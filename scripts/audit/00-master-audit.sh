@@ -78,10 +78,11 @@ run_audit() {
         local duration=$((end_time - start_time))
         echo -e "${GREEN}✓ ${name} completed in ${duration}s${NC}"
         
-        # Extract score from log using defined pattern
-        local score=$(grep -oP "$SCORE_REGEX" "$audit_log" 2>/dev/null | tail -1 || echo "0")
-        if [[ -z "$score" || "$score" == "0" ]]; then
-            # Default to 100 if completed successfully without score
+        # Extract score from log using defined pattern.
+        # Default to 100 only if the audit did not emit any parsable score.
+        local score
+        score=$(grep -oP "$SCORE_REGEX" "$audit_log" 2>/dev/null | tail -1 || true)
+        if [[ -z "${score:-}" ]]; then
             score=100
         fi
         AUDIT_SCORES[$name]=$score

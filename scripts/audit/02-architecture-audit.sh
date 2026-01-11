@@ -370,3 +370,35 @@ echo ""
 echo "📁 Full report: $REPORT_DIR/ARCHITECTURE_SUMMARY.md"
 echo "📋 Consolidation plan: $REPORT_DIR/CONSOLIDATION_PLAN.md"
 echo ""
+
+# Deterministic score (0-100)
+ARCH_SCORE=100
+
+# Duplication penalties
+dup_penalty=0
+if [ "${DEVTOOLS_COUNT:-0}" -gt 1 ]; then dup_penalty=$((dup_penalty + 20)); fi
+if [ "${CHAT_COUNT:-0}" -gt 2 ]; then dup_penalty=$((dup_penalty + 15)); fi
+
+# Circular deps penalty (unknown if tool missing)
+circular_penalty=0
+if [ -n "${CIRCULAR_COUNT:-}" ]; then
+    circular_penalty=$((CIRCULAR_COUNT * 10))
+    if [ "$circular_penalty" -gt 30 ]; then circular_penalty=30; fi
+else
+    circular_penalty=10
+fi
+
+# Import / hygiene penalties
+global_penalty=$(( (${GLOBAL_IMPORTS:-0}) * 2 ))
+if [ "$global_penalty" -gt 20 ]; then global_penalty=20; fi
+
+todo_penalty=$(( (${TODO_COUNT:-0}) / 10 ))
+if [ "$todo_penalty" -gt 20 ]; then todo_penalty=20; fi
+
+total_penalty=$((dup_penalty + circular_penalty + global_penalty + todo_penalty))
+if [ "$total_penalty" -gt 100 ]; then total_penalty=100; fi
+
+ARCH_SCORE=$((ARCH_SCORE - total_penalty))
+if [ "$ARCH_SCORE" -lt 0 ]; then ARCH_SCORE=0; fi
+
+echo "Score: $ARCH_SCORE"

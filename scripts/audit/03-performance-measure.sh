@@ -6,6 +6,18 @@
 
 set -e
 
+# Initialize numeric metrics to safe defaults
+BUILD_TIME=0
+DIST_SIZE=0
+NODE_MODULES_SIZE=0
+IPC_COMMANDS=0
+IPC_CALLS=0
+DYNAMIC_IMPORTS=0
+LAZY_COMPONENTS=0
+IMAGE_COUNT=0
+WILDCARD_IMPORTS=0
+DEEP_IMPORTS=0
+
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 REPORT_DIR="reports/performance-$TIMESTAMP"
 mkdir -p "$REPORT_DIR"
@@ -16,16 +28,24 @@ echo "================================================"
 # 1. Build Time Measurement
 echo ""
 echo "🏗️ [1/8] Measuring build time..."
-echo "   └─ Running production build..."
+echo "   └─ Build step is gated (no production build by default)."
 
 BUILD_START=$(date +%s)
-pnpm run build > "$REPORT_DIR/build-output.txt" 2>&1 || {
-    echo "   ⚠️ Build failed - check build-output.txt"
-}
+if [ "${TITANE_PERF_ALLOW_BUILD:-0}" = "1" ]; then
+    echo "   └─ Running production build (TITANE_PERF_ALLOW_BUILD=1)..."
+    pnpm run build > "$REPORT_DIR/build-output.txt" 2>&1 || {
+        echo "   ⚠️ Build failed - check build-output.txt"
+    }
+else
+    {
+        echo "Build step skipped by policy."
+        echo "Set TITANE_PERF_ALLOW_BUILD=1 to enable build timing."
+    } > "$REPORT_DIR/build-output.txt"
+fi
 BUILD_END=$(date +%s)
 BUILD_TIME=$((BUILD_END - BUILD_START))
 
-echo "   ✅ Build completed in ${BUILD_TIME}s"
+echo "   ✅ Step completed in ${BUILD_TIME}s"
 
 # 2. Bundle Size Analysis
 echo ""
@@ -50,6 +70,7 @@ if [ -d "dist" ]; then
 else
     echo "   ⚠️ dist/ not found - build may have failed"
     echo "dist/ not found" > "$REPORT_DIR/bundle-size.txt"
+    DIST_SIZE=0
 fi
 
 # 3. Dependency Size
@@ -287,3 +308,47 @@ echo "   └─ Imports: $WILDCARD_IMPORTS wildcard, $DEEP_IMPORTS deep"
 echo ""
 echo "📁 Full report: $REPORT_DIR/PERFORMANCE_SUMMARY.md"
 echo ""
+
+# Deterministic score (0-100)
+PERF_SCORE=100
+
+# If build is skipped, apply a small penalty (missing measured baseline)
+if [ "${TITANE_PERF_ALLOW_BUILD:-0}" != "1" ]; then
+    PERF_SCORE=$((PERF_SCORE - 10))
+fi
+
+# Penalize slow build if measured
+if [ "$BUILD_TIME" -gt 60 ]; then
+    over=$((BUILD_TIME - 60))
+    bt_penalty=$((over / 5))
+    if [ "$bt_penalty" -gt 25 ]; then bt_penalty=25; fi
+    PERF_SCORE=$((PERF_SCORE - bt_penalty))
+fi
+
+# Bundle size penalty
+if [ "$DIST_SIZE" -gt 10 ]; then
+    bs_penalty=$(((DIST_SIZE - 10) * 3))
+    if [ "$bs_penalty" -gt 30 ]; then bs_penalty=30; fi
+    PERF_SCORE=$((PERF_SCORE - bs_penalty))
+fi
+
+# Import hygiene penalties
+if [ "${WILDCARD_IMPORTS:-0}" -gt 0 ]; then
+    wi_penalty=$((WILDCARD_IMPORTS * 5))
+    if [ "$wi_penalty" -gt 25 ]; then wi_penalty=25; fi
+    PERF_SCORE=$((PERF_SCORE - wi_penalty))
+fi
+
+di_penalty=$(( (${DEEP_IMPORTS:-0}) * 1 ))
+if [ "$di_penalty" -gt 15 ]; then di_penalty=15; fi
+PERF_SCORE=$((PERF_SCORE - di_penalty))
+
+# Encourage code splitting
+if [ "${DYNAMIC_IMPORTS:-0}" -lt 10 ]; then
+    PERF_SCORE=$((PERF_SCORE - 5))
+fi
+
+if [ "$PERF_SCORE" -lt 0 ]; then PERF_SCORE=0; fi
+if [ "$PERF_SCORE" -gt 100 ]; then PERF_SCORE=100; fi
+
+echo "Score: $PERF_SCORE"
