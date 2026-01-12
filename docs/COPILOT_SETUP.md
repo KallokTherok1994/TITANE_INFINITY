@@ -368,7 +368,7 @@ This setup provides:
 - ✅ Automated validation (`copilot-xs:validate`)
 - ✅ Documentation in README and CONTRIBUTING
 
-**Status:** ✅ **COMPLETE** - Ready for production use with GitHub Copilot
+**Status:** ✅ **COMPLETE** - ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise) use with GitHub Copilot
 
 ---
 

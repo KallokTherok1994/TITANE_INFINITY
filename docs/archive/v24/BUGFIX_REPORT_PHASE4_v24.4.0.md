@@ -267,7 +267,7 @@ if (response.memoryContext) {
 - ✅ **4 providers fonctionnels** (Local, OpenAI, Gemini, Anthropic)
 - ✅ **Conversation tracking** opérationnel
 - ✅ **RAG visibility** complète
-- 🟢 **Severity**: Résolu - Production ready
+- 🟢 **Severity**: Résolu - tech-ready (dev); production en attente d’autorisation
 
 ---
 
@@ -356,7 +356,7 @@ Refs: AUTO_IMPROVEMENTS_YOLO_PHASE3_v24.3.0.md"
 **Pass Rate**: 0% → 100%  
 **Production Blockers Resolved**: 3 (IA, tracking, RAG)  
 **Lines Changed**: 12 (ConversationManager) + 20 (tests)  
-**ROI**: 25 min → Production-ready IA conversational system 🚀
+**ROI**: 25 min → Tech-Ready (Dev) IA conversational system 🚀
 
 **Status**: ✅ **PHASE 4 COMPLETE — ALL TESTS GREEN**
 

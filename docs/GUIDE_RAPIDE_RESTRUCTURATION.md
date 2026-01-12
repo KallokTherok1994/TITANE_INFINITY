@@ -239,7 +239,7 @@ cp docs/backup_YYYYMMDD/*.md .
 ## 📚 Documentation
 
 - [Documentation Actuelle v26.2](docs/current/INDEX.md)
-- [Quick Start](QUICKSTART_UBUNTU_24.04.md)
+- [Quick Start](current/guides/QUICKSTART_UBUNTU_24.04.md)
 - [Architecture](ARCHITECTURE.md)
 - [Changelog](CHANGELOG.md)
 ```

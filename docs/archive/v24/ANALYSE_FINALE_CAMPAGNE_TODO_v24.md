@@ -375,7 +375,7 @@
 ║  ✅ 0 unwrap() calls (Phase 0 complete)                       ║
 ║  ✅ 97.5% TODO reduction (cette campagne)                     ║
 ║  ✅ Build times: 11.48s (TypeScript), 3m 36s (Rust)           ║
-║  ✅ Statut: PRODUCTION READY ✨                                ║
+║  ✅ Statut: ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise) ✨                                ║
 ╚═══════════════════════════════════════════════════════════════╝
 ```
 
@@ -656,7 +656,7 @@ TITANE∞ v24.2.0 = v25 Transformation + TODO Cleanup
 - 100% type safety ✅
 - 0 unwrap() calls ✅
 - 97.5% TODO reduction ✅
-- Production ready ✅
+- tech-ready (dev); production en attente d’autorisation ✅
 ```
 
 ### Recommandation

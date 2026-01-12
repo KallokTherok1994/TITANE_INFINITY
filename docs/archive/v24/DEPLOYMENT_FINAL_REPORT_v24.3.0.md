@@ -2,7 +2,7 @@
 
 **Date**: 16 Décembre 2024  
 **Version**: 24.3.0  
-**Status**: ✅ **PRODUCTION READY**
+**Status**: ✅ **✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)**
 
 ---
 
@@ -319,7 +319,7 @@ Le plugin updater de Tauri cherche un symbole spécifique (`__TAURI_BUNDLE_TYPE`
 
 ## 🎉 CONCLUSION
 
-### Status Final: ✅ PRODUCTION READY
+### Status Final: ✅ ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)
 
 **Réalisations**:
 

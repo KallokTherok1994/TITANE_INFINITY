@@ -1,7 +1,7 @@
-# TITANE∞ IPC Contract v26.2.0
+# TITANE∞ IPC Contract v26.3.0
 
 **Date:** 2026-01-03  
-**Version:** 26.2.0  
+**Version:** 26.3.0  
 **Protocol:** Tauri IPC (JSON-RPC over WebSocket)
 
 ---

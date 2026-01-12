@@ -453,7 +453,7 @@ export function CognitiveMonitor() {
 
 **Phase 1 (Infrastructure) : 100% ✅ TERMINÉE**
 
-Le système est **production-ready** pour dashboard frontend et déploiement scalable.
+Le système est **tech-ready (dev)** pour dashboard frontend et déploiement scalable.
 
 ---
 

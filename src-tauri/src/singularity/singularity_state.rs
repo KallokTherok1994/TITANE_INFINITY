@@ -20,7 +20,7 @@
  *
  * Documentation: SINGULARITY_INTEGRATION_COMPLETE.md
  * Tests: omega_p2_performance_test.rs (3/3 passing)
- * Status: ✅ Production-ready (commit 47d8e3a, 10 déc 2025)
+ * Status: ✅ Tech-Ready (Dev) (commit 47d8e3a, 10 déc 2025)
  * ═══════════════════════════════════════════════════════════════════
  */
 use serde::{Deserialize, Serialize};

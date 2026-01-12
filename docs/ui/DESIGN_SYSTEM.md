@@ -2,8 +2,11 @@
 
 **Version:** 26.2.0  
 **Last Updated:** 2026-01-03  
-**Status:** ✅ Production Ready  
+**Status:** Document historique (UI/UX) — Production EN ATTENTE (autorisation)  
 **Compliance:** WCAG 2.2 AA
+
+> NOTE (gouvernance): ce document décrit un design system UI/UX (v26.2.0) et ne constitue pas une validation de déploiement.
+> Runtime actuel: v26.3.0.
 
 > **Complete documentation:** See `titanium-dark-tokens.css` for all token definitions.
 > **Research basis:** See `RESEARCH_NOTES.md` for design rationale.

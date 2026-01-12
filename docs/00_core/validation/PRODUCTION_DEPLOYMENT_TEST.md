@@ -116,7 +116,7 @@ Production Deployment Test Survey
 
 11. Overall satisfaction (1-10): ___
 
-12. Would you deploy to production?
+12. Would you déploiement production (autorisation requise)?
     [ ] Yes, confidently  [ ] Yes, with hesitation  [ ] No
 ```
 
@@ -134,7 +134,7 @@ Production Deployment Test Survey
 | **Security confidence** | ≥8/10 | ⚠️ Important |
 | **Monitoring confidence** | ≥8/10 | ⚠️ Important |
 | **Overall satisfaction** | ≥8/10 | ⚠️ Important |
-| **Production-ready confidence** | ≥80% "Yes, confidently" | ⚠️ Important |
+| **Tech-Ready (Dev) confidence** | ≥80% "Yes, confidently" | ⚠️ Important |
 
 ---
 
@@ -250,14 +250,14 @@ Production Deployment Test Survey
 - ✅ <4 hours deployment time (avg)
 - ✅ ≤5 critical gaps identified
 - ✅ ≥8/10 overall satisfaction
-- ✅ ≥80% production-ready confidence
+- ✅ ≥80% tech-ready (dev) confidence
 
 **Test FAILS if:**
 - ❌ <90% deployment success rate
 - ❌ >6 hours deployment time (avg)
 - ❌ >10 critical gaps identified
 - ❌ <7/10 overall satisfaction
-- ❌ <50% production-ready confidence
+- ❌ <50% tech-ready (dev) confidence
 
 ---
 

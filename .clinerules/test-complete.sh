@@ -311,7 +311,7 @@ fi
 
 # Test UserPromptSubmit - Détection déploiement
 test_item "UserPromptSubmit détecte demandes déploiement"
-TEST_INPUT='{"clineVersion":"3.39.2","hookName":"UserPromptSubmit","timestamp":"2026-01-02T23:00:00Z","taskId":"test","workspaceRoots":["/test"],"userId":"test","userPromptSubmit":{"prompt":"Deploy to production"}}'
+TEST_INPUT='{"clineVersion":"3.39.2","hookName":"UserPromptSubmit","timestamp":"2026-01-02T23:00:00Z","taskId":"test","workspaceRoots":["/test"],"userId":"test","userPromptSubmit":{"prompt":"déploiement production (autorisation requise)"}}'
 RESULT=$(echo "$TEST_INPUT" | .clinerules/hooks/UserPromptSubmit 2>/dev/null)
 if echo "$RESULT" | jq -e '.contextModification' 2>/dev/null | grep -qi "DEPLOYMENT"; then
     test_pass "Avertissement déploiement injecté"

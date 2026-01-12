@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v24.3.0 — Proprietary License
+ * TITANE∞ v26.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v24.3.0 — CHAT ENGINE OMEGA (FlowEngine Reconstruction)
+ *   TITANE∞ v26.3.0 — CHAT ENGINE OMEGA (FlowEngine Reconstruction)
  *   Pipeline infaillible • Validation multi-niveaux • Auto-guérison
  *   Architecture: UI → useChat → chatEngine → orchestrator → providers → normalize → UI
  *   v22Ω AI Performance Optimizations: Parallel loading, -40% latency

@@ -435,7 +435,7 @@ console.log('⚡ Menu v25.3.0 - TITANE FUSION activée');
 
 **Version**: v25.3.0  
 **Date**: 2025  
-**Statut**: ✅ **PRODUCTION READY**  
+**Statut**: ✅ **✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)**  
 **Auteur**: TITANE Team  
 **License**: Proprietary — TITANE∞ v15
 

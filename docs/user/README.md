@@ -1,6 +1,6 @@
 # 🌟 TITANE∞ — Intelligence Artificielle Locale
 
-**Version :** 19.4.3 (Production-Ready)  
+**Version :** 19.4.3 (Tech-Ready (Dev); production en attente d’autorisation)  
 **License :** Proprietary  
 **Platform :** Windows, macOS, Linux
 

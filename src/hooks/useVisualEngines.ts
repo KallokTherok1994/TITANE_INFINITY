@@ -7,7 +7,7 @@
  */
 
 /**
- * TITANE∞ v24.3.0 — useVisualEngines Hook
+ * TITANE∞ v26.3.0 — useVisualEngines Hook
  *
  * Applique automatiquement CSS variables selon système state
  * Active les engines visuels via variables CSS globales

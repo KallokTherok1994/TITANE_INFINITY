@@ -3,7 +3,7 @@
 **Date:** 17 décembre 2025  
 **Version:** v25.7.5  
 **Phase:** Phase 4 P2 (Brotli + Service Worker)  
-**Status:** ✅ **PRODUCTION READY**
+**Status:** ✅ **✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)**
 
 ---
 

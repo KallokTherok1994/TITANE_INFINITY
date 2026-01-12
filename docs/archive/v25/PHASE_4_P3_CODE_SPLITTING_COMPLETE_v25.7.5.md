@@ -2,7 +2,7 @@
 
 **Version:** 25.7.5  
 **Date:** $(date +%Y-%m-%d)  
-**Status:** ✅ PRODUCTION READY  
+**Status:** ✅ ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)  
 **Gain net:** -32.65 KB initial bundle gzip (-39.5%)
 
 ---
@@ -537,7 +537,7 @@ pnpm run build
 # 2. Test Service Worker locally
 pnpm run preview  # Test dist/ with SW enabled
 
-# 3. Deploy to production
+# 3. déploiement production (autorisation requise)
 ./runtime/stable/build.sh  # Build Titan-Stable
 # Upload dist/ to production server
 
@@ -587,7 +587,7 @@ npx lighthouse https://titan-infinity.app --view
 
 **Agent:** GitHub Copilot  
 **Status:** Phase 4 P3 Code Splitting COMPLET ✅  
-**Production Ready:** OUI  
+**Tech-Ready (Dev); production en attente d’autorisation:** OUI  
 **Validation:** 100% automated + manual tests pending
 
 **Gains Validés:**

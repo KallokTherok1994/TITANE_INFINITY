@@ -4,7 +4,7 @@ Complete frontend visual system with adaptive states, advanced particle physics,
 
 ## Overview
 
-The TITANE Visual Engine is a production-ready, high-performance visual system that provides:
+The TITANE Visual Engine is a tech-ready (dev), high-performance visual system that provides:
 
 - **11 Visual States** with smooth 500ms transitions
 - **Advanced Particle System** supporting 600 particles at 60fps

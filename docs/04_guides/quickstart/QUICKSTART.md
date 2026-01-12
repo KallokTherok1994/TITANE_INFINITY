@@ -2,7 +2,10 @@
 
 **Version:** v24.2.0  
 **Date:** 15 décembre 2025  
-**Status:** Production Ready
+**Status:** Document historique (v24.2.0) — Production EN ATTENTE (autorisation)
+
+> NOTE (gouvernance): ce guide peut contenir des instructions obsolètes (versions/outils).
+> Runtime actuel: v26.3.0.
 
 ---
 

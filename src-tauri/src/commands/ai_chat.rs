@@ -1,6 +1,6 @@
 // TITANE∞ v15 - AI Chat Commands
 // Tauri commands for AI interaction and Voice Mode
-// Clean architecture v15: Unified SingularityEngine, documented, production-ready
+// Clean architecture v15: Unified SingularityEngine, documented, tech-ready (dev)
 
 use crate::ai::router::AIRouter;
 use crate::ai::{AIRequest, AIResponse};

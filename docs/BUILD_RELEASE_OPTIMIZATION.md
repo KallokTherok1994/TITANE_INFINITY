@@ -205,7 +205,7 @@ Release build:
 
 ## Recommended Profile
 
-**Production-ready balance** (performance + size):
+**Tech-Ready (Dev) balance** (performance + size):
 
 ```toml
 [profile.release]

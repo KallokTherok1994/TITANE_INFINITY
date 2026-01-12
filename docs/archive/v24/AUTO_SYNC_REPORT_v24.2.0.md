@@ -85,7 +85,7 @@ Vitest Tests: 229 passed
 
 **Coverage:** Non mesuré (optionnel)
 
-**Qualité code:** Production ready confirmé
+**Qualité code:** tech-ready (dev); production en attente d’autorisation confirmé
 
 ---
 

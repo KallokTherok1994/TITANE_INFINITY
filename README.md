@@ -1,7 +1,7 @@
 # TITANE∞ — Cognitive Operating System
 
 **Version:** v26.3.0  
-**Status:** Production Ready ✅  
+**Status:** Build Titan-Stable validé (AppImage + DEB); déploiement utilisateur en cours de validation ✅  
 **License:** Proprietary — © 2025 Humain Total / Kevin Thibault
 
 **Qualité (v26.3.0) :** Score 10/10 (cf. [CHANGELOG v26.3.0](CHANGELOG.md#v26-3-0)) — zéro dette technique — ADR + validation finale 🏆
@@ -239,7 +239,7 @@ Pour plus d'informations : [COPILOT-XS README](.github/copilot-xs/README.md)
 ## 📚 Documentation
 
 > **🎯 NEW: World-Class Documentation (200% Coverage - Dec 2025)**  
-> **Quick Navigation:** [Getting Started](docs/GETTING_STARTED.md) • [Contributing](CONTRIBUTING.md) • [Master Index](docs/INDEX.md)
+> **Quick Navigation:** [Getting Started](docs/GETTING_STARTED.md) • [Contributing](CONTRIBUTING.md) • [Docs (current)](docs/current/INDEX.md) • [Master Index](docs/INDEX.md) • [Archive (root)](docs/archive/root/INDEX.md)
 
 ### 🚀 Start Here (New to TITANE∞?)
 
@@ -295,10 +295,8 @@ Ready-to-execute validation campaign (PAUSE before Phase 8+):
 
 ### 🗂️ Legacy Documentation (Archived)
 
-- **ARCHITECTURE.md** : Architecture détaillée (frontend/backend/pipeline)
-- **DEVELOPER_GUIDE.md** : Guide développeur (conventions, setup, troubleshooting)
-- **AUDIT_COMPLET_v21_ENGINE_2025-12-10.md** : Audit complet système
-- **CHANGELOG_v24.md** : Historique des changements v24
+- Les anciens fichiers `.md` historiquement stockés à la racine sont archivés ici : [docs/archive/root/INDEX.md](docs/archive/root/INDEX.md)
+- La documentation active est centralisée dans : [docs/current/INDEX.md](docs/current/INDEX.md)
 
 ### 📁 Technical Documentation (Legacy)
 

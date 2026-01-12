@@ -855,7 +855,7 @@ test('User can view predictions in dashboard', async ({ page }) => {
 
 1. **Intelligence prédictive fonctionnelle** (health, TTF, correlations)
 2. **Type safety complète** (0 TypeScript errors)
-3. **Production-ready** (0% console overhead)
+3. **Tech-Ready (Dev)** (0% console overhead)
 4. **Scalable** (cleanup auto, FIFO queues)
 5. **Testable** (97.4% coverage maintained)
 6. **Documented** (586 + 400 lignes docs)
@@ -875,7 +875,7 @@ test('User can view predictions in dashboard', async ({ page }) => {
 3. **v26.5:** Auto-remediation scripts (4 semaines)
 4. **v26.6:** Graph visualizations (2 semaines)
 
-**État système:** ✅ **PRODUCTION READY + CONTINUOUSLY IMPROVING**
+**État système:** ✅ Tech-Ready (Dev) + continuously improving | **Production:** ⛔ EN ATTENTE (autorisation requise)
 
 ---
 

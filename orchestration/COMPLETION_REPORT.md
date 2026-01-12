@@ -347,7 +347,7 @@ npm run status            # Shows P3-1-2 as next
 
 ---
 
-## 🚀 Production Ready
+## 🚀 Tech-Ready (Dev); production en attente d’autorisation
 
 ### Checklist
 

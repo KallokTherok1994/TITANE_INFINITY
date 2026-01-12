@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v24.3.0 — Proprietary License
+ * TITANE∞ v26.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v24.3.0 — CHAT PAGE OMEGA (UI ANTI-CRASH)
+ *   TITANE∞ v26.3.0 — CHAT PAGE OMEGA (UI ANTI-CRASH)
  *   v22Ω AI Performance Optimizations: -40% latency, stream batching
  *   Protection render • État stable • Récupération auto
  *   Keyboard shortcuts, Focus trap, Code splitting

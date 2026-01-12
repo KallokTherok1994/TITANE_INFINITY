@@ -1,10 +1,10 @@
-// TITANE_INFINITY v24.3.0 — Proprietary License
+// TITANE_INFINITY v26.3.0 — Proprietary License
 // © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
 
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v24.3.0 — MAIN ENTRY POINT (Singularity Architecture)
+//   TITANE∞ v26.3.0 — MAIN ENTRY POINT (Singularity Architecture)
 //   20 Engines Unified + OMEGA Pipeline + Phase 2 Fusion Commands
-//   Onboarding System + Production Ready
+//   Stable runtime validé (Linux) • Déploiement utilisateur en cours de validation
 // ═══════════════════════════════════════════════════════════════
 
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
@@ -538,19 +538,30 @@ fn main() {
             app.manage(singularity_engine.clone());
 
             // 🎯 Initialize OMEGA Conversation Engine (v19.5.2)
-            let storage_dir = app.path().app_data_dir()
+            // IMPORTANT: ne pas crasher le runtime stable si la passphrase n'est pas définie.
+            // On démarre en mode "bootstrap" (stockage séparé) pour laisser l'UI s'ouvrir et
+            // permettre la configuration sécurisée, sans corrompre un stockage chiffré attendu.
+            let app_data_dir = app
+                .path()
+                .app_data_dir()
                 .unwrap_or_else(|_| std::path::PathBuf::from("/tmp/titane"));
-            let password = match std::env::var("TITANE_SECRETS_PASSPHRASE") {
-                Ok(value) => value,
-                Err(_) if cfg!(debug_assertions) => {
-                    "default-dev-passphrase-change-in-production".to_string()
-                }
+
+            let (storage_dir, password) = match std::env::var("TITANE_SECRETS_PASSPHRASE") {
+                Ok(value) => (app_data_dir, value),
+                Err(_) if cfg!(debug_assertions) => (
+                    app_data_dir,
+                    "default-dev-passphrase-change-in-production".to_string(),
+                ),
                 Err(_) => {
-                    eprintln!(
-                        "❌ TITANE∞ FATAL: Missing TITANE_SECRETS_PASSPHRASE in non-dev build"
+                    log::error!(
+                        "⚠️ TITANE∞: TITANE_SECRETS_PASSPHRASE manquante en build release → mode bootstrap (stockage séparé)"
                     );
-                    eprintln!("   → Please set TITANE_SECRETS_PASSPHRASE and restart.");
-                    std::process::exit(1);
+                    log::error!(
+                        "   → Définis TITANE_SECRETS_PASSPHRASE (>=12+ chars) et redémarre pour activer le stockage chiffré principal"
+                    );
+
+                    let bootstrap_dir = app_data_dir.join("bootstrap_no_passphrase");
+                    (bootstrap_dir, String::new())
                 }
             };
 

@@ -2,7 +2,10 @@
 
 **Version:** 26.2.0  
 **Date:** 2025-01-03  
-**Status:** ✅ PRODUCTION READY
+**Status:** Document historique (v26.2.0) — Production EN ATTENTE (autorisation)
+
+> NOTE (gouvernance): ce guide est technique (UI). Il ne constitue pas une autorisation de déploiement.
+> Runtime actuel: v26.3.0.
 
 ---
 

@@ -464,7 +464,7 @@ La page Conversation TITANE∞ v25.3.1 est maintenant:
    - Performance monitoring
    - Gain: +observabilité
 
-**Note:** Ces fonctionnalités sont **non-essentielles**. La v25.3.1 est **production-ready** et **optimisée à pleine puissance**.
+**Note:** Ces fonctionnalités sont **non-essentielles**. La v25.3.1 est **tech-ready (dev)** et **optimisée à pleine puissance**.
 
 ---
 

@@ -692,7 +692,7 @@ export const HeavyComponent = memo(function HeavyComponent({ data, onUpdate }) {
 ║                                                              ║
 ║  🎯 SCORE GLOBAL: 98.5% / 100                                ║
 ║                                                              ║
-║  ✅ PRODUCTION READY                                         ║
+║  ✅ ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)                                         ║
 ║  ✅ ENTERPRISE GRADE                                         ║
 ║  ✅ PERFECTION ACHIEVED                                      ║
 ║                                                              ║

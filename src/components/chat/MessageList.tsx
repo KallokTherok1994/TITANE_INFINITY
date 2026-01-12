@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v24.3.0 — Proprietary License
+ * TITANE∞ v26.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v24.3.0 — MESSAGE LIST OMEGA (UI ANTI-CRASH + OPTIMIZED)
+ *   TITANE∞ v26.3.0 — MESSAGE LIST OMEGA (UI ANTI-CRASH + OPTIMIZED)
  *   Protection render • Isolation erreurs • Auto-récupération
  *   useMemo optimisé pour performance 100+ messages
  *   v22Ω AI Performance Optimizations Compatible

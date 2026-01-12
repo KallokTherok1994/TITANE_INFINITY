@@ -501,7 +501,7 @@ export async function secureInvoke<T>(
 }
 ```
 
-**Lesson:** Security + Type safety = Production ready
+**Lesson:** Security + Type safety = tech-ready (dev); production en attente d’autorisation
 
 ---
 

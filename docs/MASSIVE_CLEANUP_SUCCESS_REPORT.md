@@ -350,7 +350,7 @@ Other:      562 (pages, utils, tests, etc.)
 
 Le codebase est maintenant:
 - **67% plus propre** en termes de console.log
-- **Production-ready** avec logging automatiquement désactivé
+- **Tech-Ready (Dev)** avec logging automatiquement désactivé
 - **Hautement maintenable** avec pattern unifié
 - **Performant** grâce au tree-shaking
 - **Documenté** avec 5 rapports complets

@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v24.3.0 — Proprietary License
+ * TITANE_INFINITY v26.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,7 +8,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v24.3.0 — APP COMPONENT - PRODUCTION READY
+ *   TITANE∞ v26.3.0 — APP COMPONENT - Build Titan-Stable validé (AppImage + DEB) • Déploiement utilisateur en cours de validation
  *   v22Ω AI Performance Optimizations: 12 optimizations (-40% latency)
  *   Build 11.5s, Tests 1964 passed, Boot ~2s, 20 Engines Unified
  *   React Router + AppShell + Living Engines + Code Splitting
@@ -884,7 +884,7 @@ const AppRouter: React.FC = () => {
           title="TITANE∞"
           subtitle={
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <span>v24.3.0 — Singularity Architecture • 20 Engines • Full OPUS</span>
+              <span>v26.3.0 — Dual Runtime (Dev/Stable) • OMEGA v2 • MemoryOS</span>
               <XPBar /> {/* ✨ v∞.D4 - Barre XP */}
             </div>
           }

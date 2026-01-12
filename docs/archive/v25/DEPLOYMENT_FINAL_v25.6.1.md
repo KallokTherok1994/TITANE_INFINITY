@@ -367,7 +367,7 @@ rien à valider, la copie de travail est propre
 ### Code Quality
 
 ✅ TypeScript: 0 errors (11 → 0 fixed)  
-✅ Build: Production ready  
+✅ Build: tech-ready (dev); production en attente d’autorisation  
 ✅ Tests: All passing (fusion-hooks.test.ts fixed)  
 ✅ Code style: Consistent and clean
 
@@ -499,7 +499,7 @@ TITANE∞ v25.6.1 "Phase 12.1 Integration" has been successfully deployed to Git
 | **Lines Added**       | ~1,850              |
 | **Documentation**     | 2,026+ lines        |
 | **TypeScript Errors** | 0                   |
-| **Build Status**      | ✅ Production Ready |
+| **Build Status**      | ✅ Tech-Ready (Dev); production en attente d’autorisation |
 | **Efficiency**        | 86% (under budget)  |
 
 ---

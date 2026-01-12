@@ -5,6 +5,9 @@
 **Version:** 26.2.0  
 **Analyste:** TITANE∞ OMEGA Copilot
 
+> NOTE (gouvernance): document historique (v26.2.0). Runtime actuel: v26.3.0.
+> Production: EN ATTENTE (autorisation explicite requise).
+
 ---
 
 ## 📊 RÉSUMÉ EXÉCUTIF

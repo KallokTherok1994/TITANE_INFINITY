@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v24.3.0 — Proprietary License
+ * TITANE∞ v26.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ══════════════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v24.3.0 — USE CHAT OMNIS (KERNEL OMNIS)
+ *   TITANE∞ v26.3.0 — USE CHAT OMNIS (KERNEL OMNIS)
  *   sendMessage() mathématiquement impossible à briser
  *   Architecture: Input→Validation→Engine→Normalize→UI→Memory→Voice
  *   v22Ω AI Performance Optimizations: -40% latency, stream batching

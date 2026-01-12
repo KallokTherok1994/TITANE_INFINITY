@@ -164,7 +164,7 @@ echo ""
 echo "🎖️ CERTIFICATION:"
 echo "🏆 TITANE∞ v19.2Ω - OMNIS ARCHITECTURE"
 echo "🎯 \"Moteur parfait Chat IA - Mathematically impossible to break\""
-echo "✅ SYSTÈME CERTIFIÉ PRODUCTION READY"
+echo "✅ SYSTÈME CERTIFIÉ ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)"
 
 echo ""
 echo "🚀 NEXT ACTIONS:"

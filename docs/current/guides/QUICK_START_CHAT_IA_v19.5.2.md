@@ -2,7 +2,7 @@
 
 **Date**: 10 décembre 2025  
 **Version**: TITANE∞ v19.5.2 OMEGA Pipeline  
-**Statut**: ✅ Production Ready
+**Statut**: ✅ Tech-Ready (Dev) | **Production**: ⛔ EN ATTENTE (autorisation requise)
 
 ---
 
@@ -574,14 +574,14 @@ git log --oneline -10
 ./test_api_integration.sh
 ./test_memory_persistence.sh
 
-# Build production
-pnpm run build
+# Build production (interdit sans autorisation)
+# Ne pas exécuter `pnpm run build` / `tauri build` sans autorisation explicite.
 ```
 
 ---
 
 **Version**: TITANE∞ v19.5.2 OMEGA Pipeline  
 **Date**: 10 décembre 2025  
-**Statut**: 🟢 **PRODUCTION READY**
+**Statut**: ✅ Tech-Ready (Dev) | **Production**: ⛔ EN ATTENTE (autorisation requise)
 
 ✨ **Bon Chat!** ✨

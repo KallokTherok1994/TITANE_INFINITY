@@ -1,8 +1,10 @@
 # 🗺️ TITANE∞ - STRATEGIC ROADMAP 2026
 **Version:** v26.2.2 → v27.0 (World-Class)
-**Current Status:** 93.5% Production Ready
+**Current Status (historical estimate):** 93.5% readiness
 **Target:** 95%+ (Industry Leading)
 **Timeline:** Q1-Q2 2026
+
+> ⚠️ Note gouvernance : ce document est un roadmap historique/stratégique. La production reste ⛔ EN ATTENTE d’une autorisation explicite.
 
 ---
 
@@ -38,7 +40,7 @@ This strategic roadmap outlines the path from TITANE∞ v26.2.2 (93.5% ready) to
 ⚠️ Some module overlap (AI/IA)
 ```
 
-### Production Readiness Score: 93.5%
+### Readiness Score (historical estimate): 93.5%
 ```
 Core Functionality:     98% ✅
 Performance:            95% ✅

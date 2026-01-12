@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v24.3.0 — Error Boundary Component
+ * TITANE∞ v26.3.0 — Error Boundary Component
  *
  * Capture et gestion des erreurs React non catchées.
  * Empêche la propagation des erreurs et affiche UI de secours.

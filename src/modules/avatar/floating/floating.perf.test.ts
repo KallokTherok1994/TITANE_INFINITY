@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v24.3.0 — FLOATING WINDOW PERFORMANCE TESTS
+//   TITANE∞ v26.3.0 — FLOATING WINDOW PERFORMANCE TESTS
 //   Benchmark 60 FPS stability, CPU/GPU usage, memory leaks
 //
 //   NOTE: These tests require WebGL support and are skipped in CI/Node.js

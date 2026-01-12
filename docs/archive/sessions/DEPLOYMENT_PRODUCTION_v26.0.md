@@ -946,7 +946,7 @@ _(Basé sur 10,000 users/mois, AWS CloudFront pricing $0.085/GB)_
 
 ---
 
-**🎉 FÉLICITATIONS! v26.0 est production-ready.**
+**🎉 FÉLICITATIONS! v26.0 est tech-ready (dev).**
 
 **Prochaine étape:** Phase 6 Image Optimization (-200 KB, WebP conversion)
 

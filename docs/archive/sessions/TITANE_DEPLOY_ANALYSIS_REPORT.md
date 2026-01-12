@@ -288,7 +288,7 @@ git checkout MAIN
 | `repair` | ~2-5min       | Dépendances fraîches |
 | `fix`    | ~30s-2min     | Auto-corrections     |
 | `build`  | ~5-15min      | Frontend + Backend   |
-| `deploy` | ~10-20min     | Production ready     |
+| `deploy` | ~10-20min     | tech-ready (dev); production en attente d’autorisation     |
 | `full`   | ~15-30min     | Cycle complet        |
 
 ---

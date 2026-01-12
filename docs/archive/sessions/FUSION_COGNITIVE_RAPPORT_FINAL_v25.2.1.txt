@@ -192,7 +192,7 @@
     • Polling efficient (5s, cleanup)
     • Documentation complète (580+ lignes)
 
-  Status: ✅ PRODUCTION READY (95%)
+  Status: ✅ ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise) (95%)
   Tests:  ⏳ Manual validation required (15 min)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

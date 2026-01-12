@@ -342,4 +342,4 @@ pnpm run dev
 **Créé le** : 16 décembre 2025  
 **Version** : 25.4.0  
 **Auteur** : GitHub Copilot  
-**Status** : ✅ Production Ready
+**Status** : ✅ Tech-Ready (Dev); production en attente d’autorisation

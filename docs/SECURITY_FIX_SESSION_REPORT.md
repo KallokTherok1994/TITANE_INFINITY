@@ -376,7 +376,7 @@ Phase 1 of security hardening is complete. Critical analysis and foundation work
 - Session 3: Secrets migration + zeroize implementation
 - Session 4: Dead code warnings + final verification
 
-**Estimated Total Time to Production-Ready:**
+**Estimated Total Time to Tech-Ready (Dev); production en attente d’autorisation:**
 - Session 1: ✅ 2 hours (DONE)
 - Sessions 2-4: 20-30 hours (PLANNED)
 - **Total:** 22-32 hours

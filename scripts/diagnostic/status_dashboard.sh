@@ -179,7 +179,7 @@ curl -s http://localhost:11434/api/tags > /dev/null 2>&1 && ((SCORE+=20))
 [ "$TS_ERRORS" -eq "0" ] && ((SCORE+=20))
 
 if [ $SCORE -ge 80 ]; then
-  echo -e "  🎉 ${GREEN}PRODUCTION READY${NC} (Score: $SCORE/100)"
+  echo -e "  🎉 ${GREEN}✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)${NC} (Score: $SCORE/100)"
   echo -e "  🚀 TITANE∞ is ready for deployment!"
 elif [ $SCORE -ge 60 ]; then
   echo -e "  🟡 ${YELLOW}ALMOST READY${NC} (Score: $SCORE/100)"

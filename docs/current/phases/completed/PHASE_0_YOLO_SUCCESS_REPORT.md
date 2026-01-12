@@ -127,7 +127,7 @@ Critical paths:     0 unwrap (Tauri commands, main.rs, core logic)
 - ✅ Control panel commands: Fixed get_config_dir() missing function
 - ✅ Sysinfo API: Updated to 0.30 (SystemExt → global_cpu_info)
 - ✅ All unwrap() replacements: Zero new errors introduced
-- ✅ Release build: 3m 19s (optimized, production-ready)
+- ✅ Release build: 3m 19s (optimized, tech-ready (dev))
 
 ---
 
@@ -188,7 +188,7 @@ With stable foundation now in place:
 
 ### ROI
 
-- **2 hours** → **99.9% test pass rate** + **0 critical unwrap()** + **production-ready build**
+- **2 hours** → **99.9% test pass rate** + **0 critical unwrap()** + **tech-ready (dev) build**
 - **Efficiency**: ~1 unwrap fixed every 5 minutes
 - **Quality**: Zero regressions, zero new bugs
 
@@ -228,7 +228,7 @@ Net:        +30 lines (safer code)
 - **Secondary Goal**: Establish baseline metrics → ✅ COMPLETE
 - **Stretch Goal**: 100% test pass rate → ✅ 99.9% (acceptable)
 
-**Status**: 🟢 **PRODUCTION READY**  
+**Status**: ✅ Tech-Ready (Dev) (historique) | Production: ⛔ EN ATTENTE (autorisation requise)  
 **Recommendation**: ✅ **Proceed to Phase 1 (Consolidation)**
 
 ---

@@ -147,4 +147,4 @@ pnpm test -- --run  # Tests unitaires
 ---
 
 **Pour instructions détaillées:** `.cline/custom-instructions.md`  
-**Version:** 1.0.0 | **Status:** ✅ Production Ready
+**Version:** 1.0.0 | **Status:** ✅ Tech-Ready (Dev); production en attente d’autorisation

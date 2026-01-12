@@ -28,7 +28,7 @@
 - Lines of Code: 450+
 - Tests: 9/9 passent ✅
 - Performance: < 20ms validation
-- Statut: Production ready
+- Statut: tech-ready (dev); production en attente d’autorisation
 
 **Bénéfices:**
 
@@ -64,7 +64,7 @@ test watchdog::scanner::tests::test_scanner_detect_low_coherence ... ok
   - STM recall: < 10ms
   - MTM search: < 50ms
   - LTM query: < 100ms
-- Statut: Production ready
+- Statut: tech-ready (dev); production en attente d’autorisation
 
 **Architecture:**
 
@@ -98,7 +98,7 @@ pub struct UnifiedMemory {
   - Health check: < 30ms
   - Diagnostics: < 100ms
   - Auto-repair: < 500ms
-- Statut: Production ready
+- Statut: tech-ready (dev); production en attente d’autorisation
 
 **Responsabilités:**
 
@@ -114,7 +114,7 @@ pub struct UnifiedMemory {
 **Code Total:** 1,640 lignes
 **Tests Total:** 21/21 (100% pass rate)
 **Performance:** Tous objectifs atteints
-**Qualité:** Production ready
+**Qualité:** tech-ready (dev); production en attente d’autorisation
 
 **Réduction Complexité:**
 

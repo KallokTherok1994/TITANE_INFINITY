@@ -778,7 +778,7 @@ cargo fmt --check || exit 1
 │  APRÈS:  94/100                     │
 │  GAIN:   +9 points (+10.6%)         │
 │                                     │
-│  Status: 🟢 PRODUCTION READY        │
+│  Status: 🟢 ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)        │
 └─────────────────────────────────────┘
 ```
 
@@ -795,7 +795,7 @@ cargo fmt --check || exit 1
 **Durée:** ~45 minutes (audit→corrections→validation)  
 **Fichiers Modifiés:** 6 (3 configs, 1 Rust, 1 lock, 1 workflow)  
 **Commits Recommandés:** 1 (atomic commit avec toutes corrections)  
-**Status Final:** ✅ **PRODUCTION READY** 🚀
+**Status Final:** ✅ **✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)** 🚀
 
 ---
 

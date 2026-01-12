@@ -4,6 +4,8 @@
 **Release Date:** 2026-01-03  
 **Status:** ✅ **100% COMPLETE**
 
+> Note: document **historique** (release UI v26.2.0). Le runtime courant est v26.3.0.
+
 ---
 
 ## 🎉 Mission Complete
@@ -349,9 +351,9 @@ The TITANE∞ "Titanium Dark" implementation is a **resounding success**:
 - ⚡ **Performant:** 25KB bundle savings, smoother animations
 - 📚 **Well-Documented:** 7 comprehensive strategic documents
 
-The foundation is solid. The components are production-ready. The design system is extensible.
+The foundation is solid. The components are Tech-Ready (Dev). The design system is extensible. Production remains pending explicit authorization.
 
-**Status:** ✅ **READY FOR PRODUCTION**
+**Status:** ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)
 
 ---
 

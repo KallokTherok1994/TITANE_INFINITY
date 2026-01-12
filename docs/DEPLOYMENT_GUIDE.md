@@ -1,8 +1,10 @@
 # TITANE∞ Deployment Guide — Complete Reference
 
-**Version:** 26.2.0  
-**Last Updated:** 2024-12-22  
+**Version:** 26.3.0  
+**Last Updated:** 2026-01-11  
 **Compliance Score:** 100/100 (A+)
+
+> ⛔ **Mode Dev (règle critique repo)** : ne pas exécuter de build/deploy production (AppImage/DEB/packaging) sans autorisation explicite.
 
 ---
 

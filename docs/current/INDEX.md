@@ -1,8 +1,8 @@
-# Documentation Actuelle TITANE∞ v26.2
+# Documentation Actuelle TITANE∞ v26.3
 
-**Version:** v26.2  
+**Version:** v26.3.0  
 **Status:** Active  
-**Dernière MAJ:** 18 décembre 2025
+**Dernière MAJ:** 12 janvier 2026
 
 ## Structure
 
@@ -10,7 +10,7 @@
 docs/current/
 ├── audits/          # Audits techniques v26 (8 fichiers)
 ├── phases/          # Phases développement + roadmap (17 complétées)
-├── guides/          # Guides utilisateur/dev (5 fichiers)
+├── guides/          # Guides utilisateur/dev (voir guides/INDEX.md)
 ├── architecture/    # Architecture système (4 fichiers)
 └── performance/     # Optimisations & benchmarks (1 fichier)
 ```
@@ -27,7 +27,14 @@ docs/current/
 - [Audit Final](./audits/AUDIT_FINAL_v26.2_COMPLETE.md)
 
 ### Guides
-- [Quick Start Ubuntu](../../QUICKSTART_UBUNTU_24.04.md)
+- [Index Guides](./guides/INDEX.md)
+- [Démarrage Rapide](./guides/DEMARRAGE_RAPIDE.md)
+- [Setup Dev](./guides/DEVELOPMENT_SETUP.md)
+- [Commandes Dev](./guides/DEV_COMMANDS.md)
+- [Dépendances Système](./guides/SYSTEM_DEPENDENCIES.md)
+- [Tests E2E](./guides/E2E_TESTING_GUIDE.md)
+- [Guide Test E2E Chat](./guides/GUIDE_TEST_E2E_CHAT.md)
+- [Quick Start Ubuntu](./guides/QUICKSTART_UBUNTU_24.04.md)
 - [Quick Start Chat IA v19.5.2](./guides/QUICK_START_CHAT_IA_v19.5.2.md)
 - [Multimodal Guide](./guides/MULTIMODAL_QUICK_START.md)
 - [Aura Quick Start](./guides/AURA_QUICK_START_GUIDE.md)

@@ -1,4 +1,7 @@
-# ✅ TITANE_INFINITY - Checklist Production Complète
+# ✅ TITANE_INFINITY - Checklist Production (gouvernance)
+
+> NOTE (gouvernance): ce document liste des critères de readiness, mais ne constitue pas une autorisation.
+> Production: EN ATTENTE (autorisation explicite requise).
 
 ## 🔐 SECURITY
 
@@ -79,7 +82,7 @@
 - [x] DEPLOYMENT.md
 - [x] CHECKLIST_FINAL.md
 
-## 🎯 READY FOR PRODUCTION
+## 🎯 ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise) (critères)
 
 ✅ Security: Enterprise-grade
 ✅ Accessibility: WCAG 2.1 AA
@@ -89,4 +92,4 @@
 ✅ Docs: Complete
 ✅ Monitoring: Configured
 
-**STATUS: 🎉 PRODUCTION READY!**
+**STATUS: Production EN ATTENTE (autorisation explicite requise).**

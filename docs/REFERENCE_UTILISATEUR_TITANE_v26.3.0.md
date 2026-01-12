@@ -5,9 +5,11 @@
 
 **Version:** v26.3.0  
 **Date:** 2025-12-22  
-**Statut:** Production Ready ✅  
+**Statut:** Tech-Ready (Dev) / Production EN ATTENTE (autorisation)  
 **Auteur:** Humain Total / Kevin Thibault / TITANE Team  
 **License:** Proprietary (voir LICENSE.md)
+
+> NOTE (gouvernance): aucun déploiement/bundle production sans autorisation explicite.
 
 ---
 

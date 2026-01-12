@@ -2,9 +2,11 @@
 
 > **SUPER PROMPT #15 — Vision, Images, Audio 3D, Embeddings Multimodaux**
 >
-> **Status**: ✅ **PRODUCTION READY** (Phases 1-4 Complete)
+> **Status**: ✅ **Tech-Ready (Dev) / Production EN ATTENTE (autorisation)**
 > **Version**: v1.0.0-Ω
 > **Date**: 2025-12-09
+
+> NOTE (gouvernance): ce document est une spec/rapport historique; il ne constitue pas une autorisation de déploiement.
 
 ---
 
@@ -810,7 +812,7 @@ cargo test --lib multimodal -- --nocapture
 
 **Total Completed**: 4/11 phases (36%)
 **Time Spent**: ~6 hours
-**Status**: **PRODUCTION READY** (core functionality)
+**Status**: ✅ Tech-Ready (Dev) | **Production:** ⛔ EN ATTENTE (autorisation requise)
 
 ---
 
@@ -901,6 +903,6 @@ cargo run --example multimodal_demo
 
 ---
 
-**Status**: ✅ **PRODUCTION READY**
+**Status**: ✅ Tech-Ready (Dev) | **Production:** ⛔ EN ATTENTE (autorisation requise)
 **Next Phase**: OMEGA Integration + Memory OS Bridge
 **ETA v1.1**: 2-3 semaines

@@ -170,7 +170,7 @@ echo ""
 if [ $FAILED -eq 0 ]; then
     echo -e "${BOLD}${GREEN}╔════════════════════════════════════════════════════════════════════════╗${NC}"
     echo -e "${BOLD}${GREEN}║                      ✅ ALL CHECKS PASSED ✅                            ║${NC}"
-    echo -e "${BOLD}${GREEN}║                  System Ready for Production                          ║${NC}"
+    echo -e "${BOLD}${GREEN}║                  System ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)                          ║${NC}"
     echo -e "${BOLD}${GREEN}╚════════════════════════════════════════════════════════════════════════╝${NC}"
     exit 0
 else

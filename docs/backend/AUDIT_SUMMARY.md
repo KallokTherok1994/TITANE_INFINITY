@@ -5,6 +5,9 @@
 **Audit Duration:** Phase 0-3 Complete  
 **Status:** ✅ Documentation Phase Complete
 
+> NOTE (gouvernance): document historique (v26.2.0). Runtime actuel: v26.3.0.
+> Production: EN ATTENTE (autorisation explicite requise).
+
 ---
 
 ## Executive Summary
@@ -302,7 +305,7 @@ This backend audit has successfully delivered **comprehensive, production-grade 
 - ✅ Audit findings (10 P0 risks, 10 P1 quick wins)
 - ✅ Optimization roadmap (14 items, 4-week timeline)
 
-**Total Documentation:** 125KB, 5 files, production-ready
+**Total Documentation:** 125KB, 5 files, tech-ready (dev)
 
 ### Next Steps
 The implementation phase (Phase 4) is ready to begin with clear priorities:

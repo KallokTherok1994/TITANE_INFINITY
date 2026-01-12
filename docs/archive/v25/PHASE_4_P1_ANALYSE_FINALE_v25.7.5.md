@@ -117,7 +117,7 @@ Performance (1000 messages):
 
 ---
 
-### 2. DevTools Tabs Infrastructure ✅ **PRODUCTION-READY**
+### 2. DevTools Tabs Infrastructure ✅ **✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)**
 
 **Files créés (305 lignes):**
 
@@ -511,7 +511,7 @@ Raison: Vite architecture (graphe unifié)
    - Code qualité production ✅
    - 0 compromis UX ✅
 
-2. **DevTools tabs infrastructure:** Production-ready
+2. **DevTools tabs infrastructure:** Tech-Ready (Dev)
    - 305 lignes code propre ✅
    - Lazy runtime fonctionnel ✅
    - 0 erreurs TypeScript ✅

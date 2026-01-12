@@ -125,7 +125,7 @@ const contentVariants: Variants = {
 | Documentation | 100/100 ✅ |
 | Best Practices | 100/100 ✅ |
 
-### Production-Ready: **OUI ✅**
+### Tech-Ready (Dev); production en attente d’autorisation: **OUI ✅**
 
 ---
 
@@ -156,7 +156,7 @@ const contentVariants: Variants = {
 ## 🚀 RECOMMANDATIONS
 
 ### Immédiat
-✅ **RIEN** — Code production-ready
+✅ **RIEN** — Code tech-ready (dev)
 
 ### Futur (optionnel)
 - 🔮 Ajouter dark/light theme toggle (CSS variables déjà prêtes)
