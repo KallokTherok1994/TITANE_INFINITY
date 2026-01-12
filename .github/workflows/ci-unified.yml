@@ -202,7 +202,7 @@ jobs:
             patchelf
 
       - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
-        uses: dtolnay/rust-toolchain@1.83
+        uses: dtolnay/rust-toolchain@1.100
         with:
           components: clippy, rustfmt
 
@@ -308,7 +308,7 @@ jobs:
           cache: 'pnpm'
 
       - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
-        uses: dtolnay/rust-toolchain@1.83
+        uses: dtolnay/rust-toolchain@1.100
 
       - name: 🔧 Install system dependencies
         run: |
@@ -390,7 +390,7 @@ jobs:
         continue-on-error: true
 
       - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
-        uses: dtolnay/rust-toolchain@1.83
+        uses: dtolnay/rust-toolchain@1.100
 
       - name: 🔒 Install cargo-audit
         run: cargo install cargo-audit --locked

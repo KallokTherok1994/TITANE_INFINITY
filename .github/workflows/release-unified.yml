@@ -69,7 +69,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
-        uses: dtolnay/rust-toolchain@1.83
+        uses: dtolnay/rust-toolchain@1.100
         with:
           components: rustfmt, clippy
 
@@ -147,7 +147,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
-        uses: dtolnay/rust-toolchain@1.83
+        uses: dtolnay/rust-toolchain@1.100
 
       - name: 💾 Cache Rust dependencies
         uses: Swatinem/rust-cache@v2.7.3
@@ -225,7 +225,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
-        uses: dtolnay/rust-toolchain@1.83
+        uses: dtolnay/rust-toolchain@1.100
         with:
           targets: ${{ matrix.target }}
 
