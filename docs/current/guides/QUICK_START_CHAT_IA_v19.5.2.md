@@ -2,7 +2,7 @@
 
 **Date**: 10 décembre 2025  
 **Version**: TITANE∞ v19.5.2 OMEGA Pipeline  
-**Statut**: ✅ Tech-Ready (Dev) | **Production**: ⛔ EN ATTENTE (autorisation requise)
+**Statut**: ✅ Tech-Ready (Dev) (historique) | **Production**: ⛔ EN ATTENTE (autorisation requise)
 
 ---
 
@@ -582,6 +582,6 @@ git log --oneline -10
 
 **Version**: TITANE∞ v19.5.2 OMEGA Pipeline  
 **Date**: 10 décembre 2025  
-**Statut**: ✅ Tech-Ready (Dev) | **Production**: ⛔ EN ATTENTE (autorisation requise)
+**Statut**: ✅ Tech-Ready (Dev) (historique) | **Production**: ⛔ EN ATTENTE (autorisation requise)
 
 ✨ **Bon Chat!** ✨

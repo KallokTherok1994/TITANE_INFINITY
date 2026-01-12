@@ -2,7 +2,7 @@
 
 **Version**: v19.3.0  
 **Date**: 8 décembre 2025  
-**Status**: ✅ Tech-Ready (Dev) | **Production**: ⛔ EN ATTENTE (autorisation requise)
+**Status**: ✅ Tech-Ready (Dev) (historique) • Déploiement utilisateur en cours de validation (autorisation requise)
 
 > ⚠️ Note gouvernance : document historique. Aucun déploiement/bundle de production n’est autorisé sans validation explicite.
 
