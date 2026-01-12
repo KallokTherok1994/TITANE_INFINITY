@@ -86,7 +86,9 @@ pub async fn get_ia_policies() -> Result<Vec<IAPolicy>, TitaneError> {
         .map_err(|e| TitaneError::InternalError(format!("Failed to lock IA_POLICIES: {}", e)))?
         .clone();
 
-    log::info!("[GOVERNANCE] Returned {} IA policies", policies.len());
+    if policies.len() > 0 {
+        log::debug!("[GOVERNANCE] Returned {} IA policies", policies.len());
+    }
     Ok(policies)
 }
 
@@ -182,7 +184,7 @@ pub async fn get_permission_matrix() -> Result<PermissionMatrix, String> {
         .map_err(|e| format!("Failed to lock PERMISSION_MATRIX: {}", e))?
         .clone();
 
-    log::info!(
+    log::debug!(
         "[GOVERNANCE] Returned permission matrix with {} roles",
         matrix.roles.len()
     );
@@ -228,10 +230,12 @@ pub async fn get_security_log(
 
     let _ = filters;
 
-    log::info!(
-        "[GOVERNANCE] Returned {} security log entries",
-        log_entries.len()
-    );
+    if log_entries.len() > 0 {
+        log::debug!(
+            "[GOVERNANCE] Returned {} security log entries",
+            log_entries.len()
+        );
+    }
     Ok(log_entries)
 }
 
@@ -253,7 +257,7 @@ pub async fn append_security_log(entry: SecurityLogEntry) -> Result<(), String> 
         state.drain(0..1000);
     }
 
-    log::debug!("[GOVERNANCE] ✅ Appended security log entry");
+    log::debug!("[GOVERNANCE] Appended security log entry");
     Ok(())
 }
 
@@ -300,6 +304,8 @@ pub async fn clear_security_log() -> Result<(), String> {
     let count = state.len();
     state.clear();
 
-    log::info!("[GOVERNANCE] ✅ Cleared {} security log entries", count);
+    if count > 0 {
+        log::debug!("[GOVERNANCE] Cleared {} security log entries", count);
+    }
     Ok(())
 }

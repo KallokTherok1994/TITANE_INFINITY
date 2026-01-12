@@ -471,33 +471,42 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
 
     const handleFilesSelected = useCallback(
       (files: AnalyzedFile[]) => {
-        isDev && console.log('[ChatInput] Files selected:', files.length);
-        setUploadedFiles(files);
+        try {
+          isDev && console.log('[ChatInput] Files selected:', files.length);
+          setUploadedFiles(files);
 
-        // Notifier le parent
-        if (onFilesAnalyzed) {
-          onFilesAnalyzed(files);
-        }
-
-        // Créer un message formaté avec les fichiers
-        if (files.length > 0) {
-          const filesSummary = files
-            .filter(f => f.status === 'done' && f.analysis)
-            .map(
-              f => `📄 **${f.name}**\n${f.analysis?.summary || 'Analyse non disponible'}`
-            )
-            .join('\n\n');
-
-          if (filesSummary) {
-            const currentValue = value.trim();
-            const newValue = currentValue
-              ? `${currentValue}\n\n---\n📎 Fichiers importés:\n${filesSummary}`
-              : `📎 Fichiers importés pour analyse:\n${filesSummary}\n\nAnalyse ces fichiers et donne-moi un résumé.`;
-            setValue(newValue);
+          // Notifier le parent
+          if (onFilesAnalyzed) {
+            onFilesAnalyzed(files);
           }
+
+          // Créer un message formaté avec les fichiers
+          if (files.length > 0) {
+            const filesSummary = files
+              .filter(f => f.status === 'done' && f.analysis)
+              .map(
+                f => `📄 **${f.name}**\n${f.analysis?.summary || 'Analyse non disponible'}`
+              )
+              .join('\n\n');
+
+            if (filesSummary) {
+              const currentValue = value.trim();
+              const newValue = currentValue
+                ? `${currentValue}\n\n---\n📎 Fichiers importés:\n${filesSummary}`
+                : `📎 Fichiers importés pour analyse:\n${filesSummary}\n\nAnalyse ces fichiers et donne-moi un résumé.`;
+              setValue(newValue);
+            }
+          }
+        } catch (filesSelectedError) {
+          handleInputError(
+            filesSelectedError instanceof Error
+              ? filesSelectedError
+              : new Error(String(filesSelectedError)),
+            'files-selected-handler'
+          );
         }
       },
-      [onFilesAnalyzed, value]
+      [onFilesAnalyzed, value, handleInputError]
     );
 
     // ═══ PHASE 5.7.2: DICTATION HANDLER ═══

@@ -6,6 +6,30 @@
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
+// 🛡️ ULTRA-EARLY GLOBAL ERROR HANDLERS (PREVENT SILENT CRASHES)
+if (typeof window !== 'undefined') {
+  // Capture synchronous errors during boot
+  window.addEventListener('error', (event) => {
+    if (event.error instanceof Error) {
+      console.error('🚨 [BOOT-ERROR] Synchronous error:', {
+        message: event.error.message,
+        stack: event.error.stack,
+        filename: event.filename,
+        lineno: event.lineno,
+        colno: event.colno,
+      });
+    }
+  }, true); // Use capture phase to catch errors early
+
+  // Capture async rejections
+  window.addEventListener('unhandledrejection', (event) => {
+    console.error('🚨 [BOOT-ERROR] Unhandled Promise rejection:', {
+      reason: event.reason,
+      stack: event.reason?.stack ?? 'N/A',
+    });
+  }, true);
+}
+
 // 🛡️ Type augmentation for Sentry and Monitoring on window
 declare global {
   interface Window {
@@ -18,6 +42,10 @@ declare global {
 
 // 🛡️ TAURI INVOKE PROTECTION - Applied first
 import './tauri-protection-patch';
+
+// 🔍 BOOT DIAGNOSTICS - Track startup progression
+import { bootDiagnostics } from './boot-diagnostics';
+bootDiagnostics.log('MAIN', 'Starting TITANE∞ boot sequence');
 
 // 🌐 BROWSER MODE ADAPTER - Configure pour mode navigateur si nécessaire
 import './utils/browserModeAdapter';
@@ -922,9 +950,11 @@ if (!rootElement) {
 
 console.log('✅ Root element found:', rootElement);
 console.log('🎨 Starting React 18 render...');
+bootDiagnostics.log('REACT', 'Root element ready, starting React render');
 
 try {
   console.log('🚀 [v16.2.3] Rendering App complet (après validation AppMinimal)');
+  bootDiagnostics.log('REACT', 'Creating React root...');
 
   // 🔬 DIAGNOSTIC: Test minimal pour isoler problème écran noir
   // Décommenter la ligne ci-dessous pour tester React minimal
@@ -932,11 +962,15 @@ try {
   //   ReactDOM.createRoot(rootElement).render(<AppMinimal />);
   // });
 
-  ReactDOM.createRoot(rootElement).render(
+  const root = ReactDOM.createRoot(rootElement);
+  bootDiagnostics.log('REACT', 'Root created successfully');
+
+  root.render(
     <React.StrictMode>
       <ErrorBoundary
         context="App"
         onError={(error, errorInfo) => {
+          bootDiagnostics.error('REACT', 'ErrorBoundary caught error', error);
           logger.error(
             'Production Error Boundary caught',
             {
@@ -959,6 +993,7 @@ try {
     </React.StrictMode>
   );
 
+  bootDiagnostics.log('REACT', 'React render complete');
   console.log('\n╔════════════════════════════════════════════════════════════════╗');
   console.log('║  ✅ TITANE∞ REACT ROOT MOUNTED (App Complet Actif)           ║');
   console.log('╚════════════════════════════════════════════════════════════════╝\n');

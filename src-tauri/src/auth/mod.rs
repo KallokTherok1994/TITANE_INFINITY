@@ -23,7 +23,7 @@ pub use error::{AuthError, AuthResult};
 pub use keystore::Keystore;
 pub use roles::RoleManager;
 
-use log::{info, warn};
+use log::{debug, info};
 
 /// Initialiser Auth OS au démarrage de TITANE∞
 pub fn init_auth() -> AuthResult<()> {
@@ -45,7 +45,7 @@ pub fn init_auth() -> AuthResult<()> {
     if dev_token_present {
         info!("✓ Dev Token présent");
     } else {
-        warn!("⚠ Dev Token absent — Génération requise");
+        debug!("Dev Token absent — sera généré au besoin");
     }
 
     info!("🔐 AUTH OS — Initialisé avec succès");

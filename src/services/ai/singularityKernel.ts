@@ -513,6 +513,7 @@ class SingularityKernel {
   // ═══ CYCLE COGNITIF ═══
   private cognitiveInterval: NodeJS.Timeout | null = null;
   private readonly COGNITIVE_CYCLE_MS = 10000; // 10 secondes
+  private cycleCount = 0; // Pour contrôler la fréquence des logs
 
   private initialized = false;
 
@@ -790,17 +791,20 @@ class SingularityKernel {
    */
 
   private startCognitiveCycle(): void {
-    // Cycle cognitif toutes les 10 secondes
+    // Cycle cognitif toutes les 30 secondes (optimisé pour réduire les logs)
     this.cognitiveInterval = setInterval(() => {
       this.executeCognitiveCycle();
-    }, this.COGNITIVE_CYCLE_MS);
+    }, 30000);
 
     // Premier cycle immédiat
     this.executeCognitiveCycle();
   }
 
   private executeCognitiveCycle(): void {
-    logger.debug('Cognitive cycle...');
+    // Logger seulement tous les 5 cycles (2.5 minutes)
+    const shouldLog = this.cycleCount++ % 5 === 0;
+    
+    if (shouldLog) logger.debug('Cognitive cycle...');
 
     // 1. PERCEVOIR
     this.systemPerception = this.perceiveSystem();
@@ -826,7 +830,7 @@ class SingularityKernel {
     // 8. OPÉRER (Phase F)
     this.operateSingularity();
 
-    logger.debug('Cognitive cycle complete');
+    if (shouldLog) logger.debug('Cognitive cycle complete');
   }
 
   /**

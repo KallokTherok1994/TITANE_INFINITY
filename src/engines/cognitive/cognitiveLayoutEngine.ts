@@ -426,12 +426,12 @@ class CognitiveLayoutEngine {
       return;
     }
 
-    // Boucle d'observation toutes les 30 secondes
+    // Boucle d'observation toutes les 60 secondes (optimisé pour réduire les logs)
     this.observationInterval = setInterval(() => {
       this.observe();
-    }, 30000);
+    }, 60000);
 
-    logger.debug('👁️ Observation loop started (30s)');
+    logger.debug('👁️ Observation loop started (60s)');
   }
 
   private observe(): void {
