@@ -207,7 +207,7 @@ jobs:
           components: clippy, rustfmt
 
       - name: 💾 Cache Cargo dependencies
-        uses: Swatinem/rust-cache@v2.7.3
+        uses: Swatinem/rust-cache@v2.8.2
         with:
           workspaces: src-tauri
           cache-on-failure: true
@@ -325,7 +325,7 @@ jobs:
             patchelf
 
       - name: 💾 Cache Cargo dependencies
-        uses: Swatinem/rust-cache@v2.7.3
+        uses: Swatinem/rust-cache@v2.8.2
         with:
           workspaces: src-tauri
           cache-on-failure: true

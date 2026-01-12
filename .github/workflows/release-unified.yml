@@ -74,7 +74,7 @@ jobs:
           components: rustfmt, clippy
 
       - name: 💾 Cache Rust dependencies
-        uses: Swatinem/rust-cache@v2.7.3
+        uses: Swatinem/rust-cache@v2.8.2
         with:
           workspaces: src-tauri
           cache-on-failure: true
@@ -150,7 +150,7 @@ jobs:
         uses: dtolnay/rust-toolchain@1.83
 
       - name: 💾 Cache Rust dependencies
-        uses: Swatinem/rust-cache@v2.7.3
+        uses: Swatinem/rust-cache@v2.8.2
         with:
           workspaces: src-tauri
 
@@ -230,7 +230,7 @@ jobs:
           targets: ${{ matrix.target }}
 
       - name: 💾 Cache Rust dependencies
-        uses: Swatinem/rust-cache@v2.7.3
+        uses: Swatinem/rust-cache@v2.8.2
         with:
           workspaces: src-tauri
           key: ${{ matrix.target }}
