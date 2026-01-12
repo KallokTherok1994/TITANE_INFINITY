@@ -450,4 +450,4 @@ See `.github/workflows/e2e-tests.yml` (template above)
 
 **Last Updated:** 2026-01-03  
 **Maintainer:** TITANE∞ Team  
-**Status:** ✅ Tech-Ready (Dev); production en attente d’autorisation (Playwright), 🚧 In Progress (Vitest E2E)
+**Status:** ✅ Tech-Ready (Dev); déploiement utilisateur en cours de validation (autorisation requise) — Playwright, 🚧 In Progress (Vitest E2E)
