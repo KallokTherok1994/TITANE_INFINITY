@@ -316,6 +316,8 @@ class MetaKernel {
 
   // ═══ ZONES DE FRAGILITÉ ═══
   private fragilityZones: FragilityZone[] = [];
+  private fragilityLogCount = 0; // Compteur pour réduire les logs de fragilité
+  private titaneLawCycleCount = 0; // Compteur pour hysteresis des warnings
 
   private initialized = false;
   private observationInterval: NodeJS.Timeout | null = null;
@@ -713,10 +715,10 @@ class MetaKernel {
    * 1.3 Démarrer observation continue
    */
   private startContinuousObservation(): void {
-    // Observer toutes les 30 secondes
+    // Observer toutes les 60 secondes (optimisé pour réduire les logs)
     this.observationInterval = setInterval(() => {
       this.observe();
-    }, 30000);
+    }, 60000);
 
     // Première observation immédiate
     this.observe();
@@ -760,12 +762,16 @@ class MetaKernel {
     // Détecter zones de fragilité
     this.detectFragilityZones(observation);
 
-    logger.debug('System observation complete', {
-      stability: observation.stability.toFixed(1),
-      coherence: observation.coherence.toFixed(1),
-      cognitiveLoad: observation.cognitiveLoad.toFixed(1),
-      titaneAlignment: observation.titaneAlignment.toFixed(1),
-    });
+    // Logger seulement si des changements significatifs (>10% variation)
+    const shouldLog = this.shouldLogObservation(observation);
+    if (shouldLog) {
+      logger.debug('System observation complete', {
+        stability: observation.stability.toFixed(1),
+        coherence: observation.coherence.toFixed(1),
+        cognitiveLoad: observation.cognitiveLoad.toFixed(1),
+        titaneAlignment: observation.titaneAlignment.toFixed(1),
+      });
+    }
   }
 
   private calculateCognitiveLoad(): number {
@@ -831,12 +837,15 @@ class MetaKernel {
     // Mettre à jour l'état du kernel
     this.subKernels[kernel].active = true;
 
-    logger.debug('Kernel activation', {
-      kernel,
-      location,
-      purpose,
-      priority: action.priority,
-    });
+    // Logger seulement en cas de priorité élevée (>80) ou en mode verbose
+    if (priority > 80 || import.meta.env.VITE_LOG_VERBOSE === 'true') {
+      logger.debug('Kernel activation', {
+        kernel,
+        location,
+        purpose,
+        priority: action.priority,
+      });
+    }
 
     return action;
   }
@@ -978,22 +987,27 @@ class MetaKernel {
     // Évaluer chaque principe
     this.evaluateTitanePrinciples();
 
-    // Appliquer corrections si nécessaire
-    if (this.titanePrinciples.simplicityStructural < 80) {
+    // Appliquer corrections si nécessaire avec hysteresis (warning seulement tous les 5 cycles)
+    if (!this.titaneLawCycleCount) this.titaneLawCycleCount = 0;
+    this.titaneLawCycleCount++;
+    const shouldWarn = this.titaneLawCycleCount % 5 === 0;
+
+    if (this.titanePrinciples.simplicityStructural < 70 && shouldWarn) {
       logger.warn('Low structural simplicity, activating simplification', {
         score: this.titanePrinciples.simplicityStructural,
       });
       this.activateKernel('autofix', 'structural-simplification', 90);
     }
 
-    if (this.titanePrinciples.clarityFlows < 80) {
+    // Ajuster seuil de clarityFlows pour éviter warnings constants quand metrique à 0
+    if (this.titanePrinciples.clarityFlows > 0 && this.titanePrinciples.clarityFlows < 70 && shouldWarn) {
       logger.warn('Low flow clarity, activating harmonization', {
         score: this.titanePrinciples.clarityFlows,
       });
       this.activateKernel('cognitive', 'flow-clarification', 85);
     }
 
-    if (this.titanePrinciples.robustnessNatural < 80) {
+    if (this.titanePrinciples.robustnessNatural < 70 && shouldWarn) {
       logger.warn('Low natural robustness, activating stability', {
         score: this.titanePrinciples.robustnessNatural,
       });
@@ -1008,8 +1022,8 @@ class MetaKernel {
     // Simplicité structurelle basée sur cohérence
     this.titanePrinciples.simplicityStructural = cognitiveReport.coherenceScore;
 
-    // Clarté des flux basée sur taux de succès
-    this.titanePrinciples.clarityFlows = metrics.successRate;
+    // Clarté des flux basée sur taux de succès (avec valeur par défaut si pas de requêtes)
+    this.titanePrinciples.clarityFlows = metrics.totalRequests > 0 ? metrics.successRate : 75;
 
     // Robustesse naturelle basée sur stabilité (convert status to number)
     const healthStats = metricsEngine.getHealthStats();
@@ -1123,8 +1137,31 @@ class MetaKernel {
     }
 
     if (this.fragilityZones.length > 0) {
-      logger.warn('Fragility zones detected', { count: this.fragilityZones.length });
+      // Logger seulement tous les 3 warnings (réduire le spam)
+      if (!this.fragilityLogCount) this.fragilityLogCount = 0;
+      this.fragilityLogCount++;
+      
+      if (this.fragilityLogCount % 3 === 0) {
+        logger.warn('Fragility zones detected', { count: this.fragilityZones.length });
+      }
     }
+  }
+
+  /**
+   * Vérifier si on doit logger l'observation (changements significatifs uniquement)
+   */
+  private shouldLogObservation(observation: SystemObservation): boolean {
+    if (this.observations.length < 2) return true; // Toujours logger les 2 premières
+    
+    const previous = this.observations[this.observations.length - 2];
+    if (!previous) return true; // Safety check
+    const threshold = 10; // 10% de changement minimum
+    
+    const stabilityChange = Math.abs(observation.stability - previous.stability);
+    const coherenceChange = Math.abs(observation.coherence - previous.coherence);
+    const loadChange = Math.abs(observation.cognitiveLoad - previous.cognitiveLoad);
+    
+    return stabilityChange > threshold || coherenceChange > threshold || loadChange > threshold;
   }
 
   /**

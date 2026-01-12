@@ -25,6 +25,11 @@ interface PerformanceMemory {
 interface SingularityStateXP {
   xp?: number;
   level?: number;
+  adaptive?: {
+    xp?: number;
+    level?: number;
+    [key: string]: unknown;
+  };
   [key: string]: unknown;
 }
 
@@ -56,7 +61,7 @@ export class AutoAuditEngine {
   private intervalId: NodeJS.Timeout | null = null;
   private lastReport: AuditReport | null = null;
   private auditHistory: AuditReport[] = [];
-  private readonly SCAN_INTERVAL = 30000; // 30s
+  private readonly SCAN_INTERVAL = 60000; // 60s (optimisé pour réduire les logs)
   private readonly MAX_HISTORY = 100; // Garder 100 derniers audits
 
   /**
@@ -71,7 +76,7 @@ export class AutoAuditEngine {
       return;
     }
 
-    logger.debug('🔍 [AUTO-AUDIT] Starting automatic audits every 30s');
+    logger.debug('🔍 [AUTO-AUDIT] Starting automatic audits every 60s');
     this.isRunning = true;
 
     // Premier scan immédiat
@@ -393,8 +398,16 @@ export class AutoAuditEngine {
     try {
       const state = await secureInvoke<SingularityStateXP>('singularity_get_full_state');
 
-      // Vérifier champs XP
-      if (state.xp !== undefined && state.level !== undefined) {
+      // Vérifier champs XP dans adaptive layer
+      if (state.adaptive?.xp !== undefined && state.adaptive?.level !== undefined) {
+        results.push({
+          timestamp: Date.now(),
+          category: 'xp',
+          status: 'ok',
+          message: `XP structure: Level ${state.adaptive.level}, XP ${state.adaptive.xp}`,
+        });
+      } else if (state.xp !== undefined && state.level !== undefined) {
+        // Fallback: vérifier au niveau root (legacy)
         results.push({
           timestamp: Date.now(),
           category: 'xp',

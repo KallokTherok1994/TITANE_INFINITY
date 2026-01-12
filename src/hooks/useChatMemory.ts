@@ -75,7 +75,10 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
       compressed: stats.compressed,
     });
 
-    logger.debug(`Loaded ${history.length} messages for mode ${options.mode}`);
+    const verboseMemory = import.meta.env.VITE_CHAT_MEMORY_VERBOSE === '1';
+    if (verboseMemory || history.length > 0) {
+      logger.debug(`Loaded ${history.length} messages for mode ${options.mode}`);
+    }
 
     // Auto-cleanup si enabled
     if (options.autoCleanup) {

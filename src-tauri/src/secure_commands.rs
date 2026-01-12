@@ -621,7 +621,7 @@ pub async fn check_system_integrity() -> Result<SecureResponse<String>, String> 
     #[cfg(feature = "mock")]
     {
         // En mode mock, renvoyer succès immédiat pour éviter faux positifs pendant le dev frontend
-        log::info!("[Security] check_system_integrity (mock) → OK");
+        log::debug!("[Security] check_system_integrity (mock) → OK");
         Ok(SecureResponse::success(
             "Mock integrity: OK — validation bypassed in mock mode".to_string(),
         ))

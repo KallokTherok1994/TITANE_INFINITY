@@ -2,6 +2,160 @@
   "snapshots": [],
   "logs": [
     {
+      "id": "ui-1768256595722-3ipcjup6",
+      "timestamp": 1768256595722,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768255989623-lh323xlk",
+      "timestamp": 1768255989623,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768255567675-ex6o3rit",
+      "timestamp": 1768255567675,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768255414970-y7zwulr5",
+      "timestamp": 1768255414970,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Importing a module script failed. (http://localhost:5173/.vite-cache/deps/chunk-GX3VV2FZ.js?v=ac36cb93:903:34)"
+    },
+    {
+      "id": "ui-1768255344210-dkhi8ccj",
+      "timestamp": 1768255344210,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768255338649-tnlj2w7t",
+      "timestamp": 1768255338649,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768255084539-oo82t3q7",
+      "timestamp": 1768255084539,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768254974065-33lnyq7i",
+      "timestamp": 1768254974065,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768254690778-nxan1c3t",
+      "timestamp": 1768254690778,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768254099177-9lzxtb75",
+      "timestamp": 1768254099177,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768254029939-8cxcnlu8",
+      "timestamp": 1768254029939,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768253976459-4jm84yh1",
+      "timestamp": 1768253976459,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768253903311-7kn4x9q0",
+      "timestamp": 1768253903311,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768253839644-pb2iusu4",
+      "timestamp": 1768253839644,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768253550583-faj3x2go",
+      "timestamp": 1768253550583,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768252745081-5d4z586g",
+      "timestamp": 1768252745081,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768252179236-6301u7tj",
+      "timestamp": 1768252179236,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768251447936-8kegvmqz",
+      "timestamp": 1768251447936,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768250009935-7xmekt1e",
+      "timestamp": 1768250009935,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768249194410-5ay4s59r",
+      "timestamp": 1768249194410,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768248756430-550jamjc",
+      "timestamp": 1768248756430,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768247267468-ebip34vq",
+      "timestamp": 1768247267468,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
       "id": "ui-1768066496497-m189hrfr",
       "timestamp": 1768066496497,
       "level": "Info",
@@ -2677,7 +2831,7 @@
   "knowledge": [],
   "rituals": [],
   "metadata": {
-    "last_validation_ts": 1768066496680,
+    "last_validation_ts": 1768256597982,
     "last_compaction_ts": null
   }
 }

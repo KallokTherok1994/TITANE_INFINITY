@@ -6,6 +6,7 @@
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import path from 'node:path';
+import { browser as playwrightBrowser } from '@vitest/browser-playwright';
 
 export default defineConfig({
   plugins: [react()],
@@ -21,8 +22,7 @@ export default defineConfig({
     // Browser mode configuration for WebGL/Three.js tests
     browser: {
       enabled: true,
-      // @ts-expect-error - Vitest typing issues with provider/name
-      provider: 'playwright',
+      provider: playwrightBrowser,
       name: 'chromium',
       headless: true,
       screenshotOnFailure: false,

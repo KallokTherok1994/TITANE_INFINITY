@@ -293,7 +293,16 @@ export class TauriInvokeProtector {
         this.pendingInvokes.delete(command);
       }
 
-      logger.warn(`[TauriProtector] Command ${command} failed:`, error);
+      const errMsg = error instanceof Error ? error.message : String(error);
+      const isMissingCmd = errMsg.includes('not found');
+      const isPermission = errMsg.toLowerCase().includes('permission denied');
+
+      // In dev, downgrade noisy warnings for missing/forbidden commands
+      if (!import.meta.env.PROD && (isMissingCmd || isPermission)) {
+        logger.debug(`[TauriProtector] Command ${command} failed (dev-muted):`, errMsg);
+      } else {
+        logger.warn(`[TauriProtector] Command ${command} failed:`, error);
+      }
       if (this.isTestEnv) {
         // En mode test, propager l'erreur pour permettre les assertions
         throw error;
@@ -391,7 +400,11 @@ export class TauriInvokeProtector {
    */
   private createFallbackResponse<T>(command: string | undefined, error: unknown): T {
     const safeCommand = command || 'unknown_command';
-    logger.debug(`[TauriProtector] Using fallback for ${safeCommand}`);
+    // Silence noisy fallbacks in dev unless explicitly enabled
+    const verboseFallback = import.meta.env.VITE_TAURI_FALLBACK_VERBOSE === '1';
+    if (verboseFallback || import.meta.env.PROD) {
+      logger.debug(`[TauriProtector] Using fallback for ${safeCommand}`);
+    }
 
     const errorMessage = error instanceof Error ? error.message : String(error);
 
