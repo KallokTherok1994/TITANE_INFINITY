@@ -4,6 +4,9 @@
 **Version:** 26.2.0  
 **Architecture:** 4-Ring Model + 9 Cognitive Engines + OMEGA Pipeline v2
 
+> NOTE (gouvernance): document historique (v26.2.0). Runtime actuel: v26.3.0.
+> Production: EN ATTENTE (autorisation explicite requise).
+
 ---
 
 ## Table of Contents

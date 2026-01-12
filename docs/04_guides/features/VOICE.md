@@ -2,7 +2,9 @@
 
 **Version**: v19.3.0  
 **Date**: 8 décembre 2025  
-**Status**: Production Ready ✅
+**Status**: Document historique (v19.3.0) — Production EN ATTENTE (autorisation)
+
+> NOTE (gouvernance): ce document est une archive technique; il ne constitue pas une autorisation de déploiement.
 
 ---
 

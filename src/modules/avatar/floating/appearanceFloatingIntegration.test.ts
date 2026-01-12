@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v24.3.0 — APPEARANCE INTEGRATION TESTS
+//   TITANE∞ v26.3.0 — APPEARANCE INTEGRATION TESTS
 //   Test appearance sync with Three.js materials
 //   NOTE: These tests require WebGL/Three.js. Skipped when unavailable.
 // ═══════════════════════════════════════════════════════════════════════════

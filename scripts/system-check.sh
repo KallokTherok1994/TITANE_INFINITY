@@ -1,6 +1,6 @@
 #!/bin/bash
 # TITANE∞ v21 — Complete System Check
-# Verify all components are production ready
+# Verify all components are tech-ready (dev); production en attente d’autorisation
 
 set -e
 
@@ -235,7 +235,7 @@ echo ""
 if [ "$FAILED" -eq 0 ] && [ "$WARNINGS" -lt 5 ]; then
     echo "╔════════════════════════════════════════════════════════════╗"
     echo "║                                                            ║"
-    echo "║   🎉 SYSTEM STATUS: PRODUCTION READY                       ║"
+    echo "║   🎉 SYSTEM STATUS: ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)                       ║"
     echo "║                                                            ║"
     echo "║   All critical checks passed!                              ║"
     echo "║   Minor warnings are acceptable for deployment.            ║"

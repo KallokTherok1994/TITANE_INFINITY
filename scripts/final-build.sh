@@ -1,6 +1,6 @@
 #!/bin/bash
 # TITANE∞ v21 — Final Build & Deploy Script
-# All warnings fixed, ready for production
+# All warnings fixed, ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)
 
 set -e
 
@@ -10,7 +10,7 @@ echo "║   🚀 TITANE∞ FINAL BUILD & DEPLOY — v21                   ║"
 echo "║                                                            ║"
 echo "║   ✅ 0 ESLint warnings                                     ║"
 echo "║   ✅ 10 Clippy warnings (non-blocking)                     ║"
-echo "║   ✅ Production ready                                      ║"
+echo "║   ✅ tech-ready (dev); production en attente d’autorisation                                      ║"
 echo "║                                                            ║"
 echo "╚════════════════════════════════════════════════════════════╝"
 echo ""
@@ -55,7 +55,7 @@ Metrics:
 - ESLint Warnings: 0
 - Clippy Warnings: 10 (non-blocking)
 
-Status: ✅ PRODUCTION READY
+Status: ✅ ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)
 
 Contents:
 - dist/ (frontend assets)
@@ -85,7 +85,7 @@ echo "║   Package: ${RELEASE_DIR}"
 echo "║                                                            ║"
 echo "║   Next Steps:                                              ║"
 echo "║   1. Test: cd ${RELEASE_DIR} && ./titane-infinity         ║"
-echo "║   2. Deploy to production server                           ║"
+echo "║   2. déploiement production (autorisation requise) server                           ║"
 echo "║   3. Monitor logs for issues                               ║"
 echo "║                                                            ║"
 echo "║   Status: ✅ READY FOR DEPLOYMENT                          ║"

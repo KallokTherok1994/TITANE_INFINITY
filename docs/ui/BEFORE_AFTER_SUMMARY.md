@@ -3,7 +3,10 @@
 **Project:** UI/UX Master Audit + "Titanium Dark" Implementation  
 **Version:** 26.2.0  
 **Date:** 2026-01-03  
-**Status:** ✅ 100% COMPLETE
+**Status:** ✅ 100% COMPLETE (document historique UI/UX)
+
+> NOTE (gouvernance): ce document reflète un état UI/UX v26.2.0. Il ne constitue pas une autorisation de déploiement.
+> Runtime actuel: v26.3.0. Production: EN ATTENTE (autorisation explicite requise).
 
 ---
 

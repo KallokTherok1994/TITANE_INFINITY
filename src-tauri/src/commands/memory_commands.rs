@@ -1,6 +1,6 @@
 // TITANE∞ v15 — MEMORY COMMANDS
 // Frontend-accessible memory management commands
-// Architecture v15: Clean, documented, production-ready
+// Architecture v15: Clean, documented, tech-ready (dev)
 
 use crate::commands::ai_chat::AIChatState;
 use serde::{Deserialize, Serialize};

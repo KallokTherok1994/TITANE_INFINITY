@@ -1073,7 +1073,7 @@ VITE_FEATURE_FLAG_MEMORY_V2=true
 # Create feature
 ./scripts/git/new-feature.sh <name>
 
-# Deploy to production
+# déploiement production (autorisation requise)
 ./scripts/git/merge-dev-to-stable.sh
 ./runtime/stable/build.sh
 

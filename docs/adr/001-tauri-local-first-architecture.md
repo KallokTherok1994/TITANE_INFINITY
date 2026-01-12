@@ -178,7 +178,7 @@ Performance:
 - Memory idle: 58MB (vs 60MB target ✅)
 
 Tests:
-- Vitest: 2056/2122 passing (97.0%)
+- Vitest: ✅ gate `copilot-xs:test` OK (validation locale)
 - Cargo tests: 23/23 passing
 - E2E Tauri: 12/12 scenarios ✅
 ```

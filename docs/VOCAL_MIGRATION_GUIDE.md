@@ -2,13 +2,13 @@
 
 **Date**: 8 décembre 2025  
 **Version**: v20.0  
-**Status**: PRODUCTION READY
+**Status**: ✅ Tech-Ready (Dev) | **Production**: ⛔ EN ATTENTE (autorisation requise)
 
 ---
 
 ## 🎯 Objectif
 
-Ce guide documente la migration de l'ancienne commande `voice_synthesize_speech()` (DEPRECATED) vers la nouvelle commande `speak()` (PRODUCTION).
+Ce guide documente la migration de l'ancienne commande `voice_synthesize_speech()` (DEPRECATED) vers la nouvelle commande `speak()` (ACTIVE).
 
 ---
 
@@ -41,11 +41,11 @@ await invoke('voice_synthesize_speech', {
 
 ---
 
-## ✅ Commande PRODUCTION
+## ✅ Commande ACTIVE
 
 ### `speak()` (src-tauri/src/commands/ai_chat.rs)
 
-**Status** : ✅ PRODUCTION READY  
+**Status** : ✅ Active (Dev) | **Production**: ⛔ EN ATTENTE (autorisation requise)  
 **Features** :
 - ✅ Synthèse TTS réelle (espeak, piper, Google TTS)
 - ✅ Multi-provider avec fallback automatique
@@ -99,7 +99,7 @@ const synthesizeSpeech = async (text: string) => {
 };
 ```
 
-#### Après (PRODUCTION)
+#### Après (COMMANDE ACTIVE)
 ```typescript
 import { invoke } from '@tauri-apps/api/tauri';
 
@@ -151,7 +151,7 @@ const synthesizeSpeech = async (text: string) => {
 
 | Feature | `voice_synthesize_speech()` (OLD) | `speak()` (NEW) |
 |---------|-----------------------------------|-----------------|
-| **Status** | ❌ DEPRECATED | ✅ PRODUCTION |
+| **Status** | ❌ DEPRECATED | ✅ ACTIVE |
 | **Audio généré** | ❌ Vide (STUB) | ✅ Réel (TTS) |
 | **Providers** | ❌ Aucun | ✅ espeak, piper, Google TTS |
 | **Fallback** | ❌ Aucun | ✅ Auto-fallback providers |
@@ -307,7 +307,7 @@ if (isTitane) {
 
 ### Q1 : Pourquoi migrer maintenant ?
 
-`voice_synthesize_speech()` est un STUB retournant audio vide. La commande `speak()` fonctionne réellement et est production-ready depuis v19.0.
+`voice_synthesize_speech()` est un STUB retournant audio vide. La commande `speak()` fonctionne réellement et est tech-ready (dev) depuis v19.0.
 
 ### Q2 : Puis-je garder l'ancien code temporairement ?
 
@@ -346,4 +346,4 @@ await voiceService.speak(text, undefined, true);
 
 Date: 8 décembre 2025  
 Version: v20.0  
-Status: PRODUCTION READY
+Status: ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)

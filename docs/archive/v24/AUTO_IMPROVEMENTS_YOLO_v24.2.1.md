@@ -260,7 +260,7 @@ $ npx tsc --noEmit | grep "ConversationManager"
 ### Moyen terme (Mois 1-3)
 
 1. **Full ConversationManager**: Multi-agent orchestration
-2. **Rust production-ready**: 0 unwrap() P0, AppError pattern
+2. **Rust tech-ready (dev)**: 0 unwrap() P0, AppError pattern
 3. **CI/CD complete**: Already operational
 
 ---
@@ -331,7 +331,7 @@ $ npx tsc --noEmit | grep "ConversationManager"
 **ROI**:
 
 - **15 min investis** → **10 semaines roadmap accélérées**
-- **4 TODOs critiques** → **Production-ready AI core**
+- **4 TODOs critiques** → **Tech-Ready (Dev) AI core**
 - **Audit Rust** → **-95% crash risk** (when P0 executed)
 
 ---
@@ -346,11 +346,11 @@ Le mode auto-amélioration a permis de:
 2. ✅ Créer roadmap Rust stability
 3. ✅ Découvrir optimisations déjà en place
 4. ✅ 0 erreurs TypeScript ajoutées
-5. ✅ Production-ready AI conversation core
+5. ✅ Tech-Ready (Dev) AI conversation core
 
 **Recommandation**:
 
-- **GO LIVE** avec ConversationManager après implémentation provider methods
+- **mise en production : autorisation requise** avec ConversationManager après implémentation provider methods
 - **START** Rust unwrap() P0 audit immédiatement (Semaine 2)
 - **MONITOR** batch streaming performance metrics
 

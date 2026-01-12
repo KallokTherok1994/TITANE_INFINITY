@@ -190,7 +190,7 @@ export interface MetricsCardProps {
 ./titane deploy
 ```
 
-**Résultat attendu:** Production ready
+**Résultat attendu:** tech-ready (dev); production en attente d’autorisation
 
 ---
 

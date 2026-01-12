@@ -2,8 +2,10 @@
 
 **Version:** 26.0.0
 **Date:** 2025-12-17
-**Status:** PRODUCTION READY
+**Status:** ✅ Tech-Ready (Dev) (historique) | **Production:** ⛔ EN ATTENTE (autorisation requise)
 **Auteur:** Claude Code Analysis
+
+> ⚠️ Note gouvernance : document historique. Pas une autorisation de déploiement.
 
 ---
 

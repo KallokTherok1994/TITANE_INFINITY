@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0",
   "productName": "Titan-Dev",
-  "version": "26.2.0-dev",
+  "version": "26.3.0-dev",
   "identifier": "com.titane.infinity.dev",
   "build": {
     "devUrl": "http://127.0.0.1:5173",

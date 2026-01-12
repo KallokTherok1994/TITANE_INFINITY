@@ -3,7 +3,7 @@
  * ═══════════════════════════════════════════════
  *
  * Contrôle centralisé des features optionnelles et appels externes
- * Mode par défaut: 100% LOCAL (production-ready)
+ * Mode par défaut: 100% LOCAL (tech-ready (dev))
  */
 
 type EnvValue = string | boolean | undefined;

@@ -3,6 +3,9 @@
 **Version:** 26.2.0
 **Status:** ACTIVE IMPLEMENTATION
 
+> NOTE (gouvernance): document historique (v26.2.0). Les pourcentages “production readiness” ici sont indicatifs
+> et ne constituent pas une autorisation de déploiement. Runtime actuel: v26.3.0. Production: EN ATTENTE.
+
 ---
 
 ## 📋 EXECUTIVE SUMMARY

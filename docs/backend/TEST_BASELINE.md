@@ -4,6 +4,9 @@
 **Version:** 26.2.0  
 **Purpose:** Document exact test commands, current status, and coverage gaps
 
+> NOTE (gouvernance): document historique (v26.2.0). Runtime actuel: v26.3.0.
+> Builds/bundles production interdits sans autorisation explicite.
+
 ---
 
 ## Table of Contents

@@ -282,7 +282,7 @@ Le système respecte la **hiérarchie fondamentale**:
 
 **Version:** TITANE∞ v25.3.0 → v22Ω  
 **Constitution:** v1.0 (Scellée 16 décembre 2025)  
-**Statut:** PRODUCTION READY ✅  
+**Statut:** ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise) ✅  
 **Audit:** PASS 5/5 ✅  
 **Tests:** 30/30 PASS ✅  
 **Deployed:** GitHub origin/MAIN ✅

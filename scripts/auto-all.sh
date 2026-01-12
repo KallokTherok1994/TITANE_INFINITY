@@ -54,7 +54,7 @@ print_banner() {
     echo "║   Phase 1: Clean & Prepare                                  ║"
     echo "║   Phase 2: Build Frontend & Backend                         ║"
     echo "║   Phase 3: Run Tests                                        ║"
-    echo "║   Phase 4: Deploy to Production                             ║"
+    echo "║   Phase 4: Déploiement production (autorisation requise)                             ║"
     echo "║                                                              ║"
     echo "╚══════════════════════════════════════════════════════════════╝"
     echo -e "${NC}"
@@ -185,7 +185,7 @@ phase3_test() {
 ###############################################################################
 
 phase4_deploy() {
-    print_step "Phase 4: Deploy to Production"
+    print_step "Phase 4: Déploiement production (autorisation requise)"
     
     # Create release package
     echo "Creating release package..."

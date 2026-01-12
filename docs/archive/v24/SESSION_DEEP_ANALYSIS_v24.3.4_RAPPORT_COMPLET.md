@@ -154,7 +154,7 @@ responseCache.startAutoCleanup(); // ✅ Managed lifecycle
 - ✅ Référence stockée → cleanup possible
 - ✅ Méthode `destroy()` → testable
 - ✅ HMR safe → pas de timers orphelins
-- ✅ Production ready
+- ✅ tech-ready (dev); production en attente d’autorisation
 
 ---
 
@@ -614,5 +614,5 @@ if (!state) return <Loading />; // ✅ Required
 **Auteur**: GitHub Copilot (Claude Sonnet 4.5)  
 **Version**: TITANE∞ v24.3.4  
 **License**: Proprietary (© 2025 TITANE Team)  
-**Status**: ✅ PRODUCTION READY  
+**Status**: ✅ ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)  
 **Next Phase**: Null Safety Validation (14 fichiers restants)

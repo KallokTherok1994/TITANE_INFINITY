@@ -721,7 +721,7 @@ const commandMap = {
 ║  ⚡ Polling: 5s interval, cleanup automatique                 ║
 ║  🎨 Variants: success/warning/error conditionnels             ║
 ║                                                               ║
-║  Status: ✅ PRODUCTION READY                                  ║
+║  Status: ✅ ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)                                  ║
 ║  Tests: ⏳ Manual validation required (15 min)                ║
 ║  Score: 95% World Class                                       ║
 ║                                                               ║

@@ -813,7 +813,7 @@ async function measured<T>(name: string, fn: () => Promise<T>): Promise<T> {
 ║                                                           ║
 ║  Score Global Combiné: 98.5% / 100 ⭐⭐⭐⭐⭐            ║
 ║                                                           ║
-║         Statut: PRODUCTION-READY CONFIRMÉ ✅              ║
+║         Statut: ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise) CONFIRMÉ ✅              ║
 ║                                                           ║
 ╚═══════════════════════════════════════════════════════════╝
 ```

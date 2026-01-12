@@ -274,7 +274,7 @@ docs/
 ║  Documentation:            ✅ COMPLETE                     ║
 ║  Test Coverage:            ✅ 97.4%                        ║
 ╠═══════════════════════════════════════════════════════════╣
-║            🎉 PRODUCTION READY 🎉                         ║
+║            🎉 ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise) 🎉                         ║
 ╚═══════════════════════════════════════════════════════════╝
 ```
 
@@ -308,7 +308,7 @@ J'ai transformé TITANE∞ en **système d'intelligence prédictive** complet :
 3. Clique dessus pour voir la magie opérer !
 4. Observe les prédictions se mettre à jour chaque 5 secondes
 
-**Tout est testé, documenté et production-ready ! 🚀**
+**Tout est testé, documenté et tech-ready (dev) ! 🚀**
 
 Des questions ? Besoin d'explications ? Je suis là ! 😊
 

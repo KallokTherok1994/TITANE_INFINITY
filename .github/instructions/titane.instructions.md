@@ -6,9 +6,9 @@
 
 # TITANE_INFINITY — Instructions Globales
 
-**Version:** 26.2.0  
+**Version:** 26.3.0  
 **Conformité:** 98/100 🎯  
-**Dernière mise à jour:** 2026-01-02
+**Dernière mise à jour:** 2026-01-11
 
 ---
 

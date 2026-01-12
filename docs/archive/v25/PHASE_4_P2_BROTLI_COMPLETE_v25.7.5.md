@@ -378,7 +378,7 @@ Refs: #P2-A PHASE_4_P2_BROTLI_COMPLETE_v25.7.5.md"
 
 **Raison:**
 
-- Production-ready (95%+ browser support)
+- Tech-Ready (Dev) (95%+ browser support)
 - Aucun risque (fallback gzip automatique)
 - Impact immédiat (-160 KB bundle)
 - Configuration serveur simple

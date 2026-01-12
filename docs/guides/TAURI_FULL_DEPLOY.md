@@ -2,7 +2,10 @@
 
 **Script:** `scripts/deployment/tauri-full-deploy.sh`  
 **Version:** 26.2.0  
-**Type:** Full deployment pipeline automatisé
+**Type:** Pipeline de déploiement (document historique; exécution soumise à gouvernance)
+
+> NOTE (gouvernance): ce guide décrit une chaîne de build/package. Les builds/bundles production sont interdits
+> sans autorisation explicite. Runtime actuel: v26.3.0. Production: EN ATTENTE (autorisation requise).
 
 ---
 

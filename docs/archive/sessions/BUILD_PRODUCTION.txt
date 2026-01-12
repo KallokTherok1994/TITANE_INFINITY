@@ -2,7 +2,7 @@
 ║                                                               ║
 ║  🎉 BUILD PRODUCTION - GUIDE COMPLET                          ║
 ║                                                               ║
-║  TITANE∞ v15.5.0 - Production Ready                          ║
+║  TITANE∞ v15.5.0 - Tech-Ready (Dev); production en attente d’autorisation                          ║
 ║                                                               ║
 ╚═══════════════════════════════════════════════════════════════╝
 

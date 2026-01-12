@@ -161,7 +161,7 @@ echo ""
 # STATUT FINAL
 # ═══════════════════════════════════════════════════════════
 
-echo "✅ STATUT: PRODUCTION READY"
+echo "✅ STATUT: ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)"
 echo "─────────────────────────────────────────────────────────"
 echo "✅ Compilation TypeScript validée"
 echo "✅ Intégrations backend connectées"

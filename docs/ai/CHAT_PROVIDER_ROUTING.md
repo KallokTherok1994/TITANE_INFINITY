@@ -2,7 +2,7 @@
 
 **Version:** 1.0  
 **Date:** 2026-01-03  
-**Status:** Production Ready
+**Status:** ✅ Tech-Ready (Dev) | **Production:** ⛔ EN ATTENTE (autorisation requise)
 
 ---
 

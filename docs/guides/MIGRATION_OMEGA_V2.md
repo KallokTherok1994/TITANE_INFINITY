@@ -3,7 +3,7 @@
 **Version:** 24.2.0  
 **Date:** Janvier 2025  
 **Auteur:** Architecture Team TITANE∞  
-**Status:** ✅ STABLE (production-ready)
+**Status:** ✅ STABLE (tech-ready (dev))
 
 ---
 
@@ -427,5 +427,5 @@ conversation-engine = []
 
 ---
 
-**Status:** ✅ OMEGA v2 production-ready depuis v24.2.0  
+**Status:** ✅ OMEGA v2 tech-ready (dev) depuis v24.2.0  
 **Deadline migration:** v25.0.0 (suppression chat_send_message)

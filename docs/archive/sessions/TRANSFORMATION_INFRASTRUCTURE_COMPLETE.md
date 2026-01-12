@@ -182,7 +182,7 @@ Located in `transformation-start.sh` (7.2KB)
 - [ ] Fix clippy warnings
 - [ ] Resolve TODO/FIXME
 
-**Deliverables**: 0 unwrap(), 0 clippy warnings, production-ready code
+**Deliverables**: 0 unwrap(), 0 clippy warnings, tech-ready (dev) code
 
 ---
 

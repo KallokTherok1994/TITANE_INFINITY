@@ -4,6 +4,9 @@
 **Date:** 2025-12-23  
 **Backend:** Rust + Tauri v2.2.0
 
+> NOTE (gouvernance): référence historique v26.2. Runtime actuel: v26.3.0.
+> Production: EN ATTENTE (autorisation explicite requise).
+
 ---
 
 ## 🎯 VUE D'ENSEMBLE

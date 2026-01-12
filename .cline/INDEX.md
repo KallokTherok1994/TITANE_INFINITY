@@ -1,7 +1,7 @@
 # 📚 CLINE MCP — Documentation Index
 
 **TITANE∞ v26.2.0 | Configuration Complète**  
-**Created:** 2026-01-03 | **Status:** ✅ Production Ready
+**Created:** 2026-01-03 | **Status:** ✅ Tech-Ready (Dev); production en attente d’autorisation
 
 ---
 

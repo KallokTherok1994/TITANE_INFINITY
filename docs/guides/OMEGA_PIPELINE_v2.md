@@ -1,8 +1,10 @@
 # OMEGA Pipeline v2 — Architecture Documentation
 
 **Version:** v26.2.0  
-**Status:** Production Ready ✅  
+**Status:** Document historique (v26.2.0) — Production EN ATTENTE (autorisation)  
 **Last Updated:** 2025-12-20
+
+> NOTE (gouvernance): la production est bloquée sans autorisation explicite.
 
 ---
 

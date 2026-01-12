@@ -238,7 +238,7 @@ Documentation/
 - 🔧 **Zero Errors** — Build successful sans erreurs
 - 🎨 **Design Excellence** — UI/UX cohérente et animée
 - 📚 **Documentation Master** — 2 guides complets créés
-- 🚀 **Production Ready** — Build optimisé et fonctionnel
+- 🚀 **Tech-Ready (Dev); production en attente d’autorisation** — Build optimisé et fonctionnel
 
 ---
 

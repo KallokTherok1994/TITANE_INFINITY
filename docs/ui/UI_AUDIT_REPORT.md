@@ -5,6 +5,9 @@
 **Auditor:** GitHub Copilot Coding Agent  
 **Tech Stack:** React 19.2.3, TypeScript 5.9.3, Tailwind CSS 3.4, Vite 6  
 
+> NOTE (gouvernance): document historique UI/UX (v26.2.0). Runtime actuel: v26.3.0.
+> Production: EN ATTENTE (autorisation explicite requise).
+
 ---
 
 ## Executive Summary

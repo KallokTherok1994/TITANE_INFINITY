@@ -281,8 +281,8 @@ export const DashboardPage = (): JSX.Element => {
               },
               {
                 icon: '✅',
-                title: 'Build v16: 0 warnings, 0 errors (143 tests pass)',
-                time: 'Production ready',
+                title: 'Build Titan-Stable v26.3.0 validé (AppImage + DEB)',
+                time: 'stable build validé (local) — déploiement utilisateur à valider',
                 type: 'build',
               },
             ].map((activity, index) => (

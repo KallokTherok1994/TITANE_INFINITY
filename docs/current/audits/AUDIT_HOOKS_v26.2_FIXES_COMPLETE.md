@@ -422,7 +422,7 @@ See: AUDIT_HOOKS_v26.2_COMPLETE.md + AUDIT_HOOKS_v26.2_FIXES_COMPLETE.md"
 ✅ **Ref pattern documenté** (useAudioSettings)
 
 **Hooks TITANE∞ v26.2:**
-- Production-ready ✅
+- Tech-Ready (Dev) ✅
 - Type-safe ✅
 - Correctement dépendus ✅
 - Documentés ✅

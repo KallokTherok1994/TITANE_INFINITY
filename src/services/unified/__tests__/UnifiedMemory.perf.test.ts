@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v24.3.0 — Proprietary License
+ * TITANE_INFINITY v26.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * v22Ω AI Performance Optimizations Compatible

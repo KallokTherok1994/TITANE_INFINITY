@@ -4,6 +4,9 @@
 **Session Type:** Deep Reflection & Strategic Analysis
 **Status:** ✅ COMPLETE
 
+> NOTE (gouvernance): document historique (v26.2.0). Les sections “Production Readiness” ne valent pas autorisation.
+> Runtime actuel: v26.3.0. Production: EN ATTENTE (autorisation explicite requise).
+
 ---
 
 ## 📊 OVERVIEW
@@ -276,7 +279,7 @@ This document provides a high-level executive summary of the comprehensive analy
 **Current Market Position:**
 - Unique multi-modal AI system
 - Strong cognitive architecture foundation
-- Production-ready frontend/backend
+- Tech-Ready (Dev) frontend/backend
 - Estimated value: **€5-15M** (conservative)
 
 **After Optimization (12 months):**
@@ -293,7 +296,7 @@ This document provides a high-level executive summary of the comprehensive analy
 - Complete P0 security fixes (2 weeks)
 - Complete P1 performance (8 weeks)
 - Basic CI/CD (2 weeks)
-- Total: **8-10 weeks to production-ready**
+- Total: **8-10 weeks to tech-ready (dev)**
 
 **Current State → World-Class (Week 48):**
 - Complete P0-P2 (16 weeks)
@@ -309,7 +312,7 @@ This document provides a high-level executive summary of the comprehensive analy
 **Strengths vs Competitors:**
 1. **vs OpenAI GPT:** Multi-modal integration, local-first, privacy
 2. **vs LangChain:** Unified architecture, cognitive depth, not just orchestration
-3. **vs AutoGPT:** Production-ready UI, stable architecture, real memory
+3. **vs AutoGPT:** Tech-Ready (Dev) UI, stable architecture, real memory
 4. **vs Claude:** Local control, multi-provider, customizable personality
 
 **Unique Differentiators:**

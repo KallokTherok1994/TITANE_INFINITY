@@ -39,7 +39,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
   - **Décision:** Pattern Singleton + Repository pour gestion conversations
   - **Justification:** Isolation contexte vectoriel + testabilité + performance
   - **Architecture:** ConversationManager singleton + Zustand UI sync + Rust vector stores
-  - **Tests:** 10/10 OMEGA tests passing (97.0% coverage)
+  - **Tests:** ✅ suite OMEGA v2 (validation via gates locales)
   - **Patterns:** Lazy loading messages, Map O(1) lookup, mock isolation avec importOriginal
   - **Évolutions futures:** Export/import (v26.4), tags/catégories (v27.0), collaboration (v28.0)
 
@@ -58,22 +58,21 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - Versionning: Git-tracked, review requise pour modifications
 - Révision: Tous les 6 mois (prochaine: 2026-06-18)
 
-#### ✅ Validated - Production Build Tauri
+#### ✅ Validé - Build Stable Tauri (Linux)
 
-**Build Production Complet** — Validation finale packaging natif Linux avec métriques complètes.
+**Build stable (Linux)** — Validé localement (AppImage + DEB). Le **déploiement utilisateur** reste conditionné à l'autorisation explicite (règles du repo).
 
 - **Build Steps:**
   1. ✅ ESLint validation (0 errors, 0 warnings)
   2. ✅ Prettier format check (100% compliance)
   3. ✅ Vite production build (optimized bundle)
-  4. ✅ Tauri native build (deb + AppImage + rpm)
+  4. ✅ Tauri native build (deb + AppImage)
   5. ✅ Post-build scripts (permissions + checksums)
 
 - **Output Artifacts:**
   - `target/release/bundle/deb/*.deb` — Debian package
   - `target/release/bundle/appimage/*.AppImage` — Universal Linux
-  - `target/release/bundle/rpm/*.rpm` — RedHat/Fedora package
-  - Build log: `/tmp/tauri-build-v26.3.0.log` (audit trail)
+  - Build logs: voir `runtime/stable/logs/*` (audit trail)
 
 - **Validation Criteria:** (Tous ✅)
   - [x] Build success sans warnings
@@ -89,10 +88,10 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **TypeScript:** 0 errors (vs 51 errors v26.0) — ✅ -100%
 - **ESLint:** 0 errors, 0 warnings (vs 56 v26.1) — ✅ -100%
 - **Prettier:** 100% formatted
-- **Tests:** 2056/2122 passing (97.0% coverage)
-  - Vitest: 2056 specs ✅
-  - Cargo: 23 Rust tests ✅
-  - E2E: 12 scenarios ✅
+- **Tests:** ✅ gate `copilot-xs:test` OK (validation locale)
+  - Vitest: ✅ OK
+  - Cargo: ✅ OK
+  - E2E: ✅ OK (CI: step bloquant)
 
 **Performance:**
 
@@ -117,10 +116,10 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 ├─────────────────────────────────────────┤
 │ TypeScript:        10/10 (0 errors)     │
 │ ESLint:            10/10 (0 warnings)   │
-│ Tests:             10/10 (97% coverage) │
+│ Tests:             Gate copilot-xs:test ✅ │
 │ Performance:       10/10 (all targets)  │
 │ Documentation ADR: 10/10 (3/3 complete) │
-│ Build Production:  10/10 (validated)    │
+│ Build Production:  EN ATTENTE (autor.)  │
 └─────────────────────────────────────────┘
 
 Progression v26.x:
@@ -138,7 +137,7 @@ v26.3.0: 10.00/10 (ADR + Tauri build) ✅
 - **Maintenabilité:** ADR = décisions documentées pour futures équipes
 - **Onboarding:** Nouveaux devs comprennent "pourquoi" architectural
 - **Évolutivité:** Patterns validés scalent vers v27+
-- **Production-ready:** Build Tauri validé, prêt déploiement utilisateurs
+- **Tech-Ready (Dev):** Build Tauri validé, prêt déploiement utilisateurs
 - **Confiance:** 10/10 score = garantie qualité maximale
 
 #### 🔄 Technical Debt Eliminated
@@ -147,7 +146,7 @@ v26.3.0: 10.00/10 (ADR + Tauri build) ✅
 - ✅ ESLint warnings: 56 → 0
 - ✅ Tests OMEGA: 0 → 10 passing
 - ✅ ADR documentation: 0 → 3 complete
-- ✅ Tauri build: Non validé → Production-ready
+- ✅ Tauri build: Non validé → Tech-Ready (Dev)
 - ✅ JSX automation: Manuel → Script CI/CD
 
 **Total Debt Resolved:** 100% (zéro issue P0/P1/P2 restantes)
@@ -196,7 +195,7 @@ v26.3.0: 10.00/10 (ADR + Tauri build) ✅
 
 #### 📖 Documentation
 
-- **Analyse complète:** [ANALYSE_REFLEXION_DOCUMENTATION_v26.2_OPTIMISATION.md](ANALYSE_REFLEXION_DOCUMENTATION_v26.2_OPTIMISATION.md) (22KB, 40+ pages)
+- **Analyse complète:** [ANALYSE_REFLEXION_DOCUMENTATION_v26.2_OPTIMISATION.md](docs/archive/root/ANALYSE_REFLEXION_DOCUMENTATION_v26.2_OPTIMISATION.md) (22KB, 40+ pages)
 - **Guide rapide:** [docs/GUIDE_RAPIDE_RESTRUCTURATION.md](docs/GUIDE_RAPIDE_RESTRUCTURATION.md)
 - **Executive summary:** [docs/RESUME_EXECUTIF_RESTRUCTURATION_v26.2.md](docs/RESUME_EXECUTIF_RESTRUCTURATION_v26.2.md)
 - **Index navigation:** [docs/current/INDEX.md](docs/current/INDEX.md)
@@ -457,7 +456,7 @@ Ajout d'interfaces TypeScript pour typage strict des return values:
 - **Total Lines Added:** ~1,800 (TypeScript + Markdown)
 - **Documentation:** 1,900+ lignes (analysis + guide + reports)
 - **TypeScript Errors:** 0
-- **Build Status:** ✅ Production Ready
+- **Build Status:** ✅ Tech-Ready (Dev); production en attente d’autorisation
 - **Git Commits:** 2 commits successfully created
 - **Integration Time:** ~3 heures (estimated 3.5h)
 - **Efficiency:** 86% (under budget)
@@ -828,7 +827,7 @@ Performance TITANE∞ v25.4.2:
 - ✅ 0 Erreurs TypeScript
 - ✅ 0 Warnings ESLint
 - ✅ 0 CVE Sécurité
-- ✅ PRODUCTION READY 🚀
+- ✅ ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise) 🚀
 
 ---
 
@@ -1414,7 +1413,7 @@ Tests:       All passing (unit, E2E, architecture, Rust)
 
 ### 🚨 Corrections Critiques - Chat IA OMEGA Pipeline
 
-**4 BUGS CRITIQUES CORRIGÉS** - Système transformé de "totalement cassé" à "production-ready"
+**4 BUGS CRITIQUES CORRIGÉS** - Système transformé de "totalement cassé" à "tech-ready (dev)"
 
 #### Fixed - Backend Rust
 
@@ -1475,7 +1474,7 @@ Tests:       All passing (unit, E2E, architecture, Rust)
 - [x] French Mastery: Post-processing actif dans pipeline
 - [x] End-to-end: Pipeline fonctionnel User Input → Frontend → Tauri → OMEGA → Memory → Response
 
-**Résultat**: ✨ **SYSTÈME 100% FONCTIONNEL** - Production-ready
+**Résultat**: ✨ **SYSTÈME 100% FONCTIONNEL** - Tech-Ready (Dev)
 
 **Vérification**: Analyse approfondie complète par GitHub Copilot (Claude Sonnet 4.5)  
 **Documentation**: `VERIFICATION_COMPLETE_v19.5.2_OMEGA.md` (rapport détaillé)
@@ -1625,7 +1624,7 @@ Tests:       All passing (unit, E2E, architecture, Rust)
 
 ---
 
-## [19.5.2] - 2025-12-06 - PRODUCTION READY - PHASE A+B COMPLETE ✅
+## [19.5.2] - 2025-12-06 - ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise) - PHASE A+B COMPLETE ✅
 
 ### 🚀 Production Build & Deployment
 
@@ -1715,7 +1714,7 @@ Tests:       All passing (unit, E2E, architecture, Rust)
 
 ### 📝 Git Tags
 
-- **v19.5.2**: Release v19.5.2 - Phase A+B Complete - Production Ready
+- **v19.5.2**: Release v19.5.2 - Phase A+B Complete - Tech-Ready (Dev); production en attente d’autorisation
 
 ---
 
@@ -1895,7 +1894,7 @@ Tests:       All passing (unit, E2E, architecture, Rust)
 - **RUNTIME**: Application opérationnelle, tous moteurs actifs
 - **SECURITY**: Double validation (frontend + backend) synchronisée
 
-### 🎯 Production Ready Status
+### 🎯 Tech-Ready (Dev); production en attente d’autorisation Status
 
 **v16.2.2+ FINAL**: 100% Opérationnel, tous systèmes GO ✅
 
@@ -1915,7 +1914,7 @@ Tests:       All passing (unit, E2E, architecture, Rust)
   - ✅ SINGULARITY-FUSION vΩ: 8 engines unified
 - **PERMISSIONS TAURI CORRIGÉES**: `allow: [{"command": "*"}]` → 50+ commandes débloquées
 - **SCORE FINAL**: 100/100 ✅
-- **PRODUCTION READY**: OUI ✅
+- **✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)**: OUI ✅
 
 ### 🔍 Audit Complet & Unification
 
@@ -1975,7 +1974,7 @@ Tests:       All passing (unit, E2E, architecture, Rust)
 
 ### 🚀 BACKEND MIGRATION v14 - 100% COMPLÉTÉE (9/9 PHASES)
 
-**Status**: ✅ **PRODUCTION READY** - Backend Rust complet avec SingularityEngine v14
+**Status**: ✅ **✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)** - Backend Rust complet avec SingularityEngine v14
 
 #### 🎯 Architecture Backend v14 Finale
 
@@ -2148,7 +2147,7 @@ Tests:       All passing (unit, E2E, architecture, Rust)
 
 ### 🎉 SUPER-PROMPT 100% COMPLÉTÉ - PHASE 4: TESTS AUTOMATISÉS
 
-**Status**: ✅ **4/4 PHASES COMPLÈTES** - Production Ready
+**Status**: ✅ **4/4 PHASES COMPLÈTES** - Tech-Ready (Dev); production en attente d’autorisation
 
 #### ✅ Phase 4: Suite de Tests Automatisés Complète
 
@@ -2819,7 +2818,7 @@ pkg-config --exists webkit2gtk-4.1
 
 ### 🏗️ ARCHITECTURE MODULAIRE — PHASE 1 COMPLETE
 
-**Status**: ✅ **PRODUCTION-READY** - Modular Architecture Deployed
+**Status**: ✅ **✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)** - Modular Architecture Deployed
 
 ### ✨ Ajouts
 
@@ -2982,7 +2981,7 @@ pkg-config --exists webkit2gtk-4.1
 - ✅ API Tauri type-safe avec 23 commandes
 - ✅ Tests complets avec 80+ unit tests
 - ✅ Documentation exhaustive (7 guides)
-- ✅ Production-ready avec health checks et rollback automatique
+- ✅ Tech-Ready (Dev) avec health checks et rollback automatique
 
 ---
 
@@ -2990,7 +2989,7 @@ pkg-config --exists webkit2gtk-4.1
 
 ### 🛡️ SECURITY HARDENING — P0 COMPLETE
 
-**Status**: ✅ **PRODUCTION-READY** - Security Architecture Deployed
+**Status**: ✅ **✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)** - Security Architecture Deployed
 
 ### 🔒 Sécurité
 
@@ -3072,7 +3071,7 @@ pkg-config --exists webkit2gtk-4.1
 
 ### 🚀 Impact
 
-- **Production-Ready**: 100% vulnérabilités critiques corrigées
+- **Tech-Ready (Dev); production en attente d’autorisation**: 100% vulnérabilités critiques corrigées
 - **Compliance**: OWASP A03 (Injection), A05 (Security Misconfiguration)
 - **Local-First**: Sandbox maintient philosophie offline
 - **Observability**: Logging sécurité (P1 pour DevTools UI)
@@ -3083,7 +3082,7 @@ pkg-config --exists webkit2gtk-4.1
 
 ### 🛠️ BUG FIXES + LEGACY COMMANDS BRIDGE
 
-**Status** : ✅ **PRODUCTION-READY** - Backend Architecture Complete + Écran Noir Résolu
+**Status** : ✅ **✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)** - Backend Architecture Complete + Écran Noir Résolu
 
 ### 🐛 Corrections
 
@@ -3181,7 +3180,7 @@ cargo check
 
 ### 🎨 DESIGN SYSTEM COMPLETE + DEMO INTERACTIVE
 
-**Status** : ✅ **PRODUCTION-READY** - 7 UI Primitives + Documentation
+**Status** : ✅ **✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)** - 7 UI Primitives + Documentation
 
 ### ✨ Ajouté
 
@@ -3507,9 +3506,9 @@ cargo check
 
 ## [15.5.0] - 2024-11-20
 
-### 🎉 RELEASE MAJEURE - PRODUCTION READY
+### 🎉 RELEASE MAJEURE - ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)
 
-**Status** : ✅ **PRODUCTION-READY** - Système complet, stable, optimisé
+**Status** : ✅ **✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)** - Système complet, stable, optimisé
 
 ### ✨ Ajouté
 
@@ -3862,4 +3861,4 @@ cargo check
 
 ---
 
-**TITANE∞ v15.5.0** - Production Ready - 20 Novembre 2025
+**TITANE∞ v15.5.0** - Tech-Ready (Dev); production en attente d’autorisation - 20 Novembre 2025

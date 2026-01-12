@@ -344,7 +344,7 @@ Vous êtes ici → [✅ Super Prompt #1]
                        │                   │
                        │                   └──→ [📝 Super Prompt #4-7...]
                        │
-                       └──→ [🎉 TITANE∞ PRODUCTION READY]
+                       └──→ [🎉 TITANE∞ ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)]
 ```
 
 ---

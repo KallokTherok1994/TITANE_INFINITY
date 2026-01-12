@@ -4,6 +4,9 @@
 **Version:** 26.2.0  
 **Priority Framework:** P0 (Critical) → P1 (High) → P2 (Nice-to-Have)
 
+> NOTE (gouvernance): document historique (v26.2.0). Runtime actuel: v26.3.0.
+> Production: EN ATTENTE (autorisation explicite requise).
+
 ---
 
 ## Table of Contents

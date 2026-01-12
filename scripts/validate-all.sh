@@ -138,7 +138,7 @@ if [ $ERRORS -eq 0 ]; then
   echo -e "${GREEN}║                                                                        ║${NC}"
   echo -e "${GREEN}║   ✓ ALL VALIDATIONS PASSED                                            ║${NC}"
   echo -e "${GREEN}║                                                                        ║${NC}"
-  echo -e "${GREEN}║   TITANE∞ is production-ready!                                        ║${NC}"
+  echo -e "${GREEN}║   TITANE∞ is tech-ready (dev)!                                        ║${NC}"
   echo -e "${GREEN}║                                                                        ║${NC}"
   echo -e "${GREEN}╚════════════════════════════════════════════════════════════════════════╝${NC}"
   echo ""

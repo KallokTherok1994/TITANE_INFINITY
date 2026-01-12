@@ -420,7 +420,7 @@ new Date(m.startTime ?? m.timestamp).toISOString(),
 ✅ **Type Safety**: Tous les types sont maintenant stricts et valides  
 ✅ **Null Safety**: Aucun crash potentiel sur champs optionnels  
 ✅ **Build Stable**: Build Vite fonctionne sans warnings  
-✅ **Production Ready**: Code déployable immédiatement  
+✅ **Tech-Ready (Dev); production en attente d’autorisation**: Code déployable immédiatement  
 ✅ **Optimizations Preserved**: YOLO OPT-1 lazy-loading intact
 
 ---
@@ -525,7 +525,7 @@ Production: ✅ Ready"
 - ✅ 100% des erreurs dans meta-dashboard/ corrigées (aucune détectée)
 - ✅ Build Vite fonctionnel
 - ✅ TypeScript strict valide
-- ✅ Production ready
+- ✅ tech-ready (dev); production en attente d’autorisation
 
 **Métriques Finales**:
 

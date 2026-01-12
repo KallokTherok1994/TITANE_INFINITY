@@ -110,7 +110,7 @@ cat > "${RELEASE_DIR}/RELEASE_NOTES.md" << EOF
 
 **Date de release :** $(date +"%d %B %Y")
 **Version :** ${VERSION} OMEGA Architecture
-**Status :** ✅ Production Ready
+**Status :** ✅ Tech-Ready (Dev); production en attente d’autorisation
 
 ---
 

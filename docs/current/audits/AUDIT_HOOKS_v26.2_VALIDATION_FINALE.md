@@ -3,7 +3,9 @@
 **Date:** 18 décembre 2025  
 **Commit:** `62c0a2a7`  
 **Session:** COMPLETE ✅  
-**Status:** PRODUCTION READY
+**Status:** ✅ Tech-Ready (Dev) | **Production:** ⛔ EN ATTENTE (autorisation requise)
+
+> ⚠️ Note gouvernance : audit historique. Ne pas interpréter comme une autorisation de déploiement.
 
 ---
 
@@ -258,7 +260,7 @@ pnpm run copilot-xs:validate
 
 **READY ✅**
 
-Tous les bugs CRITICAL et HIGH sont résolus. Le code est production-ready avec:
+Tous les bugs CRITICAL et HIGH sont résolus. Le code est tech-ready (dev) avec:
 - Type safety amélioré
 - Sécurité renforcée
 - Performance optimisée

@@ -292,7 +292,7 @@ Documentation:          100% complete
 
 ### 2. Build Pipeline
 
-**Vite v6.4.1**: Production-ready  
+**Vite v6.4.1**: Tech-Ready (Dev)  
 **Tauri 2.0**: Configuration validée  
 **Optimisations**: LTO thin, opt-level 3, strip symbols
 

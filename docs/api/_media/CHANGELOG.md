@@ -136,7 +136,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
 ### 🏗️ ARCHITECTURE MODULAIRE — PHASE 1 COMPLETE
 
-**Status**: ✅ **PRODUCTION-READY** - Modular Architecture Deployed
+**Status**: ✅ **✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)** - Modular Architecture Deployed
 
 ### ✨ Ajouts
 
@@ -293,7 +293,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - ✅ API Tauri type-safe avec 23 commandes
 - ✅ Tests complets avec 80+ unit tests
 - ✅ Documentation exhaustive (7 guides)
-- ✅ Production-ready avec health checks et rollback automatique
+- ✅ Tech-Ready (Dev) avec health checks et rollback automatique
 
 ---
 
@@ -301,7 +301,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
 ### 🛡️ SECURITY HARDENING — P0 COMPLETE
 
-**Status**: ✅ **PRODUCTION-READY** - Security Architecture Deployed
+**Status**: ✅ **✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)** - Security Architecture Deployed
 
 ### 🔒 Sécurité
 
@@ -376,7 +376,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
   - Standards: OWASP Top 10, CWE-78, CWE-22, CWE-379
 
 ### 🚀 Impact
-- **Production-Ready**: 100% vulnérabilités critiques corrigées
+- **Tech-Ready (Dev); production en attente d’autorisation**: 100% vulnérabilités critiques corrigées
 - **Compliance**: OWASP A03 (Injection), A05 (Security Misconfiguration)
 - **Local-First**: Sandbox maintient philosophie offline
 - **Observability**: Logging sécurité (P1 pour DevTools UI)
@@ -387,7 +387,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
 ### 🛠️ BUG FIXES + LEGACY COMMANDS BRIDGE
 
-**Status** : ✅ **PRODUCTION-READY** - Backend Architecture Complete + Écran Noir Résolu
+**Status** : ✅ **✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)** - Backend Architecture Complete + Écran Noir Résolu
 
 ### 🐛 Corrections
 
@@ -476,7 +476,7 @@ cargo check
 
 ### 🎨 DESIGN SYSTEM COMPLETE + DEMO INTERACTIVE
 
-**Status** : ✅ **PRODUCTION-READY** - 7 UI Primitives + Documentation
+**Status** : ✅ **✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)** - 7 UI Primitives + Documentation
 
 ### ✨ Ajouté
 
@@ -777,9 +777,9 @@ cargo check
 
 ## [15.5.0] - 2024-11-20
 
-### 🎉 RELEASE MAJEURE - PRODUCTION READY
+### 🎉 RELEASE MAJEURE - ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)
 
-**Status** : ✅ **PRODUCTION-READY** - Système complet, stable, optimisé
+**Status** : ✅ **✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)** - Système complet, stable, optimisé
 
 ### ✨ Ajouté
 
@@ -1096,4 +1096,4 @@ cargo check
 
 ---
 
-**TITANE∞ v15.5.0** - Production Ready - 20 Novembre 2025
+**TITANE∞ v15.5.0** - Tech-Ready (Dev); production en attente d’autorisation - 20 Novembre 2025

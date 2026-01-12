@@ -787,7 +787,7 @@ npx lighthouse https://localhost:8080 --view
    - 160 lignes code → 344 GB/year savings 🌿
    - **7:1 cost/benefit ratio** ✅
 
-4. **Production-ready:**
+4. **Tech-Ready (Dev):**
    - 97%+ browser support ✅
    - Graceful degradation (no risk) ✅
    - No server config needed ✅
@@ -798,7 +798,7 @@ npx lighthouse https://localhost:8080 --view
 
 **Raison:**
 
-- Production-ready (97%+ browser support)
+- Tech-Ready (Dev) (97%+ browser support)
 - Aucun risque (graceful degradation)
 - Impact majeur (-400ms repeat TTI)
 - Zero server changes required

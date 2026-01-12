@@ -121,7 +121,7 @@ graph TD
 
 | Fichier                                    | Type    | Rôle                              | Lignes | Status                  |
 | ------------------------------------------ | ------- | --------------------------------- | ------ | ----------------------- |
-| `src/services/api/voice.ts`                | Service | Voice API centralisée (TTS + ASR) | 360    | ✅ Production ready     |
+| `src/services/api/voice.ts`                | Service | Voice API centralisée (TTS + ASR) | 360    | ✅ Tech-Ready (Dev)     |
 | `src-tauri/src/overdrive/voice_engine.rs`  | Rust    | Voice Engine full-duplex          | 500+   | ⚠️ STUB TTS (ligne 208) |
 | `src-tauri/src/audio/whisper_streaming.rs` | Rust    | Whisper streaming                 | 200+   | ⏳ Pas testé            |
 

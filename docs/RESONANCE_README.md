@@ -611,6 +611,6 @@ if map.stability < 0.4 {
 ---
 
 **Version** : Resonance Engine v8.0  
-**Statut** : ✅ Production Ready  
+**Statut** : Document historique (non autorisation)  
 **Dernière mise à jour** : 2024-11-17  
 **Compatibilité** : TITANE∞ v8.0 (Prompts 1-6)

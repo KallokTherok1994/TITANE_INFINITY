@@ -175,7 +175,7 @@ echo ""
 
 echo "╔══════════════════════════════════════════════════════════════╗"
 echo "║   ✅ TOUS LES TESTS COMPLÉTÉS AVEC SUCCÈS                   ║"
-echo "║   🚀 TITANE∞ OS v24.2.0 PRODUCTION READY                    ║"
+echo "║   🚀 TITANE∞ OS v24.2.0 ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)                    ║"
 echo "╚══════════════════════════════════════════════════════════════╝"
 
 exit 0

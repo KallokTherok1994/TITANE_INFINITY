@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v26.2.0 — Proprietary License
+ * TITANE_INFINITY v26.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
- *   LOGGER UTILITIES — Production-Ready Conditional Logging
+ *   LOGGER UTILITIES — Conditional Logging (Dev/Stable)
  *   Replace console.log avec filtrage basé sur environnement
  *   Phase 4 (Week 6): Runtime LOG_LEVEL control integration
  * ═══════════════════════════════════════════════════════════════════════════════

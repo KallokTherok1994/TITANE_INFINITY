@@ -474,7 +474,7 @@ sudo certbot renew --force-renewal
 
 ## ✅ CHECKLIST POST-SETUP
 
-Avant de considérer admin access production-ready:
+Avant de considérer admin access tech-ready (dev):
 
 - [ ] Credentials créées (`/etc/nginx/.htpasswd-titane`)
 - [ ] Permissions 640 root:www-data

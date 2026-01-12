@@ -390,7 +390,7 @@ const networkDensity = useMemo(
 | **Maintenability**    | 80% ⭐⭐⭐⭐    | -20% extractNumber dupliqué              |
 | **Test Coverage**     | 0% ❌           | Aucun test (validation manuelle requise) |
 
-**Score Global**: ✅ **88% — PRODUCTION READY**
+**Score Global**: ✅ **88% — ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)**
 
 ---
 
@@ -549,7 +549,7 @@ DOCUMENTATION
 | **Tests**         | 0% ❌           | ⏳ VALIDATION MANUELLE REQUISE  |
 | **Documentation** | 100% ⭐⭐⭐⭐⭐ | ✅ COMPLÈTE                     |
 
-**SCORE GLOBAL**: ✅ **88% — PRODUCTION READY**
+**SCORE GLOBAL**: ✅ **88% — ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)**
 
 ---
 
@@ -601,7 +601,7 @@ DOCUMENTATION
 - ⚠️ **Maintenance**: 1 duplication extractNumber (refactor 5 min)
 - ⏳ **Tests**: Validation manuelle requise avant production
 
-**État Actuel**: ✅ **PRODUCTION READY** avec 2 optimisations mineures recommandées
+**État Actuel**: ✅ **✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)** avec 2 optimisations mineures recommandées
 
 **Prochaine Étape**: 🚀 **VALIDATION MANUELLE** (run-dev.sh + tests utilisateur)
 

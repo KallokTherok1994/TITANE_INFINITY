@@ -4,6 +4,9 @@
 **Date:** 2026-01-03  
 **Based on:** UI_AUDIT_REPORT.md + RESEARCH_NOTES.md
 
+> NOTE (gouvernance): plan UI/UX historique (v26.2.0). Runtime actuel: v26.3.0.
+> Production: EN ATTENTE (autorisation explicite requise).
+
 ---
 
 ## Executive Summary

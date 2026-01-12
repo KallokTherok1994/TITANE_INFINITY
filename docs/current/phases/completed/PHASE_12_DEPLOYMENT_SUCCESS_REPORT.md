@@ -2,8 +2,10 @@
 
 **Date:** 17 Décembre 2025  
 **Version:** v25.6.0  
-**Status:** ✅ **PRODUCTION READY & DEPLOYED**  
+**Status:** ✅ Tech-Ready (Dev) (historique) | **Production:** ⛔ EN ATTENTE (autorisation requise)  
 **GitHub Commit:** fdc8d66b
+
+> ⚠️ Note gouvernance : rapport historique. Ne pas interpréter comme une autorisation de déploiement.
 
 ---
 
@@ -534,7 +536,7 @@ TOTAL NEW LINES: 3,697 production code + 741 docs = 4,438 lines
 - DB: 85% faster reads (IndexedDB)
 - Cache hit rate: 78.5%
 
-🎯 Production Ready
+🎯 Readiness (Dev)
 ```
 
 ### **GitHub Status**
@@ -579,7 +581,7 @@ TOTAL NEW LINES: 3,697 production code + 741 docs = 4,438 lines
 - ✅ **10-15x performance improvement** on heavy operations
 - ✅ **Zero external dependencies** (100% browser native APIs)
 - ✅ **100% offline support** (Service Worker with 5-level cache)
-- ✅ **Production-ready code** (3,697 lines, 0 TypeScript errors)
+- ✅ **Tech-Ready (Dev) code** (3,697 lines, 0 TypeScript errors)
 - ✅ **Comprehensive documentation** (500+ lines technical guide)
 - ✅ **Real-time monitoring dashboard** (glass-morphism UI)
 - ✅ **Deployed to GitHub** (commit fdc8d66b on MAIN)
@@ -593,7 +595,7 @@ The **TITANE∞ OS** ecosystem now features:
 - **182+ documentation files**
 - **16 automation scripts**
 
-**Status:** 🚀 **PRODUCTION READY** - All systems operational, validated, documented, and deployed.
+**Status:** ✅ Tech-Ready (Dev) (historique) | Production: ⛔ EN ATTENTE (autorisation requise)
 
 ---
 

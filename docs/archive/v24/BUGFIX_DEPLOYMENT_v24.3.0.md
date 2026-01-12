@@ -308,7 +308,7 @@ fn patch_binary(binary_path: &Path, bundle_type: &str) -> Result<()> {
 **Durée session**: ~15 minutes  
 **Problèmes traités**: 3  
 **Corrections appliquées**: 2  
-**Status final**: ✅ **PRODUCTION READY**
+**Status final**: ✅ **✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)**
 
 ---
 
