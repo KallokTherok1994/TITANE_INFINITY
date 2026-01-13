@@ -142,6 +142,7 @@ src-tauri/vault/encrypted/test_data.enc
 .vscode-server/
 remote-tunnel.pid
 tunnel-*.log
+.tunnel-access.txt
 
 # Cline CLI binaries (legacy global install)
 .tools/node/_extract/

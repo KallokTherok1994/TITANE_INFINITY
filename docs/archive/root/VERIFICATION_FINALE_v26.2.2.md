@@ -41,11 +41,11 @@ Lors de la vérification `cargo check`, 3 marqueurs de conflit non résolus ont 
 
 ```rust
 // Avant (avec marqueurs de conflit)
-<<<<<<< HEAD
+// <<<<<<< HEAD
 default_task_timeout_ms: 30_000,
-=======
+// =======
 default_task_timeout_ms: 30000,
->>>>>>> 73e0af0387eb6290805860820712f690f70a7dee
+// >>>>>>> 73e0af0387eb6290805860820712f690f70a7dee
 
 // Après (résolu)
 default_task_timeout_ms: 30000,  // Format unifié sans underscore
