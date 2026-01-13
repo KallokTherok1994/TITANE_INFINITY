@@ -36,6 +36,12 @@ Objectif: pointer les surfaces réelles AutoHeal/AutoFix/Auto-Healing (scripts, 
 
 - Enregistrement de states AutoFix/AutoHeal: [src-tauri/src/main.rs](../../src-tauri/src/main.rs#L506-L521).
 - Commandes exposées (IPC) AutoFix/AutoHeal: [src-tauri/src/main.rs](../../src-tauri/src/main.rs#L812-L857).
+
+- Implémentation backend (Rust) AutoFix/AutoHeal:
+  - Module exports: [src-tauri/src/singularity_fusion/mod.rs](../../src-tauri/src/singularity_fusion/mod.rs#L1-L33)
+  - AutoFix impl: [src-tauri/src/singularity_fusion/auto_fix.rs](../../src-tauri/src/singularity_fusion/auto_fix.rs#L53-L216)
+  - AutoHeal impl: [src-tauri/src/singularity_fusion/auto_heal.rs](../../src-tauri/src/singularity_fusion/auto_heal.rs#L33-L291)
+  - Preuve (inventaire + extraits + fns): [docs/_evidence/v27/B12b_auto_systems_backend_map_clean_2026-01-13.txt](../../docs/_evidence/v27/B12b_auto_systems_backend_map_clean_2026-01-13.txt#L1-L120)
   - AutoFix: `singularity_fusion::autofix_*`
   - AutoHeal: `singularity_fusion::autoheal_*`
 

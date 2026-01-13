@@ -60,3 +60,9 @@ Chaque point ci-dessous doit être vérifiable via (a) un fichier, ou (b) une pr
 - Surfaces Tauri/Rust “singularity_fusion::*” exposées via `generate_handler![...]`.
   - States AutoFix/AutoHeal/CrashGuard/Performance/Pipeline: [src-tauri/src/main.rs](src-tauri/src/main.rs#L506-L521)
   - Commandes AutoFix/AutoHeal (IPC): [src-tauri/src/main.rs](src-tauri/src/main.rs#L812-L857)
+
+- Implémentations backend (Rust) AutoFix/AutoHeal dans le module `singularity_fusion`.
+  - Preuve (inventaire + extraits + liste des fns): [docs/_evidence/v27/B12b_auto_systems_backend_map_clean_2026-01-13.txt](docs/_evidence/v27/B12b_auto_systems_backend_map_clean_2026-01-13.txt#L1-L120)
+  - Exports module: [src-tauri/src/singularity_fusion/mod.rs](src-tauri/src/singularity_fusion/mod.rs#L1-L33)
+  - AutoFix impl: [src-tauri/src/singularity_fusion/auto_fix.rs](src-tauri/src/singularity_fusion/auto_fix.rs#L53-L216)
+  - AutoHeal impl: [src-tauri/src/singularity_fusion/auto_heal.rs](src-tauri/src/singularity_fusion/auto_heal.rs#L33-L291)
