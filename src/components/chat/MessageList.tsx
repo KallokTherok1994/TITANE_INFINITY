@@ -16,7 +16,7 @@ import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { logger } from '@/lib/logger';
 import { MessageBubble } from './MessageBubble';
 import type { AIMessage } from '../../services/ai/types';
-import { autoHealEngine } from '../../services/ai/autoHealEngine';
+import { unifiedHealingFacade } from '../../services/ai/system';
 import './MessageList.css';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -64,12 +64,21 @@ function useOmegaErrorBoundary() {
     (error: Error, context: string, messages?: AIMessage[]) => {
       const now = Date.now();
 
-      // Auto-heal trigger
-      autoHealEngine.heal('message-list', error, 'validation', {
-        context,
-        messageCount: messages?.length || 0,
-        timestamp: now,
-      });
+      // Unified heal (non-bloquant)
+      void unifiedHealingFacade
+        .heal({
+          source: 'message-list',
+          error,
+          type: 'validation',
+          metadata: {
+            context,
+            messageCount: messages?.length || 0,
+            timestamp: now,
+          },
+        })
+        .catch(() => {
+          // Intentionnel: fire-and-forget, éviter les rejections non gérées.
+        });
 
       setState(prev => {
         const newRecoveryCount = prev.recoveryCount + 1;

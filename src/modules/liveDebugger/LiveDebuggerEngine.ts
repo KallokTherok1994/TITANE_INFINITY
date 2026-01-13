@@ -708,10 +708,10 @@ export class LiveDebuggerEngine {
     this.notifyListeners();
 
     try {
-      // Note: autoHealEngine.heal() needs proper args in real implementation
+      // Note: unifiedHealingFacade.heal() needs proper args in real implementation
       // For now, log the patch application
       logger.debug('Auto-applying micro-patch:', patch.reason);
-      // await autoHealEngine.heal(patch.file, patch.changes, patch.reason, patch.confidence);
+      // void unifiedHealingFacade.heal({ source: patch.module, error: patch.reason, type: 'validation' });
 
       this.state.appliedPatches.push(patch);
       this.state.totalPatches++;
