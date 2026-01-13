@@ -40,6 +40,7 @@ export { ollamaProvider } from './providers/ollama';
 // ℹ️ Previously lazy-loaded, but metaKernel.ts uses static imports
 // Converting to static to avoid Vite chunk splitting warnings
 export { autoHealEngine } from './autoHealEngine';
+export { unifiedHealingFacade } from './unifiedHealingFacade';
 export { metricsEngine } from './metricsEngine';
 export { aiHealthMonitor } from './healthMonitor';
 
@@ -60,6 +61,12 @@ export type {
   AutoHealStats,
   AutoHealConfig,
 } from './autoHealEngine';
+
+export type {
+  UnifiedStats,
+  UnifiedHealResult,
+  UnifiedHealRequest,
+} from './unifiedHealingFacade';
 
 export type { MetricEvent, ProviderMetrics, AggregatedMetrics } from './metricsEngine';
 
