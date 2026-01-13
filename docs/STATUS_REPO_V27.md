@@ -20,6 +20,7 @@ Ce document est conçu pour être **vérifiable** : chaque constat pointe vers (
 - PR-4 (Vite host local-only): `docs/_evidence/v27/A9_pr4_vite_host_localonly_2026-01-13T184642Z.txt`
 - Exécution tests (run complet, succès — résumé compact): `docs/_evidence/v27/B5_pnpm_test_run_summary_2026-01-13T093401Z.txt`
 - Checks ports/process (anti faux-positifs): `docs/_evidence/v27/B8_dev_process_check_filters_2026-01-13.txt`
+- Git-ignore `.vscode/tasks.json` (tâches VS Code non versionnées): `docs/_evidence/v27/B9_vscode_tasks_ignored_2026-01-13.txt`
 
 ## 1) Snapshot repo (Git)
 

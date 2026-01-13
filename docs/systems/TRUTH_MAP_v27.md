@@ -27,6 +27,9 @@ Chaque point ci-dessous doit être vérifiable via (a) un fichier, ou (b) une pr
   - Script versionné: `scripts/verify/check-dev-ports-processes.sh`
   - Preuve d’exécution: `docs/_evidence/v27/B8_dev_process_check_filters_2026-01-13.txt`
 
+- Note: les tâches VS Code sous `.vscode/` peuvent être ignorées par git (policy repo). Le check canon doit donc rester le script versionné.
+  - Preuve git-ignore: `docs/_evidence/v27/B9_vscode_tasks_ignored_2026-01-13.txt`
+
 ## D) Gouvernance (dev-only)
 
 - Interdictions de build/bundle prod sans autorisation.
