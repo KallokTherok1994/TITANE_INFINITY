@@ -6,8 +6,8 @@ Ce document est conçu pour être **vérifiable** : chaque constat pointe vers (
 
 ## 0) Dossier de preuves
 
-- Point d’entrée: `docs/_evidence/v27/`
-- TRUTH MAP (canon): `docs/systems/TRUTH_MAP_v27.md`
+- Point d’entrée: `docs/_evidence/v27/` (voir aussi [docs/_evidence/v27/](docs/_evidence/v27/))
+- TRUTH MAP (canon): `docs/systems/TRUTH_MAP_v27.md` (voir aussi [docs/systems/TRUTH_MAP_v27.md](docs/systems/TRUTH_MAP_v27.md))
 - État Git capturé: `docs/_evidence/v27/A1_repo.txt`
 - Versions tooling capturées: `docs/_evidence/v27/B1_pnpm_ls_vite_vitest.txt`
 - Exécution tests (échantillon) capturée (extrait): `docs/_evidence/v27/B3_omega_provider_excerpt_1880-1990.txt`
@@ -20,7 +20,7 @@ Ce document est conçu pour être **vérifiable** : chaque constat pointe vers (
 - PR-4 (Vite host local-only): `docs/_evidence/v27/A9_pr4_vite_host_localonly_2026-01-13T184642Z.txt`
 - Exécution tests (run complet, succès — résumé compact): `docs/_evidence/v27/B5_pnpm_test_run_summary_2026-01-13T093401Z.txt`
 - Checks ports/process (anti faux-positifs): `docs/_evidence/v27/B8_dev_process_check_filters_2026-01-13.txt`
-- Git-ignore `.vscode/tasks.json` (tâches VS Code non versionnées): `docs/_evidence/v27/B9_vscode_tasks_ignored_2026-01-13.txt`
+- Git-ignore `.vscode/tasks.json` (tâches VS Code non versionnées): [docs/_evidence/v27/B9_vscode_tasks_ignored_2026-01-13.txt](docs/_evidence/v27/B9_vscode_tasks_ignored_2026-01-13.txt#L1-L36)
 
 ## 1) Snapshot repo (Git)
 
@@ -39,7 +39,7 @@ Ce document est conçu pour être **vérifiable** : chaque constat pointe vers (
 
 Le repo impose un **mode développement permanent** (interdiction de builds/bundles prod sans autorisation explicite).
 
-- Source: `.github/instructions/titane.instructions.md` lignes 1-31 (interdictions explicites dont `pnpm run build` / `tauri build`).
+- Source: [.github/instructions/titane.instructions.md](.github/instructions/titane.instructions.md#L15-L30) (interdictions explicites dont `pnpm run build` / `tauri build`).
 
 ## 3) Versions & tooling (Vite/Vitest)
 
@@ -74,7 +74,7 @@ Le repo impose un **mode développement permanent** (interdiction de builds/bund
 
 ### 4.1 Vite
 
-- Source: `vite.config.ts` lignes 108-128
+- Source: [vite.config.ts](vite.config.ts#L119-L134)
   - `server.port = 5173`
   - `server.host = '127.0.0.1'`
 
@@ -84,13 +84,13 @@ Le repo impose un **mode développement permanent** (interdiction de builds/bund
 
 **Vérification runtime (ports/process):** les checks de ports/process ont été durcis pour éviter les faux positifs (ex: `vitest.explorer`) et confirment qu’aucun port dev n’est ouvert.
 
-- Script versionné: `scripts/verify/check-dev-ports-processes.sh`
+- Script versionné: [scripts/verify/check-dev-ports-processes.sh](scripts/verify/check-dev-ports-processes.sh#L1-L43)
 
-- Preuve: `docs/_evidence/v27/B8_dev_process_check_filters_2026-01-13.txt`
+- Preuve: [docs/_evidence/v27/B8_dev_process_check_filters_2026-01-13.txt](docs/_evidence/v27/B8_dev_process_check_filters_2026-01-13.txt#L1-L15)
 
 ### 4.2 Vitest (node/happy-dom)
 
-- Source: `vitest.config.ts` lignes 71-102
+- Source: [vitest.config.ts](vitest.config.ts#L75-L103)
   - `environment: 'happy-dom'`
   - `setupFiles`: `./src/setupTests.ts`, `./src/test/setup.ts`, `./src/test-utils/setup.ts`
   - `singleThread: true`, `isolate: true`, `clearMocks: true`, `restoreMocks: true`
@@ -99,12 +99,16 @@ Le repo impose un **mode développement permanent** (interdiction de builds/bund
 
 ### 5.1 Wrapper de tests
 
-- Source: `scripts/test-wrapper.sh` lignes 1-210
+- Source: [scripts/test-wrapper.sh](scripts/test-wrapper.sh#L1-L172)
   - Lance `vitest run` via `npx cross-env ... vitest run ... | tee ...`
   - Filtre `--run` des arguments (commentaire lignes 24-41).
   - Analyse le output pour détecter échec via patterns `Test Files ... failed` et `Tests ... failed`.
   - Supporte un mode bypass parsing (debug): `TEST_WRAPPER_RAW=1`.
   - Échec strict si 0 test détecté (anti faux-positif), opt-out: `TEST_WRAPPER_ALLOW_NO_TESTS=1`.
+
+  Références internes (pour audit):
+  - RAW: [scripts/test-wrapper.sh](scripts/test-wrapper.sh#L45-L54)
+  - No-tests guard: [scripts/test-wrapper.sh](scripts/test-wrapper.sh#L106-L149)
 
 - Preuve (run ciblé, wrapper OK): `docs/_evidence/v27/B6_test_wrapper_pr3_targeted_webVitals_2026-01-13.txt`
 - Preuve (cas no-tests, échec attendu): `docs/_evidence/v27/B7_test_wrapper_pr3_no_tests_case_2026-01-13.txt`
@@ -123,12 +127,12 @@ Le repo impose un **mode développement permanent** (interdiction de builds/bund
 
 Un incident de hoisting/TDZ sur des mocks Tauri a été observé dans les logs précédents.
 
-- Source (fix local dans setup global): `src/test/setup.ts` lignes 700-760
+- Source (fix local dans setup global): [src/test/setup.ts](src/test/setup.ts#L700-L759)
   - Utilise `vi.hoisted(() => { ... })` et des `var` pour éviter les problèmes de TDZ avec `vi.mock()` hoisté.
 
 Référence de lignes (setup actuel):
 
-- Source: `src/test/setup.ts` lignes 690-737
+- Source: [src/test/setup.ts](src/test/setup.ts#L700-L759)
 
 Preuve du changement exact appliqué:
 
