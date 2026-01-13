@@ -22,7 +22,7 @@ import { geminiProvider } from '../../services/ai/providers/gemini';
 import { openaiProvider } from '../../services/ai/providers/openai'; // ← NOUVEAU: OpenAI GPT
 import { claudeProvider } from '../../services/ai/providers/claude'; // ← NOUVEAU: Anthropic Claude
 import { ollamaProvider } from '../../services/ai/providers/ollama';
-import { autoHealEngine } from './systemHealth'; // ← NOUVEAU: Auto-heal intégré
+import { autoHealEngine, unifiedHealingFacade } from './systemHealth'; // ← NOUVEAU: Auto-heal intégré
 import { metricsEngine } from './metrics'; // ← NOUVEAU: Metrics Engine v20Ω
 import type { AggregatedMetrics } from '../../services/ai/metricsEngine';
 import { cognitiveKernel } from './cognitiveKernel'; // ← NOUVEAU v22Ω: Cognitive Kernel
@@ -508,7 +508,16 @@ class AIOrchestrator {
 
       if (!valid) {
         const error = `Invalid message: ${issues.join(', ')}`;
-        autoHealEngine.heal('orchestrator', error, 'validation', { issues, requestId });
+        void unifiedHealingFacade
+          .heal({
+            source: 'orchestrator',
+            error,
+            type: 'validation',
+            metadata: { issues, requestId },
+          })
+          .catch(() => {
+            // Intentionnel: fire-and-forget
+          });
         throw new Error(error);
       }
 
@@ -738,11 +747,20 @@ class AIOrchestrator {
 
           // Trigger auto-heal sauf pour titane-local (déjà auto-réparé)
           if (providerName !== 'titane-local') {
-            autoHealEngine.heal(providerName, lastError, 'provider', {
-              requestId,
-              attempt: attempts,
-              providerLatency: providerFailureLatency, // EVOLUTION v21Ω: Accurate latency
-            });
+            void unifiedHealingFacade
+              .heal({
+                source: providerName,
+                error: lastError,
+                type: 'provider',
+                metadata: {
+                  requestId,
+                  attempt: attempts,
+                  providerLatency: providerFailureLatency, // EVOLUTION v21Ω: Accurate latency
+                },
+              })
+              .catch(() => {
+                // Intentionnel: fire-and-forget
+              });
             this.orchestratorMetrics.autoHealTriggers++;
           }
 
@@ -811,15 +829,19 @@ Le système s'auto-répare en continu. Que puis-je t'aider à explorer ?`,
       const responseTime = Date.now() - requestStartTime;
       this.orchestratorMetrics.totalFailures++;
 
-      autoHealEngine.heal(
-        'orchestrator',
-        criticalError instanceof Error ? criticalError : new Error(String(criticalError)),
-        'critical',
-        {
-          requestId,
-          responseTime,
-        }
-      );
+      void unifiedHealingFacade
+        .heal({
+          source: 'orchestrator',
+          error: criticalError instanceof Error ? criticalError : new Error(String(criticalError)),
+          type: 'critical',
+          metadata: {
+            requestId,
+            responseTime,
+          },
+        })
+        .catch(() => {
+          // Intentionnel: fire-and-forget
+        });
 
       if (isDev) {
         console.error(
@@ -1071,11 +1093,15 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
     const { sanitized, valid, issues } = this.sanitizeMessage(message);
 
     if (!valid) {
-      autoHealEngine.heal(
-        'orchestrator',
-        `Stream validation failed: ${issues.join(', ')}`,
-        'validation'
-      );
+      void unifiedHealingFacade
+        .heal({
+          source: 'orchestrator',
+          error: `Stream validation failed: ${issues.join(', ')}`,
+          type: 'validation',
+        })
+        .catch(() => {
+          // Intentionnel: fire-and-forget
+        });
       yield '⚠️ Message invalide détecté pour streaming...';
       return;
     }
@@ -1154,11 +1180,15 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
         isDev && console.warn(`[OMEGA STREAM] ${providerName} failed:`, error);
 
         // Auto-heal pour streaming failures
-        autoHealEngine.heal(
-          providerName,
-          error instanceof Error ? error : new Error(String(error)),
-          'network'
-        );
+        void unifiedHealingFacade
+          .heal({
+            source: providerName,
+            error: error instanceof Error ? error : new Error(String(error)),
+            type: 'network',
+          })
+          .catch(() => {
+            // Intentionnel: fire-and-forget
+          });
 
         continue; // Try next provider
       }

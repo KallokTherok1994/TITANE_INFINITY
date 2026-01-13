@@ -33,6 +33,7 @@ import { claudeProvider } from './providers/claude'; // ← NOUVEAU: Anthropic C
 import { copilotProvider } from './providers/copilot'; // ← NOUVEAU: GitHub Copilot
 import { ollamaProvider } from './providers/ollama';
 import { autoHealEngine } from './autoHealEngine';
+import { unifiedHealingFacade } from './unifiedHealingFacade';
 import { metricsEngine } from './metricsEngine';
 import { cognitiveKernel } from './cognitiveKernel'; // ← NOUVEAU v22Ω: Cognitive Kernel
 import { circuitBreaker } from './circuitBreaker'; // ← v24.5: Circuit Breaker Pattern
@@ -727,7 +728,7 @@ class AIOrchestrator {
     const requestStartTime = Date.now();
 
     // Ensure engines are loaded
-    const { autoHeal, metrics: _metrics } = await ensureEngines();
+    await ensureEngines();
 
     // Increment metrics
     this.orchestratorMetrics.totalRequests++;
@@ -739,7 +740,12 @@ class AIOrchestrator {
 
       if (!valid) {
         const error = `Invalid message: ${issues.join(', ')}`;
-        autoHeal.heal('orchestrator', error, 'validation', { issues, requestId });
+        void unifiedHealingFacade.heal({
+          source: 'orchestrator',
+          error,
+          type: 'validation',
+          metadata: { issues, requestId },
+        });
         throw new Error(error);
       }
 
@@ -1092,11 +1098,15 @@ class AIOrchestrator {
 
           // Trigger auto-heal sauf pour titane-local (déjà auto-réparé)
           if (providerName !== 'titane-local') {
-            const { autoHeal: _autoHealLoaded } = await ensureEngines();
-            _autoHealLoaded.heal(providerName, lastError, 'provider', {
-              requestId,
-              attempt: attempts,
-              providerLatency: providerFailureLatency, // EVOLUTION v21Ω: Accurate latency
+            void unifiedHealingFacade.heal({
+              source: providerName,
+              error: lastError,
+              type: 'provider',
+              metadata: {
+                requestId,
+                attempt: attempts,
+                providerLatency: providerFailureLatency, // EVOLUTION v21Ω: Accurate latency
+              },
             });
             this.orchestratorMetrics.autoHealTriggers++;
           }
@@ -1183,18 +1193,17 @@ Le système s'auto-répare en continu. Que puis-je t'aider à explorer ?`,
         );
       }
 
-      const { autoHeal: _autoHealLoaded } = await ensureEngines();
-      _autoHealLoaded.heal(
-        'orchestrator',
-        criticalError instanceof Error ? criticalError : new Error(String(criticalError)),
-        'critical',
-        {
+      void unifiedHealingFacade.heal({
+        source: 'orchestrator',
+        error: criticalError instanceof Error ? criticalError : new Error(String(criticalError)),
+        type: 'critical',
+        metadata: {
           requestId,
           responseTime,
           degradedMode: this.isDegradedMode,
           criticalErrorCount: this.criticalErrorHistory.length,
-        }
-      );
+        },
+      });
 
       logger.error(`Critical error [${requestId}]`, {
         criticalError,
@@ -1457,12 +1466,11 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
     };
 
     if (!valid) {
-      const { autoHeal: _autoHealLoaded } = await ensureEngines();
-      _autoHealLoaded.heal(
-        'orchestrator',
-        `Stream validation failed: ${issues.join(', ')}`,
-        'validation'
-      );
+      void unifiedHealingFacade.heal({
+        source: 'orchestrator',
+        error: `Stream validation failed: ${issues.join(', ')}`,
+        type: 'validation',
+      });
       yield '⚠️ Message invalide détecté pour streaming...';
       return;
     }
@@ -1596,12 +1604,11 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
         logger.warn('Stream provider failed', { provider: providerName, error });
 
         // Auto-heal pour streaming failures
-        const { autoHeal: _autoHealLoaded } = await ensureEngines();
-        _autoHealLoaded.heal(
-          providerName,
-          error instanceof Error ? error : new Error(String(error)),
-          'network'
-        );
+        void unifiedHealingFacade.heal({
+          source: providerName,
+          error: error instanceof Error ? error : new Error(String(error)),
+          type: 'network',
+        });
 
         continue; // Try next provider
       }

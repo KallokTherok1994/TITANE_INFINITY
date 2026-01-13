@@ -38,7 +38,7 @@ import { ChatModeSelector } from '../../components/chat/ChatModeSelector';
 import { ModeBadge } from '../../components/chat/ModeBadge';
 import { VoiceConversation } from '../../components/VoiceConversation';
 import type { ChatModeId } from '../../services/ai/chatModes.config';
-import { autoHealEngine } from '../../services/ai/system';
+import { unifiedHealingFacade } from '../../services/ai/system';
 // Phase 1.9: Audio Feedback - VAD + TTS integration
 import useVAD, { useVADWithTTS, useBargeInHandler } from '../../hooks/useVAD';
 // Phase 2 v24.7.4: Keyboard shortcuts & Focus trap
@@ -463,12 +463,22 @@ function useOmegaRenderProtection() {
   const handleRenderError = useCallback((error: Error, context: string) => {
     renderAttempts.current++;
 
-    // Auto-heal trigger (direct instance)
-    autoHealEngine.heal('chat-page', error, 'validation', {
-      context,
-      renderAttempts: renderAttempts.current,
-      timestamp: Date.now(),
-    });
+    // Auto-heal trigger (unified, non-bloquant)
+    void unifiedHealingFacade
+      .heal({
+        source: 'chat-page',
+        error,
+        type: 'validation',
+        metadata: {
+          context,
+          renderAttempts: renderAttempts.current,
+          timestamp: Date.now(),
+        },
+      })
+      .catch(err => {
+        isDev &&
+          console.warn('[OMEGA CHAT PAGE] Unified healing failed:', err);
+      });
 
     setPageState(prev => ({
       ...prev,

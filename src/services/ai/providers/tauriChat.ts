@@ -14,7 +14,7 @@
 import type { AIMessage, AIProvider, AIResponse } from '../types';
 import { TAURI_COMMANDS } from '../../../core/commands/TAURI_COMMANDS';
 import { safeInvokeTauri } from '../../../utils/tauriProtector';
-import { autoHealEngine } from '../system';
+import { unifiedHealingFacade } from '../system';
 import { createLogger } from '@/utils/logger';
 
 const logger = createLogger('TauriChat');
@@ -231,13 +231,24 @@ class TauriChatProvider implements AIProvider {
 
     const errorObj = error instanceof Error ? error : new Error(String(error));
 
-    // Auto-heal trigger (direct instance)
-    autoHealEngine.heal('tauri-chat', errorObj, 'provider', {
-      context,
-      errorCount: this.errorCount,
-      metadata,
-      timestamp: Date.now(),
-    });
+    // Auto-heal trigger (unified)
+    void unifiedHealingFacade
+      .heal({
+        source: 'tauri-chat',
+        error: errorObj,
+        type: 'provider',
+        metadata: {
+          context,
+          errorCount: this.errorCount,
+          metadata,
+          timestamp: Date.now(),
+        },
+      })
+      .catch(err => {
+        logger.warn('UnifiedHealingFacade heal failed (tauri-chat)', {
+          error: err instanceof Error ? err.message : String(err),
+        });
+      });
 
     logger.error(`Tauri invoke error [${context}]`, {
       message: errorObj.message,

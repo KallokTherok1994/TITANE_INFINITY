@@ -14,7 +14,7 @@
 
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { logger } from '@/lib/logger';
-import { autoHealEngine } from '../../services/ai/system';
+import { unifiedHealingFacade } from '../../services/ai/system';
 import { FileUploadButton, type AnalyzedFile } from './FileUploadButton';
 import { DictationButton } from './DictationButton';
 import { UI_DELAYS } from '@/constants/timeouts';
@@ -78,12 +78,21 @@ function useOmegaInputProtection() {
 
   const handleInputError = useCallback(
     (error: Error, context: string, inputValue?: string) => {
-      // Auto-heal trigger (direct instance)
-      autoHealEngine.heal('chat-input', error, 'validation', {
-        context,
-        inputLength: inputValue?.length || 0,
-        timestamp: Date.now(),
-      });
+      // Unified heal (non-bloquant)
+      void unifiedHealingFacade
+        .heal({
+          source: 'chat-input',
+          error,
+          type: 'validation',
+          metadata: {
+            context,
+            inputLength: inputValue?.length || 0,
+            timestamp: Date.now(),
+          },
+        })
+        .catch(() => {
+          // Intentionnel: fire-and-forget, éviter les rejections non gérées.
+        });
 
       setInputState(prev => ({
         ...prev,

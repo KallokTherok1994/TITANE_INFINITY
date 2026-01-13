@@ -8,7 +8,7 @@
 
 import { logger } from '@/utils/logger';
 import { secureInvoke } from '@/lib/security';
-import { autoHealEngine } from '@/services/ai/system';
+import { unifiedHealingFacade } from '@/services/ai/system';
 import { autoSaveConversationEngine } from '@/modules/talkToTitane/AutoSaveConversationEngine';
 import { talkToTitaneEngine } from '@/modules/talkToTitane/TalkToTitaneEngine';
 import type { LiveDebuggerMode } from '@/modules/liveDebugger/LiveDebuggerEngine';
@@ -3687,13 +3687,13 @@ Le patch généré nécessite review manuelle.
       };
     }
 
-    // Appliquer le patch via AutoHealEngine (direct instance)
-    await autoHealEngine.heal(
-      'live-debugger',
-      new Error(`Applying patch for ${patch.module}: ${patch.reason}`),
-      'critical',
-      { module: patch.module, confidence: patch.confidence }
-    );
+    // Appliquer le patch via UnifiedHealingFacade
+    await unifiedHealingFacade.heal({
+      source: 'live-debugger',
+      error: new Error(`Applying patch for ${patch.module}: ${patch.reason}`),
+      type: 'critical',
+      metadata: { module: patch.module, confidence: patch.confidence },
+    });
 
     return {
       handled: true,

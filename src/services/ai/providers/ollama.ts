@@ -19,7 +19,7 @@ import {
   type SecureAIResponse,
   type ChatResponse,
 } from '@/lib/security';
-import { autoHealEngine } from '../system';
+import { unifiedHealingFacade } from '../system';
 import { memoryIntegration } from '../memoryIntegration'; // ✨ v21 - Memory integration
 import type { MemoryContext } from '../memoryIntegration'; // ✨ v21
 import { createLogger } from '@/utils/logger'; // ✨ v21.1 - Conditional logging
@@ -243,13 +243,22 @@ function handleOllamaError(
 
   const errorObj = error instanceof Error ? error : new Error(String(error));
 
-  // Auto-heal trigger (direct instance)
-  autoHealEngine.heal('ollama', errorObj, 'provider', {
-    context,
-    errorCount,
-    ...metadata,
-    timestamp: Date.now(),
-  });
+  // Unified heal (non-bloquant)
+  void unifiedHealingFacade
+    .heal({
+      source: 'ollama',
+      error: errorObj,
+      type: 'provider',
+      metadata: {
+        context,
+        errorCount,
+        ...metadata,
+        timestamp: Date.now(),
+      },
+    })
+    .catch(() => {
+      // Intentionnel: fire-and-forget, éviter les rejections non gérées.
+    });
 
   logger.error('Error in Ollama provider', {
     context,
