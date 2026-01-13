@@ -1,0 +1,22 @@
+## MAIN...origin/MAIN [devant 2]
+ M src/__tests__/omega-e2e-validation.test.ts
+ M src/__tests__/omega-provider-tests.test.ts
+ M src/components/chat/ChatInput.tsx
+ M src/components/chat/MessageList.tsx
+ M src/core/services/orchestrator.ts
+ M src/core/services/systemHealth.ts
+ M src/modules/devSudo/devSudoBuiltins.ts
+ M src/modules/liveDebugger/LiveDebuggerEngine.ts
+ M src/modules/vocalDev/VocalDevConsoleEngine.ts
+ M src/services/ai/autoHealEngine.ts
+ M src/services/ai/orchestrator.ts
+ M src/services/ai/providers/ollama.ts
+ M src/services/ai/providers/tauriChat.ts
+ M src/services/monitoring/consoleMonitor.ts
+M  src/test/setup.ts
+ M src/ui/pages/Chat.tsx
+?? docs/STATUS_REPO_V27.md
+?? docs/_evidence/
+?? docs/systems/AUTO_SYSTEMS_INDEX_v27.md
+?? src/services/ai/__tests__/unifiedHealingFacade.test.ts
+?? src/services/ai/unifiedHealingFacade.ts

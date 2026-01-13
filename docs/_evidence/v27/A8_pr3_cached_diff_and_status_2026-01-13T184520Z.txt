@@ -1,0 +1,34 @@
+[A8] date_utc=2026-01-13T184520Z
+[A8] git status -sb
+## MAIN...origin/MAIN [devant 4]
+ M src/__tests__/omega-e2e-validation.test.ts
+ M src/__tests__/omega-provider-tests.test.ts
+ M src/components/chat/ChatInput.tsx
+ M src/components/chat/MessageList.tsx
+ M src/core/services/orchestrator.ts
+ M src/core/services/systemHealth.ts
+ M src/modules/devSudo/devSudoBuiltins.ts
+ M src/modules/liveDebugger/LiveDebuggerEngine.ts
+ M src/modules/vocalDev/VocalDevConsoleEngine.ts
+ M src/services/ai/autoHealEngine.ts
+ M src/services/ai/orchestrator.ts
+ M src/services/ai/providers/ollama.ts
+ M src/services/ai/providers/tauriChat.ts
+ M src/services/monitoring/consoleMonitor.ts
+ M src/ui/pages/Chat.tsx
+?? docs/STATUS_REPO_V27.md
+?? docs/_evidence/
+?? docs/systems/AUTO_SYSTEMS_INDEX_v27.md
+?? src/services/ai/__tests__/unifiedHealingFacade.test.ts
+?? src/services/ai/unifiedHealingFacade.ts
+
+[A8] git diff --cached --name-only
+
+[A8] (planned) stage files:
+docs/STATUS_REPO_V27.md
+docs/systems/AUTO_SYSTEMS_INDEX_v27.md
+docs/_evidence/v27/A5_git_status_after_unstage_2026-01-13T093108.txt
+docs/_evidence/v27/A6_pr1_cached_diff_and_status_2026-01-13T144821Z.txt
+docs/_evidence/v27/A7_pr2_docs_versions_commit_2026-01-13T184332Z.txt
+docs/_evidence/v27/B5_pnpm_test_run_summary_2026-01-13T093401Z.txt
+docs/_evidence/v27/A8_pr3_cached_diff_and_status_2026-01-13T184520Z.txt
