@@ -1,0 +1,18 @@
+TITANE∞ v27 - Evidence
+
+File: scripts/test-wrapper.sh (PR-3 hardening)
+Date: 2026-01-13
+Context: wrapper invoked with a non-existent test path to validate the "no test files" behavior.
+Command:
+  ./scripts/test-wrapper.sh src/utils/__tests__/__does_not_exist__.test.ts
+
+Observed output (tail):
+
+Vitest exit code: 1
+❌ Tests failed or insufficient passing tests
+ RUN  v4.0.16 /home/titane-os/Documents/GitHub/TITANE_INFINITY
+No test files found, exiting with code 1
+filter: src/utils/__tests__/__does_not_exist__.test.ts
+include: src/**/*.{test,spec}.{ts,tsx}, tests/unit/**/*.{test,spec}.{ts,tsx}, tests/integration/**/*.{test,spec}.{ts,tsx}
+exclude:  node_modules, dist, src-tauri
+EXIT:1

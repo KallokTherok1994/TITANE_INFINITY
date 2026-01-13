@@ -90,10 +90,15 @@ Le repo impose un **mode développement permanent** (interdiction de builds/bund
 
 ### 5.1 Wrapper de tests
 
-- Source: `scripts/test-wrapper.sh` lignes 1-170
+- Source: `scripts/test-wrapper.sh` lignes 1-210
   - Lance `vitest run` via `npx cross-env ... vitest run ... | tee ...`
   - Filtre `--run` des arguments (commentaire lignes 24-41).
   - Analyse le output pour détecter échec via patterns `Test Files ... failed` et `Tests ... failed`.
+  - Supporte un mode bypass parsing (debug): `TEST_WRAPPER_RAW=1`.
+  - Échec strict si 0 test détecté (anti faux-positif), opt-out: `TEST_WRAPPER_ALLOW_NO_TESTS=1`.
+
+- Preuve (run ciblé, wrapper OK): `docs/_evidence/v27/B6_test_wrapper_pr3_targeted_webVitals_2026-01-13.txt`
+- Preuve (cas no-tests, échec attendu): `docs/_evidence/v27/B7_test_wrapper_pr3_no_tests_case_2026-01-13.txt`
 
 ### 5.2 Exemple d’exécution (omega-provider)
 
