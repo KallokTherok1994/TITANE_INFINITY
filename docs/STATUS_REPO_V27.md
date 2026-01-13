@@ -23,6 +23,7 @@ Ce document est conçu pour être **vérifiable** : chaque constat pointe vers (
 - Git-ignore `.vscode/tasks.json` (tâches VS Code non versionnées): [docs/_evidence/v27/B9_vscode_tasks_ignored_2026-01-13.txt](docs/_evidence/v27/B9_vscode_tasks_ignored_2026-01-13.txt#L1-L36)
 - Validation AUTO-HEAL (scripts + doc + structure, exécution complète OK): [docs/_evidence/v27/B11_auto_heal_validation_fixed_2026-01-13.txt](docs/_evidence/v27/B11_auto_heal_validation_fixed_2026-01-13.txt#L1-L35)
 - Backend AUTO-* (map module + extraits + liste commandes): [docs/_evidence/v27/B12b_auto_systems_backend_map_clean_2026-01-13.txt](docs/_evidence/v27/B12b_auto_systems_backend_map_clean_2026-01-13.txt#L1-L120)
+- Contrat IPC AUTO-* (docs ↔ commandes ↔ tests): [docs/_evidence/v27/B13b_ipc_contract_auto_commands_clean_2026-01-13.txt](docs/_evidence/v27/B13b_ipc_contract_auto_commands_clean_2026-01-13.txt#L1-L160)
 
 ## 1) Snapshot repo (Git)
 
@@ -167,6 +168,14 @@ Le repo contient des systèmes AutoFix/AutoHeal documentés et intégrés côté
   - AutoFix impl: [src-tauri/src/singularity_fusion/auto_fix.rs](src-tauri/src/singularity_fusion/auto_fix.rs#L53-L216)
   - AutoHeal impl: [src-tauri/src/singularity_fusion/auto_heal.rs](src-tauri/src/singularity_fusion/auto_heal.rs#L33-L291)
   - Preuve (inventaire + extraits): [docs/_evidence/v27/B12b_auto_systems_backend_map_clean_2026-01-13.txt](docs/_evidence/v27/B12b_auto_systems_backend_map_clean_2026-01-13.txt#L1-L120)
+
+- Source (contrat IPC doc ↔ tests):
+  - Matrix: [docs/backend/IPC_CONTRACT.md](docs/backend/IPC_CONTRACT.md#L270-L291)
+  - Détails: [docs/backend/IPC_CONTRACT.md](docs/backend/IPC_CONTRACT.md#L461-L489)
+  - Backend map: [docs/backend/BACKEND_MAP.md](docs/backend/BACKEND_MAP.md#L295-L306)
+  - SINGULARITY vΩ: [docs/SINGULARITY_FUSION_vΩ.md](docs/SINGULARITY_FUSION_vΩ.md#L641-L657)
+  - Tests invoke(): [src/__tests__/singularity-fusion-integration.test.ts](src/__tests__/singularity-fusion-integration.test.ts#L225-L236)
+  - Preuve consolidée: [docs/_evidence/v27/B13b_ipc_contract_auto_commands_clean_2026-01-13.txt](docs/_evidence/v27/B13b_ipc_contract_auto_commands_clean_2026-01-13.txt#L1-L160)
 
 Voir l’index consolidé: `docs/systems/AUTO_SYSTEMS_INDEX_v27.md`.
 

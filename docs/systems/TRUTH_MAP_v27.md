@@ -66,3 +66,11 @@ Chaque point ci-dessous doit être vérifiable via (a) un fichier, ou (b) une pr
   - Exports module: [src-tauri/src/singularity_fusion/mod.rs](src-tauri/src/singularity_fusion/mod.rs#L1-L33)
   - AutoFix impl: [src-tauri/src/singularity_fusion/auto_fix.rs](src-tauri/src/singularity_fusion/auto_fix.rs#L53-L216)
   - AutoHeal impl: [src-tauri/src/singularity_fusion/auto_heal.rs](src-tauri/src/singularity_fusion/auto_heal.rs#L33-L291)
+
+- Contrat IPC “AUTO-*” (docs) ↔ commandes (Tauri) ↔ tests `invoke()` (reality check).
+  - Source (matrix): [docs/backend/IPC_CONTRACT.md](docs/backend/IPC_CONTRACT.md#L270-L291)
+  - Source (détails): [docs/backend/IPC_CONTRACT.md](docs/backend/IPC_CONTRACT.md#L461-L489)
+  - Source (backend map): [docs/backend/BACKEND_MAP.md](docs/backend/BACKEND_MAP.md#L295-L306)
+  - Source (SINGULARITY vΩ): [docs/SINGULARITY_FUSION_vΩ.md](docs/SINGULARITY_FUSION_vΩ.md#L641-L657)
+  - Source (tests): [src/__tests__/singularity-fusion-integration.test.ts](src/__tests__/singularity-fusion-integration.test.ts#L225-L236)
+  - Preuve consolidée: [docs/_evidence/v27/B13b_ipc_contract_auto_commands_clean_2026-01-13.txt](docs/_evidence/v27/B13b_ipc_contract_auto_commands_clean_2026-01-13.txt#L1-L160)
