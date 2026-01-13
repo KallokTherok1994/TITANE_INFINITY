@@ -22,6 +22,7 @@ Ce document est conçu pour être **vérifiable** : chaque constat pointe vers (
 - Checks ports/process (anti faux-positifs): `docs/_evidence/v27/B8_dev_process_check_filters_2026-01-13.txt`
 - Git-ignore `.vscode/tasks.json` (tâches VS Code non versionnées): [docs/_evidence/v27/B9_vscode_tasks_ignored_2026-01-13.txt](docs/_evidence/v27/B9_vscode_tasks_ignored_2026-01-13.txt#L1-L36)
 - Validation AUTO-HEAL (scripts + doc + structure, exécution complète OK): [docs/_evidence/v27/B11_auto_heal_validation_fixed_2026-01-13.txt](docs/_evidence/v27/B11_auto_heal_validation_fixed_2026-01-13.txt#L1-L35)
+- Backend AUTO-* (map module + extraits + liste commandes): [docs/_evidence/v27/B12b_auto_systems_backend_map_clean_2026-01-13.txt](docs/_evidence/v27/B12b_auto_systems_backend_map_clean_2026-01-13.txt#L1-L120)
 
 ## 1) Snapshot repo (Git)
 
@@ -160,6 +161,12 @@ Le repo contient des systèmes AutoFix/AutoHeal documentés et intégrés côté
 - Source (Tauri commands):
   - States AutoFix/AutoHeal/CrashGuard/Performance/Pipeline: [src-tauri/src/main.rs](src-tauri/src/main.rs#L506-L521)
   - Commandes AutoFix/AutoHeal (IPC): [src-tauri/src/main.rs](src-tauri/src/main.rs#L812-L857)
+
+- Source (impl backend Rust):
+  - Module exports: [src-tauri/src/singularity_fusion/mod.rs](src-tauri/src/singularity_fusion/mod.rs#L1-L33)
+  - AutoFix impl: [src-tauri/src/singularity_fusion/auto_fix.rs](src-tauri/src/singularity_fusion/auto_fix.rs#L53-L216)
+  - AutoHeal impl: [src-tauri/src/singularity_fusion/auto_heal.rs](src-tauri/src/singularity_fusion/auto_heal.rs#L33-L291)
+  - Preuve (inventaire + extraits): [docs/_evidence/v27/B12b_auto_systems_backend_map_clean_2026-01-13.txt](docs/_evidence/v27/B12b_auto_systems_backend_map_clean_2026-01-13.txt#L1-L120)
 
 Voir l’index consolidé: `docs/systems/AUTO_SYSTEMS_INDEX_v27.md`.
 

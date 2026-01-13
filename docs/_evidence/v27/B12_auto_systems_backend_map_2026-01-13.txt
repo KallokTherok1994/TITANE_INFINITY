@@ -1,0 +1,735 @@
+]633;E;echo "[ts]  $(date -Is)";72db421b-0813-4827-a5e3-c071ce5af60e]633;C[ts]  2026-01-13T18:36:45-05:00
+[cwd] /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+=== inventory: src-tauri/src/singularity_fusion ===
+total 76
+drwxrwxr-x   2 titane-os titane-os  4096 janv.  3 01:22 .
+drwxrwxr-x 103 titane-os titane-os  4096 janv. 12 20:02 ..
+-rw-rw-r--   1 titane-os titane-os 13135 janv.  3 01:22 auto_fix.rs
+-rw-rw-r--   1 titane-os titane-os 10643 déc.  19 11:30 auto_heal.rs
+-rw-rw-r--   1 titane-os titane-os  4591 déc.  19 11:30 crash_guard.rs
+-rw-rw-r--   1 titane-os titane-os 11528 déc.   9 10:57 fusion_engine.rs
+-rw-rw-r--   1 titane-os titane-os  1400 déc.  19 23:30 mod.rs
+-rw-rw-r--   1 titane-os titane-os  4285 déc.  20 12:11 performance.rs
+-rw-rw-r--   1 titane-os titane-os  7291 déc.   9 10:57 unified_pipeline.rs
+
+=== main.rs: module decl + states manage() ===
+   250	
+   251	// Fusion Engine commands v∞.27.0 (Super Prompt #17)
+   252	mod fusion;
+   253	
+   254	mod ollama;
+   255	
+   256	// Onboarding System v19.5.2 (Phase 1 - Quick Wins)
+   257	mod onboarding;
+   258	
+   259	// Configuration Management System v19.5.2 (Phase 2 - Configuration Hub)
+   260	mod config;
+   261	
+   262	// ═══════════════════════════════════════════════════════════════
+   263	// SUPPORT MODULES (v21.5 AUTO-FIX) - Types, Memory, Utils
+   264	// ═══════════════════════════════════════════════════════════════
+   265	mod memory;
+   266	mod memory_compactor;
+   267	mod types;
+   268	mod utils;
+   269	
+   270	// Immersive Avatar Engine v23
+   271	mod avatar;
+   272	
+   273	// SINGULARITY-FUSION vΩ (AutoHeal/AutoFix/CrashGuard/Performance/Pipeline)
+   274	mod singularity_fusion;
+   275	
+   276	// System Center v∞ (Diagnostics, DevTools, Cluster)
+   277	use titane_infinity::system_center;
+   278	
+   279	// Cognitive system (always available)
+   280	use titane_infinity::cognitive::{
+   281	    AnalysisEngine, ConsistencyEngine, EvolutionCognitiveEngine, IntegrationEngine,
+   282	};
+   283	use tokio::sync::Mutex;
+   284	
+   285	// Singularity Cortex OS v∞ (SUPER PROMPT #7)
+   286	use titane_infinity::singularity_cortex::api::SingularityCortexState;
+   287	
+   288	// Multi-IA Orchestrator v∞ (SUPER PROMPT #8)
+   289	use titane_infinity::ai::orchestrator_multi::OrchestratorState;
+   290	
+   291	// Core Singularity State (for CoherenceEngine v20.0)
+   292	
+   293	// QA System v19.8
+   294	
+   295	// Singularity State v∞ (v20)
+   296	
+   297	// Adaptive Engine v21
+   298	
+   299	// Narrative Engine v22
+   300	
+   301	// Immersive Avatar Engine v23
+   302	
+   303	// Cloud Sync Engine v∞ (OPUS #13)
+   304	
+   305	// Memory Evolution Engine++ v∞ (OPUS #14)
+   306	
+   307	// System Identity Engine v∞ (OPUS #15)
+   308	
+   309	// Use persistence module from lib.rs (includes all commands)
+   310	use titane_infinity::persistence;
+
+   500	    // Initialize Singularity Cortex OS v∞ (SUPER PROMPT #7)
+   501	    let singularity_cortex = SingularityCortexState::new();
+   502	
+   503	    // Initialize Multi-IA Orchestrator v∞ (SUPER PROMPT #8)
+   504	    let multi_ai_orchestrator = OrchestratorState::new();
+   505	
+   506	    let builder = tauri::Builder::default()
+   507	        .manage(app_state)
+   508	        .manage(singularity_cortex)
+   509	        .manage(multi_ai_orchestrator)
+   510	        .manage(secrets_engine)
+   511	        .manage(copilot_state) // ✨ v26.3: Copilot State
+   512	        .manage(chat_orchestrator.clone())
+   513	        .manage(helios_core)
+   514	        .manage(memory_core)
+   515	        .manage(avatar::AvatarEngineGlobal::default())
+   516	        .manage(singularity_fusion::AutoFixState::default())
+   517	        .manage(singularity_fusion::AutoHealState::default())
+   518	        .manage(singularity_fusion::CrashGuardState::default())
+   519	        .manage(singularity_fusion::PerformanceState::default())
+   520	        .manage(singularity_fusion::UnifiedPipelineState::default())
+   521	        .manage(state_bridge_commands::FrontendStateStore::default());
+   522	
+   523	    // EXP FUSION ENGINE (XP/EXP UI)
+   524	    let builder = builder.manage(ExpFusionState::new());
+   525	
+   526	    builder
+   527	        .manage(std::sync::Mutex::new(onboarding::OnboardingState::default()))
+   528	        .setup(move |app| {
+   529	            // 🔐 Initialize Auth OS v∞ (Unified Authentication System)
+   530	            if let Err(e) = auth::init_auth() {
+   531	                log::error!("❌ AUTH OS initialization failed: {}", e);
+   532	            } else {
+   533	                log::info!("✅ AUTH OS v∞ initialized successfully");
+   534	            }
+   535	
+
+=== main.rs: generate_handler excerpt (AutoFix/AutoHeal) ===
+   800	            avatar::fullbody_commands::fullbody_advance_frame,
+   801	            avatar::fullbody_commands::fullbody_activate_gesture,
+   802	            avatar::fullbody_commands::fullbody_update_expression,
+   803	            avatar::fullbody_commands::fullbody_update_lipsync,
+   804	            avatar::fullbody_commands::fullbody_update_state,
+   805	            avatar::fullbody_commands::fullbody_on_wake_word,
+   806	            avatar::fullbody_commands::fullbody_export_skeleton,
+   807	            avatar::fullbody_commands::fullbody_update_context,
+   808	            avatar::fullbody_commands::fullbody_get_posture,
+   809	            avatar::fullbody_commands::fullbody_get_stats,
+   810	            avatar::fullbody_selftest::fullbody_run_selftest,
+   811	
+   812	            // SINGULARITY-FUSION (AutoFix/AutoHeal/CrashGuard/Performance/Pipeline)
+   813	            singularity_fusion::autofix_detect_rust_warnings,
+   814	            singularity_fusion::autofix_detect_typescript_errors,
+   815	            singularity_fusion::autofix_detect_react_hook_violations,
+   816	            singularity_fusion::autofix_detect_invalid_states,
+   817	            singularity_fusion::autofix_fix_issue,
+   818	            singularity_fusion::autofix_fix_all,
+   819	            singularity_fusion::autofix_get_history,
+   820	            singularity_fusion::autofix_get_stats,
+   821	            singularity_fusion::autofix_reset,
+   822	            singularity_fusion::autofix_rust_warning,
+   823	            singularity_fusion::autofix_typescript_error,
+   824	            singularity_fusion::autofix_reset_state,
+   825	            singularity_fusion::autofix_restart_pipeline,
+   826	            singularity_fusion::autofix_restart_tauri_command,
+   827	            singularity_fusion::autofix_resync_lipsync,
+   828	            singularity_fusion::autofix_add_mutex,
+   829	
+   830	            singularity_fusion::autoheal_detect_broken,
+   831	            singularity_fusion::autoheal_detect_broken_modules,
+   832	            singularity_fusion::autoheal_reset_cognitive,
+   833	            singularity_fusion::autoheal_init_cognitive,
+   834	            singularity_fusion::autoheal_reset_adaptive,
+   835	            singularity_fusion::autoheal_clear_narrative,
+   836	            singularity_fusion::autoheal_init_narrative,
+   837	            singularity_fusion::autoheal_stop_avatar,
+   838	            singularity_fusion::autoheal_reload_avatar,
+   839	            singularity_fusion::autoheal_start_avatar,
+   840	            singularity_fusion::autoheal_clear_tts_queue,
+   841	            singularity_fusion::autoheal_init_tts,
+   842	            singularity_fusion::autoheal_resync_lipsync,
+   843	            singularity_fusion::autoheal_rebuild_memory_index,
+   844	            singularity_fusion::autoheal_validate_memory,
+   845	            singularity_fusion::autoheal_stop_pipeline,
+   846	            singularity_fusion::autoheal_clear_pipeline,
+   847	            singularity_fusion::autoheal_start_pipeline,
+   848	            singularity_fusion::autoheal_heal_cognitive_module,
+   849	            singularity_fusion::autoheal_heal_avatar_module,
+   850	            singularity_fusion::autoheal_heal_tts_module,
+   851	            singularity_fusion::autoheal_heal_lipsync_module,
+   852	            singularity_fusion::autoheal_heal_memory_module,
+   853	            singularity_fusion::autoheal_heal_pipeline,
+   854	            singularity_fusion::autoheal_resync_state,
+   855	            singularity_fusion::autoheal_get_history,
+   856	            singularity_fusion::autoheal_reset,
+   857	
+   858	            singularity_fusion::crashguard_detect_threats,
+   859	            singularity_fusion::crashguard_clear_memory,
+   860	            singularity_fusion::crashguard_kill_thread,
+   861	            singularity_fusion::crashguard_restart_module,
+   862	            singularity_fusion::crashguard_emergency_shutdown,
+   863	            singularity_fusion::crashguard_reset_pipeline,
+   864	            singularity_fusion::crashguard_emergency_rollback,
+   865	            singularity_fusion::crashguard_get_active_threats,
+   866	            singularity_fusion::crashguard_get_stats,
+   867	
+   868	            singularity_fusion::performance_get_metrics,
+   869	            singularity_fusion::performance_throttle_cpu,
+   870	            singularity_fusion::performance_optimize_gpu,
+
+=== singularity_fusion/mod.rs (exports) ===
+     1	//! ═══════════════════════════════════════════════════════════════════════════
+     2	//! TITANE∞ SINGULARITY-FUSION vΩ - Backend Module
+     3	//! ═══════════════════════════════════════════════════════════════════════════
+     4	//!
+     5	//! @description Module central pour SINGULARITY-FUSION vΩ
+     6	//!
+     7	//! @modules
+     8	//! - fusion_engine: Moteur de fusion central
+     9	//! - unified_pipeline: Pipeline unifié IA→TTS→Avatar
+    10	//! - auto_fix: Correction automatique
+    11	//! - auto_heal: Réparation modules
+    12	//! - performance: Optimisation CPU/GPU/Mémoire
+    13	//! - crash_guard: Protection crashes + recovery
+    14	//!
+    15	//! @version Ω (Omega - Final Fusion)
+    16	//! @created 2025-11-27
+    17	
+    18	pub mod auto_fix;
+    19	pub mod auto_heal;
+    20	pub mod crash_guard;
+    21	pub mod fusion_engine;
+    22	pub mod performance;
+    23	pub mod unified_pipeline;
+    24	
+    25	// Réexporter les types publics
+    26	#[allow(unused_imports)]
+    27	pub use auto_fix::*;
+    28	#[allow(unused_imports)]
+    29	pub use auto_heal::*;
+    30	#[allow(unused_imports)]
+    31	pub use crash_guard::*;
+    32	#[allow(unused_imports)]
+    33	pub use fusion_engine::*;
+    34	#[allow(unused_imports)]
+    35	pub use performance::*;
+    36	#[allow(unused_imports)]
+    37	pub use unified_pipeline::*;
+
+=== auto_fix.rs: key symbols + fn list (excerpt) ===
+     1	//! ═══════════════════════════════════════════════════════════════════════════
+     2	//! AUTO FIX ENGINE - Backend Commands
+     3	//! ═══════════════════════════════════════════════════════════════════════════
+     4	
+     5	use serde::{Deserialize, Serialize};
+     6	use std::sync::Mutex;
+     7	use tauri::State;
+     8	
+     9	// ═══════════════════════════════════════════════════════════════════════════
+    10	// TYPES
+    11	// ═══════════════════════════════════════════════════════════════════════════
+    12	
+    13	#[derive(Debug, Clone, Serialize, Deserialize)]
+    14	pub struct DetectedIssue {
+    15	    pub id: String,
+    16	    pub issue_type: String,
+    17	    pub severity: String,
+    18	    pub description: String,
+    19	    pub source: String,
+    20	    pub detected_at: u64,
+    21	    pub fixable: bool,
+    22	}
+    23	
+    24	#[derive(Debug, Clone, Serialize, Deserialize)]
+    25	pub struct FixResult {
+    26	    pub issue_id: String,
+    27	    pub success: bool,
+    28	    pub actions_taken: Vec<String>,
+    29	    pub duration: u64,
+    30	    pub timestamp: u64,
+    31	}
+    32	
+    33	#[derive(Debug, Clone, Serialize, Deserialize)]
+    34	pub struct AutoFixStats {
+    35	    pub total_issues_detected: u64,
+    36	    pub total_issues_fixed: u64,
+    37	    pub fix_success_rate: f32,
+    38	    pub avg_fix_duration: f32,
+    39	}
+    40	
+    41	#[derive(Debug, Clone, Serialize, Deserialize)]
+    42	#[serde(rename_all = "camelCase")]
+    43	pub struct AutoFixAddMutexArgs {
+    44	    pub file: Option<String>,
+    45	    pub symbol: Option<String>,
+    46	    pub reason: Option<String>,
+    47	}
+    48	
+    49	// ═══════════════════════════════════════════════════════════════════════════
+    50	// STATE
+    51	// ═══════════════════════════════════════════════════════════════════════════
+    52	
+    53	pub struct AutoFixState {
+    54	    pub issues: Mutex<Vec<DetectedIssue>>,
+    55	    pub fix_history: Mutex<Vec<FixResult>>,
+    56	    pub stats: Mutex<AutoFixStats>,
+    57	}
+    58	
+    59	impl Default for AutoFixState {
+    60	    fn default() -> Self {
+    61	        Self {
+    62	            issues: Mutex::new(Vec::new()),
+    63	            fix_history: Mutex::new(Vec::new()),
+    64	            stats: Mutex::new(AutoFixStats {
+    65	                total_issues_detected: 0,
+    66	                total_issues_fixed: 0,
+    67	                fix_success_rate: 1.0,
+    68	                avg_fix_duration: 0.0,
+    69	            }),
+    70	        }
+    71	    }
+    72	}
+    73	
+    74	// ═══════════════════════════════════════════════════════════════════════════
+    75	// COMMANDS
+    76	// ═══════════════════════════════════════════════════════════════════════════
+    77	
+    78	/// Détecte les warnings Rust
+    79	#[tauri::command]
+    80	pub async fn autofix_detect_rust_warnings(
+    81	    state: State<'_, AutoFixState>,
+    82	) -> Result<Vec<DetectedIssue>, String> {
+    83	    // Simuler détection
+    84	    let issues = vec![];
+    85	
+    86	    let mut stored_issues = state.issues.lock().map_err(|e| e.to_string())?;
+    87	    stored_issues.extend(issues.clone());
+    88	
+    89	    Ok(issues)
+    90	}
+    91	
+    92	/// Détecte les erreurs TypeScript
+    93	#[tauri::command]
+    94	pub async fn autofix_detect_typescript_errors(
+    95	    state: State<'_, AutoFixState>,
+    96	) -> Result<Vec<DetectedIssue>, String> {
+    97	    let issues = vec![];
+    98	
+    99	    let mut stored_issues = state.issues.lock().map_err(|e| e.to_string())?;
+   100	    stored_issues.extend(issues.clone());
+   101	
+   102	    Ok(issues)
+   103	}
+   104	
+   105	/// Détecte les violations React Hooks
+   106	#[tauri::command]
+   107	pub async fn autofix_detect_react_hook_violations(
+   108	    state: State<'_, AutoFixState>,
+   109	) -> Result<Vec<DetectedIssue>, String> {
+   110	    let issues = vec![];
+   111	
+   112	    let mut stored_issues = state.issues.lock().map_err(|e| e.to_string())?;
+   113	    stored_issues.extend(issues.clone());
+   114	
+   115	    Ok(issues)
+   116	}
+   117	
+   118	/// Détecte les états invalides
+   119	#[tauri::command]
+   120	pub async fn autofix_detect_invalid_states(
+   121	    state: State<'_, AutoFixState>,
+   122	) -> Result<Vec<DetectedIssue>, String> {
+   123	    let issues = vec![];
+   124	
+   125	    let mut stored_issues = state.issues.lock().map_err(|e| e.to_string())?;
+   126	    stored_issues.extend(issues.clone());
+   127	
+   128	    Ok(issues)
+   129	}
+   130	
+   131	/// Corrige un problème spécifique
+   132	#[tauri::command]
+   133	pub async fn autofix_fix_issue(
+   134	    state: State<'_, AutoFixState>,
+   135	    issue_id: String,
+   136	) -> Result<FixResult, String> {
+   137	    let start = current_timestamp();
+   138	
+   139	    // Simuler correction
+   140	    let result = FixResult {
+   141	        issue_id: issue_id.clone(),
+   142	        success: true,
+   143	        actions_taken: vec!["Applied automatic fix".to_string()],
+   144	        duration: current_timestamp() - start,
+   145	        timestamp: current_timestamp(),
+   146	    };
+   147	
+   148	    // Sauvegarder dans l'historique
+   149	    let mut history = state.fix_history.lock().map_err(|e| e.to_string())?;
+   150	    history.push(result.clone());
+   151	
+   152	    // Mettre à jour stats
+   153	    let mut stats = state.stats.lock().map_err(|e| e.to_string())?;
+   154	    stats.total_issues_fixed += 1;
+   155	
+   156	    // Retirer de la liste des issues
+   157	    let mut issues = state.issues.lock().map_err(|e| e.to_string())?;
+   158	    issues.retain(|i| i.id != issue_id);
+   159	
+   160	    Ok(result)
+   161	}
+   162	
+   163	/// Corrige tous les problèmes
+   164	#[tauri::command]
+   165	pub async fn autofix_fix_all(state: State<'_, AutoFixState>) -> Result<Vec<FixResult>, String> {
+   166	    let issues = state.issues.lock().map_err(|e| e.to_string())?.clone();
+   167	    let mut results = Vec::new();
+   168	
+   169	    for issue in issues {
+   170	        if issue.fixable {
+   171	            // Correction inline au lieu d'appel récursif
+   172	            let start = current_timestamp();
+   173	
+   174	            let result = FixResult {
+   175	                issue_id: issue.id.clone(),
+   176	                success: true,
+   177	                actions_taken: vec!["Applied automatic fix".to_string()],
+   178	                duration: current_timestamp() - start,
+   179	                timestamp: current_timestamp(),
+   180	            };
+   181	
+   182	            // Sauvegarder dans l'historique
+   183	            let mut history = state.fix_history.lock().map_err(|e| e.to_string())?;
+   184	            history.push(result.clone());
+   185	
+   186	            // Mettre à jour stats
+   187	            let mut stats = state.stats.lock().map_err(|e| e.to_string())?;
+   188	            stats.total_issues_fixed += 1;
+   189	
+   190	            results.push(result);
+   191	        }
+   192	    }
+   193	
+   194	    // Retirer toutes les issues fixées
+   195	    let mut issues_lock = state.issues.lock().map_err(|e| e.to_string())?;
+   196	    issues_lock.clear();
+   197	
+   198	    Ok(results)
+   199	}
+   200	/// Obtient l'historique des corrections
+   201	#[tauri::command]
+   202	pub async fn autofix_get_history(state: State<'_, AutoFixState>) -> Result<Vec<FixResult>, String> {
+   203	    let history = state.fix_history.lock().map_err(|e| e.to_string())?;
+   204	    Ok(history.clone())
+   205	}
+   206	
+   207	/// Obtient les statistiques
+   208	#[tauri::command]
+   209	pub async fn autofix_get_stats(state: State<'_, AutoFixState>) -> Result<AutoFixStats, String> {
+   210	    let stats = state.stats.lock().map_err(|e| e.to_string())?;
+   211	    Ok(stats.clone())
+   212	}
+   213	
+   214	/// Réinitialise AutoFix
+   215	#[tauri::command]
+   216	pub async fn autofix_reset(state: State<'_, AutoFixState>) -> Result<(), String> {
+   217	    let mut issues = state.issues.lock().map_err(|e| e.to_string())?;
+   218	    let mut history = state.fix_history.lock().map_err(|e| e.to_string())?;
+   219	    let mut stats = state.stats.lock().map_err(|e| e.to_string())?;
+   220	
+
+=== auto_heal.rs: key symbols + fn list (excerpt) ===
+     1	//! ═══════════════════════════════════════════════════════════════════════════
+     2	//! AUTO HEAL ENGINE - Backend Commands
+     3	//! ═══════════════════════════════════════════════════════════════════════════
+     4	
+     5	use serde::{Deserialize, Serialize};
+     6	use std::sync::Mutex;
+     7	use tauri::State;
+     8	
+     9	// ═══════════════════════════════════════════════════════════════════════════
+    10	// TYPES
+    11	// ═══════════════════════════════════════════════════════════════════════════
+    12	
+    13	#[derive(Debug, Clone, Serialize, Deserialize)]
+    14	pub struct BrokenModule {
+    15	    pub module_type: String,
+    16	    pub severity: String,
+    17	    pub error: String,
+    18	    pub detected_at: u64,
+    19	}
+    20	
+    21	#[derive(Debug, Clone, Serialize, Deserialize)]
+    22	pub struct HealResult {
+    23	    pub module_type: String,
+    24	    pub success: bool,
+    25	    pub actions: Vec<String>,
+    26	    pub duration: u64,
+    27	}
+    28	
+    29	// ═══════════════════════════════════════════════════════════════════════════
+    30	// STATE
+    31	// ═══════════════════════════════════════════════════════════════════════════
+    32	
+    33	pub struct AutoHealState {
+    34	    pub broken_modules: Mutex<Vec<BrokenModule>>,
+    35	    pub heal_history: Mutex<Vec<HealResult>>,
+    36	}
+    37	
+    38	impl Default for AutoHealState {
+    39	    fn default() -> Self {
+    40	        Self {
+    41	            broken_modules: Mutex::new(Vec::new()),
+    42	            heal_history: Mutex::new(Vec::new()),
+    43	        }
+    44	    }
+    45	}
+    46	
+    47	// ═══════════════════════════════════════════════════════════════════════════
+    48	// COMMANDS
+    49	// ═══════════════════════════════════════════════════════════════════════════
+    50	
+    51	#[tauri::command]
+    52	pub async fn autoheal_detect_broken_modules(
+    53	    state: State<'_, AutoHealState>,
+    54	) -> Result<Vec<BrokenModule>, String> {
+    55	    let modules = state.broken_modules.lock().map_err(|e| e.to_string())?;
+    56	    Ok(modules.clone())
+    57	}
+    58	
+    59	/// Frontend-compat alias for `autoheal_detect_broken_modules`.
+    60	#[tauri::command]
+    61	pub async fn autoheal_detect_broken(
+    62	    state: State<'_, AutoHealState>,
+    63	) -> Result<Vec<BrokenModule>, String> {
+    64	    autoheal_detect_broken_modules(state).await
+    65	}
+    66	
+    67	fn record_simple_action(
+    68	    state: &State<'_, AutoHealState>,
+    69	    module_type: &str,
+    70	    actions: Vec<String>,
+    71	) -> Result<(), String> {
+    72	    let result = HealResult {
+    73	        module_type: module_type.to_string(),
+    74	        success: true,
+    75	        actions,
+    76	        duration: 0,
+    77	    };
+    78	
+    79	    let mut history = state.heal_history.lock().map_err(|e| e.to_string())?;
+    80	    history.push(result);
+    81	    Ok(())
+    82	}
+    83	
+    84	// ═══════════════════════════════════════════════════════════════════════════
+    85	// FRONTEND COMPAT COMMANDS (secureInvoke)
+    86	// ═══════════════════════════════════════════════════════════════════════════
+    87	
+    88	#[tauri::command]
+    89	pub async fn autoheal_reset_cognitive(state: State<'_, AutoHealState>) -> Result<(), String> {
+    90	    record_simple_action(&state, "cognitive", vec!["reset".to_string()])
+    91	}
+    92	
+    93	#[tauri::command]
+    94	pub async fn autoheal_init_cognitive(state: State<'_, AutoHealState>) -> Result<(), String> {
+    95	    record_simple_action(&state, "cognitive", vec!["init".to_string()])
+    96	}
+    97	
+    98	#[tauri::command]
+    99	pub async fn autoheal_reset_adaptive(state: State<'_, AutoHealState>) -> Result<(), String> {
+   100	    record_simple_action(&state, "adaptive", vec!["reset".to_string()])
+   101	}
+   102	
+   103	#[tauri::command]
+   104	pub async fn autoheal_clear_narrative(state: State<'_, AutoHealState>) -> Result<(), String> {
+   105	    record_simple_action(&state, "narrative", vec!["clear".to_string()])
+   106	}
+   107	
+   108	#[tauri::command]
+   109	pub async fn autoheal_init_narrative(state: State<'_, AutoHealState>) -> Result<(), String> {
+   110	    record_simple_action(&state, "narrative", vec!["init".to_string()])
+   111	}
+   112	
+   113	#[tauri::command]
+   114	pub async fn autoheal_stop_avatar(state: State<'_, AutoHealState>) -> Result<(), String> {
+   115	    record_simple_action(&state, "avatar", vec!["stop".to_string()])
+   116	}
+   117	
+   118	#[tauri::command]
+   119	pub async fn autoheal_reload_avatar(state: State<'_, AutoHealState>) -> Result<(), String> {
+   120	    record_simple_action(&state, "avatar", vec!["reload".to_string()])
+   121	}
+   122	
+   123	#[tauri::command]
+   124	pub async fn autoheal_start_avatar(state: State<'_, AutoHealState>) -> Result<(), String> {
+   125	    record_simple_action(&state, "avatar", vec!["start".to_string()])
+   126	}
+   127	
+   128	#[tauri::command]
+   129	pub async fn autoheal_clear_tts_queue(state: State<'_, AutoHealState>) -> Result<(), String> {
+   130	    record_simple_action(&state, "tts", vec!["clear_queue".to_string()])
+   131	}
+   132	
+   133	#[tauri::command]
+   134	pub async fn autoheal_init_tts(state: State<'_, AutoHealState>) -> Result<(), String> {
+   135	    record_simple_action(&state, "tts", vec!["init".to_string()])
+   136	}
+   137	
+   138	#[tauri::command]
+   139	pub async fn autoheal_resync_lipsync(state: State<'_, AutoHealState>) -> Result<(), String> {
+   140	    record_simple_action(&state, "lipsync", vec!["resync".to_string()])
+   141	}
+   142	
+   143	#[tauri::command]
+   144	pub async fn autoheal_rebuild_memory_index(state: State<'_, AutoHealState>) -> Result<(), String> {
+   145	    record_simple_action(&state, "memory", vec!["rebuild_index".to_string()])
+   146	}
+   147	
+   148	#[tauri::command]
+   149	pub async fn autoheal_validate_memory(state: State<'_, AutoHealState>) -> Result<(), String> {
+   150	    record_simple_action(&state, "memory", vec!["validate".to_string()])
+   151	}
+   152	
+   153	#[tauri::command]
+   154	pub async fn autoheal_stop_pipeline(state: State<'_, AutoHealState>) -> Result<(), String> {
+   155	    record_simple_action(&state, "pipeline", vec!["stop".to_string()])
+   156	}
+   157	
+   158	#[tauri::command]
+   159	pub async fn autoheal_clear_pipeline(state: State<'_, AutoHealState>) -> Result<(), String> {
+   160	    record_simple_action(&state, "pipeline", vec!["clear".to_string()])
+   161	}
+   162	
+   163	#[tauri::command]
+   164	pub async fn autoheal_start_pipeline(state: State<'_, AutoHealState>) -> Result<(), String> {
+   165	    record_simple_action(&state, "pipeline", vec!["start".to_string()])
+   166	}
+   167	
+   168	#[tauri::command]
+   169	pub async fn autoheal_heal_cognitive_module(
+   170	    state: State<'_, AutoHealState>,
+   171	) -> Result<HealResult, String> {
+   172	    let result = HealResult {
+   173	        module_type: "cognitive".to_string(),
+   174	        success: true,
+   175	        actions: vec!["Reset".to_string(), "Reinit".to_string()],
+   176	        duration: 100,
+   177	    };
+   178	
+   179	    let mut history = state.heal_history.lock().map_err(|e| e.to_string())?;
+   180	    history.push(result.clone());
+   181	
+   182	    Ok(result)
+   183	}
+   184	
+   185	#[tauri::command]
+   186	pub async fn autoheal_heal_avatar_module(
+   187	    state: State<'_, AutoHealState>,
+   188	) -> Result<HealResult, String> {
+   189	    let result = HealResult {
+   190	        module_type: "avatar".to_string(),
+   191	        success: true,
+   192	        actions: vec![
+   193	            "Stop".to_string(),
+   194	            "Reload".to_string(),
+   195	            "Restart".to_string(),
+   196	        ],
+   197	        duration: 150,
+   198	    };
+   199	
+   200	    let mut history = state.heal_history.lock().map_err(|e| e.to_string())?;
+   201	    history.push(result.clone());
+   202	
+   203	    Ok(result)
+   204	}
+   205	
+   206	#[tauri::command]
+   207	pub async fn autoheal_heal_tts_module(
+   208	    state: State<'_, AutoHealState>,
+   209	) -> Result<HealResult, String> {
+   210	    let result = HealResult {
+   211	        module_type: "tts".to_string(),
+   212	        success: true,
+   213	        actions: vec!["Clear queue".to_string(), "Reinit".to_string()],
+   214	        duration: 80,
+   215	    };
+   216	
+   217	    let mut history = state.heal_history.lock().map_err(|e| e.to_string())?;
+   218	    history.push(result.clone());
+   219	
+   220	    Ok(result)
+   221	}
+   222	
+   223	#[tauri::command]
+   224	pub async fn autoheal_heal_lipsync_module(
+   225	    state: State<'_, AutoHealState>,
+   226	) -> Result<HealResult, String> {
+   227	    let result = HealResult {
+   228	        module_type: "lipsync".to_string(),
+   229	        success: true,
+   230	        actions: vec!["Resynchronize".to_string()],
+   231	        duration: 50,
+   232	    };
+   233	
+   234	    let mut history = state.heal_history.lock().map_err(|e| e.to_string())?;
+   235	    history.push(result.clone());
+   236	
+   237	    Ok(result)
+   238	}
+   239	
+   240	#[tauri::command]
+
+=== grep: exported Tauri commands (autoheal_/autofix_) ===
+src-tauri/src/singularity_fusion/auto_fix.rs:80:pub async fn autofix_detect_rust_warnings(
+src-tauri/src/singularity_fusion/auto_fix.rs:94:pub async fn autofix_detect_typescript_errors(
+src-tauri/src/singularity_fusion/auto_fix.rs:107:pub async fn autofix_detect_react_hook_violations(
+src-tauri/src/singularity_fusion/auto_fix.rs:120:pub async fn autofix_detect_invalid_states(
+src-tauri/src/singularity_fusion/auto_fix.rs:133:pub async fn autofix_fix_issue(
+src-tauri/src/singularity_fusion/auto_fix.rs:165:pub async fn autofix_fix_all(state: State<'_, AutoFixState>) -> Result<Vec<FixResult>, String> {
+src-tauri/src/singularity_fusion/auto_fix.rs:202:pub async fn autofix_get_history(state: State<'_, AutoFixState>) -> Result<Vec<FixResult>, String> {
+src-tauri/src/singularity_fusion/auto_fix.rs:209:pub async fn autofix_get_stats(state: State<'_, AutoFixState>) -> Result<AutoFixStats, String> {
+src-tauri/src/singularity_fusion/auto_fix.rs:216:pub async fn autofix_reset(state: State<'_, AutoFixState>) -> Result<(), String> {
+src-tauri/src/singularity_fusion/auto_fix.rs:238:pub async fn autofix_rust_warning(
+src-tauri/src/singularity_fusion/auto_fix.rs:268:pub async fn autofix_typescript_error(
+src-tauri/src/singularity_fusion/auto_fix.rs:298:pub async fn autofix_reset_state(state: State<'_, AutoFixState>) -> Result<(), String> {
+src-tauri/src/singularity_fusion/auto_fix.rs:338:pub async fn autofix_restart_pipeline(state: State<'_, AutoFixState>) -> Result<(), String> {
+src-tauri/src/singularity_fusion/auto_fix.rs:344:pub async fn autofix_restart_tauri_command(
+src-tauri/src/singularity_fusion/auto_fix.rs:354:pub async fn autofix_resync_lipsync(state: State<'_, AutoFixState>) -> Result<(), String> {
+src-tauri/src/singularity_fusion/auto_fix.rs:360:pub async fn autofix_add_mutex(
+src-tauri/src/singularity_fusion/auto_heal.rs:52:pub async fn autoheal_detect_broken_modules(
+src-tauri/src/singularity_fusion/auto_heal.rs:61:pub async fn autoheal_detect_broken(
+src-tauri/src/singularity_fusion/auto_heal.rs:89:pub async fn autoheal_reset_cognitive(state: State<'_, AutoHealState>) -> Result<(), String> {
+src-tauri/src/singularity_fusion/auto_heal.rs:94:pub async fn autoheal_init_cognitive(state: State<'_, AutoHealState>) -> Result<(), String> {
+src-tauri/src/singularity_fusion/auto_heal.rs:99:pub async fn autoheal_reset_adaptive(state: State<'_, AutoHealState>) -> Result<(), String> {
+src-tauri/src/singularity_fusion/auto_heal.rs:104:pub async fn autoheal_clear_narrative(state: State<'_, AutoHealState>) -> Result<(), String> {
+src-tauri/src/singularity_fusion/auto_heal.rs:109:pub async fn autoheal_init_narrative(state: State<'_, AutoHealState>) -> Result<(), String> {
+src-tauri/src/singularity_fusion/auto_heal.rs:114:pub async fn autoheal_stop_avatar(state: State<'_, AutoHealState>) -> Result<(), String> {
+src-tauri/src/singularity_fusion/auto_heal.rs:119:pub async fn autoheal_reload_avatar(state: State<'_, AutoHealState>) -> Result<(), String> {
+src-tauri/src/singularity_fusion/auto_heal.rs:124:pub async fn autoheal_start_avatar(state: State<'_, AutoHealState>) -> Result<(), String> {
+src-tauri/src/singularity_fusion/auto_heal.rs:129:pub async fn autoheal_clear_tts_queue(state: State<'_, AutoHealState>) -> Result<(), String> {
+src-tauri/src/singularity_fusion/auto_heal.rs:134:pub async fn autoheal_init_tts(state: State<'_, AutoHealState>) -> Result<(), String> {
+src-tauri/src/singularity_fusion/auto_heal.rs:139:pub async fn autoheal_resync_lipsync(state: State<'_, AutoHealState>) -> Result<(), String> {
+src-tauri/src/singularity_fusion/auto_heal.rs:144:pub async fn autoheal_rebuild_memory_index(state: State<'_, AutoHealState>) -> Result<(), String> {
+src-tauri/src/singularity_fusion/auto_heal.rs:149:pub async fn autoheal_validate_memory(state: State<'_, AutoHealState>) -> Result<(), String> {
+src-tauri/src/singularity_fusion/auto_heal.rs:154:pub async fn autoheal_stop_pipeline(state: State<'_, AutoHealState>) -> Result<(), String> {
+src-tauri/src/singularity_fusion/auto_heal.rs:159:pub async fn autoheal_clear_pipeline(state: State<'_, AutoHealState>) -> Result<(), String> {
+src-tauri/src/singularity_fusion/auto_heal.rs:164:pub async fn autoheal_start_pipeline(state: State<'_, AutoHealState>) -> Result<(), String> {
+src-tauri/src/singularity_fusion/auto_heal.rs:169:pub async fn autoheal_heal_cognitive_module(
+src-tauri/src/singularity_fusion/auto_heal.rs:186:pub async fn autoheal_heal_avatar_module(
+src-tauri/src/singularity_fusion/auto_heal.rs:207:pub async fn autoheal_heal_tts_module(
+src-tauri/src/singularity_fusion/auto_heal.rs:224:pub async fn autoheal_heal_lipsync_module(
+src-tauri/src/singularity_fusion/auto_heal.rs:241:pub async fn autoheal_heal_memory_module(
+src-tauri/src/singularity_fusion/auto_heal.rs:258:pub async fn autoheal_heal_pipeline(state: State<'_, AutoHealState>) -> Result<HealResult, String> {
+src-tauri/src/singularity_fusion/auto_heal.rs:277:pub async fn autoheal_resync_state() -> Result<(), String> {
+src-tauri/src/singularity_fusion/auto_heal.rs:283:pub async fn autoheal_get_history(
+src-tauri/src/singularity_fusion/auto_heal.rs:291:pub async fn autoheal_reset(state: State<'_, AutoHealState>) -> Result<(), String> {
