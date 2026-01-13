@@ -21,16 +21,16 @@ Ce document est conçu pour être **vérifiable** : chaque constat pointe vers (
 
 ## 1) Snapshot repo (Git)
 
-**État actuel (2026-01-13):** le repo est sur `MAIN`, **devant `origin/MAIN` de 2 commits**, avec de nombreux changements **unstaged** + des fichiers **non suivis**.
+**État actuel (2026-01-13):** le repo est sur `MAIN`, **aligné avec `origin/MAIN` (0/0)**. Aucun changement **tracked** en working tree ; seuls des fichiers de preuve existent localement en **non suivis** sous `docs/_evidence/v27/`.
 
-- Preuve (post-split index): `docs/_evidence/v27/A5_git_status_after_unstage_2026-01-13T093108.txt`
-  - Montre que **seul** `src/test/setup.ts` est staged (`M  src/test/setup.ts`), le reste étant en working tree (` M ...`) ou non suivi (`?? ...`).
+- Commande reproductible: `git status --porcelain=v1 -b`
+  - Montre `## MAIN...origin/MAIN` + des entrées `?? docs/_evidence/v27/...`.
+- Commande reproductible: `git rev-list --left-right --count origin/MAIN...HEAD`
+  - Retour attendu: `0 0`.
 
-**Note:** une capture plus ancienne mentionnait un cherry-pick en cours.
+**P0 (règle permanente pour audit/PRs sûres):** ne pas mélanger de sujets dans la même PR.
 
-- Preuve (ancienne capture): `docs/_evidence/v27/A1_repo.txt`
-
-**P0 (bloquant pour audit/PRs sûres):** ne pas mélanger de sujets dans la même PR. Le risque "gros batch staged" a été **réduit** en isolant un seul fichier staged (preuve: `A5_git_status_after_unstage_2026-01-13T093108.txt`).
+- Historique (preuve de “split”/unstage pendant l’audit): `docs/_evidence/v27/A5_git_status_after_unstage_2026-01-13T093108.txt`
 
 ## 2) Règles de gouvernance (dev-only)
 
@@ -152,3 +152,40 @@ Sans modifier le code ici (dev-only), une séquence typique “safe PRs” pour 
 2. **PR-2 (docs)**: mettre à jour la doc d’instructions (versions Vite/Vitest/TS) pour refléter `package.json`.
 3. **PR-3 (tests)**: durcir le wrapper `scripts/test-wrapper.sh` contre les changements de format output Vitest (detection des fails) et/ou ajouter un mode “raw” recommandé.
 4. **PR-4 (dev server)**: revoir `vite.config.ts` (`server.host`) si “local-only strict” est requis.
+
+## 9) Convention d’usage — Healing (`unifiedHealingFacade` vs `autoHealEngine`)
+
+Objectif: éviter la dérive (mix callsites/engines) et clarifier quand utiliser la façade unifiée.
+
+### 9.1 Règle de base (nouveau code)
+
+- **Call sites applicatifs** (UI, orchestrateur, monitoring, “actions” runtime): utiliser **`unifiedHealingFacade.heal()`**.
+  - Source: `src/services/ai/unifiedHealingFacade.ts` lignes 1-120 (architecture/intent) et 120-220 (API `heal()` + protections rate-limit/circuit breaker).
+  - Raison: la façade applique des garde-fous (rate limit, circuit breaker) et route vers **simple** (autoHealEngine) ou **advanced** (selfHealing) selon la sévérité.
+
+- **Appels “fire-and-forget”**: utiliser `void unifiedHealingFacade.heal(...)`.
+  - Source (pattern existant): `src/services/ai/orchestrator.ts` lignes 744-752.
+  - Note: si un appelant a besoin de savoir si une tentative a échoué, il doit `await` le `UnifiedHealResult`.
+
+### 9.2 Usage direct de `autoHealEngine` (exceptions acceptées)
+
+- **Niveau moteur / tests de bas niveau / instrumentation**: `autoHealEngine` reste le “source-of-truth” pour la détection, les stats et l’attente synchronisée d’une action.
+  - Source: `src/services/ai/autoHealEngine.ts` lignes 636-687 (API `heal()` et `awaitHealAction()`).
+
+- **Providers** (OpenAI/Claude/Gemini/Copilot): l’usage de `autoHealEngine.detectError()` est acceptable si l’intention est **uniquement** de classifier/logguer/stats, sans orchestration de healing.
+  - Sources (exemples):
+    - `src/services/ai/providers/openai.ts` ligne 112
+    - `src/services/ai/providers/claude.ts` ligne 115
+    - `src/services/ai/providers/gemini.ts` ligne 187
+    - `src/services/ai/providers/copilot.ts` ligne 183
+
+**Quand migrer un provider vers la façade ?**
+
+- Si on veut déclencher une tentative de récupération “end-to-end” (simple/advanced) avec protections, remplacer `autoHealEngine.detectError(...)` par `unifiedHealingFacade.heal({ source, error, type, metadata })`.
+  - Source: `src/services/ai/unifiedHealingFacade.ts` lignes 134-220 (classifie via `autoHealEngine.detectError()` puis route).
+
+### 9.3 Règle pour les tests
+
+- Tests “système”/orchestrateur: préférer `unifiedHealingFacade` pour refléter le runtime.
+- Tests “moteur”: utiliser `autoHealEngine.detectError()`/`awaitHealAction()` pour tester le comportement interne.
+  - Source (exemple test utilisant `detectError`): `src/__tests__/ai-subsystem-validation-v20omega.test.ts` ligne 174.
