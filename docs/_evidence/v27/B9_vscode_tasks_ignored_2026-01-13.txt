@@ -1,0 +1,89 @@
+]633;E;echo "Timestamp: 2026-01-13";65d9b9e1-c01a-4a21-9225-c83ac301ae3b]633;CTimestamp: 2026-01-13
+Scope: preuve git-ignore — .vscode/tasks.json
+
+Command: git ls-files .vscode/tasks.json
+
+Command: git check-ignore -v .vscode/tasks.json
+.gitignore:23:.vscode/	.vscode/tasks.json
+
+Command: sed -n '1,80p' .gitignore | cat
+# Dependencies
+node_modules/
+.[n][p][m]
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+*.lcov
+.nyc_output
+
+# Production
+dist/
+build/
+out/
+
+# Rust
+target/
+Cargo.lock
+**/*.rs.bk
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+logs/
+*.log
+n[p]m-debug.log*
+y[a]rn-debug.log*
+y[a]rn-error.log*
+lerna-debug.log*
+package-lock.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Python virtualenvs (local dev)
+.venv/
+venv/
+
+# Tauri
+/src-tauri/target
+/src-tauri/target-test
+/src-tauri/target-release
+/src-tauri/WixTools
+
+# TITANE∞ Dual-Runtime Directories
+runtime/stable/build/
+runtime/stable/dist/
+runtime/stable/node_modules/
+runtime/stable/*.AppImage
+runtime/stable/*.exe
+runtime/stable/*.dmg
+runtime/stable/*.deb
+runtime/dev/build/
+runtime/dev/dist/
+runtime/dev/node_modules/
+runtime/dev/logs/
+runtime/dev/*.log
+
+# Deploy artifacts
+deploy/
+*.tar.gz
+*.sha256
+
+# Caches
+.cache/
+.vite/
