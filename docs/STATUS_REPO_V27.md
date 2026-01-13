@@ -7,6 +7,7 @@ Ce document est conçu pour être **vérifiable** : chaque constat pointe vers (
 ## 0) Dossier de preuves
 
 - Point d’entrée: `docs/_evidence/v27/`
+- TRUTH MAP (canon): `docs/systems/TRUTH_MAP_v27.md`
 - État Git capturé: `docs/_evidence/v27/A1_repo.txt`
 - Versions tooling capturées: `docs/_evidence/v27/B1_pnpm_ls_vite_vitest.txt`
 - Exécution tests (échantillon) capturée (extrait): `docs/_evidence/v27/B3_omega_provider_excerpt_1880-1990.txt`
