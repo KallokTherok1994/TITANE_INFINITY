@@ -75,6 +75,7 @@
     "copilot-xs:precommit": "node .github/copilot-xs/scripts/precommit.js",
     "copilot-xs:status": "node .github/copilot-xs/scripts/agent-status.js",
     "copilot-xs:security-scan": "node .github/copilot-xs/scripts/security-scan.js",
+    "copilot-xs:gitguardian": "node .github/copilot-xs/scripts/gitguardian-precommit.js",
     "copilot-xs:test": "pnpm run copilot-xs:validate && pnpm run test:all",
     "cline:install": "bash .clinerules/install-hooks.sh",
     "cline:test-hooks": "bash -c 'echo Testing hooks... && .clinerules/hooks/TaskStart < tests/fixtures/hook-test-input.json'",

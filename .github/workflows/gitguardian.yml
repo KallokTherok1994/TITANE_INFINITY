@@ -1,0 +1,55 @@
+name: GitGuardian Secret Scanning
+
+on:
+  push:
+    branches: [MAIN, main, dev, stable-runtime]
+  pull_request:
+    branches: [MAIN, main]
+  schedule:
+    - cron: '0 4 * * *' # Daily at 4 AM UTC
+  workflow_dispatch:
+
+# Prevent concurrent runs on the same branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Default permissions (least privilege)
+permissions:
+  contents: read
+  security-events: write
+  issues: write
+
+jobs:
+  scan:
+    name: 🔐 GitGuardian Secret Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # Full history for better scanning
+
+      - name: 🔐 Run GitGuardian scan
+        uses: GitGuardian/ggshield-action@v1.33.0
+        env:
+          GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
+          GITHUB_PUSH_BEFORE_SHA: ${{ github.event.before }}
+          GITHUB_PUSH_BASE_SHA: ${{ github.event.base }}
+          GITHUB_PULL_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          GITHUB_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        with:
+          args: --show-secrets
+
+      - name: 📊 Summary
+        if: always()
+        run: |
+          echo "## 🔐 GitGuardian Secret Scan Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Secret scanning completed with GitGuardian" >> $GITHUB_STEP_SUMMARY
+          echo "- Scan type: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Branch: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "_GitGuardian scans for 350+ types of secrets including API keys, tokens, and credentials_" >> $GITHUB_STEP_SUMMARY
