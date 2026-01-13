@@ -33,7 +33,7 @@ paths-ignore:
   # Temporary and local files
   - tmp/
   - .tmp/
-  - *.log
+  - '*.log'
   - .current-server-info
   - .server.pid
   - .tunnel-access.txt
@@ -50,9 +50,9 @@ exclude:
   
   # Test fixtures that may contain fake credentials
   - tests/fixtures/**
-  - test/**/*.fixture.*
-  - **/*.test.ts
-  - **/*.spec.ts
+  - 'test/**/*.fixture.*'
+  - '**/*.test.ts'
+  - '**/*.spec.ts'
   
   # Configuration files with benign patterns
   - figma-tokens.json
