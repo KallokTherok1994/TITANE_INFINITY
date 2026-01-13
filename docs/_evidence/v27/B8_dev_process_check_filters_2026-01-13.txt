@@ -1,0 +1,15 @@
+Timestamp: 2026-01-13
+Scope: P0 tooling — fiabilisation des checks ports/process (éviter faux positifs)
+
+Contexte:
+- Les tâches VS Code sous `.vscode/` peuvent être ignorées par `.gitignore` selon la politique du repo.
+- Pour garantir un check reproductible et versionné, la vérification est désormais disponible via un script: `scripts/verify/check-dev-ports-processes.sh`.
+
+Command:
+  bash scripts/verify/check-dev-ports-processes.sh
+
+Output:
+  --- listening ports (4000/5173/4173/1430) ---
+  OK: no dev ports
+  --- dev processes (vite/tauri dev) ---
+  OK: no dev processes

@@ -18,6 +18,7 @@ Ce document est conçu pour être **vérifiable** : chaque constat pointe vers (
 - PR-2 (commit doc versions): `docs/_evidence/v27/A7_pr2_docs_versions_commit_2026-01-13T184332Z.txt`
 - PR-4 (Vite host local-only): `docs/_evidence/v27/A9_pr4_vite_host_localonly_2026-01-13T184642Z.txt`
 - Exécution tests (run complet, succès — résumé compact): `docs/_evidence/v27/B5_pnpm_test_run_summary_2026-01-13T093401Z.txt`
+- Checks ports/process (anti faux-positifs): `docs/_evidence/v27/B8_dev_process_check_filters_2026-01-13.txt`
 
 ## 1) Snapshot repo (Git)
 
@@ -78,6 +79,12 @@ Le repo impose un **mode développement permanent** (interdiction de builds/bund
 **Note sécurité/local-first:** le serveur dev était exposé sur `0.0.0.0` (accès réseau possible si pare-feu permissif). Il est désormais limité à `127.0.0.1`.
 
 - Preuve (commit): `docs/_evidence/v27/A9_pr4_vite_host_localonly_2026-01-13T184642Z.txt`
+
+**Vérification runtime (ports/process):** les checks de ports/process ont été durcis pour éviter les faux positifs (ex: `vitest.explorer`) et confirment qu’aucun port dev n’est ouvert.
+
+- Script versionné: `scripts/verify/check-dev-ports-processes.sh`
+
+- Preuve: `docs/_evidence/v27/B8_dev_process_check_filters_2026-01-13.txt`
 
 ### 4.2 Vitest (node/happy-dom)
 
