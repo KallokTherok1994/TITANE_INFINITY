@@ -144,6 +144,9 @@ remote-tunnel.pid
 tunnel-*.log
 .tunnel-access.txt
 
+# Local GitHub Actions self-hosted runner (contains credentials/state)
+actions-runner/
+
 # Cline CLI binaries (legacy global install)
 .tools/node/_extract/
 
