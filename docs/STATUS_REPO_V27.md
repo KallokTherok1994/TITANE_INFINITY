@@ -173,6 +173,7 @@ Objectif: éviter la dérive (mix callsites/engines) et clarifier quand utiliser
   - Source: `src/services/ai/autoHealEngine.ts` lignes 636-687 (API `heal()` et `awaitHealAction()`).
 
 - **Providers** (OpenAI/Claude/Gemini/Copilot): l’usage de `autoHealEngine.detectError()` est acceptable si l’intention est **uniquement** de classifier/logguer/stats, sans orchestration de healing.
+  - Raison: les providers relancent l’erreur (ils ne “recover” pas localement). Le healing “end-to-end” (avec protections rate-limit/circuit) est mieux déclenché au niveau orchestrateur/UI, là où une stratégie de fallback/récupération existe.
   - Sources (exemples):
     - `src/services/ai/providers/openai.ts` ligne 112
     - `src/services/ai/providers/claude.ts` ligne 115
