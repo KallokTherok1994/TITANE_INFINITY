@@ -51,10 +51,10 @@ Assistant IA local-first, privacy-first, cognitif révolutionnaire.
 
 ### Frontend
 
-- **React 18.3.1** + **Vite 6.0.5** + **TypeScript 5.7.3**
-- **Zustand 5.0.2** (state management)
-- **Vitest 4.0.13** (testing) — **NO JEST**
-- **Playwright 1.56.1** (E2E)
+- **React 18.3.1** + **Vite 6.4.1** + **TypeScript 5.9.3**
+- **Zustand 5.0.9** (state management)
+- **Vitest 4.0.16** (testing) — **NO JEST**
+- **Playwright 1.57.0** (E2E)
 
 ### Backend
 
