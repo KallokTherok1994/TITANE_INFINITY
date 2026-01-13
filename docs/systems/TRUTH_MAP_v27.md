@@ -50,3 +50,13 @@ Chaque point ci-dessous doit être vérifiable via (a) un fichier, ou (b) une pr
 
 - Le document de référence v27 est [docs/STATUS_REPO_V27.md](docs/STATUS_REPO_V27.md).
   - Il pointe vers les preuves v27 et sert de résumé audit/état.
+
+## F) AUTO-* reality check (validation + surfaces réelles)
+
+- Validation “AUTO-HEAL systems” (scripts + doc + structure) : exécution complète OK.
+  - Source: [scripts/validate-auto-heal.sh](scripts/validate-auto-heal.sh#L8-L120)
+  - Preuve: [docs/_evidence/v27/B11_auto_heal_validation_fixed_2026-01-13.txt](docs/_evidence/v27/B11_auto_heal_validation_fixed_2026-01-13.txt#L1-L35)
+
+- Surfaces Tauri/Rust “singularity_fusion::*” exposées via `generate_handler![...]`.
+  - States AutoFix/AutoHeal/CrashGuard/Performance/Pipeline: [src-tauri/src/main.rs](src-tauri/src/main.rs#L506-L521)
+  - Commandes AutoFix/AutoHeal (IPC): [src-tauri/src/main.rs](src-tauri/src/main.rs#L812-L857)

@@ -21,7 +21,8 @@ Objectif: pointer les surfaces réelles AutoHeal/AutoFix/Auto-Healing (scripts, 
 
 ## 3) Script de validation (validation “AUTO-HEAL systems”)
 
-- Validation des scripts + doc: `scripts/validate-auto-heal.sh` lignes 1-134.
+- Validation des scripts + doc: [scripts/validate-auto-heal.sh](../../scripts/validate-auto-heal.sh#L8-L120).
+  - Preuve d’exécution: [docs/_evidence/v27/B11_auto_heal_validation_fixed_2026-01-13.txt](../../docs/_evidence/v27/B11_auto_heal_validation_fixed_2026-01-13.txt#L1-L35)
   - Vérifie l’existence/exécutabilité de:
     - `scripts/maintenance/health-check-enhanced.sh`
     - `scripts/maintenance/proactive-monitor.sh`
@@ -33,8 +34,8 @@ Objectif: pointer les surfaces réelles AutoHeal/AutoFix/Auto-Healing (scripts, 
 
 ### 4.1 États et commandes “singularity_fusion::*”
 
-- Enregistrement de states AutoFix/AutoHeal: `src-tauri/src/main.rs` lignes 505-523.
-- Commandes exposées (IPC) AutoFix/AutoHeal: `src-tauri/src/main.rs` lignes 804-857.
+- Enregistrement de states AutoFix/AutoHeal: [src-tauri/src/main.rs](../../src-tauri/src/main.rs#L506-L521).
+- Commandes exposées (IPC) AutoFix/AutoHeal: [src-tauri/src/main.rs](../../src-tauri/src/main.rs#L812-L857).
   - AutoFix: `singularity_fusion::autofix_*`
   - AutoHeal: `singularity_fusion::autoheal_*`
 

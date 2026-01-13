@@ -21,6 +21,7 @@ Ce document est conçu pour être **vérifiable** : chaque constat pointe vers (
 - Exécution tests (run complet, succès — résumé compact): `docs/_evidence/v27/B5_pnpm_test_run_summary_2026-01-13T093401Z.txt`
 - Checks ports/process (anti faux-positifs): `docs/_evidence/v27/B8_dev_process_check_filters_2026-01-13.txt`
 - Git-ignore `.vscode/tasks.json` (tâches VS Code non versionnées): [docs/_evidence/v27/B9_vscode_tasks_ignored_2026-01-13.txt](docs/_evidence/v27/B9_vscode_tasks_ignored_2026-01-13.txt#L1-L36)
+- Validation AUTO-HEAL (scripts + doc + structure, exécution complète OK): [docs/_evidence/v27/B11_auto_heal_validation_fixed_2026-01-13.txt](docs/_evidence/v27/B11_auto_heal_validation_fixed_2026-01-13.txt#L1-L35)
 
 ## 1) Snapshot repo (Git)
 
@@ -154,8 +155,11 @@ Le workflow principal CI est `TITANE∞ CI/CD Unified Pipeline v26.3.0`.
 Le repo contient des systèmes AutoFix/AutoHeal documentés et intégrés côté Tauri.
 
 - Source (doc): `docs/AUTO_HEAL_SYSTEMS.md` (doc historique, statut “production en attente”).
-- Source (validation): `scripts/validate-auto-heal.sh` lignes 1-120.
-- Source (Tauri commands): `src-tauri/src/main.rs` lignes 510-860 (states `.manage(...)` + `generate_handler![...]` incluant `singularity_fusion::autoheal_*` et `singularity_fusion::autofix_*`).
+- Source (validation): [scripts/validate-auto-heal.sh](scripts/validate-auto-heal.sh#L8-L120).
+  - Preuve: [docs/_evidence/v27/B11_auto_heal_validation_fixed_2026-01-13.txt](docs/_evidence/v27/B11_auto_heal_validation_fixed_2026-01-13.txt#L1-L35)
+- Source (Tauri commands):
+  - States AutoFix/AutoHeal/CrashGuard/Performance/Pipeline: [src-tauri/src/main.rs](src-tauri/src/main.rs#L506-L521)
+  - Commandes AutoFix/AutoHeal (IPC): [src-tauri/src/main.rs](src-tauri/src/main.rs#L812-L857)
 
 Voir l’index consolidé: `docs/systems/AUTO_SYSTEMS_INDEX_v27.md`.
 
