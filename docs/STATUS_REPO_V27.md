@@ -16,6 +16,7 @@ Ce document est conçu pour être **vérifiable** : chaque constat pointe vers (
 - État Git (post-split index / unstage): `docs/_evidence/v27/A5_git_status_after_unstage_2026-01-13T093108.txt`
 - PR-1 (diff staged + status): `docs/_evidence/v27/A6_pr1_cached_diff_and_status_2026-01-13T144821Z.txt`
 - PR-2 (commit doc versions): `docs/_evidence/v27/A7_pr2_docs_versions_commit_2026-01-13T184332Z.txt`
+- PR-4 (Vite host local-only): `docs/_evidence/v27/A9_pr4_vite_host_localonly_2026-01-13T184642Z.txt`
 - Exécution tests (run complet, succès — résumé compact): `docs/_evidence/v27/B5_pnpm_test_run_summary_2026-01-13T093401Z.txt`
 
 ## 1) Snapshot repo (Git)
@@ -72,9 +73,11 @@ Le repo impose un **mode développement permanent** (interdiction de builds/bund
 
 - Source: `vite.config.ts` lignes 108-128
   - `server.port = 5173`
-  - `server.host = '0.0.0.0'`
+  - `server.host = '127.0.0.1'`
 
-**Note sécurité/local-first:** exposer sur `0.0.0.0` ouvre l’accès réseau au serveur dev (si pare-feu permissif). Si l’objectif est strictement local, `127.0.0.1` est plus aligné.
+**Note sécurité/local-first:** le serveur dev était exposé sur `0.0.0.0` (accès réseau possible si pare-feu permissif). Il est désormais limité à `127.0.0.1`.
+
+- Preuve (commit): `docs/_evidence/v27/A9_pr4_vite_host_localonly_2026-01-13T184642Z.txt`
 
 ### 4.2 Vitest (node/happy-dom)
 
