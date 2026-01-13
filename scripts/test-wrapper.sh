@@ -42,6 +42,17 @@ VITEST_ARGS=("${FILTERED_ARGS[@]}")
 npx cross-env NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run "${VITEST_ARGS[@]}" 2>&1 | tee "$TEMP_OUTPUT"
 VITEST_EXIT=${PIPESTATUS[0]}
 
+# RAW mode: bypass all output parsing (useful when Vitest output formats change)
+# - Set TEST_WRAPPER_RAW=1 to use Vitest's raw exit code.
+if [[ "${TEST_WRAPPER_RAW:-0}" == "1" ]]; then
+    echo ""
+    echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${CYAN}📊 Test Results Analysis (RAW mode)${NC}"
+    echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo "RAW mode enabled (TEST_WRAPPER_RAW=1). Returning Vitest exit code: $VITEST_EXIT"
+    exit "$VITEST_EXIT"
+fi
+
 echo ""
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo -e "${CYAN}📊 Test Results Analysis${NC}"
@@ -92,6 +103,23 @@ FAILED_TESTS_COUNT=${FAILED_TESTS_COUNT:-0}
 
 FAILED_TEST_LINES=$((FAILED_FILES_COUNT + FAILED_TESTS_COUNT))
 
+# Guard against false-success when no tests were actually executed.
+# - Default is strict: if we can confidently detect 0 tests, we fail.
+# - Opt-out with TEST_WRAPPER_ALLOW_NO_TESTS=1.
+NO_TESTS_HINT=$(echo "$CLEAN_OUTPUT" | grep -Eic "No test files found|No tests found" || true)
+NO_TESTS_HINT=$(echo "$NO_TESTS_HINT" | tr -dc '0-9')
+NO_TESTS_HINT=${NO_TESTS_HINT:-0}
+
+NO_TESTS_BY_SUMMARY=0
+if [[ -n "${PASSED_FILES_SUMMARY:-}" && -n "${PASSED_TESTS_SUMMARY:-}" ]] && [[ $PASSED_FILES_COUNT -eq 0 ]] && [[ $PASSED_TESTS_COUNT -eq 0 ]]; then
+    NO_TESTS_BY_SUMMARY=1
+fi
+
+NO_TESTS_DETECTED=0
+if [[ $NO_TESTS_HINT -gt 0 || $NO_TESTS_BY_SUMMARY -eq 1 ]]; then
+    NO_TESTS_DETECTED=1
+fi
+
 # Check for heap overflow - use tr to ensure clean number
 HAS_HEAP_OVERFLOW=$(echo "$CLEAN_OUTPUT" | grep -ci "heap out of memory" || true)
 HAS_HEAP_OVERFLOW=$(echo "$HAS_HEAP_OVERFLOW" | tr -dc '0-9')
@@ -104,6 +132,7 @@ echo "Passing test markers (✓): $PASSING_TESTS"
 echo "Passed summary: files=$PASSED_FILES_COUNT tests=$PASSED_TESTS_COUNT"
 echo "Failed summary: files=$FAILED_FILES_COUNT tests=$FAILED_TESTS_COUNT"
 echo "Total failures detected: $FAILED_TEST_LINES"
+echo "No-tests detected: $NO_TESTS_DETECTED (allow=${TEST_WRAPPER_ALLOW_NO_TESTS:-0})"
 echo "Heap overflow: $HAS_HEAP_OVERFLOW"
 echo "Vitest exit code: $VITEST_EXIT"
 echo ""
@@ -113,6 +142,11 @@ echo ""
 # OR
 # - Heap overflow detected AFTER tests finished, summary has 0 failed, and we have a passed summary.
 if [[ $FAILED_TEST_LINES -eq 0 ]] && ( [[ $VITEST_EXIT -eq 0 ]] || ( [[ $HAS_HEAP_OVERFLOW -gt 0 ]] && [[ $PASSED_TESTS_COUNT -gt 0 ]] ) ); then
+    if [[ $NO_TESTS_DETECTED -eq 1 && "${TEST_WRAPPER_ALLOW_NO_TESTS:-0}" != "1" ]]; then
+        echo -e "${RED}❌ No tests detected (strict mode).${NC}"
+        echo "Hint: set TEST_WRAPPER_ALLOW_NO_TESTS=1 to allow this (not recommended for CI)."
+        exit 1
+    fi
     echo -e "${GREEN}✅ All tests passed! ($PASSING_TESTS individual tests)${NC}"
 
     # Show summary if available
