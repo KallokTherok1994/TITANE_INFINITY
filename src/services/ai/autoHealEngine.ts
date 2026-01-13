@@ -645,6 +645,29 @@ class AutoHealEngine {
   }
 
   /**
+   * Attendre la fin de l'action de guérison pour une erreur donnée.
+   * Utile pour les façades/orchestrateurs qui veulent un résultat synchronisé.
+   */
+  async awaitHealAction(
+    error: AutoHealError,
+    options?: {
+      /**
+       * Par défaut, (re)déclenche le pipeline pour garantir une action.
+       * Mettre à false si l'appelant sait que le pipeline est déjà lancé.
+       */
+      triggerIfNeeded?: boolean;
+    }
+  ): Promise<AutoHealAction> {
+    return new Promise<AutoHealAction>((resolve, reject) => {
+      this.healWaiters.set(error.id, { resolve, reject });
+      if (options?.triggerIfNeeded === false) {
+        return;
+      }
+      void this.triggerHeal(error);
+    });
+  }
+
+  /**
    * Obtenir statistiques complètes
    */
   getStats(): AutoHealStats & { providers: Record<string, unknown> } {
