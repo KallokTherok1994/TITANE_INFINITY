@@ -405,7 +405,6 @@ export class TauriInvokeProtector {
     if (verboseFallback || import.meta.env.PROD) {
       logger.debug(`[TauriProtector] Using fallback for ${safeCommand}`);
     }
-
     const errorMessage = error instanceof Error ? error.message : String(error);
 
     // Fallbacks spécifiques par type de commande
