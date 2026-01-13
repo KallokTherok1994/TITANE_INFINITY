@@ -1,0 +1,15 @@
+## B1bis) pnpm ls (depth=0)
+$ pnpm ls vite vitest @vitest/* jsdom typescript --depth=0 || true
+Legend: production dependency, optional only, dev only
+
+titane-infinity@26.3.0 /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+devDependencies:
+@vitest/browser 4.0.17
+@vitest/browser-playwright 4.0.17
+@vitest/coverage-v8 4.0.17
+@vitest/ui 4.0.17
+jsdom 27.4.0
+typescript 5.9.3
+vite 6.4.1
+vitest 4.0.17

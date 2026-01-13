@@ -1,0 +1,63 @@
+# A4_diff_src_test_setup_ts_2026-01-13
+
+2026-01-13T08:56:16-05:00
+
+diff --git a/src/test/setup.ts b/src/test/setup.ts
+index 1a070390..77a6e441 100644
+--- a/src/test/setup.ts
++++ b/src/test/setup.ts
+@@ -696,7 +696,24 @@ const handleTauriInvoke = async (
+   }
+ };
+ 
+-const invokeMock = vi.fn(handleTauriInvoke);
++// NOTE: `vi.mock()` factories are hoisted by Vitest.
++// Any variables they reference must be created via `vi.hoisted()`.
++// Use `var` to avoid TDZ issues when Vitest hoists `vi.mock()` above declarations.
++// The `vi.hoisted()` callback runs before mock factories, so these assignments are safe.
++// eslint-disable-next-line no-var
++var invokeMock: ReturnType<typeof vi.fn>;
++// eslint-disable-next-line no-var
++var tauriEventListenMock: ReturnType<typeof vi.fn>;
++// eslint-disable-next-line no-var
++var tauriEventEmitMock: ReturnType<typeof vi.fn>;
++
++vi.hoisted(() => {
++  invokeMock = vi.fn();
++  tauriEventListenMock = vi.fn();
++  tauriEventEmitMock = vi.fn();
++});
++
++invokeMock.mockImplementation(handleTauriInvoke);
+ 
+ // Mock Tauri API (évite erreurs "window.__TAURI__ undefined")
+ interface MockWindow extends Window {
+@@ -713,8 +730,8 @@ global.window = global.window || ({} as MockWindow);
+ (global.window as MockWindow).__TAURI__ = {
+   invoke: invokeMock,
+   event: {
+-    listen: vi.fn(),
+-    emit: vi.fn(),
++    listen: tauriEventListenMock,
++    emit: tauriEventEmitMock,
+   },
+   tauri: {
+     invoke: invokeMock,
+@@ -727,6 +744,8 @@ afterEach(() => {
+   resetMockTauriState();
+   invokeMock.mockClear();
+   invokeMock.mockImplementation(handleTauriInvoke);
++  tauriEventListenMock.mockClear();
++  tauriEventEmitMock.mockClear();
+ });
+ 
+ // Mock @tauri-apps/api
+@@ -735,6 +754,6 @@ vi.mock('@tauri-apps/api/core', () => ({
+ }));
+ 
+ vi.mock('@tauri-apps/api/event', () => ({
+-  listen: vi.fn(),
+-  emit: vi.fn(),
++  listen: tauriEventListenMock,
++  emit: tauriEventEmitMock,
+ }));
