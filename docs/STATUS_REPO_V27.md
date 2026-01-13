@@ -148,7 +148,7 @@ Sans modifier le code ici (dev-only), une séquence typique “safe PRs” pour 
 1. **PR-1 (tests infra, P0)**: isoler le fix hoisting Tauri/Vitest (un seul fichier: `src/test/setup.ts`).
   - Preuve isolation index: `docs/_evidence/v27/A5_git_status_after_unstage_2026-01-13T093108.txt`
   - Preuve diff fix: `docs/_evidence/v27/A4_diff_src_test_setup_ts_2026-01-13.txt`
-  - Preuve tests OK: `docs/_evidence/v27/B4_pnpm_test_run_2026-01-13T093401.txt`
+  - Preuve tests OK (résumé compact): `docs/_evidence/v27/B5_pnpm_test_run_summary_2026-01-13T093401Z.txt`
 2. **PR-2 (docs)**: mettre à jour la doc d’instructions (versions Vite/Vitest/TS) pour refléter `package.json`.
 3. **PR-3 (tests)**: durcir le wrapper `scripts/test-wrapper.sh` contre les changements de format output Vitest (detection des fails) et/ou ajouter un mode “raw” recommandé.
 4. **PR-4 (dev server)**: revoir `vite.config.ts` (`server.host`) si “local-only strict” est requis.
