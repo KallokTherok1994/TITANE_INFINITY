@@ -330,6 +330,9 @@ pnpm run test:all
 - **Sandbox Tauri** : Isolation filesystem + permissions
 - **CSP** : Content Security Policy configurée
 - **Local-First** : Données 100% locales par défaut
+- **GitGuardian** : Secret scanning en pre-commit et CI/CD ([Documentation](docs/security/GITGUARDIAN.md))
+- **CodeQL** : Analyse de sécurité automatisée
+- **Dependency Auditing** : pnpm audit + cargo-audit
 
 ---
 

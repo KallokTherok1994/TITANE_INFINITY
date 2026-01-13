@@ -1,0 +1,84 @@
+# GitGuardian Configuration for TITANE∞
+# This file configures GitGuardian secret scanning behavior
+# Documentation: https://docs.gitguardian.com/ggshield-docs/configuration
+
+version: 2
+
+# Paths to ignore during scanning
+paths-ignore:
+  # Dependencies and build artifacts
+  - node_modules/
+  - dist/
+  - target/
+  - build/
+  - .cache/
+  - coverage/
+  
+  # Lock files (may contain hashes that look like secrets)
+  - pnpm-lock.yaml
+  - Cargo.lock
+  - package-lock.json
+  
+  # Documentation and archives
+  - docs/
+  - _archive/
+  - legacy/
+  - TITANE_INFINITY-main.zip
+  
+  # Storybook and testing
+  - .storybook/
+  - playwright-report/
+  - performance-reports/
+  
+  # Temporary and local files
+  - tmp/
+  - .tmp/
+  - *.log
+  - .current-server-info
+  - .server.pid
+  - .tunnel-access.txt
+  
+  # Git internals
+  - .git/
+
+# Specific files to ignore
+exclude:
+  # Example/template files
+  - .env.example
+  - .env.deploy
+  - .env.ollama
+  
+  # Test fixtures that may contain fake credentials
+  - tests/fixtures/**
+  - test/**/*.fixture.*
+  - **/*.test.ts
+  - **/*.spec.ts
+  
+  # Configuration files with benign patterns
+  - figma-tokens.json
+  - .titane-security-config.json
+
+# Detectors to enable/disable
+# Uncomment and customize as needed
+# detectors:
+#   - name: Generic Password
+#     enabled: true
+
+# Minimum occurrences before alerting (reduces false positives)
+# secret-min-occurrences: 3
+
+# Exit code behavior
+exit-zero: false  # Fail CI on secret detection
+
+# Verbose output for debugging (use sparingly in CI)
+verbose: false
+
+# Show secrets in output (masked by default for security)
+# Only enable during debugging
+show-secrets: false
+
+# Banlist mode: block commits with secrets
+# Use in pre-commit hook
+# banlist-detectors:
+#   - api_key
+#   - generic_password
