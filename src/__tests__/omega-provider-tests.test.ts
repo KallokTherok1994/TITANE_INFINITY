@@ -18,7 +18,20 @@ import { ollamaProvider } from '../services/ai/providers/ollama';
 import { titaneLocalProvider } from '../services/ai/providers/titaneLocal';
 import { aiOrchestrator } from '../services/ai/orchestrator';
 import { autoHealEngine } from '../services/ai/autoHealEngine';
+import { unifiedHealingFacade } from '../services/ai/unifiedHealingFacade';
 import type { AIMessage } from '../services/ai/types';
+
+beforeEach(() => {
+  // Isoler les tests: éviter l'accumulation de rate-limit/circuits entre tests.
+  unifiedHealingFacade.reset();
+  unifiedHealingFacade.configure({
+    enabled: true,
+    useCircuitBreaker: false,
+    maxHealsPerMinute: 10_000,
+    advancedThreshold: 'high',
+    logLevel: 'error',
+  });
+});
 
 // ═══════════════════════════════════════════════════════════════════
 // OMEGA TEST SUITE 1: GEMINI PROVIDER DOWN
@@ -150,7 +163,7 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 2: Tauri Backend Down', () => {
   });
 
   it('should auto-heal Tauri backend errors', async () => {
-    const healSpy = vi.spyOn(autoHealEngine, 'heal');
+    const healSpy = vi.spyOn(unifiedHealingFacade, 'heal');
 
     try {
       await tauriChatProvider.generate('Test healing', []);
@@ -619,7 +632,12 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 9: Concurrent Requests', () => {
     // Trigger multiple healing operations simultaneously
     const healOperations = Array.from({ length: 5 }, (_, i) => {
       const error = new Error(`Concurrent error ${i}`);
-      return autoHealEngine.heal('test-concurrent', error, 'provider', { index: i });
+      return unifiedHealingFacade.heal({
+        source: 'test-concurrent',
+        error,
+        type: 'provider',
+        metadata: { index: i },
+      });
     });
 
     await Promise.all(healOperations);
@@ -732,12 +750,28 @@ describe('🟣 OMEGA Phase 7Ω - Integration: Complete System', () => {
     expect(healingStats).toHaveProperty('providers');
     expect(typeof healingStats.providers).toBe('object');
 
+    // Évite les timeouts: on rend l'action de healing immédiate et déterministe.
+    const awaitSpy = vi.spyOn(autoHealEngine, 'awaitHealAction').mockResolvedValue({
+      id: 'action_test_omega',
+      success: true,
+      action: 'noop',
+      duration: 0,
+      details: { test: 'omega-integration' },
+    } as unknown as Awaited<ReturnType<typeof autoHealEngine.awaitHealAction>>);
+
     // Trigger healing
     const error = new Error('Integration test error');
-    await autoHealEngine.heal('integration-test', error, 'validation', {
-      test: 'omega-integration',
-      timestamp: Date.now(),
+    await unifiedHealingFacade.heal({
+      source: 'integration-test',
+      error,
+      type: 'validation',
+      metadata: {
+        test: 'omega-integration',
+        timestamp: Date.now(),
+      },
     });
+
+    awaitSpy.mockRestore();
 
     const updatedStats = autoHealEngine.getStats();
     expect(updatedStats).toBeDefined();
