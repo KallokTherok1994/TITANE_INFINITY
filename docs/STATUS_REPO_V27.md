@@ -9,7 +9,7 @@ Ce document est conçu pour être **vérifiable** : chaque constat pointe vers (
 - Point d’entrée: `docs/_evidence/v27/`
 - État Git capturé: `docs/_evidence/v27/A1_repo.txt`
 - Versions tooling capturées: `docs/_evidence/v27/B1_pnpm_ls_vite_vitest.txt`
-- Exécution tests (échantillon) capturée: `docs/_evidence/v27/B3_test_omega_provider_run.txt`
+- Exécution tests (échantillon) capturée (extrait): `docs/_evidence/v27/B3_omega_provider_excerpt_1880-1990.txt`
 - État Git (capture récente): `docs/_evidence/v27/A2_git_status_2026-01-13.txt`
 - Diffstat (staged/unstaged): `docs/_evidence/v27/A3_git_diffstat_2026-01-13.txt`
 - Diff du fix Vitest (setup): `docs/_evidence/v27/A4_diff_src_test_setup_ts_2026-01-13.txt`
@@ -21,7 +21,7 @@ Ce document est conçu pour être **vérifiable** : chaque constat pointe vers (
 
 ## 1) Snapshot repo (Git)
 
-**État actuel (2026-01-13):** le repo est sur `MAIN`, **aligné avec `origin/MAIN` (0/0)**. Aucun changement **tracked** en working tree ; seuls des fichiers de preuve existent localement en **non suivis** sous `docs/_evidence/v27/`.
+**État actuel (2026-01-13):** le repo est sur `MAIN`, **aligné avec `origin/MAIN` (0/0)**. Aucun changement **tracked** en working tree ; des preuves existent sous `docs/_evidence/v27/` (certaines versionnées, d’autres locales/non suivies, selon la politique `.gitignore`).
 
 - Commande reproductible: `git status --porcelain=v1 -b`
   - Montre `## MAIN...origin/MAIN` + des entrées `?? docs/_evidence/v27/...`.
@@ -97,7 +97,7 @@ Le repo impose un **mode développement permanent** (interdiction de builds/bund
 
 ### 5.2 Exemple d’exécution (omega-provider)
 
-- Source: `docs/_evidence/v27/B3_test_omega_provider_run.txt` lignes 1880-1990
+- Source: `docs/_evidence/v27/B3_omega_provider_excerpt_1880-1990.txt` lignes 1-109
   - Montre `3 failed` et `Vitest exit code: 1` dans la section de synthèse.
 
 ### 5.2bis Exécution (run complet) — succès

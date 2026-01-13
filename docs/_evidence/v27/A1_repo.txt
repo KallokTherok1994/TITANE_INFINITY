@@ -1,0 +1,60 @@
+## A1) Repo
+$ git status
+Sur la branche MAIN
+Votre branche est en avance sur 'origin/MAIN' de 2 commits.
+  (utilisez "git push" pour publier vos commits locaux)
+
+Vous êtes actuellement en train de picorer le commit aa3560e8.
+  (tous les conflits sont réglés : lancez "git cherry-pick --continue")
+  (utilisez "git cherry-pick --skip" pour sauter cette rustine)
+  (utilisez "git cherry-pick --abort" pour annuler le picorage)
+
+Modifications qui seront validées :
+	modifié :         src/__tests__/omega-e2e-validation.test.ts
+	modifié :         src/__tests__/omega-provider-tests.test.ts
+	modifié :         src/components/chat/ChatInput.tsx
+	modifié :         src/components/chat/MessageList.tsx
+	modifié :         src/core/services/orchestrator.ts
+	modifié :         src/core/services/systemHealth.ts
+	modifié :         src/modules/devSudo/devSudoBuiltins.ts
+	modifié :         src/modules/liveDebugger/LiveDebuggerEngine.ts
+	modifié :         src/modules/vocalDev/VocalDevConsoleEngine.ts
+	nouveau fichier : src/services/ai/__tests__/unifiedHealingFacade.test.ts
+	modifié :         src/services/ai/autoHealEngine.ts
+	modifié :         src/services/ai/orchestrator.ts
+	modifié :         src/services/ai/providers/ollama.ts
+	modifié :         src/services/ai/providers/tauriChat.ts
+	nouveau fichier : src/services/ai/unifiedHealingFacade.ts
+	modifié :         src/services/monitoring/consoleMonitor.ts
+	modifié :         src/ui/pages/Chat.tsx
+
+Fichiers non suivis:
+  (utilisez "git add <fichier>..." pour inclure dans ce qui sera validé)
+	docs/_evidence/
+
+
+$ git status --porcelain=v1
+M  src/__tests__/omega-e2e-validation.test.ts
+M  src/__tests__/omega-provider-tests.test.ts
+M  src/components/chat/ChatInput.tsx
+M  src/components/chat/MessageList.tsx
+M  src/core/services/orchestrator.ts
+M  src/core/services/systemHealth.ts
+M  src/modules/devSudo/devSudoBuiltins.ts
+M  src/modules/liveDebugger/LiveDebuggerEngine.ts
+M  src/modules/vocalDev/VocalDevConsoleEngine.ts
+A  src/services/ai/__tests__/unifiedHealingFacade.test.ts
+M  src/services/ai/autoHealEngine.ts
+M  src/services/ai/orchestrator.ts
+M  src/services/ai/providers/ollama.ts
+M  src/services/ai/providers/tauriChat.ts
+A  src/services/ai/unifiedHealingFacade.ts
+M  src/services/monitoring/consoleMonitor.ts
+M  src/ui/pages/Chat.tsx
+?? docs/_evidence/
+
+$ git rev-parse --abbrev-ref HEAD
+MAIN
+
+$ git rev-parse HEAD
+16a0fd73ec9ac6b362386d91be6de36ff63dcb2d

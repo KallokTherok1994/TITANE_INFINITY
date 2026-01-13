@@ -1,0 +1,109 @@
+     [32m✓[39m should handle corrupted message objects[32m 1[2mms[22m[39m
+     [32m✓[39m should filter out messages over size limit[32m 1[2mms[22m[39m
+     [32m✓[39m should handle rapid message updates without memory leaks[32m 1[2mms[22m[39m
+     [32m✓[39m should work completely offline using titane-local[32m 5[2mms[22m[39m
+     [32m✓[39m should provide intelligent responses offline[32m 49[2mms[22m[39m
+     [32m✓[39m should maintain conversation context offline[32m 7[2mms[22m[39m
+     [32m✓[39m should show offline indicators when appropriate[32m 9[2mms[22m[39m
+     [32m✓[39m should handle multiple simultaneous requests[32m 21[2mms[22m[39m
+     [32m✓[39m should prevent race conditions in provider selection[32m 15[2mms[22m[39m
+[31m     [31m×[31m should maintain auto-heal state consistency under load[39m[33m 30001[2mms[22m[39m
+     [32m✓[39m should handle burst request patterns[32m 17[2mms[22m[39m
+     [32m✓[39m should properly queue requests when providers are busy[32m 101[2mms[22m[39m
+     [32m✓[39m should pass OMEGA infallibility test under extreme conditions[32m 25[2mms[22m[39m
+     [32m✓[39m should maintain TITANE∞ personality consistency across all scenarios[32m 41[2mms[22m[39m
+     [32m✓[39m should demonstrate auto-healing in action[32m 1[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 3 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m [30m[45m core [49m[39m src/__tests__/omega-provider-tests.test.ts[2m > [22m🟣 OMEGA Phase 7Ω - Test Suite 2: Tauri Backend Down[2m > [22mshould auto-heal Tauri backend errors
+[31m[1mAssertionError[22m: expected "heal" to be called at least once[39m
+[36m [2m❯[22m src/__tests__/omega-provider-tests.test.ts:[2m175:21[22m[39m
+    [90m173| [39m
+    [90m174| [39m    [90m// Check if auto-heal was triggered for tauri errors[39m
+    [90m175| [39m    [34mexpect[39m(healSpy)[33m.[39m[34mtoHaveBeenCalled[39m()[33m;[39m
+    [90m   | [39m                    [31m^[39m
+    [90m176| [39m  })[33m;[39m
+    [90m177| [39m})[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[45m core [49m[39m src/__tests__/omega-provider-tests.test.ts[2m > [22m🟣 OMEGA Phase 7Ω - Test Suite 3: Ollama Offline[2m > [22mshould detect Ollama endpoint unavailable
+[31m[1mTypeError[22m: Cannot read properties of undefined (reading 'heal')[39m
+[36m [2m❯[22m handleOllamaError src/services/ai/providers/ollama.ts:[2m248:6[22m[39m
+    [90m246| [39m  [90m// Unified heal (non-bloquant)[39m
+    [90m247| [39m  [35mvoid[39m unifiedHealingFacade
+    [90m248| [39m    [33m.[39m[34mheal[39m({
+    [90m   | [39m     [31m^[39m
+    [90m249| [39m      source[33m:[39m [32m'ollama'[39m[33m,[39m
+    [90m250| [39m      error[33m:[39m errorObj[33m,[39m
+[90m [2m❯[22m checkEndpointHealth src/services/ai/providers/ollama.ts:[2m229:5[22m[39m
+[90m [2m❯[22m Object.isAvailable src/services/ai/providers/ollama.ts:[2m307:23[22m[39m
+[90m [2m❯[22m src/__tests__/omega-provider-tests.test.ts:[2m193:25[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[45m core [49m[39m src/__tests__/omega-provider-tests.test.ts[2m > [22m🟣 OMEGA Phase 7Ω - Test Suite 9: Concurrent Requests[2m > [22mshould maintain auto-heal state consistency under load
+[31m[1mError[22m: Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".[39m
+[36m [2m❯[22m src/__tests__/omega-provider-tests.test.ts:[2m631:3[22m[39m
+    [90m629| [39m  })[33m;[39m
+    [90m630| [39m
+    [90m631| [39m  it('should maintain auto-heal state consistency under load', async (…
+    [90m   | [39m  [31m^[39m
+    [90m632| [39m    [90m// Trigger multiple healing operations simultaneously[39m
+    [90m633| [39m    [35mconst[39m healOperations [33m=[39m [33mArray[39m[33m.[39m[35mfrom[39m({ length[33m:[39m [34m5[39m }[33m,[39m (_[33m,[39m i) [33m=>[39m {
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m3 failed[39m[22m[2m | [22m[1m[32m35 passed[39m[22m[90m (38)[39m
+[2m   Start at [22m 08:14:24
+[2m   Duration [22m 40.76s[2m (transform 590ms, setup 201ms, import 579ms, tests 39.50s, environment 192ms)[22m
+
+
+[0;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;36m📊 Test Results Analysis[0m
+[0;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+Passing test markers (✓): 35
+Passed summary: files=0 tests=0
+Failed summary: files=1 tests=3
+Total failures detected: 4
+Heap overflow: 0
+Vitest exit code: 1
+
+[0;31m❌ Tests failed or insufficient passing tests[0m
+
+    [90m247| [39m  [35mvoid[39m unifiedHealingFacade
+    [90m248| [39m    [33m.[39m[34mheal[39m({
+    [90m   | [39m     [31m^[39m
+    [90m249| [39m      source[33m:[39m [32m'ollama'[39m[33m,[39m
+    [90m250| [39m      error[33m:[39m errorObj[33m,[39m
+[90m [2m❯[22m checkEndpointHealth src/services/ai/providers/ollama.ts:[2m229:5[22m[39m
+[90m [2m❯[22m Object.isAvailable src/services/ai/providers/ollama.ts:[2m307:23[22m[39m
+[90m [2m❯[22m src/__tests__/omega-provider-tests.test.ts:[2m193:25[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[45m core [49m[39m src/__tests__/omega-provider-tests.test.ts[2m > [22m🟣 OMEGA Phase 7Ω - Test Suite 9: Concurrent Requests[2m > [22mshould maintain auto-heal state consistency under load
+[31m[1mError[22m: Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".[39m
+[36m [2m❯[22m src/__tests__/omega-provider-tests.test.ts:[2m631:3[22m[39m
+    [90m629| [39m  })[33m;[39m
+    [90m630| [39m
+    [90m631| [39m  it('should maintain auto-heal state consistency under load', async (…
+    [90m   | [39m  [31m^[39m
+    [90m632| [39m    [90m// Trigger multiple healing operations simultaneously[39m
+    [90m633| [39m    [35mconst[39m healOperations [33m=[39m [33mArray[39m[33m.[39m[35mfrom[39m({ length[33m:[39m [34m5[39m }[33m,[39m (_[33m,[39m i) [33m=>[39m {
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m3 failed[39m[22m[2m | [22m[1m[32m35 passed[39m[22m[90m (38)[39m
+[2m   Start at [22m 08:14:24
+[2m   Duration [22m 40.76s[2m (transform 590ms, setup 201ms, import 579ms, tests 39.50s, environment 192ms)[22m
+
+ ELIFECYCLE  Test failed. See above for more details.
+EXIT:1
