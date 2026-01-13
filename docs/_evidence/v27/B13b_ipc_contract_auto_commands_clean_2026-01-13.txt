@@ -1,0 +1,428 @@
+[ts]  2026-01-13T18:41:49-05:00
+[cwd] /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+=== docs/backend/IPC_CONTRACT.md (table entry) ===
+   270	## Command → Frontend Matrix
+   271	
+   272	### High-Traffic Commands (>100 calls/session)
+   273	
+   274	| Command | Frontend Files | Payload | Response | Errors |
+   275	|---------|----------------|---------|----------|--------|
+   276	| `conversation_generate` | `src/hooks/useConversation.ts`<br>`src/services/conversationService.ts` | `{conversationId: string, message: string, provider?: string}` | `{id: string, role: string, content: string, timestamp: string}` | `UNAUTHORIZED` (no API key)<br>`RATE_LIMITED`<br>`EXTERNAL_API_ERROR`<br>`TIMEOUT` |
+   277	| `chat_get_providers_status` | `src/components/SettingsPanel.tsx`<br>`src/services/aiService.ts` | `{}` | `{openai: boolean, claude: boolean, gemini: boolean, copilot: boolean, ollama: boolean}` | `INTERNAL_ERROR` |
+   278	| `avatar_advance_lip_sync` | `src/components/Avatar3D.tsx`<br>`src/hooks/useAvatar.ts` | `{phoneme: string, timestamp: number}` | `void` | `NOT_FOUND` (avatar not initialized) |
+   279	| `voice_start_listening` | `src/components/VoiceInput.tsx`<br>`src/hooks/useVoice.ts` | `{continuous?: boolean}` | `{sessionId: string}` | `PERMISSION_DENIED` (mic access)<br>`DEVICE_NOT_FOUND` |
+   280	| `singularity_get_full_state` | `src/services/singularityService.ts` | `{}` | `{physical: {...}, cognitive: {...}, symbolic: {...}, adaptive: {...}, meta: {...}}` | `INTERNAL_ERROR` |
+   281	| `get_memory_state` | `src/services/memoryService.ts` | `{}` | `{stm: [...], mtm: [...], ltm: [...], stats: {...}}` | `DATABASE_ERROR` |
+   282	| `add_timeline_event` | `src/services/timelineService.ts` | `{type: string, content: string, metadata?: object}` | `{id: string}` | `INVALID_INPUT`<br>`DATABASE_ERROR` |
+   283	
+   284	### Medium-Traffic Commands (10-100 calls/session)
+   285	
+   286	| Command | Frontend Files | Payload | Response | Errors |
+   287	|---------|----------------|---------|----------|--------|
+   288	| `chat_set_openai_key` | `src/components/APIKeyDialog.tsx` | `{key: string}` | `void` | `INVALID_INPUT` (bad key format) |
+   289	| `avatar_set_appearance` | `src/components/AvatarCustomizer.tsx` | `{style: object}` | `void` | `SERIALIZATION_ERROR` |
+   290	| `autoheal_detect_broken_modules` | `src/services/healthService.ts` | `{}` | `{broken: string[]}` | `INTERNAL_ERROR` |
+   291	| `performance_get_metrics` | `src/components/Dashboard.tsx` | `{}` | `{cpu: number, memory: number, fps: number}` | - |
+   292	
+   293	### Low-Traffic Commands (<10 calls/session)
+   294	
+   295	| Command | Frontend Files | Payload | Response | Errors |
+   296	|---------|----------------|---------|----------|--------|
+   297	| `onboarding_complete` | `src/pages/Onboarding.tsx` | `{}` | `void` | - |
+   298	| `export_security_log` | `src/pages/Governance.tsx` | `{format: "json" \| "csv"}` | `{path: string}` | `IO_ERROR` |
+   299	| `sc_run_full_diagnostics` | `src/pages/SystemCenter.tsx` | `{}` | `{results: [...]}` | `TIMEOUT` |
+   300	
+   301	### Orphaned Commands (No Frontend Callers - TO VERIFY)
+   302	- `memory_compactor_*` commands (deprecated)
+   303	- Some `cycle_engine_*` commands (disabled)
+   304	- Some legacy `singularity_*` commands (replaced by `singularity_state`)
+   305	
+   306	---
+   307	
+   308	## Payload Specifications
+   309	
+   310	### 1. conversation_generate (OMEGA v2)
+   311	
+   312	**Command:** `conversation_generate`
+   313	
+   314	**Request:**
+   315	```typescript
+   316	interface ConversationGenerateRequest {
+   317	  conversationId: string;         // MANDATORY (BREAKING CHANGE from v1)
+   318	  message: string;                // User message (1-10,000 chars)
+   319	  provider?: "openai" | "claude" | "gemini" | "copilot" | "ollama"; // Optional, auto-routed if omitted
+   320	  temperature?: number;           // 0.0-2.0, default 0.7
+
+=== docs/backend/IPC_CONTRACT.md (details section) ===
+   440	  metadata?: {
+   441	    tags?: string[];
+   442	    importance?: number;          // 0-10
+   443	    linkedEvents?: string[];      // Event IDs
+   444	    [key: string]: unknown;       // Additional metadata
+   445	  };
+   446	}
+   447	```
+   448	
+   449	**Response:**
+   450	```typescript
+   451	interface TimelineEventResponse {
+   452	  id: string;                     // UUID
+   453	  timestamp: string;              // ISO 8601 (server-assigned)
+   454	}
+   455	```
+   456	
+   457	**Errors:**
+   458	- `INVALID_INPUT`: Invalid `type` or empty `content`
+   459	- `DATABASE_ERROR`: Failed to insert into SQLite
+   460	
+   461	### 6. autoheal_detect_broken_modules
+   462	
+   463	**Request:**
+   464	```typescript
+   465	{} // No parameters
+   466	```
+   467	
+   468	**Response:**
+   469	```typescript
+   470	interface BrokenModulesResponse {
+   471	  broken: Array<{
+   472	    module: string;               // Module name (e.g., "cognitive", "avatar", "tts")
+   473	    reason: string;               // Why it's broken
+   474	    severity: "low" | "medium" | "high" | "critical";
+   475	    healable: boolean;            // Can AutoHeal fix it?
+   476	  }>;
+   477	  timestamp: string;
+   478	}
+   479	```
+   480	
+   481	### 7. chat_set_openai_key
+   482	
+   483	**Request:**
+   484	```typescript
+   485	interface SetApiKeyRequest {
+   486	  key: string;                    // OpenAI API key (sk-...)
+   487	}
+   488	```
+   489	
+   490	**Response:**
+   491	```typescript
+   492	void // No return value (success = no error thrown)
+   493	```
+   494	
+   495	**Errors:**
+   496	- `INVALID_INPUT`: Key format invalid (not starting with `sk-`, wrong length)
+   497	- `EXTERNAL_API_ERROR`: Key validation failed (test call to OpenAI API)
+   498	
+   499	### 8. voice_start_listening
+   500	
+   501	**Request:**
+   502	```typescript
+   503	interface VoiceListenRequest {
+   504	  continuous?: boolean;           // true = keep listening, false = stop after silence
+   505	  language?: string;              // "en-US", "fr-FR", etc.
+   506	  silenceThreshold?: number;      // Milliseconds of silence before stopping (default 2000)
+   507	}
+   508	```
+   509	
+   510	**Response:**
+   511	```typescript
+   512	interface VoiceListenResponse {
+   513	  sessionId: string;              // UUID for this recording session
+   514	  status: "listening";
+   515	}
+   516	```
+   517	
+   518	**Errors:**
+   519	- `PERMISSION_DENIED`: Microphone permission not granted
+   520	- `DEVICE_NOT_FOUND`: No microphone detected
+
+=== docs/backend/BACKEND_MAP.md (AutoFix/AutoHeal commands list) ===
+   270	- `avatar_run_selftest` (avatar_selftest.rs)
+   271	
+   272	**Appearance (10 commands)** - `avatar/appearance_commands.rs`:
+   273	- `avatar_get_appearance`, `avatar_set_appearance`, `avatar_update_appearance`
+   274	- `avatar_apply_style_preset`, `avatar_parse_style_command`
+   275	- `avatar_save_custom_style`, `avatar_load_custom_style`
+   276	- `avatar_merge_styles`, `avatar_list_styles`, `avatar_add_archetype`
+   277	
+   278	**Floating Window (18 commands)** - `avatar/avatar_floating_commands.rs`:
+   279	- `avatar_get_display_state`, `avatar_set_display_state`, `avatar_update_display_state`, `avatar_reset_display_state`
+   280	- `avatar_mode_floating`, `avatar_mode_embed`, `avatar_mode_hidden`
+   281	- `avatar_set_position`, `avatar_set_size`, `avatar_set_scale`, `avatar_set_opacity`
+   282	- `avatar_set_always_on_top`, `avatar_set_locked`, `avatar_set_mirror_mode`
+   283	- `avatar_set_click_through`, `avatar_set_anchor`, `avatar_set_anchor_by_name`
+   284	- `avatar_list_screens`, `avatar_move_to_screen`
+   285	
+   286	**FullBody (12 commands)** - `avatar/fullbody_commands.rs`:
+   287	- `fullbody_initialize`, `fullbody_advance_frame`
+   288	- `fullbody_activate_gesture`, `fullbody_update_expression`, `fullbody_update_lipsync`
+   289	- `fullbody_update_state`, `fullbody_on_wake_word`, `fullbody_export_skeleton`
+   290	- `fullbody_update_context`, `fullbody_get_posture`, `fullbody_get_stats`
+   291	- `fullbody_run_selftest` (fullbody_selftest.rs)
+   292	
+   293	#### 7. Singularity Fusion (70 commands)
+   294	
+   295	**AutoFix (16 commands)** - `singularity_fusion/auto_fix.rs`:
+   296	- Detection: `autofix_detect_rust_warnings`, `autofix_detect_typescript_errors`, `autofix_detect_react_hook_violations`, `autofix_detect_invalid_states`
+   297	- Fixing: `autofix_fix_issue`, `autofix_fix_all`
+   298	- Management: `autofix_get_history`, `autofix_get_stats`, `autofix_reset`
+   299	- Specific fixes: `autofix_rust_warning`, `autofix_typescript_error`, `autofix_reset_state`, `autofix_restart_pipeline`, `autofix_restart_tauri_command`, `autofix_resync_lipsync`, `autofix_add_mutex`
+   300	
+   301	**AutoHeal (27 commands)** - `singularity_fusion/auto_heal.rs`:
+   302	- Detection: `autoheal_detect_broken`, `autoheal_detect_broken_modules`
+   303	- Module resets: `autoheal_reset_cognitive`, `autoheal_init_cognitive`, `autoheal_reset_adaptive`, `autoheal_clear_narrative`, `autoheal_init_narrative`
+   304	- Avatar healing: `autoheal_stop_avatar`, `autoheal_reload_avatar`, `autoheal_start_avatar`
+   305	- TTS healing: `autoheal_clear_tts_queue`, `autoheal_init_tts`, `autoheal_resync_lipsync`
+   306	- Memory healing: `autoheal_rebuild_memory_index`, `autoheal_validate_memory`
+   307	- Pipeline healing: `autoheal_stop_pipeline`, `autoheal_clear_pipeline`, `autoheal_start_pipeline`
+   308	- Targeted healing: `autoheal_heal_cognitive_module`, `autoheal_heal_avatar_module`, `autoheal_heal_tts_module`, `autoheal_heal_lipsync_module`, `autoheal_heal_memory_module`, `autoheal_heal_pipeline`
+   309	- Management: `autoheal_resync_state`, `autoheal_get_history`, `autoheal_reset`
+   310	
+   311	**CrashGuard (9 commands)** - `singularity_fusion/crash_guard.rs`:
+   312	- `crashguard_detect_threats`, `crashguard_clear_memory`, `crashguard_kill_thread`
+   313	- `crashguard_restart_module`, `crashguard_emergency_shutdown`, `crashguard_reset_pipeline`
+   314	- `crashguard_emergency_rollback`, `crashguard_get_active_threats`, `crashguard_get_stats`
+   315	
+   316	**Performance (6 commands)** - `singularity_fusion/performance.rs`:
+   317	- `performance_get_metrics`, `performance_throttle_cpu`, `performance_optimize_gpu`
+   318	- `performance_reduce_render_quality`, `performance_compress_memory`, `performance_reset_optimizations`
+   319	
+   320	**Unified Pipeline (9 commands)** - `singularity_fusion/unified_pipeline.rs`:
+   321	- `pipeline_analyze_intention`, `pipeline_generate_cognitive_response`
+   322	- `pipeline_prepare_tts`, `pipeline_prepare_avatar_animation`
+   323	- `pipeline_get_stats`, `pipeline_pause`, `pipeline_resume`, `pipeline_reset`, `pipeline_validate`
+   324	
+   325	**Singularity State (17 commands)** - `singularity_state/commands.rs`:
+   326	- Getters: `singularity_get_full_state`, `singularity_get_physical`, `singularity_get_cognitive`, `singularity_get_symbolic`, `singularity_get_adaptive`, `singularity_get_meta`, `singularity_get_global_coherence`, `singularity_is_critical`
+   327	- Updaters: `singularity_update_physical`, `singularity_update_cognitive`, `singularity_update_symbolic`, `singularity_update_adaptive`, `singularity_update_meta`, `singularity_update_full_state`
+   328	- Sync/Persistence: `sync_singularity`, `singularity_save_state`, `singularity_load_state`
+   329	
+   330	#### 8. Audio System (13 commands)
+
+=== docs/SINGULARITY_FUSION_vΩ.md (command bullets excerpt) ===
+   620	
+   621	**Commandes Tauri requises:**
+   622	
+   623	**SingularityFusion (~10 commandes):**
+   624	- `singularity_get_state`
+   625	- `singularity_save_state`
+   626	- `fusion_sync_state`
+   627	- `fusion_integrity_check`
+   628	- `fusion_create_snapshot`
+   629	- `fusion_restore_snapshot`
+   630	- `fusion_get_metrics`
+   631	
+   632	**UnifiedPipeline (~15 commandes):**
+   633	- `cognitive_analyze_intention`
+   634	- `cognitive_generate_response`
+   635	- `tts_generate_audio`
+   636	- `avatar_prepare_animation`
+   637	- `pipeline_execute`
+   638	- `pipeline_get_status`
+   639	
+   640	**AutoFix (~8 commandes):**
+   641	- `autofix_detect_rust_warnings`
+   642	- `autofix_detect_typescript_errors`
+   643	- `autofix_rust_warning`
+   644	- `autofix_typescript_error`
+   645	- `autofix_reset_state`
+   646	- `autofix_restart_pipeline`
+   647	- `autofix_resync_lipsync`
+   648	
+   649	**AutoHeal (~10 commandes):**
+   650	- `autoheal_detect_broken`
+   651	- `autoheal_reset_cognitive`
+   652	- `autoheal_init_cognitive`
+   653	- `autoheal_reload_avatar`
+   654	- `autoheal_clear_tts_queue`
+   655	- `autoheal_resync_lipsync`
+   656	- `autoheal_rebuild_memory_index`
+   657	- `autoheal_resync_state`
+   658	
+   659	**Total: ~43 commandes Rust à implémenter**
+   660	
+   661	---
+   662	
+   663	## 🔒 SÉCURITÉ & HARDENING
+   664	
+   665	### Mécanismes activés
+   666	
+   667	- ✅ **Rollback state** - Restauration snapshot automatique
+   668	- ✅ **Crash-guard** - Détection crashes imminents
+   669	- ✅ **Auto-heal** - Réparation rupture pipeline
+   670	- ✅ **Integrity checks** - Vérification cohérence continue
+   671	- ✅ **Sandbox renforcé** - Isolation modules critiques
+   672	- ✅ **Audit logs** - Traçabilité complète
+   673	
+   674	### Cleanup automatique
+   675	
+   676	- ✅ Suppression fichiers inutiles
+   677	- ✅ Suppression modules morts
+   678	- ✅ Suppression imports fantômes
+   679	- ✅ Logs minimaux et utiles seulement
+   680	
+
+=== frontend tests: invoke() usage (singularity-fusion integration) ===
+    80	    it('should prepare TTS', async () => {
+    81	      const tts = await invoke('pipeline_prepare_tts', {
+    82	        text: 'Hello world',
+    83	      });
+    84	      expect(tts).toBeDefined();
+    85	      expect(tts).toHaveProperty('duration');
+    86	      expect(tts).toHaveProperty('audio_data');
+    87	    });
+    88	
+    89	    it('should get pipeline stats', async () => {
+    90	      const stats = await invoke('pipeline_get_stats');
+    91	      expect(stats).toBeDefined();
+    92	      expect(stats).toHaveProperty('total_processed');
+    93	      expect(stats).toHaveProperty('success_rate');
+    94	    });
+    95	
+    96	    it('should validate pipeline', async () => {
+    97	      const valid = await invoke('pipeline_validate');
+    98	      expect(typeof valid).toBe('boolean');
+    99	    });
+   100	  });
+   101	
+   102	  describe('AutoFix', () => {
+   103	    it('should detect rust warnings', async () => {
+   104	      const issues = await invoke('autofix_detect_rust_warnings');
+   105	      expect(Array.isArray(issues)).toBe(true);
+   106	    });
+   107	
+   108	    it('should detect typescript errors', async () => {
+   109	      const issues = await invoke('autofix_detect_typescript_errors');
+   110	      expect(Array.isArray(issues)).toBe(true);
+   111	    });
+   112	
+   113	    it('should get autofix stats', async () => {
+   114	      const stats = await invoke('autofix_get_stats');
+   115	      expect(stats).toBeDefined();
+   116	      expect(stats).toHaveProperty('total_issues_detected');
+   117	      expect(stats).toHaveProperty('total_issues_fixed');
+   118	      expect(stats).toHaveProperty('fix_success_rate');
+   119	    });
+   120	
+   121	    it('should get fix history', async () => {
+   122	      const history = await invoke('autofix_get_history');
+   123	      expect(Array.isArray(history)).toBe(true);
+   124	    });
+   125	  });
+   126	
+   127	  describe('AutoHeal', () => {
+   128	    it('should detect broken modules', async () => {
+   129	      const modules = await invoke('autoheal_detect_broken_modules');
+   130	      expect(Array.isArray(modules)).toBe(true);
+   131	    });
+   132	
+   133	    it('should heal cognitive module', async () => {
+   134	      const result = await invoke('autoheal_heal_cognitive_module');
+   135	      expect(result).toBeDefined();
+   136	      expect(result).toHaveProperty('module_type');
+   137	      expect(result).toHaveProperty('success');
+   138	      expect(result.module_type).toBe('cognitive');
+   139	    });
+   140	
+   141	    it('should heal avatar module', async () => {
+   142	      const result = await invoke('autoheal_heal_avatar_module');
+   143	      expect(result).toBeDefined();
+   144	      expect(result.module_type).toBe('avatar');
+   145	    });
+   146	
+   147	    it('should get heal history', async () => {
+   148	      const history = await invoke('autoheal_get_history');
+   149	      expect(Array.isArray(history)).toBe(true);
+   150	    });
+   151	  });
+   152	
+   153	  describe('Performance', () => {
+   154	    it('should get performance metrics', async () => {
+   155	      const metrics = await invoke('performance_get_metrics');
+   156	      expect(metrics).toBeDefined();
+   157	      expect(metrics).toHaveProperty('cpu_usage');
+   158	      expect(metrics).toHaveProperty('gpu_usage');
+   159	      expect(metrics).toHaveProperty('memory_usage');
+   160	      expect(metrics).toHaveProperty('fps');
+   161	    });
+   162	
+   163	    it('should throttle CPU', async () => {
+   164	      await expect(invoke('performance_throttle_cpu')).resolves.toBeUndefined();
+   165	    });
+   166	
+   167	    it('should optimize GPU', async () => {
+   168	      await expect(invoke('performance_optimize_gpu')).resolves.toBeUndefined();
+   169	    });
+   170	
+   210	        text: response.text,
+   211	      });
+   212	      expect(tts).toBeDefined();
+   213	
+   214	      // 4. Vérifier intégrité
+   215	      const integrity = await invoke('singularity_check_integrity');
+   216	      expect(integrity).toBeGreaterThan(0);
+   217	
+   218	      // 5. Vérifier métriques
+   219	      const metrics = await invoke('performance_get_metrics');
+   220	      expect(metrics.fps).toBeGreaterThan(0);
+   221	    });
+   222	
+   223	    it('should handle auto-heal cycle', async () => {
+   224	      // 1. Détecter modules cassés
+   225	      const broken = await invoke('autoheal_detect_broken_modules');
+   226	      expect(Array.isArray(broken)).toBe(true);
+   227	
+   228	      // 2. Heal cognitive
+   229	      const healResult = await invoke('autoheal_heal_cognitive_module');
+   230	      expect(healResult.success).toBe(true);
+   231	
+   232	      // 3. Resync état
+   233	      await invoke('autoheal_resync_state');
+   234	
+   235	      // 4. Vérifier intégrité finale
+   236	      const integrity = await invoke('singularity_check_integrity');
+   237	      expect(integrity).toBeGreaterThan(0);
+   238	    });
+   239	
+   240	    it('should maintain system health throughout operations', async () => {
+   241	      // Série d'opérations pour tester stabilité
+   242	      for (let i = 0; i < 5; i++) {
+   243	        await invoke('singularity_perform_sync');
+   244	        await invoke('singularity_check_integrity');
+   245	        await invoke('performance_get_metrics');
+   246	      }
+   247	
+   248	      // Vérifier état final
+   249	      const state = await invoke('singularity_get_fusion_state');
+   250	      expect(state.fusion_integrity).toBeGreaterThan(0.5);
+   251	      expect(state.sync_score).toBeGreaterThan(0.5);
+   252	      expect(state.pipeline_health).toBeGreaterThan(0.5);
+   253	    });
+   254	  });
+   255	
+   256	  describe('Reset & Recovery', () => {
+   257	    it('should reset all systems', async () => {
+   258	      await invoke('singularity_reset');
+   259	      await invoke('autofix_reset');
+   260	      await invoke('autoheal_reset');
+   261	      await invoke('performance_reset_optimizations');
+   262	
+   263	      // Vérifier que tout est resetté
+   264	      const state = await invoke('singularity_get_fusion_state');
+   265	      expect(state.total_syncs).toBe(0);
+   266	
+   267	      const fixStats = await invoke('autofix_get_stats');
+   268	      expect(fixStats.total_issues_fixed).toBe(0);
+   269	    });
+   270	
+   271	    it('should create and restore snapshot', async () => {
+   272	      const baselineState = await invoke('singularity_get_fusion_state');
+   273	      // Créer snapshot
+   274	      const snapshotId = await invoke('singularity_create_snapshot', {
+   275	        compressed: true,
+   276	      });
+   277	      expect(snapshotId).toBeDefined();
+   278	
+   279	      // Modifier état
+   280	      await invoke('singularity_perform_sync');

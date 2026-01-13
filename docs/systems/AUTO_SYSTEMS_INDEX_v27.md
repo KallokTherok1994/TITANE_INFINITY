@@ -37,6 +37,14 @@ Objectif: pointer les surfaces réelles AutoHeal/AutoFix/Auto-Healing (scripts, 
 - Enregistrement de states AutoFix/AutoHeal: [src-tauri/src/main.rs](../../src-tauri/src/main.rs#L506-L521).
 - Commandes exposées (IPC) AutoFix/AutoHeal: [src-tauri/src/main.rs](../../src-tauri/src/main.rs#L812-L857).
 
+- Contrat IPC (docs) ↔ tests `invoke()` (reality check):
+  - Matrix: [docs/backend/IPC_CONTRACT.md](../backend/IPC_CONTRACT.md#L270-L291)
+  - Détails: [docs/backend/IPC_CONTRACT.md](../backend/IPC_CONTRACT.md#L461-L489)
+  - Backend map: [docs/backend/BACKEND_MAP.md](../backend/BACKEND_MAP.md#L295-L306)
+  - SINGULARITY vΩ: [docs/SINGULARITY_FUSION_vΩ.md](../SINGULARITY_FUSION_vΩ.md#L641-L657)
+  - Tests invoke(): [src/__tests__/singularity-fusion-integration.test.ts](../../src/__tests__/singularity-fusion-integration.test.ts#L225-L236)
+  - Preuve: [docs/_evidence/v27/B13b_ipc_contract_auto_commands_clean_2026-01-13.txt](../../docs/_evidence/v27/B13b_ipc_contract_auto_commands_clean_2026-01-13.txt#L1-L160)
+
 - Implémentation backend (Rust) AutoFix/AutoHeal:
   - Module exports: [src-tauri/src/singularity_fusion/mod.rs](../../src-tauri/src/singularity_fusion/mod.rs#L1-L33)
   - AutoFix impl: [src-tauri/src/singularity_fusion/auto_fix.rs](../../src-tauri/src/singularity_fusion/auto_fix.rs#L53-L216)
@@ -84,4 +92,4 @@ Objectif: pointer les surfaces réelles AutoHeal/AutoFix/Auto-Healing (scripts, 
 ## 6) Tests
 
 - Scénario “trigger auto-heal” (Gemini failures): `src/__tests__/omega-provider-tests.test.ts` lignes 89-118.
-- Test d’intégration IPC autoheal_*: `src/__tests__/singularity-fusion-integration.test.ts` lignes 223-255.
+- Test d’intégration IPC autoheal_*: `src/__tests__/singularity-fusion-integration.test.ts` lignes 225-236.
