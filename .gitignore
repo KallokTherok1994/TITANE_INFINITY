@@ -120,6 +120,18 @@ docs/_evidence/**/B3_test_*_run.txt
 docs/_evidence/**/B4_pnpm_test_run_*.txt
 docs/_evidence/**/E_rg_v26_v27*.txt
 
+# Evidence (proof-first) - local-only helpers (not referenced by docs)
+docs/_evidence/**/A10_unrelated_changes_inventory_*.txt
+docs/_evidence/**/A1_gitlog_*.txt
+docs/_evidence/**/A1_tags_*.txt
+docs/_evidence/**/A2_find_maxdepth4_*.txt
+docs/_evidence/**/A2_ls*.txt
+docs/_evidence/**/A3_package.json*.txt
+docs/_evidence/**/A3_tooling*.txt
+docs/_evidence/**/B1_config_files_list*.txt
+docs/_evidence/**/B1_npm_ls_vite_vitest*.txt
+docs/_evidence/**/B2_ps_vitest*.txt
+
 # Logs étendus
 *.log.*
 n[p]m-debug*.log
