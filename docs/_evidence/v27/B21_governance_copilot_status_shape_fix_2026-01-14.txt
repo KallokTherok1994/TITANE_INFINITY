@@ -1,0 +1,69 @@
+B21 — Governance Copilot status shape fix (2026-01-14)
+
+Problem
+- Rust Copilot commands return `CopilotKeyStatus` directly (NOT `SecureResponse<...>`), but the Governance Center treated them as `SecureResponse<GeminiKeyStatus>`.
+- This can cause the UI to show "backend indisponible" / status always failing because `normalizeResponse` expects an `ok` boolean.
+
+Rust source-of-truth excerpts
+
+1) CopilotKeyStatus struct (no masked_key/provider_enabled)
+--- src-tauri/src/commands/copilot_commands.rs ---
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CopilotKeyStatus {
+    pub configured: bool,
+    pub status: String,
+    pub message: Option<String>,
+}
+
+2) get_copilot_key_status returns CopilotKeyStatus
+--- src-tauri/src/commands/copilot_commands.rs ---
+#[tauri::command]
+pub async fn get_copilot_key_status(
+    state: State<'_, CopilotState>,
+) -> Result<CopilotKeyStatus, String> {
+...
+    Ok(CopilotKeyStatus {
+        configured,
+        status: if configured { "ok".to_string() } else { "not_configured".to_string() },
+        message: if configured { Some("Copilot configuré".to_string()) } else { Some("Copilot non configuré".to_string()) },
+    })
+}
+
+Frontend fixes (post-fix)
+
+A) Add explicit CopilotKeyStatus type + update GovernanceState
+--- src/features/governance-center/types.ts ---
+export interface CopilotKeyStatus {
+  configured: boolean;
+  status: string;
+  message: string | null;
+}
+...
+export interface GovernanceState {
+  ...
+  copilotStatus: CopilotKeyStatus | null;
+  ...
+}
+
+B) Wrap direct Rust object into SecureResponse via normalizeDirectResponse
+--- src/features/governance-center/services/governanceService.ts ---
+function normalizeDirectResponse<T>(raw: unknown, defaultError = FALLBACK_ERROR): SecureResponse<T> {
+  ...
+  if (payload.fallback) {
+    return { ok: false, data: null, error: payload.error ?? payload.message ?? defaultError };
+  }
+  return { ok: true, data: raw as T, error: null };
+}
+...
+async function getCopilotStatus(): Promise<SecureResponse<CopilotKeyStatus>> {
+  const raw = await safeInvoke<unknown>('get_copilot_key_status');
+  return normalizeDirectResponse<CopilotKeyStatus>(raw, 'Impossible de récupérer le statut Copilot');
+}
+
+C) SecretsTab no longer expects masked_key for Copilot
+--- src/features/governance-center/tabs/SecretsTab.tsx ---
+{copilotStatus?.message && (
+  <div style={{ fontSize: '0.85rem', opacity: 0.75, marginTop: '4px' }}>
+    {copilotStatus.message}
+  </div>
+)}
