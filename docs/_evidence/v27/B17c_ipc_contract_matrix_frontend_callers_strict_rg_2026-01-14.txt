@@ -1,0 +1,88 @@
+[ts]  2026-01-14T08:57:03-05:00
+[cwd] /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+Strict callers scan (rg): invoke/secureInvoke/safeInvoke/safeInvokeTauri/invokeCommand/mappedInvoke
+Regex requires the literal string arg == command (no substring matches).
+
+--- command: conversation_generate ---
+src/tests/e2e/titane_e2e.test.ts:136:      const response = await invoke('conversation_generate', {
+src/tests/e2e/titane_e2e.test.ts:251:      const analysis = await invoke('conversation_generate', {
+src/tests/e2e/titane_e2e.test.ts:352:      const synthesis = await invoke('conversation_generate', {
+src/services/tauri/chatEngine.commands.ts:261:  return invokeCommand<OmegaResponse>('conversation_generate', {
+src/services/ai/providers/tauriChat.ts:169:        safeInvokeTauri<ChatResponse>('conversation_generate', {
+
+--- command: chat_get_providers_status ---
+src/tests/tauri-invoke-fix-validator.ts:18:    const providersResult = await safeInvokeTauri('chat_get_providers_status');
+src/tests/regression/titane_regression.test.ts:80:          await invoke('chat_get_providers_status');
+src/tests/regression/titane_regression.test.ts:383:      const status = await invoke('chat_get_providers_status');
+src/components/ChatDiagnostic.tsx:194:    run: () => safeInvoke<Record<string, unknown>>('chat_get_providers_status'),
+
+--- command: avatar_advance_lip_sync ---
+NO_CALLERS_FOUND
+
+--- command: voice_start_listening ---
+NO_CALLERS_FOUND
+
+--- command: singularity_get_full_state ---
+src/services/autoAuditEngine.ts:399:      const state = await secureInvoke<SingularityStateXP>('singularity_get_full_state');
+src/services/singularityBridge.ts:287:    const state = await safeInvoke<SingularityState>('singularity_get_full_state');
+src/tests/regression/titane_regression.test.ts:72:          await invoke('singularity_get_full_state');
+src/tests/regression/titane_regression.test.ts:216:      const state = await invoke('singularity_get_full_state');
+src/tests/regression/titane_regression.test.ts:420:      const state = await invoke('singularity_get_full_state');
+src/tests/e2e/titane_e2e.test.ts:127:      const state = await invoke('singularity_get_full_state');
+src/tests/e2e/titane_e2e.test.ts:574:      const state = await invoke('singularity_get_full_state');
+src/services/tauriAutoRepair.ts:285:      const rawState = await mappedInvoke<any>('singularity_get_full_state');
+src/components/ChatDiagnostic.tsx:312:    run: () => safeInvoke<SingularityState>('singularity_get_full_state'),
+
+--- command: get_memory_state ---
+src/services/tauri/backend-v17.2.commands.ts:76:    return safeInvoke<MemoryState>('get_memory_state');
+src/services/singularityConnections.ts:245:    const memory = await this.safeInvoke<MemoryState>('get_memory_state');
+src/services/autoAuditEngine.ts:284:      const state = await secureInvoke<MemoryState>('get_memory_state');
+
+--- command: add_timeline_event ---
+src/tests/e2e/titane_e2e.test.ts:177:      const event = await invoke('add_timeline_event', {
+src/tests/e2e/titane_e2e.test.ts:280:      const event = await invoke('add_timeline_event', {
+src/tests/e2e/titane_e2e.test.ts:380:      const event = await invoke('add_timeline_event', {
+src/engines/selfHealing/selfHealingEngine.ts:554:    safeInvoke('add_timeline_event', {
+src/services/tauri/backend-v17.2.commands.ts:111:    return safeInvoke<void>('add_timeline_event', { event });
+src/services/tauri/backend-v17.2.commands.ts:232:    await safeInvoke<void>('add_timeline_event', { event });
+
+--- command: chat_set_openai_key ---
+src/features/governance-center/services/governanceService.ts:93:  const raw = await safeInvoke<unknown>('chat_set_openai_key', { apiKey });
+src/utils/secureSecrets.ts:110:  const raw = await safeInvoke<unknown>('chat_set_openai_key', { api_key: apiKey });
+
+--- command: avatar_set_appearance ---
+src/modules/avatar/appearance/appearanceEngine.ts:25:  return secureInvoke<string>('avatar_set_appearance', { stateJson: json });
+
+--- command: autoheal_detect_broken_modules ---
+src/__tests__/singularity-fusion-integration.test.ts:129:      const modules = await invoke('autoheal_detect_broken_modules');
+src/__tests__/singularity-fusion-integration.test.ts:225:      const broken = await invoke('autoheal_detect_broken_modules');
+src/__tests__/e2e-automated-validation.test.tsx:2003:        const brokenModules = await invoke('autoheal_detect_broken_modules');
+src/__tests__/e2e-automated-validation.test.tsx:2143:        const broken = await invoke('autoheal_detect_broken_modules');
+src/__tests__/singularity-fusion-mocked.test.ts:149:      const modules = await invoke('autoheal_detect_broken_modules');
+
+--- command: performance_get_metrics ---
+src/__tests__/singularity-fusion-integration.test.ts:155:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-integration.test.ts:219:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-integration.test.ts:245:        await invoke('performance_get_metrics');
+src/__tests__/e2e-automated-validation.test.tsx:2065:        const metrics = await invoke('performance_get_metrics');
+src/__tests__/e2e-automated-validation.test.tsx:2101:        const metrics = await invoke('performance_get_metrics');
+src/__tests__/e2e-automated-validation.test.tsx:2118:            invoke('performance_get_metrics'),
+src/__tests__/e2e-automated-validation.test.tsx:2168:      const metrics = (await invoke('performance_get_metrics')) as PerformanceMetrics;
+src/__tests__/e2e-automated-validation.test.tsx:2182:        const metrics = (await invoke('performance_get_metrics')) as {
+src/__tests__/e2e-automated-validation.test.tsx:2208:      const perfMetrics = (await invoke('performance_get_metrics')) as PerformanceMetrics;
+src/__tests__/singularity-fusion-mocked.test.ts:158:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-mocked.test.ts:195:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-mocked.test.ts:208:      const metrics = await invoke('performance_get_metrics');
+
+--- command: is_onboarding_complete ---
+src/App.tsx:286:        const isComplete = await secureInvoke<boolean>('is_onboarding_complete');
+src/components/Onboarding/INTEGRATION_GUIDE.md:77:        const isComplete = await invoke<boolean>('is_onboarding_complete');
+src/components/Onboarding/INTEGRATION_GUIDE.md:254:const isComplete = await invoke<boolean>('is_onboarding_complete');
+
+--- command: export_security_log ---
+src/features/governance-center/services/governanceService.ts:309:  const raw = await safeInvoke<unknown>('export_security_log', { format });
+
+--- command: sc_run_full_diagnostics ---
+src/features/system-center/hooks/useSystemDiagnostics.ts:55:      const result = await secureInvoke<SystemDiagnostics>('sc_run_full_diagnostics');
+

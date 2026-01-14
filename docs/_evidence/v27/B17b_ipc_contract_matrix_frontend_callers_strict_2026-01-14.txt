@@ -1,0 +1,85 @@
+[ts]  2026-01-14T08:56:26-05:00
+[cwd] /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+⚠️ INVALID / NE PAS UTILISER
+
+- Cette capture a été générée avec `grep -E` en utilisant `\b` comme “word boundary”.
+	Or, en ERE grep, `\b` n'est pas une frontière de mot fiable (souvent interprétée comme backspace),
+	ce qui rend les résultats incomplets/erronés pour certaines commandes.
+- Remplacement officiel: `docs/_evidence/v27/B17c_ipc_contract_matrix_frontend_callers_strict_rg_2026-01-14.txt`
+
+Strict callers scan: invoke/secureInvoke/safeInvoke/safeInvokeTauri/invokeCommand/mappedInvoke
+(regex avoids substring matches; command must be the literal string arg)
+
+--- command: conversation_generate ---
+src/tests/e2e/titane_e2e.test.ts:136:      const response = await invoke('conversation_generate', {
+src/tests/e2e/titane_e2e.test.ts:251:      const analysis = await invoke('conversation_generate', {
+src/tests/e2e/titane_e2e.test.ts:352:      const synthesis = await invoke('conversation_generate', {
+
+--- command: chat_get_providers_status ---
+src/tests/regression/titane_regression.test.ts:80:          await invoke('chat_get_providers_status');
+src/tests/regression/titane_regression.test.ts:383:      const status = await invoke('chat_get_providers_status');
+src/tests/tauri-invoke-fix-validator.ts:18:    const providersResult = await safeInvokeTauri('chat_get_providers_status');
+
+--- command: avatar_advance_lip_sync ---
+NO_CALLERS_FOUND
+
+--- command: voice_start_listening ---
+NO_CALLERS_FOUND
+
+--- command: singularity_get_full_state ---
+src/tests/regression/titane_regression.test.ts:72:          await invoke('singularity_get_full_state');
+src/tests/regression/titane_regression.test.ts:216:      const state = await invoke('singularity_get_full_state');
+src/tests/regression/titane_regression.test.ts:420:      const state = await invoke('singularity_get_full_state');
+src/tests/e2e/titane_e2e.test.ts:127:      const state = await invoke('singularity_get_full_state');
+src/tests/e2e/titane_e2e.test.ts:574:      const state = await invoke('singularity_get_full_state');
+
+--- command: get_memory_state ---
+src/services/autoAuditEngine.ts:284:      const state = await secureInvoke<MemoryState>('get_memory_state');
+src/services/tauri/backend-v17.2.commands.ts:76:    return safeInvoke<MemoryState>('get_memory_state');
+src/services/singularityConnections.ts:245:    const memory = await this.safeInvoke<MemoryState>('get_memory_state');
+
+--- command: add_timeline_event ---
+src/engines/selfHealing/selfHealingEngine.ts:554:    safeInvoke('add_timeline_event', {
+src/tests/e2e/titane_e2e.test.ts:177:      const event = await invoke('add_timeline_event', {
+src/tests/e2e/titane_e2e.test.ts:280:      const event = await invoke('add_timeline_event', {
+src/tests/e2e/titane_e2e.test.ts:380:      const event = await invoke('add_timeline_event', {
+src/services/tauri/backend-v17.2.commands.ts:111:    return safeInvoke<void>('add_timeline_event', { event });
+src/services/tauri/backend-v17.2.commands.ts:232:    await safeInvoke<void>('add_timeline_event', { event });
+
+--- command: chat_set_openai_key ---
+NO_CALLERS_FOUND
+
+--- command: avatar_set_appearance ---
+NO_CALLERS_FOUND
+
+--- command: autoheal_detect_broken_modules ---
+src/__tests__/singularity-fusion-mocked.test.ts:149:      const modules = await invoke('autoheal_detect_broken_modules');
+src/__tests__/e2e-automated-validation.test.tsx:2003:        const brokenModules = await invoke('autoheal_detect_broken_modules');
+src/__tests__/e2e-automated-validation.test.tsx:2143:        const broken = await invoke('autoheal_detect_broken_modules');
+src/__tests__/singularity-fusion-integration.test.ts:129:      const modules = await invoke('autoheal_detect_broken_modules');
+src/__tests__/singularity-fusion-integration.test.ts:225:      const broken = await invoke('autoheal_detect_broken_modules');
+
+--- command: performance_get_metrics ---
+src/__tests__/singularity-fusion-mocked.test.ts:158:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-mocked.test.ts:195:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-mocked.test.ts:208:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/e2e-automated-validation.test.tsx:2065:        const metrics = await invoke('performance_get_metrics');
+src/__tests__/e2e-automated-validation.test.tsx:2101:        const metrics = await invoke('performance_get_metrics');
+src/__tests__/e2e-automated-validation.test.tsx:2118:            invoke('performance_get_metrics'),
+src/__tests__/e2e-automated-validation.test.tsx:2168:      const metrics = (await invoke('performance_get_metrics')) as PerformanceMetrics;
+src/__tests__/e2e-automated-validation.test.tsx:2182:        const metrics = (await invoke('performance_get_metrics')) as {
+src/__tests__/e2e-automated-validation.test.tsx:2208:      const perfMetrics = (await invoke('performance_get_metrics')) as PerformanceMetrics;
+src/__tests__/singularity-fusion-integration.test.ts:155:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-integration.test.ts:219:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-integration.test.ts:245:        await invoke('performance_get_metrics');
+
+--- command: is_onboarding_complete ---
+NO_CALLERS_FOUND
+
+--- command: export_security_log ---
+NO_CALLERS_FOUND
+
+--- command: sc_run_full_diagnostics ---
+NO_CALLERS_FOUND
+

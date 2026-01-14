@@ -68,7 +68,7 @@ Chaque point ci-dessous doit être vérifiable via (a) un fichier, ou (b) une pr
   - AutoHeal impl: [src-tauri/src/singularity_fusion/auto_heal.rs](src-tauri/src/singularity_fusion/auto_heal.rs#L33-L291)
 
 - Contrat IPC “AUTO-*” (docs) ↔ commandes (Tauri) ↔ tests `invoke()` (reality check).
-  - Source (matrix): [docs/backend/IPC_CONTRACT.md](docs/backend/IPC_CONTRACT.md#L270-L291)
+  - Source (matrix): [docs/backend/IPC_CONTRACT.md](docs/backend/IPC_CONTRACT.md#L270-L300)
   - Source (détails): [docs/backend/IPC_CONTRACT.md](docs/backend/IPC_CONTRACT.md#L461-L489)
   - Source (backend map): [docs/backend/BACKEND_MAP.md](docs/backend/BACKEND_MAP.md#L295-L306)
   - Source (SINGULARITY vΩ): [docs/SINGULARITY_FUSION_vΩ.md](docs/SINGULARITY_FUSION_vΩ.md#L641-L657)
@@ -84,3 +84,7 @@ Chaque point ci-dessous doit être vérifiable via (a) un fichier, ou (b) une pr
 
 - Reality check “matrix candidates” (doc ↔ repo): recherche de candidats repo pour les chemins manquants (match basename + match stem) afin de préparer une correction doc.
   - Preuve: [docs/_evidence/v27/B16_ipc_contract_matrix_missing_frontend_file_candidates_2026-01-14.txt](docs/_evidence/v27/B16_ipc_contract_matrix_missing_frontend_file_candidates_2026-01-14.txt#L1-L120)
+
+- Reality check “matrix callers” (doc ↔ repo): scan repo des callers réels par commande (puis correction de la matrix pour remplacer les chemins fantômes par des callers prouvés, sinon `NO_CALLERS_FOUND`).
+  - Preuve (scan): [docs/_evidence/v27/B17_ipc_contract_matrix_frontend_files_callers_2026-01-14.txt](docs/_evidence/v27/B17_ipc_contract_matrix_frontend_files_callers_2026-01-14.txt#L60-L140)
+  - Preuve (strict, sans faux-positifs substring): [docs/_evidence/v27/B17c_ipc_contract_matrix_frontend_callers_strict_rg_2026-01-14.txt](docs/_evidence/v27/B17c_ipc_contract_matrix_frontend_callers_strict_rg_2026-01-14.txt#L1-L120)

@@ -273,30 +273,30 @@ export class TitaneError extends Error {
 
 | Command | Frontend Files | Payload | Response | Errors |
 |---------|----------------|---------|----------|--------|
-| `conversation_generate` | `src/hooks/useConversation.ts`<br>`src/services/conversationService.ts` | `{conversationId: string, message: string, provider?: string}` | `{id: string, role: string, content: string, timestamp: string}` | `UNAUTHORIZED` (no API key)<br>`RATE_LIMITED`<br>`EXTERNAL_API_ERROR`<br>`TIMEOUT` |
-| `chat_get_providers_status` | `src/components/SettingsPanel.tsx`<br>`src/services/aiService.ts` | `{}` | `{openai: boolean, claude: boolean, gemini: boolean, copilot: boolean, ollama: boolean}` | `INTERNAL_ERROR` |
-| `avatar_advance_lip_sync` | `src/components/Avatar3D.tsx`<br>`src/hooks/useAvatar.ts` | `{phoneme: string, timestamp: number}` | `void` | `NOT_FOUND` (avatar not initialized) |
-| `voice_start_listening` | `src/components/VoiceInput.tsx`<br>`src/hooks/useVoice.ts` | `{continuous?: boolean}` | `{sessionId: string}` | `PERMISSION_DENIED` (mic access)<br>`DEVICE_NOT_FOUND` |
-| `singularity_get_full_state` | `src/services/singularityService.ts` | `{}` | `{physical: {...}, cognitive: {...}, symbolic: {...}, adaptive: {...}, meta: {...}}` | `INTERNAL_ERROR` |
-| `get_memory_state` | `src/services/memoryService.ts` | `{}` | `{stm: [...], mtm: [...], ltm: [...], stats: {...}}` | `DATABASE_ERROR` |
-| `add_timeline_event` | `src/services/timelineService.ts` | `{type: string, content: string, metadata?: object}` | `{id: string}` | `INVALID_INPUT`<br>`DATABASE_ERROR` |
+| `conversation_generate` | `src/services/tauri/chatEngine.commands.ts`<br>`src/services/ai/providers/tauriChat.ts`<br>`src/tests/e2e/titane_e2e.test.ts` | `{conversationId: string, message: string, provider?: string}` | `{id: string, role: string, content: string, timestamp: string}` | `UNAUTHORIZED` (no API key)<br>`RATE_LIMITED`<br>`EXTERNAL_API_ERROR`<br>`TIMEOUT` |
+| `chat_get_providers_status` | `src/components/ChatDiagnostic.tsx`<br>`src/tests/regression/titane_regression.test.ts`<br>`src/tests/tauri-invoke-fix-validator.ts` | `{}` | `{openai: boolean, claude: boolean, gemini: boolean, copilot: boolean, ollama: boolean}` | `INTERNAL_ERROR` |
+| `avatar_advance_lip_sync` | `NO_CALLERS_FOUND` | `{phoneme: string, timestamp: number}` | `void` | `NOT_FOUND` (avatar not initialized) |
+| `voice_start_listening` | `NO_CALLERS_FOUND` | `{continuous?: boolean}` | `{sessionId: string}` | `PERMISSION_DENIED` (mic access)<br>`DEVICE_NOT_FOUND` |
+| `singularity_get_full_state` | `src/services/autoAuditEngine.ts`<br>`src/services/singularityBridge.ts`<br>`src/components/ChatDiagnostic.tsx` | `{}` | `{physical: {...}, cognitive: {...}, symbolic: {...}, adaptive: {...}, meta: {...}}` | `INTERNAL_ERROR` |
+| `get_memory_state` | `src/services/tauri/backend-v17.2.commands.ts`<br>`src/services/singularityConnections.ts`<br>`src/services/autoAuditEngine.ts` | `{}` | `{stm: [...], mtm: [...], ltm: [...], stats: {...}}` | `DATABASE_ERROR` |
+| `add_timeline_event` | `src/engines/selfHealing/selfHealingEngine.ts`<br>`src/services/tauri/backend-v17.2.commands.ts`<br>`src/tests/e2e/titane_e2e.test.ts` | `{type: string, content: string, metadata?: object}` | `{id: string}` | `INVALID_INPUT`<br>`DATABASE_ERROR` |
 
 ### Medium-Traffic Commands (10-100 calls/session)
 
 | Command | Frontend Files | Payload | Response | Errors |
 |---------|----------------|---------|----------|--------|
-| `chat_set_openai_key` | `src/components/APIKeyDialog.tsx` | `{key: string}` | `void` | `INVALID_INPUT` (bad key format) |
-| `avatar_set_appearance` | `src/components/AvatarCustomizer.tsx` | `{style: object}` | `void` | `SERIALIZATION_ERROR` |
-| `autoheal_detect_broken_modules` | `src/services/healthService.ts` | `{}` | `{broken: string[]}` | `INTERNAL_ERROR` |
-| `performance_get_metrics` | `src/components/Dashboard.tsx` | `{}` | `{cpu: number, memory: number, fps: number}` | - |
+| `chat_set_openai_key` | `src/features/governance-center/services/governanceService.ts`<br>`src/utils/secureSecrets.ts` | `{key: string}` | `void` | `INVALID_INPUT` (bad key format) |
+| `avatar_set_appearance` | `src/modules/avatar/appearance/appearanceEngine.ts` | `{style: object}` | `void` | `SERIALIZATION_ERROR` |
+| `autoheal_detect_broken_modules` | `src/__tests__/singularity-fusion-integration.test.ts`<br>`src/__tests__/e2e-automated-validation.test.tsx`<br>`src/__tests__/singularity-fusion-mocked.test.ts` | `{}` | `{broken: string[]}` | `INTERNAL_ERROR` |
+| `performance_get_metrics` | `src/services/systemCenter/SystemAPI.ts`<br>`src/__tests__/e2e-automated-validation.test.tsx`<br>`src/__tests__/singularity-fusion-integration.test.ts` | `{}` | `{cpu: number, memory: number, fps: number}` | - |
 
 ### Low-Traffic Commands (<10 calls/session)
 
 | Command | Frontend Files | Payload | Response | Errors |
 |---------|----------------|---------|----------|--------|
-| `onboarding_complete` | `src/pages/Onboarding.tsx` | `{}` | `void` | - |
-| `export_security_log` | `src/pages/Governance.tsx` | `{format: "json" \| "csv"}` | `{path: string}` | `IO_ERROR` |
-| `sc_run_full_diagnostics` | `src/pages/SystemCenter.tsx` | `{}` | `{results: [...]}` | `TIMEOUT` |
+| `is_onboarding_complete` | `src/App.tsx`<br>`src/components/Onboarding/INTEGRATION_GUIDE.md` | `{}` | `boolean` | - |
+| `export_security_log` | `src/features/governance-center/services/governanceService.ts` | `{format: "json" \| "csv"}` | `{path: string}` | `IO_ERROR` |
+| `sc_run_full_diagnostics` | `src/features/system-center/hooks/useSystemDiagnostics.ts` | `{}` | `{results: [...]}` | `TIMEOUT` |
 
 ### Orphaned Commands (No Frontend Callers - TO VERIFY)
 - `memory_compactor_*` commands (deprecated)
