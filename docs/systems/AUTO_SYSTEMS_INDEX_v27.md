@@ -55,6 +55,10 @@ Objectif: pointer les surfaces réelles AutoHeal/AutoFix/Auto-Healing (scripts, 
   - Scan existence/tracking des chemins `src/...` référencés par la matrix “Command → Frontend Matrix”.
   - Preuve: [docs/_evidence/v27/B15_ipc_contract_matrix_frontend_files_exist_2026-01-13.txt](../../docs/_evidence/v27/B15_ipc_contract_matrix_frontend_files_exist_2026-01-13.txt#L1-L120)
 
+- Contrat IPC — reality check “matrix candidates”:
+  - Recherche de candidats repo pour les chemins manquants (match basename + match stem) — utile pour une correction doc.
+  - Preuve: [docs/_evidence/v27/B16_ipc_contract_matrix_missing_frontend_file_candidates_2026-01-14.txt](../../docs/_evidence/v27/B16_ipc_contract_matrix_missing_frontend_file_candidates_2026-01-14.txt#L1-L120)
+
 - Implémentation backend (Rust) AutoFix/AutoHeal:
   - Module exports: [src-tauri/src/singularity_fusion/mod.rs](../../src-tauri/src/singularity_fusion/mod.rs#L1-L33)
   - AutoFix impl: [src-tauri/src/singularity_fusion/auto_fix.rs](../../src-tauri/src/singularity_fusion/auto_fix.rs#L53-L216)

@@ -27,6 +27,7 @@ Ce document est conçu pour être **vérifiable** : chaque constat pointe vers (
 - Contrat IPC AUTO-* (écart doc ↔ repo: `healthService.ts` absent): [docs/_evidence/v27/B14_ipc_contract_vs_repo_healthservice_gap_2026-01-13.txt](docs/_evidence/v27/B14_ipc_contract_vs_repo_healthservice_gap_2026-01-13.txt#L1-L60)
 - Contrat IPC AUTO-* — reality check “caller” (doc ↔ repo): [docs/_evidence/v27/B14_ipc_contract_autoheal_detect_callers_2026-01-13.txt](docs/_evidence/v27/B14_ipc_contract_autoheal_detect_callers_2026-01-13.txt#L1-L120)
 - Contrat IPC (doc ↔ repo) — scan matrix “Frontend Files” (existence/tracking): [docs/_evidence/v27/B15_ipc_contract_matrix_frontend_files_exist_2026-01-13.txt](docs/_evidence/v27/B15_ipc_contract_matrix_frontend_files_exist_2026-01-13.txt#L1-L120)
+- Contrat IPC (doc ↔ repo) — candidats repo pour les chemins manquants (scan basename/stem): [docs/_evidence/v27/B16_ipc_contract_matrix_missing_frontend_file_candidates_2026-01-14.txt](docs/_evidence/v27/B16_ipc_contract_matrix_missing_frontend_file_candidates_2026-01-14.txt#L1-L120)
 
 ## 1) Snapshot repo (Git)
 
@@ -185,6 +186,9 @@ Le repo contient des systèmes AutoFix/AutoHeal documentés et intégrés côté
 
 - Note “doc ↔ repo” (matrix IPC): la section “Command → Frontend Matrix” référence majoritairement des fichiers `src/...` absents (scan existence/tracking).
   - Preuve: [docs/_evidence/v27/B15_ipc_contract_matrix_frontend_files_exist_2026-01-13.txt](docs/_evidence/v27/B15_ipc_contract_matrix_frontend_files_exist_2026-01-13.txt#L1-L120)
+
+- Note “doc ↔ repo” (matrix IPC): candidats identifiés pour certains chemins manquants (basenames/stems) — utile pour corriger la doc dans un commit séparé.
+  - Preuve: [docs/_evidence/v27/B16_ipc_contract_matrix_missing_frontend_file_candidates_2026-01-14.txt](docs/_evidence/v27/B16_ipc_contract_matrix_missing_frontend_file_candidates_2026-01-14.txt#L1-L120)
 
 Voir l’index consolidé: `docs/systems/AUTO_SYSTEMS_INDEX_v27.md`.
 

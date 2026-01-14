@@ -1,0 +1,185 @@
+[ts]  2026-01-14T08:43:28-05:00
+[cwd] /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+=== Source: IPC_CONTRACT.md matrix paths (from docs/backend/IPC_CONTRACT.md) ===
+paths_total=18
+src/components/APIKeyDialog.tsx
+src/components/Avatar3D.tsx
+src/components/AvatarCustomizer.tsx
+src/components/Dashboard.tsx
+src/components/SettingsPanel.tsx
+src/components/VoiceInput.tsx
+src/hooks/useAvatar.ts
+src/hooks/useConversation.ts
+src/hooks/useVoice.ts
+src/pages/Governance.tsx
+src/pages/Onboarding.tsx
+src/pages/SystemCenter.tsx
+src/services/aiService.ts
+src/services/conversationService.ts
+src/services/healthService.ts
+src/services/memoryService.ts
+src/services/singularityService.ts
+src/services/timelineService.ts
+
+=== Repo index: git ls-files (src/) count ===
+src_tracked_files=1474
+
+=== Candidates for missing matrix paths ===
+missing_total=17
+
+MISSING: src/components/APIKeyDialog.tsx
+  basename=APIKeyDialog.tsx
+  candidates_exact_basename: (none)
+  candidates_stem_substring: (none)
+
+MISSING: src/components/Avatar3D.tsx
+  basename=Avatar3D.tsx
+  candidates_exact_basename: (none)
+  candidates_stem_substring: (none)
+
+MISSING: src/components/AvatarCustomizer.tsx
+  basename=AvatarCustomizer.tsx
+  candidates_exact_basename: (none)
+  candidates_stem_substring: (none)
+
+MISSING: src/components/Dashboard.tsx
+  basename=Dashboard.tsx
+  candidates_exact_basename:
+    - src/apps/devtools/sections/Dashboard.tsx
+  candidates_stem_substring:
+    - src/components/PerformanceDashboard.tsx
+    - src/components/admin/AdminDashboard.tsx
+    - src/components/chat/MemoryDashboard.tsx
+    - src/components/dev/ConsoleMonitorDashboard.css
+    - src/components/dev/ConsoleMonitorDashboard.tsx
+    - src/components/dev/PredictiveDashboard.tsx
+    - src/components/evolution/EvolutionDashboard.css
+    - src/components/evolution/EvolutionDashboard.tsx
+    - src/components/fusion/PerfectFusionDashboard.tsx
+    - src/components/monitoring/AnomalyDashboard.tsx
+    - src/components/monitoring/PredictiveAlertsDashboard.tsx
+    - src/components/monitoring/SingularityDashboard.tsx
+    - src/components/optimization/UltimateOptimizationDashboard.css
+    - src/components/optimization/UltimateOptimizationDashboard.tsx
+    - src/components/performance/AdvancedPerformanceDashboard.css
+    - src/components/performance/AdvancedPerformanceDashboard.tsx
+    - src/components/performance/PerformanceDashboard.tsx
+    - src/features/dashboard/DashboardEditor.tsx
+    - src/features/dashboard/RealTimeCharts.css
+    - src/features/dashboard/RealTimeCharts.tsx
+
+MISSING: src/components/SettingsPanel.tsx
+  basename=SettingsPanel.tsx
+  candidates_exact_basename: (none)
+  candidates_stem_substring: (none)
+
+MISSING: src/components/VoiceInput.tsx
+  basename=VoiceInput.tsx
+  candidates_exact_basename: (none)
+  candidates_stem_substring:
+    - src/hooks/useVoiceInput.ts
+
+MISSING: src/hooks/useAvatar.ts
+  basename=useAvatar.ts
+  candidates_exact_basename: (none)
+  candidates_stem_substring: (none)
+
+MISSING: src/hooks/useConversation.ts
+  basename=useConversation.ts
+  candidates_exact_basename: (none)
+  candidates_stem_substring:
+    - src/hooks/useConversationEngine.ts
+
+MISSING: src/pages/Governance.tsx
+  basename=Governance.tsx
+  candidates_exact_basename: (none)
+  candidates_stem_substring:
+    - src/components/panels/GovernancePanel.tsx
+    - src/features/governance-center/GovernanceCenter.tsx
+    - src/features/governance-center/GovernanceCenterPage.tsx
+    - src/features/governance-center/components/AIProvidersTester.tsx
+    - src/features/governance-center/components/APIProviderCard.tsx
+    - src/features/governance-center/hooks/useGovernance.ts
+    - src/features/governance-center/index.ts
+    - src/features/governance-center/services/governanceService.ts
+    - src/features/governance-center/tabs/PermissionsTab.tsx
+    - src/features/governance-center/tabs/PoliciesTab.tsx
+    - src/features/governance-center/tabs/SecretsTab.tsx
+    - src/features/governance-center/tabs/SecurityLogTab.tsx
+    - src/features/governance-center/types.ts
+    - src/pages/SystemGovernance.css
+    - src/services/governance/GovernanceConnector.ts
+
+MISSING: src/pages/Onboarding.tsx
+  basename=Onboarding.tsx
+  candidates_exact_basename: (none)
+  candidates_stem_substring:
+    - src/components/Onboarding/CustomizationStep.tsx
+    - src/components/Onboarding/FeaturesStep.tsx
+    - src/components/Onboarding/INTEGRATION_GUIDE.md
+    - src/components/Onboarding/OnboardingFlow.css
+    - src/components/Onboarding/OnboardingFlow.tsx
+    - src/components/Onboarding/PrivacyStep.tsx
+    - src/components/Onboarding/ReadyStep.tsx
+    - src/components/Onboarding/WelcomeStep.tsx
+    - src/components/Onboarding/index.ts
+    - src/components/Onboarding/types.ts
+
+MISSING: src/pages/SystemCenter.tsx
+  basename=SystemCenter.tsx
+  candidates_exact_basename: (none)
+  candidates_stem_substring:
+    - src/features/system-center/SystemCenterPage.css
+    - src/features/system-center/SystemCenterPage.tsx
+    - src/features/system-center/components/SystemCenterErrorBoundary.tsx
+    - src/features/system-center/types/systemCenter.types.ts
+    - src/hooks/useSystemCenterAutoFix.ts
+    - src/services/systemCenter/SystemAPI.ts
+    - src/services/systemCenter/SystemCenterAutoFix.ts
+
+MISSING: src/services/aiService.ts
+  basename=aiService.ts
+  candidates_exact_basename: (none)
+  candidates_stem_substring:
+    - src/__tests__/lib/security/SecureAIService.test.ts
+    - src/lib/security/SecureAIService.ts
+
+MISSING: src/services/conversationService.ts
+  basename=conversationService.ts
+  candidates_exact_basename: (none)
+  candidates_stem_substring: (none)
+
+MISSING: src/services/healthService.ts
+  basename=healthService.ts
+  candidates_exact_basename: (none)
+  candidates_stem_substring:
+    - src/services/devices/deviceHealthService.ts
+
+MISSING: src/services/memoryService.ts
+  basename=memoryService.ts
+  candidates_exact_basename: (none)
+  candidates_stem_substring: (none)
+
+MISSING: src/services/singularityService.ts
+  basename=singularityService.ts
+  candidates_exact_basename: (none)
+  candidates_stem_substring: (none)
+
+MISSING: src/services/timelineService.ts
+  basename=timelineService.ts
+  candidates_exact_basename: (none)
+  candidates_stem_substring: (none)
+
+--- summary ---
+missing_total=17
+missing_with_no_candidates=9
+NO_CANDIDATES: src/components/APIKeyDialog.tsx
+NO_CANDIDATES: src/components/Avatar3D.tsx
+NO_CANDIDATES: src/components/AvatarCustomizer.tsx
+NO_CANDIDATES: src/components/SettingsPanel.tsx
+NO_CANDIDATES: src/hooks/useAvatar.ts
+NO_CANDIDATES: src/services/conversationService.ts
+NO_CANDIDATES: src/services/memoryService.ts
+NO_CANDIDATES: src/services/singularityService.ts
+NO_CANDIDATES: src/services/timelineService.ts
