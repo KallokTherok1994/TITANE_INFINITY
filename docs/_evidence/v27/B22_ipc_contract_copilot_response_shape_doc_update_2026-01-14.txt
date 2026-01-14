@@ -1,0 +1,50 @@
+B22 — IPC_CONTRACT Copilot response shape doc update (2026-01-14)
+
+=== Context ===
+date: 2026-01-14
+branch: MAIN
+
+=== Rust source-of-truth: Copilot responses are direct CopilotKeyStatus (no SecureResponse envelope) ===
+
+--- src-tauri/src/commands/copilot_commands.rs (lines 45-85) ---
+pub struct CopilotKeyStatus {
+	pub configured: bool,
+	pub status: String,
+	pub message: Option<String>,
+}
+
+--- src-tauri/src/commands/copilot_commands.rs (lines 185-235) ---
+pub async fn chat_set_copilot_key(
+	api_key: String,
+	state: State<'_, CopilotState>,
+) -> Result<CopilotKeyStatus, String>
+
+--- src-tauri/src/commands/copilot_commands.rs (lines 255-310) ---
+pub async fn get_copilot_key_status(
+	state: State<'_, CopilotState>,
+) -> Result<CopilotKeyStatus, String>
+
+=== Frontend callsites (TS) ===
+
+--- get_copilot_key_status ---
+src/features/governance-center/services/governanceService.ts:144:  const raw = await safeInvoke<unknown>('get_copilot_key_status');
+src/services/ai/providers/copilot.ts:55:      }>('get_copilot_key_status');
+src/services/ai/providers/copilot.ts:329:    }>('get_copilot_key_status');
+src/lib/security.ts:436:  'get_copilot_key_status',
+
+--- chat_set_copilot_key ---
+src/features/governance-center/services/governanceService.ts:152:  const raw = await safeInvoke<unknown>('chat_set_copilot_key', { api_key: apiKey });
+src/services/ai/providers/copilot.ts:270:    }>('chat_set_copilot_key', { api_key: apiKey });
+
+=== docs/backend/IPC_CONTRACT.md updates ===
+
+--- Command → Frontend Matrix row ---
+docs/backend/IPC_CONTRACT.md:289:
+| `get_copilot_key_status` | `src/features/governance-center/services/governanceService.ts`<br>`src/services/ai/providers/copilot.ts` | `{}` | `CopilotKeyStatus` | `Err(String)` |
+
+--- Payload specs sections added ---
+docs/backend/IPC_CONTRACT.md:504: ### 7b. get_copilot_key_status
+docs/backend/IPC_CONTRACT.md:526: ### 7c. chat_set_copilot_key
+
+--- IPC_CONTRACT excerpt (lines 470-560) ---
+NOTE: Copilot endpoints documented as returning CopilotKeyStatus directly (no SecureResponse).
