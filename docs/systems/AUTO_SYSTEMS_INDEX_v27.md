@@ -44,6 +44,12 @@ Objectif: pointer les surfaces réelles AutoHeal/AutoFix/Auto-Healing (scripts, 
   - SINGULARITY vΩ: [docs/SINGULARITY_FUSION_vΩ.md](../SINGULARITY_FUSION_vΩ.md#L641-L657)
   - Tests invoke(): [src/__tests__/singularity-fusion-integration.test.ts](../../src/__tests__/singularity-fusion-integration.test.ts#L225-L236)
   - Preuve: [docs/_evidence/v27/B13b_ipc_contract_auto_commands_clean_2026-01-13.txt](../../docs/_evidence/v27/B13b_ipc_contract_auto_commands_clean_2026-01-13.txt#L1-L160)
+  - Note (écart doc ↔ repo): `docs/backend/IPC_CONTRACT.md` cite `src/services/healthService.ts` mais le fichier est absent.
+    - Preuve: [docs/_evidence/v27/B14_ipc_contract_vs_repo_healthservice_gap_2026-01-13.txt](../../docs/_evidence/v27/B14_ipc_contract_vs_repo_healthservice_gap_2026-01-13.txt#L1-L60)
+
+- Contrat IPC — reality check “caller”:
+  - `IPC_CONTRACT.md` cite `src/services/healthService.ts` pour `autoheal_detect_broken_modules`, mais aucun fichier `healthService.ts` n’existe dans `src/services/`.
+  - Preuve (inclut handlers Tauri + allowlists + mocks + tests): [docs/_evidence/v27/B14_ipc_contract_autoheal_detect_callers_2026-01-13.txt](../../docs/_evidence/v27/B14_ipc_contract_autoheal_detect_callers_2026-01-13.txt#L1-L120)
 
 - Implémentation backend (Rust) AutoFix/AutoHeal:
   - Module exports: [src-tauri/src/singularity_fusion/mod.rs](../../src-tauri/src/singularity_fusion/mod.rs#L1-L33)

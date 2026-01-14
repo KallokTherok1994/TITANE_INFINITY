@@ -1,0 +1,485 @@
+[ts]  2026-01-13T18:53:05-05:00
+[cwd] /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+=== IPC_CONTRACT.md: matrix entry (claims src/services/healthService.ts) ===
+   268	---
+   269	
+   270	## Command → Frontend Matrix
+   271	
+   272	### High-Traffic Commands (>100 calls/session)
+   273	
+   274	| Command | Frontend Files | Payload | Response | Errors |
+   275	|---------|----------------|---------|----------|--------|
+   276	| `conversation_generate` | `src/hooks/useConversation.ts`<br>`src/services/conversationService.ts` | `{conversationId: string, message: string, provider?: string}` | `{id: string, role: string, content: string, timestamp: string}` | `UNAUTHORIZED` (no API key)<br>`RATE_LIMITED`<br>`EXTERNAL_API_ERROR`<br>`TIMEOUT` |
+   277	| `chat_get_providers_status` | `src/components/SettingsPanel.tsx`<br>`src/services/aiService.ts` | `{}` | `{openai: boolean, claude: boolean, gemini: boolean, copilot: boolean, ollama: boolean}` | `INTERNAL_ERROR` |
+   278	| `avatar_advance_lip_sync` | `src/components/Avatar3D.tsx`<br>`src/hooks/useAvatar.ts` | `{phoneme: string, timestamp: number}` | `void` | `NOT_FOUND` (avatar not initialized) |
+   279	| `voice_start_listening` | `src/components/VoiceInput.tsx`<br>`src/hooks/useVoice.ts` | `{continuous?: boolean}` | `{sessionId: string}` | `PERMISSION_DENIED` (mic access)<br>`DEVICE_NOT_FOUND` |
+   280	| `singularity_get_full_state` | `src/services/singularityService.ts` | `{}` | `{physical: {...}, cognitive: {...}, symbolic: {...}, adaptive: {...}, meta: {...}}` | `INTERNAL_ERROR` |
+   281	| `get_memory_state` | `src/services/memoryService.ts` | `{}` | `{stm: [...], mtm: [...], ltm: [...], stats: {...}}` | `DATABASE_ERROR` |
+   282	| `add_timeline_event` | `src/services/timelineService.ts` | `{type: string, content: string, metadata?: object}` | `{id: string}` | `INVALID_INPUT`<br>`DATABASE_ERROR` |
+   283	
+   284	### Medium-Traffic Commands (10-100 calls/session)
+   285	
+   286	| Command | Frontend Files | Payload | Response | Errors |
+   287	|---------|----------------|---------|----------|--------|
+   288	| `chat_set_openai_key` | `src/components/APIKeyDialog.tsx` | `{key: string}` | `void` | `INVALID_INPUT` (bad key format) |
+   289	| `avatar_set_appearance` | `src/components/AvatarCustomizer.tsx` | `{style: object}` | `void` | `SERIALIZATION_ERROR` |
+   290	| `autoheal_detect_broken_modules` | `src/services/healthService.ts` | `{}` | `{broken: string[]}` | `INTERNAL_ERROR` |
+   291	| `performance_get_metrics` | `src/components/Dashboard.tsx` | `{}` | `{cpu: number, memory: number, fps: number}` | - |
+   292	
+   293	### Low-Traffic Commands (<10 calls/session)
+   294	
+   295	| Command | Frontend Files | Payload | Response | Errors |
+   296	|---------|----------------|---------|----------|--------|
+   297	| `onboarding_complete` | `src/pages/Onboarding.tsx` | `{}` | `void` | - |
+   298	| `export_security_log` | `src/pages/Governance.tsx` | `{format: "json" \| "csv"}` | `{path: string}` | `IO_ERROR` |
+   299	| `sc_run_full_diagnostics` | `src/pages/SystemCenter.tsx` | `{}` | `{results: [...]}` | `TIMEOUT` |
+   300	
+
+=== IPC_CONTRACT.md: details section (autoheal_detect_broken_modules) ===
+   456	
+   457	**Errors:**
+   458	- `INVALID_INPUT`: Invalid `type` or empty `content`
+   459	- `DATABASE_ERROR`: Failed to insert into SQLite
+   460	
+   461	### 6. autoheal_detect_broken_modules
+   462	
+   463	**Request:**
+   464	```typescript
+   465	{} // No parameters
+   466	```
+   467	
+   468	**Response:**
+   469	```typescript
+   470	interface BrokenModulesResponse {
+   471	  broken: Array<{
+   472	    module: string;               // Module name (e.g., "cognitive", "avatar", "tts")
+   473	    reason: string;               // Why it's broken
+   474	    severity: "low" | "medium" | "high" | "critical";
+   475	    healable: boolean;            // Can AutoHeal fix it?
+   476	  }>;
+   477	  timestamp: string;
+   478	}
+   479	```
+   480	
+   481	### 7. chat_set_openai_key
+   482	
+   483	**Request:**
+   484	```typescript
+   485	interface SetApiKeyRequest {
+   486	  key: string;                    // OpenAI API key (sk-...)
+   487	}
+   488	```
+   489	
+   490	**Response:**
+   491	```typescript
+   492	void // No return value (success = no error thrown)
+
+=== repo check: src/services/healthService.ts existence ===
+[cmd] test -f src/services/healthService.ts -> exit:1
+[cmd] git ls-files src/services/healthService.ts
+[cmd] find src/services -maxdepth 3 -iname '*health*service*'
+src/services/devices/deviceHealthService.ts
+
+=== Tauri handler registration: generate_handler (main.rs) ===
+   810	            avatar::fullbody_selftest::fullbody_run_selftest,
+   811	
+   812	            // SINGULARITY-FUSION (AutoFix/AutoHeal/CrashGuard/Performance/Pipeline)
+   813	            singularity_fusion::autofix_detect_rust_warnings,
+   814	            singularity_fusion::autofix_detect_typescript_errors,
+   815	            singularity_fusion::autofix_detect_react_hook_violations,
+   816	            singularity_fusion::autofix_detect_invalid_states,
+   817	            singularity_fusion::autofix_fix_issue,
+   818	            singularity_fusion::autofix_fix_all,
+   819	            singularity_fusion::autofix_get_history,
+   820	            singularity_fusion::autofix_get_stats,
+   821	            singularity_fusion::autofix_reset,
+   822	            singularity_fusion::autofix_rust_warning,
+   823	            singularity_fusion::autofix_typescript_error,
+   824	            singularity_fusion::autofix_reset_state,
+   825	            singularity_fusion::autofix_restart_pipeline,
+   826	            singularity_fusion::autofix_restart_tauri_command,
+   827	            singularity_fusion::autofix_resync_lipsync,
+   828	            singularity_fusion::autofix_add_mutex,
+   829	
+   830	            singularity_fusion::autoheal_detect_broken,
+   831	            singularity_fusion::autoheal_detect_broken_modules,
+   832	            singularity_fusion::autoheal_reset_cognitive,
+   833	            singularity_fusion::autoheal_init_cognitive,
+   834	            singularity_fusion::autoheal_reset_adaptive,
+   835	            singularity_fusion::autoheal_clear_narrative,
+   836	            singularity_fusion::autoheal_init_narrative,
+   837	            singularity_fusion::autoheal_stop_avatar,
+   838	            singularity_fusion::autoheal_reload_avatar,
+   839	            singularity_fusion::autoheal_start_avatar,
+   840	            singularity_fusion::autoheal_clear_tts_queue,
+   841	            singularity_fusion::autoheal_init_tts,
+   842	            singularity_fusion::autoheal_resync_lipsync,
+   843	            singularity_fusion::autoheal_rebuild_memory_index,
+   844	            singularity_fusion::autoheal_validate_memory,
+   845	            singularity_fusion::autoheal_stop_pipeline,
+   846	            singularity_fusion::autoheal_clear_pipeline,
+   847	            singularity_fusion::autoheal_start_pipeline,
+   848	            singularity_fusion::autoheal_heal_cognitive_module,
+   849	            singularity_fusion::autoheal_heal_avatar_module,
+   850	            singularity_fusion::autoheal_heal_tts_module,
+   851	            singularity_fusion::autoheal_heal_lipsync_module,
+   852	            singularity_fusion::autoheal_heal_memory_module,
+   853	            singularity_fusion::autoheal_heal_pipeline,
+   854	            singularity_fusion::autoheal_resync_state,
+   855	            singularity_fusion::autoheal_get_history,
+   856	            singularity_fusion::autoheal_reset,
+   857	
+   858	            singularity_fusion::crashguard_detect_threats,
+   859	            singularity_fusion::crashguard_clear_memory,
+   860	            singularity_fusion::crashguard_kill_thread,
+
+=== Backend impl: autoheal_detect_broken_modules + alias (auto_heal.rs) ===
+    40	        Self {
+    41	            broken_modules: Mutex::new(Vec::new()),
+    42	            heal_history: Mutex::new(Vec::new()),
+    43	        }
+    44	    }
+    45	}
+    46	
+    47	// ═══════════════════════════════════════════════════════════════════════════
+    48	// COMMANDS
+    49	// ═══════════════════════════════════════════════════════════════════════════
+    50	
+    51	#[tauri::command]
+    52	pub async fn autoheal_detect_broken_modules(
+    53	    state: State<'_, AutoHealState>,
+    54	) -> Result<Vec<BrokenModule>, String> {
+    55	    let modules = state.broken_modules.lock().map_err(|e| e.to_string())?;
+    56	    Ok(modules.clone())
+    57	}
+    58	
+    59	/// Frontend-compat alias for `autoheal_detect_broken_modules`.
+    60	#[tauri::command]
+    61	pub async fn autoheal_detect_broken(
+    62	    state: State<'_, AutoHealState>,
+    63	) -> Result<Vec<BrokenModule>, String> {
+    64	    autoheal_detect_broken_modules(state).await
+    65	}
+    66	
+    67	fn record_simple_action(
+    68	    state: &State<'_, AutoHealState>,
+    69	    module_type: &str,
+    70	    actions: Vec<String>,
+    71	) -> Result<(), String> {
+    72	    let result = HealResult {
+    73	        module_type: module_type.to_string(),
+    74	        success: true,
+    75	        actions,
+    76	        duration: 0,
+    77	    };
+    78	
+    79	    let mut history = state.heal_history.lock().map_err(|e| e.to_string())?;
+    80	    history.push(result);
+
+=== Backend security allowlist: commands.insert (commands/security.rs) ===
+   450	    commands.insert("autofix_detect_rust_warnings");
+   451	    commands.insert("autofix_detect_typescript_errors");
+   452	    commands.insert("autofix_detect_react_hook_violations");
+   453	    commands.insert("autofix_detect_invalid_states");
+   454	    commands.insert("autofix_fix_issue");
+   455	    commands.insert("autofix_fix_all");
+   456	    commands.insert("autofix_get_history");
+   457	    commands.insert("autofix_get_stats");
+   458	    commands.insert("autofix_reset");
+   459	    commands.insert("autofix_rust_warning");
+   460	    commands.insert("autofix_typescript_error");
+   461	    commands.insert("autofix_reset_state");
+   462	    commands.insert("autofix_restart_pipeline");
+   463	    commands.insert("autofix_restart_tauri_command");
+   464	    commands.insert("autofix_resync_lipsync");
+   465	    commands.insert("autofix_add_mutex");
+   466	
+   467	    // AutoHeal
+   468	    commands.insert("autoheal_detect_broken");
+   469	    commands.insert("autoheal_detect_broken_modules");
+   470	    commands.insert("autoheal_reset_cognitive");
+   471	    commands.insert("autoheal_init_cognitive");
+   472	    commands.insert("autoheal_reset_adaptive");
+   473	    commands.insert("autoheal_clear_narrative");
+   474	    commands.insert("autoheal_init_narrative");
+   475	    commands.insert("autoheal_stop_avatar");
+   476	    commands.insert("autoheal_reload_avatar");
+   477	    commands.insert("autoheal_start_avatar");
+   478	    commands.insert("autoheal_clear_tts_queue");
+   479	    commands.insert("autoheal_init_tts");
+   480	    commands.insert("autoheal_resync_lipsync");
+   481	    commands.insert("autoheal_rebuild_memory_index");
+   482	    commands.insert("autoheal_validate_memory");
+   483	    commands.insert("autoheal_stop_pipeline");
+   484	    commands.insert("autoheal_clear_pipeline");
+   485	    commands.insert("autoheal_start_pipeline");
+   486	    commands.insert("autoheal_heal_cognitive_module");
+   487	    commands.insert("autoheal_heal_avatar_module");
+   488	    commands.insert("autoheal_heal_tts_module");
+   489	    commands.insert("autoheal_heal_lipsync_module");
+   490	    commands.insert("autoheal_heal_memory_module");
+
+=== Frontend allowlist: secureInvoke allowlist (src/lib/security.ts) ===
+   600	  'qa_run_module',
+   601	  'qa_get_last_report',
+   602	  'autofix_detect_rust_warnings',
+   603	  'autofix_detect_typescript_errors',
+   604	  'autofix_detect_react_hook_violations',
+   605	  'autofix_detect_invalid_states',
+   606	  'autofix_fix_issue',
+   607	  'autofix_fix_all',
+   608	  'autofix_get_history',
+   609	  'autofix_get_stats',
+   610	  'autofix_reset',
+   611	  'autofix_rust_warning',
+   612	  'autofix_typescript_error',
+   613	  'autofix_reset_state',
+   614	  'autofix_restart_pipeline',
+   615	  'autofix_restart_tauri_command',
+   616	  'autofix_resync_lipsync',
+   617	  'autofix_add_mutex',
+   618	
+   619	  // AutoHeal (vΩ)
+   620	  'autoheal_detect_broken',
+   621	  'autoheal_detect_broken_modules',
+   622	  'autoheal_reset_cognitive',
+   623	  'autoheal_init_cognitive',
+   624	  'autoheal_reset_adaptive',
+   625	  'autoheal_clear_narrative',
+   626	  'autoheal_init_narrative',
+   627	  'autoheal_stop_avatar',
+   628	  'autoheal_reload_avatar',
+   629	  'autoheal_start_avatar',
+   630	  'autoheal_clear_tts_queue',
+   631	  'autoheal_init_tts',
+   632	  'autoheal_resync_lipsync',
+   633	  'autoheal_rebuild_memory_index',
+   634	  'autoheal_validate_memory',
+   635	  'autoheal_stop_pipeline',
+   636	  'autoheal_clear_pipeline',
+   637	  'autoheal_start_pipeline',
+   638	  'autoheal_heal_cognitive_module',
+   639	  'autoheal_heal_avatar_module',
+   640	  'autoheal_heal_tts_module',
+   641	  'autoheal_heal_lipsync_module',
+   642	  'autoheal_heal_memory_module',
+   643	  'autoheal_heal_pipeline',
+   644	  'autoheal_resync_state',
+   645	  'autoheal_get_history',
+   646	  'autoheal_reset',
+   647	
+   648	  // ═══════════════════════════════════════════════════════════════
+   649	  // PERSONA & NARRATIVE (v∞.Ω QA)
+   650	  // ═══════════════════════════════════════════════════════════════
+   651	  'persona_initialize',
+   652	  'persona_get_state',
+   653	  'persona_update',
+   654	  'persona_react',
+   655	  'persona_reset',
+   656	  'persona_get_multipliers',
+   657	  'narrative_generate',
+   658	  'narrative_get_style',
+   659	  'narrative_set_style',
+   660	  'narrative_get_identity',
+
+=== Frontend allowlist (extended): SELF-HEALING EXTENDED (src/lib/security.ts) ===
+  1100	  // ═══════════════════════════════════════════════════════════════
+  1101	  'devtools_enable',
+  1102	  'devtools_disable',
+  1103	  'devtools_debug_clear',
+  1104	  'camera_start',
+  1105	
+  1106	  // ═══════════════════════════════════════════════════════════════
+  1107	  // DEV SUDO (v24.4+)
+  1108	  // ═══════════════════════════════════════════════════════════════
+  1109	  'dev_inspect_file',
+  1110	  'dev_apply_patch',
+  1111	  'dev_run_command',
+  1112	  'dev_get_logs',
+  1113	  'hybrid_analyze_code',
+  1114	
+  1115	  // ═══════════════════════════════════════════════════════════════
+  1116	  // SELF-HEALING EXTENDED (v24.4+)
+  1117	  // ═══════════════════════════════════════════════════════════════
+  1118	  'self_healing_trigger',
+  1119	  'confirm_self_healing_action',
+  1120	  'reject_self_healing_action',
+  1121	  'autoheal_detect_broken_modules',
+  1122	  'autoheal_heal_avatar_module',
+  1123	  'autoheal_heal_cognitive_module',
+  1124	  'autoheal_resync_state',
+  1125	  'autoheal_get_history',
+  1126	  'autoheal_reset',
+  1127	
+  1128	  // ═══════════════════════════════════════════════════════════════
+  1129	  // CRASHGUARD (v24.4+)
+  1130	  // ═══════════════════════════════════════════════════════════════
+  1131	  'crashguard_detect_threats',
+  1132	  'crashguard_get_active_threats',
+  1133	  'crashguard_get_stats',
+  1134	  'crashguard_clear_memory',
+  1135	  'crashguard_kill_thread',
+  1136	  'crashguard_restart_module',
+  1137	  'crashguard_emergency_shutdown',
+  1138	  'crashguard_reset_pipeline',
+  1139	  'crashguard_emergency_rollback',
+  1140	
+
+=== Test mock: Vitest setup invoke() switch (src/test/setup.ts) ===
+   560	        primary: 'information_request',
+   561	        confidence: 0.95,
+   562	        original: payload?.message,
+   563	      };
+   564	    case 'pipeline_generate_cognitive_response':
+   565	      return {
+   566	        text: `Réponse TITANE∞: ${payload?.message ?? 'message'}`,
+   567	        confidence: 0.93,
+   568	      };
+   569	    case 'pipeline_prepare_tts':
+   570	      return {
+   571	        duration: Math.max(1, String(payload?.text ?? '').length) * 12,
+   572	        audio_data: 'mock-audio-data',
+   573	      };
+   574	    case 'pipeline_get_stats':
+   575	      return {
+   576	        total_processed: 42,
+   577	        success_rate: 0.98,
+   578	      };
+   579	    case 'pipeline_validate':
+   580	      return true;
+   581	    case 'autofix_detect_rust_warnings':
+   582	      return [{ file: 'src/main.rs', warning: 'clippy::await_holding_lock' }];
+   583	    case 'autofix_detect_typescript_errors':
+   584	      return [{ file: 'src/app.tsx', message: 'Type mismatch' }];
+   585	    case 'autofix_get_stats':
+   586	      return clone(autofixStats);
+   587	    case 'autofix_get_history':
+   588	      return clone(autofixHistory);
+   589	    case 'autofix_reset':
+   590	      autofixStats = createInitialAutofixStats();
+   591	      autofixHistory = [];
+   592	      return undefined;
+   593	    case 'autoheal_detect_broken_modules':
+   594	      return clone(brokenModules);
+   595	    case 'autoheal_heal_cognitive_module':
+   596	      brokenModules = brokenModules.filter(mod => mod.module !== 'cognitive');
+   597	      autohealHistory.push({ module: 'cognitive', success: true, timestamp: Date.now() });
+   598	      return { module_type: 'cognitive', success: true };
+   599	    case 'autoheal_heal_avatar_module':
+   600	      brokenModules = brokenModules.filter(mod => mod.module !== 'avatar');
+   601	      autohealHistory.push({ module: 'avatar', success: true, timestamp: Date.now() });
+   602	      return { module_type: 'avatar', success: true };
+   603	    case 'autoheal_get_history':
+   604	      return clone(autohealHistory);
+   605	    case 'autoheal_resync_state':
+   606	      return { status: 'ok' };
+   607	    case 'autoheal_reset':
+   608	      brokenModules = defaultBrokenModules();
+   609	      autohealHistory = [];
+   610	      return undefined;
+   611	    case 'performance_get_metrics':
+   612	      return clone(performanceMetrics);
+   613	    case 'performance_throttle_cpu':
+   614	    case 'performance_optimize_gpu':
+   615	    case 'performance_compress_memory':
+   616	    case 'performance_reset_optimizations':
+   617	      return undefined;
+   618	    case 'crashguard_detect_threats':
+   619	    case 'crashguard_get_active_threats':
+   620	      return [];
+   621	    case 'crashguard_get_stats':
+   622	      return 'OK';
+   623	    case 'singularity_get_state':
+   624	    case 'singularity_get_full_state': {
+   625	      const coherence = Number(
+   626	        (
+   627	          (fusionState.fusion_integrity +
+   628	            fusionState.sync_score +
+   629	            fusionState.pipeline_health) /
+   630	          3
+   631	        ).toFixed(2)
+   632	      );
+   633	      return {
+   634	        ...clone(fusionState),
+   635	        physical: { battery: 0.78, temperature: 36.8 },
+   636	        cognitive: { stability: 0.92, attention: 0.85 },
+   637	        meta: { timestamp: Date.now() },
+   638	        global_coherence: coherence,
+   639	      };
+   640	    }
+
+=== Tests: invoke('autoheal_detect_broken_modules') (singularity-fusion-integration) ===
+   110	      expect(Array.isArray(issues)).toBe(true);
+   111	    });
+   112	
+   113	    it('should get autofix stats', async () => {
+   114	      const stats = await invoke('autofix_get_stats');
+   115	      expect(stats).toBeDefined();
+   116	      expect(stats).toHaveProperty('total_issues_detected');
+   117	      expect(stats).toHaveProperty('total_issues_fixed');
+   118	      expect(stats).toHaveProperty('fix_success_rate');
+   119	    });
+   120	
+   121	    it('should get fix history', async () => {
+   122	      const history = await invoke('autofix_get_history');
+   123	      expect(Array.isArray(history)).toBe(true);
+   124	    });
+   125	  });
+   126	
+   127	  describe('AutoHeal', () => {
+   128	    it('should detect broken modules', async () => {
+   129	      const modules = await invoke('autoheal_detect_broken_modules');
+   130	      expect(Array.isArray(modules)).toBe(true);
+   131	    });
+   132	
+   133	    it('should heal cognitive module', async () => {
+   134	      const result = await invoke('autoheal_heal_cognitive_module');
+   135	      expect(result).toBeDefined();
+   136	      expect(result).toHaveProperty('module_type');
+   137	      expect(result).toHaveProperty('success');
+   138	      expect(result.module_type).toBe('cognitive');
+   139	    });
+   140	
+   141	    it('should heal avatar module', async () => {
+   142	      const result = await invoke('autoheal_heal_avatar_module');
+   143	      expect(result).toBeDefined();
+   144	      expect(result.module_type).toBe('avatar');
+   145	    });
+   146	
+   147	    it('should get heal history', async () => {
+   148	      const history = await invoke('autoheal_get_history');
+   149	      expect(Array.isArray(history)).toBe(true);
+   150	    });
+
+   215	      const integrity = await invoke('singularity_check_integrity');
+   216	      expect(integrity).toBeGreaterThan(0);
+   217	
+   218	      // 5. Vérifier métriques
+   219	      const metrics = await invoke('performance_get_metrics');
+   220	      expect(metrics.fps).toBeGreaterThan(0);
+   221	    });
+   222	
+   223	    it('should handle auto-heal cycle', async () => {
+   224	      // 1. Détecter modules cassés
+   225	      const broken = await invoke('autoheal_detect_broken_modules');
+   226	      expect(Array.isArray(broken)).toBe(true);
+   227	
+   228	      // 2. Heal cognitive
+   229	      const healResult = await invoke('autoheal_heal_cognitive_module');
+   230	      expect(healResult.success).toBe(true);
+   231	
+   232	      // 3. Resync état
+   233	      await invoke('autoheal_resync_state');
+   234	
+   235	      // 4. Vérifier intégrité finale
+   236	      const integrity = await invoke('singularity_check_integrity');
+   237	      expect(integrity).toBeGreaterThan(0);
+   238	    });
+   239	
+   240	    it('should maintain system health throughout operations', async () => {
+   241	      // Série d'opérations pour tester stabilité
+   242	      for (let i = 0; i < 5; i++) {
+   243	        await invoke('singularity_perform_sync');
+   244	        await invoke('singularity_check_integrity');
+   245	        await invoke('performance_get_metrics');

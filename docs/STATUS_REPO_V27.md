@@ -24,6 +24,8 @@ Ce document est conçu pour être **vérifiable** : chaque constat pointe vers (
 - Validation AUTO-HEAL (scripts + doc + structure, exécution complète OK): [docs/_evidence/v27/B11_auto_heal_validation_fixed_2026-01-13.txt](docs/_evidence/v27/B11_auto_heal_validation_fixed_2026-01-13.txt#L1-L35)
 - Backend AUTO-* (map module + extraits + liste commandes): [docs/_evidence/v27/B12b_auto_systems_backend_map_clean_2026-01-13.txt](docs/_evidence/v27/B12b_auto_systems_backend_map_clean_2026-01-13.txt#L1-L120)
 - Contrat IPC AUTO-* (docs ↔ commandes ↔ tests): [docs/_evidence/v27/B13b_ipc_contract_auto_commands_clean_2026-01-13.txt](docs/_evidence/v27/B13b_ipc_contract_auto_commands_clean_2026-01-13.txt#L1-L160)
+- Contrat IPC AUTO-* (écart doc ↔ repo: `healthService.ts` absent): [docs/_evidence/v27/B14_ipc_contract_vs_repo_healthservice_gap_2026-01-13.txt](docs/_evidence/v27/B14_ipc_contract_vs_repo_healthservice_gap_2026-01-13.txt#L1-L60)
+- Contrat IPC AUTO-* — reality check “caller” (doc ↔ repo): [docs/_evidence/v27/B14_ipc_contract_autoheal_detect_callers_2026-01-13.txt](docs/_evidence/v27/B14_ipc_contract_autoheal_detect_callers_2026-01-13.txt#L1-L120)
 
 ## 1) Snapshot repo (Git)
 
@@ -176,6 +178,9 @@ Le repo contient des systèmes AutoFix/AutoHeal documentés et intégrés côté
   - SINGULARITY vΩ: [docs/SINGULARITY_FUSION_vΩ.md](docs/SINGULARITY_FUSION_vΩ.md#L641-L657)
   - Tests invoke(): [src/__tests__/singularity-fusion-integration.test.ts](src/__tests__/singularity-fusion-integration.test.ts#L225-L236)
   - Preuve consolidée: [docs/_evidence/v27/B13b_ipc_contract_auto_commands_clean_2026-01-13.txt](docs/_evidence/v27/B13b_ipc_contract_auto_commands_clean_2026-01-13.txt#L1-L160)
+
+- Note “doc ↔ repo” (caller): `IPC_CONTRACT.md` référence `src/services/healthService.ts`, mais le fichier est absent; la commande reste exposée + testée via allowlists/mocks/tests.
+  - Preuve: [docs/_evidence/v27/B14_ipc_contract_autoheal_detect_callers_2026-01-13.txt](docs/_evidence/v27/B14_ipc_contract_autoheal_detect_callers_2026-01-13.txt#L1-L120)
 
 Voir l’index consolidé: `docs/systems/AUTO_SYSTEMS_INDEX_v27.md`.
 
