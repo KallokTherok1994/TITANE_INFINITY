@@ -90,7 +90,7 @@ async function getOpenAIStatus(): Promise<SecureResponse<GeminiKeyStatus>> {
  * Définir la clé OpenAI
  */
 async function setOpenAIKey(apiKey: string): Promise<SecureResponse<GeminiKeyStatus>> {
-  const raw = await safeInvoke<unknown>('chat_set_openai_key', { apiKey });
+  const raw = await safeInvoke<unknown>('chat_set_openai_key', { api_key: apiKey });
   return normalizeResponse<GeminiKeyStatus>(raw, 'Impossible de définir la clé OpenAI');
 }
 

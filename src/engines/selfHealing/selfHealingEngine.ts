@@ -555,8 +555,14 @@ export async function storeLearning(result: SelfHealingRunResult): Promise<void>
       event: {
         id: `self-healing-${record.timestamp}`,
         timestamp: record.timestamp,
-        event_type: 'SelfHealingCycle',
+        event_type: 'Repair',
         description: `Playbook ${data.playbook.id} appliqué (confiance ${(record.confidence * 100).toFixed(0)}%).`,
+        data: {
+          original_event_type: 'SelfHealingCycle',
+          playbookId: data.playbook.id,
+          confidence: record.confidence,
+          channel,
+        },
       },
     }),
     syncSingularityLearning(data),
