@@ -1,0 +1,147 @@
+# B24 — IPC_CONTRACT: autres SecureCommands (secrets/files/audit/validation/integrity) — preuve
+
+Date: 2026-01-14
+Repo: /home/titane-os/Documents/GitHub/TITANE_INFINITY
+Branch: MAIN
+HEAD: a629ce397a289aca9f5167c9496b32ff8e42eb8e
+
+Objectif
+- Compléter docs/backend/IPC_CONTRACT.md pour les commandes SecureCommands suivantes:
+  - secure_store_secret
+  - secure_import_file / secure_read_file / secure_list_files / secure_delete_file
+  - get_permission_audit
+  - validate_chat_message
+  - check_system_integrity
+- Aligner le contrat (payload + réponse + erreurs) sur la réalité Rust (src-tauri/src/secure_commands.rs) et sur les callsites TS existants
+
+---
+
+## A) Snapshot Git (preuve d’état)
+
+Commande: git status --porcelain=v1 -b
+Résultat (extrait):
+- ## MAIN...origin/MAIN
+-  M docs/backend/IPC_CONTRACT.md
+
+Commande: git rev-parse --abbrev-ref HEAD
+Résultat: MAIN
+
+Commande: git rev-parse HEAD
+Résultat: a629ce397a289aca9f5167c9496b32ff8e42eb8e
+
+---
+
+## B) Source of truth: Rust (secure_commands.rs)
+
+### B1) Payload/Result types (SecureSecretRequest / SecretOperationResult)
+
+Extrait: src-tauri/src/secure_commands.rs (L40-L70)
+```rust
+pub struct SecureSecretRequest {
+    pub key: String,
+    pub value: String,
+    #[serde(default)]
+    pub purge_env: bool,
+    #[serde(default)]
+    pub env_variable: Option<String>,
+}
+
+pub struct SecretOperationResult {
+    pub key: String,
+    pub stored: bool,
+    pub env_purged: bool,
+}
+```
+
+### B2) secure_store_secret (signature + behavior)
+
+Extrait: src-tauri/src/secure_commands.rs (L411-L477)
+- Commande: secure_store_secret(payload: SecureSecretRequest)
+- Retour: Result<SecureResponse<SecretOperationResult>, String>
+- Erreurs:
+  - `Ok(SecureResponse::error(...))` sur validation payload
+  - `Err(String)` sur permission / stockage
+
+### B3) secure_import_file / secure_read_file / secure_list_files / secure_delete_file
+
+Extraits: src-tauri/src/secure_commands.rs
+- L488: secure_import_file(filename: String, data: Vec<u8>) -> Result<SecureResponse<String>, String>
+- L516: secure_read_file(safe_name: String) -> Result<SecureResponse<Vec<u8>>, String>
+- L538: secure_list_files() -> Result<SecureResponse<Vec<String>>, String>
+- L555: secure_delete_file(safe_name: String) -> Result<SecureResponse<()>, String>
+
+### B4) get_permission_audit / validate_chat_message / check_system_integrity
+
+Extraits: src-tauri/src/secure_commands.rs
+- L577: get_permission_audit() -> Result<SecureResponse<String>, String>
+- L593: validate_chat_message(message: String) -> Result<SecureResponse<String>, String>
+- L613: check_system_integrity() -> Result<SecureResponse<String>, String>
+
+---
+
+## C) Call sites: Frontend TypeScript (preuve)
+
+### C1) Governance Center — secure_store_secret
+
+Extrait: src/features/governance-center/services/governanceService.ts (L156-L176)
+- safeInvoke('secure_store_secret', { key, value, purge_env, env_variable })
+
+### C2) Governance Center — get_permission_audit (JSON string -> parse)
+
+Extrait: src/features/governance-center/services/governanceService.ts (L262-L303)
+- safeInvoke('get_permission_audit')
+- normalizeResponse<string>(...)
+- JSON.parse(response.data)
+
+### C3) Governance Center — check_system_integrity
+
+Extrait: src/features/governance-center/services/governanceService.ts (L343-L351)
+- safeInvoke('check_system_integrity')
+
+### C4) AutoAuditEngine — check_system_integrity
+
+Extrait: src/services/autoAuditEngine.ts (L187-L224)
+- secureInvoke('check_system_integrity')
+- Attend un SecureResponse-like { ok, data?, error? }
+
+### C5) ChatDiagnostic — check_system_integrity
+
+Extrait: src/components/ChatDiagnostic.tsx (L286-L306)
+- safeInvoke('check_system_integrity')
+
+### C6) E2E — secure_list_files
+
+Extrait: src/tests/e2e/titane_e2e.test.ts (L225-L236)
+- invoke('secure_list_files')
+
+### C7) Allowlist (présence, même sans call direct)
+
+Extrait: src/lib/security.ts (L420-L450)
+- 'secure_import_file', 'secure_read_file', 'secure_list_files', 'secure_delete_file',
+  'secure_store_secret', 'get_permission_audit', 'validate_chat_message', 'check_system_integrity'
+
+---
+
+## D) Documentation: IPC_CONTRACT.md (preuve)
+
+### D1) Matrix (Low-Traffic) — nouvelles entrées
+
+Extrait: docs/backend/IPC_CONTRACT.md (L306-L314)
+- Ajoute: secure_store_secret, secure_*_file, get_permission_audit, validate_chat_message, check_system_integrity
+
+### D2) Payload specs — nouvelles sections
+
+Extrait: docs/backend/IPC_CONTRACT.md
+- L637: ### 7h. secure_store_secret
+- L664: ### 7i. secure_import_file
+- L684: ### 7j. secure_read_file
+- L702: ### 7k. secure_list_files
+- L718: ### 7l. secure_delete_file
+- L736: ### 7m. get_permission_audit
+- L753: ### 7n. validate_chat_message
+- L772: ### 7o. check_system_integrity
+
+### D3) Meta doc
+
+Extrait: docs/backend/IPC_CONTRACT.md (L980-L983)
+- Last Updated: 2026-01-14

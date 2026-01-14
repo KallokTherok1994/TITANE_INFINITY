@@ -304,6 +304,14 @@ export class TitaneError extends Error {
 | `is_onboarding_complete` | `src/App.tsx`<br>`src/components/Onboarding/INTEGRATION_GUIDE.md` | `{}` | `boolean` | - |
 | `export_security_log` | `src/features/governance-center/services/governanceService.ts` | `{format: "json" \| "csv"}` | `{path: string}` | `IO_ERROR` |
 | `sc_run_full_diagnostics` | `src/features/system-center/hooks/useSystemDiagnostics.ts` | `{}` | `{results: [...]}` | `TIMEOUT` |
+| `secure_store_secret` | `src/features/governance-center/services/governanceService.ts`<br>`src/utils/secureSecrets.ts` | `{key: string, value: string, purge_env?: boolean, env_variable?: string}` | `SecureResponse<SecretOperationResult>` | `Err(String)` |
+| `secure_import_file` | `NO_CALLERS_FOUND` (allowlisted: `src/lib/security.ts`) | `{filename: string, data: number[]}` | `SecureResponse<string>` | `Err(String)` |
+| `secure_read_file` | `NO_CALLERS_FOUND` (allowlisted: `src/lib/security.ts`) | `{safe_name: string}` | `SecureResponse<number[]>` | `Err(String)` |
+| `secure_list_files` | `src/tests/e2e/titane_e2e.test.ts`<br>`src/test/setup.ts` (mock) | `{}` | `SecureResponse<string[]>` | `Err(String)` |
+| `secure_delete_file` | `NO_CALLERS_FOUND` (allowlisted: `src/lib/security.ts`) | `{safe_name: string}` | `SecureResponse<void>` | `Err(String)` |
+| `get_permission_audit` | `src/features/governance-center/services/governanceService.ts` | `{}` | `SecureResponse<string>` | `Err(String)` |
+| `validate_chat_message` | `NO_CALLERS_FOUND` (allowlisted: `src/lib/security.ts`) | `{message: string}` | `SecureResponse<string>` | `Err(String)` |
+| `check_system_integrity` | `src/features/governance-center/services/governanceService.ts`<br>`src/services/autoAuditEngine.ts`<br>`src/components/ChatDiagnostic.tsx` | `{}` | `SecureResponse<string>` | `Err(String)` |
 
 ### Orphaned Commands (No Frontend Callers - TO VERIFY)
 - `memory_compactor_*` commands (deprecated)
@@ -626,6 +634,158 @@ type ChatSetCopilotKeyResponse = CopilotKeyStatus
 **Errors:**
 - Peut échouer en `Err(String)` (permission / stockage)
 
+### 7h. secure_store_secret
+
+**Request:**
+```typescript
+interface SecureSecretRequest {
+  key: string;
+  value: string;
+  purge_env?: boolean;
+  env_variable?: string;
+}
+```
+
+**Response:**
+```typescript
+interface SecretOperationResult {
+  key: string;
+  stored: boolean;
+  env_purged: boolean;
+}
+
+type SecureStoreSecretResponse = SecureResponse<SecretOperationResult>
+```
+
+**Errors:**
+- Peut retourner `ok=false` avec `error` (validation côté backend)
+- Peut échouer en `Err(String)` (permission / stockage)
+
+### 7i. secure_import_file
+
+**Request:**
+```typescript
+interface SecureImportFileRequest {
+  filename: string;
+  data: number[]; // bytes (Vec<u8> côté Rust)
+}
+```
+
+**Response:**
+```typescript
+// Retourne le "safe_name" dans la sandbox
+type SecureImportFileResponse = SecureResponse<string>
+```
+
+**Errors:**
+- Peut retourner `ok=false` avec `error` (validation / import)
+- Peut échouer en `Err(String)` (permission)
+
+### 7j. secure_read_file
+
+**Request:**
+```typescript
+interface SecureReadFileRequest {
+  safe_name: string;
+}
+```
+
+**Response:**
+```typescript
+type SecureReadFileResponse = SecureResponse<number[]> // bytes (Vec<u8> côté Rust)
+```
+
+**Errors:**
+- Peut retourner `ok=false` avec `error` (validation / read)
+- Peut échouer en `Err(String)` (permission)
+
+### 7k. secure_list_files
+
+**Request:**
+```typescript
+{} // No parameters
+```
+
+**Response:**
+```typescript
+type SecureListFilesResponse = SecureResponse<string[]>
+```
+
+**Errors:**
+- Peut retourner `ok=false` avec `error` (list)
+- Peut échouer en `Err(String)` (permission)
+
+### 7l. secure_delete_file
+
+**Request:**
+```typescript
+interface SecureDeleteFileRequest {
+  safe_name: string;
+}
+```
+
+**Response:**
+```typescript
+type SecureDeleteFileResponse = SecureResponse<void>
+```
+
+**Errors:**
+- Peut retourner `ok=false` avec `error` (validation / delete)
+- Peut échouer en `Err(String)` (permission)
+
+### 7m. get_permission_audit
+
+**Request:**
+```typescript
+{} // No parameters
+```
+
+**Response:**
+```typescript
+// Le backend retourne un JSON sérialisé dans un string
+type GetPermissionAuditResponse = SecureResponse<string>
+```
+
+**Errors:**
+- Peut retourner `ok=false` avec `error` (export)
+- Peut échouer en `Err(String)` (permission)
+
+### 7n. validate_chat_message
+
+**Request:**
+```typescript
+interface ValidateChatMessageRequest {
+  message: string;
+}
+```
+
+**Response:**
+```typescript
+// Retourne le message sanitizé (anti-XSS)
+type ValidateChatMessageResponse = SecureResponse<string>
+```
+
+**Errors:**
+- Peut retourner `ok=false` avec `error` (validation)
+- Peut échouer en `Err(String)` (permission)
+
+### 7o. check_system_integrity
+
+**Request:**
+```typescript
+{} // No parameters
+```
+
+**Response:**
+```typescript
+// Rapport multi-lignes (string)
+type CheckSystemIntegrityResponse = SecureResponse<string>
+```
+
+**Errors:**
+- Peut retourner `ok=false` avec `error` (integrity check)
+- Peut échouer en `Err(String)` (permission)
+
 ### 8. voice_start_listening
 
 **Request:**
@@ -818,5 +978,5 @@ const sendMessage = async (message: string) => {
 ---
 
 **Document Status:** ✅ Complete (Phase 0)  
-**Last Updated:** 2026-01-03  
+**Last Updated:** 2026-01-14  
 **Next Review:** Phase 1 Audit (Validate all payload structures)
