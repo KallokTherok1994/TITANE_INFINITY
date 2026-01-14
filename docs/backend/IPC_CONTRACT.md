@@ -302,7 +302,20 @@ export class TitaneError extends Error {
 | Command | Frontend Files | Payload | Response | Errors |
 |---------|----------------|---------|----------|--------|
 | `is_onboarding_complete` | `src/App.tsx`<br>`src/components/Onboarding/INTEGRATION_GUIDE.md` | `{}` | `boolean` | - |
-| `export_security_log` | `src/features/governance-center/services/governanceService.ts` | `{format: "json" \| "csv"}` | `{path: string}` | `IO_ERROR` |
+| `get_secrets_status` | `src/features/governance-center/services/governanceService.ts` | `{}` | `SecureResponse<SecretStatus[]>` | `Err(String)` |
+| `has_secret` | `src/features/governance-center/services/governanceService.ts` | `{key: string}` | `SecureResponse<boolean>` | `Err(String)` |
+| `delete_secret` | `src/features/governance-center/services/governanceService.ts` | `{key: string}` | `SecureResponse<void>` | `Err(String)` |
+| `get_ia_policies` | `src/features/governance-center/services/governanceService.ts` | `{}` | `SecureResponse<IAPolicy[]>` | `Err(String)` |
+| `save_ia_policies` | `src/features/governance-center/services/governanceService.ts` | `{policies: IAPolicy[]}` | `SecureResponse<void>` | `Err(String)` |
+| `toggle_ia_policy` | `src/features/governance-center/services/governanceService.ts` | `{policyId: string, enabled: boolean}` | `SecureResponse<IAPolicy>` | `Err(String)` |
+| `create_ia_policy` | `src/features/governance-center/services/governanceService.ts` | `{policy: Omit<IAPolicy, "id" \| "createdAt" \| "updatedAt">}` | `SecureResponse<IAPolicy>` | `Err(String)` |
+| `delete_ia_policy` | `src/features/governance-center/services/governanceService.ts` | `{policyId: string}` | `SecureResponse<void>` | `Err(String)` |
+| `get_permission_matrix` | `src/features/governance-center/services/governanceService.ts` | `{}` | `SecureResponse<PermissionMatrix>` | `Err(String)` |
+| `get_security_log` | `src/features/governance-center/services/governanceService.ts` | `{filters?: SecurityLogFilters}` | `SecureResponse<SecurityLogEntry[]>` | `Err(String)` |
+| `append_security_log` | `src/features/governance-center/services/governanceService.ts` | `{entry: Omit<SecurityLogEntry, "id" \| "timestamp">}` | `SecureResponse<SecurityLogEntry>` | `Err(String)` |
+| `export_security_log` | `src/features/governance-center/services/governanceService.ts` | `{format: "json" \| "csv"}` | `SecureResponse<string>` | `Err(String)` |
+| `clear_security_log` | `src/features/governance-center/services/governanceService.ts` | `{}` | `SecureResponse<void>` | `Err(String)` |
+| `clear_permission_audit` | `src/features/governance-center/services/governanceService.ts` | `{}` | `SecureResponse<void>` | `Err(String)` |
 | `sc_run_full_diagnostics` | `src/features/system-center/hooks/useSystemDiagnostics.ts` | `{}` | `{results: [...]}` | `TIMEOUT` |
 | `secure_store_secret` | `src/features/governance-center/services/governanceService.ts`<br>`src/utils/secureSecrets.ts` | `{key: string, value: string, purge_env?: boolean, env_variable?: string}` | `SecureResponse<SecretOperationResult>` | `Err(String)` |
 | `secure_import_file` | `NO_CALLERS_FOUND` (allowlisted: `src/lib/security.ts`) | `{filename: string, data: number[]}` | `SecureResponse<string>` | `Err(String)` |
@@ -785,6 +798,268 @@ type CheckSystemIntegrityResponse = SecureResponse<string>
 **Errors:**
 - Peut retourner `ok=false` avec `error` (integrity check)
 - Peut échouer en `Err(String)` (permission)
+
+### 7p. get_secrets_status
+
+**Request:**
+```typescript
+{} // No parameters
+```
+
+**Response:**
+```typescript
+interface SecretStatus {
+  key: string;
+  configured: boolean;
+  maskedValue: string | null;
+  lastUpdated: number | null;
+  category: 'api_key' | 'token' | 'credential' | 'certificate' | 'other';
+}
+
+type GetSecretsStatusResponse = SecureResponse<SecretStatus[]>
+```
+
+**Errors:**
+- Peut échouer en `Err(String)` (permission / accès secrets)
+
+### 7q. has_secret
+
+**Request:**
+```typescript
+interface HasSecretRequest {
+  key: string;
+}
+```
+
+**Response:**
+```typescript
+type HasSecretResponse = SecureResponse<boolean>
+```
+
+**Errors:**
+- Peut retourner `ok=false` avec `error` (validation `key`)
+- Peut échouer en `Err(String)` (permission)
+
+### 7r. delete_secret
+
+**Request:**
+```typescript
+interface DeleteSecretRequest {
+  key: string;
+}
+```
+
+**Response:**
+```typescript
+type DeleteSecretResponse = SecureResponse<void>
+```
+
+**Errors:**
+- Peut retourner `ok=false` avec `error` (validation `key`)
+- Peut échouer en `Err(String)` (permission / suppression)
+
+### 7s. get_security_log
+
+**Request:**
+```typescript
+interface SecurityLogFilters {
+  level?: 'debug' | 'info' | 'warn' | 'error' | 'critical';
+  category?: 'authentication' | 'authorization' | 'secrets' | 'policy' | 'system' | 'audit';
+  startDate?: number;
+  endDate?: number;
+  search?: string;
+  limit?: number;
+}
+
+interface GetSecurityLogRequest {
+  filters?: SecurityLogFilters;
+}
+```
+
+**Response:**
+```typescript
+interface SecurityLogEntry {
+  id: string;
+  timestamp: number;
+  level: 'debug' | 'info' | 'warn' | 'error' | 'critical';
+  category: 'authentication' | 'authorization' | 'secrets' | 'policy' | 'system' | 'audit';
+  event: string;
+  details: string;
+  source: string;
+  userId?: string;
+  metadata?: Record<string, unknown>;
+}
+
+type GetSecurityLogResponse = SecureResponse<SecurityLogEntry[]>
+```
+
+**Errors:**
+- Peut échouer en `Err(String)` (lecture)
+
+### 7t. append_security_log
+
+**Request:**
+```typescript
+type AppendSecurityLogRequest = {
+  entry: Omit<SecurityLogEntry, 'id' | 'timestamp'>;
+}
+```
+
+**Response:**
+```typescript
+type AppendSecurityLogResponse = SecureResponse<SecurityLogEntry>
+```
+
+**Errors:**
+- Peut échouer en `Err(String)` (append)
+
+### 7u. export_security_log
+
+**Request:**
+```typescript
+interface ExportSecurityLogRequest {
+  format: 'json' | 'csv';
+}
+```
+
+**Response:**
+```typescript
+// Retourne le contenu (JSON/CSV) sous forme de string (pas un chemin fichier)
+type ExportSecurityLogResponse = SecureResponse<string>
+```
+
+**Errors:**
+- Peut échouer en `Err(String)` (format invalide / sérialisation)
+
+### 7v. clear_security_log
+
+**Request:**
+```typescript
+{} // No parameters
+```
+
+**Response:**
+```typescript
+type ClearSecurityLogResponse = SecureResponse<void>
+```
+
+**Errors:**
+- Peut échouer en `Err(String)` (permission / clear)
+
+### 7w. clear_permission_audit
+
+**Request:**
+```typescript
+{} // No parameters
+```
+
+**Response:**
+```typescript
+type ClearPermissionAuditResponse = SecureResponse<void>
+```
+
+**Errors:**
+- Peut échouer en `Err(String)` (permission / clear)
+
+### 7x. get_ia_policies
+
+**Request:**
+```typescript
+{} // No parameters
+```
+
+**Response:**
+```typescript
+type GetIAPoliciesResponse = SecureResponse<IAPolicy[]>
+```
+
+**Errors:**
+- Peut échouer en `Err(String)`
+
+### 7y. save_ia_policies
+
+**Request:**
+```typescript
+interface SaveIAPoliciesRequest {
+  policies: IAPolicy[];
+}
+```
+
+**Response:**
+```typescript
+type SaveIAPoliciesResponse = SecureResponse<void>
+```
+
+**Errors:**
+- Peut échouer en `Err(String)`
+
+### 7z. toggle_ia_policy
+
+**Request:**
+```typescript
+interface ToggleIAPolicyRequest {
+  policyId: string;
+  enabled: boolean;
+}
+```
+
+**Response:**
+```typescript
+type ToggleIAPolicyResponse = SecureResponse<IAPolicy>
+```
+
+**Errors:**
+- Peut échouer en `Err(String)` (policy introuvable / lock)
+
+### 7aa. create_ia_policy
+
+**Request:**
+```typescript
+interface CreateIAPolicyRequest {
+  policy: Omit<IAPolicy, 'id' | 'createdAt' | 'updatedAt'>;
+}
+```
+
+**Response:**
+```typescript
+type CreateIAPolicyResponse = SecureResponse<IAPolicy>
+```
+
+**Errors:**
+- Peut échouer en `Err(String)` (validation / lock)
+
+### 7ab. delete_ia_policy
+
+**Request:**
+```typescript
+interface DeleteIAPolicyRequest {
+  policyId: string;
+}
+```
+
+**Response:**
+```typescript
+type DeleteIAPolicyResponse = SecureResponse<void>
+```
+
+**Errors:**
+- Peut échouer en `Err(String)` (lock)
+
+### 7ac. get_permission_matrix
+
+**Request:**
+```typescript
+{} // No parameters
+```
+
+**Response:**
+```typescript
+// PermissionMatrix = Record<string, Role[]> (action -> roles autorisés)
+type GetPermissionMatrixResponse = SecureResponse<PermissionMatrix>
+```
+
+**Errors:**
+- Peut échouer en `Err(String)` (lock)
 
 ### 8. voice_start_listening
 

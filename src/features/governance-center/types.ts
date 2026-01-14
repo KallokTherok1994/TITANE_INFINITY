@@ -75,7 +75,7 @@ export type SecretCategory = 'api_key' | 'token' | 'credential' | 'certificate' 
 export interface SecretOperationResult {
   key: string;
   stored: boolean;
-  envPurged: boolean;
+  env_purged: boolean;
 }
 
 /**
