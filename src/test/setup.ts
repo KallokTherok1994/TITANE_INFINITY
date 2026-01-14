@@ -331,12 +331,20 @@ const handleTauriInvoke = async (
       return `mock_${Date.now()}`;
     case 'add_timeline_event': {
       const eventId = `timeline-${timelineEvents.length}`;
+      const raw = payload?.event;
+      const rawEventType =
+        typeof raw?.event_type === 'string'
+          ? raw.event_type
+          : typeof raw?.type === 'string'
+            ? raw.type
+            : 'generic';
       const event = {
         id: eventId,
-        type: payload?.event?.type ?? 'generic',
+        type: rawEventType,
         description: payload?.event?.description ?? 'timeline_event',
         metadata: payload?.event?.metadata,
-        timestamp: new Date().toISOString(),
+        data: payload?.event?.data,
+        timestamp: payload?.event?.timestamp ?? new Date().toISOString(),
       };
       timelineEvents.push(event);
       return { id: eventId, ...event };

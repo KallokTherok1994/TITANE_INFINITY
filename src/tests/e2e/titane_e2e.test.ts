@@ -174,14 +174,16 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 1: New User Onboarding', () => {
 
     // Step 6: Créer premier événement Timeline
     const step6 = await measureStep('Create timeline event', async () => {
-      const event = await invoke('add_timeline_event', {
+      await invoke('add_timeline_event', {
         event: {
-          type: 'user_onboarding',
+          id: `e2e-${Date.now()}`,
+          timestamp: Date.now(),
+          event_type: 'Alert',
           description: 'New user registered',
-          timestamp: new Date().toISOString(),
+          data: { original_event_type: 'user_onboarding' },
         },
       });
-      return event;
+      return null;
     });
     trace.steps.push({ step: 6, action: 'Create timeline event', ...step6 });
     expect(step6.status).toBe('OK');

@@ -1,0 +1,383 @@
+[ts]  2026-01-14T09:27:27-05:00
+[cwd] /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+B19 — Code fixes: chat_set_openai_key payload + add_timeline_event normalization
+
+=== Rust source of truth (chat_set_openai_key) ===
+206:pub async fn chat_set_openai_key(
+   200	    status.was_updated = false;
+   201	    Ok(SecureResponse::success(status))
+   202	}
+   203	
+   204	/// Configurer la clé API OpenAI
+   205	#[tauri::command]
+   206	pub async fn chat_set_openai_key(
+   207	    api_key: String,
+   208	    secrets: State<'_, SecureSecretsEngine>,
+   209	    orchestrator: State<'_, ChatOrchestratorState>,
+   210	) -> Result<SecureResponse<GeminiKeyStatus>, String> {
+   211	    PERMISSION_GUARD
+   212	        .require("secret_write", Role::Root, "chat_set_openai_key")
+   213	        .await
+   214	        .map_err(|e| format!("Permission denied: {}", e))?;
+   215	
+   216	    let trimmed = api_key.trim();
+   217	    if let Err(err) = PayloadValidator::validate_string(trimmed, "api_key", true) {
+   218	        return Ok(SecureResponse::error(format!("Invalid API key: {}", err)));
+   219	    }
+   220	
+   221	    if trimmed.len() < 16 {
+   222	        return Ok(SecureResponse::error(
+   223	            "OpenAI API key too short (min 16 chars)".to_string(),
+   224	        ));
+   225	    }
+   226	
+   227	    let zero = zeroize_string(trimmed.to_string());
+   228	    let new_value = zero.as_str().to_string();
+   229	
+   230	    let previously_configured = secrets.has_secret("openai_api_key").unwrap_or(false);
+   231	
+   232	    secrets
+   233	        .set_secret("openai_api_key", new_value.clone())
+   234	        .map_err(|e| format!("Failed to store OpenAI key: {}", e))?;
+   235	
+   236	    {
+   237	        let mut guard = orchestrator.openai_api_key.write().await;
+   238	        *guard = Some(new_value.clone());
+   239	    }
+   240	    orchestrator.set_provider_availability("openai", true).await;
+   241	
+   242	    drop(zero);
+   243	
+   244	    let env_present = std::env::var("OPENAI_API_KEY").is_ok();
+   245	    let env_purged = match purge_env_key("OPENAI_API_KEY").await {
+   246	        Ok(_) => {
+   247	            info!("[SecureCommands] Purged OPENAI_API_KEY from .env");
+   248	            true
+   249	        }
+   250	        Err(err) => {
+
+=== Frontend caller (governanceService) ===
+93:  const raw = await safeInvoke<unknown>('chat_set_openai_key', { api_key: apiKey });
+    70	/**
+    71	 * Définir la clé Gemini
+    72	 */
+    73	async function setGeminiKey(apiKey: string): Promise<SecureResponse<GeminiKeyStatus>> {
+    74	  const raw = await safeInvoke<unknown>('chat_set_gemini_key', { apiKey });
+    75	  return normalizeResponse<GeminiKeyStatus>(raw, 'Impossible de définir la clé Gemini');
+    76	}
+    77	
+    78	/**
+    79	 * Obtenir le statut de la clé OpenAI
+    80	 */
+    81	async function getOpenAIStatus(): Promise<SecureResponse<GeminiKeyStatus>> {
+    82	  const raw = await safeInvoke<unknown>('get_openai_key_status');
+    83	  return normalizeResponse<GeminiKeyStatus>(
+    84	    raw,
+    85	    'Impossible de récupérer le statut OpenAI'
+    86	  );
+    87	}
+    88	
+    89	/**
+    90	 * Définir la clé OpenAI
+    91	 */
+    92	async function setOpenAIKey(apiKey: string): Promise<SecureResponse<GeminiKeyStatus>> {
+    93	  const raw = await safeInvoke<unknown>('chat_set_openai_key', { api_key: apiKey });
+    94	  return normalizeResponse<GeminiKeyStatus>(raw, 'Impossible de définir la clé OpenAI');
+    95	}
+    96	
+    97	/**
+    98	 * Obtenir le statut de la clé Anthropic
+    99	 */
+   100	async function getAnthropicStatus(): Promise<SecureResponse<GeminiKeyStatus>> {
+   101	  const raw = await safeInvoke<unknown>('get_anthropic_key_status');
+   102	  return normalizeResponse<GeminiKeyStatus>(
+   103	    raw,
+   104	    'Impossible de récupérer le statut Anthropic'
+   105	  );
+   106	}
+   107	
+   108	/**
+   109	 * Définir la clé Anthropic
+   110	 */
+   111	async function setAnthropicKey(apiKey: string): Promise<SecureResponse<GeminiKeyStatus>> {
+   112	  const raw = await safeInvoke<unknown>('chat_set_anthropic_key', { apiKey });
+   113	  return normalizeResponse<GeminiKeyStatus>(
+   114	    raw,
+   115	    'Impossible de définir la clé Anthropic'
+   116	  );
+   117	}
+   118	
+   119	/**
+   120	 * Obtenir le statut de la clé GitHub Copilot
+
+=== Rust source of truth (TimelineEvent + add_timeline_event) ===
+83:pub struct TimelineEvent {
+92:pub enum EventType {
+    78	    Error,
+    79	}
+    80	
+    81	/// Timeline event
+    82	#[derive(Debug, Clone, Serialize, Deserialize)]
+    83	pub struct TimelineEvent {
+    84	    pub id: String,
+    85	    pub timestamp: i64,
+    86	    pub event_type: EventType,
+    87	    pub description: String,
+    88	    pub data: HashMap<String, serde_json::Value>,
+    89	}
+    90	
+    91	#[derive(Debug, Clone, Serialize, Deserialize)]
+    92	pub enum EventType {
+    93	    SystemStart,
+    94	    ModuleInit,
+    95	    HealthChange,
+    96	    Repair,
+    97	    Snapshot,
+    98	    Alert,
+    99	}
+   100	
+   101	impl Default for MemoryState {
+   102	    fn default() -> Self {
+   103	        Self {
+   104	            snapshots_count: 0,
+   105	            log_entries_count: 0,
+   106	            timeline_events: 0,
+   107	            storage_size_mb: 0.0,
+   108	            timestamp: 0,
+   109	            disk_mode: DiskMode::Disabled,
+   110	            synthetic_mode: true,
+   111	            last_validation_ts: None,
+   112	            last_compaction_ts: None,
+   113	            issues: Vec::new(),
+   114	        }
+   115	    }
+60:pub async fn add_timeline_event(
+    55	) -> AppResult<Vec<LogEntry>> {
+    56	    memory.read_logs(count).await
+    57	}
+    58	
+    59	#[tauri::command]
+    60	pub async fn add_timeline_event(
+    61	    memory: tauri::State<'_, MemoryCore>,
+    62	    event: TimelineEvent,
+    63	) -> AppResult<()> {
+    64	    memory.add_event(event).await
+    65	}
+    66	
+    67	// ═══════════════════════════════════════════════════════════════
+    68	// COMMANDES CHAT IA ↔ MEMORY CORE (v17.3.0)
+    69	// ═══════════════════════════════════════════════════════════════
+    70	
+    71	#[derive(Debug, Serialize)]
+    72	pub struct ChatInteractionAck {
+    73	    status: &'static str,
+    74	    saved: bool,
+    75	    timestamp_ms: i64,
+    76	}
+    77	
+    78	impl ChatInteractionAck {
+    79	    fn success() -> Self {
+    80	        Self {
+
+=== Frontend normalization (backend-v17.2.commands.ts) ===
+55:function normalizeTimelineEventForRust(event: unknown): {
+174:    const normalized = normalizeTimelineEventForRust(event);
+175:    return safeInvoke<void>('add_timeline_event', { event: normalized });
+    20	  NexusState,
+    21	  HarmoniaState,
+    22	  SentinelState,
+    23	  MemoryState,
+    24	  MemoryDirectoryReport,
+    25	  Snapshot,
+    26	  LogEntry,
+    27	  TimelineEvent,
+    28	  EvolutionReport,
+    29	  EvolutionState,
+    30	  SystemState,
+    31	} from './backend-v17.2.types';
+    32	
+    33	/**
+    34	 * Utilitaire d'invocation avec gestion d'erreur
+    35	 */
+    36	async function safeInvoke<T>(cmd: string, args?: Record<string, unknown>): Promise<T> {
+    37	  try {
+    38	    const result = await secureInvoke<T>(cmd, args);
+    39	    return result;
+    40	  } catch (error) {
+    41	    const errorMsg = error instanceof Error ? error.message : String(error);
+    42	    console.error(`[Backend v15.2] Command "${cmd}" failed:`, errorMsg);
+    43	    throw new Error(`Backend command "${cmd}" failed: ${errorMsg}`);
+    44	  }
+    45	}
+    46	
+    47	type RustTimelineEventType =
+    48	  | 'SystemStart'
+    49	  | 'ModuleInit'
+    50	  | 'HealthChange'
+    51	  | 'Repair'
+    52	  | 'Snapshot'
+    53	  | 'Alert';
+    54	
+    55	function normalizeTimelineEventForRust(event: unknown): {
+    56	  id: string;
+    57	  timestamp: number;
+    58	  event_type: RustTimelineEventType;
+    59	  description: string;
+    60	  data: Record<string, unknown>;
+    61	} {
+    62	  const allowed: ReadonlySet<RustTimelineEventType> = new Set([
+    63	    'SystemStart',
+    64	    'ModuleInit',
+    65	    'HealthChange',
+    66	    'Repair',
+    67	    'Snapshot',
+    68	    'Alert',
+    69	  ]);
+    70	
+    71	  const input = (event ?? {}) as Record<string, unknown>;
+    72	
+    73	  const idValue = typeof input.id === 'string' && input.id.trim() ? input.id : undefined;
+    74	  const id = idValue ?? (crypto.randomUUID?.() ?? `evt-${Date.now()}-${Math.random().toString(16).slice(2)}`);
+    75	
+    76	  const rawTimestamp = input.timestamp;
+    77	  const timestamp =
+    78	    typeof rawTimestamp === 'number'
+    79	      ? rawTimestamp
+    80	      : typeof rawTimestamp === 'string'
+    81	        ? Date.parse(rawTimestamp) || Date.now()
+    82	        : Date.now();
+    83	
+    84	  const rawEventType =
+    85	    (typeof input.event_type === 'string' ? input.event_type : undefined) ??
+    86	    (typeof input.type === 'string' ? input.type : undefined);
+    87	
+    88	  const event_type: RustTimelineEventType = allowed.has(rawEventType as RustTimelineEventType)
+    89	    ? (rawEventType as RustTimelineEventType)
+    90	    : 'Alert';
+    91	
+    92	  const description = typeof input.description === 'string' ? input.description : '';
+    93	
+    94	  const dataCandidate = input.data;
+    95	  const data: Record<string, unknown> =
+    96	    dataCandidate && typeof dataCandidate === 'object' && !Array.isArray(dataCandidate)
+    97	      ? (dataCandidate as Record<string, unknown>)
+    98	      : {};
+    99	
+   100	  if (input.metadata && typeof input.metadata === 'object' && !Array.isArray(input.metadata)) {
+   101	    data.metadata = input.metadata;
+   102	  }
+   103	  if (rawEventType && rawEventType !== event_type) {
+   104	    data.original_event_type = rawEventType;
+   105	  }
+   106	
+   107	  return { id, timestamp, event_type, description, data };
+   108	}
+   109	
+   110	// ─────────────────────────────────────────────────────────────────
+   111	// HELIOS API - System Monitoring (2 commands)
+   112	// ─────────────────────────────────────────────────────────────────
+   113	
+   114	export const helios = {
+   115	  /**
+   116	   * Récupérer l'état actuel du monitoring système
+   117	   */
+   118	  async getState(): Promise<HeliosState> {
+   119	    return safeInvoke<HeliosState>('get_helios_state');
+   120	  },
+   120	  },
+   121	
+   122	  /**
+   123	   * Récupérer le statut de santé système global
+   124	   */
+   125	  async getHealth(): Promise<HealthStatus> {
+   126	    return safeInvoke<HealthStatus>('get_system_health');
+   127	  },
+   128	};
+   129	
+   130	// ─────────────────────────────────────────────────────────────────
+   131	// MEMORY API - Unified Storage (6 commands)
+   132	// ─────────────────────────────────────────────────────────────────
+   133	
+   134	export const memory = {
+   135	  /**
+   136	   * Récupérer l'état actuel du système mémoire
+   137	   */
+   138	  async getState(): Promise<MemoryState> {
+   139	    return safeInvoke<MemoryState>('get_memory_state');
+   140	  },
+   141	
+   142	  /**
+   143	   * Écrire un snapshot complet du système
+   144	   */
+   145	  async writeSnapshot(snapshot: Snapshot): Promise<void> {
+   146	    return safeInvoke<void>('write_snapshot', { snapshot });
+   147	  },
+   148	
+   149	  /**
+   150	   * Lire le dernier snapshot disponible
+   151	   */
+   152	  async readSnapshot(): Promise<Snapshot | null> {
+   153	    return safeInvoke<Snapshot | null>('read_snapshot');
+   154	  },
+   155	
+   156	  /**
+   157	   * Écrire une entrée de log
+   158	   */
+   159	  async writeLog(entry: LogEntry): Promise<void> {
+   160	    return safeInvoke<void>('write_log', { entry });
+   161	  },
+   162	
+   163	  /**
+   164	   * Lire les derniers logs (count maximum)
+   165	   */
+   166	  async readLogs(count: number): Promise<LogEntry[]> {
+   167	    return safeInvoke<LogEntry[]>('read_logs', { count });
+   168	  },
+   169	
+   170	  /**
+
+=== Direct caller fix (selfHealingEngine) ===
+554:    safeInvoke('add_timeline_event', {
+   540	
+   541	  const record = {
+   542	    kind: 'self-healing-cycle',
+   543	    timestamp: Date.now(),
+   544	    symptoms: data.context.symptoms,
+   545	    playbookId: data.playbook.id,
+   546	    diagnostic: data.parsed.diagnostic,
+   547	    confidence: data.parsed.confidence,
+   548	    escalation: data.escalation,
+   549	    patchApplied: data.patchResult,
+   550	  };
+   551	
+   552	  await Promise.allSettled([
+   553	    safeInvoke('write_log', { log: record }),
+   554	    safeInvoke('add_timeline_event', {
+   555	      event: {
+   556	        id: `self-healing-${record.timestamp}`,
+   557	        timestamp: record.timestamp,
+   558	        event_type: 'Repair',
+   559	        description: `Playbook ${data.playbook.id} appliqué (confiance ${(record.confidence * 100).toFixed(0)}%).`,
+   560	        data: {
+   561	          original_event_type: 'SelfHealingCycle',
+   562	          playbookId: data.playbook.id,
+   563	          confidence: record.confidence,
+   564	          channel,
+   565	        },
+   566	      },
+   567	    }),
+   568	    syncSingularityLearning(data),
+   569	  ]);
+   570	}
+   571	
+   572	// ═══════════════════════════════════════════════════════════════════════════
+   573	// INTERNAL HELPERS
+   574	// ═══════════════════════════════════════════════════════════════════════════
+   575	
+   576	function clampConfidence(value: number): number {
+   577	  if (Number.isNaN(value)) {
+   578	    return 0;
+   579	  }
+   580	  return Math.max(0, Math.min(1, value));
+
