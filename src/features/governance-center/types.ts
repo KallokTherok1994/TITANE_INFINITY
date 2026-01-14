@@ -91,6 +91,16 @@ export interface GeminiKeyStatus {
 }
 
 /**
+ * Status de la clé GitHub Copilot
+ * (Retour direct du backend Rust, sans enveloppe SecureResponse)
+ */
+export interface CopilotKeyStatus {
+  configured: boolean;
+  status: string;
+  message: string | null;
+}
+
+/**
  * Status d'Ollama (local, pas de clé)
  */
 export interface OllamaStatus {
@@ -321,7 +331,7 @@ export interface GovernanceState {
   geminiStatus: GeminiKeyStatus | null;
   openaiStatus: GeminiKeyStatus | null;
   anthropicStatus: GeminiKeyStatus | null;
-  copilotStatus: GeminiKeyStatus | null; // ✨ v26.3 - GitHub Copilot
+  copilotStatus: CopilotKeyStatus | null; // ✨ v26.3 - GitHub Copilot
   ollamaStatus: OllamaStatus | null;
 
   // Politiques

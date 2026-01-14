@@ -12,6 +12,7 @@ import { safeInvoke } from '@/utils/invoke';
 import type {
   SecureResponse,
   GeminiKeyStatus,
+  CopilotKeyStatus,
   SecretOperationResult,
   SecretStatus,
   IAPolicy,
@@ -50,6 +51,26 @@ function normalizeResponse<T>(
   }
 
   return { ok: false, data: null, error: defaultError };
+}
+
+function normalizeDirectResponse<T>(
+  raw: unknown,
+  defaultError = FALLBACK_ERROR
+): SecureResponse<T> {
+  if (!raw || typeof raw !== 'object') {
+    return { ok: false, data: null, error: defaultError };
+  }
+
+  const payload = raw as { fallback?: boolean; error?: string | null; message?: string };
+  if (payload.fallback) {
+    return {
+      ok: false,
+      data: null,
+      error: payload.error ?? payload.message ?? defaultError,
+    };
+  }
+
+  return { ok: true, data: raw as T, error: null };
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -119,20 +140,17 @@ async function setAnthropicKey(apiKey: string): Promise<SecureResponse<GeminiKey
 /**
  * Obtenir le statut de la clé GitHub Copilot
  */
-async function getCopilotStatus(): Promise<SecureResponse<GeminiKeyStatus>> {
+async function getCopilotStatus(): Promise<SecureResponse<CopilotKeyStatus>> {
   const raw = await safeInvoke<unknown>('get_copilot_key_status');
-  return normalizeResponse<GeminiKeyStatus>(
-    raw,
-    'Impossible de récupérer le statut Copilot'
-  );
+  return normalizeDirectResponse<CopilotKeyStatus>(raw, 'Impossible de récupérer le statut Copilot');
 }
 
 /**
  * Définir la clé GitHub Copilot
  */
-async function setCopilotKey(apiKey: string): Promise<SecureResponse<GeminiKeyStatus>> {
+async function setCopilotKey(apiKey: string): Promise<SecureResponse<CopilotKeyStatus>> {
   const raw = await safeInvoke<unknown>('chat_set_copilot_key', { api_key: apiKey });
-  return normalizeResponse<GeminiKeyStatus>(raw, 'Impossible de définir la clé Copilot');
+  return normalizeDirectResponse<CopilotKeyStatus>(raw, 'Impossible de définir la clé Copilot');
 }
 
 /**
