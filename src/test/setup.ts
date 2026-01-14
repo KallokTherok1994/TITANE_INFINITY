@@ -685,6 +685,35 @@ const handleTauriInvoke = async (
         ok: true,
         data: { configured: false },
       };
+    case 'get_copilot_key_status':
+      return {
+        configured: false,
+        status: 'missing',
+        message: null,
+      };
+    case 'selfheal_get_vitals':
+      return {
+        timestamp: Date.now(),
+        cpu_usage: 5,
+        memory_usage: 20,
+        fps: 60,
+        webview_responsive: true,
+        tauri_backend_alive: true,
+        ollama_available: false,
+        gemini_available: false,
+        tts_available: false,
+        memory_integrity: 100,
+        active_errors: 0,
+        queue_size: 0,
+      };
+    case 'selfheal_load_profile':
+      return {};
+    case 'selfheal_save_profile':
+      return null;
+    case 'selfheal_clear_cache':
+      return { ok: true };
+    case 'selfheal_reset_state':
+      return { ok: true };
     case 'chat_get_providers_status':
       return {
         gemini: { healthy: true, latency_ms: 320 },
