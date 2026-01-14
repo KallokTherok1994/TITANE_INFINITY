@@ -1,0 +1,64 @@
+B20 — Secure key payload snake_case fixes (2026-01-14)
+
+Goal
+- Ensure TS callers send `api_key` (snake_case) for secure key setter IPC commands, matching Rust command parameter names (Tauri deserialization).
+
+Scope
+- chat_set_gemini_key
+- chat_set_anthropic_key
+- chat_set_copilot_key
+
+Rust source-of-truth excerpts
+
+1) chat_set_gemini_key expects `api_key`
+--- src-tauri/src/secure_commands.rs ---
+#[tauri::command]
+pub async fn chat_set_gemini_key(
+    api_key: String,
+    secrets: State<'_, SecureSecretsEngine>,
+    orchestrator: State<'_, ChatOrchestratorState>,
+) -> Result<SecureResponse<GeminiKeyStatus>, String> {
+...
+    let trimmed = api_key.trim();
+    if let Err(err) = PayloadValidator::validate_string(trimmed, "api_key", true) {
+...
+
+2) chat_set_anthropic_key expects `api_key`
+--- src-tauri/src/secure_commands.rs ---
+#[tauri::command]
+pub async fn chat_set_anthropic_key(
+    api_key: String,
+    secrets: State<'_, SecureSecretsEngine>,
+    orchestrator: State<'_, ChatOrchestratorState>,
+) -> Result<SecureResponse<GeminiKeyStatus>, String> {
+...
+    let trimmed = api_key.trim();
+    if let Err(err) = PayloadValidator::validate_string(trimmed, "api_key", true) {
+...
+
+3) chat_set_copilot_key expects `api_key`
+--- src-tauri/src/commands/copilot_commands.rs ---
+#[tauri::command]
+pub async fn chat_set_copilot_key(
+    api_key: String,
+    state: State<'_, CopilotState>,
+) -> Result<CopilotKeyStatus, String> {
+...
+
+Frontend callsites excerpts (post-fix)
+
+A) Governance service now sends `{ api_key: apiKey }`
+--- src/features/governance-center/services/governanceService.ts ---
+const raw = await safeInvoke<unknown>('chat_set_gemini_key', { api_key: apiKey });
+...
+const raw = await safeInvoke<unknown>('chat_set_anthropic_key', { api_key: apiKey });
+...
+const raw = await safeInvoke<unknown>('chat_set_copilot_key', { api_key: apiKey });
+
+B) SecureSecrets helper now sends `{ api_key: apiKey }` for Gemini
+--- src/utils/secureSecrets.ts ---
+const raw = await safeInvoke<unknown>('chat_set_gemini_key', { api_key: apiKey });
+
+C) Copilot provider helper now sends `{ api_key: apiKey }`
+--- src/services/ai/providers/copilot.ts ---
+}>('chat_set_copilot_key', { api_key: apiKey });

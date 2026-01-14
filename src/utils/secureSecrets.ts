@@ -83,7 +83,7 @@ export interface SecureSecretRequestPayload {
 export async function setGeminiApiKey(
   apiKey: string
 ): Promise<SecureResponse<GeminiKeyStatus>> {
-  const raw = await safeInvoke<unknown>('chat_set_gemini_key', { apiKey });
+  const raw = await safeInvoke<unknown>('chat_set_gemini_key', { api_key: apiKey });
   return normalizeSecureResponse<GeminiKeyStatus>(
     raw,
     'Impossible de sécuriser la clé Gemini (runtime indisponible).'
