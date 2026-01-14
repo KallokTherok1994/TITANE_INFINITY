@@ -286,6 +286,8 @@ export class TitaneError extends Error {
 | Command | Frontend Files | Payload | Response | Errors |
 |---------|----------------|---------|----------|--------|
 | `chat_set_openai_key` | `src/features/governance-center/services/governanceService.ts`<br>`src/utils/secureSecrets.ts` | `{api_key: string}` | `SecureResponse<GeminiKeyStatus>` | `PERMISSION_DENIED`<br>`INTERNAL_ERROR` |
+| `get_copilot_key_status` | `src/features/governance-center/services/governanceService.ts`<br>`src/services/ai/providers/copilot.ts` | `{}` | `CopilotKeyStatus` | `Err(String)` |
+| `chat_set_copilot_key` | `src/features/governance-center/services/governanceService.ts`<br>`src/services/ai/providers/copilot.ts` | `{api_key: string}` | `CopilotKeyStatus` | `Err(String)` |
 | `avatar_set_appearance` | `src/modules/avatar/appearance/appearanceEngine.ts` | `{style: object}` | `void` | `SERIALIZATION_ERROR` |
 | `autoheal_detect_broken_modules` | `src/__tests__/singularity-fusion-integration.test.ts`<br>`src/__tests__/e2e-automated-validation.test.tsx`<br>`src/__tests__/singularity-fusion-mocked.test.ts` | `{}` | `BrokenModule[]` | `INTERNAL_ERROR` |
 | `performance_get_metrics` | `src/services/systemCenter/SystemAPI.ts`<br>`src/__tests__/e2e-automated-validation.test.tsx`<br>`src/__tests__/singularity-fusion-integration.test.ts` | `{}` | `{cpu_usage: number, gpu_usage: number, memory_usage: number, memory_available: number, fps: number, frame_time: number, render_time: number, idle_time: number, gc_time: number, network_latency: number, timestamp: number}` | `INTERNAL_ERROR` |
@@ -497,6 +499,45 @@ type ChatSetOpenAIKeyResponse = SecureResponse<GeminiKeyStatus>
 
 **Errors:**
 - Peut retourner `ok=false` avec `error` (validation côté backend)
+- Peut échouer en `Err(String)` (permission / stockage)
+
+### 7b. get_copilot_key_status
+
+**Request:**
+```typescript
+{} // No parameters
+```
+
+**Response:**
+```typescript
+interface CopilotKeyStatus {
+  configured: boolean;
+  status: string;
+  message: string | null;
+}
+
+// NOTE: retour direct du backend Rust (pas d'enveloppe SecureResponse)
+type GetCopilotKeyStatusResponse = CopilotKeyStatus
+```
+
+**Errors:**
+- Peut échouer en `Err(String)` (permission / lecture)
+
+### 7c. chat_set_copilot_key
+
+**Request:**
+```typescript
+interface SetCopilotKeyRequest {
+  api_key: string;                // GitHub token
+}
+```
+
+**Response:**
+```typescript
+type ChatSetCopilotKeyResponse = CopilotKeyStatus
+```
+
+**Errors:**
 - Peut échouer en `Err(String)` (permission / stockage)
 
 ### 8. voice_start_listening
