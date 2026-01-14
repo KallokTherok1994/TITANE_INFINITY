@@ -38,12 +38,13 @@ Objectif: pointer les surfaces réelles AutoHeal/AutoFix/Auto-Healing (scripts, 
 - Commandes exposées (IPC) AutoFix/AutoHeal: [src-tauri/src/main.rs](../../src-tauri/src/main.rs#L812-L857).
 
 - Contrat IPC (docs) ↔ tests `invoke()` (reality check):
-  - Matrix: [docs/backend/IPC_CONTRACT.md](../backend/IPC_CONTRACT.md#L270-L300)
-  - Détails: [docs/backend/IPC_CONTRACT.md](../backend/IPC_CONTRACT.md#L461-L489)
+  - Matrix: [docs/backend/IPC_CONTRACT.md](../backend/IPC_CONTRACT.md#L270-L306)
+  - Détails (payload specs): [docs/backend/IPC_CONTRACT.md](../backend/IPC_CONTRACT.md#L308-L542)
   - Backend map: [docs/backend/BACKEND_MAP.md](../backend/BACKEND_MAP.md#L295-L306)
   - SINGULARITY vΩ: [docs/SINGULARITY_FUSION_vΩ.md](../SINGULARITY_FUSION_vΩ.md#L641-L657)
   - Tests invoke(): [src/__tests__/singularity-fusion-integration.test.ts](../../src/__tests__/singularity-fusion-integration.test.ts#L225-L236)
   - Preuve: [docs/_evidence/v27/B13b_ipc_contract_auto_commands_clean_2026-01-13.txt](../../docs/_evidence/v27/B13b_ipc_contract_auto_commands_clean_2026-01-13.txt#L1-L160)
+  - Preuve (payload specs ↔ signatures/types Rust): [docs/_evidence/v27/B18_ipc_contract_payload_specs_reality_check_2026-01-14.txt](../../docs/_evidence/v27/B18_ipc_contract_payload_specs_reality_check_2026-01-14.txt#L1-L260)
   - Note (écart doc ↔ repo): `docs/backend/IPC_CONTRACT.md` cite `src/services/healthService.ts` mais le fichier est absent.
     - Preuve: [docs/_evidence/v27/B14_ipc_contract_vs_repo_healthservice_gap_2026-01-13.txt](../../docs/_evidence/v27/B14_ipc_contract_vs_repo_healthservice_gap_2026-01-13.txt#L1-L60)
 

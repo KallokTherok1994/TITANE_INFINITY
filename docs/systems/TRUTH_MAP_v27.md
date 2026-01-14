@@ -68,13 +68,14 @@ Chaque point ci-dessous doit être vérifiable via (a) un fichier, ou (b) une pr
   - AutoHeal impl: [src-tauri/src/singularity_fusion/auto_heal.rs](src-tauri/src/singularity_fusion/auto_heal.rs#L33-L291)
 
 - Contrat IPC “AUTO-*” (docs) ↔ commandes (Tauri) ↔ tests `invoke()` (reality check).
-  - Source (matrix): [docs/backend/IPC_CONTRACT.md](docs/backend/IPC_CONTRACT.md#L270-L300)
-  - Source (détails): [docs/backend/IPC_CONTRACT.md](docs/backend/IPC_CONTRACT.md#L461-L489)
+  - Source (matrix): [docs/backend/IPC_CONTRACT.md](docs/backend/IPC_CONTRACT.md#L270-L306)
+  - Source (détails, payload specs): [docs/backend/IPC_CONTRACT.md](docs/backend/IPC_CONTRACT.md#L308-L542)
   - Source (backend map): [docs/backend/BACKEND_MAP.md](docs/backend/BACKEND_MAP.md#L295-L306)
   - Source (SINGULARITY vΩ): [docs/SINGULARITY_FUSION_vΩ.md](docs/SINGULARITY_FUSION_vΩ.md#L641-L657)
   - Source (tests): [src/__tests__/singularity-fusion-integration.test.ts](src/__tests__/singularity-fusion-integration.test.ts#L225-L236)
   - Preuve consolidée: [docs/_evidence/v27/B13b_ipc_contract_auto_commands_clean_2026-01-13.txt](docs/_evidence/v27/B13b_ipc_contract_auto_commands_clean_2026-01-13.txt#L1-L160)
   - Écart constaté (doc cite `src/services/healthService.ts`, absent dans le repo): [docs/_evidence/v27/B14_ipc_contract_vs_repo_healthservice_gap_2026-01-13.txt](docs/_evidence/v27/B14_ipc_contract_vs_repo_healthservice_gap_2026-01-13.txt#L1-L60)
+  - Preuve (payload specs ↔ signatures/types Rust): [docs/_evidence/v27/B18_ipc_contract_payload_specs_reality_check_2026-01-14.txt](docs/_evidence/v27/B18_ipc_contract_payload_specs_reality_check_2026-01-14.txt#L1-L260)
 
 - Reality check “caller” (doc ↔ repo): `IPC_CONTRACT.md` cite `src/services/healthService.ts` pour `autoheal_detect_broken_modules`, mais le fichier n’existe pas dans `src/services/` (preuves + fallback via tests/mocks).
   - Preuve: [docs/_evidence/v27/B14_ipc_contract_autoheal_detect_callers_2026-01-13.txt](docs/_evidence/v27/B14_ipc_contract_autoheal_detect_callers_2026-01-13.txt#L1-L120)

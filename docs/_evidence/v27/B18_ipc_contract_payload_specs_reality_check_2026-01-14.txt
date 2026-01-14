@@ -1,0 +1,903 @@
+[ts]  2026-01-14T09:12:25-05:00
+[cwd] /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+B18 — IPC_CONTRACT Payload Specifications reality check
+Goal: verify documented request/response shapes against Rust command signatures/types.
+
+=== IPC_CONTRACT payload sections (headings) ===
+310:### 1. conversation_generate (OMEGA v2)
+354:### 2. chat_get_providers_status
+373:### 3. avatar_advance_lip_sync
+393:### 4. singularity_get_full_state
+433:### 5. add_timeline_event
+461:### 6. autoheal_detect_broken_modules
+481:### 7. chat_set_openai_key
+499:### 8. voice_start_listening
+523:### 9. performance_get_metrics
+312:**Command:** `conversation_generate`
+
+=== Backend command signatures (rg) ===
+--- command: conversation_generate ---
+src-tauri/src/overdrive/chat_orchestrator.rs:7:// TODO v25.x: Migrer vers conversation_engine::conversation_generate (OMEGA v2)
+src-tauri/src/overdrive/chat_orchestrator.rs:435:/// **DEPRECATED**: Use `conversation_generate` from ConversationEngine (OMEGA Pipeline v2)
+src-tauri/src/overdrive/chat_orchestrator.rs:438:/// Migration: Use conversation_engine::commands::conversation_generate instead
+src-tauri/src/overdrive/chat_orchestrator.rs:442:    note = "Use conversation_generate from OMEGA Pipeline v2 (conversation_engine)"
+src-tauri/src/overdrive/chat_orchestrator.rs:448:    log::warn!("[DEPRECATED] overdrive::chat_send_message called - migrate to conversation_engine::conversation_generate");
+src-tauri/src/qa/qa_engine.rs:574:        // Integration point: Use chat_send_message or conversation_generate
+src-tauri/src/main.rs:12:#![allow(deprecated)] // Migration to conversation_engine::conversation_generate in progress
+src-tauri/src/main.rs:719:            conversation_engine::commands::conversation_generate,
+src-tauri/src/conversation_engine/commands.rs:36:pub async fn conversation_generate(
+src-tauri/src/api/chat_commands.rs:36:/// **DEPRECATED**: Use `conversation_generate` from OMEGA Pipeline v2 instead.
+src-tauri/src/api/chat_commands.rs:45:/// conversation_generate(message, conversation_id, mode, provider, system_prompt)
+src-tauri/src/api/chat_commands.rs:50:    note = "Use conversation_generate from OMEGA Pipeline v2 instead"
+src-tauri/src/api/chat_commands.rs:56:    log::warn!("[BLOCKED] chat_send_message is disabled. Use conversation_generate.");
+src-tauri/src/api/chat_commands.rs:57:    Err("chat_send_message is disabled; migrate to conversation_generate".to_string())
+
+--- command: chat_get_providers_status ---
+src-tauri/src/overdrive/chat_orchestrator.rs:1433:pub async fn chat_get_providers_status(
+src-tauri/src/commands/state_bridge_commands.rs:169:    let providers = crate::overdrive::chat_orchestrator::chat_get_providers_status(chat)
+src-tauri/src/main.rs:613:                    match overdrive::chat_orchestrator::chat_get_providers_status(
+src-tauri/src/main.rs:726:            overdrive::chat_orchestrator::chat_get_providers_status,
+src-tauri/tauri.conf.json:175:            { "command": "chat_get_providers_status" },
+src-tauri/src/commands/security.rs:127:    commands.insert("chat_get_providers_status");
+
+--- command: avatar_advance_lip_sync ---
+src-tauri/src/avatar/avatar_commands.rs:93:pub async fn avatar_advance_lip_sync(engine: State<'_, AvatarEngineGlobal>) -> Result<(), String> {
+src-tauri/src/main.rs:759:            avatar::avatar_commands::avatar_advance_lip_sync,
+src-tauri/tauri.conf.json:206:            { "command": "avatar_advance_lip_sync" },
+src-tauri/src/commands/security.rs:393:    commands.insert("avatar_advance_lip_sync");
+
+--- command: singularity_get_full_state ---
+src-tauri/tauri.conf.json:138:            { "command": "singularity_get_full_state" },
+src-tauri/src/main.rs:885:            singularity_state::commands::singularity_get_full_state,
+src-tauri/src/security/pre_boot_validation.rs:280:        "singularity_get_full_state",
+src-tauri/src/commands/security.rs:167:    commands.insert("singularity_get_full_state");
+src-tauri/src/singularity_state/commands.rs:36:pub async fn singularity_get_full_state(
+src-tauri/src/singularity_state/commands.rs:209:///     singularity_state::commands::singularity_get_full_state,
+src-tauri/src/singularity_state/commands.rs:217:        "singularity_get_full_state",
+src-tauri/src/singularity_state/commands.rs:304:        assert!(commands.contains(&"singularity_get_full_state"));
+
+--- command: add_timeline_event ---
+src-tauri/tauri.conf.json:128:            { "command": "add_timeline_event" },
+src-tauri/src/main.rs:1005:            api::memory_api::add_timeline_event,
+src-tauri/src/api/memory_api.rs:60:pub async fn add_timeline_event(
+src-tauri/src/commands/security.rs:38:    commands.insert("add_timeline_event");
+
+--- command: autoheal_detect_broken_modules ---
+src-tauri/src/singularity_fusion/auto_heal.rs:52:pub async fn autoheal_detect_broken_modules(
+src-tauri/src/singularity_fusion/auto_heal.rs:59:/// Frontend-compat alias for `autoheal_detect_broken_modules`.
+src-tauri/src/singularity_fusion/auto_heal.rs:64:    autoheal_detect_broken_modules(state).await
+src-tauri/tauri.conf.json:975:            { "command": "autoheal_detect_broken_modules" },
+src-tauri/src/main.rs:831:            singularity_fusion::autoheal_detect_broken_modules,
+src-tauri/src/commands/security.rs:469:    commands.insert("autoheal_detect_broken_modules");
+
+--- command: chat_set_openai_key ---
+src-tauri/src/main.rs:942:            secure_commands::chat_set_openai_key,
+
+--- command: voice_start_listening ---
+src-tauri/src/main.rs:734:            overdrive::voice_engine::voice_start_listening,
+src-tauri/tauri.conf.json:299:            { "command": "voice_start_listening" },
+src-tauri/src/overdrive/voice_engine.rs:122:pub fn voice_start_listening(state: State<VoiceEngineState>) -> Result<String, TAPIError> {
+src-tauri/src/overdrive/voice_engine.rs:126:            eprintln!("[VOICE] is_listening lock poisoned in voice_start_listening, recovering");
+src-tauri/src/overdrive/voice_engine.rs:138:            eprintln!("[VOICE] status lock poisoned in voice_start_listening, recovering");
+
+--- command: performance_get_metrics ---
+src-tauri/tauri.conf.json:643:            { "command": "performance_get_metrics" },
+src-tauri/src/main.rs:868:            singularity_fusion::performance_get_metrics,
+src-tauri/src/singularity_fusion/performance.rs:61:pub async fn performance_get_metrics(
+src-tauri/src/commands/security.rs:508:    commands.insert("performance_get_metrics");
+
+=== Key type definitions (Rust) ===
+--- SecureResponse / GeminiKeyStatus ---
+23:pub struct SecureResponse<T> {
+48:pub struct GeminiKeyStatus {
+
+--- AutoHeal BrokenModule ---
+14:pub struct BrokenModule {
+52:pub async fn autoheal_detect_broken_modules(
+
+--- Performance PerformanceMetrics ---
+14:pub struct PerformanceMetrics {
+61:pub async fn performance_get_metrics(
+
+--- Voice voice_start_listening ---
+122:pub fn voice_start_listening(state: State<VoiceEngineState>) -> Result<String, TAPIError> {
+
+--- Memory TimelineEvent + add_timeline_event signature ---
+83:pub struct TimelineEvent {
+60:pub async fn add_timeline_event(
+
+=== Frontend callers (strict, direct callsites only) ===
+--- command: conversation_generate ---
+src/services/tauri/chatEngine.commands.ts:261:  return invokeCommand<OmegaResponse>('conversation_generate', {
+src/services/ai/providers/tauriChat.ts:169:        safeInvokeTauri<ChatResponse>('conversation_generate', {
+src/tests/e2e/titane_e2e.test.ts:136:      const response = await invoke('conversation_generate', {
+src/tests/e2e/titane_e2e.test.ts:251:      const analysis = await invoke('conversation_generate', {
+src/tests/e2e/titane_e2e.test.ts:352:      const synthesis = await invoke('conversation_generate', {
+
+--- command: chat_get_providers_status ---
+src/tests/tauri-invoke-fix-validator.ts:18:    const providersResult = await safeInvokeTauri('chat_get_providers_status');
+src/tests/regression/titane_regression.test.ts:80:          await invoke('chat_get_providers_status');
+src/tests/regression/titane_regression.test.ts:383:      const status = await invoke('chat_get_providers_status');
+src/components/ChatDiagnostic.tsx:194:    run: () => safeInvoke<Record<string, unknown>>('chat_get_providers_status'),
+
+--- command: avatar_advance_lip_sync ---
+NO_CALLERS_FOUND
+
+--- command: singularity_get_full_state ---
+src/tests/e2e/titane_e2e.test.ts:127:      const state = await invoke('singularity_get_full_state');
+src/tests/e2e/titane_e2e.test.ts:574:      const state = await invoke('singularity_get_full_state');
+src/tests/regression/titane_regression.test.ts:72:          await invoke('singularity_get_full_state');
+src/tests/regression/titane_regression.test.ts:216:      const state = await invoke('singularity_get_full_state');
+src/tests/regression/titane_regression.test.ts:420:      const state = await invoke('singularity_get_full_state');
+src/components/ChatDiagnostic.tsx:312:    run: () => safeInvoke<SingularityState>('singularity_get_full_state'),
+src/services/tauriAutoRepair.ts:285:      const rawState = await mappedInvoke<any>('singularity_get_full_state');
+src/services/autoAuditEngine.ts:399:      const state = await secureInvoke<SingularityStateXP>('singularity_get_full_state');
+src/services/singularityBridge.ts:287:    const state = await safeInvoke<SingularityState>('singularity_get_full_state');
+
+--- command: add_timeline_event ---
+src/services/tauri/backend-v17.2.commands.ts:111:    return safeInvoke<void>('add_timeline_event', { event });
+src/services/tauri/backend-v17.2.commands.ts:232:    await safeInvoke<void>('add_timeline_event', { event });
+src/tests/e2e/titane_e2e.test.ts:177:      const event = await invoke('add_timeline_event', {
+src/tests/e2e/titane_e2e.test.ts:280:      const event = await invoke('add_timeline_event', {
+src/tests/e2e/titane_e2e.test.ts:380:      const event = await invoke('add_timeline_event', {
+src/engines/selfHealing/selfHealingEngine.ts:554:    safeInvoke('add_timeline_event', {
+
+--- command: autoheal_detect_broken_modules ---
+src/__tests__/singularity-fusion-integration.test.ts:129:      const modules = await invoke('autoheal_detect_broken_modules');
+src/__tests__/singularity-fusion-integration.test.ts:225:      const broken = await invoke('autoheal_detect_broken_modules');
+src/__tests__/e2e-automated-validation.test.tsx:2003:        const brokenModules = await invoke('autoheal_detect_broken_modules');
+src/__tests__/e2e-automated-validation.test.tsx:2143:        const broken = await invoke('autoheal_detect_broken_modules');
+src/__tests__/singularity-fusion-mocked.test.ts:149:      const modules = await invoke('autoheal_detect_broken_modules');
+
+--- command: chat_set_openai_key ---
+src/features/governance-center/services/governanceService.ts:93:  const raw = await safeInvoke<unknown>('chat_set_openai_key', { apiKey });
+src/utils/secureSecrets.ts:110:  const raw = await safeInvoke<unknown>('chat_set_openai_key', { api_key: apiKey });
+
+--- command: voice_start_listening ---
+NO_CALLERS_FOUND
+
+--- command: performance_get_metrics ---
+src/__tests__/singularity-fusion-integration.test.ts:155:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-integration.test.ts:219:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-integration.test.ts:245:        await invoke('performance_get_metrics');
+src/__tests__/e2e-automated-validation.test.tsx:2065:        const metrics = await invoke('performance_get_metrics');
+src/__tests__/e2e-automated-validation.test.tsx:2101:        const metrics = await invoke('performance_get_metrics');
+src/__tests__/e2e-automated-validation.test.tsx:2118:            invoke('performance_get_metrics'),
+src/__tests__/e2e-automated-validation.test.tsx:2168:      const metrics = (await invoke('performance_get_metrics')) as PerformanceMetrics;
+src/__tests__/e2e-automated-validation.test.tsx:2182:        const metrics = (await invoke('performance_get_metrics')) as {
+src/__tests__/e2e-automated-validation.test.tsx:2208:      const perfMetrics = (await invoke('performance_get_metrics')) as PerformanceMetrics;
+src/__tests__/singularity-fusion-mocked.test.ts:158:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-mocked.test.ts:195:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-mocked.test.ts:208:      const metrics = await invoke('performance_get_metrics');
+
+
+=== Source excerpts (nl -ba) ===
+--- src-tauri/src/avatar/avatar_commands.rs (avatar_advance_lip_sync) ---
+    70	) -> Result<serde_json::Value, String> {
+    71	    let avatar = engine.0.lock().map_err(|e| format!("Lock error: {}", e))?;
+    72	
+    73	    match avatar.lip_sync.get_current_morph() {
+    74	        Some(morph) => Ok(serde_json::json!({
+    75	            "jaw_open": morph.jaw_open,
+    76	            "lip_rounding": morph.lip_rounding,
+    77	            "tongue_position": morph.tongue_position,
+    78	            "lip_spread": morph.lip_spread,
+    79	            "duration_ms": morph.duration_ms,
+    80	        })),
+    81	        None => Ok(serde_json::json!({
+    82	            "jaw_open": 0.1,
+    83	            "lip_rounding": 0.2,
+    84	            "tongue_position": 0.4,
+    85	            "lip_spread": 0.3,
+    86	            "duration_ms": 0,
+    87	        })),
+    88	    }
+    89	}
+    90	
+    91	/// Avance frame lip-sync
+    92	#[tauri::command]
+    93	pub async fn avatar_advance_lip_sync(engine: State<'_, AvatarEngineGlobal>) -> Result<(), String> {
+    94	    let mut avatar = engine.0.lock().map_err(|e| format!("Lock error: {}", e))?;
+    95	    avatar.lip_sync.advance_frame();
+    96	
+    97	    Ok(())
+    98	}
+    99	
+   100	/// Récupère expression faciale actuelle
+   101	#[tauri::command]
+   102	pub async fn avatar_get_expression(
+   103	    engine: State<'_, AvatarEngineGlobal>,
+   104	) -> Result<String, String> {
+   105	    let avatar = engine.0.lock().map_err(|e| format!("Lock error: {}", e))?;
+   106	
+   107	    let expression = match avatar.expression.current_expression {
+   108	        FacialExpression::Neutral => "neutral",
+   109	        FacialExpression::SoftSmile => "soft_smile",
+   110	        FacialExpression::Attentive => "attentive",
+   111	        FacialExpression::WarmFocus => "warm_focus",
+   112	        FacialExpression::ExplainMode => "explain_mode",
+   113	        FacialExpression::LiftedBrows => "lifted_brows",
+   114	        FacialExpression::RelaxedBrows => "relaxed_brows",
+   115	        FacialExpression::TinyNod => "tiny_nod",
+   116	    };
+   117	
+   118	    Ok(expression.to_string())
+   119	}
+   120	
+
+--- src-tauri/src/api/memory_api.rs (add_timeline_event) ---
+    40	
+    41	#[tauri::command]
+    42	pub async fn read_snapshot(memory: tauri::State<'_, MemoryCore>) -> AppResult<Option<Snapshot>> {
+    43	    memory.read_snapshot().await
+    44	}
+    45	
+    46	#[tauri::command]
+    47	pub async fn write_log(memory: tauri::State<'_, MemoryCore>, log: LogEntry) -> AppResult<()> {
+    48	    memory.write_log(log).await
+    49	}
+    50	
+    51	#[tauri::command]
+    52	pub async fn read_logs(
+    53	    memory: tauri::State<'_, MemoryCore>,
+    54	    count: usize,
+    55	) -> AppResult<Vec<LogEntry>> {
+    56	    memory.read_logs(count).await
+    57	}
+    58	
+    59	#[tauri::command]
+    60	pub async fn add_timeline_event(
+    61	    memory: tauri::State<'_, MemoryCore>,
+    62	    event: TimelineEvent,
+    63	) -> AppResult<()> {
+    64	    memory.add_event(event).await
+    65	}
+    66	
+    67	// ═══════════════════════════════════════════════════════════════
+    68	// COMMANDES CHAT IA ↔ MEMORY CORE (v17.3.0)
+    69	// ═══════════════════════════════════════════════════════════════
+    70	
+    71	#[derive(Debug, Serialize)]
+    72	pub struct ChatInteractionAck {
+    73	    status: &'static str,
+    74	    saved: bool,
+    75	    timestamp_ms: i64,
+    76	}
+    77	
+    78	impl ChatInteractionAck {
+    79	    fn success() -> Self {
+    80	        Self {
+    81	            status: "ok",
+    82	            saved: true,
+    83	            timestamp_ms: Utc::now().timestamp_millis(),
+    84	        }
+    85	    }
+    86	}
+    87	
+    88	/// Récupère les projets actifs pour contexte chat
+    89	#[tauri::command]
+    90	pub async fn memory_get_active_projects(
+    91	    memory: tauri::State<'_, MemoryCore>,
+    92	    limit: usize,
+    93	) -> AppResult<Vec<ProjectSummary>> {
+    94	    memory.get_active_projects(limit).await
+    95	}
+    96	
+    97	/// Récupère les décisions récentes
+    98	#[tauri::command]
+    99	pub async fn memory_get_recent_decisions(
+   100	    memory: tauri::State<'_, MemoryCore>,
+
+--- src-tauri/src/types/memory.rs (TimelineEvent) ---
+    70	    pub module: String,
+    71	    pub message: String,
+    72	}
+    73	
+    74	#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+    75	pub enum LogLevel {
+    76	    Info,
+    77	    Warning,
+    78	    Error,
+    79	}
+    80	
+    81	/// Timeline event
+    82	#[derive(Debug, Clone, Serialize, Deserialize)]
+    83	pub struct TimelineEvent {
+    84	    pub id: String,
+    85	    pub timestamp: i64,
+    86	    pub event_type: EventType,
+    87	    pub description: String,
+    88	    pub data: HashMap<String, serde_json::Value>,
+    89	}
+    90	
+    91	#[derive(Debug, Clone, Serialize, Deserialize)]
+    92	pub enum EventType {
+    93	    SystemStart,
+    94	    ModuleInit,
+    95	    HealthChange,
+    96	    Repair,
+    97	    Snapshot,
+    98	    Alert,
+    99	}
+   100	
+   101	impl Default for MemoryState {
+   102	    fn default() -> Self {
+   103	        Self {
+   104	            snapshots_count: 0,
+   105	            log_entries_count: 0,
+   106	            timeline_events: 0,
+   107	            storage_size_mb: 0.0,
+   108	            timestamp: 0,
+   109	            disk_mode: DiskMode::Disabled,
+   110	            synthetic_mode: true,
+   111	            last_validation_ts: None,
+   112	            last_compaction_ts: None,
+   113	            issues: Vec::new(),
+   114	        }
+   115	    }
+   116	}
+   117	
+   118	#[cfg(test)]
+   119	mod tests {
+   120	    use super::*;
+   121	
+   122	    // ─────────────────────────────────────────────────────────────
+   123	    // DiskMode Tests
+   124	    // ─────────────────────────────────────────────────────────────
+   125	
+   126	    #[test]
+   127	    fn test_disk_mode_variants() {
+   128	        let modes = [
+   129	            DiskMode::Disabled,
+   130	            DiskMode::ReadOnly,
+   131	            DiskMode::WriteOnly,
+   132	            DiskMode::ReadWrite,
+   133	        ];
+   134	        assert_eq!(modes.len(), 4);
+   135	    }
+   136	
+   137	    #[test]
+   138	    fn test_disk_mode_equality() {
+   139	        assert_eq!(DiskMode::ReadWrite, DiskMode::ReadWrite);
+   140	        assert_ne!(DiskMode::ReadOnly, DiskMode::WriteOnly);
+
+--- src-tauri/src/singularity_fusion/auto_heal.rs (BrokenModule + autoheal_detect_broken_modules) ---
+     1	//! ═══════════════════════════════════════════════════════════════════════════
+     2	//! AUTO HEAL ENGINE - Backend Commands
+     3	//! ═══════════════════════════════════════════════════════════════════════════
+     4	
+     5	use serde::{Deserialize, Serialize};
+     6	use std::sync::Mutex;
+     7	use tauri::State;
+     8	
+     9	// ═══════════════════════════════════════════════════════════════════════════
+    10	// TYPES
+    11	// ═══════════════════════════════════════════════════════════════════════════
+    12	
+    13	#[derive(Debug, Clone, Serialize, Deserialize)]
+    14	pub struct BrokenModule {
+    15	    pub module_type: String,
+    16	    pub severity: String,
+    17	    pub error: String,
+    18	    pub detected_at: u64,
+    19	}
+    20	
+    21	#[derive(Debug, Clone, Serialize, Deserialize)]
+    22	pub struct HealResult {
+    23	    pub module_type: String,
+    24	    pub success: bool,
+    25	    pub actions: Vec<String>,
+    26	    pub duration: u64,
+    27	}
+    28	
+    29	// ═══════════════════════════════════════════════════════════════════════════
+    30	// STATE
+    31	// ═══════════════════════════════════════════════════════════════════════════
+    32	
+    33	pub struct AutoHealState {
+    34	    pub broken_modules: Mutex<Vec<BrokenModule>>,
+    35	    pub heal_history: Mutex<Vec<HealResult>>,
+    36	}
+    37	
+    38	impl Default for AutoHealState {
+    39	    fn default() -> Self {
+    40	        Self {
+    41	            broken_modules: Mutex::new(Vec::new()),
+    42	            heal_history: Mutex::new(Vec::new()),
+    43	        }
+    44	    }
+    45	}
+    46	
+    47	// ═══════════════════════════════════════════════════════════════════════════
+    48	// COMMANDS
+    49	// ═══════════════════════════════════════════════════════════════════════════
+    50	
+    51	#[tauri::command]
+    52	pub async fn autoheal_detect_broken_modules(
+    53	    state: State<'_, AutoHealState>,
+    54	) -> Result<Vec<BrokenModule>, String> {
+    55	    let modules = state.broken_modules.lock().map_err(|e| e.to_string())?;
+    56	    Ok(modules.clone())
+    57	}
+    58	
+    59	/// Frontend-compat alias for `autoheal_detect_broken_modules`.
+    60	#[tauri::command]
+    61	pub async fn autoheal_detect_broken(
+    62	    state: State<'_, AutoHealState>,
+    63	) -> Result<Vec<BrokenModule>, String> {
+    64	    autoheal_detect_broken_modules(state).await
+    65	}
+    66	
+    67	fn record_simple_action(
+    68	    state: &State<'_, AutoHealState>,
+    69	    module_type: &str,
+    70	    actions: Vec<String>,
+    71	) -> Result<(), String> {
+    72	    let result = HealResult {
+    73	        module_type: module_type.to_string(),
+    74	        success: true,
+    75	        actions,
+    76	        duration: 0,
+    77	    };
+    78	
+    79	    let mut history = state.heal_history.lock().map_err(|e| e.to_string())?;
+    80	    history.push(result);
+    81	    Ok(())
+    82	}
+    83	
+    84	// ═══════════════════════════════════════════════════════════════════════════
+    85	// FRONTEND COMPAT COMMANDS (secureInvoke)
+    86	// ═══════════════════════════════════════════════════════════════════════════
+    87	
+    88	#[tauri::command]
+    89	pub async fn autoheal_reset_cognitive(state: State<'_, AutoHealState>) -> Result<(), String> {
+    90	    record_simple_action(&state, "cognitive", vec!["reset".to_string()])
+    91	}
+    92	
+    93	#[tauri::command]
+    94	pub async fn autoheal_init_cognitive(state: State<'_, AutoHealState>) -> Result<(), String> {
+    95	    record_simple_action(&state, "cognitive", vec!["init".to_string()])
+    96	}
+    97	
+    98	#[tauri::command]
+    99	pub async fn autoheal_reset_adaptive(state: State<'_, AutoHealState>) -> Result<(), String> {
+   100	    record_simple_action(&state, "adaptive", vec!["reset".to_string()])
+   101	}
+   102	
+   103	#[tauri::command]
+   104	pub async fn autoheal_clear_narrative(state: State<'_, AutoHealState>) -> Result<(), String> {
+   105	    record_simple_action(&state, "narrative", vec!["clear".to_string()])
+   106	}
+   107	
+   108	#[tauri::command]
+   109	pub async fn autoheal_init_narrative(state: State<'_, AutoHealState>) -> Result<(), String> {
+   110	    record_simple_action(&state, "narrative", vec!["init".to_string()])
+   111	}
+   112	
+   113	#[tauri::command]
+   114	pub async fn autoheal_stop_avatar(state: State<'_, AutoHealState>) -> Result<(), String> {
+   115	    record_simple_action(&state, "avatar", vec!["stop".to_string()])
+   116	}
+   117	
+   118	#[tauri::command]
+   119	pub async fn autoheal_reload_avatar(state: State<'_, AutoHealState>) -> Result<(), String> {
+   120	    record_simple_action(&state, "avatar", vec!["reload".to_string()])
+
+--- src-tauri/src/secure_commands.rs (SecureResponse + GeminiKeyStatus + chat_set_openai_key) ---
+     1	// TITANE_INFINITY v∞ — Proprietary License
+     2	// © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+     3	
+     4	// ═══════════════════════════════════════════════════════════════
+     5	//   SECURE COMMANDS — Super-Prompts H, I, J, K
+     6	//   Commandes Tauri avec permissions, validation et chiffrement
+     7	// ═══════════════════════════════════════════════════════════════
+     8	
+     9	use crate::overdrive::chat_orchestrator::ChatOrchestratorState;
+    10	use crate::secure_engine::{purge_env_key, zeroize_string};
+    11	use crate::security::permission_guard::PERMISSION_GUARD;
+    12	use crate::security::permissions::Role;
+    13	use crate::security::sandbox::FileImportSandbox;
+    14	use crate::security::validation::PayloadValidator;
+    15	use serde::{Deserialize, Serialize};
+    16	use tauri::State;
+    17	
+    18	use crate::security::secrets_engine::SecureSecretsEngine;
+    19	use log::{info, warn};
+    20	
+    21	/// Response format uniforme
+    22	#[derive(Debug, Clone, Serialize, Deserialize)]
+    23	pub struct SecureResponse<T> {
+    24	    pub ok: bool,
+    25	    pub data: Option<T>,
+    26	    pub error: Option<String>,
+    27	}
+    28	
+    29	impl<T> SecureResponse<T> {
+    30	    pub fn success(data: T) -> Self {
+    31	        Self {
+    32	            ok: true,
+    33	            data: Some(data),
+    34	            error: None,
+    35	        }
+    36	    }
+    37	
+    38	    pub fn error(message: String) -> Self {
+    39	        Self {
+    40	            ok: false,
+    41	            data: None,
+    42	            error: Some(message),
+    43	        }
+    44	    }
+    45	}
+    46	
+    47	#[derive(Debug, Clone, Serialize, Deserialize)]
+    48	pub struct GeminiKeyStatus {
+    49	    pub configured: bool,
+    50	    pub provider_enabled: bool,
+    51	    pub masked_key: Option<String>,
+    52	    pub env_present: bool,
+    53	    pub env_purged: bool,
+    54	    pub was_updated: bool,
+    55	}
+    56	
+    57	#[derive(Debug, Clone, Serialize, Deserialize)]
+    58	pub struct SecureSecretRequest {
+    59	    pub key: String,
+    60	    pub value: String,
+    61	    #[serde(default)]
+    62	    pub purge_env: bool,
+    63	    #[serde(default)]
+    64	    pub env_variable: Option<String>,
+    65	}
+    66	
+    67	#[derive(Debug, Clone, Serialize, Deserialize)]
+    68	pub struct SecretOperationResult {
+    69	    pub key: String,
+    70	    pub stored: bool,
+    71	    pub env_purged: bool,
+    72	}
+    73	
+    74	fn mask_secret_for_display(secret: &str) -> String {
+    75	    if secret.is_empty() {
+    76	        return String::new();
+    77	    }
+    78	
+    79	    let mut visible: Vec<char> = secret.chars().rev().take(4).collect();
+    80	    visible.reverse();
+    81	
+    82	    let total = secret.chars().count();
+    83	    let masked_len = total.saturating_sub(visible.len());
+    84	
+    85	    let mut output = String::with_capacity(total);
+    86	    if masked_len > 0 {
+    87	        output.push_str(&"•".repeat(masked_len));
+    88	    }
+    89	    for ch in visible {
+    90	        output.push(ch);
+    91	    }
+    92	
+    93	    output
+    94	}
+    95	
+    96	fn build_gemini_status_sync(
+    97	    secrets: &SecureSecretsEngine,
+    98	    provider_enabled: bool,
+    99	    env_present: bool,
+   100	) -> GeminiKeyStatus {
+   101	    let configured = secrets.has_secret("gemini_api_key").unwrap_or(false);
+   102	
+   103	    let masked_key = secrets
+   104	        .get_secret("gemini_api_key")
+   105	        .ok()
+   106	        .flatten()
+   107	        .map(|value| {
+   108	            let zero = zeroize_string(value);
+   109	            mask_secret_for_display(zero.as_str())
+   110	        });
+   111	
+   112	    GeminiKeyStatus {
+   113	        configured,
+   114	        provider_enabled,
+   115	        masked_key,
+   116	        env_present,
+   117	        env_purged: configured && !env_present,
+   118	        was_updated: false,
+   119	    }
+   120	}
+206:pub async fn chat_set_openai_key(
+   120	}
+   121	
+   122	/// Enregistrer la clé Gemini de manière sécurisée depuis le frontend
+   123	#[tauri::command]
+   124	pub async fn chat_set_gemini_key(
+   125	    api_key: String,
+   126	    secrets: State<'_, SecureSecretsEngine>,
+   127	    orchestrator: State<'_, ChatOrchestratorState>,
+   128	) -> Result<SecureResponse<GeminiKeyStatus>, String> {
+   129	    PERMISSION_GUARD
+   130	        .require("secret_write", Role::Root, "chat_set_gemini_key")
+   131	        .await
+   132	        .map_err(|e| format!("Permission denied: {}", e))?;
+   133	
+   134	    let trimmed = api_key.trim();
+   135	    if let Err(err) = PayloadValidator::validate_string(trimmed, "api_key", true) {
+   136	        return Ok(SecureResponse::error(format!("Invalid API key: {}", err)));
+   137	    }
+   138	
+   139	    if trimmed.len() < 16 {
+   140	        return Ok(SecureResponse::error(
+   141	            "Gemini API key semble invalide (longueur insuffisante)".to_string(),
+   142	        ));
+   143	    }
+   144	
+   145	    let zero = zeroize_string(trimmed.to_string());
+   146	    let new_value = zero.as_str().to_string();
+   147	    let previously_configured = secrets.has_secret("gemini_api_key").unwrap_or(false);
+   148	
+   149	    secrets
+   150	        .set_secret("gemini_api_key", new_value.clone())
+   151	        .map_err(|e| format!("Failed to store Gemini key: {}", e))?;
+   152	
+   153	    {
+   154	        let mut guard = orchestrator.gemini_api_key.write().await;
+   155	        *guard = Some(new_value.clone());
+   156	    }
+   157	    orchestrator.set_provider_availability("gemini", true).await;
+   158	
+   159	    drop(zero); // zeroized buffer dropped here
+   160	
+   161	    let env_present = std::env::var("GEMINI_API_KEY").is_ok();
+   162	    let env_purged = match purge_env_key("GEMINI_API_KEY").await {
+   163	        Ok(_) => {
+   164	            info!("[SecureCommands] Purged GEMINI_API_KEY from .env");
+   165	            true
+   166	        }
+   167	        Err(err) => {
+   168	            if env_present {
+   169	                warn!(
+   170	                    "[SecureCommands] Failed to purge GEMINI_API_KEY from .env: {}",
+   171	                    err
+   172	                );
+   173	            }
+   174	            false
+   175	        }
+   176	    };
+   177	
+   178	    let mut status = build_gemini_status_sync(&secrets, true, env_present && !env_purged);
+   179	    status.env_present = env_present && !env_purged;
+   180	    status.env_purged = env_purged;
+   181	    status.was_updated = !previously_configured || env_purged;
+   182	
+   183	    Ok(SecureResponse::success(status))
+   184	}
+   185	
+   186	/// Obtenir l'état actuel de la clé Gemini (masquée)
+   187	#[tauri::command]
+   188	pub async fn get_gemini_key_status(
+   189	    secrets: State<'_, SecureSecretsEngine>,
+   190	    orchestrator: State<'_, ChatOrchestratorState>,
+   191	) -> Result<SecureResponse<GeminiKeyStatus>, String> {
+   192	    PERMISSION_GUARD
+   193	        .require("secret_status", Role::System, "get_gemini_key_status")
+   194	        .await
+   195	        .map_err(|e| format!("Permission denied: {}", e))?;
+   196	
+   197	    let provider_enabled = orchestrator.gemini_api_key.read().await.is_some();
+   198	    let env_present = std::env::var("GEMINI_API_KEY").is_ok();
+   199	    let mut status = build_gemini_status_sync(&secrets, provider_enabled, env_present);
+   200	    status.was_updated = false;
+   201	    Ok(SecureResponse::success(status))
+   202	}
+   203	
+   204	/// Configurer la clé API OpenAI
+   205	#[tauri::command]
+   206	pub async fn chat_set_openai_key(
+   207	    api_key: String,
+   208	    secrets: State<'_, SecureSecretsEngine>,
+   209	    orchestrator: State<'_, ChatOrchestratorState>,
+   210	) -> Result<SecureResponse<GeminiKeyStatus>, String> {
+   211	    PERMISSION_GUARD
+   212	        .require("secret_write", Role::Root, "chat_set_openai_key")
+   213	        .await
+   214	        .map_err(|e| format!("Permission denied: {}", e))?;
+   215	
+   216	    let trimmed = api_key.trim();
+   217	    if let Err(err) = PayloadValidator::validate_string(trimmed, "api_key", true) {
+   218	        return Ok(SecureResponse::error(format!("Invalid API key: {}", err)));
+   219	    }
+   220	
+
+--- src-tauri/src/overdrive/voice_engine.rs (voice_start_listening) ---
+    90	        audio_pipeline: detect_audio_pipeline(),
+    91	        mic_level: 0.0,
+    92	        wake_word_detected: false,
+    93	        processing: false,
+    94	    };
+    95	
+    96	    VoiceEngineState {
+    97	        config: Arc::new(Mutex::new(config)),
+    98	        status: Arc::new(Mutex::new(status)),
+    99	        is_listening: Arc::new(Mutex::new(false)),
+   100	        is_speaking: Arc::new(Mutex::new(false)),
+   101	    }
+   102	}
+   103	
+   104	fn detect_audio_pipeline() -> String {
+   105	    // ✅ SECURED: Use ShellGuard for detection
+   106	    use crate::security::shell_guard::ShellGuard;
+   107	
+   108	    let guard = ShellGuard::new();
+   109	
+   110	    // Détecter PipeWire/PulseAudio via pactl
+   111	    if guard.execute_verified("pactl", &["info"]).is_ok() {
+   112	        return "pipewire".to_string();
+   113	    }
+   114	    "alsa".to_string()
+   115	}
+   116	
+   117	// ─────────────────────────────────────────────────────────────────────────────
+   118	// COMMANDES TAURI — ASR (Automatic Speech Recognition)
+   119	// ─────────────────────────────────────────────────────────────────────────────
+   120	
+   121	#[tauri::command]
+   122	pub fn voice_start_listening(state: State<VoiceEngineState>) -> Result<String, TAPIError> {
+   123	    let mut is_listening = match state.is_listening.lock() {
+   124	        Ok(guard) => guard,
+   125	        Err(poisoned) => {
+   126	            eprintln!("[VOICE] is_listening lock poisoned in voice_start_listening, recovering");
+   127	            poisoned.into_inner()
+   128	        }
+   129	    };
+   130	    if *is_listening {
+   131	        return Err(TAPIError::validation("Déjà en écoute"));
+   132	    }
+   133	
+   134	    *is_listening = true;
+   135	    let mut status = match state.status.lock() {
+   136	        Ok(guard) => guard,
+   137	        Err(poisoned) => {
+   138	            eprintln!("[VOICE] status lock poisoned in voice_start_listening, recovering");
+   139	            poisoned.into_inner()
+   140	        }
+   141	    };
+   142	    status.asr_active = true;
+   143	
+   144	    println!("[VOICE] ASR démarré - En attente du wake word");
+   145	    Ok("Écoute activée".to_string())
+   146	}
+   147	
+   148	#[tauri::command]
+   149	pub fn voice_stop_listening(state: State<VoiceEngineState>) -> Result<String, TAPIError> {
+   150	    let mut is_listening = match state.is_listening.lock() {
+   151	        Ok(guard) => guard,
+   152	        Err(poisoned) => {
+   153	            eprintln!("[VOICE] is_listening lock poisoned in voice_stop_listening, recovering");
+   154	            poisoned.into_inner()
+   155	        }
+   156	    };
+   157	    *is_listening = false;
+   158	
+   159	    let mut status = match state.status.lock() {
+   160	        Ok(guard) => guard,
+   161	        Err(poisoned) => {
+   162	            eprintln!("[VOICE] status lock poisoned in voice_stop_listening, recovering");
+   163	            poisoned.into_inner()
+   164	        }
+   165	    };
+   166	    status.asr_active = false;
+   167	
+   168	    println!("[VOICE] ASR arrêté");
+   169	    Ok("Écoute désactivée".to_string())
+   170	}
+
+--- src-tauri/src/singularity_fusion/performance.rs (PerformanceMetrics + performance_get_metrics) ---
+     1	//! ═══════════════════════════════════════════════════════════════════════════
+     2	//! PERFORMANCE OPTIMIZER - Backend Commands
+     3	//! ═══════════════════════════════════════════════════════════════════════════
+     4	
+     5	use serde::{Deserialize, Serialize};
+     6	use std::sync::Mutex;
+     7	use tauri::State;
+     8	
+     9	// ═══════════════════════════════════════════════════════════════════════════
+    10	// TYPES
+    11	// ═══════════════════════════════════════════════════════════════════════════
+    12	
+    13	#[derive(Debug, Clone, Serialize, Deserialize)]
+    14	pub struct PerformanceMetrics {
+    15	    pub cpu_usage: f32,
+    16	    pub gpu_usage: f32,
+    17	    pub memory_usage: u64,
+    18	    pub memory_available: u64,
+    19	    pub fps: u32,
+    20	    pub frame_time: f32,
+    21	    pub render_time: f32,
+    22	    pub idle_time: f32,
+    23	    pub gc_time: f32,
+    24	    pub network_latency: f32,
+    25	    pub timestamp: u64,
+    26	}
+    27	
+    28	// ═══════════════════════════════════════════════════════════════════════════
+    29	// STATE
+    30	// ═══════════════════════════════════════════════════════════════════════════
+    31	
+    32	pub struct PerformanceState {
+    33	    pub metrics: Mutex<PerformanceMetrics>,
+    34	}
+    35	
+    36	impl Default for PerformanceState {
+    37	    fn default() -> Self {
+    38	        Self {
+    39	            metrics: Mutex::new(PerformanceMetrics {
+    40	                cpu_usage: 0.0,
+    41	                gpu_usage: 0.0,
+    42	                memory_usage: 0,
+    43	                memory_available: 0,
+    44	                fps: 60,
+    45	                frame_time: 16.6,
+    46	                render_time: 10.0,
+    47	                idle_time: 6.6,
+    48	                gc_time: 0.0,
+    49	                network_latency: 0.0,
+    50	                timestamp: 0,
+    51	            }),
+    52	        }
+    53	    }
+    54	}
+    55	
+    56	// ═══════════════════════════════════════════════════════════════════════════
+    57	// COMMANDS
+    58	// ═══════════════════════════════════════════════════════════════════════════
+    59	
+    60	#[tauri::command]
+    61	pub async fn performance_get_metrics(
+    62	    state: State<'_, PerformanceState>,
+    63	) -> Result<PerformanceMetrics, String> {
+    64	    let mut metrics = state.metrics.lock().map_err(|e| e.to_string())?;
+    65	
+    66	    // Simuler métriques système
+    67	    metrics.cpu_usage = 45.0;
+    68	    metrics.gpu_usage = 30.0;
+    69	    metrics.memory_usage = 1024 * 1024 * 512; // 512MB
+    70	    metrics.memory_available = 1024 * 1024 * 1024 * 2; // 2GB
+    71	    metrics.timestamp = current_timestamp();
+    72	
+    73	    Ok(metrics.clone())
+    74	}
+    75	
+    76	#[tauri::command]
+    77	pub async fn performance_throttle_cpu() -> Result<(), String> {
+    78	    println!("[Performance] CPU throttling applied");
+    79	    Ok(())
+    80	}
+    81	
+    82	#[tauri::command]
+    83	pub async fn performance_optimize_gpu() -> Result<(), String> {
+    84	    println!("[Performance] GPU optimization applied");
+    85	    Ok(())
+    86	}
+    87	
+    88	#[tauri::command]
+    89	pub async fn performance_reduce_render_quality() -> Result<(), String> {
+    90	    println!("[Performance] Render quality reduced");
+    91	    Ok(())
+    92	}
+    93	
+    94	#[tauri::command]
+    95	pub async fn performance_compress_memory() -> Result<(), String> {
+    96	    println!("[Performance] Memory compression applied");
+    97	    Ok(())
+    98	}
+    99	
+   100	#[tauri::command]
+   101	pub async fn performance_reset_optimizations() -> Result<(), String> {
+   102	    println!("[Performance] Optimizations reset");
+   103	    Ok(())
+   104	}
+   105	
+   106	fn current_timestamp() -> u64 {
+   107	    crate::core::utils::now_ms()
+   108	}
+
