@@ -51,6 +51,10 @@ Objectif: pointer les surfaces réelles AutoHeal/AutoFix/Auto-Healing (scripts, 
   - `IPC_CONTRACT.md` cite `src/services/healthService.ts` pour `autoheal_detect_broken_modules`, mais aucun fichier `healthService.ts` n’existe dans `src/services/`.
   - Preuve (inclut handlers Tauri + allowlists + mocks + tests): [docs/_evidence/v27/B14_ipc_contract_autoheal_detect_callers_2026-01-13.txt](../../docs/_evidence/v27/B14_ipc_contract_autoheal_detect_callers_2026-01-13.txt#L1-L120)
 
+- Contrat IPC — reality check “matrix frontend files”:
+  - Scan existence/tracking des chemins `src/...` référencés par la matrix “Command → Frontend Matrix”.
+  - Preuve: [docs/_evidence/v27/B15_ipc_contract_matrix_frontend_files_exist_2026-01-13.txt](../../docs/_evidence/v27/B15_ipc_contract_matrix_frontend_files_exist_2026-01-13.txt#L1-L120)
+
 - Implémentation backend (Rust) AutoFix/AutoHeal:
   - Module exports: [src-tauri/src/singularity_fusion/mod.rs](../../src-tauri/src/singularity_fusion/mod.rs#L1-L33)
   - AutoFix impl: [src-tauri/src/singularity_fusion/auto_fix.rs](../../src-tauri/src/singularity_fusion/auto_fix.rs#L53-L216)

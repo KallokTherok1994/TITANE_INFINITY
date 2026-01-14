@@ -78,3 +78,6 @@ Chaque point ci-dessous doit être vérifiable via (a) un fichier, ou (b) une pr
 
 - Reality check “caller” (doc ↔ repo): `IPC_CONTRACT.md` cite `src/services/healthService.ts` pour `autoheal_detect_broken_modules`, mais le fichier n’existe pas dans `src/services/` (preuves + fallback via tests/mocks).
   - Preuve: [docs/_evidence/v27/B14_ipc_contract_autoheal_detect_callers_2026-01-13.txt](docs/_evidence/v27/B14_ipc_contract_autoheal_detect_callers_2026-01-13.txt#L1-L120)
+
+- Reality check “matrix” (doc ↔ repo): la section “Command → Frontend Matrix” référence majoritairement des chemins `src/...` absents (scan existence + git tracking).
+  - Preuve: [docs/_evidence/v27/B15_ipc_contract_matrix_frontend_files_exist_2026-01-13.txt](docs/_evidence/v27/B15_ipc_contract_matrix_frontend_files_exist_2026-01-13.txt#L1-L120)
