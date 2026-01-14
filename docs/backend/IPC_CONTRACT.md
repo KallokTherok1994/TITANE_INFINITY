@@ -275,20 +275,20 @@ export class TitaneError extends Error {
 |---------|----------------|---------|----------|--------|
 | `conversation_generate` | `src/services/tauri/chatEngine.commands.ts`<br>`src/services/ai/providers/tauriChat.ts`<br>`src/tests/e2e/titane_e2e.test.ts` | `{conversationId: string, message: string, provider?: string}` | `{id: string, role: string, content: string, timestamp: string}` | `UNAUTHORIZED` (no API key)<br>`RATE_LIMITED`<br>`EXTERNAL_API_ERROR`<br>`TIMEOUT` |
 | `chat_get_providers_status` | `src/components/ChatDiagnostic.tsx`<br>`src/tests/regression/titane_regression.test.ts`<br>`src/tests/tauri-invoke-fix-validator.ts` | `{}` | `{openai: boolean, claude: boolean, gemini: boolean, copilot: boolean, ollama: boolean}` | `INTERNAL_ERROR` |
-| `avatar_advance_lip_sync` | `NO_CALLERS_FOUND` | `{phoneme: string, timestamp: number}` | `void` | `NOT_FOUND` (avatar not initialized) |
-| `voice_start_listening` | `NO_CALLERS_FOUND` | `{continuous?: boolean}` | `{sessionId: string}` | `PERMISSION_DENIED` (mic access)<br>`DEVICE_NOT_FOUND` |
+| `avatar_advance_lip_sync` | `NO_CALLERS_FOUND` | `{}` | `void` | `INTERNAL_ERROR` |
+| `voice_start_listening` | `NO_CALLERS_FOUND` | `{}` | `string` | `VALIDATION_ERROR` (already listening)<br>`INTERNAL_ERROR` |
 | `singularity_get_full_state` | `src/services/autoAuditEngine.ts`<br>`src/services/singularityBridge.ts`<br>`src/components/ChatDiagnostic.tsx` | `{}` | `{physical: {...}, cognitive: {...}, symbolic: {...}, adaptive: {...}, meta: {...}}` | `INTERNAL_ERROR` |
 | `get_memory_state` | `src/services/tauri/backend-v17.2.commands.ts`<br>`src/services/singularityConnections.ts`<br>`src/services/autoAuditEngine.ts` | `{}` | `{stm: [...], mtm: [...], ltm: [...], stats: {...}}` | `DATABASE_ERROR` |
-| `add_timeline_event` | `src/engines/selfHealing/selfHealingEngine.ts`<br>`src/services/tauri/backend-v17.2.commands.ts`<br>`src/tests/e2e/titane_e2e.test.ts` | `{type: string, content: string, metadata?: object}` | `{id: string}` | `INVALID_INPUT`<br>`DATABASE_ERROR` |
+| `add_timeline_event` | `src/engines/selfHealing/selfHealingEngine.ts`<br>`src/services/tauri/backend-v17.2.commands.ts`<br>`src/tests/e2e/titane_e2e.test.ts` | `{event: TimelineEvent}` | `void` | `INVALID_INPUT`<br>`DATABASE_ERROR` |
 
 ### Medium-Traffic Commands (10-100 calls/session)
 
 | Command | Frontend Files | Payload | Response | Errors |
 |---------|----------------|---------|----------|--------|
-| `chat_set_openai_key` | `src/features/governance-center/services/governanceService.ts`<br>`src/utils/secureSecrets.ts` | `{key: string}` | `void` | `INVALID_INPUT` (bad key format) |
+| `chat_set_openai_key` | `src/features/governance-center/services/governanceService.ts`<br>`src/utils/secureSecrets.ts` | `{api_key: string}` | `SecureResponse<GeminiKeyStatus>` | `PERMISSION_DENIED`<br>`INTERNAL_ERROR` |
 | `avatar_set_appearance` | `src/modules/avatar/appearance/appearanceEngine.ts` | `{style: object}` | `void` | `SERIALIZATION_ERROR` |
-| `autoheal_detect_broken_modules` | `src/__tests__/singularity-fusion-integration.test.ts`<br>`src/__tests__/e2e-automated-validation.test.tsx`<br>`src/__tests__/singularity-fusion-mocked.test.ts` | `{}` | `{broken: string[]}` | `INTERNAL_ERROR` |
-| `performance_get_metrics` | `src/services/systemCenter/SystemAPI.ts`<br>`src/__tests__/e2e-automated-validation.test.tsx`<br>`src/__tests__/singularity-fusion-integration.test.ts` | `{}` | `{cpu: number, memory: number, fps: number}` | - |
+| `autoheal_detect_broken_modules` | `src/__tests__/singularity-fusion-integration.test.ts`<br>`src/__tests__/e2e-automated-validation.test.tsx`<br>`src/__tests__/singularity-fusion-mocked.test.ts` | `{}` | `BrokenModule[]` | `INTERNAL_ERROR` |
+| `performance_get_metrics` | `src/services/systemCenter/SystemAPI.ts`<br>`src/__tests__/e2e-automated-validation.test.tsx`<br>`src/__tests__/singularity-fusion-integration.test.ts` | `{}` | `{cpu_usage: number, gpu_usage: number, memory_usage: number, memory_available: number, fps: number, frame_time: number, render_time: number, idle_time: number, gc_time: number, network_latency: number, timestamp: number}` | `INTERNAL_ERROR` |
 
 ### Low-Traffic Commands (<10 calls/session)
 
@@ -374,11 +374,7 @@ interface ProvidersStatusResponse {
 
 **Request:**
 ```typescript
-interface LipSyncRequest {
-  phoneme: string;      // Phoneme code (e.g., "AH", "EE", "OO")
-  timestamp: number;    // Milliseconds since speech start
-  intensity?: number;   // 0.0-1.0, default 1.0
-}
+{} // No parameters
 ```
 
 **Response:**
@@ -387,8 +383,7 @@ void // No return value
 ```
 
 **Errors:**
-- `NOT_FOUND`: Avatar not initialized (call `avatar_prepare_speech` first)
-- `INVALID_INPUT`: Invalid phoneme code
+- `INTERNAL_ERROR`: Backend returned `Err(String)`
 
 ### 4. singularity_get_full_state
 
@@ -434,29 +429,23 @@ interface SingularityState {
 
 **Request:**
 ```typescript
-interface TimelineEventRequest {
-  type: "chat" | "decision" | "project" | "ritual" | "emotion";
-  content: string;                // Event description (1-10,000 chars)
-  metadata?: {
-    tags?: string[];
-    importance?: number;          // 0-10
-    linkedEvents?: string[];      // Event IDs
-    [key: string]: unknown;       // Additional metadata
-  };
+interface TimelineEvent {
+  id: string;
+  timestamp: number;              // i64 côté Rust
+  event_type: "SystemStart" | "ModuleInit" | "HealthChange" | "Repair" | "Snapshot" | "Alert";
+  description: string;
+  data: Record<string, unknown>;  // HashMap<String, serde_json::Value> côté Rust
 }
 ```
 
 **Response:**
 ```typescript
-interface TimelineEventResponse {
-  id: string;                     // UUID
-  timestamp: string;              // ISO 8601 (server-assigned)
-}
+void // No return value
 ```
 
 **Errors:**
-- `INVALID_INPUT`: Invalid `type` or empty `content`
-- `DATABASE_ERROR`: Failed to insert into SQLite
+- `INVALID_INPUT`: Champ manquant / invalide dans `event`
+- `INTERNAL_ERROR`: Erreur backend (MemoryCore / AppResult)
 
 ### 6. autoheal_detect_broken_modules
 
@@ -467,15 +456,14 @@ interface TimelineEventResponse {
 
 **Response:**
 ```typescript
-interface BrokenModulesResponse {
-  broken: Array<{
-    module: string;               // Module name (e.g., "cognitive", "avatar", "tts")
-    reason: string;               // Why it's broken
-    severity: "low" | "medium" | "high" | "critical";
-    healable: boolean;            // Can AutoHeal fix it?
-  }>;
-  timestamp: string;
+interface BrokenModule {
+  module_type: string;
+  severity: string;
+  error: string;
+  detected_at: number; // u64 côté Rust
 }
+
+type AutoHealDetectBrokenModulesResponse = BrokenModule[]
 ```
 
 ### 7. chat_set_openai_key
@@ -483,42 +471,49 @@ interface BrokenModulesResponse {
 **Request:**
 ```typescript
 interface SetApiKeyRequest {
-  key: string;                    // OpenAI API key (sk-...)
+  api_key: string;                // OpenAI API key
 }
 ```
 
 **Response:**
 ```typescript
-void // No return value (success = no error thrown)
+interface SecureResponse<T> {
+  ok: boolean;
+  data: T | null;
+  error: string | null;
+}
+
+interface GeminiKeyStatus {
+  configured: boolean;
+  provider_enabled: boolean;
+  masked_key: string | null;
+  env_present: boolean;
+  env_purged: boolean;
+  was_updated: boolean;
+}
+
+type ChatSetOpenAIKeyResponse = SecureResponse<GeminiKeyStatus>
 ```
 
 **Errors:**
-- `INVALID_INPUT`: Key format invalid (not starting with `sk-`, wrong length)
-- `EXTERNAL_API_ERROR`: Key validation failed (test call to OpenAI API)
+- Peut retourner `ok=false` avec `error` (validation côté backend)
+- Peut échouer en `Err(String)` (permission / stockage)
 
 ### 8. voice_start_listening
 
 **Request:**
 ```typescript
-interface VoiceListenRequest {
-  continuous?: boolean;           // true = keep listening, false = stop after silence
-  language?: string;              // "en-US", "fr-FR", etc.
-  silenceThreshold?: number;      // Milliseconds of silence before stopping (default 2000)
-}
+{} // No parameters
 ```
 
 **Response:**
 ```typescript
-interface VoiceListenResponse {
-  sessionId: string;              // UUID for this recording session
-  status: "listening";
-}
+string // ex: "Écoute activée"
 ```
 
 **Errors:**
-- `PERMISSION_DENIED`: Microphone permission not granted
-- `DEVICE_NOT_FOUND`: No microphone detected
-- `INTERNAL_ERROR`: Failed to initialize recording engine
+- `VALIDATION_ERROR`: Déjà en écoute
+- `INTERNAL_ERROR`: Erreur backend (TAPIError)
 
 ### 9. performance_get_metrics
 
@@ -530,26 +525,17 @@ interface VoiceListenResponse {
 **Response:**
 ```typescript
 interface PerformanceMetrics {
-  cpu: {
-    usage: number;                // 0-100 (percentage)
-    cores: number;
-    threads: number;
-  };
-  memory: {
-    used: number;                 // Bytes
-    total: number;                // Bytes
-    percentage: number;           // 0-100
-  };
-  gpu: {
-    usage: number;                // 0-100 (if available, else 0)
-    memory: number;               // Bytes (if available)
-  };
-  fps: number;                    // Current FPS (if avatar active)
-  latency: {
-    ipc: number;                  // Milliseconds (average IPC round-trip)
-    ai: number;                   // Milliseconds (last AI call)
-  };
-  timestamp: string;
+  cpu_usage: number;
+  gpu_usage: number;
+  memory_usage: number;
+  memory_available: number;
+  fps: number;
+  frame_time: number;
+  render_time: number;
+  idle_time: number;
+  gc_time: number;
+  network_latency: number;
+  timestamp: number;
 }
 ```
 

@@ -176,12 +176,13 @@ Le repo contient des systèmes AutoFix/AutoHeal documentés et intégrés côté
   - Preuve (inventaire + extraits): [docs/_evidence/v27/B12b_auto_systems_backend_map_clean_2026-01-13.txt](docs/_evidence/v27/B12b_auto_systems_backend_map_clean_2026-01-13.txt#L1-L120)
 
 - Source (contrat IPC doc ↔ tests):
-  - Matrix: [docs/backend/IPC_CONTRACT.md](docs/backend/IPC_CONTRACT.md#L270-L300)
-  - Détails: [docs/backend/IPC_CONTRACT.md](docs/backend/IPC_CONTRACT.md#L461-L489)
+  - Matrix: [docs/backend/IPC_CONTRACT.md](docs/backend/IPC_CONTRACT.md#L270-L306)
+  - Détails (payload specs): [docs/backend/IPC_CONTRACT.md](docs/backend/IPC_CONTRACT.md#L308-L542)
   - Backend map: [docs/backend/BACKEND_MAP.md](docs/backend/BACKEND_MAP.md#L295-L306)
   - SINGULARITY vΩ: [docs/SINGULARITY_FUSION_vΩ.md](docs/SINGULARITY_FUSION_vΩ.md#L641-L657)
   - Tests invoke(): [src/__tests__/singularity-fusion-integration.test.ts](src/__tests__/singularity-fusion-integration.test.ts#L225-L236)
   - Preuve consolidée: [docs/_evidence/v27/B13b_ipc_contract_auto_commands_clean_2026-01-13.txt](docs/_evidence/v27/B13b_ipc_contract_auto_commands_clean_2026-01-13.txt#L1-L160)
+  - Preuve (payload specs ↔ signatures/types Rust): [docs/_evidence/v27/B18_ipc_contract_payload_specs_reality_check_2026-01-14.txt](docs/_evidence/v27/B18_ipc_contract_payload_specs_reality_check_2026-01-14.txt#L1-L260)
 
 - Note “doc ↔ repo” (caller): `IPC_CONTRACT.md` référence `src/services/healthService.ts`, mais le fichier est absent; la commande reste exposée + testée via allowlists/mocks/tests.
   - Preuve: [docs/_evidence/v27/B14_ipc_contract_autoheal_detect_callers_2026-01-13.txt](docs/_evidence/v27/B14_ipc_contract_autoheal_detect_callers_2026-01-13.txt#L1-L120)
@@ -195,6 +196,9 @@ Le repo contient des systèmes AutoFix/AutoHeal documentés et intégrés côté
 - Correction (matrix IPC) — remplacement des chemins fantômes par des callers réels (ou `NO_CALLERS_FOUND`) basé sur scan repo.
   - Preuve (scan): [docs/_evidence/v27/B17_ipc_contract_matrix_frontend_files_callers_2026-01-14.txt](docs/_evidence/v27/B17_ipc_contract_matrix_frontend_files_callers_2026-01-14.txt#L60-L140)
   - Preuve (strict): [docs/_evidence/v27/B17c_ipc_contract_matrix_frontend_callers_strict_rg_2026-01-14.txt](docs/_evidence/v27/B17c_ipc_contract_matrix_frontend_callers_strict_rg_2026-01-14.txt#L1-L120)
+
+- Correction (payload specs IPC) — alignement des payloads/réponses sur les signatures/types Rust.
+  - Preuve: [docs/_evidence/v27/B18_ipc_contract_payload_specs_reality_check_2026-01-14.txt](docs/_evidence/v27/B18_ipc_contract_payload_specs_reality_check_2026-01-14.txt#L1-L260)
 
 Voir l’index consolidé: `docs/systems/AUTO_SYSTEMS_INDEX_v27.md`.
 
