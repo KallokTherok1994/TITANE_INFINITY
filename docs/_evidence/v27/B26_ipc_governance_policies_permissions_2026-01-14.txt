@@ -1,0 +1,54 @@
+B26 — IPC ALIGNMENT: Governance Center (Policies + Permission Matrix)
+Date: 2026-01-14
+
+Goal
+- Align Rust Tauri commands ↔ TS Governance Center callers ↔ IPC_CONTRACT documentation.
+- Remove mismatches:
+  - TS expects SecureResponse<T> for policies + permission matrix
+  - TS sends camelCase payload keys (policyId)
+  - TS policy shape uses { type, severity, config, createdAt, updatedAt }
+
+What changed (backend)
+1) Policies IPC now uses SecureResponse<T>
+- File: src-tauri/src/commands/governance_commands.rs
+  - get_ia_policies(): Result<SecureResponse<Vec<IAPolicy>>, String>
+  - save_ia_policies(policies): Result<SecureResponse<()>, String>
+  - toggle_ia_policy(policyId, enabled): Result<SecureResponse<IAPolicy>, String>
+  - create_ia_policy(policy): Result<SecureResponse<IAPolicy>, String>
+  - delete_ia_policy(policyId): Result<SecureResponse<()>, String>
+
+2) Policy shape matches TS Governance Center types
+- File: src-tauri/src/commands/governance_commands.rs
+  - IAPolicy now serializes as camelCase:
+    - id, name, description, type, severity, enabled, config, createdAt, updatedAt
+  - create_ia_policy now accepts CreateIAPolicyRequest (Omit<IAPolicy, 'id'|'createdAt'|'updatedAt'>)
+  - IDs generated server-side via uuid::Uuid
+  - timestamps stored as epoch milliseconds
+
+3) Permission matrix IPC now uses SecureResponse<T> and TS-compatible shape
+- File: src-tauri/src/commands/governance_commands.rs
+  - get_permission_matrix(): Result<SecureResponse<PermissionMatrix>, String>
+  - PermissionMatrix = HashMap<String, Vec<Role>> (action -> roles)
+  - Source of truth: src-tauri/src/security/permissions.rs (build_permission_matrix)
+
+What changed (docs)
+- File: docs/backend/IPC_CONTRACT.md
+  - Added Command → Frontend Matrix rows for:
+    - get_ia_policies, save_ia_policies, toggle_ia_policy, create_ia_policy, delete_ia_policy
+    - get_permission_matrix
+  - Added Payload Specifications sections:
+    - 7x get_ia_policies
+    - 7y save_ia_policies
+    - 7z toggle_ia_policy
+    - 7aa create_ia_policy
+    - 7ab delete_ia_policy
+    - 7ac get_permission_matrix
+
+Frontend expectations confirmed
+- File: src/features/governance-center/services/governanceService.ts
+  - getPolicies/savePolicies/togglePolicy/createPolicy/deletePolicy use normalizeResponse<...>() => SecureResponse expected
+  - getPermissionMatrix uses normalizeResponse<PermissionMatrix>() => SecureResponse expected
+
+Notes
+- ALLOWED_COMMANDS already included the above commands in src/lib/security.ts (from earlier work).
+- This change is strictly about contract alignment; no new UI features.

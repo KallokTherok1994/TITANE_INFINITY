@@ -945,6 +945,10 @@ fn main() {
             secure_commands::get_anthropic_key_status,
             secure_commands::get_permission_audit, // ✅ v26.2.3: Permission audit log
             secure_commands::check_system_integrity, // ✅ v21.5: System integrity check
+            // ✅ v27 (B25): Secrets status + delete (Governance Center)
+            secure_commands::get_secrets_status,
+            secure_commands::has_secret,
+            secure_commands::delete_secret,
             // Runtime Configuration Bridge v∞ (Frontend config without secrets)
             runtime_config::get_runtime_config,
             // ✅ v21 Phase 1: Provider-specific AI generation
