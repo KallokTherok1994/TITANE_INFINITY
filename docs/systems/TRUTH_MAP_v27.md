@@ -81,3 +81,6 @@ Chaque point ci-dessous doit être vérifiable via (a) un fichier, ou (b) une pr
 
 - Reality check “matrix” (doc ↔ repo): la section “Command → Frontend Matrix” référence majoritairement des chemins `src/...` absents (scan existence + git tracking).
   - Preuve: [docs/_evidence/v27/B15_ipc_contract_matrix_frontend_files_exist_2026-01-13.txt](docs/_evidence/v27/B15_ipc_contract_matrix_frontend_files_exist_2026-01-13.txt#L1-L120)
+
+- Reality check “matrix candidates” (doc ↔ repo): recherche de candidats repo pour les chemins manquants (match basename + match stem) afin de préparer une correction doc.
+  - Preuve: [docs/_evidence/v27/B16_ipc_contract_matrix_missing_frontend_file_candidates_2026-01-14.txt](docs/_evidence/v27/B16_ipc_contract_matrix_missing_frontend_file_candidates_2026-01-14.txt#L1-L120)
