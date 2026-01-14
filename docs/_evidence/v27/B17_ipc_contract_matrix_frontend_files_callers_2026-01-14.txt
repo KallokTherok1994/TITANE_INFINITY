@@ -1,0 +1,269 @@
+[ts]  2026-01-14T08:51:58-05:00
+[cwd] /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+=== IPC_CONTRACT.md matrix excerpt (current) ===
+     1	
+     2	```json
+     3	{
+     4	  "type": "INVALID_INPUT",
+     5	  "message": "conversationId is required for conversation_generate"
+     6	}
+     7	```
+     8	
+     9	---
+    10	
+    11	## Command → Frontend Matrix
+    12	
+    13	### High-Traffic Commands (>100 calls/session)
+    14	
+    15	| Command | Frontend Files | Payload | Response | Errors |
+    16	|---------|----------------|---------|----------|--------|
+    17	| `conversation_generate` | `src/hooks/useConversation.ts`<br>`src/services/conversationService.ts` | `{conversationId: string, message: string, provider?: string}` | `{id: string, role: string, content: string, timestamp: string}` | `UNAUTHORIZED` (no API key)<br>`RATE_LIMITED`<br>`EXTERNAL_API_ERROR`<br>`TIMEOUT` |
+    18	| `chat_get_providers_status` | `src/components/SettingsPanel.tsx`<br>`src/services/aiService.ts` | `{}` | `{openai: boolean, claude: boolean, gemini: boolean, copilot: boolean, ollama: boolean}` | `INTERNAL_ERROR` |
+    19	| `avatar_advance_lip_sync` | `src/components/Avatar3D.tsx`<br>`src/hooks/useAvatar.ts` | `{phoneme: string, timestamp: number}` | `void` | `NOT_FOUND` (avatar not initialized) |
+    20	| `voice_start_listening` | `src/components/VoiceInput.tsx`<br>`src/hooks/useVoice.ts` | `{continuous?: boolean}` | `{sessionId: string}` | `PERMISSION_DENIED` (mic access)<br>`DEVICE_NOT_FOUND` |
+    21	| `singularity_get_full_state` | `src/services/singularityService.ts` | `{}` | `{physical: {...}, cognitive: {...}, symbolic: {...}, adaptive: {...}, meta: {...}}` | `INTERNAL_ERROR` |
+    22	| `get_memory_state` | `src/services/memoryService.ts` | `{}` | `{stm: [...], mtm: [...], ltm: [...], stats: {...}}` | `DATABASE_ERROR` |
+    23	| `add_timeline_event` | `src/services/timelineService.ts` | `{type: string, content: string, metadata?: object}` | `{id: string}` | `INVALID_INPUT`<br>`DATABASE_ERROR` |
+    24	
+    25	### Medium-Traffic Commands (10-100 calls/session)
+    26	
+    27	| Command | Frontend Files | Payload | Response | Errors |
+    28	|---------|----------------|---------|----------|--------|
+    29	| `chat_set_openai_key` | `src/components/APIKeyDialog.tsx` | `{key: string}` | `void` | `INVALID_INPUT` (bad key format) |
+    30	| `avatar_set_appearance` | `src/components/AvatarCustomizer.tsx` | `{style: object}` | `void` | `SERIALIZATION_ERROR` |
+    31	| `autoheal_detect_broken_modules` | `src/services/healthService.ts` | `{}` | `{broken: string[]}` | `INTERNAL_ERROR` |
+    32	| `performance_get_metrics` | `src/components/Dashboard.tsx` | `{}` | `{cpu: number, memory: number, fps: number}` | - |
+    33	
+    34	### Low-Traffic Commands (<10 calls/session)
+    35	
+    36	| Command | Frontend Files | Payload | Response | Errors |
+    37	|---------|----------------|---------|----------|--------|
+    38	| `onboarding_complete` | `src/pages/Onboarding.tsx` | `{}` | `void` | - |
+    39	| `export_security_log` | `src/pages/Governance.tsx` | `{format: "json" \| "csv"}` | `{path: string}` | `IO_ERROR` |
+    40	| `sc_run_full_diagnostics` | `src/pages/SystemCenter.tsx` | `{}` | `{results: [...]}` | `TIMEOUT` |
+    41	
+    42	### Orphaned Commands (No Frontend Callers - TO VERIFY)
+    43	- `memory_compactor_*` commands (deprecated)
+    44	- Some `cycle_engine_*` commands (disabled)
+    45	- Some legacy `singularity_*` commands (replaced by `singularity_state`)
+    46	
+    47	---
+    48	
+    49	## Payload Specifications
+    50	
+    51	### 1. conversation_generate (OMEGA v2)
+    52	
+    53	**Command:** `conversation_generate`
+    54	
+    55	**Request:**
+    56	```typescript
+    57	interface ConversationGenerateRequest {
+    58	  conversationId: string;         // MANDATORY (BREAKING CHANGE from v1)
+    59	  message: string;                // User message (1-10,000 chars)
+    60	  provider?: "openai" | "claude" | "gemini" | "copilot" | "ollama"; // Optional, auto-routed if omitted
+    61	  temperature?: number;           // 0.0-2.0, default 0.7
+
+=== Repo callers scan (git grep) ===
+
+--- command: conversation_generate ---
+src/tests/e2e/titane_e2e.test.ts:136:      const response = await invoke('conversation_generate', {
+src/tests/e2e/titane_e2e.test.ts:251:      const analysis = await invoke('conversation_generate', {
+src/tests/e2e/titane_e2e.test.ts:352:      const synthesis = await invoke('conversation_generate', {
+src/__tests__/e2e-automated-validation.test.tsx:1742:      case 'conversation_generate': {
+src/__tests__/omega/conversation-manager.test.ts:31:      if (cmd === 'conversation_generate') {
+src/core/commands/TAURI_COMMANDS.ts:122:  /** @deprecated Disabled: use conversation_generate */
+src/lib/security.ts:1022:  'conversation_generate',
+src/services/ai/__tests__/ConversationManager.test.ts:28:    if (cmd === 'conversation_generate') {
+src/services/ai/providers/tauriChat.ts:169:        safeInvokeTauri<ChatResponse>('conversation_generate', {
+src/services/api/chat.ts:298:        'conversation_generate', // 🎯 NOUVELLE commande Tauri OMEGA
+src/services/api/chat.ts:408:   * Réimplémenté avec OMEGA conversation_generate pour compatibilité useChat
+src/services/api/chat.ts:425:    // Utiliser l'API OMEGA conversation_generate via sendMessage
+src/services/tauri/chatEngine.commands.ts:261:  return invokeCommand<OmegaResponse>('conversation_generate', {
+src/services/tauriBridge.ts:255:    'conversation_generate',
+src/services/tauriBridge.ts:267:  // conversation_generate retourne directement le contenu généré
+src/services/tauriClient.ts:301:      'Legacy chat_send_message is disabled. Use conversation_generate.',
+src/services/tauriCommands.ts:366:      'chat_send_message is disabled; use conversation_generate via ConversationManager'
+src/test/setup.ts:649:    case 'conversation_generate': {
+src/tests/e2e/titane_e2e.test.ts:136:      const response = await invoke('conversation_generate', {
+src/tests/e2e/titane_e2e.test.ts:251:      const analysis = await invoke('conversation_generate', {
+src/tests/e2e/titane_e2e.test.ts:352:      const synthesis = await invoke('conversation_generate', {
+
+--- command: chat_get_providers_status ---
+src/tests/regression/titane_regression.test.ts:80:          await invoke('chat_get_providers_status');
+src/tests/regression/titane_regression.test.ts:383:      const status = await invoke('chat_get_providers_status');
+src/__tests__/omega-provider-tests.test.ts:138:        CHAT_GET_PROVIDERS_STATUS: 'chat_get_providers_status',
+src/components/ChatDiagnostic.tsx:194:    run: () => safeInvoke<Record<string, unknown>>('chat_get_providers_status'),
+src/core/commands/TAURI_COMMANDS.ts:129:  GET_PROVIDERS_STATUS: 'chat_get_providers_status',
+src/core/commands/TAURI_COMMANDS.ts:131:  CHAT_GET_PROVIDERS_STATUS: 'chat_get_providers_status',
+src/lib/security.ts:280:  'chat_get_providers_status',
+src/services/tauriClient.ts:486:        'chat_get_providers_status',
+src/test/setup.ts:680:    case 'chat_get_providers_status':
+src/tests/regression/titane_regression.test.ts:80:          await invoke('chat_get_providers_status');
+src/tests/regression/titane_regression.test.ts:383:      const status = await invoke('chat_get_providers_status');
+src/tests/tauri-invoke-fix-validator.ts:18:    const providersResult = await safeInvokeTauri('chat_get_providers_status');
+src/utils/tauriCommandMapper.ts:50:  get_gemini_key_status: 'chat_get_providers_status',
+src/utils/tauriProtector.ts:444:      safeCommand.includes('chat_get_providers_status') ||
+
+--- command: avatar_advance_lip_sync ---
+src/core/commands/TAURI_COMMANDS.ts:186:  AVATAR_ADVANCE_LIP_SYNC: 'avatar_advance_lip_sync',
+src/lib/security.ts:115:  'avatar_advance_lip_sync',
+src/lib/security.ts:537:  'avatar_advance_lip_sync',
+
+--- command: voice_start_listening ---
+src/lib/security.ts:481:  'voice_start_listening',
+
+--- command: singularity_get_full_state ---
+src/tests/e2e/titane_e2e.test.ts:127:      const state = await invoke('singularity_get_full_state');
+src/tests/e2e/titane_e2e.test.ts:574:      const state = await invoke('singularity_get_full_state');
+src/tests/regression/titane_regression.test.ts:72:          await invoke('singularity_get_full_state');
+src/tests/regression/titane_regression.test.ts:216:      const state = await invoke('singularity_get_full_state');
+src/tests/regression/titane_regression.test.ts:420:      const state = await invoke('singularity_get_full_state');
+src/components/ChatDiagnostic.tsx:312:    run: () => safeInvoke<SingularityState>('singularity_get_full_state'),
+src/core/STATE_ARCHITECTURE.ts:126: * - `singularity_get_full_state` : Récupère l'état complet
+src/core/commands/TAURI_COMMANDS.ts:54:  SINGULARITY_GET_FULL_STATE: 'singularity_get_full_state',
+src/features/system-center/hooks/useDebuggerLiveOS.ts:472:      }>('singularity_get_full_state');
+src/hooks/useSingularitySync.ts:99:        'singularity_get_full_state'
+src/lib/security.ts:329:  'singularity_get_full_state',
+src/services/autoAuditEngine.ts:249:      'singularity_get_full_state',
+src/services/autoAuditEngine.ts:399:      const state = await secureInvoke<SingularityStateXP>('singularity_get_full_state');
+src/services/singularityBridge.ts:287:    const state = await safeInvoke<SingularityState>('singularity_get_full_state');
+src/services/tauriAutoRepair.ts:111:      'singularity_get_full_state',
+src/services/tauriAutoRepair.ts:170:    if (available.singularity.includes('singularity_get_full_state')) {
+src/services/tauriAutoRepair.ts:173:        "Les commandes Singularity individuelles (get_physical, get_cognitive, etc.) n'existent pas. Utiliser singularity_get_full_state et extraire les sous-états.";
+src/services/tauriAutoRepair.ts:177:      details = 'Utiliser get_singularity_state au lieu de singularity_get_full_state';
+src/services/tauriAutoRepair.ts:246:        commands_mapped[cmd] = 'singularity_get_full_state';
+src/services/tauriAutoRepair.ts:285:      const rawState = await mappedInvoke<any>('singularity_get_full_state');
+src/services/tauriClient.ts:623:        'singularity_get_full_state',
+src/test/setup.ts:624:    case 'singularity_get_full_state': {
+src/tests/e2e/titane_e2e.test.ts:127:      const state = await invoke('singularity_get_full_state');
+src/tests/e2e/titane_e2e.test.ts:574:      const state = await invoke('singularity_get_full_state');
+src/tests/regression/titane_regression.test.ts:72:          await invoke('singularity_get_full_state');
+src/tests/regression/titane_regression.test.ts:110:      'singularity_get_full_state',
+src/tests/regression/titane_regression.test.ts:216:      const state = await invoke('singularity_get_full_state');
+src/tests/regression/titane_regression.test.ts:234:        cause: `Échec singularity_get_full_state: ${error}`,
+src/tests/regression/titane_regression.test.ts:236:        solution_suggeree: 'Restaurer commande singularity_get_full_state',
+src/tests/regression/titane_regression.test.ts:420:      const state = await invoke('singularity_get_full_state');
+src/utils/tauriCommandMapper.ts:24:  singularity_get_physical: 'singularity_get_full_state',
+src/utils/tauriCommandMapper.ts:25:  singularity_get_cognitive: 'singularity_get_full_state',
+src/utils/tauriCommandMapper.ts:26:  singularity_get_symbolic: 'singularity_get_full_state',
+src/utils/tauriCommandMapper.ts:27:  singularity_get_adaptive: 'singularity_get_full_state',
+src/utils/tauriCommandMapper.ts:28:  singularity_get_meta: 'singularity_get_full_state',
+src/utils/tauriCommandMapper.ts:56: * depuis singularity_get_full_state
+src/utils/tauriCommandMapper.ts:198:    'singularity_get_full_state',
+src/utils/tauriProtector.ts:411:    if (safeCommand.includes('singularity_get_full_state')) {
+
+--- command: get_memory_state ---
+src/core/commands/TAURI_COMMANDS.ts:30:  MEMORY_GET_STATE: 'get_memory_state',
+src/lib/security.ts:167:  'get_memory_state',
+src/services/autoAuditEngine.ts:250:      'get_memory_state',
+src/services/autoAuditEngine.ts:284:      const state = await secureInvoke<MemoryState>('get_memory_state');
+src/services/singularityConnections.ts:244:    // Changed: memory_get_state → get_memory_state (to match Rust)
+src/services/singularityConnections.ts:245:    const memory = await this.safeInvoke<MemoryState>('get_memory_state');
+src/services/tauri/backend-v17.2.commands.ts:76:    return safeInvoke<MemoryState>('get_memory_state');
+src/services/tauriAutoRepair.ts:105:      'get_memory_state',
+src/services/tauriAutoRepair.ts:194:    if (!available.memory.includes('get_memory_state')) {
+src/services/tauriAutoRepair.ts:196:        details += ' | Memory: Utiliser memory_get_state au lieu de get_memory_state.';
+src/services/tauriAutoRepair.ts:251:      } else if (cmd === 'get_memory_state') {
+src/utils/tauriCommandMapper.ts:44:  get_memory_state: ['memory_get_state', 'memory_get_stats'],
+src/utils/tauriCommandMapper.ts:82:  get_memory_state: results => {
+src/utils/tauriCommandMapper.ts:210:    'get_memory_state',
+
+--- command: add_timeline_event ---
+src/tests/e2e/titane_e2e.test.ts:177:      const event = await invoke('add_timeline_event', {
+src/tests/e2e/titane_e2e.test.ts:280:      const event = await invoke('add_timeline_event', {
+src/tests/e2e/titane_e2e.test.ts:380:      const event = await invoke('add_timeline_event', {
+src/core/commands/TAURI_COMMANDS.ts:36:  MEMORY_ADD_TIMELINE_EVENT: 'add_timeline_event',
+src/engines/selfHealing/selfHealingEngine.ts:554:    safeInvoke('add_timeline_event', {
+src/lib/security.ts:173:  'add_timeline_event',
+src/services/tauri/backend-v17.2.commands.ts:111:    return safeInvoke<void>('add_timeline_event', { event });
+src/services/tauri/backend-v17.2.commands.ts:232:    await safeInvoke<void>('add_timeline_event', { event });
+src/test/setup.ts:332:    case 'add_timeline_event': {
+src/tests/e2e/titane_e2e.test.ts:177:      const event = await invoke('add_timeline_event', {
+src/tests/e2e/titane_e2e.test.ts:280:      const event = await invoke('add_timeline_event', {
+src/tests/e2e/titane_e2e.test.ts:380:      const event = await invoke('add_timeline_event', {
+src/tests/regression/titane_regression.test.ts:113:      'add_timeline_event',
+
+--- command: chat_set_openai_key ---
+src/features/governance-center/services/governanceService.ts:93:  const raw = await safeInvoke<unknown>('chat_set_openai_key', { apiKey });
+src/lib/security.ts:437:  'chat_set_openai_key',
+src/utils/secureSecrets.ts:110:  const raw = await safeInvoke<unknown>('chat_set_openai_key', { api_key: apiKey });
+
+--- command: avatar_set_appearance ---
+src/lib/security.ts:545:  'avatar_set_appearance',
+src/modules/avatar/appearance/appearanceEngine.ts:25:  return secureInvoke<string>('avatar_set_appearance', { stateJson: json });
+
+--- command: autoheal_detect_broken_modules ---
+src/__tests__/e2e-automated-validation.test.tsx:2003:        const brokenModules = await invoke('autoheal_detect_broken_modules');
+src/__tests__/e2e-automated-validation.test.tsx:2143:        const broken = await invoke('autoheal_detect_broken_modules');
+src/__tests__/singularity-fusion-integration.test.ts:129:      const modules = await invoke('autoheal_detect_broken_modules');
+src/__tests__/singularity-fusion-integration.test.ts:225:      const broken = await invoke('autoheal_detect_broken_modules');
+src/__tests__/singularity-fusion-mocked.test.ts:149:      const modules = await invoke('autoheal_detect_broken_modules');
+src/__tests__/e2e-automated-validation.test.tsx:1892:      case 'autoheal_detect_broken_modules':
+src/__tests__/e2e-automated-validation.test.tsx:2003:        const brokenModules = await invoke('autoheal_detect_broken_modules');
+src/__tests__/e2e-automated-validation.test.tsx:2143:        const broken = await invoke('autoheal_detect_broken_modules');
+src/__tests__/singularity-fusion-integration.test.ts:129:      const modules = await invoke('autoheal_detect_broken_modules');
+src/__tests__/singularity-fusion-integration.test.ts:225:      const broken = await invoke('autoheal_detect_broken_modules');
+src/__tests__/singularity-fusion-mocked.test.ts:49:      case 'autoheal_detect_broken_modules':
+src/__tests__/singularity-fusion-mocked.test.ts:149:      const modules = await invoke('autoheal_detect_broken_modules');
+src/lib/security.ts:621:  'autoheal_detect_broken_modules',
+src/lib/security.ts:1121:  'autoheal_detect_broken_modules',
+src/test/setup.ts:593:    case 'autoheal_detect_broken_modules':
+
+--- command: performance_get_metrics ---
+src/__tests__/e2e-automated-validation.test.tsx:2065:        const metrics = await invoke('performance_get_metrics');
+src/__tests__/e2e-automated-validation.test.tsx:2101:        const metrics = await invoke('performance_get_metrics');
+src/__tests__/e2e-automated-validation.test.tsx:2118:            invoke('performance_get_metrics'),
+src/__tests__/e2e-automated-validation.test.tsx:2168:      const metrics = (await invoke('performance_get_metrics')) as PerformanceMetrics;
+src/__tests__/e2e-automated-validation.test.tsx:2182:        const metrics = (await invoke('performance_get_metrics')) as {
+src/__tests__/e2e-automated-validation.test.tsx:2208:      const perfMetrics = (await invoke('performance_get_metrics')) as PerformanceMetrics;
+src/__tests__/singularity-fusion-integration.test.ts:155:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-integration.test.ts:219:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-integration.test.ts:245:        await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-mocked.test.ts:158:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-mocked.test.ts:195:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-mocked.test.ts:208:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/e2e-automated-validation.test.tsx:1915:      case 'performance_get_metrics':
+src/__tests__/e2e-automated-validation.test.tsx:2065:        const metrics = await invoke('performance_get_metrics');
+src/__tests__/e2e-automated-validation.test.tsx:2101:        const metrics = await invoke('performance_get_metrics');
+src/__tests__/e2e-automated-validation.test.tsx:2118:            invoke('performance_get_metrics'),
+src/__tests__/e2e-automated-validation.test.tsx:2168:      const metrics = (await invoke('performance_get_metrics')) as PerformanceMetrics;
+src/__tests__/e2e-automated-validation.test.tsx:2182:        const metrics = (await invoke('performance_get_metrics')) as {
+src/__tests__/e2e-automated-validation.test.tsx:2208:      const perfMetrics = (await invoke('performance_get_metrics')) as PerformanceMetrics;
+src/__tests__/singularity-fusion-integration.test.ts:155:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-integration.test.ts:219:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-integration.test.ts:245:        await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-mocked.test.ts:52:      case 'performance_get_metrics':
+src/__tests__/singularity-fusion-mocked.test.ts:158:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-mocked.test.ts:195:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-mocked.test.ts:208:      const metrics = await invoke('performance_get_metrics');
+src/core/optimization/PerformanceOptimizer.ts:183:          'performance_get_metrics'
+src/lib/security.ts:679:  'performance_get_metrics',
+src/services/systemCenter/SystemAPI.ts:110:      'performance_get_metrics',
+src/services/systemCenter/SystemCenterAutoFix.ts:77:    'performance_get_metrics',
+src/services/systemCenter/SystemCenterAutoFix.ts:100:    alternatives: ['engines_monitoring_get_dashboard', 'performance_get_metrics'],
+src/services/systemCenter/SystemCenterAutoFix.ts:787:   - monitoring_init → performance_get_metrics
+src/test/setup.ts:611:    case 'performance_get_metrics':
+
+--- command: onboarding_complete ---
+src/App.tsx:274:              localStorage.getItem('titane_onboarding_complete') === '1';
+src/App.tsx:286:        const isComplete = await secureInvoke<boolean>('is_onboarding_complete');
+src/components/Onboarding/INTEGRATION_GUIDE.md:51:            onboarding::is_onboarding_complete,
+src/components/Onboarding/INTEGRATION_GUIDE.md:77:        const isComplete = await invoke<boolean>('is_onboarding_complete');
+src/components/Onboarding/INTEGRATION_GUIDE.md:82:        const localStorage Complete = localStorage.getItem('onboarding_completed') === 'true';
+src/components/Onboarding/INTEGRATION_GUIDE.md:176:      localStorage.removeItem('onboarding_completed');
+src/components/Onboarding/INTEGRATION_GUIDE.md:213:      localStorage.removeItem('onboarding_completed');
+src/components/Onboarding/INTEGRATION_GUIDE.md:243:| `is_onboarding_complete()`         | Vérifie si l'onboarding est complété                             |
+src/components/Onboarding/INTEGRATION_GUIDE.md:254:const isComplete = await invoke<boolean>('is_onboarding_complete');
+src/components/Onboarding/INTEGRATION_GUIDE.md:295:   console.log(localStorage.getItem('onboarding_completed'));
+src/components/Onboarding/INTEGRATION_GUIDE.md:303:localStorage.removeItem('onboarding_completed');
+src/components/Onboarding/OnboardingFlow.tsx:92:        localStorage.setItem('onboarding_completed', 'true');
+src/lib/security.ts:1014:  'is_onboarding_complete',
+src/utils/browserModeAdapter.ts:44:    localStorage.setItem('titane_onboarding_complete', '1');
+
+--- command: export_security_log ---
+src/features/governance-center/services/governanceService.ts:309:  const raw = await safeInvoke<unknown>('export_security_log', { format });
+
+--- command: sc_run_full_diagnostics ---
+src/features/system-center/hooks/useSystemDiagnostics.ts:55:      const result = await secureInvoke<SystemDiagnostics>('sc_run_full_diagnostics');
+src/lib/security.ts:517:  'sc_run_full_diagnostics',

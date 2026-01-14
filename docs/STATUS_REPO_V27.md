@@ -28,6 +28,8 @@ Ce document est conçu pour être **vérifiable** : chaque constat pointe vers (
 - Contrat IPC AUTO-* — reality check “caller” (doc ↔ repo): [docs/_evidence/v27/B14_ipc_contract_autoheal_detect_callers_2026-01-13.txt](docs/_evidence/v27/B14_ipc_contract_autoheal_detect_callers_2026-01-13.txt#L1-L120)
 - Contrat IPC (doc ↔ repo) — scan matrix “Frontend Files” (existence/tracking): [docs/_evidence/v27/B15_ipc_contract_matrix_frontend_files_exist_2026-01-13.txt](docs/_evidence/v27/B15_ipc_contract_matrix_frontend_files_exist_2026-01-13.txt#L1-L120)
 - Contrat IPC (doc ↔ repo) — candidats repo pour les chemins manquants (scan basename/stem): [docs/_evidence/v27/B16_ipc_contract_matrix_missing_frontend_file_candidates_2026-01-14.txt](docs/_evidence/v27/B16_ipc_contract_matrix_missing_frontend_file_candidates_2026-01-14.txt#L1-L120)
+- Contrat IPC (doc ↔ repo) — scan callers par commande (grep “best effort”): [docs/_evidence/v27/B17_ipc_contract_matrix_frontend_files_callers_2026-01-14.txt](docs/_evidence/v27/B17_ipc_contract_matrix_frontend_files_callers_2026-01-14.txt#L1-L140)
+- Contrat IPC (doc ↔ repo) — scan callers strict (rg, sans faux-positifs substring): [docs/_evidence/v27/B17c_ipc_contract_matrix_frontend_callers_strict_rg_2026-01-14.txt](docs/_evidence/v27/B17c_ipc_contract_matrix_frontend_callers_strict_rg_2026-01-14.txt#L1-L120)
 
 ## 1) Snapshot repo (Git)
 
@@ -174,7 +176,7 @@ Le repo contient des systèmes AutoFix/AutoHeal documentés et intégrés côté
   - Preuve (inventaire + extraits): [docs/_evidence/v27/B12b_auto_systems_backend_map_clean_2026-01-13.txt](docs/_evidence/v27/B12b_auto_systems_backend_map_clean_2026-01-13.txt#L1-L120)
 
 - Source (contrat IPC doc ↔ tests):
-  - Matrix: [docs/backend/IPC_CONTRACT.md](docs/backend/IPC_CONTRACT.md#L270-L291)
+  - Matrix: [docs/backend/IPC_CONTRACT.md](docs/backend/IPC_CONTRACT.md#L270-L300)
   - Détails: [docs/backend/IPC_CONTRACT.md](docs/backend/IPC_CONTRACT.md#L461-L489)
   - Backend map: [docs/backend/BACKEND_MAP.md](docs/backend/BACKEND_MAP.md#L295-L306)
   - SINGULARITY vΩ: [docs/SINGULARITY_FUSION_vΩ.md](docs/SINGULARITY_FUSION_vΩ.md#L641-L657)
@@ -189,6 +191,10 @@ Le repo contient des systèmes AutoFix/AutoHeal documentés et intégrés côté
 
 - Note “doc ↔ repo” (matrix IPC): candidats identifiés pour certains chemins manquants (basenames/stems) — utile pour corriger la doc dans un commit séparé.
   - Preuve: [docs/_evidence/v27/B16_ipc_contract_matrix_missing_frontend_file_candidates_2026-01-14.txt](docs/_evidence/v27/B16_ipc_contract_matrix_missing_frontend_file_candidates_2026-01-14.txt#L1-L120)
+
+- Correction (matrix IPC) — remplacement des chemins fantômes par des callers réels (ou `NO_CALLERS_FOUND`) basé sur scan repo.
+  - Preuve (scan): [docs/_evidence/v27/B17_ipc_contract_matrix_frontend_files_callers_2026-01-14.txt](docs/_evidence/v27/B17_ipc_contract_matrix_frontend_files_callers_2026-01-14.txt#L60-L140)
+  - Preuve (strict): [docs/_evidence/v27/B17c_ipc_contract_matrix_frontend_callers_strict_rg_2026-01-14.txt](docs/_evidence/v27/B17c_ipc_contract_matrix_frontend_callers_strict_rg_2026-01-14.txt#L1-L120)
 
 Voir l’index consolidé: `docs/systems/AUTO_SYSTEMS_INDEX_v27.md`.
 

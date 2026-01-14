@@ -38,7 +38,7 @@ Objectif: pointer les surfaces réelles AutoHeal/AutoFix/Auto-Healing (scripts, 
 - Commandes exposées (IPC) AutoFix/AutoHeal: [src-tauri/src/main.rs](../../src-tauri/src/main.rs#L812-L857).
 
 - Contrat IPC (docs) ↔ tests `invoke()` (reality check):
-  - Matrix: [docs/backend/IPC_CONTRACT.md](../backend/IPC_CONTRACT.md#L270-L291)
+  - Matrix: [docs/backend/IPC_CONTRACT.md](../backend/IPC_CONTRACT.md#L270-L300)
   - Détails: [docs/backend/IPC_CONTRACT.md](../backend/IPC_CONTRACT.md#L461-L489)
   - Backend map: [docs/backend/BACKEND_MAP.md](../backend/BACKEND_MAP.md#L295-L306)
   - SINGULARITY vΩ: [docs/SINGULARITY_FUSION_vΩ.md](../SINGULARITY_FUSION_vΩ.md#L641-L657)
@@ -58,6 +58,10 @@ Objectif: pointer les surfaces réelles AutoHeal/AutoFix/Auto-Healing (scripts, 
 - Contrat IPC — reality check “matrix candidates”:
   - Recherche de candidats repo pour les chemins manquants (match basename + match stem) — utile pour une correction doc.
   - Preuve: [docs/_evidence/v27/B16_ipc_contract_matrix_missing_frontend_file_candidates_2026-01-14.txt](../../docs/_evidence/v27/B16_ipc_contract_matrix_missing_frontend_file_candidates_2026-01-14.txt#L1-L120)
+
+- Contrat IPC — reality check “matrix callers” (puis correction doc):
+  - Scan callers par commande (best effort): [docs/_evidence/v27/B17_ipc_contract_matrix_frontend_files_callers_2026-01-14.txt](../../docs/_evidence/v27/B17_ipc_contract_matrix_frontend_files_callers_2026-01-14.txt#L60-L140)
+  - Scan callers strict (rg, sans faux-positifs substring): [docs/_evidence/v27/B17c_ipc_contract_matrix_frontend_callers_strict_rg_2026-01-14.txt](../../docs/_evidence/v27/B17c_ipc_contract_matrix_frontend_callers_strict_rg_2026-01-14.txt#L1-L120)
 
 - Implémentation backend (Rust) AutoFix/AutoHeal:
   - Module exports: [src-tauri/src/singularity_fusion/mod.rs](../../src-tauri/src/singularity_fusion/mod.rs#L1-L33)
