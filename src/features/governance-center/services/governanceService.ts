@@ -71,7 +71,7 @@ async function getGeminiStatus(): Promise<SecureResponse<GeminiKeyStatus>> {
  * Définir la clé Gemini
  */
 async function setGeminiKey(apiKey: string): Promise<SecureResponse<GeminiKeyStatus>> {
-  const raw = await safeInvoke<unknown>('chat_set_gemini_key', { apiKey });
+  const raw = await safeInvoke<unknown>('chat_set_gemini_key', { api_key: apiKey });
   return normalizeResponse<GeminiKeyStatus>(raw, 'Impossible de définir la clé Gemini');
 }
 
@@ -109,7 +109,7 @@ async function getAnthropicStatus(): Promise<SecureResponse<GeminiKeyStatus>> {
  * Définir la clé Anthropic
  */
 async function setAnthropicKey(apiKey: string): Promise<SecureResponse<GeminiKeyStatus>> {
-  const raw = await safeInvoke<unknown>('chat_set_anthropic_key', { apiKey });
+  const raw = await safeInvoke<unknown>('chat_set_anthropic_key', { api_key: apiKey });
   return normalizeResponse<GeminiKeyStatus>(
     raw,
     'Impossible de définir la clé Anthropic'
@@ -131,7 +131,7 @@ async function getCopilotStatus(): Promise<SecureResponse<GeminiKeyStatus>> {
  * Définir la clé GitHub Copilot
  */
 async function setCopilotKey(apiKey: string): Promise<SecureResponse<GeminiKeyStatus>> {
-  const raw = await safeInvoke<unknown>('chat_set_copilot_key', { apiKey });
+  const raw = await safeInvoke<unknown>('chat_set_copilot_key', { api_key: apiKey });
   return normalizeResponse<GeminiKeyStatus>(raw, 'Impossible de définir la clé Copilot');
 }
 

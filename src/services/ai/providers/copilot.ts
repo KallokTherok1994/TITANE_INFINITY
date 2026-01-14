@@ -267,7 +267,7 @@ export async function setCopilotApiKey(apiKey: string): Promise<{
       configured: boolean;
       status: string;
       message?: string;
-    }>('chat_set_copilot_key', { apiKey });
+    }>('chat_set_copilot_key', { api_key: apiKey });
 
     if (result.configured) {
       logger.info('Copilot key configured successfully');
