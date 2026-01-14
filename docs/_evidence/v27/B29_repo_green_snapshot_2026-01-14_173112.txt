@@ -1,0 +1,65 @@
+]633;E;echo "TITANE∞ — Repo Green Snapshot";b711af89-9798-4c33-9f9e-f1d02593b2c2]633;CTITANE∞ — Repo Green Snapshot
+Timestamp: 2026-01-14T17:31:12-05:00
+
+=== git status ===
+## MAIN...origin/MAIN
+?? docs/_evidence/v27/B29_repo_green_snapshot_2026-01-14_173112.txt
+
+=== git head ===
+branch: MAIN
+commit: a9ef20beeeacd105a13462aef565ff772a7740a3
+
+=== git log (last 10) ===
+a9ef20be test(vitest): compléter mocks tauri self-heal
+f08b5988 fix(backend): align Governance Center IPC contracts
+fd677a83 docs(ipc): compléter SecureCommands (files/audit/integrity)
+a629ce39 docs(ipc): documenter clés secure (Gemini/OpenAI/Anthropic)
+44e11901 docs(ipc): documenter réponses Copilot (retour direct)
+ce55c7de fix(governance): corriger shape statut Copilot
+c6ecc6f5 fix(ipc): payload api_key pour setters
+ad735a4d fix(ipc): normaliser add_timeline_event + payload openai
+7e0af5b0 docs(ipc): aligner payload specs sur Rust (B18)
+293ce5c4 docs(ipc): corriger matrix via callers réels
+
+=== COPILOT-XS validate (tail) ===
+
+> titane-infinity@26.3.0 copilot-xs:validate /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> node .github/copilot-xs/scripts/validate.js
+
+✅ COPILOT-XS VALIDATION PASSED
+EXIT:0
+
+=== COPILOT-XS status (tail) ===
+
+> titane-infinity@26.3.0 copilot-xs:status /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> node .github/copilot-xs/scripts/agent-status.js
+
+🎯 COPILOT-XS STATUS REPORT
+
+✅ Layer 1: Instructions
+✅ Layer 2: Agent roster
+✅ Layer 3: Routing
+✅ Layer 3: Workflow
+✅ Automation: validate.js
+✅ Automation: precommit.js
+
+🚀 System Status: OPERATIONAL
+EXIT:0
+
+=== COPILOT-XS security scan (tail) ===
+
+> titane-infinity@26.3.0 copilot-xs:security-scan /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> node .github/copilot-xs/scripts/security-scan.js
+
+No known vulnerabilities found
+[0m[0m[1m[32m    Fetching[0m advisory database from `https://github.com/RustSec/advisory-db.git`
+[0m[0m[1m[32m      Loaded[0m 900 security advisories (from /home/titane-os/.cargo/advisory-db)
+[0m[0m[1m[32m    Updating[0m crates.io index
+[0m[0m[1m[32m    Scanning[0m Cargo.lock for vulnerabilities (751 crate dependencies)
+EXIT:0
+
+=== dev ports/processes check ===
+--- listening ports (4000/5173/4173/1430) ---
+OK: no dev ports
+--- dev processes (vite/tauri dev) ---
+OK: no dev processes
