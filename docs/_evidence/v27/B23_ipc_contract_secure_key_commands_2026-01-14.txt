@@ -1,0 +1,172 @@
+# B23 — IPC_CONTRACT: Secure key commands (Gemini/OpenAI/Anthropic) — preuve
+
+Date: 2026-01-14
+Repo: /home/titane-os/Documents/GitHub/TITANE_INFINITY
+Branch: MAIN
+HEAD: 44e11901330732f9a2e36d70827fa83e174b4e8c
+
+Objectif
+- Documenter dans docs/backend/IPC_CONTRACT.md les commandes IPC de gestion de clés “secure” (Gemini/OpenAI/Anthropic)
+- Aligner le contrat (payload + réponse + erreurs) sur la réalité Rust (src-tauri/src/secure_commands.rs) et sur les callsites TS
+
+---
+
+## A) Snapshot Git (preuve d’état)
+
+Commande: git status --porcelain=v1 -b
+Résultat (extrait):
+- ## MAIN...origin/MAIN
+-  M docs/backend/IPC_CONTRACT.md
+
+Commande: git rev-parse --abbrev-ref HEAD
+Résultat: MAIN
+
+Commande: git rev-parse HEAD
+Résultat: 44e11901330732f9a2e36d70827fa83e174b4e8c
+
+---
+
+## B) Source of truth: Rust (secure_commands.rs)
+
+### B1) Types: SecureResponse + GeminiKeyStatus
+
+Extrait: src-tauri/src/secure_commands.rs (L15-L70)
+```rust
+pub struct SecureResponse<T> {
+    pub ok: bool,
+    pub data: Option<T>,
+    pub error: Option<String>,
+}
+
+pub struct GeminiKeyStatus {
+    pub configured: bool,
+    pub provider_enabled: bool,
+    pub masked_key: Option<String>,
+    pub env_present: bool,
+    pub env_purged: bool,
+    pub was_updated: bool,
+}
+```
+
+### B2) Commandes: signatures et types de retour
+
+Preuve (grep lignes): src-tauri/src/secure_commands.rs
+- L124: pub async fn chat_set_gemini_key(
+- L188: pub async fn get_gemini_key_status(
+- L206: pub async fn chat_set_openai_key(
+- L279: pub async fn get_openai_key_status(
+- L308: pub async fn chat_set_anthropic_key(
+- L383: pub async fn get_anthropic_key_status(
+
+Extrait: src-tauri/src/secure_commands.rs (L124-L131)
+```rust
+pub async fn chat_set_gemini_key(
+    api_key: String,
+    secrets: State<'_, SecureSecretsEngine>,
+    orchestrator: State<'_, ChatOrchestratorState>,
+) -> Result<SecureResponse<GeminiKeyStatus>, String> {
+```
+
+Extrait: src-tauri/src/secure_commands.rs (L188-L194)
+```rust
+pub async fn get_gemini_key_status(
+    secrets: State<'_, SecureSecretsEngine>,
+    orchestrator: State<'_, ChatOrchestratorState>,
+) -> Result<SecureResponse<GeminiKeyStatus>, String> {
+```
+
+Extrait: src-tauri/src/secure_commands.rs (L206-L212)
+```rust
+pub async fn chat_set_openai_key(
+    api_key: String,
+    secrets: State<'_, SecureSecretsEngine>,
+    orchestrator: State<'_, ChatOrchestratorState>,
+) -> Result<SecureResponse<GeminiKeyStatus>, String> {
+```
+
+Extrait: src-tauri/src/secure_commands.rs (L279-L285)
+```rust
+pub async fn get_openai_key_status(
+    secrets: State<'_, SecureSecretsEngine>,
+    orchestrator: State<'_, ChatOrchestratorState>,
+) -> Result<SecureResponse<GeminiKeyStatus>, String> {
+```
+
+Extrait: src-tauri/src/secure_commands.rs (L308-L314)
+```rust
+pub async fn chat_set_anthropic_key(
+    api_key: String,
+    secrets: State<'_, SecureSecretsEngine>,
+    orchestrator: State<'_, ChatOrchestratorState>,
+) -> Result<SecureResponse<GeminiKeyStatus>, String> {
+```
+
+Extrait: src-tauri/src/secure_commands.rs (L383-L389)
+```rust
+pub async fn get_anthropic_key_status(
+    secrets: State<'_, SecureSecretsEngine>,
+    orchestrator: State<'_, ChatOrchestratorState>,
+) -> Result<SecureResponse<GeminiKeyStatus>, String> {
+```
+
+---
+
+## C) Call sites: Frontend TypeScript (preuve)
+
+### C1) Governance Center
+
+Extrait: src/features/governance-center/services/governanceService.ts (L80-L136)
+- get_gemini_key_status / chat_set_gemini_key
+- get_openai_key_status / chat_set_openai_key
+- get_anthropic_key_status / chat_set_anthropic_key
+
+### C2) Helpers SecureSecrets
+
+Extrait: src/utils/secureSecrets.ts (L78-L151)
+- setGeminiApiKey / getGeminiKeyStatus
+- setOpenAIApiKey / getOpenAIKeyStatus
+- setAnthropicApiKey / getAnthropicKeyStatus
+
+### C3) Providers (availability checks)
+
+Extraits:
+- src/services/ai/providers/gemini.ts (L57-L75): secureInvoke('get_gemini_key_status')
+- src/services/ai/providers/openai.ts (L175-L193): secureInvoke('get_openai_key_status')
+- src/services/ai/providers/claude.ts (L176-L194): secureInvoke('get_anthropic_key_status')
+
+### C4) Provider tauriChat (Gemini set)
+
+Extrait: src/services/ai/providers/tauriChat.ts (L323-L346)
+- safeInvokeTauri(TAURI_COMMANDS.CHAT_SET_GEMINI_KEY, { api_key: apiKey.trim() })
+
+---
+
+## D) Documentation: IPC_CONTRACT.md (preuve)
+
+### D1) Matrix rows ajoutés/alignés
+
+Extrait: docs/backend/IPC_CONTRACT.md (L286-L293)
+```md
+| `chat_set_gemini_key` | `src/features/governance-center/services/governanceService.ts`<br>`src/utils/secureSecrets.ts`<br>`src/services/ai/providers/tauriChat.ts` | `{api_key: string}` | `SecureResponse<GeminiKeyStatus>` | `Err(String)` |
+| `get_gemini_key_status` | `src/features/governance-center/services/governanceService.ts`<br>`src/utils/secureSecrets.ts`<br>`src/services/ai/providers/gemini.ts` | `{}` | `SecureResponse<GeminiKeyStatus>` | `Err(String)` |
+| `chat_set_openai_key` | `src/features/governance-center/services/governanceService.ts`<br>`src/utils/secureSecrets.ts` | `{api_key: string}` | `SecureResponse<GeminiKeyStatus>` | `Err(String)` |
+| `get_openai_key_status` | `src/features/governance-center/services/governanceService.ts`<br>`src/utils/secureSecrets.ts`<br>`src/services/ai/providers/openai.ts` | `{}` | `SecureResponse<GeminiKeyStatus>` | `Err(String)` |
+| `chat_set_anthropic_key` | `src/features/governance-center/services/governanceService.ts`<br>`src/utils/secureSecrets.ts` | `{api_key: string}` | `SecureResponse<GeminiKeyStatus>` | `Err(String)` |
+| `get_anthropic_key_status` | `src/features/governance-center/services/governanceService.ts`<br>`src/utils/secureSecrets.ts`<br>`src/services/ai/providers/claude.ts` | `{}` | `SecureResponse<GeminiKeyStatus>` | `Err(String)` |
+```
+
+### D2) Payload specs ajoutés
+
+Extrait: docs/backend/IPC_CONTRACT.md
+- L476: ### 7a. chat_set_gemini_key
+- L494: ### 7. chat_set_openai_key
+- L527: ### 7d. get_gemini_key_status
+- L542: ### 7e. get_openai_key_status
+- L557: ### 7f. chat_set_anthropic_key
+- L575: ### 7g. get_anthropic_key_status
+
+Extrait: docs/backend/IPC_CONTRACT.md (L476-L585)
+- Montre les requests `{ api_key: string }` et réponses `SecureResponse<GeminiKeyStatus>`
+- Les erreurs sont décrites comme:
+  - `ok=false` + `error` (validation backend)
+  - `Err(String)` (permission / stockage / lecture)

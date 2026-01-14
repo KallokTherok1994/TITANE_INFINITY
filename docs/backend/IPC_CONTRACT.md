@@ -285,7 +285,12 @@ export class TitaneError extends Error {
 
 | Command | Frontend Files | Payload | Response | Errors |
 |---------|----------------|---------|----------|--------|
-| `chat_set_openai_key` | `src/features/governance-center/services/governanceService.ts`<br>`src/utils/secureSecrets.ts` | `{api_key: string}` | `SecureResponse<GeminiKeyStatus>` | `PERMISSION_DENIED`<br>`INTERNAL_ERROR` |
+| `chat_set_gemini_key` | `src/features/governance-center/services/governanceService.ts`<br>`src/utils/secureSecrets.ts`<br>`src/services/ai/providers/tauriChat.ts` | `{api_key: string}` | `SecureResponse<GeminiKeyStatus>` | `Err(String)` |
+| `get_gemini_key_status` | `src/features/governance-center/services/governanceService.ts`<br>`src/utils/secureSecrets.ts`<br>`src/services/ai/providers/gemini.ts` | `{}` | `SecureResponse<GeminiKeyStatus>` | `Err(String)` |
+| `chat_set_openai_key` | `src/features/governance-center/services/governanceService.ts`<br>`src/utils/secureSecrets.ts` | `{api_key: string}` | `SecureResponse<GeminiKeyStatus>` | `Err(String)` |
+| `get_openai_key_status` | `src/features/governance-center/services/governanceService.ts`<br>`src/utils/secureSecrets.ts`<br>`src/services/ai/providers/openai.ts` | `{}` | `SecureResponse<GeminiKeyStatus>` | `Err(String)` |
+| `chat_set_anthropic_key` | `src/features/governance-center/services/governanceService.ts`<br>`src/utils/secureSecrets.ts` | `{api_key: string}` | `SecureResponse<GeminiKeyStatus>` | `Err(String)` |
+| `get_anthropic_key_status` | `src/features/governance-center/services/governanceService.ts`<br>`src/utils/secureSecrets.ts`<br>`src/services/ai/providers/claude.ts` | `{}` | `SecureResponse<GeminiKeyStatus>` | `Err(String)` |
 | `get_copilot_key_status` | `src/features/governance-center/services/governanceService.ts`<br>`src/services/ai/providers/copilot.ts` | `{}` | `CopilotKeyStatus` | `Err(String)` |
 | `chat_set_copilot_key` | `src/features/governance-center/services/governanceService.ts`<br>`src/services/ai/providers/copilot.ts` | `{api_key: string}` | `CopilotKeyStatus` | `Err(String)` |
 | `avatar_set_appearance` | `src/modules/avatar/appearance/appearanceEngine.ts` | `{style: object}` | `void` | `SERIALIZATION_ERROR` |
@@ -468,6 +473,24 @@ interface BrokenModule {
 type AutoHealDetectBrokenModulesResponse = BrokenModule[]
 ```
 
+### 7a. chat_set_gemini_key
+
+**Request:**
+```typescript
+interface SetApiKeyRequest {
+  api_key: string;                // Gemini API key
+}
+```
+
+**Response:**
+```typescript
+type ChatSetGeminiKeyResponse = SecureResponse<GeminiKeyStatus>
+```
+
+**Errors:**
+- Peut retourner `ok=false` avec `error` (validation côté backend)
+- Peut échouer en `Err(String)` (permission / stockage)
+
 ### 7. chat_set_openai_key
 
 **Request:**
@@ -500,6 +523,69 @@ type ChatSetOpenAIKeyResponse = SecureResponse<GeminiKeyStatus>
 **Errors:**
 - Peut retourner `ok=false` avec `error` (validation côté backend)
 - Peut échouer en `Err(String)` (permission / stockage)
+
+### 7d. get_gemini_key_status
+
+**Request:**
+```typescript
+{} // No parameters
+```
+
+**Response:**
+```typescript
+type GetGeminiKeyStatusResponse = SecureResponse<GeminiKeyStatus>
+```
+
+**Errors:**
+- Peut échouer en `Err(String)` (permission / lecture)
+
+### 7e. get_openai_key_status
+
+**Request:**
+```typescript
+{} // No parameters
+```
+
+**Response:**
+```typescript
+type GetOpenAIKeyStatusResponse = SecureResponse<GeminiKeyStatus>
+```
+
+**Errors:**
+- Peut échouer en `Err(String)` (permission / lecture)
+
+### 7f. chat_set_anthropic_key
+
+**Request:**
+```typescript
+interface SetAnthropicKeyRequest {
+  api_key: string;                // Anthropic API key
+}
+```
+
+**Response:**
+```typescript
+type ChatSetAnthropicKeyResponse = SecureResponse<GeminiKeyStatus>
+```
+
+**Errors:**
+- Peut retourner `ok=false` avec `error` (validation côté backend)
+- Peut échouer en `Err(String)` (permission / stockage)
+
+### 7g. get_anthropic_key_status
+
+**Request:**
+```typescript
+{} // No parameters
+```
+
+**Response:**
+```typescript
+type GetAnthropicKeyStatusResponse = SecureResponse<GeminiKeyStatus>
+```
+
+**Errors:**
+- Peut échouer en `Err(String)` (permission / lecture)
 
 ### 7b. get_copilot_key_status
 
