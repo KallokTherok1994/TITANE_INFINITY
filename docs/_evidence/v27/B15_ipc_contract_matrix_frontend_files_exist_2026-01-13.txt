@@ -1,0 +1,127 @@
+[ts]  2026-01-13T21:29:13-05:00
+[cwd] /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+=== Source excerpt: IPC_CONTRACT.md matrix ===
+     1	
+     2	```json
+     3	{
+     4	  "type": "INVALID_INPUT",
+     5	  "message": "conversationId is required for conversation_generate"
+     6	}
+     7	```
+     8	
+     9	---
+    10	
+    11	## Command → Frontend Matrix
+    12	
+    13	### High-Traffic Commands (>100 calls/session)
+    14	
+    15	| Command | Frontend Files | Payload | Response | Errors |
+    16	|---------|----------------|---------|----------|--------|
+    17	| `conversation_generate` | `src/hooks/useConversation.ts`<br>`src/services/conversationService.ts` | `{conversationId: string, message: string, provider?: string}` | `{id: string, role: string, content: string, timestamp: string}` | `UNAUTHORIZED` (no API key)<br>`RATE_LIMITED`<br>`EXTERNAL_API_ERROR`<br>`TIMEOUT` |
+    18	| `chat_get_providers_status` | `src/components/SettingsPanel.tsx`<br>`src/services/aiService.ts` | `{}` | `{openai: boolean, claude: boolean, gemini: boolean, copilot: boolean, ollama: boolean}` | `INTERNAL_ERROR` |
+    19	| `avatar_advance_lip_sync` | `src/components/Avatar3D.tsx`<br>`src/hooks/useAvatar.ts` | `{phoneme: string, timestamp: number}` | `void` | `NOT_FOUND` (avatar not initialized) |
+    20	| `voice_start_listening` | `src/components/VoiceInput.tsx`<br>`src/hooks/useVoice.ts` | `{continuous?: boolean}` | `{sessionId: string}` | `PERMISSION_DENIED` (mic access)<br>`DEVICE_NOT_FOUND` |
+    21	| `singularity_get_full_state` | `src/services/singularityService.ts` | `{}` | `{physical: {...}, cognitive: {...}, symbolic: {...}, adaptive: {...}, meta: {...}}` | `INTERNAL_ERROR` |
+    22	| `get_memory_state` | `src/services/memoryService.ts` | `{}` | `{stm: [...], mtm: [...], ltm: [...], stats: {...}}` | `DATABASE_ERROR` |
+    23	| `add_timeline_event` | `src/services/timelineService.ts` | `{type: string, content: string, metadata?: object}` | `{id: string}` | `INVALID_INPUT`<br>`DATABASE_ERROR` |
+    24	
+    25	### Medium-Traffic Commands (10-100 calls/session)
+    26	
+    27	| Command | Frontend Files | Payload | Response | Errors |
+    28	|---------|----------------|---------|----------|--------|
+    29	| `chat_set_openai_key` | `src/components/APIKeyDialog.tsx` | `{key: string}` | `void` | `INVALID_INPUT` (bad key format) |
+    30	| `avatar_set_appearance` | `src/components/AvatarCustomizer.tsx` | `{style: object}` | `void` | `SERIALIZATION_ERROR` |
+    31	| `autoheal_detect_broken_modules` | `src/services/healthService.ts` | `{}` | `{broken: string[]}` | `INTERNAL_ERROR` |
+    32	| `performance_get_metrics` | `src/components/Dashboard.tsx` | `{}` | `{cpu: number, memory: number, fps: number}` | - |
+    33	
+    34	### Low-Traffic Commands (<10 calls/session)
+    35	
+    36	| Command | Frontend Files | Payload | Response | Errors |
+    37	|---------|----------------|---------|----------|--------|
+    38	| `onboarding_complete` | `src/pages/Onboarding.tsx` | `{}` | `void` | - |
+    39	| `export_security_log` | `src/pages/Governance.tsx` | `{format: "json" \| "csv"}` | `{path: string}` | `IO_ERROR` |
+    40	| `sc_run_full_diagnostics` | `src/pages/SystemCenter.tsx` | `{}` | `{results: [...]}` | `TIMEOUT` |
+    41	
+    42	### Orphaned Commands (No Frontend Callers - TO VERIFY)
+    43	- `memory_compactor_*` commands (deprecated)
+    44	- Some `cycle_engine_*` commands (disabled)
+    45	- Some legacy `singularity_*` commands (replaced by `singularity_state`)
+    46	
+    47	---
+    48	
+    49	## Payload Specifications
+    50	
+    51	### 1. conversation_generate (OMEGA v2)
+    52	
+    53	**Command:** `conversation_generate`
+    54	
+    55	**Request:**
+    56	```typescript
+    57	interface ConversationGenerateRequest {
+    58	  conversationId: string;         // MANDATORY (BREAKING CHANGE from v1)
+    59	  message: string;                // User message (1-10,000 chars)
+    60	  provider?: "openai" | "claude" | "gemini" | "copilot" | "ollama"; // Optional, auto-routed if omitted
+    61	  temperature?: number;           // 0.0-2.0, default 0.7
+
+=== Parse: extract backticked src/... paths from matrix section ===
+found_paths=18
+src/components/APIKeyDialog.tsx
+src/components/Avatar3D.tsx
+src/components/AvatarCustomizer.tsx
+src/components/Dashboard.tsx
+src/components/SettingsPanel.tsx
+src/components/VoiceInput.tsx
+src/hooks/useAvatar.ts
+src/hooks/useConversation.ts
+src/hooks/useVoice.ts
+src/pages/Governance.tsx
+src/pages/Onboarding.tsx
+src/pages/SystemCenter.tsx
+src/services/aiService.ts
+src/services/conversationService.ts
+src/services/healthService.ts
+src/services/memoryService.ts
+src/services/singularityService.ts
+src/services/timelineService.ts
+
+=== Check existence + tracked (git ls-files) ===
+src/components/APIKeyDialog.tsx	MISSING UNTRACKED
+src/components/Avatar3D.tsx	MISSING UNTRACKED
+src/components/AvatarCustomizer.tsx	MISSING UNTRACKED
+src/components/Dashboard.tsx	MISSING UNTRACKED
+src/components/SettingsPanel.tsx	MISSING UNTRACKED
+src/components/VoiceInput.tsx	MISSING UNTRACKED
+src/hooks/useAvatar.ts	MISSING UNTRACKED
+src/hooks/useConversation.ts	MISSING UNTRACKED
+src/hooks/useVoice.ts	EXISTS TRACKED
+src/pages/Governance.tsx	MISSING UNTRACKED
+src/pages/Onboarding.tsx	MISSING UNTRACKED
+src/pages/SystemCenter.tsx	MISSING UNTRACKED
+src/services/aiService.ts	MISSING UNTRACKED
+src/services/conversationService.ts	MISSING UNTRACKED
+src/services/healthService.ts	MISSING UNTRACKED
+src/services/memoryService.ts	MISSING UNTRACKED
+src/services/singularityService.ts	MISSING UNTRACKED
+src/services/timelineService.ts	MISSING UNTRACKED
+
+--- summary ---
+missing=17
+MISSING: src/components/APIKeyDialog.tsx
+MISSING: src/components/Avatar3D.tsx
+MISSING: src/components/AvatarCustomizer.tsx
+MISSING: src/components/Dashboard.tsx
+MISSING: src/components/SettingsPanel.tsx
+MISSING: src/components/VoiceInput.tsx
+MISSING: src/hooks/useAvatar.ts
+MISSING: src/hooks/useConversation.ts
+MISSING: src/pages/Governance.tsx
+MISSING: src/pages/Onboarding.tsx
+MISSING: src/pages/SystemCenter.tsx
+MISSING: src/services/aiService.ts
+MISSING: src/services/conversationService.ts
+MISSING: src/services/healthService.ts
+MISSING: src/services/memoryService.ts
+MISSING: src/services/singularityService.ts
+MISSING: src/services/timelineService.ts
+untracked_existing=0
