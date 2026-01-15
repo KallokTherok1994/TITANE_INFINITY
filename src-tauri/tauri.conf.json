@@ -5,8 +5,8 @@
   "identifier": "com.titane.infinity",
   "build": {
     "devUrl": "http://localhost:5173",
-    "beforeDevCommand": "npx vite dev --host 127.0.0.1 --port 5173 --strictPort",
-    "beforeBuildCommand": "npx vite build",
+    "beforeDevCommand": "bash -lc 'set -euo pipefail; ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd); cd \"$ROOT\"; export PATH=\"$ROOT/.tools/node/current/bin:$PATH\"; exec pnpm exec vite dev --host 127.0.0.1 --port 5173 --strictPort'",
+    "beforeBuildCommand": "bash -lc 'set -euo pipefail; ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd); cd \"$ROOT\"; export PATH=\"$ROOT/.tools/node/current/bin:$PATH\"; exec pnpm exec vite build'",
     "frontendDist": "../dist_stub"
   },
   "bundle": {
