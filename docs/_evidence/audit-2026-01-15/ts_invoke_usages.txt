@@ -1,0 +1,201 @@
+src/__tests__/singularity-fusion-mocked.test.ts:83:      const state = await invoke('singularity_get_fusion_state');
+src/__tests__/singularity-fusion-mocked.test.ts:95:      const score = await invoke('singularity_perform_sync');
+src/__tests__/singularity-fusion-mocked.test.ts:104:      const integrity = await invoke('singularity_check_integrity');
+src/__tests__/singularity-fusion-mocked.test.ts:114:      const intention = await invoke('pipeline_analyze_intention', {
+src/__tests__/singularity-fusion-mocked.test.ts:126:      const response = await invoke('pipeline_generate_cognitive_response', {
+src/__tests__/singularity-fusion-mocked.test.ts:140:      const warnings = await invoke('autofix_detect_rust_warnings');
+src/__tests__/singularity-fusion-mocked.test.ts:149:      const modules = await invoke('autoheal_detect_broken_modules');
+src/__tests__/singularity-fusion-mocked.test.ts:158:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-mocked.test.ts:171:      const threats = await invoke('crashguard_detect_threats');
+src/__tests__/singularity-fusion-mocked.test.ts:182:      const intention = await invoke('pipeline_analyze_intention', {
+src/__tests__/singularity-fusion-mocked.test.ts:188:      const response = await invoke('pipeline_generate_cognitive_response', {
+src/__tests__/singularity-fusion-mocked.test.ts:195:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-mocked.test.ts:199:      const threats = await invoke('crashguard_detect_threats');
+src/__tests__/singularity-fusion-mocked.test.ts:206:      const state = await invoke('singularity_get_fusion_state');
+src/__tests__/singularity-fusion-mocked.test.ts:207:      const integrity = await invoke('singularity_check_integrity');
+src/__tests__/singularity-fusion-mocked.test.ts:208:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-integration.test.ts:16:      const state = await invoke('singularity_get_fusion_state');
+src/__tests__/singularity-fusion-integration.test.ts:24:      const score = await invoke('singularity_perform_sync');
+src/__tests__/singularity-fusion-integration.test.ts:31:      const integrity = await invoke('singularity_check_integrity');
+src/__tests__/singularity-fusion-integration.test.ts:38:      const snapshotId = await invoke('singularity_create_snapshot', {
+src/__tests__/singularity-fusion-integration.test.ts:46:      const metrics = await invoke('singularity_get_metrics');
+src/__tests__/singularity-fusion-integration.test.ts:53:      const diagnostics = await invoke('singularity_get_diagnostics');
+src/__tests__/singularity-fusion-integration.test.ts:62:      const intention = await invoke('pipeline_analyze_intention', {
+src/__tests__/singularity-fusion-integration.test.ts:71:      const response = await invoke('pipeline_generate_cognitive_response', {
+src/__tests__/singularity-fusion-integration.test.ts:81:      const tts = await invoke('pipeline_prepare_tts', {
+src/__tests__/singularity-fusion-integration.test.ts:90:      const stats = await invoke('pipeline_get_stats');
+src/__tests__/singularity-fusion-integration.test.ts:97:      const valid = await invoke('pipeline_validate');
+src/__tests__/singularity-fusion-integration.test.ts:104:      const issues = await invoke('autofix_detect_rust_warnings');
+src/__tests__/singularity-fusion-integration.test.ts:109:      const issues = await invoke('autofix_detect_typescript_errors');
+src/__tests__/singularity-fusion-integration.test.ts:114:      const stats = await invoke('autofix_get_stats');
+src/__tests__/singularity-fusion-integration.test.ts:122:      const history = await invoke('autofix_get_history');
+src/__tests__/singularity-fusion-integration.test.ts:129:      const modules = await invoke('autoheal_detect_broken_modules');
+src/__tests__/singularity-fusion-integration.test.ts:134:      const result = await invoke('autoheal_heal_cognitive_module');
+src/__tests__/singularity-fusion-integration.test.ts:142:      const result = await invoke('autoheal_heal_avatar_module');
+src/__tests__/singularity-fusion-integration.test.ts:148:      const history = await invoke('autoheal_get_history');
+src/__tests__/singularity-fusion-integration.test.ts:155:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-integration.test.ts:164:      await expect(invoke('performance_throttle_cpu')).resolves.toBeUndefined();
+src/__tests__/singularity-fusion-integration.test.ts:168:      await expect(invoke('performance_optimize_gpu')).resolves.toBeUndefined();
+src/__tests__/singularity-fusion-integration.test.ts:172:      await expect(invoke('performance_compress_memory')).resolves.toBeUndefined();
+src/__tests__/singularity-fusion-integration.test.ts:178:      const threats = await invoke('crashguard_detect_threats');
+src/__tests__/singularity-fusion-integration.test.ts:183:      const threats = await invoke('crashguard_get_active_threats');
+src/__tests__/singularity-fusion-integration.test.ts:188:      const stats = await invoke('crashguard_get_stats');
+src/__tests__/singularity-fusion-integration.test.ts:196:      const intention = await invoke('pipeline_analyze_intention', {
+src/__tests__/singularity-fusion-integration.test.ts:202:      const response = await invoke('pipeline_generate_cognitive_response', {
+src/__tests__/singularity-fusion-integration.test.ts:209:      const tts = await invoke('pipeline_prepare_tts', {
+src/__tests__/singularity-fusion-integration.test.ts:215:      const integrity = await invoke('singularity_check_integrity');
+src/__tests__/singularity-fusion-integration.test.ts:219:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-integration.test.ts:225:      const broken = await invoke('autoheal_detect_broken_modules');
+src/__tests__/singularity-fusion-integration.test.ts:229:      const healResult = await invoke('autoheal_heal_cognitive_module');
+src/__tests__/singularity-fusion-integration.test.ts:233:      await invoke('autoheal_resync_state');
+src/__tests__/singularity-fusion-integration.test.ts:236:      const integrity = await invoke('singularity_check_integrity');
+src/__tests__/singularity-fusion-integration.test.ts:243:        await invoke('singularity_perform_sync');
+src/__tests__/singularity-fusion-integration.test.ts:244:        await invoke('singularity_check_integrity');
+src/__tests__/singularity-fusion-integration.test.ts:245:        await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-integration.test.ts:249:      const state = await invoke('singularity_get_fusion_state');
+src/__tests__/singularity-fusion-integration.test.ts:258:      await invoke('singularity_reset');
+src/__tests__/singularity-fusion-integration.test.ts:259:      await invoke('autofix_reset');
+src/__tests__/singularity-fusion-integration.test.ts:260:      await invoke('autoheal_reset');
+src/__tests__/singularity-fusion-integration.test.ts:261:      await invoke('performance_reset_optimizations');
+src/__tests__/singularity-fusion-integration.test.ts:264:      const state = await invoke('singularity_get_fusion_state');
+src/__tests__/singularity-fusion-integration.test.ts:267:      const fixStats = await invoke('autofix_get_stats');
+src/__tests__/singularity-fusion-integration.test.ts:272:      const baselineState = await invoke('singularity_get_fusion_state');
+src/__tests__/singularity-fusion-integration.test.ts:274:      const snapshotId = await invoke('singularity_create_snapshot', {
+src/__tests__/singularity-fusion-integration.test.ts:280:      await invoke('singularity_perform_sync');
+src/__tests__/singularity-fusion-integration.test.ts:283:      await invoke('singularity_restore_snapshot', { snapshotId });
+src/__tests__/singularity-fusion-integration.test.ts:286:      const state = await invoke('singularity_get_fusion_state');
+src/__tests__/e2e-automated-validation.test.tsx:1964:        const intention = (await invoke('pipeline_analyze_intention', {
+src/__tests__/e2e-automated-validation.test.tsx:1968:        const response = (await invoke('pipeline_generate_cognitive_response', {
+src/__tests__/e2e-automated-validation.test.tsx:2001:        const rustWarnings = await invoke('autofix_detect_rust_warnings');
+src/__tests__/e2e-automated-validation.test.tsx:2002:        const tsErrors = await invoke('autofix_detect_typescript_errors');
+src/__tests__/e2e-automated-validation.test.tsx:2003:        const brokenModules = await invoke('autoheal_detect_broken_modules');
+src/__tests__/e2e-automated-validation.test.tsx:2010:          await invoke('autofix_fix_all');
+src/__tests__/e2e-automated-validation.test.tsx:2015:            await invoke('autoheal_heal_cognitive_module', {
+src/__tests__/e2e-automated-validation.test.tsx:2022:        const integrity = await invoke('singularity_check_integrity');
+src/__tests__/e2e-automated-validation.test.tsx:2040:        const tts = await invoke('pipeline_prepare_tts', {
+src/__tests__/e2e-automated-validation.test.tsx:2044:        const animation = await invoke('pipeline_prepare_avatar_animation', {
+src/__tests__/e2e-automated-validation.test.tsx:2064:        const state = await invoke('singularity_get_fusion_state');
+src/__tests__/e2e-automated-validation.test.tsx:2065:        const metrics = await invoke('performance_get_metrics');
+src/__tests__/e2e-automated-validation.test.tsx:2081:      const intention = (await invoke('pipeline_analyze_intention', {
+src/__tests__/e2e-automated-validation.test.tsx:2085:      const response = (await invoke('pipeline_generate_cognitive_response', {
+src/__tests__/e2e-automated-validation.test.tsx:2101:        const metrics = await invoke('performance_get_metrics');
+src/__tests__/e2e-automated-validation.test.tsx:2117:            invoke('singularity_get_fusion_state'),
+src/__tests__/e2e-automated-validation.test.tsx:2118:            invoke('performance_get_metrics'),
+src/__tests__/e2e-automated-validation.test.tsx:2119:            invoke('pipeline_get_stats'),
+src/__tests__/e2e-automated-validation.test.tsx:2142:        void (await invoke('crashguard_detect_threats'));
+src/__tests__/e2e-automated-validation.test.tsx:2143:        const broken = await invoke('autoheal_detect_broken_modules');
+src/__tests__/e2e-automated-validation.test.tsx:2147:          const healed = await invoke('autoheal_heal_cognitive_module', {
+src/__tests__/e2e-automated-validation.test.tsx:2155:        const integrity = await invoke('singularity_check_integrity');
+src/__tests__/e2e-automated-validation.test.tsx:2166:      const state = (await invoke('singularity_get_fusion_state')) as FusionStateResponse;
+src/__tests__/e2e-automated-validation.test.tsx:2167:      const integrity = (await invoke('singularity_check_integrity')) as number;
+src/__tests__/e2e-automated-validation.test.tsx:2168:      const metrics = (await invoke('performance_get_metrics')) as PerformanceMetrics;
+src/__tests__/e2e-automated-validation.test.tsx:2169:      const stats = (await invoke('autofix_get_stats')) as AutoFixStats;
+src/__tests__/e2e-automated-validation.test.tsx:2182:        const metrics = (await invoke('performance_get_metrics')) as {
+src/__tests__/e2e-automated-validation.test.tsx:2198:      const fusionState = (await invoke(
+src/__tests__/e2e-automated-validation.test.tsx:2204:      const pipelineStats = (await invoke('pipeline_get_stats')) as PipelineStats;
+src/__tests__/e2e-automated-validation.test.tsx:2208:      const perfMetrics = (await invoke('performance_get_metrics')) as PerformanceMetrics;
+src/__tests__/e2e-automated-validation.test.tsx:2212:      const threats = (await invoke('crashguard_detect_threats')) as unknown[];
+src/__tests__/e2e-automated-validation.test.tsx:2216:      const autofixStats = (await invoke('autofix_get_stats')) as AutoFixStats;
+src/utils/invoke.ts:12: * Wrapper universel pour invoke() avec gestion d'erreur automatique
+src/utils/invoke.ts:37: * Wrapper pour invoke() avec retry automatique
+src/utils/invoke.ts:79: * Wrapper pour invoke() avec timeout
+src/utils/logging/structuredLogger.ts:278:        await invoke('log_entries', { entries });
+src/tests/e2e/titane_e2e.test.ts:118:      const health = await invoke('get_system_health');
+src/tests/e2e/titane_e2e.test.ts:127:      const state = await invoke('singularity_get_full_state');
+src/tests/e2e/titane_e2e.test.ts:136:      const response = await invoke('conversation_generate', {
+src/tests/e2e/titane_e2e.test.ts:154:      const result = await invoke('memory_save_chat_interaction', {
+src/tests/e2e/titane_e2e.test.ts:168:      const stats = await invoke('memory_get_stats');
+src/tests/e2e/titane_e2e.test.ts:177:      await invoke('add_timeline_event', {
+src/tests/e2e/titane_e2e.test.ts:193:      const coherence = await invoke('singularity_get_global_coherence');
+src/tests/e2e/titane_e2e.test.ts:231:      const files = await invoke('secure_list_files');
+src/tests/e2e/titane_e2e.test.ts:244:      const parsed = await invoke('parse_document', { file_path: filePath });
+src/tests/e2e/titane_e2e.test.ts:253:      const analysis = await invoke('conversation_generate', {
+src/tests/e2e/titane_e2e.test.ts:270:      const result = await invoke('store_file', {
+src/tests/e2e/titane_e2e.test.ts:282:      const event = await invoke('add_timeline_event', {
+src/tests/e2e/titane_e2e.test.ts:296:      const files = await invoke('get_files_by_category', { category: 'legal' });
+src/tests/e2e/titane_e2e.test.ts:354:      const synthesis = await invoke('conversation_generate', {
+src/tests/e2e/titane_e2e.test.ts:371:      const stored = await invoke('memory_store', {
+src/tests/e2e/titane_e2e.test.ts:382:      const event = await invoke('add_timeline_event', {
+src/tests/e2e/titane_e2e.test.ts:424:      const state = await invoke('meta_get_state');
+src/tests/e2e/titane_e2e.test.ts:433:      const sync = await invoke('meta_trigger_sync');
+src/tests/e2e/titane_e2e.test.ts:442:      const alignment = await invoke('meta_get_alignment');
+src/tests/e2e/titane_e2e.test.ts:451:      const report = await invoke('meta_get_report');
+src/tests/e2e/titane_e2e.test.ts:460:      const coherence = await invoke('singularity_check_coherence');
+src/tests/e2e/titane_e2e.test.ts:469:      const selftest = await invoke('meta_selftest_all');
+src/tests/e2e/titane_e2e.test.ts:478:      const metrics = await invoke('meta_get_monitoring_metrics');
+src/tests/e2e/titane_e2e.test.ts:516:      const message = await invoke('chat_send_message', {
+src/tests/e2e/titane_e2e.test.ts:522:      await invoke('memory_save_chat_interaction', {
+src/tests/e2e/titane_e2e.test.ts:535:      const projects = await invoke('memory_get_active_projects');
+src/tests/e2e/titane_e2e.test.ts:544:      const parsed = await invoke('parse_document', {
+src/tests/e2e/titane_e2e.test.ts:555:      const snapshot = await invoke('write_snapshot', {
+src/tests/e2e/titane_e2e.test.ts:568:      const sync = await invoke('meta_trigger_sync');
+src/tests/e2e/titane_e2e.test.ts:576:      const state = await invoke('singularity_get_full_state');
+src/tests/e2e/titane_e2e.test.ts:585:      const coherence = await invoke('singularity_get_global_coherence');
+src/tests/regression/titane_regression.test.ts:70:          await invoke('memory_get_stats');
+src/tests/regression/titane_regression.test.ts:72:          await invoke('singularity_get_full_state');
+src/tests/regression/titane_regression.test.ts:74:          await invoke('cognitive_get_map');
+src/tests/regression/titane_regression.test.ts:76:          await invoke('meta_get_state');
+src/tests/regression/titane_regression.test.ts:78:          await invoke('get_timeline');
+src/tests/regression/titane_regression.test.ts:80:          await invoke('chat_get_providers_status');
+src/tests/regression/titane_regression.test.ts:120:        await invoke(command, {}).catch(() => {
+src/tests/regression/titane_regression.test.ts:153:      const stats = await invoke('memory_get_stats');
+src/tests/regression/titane_regression.test.ts:182:      const timeline = await invoke('get_timeline');
+src/tests/regression/titane_regression.test.ts:216:      const state = await invoke('singularity_get_full_state');
+src/tests/regression/titane_regression.test.ts:256:      await invoke('parse_document', { file_path: filePath });
+src/tests/regression/titane_regression.test.ts:283:      const timeline = await invoke('get_timeline');
+src/tests/regression/titane_regression.test.ts:333:      const response = await invoke('chat_send_message', {
+src/tests/regression/titane_regression.test.ts:383:      const status = await invoke('chat_get_providers_status');
+src/tests/regression/titane_regression.test.ts:420:      const state = await invoke('singularity_get_full_state');
+src/tests/regression/titane_regression.test.ts:421:      const coherence = await invoke('singularity_get_global_coherence');
+src/tests/regression/titane_regression.test.ts:484:      const stateBefore = await invoke('meta_get_state');
+src/tests/regression/titane_regression.test.ts:485:      await invoke('meta_trigger_sync');
+src/tests/regression/titane_regression.test.ts:486:      const stateAfter = await invoke('meta_get_state');
+src/tests/regression/titane_regression.test.ts:500:      const alignment = await invoke('meta_get_alignment');
+src/core/commands/TAURI_COMMANDS.ts:222: * Helper pour invoke() avec validation et protection robuste
+src/core/commands/TAURI_COMMANDS.ts:343: *       - Replace mock responses with await invoke(TAURI_COMMANDS.CHAT_SEND_MESSAGE, {message})
+src/hooks/useMultimodalPresence.ts:286:    // 1. Engine call: multimodalPresenceEngine.activateMirroring() or invoke('presence:activate_mirroring')
+src/hooks/useMultimodalPresence.ts:297:    // 1. Engine call: multimodalPresenceEngine.deactivateMirroring() or invoke('presence:deactivate_mirroring')
+src/hooks/useMemoryCore.ts:113:      await invoke('memory_clear');
+src/modules/devSudo/devSudoBackendHandlers.ts:125:   invoke('memory_scan') → #[tauri::command] memory_scan()
+src/modules/devSudo/devSudoBackendHandlers.ts:126:   invoke('secure_store_key') → #[tauri::command] secure_store_key()
+src/modules/devSudo/devSudoBackendHandlers.ts:127:   invoke('camera_start') → #[tauri::command] camera_start()
+src/modules/devSudo/devSudoBackendHandlers.ts:298:   invoke('${handlerName}').then(console.log).catch(console.error)
+src/modules/devSudo/devSudoBackendHandlers.ts:507:       return invoke('${apiName.toLowerCase()}_init');
+src/modules/devSudo/devSudoBackendHandlers.ts:511:       return invoke('${apiName.toLowerCase()}_execute', { input });
+src/modules/devSudo/devSudoBackendHandlers.ts:515:       return invoke('${apiName.toLowerCase()}_stop');
+src/modules/devSudo/devSudoSingularityHandlers.ts:948:  await invoke('command');
+src/modules/devSudo/devSudoBuiltins.ts:387:await window.__TAURI__.core.invoke('titan_state_get')
+src/core/devops/LocalAgentEngine.ts:960:      // 1. Tauri: invoke('fs_exists', {path}) - requires Tauri command registration
+src/core/devops/LocalAgentEngine.ts:972:      // 1. Tauri: invoke('read_json_file', {path}) - type-safe, sandboxed
+src/core/devops/VisualDevOpsEngine.ts:816:    // 2. Tauri filesystem: Use invoke('fs:write_file', { path, content }) to save
+src/hooks/useDevicePermissions.ts:267:  // - API: await invoke('plugin:screenshots|capture', {monitor: 0})
+src/core/identity/defaultIdentityMatrix.ts:321:  await invoke('identity_set_matrix', { matrix });
+src/hooks/useMemory.ts:132:        await invoke('delete_conversation', { conversationId });
+src/hooks/useMemory.ts:161:      await invoke('clear_all_memory');
+src/lib/logger.ts:285:      // await invoke('log_to_file', { entry: this.formatEntry(_entry) });
+src/os/bridge/TauriBridge.ts:32:      await this.invoke('ping');
+src/os/bridge/TauriBridge.ts:162:    return Promise.all(commands.map(cmd => this.invoke(cmd.name, cmd.args))) as Promise<
+src/os/bridge/TauriBridge.ts:172:      await this.invoke('ping');
+src/os/bridge/StateBridge.ts:84:      await this.bridge.invoke('set_state', { key, value });
+src/os/bridge/StateBridge.ts:116:      await this.bridge.invoke('delete_state', { key });
+src/os/bridge/StateBridge.ts:225:        await this.bridge.invoke('set_state', { key, value });
+src/components/ChatErrorBoundary.tsx:358:      // await invoke('report_chat_error', {
+src/services/api/index.ts:15: * Remplace les `invoke()` dispersés par une API cohérente + cache + validation.
+src/services/api/index.ts:103: * const projects = await invoke('memory_get_active_projects', { limit: 5 });
+src/services/api/index.ts:126: * Phase 2 (Semaine 2): Refactor tous les invoke() existants
+src/services/api/index.ts:130: * grep -r "invoke(" src/ --include="*.ts" --include="*.tsx"
+src/services/api/index.ts:136: *    `invoke('memory_get_active_projects')`
+src/services/api/index.ts:140: *    `invoke('chat_send_message', { messages, config })`
+src/services/api/index.ts:144: *    `invoke('speak', { text })`
+src/services/api/index.ts:148: *    `invoke('persona_get_multipliers')`
+src/services/api/index.ts:152: *    `invoke('system_get_status')`
+src/components/Onboarding/INTEGRATION_GUIDE.md:148:await invoke('reset_onboarding');
+src/components/Onboarding/INTEGRATION_GUIDE.md:257:await invoke('complete_onboarding', {
+src/components/Onboarding/INTEGRATION_GUIDE.md:267:const prefs = await invoke('get_onboarding_preferences');
+src/components/Onboarding/INTEGRATION_GUIDE.md:270:await invoke('reset_onboarding');
+src/components/Onboarding/INTEGRATION_GUIDE.md:302:await invoke('reset_onboarding');
+src/components/ErrorBoundary.tsx:85:    // 4. Tauri command: invoke('watchdog:report_ui_error', { errorReport })
+src/services/evolutionEngine/index.ts:254:      // await invoke('sync_evolution_state', { snapshot });
+src/services/ai/providers/tauriChat.ts:9: *   PHASE 4Ω: Protection invoke() • Timeout handling • Error isolation
+src/services/cognitive/index.ts:212:    await invoke('check_sqlite_available');
+src/services/tauriClient.ts:4: * Client centralisé pour tous les appels Tauri invoke()

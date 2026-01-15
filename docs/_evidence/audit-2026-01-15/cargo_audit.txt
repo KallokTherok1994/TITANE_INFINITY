@@ -1,0 +1,851 @@
+[0m[0m[1m[32m    Fetching[0m advisory database from `https://github.com/RustSec/advisory-db.git`
+[0m[0m[1m[32m      Loaded[0m 901 security advisories (from /home/titane-os/.cargo/advisory-db)
+[0m[0m[1m[32m    Updating[0m crates.io index
+[0m[0m[1m[32m    Scanning[0m Cargo.lock for vulnerabilities (748 crate dependencies)
+[0m[0m[1m[33mCrate:    [0m atk
+[0m[0m[1m[33mVersion:  [0m 0.18.2
+[0m[0m[1m[33mWarning:  [0m unmaintained
+[0m[0m[1m[33mTitle:    [0m gtk-rs GTK3 bindings - no longer maintained
+[0m[0m[1m[33mDate:     [0m 2024-03-04
+[0m[0m[1m[33mID:       [0m RUSTSEC-2024-0413
+[0m[0m[1m[33mURL:      [0m https://rustsec.org/advisories/RUSTSEC-2024-0413
+[0m[0m[1m[33mDependency tree:
+[0matk 0.18.2
+└── gtk 0.18.2
+    ├── wry 0.53.5
+    │   └── tauri-runtime-wry 2.9.3
+    │       └── tauri 2.9.5
+    │           ├── titane-infinity 26.3.0
+    │           ├── tauri-plugin-updater 2.9.0
+    │           │   └── titane-infinity 26.3.0
+    │           ├── tauri-plugin-fs 2.4.5
+    │           │   └── tauri-plugin-dialog 2.5.0
+    │           │       └── titane-infinity 26.3.0
+    │           ├── tauri-plugin-dialog 2.5.0
+    │           └── tauri-plugin-clipboard-manager 2.3.2
+    │               └── titane-infinity 26.3.0
+    ├── webkit2gtk 2.0.1
+    │   ├── wry 0.53.5
+    │   ├── tauri-runtime-wry 2.9.3
+    │   ├── tauri-runtime 2.9.2
+    │   │   ├── tauri-runtime-wry 2.9.3
+    │   │   └── tauri 2.9.5
+    │   └── tauri 2.9.5
+    ├── tauri-runtime-wry 2.9.3
+    ├── tauri-runtime 2.9.2
+    ├── tauri 2.9.5
+    ├── tao 0.34.5
+    │   └── tauri-runtime-wry 2.9.3
+    ├── muda 0.17.1
+    │   ├── tray-icon 0.21.2
+    │   │   └── tauri 2.9.5
+    │   └── tauri 2.9.5
+    └── libappindicator 0.9.0
+        └── tray-icon 0.21.2
+
+[0m[0m[1m[33mCrate:    [0m atk-sys
+[0m[0m[1m[33mVersion:  [0m 0.18.2
+[0m[0m[1m[33mWarning:  [0m unmaintained
+[0m[0m[1m[33mTitle:    [0m gtk-rs GTK3 bindings - no longer maintained
+[0m[0m[1m[33mDate:     [0m 2024-03-04
+[0m[0m[1m[33mID:       [0m RUSTSEC-2024-0416
+[0m[0m[1m[33mURL:      [0m https://rustsec.org/advisories/RUSTSEC-2024-0416
+[0m[0m[1m[33mDependency tree:
+[0matk-sys 0.18.2
+├── gtk-sys 0.18.2
+│   ├── webkit2gtk-sys 2.0.1
+│   │   ├── wry 0.53.5
+│   │   │   └── tauri-runtime-wry 2.9.3
+│   │   │       └── tauri 2.9.5
+│   │   │           ├── titane-infinity 26.3.0
+│   │   │           ├── tauri-plugin-updater 2.9.0
+│   │   │           │   └── titane-infinity 26.3.0
+│   │   │           ├── tauri-plugin-fs 2.4.5
+│   │   │           │   └── tauri-plugin-dialog 2.5.0
+│   │   │           │       └── titane-infinity 26.3.0
+│   │   │           ├── tauri-plugin-dialog 2.5.0
+│   │   │           └── tauri-plugin-clipboard-manager 2.3.2
+│   │   │               └── titane-infinity 26.3.0
+│   │   └── webkit2gtk 2.0.1
+│   │       ├── wry 0.53.5
+│   │       ├── tauri-runtime-wry 2.9.3
+│   │       ├── tauri-runtime 2.9.2
+│   │       │   ├── tauri-runtime-wry 2.9.3
+│   │       │   └── tauri 2.9.5
+│   │       └── tauri 2.9.5
+│   ├── webkit2gtk 2.0.1
+│   ├── rfd 0.16.0
+│   │   └── tauri-plugin-dialog 2.5.0
+│   ├── libappindicator-sys 0.9.0
+│   │   └── libappindicator 0.9.0
+│   │       └── tray-icon 0.21.2
+│   │           └── tauri 2.9.5
+│   ├── libappindicator 0.9.0
+│   └── gtk 0.18.2
+│       ├── wry 0.53.5
+│       ├── webkit2gtk 2.0.1
+│       ├── tauri-runtime-wry 2.9.3
+│       ├── tauri-runtime 2.9.2
+│       ├── tauri 2.9.5
+│       ├── tao 0.34.5
+│       │   └── tauri-runtime-wry 2.9.3
+│       ├── muda 0.17.1
+│       │   ├── tray-icon 0.21.2
+│       │   └── tauri 2.9.5
+│       └── libappindicator 0.9.0
+└── atk 0.18.2
+    └── gtk 0.18.2
+
+[0m[0m[1m[33mCrate:    [0m bincode
+[0m[0m[1m[33mVersion:  [0m 1.3.3
+[0m[0m[1m[33mWarning:  [0m unmaintained
+[0m[0m[1m[33mTitle:    [0m Bincode is unmaintained
+[0m[0m[1m[33mDate:     [0m 2025-12-16
+[0m[0m[1m[33mID:       [0m RUSTSEC-2025-0141
+[0m[0m[1m[33mURL:      [0m https://rustsec.org/advisories/RUSTSEC-2025-0141
+[0m[0m[1m[33mDependency tree:
+[0mbincode 1.3.3
+└── hnsw_rs 0.3.3
+    └── titane-infinity 26.3.0
+
+[0m[0m[1m[33mCrate:    [0m fxhash
+[0m[0m[1m[33mVersion:  [0m 0.2.1
+[0m[0m[1m[33mWarning:  [0m unmaintained
+[0m[0m[1m[33mTitle:    [0m fxhash - no longer maintained
+[0m[0m[1m[33mDate:     [0m 2025-09-05
+[0m[0m[1m[33mID:       [0m RUSTSEC-2025-0057
+[0m[0m[1m[33mURL:      [0m https://rustsec.org/advisories/RUSTSEC-2025-0057
+[0m[0m[1m[33mDependency tree:
+[0mfxhash 0.2.1
+└── selectors 0.24.0
+    └── kuchikiki 0.8.8-speedreader
+        ├── wry 0.53.5
+        │   └── tauri-runtime-wry 2.9.3
+        │       └── tauri 2.9.5
+        │           ├── titane-infinity 26.3.0
+        │           ├── tauri-plugin-updater 2.9.0
+        │           │   └── titane-infinity 26.3.0
+        │           ├── tauri-plugin-fs 2.4.5
+        │           │   └── tauri-plugin-dialog 2.5.0
+        │           │       └── titane-infinity 26.3.0
+        │           ├── tauri-plugin-dialog 2.5.0
+        │           └── tauri-plugin-clipboard-manager 2.3.2
+        │               └── titane-infinity 26.3.0
+        └── tauri-utils 2.8.1
+            ├── tauri-runtime-wry 2.9.3
+            ├── tauri-runtime 2.9.2
+            │   ├── tauri-runtime-wry 2.9.3
+            │   └── tauri 2.9.5
+            ├── tauri-plugin-fs 2.4.5
+            ├── tauri-plugin 2.5.2
+            │   ├── tauri-plugin-updater 2.9.0
+            │   ├── tauri-plugin-fs 2.4.5
+            │   ├── tauri-plugin-dialog 2.5.0
+            │   └── tauri-plugin-clipboard-manager 2.3.2
+            ├── tauri-macros 2.5.2
+            │   └── tauri 2.9.5
+            ├── tauri-codegen 2.5.2
+            │   └── tauri-macros 2.5.2
+            ├── tauri-build 2.5.3
+            │   ├── titane-infinity 26.3.0
+            │   └── tauri 2.9.5
+            └── tauri 2.9.5
+
+[0m[0m[1m[33mCrate:    [0m gdk
+[0m[0m[1m[33mVersion:  [0m 0.18.2
+[0m[0m[1m[33mWarning:  [0m unmaintained
+[0m[0m[1m[33mTitle:    [0m gtk-rs GTK3 bindings - no longer maintained
+[0m[0m[1m[33mDate:     [0m 2024-03-04
+[0m[0m[1m[33mID:       [0m RUSTSEC-2024-0412
+[0m[0m[1m[33mURL:      [0m https://rustsec.org/advisories/RUSTSEC-2024-0412
+[0m[0m[1m[33mDependency tree:
+[0mgdk 0.18.2
+├── webkit2gtk 2.0.1
+│   ├── wry 0.53.5
+│   │   └── tauri-runtime-wry 2.9.3
+│   │       └── tauri 2.9.5
+│   │           ├── titane-infinity 26.3.0
+│   │           ├── tauri-plugin-updater 2.9.0
+│   │           │   └── titane-infinity 26.3.0
+│   │           ├── tauri-plugin-fs 2.4.5
+│   │           │   └── tauri-plugin-dialog 2.5.0
+│   │           │       └── titane-infinity 26.3.0
+│   │           ├── tauri-plugin-dialog 2.5.0
+│   │           └── tauri-plugin-clipboard-manager 2.3.2
+│   │               └── titane-infinity 26.3.0
+│   ├── tauri-runtime-wry 2.9.3
+│   ├── tauri-runtime 2.9.2
+│   │   ├── tauri-runtime-wry 2.9.3
+│   │   └── tauri 2.9.5
+│   └── tauri 2.9.5
+├── gtk 0.18.2
+│   ├── wry 0.53.5
+│   ├── webkit2gtk 2.0.1
+│   ├── tauri-runtime-wry 2.9.3
+│   ├── tauri-runtime 2.9.2
+│   ├── tauri 2.9.5
+│   ├── tao 0.34.5
+│   │   └── tauri-runtime-wry 2.9.3
+│   ├── muda 0.17.1
+│   │   ├── tray-icon 0.21.2
+│   │   │   └── tauri 2.9.5
+│   │   └── tauri 2.9.5
+│   └── libappindicator 0.9.0
+│       └── tray-icon 0.21.2
+└── gdkx11 0.18.2
+    └── wry 0.53.5
+
+[0m[0m[1m[33mCrate:    [0m gdk-sys
+[0m[0m[1m[33mVersion:  [0m 0.18.2
+[0m[0m[1m[33mWarning:  [0m unmaintained
+[0m[0m[1m[33mTitle:    [0m gtk-rs GTK3 bindings - no longer maintained
+[0m[0m[1m[33mDate:     [0m 2024-03-04
+[0m[0m[1m[33mID:       [0m RUSTSEC-2024-0418
+[0m[0m[1m[33mURL:      [0m https://rustsec.org/advisories/RUSTSEC-2024-0418
+[0m[0m[1m[33mDependency tree:
+[0mgdk-sys 0.18.2
+├── webkit2gtk-sys 2.0.1
+│   ├── wry 0.53.5
+│   │   └── tauri-runtime-wry 2.9.3
+│   │       └── tauri 2.9.5
+│   │           ├── titane-infinity 26.3.0
+│   │           ├── tauri-plugin-updater 2.9.0
+│   │           │   └── titane-infinity 26.3.0
+│   │           ├── tauri-plugin-fs 2.4.5
+│   │           │   └── tauri-plugin-dialog 2.5.0
+│   │           │       └── titane-infinity 26.3.0
+│   │           ├── tauri-plugin-dialog 2.5.0
+│   │           └── tauri-plugin-clipboard-manager 2.3.2
+│   │               └── titane-infinity 26.3.0
+│   └── webkit2gtk 2.0.1
+│       ├── wry 0.53.5
+│       ├── tauri-runtime-wry 2.9.3
+│       ├── tauri-runtime 2.9.2
+│       │   ├── tauri-runtime-wry 2.9.3
+│       │   └── tauri 2.9.5
+│       └── tauri 2.9.5
+├── webkit2gtk 2.0.1
+├── gtk-sys 0.18.2
+│   ├── webkit2gtk-sys 2.0.1
+│   ├── webkit2gtk 2.0.1
+│   ├── rfd 0.16.0
+│   │   └── tauri-plugin-dialog 2.5.0
+│   ├── libappindicator-sys 0.9.0
+│   │   └── libappindicator 0.9.0
+│   │       └── tray-icon 0.21.2
+│   │           └── tauri 2.9.5
+│   ├── libappindicator 0.9.0
+│   └── gtk 0.18.2
+│       ├── wry 0.53.5
+│       ├── webkit2gtk 2.0.1
+│       ├── tauri-runtime-wry 2.9.3
+│       ├── tauri-runtime 2.9.2
+│       ├── tauri 2.9.5
+│       ├── tao 0.34.5
+│       │   └── tauri-runtime-wry 2.9.3
+│       ├── muda 0.17.1
+│       │   ├── tray-icon 0.21.2
+│       │   └── tauri 2.9.5
+│       └── libappindicator 0.9.0
+├── gdkx11-sys 0.18.2
+│   ├── tao 0.34.5
+│   └── gdkx11 0.18.2
+│       └── wry 0.53.5
+├── gdkwayland-sys 0.18.2
+│   └── tao 0.34.5
+└── gdk 0.18.2
+    ├── webkit2gtk 2.0.1
+    ├── gtk 0.18.2
+    └── gdkx11 0.18.2
+
+[0m[0m[1m[33mCrate:    [0m gdkwayland-sys
+[0m[0m[1m[33mVersion:  [0m 0.18.2
+[0m[0m[1m[33mWarning:  [0m unmaintained
+[0m[0m[1m[33mTitle:    [0m gtk-rs GTK3 bindings - no longer maintained
+[0m[0m[1m[33mDate:     [0m 2024-03-04
+[0m[0m[1m[33mID:       [0m RUSTSEC-2024-0411
+[0m[0m[1m[33mURL:      [0m https://rustsec.org/advisories/RUSTSEC-2024-0411
+[0m[0m[1m[33mDependency tree:
+[0mgdkwayland-sys 0.18.2
+└── tao 0.34.5
+    └── tauri-runtime-wry 2.9.3
+        └── tauri 2.9.5
+            ├── titane-infinity 26.3.0
+            ├── tauri-plugin-updater 2.9.0
+            │   └── titane-infinity 26.3.0
+            ├── tauri-plugin-fs 2.4.5
+            │   └── tauri-plugin-dialog 2.5.0
+            │       └── titane-infinity 26.3.0
+            ├── tauri-plugin-dialog 2.5.0
+            └── tauri-plugin-clipboard-manager 2.3.2
+                └── titane-infinity 26.3.0
+
+[0m[0m[1m[33mCrate:    [0m gdkx11
+[0m[0m[1m[33mVersion:  [0m 0.18.2
+[0m[0m[1m[33mWarning:  [0m unmaintained
+[0m[0m[1m[33mTitle:    [0m gtk-rs GTK3 bindings - no longer maintained
+[0m[0m[1m[33mDate:     [0m 2024-03-04
+[0m[0m[1m[33mID:       [0m RUSTSEC-2024-0417
+[0m[0m[1m[33mURL:      [0m https://rustsec.org/advisories/RUSTSEC-2024-0417
+[0m[0m[1m[33mDependency tree:
+[0mgdkx11 0.18.2
+└── wry 0.53.5
+    └── tauri-runtime-wry 2.9.3
+        └── tauri 2.9.5
+            ├── titane-infinity 26.3.0
+            ├── tauri-plugin-updater 2.9.0
+            │   └── titane-infinity 26.3.0
+            ├── tauri-plugin-fs 2.4.5
+            │   └── tauri-plugin-dialog 2.5.0
+            │       └── titane-infinity 26.3.0
+            ├── tauri-plugin-dialog 2.5.0
+            └── tauri-plugin-clipboard-manager 2.3.2
+                └── titane-infinity 26.3.0
+
+[0m[0m[1m[33mCrate:    [0m gdkx11-sys
+[0m[0m[1m[33mVersion:  [0m 0.18.2
+[0m[0m[1m[33mWarning:  [0m unmaintained
+[0m[0m[1m[33mTitle:    [0m gtk-rs GTK3 bindings - no longer maintained
+[0m[0m[1m[33mDate:     [0m 2024-03-04
+[0m[0m[1m[33mID:       [0m RUSTSEC-2024-0414
+[0m[0m[1m[33mURL:      [0m https://rustsec.org/advisories/RUSTSEC-2024-0414
+[0m[0m[1m[33mDependency tree:
+[0mgdkx11-sys 0.18.2
+├── tao 0.34.5
+│   └── tauri-runtime-wry 2.9.3
+│       └── tauri 2.9.5
+│           ├── titane-infinity 26.3.0
+│           ├── tauri-plugin-updater 2.9.0
+│           │   └── titane-infinity 26.3.0
+│           ├── tauri-plugin-fs 2.4.5
+│           │   └── tauri-plugin-dialog 2.5.0
+│           │       └── titane-infinity 26.3.0
+│           ├── tauri-plugin-dialog 2.5.0
+│           └── tauri-plugin-clipboard-manager 2.3.2
+│               └── titane-infinity 26.3.0
+└── gdkx11 0.18.2
+    └── wry 0.53.5
+        └── tauri-runtime-wry 2.9.3
+
+[0m[0m[1m[33mCrate:    [0m gtk
+[0m[0m[1m[33mVersion:  [0m 0.18.2
+[0m[0m[1m[33mWarning:  [0m unmaintained
+[0m[0m[1m[33mTitle:    [0m gtk-rs GTK3 bindings - no longer maintained
+[0m[0m[1m[33mDate:     [0m 2024-03-04
+[0m[0m[1m[33mID:       [0m RUSTSEC-2024-0415
+[0m[0m[1m[33mURL:      [0m https://rustsec.org/advisories/RUSTSEC-2024-0415
+[0m[0m[1m[33mDependency tree:
+[0mgtk 0.18.2
+├── wry 0.53.5
+│   └── tauri-runtime-wry 2.9.3
+│       └── tauri 2.9.5
+│           ├── titane-infinity 26.3.0
+│           ├── tauri-plugin-updater 2.9.0
+│           │   └── titane-infinity 26.3.0
+│           ├── tauri-plugin-fs 2.4.5
+│           │   └── tauri-plugin-dialog 2.5.0
+│           │       └── titane-infinity 26.3.0
+│           ├── tauri-plugin-dialog 2.5.0
+│           └── tauri-plugin-clipboard-manager 2.3.2
+│               └── titane-infinity 26.3.0
+├── webkit2gtk 2.0.1
+│   ├── wry 0.53.5
+│   ├── tauri-runtime-wry 2.9.3
+│   ├── tauri-runtime 2.9.2
+│   │   ├── tauri-runtime-wry 2.9.3
+│   │   └── tauri 2.9.5
+│   └── tauri 2.9.5
+├── tauri-runtime-wry 2.9.3
+├── tauri-runtime 2.9.2
+├── tauri 2.9.5
+├── tao 0.34.5
+│   └── tauri-runtime-wry 2.9.3
+├── muda 0.17.1
+│   ├── tray-icon 0.21.2
+│   │   └── tauri 2.9.5
+│   └── tauri 2.9.5
+└── libappindicator 0.9.0
+    └── tray-icon 0.21.2
+
+[0m[0m[1m[33mCrate:    [0m gtk-sys
+[0m[0m[1m[33mVersion:  [0m 0.18.2
+[0m[0m[1m[33mWarning:  [0m unmaintained
+[0m[0m[1m[33mTitle:    [0m gtk-rs GTK3 bindings - no longer maintained
+[0m[0m[1m[33mDate:     [0m 2024-03-04
+[0m[0m[1m[33mID:       [0m RUSTSEC-2024-0420
+[0m[0m[1m[33mURL:      [0m https://rustsec.org/advisories/RUSTSEC-2024-0420
+[0m[0m[1m[33mDependency tree:
+[0mgtk-sys 0.18.2
+├── webkit2gtk-sys 2.0.1
+│   ├── wry 0.53.5
+│   │   └── tauri-runtime-wry 2.9.3
+│   │       └── tauri 2.9.5
+│   │           ├── titane-infinity 26.3.0
+│   │           ├── tauri-plugin-updater 2.9.0
+│   │           │   └── titane-infinity 26.3.0
+│   │           ├── tauri-plugin-fs 2.4.5
+│   │           │   └── tauri-plugin-dialog 2.5.0
+│   │           │       └── titane-infinity 26.3.0
+│   │           ├── tauri-plugin-dialog 2.5.0
+│   │           └── tauri-plugin-clipboard-manager 2.3.2
+│   │               └── titane-infinity 26.3.0
+│   └── webkit2gtk 2.0.1
+│       ├── wry 0.53.5
+│       ├── tauri-runtime-wry 2.9.3
+│       ├── tauri-runtime 2.9.2
+│       │   ├── tauri-runtime-wry 2.9.3
+│       │   └── tauri 2.9.5
+│       └── tauri 2.9.5
+├── webkit2gtk 2.0.1
+├── rfd 0.16.0
+│   └── tauri-plugin-dialog 2.5.0
+├── libappindicator-sys 0.9.0
+│   └── libappindicator 0.9.0
+│       └── tray-icon 0.21.2
+│           └── tauri 2.9.5
+├── libappindicator 0.9.0
+└── gtk 0.18.2
+    ├── wry 0.53.5
+    ├── webkit2gtk 2.0.1
+    ├── tauri-runtime-wry 2.9.3
+    ├── tauri-runtime 2.9.2
+    ├── tauri 2.9.5
+    ├── tao 0.34.5
+    │   └── tauri-runtime-wry 2.9.3
+    ├── muda 0.17.1
+    │   ├── tray-icon 0.21.2
+    │   └── tauri 2.9.5
+    └── libappindicator 0.9.0
+
+[0m[0m[1m[33mCrate:    [0m gtk3-macros
+[0m[0m[1m[33mVersion:  [0m 0.18.2
+[0m[0m[1m[33mWarning:  [0m unmaintained
+[0m[0m[1m[33mTitle:    [0m gtk-rs GTK3 bindings - no longer maintained
+[0m[0m[1m[33mDate:     [0m 2024-03-04
+[0m[0m[1m[33mID:       [0m RUSTSEC-2024-0419
+[0m[0m[1m[33mURL:      [0m https://rustsec.org/advisories/RUSTSEC-2024-0419
+[0m[0m[1m[33mDependency tree:
+[0mgtk3-macros 0.18.2
+└── gtk 0.18.2
+    ├── wry 0.53.5
+    │   └── tauri-runtime-wry 2.9.3
+    │       └── tauri 2.9.5
+    │           ├── titane-infinity 26.3.0
+    │           ├── tauri-plugin-updater 2.9.0
+    │           │   └── titane-infinity 26.3.0
+    │           ├── tauri-plugin-fs 2.4.5
+    │           │   └── tauri-plugin-dialog 2.5.0
+    │           │       └── titane-infinity 26.3.0
+    │           ├── tauri-plugin-dialog 2.5.0
+    │           └── tauri-plugin-clipboard-manager 2.3.2
+    │               └── titane-infinity 26.3.0
+    ├── webkit2gtk 2.0.1
+    │   ├── wry 0.53.5
+    │   ├── tauri-runtime-wry 2.9.3
+    │   ├── tauri-runtime 2.9.2
+    │   │   ├── tauri-runtime-wry 2.9.3
+    │   │   └── tauri 2.9.5
+    │   └── tauri 2.9.5
+    ├── tauri-runtime-wry 2.9.3
+    ├── tauri-runtime 2.9.2
+    ├── tauri 2.9.5
+    ├── tao 0.34.5
+    │   └── tauri-runtime-wry 2.9.3
+    ├── muda 0.17.1
+    │   ├── tray-icon 0.21.2
+    │   │   └── tauri 2.9.5
+    │   └── tauri 2.9.5
+    └── libappindicator 0.9.0
+        └── tray-icon 0.21.2
+
+[0m[0m[1m[33mCrate:    [0m paste
+[0m[0m[1m[33mVersion:  [0m 1.0.15
+[0m[0m[1m[33mWarning:  [0m unmaintained
+[0m[0m[1m[33mTitle:    [0m paste - no longer maintained
+[0m[0m[1m[33mDate:     [0m 2024-10-07
+[0m[0m[1m[33mID:       [0m RUSTSEC-2024-0436
+[0m[0m[1m[33mURL:      [0m https://rustsec.org/advisories/RUSTSEC-2024-0436
+[0m[0m[1m[33mDependency tree:
+[0mpaste 1.0.15
+└── rav1e 0.8.1
+    └── ravif 0.12.0
+        └── image 0.25.9
+            ├── titane-infinity 26.3.0
+            └── arboard 3.6.1
+                └── tauri-plugin-clipboard-manager 2.3.2
+                    └── titane-infinity 26.3.0
+
+[0m[0m[1m[33mCrate:    [0m proc-macro-error
+[0m[0m[1m[33mVersion:  [0m 1.0.4
+[0m[0m[1m[33mWarning:  [0m unmaintained
+[0m[0m[1m[33mTitle:    [0m proc-macro-error is unmaintained
+[0m[0m[1m[33mDate:     [0m 2024-09-01
+[0m[0m[1m[33mID:       [0m RUSTSEC-2024-0370
+[0m[0m[1m[33mURL:      [0m https://rustsec.org/advisories/RUSTSEC-2024-0370
+[0m[0m[1m[33mDependency tree:
+[0mproc-macro-error 1.0.4
+├── gtk3-macros 0.18.2
+│   └── gtk 0.18.2
+│       ├── wry 0.53.5
+│       │   └── tauri-runtime-wry 2.9.3
+│       │       └── tauri 2.9.5
+│       │           ├── titane-infinity 26.3.0
+│       │           ├── tauri-plugin-updater 2.9.0
+│       │           │   └── titane-infinity 26.3.0
+│       │           ├── tauri-plugin-fs 2.4.5
+│       │           │   └── tauri-plugin-dialog 2.5.0
+│       │           │       └── titane-infinity 26.3.0
+│       │           ├── tauri-plugin-dialog 2.5.0
+│       │           └── tauri-plugin-clipboard-manager 2.3.2
+│       │               └── titane-infinity 26.3.0
+│       ├── webkit2gtk 2.0.1
+│       │   ├── wry 0.53.5
+│       │   ├── tauri-runtime-wry 2.9.3
+│       │   ├── tauri-runtime 2.9.2
+│       │   │   ├── tauri-runtime-wry 2.9.3
+│       │   │   └── tauri 2.9.5
+│       │   └── tauri 2.9.5
+│       ├── tauri-runtime-wry 2.9.3
+│       ├── tauri-runtime 2.9.2
+│       ├── tauri 2.9.5
+│       ├── tao 0.34.5
+│       │   └── tauri-runtime-wry 2.9.3
+│       ├── muda 0.17.1
+│       │   ├── tray-icon 0.21.2
+│       │   │   └── tauri 2.9.5
+│       │   └── tauri 2.9.5
+│       └── libappindicator 0.9.0
+│           └── tray-icon 0.21.2
+└── glib-macros 0.18.5
+    └── glib 0.18.5
+        ├── webkit2gtk 2.0.1
+        ├── soup3 0.5.0
+        │   ├── wry 0.53.5
+        │   └── webkit2gtk 2.0.1
+        ├── pango 0.18.3
+        │   ├── gtk 0.18.2
+        │   └── gdk 0.18.2
+        │       ├── webkit2gtk 2.0.1
+        │       ├── gtk 0.18.2
+        │       └── gdkx11 0.18.2
+        │           └── wry 0.53.5
+        ├── libappindicator 0.9.0
+        ├── javascriptcore-rs 1.1.2
+        │   ├── wry 0.53.5
+        │   └── webkit2gtk 2.0.1
+        ├── gtk 0.18.2
+        ├── gio 0.18.4
+        │   ├── webkit2gtk 2.0.1
+        │   ├── soup3 0.5.0
+        │   ├── pango 0.18.3
+        │   ├── gtk 0.18.2
+        │   ├── gdkx11 0.18.2
+        │   ├── gdk-pixbuf 0.18.5
+        │   │   ├── gtk 0.18.2
+        │   │   └── gdk 0.18.2
+        │   └── gdk 0.18.2
+        ├── gdkx11 0.18.2
+        ├── gdk-pixbuf 0.18.5
+        ├── gdk 0.18.2
+        ├── cairo-rs 0.18.5
+        │   ├── webkit2gtk 2.0.1
+        │   ├── gtk 0.18.2
+        │   └── gdk 0.18.2
+        └── atk 0.18.2
+            └── gtk 0.18.2
+
+[0m[0m[1m[33mCrate:    [0m rustls-pemfile
+[0m[0m[1m[33mVersion:  [0m 1.0.4
+[0m[0m[1m[33mWarning:  [0m unmaintained
+[0m[0m[1m[33mTitle:    [0m rustls-pemfile is unmaintained
+[0m[0m[1m[33mDate:     [0m 2025-11-28
+[0m[0m[1m[33mID:       [0m RUSTSEC-2025-0134
+[0m[0m[1m[33mURL:      [0m https://rustsec.org/advisories/RUSTSEC-2025-0134
+[0m[0m[1m[33mDependency tree:
+[0mrustls-pemfile 1.0.4
+└── reqwest 0.11.27
+    └── titane-infinity 26.3.0
+
+[0m[0m[1m[33mCrate:    [0m unic-char-property
+[0m[0m[1m[33mVersion:  [0m 0.9.0
+[0m[0m[1m[33mWarning:  [0m unmaintained
+[0m[0m[1m[33mTitle:    [0m `unic-char-property` is unmaintained
+[0m[0m[1m[33mDate:     [0m 2025-10-18
+[0m[0m[1m[33mID:       [0m RUSTSEC-2025-0081
+[0m[0m[1m[33mURL:      [0m https://rustsec.org/advisories/RUSTSEC-2025-0081
+[0m[0m[1m[33mDependency tree:
+[0munic-char-property 0.9.0
+└── unic-ucd-ident 0.9.0
+    └── urlpattern 0.3.0
+        └── tauri-utils 2.8.1
+            ├── tauri-runtime-wry 2.9.3
+            │   └── tauri 2.9.5
+            │       ├── titane-infinity 26.3.0
+            │       ├── tauri-plugin-updater 2.9.0
+            │       │   └── titane-infinity 26.3.0
+            │       ├── tauri-plugin-fs 2.4.5
+            │       │   └── tauri-plugin-dialog 2.5.0
+            │       │       └── titane-infinity 26.3.0
+            │       ├── tauri-plugin-dialog 2.5.0
+            │       └── tauri-plugin-clipboard-manager 2.3.2
+            │           └── titane-infinity 26.3.0
+            ├── tauri-runtime 2.9.2
+            │   ├── tauri-runtime-wry 2.9.3
+            │   └── tauri 2.9.5
+            ├── tauri-plugin-fs 2.4.5
+            ├── tauri-plugin 2.5.2
+            │   ├── tauri-plugin-updater 2.9.0
+            │   ├── tauri-plugin-fs 2.4.5
+            │   ├── tauri-plugin-dialog 2.5.0
+            │   └── tauri-plugin-clipboard-manager 2.3.2
+            ├── tauri-macros 2.5.2
+            │   └── tauri 2.9.5
+            ├── tauri-codegen 2.5.2
+            │   └── tauri-macros 2.5.2
+            ├── tauri-build 2.5.3
+            │   ├── titane-infinity 26.3.0
+            │   └── tauri 2.9.5
+            └── tauri 2.9.5
+
+[0m[0m[1m[33mCrate:    [0m unic-char-range
+[0m[0m[1m[33mVersion:  [0m 0.9.0
+[0m[0m[1m[33mWarning:  [0m unmaintained
+[0m[0m[1m[33mTitle:    [0m `unic-char-range` is unmaintained
+[0m[0m[1m[33mDate:     [0m 2025-10-18
+[0m[0m[1m[33mID:       [0m RUSTSEC-2025-0075
+[0m[0m[1m[33mURL:      [0m https://rustsec.org/advisories/RUSTSEC-2025-0075
+[0m[0m[1m[33mDependency tree:
+[0munic-char-range 0.9.0
+├── unic-ucd-ident 0.9.0
+│   └── urlpattern 0.3.0
+│       └── tauri-utils 2.8.1
+│           ├── tauri-runtime-wry 2.9.3
+│           │   └── tauri 2.9.5
+│           │       ├── titane-infinity 26.3.0
+│           │       ├── tauri-plugin-updater 2.9.0
+│           │       │   └── titane-infinity 26.3.0
+│           │       ├── tauri-plugin-fs 2.4.5
+│           │       │   └── tauri-plugin-dialog 2.5.0
+│           │       │       └── titane-infinity 26.3.0
+│           │       ├── tauri-plugin-dialog 2.5.0
+│           │       └── tauri-plugin-clipboard-manager 2.3.2
+│           │           └── titane-infinity 26.3.0
+│           ├── tauri-runtime 2.9.2
+│           │   ├── tauri-runtime-wry 2.9.3
+│           │   └── tauri 2.9.5
+│           ├── tauri-plugin-fs 2.4.5
+│           ├── tauri-plugin 2.5.2
+│           │   ├── tauri-plugin-updater 2.9.0
+│           │   ├── tauri-plugin-fs 2.4.5
+│           │   ├── tauri-plugin-dialog 2.5.0
+│           │   └── tauri-plugin-clipboard-manager 2.3.2
+│           ├── tauri-macros 2.5.2
+│           │   └── tauri 2.9.5
+│           ├── tauri-codegen 2.5.2
+│           │   └── tauri-macros 2.5.2
+│           ├── tauri-build 2.5.3
+│           │   ├── titane-infinity 26.3.0
+│           │   └── tauri 2.9.5
+│           └── tauri 2.9.5
+└── unic-char-property 0.9.0
+    └── unic-ucd-ident 0.9.0
+
+[0m[0m[1m[33mCrate:    [0m unic-common
+[0m[0m[1m[33mVersion:  [0m 0.9.0
+[0m[0m[1m[33mWarning:  [0m unmaintained
+[0m[0m[1m[33mTitle:    [0m `unic-common` is unmaintained
+[0m[0m[1m[33mDate:     [0m 2025-10-18
+[0m[0m[1m[33mID:       [0m RUSTSEC-2025-0080
+[0m[0m[1m[33mURL:      [0m https://rustsec.org/advisories/RUSTSEC-2025-0080
+[0m[0m[1m[33mDependency tree:
+[0munic-common 0.9.0
+└── unic-ucd-version 0.9.0
+    └── unic-ucd-ident 0.9.0
+        └── urlpattern 0.3.0
+            └── tauri-utils 2.8.1
+                ├── tauri-runtime-wry 2.9.3
+                │   └── tauri 2.9.5
+                │       ├── titane-infinity 26.3.0
+                │       ├── tauri-plugin-updater 2.9.0
+                │       │   └── titane-infinity 26.3.0
+                │       ├── tauri-plugin-fs 2.4.5
+                │       │   └── tauri-plugin-dialog 2.5.0
+                │       │       └── titane-infinity 26.3.0
+                │       ├── tauri-plugin-dialog 2.5.0
+                │       └── tauri-plugin-clipboard-manager 2.3.2
+                │           └── titane-infinity 26.3.0
+                ├── tauri-runtime 2.9.2
+                │   ├── tauri-runtime-wry 2.9.3
+                │   └── tauri 2.9.5
+                ├── tauri-plugin-fs 2.4.5
+                ├── tauri-plugin 2.5.2
+                │   ├── tauri-plugin-updater 2.9.0
+                │   ├── tauri-plugin-fs 2.4.5
+                │   ├── tauri-plugin-dialog 2.5.0
+                │   └── tauri-plugin-clipboard-manager 2.3.2
+                ├── tauri-macros 2.5.2
+                │   └── tauri 2.9.5
+                ├── tauri-codegen 2.5.2
+                │   └── tauri-macros 2.5.2
+                ├── tauri-build 2.5.3
+                │   ├── titane-infinity 26.3.0
+                │   └── tauri 2.9.5
+                └── tauri 2.9.5
+
+[0m[0m[1m[33mCrate:    [0m unic-ucd-ident
+[0m[0m[1m[33mVersion:  [0m 0.9.0
+[0m[0m[1m[33mWarning:  [0m unmaintained
+[0m[0m[1m[33mTitle:    [0m `unic-ucd-ident` is unmaintained
+[0m[0m[1m[33mDate:     [0m 2025-10-18
+[0m[0m[1m[33mID:       [0m RUSTSEC-2025-0100
+[0m[0m[1m[33mURL:      [0m https://rustsec.org/advisories/RUSTSEC-2025-0100
+[0m[0m[1m[33mDependency tree:
+[0munic-ucd-ident 0.9.0
+└── urlpattern 0.3.0
+    └── tauri-utils 2.8.1
+        ├── tauri-runtime-wry 2.9.3
+        │   └── tauri 2.9.5
+        │       ├── titane-infinity 26.3.0
+        │       ├── tauri-plugin-updater 2.9.0
+        │       │   └── titane-infinity 26.3.0
+        │       ├── tauri-plugin-fs 2.4.5
+        │       │   └── tauri-plugin-dialog 2.5.0
+        │       │       └── titane-infinity 26.3.0
+        │       ├── tauri-plugin-dialog 2.5.0
+        │       └── tauri-plugin-clipboard-manager 2.3.2
+        │           └── titane-infinity 26.3.0
+        ├── tauri-runtime 2.9.2
+        │   ├── tauri-runtime-wry 2.9.3
+        │   └── tauri 2.9.5
+        ├── tauri-plugin-fs 2.4.5
+        ├── tauri-plugin 2.5.2
+        │   ├── tauri-plugin-updater 2.9.0
+        │   ├── tauri-plugin-fs 2.4.5
+        │   ├── tauri-plugin-dialog 2.5.0
+        │   └── tauri-plugin-clipboard-manager 2.3.2
+        ├── tauri-macros 2.5.2
+        │   └── tauri 2.9.5
+        ├── tauri-codegen 2.5.2
+        │   └── tauri-macros 2.5.2
+        ├── tauri-build 2.5.3
+        │   ├── titane-infinity 26.3.0
+        │   └── tauri 2.9.5
+        └── tauri 2.9.5
+
+[0m[0m[1m[33mCrate:    [0m unic-ucd-version
+[0m[0m[1m[33mVersion:  [0m 0.9.0
+[0m[0m[1m[33mWarning:  [0m unmaintained
+[0m[0m[1m[33mTitle:    [0m `unic-ucd-version` is unmaintained
+[0m[0m[1m[33mDate:     [0m 2025-10-18
+[0m[0m[1m[33mID:       [0m RUSTSEC-2025-0098
+[0m[0m[1m[33mURL:      [0m https://rustsec.org/advisories/RUSTSEC-2025-0098
+[0m[0m[1m[33mDependency tree:
+[0munic-ucd-version 0.9.0
+└── unic-ucd-ident 0.9.0
+    └── urlpattern 0.3.0
+        └── tauri-utils 2.8.1
+            ├── tauri-runtime-wry 2.9.3
+            │   └── tauri 2.9.5
+            │       ├── titane-infinity 26.3.0
+            │       ├── tauri-plugin-updater 2.9.0
+            │       │   └── titane-infinity 26.3.0
+            │       ├── tauri-plugin-fs 2.4.5
+            │       │   └── tauri-plugin-dialog 2.5.0
+            │       │       └── titane-infinity 26.3.0
+            │       ├── tauri-plugin-dialog 2.5.0
+            │       └── tauri-plugin-clipboard-manager 2.3.2
+            │           └── titane-infinity 26.3.0
+            ├── tauri-runtime 2.9.2
+            │   ├── tauri-runtime-wry 2.9.3
+            │   └── tauri 2.9.5
+            ├── tauri-plugin-fs 2.4.5
+            ├── tauri-plugin 2.5.2
+            │   ├── tauri-plugin-updater 2.9.0
+            │   ├── tauri-plugin-fs 2.4.5
+            │   ├── tauri-plugin-dialog 2.5.0
+            │   └── tauri-plugin-clipboard-manager 2.3.2
+            ├── tauri-macros 2.5.2
+            │   └── tauri 2.9.5
+            ├── tauri-codegen 2.5.2
+            │   └── tauri-macros 2.5.2
+            ├── tauri-build 2.5.3
+            │   ├── titane-infinity 26.3.0
+            │   └── tauri 2.9.5
+            └── tauri 2.9.5
+
+[0m[0m[1m[33mCrate:    [0m glib
+[0m[0m[1m[33mVersion:  [0m 0.18.5
+[0m[0m[1m[33mWarning:  [0m unsound
+[0m[0m[1m[33mTitle:    [0m Unsoundness in `Iterator` and `DoubleEndedIterator` impls for `glib::VariantStrIter`
+[0m[0m[1m[33mDate:     [0m 2024-03-30
+[0m[0m[1m[33mID:       [0m RUSTSEC-2024-0429
+[0m[0m[1m[33mURL:      [0m https://rustsec.org/advisories/RUSTSEC-2024-0429
+[0m[0m[1m[33mDependency tree:
+[0mglib 0.18.5
+├── webkit2gtk 2.0.1
+│   ├── wry 0.53.5
+│   │   └── tauri-runtime-wry 2.9.3
+│   │       └── tauri 2.9.5
+│   │           ├── titane-infinity 26.3.0
+│   │           ├── tauri-plugin-updater 2.9.0
+│   │           │   └── titane-infinity 26.3.0
+│   │           ├── tauri-plugin-fs 2.4.5
+│   │           │   └── tauri-plugin-dialog 2.5.0
+│   │           │       └── titane-infinity 26.3.0
+│   │           ├── tauri-plugin-dialog 2.5.0
+│   │           └── tauri-plugin-clipboard-manager 2.3.2
+│   │               └── titane-infinity 26.3.0
+│   ├── tauri-runtime-wry 2.9.3
+│   ├── tauri-runtime 2.9.2
+│   │   ├── tauri-runtime-wry 2.9.3
+│   │   └── tauri 2.9.5
+│   └── tauri 2.9.5
+├── soup3 0.5.0
+│   ├── wry 0.53.5
+│   └── webkit2gtk 2.0.1
+├── pango 0.18.3
+│   ├── gtk 0.18.2
+│   │   ├── wry 0.53.5
+│   │   ├── webkit2gtk 2.0.1
+│   │   ├── tauri-runtime-wry 2.9.3
+│   │   ├── tauri-runtime 2.9.2
+│   │   ├── tauri 2.9.5
+│   │   ├── tao 0.34.5
+│   │   │   └── tauri-runtime-wry 2.9.3
+│   │   ├── muda 0.17.1
+│   │   │   ├── tray-icon 0.21.2
+│   │   │   │   └── tauri 2.9.5
+│   │   │   └── tauri 2.9.5
+│   │   └── libappindicator 0.9.0
+│   │       └── tray-icon 0.21.2
+│   └── gdk 0.18.2
+│       ├── webkit2gtk 2.0.1
+│       ├── gtk 0.18.2
+│       └── gdkx11 0.18.2
+│           └── wry 0.53.5
+├── libappindicator 0.9.0
+├── javascriptcore-rs 1.1.2
+│   ├── wry 0.53.5
+│   └── webkit2gtk 2.0.1
+├── gtk 0.18.2
+├── gio 0.18.4
+│   ├── webkit2gtk 2.0.1
+│   ├── soup3 0.5.0
+│   ├── pango 0.18.3
+│   ├── gtk 0.18.2
+│   ├── gdkx11 0.18.2
+│   ├── gdk-pixbuf 0.18.5
+│   │   ├── gtk 0.18.2
+│   │   └── gdk 0.18.2
+│   └── gdk 0.18.2
+├── gdkx11 0.18.2
+├── gdk-pixbuf 0.18.5
+├── gdk 0.18.2
+├── cairo-rs 0.18.5
+│   ├── webkit2gtk 2.0.1
+│   ├── gtk 0.18.2
+│   └── gdk 0.18.2
+└── atk 0.18.2
+    └── gtk 0.18.2
+
+[0m[0m[1m[33mwarning:[0m 21 allowed warnings found
