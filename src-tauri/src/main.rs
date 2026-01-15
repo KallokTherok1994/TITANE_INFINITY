@@ -523,6 +523,22 @@ fn main() {
     // EXP FUSION ENGINE (XP/EXP UI)
     let builder = builder.manage(ExpFusionState::new());
 
+    // ─────────────────────────────────────────────────────────────
+    // UPDATER (opt-in)
+    // - Endpoints définis dans src-tauri/tauri.conf.json (plugins.updater.endpoints)
+    // - Pubkey fournie via env (pas de secret committé)
+    // ─────────────────────────────────────────────────────────────
+    let builder = match std::env::var("TITANE_UPDATER_PUBKEY") {
+        Ok(pubkey) if !pubkey.trim().is_empty() => {
+            log::info!("✅ Updater enabled (TITANE_UPDATER_PUBKEY provided)");
+            builder.plugin(tauri_plugin_updater::Builder::new().pubkey(pubkey).build())
+        }
+        _ => {
+            log::warn!("⚠️ Updater disabled (set TITANE_UPDATER_PUBKEY to enable)");
+            builder
+        }
+    };
+
     builder
         .manage(std::sync::Mutex::new(onboarding::OnboardingState::default()))
         .setup(move |app| {

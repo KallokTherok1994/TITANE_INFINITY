@@ -1041,6 +1041,11 @@
     "shell": {
       "open": false,
       "scope": []
+    },
+    "updater": {
+      "endpoints": [
+        "https://raw.githubusercontent.com/KallokTherok1994/TITANE_INFINITY/MAIN/latest.json"
+      ]
     }
   }
 }
