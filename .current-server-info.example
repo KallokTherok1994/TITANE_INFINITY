@@ -1,0 +1,8 @@
+# TITANE∞ — Server info (EXEMPLE)
+#
+# Créez localement: .current-server-info
+# Ce fichier peut contenir des infos d’environnement/ports/hosts.
+# Ne jamais commit.
+
+SERVER_HOST=__REDACTED__
+SERVER_PORT=__REDACTED__

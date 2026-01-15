@@ -1,0 +1,7 @@
+# TITANE∞ — Tunnel access (EXEMPLE)
+#
+# Créez localement: .tunnel-access.txt
+# Contenu attendu: token/identifiants de tunnel (NE JAMAIS COMMIT).
+#
+# Exemple (placeholder):
+TUNNEL_ACCESS_TOKEN=__REDACTED__
