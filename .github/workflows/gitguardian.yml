@@ -23,6 +23,7 @@ permissions:
 jobs:
   scan:
     name: 🔐 GitGuardian Secret Scan
+    if: ${{ secrets.GITGUARDIAN_API_KEY != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     
