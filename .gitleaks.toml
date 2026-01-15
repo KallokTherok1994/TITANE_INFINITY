@@ -1,0 +1,34 @@
+title = "TITANE∞ — Gitleaks configuration"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Allowlist pour réduire les faux positifs sans masquer les vrais secrets"
+
+# Ne pas scanner les répertoires générés / volumineux / archives
+paths = [
+  '''(?i)^docs/_evidence/''',
+  '''(?i)^docs/99_ARCHIVE_''',
+  '''(?i)^docs/backups_''',
+  '''(?i)^docs/.*\\.tar\\.gz$''',
+  '''(?i)^node_modules/''',
+  '''(?i)^dist/''',
+  '''(?i)^coverage/''',
+  '''(?i)^reports/''',
+  '''(?i)^playwright-report/''',
+  '''(?i)^test-results/''',
+  '''(?i)^src-tauri/target/''',
+  '''(?i)^runtime/.*?/dist/''',
+  '''(?i)^runtime/.*?/build/''',
+  '''(?i)^runtime/.*?/logs/''',
+  '''(?i)^deployment/latest/.*\\.(AppImage|deb)$''',
+]
+
+# Autoriser les placeholders/valeurs fictives dans les templates/tests
+regexes = [
+  '''__REDACTED__''',
+  '''your_(gemini|openai|anthropic|elevenlabs)_api_key_here''',
+  '''\*\*\*MASKED\*\*\*''',
+  '''abc123''',
+]
