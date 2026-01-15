@@ -5,7 +5,7 @@
   "identifier": "com.titane.infinity.stable",
   "build": {
     "beforeDevCommand": "",
-    "beforeBuildCommand": "npx vite build",
+    "beforeBuildCommand": "bash -lc 'set -euo pipefail; ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd); cd \"$ROOT\"; export PATH=\"$ROOT/.tools/node/current/bin:$PATH\"; exec pnpm exec vite build'",
     "frontendDist": "../dist"
   },
   "bundle": {
