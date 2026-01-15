@@ -145,6 +145,10 @@ pnpm-debug*.log
 *.deb
 *.rpm
 
+# Exception: publier les bundles “latest” (Linux) dans le repo
+!deployment/latest/*.AppImage
+!deployment/latest/*.deb
+
 add_license_headers*.sh
 
 *storybook.log
