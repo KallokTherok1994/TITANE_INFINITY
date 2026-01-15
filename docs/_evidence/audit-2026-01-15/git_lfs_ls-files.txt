@@ -1,0 +1,7 @@
+c947ad4ce9 * .tools/node/_extract/node-v20.19.6-linux-x64/bin/node
+698abca884 * TITANE_INFINITY-main.zip
+3a6dac953a * deployment/latest/TITANE-Infinity_26.3.0_amd64.AppImage
+caff96d018 * deployment/latest/TITANE-Infinity_26.3.0_amd64.deb
+0cd899c982 * test.wav
+43050cf1e5 * tts-service/cache/audio/0ae6edbff3f1826e.wav
+96f5a693b6 * tts-service/cache/audio/65eaf2199642baf6.wav
