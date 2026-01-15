@@ -720,6 +720,9 @@ class AutoHealEngine {
     this.errors.clear();
     this.actions.clear();
     this.providerHealthMap.clear();
+    this.healWaiters.clear();
+    this.healingQueue = [];
+    this.isHealing = false;
     this.stats = {
       totalErrors: 0,
       totalHeals: 0,

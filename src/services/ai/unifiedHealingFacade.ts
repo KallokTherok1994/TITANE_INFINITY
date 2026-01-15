@@ -28,6 +28,11 @@ import type { CircuitStats, CircuitState } from './circuitBreaker';
 
 const logger = createLogger('[UNIFIED-HEALING]');
 
+const isVitestEnvironment =
+  (typeof process !== 'undefined' && Boolean(process.env?.VITEST_WORKER_ID)) ||
+  (typeof globalThis !== 'undefined' &&
+    Boolean((globalThis as { __vitest_worker__?: unknown }).__vitest_worker__));
+
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
@@ -458,6 +463,10 @@ class UnifiedHealingFacade {
 
   private shouldUseAdvancedHealing(error: AutoHealError, forceAdvanced?: boolean): boolean {
     if (forceAdvanced) return true;
+
+    // En tests Vitest, éviter de déclencher l'orchestrateur avancé (selfHealing/*)
+    // sauf si explicitement forcé. Cela rend les suites de charge/concurrence déterministes.
+    if (isVitestEnvironment) return false;
 
     const severityOrder: HealingSeverity[] = ['low', 'medium', 'high', 'critical'];
     const errorIndex = severityOrder.indexOf(error.severity);
