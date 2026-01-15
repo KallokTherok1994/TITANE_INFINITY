@@ -32,7 +32,7 @@
     "test:coverage:integration": "cross-env NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run -c vitest.integration.config.ts --coverage",
     "test:coverage:check": "bash scripts/verify/verify-coverage.sh",
     "test:coverage:report": "cross-env NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run --coverage && echo 'Open coverage/index.html in browser'",
-    "test:e2e": "pnpm run test:e2e:vitest",
+    "test:e2e": "./pnpm-local.sh run test:e2e:vitest",
     "test:e2e:playwright": "playwright test",
     "test:e2e:vitest": "cross-env RUN_E2E_TESTS=1 NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run src/tests/e2e/titane_e2e.test.ts",
     "test:browser": "vitest --config vitest.browser.config.ts --run",
