@@ -20,11 +20,14 @@ Cargo.lock
 **/*.rs.bk
 
 # IDEs
-.vscode/
+.vscode/*
 .idea/
 *.swp
 *.swo
 *~
+
+# Allowlist: VS Code tasks are shared/reproducible
+!.vscode/tasks.json
 
 # Logs
 logs/
