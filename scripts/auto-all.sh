@@ -1,267 +1,253 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 ###############################################################################
-# 🚀 TITANE∞ AUTO-ALL SCRIPT
-# Automatisation complète : Build, Test, Deploy
+# 🧪 TITANE∞ AUTO-ALL (DEV-ONLY)
+#
+# Objectif: une passe "auto all" sûre en MODE DÉVELOPPEMENT.
+# - ✅ Validate (COPILOT-XS)
+# - ✅ Tests (gate)
+# - ✅ Security scan
+# - ✅ Conformité ports/process dev
+# - ✅ Snapshot git (propre + sync)
+#
+# ⚠️ IMPORTANT: ce script NE DOIT PAS builder/bundler/déployer (interdit).
 ###############################################################################
 
-set -e  # Exit on error
+set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-
 cd "$PROJECT_ROOT"
 
-# Couleurs
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-PURPLE='\033[0;35m'
 CYAN='\033[0;36m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 
-resolve_pnpm_cmd() {
-    if command -v corepack >/dev/null 2>&1; then
-        PNPM=(corepack pnpm)
-        return 0
+AUTO_ALL_REPORTS_DIR_DEFAULT='reports/auto-all'
+
+RUN_DIR=""
+CURRENT_STEP_TITLE=""
+CURRENT_STEP_LOGFILE=""
+CURRENT_STEP_PID=""
+SIGINT_COUNT=0
+
+on_interrupt() {
+  local sig="$1"
+  local code=130
+  if [ "$sig" = "TERM" ]; then
+    code=143
+  fi
+
+  echo -e "${RED}⛔ Interruption (${sig})${NC} pendant: ${CURRENT_STEP_TITLE:-<inconnu>}"
+
+  if [ -n "${CURRENT_STEP_LOGFILE:-}" ] && [ -f "${CURRENT_STEP_LOGFILE}" ]; then
+    echo -e "${YELLOW}--- tail (120) ${CURRENT_STEP_LOGFILE} ---${NC}"
+    tail -n 120 "${CURRENT_STEP_LOGFILE}" | cat
+  fi
+
+  if [ -n "${RUN_DIR:-}" ]; then
+    echo -e "${YELLOW}Logs:${NC} ${RUN_DIR}"
+  fi
+
+  exit "$code"
+}
+
+on_sigint_detached_step() {
+  SIGINT_COUNT=$((SIGINT_COUNT + 1))
+
+  echo -e "\n${YELLOW}⚠️ SIGINT reçu:${NC} ${CURRENT_STEP_TITLE:-<inconnu>} (count=${SIGINT_COUNT})"
+
+  if [ -n "${CURRENT_STEP_LOGFILE:-}" ] && [ -f "${CURRENT_STEP_LOGFILE}" ]; then
+    echo -e "${YELLOW}--- tail (80) ${CURRENT_STEP_LOGFILE} ---${NC}"
+    tail -n 80 "${CURRENT_STEP_LOGFILE}" | cat
+  fi
+
+  if [ "$SIGINT_COUNT" -ge 2 ]; then
+    echo -e "${RED}⛔ Second SIGINT: arrêt demandé${NC}"
+    if [ -n "${CURRENT_STEP_PID:-}" ]; then
+      kill -TERM "${CURRENT_STEP_PID}" 2>/dev/null || true
     fi
-    if command -v pnpm >/dev/null 2>&1; then
-        PNPM=(pnpm)
-        return 0
+    exit 130
+  fi
+}
+
+on_term_detached_step() {
+  if [ -n "${CURRENT_STEP_PID:-}" ]; then
+    kill -TERM "${CURRENT_STEP_PID}" 2>/dev/null || true
+  fi
+  on_interrupt TERM
+}
+
+run_step_resilient_to_sigint() {
+  local title="$1"
+  shift
+  local logfile="$1"
+  shift
+
+  CURRENT_STEP_TITLE="$title"
+  CURRENT_STEP_LOGFILE="$logfile"
+
+  echo -e "\n${CYAN}═══════════════════════════════════════════════════════════════${NC}"
+  echo -e "${CYAN}▶ ${title}${NC}"
+  echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}"
+
+  echo -e "${CYAN}log: ${logfile}${NC}"
+  {
+    echo ""
+    echo "===== [${title}] $(date -Is) ====="
+    echo -n "cmd:"
+    printf ' %q' "$@"
+    echo
+  } >>"$logfile"
+
+  local prev_trap_int prev_trap_term
+  prev_trap_int="$(trap -p INT || true)"
+  prev_trap_term="$(trap -p TERM || true)"
+
+  SIGINT_COUNT=0
+  CURRENT_STEP_PID=""
+
+  if command -v setsid >/dev/null 2>&1; then
+    # Start in a new session so SIGINT from the controlling terminal does not kill the test runner.
+    setsid "$@" >>"$logfile" 2>&1 &
+    CURRENT_STEP_PID=$!
+    echo "pid: ${CURRENT_STEP_PID}" >>"$logfile"
+
+    trap 'on_sigint_detached_step' INT
+    trap 'on_term_detached_step' TERM
+
+    set +e
+    wait "$CURRENT_STEP_PID"
+    local ec=$?
+    set -e
+
+    # Restore traps.
+    if [ -n "$prev_trap_int" ]; then eval "$prev_trap_int"; else trap - INT; fi
+    if [ -n "$prev_trap_term" ]; then eval "$prev_trap_term"; else trap - TERM; fi
+
+    if [ "$ec" -ne 0 ]; then
+      echo -e "${RED}❌ Step failed:${NC} ${title} (exit=${ec})"
+      echo -e "${YELLOW}--- tail (120) ${logfile} ---${NC}"
+      tail -n 120 "$logfile" | cat
+      echo -e "${YELLOW}Logs:${NC} ${RUN_DIR}"
+      exit "$ec"
     fi
-    PNPM=()
-    return 1
-}
+  else
+    # Fallback: no setsid available.
+    set +e
+    "$@" >>"$logfile" 2>&1
+    local ec=$?
+    set -e
 
-ensure_pnpm() {
-    if ! resolve_pnpm_cmd; then
-        print_error "pnpm requis (corepack/pnpm introuvable)"
-        return 1
+    if [ "$ec" -ne 0 ]; then
+      echo -e "${RED}❌ Step failed:${NC} ${title} (exit=${ec})"
+      echo -e "${YELLOW}--- tail (120) ${logfile} ---${NC}"
+      tail -n 120 "$logfile" | cat
+      echo -e "${YELLOW}Logs:${NC} ${RUN_DIR}"
+      exit "$ec"
     fi
+  fi
+
+  CURRENT_STEP_TITLE=""
+  CURRENT_STEP_LOGFILE=""
+  CURRENT_STEP_PID=""
+  SIGINT_COUNT=0
 }
 
-###############################################################################
-# FUNCTIONS
-###############################################################################
+init_run_dir() {
+  local reports_dir="${AUTO_ALL_REPORTS_DIR:-$AUTO_ALL_REPORTS_DIR_DEFAULT}"
+  local run_id
+  run_id="$(date +%Y%m%d-%H%M%S)"
 
-print_banner() {
-    echo -e "${PURPLE}"
-    echo "╔══════════════════════════════════════════════════════════════╗"
-    echo "║                                                              ║"
-    echo "║   🚀 TITANE∞ AUTO-ALL — Full Automation Pipeline            ║"
-    echo "║                                                              ║"
-    echo "║   Phase 1: Clean & Prepare                                  ║"
-    echo "║   Phase 2: Build Frontend & Backend                         ║"
-    echo "║   Phase 3: Run Tests                                        ║"
-    echo "║   Phase 4: Déploiement production (autorisation requise)                             ║"
-    echo "║                                                              ║"
-    echo "╚══════════════════════════════════════════════════════════════╝"
-    echo -e "${NC}"
+  if [[ "$reports_dir" = /* ]]; then
+    RUN_DIR="${reports_dir}/${run_id}"
+  else
+    RUN_DIR="${PROJECT_ROOT}/${reports_dir}/${run_id}"
+  fi
+
+  mkdir -p "$RUN_DIR"
 }
 
-print_step() {
-    echo -e "\n${CYAN}═══════════════════════════════════════════════════════════════${NC}"
-    echo -e "${CYAN}▶ $1${NC}"
-    echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}\n"
+resolve_pnpm() {
+  # Prefer repo-bundled pnpm to avoid engine mismatches.
+  if [ -x "${PROJECT_ROOT}/.tools/node/current/bin/pnpm" ]; then
+    PNPM_CMD=("${PROJECT_ROOT}/.tools/node/current/bin/pnpm")
+    export PATH="${PROJECT_ROOT}/.tools/node/current/bin:${PATH}"
+    return 0
+  fi
+  if command -v corepack >/dev/null 2>&1; then
+    PNPM_CMD=(corepack pnpm)
+    return 0
+  fi
+  if command -v pnpm >/dev/null 2>&1; then
+    PNPM_CMD=(pnpm)
+    return 0
+  fi
+  return 1
 }
 
-print_success() {
-    echo -e "${GREEN}✅ $1${NC}"
+run_step() {
+  local title="$1"
+  shift
+  local logfile="$1"
+  shift
+
+  CURRENT_STEP_TITLE="$title"
+  CURRENT_STEP_LOGFILE="$logfile"
+
+  echo -e "\n${CYAN}═══════════════════════════════════════════════════════════════${NC}"
+  echo -e "${CYAN}▶ ${title}${NC}"
+  echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}"
+
+  echo -e "${CYAN}log: ${logfile}${NC}"
+  {
+    echo ""
+    echo "===== [${title}] $(date -Is) ====="
+    echo -n "cmd:"
+    printf ' %q' "$@"
+    echo
+  } >>"$logfile"
+
+  set +e
+  "$@" >>"$logfile" 2>&1
+  local ec=$?
+  set -e
+
+  if [ "$ec" -ne 0 ]; then
+    echo -e "${RED}❌ Step failed:${NC} ${title} (exit=${ec})"
+    echo -e "${YELLOW}--- tail (120) ${logfile} ---${NC}"
+    tail -n 120 "$logfile" | cat
+    echo -e "${YELLOW}Logs:${NC} ${RUN_DIR}"
+    exit "$ec"
+  fi
+
+  CURRENT_STEP_TITLE=""
+  CURRENT_STEP_LOGFILE=""
 }
-
-print_error() {
-    echo -e "${RED}❌ $1${NC}"
-}
-
-print_warning() {
-    echo -e "${YELLOW}⚠️  $1${NC}"
-}
-
-###############################################################################
-# PHASE 1: CLEAN & PREPARE
-###############################################################################
-
-phase1_clean() {
-    print_step "Phase 1: Clean & Prepare"
-    
-    # Clean old builds
-    if [ -d "dist" ]; then
-        echo "Cleaning old frontend build..."
-        rm -rf dist
-        print_success "Frontend dist/ cleaned"
-    fi
-    
-    if [ -d "src-tauri/target/release" ]; then
-        echo "Cleaning old backend build..."
-        rm -rf src-tauri/target/release
-        print_success "Backend target/ cleaned"
-    fi
-    
-    # Install/update dependencies
-    echo "Checking dependencies..."
-    if [ ! -d "node_modules" ]; then
-        ensure_pnpm || return 1
-        echo "Installing Node dependencies..."
-        "${PNPM[@]}" install
-        print_success "Node dependencies installed"
-    else
-        print_success "Node dependencies OK"
-    fi
-    
-    print_success "Phase 1 Complete"
-}
-
-###############################################################################
-# PHASE 2: BUILD
-###############################################################################
-
-phase2_build() {
-    print_step "Phase 2: Build Frontend & Backend"
-    
-    # Lint first
-    echo "Running ESLint..."
-    ensure_pnpm || return 1
-    "${PNPM[@]}" run lint || {
-        print_warning "ESLint warnings found (non-blocking)"
-    }
-    
-    # TypeScript check
-    echo "Running TypeScript check..."
-    "${PNPM[@]}" exec tsc --noEmit || {
-        print_error "TypeScript errors found"
-        return 1
-    }
-    print_success "TypeScript check passed"
-    
-    # Build frontend
-    echo "Building frontend (Vite)..."
-    "${PNPM[@]}" run build || {
-        print_error "Frontend build failed"
-        return 1
-    }
-    print_success "Frontend built successfully"
-    
-    # Build backend
-    echo "Building backend (Rust/Cargo)..."
-    cd src-tauri
-    cargo build --release || {
-        print_error "Backend build failed"
-        cd ..
-        return 1
-    }
-    cd ..
-    print_success "Backend built successfully"
-    
-    print_success "Phase 2 Complete"
-}
-
-###############################################################################
-# PHASE 3: TEST
-###############################################################################
-
-phase3_test() {
-    print_step "Phase 3: Run Tests"
-    
-    # Run unit tests
-    echo "Running unit tests..."
-    pnpm test -- --run || {
-        print_warning "Some tests failed (non-blocking)"
-    }
-    
-    # Cargo tests
-    echo "Running Rust tests..."
-    cd src-tauri
-    cargo test || {
-        print_warning "Some Rust tests failed (non-blocking)"
-    }
-    cd ..
-    
-    print_success "Phase 3 Complete"
-}
-
-###############################################################################
-# PHASE 4: DEPLOY
-###############################################################################
-
-phase4_deploy() {
-    print_step "Phase 4: Déploiement production (autorisation requise)"
-    
-    # Create release package
-    echo "Creating release package..."
-    
-    RELEASE_DIR="release/titane-infinity-v$(date +%Y%m%d-%H%M%S)"
-    mkdir -p "$RELEASE_DIR"
-    
-    # Copy built files
-    cp -r dist "$RELEASE_DIR/"
-    cp -r src-tauri/target/release/titane-infinity "$RELEASE_DIR/" 2>/dev/null || true
-    cp -r src-tauri/target/release/bundle "$RELEASE_DIR/" 2>/dev/null || true
-    
-    # Create manifest
-    cat > "$RELEASE_DIR/MANIFEST.txt" <<EOF
-TITANE∞ Release Package
-=======================
-
-Build Date: $(date)
-Version: 19.3.0
-Environment: Production
-
-Frontend:
-  - Vite Build: dist/
-  - Bundle Size: $(du -sh dist | cut -f1)
-
-Backend:
-  - Rust Binary: titane-infinity
-  - Binary Size: $(du -sh src-tauri/target/release/titane-infinity 2>/dev/null | cut -f1 || echo "N/A")
-
-Deployment Instructions:
-  1. Extract package
-  2. Run ./titane-infinity (or install bundle)
-  3. Frontend served from dist/
-
-EOF
-    
-    print_success "Release package created: $RELEASE_DIR"
-    print_success "Phase 4 Complete"
-}
-
-###############################################################################
-# MAIN
-###############################################################################
 
 main() {
-    print_banner
-    
-    START_TIME=$(date +%s)
-    
-    # Run all phases
-    phase1_clean || exit 1
-    phase2_build || exit 1
-    phase3_test || true  # Non-blocking
-    phase4_deploy || exit 1
-    
-    END_TIME=$(date +%s)
-    DURATION=$((END_TIME - START_TIME))
-    
-    # Final summary
-    echo -e "\n${GREEN}"
-    echo "╔══════════════════════════════════════════════════════════════╗"
-    echo "║                                                              ║"
-    echo "║   ✅ TITANE∞ AUTO-ALL COMPLETE                               ║"
-    echo "║                                                              ║"
-    echo "║   Duration: ${DURATION}s                                        ║"
-    echo "║   Status: SUCCESS                                            ║"
-    echo "║                                                              ║"
-    echo "║   🚀 Ready for deployment!                                   ║"
-    echo "║                                                              ║"
-    echo "╚══════════════════════════════════════════════════════════════╝"
-    echo -e "${NC}\n"
-    
-    # Show release location
-    echo -e "${CYAN}📦 Release package available in: release/${NC}"
-    ls -lh release/ | tail -5
+  if ! resolve_pnpm; then
+    echo -e "${RED}❌ pnpm requis (${PROJECT_ROOT}/.tools/node/current/bin/pnpm | corepack | pnpm introuvable)${NC}"
+    exit 1
+  fi
+
+  init_run_dir
+
+  trap 'on_interrupt INT' INT
+  trap 'on_interrupt TERM' TERM
+
+  run_step "COPILOT-XS validate" "${RUN_DIR}/01_validate.log" "${PNPM_CMD[@]}" run copilot-xs:validate
+  run_step_resilient_to_sigint "Test gate (copilot-xs:test)" "${RUN_DIR}/02_test_gate.log" "${PNPM_CMD[@]}" run copilot-xs:test --silent
+  run_step "Security scan" "${RUN_DIR}/03_security_scan.log" "${PNPM_CMD[@]}" run copilot-xs:security-scan
+  run_step "No dev ports/processes" "${RUN_DIR}/04_dev_ports_processes.log" bash scripts/verify/check-dev-ports-processes.sh
+
+  run_step "Git snapshot" "${RUN_DIR}/05_git_snapshot.log" bash -c "git status --porcelain=v1 -b | cat; git rev-list --left-right --count origin/MAIN...HEAD 2>/dev/null | cat || true"
+
+  echo -e "\n${GREEN}✅ AUTO-ALL (DEV-ONLY) OK${NC}"
+  echo -e "${CYAN}Logs:${NC} ${RUN_DIR}"
+  echo -e "${YELLOW}Note:${NC} Les logs E2E peuvent contenir des détections d'injection attendues tant que l'exit code reste 0."
 }
 
-# Run main
 main "$@"
