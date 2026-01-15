@@ -1,0 +1,1121 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "🟢 Launch Titan-Dev",
+			"type": "shell",
+			"command": "./runtime/dev/run-dev.sh",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"focus": false,
+				"showReuseMessage": false
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"detail": "Launch TITANE∞ Dev Runtime (development environment)"
+		},
+		{
+			"label": "⚛️ Reload React (Manual)",
+			"type": "shell",
+			"command": "echo '🔄 Press Ctrl+R in Titan-Dev window to reload React'",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"focus": false,
+				"showReuseMessage": false
+			},
+			"detail": "Reminder: Manual React reload via Ctrl+R in Titan-Dev"
+		},
+		{
+			"label": "🔵 Build Titan-Stable",
+			"type": "shell",
+			"command": "./runtime/stable/build.sh",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"focus": true,
+				"showReuseMessage": false
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"detail": "Build TITANE∞ Stable Runtime (production user runtime)"
+		},
+		{
+			"label": "🧪 Run All Tests",
+			"type": "shell",
+			"command": "mkdir -p reports && ./.tools/node/current/bin/pnpm test -- --run && ./.tools/node/current/bin/pnpm run test:tauri",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"focus": true,
+				"showReuseMessage": false
+			},
+			"group": {
+				"kind": "test",
+				"isDefault": true
+			},
+			"detail": "Run all tests (React + Tauri)"
+		},
+		{
+			"label": "📥 Install Deps (pnpm)",
+			"type": "shell",
+			"command": "./.tools/node/current/bin/pnpm install --no-lockfile",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"focus": true,
+				"showReuseMessage": false
+			},
+			"detail": "Install workspace dependencies via pnpm (development)"
+		},
+		{
+			"label": "✅ Safe-Run: Install Deps",
+			"type": "shell",
+			"command": "./scripts/maintenance/safe-run.sh install-deps",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"focus": true,
+				"showReuseMessage": false
+			},
+			"detail": "Safe-run wrapper (allowlist + checks + logs)"
+		},
+		{
+			"label": "✅ Safe-Run: Run All Tests",
+			"type": "shell",
+			"command": "./scripts/maintenance/safe-run.sh run-tests",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"focus": true,
+				"showReuseMessage": false
+			},
+			"group": "test",
+			"detail": "Safe-run all tests (with pre/post checks + logs)"
+		},
+		{
+			"label": "✅ Safe-Run: COPILOT-XS Validate",
+			"type": "shell",
+			"command": "./scripts/maintenance/safe-run.sh validate",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"focus": true,
+				"showReuseMessage": false
+			},
+			"detail": "Safe-run copilot-xs:validate (with dev ports checks + logs)"
+		},
+		{
+			"label": "✅ Safe-Run: Check Dev Ports/Processes",
+			"type": "shell",
+			"command": "./scripts/maintenance/safe-run.sh check-dev-ports",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"focus": false,
+				"showReuseMessage": false
+			},
+			"detail": "Safe-run wrapper for dev ports/processes check (logged)"
+		},
+		{
+			"label": "🧹 Clean Dev Artefacts (strict)",
+			"type": "shell",
+			"command": "rm -rf node_modules .vite-cache logs reports coverage playwright-report test-results src-tauri/target src-tauri/src/target && mkdir -p reports dist",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"focus": false,
+				"showReuseMessage": false
+			},
+			"detail": "Remove generated artefacts so strict scans stay clean"
+		},
+		{
+			"label": "🔄 Switch to Dev Branch",
+			"type": "shell",
+			"command": "./scripts/git/switch-dev.sh",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"focus": false,
+				"showReuseMessage": false
+			},
+			"detail": "Switch to dev branch (development environment)"
+		},
+		{
+			"label": "🔵 Switch to Stable Branch",
+			"type": "shell",
+			"command": "./scripts/git/switch-stable.sh",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"focus": false,
+				"showReuseMessage": false
+			},
+			"detail": "Switch to stable-runtime branch (production)"
+		},
+		{
+			"label": "📦 Merge Dev to Stable",
+			"type": "shell",
+			"command": "./scripts/git/merge-dev-to-stable.sh",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"focus": true,
+				"showReuseMessage": false
+			},
+			"detail": "Deploy validated dev changes to stable-runtime"
+		},
+		{
+			"label": "🧹 Clean Working State",
+			"type": "shell",
+			"command": "./scripts/git/clean-working-state.sh",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"focus": false,
+				"showReuseMessage": false
+			},
+			"detail": "Stash or reset uncommitted changes"
+		},
+		{
+			"label": "📊 Dev Logs (Vite)",
+			"type": "shell",
+			"command": "tail -f ${workspaceFolder}/runtime/dev/logs/vite.log",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"focus": false,
+				"showReuseMessage": false
+			},
+			"isBackground": true,
+			"detail": "Watch Vite dev server logs"
+		},
+		{
+			"label": "📊 Dev Logs (Tauri)",
+			"type": "shell",
+			"command": "tail -f ${workspaceFolder}/runtime/dev/logs/tauri.log",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"focus": false,
+				"showReuseMessage": false
+			},
+			"isBackground": true,
+			"detail": "Watch Tauri runtime logs"
+		},
+		{
+			"label": "🟢 Dev: pnpm run dev:tauri (bundled node)",
+			"type": "shell",
+			"command": "./.tools/node/current/bin/pnpm run dev:tauri",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"focus": true,
+				"showReuseMessage": false
+			},
+			"detail": "Run Tauri dev via repo-bundled Node/PNPM (avoids engines.node mismatch)"
+		},
+		{
+			"label": "🌿 Create Feature Branch",
+			"type": "shell",
+			"command": "${input:featureName}",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"focus": false,
+				"showReuseMessage": false
+			},
+			"detail": "Create new feature/* branch from dev"
+		},
+		{
+			"label": "🧩 COPILOT-XS: Status",
+			"type": "shell",
+			"command": "./.tools/node/current/bin/pnpm run copilot-xs:status",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"focus": false,
+				"showReuseMessage": false
+			},
+			"detail": "Check COPILOT-XS scaffolding health"
+		},
+		{
+			"label": "🧩 COPILOT-XS: Validate",
+			"type": "shell",
+			"command": "./.tools/node/current/bin/pnpm run copilot-xs:validate",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"focus": true,
+				"showReuseMessage": false
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"detail": "Run COPILOT-XS validation gate"
+		},
+		{
+			"label": "🧩 COPILOT-XS: Test Gate",
+			"type": "shell",
+			"command": "./.tools/node/current/bin/pnpm run copilot-xs:test",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"focus": true,
+				"showReuseMessage": false
+			},
+			"group": {
+				"kind": "test",
+				"isDefault": false
+			},
+			"detail": "Validate + run full test suite (test:all)"
+		},
+		{
+			"label": "🧩 COPILOT-XS: Security Scan",
+			"type": "shell",
+			"command": "./.tools/node/current/bin/pnpm run copilot-xs:security-scan",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"focus": true,
+				"showReuseMessage": false
+			},
+			"detail": "Run dependency audit (repo lockfile)"
+		},
+		{
+			"label": "🧩 COPILOT-XS: Test Gate (tail)",
+			"type": "shell",
+			"command": "./.tools/node/current/bin/pnpm run copilot-xs:test 2>&1 | tail -n 120",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
+			"isBackground": false
+		},
+		{
+			"label": "🧩 COPILOT-XS: Test Gate (exitcode)",
+			"type": "shell",
+			"command": "./.tools/node/current/bin/pnpm run copilot-xs:test --silent; echo EXIT:$?",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
+			"isBackground": false
+		},
+		{
+			"label": "🧪 Run All Tests (after polyfill)",
+			"type": "shell",
+			"command": "./.tools/node/current/bin/pnpm test -- --run && ./.tools/node/current/bin/pnpm run test:tauri",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "🧪 Run All Tests (after jsdom directive removal)",
+			"type": "shell",
+			"command": "./.tools/node/current/bin/pnpm test -- --run && ./.tools/node/current/bin/pnpm run test:tauri",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
+			"isBackground": false
+		},
+		{
+			"label": "🧪 pnpm test (exitcode)",
+			"type": "shell",
+			"command": "./.tools/node/current/bin/pnpm test -- --run; echo EXIT:$?",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
+			"isBackground": false
+		},
+		{
+			"label": "🧩 copilot-xs:test (exitcode)",
+			"type": "shell",
+			"command": "./.tools/node/current/bin/pnpm run copilot-xs:test --silent; echo EXIT:$?",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
+			"isBackground": false
+		},
+		{
+			"label": "🧪 Run Titan-Stable AppImage (capture)",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\nAPP=runtime/stable/Titan-Stable_26.2.0_amd64.AppImage\nchmod +x \"$APP\" || true\nLOG=\"/tmp/titane-stable-run-$(date +%Y%m%d-%H%M%S).log\"\necho \"[run] app=$APP\" | tee \"$LOG\"\necho \"[run] log=$LOG\" | tee -a \"$LOG\"\nexport RUST_LOG=debug\nexport RUST_BACKTRACE=1\n# Run for up to 90s; if the app quits earlier we capture the real exit code\nset +e\ntimeout 90s \"$APP\" 2>&1 | tee -a \"$LOG\"\ncode=${PIPESTATUS[0]}\necho \"[run] exit_code=$code\" | tee -a \"$LOG\"\necho \"[run] tail:\" | tee -a \"$LOG\"\ntail -n 120 \"$LOG\"\nexit 0"
+		},
+		{
+			"label": "🔧 Rebuild Stable AppImage (logged)",
+			"type": "shell",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\nmkdir -p runtime/stable/logs\nLOG=\"runtime/stable/logs/stable-build-$(date +%Y%m%d-%H%M%S).log\"\necho \"[build] logging to $LOG\"\n# Build en mode non-interactif et log complet (stdout+stderr)\nTITANE_BUILD_ASSUME_YES=1 bash -o pipefail -c './runtime/stable/build.sh' 2>&1 | tee \"$LOG\"\n\necho \"---\"\necho \"[build] artifacts in runtime/stable:\" \nls -lah runtime/stable | sed -n '1,200p'\necho \"---\"\necho \"[build] sha256:\" \nsha256sum runtime/stable/*.AppImage | cat\n\necho \"---\"\necho \"[build] tail log:\" \ntail -n 80 \"$LOG\""
+		},
+		{
+			"label": "📦 Stable: Status (log + artifacts)",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\nLOG=$(ls -t runtime/stable/logs/stable-build-*.log 2>/dev/null | head -n 1 || true)\nif [ -z \"${LOG:-}\" ]; then\n  echo \"No stable-build log found in runtime/stable/logs\"; exit 1;\nfi\necho \"Log: $LOG\"\necho \"--- last 40 lines ---\"\ntail -n 40 \"$LOG\" | cat\n\necho \"--- markers (tail) ---\"\ngrep -nE 'Bundling|AppImage|bundle/appimage|bundle/deb|Finished release|Finished|BUILD COMPLETE|error:|ERROR|panicked' \"$LOG\" | tail -n 80 || true\n\necho \"--- processes (top) ---\"\npgrep -af 'tauri build|cargo build --bins|rustc --crate-name titane_infinity' | head -n 30 || true\n\necho \"--- artifacts ---\"\nls -la runtime/stable | head -n 200\nls -la src-tauri/target/release/bundle/appimage 2>/dev/null || true\nls -la src-tauri/target/release/bundle/deb 2>/dev/null || true\n",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "📦 Stable: Write Status Report",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\nTS=$(date +%Y%m%d-%H%M%S)\nOUT=runtime/stable/logs/stable-status-$TS.txt\nLOG=$(ls -t runtime/stable/logs/stable-build-*.log 2>/dev/null | head -n 1 || true)\n{\n  echo \"Timestamp: $TS\"\n  echo \"Build log: ${LOG:-<none>}\"\n  echo\n  if [ -n \"${LOG:-}\" ]; then\n    echo \"=== last 80 lines ===\"\n    tail -n 80 \"$LOG\" || true\n    echo\n    echo \"=== markers ===\"\n    grep -nE 'Bundling|AppImage|bundle/appimage|bundle/deb|Finished release|Finished|BUILD COMPLETE|error:|ERROR|panicked' \"$LOG\" | tail -n 120 || true\n  fi\n  echo\n  echo \"=== processes ===\"\n  pgrep -af 'tauri build|cargo build --bins|rustc --crate-name titane_infinity' | head -n 50 || true\n  echo\n  echo \"=== artifacts: runtime/stable ===\"\n  ls -la runtime/stable || true\n  echo\n  echo \"=== artifacts: bundle/appimage ===\"\n  ls -la src-tauri/target/release/bundle/appimage 2>/dev/null || true\n  echo\n  echo \"=== artifacts: bundle/deb ===\"\n  ls -la src-tauri/target/release/bundle/deb 2>/dev/null || true\n} > \"$OUT\"\n\necho \"Wrote: $OUT\"",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "🔐 Stable: Hashes + AppImage Inventory",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\nTS=$(date +%Y%m%d-%H%M%S)\nOUT=runtime/stable/logs/stable-inventory-$TS.txt\n{\n  echo \"Timestamp: $TS\"\n  echo\n  echo \"=== runtime/stable artifacts ===\"\n  ls -la runtime/stable | cat\n  echo\n  echo \"=== sha256 ===\"\n  if ls runtime/stable/*.AppImage >/dev/null 2>&1; then\n    sha256sum runtime/stable/*.AppImage | cat\n  else\n    echo \"No AppImage in runtime/stable\"\n  fi\n  if ls runtime/stable/*.deb >/dev/null 2>&1; then\n    sha256sum runtime/stable/*.deb | cat\n  else\n    echo \"No .deb in runtime/stable\"\n  fi\n  echo\n  echo \"=== all AppImages (repo-wide) ===\"\n  find . -type f -name '*.AppImage' -print | sort | cat\n} > \"$OUT\"\necho \"Wrote: $OUT\"",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "🧪 Status: Rust Tests Running?",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\necho \"Now: $(date -Is)\"\npgrep -af 'cargo test' | head -n 20 || echo 'no cargo test process'\npgrep -af 'rustc.*--crate-name' | head -n 5 || true\n",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "🚀 Run Titan-Stable (logged, timeout)",
+			"type": "shell",
+			"command": "set -uo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\nmkdir -p runtime/stable/logs\nTS=$(date +%Y%m%d-%H%M%S)\nLOG=runtime/stable/logs/stable-run-$TS.log\nAPP=$(ls -1 runtime/stable/*.AppImage 2>/dev/null | head -n 1 || true)\nif [ -z \"${APP:-}\" ]; then\n  echo \"No AppImage in runtime/stable\" | tee \"$LOG\"; exit 1;\nfi\nchmod +x \"$APP\" || true\n{\n  echo \"Timestamp: $TS\"\n  echo \"AppImage: $APP\"\n  echo \"Running with timeout 30s...\"\n  echo \"----------------------------------------\"\n} | tee \"$LOG\"\n\n# Accepte 124 (timeout) et continue pour écrire le résumé dans le log.\nset +e\ntimeout 30s \"$APP\" 2>&1 | tee -a \"$LOG\"\nEC=${PIPESTATUS[0]}\nset -e\n\necho \"----------------------------------------\" | tee -a \"$LOG\"\necho \"ExitCode: $EC\" | tee -a \"$LOG\"\nif [ \"$EC\" = \"124\" ]; then\n  echo \"✅ OK: app stayed running for 30s (killed by timeout)\" | tee -a \"$LOG\"\nelse\n  echo \"⚠️ App exited before timeout (exit=$EC)\" | tee -a \"$LOG\"\nfi\n\necho \"Log: $LOG\"\nexit 0",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "⏳ Wait Stable Build Finish (then inventory)",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\nmkdir -p runtime/stable/logs\nTS=$(date +%Y%m%d-%H%M%S)\nOUT=runtime/stable/logs/stable-build-wait-$TS.log\n{\n  echo \"Timestamp: $TS\"\n  echo \"Waiting for: tauri build --config runtime/stable/tauri.conf.json\"\n  echo \"----------------------------------------\"\n} | tee \"$OUT\"\n\nfor i in $(seq 1 120); do\n  if pgrep -f 'tauri build --config runtime/stable/tauri.conf.json' >/dev/null; then\n    echo \"[$i/120] still building... $(date +%H:%M:%S)\" | tee -a \"$OUT\"\n    sleep 10\n  else\n    echo \"Build process ended at $(date +%H:%M:%S)\" | tee -a \"$OUT\"\n    break\n  fi\ndone\n\necho \"--- runtime/stable ---\" | tee -a \"$OUT\"\nls -la runtime/stable | tee -a \"$OUT\"\n\necho \"--- bundle/appimage ---\" | tee -a \"$OUT\"\nls -la src-tauri/target/release/bundle/appimage 2>/dev/null | tee -a \"$OUT\" || true\n\necho \"--- bundle/deb ---\" | tee -a \"$OUT\"\nls -la src-tauri/target/release/bundle/deb 2>/dev/null | tee -a \"$OUT\" || true\n\necho \"Log: $OUT\"",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "📦 Copy AppImage to runtime/stable",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\nAPP=$(ls -1 src-tauri/target/release/bundle/appimage/*.AppImage | head -n 1)\ncp \"$APP\" runtime/stable/\"$(basename \"$APP\")\"\nchmod +x runtime/stable/\"$(basename \"$APP\")\"\necho \"Copied: $APP -> runtime/stable/$(basename \"$APP\")\"\n",
+			"isBackground": false
+		},
+		{
+			"label": "🚀 Smoke-run Titan-Stable (30s, logged)",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\nmkdir -p runtime/stable/logs\nTS=$(date +%Y%m%d-%H%M%S)\nLOG=runtime/stable/logs/stable-run-$TS.log\nAPP=$(ls -1 runtime/stable/*.AppImage 2>/dev/null | head -n 1 || true)\nif [ -z \"${APP:-}\" ]; then\n  echo \"No AppImage in runtime/stable\" | tee \"$LOG\"; exit 1;\nfi\nchmod +x \"$APP\" || true\n{\n  echo \"Timestamp: $TS\"\n  echo \"AppImage: $APP\"\n  echo \"Running with timeout 30s...\"\n  echo \"----------------------------------------\"\n} | tee \"$LOG\"\n\nset +e\ntimeout 30s \"$APP\" 2>&1 | tee -a \"$LOG\"\nEC=${PIPESTATUS[0]}\nset -e\n\necho \"----------------------------------------\" | tee -a \"$LOG\"\necho \"ExitCode: $EC\" | tee -a \"$LOG\"\nif [ \"$EC\" = \"124\" ]; then\n  echo \"OK: app stayed running for 30s (killed by timeout)\" | tee -a \"$LOG\"\nelse\n  echo \"WARN: app exited before timeout (exit=$EC)\" | tee -a \"$LOG\"\nfi\n\necho \"Log: $LOG\"",
+			"isBackground": false
+		},
+		{
+			"label": "🚀 Deploy Local: Run Titan-Stable (detached, logged)",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\nmkdir -p runtime/stable/logs\nTS=$(date +%Y%m%d-%H%M%S)\nLOG=runtime/stable/logs/local-deploy-$TS.log\nPIDFILE=runtime/stable/logs/local-deploy-$TS.pid\nAPP=$(ls -1 runtime/stable/*.AppImage 2>/dev/null | head -n 1 || true)\nif [ -z \"${APP:-}\" ]; then\n  echo \"No AppImage in runtime/stable\" | tee \"$LOG\"; exit 1;\nfi\nchmod +x \"$APP\" || true\n{\n  echo \"Timestamp: $TS\"\n  echo \"AppImage: $APP\"\n  echo \"Mode: detached (nohup)\"\n  echo \"Log: $LOG\"\n  echo \"----------------------------------------\"\n} | tee \"$LOG\"\n\nnohup \"$APP\" >>\"$LOG\" 2>&1 &\nPID=$!\necho \"$PID\" > \"$PIDFILE\"\n\necho \"Started PID=$PID\" | tee -a \"$LOG\"\necho \"PIDFILE: $PIDFILE\" | tee -a \"$LOG\"\necho \"To stop: kill $PID\" | tee -a \"$LOG\"\n",
+			"isBackground": false
+		},
+		{
+			"label": "🔎 Check Local Deploy PID",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\nPID=$(cat runtime/stable/logs/local-deploy-20251223-175442.pid)\necho \"PID=$PID\"\nps -p \"$PID\" -o pid,etimes,cmd || { echo 'NOT RUNNING'; exit 1; }\n",
+			"isBackground": false
+		},
+		{
+			"label": "🛑 Stop Local Deploy PID",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\nPID=$(cat runtime/stable/logs/local-deploy-20251223-175442.pid)\necho \"Stopping PID=$PID\"\nkill \"$PID\" || true\nsleep 1\nps -p \"$PID\" -o pid,cmd && { echo 'Still running'; exit 1; } || echo 'Stopped'\n",
+			"isBackground": false
+		},
+		{
+			"label": "🚀 Deploy Local: Run Titan-Stable (detached, TITANE_MEMORY_DIR set)",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\nmkdir -p runtime/stable/logs\nTS=$(date +%Y%m%d-%H%M%S)\nLOG=runtime/stable/logs/local-deploy-$TS.log\nPIDFILE=runtime/stable/logs/local-deploy-$TS.pid\nAPP=$(ls -1 runtime/stable/*.AppImage 2>/dev/null | head -n 1 || true)\nif [ -z \"${APP:-}\" ]; then\n  echo \"No AppImage in runtime/stable\" | tee \"$LOG\"; exit 1;\nfi\nMEMDIR=\"${XDG_DATA_HOME:-$HOME/.local/share}/titane-infinity/memory\"\nmkdir -p \"$MEMDIR\"\nchmod +x \"$APP\" || true\n{\n  echo \"Timestamp: $TS\"\n  echo \"AppImage: $APP\"\n  echo \"TITANE_MEMORY_DIR: $MEMDIR\"\n  echo \"Mode: detached (nohup)\"\n  echo \"Log: $LOG\"\n  echo \"----------------------------------------\"\n} | tee \"$LOG\"\n\nnohup env TITANE_MEMORY_DIR=\"$MEMDIR\" \"$APP\" >>\"$LOG\" 2>&1 &\nPID=$!\necho \"$PID\" > \"$PIDFILE\"\n\necho \"Started PID=$PID\" | tee -a \"$LOG\"\necho \"PIDFILE: $PIDFILE\" | tee -a \"$LOG\"\necho \"To stop: kill $PID\" | tee -a \"$LOG\"\n",
+			"isBackground": false
+		},
+		{
+			"label": "🛑 Stop AppImage local deploy (if running)",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\nPIDFILE=$(ls -t runtime/stable/logs/local-deploy-*.pid 2>/dev/null | head -n 1 || true)\nif [ -z \"${PIDFILE:-}\" ]; then\n  echo \"No local-deploy pidfile found\"; exit 0;\nfi\nPID=$(cat \"$PIDFILE\" || true)\nif [ -z \"${PID:-}\" ]; then\n  echo \"Empty pidfile: $PIDFILE\"; exit 0;\nfi\nif ps -p \"$PID\" >/dev/null 2>&1; then\n  echo \"Stopping PID=$PID (from $PIDFILE)\";\n  kill \"$PID\" || true\n  sleep 1\nfi\nif ps -p \"$PID\" >/dev/null 2>&1; then\n  echo \"Still running PID=$PID\"; exit 1;\nfi\necho \"Stopped PID=$PID\"",
+			"isBackground": false
+		},
+		{
+			"label": "🔐 Check sudo non-interactive",
+			"type": "shell",
+			"command": "set -euo pipefail\nif sudo -n true 2>/dev/null; then\n  echo 'sudo: OK (non-interactive)'\nelse\n  echo 'sudo: NEEDS PASSWORD (interactive)'\n  exit 2\nfi\n",
+			"isBackground": false
+		},
+		{
+			"label": "📦 Inspect DEB metadata",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\nDEB=$(ls -1 runtime/stable/*.deb | head -n 1)\necho \"DEB=$DEB\"\ndpkg-deb -f \"$DEB\" Package Version Architecture | cat\n",
+			"isBackground": false
+		},
+		{
+			"label": "🔎 Check if titan-stable installed",
+			"type": "shell",
+			"command": "set -euo pipefail\nif dpkg -s titan-stable >/dev/null 2>&1; then\n  echo 'titan-stable: installed'\n  dpkg -s titan-stable | grep -E '^(Package|Status|Version|Architecture):' | cat\nelse\n  echo 'titan-stable: NOT installed'\nfi\n",
+			"isBackground": false
+		},
+		{
+			"label": "📄 List installed files (titan-stable)",
+			"type": "shell",
+			"command": "set -euo pipefail\ndpkg -L titan-stable | head -n 60 | cat\n",
+			"isBackground": false
+		},
+		{
+			"label": "📄 List installed files (titan-stable, more)",
+			"type": "shell",
+			"command": "set -euo pipefail\ndpkg -L titan-stable | sed -n '1,200p' | cat\n",
+			"isBackground": false
+		},
+		{
+			"label": "📦 Inspect DEB contents (dpkg-deb -c)",
+			"type": "shell",
+			"command": "set -euo pipefail\nDEB=runtime/stable/Titan-Stable_26.2.0_amd64.deb\ndpkg-deb -c \"$DEB\" | head -n 80 | cat\n",
+			"isBackground": false
+		},
+		{
+			"label": "🧾 Show Titan-Stable.desktop",
+			"type": "shell",
+			"command": "set -euo pipefail\nDESK=/usr/share/applications/Titan-Stable.desktop\nif [ -f \"$DESK\" ]; then\n  echo \"Found: $DESK\"\n  cat \"$DESK\" | cat\nelse\n  echo \"Missing: $DESK\"; exit 1;\nfi\n",
+			"isBackground": false
+		},
+		{
+			"label": "🔎 Check titane-infinity executable",
+			"type": "shell",
+			"command": "set -euo pipefail\nif command -v titane-infinity >/dev/null 2>&1; then\n  BIN=$(command -v titane-infinity)\n  echo \"titane-infinity: $BIN\"\n  ls -la \"$BIN\" | cat\n  dpkg -S \"$BIN\" 2>/dev/null || echo 'dpkg -S: no owner (maybe not from dpkg)'\nelse\n  echo 'titane-infinity: NOT FOUND'\n  exit 1\nfi\n",
+			"isBackground": false
+		},
+		{
+			"label": "🧪 Cargo test (telemetry module)",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri\ncargo test memory::telemetry -- --nocapture\n",
+			"isBackground": false
+		},
+		{
+			"label": "📦 Reinstall Titan-Stable (.deb) via sudo",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\nDEB=$(ls -1 runtime/stable/*.deb | head -n 1)\necho \"Installing: $DEB\"\necho \"NOTE: sudo may prompt for your password in this terminal.\"\nsudo dpkg -i \"$DEB\"\n\ndpkg -s titan-stable | grep -E '^(Package|Status|Version|Architecture):' | cat\n",
+			"isBackground": false
+		},
+		{
+			"label": "🚀 Smoke-run installed titane-infinity (60s, logged)",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\nmkdir -p runtime/stable/logs\nTS=$(date +%Y%m%d-%H%M%S)\nLOG=runtime/stable/logs/installed-run-$TS.log\n{\n  echo \"Timestamp: $TS\"\n  echo \"Cmd: titane-infinity\"\n  echo \"Running with timeout 60s...\"\n  echo \"----------------------------------------\"\n} | tee \"$LOG\"\n\nset +e\ntimeout 60s titane-infinity 2>&1 | tee -a \"$LOG\"\nEC=${PIPESTATUS[0]}\nset -e\n\necho \"----------------------------------------\" | tee -a \"$LOG\"\necho \"ExitCode: $EC\" | tee -a \"$LOG\"\nif [ \"$EC\" = \"124\" ]; then\n  echo \"OK: installed app stayed running for 60s (killed by timeout)\" | tee -a \"$LOG\"\nelse\n  echo \"WARN: installed app exited before timeout (exit=$EC)\" | tee -a \"$LOG\"\nfi\n\necho \"Log: $LOG\"\npgrep -af '^/usr/bin/titane-infinity$' | head -n 20 || echo 'no titane-infinity process'\n",
+			"isBackground": false
+		},
+		{
+			"label": "🧪 Run webVitals tests (targeted)",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\nexport PATH=\"$PWD/.tools/node/current/bin:$PATH\"\n./.tools/node/current/bin/pnpm test -- --run src/utils/__tests__/webVitals.test.ts\n",
+			"isBackground": false
+		},
+		{
+			"label": "🧪 Smoke-run Installed (180s)",
+			"type": "shell",
+			"command": "cd /home/titane-os/Documents/GitHub/TITANE_INFINITY && mkdir -p runtime/stable/logs && ts=$(date +%Y%m%d-%H%M%S) && log=runtime/stable/logs/installed-run-180s-${ts}.log && echo \"[RUN] $(date -Is) starting 180s timeout\" | tee \"$log\" && timeout 180s /usr/bin/titane-infinity >>\"$log\" 2>&1; ec=$?; echo \"[RUN] $(date -Is) finished exit_code=$ec\" | tee -a \"$log\"; if [ \"$ec\" = \"124\" ]; then exit 0; fi; exit \"$ec\"",
+			"isBackground": false
+		},
+		{
+			"label": "🧪 Smoke-run AppImage (90s + log scan)",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\nAPP=$(ls -1 runtime/stable/*.AppImage | head -n 1)\nmkdir -p runtime/stable/logs\nTS=$(date +%Y%m%d-%H%M%S)\nLOG=runtime/stable/logs/appimage-run-${TS}-90s.log\n\necho \"[RUN] $(date -Is) appimage=$APP\" | tee \"$LOG\"\nset +e\ntimeout 90s \"$APP\" >>\"$LOG\" 2>&1\nEC=$?\nset -e\n\necho \"[RUN] $(date -Is) finished exit_code=$EC\" | tee -a \"$LOG\"\n\necho \"--- UI markers ---\"\ngrep -nE 'Main window shown successfully|page_load|label=main' \"$LOG\" | tail -n 50 || true\n\necho \"--- error markers ---\"\ngrep -nE 'ERROR|Error|panic|panicked|read-only|Read-only|permission denied|Permission denied|segfault|SIGSEGV|deadlock|blocked' \"$LOG\" | tail -n 80 || true\n\necho \"Log: $LOG\"\n\nif [ \"$EC\" = \"124\" ]; then exit 0; fi\nexit \"$EC\"",
+			"isBackground": false
+		},
+		{
+			"label": "🧪 Smoke-run AppImage (90s)",
+			"type": "shell",
+			"command": "set -euo pipefail\nAPP=$(ls -1 runtime/stable/*.AppImage | head -n 1)\nmkdir -p runtime/stable/logs\nTS=$(date +%Y%m%d-%H%M%S)\nLOG=runtime/stable/logs/appimage-run-${TS}-90s.log\n\necho \"[RUN] $(date -Is) appimage=$APP\" | tee \"$LOG\"\nEC=0\ntimeout 90s \"$APP\" >>\"$LOG\" 2>&1 || EC=$?\necho \"[RUN] $(date -Is) finished exit_code=$EC\" | tee -a \"$LOG\"\n\necho \"--- UI markers ---\"\ngrep -nE 'Main window shown successfully|page_load|label=main' \"$LOG\" | tail -n 50 || true\n\necho \"--- error markers ---\"\ngrep -nE 'ERROR|Error|panic|panicked|read-only|Read-only|permission denied|Permission denied|segfault|SIGSEGV|deadlock|blocked|Unable to create memory directory|memory_core_state\\.json' \"$LOG\" | tail -n 160 || true\n\necho \"Log: $LOG\"\n\nif [ \"$EC\" = \"124\" ]; then exit 0; fi\nexit \"$EC\"",
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "🧪 Smoke-run AppImage (180s)",
+			"type": "shell",
+			"command": "set -euo pipefail\nAPP=$(ls -1 runtime/stable/*.AppImage | head -n 1)\nmkdir -p runtime/stable/logs\nTS=$(date +%Y%m%d-%H%M%S)\nLOG=runtime/stable/logs/appimage-run-${TS}-180s.log\n\necho \"[RUN] $(date -Is) appimage=$APP\" | tee \"$LOG\"\nEC=0\ntimeout 180s \"$APP\" >>\"$LOG\" 2>&1 || EC=$?\necho \"[RUN] $(date -Is) finished exit_code=$EC\" | tee -a \"$LOG\"\n\necho \"--- UI markers ---\"\ngrep -nE 'Main window shown successfully|page_load|label=main' \"$LOG\" | tail -n 50 || true\n\necho \"--- error markers ---\"\ngrep -nE 'ERROR|Error|panic|panicked|read-only|Read-only|permission denied|Permission denied|segfault|SIGSEGV|deadlock|blocked|Unable to create memory directory|memory_core_state\\.json' \"$LOG\" | tail -n 200 || true\n\necho \"Log: $LOG\"\n\nif [ \"$EC\" = \"124\" ]; then exit 0; fi\nexit \"$EC\"",
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "🔎 Check AppImage 180s log",
+			"type": "shell",
+			"command": "set -euo pipefail\nLOG=runtime/stable/logs/appimage-run-20251223-192213-180s.log\nls -la \"$LOG\"\necho \"--- tail 30 ---\"\ntail -n 30 \"$LOG\" | cat\n",
+			"problemMatcher": []
+		},
+		{
+			"label": "🔎 Check running AppImage process",
+			"type": "shell",
+			"command": "set -euo pipefail\npgrep -af 'Titan-Stable_26\\.2\\.0_amd64\\.AppImage' | cat || true\npgrep -af '/tmp/\\.mount_.*Titan' | head -n 20 || true\n",
+			"problemMatcher": []
+		},
+		{
+			"label": "🔎 Check timeout/AppImage leftovers",
+			"type": "shell",
+			"command": "set -euo pipefail\npgrep -af 'timeout 180s.*AppImage' | cat || true\npgrep -af 'timeout 90s.*AppImage' | cat || true\npgrep -af 'runtime/stable/.*\\.AppImage' | head -n 20 || true\n",
+			"problemMatcher": []
+		},
+		{
+			"label": "🧪 AppImage keepalive 180s (minimal)",
+			"type": "shell",
+			"command": "set -euo pipefail\nAPP=$(ls -1 runtime/stable/*.AppImage | head -n 1)\nmkdir -p runtime/stable/logs\nTS=$(date +%Y%m%d-%H%M%S)\nLOG=runtime/stable/logs/appimage-keepalive-${TS}-180s.log\n\necho \"[RUN] $(date -Is) appimage=$APP\" | tee \"$LOG\"\nEC=0\ntimeout 180s \"$APP\" >>\"$LOG\" 2>&1 || EC=$?\necho \"[RUN] $(date -Is) finished exit_code=$EC\" | tee -a \"$LOG\"\necho \"Log: $LOG\"\nif [ \"$EC\" = \"124\" ]; then exit 0; fi\nexit \"$EC\"",
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "🔎 Tail AppImage detached log",
+			"type": "shell",
+			"command": "set -euo pipefail\nLOG=runtime/stable/logs/appimage-detached-20251223-201247.log\necho \"Log: $LOG\"\necho \"--- tail 120 ---\"\ntail -n 120 \"$LOG\" | cat\n",
+			"problemMatcher": []
+		},
+		{
+			"label": "🔎 Inspect AppImage process (PID 874807)",
+			"type": "shell",
+			"command": "set -euo pipefail\nPID=874807\nps -p \"$PID\" -o pid,ppid,stat,etime,%cpu,%mem,cmd --no-headers || true\necho \"--- children ---\"\npgrep -P \"$PID\" -a || true\necho \"--- top appimage-related ---\"\npgrep -af 'Titan-Stable_26\\.2\\.0_amd64\\.AppImage|/tmp/\\.mount_.*Titan|titane-infinity' | head -n 30 || true\n",
+			"problemMatcher": []
+		},
+		{
+			"label": "🌐 Setup GitHub Tunnel (Interactive)",
+			"type": "shell",
+			"command": "./scripts/remote/setup-github-tunnel.sh",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"focus": true,
+				"showReuseMessage": false
+			},
+			"detail": "Configure remote access via GitHub tunnel (interactive)"
+		},
+		{
+			"label": "🌐 Install Tunnel Service",
+			"type": "shell",
+			"command": "./scripts/remote/install-tunnel-service.sh",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"focus": true,
+				"showReuseMessage": false
+			},
+			"detail": "Install GitHub tunnel as system service (permanent access)"
+		},
+		{
+			"label": "🌐 Tunnel Status",
+			"type": "shell",
+			"command": "code tunnel status",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"focus": false
+			},
+			"detail": "Show current tunnel status"
+		},
+		{
+			"label": "🌐 Tunnel Service Status",
+			"type": "shell",
+			"command": "code tunnel service status",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"focus": false
+			},
+			"detail": "Show tunnel system service status"
+		},
+		{
+			"label": "🌐 Start Tunnel Service",
+			"type": "shell",
+			"command": "code tunnel service start",
+			"problemMatcher": [],
+			"detail": "Start the tunnel system service"
+		},
+		{
+			"label": "🌐 Stop Tunnel Service",
+			"type": "shell",
+			"command": "code tunnel service stop",
+			"problemMatcher": [],
+			"detail": "Stop the tunnel system service"
+		},
+		{
+			"label": "🌐 Tunnel Service Logs",
+			"type": "shell",
+			"command": "code tunnel service log",
+			"isBackground": true,
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"focus": false
+			},
+			"detail": "Watch tunnel service logs"
+		},
+		{
+			"label": "🧪 Rust: cargo test (tail errors)",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd src-tauri\ncargo test 2>&1 | tail -n 240 | cat\nEC=${PIPESTATUS[0]}\necho \"EXIT:$EC\"",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "🛠️ Rebuild better-sqlite3",
+			"type": "shell",
+			"command": "pnpm rebuild better-sqlite3",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "🧪 Debug: pnpm run dev:tauri",
+			"type": "shell",
+			"command": "./.tools/node/current/bin/pnpm run dev:tauri",
+			"args": [],
+			"isBackground": true,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "🧪 Debug: dev:tauri (bundled node)",
+			"type": "shell",
+			"command": "export PATH=\"$PWD/.tools/node/current/bin:$PATH\" && pnpm run dev:tauri",
+			"isBackground": true,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "🛑 Stop Titan-Dev (cleanup after 10s)",
+			"type": "shell",
+			"command": "sleep 10 && ./runtime/dev/cleanup.sh",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "🧪 Smoke Deploy Full Local Dev (90s)",
+			"type": "shell",
+			"command": "timeout 90s ./scripts/launch/deploy_full_local_dev.sh",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "🔎 Tail Tauri Dev Log (200)",
+			"type": "shell",
+			"command": "tail -n 200 runtime/dev/logs/tauri.log | cat",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "🧪 Smoke Deploy Full Local Dev (30s, clean)",
+			"type": "shell",
+			"command": "./scripts/launch/deploy_full_local_dev.sh --smoke 30",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "🧪 Smoke Deploy Full Local Dev (15s, clean)",
+			"type": "shell",
+			"command": "./scripts/launch/deploy_full_local_dev.sh --smoke 15",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "🧪 Run Playwright E2E (critical)",
+			"type": "shell",
+			"command": "./.tools/node/current/bin/pnpm run test:e2e",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "🧪 Wrapper: no-tests check (capture exit)",
+			"type": "shell",
+			"command": "set +e; ./scripts/test-wrapper.sh src/utils/__tests__/__does_not_exist__.test.ts 2>&1 | tail -n 200; code=${PIPESTATUS[0]}; echo EXIT:$code; exit 0",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "🔎 Git Status (porcelain)",
+			"type": "shell",
+			"command": "cd /home/titane-os/Documents/GitHub/TITANE_INFINITY && git status --porcelain=v1 -b",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "🧹 Revert runtime memory file",
+			"type": "shell",
+			"command": "cd /home/titane-os/Documents/GitHub/TITANE_INFINITY && git restore src-tauri/memory/memory_core_state.json",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "🧹 Revert memory file (post-cleanup)",
+			"type": "shell",
+			"command": "cd /home/titane-os/Documents/GitHub/TITANE_INFINITY && git restore src-tauri/memory/memory_core_state.json && git status --porcelain=v1 -b",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "✅ Commit PR-3 (wrapper hardening)",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\n\ngit add \\\n  scripts/test-wrapper.sh \\\n  docs/STATUS_REPO_V27.md \\\n  docs/_evidence/v27/B6_test_wrapper_pr3_targeted_webVitals_2026-01-13.txt \\\n  docs/_evidence/v27/B7_test_wrapper_pr3_no_tests_case_2026-01-13.txt\n\ngit status --porcelain=v1 -b | cat\n\ngit commit -m \"tests(wrapper): durcir test-wrapper (RAW + no-tests guard)\" -m \"- Ajoute TEST_WRAPPER_RAW=1 pour bypass l'analyse\\n- Ajoute garde anti faux-positifs quand 0 test est détecté (+ opt-out)\\n- Ajoute preuves v27 B6/B7 + update STATUS v27\"\n\ngit status --porcelain=v1 -b | cat\n",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "⬆️ Push MAIN to origin",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\ngit push origin MAIN\n\ngit status --porcelain=v1 -b | cat\n\ngit rev-list --left-right --count origin/MAIN...HEAD | cat\n",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "🔒 Check dev ports/processes",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\n\nbash scripts/verify/check-dev-ports-processes.sh\n",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "🔎 Inspect Vite PID/port",
+			"type": "shell",
+			"command": "set -euo pipefail\n\necho \"--- Vite PIDs ---\"\npgrep -af 'vite/bin/vite\\.js' | cat || true\n\necho \"--- listening ports :4000/:5173/:4173/:1430 ---\"\n(ss -ltnp 2>/dev/null || ss -ltn 2>/dev/null) | grep -E ':(4000|5173|4173|1430)\\b' | cat || echo \"OK: none\"\n",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "🛑 Stop stray Vite port 4000",
+			"type": "shell",
+			"command": "set -euo pipefail\nPID=3855490\n\necho \"Stopping Vite PID=$PID\"\nkill \"$PID\" 2>/dev/null || true\nsleep 2\nif ps -p \"$PID\" >/dev/null 2>&1; then\n  echo \"PID still running; sending SIGKILL\"\n  kill -9 \"$PID\" 2>/dev/null || true\n  sleep 1\nfi\n\necho \"--- verify ports ---\"\n(ss -ltnp 2>/dev/null || ss -ltn 2>/dev/null) | grep -E ':(4000|5173|4173|1430)\\b' | cat || echo \"OK: none\"\n",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "⏳ Wait Rust tests finish",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\necho \"Waiting for cargo test to finish...\"\nfor i in $(seq 1 180); do\n  if pgrep -af 'cargo test' >/dev/null; then\n    echo \"[$i/180] still running... $(date -Is)\";\n    sleep 5\n  else\n    echo \"done: no cargo test process\";\n    exit 0\n  fi\n done\n echo \"timeout waiting (still running?)\"; exit 2\n",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "⏳ Wait cargo test (quiet)",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\necho \"waiting...\"\nwhile pgrep -af 'cargo test' >/dev/null; do\n  sleep 10\ndone\necho \"done: cargo test finished\"\n",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "🛑 Stop broken wait loops",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\n# Kill any previous wait-loop bash processes that match our marker\npgrep -af \"echo \\\"waiting\\.\\.\\.\\\"\" | awk '{print $1}' | head -n 20 | while read -r pid; do\n  echo \"killing wait-loop pid=$pid\";\n  kill \"$pid\" 2>/dev/null || true\ndone\n",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "🔎 Check real cargo test processes",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\necho \"Now: $(date -Is)\"\npgrep -af '^/.*cargo test' | head -n 20 || echo 'no cargo test process'\npgrep -af '^/.*rustc .*--crate-name' | head -n 5 || true\n",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "🛑 Stop wait-loop leftovers",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\npgrep -af \"Waiting for cargo test to finish\" | awk '{print $1}' | head -n 20 | while read -r pid; do\n  echo \"killing wait-loop pid=$pid\";\n  kill \"$pid\" 2>/dev/null || true\ndone\n",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "🔎 Check cargo process name",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\necho \"Now: $(date -Is)\"\nif pgrep -x cargo >/dev/null 2>&1; then\n  echo \"cargo is running:\";\n  pgrep -x cargo | head -n 10 | while read -r pid; do\n    ps -p \"$pid\" -o pid,etime,cmd --no-headers | cat\n  done\nelse\n  echo \"no cargo process (Rust tests likely finished)\"\nfi\n",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "🔒 Ports check (explicit)",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\n(ss -ltnp 2>/dev/null || ss -ltn 2>/dev/null) | grep -E ':(4000|5173|4173|1430)\\b' | cat || echo 'OK: no dev ports'\n",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "🔎 Dev process check (explicit)",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\nMATCHES=\"$(pgrep -af 'vite/bin/vite\\.js|\\btauri dev\\b|pnpm run dev:tauri|runtime/dev/tauri\\.conf\\.json|vite\\.js --port' 2>/dev/null || true)\"\nFILTERED=\"\"\nwhile IFS= read -r line; do\n  case \"$line\" in\n    *\"pgrep -af\"*|*\"SELF_PID=$$\"*) continue ;;\n    *\"vitest.explorer\"*|*\"/dist/worker.js\"*) continue ;;\n  esac\n  [ -n \"$line\" ] && FILTERED=\"${FILTERED}${line}\\n\"\ndone <<< \"$MATCHES\"\n\nif [ -n \"${FILTERED//[[:space:]]/}\" ]; then\n  printf '%s' \"$FILTERED\" | head -n 30\nelse\n  echo 'OK: no dev processes'\nfi\n",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "🔎 Git status (post-tests)",
+			"type": "shell",
+			"command": "cd /home/titane-os/Documents/GitHub/TITANE_INFINITY && git status --porcelain=v1 -b",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "🧾 Phase A: Git snapshot (all required commands)",
+			"type": "shell",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\n\necho \"=== git status ===\"\ngit status --porcelain=v1 -b | cat\n\necho\n\necho \"=== git rev-parse --abbrev-ref HEAD ===\"\ngit rev-parse --abbrev-ref HEAD | cat\n\necho\n\necho \"=== git rev-parse HEAD ===\"\ngit rev-parse HEAD | cat\n\necho\n\necho \"=== git log -20 --date=iso --oneline ===\"\ngit log -20 --date=iso --oneline | cat\n\necho\n\necho \"=== git diff --stat ===\"\ngit diff --stat | cat\n\necho\n\necho \"=== git diff --cached --stat ===\"\ngit diff --cached --stat | cat\n",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "A1 git status",
+			"type": "shell",
+			"command": "cd /home/titane-os/Documents/GitHub/TITANE_INFINITY && git status --porcelain=v1 -b | cat",
+			"isBackground": false
+		},
+		{
+			"label": "A1 git branch",
+			"type": "shell",
+			"command": "cd /home/titane-os/Documents/GitHub/TITANE_INFINITY && git rev-parse --abbrev-ref HEAD | cat",
+			"isBackground": false
+		},
+		{
+			"label": "A1 git head",
+			"type": "shell",
+			"command": "cd /home/titane-os/Documents/GitHub/TITANE_INFINITY && git rev-parse HEAD | cat",
+			"isBackground": false
+		},
+		{
+			"label": "A1 git log -20",
+			"type": "shell",
+			"command": "cd /home/titane-os/Documents/GitHub/TITANE_INFINITY && git log -20 --date=iso --oneline | cat",
+			"isBackground": false
+		},
+		{
+			"label": "A1 git diff --stat",
+			"type": "shell",
+			"command": "cd /home/titane-os/Documents/GitHub/TITANE_INFINITY && git diff --stat | cat",
+			"isBackground": false
+		},
+		{
+			"label": "A1 git diff --cached --stat",
+			"type": "shell",
+			"command": "cd /home/titane-os/Documents/GitHub/TITANE_INFINITY && git diff --cached --stat | cat",
+			"isBackground": false
+		},
+		{
+			"label": "🔎 Git diff names (staged/unstaged)",
+			"type": "shell",
+			"command": "cd /home/titane-os/Documents/GitHub/TITANE_INFINITY && echo '--- git diff --name-only ---' && git diff --name-only | cat && echo '--- git diff --cached --name-only ---' && git diff --cached --name-only | cat && echo '--- status ---' && git status --porcelain=v1 -b | cat",
+			"isBackground": false
+		},
+		{
+			"label": "🔎 Git tracked? .vscode/tasks.json",
+			"type": "shell",
+			"command": "cd /home/titane-os/Documents/GitHub/TITANE_INFINITY && echo '--- ls-files .vscode/tasks.json ---' && git ls-files .vscode/tasks.json | cat && echo '--- check-ignore ---' && (git check-ignore -v .vscode/tasks.json || echo 'NOT IGNORED')",
+			"isBackground": false
+		},
+		{
+			"label": "📦 Inspect publish artifacts (v26.3.0)",
+			"type": "shell",
+			"command": "bash -lc 'set -euo pipefail; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; echo \"=== runtime/stable ===\"; ls -la runtime/stable | sed -n \"1,200p\"; echo; echo \"=== deployment/latest ===\"; ls -la deployment/latest | sed -n \"1,200p\"; echo; echo \"=== src-tauri/target/release ===\"; ls -la src-tauri/target/release 2>/dev/null | sed -n \"1,160p\" || true; echo; if [ -f src-tauri/target/release/titane-infinity ]; then echo \"FOUND: src-tauri/target/release/titane-infinity\"; file src-tauri/target/release/titane-infinity | cat; sha256sum src-tauri/target/release/titane-infinity | cat; else echo \"MISSING: src-tauri/target/release/titane-infinity\"; fi; echo; if ls runtime/stable/*.AppImage >/dev/null 2>&1; then sha256sum runtime/stable/*.AppImage | cat; fi; if ls runtime/stable/*.deb >/dev/null 2>&1; then sha256sum runtime/stable/*.deb | cat; fi'",
+			"isBackground": false
+		},
+		{
+			"label": "📏 Compute hashes/sizes for publish",
+			"type": "shell",
+			"command": "bash -lc 'set -euo pipefail; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; APP=$(ls -1 runtime/stable/*.AppImage | head -n 1); DEB=$(ls -1 runtime/stable/*.deb | head -n 1); BIN=src-tauri/target/release/titane-infinity; echo \"APP=$APP\"; echo \"DEB=$DEB\"; echo \"BIN=$BIN\"; echo; echo \"--- sha256 ---\"; sha256sum \"$APP\" \"$DEB\" \"$BIN\" | cat; echo; echo \"--- bytes (stat) ---\"; stat -c \"%n %s\" \"$APP\" \"$DEB\" \"$BIN\" | cat; echo; echo \"--- human (du -h) ---\"; du -h \"$APP\" \"$DEB\" \"$BIN\" | cat; echo; echo \"--- mtime (UTC-ish) ---\"; TZ=UTC stat -c \"%n %y\" \"$APP\" \"$DEB\" \"$BIN\" | cat'",
+			"isBackground": false
+		},
+		{
+			"label": "🔐 Publish sha256 (stable+bin)",
+			"type": "shell",
+			"command": "bash -lc 'cd /home/titane-os/Documents/GitHub/TITANE_INFINITY && APP=$(ls -1 runtime/stable/*.AppImage | head -n 1) && DEB=$(ls -1 runtime/stable/*.deb | head -n 1) && BIN=src-tauri/target/release/titane-infinity && sha256sum \"$APP\" \"$DEB\" \"$BIN\" | cat'",
+			"isBackground": false
+		},
+		{
+			"label": "📦 Publish sizes (bytes + du -h)",
+			"type": "shell",
+			"command": "bash -lc 'cd /home/titane-os/Documents/GitHub/TITANE_INFINITY && APP=$(ls -1 runtime/stable/*.AppImage | head -n 1) && DEB=$(ls -1 runtime/stable/*.deb | head -n 1) && BIN=src-tauri/target/release/titane-infinity && echo \"-- bytes\" && stat -c \"%s %n\" \"$APP\" \"$DEB\" \"$BIN\" | cat && echo \"-- human\" && du -h \"$APP\" \"$DEB\" \"$BIN\" | cat'",
+			"isBackground": false
+		},
+		{
+			"label": "🚚 Publish artifacts to deployment/latest (26.3.0)",
+			"type": "shell",
+			"command": "bash -lc 'set -euo pipefail; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; APP_SRC=$(ls -1 runtime/stable/*.AppImage | head -n 1); DEB_SRC=$(ls -1 runtime/stable/*.deb | head -n 1); BIN_SRC=src-tauri/target/release/titane-infinity; APP_DST=deployment/latest/TITANE-Infinity_26.3.0_amd64.AppImage; DEB_DST=deployment/latest/TITANE-Infinity_26.3.0_amd64.deb; BIN_DST=deployment/latest/titane-infinity; echo \"Copying AppImage: $APP_SRC -> $APP_DST\"; cp -f \"$APP_SRC\" \"$APP_DST\"; chmod +x \"$APP_DST\"; echo \"Copying DEB: $DEB_SRC -> $DEB_DST\"; cp -f \"$DEB_SRC\" \"$DEB_DST\"; echo \"Copying BIN: $BIN_SRC -> $BIN_DST\"; cp -f \"$BIN_SRC\" \"$BIN_DST\"; chmod +x \"$BIN_DST\" || true; echo; echo \"Removing old 26.2.0 artifacts (if present)...\"; rm -f deployment/latest/TITANE-Infinity_26.2.0_amd64.AppImage deployment/latest/TITANE-Infinity_26.2.0_amd64.deb deployment/latest/TITANE-Infinity-26.2.0-1.x86_64.rpm; echo; echo \"deployment/latest now:\"; ls -la deployment/latest | sed -n \"1,200p\"'",
+			"isBackground": false
+		},
+		{
+			"label": "🔐 Compute sha256 for deployment/latest",
+			"type": "shell",
+			"command": "bash -lc 'cd /home/titane-os/Documents/GitHub/TITANE_INFINITY && sha256sum deployment/latest/TITANE-Infinity_26.3.0_amd64.AppImage deployment/latest/TITANE-Infinity_26.3.0_amd64.deb deployment/latest/titane-infinity | cat'",
+			"isBackground": false
+		},
+		{
+			"label": "🔎 Git tracked? deployment/latest artifacts",
+			"type": "shell",
+			"command": "bash -lc 'cd /home/titane-os/Documents/GitHub/TITANE_INFINITY && echo \"--- ls-files (AppImage) ---\" && git ls-files deployment/latest/*.AppImage | cat && echo \"--- ls-files (deb) ---\" && git ls-files deployment/latest/*.deb | cat && echo \"--- ls-files (rpm) ---\" && git ls-files deployment/latest/*.rpm | cat && echo \"--- check-ignore (AppImage) ---\" && (git check-ignore -v deployment/latest/TITANE-Infinity_26.3.0_amd64.AppImage || echo \"NOT IGNORED\") && echo \"--- check-ignore (deb) ---\" && (git check-ignore -v deployment/latest/TITANE-Infinity_26.3.0_amd64.deb || echo \"NOT IGNORED\")'",
+			"isBackground": false
+		},
+		{
+			"label": "✅ Commit publish: latest v26.3.0",
+			"type": "shell",
+			"command": "bash -lc 'set -euo pipefail; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; git add deployment/latest/MANIFEST.json deployment/latest/titane-infinity launch-titane.sh; git status --porcelain=v1 -b | cat; git commit -m \"publish(latest): v26.3.0\" -m \"- Met à jour deployment/latest/MANIFEST.json (26.3.0 + sha256)\\n- Met à jour launch-titane.sh pour l’AppImage 26.3.0\\n- Met à jour deployment/latest/titane-infinity\"; git status --porcelain=v1 -b | cat'",
+			"isBackground": false
+		},
+		{
+			"label": "📦 Commit publish artifacts (AppImage+DEB) v26.3.0",
+			"type": "shell",
+			"command": "bash -lc 'set -euo pipefail; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; git add .gitignore deployment/latest/TITANE-Infinity_26.3.0_amd64.AppImage deployment/latest/TITANE-Infinity_26.3.0_amd64.deb; git status --porcelain=v1 -b | cat; git commit -m \"publish(latest): add linux bundles v26.3.0\" -m \"- Autorise deployment/latest/*.AppImage et *.deb (exception .gitignore)\\n- Versionne les artefacts AppImage/DEB v26.3.0\"; git status --porcelain=v1 -b | cat'",
+			"isBackground": false
+		}
+	],
+	"inputs": [
+		{
+			"id": "featureName",
+			"type": "promptString",
+			"description": "Feature name (e.g., visual-engine-v22):",
+			"default": "new-feature"
+		}
+	]
+}
