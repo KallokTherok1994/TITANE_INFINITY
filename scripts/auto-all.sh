@@ -118,9 +118,18 @@ run_step_resilient_to_sigint() {
     trap 'on_sigint_detached_step' INT
     trap 'on_term_detached_step' TERM
 
+    # `wait` peut être interrompu par SIGINT même si le process détaché continue.
+    # On boucle tant que le PID est vivant et que l'arrêt n'a pas été explicitement demandé.
+    local ec=0
     set +e
-    wait "$CURRENT_STEP_PID"
-    local ec=$?
+    while true; do
+      wait "$CURRENT_STEP_PID"
+      ec=$?
+      if [ "$ec" -eq 130 ] && kill -0 "$CURRENT_STEP_PID" >/dev/null 2>&1 && [ "$SIGINT_COUNT" -lt 2 ]; then
+        continue
+      fi
+      break
+    done
     set -e
 
     # Restore traps.
