@@ -51,7 +51,6 @@
 *.md text eol=lf
 *.css text eol=lf
 *.scss text eol=lf
-
 # 🧰 Toolchain binaries (vendored)
 .tools/node/_extract/**/bin/node filter=lfs diff=lfs merge=lfs -text
 *.html text eol=lf
@@ -64,3 +63,5 @@
 # ═══════════════════════════════════════════════════════════════════
 # END TITANE∞ .gitattributes
 # ═══════════════════════════════════════════════════════════════════
+deployment/latest/*.AppImage filter=lfs diff=lfs merge=lfs -text
+deployment/latest/*.deb filter=lfs diff=lfs merge=lfs -text

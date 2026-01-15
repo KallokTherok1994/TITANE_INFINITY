@@ -61,6 +61,10 @@ venv/
 
 # TITANE∞ Dual-Runtime Directories
 runtime/stable/build/
+
+# Publish allowlist (Git LFS): keep global ignores but allow latest artifacts
+!deployment/latest/*.AppImage
+!deployment/latest/*.deb
 runtime/stable/dist/
 runtime/stable/node_modules/
 runtime/stable/*.AppImage
