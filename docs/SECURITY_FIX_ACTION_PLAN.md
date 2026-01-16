@@ -42,7 +42,7 @@ frame-ancestors 'none';
 
 **Note:** Keep `'unsafe-inline'` for style-src only (required for React inline styles). Remove from script-src.
 
-**Action:** Apply new CSP to tauri.conf.json
+**Action:** Apply new CSP to `src-tauri/tauri.conf.json`
 
 ---
 

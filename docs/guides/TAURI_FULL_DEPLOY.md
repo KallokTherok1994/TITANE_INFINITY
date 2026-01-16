@@ -390,9 +390,9 @@ RUST_BACKTRACE=0
 ```
 
 ### Configs Tauri
-- **Dev:** `runtime/dev/tauri.conf.json`
-- **Stable:** `runtime/stable/tauri.conf.json`
-- **Production:** `runtime/stable/tauri.conf.json` (avec devtools=false)
+- **Dev:** `runtime/dev/tauri.dev.conf.json`
+- **Stable:** `runtime/stable/tauri.stable.conf.json`
+- **Production:** `runtime/stable/tauri.stable.conf.json` (avec devtools=false)
 
 ---
 

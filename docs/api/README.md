@@ -831,7 +831,7 @@ TITANE_INFINITY/
 │   │   │   └── memory/     # AES-256-GCM encryption
 │   │   └── shared/         # Types communs
 │   ├── Cargo.toml          # Dependencies
-│   ├── tauri.conf.json     # Configuration Tauri
+│   ├── tauri.conf.json     # Configuration Tauri (src-tauri/tauri.conf.json; base; overlay via runtime/*)
 │   └── icons/              # PNG RGBA valides
 ├── src/                    # Frontend (futur)
 ├── docs/                   # Documentation

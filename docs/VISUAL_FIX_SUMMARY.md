@@ -31,8 +31,8 @@
            │
 13:47 ───► Améliorations Proactives (Utilisateur)
            │ ├─ vite.config.ts: watch.ignored
-           │ ├─ tauri.conf.json: Smart Vite detection
-           │ └─ tauri.conf.json: 3-tier pnpm fallback
+           │ ├─ runtime/dev/tauri.dev.conf.json: Smart Vite detection
+           │ └─ runtime/dev/tauri.dev.conf.json: 3-tier pnpm fallback
            │
 14:07 ───► Validation Finale
            │ ├─ Startup: 777ms (première run post-modifs)
@@ -268,7 +268,7 @@ No HMR trigger ✅
 
 ---
 
-### 2️⃣ Smart Vite Detection (tauri.conf.json)
+### 2️⃣ Smart Vite Detection (runtime/dev/tauri.dev.conf.json)
 
 **Problème:**
 ```
@@ -310,7 +310,7 @@ Tauri connects to existing Vite ✅
 
 ---
 
-### 3️⃣ 3-Tier pnpm Fallback (tauri.conf.json)
+### 3️⃣ 3-Tier pnpm Fallback (runtime/dev/tauri.dev.conf.json)
 
 **Problème:**
 ```

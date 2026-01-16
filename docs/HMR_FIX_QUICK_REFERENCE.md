@@ -226,7 +226,7 @@ grep -r "from './hooks'" src | wc -l
 
 ## Related Issues
 
-### tauri.conf.json Change
+### runtime/dev/tauri.dev.conf.json Change
 
 **Not related to HMR**, but improved in same session:
 

@@ -184,7 +184,7 @@ HMR <200ms ⚡
 
 ---
 
-## Why the tauri.conf.json Changed
+## Why the runtime/dev/tauri.dev.conf.json Changed
 
 **Question**: Was the `beforeDevCommand` change related to HMR issue?
 
@@ -244,7 +244,7 @@ HMR <200ms ⚡
 ### Q: What is the dependency chain that creates the cycle?
 **A**: `logger.ts` → `logLevelConfig.ts` → `logger.ts` (LogLevel enum)
 
-### Q: Why was tauri.conf.json beforeDevCommand modified?
+### Q: Why was runtime/dev/tauri.dev.conf.json beforeDevCommand modified?
 **A**: Separate fix for `pnpm not found` errors (explicit PATH). Not related to HMR.
 
 ### Q: Are there other files with similar issues?

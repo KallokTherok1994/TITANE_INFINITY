@@ -84,7 +84,7 @@ TITANE∞ includes comprehensive automated systems for detecting and resolving i
    - Rust toolchain presence
 
 2. **Build Configuration**
-   - Version consistency (package.json, Cargo.toml, tauri.conf.json)
+   - Version consistency (package.json, Cargo.toml, src-tauri/tauri.conf.json)
    - Tauri-only mode enforcement
    - dist directory presence
    - TypeScript strict mode

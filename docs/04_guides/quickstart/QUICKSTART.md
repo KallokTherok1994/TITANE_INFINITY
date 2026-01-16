@@ -486,7 +486,7 @@ lsof -i :1420
 # Tuer processus
 kill -9 <PID>
 
-# Ou changer port dans tauri.conf.json
+# Ou changer port dans runtime/dev/tauri.dev.conf.json
 ```
 
 ---

@@ -282,7 +282,7 @@ VITE_OMEGA_ENABLED=true
 VITE_OMEGA_MODE=production
 ```
 
-**Tauri Config**: `runtime/stable/tauri.conf.json`
+**Tauri Config**: `runtime/stable/tauri.stable.conf.json`
 
 Key settings:
 ```json
@@ -358,7 +358,7 @@ VITE_OMEGA_LOGGING=verbose
 VITE_CLAUDE_CODE_INTEGRATION=true
 ```
 
-**Tauri Config**: `runtime/dev/tauri.conf.json`
+**Tauri Config**: `runtime/dev/tauri.dev.conf.json`
 
 Key settings:
 ```json
@@ -971,13 +971,13 @@ VITE_FEATURE_FLAG_MEMORY_V2=true
 
 **Runtime Stable** (4 files):
 - ✅ `build.sh` — Production build script
-- ✅ `tauri.conf.json` — Tauri production config
+- ✅ `tauri.stable.conf.json` — Tauri production config
 - ✅ `.env.production` — Production environment
 - ✅ `README.md` — User guide (200+ lines)
 
 **Runtime Dev** (4 files):
 - ✅ `run-dev.sh` — Dev launcher script
-- ✅ `tauri.conf.json` — Tauri dev config
+- ✅ `tauri.dev.conf.json` — Tauri dev config
 - ✅ `.env.development` — Development environment
 - ✅ `README.md` — Developer guide (300+ lines)
 

@@ -159,7 +159,7 @@ export function useSomeHook() {
 
 ---
 
-## 3. Why the tauri.conf.json Change?
+## 3. Why the runtime/dev/tauri.dev.conf.json Change?
 
 ### 3.1 Before vs After
 
@@ -731,7 +731,7 @@ export function getConnection() {
 | `src/config/logLevelConfig.ts` | 439 | Runtime log level configuration | ⚠️ Circular import |
 | `src/hooks/index.ts` | 773 | Barrel export for all hooks | ⚠️ Performance issue |
 | `src/App.tsx` | 1327 | Main app component | ✅ Stable |
-| `runtime/dev/tauri.conf.json` | 69 | Tauri dev configuration | ✅ Enhanced PATH |
+| `runtime/dev/tauri.dev.conf.json` | 69 | Tauri dev configuration | ✅ Enhanced PATH |
 
 ### Documentation Generated
 - `/tmp/hmr_analysis.md` - Initial quick analysis

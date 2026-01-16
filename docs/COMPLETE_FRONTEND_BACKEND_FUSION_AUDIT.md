@@ -487,7 +487,7 @@ pub async fn command_name(params: Params) -> Result<Output, String> {
    - Recommendation: Use thread-safe alternatives or mutex
 
 5. **dangerousDisableAssetCspModification: true**
-   - Location: `tauri.conf.json`
+   - Location: `src-tauri/tauri.conf.json`
    - Risk: Bypasses asset CSP protections
    - Recommendation: Review if truly necessary
 
@@ -766,7 +766,7 @@ Frontend Stores
 1. **Tighten CSP policy** - Remove `unsafe-eval`/`unsafe-inline`
    - Impact: HIGH
    - Effort: 2-4 hours
-   - File: `tauri.conf.json`
+   - File: `src-tauri/tauri.conf.json`
 
 2. **Replace top 100 .unwrap()/.expect()** - Prevent crashes
    - Impact: HIGH
