@@ -1,11 +1,27 @@
 #!/bin/bash
 # TITANE∞ — Build STABLE RUNTIME (Production)
 # Usage: ./runtime/stable/build.sh
+# P3_2_BUILD_HARDEN: Enhanced security for stable builds
 
-set -e
+set -euo pipefail  # P3_2: Strict error handling
 
 echo "🔵 TITANE∞ — Building STABLE RUNTIME"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+
+# P3_2_BUILD_HARDEN: Pre-build security scan
+echo "🛡️ P3_2_BUILD_HARDEN: Security verification..."
+if [ -f "./scripts/check_forbidden_files.sh" ]; then
+    ./scripts/check_forbidden_files.sh
+    if [ $? -ne 0 ]; then
+        echo "❌ P3_2_BUILD_HARDEN: Security scan failed"
+        echo "🔧 Clean forbidden files before stable build"
+        exit 1
+    fi
+    echo "✅ P3_2_BUILD_HARDEN: Security scan passed"
+else
+    echo "⚠️ P3_2_BUILD_HARDEN: Security scanner not found"
+fi
 echo ""
 
 # Navigate to project root

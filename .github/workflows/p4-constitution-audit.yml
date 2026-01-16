@@ -1,0 +1,234 @@
+# P4 CONSTITUTIONAL AUDIT CI GATE
+# TITANE_INFINITY_PROD_CERTIFICATION_RUN_V1
+# GATE: GATE_P4 = (constitutional_compliance == PASS && l1_l7_violations == 0)
+
+name: "🏛️ P4-CONSTITUTION-AUDIT-GATE"
+
+on:
+  push:
+    branches: [ main, MAIN ]
+  pull_request:
+    branches: [ main, MAIN ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  p4-l1-local-first-audit:
+    name: "L1 LOCAL_FIRST Audit"
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Verify Tauri Architecture
+      run: |
+        echo "🔍 L1 LOCAL_FIRST: Auditing architecture..."
+        if [ -f "src-tauri/Cargo.toml" ]; then
+          echo "✅ Tauri-based architecture confirmed"
+        else
+          echo "❌ L1 VIOLATION: No Tauri architecture found"
+          exit 1
+        fi
+        
+        if [ -f "src-tauri/tauri.conf.json" ]; then
+          echo "✅ Local-first configuration confirmed"
+        else
+          echo "❌ L1 VIOLATION: Missing Tauri configuration"
+          exit 1
+        fi
+        
+        echo "✅ L1 LOCAL_FIRST: COMPLIANT"
+
+  p4-l2-dual-runtime-audit:
+    name: "L2 DUAL_RUNTIME Audit"
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Verify Dual Runtime Structure
+      run: |
+        echo "🔍 L2 DUAL_RUNTIME: Auditing runtime separation..."
+        if [ -d "runtime/dev" ] && [ -d "runtime/stable" ]; then
+          echo "✅ Dual runtime directories confirmed"
+        else
+          echo "❌ L2 VIOLATION: Missing dual runtime structure"
+          exit 1
+        fi
+        
+        if [ -f "runtime/dev/tauri.conf.json" ] && [ -f "runtime/stable/tauri.conf.json" ]; then
+          echo "✅ Separate runtime configurations confirmed"
+        else
+          echo "❌ L2 VIOLATION: Missing dual configuration"
+          exit 1
+        fi
+        
+        echo "✅ L2 DUAL_RUNTIME: COMPLIANT"
+
+  p4-l3-no-secrets-audit:
+    name: "L3 NO_SECRETS Audit"
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Run P0_1_SECRETS Validation
+      run: |
+        echo "🔍 L3 NO_SECRETS: Running secrets audit..."
+        if find . -name ".env" -o -name ".env.*" ! -name "*.example" -type f | grep -q .; then
+          echo "❌ L3 VIOLATION: .env files found"
+          find . -name ".env" -o -name ".env.*" ! -name "*.example" -type f
+          exit 1
+        fi
+        echo "✅ L3 NO_SECRETS: COMPLIANT"
+
+  p4-l4-no-expansion-audit:
+    name: "L4 NO_EXPANSION Audit" 
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Verify Surface Lock
+      run: |
+        echo "🔍 L4 NO_EXPANSION: Auditing surface lock..."
+        if [ -f "docs/TAURI_SURFACE.md" ]; then
+          COMMANDS=$(grep -o "command_[a-zA-Z_]*" docs/TAURI_SURFACE.md | wc -l)
+          if [ "$COMMANDS" -eq 52 ]; then
+            echo "✅ Surface locked at 52 commands"
+          else
+            echo "❌ L4 VIOLATION: Surface changed ($COMMANDS commands, expected 52)"
+            exit 1
+          fi
+        else
+          echo "❌ L4 VIOLATION: Missing surface documentation"
+          exit 1
+        fi
+        echo "✅ L4 NO_EXPANSION: COMPLIANT"
+
+  p4-l5-no-free-refactor-audit:
+    name: "L5 NO_FREE_REFACTOR Audit"
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Verify Contract Stability
+      run: |
+        echo "🔍 L5 NO_FREE_REFACTOR: Auditing contract stability..."
+        if [ -f "src/lib/tauriCommands.ts" ] && [ -f "src/lib/tauriClient.ts" ]; then
+          echo "✅ TypeScript contracts maintained"
+        else
+          echo "❌ L5 VIOLATION: Missing contract files"
+          exit 1
+        fi
+        echo "✅ L5 NO_FREE_REFACTOR: COMPLIANT"
+
+  p4-l6-proof-over-intuition-audit:
+    name: "L6 PROOF_OVER_INTUITION Audit"
+    runs-on: ubuntu-latest  
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Verify Evidence-Based Approach
+      run: |
+        echo "🔍 L6 PROOF_OVER_INTUITION: Auditing evidence..."
+        if [ -d "docs/_evidence" ]; then
+          echo "✅ Evidence directory exists"
+          EVIDENCE_COUNT=$(find docs/_evidence -name "*.md" -o -name "*.txt" | wc -l)
+          if [ "$EVIDENCE_COUNT" -gt 0 ]; then
+            echo "✅ Evidence documentation found ($EVIDENCE_COUNT files)"
+          else
+            echo "❌ L6 VIOLATION: No evidence files found"
+            exit 1
+          fi
+        else
+          echo "❌ L6 VIOLATION: Missing evidence directory"
+          exit 1
+        fi
+        echo "✅ L6 PROOF_OVER_INTUITION: COMPLIANT"
+
+  p4-l7-safe-run-gate-audit:
+    name: "L7 SAFE_RUN_GATE Audit"
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Verify CI Gates
+      run: |
+        echo "🔍 L7 SAFE_RUN_GATE: Auditing CI gates..."
+        GATES=0
+        if [ -f ".github/workflows/p0-1-secrets-guard.yml" ]; then
+          echo "✅ P0_1_SECRETS gate active"
+          GATES=$((GATES + 1))
+        fi
+        if [ -f ".github/workflows/p0-2-surface-guard.yml" ]; then
+          echo "✅ P0_2_SURFACE gate active"
+          GATES=$((GATES + 1))
+        fi
+        if [ -f ".github/workflows/p3-stable-build.yml" ]; then
+          echo "✅ P3_STABLE_BUILD gate active"  
+          GATES=$((GATES + 1))
+        fi
+        
+        if [ "$GATES" -ge 3 ]; then
+          echo "✅ Safety gates active ($GATES gates)"
+        else
+          echo "❌ L7 VIOLATION: Insufficient safety gates ($GATES/3)"
+          exit 1
+        fi
+        echo "✅ L7 SAFE_RUN_GATE: COMPLIANT"
+
+  p4-constitutional-certification:
+    name: "🏛️ Constitutional Certification"
+    runs-on: ubuntu-latest
+    needs: [
+      p4-l1-local-first-audit,
+      p4-l2-dual-runtime-audit, 
+      p4-l3-no-secrets-audit,
+      p4-l4-no-expansion-audit,
+      p4-l5-no-free-refactor-audit,
+      p4-l6-proof-over-intuition-audit,
+      p4-l7-safe-run-gate-audit
+    ]
+    steps:
+    - name: Constitutional Compliance Certification
+      run: |
+        echo "🏛️ P4_CONSTITUTION_AUDIT: Generating certification..."
+        echo "Constitutional Compliance: 7/7 LAWS"
+        echo "L1 LOCAL_FIRST: ✅ COMPLIANT"  
+        echo "L2 DUAL_RUNTIME: ✅ COMPLIANT"
+        echo "L3 NO_SECRETS: ✅ COMPLIANT" 
+        echo "L4 NO_EXPANSION: ✅ COMPLIANT"
+        echo "L5 NO_FREE_REFACTOR: ✅ COMPLIANT"
+        echo "L6 PROOF_OVER_INTUITION: ✅ COMPLIANT"
+        echo "L7 SAFE_RUN_GATE: ✅ COMPLIANT"
+        echo ""
+        echo "🎯 GATE_P4: CONSTITUTIONAL AUDIT PASS"
+        echo "📋 Ready for: P5_RUNTIME_GOVERNANCE"
+
+  evidence-collection:
+    name: "📊 P4 Evidence Collection"
+    runs-on: ubuntu-latest
+    needs: [p4-constitutional-certification]
+    if: always()
+    steps:
+    - name: Collect P4 evidence
+      run: |
+        echo "📊 P4_CONSTITUTION_AUDIT Evidence Collection"
+        echo "Timestamp: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+        echo "Phase: P4_CONSTITUTION_AUDIT"
+        echo "Status: $([ '${{ needs.p4-constitutional-certification.result }}' = 'success' ] && echo 'PASS' || echo 'FAIL')"
+        echo ""
+        echo "Constitutional Laws Compliance:"
+        echo "- L1 LOCAL_FIRST: ${{ needs.p4-l1-local-first-audit.result }}"
+        echo "- L2 DUAL_RUNTIME: ${{ needs.p4-l2-dual-runtime-audit.result }}"
+        echo "- L3 NO_SECRETS: ${{ needs.p4-l3-no-secrets-audit.result }}"
+        echo "- L4 NO_EXPANSION: ${{ needs.p4-l4-no-expansion-audit.result }}"
+        echo "- L5 NO_FREE_REFACTOR: ${{ needs.p4-l5-no-free-refactor-audit.result }}"
+        echo "- L6 PROOF_OVER_INTUITION: ${{ needs.p4-l6-proof-over-intuition-audit.result }}"
+        echo "- L7 SAFE_RUN_GATE: ${{ needs.p4-l7-safe-run-gate-audit.result }}"

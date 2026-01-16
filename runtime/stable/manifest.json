@@ -1,0 +1,57 @@
+{
+  "name": "titane-infinity-stable",
+  "version": "26.3.0",
+  "build_target": "production",
+  "certification_level": "P3_STABLE_BUILD",
+  "build_timestamp": null,
+  "build_hash": null,
+  "allowlist_source": "src-tauri/allowlist.whitelist.stable.json",
+  "config_source": "runtime/stable/tauri.conf.json",
+  "stage_directory": "runtime/stable/stage/",
+  "forbidden_files": [
+    "*.env",
+    "*.key",
+    "*.pem",
+    "*secret*.txt",
+    "*secret*.log",
+    "*.backup",
+    "src-tauri/runtime/dev/logs/",
+    "runtime/dev/logs/",
+    "runtime/stable/logs/",
+    "scripts/logs/",
+    "scripts/diagnostic/logs/",
+    "*.tmp",
+    "*.cache"
+  ],
+  "required_files": [
+    "src-tauri/allowlist.whitelist.stable.json",
+    "runtime/stable/tauri.conf.json",
+    "src/",
+    "dist/"
+  ],
+  "build_constraints": {
+    "no_dev_dependencies": true,
+    "no_debug_symbols": true,
+    "whitelist_only": true,
+    "no_expansion": true
+  },
+  "validation_steps": [
+    "forbidden_files_scan",
+    "allowlist_validation",
+    "config_validation",
+    "dependencies_check",
+    "build_execution",
+    "artifact_verification"
+  ],
+  "success_criteria": {
+    "exit_code": 0,
+    "artifacts_created": [
+      "*.AppImage",
+      "*.deb"
+    ],
+    "size_limit_mb": 100,
+    "no_forbidden_content": true
+  },
+  "last_validation": 1768575356.008014,
+  "certification_status": "FORBIDDEN_SCAN_PASSED"
+}

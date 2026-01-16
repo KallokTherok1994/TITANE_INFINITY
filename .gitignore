@@ -48,6 +48,15 @@ Thumbs.db
 !.env.example
 !.env.*.example
 .env.local
+
+# P3 STABLE BUILD FORBIDDEN - Backup files
+*.backup
+.env.*.backup
+
+# P3 STABLE BUILD FORBIDDEN - Cache and temp
+*.cache
+*.tmp
+*.temp
 .env.development.local
 .env.test.local
 .env.production.local
