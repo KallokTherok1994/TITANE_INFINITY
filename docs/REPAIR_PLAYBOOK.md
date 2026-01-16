@@ -1,14 +1,14 @@
 # TITANE∞ — Repair Playbook
 
-**Phase** : PHASE_5 (Runtime Governance & Operational Integrity)  
-**Version** : 1.0.0  
-**Date** : 16 janvier 2026  
+**Phase** : PHASE_6 (Capabilities Lifecycle Management)  
+**Version** : 2.0.0  
+**Date** : 15 janvier 2026  
 
 ---
 
 ## 🎯 Objectif
 
-Ce playbook définit **10 scénarios de réparation** avec diagnostic guidé et actions safe-run.
+Ce playbook définit **12 scénarios de réparation** avec diagnostic guidé et actions safe-run, incluant les nouveaux capabilities PHASE 6.
 
 **Principe** : *Pas d'improvisation. Chaque symptôme → diagnostic → action vérifiable.*
 
@@ -398,7 +398,96 @@ scripts/maintenance/safe-run.sh health-check
 
 ---
 
-### Scénario 10 : Staging stable plein (>100GB)
+### Scénario 10 : Capability promotion gate échoue
+
+**Symptômes** :
+```bash
+$ ./scripts/ci/check-promotion-stable.sh docs/capabilities/memory-core-encryption.md
+❌ PROMOTION FAILED: tests not found for capability 'memory-core-encryption'
+```
+
+**Diagnostic** :
+```bash
+# Vérifier capability documentation
+cat docs/capabilities/memory-core-encryption.md | grep -E '^## Status|^### .*Checklist'
+
+# Vérifier tests Rust
+find src-tauri/src -name '*.rs' -exec grep -l 'test_.*memory_core_encryption\|test_.*memory_vault' {} \;
+
+# Lancer tests capability manuellement
+cd src-tauri && cargo test test_memory_vault -- --nocapture
+```
+
+**Action safe-run** :
+```bash
+# Si tests manquent, les créer d'abord
+cd src-tauri && cargo test test_memory_vault
+
+# Re-lancer gate promotion
+./scripts/ci/check-promotion-stable.sh docs/capabilities/memory-core-encryption.md
+
+# Vérifier registry capabilities
+cat docs/CAPABILITIES_REGISTRY.md | grep -A5 -B5 'memory-core-encryption'
+```
+
+**Résultat attendu** :
+```
+✅ PROMOTION APPROVED: memory-core-encryption can be promoted to STABLE
+✓ Tests Rust passent pour la capability
+✓ Documentation capability complète (11/11 checklist)
+✓ Registry capabilities mis à jour
+```
+
+**Durée estimée** : 3-8 minutes
+
+---
+
+### Scénario 11 : Capabilities registry désynchronisé
+
+**Symptômes** :
+```bash
+# Registry montre status incorrect
+$ cat docs/CAPABILITIES_REGISTRY.md
+🎯 QUALIFIED: 0 capabilities
+⚡ EXPERIMENTAL: 2 capabilities
+# Mais fichiers capability sont QUALIFIED
+```
+
+**Diagnostic** :
+```bash
+# Vérifier status réel des capabilities
+find docs/capabilities -name '*.md' -exec grep -l 'Status.*QUALIFIED' {} \;
+find docs/capabilities -name '*.md' -exec grep -l 'Status.*EXPERIMENTAL' {} \;
+
+# Comparer avec registry
+cat docs/CAPABILITIES_REGISTRY.md | grep -E '^🎯|^⚡|^🏆'
+```
+
+**Action safe-run** :
+```bash
+# Régénérer registry (pas de safe-run spécifique, action manuelle)
+# Compter capabilities par status
+QUALIFIED=$(find docs/capabilities -name '*.md' -exec grep -l 'Status.*QUALIFIED' {} \; | wc -l)
+EXPERIMENTAL=$(find docs/capabilities -name '*.md' -exec grep -l 'Status.*EXPERIMENTAL' {} \; | wc -l)
+STABLE=$(find docs/capabilities -name '*.md' -exec grep -l 'Status.*STABLE' {} \; | wc -l)
+
+echo "QUALIFIED: $QUALIFIED, EXPERIMENTAL: $EXPERIMENTAL, STABLE: $STABLE"
+
+# Mettre à jour registry manuellement avec comptes corrects
+```
+
+**Résultat attendu** :
+```
+✓ Registry dashboard correspond aux fichiers capability réels
+✓ Comptes QUALIFIED/EXPERIMENTAL/STABLE cohérents
+✓ Evolution tracking à jour
+```
+
+**Durée estimée** : 2-5 minutes
+
+---
+
+### Scénario 12 : Staging stable plein (>100GB)
 
 **Symptômes** :
 ```bash
@@ -473,6 +562,12 @@ START
   ├─> Symptôme: Toolchain absent
   │   └─> Action: health-check → reinstall toolchain (MANUEL)
   │
+  ├─> Symptôme: Capability gate échoue
+  │   └─> Action: cargo test capability → fix tests → re-run gate
+  │
+  ├─> Symptôme: Registry désynchronisé
+  │   └─> Action: recompter capabilities → update registry
+  │
   └─> Symptôme: Espace disque plein
       └─> Action: reset-staging-stable (TITANE_PROD_OK=1)
 ```
@@ -517,6 +612,9 @@ scripts/maintenance/safe-run.sh check-dev-ports
 - **Constitution audit** : `scripts/audit/constitution-audit.sh`
 - **Logging standard** : `runtime/LOGGING_STANDARD.md`
 - **Observability guide** : `docs/RUNTIME_OBSERVABILITY.md`
+- **PHASE 6 capabilities** : `docs/CAPABILITIES_REGISTRY.md`
+- **Promotion gates** : `scripts/ci/check-promotion-*.sh`
+- **Capability template** : `docs/capabilities/TEMPLATE.md`
 
 ---
 
@@ -537,7 +635,7 @@ Si aucun scénario ne correspond **ET** safe-run bloque :
 
 ---
 
-**Version** : 1.0.0  
-**Last Updated** : 16 janvier 2026  
+**Version** : 2.0.0  
+**Last Updated** : 15 janvier 2026  
 **Maintainer** : TITANE∞ Core Team  
-**Status** : ✅ SEALED (PHASE_5 BLOC C)
+**Status** : ✅ SEALED (PHASE_6 CAPABILITIES SYSTEM)
