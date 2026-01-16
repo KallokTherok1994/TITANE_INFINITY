@@ -1,0 +1,98 @@
+name: P0_2_STABLE_SURFACE - Tauri Surface Guard
+on:
+  push:
+    branches: [ MAIN, dev, stable-runtime ]
+  pull_request:
+    branches: [ MAIN ]
+
+jobs:
+  surface-guard:
+    name: 🛡️ P0_2_STABLE_SURFACE Guard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate Tauri Surface
+        run: |
+          echo "🛡️ [P0_2_STABLE_SURFACE] TITANE∞ Tauri Surface Guard"
+          echo "====================================================="
+          
+          # Check required documentation exists
+          if [ ! -f "docs/TAURI_SURFACE.md" ]; then
+            echo "❌ FAIL: docs/TAURI_SURFACE.md missing"
+            exit 1
+          fi
+          
+          # Execute existing surface guard if available
+          if [ -f "scripts/security/surface-guard.sh" ]; then
+            chmod +x scripts/security/surface-guard.sh
+            ./scripts/security/surface-guard.sh
+          else
+            echo "⚠️ WARNING: scripts/security/surface-guard.sh not found"
+            echo "Proceeding with basic validation..."
+          fi
+          
+          # Check stable allowlist exists
+          STABLE_ALLOWLIST="src-tauri/allowlist.whitelist.stable.json"
+          if [ ! -f "$STABLE_ALLOWLIST" ]; then
+            echo "❌ FAIL: $STABLE_ALLOWLIST missing"
+            exit 1
+          fi
+          
+          # Extract command count from allowlist
+          if command -v jq >/dev/null 2>&1; then
+            COMMANDS=$(jq -r '.app.security.capabilities[0].allow[]' "$STABLE_ALLOWLIST" | wc -l)
+            echo "📊 Detected commands in stable allowlist: $COMMANDS"
+            
+            # Verify documentation mentions command count
+            if ! grep -q "$COMMANDS.*commands\|commands.*$COMMANDS" docs/TAURI_SURFACE.md; then
+              echo "⚠️ WARNING: Command count mismatch between allowlist ($COMMANDS) and documentation"
+            fi
+          else
+            echo "⚠️ WARNING: jq not available, skipping detailed command analysis"
+          fi
+          
+          echo "✅ P0_2_STABLE_SURFACE validation passed"
+        
+      - name: Evidence Collection  
+        if: always()
+        run: |
+          mkdir -p docs/_evidence/p0-surface/
+          {
+            echo "P0_2_STABLE_SURFACE Evidence - $(date -Iseconds)"
+            echo "============================================="
+            echo "Repository: ${{ github.repository }}"
+            echo "Branch: ${{ github.ref_name }}"
+            echo "Commit: ${{ github.sha }}"
+            echo ""
+            echo "Surface Guard Results:"
+            if [ -f "scripts/security/surface-guard.sh" ]; then
+              ./scripts/security/surface-guard.sh || echo "SURFACE GUARD FAILED"
+            else
+              echo "Basic validation performed"
+            fi
+            echo ""
+            echo "Stable Allowlist Analysis:"
+            if command -v jq >/dev/null 2>&1 && [ -f "src-tauri/allowlist.whitelist.stable.json" ]; then
+              jq -r '.app.security.capabilities[0].allow[]' src-tauri/allowlist.whitelist.stable.json | nl
+            else
+              echo "jq or allowlist not available"
+            fi
+          } > docs/_evidence/p0-surface/ci-surface-${{ github.run_id }}.txt
+
+  gate-check:
+    name: 🚨 GATE_P0_2_STABLE_SURFACE
+    needs: surface-guard
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Gate Validation
+        run: |
+          if [ "${{ needs.surface-guard.result }}" != "success" ]; then
+            echo "❌ GATE_P0_2_STABLE_SURFACE: FAIL"
+            echo "Surface guard must pass before proceeding"
+            exit 1
+          fi
+          echo "✅ GATE_P0_2_STABLE_SURFACE: PASS"
