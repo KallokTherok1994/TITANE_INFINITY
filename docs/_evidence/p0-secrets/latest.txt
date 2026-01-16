@@ -1,0 +1,21 @@
+🔒 [SECRET-SCAN] TITANE∞ Production Secret Scanner
+====================================================
+📋 Phase 1: Scan fichiers trackés git...
+
+📋 Phase 2: Scan contenu pour patterns secrets...
+⚠️ PATTERN SECRET détecté dans:
+.tools/node/_extract/node-v20.19.6-linux-x64/bin/node
+e2e/features/governance-center.spec.ts
+scripts/ci/check-promotion-stable.sh
+scripts/fix_all_remaining.sh
+scripts/fix_p0_issues.sh
+⚠️ PATTERN SECRET détecté dans:
+.github/copilot-xs/scripts/validate.js
+scripts/init-copilot-xs.sh
+src/services/memory/persistentMemory.config.ts
+
+📋 Phase 3: Vérification .gitignore protection...
+⚠️ MANQUE dans .gitignore: 'tunnel*.json'
+⚠️ MANQUE dans .gitignore: 'secret*.json'
+
+✅ SECRET-SCAN: PASS - Aucun secret critique tracké
