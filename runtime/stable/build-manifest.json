@@ -1,0 +1,30 @@
+{
+  "build": {
+    "timestamp": "2026-01-16T17:18:16Z",
+    "commit": "891c5edabbcbec6b9ed8e2d21aadfb0ed698fd1e",
+    "branch": "MAIN",
+    "mode": "production",
+    "target": "Titan-Stable",
+    "platform": "linux",
+    "deterministic": true
+  },
+  "security": {
+    "allowlist_file": "src-tauri/allowlist.whitelist.stable.json",
+    "allowlist_hash": "2bd3a80968be02880bf8d89eaf14469bc79d0d5eca8e3a3e6973f3cb0c79cce8",
+    "phase3_validations": "passed"
+  },
+  "artifacts": {
+    "appimage": {
+      "sha256": "c134bf39da6cc331548c5671ab99feec0ee6e4707d0ed7c0fb06db7545e67b8e"
+    },
+    "deb": {
+      "sha256": "536e991ce095d0253b805592214335ff4c8e7a6d06681c60a26cf2d9bbb93b14"
+    }
+  },
+  "reproducibility": {
+    "source_date_epoch": "1768583596",
+    "rustflags": "-C link-arg=-Wl,--build-id=sha1 -C codegen-units=1",
+    "lto": "fat",
+    "opt_level": "3"
+  }
+}
