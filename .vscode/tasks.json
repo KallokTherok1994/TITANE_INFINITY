@@ -171,6 +171,22 @@
 			"detail": "Safe-run wrapper for dev ports/processes check (logged)"
 		},
 		{
+			"label": "✅ Safe-Run: Ports check (explicit)",
+			"type": "shell",
+			"command": "./scripts/maintenance/safe-run.sh ports-check-explicit",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"focus": false,
+				"showReuseMessage": false
+			},
+			"detail": "Run explicit ss/grep dev ports check via safe-run allowlist"
+		},
+		{
 			"label": "🧹 Clean Dev Artefacts (strict)",
 			"type": "shell",
 			"command": "rm -rf node_modules .vite-cache logs reports coverage playwright-report test-results src-tauri/target src-tauri/src/target && mkdir -p reports dist",
@@ -529,7 +545,7 @@
 		{
 			"label": "⏳ Wait Stable Build Finish (then inventory)",
 			"type": "shell",
-			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\nmkdir -p runtime/stable/logs\nTS=$(date +%Y%m%d-%H%M%S)\nOUT=runtime/stable/logs/stable-build-wait-$TS.log\n{\n  echo \"Timestamp: $TS\"\n  echo \"Waiting for: tauri build --config runtime/stable/tauri.conf.json\"\n  echo \"----------------------------------------\"\n} | tee \"$OUT\"\n\nfor i in $(seq 1 120); do\n  if pgrep -f 'tauri build --config runtime/stable/tauri.conf.json' >/dev/null; then\n    echo \"[$i/120] still building... $(date +%H:%M:%S)\" | tee -a \"$OUT\"\n    sleep 10\n  else\n    echo \"Build process ended at $(date +%H:%M:%S)\" | tee -a \"$OUT\"\n    break\n  fi\ndone\n\necho \"--- runtime/stable ---\" | tee -a \"$OUT\"\nls -la runtime/stable | tee -a \"$OUT\"\n\necho \"--- bundle/appimage ---\" | tee -a \"$OUT\"\nls -la src-tauri/target/release/bundle/appimage 2>/dev/null | tee -a \"$OUT\" || true\n\necho \"--- bundle/deb ---\" | tee -a \"$OUT\"\nls -la src-tauri/target/release/bundle/deb 2>/dev/null | tee -a \"$OUT\" || true\n\necho \"Log: $OUT\"",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\nmkdir -p runtime/stable/logs\nTS=$(date +%Y%m%d-%H%M%S)\nOUT=runtime/stable/logs/stable-build-wait-$TS.log\n{\n  echo \"Timestamp: $TS\"\n  echo \"Waiting for: tauri build --config runtime/stable/tauri.stable.conf.json\"\n  echo \"----------------------------------------\"\n} | tee \"$OUT\"\n\nfor i in $(seq 1 120); do\n  if pgrep -f 'tauri build --config runtime/stable/tauri.stable.conf.json' >/dev/null; then\n    echo \"[$i/120] still building... $(date +%H:%M:%S)\" | tee -a \"$OUT\"\n    sleep 10\n  else\n    echo \"Build process ended at $(date +%H:%M:%S)\" | tee -a \"$OUT\"\n    break\n  fi\ndone\n\necho \"--- runtime/stable ---\" | tee -a \"$OUT\"\nls -la runtime/stable | tee -a \"$OUT\"\n\necho \"--- bundle/appimage ---\" | tee -a \"$OUT\"\nls -la src-tauri/target/release/bundle/appimage 2>/dev/null | tee -a \"$OUT\" || true\n\necho \"--- bundle/deb ---\" | tee -a \"$OUT\"\nls -la src-tauri/target/release/bundle/deb 2>/dev/null | tee -a \"$OUT\" || true\n\necho \"Log: $OUT\"",
 			"isBackground": false,
 			"problemMatcher": []
 		},

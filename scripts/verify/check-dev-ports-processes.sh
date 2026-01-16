@@ -18,7 +18,7 @@ check_processes() {
   # NOTE: "vitest.explorer" contains "vite"; avoid false positives.
   # Match only actual Vite CLI entrypoint + tauri dev.
   local matches filtered
-  matches="$(pgrep -af 'vite/bin/vite\.js|\btauri dev\b|pnpm run dev:tauri|runtime/dev/tauri\.conf\.json|vite\.js --port' 2>/dev/null || true)"
+  matches="$(pgrep -af 'vite/bin/vite\.js|\btauri dev\b|pnpm run dev:tauri|runtime/dev/tauri\.dev\.conf\.json|vite\.js --port' 2>/dev/null || true)"
   filtered=""
 
   while IFS= read -r line; do

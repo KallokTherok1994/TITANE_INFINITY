@@ -260,8 +260,8 @@ check_tauri_gate() {
 check_runtime_gate() {
     echo -e "\n${CYAN}━━━ Gate 7: Runtime Configurations ━━━${NC}"
     
-    local dev_conf="${PROJECT_ROOT}/runtime/dev/tauri.conf.json"
-    local stable_conf="${PROJECT_ROOT}/runtime/stable/tauri.conf.json"
+    local dev_conf="${PROJECT_ROOT}/runtime/dev/tauri.dev.conf.json"
+    local stable_conf="${PROJECT_ROOT}/runtime/stable/tauri.stable.conf.json"
     
     local issues=0
     

@@ -13,6 +13,7 @@ Examples:
   scripts/maintenance/safe-run.sh run-tests
   scripts/maintenance/safe-run.sh validate
   scripts/maintenance/safe-run.sh check-dev-ports
+  scripts/maintenance/safe-run.sh ports-check-explicit
 
 Notes:
   - "--force" bypasses SOME checks (never production-gating).
@@ -149,6 +150,10 @@ case "$COMMAND_ID" in
 
   check-dev-ports)
     check_dev_ports
+    ;;
+
+  ports-check-explicit)
+    run_cmd bash -lc "set -euo pipefail; cd '$REPO_ROOT'; (ss -ltnp 2>/dev/null || ss -ltn 2>/dev/null) | grep -E ':(4000|5173|4173|1430)\\b' | cat || echo 'OK: no dev ports'"
     ;;
 
   launch-dev)

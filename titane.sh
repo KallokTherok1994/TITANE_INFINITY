@@ -428,7 +428,7 @@ build() {
     
     if [ "$mode" = "stable" ]; then
         info "Using stable runtime configuration..."
-        pm_exec tauri build --config runtime/stable/tauri.conf.json
+        pm_exec tauri build --config runtime/stable/tauri.stable.conf.json
         
         # Copy to runtime/stable
         print_section "Copying build artifacts..."
@@ -447,7 +447,7 @@ build() {
         bash scripts/update-desktop-icon.sh || true
     else
         info "Using dev runtime configuration..."
-        pm_exec tauri build --config runtime/dev/tauri.conf.json
+        pm_exec tauri build --config runtime/dev/tauri.dev.conf.json
         success "Dev runtime built"
     fi
     
