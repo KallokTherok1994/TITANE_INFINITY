@@ -30,7 +30,7 @@
 src-tauri/
 ├── Cargo.toml          # Pas de workspace multi-crate
 ├── Cargo.lock
-├── tauri.conf.json     # Config Tauri 2
+├── tauri.conf.json     # Config Tauri (src-tauri/tauri.conf.json; base; overlay via runtime/*)
 ├── capabilities/       # 6 fichiers de capabilities
 │   ├── audio_tts.json
 │   ├── chat_ai.json
@@ -93,7 +93,7 @@ zeroize = "1.7"       # ✅ Memory wipe
 
 ### Configuration Analysée
 
-**Fichier**: `tauri.conf.json`
+**Fichier**: `src-tauri/tauri.conf.json`
 
 ```json
 {

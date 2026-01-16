@@ -426,7 +426,7 @@ pnpm run tauri dev
 1. Cliquer "Autoriser" dans popup navigateur
 2. Vérifier paramètres site : `chrome://settings/content/microphone`
 3. Réinitialiser permissions : Supprimer site dans historique
-4. Tauri : Vérifier `tauri.conf.json` → `permissions`
+4. Tauri : Vérifier `tauri.base.json` (ou `runtime/stable/tauri.stable.conf.json`) → `app.security.capabilities[].permissions`
 
 ---
 

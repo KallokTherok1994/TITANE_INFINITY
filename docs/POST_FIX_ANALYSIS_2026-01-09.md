@@ -74,7 +74,7 @@ Watch events: Filtered out by Vite
 
 ---
 
-### 2. **Smart Vite Detection** (`runtime/dev/tauri.conf.json:8`)
+### 2. **Smart Vite Detection** (`runtime/dev/tauri.dev.conf.json:8`)
 
 #### Changement (beforeDevCommand)
 
@@ -156,7 +156,7 @@ Tauri OK  Tauri OK ✅
 
 ---
 
-### 3. **3-Tier pnpm Fallback Strategy** (`runtime/dev/tauri.conf.json:8`)
+### 3. **3-Tier pnpm Fallback Strategy** (`runtime/dev/tauri.dev.conf.json:8`)
 
 #### Architecture
 
@@ -232,7 +232,7 @@ NO → FAIL ❌
 
 ---
 
-### 4. **Signal Handling** (`runtime/dev/tauri.conf.json:8`)
+### 4. **Signal Handling** (`runtime/dev/tauri.dev.conf.json:8`)
 
 #### Changement
 ```bash
@@ -683,7 +683,7 @@ Critical: >80% (investigate ignored paths)
 
 #### Changed
 - `vite.config.ts`: Added watch.ignored for runtime artifacts
-- `runtime/dev/tauri.conf.json`: Robust beforeDevCommand with fallbacks
+- `runtime/dev/tauri.dev.conf.json`: Robust beforeDevCommand with fallbacks
 - Startup time improved: 813ms → 777ms (first run), ~543ms (subsequent)
 
 #### Performance

@@ -619,9 +619,9 @@ let key = secrets.get_or_generate("encryption_key")?;
 let nonce = secrets.generate_nonce()?;
 ```
 
-### Permissions Tauri (tauri.conf.json)
+### Permissions Tauri (tauri.base.json)
 
-**Audit requis:** Vérifier principe du moindre privilège
+**Audit requis:** Vérifier principe du moindre privilège (source: `tauri.base.json` → `app.security.capabilities`)
 
 ```json
 {

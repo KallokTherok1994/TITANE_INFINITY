@@ -398,7 +398,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **Error Handlers**: Gestionnaires globaux `error` + `unhandledrejection`
 - **Instrumentation**: 3 println! backend + logs frontend avec timestamps
 - **Module Bundling**: Fix `@tauri-apps/api/core` - suppression `external` dans vite.config.ts
-- **Files**: `main.rs`, `main.tsx`, `tauri.conf.json`, `vite.config.ts`
+- **Files**: `main.rs`, `main.tsx`, `src-tauri/tauri.conf.json`, `vite.config.ts`
 
 #### Commandes Tauri "not found" (RÉSOLU)
 - **Problème**: Frontend appelle 14 commandes legacy non enregistrées dans v17.2.0
@@ -414,7 +414,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 #### Configuration Tauri
 - **beforeDevCommand**: Fix `../pnpm-host.sh` → `pnpm run dev`
 - **beforeBuildCommand**: Fix `../pnpm-host.sh` → `pnpm run build`
-- **File**: `tauri.conf.json`
+- **File**: `src-tauri/tauri.conf.json`
 
 ### ✨ Ajouté
 
@@ -437,7 +437,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 #### Versions
 - **package.json**: 17.1.1 → 17.2.1
 - **Cargo.toml**: 17.1.1 → 17.2.1
-- **tauri.conf.json**: 17.1.1 → 17.2.1
+- **src-tauri/tauri.conf.json**: 17.1.1 → 17.2.1
 - **Description**: Backend Architecture Refactor + Legacy Commands
 
 #### Frontend
@@ -672,7 +672,7 @@ cargo check
 #### Tauri-Only Enforcement 100%
 - **HTTP servers bloqués** : pnpm run preview → exit 1, vite:dev → exit 1
 - **Validation stricte** : enforce-tauri-only.sh (0 erreurs, 0 warnings)
-- **Configuration verrouillée** : tauri.conf.json sans devUrl HTTP
+- **Configuration verrouillée** : src-tauri/tauri.conf.json sans devUrl HTTP
 - **package.json** : Scripts HTTP désactivés avec messages explicites
 
 #### Règles Permanentes Kevin Thibault
@@ -684,7 +684,7 @@ cargo check
 #### Version Harmonization v17.0.0
 - **package.json** : v17.0.0, description WebKit Fix Total
 - **Cargo.toml** : v17.0.0, author Kevin Thibault
-- **tauri.conf.json** : v17.0.0, productName "TITANE∞ v17.0"
+- **src-tauri/tauri.conf.json** : v17.0.0, productName "TITANE∞ v17.0"
 - **dist/index.html** : v17.0.0, meta WebKit Fix + Tauri Only
 
 ### 🔧 Modifié
@@ -726,7 +726,7 @@ cargo check
 - ✅ **pnpm run dev** → tauri dev (correct)
 - ✅ **pnpm run preview** → bloqué (correct)
 - ✅ **vite:dev** → bloqué (correct)
-- ✅ **Pas de devUrl HTTP** (tauri.conf.json)
+- ✅ **Pas de devUrl HTTP** (src-tauri/tauri.conf.json)
 - ✅ **frontendDist** → ../dist (correct)
 - ✅ **HMR désactivé** (Tauri-only)
 - ✅ **strictPort activé**

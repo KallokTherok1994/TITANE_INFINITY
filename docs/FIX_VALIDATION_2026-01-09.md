@@ -99,7 +99,7 @@ A PostCSS plugin did not pass the `from` option...
 
 ---
 
-### 2. Smart Vite Detection (tauri.conf.json:8)
+### 2. Smart Vite Detection (runtime/dev/tauri.dev.conf.json)
 
 **Test**: Vérifier curl pre-flight check et logging
 
@@ -136,7 +136,7 @@ Run 2: Port occupé → Skip + réutilise instance ✅
 
 ---
 
-### 3. 3-Tier pnpm Fallback (tauri.conf.json:8)
+### 3. 3-Tier pnpm Fallback (runtime/dev/tauri.dev.conf.json)
 
 **Test**: Vérifier sélection automatique de pnpm
 
@@ -165,7 +165,7 @@ $ ps aux | grep vite
 
 ---
 
-### 4. Signal Handling (tauri.conf.json:8)
+### 4. Signal Handling (runtime/dev/tauri.dev.conf.json)
 
 **Test**: Vérifier graceful shutdown sur Ctrl+C
 

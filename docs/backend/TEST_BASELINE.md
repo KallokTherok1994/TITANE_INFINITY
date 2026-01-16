@@ -195,7 +195,7 @@ pnpm run verify
 ```bash
 pnpm run verify:tauri-only  # Ensures no HTTP servers in code
 pnpm run verify:local-first # Ensures local-first architecture
-pnpm run verify:tauri-configs # Validates tauri.conf.json
+pnpm run verify:tauri-configs # Validates tauri.base.json + runtime/* Tauri configs
 ```
 
 #### Quick Health Check

@@ -64,7 +64,7 @@ cargo build --locked
 ```bash
 # Check production config exists
 cat .env.production
-cat tauri.conf.json
+cat src-tauri/tauri.conf.json
 
 # Validate API keys present
 grep "API_KEY" .env.production
@@ -214,7 +214,7 @@ strip target/release/titane-infinity
 # Generate production bundles
 pnpm run tauri build
 
-# tauri.conf.json
+# src-tauri/tauri.conf.json
 {
   "tauri": {
     "bundle": {
@@ -276,7 +276,7 @@ ls -lh src-tauri/target/release/bundle/
 ### 1. Content Security Policy (CSP)
 
 ```json
-// tauri.conf.json
+// src-tauri/tauri.conf.json
 {
   "tauri": {
     "security": {
@@ -670,7 +670,7 @@ open TITANE_INFINITY_24.2.0_x64.dmg
 ### Auto-Update (Tauri Updater)
 
 ```json
-// tauri.conf.json
+// src-tauri/tauri.conf.json
 {
   "tauri": {
     "updater": {

@@ -292,7 +292,7 @@ TITANE_INFINITY/
 │   │   ├── commands/         # Commandes Tauri
 │   │   └── ...
 │   ├── Cargo.toml            # Dépendances Rust
-│   └── tauri.conf.json       # Config Tauri
+│   └── tauri.conf.json       # Config Tauri (src-tauri/tauri.conf.json; base; overlay via runtime/*)
 ├── e2e/                      # Tests E2E Playwright
 ├── docs/                     # Documentation
 ├── public/                   # Assets statiques

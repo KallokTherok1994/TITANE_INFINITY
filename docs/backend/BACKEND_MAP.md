@@ -545,7 +545,7 @@ Located in:
 All 350 commands are explicitly registered in `tauri::generate_handler![]` (main.rs:678-1116)
 
 ### 2. Content Security Policy (CSP)
-Defined in `tauri.conf.json`:
+Defined in `tauri.base.json`:
 ```json
 {
   "security": {

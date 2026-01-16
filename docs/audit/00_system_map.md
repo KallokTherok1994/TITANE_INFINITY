@@ -52,7 +52,7 @@ TITANE_INFINITY/
 │
 ├── 📁 src-tauri/                  # Backend Rust/Tauri
 │   ├── 📄 Cargo.toml              # Dépendances Rust
-│   ├── 📄 tauri.conf.json         # Config Tauri
+│   ├── 📄 tauri.conf.json         # Config Tauri (src-tauri/tauri.conf.json; base; overlay via runtime/*)
 │   ├── 📁 src/                    # 103 modules Rust
 │   │   ├── 📄 main.rs             # Entry point Tauri
 │   │   ├── 📁 agent_system/       # Système d'agents
@@ -233,7 +233,7 @@ graph TB
 
 | Hypothèse | Statut | Source |
 |-----------|--------|--------|
-| Mode Tauri-only actif | ✅ | tauri.conf.json: `tauri://localhost` |
+| Mode Tauri-only actif | ✅ | src-tauri/tauri.conf.json: `tauri://localhost` |
 | React 19 stable | ✅ | package.json: `^19.2.3` |
 | TypeScript strict | ✅ | tsconfig.json |
 | Tests > 95% | ✅ | 97.9% React, 100% Rust |

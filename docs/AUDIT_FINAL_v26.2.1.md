@@ -161,7 +161,7 @@ if (Date.now() - lastSendTime.current < MIN_INTERVAL_MS) {
 
 #### R2: CSP Headers (RECOMMENDED)
 ```json
-// tauri.conf.json
+// tauri.base.json
 "security": {
   "csp": "default-src 'self'; script-src 'self' 'unsafe-inline'"
 }
