@@ -79,16 +79,16 @@ echo ""
 #   ./runtime/dev/run-dev.sh --features full ollama
 if command -v corepack &> /dev/null; then
     set +e
-    corepack pnpm exec tauri dev --config runtime/dev/tauri.conf.json --no-watch -- "$@" 2>&1 | tee runtime/dev/logs/tauri.log
+    corepack pnpm exec tauri dev --config runtime/dev/tauri.dev.conf.json --no-watch -- "$@" 2>&1 | tee runtime/dev/logs/tauri.log
     cmd_ec=${PIPESTATUS[0]}
     set -e
 elif command -v pnpm &> /dev/null; then
     set +e
-    pnpm exec tauri dev --config runtime/dev/tauri.conf.json --no-watch -- "$@" 2>&1 | tee runtime/dev/logs/tauri.log
+    pnpm exec tauri dev --config runtime/dev/tauri.dev.conf.json --no-watch -- "$@" 2>&1 | tee runtime/dev/logs/tauri.log
     cmd_ec=${PIPESTATUS[0]}
     set -e
 elif [ -x "$PWD/.tools/node/current/bin/pnpm" ]; then
-    "$PWD/.tools/node/current/bin/pnpm" exec tauri dev --config runtime/dev/tauri.conf.json --no-watch -- "$@" 2>&1 | tee runtime/dev/logs/tauri.log
+    "$PWD/.tools/node/current/bin/pnpm" exec tauri dev --config runtime/dev/tauri.dev.conf.json --no-watch -- "$@" 2>&1 | tee runtime/dev/logs/tauri.log
 else
     echo "❌ ERROR: pnpm introuvable (corepack/pnpm/.tools/node/current/bin/pnpm)"
     exit 1

@@ -24,6 +24,24 @@ env:
 
 jobs:
   # ═══════════════════════════════════════════════════════════════════════════
+  # STABLE SURFACE GUARD
+  # ═══════════════════════════════════════════════════════════════════════════
+  stable-surface-guard:
+    name: 🔒 Stable Surface Guard
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+    timeout-minutes: 5
+    permissions:
+      contents: read
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔎 Verify stable allowlist matches contract
+        run: bash scripts/verify/verify-stable-surface-allowlist.sh
+
+  # ═══════════════════════════════════════════════════════════════════════════
   # LINT & TYPE CHECK
   # ═══════════════════════════════════════════════════════════════════════════
   lint-and-typecheck:
@@ -35,13 +53,13 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: 🔧 Enable Corepack (pnpm)
         run: corepack enable
 
       - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v6.1.0
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
@@ -80,13 +98,13 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: 🔧 Enable Corepack (pnpm)
         run: corepack enable
 
       - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v6.1.0
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
@@ -181,7 +199,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: 📁 Ensure dist directory exists
         run: mkdir -p dist
@@ -246,13 +264,13 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: 🔧 Enable Corepack (pnpm)
         run: corepack enable
 
       - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v6.1.0
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
@@ -268,7 +286,7 @@ jobs:
 
       - name: 📤 Upload Playwright report
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: playwright-report-${{ github.run_id }}
           path: playwright-report/
@@ -296,13 +314,13 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: 🔧 Enable Corepack (pnpm)
         run: corepack enable
 
       - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v6.1.0
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
@@ -341,7 +359,7 @@ jobs:
 
       - name: 📤 Upload build artifacts
         if: success() && github.event_name == 'push' && github.ref == 'refs/heads/MAIN'
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: titane-build-ubuntu-${{ github.run_id }}
           path: src-tauri/target/debug/bundle/
@@ -372,10 +390,10 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v6.1.0
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 

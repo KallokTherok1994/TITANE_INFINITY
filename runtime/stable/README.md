@@ -225,7 +225,7 @@ taskkill /F /IM titan-stable.exe  # Windows
 ```
 runtime/stable/
 ├── build.sh                 # Build script
-├── tauri.conf.json         # Tauri production config
+├── tauri.stable.conf.json   # Tauri production config
 ├── .env.production         # Environment variables
 ├── README.md               # This file
 ├── *.AppImage              # Linux executable (generated)

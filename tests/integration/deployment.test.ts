@@ -152,11 +152,11 @@ describe('🚀 Deployment Configuration Verification', () => {
 
   describe('🏠 Runtime Configurations', () => {
     it('should have dev runtime configuration', () => {
-      expect(fs.existsSync('runtime/dev/tauri.conf.json')).toBe(true);
+      expect(fs.existsSync('runtime/dev/tauri.dev.conf.json')).toBe(true);
     });
 
     it('should have stable runtime configuration', () => {
-      expect(fs.existsSync('runtime/stable/tauri.conf.json')).toBe(true);
+      expect(fs.existsSync('runtime/stable/tauri.stable.conf.json')).toBe(true);
     });
 
     it('should have dev runtime build script', () => {
@@ -169,7 +169,7 @@ describe('🚀 Deployment Configuration Verification', () => {
 
     it('stable version should not contain -dev suffix', () => {
       const stableConfig = JSON.parse(
-        fs.readFileSync('runtime/stable/tauri.conf.json', 'utf-8')
+        fs.readFileSync('runtime/stable/tauri.stable.conf.json', 'utf-8')
       );
       const version = stableConfig.version as string;
 
@@ -178,7 +178,7 @@ describe('🚀 Deployment Configuration Verification', () => {
 
     it('stable runtime should target AppImage', () => {
       const stableConfig = JSON.parse(
-        fs.readFileSync('runtime/stable/tauri.conf.json', 'utf-8')
+        fs.readFileSync('runtime/stable/tauri.stable.conf.json', 'utf-8')
       );
       const bundle = stableConfig.bundle as Record<string, unknown>;
       const targets = bundle.targets;
@@ -348,7 +348,7 @@ describe('🚀 Deployment Configuration Verification', () => {
   describe('🔐 Security Configuration', () => {
     it('should not expose development server in production', () => {
       const stableConfig = JSON.parse(
-        fs.readFileSync('runtime/stable/tauri.conf.json', 'utf-8')
+        fs.readFileSync('runtime/stable/tauri.stable.conf.json', 'utf-8')
       );
       const build = stableConfig.build as Record<string, unknown>;
 
@@ -358,7 +358,7 @@ describe('🚀 Deployment Configuration Verification', () => {
 
     it('should have CSP in stable configuration', () => {
       const stableConfig = JSON.parse(
-        fs.readFileSync('runtime/stable/tauri.conf.json', 'utf-8')
+        fs.readFileSync('runtime/stable/tauri.stable.conf.json', 'utf-8')
       );
       const app = stableConfig.app as Record<string, unknown>;
       const security = app.security as Record<string, unknown>;

@@ -80,8 +80,8 @@ fi
 
 # Version affichée dans le menu (évite la confusion quand plusieurs runtimes cohabitent)
 APP_VERSION=""
-if [ -f "$PROJECT_DIR/runtime/stable/tauri.conf.json" ]; then
-    APP_VERSION="$(grep -m1 '"version"' "$PROJECT_DIR/runtime/stable/tauri.conf.json" | sed -E 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')"
+if [ -f "$PROJECT_DIR/runtime/stable/tauri.stable.conf.json" ]; then
+    APP_VERSION="$(grep -m1 '"version"' "$PROJECT_DIR/runtime/stable/tauri.stable.conf.json" | sed -E 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')"
 fi
 if [ -z "$APP_VERSION" ] && [ -f "$PROJECT_DIR/package.json" ]; then
     APP_VERSION="$(grep -m1 '"version"' "$PROJECT_DIR/package.json" | sed -E 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')"

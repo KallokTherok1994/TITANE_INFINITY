@@ -508,10 +508,10 @@ step8_build_tauri() {
     
     # ─── Determine config file ───
     if [ "$BUILD_MODE" = "production" ] || [ "$BUILD_MODE" = "stable" ]; then
-        TAURI_CONFIG="runtime/stable/tauri.conf.json"
+        TAURI_CONFIG="runtime/stable/tauri.stable.conf.json"
         OUTPUT_DIR="runtime/stable"
     else
-        TAURI_CONFIG="runtime/dev/tauri.conf.json"
+        TAURI_CONFIG="runtime/dev/tauri.dev.conf.json"
         OUTPUT_DIR="runtime/dev"
     fi
     
