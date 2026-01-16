@@ -1,0 +1,328 @@
+# TITANE∞ — Safe-Run Actions Catalog
+#
+# PHASE_5 BLOC C: Self-Healing Contrôlé
+#
+# Ce fichier définit TOUTES les actions autorisées via safe-run.sh.
+# Toute action non listée ici DOIT être refusée.
+#
+# Version: 1.0.0
+# Date: 2026-01-16
+
+actions:
+  # ========================================
+  # MAINTENANCE (DEV)
+  # ========================================
+
+  - id: install-deps
+    description: "Installe les dépendances workspace via pnpm (sans lockfile)"
+    command: "./.tools/node/current/bin/pnpm install --no-lockfile"
+    impact:
+      filesystem: true      # Modifie node_modules/
+      build: false
+      tests: false
+      stable: false
+    reversible: true         # pnpm install peut être relancé
+    requires:
+      clean_git: true        # Git working tree propre requis
+      dev_ports_check: false
+      prod_approval: false
+
+  - id: validate
+    description: "Exécute validation COPILOT-XS (markers, secrets, tests)"
+    command: "./.tools/node/current/bin/pnpm run copilot-xs:validate"
+    impact:
+      filesystem: false
+      build: false
+      tests: true            # Peut exécuter tests rapides
+      stable: false
+    reversible: true
+    requires:
+      clean_git: true
+      dev_ports_check: true  # Avant + après
+      prod_approval: false
+
+  - id: run-tests
+    description: "Exécute tous les tests (React + Tauri)"
+    command: "./.tools/node/current/bin/pnpm test -- --run && ./.tools/node/current/bin/pnpm run test:tauri"
+    impact:
+      filesystem: false      # Tests read-only
+      build: false
+      tests: true
+      stable: false
+    reversible: true
+    requires:
+      clean_git: true
+      dev_ports_check: true
+      prod_approval: false
+
+  - id: test-gate
+    description: "Exécute COPILOT-XS test gate (validation + tests complets)"
+    command: "./.tools/node/current/bin/pnpm run copilot-xs:test"
+    impact:
+      filesystem: false
+      build: false
+      tests: true
+      stable: false
+    reversible: true
+    requires:
+      clean_git: true
+      dev_ports_check: true
+      prod_approval: false
+
+  - id: check-dev-ports
+    description: "Vérifie ports/processes dev (4000, 5173, 4173, 1430)"
+    command: "scripts/verify/check-dev-ports-processes.sh"
+    impact:
+      filesystem: false
+      build: false
+      tests: false
+      stable: false
+    reversible: true         # Read-only check
+    requires:
+      clean_git: false
+      dev_ports_check: false # C'est le check lui-même
+      prod_approval: false
+
+  - id: ports-check-explicit
+    description: "Vérifie ports dev avec ss/netstat (alternative check-dev-ports)"
+    command: "(ss -ltnp 2>/dev/null || ss -ltn 2>/dev/null) | grep -E ':(4000|5173|4173|1430)\\b'"
+    impact:
+      filesystem: false
+      build: false
+      tests: false
+      stable: false
+    reversible: true
+    requires:
+      clean_git: false
+      dev_ports_check: false
+      prod_approval: false
+
+  - id: health-check
+    description: "Exécute health check PHASE_5 (< 2s, 16 checks)"
+    command: "bash scripts/health/health_check.sh --format both"
+    impact:
+      filesystem: true       # Écrit reports dans docs/_evidence/health/
+      build: false
+      tests: false
+      stable: false
+    reversible: true
+    requires:
+      clean_git: false
+      dev_ports_check: false
+      prod_approval: false
+
+  - id: constitution-audit
+    description: "Exécute audit constitutionnel PHASE_4 (13 checks)"
+    command: "bash scripts/audit/constitution-audit.sh --format both"
+    impact:
+      filesystem: true       # Écrit reports dans reports/
+      build: false
+      tests: false
+      stable: false
+    reversible: true
+    requires:
+      clean_git: false
+      dev_ports_check: false
+      prod_approval: false
+
+  # ========================================
+  # RUNTIME DEV
+  # ========================================
+
+  - id: launch-dev
+    description: "Lance Titan-Dev (runtime développement)"
+    command: "./runtime/dev/run-dev.sh"
+    impact:
+      filesystem: true       # Logs runtime/dev/logs/
+      build: false
+      tests: false
+      stable: false
+    reversible: true         # stop-dev disponible
+    requires:
+      clean_git: false
+      dev_ports_check: false # Lance les serveurs
+      prod_approval: false
+
+  - id: stop-dev
+    description: "Arrête Titan-Dev (cleanup ports/processes)"
+    command: "./runtime/dev/cleanup.sh"
+    impact:
+      filesystem: true       # Peut supprimer logs
+      build: false
+      tests: false
+      stable: false
+    reversible: true
+    requires:
+      clean_git: false
+      dev_ports_check: false
+      prod_approval: false
+
+  - id: clean-caches
+    description: "Nettoie caches dev (node_modules/.cache, .vite-cache, etc.)"
+    command: "rm -rf node_modules/.cache .vite-cache playwright-report test-results coverage"
+    impact:
+      filesystem: true
+      build: false
+      tests: false
+      stable: false
+    reversible: true         # Recréé au prochain build
+    requires:
+      clean_git: false
+      dev_ports_check: true  # Ports doivent être fermés
+      prod_approval: false
+
+  # ========================================
+  # BUILD STABLE (PRODUCTION)
+  # ========================================
+
+  - id: build-stable
+    description: "Build production stable (AppImage + DEB + manifest)"
+    command: "./runtime/stable/build.sh"
+    impact:
+      filesystem: true       # runtime/stable/, src-tauri/target/
+      build: true
+      tests: false
+      stable: true           # Modifie artefacts production
+    reversible: false        # Build long (15-20min), pas facilement annulable
+    requires:
+      clean_git: true        # Git propre obligatoire
+      dev_ports_check: true  # Ports fermés
+      prod_approval: true    # TITANE_PROD_OK=1 requis
+
+  - id: reset-staging-stable
+    description: "Nettoie artefacts staging stable (target/, logs vieux)"
+    command: "rm -rf src-tauri/target/release/bundle && find runtime/stable/logs -name 'stable-build-*.log' -mtime +30 -delete"
+    impact:
+      filesystem: true
+      build: true            # Supprime artefacts build
+      tests: false
+      stable: true
+    reversible: false        # Données supprimées
+    requires:
+      clean_git: true
+      dev_ports_check: true
+      prod_approval: true
+
+  # ========================================
+  # TESTS CONTRACTUELS
+  # ========================================
+
+  - id: test-contract
+    description: "Exécute tests contractuels PHASE_2 (Tauri ↔ TS)"
+    command: "./.tools/node/current/bin/pnpm test -- --run tests/contract/tauri.contract.test.ts"
+    impact:
+      filesystem: false
+      build: false
+      tests: true
+      stable: false
+    reversible: true
+    requires:
+      clean_git: false
+      dev_ports_check: false
+      prod_approval: false
+
+  - id: test-gate-p3
+    description: "Exécute tests GATE_P3 (PHASE_3 build stable)"
+    command: "./.tools/node/current/bin/pnpm test -- --run tests/phase3/gate-p3.test.ts"
+    impact:
+      filesystem: false
+      build: false
+      tests: true
+      stable: false
+    reversible: true
+    requires:
+      clean_git: false
+      dev_ports_check: false
+      prod_approval: false
+
+  - id: test-gate-p4
+    description: "Exécute tests GATE_P4 (PHASE_4 audit constitutionnel)"
+    command: "./.tools/node/current/bin/pnpm test -- --run tests/phase4/gate-p4.test.ts"
+    impact:
+      filesystem: false
+      build: false
+      tests: true
+      stable: false
+    reversible: true
+    requires:
+      clean_git: false
+      dev_ports_check: false
+      prod_approval: false
+
+# ========================================
+# RÈGLES GLOBALES
+# ========================================
+
+global_rules:
+  # Toute action non listée = REFUSÉE
+  default_action: deny
+
+  # Log obligatoire pour toutes actions
+  logging:
+    enabled: true
+    directory: "reports/safe-run"
+    format: "{timestamp}-{action_id}.log"
+    retention_days: 90
+
+  # Validation pre-execution
+  pre_checks:
+    - check: repo_is_git
+      required: true
+    - check: bundled_node_available
+      required: true
+      path: ".tools/node/current/bin/node"
+
+  # Validation post-execution
+  post_checks:
+    - check: exit_code_zero
+      required: true
+
+# ========================================
+# INTERDICTIONS
+# ========================================
+
+forbidden:
+  # Actions JAMAIS autorisées via safe-run
+  - description: "Shell arbitraire"
+    patterns:
+      - "bash -c"
+      - "sh -c"
+      - "eval"
+      - "source"
+    reason: "Surface d'attaque trop large, imprédictible"
+
+  - description: "Accès large FS"
+    patterns:
+      - "rm -rf /"
+      - "rm -rf ~"
+      - "chmod -R 777"
+      - "chown -R"
+    reason: "Destructeur, irréversible"
+
+  - description: "Modification config stable sans approbation"
+    paths:
+      - "src-tauri/allowlist.whitelist.stable.json"
+      - "runtime/stable/tauri.stable.conf.json"
+      - "runtime/stable/build.sh"
+    reason: "Surface production gelée (PHASE_3)"
+
+  - description: "Installation système (apt, dpkg, etc.)"
+    patterns:
+      - "apt install"
+      - "dpkg -i"
+      - "rpm -i"
+      - "sudo"
+    reason: "Modifications système hors scope repo"
+
+# ========================================
+# METADATA
+# ========================================
+
+metadata:
+  version: "1.0.0"
+  phase: "PHASE_5"
+  bloc: "C"
+  date: "2026-01-16"
+  status: "SEALED"
+  actions_count: 16
+  forbidden_count: 4
