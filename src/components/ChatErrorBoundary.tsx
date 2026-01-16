@@ -355,7 +355,7 @@ export class ChatErrorBoundary extends Component<
       });
 
       // Send error report via Tauri (implementation in future)
-      // await invoke('report_chat_error', {
+      // await tauriClient.reportChatError({
       //   error: {
       //     message: error.message,
       //     stack: error.stack,

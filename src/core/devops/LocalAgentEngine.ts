@@ -957,7 +957,7 @@ class LocalAgentEngine {
   private async fileExists(_path: string): Promise<boolean> {
     try {
       // IMPLEMENTATION OPTIONS:
-      // 1. Tauri: invoke('fs_exists', {path}) - requires Tauri command registration
+      // 1. Tauri: tauriClient.fsExists({path}) - requires Tauri command registration
       // 2. Node: require('fs').promises.access(path, fs.constants.F_OK)
       // 3. Hybrid: Feature flag based on environment (Tauri vs Node)
       return false; // Placeholder - awaiting environment detection
@@ -969,7 +969,7 @@ class LocalAgentEngine {
   private async readJsonFile(path: string): Promise<any> {
     try {
       // IMPLEMENTATION OPTIONS:
-      // 1. Tauri: invoke('read_json_file', {path}) - type-safe, sandboxed
+      // 1. Tauri: tauriClient.readJsonFile({path}) - type-safe, sandboxed
       // 2. Node: JSON.parse(await fs.promises.readFile(path, 'utf-8'))
       // 3. Hybrid: Environment detection + appropriate API selection
       return {}; // Placeholder - awaiting fs abstraction layer

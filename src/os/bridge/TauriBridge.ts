@@ -29,7 +29,7 @@ export class TauriBridge {
   async init(): Promise<void> {
     try {
       // Tester la connexion avec un ping
-      await this.invoke('ping');
+      await this.tauriClient.ping();
       this.state.connected = true;
       this.state.lastSync = Date.now();
     } catch (error) {
@@ -169,7 +169,7 @@ export class TauriBridge {
    */
   async checkConnection(): Promise<boolean> {
     try {
-      await this.invoke('ping');
+      await this.tauriClient.ping();
       this.state.connected = true;
       return true;
     } catch {

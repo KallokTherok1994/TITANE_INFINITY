@@ -129,7 +129,7 @@ export function useMemory() {
       try {
         // Note: delete_conversation est legacy, pas de service équivalent - garder invoke direct
         const { invoke } = await import('@tauri-apps/api/core');
-        await invoke('delete_conversation', { conversationId });
+        await tauriClient.deleteConversation({ conversationId });
 
         if (currentConversation?.id === conversationId) {
           setCurrentConversation(null);
@@ -158,7 +158,7 @@ export function useMemory() {
     try {
       // Note: clear_all_memory est legacy, pas de service équivalent - garder invoke direct
       const { invoke } = await import('@tauri-apps/api/core');
-      await invoke('clear_all_memory');
+      await tauriClient.clearAllMemory();
       setCurrentConversation(null);
       setConversations([]);
     } catch (err) {

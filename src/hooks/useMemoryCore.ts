@@ -110,7 +110,7 @@ export const useMemoryCore = (): UseMemoryCoreReturn => {
       setError(null);
       // Note: memory_clear est legacy, pas de service équivalent - garder invoke direct
       const { invoke } = await import('@tauri-apps/api/core');
-      await invoke('memory_clear');
+      await tauriClient.memoryClear();
       setEntries([]);
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to clear memory';

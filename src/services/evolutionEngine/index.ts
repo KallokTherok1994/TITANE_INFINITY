@@ -251,7 +251,7 @@ export class EvolutionEngine {
     // Cette méthode sera implémentée quand le Singularity Engine sera disponible
     try {
       const snapshot = this.getSnapshot();
-      // await invoke('sync_evolution_state', { snapshot });
+      // await tauriClient.syncEvolutionState({ snapshot });
       console.debug('[EvolutionEngine] Singularity sync:', snapshot.scores.overallScore);
     } catch (error) {
       console.error('[EvolutionEngine] Singularity sync error:', error);

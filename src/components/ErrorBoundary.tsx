@@ -82,7 +82,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     // 1. Create sendUIErrorReport(context, error, errorInfo): Format error data
     // 2. Include: error.message, error.stack, componentStack from errorInfo
     // 3. Add UI context: current route, user actions (last 10), session ID
-    // 4. Tauri command: invoke('watchdog:report_ui_error', { errorReport })
+    // 4. Tauri command: tauriClient.watchdog:reportUiError({ errorReport })
     // 5. Fallback: Store locally if backend unavailable, sync later
     // 6. Privacy: Strip sensitive data (user input, tokens) before sending
     // sendUIErrorReport(context, error, errorInfo);

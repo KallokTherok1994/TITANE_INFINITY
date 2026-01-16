@@ -384,7 +384,7 @@ ${Object.keys(state)
 💡 **Analyse détaillée**:
 Utiliser DevTools console:
 \`\`\`javascript
-await window.__TAURI__.core.invoke('titan_state_get')
+await window.__TAURI__.core.tauriClient.titanStateGet()
 \`\`\`
 
 📖 **Documentation**: \`OPUS_MPE_2_3_REPORT.md\``,
