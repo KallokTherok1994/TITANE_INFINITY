@@ -1,0 +1,40 @@
+TITANE∞ — PHASE_5 Health Check Report
+======================================
+
+Timestamp: 2026-01-16T01:57:16Z
+Status:    HEALTHY
+
+Summary
+-------
+Total checks:   16
+Passed:         15
+Failed:         0
+Warnings:       1
+Compliance:     93.8%
+
+System Info
+-----------
+Node.js:  v24.0.0
+pnpm:     10.28.0
+Rust:     1.91.1
+
+Detailed Results
+----------------
+✓ [Toolchain] Node.js version: v24.0.0 
+✓ [Toolchain] pnpm available: 10.28.0 
+✓ [Toolchain] Rust available: 1.91.1 
+✓ [Critical Files] src-tauri/tauri.conf.json exists: 57134 bytes 
+✓ [Critical Files] runtime/stable/tauri.stable.conf.json exists: 7569 bytes 
+✓ [Critical Files] runtime/dev/tauri.dev.conf.json exists: 2922 bytes 
+✓ [Critical Files] src-tauri/allowlist.whitelist.stable.json exists: 4607 bytes 
+✓ [Critical Files] runtime/stable/build.sh exists: 12785 bytes 
+⚠ [Critical Files] build-manifest.json: Not present (no stable build yet) 
+✓ [Security] No .env secrets: 0 files with real API keys/tokens 
+✓ [Security] No tunnels in stable: 0 markers 
+✓ [CI/CD] stable-build.yml: Present 
+✓ [CI/CD] constitution-audit.yml: Present 
+✓ [Tests] tauri.contract.test.ts: Present 
+✓ [Tests] gate-p3.test.ts: Present 
+✓ [Tests] gate-p4.test.ts: Present 
+
+Generated: 2026-01-16T01:57:16Z
