@@ -1,8 +1,8 @@
 # TITANE∞ — SECRETS MANAGEMENT
 
 **Version** : 1.0.0  
-**Status** : 🔒 SEALED (Production Certification P0-1)  
-**Date** : 15 janvier 2026  
+**Status** : 🔒 SEALED (Production Certification P0_1_SECRETS)  
+**Date** : 16 janvier 2026 - CERTIFICATION RUN V1  
 
 ---
 
