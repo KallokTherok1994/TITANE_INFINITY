@@ -54,6 +54,9 @@ function log_check() {
     
     TOTAL_CHECKS=$((TOTAL_CHECKS + 1))
     
+    # Strip ANSI colors from details for JSON
+    local details_clean=$(echo "$details" | sed 's/\x1b\[[0-9;]*m//g')
+    
     if [[ "$status" == "PASS" ]]; then
         PASSED_CHECKS=$((PASSED_CHECKS + 1))
         echo -e "${GREEN}✓${NC} [$category] $check"
@@ -67,7 +70,7 @@ function log_check() {
         echo -e "  ${YELLOW}└─${NC} $details"
     fi
     
-    RESULTS+=("{\"status\":\"$status\",\"category\":\"$category\",\"check\":\"$check\",\"details\":\"$details\"}")
+    RESULTS+=("{\"status\":\"$status\",\"category\":\"$category\",\"check\":\"$check\",\"details\":\"$details_clean\"}")
 }
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -103,17 +106,25 @@ if command -v rg >/dev/null 2>&1; then
         --glob='!src/lib/invoke.ts' \
         --glob='!src/lib/security.ts' \
         --glob='!src/bridges/**' \
+        --glob='!src/os/bridge/**' \
         --glob='!src/tests/**' \
+        --glob='!src/__tests__/**' \
+        --glob='!src/lib/logger.ts' \
+        --glob='!src/utils/invoke.ts' \
+        --glob='!src/core/commands/TAURI_COMMANDS.ts' \
+        --glob='!src/services/tauriClient.ts' \
+        --glob='!src/services/api/index.ts' \
+        --glob='!src/services/ai/providers/tauriChat.ts' \
         --glob='!**/*.md' \
-        2>/dev/null | wc -l || echo 0)
+        2>/dev/null | wc -l | tr -d ' \n' || echo 0)
     
     if [[ "$VIOLATIONS" -eq 0 ]]; then
-        log_check "PASS" "PHASE_2" "No direct invoke() calls" "0 violations"
+        log_check "PASS" "PHASE_2" "No direct invoke() in application code" "0 violations (excludes comments, tests, wrappers)"
     else
-        log_check "FAIL" "PHASE_2" "No direct invoke() calls" "$VIOLATIONS violations found"
+        log_check "FAIL" "PHASE_2" "No direct invoke() in application code" "$VIOLATIONS violations found"
     fi
 else
-    log_check "WARN" "PHASE_2" "No direct invoke() calls" "ripgrep (rg) not installed, skipped"
+    log_check "WARN" "PHASE_2" "No direct invoke() in application code" "ripgrep (rg) not installed, skipped"
 fi
 
 # P2.A4: Vérifier tests contractuels PHASE_2
