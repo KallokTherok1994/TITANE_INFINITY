@@ -56,6 +56,21 @@ Thumbs.db
 .current-server-info
 !.current-server-info.example
 
+# Security & Secrets (PROD certification)
+.envrc
+*.key
+*.pem
+secret*.json
+tunnel*.json
+id_rsa*
+id_ed25519*
+
+# Temporary files (potential secrets)
+temp/
+tmp/
+*.tmp
+tmp_*
+
 # Python virtualenvs (local dev)
 .venv/
 venv/
