@@ -54,7 +54,7 @@ check_capability_file() {
     fi
     
     # Vérifier que c'est bien QUALIFIED → STABLE
-    if ! grep -q "Statut: QUALIFIED" "$cap_file"; then
+    if ! grep -q "Statut.*QUALIFIED\|\*\*Statut actuel\*\*.*QUALIFIED" "$cap_file"; then
         error "Capability must be QUALIFIED before promotion to STABLE"
         return 1
     fi
@@ -86,7 +86,8 @@ check_promotion_checklist() {
     
     for item in "${checklist_items[@]}"; do
         # Vérifier que l'item est coché [x] dans le fichier
-        if grep -q "- \[x\].*$item" "$cap_file"; then
+        # Approche simple : chercher ligne contenant "- [x]" puis vérifier si elle contient l'item
+        if grep -- "- \[x\]" "$cap_file" | grep -qF "$item"; then
             success "✓ $item"
         else
             error "✗ Missing or unchecked: $item"

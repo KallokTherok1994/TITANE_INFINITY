@@ -80,7 +80,7 @@ EXPERIMENTAL ──→ QUALIFIED ──→ STABLE ──→ DEPRECATED ──→
 |--------|-------|--------|
 | **STABLE** | 53 | Commands production-ready avec rétrocompatibilité |
 | **QUALIFIED** | 0 | Commands avec API figée, tests complets, prêts pour STABLE |
-| **EXPERIMENTAL** | 0 | Commands en développement, API instable |
+| **EXPERIMENTAL** | 2 | Commands en développement, API instable |
 | **DEPRECATED** | 0 | Commands marqués obsolètes, migration path définie |
 | **REMOVED** | 0 | Commands retirés (archives seulement) |
 
@@ -89,6 +89,7 @@ EXPERIMENTAL ──→ QUALIFIED ──→ STABLE ──→ DEPRECATED ──→
 | Version | STABLE | QUALIFIED | EXPERIMENTAL | DEPRECATED | Notes |
 |---------|--------|-----------|-------------|------------|-------|
 | v26.3.0 | 53 | 0 | 0 | 0 | État initial PHASE 6 (migration depuis PHASE 5) |
+| v26.3.0+ | 53 | 0 | 2 | 0 | Première capability PHASE 6: memory-core-encryption |
 
 **Migration PHASE 5 → PHASE 6**: Toutes les capabilities PHASE 5 "stable" sont automatiquement promues **STABLE** PHASE 6 avec grandfathering (pas de re-qualification requise).
 
@@ -230,6 +231,19 @@ command: <nom>
 | `tts_get_status` | **STABLE** | memory | tests/contract/tauri.contract.test.ts | docs/TTS.md | v26.1.0 | v26.3.0 | Status TTS (P5→P6) |
 | `tts_is_speaking` | **STABLE** | memory | tests/contract/tauri.contract.test.ts | docs/TTS.md | v26.1.0 | v26.3.0 | Check TTS actif (P5→P6) |
 | `tts_stop` | **STABLE** | memory, audio | tests/contract/tauri.contract.test.ts | docs/TTS.md | v26.1.0 | v26.3.0 | Arrêt TTS (P5→P6) |
+
+---
+
+## Couche EXPERIMENTAL
+
+**Capabilities en développement** - API instable, tests unitaires seulement, dev workspace uniquement.
+
+### Security & Privacy
+
+| Command | Status | Permissions | Contract Test | Doc Ref | Added | Notes |
+|---------|--------|-------------|---------------|---------|-------|-------|
+| `unlock_memory_vault` | **EXPERIMENTAL** | memory, filesystem | tests/experimental/memory-encryption.test.ts | docs/capabilities/memory-core-encryption.md | v26.3.0+ | Déchiffrement vault utilisateur |
+| `lock_memory_vault` | **EXPERIMENTAL** | memory, filesystem | tests/experimental/memory-encryption.test.ts | docs/capabilities/memory-core-encryption.md | v26.3.0+ | Chiffrement vault utilisateur |
 
 ---
 
