@@ -34,7 +34,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y jq ripgrep
       
-      - name: "� PHASE_5: Capabilities Drift Check"
+      - name: "🔍 PHASE_5: Capabilities Drift Check"
         id: drift
         run: |
           chmod +x scripts/ci/check-capabilities-drift.sh
@@ -53,7 +53,7 @@ jobs:
             echo "✅ No capabilities drift"
           fi
       
-      - name: "�📋 PHASE_4: Run Constitution Audit"
+      - name: "📋 PHASE_4: Run Constitution Audit"
         id: audit
         run: |
           chmod +x scripts/audit/constitution-audit.sh

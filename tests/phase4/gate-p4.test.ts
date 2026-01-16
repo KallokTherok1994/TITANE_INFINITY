@@ -12,7 +12,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { existsSync, readFileSync, accessSync, constants } from 'node:fs';
+import { existsSync, readFileSync, accessSync, constants, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { execSync } from 'node:child_process';
 
@@ -231,7 +231,6 @@ describe('GATE_P4: PHASE_4 Audit constitutionnel validations', () => {
         return;
       }
       
-      const { readdirSync } = require('fs');
       const reports = readdirSync(reportsDir)
         .filter((f: string) => f.startsWith('constitution-audit-') && f.endsWith('.json'))
         .sort()
@@ -280,7 +279,6 @@ describe('GATE_P4: PHASE_4 Audit constitutionnel validations', () => {
         return;
       }
       
-      const { readdirSync } = require('fs');
       const reports = readdirSync(reportsDir)
         .filter((f: string) => f.startsWith('constitution-audit-') && f.endsWith('.md'))
         .sort()

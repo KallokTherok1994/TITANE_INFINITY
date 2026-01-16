@@ -932,7 +932,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
       const assistantPlaceholder: AIMessage = {
         role: 'assistant',
-        content: '',
+        content: 'Génération en cours...', // CONTENT NON VIDE POUR ÉVITER TYPING INFINI
         timestamp: Date.now(),
         provider: 'tauri-backend',
         metadata: assistantMetadata,
@@ -1539,20 +1539,26 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
           typeof finalResponse.content === 'string' ? finalResponse.content : '';
         const finalContent =
           responseContent.trim().length > 0 ? responseContent : aggregatedContent;
-        if (finalContent.trim().length === 0) {
+
+        // ✅ CRITICAL FIX: Jamais de content vide pour message terminé
+        const safeFinalContent = finalContent.trim().length > 0
+          ? finalContent
+          : "Erreur : Aucune réponse générée par l'IA. Veuillez réessayer.";
+
+        if (safeFinalContent.trim().length === 0) {
           throw new Error('Réponse vide du backend (final content)');
         }
         chatLogger.debug(
           '🎯 finalContent:',
-          finalContent?.substring(0, 100),
+          safeFinalContent?.substring(0, 100),
           'length:',
-          finalContent?.length
+          safeFinalContent?.length
         );
 
         updateAssistant(
           message => ({
             ...message,
-            content: finalContent,
+            content: safeFinalContent, // CONTENT TOUJOURS NON VIDE
             provider,
             timestamp: Date.now(),
           }),
