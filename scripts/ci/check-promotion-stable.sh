@@ -115,14 +115,21 @@ check_tests_coverage() {
     
     if [[ -z "$test_files" ]]; then
         warn "No specific test files found for capability: $cap_name"
-        # Vérifier si les tests sont intégrés ailleurs
+        # Vérifier si les tests sont intégrés ailleurs (TypeScript)
         if grep -r "describe.*$cap_name\|test.*$cap_name\|it.*$cap_name" "$REPO_ROOT/src" "$REPO_ROOT/src-tauri" --include="*.test.*" --include="*.spec.*" >/dev/null 2>&1; then
             success "Capability tests found in integrated test suites"
             return 0
-        else
-            error "No tests found for capability: $cap_name"
-            return 1
         fi
+        
+        # Vérifier si les tests sont dans les fichiers Rust (PHASE 6 pattern)
+        rust_cap_name=$(echo "$cap_name" | tr '-' '_')
+        if grep -r "test_.*${rust_cap_name}\|${rust_cap_name}.*test\|async fn test.*" "$REPO_ROOT/src-tauri/src" --include="*.rs" >/dev/null 2>&1; then
+            success "Capability tests found in Rust source files"
+            return 0
+        fi
+        
+        error "No tests found for capability: $cap_name"
+        return 1
     fi
     
     success "Test files found: $(echo "$test_files" | wc -l) files"
