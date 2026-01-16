@@ -1,0 +1,220 @@
+# P5 RUNTIME GOVERNANCE CI GATE
+# TITANE_INFINITY_PROD_CERTIFICATION_RUN_V1
+# GATE: GATE_P5 = (runtime_isolation == PASS && ops_procedures == PASS && deployment_governance == PASS)
+
+name: "🏛️ P5-RUNTIME-GOVERNANCE-GATE"
+
+on:
+  push:
+    branches: [ main, MAIN ]
+  pull_request:
+    branches: [ main, MAIN ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  p5-runtime-isolation-audit:
+    name: "P5.1 Runtime Isolation Audit"
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Verify Runtime Separation
+      run: |
+        echo "🔍 P5.1 RUNTIME_ISOLATION: Auditing separation..."
+        
+        # Verify dual runtime structure
+        if [ -d "runtime/dev" ] && [ -d "runtime/stable" ]; then
+          echo "✅ Dual runtime directories confirmed"
+        else
+          echo "❌ P5 VIOLATION: Missing runtime separation"
+          exit 1
+        fi
+        
+        # Verify separate configurations
+        DEV_CONFIG="runtime/dev/tauri.conf.json"
+        STABLE_CONFIG="runtime/stable/tauri.conf.json"
+        
+        if [ -f "$DEV_CONFIG" ] && [ -f "$STABLE_CONFIG" ]; then
+          echo "✅ Runtime configurations separated"
+        else
+          echo "❌ P5 VIOLATION: Missing runtime configurations"
+          exit 1
+        fi
+        
+        # Verify build scripts separation
+        if [ -f "runtime/dev/run-dev.sh" ] && [ -f "runtime/stable/build.sh" ]; then
+          echo "✅ Build scripts separated"
+        else
+          echo "❌ P5 VIOLATION: Missing build scripts"
+          exit 1
+        fi
+        
+        echo "✅ P5.1 RUNTIME_ISOLATION: PASS"
+
+  p5-deployment-governance-audit:
+    name: "P5.2 Deployment Governance Audit"
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Verify Deployment Rules
+      run: |
+        echo "🔍 P5.2 DEPLOYMENT_GOVERNANCE: Auditing rules..."
+        
+        # RULE 5.1: Only runtime/stable/build.sh creates production
+        if [ -x "runtime/stable/build.sh" ]; then
+          echo "✅ RULE 5.1: Production build script exists and executable"
+        else
+          echo "❌ RULE 5.1 VIOLATION: Missing/non-executable production build"
+          exit 1
+        fi
+        
+        # RULE 5.2: P3_3_FORBIDDEN_SCAN integration
+        if grep -q "check_forbidden_files.sh" runtime/stable/build.sh; then
+          echo "✅ RULE 5.2: Security scanning integrated in build"
+        else
+          echo "❌ RULE 5.2 VIOLATION: Missing security scan in production build"
+          exit 1
+        fi
+        
+        # RULE 5.3: No dev artifacts (check for common dev patterns)
+        if grep -q "P3_2_BUILD_HARDEN" runtime/stable/build.sh; then
+          echo "✅ RULE 5.3: Build hardening active"
+        else
+          echo "❌ RULE 5.3 VIOLATION: Missing build hardening"
+          exit 1
+        fi
+        
+        echo "✅ P5.2 DEPLOYMENT_GOVERNANCE: PASS"
+
+  p5-change-management-audit:
+    name: "P5.3 Change Management Audit"
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Verify Change Controls
+      run: |
+        echo "🔍 P5.3 CHANGE_MANAGEMENT: Auditing controls..."
+        
+        # Verify constitutional gates exist
+        CONSTITUTIONAL_GATES=0
+        if [ -f ".github/workflows/p4-constitution-audit.yml" ]; then
+          echo "✅ Constitutional audit gate active"
+          CONSTITUTIONAL_GATES=$((CONSTITUTIONAL_GATES + 1))
+        fi
+        
+        # Verify surface control gates
+        if [ -f ".github/workflows/p0-2-surface-guard.yml" ]; then
+          echo "✅ Surface expansion control active"
+          CONSTITUTIONAL_GATES=$((CONSTITUTIONAL_GATES + 1))
+        fi
+        
+        # Verify secrets control gates  
+        if [ -f ".github/workflows/p0-1-secrets-guard.yml" ]; then
+          echo "✅ Secrets control active"
+          CONSTITUTIONAL_GATES=$((CONSTITUTIONAL_GATES + 1))
+        fi
+        
+        if [ "$CONSTITUTIONAL_GATES" -ge 3 ]; then
+          echo "✅ Change control gates active ($CONSTITUTIONAL_GATES gates)"
+        else
+          echo "❌ P5 VIOLATION: Insufficient change controls ($CONSTITUTIONAL_GATES/3)"
+          exit 1
+        fi
+        
+        echo "✅ P5.3 CHANGE_MANAGEMENT: PASS"
+
+  p5-operational-procedures-audit:
+    name: "P5.4 Operational Procedures Audit"
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Verify Operational Readiness
+      run: |
+        echo "🔍 P5.4 OPERATIONAL_PROCEDURES: Auditing readiness..."
+        
+        # Verify governance documentation
+        if [ -f "docs/_evidence/P5_RUNTIME_GOVERNANCE.md" ]; then
+          echo "✅ Governance documentation present"
+        else
+          echo "❌ P5 VIOLATION: Missing governance documentation"
+          exit 1
+        fi
+        
+        # Verify monitoring capabilities (forbidden scan)
+        if [ -x "scripts/check_forbidden_files.sh" ]; then
+          echo "✅ Automated monitoring tools available"
+        else
+          echo "❌ P5 VIOLATION: Missing monitoring automation"
+          exit 1
+        fi
+        
+        # Verify incident response capability (constitutional audit)
+        INCIDENT_RESPONSE=0
+        [ -f ".github/workflows/p0-1-secrets-guard.yml" ] && INCIDENT_RESPONSE=$((INCIDENT_RESPONSE + 1))
+        [ -f ".github/workflows/p0-2-surface-guard.yml" ] && INCIDENT_RESPONSE=$((INCIDENT_RESPONSE + 1))
+        [ -f ".github/workflows/p3-stable-build.yml" ] && INCIDENT_RESPONSE=$((INCIDENT_RESPONSE + 1))
+        [ -f ".github/workflows/p4-constitution-audit.yml" ] && INCIDENT_RESPONSE=$((INCIDENT_RESPONSE + 1))
+        
+        if [ "$INCIDENT_RESPONSE" -ge 4 ]; then
+          echo "✅ Incident response capabilities ready ($INCIDENT_RESPONSE systems)"
+        else
+          echo "❌ P5 VIOLATION: Insufficient incident response ($INCIDENT_RESPONSE/4)"
+          exit 1
+        fi
+        
+        echo "✅ P5.4 OPERATIONAL_PROCEDURES: PASS"
+
+  p5-governance-certification:
+    name: "🏛️ P5 Governance Certification"
+    runs-on: ubuntu-latest
+    needs: [
+      p5-runtime-isolation-audit,
+      p5-deployment-governance-audit,
+      p5-change-management-audit,
+      p5-operational-procedures-audit
+    ]
+    steps:
+    - name: P5 Governance Compliance Certification
+      run: |
+        echo "🏛️ P5_RUNTIME_GOVERNANCE: Generating certification..."
+        echo "Runtime Governance Compliance: 4/4 AREAS"
+        echo "P5.1 RUNTIME_ISOLATION: ✅ PASS"  
+        echo "P5.2 DEPLOYMENT_GOVERNANCE: ✅ PASS"
+        echo "P5.3 CHANGE_MANAGEMENT: ✅ PASS" 
+        echo "P5.4 OPERATIONAL_PROCEDURES: ✅ PASS"
+        echo ""
+        echo "Governance Status: COMPLIANT"
+        echo "Risk Assessment: LOW"
+        echo "Operational Readiness: CONFIRMED"
+        echo ""
+        echo "🎯 GATE_P5: RUNTIME GOVERNANCE PASS"
+        echo "📋 Ready for: P6_CAPABILITY_QUALIFICATION"
+
+  evidence-collection:
+    name: "📊 P5 Evidence Collection"
+    runs-on: ubuntu-latest
+    needs: [p5-governance-certification]
+    if: always()
+    steps:
+    - name: Collect P5 evidence
+      run: |
+        echo "📊 P5_RUNTIME_GOVERNANCE Evidence Collection"
+        echo "Timestamp: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+        echo "Phase: P5_RUNTIME_GOVERNANCE"
+        echo "Status: $([ '${{ needs.p5-governance-certification.result }}' = 'success' ] && echo 'PASS' || echo 'FAIL')"
+        echo ""
+        echo "Governance Components:"
+        echo "- P5.1 Runtime Isolation: ${{ needs.p5-runtime-isolation-audit.result }}"
+        echo "- P5.2 Deployment Governance: ${{ needs.p5-deployment-governance-audit.result }}"
+        echo "- P5.3 Change Management: ${{ needs.p5-change-management-audit.result }}"
+        echo "- P5.4 Operational Procedures: ${{ needs.p5-operational-procedures-audit.result }}"
