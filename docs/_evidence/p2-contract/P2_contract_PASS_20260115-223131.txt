@@ -1,0 +1,155 @@
+TIMESTAMP: 2026-01-15T22:31:31-05:00
+PHASE: P2 CONTRACT TS↔TAURI
+STATUS: PASS
+
+🔗 [CONTRACT-GUARD] TITANE∞ TypeScript ↔ Tauri Contract Guard
+==============================================================
+📋 Phase 1: Extraction invoke() frontend...
+📋 Phase 2: Extraction allowlist backend...
+📋 Phase 3: Analyse cohérence contrat...
+Commands frontend (invoke): 59
+Commands backend (allowlist): 53
+
+Commands invoqués par le frontend:
+  - add_timeline_event
+  - autofix_detect_rust_warnings
+  - autofix_detect_typescript_errors
+  - autofix_fix_all
+  - autofix_get_history
+  - autofix_get_stats
+  - autofix_reset
+  - autoheal_detect_broken_modules
+  - autoheal_get_history
+  - autoheal_heal_avatar_module
+  - autoheal_heal_cognitive_module
+  - autoheal_reset
+  - autoheal_resync_state
+  - chat_get_providers_status
+  - chat_send_message
+  - cognitive_get_map
+  - conversation_generate
+  - crashguard_detect_threats
+  - crashguard_get_active_threats
+  - crashguard_get_stats
+  - get_files_by_category
+  - get_system_health
+  - get_timeline
+  - memory_get_active_projects
+  - memory_get_stats
+  - memory_save_chat_interaction
+  - memory_store
+  - meta_get_alignment
+  - meta_get_monitoring_metrics
+  - meta_get_report
+  - meta_get_state
+  - meta_selftest_all
+  - meta_trigger_sync
+  - parse_document
+  - performance_compress_memory
+  - performance_get_metrics
+  - performance_optimize_gpu
+  - performance_reset_optimizations
+  - performance_throttle_cpu
+  - pipeline_analyze_intention
+  - pipeline_generate_cognitive_response
+  - pipeline_get_stats
+  - pipeline_prepare_avatar_animation
+  - pipeline_prepare_tts
+  - pipeline_validate
+  - secure_list_files
+  - singularity_check_coherence
+  - singularity_check_integrity
+  - singularity_create_snapshot
+  - singularity_get_diagnostics
+  - singularity_get_full_state
+  - singularity_get_fusion_state
+  - singularity_get_global_coherence
+  - singularity_get_metrics
+  - singularity_perform_sync
+  - singularity_reset
+  - singularity_restore_snapshot
+  - store_file
+  - write_snapshot
+
+Commands autorisés backend:
+  - add_timeline_event
+  - avatar_get_expression
+  - chat_generate
+  - chat_stream_message
+  - complete_onboarding
+  - cp_get_ai_config
+  - cp_set_ai_config
+  - experience_get_state
+  - experience_update_state
+  - file_analyze
+  - fullbody_get_state
+  - fullbody_init
+  - fullbody_update_expression
+  - fullbody_update_pose
+  - get_active_projects
+  - get_active_rituals
+  - get_helios_state
+  - get_knowledge
+  - get_memory_state
+  - get_onboarding_preferences
+  ... (et 33 autres)
+
+📋 Phase 4: Détection violations contrat...
+ℹ️ DEV: invoke('autofix_detect_rust_warnings') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('autofix_detect_typescript_errors') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('autofix_fix_all') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('autofix_get_history') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('autofix_get_stats') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('autofix_reset') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('autoheal_detect_broken_modules') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('autoheal_get_history') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('autoheal_heal_avatar_module') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('autoheal_heal_cognitive_module') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('autoheal_reset') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('autoheal_resync_state') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('chat_get_providers_status') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('chat_send_message') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('cognitive_get_map') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('conversation_generate') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('crashguard_detect_threats') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('crashguard_get_active_threats') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('crashguard_get_stats') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('get_files_by_category') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('memory_get_active_projects') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('memory_get_stats') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('memory_save_chat_interaction') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('memory_store') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('meta_get_alignment') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('meta_get_monitoring_metrics') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('meta_get_report') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('meta_get_state') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('meta_selftest_all') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('meta_trigger_sync') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('parse_document') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('performance_compress_memory') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('performance_get_metrics') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('performance_optimize_gpu') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('performance_reset_optimizations') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('performance_throttle_cpu') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('pipeline_analyze_intention') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('pipeline_generate_cognitive_response') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('pipeline_get_stats') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('pipeline_prepare_avatar_animation') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('pipeline_prepare_tts') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('pipeline_validate') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('secure_list_files') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('singularity_check_coherence') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('singularity_check_integrity') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('singularity_create_snapshot') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('singularity_get_diagnostics') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('singularity_get_fusion_state') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('singularity_get_metrics') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('singularity_perform_sync') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('singularity_reset') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('singularity_restore_snapshot') command développement non en allowlist stable (normal)
+ℹ️ DEV: invoke('store_file') command développement non en allowlist stable (normal)
+ℹ️ INFO: 47 commands backend inutilisés par le frontend (normal en prod)
+
+✅ CONTRACT-GUARD: PASS - Contrat TypeScript ↔ Tauri cohérent
+📊 Frontend invokes: 59, Backend commands: 53
+📊 Commands dev ignorés: 53, Violations production: 0
