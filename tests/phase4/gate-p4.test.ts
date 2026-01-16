@@ -46,7 +46,7 @@ describe('GATE_P4: PHASE_4 Audit constitutionnel validations', () => {
       expect(content).toContain('PHASE_2 Audits: Contrat TS ↔ Tauri');
       expect(content).toContain('tauriCommands.ts');
       expect(content).toContain('tauriClient.ts');
-      expect(content).toContain('No direct invoke() calls');
+      expect(content).toContain('No direct invoke() in application code');
     });
     
     it('should contain PHASE_3 audit checks', () => {
