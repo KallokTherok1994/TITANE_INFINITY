@@ -8,10 +8,17 @@
 import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
+  // Global setup for Tauri mocking
+  globalSetup: './playwright.global-setup.ts',
+
   // Test directories
   // Governance gate: 3 scenarios Playwright only (critical path)
   testDir: './e2e/critical',
-  testMatch: ['app-launch.spec.ts', 'chat-interaction.spec.ts', 'engine-navigation.spec.ts'],
+  testMatch: [
+    'app-launch.spec.ts',
+    'chat-interaction.spec.ts',
+    'engine-navigation.spec.ts',
+  ],
 
   // Parallel execution
   fullyParallel: true,
@@ -42,6 +49,10 @@ export default defineConfig({
       executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE || '/snap/bin/chromium',
       args: ['--disable-dev-shm-usage'],
     },
+    // Mock Tauri APIs for E2E testing
+    contextOptions: {
+      permissions: ['clipboard-read', 'clipboard-write'],
+    },
   },
 
   // Single-browser project (system Chromium)
@@ -50,7 +61,7 @@ export default defineConfig({
   // Dev server configuration
   webServer: {
     command:
-      './.tools/node/current/bin/pnpm exec vite dev --port 1420 --strictPort --host 127.0.0.1',
+      'pnpm exec vite dev --config vite.config.ts --port 1420 --strictPort --host 127.0.0.1',
     url: 'http://127.0.0.1:1420',
     reuseExistingServer: !process.env.CI,
     timeout: 120000, // 2min to start

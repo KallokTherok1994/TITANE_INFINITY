@@ -1,4 +1,4 @@
-name: "📊 Production Monitoring"
+name: '📊 Production Monitoring'
 
 on:
   schedule:
@@ -11,31 +11,31 @@ permissions:
 
 jobs:
   health-check:
-    name: "System Health Check"
+    name: 'System Health Check'
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: "Checkout repository"
+      - name: 'Checkout repository'
         uses: actions/checkout@v4
-        
-      - name: "Run production validation"
+
+      - name: 'Run production validation'
         run: |
           chmod +x scripts/validate_production.sh
           ./scripts/validate_production.sh
-          
-      - name: "Check artifact integrity"
+
+      - name: 'Check artifact integrity'
         run: |
           echo "🔐 Artifact integrity verification:"
           find deployment/latest -type f \( -name "*.AppImage" -o -name "*.deb" -o -name "titane-infinity" \) -exec sha256sum {} \;
-          
-      - name: "Verify constitutional compliance"
+
+      - name: 'Verify constitutional compliance'
         run: |
           if [ -f scripts/check_forbidden_files.sh ]; then
             echo "🔍 Running forbidden files scan..."
             ./scripts/check_forbidden_files.sh
           fi
-          
-      - name: "Generate health report"
+
+      - name: 'Generate health report'
         run: |
           echo "📊 Daily Health Report - $(date)"
           echo "Repository status: OK"

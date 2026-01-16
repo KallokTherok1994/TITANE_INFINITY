@@ -14,6 +14,7 @@
 **99 Engines Identifiés** organisés selon le **4-Ring Model**
 
 **Répartition:**
+
 - **Ring 1 (Types):** 3 fichiers types
 - **Ring 2 (Engines):** 36 engines logique métier pure
 - **Ring 3 (Services):** 44 engines orchestration I/O
@@ -26,26 +27,28 @@
 
 Les 9 moteurs cognitifs documentés historiquement se décomposent en 99 engines spécialisés:
 
-| Moteur Conceptuel | Engines Réels | Domaines |
-|-------------------|---------------|----------|
-| **Orchestrator** | 8 engines | Fusion, Autonomy, Conversation, Recovery |
-| **StyleEngine** | 6 engines | UIUX + 5 adapters (Density, Layout, Motion, Theme, Visibility) |
-| **CoherenceEngine** | 5 engines | Consistency, Goal Consistency, State Integrity, Observability |
-| **ReflectionEngine** | 7 engines | Cognitive Optimization, Evolution, XP, Introspection, Semantic Memory |
-| **EmotionEngine** | 9 engines | Synesthetic Emotion, Expression, Aura, Archetype, Facial, Prosody |
-| **UnifiedMemory** | 5 engines | Memory (STM/MTM/LTM), Semantic Memory, Auto Save, Timeline |
-| **BehaviorEngine** | 10 engines | Flow, Conscious, Autopoiesis, Agenda, Priority, Attention |
-| **AdaptationEngine** | 12 engines | UIUX detectors/policies, User Preferences, Performance Advisor |
-| **SystemHealth** | 37 engines | Auto Heal, Crash Guard, Self Healing, Monitoring, Metrics |
+| Moteur Conceptuel    | Engines Réels | Domaines                                                              |
+| -------------------- | ------------- | --------------------------------------------------------------------- |
+| **Orchestrator**     | 8 engines     | Fusion, Autonomy, Conversation, Recovery                              |
+| **StyleEngine**      | 6 engines     | UIUX + 5 adapters (Density, Layout, Motion, Theme, Visibility)        |
+| **CoherenceEngine**  | 5 engines     | Consistency, Goal Consistency, State Integrity, Observability         |
+| **ReflectionEngine** | 7 engines     | Cognitive Optimization, Evolution, XP, Introspection, Semantic Memory |
+| **EmotionEngine**    | 9 engines     | Synesthetic Emotion, Expression, Aura, Archetype, Facial, Prosody     |
+| **UnifiedMemory**    | 5 engines     | Memory (STM/MTM/LTM), Semantic Memory, Auto Save, Timeline            |
+| **BehaviorEngine**   | 10 engines    | Flow, Conscious, Autopoiesis, Agenda, Priority, Attention             |
+| **AdaptationEngine** | 12 engines    | UIUX detectors/policies, User Preferences, Performance Advisor        |
+| **SystemHealth**     | 37 engines    | Auto Heal, Crash Guard, Self Healing, Monitoring, Metrics             |
 
 **Total:** 99 engines (vs 9 documentés = +1,000%)
 
 ### Classification par Ring (4-Ring Model)
 
 **Ring 1: Core Types**
+
 - Types définitions pour engines (memoryEngine.ts, performanceEngine.ts, ttsEngine.ts)
 
 **Ring 2: Engines (Logique Métier Pure)**
+
 - **Cognitifs (9):** Aura, Cognitive Layout, Conscious, Continuum, Embodiment, Flow, Holo Presence, etc.
 - **Émotionnels (3):** Synesthetic Emotion, Expression
 - **Identité/Psyché (5):** Unified Identity, Meta Singularity, Archetype Resonance, Narrative
@@ -56,11 +59,13 @@ Les 9 moteurs cognitifs documentés historiquement se décomposent en 99 engines
 - **Cognitive Advanced (3):** Evolution, Memory, XP
 
 **Ring 3: Services (Orchestration I/O)**
+
 - **Core Services (12):** Singularity Autonomy, Cognitive Optimization, Dev Mode, Auto Fix/Heal, etc.
 - **Service Engines (21):** Admin Actions/Logs, AI Chat/Metrics, Audit, Cognitive Observability, etc.
 - **Voice Services (9):** Adaptive Threshold, Attention, Autonomic Reaction, Halo, Prosody, etc.
 
 **Ring 4: Modules & UI**
+
 - **Avatar (8):** Appearance, Camera, Audio-Visual Sync, Facial Expression, Floating, Gesture, Lip Sync, Fullbody
 - **System Modules (10):** Data Collector, Fusion, Hybrid, Live Debugger, Singularity Introspection, etc.
 - **Visual/Quantum (2):** Titane Visual Engine, Motion Frame Engine

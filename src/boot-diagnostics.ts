@@ -1,6 +1,6 @@
 /**
  * TITANE∞ v26.3.0 - Boot Diagnostics
- * 
+ *
  * Detects and logs what's happening during application startup
  * to help diagnose unexpected shutdowns
  */
@@ -74,10 +74,7 @@ class BootDiagnostics {
   exportToLocalStorage() {
     try {
       if (typeof window === 'undefined' || typeof localStorage === 'undefined') return;
-      localStorage.setItem(
-        'titane_boot_diagnostics',
-        JSON.stringify(this.getReport())
-      );
+      localStorage.setItem('titane_boot_diagnostics', JSON.stringify(this.getReport()));
     } catch (err) {
       console.warn('[BOOT-DIAG] Failed to export to localStorage:', err);
     }
@@ -88,5 +85,5 @@ export const bootDiagnostics = new BootDiagnostics();
 
 // Initialize boot diagnostics in global scope
 if (typeof window !== 'undefined') {
-  (window as any).__TITANE_BOOT_DIAG__ = bootDiagnostics;
+  (window as unknown as Record<string, unknown>).__TITANE_BOOT_DIAG__ = bootDiagnostics;
 }

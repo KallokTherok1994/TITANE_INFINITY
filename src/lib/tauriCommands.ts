@@ -1,11 +1,11 @@
 /**
  * TITANE∞ — Source Canonique des Commands Tauri (PHASE_2)
- * 
+ *
  * **Invariant PHASE_2:**
  * - Aucune duplication ailleurs dans le codebase
  * - Aucune nouvelle command introduite sans audit
  * - Chaque command doit avoir un wrapper typé dans tauriClient.ts
- * 
+ *
  * © 2026 TITANE Team. All rights reserved.
  */
 

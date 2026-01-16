@@ -315,7 +315,7 @@ class ChatService {
         keys: Object.keys(backendResponse),
       });
 
-      console.log("RAW_CHAT_RESPONSE", JSON.stringify(backendResponse, null, 2)); // LOG OBLIGATOIRE
+      console.log('RAW_CHAT_RESPONSE', JSON.stringify(backendResponse, null, 2)); // LOG OBLIGATOIRE
 
       // ✅ FIX AUDIT: Gérer cas error explicite AVANT détection format
       if (backendResponse.error && !backendResponse.content && !backendResponse.success) {
@@ -331,10 +331,14 @@ class ChatService {
         backendResponse?.response ??
         backendResponse?.data?.content ??
         backendResponse?.data?.text ??
-        "";
+        '';
 
-      if (!assistantText || typeof assistantText !== 'string' || assistantText.trim().length === 0) {
-        console.error("Empty assistant response", backendResponse);
+      if (
+        !assistantText ||
+        typeof assistantText !== 'string' ||
+        assistantText.trim().length === 0
+      ) {
+        console.error('Empty assistant response', backendResponse);
         throw new Error('Backend returned empty or invalid assistant content');
       }
 

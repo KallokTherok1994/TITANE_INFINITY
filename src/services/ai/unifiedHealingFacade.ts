@@ -24,7 +24,7 @@ import { createLogger } from '@/utils/logger';
 import { autoHealEngine } from './autoHealEngine';
 import type { AutoHealError, AutoHealStats, AutoHealAction } from './autoHealEngine';
 import { circuitBreaker } from './circuitBreaker';
-import type { CircuitStats, CircuitState } from './circuitBreaker';
+import type { CircuitState } from './circuitBreaker';
 
 const logger = createLogger('[UNIFIED-HEALING]');
 
@@ -150,7 +150,10 @@ class UnifiedHealingFacade {
     // Check rate limit
     if (this.recentRequests.length > this.config.maxHealsPerMinute) {
       this.facadeStats.blockedRequests++;
-      this.log('warn', `Rate limited: ${this.recentRequests.length} requests in last minute`);
+      this.log(
+        'warn',
+        `Rate limited: ${this.recentRequests.length} requests in last minute`
+      );
       return this.blockedResult('rate-limited', startTime);
     }
 
@@ -162,7 +165,8 @@ class UnifiedHealingFacade {
     }
 
     // Detect and classify error via autoHealEngine (source-of-truth)
-    const error = request.error instanceof Error ? request.error : new Error(String(request.error));
+    const error =
+      request.error instanceof Error ? request.error : new Error(String(request.error));
     const autoHealError = autoHealEngine.detectError(
       request.source,
       error,
@@ -171,7 +175,10 @@ class UnifiedHealingFacade {
     );
 
     // Determine healing path
-    const shouldUseAdvanced = this.shouldUseAdvancedHealing(autoHealError, request.forceAdvanced);
+    const shouldUseAdvanced = this.shouldUseAdvancedHealing(
+      autoHealError,
+      request.forceAdvanced
+    );
 
     let result: UnifiedHealResult;
 
@@ -228,7 +235,10 @@ class UnifiedHealingFacade {
     autoHealError: AutoHealError,
     startTime: number
   ): Promise<UnifiedHealResult> {
-    this.log('debug', `Simple healing for ${autoHealError.source}: ${autoHealError.type}`);
+    this.log(
+      'debug',
+      `Simple healing for ${autoHealError.source}: ${autoHealError.type}`
+    );
 
     try {
       // autoHealEngine a déjà déclenché le healing via detectError(); on attend l'action.
@@ -271,7 +281,10 @@ class UnifiedHealingFacade {
     autoHealError: AutoHealError,
     startTime: number
   ): Promise<UnifiedHealResult> {
-    this.log('info', `Advanced healing for ${autoHealError.source}: ${autoHealError.severity}`);
+    this.log(
+      'info',
+      `Advanced healing for ${autoHealError.source}: ${autoHealError.severity}`
+    );
 
     try {
       // Import dynamique pour éviter des cycles au bundle.
@@ -461,7 +474,10 @@ class UnifiedHealingFacade {
   // PRIVATE HELPERS
   // ═══════════════════════════════════════════════════════════════════════════
 
-  private shouldUseAdvancedHealing(error: AutoHealError, forceAdvanced?: boolean): boolean {
+  private shouldUseAdvancedHealing(
+    error: AutoHealError,
+    forceAdvanced?: boolean
+  ): boolean {
     if (forceAdvanced) return true;
 
     // En tests Vitest, éviter de déclencher l'orchestrateur avancé (selfHealing/*)
@@ -475,7 +491,10 @@ class UnifiedHealingFacade {
     return errorIndex >= thresholdIndex;
   }
 
-  private blockedResult(reason: UnifiedHealResult['blockReason'], startTime: number): UnifiedHealResult {
+  private blockedResult(
+    reason: UnifiedHealResult['blockReason'],
+    startTime: number
+  ): UnifiedHealResult {
     return {
       success: false,
       blocked: true,

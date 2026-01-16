@@ -35,12 +35,14 @@ Constat: en release, l'absence de `TITANE_SECRETS_PASSPHRASE` empêchait le dém
 Décision: permettre le boot UI en mode **bootstrap** (stockage séparé) afin de ne pas bloquer l'utilisateur au premier lancement.
 
 Implications:
+
 - ✅ UI bootable et utilisable pour onboarding/configuration
 - ⚠️ Le stockage chiffré “principal” reste désactivé tant que la passphrase n'est pas définie
 
 ### ⚠️ Warnings WebKit/GStreamer (non fatals)
 
 Constat: logs récurrents en runtime stable:
+
 - `GStreamer element appsink not found`
 - `GStreamer element appsrc not found`
 - `GStreamer element autoaudiosink not found`
@@ -52,6 +54,7 @@ Interprétation: environnement Linux sans certains plugins GStreamer (souvent pl
 Objectif: éviter que l'utilisateur installe le `.deb` sans dépendances GStreamer critiques.
 
 Action: ajout des dépendances DEB via la config stable Tauri (`bundle.linux.deb.depends`) :
+
 - `gstreamer1.0-plugins-base`
 - `gstreamer1.0-plugins-good`
 - `gstreamer1.0-alsa`
@@ -63,6 +66,7 @@ Note: cette action vise la robustesse d'installation (résolution automatique vi
 Objectif: éliminer les incohérences visibles (version/statut) et réduire la sprawl documentaire avant lancement.
 
 Actions:
+
 - Archivage massif des `.md` racine vers `docs/archive/root/` + création d'index
 - Déplacement des guides actifs vers `docs/current/guides/` + correction des liens officiels
 - Alignement des versions/statuts exposés: `index.html`, `README.md`, `package.json`, `Cargo.toml`, configs Tauri, UI
@@ -73,18 +77,21 @@ Actions:
 ### ✅ Accomplissements Phase 1 (session locale)
 
 **1. Audit Complet 100% Repository (Trace: non commitée)**
+
 - Scan exhaustif: 100% fichiers, dossiers, sous-dossiers
 - Score global: **98/100** (Tech-Ready (Dev) ; Production ⛔ en attente d'autorisation)
 - Document: AUDIT_COMPLET_REPOSITORY_2026-01-11.md (265 lignes)
 - Métriques détaillées: Architecture, Tests, Documentation, Performance, Sécurité
 
 **2. Version Unification v26.3.0 (Trace: non commitée)**
+
 - ✅ **P0 Blocker #1 RÉSOLU**
 - 9 fichiers modifiés: package.json, Cargo.toml, tous tauri.conf.json
 - Cohérence 100% versions: 26.3.0 partout
 - Descriptions mises à jour: Score 98/100 reflété
 
 **3. CI/CD Hardening (Trace: non commitée)**
+
 - ✅ **P0 Blocker #4 RÉSOLU**
 - E2E tests maintenant bloquants (continue-on-error supprimé)
 - Impact: Bugs UI ne peuvent plus passer en production silencieusement
@@ -93,11 +100,13 @@ Actions:
 ### 🔴 Blockers Restants (2/4)
 
 **P0 Blocker #2: Tests — RÉSOLU (validation locale)**
+
 - Status: ✅ OK (gate `copilot-xs:test` + suite `🧪 Run All Tests`)
 - Objectif: Maintenir 0 échec (re-validation avant toute étape de release)
 - Priorité: **MOYENNE** (surveillance / prévention régressions)
 
 **P0 Blocker #3: Autorisation Kevin Thibault**
+
 - Status: Non confirmée dans cette session
 - Condition: "GO FOR PRODUCTION DEPLOY - Kevin Thibault"
 - Prérequis: Tests 100/100 + Audit sécurité propre
@@ -112,6 +121,7 @@ Actions:
 **Hypothèses sur les Causes:**
 
 **A. Tests Flaky (instables)**
+
 - Timing issues dans tests asynchrones
 - Race conditions non gérées
 - Dépendances externes (APIs, filesystem)
@@ -119,6 +129,7 @@ Actions:
 - **Solution:** Retry logic, better mocking, isolation
 
 **B. Heap Accumulation (mémoire)**
+
 - Config Vitest: NODE_OPTIONS='--max-old-space-size=12288'
 - Tests parallèles + singleThread: true
 - Possible memory leaks dans tests longs
@@ -126,6 +137,7 @@ Actions:
 - **Solution:** Ajuster timeouts, cleanup, gc()
 
 **C. Vrais Bugs (code issues)**
+
 - Bugs réels dans fonctionnalités testées
 - Breaking changes non détectés
 - Regressions récentes
@@ -133,6 +145,7 @@ Actions:
 - **Solution:** Debug + fix code production
 
 **D. Environnement CI vs Local**
+
 - Différences Node/Rust versions
 - Permissions filesystem
 - Variables d'environnement manquantes
@@ -144,6 +157,7 @@ Actions:
 **Approche Recommandée (4 étapes):**
 
 **Étape 1: Identification (2h)**
+
 ```bash
 # Exécuter tests avec maximum verbosity
 pnpm run test:raw -- --reporter=verbose --no-coverage > test-failures.log 2>&1
@@ -154,16 +168,19 @@ grep "Error:" test-failures.log | head -50
 ```
 
 **Étape 2: Catégorisation (2h)**
+
 - Grouper par type d'erreur (timeout, assertion, crash)
 - Grouper par module (chat, memory, engines, ui)
 - Identifier tests flaky (échecs intermittents)
 
 **Étape 3: Priorisation (1h)**
+
 - **P0:** Tests critiques (chat, memory, security)
 - **P1:** Tests importants (ui, features)
 - **P2:** Tests périphériques (stats, design)
 
 **Étape 4: Résolution (8-16h)**
+
 - Fixer P0 en priorité (bloquants deployment)
 - Documenter P1/P2 pour post-release
 - Obtenir waiver Kevin Thibault si P1/P2 acceptables
@@ -171,19 +188,23 @@ grep "Error:" test-failures.log | head -50
 ### 3. Analyse Sécurité
 
 **Audit npm/pnpm:**
+
 - Endpoint audit temporairement down (400 Bad Request)
 - Alternative: Vérification manuelle dependencies
 - Focus: HIGH/CRITICAL vulnerabilities uniquement
 
 **Audit Cargo (Rust):**
+
 ```bash
 cd src-tauri && cargo audit
 ```
+
 - Tests Rust: ✅ OK (23/23 passing, validation locale)
 - Clippy: 0 warnings ✅
 - Probabilité vulns: **FAIBLE** (code Rust récent, bien maintenu)
 
 **Recommandation:**
+
 - Re-tenter pnpm audit dans 1-2h (issue temporaire)
 - Si persiste: Vérifier manually CVE connus pour deps critiques
 - Bloquer seulement sur HIGH/CRITICAL confirmés
@@ -193,6 +214,7 @@ cd src-tauri && cargo audit
 **Discordance Engines (9 vs 25):**
 
 **Engines Documentés (9):**
+
 1. Orchestrator
 2. StyleEngine
 3. CoherenceEngine
@@ -204,6 +226,7 @@ cd src-tauri && cargo audit
 9. SystemHealth
 
 **Engines Réels Détectés (~25):**
+
 - aura, autopoiesis, cognitive, conscious, continuum
 - embodiment, emotion, expression, flow, holopresence
 - identity, interoception, metasingularity, narrative
@@ -211,11 +234,13 @@ cd src-tauri && cargo audit
 - selfHealing, spatial, time, uiux, voice, + index.ts
 
 **Analyse:**
+
 - **Hypothèse 1:** Engines supplémentaires = sous-modules des 9 principaux
 - **Hypothèse 2:** Architecture évoluée sans mise à jour docs
 - **Hypothèse 3:** Mix d'engines actifs + expérimentaux/deprecated
 
 **Action Recommandée (Phase 2):**
+
 - Mapper chaque engine réel → engine documenté (parent)
 - OU: Mettre à jour ARCHITECTURE.md avec liste complète
 - Temps estimé: 4-6h (analyse + documentation)
@@ -223,6 +248,7 @@ cd src-tauri && cargo audit
 ### 5. Performance — Validation Continue
 
 **Métriques Actuelles (Excellentes):**
+
 ```
 Bundle Size: 14.2MB ✅ (target <20MB)
 Cold Start: 427ms ✅ (target <1s)
@@ -231,6 +257,7 @@ Code Splitting: 30+ chunks ✅
 ```
 
 **Recommandation:**
+
 - Maintenir monitoring continu
 - Tests de régression performance (Phase 3)
 - Benchmarks pré/post-deploy
@@ -244,6 +271,7 @@ Code Splitting: 30+ chunks ✅
 **Actions Séquentielles:**
 
 1. **Setup Environnement de Test (30min)**
+
    ```bash
    cd /home/runner/work/TITANE_INFINITY/TITANE_INFINITY
    corepack enable
@@ -251,13 +279,14 @@ Code Splitting: 30+ chunks ✅
    ```
 
 2. **Exécution Tests avec Logs Détaillés (2h)**
+
    ```bash
    # Tests unitaires verbose
    pnpm run test:raw -- --reporter=verbose > test-unit-verbose.log 2>&1
-   
+
    # Isoler tests en échec
    pnpm run test:raw -- --reporter=json > test-results.json 2>&1
-   
+
    # Analyser patterns
    grep -A 5 "FAIL" test-unit-verbose.log | tee test-failures-summary.txt
    ```
@@ -282,6 +311,7 @@ Code Splitting: 30+ chunks ✅
 **Actions:**
 
 1. **Re-tenter pnpm audit (30min)**
+
    ```bash
    # Attendre résolution endpoint
    sleep 3600  # 1h
@@ -289,6 +319,7 @@ Code Splitting: 30+ chunks ✅
    ```
 
 2. **Cargo Audit (30min)**
+
    ```bash
    cd src-tauri
    cargo install cargo-audit --locked
@@ -311,7 +342,7 @@ Code Splitting: 30+ chunks ✅
 **Actions (optionnel, peut attendre post-tests):**
 
 1. **Mapper Engines (2h)**
-   - Analyser src/engines/*/
+   - Analyser src/engines/\*/
    - Créer mapping: engine réel → parent documenté
    - Valider avec architecture code
 
@@ -327,18 +358,22 @@ Code Splitting: 30+ chunks ✅
 ### ✅ Checklist GO/NO-GO
 
 **Tests:**
+
 - [x] Vitest: OK (validation locale récente)
 - [x] Cargo: ✅ OK (23/23, validation locale)
 - [x] E2E: Bloquants dans CI ✅
 
 **Sécurité:**
+
 - [ ] pnpm audit: 0 HIGH/CRITICAL (ou plan mitigation)
 - [ ] cargo audit: 0 vulnerabilities (ou plan mitigation)
 
 **Versions:**
+
 - [x] Cohérence 100%: v26.3.0 partout ✅
 
 **Autorisation:**
+
 - [ ] Email envoyé Kevin Thibault avec rapport complet
 - [ ] Réponse reçue: "GO FOR PRODUCTION DEPLOY - Kevin Thibault"
 
@@ -347,10 +382,12 @@ Code Splitting: 30+ chunks ✅
 **Actuel:** 98/100 (Tech-Ready (Dev) ; Production ⛔ en attente d'autorisation)
 
 **Après Phase 1 Complète (estimé):** 99/100
+
 - Tests: 17/20 → 19/20 (+2 si 100% passing)
 - Sécurité: 18/20 → 20/20 (+2 si 0 HIGH/CRITICAL)
 
 **Après Phase 2 (documentation):** 100/100
+
 - Architecture: 19/20 → 20/20 (+1 si engines documentés)
 
 ---
@@ -407,6 +444,7 @@ Code Splitting: 30+ chunks ✅
 **Prochaines 24-48h:** Re-validation tests + audit sécurité + demande d'autorisation
 
 **Timeline Déploiement Révisée:**
+
 - **Phase 1 Complète:** 2-3 jours (vs 1-2j initial)
 - **Phase 2:** 1 jour (documentation)
 - **Phase 3:** 1 jour (validation)
@@ -419,4 +457,3 @@ Code Splitting: 30+ chunks ✅
 
 **Document généré par analyse approfondie post-corrections Phase 1.**  
 **Prochaine action: Investigation tests + audit sécurité.**
-

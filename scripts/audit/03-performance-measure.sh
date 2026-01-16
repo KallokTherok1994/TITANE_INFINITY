@@ -6,6 +6,21 @@
 
 set -e
 
+# Parse command line arguments
+QUIET_MODE=false
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --quiet)
+      QUIET_MODE=true
+      shift
+      ;;
+    *)
+      echo "Unknown option: $1"
+      exit 1
+      ;;
+  esac
+done
+
 # Initialize numeric metrics to safe defaults
 BUILD_TIME=0
 DIST_SIZE=0
@@ -25,24 +40,24 @@ TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 REPORT_DIR="reports/performance-$TIMESTAMP"
 mkdir -p "$REPORT_DIR"
 
-echo "⚡ TITANE∞ Performance Measurement - $TIMESTAMP"
-echo "================================================"
+if [ "$QUIET_MODE" = false ]; then
+  echo "⚡ TITANE∞ Performance Measurement - $TIMESTAMP"
+  echo "================================================"
+fi
 
 # 1. Build Time Measurement
-echo ""
-echo "🏗️ [1/8] Measuring build time..."
-echo "   └─ Production build is forbidden by repo policy (dev-mode only)."
+if [ "$QUIET_MODE" = false ]; then echo ""; echo "🏗️ [1/8] Measuring build time..."; fi
+if [ "$QUIET_MODE" = false ]; then echo "   └─ Production build is forbidden by repo policy (dev-mode only)."; fi
 {
     echo "Build step not executed."
     echo "Reason: Repo policy forbids production builds (pnpm run build / tauri build)."
 } > "$REPORT_DIR/build-output.txt"
 BUILD_TIME=0
 
-echo "   ✅ Step completed (no build)"
+if [ "$QUIET_MODE" = false ]; then echo "   ✅ Step completed (no build)"; fi
 
 # 2. Bundle Size Analysis
-echo ""
-echo "📦 [2/8] Analyzing bundle size..."
+if [ "$QUIET_MODE" = false ]; then echo ""; echo "📦 [2/8] Analyzing bundle size..."; fi
 if [ -d "dist" ]; then
     {
         echo "=== Main Bundle ==="
@@ -59,16 +74,15 @@ if [ -d "dist" ]; then
     } > "$REPORT_DIR/bundle-size.txt"
     
     DIST_SIZE=$(du -sm dist/ | cut -f1)
-    echo "   └─ Total bundle size: ${DIST_SIZE}MB"
+    if [ "$QUIET_MODE" = false ]; then echo "   └─ Total bundle size: ${DIST_SIZE}MB"; fi
 else
-    echo "   ⚠️ dist/ not found - build may have failed"
+    if [ "$QUIET_MODE" = false ]; then echo "   ⚠️ dist/ not found - build may have failed"; fi
     echo "dist/ not found" > "$REPORT_DIR/bundle-size.txt"
     DIST_SIZE=0
 fi
 
 # 3. Dependency Size
-echo ""
-echo "📚 [3/8] Analyzing dependency sizes..."
+if [ "$QUIET_MODE" = false ]; then echo ""; echo "📚 [3/8] Analyzing dependency sizes..."; fi
 if command -v pnpm &> /dev/null; then
     pnpm list --depth=0 --json > "$REPORT_DIR/dependencies.json" 2>/dev/null || true
     
@@ -81,14 +95,13 @@ if command -v pnpm &> /dev/null; then
     } > "$REPORT_DIR/dependency-sizes.txt"
     
     NODE_MODULES_SIZE=$(du -sm node_modules/ 2>/dev/null | cut -f1 || echo "0")
-    echo "   └─ node_modules size: ${NODE_MODULES_SIZE}MB"
+    if [ "$QUIET_MODE" = false ]; then echo "   └─ node_modules size: ${NODE_MODULES_SIZE}MB"; fi
 else
-    echo "   ⚠️ pnpm not found"
+    if [ "$QUIET_MODE" = false ]; then echo "   ⚠️ pnpm not found"; fi
 fi
 
 # 4. Memory Usage Estimate
-echo ""
-echo "💾 [4/8] Estimating runtime memory..."
+if [ "$QUIET_MODE" = false ]; then echo ""; echo "💾 [4/8] Estimating runtime memory..."; fi
 {
     echo "=== Runtime Memory Estimate ==="
     echo "Based on bundle size and typical Tauri overhead"
@@ -110,11 +123,10 @@ echo "💾 [4/8] Estimating runtime memory..."
     echo "- Optimal: 8GB+ RAM"
 } > "$REPORT_DIR/memory-estimate.txt"
 
-echo "   └─ Memory estimate generated"
+if [ "$QUIET_MODE" = false ]; then echo "   └─ Memory estimate generated"; fi
 
 # 5. IPC Performance
-echo ""
-echo "🔌 [5/8] Checking IPC patterns..."
+if [ "$QUIET_MODE" = false ]; then echo ""; echo "🔌 [5/8] Checking IPC patterns..."; fi
 {
     echo "=== Tauri Commands (IPC Endpoints) ==="
     grep -r "#\[tauri::command\]" src-tauri/src/ -A 2 | grep "^pub fn" | wc -l || echo "0"
@@ -133,12 +145,10 @@ echo "🔌 [5/8] Checking IPC patterns..."
 
 IPC_COMMANDS=$(grep -r "#\[tauri::command\]" src-tauri/src/ -A 2 | grep "^pub fn" | wc -l || echo "0")
 IPC_CALLS=$(grep -r "invoke(" src/ --include="*.ts" --include="*.tsx" | wc -l || echo "0")
-echo "   ├─ Tauri commands: $IPC_COMMANDS"
-echo "   └─ Frontend calls: $IPC_CALLS"
+if [ "$QUIET_MODE" = false ]; then echo "   ├─ Tauri commands: $IPC_COMMANDS"; echo "   └─ Frontend calls: $IPC_CALLS"; fi
 
 # 6. Code Splitting Analysis
-echo ""
-echo "✂️ [6/8] Analyzing code splitting..."
+if [ "$QUIET_MODE" = false ]; then echo ""; echo "✂️ [6/8] Analyzing code splitting..."; fi
 {
     echo "=== Dynamic Imports ==="
     grep -r "import(" src/ --include="*.ts" --include="*.tsx" || echo "None found"
@@ -152,12 +162,10 @@ echo "✂️ [6/8] Analyzing code splitting..."
 
 DYNAMIC_IMPORTS=$(grep -r "import(" src/ --include="*.ts" --include="*.tsx" | wc -l || echo "0")
 LAZY_COMPONENTS=$(grep -r "React.lazy" src/ --include="*.tsx" | wc -l || echo "0")
-echo "   ├─ Dynamic imports: $DYNAMIC_IMPORTS"
-echo "   └─ Lazy components: $LAZY_COMPONENTS"
+if [ "$QUIET_MODE" = false ]; then echo "   ├─ Dynamic imports: $DYNAMIC_IMPORTS"; echo "   └─ Lazy components: $LAZY_COMPONENTS"; fi
 
 # 7. Asset Optimization
-echo ""
-echo "🖼️ [7/8] Checking asset optimization..."
+if [ "$QUIET_MODE" = false ]; then echo ""; echo "🖼️ [7/8] Checking asset optimization..."; fi
 {
     echo "=== Image Assets ==="
     find src public -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.svg" \) 2>/dev/null | while read img; do
@@ -177,11 +185,10 @@ echo "🖼️ [7/8] Checking asset optimization..."
 } > "$REPORT_DIR/asset-optimization.txt"
 
 IMAGE_COUNT=$(find src public -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.svg" \) 2>/dev/null | wc -l || echo "0")
-echo "   └─ Image assets: $IMAGE_COUNT"
+if [ "$QUIET_MODE" = false ]; then echo "   └─ Image assets: $IMAGE_COUNT"; fi
 
 # 8. Import Optimization Opportunities
-echo ""
-echo "📦 [8/8] Analyzing import optimization..."
+if [ "$QUIET_MODE" = false ]; then echo ""; echo "📦 [8/8] Analyzing import optimization..."; fi
 
 # Some folders/files are excluded from TS compilation (see tsconfig.json exclude).
 # Do not penalize import hygiene in code that is not part of the runtime surface.
@@ -219,12 +226,10 @@ DEEP_IMPORTS=$(grep -R "from.*\.\./\.\./\.\.\." src/ \
     --exclude="*.d.ts" \
     --include="*.ts" --include="*.tsx" \
     2>/dev/null | wc -l | xargs || echo "0")
-echo "   ├─ Wildcard imports: $WILDCARD_IMPORTS"
-echo "   └─ Deep imports: $DEEP_IMPORTS"
+if [ "$QUIET_MODE" = false ]; then echo "   ├─ Wildcard imports: $WILDCARD_IMPORTS"; echo "   └─ Deep imports: $DEEP_IMPORTS"; fi
 
 # Generate Summary
-echo ""
-echo "📊 Generating performance summary..."
+if [ "$QUIET_MODE" = false ]; then echo ""; echo "📊 Generating performance summary..."; fi
 cat > "$REPORT_DIR/PERFORMANCE_SUMMARY.md" << EOF
 # ⚡ TITANE∞ Performance Report
 **Date**: $(date)
@@ -305,20 +310,22 @@ Monitor these metrics weekly:
 **Target**: All metrics in green zone ✅
 EOF
 
-echo ""
-echo "================================================"
-echo "✅ Performance Measurement Complete!"
-echo ""
-echo "📊 Summary:"
-echo "   ├─ Build Time: Not measured (policy)"
-echo "   ├─ Bundle Size: ${DIST_SIZE}MB $([ "$DIST_SIZE" -lt 10 ] && echo "(✅)" || echo "(⚠️ >10MB)")"
-echo "   ├─ Dependencies: ${NODE_MODULES_SIZE}MB"
-echo "   ├─ IPC: $IPC_COMMANDS commands, $IPC_CALLS calls"
-echo "   ├─ Code Splitting: $DYNAMIC_IMPORTS dynamic, $LAZY_COMPONENTS lazy"
-echo "   └─ Imports: $WILDCARD_IMPORTS wildcard, $DEEP_IMPORTS deep"
-echo ""
-echo "📁 Full report: $REPORT_DIR/PERFORMANCE_SUMMARY.md"
-echo ""
+if [ "$QUIET_MODE" = false ]; then
+  echo ""
+  echo "================================================"
+  echo "✅ Performance Measurement Complete!"
+  echo ""
+  echo "📊 Summary:"
+  echo "   ├─ Build Time: Not measured (policy)"
+  echo "   ├─ Bundle Size: ${DIST_SIZE}MB $([ "$DIST_SIZE" -lt 10 ] && echo "(✅)" || echo "(⚠️ >10MB)")"
+  echo "   ├─ Dependencies: ${NODE_MODULES_SIZE}MB"
+  echo "   ├─ IPC: $IPC_COMMANDS commands, $IPC_CALLS calls"
+  echo "   ├─ Code Splitting: $DYNAMIC_IMPORTS dynamic, $LAZY_COMPONENTS lazy"
+  echo "   └─ Imports: $WILDCARD_IMPORTS wildcard, $DEEP_IMPORTS deep"
+  echo ""
+  echo "📁 Full report: $REPORT_DIR/PERFORMANCE_SUMMARY.md"
+  echo ""
+fi
 
 # Deterministic score (0-100)
 PERF_SCORE=100
@@ -356,4 +363,13 @@ PERF_SCORE=$((PERF_SCORE - di_penalty))
 if [ "$PERF_SCORE" -lt 0 ]; then PERF_SCORE=0; fi
 if [ "$PERF_SCORE" -gt 100 ]; then PERF_SCORE=100; fi
 
-echo "Score: $PERF_SCORE"
+if [ "$QUIET_MODE" = true ]; then
+  # Quiet mode: exit 0 if score >= 90, else 1
+  if [ "$PERF_SCORE" -ge 90 ]; then
+    exit 0
+  else
+    exit 1
+  fi
+else
+  echo "Score: $PERF_SCORE"
+fi

@@ -95,7 +95,7 @@ const MessageBubble = memo<MessageBubbleProps>(
       } finally {
         setIsSpeaking(false);
       }
-    }, [message.content, isSpeaking]);
+    }, [message, isSpeaking]);
 
     // Stop TTS handler
     const handleStopSpeak = useCallback(async () => {

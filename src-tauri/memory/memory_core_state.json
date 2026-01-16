@@ -2,6 +2,251 @@
   "snapshots": [],
   "logs": [
     {
+      "id": "ui-1768595928435-wt30ute4",
+      "timestamp": 1768595928435,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768595848582-6nuwbhdz",
+      "timestamp": 1768595848582,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768595690756-vk3b3s25",
+      "timestamp": 1768595690756,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768595683285-1ksyz9m3",
+      "timestamp": 1768595683285,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Importing a module script failed. (http://127.0.0.1:5173/.vite-cache/deps/chunk-GX3VV2FZ.js?v=96a54f08:903:34)"
+    },
+    {
+      "id": "ui-1768595683185-o2qvsx9f",
+      "timestamp": 1768595683185,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768595683032-pcy6u6c8",
+      "timestamp": 1768595683032,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768595681994-fcb4h2ml",
+      "timestamp": 1768595681994,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Importing a module script failed. (http://127.0.0.1:5173/.vite-cache/deps/chunk-GX3VV2FZ.js?v=96a54f08:903:34)"
+    },
+    {
+      "id": "ui-1768595681963-s6v2enlg",
+      "timestamp": 1768595681963,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768595680501-2qibjxn5",
+      "timestamp": 1768595680501,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Importing a module script failed. (http://127.0.0.1:5173/.vite-cache/deps/chunk-GX3VV2FZ.js?v=96a54f08:903:34)"
+    },
+    {
+      "id": "ui-1768595680107-npoqhfoo",
+      "timestamp": 1768595680107,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768595680064-04r1ip1j",
+      "timestamp": 1768595680064,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768595675326-vncqafa3",
+      "timestamp": 1768595675326,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Importing a module script failed. (http://127.0.0.1:5173/.vite-cache/deps/chunk-GX3VV2FZ.js?v=96a54f08:903:34)"
+    },
+    {
+      "id": "ui-1768595674876-w5mb24t2",
+      "timestamp": 1768595674876,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768595674826-8j7gcf48",
+      "timestamp": 1768595674826,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768595673122-vk4y6ebw",
+      "timestamp": 1768595673122,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768595673090-1lh8jqss",
+      "timestamp": 1768595673090,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768595671608-osaz3u6s",
+      "timestamp": 1768595671608,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Importing a module script failed. (http://127.0.0.1:5173/.vite-cache/deps/chunk-GX3VV2FZ.js?v=96a54f08:903:34)"
+    },
+    {
+      "id": "ui-1768595671389-cqjhnt8m",
+      "timestamp": 1768595671389,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768595671330-mwpci1fv",
+      "timestamp": 1768595671330,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768595670210-e2jsbnyi",
+      "timestamp": 1768595670210,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Importing a module script failed. (http://127.0.0.1:5173/.vite-cache/deps/chunk-GX3VV2FZ.js?v=96a54f08:903:34)"
+    },
+    {
+      "id": "ui-1768595670126-kbocjkce",
+      "timestamp": 1768595670126,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768595670026-930jscs3",
+      "timestamp": 1768595670026,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768595667167-rk9zpoa8",
+      "timestamp": 1768595667167,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Importing a module script failed. (http://127.0.0.1:5173/.vite-cache/deps/chunk-GX3VV2FZ.js?v=96a54f08:903:34)"
+    },
+    {
+      "id": "ui-1768595666988-9h2e22m8",
+      "timestamp": 1768595666988,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768595666925-3avsjnkf",
+      "timestamp": 1768595666925,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768595664352-o1t087t1",
+      "timestamp": 1768595664352,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768595664285-r1r32wh4",
+      "timestamp": 1768595664285,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768595662223-dqammlr2",
+      "timestamp": 1768595662223,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768595662189-vltae0vz",
+      "timestamp": 1768595662189,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768595660315-7rgsrmgb",
+      "timestamp": 1768595660315,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768595660253-xsbfgumc",
+      "timestamp": 1768595660253,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768595658007-ejtc3me3",
+      "timestamp": 1768595658007,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768595641916-fnys20a1",
+      "timestamp": 1768595641916,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768595508509-0mu2ovet",
+      "timestamp": 1768595508509,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768595410853-smavpsix",
+      "timestamp": 1768595410853,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
       "id": "ui-1768584558196-grvkuwi8",
       "timestamp": 1768584558196,
       "level": "Info",
@@ -2852,7 +3097,7 @@
   "knowledge": [],
   "rituals": [],
   "metadata": {
-    "last_validation_ts": 1768584558387,
+    "last_validation_ts": 1768595928623,
     "last_compaction_ts": null
   }
 }

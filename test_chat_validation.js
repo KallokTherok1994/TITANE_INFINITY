@@ -183,7 +183,9 @@ const allPassed = results.every(r => r.passed);
 console.log('\n' + '='.repeat(50));
 if (allPassed) {
   console.log('✅ VALIDATION RÉUSSIE - Chat IA 100% Fonctionnel');
-  console.log('🎯 Statut: ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)');
+  console.log(
+    '🎯 Statut: ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)'
+  );
   console.log('\n📝 Prochaines étapes:');
   console.log('  1. Lancer: pnpm run dev');
   console.log('  2. Tester: Envoyer 5 messages rapides');

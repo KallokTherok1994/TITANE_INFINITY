@@ -6,7 +6,6 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { logger } from '@/utils/logger';
 import { secureInvoke } from '@/lib/security';
 import { unifiedHealingFacade } from '@/services/ai/system';
 import { autoSaveConversationEngine } from '@/modules/talkToTitane/AutoSaveConversationEngine';

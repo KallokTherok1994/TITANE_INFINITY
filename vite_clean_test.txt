@@ -1,0 +1,17 @@
+15:41:31 [vite] (client) Re-optimizing dependencies because vite config has changed
+
+  VITE v6.4.1  ready in 170 ms
+
+  ➜  Local:   http://127.0.0.1:5173/
+  ➜  press h + enter to show help
+Error: The following dependencies are imported but could not be resolved:
+
+  @features/progression (imported by /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/pages/TitanePage.tsx)
+  @themes/tokens (imported by /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/components/conversation/ModeBuilder.tsx)
+
+Are they installed?
+    at file:///home/titane-os/Documents/GitHub/TITANE_INFINITY/node_modules/.pnpm/vite@6.4.1_@types+node@25.0.6_jiti@2.6.1_lightningcss@1.30.2_terser@5.44.1_yaml@2.8.2/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14849:15
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async file:///home/titane-os/Documents/GitHub/TITANE_INFINITY/node_modules/.pnpm/vite@6.4.1_@types+node@25.0.6_jiti@2.6.1_lightningcss@1.30.2_terser@5.44.1_yaml@2.8.2/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:47014:28
+15:41:40 [vite] vite.config.ts changed, restarting server...
+15:41:40 [vite] server restarted.

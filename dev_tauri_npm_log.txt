@@ -1,0 +1,6 @@
+
+> titane-infinity@26.3.0 dev:tauri
+> tauri dev --config runtime/dev/tauri.dev.conf.json --no-watch
+
+     Running BeforeDevCommand (`bash -lc 'set -euo pipefail; ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd); cd "$ROOT"; mkdir -p runtime/dev/logs; LOG=runtime/dev/logs/vite.log; : >"$LOG"; exec >>"$LOG" 2>&1; echo "[tauri.dev] $(date -Is) beforeDevCommand: start vite on :5173"; export PATH="$ROOT/.tools/node/current/bin:$PATH"; NODE_MAJOR=$(node -p "Number(process.versions.node.split(\".\")[0])" 2>/dev/null || echo 0); if [ "${NODE_MAJOR:-0}" -ge 23 ]; then NODE_OPTIONS="${NODE_OPTIONS:-}"; NODE_OPTIONS="${NODE_OPTIONS//--experimental-strip-types/}"; case " $NODE_OPTIONS " in *" --no-experimental-strip-types "*) ;; *) NODE_OPTIONS="$NODE_OPTIONS --no-experimental-strip-types" ;; esac; export NODE_OPTIONS="$(echo "$NODE_OPTIONS" | xargs)"; fi; PNPM="$ROOT/.tools/node/current/bin/pnpm"; if [ ! -x "$PNPM" ]; then PNPM=$(command -v pnpm || true); fi; if [ -z "${PNPM:-}" ]; then echo "[tauri.dev] ERROR: pnpm introuvable"; exit 1; fi; exec "$PNPM" exec vite dev --host 127.0.0.1 --port 5173 --strictPort'`)
+       Error The "beforeDevCommand" terminated with a non-zero status code.

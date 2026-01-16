@@ -1021,6 +1021,7 @@ export function matchPattern(
         // Add positional captures
         for (let i = 1; i < match.length; i++) {
           if (match[i] !== undefined) {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             params[`capture${i}`] = match[i]!;
           }
         }
@@ -1058,6 +1059,7 @@ export function getAllMatches(
         }
         for (let i = 1; i < match.length; i++) {
           if (match[i] !== undefined) {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             params[`capture${i}`] = match[i]!;
           }
         }

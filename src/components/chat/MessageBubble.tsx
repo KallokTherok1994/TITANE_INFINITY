@@ -136,7 +136,7 @@ export const MessageBubble = memo(function MessageBubble({
   // Contenu du message avec lazy markdown
   const messageContent = useMemo(() => {
     if (role === 'assistant') {
-      const safeContent = content?.trim() || "Erreur : Contenu manquant";
+      const safeContent = content?.trim() || 'Erreur : Contenu manquant';
       if (safeContent.length > 0) {
         // YOLO OPT: Lazy-load markdown pour assistant uniquement
         return (

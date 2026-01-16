@@ -6,8 +6,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { logger } from '@/utils/logger';
-import type { DevSudoCommand, DevSudoAction, DevSudoResult } from './types';
+import type { DevSudoCommand, DevSudoAction } from './types';
 import { DEV_SUDO_PATTERNS } from './devSudoPatterns';
 import { executeDevSudoCommand } from './devSudoExecutor';
 

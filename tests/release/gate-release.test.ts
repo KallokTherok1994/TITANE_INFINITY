@@ -1,20 +1,20 @@
 /**
  * TITANE∞ — RELEASE GATE (Phase FINAL)
- * 
+ *
  * **Gate de Certification Ultime**
  * Validation complète P0→P6 pour certification production TITANE∞
- * 
+ *
  * **Phases validées:**
  * - P0: Foundation (Secrets & Surface Guards)
  * - P1: [Future expansion]
  * - P2: Contracts & TypeScript Surface
- * - P3: Stable Build & Artifact Generation  
+ * - P3: Stable Build & Artifact Generation
  * - P4: Constitutional Audit Framework
  * - P5: Runtime Governance Framework
  * - P6: Capability Qualification Framework
- * 
+ *
  * **RELEASE** = ∀ phases P0-P6 → CERTIFICATION_COMPLETE ✅
- * 
+ *
  * © 2026 TITANE Team. All rights reserved.
  */
 
@@ -30,12 +30,12 @@ describe('GATE_RELEASE: TITANE∞ PRODUCTION CERTIFICATION', () => {
     it('should have all P0-P6 test gates operational', async () => {
       const phaseGates = [
         // 'tests/phase0-1/gate-p0-1.test.ts',   // P0.1: Secrets Guard (TODO)
-        // 'tests/phase0-2/gate-p0-2.test.ts',   // P0.2: Surface Guard (TODO) 
-        'tests/phase2/gate-p2.test.ts',       // P2: Contracts
-        'tests/phase3/gate-p3.test.ts',       // P3: Stable Build
-        'tests/phase4/gate-p4.test.ts',       // P4: Constitution Audit
-        'tests/phase5/gate-p5.test.ts',       // P5: Runtime Governance
-        'tests/phase6/gate-p6.test.ts',       // P6: Capability Qualification
+        // 'tests/phase0-2/gate-p0-2.test.ts',   // P0.2: Surface Guard (TODO)
+        'tests/phase2/gate-p2.test.ts', // P2: Contracts
+        'tests/phase3/gate-p3.test.ts', // P3: Stable Build
+        'tests/phase4/gate-p4.test.ts', // P4: Constitution Audit
+        'tests/phase5/gate-p5.test.ts', // P5: Runtime Governance
+        'tests/phase6/gate-p6.test.ts', // P6: Capability Qualification
       ];
 
       for (const gate of phaseGates) {
@@ -53,7 +53,7 @@ describe('GATE_RELEASE: TITANE∞ PRODUCTION CERTIFICATION', () => {
         {
           cwd: ROOT,
           encoding: 'utf-8',
-          stdio: 'pipe'
+          stdio: 'pipe',
         }
       );
 
@@ -71,17 +71,17 @@ describe('GATE_RELEASE: TITANE∞ PRODUCTION CERTIFICATION', () => {
         '.github/workflows/p3-stable-build.yml',
         '.github/workflows/p4-constitution-audit.yml',
         '.github/workflows/p5-runtime-governance.yml',
-        '.github/workflows/p6-capability-qualification.yml'
+        '.github/workflows/p6-capability-qualification.yml',
       ];
 
       for (const workflow of requiredWorkflows) {
         const workflowPath = resolve(ROOT, workflow);
         expect(existsSync(workflowPath)).toBe(true);
-        
+
         const content = readFileSync(workflowPath, 'utf-8');
         expect(content).toContain('runs-on: ubuntu-latest');
         expect(content).toContain('actions/checkout@v4');
-        
+
         console.log(`✅ CI Workflow: ${workflow.split('/').pop()}`);
       }
 
@@ -90,13 +90,22 @@ describe('GATE_RELEASE: TITANE∞ PRODUCTION CERTIFICATION', () => {
 
     it('should validate workflow interdependencies', () => {
       // Vérifier que les workflows référencent les bonnes phases
-      const p4Workflow = readFileSync(resolve(ROOT, '.github/workflows/p4-constitution-audit.yml'), 'utf-8');
+      const p4Workflow = readFileSync(
+        resolve(ROOT, '.github/workflows/p4-constitution-audit.yml'),
+        'utf-8'
+      );
       expect(p4Workflow).toContain('P4_CONSTITUTION_AUDIT');
-      
-      const p5Workflow = readFileSync(resolve(ROOT, '.github/workflows/p5-runtime-governance.yml'), 'utf-8');
+
+      const p5Workflow = readFileSync(
+        resolve(ROOT, '.github/workflows/p5-runtime-governance.yml'),
+        'utf-8'
+      );
       expect(p5Workflow).toContain('P5_RUNTIME_GOVERNANCE');
-      
-      const p6Workflow = readFileSync(resolve(ROOT, '.github/workflows/p6-capability-qualification.yml'), 'utf-8');
+
+      const p6Workflow = readFileSync(
+        resolve(ROOT, '.github/workflows/p6-capability-qualification.yml'),
+        'utf-8'
+      );
       expect(p6Workflow).toContain('P6_CAPABILITY_QUALIFICATION');
 
       console.log('✅ Workflow interdependencies validated');
@@ -107,29 +116,29 @@ describe('GATE_RELEASE: TITANE∞ PRODUCTION CERTIFICATION', () => {
     it('should have stable runtime configuration', () => {
       const stableConfigPath = resolve(ROOT, 'runtime/stable/tauri.conf.json');
       expect(existsSync(stableConfigPath)).toBe(true);
-      
+
       const config = JSON.parse(readFileSync(stableConfigPath, 'utf-8'));
       expect(config.productName).toBe('TITANE-Infinity');
       expect(config.version).toBeDefined();
-      
+
       console.log('✅ Stable runtime configuration validated');
     });
 
     it('should have build optimization scripts', () => {
       const buildScript = resolve(ROOT, 'runtime/stable/build.sh');
       expect(existsSync(buildScript)).toBe(true);
-      
+
       const buildContent = readFileSync(buildScript, 'utf-8');
       expect(buildContent).toContain('tauri build');
       expect(buildContent).toContain('tauri.stable.conf.json');
-      
+
       console.log('✅ Build optimization scripts validated');
     });
 
     it('should validate deployment artifacts structure', () => {
       const deploymentDir = resolve(ROOT, 'deployment/latest');
       expect(existsSync(deploymentDir)).toBe(true);
-      
+
       const manifestPath = resolve(deploymentDir, 'MANIFEST.json');
       if (existsSync(manifestPath)) {
         const manifest = JSON.parse(readFileSync(manifestPath, 'utf-8'));
@@ -148,11 +157,11 @@ describe('GATE_RELEASE: TITANE∞ PRODUCTION CERTIFICATION', () => {
       if (existsSync(surfaceDoc)) {
         const content = readFileSync(surfaceDoc, 'utf-8');
         const commands = (content.match(/command_[a-zA-Z_]*/g) || []).length;
-        
+
         // L4: Pas plus de 52 commands (surface verrouillée)
         expect(commands).toBeLessThanOrEqual(52);
         expect(commands).toBeGreaterThanOrEqual(0); // Au moins structure présente
-        
+
         console.log(`✅ Constitutional L4_NO_EXPANSION: ${commands}/52 commands`);
       } else {
         console.log('ℹ️  TAURI_SURFACE.md not found (will be generated)');
@@ -171,15 +180,17 @@ describe('GATE_RELEASE: TITANE∞ PRODUCTION CERTIFICATION', () => {
 
     it('should validate L1_LOCAL_FIRST compliance', () => {
       // Vérifier qu'aucune dépendance réseau n'est requise pour le fonctionnement de base
-      const packageJson = JSON.parse(readFileSync(resolve(ROOT, 'package.json'), 'utf-8'));
-      
+      const packageJson = JSON.parse(
+        readFileSync(resolve(ROOT, 'package.json'), 'utf-8')
+      );
+
       // Ces dépendances network-first sont interdites en production
       const forbiddenDeps = ['axios', 'node-fetch', 'request', 'http-client'];
       for (const dep of forbiddenDeps) {
         expect(packageJson.dependencies?.[dep]).toBeUndefined();
         expect(packageJson.devDependencies?.[dep]).toBeUndefined();
       }
-      
+
       console.log('✅ L1_LOCAL_FIRST: No forbidden network dependencies');
     });
   });
@@ -189,8 +200,8 @@ describe('GATE_RELEASE: TITANE∞ PRODUCTION CERTIFICATION', () => {
       const evidenceDir = resolve(ROOT, 'docs/_evidence');
       const requiredEvidence = [
         'P4_CONSTITUTION_AUDIT.md',
-        'P5_RUNTIME_GOVERNANCE.md', 
-        'P6_CAPABILITY_QUALIFICATION.md'
+        'P5_RUNTIME_GOVERNANCE.md',
+        'P6_CAPABILITY_QUALIFICATION.md',
       ];
 
       let evidenceCount = 0;
@@ -207,17 +218,19 @@ describe('GATE_RELEASE: TITANE∞ PRODUCTION CERTIFICATION', () => {
       }
 
       expect(evidenceCount).toBeGreaterThanOrEqual(1); // Au moins une preuve
-      console.log(`✅ Evidence chain: ${evidenceCount}/${requiredEvidence.length} documents`);
+      console.log(
+        `✅ Evidence chain: ${evidenceCount}/${requiredEvidence.length} documents`
+      );
     });
 
     it('should have master documentation updated', () => {
       const readmePath = resolve(ROOT, 'README.md');
       expect(existsSync(readmePath)).toBe(true);
-      
+
       const readme = readFileSync(readmePath, 'utf-8');
       expect(readme).toContain('TITANE');
       expect(readme).toMatch(/version|v\d+\.\d+/i);
-      
+
       console.log('✅ Master documentation present');
     });
   });
@@ -227,10 +240,10 @@ describe('GATE_RELEASE: TITANE∞ PRODUCTION CERTIFICATION', () => {
       // Simulation de la certification finale
       const certificationChecks = [
         'Phase chain P0→P6: Complete',
-        'CI/CD pipeline: Active', 
+        'CI/CD pipeline: Active',
         'Artifacts: Validated',
         'Security: Compliant',
-        'Evidence: Documented'
+        'Evidence: Documented',
       ];
 
       for (const check of certificationChecks) {
@@ -247,9 +260,9 @@ describe('GATE_RELEASE: TITANE∞ PRODUCTION CERTIFICATION', () => {
     it('should generate final release signature', () => {
       const timestamp = new Date().toISOString();
       const releaseSignature = `TITANE_INFINITY_RELEASE_${timestamp.split('T')[0].replace(/-/g, '')}`;
-      
+
       expect(releaseSignature).toMatch(/^TITANE_INFINITY_RELEASE_\d{8}$/);
-      
+
       console.log(`🔐 Release Signature: ${releaseSignature}`);
       console.log('🎉 TITANE∞ PRODUCTION CERTIFICATION: ACHIEVED');
     });

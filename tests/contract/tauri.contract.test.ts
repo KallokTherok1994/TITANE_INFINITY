@@ -1,11 +1,11 @@
 /**
  * TITANE∞ — Tests Contractuels Tauri (PHASE_2)
- * 
+ *
  * **Invariants testés:**
  * - Aucun invoke() direct hors src/lib/tauriClient.ts
  * - Toutes les commands ont un wrapper typé
  * - Aucune string dynamique non mappée
- * 
+ *
  * © 2026 TITANE Team. All rights reserved.
  */
 
@@ -43,7 +43,12 @@ describe('PHASE_2: Contrat TS ↔ Tauri', () => {
         ).trim();
       } catch (error: unknown) {
         // rg exit code 1 = no match (OK pour ce test)
-        if (error && typeof error === 'object' && 'status' in error && error.status === 1) {
+        if (
+          error &&
+          typeof error === 'object' &&
+          'status' in error &&
+          error.status === 1
+        ) {
           result = '';
         } else {
           throw error;
@@ -64,7 +69,7 @@ describe('PHASE_2: Contrat TS ↔ Tauri', () => {
   });
 
   describe('P2.4.2: full_coverage', () => {
-    it('FAIL si une command n\'a pas de wrapper', () => {
+    it("FAIL si une command n'a pas de wrapper", () => {
       // Lit les commands disponibles depuis tauriCommands.ts
       const commandsFilePath = path.resolve(__dirname, '../../src/lib/tauriCommands.ts');
       const commandsContent = fs.readFileSync(commandsFilePath, 'utf-8');

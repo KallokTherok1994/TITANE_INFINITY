@@ -1,0 +1,203 @@
+
+> titane-infinity@26.3.0 dev:tauri /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> tauri dev --config runtime/dev/tauri.dev.conf.json --no-watch
+
+     Running BeforeDevCommand (`bash -lc 'set -euo pipefail; ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd); cd "$ROOT"; mkdir -p runtime/dev/logs; LOG=runtime/dev/logs/vite.log; : >"$LOG"; exec >>"$LOG" 2>&1; echo "[tauri.dev] $(date -Is) beforeDevCommand: start vite on :5173"; export PATH="$ROOT/.tools/node/current/bin:$PATH"; exec npx vite dev --host 127.0.0.1 --port 5173 --strictPort'`)
+     Running DevCommand (`cargo  run --no-default-features --features mock --color always --`)
+[1m[92m    Finished[0m ]8;;https://doc.rust-lang.org/cargo/reference/profiles.html#default-profiles\`dev` profile [unoptimized + debuginfo]]8;;\ target(s) in 0.27s
+[1m[92m     Running[0m `target/debug/titane-infinity`
+[2026-01-16T20:42:06.414Z INFO  titane_infinity::security::secrets_engine] [SecretsEngine] Secure secrets engine initialised (encrypted)
+[CHAT] ✅ UnifiedMemory initialized (STM/MTM/LTM ready)
+[2026-01-16T20:42:06.415Z INFO  titane_infinity] ✅ Copilot state initialized (key configured: false)
+[2026-01-16T20:42:06.416Z INFO  titane_infinity] ✅ HeliosCore and MemoryCore initialized successfully
+[2026-01-16T20:42:06.452Z WARN  titane_infinity] ⚠️ Updater disabled (set TITANE_UPDATER_PUBKEY to enable)
+[2026-01-16T20:42:06.617Z INFO  titane_infinity::auth] 🔐 AUTH OS — Initialisation...
+[2026-01-16T20:42:06.617Z INFO  titane_infinity::auth] ✓ Keystore chargé: 1 secrets configurés
+[2026-01-16T20:42:06.617Z INFO  titane_infinity::auth::roles] ✓ Role Owner déjà présent pour Kevin Thibault
+[2026-01-16T20:42:06.617Z INFO  titane_infinity::auth] ✓ Owner role vérifié: Kevin Thibault
+[2026-01-16T20:42:06.617Z INFO  titane_infinity::auth] ✓ Dev Token présent
+[2026-01-16T20:42:06.617Z INFO  titane_infinity::auth] 🔐 AUTH OS — Initialisé avec succès
+[2026-01-16T20:42:06.617Z INFO  titane_infinity] ✅ AUTH OS v∞ initialized successfully
+[2026-01-16T20:42:06.674Z INFO  titane_infinity] ✅ OMEGA Conversation Engine v19.5.2 initialized
+[2026-01-16T20:42:06.676Z INFO  titane_infinity] 📱 Main window found in app context
+[2026-01-16T20:42:06.679Z INFO  titane_infinity] 🛠️ DevTools opened automatically (dev mode)
+[2026-01-16T20:42:06.679Z INFO  titane_infinity] ✅ Main window shown successfully
+[2026-01-16T20:42:08.697Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:08.698Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:11.206Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:11.343Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:16.832Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:16.835Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:19.420Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:19.420Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:19.516Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:19.517Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:19.901Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:20.675Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:20.748Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:20.749Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:21.536Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:21.602Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:21.634Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:21.638Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:22.052Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:22.053Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:22.155Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:22.199Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:23.091Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:23.179Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:23.219Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:23.243Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:23.284Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:24.571Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:24.602Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:24.647Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:24.679Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:25.877Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:25.878Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:25.986Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:25.991Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:26.768Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:26.836Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:26.853Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:26.857Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:27.239Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:27.341Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:27.376Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:27.409Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:27.754Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:28.721Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:28.779Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:28.813Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:28.813Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:29.145Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:29.656Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:29.753Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:29.758Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:30.472Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:30.495Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:30.592Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:30.598Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:30.940Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:31.293Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:31.357Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:31.363Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:31.703Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:32.095Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:32.200Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:32.221Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:32.934Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:33.008Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:33.037Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:33.076Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:33.921Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:34.000Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:34.032Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:34.039Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:34.473Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:34.553Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:34.605Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:34.613Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:35.363Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:35.391Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:35.466Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:35.504Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:36.522Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:36.555Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:36.597Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:36.603Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:36.661Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:38.299Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:38.389Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:38.391Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:39.156Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:39.233Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:39.259Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:39.262Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:39.683Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:39.780Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:39.782Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:39.817Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:40.651Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:40.749Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:40.783Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:40.786Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:41.179Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:41.181Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:41.281Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:41.284Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:41.319Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:42.068Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:42.163Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:42.201Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:43.553Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:43.583Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:43.623Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:43.648Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:44.066Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:45.036Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:45.105Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:45.138Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:45.982Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:46.050Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:46.105Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:46.116Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:46.152Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:47.563Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:47.563Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:47.649Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:47.656Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:48.730Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:48.730Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:48.800Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:48.806Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:48.830Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:49.884Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:49.951Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:49.954Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:49.978Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:51.027Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:51.100Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:51.103Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:51.861Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:51.939Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:51.940Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:51.973Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:53.166Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:53.262Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:53.295Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:53.329Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:54.355Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:54.387Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:54.445Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:54.824Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:55.656Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:55.713Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:55.779Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:56.139Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:57.224Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:57.252Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:57.311Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:57.696Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:58.537Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:58.609Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:58.643Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:58.652Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:58.655Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:59.371Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:42:59.437Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:59.460Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:42:59.808Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:43:00.519Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:43:01.354Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:43:01.415Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:43:01.478Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:43:01.540Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:43:01.838Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:43:01.843Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:43:02.240Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:43:02.272Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:43:02.343Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:43:02.381Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:43:03.247Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:43:03.309Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/

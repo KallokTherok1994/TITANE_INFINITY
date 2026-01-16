@@ -1,0 +1,39 @@
+
+> titane-infinity@26.3.0 dev:tauri
+> tauri dev --config runtime/dev/tauri.dev.conf.json --no-watch
+
+     Running BeforeDevCommand (`bash -lc 'set -euo pipefail; ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd); cd "$ROOT"; mkdir -p runtime/dev/logs; LOG=runtime/dev/logs/vite.log; : >"$LOG"; exec >>"$LOG" 2>&1; echo "[tauri.dev] $(date -Is) beforeDevCommand: start vite on :5173"; export PATH="$ROOT/.tools/node/current/bin:$PATH"; exec npx vite dev --host 127.0.0.1 --port 5173 --strictPort'`)
+     Running DevCommand (`cargo  run --no-default-features --features mock --color always --`)
+[1m[92m   Compiling[0m titane-infinity v26.3.0 (/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri)
+[1m[96m    Building[0m [=======================> ] 742/745: titane-infinity(build)      [1m[96m    Building[0m [=======================> ] 743/745: titane-infinity             [1m[96m    Building[0m [=======================> ] 744/745: titane-infinity(bin)        [K[1m[92m    Finished[0m ]8;;https://doc.rust-lang.org/cargo/reference/profiles.html#default-profiles\`dev` profile [unoptimized + debuginfo]]8;;\ target(s) in 20.75s
+[1m[92m     Running[0m `target/debug/titane-infinity`
+[2026-01-16T20:33:56.201Z INFO  titane_infinity::security::secrets_engine] [SecretsEngine] Secure secrets engine initialised (encrypted)
+[CHAT] ✅ UnifiedMemory initialized (STM/MTM/LTM ready)
+[2026-01-16T20:33:56.201Z INFO  titane_infinity] ✅ Copilot state initialized (key configured: false)
+[2026-01-16T20:33:56.202Z INFO  titane_infinity] ✅ HeliosCore and MemoryCore initialized successfully
+[2026-01-16T20:33:56.237Z WARN  titane_infinity] ⚠️ Updater disabled (set TITANE_UPDATER_PUBKEY to enable)
+[2026-01-16T20:33:56.437Z INFO  titane_infinity::auth] 🔐 AUTH OS — Initialisation...
+[2026-01-16T20:33:56.437Z INFO  titane_infinity::auth] ✓ Keystore chargé: 1 secrets configurés
+[2026-01-16T20:33:56.438Z INFO  titane_infinity::auth::roles] ✓ Role Owner déjà présent pour Kevin Thibault
+[2026-01-16T20:33:56.438Z INFO  titane_infinity::auth] ✓ Owner role vérifié: Kevin Thibault
+[2026-01-16T20:33:56.438Z INFO  titane_infinity::auth] ✓ Dev Token présent
+[2026-01-16T20:33:56.438Z INFO  titane_infinity::auth] 🔐 AUTH OS — Initialisé avec succès
+[2026-01-16T20:33:56.438Z INFO  titane_infinity] ✅ AUTH OS v∞ initialized successfully
+[2026-01-16T20:33:56.493Z INFO  titane_infinity] ✅ OMEGA Conversation Engine v19.5.2 initialized
+[2026-01-16T20:33:56.495Z INFO  titane_infinity] 📱 Main window found in app context
+[2026-01-16T20:33:56.497Z INFO  titane_infinity] 🛠️ DevTools opened automatically (dev mode)
+[2026-01-16T20:33:56.498Z INFO  titane_infinity] ✅ Main window shown successfully
+[2026-01-16T20:33:57.796Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:33:57.797Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:33:58.031Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:34:01.752Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:34:02.003Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:34:02.124Z INFO  ui] [UI] frontend.boot — main.tsx: boot handlers registered
+[2026-01-16T20:34:02.404Z INFO  titane_infinity::persistence] [PersistenceEngine] 🚀 Initialisation...
+[2026-01-16T20:34:02.404Z INFO  titane_infinity::persistence::database] [PersistenceDB] 📂 Opening DB: "/home/titane-os/.local/share/TITANE_INFINITY/persistence/titan_events.db"
+[2026-01-16T20:34:02.404Z INFO  titane_infinity::persistence::database] [PersistenceDB] ✅ Schéma vérifié/créé
+[2026-01-16T20:34:02.405Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] 🔄 Démarrage de la récupération...
+[2026-01-16T20:34:02.405Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] ✅ 0 événements récupérés
+[2026-01-16T20:34:02.405Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] ✅ 0 snapshots trouvés
+[2026-01-16T20:34:02.405Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] ✅ Récupération terminée en 0ms
+[2026-01-16T20:34:02.405Z INFO  titane_infinity::persistence] [PersistenceEngine] ✅ Initialisé avec succès

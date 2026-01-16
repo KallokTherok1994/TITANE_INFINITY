@@ -1,6 +1,6 @@
 # P2 CONTRACT GUARD - PROD CERTIFICATION GATE
 # BLOQUANT: Vérifie cohérence invoke() frontend vs allowlist backend
-name: "P2 Contract Guard"
+name: 'P2 Contract Guard'
 
 on:
   push:
@@ -17,29 +17,29 @@ on:
       - 'src/**/*.tsx'
       - 'src-tauri/allowlist.whitelist.stable.json'
   schedule:
-    - cron: '0 3 * * *'  # Quotidien 3h UTC
+    - cron: '0 3 * * *' # Quotidien 3h UTC
   workflow_dispatch:
 
 jobs:
   contract-guard:
-    name: "P2 Contract Guard Validation"
+    name: 'P2 Contract Guard Validation'
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: "📥 Checkout repository"
+      - name: '📥 Checkout repository'
         uses: actions/checkout@v4
-        
-      - name: "⚙️ Install jq for JSON processing"
+
+      - name: '⚙️ Install jq for JSON processing'
         run: |
           sudo apt-get update -q
           sudo apt-get install -y jq
-          
-      - name: "🔗 Run Contract Guard"
+
+      - name: '🔗 Run Contract Guard'
         run: |
           chmod +x ./scripts/security/contract-guard.sh
           ./scripts/security/contract-guard.sh
-          
-      - name: "📋 Create evidence artifact"
+
+      - name: '📋 Create evidence artifact'
         if: always()
         run: |
           mkdir -p /tmp/contract-evidence
@@ -48,8 +48,8 @@ jobs:
           echo "COMMIT: ${{ github.sha }}" >> /tmp/contract-evidence/contract-guard-ci-$(date +%Y%m%d-%H%M%S).txt
           echo "" >> /tmp/contract-evidence/contract-guard-ci-$(date +%Y%m%d-%H%M%S).txt
           ./scripts/security/contract-guard.sh >> /tmp/contract-evidence/contract-guard-ci-$(date +%Y%m%d-%H%M%S).txt 2>&1 || true
-          
-      - name: "🗂️ Upload evidence"
+
+      - name: '🗂️ Upload evidence'
         if: always()
         uses: actions/upload-artifact@v4
         with:

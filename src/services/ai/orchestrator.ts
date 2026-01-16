@@ -1195,7 +1195,10 @@ Le système s'auto-répare en continu. Que puis-je t'aider à explorer ?`,
 
       void unifiedHealingFacade.heal({
         source: 'orchestrator',
-        error: criticalError instanceof Error ? criticalError : new Error(String(criticalError)),
+        error:
+          criticalError instanceof Error
+            ? criticalError
+            : new Error(String(criticalError)),
         type: 'critical',
         metadata: {
           requestId,

@@ -1000,7 +1000,11 @@ class MetaKernel {
     }
 
     // Ajuster seuil de clarityFlows pour éviter warnings constants quand metrique à 0
-    if (this.titanePrinciples.clarityFlows > 0 && this.titanePrinciples.clarityFlows < 70 && shouldWarn) {
+    if (
+      this.titanePrinciples.clarityFlows > 0 &&
+      this.titanePrinciples.clarityFlows < 70 &&
+      shouldWarn
+    ) {
       logger.warn('Low flow clarity, activating harmonization', {
         score: this.titanePrinciples.clarityFlows,
       });
@@ -1023,7 +1027,8 @@ class MetaKernel {
     this.titanePrinciples.simplicityStructural = cognitiveReport.coherenceScore;
 
     // Clarté des flux basée sur taux de succès (avec valeur par défaut si pas de requêtes)
-    this.titanePrinciples.clarityFlows = metrics.totalRequests > 0 ? metrics.successRate : 75;
+    this.titanePrinciples.clarityFlows =
+      metrics.totalRequests > 0 ? metrics.successRate : 75;
 
     // Robustesse naturelle basée sur stabilité (convert status to number)
     const healthStats = metricsEngine.getHealthStats();
@@ -1140,7 +1145,7 @@ class MetaKernel {
       // Logger seulement tous les 3 warnings (réduire le spam)
       if (!this.fragilityLogCount) this.fragilityLogCount = 0;
       this.fragilityLogCount++;
-      
+
       if (this.fragilityLogCount % 3 === 0) {
         logger.warn('Fragility zones detected', { count: this.fragilityZones.length });
       }
@@ -1152,16 +1157,18 @@ class MetaKernel {
    */
   private shouldLogObservation(observation: SystemObservation): boolean {
     if (this.observations.length < 2) return true; // Toujours logger les 2 premières
-    
+
     const previous = this.observations[this.observations.length - 2];
     if (!previous) return true; // Safety check
     const threshold = 10; // 10% de changement minimum
-    
+
     const stabilityChange = Math.abs(observation.stability - previous.stability);
     const coherenceChange = Math.abs(observation.coherence - previous.coherence);
     const loadChange = Math.abs(observation.cognitiveLoad - previous.cognitiveLoad);
-    
-    return stabilityChange > threshold || coherenceChange > threshold || loadChange > threshold;
+
+    return (
+      stabilityChange > threshold || coherenceChange > threshold || loadChange > threshold
+    );
   }
 
   /**

@@ -7,7 +7,6 @@
  */
 
 import type { DevSudoResult } from './types';
-import { logger } from '@/utils/logger';
 
 /**
  * VISION ANALYZE - Analyser l'interface visuelle complète
