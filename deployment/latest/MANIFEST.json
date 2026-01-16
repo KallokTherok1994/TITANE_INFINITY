@@ -1,16 +1,16 @@
 {
   "name": "TITANE-Infinity",
-  "version": "26.3.1",
+  "version": "26.3.2",
   "buildDate": "2026-01-16T23:56:33Z",
   "platform": "linux-x86_64",
   "bundles": {
     "appimage": {
-      "file": "Titan-Stable_26.3.1_amd64.AppImage",
+      "file": "Titan-Stable_26.3.2_amd64.AppImage",
       "sha256": "85245d7c34fa05fe410de2d73e561d7517b3ee9ade22e6b540c57e477e3ef813",
       "size": "83MB"
     },
     "deb": {
-      "file": "Titan-Stable_26.3.1_amd64.deb",
+      "file": "Titan-Stable_26.3.2_amd64.deb",
       "sha256": "78462a0e440d31369270e82c82004c63076b49bda7b76087356473efa2766448",
       "size": "10MB"
     },
