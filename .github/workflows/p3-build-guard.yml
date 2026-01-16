@@ -1,0 +1,92 @@
+# P3 BUILD GUARD - PROD CERTIFICATION GATE
+# BLOQUANT: Valide configuration build stable (sans build complet 20min)
+name: "P3 Build Guard"
+
+on:
+  push:
+    branches: [main, dev, MAIN]
+    paths:
+      - 'runtime/stable/tauri.conf.json'
+      - 'package.json'
+      - 'src-tauri/Cargo.toml'
+      - 'scripts/build/build-validator.sh'
+  pull_request:
+    branches: [main, dev, MAIN]
+    paths:
+      - 'runtime/stable/tauri.conf.json'
+      - 'package.json'
+      - 'src-tauri/Cargo.toml'
+  schedule:
+    - cron: '0 4 * * *'  # Quotidien 4h UTC
+  workflow_dispatch:
+    inputs:
+      full_build:
+        description: 'Full build avec AppImage (20min)'
+        required: false
+        default: 'false'
+        type: boolean
+
+jobs:
+  build-validation:
+    name: "P3 Build Config Validation"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: "📥 Checkout repository"
+        uses: actions/checkout@v4
+        
+      - name: "🔧 Setup Node.js"
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: "🔧 Setup Rust toolchain"
+        uses: dtolnay/rust-toolchain@stable
+        
+      - name: "📦 Install pnpm"
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+          
+      - name: "⚙️ Install system dependencies"
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y jq libwebkit2gtk-4.1-dev libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
+          
+      - name: "🧪 Run Build Config Validation"
+        run: |
+          chmod +x ./scripts/build/build-validator.sh
+          ./scripts/build/build-validator.sh
+          
+      - name: "🏗️ Run Full Build (if requested)"
+        if: ${{ github.event.inputs.full_build == 'true' }}
+        run: |
+          chmod +x ./scripts/build/build-guard.sh
+          ./scripts/build/build-guard.sh
+          
+      - name: "📋 Create evidence artifact"
+        if: always()
+        run: |
+          mkdir -p /tmp/build-evidence
+          echo "TIMESTAMP: $(date -Iseconds)" > /tmp/build-evidence/build-guard-ci-$(date +%Y%m%d-%H%M%S).txt
+          echo "TRIGGER: GitHub Actions CI" >> /tmp/build-evidence/build-guard-ci-$(date +%Y%m%d-%H%M%S).txt
+          echo "COMMIT: ${{ github.sha }}" >> /tmp/build-evidence/build-guard-ci-$(date +%Y%m%d-%H%M%S).txt
+          echo "FULL_BUILD: ${{ github.event.inputs.full_build || 'false' }}" >> /tmp/build-evidence/build-guard-ci-$(date +%Y%m%d-%H%M%S).txt
+          echo "" >> /tmp/build-evidence/build-guard-ci-$(date +%Y%m%d-%H%M%S).txt
+          ./scripts/build/build-validator.sh >> /tmp/build-evidence/build-guard-ci-$(date +%Y%m%d-%H%M%S).txt 2>&1 || true
+          
+      - name: "🗂️ Upload evidence"
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p3-build-guard-evidence
+          path: /tmp/build-evidence/
+          retention-days: 90
+          
+      - name: "📦 Upload AppImage artifacts"
+        if: ${{ github.event.inputs.full_build == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: runtime/stable/*.AppImage
+          retention-days: 30
