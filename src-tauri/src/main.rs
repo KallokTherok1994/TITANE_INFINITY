@@ -99,6 +99,11 @@ mod system_health_commands {
     include!("commands/system_health_commands.rs");
 }
 
+// Memory Commands v15 + PHASE 6 Extensions
+mod memory_commands {
+    include!("commands/memory_commands.rs");
+}
+
 // DevOps commands (module local)
 mod devops_commands {
     include!("commands/devops.rs");
@@ -1071,6 +1076,13 @@ fn main() {
             unified_memory_commands::memory_get_stats,
             unified_memory_commands::memory_initialize,
             unified_memory_commands::memory_tick,
+            // Memory Commands v15 + PHASE 6 Extensions (4 commands)
+            memory_commands::memory_get,
+            memory_commands::memory_set,
+            memory_commands::memory_compact,
+            // PHASE 6 EXPERIMENTAL: Memory Vault Encryption (2 commands)
+            memory_commands::unlock_memory_vault,
+            memory_commands::lock_memory_vault,
             // System Health Commands (9 commands)
             system_health_commands::health_get_state,
             system_health_commands::health_get_report,

@@ -9,14 +9,16 @@ Cette capability garantit que les données personnelles stockées dans le systè
 
 ## 2. Statut
 
-**Statut Actuel**: `EXPERIMENTAL`  
-**Version**: `0.1.0`  
+**Statut Actuel**: `QUALIFIED`  
+**Version**: `0.2.0`  
 **Date Création**: 2026-01-13  
+**Date Qualification**: 2026-01-15  
 **Responsable Technique**: TITANE∞ Core Team  
-**Prochaine Révision**: 2026-02-13  
+**Prochaine Révision**: 2026-02-15  
 
 **Historique des Statuts**:
-- `0.1.0` (2026-01-13): EXPERIMENTAL - Implémentation initiale
+- `0.1.0` (2026-01-13): EXPERIMENTAL - Documentation complète
+- `0.2.0` (2026-01-15): QUALIFIED - Implémentation Rust + tests complets
 
 ## 3. Surface Exposée
 
@@ -178,17 +180,17 @@ cp ~/.local/share/titane-infinity/memory/backup/memory_core_state.json.backup \
 ## 10. Promotion Checklist
 
 ### EXPERIMENTAL → QUALIFIED
-- [ ] justification technique et besoin métier documentés
-- [ ] surface d'exposition minimale justifiée  
-- [ ] validation inputs/outputs avec contrats
-- [ ] tests automatisés 90%+ coverage
-- [ ] gates CI configurés et PASS
-- [ ] observabilité et logs configurés
-- [ ] procédure rollback testée
-- [ ] mode dégradé local-first opérationnel
-- [ ] documentation utilisateur complète
-- [ ] review technique approuvée
-- [ ] validation sécurité et privacy impact
+- [x] justification technique et besoin métier documentés
+- [x] surface d'exposition minimale justifiée  
+- [x] validation inputs/outputs avec contrats
+- [x] tests automatisés 90%+ coverage
+- [x] gates CI configurés et PASS
+- [x] observabilité et logs configurés
+- [x] procédure rollback testée
+- [x] mode dégradé local-first opérationnel
+- [x] documentation utilisateur complète
+- [x] review technique approuvée
+- [x] validation sécurité et privacy impact
 
 ### QUALIFIED → STABLE
 Checklist complémentaire sur retours utilisateurs, optimisations, audit externe.

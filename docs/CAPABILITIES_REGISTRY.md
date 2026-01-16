@@ -79,8 +79,8 @@ EXPERIMENTAL ──→ QUALIFIED ──→ STABLE ──→ DEPRECATED ──→
 | Statut | Count | Détail |
 |--------|-------|--------|
 | **STABLE** | 53 | Commands production-ready avec rétrocompatibilité |
-| **QUALIFIED** | 0 | Commands avec API figée, tests complets, prêts pour STABLE |
-| **EXPERIMENTAL** | 2 | Commands en développement, API instable |
+| **QUALIFIED** | 2 | Commands avec API figée, tests complets, prêts pour STABLE |
+| **EXPERIMENTAL** | 0 | Commands en développement, API instable |
 | **DEPRECATED** | 0 | Commands marqués obsolètes, migration path définie |
 | **REMOVED** | 0 | Commands retirés (archives seulement) |
 
@@ -90,6 +90,7 @@ EXPERIMENTAL ──→ QUALIFIED ──→ STABLE ──→ DEPRECATED ──→
 |---------|--------|-----------|-------------|------------|-------|
 | v26.3.0 | 53 | 0 | 0 | 0 | État initial PHASE 6 (migration depuis PHASE 5) |
 | v26.3.0+ | 53 | 0 | 2 | 0 | Première capability PHASE 6: memory-core-encryption |
+| v26.3.0++ | 53 | 2 | 0 | 0 | memory-core-encryption EXPERIMENTAL → QUALIFIED |
 
 **Migration PHASE 5 → PHASE 6**: Toutes les capabilities PHASE 5 "stable" sont automatiquement promues **STABLE** PHASE 6 avec grandfathering (pas de re-qualification requise).
 
@@ -234,16 +235,24 @@ command: <nom>
 
 ---
 
-## Couche EXPERIMENTAL
+## Couche QUALIFIED
 
-**Capabilities en développement** - API instable, tests unitaires seulement, dev workspace uniquement.
+**Capabilities avec API figée** - tests complets, documentation scellée, prêts pour promotion STABLE.
 
 ### Security & Privacy
 
 | Command | Status | Permissions | Contract Test | Doc Ref | Added | Notes |
 |---------|--------|-------------|---------------|---------|-------|-------|
-| `unlock_memory_vault` | **EXPERIMENTAL** | memory, filesystem | tests/experimental/memory-encryption.test.ts | docs/capabilities/memory-core-encryption.md | v26.3.0+ | Déchiffrement vault utilisateur |
-| `lock_memory_vault` | **EXPERIMENTAL** | memory, filesystem | tests/experimental/memory-encryption.test.ts | docs/capabilities/memory-core-encryption.md | v26.3.0+ | Chiffrement vault utilisateur |
+| `unlock_memory_vault` | **QUALIFIED** | memory, filesystem | src-tauri/src/commands/memory_commands.rs#tests | docs/capabilities/memory-core-encryption.md | v26.3.0+ | Déchiffrement vault utilisateur (QUALIFIED v0.2.0) |
+| `lock_memory_vault` | **QUALIFIED** | memory, filesystem | src-tauri/src/commands/memory_commands.rs#tests | docs/capabilities/memory-core-encryption.md | v26.3.0+ | Chiffrement vault utilisateur (QUALIFIED v0.2.0) |
+
+---
+
+## Couche EXPERIMENTAL
+
+**Capabilities en développement** - API instable, tests unitaires seulement, dev workspace uniquement.
+
+*Aucune capability EXPERIMENTAL active.*
 
 ---
 
