@@ -813,7 +813,7 @@ echo "✅ Operation complete"
     console.log('[VisualDevOpsEngine] Saving session:', session.session_id);
     // IMPLEMENTATION: Persist session to disk or backend
     // 1. Serialize: JSON.stringify(session) with pretty formatting
-    // 2. Tauri filesystem: Use invoke('fs:write_file', { path, content }) to save
+    // 2. Tauri filesystem: Use tauriClient.fs:writeFile({ path, content }) to save
     // 3. Path: ~/.titane/devops/sessions/${session.session_id}.json
     // 4. Backup: Keep last 10 sessions, rotate older ones
     // 5. Load on startup: Read sessions on engine initialization for session recovery

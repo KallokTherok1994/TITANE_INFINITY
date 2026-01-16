@@ -264,7 +264,7 @@ async function checkCamera(env: EnvironmentInfo): Promise<DevicePermission> {
 async function checkScreen(env: EnvironmentInfo): Promise<DevicePermission> {
   // Implementation: Screen capture via Tauri plugin
   // - Plugin: Add tauri-plugin-screenshots to Cargo.toml dependencies
-  // - API: await invoke('plugin:screenshots|capture', {monitor: 0})
+  // - API: await tauriClient.plugin:screenshots|capture({monitor: 0})
   // - Permissions: Add "screenshots" to tauri.conf.json allowlist
   // - Monitor selection: Get available displays with getDisplays() first
   // - Format: Save as PNG/JPEG, return base64 or file path

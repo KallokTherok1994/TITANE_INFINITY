@@ -209,7 +209,7 @@ export async function checkCognitiveAvailability(): Promise<{
   try {
     const { invoke } = await import('@tauri-apps/api/core');
     // Tester si le backend Tauri SQLite est disponible
-    await invoke('check_sqlite_available');
+    await tauriClient.checkSqliteAvailable();
     results.sqlite = true;
   } catch (error) {
     // Mode navigateur pur ou Tauri sans SQLite

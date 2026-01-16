@@ -283,7 +283,7 @@ export function useUserMirroring(): {
 
   const activate = useCallback(() => {
     // IMPLEMENTATION: Activate user mirroring in MultimodalPresenceEngine
-    // 1. Engine call: multimodalPresenceEngine.activateMirroring() or invoke('presence:activate_mirroring')
+    // 1. Engine call: multimodalPresenceEngine.activateMirroring() or tauriClient.presence:activateMirroring()
     // 2. Media streams: Request camera/microphone access via getUserMedia()
     // 3. Emotion tracking: Start real-time emotion detection from video frames
     // 4. State update: Set isActive = true, emit 'mirroring:activated' event
@@ -294,7 +294,7 @@ export function useUserMirroring(): {
 
   const deactivate = useCallback(() => {
     // IMPLEMENTATION: Deactivate user mirroring in MultimodalPresenceEngine
-    // 1. Engine call: multimodalPresenceEngine.deactivateMirroring() or invoke('presence:deactivate_mirroring')
+    // 1. Engine call: multimodalPresenceEngine.deactivateMirroring() or tauriClient.presence:deactivateMirroring()
     // 2. Stop streams: mediaStream.getTracks().forEach(track => track.stop())
     // 3. Stop tracking: Disable emotion detection, clear active frame buffer
     // 4. State update: Set isActive = false, emit 'mirroring:deactivated' event

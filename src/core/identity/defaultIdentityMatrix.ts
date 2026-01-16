@@ -318,7 +318,7 @@ export async function saveIdentityMatrix(matrix: IdentityMatrix): Promise<void> 
   }
 
   const { invoke } = await import('@tauri-apps/api/core');
-  await invoke('identity_set_matrix', { matrix });
+  await tauriClient.identitySetMatrix({ matrix });
 }
 
 /**
