@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/tauri-updater.json",
-  "version": "26.3.0",
+  "version": "26.3.1",
   "notes": "TITANE Infinity v26.3.0 (Stable) — AppImage + DEB publiés via Git LFS + GitHub Release.",
   "pub_date": "2026-01-15T21:43:56Z",
   "platforms": {

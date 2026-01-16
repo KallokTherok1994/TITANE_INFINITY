@@ -1,11 +1,11 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0",
   "productName": "Titan-Stable",
-  "version": "26.3.0",
+  "version": "26.3.1",
   "identifier": "com.titane.infinity.stable",
   "build": {
     "beforeDevCommand": "",
-    "beforeBuildCommand": "bash -lc 'set -euo pipefail; ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd); cd \"$ROOT\"; export PATH=\"$ROOT/.tools/node/current/bin:$PATH\"; exec pnpm exec vite build'",
+    "beforeBuildCommand": "",
     "frontendDist": "../dist"
   },
   "bundle": {
