@@ -103,6 +103,7 @@ export const sharedTestConfig = defineConfig({
       'tests/phase4/**/*.{test,spec}.{ts,tsx}',
       'tests/phase5/**/*.{test,spec}.{ts,tsx}',
       'tests/phase6/**/*.{test,spec}.{ts,tsx}',
+      'tests/release/**/*.{test,spec}.{ts,tsx}',
     ],
     exclude: ['node_modules', 'dist', 'src-tauri'],
     coverage: {
