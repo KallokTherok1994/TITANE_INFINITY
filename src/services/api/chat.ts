@@ -315,6 +315,8 @@ class ChatService {
         keys: Object.keys(backendResponse),
       });
 
+      console.log("RAW_CHAT_RESPONSE", JSON.stringify(backendResponse, null, 2)); // LOG OBLIGATOIRE
+
       // ✅ FIX AUDIT: Gérer cas error explicite AVANT détection format
       if (backendResponse.error && !backendResponse.content && !backendResponse.success) {
         monitoring.trackPipelineError();
@@ -323,20 +325,26 @@ class ChatService {
       }
 
       // ✅ FIX P0-1: Détection du format de réponse (OMEGA direct vs Legacy)
-      if (backendResponse.content !== undefined) {
-        // ✅ FIX AUDIT: Valider content non-null ET non-vide
-        if (!backendResponse.content || backendResponse.content.trim() === '') {
-          monitoring.trackPipelineError();
-          logger.error('❌ Backend retourné content vide');
-          throw new Error('Backend returned empty content');
-        }
+      const assistantText =
+        backendResponse?.content ??
+        backendResponse?.reply ??
+        backendResponse?.response ??
+        backendResponse?.data?.content ??
+        backendResponse?.data?.text ??
+        "";
 
+      if (!assistantText || typeof assistantText !== 'string' || assistantText.trim().length === 0) {
+        console.error("Empty assistant response", backendResponse);
+        throw new Error('Backend returned empty or invalid assistant content');
+      }
+
+      if (backendResponse.content !== undefined) {
         // Format OMEGA direct: { content, conversationId, messageId, latencyMs, metadata }
         const latencyMs = backendResponse.latencyMs || Date.now() - startedAt;
         monitoring.trackPipelineLatency(latencyMs);
 
         logger.debug('✅ Format OMEGA direct détecté:', {
-          contentLength: backendResponse.content?.length ?? 0,
+          contentLength: assistantText.length,
           conversationId: backendResponse.conversationId,
           messageId: backendResponse.messageId,
           latencyMs,
@@ -344,7 +352,7 @@ class ChatService {
         });
 
         return {
-          content: backendResponse.content,
+          content: String(assistantText), // FORCE STRING
           finishReason: 'stop',
           model: config?.model || 'omega-pipeline',
           provider: backendResponse.metadata?.provider || 'tauri-backend',

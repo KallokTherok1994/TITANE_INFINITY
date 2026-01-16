@@ -42,3 +42,6 @@ pnpm-lock.yaml
 .output
 .vercel
 .netlify
+
+# Workflow files with complex YAML (template strings cause parsing issues)
+.github/workflows/constitution-audit.yml
