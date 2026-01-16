@@ -5,7 +5,7 @@
  * Creator: Kevin Thibault
  * Generated/maintained with GitHub Copilot (GPT-5.2)
  * License: governed by repository LICENSE.md
- * 
+ *
  * This script runs GitGuardian secret scanning on staged files before commit.
  * Set COPILOT_XS_SKIP_GITGUARDIAN=1 to bypass GitGuardian scanning locally.
  */
@@ -49,21 +49,23 @@ function checkGitGuardianInstalled() {
 
 function installGitGuardian() {
   console.log('🔐 GitGuardian not found. Attempting to install ggshield...');
-  
+
   // Try to install via pip
   const pipInstall = run('pip3', ['install', '--user', 'ggshield'], { stdio: 'inherit' });
-  
+
   if (!pipInstall.ok && pipInstall.reason === 'not-found') {
     // Try pip without version suffix
-    const pipInstall2 = run('pip', ['install', '--user', 'ggshield'], { stdio: 'inherit' });
-    
+    const pipInstall2 = run('pip', ['install', '--user', 'ggshield'], {
+      stdio: 'inherit',
+    });
+
     if (!pipInstall2.ok) {
       console.warn('⚠️ Could not install ggshield. Skipping GitGuardian scan.');
       console.warn('To install manually, run: pip install ggshield');
       return false;
     }
   }
-  
+
   console.log('✅ GitGuardian ggshield installed successfully');
   return true;
 }
@@ -76,7 +78,9 @@ if (process.env.COPILOT_XS_SKIP_GITGUARDIAN === '1') {
 
 // Check if .gitguardian.yml config exists
 if (!existsSync('.gitguardian.yml')) {
-  console.warn('⚠️ .gitguardian.yml not found. GitGuardian will use default configuration.');
+  console.warn(
+    '⚠️ .gitguardian.yml not found. GitGuardian will use default configuration.'
+  );
 }
 
 // Check if GitGuardian is installed
@@ -107,7 +111,9 @@ if (!scanResult.ok) {
     console.error('   Please remove secrets before committing.');
     console.error('   See output above for details.');
     console.error('');
-    console.error('   To bypass (NOT RECOMMENDED): COPILOT_XS_SKIP_GITGUARDIAN=1 git commit');
+    console.error(
+      '   To bypass (NOT RECOMMENDED): COPILOT_XS_SKIP_GITGUARDIAN=1 git commit'
+    );
     process.exit(scanResult.status);
   }
 }

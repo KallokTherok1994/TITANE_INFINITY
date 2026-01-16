@@ -71,7 +71,10 @@ function normalizeTimelineEventForRust(event: unknown): {
   const input = (event ?? {}) as Record<string, unknown>;
 
   const idValue = typeof input.id === 'string' && input.id.trim() ? input.id : undefined;
-  const id = idValue ?? (crypto.randomUUID?.() ?? `evt-${Date.now()}-${Math.random().toString(16).slice(2)}`);
+  const id =
+    idValue ??
+    crypto.randomUUID?.() ??
+    `evt-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
   const rawTimestamp = input.timestamp;
   const timestamp =
@@ -85,7 +88,9 @@ function normalizeTimelineEventForRust(event: unknown): {
     (typeof input.event_type === 'string' ? input.event_type : undefined) ??
     (typeof input.type === 'string' ? input.type : undefined);
 
-  const event_type: RustTimelineEventType = allowed.has(rawEventType as RustTimelineEventType)
+  const event_type: RustTimelineEventType = allowed.has(
+    rawEventType as RustTimelineEventType
+  )
     ? (rawEventType as RustTimelineEventType)
     : 'Alert';
 
@@ -97,7 +102,11 @@ function normalizeTimelineEventForRust(event: unknown): {
       ? (dataCandidate as Record<string, unknown>)
       : {};
 
-  if (input.metadata && typeof input.metadata === 'object' && !Array.isArray(input.metadata)) {
+  if (
+    input.metadata &&
+    typeof input.metadata === 'object' &&
+    !Array.isArray(input.metadata)
+  ) {
     data.metadata = input.metadata;
   }
   if (rawEventType && rawEventType !== event_type) {

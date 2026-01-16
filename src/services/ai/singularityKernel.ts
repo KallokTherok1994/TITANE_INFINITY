@@ -803,7 +803,7 @@ class SingularityKernel {
   private executeCognitiveCycle(): void {
     // Logger seulement tous les 5 cycles (2.5 minutes)
     const shouldLog = this.cycleCount++ % 5 === 0;
-    
+
     if (shouldLog) logger.debug('Cognitive cycle...');
 
     // 1. PERCEVOIR

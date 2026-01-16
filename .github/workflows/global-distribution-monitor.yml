@@ -1,4 +1,4 @@
-name: "🌐 Global Distribution Monitor"
+name: '🌐 Global Distribution Monitor'
 
 on:
   workflow_dispatch:
@@ -26,47 +26,47 @@ env:
 
 jobs:
   global-availability-check:
-    name: "🌍 Check Global Availability"
+    name: '🌍 Check Global Availability'
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
         region:
-          - name: "Americas (US-East)"
-            code: "us-east"
-            timezone: "America/New_York"
-          - name: "Europe (EU-West)"  
-            code: "eu-west"
-            timezone: "Europe/London"
-          - name: "Asia-Pacific (AP-Southeast)"
-            code: "ap-southeast"
-            timezone: "Asia/Singapore"
-    
+          - name: 'Americas (US-East)'
+            code: 'us-east'
+            timezone: 'America/New_York'
+          - name: 'Europe (EU-West)'
+            code: 'eu-west'
+            timezone: 'Europe/London'
+          - name: 'Asia-Pacific (AP-Southeast)'
+            code: 'ap-southeast'
+            timezone: 'Asia/Singapore'
+
     steps:
-      - name: "📥 Checkout repository"
+      - name: '📥 Checkout repository'
         uses: actions/checkout@v4
-      
-      - name: "🌐 Regional Availability Test"
+
+      - name: '🌐 Regional Availability Test'
         id: availability
         run: |
           echo "Testing availability for ${{ matrix.region.name }}..."
           mkdir -p reports/distribution
-          
+
           # Set timezone for regional testing
           export TZ="${{ matrix.region.timezone }}"
           REGION_TIME=$(date "+%Y-%m-%d %H:%M:%S %Z")
-          
+
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
           echo "🌍 Regional Test: ${{ matrix.region.name }}"
           echo "🕒 Local Time: $REGION_TIME"
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          
+
           # Create regional availability report
           python3 << 'EOF'
           import json
           import os
           from datetime import datetime
-          
+
           region_data = {
               'region_name': '${{ matrix.region.name }}',
               'region_code': '${{ matrix.region.code }}',
@@ -99,25 +99,25 @@ jobs:
                   'storage_footprint': '~100MB'
               }
           }
-          
+
           # Save regional report
           with open('reports/distribution/region-${{ matrix.region.code }}.json', 'w') as f:
               json.dump(region_data, f, indent=2)
-          
+
           print("✅ Regional availability confirmed for ${{ matrix.region.name }}")
-          
+
           # Set outputs
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
               f.write(f"availability_status=AVAILABLE\n")
               f.write(f"region_ready=true\n")
           EOF
-      
-      - name: "📊 Display Regional Status"
+
+      - name: '📊 Display Regional Status'
         run: |
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
           echo "📊 ${{ matrix.region.name }} Distribution Status"
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          
+
           if [[ -f "reports/distribution/region-${{ matrix.region.code }}.json" ]]; then
             STATUS=$(jq -r '.availability_status' "reports/distribution/region-${{ matrix.region.code }}.json")
             READY=$(jq -r '.distribution_ready' "reports/distribution/region-${{ matrix.region.code }}.json")
@@ -132,10 +132,10 @@ jobs:
             echo "⚡ Performance:"
             jq -r '.performance_metrics | to_entries[] | "  📈 \(.key): \(.value)"' "reports/distribution/region-${{ matrix.region.code }}.json"
           fi
-          
+
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-      
-      - name: "📦 Upload Regional Reports"
+
+      - name: '📦 Upload Regional Reports'
         uses: actions/upload-artifact@v4
         with:
           name: distribution-report-${{ matrix.region.code }}-${{ github.sha }}
@@ -144,40 +144,40 @@ jobs:
           retention-days: 7
 
   global-distribution-summary:
-    name: "📋 Global Distribution Summary"
+    name: '📋 Global Distribution Summary'
     needs: global-availability-check
     runs-on: ubuntu-latest
     if: always()
-    
+
     steps:
-      - name: "📥 Checkout repository"
+      - name: '📥 Checkout repository'
         uses: actions/checkout@v4
-      
-      - name: "📥 Download all regional reports"
+
+      - name: '📥 Download all regional reports'
         uses: actions/download-artifact@v4
         with:
           path: regional-reports
           pattern: distribution-report-*
           merge-multiple: true
-      
-      - name: "🌐 Generate Global Summary"
+
+      - name: '🌐 Generate Global Summary'
         run: |
           echo "Generating global distribution summary..."
           mkdir -p reports/global
-          
+
           python3 << 'EOF'
           import json
           import os
           import glob
           from datetime import datetime
-          
+
           # Collect all regional reports
           regional_files = glob.glob('regional-reports/*.json') or []
           print(f"Found {len(regional_files)} regional reports")
-          
+
           regions = []
           total_available = 0
-          
+
           for file_path in regional_files:
               try:
                   with open(file_path, 'r') as f:
@@ -187,7 +187,7 @@ jobs:
                           total_available += 1
               except Exception as e:
                   print(f"Error reading {file_path}: {e}")
-          
+
           # Generate global summary
           global_summary = {
               'timestamp': datetime.utcnow().isoformat() + 'Z',
@@ -216,26 +216,26 @@ jobs:
                   'updates': 'Automated CI/CD'
               }
           }
-          
+
           # Save global summary
           with open('reports/global/distribution-summary.json', 'w') as f:
               json.dump(global_summary, f, indent=2)
-          
+
           print(f"✅ Global summary generated - {total_available}/{len(regions)} regions available")
-          
+
           # Set GitHub outputs
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
               f.write(f"global_status={global_summary['distribution_status']}\n")
               f.write(f"coverage_percentage={global_summary['coverage_percentage']}\n")
               f.write(f"available_regions={total_available}\n")
           EOF
-      
-      - name: "🌟 Display Global Distribution Status"
+
+      - name: '🌟 Display Global Distribution Status'
         run: |
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
           echo "🌐 TITANE∞ v26.3.0 - Global Distribution Status"
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          
+
           if [[ -f "reports/global/distribution-summary.json" ]]; then
             STATUS=$(jq -r '.distribution_status' reports/global/distribution-summary.json)
             COVERAGE=$(jq -r '.coverage_percentage' reports/global/distribution-summary.json)
@@ -256,18 +256,18 @@ jobs:
           else
             echo "❌ Global summary not available"
           fi
-          
+
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-      
-      - name: "📦 Upload Global Reports"
+
+      - name: '📦 Upload Global Reports'
         uses: actions/upload-artifact@v4
         with:
           name: global-distribution-summary-${{ github.sha }}
           path: |
             reports/global/
           retention-days: 30
-      
-      - name: "🎉 World Conquest Status"
+
+      - name: '🎉 World Conquest Status'
         run: |
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
           echo "🏆 TITANE∞ v26.3.0 - WORLD CONQUEST STATUS"

@@ -1,0 +1,169 @@
+
+> titane-infinity@26.3.0 dev:tauri /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> tauri dev --config runtime/dev/tauri.dev.conf.json --no-watch
+
+     Running BeforeDevCommand (`bash -lc 'set -euo pipefail; ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd); cd "$ROOT"; mkdir -p runtime/dev/logs; LOG=runtime/dev/logs/vite.log; : >"$LOG"; exec >>"$LOG" 2>&1; echo "[tauri.dev] $(date -Is) beforeDevCommand: start vite on :5173"; export PATH="$ROOT/.tools/node/current/bin:$PATH"; NODE_MAJOR=$(node -p "Number(process.versions.node.split(\".\")[0])" 2>/dev/null || echo 0); if [ "${NODE_MAJOR:-0}" -ge 23 ]; then NODE_OPTIONS="${NODE_OPTIONS:-}"; NODE_OPTIONS="${NODE_OPTIONS//--experimental-strip-types/}"; case " $NODE_OPTIONS " in *" --no-experimental-strip-types "*) ;; *) NODE_OPTIONS="$NODE_OPTIONS --no-experimental-strip-types" ;; esac; export NODE_OPTIONS="$(echo "$NODE_OPTIONS" | xargs)"; fi; PNPM="$ROOT/.tools/node/current/bin/pnpm"; if [ ! -x "$PNPM" ]; then PNPM=$(command -v pnpm || true); fi; if [ -z "${PNPM:-}" ]; then echo "[tauri.dev] ERROR: pnpm introuvable"; exit 1; fi; exec "$PNPM" exec vite dev --host 127.0.0.1 --port 5173 --strictPort'`)
+     Running DevCommand (`cargo  run --no-default-features --features mock --color always --`)
+[1m[92m   Compiling[0m titane-infinity v26.3.0 (/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri)
+[1m[96m    Building[0m [=======================> ] 742/745: titane-infinity(build)      [1m[96m    Building[0m [=======================> ] 743/745: titane-infinity             [1m[96m    Building[0m [=======================> ] 744/745: titane-infinity(bin)        [K[1m[92m    Finished[0m ]8;;https://doc.rust-lang.org/cargo/reference/profiles.html#default-profiles\`dev` profile [unoptimized + debuginfo]]8;;\ target(s) in 19.85s
+[1m[92m     Running[0m `target/debug/titane-infinity`
+[2026-01-16T20:30:04.528Z INFO  titane_infinity::security::secrets_engine] [SecretsEngine] Secure secrets engine initialised (encrypted)
+[CHAT] ✅ UnifiedMemory initialized (STM/MTM/LTM ready)
+[2026-01-16T20:30:04.528Z INFO  titane_infinity] ✅ Copilot state initialized (key configured: false)
+[2026-01-16T20:30:04.530Z INFO  titane_infinity] ✅ HeliosCore and MemoryCore initialized successfully
+[2026-01-16T20:30:04.564Z WARN  titane_infinity] ⚠️ Updater disabled (set TITANE_UPDATER_PUBKEY to enable)
+[2026-01-16T20:30:04.721Z INFO  titane_infinity::auth] 🔐 AUTH OS — Initialisation...
+[2026-01-16T20:30:04.722Z INFO  titane_infinity::auth] ✓ Keystore chargé: 1 secrets configurés
+[2026-01-16T20:30:04.722Z INFO  titane_infinity::auth::roles] ✓ Role Owner déjà présent pour Kevin Thibault
+[2026-01-16T20:30:04.722Z INFO  titane_infinity::auth] ✓ Owner role vérifié: Kevin Thibault
+[2026-01-16T20:30:04.722Z INFO  titane_infinity::auth] ✓ Dev Token présent
+[2026-01-16T20:30:04.722Z INFO  titane_infinity::auth] 🔐 AUTH OS — Initialisé avec succès
+[2026-01-16T20:30:04.722Z INFO  titane_infinity] ✅ AUTH OS v∞ initialized successfully
+[2026-01-16T20:30:04.760Z INFO  titane_infinity] ✅ OMEGA Conversation Engine v19.5.2 initialized
+[2026-01-16T20:30:04.761Z INFO  titane_infinity] 📱 Main window found in app context
+[2026-01-16T20:30:04.765Z INFO  titane_infinity] 🛠️ DevTools opened automatically (dev mode)
+[2026-01-16T20:30:04.765Z INFO  titane_infinity] ✅ Main window shown successfully
+[2026-01-16T20:30:05.569Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:05.570Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:09.074Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:09.299Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:09.680Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:09.729Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:10.210Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:10.245Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:11.030Z INFO  ui] [UI] frontend.boot — main.tsx: boot handlers registered
+[2026-01-16T20:30:11.329Z INFO  titane_infinity::persistence] [PersistenceEngine] 🚀 Initialisation...
+[2026-01-16T20:30:11.329Z INFO  titane_infinity::persistence::database] [PersistenceDB] 📂 Opening DB: "/home/titane-os/.local/share/TITANE_INFINITY/persistence/titan_events.db"
+[2026-01-16T20:30:11.329Z INFO  titane_infinity::persistence::database] [PersistenceDB] ✅ Schéma vérifié/créé
+[2026-01-16T20:30:11.330Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] 🔄 Démarrage de la récupération...
+[2026-01-16T20:30:11.330Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] ✅ 0 événements récupérés
+[2026-01-16T20:30:11.330Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] ✅ 0 snapshots trouvés
+[2026-01-16T20:30:11.330Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] ✅ Récupération terminée en 0ms
+[2026-01-16T20:30:11.330Z INFO  titane_infinity::persistence] [PersistenceEngine] ✅ Initialisé avec succès
+[2026-01-16T20:30:11.355Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:11.411Z INFO  ui] [UI] frontend.boot — main.tsx: boot handlers registered
+[2026-01-16T20:30:11.546Z ERROR ui] [UI] frontend.fatal — Erreur UI (non capturée): Importing a module script failed. (http://127.0.0.1:5173/.vite-cache/deps/chunk-GX3VV2FZ.js?v=96a54f08:903:34)
+[2026-01-16T20:30:11.689Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:12.142Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:12.235Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:12.534Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:12.841Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:13.281Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:13.414Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:13.423Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:13.735Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:14.139Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:14.210Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:14.234Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:14.563Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:14.998Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:15.067Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:15.103Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:15.423Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:16.157Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:16.206Z INFO  ui] [UI] frontend.boot — main.tsx: boot handlers registered
+[2026-01-16T20:30:16.252Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:16.288Z INFO  ui] [UI] frontend.boot — main.tsx: boot handlers registered
+[2026-01-16T20:30:16.289Z ERROR ui] [UI] frontend.fatal — Erreur UI (non capturée): Importing a module script failed. (http://127.0.0.1:5173/.vite-cache/deps/chunk-GX3VV2FZ.js?v=96a54f08:903:34)
+[2026-01-16T20:30:16.328Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:16.500Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:17.039Z ERROR ui] [UI] frontend.fatal — Erreur UI (non capturée): Importing a module script failed. (http://127.0.0.1:5173/.vite-cache/deps/chunk-GX3VV2FZ.js?v=96a54f08:903:34)
+[2026-01-16T20:30:17.061Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:17.851Z INFO  ui] [UI] frontend.boot — main.tsx: boot handlers registered
+[2026-01-16T20:30:17.851Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:17.900Z INFO  ui] [UI] frontend.boot — main.tsx: boot handlers registered
+[2026-01-16T20:30:17.970Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:18.257Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:18.654Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:18.659Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:19.042Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:19.766Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:19.884Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:20.174Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:20.617Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:20.625Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:20.748Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:20.774Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:21.510Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:21.514Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:21.663Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:21.943Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:22.376Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:22.464Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:22.761Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:23.105Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:23.491Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:24.055Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:24.157Z INFO  ui] [UI] frontend.boot — main.tsx: boot handlers registered
+[2026-01-16T20:30:24.200Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:24.277Z ERROR ui] [UI] frontend.fatal — Erreur UI (non capturée): Importing a module script failed. (http://127.0.0.1:5173/.vite-cache/deps/chunk-GX3VV2FZ.js?v=96a54f08:903:34)
+[2026-01-16T20:30:24.566Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:25.330Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:25.428Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:25.461Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:25.473Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:27.011Z INFO  ui] [UI] frontend.boot — main.tsx: boot handlers registered
+[2026-01-16T20:30:27.012Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:27.135Z INFO  ui] [UI] frontend.boot — main.tsx: boot handlers registered
+[2026-01-16T20:30:27.140Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:27.214Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:27.334Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:27.364Z ERROR ui] [UI] frontend.fatal — Erreur UI (non capturée): Importing a module script failed. (http://127.0.0.1:5173/.vite-cache/deps/chunk-GX3VV2FZ.js?v=96a54f08:903:34)
+[2026-01-16T20:30:27.581Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:27.637Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:28.607Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:28.629Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:28.697Z INFO  ui] [UI] frontend.boot — main.tsx: boot handlers registered
+[2026-01-16T20:30:28.767Z ERROR ui] [UI] frontend.fatal — Erreur UI (non capturée): Importing a module script failed. (http://127.0.0.1:5173/.vite-cache/deps/chunk-GX3VV2FZ.js?v=96a54f08:903:34)
+[2026-01-16T20:30:28.805Z INFO  ui] [UI] frontend.boot — main.tsx: boot handlers registered
+[2026-01-16T20:30:28.817Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:28.978Z ERROR ui] [UI] frontend.fatal — Erreur UI (non capturée): Importing a module script failed. (http://127.0.0.1:5173/.vite-cache/deps/chunk-GX3VV2FZ.js?v=96a54f08:903:34)
+[2026-01-16T20:30:29.309Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:29.699Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:29.702Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:30.712Z INFO  ui] [UI] frontend.boot — main.tsx: boot handlers registered
+[2026-01-16T20:30:30.795Z INFO  ui] [UI] frontend.boot — main.tsx: boot handlers registered
+[2026-01-16T20:30:30.907Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:31.289Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:31.671Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:32.282Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:32.308Z INFO  ui] [UI] frontend.boot — main.tsx: boot handlers registered
+[2026-01-16T20:30:32.454Z INFO  ui] [UI] frontend.boot — main.tsx: boot handlers registered
+[2026-01-16T20:30:32.484Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:32.524Z ERROR ui] [UI] frontend.fatal — Erreur UI (non capturée): Importing a module script failed. (http://127.0.0.1:5173/.vite-cache/deps/chunk-GX3VV2FZ.js?v=96a54f08:903:34)
+[2026-01-16T20:30:32.817Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:33.612Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:33.683Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:33.716Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:33.728Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:34.105Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:34.788Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:34.976Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:34.977Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:35.356Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:36.289Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:36.325Z INFO  ui] [UI] frontend.boot — main.tsx: boot handlers registered
+[2026-01-16T20:30:36.456Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:36.521Z INFO  ui] [UI] frontend.boot — main.tsx: boot handlers registered
+[2026-01-16T20:30:36.596Z ERROR ui] [UI] frontend.fatal — Erreur UI (non capturée): Importing a module script failed. (http://127.0.0.1:5173/.vite-cache/deps/chunk-GX3VV2FZ.js?v=96a54f08:903:34)
+[2026-01-16T20:30:36.829Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:37.254Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:37.311Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:37.595Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:37.984Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:38.698Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:38.775Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:38.802Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:39.143Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:39.574Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:39.640Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:39.919Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:40.256Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:40.746Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:40.836Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:40.839Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:41.169Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:41.561Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-01-16T20:30:41.576Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:41.929Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-01-16T20:30:41.932Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/

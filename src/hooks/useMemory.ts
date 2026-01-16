@@ -9,6 +9,8 @@
 // TITANE∞ v15 - useMemory Hook
 // React hook for conversational memory management
 
+import { tauriClient } from '@/lib/tauriClient';
+
 import { useState, useCallback, useEffect } from 'react';
 import { secureInvoke } from '@/lib/security';
 import { logger } from '@/lib/logger';
@@ -128,7 +130,6 @@ export function useMemory() {
 
       try {
         // Note: delete_conversation est legacy, pas de service équivalent - garder invoke direct
-        const { invoke } = await import('@tauri-apps/api/core');
         await tauriClient.deleteConversation({ conversationId });
 
         if (currentConversation?.id === conversationId) {
@@ -157,7 +158,6 @@ export function useMemory() {
 
     try {
       // Note: clear_all_memory est legacy, pas de service équivalent - garder invoke direct
-      const { invoke } = await import('@tauri-apps/api/core');
       await tauriClient.clearAllMemory();
       setCurrentConversation(null);
       setConversations([]);

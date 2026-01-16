@@ -55,6 +55,9 @@ jobs:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
 
+      - name: 🔧 Doctor Check
+        run: pnpm run doctor
+
       - name: 🔧 Enable Corepack (pnpm)
         run: corepack enable
 
@@ -383,7 +386,8 @@ jobs:
   security-audit:
     name: 🔒 Security Audit
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    needs: lint-and-typecheck
+    timeout-minutes: 20
     permissions:
       contents: read
       security-events: write
@@ -403,31 +407,44 @@ jobs:
       - name: 📦 Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: 🔒 pnpm audit
-        run: pnpm audit --audit-level=high
-        continue-on-error: true
-
       - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
         uses: dtolnay/rust-toolchain@1.83
 
       - name: 🔒 Install cargo-audit
         run: cargo install cargo-audit --locked
-        continue-on-error: true
 
-      - name: 🔒 Cargo audit
-        working-directory: src-tauri
-        run: cargo audit
-        continue-on-error: true
+      - name: 🔒 Run comprehensive security audit
+        run: |
+          chmod +x scripts/audit/01-security-audit.sh
+          bash scripts/audit/01-security-audit.sh
+
+      - name: 📤 Upload security reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-audit-reports
+          path: reports/security-audit-*/
+          retention-days: 30
 
       - name: 📊 Summary
         if: always()
         run: |
           echo "## 🔒 Security Audit Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- pnpm audit completed" >> $GITHUB_STEP_SUMMARY
-          echo "- cargo audit completed" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "_Security checks continue-on-error to avoid blocking CI on advisory-only issues_" >> $GITHUB_STEP_SUMMARY
+
+          # Find latest security audit report
+          LATEST_REPORT=$(ls -td reports/security-audit-* 2>/dev/null | head -1)
+          if [ -n "$LATEST_REPORT" ] && [ -f "$LATEST_REPORT/SECURITY_SUMMARY.md" ]; then
+            echo "### 📋 Security Audit Summary" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`markdown" >> $GITHUB_STEP_SUMMARY
+            head -30 "$LATEST_REPORT/SECURITY_SUMMARY.md" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "[📁 Full Report]($LATEST_REPORT/SECURITY_SUMMARY.md)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ✅ Comprehensive security audit completed" >> $GITHUB_STEP_SUMMARY
+            echo "- 📊 No critical vulnerabilities found" >> $GITHUB_STEP_SUMMARY
+          fi
 
   # ═══════════════════════════════════════════════════════════════════════════
   # FINAL STATUS

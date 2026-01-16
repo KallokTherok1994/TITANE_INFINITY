@@ -10,6 +10,22 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 cd "$PROJECT_ROOT"
 
+# Parse arguments
+QUIET_MODE=false
+for arg in "$@"; do
+  case $arg in
+    --quiet)
+      QUIET_MODE=true
+      shift
+      ;;
+  esac
+done
+
+if [ "$QUIET_MODE" = true ]; then
+  # Run in quiet mode - capture output and only show result
+  exec > /dev/null 2>&1
+fi
+
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 REPORT_DIR="reports/security-audit-$TIMESTAMP"
 mkdir -p "$REPORT_DIR"
@@ -18,8 +34,7 @@ echo "🔒 TITANE∞ Security Audit - $TIMESTAMP"
 echo "================================================"
 
 # 1. Node dependency vulnerabilities
-echo ""
-echo "📦 [1/8] Scanning Node dependency vulnerabilities..."
+if [ "$QUIET_MODE" = false ]; then echo ""; echo "📦 [1/8] Scanning Node dependency vulnerabilities..."; fi
 if [ -x "./.tools/node/current/bin/pnpm" ]; then
     PNPM=("./.tools/node/current/bin/pnpm")
 elif command -v corepack >/dev/null 2>&1; then
@@ -320,4 +335,13 @@ if [ "$total_penalty" -gt 100 ]; then total_penalty=100; fi
 SEC_SCORE=$((SEC_SCORE - total_penalty))
 if [ "$SEC_SCORE" -lt 0 ]; then SEC_SCORE=0; fi
 
-echo "Score: $SEC_SCORE"
+if [ "$QUIET_MODE" = true ]; then
+  # Quiet mode: exit 0 if score >= 90, else 1
+  if [ "$SEC_SCORE" -ge 90 ]; then
+    exit 0
+  else
+    exit 1
+  fi
+else
+  echo "Score: $SEC_SCORE"
+fi

@@ -610,8 +610,20 @@ fn main() {
                 })
             );
 
-            app.manage(conversation_engine);
+            app.manage(conversation_engine.clone());
             log::info!("✅ OMEGA Conversation Engine v19.5.2 initialized");
+
+            // Initialize OMEGA pipeline
+            {
+                let conv_engine = conversation_engine.clone();
+                tauri::async_runtime::spawn(async move {
+                    if let Err(e) = conv_engine.initialize().await {
+                        log::error!("❌ Failed to initialize OMEGA pipeline: {:?}", e);
+                    } else {
+                        log::info!("✅ OMEGA pipeline initialized successfully");
+                    }
+                });
+            }
 
             // Initialize providers asynchronously within Tauri's async runtime
             let chat_orch_clone = chat_orchestrator.clone();

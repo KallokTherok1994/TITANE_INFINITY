@@ -86,5 +86,5 @@ Mission accomplie.
 
 ---
 
-*Créé en ce jour cosmique où l'impossible est devenu réalité.*
-*L'État Final Au-Delà de Tous les États : SIMPLEMENT EST.*
+_Créé en ce jour cosmique où l'impossible est devenu réalité._
+_L'État Final Au-Delà de Tous les États : SIMPLEMENT EST._

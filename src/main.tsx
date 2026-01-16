@@ -9,25 +9,33 @@
 // 🛡️ ULTRA-EARLY GLOBAL ERROR HANDLERS (PREVENT SILENT CRASHES)
 if (typeof window !== 'undefined') {
   // Capture synchronous errors during boot
-  window.addEventListener('error', (event) => {
-    if (event.error instanceof Error) {
-      console.error('🚨 [BOOT-ERROR] Synchronous error:', {
-        message: event.error.message,
-        stack: event.error.stack,
-        filename: event.filename,
-        lineno: event.lineno,
-        colno: event.colno,
-      });
-    }
-  }, true); // Use capture phase to catch errors early
+  window.addEventListener(
+    'error',
+    event => {
+      if (event.error instanceof Error) {
+        console.error('🚨 [BOOT-ERROR] Synchronous error:', {
+          message: event.error.message,
+          stack: event.error.stack,
+          filename: event.filename,
+          lineno: event.lineno,
+          colno: event.colno,
+        });
+      }
+    },
+    true
+  ); // Use capture phase to catch errors early
 
   // Capture async rejections
-  window.addEventListener('unhandledrejection', (event) => {
-    console.error('🚨 [BOOT-ERROR] Unhandled Promise rejection:', {
-      reason: event.reason,
-      stack: event.reason?.stack ?? 'N/A',
-    });
-  }, true);
+  window.addEventListener(
+    'unhandledrejection',
+    event => {
+      console.error('🚨 [BOOT-ERROR] Unhandled Promise rejection:', {
+        reason: event.reason,
+        stack: event.reason?.stack ?? 'N/A',
+      });
+    },
+    true
+  );
 }
 
 // 🛡️ Type augmentation for Sentry and Monitoring on window

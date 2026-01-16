@@ -11,4 +11,8 @@ export type {
 } from '../../services/ai/autoHealEngine';
 
 export { unifiedHealingFacade } from '../../services/ai/unifiedHealingFacade';
-export type { UnifiedStats, UnifiedHealResult, UnifiedHealRequest } from '../../services/ai/unifiedHealingFacade';
+export type {
+  UnifiedStats,
+  UnifiedHealResult,
+  UnifiedHealRequest,
+} from '../../services/ai/unifiedHealingFacade';

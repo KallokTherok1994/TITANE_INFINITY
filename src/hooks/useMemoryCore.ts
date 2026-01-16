@@ -8,6 +8,7 @@
 
 // TITANE∞ v15 - Memory Core Hook
 import { useState, useCallback } from 'react';
+import { tauriClient } from '@/lib/tauriClient';
 import { secureInvoke } from '@/lib/security';
 import { memoryService } from '../services/api';
 import type { MemoryEntry } from '../core/ARCHITECTURE_TYPES_v∞';
@@ -109,7 +110,6 @@ export const useMemoryCore = (): UseMemoryCoreReturn => {
       setLoading(true);
       setError(null);
       // Note: memory_clear est legacy, pas de service équivalent - garder invoke direct
-      const { invoke } = await import('@tauri-apps/api/core');
       await tauriClient.memoryClear();
       setEntries([]);
     } catch (err) {

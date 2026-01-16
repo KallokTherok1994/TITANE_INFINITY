@@ -302,7 +302,10 @@ export class PerformanceMonitor {
       this.metrics.set(metricName, new PerformanceMetric(metricName));
     }
 
-    this.metrics.get(metricName)!.record(value, metadata);
+    const metric = this.metrics.get(metricName);
+    if (metric) {
+      metric.record(value, metadata);
+    }
   }
 
   /**

@@ -494,7 +494,8 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
             const filesSummary = files
               .filter(f => f.status === 'done' && f.analysis)
               .map(
-                f => `📄 **${f.name}**\n${f.analysis?.summary || 'Analyse non disponible'}`
+                f =>
+                  `📄 **${f.name}**\n${f.analysis?.summary || 'Analyse non disponible'}`
               )
               .join('\n\n');
 

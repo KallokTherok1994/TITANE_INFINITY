@@ -11,7 +11,104 @@
     "warnings": 1,
     "compliance_percentage": 93.8
   },
-  "results": [{"status":"PASS","category":"Toolchain","check":"Node.js version","details":"v24.0.0 "},{"status":"PASS","category":"Toolchain","check":"pnpm available","details":"10.28.0 "},{"status":"PASS","category":"Toolchain","check":"Rust available","details":"1.91.1 "},{"status":"PASS","category":"Critical Files","check":"src-tauri/tauri.conf.json exists","details":"57134 bytes "},{"status":"PASS","category":"Critical Files","check":"runtime/stable/tauri.stable.conf.json exists","details":"7569 bytes "},{"status":"PASS","category":"Critical Files","check":"runtime/dev/tauri.dev.conf.json exists","details":"2922 bytes "},{"status":"PASS","category":"Critical Files","check":"src-tauri/allowlist.whitelist.stable.json exists","details":"4607 bytes "},{"status":"PASS","category":"Critical Files","check":"runtime/stable/build.sh exists","details":"12785 bytes "},{"status":"WARN","category":"Critical Files","check":"build-manifest.json","details":"Not present (no stable build yet) "},{"status":"PASS","category":"Security","check":"No .env secrets","details":"0 files with real API keys/tokens "},{"status":"PASS","category":"Security","check":"No tunnels in stable","details":"0 markers "},{"status":"PASS","category":"CI/CD","check":"stable-build.yml","details":"Present "},{"status":"PASS","category":"CI/CD","check":"constitution-audit.yml","details":"Present "},{"status":"PASS","category":"Tests","check":"tauri.contract.test.ts","details":"Present "},{"status":"PASS","category":"Tests","check":"gate-p3.test.ts","details":"Present "},{"status":"PASS","category":"Tests","check":"gate-p4.test.ts","details":"Present "}],
+  "results": [
+    {
+      "status": "PASS",
+      "category": "Toolchain",
+      "check": "Node.js version",
+      "details": "v24.0.0 "
+    },
+    {
+      "status": "PASS",
+      "category": "Toolchain",
+      "check": "pnpm available",
+      "details": "10.28.0 "
+    },
+    {
+      "status": "PASS",
+      "category": "Toolchain",
+      "check": "Rust available",
+      "details": "1.91.1 "
+    },
+    {
+      "status": "PASS",
+      "category": "Critical Files",
+      "check": "src-tauri/tauri.conf.json exists",
+      "details": "57134 bytes "
+    },
+    {
+      "status": "PASS",
+      "category": "Critical Files",
+      "check": "runtime/stable/tauri.stable.conf.json exists",
+      "details": "7569 bytes "
+    },
+    {
+      "status": "PASS",
+      "category": "Critical Files",
+      "check": "runtime/dev/tauri.dev.conf.json exists",
+      "details": "2922 bytes "
+    },
+    {
+      "status": "PASS",
+      "category": "Critical Files",
+      "check": "src-tauri/allowlist.whitelist.stable.json exists",
+      "details": "4607 bytes "
+    },
+    {
+      "status": "PASS",
+      "category": "Critical Files",
+      "check": "runtime/stable/build.sh exists",
+      "details": "12785 bytes "
+    },
+    {
+      "status": "WARN",
+      "category": "Critical Files",
+      "check": "build-manifest.json",
+      "details": "Not present (no stable build yet) "
+    },
+    {
+      "status": "PASS",
+      "category": "Security",
+      "check": "No .env secrets",
+      "details": "0 files with real API keys/tokens "
+    },
+    {
+      "status": "PASS",
+      "category": "Security",
+      "check": "No tunnels in stable",
+      "details": "0 markers "
+    },
+    {
+      "status": "PASS",
+      "category": "CI/CD",
+      "check": "stable-build.yml",
+      "details": "Present "
+    },
+    {
+      "status": "PASS",
+      "category": "CI/CD",
+      "check": "constitution-audit.yml",
+      "details": "Present "
+    },
+    {
+      "status": "PASS",
+      "category": "Tests",
+      "check": "tauri.contract.test.ts",
+      "details": "Present "
+    },
+    {
+      "status": "PASS",
+      "category": "Tests",
+      "check": "gate-p3.test.ts",
+      "details": "Present "
+    },
+    {
+      "status": "PASS",
+      "category": "Tests",
+      "check": "gate-p4.test.ts",
+      "details": "Present "
+    }
+  ],
   "system": {
     "node_version": "v24.0.0",
     "pnpm_version": "10.28.0",

@@ -476,8 +476,7 @@ function useOmegaRenderProtection() {
         },
       })
       .catch(err => {
-        isDev &&
-          console.warn('[OMEGA CHAT PAGE] Unified healing failed:', err);
+        isDev && console.warn('[OMEGA CHAT PAGE] Unified healing failed:', err);
       });
 
     setPageState(prev => ({

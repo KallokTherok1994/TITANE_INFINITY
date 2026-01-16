@@ -1541,9 +1541,10 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
           responseContent.trim().length > 0 ? responseContent : aggregatedContent;
 
         // ✅ CRITICAL FIX: Jamais de content vide pour message terminé
-        const safeFinalContent = finalContent.trim().length > 0
-          ? finalContent
-          : "Erreur : Aucune réponse générée par l'IA. Veuillez réessayer.";
+        const safeFinalContent =
+          finalContent.trim().length > 0
+            ? finalContent
+            : "Erreur : Aucune réponse générée par l'IA. Veuillez réessayer.";
 
         if (safeFinalContent.trim().length === 0) {
           throw new Error('Réponse vide du backend (final content)');

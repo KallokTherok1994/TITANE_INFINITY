@@ -5,6 +5,8 @@
  * Facilite l'import et l'instanciation des 4 moteurs cognitifs
  */
 
+import { tauriClient } from '@/lib/tauriClient';
+
 // ==================== TYPES ====================
 export * from './semanticMemory.types';
 export * from './goalConsistency.types';
@@ -207,7 +209,6 @@ export async function checkCognitiveAvailability(): Promise<{
   // Check si on est dans Tauri (SQLite via backend Rust, pas better-sqlite3)
   // better-sqlite3 est un module Node.js natif qui ne fonctionne pas dans le navigateur
   try {
-    const { invoke } = await import('@tauri-apps/api/core');
     // Tester si le backend Tauri SQLite est disponible
     await tauriClient.checkSqliteAvailable();
     results.sqlite = true;

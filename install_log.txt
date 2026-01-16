@@ -1,0 +1,12 @@
+Lockfile is up to date, resolution step is skipped
+Already up to date
+
+
+> titane-infinity@26.3.0 preinstall /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> node scripts/install/enforce-package-manager.cjs
+
+
+> titane-infinity@26.3.0 prepare /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> husky
+
+Done in 904ms using pnpm v10.28.0

@@ -23,11 +23,11 @@ async function testOllamaConnection() {
     console.log('2️⃣  Liste des modèles disponibles...');
     const modelsResponse = await fetch(`${OLLAMA_URL}/api/tags`);
     const modelsData = await modelsResponse.json();
-    
+
     if (modelsData.models && modelsData.models.length > 0) {
       console.log(`   ✅ ${modelsData.models.length} modèle(s) trouvé(s):`);
       modelsData.models.forEach(model => {
-        const sizeGB = (model.size / (1024 ** 3)).toFixed(2);
+        const sizeGB = (model.size / 1024 ** 3).toFixed(2);
         console.log(`      • ${model.name} (${sizeGB} GB)`);
       });
       console.log('');
@@ -37,10 +37,10 @@ async function testOllamaConnection() {
 
     // Test 3: Check if default model exists
     console.log(`3️⃣  Vérification du modèle ${OLLAMA_MODEL}...`);
-    const defaultModelExists = modelsData.models.some(m => 
-      m.name === OLLAMA_MODEL || m.name === `${OLLAMA_MODEL}:latest`
+    const defaultModelExists = modelsData.models.some(
+      m => m.name === OLLAMA_MODEL || m.name === `${OLLAMA_MODEL}:latest`
     );
-    
+
     if (defaultModelExists) {
       console.log(`   ✅ Modèle ${OLLAMA_MODEL} disponible\n`);
     } else {
@@ -53,7 +53,7 @@ async function testOllamaConnection() {
     // Test 4: Simple generation test
     console.log('4️⃣  Test de génération simple...');
     const testModel = defaultModelExists ? OLLAMA_MODEL : modelsData.models[0]?.name;
-    
+
     if (testModel) {
       const generateResponse = await fetch(`${OLLAMA_URL}/api/generate`, {
         method: 'POST',
@@ -61,12 +61,12 @@ async function testOllamaConnection() {
         body: JSON.stringify({
           model: testModel,
           prompt: 'Dis bonjour en français (une seule phrase)',
-          stream: false
-        })
+          stream: false,
+        }),
       });
 
       const generateData = await generateResponse.json();
-      
+
       if (generateData.response) {
         console.log(`   ✅ Génération réussie avec ${testModel}`);
         console.log(`   📝 Réponse: "${generateData.response.substring(0, 100)}..."\n`);
@@ -79,18 +79,17 @@ async function testOllamaConnection() {
     console.log('═══════════════════════════════════════════════════');
     console.log('✅ RÉSULTAT: Ollama est opérationnel et prêt pour TITANE∞');
     console.log('═══════════════════════════════════════════════════\n');
-    
+
     console.log('📋 Configuration recommandée pour .env:');
     console.log(`OLLAMA_BASE_URL=${OLLAMA_URL}`);
     console.log(`OLLAMA_DEFAULT_MODEL=${testModel || OLLAMA_MODEL}`);
     console.log('');
-
   } catch (error) {
     console.error('\n❌ ERREUR:', error.message);
     console.log('\n💡 Solutions possibles:');
-    console.log('   1. Vérifiez qu\'Ollama est démarré: systemctl status ollama');
+    console.log("   1. Vérifiez qu'Ollama est démarré: systemctl status ollama");
     console.log('   2. Ou démarrez-le: ollama serve');
-    console.log('   3. Vérifiez l\'URL dans OLLAMA_BASE_URL');
+    console.log("   3. Vérifiez l'URL dans OLLAMA_BASE_URL");
     console.log('');
     process.exit(1);
   }

@@ -561,7 +561,7 @@ export async function storeLearning(result: SelfHealingRunResult): Promise<void>
           original_event_type: 'SelfHealingCycle',
           playbookId: data.playbook.id,
           confidence: record.confidence,
-          channel,
+          channel: data.escalation.channel,
         },
       },
     }),

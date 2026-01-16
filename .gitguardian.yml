@@ -13,23 +13,23 @@ paths-ignore:
   - build/
   - .cache/
   - coverage/
-  
+
   # Lock files (may contain hashes that look like secrets)
   - pnpm-lock.yaml
   - Cargo.lock
   - package-lock.json
-  
+
   # Documentation and archives
   - docs/
   - _archive/
   - legacy/
   - TITANE_INFINITY-main.zip
-  
+
   # Storybook and testing
   - .storybook/
   - playwright-report/
   - performance-reports/
-  
+
   # Temporary and local files
   - tmp/
   - .tmp/
@@ -37,7 +37,7 @@ paths-ignore:
   - .current-server-info
   - .server.pid
   - .tunnel-access.txt
-  
+
   # Git internals
   - .git/
 
@@ -47,13 +47,13 @@ exclude:
   - .env.example
   - .env.deploy
   - .env.ollama
-  
+
   # Test fixtures that may contain fake credentials
   - tests/fixtures/**
   - 'test/**/*.fixture.*'
   - '**/*.test.ts'
   - '**/*.spec.ts'
-  
+
   # Configuration files with benign patterns
   - figma-tokens.json
   - .titane-security-config.json
@@ -68,7 +68,7 @@ exclude:
 # secret-min-occurrences: 3
 
 # Exit code behavior
-exit-zero: false  # Fail CI on secret detection
+exit-zero: false # Fail CI on secret detection
 
 # Verbose output for debugging (use sparingly in CI)
 verbose: false

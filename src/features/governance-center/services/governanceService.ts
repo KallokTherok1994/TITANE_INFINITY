@@ -142,7 +142,10 @@ async function setAnthropicKey(apiKey: string): Promise<SecureResponse<GeminiKey
  */
 async function getCopilotStatus(): Promise<SecureResponse<CopilotKeyStatus>> {
   const raw = await safeInvoke<unknown>('get_copilot_key_status');
-  return normalizeDirectResponse<CopilotKeyStatus>(raw, 'Impossible de récupérer le statut Copilot');
+  return normalizeDirectResponse<CopilotKeyStatus>(
+    raw,
+    'Impossible de récupérer le statut Copilot'
+  );
 }
 
 /**
@@ -150,7 +153,10 @@ async function getCopilotStatus(): Promise<SecureResponse<CopilotKeyStatus>> {
  */
 async function setCopilotKey(apiKey: string): Promise<SecureResponse<CopilotKeyStatus>> {
   const raw = await safeInvoke<unknown>('chat_set_copilot_key', { api_key: apiKey });
-  return normalizeDirectResponse<CopilotKeyStatus>(raw, 'Impossible de définir la clé Copilot');
+  return normalizeDirectResponse<CopilotKeyStatus>(
+    raw,
+    'Impossible de définir la clé Copilot'
+  );
 }
 
 /**

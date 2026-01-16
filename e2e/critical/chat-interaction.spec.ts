@@ -25,9 +25,106 @@ async function neutralizeBootOverlay(page: Page): Promise<void> {
 
 test.describe('Critical Path: Chat Interaction', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/chat');
-    await page.waitForLoadState('domcontentloaded');
-    await expect(chatInputLocator(page)).toBeVisible({ timeout: 10000 });
+    // Mock Tauri APIs for E2E testing
+    await page.addInitScript(() => {
+      // Set browser mode for E2E tests
+      localStorage.setItem('titane_browser_mode', '1');
+      localStorage.setItem('titane_onboarding_complete', '1');
+
+      // Mock Node.js modules that don't work in browser
+      (window as any).process = { env: {} };
+      (window as any).global = window;
+
+      // Mock events module
+      (window as any).require = (module: string) => {
+        if (module === 'events') {
+          return {
+            EventEmitter: class EventEmitter {
+              on() {
+                return this;
+              }
+              emit() {
+                return this;
+              }
+              off() {
+                return this;
+              }
+              addListener() {
+                return this;
+              }
+              removeListener() {
+                return this;
+              }
+            },
+          };
+        }
+        throw new Error(`Module ${module} not found`);
+      };
+
+      // Mock Tauri globals
+      (window as any).__TAURI__ = {
+        core: {
+          invoke: async (cmd: string, args?: any) => {
+            console.log(`[MOCK] Tauri invoke: ${cmd}`, args);
+
+            // Mock responses for common commands
+            switch (cmd) {
+              case 'is_onboarding_complete':
+                return true;
+              case 'get_memory_stats':
+                return { shortTerm: 10, midTerm: 5, longTerm: 2 };
+              case 'get_system_health':
+                return { status: 'healthy', uptime: 3600 };
+              case 'memory_write_log':
+                return null;
+              case 'get_app_config':
+                return { theme: 'dark', language: 'fr' };
+              case 'list_memory_entries':
+                return [];
+              case 'get_conversation_history':
+                return [];
+              case 'send_chat_message':
+                return {
+                  assistant_message: 'Bonjour! Je suis TITANE, votre assistant IA.',
+                  usage: { tokens: 50 },
+                };
+              default:
+                console.warn(`[MOCK] Unhandled Tauri command: ${cmd}`);
+                return null;
+            }
+          },
+        },
+      };
+
+      // Mock Tauri internals
+      (window as any).__TAURI_INTERNALS__ = {
+        invoke: (window as any).__TAURI__.core.invoke,
+      };
+    });
+
+    // Log console messages for debugging
+    page.on('console', msg => {
+      console.log(`PAGE LOG: ${msg.type()}: ${msg.text()}`);
+    });
+    page.on('pageerror', error => {
+      console.log(`PAGE ERROR: ${error.message}`);
+    });
+
+    await page.goto('/titane');
+    await page.waitForLoadState('networkidle');
+
+    // Debug: Check what's actually on the page
+    const bodyText = await page.locator('body').textContent();
+    console.log('Page body text:', bodyText?.substring(0, 500));
+
+    // Wait for React to load and routing to complete
+    await page.waitForTimeout(3000); // Give React time to mount
+
+    // Wait for the main TITANE header to be visible
+    await expect(
+      page.locator('h1.titane-title').filter({ hasText: 'TITANE — Le Cœur du Système' })
+    ).toBeVisible({ timeout: 20000 });
+
     await neutralizeBootOverlay(page);
   });
 

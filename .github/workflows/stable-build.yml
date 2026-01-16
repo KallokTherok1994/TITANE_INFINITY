@@ -1,18 +1,18 @@
-name: "🔵 Stable Build (PHASE_3)"
+name: '🔵 Stable Build (PHASE_3)'
 
 on:
   workflow_dispatch:
     inputs:
       validate_reproducibility:
-        description: "Run double-build reproducibility check"
+        description: 'Run double-build reproducibility check'
         required: false
         type: boolean
         default: true
   push:
     tags:
-      - "v*.*.*"
+      - 'v*.*.*'
     branches:
-      - "stable-runtime"
+      - 'stable-runtime'
 
 permissions:
   contents: read
@@ -23,27 +23,27 @@ env:
 
 jobs:
   stable-build:
-    name: "Build Stable Runtime (Linux)"
+    name: 'Build Stable Runtime (Linux)'
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: "Checkout repository"
+      - name: 'Checkout repository'
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
-      - name: "Setup Node.js (repo-bundled)"
+
+      - name: 'Setup Node.js (repo-bundled)'
         run: |
           echo "$PWD/.tools/node/current/bin" >> $GITHUB_PATH
           node --version
           pnpm --version
-      
-      - name: "Install Rust stable"
+
+      - name: 'Install Rust stable'
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: x86_64-unknown-linux-gnu
-      
-      - name: "Install system dependencies (Ubuntu)"
+
+      - name: 'Install system dependencies (Ubuntu)'
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -52,8 +52,8 @@ jobs:
             librsvg2-dev \
             patchelf \
             jq
-      
-      - name: "Cache Rust dependencies"
+
+      - name: 'Cache Rust dependencies'
         uses: actions/cache@v4
         with:
           path: |
@@ -65,76 +65,76 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
-      
-      - name: "Cache pnpm store"
+
+      - name: 'Cache pnpm store'
         uses: actions/cache@v4
         with:
           path: ~/.local/share/pnpm/store
           key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-
-      
-      - name: "Install frontend dependencies"
+
+      - name: 'Install frontend dependencies'
         run: pnpm install --frozen-lockfile
-      
-      - name: "🔐 PHASE_3: Validate allowlist integrity"
+
+      - name: '🔐 PHASE_3: Validate allowlist integrity'
         run: |
           ALLOWLIST="src-tauri/allowlist.whitelist.stable.json"
           if [[ ! -f "$ALLOWLIST" ]]; then
             echo "❌ ERROR: Stable allowlist missing: $ALLOWLIST"
             exit 1
           fi
-          
+
           # Verify JSON validity
           if ! jq empty "$ALLOWLIST" 2>/dev/null; then
             echo "❌ ERROR: Invalid JSON in allowlist"
             exit 1
           fi
-          
+
           # Count allowed commands
           ALLOWED=$(jq -r '.app.security.capabilities[].allow[]?.command // empty' "$ALLOWLIST" | wc -l)
           echo "✅ Allowlist valid: $ALLOWED commands allowed"
-          
+
           # Verify deny list exists
           DENIED=$(jq -r '.app.security.capabilities[].deny[]?.command // empty' "$ALLOWLIST" | wc -l)
           echo "✅ Deny list valid: $DENIED commands denied"
-      
-      - name: "🔵 Build Stable Runtime (1st pass)"
+
+      - name: '🔵 Build Stable Runtime (1st pass)'
         run: |
           export TITANE_BUILD_ASSUME_YES=1
           bash runtime/stable/build.sh
-      
-      - name: "📦 Save build artifacts (1st pass)"
+
+      - name: '📦 Save build artifacts (1st pass)'
         run: |
           mkdir -p build-pass1
           cp runtime/stable/*.AppImage build-pass1/ 2>/dev/null || true
           cp runtime/stable/*.deb build-pass1/ 2>/dev/null || true
           cp runtime/stable/build-manifest.json build-pass1/ 2>/dev/null || true
-      
-      - name: "🔁 GATE_P3: Reproducibility check (2nd build)"
+
+      - name: '🔁 GATE_P3: Reproducibility check (2nd build)'
         if: ${{ inputs.validate_reproducibility == true || github.event_name == 'push' }}
         run: |
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
           echo "🔐 GATE_P3: Reproducible Build Validation"
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
           echo ""
-          
+
           # Clean build artifacts (keep deps cache)
           rm -rf runtime/stable/*.AppImage runtime/stable/*.deb
           rm -rf dist/ build/ runtime/stable/build/
-          
+
           # Rebuild with same environment
           export TITANE_BUILD_ASSUME_YES=1
           bash runtime/stable/build.sh
-          
+
           # Compare hashes
           echo "📊 Comparing build hashes..."
           HASH1=$(sha256sum build-pass1/*.AppImage | awk '{print $1}')
           HASH2=$(sha256sum runtime/stable/*.AppImage | awk '{print $1}')
-          
+
           echo "  Build 1 hash: $HASH1"
           echo "  Build 2 hash: $HASH2"
-          
+
           if [[ "$HASH1" == "$HASH2" ]]; then
             echo "✅ GATE_P3 PASS: Builds are reproducible (hashes match)"
           else
@@ -142,8 +142,8 @@ jobs:
             echo "  This violates PHASE_3 deterministic build requirements."
             exit 1
           fi
-      
-      - name: "📋 Display build manifest"
+
+      - name: '📋 Display build manifest'
         run: |
           if [[ -f runtime/stable/build-manifest.json ]]; then
             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -151,8 +151,8 @@ jobs:
             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
             cat runtime/stable/build-manifest.json | jq .
           fi
-      
-      - name: "📦 Upload build artifacts"
+
+      - name: '📦 Upload build artifacts'
         uses: actions/upload-artifact@v4
         with:
           name: titane-stable-${{ github.sha }}
@@ -161,8 +161,8 @@ jobs:
             runtime/stable/*.deb
             runtime/stable/build-manifest.json
           retention-days: 30
-      
-      - name: "🎉 Build Summary"
+
+      - name: '🎉 Build Summary'
         run: |
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
           echo "🎉 STABLE BUILD COMPLETE"

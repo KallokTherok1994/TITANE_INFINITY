@@ -2,7 +2,7 @@
 
 **Phase** : PHASE_5 — Runtime Governance & Operational Integrity  
 **Version** : 1.0.0  
-**Date** : 16 janvier 2026  
+**Date** : 16 janvier 2026
 
 ---
 
@@ -17,12 +17,14 @@ runtime/<env>/logs/<component>-<timestamp>.log
 ```
 
 **Règles** :
+
 - `<env>` : `dev` ou `stable`
 - `<component>` : nom descriptif (vite, tauri, stable-build, appimage-run, etc.)
 - `<timestamp>` : `YYYYMMDD-HHMMSS` (UTC)
 - Extension : `.log` (logs complets) ou `.txt` (rapports/summaries)
 
 **Exemples valides** :
+
 ```
 runtime/dev/logs/vite.log
 runtime/dev/logs/tauri.log
@@ -31,6 +33,7 @@ runtime/stable/logs/appimage-run-20260116-020045.log
 ```
 
 **Exemples interdits** :
+
 ```
 ❌ logs/build.log                     (hors runtime/)
 ❌ src-tauri/debug.log                 (dans code source)
@@ -49,12 +52,14 @@ runtime/stable/logs/appimage-run-20260116-020045.log
 ```
 
 **Champs** :
+
 - `timestamp` : ISO 8601 UTC (`YYYY-MM-DDTHH:MM:SSZ`)
 - `component` : Nom du module/service (max 20 chars)
 - `level` : `DEBUG` | `INFO` | `WARN` | `ERROR` | `FATAL`
 - `message` : Texte libre (max 200 chars recommandé)
 
 **Exemples** :
+
 ```
 2026-01-16T01:57:16Z tauri.dev INFO Vite ready on :5173
 2026-01-16T01:57:20Z memory.core ERROR Failed to load memory_core_state.json: file not found
@@ -70,6 +75,7 @@ Si l'implémentation complète est complexe, minimum acceptable :
 ```
 
 **Exemple** :
+
 ```
 [build.stable] 2026-01-16T01:57:25Z Build completed: Titan-Stable_26.3.0_amd64.AppImage
 ```
@@ -81,6 +87,7 @@ Si l'implémentation complète est complexe, minimum acceptable :
 ### Secrets et Credentials
 
 ❌ **Jamais logger** :
+
 - API keys : `GEMINI_API_KEY`, `OPENAI_API_KEY`, etc.
 - Tokens : Bearer tokens, JWT, OAuth secrets
 - Passwords : En clair, hashés, ou partiels
@@ -88,6 +95,7 @@ Si l'implémentation complète est complexe, minimum acceptable :
 - Database credentials : URLs avec user:pass
 
 ✅ **À la place** :
+
 ```
 ❌ DEBUG GEMINI_API_KEY=AIzaSyAbC123...
 ✅ INFO GEMINI_API_KEY configured (32 chars)
@@ -99,6 +107,7 @@ Si l'implémentation complète est complexe, minimum acceptable :
 ### PII (Personally Identifiable Information)
 
 ❌ **Jamais logger complet** :
+
 - Emails : `user@example.com`
 - SSN / Tax IDs
 - Phone numbers
@@ -106,6 +115,7 @@ Si l'implémentation complète est complexe, minimum acceptable :
 - Addresses
 
 ✅ **Redaction acceptable** :
+
 ```
 ❌ INFO User logged in: john.doe@example.com
 ✅ INFO User logged in: j***@e***.com (id: abc123)
@@ -117,11 +127,13 @@ Si l'implémentation complète est complexe, minimum acceptable :
 ### Paths et Code
 
 ❌ **Éviter** :
+
 - Paths absolus système : `/home/user/.ssh/id_rsa`
 - Code propriétaire dans stack traces
 - Secrets dans variables d'environnement
 
 ✅ **Alternatives** :
+
 ```
 ❌ ERROR Failed to read /home/user/.config/titane/secrets.json
 ✅ ERROR Failed to read ~/.config/titane/secrets.json
@@ -169,13 +181,13 @@ Si l'implémentation complète est complexe, minimum acceptable :
 
 ## 📊 Niveaux de Log (Levels)
 
-| Level | Stable | Dev | Usage |
-|-------|--------|-----|-------|
-| `DEBUG` | ❌ | ✅ | Détails internes (state, function calls) |
-| `INFO` | ✅ | ✅ | Événements normaux (startup, requests) |
-| `WARN` | ✅ | ✅ | Anomalies non-bloquantes (retry, fallback) |
-| `ERROR` | ✅ | ✅ | Erreurs bloquantes (I/O fail, timeout) |
-| `FATAL` | ✅ | ✅ | Critiques système (OOM, corruption) |
+| Level   | Stable | Dev | Usage                                      |
+| ------- | ------ | --- | ------------------------------------------ |
+| `DEBUG` | ❌     | ✅  | Détails internes (state, function calls)   |
+| `INFO`  | ✅     | ✅  | Événements normaux (startup, requests)     |
+| `WARN`  | ✅     | ✅  | Anomalies non-bloquantes (retry, fallback) |
+| `ERROR` | ✅     | ✅  | Erreurs bloquantes (I/O fail, timeout)     |
+| `FATAL` | ✅     | ✅  | Critiques système (OOM, corruption)        |
 
 **Stable** : Production → `INFO` minimum  
 **Dev** : Development → Tous niveaux autorisés

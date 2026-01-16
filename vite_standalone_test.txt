@@ -1,0 +1,21 @@
+✘ [ERROR] Expected ":" but found ","
+
+    vite.config.ts:441:3:
+      441 │   },
+          │    ^
+          ╵    :
+
+failed to load config from /home/titane-os/Documents/GitHub/TITANE_INFINITY/vite.config.ts
+error when starting dev server:
+Error: Build failed with 1 error:
+vite.config.ts:441:3: ERROR: Expected ":" but found ","
+    at failureErrorWithLog (/home/titane-os/Documents/GitHub/TITANE_INFINITY/node_modules/.pnpm/esbuild@0.25.12/node_modules/esbuild/lib/main.js:1467:15)
+    at /home/titane-os/Documents/GitHub/TITANE_INFINITY/node_modules/.pnpm/esbuild@0.25.12/node_modules/esbuild/lib/main.js:926:25
+    at runOnEndCallbacks (/home/titane-os/Documents/GitHub/TITANE_INFINITY/node_modules/.pnpm/esbuild@0.25.12/node_modules/esbuild/lib/main.js:1307:45)
+    at buildResponseToResult (/home/titane-os/Documents/GitHub/TITANE_INFINITY/node_modules/.pnpm/esbuild@0.25.12/node_modules/esbuild/lib/main.js:924:7)
+    at /home/titane-os/Documents/GitHub/TITANE_INFINITY/node_modules/.pnpm/esbuild@0.25.12/node_modules/esbuild/lib/main.js:951:16
+    at responseCallbacks.<computed> (/home/titane-os/Documents/GitHub/TITANE_INFINITY/node_modules/.pnpm/esbuild@0.25.12/node_modules/esbuild/lib/main.js:603:9)
+    at handleIncomingPacket (/home/titane-os/Documents/GitHub/TITANE_INFINITY/node_modules/.pnpm/esbuild@0.25.12/node_modules/esbuild/lib/main.js:658:12)
+    at Socket.readFromStdout (/home/titane-os/Documents/GitHub/TITANE_INFINITY/node_modules/.pnpm/esbuild@0.25.12/node_modules/esbuild/lib/main.js:581:7)
+    at Socket.emit (node:events:524:28)
+    at addChunk (node:internal/streams/readable:561:12)

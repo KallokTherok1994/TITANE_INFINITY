@@ -1,6 +1,7 @@
 # 🌐 TITANE∞ Tunnel Public
 
 ## État du Tunnel
+
 ✅ **Cloudflared tunnel activé**
 
 ## Accès Public au Serveur Dev
@@ -8,28 +9,31 @@
 Le serveur TITANE dev (Vite sur port 5173) est maintenant exposé publiquement via Cloudflare Tunnel.
 
 ### URL d'Accès
+
 ```
 https://[URL-TRYCLOUDFLARE].trycloudflare.com
 ```
 
 **Note:** L'URL exact est généré automatiquement par Cloudflare. Vérifiez la sortie cloudflared ou utilisez :
+
 ```bash
 curl -I http://localhost:5173
 ```
 
 ## Configuration Active
 
-| Paramètre | Valeur |
-|-----------|--------|
-| **Local URL** | http://localhost:5173 |
+| Paramètre       | Valeur                                 |
+| --------------- | -------------------------------------- |
+| **Local URL**   | http://localhost:5173                  |
 | **Tunnel Type** | Cloudflare Quick Tunnel (account-less) |
-| **Service** | Vite Dev Server (TITANE) |
-| **Ollama** | http://localhost:11434 (local only) |
-| **Status** | 🟢 Running |
+| **Service**     | Vite Dev Server (TITANE)               |
+| **Ollama**      | http://localhost:11434 (local only)    |
+| **Status**      | 🟢 Running                             |
 
 ## Commandes Utiles
 
 ### Afficher l'URL du tunnel
+
 ```bash
 # L'URL s'affiche dans les logs cloudflared
 ps aux | grep cloudflared
@@ -38,17 +42,20 @@ tail -50 ~/.local/share/cloudflared/tunnel.log 2>/dev/null || echo "Logs not fou
 ```
 
 ### Arrêter le tunnel
+
 ```bash
 pkill -f "cloudflared tunnel"
 ```
 
 ### Relancer le tunnel
+
 ```bash
 cd /home/titane/Documents/TITANE_INFINITY
 nohup cloudflared tunnel --url http://localhost:5173 > .tunnel-access.txt 2>&1 &
 ```
 
 ### Tester l'accès local
+
 ```bash
 curl -s http://localhost:5173 | head -20
 ```

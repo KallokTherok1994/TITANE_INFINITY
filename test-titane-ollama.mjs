@@ -3,7 +3,7 @@
  */
 import { spawn } from 'child_process';
 
-console.log('🧪 Test d\'intégration TITANE ↔ Ollama\n');
+console.log("🧪 Test d'intégration TITANE ↔ Ollama\n");
 
 // Test 1: Vérifier Ollama
 console.log('1️⃣  Vérification Ollama...');

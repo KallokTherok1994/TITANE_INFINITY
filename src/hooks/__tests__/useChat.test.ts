@@ -529,4 +529,27 @@ describe('useChat - Performance', () => {
     // Devrait avoir traité tous les messages sans erreur
     expect(result.current.messages.length).toBeGreaterThan(0);
   });
+
+  it('should normalize messages with content always as string', async () => {
+    const { result } = renderHook(() => useChat(), {
+      wrapper: TestWrapper,
+    });
+
+    await act(async () => {
+      await result.current.sendMessage('test message');
+    });
+
+    await waitFor(
+      () => {
+        expect(result.current.isLoading).toBe(false);
+      },
+      { timeout: 10000 }
+    );
+
+    // Vérifier que tous les messages ont content comme string
+    result.current.messages.forEach(message => {
+      expect(typeof message.content).toBe('string');
+      expect(message.content).not.toBe('');
+    });
+  });
 });

@@ -6,6 +6,7 @@
 import { secureInvoke } from '@/lib/security';
 import { listen, emit as tauriEmit, type UnlistenFn } from '@tauri-apps/api/event';
 import type { BridgeState, TauriCommand } from '../types';
+import { tauriClient } from '@/lib/tauriClient';
 
 /**
  * Pont Tauri
@@ -22,6 +23,7 @@ export class TauriBridge {
   private isProcessingQueue = false;
   private maxRetries = 3;
   private retryDelay = 1000;
+  public tauriClient = tauriClient;
 
   /**
    * Initialise le pont

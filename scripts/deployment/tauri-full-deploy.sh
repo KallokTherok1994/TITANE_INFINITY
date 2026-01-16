@@ -433,7 +433,7 @@ step5_tests() {
     cd "$PROJECT_ROOT"
     
     print_section "5.1: Frontend tests (Vitest)"
-    run_cmd "$PM_CMD run test -- --run --reporter=basic" "Frontend tests" || warning "Some tests failed"
+    run_cmd "$PM_CMD run test -- --run" "Frontend tests" || warning "Some tests failed"
     
     print_section "5.2: Architecture tests"
     run_cmd "$PM_CMD run test:architecture" "Architecture tests" || warning "Architecture tests failed"
