@@ -1,0 +1,56 @@
+# P0-2 SURFACE GUARD - PROD CERTIFICATION GATE
+# BLOQUANT: Vérifie cohérence documentation surface vs allowlist
+name: "P0-2 Surface Guard"
+
+on:
+  push:
+    branches: [main, dev, MAIN]
+    paths:
+      - 'docs/TAURI_SURFACE.md'
+      - 'src-tauri/allowlist.whitelist.stable.json'
+      - 'scripts/security/surface-guard.sh'
+  pull_request:
+    branches: [main, dev, MAIN]
+    paths:
+      - 'docs/TAURI_SURFACE.md'
+      - 'src-tauri/allowlist.whitelist.stable.json'
+  schedule:
+    - cron: '0 2 * * *'  # Quotidien 2h UTC
+  workflow_dispatch:
+
+jobs:
+  surface-guard:
+    name: "P0-2 Surface Guard Validation"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: "📥 Checkout repository"
+        uses: actions/checkout@v4
+        
+      - name: "⚙️ Install jq for JSON processing"
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y jq
+          
+      - name: "🛡️ Run Surface Guard"
+        run: |
+          chmod +x ./scripts/security/surface-guard.sh
+          ./scripts/security/surface-guard.sh
+          
+      - name: "📋 Create evidence artifact"
+        if: always()
+        run: |
+          mkdir -p /tmp/surface-evidence
+          echo "TIMESTAMP: $(date -Iseconds)" > /tmp/surface-evidence/surface-guard-ci-$(date +%Y%m%d-%H%M%S).txt
+          echo "TRIGGER: GitHub Actions CI" >> /tmp/surface-evidence/surface-guard-ci-$(date +%Y%m%d-%H%M%S).txt
+          echo "COMMIT: ${{ github.sha }}" >> /tmp/surface-evidence/surface-guard-ci-$(date +%Y%m%d-%H%M%S).txt
+          echo "" >> /tmp/surface-evidence/surface-guard-ci-$(date +%Y%m%d-%H%M%S).txt
+          ./scripts/security/surface-guard.sh >> /tmp/surface-evidence/surface-guard-ci-$(date +%Y%m%d-%H%M%S).txt 2>&1 || true
+          
+      - name: "🗂️ Upload evidence"
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p0-surface-guard-evidence
+          path: /tmp/surface-evidence/
+          retention-days: 90
