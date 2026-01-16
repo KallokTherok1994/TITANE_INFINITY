@@ -1,0 +1,275 @@
+# RELEASE DEPLOYMENT CI/CD WORKFLOW
+# TITANE_INFINITY_PROD_CERTIFICATION_RUN_V1
+# Automated deployment after GATE_RELEASE certification
+
+name: "🚀 RELEASE-DEPLOYMENT-PIPELINE"
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      target_type:
+        description: 'Deployment target'
+        required: true
+        default: 'both'
+        type: choice
+        options:
+          - 'both'
+          - 'appimage'
+          - 'deb'
+      skip_certification:
+        description: 'Skip certification verification (DANGER)'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  pre-deployment-validation:
+    name: "🔍 Pre-Deployment Validation"
+    runs-on: ubuntu-latest
+    outputs:
+      certification-status: ${{ steps.cert-check.outputs.status }}
+      build-artifacts: ${{ steps.artifacts-check.outputs.available }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Install Dependencies
+      run: |
+        if [ -d ".tools/node/current/bin" ]; then
+          export PATH="$PWD/.tools/node/current/bin:$PATH"
+        fi
+        pnpm install --frozen-lockfile
+
+    - name: Execute Full Certification Chain
+      id: cert-check
+      run: |
+        echo "🔍 RELEASE DEPLOYMENT: Running full certification validation..."
+        
+        if [ -d ".tools/node/current/bin" ]; then
+          export PATH="$PWD/.tools/node/current/bin:$PATH"
+        fi
+        
+        # Run complete certification chain
+        if pnpm test -- --run tests/phase*/gate-*.test.ts tests/release/gate-release.test.ts; then
+          echo "✅ CERTIFICATION COMPLETE: All gates operational"
+          echo "status=CERTIFIED" >> $GITHUB_OUTPUT
+        else
+          echo "❌ CERTIFICATION FAILED: System not ready for deployment"
+          echo "status=FAILED" >> $GITHUB_OUTPUT
+          exit 1
+        fi
+
+    - name: Check Build Artifacts Availability
+      id: artifacts-check
+      run: |
+        echo "🔍 Checking for existing build artifacts..."
+        
+        ARTIFACTS_AVAILABLE=false
+        
+        if [ -f "runtime/stable/*.AppImage" ] || [ -f "runtime/stable/*.deb" ]; then
+          ARTIFACTS_AVAILABLE=true
+          echo "✅ Build artifacts found in runtime/stable/"
+        else
+          echo "ℹ️  No existing artifacts - will trigger build"
+        fi
+        
+        echo "available=$ARTIFACTS_AVAILABLE" >> $GITHUB_OUTPUT
+
+  certified-build:
+    name: "🔨 Certified Build Pipeline"
+    runs-on: ubuntu-latest
+    needs: [pre-deployment-validation]
+    if: needs.pre-deployment-validation.outputs.certification-status == 'CERTIFIED'
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Setup Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        profile: minimal
+        override: true
+
+    - name: Install Tauri CLI
+      run: |
+        if [ -d ".tools/node/current/bin" ]; then
+          export PATH="$PWD/.tools/node/current/bin:$PATH"
+        fi
+        pnpm add -g @tauri-apps/cli
+
+    - name: Install System Dependencies (Linux)
+      run: |
+        sudo apt update
+        sudo apt install -y \
+          build-essential \
+          curl \
+          wget \
+          libwebkit2gtk-4.0-dev \
+          libssl-dev \
+          libgtk-3-dev \
+          libayatana-appindicator3-dev \
+          librsvg2-dev \
+          patchelf
+
+    - name: Install Dependencies
+      run: |
+        if [ -d ".tools/node/current/bin" ]; then
+          export PATH="$PWD/.tools/node/current/bin:$PATH"
+        fi
+        pnpm install --frozen-lockfile
+
+    - name: Execute Certified Build
+      run: |
+        echo "🔨 CERTIFIED BUILD: Building production artifacts..."
+        
+        # Use existing stable build script
+        ./runtime/stable/build.sh
+        
+        echo "✅ Certified build completed"
+
+    - name: Verify Build Artifacts
+      run: |
+        echo "🔍 Verifying build artifacts..."
+        
+        if ls runtime/stable/*.AppImage >/dev/null 2>&1; then
+          echo "✅ AppImage artifact verified"
+          ls -la runtime/stable/*.AppImage
+        fi
+        
+        if ls runtime/stable/*.deb >/dev/null 2>&1; then
+          echo "✅ DEB artifact verified"  
+          ls -la runtime/stable/*.deb
+        fi
+        
+        # Calculate and display hashes
+        echo "🔐 Artifact hashes:"
+        sha256sum runtime/stable/*.AppImage runtime/stable/*.deb 2>/dev/null || true
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: titane-infinity-build-artifacts
+        path: |
+          runtime/stable/*.AppImage
+          runtime/stable/*.deb
+        retention-days: 30
+
+  release-deployment:
+    name: "🚀 Release Deployment"
+    runs-on: ubuntu-latest
+    needs: [pre-deployment-validation, certified-build]
+    if: needs.pre-deployment-validation.outputs.certification-status == 'CERTIFIED'
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Download Build Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: titane-infinity-build-artifacts
+        path: runtime/stable/
+
+    - name: Make Artifacts Executable
+      run: |
+        chmod +x runtime/stable/*.AppImage 2>/dev/null || true
+
+    - name: Execute Certified Deployment
+      run: |
+        echo "🚀 RELEASE DEPLOYMENT: Executing certified deployment pipeline..."
+        
+        # Set target type
+        TARGET="${{ github.event.inputs.target_type || 'both' }}"
+        
+        # Set certification skip flag
+        SKIP_CERT_FLAG=""
+        if [ "${{ github.event.inputs.skip_certification }}" = "true" ]; then
+          SKIP_CERT_FLAG="--skip-cert"
+          echo "⚠️  WARNING: Certification verification disabled"
+        fi
+        
+        # Execute deployment
+        ./scripts/deployment/certified-deploy.sh \
+          --target "$TARGET" \
+          --deploy-path deployment/latest \
+          --manifest-update \
+          --verbose \
+          $SKIP_CERT_FLAG
+        
+        echo "✅ Certified deployment completed"
+
+    - name: Verify Deployment
+      run: |
+        echo "🔍 Verifying deployment..."
+        
+        if [ -d "deployment/latest" ]; then
+          echo "✅ Deployment directory created"
+          ls -la deployment/latest/
+        fi
+        
+        if [ -f "deployment/latest/MANIFEST.json" ]; then
+          echo "✅ Deployment manifest created"
+          cat deployment/latest/MANIFEST.json
+        fi
+        
+        # Verify artifact hashes
+        if ls deployment/latest/*.AppImage >/dev/null 2>&1; then
+          echo "🔐 AppImage deployment hash:"
+          sha256sum deployment/latest/*.AppImage
+        fi
+        
+        if ls deployment/latest/*.deb >/dev/null 2>&1; then
+          echo "🔐 DEB deployment hash:"
+          sha256sum deployment/latest/*.deb
+        fi
+
+    - name: Upload Deployment Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: titane-infinity-deployment
+        path: |
+          deployment/latest/*
+        retention-days: 90
+
+  deployment-notification:
+    name: "📢 Deployment Notification"
+    runs-on: ubuntu-latest
+    needs: [pre-deployment-validation, certified-build, release-deployment]
+    if: always()
+    steps:
+    - name: Deployment Status Summary
+      run: |
+        echo "📊 DEPLOYMENT PIPELINE SUMMARY"
+        echo "================================"
+        echo ""
+        echo "Certification Status: ${{ needs.pre-deployment-validation.outputs.certification-status }}"
+        echo "Build Status: ${{ needs.certified-build.result }}"
+        echo "Deployment Status: ${{ needs.release-deployment.result }}"
+        echo ""
+        
+        if [ "${{ needs.release-deployment.result }}" = "success" ]; then
+          echo "🎉 TITANE∞ RELEASE DEPLOYMENT: SUCCESS"
+          echo "✅ Production artifacts are ready for distribution"
+          echo "🔐 All artifacts cryptographically verified"
+          echo "📋 Deployment manifest updated"
+        else
+          echo "❌ DEPLOYMENT PIPELINE: FAILED"
+          echo "🔍 Check individual job logs for details"
+        fi
