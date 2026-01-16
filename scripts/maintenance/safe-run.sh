@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+#
+# TITANE∞ — Safe-Run (PHASE_5 BLOC C aligned)
+#
+# Exécute UNIQUEMENT les actions listées dans actions.yml.
+# Toute action non déclarée est REFUSÉE.
+#
 set -euo pipefail
 
 usage() {
@@ -7,17 +13,28 @@ Usage:
   scripts/maintenance/safe-run.sh <command-id> [--force] [--] [args...]
 
 Runs a whitelisted command with safety checks + logging.
+All actions MUST be declared in scripts/maintenance/actions.yml.
 
 Examples:
   scripts/maintenance/safe-run.sh install-deps
   scripts/maintenance/safe-run.sh run-tests
   scripts/maintenance/safe-run.sh validate
-  scripts/maintenance/safe-run.sh check-dev-ports
-  scripts/maintenance/safe-run.sh ports-check-explicit
+  scripts/maintenance/safe-run.sh health-check
+  scripts/maintenance/safe-run.sh constitution-audit
+  scripts/maintenance/safe-run.sh build-stable      # Requires TITANE_PROD_OK=1
+
+Available actions (see actions.yml):
+  - install-deps, validate, run-tests, test-gate
+  - check-dev-ports, ports-check-explicit
+  - health-check, constitution-audit
+  - launch-dev, stop-dev, clean-caches
+  - build-stable, reset-staging-stable
+  - test-contract, test-gate-p3, test-gate-p4
 
 Notes:
   - "--force" bypasses SOME checks (never production-gating).
-  - For production operations, an explicit env var is required.
+  - Production operations require TITANE_PROD_OK=1.
+  - Actions not in actions.yml are DENIED.
 EOF
 }
 
@@ -120,7 +137,12 @@ run_cmd() {
   say "[run] exit_code=0"
 }
 
+# ========================================
+# ACTION DISPATCH (aligned with actions.yml)
+# ========================================
+
 case "$COMMAND_ID" in
+  # MAINTENANCE (DEV)
   install-deps)
     require_clean_git
     run_cmd ./.tools/node/current/bin/pnpm install --no-lockfile
@@ -156,6 +178,15 @@ case "$COMMAND_ID" in
     run_cmd bash -lc "set -euo pipefail; cd '$REPO_ROOT'; (ss -ltnp 2>/dev/null || ss -ltn 2>/dev/null) | grep -E ':(4000|5173|4173|1430)\\b' | cat || echo 'OK: no dev ports'"
     ;;
 
+  health-check)
+    run_cmd bash scripts/health/health_check.sh --format both
+    ;;
+
+  constitution-audit)
+    run_cmd bash scripts/audit/constitution-audit.sh --format both
+    ;;
+
+  # RUNTIME DEV
   launch-dev)
     run_cmd ./runtime/dev/run-dev.sh
     ;;
@@ -168,6 +199,12 @@ case "$COMMAND_ID" in
     fi
     ;;
 
+  clean-caches)
+    check_dev_ports  # Ports doivent être fermés
+    run_cmd rm -rf node_modules/.cache .vite-cache playwright-report test-results coverage
+    ;;
+
+  # BUILD STABLE (PRODUCTION)
   build-stable)
     require_prod_approval
     require_clean_git
@@ -176,9 +213,34 @@ case "$COMMAND_ID" in
     check_dev_ports
     ;;
 
+  reset-staging-stable)
+    require_prod_approval
+    require_clean_git
+    check_dev_ports
+    say "Cleaning stable staging: target/release/bundle + logs >30 days"
+    rm -rf src-tauri/target/release/bundle
+    find runtime/stable/logs -name 'stable-build-*.log' -mtime +30 -delete || true
+    say "Staging cleaned"
+    ;;
+
+  # TESTS CONTRACTUELS
+  test-contract)
+    run_cmd ./.tools/node/current/bin/pnpm test -- --run tests/contract/tauri.contract.test.ts
+    ;;
+
+  test-gate-p3)
+    run_cmd ./.tools/node/current/bin/pnpm test -- --run tests/phase3/gate-p3.test.ts
+    ;;
+
+  test-gate-p4)
+    run_cmd ./.tools/node/current/bin/pnpm test -- --run tests/phase4/gate-p4.test.ts
+    ;;
+
   *)
+    say "ERROR: action '$COMMAND_ID' not in whitelist"
+    say "See scripts/maintenance/actions.yml for available actions"
     usage
-    fail "unknown command-id: $COMMAND_ID"
+    fail "DENIED: unknown command-id: $COMMAND_ID"
     ;;
 esac
 
