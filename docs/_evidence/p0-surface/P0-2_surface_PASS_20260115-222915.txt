@@ -1,0 +1,123 @@
+TIMESTAMP: 2026-01-15T22:29:15-05:00
+PHASE: P0-2 SURFACE GUARD
+STATUS: PASS
+
+SURFACE GUARD OUTPUT:
+🛡️ [SURFACE-GUARD] TITANE∞ Tauri Surface Guard
+================================================
+📋 Phase 1: Extraction commands allowlist stable...
+📋 Phase 2: Extraction commands documentation...
+📋 Phase 3: Comparaison allowlist vs documentation...
+Commands allowlist:
+  - add_timeline_event
+  - avatar_get_expression
+  - chat_generate
+  - chat_stream_message
+  - complete_onboarding
+  - cp_get_ai_config
+  - cp_set_ai_config
+  - experience_get_state
+  - experience_update_state
+  - file_analyze
+  - fullbody_get_state
+  - fullbody_init
+  - fullbody_update_expression
+  - fullbody_update_pose
+  - get_active_projects
+  - get_active_rituals
+  - get_helios_state
+  - get_knowledge
+  - get_memory_state
+  - get_onboarding_preferences
+  - get_recent_decisions
+  - get_runtime_config
+  - get_singularity_state
+  - get_system_health
+  - get_system_info
+  - get_timeline
+  - import_file
+  - is_onboarding_complete
+  - memory_get_state
+  - memory_ingest_file
+  - orchestration_get_cognitive_state
+  - orchestration_get_unified_state
+  - read_snapshot
+  - save_chat_interaction
+  - singularity_export_json
+  - singularity_get
+  - singularity_get_adaptive
+  - singularity_get_cognitive
+  - singularity_get_full_state
+  - singularity_get_global_coherence
+  - singularity_get_meta
+  - singularity_get_physical
+  - singularity_get_symbolic
+  - singularity_is_critical
+  - singularity_set
+  - singularity_sync
+  - sync_singularity
+  - tts_get_status
+  - tts_is_speaking
+  - tts_speak_parler
+  - tts_stop
+  - upload_and_process_file
+  - write_snapshot
+
+Commands documentés:
+  - add_timeline_event
+  - avatar_get_expression
+  - chat_generate
+  - chat_stream_message
+  - complete_onboarding
+  - cp_get_ai_config
+  - cp_set_ai_config
+  - experience_get_state
+  - experience_update_state
+  - file_analyze
+  - fullbody_get_state
+  - fullbody_init
+  - fullbody_update_expression
+  - fullbody_update_pose
+  - get_active_projects
+  - get_active_rituals
+  - get_helios_state
+  - get_knowledge
+  - get_memory_state
+  - get_onboarding_preferences
+  - get_recent_decisions
+  - get_runtime_config
+  - get_singularity_state
+  - get_system_health
+  - get_system_info
+  - get_timeline
+  - import_file
+  - is_onboarding_complete
+  - memory_get_state
+  - memory_ingest_file
+  - orchestration_get_cognitive_state
+  - orchestration_get_unified_state
+  - read_snapshot
+  - save_chat_interaction
+  - singularity_export_json
+  - singularity_get
+  - singularity_get_adaptive
+  - singularity_get_cognitive
+  - singularity_get_full_state
+  - singularity_get_global_coherence
+  - singularity_get_meta
+  - singularity_get_physical
+  - singularity_get_symbolic
+  - singularity_is_critical
+  - singularity_set
+  - singularity_sync
+  - sync_singularity
+  - tts_get_status
+  - tts_is_speaking
+  - tts_speak_parler
+  - tts_stop
+  - upload_and_process_file
+  - write_snapshot
+
+📋 Phase 4: Vérification métadonnées documentation...
+
+✅ SURFACE-GUARD: PASS - Surface documentée et cohérente
