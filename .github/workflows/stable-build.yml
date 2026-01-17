@@ -77,7 +77,10 @@ jobs:
       - name: 'Install frontend dependencies'
         run: pnpm install --frozen-lockfile
 
-      - name: '🔐 PHASE_3: Validate allowlist integrity'
+      - name: '�️ PNPM Governance Guard'
+        run: pnpm run guard:pm
+
+      - name: '�🔐 PHASE_3: Validate allowlist integrity'
         run: |
           ALLOWLIST="src-tauri/allowlist.whitelist.stable.json"
           if [[ ! -f "$ALLOWLIST" ]]; then
