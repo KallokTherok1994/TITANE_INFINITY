@@ -9,6 +9,38 @@ export default defineConfig({
   plugins: [react()],
   root: ROOT_DIR,
   publicDir: 'public',
+  
+  // Configuration pour les dépendances et modules
+  optimizeDeps: {
+    // Force re-optimization si nécessaire (via env var)
+    force: process.env.VITE_FORCE_OPTIMIZE === '1',
+    
+    // Inclure les dépendances problématiques
+    include: [
+      'react',
+      'react-dom',
+      'react-router-dom',
+      '@tauri-apps/api/core',
+      '@tauri-apps/plugin-shell',
+      'framer-motion',
+      'lucide-react',
+    ],
+    
+    // Exclure les modules qui causent des problèmes
+    exclude: [
+      'events', // Mock events module, don't pre-bundle
+      // Modules qui doivent être chargés directement
+    ],
+  },
+  
+  // Configuration ESM
+  esbuild: {
+    target: 'esnext',
+    format: 'esm',
+    drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
+    legalComments: 'none',
+  },
+  
   server: {
     host: '127.0.0.1',
     port: 5173,
@@ -56,9 +88,6 @@ export default defineConfig({
     'process.env': {},
     global: 'globalThis',
   },
-  optimizeDeps: {
-    exclude: ['events'], // Don't pre-bundle events module
-  },
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
@@ -72,10 +101,6 @@ export default defineConfig({
     rollupOptions: {
       external: process.env.NODE_ENV === 'production' ? ['events'] : [],
     },
-  },
-  esbuild: {
-    drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
-    legalComments: 'none',
   },
   css: {
     devSourcemap: false,

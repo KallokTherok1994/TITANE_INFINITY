@@ -8,6 +8,8 @@ echo "🔍 Vérification de WebKitWebDriver..."
 # Vérifier si WebKitWebDriver est dans le PATH
 if command -v WebKitWebDriver >/dev/null 2>&1; then
   echo "✅ WebKitWebDriver trouvé dans le PATH : $(command -v WebKitWebDriver)"
+  export WEBKIT_WEBDRIVER_PATH=$(command -v WebKitWebDriver)
+  echo "DEBUG: WEBKIT_WEBDRIVER_PATH=$WEBKIT_WEBDRIVER_PATH"
   exit 0
 fi
 
@@ -23,6 +25,7 @@ for path in "${POSSIBLE_PATHS[@]}"; do
   if [ -x "$path" ]; then
     echo "✅ WebKitWebDriver trouvé : $path"
     export WEBKIT_WEBDRIVER_PATH="$path"
+    echo "DEBUG: WEBKIT_WEBDRIVER_PATH=$WEBKIT_WEBDRIVER_PATH"
     exit 0
   fi
 done

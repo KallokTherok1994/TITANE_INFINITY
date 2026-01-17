@@ -34,11 +34,13 @@ import { TitanStateProvider } from './context/TitanStateContext'; // ✨ v∞.MP
 import { AppShell, Sidebar, Header } from '@components/layout';
 import { Button } from './ui';
 // ✨ P3: Lazy-load XP bar for smaller initial bundle
-const XPBar = lazy(() =>
-  import('./components/experience/XPBar').then(m => ({ default: m.XPBar }))
+const XPBar = lazyWithDiagnostic(() =>
+  import('./components/experience/XPBar').then(m => ({ default: m.XPBar })),
+  'XPBar'
 );
 import { AutoHealErrorBoundary } from './components/AutoHealErrorBoundary';
 import { ErrorBoundary } from './components/ErrorBoundary'; // ✨ v19 - Security Hardening
+import { lazyWithDiagnostic, lazyWithTimeout } from './utils/lazyImportDiagnostic'; // ✨ BOOT-FIX - Diagnostic lazy imports
 import {
   detectEnvironment,
   shouldBlockLoading as _shouldBlockLoading,
@@ -58,15 +60,17 @@ import { initializeOllama } from './services/ai/providers/ollama'; // ✨ v21 - 
 // ✨ CONSOLE MONITOR - Auto-Heal Integration
 import { consoleMonitor } from './services/monitoring/consoleMonitor';
 // ✨ v25.3.1 + P3: Lazy-load Aura components (heavy graphics)
-const QuantumParticles = lazy(() =>
+const QuantumParticles = lazyWithDiagnostic(() =>
   import('./components/aura/QuantumParticles').then(m => ({
     default: m.QuantumParticles,
-  }))
+  })),
+  'QuantumParticles'
 );
-const AuraControlPanel = lazy(() =>
+const AuraControlPanel = lazyWithDiagnostic(() =>
   import('./components/aura/AuraControlPanel').then(m => ({
     default: m.AuraControlPanel,
-  }))
+  })),
+  'AuraControlPanel'
 );
 import { useAura } from './hooks/useAuraOrchestrator';
 import { useWindowControls } from './hooks/useWindowControls'; // ✨ v26.2.1 - Window zoom & fullscreen controls
@@ -99,30 +103,38 @@ if (typeof window !== 'undefined') {
 }
 
 // ✨ v24.3.0 - Lazy loaded pages (code splitting)
-const TimePage = lazy(() =>
-  import('./pages/TimePage').then(m => ({ default: m.TimePage }))
+const TimePage = lazyWithDiagnostic(() =>
+  import('./pages/TimePage').then(m => ({ default: m.TimePage })),
+  'TimePage'
 );
-const Experience = lazy(() =>
-  import('./pages/Experience').then(m => ({ default: m.Experience }))
+const Experience = lazyWithDiagnostic(() =>
+  import('./pages/Experience').then(m => ({ default: m.Experience })),
+  'Experience'
 );
-const Stats = lazy(() => import('./pages/Stats').then(m => ({ default: m.Stats })));
+const Stats = lazyWithDiagnostic(() => 
+  import('./pages/Stats').then(m => ({ default: m.Stats })),
+  'Stats'
+);
 
 // ✨ v24 - Performance: Lazy load SingularityMonitor
-const SingularityMonitor = lazy(() =>
-  import('./components/SingularityMonitor').then(m => ({ default: m.SingularityMonitor }))
+const SingularityMonitor = lazyWithDiagnostic(() =>
+  import('./components/SingularityMonitor').then(m => ({ default: m.SingularityMonitor })),
+  'SingularityMonitor'
 );
 
 // ✨ v∞.20.0 - Chat Bubble Global (Super Prompt #3)
 // ✨ PHASE 4.2 - Lazy load chat bubbles (defer ~150KB)
-const ChatBubble = lazy(() =>
-  import('./components/chat/ChatBubble').then(m => ({ default: m.ChatBubble }))
+const ChatBubble = lazyWithDiagnostic(() =>
+  import('./components/chat/ChatBubble').then(m => ({ default: m.ChatBubble })),
+  'ChatBubble'
 );
 
 // ✨ v24.3.0 - Cognitive Layout Control
-const CognitiveLayoutControl = lazy(() =>
+const CognitiveLayoutControl = lazyWithDiagnostic(() =>
   import('./components/cognitive/CognitiveLayoutControl').then(m => ({
     default: m.CognitiveLayoutControl,
-  }))
+  })),
+  'CognitiveLayoutControl'
 );
 
 import './components/psyche/DeepPsychePanel.css';
@@ -130,30 +142,28 @@ import { presenceOS } from './engines/presence/_stubs';
 
 type LazyModule<T> = { default: T };
 
-const lazyWithTimeout = <T extends React.ComponentType>(
-  loader: () => Promise<LazyModule<T>>,
-  options: { timeoutMs: number; label: string }
-) =>
-  lazy<T>(() => {
-    const timeoutPromise = new Promise<LazyModule<T>>((_, reject) => {
-      setTimeout(() => {
-        reject(new Error(`Lazy load timeout: ${options.label}`));
-      }, options.timeoutMs);
-    });
-    return Promise.race([loader(), timeoutPromise]);
-  });
-
 // ✨ v24.3.0 - Lazy loaded pages
-const PerformanceTest = lazy(() =>
-  import('./pages/PerformanceTest').then(m => ({ default: m.PerformanceTest }))
+const PerformanceTest = lazyWithDiagnostic(() =>
+  import('./pages/PerformanceTest').then(m => ({ default: m.PerformanceTest })),
+  'PerformanceTest'
 );
-const KnowledgeFusionPage = lazy(() => import('./ui/pages/KnowledgeFusionPage'));
-const CreationStudio = lazy(() => import('./ui/pages/CreationStudio'));
-const EvolutionMonitor = lazy(() => import('./ui/pages/EvolutionMonitor'));
+const KnowledgeFusionPage = lazyWithDiagnostic(() => 
+  import('./ui/pages/KnowledgeFusionPage'),
+  'KnowledgeFusionPage'
+);
+const CreationStudio = lazyWithDiagnostic(() => 
+  import('./ui/pages/CreationStudio'),
+  'CreationStudio'
+);
+const EvolutionMonitor = lazyWithDiagnostic(() => 
+  import('./ui/pages/EvolutionMonitor'),
+  'EvolutionMonitor'
+);
 
 // ✨ v24.3.0 - Core pages
-const AdminPage = lazy(() =>
-  import('./features/admin').then(m => ({ default: m.AdminPage }))
+const AdminPage = lazyWithDiagnostic(() =>
+  import('./features/admin').then(m => ({ default: m.AdminPage })),
+  'AdminPage'
 );
 const TitanePage = lazyWithTimeout(
   () => import('./pages/TitanePage').then(m => ({ default: m.TitanePage })),
@@ -175,27 +185,31 @@ const UltimateOptimizationDashboard = lazy(() =>
 );
 
 // ✨ v24.3.0 - Center modules
-const RealityCenter = lazy(() =>
-  import('./components/RealityCenter/RealityCenter').then(m => ({ default: m.default }))
+const RealityCenter = lazyWithDiagnostic(() =>
+  import('./components/RealityCenter/RealityCenter').then(m => ({ default: m.default })),
+  'RealityCenter'
 );
 
 // ✨ v26.1 CONSOLE MONITOR DASHBOARD - Dev-only monitoring UI
-const ConsoleMonitorDashboard = lazy(() =>
+const ConsoleMonitorDashboard = lazyWithDiagnostic(() =>
   import('./components/dev/ConsoleMonitorDashboard').then(m => ({
     default: m.ConsoleMonitorDashboard,
-  }))
+  })),
+  'ConsoleMonitorDashboard'
 );
 
 // ✨ v26.2 PREDICTIVE DASHBOARD - ML-like error prediction & correlation
-const PredictiveDashboard = lazy(() =>
+const PredictiveDashboard = lazyWithDiagnostic(() =>
   import('./components/dev/PredictiveDashboard').then(m => ({
     default: m.PredictiveDashboard,
-  }))
+  })),
+  'PredictiveDashboard'
 );
 
 // ✨ HYPER CENTER - Hyper-Intelligence Engine v∞ (OPUS #20)
-const HyperCenter = lazy(() =>
-  import('./components/HyperCenter/HyperCenter').then(m => ({ default: m.default }))
+const HyperCenter = lazyWithDiagnostic(() =>
+  import('./components/HyperCenter/HyperCenter').then(m => ({ default: m.default })),
+  'HyperCenter'
 );
 
 // ✨ QUANTUM CENTER - Quantum Rendering Layer v∞ (OPUS #17)

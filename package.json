@@ -9,6 +9,8 @@
     "preinstall": "node scripts/install/enforce-package-manager.cjs",
     "dev": "tauri dev",
     "dev:tauri": "tauri dev --config runtime/dev/tauri.dev.conf.json --no-watch -- --features full --features ollama --no-default-features --features mock",
+    "dev:clean": "./scripts/dev-clean.sh && pnpm run dev:tauri",
+    "dev:clean:full": "./scripts/dev-clean.sh --full && pnpm run dev:tauri",
     "build": "vite build",
     "postbuild": "bash scripts/post-build.sh",
     "build:production": "pnpm run lint && pnpm run format:check && pnpm run check && vite build && tauri build && bash scripts/post-build.sh",
@@ -58,7 +60,7 @@
     "audit:quality-gates": "./scripts/audit/07-quality-gates.sh",
     "beta:doctor": "bash scripts/beta-doctor.sh",
     "beta:build": "./runtime/stable/build.sh",
-    "e2e": "wdio run wdio.conf.js",
+    "e2e:single": "wdio run wdio.conf.js",
     "clean": "rm -rf node_modules target dist",
     "titane": "./titane.sh",
     "titane:clean": "./titane.sh clean",
@@ -86,7 +88,7 @@
     "cline:logs": "tail -f .clinerules/logs/operations.log",
     "cline:verify": "bash -c 'for hook in TaskStart PreToolUse PostToolUse UserPromptSubmit; do echo \"Testing $hook...\"; test -x .clinerules/hooks/$hook && echo \"✅ $hook\" || echo \"❌ $hook\"; done'",
     "doctor": "node scripts/doctor.cjs",
-    "e2e:driver": "./scripts/e2e/ensure-webkit-webdriver.sh && tauri-driver --native-driver \"$WEBKIT_WEBDRIVER_PATH\"",
+    "e2e:driver": "./scripts/e2e/ensure-webkit-webdriver.sh && tauri-driver --native-driver /usr/bin/WebKitWebDriver",
     "e2e": "concurrently --kill-others-on-fail \"pnpm run e2e:driver\" \"pnpm run dev:tauri\" \"wdio run ./e2e/wdio.conf.ts\""
   },
   "dependencies": {
