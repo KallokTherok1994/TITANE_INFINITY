@@ -5,13 +5,13 @@
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.
  */
 
-// Tokens (colors, spacing, typography)
+// Tokens (any: any)
 export * from './tokens';
 
-// Motion system (Framer Motion variants)
+// Motion system (any: any)
 export { transitions as animationTransitions } from './motion';
 
-// Visual States v21 (Multi-dimensional state system)
+// Visual States v21 (any: any)
 export * from './visual-states';
 
 // Components

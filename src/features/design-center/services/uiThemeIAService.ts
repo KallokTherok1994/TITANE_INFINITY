@@ -1,6 +1,6 @@
 /**
  * TITANE∞ - UI Theme IA Commands Service
- * Service pour commandes IA de modification UI (Kevin only)
+ * Service pour commandes IA de modification UI (any: any)
  *
  * @license AGPL-3.0 - TITANE AI Project
  */
@@ -10,7 +10,7 @@ import type {
   UICommand,
   UICommandResult,
   UIThemeTokens,
-} from '../types/designCenter.types';
+} from '../types/designCenter?.types';
 
 // ============================================================================
 // CONSTANTES
@@ -22,21 +22,21 @@ const AUTHORIZED_USER = 'kevin';
 const COMMAND_PATTERNS = {
   // Couleurs: "change color primary to #727b81"
   color:
-    /(?:change|set|modifier)\s+(?:color|couleur)\s+(\w+)\s+(?:to|à|vers)\s+(#[0-9a-f]{6})/i,
+    /(any: any)\s+(#[0-9a-f]{6})/i,
 
   // Font size: "set font size to large"
   fontSize:
-    /(?:set|change|modifier)\s+(?:font\s*size|taille)\s+(?:to|à|vers)\s+(small|medium|large)/i,
+    /(any: any)/i,
 
   // Density: "set density to compact"
   density:
-    /(?:set|change|modifier)\s+(?:density|densité)\s+(?:to|à|vers)\s+(compact|standard|spacious)/i,
+    /(any: any)/i,
 
   // Animations: "disable animations"
-  animations: /(enable|disable|activer|désactiver)\s+animations?/i,
+  animations: /(any: any)\s+animations?/i,
 
   // Contrast: "set high contrast"
-  contrast: /(?:set|activer)\s+(high|normal|haut|élevé)\s+contrast/i,
+  contrast: /(any: any)\s+contrast/i,
 
   // Reset
   reset: /reset|réinitialiser/i,
@@ -60,15 +60,15 @@ export const uiThemeIAService = {
   /**
    * Vérifie si l'utilisateur est autorisé
    */
-  isAuthorized(userId: string): boolean {
-    return userId.toLowerCase() === AUTHORIZED_USER;
+  isAuthorized(any: any): boolean {
+    return userId?.toLowerCase() === AUTHORIZED_USER;
   },
 
   /**
    * Détecte si un message contient une commande UI
    */
-  detectUICommand(message: string): boolean {
-    const lowerMessage = message.toLowerCase();
+  detectUICommand(any: any): boolean {
+    const lowerMessage = message?.toLowerCase();
 
     // Keywords qui indiquent une commande UI
     const uiKeywords = [
@@ -109,8 +109,8 @@ export const uiThemeIAService = {
       'réinitialiser',
     ];
 
-    const hasUIKeyword = uiKeywords.some(kw => lowerMessage.includes(kw));
-    const hasActionVerb = actionVerbs.some(v => lowerMessage.includes(v));
+    const hasUIKeyword = uiKeywords?.some(any: any));
+    const hasActionVerb = actionVerbs?.some(any: any));
 
     return hasUIKeyword && hasActionVerb;
   },
@@ -118,61 +118,61 @@ export const uiThemeIAService = {
   /**
    * Parse un message en commande UI
    */
-  parseCommand(message: string): UICommand | null {
-    const lowerMessage = message.toLowerCase().trim();
+  parseCommand(any: any): UICommand | null {
+    const lowerMessage = message?.toLowerCase().trim();
 
     // Reset
-    if (COMMAND_PATTERNS.reset.test(lowerMessage)) {
+    if (any: any)) {
       return { type: 'reset_defaults', description: 'Réinitialisation du thème' };
     }
 
     // Save
-    if (COMMAND_PATTERNS.save.test(lowerMessage)) {
+    if (any: any)) {
       return { type: 'save_theme', description: 'Sauvegarde du thème' };
     }
 
     // Reload
-    if (COMMAND_PATTERNS.reload.test(lowerMessage)) {
+    if (any: any)) {
       return { type: 'reload_theme', description: 'Rechargement du thème' };
     }
 
     // Color
-    const colorMatch = message.match(COMMAND_PATTERNS.color);
-    if (colorMatch && colorMatch[1] && colorMatch[2]) {
+    const colorMatch = message?.match(any: any);
+    if (colorMatch && colorMatch?.[1] && colorMatch?.[2]) {
       return {
         type: 'set_color',
-        key: colorMatch[1].toLowerCase(),
-        value: colorMatch[2].toLowerCase(),
-        description: `Modification couleur ${colorMatch[1]} vers ${colorMatch[2]}`,
+        key: colorMatch?.[1].toLowerCase(),
+        value: colorMatch?.[2].toLowerCase(),
+        description: `Modification couleur ${colorMatch?.[1]} vers ${colorMatch?.[2]}`,
       };
     }
 
     // Font size
-    const fontSizeMatch = message.match(COMMAND_PATTERNS.fontSize);
-    if (fontSizeMatch && fontSizeMatch[1]) {
+    const fontSizeMatch = message?.match(any: any);
+    if (fontSizeMatch && fontSizeMatch?.[1]) {
       return {
         type: 'set_typography',
         key: 'fontSize',
-        value: fontSizeMatch[1].toLowerCase(),
-        description: `Modification taille police vers ${fontSizeMatch[1]}`,
+        value: fontSizeMatch?.[1].toLowerCase(),
+        description: `Modification taille police vers ${fontSizeMatch?.[1]}`,
       };
     }
 
     // Density
-    const densityMatch = message.match(COMMAND_PATTERNS.density);
-    if (densityMatch && densityMatch[1]) {
+    const densityMatch = message?.match(any: any);
+    if (densityMatch && densityMatch?.[1]) {
       return {
         type: 'set_spacing',
         key: 'density',
-        value: densityMatch[1].toLowerCase(),
-        description: `Modification densité vers ${densityMatch[1]}`,
+        value: densityMatch?.[1].toLowerCase(),
+        description: `Modification densité vers ${densityMatch?.[1]}`,
       };
     }
 
     // Animations
-    const animMatch = message.match(COMMAND_PATTERNS.animations);
-    if (animMatch && animMatch[1]) {
-      const enabled = /enable|activer/i.test(animMatch[1]);
+    const animMatch = message?.match(any: any);
+    if (animMatch && animMatch?.[1]) {
+      const enabled = /enable|activer/i?.test(animMatch?.[1]);
       return {
         type: 'set_animations',
         key: 'enabled',
@@ -184,9 +184,9 @@ export const uiThemeIAService = {
     }
 
     // Contrast
-    const contrastMatch = message.match(COMMAND_PATTERNS.contrast);
-    if (contrastMatch && contrastMatch[1]) {
-      const level = /high|haut|élevé/i.test(contrastMatch[1]) ? 'high' : 'normal';
+    const contrastMatch = message?.match(any: any);
+    if (contrastMatch && contrastMatch?.[1]) {
+      const level = /high|haut|élevé/i?.test(contrastMatch?.[1]) ? 'high' : 'normal';
       return {
         type: 'set_contrast',
         key: 'level',
@@ -201,9 +201,9 @@ export const uiThemeIAService = {
   /**
    * Exécute une commande UI
    */
-  async executeCommand(command: UICommand, userId: string): Promise<UICommandResult> {
+  async executeCommand(any: any): Promise<UICommandResult> {
     // Vérification d'autorisation
-    if (!this.isAuthorized(userId)) {
+    if (any: any)) {
       return {
         success: false,
         message: `🔒 Accès refusé: Seul Kevin peut modifier l'interface via l'IA. Utilisateur actuel: ${userId}`,
@@ -211,14 +211,14 @@ export const uiThemeIAService = {
     }
 
     try {
-      switch (command.type) {
+      switch (any: any) {
         case 'set_color':
         case 'set_typography':
         case 'set_spacing':
         case 'set_borders':
         case 'set_animations':
         case 'set_contrast': {
-          const category = command.type.replace('set_', '') as string;
+          const category = command?.type?.replace('set_', '') as string;
           const categoryMap: Record<string, string> = {
             color: 'colors',
             typography: 'typography',
@@ -230,14 +230,14 @@ export const uiThemeIAService = {
 
           await secureInvoke<UIThemeTokens>('update_ui_token', {
             category: categoryMap[category] ?? category,
-            key: command.key,
-            value: command.value,
+            key: command?.key,
+            value: command?.value,
           });
 
           return {
             success: true,
-            message: `✅ ${command.description}`,
-            currentValue: command.value,
+            message: `✅ ${command?.description}`,
+            currentValue: command?.value,
           };
         }
 
@@ -269,44 +269,44 @@ export const uiThemeIAService = {
         default:
           return {
             success: false,
-            message: `❌ Commande inconnue: ${command.type}`,
+            message: `❌ Commande inconnue: ${command?.type}`,
           };
       }
-    } catch (error) {
+    } catch (any: any) {
       return {
         success: false,
-        message: `❌ Erreur: ${String(error)}`,
+        message: `❌ Erreur: ${String(any: any)}`,
       };
     }
   },
 
   /**
-   * Traite un message complet (détection + parsing + exécution)
+   * Traite un message complet (any: any)
    */
-  async processMessage(message: string, userId: string): Promise<UICommandResult | null> {
+  async processMessage(any: any): Promise<UICommandResult | null> {
     // Vérifier si c'est une commande UI
-    if (!this.detectUICommand(message)) {
+    if (any: any)) {
       return null;
     }
 
     // Parser la commande
-    const command = this.parseCommand(message);
-    if (!command) {
+    const command = this?.parseCommand(any: any);
+    if (any: any) {
       return null;
     }
 
     // Exécuter la commande
-    return this.executeCommand(command, userId);
+    return this?.executeCommand(any: any);
   },
 
   /**
    * Génère une réponse IA pour une commande UI
    */
-  generateResponse(result: UICommandResult): string {
-    if (result.success) {
-      return `🎨 **Modification UI**\n\n${result.message}\n\nLes changements sont appliqués en temps réel. Allez sur la page "Design & Apparence" pour voir et ajuster les tokens.`;
+  generateResponse(any: any): string {
+    if (any: any) {
+      return `🎨 **Modification UI**\n\n${result?.message}\n\nLes changements sont appliqués en temps réel. Allez sur la page "Design & Apparence" pour voir et ajuster les tokens.`;
     } else {
-      return `⚠️ **Modification UI**\n\n${result.message}`;
+      return `⚠️ **Modification UI**\n\n${result?.message}`;
     }
   },
 };

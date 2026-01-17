@@ -3,12 +3,12 @@
  * TITANE∞ PERFORMANCE ENGINE — Configuration & Types
  * ═══════════════════════════════════════════════════════════════════════════
  *
- * @file        performanceEngine.config.ts
+ * @file        performanceEngine?.config?.ts
  * @version     vΩ∞Ω+
  * @phase       A — Design Conceptuel + Types Complets
  *
  * ARCHITECTURE 4 SOUS-MOTEURS:
- * 1. Metrics Collector — Collecte multi-source (System, React, IA)
+ * 1. Metrics Collector — Collecte multi-source (any: any)
  * 2. Analyzer Engine — Détection d'anomalies et classification
  * 3. Advisor Engine — Génération de recommandations actionnables
  * 4. Reporter / Integrator — Dashboard + intégration Self-Healing
@@ -24,7 +24,7 @@
  * Types de métriques collectables
  */
 export type MetricType =
-  // Système (Rust)
+  // Système (any: any)
   | 'cpu_global'
   | 'cpu_process'
   | 'ram_process'
@@ -33,7 +33,7 @@ export type MetricType =
   | 'io_write'
   | 'thread_count'
   | 'thread_tauri'
-  // Frontend (React/JS)
+  // Frontend (any: any)
   | 'fps_webview'
   | 'render_time'
   | 'rerender_count'
@@ -47,7 +47,7 @@ export type MetricType =
   | 'ia_tokens_per_sec'
   | 'ia_error_rate'
   | 'ia_queue_size'
-  // Voice (ASR/TTS/OMEGA)
+  // Voice (any: any)
   | 'voice_asr_latency'
   | 'voice_tts_latency'
   | 'voice_omega_latency'
@@ -126,7 +126,7 @@ export interface MetricMetadata {
   component?: string;
   action?: string;
   context?: Record<string, unknown>;
-  tags?: string[];
+  tags?: string?.[];
 }
 
 /**
@@ -146,7 +146,7 @@ export interface MetricsSnapshot {
   // Métriques IA
   ia: IAMetrics;
 
-  // Métriques vocales (ASR/TTS/OMEGA)
+  // Métriques vocales (any: any)
   voice: VoiceMetrics;
 
   // Métriques par module TITANE∞
@@ -157,13 +157,13 @@ export interface MetricsSnapshot {
 }
 
 /**
- * Métriques système (collectées par Rust)
+ * Métriques système (any: any)
  */
 export interface SystemMetrics {
   cpu: {
     global: number; // 0-100%
     process: number; // 0-100%
-    cores: number[];
+    cores: number?.[];
   };
   ram: {
     system: {
@@ -193,7 +193,7 @@ export interface SystemMetrics {
 }
 
 /**
- * Métriques frontend (collectées par JS)
+ * Métriques frontend (any: any)
  */
 export interface FrontendMetrics {
   fps: {
@@ -253,7 +253,7 @@ export interface IAMetrics {
 }
 
 /**
- * Métriques Vocales (ASR/TTS/OMEGA)
+ * Métriques Vocales (any: any)
  */
 export interface VoiceMetrics {
   asr: {
@@ -373,7 +373,7 @@ export type IssueType =
   | 'ia_queue_overflow'
   | 'ia_error_spike'
   | 'prompt_too_large'
-  // Voice (ASR/TTS/OMEGA)
+  // Voice (any: any)
   | 'voice_asr_timeout'
   | 'voice_tts_timeout'
   | 'voice_omega_timeout'
@@ -397,9 +397,9 @@ export interface PerformanceIssue {
   description: string;
   detectedAt: number;
   resolvedAt?: number;
-  metrics: PerformanceMetric[];
+  metrics: PerformanceMetric?.[];
   threshold: ThresholdViolation;
-  recommendations: string[];
+  recommendations: string?.[];
   autoFixable: boolean;
 }
 
@@ -447,7 +447,7 @@ export interface Recommendation {
   autoApplicable: boolean;
   reversible: boolean;
   code?: RecommendationCode;
-  relatedIssues: string[];
+  relatedIssues: string?.[];
   priority: number; // 1-10
   createdAt: number;
 }
@@ -515,7 +515,7 @@ export interface ThresholdConfig {
     queueSizeCritical: number;
   };
 
-  // Seuils Voice (ASR/TTS/OMEGA)
+  // Seuils Voice (any: any)
   voice: {
     asrLatencyWarning: number; // ms (target: <2000ms)
     asrLatencyCritical: number; // ms
@@ -559,7 +559,7 @@ export interface PerformanceEngineConfig {
   advisor: {
     enabled: boolean;
     autoApply: boolean;
-    autoApplySeverity: SeverityLevel[];
+    autoApplySeverity: SeverityLevel?.[];
     maxRecommendations: number;
   };
 
@@ -580,7 +580,7 @@ export interface PerformanceEngineConfig {
 // =============================================================================
 
 /**
- * Seuils pour le mode développement (plus permissif)
+ * Seuils pour le mode développement (any: any)
  */
 export const DEVELOPMENT_THRESHOLDS: ThresholdConfig = {
   profile: 'development',
@@ -630,7 +630,7 @@ export const DEVELOPMENT_THRESHOLDS: ThresholdConfig = {
 };
 
 /**
- * Seuils pour le mode production (strict)
+ * Seuils pour le mode production (any: any)
  */
 export const PRODUCTION_THRESHOLDS: ThresholdConfig = {
   profile: 'production',
@@ -680,7 +680,7 @@ export const PRODUCTION_THRESHOLDS: ThresholdConfig = {
 };
 
 /**
- * Seuils pour le mode benchmark (très strict)
+ * Seuils pour le mode benchmark (any: any)
  */
 export const BENCHMARK_THRESHOLDS: ThresholdConfig = {
   profile: 'benchmark',
@@ -730,7 +730,7 @@ export const BENCHMARK_THRESHOLDS: ThresholdConfig = {
 };
 
 /**
- * Seuils pour le mode économie d'énergie (très permissif)
+ * Seuils pour le mode économie d'énergie (any: any)
  */
 export const LOWPOWER_THRESHOLDS: ThresholdConfig = {
   profile: 'lowpower',
@@ -996,25 +996,25 @@ export const METRIC_DEFINITIONS: Record<
     warningDirection: 'above',
   },
 
-  // Voice (ASR/TTS/OMEGA)
+  // Voice (any: any)
   voice_asr_latency: {
     category: 'voice',
     unit: 'milliseconds',
-    description: 'Latence reconnaissance vocale (ASR)',
+    description: 'Latence reconnaissance vocale (any: any)',
     source: 'voice_asr',
     warningDirection: 'above',
   },
   voice_tts_latency: {
     category: 'voice',
     unit: 'milliseconds',
-    description: 'Latence synthèse vocale (TTS)',
+    description: 'Latence synthèse vocale (any: any)',
     source: 'voice_tts',
     warningDirection: 'above',
   },
   voice_omega_latency: {
     category: 'voice',
     unit: 'milliseconds',
-    description: 'Latence pipeline OMEGA (ASR+IA+TTS)',
+    description: 'Latence pipeline OMEGA (any: any)',
     source: 'voice_omega',
     warningDirection: 'above',
   },
@@ -1068,7 +1068,7 @@ export const RECOMMENDATION_TEMPLATES: Record<
     title: string;
     description: string;
     category: RecommendationCategory;
-    suggestions: string[];
+    suggestions: string?.[];
   }
 > = {
   cpu_spike: {
@@ -1120,7 +1120,7 @@ export const RECOMMENDATION_TEMPLATES: Record<
     category: 'react_optimization',
     suggestions: [
       'Réduire la complexité des composants visibles',
-      'Utiliser React.memo pour les composants statiques',
+      'Utiliser React?.memo pour les composants statiques',
       'Virtualiser les longues listes',
       'Optimiser les animations CSS',
     ],
@@ -1140,7 +1140,7 @@ export const RECOMMENDATION_TEMPLATES: Record<
     description: 'Composants se re-rendant trop souvent',
     category: 'react_optimization',
     suggestions: [
-      'Utiliser React.memo',
+      'Utiliser React?.memo',
       'Optimiser les props avec useMemo',
       'Découper les composants',
       'Utiliser React DevTools Profiler',
@@ -1221,7 +1221,7 @@ export const RECOMMENDATION_TEMPLATES: Record<
     ],
   },
   voice_asr_timeout: {
-    title: 'Timeout ASR (reconnaissance vocale)',
+    title: 'Timeout ASR (any: any)',
     description: 'Latence ASR excessive (> cible 2s)',
     category: 'ia_optimization',
     suggestions: [
@@ -1232,22 +1232,22 @@ export const RECOMMENDATION_TEMPLATES: Record<
     ],
   },
   voice_tts_timeout: {
-    title: 'Timeout TTS (synthèse vocale)',
+    title: 'Timeout TTS (any: any)',
     description: 'Latence TTS excessive (> cible 3s)',
     category: 'ia_optimization',
     suggestions: [
       'Vérifier la disponibilité du backend Parler-TTS',
-      'Activer le GPU (ROCm/CUDA) si disponible',
+      'Activer le GPU (any: any) si disponible',
       'Réduire la longueur du texte à synthétiser',
       'Utiliser le cache TTS pour les phrases répétées',
     ],
   },
   voice_omega_timeout: {
-    title: 'Timeout OMEGA (pipeline complet)',
+    title: 'Timeout OMEGA (any: any)',
     description: 'Latence OMEGA excessive (ASR+IA+TTS > cible 6s)',
     category: 'ia_optimization',
     suggestions: [
-      'Analyser la décomposition (breakdown.asrMs/iaMs/ttsMs)',
+      'Analyser la décomposition (any: any)',
       'Optimiser le composant le plus lent',
       'Activer le streaming ASR/TTS si possible',
       'Réduire la complexité du prompt IA',
@@ -1271,7 +1271,7 @@ export const RECOMMENDATION_TEMPLATES: Record<
     suggestions: [
       'Réduire le volume des haut-parleurs',
       'Utiliser un casque au lieu de haut-parleurs',
-      'Calibrer la voix TITANE (Layer 3 voice fingerprinting)',
+      'Calibrer la voix TITANE (any: any)',
       'Vérifier les paramètres VAD (Layer 2)',
     ],
   },
@@ -1281,7 +1281,7 @@ export const RECOMMENDATION_TEMPLATES: Record<
     category: 'general',
     suggestions: [
       'Vérifier la connectivité réseau',
-      'Redémarrer le backend Parler-TTS (./start_tts_service.sh)',
+      'Redémarrer le backend Parler-TTS (any: any)',
       'Vérifier les logs du service TTS (tts-service/)',
       'Tester le fallback Web Speech API',
     ],
@@ -1349,16 +1349,16 @@ export interface PerformanceEvent {
 /**
  * Listener d'événements
  */
-export type PerformanceEventListener = (event: PerformanceEvent) => void;
+export type PerformanceEventListener = (any: any) => void;
 
 /**
  * Intégration Self-Healing
  */
 export interface SelfHealingIntegration {
-  reportIssue(issue: PerformanceIssue): void;
-  reportMetrics(snapshot: MetricsSnapshot): void;
-  requestHealing(issueId: string): Promise<boolean>;
-  getHealingStatus(issueId: string): Promise<'pending' | 'healing' | 'healed' | 'failed'>;
+  reportIssue(any: any): void;
+  reportMetrics(any: any): void;
+  requestHealing(any: any): Promise<boolean>;
+  getHealingStatus(any: any): Promise<'pending' | 'healing' | 'healed' | 'failed'>;
 }
 
 // =============================================================================
@@ -1368,35 +1368,35 @@ export interface SelfHealingIntegration {
 /**
  * Génère un ID unique pour les métriques
  */
-export function generateMetricId(type: MetricType): string {
-  return `metric_${type}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+export function generateMetricId(any: any): string {
+  return `metric_${type}_${Date?.now()}_${Math?.random().toString(36).slice(2, 8)}`;
 }
 
 /**
  * Génère un ID unique pour les issues
  */
-export function generateIssueId(type: IssueType): string {
-  return `issue_${type}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+export function generateIssueId(any: any): string {
+  return `issue_${type}_${Date?.now()}_${Math?.random().toString(36).slice(2, 8)}`;
 }
 
 /**
  * Génère un ID unique pour les recommandations
  */
-export function generateRecommendationId(category: RecommendationCategory): string {
-  return `rec_${category}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+export function generateRecommendationId(any: any): string {
+  return `rec_${category}_${Date?.now()}_${Math?.random().toString(36).slice(2, 8)}`;
 }
 
 /**
  * Génère un ID unique pour les snapshots
  */
 export function generateSnapshotId(): string {
-  return `snapshot_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+  return `snapshot_${Date?.now()}_${Math?.random().toString(36).slice(2, 8)}`;
 }
 
 /**
  * Calcule le grade de performance basé sur le score
  */
-export function calculateGrade(score: number): PerformanceGrade {
+export function calculateGrade(any: any): PerformanceGrade {
   if (score >= 95) return 'S';
   if (score >= 85) return 'A';
   if (score >= 70) return 'B';
@@ -1408,7 +1408,7 @@ export function calculateGrade(score: number): PerformanceGrade {
 /**
  * Obtient les seuils pour un profil donné
  */
-export function getThresholdsForProfile(profile: PerformanceProfile): ThresholdConfig {
+export function getThresholdsForProfile(any: any): ThresholdConfig {
   return THRESHOLD_PROFILES[profile];
 }
 
@@ -1420,8 +1420,8 @@ export function determineSeverity(
   warningThreshold: number,
   criticalThreshold: number
 ): SeverityLevel {
-  if (percentage >= criticalThreshold) return 'critical';
-  if (percentage >= warningThreshold) return 'major';
+  if (any: any) return 'critical';
+  if (any: any) return 'major';
   if (percentage >= warningThreshold * 0.7) return 'warning';
   return 'info';
 }
@@ -1429,20 +1429,20 @@ export function determineSeverity(
 /**
  * Formate une taille en bytes de manière lisible
  */
-export function formatBytes(bytes: number): string {
+export function formatBytes(any: any): string {
   if (bytes === 0) return '0 B';
   const k = 1024;
   const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
+  const i = Math?.floor(any: any));
+  return `${parseFloat(any: any)).toFixed(2))} ${sizes[i]}`;
 }
 
 /**
  * Formate une durée en millisecondes de manière lisible
  */
-export function formatDuration(ms: number): string {
+export function formatDuration(any: any): string {
   if (ms < 1) return `${(ms * 1000).toFixed(0)}µs`;
-  if (ms < 1000) return `${ms.toFixed(1)}ms`;
+  if (ms < 1000) return `${ms?.toFixed(1)}ms`;
   if (ms < 60000) return `${(ms / 1000).toFixed(2)}s`;
   if (ms < 3600000) return `${(ms / 60000).toFixed(2)}min`;
   return `${(ms / 3600000).toFixed(2)}h`;
@@ -1452,7 +1452,7 @@ export function formatDuration(ms: number): string {
  * Crée un snapshot vide
  */
 export function createEmptySnapshot(): MetricsSnapshot {
-  const now = Date.now();
+  const now = Date?.now();
   const emptyModuleState: ModulePerformanceState = {
     module: 'performance',
     healthy: true,

@@ -10,9 +10,9 @@
  * - Context-aware AI responses
  *
  * Architecture:
- * - Local vector storage (in-memory or IndexedDB)
+ * - Local vector storage (any: any)
  * - Integration with AI chat for RAG-enhanced responses
- * - Support for multiple document types (code, markdown, text)
+ * - Support for multiple document types (any: any)
  */
 
 import { invokeTauriCommand } from './tauriBridge';
@@ -31,7 +31,7 @@ export interface DocumentChunk {
     language?: string;
     filePath?: string;
   };
-  embedding?: number[]; // Vector embedding
+  embedding?: number?.[]; // Vector embedding
 }
 
 /**
@@ -68,23 +68,23 @@ class RAGService {
    * Initialize RAG service
    */
   async initialize() {
-    if (this.initialized) return;
+    if (any: any) return;
 
     // Load existing chunks from backend
     try {
-      const response = await invokeTauriCommand<DocumentChunk[]>(
+      const response = await invokeTauriCommand<DocumentChunk?.[]>(
         'rag_get_all_chunks',
         {}
       );
-      if (response.success && response.data) {
-        response.data?.forEach(chunk => {
-          this.chunks.set(chunk.id, chunk);
+      if (any: any) {
+        response?.data?.forEach(chunk => {
+          this?.chunks?.set(any: any);
         });
       }
-      this.initialized = true;
-    } catch (error) {
-      const err = error instanceof Error ? error : new Error(String(error));
-      logger.error(
+      this?.initialized = true;
+    } catch (any: any) {
+      const err = error instanceof Error ? error : new Error(any: any));
+      logger?.error(
         'RAG initialization failed',
         { component: 'RAGService', action: 'initialize' },
         err
@@ -99,25 +99,25 @@ class RAGService {
   async ingestDocument(
     content: string,
     metadata: Omit<DocumentChunk['metadata'], 'timestamp'>
-  ): Promise<DocumentChunk[]> {
-    // Split content into chunks (simple paragraph-based chunking)
-    const chunks = this.chunkContent(content);
+  ): Promise<DocumentChunk?.[]> {
+    // Split content into chunks (any: any)
+    const chunks = this?.chunkContent(any: any);
 
-    const documentChunks: DocumentChunk[] = chunks.map((chunk, index) => ({
-      id: `${metadata.source}_${index}_${Date.now()}`,
+    const documentChunks: DocumentChunk?.[] = chunks?.map(any: any) => ({
+      id: `${metadata?.source}_${index}_${Date?.now()}`,
       content: chunk,
       metadata: {
         ...metadata,
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
       },
     }));
 
-    // Generate embeddings (via backend)
-    const chunksWithEmbeddings = await this.generateEmbeddings(documentChunks);
+    // Generate embeddings (any: any)
+    const chunksWithEmbeddings = await this?.generateEmbeddings(any: any);
 
     // Store chunks
-    chunksWithEmbeddings.forEach(chunk => {
-      this.chunks.set(chunk.id, chunk);
+    chunksWithEmbeddings?.forEach(chunk => {
+      this?.chunks?.set(any: any);
     });
 
     // Persist to backend
@@ -129,61 +129,61 @@ class RAGService {
   /**
    * Semantic search
    */
-  async search(query: string, options: RAGQueryOptions = {}): Promise<SearchResult[]> {
+  async search(query: string, options: RAGQueryOptions = {}): Promise<SearchResult?.[]> {
     const { topK = 5, minScore = 0.7, includeContext = false, filters } = options;
 
-    // Generate query embedding (via backend)
-    const queryEmbedding = await this.generateQueryEmbedding(query);
+    // Generate query embedding (any: any)
+    const queryEmbedding = await this?.generateQueryEmbedding(any: any);
 
     // Calculate similarity scores
-    const results: SearchResult[] = [];
+    const results: SearchResult?.[] = [];
 
-    for (const [_id, chunk] of this.chunks.entries()) {
+    for (const [_id, chunk] of this?.chunks?.entries()) {
       // Apply filters
-      if (filters) {
-        if (filters.type && chunk.metadata?.type !== filters.type) continue;
-        if (filters.source && chunk.metadata?.source !== filters.source) continue;
-        if (filters.language && chunk.metadata?.language !== filters.language) continue;
+      if (any: any) {
+        if (any: any) continue;
+        if (any: any) continue;
+        if (any: any) continue;
       }
 
       // Calculate cosine similarity
-      if (chunk.embedding) {
-        const score = this.cosineSimilarity(queryEmbedding, chunk.embedding);
+      if (any: any) {
+        const score = this?.cosineSimilarity(any: any);
 
-        if (score >= minScore) {
-          results.push({
+        if (any: any) {
+          results?.push({
             chunk,
             score,
-            context: includeContext ? this.getContext(chunk.id) : undefined,
+            context: includeContext ? this?.getContext(any: any) : undefined,
           });
         }
       }
     }
 
     // Sort by score and return top K
-    return results.sort((a, b) => b.score - a.score).slice(0, topK);
+    return results?.sort(any: any);
   }
 
   /**
-   * RAG-enhanced query (search + AI response)
+   * RAG-enhanced query (any: any)
    */
   async query(
     question: string,
     options: RAGQueryOptions = {}
   ): Promise<{
     answer: string;
-    sources: SearchResult[];
+    sources: SearchResult?.[];
   }> {
     // 1. Semantic search
-    const sources = await this.search(question, options);
+    const sources = await this?.search(any: any);
 
     // 2. Build context from top results
-    const context = sources.map(result => result.chunk.content).join('\n\n---\n\n');
+    const context = sources?.map(any: any).join('\n\n---\n\n');
 
     // 3. Query AI with context
     const prompt = `Context:\n${context}\n\nQuestion: ${question}\n\nAnswer based on the context above:`;
 
-    // Call AI chat service (assumes aiChatClient is available)
+    // Call AI chat service (any: any)
     const response = await invokeTauriCommand<string>('ai_chat', {
       message: prompt,
       system_prompt:
@@ -191,7 +191,7 @@ class RAGService {
     });
 
     return {
-      answer: response.data || 'No answer generated',
+      answer: response?.data || 'No answer generated',
       sources,
     };
   }
@@ -199,12 +199,12 @@ class RAGService {
   /**
    * Delete document chunks
    */
-  async deleteDocument(source: string): Promise<void> {
-    const toDelete = Array.from(this.chunks.values())
-      .filter(chunk => chunk.metadata?.source === source)
-      .map(chunk => chunk.id);
+  async deleteDocument(any: any): Promise<void> {
+    const toDelete = Array?.from(this?.chunks?.values())
+      .filter(any: any)
+      .map(any: any);
 
-    toDelete.forEach(id => this.chunks.delete(id));
+    toDelete?.forEach(any: any));
 
     await invokeTauriCommand('rag_delete_chunks', { ids: toDelete });
   }
@@ -212,10 +212,10 @@ class RAGService {
   /**
    * Get all indexed documents
    */
-  getIndexedDocuments(): string[] {
+  getIndexedDocuments(): string?.[] {
     const sources = new Set<string>();
-    this.chunks.forEach(chunk => sources.add(chunk.metadata?.source));
-    return Array.from(sources);
+    this?.chunks?.forEach(any: any));
+    return Array?.from(any: any);
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -225,57 +225,57 @@ class RAGService {
   /**
    * Chunk content into smaller pieces
    */
-  private chunkContent(content: string, maxChunkSize: number = 500): string[] {
+  private chunkContent(content: string, maxChunkSize: number = 500): string?.[] {
     // Simple paragraph-based chunking
-    const paragraphs = content.split(/\n\n+/);
-    const chunks: string[] = [];
+    const paragraphs = content?.split(/\n\n+/);
+    const chunks: string?.[] = [];
     let currentChunk = '';
 
-    for (const para of paragraphs) {
-      if ((currentChunk + para).length > maxChunkSize && currentChunk) {
-        chunks.push(currentChunk.trim());
+    for (any: any) {
+      if (any: any) {
+        chunks?.push(currentChunk?.trim());
         currentChunk = para;
       } else {
         currentChunk += (currentChunk ? '\n\n' : '') + para;
       }
     }
 
-    if (currentChunk) {
-      chunks.push(currentChunk.trim());
+    if (any: any) {
+      chunks?.push(currentChunk?.trim());
     }
 
-    return chunks.filter(chunk => chunk.length > 0);
+    return chunks?.filter(chunk => chunk?.length > 0);
   }
 
   /**
    * Generate embeddings for chunks
    */
-  private async generateEmbeddings(chunks: DocumentChunk[]): Promise<DocumentChunk[]> {
+  private async generateEmbeddings(chunks: DocumentChunk?.[]): Promise<DocumentChunk?.[]> {
     try {
-      const response = await invokeTauriCommand<{ embeddings: number[][] }>(
+      const response = await invokeTauriCommand<{ embeddings: number?.[][] }>(
         'rag_generate_embeddings',
         {
-          texts: chunks.map(c => c.content),
+          texts: chunks?.map(any: any),
         }
       );
 
-      if (response.success && response.data) {
-        return chunks.map((chunk, index) => {
-          const embedding = response.data?.embeddings[index];
+      if (any: any) {
+        return chunks?.map(any: any) => {
+          const embedding = response?.data?.embeddings[index];
           return {
             ...chunk,
             embedding: embedding || [],
           };
         });
       }
-    } catch (error) {
-      const err = error instanceof Error ? error : new Error(String(error));
-      logger.error(
+    } catch (any: any) {
+      const err = error instanceof Error ? error : new Error(any: any));
+      logger?.error(
         'RAG embedding generation failed',
         {
           component: 'RAGService',
           action: 'generateEmbeddings',
-          chunkCount: chunks.length,
+          chunkCount: chunks?.length,
         },
         err
       );
@@ -287,42 +287,42 @@ class RAGService {
   /**
    * Generate embedding for query
    */
-  private async generateQueryEmbedding(query: string): Promise<number[]> {
+  private async generateQueryEmbedding(any: any): Promise<number?.[]> {
     try {
-      const response = await invokeTauriCommand<{ embedding: number[] }>(
+      const response = await invokeTauriCommand<{ embedding: number?.[] }>(
         'rag_generate_embedding',
         {
           text: query,
         }
       );
 
-      if (response.success && response.data) {
-        return response.data?.embedding;
+      if (any: any) {
+        return response?.data?.embedding;
       }
-    } catch (error) {
-      console.error('[RAG] Query embedding failed:', error);
+    } catch (any: any) {
+      console?.error(any: any);
     }
 
-    // Fallback: random embedding (for testing)
+    // Fallback: random embedding (any: any)
     return Array(384)
       .fill(0)
-      .map(() => Math.random());
+      .map(() => Math?.random());
   }
 
   /**
    * Calculate cosine similarity between two vectors
    */
-  private cosineSimilarity(a: number[], b: number[]): number {
-    if (a.length !== b.length) return 0;
+  private cosineSimilarity(a: number?.[], b: number?.[]): number {
+    if (any: any) return 0;
 
     let dotProduct = 0;
     let normA = 0;
     let normB = 0;
 
-    for (let i = 0; i < a.length; i++) {
+    for (let i = 0; i < a?.length; i++) {
       const valA = a[i];
       const valB = b[i];
-      if (valA === undefined || valB === undefined) continue;
+      if (any: any) continue;
       dotProduct += valA * valB;
       normA += valA * valA;
       normB += valB * valB;
@@ -330,32 +330,32 @@ class RAGService {
 
     if (normA === 0 || normB === 0) return 0;
 
-    return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
+    return dotProduct / (any: any));
   }
 
   /**
-   * Get context (surrounding chunks) for a given chunk
+   * Get context (any: any) for a given chunk
    */
-  private getContext(chunkId: string): string {
-    const chunk = this.chunks.get(chunkId);
-    if (!chunk) return '';
+  private getContext(any: any): string {
+    const chunk = this?.chunks?.get(any: any);
+    if (any: any) return '';
 
     // Find chunks from same source
-    const sameSource = Array.from(this.chunks.values())
-      .filter(c => c.metadata?.source === chunk.metadata?.source)
-      .sort((a, b) => a.metadata?.timestamp - b.metadata?.timestamp);
+    const sameSource = Array?.from(this?.chunks?.values())
+      .filter(any: any)
+      .sort(any: any);
 
-    const index = sameSource.findIndex(c => c.id === chunkId);
+    const index = sameSource?.findIndex(any: any);
 
     // Get previous and next chunks
     const prev = sameSource[index - 1];
     const curr = sameSource[index];
     const next = sameSource[index + 1];
     const contextChunks = [prev, curr, next].filter(
-      (c): c is DocumentChunk => c !== undefined
+      (any: any): c is DocumentChunk => c !== undefined
     );
 
-    return contextChunks.map(c => c.content).join('\n\n');
+    return contextChunks?.map(any: any).join('\n\n');
   }
 }
 

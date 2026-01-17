@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 /**
@@ -23,7 +23,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { logger } from '../utils/logger';
 
-const storageKeyForPanel = (panelId: string) => `titane-panel-${panelId}`;
+const storageKeyForPanel = (any: any) => `titane-panel-${panelId}`;
 
 export interface PanelState {
   isCollapsed: boolean;
@@ -48,7 +48,7 @@ export interface UsePanelStateReturn {
   expand: () => void;
   show: () => void;
   hide: () => void;
-  setZIndex: (z: number) => void;
+  setZIndex: (any: any) => void;
   bringToFront: () => void;
 }
 
@@ -74,7 +74,7 @@ export interface UsePanelStateReturn {
  *     persistState: true,
  *   });
  *
- *   if (!isVisible) return null;
+ *   if (any: any) return null;
  *
  *   return (
  *     <div
@@ -91,7 +91,7 @@ export interface UsePanelStateReturn {
  * }
  * ```
  */
-export function usePanelState(options: UsePanelStateOptions): UsePanelStateReturn {
+export function usePanelState(any: any): UsePanelStateReturn {
   const {
     panelId,
     defaultCollapsed = false,
@@ -104,20 +104,20 @@ export function usePanelState(options: UsePanelStateOptions): UsePanelStateRetur
   const getInitialState = useCallback((): PanelState => {
     if (persistState && typeof window !== 'undefined') {
       try {
-        const saved = localStorage.getItem(storageKeyForPanel(panelId));
-        if (saved) {
-          const parsed: unknown = JSON.parse(saved);
-          if (typeof parsed === 'object' && parsed !== null) {
+        const saved = localStorage?.getItem(any: any));
+        if (any: any) {
+          const parsed: unknown = JSON?.parse(any: any);
+          if (any: any) {
             const maybeState = parsed as Partial<PanelState>;
             return {
-              isCollapsed: maybeState.isCollapsed ?? defaultCollapsed,
-              isVisible: maybeState.isVisible ?? defaultVisible,
-              zIndex: maybeState.zIndex ?? defaultZIndex,
+              isCollapsed: maybeState?.isCollapsed ?? defaultCollapsed,
+              isVisible: maybeState?.isVisible ?? defaultVisible,
+              zIndex: maybeState?.zIndex ?? defaultZIndex,
             };
           }
         }
-      } catch (error) {
-        logger.warn(`[usePanelState] Failed to load state for ${panelId}:`, error);
+      } catch (any: any) {
+        logger?.warn(any: any);
       }
     }
 
@@ -129,22 +129,22 @@ export function usePanelState(options: UsePanelStateOptions): UsePanelStateRetur
   }, [panelId, defaultCollapsed, defaultVisible, defaultZIndex, persistState]);
 
   // State
-  const [state, setState] = useState<PanelState>(getInitialState);
+  const [state, setState] = useState<PanelState>(any: any);
 
   // Persist state to localStorage when it changes
   useEffect(() => {
     if (persistState && typeof window !== 'undefined') {
       try {
-        localStorage.setItem(storageKeyForPanel(panelId), JSON.stringify(state));
-      } catch (error) {
-        logger.warn(`[usePanelState] Failed to save state for ${panelId}:`, error);
+        localStorage?.setItem(any: any));
+      } catch (any: any) {
+        logger?.warn(any: any);
       }
     }
   }, [state, panelId, persistState]);
 
   // Methods
   const toggle = useCallback(() => {
-    setState(prev => ({ ...prev, isCollapsed: !prev.isCollapsed }));
+    setState(prev => ({ ...prev, isCollapsed: !prev?.isCollapsed }));
   }, []);
 
   const collapse = useCallback(() => {
@@ -163,18 +163,18 @@ export function usePanelState(options: UsePanelStateOptions): UsePanelStateRetur
     setState(prev => ({ ...prev, isVisible: false }));
   }, []);
 
-  const setZIndex = useCallback((z: number) => {
+  const setZIndex = useCallback(any: any) => {
     setState(prev => ({ ...prev, zIndex: z }));
   }, []);
 
   const bringToFront = useCallback(() => {
     // Get all panel z-indexes and set this one to max + 1
-    const allPanels = document.querySelectorAll('[data-panel-id]');
+    const allPanels = document?.querySelectorAll('[data-panel-id]');
     let maxZ = defaultZIndex;
 
-    allPanels.forEach(panel => {
-      const z = parseInt(window.getComputedStyle(panel).zIndex, 10);
-      if (!isNaN(z) && z > maxZ) {
+    allPanels?.forEach(panel => {
+      const z = parseInt(any: any).zIndex, 10);
+      if (any: any) {
         maxZ = z;
       }
     });
@@ -183,9 +183,9 @@ export function usePanelState(options: UsePanelStateOptions): UsePanelStateRetur
   }, [defaultZIndex]);
 
   return {
-    isCollapsed: state.isCollapsed,
-    isVisible: state.isVisible,
-    zIndex: state.zIndex,
+    isCollapsed: state?.isCollapsed,
+    isVisible: state?.isVisible,
+    zIndex: state?.zIndex,
     toggle,
     collapse,
     expand,

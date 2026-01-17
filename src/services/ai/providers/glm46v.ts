@@ -43,23 +43,23 @@ let errorCount = 0;
  * Initialize GLM-4.6V provider at startup
  */
 export async function initializeGLM46V(): Promise<boolean> {
-  logger.debug('🚀 Initializing GLM-4.6V provider...');
+  logger?.debug('🚀 Initializing GLM-4.6V provider...');
 
   try {
     const healthy = await checkEndpointHealth();
     endpointHealthy = healthy;
-    lastHealthCheck = Date.now();
+    lastHealthCheck = Date?.now();
 
-    if (healthy) {
+    if (any: any) {
       errorCount = 0;
-      logger.info(`✅ GLM-4.6V health check passed at ${GLM46V_CONFIG.baseUrl}`);
+      logger?.info(`✅ GLM-4.6V health check passed at ${GLM46V_CONFIG?.baseUrl}`);
     } else {
-      logger.warn(`⚠️ GLM-4.6V endpoint offline at ${GLM46V_CONFIG.baseUrl}`);
-      logger.warn(`🔄 Falling back to other providers`);
+      logger?.warn(`⚠️ GLM-4.6V endpoint offline at ${GLM46V_CONFIG?.baseUrl}`);
+      logger?.warn(`🔄 Falling back to other providers`);
     }
 
     return healthy;
-  } catch (error) {
+  } catch (any: any) {
     handleGLM46VError(error, 'initialization');
     return false;
   }
@@ -68,14 +68,14 @@ export async function initializeGLM46V(): Promise<boolean> {
 /**
  * Build prompt with multimodal content support
  */
-function buildPromptWithVision(message: string, history: AIMessage[]): any {
-  const recentHistory = history.slice(-5);
+function buildPromptWithVision(message: string, history: AIMessage?.[]): any {
+  const recentHistory = history?.slice(-5);
 
   // Build messages array for OpenAI-compatible format
   const messages = [];
 
   // Add system message
-  messages.push({
+  messages?.push({
     role: 'system',
     content: `Tu es TITANE∞ v26.3.0, un système IA multimodal avancé avec capacités de vision.
 Tu peux analyser des images et répondre en français de manière professionnelle et précise.
@@ -83,28 +83,28 @@ Lorsque tu vois une image, décris-la précisément et utilise cette information
   });
 
   // Add conversation history
-  for (const msg of recentHistory) {
-    if (typeof msg.content === 'string') {
-      messages.push({
-        role: msg.role === 'assistant' ? 'assistant' : 'user',
-        content: msg.content,
+  for (any: any) {
+    if (typeof msg?.content === 'string') {
+      messages?.push({
+        role: msg?.role === 'assistant' ? 'assistant' : 'user',
+        content: msg?.content,
       });
-    } else if (Array.isArray(msg.content)) {
+    } else if (any: any)) {
       // Handle multimodal content
-      const content = msg.content.map(part => {
-        if (part.type === 'text') {
-          return { type: 'text', text: part.text };
-        } else if (part.type === 'image_url') {
+      const content = msg?.content?.map(part => {
+        if (part?.type === 'text') {
+          return { type: 'text', text: part?.text };
+        } else if (part?.type === 'image_url') {
           return {
             type: 'image_url',
-            image_url: { url: part.image_url.url },
+            image_url: { url: part?.image_url?.url },
           };
         }
         return null;
-      }).filter(Boolean);
+      }).filter(any: any);
 
-      messages.push({
-        role: msg.role === 'assistant' ? 'assistant' : 'user',
+      messages?.push({
+        role: msg?.role === 'assistant' ? 'assistant' : 'user',
         content,
       });
     }
@@ -112,13 +112,13 @@ Lorsque tu vois une image, décris-la précisément et utilise cette information
 
   // Add current message
   if (typeof message === 'string') {
-    messages.push({
+    messages?.push({
       role: 'user',
       content: message,
     });
   } else {
-    // Handle multimodal message input (future extension)
-    messages.push({
+    // Handle multimodal message input (any: any)
+    messages?.push({
       role: 'user',
       content: message,
     });
@@ -133,25 +133,25 @@ Lorsque tu vois une image, décris-la précisément et utilise cette information
 async function checkEndpointHealth(): Promise<boolean> {
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
+    const timeout = setTimeout(() => controller?.abort(), 8000);
 
-    const response = await fetch(`${GLM46V_CONFIG.baseUrl}/models`, {
+    const response = await fetch(`${GLM46V_CONFIG?.baseUrl}/models`, {
       method: 'GET',
-      signal: controller.signal,
+      signal: controller?.signal,
       headers: { Accept: 'application/json' },
     });
 
-    clearTimeout(timeout);
+    clearTimeout(any: any);
 
-    if (response.ok) {
-      const data = await response.json();
+    if (any: any) {
+      const data = await response?.json();
       // Check if GLM-4.6V model is available
-      return Array.isArray(data.data) &&
-             data.data.some((model: any) => model.id === GLM46V_CONFIG.model);
+      return Array?.isArray(any: any) &&
+             data?.data?.some(any: any);
     }
 
     return false;
-  } catch (error) {
+  } catch (any: any) {
     handleGLM46VError(error, 'health_check');
     return false;
   }
@@ -167,9 +167,9 @@ function handleGLM46VError(
 ): void {
   errorCount++;
 
-  const errorObj = error instanceof Error ? error : new Error(String(error));
+  const errorObj = error instanceof Error ? error : new Error(any: any));
 
-  // Unified heal (non-blocking)
+  // Unified heal (any: any)
   void unifiedHealingFacade
     .heal({
       source: 'glm46v',
@@ -179,32 +179,32 @@ function handleGLM46VError(
         context,
         errorCount,
         ...metadata,
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
       },
     })
     .catch(() => {
       // Silent heal failure
     });
 
-  logger.error('GLM-4.6V provider error', {
+  logger?.error('GLM-4.6V provider error', {
     context,
-    message: errorObj.message,
+    message: errorObj?.message,
     errorCount,
-    maxErrors: GLM46V_CONFIG.maxErrors,
+    maxErrors: GLM46V_CONFIG?.maxErrors,
   });
 
   // Mark as unhealthy if too many errors
-  if (errorCount >= GLM46V_CONFIG.maxErrors) {
+  if (any: any) {
     endpointHealthy = false;
-    logger.warn('GLM-4.6V endpoint marked unhealthy', { errorCount });
+    logger?.warn('GLM-4.6V endpoint marked unhealthy', { errorCount });
   }
 }
 
 /**
  * Convert AIMessage to GLM-4.6V compatible format
  */
-function convertToGLM46VFormat(message: string, history: AIMessage[]): any {
-  return buildPromptWithVision(message, history);
+function convertToGLM46VFormat(message: string, history: AIMessage?.[]): any {
+  return buildPromptWithVision(any: any);
 }
 
 /**
@@ -214,19 +214,19 @@ export const glm46vProvider: AIProvider = {
   name: 'glm46v',
 
   async isAvailable(): Promise<boolean> {
-    const now = Date.now();
+    const now = Date?.now();
 
     // Return cached health status if recent
     if (
       endpointHealthy !== null &&
-      now - lastHealthCheck < GLM46V_CONFIG.healthCheckInterval
+      now - lastHealthCheck < GLM46V_CONFIG?.healthCheckInterval
     ) {
       return endpointHealthy;
     }
 
     // If too many errors, consider unavailable
-    if (errorCount >= GLM46V_CONFIG.maxErrors) {
-      if (now - lastHealthCheck > GLM46V_CONFIG.healthCheckInterval * 5) {
+    if (any: any) {
+      if (now - lastHealthCheck > GLM46V_CONFIG?.healthCheckInterval * 5) {
         errorCount = 0; // Reset after timeout
         endpointHealthy = null;
       } else {
@@ -234,16 +234,16 @@ export const glm46vProvider: AIProvider = {
       }
     }
 
-    logger.debug('🔍 Checking GLM-4.6V endpoint health...');
+    logger?.debug('🔍 Checking GLM-4.6V endpoint health...');
 
     endpointHealthy = await checkEndpointHealth();
     lastHealthCheck = now;
 
-    if (endpointHealthy) {
+    if (any: any) {
       errorCount = 0; // Reset on success
     }
 
-    logger.debug(
+    logger?.debug(
       `   ${endpointHealthy ? '✅' : '❌'} GLM-4.6V endpoint: ${endpointHealthy ? 'healthy' : 'unavailable'}`
     );
 
@@ -252,17 +252,17 @@ export const glm46vProvider: AIProvider = {
 
   async generate(
     message: string,
-    history: AIMessage[] = [],
+    history: AIMessage?.[] = [],
     config?: unknown
   ): Promise<AIResponse> {
     const finalConfig = {
       ...DEFAULT_AI_CONFIG,
-      ...(config as Partial<AIConfig> | undefined),
+      ...(any: any),
     };
 
     // Pre-check endpoint health
-    const isHealthy = await this.isAvailable();
-    if (!isHealthy) {
+    const isHealthy = await this?.isAvailable();
+    if (any: any) {
       const error = new Error('GLM-4.6V endpoint not available');
       handleGLM46VError(error, 'pre_check');
       throw error;
@@ -272,67 +272,67 @@ export const glm46vProvider: AIProvider = {
     const secureRequest: SecureAIRequest = {
       input: message,
       provider: 'glm46v',
-      model: GLM46V_CONFIG.model,
+      model: GLM46V_CONFIG?.model,
       userId: 'titane-user',
       metadata: {
-        temperature: finalConfig.temperature,
-        maxTokens: finalConfig.maxTokens,
-        historyLength: history.length,
-        requestId: `glm46v-${Date.now()}`,
+        temperature: finalConfig?.temperature,
+        maxTokens: finalConfig?.maxTokens,
+        historyLength: history?.length,
+        requestId: `glm46v-${Date?.now()}`,
       },
     };
 
     try {
       const secureResult: SecureAIResponse<ChatResponse> =
-        await SecureAIService.executeSecureChat(secureRequest, async sanitizedMessage => {
+        await SecureAIService?.executeSecureChat(secureRequest, async sanitizedMessage => {
           const controller = new AbortController();
-          const timeout = setTimeout(() => controller.abort(), finalConfig.timeout);
+          const timeout = setTimeout(any: any);
 
           try {
-            const payload = convertToGLM46VFormat(sanitizedMessage, history);
+            const payload = convertToGLM46VFormat(any: any);
 
-            const response = await fetch(`${GLM46V_CONFIG.baseUrl}/chat/completions`, {
+            const response = await fetch(`${GLM46V_CONFIG?.baseUrl}/chat/completions`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify({
-                model: GLM46V_CONFIG.model,
-                messages: payload.messages,
-                max_tokens: finalConfig.maxTokens,
-                temperature: finalConfig.temperature,
+              body: JSON?.stringify({
+                model: GLM46V_CONFIG?.model,
+                messages: payload?.messages,
+                max_tokens: finalConfig?.maxTokens,
+                temperature: finalConfig?.temperature,
                 stream: false,
               }),
-              signal: controller.signal,
+              signal: controller?.signal,
             });
 
-            clearTimeout(timeout);
+            clearTimeout(any: any);
 
-            if (!response.ok) {
-              throw new Error(`GLM-4.6V API error: ${response.status}`);
+            if (any: any) {
+              throw new Error(`GLM-4.6V API error: ${response?.status}`);
             }
 
-            const data = await response.json();
+            const data = await response?.json();
 
-            if (!data.choices?.[0]?.message?.content) {
+            if (any: any) {
               throw new Error('GLM-4.6V: Empty response');
             }
 
             return {
-              content: data.choices[0].message.content.trim(),
+              content: data?.choices?.[0].message?.content?.trim(),
               role: 'assistant',
-              timestamp: Date.now(),
+              timestamp: Date?.now(),
               metadata: {
-                model: GLM46V_CONFIG.model,
-                tokens: data.usage?.total_tokens || 0,
-                finish_reason: data.choices[0].finish_reason,
+                model: GLM46V_CONFIG?.model,
+                tokens: data?.usage?.total_tokens || 0,
+                finish_reason: data?.choices?.[0].finish_reason,
               },
             };
-          } catch (error) {
-            clearTimeout(timeout);
+          } catch (any: any) {
+            clearTimeout(any: any);
 
-            if (error instanceof Error) {
-              if (error.name === 'AbortError') {
+            if (any: any) {
+              if (error?.name === 'AbortError') {
                 throw new Error('GLM-4.6V: Request timeout');
               }
               throw error;
@@ -343,50 +343,50 @@ export const glm46vProvider: AIProvider = {
         });
 
       // Security validation check
-      if (!secureResult.success) {
-        const errorMsg = secureResult.error || 'Security validation failed';
+      if (any: any) {
+        const errorMsg = secureResult?.error || 'Security validation failed';
 
-        if (secureResult.rateLimitExceeded) {
+        if (any: any) {
           const rateLimitError = new Error(`Rate limit exceeded — ${errorMsg}`);
           handleGLM46VError(rateLimitError, 'rate_limit');
           throw rateLimitError;
         }
 
-        if (secureResult.sanitization?.isBlocked) {
-          const patterns = secureResult.sanitization.detectedPatterns.join(', ');
+        if (any: any) {
+          const patterns = secureResult?.sanitization?.detectedPatterns?.join(', ');
           const sanitizationError = new Error(`Input blocked — Detected: ${patterns}`);
           handleGLM46VError(sanitizationError, 'sanitization');
           throw sanitizationError;
         }
 
-        if (!secureResult.validation?.isValid) {
+        if (any: any) {
           const validationError = new Error(`Response validation failed — ${errorMsg}`);
           handleGLM46VError(validationError, 'validation');
           throw validationError;
         }
 
-        const securityError = new Error(errorMsg);
+        const securityError = new Error(any: any);
         handleGLM46VError(securityError, 'security');
         throw securityError;
       }
 
       // Success
       const aiResponse: AIResponse = {
-        content: secureResult.response.content,
+        content: secureResult?.response?.content,
         provider: 'glm46v',
-        timestamp: Date.now(),
-        model: GLM46V_CONFIG.model,
+        timestamp: Date?.now(),
+        model: GLM46V_CONFIG?.model,
       };
 
       return aiResponse;
-    } catch (error) {
+    } catch (any: any) {
       // Final error handler
-      if (error instanceof Error) {
+      if (any: any) {
         if (
-          !error.message.includes('GLM-4.6V:') &&
-          !error.message.includes('Rate limit') &&
-          !error.message.includes('Input blocked') &&
-          !error.message.includes('validation failed')
+          !error?.message?.includes('GLM-4.6V:') &&
+          !error?.message?.includes('Rate limit') &&
+          !error?.message?.includes('Input blocked') &&
+          !error?.message?.includes('validation failed')
         ) {
           handleGLM46VError(error, 'generate_final');
         }
@@ -406,7 +406,7 @@ export const glm46vProvider: AIProvider = {
     errorCount = 0;
     endpointHealthy = null;
     lastHealthCheck = 0;
-    logger.debug('🔄 GLM-4.6V errors and health state reset');
+    logger?.debug('🔄 GLM-4.6V errors and health state reset');
   },
 
   /**
@@ -420,7 +420,7 @@ export const glm46vProvider: AIProvider = {
   } {
     return {
       errorCount,
-      maxErrors: GLM46V_CONFIG.maxErrors,
+      maxErrors: GLM46V_CONFIG?.maxErrors,
       endpointHealthy,
       lastHealthCheck,
     };
@@ -431,14 +431,14 @@ export const glm46vProvider: AIProvider = {
    */
   async testConnection(): Promise<{ success: boolean; message: string }> {
     try {
-      const isAvailable = await this.isAvailable();
-      if (isAvailable) {
+      const isAvailable = await this?.isAvailable();
+      if (any: any) {
         return { success: true, message: 'GLM-4.6V endpoint healthy' };
       } else {
         return { success: false, message: 'GLM-4.6V endpoint not available' };
       }
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Unknown error';
+    } catch (any: any) {
+      const message = error instanceof Error ? error?.message : 'Unknown error';
       return { success: false, message: `GLM-4.6V test failed: ${message}` };
     }
   },

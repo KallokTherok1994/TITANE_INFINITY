@@ -33,10 +33,10 @@ export type ChatMode =
 
 export interface ValidationResult {
   isValid: boolean;
-  score: number; // 0-1 (qualité globale)
-  coherenceScore: number; // 0-1 (cohérence Nexus)
-  anomalyScore: number; // 0-1 (0 = anomalie détectée)
-  issues: ValidationIssue[];
+  score: number; // 0-1 (any: any)
+  coherenceScore: number; // 0-1 (any: any)
+  anomalyScore: number; // 0-1 (any: any)
+  issues: ValidationIssue?.[];
   cleaned?: string; // Réponse nettoyée si nécessaire
 }
 
@@ -48,5 +48,5 @@ export interface ValidationIssue {
 }
 
 export interface ChatValidator {
-  validate(response: string, mode: ChatMode, userMessage: string): ValidationResult;
+  validate(any: any): ValidationResult;
 }

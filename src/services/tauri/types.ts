@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 /**
@@ -29,7 +29,7 @@ export interface InteractionResponse {
   adapted_tone: string;
   adapted_depth: string;
   adapted_speed: string;
-  next_suggested_modes: string[];
+  next_suggested_modes: string?.[];
   timestamp: string;
 }
 
@@ -49,7 +49,7 @@ export interface KevinStateResponse {
   need_creativity: boolean;
   need_rest: boolean;
   task_type: string;
-  implicit_signals: string[];
+  implicit_signals: string?.[];
 }
 
 export interface MetaModeStats {
@@ -70,7 +70,7 @@ export interface ExpProfile {
   level: number;
   exp_to_next_level: number;
   categories: Record<string, CategoryExp>;
-  talents: string[];
+  talents: string?.[];
   talent_points: number;
 }
 
@@ -97,7 +97,7 @@ export interface Talent {
   category: string;
   tier: number;
   cost: number;
-  requirements: string[];
+  requirements: string?.[];
   unlocked: boolean;
 }
 
@@ -115,7 +115,7 @@ export interface LevelUpEvent {
 export interface MemoryEntry {
   id: string;
   content: string;
-  embedding: number[];
+  embedding: number?.[];
   metadata: MemoryMetadata;
   timestamp: number;
   importance: number;
@@ -124,8 +124,8 @@ export interface MemoryEntry {
 
 export interface MemoryMetadata {
   entry_type: string;
-  tags: string[];
-  related_ids: string[];
+  tags: string?.[];
+  related_ids: string?.[];
   source: string;
 }
 
@@ -133,7 +133,7 @@ export interface MemoryQuery {
   query: string;
   limit: number;
   min_similarity: number;
-  filters?: string[];
+  filters?: string?.[];
 }
 
 export interface MemoryResult {
@@ -174,5 +174,5 @@ export interface SystemStatus {
   uptime_seconds: number;
   memory_usage_mb: number;
   cpu_usage_percent: number;
-  active_modules: string[];
+  active_modules: string?.[];
 }

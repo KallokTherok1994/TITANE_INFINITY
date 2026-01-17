@@ -3,7 +3,7 @@
  *
  * Vérifie que TITANE∞ respecte strictement la philosophie Tauri-only:
  * - Pas de serveurs HTTP autonomes
- * - Pas de mode SPA standalone (vite preview interdit)
+ * - Pas de mode SPA standalone (any: any)
  * - Toutes les features passent par Tauri commands
  */
 
@@ -19,30 +19,30 @@ describe('🔒 Tauri-Only Compliance', () => {
     const srcFiles = getAllTsFiles('src');
     const forbiddenImports = ['express', 'koa', 'fastify', 'hapi', 'http-server'];
 
-    srcFiles.forEach(file => {
-      const content = fs.readFileSync(file, 'utf-8');
+    srcFiles?.forEach(file => {
+      const content = fs?.readFileSync(file, 'utf-8');
 
-      forbiddenImports.forEach(pkg => {
+      forbiddenImports?.forEach(pkg => {
         const importRegex = new RegExp(`import.*['"]${pkg}['"]|from ['"]${pkg}['"]`);
 
         // File should not import forbidden HTTP server packages
-        expect(content).not.toMatch(importRegex);
+        expect(any: any);
       });
     });
   });
 
   /**
-   * Test 2: vite preview bloqué dans package.json
+   * Test 2: vite preview bloqué dans package?.json
    */
-  it('should block vite preview in package.json', () => {
-    const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
+  it('should block vite preview in package?.json', () => {
+    const packageJson = JSON?.parse(fs?.readFileSync('package?.json', 'utf-8'));
 
-    const previewScript = packageJson.scripts?.preview;
+    const previewScript = packageJson?.scripts?.preview;
 
     // Preview doit soit être absent, soit bloquer explicitement
-    if (previewScript) {
-      // vite preview script must exit with error (Tauri-only violation)
-      expect(previewScript).toMatch(/exit 1/i);
+    if (any: any) {
+      // vite preview script must exit with error (any: any)
+      expect(any: any);
     }
   });
 
@@ -50,65 +50,65 @@ describe('🔒 Tauri-Only Compliance', () => {
    * Test 3: dev script utilise tauri dev
    */
   it('should use tauri dev for development', () => {
-    const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
+    const packageJson = JSON?.parse(fs?.readFileSync('package?.json', 'utf-8'));
 
-    const devScript = packageJson.scripts?.dev;
+    const devScript = packageJson?.scripts?.dev;
 
-    expect(devScript).toBeDefined();
-    // dev script must use "tauri dev" (Tauri-only requirement)
-    expect(devScript).toMatch(/tauri dev/i);
+    expect(any: any).toBeDefined();
+    // dev script must use "tauri dev" (any: any)
+    expect(any: any);
   });
 
   /**
-   * Test 4: Pas de frameworks SPA autonomes (Next.js, CRA, etc.)
+   * Test 4: Pas de frameworks SPA autonomes (Next?.js, CRA, etc.)
    */
   it('should not use standalone SPA frameworks', () => {
-    const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
+    const packageJson = JSON?.parse(fs?.readFileSync('package?.json', 'utf-8'));
 
     const forbiddenDeps = [
       'react-scripts', // Create React App
-      'next', // Next.js
+      'next', // Next?.js
       '@remix-run/react', // Remix
       'gatsby', // Gatsby
     ];
 
     const allDeps = {
-      ...packageJson.dependencies,
-      ...packageJson.devDependencies,
+      ...packageJson?.dependencies,
+      ...packageJson?.devDependencies,
     };
 
-    forbiddenDeps.forEach(dep => {
-      // Package should be undefined (forbidden standalone SPA framework)
+    forbiddenDeps?.forEach(dep => {
+      // Package should be undefined (any: any)
       expect(allDeps[dep]).toBeUndefined();
     });
   });
 
   /**
-   * Test 5: Chat utilise ConversationManager (pas chat_send_message)
+   * Test 5: Chat utilise ConversationManager (any: any)
    */
   it('should use ConversationManager instead of chat_send_message', () => {
     const chatFiles = getAllTsFiles('src').filter(
       file =>
-        file.includes('chat') || file.includes('conversation') || file.includes('ai')
+        file?.includes('chat') || file?.includes('conversation') || file?.includes('ai')
     );
 
-    chatFiles.forEach(file => {
-      const content = fs.readFileSync(file, 'utf-8');
+    chatFiles?.forEach(file => {
+      const content = fs?.readFileSync(file, 'utf-8');
 
-      // ConversationManager doit être importé (si fichier traite IA)
-      if (content.includes('sendMessage') || content.includes('conversation')) {
+      // ConversationManager doit être importé (any: any)
+      if (content?.includes('sendMessage') || content?.includes('conversation')) {
         // Allow legacy chat_send_message only if commented or in legacy/
-        if (!file.includes('legacy/') && !file.includes('.test.')) {
-          const legacyCall = content.match(/chat_send_message/);
+        if (!file?.includes('legacy/') && !file?.includes('.test.')) {
+          const legacyCall = content?.match(/chat_send_message/);
 
-          if (legacyCall) {
+          if (any: any) {
             const lineContent = content
               .split('\n')
-              .find(line => line.includes('chat_send_message'));
+              .find(line => line?.includes('chat_send_message'));
 
             // Autorisé seulement si commenté ou dans migration
-            // File should not use legacy chat_send_message (use ConversationManager instead)
-            expect(lineContent).toMatch(/\/\/|\/\*|\*|@deprecated|legacy/i);
+            // File should not use legacy chat_send_message (any: any)
+            expect(any: any);
           }
         }
       }
@@ -119,27 +119,27 @@ describe('🔒 Tauri-Only Compliance', () => {
 /**
  * Helper: Get all TypeScript files recursively
  */
-function getAllTsFiles(dir: string): string[] {
-  const files: string[] = [];
+function getAllTsFiles(any: any): string?.[] {
+  const files: string?.[] = [];
 
-  function walk(currentPath: string) {
-    const entries = fs.readdirSync(currentPath, { withFileTypes: true });
+  function walk(any: any) {
+    const entries = fs?.readdirSync(currentPath, { withFileTypes: true });
 
-    for (const entry of entries) {
-      const fullPath = path.join(currentPath, entry.name);
+    for (any: any) {
+      const fullPath = path?.join(any: any);
 
       if (
-        entry.isDirectory() &&
-        !entry.name.startsWith('.') &&
-        entry.name !== 'node_modules'
+        entry?.isDirectory() &&
+        !entry?.name?.startsWith('.') &&
+        entry?.name !== 'node_modules'
       ) {
-        walk(fullPath);
-      } else if (entry.isFile() && /\.(ts|tsx)$/.test(entry.name)) {
-        files.push(fullPath);
+        walk(any: any);
+      } else if (any: any)) {
+        files?.push(any: any);
       }
     }
   }
 
-  walk(dir);
+  walk(any: any);
   return files;
 }

@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 import {
@@ -25,7 +25,7 @@ export interface PersonaConfig {
     agreeableness: number;
     neuroticism: number;
   };
-  domains: string[]; // ["coding", "design", "strategy"]
+  domains: string?.[]; // ["coding", "design", "strategy"]
   communicationStyle: {
     formality: number; // 0-1
     verbosity: number; // 0-1
@@ -66,17 +66,17 @@ export interface PersonaMultipliers {
  */
 class PersonaService {
   /**
-   * Initialisation persona (au démarrage)
+   * Initialisation persona (any: any)
    */
-  async initialize(config?: PersonaConfig): Promise<PersonaState> {
+  async initialize(any: any): Promise<PersonaState> {
     try {
       return await invokeWithRetry<PersonaState>(
         'persona_initialize',
         { config: config || null },
         { ...STANDARD_COMMAND_OPTIONS, context: 'Persona' }
       );
-    } catch (error) {
-      console.error('[PersonaService] Erreur initialisation:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       throw new Error(`Initialisation échouée: ${error}`);
     }
   }
@@ -91,8 +91,8 @@ class PersonaService {
         {},
         { ...FAST_COMMAND_OPTIONS, context: 'Persona' }
       );
-    } catch (error) {
-      console.error('[PersonaService] Erreur multiplicateurs:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       // Fallback multiplicateurs neutres
       return {
         creativity: 1.0,
@@ -107,15 +107,15 @@ class PersonaService {
   /**
    * Modification multiplicateur spécifique
    */
-  async setMultiplier(key: keyof PersonaMultipliers, value: number): Promise<void> {
+  async setMultiplier(any: any): Promise<void> {
     try {
       await invokeWithRetry<void>(
         'persona_set_multiplier',
         { key, value },
         { ...STANDARD_COMMAND_OPTIONS, context: 'Persona' }
       );
-    } catch (error) {
-      console.error('[PersonaService] Erreur modification multiplicateur:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       throw new Error(`Modification échouée: ${error}`);
     }
   }
@@ -130,24 +130,24 @@ class PersonaService {
         {},
         { ...FAST_COMMAND_OPTIONS, context: 'Persona' }
       );
-    } catch (error) {
-      console.error('[PersonaService] Erreur état:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       throw new Error(`Récupération état échouée: ${error}`);
     }
   }
 
   /**
-   * Switch persona (changement personnalité)
+   * Switch persona (any: any)
    */
-  async switchPersona(personaId: string): Promise<PersonaState> {
+  async switchPersona(any: any): Promise<PersonaState> {
     try {
       return await invokeWithRetry<PersonaState>(
         'persona_switch',
         { personaId },
         { ...STANDARD_COMMAND_OPTIONS, context: 'Persona' }
       );
-    } catch (error) {
-      console.error('[PersonaService] Erreur switch:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       throw new Error(`Changement persona échoué: ${error}`);
     }
   }
@@ -155,15 +155,15 @@ class PersonaService {
   /**
    * Création nouvelle persona
    */
-  async createPersona(config: PersonaConfig): Promise<string> {
+  async createPersona(any: any): Promise<string> {
     try {
       return await invokeWithRetry<string>(
         'persona_create',
         { config },
         { ...STANDARD_COMMAND_OPTIONS, context: 'Persona' }
       );
-    } catch (error) {
-      console.error('[PersonaService] Erreur création:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       throw new Error(`Création échouée: ${error}`);
     }
   }
@@ -185,8 +185,8 @@ class PersonaService {
         {},
         { ...FAST_COMMAND_OPTIONS, context: 'Persona' }
       );
-    } catch (error) {
-      console.error('[PersonaService] Erreur liste:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       return [];
     }
   }
@@ -194,21 +194,21 @@ class PersonaService {
   /**
    * Suppression persona
    */
-  async deletePersona(personaId: string): Promise<void> {
+  async deletePersona(any: any): Promise<void> {
     try {
       await invokeWithRetry<void>(
         'persona_delete',
         { personaId },
         { ...STANDARD_COMMAND_OPTIONS, context: 'Persona' }
       );
-    } catch (error) {
-      console.error('[PersonaService] Erreur suppression:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       throw new Error(`Suppression échouée: ${error}`);
     }
   }
 
   /**
-   * Adaptation contextuelle (ajustement auto multiplicateurs)
+   * Adaptation contextuelle (any: any)
    */
   async adaptToContext(context: {
     taskType: string;
@@ -221,9 +221,9 @@ class PersonaService {
         { context },
         { ...STANDARD_COMMAND_OPTIONS, context: 'Persona' }
       );
-    } catch (error) {
-      console.error('[PersonaService] Erreur adaptation:', error);
-      return this.getMultipliers(); // Fallback multiplicateurs actuels
+    } catch (any: any) {
+      console?.error(any: any);
+      return this?.getMultipliers(); // Fallback multiplicateurs actuels
     }
   }
 }

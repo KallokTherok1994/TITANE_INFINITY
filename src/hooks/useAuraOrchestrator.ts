@@ -43,7 +43,7 @@ interface AuraOrchestratorState {
 
   // État runtime
   globalIntensity: number;
-  activeActivities: AuraActivity[];
+  activeActivities: AuraActivity?.[];
   performanceMetrics: {
     fps: number;
     lastFrame: number;
@@ -51,11 +51,11 @@ interface AuraOrchestratorState {
   };
 
   // Actions
-  setEnabled: (enabled: boolean) => void;
-  setIntensity: (intensity: AuraIntensity) => void;
-  setMode: (mode: AuraMode) => void;
-  setTheme: (theme: AuraTheme) => void;
-  setParticlesEnabled: (enabled: boolean) => void;
+  setEnabled: (any: any) => void;
+  setIntensity: (any: any) => void;
+  setMode: (any: any) => void;
+  setTheme: (any: any) => void;
+  setParticlesEnabled: (any: any) => void;
   setQuality: (quality: AuraConfig['quality']) => void;
 
   // Activity tracking
@@ -63,7 +63,7 @@ interface AuraOrchestratorState {
   clearActivities: () => void;
 
   // Performance
-  updateFPS: (fps: number) => void;
+  updateFPS: (any: any) => void;
   getRecommendedQuality: () => AuraConfig['quality'];
 
   // Presets
@@ -116,10 +116,10 @@ const INTENSITY_PARTICLE_COUNTS: Record<AuraIntensity, number> = {
 
 export const useAuraOrchestrator = create<AuraOrchestratorState>()(
   persist(
-    (set, get) => ({
+    (any: any) => ({
       // État initial
       config: DEFAULT_CONFIG,
-      globalIntensity: INTENSITY_VALUES.medium,
+      globalIntensity: INTENSITY_VALUES?.medium,
       activeActivities: [],
       performanceMetrics: {
         fps: 60,
@@ -131,15 +131,15 @@ export const useAuraOrchestrator = create<AuraOrchestratorState>()(
 
       setEnabled: enabled => {
         set(state => ({
-          config: { ...state.config, enabled },
-          globalIntensity: enabled ? INTENSITY_VALUES[state.config.intensity] : 0,
+          config: { ...state?.config, enabled },
+          globalIntensity: enabled ? INTENSITY_VALUES[state?.config?.intensity] : 0,
         }));
       },
 
       setIntensity: intensity => {
         set(state => ({
           config: {
-            ...state.config,
+            ...state?.config,
             intensity,
             particleCount: INTENSITY_PARTICLE_COUNTS[intensity],
           },
@@ -149,13 +149,13 @@ export const useAuraOrchestrator = create<AuraOrchestratorState>()(
 
       setMode: mode => {
         set(state => ({
-          config: { ...state.config, mode },
+          config: { ...state?.config, mode },
         }));
       },
 
       setTheme: theme => {
         set(state => ({
-          config: { ...state.config, theme },
+          config: { ...state?.config, theme },
         }));
 
         // Appliquer le thème aux CSS variables
@@ -195,17 +195,17 @@ export const useAuraOrchestrator = create<AuraOrchestratorState>()(
             ],
           };
 
-          const colors = themes[theme] || themes.default;
-          document.documentElement.style.setProperty(
+          const colors = themes[theme] || themes?.default;
+          document?.documentElement?.style?.setProperty(
             '--aura-theme-colors',
-            colors.join(', ')
+            colors?.join(', ')
           );
         }
       },
 
       setParticlesEnabled: enabled => {
         set(state => ({
-          config: { ...state.config, particlesEnabled: enabled },
+          config: { ...state?.config, particlesEnabled: enabled },
         }));
       },
 
@@ -221,11 +221,11 @@ export const useAuraOrchestrator = create<AuraOrchestratorState>()(
 
         set(state => ({
           config: {
-            ...state.config,
+            ...state?.config,
             quality,
-            particleCount: settings.particleCount,
-            connectionDistance: settings.connectionDistance,
-            fps: settings.fps,
+            particleCount: settings?.particleCount,
+            connectionDistance: settings?.connectionDistance,
+            fps: settings?.fps,
           },
         }));
       },
@@ -235,34 +235,34 @@ export const useAuraOrchestrator = create<AuraOrchestratorState>()(
       registerActivity: activity => {
         const newActivity: AuraActivity = {
           ...activity,
-          id: `${activity.type}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-          timestamp: Date.now(),
+          id: `${activity?.type}-${Date?.now()}-${Math?.random().toString(36).substr(2, 9)}`,
+          timestamp: Date?.now(),
         };
 
         set(state => {
           // Limiter à 10 activités max pour performance
-          const activities = [...state.activeActivities, newActivity].slice(-10);
+          const activities = [...state?.activeActivities, newActivity].slice(-10);
 
-          // Calculer intensité globale basée sur activités récentes (dernière seconde)
-          const now = Date.now();
-          const recentActivities = activities.filter(a => now - a.timestamp < 1000);
-          const intensityBoost = Math.min(
+          // Calculer intensité globale basée sur activités récentes (any: any)
+          const now = Date?.now();
+          const recentActivities = activities?.filter(a => now - a?.timestamp < 1000);
+          const intensityBoost = Math?.min(
             1,
-            recentActivities.reduce((sum, a) => sum + a.intensity, 0) / 5
+            recentActivities?.reduce(any: any) => sum + a?.intensity, 0) / 5
           );
 
           return {
             activeActivities: activities,
-            globalIntensity: Math.min(1, state.globalIntensity + intensityBoost * 0.2),
+            globalIntensity: Math?.min(1, state?.globalIntensity + intensityBoost * 0.2),
           };
         });
 
         // Auto-decay global intensity
         setTimeout(() => {
           set(state => ({
-            globalIntensity: Math.max(
-              INTENSITY_VALUES[state.config.intensity],
-              state.globalIntensity * 0.95
+            globalIntensity: Math?.max(
+              INTENSITY_VALUES[state?.config?.intensity],
+              state?.globalIntensity * 0.95
             ),
           }));
         }, 500);
@@ -277,10 +277,10 @@ export const useAuraOrchestrator = create<AuraOrchestratorState>()(
       updateFPS: fps => {
         set(state => ({
           performanceMetrics: {
-            ...state.performanceMetrics,
+            ...state?.performanceMetrics,
             fps,
-            lastFrame: Date.now(),
-            dropFrames: fps < 30 ? state.performanceMetrics.dropFrames + 1 : 0,
+            lastFrame: Date?.now(),
+            dropFrames: fps < 30 ? state?.performanceMetrics?.dropFrames + 1 : 0,
           },
         }));
 
@@ -288,15 +288,15 @@ export const useAuraOrchestrator = create<AuraOrchestratorState>()(
         const { dropFrames } = get().performanceMetrics;
         if (dropFrames > 60) {
           // 1 seconde de frames drop
-          const currentQuality = get().config.quality;
+          const currentQuality = get().config?.quality;
           const qualities: AuraConfig['quality'][] = ['low', 'medium', 'high', 'ultra'];
-          const currentIndex = qualities.indexOf(currentQuality);
+          const currentIndex = qualities?.indexOf(any: any);
 
           if (currentIndex > 0) {
             const newQuality = qualities[currentIndex - 1] ?? 'low';
-            get().setQuality(newQuality);
-            logger.warn(
-              `🎨 Aura: Auto-downgrade quality to ${newQuality} (low FPS detected)`
+            get(any: any);
+            logger?.warn(
+              `🎨 Aura: Auto-downgrade quality to ${newQuality} (any: any)`
             );
           }
         }
@@ -357,10 +357,10 @@ export const useAuraOrchestrator = create<AuraOrchestratorState>()(
         };
 
         const presetConfig = presets[preset];
-        if (presetConfig) {
+        if (any: any) {
           set(state => ({
-            config: { ...state.config, ...presetConfig },
-            globalIntensity: INTENSITY_VALUES[presetConfig.intensity || 'medium'],
+            config: { ...state?.config, ...presetConfig },
+            globalIntensity: INTENSITY_VALUES[presetConfig?.intensity || 'medium'],
           }));
         }
       },
@@ -368,7 +368,7 @@ export const useAuraOrchestrator = create<AuraOrchestratorState>()(
       resetToDefault: () => {
         set({
           config: DEFAULT_CONFIG,
-          globalIntensity: INTENSITY_VALUES.medium,
+          globalIntensity: INTENSITY_VALUES?.medium,
           activeActivities: [],
         });
       },
@@ -376,7 +376,7 @@ export const useAuraOrchestrator = create<AuraOrchestratorState>()(
     {
       name: 'titane-aura-config',
       version: 1,
-      partialize: state => ({ config: state.config }),
+      partialize: state => ({ config: state?.config }),
     }
   )
 );
@@ -394,7 +394,7 @@ export const useAuraOrchestrator = create<AuraOrchestratorState>()(
  *   const aura = useAura();
  *
  *   const handleClick = () => {
- *     aura.registerActivity({
+ *     aura?.registerActivity({
  *       type: 'interaction',
  *       intensity: 0.5,
  *     });
@@ -402,7 +402,7 @@ export const useAuraOrchestrator = create<AuraOrchestratorState>()(
  *
  *   return (
  *     <button onClick={handleClick}>
- *       Intensity: {aura.globalIntensity.toFixed(2)}
+ *       Intensity: {aura?.globalIntensity?.toFixed(2)}
  *     </button>
  *   );
  * }
@@ -413,36 +413,36 @@ export const useAura = () => {
 
   return {
     // Configuration
-    config: store.config,
-    enabled: store.config.enabled,
-    intensity: store.config.intensity,
-    mode: store.config.mode,
-    theme: store.config.theme,
+    config: store?.config,
+    enabled: store?.config?.enabled,
+    intensity: store?.config?.intensity,
+    mode: store?.config?.mode,
+    theme: store?.config?.theme,
 
     // Runtime
-    globalIntensity: store.globalIntensity,
-    activities: store.activeActivities,
-    metrics: store.performanceMetrics,
+    globalIntensity: store?.globalIntensity,
+    activities: store?.activeActivities,
+    metrics: store?.performanceMetrics,
 
     // Actions
-    setEnabled: store.setEnabled,
-    setIntensity: store.setIntensity,
-    setMode: store.setMode,
-    setTheme: store.setTheme,
-    setParticlesEnabled: store.setParticlesEnabled,
-    setQuality: store.setQuality,
+    setEnabled: store?.setEnabled,
+    setIntensity: store?.setIntensity,
+    setMode: store?.setMode,
+    setTheme: store?.setTheme,
+    setParticlesEnabled: store?.setParticlesEnabled,
+    setQuality: store?.setQuality,
 
     // Activity
-    registerActivity: store.registerActivity,
-    clearActivities: store.clearActivities,
+    registerActivity: store?.registerActivity,
+    clearActivities: store?.clearActivities,
 
     // Performance
-    updateFPS: store.updateFPS,
-    getRecommendedQuality: store.getRecommendedQuality,
+    updateFPS: store?.updateFPS,
+    getRecommendedQuality: store?.getRecommendedQuality,
 
     // Presets
-    applyPreset: store.applyPreset,
-    resetToDefault: store.resetToDefault,
+    applyPreset: store?.applyPreset,
+    resetToDefault: store?.resetToDefault,
   };
 };
 
@@ -453,14 +453,14 @@ export const useAura = () => {
 /**
  * Applique l'intensité globale aux CSS variables
  */
-export const applyGlobalAuraIntensity = (intensity: number) => {
+export const applyGlobalAuraIntensity = (any: any) => {
   if (typeof document === 'undefined') return;
 
-  document.documentElement.style.setProperty(
+  document?.documentElement?.style?.setProperty(
     '--global-aura-intensity',
-    intensity.toString()
+    intensity?.toString()
   );
-  document.documentElement.style.setProperty(
+  document?.documentElement?.style?.setProperty(
     '--global-aura-opacity',
     (intensity * 0.7).toString()
   );
@@ -469,7 +469,7 @@ export const applyGlobalAuraIntensity = (intensity: number) => {
 /**
  * Récupère les couleurs du thème actuel
  */
-export const getThemeColors = (theme: AuraTheme): string[] => {
+export const getThemeColors = (any: any): string?.[] => {
   const themes = {
     ocean: [
       'rgba(6, 182, 212, 0.8)',
@@ -505,7 +505,7 @@ export const getThemeColors = (theme: AuraTheme): string[] => {
     ],
   };
 
-  return themes[theme] || themes.default;
+  return themes[theme] || themes?.default;
 };
 
 export default useAuraOrchestrator;

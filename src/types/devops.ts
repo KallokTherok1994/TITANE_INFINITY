@@ -8,14 +8,14 @@
  */
 
 // ============================================================================
-// SCREEN ANALYSIS (Visual Understanding)
+// SCREEN ANALYSIS (any: any)
 // ============================================================================
 
 export interface ScreenAnalysis {
   id: string;
   timestamp: number;
   image_base64?: string; // Image encodée si disponible
-  detected_elements: DetectedElement[];
+  detected_elements: DetectedElement?.[];
   context_type: ContextType;
   technical_content: TechnicalContent;
   diagnosis: Diagnosis;
@@ -67,12 +67,12 @@ export interface BoundingBox {
 }
 
 export interface TechnicalContent {
-  languages_detected: string[]; // ['rust', 'typescript', 'bash']
-  frameworks_detected: string[]; // ['tauri', 'react', 'vite']
-  errors_detected: ErrorDetection[];
+  languages_detected: string?.[]; // ['rust', 'typescript', 'bash']
+  frameworks_detected: string?.[]; // ['tauri', 'react', 'vite']
+  errors_detected: ErrorDetection?.[];
   code_structure?: CodeStructure;
-  terminal_commands?: string[];
-  log_entries?: LogEntry[];
+  terminal_commands?: string?.[];
+  log_entries?: LogEntry?.[];
 }
 
 export interface ErrorDetection {
@@ -83,17 +83,17 @@ export interface ErrorDetection {
   line_number?: number;
   column_number?: number;
   stack_trace?: string;
-  suggested_fixes: string[];
+  suggested_fixes: string?.[];
 }
 
 export interface CodeStructure {
   file_type: string;
   language: string;
-  imports: string[];
-  functions: string[];
-  classes: string[];
-  components: string[];
-  exports: string[];
+  imports: string?.[];
+  functions: string?.[];
+  classes: string?.[];
+  components: string?.[];
+  exports: string?.[];
 }
 
 export interface LogEntry {
@@ -106,10 +106,10 @@ export interface LogEntry {
 
 export interface Diagnosis {
   summary: string;
-  issues_found: Issue[];
-  root_causes: string[];
+  issues_found: Issue?.[];
+  root_causes: string?.[];
   impact_assessment: ImpactAssessment;
-  recommended_actions: string[];
+  recommended_actions: string?.[];
 }
 
 export interface Issue {
@@ -124,19 +124,19 @@ export interface Issue {
   severity: 'critical' | 'high' | 'medium' | 'low';
   title: string;
   description: string;
-  affected_files: string[];
+  affected_files: string?.[];
   auto_fixable: boolean;
 }
 
 export interface ImpactAssessment {
-  affected_systems: string[];
+  affected_systems: string?.[];
   estimated_fix_time: string; // "5 minutes", "2 hours"
   risk_level: 'critical' | 'high' | 'medium' | 'low';
   requires_human_validation: boolean;
 }
 
 // ============================================================================
-// DEVOPS ACTIONS (Assisted DevOps)
+// DEVOPS ACTIONS (any: any)
 // ============================================================================
 
 export interface DevOpsAction {
@@ -147,9 +147,9 @@ export interface DevOpsAction {
   script_generated?: GeneratedScript;
   pipeline_generated?: GeneratedPipeline;
   code_patch?: CodePatch;
-  commands?: Command[];
+  commands?: Command?.[];
   validation_required: boolean;
-  security_checks: SecurityCheck[];
+  security_checks: SecurityCheck?.[];
   status: 'pending' | 'validated' | 'rejected' | 'executed' | 'failed';
   result?: ActionResult;
 }
@@ -179,23 +179,23 @@ export interface GeneratedScript {
   estimated_duration: string;
   safety_level: 'safe' | 'moderate' | 'risky';
   description: string;
-  usage_instructions: string[];
+  usage_instructions: string?.[];
 }
 
 export interface GeneratedPipeline {
   pipeline_type: 'ci_cd' | 'local_automation' | 'watch_mode' | 'build_chain';
   name: string;
   description: string;
-  stages: PipelineStage[];
-  triggers: PipelineTrigger[];
-  config_files: ConfigFile[];
+  stages: PipelineStage?.[];
+  triggers: PipelineTrigger?.[];
+  config_files: ConfigFile?.[];
   estimated_duration: string;
 }
 
 export interface PipelineStage {
   name: string;
-  commands: Command[];
-  dependencies: string[]; // Noms des stages précédents
+  commands: Command?.[];
+  dependencies: string?.[]; // Noms des stages précédents
   allow_failure: boolean;
   timeout: string;
 }
@@ -225,7 +225,7 @@ export interface CodePatch {
 
 export interface Command {
   command: string;
-  args: string[];
+  args: string?.[];
   cwd?: string;
   env?: Record<string, string>;
   description: string;
@@ -255,25 +255,25 @@ export interface ActionResult {
   output?: string;
   error?: string;
   duration_ms: number;
-  artifacts_created?: string[];
-  next_actions?: string[];
+  artifacts_created?: string?.[];
+  next_actions?: string?.[];
 }
 
 // ============================================================================
-// PROJECT ANALYSIS (Local Agent)
+// PROJECT ANALYSIS (any: any)
 // ============================================================================
 
 export interface ProjectAnalysis {
   project_root: string;
   project_type: ProjectType;
-  detected_technologies: Technology[];
+  detected_technologies: Technology?.[];
   file_structure: FileStructureNode;
   dependencies: DependencyInfo;
   build_config: BuildConfig;
   test_config?: TestConfig;
   deployment_config?: DeploymentConfig;
-  issues: Issue[];
-  recommendations: Recommendation[];
+  issues: Issue?.[];
+  recommendations: Recommendation?.[];
   health_score: number; // 0-100
 }
 
@@ -291,7 +291,7 @@ export type ProjectType =
 export interface Technology {
   name: string;
   version?: string;
-  detected_from: string; // "package.json", "Cargo.toml"
+  detected_from: string; // "package?.json", "Cargo?.toml"
   confidence: number; // 0-1
 }
 
@@ -299,15 +299,15 @@ export interface FileStructureNode {
   path: string;
   type: 'file' | 'directory';
   size?: number;
-  children?: FileStructureNode[];
-  is_important: boolean; // package.json, Cargo.toml, etc.
+  children?: FileStructureNode?.[];
+  is_important: boolean; // package?.json, Cargo?.toml, etc.
 }
 
 export interface DependencyInfo {
   npm_dependencies?: Record<string, string>;
   cargo_dependencies?: Record<string, string>;
-  outdated_packages: OutdatedPackage[];
-  security_vulnerabilities: SecurityVulnerability[];
+  outdated_packages: OutdatedPackage?.[];
+  security_vulnerabilities: SecurityVulnerability?.[];
 }
 
 export interface OutdatedPackage {
@@ -330,21 +330,21 @@ export interface BuildConfig {
   build_command: string;
   output_directory: string;
   optimization_level?: 'dev' | 'production';
-  targets?: string[]; // ["x86_64-unknown-linux-gnu"]
-  features?: string[]; // Cargo features
+  targets?: string?.[]; // ["x86_64-unknown-linux-gnu"]
+  features?: string?.[]; // Cargo features
 }
 
 export interface TestConfig {
   test_framework: string; // "vitest", "jest", "cargo test"
   test_command: string;
   coverage_enabled: boolean;
-  test_files: string[];
+  test_files: string?.[];
 }
 
 export interface DeploymentConfig {
   deployment_type: 'local' | 'remote' | 'ci_cd';
-  platforms: string[]; // ["linux", "windows", "macos"]
-  artifacts: string[];
+  platforms: string?.[]; // ["linux", "windows", "macos"]
+  artifacts: string?.[];
 }
 
 export interface Recommendation {
@@ -352,21 +352,21 @@ export interface Recommendation {
   priority: 'critical' | 'high' | 'medium' | 'low';
   title: string;
   description: string;
-  implementation_steps: string[];
+  implementation_steps: string?.[];
   estimated_impact: string;
 }
 
 // ============================================================================
-// AUTOMATION (Safe Automation)
+// AUTOMATION (any: any)
 // ============================================================================
 
 export interface AutomationWorkflow {
   id: string;
   name: string;
   description: string;
-  triggers: PipelineTrigger[];
-  steps: AutomationStep[];
-  validation_points: ValidationPoint[];
+  triggers: PipelineTrigger?.[];
+  steps: AutomationStep?.[];
+  validation_points: ValidationPoint?.[];
   safety_level: 'safe' | 'moderate' | 'risky';
   status: 'active' | 'paused' | 'disabled';
 }
@@ -389,14 +389,14 @@ export interface ValidationPoint {
 }
 
 // ============================================================================
-// COLLABORATION (Pair Programming)
+// COLLABORATION (any: any)
 // ============================================================================
 
 export interface CollaborationSession {
   session_id: string;
   started_at: number;
   context: SessionContext;
-  interactions: Interaction[];
+  interactions: Interaction?.[];
   current_focus?: string; // Fichier/task actuel
   shared_state: Record<string, unknown>;
 }
@@ -404,9 +404,9 @@ export interface CollaborationSession {
 export interface SessionContext {
   project_root: string;
   current_branch?: string;
-  open_files: string[];
-  recent_errors: ErrorDetection[];
-  recent_actions: DevOpsAction[];
+  open_files: string?.[];
+  recent_errors: ErrorDetection?.[];
+  recent_actions: DevOpsAction?.[];
 }
 
 export interface Interaction {
@@ -422,7 +422,7 @@ export interface Interaction {
 }
 
 // ============================================================================
-// DEVOPS LAYER STATE (Extension de SingularityState)
+// DEVOPS LAYER STATE (any: any)
 // ============================================================================
 
 export interface DevOpsLayer {
@@ -438,8 +438,8 @@ export interface DevOpsLayer {
 
   // Sécurité
   security_level: 'strict' | 'moderate' | 'permissive';
-  require_validation_for: ActionType[];
-  blocked_actions: ActionType[];
+  require_validation_for: ActionType?.[];
+  blocked_actions: ActionType?.[];
 
   // Tracking
   last_screen_analysis?: number;
@@ -452,8 +452,8 @@ export interface DevOpsLayer {
   active_session?: CollaborationSession;
 
   // History (last 50)
-  action_history: DevOpsAction[];
-  analysis_history: ScreenAnalysis[];
+  action_history: DevOpsAction?.[];
+  analysis_history: ScreenAnalysis?.[];
 }
 
 // ============================================================================
@@ -477,8 +477,8 @@ export interface DevOpsReport {
   scripts_generated: number;
   pipelines_created: number;
 
-  top_issues: Issue[];
-  top_recommendations: Recommendation[];
+  top_issues: Issue?.[];
+  top_recommendations: Recommendation?.[];
 
   safety_metrics: {
     risky_actions_proposed: number;
@@ -497,6 +497,6 @@ export interface HealthCheck {
     security_health: number;
     performance_health: number;
   };
-  issues: Issue[];
-  recommendations: Recommendation[];
+  issues: Issue?.[];
+  recommendations: Recommendation?.[];
 }

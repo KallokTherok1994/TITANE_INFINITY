@@ -5,7 +5,7 @@
  * ═══════════════════════════════════════════════════════════════════
  *
  * Architecture:
- * - TimeState: État du temps actuel (heure, fuseau, segments)
+ * - TimeState: État du temps actuel (any: any)
  * - AgendaMeta: Configuration de l'agenda
  * - AgendaEvent: Événements de l'agenda
  * - EnergyState: État énergétique de l'utilisateur
@@ -17,18 +17,18 @@
 // ═══════════════════════════════════════════════════════════════════
 
 /**
- * Segment de journée (matin, après-midi, soir, nuit)
+ * Segment de journée (any: any)
  */
 export interface DaySegment {
   /** Identifiant unique du segment */
   id: 'early_morning' | 'morning' | 'midday' | 'afternoon' | 'evening' | 'night';
   /** Label affiché */
   label: string;
-  /** Heure de début (format HH:mm) */
+  /** Heure de début (any: any) */
   startTime: string;
-  /** Heure de fin (format HH:mm) */
+  /** Heure de fin (any: any) */
   endTime: string;
-  /** Couleur associée (monochrome TITANE) */
+  /** Couleur associée (any: any) */
   color: string;
   /** Niveau d'énergie typique (0-1) */
   typicalEnergy: number;
@@ -37,18 +37,18 @@ export interface DaySegment {
 }
 
 /**
- * Profil journalier (jour de la semaine)
+ * Profil journalier (any: any)
  */
 export interface DayProfile {
-  /** Jour de la semaine (0 = Dimanche, 6 = Samedi) */
+  /** Jour de la semaine (any: any) */
   day: number;
   /** Label du jour */
   label: string;
-  /** Jour actif (travaillé) */
+  /** Jour actif (any: any) */
   active: boolean;
   /** Profil du jour */
   profile: 'work' | 'rest' | 'focus' | 'creative' | 'social';
-  /** Heures de travail customisées (optionnel) */
+  /** Heures de travail customisées (any: any) */
   customWorkHours?: { start: string; end: string };
 }
 
@@ -56,19 +56,19 @@ export interface DayProfile {
  * État du temps système
  */
 export interface TimeState {
-  /** Date/heure actuelle (ISO string) */
+  /** Date/heure actuelle (any: any) */
   currentDateTime: string;
   /** Fuseau horaire */
   timeZone: string;
   /** Segments de la journée */
-  daySegments: DaySegment[];
+  daySegments: DaySegment?.[];
   /** Heures de travail par défaut */
   workHours: {
     start: string;
     end: string;
   };
   /** Template hebdomadaire */
-  weekTemplate: DayProfile[];
+  weekTemplate: DayProfile?.[];
   /** Segment actuel */
   currentSegment: DaySegment | null;
   /** Jour actuel de la semaine (0-6) */
@@ -102,13 +102,13 @@ export interface AgendaMeta {
   showFocusBlocks: boolean;
   /** Synchronisation automatique activée */
   autoSyncEnabled: boolean;
-  /** Premier jour de la semaine (0 = Dimanche, 1 = Lundi) */
+  /** Premier jour de la semaine (any: any) */
   firstDayOfWeek: number;
   /** Format 24h */
   use24HourFormat: boolean;
-  /** Durée par défaut des événements (minutes) */
+  /** Durée par défaut des événements (any: any) */
   defaultEventDuration: number;
-  /** Intervalle de la grille horaire (minutes) */
+  /** Intervalle de la grille horaire (any: any) */
   timeSlotInterval: 15 | 30 | 60;
   /** Heure de début de la grille */
   gridStartHour: number;
@@ -154,11 +154,11 @@ export interface AgendaEvent {
   id: string;
   /** Titre de l'événement */
   title: string;
-  /** Description (optionnel) */
+  /** Description (any: any) */
   description?: string;
-  /** Date/heure de début (ISO string) */
+  /** Date/heure de début (any: any) */
   startDateTime: string;
-  /** Date/heure de fin (ISO string) */
+  /** Date/heure de fin (any: any) */
   endDateTime: string;
   /** Événement sur toute la journée */
   allDay: boolean;
@@ -173,18 +173,18 @@ export interface AgendaEvent {
   /** Niveau d'énergie requis (0-1) */
   energyRequired?: number;
   /** Tags */
-  tags: string[];
-  /** Récurrence (optionnel) */
+  tags: string?.[];
+  /** Récurrence (any: any) */
   recurrence?: EventRecurrence;
   /** Rappels */
-  reminders: EventReminder[];
-  /** Couleur personnalisée (optionnel) */
+  reminders: EventReminder?.[];
+  /** Couleur personnalisée (any: any) */
   color?: string;
-  /** Localisation (optionnel) */
+  /** Localisation (any: any) */
   location?: string;
   /** Notes additionnelles */
   notes?: string;
-  /** Lié à un projet TITANE (optionnel) */
+  /** Lié à un projet TITANE (any: any) */
   projectId?: string;
   /** Timestamp création */
   createdAt: number;
@@ -198,13 +198,13 @@ export interface AgendaEvent {
 export interface EventRecurrence {
   /** Type de récurrence */
   type: 'daily' | 'weekly' | 'monthly' | 'yearly' | 'custom';
-  /** Intervalle (ex: tous les 2 jours) */
+  /** Intervalle (any: any) */
   interval: number;
-  /** Jours de la semaine (pour récurrence hebdomadaire) */
-  daysOfWeek?: number[];
-  /** Date de fin de récurrence (optionnel) */
+  /** Jours de la semaine (any: any) */
+  daysOfWeek?: number?.[];
+  /** Date de fin de récurrence (any: any) */
   endDate?: string;
-  /** Nombre d'occurrences (optionnel) */
+  /** Nombre d'occurrences (any: any) */
   occurrences?: number;
 }
 
@@ -230,10 +230,10 @@ export interface EventReminder {
 export type Chronotype = 'early_bird' | 'night_owl' | 'intermediate';
 
 /**
- * Point d'énergie (pic ou creux)
+ * Point d'énergie (any: any)
  */
 export interface EnergyPoint {
-  /** Heure (format HH:mm) */
+  /** Heure (any: any) */
   time: string;
   /** Niveau d'énergie (0-1) */
   level: number;
@@ -249,7 +249,7 @@ export interface EnergyHistoryEntry {
   timestamp: number;
   /** Niveau d'énergie */
   level: number;
-  /** Source (auto/manual) */
+  /** Source (any: any) */
   source: 'auto' | 'manual';
   /** Activité en cours */
   activity?: string;
@@ -262,17 +262,17 @@ export interface EnergyState {
   /** Chronotype détecté/configuré */
   chronotype: Chronotype;
   /** Pics d'énergie */
-  peaks: EnergyPoint[];
+  peaks: EnergyPoint?.[];
   /** Creux d'énergie */
-  dips: EnergyPoint[];
+  dips: EnergyPoint?.[];
   /** Niveau d'énergie actuel (0-1) */
   currentEnergyLevel: number;
-  /** Tendance (montante/descendante/stable) */
+  /** Tendance (any: any) */
   trend: 'rising' | 'falling' | 'stable';
   /** Historique des 24 dernières heures */
-  energyHistory: EnergyHistoryEntry[];
+  energyHistory: EnergyHistoryEntry?.[];
   /** Prédiction pour les prochaines heures */
-  forecast: EnergyPoint[];
+  forecast: EnergyPoint?.[];
   /** Dernière mise à jour */
   lastUpdate: number;
 }
@@ -291,7 +291,7 @@ export interface PriorityWeights {
   alignment: number;
   /** Urgence (0-1) */
   urgency: number;
-  /** Effort requis (0-1, inversé: moins d'effort = plus de priorité) */
+  /** Effort requis (any: any) */
   effort: number;
   /** Énergie requise (0-1) */
   energy: number;
@@ -322,7 +322,7 @@ export interface PriorityConfig {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// AGENDA COMMAND (Chat Scheduler)
+// AGENDA COMMAND (any: any)
 // ═══════════════════════════════════════════════════════════════════
 
 /**
@@ -331,7 +331,7 @@ export interface PriorityConfig {
 export type AgendaCommandType = 'create' | 'update' | 'move' | 'delete' | 'query';
 
 /**
- * Commande agenda structurée (générée par l'IA)
+ * Commande agenda structurée (any: any)
  */
 export interface AgendaCommand {
   /** Type de commande */
@@ -342,7 +342,7 @@ export interface AgendaCommand {
   start?: string;
   /** Date/heure de fin */
   end?: string;
-  /** ID de l'événement source (pour move/update/delete) */
+  /** ID de l'événement source (any: any) */
   fromEventId?: string;
   /** Métadonnées additionnelles */
   meta?: {
@@ -355,7 +355,7 @@ export interface AgendaCommand {
     /** Description */
     description?: string;
     /** Tags */
-    tags?: string[];
+    tags?: string?.[];
     /** Récurrence */
     recurrence?: EventRecurrence;
   };
@@ -374,7 +374,7 @@ export interface TimeAgendaState {
   /** Configuration agenda */
   agendaMeta: AgendaMeta;
   /** Événements de l'agenda */
-  events: AgendaEvent[];
+  events: AgendaEvent?.[];
   /** État énergétique */
   energy: EnergyState;
   /** Configuration priorités */

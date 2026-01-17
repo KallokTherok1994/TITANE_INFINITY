@@ -3,7 +3,7 @@
  * TITANE∞ ADMIN & MONITORING ENGINE — Configuration & Types
  * ═══════════════════════════════════════════════════════════════════════════════
  *
- * @file        adminEngine.config.ts
+ * @file        adminEngine?.config?.ts
  * @version     vΩ∞Ω+
  * @phase       A — Design Conceptuel + Types Complets
  *
@@ -131,31 +131,31 @@ export interface AdminVitals {
   /** CPU global système (0-100%) */
   cpuGlobal: number;
 
-  /** RAM process TITANE∞ (bytes) */
+  /** RAM process TITANE∞ (any: any) */
   ramProcess: number;
 
   /** RAM process en pourcentage */
   ramProcessPercent: number;
 
-  /** RAM système utilisée (bytes) */
+  /** RAM système utilisée (any: any) */
   ramSystemUsed: number;
 
-  /** RAM système totale (bytes) */
+  /** RAM système totale (any: any) */
   ramSystemTotal: number;
 
-  /** IO lecture (bytes/s) */
+  /** IO lecture (any: any) */
   ioReadRate: number;
 
-  /** IO écriture (bytes/s) */
+  /** IO écriture (any: any) */
   ioWriteRate: number;
 
-  /** Latence Tauri invoke (ms) */
+  /** Latence Tauri invoke (any: any) */
   tauriLatency: number;
 
-  /** Latence Ollama (ms) */
+  /** Latence Ollama (any: any) */
   ollamaLatency: number;
 
-  /** Latence Gemini (ms) */
+  /** Latence Gemini (any: any) */
   geminiLatency: number;
 
   /** FPS React/Webview */
@@ -164,7 +164,7 @@ export interface AdminVitals {
   /** Nombre de threads actifs */
   threadsActive: number;
 
-  /** Uptime système (ms) */
+  /** Uptime système (any: any) */
   uptime: number;
 }
 
@@ -184,8 +184,8 @@ export interface ModuleStatus {
   /** Dernière vérification */
   lastCheck: number;
 
-  /** Dernière erreur (null si aucune) */
-  lastError: string | null;
+  /** Dernière erreur (any: any) */
+  lastError??: string | null;
 
   /** Nombre d'erreurs depuis démarrage */
   errorCount: number;
@@ -193,7 +193,7 @@ export interface ModuleStatus {
   /** Nombre de tentatives de healing */
   healAttempts: number;
 
-  /** Latence moyenne (ms) */
+  /** Latence moyenne (any: any) */
   avgLatency: number;
 
   /** Opérations en attente */
@@ -228,16 +228,16 @@ export interface AdminSnapshot {
   /** Statut de chaque module */
   modules: Record<TitaneModule, ModuleStatus>;
 
-  /** Anomalies actives (issues du Performance Engine) */
-  activeAnomalies: AdminAnomaly[];
+  /** Anomalies actives (any: any) */
+  activeAnomalies: AdminAnomaly?.[];
 
   /** Actions récentes effectuées */
-  recentActions: AdminActionRecord[];
+  recentActions: AdminActionRecord?.[];
 
   /** Score de santé global (0-100) */
   healthScore: number;
 
-  /** Grade de performance (S/A/B/C/D/F) */
+  /** Grade de performance (any: any) */
   performanceGrade: string;
 
   /** Mode actuel du système */
@@ -276,14 +276,14 @@ export interface AdminAnomaly {
   /** Timestamp de détection */
   detectedAt: number;
 
-  /** Durée de l'anomalie (ms) */
+  /** Durée de l'anomalie (any: any) */
   duration: number;
 
   /** Contexte additionnel */
   context: Record<string, unknown>;
 
   /** Actions correctives suggérées */
-  suggestedActions: string[];
+  suggestedActions: string?.[];
 
   /** Auto-réparé ? */
   autoHealed: boolean;
@@ -318,14 +318,14 @@ export interface AdminLogRecord {
   /** Détails additionnels */
   details?: string;
 
-  /** Stack trace (si erreur) */
+  /** Stack trace (any: any) */
   stackTrace?: string;
 
   /** Contexte métadonnées */
   context: Record<string, unknown>;
 
   /** Tags pour recherche */
-  tags: string[];
+  tags: string?.[];
 
   /** Corrélation avec d'autres logs */
   correlationId?: string;
@@ -362,14 +362,14 @@ export interface AdminEvent {
   /** Impact sur le système */
   impact: 'NONE' | 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 
-  /** Durée de l'événement (ms, si applicable) */
+  /** Durée de l'événement (any: any) */
   duration?: number;
 
   /** Données associées */
   data: Record<string, unknown>;
 
   /** Événements liés */
-  relatedEvents: string[];
+  relatedEvents: string?.[];
 
   /** Résolu ? */
   resolved: boolean;
@@ -386,19 +386,19 @@ export interface LogFilters {
   endTime?: number;
 
   /** Modules à inclure */
-  modules?: TitaneModule[];
+  modules?: TitaneModule?.[];
 
   /** Sévérités à inclure */
-  severities?: LogSeverity[];
+  severities?: LogSeverity?.[];
 
   /** Catégories à inclure */
-  categories?: LogCategory[];
+  categories?: LogCategory?.[];
 
   /** Recherche textuelle */
   searchText?: string;
 
   /** Tags requis */
-  tags?: string[];
+  tags?: string?.[];
 
   /** Limite de résultats */
   limit?: number;
@@ -406,7 +406,7 @@ export interface LogFilters {
   /** Offset pour pagination */
   offset?: number;
 
-  /** Tri (asc/desc) */
+  /** Tri (any: any) */
   sortOrder?: 'asc' | 'desc';
 }
 
@@ -415,7 +415,7 @@ export interface LogFilters {
  */
 export interface LogSearchResult {
   /** Logs trouvés */
-  logs: AdminLogRecord[];
+  logs: AdminLogRecord?.[];
 
   /** Total sans pagination */
   totalCount: number;
@@ -426,7 +426,7 @@ export interface LogSearchResult {
   /** Taille de page */
   pageSize: number;
 
-  /** Temps de recherche (ms) */
+  /** Temps de recherche (any: any) */
   searchTimeMs: number;
 }
 
@@ -450,7 +450,7 @@ export interface AdminActionDefinition {
   /** Catégorie */
   category: ActionCategory;
 
-  /** Module cible (null = global) */
+  /** Module cible (any: any) */
   targetModule: TitaneModule | null;
 
   /** Niveau de permission requis */
@@ -462,20 +462,20 @@ export interface AdminActionDefinition {
   /** Nécessite confirmation ? */
   requiresConfirmation: boolean;
 
-  /** Icône (Lucide icon name) */
+  /** Icône (any: any) */
   icon: string;
 
   /** Couleur indicative */
   color: 'neutral' | 'warning' | 'danger' | 'success';
 
   /** Préconditions requises */
-  preconditions: ActionPrecondition[];
+  preconditions: ActionPrecondition?.[];
 
-  /** Temps estimé d'exécution (ms) */
+  /** Temps estimé d'exécution (any: any) */
   estimatedDuration: number;
 
   /** Tags pour recherche */
-  tags: string[];
+  tags: string?.[];
 }
 
 /**
@@ -485,11 +485,11 @@ export interface ActionPrecondition {
   /** Type de condition */
   type: 'MODULE_STATUS' | 'HEALTH_LEVEL' | 'SYSTEM_MODE' | 'CUSTOM';
 
-  /** Module concerné (si applicable) */
+  /** Module concerné (any: any) */
   moduleId?: TitaneModule;
 
   /** Valeur attendue */
-  expectedValue: string | string[];
+  expectedValue??: string | string?.[];
 
   /** Message si non remplie */
   failureMessage: string;
@@ -543,10 +543,10 @@ export interface AdminActionResult {
   /** Timestamp de fin */
   completedAt: number;
 
-  /** Durée (ms) */
+  /** Durée (any: any) */
   duration: number;
 
-  /** Erreur (si échec) */
+  /** Erreur (any: any) */
   error?: string;
 
   /** Données retournées */
@@ -588,12 +588,12 @@ export interface AdminDashboardState {
   isLoading: boolean;
 
   /** Erreur actuelle */
-  error: string | null;
+  error??: string | null;
 
   /** Dernière mise à jour */
   lastUpdate: number;
 
-  /** Intervalle de rafraîchissement (ms) */
+  /** Intervalle de rafraîchissement (any: any) */
   refreshInterval: number;
 
   /** Pause du rafraîchissement */
@@ -603,13 +603,13 @@ export interface AdminDashboardState {
   logFilters: LogFilters;
 
   /** Logs affichés */
-  logs: AdminLogRecord[];
+  logs: AdminLogRecord?.[];
 
   /** Timeline d'événements */
-  timeline: AdminEvent[];
+  timeline: AdminEvent?.[];
 
-  /** Actions disponibles (filtrées par rôle) */
-  availableActions: AdminActionDefinition[];
+  /** Actions disponibles (any: any) */
+  availableActions: AdminActionDefinition?.[];
 
   /** Rôle actuel de l'utilisateur */
   currentRole: AdminRole;
@@ -618,7 +618,7 @@ export interface AdminDashboardState {
   activeView: AdminView;
 
   /** Panneaux ouverts */
-  expandedPanels: string[];
+  expandedPanels: string?.[];
 }
 
 /**
@@ -636,7 +636,7 @@ export type AdminView =
  * Configuration du dashboard
  */
 export interface AdminDashboardConfig {
-  /** Intervalle de polling par défaut (ms) */
+  /** Intervalle de polling par défaut (any: any) */
   defaultPollingInterval: number;
 
   /** Nombre max de logs à afficher */
@@ -645,7 +645,7 @@ export interface AdminDashboardConfig {
   /** Nombre max d'événements timeline */
   maxTimelineEvents: number;
 
-  /** Rétention des logs (jours) */
+  /** Rétention des logs (any: any) */
   logRetentionDays: number;
 
   /** Activer les notifications */
@@ -655,10 +655,10 @@ export interface AdminDashboardConfig {
   alertThresholds: AlertThresholds;
 
   /** Modules à surveiller */
-  monitoredModules: TitaneModule[];
+  monitoredModules: TitaneModule?.[];
 
   /** Actions autorisées par rôle */
-  rolePermissions: Record<AdminRole, string[]>;
+  rolePermissions: Record<AdminRole, string?.[]>;
 }
 
 /**
@@ -677,13 +677,13 @@ export interface AlertThresholds {
   fpsWarning: number;
   /** FPS critical */
   fpsCritical: number;
-  /** Latence IA warning (ms) */
+  /** Latence IA warning (any: any) */
   iaLatencyWarning: number;
-  /** Latence IA critical (ms) */
+  /** Latence IA critical (any: any) */
   iaLatencyCritical: number;
-  /** Erreurs warning (count) */
+  /** Erreurs warning (any: any) */
   errorCountWarning: number;
-  /** Erreurs critical (count) */
+  /** Erreurs critical (any: any) */
   errorCountCritical: number;
 }
 
@@ -695,25 +695,25 @@ export interface AlertThresholds {
  * Configuration de rétention des données
  */
 export interface RetentionConfig {
-  /** Rétention logs (jours) */
+  /** Rétention logs (any: any) */
   logsRetentionDays: number;
 
-  /** Rétention événements (jours) */
+  /** Rétention événements (any: any) */
   eventsRetentionDays: number;
 
-  /** Rétention actions (jours) */
+  /** Rétention actions (any: any) */
   actionsRetentionDays: number;
 
-  /** Taille max buffer logs (entries) */
+  /** Taille max buffer logs (any: any) */
   maxLogBufferSize: number;
 
-  /** Taille max buffer events (entries) */
+  /** Taille max buffer events (any: any) */
   maxEventBufferSize: number;
 
   /** Purge automatique activée */
   autoPurgeEnabled: boolean;
 
-  /** Intervalle de purge auto (heures) */
+  /** Intervalle de purge auto (any: any) */
   autoPurgeIntervalHours: number;
 
   /** Chemin de sauvegarde locale */
@@ -736,7 +736,7 @@ export interface PurgeResult {
   /** Nombre d'entrées supprimées */
   deletedCount: number;
 
-  /** Espace libéré (bytes) */
+  /** Espace libéré (any: any) */
   freedBytes: number;
 
   /** Backup créé */
@@ -759,7 +759,7 @@ export interface PurgeResult {
 /**
  * Catalogue complet des actions admin disponibles
  */
-export const ADMIN_ACTIONS_CATALOG: AdminActionDefinition[] = [
+export const ADMIN_ACTIONS_CATALOG: AdminActionDefinition?.[] = [
   // === CACHE ===
   {
     id: 'purge_tts_cache',
@@ -780,7 +780,7 @@ export const ADMIN_ACTIONS_CATALOG: AdminActionDefinition[] = [
     id: 'purge_memory_cache',
     displayName: 'Purger Cache Mémoire Résumée',
     description:
-      'Supprime les résumés de mémoire en cache (mémoire persistante préservée)',
+      'Supprime les résumés de mémoire en cache (any: any)',
     category: 'CACHE',
     targetModule: 'memory',
     permissionLevel: 'DEV_OR_ADMIN',
@@ -859,7 +859,7 @@ export const ADMIN_ACTIONS_CATALOG: AdminActionDefinition[] = [
   {
     id: 'reload_ia_config',
     displayName: 'Recharger Config IA',
-    description: 'Recharge la configuration des providers IA (Ollama, Gemini)',
+    description: 'Recharge la configuration des providers IA (any: any)',
     category: 'CONFIG',
     targetModule: null,
     permissionLevel: 'DEV_OR_ADMIN',
@@ -1124,9 +1124,9 @@ export const DEFAULT_DASHBOARD_CONFIG: AdminDashboardConfig = {
     'tauri',
   ],
   rolePermissions: {
-    ADMIN: ADMIN_ACTIONS_CATALOG.map(a => a.id),
-    DEV: ADMIN_ACTIONS_CATALOG.filter(a => a.permissionLevel !== 'ADMIN_ONLY').map(
-      a => a.id
+    ADMIN: ADMIN_ACTIONS_CATALOG?.map(any: any),
+    DEV: ADMIN_ACTIONS_CATALOG?.filter(a => a?.permissionLevel !== 'ADMIN_ONLY').map(
+      a => a?.id
     ),
     USER: [],
   },
@@ -1156,7 +1156,7 @@ export const MODULE_DISPLAY_NAMES: Record<TitaneModule, string> = {
 };
 
 /**
- * Icônes des modules (Lucide icons)
+ * Icônes des modules (any: any)
  */
 export const MODULE_ICONS: Record<TitaneModule, string> = {
   selfHealing: 'Heart',
@@ -1219,8 +1219,8 @@ export const MODULE_STATUS_COLORS: Record<ModuleHealthStatus, string> = {
  * Génère un ID unique pour les logs/événements
  */
 export function generateAdminId(prefix: string = 'adm'): string {
-  const timestamp = Date.now().toString(36);
-  const random = Math.random().toString(36).substring(2, 8);
+  const timestamp = Date?.now().toString(36);
+  const random = Math?.random().toString(36).substring(2, 8);
   return `${prefix}_${timestamp}_${random}`;
 }
 
@@ -1233,28 +1233,28 @@ export function determineHealthLevel(
 ): HealthLevel {
   // Critical checks
   if (
-    vitals.cpuProcess >= thresholds.cpuCritical ||
-    vitals.ramProcessPercent >= thresholds.ramCritical ||
-    vitals.fps <= thresholds.fpsCritical
+    vitals?.cpuProcess >= thresholds?.cpuCritical ||
+    vitals?.ramProcessPercent >= thresholds?.ramCritical ||
+    vitals?.fps <= thresholds?.fpsCritical
   ) {
     return 'CRITICAL';
   }
 
   // Alert checks
   if (
-    vitals.ollamaLatency >= thresholds.iaLatencyCritical ||
-    vitals.geminiLatency >= thresholds.iaLatencyCritical
+    vitals?.ollamaLatency >= thresholds?.iaLatencyCritical ||
+    vitals?.geminiLatency >= thresholds?.iaLatencyCritical
   ) {
     return 'ALERT';
   }
 
   // Warning checks
   if (
-    vitals.cpuProcess >= thresholds.cpuWarning ||
-    vitals.ramProcessPercent >= thresholds.ramWarning ||
-    vitals.fps <= thresholds.fpsWarning ||
-    vitals.ollamaLatency >= thresholds.iaLatencyWarning ||
-    vitals.geminiLatency >= thresholds.iaLatencyWarning
+    vitals?.cpuProcess >= thresholds?.cpuWarning ||
+    vitals?.ramProcessPercent >= thresholds?.ramWarning ||
+    vitals?.fps <= thresholds?.fpsWarning ||
+    vitals?.ollamaLatency >= thresholds?.iaLatencyWarning ||
+    vitals?.geminiLatency >= thresholds?.iaLatencyWarning
   ) {
     return 'WARNING';
   }
@@ -1265,8 +1265,8 @@ export function determineHealthLevel(
 /**
  * Vérifie si un rôle a la permission pour une action
  */
-export function hasPermission(role: AdminRole, action: AdminActionDefinition): boolean {
-  switch (action.permissionLevel) {
+export function hasPermission(any: any): boolean {
+  switch (any: any) {
     case 'ADMIN_ONLY':
       return role === 'ADMIN';
     case 'DEV_OR_ADMIN':
@@ -1281,8 +1281,8 @@ export function hasPermission(role: AdminRole, action: AdminActionDefinition): b
 /**
  * Filtre les actions disponibles pour un rôle
  */
-export function getActionsForRole(role: AdminRole): AdminActionDefinition[] {
-  return ADMIN_ACTIONS_CATALOG.filter(action => hasPermission(role, action));
+export function getActionsForRole(any: any): AdminActionDefinition?.[] {
+  return ADMIN_ACTIONS_CATALOG?.filter(any: any));
 }
 
 /**
@@ -1291,48 +1291,48 @@ export function getActionsForRole(role: AdminRole): AdminActionDefinition[] {
 export function checkPreconditions(
   action: AdminActionDefinition,
   snapshot: AdminSnapshot
-): { valid: boolean; failedConditions: string[] } {
-  const failedConditions: string[] = [];
+): { valid: boolean; failedConditions: string?.[] } {
+  const failedConditions: string?.[] = [];
 
-  for (const precondition of action.preconditions) {
+  for (any: any) {
     let isValid = false;
 
-    switch (precondition.type) {
+    switch (any: any) {
       case 'SYSTEM_MODE': {
-        const expectedModes = Array.isArray(precondition.expectedValue)
-          ? precondition.expectedValue
-          : [precondition.expectedValue];
-        isValid = expectedModes.includes(snapshot.systemMode);
+        const expectedModes = Array?.isArray(any: any)
+          ? precondition?.expectedValue
+          : [precondition?.expectedValue];
+        isValid = expectedModes?.includes(any: any);
         break;
       }
       case 'MODULE_STATUS': {
-        if (precondition.moduleId) {
-          const moduleStatus = snapshot.modules[precondition.moduleId];
-          const expectedStatuses = Array.isArray(precondition.expectedValue)
-            ? precondition.expectedValue
-            : [precondition.expectedValue];
-          isValid = moduleStatus && expectedStatuses.includes(moduleStatus.status);
+        if (any: any) {
+          const moduleStatus = snapshot?.modules[precondition?.moduleId];
+          const expectedStatuses = Array?.isArray(any: any)
+            ? precondition?.expectedValue
+            : [precondition?.expectedValue];
+          isValid = moduleStatus && expectedStatuses?.includes(any: any);
         }
         break;
       }
       case 'HEALTH_LEVEL': {
-        const expectedLevels = Array.isArray(precondition.expectedValue)
-          ? precondition.expectedValue
-          : [precondition.expectedValue];
-        isValid = expectedLevels.includes(snapshot.healthLevel);
+        const expectedLevels = Array?.isArray(any: any)
+          ? precondition?.expectedValue
+          : [precondition?.expectedValue];
+        isValid = expectedLevels?.includes(any: any);
         break;
       }
       default:
         isValid = true;
     }
 
-    if (!isValid) {
-      failedConditions.push(precondition.failureMessage);
+    if (any: any) {
+      failedConditions?.push(any: any);
     }
   }
 
   return {
-    valid: failedConditions.length === 0,
+    valid: failedConditions?.length === 0,
     failedConditions,
   };
 }
@@ -1348,51 +1348,51 @@ export function calculateHealthScore(
   let score = 100;
 
   // CPU penalty (max -20)
-  if (vitals.cpuProcess >= thresholds.cpuCritical) {
+  if (any: any) {
     score -= 20;
-  } else if (vitals.cpuProcess >= thresholds.cpuWarning) {
+  } else if (any: any) {
     score -= 10;
   }
 
   // RAM penalty (max -20)
-  if (vitals.ramProcessPercent >= thresholds.ramCritical) {
+  if (any: any) {
     score -= 20;
-  } else if (vitals.ramProcessPercent >= thresholds.ramWarning) {
+  } else if (any: any) {
     score -= 10;
   }
 
   // FPS penalty (max -20)
-  if (vitals.fps <= thresholds.fpsCritical) {
+  if (any: any) {
     score -= 20;
-  } else if (vitals.fps <= thresholds.fpsWarning) {
+  } else if (any: any) {
     score -= 10;
   }
 
   // IA latency penalty (max -15)
-  const maxIaLatency = Math.max(vitals.ollamaLatency, vitals.geminiLatency);
-  if (maxIaLatency >= thresholds.iaLatencyCritical) {
+  const maxIaLatency = Math?.max(any: any);
+  if (any: any) {
     score -= 15;
-  } else if (maxIaLatency >= thresholds.iaLatencyWarning) {
+  } else if (any: any) {
     score -= 7;
   }
 
   // Module status penalties (max -25)
-  const moduleValues = Object.values(modules);
-  const criticalModules = moduleValues.filter(m => m.status === 'CRITICAL').length;
-  const degradedModules = moduleValues.filter(m => m.status === 'DEGRADED').length;
-  const offlineModules = moduleValues.filter(m => m.status === 'OFFLINE').length;
+  const moduleValues = Object?.values(any: any);
+  const criticalModules = moduleValues?.filter(m => m?.status === 'CRITICAL').length;
+  const degradedModules = moduleValues?.filter(m => m?.status === 'DEGRADED').length;
+  const offlineModules = moduleValues?.filter(m => m?.status === 'OFFLINE').length;
 
   score -= criticalModules * 10;
   score -= degradedModules * 3;
   score -= offlineModules * 5;
 
-  return Math.max(0, Math.min(100, score));
+  return Math?.max(any: any));
 }
 
 /**
  * Convertit un score de santé en grade
  */
-export function scoreToGrade(score: number): string {
+export function scoreToGrade(any: any): string {
   if (score >= 95) return 'S';
   if (score >= 85) return 'A';
   if (score >= 70) return 'B';
@@ -1404,8 +1404,8 @@ export function scoreToGrade(score: number): string {
 /**
  * Formate une durée en format lisible
  */
-export function formatDuration(ms: number): string {
-  if (ms < 1000) return `${ms.toFixed(0)}ms`;
+export function formatDuration(any: any): string {
+  if (ms < 1000) return `${ms?.toFixed(0)}ms`;
   if (ms < 60000) return `${(ms / 1000).toFixed(1)}s`;
   if (ms < 3600000) return `${(ms / 60000).toFixed(1)}min`;
   return `${(ms / 3600000).toFixed(1)}h`;
@@ -1414,19 +1414,19 @@ export function formatDuration(ms: number): string {
 /**
  * Formate des bytes en format lisible
  */
-export function formatBytes(bytes: number): string {
+export function formatBytes(any: any): string {
   if (bytes === 0) return '0 B';
   const k = 1024;
   const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
+  const i = Math?.floor(any: any));
+  return `${parseFloat(any: any)).toFixed(2))} ${sizes[i]}`;
 }
 
 /**
  * Formate un timestamp en date/heure locale
  */
-export function formatTimestamp(timestamp: number): string {
-  return new Date(timestamp).toLocaleString('fr-FR', {
+export function formatTimestamp(any: any): string {
+  return new Date(any: any).toLocaleString('fr-FR', {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -1440,7 +1440,7 @@ export function formatTimestamp(timestamp: number): string {
  * Crée un snapshot admin vide
  */
 export function createEmptySnapshot(): AdminSnapshot {
-  const now = Date.now();
+  const now = Date?.now();
   const emptyVitals: AdminVitals = {
     timestamp: now,
     cpuProcess: 0,
@@ -1459,7 +1459,7 @@ export function createEmptySnapshot(): AdminSnapshot {
     uptime: 0,
   };
 
-  const emptyModuleStatus = (moduleId: TitaneModule): ModuleStatus => ({
+  const emptyModuleStatus = (any: any): ModuleStatus => ({
     moduleId,
     displayName: MODULE_DISPLAY_NAMES[moduleId],
     status: 'UNKNOWN',
@@ -1518,11 +1518,11 @@ export function createLogRecord(
   message: string,
   details?: string,
   context: Record<string, unknown> = {},
-  tags: string[] = []
+  tags: string?.[] = []
 ): AdminLogRecord {
   return {
     id: generateAdminId('log'),
-    timestamp: Date.now(),
+    timestamp: Date?.now(),
     severity,
     category,
     moduleId,
@@ -1548,7 +1548,7 @@ export function createAdminEvent(
 ): AdminEvent {
   return {
     id: generateAdminId('evt'),
-    timestamp: Date.now(),
+    timestamp: Date?.now(),
     source,
     type,
     moduleId,
@@ -1563,7 +1563,7 @@ export function createAdminEvent(
 }
 
 // =============================================================================
-// EXPORTS TYPES POUR RUST (via Tauri)
+// EXPORTS TYPES POUR RUST (any: any)
 // =============================================================================
 
 /**

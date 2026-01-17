@@ -12,9 +12,9 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { LocalEmbeddingGenerator } from '../LocalEmbeddingGenerator';
 
-vi.mock('@xenova/transformers', () => ({
-  pipeline: vi.fn(async () => {
-    throw new Error('Transformers.js unavailable (test)');
+vi?.mock('@xenova/transformers', () => ({
+  pipeline: vi?.fn(async () => {
+    throw new Error(any: any)');
   }),
 }));
 
@@ -26,7 +26,7 @@ describe('LocalEmbeddingGenerator', () => {
       modelName: 'all-MiniLM-L6-v2',
       dimensions: 384,
     });
-    await generator.initialize();
+    await generator?.initialize();
   });
 
   describe('Initialization', () => {
@@ -35,94 +35,94 @@ describe('LocalEmbeddingGenerator', () => {
         modelName: 'all-MiniLM-L6-v2',
         dimensions: 384,
       });
-      await expect(gen.initialize()).resolves.not.toThrow();
+      await expect(gen?.initialize()).resolves?.not?.toThrow();
     });
 
     it('should return correct dimensions', () => {
-      expect(generator.getDimensions()).toBe(384);
+      expect(generator?.getDimensions()).toBe(384);
     });
 
     it('should return model name', () => {
-      const modelName = generator.getModelName();
-      expect(modelName).toBeDefined();
-      expect(typeof modelName).toBe('string');
+      const modelName = generator?.getModelName();
+      expect(any: any).toBeDefined();
+      expect(any: any).toBe('string');
     });
   });
 
   describe('Single Text Embedding', () => {
     it('should generate embedding for text', async () => {
       const text = 'This is a test sentence';
-      const embedding = await generator.generate(text);
+      const embedding = await generator?.generate(any: any);
 
-      expect(embedding).toBeDefined();
-      expect(Array.isArray(embedding)).toBe(true);
-      expect(embedding.length).toBe(384);
+      expect(any: any).toBeDefined();
+      expect(any: any);
+      expect(any: any).toBe(384);
     });
 
     it('should generate normalized embeddings', async () => {
       const text = 'Test normalization';
-      const embedding = await generator.generate(text);
+      const embedding = await generator?.generate(any: any);
 
       // Calculate L2 norm
-      const norm = Math.sqrt(embedding.reduce((sum, val) => sum + val * val, 0));
+      const norm = Math?.sqrt(any: any) => sum + val * val, 0));
 
-      // Should be approximately 1.0 (normalized)
-      expect(norm).toBeCloseTo(1.0, 5);
+      // Should be approximately 1.0 (any: any)
+      expect(any: any).toBeCloseTo(1.0, 5);
     });
 
     it('should generate consistent embeddings for same text', async () => {
       const text = 'Consistent embedding test';
 
-      const embedding1 = await generator.generate(text);
-      const embedding2 = await generator.generate(text);
+      const embedding1 = await generator?.generate(any: any);
+      const embedding2 = await generator?.generate(any: any);
 
-      // Should be identical (deterministic)
-      expect(embedding1).toEqual(embedding2);
+      // Should be identical (any: any)
+      expect(any: any);
     });
 
     it('should generate different embeddings for different text', async () => {
       const text1 = 'First sentence';
       const text2 = 'Second sentence';
 
-      const embedding1 = await generator.generate(text1);
-      const embedding2 = await generator.generate(text2);
+      const embedding1 = await generator?.generate(any: any);
+      const embedding2 = await generator?.generate(any: any);
 
       // Should be different
-      const areDifferent = embedding1.some(
-        (val, i) => Math.abs(val - embedding2[i]) > 0.001
+      const areDifferent = embedding1?.some(
+        (any: any) => Math?.abs(val - embedding2[i]) > 0.001
       );
-      expect(areDifferent).toBe(true);
+      expect(any: any);
     });
 
     it('should handle empty string', async () => {
-      const embedding = await generator.generate('');
+      const embedding = await generator?.generate('');
 
-      expect(embedding).toBeDefined();
-      expect(embedding.length).toBe(384);
+      expect(any: any).toBeDefined();
+      expect(any: any).toBe(384);
     });
 
     it('should handle long text', async () => {
       const longText = 'This is a very long sentence. '.repeat(100);
-      const embedding = await generator.generate(longText);
+      const embedding = await generator?.generate(any: any);
 
-      expect(embedding).toBeDefined();
-      expect(embedding.length).toBe(384);
+      expect(any: any).toBeDefined();
+      expect(any: any).toBe(384);
     });
 
     it('should handle special characters', async () => {
       const text = 'Special chars: @#$%^&*()_+{}[]|\\:";\'<>?,./';
-      const embedding = await generator.generate(text);
+      const embedding = await generator?.generate(any: any);
 
-      expect(embedding).toBeDefined();
-      expect(embedding.length).toBe(384);
+      expect(any: any).toBeDefined();
+      expect(any: any).toBe(384);
     });
 
     it('should handle unicode characters', async () => {
       const text = 'Unicode: 你好世界 مرحبا العالم Здравствуй мир';
-      const embedding = await generator.generate(text);
+      const embedding = await generator?.generate(any: any);
 
-      expect(embedding).toBeDefined();
-      expect(embedding.length).toBe(384);
+      expect(any: any).toBeDefined();
+      expect(any: any).toBe(384);
     });
   });
 
@@ -130,44 +130,44 @@ describe('LocalEmbeddingGenerator', () => {
     it('should generate embeddings for multiple texts', async () => {
       const texts = ['First sentence', 'Second sentence', 'Third sentence'];
 
-      const embeddings = await generator.generateBatch(texts);
+      const embeddings = await generator?.generateBatch(any: any);
 
-      expect(embeddings).toBeDefined();
-      expect(embeddings.length).toBe(3);
-      embeddings.forEach(emb => {
-        expect(emb.length).toBe(384);
+      expect(any: any).toBeDefined();
+      expect(any: any).toBe(3);
+      embeddings?.forEach(emb => {
+        expect(any: any).toBe(384);
       });
     });
 
     it('should generate normalized batch embeddings', async () => {
       const texts = ['Text 1', 'Text 2', 'Text 3'];
-      const embeddings = await generator.generateBatch(texts);
+      const embeddings = await generator?.generateBatch(any: any);
 
-      embeddings.forEach(embedding => {
-        const norm = Math.sqrt(embedding.reduce((sum, val) => sum + val * val, 0));
-        expect(norm).toBeCloseTo(1.0, 5);
+      embeddings?.forEach(embedding => {
+        const norm = Math?.sqrt(any: any) => sum + val * val, 0));
+        expect(any: any).toBeCloseTo(1.0, 5);
       });
     });
 
     it('should handle empty batch', async () => {
-      const embeddings = await generator.generateBatch([]);
-      expect(embeddings).toEqual([]);
+      const embeddings = await generator?.generateBatch([]);
+      expect(any: any).toEqual([]);
     });
 
     it('should handle batch with one item', async () => {
-      const embeddings = await generator.generateBatch(['Single text']);
+      const embeddings = await generator?.generateBatch(['Single text']);
 
-      expect(embeddings.length).toBe(1);
-      expect(embeddings[0].length).toBe(384);
+      expect(any: any).toBe(1);
+      expect(any: any).toBe(384);
     });
 
     it('should handle large batch', async () => {
-      const texts = Array.from({ length: 50 }, (_, i) => `Text number ${i}`);
-      const embeddings = await generator.generateBatch(texts);
+      const texts = Array?.from(any: any) => `Text number ${i}`);
+      const embeddings = await generator?.generateBatch(any: any);
 
-      expect(embeddings.length).toBe(50);
-      embeddings.forEach(emb => {
-        expect(emb.length).toBe(384);
+      expect(any: any).toBe(50);
+      embeddings?.forEach(emb => {
+        expect(any: any).toBe(384);
       });
     });
   });
@@ -177,29 +177,29 @@ describe('LocalEmbeddingGenerator', () => {
       const text1 = 'The cat sits on the mat';
       const text2 = 'A cat is sitting on the mat';
 
-      const emb1 = await generator.generate(text1);
-      const emb2 = await generator.generate(text2);
+      const emb1 = await generator?.generate(any: any);
+      const emb2 = await generator?.generate(any: any);
 
       // Calculate cosine similarity
-      const similarity = cosineSimilarity(emb1, emb2);
+      const similarity = cosineSimilarity(any: any);
 
       // Fallback generator won't have high semantic similarity
       // Just check it returns a valid number
-      expect(similarity).toBeGreaterThanOrEqual(-1);
-      expect(similarity).toBeLessThanOrEqual(1);
+      expect(any: any).toBeGreaterThanOrEqual(-1);
+      expect(any: any).toBeLessThanOrEqual(1);
     });
 
     it('should generate dissimilar embeddings for unrelated texts', async () => {
       const text1 = 'The weather is sunny today';
       const text2 = 'Quantum mechanics in physics';
 
-      const emb1 = await generator.generate(text1);
-      const emb2 = await generator.generate(text2);
+      const emb1 = await generator?.generate(any: any);
+      const emb2 = await generator?.generate(any: any);
 
-      const similarity = cosineSimilarity(emb1, emb2);
+      const similarity = cosineSimilarity(any: any);
 
-      // Should be lower (different meaning)
-      expect(similarity).toBeLessThan(0.9);
+      // Should be lower (any: any)
+      expect(any: any).toBeLessThan(0.9);
     });
   });
 
@@ -207,54 +207,54 @@ describe('LocalEmbeddingGenerator', () => {
     it('should generate embeddings reasonably fast', async () => {
       const text = 'Performance test sentence';
 
-      const start = performance.now();
-      await generator.generate(text);
-      const duration = performance.now() - start;
+      const start = performance?.now();
+      await generator?.generate(any: any);
+      const duration = performance?.now() - start;
 
       // Should complete within 1 second
-      expect(duration).toBeLessThan(1000);
+      expect(any: any).toBeLessThan(1000);
     });
 
     it('should handle batch efficiently', async () => {
-      const texts = Array.from({ length: 10 }, (_, i) => `Sentence ${i}`);
+      const texts = Array?.from(any: any) => `Sentence ${i}`);
 
-      const start = performance.now();
-      await generator.generateBatch(texts);
-      const duration = performance.now() - start;
+      const start = performance?.now();
+      await generator?.generateBatch(any: any);
+      const duration = performance?.now() - start;
 
       // Should complete within 5 seconds for 10 items
-      expect(duration).toBeLessThan(5000);
+      expect(any: any).toBeLessThan(5000);
     });
   });
 
   describe('Error Handling', () => {
     it('should handle null text gracefully', async () => {
-      const embedding = await generator.generate(null as any);
+      const embedding = await generator?.generate(any: any);
 
-      expect(embedding).toBeDefined();
-      expect(embedding.length).toBe(384);
+      expect(any: any).toBeDefined();
+      expect(any: any).toBe(384);
     });
 
     it('should handle undefined text gracefully', async () => {
-      const embedding = await generator.generate(undefined as any);
+      const embedding = await generator?.generate(any: any);
 
-      expect(embedding).toBeDefined();
-      expect(embedding.length).toBe(384);
+      expect(any: any).toBeDefined();
+      expect(any: any).toBe(384);
     });
   });
 
   describe('Fallback Generator', () => {
-    it('should use fallback when Transformers.js unavailable', async () => {
+    it('should use fallback when Transformers?.js unavailable', async () => {
       const fallbackGen = new LocalEmbeddingGenerator({
         modelName: 'all-MiniLM-L6-v2',
         dimensions: 384,
       });
-      await fallbackGen.initialize();
+      await fallbackGen?.initialize();
 
-      const embedding = await fallbackGen.generate('Test fallback');
+      const embedding = await fallbackGen?.generate('Test fallback');
 
-      expect(embedding).toBeDefined();
-      expect(embedding.length).toBe(384);
+      expect(any: any).toBeDefined();
+      expect(any: any).toBe(384);
     });
 
     it('should generate deterministic fallback embeddings', async () => {
@@ -262,26 +262,26 @@ describe('LocalEmbeddingGenerator', () => {
         modelName: 'all-MiniLM-L6-v2',
         dimensions: 384,
       });
-      await fallbackGen.initialize();
+      await fallbackGen?.initialize();
 
       const text = 'Deterministic test';
-      const emb1 = await fallbackGen.generate(text);
-      const emb2 = await fallbackGen.generate(text);
+      const emb1 = await fallbackGen?.generate(any: any);
+      const emb2 = await fallbackGen?.generate(any: any);
 
-      expect(emb1).toEqual(emb2);
+      expect(any: any);
     });
   });
 });
 
 // Helper function
-function cosineSimilarity(a: number[], b: number[]): number {
+function cosineSimilarity(a: number?.[], b: number?.[]): number {
   let dot = 0,
     normA = 0,
     normB = 0;
-  for (let i = 0; i < a.length; i++) {
+  for (let i = 0; i < a?.length; i++) {
     dot += a[i] * b[i];
     normA += a[i] * a[i];
     normB += b[i] * b[i];
   }
-  return dot / (Math.sqrt(normA) * Math.sqrt(normB));
+  return dot / (any: any));
 }

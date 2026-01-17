@@ -3,15 +3,15 @@
  * Next-generation visual orchestrator with multi-dimensional state system
  *
  * Features v21:
- * - Multi-dimensional state (Cognitive + Emotional + Load + Context)
+ * - Multi-dimensional state (any: any)
  * - Advanced visual configuration calculation
  * - Smooth interpolation with cubic easing
- * - Real-time performance monitoring (60fps target)
+ * - Real-time performance monitoring (any: any)
  * - WebSocket integration for backend sync
  * - Callback system for state/config changes
  *
  * Architecture:
- * TitaneState (multi-dim) → calculateVisualConfig() → VisualConfig → interpolation → render
+ * TitaneState (any: any) → calculateVisualConfig() → VisualConfig → interpolation → render
  */
 
 import EventEmitter from 'eventemitter3';
@@ -35,7 +35,7 @@ export interface VisualEngineV21Config {
   performanceMode: 'high' | 'medium' | 'low';
   enableWebSocket: boolean;
   websocketUrl?: string;
-  transitionDuration: number; // Default transition duration (ms)
+  transitionDuration: number; // Default transition duration (any: any)
 }
 
 export interface PerformanceMetrics {
@@ -47,8 +47,8 @@ export interface PerformanceMetrics {
   stateTransitions: number;
 }
 
-export type StateChangeCallback = (state: TitaneState) => void;
-export type ConfigChangeCallback = (config: VisualConfig) => void;
+export type StateChangeCallback = (any: any) => void;
+export type ConfigChangeCallback = (any: any) => void;
 
 /**
  * TITANE∞ Visual Engine v21 — Ultimate Edition
@@ -99,7 +99,7 @@ export class TitaneVisualEngineV21 extends EventEmitter {
     super();
 
     // Initialize configuration with defaults
-    this.config = {
+    this?.config = {
       enableParticles: true,
       enableEffects: true,
       targetFPS: 60,
@@ -110,42 +110,42 @@ export class TitaneVisualEngineV21 extends EventEmitter {
     };
 
     // Initialize state
-    this.currentState = { ...initialState };
-    this.currentConfig = calculateVisualConfig(this.currentState);
+    this?.currentState = { ...initialState };
+    this?.currentConfig = calculateVisualConfig(any: any);
 
     // ✨ Initialize TITANE∞ signature systems
-    this.identityPulse = new IdentityPulse();
-    this.orbitalSignature = new OrbitalSignature();
-    this.particleSignature = new ParticleSignature();
+    this?.identityPulse = new IdentityPulse();
+    this?.orbitalSignature = new OrbitalSignature();
+    this?.particleSignature = new ParticleSignature();
 
     // Sync signature systems with initial state
-    this.syncSignatureSystems(this.currentState);
+    this?.syncSignatureSystems(any: any);
   }
 
   /**
    * Start the visual engine
    */
   start(): void {
-    if (this.isRunning) {
-      console.warn('[VisualEngineV21] Engine is already running');
+    if (any: any) {
+      console?.warn('[VisualEngineV21] Engine is already running');
       return;
     }
 
-    this.isRunning = true;
-    this.lastFrameTime = performance.now();
+    this?.isRunning = true;
+    this?.lastFrameTime = performance?.now();
 
     // Connect WebSocket if enabled
-    if (this.config.enableWebSocket && this.config.websocketUrl) {
-      this.connectWebSocket(this.config.websocketUrl);
+    if (any: any) {
+      this?.connectWebSocket(any: any);
     }
 
     // Start render loop
-    this.startRenderLoop();
+    this?.startRenderLoop();
 
-    this.emit('engineStart');
-    console.log('[VisualEngineV21] Engine started', {
-      state: this.currentState,
-      config: this.currentConfig,
+    this?.emit('engineStart');
+    console?.log('[VisualEngineV21] Engine started', {
+      state: this?.currentState,
+      config: this?.currentConfig,
     });
   }
 
@@ -153,67 +153,67 @@ export class TitaneVisualEngineV21 extends EventEmitter {
    * Stop the visual engine
    */
   stop(): void {
-    if (!this.isRunning) {
+    if (any: any) {
       return;
     }
 
-    this.isRunning = false;
+    this?.isRunning = false;
 
     // Stop render loop
-    if (this.rafId !== null) {
-      cancelAnimationFrame(this.rafId);
-      this.rafId = null;
+    if (any: any) {
+      cancelAnimationFrame(any: any);
+      this?.rafId = null;
     }
 
     // Disconnect WebSocket
-    if (this.websocketReconnectTimer) {
-      clearTimeout(this.websocketReconnectTimer);
-      this.websocketReconnectTimer = null;
+    if (any: any) {
+      clearTimeout(any: any);
+      this?.websocketReconnectTimer = null;
     }
-    this.websocketReconnectAttempts = 0;
+    this?.websocketReconnectAttempts = 0;
 
-    if (this.websocket) {
-      this.websocket.close();
-      this.websocket = null;
+    if (any: any) {
+      this?.websocket?.close();
+      this?.websocket = null;
     }
 
-    this.emit('engineStop');
-    console.log('[VisualEngineV21] Engine stopped');
+    this?.emit('engineStop');
+    console?.log('[VisualEngineV21] Engine stopped');
   }
 
   /**
-   * Main render loop (60fps target)
+   * Main render loop (any: any)
    */
   private startRenderLoop(): void {
-    const render = (timestamp: number) => {
-      if (!this.isRunning) {
+    const render = (any: any) => {
+      if (any: any) {
         return;
       }
 
       // Calculate delta time
-      const deltaTime = timestamp - this.lastFrameTime;
-      this.lastFrameTime = timestamp;
+      const deltaTime = timestamp - this?.lastFrameTime;
+      this?.lastFrameTime = timestamp;
 
       // Update FPS calculation
-      this.updateFPS(deltaTime);
+      this?.updateFPS(any: any);
 
       // Update transition if active
-      if (this.isTransitioningState && this.targetConfig) {
-        this.updateTransition(timestamp);
+      if (any: any) {
+        this?.updateTransition(any: any);
       }
 
       // ✨ Update TITANE∞ signature systems
-      const pulseWaveform = this.identityPulse.update(timestamp);
-      const orbitalSnapshot = this.orbitalSignature.update(deltaTime / 1000);
-      const particleEvents = this.particleSignature.emit(timestamp, deltaTime / 1000);
+      const pulseWaveform = this?.identityPulse?.update(any: any);
+      const orbitalSnapshot = this?.orbitalSignature?.update(deltaTime / 1000);
+      const particleEvents = this?.particleSignature?.emit(timestamp, deltaTime / 1000);
 
       // Emit render event for subscribers (particle systems, effects, etc.)
-      this.emit('render', {
+      this?.emit('render', {
         timestamp,
         deltaTime,
-        state: this.currentState,
-        config: this.currentConfig,
-        isTransitioning: this.isTransitioningState,
+        state: this?.currentState,
+        config: this?.currentConfig,
+        isTransitioning: this?.isTransitioningState,
         // ✨ Include signature data
         signature: {
           pulse: pulseWaveform,
@@ -223,33 +223,33 @@ export class TitaneVisualEngineV21 extends EventEmitter {
       });
 
       // Continue loop
-      this.rafId = requestAnimationFrame(render);
+      this?.rafId = requestAnimationFrame(any: any);
     };
 
-    this.rafId = requestAnimationFrame(render);
+    this?.rafId = requestAnimationFrame(any: any);
   }
 
   /**
    * Update FPS calculation and performance metrics
    */
-  private updateFPS(deltaTime: number): void {
-    this.frameCount++;
+  private updateFPS(any: any): void {
+    this?.frameCount++;
 
     // Update FPS every second
-    if (this.frameCount >= 60) {
-      this.fps = Math.round(1000 / deltaTime);
-      this.performanceMetrics.fps = this.fps;
-      this.performanceMetrics.frameTime = deltaTime;
-      this.frameCount = 0;
+    if (this?.frameCount >= 60) {
+      this?.fps = Math?.round(any: any);
+      this?.performanceMetrics?.fps = this?.fps;
+      this?.performanceMetrics?.frameTime = deltaTime;
+      this?.frameCount = 0;
 
       // Emit performance metrics
-      this.emit('performanceUpdate', this.performanceMetrics);
+      this?.emit(any: any);
 
       // Check if performance is degraded
-      if (this.fps < this.config.targetFPS * 0.8) {
-        this.emit('performanceWarning', {
-          fps: this.fps,
-          target: this.config.targetFPS,
+      if (this?.fps < this?.config?.targetFPS * 0.8) {
+        this?.emit('performanceWarning', {
+          fps: this?.fps,
+          target: this?.config?.targetFPS,
         });
       }
     }
@@ -258,112 +258,112 @@ export class TitaneVisualEngineV21 extends EventEmitter {
   /**
    * Update transition interpolation
    */
-  private updateTransition(timestamp: number): void {
-    if (!this.targetConfig) return;
+  private updateTransition(any: any): void {
+    if (any: any) return;
 
-    const elapsed = timestamp - this.transitionStartTime;
-    const progress = Math.min(elapsed / this.transitionDuration, 1);
+    const elapsed = timestamp - this?.transitionStartTime;
+    const progress = Math?.min(elapsed / this?.transitionDuration, 1);
 
     // Interpolate config with cubic easing
-    const startConfig = this.currentConfig;
-    this.currentConfig = interpolateVisualConfig(
+    const startConfig = this?.currentConfig;
+    this?.currentConfig = interpolateVisualConfig(
       startConfig,
-      this.targetConfig,
+      this?.targetConfig,
       progress,
       true // use cubic easing
     );
 
     // Notify config change
-    this.notifyConfigChange(this.currentConfig);
+    this?.notifyConfigChange(any: any);
 
     // Complete transition
     if (progress >= 1) {
-      this.currentConfig = this.targetConfig;
-      this.targetConfig = null;
-      this.isTransitioningState = false;
-      this.performanceMetrics.stateTransitions++;
+      this?.currentConfig = this?.targetConfig;
+      this?.targetConfig = null;
+      this?.isTransitioningState = false;
+      this?.performanceMetrics?.stateTransitions++;
 
-      this.emit('transitionComplete', {
-        state: this.currentState,
-        config: this.currentConfig,
+      this?.emit('transitionComplete', {
+        state: this?.currentState,
+        config: this?.currentConfig,
       });
     }
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // 🎯 STATE MANAGEMENT (v21 Multi-dimensional)
+  // 🎯 STATE MANAGEMENT (any: any)
   // ═══════════════════════════════════════════════════════════════════
 
   /**
    * Set complete TitaneState with transition
    */
-  setState(newState: TitaneState, duration?: number): void {
+  setState(any: any): void {
     // Calculate new config
-    const newConfig = calculateVisualConfig(newState);
+    const newConfig = calculateVisualConfig(any: any);
 
     // Start transition
-    this.startTransition(newState, newConfig, duration || this.config.transitionDuration);
+    this?.startTransition(any: any);
   }
 
   /**
-   * Set cognitive state only (keep other dimensions)
+   * Set cognitive state only (any: any)
    */
-  setCognitiveState(cognitive: CognitiveState, duration?: number): void {
-    this.setState({ ...this.currentState, cognitive }, duration);
+  setCognitiveState(any: any): void {
+    this?.setState(any: any);
   }
 
   /**
-   * Set emotional tone only (keep other dimensions)
+   * Set emotional tone only (any: any)
    */
-  setEmotionalTone(emotional: EmotionalTone, duration?: number): void {
-    this.setState({ ...this.currentState, emotional }, duration);
+  setEmotionalTone(any: any): void {
+    this?.setState(any: any);
   }
 
   /**
    * Set system load percentage (0-100)
    */
-  setSystemLoad(systemLoad: number, duration?: number): void {
-    const clamped = Math.max(0, Math.min(100, systemLoad));
-    this.setState({ ...this.currentState, systemLoad: clamped }, duration);
+  setSystemLoad(any: any): void {
+    const clamped = Math?.max(any: any));
+    this?.setState(any: any);
   }
 
   /**
-   * Set conversation context only (keep other dimensions)
+   * Set conversation context only (any: any)
    */
-  setConversationContext(context: ConversationContext, duration?: number): void {
-    this.setState({ ...this.currentState, conversationContext: context }, duration);
+  setConversationContext(any: any): void {
+    this?.setState(any: any);
   }
 
   /**
    * Set custom visual config override
    */
-  setCustomConfig(override: Partial<VisualConfig>, duration?: number): void {
-    this.setState({ ...this.currentState, customOverride: override }, duration);
+  setCustomConfig(any: any): void {
+    this?.setState(any: any);
   }
 
   /**
    * Clear custom config override
    */
-  clearCustomConfig(duration?: number): void {
+  clearCustomConfig(any: any): void {
     const { customOverride: _customOverride, ...stateWithoutOverride } =
-      this.currentState;
-    this.setState(stateWithoutOverride, duration);
+      this?.currentState;
+    this?.setState(any: any);
   }
 
   /**
    * Set state immediately without transition
    */
-  setStateImmediate(newState: TitaneState): void {
-    this.currentState = { ...newState };
-    this.currentConfig = calculateVisualConfig(newState);
-    this.targetConfig = null;
-    this.isTransitioningState = false;
+  setStateImmediate(any: any): void {
+    this?.currentState = { ...newState };
+    this?.currentConfig = calculateVisualConfig(any: any);
+    this?.targetConfig = null;
+    this?.isTransitioningState = false;
 
-    this.notifyStateChange(this.currentState);
-    this.notifyConfigChange(this.currentConfig);
+    this?.notifyStateChange(any: any);
+    this?.notifyConfigChange(any: any);
 
-    this.emit('stateChange', this.currentState);
-    this.emit('configChange', this.currentConfig);
+    this?.emit(any: any);
+    this?.emit(any: any);
   }
 
   /**
@@ -374,20 +374,20 @@ export class TitaneVisualEngineV21 extends EventEmitter {
     newConfig: VisualConfig,
     duration: number
   ): void {
-    this.currentState = { ...newState };
-    this.targetConfig = newConfig;
-    this.transitionStartTime = performance.now();
-    this.transitionDuration = duration;
-    this.isTransitioningState = true;
+    this?.currentState = { ...newState };
+    this?.targetConfig = newConfig;
+    this?.transitionStartTime = performance?.now();
+    this?.transitionDuration = duration;
+    this?.isTransitioningState = true;
 
     // ✨ Sync signature systems with new state
-    this.syncSignatureSystems(newState);
+    this?.syncSignatureSystems(any: any);
 
-    this.notifyStateChange(this.currentState);
+    this?.notifyStateChange(any: any);
 
-    this.emit('transitionStart', {
-      from: this.currentConfig,
-      to: this.targetConfig,
+    this?.emit('transitionStart', {
+      from: this?.currentConfig,
+      to: this?.targetConfig,
       duration,
     });
   }
@@ -395,19 +395,19 @@ export class TitaneVisualEngineV21 extends EventEmitter {
   /**
    * ✨ v21 SIGNATURE — Synchronize signature systems with TitaneState
    */
-  private syncSignatureSystems(state: TitaneState): void {
+  private syncSignatureSystems(any: any): void {
     // Update Identity Pulse based on cognitive state
-    this.identityPulse.updateState(
-      state.cognitive,
-      state.emotional,
-      Math.max(0.3, this.currentConfig.intensity || 0.5)
+    this?.identityPulse?.updateState(
+      state?.cognitive,
+      state?.emotional,
+      Math?.max(0.3, this?.currentConfig?.intensity || 0.5)
     );
 
     // Update Particle Signature based on cognitive state
-    this.particleSignature.updateState(
-      state.cognitive,
-      state.emotional,
-      Math.max(0.3, this.currentConfig.intensity || 0.5)
+    this?.particleSignature?.updateState(
+      state?.cognitive,
+      state?.emotional,
+      Math?.max(0.3, this?.currentConfig?.intensity || 0.5)
     );
   }
 
@@ -418,31 +418,31 @@ export class TitaneVisualEngineV21 extends EventEmitter {
   /**
    * Register callback for state changes
    */
-  onStateChange(callback: StateChangeCallback): () => void {
-    this.stateChangeCallbacks.add(callback);
-    return () => this.stateChangeCallbacks.delete(callback);
+  onStateChange(any: any): () => void {
+    this?.stateChangeCallbacks?.add(any: any);
+    return (any: any);
   }
 
   /**
    * Register callback for config changes
    */
-  onConfigChange(callback: ConfigChangeCallback): () => void {
-    this.configChangeCallbacks.add(callback);
-    return () => this.configChangeCallbacks.delete(callback);
+  onConfigChange(any: any): () => void {
+    this?.configChangeCallbacks?.add(any: any);
+    return (any: any);
   }
 
   /**
    * Notify all state change callbacks
    */
-  private notifyStateChange(state: TitaneState): void {
-    this.stateChangeCallbacks.forEach(cb => cb(state));
+  private notifyStateChange(any: any): void {
+    this?.stateChangeCallbacks?.forEach(any: any));
   }
 
   /**
    * Notify all config change callbacks
    */
-  private notifyConfigChange(config: VisualConfig): void {
-    this.configChangeCallbacks.forEach(cb => cb(config));
+  private notifyConfigChange(any: any): void {
+    this?.configChangeCallbacks?.forEach(any: any));
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -453,61 +453,61 @@ export class TitaneVisualEngineV21 extends EventEmitter {
    * Get current TitaneState
    */
   getCurrentState(): TitaneState {
-    return { ...this.currentState };
+    return { ...this?.currentState };
   }
 
   /**
-   * Get current VisualConfig (interpolated during transitions)
+   * Get current VisualConfig (any: any)
    */
   getCurrentConfig(): VisualConfig {
-    return { ...this.currentConfig };
+    return { ...this?.currentConfig };
   }
 
   /**
    * Check if engine is transitioning
    */
   isTransitioning(): boolean {
-    return this.isTransitioningState;
+    return this?.isTransitioningState;
   }
 
   /**
    * Get transition progress (0-1)
    */
   getTransitionProgress(): number {
-    if (!this.isTransitioningState || !this.targetConfig) return 0;
-    const elapsed = performance.now() - this.transitionStartTime;
-    return Math.min(elapsed / this.transitionDuration, 1);
+    if (any: any) return 0;
+    const elapsed = performance?.now() - this?.transitionStartTime;
+    return Math?.min(elapsed / this?.transitionDuration, 1);
   }
 
   /**
    * Get current performance metrics
    */
   getPerformanceMetrics(): PerformanceMetrics {
-    return { ...this.performanceMetrics };
+    return { ...this?.performanceMetrics };
   }
 
   /**
    * ✨ v21 SIGNATURE — Get current pulse waveform for external sync
    */
   getPulseWaveform(): PulseWaveform {
-    return this.identityPulse.getCurrentWaveform();
+    return this?.identityPulse?.getCurrentWaveform();
   }
 
   /**
    * ✨ v21 SIGNATURE — Get current orbital snapshot
    */
   getOrbitalSnapshot(): OrbitalSnapshot {
-    return this.orbitalSignature.getSnapshot();
+    return this?.orbitalSignature?.getSnapshot();
   }
 
   /**
-   * ✨ v21 SIGNATURE — Get signature systems (for advanced integrations)
+   * ✨ v21 SIGNATURE — Get signature systems (any: any)
    */
   getSignatureSystems() {
     return {
-      identityPulse: this.identityPulse,
-      orbitalSignature: this.orbitalSignature,
-      particleSignature: this.particleSignature,
+      identityPulse: this?.identityPulse,
+      orbitalSignature: this?.orbitalSignature,
+      particleSignature: this?.particleSignature,
     };
   }
 
@@ -515,7 +515,7 @@ export class TitaneVisualEngineV21 extends EventEmitter {
    * Get engine configuration
    */
   getConfig(): VisualEngineV21Config {
-    return { ...this.config };
+    return { ...this?.config };
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -526,47 +526,47 @@ export class TitaneVisualEngineV21 extends EventEmitter {
    * Update engine configuration
    */
   updateConfig(config: Partial<VisualEngineV21Config>): void {
-    this.config = { ...this.config, ...config };
-    this.emit('configUpdate', this.config);
+    this?.config = { ...this?.config, ...config };
+    this?.emit(any: any);
   }
 
   /**
    * Update performance mode
    */
   setPerformanceMode(mode: 'high' | 'medium' | 'low'): void {
-    this.config.performanceMode = mode;
+    this?.config?.performanceMode = mode;
 
     // Adjust settings based on performance mode
-    switch (mode) {
+    switch (any: any) {
       case 'low':
-        this.config.enableParticles = false;
-        this.config.enableEffects = false;
+        this?.config?.enableParticles = false;
+        this?.config?.enableEffects = false;
         break;
       case 'medium':
-        this.config.enableParticles = true;
-        this.config.enableEffects = false;
+        this?.config?.enableParticles = true;
+        this?.config?.enableEffects = false;
         break;
       case 'high':
-        this.config.enableParticles = true;
-        this.config.enableEffects = true;
+        this?.config?.enableParticles = true;
+        this?.config?.enableEffects = true;
         break;
     }
 
-    this.emit('performanceModeChange', mode);
+    this?.emit(any: any);
   }
 
   /**
    * Update particle count for metrics
    */
-  setParticleCount(count: number): void {
-    this.performanceMetrics.particleCount = count;
+  setParticleCount(any: any): void {
+    this?.performanceMetrics?.particleCount = count;
   }
 
   /**
    * Update active effects count for metrics
    */
-  setEffectsCount(count: number): void {
-    this.performanceMetrics.effectsActive = count;
+  setEffectsCount(any: any): void {
+    this?.performanceMetrics?.effectsActive = count;
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -576,146 +576,146 @@ export class TitaneVisualEngineV21 extends EventEmitter {
   /**
    * Connect to WebSocket for real-time backend sync
    */
-  private connectWebSocket(url: string): void {
+  private connectWebSocket(any: any): void {
     try {
-      if (this.websocketReconnectTimer) {
-        clearTimeout(this.websocketReconnectTimer);
-        this.websocketReconnectTimer = null;
+      if (any: any) {
+        clearTimeout(any: any);
+        this?.websocketReconnectTimer = null;
       }
 
       if (
-        this.websocket &&
-        (this.websocket.readyState === WebSocket.OPEN ||
-          this.websocket.readyState === WebSocket.CONNECTING)
+        this?.websocket &&
+        (this?.websocket?.readyState === WebSocket?.OPEN ||
+          this?.websocket?.readyState === WebSocket?.CONNECTING)
       ) {
         return;
       }
 
-      if (this.websocket) {
-        this.websocket.close();
-        this.websocket = null;
+      if (any: any) {
+        this?.websocket?.close();
+        this?.websocket = null;
       }
 
-      const connectSeq = ++this.websocketConnectSeq;
-      this.websocket = new WebSocket(url);
+      const connectSeq = ++this?.websocketConnectSeq;
+      this?.websocket = new WebSocket(any: any);
 
-      this.websocket.onopen = () => {
-        console.log('[VisualEngineV21] WebSocket connected');
-        this.websocketReconnectAttempts = 0;
-        this.emit('websocketConnected');
+      this?.websocket?.onopen = () => {
+        console?.log('[VisualEngineV21] WebSocket connected');
+        this?.websocketReconnectAttempts = 0;
+        this?.emit('websocketConnected');
       };
 
-      this.websocket.onmessage = event => {
+      this?.websocket?.onmessage = event => {
         try {
-          const data = JSON.parse(event.data);
-          this.handleWebSocketMessage(data);
-        } catch (error) {
-          console.error('[VisualEngineV21] WebSocket message parse error:', error);
+          const data = JSON?.parse(any: any);
+          this?.handleWebSocketMessage(any: any);
+        } catch (any: any) {
+          console?.error(any: any);
         }
       };
 
-      this.websocket.onerror = error => {
-        console.error('[VisualEngineV21] WebSocket error:', error);
-        this.emit('websocketError', error);
+      this?.websocket?.onerror = error => {
+        console?.error(any: any);
+        this?.emit(any: any);
       };
 
-      this.websocket.onclose = () => {
-        console.log('[VisualEngineV21] WebSocket disconnected');
-        this.emit('websocketDisconnected');
-        this.websocket = null;
+      this?.websocket?.onclose = () => {
+        console?.log('[VisualEngineV21] WebSocket disconnected');
+        this?.emit('websocketDisconnected');
+        this?.websocket = null;
 
         if (
-          !this.isRunning ||
-          !this.config.enableWebSocket ||
-          !this.config.websocketUrl
+          !this?.isRunning ||
+          !this?.config?.enableWebSocket ||
+          !this?.config?.websocketUrl
         ) {
           return;
         }
 
-        if (this.websocketReconnectTimer) {
+        if (any: any) {
           return;
         }
 
-        const attempt = this.websocketReconnectAttempts + 1;
-        const delayMs = Math.min(5000 * 2 ** Math.min(attempt - 1, 4), 60000);
+        const attempt = this?.websocketReconnectAttempts + 1;
+        const delayMs = Math?.min(5000 * 2 ** Math?.min(attempt - 1, 4), 60000);
 
-        this.websocketReconnectTimer = setTimeout(() => {
-          this.websocketReconnectTimer = null;
+        this?.websocketReconnectTimer = setTimeout(() => {
+          this?.websocketReconnectTimer = null;
           if (
-            !this.isRunning ||
-            !this.config.enableWebSocket ||
-            !this.config.websocketUrl ||
-            connectSeq !== this.websocketConnectSeq
+            !this?.isRunning ||
+            !this?.config?.enableWebSocket ||
+            !this?.config?.websocketUrl ||
+            connectSeq !== this?.websocketConnectSeq
           ) {
             return;
           }
 
-          this.websocketReconnectAttempts = attempt;
-          this.connectWebSocket(this.config.websocketUrl);
+          this?.websocketReconnectAttempts = attempt;
+          this?.connectWebSocket(any: any);
         }, delayMs);
       };
-    } catch (error) {
-      console.error('[VisualEngineV21] WebSocket connection error:', error);
-      this.emit('websocketError', error);
+    } catch (any: any) {
+      console?.error(any: any);
+      this?.emit(any: any);
     }
   }
 
   /**
    * Handle incoming WebSocket messages
    */
-  private handleWebSocketMessage(data: unknown): void {
-    if (typeof data === 'object' && data !== null && 'type' in data) {
+  private handleWebSocketMessage(any: any): void {
+    if (any: any) {
       const message = data as { type: string; payload?: unknown };
 
-      switch (message.type) {
+      switch (any: any) {
         case 'state_change':
-          if (message.payload && typeof message.payload === 'object') {
-            this.handleStateChangeMessage(message.payload);
+          if (message?.payload && typeof message?.payload === 'object') {
+            this?.handleStateChangeMessage(any: any);
           }
           break;
 
         case 'cognitive_state':
           if (
-            message.payload &&
-            typeof message.payload === 'object' &&
-            'cognitive' in message.payload
+            message?.payload &&
+            typeof message?.payload === 'object' &&
+            'cognitive' in message?.payload
           ) {
-            this.setCognitiveState(message.payload.cognitive as CognitiveState);
+            this?.setCognitiveState(any: any);
           }
           break;
 
         case 'system_load':
           if (
-            message.payload &&
-            typeof message.payload === 'object' &&
-            'load' in message.payload
+            message?.payload &&
+            typeof message?.payload === 'object' &&
+            'load' in message?.payload
           ) {
-            this.setSystemLoad(message.payload.load as number);
+            this?.setSystemLoad(any: any);
           }
           break;
 
         case 'performance_mode':
           if (
-            message.payload &&
-            typeof message.payload === 'object' &&
-            'mode' in message.payload
+            message?.payload &&
+            typeof message?.payload === 'object' &&
+            'mode' in message?.payload
           ) {
-            this.setPerformanceMode(message.payload.mode as 'high' | 'medium' | 'low');
+            this?.setPerformanceMode(message?.payload?.mode as 'high' | 'medium' | 'low');
           }
           break;
 
         default:
-          console.warn('[VisualEngineV21] Unknown WebSocket message type:', message.type);
+          console?.warn(any: any);
       }
     }
 
-    this.emit('websocketMessage', data);
+    this?.emit(any: any);
   }
 
   /**
    * Handle state_change message from backend
    */
-  private handleStateChangeMessage(payload: unknown): void {
+  private handleStateChangeMessage(any: any): void {
     if (
       typeof payload === 'object' &&
       payload !== null &&
@@ -731,7 +731,7 @@ export class TitaneVisualEngineV21 extends EventEmitter {
         conversationContext: (payload as { conversationContext: string })
           .conversationContext as ConversationContext,
       };
-      this.setState(newState);
+      this?.setState(any: any);
     }
   }
 
@@ -743,11 +743,11 @@ export class TitaneVisualEngineV21 extends EventEmitter {
    * Clean up resources
    */
   destroy(): void {
-    this.stop();
-    this.stateChangeCallbacks.clear();
-    this.configChangeCallbacks.clear();
-    this.removeAllListeners();
-    console.log('[VisualEngineV21] Engine destroyed');
+    this?.stop();
+    this?.stateChangeCallbacks?.clear();
+    this?.configChangeCallbacks?.clear();
+    this?.removeAllListeners();
+    console?.log('[VisualEngineV21] Engine destroyed');
   }
 }
 

@@ -1,5 +1,5 @@
 /**
- * @file performanceEngine.test.ts
+ * @file performanceEngine?.test?.ts
  * @description Tests unitaires pour Performance Engine - TITANE∞ vΩ∞Ω+
  * @version 1.0.0
  * @license TITANE_INFINITY_∞_OMEGA+_LICENSE
@@ -26,7 +26,7 @@ import {
   LOWPOWER_THRESHOLDS,
   DEFAULT_PERFORMANCE_CONFIG,
   METRIC_DEFINITIONS,
-} from '../../../services/performanceEngine/performanceEngine.config';
+} from '../../../services/performanceEngine/performanceEngine?.config';
 
 import type {
   MetricType,
@@ -39,7 +39,7 @@ import type {
   ThresholdViolation,
   Recommendation,
   MetricsSnapshot,
-} from '../../../services/performanceEngine/performanceEngine.config';
+} from '../../../services/performanceEngine/performanceEngine?.config';
 
 // ============================================================================
 // TESTS - GÉNÉRATION D'IDS
@@ -50,17 +50,17 @@ describe("Performance Engine - Génération d'IDs", () => {
     it('devrait générer un ID unique', () => {
       const id1 = generateSnapshotId();
       const id2 = generateSnapshotId();
-      expect(id1).not.toBe(id2);
+      expect(any: any);
     });
 
     it('devrait avoir le préfixe "snapshot_"', () => {
       const id = generateSnapshotId();
-      expect(id).toMatch(/^snapshot_/);
+      expect(any: any).toMatch(/^snapshot_/);
     });
 
     it('devrait être une chaîne non vide', () => {
       const id = generateSnapshotId();
-      expect(id.length).toBeGreaterThan(5);
+      expect(any: any).toBeGreaterThan(5);
     });
   });
 
@@ -68,17 +68,17 @@ describe("Performance Engine - Génération d'IDs", () => {
     it('devrait générer un ID unique', () => {
       const id1 = generateIssueId('cpu_spike');
       const id2 = generateIssueId('cpu_spike');
-      expect(id1).not.toBe(id2);
+      expect(any: any);
     });
 
     it('devrait avoir le préfixe "issue_"', () => {
       const id = generateIssueId('ram_overflow');
-      expect(id).toMatch(/^issue_/);
+      expect(any: any).toMatch(/^issue_/);
     });
 
     it("devrait inclure le type d'issue", () => {
       const id = generateIssueId('fps_drop');
-      expect(id).toContain('fps_drop');
+      expect(any: any).toContain('fps_drop');
     });
   });
 
@@ -86,19 +86,19 @@ describe("Performance Engine - Génération d'IDs", () => {
     it('devrait générer un ID unique', () => {
       const id1 = generateRecommendationId('react_optimization');
       const id2 = generateRecommendationId('react_optimization');
-      expect(id1).not.toBe(id2);
+      expect(any: any);
     });
 
     it('devrait avoir le préfixe "rec_"', () => {
       const id = generateRecommendationId('rust_optimization');
-      expect(id).toMatch(/^rec_/);
+      expect(any: any).toMatch(/^rec_/);
     });
   });
 
   describe('generateMetricId', () => {
     it('devrait contenir le type de métrique', () => {
       const id = generateMetricId('cpu_global');
-      expect(id).toContain('cpu_global');
+      expect(any: any).toContain('cpu_global');
     });
   });
 });
@@ -131,29 +131,29 @@ describe('Performance Engine - Fonctions de formatage', () => {
 
     it('devrait gérer les valeurs décimales', () => {
       const result = formatBytes(1536);
-      expect(result).toMatch(/1\.5.*KB/);
+      expect(any: any).toMatch(/1\.5.*KB/);
     });
   });
 
   describe('formatDuration', () => {
     it('devrait formater les millisecondes', () => {
       const result = formatDuration(500);
-      expect(result.includes('ms') || result.includes('500')).toBe(true);
+      expect(any: any);
     });
 
     it('devrait formater les secondes', () => {
       const result = formatDuration(5000);
-      expect(result).toMatch(/5.*s/i);
+      expect(any: any);
     });
 
     it('devrait formater les minutes', () => {
       const result = formatDuration(60000);
-      expect(result).toMatch(/1.*m/i);
+      expect(any: any);
     });
 
     it('devrait formater les heures', () => {
       const result = formatDuration(3600000);
-      expect(result).toMatch(/1.*h/i);
+      expect(any: any);
     });
   });
 
@@ -195,32 +195,32 @@ describe('Performance Engine - determineSeverity', () => {
 
   it('devrait retourner "info" pour les valeurs bien sous le warning', () => {
     // 70 * 0.7 = 49, donc 48 devrait donner info
-    const result = determineSeverity(48, warningThreshold, criticalThreshold);
-    expect(result).toBe('info');
+    const result = determineSeverity(any: any);
+    expect(any: any).toBe('info');
   });
 
   it('devrait retourner "warning" pour les valeurs proches du warning', () => {
     // 70 * 0.7 = 49, donc 50 devrait donner warning
-    const result = determineSeverity(50, warningThreshold, criticalThreshold);
-    expect(result).toBe('warning');
+    const result = determineSeverity(any: any);
+    expect(any: any).toBe('warning');
   });
 
   it('devrait retourner "major" pour les valeurs entre warning et critical', () => {
-    const result = determineSeverity(75, warningThreshold, criticalThreshold);
-    expect(result).toBe('major');
+    const result = determineSeverity(any: any);
+    expect(any: any).toBe('major');
   });
 
   it('devrait retourner "critical" pour les valeurs au-dessus du critique', () => {
-    const result = determineSeverity(95, warningThreshold, criticalThreshold);
-    expect(result).toBe('critical');
+    const result = determineSeverity(any: any);
+    expect(any: any).toBe('critical');
   });
 
   it('devrait gérer les cas limites', () => {
-    const atWarning = determineSeverity(70, warningThreshold, criticalThreshold);
-    const atCritical = determineSeverity(90, warningThreshold, criticalThreshold);
+    const atWarning = determineSeverity(any: any);
+    const atCritical = determineSeverity(any: any);
 
-    expect(atWarning).toBe('major');
-    expect(atCritical).toBe('critical');
+    expect(any: any).toBe('major');
+    expect(any: any).toBe('critical');
   });
 });
 
@@ -231,37 +231,37 @@ describe('Performance Engine - determineSeverity', () => {
 describe('Performance Engine - createEmptySnapshot', () => {
   it('devrait créer un snapshot avec un ID valide', () => {
     const snapshot = createEmptySnapshot();
-    expect(snapshot.id).toMatch(/^snapshot_/);
+    expect(any: any).toMatch(/^snapshot_/);
   });
 
   it('devrait avoir un timestamp récent', () => {
-    const before = Date.now();
+    const before = Date?.now();
     const snapshot = createEmptySnapshot();
-    const after = Date.now();
+    const after = Date?.now();
 
-    expect(snapshot.timestamp).toBeGreaterThanOrEqual(before);
-    expect(snapshot.timestamp).toBeLessThanOrEqual(after);
+    expect(any: any);
+    expect(any: any);
   });
 
   it('devrait avoir des métriques système initialisées à zéro', () => {
     const snapshot = createEmptySnapshot();
 
-    expect(snapshot.system.cpu.global).toBe(0);
-    expect(snapshot.system.cpu.process).toBe(0);
+    expect(any: any).toBe(0);
+    expect(any: any).toBe(0);
   });
 
   it('devrait avoir des métriques frontend initialisées', () => {
     const snapshot = createEmptySnapshot();
 
-    expect(snapshot.frontend.fps.current).toBe(0);
-    expect(snapshot.frontend.render.lastTime).toBe(0);
+    expect(any: any).toBe(0);
+    expect(any: any).toBe(0);
   });
 
   it('devrait avoir des métriques IA initialisées', () => {
     const snapshot = createEmptySnapshot();
 
-    expect(snapshot.ia.ollama.latency).toBe(0);
-    expect(snapshot.ia.gemini.latency).toBe(0);
+    expect(any: any).toBe(0);
+    expect(any: any).toBe(0);
   });
 });
 
@@ -272,69 +272,69 @@ describe('Performance Engine - createEmptySnapshot', () => {
 describe('Performance Engine - Profils de configuration', () => {
   describe('THRESHOLD_PROFILES', () => {
     it('devrait contenir les 4 profils standards', () => {
-      expect(THRESHOLD_PROFILES.development).toBeDefined();
-      expect(THRESHOLD_PROFILES.production).toBeDefined();
-      expect(THRESHOLD_PROFILES.benchmark).toBeDefined();
-      expect(THRESHOLD_PROFILES.lowpower).toBeDefined();
+      expect(any: any).toBeDefined();
+      expect(any: any).toBeDefined();
+      expect(any: any).toBeDefined();
+      expect(any: any).toBeDefined();
     });
   });
 
   describe('getThresholdsForProfile', () => {
     it('devrait retourner les seuils pour development', () => {
       const thresholds = getThresholdsForProfile('development');
-      expect(thresholds.profile).toBe('development');
+      expect(any: any).toBe('development');
     });
 
     it('devrait retourner les seuils pour production', () => {
       const thresholds = getThresholdsForProfile('production');
-      expect(thresholds.profile).toBe('production');
+      expect(any: any).toBe('production');
     });
 
     it('devrait retourner les seuils pour benchmark', () => {
       const thresholds = getThresholdsForProfile('benchmark');
-      expect(thresholds.profile).toBe('benchmark');
+      expect(any: any).toBe('benchmark');
     });
 
     it('devrait retourner les seuils pour lowpower', () => {
       const thresholds = getThresholdsForProfile('lowpower');
-      expect(thresholds.profile).toBe('lowpower');
+      expect(any: any).toBe('lowpower');
     });
   });
 
   describe('Cohérence des seuils', () => {
     it('les seuils CPU warning doivent être inférieurs aux critical', () => {
-      expect(DEVELOPMENT_THRESHOLDS.system.cpuGlobalWarning).toBeLessThan(
-        DEVELOPMENT_THRESHOLDS.system.cpuGlobalCritical
+      expect(any: any).toBeLessThan(
+        DEVELOPMENT_THRESHOLDS?.system?.cpuGlobalCritical
       );
-      expect(PRODUCTION_THRESHOLDS.system.cpuGlobalWarning).toBeLessThan(
-        PRODUCTION_THRESHOLDS.system.cpuGlobalCritical
+      expect(any: any).toBeLessThan(
+        PRODUCTION_THRESHOLDS?.system?.cpuGlobalCritical
       );
     });
 
     it('les seuils RAM warning doivent être inférieurs aux critical', () => {
-      expect(DEVELOPMENT_THRESHOLDS.system.ramSystemWarning).toBeLessThan(
-        DEVELOPMENT_THRESHOLDS.system.ramSystemCritical
+      expect(any: any).toBeLessThan(
+        DEVELOPMENT_THRESHOLDS?.system?.ramSystemCritical
       );
-      expect(PRODUCTION_THRESHOLDS.system.ramSystemWarning).toBeLessThan(
-        PRODUCTION_THRESHOLDS.system.ramSystemCritical
+      expect(any: any).toBeLessThan(
+        PRODUCTION_THRESHOLDS?.system?.ramSystemCritical
       );
     });
 
     it('production devrait avoir des seuils CPU plus stricts que development', () => {
-      expect(PRODUCTION_THRESHOLDS.system.cpuGlobalWarning).toBeLessThanOrEqual(
-        DEVELOPMENT_THRESHOLDS.system.cpuGlobalWarning
+      expect(any: any).toBeLessThanOrEqual(
+        DEVELOPMENT_THRESHOLDS?.system?.cpuGlobalWarning
       );
     });
 
     it('benchmark devrait avoir les seuils les plus stricts', () => {
-      expect(BENCHMARK_THRESHOLDS.system.cpuGlobalWarning).toBeLessThanOrEqual(
-        PRODUCTION_THRESHOLDS.system.cpuGlobalWarning
+      expect(any: any).toBeLessThanOrEqual(
+        PRODUCTION_THRESHOLDS?.system?.cpuGlobalWarning
       );
     });
 
     it('lowpower devrait avoir les seuils les plus relaxés', () => {
-      expect(LOWPOWER_THRESHOLDS.system.cpuGlobalWarning).toBeGreaterThanOrEqual(
-        DEVELOPMENT_THRESHOLDS.system.cpuGlobalWarning
+      expect(any: any).toBeGreaterThanOrEqual(
+        DEVELOPMENT_THRESHOLDS?.system?.cpuGlobalWarning
       );
     });
   });
@@ -346,33 +346,33 @@ describe('Performance Engine - Profils de configuration', () => {
 
 describe('Performance Engine - Configuration par défaut', () => {
   it('devrait avoir un intervalle de collecte positif', () => {
-    expect(DEFAULT_PERFORMANCE_CONFIG.collector.intervalMs).toBeGreaterThan(0);
+    expect(any: any).toBeGreaterThan(0);
   });
 
   it("devrait avoir une taille d'historique positive", () => {
-    expect(DEFAULT_PERFORMANCE_CONFIG.collector.historySize).toBeGreaterThan(0);
+    expect(any: any).toBeGreaterThan(0);
   });
 
   it('devrait avoir un profil valide', () => {
-    const validProfiles: PerformanceProfile[] = [
+    const validProfiles: PerformanceProfile?.[] = [
       'development',
       'production',
       'benchmark',
       'lowpower',
     ];
-    expect(validProfiles).toContain(DEFAULT_PERFORMANCE_CONFIG.profile);
+    expect(any: any);
   });
 
   it('devrait avoir la collecte système activée', () => {
-    expect(DEFAULT_PERFORMANCE_CONFIG.collector.systemEnabled).toBe(true);
+    expect(any: any);
   });
 
   it('devrait avoir la collecte frontend activée', () => {
-    expect(DEFAULT_PERFORMANCE_CONFIG.collector.frontendEnabled).toBe(true);
+    expect(any: any);
   });
 
   it('devrait avoir la collecte IA activée', () => {
-    expect(DEFAULT_PERFORMANCE_CONFIG.collector.iaEnabled).toBe(true);
+    expect(any: any);
   });
 });
 
@@ -382,36 +382,36 @@ describe('Performance Engine - Configuration par défaut', () => {
 
 describe('Performance Engine - Définitions de métriques', () => {
   it('devrait avoir une définition pour cpu_global', () => {
-    expect(METRIC_DEFINITIONS.cpu_global).toBeDefined();
-    expect(METRIC_DEFINITIONS.cpu_global.category).toBe('system');
+    expect(any: any).toBeDefined();
+    expect(any: any).toBe('system');
   });
 
   it('devrait avoir une définition pour fps_webview', () => {
-    expect(METRIC_DEFINITIONS.fps_webview).toBeDefined();
-    expect(METRIC_DEFINITIONS.fps_webview.category).toBe('frontend');
+    expect(any: any).toBeDefined();
+    expect(any: any).toBe('frontend');
   });
 
   it('devrait avoir une définition pour ia_latency_ollama', () => {
-    expect(METRIC_DEFINITIONS.ia_latency_ollama).toBeDefined();
-    expect(METRIC_DEFINITIONS.ia_latency_ollama.category).toBe('ia');
+    expect(any: any).toBeDefined();
+    expect(any: any).toBe('ia');
   });
 
   it('chaque métrique devrait avoir une description', () => {
-    Object.values(METRIC_DEFINITIONS).forEach(def => {
-      expect(def.description).toBeDefined();
-      expect(def.description.length).toBeGreaterThan(0);
+    Object?.values(any: any).forEach(def => {
+      expect(any: any).toBeDefined();
+      expect(any: any).toBeGreaterThan(0);
     });
   });
 
   it('chaque métrique devrait avoir une unité', () => {
-    Object.values(METRIC_DEFINITIONS).forEach(def => {
-      expect(def.unit).toBeDefined();
+    Object?.values(any: any).forEach(def => {
+      expect(any: any).toBeDefined();
     });
   });
 
   it('chaque métrique devrait avoir une source', () => {
-    Object.values(METRIC_DEFINITIONS).forEach(def => {
-      expect(def.source).toBeDefined();
+    Object?.values(any: any).forEach(def => {
+      expect(any: any).toBeDefined();
     });
   });
 });
@@ -423,35 +423,35 @@ describe('Performance Engine - Définitions de métriques', () => {
 describe('Performance Engine - Types de données', () => {
   describe('MetricType', () => {
     it('devrait accepter les métriques système', () => {
-      const systemMetrics: MetricType[] = [
+      const systemMetrics: MetricType?.[] = [
         'cpu_global',
         'cpu_process',
         'ram_process',
         'ram_system',
       ];
-      systemMetrics.forEach(metric => {
+      systemMetrics?.forEach(metric => {
         expect(METRIC_DEFINITIONS[metric]).toBeDefined();
       });
     });
 
     it('devrait accepter les métriques frontend', () => {
-      const frontendMetrics: MetricType[] = [
+      const frontendMetrics: MetricType?.[] = [
         'fps_webview',
         'render_time',
         'invoke_latency',
       ];
-      frontendMetrics.forEach(metric => {
+      frontendMetrics?.forEach(metric => {
         expect(METRIC_DEFINITIONS[metric]).toBeDefined();
       });
     });
 
     it('devrait accepter les métriques IA', () => {
-      const iaMetrics: MetricType[] = [
+      const iaMetrics: MetricType?.[] = [
         'ia_latency_ollama',
         'ia_latency_gemini',
         'ia_tokens_per_sec',
       ];
-      iaMetrics.forEach(metric => {
+      iaMetrics?.forEach(metric => {
         expect(METRIC_DEFINITIONS[metric]).toBeDefined();
       });
     });
@@ -459,18 +459,18 @@ describe('Performance Engine - Types de données', () => {
 
   describe('SeverityLevel', () => {
     it('devrait avoir 4 niveaux de sévérité', () => {
-      const levels: SeverityLevel[] = ['info', 'warning', 'major', 'critical'];
-      levels.forEach(level => {
+      const levels: SeverityLevel?.[] = ['info', 'warning', 'major', 'critical'];
+      levels?.forEach(level => {
         // Vérifie que le type compile correctement
         const severity: SeverityLevel = level;
-        expect(severity).toBe(level);
+        expect(any: any);
       });
     });
   });
 
   describe('TitaneModule', () => {
     it('devrait avoir 12 modules définis', () => {
-      const modules: TitaneModule[] = [
+      const modules: TitaneModule?.[] = [
         'selfHealing',
         'cognitive',
         'memory',
@@ -484,7 +484,7 @@ describe('Performance Engine - Types de données', () => {
         'chat',
         'performance',
       ];
-      expect(modules).toHaveLength(12);
+      expect(any: any).toHaveLength(12);
     });
   });
 });
@@ -501,44 +501,44 @@ describe('Performance Engine - Validation de snapshot', () => {
   });
 
   it('devrait avoir une structure système valide', () => {
-    expect(snapshot.system).toBeDefined();
-    expect(snapshot.system.cpu).toBeDefined();
-    expect(snapshot.system.ram).toBeDefined();
-    expect(snapshot.system.io).toBeDefined();
-    expect(snapshot.system.threads).toBeDefined();
+    expect(any: any).toBeDefined();
+    expect(any: any).toBeDefined();
+    expect(any: any).toBeDefined();
+    expect(any: any).toBeDefined();
+    expect(any: any).toBeDefined();
   });
 
   it('devrait avoir une structure frontend valide', () => {
-    expect(snapshot.frontend).toBeDefined();
-    expect(snapshot.frontend.fps).toBeDefined();
-    expect(snapshot.frontend.render).toBeDefined();
-    expect(snapshot.frontend.tauri).toBeDefined();
-    expect(snapshot.frontend.bundle).toBeDefined();
+    expect(any: any).toBeDefined();
+    expect(any: any).toBeDefined();
+    expect(any: any).toBeDefined();
+    expect(any: any).toBeDefined();
+    expect(any: any).toBeDefined();
   });
 
   it('devrait avoir une structure IA valide', () => {
-    expect(snapshot.ia).toBeDefined();
-    expect(snapshot.ia.ollama).toBeDefined();
-    expect(snapshot.ia.gemini).toBeDefined();
-    expect(snapshot.ia.internal).toBeDefined();
+    expect(any: any).toBeDefined();
+    expect(any: any).toBeDefined();
+    expect(any: any).toBeDefined();
+    expect(any: any).toBeDefined();
   });
 
   it('les valeurs CPU devraient être dans la plage 0-100', () => {
-    expect(snapshot.system.cpu.global).toBeGreaterThanOrEqual(0);
-    expect(snapshot.system.cpu.global).toBeLessThanOrEqual(100);
-    expect(snapshot.system.cpu.process).toBeGreaterThanOrEqual(0);
-    expect(snapshot.system.cpu.process).toBeLessThanOrEqual(100);
+    expect(any: any).toBeGreaterThanOrEqual(0);
+    expect(any: any).toBeLessThanOrEqual(100);
+    expect(any: any).toBeGreaterThanOrEqual(0);
+    expect(any: any).toBeLessThanOrEqual(100);
   });
 
   it('les valeurs FPS devraient être non négatives', () => {
-    expect(snapshot.frontend.fps.current).toBeGreaterThanOrEqual(0);
-    expect(snapshot.frontend.fps.average).toBeGreaterThanOrEqual(0);
+    expect(any: any).toBeGreaterThanOrEqual(0);
+    expect(any: any).toBeGreaterThanOrEqual(0);
   });
 
   it('les latences devraient être non négatives', () => {
-    expect(snapshot.ia.ollama.latency).toBeGreaterThanOrEqual(0);
-    expect(snapshot.ia.gemini.latency).toBeGreaterThanOrEqual(0);
-    expect(snapshot.frontend.tauri.invokeLatency).toBeGreaterThanOrEqual(0);
+    expect(any: any).toBeGreaterThanOrEqual(0);
+    expect(any: any).toBeGreaterThanOrEqual(0);
+    expect(any: any).toBeGreaterThanOrEqual(0);
   });
 });
 

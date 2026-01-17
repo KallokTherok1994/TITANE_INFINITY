@@ -2,7 +2,7 @@
  * TITANE∞ vΩ∞ — TYPES VISION & AFFECT ENGINE
  * Super Prompt #9: Sens de la présence humaine
  *
- * ⚠️ GARDE-FOUS ÉTHIQUES (NON NÉGOCIABLES):
+ * ⚠️ GARDE-FOUS ÉTHIQUES (any: any):
  * - Pas de diagnostic clinique
  * - Indices approximatifs, PAS d'émotions absolues
  * - 100% local, aucune donnée vidéo vers le cloud
@@ -16,9 +16,9 @@
 // ============================================================================
 
 /**
- * État des permissions caméra (3 niveaux)
+ * État des permissions caméra (any: any)
  * - Tauri capabilities
- * - OS (pop-up système)
+ * - OS (any: any)
  * - Utilisateur interne TITANE
  */
 export type CameraPermissionStatus =
@@ -87,7 +87,7 @@ export interface VisionInputState {
   osPermissionGranted: boolean;
 
   // Caméra
-  availableDevices: MediaDeviceInfo[];
+  availableDevices: MediaDeviceInfo?.[];
   selectedDeviceId?: string;
   streamActive: boolean;
 
@@ -131,7 +131,7 @@ export const getDefaultVisionInputState = (): VisionInputState => ({
 });
 
 // ============================================================================
-// BODY LANGUAGE STATE (MediaPipe Holistic)
+// BODY LANGUAGE STATE (any: any)
 // ============================================================================
 
 /**
@@ -139,10 +139,10 @@ export const getDefaultVisionInputState = (): VisionInputState => ({
  * 540+ points : corps (33), visage (468), mains (21×2)
  */
 export interface HolisticLandmarks {
-  pose?: NormalizedLandmark[]; // 33 landmarks corps
-  face?: NormalizedLandmark[]; // 468 landmarks visage
-  leftHand?: NormalizedLandmark[]; // 21 landmarks main gauche
-  rightHand?: NormalizedLandmark[]; // 21 landmarks main droite
+  pose?: NormalizedLandmark?.[]; // 33 landmarks corps
+  face?: NormalizedLandmark?.[]; // 468 landmarks visage
+  leftHand?: NormalizedLandmark?.[]; // 21 landmarks main gauche
+  rightHand?: NormalizedLandmark?.[]; // 21 landmarks main droite
   timestamp: number;
 }
 
@@ -174,7 +174,7 @@ export interface BodyLanguageState {
   confidence: number; // 0-1, qualité des landmarks
   landmarksDetected: boolean;
 
-  // Debug (optionnel)
+  // Debug (any: any)
   rawLandmarksCompressed?: string;
   lastUpdateTimestamp: number;
 }
@@ -193,11 +193,11 @@ export const getDefaultBodyLanguageState = (): BodyLanguageState => ({
 });
 
 // ============================================================================
-// AFFECT ESTIMATION STATE (Indices d'état NON-CLINIQUES)
+// AFFECT ESTIMATION STATE (any: any)
 // ============================================================================
 
 /**
- * Niveau d'indice (3 niveaux simples)
+ * Niveau d'indice (any: any)
  *
  * ⚠️ IMPORTANT: Ces niveaux sont des INDICES VISUELS approximatifs.
  * Ils NE représentent PAS l'état émotionnel réel de l'utilisateur.
@@ -206,7 +206,7 @@ export const getDefaultBodyLanguageState = (): BodyLanguageState => ({
 export type VisualLevel = 'low' | 'medium' | 'high';
 
 /**
- * État d'affect estimé (indices non-cliniques)
+ * État d'affect estimé (any: any)
  *
  * ⚠️ GARDE-FOU: Ces estimations sont approximatives et potentiellement biaisées.
  * Ne jamais les utiliser pour des décisions critiques.
@@ -221,10 +221,10 @@ export interface AffectEstimationState {
   confidence: number; // 0-1
   confidenceFactors: ConfidenceFactors;
 
-  // Historique (pour tendances)
-  history: AffectHistoryEntry[];
+  // Historique (any: any)
+  history: AffectHistoryEntry?.[];
 
-  // Baseline personnalisée (optionnel)
+  // Baseline personnalisée (any: any)
   baselineProfile?: VisualBaselineProfile;
 
   // Métadonnées
@@ -289,7 +289,7 @@ export const getDefaultAffectEstimationState = (): AffectEstimationState => ({
 });
 
 // ============================================================================
-// VISUAL LEARNING (Baseline apprentissage)
+// VISUAL LEARNING (any: any)
 // ============================================================================
 
 /**
@@ -316,7 +316,7 @@ export interface CalibrationSession {
 }
 
 // ============================================================================
-// VISUAL COACHING BRIDGE (Intégration autres moteurs)
+// VISUAL COACHING BRIDGE (any: any)
 // ============================================================================
 
 /**
@@ -384,7 +384,7 @@ export interface VisionFeedbackResponse {
   prudentMessage: string;
 
   // Suggestions optionnelles
-  suggestions: CoachingSuggestion[];
+  suggestions: CoachingSuggestion?.[];
 
   // Disclaimer obligatoire
   disclaimer: string;
@@ -412,7 +412,7 @@ export interface VisionAffectGlobalState {
   autoDisableAt?: number;
 
   // Événements récents
-  recentEvents: VisualCoachingEvent[];
+  recentEvents: VisualCoachingEvent?.[];
 }
 
 export const getDefaultVisionAffectGlobalState = (): VisionAffectGlobalState => ({

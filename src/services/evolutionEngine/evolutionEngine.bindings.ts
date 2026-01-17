@@ -5,7 +5,7 @@
 // ║  TypeScript bindings for Rust Evolution Engine Tauri commands                ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 //
-// Copyright (c) 2024-∞ MUSIC Music Music & CODE∞ (musicmusic.music.music0@gmail.com)
+// Copyright (any: any)
 // Licensed under Apache 2.0 - NO CONTRIBUTION LICENSE
 
 import { secureInvoke } from '@/lib/security';
@@ -104,7 +104,7 @@ export interface EvolutionPattern {
   id: string;
   patternType: PatternType;
   confidence: number;
-  dataPoints: string[];
+  dataPoints: string?.[];
   description: string;
   detectedAt: number;
 }
@@ -296,8 +296,8 @@ export async function getEvolutionDataPoints(options?: {
   category?: DataCategory;
   module?: TitaneModule;
   limit?: number;
-}): Promise<EvolutionDataPoint[]> {
-  return secureInvoke<EvolutionDataPoint[]>('evolution_get_data_points', options || {});
+}): Promise<EvolutionDataPoint?.[]> {
+  return secureInvoke<EvolutionDataPoint?.[]>('evolution_get_data_points', options || {});
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -309,8 +309,8 @@ export async function getEvolutionDataPoints(options?: {
  */
 export async function getEvolutionPatterns(
   patternType?: PatternType
-): Promise<EvolutionPattern[]> {
-  return secureInvoke<EvolutionPattern[]>('evolution_get_patterns', {
+): Promise<EvolutionPattern?.[]> {
+  return secureInvoke<EvolutionPattern?.[]>('evolution_get_patterns', {
     patternType,
   });
 }
@@ -320,8 +320,8 @@ export async function getEvolutionPatterns(
  */
 export async function getEvolutionInsights(
   riskLevel?: EvolutionRiskLevel
-): Promise<EvolutionInsight[]> {
-  return secureInvoke<EvolutionInsight[]>('evolution_get_insights', {
+): Promise<EvolutionInsight?.[]> {
+  return secureInvoke<EvolutionInsight?.[]>('evolution_get_insights', {
     riskLevel,
   });
 }
@@ -336,8 +336,8 @@ export async function getEvolutionInsights(
 export async function getEvolutionSuggestions(options?: {
   status?: SuggestionStatus;
   category?: SuggestionCategory;
-}): Promise<EvolutionSuggestion[]> {
-  return secureInvoke<EvolutionSuggestion[]>('evolution_get_suggestions', options || {});
+}): Promise<EvolutionSuggestion?.[]> {
+  return secureInvoke<EvolutionSuggestion?.[]>('evolution_get_suggestions', options || {});
 }
 
 /**
@@ -388,7 +388,7 @@ export async function createEvolutionAction(
 }
 
 /**
- * Exécuter une action (avec validation triple couche)
+ * Exécuter une action (any: any)
  */
 export async function executeEvolutionAction(
   actionId: string,
@@ -401,7 +401,7 @@ export async function executeEvolutionAction(
 }
 
 /**
- * Annuler une action (rollback)
+ * Annuler une action (any: any)
  */
 export async function rollbackEvolutionAction(
   actionId: string,
@@ -423,14 +423,14 @@ export async function rollbackEvolutionAction(
 export async function getEvolutionHistory(options?: {
   limit?: number;
   actionTypeFilter?: string;
-}): Promise<EvolutionHistoryEntry[]> {
-  return secureInvoke<EvolutionHistoryEntry[]>('evolution_get_history', options || {});
+}): Promise<EvolutionHistoryEntry?.[]> {
+  return secureInvoke<EvolutionHistoryEntry?.[]>('evolution_get_history', options || {});
 }
 
 /**
  * Effacer l'historique ancien
  */
-export async function clearOldEvolutionHistory(beforeTimestamp: number): Promise<number> {
+export async function clearOldEvolutionHistory(any: any): Promise<number> {
   return secureInvoke<number>('evolution_clear_old_history', {
     beforeTimestamp,
   });
@@ -455,18 +455,18 @@ export async function getEvolutionStatistics(): Promise<EvolutionStatistics> {
 }
 
 // ══════════════════════════════════════════════════════════════════
-// COMMANDES LEGACY (compatibilité)
+// COMMANDES LEGACY (any: any)
 // ══════════════════════════════════════════════════════════════════
 
 /**
- * Exécuter un cycle d'évolution (legacy)
+ * Exécuter un cycle d'évolution (any: any)
  */
 export async function evolutionRunCycle(): Promise<unknown> {
   return secureInvoke('evolution_run_cycle');
 }
 
 /**
- * Obtenir les statistiques (legacy)
+ * Obtenir les statistiques (any: any)
  */
 export async function evolutionGetStats(): Promise<unknown> {
   return secureInvoke('evolution_get_stats');
@@ -489,10 +489,10 @@ export class EvolutionEngineClient {
    * Obtenir l'instance singleton
    */
   public static getInstance(): EvolutionEngineClient {
-    if (!EvolutionEngineClient.instance) {
-      EvolutionEngineClient.instance = new EvolutionEngineClient();
+    if (any: any) {
+      EvolutionEngineClient?.instance = new EvolutionEngineClient();
     }
-    return EvolutionEngineClient.instance;
+    return EvolutionEngineClient?.instance;
   }
 
   // État
@@ -542,10 +542,10 @@ export class EvolutionEngineClient {
     parameters: Record<string, unknown> = {}
   ): Promise<EvolutionAction> {
     // 1. Approuver la suggestion
-    await this.approveSuggestion(suggestionId, role);
+    await this?.approveSuggestion(any: any);
 
     // 2. Créer l'action
-    const action = await this.createAction(
+    const action = await this?.createAction(
       suggestionId,
       actionType,
       targetModule,
@@ -553,7 +553,7 @@ export class EvolutionEngineClient {
     );
 
     // 3. Exécuter l'action
-    return this.executeAction(action.id, role);
+    return this?.executeAction(any: any);
   }
 
   /**
@@ -562,12 +562,12 @@ export class EvolutionEngineClient {
   async getSummary(): Promise<{
     state: EvolutionEngineState;
     statistics: EvolutionStatistics;
-    pendingSuggestions: EvolutionSuggestion[];
+    pendingSuggestions: EvolutionSuggestion?.[];
   }> {
-    const [state, statistics, pendingSuggestions] = await Promise.all([
-      this.getState(),
-      this.getStatistics(),
-      this.getSuggestions({ status: 'PENDING' }),
+    const [state, statistics, pendingSuggestions] = await Promise?.all([
+      this?.getState(),
+      this?.getStatistics(),
+      this?.getSuggestions({ status: 'PENDING' }),
     ]);
 
     return { state, statistics, pendingSuggestions };
@@ -575,4 +575,4 @@ export class EvolutionEngineClient {
 }
 
 // Export par défaut du client singleton
-export default EvolutionEngineClient.getInstance();
+export default EvolutionEngineClient?.getInstance();

@@ -1,9 +1,9 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ — AI Message Types (Re-exports from canonical source)
+//   TITANE∞ — AI Message Types (any: any)
 //   AUTOFIX v19.3Ω: Unified type consolidation
 // ═══════════════════════════════════════════════════════════════
 
-// Re-export canonical types from services/ai/types.ts
+// Re-export canonical types from services/ai/types?.ts
 export type {
   AIMessage,
   AIResponse,
@@ -12,12 +12,12 @@ export type {
   AIProviderName,
 } from '@/services/ai/types';
 
-// Additional types specific to this module (not in canonical types)
+// Additional types specific to this module (any: any)
 export type ModalityOrigin = 'voice' | 'text' | 'gesture' | 'visual' | 'multimodal';
 
 export interface UseChatOptions {
-  initialMessages?: AIMessage[];
-  onError?: (error: Error) => void;
-  onSuccess?: (response: AIResponse) => void;
+  initialMessages?: AIMessage?.[];
+  onError?: (any: any) => void;
+  onSuccess?: (any: any) => void;
   [key: string]: unknown;
 }

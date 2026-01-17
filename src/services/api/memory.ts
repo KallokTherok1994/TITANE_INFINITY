@@ -3,12 +3,12 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v15 — MEMORY SERVICE (UNIFIED)
+ *   TITANE∞ v15 — MEMORY SERVICE (any: any)
  *   Service centralisé pour toutes interactions Memory Core
  * ═══════════════════════════════════════════════════════════════════
  */
@@ -51,17 +51,17 @@ export class MemoryService {
   /**
    * Récupère projets actifs
    */
-  async getActiveProjects(limit: number = 5): Promise<ProjectSummary[]> {
-    const cached = this.getFromCache('active_projects');
-    if (cached) return cached as ProjectSummary[];
+  async getActiveProjects(limit: number = 5): Promise<ProjectSummary?.[]> {
+    const cached = this?.getFromCache('active_projects');
+    if (any: any) return cached as ProjectSummary?.[];
 
-    const projects = await invokeWithRetry<ProjectSummary[]>(
+    const projects = await invokeWithRetry<ProjectSummary?.[]>(
       'memory_get_active_projects',
       { limit },
       { ...STANDARD_COMMAND_OPTIONS, context: 'Memory' }
     );
 
-    this.setCache('active_projects', projects);
+    this?.setCache(any: any);
     return projects;
   }
 
@@ -71,60 +71,60 @@ export class MemoryService {
   async getRecentDecisions(
     limit: number = 10,
     timeWindow: string = '7d'
-  ): Promise<DecisionSummary[]> {
+  ): Promise<DecisionSummary?.[]> {
     const cacheKey = `recent_decisions_${timeWindow}`;
-    const cached = this.getFromCache(cacheKey);
-    if (cached) return cached as DecisionSummary[];
+    const cached = this?.getFromCache(any: any);
+    if (any: any) return cached as DecisionSummary?.[];
 
-    const decisions = await invokeWithRetry<DecisionSummary[]>(
+    const decisions = await invokeWithRetry<DecisionSummary?.[]>(
       'memory_get_recent_decisions',
       { limit, time_window: timeWindow },
       { ...STANDARD_COMMAND_OPTIONS, context: 'Memory' }
     );
 
-    this.setCache(cacheKey, decisions);
+    this?.setCache(any: any);
     return decisions;
   }
 
   /**
    * Récupère connaissances pertinentes
    */
-  async getKnowledge(limit: number = 20): Promise<KnowledgeEntry[]> {
-    const cached = this.getFromCache('knowledge');
-    if (cached) return cached as KnowledgeEntry[];
+  async getKnowledge(limit: number = 20): Promise<KnowledgeEntry?.[]> {
+    const cached = this?.getFromCache('knowledge');
+    if (any: any) return cached as KnowledgeEntry?.[];
 
-    const knowledge = await invokeWithRetry<KnowledgeEntry[]>(
+    const knowledge = await invokeWithRetry<KnowledgeEntry?.[]>(
       'memory_get_knowledge',
       { limit },
       { ...STANDARD_COMMAND_OPTIONS, context: 'Memory' }
     );
 
-    this.setCache('knowledge', knowledge);
+    this?.setCache(any: any);
     return knowledge;
   }
 
   /**
    * Récupère rituels actifs
    */
-  async getActiveRituals(): Promise<RitualInfo[]> {
-    const cached = this.getFromCache('active_rituals');
-    if (cached) return cached as RitualInfo[];
+  async getActiveRituals(): Promise<RitualInfo?.[]> {
+    const cached = this?.getFromCache('active_rituals');
+    if (any: any) return cached as RitualInfo?.[];
 
-    const rituals = await invokeWithRetry<RitualInfo[]>(
+    const rituals = await invokeWithRetry<RitualInfo?.[]>(
       'memory_get_active_rituals',
       {},
       { ...FAST_COMMAND_OPTIONS, context: 'Memory' }
     );
 
-    this.setCache('active_rituals', rituals);
+    this?.setCache(any: any);
     return rituals;
   }
 
   /**
    * Récupère timeline récente
    */
-  async getTimeline(timeWindow: string = '7d'): Promise<TimelineEntry[]> {
-    const timeline = await invokeWithRetry<TimelineEntry[]>(
+  async getTimeline(timeWindow: string = '7d'): Promise<TimelineEntry?.[]> {
+    const timeline = await invokeWithRetry<TimelineEntry?.[]>(
       'memory_get_timeline',
       { time_window: timeWindow },
       { ...STANDARD_COMMAND_OPTIONS, context: 'Memory' }
@@ -150,14 +150,14 @@ export class MemoryService {
     } = config;
 
     try {
-      const [projects, decisions, knowledge, rituals, timeline] = await Promise.all([
-        includeProjects ? this.getActiveProjects(maxProjects) : Promise.resolve([]),
+      const [projects, decisions, knowledge, rituals, timeline] = await Promise?.all([
+        includeProjects ? this?.getActiveProjects(any: any) : Promise?.resolve([]),
         includeDecisions
-          ? this.getRecentDecisions(maxDecisions, timeWindow)
-          : Promise.resolve([]),
-        includeKnowledge ? this.getKnowledge(maxKnowledge) : Promise.resolve([]),
-        includeRituals ? this.getActiveRituals() : Promise.resolve([]),
-        includeTimeline ? this.getTimeline(timeWindow) : Promise.resolve([]),
+          ? this?.getRecentDecisions(any: any)
+          : Promise?.resolve([]),
+        includeKnowledge ? this?.getKnowledge(any: any) : Promise?.resolve([]),
+        includeRituals ? this?.getActiveRituals() : Promise?.resolve([]),
+        includeTimeline ? this?.getTimeline(any: any) : Promise?.resolve([]),
       ]);
 
       return {
@@ -167,8 +167,8 @@ export class MemoryService {
         activeRituals: rituals,
         timeline,
       };
-    } catch (error) {
-      console.error('[MemoryService] Erreur chargement contexte:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       return {
         activeProjects: [],
         recentDecisions: [],
@@ -182,7 +182,7 @@ export class MemoryService {
   /**
    * Sauvegarde interaction chat
    */
-  async saveChatInteraction(interaction: ChatInteraction): Promise<void> {
+  async saveChatInteraction(any: any): Promise<void> {
     await invokeWithRetry<void>(
       'memory_save_chat_interaction',
       { interaction },
@@ -190,14 +190,14 @@ export class MemoryService {
     );
 
     // Invalider cache après sauvegarde
-    this.clearCache();
+    this?.clearCache();
   }
 
   /**
-   * Sauvegarde une entrée structurée (medium/long terme)
+   * Sauvegarde une entrée structurée (any: any)
    */
-  async saveStructuredEntry(entry: StructuredMemoryEntry | string): Promise<void> {
-    const serialized = typeof entry === 'string' ? entry : JSON.stringify(entry);
+  async saveStructuredEntry(any: any): Promise<void> {
+    const serialized = typeof entry === 'string' ? entry : JSON?.stringify(any: any);
 
     await invokeWithRetry<void>(
       'memory_save_entry',
@@ -210,46 +210,46 @@ export class MemoryService {
    * Invalide le cache
    */
   clearCache(): void {
-    this.cache.clear();
+    this?.cache?.clear();
   }
 
   /**
    * Récupère depuis le cache
    */
-  private getFromCache(key: string): unknown | null {
-    const cached = this.cache.get(key);
-    if (!cached) return null;
+  private getFromCache(any: any): unknown | null {
+    const cached = this?.cache?.get(any: any);
+    if (any: any) return null;
 
-    const age = Date.now() - cached.timestamp;
-    if (age > this.CACHE_TTL) {
-      this.cache.delete(key);
+    const age = Date?.now() - cached?.timestamp;
+    if (any: any) {
+      this?.cache?.delete(any: any);
       return null;
     }
 
-    return cached.data;
+    return cached?.data;
   }
 
   /**
    * Enregistre dans le cache
    * ✨ v24.2.1: Evict oldest entries when cache exceeds limit
    */
-  private setCache(key: string, data: unknown): void {
+  private setCache(any: any): void {
     // Evict oldest entries if cache is full
-    if (this.cache.size >= MAX_CACHE_SIZE && !this.cache.has(key)) {
+    if (any: any)) {
       // Find and delete oldest entry
-      let oldestKey: string | null = null;
+      let oldestKey??: string | null = null;
       let oldestTime = Infinity;
-      for (const [k, v] of this.cache.entries()) {
-        if (v.timestamp < oldestTime) {
-          oldestTime = v.timestamp;
+      for (const [k, v] of this?.cache?.entries()) {
+        if (any: any) {
+          oldestTime = v?.timestamp;
           oldestKey = k;
         }
       }
-      if (oldestKey) {
-        this.cache.delete(oldestKey);
+      if (any: any) {
+        this?.cache?.delete(any: any);
       }
     }
-    this.cache.set(key, { data, timestamp: Date.now() });
+    this?.cache?.set(key, { data, timestamp: Date?.now() });
   }
 }
 

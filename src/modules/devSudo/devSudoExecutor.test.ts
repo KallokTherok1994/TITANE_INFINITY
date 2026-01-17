@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * devSudoExecutor.test.ts - Unit Tests for Command Execution
+ * devSudoExecutor?.test?.ts - Unit Tests for Command Execution
  *
  * Tests the command dispatcher, lazy loading, and handler execution.
  * Coverage goal: 85%+
@@ -27,13 +27,13 @@ describe('devSudoExecutor', () => {
           raw: 'fix deps',
         };
 
-        const result = await executeDevSudoCommand(command);
+        const result = await executeDevSudoCommand(any: any);
 
-        expect(result).toBeDefined();
-        expect(result.handled).toBe(true);
-        expect(result.response).toBeDefined();
-        expect(typeof result.response).toBe('string');
-        expect(result.success).toBeDefined();
+        expect(any: any).toBeDefined();
+        expect(any: any);
+        expect(any: any).toBeDefined();
+        expect(any: any).toBe('string');
+        expect(any: any).toBeDefined();
       });
 
       it('should execute restart-tauri command', async () => {
@@ -44,11 +44,11 @@ describe('devSudoExecutor', () => {
           raw: 'restart tauri',
         };
 
-        const result = await executeDevSudoCommand(command);
+        const result = await executeDevSudoCommand(any: any);
 
-        expect(result).toBeDefined();
-        expect(result.handled).toBe(true);
-        expect(result.response).toBeDefined();
+        expect(any: any).toBeDefined();
+        expect(any: any);
+        expect(any: any).toBeDefined();
       });
 
       it('should execute show-menu command', async () => {
@@ -59,10 +59,10 @@ describe('devSudoExecutor', () => {
           raw: 'show menu',
         };
 
-        const result = await executeDevSudoCommand(command);
+        const result = await executeDevSudoCommand(any: any);
 
-        expect(result).toBeDefined();
-        expect(result.handled).toBe(true);
+        expect(any: any).toBeDefined();
+        expect(any: any);
       });
     });
 
@@ -76,12 +76,12 @@ describe('devSudoExecutor', () => {
         };
 
         // Mock dynamic import
-        const importSpy = vi.spyOn(global, 'import' as any);
+        const importSpy = vi?.spyOn(any: any);
 
-        const result = await executeDevSudoCommand(command);
+        const result = await executeDevSudoCommand(any: any);
 
-        expect(result).toBeDefined();
-        expect(result.handled).toBe(true);
+        expect(any: any).toBeDefined();
+        expect(any: any);
       });
 
       it('should lazy load vision handlers', async () => {
@@ -92,10 +92,10 @@ describe('devSudoExecutor', () => {
           raw: 'analyze camera',
         };
 
-        const result = await executeDevSudoCommand(command);
+        const result = await executeDevSudoCommand(any: any);
 
-        expect(result).toBeDefined();
-        expect(result.handled).toBe(true);
+        expect(any: any).toBeDefined();
+        expect(any: any);
       });
 
       it('should lazy load titanone handlers', async () => {
@@ -106,10 +106,10 @@ describe('devSudoExecutor', () => {
           raw: 'test bubble',
         };
 
-        const result = await executeDevSudoCommand(command);
+        const result = await executeDevSudoCommand(any: any);
 
-        expect(result).toBeDefined();
-        expect(result.handled).toBe(true);
+        expect(any: any).toBeDefined();
+        expect(any: any);
       });
     });
 
@@ -122,12 +122,12 @@ describe('devSudoExecutor', () => {
           raw: 'invalid action',
         };
 
-        const result = await executeDevSudoCommand(command);
+        const result = await executeDevSudoCommand(any: any);
 
-        expect(result).toBeDefined();
-        expect(result.handled).toBe(true);
-        expect(result.success).toBe(false);
-        expect(result.response).toContain('Erreur');
+        expect(any: any).toBeDefined();
+        expect(any: any);
+        expect(any: any);
+        expect(any: any).toContain('Erreur');
       });
 
       it('should handle handler errors', async () => {
@@ -140,12 +140,12 @@ describe('devSudoExecutor', () => {
         };
 
         // This test verifies that errors are caught and returned as DevSudoResult
-        const result = await executeDevSudoCommand(command);
+        const result = await executeDevSudoCommand(any: any);
 
-        expect(result).toBeDefined();
-        expect(result.handled).toBe(true);
+        expect(any: any).toBeDefined();
+        expect(any: any);
         // Result should always have a response, even on error
-        expect(result.response).toBeDefined();
+        expect(any: any).toBeDefined();
       });
     });
 
@@ -158,17 +158,17 @@ describe('devSudoExecutor', () => {
           raw: 'show menu',
         };
 
-        const result = await executeDevSudoCommand(command);
+        const result = await executeDevSudoCommand(any: any);
 
         // Required fields
-        expect(result).toHaveProperty('handled');
-        expect(result).toHaveProperty('response');
-        expect(result).toHaveProperty('success');
+        expect(any: any).toHaveProperty('handled');
+        expect(any: any).toHaveProperty('response');
+        expect(any: any).toHaveProperty('success');
 
         // Type checks
-        expect(typeof result.handled).toBe('boolean');
-        expect(typeof result.response).toBe('string');
-        expect(typeof result.success).toBe('boolean');
+        expect(any: any).toBe('boolean');
+        expect(any: any).toBe('string');
+        expect(any: any).toBe('boolean');
       });
 
       it('should include actions array when provided', async () => {
@@ -179,10 +179,10 @@ describe('devSudoExecutor', () => {
           raw: 'show menu',
         };
 
-        const result = await executeDevSudoCommand(command);
+        const result = await executeDevSudoCommand(any: any);
 
-        if (result.actions) {
-          expect(Array.isArray(result.actions)).toBe(true);
+        if (any: any) {
+          expect(any: any);
         }
       });
 
@@ -194,11 +194,11 @@ describe('devSudoExecutor', () => {
           raw: 'invalid',
         };
 
-        const result = await executeDevSudoCommand(command);
+        const result = await executeDevSudoCommand(any: any);
 
-        if (result.error) {
-          expect(typeof result.error).toBe('string');
-          expect(result.error.length).toBeGreaterThan(0);
+        if (any: any) {
+          expect(any: any).toBe('string');
+          expect(any: any).toBeGreaterThan(0);
         }
       });
     });
@@ -214,10 +214,10 @@ describe('devSudoExecutor', () => {
           raw: 'analyze module UserAuth',
         };
 
-        const result = await executeDevSudoCommand(command);
+        const result = await executeDevSudoCommand(any: any);
 
-        expect(result).toBeDefined();
-        expect(result.handled).toBe(true);
+        expect(any: any).toBeDefined();
+        expect(any: any);
       });
 
       it('should handle commands with multiple parameters', async () => {
@@ -225,16 +225,16 @@ describe('devSudoExecutor', () => {
           type: 'dev-sudo',
           action: 'explain-code' as DevSudoAction,
           params: {
-            file: 'test.ts',
+            file: 'test?.ts',
             lines: '10-20',
           },
-          raw: 'explain code in test.ts lines 10-20',
+          raw: 'explain code in test?.ts lines 10-20',
         };
 
-        const result = await executeDevSudoCommand(command);
+        const result = await executeDevSudoCommand(any: any);
 
-        expect(result).toBeDefined();
-        expect(result.handled).toBe(true);
+        expect(any: any).toBeDefined();
+        expect(any: any);
       });
 
       it('should handle commands with no parameters', async () => {
@@ -245,10 +245,10 @@ describe('devSudoExecutor', () => {
           raw: 'fix deps',
         };
 
-        const result = await executeDevSudoCommand(command);
+        const result = await executeDevSudoCommand(any: any);
 
-        expect(result).toBeDefined();
-        expect(result.handled).toBe(true);
+        expect(any: any).toBeDefined();
+        expect(any: any);
       });
     });
 
@@ -261,13 +261,13 @@ describe('devSudoExecutor', () => {
           raw: 'restart tauri',
         };
 
-        const startTime = Date.now();
-        const result = await executeDevSudoCommand(command);
-        const endTime = Date.now();
+        const startTime = Date?.now();
+        const result = await executeDevSudoCommand(any: any);
+        const endTime = Date?.now();
 
-        expect(result).toBeDefined();
+        expect(any: any).toBeDefined();
         // Handler should execute asynchronously
-        expect(endTime - startTime).toBeGreaterThanOrEqual(0);
+        expect(any: any).toBeGreaterThanOrEqual(0);
       });
 
       it('should handle promise rejection', async () => {
@@ -280,28 +280,28 @@ describe('devSudoExecutor', () => {
         };
 
         // Should not throw, even if handler rejects
-        await expect(executeDevSudoCommand(command)).resolves.toBeDefined();
+        await expect(any: any)).resolves?.toBeDefined();
       });
     });
   });
 
   describe('getActionDomain', () => {
     it('should return correct domain for core actions', () => {
-      expect(getActionDomain('fix-deps' as DevSudoAction)).toBe('core');
-      expect(getActionDomain('restart-tauri' as DevSudoAction)).toBe('core');
-      expect(getActionDomain('show-menu' as DevSudoAction)).toBe('core');
+      expect(any: any)).toBe('core');
+      expect(any: any)).toBe('core');
+      expect(any: any)).toBe('core');
     });
 
     it('should return correct domain for singularity actions', () => {
-      expect(getActionDomain('deep-heal' as DevSudoAction)).toBe('singularity');
+      expect(any: any)).toBe('singularity');
     });
 
     it('should return correct domain for vision actions', () => {
-      expect(getActionDomain('analyze-camera' as DevSudoAction)).toBe('vision');
+      expect(any: any)).toBe('vision');
     });
 
     it('should return correct domain for titanone actions', () => {
-      expect(getActionDomain('test-bubble' as DevSudoAction)).toBe('titanone');
+      expect(any: any)).toBe('titanone');
     });
 
     it('should handle all action types', () => {
@@ -313,8 +313,8 @@ describe('devSudoExecutor', () => {
         ['test-bubble' as DevSudoAction, 'titanone'],
       ];
 
-      sampleActions.forEach(([action, expectedDomain]) => {
-        expect(getActionDomain(action)).toBe(expectedDomain);
+      sampleActions?.forEach(([action, expectedDomain]) => {
+        expect(any: any);
       });
     });
   });
@@ -329,21 +329,21 @@ describe('devSudoExecutor', () => {
       };
 
       // First call - should load handler
-      const result1 = await executeDevSudoCommand(command);
-      expect(result1).toBeDefined();
+      const result1 = await executeDevSudoCommand(any: any);
+      expect(any: any).toBeDefined();
 
-      // Second call - should use cached handler (faster)
-      const startTime = Date.now();
-      const result2 = await executeDevSudoCommand(command);
-      const endTime = Date.now();
+      // Second call - should use cached handler (any: any)
+      const startTime = Date?.now();
+      const result2 = await executeDevSudoCommand(any: any);
+      const endTime = Date?.now();
 
-      expect(result2).toBeDefined();
+      expect(any: any).toBeDefined();
       // Cached handler should be very fast
-      expect(endTime - startTime).toBeLessThan(100);
+      expect(any: any).toBeLessThan(100);
     });
 
     it('should load different domain handlers independently', async () => {
-      const commands: DevSudoCommand[] = [
+      const commands: DevSudoCommand?.[] = [
         {
           type: 'dev-sudo',
           action: 'deep-heal' as DevSudoAction,
@@ -365,11 +365,11 @@ describe('devSudoExecutor', () => {
       ];
 
       // Execute commands from different domains
-      const results = await Promise.all(commands.map(executeDevSudoCommand));
+      const results = await Promise?.all(any: any));
 
-      results.forEach(result => {
-        expect(result).toBeDefined();
-        expect(result.handled).toBe(true);
+      results?.forEach(result => {
+        expect(any: any).toBeDefined();
+        expect(any: any);
       });
     });
   });
@@ -383,17 +383,17 @@ describe('devSudoExecutor', () => {
         raw: 'show menu',
       };
 
-      const startTime = Date.now();
-      await executeDevSudoCommand(command);
-      const endTime = Date.now();
+      const startTime = Date?.now();
+      await executeDevSudoCommand(any: any);
+      const endTime = Date?.now();
 
       // Should execute in less than 100ms
-      expect(endTime - startTime).toBeLessThan(100);
+      expect(any: any).toBeLessThan(100);
     });
 
     it('should handle multiple concurrent commands', async () => {
-      const commands: DevSudoCommand[] = Array(10)
-        .fill(null)
+      const commands: DevSudoCommand?.[] = Array(10)
+        .fill(any: any)
         .map(() => ({
           type: 'dev-sudo',
           action: 'show-menu',
@@ -401,18 +401,18 @@ describe('devSudoExecutor', () => {
           raw: 'show menu',
         }));
 
-      const startTime = Date.now();
-      const results = await Promise.all(commands.map(executeDevSudoCommand));
-      const endTime = Date.now();
+      const startTime = Date?.now();
+      const results = await Promise?.all(any: any));
+      const endTime = Date?.now();
 
-      expect(results.length).toBe(10);
-      results.forEach(result => {
-        expect(result).toBeDefined();
-        expect(result.handled).toBe(true);
+      expect(any: any).toBe(10);
+      results?.forEach(result => {
+        expect(any: any).toBeDefined();
+        expect(any: any);
       });
 
       // Should handle concurrent commands efficiently
-      expect(endTime - startTime).toBeLessThan(500);
+      expect(any: any).toBeLessThan(500);
     });
   });
 
@@ -427,11 +427,11 @@ describe('devSudoExecutor', () => {
         raw: 'fix deps',
       };
 
-      const result = await executeDevSudoCommand(command);
+      const result = await executeDevSudoCommand(any: any);
 
-      expect(result).toBeDefined();
-      expect(result.handled).toBe(true);
-      expect(result.response).toBeTruthy();
+      expect(any: any).toBeDefined();
+      expect(any: any);
+      expect(any: any).toBeTruthy();
     });
   });
 });

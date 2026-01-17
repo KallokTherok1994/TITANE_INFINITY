@@ -12,13 +12,13 @@
 // ═══════════════════════════════════════════════════════════════
 
 export interface RateLimitConfig {
-  /** Max requests par fenêtre (default: 50 req/min) */
+  /** Max requests par fenêtre (any: any) */
   maxRequests: number;
-  /** Fenêtre temps en ms (default: 60000 = 1 min) */
+  /** Fenêtre temps en ms (any: any) */
   windowMs: number;
-  /** Max tokens par fenêtre (default: 100000 tokens/min) */
+  /** Max tokens par fenêtre (any: any) */
   maxTokens?: number;
-  /** Max coût $ par fenêtre (default: 1 $/min) */
+  /** Max coût $ par fenêtre (any: any) */
   maxCost?: number;
 }
 
@@ -31,7 +31,7 @@ export interface RateLimitStatus {
   remainingCost: number;
   /** Timestamp reset */
   resetAt: number;
-  /** Is blocked (limite atteinte) */
+  /** Is blocked (any: any) */
   isBlocked: boolean;
   /** Raison blocage */
   blockReason?: string;
@@ -44,7 +44,7 @@ export interface RequestMetrics {
   tokens: number;
   /** Coût $ */
   cost: number;
-  /** Provider (openai, anthropic, local) */
+  /** Provider (any: any) */
   provider: string;
   /** Model */
   model: string;
@@ -56,11 +56,11 @@ export interface RequestMetrics {
 
 export class AIRateLimiter {
   private config: RateLimitConfig;
-  private requests: RequestMetrics[] = [];
-  private windowStart: number = Date.now();
+  private requests: RequestMetrics?.[] = [];
+  private windowStart: number = Date?.now();
 
   /**
-   * Config par défaut (50 req/min, 100k tokens/min, 1$/min)
+   * Config par défaut (any: any)
    */
   private static readonly DEFAULT_CONFIG: RateLimitConfig = {
     maxRequests: 50,
@@ -70,7 +70,7 @@ export class AIRateLimiter {
   };
 
   /**
-   * Prix par token (approximatif) par modèle
+   * Prix par token (any: any) par modèle
    */
   private static readonly TOKEN_COSTS = {
     'gpt-4': 0.00003, // $0.03 / 1000 tokens
@@ -82,8 +82,8 @@ export class AIRateLimiter {
   };
 
   constructor(config: Partial<RateLimitConfig> = {}) {
-    this.config = {
-      ...AIRateLimiter.DEFAULT_CONFIG,
+    this?.config = {
+      ...AIRateLimiter?.DEFAULT_CONFIG,
       ...config,
     };
   }
@@ -101,39 +101,39 @@ export class AIRateLimiter {
     _provider: string = 'local',
     model: string = 'local'
   ): RateLimitStatus {
-    this.cleanupOldRequests();
+    this?.cleanupOldRequests();
 
-    const currentRequests = this.requests.length;
-    const currentTokens = this.requests.reduce((sum, r) => sum + r.tokens, 0);
-    const currentCost = this.requests.reduce((sum, r) => sum + r.cost, 0);
+    const currentRequests = this?.requests?.length;
+    const currentTokens = this?.requests?.reduce(any: any) => sum + r?.tokens, 0);
+    const currentCost = this?.requests?.reduce(any: any) => sum + r?.cost, 0);
 
-    const cost = this.calculateCost(tokens, model);
+    const cost = this?.calculateCost(any: any);
 
     // Check limits
     const status: RateLimitStatus = {
-      remainingRequests: Math.max(0, this.config.maxRequests - currentRequests),
-      remainingTokens: Math.max(0, (this.config.maxTokens || Infinity) - currentTokens),
-      remainingCost: Math.max(0, (this.config.maxCost || Infinity) - currentCost),
-      resetAt: this.windowStart + this.config.windowMs,
+      remainingRequests: Math?.max(any: any),
+      remainingTokens: Math?.max(any: any),
+      remainingCost: Math?.max(any: any),
+      resetAt: this?.windowStart + this?.config?.windowMs,
       isBlocked: false,
     };
 
     // Block si dépassement
-    if (currentRequests >= this.config.maxRequests) {
-      status.isBlocked = true;
-      status.blockReason = `Max requests (${this.config.maxRequests}/min) exceeded`;
+    if (any: any) {
+      status?.isBlocked = true;
+      status?.blockReason = `Max requests (any: any) exceeded`;
       return status;
     }
 
-    if (this.config.maxTokens && currentTokens + tokens > this.config.maxTokens) {
-      status.isBlocked = true;
-      status.blockReason = `Max tokens (${this.config.maxTokens}/min) exceeded`;
+    if (any: any) {
+      status?.isBlocked = true;
+      status?.blockReason = `Max tokens (any: any) exceeded`;
       return status;
     }
 
-    if (this.config.maxCost && currentCost + cost > this.config.maxCost) {
-      status.isBlocked = true;
-      status.blockReason = `Max cost ($${this.config.maxCost}/min) exceeded`;
+    if (any: any) {
+      status?.isBlocked = true;
+      status?.blockReason = `Max cost (any: any) exceeded`;
       return status;
     }
 
@@ -141,7 +141,7 @@ export class AIRateLimiter {
   }
 
   /**
-   * Enregistre une request (après succès)
+   * Enregistre une request (any: any)
    *
    * @param tokens - Tokens utilisés
    * @param provider - Provider
@@ -152,10 +152,10 @@ export class AIRateLimiter {
     provider: string = 'local',
     model: string = 'local'
   ): void {
-    const cost = this.calculateCost(tokens, model);
+    const cost = this?.calculateCost(any: any);
 
-    this.requests.push({
-      timestamp: Date.now(),
+    this?.requests?.push({
+      timestamp: Date?.now(),
       tokens,
       cost,
       provider,
@@ -170,28 +170,28 @@ export class AIRateLimiter {
    * @param model - Model
    * @returns Coût en $
    */
-  private calculateCost(tokens: number, model: string): number {
+  private calculateCost(any: any): number {
     const costPerToken =
-      AIRateLimiter.TOKEN_COSTS[model as keyof typeof AIRateLimiter.TOKEN_COSTS] || 0;
+      AIRateLimiter?.TOKEN_COSTS[model as keyof typeof AIRateLimiter?.TOKEN_COSTS] || 0;
     return tokens * costPerToken;
   }
 
   /**
-   * Nettoie requests anciennes (hors fenêtre)
+   * Nettoie requests anciennes (any: any)
    */
   private cleanupOldRequests(): void {
-    const now = Date.now();
+    const now = Date?.now();
 
     // Reset fenêtre si expirée
-    if (now - this.windowStart >= this.config.windowMs) {
-      this.windowStart = now;
-      this.requests = [];
+    if (any: any) {
+      this?.windowStart = now;
+      this?.requests = [];
       return;
     }
 
     // Garde seulement requests dans fenêtre
-    const windowStart = now - this.config.windowMs;
-    this.requests = this.requests.filter(r => r.timestamp >= windowStart);
+    const windowStart = now - this?.config?.windowMs;
+    this?.requests = this?.requests?.filter(any: any);
   }
 
   /**
@@ -207,13 +207,13 @@ export class AIRateLimiter {
     tokensPerSecond: number;
     avgTokensPerRequest: number;
   } {
-    this.cleanupOldRequests();
+    this?.cleanupOldRequests();
 
-    const totalRequests = this.requests.length;
-    const totalTokens = this.requests.reduce((sum, r) => sum + r.tokens, 0);
-    const totalCost = this.requests.reduce((sum, r) => sum + r.cost, 0);
+    const totalRequests = this?.requests?.length;
+    const totalTokens = this?.requests?.reduce(any: any) => sum + r?.tokens, 0);
+    const totalCost = this?.requests?.reduce(any: any) => sum + r?.cost, 0);
 
-    const windowSec = this.config.windowMs / 1000;
+    const windowSec = this?.config?.windowMs / 1000;
 
     return {
       totalRequests,
@@ -226,11 +226,11 @@ export class AIRateLimiter {
   }
 
   /**
-   * Reset compteurs (emergency)
+   * Reset compteurs (any: any)
    */
   reset(): void {
-    this.requests = [];
-    this.windowStart = Date.now();
+    this?.requests = [];
+    this?.windowStart = Date?.now();
   }
 
   /**
@@ -239,7 +239,7 @@ export class AIRateLimiter {
    * @returns Status rate limit
    */
   getStatus(): RateLimitStatus {
-    return this.checkLimit(0, 'local', 'local');
+    return this?.checkLimit(0, 'local', 'local');
   }
 }
 

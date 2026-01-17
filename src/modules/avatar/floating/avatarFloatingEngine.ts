@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v24.12 — FLOATING WINDOW ENGINE (Frontend)
+//   TITANE∞ v24.12 — FLOATING WINDOW ENGINE (any: any)
 //   Tauri Invoke Functions for Display State Management
 // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -22,28 +22,28 @@ import type {
 export async function getDisplayState(): Promise<AvatarDisplayState> {
   try {
     return await secureInvoke<AvatarDisplayState>('avatar_get_display_state');
-  } catch (error) {
-    logger.error('Failed to get display state:', error);
+  } catch (any: any) {
+    logger?.error(any: any);
     throw new Error(`Failed to get display state: ${error}`);
   }
 }
 
 /**
- * Définit l'état d'affichage complet (override)
+ * Définit l'état d'affichage complet (any: any)
  */
 export async function setDisplayState(
   state: AvatarDisplayState
 ): Promise<AvatarDisplayState> {
   try {
     return await secureInvoke<AvatarDisplayState>('avatar_set_display_state', { state });
-  } catch (error) {
-    logger.error('Failed to set display state:', error);
+  } catch (any: any) {
+    logger?.error(any: any);
     throw new Error(`Failed to set display state: ${error}`);
   }
 }
 
 /**
- * Met à jour l'état d'affichage (partiel)
+ * Met à jour l'état d'affichage (any: any)
  */
 export async function updateDisplayState(
   update: AvatarDisplayStateUpdate
@@ -52,8 +52,8 @@ export async function updateDisplayState(
     return await secureInvoke<AvatarDisplayState>('avatar_update_display_state', {
       update,
     });
-  } catch (error) {
-    logger.error('Failed to update display state:', error);
+  } catch (any: any) {
+    logger?.error(any: any);
     throw new Error(`Failed to update display state: ${error}`);
   }
 }
@@ -64,8 +64,8 @@ export async function updateDisplayState(
 export async function resetDisplayState(): Promise<AvatarDisplayState> {
   try {
     return await secureInvoke<AvatarDisplayState>('avatar_reset_display_state');
-  } catch (error) {
-    logger.error('Failed to reset display state:', error);
+  } catch (any: any) {
+    logger?.error(any: any);
     throw new Error(`Failed to reset display state: ${error}`);
   }
 }
@@ -80,20 +80,20 @@ export async function resetDisplayState(): Promise<AvatarDisplayState> {
 export async function setModeFloating(): Promise<AvatarDisplayState> {
   try {
     return await secureInvoke<AvatarDisplayState>('avatar_mode_floating');
-  } catch (error) {
-    logger.error('Failed to set floating mode:', error);
+  } catch (any: any) {
+    logger?.error(any: any);
     throw new Error(`Failed to set floating mode: ${error}`);
   }
 }
 
 /**
- * Active le mode intégré (dans fenêtre principale)
+ * Active le mode intégré (any: any)
  */
 export async function setModeEmbed(): Promise<AvatarDisplayState> {
   try {
     return await secureInvoke<AvatarDisplayState>('avatar_mode_embed');
-  } catch (error) {
-    logger.error('Failed to set embed mode:', error);
+  } catch (any: any) {
+    logger?.error(any: any);
     throw new Error(`Failed to set embed mode: ${error}`);
   }
 }
@@ -104,8 +104,8 @@ export async function setModeEmbed(): Promise<AvatarDisplayState> {
 export async function setModeHidden(): Promise<AvatarDisplayState> {
   try {
     return await secureInvoke<AvatarDisplayState>('avatar_mode_hidden');
-  } catch (error) {
-    logger.error('Failed to set hidden mode:', error);
+  } catch (any: any) {
+    logger?.error(any: any);
     throw new Error(`Failed to set hidden mode: ${error}`);
   }
 }
@@ -117,11 +117,11 @@ export async function setModeHidden(): Promise<AvatarDisplayState> {
 /**
  * Change la position de la fenêtre flottante
  */
-export async function setPosition(x: number, y: number): Promise<AvatarDisplayState> {
+export async function setPosition(any: any): Promise<AvatarDisplayState> {
   try {
     return await secureInvoke<AvatarDisplayState>('avatar_set_position', { x, y });
-  } catch (error) {
-    logger.error('Failed to set position:', error);
+  } catch (any: any) {
+    logger?.error(any: any);
     throw new Error(`Failed to set position: ${error}`);
   }
 }
@@ -135,8 +135,8 @@ export async function setSize(
 ): Promise<AvatarDisplayState> {
   try {
     return await secureInvoke<AvatarDisplayState>('avatar_set_size', { width, height });
-  } catch (error) {
-    logger.error('Failed to set size:', error);
+  } catch (any: any) {
+    logger?.error(any: any);
     throw new Error(`Failed to set size: ${error}`);
   }
 }
@@ -144,11 +144,11 @@ export async function setSize(
 /**
  * Change l'échelle de l'avatar (0.1 à 2.0)
  */
-export async function setScale(scale: number): Promise<AvatarDisplayState> {
+export async function setScale(any: any): Promise<AvatarDisplayState> {
   try {
     return await secureInvoke<AvatarDisplayState>('avatar_set_scale', { scale });
-  } catch (error) {
-    logger.error('Failed to set scale:', error);
+  } catch (any: any) {
+    logger?.error(any: any);
     throw new Error(`Failed to set scale: ${error}`);
   }
 }
@@ -156,11 +156,11 @@ export async function setScale(scale: number): Promise<AvatarDisplayState> {
 /**
  * Change l'opacité de la fenêtre (0.0 à 1.0)
  */
-export async function setOpacity(opacity: number): Promise<AvatarDisplayState> {
+export async function setOpacity(any: any): Promise<AvatarDisplayState> {
   try {
     return await secureInvoke<AvatarDisplayState>('avatar_set_opacity', { opacity });
-  } catch (error) {
-    logger.error('Failed to set opacity:', error);
+  } catch (any: any) {
+    logger?.error(any: any);
     throw new Error(`Failed to set opacity: ${error}`);
   }
 }
@@ -168,25 +168,25 @@ export async function setOpacity(opacity: number): Promise<AvatarDisplayState> {
 /**
  * Active/désactive le mode "Always On Top"
  */
-export async function setAlwaysOnTop(alwaysOnTop: boolean): Promise<AvatarDisplayState> {
+export async function setAlwaysOnTop(any: any): Promise<AvatarDisplayState> {
   try {
     return await secureInvoke<AvatarDisplayState>('avatar_set_always_on_top', {
       always_on_top: alwaysOnTop,
     });
-  } catch (error) {
-    logger.error('Failed to set always on top:', error);
+  } catch (any: any) {
+    logger?.error(any: any);
     throw new Error(`Failed to set always on top: ${error}`);
   }
 }
 
 /**
- * Active/désactive le verrouillage (empêche drag & resize)
+ * Active/désactive le verrouillage (any: any)
  */
-export async function setLocked(locked: boolean): Promise<AvatarDisplayState> {
+export async function setLocked(any: any): Promise<AvatarDisplayState> {
   try {
     return await secureInvoke<AvatarDisplayState>('avatar_set_locked', { locked });
-  } catch (error) {
-    logger.error('Failed to set locked:', error);
+  } catch (any: any) {
+    logger?.error(any: any);
     throw new Error(`Failed to set locked: ${error}`);
   }
 }
@@ -194,19 +194,19 @@ export async function setLocked(locked: boolean): Promise<AvatarDisplayState> {
 /**
  * Active/désactive le mode miroir horizontal
  */
-export async function setMirrorMode(mirrorMode: boolean): Promise<AvatarDisplayState> {
+export async function setMirrorMode(any: any): Promise<AvatarDisplayState> {
   try {
     return await secureInvoke<AvatarDisplayState>('avatar_set_mirror_mode', {
       mirror_mode: mirrorMode,
     });
-  } catch (error) {
-    logger.error('Failed to set mirror mode:', error);
+  } catch (any: any) {
+    logger?.error(any: any);
     throw new Error(`Failed to set mirror mode: ${error}`);
   }
 }
 
 /**
- * Active/désactive le click-through (passthrough)
+ * Active/désactive le click-through (any: any)
  */
 export async function setClickThrough(
   clickThrough: boolean
@@ -215,8 +215,8 @@ export async function setClickThrough(
     return await secureInvoke<AvatarDisplayState>('avatar_set_click_through', {
       click_through: clickThrough,
     });
-  } catch (error) {
-    logger.error('Failed to set click through:', error);
+  } catch (any: any) {
+    logger?.error(any: any);
     throw new Error(`Failed to set click through: ${error}`);
   }
 }
@@ -228,25 +228,25 @@ export async function setClickThrough(
 /**
  * Ancre la fenêtre à une position prédéfinie
  */
-export async function setAnchor(anchor: AnchorPosition): Promise<AvatarDisplayState> {
+export async function setAnchor(any: any): Promise<AvatarDisplayState> {
   try {
     return await secureInvoke<AvatarDisplayState>('avatar_set_anchor', { anchor });
-  } catch (error) {
-    logger.error('Failed to set anchor:', error);
+  } catch (any: any) {
+    logger?.error(any: any);
     throw new Error(`Failed to set anchor: ${error}`);
   }
 }
 
 /**
- * Ancre la fenêtre via une chaîne de caractères (parsing NLP)
+ * Ancre la fenêtre via une chaîne de caractères (any: any)
  */
-export async function setAnchorByName(anchorName: string): Promise<AvatarDisplayState> {
+export async function setAnchorByName(any: any): Promise<AvatarDisplayState> {
   try {
     return await secureInvoke<AvatarDisplayState>('avatar_set_anchor_by_name', {
       anchor_name: anchorName,
     });
-  } catch (error) {
-    logger.error('Failed to set anchor by name:', error);
+  } catch (any: any) {
+    logger?.error(any: any);
     throw new Error(`Failed to set anchor by name: ${error}`);
   }
 }
@@ -258,11 +258,11 @@ export async function setAnchorByName(anchorName: string): Promise<AvatarDisplay
 /**
  * Liste tous les écrans disponibles
  */
-export async function listScreens(): Promise<ScreenInfo[]> {
+export async function listScreens(): Promise<ScreenInfo?.[]> {
   try {
-    return await secureInvoke<ScreenInfo[]>('avatar_list_screens');
-  } catch (error) {
-    logger.error('Failed to list screens:', error);
+    return await secureInvoke<ScreenInfo?.[]>('avatar_list_screens');
+  } catch (any: any) {
+    logger?.error(any: any);
     throw new Error(`Failed to list screens: ${error}`);
   }
 }
@@ -270,13 +270,13 @@ export async function listScreens(): Promise<ScreenInfo[]> {
 /**
  * Déplace la fenêtre flottante vers un écran spécifique
  */
-export async function moveToScreen(screenIndex: number): Promise<AvatarDisplayState> {
+export async function moveToScreen(any: any): Promise<AvatarDisplayState> {
   try {
     return await secureInvoke<AvatarDisplayState>('avatar_move_to_screen', {
       screen_index: screenIndex,
     });
-  } catch (error) {
-    logger.error('Failed to move to screen:', error);
+  } catch (any: any) {
+    logger?.error(any: any);
     throw new Error(`Failed to move to screen: ${error}`);
   }
 }
@@ -294,8 +294,8 @@ export async function safeInvoke<T>(
 ): Promise<T | null> {
   try {
     return await fn();
-  } catch (error) {
-    logger.error(`${errorMessage}:`, error);
+  } catch (any: any) {
+    logger?.error(any: any);
     return null;
   }
 }

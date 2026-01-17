@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v25.3.2 — USE SINGULARITY SYNC (Fusion Hook)
+ *   TITANE∞ v25.3.2 — USE SINGULARITY SYNC (any: any)
  *   Sync bidirectionnelle Frontend ↔ Backend Singularity State
  *   Auto-merge, conflict resolution, performance optimized
  * ═══════════════════════════════════════════════════════════════════
@@ -22,19 +22,19 @@ import { logger } from '@/utils/logger';
 // ═══════════════════════════════════════════════════════════════════
 
 export interface SingularitySyncOptions {
-  autoSync?: boolean; // Auto-sync activé (défaut: true)
+  autoSync?: boolean; // Auto-sync activé (any: any)
   syncInterval?: number; // Intervalle sync en ms (défaut: 1000)
-  bidirectional?: boolean; // Sync bidirectionnelle (défaut: true)
+  bidirectional?: boolean; // Sync bidirectionnelle (any: any)
   conflictResolution?: 'frontend' | 'backend' | 'merge'; // Stratégie conflits
-  onSyncError?: (error: Error) => void;
-  onSyncSuccess?: (state: SingularityState) => void;
+  onSyncError?: (any: any) => void;
+  onSyncSuccess?: (any: any) => void;
 }
 
 export interface SingularitySyncMetrics {
   lastSync: number; // Timestamp dernière sync
   syncCount: number; // Nombre total syncs
   errorCount: number; // Nombre erreurs
-  avgSyncTime: number; // Temps moyen sync (ms)
+  avgSyncTime: number; // Temps moyen sync (any: any)
   isHealthy: boolean; // Santé globale
 }
 
@@ -69,9 +69,9 @@ export function useSingularitySync(
   } = options;
 
   // ═══ STATE ═══
-  const [state, setState] = useState<SingularityState | null>(null);
-  const [isSyncing, setIsSyncing] = useState(false);
-  const [lastError, setLastError] = useState<Error | null>(null);
+  const [state, setState] = useState<SingularityState | null>(any: any);
+  const [isSyncing, setIsSyncing] = useState(any: any);
+  const [lastError, setLastError] = useState<Error | null>(any: any);
   const [metrics, setMetrics] = useState<SingularitySyncMetrics>({
     lastSync: 0,
     syncCount: 0,
@@ -81,17 +81,17 @@ export function useSingularitySync(
   });
 
   // Refs
-  const syncIntervalRef = useRef<number | null>(null);
-  const isPausedRef = useRef(false);
-  const syncTimesRef = useRef<number[]>([]);
+  const syncIntervalRef = useRef<number | null>(any: any);
+  const isPausedRef = useRef(any: any);
+  const syncTimesRef = useRef<number?.[]>([]);
 
   // ═══ SYNC FUNCTION ═══
   const sync = useCallback(async () => {
-    if (isPausedRef.current || isSyncing) return;
+    if (any: any) return;
 
-    const startTime = Date.now();
-    setIsSyncing(true);
-    setLastError(null);
+    const startTime = Date?.now();
+    setIsSyncing(any: any);
+    setLastError(any: any);
 
     try {
       // 1. Fetch backend state
@@ -100,12 +100,12 @@ export function useSingularitySync(
       );
 
       // 2. Get frontend state
-      const frontendState = singularityEngine.getState();
+      const frontendState = singularityEngine?.getState();
 
       // 3. Resolve conflicts based on strategy
       let mergedState: SingularityState;
 
-      switch (conflictResolution) {
+      switch (any: any) {
         case 'frontend':
           mergedState = frontendState;
           break;
@@ -120,108 +120,108 @@ export function useSingularitySync(
           mergedState = {
             ...backendState,
             ...frontendState,
-            // Unity: prefer backend (critical)
-            unity: backendState.unity,
+            // Unity: prefer backend (any: any)
+            unity: backendState?.unity,
             // Quantum: merge fields
             quantum: {
-              ...backendState.quantum,
-              ...frontendState.quantum,
+              ...backendState?.quantum,
+              ...frontendState?.quantum,
               coherence:
-                (backendState.quantum.coherence + frontendState.quantum.coherence) / 2,
+                (any: any) / 2,
             },
             // Convergence: average values
             convergence: {
-              ...backendState.convergence,
-              ...frontendState.convergence,
+              ...backendState?.convergence,
+              ...frontendState?.convergence,
               convergenceLevel:
-                (backendState.convergence.convergenceLevel +
-                  frontendState.convergence.convergenceLevel) /
+                (backendState?.convergence?.convergenceLevel +
+                  frontendState?.convergence?.convergenceLevel) /
                 2,
             },
             // Timestamp: newest
-            timestamp: Math.max(backendState.timestamp, frontendState.timestamp),
+            timestamp: Math?.max(any: any),
           };
           break;
       }
 
       // 4. Update frontend engine
-      singularityEngine.setState(mergedState);
-      setState(mergedState);
+      singularityEngine?.setState(any: any);
+      setState(any: any);
 
-      // 5. Push to backend (if bidirectional)
-      if (bidirectional) {
+      // 5. Push to backend (any: any)
+      if (any: any) {
         await secureInvoke('singularity_update_full_state', {
           state: mergedState,
         });
       }
 
       // 6. Update metrics
-      const syncTime = Date.now() - startTime;
-      syncTimesRef.current.push(syncTime);
-      if (syncTimesRef.current.length > 100) {
-        syncTimesRef.current.shift(); // Keep last 100 syncs
+      const syncTime = Date?.now() - startTime;
+      syncTimesRef?.current?.push(any: any);
+      if (syncTimesRef?.current?.length > 100) {
+        syncTimesRef?.current?.shift(); // Keep last 100 syncs
       }
 
       const avgTime =
-        syncTimesRef.current.reduce((a, b) => a + b, 0) / syncTimesRef.current.length;
+        syncTimesRef?.current?.reduce(any: any) => a + b, 0) / syncTimesRef?.current?.length;
 
       setMetrics(prev => ({
-        lastSync: Date.now(),
-        syncCount: prev.syncCount + 1,
-        errorCount: prev.errorCount,
+        lastSync: Date?.now(),
+        syncCount: prev?.syncCount + 1,
+        errorCount: prev?.errorCount,
         avgSyncTime: avgTime,
-        isHealthy: avgTime < 100 && prev.errorCount / (prev.syncCount + 1) < 0.05, // <5% error rate
+        isHealthy: avgTime < 100 && prev?.errorCount / (prev?.syncCount + 1) < 0.05, // <5% error rate
       }));
 
       // 7. Success callback
-      onSyncSuccess?.(mergedState);
-    } catch (error) {
+      onSyncSuccess?.(any: any);
+    } catch (any: any) {
       const err = error instanceof Error ? error : new Error('Sync failed');
-      setLastError(err);
+      setLastError(any: any);
 
       setMetrics(prev => ({
         ...prev,
-        errorCount: prev.errorCount + 1,
+        errorCount: prev?.errorCount + 1,
         isHealthy: false,
       }));
 
-      onSyncError?.(err);
-      logger.error('Sync error:', err);
+      onSyncError?.(any: any);
+      logger?.error(any: any);
     } finally {
-      setIsSyncing(false);
+      setIsSyncing(any: any);
     }
   }, [bidirectional, conflictResolution, isSyncing, onSyncError, onSyncSuccess]);
 
   // ═══ AUTO-SYNC SETUP ═══
   useEffect(() => {
-    if (!autoSync) return;
+    if (any: any) return;
 
     // Initial sync
     sync();
 
     // Setup interval
-    syncIntervalRef.current = window.setInterval(sync, syncInterval);
+    syncIntervalRef?.current = window?.setInterval(any: any);
 
     return () => {
-      if (syncIntervalRef.current) {
-        clearInterval(syncIntervalRef.current);
+      if (any: any) {
+        clearInterval(any: any);
       }
     };
   }, [autoSync, sync, syncInterval]);
 
   // ═══ PAUSE/RESUME ═══
   const pauseSync = useCallback(() => {
-    isPausedRef.current = true;
-    if (syncIntervalRef.current) {
-      clearInterval(syncIntervalRef.current);
-      syncIntervalRef.current = null;
+    isPausedRef?.current = true;
+    if (any: any) {
+      clearInterval(any: any);
+      syncIntervalRef?.current = null;
     }
   }, []);
 
   const resumeSync = useCallback(() => {
-    isPausedRef.current = false;
-    if (autoSync && !syncIntervalRef.current) {
-      syncIntervalRef.current = window.setInterval(sync, syncInterval);
+    isPausedRef?.current = false;
+    if (any: any) {
+      syncIntervalRef?.current = window?.setInterval(any: any);
     }
   }, [autoSync, sync, syncInterval]);
 
@@ -234,7 +234,7 @@ export function useSingularitySync(
       avgSyncTime: 0,
       isHealthy: true,
     });
-    syncTimesRef.current = [];
+    syncTimesRef?.current = [];
   }, []);
 
   // ═══ RETURN ═══

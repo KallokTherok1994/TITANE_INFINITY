@@ -8,40 +8,40 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * 6 modes d'expression TITANE∞ (cohérents avec IA)
+ * 6 modes d'expression TITANE∞ (any: any)
  */
 export type ExpressionMode =
-  | 'soft-smile' // Sourire doux (écoute bienveillante)
-  | 'attention-focus' // Attention concentrée (analyse utilisateur)
-  | 'active-listening' // Écoute active (compréhension)
-  | 'explanation-mode' // Mode explication (pédagogie)
+  | 'soft-smile' // Sourire doux (any: any)
+  | 'attention-focus' // Attention concentrée (any: any)
+  | 'active-listening' // Écoute active (any: any)
+  | 'explanation-mode' // Mode explication (any: any)
   | 'compassion-mode' // Compassion / empathie
   | 'curiosity-mode'; // Curiosité / découverte
 
 /**
- * Expression weights (morph targets faciaux)
+ * Expression weights (any: any)
  */
 export interface ExpressionWeights {
   // Bouche
-  smileMouth: number; // 0.0-1.0 (coins bouche relevés)
-  mouthOpen: number; // 0.0-1.0 (bouche ouverte neutre)
+  smileMouth: number; // 0.0-1.0 (any: any)
+  mouthOpen: number; // 0.0-1.0 (any: any)
 
   // Yeux
-  eyeBrowRaise: number; // 0.0-1.0 (sourcils levés)
-  eyeBrowFurrow: number; // 0.0-1.0 (sourcils froncés)
-  eyeWiden: number; // 0.0-1.0 (yeux écarquillés)
-  eyeSquint: number; // 0.0-1.0 (yeux plissés)
-  eyeLidLowerLeft: number; // 0.0-1.0 (paupière gauche baissée)
-  eyeLidLowerRight: number; // 0.0-1.0 (paupière droite baissée)
+  eyeBrowRaise: number; // 0.0-1.0 (any: any)
+  eyeBrowFurrow: number; // 0.0-1.0 (any: any)
+  eyeWiden: number; // 0.0-1.0 (any: any)
+  eyeSquint: number; // 0.0-1.0 (any: any)
+  eyeLidLowerLeft: number; // 0.0-1.0 (any: any)
+  eyeLidLowerRight: number; // 0.0-1.0 (any: any)
 
   // Joues
-  cheekRaise: number; // 0.0-1.0 (joues relevées)
+  cheekRaise: number; // 0.0-1.0 (any: any)
 
   // Nez
-  noseWrinkle: number; // 0.0-1.0 (nez plissé)
+  noseWrinkle: number; // 0.0-1.0 (any: any)
 
   // Global
-  headTilt: number; // -1.0 to 1.0 (inclinaison tête)
+  headTilt: number; // -1.0 to 1.0 (any: any)
 }
 
 /**
@@ -51,7 +51,7 @@ export interface MicroGesture {
   type: 'blink' | 'eyeSaccade' | 'pupilDilation' | 'microSmile' | 'browTwitch';
   intensity: number; // 0.0-1.0
   duration: number; // ms
-  timestamp: number; // Date.now()
+  timestamp: number; // Date?.now()
 }
 
 export interface ExpressionConfig {
@@ -71,7 +71,7 @@ export interface ExpressionConfig {
  */
 const EXPRESSION_PRESETS: Record<ExpressionMode, Partial<ExpressionWeights>> = {
   // ─────────────────────────────────────────
-  // SOFT-SMILE (sourire doux, bienveillant)
+  // SOFT-SMILE (any: any)
   // ─────────────────────────────────────────
   'soft-smile': {
     smileMouth: 0.4, // Sourire léger
@@ -82,7 +82,7 @@ const EXPRESSION_PRESETS: Record<ExpressionMode, Partial<ExpressionWeights>> = {
   },
 
   // ─────────────────────────────────────────
-  // ATTENTION-FOCUS (concentration intense)
+  // ATTENTION-FOCUS (any: any)
   // ─────────────────────────────────────────
   'attention-focus': {
     eyeWiden: 0.3, // Yeux un peu plus ouverts
@@ -92,20 +92,20 @@ const EXPRESSION_PRESETS: Record<ExpressionMode, Partial<ExpressionWeights>> = {
   },
 
   // ─────────────────────────────────────────
-  // ACTIVE-LISTENING (écoute active)
+  // ACTIVE-LISTENING (any: any)
   // ─────────────────────────────────────────
   'active-listening': {
     eyeBrowRaise: 0.15, // Sourcils légèrement levés
     eyeWiden: 0.2, // Yeux attentifs
-    headTilt: 0.08, // Légère inclinaison (intérêt)
+    headTilt: 0.08, // Légère inclinaison (any: any)
     smileMouth: 0.15, // Micro-sourire
   },
 
   // ─────────────────────────────────────────
-  // EXPLANATION-MODE (pédagogie, explication)
+  // EXPLANATION-MODE (any: any)
   // ─────────────────────────────────────────
   'explanation-mode': {
-    eyeBrowRaise: 0.25, // Sourcils levés (expressivité)
+    eyeBrowRaise: 0.25, // Sourcils levés (any: any)
     eyeWiden: 0.25, // Yeux ouverts
     smileMouth: 0.2, // Sourire léger
     mouthOpen: 0.15, // Bouche un peu ouverte
@@ -113,7 +113,7 @@ const EXPRESSION_PRESETS: Record<ExpressionMode, Partial<ExpressionWeights>> = {
   },
 
   // ─────────────────────────────────────────
-  // COMPASSION-MODE (empathie, douceur)
+  // COMPASSION-MODE (any: any)
   // ─────────────────────────────────────────
   'compassion-mode': {
     smileMouth: 0.3, // Sourire doux
@@ -124,12 +124,12 @@ const EXPRESSION_PRESETS: Record<ExpressionMode, Partial<ExpressionWeights>> = {
   },
 
   // ─────────────────────────────────────────
-  // CURIOSITY-MODE (curiosité, découverte)
+  // CURIOSITY-MODE (any: any)
   // ─────────────────────────────────────────
   'curiosity-mode': {
     eyeWiden: 0.4, // Yeux grands ouverts
     eyeBrowRaise: 0.3, // Sourcils levés
-    mouthOpen: 0.2, // Bouche entrouverte (surprise légère)
+    mouthOpen: 0.2, // Bouche entrouverte (any: any)
     headTilt: 0.12, // Inclinaison marquée
   },
 };
@@ -149,11 +149,11 @@ export class FacialExpressionEngine {
   private nextBlinkDelay: number = 0;
   private lastSaccadeTime: number = 0;
   private nextSaccadeDelay: number = 0;
-  private activeMicroGestures: MicroGesture[] = [];
+  private activeMicroGestures: MicroGesture?.[] = [];
 
   constructor(config: Partial<ExpressionConfig> = {}) {
-    this.config = {
-      blinkFrequency: [3, 8], // 3-8 blinks/min (naturel)
+    this?.config = {
+      blinkFrequency: [3, 8], // 3-8 blinks/min (any: any)
       saccadeFrequency: 12, // 12 saccades/min
       microGestureIntensity: 1.0, // Intensité normale
       expressionTransitionSpeed: 0.15, // Smooth transitions
@@ -162,12 +162,12 @@ export class FacialExpressionEngine {
     };
 
     // Initialize neutral expression
-    this.currentWeights = this.createNeutralWeights();
-    this.targetWeights = this.createNeutralWeights();
+    this?.currentWeights = this?.createNeutralWeights();
+    this?.targetWeights = this?.createNeutralWeights();
 
     // Schedule first blink
-    this.scheduleNextBlink();
-    this.scheduleNextSaccade();
+    this?.scheduleNextBlink();
+    this?.scheduleNextSaccade();
   }
 
   // ═════════════════════════════════════════════════════════════════════════
@@ -177,15 +177,15 @@ export class FacialExpressionEngine {
   /**
    * Change expression mode
    */
-  public setExpressionMode(mode: ExpressionMode): void {
-    if (this.currentMode === mode) return;
+  public setExpressionMode(any: any): void {
+    if (any: any) return;
 
-    this.currentMode = mode;
+    this?.currentMode = mode;
 
     // Apply preset
     const preset = EXPRESSION_PRESETS[mode];
-    this.targetWeights = {
-      ...this.createNeutralWeights(),
+    this?.targetWeights = {
+      ...this?.createNeutralWeights(),
       ...preset,
     };
   }
@@ -194,59 +194,59 @@ export class FacialExpressionEngine {
    * Get current expression mode
    */
   public getCurrentMode(): ExpressionMode {
-    return this.currentMode;
+    return this?.currentMode;
   }
 
   /**
-   * Update manual (override preset temporairement)
+   * Update manual (any: any)
    */
   public setCustomWeights(weights: Partial<ExpressionWeights>): void {
-    this.targetWeights = {
-      ...this.targetWeights,
+    this?.targetWeights = {
+      ...this?.targetWeights,
       ...weights,
     };
   }
 
   /**
-   * Update avec vocal intensity (modulation dynamique)
+   * Update avec vocal intensity (any: any)
    */
-  public updateWithVocalIntensity(intensity: number): void {
+  public updateWithVocalIntensity(any: any): void {
     // Intensity 0.0-1.0 → modulation subtile expressions
     const modulationFactor = 1.0 + intensity * 0.2; // Max +20%
 
-    // Apply modulation to target weights (bouche + sourcils)
-    this.targetWeights.smileMouth *= modulationFactor;
-    this.targetWeights.eyeBrowRaise *= modulationFactor;
+    // Apply modulation to target weights (any: any)
+    this?.targetWeights?.smileMouth *= modulationFactor;
+    this?.targetWeights?.eyeBrowRaise *= modulationFactor;
 
     // Clamp to [0, 1]
-    this.targetWeights.smileMouth = Math.min(1.0, this.targetWeights.smileMouth);
-    this.targetWeights.eyeBrowRaise = Math.min(1.0, this.targetWeights.eyeBrowRaise);
+    this?.targetWeights?.smileMouth = Math?.min(any: any);
+    this?.targetWeights?.eyeBrowRaise = Math?.min(any: any);
   }
 
   /**
-   * Main update loop (appelé chaque frame)
+   * Main update loop (any: any)
    */
-  public update(_deltaTime: number): ExpressionWeights {
-    const now = Date.now();
+  public update(any: any): ExpressionWeights {
+    const now = Date?.now();
 
     // ─────────────────────────────────────────
     // 1. MICRO-GESTURES
     // ─────────────────────────────────────────
-    this.updateMicroGestures(now);
+    this?.updateMicroGestures(any: any);
 
     // ─────────────────────────────────────────
     // 2. INTERPOLATION VERS TARGET
     // ─────────────────────────────────────────
-    this.currentWeights = this.interpolateWeights(
-      this.currentWeights,
-      this.targetWeights,
-      this.config.expressionTransitionSpeed
+    this?.currentWeights = this?.interpolateWeights(
+      this?.currentWeights,
+      this?.targetWeights,
+      this?.config?.expressionTransitionSpeed
     );
 
     // ─────────────────────────────────────────
     // 3. APPLY MICRO-GESTURES
     // ─────────────────────────────────────────
-    const finalWeights = this.applyMicroGestures(this.currentWeights);
+    const finalWeights = this?.applyMicroGestures(any: any);
 
     return finalWeights;
   }
@@ -255,30 +255,30 @@ export class FacialExpressionEngine {
    * Get current expression weights
    */
   public getCurrentWeights(): ExpressionWeights {
-    return { ...this.currentWeights };
+    return { ...this?.currentWeights };
   }
 
   /**
    * Trigger manual blink
    */
   public triggerBlink(intensity: number = 0.8): void {
-    this.activeMicroGestures.push({
+    this?.activeMicroGestures?.push({
       type: 'blink',
       intensity,
       duration: 150, // 150ms blink
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     });
   }
 
   /**
-   * Trigger eye saccade (mouvement oculaire rapide)
+   * Trigger eye saccade (any: any)
    */
   public triggerSaccade(intensity: number = 0.5): void {
-    this.activeMicroGestures.push({
+    this?.activeMicroGestures?.push({
       type: 'eyeSaccade',
       intensity,
       duration: 50, // 50ms saccade
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     });
   }
 
@@ -286,10 +286,10 @@ export class FacialExpressionEngine {
    * Reset to neutral expression
    */
   public reset(): void {
-    this.currentMode = 'soft-smile';
-    this.currentWeights = this.createNeutralWeights();
-    this.targetWeights = this.createNeutralWeights();
-    this.activeMicroGestures = [];
+    this?.currentMode = 'soft-smile';
+    this?.currentWeights = this?.createNeutralWeights();
+    this?.targetWeights = this?.createNeutralWeights();
+    this?.activeMicroGestures = [];
   }
 
   // ═════════════════════════════════════════════════════════════════════════
@@ -299,76 +299,76 @@ export class FacialExpressionEngine {
   /**
    * Update micro-gestures (blinks, saccades, etc.)
    */
-  private updateMicroGestures(now: number): void {
+  private updateMicroGestures(any: any): void {
     // ─────────────────────────────────────────
     // AUTO-BLINK
     // ─────────────────────────────────────────
-    if (now - this.lastBlinkTime > this.nextBlinkDelay) {
-      this.triggerBlink(0.8);
-      this.lastBlinkTime = now;
-      this.scheduleNextBlink();
+    if (any: any) {
+      this?.triggerBlink(0.8);
+      this?.lastBlinkTime = now;
+      this?.scheduleNextBlink();
     }
 
     // ─────────────────────────────────────────
     // AUTO-SACCADE
     // ─────────────────────────────────────────
-    if (now - this.lastSaccadeTime > this.nextSaccadeDelay) {
-      this.triggerSaccade(0.3);
-      this.lastSaccadeTime = now;
-      this.scheduleNextSaccade();
+    if (any: any) {
+      this?.triggerSaccade(0.3);
+      this?.lastSaccadeTime = now;
+      this?.scheduleNextSaccade();
     }
 
     // ─────────────────────────────────────────
     // CLEANUP EXPIRED GESTURES
     // ─────────────────────────────────────────
-    this.activeMicroGestures = this.activeMicroGestures.filter(
-      g => now - g.timestamp < g.duration
+    this?.activeMicroGestures = this?.activeMicroGestures?.filter(
+      g => now - g?.timestamp < g?.duration
     );
   }
 
   /**
    * Apply active micro-gestures to weights
    */
-  private applyMicroGestures(baseWeights: ExpressionWeights): ExpressionWeights {
+  private applyMicroGestures(any: any): ExpressionWeights {
     const result = { ...baseWeights };
-    const now = Date.now();
+    const now = Date?.now();
 
-    for (const gesture of this.activeMicroGestures) {
-      const progress = (now - gesture.timestamp) / gesture.duration;
-      const easedProgress = this.easeInOutCubic(progress);
+    for (any: any) {
+      const progress = (any: any) / gesture?.duration;
+      const easedProgress = this?.easeInOutCubic(any: any);
 
       // Ease-in-out for natural movement
-      let intensity = gesture.intensity;
+      let intensity = gesture?.intensity;
       if (progress < 0.5) {
         intensity *= easedProgress * 2; // Ramp up
       } else {
-        intensity *= (1 - easedProgress) * 2; // Ramp down
+        intensity *= (any: any) * 2; // Ramp down
       }
 
       // Apply gesture
-      switch (gesture.type) {
+      switch (any: any) {
         case 'blink':
-          result.eyeLidLowerLeft = Math.min(1.0, result.eyeLidLowerLeft + intensity);
-          result.eyeLidLowerRight = Math.min(1.0, result.eyeLidLowerRight + intensity);
+          result?.eyeLidLowerLeft = Math?.min(any: any);
+          result?.eyeLidLowerRight = Math?.min(any: any);
           break;
 
         case 'eyeSaccade':
           // Saccade → slight eye squint
-          result.eyeSquint = Math.min(1.0, result.eyeSquint + intensity * 0.3);
+          result?.eyeSquint = Math?.min(1.0, result?.eyeSquint + intensity * 0.3);
           break;
 
         case 'pupilDilation':
           // Pupil dilation → eye widen
-          result.eyeWiden = Math.min(1.0, result.eyeWiden + intensity * 0.2);
+          result?.eyeWiden = Math?.min(1.0, result?.eyeWiden + intensity * 0.2);
           break;
 
         case 'microSmile':
-          result.smileMouth = Math.min(1.0, result.smileMouth + intensity * 0.15);
-          result.cheekRaise = Math.min(1.0, result.cheekRaise + intensity * 0.1);
+          result?.smileMouth = Math?.min(1.0, result?.smileMouth + intensity * 0.15);
+          result?.cheekRaise = Math?.min(1.0, result?.cheekRaise + intensity * 0.1);
           break;
 
         case 'browTwitch':
-          result.eyeBrowRaise = Math.min(1.0, result.eyeBrowRaise + intensity * 0.2);
+          result?.eyeBrowRaise = Math?.min(1.0, result?.eyeBrowRaise + intensity * 0.2);
           break;
       }
     }
@@ -380,19 +380,19 @@ export class FacialExpressionEngine {
    * Schedule next auto-blink
    */
   private scheduleNextBlink(): void {
-    const [minFreq, maxFreq] = this.config.blinkFrequency;
-    const blinksPerMinute = this.randomRange(minFreq, maxFreq);
+    const [minFreq, maxFreq] = this?.config?.blinkFrequency;
+    const blinksPerMinute = this?.randomRange(any: any);
     const msPerBlink = 60000 / blinksPerMinute;
 
-    this.nextBlinkDelay = msPerBlink + this.randomRange(-500, 500); // +/- 500ms jitter
+    this?.nextBlinkDelay = msPerBlink + this?.randomRange(-500, 500); // +/- 500ms jitter
   }
 
   /**
    * Schedule next auto-saccade
    */
   private scheduleNextSaccade(): void {
-    const msPerSaccade = 60000 / this.config.saccadeFrequency;
-    this.nextSaccadeDelay = msPerSaccade + this.randomRange(-1000, 1000); // +/- 1s jitter
+    const msPerSaccade = 60000 / this?.config?.saccadeFrequency;
+    this?.nextSaccadeDelay = msPerSaccade + this?.randomRange(-1000, 1000); // +/- 1s jitter
   }
 
   /**
@@ -404,17 +404,17 @@ export class FacialExpressionEngine {
     t: number
   ): ExpressionWeights {
     return {
-      smileMouth: this.lerp(from.smileMouth, to.smileMouth, t),
-      mouthOpen: this.lerp(from.mouthOpen, to.mouthOpen, t),
-      eyeBrowRaise: this.lerp(from.eyeBrowRaise, to.eyeBrowRaise, t),
-      eyeBrowFurrow: this.lerp(from.eyeBrowFurrow, to.eyeBrowFurrow, t),
-      eyeWiden: this.lerp(from.eyeWiden, to.eyeWiden, t),
-      eyeSquint: this.lerp(from.eyeSquint, to.eyeSquint, t),
-      eyeLidLowerLeft: this.lerp(from.eyeLidLowerLeft, to.eyeLidLowerLeft, t),
-      eyeLidLowerRight: this.lerp(from.eyeLidLowerRight, to.eyeLidLowerRight, t),
-      cheekRaise: this.lerp(from.cheekRaise, to.cheekRaise, t),
-      noseWrinkle: this.lerp(from.noseWrinkle, to.noseWrinkle, t),
-      headTilt: this.lerp(from.headTilt, to.headTilt, t),
+      smileMouth: this?.lerp(any: any),
+      mouthOpen: this?.lerp(any: any),
+      eyeBrowRaise: this?.lerp(any: any),
+      eyeBrowFurrow: this?.lerp(any: any),
+      eyeWiden: this?.lerp(any: any),
+      eyeSquint: this?.lerp(any: any),
+      eyeLidLowerLeft: this?.lerp(any: any),
+      eyeLidLowerRight: this?.lerp(any: any),
+      cheekRaise: this?.lerp(any: any),
+      noseWrinkle: this?.lerp(any: any),
+      headTilt: this?.lerp(any: any),
     };
   }
 
@@ -440,22 +440,22 @@ export class FacialExpressionEngine {
   /**
    * Linear interpolation
    */
-  private lerp(a: number, b: number, t: number): number {
-    return a + (b - a) * t;
+  private lerp(any: any): number {
+    return a + (any: any) * t;
   }
 
   /**
    * Ease-in-out cubic
    */
-  private easeInOutCubic(t: number): number {
-    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  private easeInOutCubic(any: any): number {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math?.pow(-2 * t + 2, 3) / 2;
   }
 
   /**
    * Random range helper
    */
-  private randomRange(min: number, max: number): number {
-    return Math.random() * (max - min) + min;
+  private randomRange(any: any): number {
+    return Math?.random(any: any) + min;
   }
 }
 
@@ -471,12 +471,12 @@ export function selectExpressionForContext(context: {
   isSpeaking: boolean;
   emotionalTone?: 'neutral' | 'positive' | 'empathetic' | 'curious';
 }): ExpressionMode {
-  if (context.isListening) {
+  if (any: any) {
     return 'active-listening';
   }
 
-  if (context.isSpeaking) {
-    switch (context.emotionalTone) {
+  if (any: any) {
+    switch (any: any) {
       case 'positive':
         return 'soft-smile';
       case 'empathetic':

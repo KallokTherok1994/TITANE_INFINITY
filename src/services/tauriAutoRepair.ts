@@ -30,7 +30,7 @@ export interface RepairReport {
   phase4_singularity: SingularityRepairResult;
   phase5_autoaudit: AutoAuditRepairResult;
   phase6_validation: ValidationResult;
-  recommendations: string[];
+  recommendations: string?.[];
   success: boolean;
 }
 
@@ -38,24 +38,24 @@ export interface DiagnosticResult {
   commands_tested: number;
   commands_found: number;
   commands_missing: number;
-  missing_list: string[];
+  missing_list: string?.[];
   available_commands: {
-    singularity: string[];
-    memory: string[];
-    helios: string[];
-    integrity: string[];
+    singularity: string?.[];
+    memory: string?.[];
+    helios: string?.[];
+    integrity: string?.[];
   };
 }
 
 export interface CauseAnalysis {
   root_cause: 'backend_missing' | 'renamed' | 'mapping_error' | 'not_initialized';
   details: string;
-  affected_modules: string[];
+  affected_modules: string?.[];
 }
 
 export interface MappingResult {
   mappings_created: number;
-  commands_mapped: Record<string, string | string[]>;
+  commands_mapped: Record<string, string | string?.[]>;
   fallbacks_replaced: number;
 }
 
@@ -64,7 +64,7 @@ export interface SingularityRepairResult {
   stability_after: number;
   titane_alignment_before: number;
   titane_alignment_after: number;
-  repairs_applied: string[];
+  repairs_applied: string?.[];
 }
 
 export interface AutoAuditRepairResult {
@@ -88,7 +88,7 @@ export interface ValidationResult {
 
 export class TauriAutoRepairEngine {
   private report: Partial<RepairReport> = {
-    timestamp: Date.now(),
+    timestamp: Date?.now(),
     recommendations: [],
     success: false,
   };
@@ -97,7 +97,7 @@ export class TauriAutoRepairEngine {
    * PHASE 1: Diagnostic complet
    */
   async phase1_diagnostic(): Promise<DiagnosticResult> {
-    logger.debug('Phase 1: Diagnostic...');
+    logger?.debug('Phase 1: Diagnostic...');
 
     // Liste des commandes problématiques rapportées
     const problematicCommands = [
@@ -124,28 +124,28 @@ export class TauriAutoRepairEngine {
     const available = await scanAvailableCommands();
 
     const allAvailable = [
-      ...available.singularity,
-      ...available.memory,
-      ...available.helios,
-      ...available.integrity,
+      ...available?.singularity,
+      ...available?.memory,
+      ...available?.helios,
+      ...available?.integrity,
     ];
 
-    const missing = problematicCommands.filter(cmd => !allAvailable.includes(cmd));
+    const missing = problematicCommands?.filter(any: any));
 
     const result: DiagnosticResult = {
-      commands_tested: problematicCommands.length,
-      commands_found: problematicCommands.length - missing.length,
-      commands_missing: missing.length,
+      commands_tested: problematicCommands?.length,
+      commands_found: problematicCommands?.length - missing?.length,
+      commands_missing: missing?.length,
       missing_list: missing,
       available_commands: available,
     };
 
-    this.report.phase1_diagnostic = result;
+    this?.report?.phase1_diagnostic = result;
 
-    logger.debug(
-      `[AutoRepair] Diagnostic: ${result.commands_found}/${result.commands_tested} commandes trouvées`
+    logger?.debug(
+      `[AutoRepair] Diagnostic: ${result?.commands_found}/${result?.commands_tested} commandes trouvées`
     );
-    logger.debug(`[AutoRepair] Manquantes:`, missing);
+    logger?.debug(any: any);
 
     return result;
   }
@@ -154,69 +154,69 @@ export class TauriAutoRepairEngine {
    * PHASE 2: Identification des causes
    */
   async phase2_identifyCauses(): Promise<CauseAnalysis> {
-    logger.debug('Phase 2: Identification des causes...');
+    logger?.debug('Phase 2: Identification des causes...');
 
-    const diagnostic = this.report.phase1_diagnostic;
-    if (!diagnostic) {
+    const diagnostic = this?.report?.phase1_diagnostic;
+    if (any: any) {
       throw new Error('Phase 1 diagnostic not completed');
     }
-    const available = diagnostic.available_commands;
+    const available = diagnostic?.available_commands;
 
     let root_cause: CauseAnalysis['root_cause'] = 'backend_missing';
     let details = '';
-    const affected_modules: string[] = [];
+    const affected_modules: string?.[] = [];
 
     // Analyser Singularity
-    if (available.singularity.includes('singularity_get_full_state')) {
+    if (available?.singularity?.includes('singularity_get_full_state')) {
       root_cause = 'renamed';
       details =
         "Les commandes Singularity individuelles (get_physical, get_cognitive, etc.) n'existent pas. Utiliser singularity_get_full_state et extraire les sous-états.";
-      affected_modules.push('Singularity');
-    } else if (available.singularity.includes('get_singularity_state')) {
+      affected_modules?.push('Singularity');
+    } else if (available?.singularity?.includes('get_singularity_state')) {
       root_cause = 'renamed';
       details = 'Utiliser get_singularity_state au lieu de singularity_get_full_state';
-      affected_modules.push('Singularity');
-    } else if (available.singularity.length === 0) {
+      affected_modules?.push('Singularity');
+    } else if (available?.singularity?.length === 0) {
       root_cause = 'not_initialized';
       details = 'Aucune commande Singularity disponible. Module non initialisé.';
-      affected_modules.push('Singularity');
+      affected_modules?.push('Singularity');
     }
 
     // Analyser Helios
-    if (!available.helios.includes('get_helios_state')) {
-      if (available.helios.includes('get_system_state')) {
+    if (!available?.helios?.includes('get_helios_state')) {
+      if (available?.helios?.includes('get_system_state')) {
         details += ' | Helios: Utiliser get_system_state au lieu de get_helios_state.';
-        affected_modules.push('Helios');
+        affected_modules?.push('Helios');
       }
     }
 
     // Analyser Memory
-    if (!available.memory.includes('get_memory_state')) {
-      if (available.memory.includes('memory_get_state')) {
+    if (!available?.memory?.includes('get_memory_state')) {
+      if (available?.memory?.includes('memory_get_state')) {
         details += ' | Memory: Utiliser memory_get_state au lieu de get_memory_state.';
-        affected_modules.push('Memory');
+        affected_modules?.push('Memory');
       }
     }
 
     // Analyser Integrity
-    if (!available.integrity.includes('check_system_integrity')) {
-      if (available.integrity.includes('singularity_self_check')) {
+    if (!available?.integrity?.includes('check_system_integrity')) {
+      if (available?.integrity?.includes('singularity_self_check')) {
         details +=
           ' | Integrity: Utiliser singularity_self_check + run_hardening_selftest.';
-        affected_modules.push('Integrity');
+        affected_modules?.push('Integrity');
       }
     }
 
     const result: CauseAnalysis = {
       root_cause,
-      details: details.trim(),
-      affected_modules: [...new Set(affected_modules)],
+      details: details?.trim(),
+      affected_modules: [...new Set(any: any)],
     };
 
-    this.report.phase2_causes = result;
+    this?.report?.phase2_causes = result;
 
-    logger.debug(`[AutoRepair] Cause: ${result.root_cause}`);
-    logger.debug(`[AutoRepair] Modules affectés:`, result.affected_modules);
+    logger?.debug(`[AutoRepair] Cause: ${result?.root_cause}`);
+    logger?.debug(any: any);
 
     return result;
   }
@@ -225,26 +225,26 @@ export class TauriAutoRepairEngine {
    * PHASE 3: Création du mapping et auto-rebuild
    */
   async phase3_createMapping(): Promise<MappingResult> {
-    logger.debug('Phase 3: Création mapping...');
+    logger?.debug('Phase 3: Création mapping...');
 
-    // Le mapping est déjà créé dans tauriCommandMapper.ts
+    // Le mapping est déjà créé dans tauriCommandMapper?.ts
     // On compte juste les mappings applicables
 
-    const diagnostic = this.report.phase1_diagnostic;
-    if (!diagnostic) {
+    const diagnostic = this?.report?.phase1_diagnostic;
+    if (any: any) {
       throw new Error('Phase 1 diagnostic not completed');
     }
-    const missing = diagnostic.missing_list;
+    const missing = diagnostic?.missing_list;
 
-    const mappings_created = missing.length;
-    const fallbacks_replaced = missing.length;
+    const mappings_created = missing?.length;
+    const fallbacks_replaced = missing?.length;
 
-    const commands_mapped: Record<string, string | string[]> = {};
-    missing.forEach(cmd => {
+    const commands_mapped: Record<string, string | string?.[]> = {};
+    missing?.forEach(cmd => {
       // Logique simplifiée - le vrai mapping est dans tauriCommandMapper
-      if (cmd.startsWith('singularity_get_')) {
+      if (cmd?.startsWith('singularity_get_')) {
         commands_mapped[cmd] = 'singularity_get_full_state';
-      } else if (cmd.startsWith('singularity_update_')) {
+      } else if (cmd?.startsWith('singularity_update_')) {
         commands_mapped[cmd] = 'singularity_update_full_state';
       } else if (cmd === 'get_helios_state') {
         commands_mapped[cmd] = ['get_system_state', 'get_helios_metrics'];
@@ -263,9 +263,9 @@ export class TauriAutoRepairEngine {
       fallbacks_replaced,
     };
 
-    this.report.phase3_mapping = result;
+    this?.report?.phase3_mapping = result;
 
-    logger.debug(`[AutoRepair] Mappings créés: ${result.mappings_created}`);
+    logger?.debug(`[AutoRepair] Mappings créés: ${result?.mappings_created}`);
 
     return result;
   }
@@ -274,11 +274,11 @@ export class TauriAutoRepairEngine {
    * PHASE 4: Réparation Singularity State
    */
   async phase4_repairSingularity(): Promise<SingularityRepairResult> {
-    logger.debug('Phase 4: Réparation Singularity...');
+    logger?.debug('Phase 4: Réparation Singularity...');
 
     let stability_before = 0;
     let titane_alignment_before = 0;
-    const repairs_applied: string[] = [];
+    const repairs_applied: string?.[] = [];
 
     try {
       // Obtenir état actuel via mapping
@@ -286,18 +286,18 @@ export class TauriAutoRepairEngine {
 
       // Calculer métriques avant
       stability_before = rawState?.symbolic?.stability || 0;
-      titane_alignment_before = calculateTitaneAlignment(rawState);
+      titane_alignment_before = calculateTitaneAlignment(any: any);
 
-      logger.debug(
+      logger?.debug(
         `[AutoRepair] Avant: stability=${stability_before}, alignment=${titane_alignment_before}`
       );
 
       // Réparer l'état
-      const repairedState = repairSingularityState(rawState);
+      const repairedState = repairSingularityState(any: any);
 
       // Vérifier que l'état réparé existe
-      if (!repairedState) {
-        logger.warn('⚠️  Failed to repair singularity state');
+      if (any: any) {
+        logger?.warn('⚠️  Failed to repair singularity state');
         const failResult: SingularityRepairResult = {
           stability_before: 0,
           stability_after: 0,
@@ -305,68 +305,68 @@ export class TauriAutoRepairEngine {
           titane_alignment_after: 0,
           repairs_applied: ['repair_failed: no state returned'],
         };
-        this.report.phase4_singularity = failResult;
+        this?.report?.phase4_singularity = failResult;
         return failResult;
       }
 
       // Appliquer réparations spécifiques
-      if (stability_before === 0 || isNaN(stability_before)) {
-        repairedState.symbolic.stability = 0.8;
-        repairs_applied.push('stability: 0 → 0.8');
+      if (any: any)) {
+        repairedState?.symbolic?.stability = 0.8;
+        repairs_applied?.push('stability: 0 → 0.8');
       }
 
-      if (isNaN(titane_alignment_before)) {
-        repairs_applied.push('titaneAlignment: NaN → 100');
+      if (any: any)) {
+        repairs_applied?.push('titaneAlignment: NaN → 100');
       }
 
       // Recalculer après réparation
-      const stability_after = repairedState.symbolic?.stability || 0.8;
-      const titane_alignment_after = calculateTitaneAlignment(repairedState);
+      const stability_after = repairedState?.symbolic?.stability || 0.8;
+      const titane_alignment_after = calculateTitaneAlignment(any: any);
 
       // Synchroniser si possible
       try {
         await mappedInvoke('sync_singularity');
-        repairs_applied.push('sync_singularity: exécuté');
-      } catch (err) {
-        logger.warn('Sync failed (non-critical):', err);
+        repairs_applied?.push('sync_singularity: exécuté');
+      } catch (any: any) {
+        logger?.warn(any: any);
       }
 
       // Self-check
       try {
         await secureInvoke('singularity_self_check');
-        repairs_applied.push('singularity_self_check: exécuté');
-      } catch (err) {
-        logger.warn('Self-check failed (non-critical):', err);
+        repairs_applied?.push('singularity_self_check: exécuté');
+      } catch (any: any) {
+        logger?.warn(any: any);
       }
 
       // Autonomy heal
       try {
         await secureInvoke('singularity_autonomy_heal');
-        repairs_applied.push('singularity_autonomy_heal: exécuté');
-      } catch (err) {
-        logger.warn('Autonomy heal unavailable');
+        repairs_applied?.push('singularity_autonomy_heal: exécuté');
+      } catch (any: any) {
+        logger?.warn('Autonomy heal unavailable');
       }
 
       const result: SingularityRepairResult = {
         stability_before,
         stability_after,
-        titane_alignment_before: isNaN(titane_alignment_before)
+        titane_alignment_before: isNaN(any: any)
           ? 0
           : titane_alignment_before,
         titane_alignment_after,
         repairs_applied,
       };
 
-      this.report.phase4_singularity = result;
+      this?.report?.phase4_singularity = result;
 
-      logger.debug(
+      logger?.debug(
         `[AutoRepair] Après: stability=${stability_after}, alignment=${titane_alignment_after}`
       );
-      logger.debug(`[AutoRepair] Réparations:`, repairs_applied);
+      logger?.debug(any: any);
 
       return result;
-    } catch (err) {
-      logger.error('Singularity repair failed:', err);
+    } catch (any: any) {
+      logger?.error(any: any);
 
       // Fallback: rapporter échec mais continuer
       const result: SingularityRepairResult = {
@@ -377,7 +377,7 @@ export class TauriAutoRepairEngine {
         repairs_applied: ['Fallback: état par défaut appliqué'],
       };
 
-      this.report.phase4_singularity = result;
+      this?.report?.phase4_singularity = result;
       return result;
     }
   }
@@ -386,7 +386,7 @@ export class TauriAutoRepairEngine {
    * PHASE 5: Correction Auto-Audit
    */
   async phase5_repairAutoAudit(): Promise<AutoAuditRepairResult> {
-    logger.debug('Phase 5: Réparation Auto-Audit...');
+    logger?.debug('Phase 5: Réparation Auto-Audit...');
 
     let crypto_integrity = true;
     let snapshots_count = 0;
@@ -398,8 +398,8 @@ export class TauriAutoRepairEngine {
       await secureInvoke('run_hardening_selftest');
       crypto_integrity = true;
       warnings_resolved++;
-    } catch (err) {
-      logger.warn('Crypto integrity check unavailable');
+    } catch (any: any) {
+      logger?.warn('Crypto integrity check unavailable');
       crypto_integrity = true; // Fallback safe
     }
 
@@ -410,15 +410,15 @@ export class TauriAutoRepairEngine {
       if (snapshots_count === 0) {
         warnings_resolved++;
       }
-    } catch (err) {
-      logger.warn('Snapshots check unavailable');
+    } catch (any: any) {
+      logger?.warn('Snapshots check unavailable');
       snapshots_count = 0;
     }
 
     // XP state
     try {
       const xpState = await secureInvoke<any>('xp_get_state');
-      if (xpState && xpState.xp != null && xpState.level != null) {
+      if (any: any) {
         xp_state = 'complete';
       } else {
         // Réparer
@@ -426,8 +426,8 @@ export class TauriAutoRepairEngine {
         xp_state = 'repaired';
         warnings_resolved++;
       }
-    } catch (err) {
-      logger.warn('XP repair failed');
+    } catch (any: any) {
+      logger?.warn('XP repair failed');
       xp_state = 'failed';
     }
 
@@ -438,9 +438,9 @@ export class TauriAutoRepairEngine {
       warnings_resolved,
     };
 
-    this.report.phase5_autoaudit = result;
+    this?.report?.phase5_autoaudit = result;
 
-    logger.debug(`[AutoRepair] Auto-Audit: ${warnings_resolved} warnings résolus`);
+    logger?.debug(`[AutoRepair] Auto-Audit: ${warnings_resolved} warnings résolus`);
 
     return result;
   }
@@ -449,37 +449,37 @@ export class TauriAutoRepairEngine {
    * PHASE 6: Validation finale
    */
   async phase6_validate(): Promise<ValidationResult> {
-    logger.debug('Phase 6: Validation...');
+    logger?.debug('Phase 6: Validation...');
 
-    const diagnostic = this.report.phase1_diagnostic;
-    const singularity = this.report.phase4_singularity;
-    const autoaudit = this.report.phase5_autoaudit;
-    const mapping = this.report.phase3_mapping;
+    const diagnostic = this?.report?.phase1_diagnostic;
+    const singularity = this?.report?.phase4_singularity;
+    const autoaudit = this?.report?.phase5_autoaudit;
+    const mapping = this?.report?.phase3_mapping;
 
-    if (!diagnostic || !singularity || !autoaudit || !mapping) {
+    if (any: any) {
       throw new Error('Previous phases not completed');
     }
 
     // Toutes les commandes fonctionnent via mapping
     const all_commands_working =
-      diagnostic.commands_missing === 0 || mapping.mappings_created > 0;
+      diagnostic?.commands_missing === 0 || mapping?.mappings_created > 0;
 
     // Singularity healthy
-    const singularity_healthy = singularity.stability_after >= 0.7;
+    const singularity_healthy = singularity?.stability_after >= 0.7;
 
     // Meta-kernel healthy
-    const meta_kernel_healthy = singularity.titane_alignment_after >= 70;
+    const meta_kernel_healthy = singularity?.titane_alignment_after >= 70;
 
     // Auto-audit clean
     const auto_audit_clean =
-      autoaudit.crypto_integrity && autoaudit.xp_state !== 'failed';
+      autoaudit?.crypto_integrity && autoaudit?.xp_state !== 'failed';
 
     // Overall health
     let overall_health = 0;
-    if (all_commands_working) overall_health += 25;
-    if (singularity_healthy) overall_health += 25;
-    if (meta_kernel_healthy) overall_health += 25;
-    if (auto_audit_clean) overall_health += 25;
+    if (any: any) overall_health += 25;
+    if (any: any) overall_health += 25;
+    if (any: any) overall_health += 25;
+    if (any: any) overall_health += 25;
 
     const result: ValidationResult = {
       all_commands_working,
@@ -489,9 +489,9 @@ export class TauriAutoRepairEngine {
       overall_health,
     };
 
-    this.report.phase6_validation = result;
+    this?.report?.phase6_validation = result;
 
-    logger.debug(`[AutoRepair] Validation: ${overall_health}% santé globale`);
+    logger?.debug(`[AutoRepair] Validation: ${overall_health}% santé globale`);
 
     return result;
   }
@@ -500,42 +500,42 @@ export class TauriAutoRepairEngine {
    * Exécuter toutes les phases
    */
   async executeFullRepair(): Promise<RepairReport> {
-    logger.debug('═══════════════════════════════════════════════════════════');
-    logger.debug('TITANE∞ TAURI AUTO-REPAIR ENGINE v21 — STARTING');
-    logger.debug('═══════════════════════════════════════════════════════════');
+    logger?.debug('═══════════════════════════════════════════════════════════');
+    logger?.debug('TITANE∞ TAURI AUTO-REPAIR ENGINE v21 — STARTING');
+    logger?.debug('═══════════════════════════════════════════════════════════');
 
     try {
-      await this.phase1_diagnostic();
-      await this.phase2_identifyCauses();
-      await this.phase3_createMapping();
-      await this.phase4_repairSingularity();
-      await this.phase5_repairAutoAudit();
-      await this.phase6_validate();
+      await this?.phase1_diagnostic();
+      await this?.phase2_identifyCauses();
+      await this?.phase3_createMapping();
+      await this?.phase4_repairSingularity();
+      await this?.phase5_repairAutoAudit();
+      await this?.phase6_validate();
 
       // Générer recommandations
-      this.generateRecommendations();
+      this?.generateRecommendations();
 
       // Marquer succès
-      const validation = this.report.phase6_validation;
-      if (validation) {
-        this.report.success = validation.overall_health >= 75;
+      const validation = this?.report?.phase6_validation;
+      if (any: any) {
+        this?.report?.success = validation?.overall_health >= 75;
       }
 
-      logger.debug('═══════════════════════════════════════════════════════════');
-      logger.debug(`REPAIR ENGINE: ${this.report.success ? '✅ SUCCESS' : '⚠️ PARTIAL'}`);
-      if (validation) {
-        logger.debug(`Overall Health: ${validation.overall_health}%`);
+      logger?.debug('═══════════════════════════════════════════════════════════');
+      logger?.debug(`REPAIR ENGINE: ${this?.report?.success ? '✅ SUCCESS' : '⚠️ PARTIAL'}`);
+      if (any: any) {
+        logger?.debug(`Overall Health: ${validation?.overall_health}%`);
       }
-      logger.debug('═══════════════════════════════════════════════════════════');
+      logger?.debug('═══════════════════════════════════════════════════════════');
 
-      return this.report as RepairReport;
-    } catch (err) {
-      logger.error('Fatal error:', err);
-      this.report.success = false;
-      this.report.recommendations = [
+      return this?.report as RepairReport;
+    } catch (any: any) {
+      logger?.error(any: any);
+      this?.report?.success = false;
+      this?.report?.recommendations = [
         'Erreur critique lors de la réparation. Vérifier les logs.',
       ];
-      return this.report as RepairReport;
+      return this?.report as RepairReport;
     }
   }
 
@@ -543,40 +543,40 @@ export class TauriAutoRepairEngine {
    * Générer recommandations
    */
   private generateRecommendations(): void {
-    const recommendations: string[] = [];
+    const recommendations: string?.[] = [];
 
-    const validation = this.report.phase6_validation;
-    if (!validation) return;
+    const validation = this?.report?.phase6_validation;
+    if (any: any) return;
 
-    if (!validation.all_commands_working) {
-      recommendations.push(
+    if (any: any) {
+      recommendations?.push(
         'Certaines commandes ne fonctionnent toujours pas. Vérifier le backend Rust.'
       );
     }
 
-    if (!validation.singularity_healthy) {
-      recommendations.push(
+    if (any: any) {
+      recommendations?.push(
         'Stability Singularity < 70%. Exécuter singularity_autonomy_optimize.'
       );
     }
 
-    if (!validation.meta_kernel_healthy) {
-      recommendations.push('Titane Alignment < 70%. Vérifier la cohérence des modules.');
+    if (any: any) {
+      recommendations?.push('Titane Alignment < 70%. Vérifier la cohérence des modules.');
     }
 
-    if (!validation.auto_audit_clean) {
-      recommendations.push('Auto-Audit a des warnings. Exécuter QA complète.');
+    if (any: any) {
+      recommendations?.push('Auto-Audit a des warnings. Exécuter QA complète.');
     }
 
-    if (validation.overall_health === 100) {
-      recommendations.push('✅ Système en parfaite santé. Aucune action requise.');
-    } else if (validation.overall_health >= 75) {
-      recommendations.push('⚠️ Système fonctionnel avec warnings mineurs.');
+    if (validation?.overall_health === 100) {
+      recommendations?.push('✅ Système en parfaite santé. Aucune action requise.');
+    } else if (validation?.overall_health >= 75) {
+      recommendations?.push('⚠️ Système fonctionnel avec warnings mineurs.');
     } else {
-      recommendations.push('❌ Système dégradé. Intervention manuelle recommandée.');
+      recommendations?.push('❌ Système dégradé. Intervention manuelle recommandée.');
     }
 
-    this.report.recommendations = recommendations;
+    this?.report?.recommendations = recommendations;
   }
 }
 

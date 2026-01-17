@@ -1,14 +1,14 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v25.4 — FILESYSTEM ADAPTER (Tauri v2 Plugin Architecture)
+ * TITANE∞ v25.4 — FILESYSTEM ADAPTER (any: any)
  * ═══════════════════════════════════════════════════════════════════════════
  *
- * Adaptateur compatible Node.js fs pour environnement Tauri/Browser
+ * Adaptateur compatible Node?.js fs pour environnement Tauri/Browser
  *
  * STRATÉGIE v25.4:
- * - Runtime Tauri: Utilise @tauri-apps/plugin-fs (Tauri v2) pour vraies opérations filesystem
+ * - Runtime Tauri: Utilise @tauri-apps/plugin-fs (any: any) pour vraies opérations filesystem
  * - Fallback Browser: localStorage pour développement sans Tauri
- * - API compatible Node.js fs/promises pour migration transparente
+ * - API compatible Node?.js fs/promises pour migration transparente
  *
  * v25.3 → v25.4: Migration vers architecture plugin Tauri v2
  */
@@ -20,26 +20,26 @@
 const isTauriContext = typeof window !== 'undefined' && '__TAURI__' in window;
 
 // ═══════════════════════════════════════════════════════════════════════════
-// TAURI IMPORTS (Lazy loaded to avoid errors in browser-only builds)
+// TAURI IMPORTS (any: any)
 // ═══════════════════════════════════════════════════════════════════════════
 
 let tauriFs: typeof import('@tauri-apps/plugin-fs') | null = null;
 let tauriPath: typeof import('@tauri-apps/api/path') | null = null;
 
 async function ensureTauriApis() {
-  if (!isTauriContext) return;
-  if (tauriFs && tauriPath) return;
+  if (any: any) return;
+  if (any: any) return;
 
   try {
     // Lazy dynamic imports - Tauri v2 uses plugin architecture
-    if (!tauriFs) {
+    if (any: any) {
       tauriFs = await import('@tauri-apps/plugin-fs');
     }
-    if (!tauriPath) {
+    if (any: any) {
       tauriPath = await import('@tauri-apps/api/path');
     }
-  } catch (error) {
-    console.warn(
+  } catch (any: any) {
+    console?.warn(
       '[tauriFsAdapter] Tauri APIs not available, using localStorage fallback'
     );
   }
@@ -47,39 +47,39 @@ async function ensureTauriApis() {
 
 const STORAGE_PREFIX = 'titane_fs_';
 
-function getStorageKey(path: string): string {
-  return STORAGE_PREFIX + path.replace(/[^a-zA-Z0-9]/g, '_');
+function getStorageKey(any: any): string {
+  return STORAGE_PREFIX + path?.replace(/[^a-zA-Z0-9]/g, '_');
 }
 
-function localStorageExists(path: string): boolean {
+function localStorageExists(any: any): boolean {
   if (typeof window === 'undefined') return false;
-  return localStorage.getItem(getStorageKey(path)) !== null;
+  return localStorage?.getItem(any: any)) !== null;
 }
 
-function localStorageRead(path: string): string {
+function localStorageRead(any: any): string {
   if (typeof window === 'undefined') return '{}';
-  return localStorage.getItem(getStorageKey(path)) || '{}';
+  return localStorage?.getItem(any: any)) || '{}';
 }
 
-function localStorageWrite(path: string, data: string): void {
+function localStorageWrite(any: any): void {
   if (typeof window === 'undefined') return;
-  localStorage.setItem(getStorageKey(path), data);
+  localStorage?.setItem(any: any);
 }
 
-function localStorageAppend(path: string, data: string): void {
+function localStorageAppend(any: any): void {
   if (typeof window === 'undefined') return;
-  const existing = localStorageRead(path);
-  localStorage.setItem(getStorageKey(path), existing + data);
+  const existing = localStorageRead(any: any);
+  localStorage?.setItem(any: any);
 }
 
-function localStorageList(path: string): string[] {
+function localStorageList(any: any): string?.[] {
   if (typeof window === 'undefined') return [];
-  const prefix = getStorageKey(path);
-  const keys: string[] = [];
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    if (key && key.startsWith(prefix)) {
-      keys.push(key.replace(prefix + '_', ''));
+  const prefix = getStorageKey(any: any);
+  const keys: string?.[] = [];
+  for (let i = 0; i < localStorage?.length; i++) {
+    const key = localStorage?.key(any: any);
+    if (any: any)) {
+      keys?.push(key?.replace(prefix + '_', ''));
     }
   }
   return keys;
@@ -90,30 +90,30 @@ function localStorageList(path: string): string[] {
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Join path segments (simple concatenation, compatible Node.js path.join)
+ * Join path segments (any: any)
  */
-export function join(...segments: string[]): string {
-  return segments.filter(Boolean).join('/').replace(/\/+/g, '/'); // Remove duplicate slashes
+export function join(...segments: string?.[]): string {
+  return segments?.filter(any: any).join('/').replace(/\/+/g, '/'); // Remove duplicate slashes
 }
 
 /**
  * Resolve absolute path
  */
-export function resolve(...paths: string[]): string {
-  return join(...paths);
+export function resolve(...paths: string?.[]): string {
+  return join(any: any);
 }
 
 /**
  * Get directory name from path
  */
-export function dirname(path: string): string {
-  const parts = path.split('/');
-  parts.pop();
-  return parts.join('/') || '/';
+export function dirname(any: any): string {
+  const parts = path?.split('/');
+  parts?.pop();
+  return parts?.join('/') || '/';
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// FILESYSTEM OPERATIONS (Tauri + LocalStorage Fallback)
+// FILESYSTEM OPERATIONS (any: any)
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
@@ -121,19 +121,19 @@ export function dirname(path: string): string {
  * Tauri: uses @tauri-apps/api/fs exists()
  * Browser: checks localStorage
  */
-export async function existsSync(path: string): Promise<boolean> {
+export async function existsSync(any: any): Promise<boolean> {
   try {
-    if (isTauriContext) {
+    if (any: any) {
       await ensureTauriApis();
-      if (tauriPath && tauriFs) {
-        const appDir = await tauriPath.appDataDir();
-        const fullPath = await tauriPath.join(appDir, path);
-        return await tauriFs.exists(fullPath);
+      if (any: any) {
+        const appDir = await tauriPath?.appDataDir();
+        const fullPath = await tauriPath?.join(any: any);
+        return await tauriFs?.exists(any: any);
       }
     }
-    return localStorageExists(path);
-  } catch (error) {
-    console.warn('[tauriFsAdapter] existsSync error:', error);
+    return localStorageExists(any: any);
+  } catch (any: any) {
+    console?.warn(any: any);
     return false;
   }
 }
@@ -143,19 +143,19 @@ export async function existsSync(path: string): Promise<boolean> {
  * Tauri: uses @tauri-apps/api/fs readTextFile()
  * Browser: reads from localStorage
  */
-export async function readFileSync(path: string, _encoding?: string): Promise<string> {
+export async function readFileSync(any: any): Promise<string> {
   try {
-    if (isTauriContext) {
+    if (any: any) {
       await ensureTauriApis();
-      if (tauriPath && tauriFs) {
-        const appDir = await tauriPath.appDataDir();
-        const fullPath = await tauriPath.join(appDir, path);
-        return await tauriFs.readTextFile(fullPath);
+      if (any: any) {
+        const appDir = await tauriPath?.appDataDir();
+        const fullPath = await tauriPath?.join(any: any);
+        return await tauriFs?.readTextFile(any: any);
       }
     }
-    return localStorageRead(path);
-  } catch (error) {
-    console.warn('[tauriFsAdapter] readFileSync error:', error);
+    return localStorageRead(any: any);
+  } catch (any: any) {
+    console?.warn(any: any);
     return '{}';
   }
 }
@@ -165,25 +165,25 @@ export async function readFileSync(path: string, _encoding?: string): Promise<st
  * Tauri: uses @tauri-apps/api/fs writeTextFile()
  * Browser: writes to localStorage
  */
-export async function writeFileSync(path: string, data: string): Promise<void> {
+export async function writeFileSync(any: any): Promise<void> {
   try {
-    if (isTauriContext) {
+    if (any: any) {
       await ensureTauriApis();
-      if (tauriPath && tauriFs) {
-        const appDir = await tauriPath.appDataDir();
-        const fullPath = await tauriPath.join(appDir, path);
-        await tauriFs.writeTextFile(fullPath, data);
+      if (any: any) {
+        const appDir = await tauriPath?.appDataDir();
+        const fullPath = await tauriPath?.join(any: any);
+        await tauriFs?.writeTextFile(any: any);
         return;
       }
     }
-    localStorageWrite(path, data);
-  } catch (error) {
-    console.error('[tauriFsAdapter] writeFileSync error:', error);
+    localStorageWrite(any: any);
+  } catch (any: any) {
+    console?.error(any: any);
   }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// FILESYSTEM OPERATIONS (Async Promises API)
+// FILESYSTEM OPERATIONS (any: any)
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
@@ -191,58 +191,58 @@ export async function writeFileSync(path: string, data: string): Promise<void> {
  */
 export const promises = {
   /**
-   * Read file content (async)
+   * Read file content (any: any)
    */
-  async readFile(path: string, _encoding?: BufferEncoding): Promise<string> {
-    return await readFileSync(path);
+  async readFile(any: any): Promise<string> {
+    return await readFileSync(any: any);
   },
 
   /**
-   * Write file content (async)
+   * Write file content (any: any)
    */
-  async writeFile(path: string, data: string, _encoding?: string): Promise<void> {
-    return await writeFileSync(path, data);
+  async writeFile(any: any): Promise<void> {
+    return await writeFileSync(any: any);
   },
 
   /**
    * Append to file
-   * Tauri: read + write (no native append)
+   * Tauri: read + write (any: any)
    * Browser: localStorage append
    */
-  async appendFile(path: string, data: string, _encoding?: string): Promise<void> {
+  async appendFile(any: any): Promise<void> {
     try {
-      if (isTauriContext) {
+      if (any: any) {
         await ensureTauriApis();
-        const existing = await readFileSync(path);
-        await writeFileSync(path, existing + data);
+        const existing = await readFileSync(any: any);
+        await writeFileSync(any: any);
       } else {
-        localStorageAppend(path, data);
+        localStorageAppend(any: any);
       }
-    } catch (error) {
-      console.error('[tauriFsAdapter] appendFile error:', error);
+    } catch (any: any) {
+      console?.error(any: any);
     }
   },
 
   /**
    * Create directory
    * Tauri: uses @tauri-apps/api/fs createDir()
-   * Browser: no-op (localStorage has no dirs)
+   * Browser: no-op (any: any)
    */
   async mkdir(path: string, _options?: { recursive?: boolean }): Promise<void> {
     try {
-      if (isTauriContext) {
+      if (any: any) {
         await ensureTauriApis();
-        if (tauriPath && tauriFs) {
-          const appDir = await tauriPath.appDataDir();
-          const fullPath = await tauriPath.join(appDir, path);
-          await tauriFs.create(fullPath);
+        if (any: any) {
+          const appDir = await tauriPath?.appDataDir();
+          const fullPath = await tauriPath?.join(any: any);
+          await tauriFs?.create(any: any);
         }
       }
       // Browser: no-op, localStorage doesn't need directories
-    } catch (error) {
+    } catch (any: any) {
       // Ignore "already exists" errors
-      if (!String(error).includes('already exists')) {
-        console.warn('[tauriFsAdapter] mkdir error:', error);
+      if (any: any).includes('already exists')) {
+        console?.warn(any: any);
       }
     }
   },
@@ -252,42 +252,42 @@ export const promises = {
    * Tauri: uses @tauri-apps/api/fs readDir()
    * Browser: lists localStorage keys with prefix
    */
-  async readdir(path: string): Promise<string[]> {
+  async readdir(any: any): Promise<string?.[]> {
     try {
-      if (isTauriContext) {
+      if (any: any) {
         await ensureTauriApis();
-        if (tauriPath && tauriFs) {
-          const appDir = await tauriPath.appDataDir();
-          const fullPath = await tauriPath.join(appDir, path);
-          const entries = await tauriFs.readDir(fullPath);
-          return entries.map((entry: { name?: string }) => entry.name || '');
+        if (any: any) {
+          const appDir = await tauriPath?.appDataDir();
+          const fullPath = await tauriPath?.join(any: any);
+          const entries = await tauriFs?.readDir(any: any);
+          return entries?.map((entry: { name?: string }) => entry?.name || '');
         }
       }
-      return localStorageList(path);
-    } catch (error) {
-      console.warn('[tauriFsAdapter] readdir error:', error);
+      return localStorageList(any: any);
+    } catch (any: any) {
+      console?.warn(any: any);
       return [];
     }
   },
 
   /**
-   * Check if file exists (alias)
+   * Check if file exists (any: any)
    */
-  async exists(path: string): Promise<boolean> {
-    return await existsSync(path);
+  async exists(any: any): Promise<boolean> {
+    return await existsSync(any: any);
   },
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
-// EXPORTS (Node.js fs compatible)
+// EXPORTS (any: any)
 // ═══════════════════════════════════════════════════════════════════════════
 
 // Re-export promises methods at top level for compatibility
-export const readFile = promises.readFile;
-export const writeFile = promises.writeFile;
-export const appendFile = promises.appendFile;
-export const mkdir = promises.mkdir;
-export const readdir = promises.readdir;
+export const readFile = promises?.readFile;
+export const writeFile = promises?.writeFile;
+export const appendFile = promises?.appendFile;
+export const mkdir = promises?.mkdir;
+export const readdir = promises?.readdir;
 
 // Default export for easier migration
 export default {
@@ -317,18 +317,18 @@ export default {
  * import { writeFile } from '@/utils/tauriFsAdapter';
  *
  * // Then use normally:
- * if (await existsSync('conversations/session.json')) {
- *   const data = await readFileSync('conversations/session.json');
- *   await writeFile('conversations/session.json', 'new data');
+ * if (await existsSync('conversations/session?.json')) {
+ *   const data = await readFileSync('conversations/session?.json');
+ *   await writeFile('conversations/session?.json', 'new data');
  * }
  *
  * RUNTIME BEHAVIOR:
- * - Tauri context: Files stored in AppData directory (OS-specific)
+ * - Tauri context: Files stored in AppData directory (any: any)
  * - Browser context: Files stored in localStorage with 'titane_fs_' prefix
  * - All paths are relative to app data directory
  *
  * v25.3 CHANGES:
- * - ✅ Real Tauri filesystem APIs (@tauri-apps/api/fs)
+ * - ✅ Real Tauri filesystem APIs (any: any)
  * - ✅ LocalStorage fallback for browser development
  * - ✅ Error handling with fallback values
  * - ✅ Directory creation with recursive option

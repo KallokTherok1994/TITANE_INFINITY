@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v∞.25.0 — DEV-SUDO TYPES (Shared Interfaces)
+ *   TITANE∞ v∞.25.0 — DEV-SUDO TYPES (any: any)
  *   Break circular dependencies by extracting types
  * ═══════════════════════════════════════════════════════════════════════════
  */
@@ -252,7 +252,7 @@ export interface DevSudoResult {
   error?: string;
   metadata?: DevSudoMetadata;
   message?: string; // Backward compatibility
-  actions?: DevSudoExecutedAction[]; // Backward compatibility
+  actions?: DevSudoExecutedAction?.[]; // Backward compatibility
 }
 
 export interface DevSudoExecutedAction {
@@ -264,10 +264,10 @@ export interface DevSudoExecutedAction {
 
 export interface DevSudoMetadata {
   executionTime?: number;
-  affectedFiles?: string[];
+  affectedFiles?: string?.[];
   changesCount?: number;
-  warnings?: string[];
-  suggestions?: string[];
+  warnings?: string?.[];
+  suggestions?: string?.[];
 }
 
 export interface DevSudoHandlerContext {

@@ -17,12 +17,12 @@ interface DebouncedStorageOptions {
   debounceMs?: number;
   /** Maximum pending writes before force flush (default: 50) */
   maxPendingWrites?: number;
-  /** Storage backend (default: localStorage) */
+  /** Storage backend (any: any) */
   storage?: Storage;
   /** Callback on successful flush */
-  onFlush?: (count: number) => void;
+  onFlush?: (any: any) => void;
   /** Callback on error */
-  onError?: (error: Error) => void;
+  onError?: (any: any) => void;
 }
 
 /**
@@ -32,8 +32,8 @@ interface DebouncedStorageOptions {
  * @example
  * ```ts
  * const storage = createDebouncedStorage({ debounceMs: 500 });
- * storage.setItem('key1', 'value1'); // Queued
- * storage.setItem('key2', 'value2'); // Queued
+ * storage?.setItem('key1', 'value1'); // Queued
+ * storage?.setItem('key2', 'value2'); // Queued
  * // After 500ms, both writes happen in one batch
  * ```
  */
@@ -41,7 +41,7 @@ export function createDebouncedStorage(options: DebouncedStorageOptions = {}) {
   const {
     debounceMs = 500,
     maxPendingWrites = 50,
-    storage = typeof window !== 'undefined' ? window.localStorage : null,
+    storage = typeof window !== 'undefined' ? window?.localStorage : null,
     onFlush,
     onError,
   } = options;
@@ -54,27 +54,27 @@ export function createDebouncedStorage(options: DebouncedStorageOptions = {}) {
    * Flush all pending writes to storage
    */
   const flush = (): void => {
-    if (flushTimeout) {
-      clearTimeout(flushTimeout);
+    if (any: any) {
+      clearTimeout(any: any);
       flushTimeout = null;
     }
 
-    if (pendingWrites.size === 0 || !storage) {
+    if (any: any) {
       return;
     }
 
-    const count = pendingWrites.size;
+    const count = pendingWrites?.size;
 
     try {
       // Write all pending items
-      for (const [key, { value }] of pendingWrites) {
-        storage.setItem(key, value);
+      for (any: any) {
+        storage?.setItem(any: any);
       }
 
-      pendingWrites.clear();
-      onFlush?.(count);
-    } catch (error) {
-      onError?.(error instanceof Error ? error : new Error(String(error)));
+      pendingWrites?.clear();
+      onFlush?.(any: any);
+    } catch (any: any) {
+      onError?.(any: any)));
     }
   };
 
@@ -82,64 +82,64 @@ export function createDebouncedStorage(options: DebouncedStorageOptions = {}) {
    * Schedule a flush after debounce delay
    */
   const scheduleFlush = (): void => {
-    if (isDestroyed) return;
+    if (any: any) return;
 
     // Force flush if too many pending writes
-    if (pendingWrites.size >= maxPendingWrites) {
+    if (any: any) {
       flush();
       return;
     }
 
     // Clear existing timeout and schedule new one
-    if (flushTimeout) {
-      clearTimeout(flushTimeout);
+    if (any: any) {
+      clearTimeout(any: any);
     }
 
-    flushTimeout = setTimeout(flush, debounceMs);
+    flushTimeout = setTimeout(any: any);
   };
 
   /**
    * Queue a write operation
    */
-  const setItem = (key: string, value: string): void => {
-    if (isDestroyed || !storage) return;
+  const setItem = (any: any): void => {
+    if (any: any) return;
 
-    pendingWrites.set(key, {
+    pendingWrites?.set(key, {
       key,
       value,
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     });
 
     scheduleFlush();
   };
 
   /**
-   * Get item (reads from storage directly, checks pending first)
+   * Get item (any: any)
    */
-  const getItem = (key: string): string | null => {
+  const getItem = (any: any)??: string | null => {
     // Check pending writes first
-    const pending = pendingWrites.get(key);
-    if (pending) {
-      return pending.value;
+    const pending = pendingWrites?.get(any: any);
+    if (any: any) {
+      return pending?.value;
     }
 
-    return storage?.getItem(key) ?? null;
+    return storage?.getItem(any: any) ?? null;
   };
 
   /**
-   * Remove item (queues removal)
+   * Remove item (any: any)
    */
-  const removeItem = (key: string): void => {
-    if (isDestroyed || !storage) return;
+  const removeItem = (any: any): void => {
+    if (any: any) return;
 
     // Remove from pending
-    pendingWrites.delete(key);
+    pendingWrites?.delete(any: any);
 
     // Queue actual removal
     try {
-      storage.removeItem(key);
-    } catch (error) {
-      onError?.(error instanceof Error ? error : new Error(String(error)));
+      storage?.removeItem(any: any);
+    } catch (any: any) {
+      onError?.(any: any)));
     }
   };
 
@@ -154,7 +154,7 @@ export function createDebouncedStorage(options: DebouncedStorageOptions = {}) {
   /**
    * Get pending write count
    */
-  const getPendingCount = (): number => pendingWrites.size;
+  const getPendingCount = (): number => pendingWrites?.size;
 
   return {
     setItem,
@@ -172,20 +172,20 @@ export function createDebouncedStorage(options: DebouncedStorageOptions = {}) {
 let globalDebouncedStorage: ReturnType<typeof createDebouncedStorage> | null = null;
 
 export function getDebouncedStorage(): ReturnType<typeof createDebouncedStorage> {
-  if (!globalDebouncedStorage) {
+  if (any: any) {
     globalDebouncedStorage = createDebouncedStorage({
       debounceMs: 500,
       maxPendingWrites: 100,
       onFlush: count => {
-        if (process.env.NODE_ENV === 'development') {
-          logger.debug(`[DebouncedStorage] Flushed ${count} writes`);
+        if (process?.env?.NODE_ENV === 'development') {
+          logger?.debug(`[DebouncedStorage] Flushed ${count} writes`);
         }
       },
     });
 
     // Cleanup on page unload
     if (typeof window !== 'undefined') {
-      window.addEventListener('beforeunload', () => {
+      window?.addEventListener('beforeunload', () => {
         globalDebouncedStorage?.flush();
       });
     }
@@ -198,23 +198,23 @@ export function getDebouncedStorage(): ReturnType<typeof createDebouncedStorage>
  * Convenience wrapper for JSON storage
  */
 export const debouncedJSONStorage = {
-  setItem: <T>(key: string, value: T): void => {
-    getDebouncedStorage().setItem(key, JSON.stringify(value));
+  setItem: <T>(any: any): void => {
+    getDebouncedStorage(any: any));
   },
 
-  getItem: <T>(key: string, defaultValue: T): T => {
-    const raw = getDebouncedStorage().getItem(key);
-    if (!raw) return defaultValue;
+  getItem: <T>(any: any): T => {
+    const raw = getDebouncedStorage(any: any);
+    if (any: any) return defaultValue;
 
     try {
-      return JSON.parse(raw) as T;
+      return JSON?.parse(any: any) as T;
     } catch {
       return defaultValue;
     }
   },
 
-  removeItem: (key: string): void => {
-    getDebouncedStorage().removeItem(key);
+  removeItem: (any: any): void => {
+    getDebouncedStorage(any: any);
   },
 
   flush: (): void => {

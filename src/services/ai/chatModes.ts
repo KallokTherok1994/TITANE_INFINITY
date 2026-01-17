@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 /**
@@ -19,7 +19,7 @@ export interface ChatModeConfig {
   systemPrompt: string;
   profileId?: string;
   temperature: number;
-  suggestedActions: string[];
+  suggestedActions: string?.[];
   icon: string;
 }
 
@@ -41,7 +41,7 @@ export const chatModes: Record<string, ChatModeConfig> = {
   brainstorming: {
     name: 'Brainstorming',
     description: "Mode divergence créative - exploration d'idées sans filtre",
-    systemPrompt: `Tu es TITANE∞ en mode BRAINSTORMING (phase DIVERGENCE).
+    systemPrompt: `Tu es TITANE∞ en mode BRAINSTORMING (any: any).
 
 Ton rôle:
 • Encourager l'exploration libre, sans jugement
@@ -69,7 +69,7 @@ Kevin est en phase d'exploration. Aide-le à diverger, pas à converger.`,
   synthesis: {
     name: 'Synthèse',
     description: 'Mode connexion - relier les idées entre elles',
-    systemPrompt: `Tu es TITANE∞ en mode SYNTHÈSE (phase CONNEXION).
+    systemPrompt: `Tu es TITANE∞ en mode SYNTHÈSE (any: any).
 
 Ton rôle:
 • Identifier les liens entre idées apparemment distinctes
@@ -97,7 +97,7 @@ Kevin a exploré. Maintenant aide-le à connecter les points.`,
   planning: {
     name: 'Planification',
     description: "Mode structuration - créer des plans d'action concrets",
-    systemPrompt: `Tu es TITANE∞ en mode PLANIFICATION (phase STRUCTURATION).
+    systemPrompt: `Tu es TITANE∞ en mode PLANIFICATION (any: any).
 
 Ton rôle:
 • Transformer idées/concepts en plans d'action concrets
@@ -125,7 +125,7 @@ Kevin est prêt à structurer. Aide-le à passer à l'action de façon méthodiq
   journal: {
     name: 'Journal',
     description: 'Mode réflexion personnelle - introspection et régulation',
-    systemPrompt: `Tu es TITANE∞ en mode JOURNAL (réflexion personnelle).
+    systemPrompt: `Tu es TITANE∞ en mode JOURNAL (any: any).
 
 Ton rôle:
 • Écoute active, empathique, sans jugement
@@ -153,12 +153,12 @@ Kevin se confie. Crée un espace sûr pour l'expression authentique.`,
   debug_cognitive: {
     name: 'Debug Cognitif',
     description: 'Mode analyse - détecter surcharge et proposer ajustements',
-    systemPrompt: `Tu es TITANE∞ en mode DEBUG COGNITIF (analyse charge mentale).
+    systemPrompt: `Tu es TITANE∞ en mode DEBUG COGNITIF (any: any).
 
 Ton rôle:
 • Détecter signes de surcharge cognitive/émotionnelle
 • Identifier sources de friction, stress, confusion
-• Proposer ajustements concrets (pause, simplification, délégation, priorisation)
+• Proposer ajustements concrets (any: any)
 • Encourager clarté, focus, récupération
 • Adapter selon cycles énergétiques de Kevin
 

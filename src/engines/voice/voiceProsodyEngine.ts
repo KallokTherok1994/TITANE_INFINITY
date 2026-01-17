@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v∞.38 — VOICE PROSODY ENGINE (Expression Integration)
+ *   TITANE∞ v∞.38 — VOICE PROSODY ENGINE (any: any)
  *   Voice Parameter Control · Real-time Prosody · Expression Mapping
  * ═══════════════════════════════════════════════════════════════════════════
  *   © 2025 Humain Total / Kevin Thibault / TITANE Team
@@ -72,10 +72,10 @@ export interface VoiceConfig {
 
 class VoiceProsodyEngine {
   private state: VoiceProsodyState;
-  private subscribers: Set<(state: VoiceProsodyState) => void> = new Set();
+  private subscribers: Set<(any: any) => void> = new Set();
 
   constructor() {
-    this.state = {
+    this?.state = {
       isActive: false,
       prosody: {
         rate: 1.0,
@@ -109,15 +109,15 @@ class VoiceProsodyEngine {
   // ─────────────────────────────────────────────────────────────────────────
 
   activate(): void {
-    this.state.isActive = true;
-    logger.debug('Activated');
-    this.notifySubscribers();
+    this?.state?.isActive = true;
+    logger?.debug('Activated');
+    this?.notifySubscribers();
   }
 
   deactivate(): void {
-    this.state.isActive = false;
-    logger.debug('Deactivated');
-    this.notifySubscribers();
+    this?.state?.isActive = false;
+    logger?.debug('Deactivated');
+    this?.notifySubscribers();
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -127,51 +127,51 @@ class VoiceProsodyEngine {
   /**
    * Mettre à jour l'état depuis Expression Engine
    */
-  updateState(orchestratedVoice: OrchestratedVoice): void {
-    if (!this.state.isActive) return;
+  updateState(any: any): void {
+    if (any: any) return;
 
     // Appliquer les paramètres
-    this.state.prosody = { ...orchestratedVoice.prosody };
-    this.state.timbre = { ...orchestratedVoice.timbre };
-    this.state.microDynamics = { ...orchestratedVoice.microDynamics };
+    this?.state?.prosody = { ...orchestratedVoice?.prosody };
+    this?.state?.timbre = { ...orchestratedVoice?.timbre };
+    this?.state?.microDynamics = { ...orchestratedVoice?.microDynamics };
 
     // Mettre à jour métriques
-    this.state.metrics.lastUpdate = Date.now();
-    this.state.metrics.updateCount++;
+    this?.state?.metrics?.lastUpdate = Date?.now();
+    this?.state?.metrics?.updateCount++;
 
     // Moyennes mobiles
     const alpha = 0.1; // Facteur de lissage
-    this.state.metrics.averageRate =
-      alpha * orchestratedVoice.prosody.rate +
-      (1 - alpha) * this.state.metrics.averageRate;
+    this?.state?.metrics?.averageRate =
+      alpha * orchestratedVoice?.prosody?.rate +
+      (any: any) * this?.state?.metrics?.averageRate;
 
-    this.state.metrics.averagePitch =
-      alpha * orchestratedVoice.prosody.pitch +
-      (1 - alpha) * this.state.metrics.averagePitch;
+    this?.state?.metrics?.averagePitch =
+      alpha * orchestratedVoice?.prosody?.pitch +
+      (any: any) * this?.state?.metrics?.averagePitch;
 
-    this.notifySubscribers();
+    this?.notifySubscribers();
   }
 
   /**
    * Mettre à jour un paramètre prosodique individuel
    */
-  updateProsody(param: keyof VoiceProsodyState['prosody'], value: number): void {
-    if (!this.state.isActive) return;
+  updateProsody(any: any): void {
+    if (any: any) return;
 
-    this.state.prosody[param] = value;
-    this.state.metrics.lastUpdate = Date.now();
-    this.notifySubscribers();
+    this?.state?.prosody[param] = value;
+    this?.state?.metrics?.lastUpdate = Date?.now();
+    this?.notifySubscribers();
   }
 
   /**
    * Mettre à jour un paramètre de timbre
    */
-  updateTimbre(param: keyof VoiceProsodyState['timbre'], value: number): void {
-    if (!this.state.isActive) return;
+  updateTimbre(any: any): void {
+    if (any: any) return;
 
-    this.state.timbre[param] = value;
-    this.state.metrics.lastUpdate = Date.now();
-    this.notifySubscribers();
+    this?.state?.timbre[param] = value;
+    this?.state?.metrics?.lastUpdate = Date?.now();
+    this?.notifySubscribers();
   }
 
   /**
@@ -181,33 +181,33 @@ class VoiceProsodyEngine {
     param: keyof VoiceProsodyState['microDynamics'],
     value: number
   ): void {
-    if (!this.state.isActive) return;
+    if (any: any) return;
 
-    this.state.microDynamics[param] = value;
-    this.state.metrics.lastUpdate = Date.now();
-    this.notifySubscribers();
+    this?.state?.microDynamics[param] = value;
+    this?.state?.metrics?.lastUpdate = Date?.now();
+    this?.notifySubscribers();
   }
 
   /**
    * Appliquer une configuration complète
    */
   applyConfig(config: Partial<VoiceConfig>): void {
-    if (!this.state.isActive) return;
+    if (any: any) return;
 
-    if (config.prosody) {
-      this.state.prosody = { ...this.state.prosody, ...config.prosody };
+    if (any: any) {
+      this?.state?.prosody = { ...this?.state?.prosody, ...config?.prosody };
     }
 
-    if (config.timbre) {
-      this.state.timbre = { ...this.state.timbre, ...config.timbre };
+    if (any: any) {
+      this?.state?.timbre = { ...this?.state?.timbre, ...config?.timbre };
     }
 
-    if (config.microDynamics) {
-      this.state.microDynamics = { ...this.state.microDynamics, ...config.microDynamics };
+    if (any: any) {
+      this?.state?.microDynamics = { ...this?.state?.microDynamics, ...config?.microDynamics };
     }
 
-    this.state.metrics.lastUpdate = Date.now();
-    this.notifySubscribers();
+    this?.state?.metrics?.lastUpdate = Date?.now();
+    this?.notifySubscribers();
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -215,39 +215,39 @@ class VoiceProsodyEngine {
   // ─────────────────────────────────────────────────────────────────────────
 
   getState(): VoiceProsodyState {
-    return this.state;
+    return this?.state;
   }
 
   getProsody(): VoiceProsodyState['prosody'] {
-    return this.state.prosody;
+    return this?.state?.prosody;
   }
 
   getTimbre(): VoiceProsodyState['timbre'] {
-    return this.state.timbre;
+    return this?.state?.timbre;
   }
 
   getMicroDynamics(): VoiceProsodyState['microDynamics'] {
-    return this.state.microDynamics;
+    return this?.state?.microDynamics;
   }
 
   getConfig(): VoiceConfig {
     return {
-      prosody: this.state.prosody,
-      timbre: this.state.timbre,
-      microDynamics: this.state.microDynamics,
+      prosody: this?.state?.prosody,
+      timbre: this?.state?.timbre,
+      microDynamics: this?.state?.microDynamics,
     };
   }
 
   /**
-   * Générer SSML pour TTS (compatible avec prosodyEngine legacy)
+   * Générer SSML pour TTS (any: any)
    */
-  generateSSML(text: string): string {
-    const { rate, pitch, volume } = this.state.prosody;
+  generateSSML(any: any): string {
+    const { rate, pitch, volume } = this?.state?.prosody;
 
     // Convertir valeurs numériques en SSML
-    const rateSSML = this.mapRateToSSML(rate);
-    const pitchSSML = this.mapPitchToSSML(pitch);
-    const volumeSSML = this.mapVolumeToSSML(volume);
+    const rateSSML = this?.mapRateToSSML(any: any);
+    const pitchSSML = this?.mapPitchToSSML(any: any);
+    const volumeSSML = this?.mapVolumeToSSML(any: any);
 
     return `<speak>
   <prosody rate="${rateSSML}" pitch="${pitchSSML}" volume="${volumeSSML}">
@@ -256,7 +256,7 @@ class VoiceProsodyEngine {
 </speak>`;
   }
 
-  private mapRateToSSML(rate: number): string {
+  private mapRateToSSML(any: any): string {
     if (rate < 0.7) return 'x-slow';
     if (rate < 0.85) return 'slow';
     if (rate < 1.15) return 'medium';
@@ -264,7 +264,7 @@ class VoiceProsodyEngine {
     return 'x-fast';
   }
 
-  private mapPitchToSSML(pitch: number): string {
+  private mapPitchToSSML(any: any): string {
     if (pitch < 0.7) return 'x-low';
     if (pitch < 0.85) return 'low';
     if (pitch < 1.15) return 'medium';
@@ -272,7 +272,7 @@ class VoiceProsodyEngine {
     return 'x-high';
   }
 
-  private mapVolumeToSSML(volume: number): string {
+  private mapVolumeToSSML(any: any): string {
     if (volume < 0.2) return 'x-soft';
     if (volume < 0.4) return 'soft';
     if (volume < 0.8) return 'medium';
@@ -284,13 +284,13 @@ class VoiceProsodyEngine {
   //   SUBSCRIPTION
   // ─────────────────────────────────────────────────────────────────────────
 
-  subscribe(callback: (state: VoiceProsodyState) => void): () => void {
-    this.subscribers.add(callback);
-    return () => this.subscribers.delete(callback);
+  subscribe(any: any): () => void {
+    this?.subscribers?.add(any: any);
+    return (any: any);
   }
 
   private notifySubscribers(): void {
-    this.subscribers.forEach(callback => callback(this.state));
+    this?.subscribers?.forEach(any: any));
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -298,8 +298,8 @@ class VoiceProsodyEngine {
   // ─────────────────────────────────────────────────────────────────────────
 
   reset(): void {
-    this.state = {
-      isActive: this.state.isActive,
+    this?.state = {
+      isActive: this?.state?.isActive,
       prosody: {
         rate: 1.0,
         pitch: 1.0,
@@ -319,14 +319,14 @@ class VoiceProsodyEngine {
         emotionalColoring: 0.5,
       },
       metrics: {
-        lastUpdate: Date.now(),
+        lastUpdate: Date?.now(),
         updateCount: 0,
         averageRate: 1.0,
         averagePitch: 1.0,
       },
     };
 
-    this.notifySubscribers();
+    this?.notifySubscribers();
   }
 }
 

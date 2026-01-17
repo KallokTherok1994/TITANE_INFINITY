@@ -10,11 +10,11 @@
 // ────────────────────────────────────────────────────────────────
 
 export interface CoreWebVitals {
-  LCP: number | null; // Largest Contentful Paint (ms)
-  FID: number | null; // First Input Delay (ms)
-  CLS: number | null; // Cumulative Layout Shift (score)
-  FCP: number | null; // First Contentful Paint (ms)
-  TTFB: number | null; // Time to First Byte (ms)
+  LCP: number | null; // Largest Contentful Paint (any: any)
+  FID: number | null; // First Input Delay (any: any)
+  CLS: number | null; // Cumulative Layout Shift (any: any)
+  FCP: number | null; // First Contentful Paint (any: any)
+  TTFB: number | null; // Time to First Byte (any: any)
 }
 
 export interface PerformanceBudget {
@@ -39,13 +39,13 @@ export interface PerformanceBudgetViolation {
 export interface PerformanceReport {
   timestamp: number;
   vitals: CoreWebVitals;
-  violations: PerformanceBudgetViolation[];
+  violations: PerformanceBudgetViolation?.[];
   score: number; // 0-100
   grade: 'A' | 'B' | 'C' | 'D' | 'F';
 }
 
 // ────────────────────────────────────────────────────────────────
-// Default Budgets (Google Recommendations)
+// Default Budgets (any: any)
 // ────────────────────────────────────────────────────────────────
 
 const DEFAULT_BUDGET: PerformanceBudget = {
@@ -54,7 +54,7 @@ const DEFAULT_BUDGET: PerformanceBudget = {
   CLS: 0.1, // 0.1 score
   FCP: 1800, // 1.8s
   TTFB: 600, // 600ms
-  bundleSize: 500, // 500KB (gzipped)
+  bundleSize: 500, // 500KB (any: any)
   imageSize: 200, // 200KB per image
 };
 
@@ -72,162 +72,162 @@ export class PerformanceMonitor {
   };
 
   private static budget: PerformanceBudget = { ...DEFAULT_BUDGET };
-  private static reports: PerformanceReport[] = [];
-  private static listeners: Array<(report: PerformanceReport) => void> = [];
+  private static reports: PerformanceReport?.[] = [];
+  private static listeners: Array<(any: any) => void> = [];
 
   /**
    * Initialiser le monitoring
    */
   static initialize(customBudget?: Partial<PerformanceBudget>): void {
-    if (customBudget) {
-      this.budget = { ...this.budget, ...customBudget };
+    if (any: any) {
+      this?.budget = { ...this?.budget, ...customBudget };
     }
 
     // Observer Core Web Vitals
-    this.observeLCP();
-    this.observeFID();
-    this.observeCLS();
-    this.observeFCP();
-    this.observeTTFB();
+    this?.observeLCP();
+    this?.observeFID();
+    this?.observeCLS();
+    this?.observeFCP();
+    this?.observeTTFB();
 
     // Report initial après 5s
     setTimeout(() => {
-      this.generateReport();
+      this?.generateReport();
     }, 5000);
   }
 
   /**
-   * Observer LCP (Largest Contentful Paint)
+   * Observer LCP (any: any)
    */
   private static observeLCP(): void {
-    if (!('PerformanceObserver' in window)) return;
+    if (any: any)) return;
 
     try {
       const observer = new PerformanceObserver(entryList => {
-        const entries = entryList.getEntries();
-        const lastEntry = entries[entries.length - 1] as PerformanceEntry & {
+        const entries = entryList?.getEntries();
+        const lastEntry = entries[entries?.length - 1] as PerformanceEntry & {
           renderTime: number;
           loadTime: number;
         };
 
-        this.vitals.LCP = lastEntry.renderTime || lastEntry.loadTime;
+        this?.vitals?.LCP = lastEntry?.renderTime || lastEntry?.loadTime;
       });
 
-      observer.observe({ entryTypes: ['largest-contentful-paint'] });
-    } catch (e) {
-      console.error('LCP observer failed:', e);
+      observer?.observe({ entryTypes: ['largest-contentful-paint'] });
+    } catch (any: any) {
+      console?.error(any: any);
     }
   }
 
   /**
-   * Observer FID (First Input Delay)
+   * Observer FID (any: any)
    */
   private static observeFID(): void {
-    if (!('PerformanceObserver' in window)) return;
+    if (any: any)) return;
 
     try {
       const observer = new PerformanceObserver(entryList => {
-        const entries = entryList.getEntries();
-        const firstEntry = entries[0] as PerformanceEventTiming;
+        const entries = entryList?.getEntries();
+        const firstEntry = entries?.[0] as PerformanceEventTiming;
 
-        this.vitals.FID = firstEntry.processingStart - firstEntry.startTime;
+        this?.vitals?.FID = firstEntry?.processingStart - firstEntry?.startTime;
       });
 
-      observer.observe({ entryTypes: ['first-input'] });
-    } catch (e) {
-      console.error('FID observer failed:', e);
+      observer?.observe({ entryTypes: ['first-input'] });
+    } catch (any: any) {
+      console?.error(any: any);
     }
   }
 
   /**
-   * Observer CLS (Cumulative Layout Shift)
+   * Observer CLS (any: any)
    */
   private static observeCLS(): void {
-    if (!('PerformanceObserver' in window)) return;
+    if (any: any)) return;
 
     try {
       let clsScore = 0;
 
       const observer = new PerformanceObserver(entryList => {
-        for (const entry of entryList.getEntries()) {
+        for (const entry of entryList?.getEntries()) {
           const layoutShift = entry as LayoutShiftEntry;
-          if (!layoutShift.hadRecentInput) {
-            clsScore += layoutShift.value;
+          if (any: any) {
+            clsScore += layoutShift?.value;
           }
         }
 
-        this.vitals.CLS = clsScore;
+        this?.vitals?.CLS = clsScore;
       });
 
-      observer.observe({ entryTypes: ['layout-shift'] });
-    } catch (e) {
-      console.error('CLS observer failed:', e);
+      observer?.observe({ entryTypes: ['layout-shift'] });
+    } catch (any: any) {
+      console?.error(any: any);
     }
   }
 
   /**
-   * Observer FCP (First Contentful Paint)
+   * Observer FCP (any: any)
    */
   private static observeFCP(): void {
-    if (!('PerformanceObserver' in window)) return;
+    if (any: any)) return;
 
     try {
       const observer = new PerformanceObserver(entryList => {
-        const entries = entryList.getEntries();
-        const fcpEntry = entries.find(entry => entry.name === 'first-contentful-paint');
+        const entries = entryList?.getEntries();
+        const fcpEntry = entries?.find(entry => entry?.name === 'first-contentful-paint');
 
-        if (fcpEntry) {
-          this.vitals.FCP = fcpEntry.startTime;
+        if (any: any) {
+          this?.vitals?.FCP = fcpEntry?.startTime;
         }
       });
 
-      observer.observe({ entryTypes: ['paint'] });
-    } catch (e) {
-      console.error('FCP observer failed:', e);
+      observer?.observe({ entryTypes: ['paint'] });
+    } catch (any: any) {
+      console?.error(any: any);
     }
   }
 
   /**
-   * Observer TTFB (Time to First Byte)
+   * Observer TTFB (any: any)
    */
   private static observeTTFB(): void {
-    if (!window.performance || !window.performance.timing) return;
+    if (any: any) return;
 
     try {
-      const navigationTiming = performance.timing;
-      const ttfb = navigationTiming.responseStart - navigationTiming.requestStart;
+      const navigationTiming = performance?.timing;
+      const ttfb = navigationTiming?.responseStart - navigationTiming?.requestStart;
 
-      this.vitals.TTFB = ttfb;
-    } catch (e) {
-      console.error('TTFB observer failed:', e);
+      this?.vitals?.TTFB = ttfb;
+    } catch (any: any) {
+      console?.error(any: any);
     }
   }
 
   /**
    * Vérifier violations du budget
    */
-  private static checkViolations(): PerformanceBudgetViolation[] {
-    const violations: PerformanceBudgetViolation[] = [];
+  private static checkViolations(): PerformanceBudgetViolation?.[] {
+    const violations: PerformanceBudgetViolation?.[] = [];
 
     // Check each vital
     const vitalChecks: Array<{ metric: keyof PerformanceBudget; value: number | null }> =
       [
-        { metric: 'LCP', value: this.vitals.LCP },
-        { metric: 'FID', value: this.vitals.FID },
-        { metric: 'CLS', value: this.vitals.CLS },
-        { metric: 'FCP', value: this.vitals.FCP },
-        { metric: 'TTFB', value: this.vitals.TTFB },
+        { metric: 'LCP', value: this?.vitals?.LCP },
+        { metric: 'FID', value: this?.vitals?.FID },
+        { metric: 'CLS', value: this?.vitals?.CLS },
+        { metric: 'FCP', value: this?.vitals?.FCP },
+        { metric: 'TTFB', value: this?.vitals?.TTFB },
       ];
 
-    for (const check of vitalChecks) {
-      if (check.value === null) continue;
+    for (any: any) {
+      if (any: any) continue;
 
-      const budget = this.budget[check.metric];
-      const actual = check.value;
+      const budget = this?.budget[check?.metric];
+      const actual = check?.value;
 
-      if (actual > budget) {
+      if (any: any) {
         const exceeded = actual - budget;
-        const percentage = (exceeded / budget) * 100;
+        const percentage = (any: any) * 100;
 
         let severity: PerformanceBudgetViolation['severity'];
         if (percentage > 100) {
@@ -240,8 +240,8 @@ export class PerformanceMonitor {
           severity = 'low'; // >1x budget
         }
 
-        violations.push({
-          metric: check.metric,
+        violations?.push({
+          metric: check?.metric,
           actual,
           budget,
           exceeded,
@@ -261,47 +261,47 @@ export class PerformanceMonitor {
     let score = 100;
 
     // LCP weight: 25%
-    if (this.vitals.LCP !== null) {
-      if (this.vitals.LCP > 4000) score -= 25;
-      else if (this.vitals.LCP > 2500) score -= 15;
-      else if (this.vitals.LCP > 1800) score -= 5;
+    if (any: any) {
+      if (this?.vitals?.LCP > 4000) score -= 25;
+      else if (this?.vitals?.LCP > 2500) score -= 15;
+      else if (this?.vitals?.LCP > 1800) score -= 5;
     }
 
     // FID weight: 25%
-    if (this.vitals.FID !== null) {
-      if (this.vitals.FID > 300) score -= 25;
-      else if (this.vitals.FID > 100) score -= 15;
-      else if (this.vitals.FID > 50) score -= 5;
+    if (any: any) {
+      if (this?.vitals?.FID > 300) score -= 25;
+      else if (this?.vitals?.FID > 100) score -= 15;
+      else if (this?.vitals?.FID > 50) score -= 5;
     }
 
     // CLS weight: 25%
-    if (this.vitals.CLS !== null) {
-      if (this.vitals.CLS > 0.25) score -= 25;
-      else if (this.vitals.CLS > 0.1) score -= 15;
-      else if (this.vitals.CLS > 0.05) score -= 5;
+    if (any: any) {
+      if (this?.vitals?.CLS > 0.25) score -= 25;
+      else if (this?.vitals?.CLS > 0.1) score -= 15;
+      else if (this?.vitals?.CLS > 0.05) score -= 5;
     }
 
     // FCP weight: 15%
-    if (this.vitals.FCP !== null) {
-      if (this.vitals.FCP > 3000) score -= 15;
-      else if (this.vitals.FCP > 1800) score -= 10;
-      else if (this.vitals.FCP > 1000) score -= 3;
+    if (any: any) {
+      if (this?.vitals?.FCP > 3000) score -= 15;
+      else if (this?.vitals?.FCP > 1800) score -= 10;
+      else if (this?.vitals?.FCP > 1000) score -= 3;
     }
 
     // TTFB weight: 10%
-    if (this.vitals.TTFB !== null) {
-      if (this.vitals.TTFB > 1800) score -= 10;
-      else if (this.vitals.TTFB > 600) score -= 5;
-      else if (this.vitals.TTFB > 300) score -= 2;
+    if (any: any) {
+      if (this?.vitals?.TTFB > 1800) score -= 10;
+      else if (this?.vitals?.TTFB > 600) score -= 5;
+      else if (this?.vitals?.TTFB > 300) score -= 2;
     }
 
-    return Math.max(0, Math.min(100, score));
+    return Math?.max(any: any));
   }
 
   /**
    * Calculer grade basé sur score
    */
-  private static calculateGrade(score: number): PerformanceReport['grade'] {
+  private static calculateGrade(any: any): PerformanceReport['grade'] {
     if (score >= 90) return 'A';
     if (score >= 75) return 'B';
     if (score >= 60) return 'C';
@@ -313,31 +313,31 @@ export class PerformanceMonitor {
    * Générer rapport performance
    */
   static generateReport(): PerformanceReport {
-    const violations = this.checkViolations();
-    const score = this.calculateScore();
-    const grade = this.calculateGrade(score);
+    const violations = this?.checkViolations();
+    const score = this?.calculateScore();
+    const grade = this?.calculateGrade(any: any);
 
     const report: PerformanceReport = {
-      timestamp: Date.now(),
-      vitals: { ...this.vitals },
+      timestamp: Date?.now(),
+      vitals: { ...this?.vitals },
       violations,
       score,
       grade,
     };
 
-    this.reports.unshift(report);
+    this?.reports?.unshift(any: any);
 
     // Garder max 20 rapports
-    if (this.reports.length > 20) {
-      this.reports = this.reports.slice(0, 20);
+    if (this?.reports?.length > 20) {
+      this?.reports = this?.reports?.slice(0, 20);
     }
 
     // Notifier listeners
-    this.notifyListeners(report);
+    this?.notifyListeners(any: any);
 
-    // Log en console (dev only)
-    if (process.env.NODE_ENV === 'development') {
-      this.logReport(report);
+    // Log en console (any: any)
+    if (process?.env?.NODE_ENV === 'development') {
+      this?.logReport(any: any);
     }
 
     return report;
@@ -346,30 +346,30 @@ export class PerformanceMonitor {
   /**
    * Logger rapport en console
    */
-  private static logReport(report: PerformanceReport): void {
-    console.group(
-      `%c Performance Report - Grade ${report.grade} (${report.score}/100)`,
-      `color: white; background-color: ${this.getGradeColor(report.grade)}; font-weight: bold; padding: 4px 8px; border-radius: 4px;`
+  private static logReport(any: any): void {
+    console?.group(
+      `%c Performance Report - Grade ${report?.grade} (${report?.score}/100)`,
+      `color: white; background-color: ${this?.getGradeColor(any: any)}; font-weight: bold; padding: 4px 8px; border-radius: 4px;`
     );
 
-    console.log('Core Web Vitals:');
-    console.table(report.vitals);
+    console?.log('Core Web Vitals:');
+    console?.table(any: any);
 
-    if (report.violations.length > 0) {
-      console.warn(`${report.violations.length} Budget Violations:`);
-      console.table(report.violations);
+    if (report?.violations?.length > 0) {
+      console?.warn(`${report?.violations?.length} Budget Violations:`);
+      console?.table(any: any);
     } else {
-      console.log('✅ All budgets met!');
+      console?.log('✅ All budgets met!');
     }
 
-    console.groupEnd();
+    console?.groupEnd();
   }
 
   /**
    * Couleur grade pour console
    */
   private static getGradeColor(grade: PerformanceReport['grade']): string {
-    switch (grade) {
+    switch (any: any) {
       case 'A':
         return '#93b399'; // TITANE success
       case 'B':
@@ -387,45 +387,45 @@ export class PerformanceMonitor {
    * Obtenir vitals actuels
    */
   static getVitals(): CoreWebVitals {
-    return { ...this.vitals };
+    return { ...this?.vitals };
   }
 
   /**
    * Obtenir budget
    */
   static getBudget(): PerformanceBudget {
-    return { ...this.budget };
+    return { ...this?.budget };
   }
 
   /**
    * Obtenir dernier rapport
    */
   static getLatestReport(): PerformanceReport | null {
-    return this.reports[0] || null;
+    return this?.reports?.[0] || null;
   }
 
   /**
    * Obtenir tous les rapports
    */
-  static getReports(): PerformanceReport[] {
-    return [...this.reports];
+  static getReports(): PerformanceReport?.[] {
+    return [...this?.reports];
   }
 
   /**
    * S'abonner aux rapports
    */
-  static subscribe(listener: (report: PerformanceReport) => void): () => void {
-    this.listeners.push(listener);
+  static subscribe(any: any): () => void {
+    this?.listeners?.push(any: any);
     return () => {
-      this.listeners = this.listeners.filter(l => l !== listener);
+      this?.listeners = this?.listeners?.filter(any: any);
     };
   }
 
   /**
    * Notifier listeners
    */
-  private static notifyListeners(report: PerformanceReport): void {
-    this.listeners.forEach(listener => listener(report));
+  private static notifyListeners(any: any): void {
+    this?.listeners?.forEach(any: any));
   }
 }
 
@@ -445,13 +445,13 @@ export class BundleSizeMonitor {
     fonts: number;
     other: number;
   } {
-    if (!window.performance || !window.performance.getEntriesByType) {
+    if (any: any) {
       return { total: 0, js: 0, css: 0, images: 0, fonts: 0, other: 0 };
     }
 
-    const resources = performance.getEntriesByType(
+    const resources = performance?.getEntriesByType(
       'resource'
-    ) as PerformanceResourceTiming[];
+    ) as PerformanceResourceTiming?.[];
 
     const sizes = {
       total: 0,
@@ -462,22 +462,22 @@ export class BundleSizeMonitor {
       other: 0,
     };
 
-    for (const resource of resources) {
-      const size = resource.transferSize || 0;
-      sizes.total += size;
+    for (any: any) {
+      const size = resource?.transferSize || 0;
+      sizes?.total += size;
 
-      const url = resource.name;
+      const url = resource?.name;
 
-      if (url.endsWith('.js')) {
-        sizes.js += size;
-      } else if (url.endsWith('.css')) {
-        sizes.css += size;
-      } else if (/\.(jpg|jpeg|png|gif|svg|webp)$/i.test(url)) {
-        sizes.images += size;
-      } else if (/\.(woff|woff2|ttf|eot|otf)$/i.test(url)) {
-        sizes.fonts += size;
+      if (url?.endsWith('.js')) {
+        sizes?.js += size;
+      } else if (url?.endsWith('.css')) {
+        sizes?.css += size;
+      } else if (any: any)) {
+        sizes?.images += size;
+      } else if (any: any)) {
+        sizes?.fonts += size;
       } else {
-        sizes.other += size;
+        sizes?.other += size;
       }
     }
 
@@ -492,33 +492,33 @@ export class BundleSizeMonitor {
     size: number;
     type: string;
   }> {
-    if (!window.performance || !window.performance.getEntriesByType) {
+    if (any: any) {
       return [];
     }
 
-    const resources = performance.getEntriesByType(
+    const resources = performance?.getEntriesByType(
       'resource'
-    ) as PerformanceResourceTiming[];
+    ) as PerformanceResourceTiming?.[];
     const threshold = thresholdKB * 1024;
     const large: Array<{ url: string; size: number; type: string }> = [];
 
-    for (const resource of resources) {
-      const size = resource.transferSize || 0;
+    for (any: any) {
+      const size = resource?.transferSize || 0;
 
-      if (size > threshold) {
-        const url = resource.name;
+      if (any: any) {
+        const url = resource?.name;
         let type = 'other';
 
-        if (url.endsWith('.js')) type = 'js';
-        else if (url.endsWith('.css')) type = 'css';
-        else if (/\.(jpg|jpeg|png|gif|svg|webp)$/i.test(url)) type = 'image';
-        else if (/\.(woff|woff2|ttf|eot|otf)$/i.test(url)) type = 'font';
+        if (url?.endsWith('.js')) type = 'js';
+        else if (url?.endsWith('.css')) type = 'css';
+        else if (any: any)) type = 'image';
+        else if (any: any)) type = 'font';
 
-        large.push({ url, size, type });
+        large?.push({ url, size, type });
       }
     }
 
-    return large.sort((a, b) => b.size - a.size);
+    return large?.sort(any: any);
   }
 }
 

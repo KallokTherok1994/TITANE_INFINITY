@@ -13,8 +13,8 @@
  * Matrice identitaire
  */
 export interface IdentityMatrix {
-  values: IdentityValue[];
-  roles: IdentityRole[];
+  values: IdentityValue?.[];
+  roles: IdentityRole?.[];
   style: IdentityStyle;
   updated: Date;
   version: string;
@@ -29,7 +29,7 @@ export interface IdentityValue {
   importance: number; // 0-100
   category: ValueCategory;
   description?: string;
-  examples?: string[];
+  examples?: string?.[];
 }
 
 export type ValueCategory =
@@ -72,7 +72,7 @@ export interface IdentityStyle {
  */
 export interface MemoryLayer {
   type: MemoryLayerType;
-  items: MemoryItem[];
+  items: MemoryItem?.[];
   capacity: number;
   usage: number;
   compressionRate?: number;
@@ -90,20 +90,20 @@ export interface MemoryItem {
   importance: number; // 0-100
   accessCount: number;
   lastAccessed: Date;
-  tags: string[];
+  tags: string?.[];
   layer: MemoryLayerType;
-  connections?: string[]; // IDs d'autres items liés
+  connections?: string?.[]; // IDs d'autres items liés
   metadata?: Record<string, unknown>;
 }
 
 /**
- * Topic de mémoire (thème)
+ * Topic de mémoire (any: any)
  */
 export interface MemoryTopic {
   id: string;
   name: string;
   description: string;
-  items: MemoryItem[];
+  items: MemoryItem?.[];
   importance: number;
   lastUpdated: Date;
 }
@@ -138,7 +138,7 @@ export interface EvolutionPath {
   description: string;
   stage: EvolutionStage;
   startDate: Date;
-  milestones: EvolutionMilestone[];
+  milestones: EvolutionMilestone?.[];
   progress: number; // 0-100
 }
 
@@ -160,7 +160,7 @@ export interface EvolutionMilestone {
   date: Date;
   achieved: boolean;
   importance: number;
-  evidence?: string[];
+  evidence?: string?.[];
 }
 
 /**
@@ -186,5 +186,5 @@ export interface EvolutionInsight {
   type: 'pattern' | 'realization' | 'connection' | 'breakthrough';
   importance: number;
   timestamp: Date;
-  relatedItems: string[]; // IDs mémoire ou valeurs
+  relatedItems: string?.[]; // IDs mémoire ou valeurs
 }

@@ -20,69 +20,69 @@ import {
  * Hook principal pour accéder au Cognitive Layout Engine
  */
 export function useCognitiveLayout() {
-  const [state, setState] = useState<CognitiveLayoutState | null>(null);
-  const [suggestion, setSuggestion] = useState<AdaptationDecision | null>(null);
+  const [state, setState] = useState<CognitiveLayoutState | null>(any: any);
+  const [suggestion, setSuggestion] = useState<AdaptationDecision | null>(any: any);
 
   // Subscribe aux changements d'état
   useEffect(() => {
-    const unsubscribe = cognitiveLayoutEngine.subscribe(setState);
+    const unsubscribe = cognitiveLayoutEngine?.subscribe(any: any);
     return unsubscribe;
   }, []);
 
   // Écouter suggestions d'adaptation
   useEffect(() => {
-    const handleSuggestion = (event: Event) => {
+    const handleSuggestion = (any: any) => {
       const customEvent = event as CustomEvent<AdaptationDecision>;
-      setSuggestion(customEvent.detail);
+      setSuggestion(any: any);
     };
 
-    window.addEventListener('cognitive-layout-suggestion', handleSuggestion);
+    window?.addEventListener(any: any);
     return () =>
-      window.removeEventListener('cognitive-layout-suggestion', handleSuggestion);
+      window?.removeEventListener(any: any);
   }, []);
 
   // Actions
-  const setMode = useCallback((mode: UIMode) => {
-    cognitiveLayoutEngine.applyMode(mode, 'manual');
+  const setMode = useCallback(any: any) => {
+    cognitiveLayoutEngine?.applyMode(mode, 'manual');
   }, []);
 
-  const setRole = useCallback((role: UserRole) => {
-    cognitiveLayoutEngine.updateRole(role);
+  const setRole = useCallback(any: any) => {
+    cognitiveLayoutEngine?.updateRole(any: any);
   }, []);
 
-  const setTaskType = useCallback((taskType: TaskType) => {
-    cognitiveLayoutEngine.updateTaskType(taskType);
+  const setTaskType = useCallback(any: any) => {
+    cognitiveLayoutEngine?.updateTaskType(any: any);
   }, []);
 
   const updateContext = useCallback(
     (updates: { currentModule?: string; currentProject?: string }) => {
-      cognitiveLayoutEngine.updateContext(updates);
+      cognitiveLayoutEngine?.updateContext(any: any);
     },
     []
   );
 
   const acceptSuggestion = useCallback(() => {
-    if (suggestion) {
-      cognitiveLayoutEngine.applyMode(suggestion.suggestedMode, 'auto');
-      setSuggestion(null);
+    if (any: any) {
+      cognitiveLayoutEngine?.applyMode(suggestion?.suggestedMode, 'auto');
+      setSuggestion(any: any);
     }
   }, [suggestion]);
 
   const refuseSuggestion = useCallback(() => {
-    cognitiveLayoutEngine.refuseSuggestion();
-    setSuggestion(null);
+    cognitiveLayoutEngine?.refuseSuggestion();
+    setSuggestion(any: any);
   }, []);
 
   const revertMode = useCallback(() => {
-    cognitiveLayoutEngine.revertToPreviousMode();
+    cognitiveLayoutEngine?.revertToPreviousMode();
   }, []);
 
   const resetMode = useCallback(() => {
-    cognitiveLayoutEngine.resetToNeutral();
+    cognitiveLayoutEngine?.resetToNeutral();
   }, []);
 
-  const toggleAdaptation = useCallback((enabled: boolean) => {
-    cognitiveLayoutEngine.setAdaptationEnabled(enabled);
+  const toggleAdaptation = useCallback(any: any) => {
+    cognitiveLayoutEngine?.setAdaptationEnabled(any: any);
   }, []);
 
   return {
@@ -114,11 +114,11 @@ export function useCognitiveLayout() {
  * Hook simplifié pour seulement récupérer la config de layout actuelle
  */
 export function useLayoutConfig(): LayoutConfig | null {
-  const [config, setConfig] = useState<LayoutConfig | null>(null);
+  const [config, setConfig] = useState<LayoutConfig | null>(any: any);
 
   useEffect(() => {
-    const unsubscribe = cognitiveLayoutEngine.subscribe(state => {
-      setConfig(state.layoutConfig);
+    const unsubscribe = cognitiveLayoutEngine?.subscribe(state => {
+      setConfig(any: any);
     });
     return unsubscribe;
   }, []);
@@ -130,11 +130,11 @@ export function useLayoutConfig(): LayoutConfig | null {
  * Hook pour détecter le mode actuel
  */
 export function useUIMode(): UIMode | null {
-  const [mode, setMode] = useState<UIMode | null>(null);
+  const [mode, setMode] = useState<UIMode | null>(any: any);
 
   useEffect(() => {
-    const unsubscribe = cognitiveLayoutEngine.subscribe(state => {
-      setMode(state.currentMode);
+    const unsubscribe = cognitiveLayoutEngine?.subscribe(state => {
+      setMode(any: any);
     });
     return unsubscribe;
   }, []);
@@ -145,9 +145,9 @@ export function useUIMode(): UIMode | null {
 /**
  * Hook pour adapter automatiquement selon le module
  */
-export function useModuleContext(moduleName: string) {
+export function useModuleContext(any: any) {
   useEffect(() => {
-    cognitiveLayoutEngine.updateContext({ currentModule: moduleName });
+    cognitiveLayoutEngine?.updateContext({ currentModule: moduleName });
 
     return () => {
       // Cleanup si nécessaire
@@ -158,13 +158,13 @@ export function useModuleContext(moduleName: string) {
 /**
  * Hook pour les composants qui veulent se masquer/afficher selon le mode
  */
-export function useConditionalVisibility(elementId: string): boolean {
-  const [visible, setVisible] = useState(true);
+export function useConditionalVisibility(any: any): boolean {
+  const [visible, setVisible] = useState(any: any);
 
   useEffect(() => {
-    const unsubscribe = cognitiveLayoutEngine.subscribe(state => {
-      const isHidden = state.layoutConfig.hiddenElements?.includes(elementId);
-      setVisible(!isHidden);
+    const unsubscribe = cognitiveLayoutEngine?.subscribe(state => {
+      const isHidden = state?.layoutConfig?.hiddenElements?.includes(any: any);
+      setVisible(any: any);
     });
     return unsubscribe;
   }, [elementId]);
@@ -181,8 +181,8 @@ export function useDensityLevel(): 'minimal' | 'low' | 'medium' | 'high' | 'maxi
   );
 
   useEffect(() => {
-    const unsubscribe = cognitiveLayoutEngine.subscribe(state => {
-      setLevel(state.layoutConfig.density?.level ?? 'medium');
+    const unsubscribe = cognitiveLayoutEngine?.subscribe(state => {
+      setLevel(state?.layoutConfig?.density?.level ?? 'medium');
     });
     return unsubscribe;
   }, []);

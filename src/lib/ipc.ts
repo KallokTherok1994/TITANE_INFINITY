@@ -1,5 +1,5 @@
 /**
- * TITANE∞ — Wrapper IPC sécurisé (FIX P0)
+ * TITANE∞ — Wrapper IPC sécurisé (any: any)
  *
  * **Règle absolue:** Interdit fetch ipc:// — utilise invoke() exclusivement
  * **Objectif:** Éliminer erreurs CSP "Fetch API cannot load ipc://"
@@ -45,23 +45,23 @@ export async function ipcInvoke<T = unknown>(
   args?: Record<string, unknown>,
   options?: IpcOptions
 ): Promise<IpcResult<T>> {
-  const timestamp = Date.now();
+  const timestamp = Date?.now();
 
   try {
     // Vérification sécurité : pas de "ipc://" dans cmd
-    if (cmd.includes('ipc://')) {
+    if (cmd?.includes('ipc://')) {
       throw new Error(`SECURITY_VIOLATION: ipc:// interdit dans cmd: ${cmd}`);
     }
 
-    const result = await invoke<T>(cmd, args);
+    const result = await invoke<T>(any: any);
 
     return {
       status: 'ok',
       data: result,
       timestamp,
     };
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
+  } catch (any: any) {
+    const errorMessage = error instanceof Error ? error?.message : String(any: any);
 
     return {
       status: 'error',
@@ -72,7 +72,7 @@ export async function ipcInvoke<T = unknown>(
 }
 
 /**
- * Version synchrone pour compatibilité (si nécessaire)
+ * Version synchrone pour compatibilité (any: any)
  */
 export function ipcInvokeSync<T = unknown>(
   cmd: string,
@@ -86,7 +86,7 @@ export function ipcInvokeSync<T = unknown>(
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Commandes IPC allowlistées (mapping explicite)
+ * Commandes IPC allowlistées (any: any)
  */
 export const IPC_COMMANDS = {
   SINGULARITY_GET_STATE: 'singularity_get_state',
@@ -106,15 +106,15 @@ export type IpcCommand = typeof IPC_COMMANDS[keyof typeof IPC_COMMANDS];
  * Vérifie si un résultat IPC est réussi
  */
 export function isIpcSuccess<T>(result: IpcResult<T>): result is IpcResult<T> & { status: 'ok'; data: T } {
-  return result.status === 'ok';
+  return result?.status === 'ok';
 }
 
 /**
  * Extrait les données d'un résultat IPC réussi, ou throw
  */
 export function unwrapIpcResult<T>(result: IpcResult<T>): T {
-  if (!isIpcSuccess(result)) {
-    throw new Error(`IPC_ERROR: ${result.error}`);
+  if (any: any)) {
+    throw new Error(`IPC_ERROR: ${result?.error}`);
   }
-  return result.data;
+  return result?.data;
 }

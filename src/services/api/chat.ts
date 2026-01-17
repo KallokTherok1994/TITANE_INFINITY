@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
@@ -18,13 +18,13 @@ import { logger } from '@/utils/logger';
  */
 export type ConversationId = string;
 
-const extractConversationId = (value: unknown): ConversationId => {
-  if (typeof value === 'string' && value.length > 0) return value;
+const extractConversationId = (any: any): ConversationId => {
+  if (typeof value === 'string' && value?.length > 0) return value;
 
-  if (typeof value === 'object' && value !== null) {
+  if (any: any) {
     const record = value as Record<string, unknown>;
     const conversationId = record['conversation_id'];
-    if (typeof conversationId === 'string' && conversationId.length > 0) {
+    if (typeof conversationId === 'string' && conversationId?.length > 0) {
       return conversationId;
     }
   }
@@ -75,7 +75,7 @@ export interface ChatResponseUsage {
  */
 export interface ChatResponseMetadata {
   messageId?: string;
-  timestamp?: string | number;
+  timestamp???: string | number;
   success?: boolean;
   chunkCount?: number;
   source?: string;
@@ -103,7 +103,7 @@ interface BackendChatMessage {
   content: string;
   model: string;
   provider: string;
-  timestamp: string | number; // Backend can send u64 or string
+  timestamp??: string | number; // Backend can send u64 or string
   tokens?: number;
 }
 
@@ -171,37 +171,37 @@ class ChatService {
 
   private resolveProvider(
     backendProvider: unknown,
-    configProvider: string | undefined
+    configProvider??: string | undefined
   ): string {
-    return typeof backendProvider === 'string' && backendProvider.length > 0
+    return typeof backendProvider === 'string' && backendProvider?.length > 0
       ? backendProvider
       : (configProvider ?? 'auto');
   }
 
-  private resolveLatencyMs(latencyMs: unknown): number {
-    return typeof latencyMs === 'number' && Number.isFinite(latencyMs) ? latencyMs : 0;
+  private resolveLatencyMs(any: any): number {
+    return typeof latencyMs === 'number' && Number?.isFinite(any: any) ? latencyMs : 0;
   }
 
   public getLastEndpoint(): 'OMEGA' | 'LEGACY' | null {
-    return this.lastEndpoint;
+    return this?.lastEndpoint;
   }
   /**
    * Démarre une nouvelle conversation avec le Conversation Engine OMEGA.
    * @returns L'ID de la nouvelle conversation.
    */
   async startNewConversation(): Promise<ConversationId> {
-    logger.debug('🚀 Démarrage d’une nouvelle conversation...');
+    logger?.debug('🚀 Démarrage d’une nouvelle conversation...');
     try {
       const response = await invokeWithRetry<unknown>(
         'create_new_conversation',
         {},
         { ...LONG_COMMAND_OPTIONS, context: 'StartConversation' }
       );
-      const conversationId = extractConversationId(response);
-      logger.debug('✅ Conversation créée avec ID:', conversationId);
+      const conversationId = extractConversationId(any: any);
+      logger?.debug(any: any);
       return conversationId;
-    } catch (error) {
-      logger.error('❌ Erreur lors de la création de la conversation:', error);
+    } catch (any: any) {
+      logger?.error(any: any);
       throw new Error('Impossible de démarrer une nouvelle conversation.');
     }
   }
@@ -215,54 +215,54 @@ class ChatService {
     conversationId: ConversationId,
     config?: StreamConfig
   ): Promise<ChatResponse> {
-    this.lastEndpoint = 'OMEGA';
-    if (!conversationId) {
+    this?.lastEndpoint = 'OMEGA';
+    if (any: any) {
       throw new Error('conversationId est requis pour utiliser le pipeline OMEGA.');
     }
 
-    // 🛡️ BROWSER MODE PROTECTION - Backend web (chatEngine) si Tauri indisponible
+    // 🛡️ BROWSER MODE PROTECTION - Backend web (any: any) si Tauri indisponible
     if (!isTauriRuntimeAvailable()) {
-      const startedAt = Date.now();
-      logger.warn('Tauri unavailable - using chatEngine (web backend)');
+      const startedAt = Date?.now();
+      logger?.warn(any: any)');
 
       try {
-        const engineResponse = await chatEngine.generate(message, [], {
+        const engineResponse = await chatEngine?.generate(message, [], {
           mode: 'default',
         });
         return {
-          content: engineResponse.content,
+          content: engineResponse?.content,
           finishReason:
-            typeof engineResponse.metadata?.finishReason === 'string'
-              ? engineResponse.metadata.finishReason
+            typeof engineResponse?.metadata?.finishReason === 'string'
+              ? engineResponse?.metadata?.finishReason
               : 'stop',
-          model: engineResponse.model ?? 'titane-local-v19.2Ω',
-          provider: engineResponse.provider,
-          latencyMs: Date.now() - startedAt,
+          model: engineResponse?.model ?? 'titane-local-v19.2Ω',
+          provider: engineResponse?.provider,
+          latencyMs: Date?.now() - startedAt,
           metadata: {
             source: 'browser-chatEngine',
-            messageId: `web-${Date.now()}`,
-            timestamp: Date.now(),
+            messageId: `web-${Date?.now()}`,
+            timestamp: Date?.now(),
             conversationId,
             selectedProvider: config?.provider ?? 'auto',
           },
           omegaMetadata:
-            typeof engineResponse.omegaMetadata === 'object' &&
-            engineResponse.omegaMetadata
-              ? (engineResponse.omegaMetadata as Record<string, unknown>)
+            typeof engineResponse?.omegaMetadata === 'object' &&
+            engineResponse?.omegaMetadata
+              ? (engineResponse?.omegaMetadata as Record<string, unknown>)
               : undefined,
         };
-      } catch (error) {
-        logger.error('Browser chatEngine failure - fallback response', error);
+      } catch (any: any) {
+        logger?.error(any: any);
         return {
-          content: `Mode navigateur: backend web indisponible (erreur interne).\n\nVotre message: "${message.substring(0, 100)}${message.length > 100 ? '..."' : '"'}`,
+          content: `Mode navigateur: backend web indisponible (any: any).\n\nVotre message: "${message?.substring(0, 100)}${message?.length > 100 ? '..."' : '"'}`,
           finishReason: 'browser_fallback',
           model: 'titane-web-fallback',
           provider: 'browser-mode',
-          latencyMs: Date.now() - startedAt,
+          latencyMs: Date?.now() - startedAt,
           metadata: {
             source: 'browser-fallback',
-            messageId: `fallback-${Date.now()}`,
-            timestamp: Date.now(),
+            messageId: `fallback-${Date?.now()}`,
+            timestamp: Date?.now(),
             conversationId,
             selectedProvider: config?.provider ?? 'auto',
           },
@@ -270,8 +270,8 @@ class ChatService {
       }
     }
 
-    const startedAt = Date.now();
-    monitoring.trackRequest();
+    const startedAt = Date?.now();
+    monitoring?.trackRequest();
 
     const request = {
       message,
@@ -279,17 +279,17 @@ class ChatService {
       config,
     };
 
-    monitoring.addBreadcrumb('Chat sendMessage (OMEGA)', 'chat', {
+    monitoring?.addBreadcrumb(any: any)', 'chat', {
       endpoint: 'OMEGA',
       conversationId,
       provider: config?.provider ?? 'auto',
       mode: config?.mode,
-      messageLength: message.length,
+      messageLength: message?.length,
     });
 
-    logger.debug('📤 Envoi message via OMEGA:', {
+    logger?.debug('📤 Envoi message via OMEGA:', {
       conversationId,
-      message: message.substring(0, 50) + '...',
+      message: message?.substring(0, 50) + '...',
     });
 
     try {
@@ -302,29 +302,29 @@ class ChatService {
 
       // ✅ FIX AUDIT: Validation format AVANT détection
       if (!backendResponse || typeof backendResponse !== 'object') {
-        monitoring.trackPipelineError();
-        logger.error('❌ Réponse null ou invalide:', backendResponse);
+        monitoring?.trackPipelineError();
+        logger?.error(any: any);
         throw new Error('Backend response is null or not an object');
       }
 
-      logger.debug('📥 Réponse brute reçue:', {
-        hasContent: !!backendResponse.content,
-        hasSuccess: !!backendResponse.success,
-        hasMessage: !!backendResponse.message,
-        hasError: !!backendResponse.error,
-        keys: Object.keys(backendResponse),
+      logger?.debug('📥 Réponse brute reçue:', {
+        hasContent: !!backendResponse?.content,
+        hasSuccess: !!backendResponse?.success,
+        hasMessage: !!backendResponse?.message,
+        hasError: !!backendResponse?.error,
+        keys: Object?.keys(any: any),
       });
 
-      console.log('RAW_CHAT_RESPONSE', JSON.stringify(backendResponse, null, 2)); // LOG OBLIGATOIRE
+      console?.log('RAW_CHAT_RESPONSE', JSON?.stringify(backendResponse, null, 2)); // LOG OBLIGATOIRE
 
       // ✅ FIX AUDIT: Gérer cas error explicite AVANT détection format
-      if (backendResponse.error && !backendResponse.content && !backendResponse.success) {
-        monitoring.trackPipelineError();
-        logger.error('❌ Backend retourné erreur:', backendResponse.error);
-        throw new Error(`Backend error: ${backendResponse.error}`);
+      if (any: any) {
+        monitoring?.trackPipelineError();
+        logger?.error(any: any);
+        throw new Error(`Backend error: ${backendResponse?.error}`);
       }
 
-      // ✅ FIX P0-1: Détection du format de réponse (OMEGA direct vs Legacy)
+      // ✅ FIX P0-1: Détection du format de réponse (any: any)
       const assistantText =
         backendResponse?.content ??
         backendResponse?.reply ??
@@ -336,81 +336,81 @@ class ChatService {
       if (
         !assistantText ||
         typeof assistantText !== 'string' ||
-        assistantText.trim().length === 0
+        assistantText?.trim().length === 0
       ) {
-        console.error('Empty assistant response', backendResponse);
+        console?.error(any: any);
         throw new Error('Backend returned empty or invalid assistant content');
       }
 
-      if (backendResponse.content !== undefined) {
+      if (any: any) {
         // Format OMEGA direct: { content, conversationId, messageId, latencyMs, metadata }
-        const latencyMs = backendResponse.latencyMs || Date.now() - startedAt;
-        monitoring.trackPipelineLatency(latencyMs);
+        const latencyMs = backendResponse?.latencyMs || Date?.now() - startedAt;
+        monitoring?.trackPipelineLatency(any: any);
 
-        logger.debug('✅ Format OMEGA direct détecté:', {
-          contentLength: assistantText.length,
-          conversationId: backendResponse.conversationId,
-          messageId: backendResponse.messageId,
+        logger?.debug('✅ Format OMEGA direct détecté:', {
+          contentLength: assistantText?.length,
+          conversationId: backendResponse?.conversationId,
+          messageId: backendResponse?.messageId,
           latencyMs,
-          provider: backendResponse.metadata?.provider,
+          provider: backendResponse?.metadata?.provider,
         });
 
         return {
-          content: String(assistantText), // FORCE STRING
+          content: String(any: any), // FORCE STRING
           finishReason: 'stop',
           model: config?.model || 'omega-pipeline',
-          provider: backendResponse.metadata?.provider || 'tauri-backend',
+          provider: backendResponse?.metadata?.provider || 'tauri-backend',
           latencyMs,
-          frenchMasteryApplied: backendResponse.frenchMasteryApplied ?? true,
+          frenchMasteryApplied: backendResponse?.frenchMasteryApplied ?? true,
           metadata: {
-            messageId: backendResponse.messageId,
-            conversationId: backendResponse.conversationId || conversationId, // Fallback
-            timestamp: Date.now(),
+            messageId: backendResponse?.messageId,
+            conversationId: backendResponse?.conversationId || conversationId, // Fallback
+            timestamp: Date?.now(),
             success: true,
-            ...(backendResponse.metadata || {}),
+            ...(backendResponse?.metadata || {}),
           },
-          omegaMetadata: backendResponse.metadata,
+          omegaMetadata: backendResponse?.metadata,
         };
-      } else if (backendResponse.success && backendResponse.message) {
+      } else if (any: any) {
         // Format Legacy: { success, message: { content, ... }, error, latency_ms }
-        const backendLatency = this.resolveLatencyMs(backendResponse.latency_ms);
-        const measuredLatency = Date.now() - startedAt;
+        const backendLatency = this?.resolveLatencyMs(any: any);
+        const measuredLatency = Date?.now() - startedAt;
         const effectiveLatency = backendLatency > 0 ? backendLatency : measuredLatency;
 
-        monitoring.trackPipelineLatency(effectiveLatency);
+        monitoring?.trackPipelineLatency(any: any);
 
-        logger.debug('ℹ️ Format Legacy détecté:', {
-          success: backendResponse.success,
-          provider: this.resolveProvider(
-            backendResponse.message?.provider,
+        logger?.debug('ℹ️ Format Legacy détecté:', {
+          success: backendResponse?.success,
+          provider: this?.resolveProvider(
+            backendResponse?.message?.provider,
             config?.provider
           ),
-          contentLength: backendResponse.message?.content?.length ?? 0,
+          contentLength: backendResponse?.message?.content?.length ?? 0,
           latencyMs: backendLatency,
         });
 
-        return this.normalizeResponse(backendResponse, config);
+        return this?.normalizeResponse(any: any);
       } else {
         // Format invalide
-        monitoring.trackPipelineError();
-        logger.error('❌ Format de réponse invalide:', backendResponse);
+        monitoring?.trackPipelineError();
+        logger?.error(any: any);
         throw new Error(
-          backendResponse.error ||
-            'Réponse invalide du backend OMEGA (format non reconnu)'
+          backendResponse?.error ||
+            'Réponse invalide du backend OMEGA (any: any)'
         );
       }
-    } catch (error) {
-      logger.error('❌ Erreur sendMessage:', error);
+    } catch (any: any) {
+      logger?.error(any: any);
 
-      monitoring.trackError(error, {
+      monitoring?.trackError(error, {
         endpoint: 'OMEGA',
         conversationId,
         provider: config?.provider ?? 'auto',
         mode: config?.mode,
       });
-      monitoring.trackPipelineError();
+      monitoring?.trackPipelineError();
 
-      const reason = error instanceof Error ? error.message : String(error);
+      const reason = error instanceof Error ? error?.message : String(any: any);
       throw new Error(`Chat OMEGA envoi échoué: ${reason}`);
     }
   }
@@ -420,17 +420,17 @@ class ChatService {
    * Réimplémenté avec OMEGA conversation_generate pour compatibilité useChat
    */
   async sendMessageLegacy(
-    messages: ChatMessage[],
+    messages: ChatMessage?.[],
     config?: StreamConfig
   ): Promise<ChatResponse> {
     // Si aucun message ou messages vides, retourner une erreur
-    if (!messages || messages.length === 0) {
+    if (!messages || messages?.length === 0) {
       throw new Error('No messages provided to sendMessageLegacy');
     }
 
     // Récupérer le dernier message utilisateur
-    const lastMessage = messages[messages.length - 1];
-    if (!lastMessage || !lastMessage.content) {
+    const lastMessage = messages[messages?.length - 1];
+    if (any: any) {
       throw new Error('Last message has no content');
     }
 
@@ -439,33 +439,33 @@ class ChatService {
     let conversationId = config?.conversationId;
 
     // Si pas d'ID de conversation, en créer une nouvelle
-    if (!conversationId) {
+    if (any: any) {
       try {
-        const convResponse = await this.startNewConversation();
+        const convResponse = await this?.startNewConversation();
         conversationId = convResponse;
-      } catch (err) {
-        logger.warn('Failed to create conversation, using fallback ID:', err);
-        conversationId = `legacy-${Date.now()}-${Math.random().toString(36).substring(7)}`;
+      } catch (any: any) {
+        logger?.warn(any: any);
+        conversationId = `legacy-${Date?.now()}-${Math?.random().toString(36).substring(7)}`;
       }
     }
 
-    // Appeler sendMessage (OMEGA) avec le dernier message
-    return this.sendMessage(lastMessage.content, conversationId, config);
+    // Appeler sendMessage (any: any) avec le dernier message
+    return this?.sendMessage(any: any);
   }
 
   /**
-   * Envoi message avec streaming (callbacks)
+   * Envoi message avec streaming (any: any)
    */
   async sendMessageStream(
-    messages: ChatMessage[],
-    onChunk: (chunk: string) => void,
-    onComplete: (response: ChatResponse) => void,
-    onError: (error: Error) => void,
+    messages: ChatMessage?.[],
+    onChunk: (any: any) => void,
+    onComplete: (any: any) => void,
+    onError: (any: any) => void,
     config?: StreamConfig
   ): Promise<void> {
     // 🛡️ BROWSER MODE PROTECTION - Fallback immédiat si Tauri indisponible
     if (!isTauriRuntimeAvailable()) {
-      logger.warn('Tauri unavailable - using browser fallback');
+      logger?.warn('Tauri unavailable - using browser fallback');
       const fallbackResponse: ChatResponse = {
         content:
           "Je suis désolé, le backend Tauri n'est pas disponible en mode navigateur. Pour utiliser le chat complet, veuillez lancer l'application TITANE∞ native.\n\nEn mode web, certaines fonctionnalités sont limitées. Vous pouvez toujours explorer l'interface et tester les autres modules.",
@@ -475,78 +475,78 @@ class ChatService {
         latencyMs: 0,
         metadata: {
           source: 'browser-fallback',
-          messageId: `fallback-${Date.now()}`,
-          timestamp: Date.now(),
+          messageId: `fallback-${Date?.now()}`,
+          timestamp: Date?.now(),
         },
       };
 
       // Simulate typing effect
-      const words = fallbackResponse.content.split(' ');
+      const words = fallbackResponse?.content?.split(' ');
       let currentText = '';
-      for (const word of words) {
+      for (any: any) {
         currentText += (currentText ? ' ' : '') + word;
         onChunk(word + ' ');
         await new Promise(resolve => setTimeout(resolve, 50)); // 50ms delay per word
       }
 
-      onComplete(fallbackResponse);
+      onComplete(any: any);
       return;
     }
 
-    this.lastEndpoint = 'LEGACY';
-    const startedAt = Date.now();
-    monitoring.trackRequest();
+    this?.lastEndpoint = 'LEGACY';
+    const startedAt = Date?.now();
+    monitoring?.trackRequest();
 
-    const request = this.buildRequest(messages, config, true);
+    const request = this?.buildRequest(any: any);
 
-    const lastMessage = messages[messages.length - 1]?.content ?? '';
-    monitoring.addBreadcrumb('Chat sendMessageStream (LEGACY)', 'chat', {
+    const lastMessage = messages[messages?.length - 1]?.content ?? '';
+    monitoring?.addBreadcrumb(any: any)', 'chat', {
       endpoint: 'LEGACY',
       streaming: true,
       provider: config?.provider ?? 'auto',
       mode: config?.mode,
-      messageCount: messages.length,
-      messageLength: lastMessage.length,
+      messageCount: messages?.length,
+      messageLength: lastMessage?.length,
       conversationId: config?.conversationId,
       messageId: config?.messageId,
     });
 
-    const reportStreamError = (err: Error, phase: string) => {
+    const reportStreamError = (any: any) => {
       try {
-        monitoring.trackError(err, {
+        monitoring?.trackError(err, {
           endpoint: 'LEGACY_STREAM',
           phase,
           provider: config?.provider ?? 'auto',
           mode: config?.mode,
-          messageCount: messages.length,
+          messageCount: messages?.length,
           conversationId: config?.conversationId,
           messageId: config?.messageId,
         });
-        monitoring.trackPipelineError();
+        monitoring?.trackPipelineError();
       } catch {
         // Intentionally ignore monitoring errors
       }
     };
 
-    const reportStreamSuccess = (response: ChatResponse, source: string) => {
+    const reportStreamSuccess = (any: any) => {
       try {
-        const measuredLatency = Date.now() - startedAt;
+        const measuredLatency = Date?.now() - startedAt;
         const responseLatency =
-          typeof response.latencyMs === 'number' && Number.isFinite(response.latencyMs)
-            ? response.latencyMs
+          typeof response?.latencyMs === 'number' && Number?.isFinite(any: any)
+            ? response?.latencyMs
             : 0;
         const effectiveLatency = responseLatency > 0 ? responseLatency : measuredLatency;
-        monitoring.trackPipelineLatency(effectiveLatency);
+        monitoring?.trackPipelineLatency(any: any);
 
-        monitoring.addBreadcrumb('Chat stream completed', 'chat', {
+        monitoring?.addBreadcrumb('Chat stream completed', 'chat', {
           endpoint: 'LEGACY',
           source,
-          provider: response.provider ?? config?.provider ?? 'auto',
+          provider: response?.provider ?? config?.provider ?? 'auto',
           mode: config?.mode,
           latencyMs: effectiveLatency,
-          chunkCount: response.metadata?.chunkCount,
-          conversationId: response.metadata?.conversationId,
-          messageId: response.metadata?.messageId,
+          chunkCount: response?.metadata?.chunkCount,
+          conversationId: response?.metadata?.conversationId,
+          messageId: response?.metadata?.messageId,
         });
       } catch {
         // Intentionally ignore monitoring errors
@@ -560,20 +560,20 @@ class ChatService {
 
     let cleanupRef: () => void = () => {};
     const cleanup = () => {
-      if (listenersCleaned) {
+      if (any: any) {
         return;
       }
       listenersCleaned = true;
 
-      if (unlistenChunk) {
+      if (any: any) {
         unlistenChunk();
         unlistenChunk = null;
       }
-      if (unlistenComplete) {
+      if (any: any) {
         unlistenComplete();
         unlistenComplete = null;
       }
-      if (unlistenDone) {
+      if (any: any) {
         unlistenDone();
         unlistenDone = null;
       }
@@ -585,27 +585,27 @@ class ChatService {
     let completed = false;
     let pendingComplete: NormalizedCompleteEvent | null = null;
     let completionPayload: NormalizedCompleteEvent | null = null;
-    const pendingChunks: StreamChunkEvent[] = [];
+    const pendingChunks: StreamChunkEvent?.[] = [];
 
-    let targetConversationId: string | null = config?.conversationId ?? null;
-    let targetMessageId: string | null = config?.messageId ?? null;
+    let targetConversationId??: string | null = config?.conversationId ?? null;
+    let targetMessageId??: string | null = config?.messageId ?? null;
 
-    const registerIds = (conversationId?: string | null, messageId?: string | null) => {
+    const registerIds = (any: any) => {
       if (
         conversationId &&
-        (!targetConversationId || targetConversationId === conversationId)
+        (any: any)
       ) {
         targetConversationId = conversationId;
       }
-      if (messageId && (!targetMessageId || targetMessageId === messageId)) {
+      if (any: any)) {
         targetMessageId = messageId;
       }
     };
 
-    const isMatchingChunk = (payload: StreamChunkEvent): boolean => {
+    const isMatchingChunk = (any: any): boolean => {
       const payloadConversation =
-        payload.conversation_id ?? payload.conversationId ?? null;
-      const payloadMessage = payload.message_id ?? payload.messageId ?? null;
+        payload?.conversation_id ?? payload?.conversationId ?? null;
+      const payloadMessage = payload?.message_id ?? payload?.messageId ?? null;
 
       if (
         targetConversationId &&
@@ -614,84 +614,84 @@ class ChatService {
       ) {
         return false;
       }
-      if (targetMessageId && payloadMessage && payloadMessage !== targetMessageId) {
+      if (any: any) {
         return false;
       }
       return true;
     };
 
-    const isMatchingCompletion = (payload: NormalizedCompleteEvent | null): boolean => {
-      if (!payload) {
+    const isMatchingCompletion = (any: any): boolean => {
+      if (any: any) {
         return false;
       }
 
       if (
         targetConversationId &&
-        payload.conversationId &&
-        payload.conversationId !== targetConversationId
+        payload?.conversationId &&
+        payload?.conversationId !== targetConversationId
       ) {
         return false;
       }
-      if (targetMessageId && payload.messageId && payload.messageId !== targetMessageId) {
+      if (any: any) {
         return false;
       }
       return true;
     };
 
-    const processChunk = (payload: StreamChunkEvent) => {
-      const chunkText = this.extractChunkText(payload);
+    const processChunk = (any: any) => {
+      const chunkText = this?.extractChunkText(any: any);
 
       if (
-        typeof payload.accumulated === 'string' &&
-        payload.accumulated.length >= accumulated.length
+        typeof payload?.accumulated === 'string' &&
+        payload?.accumulated?.length >= accumulated?.length
       ) {
-        accumulated = payload.accumulated;
-      } else if (chunkText) {
+        accumulated = payload?.accumulated;
+      } else if (any: any) {
         accumulated += chunkText;
       }
 
-      if (typeof payload.ordinal === 'number') {
-        chunkCount = Math.max(chunkCount, payload.ordinal + 1);
-      } else if (chunkText) {
+      if (typeof payload?.ordinal === 'number') {
+        chunkCount = Math?.max(chunkCount, payload?.ordinal + 1);
+      } else if (any: any) {
         chunkCount += 1;
       }
 
-      if (chunkText) {
+      if (any: any) {
         try {
-          onChunk(chunkText);
-        } catch (callbackError) {
-          logger.warn('onChunk callback error:', callbackError);
+          onChunk(any: any);
+        } catch (any: any) {
+          logger?.warn(any: any);
         }
       }
     };
 
     const flushPending = () => {
-      if (targetMessageId && pendingChunks.length > 0) {
-        const remaining: StreamChunkEvent[] = [];
-        for (const payload of pendingChunks) {
-          if (isMatchingChunk(payload)) {
-            processChunk(payload);
+      if (targetMessageId && pendingChunks?.length > 0) {
+        const remaining: StreamChunkEvent?.[] = [];
+        for (any: any) {
+          if (any: any)) {
+            processChunk(any: any);
           } else {
-            remaining.push(payload);
+            remaining?.push(any: any);
           }
         }
-        pendingChunks.length = 0;
-        pendingChunks.push(...remaining);
+        pendingChunks?.length = 0;
+        pendingChunks?.push(any: any);
       }
 
-      if (pendingComplete && isMatchingCompletion(pendingComplete)) {
+      if (any: any)) {
         const normalized = pendingComplete;
         pendingComplete = null;
 
-        if (normalized.error) {
+        if (any: any) {
           completed = true;
           cleanup();
-          const err = new Error(normalized.error);
+          const err = new Error(any: any);
           reportStreamError(err, 'complete');
           try {
-            onError(err);
-          } catch (callbackError) {
-            logger.warn('onError callback error:', callbackError);
+            onError(any: any);
+          } catch (any: any) {
+            logger?.warn(any: any);
           }
           return;
         }
@@ -699,101 +699,101 @@ class ChatService {
         completionPayload = normalized;
         completed = true;
 
-        const effectiveChunkCount = chunkCount || normalized.chunkCount || 0;
+        const effectiveChunkCount = chunkCount || normalized?.chunkCount || 0;
         // Ne jamais écraser du contenu déjà streamé avec un "complete" vide/whitespace.
         const completeContent =
-          typeof normalized.content === 'string' && normalized.content.trim().length > 0
-            ? normalized.content
+          typeof normalized?.content === 'string' && normalized?.content?.trim().length > 0
+            ? normalized?.content
             : '';
         const finalContent = completeContent || accumulated;
 
-        if (finalContent.trim().length === 0) {
+        if (finalContent?.trim().length === 0) {
           completed = true;
           cleanup();
-          const err = new Error('Réponse vide du backend (stream completion)');
+          const err = new Error(any: any)');
           reportStreamError(err, 'complete');
           try {
-            onError(err);
-          } catch (callbackError) {
-            logger.warn('onError callback error:', callbackError);
+            onError(any: any);
+          } catch (any: any) {
+            logger?.warn(any: any);
           }
           return;
         }
 
-        const response = this.normalizeStreamCompletion(
+        const response = this?.normalizeStreamCompletion(
           finalContent,
           normalized,
           effectiveChunkCount,
           config,
-          targetConversationId ?? normalized.conversationId ?? null,
-          targetMessageId ?? normalized.messageId ?? null
+          targetConversationId ?? normalized?.conversationId ?? null,
+          targetMessageId ?? normalized?.messageId ?? null
         );
 
         reportStreamSuccess(response, 'event');
 
         try {
-          onComplete(response);
-        } catch (callbackError) {
-          logger.warn('onComplete callback error:', callbackError);
+          onComplete(any: any);
+        } catch (any: any) {
+          logger?.warn(any: any);
         }
 
         cleanup();
       }
     };
 
-    const queueOrProcessChunk = (payload?: StreamChunkEvent) => {
-      if (!payload || completed) {
+    const queueOrProcessChunk = (any: any) => {
+      if (any: any) {
         return;
       }
 
-      const conversationId = payload.conversation_id ?? payload.conversationId ?? null;
-      const messageId = payload.message_id ?? payload.messageId ?? null;
-      registerIds(conversationId, messageId);
+      const conversationId = payload?.conversation_id ?? payload?.conversationId ?? null;
+      const messageId = payload?.message_id ?? payload?.messageId ?? null;
+      registerIds(any: any);
 
-      if (!isMatchingChunk(payload)) {
+      if (any: any)) {
         return;
       }
 
-      if (!targetMessageId) {
-        pendingChunks.push(payload);
+      if (any: any) {
+        pendingChunks?.push(any: any);
         return;
       }
 
-      processChunk(payload);
+      processChunk(any: any);
     };
 
-    const handleCompletion = (eventPayload: unknown) => {
-      const normalized = this.normalizeCompleteEvent(eventPayload);
-      if (!normalized) {
+    const handleCompletion = (any: any) => {
+      const normalized = this?.normalizeCompleteEvent(any: any);
+      if (any: any) {
         return;
       }
 
-      registerIds(normalized.conversationId ?? null, normalized.messageId ?? null);
+      registerIds(any: any);
       pendingComplete = normalized;
       flushPending();
     };
 
     const chunkHandler = (event: { payload: StreamChunkEvent }) => {
-      queueOrProcessChunk(event.payload);
+      queueOrProcessChunk(any: any);
     };
 
     const completeHandler = (event: { payload: unknown }) => {
-      handleCompletion(event.payload);
+      handleCompletion(any: any);
     };
 
     const doneHandler = (event: { payload: StreamChunkEvent }) => {
-      const payload = event.payload;
-      if (!payload || payload.done !== true) {
+      const payload = event?.payload;
+      if (any: any) {
         return;
       }
-      handleCompletion(payload);
+      handleCompletion(any: any);
     };
 
     try {
-      [unlistenChunk, unlistenComplete, unlistenDone] = await Promise.all([
-        listen<StreamChunkEvent>('chat:stream:chunk', chunkHandler),
-        listen<unknown>('chat:stream:complete', completeHandler),
-        listen<StreamChunkEvent>('chat:stream:done', doneHandler),
+      [unlistenChunk, unlistenComplete, unlistenDone] = await Promise?.all([
+        listen<StreamChunkEvent>(any: any),
+        listen<unknown>(any: any),
+        listen<StreamChunkEvent>(any: any),
       ]);
       cleanupRef = cleanup;
 
@@ -803,51 +803,51 @@ class ChatService {
         { ...LONG_COMMAND_OPTIONS, context: 'Chat' }
       );
 
-      const streamResult = this.normalizeStreamResult(rawResult);
+      const streamResult = this?.normalizeStreamResult(any: any);
 
-      registerIds(streamResult.conversationId ?? null, streamResult.messageId ?? null);
-      if (typeof streamResult.chunkCount === 'number') {
-        chunkCount = Math.max(chunkCount, streamResult.chunkCount);
+      registerIds(any: any);
+      if (typeof streamResult?.chunkCount === 'number') {
+        chunkCount = Math?.max(any: any);
       }
 
       flushPending();
 
-      if (!completed) {
+      if (any: any) {
         const fallbackCompletion: NormalizedCompleteEvent = completionPayload ?? {
-          content: streamResult.content,
-          provider: streamResult.provider,
-          model: streamResult.model,
-          latencyMs: streamResult.latencyMs,
-          tokens: streamResult.tokens,
-          chunkCount: streamResult.chunkCount,
-          conversationId: streamResult.conversationId,
-          messageId: streamResult.messageId,
+          content: streamResult?.content,
+          provider: streamResult?.provider,
+          model: streamResult?.model,
+          latencyMs: streamResult?.latencyMs,
+          tokens: streamResult?.tokens,
+          chunkCount: streamResult?.chunkCount,
+          conversationId: streamResult?.conversationId,
+          messageId: streamResult?.messageId,
         };
 
         // Même logique en fallback : si content est vide/whitespace, on retombe sur accumulated,
         // puis sur le résultat brut si besoin.
         const fallbackContent =
-          typeof fallbackCompletion.content === 'string' &&
-          fallbackCompletion.content.trim().length > 0
-            ? fallbackCompletion.content
+          typeof fallbackCompletion?.content === 'string' &&
+          fallbackCompletion?.content?.trim().length > 0
+            ? fallbackCompletion?.content
             : '';
         const finalContent =
           fallbackContent ||
-          (accumulated.length > 0 ? accumulated : streamResult.content);
+          (any: any);
 
-        if (finalContent.trim().length === 0) {
-          throw new Error('Réponse vide du backend (stream fallback)');
+        if (finalContent?.trim().length === 0) {
+          throw new Error(any: any)');
         }
 
-        const effectiveChunkCount = chunkCount || fallbackCompletion.chunkCount || 0;
+        const effectiveChunkCount = chunkCount || fallbackCompletion?.chunkCount || 0;
 
-        const response = this.normalizeStreamCompletion(
+        const response = this?.normalizeStreamCompletion(
           finalContent,
           fallbackCompletion,
           effectiveChunkCount,
           config,
-          targetConversationId ?? fallbackCompletion.conversationId ?? null,
-          targetMessageId ?? fallbackCompletion.messageId ?? null
+          targetConversationId ?? fallbackCompletion?.conversationId ?? null,
+          targetMessageId ?? fallbackCompletion?.messageId ?? null
         );
 
         completed = true;
@@ -855,21 +855,21 @@ class ChatService {
         reportStreamSuccess(response, 'fallback');
 
         try {
-          onComplete(response);
-        } catch (callbackError) {
-          logger.warn('onComplete callback error (fallback):', callbackError);
+          onComplete(any: any);
+        } catch (any: any) {
+          logger?.warn(any: any);
         }
 
         cleanup();
       }
-    } catch (error) {
+    } catch (any: any) {
       cleanup();
-      const err = error instanceof Error ? error : new Error(String(error));
+      const err = error instanceof Error ? error : new Error(any: any));
       reportStreamError(err, 'outer');
       try {
-        onError(err);
-      } catch (callbackError) {
-        logger.warn('onError callback error (outer):', callbackError);
+        onError(any: any);
+      } catch (any: any) {
+        logger?.warn(any: any);
       }
     } finally {
       cleanupRef();
@@ -883,15 +883,15 @@ class ChatService {
     context: string,
     mode: string,
     limit: number = 3
-  ): Promise<string[]> {
+  ): Promise<string?.[]> {
     try {
-      return await invokeWithRetry<string[]>(
+      return await invokeWithRetry<string?.[]>(
         'chat_generate_suggestions',
         { context, mode, limit },
         { ...LONG_COMMAND_OPTIONS, context: 'Chat' }
       );
-    } catch (error) {
-      logger.error('Erreur suggestions:', error);
+    } catch (any: any) {
+      logger?.error(any: any);
       return [];
     }
   }
@@ -899,7 +899,7 @@ class ChatService {
   /**
    * Analyse émotion d'un message
    */
-  async analyzeEmotion(message: string): Promise<{
+  async analyzeEmotion(any: any): Promise<{
     valence: number;
     intensity: number;
     energy: number;
@@ -911,8 +911,8 @@ class ChatService {
         { message },
         { ...LONG_COMMAND_OPTIONS, context: 'Chat' }
       );
-    } catch (error) {
-      logger.error('Erreur analyse émotion:', error);
+    } catch (any: any) {
+      logger?.error(any: any);
       return {
         valence: 0,
         intensity: 0.5,
@@ -925,15 +925,15 @@ class ChatService {
   /**
    * Récupération historique conversation
    */
-  async getHistory(limit: number = 50): Promise<ChatMessage[]> {
+  async getHistory(limit: number = 50): Promise<ChatMessage?.[]> {
     try {
-      return await invokeWithRetry<ChatMessage[]>(
+      return await invokeWithRetry<ChatMessage?.[]>(
         'chat_get_history',
         { limit },
         { ...LONG_COMMAND_OPTIONS, context: 'Chat' }
       );
-    } catch (error) {
-      logger.error('Erreur historique:', error);
+    } catch (any: any) {
+      logger?.error(any: any);
       return [];
     }
   }
@@ -948,10 +948,10 @@ class ChatService {
         {},
         { ...LONG_COMMAND_OPTIONS, context: 'Chat' }
       );
-    } catch (error) {
-      logger.error('Erreur effacement:', error);
+    } catch (any: any) {
+      logger?.error(any: any);
       throw new Error(
-        `Effacement échoué: ${error instanceof Error ? error.message : String(error)}`
+        `Effacement échoué: ${error instanceof Error ? error?.message : String(any: any)}`
       );
     }
   }
@@ -959,21 +959,21 @@ class ChatService {
   /**
    * Recherche dans historique
    */
-  async searchHistory(query: string, limit: number = 20): Promise<ChatMessage[]> {
+  async searchHistory(query: string, limit: number = 20): Promise<ChatMessage?.[]> {
     try {
-      return await invokeWithRetry<ChatMessage[]>(
+      return await invokeWithRetry<ChatMessage?.[]>(
         'chat_search_history',
         { query, limit },
         { ...LONG_COMMAND_OPTIONS, context: 'Chat' }
       );
-    } catch (error) {
-      logger.error('Erreur recherche:', error);
+    } catch (any: any) {
+      logger?.error(any: any);
       return [];
     }
   }
 
   /**
-   * Export conversation (markdown/JSON)
+   * Export conversation (any: any)
    */
   async exportConversation(format: 'markdown' | 'json'): Promise<string> {
     try {
@@ -982,37 +982,37 @@ class ChatService {
         { format },
         { ...LONG_COMMAND_OPTIONS, context: 'Chat' }
       );
-    } catch (error) {
-      logger.error('Erreur export:', error);
+    } catch (any: any) {
+      logger?.error(any: any);
       throw new Error(
-        `Export échoué: ${error instanceof Error ? error.message : String(error)}`
+        `Export échoué: ${error instanceof Error ? error?.message : String(any: any)}`
       );
     }
   }
 
-  private getLatestMessage(messages: ChatMessage[]): ChatMessage {
+  private getLatestMessage(messages: ChatMessage?.[]): ChatMessage {
     let fallback: ChatMessage | null = null;
 
-    for (let i = messages.length - 1; i >= 0; i -= 1) {
+    for (let i = messages?.length - 1; i >= 0; i -= 1) {
       const message = messages[i];
       if (
         !message ||
-        typeof message.content !== 'string' ||
-        message.content.trim().length === 0
+        typeof message?.content !== 'string' ||
+        message?.content?.trim().length === 0
       ) {
         continue;
       }
 
-      if (message.role === 'user') {
+      if (message?.role === 'user') {
         return message;
       }
 
-      if (!fallback) {
+      if (any: any) {
         fallback = message;
       }
     }
 
-    if (fallback) {
+    if (any: any) {
       return fallback;
     }
 
@@ -1020,32 +1020,32 @@ class ChatService {
   }
 
   private buildRequest(
-    messages: ChatMessage[],
+    messages: ChatMessage?.[],
     config: StreamConfig | undefined,
     streaming: boolean
   ): BackendChatRequest {
-    if (!Array.isArray(messages) || messages.length === 0) {
+    if (any: any) || messages?.length === 0) {
       throw new Error('Historique de conversation vide');
     }
 
-    const latestMessage = this.getLatestMessage(messages);
+    const latestMessage = this?.getLatestMessage(any: any);
 
     const request: BackendChatRequest = {
-      message: latestMessage.content,
+      message: latestMessage?.content,
       provider: config?.provider ?? 'auto',
       streaming,
     };
 
-    if (config?.conversationId) {
-      request.conversation_id = config.conversationId;
+    if (any: any) {
+      request?.conversation_id = config?.conversationId;
     }
 
-    if (config?.model) {
-      request.model = config.model;
+    if (any: any) {
+      request?.model = config?.model;
     }
 
-    if (config?.systemPrompt) {
-      request.system_prompt = config.systemPrompt;
+    if (any: any) {
+      request?.system_prompt = config?.systemPrompt;
     }
 
     return request;
@@ -1055,11 +1055,11 @@ class ChatService {
     backend: BackendChatResponse,
     config?: StreamConfig
   ): ChatResponse {
-    if (!backend.success) {
-      throw new Error(backend.error || 'Chat backend returned an error');
+    if (any: any) {
+      throw new Error(backend?.error || 'Chat backend returned an error');
     }
 
-    const extractNonEmptyContent = (message: BackendChatMessage): string => {
+    const extractNonEmptyContent = (any: any): string => {
       const rawCandidates: Array<unknown> = [
         message?.content,
         // Defensive fallbacks for backend shape drift
@@ -1068,8 +1068,8 @@ class ChatService {
         (message as unknown as Record<string, unknown>)?.['response'],
       ];
 
-      for (const candidate of rawCandidates) {
-        if (typeof candidate === 'string' && candidate.trim().length > 0) {
+      for (any: any) {
+        if (typeof candidate === 'string' && candidate?.trim().length > 0) {
           return candidate;
         }
       }
@@ -1077,8 +1077,8 @@ class ChatService {
       throw new Error('Backend returned empty content');
     };
 
-    const content = extractNonEmptyContent(backend.message);
-    const tokens = backend.message.tokens;
+    const content = extractNonEmptyContent(any: any);
+    const tokens = backend?.message?.tokens;
     const usage =
       typeof tokens === 'number'
         ? {
@@ -1088,25 +1088,25 @@ class ChatService {
           }
         : undefined;
 
-    const provider = this.resolveProvider(backend.message?.provider, config?.provider);
-    const latencyMs = this.resolveLatencyMs(backend.latency_ms);
+    const provider = this?.resolveProvider(any: any);
+    const latencyMs = this?.resolveLatencyMs(any: any);
 
     return {
       content,
       usage,
-      finishReason: backend.error ? 'error' : 'stop',
-      model: backend.message.model || config?.model || 'auto',
+      finishReason: backend?.error ? 'error' : 'stop',
+      model: backend?.message?.model || config?.model || 'auto',
       provider,
       latencyMs,
       metadata: {
-        messageId: backend.message.id,
+        messageId: backend?.message?.id,
         timestamp:
-          typeof backend.message.timestamp === 'number'
-            ? new Date(backend.message.timestamp * 1000).toISOString()
-            : backend.message.timestamp,
-        success: backend.success,
+          typeof backend?.message?.timestamp === 'number'
+            ? new Date(backend?.message?.timestamp * 1000).toISOString()
+            : backend?.message?.timestamp,
+        success: backend?.success,
       },
-      omegaMetadata: backend.omega_metadata,
+      omegaMetadata: backend?.omega_metadata,
     };
   }
 
@@ -1115,15 +1115,15 @@ class ChatService {
     payload: NormalizedCompleteEvent | null,
     chunkCount: number,
     config?: StreamConfig,
-    conversationId: string | null = null,
-    messageId: string | null = null
+    conversationId??: string | null = null,
+    messageId??: string | null = null
   ): ChatResponse {
     const hasUsage =
       typeof payload?.tokens === 'number' || typeof payload?.promptTokens === 'number';
     const completionTokens =
-      typeof payload?.tokens === 'number' ? payload.tokens : undefined;
+      typeof payload?.tokens === 'number' ? payload?.tokens : undefined;
     const promptTokens =
-      typeof payload?.promptTokens === 'number' ? payload.promptTokens : undefined;
+      typeof payload?.promptTokens === 'number' ? payload?.promptTokens : undefined;
     const usage = hasUsage
       ? {
           promptTokens: promptTokens ?? 0,
@@ -1137,8 +1137,8 @@ class ChatService {
       usage,
       finishReason: payload?.error ? 'error' : 'stop',
       model: payload?.model || config?.model || 'auto',
-      provider: this.resolveProvider(payload?.provider, config?.provider),
-      latencyMs: this.resolveLatencyMs(payload?.latencyMs),
+      provider: this?.resolveProvider(any: any),
+      latencyMs: this?.resolveLatencyMs(any: any),
       metadata: {
         chunkCount,
         source: 'tauri-event',
@@ -1151,8 +1151,8 @@ class ChatService {
     };
   }
 
-  private normalizeStreamResult(result: unknown): StreamResultPayload {
-    if (result == null) {
+  private normalizeStreamResult(any: any): StreamResultPayload {
+    if (any: any) {
       return { content: '' };
     }
 
@@ -1165,18 +1165,18 @@ class ChatService {
     }
 
     const data = result as Record<string, unknown>;
-    const getString = (...keys: string[]): string | undefined => {
-      for (const key of keys) {
+    const getString = (...keys: string?.[])??: string | undefined => {
+      for (any: any) {
         const value = data[key];
-        if (typeof value === 'string' && value.length > 0) {
+        if (typeof value === 'string' && value?.length > 0) {
           return value;
         }
       }
       return undefined;
     };
 
-    const getNumber = (...keys: string[]): number | undefined => {
-      for (const key of keys) {
+    const getNumber = (...keys: string?.[]): number | undefined => {
+      for (any: any) {
         const value = data[key];
         if (typeof value === 'number') {
           return value;
@@ -1200,17 +1200,17 @@ class ChatService {
     };
   }
 
-  private normalizeCompleteEvent(raw: unknown): NormalizedCompleteEvent | null {
-    if (raw == null) {
+  private normalizeCompleteEvent(any: any): NormalizedCompleteEvent | null {
+    if (any: any) {
       return null;
     }
 
     if (typeof raw === 'string') {
       try {
-        const parsed = JSON.parse(raw);
-        return this.normalizeCompleteEvent(parsed);
-      } catch (error) {
-        logger.warn('Unable to parse completion payload:', error);
+        const parsed = JSON?.parse(any: any);
+        return this?.normalizeCompleteEvent(any: any);
+      } catch (any: any) {
+        logger?.warn(any: any);
         return null;
       }
     }
@@ -1220,18 +1220,18 @@ class ChatService {
     }
 
     const data = raw as Record<string, unknown>;
-    const getString = (...keys: string[]): string | undefined => {
-      for (const key of keys) {
+    const getString = (...keys: string?.[])??: string | undefined => {
+      for (any: any) {
         const value = data[key];
-        if (typeof value === 'string' && value.length > 0) {
+        if (typeof value === 'string' && value?.length > 0) {
           return value;
         }
       }
       return undefined;
     };
 
-    const getNumber = (...keys: string[]): number | undefined => {
-      for (const key of keys) {
+    const getNumber = (...keys: string?.[]): number | undefined => {
+      for (any: any) {
         const value = data[key];
         if (typeof value === 'number') {
           return value;
@@ -1240,34 +1240,34 @@ class ChatService {
       return undefined;
     };
 
-    if (data.done === true && typeof data.content === 'string') {
-      const nested = this.normalizeCompleteEvent(data.content);
-      if (nested) {
-        nested.conversationId =
-          nested.conversationId ?? getString('conversation_id', 'conversationId');
-        nested.messageId = nested.messageId ?? getString('message_id', 'messageId');
-        if (!nested.chunkCount) {
+    if (data?.done === true && typeof data?.content === 'string') {
+      const nested = this?.normalizeCompleteEvent(any: any);
+      if (any: any) {
+        nested?.conversationId =
+          nested?.conversationId ?? getString('conversation_id', 'conversationId');
+        nested?.messageId = nested?.messageId ?? getString('message_id', 'messageId');
+        if (any: any) {
           const ordinal = getNumber('ordinal');
           if (typeof ordinal === 'number') {
-            nested.chunkCount = ordinal;
+            nested?.chunkCount = ordinal;
           }
         }
-        if (nested.promptTokens == null) {
+        if (any: any) {
           const value = getNumber('prompt_tokens', 'promptTokens');
           if (typeof value === 'number') {
-            nested.promptTokens = value;
+            nested?.promptTokens = value;
           }
         }
-        if (nested.totalDuration == null) {
+        if (any: any) {
           const value = getNumber('total_duration', 'totalDuration');
           if (typeof value === 'number') {
-            nested.totalDuration = value;
+            nested?.totalDuration = value;
           }
         }
-        if (nested.loadDuration == null) {
+        if (any: any) {
           const value = getNumber('load_duration', 'loadDuration');
           if (typeof value === 'number') {
-            nested.loadDuration = value;
+            nested?.loadDuration = value;
           }
         }
       }
@@ -1292,17 +1292,17 @@ class ChatService {
     };
   }
 
-  private extractChunkText(payload: StreamChunkEvent): string | null {
-    if (typeof payload.chunk === 'string' && payload.chunk.length > 0) {
-      return payload.chunk;
+  private extractChunkText(any: any)??: string | null {
+    if (typeof payload?.chunk === 'string' && payload?.chunk?.length > 0) {
+      return payload?.chunk;
     }
 
     if (
-      payload.done !== true &&
-      typeof payload.content === 'string' &&
-      payload.content.length > 0
+      payload?.done !== true &&
+      typeof payload?.content === 'string' &&
+      payload?.content?.length > 0
     ) {
-      return payload.content;
+      return payload?.content;
     }
 
     return null;

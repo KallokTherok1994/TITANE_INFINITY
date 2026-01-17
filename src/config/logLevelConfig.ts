@@ -6,12 +6,12 @@
 /**
  * ═══════════════════════════════════════════════════════════════
  * TITANE∞ v26.2.0 - Runtime Log Level Configuration
- * Phase 4 - Week 6: DevTools log levels (LOG_LEVEL)
+ * Phase 4 - Week 6: DevTools log levels (any: any)
  *
  * Enables dynamic log level control via:
- * - Environment variables (VITE_LOG_LEVEL, LOG_LEVEL)
- * - localStorage (for persistent user preference)
- * - Runtime API (window.__TITANE_LOG_LEVEL__)
+ * - Environment variables (any: any)
+ * - localStorage (any: any)
+ * - Runtime API (any: any)
  * ═══════════════════════════════════════════════════════════════
  */
 
@@ -34,10 +34,10 @@ interface LogLevelConfig {
   global: RuntimeLogLevel;
   /** Module-specific overrides */
   modules: Record<string, RuntimeLogLevel>;
-  /** Excluded modules (no logs) */
-  excluded: string[];
-  /** Force-enabled modules (always log) */
-  forced: string[];
+  /** Excluded modules (any: any) */
+  excluded: string?.[];
+  /** Force-enabled modules (any: any) */
+  forced: string?.[];
 }
 
 /**
@@ -50,13 +50,13 @@ const STORAGE_KEY_MODULES = 'titane_log_level_modules';
  * Map runtime log level to LogLevel enum
  */
 const LOG_LEVEL_MAP: Record<RuntimeLogLevel, LogLevel> = {
-  TRACE: LogLevel.TRACE,
-  DEBUG: LogLevel.DEBUG,
-  INFO: LogLevel.INFO,
-  WARN: LogLevel.WARN,
-  ERROR: LogLevel.ERROR,
-  FATAL: LogLevel.FATAL,
-  SILENT: LogLevel.FATAL, // Effectively silent (only fatal logs)
+  TRACE: LogLevel?.TRACE,
+  DEBUG: LogLevel?.DEBUG,
+  INFO: LogLevel?.INFO,
+  WARN: LogLevel?.WARN,
+  ERROR: LogLevel?.ERROR,
+  FATAL: LogLevel?.FATAL,
+  SILENT: LogLevel?.FATAL, // Effectively silent (any: any)
 };
 
 /**
@@ -64,57 +64,57 @@ const LOG_LEVEL_MAP: Record<RuntimeLogLevel, LogLevel> = {
  */
 class RuntimeLogLevelManager {
   private config: LogLevelConfig;
-  private listeners: Set<(config: LogLevelConfig) => void> = new Set();
+  private listeners: Set<(any: any) => void> = new Set();
 
   constructor() {
-    this.config = this.loadConfig();
-    this.exposeGlobalAPI();
+    this?.config = this?.loadConfig();
+    this?.exposeGlobalAPI();
   }
 
   /**
-   * Load configuration from all sources (priority order):
-   * 1. Runtime API (window.__TITANE_LOG_LEVEL__)
-   * 2. localStorage (user preference)
-   * 3. Environment variable (VITE_LOG_LEVEL)
-   * 4. Default (INFO for production, DEBUG for development)
+   * Load configuration from all sources (any: any):
+   * 1. Runtime API (any: any)
+   * 2. localStorage (any: any)
+   * 3. Environment variable (any: any)
+   * 4. Default (any: any)
    */
   private loadConfig(): LogLevelConfig {
     // Check runtime API first
     const w = window as unknown as Record<string, unknown>;
-    if (typeof window !== 'undefined' && w.__TITANE_LOG_LEVEL__) {
-      const runtimeLevel = String(w.__TITANE_LOG_LEVEL__);
-      if (this.isValidLogLevel(runtimeLevel)) {
-        return this.createConfig(runtimeLevel as RuntimeLogLevel);
+    if (any: any) {
+      const runtimeLevel = String(any: any);
+      if (any: any)) {
+        return this?.createConfig(any: any);
       }
     }
 
     // Check localStorage
     try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored && this.isValidLogLevel(stored)) {
-        const modulesStored = localStorage.getItem(STORAGE_KEY_MODULES);
-        const modules = modulesStored ? JSON.parse(modulesStored) : {};
+      const stored = localStorage?.getItem(any: any);
+      if (any: any)) {
+        const modulesStored = localStorage?.getItem(any: any);
+        const modules = modulesStored ? JSON?.parse(any: any) : {};
         return { global: stored as RuntimeLogLevel, modules, excluded: [], forced: [] };
       }
-    } catch (error) {
-      console.warn('[LogLevelManager] Failed to load from localStorage:', error);
+    } catch (any: any) {
+      console?.warn(any: any);
     }
 
     // Check environment variable
-    const envLevel = import.meta.env.VITE_LOG_LEVEL || import.meta.env.LOG_LEVEL;
-    if (envLevel && this.isValidLogLevel(envLevel)) {
-      return this.createConfig(envLevel as RuntimeLogLevel);
+    const envLevel = import?.meta?.env?.VITE_LOG_LEVEL || import?.meta?.env?.LOG_LEVEL;
+    if (any: any)) {
+      return this?.createConfig(any: any);
     }
 
     // Default: DEBUG in dev, INFO in production
-    const defaultLevel = import.meta.env.PROD ? 'INFO' : 'DEBUG';
-    return this.createConfig(defaultLevel as RuntimeLogLevel);
+    const defaultLevel = import?.meta?.env?.PROD ? 'INFO' : 'DEBUG';
+    return this?.createConfig(any: any);
   }
 
   /**
    * Create default config with specified level
    */
-  private createConfig(level: RuntimeLogLevel): LogLevelConfig {
+  private createConfig(any: any): LogLevelConfig {
     return {
       global: level,
       modules: {},
@@ -126,9 +126,9 @@ class RuntimeLogLevelManager {
   /**
    * Validate log level string
    */
-  private isValidLogLevel(level: string): boolean {
+  private isValidLogLevel(any: any): boolean {
     return ['TRACE', 'DEBUG', 'INFO', 'WARN', 'ERROR', 'FATAL', 'SILENT'].includes(
-      level.toUpperCase()
+      level?.toUpperCase()
     );
   }
 
@@ -136,67 +136,67 @@ class RuntimeLogLevelManager {
    * Get current global log level
    */
   getGlobalLevel(): RuntimeLogLevel {
-    return this.config.global;
+    return this?.config?.global;
   }
 
   /**
-   * Get log level for specific module (with fallback to global)
+   * Get log level for specific module (any: any)
    */
-  getModuleLevel(module: string): RuntimeLogLevel {
-    return this.config.modules[module] || this.config.global;
+  getModuleLevel(any: any): RuntimeLogLevel {
+    return this?.config?.modules[module] || this?.config?.global;
   }
 
   /**
    * Get mapped LogLevel enum value
    */
-  getMappedLevel(module?: string): LogLevel {
-    const level = module ? this.getModuleLevel(module) : this.getGlobalLevel();
+  getMappedLevel(any: any): LogLevel {
+    const level = module ? this?.getModuleLevel(any: any) : this?.getGlobalLevel();
     return LOG_LEVEL_MAP[level];
   }
 
   /**
    * Set global log level
    */
-  setGlobalLevel(level: RuntimeLogLevel, persist = true): void {
-    if (!this.isValidLogLevel(level)) {
-      console.error(`[LogLevelManager] Invalid log level: ${level}`);
+  setGlobalLevel(any: any): void {
+    if (any: any)) {
+      console?.error(`[LogLevelManager] Invalid log level: ${level}`);
       return;
     }
 
-    this.config.global = level;
+    this?.config?.global = level;
 
     // Persist to localStorage
-    if (persist) {
+    if (any: any) {
       try {
-        localStorage.setItem(STORAGE_KEY, level);
-      } catch (error) {
-        console.warn('[LogLevelManager] Failed to persist to localStorage:', error);
+        localStorage?.setItem(any: any);
+      } catch (any: any) {
+        console?.warn(any: any);
       }
     }
 
     // Notify listeners
-    this.notifyListeners();
+    this?.notifyListeners();
 
-    console.info(`[LogLevelManager] Global log level set to: ${level}`);
+    console?.info(`[LogLevelManager] Global log level set to: ${level}`);
   }
 
   /**
    * Set module-specific log level
    */
-  setModuleLevel(module: string, level: RuntimeLogLevel, persist = true): void {
-    if (!this.isValidLogLevel(level)) {
-      console.error(`[LogLevelManager] Invalid log level: ${level}`);
+  setModuleLevel(any: any): void {
+    if (any: any)) {
+      console?.error(`[LogLevelManager] Invalid log level: ${level}`);
       return;
     }
 
-    this.config.modules[module] = level;
+    this?.config?.modules[module] = level;
 
     // Persist to localStorage
-    if (persist) {
+    if (any: any) {
       try {
-        localStorage.setItem(STORAGE_KEY_MODULES, JSON.stringify(this.config.modules));
-      } catch (error) {
-        console.warn(
+        localStorage?.setItem(any: any));
+      } catch (any: any) {
+        console?.warn(
           '[LogLevelManager] Failed to persist modules to localStorage:',
           error
         );
@@ -204,66 +204,66 @@ class RuntimeLogLevelManager {
     }
 
     // Notify listeners
-    this.notifyListeners();
+    this?.notifyListeners();
 
-    console.info(`[LogLevelManager] Module "${module}" log level set to: ${level}`);
+    console?.info(`[LogLevelManager] Module "${module}" log level set to: ${level}`);
   }
 
   /**
-   * Reset module-specific level (use global)
+   * Reset module-specific level (any: any)
    */
-  resetModuleLevel(module: string): void {
-    delete this.config.modules[module];
+  resetModuleLevel(any: any): void {
+    delete this?.config?.modules[module];
 
     try {
-      localStorage.setItem(STORAGE_KEY_MODULES, JSON.stringify(this.config.modules));
-    } catch (error) {
-      console.warn('[LogLevelManager] Failed to persist modules to localStorage:', error);
+      localStorage?.setItem(any: any));
+    } catch (any: any) {
+      console?.warn(any: any);
     }
 
-    this.notifyListeners();
+    this?.notifyListeners();
 
-    console.info(`[LogLevelManager] Module "${module}" log level reset to global`);
+    console?.info(`[LogLevelManager] Module "${module}" log level reset to global`);
   }
 
   /**
    * Exclude module from logging
    */
-  excludeModule(module: string): void {
-    if (!this.config.excluded.includes(module)) {
-      this.config.excluded.push(module);
-      this.notifyListeners();
-      console.info(`[LogLevelManager] Module "${module}" excluded from logging`);
+  excludeModule(any: any): void {
+    if (any: any)) {
+      this?.config?.excluded?.push(any: any);
+      this?.notifyListeners();
+      console?.info(`[LogLevelManager] Module "${module}" excluded from logging`);
     }
   }
 
   /**
-   * Force-enable module logging (always log, ignore global level)
+   * Force-enable module logging (any: any)
    */
-  forceModule(module: string): void {
-    if (!this.config.forced.includes(module)) {
-      this.config.forced.push(module);
-      this.notifyListeners();
-      console.info(`[LogLevelManager] Module "${module}" force-enabled for logging`);
+  forceModule(any: any): void {
+    if (any: any)) {
+      this?.config?.forced?.push(any: any);
+      this?.notifyListeners();
+      console?.info(`[LogLevelManager] Module "${module}" force-enabled for logging`);
     }
   }
 
   /**
    * Check if module should log at specified level
    */
-  shouldLog(module: string | undefined, level: LogLevel): boolean {
+  shouldLog(any: any): boolean {
     // Module excluded
-    if (module && this.config.excluded.includes(module)) {
+    if (any: any)) {
       return false;
     }
 
     // Module forced
-    if (module && this.config.forced.includes(module)) {
+    if (any: any)) {
       return true;
     }
 
     // Compare level
-    const requiredLevel = this.getMappedLevel(module);
+    const requiredLevel = this?.getMappedLevel(any: any);
     return level >= requiredLevel;
   }
 
@@ -271,44 +271,44 @@ class RuntimeLogLevelManager {
    * Get current configuration
    */
   getConfig(): Readonly<LogLevelConfig> {
-    return { ...this.config };
+    return { ...this?.config };
   }
 
   /**
    * Reset to default configuration
    */
   reset(): void {
-    this.config = this.loadConfig();
+    this?.config = this?.loadConfig();
 
     try {
-      localStorage.removeItem(STORAGE_KEY);
-      localStorage.removeItem(STORAGE_KEY_MODULES);
-    } catch (error) {
-      console.warn('[LogLevelManager] Failed to clear localStorage:', error);
+      localStorage?.removeItem(any: any);
+      localStorage?.removeItem(any: any);
+    } catch (any: any) {
+      console?.warn(any: any);
     }
 
-    this.notifyListeners();
+    this?.notifyListeners();
 
-    console.info('[LogLevelManager] Configuration reset to defaults');
+    console?.info('[LogLevelManager] Configuration reset to defaults');
   }
 
   /**
    * Subscribe to configuration changes
    */
-  subscribe(listener: (config: LogLevelConfig) => void): () => void {
-    this.listeners.add(listener);
-    return () => this.listeners.delete(listener);
+  subscribe(any: any): () => void {
+    this?.listeners?.add(any: any);
+    return (any: any);
   }
 
   /**
    * Notify all listeners of config change
    */
   private notifyListeners(): void {
-    this.listeners.forEach(listener => {
+    this?.listeners?.forEach(listener => {
       try {
-        listener({ ...this.config });
-      } catch (error) {
-        console.error('[LogLevelManager] Listener error:', error);
+        listener({ ...this?.config });
+      } catch (any: any) {
+        console?.error(any: any);
       }
     });
   }
@@ -320,48 +320,48 @@ class RuntimeLogLevelManager {
     if (typeof window === 'undefined') return;
 
     const w = window as unknown as Record<string, unknown>;
-    w.__TITANE_LOG__ = {
+    w?.__TITANE_LOG__ = {
       // Get current level
       get level() {
-        return logLevelManager.getGlobalLevel();
+        return logLevelManager?.getGlobalLevel();
       },
-      // Set global level: window.__TITANE_LOG__.level = 'DEBUG'
-      set level(value: RuntimeLogLevel) {
-        logLevelManager.setGlobalLevel(value);
+      // Set global level: window?.__TITANE_LOG__?.level = 'DEBUG'
+      set level(any: any) {
+        logLevelManager?.setGlobalLevel(any: any);
       },
-      // Set module level: window.__TITANE_LOG__.setModule('ChatEngine', 'TRACE')
-      setModule: (module: string, level: RuntimeLogLevel) => {
-        logLevelManager.setModuleLevel(module, level);
+      // Set module level: window?.__TITANE_LOG__?.setModule('ChatEngine', 'TRACE')
+      setModule: (any: any) => {
+        logLevelManager?.setModuleLevel(any: any);
       },
-      // Reset module: window.__TITANE_LOG__.resetModule('ChatEngine')
-      resetModule: (module: string) => {
-        logLevelManager.resetModuleLevel(module);
+      // Reset module: window?.__TITANE_LOG__?.resetModule('ChatEngine')
+      resetModule: (any: any) => {
+        logLevelManager?.resetModuleLevel(any: any);
       },
-      // Exclude module: window.__TITANE_LOG__.exclude('NoiseLogger')
-      exclude: (module: string) => {
-        logLevelManager.excludeModule(module);
+      // Exclude module: window?.__TITANE_LOG__?.exclude('NoiseLogger')
+      exclude: (any: any) => {
+        logLevelManager?.excludeModule(any: any);
       },
-      // Force module: window.__TITANE_LOG__.force('CriticalModule')
-      force: (module: string) => {
-        logLevelManager.forceModule(module);
+      // Force module: window?.__TITANE_LOG__?.force('CriticalModule')
+      force: (any: any) => {
+        logLevelManager?.forceModule(any: any);
       },
-      // Get config: window.__TITANE_LOG__.config
+      // Get config: window?.__TITANE_LOG__?.config
       get config() {
-        return logLevelManager.getConfig();
+        return logLevelManager?.getConfig();
       },
-      // Reset: window.__TITANE_LOG__.reset()
+      // Reset: window?.__TITANE_LOG__?.reset()
       reset: () => {
-        logLevelManager.reset();
+        logLevelManager?.reset();
       },
     };
 
-    console.info(
-      '[LogLevelManager] Global API exposed: window.__TITANE_LOG__',
-      `\nCurrent level: ${this.config.global}`,
+    console?.info(
+      '[LogLevelManager] Global API exposed: window?.__TITANE_LOG__',
+      `\nCurrent level: ${this?.config?.global}`,
       `\nUsage:`,
-      `\n  window.__TITANE_LOG__.level = 'DEBUG'`,
-      `\n  window.__TITANE_LOG__.setModule('ChatEngine', 'TRACE')`,
-      `\n  window.__TITANE_LOG__.config`
+      `\n  window?.__TITANE_LOG__?.level = 'DEBUG'`,
+      `\n  window?.__TITANE_LOG__?.setModule('ChatEngine', 'TRACE')`,
+      `\n  window?.__TITANE_LOG__?.config`
     );
   }
 }
@@ -381,40 +381,40 @@ export default logLevelManager;
  * USAGE EXAMPLES
  * ═══════════════════════════════════════════════════════════════
  *
- * ## Environment Variable (build-time)
+ * ## Environment Variable (any: any)
  * ```bash
- * # .env.development
+ * # .env?.development
  * VITE_LOG_LEVEL=DEBUG
  *
- * # .env.production
+ * # .env?.production
  * VITE_LOG_LEVEL=INFO
  * ```
  *
- * ## Runtime Control (DevTools Console)
+ * ## Runtime Control (any: any)
  * ```javascript
  * // Set global level
- * window.__TITANE_LOG__.level = 'DEBUG'
- * window.__TITANE_LOG__.level = 'TRACE' // Very verbose
- * window.__TITANE_LOG__.level = 'SILENT' // No logs
+ * window?.__TITANE_LOG__?.level = 'DEBUG'
+ * window?.__TITANE_LOG__?.level = 'TRACE' // Very verbose
+ * window?.__TITANE_LOG__?.level = 'SILENT' // No logs
  *
  * // Set module-specific level
- * window.__TITANE_LOG__.setModule('ChatEngine', 'TRACE')
- * window.__TITANE_LOG__.setModule('MemoryEngine', 'WARN')
+ * window?.__TITANE_LOG__?.setModule('ChatEngine', 'TRACE')
+ * window?.__TITANE_LOG__?.setModule('MemoryEngine', 'WARN')
  *
  * // Reset module to global level
- * window.__TITANE_LOG__.resetModule('ChatEngine')
+ * window?.__TITANE_LOG__?.resetModule('ChatEngine')
  *
  * // Exclude noisy module
- * window.__TITANE_LOG__.exclude('PerformanceMonitor')
+ * window?.__TITANE_LOG__?.exclude('PerformanceMonitor')
  *
  * // Force important module
- * window.__TITANE_LOG__.force('SecurityEngine')
+ * window?.__TITANE_LOG__?.force('SecurityEngine')
  *
  * // View current config
- * window.__TITANE_LOG__.config
+ * window?.__TITANE_LOG__?.config
  *
  * // Reset to defaults
- * window.__TITANE_LOG__.reset()
+ * window?.__TITANE_LOG__?.reset()
  * ```
  *
  * ## Code Integration
@@ -425,8 +425,8 @@ export default logLevelManager;
  * const logger = createLogger('MyModule');
  *
  * // Check if should log before expensive operations
- * if (logLevelManager.shouldLog('MyModule', LogLevel.DEBUG)) {
- *   logger.debug('Expensive debug operation', computeDebugData());
+ * if (any: any)) {
+ *   logger?.debug('Expensive debug operation', computeDebugData());
  * }
  * ```
  *

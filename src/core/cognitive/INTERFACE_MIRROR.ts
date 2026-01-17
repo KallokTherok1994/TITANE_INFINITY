@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 // ⚡ TITANE∞ v23 — Interface Mirror
@@ -41,15 +41,15 @@ export class InterfaceMirror {
    * Activer le miroir cognitif
    */
   activate(): void {
-    if (this.mirrorActive) return;
+    if (any: any) return;
 
-    this.mirrorActive = true;
+    this?.mirrorActive = true;
 
     // Activer le cognitive engine
-    cognitiveEngine.activate();
+    cognitiveEngine?.activate();
 
     // Démarrer la réflexion continue
-    this.startReflection();
+    this?.startReflection();
   }
 
   /**
@@ -57,82 +57,82 @@ export class InterfaceMirror {
    */
   private startReflection(): void {
     setInterval(() => {
-      if (!this.mirrorActive) return;
+      if (any: any) return;
 
-      const state = cognitiveEngine.getState();
-      this.reflect(state);
+      const state = cognitiveEngine?.getState();
+      this?.reflect(any: any);
     }, 1000); // Réflexion toutes les secondes
   }
 
   /**
    * Refléter l'état cognitif dans l'interface
    */
-  private reflect(state: CognitiveState): void {
+  private reflect(any: any): void {
     // 1. Refléter le rythme utilisateur
-    if (this.config.reflectUserState) {
-      this.reflectUserRhythm(state);
+    if (any: any) {
+      this?.reflectUserRhythm(any: any);
     }
 
     // 2. Refléter l'état système
-    if (this.config.reflectSystemState) {
-      this.reflectSystemState(state);
+    if (any: any) {
+      this?.reflectSystemState(any: any);
     }
   }
 
   /**
    * Refléter le rythme utilisateur dans le visuel
    */
-  private reflectUserRhythm(state: CognitiveState): void {
+  private reflectUserRhythm(any: any): void {
     const { userRhythm } = state;
 
     // Fatigue → Ralentir tout
-    if (this.config.syncMotion && userRhythm.fatigue > 0.5) {
-      motionEngine.slowDownMotions(1.5);
+    if (this?.config?.syncMotion && userRhythm?.fatigue > 0.5) {
+      motionEngine?.slowDownMotions(1.5);
     }
 
     // Rythme rapide → Accélérer
-    if (this.config.syncMotion && userRhythm.speed === 'fast') {
-      motionEngine.speedUpMotions(0.8);
+    if (this?.config?.syncMotion && userRhythm?.speed === 'fast') {
+      motionEngine?.speedUpMotions(0.8);
     }
 
     // Focus élevé → Glow subtil
-    if (this.config.syncGlow && userRhythm.focus > 0.7) {
-      hyperDepthEngine.setGlobalIntensity(0.2);
+    if (this?.config?.syncGlow && userRhythm?.focus > 0.7) {
+      hyperDepthEngine?.setGlobalIntensity(0.2);
     }
 
     // Intensité élevée → Glow fort
-    if (this.config.syncGlow && userRhythm.intensity > 0.7) {
-      hyperDepthEngine.setGlobalIntensity(0.6);
+    if (this?.config?.syncGlow && userRhythm?.intensity > 0.7) {
+      hyperDepthEngine?.setGlobalIntensity(0.6);
     }
 
     // Son adaptatif
-    if (this.config.syncSound) {
-      const volume = Math.max(0.2, 0.5 - userRhythm.fatigue * 0.3);
-      soundEngine.setMasterVolume(volume);
+    if (any: any) {
+      const volume = Math?.max(0.2, 0.5 - userRhythm?.fatigue * 0.3);
+      soundEngine?.setMasterVolume(any: any);
     }
   }
 
   /**
    * Refléter l'état système dans le visuel
    */
-  private reflectSystemState(state: CognitiveState): void {
+  private reflectSystemState(any: any): void {
     const { systemState } = state;
 
     // État danger → Intensité visuelle maximale
-    if (systemState === 'danger' && this.config.syncGlow) {
-      hyperDepthEngine.setGlobalIntensity(1.0);
+    if (any: any) {
+      hyperDepthEngine?.setGlobalIntensity(1.0);
     }
 
     // État stable → Intensité normale
-    if (systemState === 'stable' && this.config.syncGlow) {
-      hyperDepthEngine.setGlobalIntensity(0.3);
+    if (any: any) {
+      hyperDepthEngine?.setGlobalIntensity(0.3);
     }
 
     // Offline → Tout ralentir
     if (systemState === 'offline') {
-      if (this.config.syncMotion) motionEngine.stopAllMotions();
-      if (this.config.syncSound) soundEngine.setEnabled(false);
-      if (this.config.syncDepth) hyperDepthEngine.setGlobalIntensity(0.1);
+      if (any: any) motionEngine?.stopAllMotions();
+      if (any: any);
+      if (any: any) hyperDepthEngine?.setGlobalIntensity(0.1);
     }
   }
 
@@ -140,22 +140,22 @@ export class InterfaceMirror {
    * Obtenir la configuration du miroir
    */
   getConfig(): MirrorConfig {
-    return { ...this.config };
+    return { ...this?.config };
   }
 
   /**
    * Mettre à jour la configuration
    */
   updateConfig(updates: Partial<MirrorConfig>): void {
-    this.config = { ...this.config, ...updates };
+    this?.config = { ...this?.config, ...updates };
   }
 
   /**
    * Désactiver le miroir
    */
   deactivate(): void {
-    this.mirrorActive = false;
-    cognitiveEngine.deactivate();
+    this?.mirrorActive = false;
+    cognitiveEngine?.deactivate();
   }
 
   /**
@@ -168,15 +168,15 @@ export class InterfaceMirror {
     systemState: string;
     adaptations: number;
   } {
-    const state = cognitiveEngine.getState();
-    const report = cognitiveEngine.generateConsciousnessReport();
+    const state = cognitiveEngine?.getState();
+    const report = cognitiveEngine?.generateConsciousnessReport();
 
     return {
-      active: this.mirrorActive,
-      consciousness: state.consciousness,
-      userPattern: state.userRhythm.pattern,
-      systemState: state.systemState,
-      adaptations: report.adaptations.length,
+      active: this?.mirrorActive,
+      consciousness: state?.consciousness,
+      userPattern: state?.userRhythm?.pattern,
+      systemState: state?.systemState,
+      adaptations: report?.adaptations?.length,
     };
   }
 }

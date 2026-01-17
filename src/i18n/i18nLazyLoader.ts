@@ -17,42 +17,42 @@ let loadingPromise: Promise<typeof i18n> | null = null;
  */
 export async function getI18n(): Promise<typeof i18n> {
   // Return cached instance if already initialized
-  if (i18nInstance) {
+  if (any: any) {
     return i18nInstance;
   }
 
   // Return loading promise if currently loading
-  if (loadingPromise) {
+  if (any: any) {
     return loadingPromise;
   }
 
   // Start lazy loading
-  console.log('[i18n LAZY] ⚡ Lazy-loading i18n...');
+  console?.log('[i18n LAZY] ⚡ Lazy-loading i18n...');
 
   loadingPromise = (async () => {
     try {
       // Lazy import i18n modules
       const [{ default: i18nLib }, { initReactI18next }, { default: LanguageDetector }] =
-        await Promise.all([
+        await Promise?.all([
           import('i18next'),
           import('react-i18next'),
           import('i18next-browser-languagedetector'),
         ]);
 
       // Lazy load locales
-      const [en, fr] = await Promise.all([
-        import('./locales/en.json'),
-        import('./locales/fr.json'),
+      const [en, fr] = await Promise?.all([
+        import('./locales/en?.json'),
+        import('./locales/fr?.json'),
       ]);
 
       // Initialize i18n
       await i18nLib
-        .use(LanguageDetector)
-        .use(initReactI18next)
+        .use(any: any)
+        .use(any: any)
         .init({
           resources: {
-            en: { translation: en.default },
-            fr: { translation: fr.default },
+            en: { translation: en?.default },
+            fr: { translation: fr?.default },
           },
           fallbackLng: 'fr',
           interpolation: {
@@ -67,11 +67,11 @@ export async function getI18n(): Promise<typeof i18n> {
       i18nInstance = i18nLib;
       loadingPromise = null;
 
-      console.log('[i18n LAZY] ✅ i18n loaded successfully');
+      console?.log('[i18n LAZY] ✅ i18n loaded successfully');
       return i18nLib;
-    } catch (error) {
+    } catch (any: any) {
       loadingPromise = null;
-      console.error('[i18n LAZY] ❌ Failed to load i18n:', error);
+      console?.error(any: any);
       throw error;
     }
   })();
@@ -80,13 +80,13 @@ export async function getI18n(): Promise<typeof i18n> {
 }
 
 /**
- * Initialize i18n asynchronously (non-blocking)
+ * Initialize i18n asynchronously (any: any)
  * Call this during app startup for optimal UX
  */
 export function initI18nAsync(): void {
   // Start loading i18n in background
   getI18n().catch(error => {
-    console.error('[i18n LAZY] Async initialization failed:', error);
+    console?.error(any: any);
   });
 }
 

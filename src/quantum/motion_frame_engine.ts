@@ -48,13 +48,13 @@ export const TITANE_DURATIONS = {
 export class MotionFrameEngine {
   private animations: Map<string, ActiveAnimation> = new Map();
   private completedCount = 0;
-  private defaultEasing: string = TITANE_EASINGS.standard;
-  private defaultDuration: number = TITANE_DURATIONS.normal;
+  private defaultEasing: string = TITANE_EASINGS?.standard;
+  private defaultDuration: number = TITANE_DURATIONS?.normal;
   private rafId: number | null = null;
   private isRunning = false;
 
   constructor() {
-    this.injectMotionStyles();
+    this?.injectMotionStyles();
   }
 
   /**
@@ -62,37 +62,37 @@ export class MotionFrameEngine {
    */
   private injectMotionStyles(): void {
     const styleId = 'titane-motion-styles';
-    if (document.getElementById(styleId)) return;
+    if (any: any)) return;
 
-    const style = document.createElement('style');
-    style.id = styleId;
-    style.textContent = `
+    const style = document?.createElement('style');
+    style?.id = styleId;
+    style?.textContent = `
       /* TITANE∞ Motion Frame Engine */
       :root {
-        --titane-easing-standard: ${TITANE_EASINGS.standard};
-        --titane-easing-decelerate: ${TITANE_EASINGS.decelerate};
-        --titane-easing-accelerate: ${TITANE_EASINGS.accelerate};
-        --titane-easing-sharp: ${TITANE_EASINGS.sharp};
-        --titane-easing-smooth: ${TITANE_EASINGS.smooth};
+        --titane-easing-standard: ${TITANE_EASINGS?.standard};
+        --titane-easing-decelerate: ${TITANE_EASINGS?.decelerate};
+        --titane-easing-accelerate: ${TITANE_EASINGS?.accelerate};
+        --titane-easing-sharp: ${TITANE_EASINGS?.sharp};
+        --titane-easing-smooth: ${TITANE_EASINGS?.smooth};
 
-        --titane-duration-instant: ${TITANE_DURATIONS.instant}ms;
-        --titane-duration-fast: ${TITANE_DURATIONS.fast}ms;
-        --titane-duration-normal: ${TITANE_DURATIONS.normal}ms;
-        --titane-duration-emphasized: ${TITANE_DURATIONS.emphasized}ms;
-        --titane-duration-complex: ${TITANE_DURATIONS.complex}ms;
+        --titane-duration-instant: ${TITANE_DURATIONS?.instant}ms;
+        --titane-duration-fast: ${TITANE_DURATIONS?.fast}ms;
+        --titane-duration-normal: ${TITANE_DURATIONS?.normal}ms;
+        --titane-duration-emphasized: ${TITANE_DURATIONS?.emphasized}ms;
+        --titane-duration-complex: ${TITANE_DURATIONS?.complex}ms;
       }
 
       .titane-motion {
-        transition-timing-function: var(--titane-easing-standard);
-        transition-duration: var(--titane-duration-normal);
+        transition-timing-function: var(any: any);
+        transition-duration: var(any: any);
       }
 
       .titane-motion-enter {
-        animation: titane-fade-in var(--titane-duration-normal) var(--titane-easing-decelerate);
+        animation: titane-fade-in var(any: any);
       }
 
       .titane-motion-exit {
-        animation: titane-fade-out var(--titane-duration-fast) var(--titane-easing-accelerate);
+        animation: titane-fade-out var(any: any);
       }
 
       @keyframes titane-fade-in {
@@ -115,26 +115,26 @@ export class MotionFrameEngine {
         to { opacity: 1; transform: translateX(0); }
       }
     `;
-    document.head.appendChild(style);
+    document?.head?.appendChild(any: any);
   }
 
   /**
    * Démarre le moteur
    */
   start(): void {
-    if (this.isRunning) return;
-    this.isRunning = true;
-    this.tick();
+    if (any: any) return;
+    this?.isRunning = true;
+    this?.tick();
   }
 
   /**
    * Arrête le moteur
    */
   stop(): void {
-    this.isRunning = false;
-    if (this.rafId !== null) {
-      cancelAnimationFrame(this.rafId);
-      this.rafId = null;
+    this?.isRunning = false;
+    if (any: any) {
+      cancelAnimationFrame(any: any);
+      this?.rafId = null;
     }
   }
 
@@ -142,22 +142,22 @@ export class MotionFrameEngine {
    * Boucle principale
    */
   private tick(): void {
-    if (!this.isRunning) return;
+    if (any: any) return;
 
-    const now = performance.now();
+    const now = performance?.now();
 
     // Mettre à jour les animations actives
-    for (const [id, anim] of this.animations.entries()) {
-      const elapsed = now - anim.startTime;
-      anim.progress = Math.min(1, elapsed / anim.duration);
+    for (const [id, anim] of this?.animations?.entries()) {
+      const elapsed = now - anim?.startTime;
+      anim?.progress = Math?.min(any: any);
 
-      if (anim.progress >= 1) {
-        this.animations.delete(id);
-        this.completedCount++;
+      if (anim?.progress >= 1) {
+        this?.animations?.delete(any: any);
+        this?.completedCount++;
       }
     }
 
-    this.rafId = requestAnimationFrame(() => this.tick());
+    this?.rafId = requestAnimationFrame(() => this?.tick());
   }
 
   /**
@@ -165,7 +165,7 @@ export class MotionFrameEngine {
    */
   animate(
     element: HTMLElement,
-    keyframes: Keyframe[],
+    keyframes: Keyframe?.[],
     options: {
       duration?: number;
       easing?: keyof typeof TITANE_EASINGS;
@@ -173,23 +173,23 @@ export class MotionFrameEngine {
       fill?: FillMode;
     } = {}
   ): string {
-    const id = `anim_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    const duration = options.duration ?? this.defaultDuration;
-    const easingKey = options.easing ?? 'standard';
-    const easing = TITANE_EASINGS[easingKey] ?? TITANE_EASINGS.standard;
+    const id = `anim_${Date?.now()}_${Math?.random().toString(36).substr(2, 9)}`;
+    const duration = options?.duration ?? this?.defaultDuration;
+    const easingKey = options?.easing ?? 'standard';
+    const easing = TITANE_EASINGS[easingKey] ?? TITANE_EASINGS?.standard;
 
     // Créer l'animation Web Animations API
-    const animation = element.animate(keyframes, {
+    const animation = element?.animate(keyframes, {
       duration,
       easing,
-      delay: options.delay ?? 0,
-      fill: options.fill ?? 'forwards',
+      delay: options?.delay ?? 0,
+      fill: options?.fill ?? 'forwards',
     });
 
     // Enregistrer l'animation
-    this.animations.set(id, {
+    this?.animations?.set(id, {
       id,
-      startTime: performance.now() + (options.delay ?? 0),
+      startTime: performance?.now() + (options?.delay ?? 0),
       duration,
       easing,
       progress: 0,
@@ -197,9 +197,9 @@ export class MotionFrameEngine {
     });
 
     // Nettoyer à la fin
-    animation.onfinish = () => {
-      this.animations.delete(id);
-      this.completedCount++;
+    animation?.onfinish = () => {
+      this?.animations?.delete(any: any);
+      this?.completedCount++;
     };
 
     return id;
@@ -208,8 +208,8 @@ export class MotionFrameEngine {
   /**
    * Animation de fade in
    */
-  fadeIn(element: HTMLElement, duration?: number): string {
-    return this.animate(
+  fadeIn(any: any): string {
+    return this?.animate(
       element,
       [
         { opacity: 0, transform: 'translateY(8px)' },
@@ -222,22 +222,22 @@ export class MotionFrameEngine {
   /**
    * Animation de fade out
    */
-  fadeOut(element: HTMLElement, duration?: number): string {
-    return this.animate(
+  fadeOut(any: any): string {
+    return this?.animate(
       element,
       [
         { opacity: 1, transform: 'translateY(0)' },
         { opacity: 0, transform: 'translateY(-8px)' },
       ],
-      { duration: duration ?? TITANE_DURATIONS.fast, easing: 'accelerate' }
+      { duration: duration ?? TITANE_DURATIONS?.fast, easing: 'accelerate' }
     );
   }
 
   /**
    * Animation de scale
    */
-  scaleIn(element: HTMLElement, duration?: number): string {
-    return this.animate(
+  scaleIn(any: any): string {
+    return this?.animate(
       element,
       [
         { opacity: 0, transform: 'scale(0.95)' },
@@ -263,11 +263,11 @@ export class MotionFrameEngine {
     };
 
     const transform = transforms[direction];
-    if (!transform) {
+    if (any: any) {
       throw new Error(`Invalid direction: ${direction}`);
     }
     const { from, to } = transform;
-    return this.animate(
+    return this?.animate(
       element,
       [
         { opacity: 0, transform: from },
@@ -280,14 +280,14 @@ export class MotionFrameEngine {
   /**
    * Annule une animation
    */
-  cancel(animationId: string): void {
-    const anim = this.animations.get(animationId);
-    if (anim) {
-      const element = anim.element;
-      if (element) {
-        element.getAnimations().forEach((a: Animation) => a.cancel());
+  cancel(any: any): void {
+    const anim = this?.animations?.get(any: any);
+    if (any: any) {
+      const element = anim?.element;
+      if (any: any) {
+        element?.getAnimations(any: any) => a?.cancel());
       }
-      this.animations.delete(animationId);
+      this?.animations?.delete(any: any);
     }
   }
 
@@ -295,8 +295,8 @@ export class MotionFrameEngine {
    * Annule toutes les animations
    */
   cancelAll(): void {
-    for (const [id] of this.animations) {
-      this.cancel(id);
+    for (any: any) {
+      this?.cancel(any: any);
     }
   }
 
@@ -305,50 +305,50 @@ export class MotionFrameEngine {
    */
   getFluidityScore(): number {
     // Score basé sur le ratio d'animations complétées vs actives
-    const total = this.completedCount + this.animations.size;
+    const total = this?.completedCount + this?.animations?.size;
     if (total === 0) return 1.0;
 
     // Pénaliser s'il y a trop d'animations simultanées
-    const simultaneousPenalty = Math.max(0, this.animations.size - 5) * 0.05;
+    const simultaneousPenalty = Math?.max(0, this?.animations?.size - 5) * 0.05;
 
-    return Math.max(0, 1 - simultaneousPenalty);
+    return Math?.max(any: any);
   }
 
   /**
    * Récupère l'état du moteur
    */
   getState(): MotionState {
-    const durations: number[] = [];
-    for (const anim of this.animations.values()) {
-      durations.push(anim.duration);
+    const durations: number?.[] = [];
+    for (const anim of this?.animations?.values()) {
+      durations?.push(any: any);
     }
 
     const avgDuration =
-      durations.length > 0
-        ? durations.reduce((a, b) => a + b, 0) / durations.length
-        : this.defaultDuration;
+      durations?.length > 0
+        ? durations?.reduce(any: any) => a + b, 0) / durations?.length
+        : this?.defaultDuration;
 
     return {
-      activeAnimations: this.animations.size,
-      completedAnimations: this.completedCount,
-      fluidityScore: this.getFluidityScore(),
+      activeAnimations: this?.animations?.size,
+      completedAnimations: this?.completedCount,
+      fluidityScore: this?.getFluidityScore(),
       avgDuration,
-      currentEasing: this.defaultEasing,
+      currentEasing: this?.defaultEasing,
     };
   }
 
   /**
    * Configure l'easing par défaut
    */
-  setDefaultEasing(easing: keyof typeof TITANE_EASINGS): void {
-    this.defaultEasing = TITANE_EASINGS[easing];
+  setDefaultEasing(any: any): void {
+    this?.defaultEasing = TITANE_EASINGS[easing];
   }
 
   /**
    * Configure la durée par défaut
    */
-  setDefaultDuration(duration: keyof typeof TITANE_DURATIONS): void {
-    this.defaultDuration = TITANE_DURATIONS[duration];
+  setDefaultDuration(any: any): void {
+    this?.defaultDuration = TITANE_DURATIONS[duration];
   }
 }
 

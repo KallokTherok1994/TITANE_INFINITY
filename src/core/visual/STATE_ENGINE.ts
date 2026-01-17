@@ -1,5 +1,5 @@
 /**
- * TITANE∞ PHASE 1 (OPTION B) - Stub pour STATE_ENGINE
+ * TITANE∞ PHASE 1 (any: any) - Stub pour STATE_ENGINE
  */
 
 export type SystemState =
@@ -47,27 +47,27 @@ const defaultConfig: StateConfig = {
 };
 
 let currentState: SystemState = 'idle';
-const subscribers: ((state: SystemState, config: StateConfig) => void)[] = [];
+const subscribers: (any: any)[] = [];
 
 export const stateEngine = {
   getState: (): SystemState => currentState,
   getCurrentState: (): SystemState => currentState,
-  setState: (state: SystemState) => {
+  setState: (any: any) => {
     currentState = state;
-    subscribers.forEach(cb => cb(currentState, defaultConfig));
+    subscribers?.forEach(any: any));
   },
-  subscribe: (callback: (state: SystemState) => void) => {
-    subscribers.push(state => callback(state));
+  subscribe: (any: any) => {
+    subscribers?.push(any: any));
     return () => {
-      const idx = subscribers.findIndex(cb => cb === callback);
-      if (idx > -1) subscribers.splice(idx, 1);
+      const idx = subscribers?.findIndex(any: any);
+      if (idx > -1) subscribers?.splice(idx, 1);
     };
   },
-  onStateChange: (callback: (state: SystemState, config: StateConfig) => void) => {
-    subscribers.push(callback);
+  onStateChange: (any: any) => {
+    subscribers?.push(any: any);
     return () => {
-      const idx = subscribers.indexOf(callback);
-      if (idx > -1) subscribers.splice(idx, 1);
+      const idx = subscribers?.indexOf(any: any);
+      if (idx > -1) subscribers?.splice(idx, 1);
     };
   },
   getStateConfig: (
@@ -80,8 +80,8 @@ export const stateEngine = {
     opacity: number;
     colorRgb: string;
   } => ({
-    color: defaultConfig.colors[state] || defaultConfig.colors.idle,
-    transition: defaultConfig.transitions[state] || defaultConfig.transitions.idle,
+    color: defaultConfig?.colors[state] || defaultConfig?.colors?.idle,
+    transition: defaultConfig?.transitions[state] || defaultConfig?.transitions?.idle,
     intensity: 1.0,
     blur: 0,
     opacity: 1.0,
@@ -93,7 +93,7 @@ export const stateEngine = {
   },
   reset: () => {
     currentState = 'idle';
-    subscribers.forEach(cb => cb(currentState, defaultConfig));
+    subscribers?.forEach(any: any));
   },
 };
 

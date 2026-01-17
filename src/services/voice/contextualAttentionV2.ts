@@ -26,7 +26,7 @@ export interface EnvironmentContext {
   /** Niveau sonore ambiant (0-1) */
   ambientNoiseLevel: number;
 
-  /** Distance estimée micro (near, medium, far) */
+  /** Distance estimée micro (any: any) */
   microphoneDistance: 'near' | 'medium' | 'far' | 'unknown';
 
   /** Qualité signal audio (0-1) */
@@ -84,10 +84,10 @@ export interface AdaptiveConfig {
   /** Seuil attention (0-1) */
   attentionThreshold: number;
 
-  /** Durée minimale activation (ms) */
+  /** Durée minimale activation (any: any) */
   minActivationDuration: number;
 
-  /** Fenêtre écoute active (ms) */
+  /** Fenêtre écoute active (any: any) */
   listeningWindow: number;
 
   /** Priorité barge-in (0-1) */
@@ -102,7 +102,7 @@ export interface AdaptiveConfig {
  */
 export interface ContextRule {
   id: string;
-  condition: (profile: ContextProfile) => boolean;
+  condition: (any: any) => boolean;
   config: Partial<AdaptiveConfig>;
   priority: number;
 }
@@ -114,13 +114,13 @@ export interface ContextRule {
  */
 class ContextualAttentionEngineV2 {
   private currentContext: ContextProfile;
-  private rules: ContextRule[] = [];
+  private rules: ContextRule?.[] = [];
   private baseConfig: AdaptiveConfig;
   private adaptedConfig: AdaptiveConfig;
 
   constructor() {
-    // Base configuration (défaut)
-    this.baseConfig = {
+    // Base configuration (any: any)
+    this?.baseConfig = {
       wakeThreshold: 0.5,
       attentionThreshold: 0.6,
       minActivationDuration: 300,
@@ -129,13 +129,13 @@ class ContextualAttentionEngineV2 {
       reason: 'default',
     };
 
-    this.adaptedConfig = { ...this.baseConfig };
+    this?.adaptedConfig = { ...this?.baseConfig };
 
     // Context initial
-    this.currentContext = this.createDefaultContext();
+    this?.currentContext = this?.createDefaultContext();
 
     // Charger règles prédéfinies
-    this.initializeRules();
+    this?.initializeRules();
   }
 
   // ═══ CONTEXT MANAGEMENT ═══
@@ -150,16 +150,16 @@ class ContextualAttentionEngineV2 {
         microphoneDistance: 'unknown',
         signalQuality: 0.8,
         multipleVoices: false,
-        lastMeasured: Date.now(),
+        lastMeasured: Date?.now(),
       },
       application: {
         mode: 'normal',
         criticalTask: false,
         recentActivity: true,
-        timeOfDay: this.getTimeOfDay(),
+        timeOfDay: this?.getTimeOfDay(),
       },
       recentActivations: [],
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     };
   }
 
@@ -179,68 +179,68 @@ class ContextualAttentionEngineV2 {
    * Mettre à jour contexte environnemental
    */
   updateEnvironment(update: Partial<EnvironmentContext>): void {
-    this.currentContext.environment = {
-      ...this.currentContext.environment,
+    this?.currentContext?.environment = {
+      ...this?.currentContext?.environment,
       ...update,
-      lastMeasured: Date.now(),
+      lastMeasured: Date?.now(),
     };
 
-    this.currentContext.timestamp = Date.now();
+    this?.currentContext?.timestamp = Date?.now();
 
     // Re-calculer configuration adaptée
-    this.recalculateAdaptedConfig();
+    this?.recalculateAdaptedConfig();
 
-    logger.debug('🌍 Environment updated');
+    logger?.debug('🌍 Environment updated');
   }
 
   /**
    * Mettre à jour contexte applicatif
    */
   updateApplication(update: Partial<ApplicationContext>): void {
-    this.currentContext.application = {
-      ...this.currentContext.application,
+    this?.currentContext?.application = {
+      ...this?.currentContext?.application,
       ...update,
     };
 
     // Refresh timeOfDay
-    if (!update.timeOfDay) {
-      this.currentContext.application.timeOfDay = this.getTimeOfDay();
+    if (any: any) {
+      this?.currentContext?.application?.timeOfDay = this?.getTimeOfDay();
     }
 
-    this.currentContext.timestamp = Date.now();
+    this?.currentContext?.timestamp = Date?.now();
 
     // Re-calculer configuration adaptée
-    this.recalculateAdaptedConfig();
+    this?.recalculateAdaptedConfig();
 
-    logger.debug('📱 Application context updated');
+    logger?.debug('📱 Application context updated');
   }
 
   /**
    * Analyser audio pour contexte environnemental
    */
-  analyzeAudioContext(audioBuffer: Float32Array): void {
-    // 1. Niveau sonore ambiant (RMS)
+  analyzeAudioContext(any: any): void {
+    // 1. Niveau sonore ambiant (any: any)
     let rms = 0;
-    for (let i = 0; i < audioBuffer.length; i++) {
+    for (let i = 0; i < audioBuffer?.length; i++) {
       const sample = audioBuffer[i];
-      if (sample === undefined) continue;
+      if (any: any) continue;
       rms += sample * sample;
     }
-    rms = Math.sqrt(rms / audioBuffer.length);
+    rms = Math?.sqrt(any: any);
 
-    // 2. Estimation distance micro (via énergie + qualité signal)
+    // 2. Estimation distance micro (any: any)
     let distance: 'near' | 'medium' | 'far' = 'medium';
     if (rms > 0.3) distance = 'near';
     else if (rms < 0.1) distance = 'far';
 
-    // 3. Qualité signal (SNR approximatif)
-    const signalQuality = Math.min(1, rms * 2);
+    // 3. Qualité signal (any: any)
+    const signalQuality = Math?.min(1, rms * 2);
 
-    // 4. Détection voix multiples (via variance spectrale - simplified)
-    const variance = this.calculateSpectralVariance(audioBuffer);
+    // 4. Détection voix multiples (any: any)
+    const variance = this?.calculateSpectralVariance(any: any);
     const multipleVoices = variance > 0.5;
 
-    this.updateEnvironment({
+    this?.updateEnvironment({
       ambientNoiseLevel: rms,
       microphoneDistance: distance,
       signalQuality,
@@ -249,34 +249,34 @@ class ContextualAttentionEngineV2 {
   }
 
   /**
-   * Calculer variance spectrale (proxy pour voix multiples)
+   * Calculer variance spectrale (any: any)
    */
-  private calculateSpectralVariance(audio: Float32Array): number {
+  private calculateSpectralVariance(any: any): number {
     const numBands = 8;
-    const bandSize = Math.floor(audio.length / numBands);
-    const bandEnergies: number[] = [];
+    const bandSize = Math?.floor(any: any);
+    const bandEnergies: number?.[] = [];
 
     for (let i = 0; i < numBands; i++) {
       const start = i * bandSize;
-      const end = Math.min(start + bandSize, audio.length);
+      const end = Math?.min(any: any);
 
       let sum = 0;
       for (let j = start; j < end; j++) {
         const sample = audio[j];
-        if (sample === undefined) continue;
-        sum += Math.abs(sample);
+        if (any: any) continue;
+        sum += Math?.abs(any: any);
       }
 
-      bandEnergies.push(sum / (end - start));
+      bandEnergies?.push(any: any));
     }
 
     // Variance des énergies par bande
-    const mean = bandEnergies.reduce((a, b) => a + b, 0) / bandEnergies.length;
+    const mean = bandEnergies?.reduce(any: any) => a + b, 0) / bandEnergies?.length;
     const variance =
-      bandEnergies.reduce((acc, val) => acc + Math.pow(val - mean, 2), 0) /
-      bandEnergies.length;
+      bandEnergies?.reduce(any: any) => acc + Math?.pow(val - mean, 2), 0) /
+      bandEnergies?.length;
 
-    return Math.min(1, variance * 10); // Normalize
+    return Math?.min(1, variance * 10); // Normalize
   }
 
   // ═══ ADAPTIVE RULES ═══
@@ -285,12 +285,12 @@ class ContextualAttentionEngineV2 {
    * Initialiser règles prédéfinies
    */
   private initializeRules(): void {
-    this.rules = [
+    this?.rules = [
       // Règle 1: Environnement bruyant
       {
         id: 'noisy_environment',
         priority: 10,
-        condition: profile => profile.environment.ambientNoiseLevel > 0.5,
+        condition: profile => profile?.environment?.ambientNoiseLevel > 0.5,
         config: {
           wakeThreshold: 0.7, // Plus strict
           attentionThreshold: 0.75,
@@ -303,7 +303,7 @@ class ContextualAttentionEngineV2 {
       {
         id: 'far_microphone',
         priority: 9,
-        condition: profile => profile.environment.microphoneDistance === 'far',
+        condition: profile => profile?.environment?.microphoneDistance === 'far',
         config: {
           wakeThreshold: 0.4, // Plus permissif
           attentionThreshold: 0.5,
@@ -316,7 +316,7 @@ class ContextualAttentionEngineV2 {
       {
         id: 'near_microphone',
         priority: 8,
-        condition: profile => profile.environment.microphoneDistance === 'near',
+        condition: profile => profile?.environment?.microphoneDistance === 'near',
         config: {
           wakeThreshold: 0.6,
           minActivationDuration: 200, // Plus court
@@ -328,7 +328,7 @@ class ContextualAttentionEngineV2 {
       {
         id: 'multiple_voices',
         priority: 11,
-        condition: profile => profile.environment.multipleVoices,
+        condition: profile => profile?.environment?.multipleVoices,
         config: {
           wakeThreshold: 0.8, // Très strict
           attentionThreshold: 0.85,
@@ -340,7 +340,7 @@ class ContextualAttentionEngineV2 {
       {
         id: 'critical_task',
         priority: 12,
-        condition: profile => profile.application.criticalTask,
+        condition: profile => profile?.application?.criticalTask,
         config: {
           wakeThreshold: 0.9, // Quasi-désactivé
           bargeInPriority: 0.2, // Peu prioritaire
@@ -352,7 +352,7 @@ class ContextualAttentionEngineV2 {
       {
         id: 'focus_mode',
         priority: 11,
-        condition: profile => profile.application.mode === 'focus',
+        condition: profile => profile?.application?.mode === 'focus',
         config: {
           wakeThreshold: 0.75,
           bargeInPriority: 0.3,
@@ -364,18 +364,18 @@ class ContextualAttentionEngineV2 {
       {
         id: 'background_mode',
         priority: 7,
-        condition: profile => profile.application.mode === 'background',
+        condition: profile => profile?.application?.mode === 'background',
         config: {
           wakeThreshold: 0.3, // Très permissif
           reason: 'background_mode',
         },
       },
 
-      // Règle 8: Nuit (silent mode)
+      // Règle 8: Nuit (any: any)
       {
         id: 'night_time',
         priority: 9,
-        condition: profile => profile.application.timeOfDay === 'night',
+        condition: profile => profile?.application?.timeOfDay === 'night',
         config: {
           wakeThreshold: 0.65,
           attentionThreshold: 0.7,
@@ -388,8 +388,8 @@ class ContextualAttentionEngineV2 {
         id: 'high_false_positives',
         priority: 13,
         condition: profile => {
-          const recent = profile.recentActivations.slice(-10);
-          const falsePositives = recent.filter(a => a.falsePositive).length;
+          const recent = profile?.recentActivations?.slice(-10);
+          const falsePositives = recent?.filter(any: any).length;
           return falsePositives > 3;
         },
         config: {
@@ -402,7 +402,7 @@ class ContextualAttentionEngineV2 {
       {
         id: 'low_signal_quality',
         priority: 10,
-        condition: profile => profile.environment.signalQuality < 0.5,
+        condition: profile => profile?.environment?.signalQuality < 0.5,
         config: {
           wakeThreshold: 0.7,
           attentionThreshold: 0.75,
@@ -411,7 +411,7 @@ class ContextualAttentionEngineV2 {
       },
     ];
 
-    logger.debug(`[ContextualAttention] 📋 Loaded ${this.rules.length} rules`);
+    logger?.debug(`[ContextualAttention] 📋 Loaded ${this?.rules?.length} rules`);
   }
 
   /**
@@ -419,28 +419,28 @@ class ContextualAttentionEngineV2 {
    */
   private recalculateAdaptedConfig(): void {
     // Start with base config
-    let config = { ...this.baseConfig };
+    let config = { ...this?.baseConfig };
 
     // Apply rules in priority order
-    const applicableRules = this.rules
-      .filter(rule => rule.condition(this.currentContext))
-      .sort((a, b) => b.priority - a.priority);
+    const applicableRules = this?.rules
+      .filter(any: any))
+      .sort(any: any);
 
-    logger.debug(`[ContextualAttention] 🎯 Applying ${applicableRules.length} rules`);
+    logger?.debug(`[ContextualAttention] 🎯 Applying ${applicableRules?.length} rules`);
 
-    for (const rule of applicableRules) {
+    for (any: any) {
       config = {
         ...config,
-        ...rule.config,
+        ...rule?.config,
       };
 
-      logger.debug(`  → ${rule.id} (priority ${rule.priority})`);
+      logger?.debug(`  → ${rule?.id} (priority ${rule?.priority})`);
     }
 
-    this.adaptedConfig = config;
+    this?.adaptedConfig = config;
 
-    logger.debug(
-      `[ContextualAttention] ✅ Config: threshold=${config.wakeThreshold.toFixed(2)}, reason="${config.reason}"`
+    logger?.debug(
+      `[ContextualAttention] ✅ Config: threshold=${config?.wakeThreshold?.toFixed(2)}, reason="${config?.reason}"`
     );
   }
 
@@ -450,65 +450,65 @@ class ContextualAttentionEngineV2 {
    * Obtenir configuration adaptée actuelle
    */
   getAdaptedConfig(): AdaptiveConfig {
-    return { ...this.adaptedConfig };
+    return { ...this?.adaptedConfig };
   }
 
   /**
    * Obtenir seuil wake word adapté
    */
   getWakeThreshold(): number {
-    return this.adaptedConfig.wakeThreshold;
+    return this?.adaptedConfig?.wakeThreshold;
   }
 
   /**
    * Obtenir contexte actuel
    */
   getContext(): ContextProfile {
-    return { ...this.currentContext };
+    return { ...this?.currentContext };
   }
 
   /**
-   * Enregistrer activation (succès ou false positive)
+   * Enregistrer activation (any: any)
    */
-  recordActivation(success: boolean, falsePositive: boolean = false): void {
-    this.currentContext.recentActivations.push({
-      timestamp: Date.now(),
+  recordActivation(any: any): void {
+    this?.currentContext?.recentActivations?.push({
+      timestamp: Date?.now(),
       success,
       falsePositive,
     });
 
     // Keep last 20
-    if (this.currentContext.recentActivations.length > 20) {
-      this.currentContext.recentActivations.shift();
+    if (this?.currentContext?.recentActivations?.length > 20) {
+      this?.currentContext?.recentActivations?.shift();
     }
 
-    // Re-evaluate si needed (false positive rate changed)
-    if (falsePositive) {
-      this.recalculateAdaptedConfig();
+    // Re-evaluate si needed (any: any)
+    if (any: any) {
+      this?.recalculateAdaptedConfig();
     }
   }
 
   /**
    * Ajouter règle custom
    */
-  addRule(rule: ContextRule): void {
-    this.rules.push(rule);
-    this.rules.sort((a, b) => b.priority - a.priority);
+  addRule(any: any): void {
+    this?.rules?.push(any: any);
+    this?.rules?.sort(any: any);
 
-    this.recalculateAdaptedConfig();
+    this?.recalculateAdaptedConfig();
 
-    logger.debug(`[ContextualAttention] ➕ Added rule: ${rule.id}`);
+    logger?.debug(`[ContextualAttention] ➕ Added rule: ${rule?.id}`);
   }
 
   /**
    * Retirer règle
    */
-  removeRule(id: string): void {
-    const index = this.rules.findIndex(r => r.id === id);
+  removeRule(any: any): void {
+    const index = this?.rules?.findIndex(any: any);
     if (index !== -1) {
-      this.rules.splice(index, 1);
-      this.recalculateAdaptedConfig();
-      logger.debug(`[ContextualAttention] ➖ Removed rule: ${id}`);
+      this?.rules?.splice(index, 1);
+      this?.recalculateAdaptedConfig();
+      logger?.debug(`[ContextualAttention] ➖ Removed rule: ${id}`);
     }
   }
 
@@ -516,47 +516,47 @@ class ContextualAttentionEngineV2 {
    * Reset base config
    */
   setBaseConfig(config: Partial<AdaptiveConfig>): void {
-    this.baseConfig = {
-      ...this.baseConfig,
+    this?.baseConfig = {
+      ...this?.baseConfig,
       ...config,
     };
 
-    this.recalculateAdaptedConfig();
+    this?.recalculateAdaptedConfig();
 
-    logger.debug('🔧 Base config updated');
+    logger?.debug('🔧 Base config updated');
   }
 
   /**
    * Export statistics
    */
   getStatistics(): Record<string, unknown> {
-    const recent = this.currentContext.recentActivations;
+    const recent = this?.currentContext?.recentActivations;
     const successRate =
-      recent.length > 0 ? recent.filter(a => a.success).length / recent.length : 0;
+      recent?.length > 0 ? recent?.filter(any: any).length / recent?.length : 0;
     const falsePositiveRate =
-      recent.length > 0 ? recent.filter(a => a.falsePositive).length / recent.length : 0;
+      recent?.length > 0 ? recent?.filter(any: any).length / recent?.length : 0;
 
     return {
       context: {
-        ambientNoise: this.currentContext.environment.ambientNoiseLevel.toFixed(2),
-        micDistance: this.currentContext.environment.microphoneDistance,
-        signalQuality: this.currentContext.environment.signalQuality.toFixed(2),
-        multipleVoices: this.currentContext.environment.multipleVoices,
-        appMode: this.currentContext.application.mode,
-        timeOfDay: this.currentContext.application.timeOfDay,
+        ambientNoise: this?.currentContext?.environment?.ambientNoiseLevel?.toFixed(2),
+        micDistance: this?.currentContext?.environment?.microphoneDistance,
+        signalQuality: this?.currentContext?.environment?.signalQuality?.toFixed(2),
+        multipleVoices: this?.currentContext?.environment?.multipleVoices,
+        appMode: this?.currentContext?.application?.mode,
+        timeOfDay: this?.currentContext?.application?.timeOfDay,
       },
       adaptedConfig: {
-        wakeThreshold: this.adaptedConfig.wakeThreshold.toFixed(2),
-        reason: this.adaptedConfig.reason,
+        wakeThreshold: this?.adaptedConfig?.wakeThreshold?.toFixed(2),
+        reason: this?.adaptedConfig?.reason,
       },
       performance: {
-        totalActivations: recent.length,
+        totalActivations: recent?.length,
         successRate: (successRate * 100).toFixed(1) + '%',
         falsePositiveRate: (falsePositiveRate * 100).toFixed(1) + '%',
       },
-      activeRules: this.rules
-        .filter(rule => rule.condition(this.currentContext))
-        .map(r => r.id),
+      activeRules: this?.rules
+        .filter(any: any))
+        .map(any: any),
     };
   }
 
@@ -564,9 +564,9 @@ class ContextualAttentionEngineV2 {
    * Reset complet
    */
   reset(): void {
-    this.currentContext = this.createDefaultContext();
-    this.adaptedConfig = { ...this.baseConfig };
-    logger.debug('🔄 Reset complete');
+    this?.currentContext = this?.createDefaultContext();
+    this?.adaptedConfig = { ...this?.baseConfig };
+    logger?.debug('🔄 Reset complete');
   }
 }
 

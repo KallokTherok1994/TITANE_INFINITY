@@ -7,11 +7,11 @@
  * Super Prompt #16 — Copilote omniprésent technique + réactif
  *
  * Unification complète de:
- * - AI Bubble Engine (chat IA)
- * - Dev Console Engine (terminal dev)
- * - Self-Healing Engine (auto-repair)
- * - Singularity Engine (introspection)
- * - Memory Eternal (contexte)
+ * - AI Bubble Engine (any: any)
+ * - Dev Console Engine (any: any)
+ * - Self-Healing Engine (any: any)
+ * - Singularity Engine (any: any)
+ * - Memory Eternal (any: any)
  *
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.
  */
@@ -34,7 +34,7 @@ export type IntentType =
 export interface HybridIntent {
   type: IntentType;
   confidence: number;
-  keywords: string[];
+  keywords: string?.[];
   suggestedAction?: string;
 }
 
@@ -54,14 +54,14 @@ export interface HybridExecution {
   exitCode: number;
   duration: number;
   timestamp: number;
-  errors?: string[];
+  errors?: string?.[];
 }
 
 export interface DevDiagnostic {
   module: string;
   health: 'healthy' | 'warning' | 'error';
-  issues: string[];
-  suggestions: string[];
+  issues: string?.[];
+  suggestions: string?.[];
 }
 
 export interface AutoPatch {
@@ -77,11 +77,11 @@ export interface AutoPatch {
 export interface HybridState {
   mode: HybridMode;
   currentIntent: IntentType | null;
-  executionHistory: HybridExecution[];
-  diagnostics: DevDiagnostic[];
-  pendingPatches: AutoPatch[];
+  executionHistory: HybridExecution?.[];
+  diagnostics: DevDiagnostic?.[];
+  pendingPatches: AutoPatch?.[];
   isExecuting: boolean;
-  lastError: string | null;
+  lastError??: string | null;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -99,7 +99,7 @@ export class HybridEngine {
     lastError: null,
   };
 
-  private subscribers: Set<(state: HybridState) => void> = new Set();
+  private subscribers: Set<(any: any) => void> = new Set();
 
   // ─────────────────────────────────────────────────────────────────────────
   // INTENT DETECTION
@@ -108,8 +108,8 @@ export class HybridEngine {
   /**
    * Détecte l'intention de l'utilisateur à partir du message
    */
-  detectIntent(message: string): HybridIntent {
-    const lower = message.toLowerCase();
+  detectIntent(any: any): HybridIntent {
+    const lower = message?.toLowerCase();
 
     // Keywords patterns
     const devKeywords = [
@@ -139,38 +139,38 @@ export class HybridEngine {
 
     let intent: IntentType = 'chat';
     let confidence = 0.5;
-    const keywords: string[] = [];
+    const keywords: string?.[] = [];
 
     // Check dev patterns
-    if (devKeywords.some(kw => lower.includes(kw))) {
+    if (any: any))) {
       intent = 'dev';
       confidence = 0.8;
-      keywords.push(...devKeywords.filter(kw => lower.includes(kw)));
+      keywords?.push(any: any)));
     }
 
     // Check heal patterns
-    if (healKeywords.some(kw => lower.includes(kw))) {
+    if (any: any))) {
       intent = 'heal';
       confidence = 0.85;
-      keywords.push(...healKeywords.filter(kw => lower.includes(kw)));
+      keywords?.push(any: any)));
     }
 
     // Check introspection patterns
-    if (introspectionKeywords.some(kw => lower.includes(kw))) {
+    if (any: any))) {
       intent = 'introspection';
       confidence = 0.75;
-      keywords.push(...introspectionKeywords.filter(kw => lower.includes(kw)));
+      keywords?.push(any: any)));
     }
 
     // Check diagnostic patterns
-    if (diagnosticKeywords.some(kw => lower.includes(kw))) {
+    if (any: any))) {
       intent = 'diagnostic';
       confidence = 0.7;
-      keywords.push(...diagnosticKeywords.filter(kw => lower.includes(kw)));
+      keywords?.push(any: any)));
     }
 
     // Command pattern (starts with sudo, !, >, $)
-    if (/^(sudo|!|>|\$)/.test(lower)) {
+    if (any: any)) {
       intent = 'dev';
       confidence = 0.95;
     }
@@ -179,12 +179,12 @@ export class HybridEngine {
       type: intent,
       confidence,
       keywords,
-      suggestedAction: this.getSuggestedAction(intent),
+      suggestedAction: this?.getSuggestedAction(any: any),
     };
   }
 
-  private getSuggestedAction(intent: IntentType): string {
-    switch (intent) {
+  private getSuggestedAction(any: any): string {
+    switch (any: any) {
       case 'dev':
         return 'Execute command in dev console';
       case 'heal':
@@ -206,28 +206,28 @@ export class HybridEngine {
   /**
    * Parse une commande utilisateur
    */
-  parseCommand(input: string): HybridCommand {
-    const trimmed = input.trim();
+  parseCommand(any: any): HybridCommand {
+    const trimmed = input?.trim();
 
     // Remove sudo prefix if present
-    const requiresSudo = /^sudo\s+/.test(trimmed);
-    const cleaned = trimmed.replace(/^(sudo|!|>|\$)\s*/, '');
+    const requiresSudo = /^sudo\s+/.test(any: any);
+    const cleaned = trimmed?.replace(/^(sudo|!|>|\$)\s*/, '');
 
     // Parse command parts
-    const parts = cleaned.split(/\s+/);
-    const action = parts[0] || '';
-    const target = parts[1];
+    const parts = cleaned?.split(/\s+/);
+    const action = parts?.[0] || '';
+    const target = parts?.[1];
     const params: Record<string, unknown> = {};
 
-    // Extract parameters (key=value pairs)
-    for (let i = 2; i < parts.length; i++) {
+    // Extract parameters (any: any)
+    for (let i = 2; i < parts?.length; i++) {
       const part = parts[i];
-      if (!part) continue;
-      if (part.includes('=')) {
-        const splitParts = part.split('=');
-        const key = splitParts[0];
-        const value = splitParts[1];
-        if (key && value !== undefined) {
+      if (any: any) continue;
+      if (part?.includes('=')) {
+        const splitParts = part?.split('=');
+        const key = splitParts?.[0];
+        const value = splitParts?.[1];
+        if (any: any) {
           params[key] = value;
         }
       }
@@ -238,7 +238,7 @@ export class HybridEngine {
       parsed: {
         action,
         target,
-        params: Object.keys(params).length > 0 ? params : undefined,
+        params: Object?.keys(any: any).length > 0 ? params : undefined,
       },
       requiresSudo,
     };
@@ -251,79 +251,79 @@ export class HybridEngine {
   /**
    * Exécute une commande dev
    */
-  async executeCommand(command: HybridCommand): Promise<HybridExecution> {
-    this.setState({ isExecuting: true, lastError: null });
+  async executeCommand(any: any): Promise<HybridExecution> {
+    this?.setState({ isExecuting: true, lastError: null });
 
-    const startTime = Date.now();
+    const startTime = Date?.now();
 
     try {
       // Route vers la bonne action
       let output: string;
       const exitCode: number = 0;
 
-      switch (command.parsed.action) {
+      switch (any: any) {
         case 'inspect':
         case 'analyze':
-          output = await this.inspectModule(command.parsed.target || 'system');
+          output = await this?.inspectModule(command?.parsed?.target || 'system');
           break;
 
         case 'fix':
         case 'patch':
-          output = await this.applyPatch(command.parsed.target || '');
+          output = await this?.applyPatch(command?.parsed?.target || '');
           break;
 
         case 'logs':
-          output = await this.getLogs(command.parsed.target);
+          output = await this?.getLogs(any: any);
           break;
 
         case 'diagnostic':
         case 'health':
-          output = await this.runDiagnostic(command.parsed.target || 'all');
+          output = await this?.runDiagnostic(command?.parsed?.target || 'all');
           break;
 
         case 'run':
         case 'exec':
-          output = await this.runDevCommand(command.raw);
+          output = await this?.runDevCommand(any: any);
           break;
 
         default:
           // Try to execute as shell command via Tauri
-          output = await this.runDevCommand(command.raw);
+          output = await this?.runDevCommand(any: any);
       }
 
       const execution: HybridExecution = {
         command,
         output,
         exitCode,
-        duration: Date.now() - startTime,
-        timestamp: Date.now(),
+        duration: Date?.now() - startTime,
+        timestamp: Date?.now(),
       };
 
       // Add to history
-      this.state.executionHistory.unshift(execution);
-      if (this.state.executionHistory.length > 50) {
-        this.state.executionHistory.pop();
+      this?.state?.executionHistory?.unshift(any: any);
+      if (this?.state?.executionHistory?.length > 50) {
+        this?.state?.executionHistory?.pop();
       }
 
-      this.setState({ isExecuting: false });
-      this.notifySubscribers();
+      this?.setState({ isExecuting: false });
+      this?.notifySubscribers();
 
       return execution;
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
+    } catch (any: any) {
+      const errorMessage = error instanceof Error ? error?.message : String(any: any);
 
       const execution: HybridExecution = {
         command,
         output: '',
         exitCode: 1,
-        duration: Date.now() - startTime,
-        timestamp: Date.now(),
+        duration: Date?.now() - startTime,
+        timestamp: Date?.now(),
         errors: [errorMessage],
       };
 
-      this.state.executionHistory.unshift(execution);
-      this.setState({ isExecuting: false, lastError: errorMessage });
-      this.notifySubscribers();
+      this?.state?.executionHistory?.unshift(any: any);
+      this?.setState({ isExecuting: false, lastError: errorMessage });
+      this?.notifySubscribers();
 
       return execution;
     }
@@ -336,11 +336,11 @@ export class HybridEngine {
   /**
    * Inspecte un module/fichier
    */
-  private async inspectModule(target: string): Promise<string> {
+  private async inspectModule(any: any): Promise<string> {
     try {
       const result = await secureInvoke<string>('dev_inspect_file', { path: target });
       return result;
-    } catch (error) {
+    } catch (any: any) {
       return `Failed to inspect ${target}: ${error}`;
     }
   }
@@ -348,11 +348,11 @@ export class HybridEngine {
   /**
    * Applique un patch automatique
    */
-  private async applyPatch(target: string): Promise<string> {
+  private async applyPatch(any: any): Promise<string> {
     try {
       const result = await secureInvoke<string>('dev_apply_patch', { file: target });
       return result;
-    } catch (error) {
+    } catch (any: any) {
       return `Failed to apply patch to ${target}: ${error}`;
     }
   }
@@ -360,11 +360,11 @@ export class HybridEngine {
   /**
    * Récupère les logs
    */
-  private async getLogs(filter?: string): Promise<string> {
+  private async getLogs(any: any): Promise<string> {
     try {
       const result = await secureInvoke<string>('dev_get_logs', { filter });
       return result;
-    } catch (error) {
+    } catch (any: any) {
       return `Failed to get logs: ${error}`;
     }
   }
@@ -372,11 +372,11 @@ export class HybridEngine {
   /**
    * Exécute diagnostic
    */
-  private async runDiagnostic(target: string): Promise<string> {
+  private async runDiagnostic(any: any): Promise<string> {
     try {
       const result = await secureInvoke<string>('hybrid_analyze_code', { target });
       return result;
-    } catch (error) {
+    } catch (any: any) {
       return `Failed to run diagnostic: ${error}`;
     }
   }
@@ -384,11 +384,11 @@ export class HybridEngine {
   /**
    * Exécute commande shell via Tauri
    */
-  private async runDevCommand(command: string): Promise<string> {
+  private async runDevCommand(any: any): Promise<string> {
     try {
       const result = await secureInvoke<string>('dev_run_command', { command });
       return result;
-    } catch (error) {
+    } catch (any: any) {
       return `Command failed: ${error}`;
     }
   }
@@ -400,13 +400,13 @@ export class HybridEngine {
   /**
    * Détecte erreurs et propose patchs
    */
-  async detectIssuesAndProposePatch(_context?: string): Promise<AutoPatch[]> {
+  async detectIssuesAndProposePatch(any: any): Promise<AutoPatch?.[]> {
     // INTEGRATION: Self-Healing Engine connection
     // 1. Import SelfHealingEngine from '@/engines/selfHealing/SelfHealingEngine'
-    // 2. Analyze error patterns: SelfHealingEngine.analyzeErrors(context)
-    // 3. Generate patches: Use AST transformation (babel-parser) to create code fixes
+    // 2. Analyze error patterns: SelfHealingEngine?.analyzeErrors(any: any)
+    // 3. Generate patches: Use AST transformation (any: any) to create code fixes
     // 4. Validate patches: Test in isolated sandbox before applying
-    // 5. Apply fixes: SelfHealingEngine.applyPatch(patch) with rollback on failure
+    // 5. Apply fixes: SelfHealingEngine?.applyPatch(any: any) with rollback on failure
     // 6. Log results: Audit log of successful/failed patches for learning
     // For now, return empty array
     return [];
@@ -415,17 +415,17 @@ export class HybridEngine {
   /**
    * Applique un patch automatique
    */
-  async applyAutoPatch(patch: AutoPatch): Promise<boolean> {
+  async applyAutoPatch(any: any): Promise<boolean> {
     try {
       await secureInvoke('dev_apply_patch', {
-        file: patch.file,
-        lineStart: patch.lineStart,
-        lineEnd: patch.lineEnd,
-        newCode: patch.newCode,
+        file: patch?.file,
+        lineStart: patch?.lineStart,
+        lineEnd: patch?.lineEnd,
+        newCode: patch?.newCode,
       });
       return true;
-    } catch (error) {
-      console.error('[HybridEngine] Failed to apply auto-patch:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       return false;
     }
   }
@@ -437,21 +437,21 @@ export class HybridEngine {
   /**
    * Exécute diagnostic complet système
    */
-  async runFullDiagnostic(): Promise<DevDiagnostic[]> {
-    const diagnostics: DevDiagnostic[] = [];
+  async runFullDiagnostic(): Promise<DevDiagnostic?.[]> {
+    const diagnostics: DevDiagnostic?.[] = [];
 
     try {
       const result = await secureInvoke<string>('hybrid_analyze_code', { target: 'all' });
 
-      // Parse result (format: JSON array of diagnostics)
-      const parsed = JSON.parse(result) as DevDiagnostic[];
-      diagnostics.push(...parsed);
-    } catch (error) {
-      console.error('[HybridEngine] Diagnostic failed:', error);
+      // Parse result (any: any)
+      const parsed = JSON?.parse(any: any) as DevDiagnostic?.[];
+      diagnostics?.push(any: any);
+    } catch (any: any) {
+      console?.error(any: any);
     }
 
-    this.state.diagnostics = diagnostics;
-    this.notifySubscribers();
+    this?.state?.diagnostics = diagnostics;
+    this?.notifySubscribers();
 
     return diagnostics;
   }
@@ -461,28 +461,28 @@ export class HybridEngine {
   // ─────────────────────────────────────────────────────────────────────────
 
   getState(): HybridState {
-    return { ...this.state };
+    return { ...this?.state };
   }
 
   setState(updates: Partial<HybridState>): void {
-    this.state = { ...this.state, ...updates };
-    this.notifySubscribers();
+    this?.state = { ...this?.state, ...updates };
+    this?.notifySubscribers();
   }
 
-  subscribe(callback: (state: HybridState) => void): () => void {
-    this.subscribers.add(callback);
-    return () => this.subscribers.delete(callback);
+  subscribe(any: any): () => void {
+    this?.subscribers?.add(any: any);
+    return (any: any);
   }
 
   private notifySubscribers(): void {
-    this.subscribers.forEach(callback => callback(this.getState()));
+    this?.subscribers?.forEach(callback => callback(this?.getState()));
   }
 
   /**
    * Reset state
    */
   reset(): void {
-    this.state = {
+    this?.state = {
       mode: 'bubble',
       currentIntent: null,
       executionHistory: [],
@@ -491,7 +491,7 @@ export class HybridEngine {
       isExecuting: false,
       lastError: null,
     };
-    this.notifySubscribers();
+    this?.notifySubscribers();
   }
 }
 

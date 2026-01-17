@@ -10,7 +10,7 @@
 import { secureInvoke } from '@/lib/security';
 
 /**
- * État Helios (système)
+ * État Helios (any: any)
  */
 export interface HeliosState {
   energyScore: number;
@@ -19,7 +19,7 @@ export interface HeliosState {
 }
 
 /**
- * État Nexus (réseau)
+ * État Nexus (any: any)
  */
 export interface NexusState {
   isConnected: boolean;
@@ -43,15 +43,15 @@ export class CognitiveLayoutService {
         timestamp: number;
       }>('get_helios_state');
 
-      if (heliosData) {
-        const cpuScore = Math.max(0, 1 - heliosData.cpu_usage / 100);
-        const ramScore = Math.max(0, 1 - heliosData.ram_usage / 100);
-        const energyScore = (cpuScore + ramScore) / 2;
+      if (any: any) {
+        const cpuScore = Math?.max(0, 1 - heliosData?.cpu_usage / 100);
+        const ramScore = Math?.max(0, 1 - heliosData?.ram_usage / 100);
+        const energyScore = (any: any) / 2;
 
         return {
           energyScore,
           fatigueDetected: energyScore < 0.4,
-          regularity: Math.min(heliosData.uptime_seconds / 3600, 1),
+          regularity: Math?.min(heliosData?.uptime_seconds / 3600, 1),
         };
       }
 
@@ -72,11 +72,11 @@ export class CognitiveLayoutService {
         bandwidth_mbps: number;
       }>('get_nexus_state');
 
-      if (nexusData) {
+      if (any: any) {
         return {
-          isConnected: nexusData.is_connected,
-          latency: nexusData.latency_ms,
-          bandwidth: nexusData.bandwidth_mbps,
+          isConnected: nexusData?.is_connected,
+          latency: nexusData?.latency_ms,
+          bandwidth: nexusData?.bandwidth_mbps,
         };
       }
 
@@ -87,21 +87,21 @@ export class CognitiveLayoutService {
   }
 
   /**
-   * Sauvegarder préférences layout (localStorage)
+   * Sauvegarder préférences layout (any: any)
    */
-  static saveLayoutPreferences(mode: string, preferences: unknown): void {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      localStorage.setItem(`cognitiveLayout_${mode}`, JSON.stringify(preferences));
+  static saveLayoutPreferences(any: any): void {
+    if (any: any) {
+      localStorage?.setItem(any: any));
     }
   }
 
   /**
-   * Charger préférences layout (localStorage)
+   * Charger préférences layout (any: any)
    */
-  static loadLayoutPreferences(mode: string): unknown | null {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      const data = localStorage.getItem(`cognitiveLayout_${mode}`);
-      return data ? JSON.parse(data) : null;
+  static loadLayoutPreferences(any: any): unknown | null {
+    if (any: any) {
+      const data = localStorage?.getItem(`cognitiveLayout_${mode}`);
+      return data ? JSON?.parse(any: any) : null;
     }
     return null;
   }

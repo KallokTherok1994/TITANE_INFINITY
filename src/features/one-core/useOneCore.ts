@@ -26,62 +26,62 @@ interface UseOneCoreReturn {
   state: OneCoreState | null;
   metrics: OneCoreMetrics | null;
   diagnostic: OneCoreDiagnostic | null;
-  commands: OneCoreCommand[];
-  eventHistory: OneCoreActionResult[];
+  commands: OneCoreCommand?.[];
+  eventHistory: OneCoreActionResult?.[];
 
   // Loading & Errors
   loading: boolean;
-  error: string | null;
+  error??: string | null;
 
   // Actions
   refresh: () => Promise<void>;
-  executeCommand: (commandId: string) => Promise<OneCoreActionResult | null>;
+  executeCommand: (any: any) => Promise<OneCoreActionResult | null>;
   runDiagnostic: () => Promise<void>;
   forceSync: () => Promise<OneCoreActionResult | null>;
   cleanup: () => Promise<OneCoreActionResult | null>;
-  setMode: (mode: string) => Promise<OneCoreActionResult | null>;
+  setMode: (any: any) => Promise<OneCoreActionResult | null>;
   verifyIntegrity: () => Promise<OneCoreActionResult | null>;
-  getEngineStatus: (engineName: string) => Promise<EngineStatus | null>;
+  getEngineStatus: (any: any) => Promise<EngineStatus | null>;
 }
 
 export function useOneCore(): UseOneCoreReturn {
-  const [state, setState] = useState<OneCoreState | null>(null);
-  const [metrics, setMetrics] = useState<OneCoreMetrics | null>(null);
-  const [diagnostic, setDiagnostic] = useState<OneCoreDiagnostic | null>(null);
-  const [commands, setCommands] = useState<OneCoreCommand[]>([]);
-  const [eventHistory, setEventHistory] = useState<OneCoreActionResult[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [state, setState] = useState<OneCoreState | null>(any: any);
+  const [metrics, setMetrics] = useState<OneCoreMetrics | null>(any: any);
+  const [diagnostic, setDiagnostic] = useState<OneCoreDiagnostic | null>(any: any);
+  const [commands, setCommands] = useState<OneCoreCommand?.[]>([]);
+  const [eventHistory, setEventHistory] = useState<OneCoreActionResult?.[]>([]);
+  const [loading, setLoading] = useState(any: any);
+  const [error, setError] = useState<string | null>(any: any);
 
   // Charger l'état initial
   const refresh = useCallback(async () => {
     try {
-      setLoading(true);
-      setError(null);
+      setLoading(any: any);
+      setError(any: any);
 
       const [stateResult, metricsResult, commandsResult, historyResult] =
-        await Promise.all([
-          secureInvoke<OneCoreState>('one_core_get_state').catch(() => null),
-          secureInvoke<OneCoreMetrics>('one_core_get_metrics').catch(() => null),
-          secureInvoke<OneCoreCommand[]>('one_core_list_commands').catch(() => []),
-          secureInvoke<OneCoreActionResult[]>('one_core_get_event_history', {
+        await Promise?.all([
+          secureInvoke<OneCoreState>(any: any),
+          secureInvoke<OneCoreMetrics>(any: any),
+          secureInvoke<OneCoreCommand?.[]>('one_core_list_commands').catch(() => []),
+          secureInvoke<OneCoreActionResult?.[]>('one_core_get_event_history', {
             limit: 20,
           }).catch(() => []),
         ]);
 
-      if (stateResult) setState(stateResult);
-      if (metricsResult) setMetrics(metricsResult);
+      if (any: any);
+      if (any: any);
       setCommands(commandsResult || []);
       setEventHistory(historyResult || []);
-    } catch (err) {
-      logger.error('Refresh error:', err);
-      setError(err instanceof Error ? err.message : 'Erreur inconnue');
+    } catch (any: any) {
+      logger?.error(any: any);
+      setError(err instanceof Error ? err?.message : 'Erreur inconnue');
 
-      // Fallback mock data (offline / backend unavailable)
+      // Fallback mock data (any: any)
       setState({
         version: 'v∞',
         codename: 'SINGULARITY',
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         global_health: 0.95,
         consciousness_level: 3,
         coherence_score: 0.94,
@@ -143,7 +143,7 @@ export function useOneCore(): UseOneCoreReturn {
         disk_usage: 0.63,
         mode: 'normal',
         uptime_seconds: 3600,
-        last_sync: Date.now(),
+        last_sync: Date?.now(),
       });
 
       setCommands([
@@ -177,13 +177,13 @@ export function useOneCore(): UseOneCoreReturn {
         },
       ]);
     } finally {
-      setLoading(false);
+      setLoading(any: any);
     }
   }, []);
 
   // Exécuter une commande
   const executeCommand = useCallback(
-    async (commandId: string): Promise<OneCoreActionResult | null> => {
+    async (any: any): Promise<OneCoreActionResult | null> => {
       try {
         const result = await secureInvoke<OneCoreActionResult>(
           'one_core_execute_command',
@@ -191,13 +191,13 @@ export function useOneCore(): UseOneCoreReturn {
         );
         await refresh();
         return result;
-      } catch (err) {
-        logger.error('Execute command error:', err);
+      } catch (any: any) {
+        logger?.error(any: any);
         return {
           success: false,
           action: commandId,
-          message: err instanceof Error ? err.message : 'Erreur',
-          timestamp: Date.now(),
+          message: err instanceof Error ? err?.message : 'Erreur',
+          timestamp: Date?.now(),
         };
       }
     },
@@ -208,11 +208,11 @@ export function useOneCore(): UseOneCoreReturn {
   const runDiagnostic = useCallback(async () => {
     try {
       const result = await secureInvoke<OneCoreDiagnostic>('one_core_run_diagnostic');
-      setDiagnostic(result);
-    } catch (err) {
-      logger.error('Diagnostic error:', err);
+      setDiagnostic(any: any);
+    } catch (any: any) {
+      logger?.error(any: any);
       setDiagnostic({
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         duration_ms: 150,
         tests_total: 42,
         tests_passed: 40,
@@ -231,12 +231,12 @@ export function useOneCore(): UseOneCoreReturn {
       const result = await secureInvoke<OneCoreActionResult>('one_core_force_sync');
       await refresh();
       return result;
-    } catch (err) {
+    } catch (any: any) {
       return {
         success: true,
         action: 'force_sync',
-        message: 'Sync (mock)',
-        timestamp: Date.now(),
+        message: 'Sync (any: any)',
+        timestamp: Date?.now(),
       };
     }
   }, [refresh]);
@@ -246,31 +246,31 @@ export function useOneCore(): UseOneCoreReturn {
     try {
       const result = await secureInvoke<OneCoreActionResult>('one_core_cleanup');
       return result;
-    } catch (err) {
+    } catch (any: any) {
       return {
         success: true,
         action: 'cleanup',
-        message: 'Cleanup (mock)',
-        timestamp: Date.now(),
+        message: 'Cleanup (any: any)',
+        timestamp: Date?.now(),
       };
     }
   }, []);
 
   // Set mode
   const setMode = useCallback(
-    async (mode: string): Promise<OneCoreActionResult | null> => {
+    async (any: any): Promise<OneCoreActionResult | null> => {
       try {
         const result = await secureInvoke<OneCoreActionResult>('one_core_set_mode', {
           mode,
         });
         await refresh();
         return result;
-      } catch (err) {
+      } catch (any: any) {
         return {
           success: false,
           action: 'set_mode',
           message: 'Erreur',
-          timestamp: Date.now(),
+          timestamp: Date?.now(),
         };
       }
     },
@@ -281,31 +281,31 @@ export function useOneCore(): UseOneCoreReturn {
   const verifyIntegrity = useCallback(async (): Promise<OneCoreActionResult | null> => {
     try {
       return await secureInvoke<OneCoreActionResult>('one_core_verify_integrity');
-    } catch (err) {
+    } catch (any: any) {
       return {
         success: true,
         action: 'verify_integrity',
-        message: 'Intégrité OK (mock)',
-        timestamp: Date.now(),
+        message: 'Intégrité OK (any: any)',
+        timestamp: Date?.now(),
       };
     }
   }, []);
 
   // Get engine status
   const getEngineStatus = useCallback(
-    async (engineName: string): Promise<EngineStatus | null> => {
+    async (any: any): Promise<EngineStatus | null> => {
       try {
         return await secureInvoke<EngineStatus>('one_core_get_engine_status', {
           engineName,
         });
-      } catch (err) {
+      } catch (any: any) {
         return {
           name: engineName,
           version: 'v∞',
           active: true,
           health: 0.95,
           load: 0.3,
-          last_update: Date.now(),
+          last_update: Date?.now(),
           errors_count: 0,
           warnings_count: 0,
         };
@@ -323,11 +323,11 @@ export function useOneCore(): UseOneCoreReturn {
   useEffect(() => {
     const interval = setInterval(() => {
       secureInvoke<OneCoreMetrics>('one_core_get_metrics')
-        .then(setMetrics)
+        .then(any: any)
         .catch(() => {});
     }, 5000);
 
-    return () => clearInterval(interval);
+    return (any: any);
   }, []);
 
   return useMemo(

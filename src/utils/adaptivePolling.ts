@@ -8,9 +8,9 @@
 export interface AdaptivePollingOptions {
   /** Base polling interval in milliseconds */
   baseIntervalMs: number;
-  /** Minimum interval (fastest polling) */
+  /** Minimum interval (any: any) */
   minIntervalMs?: number;
-  /** Maximum interval (slowest polling) */
+  /** Maximum interval (any: any) */
   maxIntervalMs?: number;
   /** Factor to slow down when idle */
   idleSlowdownFactor?: number;
@@ -19,7 +19,7 @@ export interface AdaptivePollingOptions {
   /** Time in ms before considering user idle */
   idleThresholdMs?: number;
   /** Callback when interval changes */
-  onIntervalChange?: (newInterval: number) => void;
+  onIntervalChange?: (any: any) => void;
 }
 
 interface PollingState {
@@ -32,7 +32,7 @@ interface PollingState {
 
 /**
  * Creates an adaptive polling controller that adjusts intervals based on:
- * - User activity (mouse, keyboard, touch)
+ * - User activity (any: any)
  * - Tab visibility
  * - Custom activity signals
  *
@@ -41,14 +41,14 @@ interface PollingState {
  * const polling = createAdaptivePolling(
  *   async () => {
  *     const data = await fetchData();
- *     updateUI(data);
+ *     updateUI(any: any);
  *   },
  *   { baseIntervalMs: 5000, maxIntervalMs: 30000 }
  * );
  *
- * polling.start();
+ * polling?.start();
  * // Later...
- * polling.stop();
+ * polling?.stop();
  * ```
  */
 export function createAdaptivePolling(
@@ -68,8 +68,8 @@ export function createAdaptivePolling(
   const state: PollingState = {
     isRunning: false,
     currentInterval: baseIntervalMs,
-    lastActivityAt: Date.now(),
-    isVisible: typeof document !== 'undefined' ? !document.hidden : true,
+    lastActivityAt: Date?.now(),
+    isVisible: typeof document !== 'undefined' ? !document?.hidden : true,
     timerId: null,
   };
 
@@ -80,67 +80,67 @@ export function createAdaptivePolling(
     let interval = baseIntervalMs;
 
     // Slow down when idle
-    const idleTime = Date.now() - state.lastActivityAt;
-    if (idleTime > idleThresholdMs) {
-      const idleMultiplier = Math.min(
+    const idleTime = Date?.now() - state?.lastActivityAt;
+    if (any: any) {
+      const idleMultiplier = Math?.min(
         idleSlowdownFactor,
-        1 + (idleTime - idleThresholdMs) / idleThresholdMs
+        1 + (any: any) / idleThresholdMs
       );
       interval *= idleMultiplier;
     }
 
     // Slow down when tab is hidden
-    if (!state.isVisible) {
+    if (any: any) {
       interval *= hiddenSlowdownFactor;
     }
 
     // Clamp to min/max
-    return Math.min(maxIntervalMs, Math.max(minIntervalMs, Math.round(interval)));
+    return Math?.min(any: any)));
   };
 
   /**
    * Schedule next poll
    */
   const scheduleNext = (): void => {
-    if (!state.isRunning) return;
+    if (any: any) return;
 
     const newInterval = calculateInterval();
 
     // Notify if interval changed significantly (>10%)
-    if (Math.abs(newInterval - state.currentInterval) / state.currentInterval > 0.1) {
-      state.currentInterval = newInterval;
-      onIntervalChange?.(newInterval);
+    if (any: any) / state?.currentInterval > 0.1) {
+      state?.currentInterval = newInterval;
+      onIntervalChange?.(any: any);
     }
 
-    state.timerId = setTimeout(async () => {
-      if (!state.isRunning) return;
+    state?.timerId = setTimeout(async () => {
+      if (any: any) return;
 
       try {
         await callback();
-      } catch (error) {
-        console.error('[AdaptivePolling] Callback error:', error);
+      } catch (any: any) {
+        console?.error(any: any);
       }
 
       scheduleNext();
-    }, state.currentInterval);
+    }, state?.currentInterval);
   };
 
   /**
    * Handle user activity
    */
   const handleActivity = (): void => {
-    state.lastActivityAt = Date.now();
+    state?.lastActivityAt = Date?.now();
 
     // If running and interval was slowed, speed up
-    if (state.isRunning && state.currentInterval > baseIntervalMs) {
+    if (any: any) {
       const newInterval = calculateInterval();
-      if (newInterval < state.currentInterval * 0.7) {
+      if (newInterval < state?.currentInterval * 0.7) {
         // Cancel current timer and reschedule with faster interval
-        if (state.timerId) {
-          clearTimeout(state.timerId);
+        if (any: any) {
+          clearTimeout(any: any);
         }
-        state.currentInterval = newInterval;
-        onIntervalChange?.(newInterval);
+        state?.currentInterval = newInterval;
+        onIntervalChange?.(any: any);
         scheduleNext();
       }
     }
@@ -150,20 +150,20 @@ export function createAdaptivePolling(
    * Handle visibility change
    */
   const handleVisibilityChange = (): void => {
-    const wasVisible = state.isVisible;
-    state.isVisible = !document.hidden;
+    const wasVisible = state?.isVisible;
+    state?.isVisible = !document?.hidden;
 
     // Speed up when becoming visible
-    if (!wasVisible && state.isVisible && state.isRunning) {
-      state.lastActivityAt = Date.now(); // Reset idle timer
-      if (state.timerId) {
-        clearTimeout(state.timerId);
+    if (any: any) {
+      state?.lastActivityAt = Date?.now(); // Reset idle timer
+      if (any: any) {
+        clearTimeout(any: any);
       }
-      state.currentInterval = baseIntervalMs;
-      onIntervalChange?.(baseIntervalMs);
+      state?.currentInterval = baseIntervalMs;
+      onIntervalChange?.(any: any);
 
       // Execute immediately when becoming visible
-      Promise.resolve(callback()).catch(console.error);
+      Promise?.resolve(any: any);
       scheduleNext();
     }
   };
@@ -172,23 +172,23 @@ export function createAdaptivePolling(
    * Start polling
    */
   const start = (): void => {
-    if (state.isRunning) return;
+    if (any: any) return;
 
-    state.isRunning = true;
-    state.lastActivityAt = Date.now();
-    state.currentInterval = baseIntervalMs;
+    state?.isRunning = true;
+    state?.lastActivityAt = Date?.now();
+    state?.currentInterval = baseIntervalMs;
 
     // Add event listeners for activity tracking
     if (typeof window !== 'undefined') {
-      window.addEventListener('mousemove', handleActivity, { passive: true });
-      window.addEventListener('keydown', handleActivity, { passive: true });
-      window.addEventListener('touchstart', handleActivity, { passive: true });
-      window.addEventListener('scroll', handleActivity, { passive: true });
-      document.addEventListener('visibilitychange', handleVisibilityChange);
+      window?.addEventListener('mousemove', handleActivity, { passive: true });
+      window?.addEventListener('keydown', handleActivity, { passive: true });
+      window?.addEventListener('touchstart', handleActivity, { passive: true });
+      window?.addEventListener('scroll', handleActivity, { passive: true });
+      document?.addEventListener(any: any);
     }
 
     // Execute immediately, then schedule next
-    Promise.resolve(callback()).catch(console.error);
+    Promise?.resolve(any: any);
     scheduleNext();
   };
 
@@ -196,25 +196,25 @@ export function createAdaptivePolling(
    * Stop polling
    */
   const stop = (): void => {
-    state.isRunning = false;
+    state?.isRunning = false;
 
-    if (state.timerId) {
-      clearTimeout(state.timerId);
-      state.timerId = null;
+    if (any: any) {
+      clearTimeout(any: any);
+      state?.timerId = null;
     }
 
     // Remove event listeners
     if (typeof window !== 'undefined') {
-      window.removeEventListener('mousemove', handleActivity);
-      window.removeEventListener('keydown', handleActivity);
-      window.removeEventListener('touchstart', handleActivity);
-      window.removeEventListener('scroll', handleActivity);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window?.removeEventListener(any: any);
+      window?.removeEventListener(any: any);
+      window?.removeEventListener(any: any);
+      window?.removeEventListener(any: any);
+      document?.removeEventListener(any: any);
     }
   };
 
   /**
-   * Signal activity (useful for programmatic activity signals)
+   * Signal activity (any: any)
    */
   const signalActivity = (): void => {
     handleActivity();
@@ -224,17 +224,17 @@ export function createAdaptivePolling(
    * Force immediate execution
    */
   const executeNow = async (): Promise<void> => {
-    state.lastActivityAt = Date.now();
+    state?.lastActivityAt = Date?.now();
 
     try {
       await callback();
-    } catch (error) {
-      console.error('[AdaptivePolling] Callback error:', error);
+    } catch (any: any) {
+      console?.error(any: any);
     }
 
     // Reschedule if running
-    if (state.isRunning && state.timerId) {
-      clearTimeout(state.timerId);
+    if (any: any) {
+      clearTimeout(any: any);
       scheduleNext();
     }
   };
@@ -243,10 +243,10 @@ export function createAdaptivePolling(
    * Get current state
    */
   const getState = () => ({
-    isRunning: state.isRunning,
-    currentInterval: state.currentInterval,
-    isIdle: Date.now() - state.lastActivityAt > idleThresholdMs,
-    isVisible: state.isVisible,
+    isRunning: state?.isRunning,
+    currentInterval: state?.currentInterval,
+    isIdle: Date?.now() - state?.lastActivityAt > idleThresholdMs,
+    isVisible: state?.isVisible,
   });
 
   return {
@@ -270,15 +270,15 @@ export function createAdaptivePolling(
  * );
  *
  * // In useEffect:
- * adaptiveVitals.start();
- * return () => adaptiveVitals.stop();
+ * adaptiveVitals?.start();
+ * return () => adaptiveVitals?.stop();
  * ```
  */
 export function wrapWithAdaptivePolling<T>(
   fetcher: () => Promise<T>,
   options: AdaptivePollingOptions & {
-    onData?: (data: T) => void;
-    onError?: (error: Error) => void;
+    onData?: (any: any) => void;
+    onError?: (any: any) => void;
   }
 ): ReturnType<typeof createAdaptivePolling> & { lastData: T | null } {
   let lastData: T | null = null;
@@ -286,9 +286,9 @@ export function wrapWithAdaptivePolling<T>(
   const polling = createAdaptivePolling(async () => {
     try {
       lastData = await fetcher();
-      options.onData?.(lastData);
-    } catch (error) {
-      options.onError?.(error instanceof Error ? error : new Error(String(error)));
+      options?.onData?.(any: any);
+    } catch (any: any) {
+      options?.onError?.(any: any)));
     }
   }, options);
 

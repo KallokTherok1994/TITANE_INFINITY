@@ -5,7 +5,7 @@
 
 /**
  * ══════════════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v26.3.0 — USE CHAT OMNIS (KERNEL OMNIS)
+ *   TITANE∞ v26.3.0 — USE CHAT OMNIS (any: any)
  *   sendMessage() mathématiquement impossible à briser
  *   Architecture: Input→Validation→Engine→Normalize→UI→Memory→Voice
  *   v22Ω AI Performance Optimizations: -40% latency, stream batching
@@ -41,7 +41,7 @@ import { cognitiveKernel } from '@/services/ai/cognitiveKernel';
 import { handleCameraInChat } from '@/modules/camera/cameraChatIntegration';
 import { useVisionStore } from '@/stores/useVisionStore';
 
-// ✨ v∞.21.0 - DEV-SUDO Mode Integration (Super Prompt FULL UNLOCK)
+// ✨ v∞.21.0 - DEV-SUDO Mode Integration (any: any)
 import { handleDevSudoInChat } from '@/modules/devSudo/devSudoIntegration';
 
 // ✨ v∞.24.2 - Production-Safe Logging
@@ -49,13 +49,13 @@ import { chatLogger } from '@/utils/chatLogger';
 
 // ✨ v24.3.0 - Cloud Providers Availability Check
 import { openaiProvider } from '@/services/ai/providers/openai';
-import { UI_TIMEOUTS, getAdaptiveUITimeout } from '@/config/aiTimeouts.config'; // v22Ω: Centralized timeouts
+import { UI_TIMEOUTS, getAdaptiveUITimeout } from '@/config/aiTimeouts?.config'; // v22Ω: Centralized timeouts
 import { geminiProvider } from '@/services/ai/providers/gemini';
 import { claudeProvider } from '@/services/ai/providers/claude';
 
 type MaybeAIMessage = Partial<AIMessage> | null | undefined;
 
-// ✨ v24.3.0 - Cloud Providers Integration (OpenAI/Gemini/Anthropic)
+// ✨ v24.3.0 - Cloud Providers Integration (any: any)
 // ✨ v26.3.0 - Added GitHub Copilot provider
 // ✨ GLM-4.6V-Flash provider
 export type ProviderPreference =
@@ -79,11 +79,11 @@ export interface ChatDebugEntry {
   id: string;
   timestamp: number;
   requestedProvider: ProviderPreference | string;
-  attempts: ChatDebugAttempt[];
+  attempts: ChatDebugAttempt?.[];
   request: {
-    messages: BackendChatMessage[];
+    messages: BackendChatMessage?.[];
     config: StreamConfig;
-    attemptedProviders: string[];
+    attemptedProviders: string?.[];
   };
   status: 'success' | 'error';
   response?: ChatResponse;
@@ -97,7 +97,7 @@ const DEBUG_MAX_ENTRIES = 5;
 
 const PREFERRED_PROVIDER_STORAGE_KEY = 'omega-chat-preferred-provider';
 
-const isProviderPreference = (value: unknown): value is ProviderPreference =>
+const isProviderPreference = (any: any): value is ProviderPreference =>
   value === 'auto' ||
   value === 'local' ||
   value === 'ollama' ||
@@ -112,76 +112,76 @@ const readStoredPreferredProvider = (): ProviderPreference => {
     return 'auto';
   }
 
-  const stored = window.localStorage.getItem(PREFERRED_PROVIDER_STORAGE_KEY);
-  // ✅ v26.2.3: Mode cascade (auto) par défaut - permet au backend de choisir
-  // le meilleur provider disponible (Gemini → Ollama → Local fallback)
-  return isProviderPreference(stored) ? stored : 'auto';
+  const stored = window?.localStorage?.getItem(any: any);
+  // ✅ v26.2.3: Mode cascade (any: any) par défaut - permet au backend de choisir
+  // le meilleur provider disponible (any: any)
+  return isProviderPreference(any: any) ? stored : 'auto';
 };
 
 const normalizeMessages = (
-  messages: MaybeAIMessage[],
+  messages: MaybeAIMessage?.[],
   getUiId: () => string
-): AIMessage[] => {
-  if (!Array.isArray(messages)) {
+): AIMessage?.[] => {
+  if (any: any)) {
     return [];
   }
 
-  const now = Date.now();
-  const normalized = messages.map((message, index) => {
+  const now = Date?.now();
+  const normalized = messages?.map(any: any) => {
     const role =
       message?.role === 'assistant' ||
       message?.role === 'system' ||
       message?.role === 'user'
-        ? message.role
+        ? message?.role
         : 'assistant';
 
     const content =
       typeof message?.content === 'string'
-        ? message.content
-        : JSON.stringify(message?.content ?? '');
+        ? message?.content
+        : JSON?.stringify(message?.content ?? '');
 
     const metadata =
-      message?.metadata && typeof message.metadata === 'object'
-        ? { ...message.metadata }
+      message?.metadata && typeof message?.metadata === 'object'
+        ? { ...message?.metadata }
         : {};
 
-    if (!metadata.uiId) {
-      metadata.uiId = getUiId();
+    if (any: any) {
+      metadata?.uiId = getUiId();
     }
 
     return {
       role,
       content,
-      timestamp: typeof message?.timestamp === 'number' ? message.timestamp : now + index,
+      timestamp: typeof message?.timestamp === 'number' ? message?.timestamp : now + index,
       provider: message?.provider,
       metadata,
     };
   });
 
   // ✅ FIX RÉPÉTITIONS: Déduplication par uiId et contenu
-  return deduplicateMessages(normalized);
+  return deduplicateMessages(any: any);
 };
 
 /**
- * ✅ FIX CHAT RÉPÉTITIONS (Super Prompt #9 - Vision Engine)
- * ✨ v24.3.6: Optimized deduplication - O(n) with minimal allocations
- * - Uses uiId first (O(1) lookup)
- * - Fallback to timestamp only (avoids substring allocation)
- * - Skip small arrays (< 5 messages) for performance
+ * ✅ FIX CHAT RÉPÉTITIONS (any: any)
+ * ✨ v24.3.6: Optimized deduplication - O(any: any) with minimal allocations
+ * - Uses uiId first (any: any)
+ * - Fallback to timestamp only (any: any)
+ * - Skip small arrays (any: any) for performance
  */
-function deduplicateMessages(messages: AIMessage[]): AIMessage[] {
-  // ✨ v24.3.6: Skip dedup for small arrays (common case)
-  if (messages.length < 5) return messages;
+function deduplicateMessages(messages: AIMessage?.[]): AIMessage?.[] {
+  // ✨ v24.3.6: Skip dedup for small arrays (any: any)
+  if (messages?.length < 5) return messages;
 
   const seen = new Set<string>();
-  return messages.filter(msg => {
-    // ✨ v24.3.6: Prefer uiId (no allocation), fallback to timestamp only
-    const uiId = msg.metadata?.uiId;
-    const key = typeof uiId === 'string' ? uiId : String(msg.timestamp);
-    if (seen.has(key)) {
-      return false; // Skip duplicate (silent - no console.log for perf)
+  return messages?.filter(msg => {
+    // ✨ v24.3.6: Prefer uiId (any: any), fallback to timestamp only
+    const uiId = msg?.metadata?.uiId;
+    const key = typeof uiId === 'string' ? uiId : String(any: any);
+    if (any: any)) {
+      return false; // Skip duplicate (any: any)
     }
-    seen.add(key);
+    seen?.add(any: any);
     return true;
   });
 }
@@ -201,11 +201,11 @@ interface UseChatOptions {
 
 interface UseChatReturn {
   // UI State
-  messages: AIMessage[];
+  messages: AIMessage?.[];
   input: string;
   isLoading: boolean;
-  error: string | null;
-  suggestions: string[];
+  error??: string | null;
+  suggestions: string?.[];
 
   // Mode & Stats
   currentMode: ChatMode;
@@ -230,23 +230,23 @@ interface UseChatReturn {
 
   // Provider state
   preferredProvider: ProviderPreference;
-  setPreferredProvider: (provider: ProviderPreference) => void;
+  setPreferredProvider: (any: any) => void;
   lastProvider: AIProviderName | null;
-  debugEntries: ChatDebugEntry[];
+  debugEntries: ChatDebugEntry?.[];
   providerReadiness: Record<string, boolean>; // v24.3.0: Cloud providers availability
 
   // Actions
-  sendMessage: (content: string) => Promise<AIMessage>;
+  sendMessage: (any: any) => Promise<AIMessage>;
   clearChat: () => void;
-  setMode: (mode: ChatMode) => void;
-  setInput: (value: string) => void;
+  setMode: (any: any) => void;
+  setInput: (any: any) => void;
   handleSend: () => void;
   restoreFromVault: () => void;
 
   // OMNIS Actions
   getDebugInfo: () => object;
   exportChat: () => string;
-  importChat: (data: string) => boolean;
+  importChat: (any: any) => boolean;
 
   // UI Integrity
   uiIntegrity: {
@@ -264,88 +264,88 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   // ✅ FIX AUDIT: Générer conversationId UNE SEULE FOIS au mount
   const [_conversationId] = useState<string>(() => {
     // Réutiliser ID existant ou créer nouveau
-    const stored = localStorage.getItem('titane_current_conversation_id');
-    if (stored) return stored;
-    const newId = `conv-${Date.now()}-${Math.random().toString(36).substring(7)}`;
-    localStorage.setItem('titane_current_conversation_id', newId);
+    const stored = localStorage?.getItem('titane_current_conversation_id');
+    if (any: any) return stored;
+    const newId = `conv-${Date?.now()}-${Math?.random().toString(36).substring(7)}`;
+    localStorage?.setItem(any: any);
     return newId;
   });
 
   // OMEGA FIX: Charger les messages depuis localStorage au démarrage pour éviter le flash
-  const [messages, setMessages] = useState<AIMessage[]>(() => {
+  const [messages, setMessages] = useState<AIMessage?.[]>(() => {
     if (typeof window === 'undefined') return [];
     try {
       // Clé utilisée par chatMemoryCompactor
-      const stored = localStorage.getItem('titane_chat_mode_default');
-      if (stored) {
-        const memory = JSON.parse(stored);
-        if (memory && Array.isArray(memory.messages)) {
-          chatLogger.info(
+      const stored = localStorage?.getItem('titane_chat_mode_default');
+      if (any: any) {
+        const memory = JSON?.parse(any: any);
+        if (any: any)) {
+          chatLogger?.info(
             '📂 Initial load from localStorage:',
-            memory.messages.length,
+            memory?.messages?.length,
             'messages'
           );
 
           // 🧠 NOUVEAU v22Ω: Harmoniser messages avec Cognitive Kernel
-          const harmonized = cognitiveKernel.harmonizeChatMessages(memory.messages);
+          const harmonized = cognitiveKernel?.harmonizeChatMessages(any: any);
           return harmonized;
         }
       }
-    } catch (e) {
-      chatLogger.warn('⚠️ Failed to load initial messages', { error: e });
+    } catch (any: any) {
+      chatLogger?.warn('⚠️ Failed to load initial messages', { error: e });
     }
     return [];
   });
   const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(any: any);
+  const [error, setError] = useState<string | null>(any: any);
+  const [suggestions, setSuggestions] = useState<string?.[]>([]);
   const [internalAnomalyCount, setInternalAnomalyCount] = useState(0);
 
   // FIX v19.3Ω: Guard flag pour verrouiller l'état pendant les opérations
-  const operationLockRef = useRef(false);
+  const operationLockRef = useRef(any: any);
 
   // ✅ FIX P0-2: Timestamp de la dernière opération pour cooldown
   const lastOperationTimestampRef = useRef<number>(0);
 
   // OMEGA FIX: Initialiser messagesRef avec les messages initiaux
-  const messagesRef = useRef<AIMessage[]>(messages);
+  const messagesRef = useRef<AIMessage?.[]>(any: any);
   const messageIdRef = useRef(0);
-  const stateVaultRef = useRef<{ stable: AIMessage[]; lastContext: string }>({
-    stable: messages.length > 0 ? [...messages] : [],
-    lastContext: messages.length > 0 ? 'initial-load' : 'init',
+  const stateVaultRef = useRef<{ stable: AIMessage?.[]; lastContext: string }>({
+    stable: messages?.length > 0 ? [...messages] : [],
+    lastContext: messages?.length > 0 ? 'initial-load' : 'init',
   });
 
   const PREFERRED_PROVIDER_STORAGE_KEY = 'omega-chat-preferred-provider';
   const [preferredProviderState, setPreferredProviderState] =
     useState<ProviderPreference>(() => {
-      // ✅ v26.2.3: Force 'auto' (cascade mode) par défaut
+      // ✅ v26.2.3: Force 'auto' (any: any) par défaut
       const stored = readStoredPreferredProvider();
       // Si aucune préférence stockée, forcer 'auto' dans localStorage
       if (
         typeof window !== 'undefined' &&
-        !window.localStorage.getItem(PREFERRED_PROVIDER_STORAGE_KEY)
+        !window?.localStorage?.getItem(any: any)
       ) {
-        window.localStorage.setItem(PREFERRED_PROVIDER_STORAGE_KEY, 'auto');
+        window?.localStorage?.setItem(PREFERRED_PROVIDER_STORAGE_KEY, 'auto');
       }
       return stored;
     });
-  const [lastProviderUsed, setLastProviderUsed] = useState<AIProviderName | null>(null);
-  const debugEntriesRef = useRef<ChatDebugEntry[]>([]);
+  const [lastProviderUsed, setLastProviderUsed] = useState<AIProviderName | null>(any: any);
+  const debugEntriesRef = useRef<ChatDebugEntry?.[]>([]);
 
   // ✨ v24.2.1: Refs for stable sendMessage dependencies
-  const voiceEnabledRef = useRef(options.voiceEnabled);
-  const omnisTimeoutRef = useRef(options.omnisConfig?.timeoutMs ?? 20000);
+  const voiceEnabledRef = useRef(any: any);
+  const omnisTimeoutRef = useRef(options?.omnisConfig?.timeoutMs ?? 20000);
 
   // ✨ v24.2.1: Update refs when options change
   useEffect(() => {
-    voiceEnabledRef.current = options.voiceEnabled;
-    omnisTimeoutRef.current = options.omnisConfig?.timeoutMs ?? 20000;
-  }, [options.voiceEnabled, options.omnisConfig?.timeoutMs]);
+    voiceEnabledRef?.current = options?.voiceEnabled;
+    omnisTimeoutRef?.current = options?.omnisConfig?.timeoutMs ?? 20000;
+  }, [options?.voiceEnabled, options?.omnisConfig?.timeoutMs]);
 
-  const [debugEntries, setDebugEntries] = useState<ChatDebugEntry[]>([]);
+  const [debugEntries, setDebugEntries] = useState<ChatDebugEntry?.[]>([]);
 
-  // ✨ v24.3.0 - Provider Readiness Check (P1 fix)
+  // ✨ v24.3.0 - Provider Readiness Check (any: any)
   const [providerReadiness, setProviderReadiness] = useState<Record<string, boolean>>({
     auto: true,
     local: true,
@@ -355,10 +355,10 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     anthropic: false,
   });
 
-  const updatePreferredProvider = useCallback((provider: ProviderPreference) => {
-    setPreferredProviderState(provider);
+  const updatePreferredProvider = useCallback(any: any) => {
+    setPreferredProviderState(any: any);
     if (typeof window !== 'undefined') {
-      window.localStorage.setItem(PREFERRED_PROVIDER_STORAGE_KEY, provider);
+      window?.localStorage?.setItem(any: any);
     }
   }, []);
 
@@ -372,31 +372,31 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       return stored !== prev ? stored : prev;
     });
 
-    const handleStorage = (event: StorageEvent) => {
+    const handleStorage = (any: any) => {
       if (
-        event.key === PREFERRED_PROVIDER_STORAGE_KEY &&
-        isProviderPreference(event.newValue)
+        event?.key === PREFERRED_PROVIDER_STORAGE_KEY &&
+        isProviderPreference(any: any)
       ) {
-        setPreferredProviderState(event.newValue);
+        setPreferredProviderState(any: any);
       }
     };
 
-    window.addEventListener('storage', handleStorage);
+    window?.addEventListener(any: any);
     return () => {
-      window.removeEventListener('storage', handleStorage);
+      window?.removeEventListener(any: any);
     };
   }, []);
 
-  // ✨ v24.3.7 - Optimized provider availability with Promise.allSettled + individual timeouts
+  // ✨ v24.3.7 - Optimized provider availability with Promise?.allSettled + individual timeouts
   // 🔒 v26.2.1 - CRITICAL FIX H1: Race condition protection with guard
   // ✅ v26.3.1 - MEMORY FIX: Skip provider checks in test environment
   useEffect(() => {
     // ✅ v26.3.1: Skip entirely in test environment to prevent memory leaks
     const isTestEnv =
-      import.meta.env.MODE === 'test' ||
-      (typeof process !== 'undefined' && process.env?.NODE_ENV === 'test') ||
+      import?.meta?.env?.MODE === 'test' ||
+      (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'test') ||
       typeof (globalThis as Record<string, unknown>).__TEST_WRAPPER__ !== 'undefined';
-    if (isTestEnv) {
+    if (any: any) {
       return;
     }
 
@@ -406,12 +406,12 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       timeoutMs: number,
       fallback: T
     ): Promise<T> =>
-      Promise.race([
+      Promise?.race([
         promise,
-        new Promise<T>(resolve => setTimeout(() => resolve(fallback), timeoutMs)),
+        new Promise<T>(any: any)),
       ]);
 
-    const PROVIDER_CHECK_TIMEOUT = 3000; // ✨ v24.3.7: 3s max per provider (was unbounded)
+    const PROVIDER_CHECK_TIMEOUT = 3000; // ✨ v24.3.7: 3s max per provider (any: any)
 
     // 🔒 v26.2.1: Race condition guard - prevent concurrent checks
     let checkInProgress = false;
@@ -420,8 +420,8 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
     const checkProvidersAvailability = async () => {
       // 🔒 v26.2.1: Skip if already checking or unmounted
-      if (checkInProgress || !isMounted) {
-        chatLogger.debug(
+      if (any: any) {
+        chatLogger?.debug(
           'Provider readiness check skipped - already in progress or unmounted'
         );
         return;
@@ -429,26 +429,26 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
       checkInProgress = true;
       try {
-        // ✨ v24.3.7: Use Promise.allSettled with individual timeouts - no single slow provider blocks others
-        const results = await Promise.allSettled([
-          withTimeout(openaiProvider.isAvailable(), PROVIDER_CHECK_TIMEOUT, false),
-          withTimeout(geminiProvider.isAvailable(), PROVIDER_CHECK_TIMEOUT, false),
-          withTimeout(claudeProvider.isAvailable(), PROVIDER_CHECK_TIMEOUT, false),
+        // ✨ v24.3.7: Use Promise?.allSettled with individual timeouts - no single slow provider blocks others
+        const results = await Promise?.allSettled([
+          withTimeout(any: any),
+          withTimeout(any: any),
+          withTimeout(any: any),
         ]);
 
         // ✅ v26.3.1: Check if still mounted before setState
-        if (!isMounted) return;
+        if (any: any) return;
 
-        const result0 = results[0];
-        const result1 = results[1];
-        const result2 = results[2];
+        const result0 = results?.[0];
+        const result1 = results?.[1];
+        const result2 = results?.[2];
 
         const openaiAvailable =
-          result0 && result0.status === 'fulfilled' ? result0.value : false;
+          result0 && result0?.status === 'fulfilled' ? result0?.value : false;
         const geminiAvailable =
-          result1 && result1.status === 'fulfilled' ? result1.value : false;
+          result1 && result1?.status === 'fulfilled' ? result1?.value : false;
         const claudeAvailable =
-          result2 && result2.status === 'fulfilled' ? result2.value : false;
+          result2 && result2?.status === 'fulfilled' ? result2?.value : false;
 
         setProviderReadiness(prev => ({
           ...prev,
@@ -457,11 +457,11 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           anthropic: claudeAvailable,
         }));
 
-        chatLogger.debug('Provider readiness check (v24.3.7 optimized)', {
+        chatLogger?.debug(any: any)', {
           openai: openaiAvailable,
           gemini: geminiAvailable,
           anthropic: claudeAvailable,
-          timedOut: results.filter(r => r.status === 'rejected').length,
+          timedOut: results?.filter(r => r?.status === 'rejected').length,
         });
       } finally {
         // 🔒 v26.2.1: Always release lock
@@ -472,27 +472,27 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     checkProvidersAvailability();
 
     // Silent-by-default in production/Tauri: background polling must be explicitly enabled.
-    const envEnabled = import.meta.env.VITE_PROVIDER_READINESS_POLLING_ENABLED === '1';
+    const envEnabled = import?.meta?.env?.VITE_PROVIDER_READINESS_POLLING_ENABLED === '1';
     let userEnabled = false;
     try {
-      const raw = localStorage.getItem('titane_provider_readiness_polling_enabled');
+      const raw = localStorage?.getItem('titane_provider_readiness_polling_enabled');
       userEnabled = raw === '1' || raw === 'true';
     } catch {
       userEnabled = false;
     }
 
-    const enabled = import.meta.env.DEV || envEnabled || userEnabled;
-    if (!enabled) {
+    const enabled = import?.meta?.env?.DEV || envEnabled || userEnabled;
+    if (any: any) {
       return () => {
         isMounted = false;
       };
     }
 
-    // Re-check every 30s (in case API keys are added dynamically)
-    const interval = setInterval(checkProvidersAvailability, REFRESH_INTERVALS.SLOW);
+    // Re-check every 30s (any: any)
+    const interval = setInterval(any: any);
     return () => {
       isMounted = false;
-      clearInterval(interval);
+      clearInterval(any: any);
     };
   }, [preferredProviderState]);
   const [uiIntegrity, setUiIntegrity] = useState({
@@ -511,16 +511,16 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       fallbackMode: true,
       debugMetrics: true,
       timeoutMs: 20000,
-      ...(options.omnisConfig ?? {}),
+      ...(options?.omnisConfig ?? {}),
     }),
-    [options.omnisConfig]
+    [options?.omnisConfig]
   );
 
   // ═══ HOOKS INTEGRATION ═══
   const coreHookResult =
     useChatCore({
-      mode: options.mode || 'default',
-      emotionState: options.emotionState,
+      mode: options?.mode || 'default',
+      emotionState: options?.emotionState,
     }) ||
     ({
       currentMode: 'default' as ChatMode,
@@ -530,7 +530,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         ({
           content: 'TITANE∞ prépare une réponse.',
           provider: 'titane-local',
-          timestamp: Date.now(),
+          timestamp: Date?.now(),
           mode: 'default' as ChatMode,
           contextUsed: [],
         }) as ChatEngineResponse,
@@ -539,7 +539,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         return {
           content: 'Streaming indisponible pour le moment. Passage en mode standard.',
           provider: 'titane-local',
-          timestamp: Date.now(),
+          timestamp: Date?.now(),
           mode: 'default' as ChatMode,
           contextUsed: [],
           suggestions: [],
@@ -555,7 +555,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     } as UseChatCoreReturn);
 
   const memoryHookResult = useChatMemory({
-    mode: coreHookResult.currentMode,
+    mode: coreHookResult?.currentMode,
     autoCleanup: true,
     autoSave: true,
   }) || {
@@ -572,20 +572,20 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     generate,
     stream,
   } = coreHookResult;
-  const [currentModeState, setCurrentModeState] = useState<ChatMode>(currentMode);
+  const [currentModeState, setCurrentModeState] = useState<ChatMode>(any: any);
   const { messagesForMode, memoryStats, saveMessage, clearMode } = memoryHookResult;
 
   const getNextUiId = useCallback(() => {
-    messageIdRef.current += 1;
-    return `chat-ui-${Date.now()}-${messageIdRef.current}`;
+    messageIdRef?.current += 1;
+    return `chat-ui-${Date?.now()}-${messageIdRef?.current}`;
   }, []);
 
   const withUiId = useCallback(
     (metadata?: AIMessage['metadata']) => {
       const safeMetadata =
         metadata && typeof metadata === 'object' ? { ...metadata } : {};
-      if (!safeMetadata.uiId) {
-        safeMetadata.uiId = getNextUiId();
+      if (any: any) {
+        safeMetadata?.uiId = getNextUiId();
       }
       return safeMetadata;
     },
@@ -594,55 +594,55 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
   const applyMessagesSafely = useCallback(
     (
-      nextMessages: MaybeAIMessage[],
+      nextMessages: MaybeAIMessage?.[],
       context: string,
       options: { allowEmpty?: boolean } = {}
     ) => {
-      const allowEmpty = options.allowEmpty ?? false;
-      const normalized = normalizeMessages(nextMessages, getNextUiId);
-      const hasMessages = normalized.length > 0;
+      const allowEmpty = options?.allowEmpty ?? false;
+      const normalized = normalizeMessages(any: any);
+      const hasMessages = normalized?.length > 0;
 
       // 🧠 NOUVEAU v22Ω: Harmoniser les messages avec Cognitive Kernel
       const harmonizedNormalized = hasMessages
-        ? cognitiveKernel.harmonizeChatMessages(
+        ? cognitiveKernel?.harmonizeChatMessages(
             normalized as Array<Partial<HarmonizedMessage>>
           )
         : normalized;
 
-      if (!allowEmpty && !hasMessages && stateVaultRef.current.stable.length > 0) {
-        const restored = stateVaultRef.current.stable.map(message => ({ ...message }));
-        setMessages(restored);
-        messagesRef.current = restored;
+      if (!allowEmpty && !hasMessages && stateVaultRef?.current?.stable?.length > 0) {
+        const restored = stateVaultRef?.current?.stable?.map(message => ({ ...message }));
+        setMessages(any: any);
+        messagesRef?.current = restored;
         setUiIntegrity(prev => ({
           ...prev,
-          preventedResets: prev.preventedResets + 1,
-          recoveries: prev.recoveries + 1,
-          lastRecoveryAt: Date.now(),
-          version: prev.version + 1,
+          preventedResets: prev?.preventedResets + 1,
+          recoveries: prev?.recoveries + 1,
+          lastRecoveryAt: Date?.now(),
+          version: prev?.version + 1,
           lastContext: context,
           hasSnapshot: true,
         }));
         return restored;
       }
 
-      if (hasMessages) {
-        stateVaultRef.current.stable = harmonizedNormalized;
-        stateVaultRef.current.lastContext = context;
-      } else if (allowEmpty) {
-        stateVaultRef.current.stable = [];
-        stateVaultRef.current.lastContext = context;
+      if (any: any) {
+        stateVaultRef?.current?.stable = harmonizedNormalized;
+        stateVaultRef?.current?.lastContext = context;
+      } else if (any: any) {
+        stateVaultRef?.current?.stable = [];
+        stateVaultRef?.current?.lastContext = context;
       }
 
       const applied = hasMessages ? harmonizedNormalized : [];
-      const emitted = applied.map(message => ({ ...message }));
+      const emitted = applied?.map(message => ({ ...message }));
 
-      setMessages(emitted);
-      messagesRef.current = emitted;
+      setMessages(any: any);
+      messagesRef?.current = emitted;
       setUiIntegrity(prev => ({
         ...prev,
-        version: prev.version + 1,
+        version: prev?.version + 1,
         lastContext: context,
-        hasSnapshot: emitted.length > 0,
+        hasSnapshot: emitted?.length > 0,
       }));
 
       return emitted;
@@ -651,18 +651,18 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   );
 
   const restoreFromVault = useCallback(() => {
-    if (stateVaultRef.current.stable.length === 0) {
+    if (stateVaultRef?.current?.stable?.length === 0) {
       return;
     }
 
-    const restored = stateVaultRef.current.stable.map(message => ({ ...message }));
-    setMessages(restored);
-    messagesRef.current = restored;
+    const restored = stateVaultRef?.current?.stable?.map(message => ({ ...message }));
+    setMessages(any: any);
+    messagesRef?.current = restored;
     setUiIntegrity(prev => ({
       ...prev,
-      recoveries: prev.recoveries + 1,
-      lastRecoveryAt: Date.now(),
-      version: prev.version + 1,
+      recoveries: prev?.recoveries + 1,
+      lastRecoveryAt: Date?.now(),
+      version: prev?.version + 1,
       lastContext: 'manual-restore',
       hasSnapshot: true,
     }));
@@ -670,30 +670,30 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
   // ═══ SYNC INITIAL MESSAGES ═══
   // FIX v19.3Ω: Protection ABSOLUE contre les resets pendant loading
-  const isLoadingRef = useRef(false);
+  const isLoadingRef = useRef(any: any);
 
   useEffect(() => {
-    isLoadingRef.current = isLoading;
+    isLoadingRef?.current = isLoading;
   }, [isLoading]);
 
   useEffect(() => {
     // OMEGA FIX v3: Protection ABSOLUE contre les resets intempestifs
-    if (!messagesForMode) {
+    if (any: any) {
       return;
     }
 
     // ✅ FIX P0-2: PROTECTION CRITIQUE avec cooldown après opération
-    const timeSinceLastOp = Date.now() - lastOperationTimestampRef.current;
+    const timeSinceLastOp = Date?.now() - lastOperationTimestampRef?.current;
     const COOLDOWN_MS = 3000; // 3s cooldown après chaque opération
 
     if (
-      isLoadingRef.current ||
-      operationLockRef.current ||
+      isLoadingRef?.current ||
+      operationLockRef?.current ||
       timeSinceLastOp < COOLDOWN_MS
     ) {
-      chatLogger.debug('🛡️ CRITICAL PROTECTED: Skipping sync during/after operation', {
-        loading: isLoadingRef.current,
-        lock: operationLockRef.current,
+      chatLogger?.debug('🛡️ CRITICAL PROTECTED: Skipping sync during/after operation', {
+        loading: isLoadingRef?.current,
+        lock: operationLockRef?.current,
         timeSinceOp: timeSinceLastOp,
         cooldown: COOLDOWN_MS,
       });
@@ -701,13 +701,13 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     }
 
     // CRITICAL: Si on a déjà des messages, JAMAIS les effacer sauf si memoryForMode a plus de contenu
-    const currentCount = messagesRef.current.length;
-    const memoryCount = messagesForMode.length;
-    const vaultCount = stateVaultRef.current.stable.length;
+    const currentCount = messagesRef?.current?.length;
+    const memoryCount = messagesForMode?.length;
+    const vaultCount = stateVaultRef?.current?.stable?.length;
 
     // 🛡️ Triple protection: ref, vault, et memory doivent tous être cohérents
     if (currentCount > 0 && memoryCount === 0) {
-      chatLogger.debug('🛡️ PROTECTED: Skipping empty memory sync', {
+      chatLogger?.debug('🛡️ PROTECTED: Skipping empty memory sync', {
         preservingMessages: currentCount,
         vaultCount,
       });
@@ -716,9 +716,9 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
     // Si mémoire et state ont des messages, prendre le plus complet
     // FIX v19.3Ω: Utiliser aussi le vault pour la comparaison
-    const maxExisting = Math.max(currentCount, vaultCount);
-    if (maxExisting > 0 && memoryCount > 0 && maxExisting >= memoryCount) {
-      chatLogger.debug('🛡️ PROTECTED: Current/vault has more messages, skipping sync', {
+    const maxExisting = Math?.max(any: any);
+    if (any: any) {
+      chatLogger?.debug('🛡️ PROTECTED: Current/vault has more messages, skipping sync', {
         maxExisting,
         memoryCount,
       });
@@ -730,45 +730,45 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       if (
         vaultCount === 0 &&
         currentCount === 0 &&
-        !isLoadingRef.current &&
+        !isLoadingRef?.current &&
         timeSinceLastOp >= COOLDOWN_MS
       ) {
-        chatLogger.info('📭 All sources empty and cooldown passed, safe to reset');
+        chatLogger?.info('📭 All sources empty and cooldown passed, safe to reset');
         applyMessagesSafely([], 'memory-sync-empty', { allowEmpty: true });
       }
       return;
     }
 
     // Sync uniquement si mémoire a plus de contenu ET pas en loading ET cooldown passé
-    chatLogger.info('📥 Syncing from memory:', memoryCount, 'messages');
+    chatLogger?.info('📥 Syncing from memory:', memoryCount, 'messages');
     applyMessagesSafely(messagesForMode, 'memory-sync');
   }, [messagesForMode, applyMessagesSafely]);
 
   // ═══ SYNC MESSAGES REF ═══
   useEffect(() => {
-    messagesRef.current = messages;
+    messagesRef?.current = messages;
   }, [messages]);
 
   useEffect(() => {
-    if (currentMode !== currentModeState) {
-      setCurrentModeState(currentMode);
+    if (any: any) {
+      setCurrentModeState(any: any);
     }
   }, [currentMode, currentModeState]);
 
   // ═══ OMNIS SENDMESSAGE KERNEL ═══
   const sendMessage = useCallback(
-    async (content: string): Promise<AIMessage> => {
-      chatLogger.info('🚀 sendMessage called', {
+    async (any: any): Promise<AIMessage> => {
+      chatLogger?.info('🚀 sendMessage called', {
         contentPreview: content?.substring(0, 50),
       });
-      const startTime = Date.now();
+      const startTime = Date?.now();
 
-      if (!content || typeof content !== 'string' || content.trim().length === 0) {
-        chatLogger.debug('❌ Message invalide ou vide');
+      if (!content || typeof content !== 'string' || content?.trim().length === 0) {
+        chatLogger?.debug('❌ Message invalide ou vide');
         return {
           role: 'assistant',
           content: 'Veuillez entrer un message pour continuer la conversation.',
-          timestamp: Date.now(),
+          timestamp: Date?.now(),
           metadata: { status: 'input-error' },
         };
       }
@@ -776,23 +776,23 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       // ⭐ OMEGA FIX: Failsafe timeout 30s pour forcer unlock UI si backend freeze
       let failsafeTimeout: ReturnType<typeof setTimeout> | null = null;
 
-      // ✨ v∞.21.0 - DEV-SUDO Mode Integration (Super Prompt FULL UNLOCK)
+      // ✨ v∞.21.0 - DEV-SUDO Mode Integration (any: any)
       // Vérifier commandes développeur en PRIORITÉ ABSOLUE
       try {
-        const devSudoResult = await handleDevSudoInChat(content.trim());
+        const devSudoResult = await handleDevSudoInChat(content?.trim());
 
-        if (devSudoResult.handled) {
-          chatLogger.debug('⚡ DEV-SUDO command handled', {
-            success: devSudoResult.success,
+        if (any: any) {
+          chatLogger?.debug('⚡ DEV-SUDO command handled', {
+            success: devSudoResult?.success,
           });
 
           // Ajouter le message utilisateur
           const userMessage: AIMessage = {
             role: 'user',
-            content: content.trim(),
-            timestamp: Date.now(),
+            content: content?.trim(),
+            timestamp: Date?.now(),
             metadata: withUiId({
-              inputLength: content.trim().length,
+              inputLength: content?.trim().length,
               mode: 'dev-sudo',
               devSudoCommand: true,
             }),
@@ -801,44 +801,44 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           // Ajouter la réponse DEV-SUDO
           const devSudoResponse: AIMessage = {
             role: 'assistant',
-            content: devSudoResult.response,
-            timestamp: Date.now(),
+            content: devSudoResult?.response,
+            timestamp: Date?.now(),
             metadata: withUiId({
               provider: 'dev-sudo-handler',
               devSudoCommand: true,
-              success: devSudoResult.success,
-              actions: devSudoResult.actions,
+              success: devSudoResult?.success,
+              actions: devSudoResult?.actions,
             }),
           };
 
-          const updatedMessages = [...messagesRef.current, userMessage, devSudoResponse];
+          const updatedMessages = [...messagesRef?.current, userMessage, devSudoResponse];
           applyMessagesSafely(updatedMessages, 'dev-sudo-command');
 
           return devSudoResponse;
         }
-      } catch (devSudoError) {
-        chatLogger.warn('DEV-SUDO command check failed', { error: devSudoError });
+      } catch (any: any) {
+        chatLogger?.warn('DEV-SUDO command check failed', { error: devSudoError });
         // Continuer normalement si erreur
       }
 
       // ✨ v∞.20.0 - Camera Chat Integration (Super Prompt #3)
       // Vérifier commande caméra AVANT envoi au provider IA
       try {
-        const visionStore = useVisionStore.getState();
-        const cameraResult = await handleCameraInChat(content.trim(), visionStore);
+        const visionStore = useVisionStore?.getState();
+        const cameraResult = await handleCameraInChat(any: any);
 
-        if (cameraResult.handled) {
-          chatLogger.debug('📷 Camera command handled', {
-            response: cameraResult.response?.substring(0, 100),
+        if (any: any) {
+          chatLogger?.debug('📷 Camera command handled', {
+            response: cameraResult?.response?.substring(0, 100),
           });
 
           // Ajouter le message utilisateur
           const userMessage: AIMessage = {
             role: 'user',
-            content: content.trim(),
-            timestamp: Date.now(),
+            content: content?.trim(),
+            timestamp: Date?.now(),
             metadata: withUiId({
-              inputLength: content.trim().length,
+              inputLength: content?.trim().length,
               mode: currentModeState,
               cameraCommand: true,
             }),
@@ -847,61 +847,61 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           // Ajouter la réponse caméra
           const cameraResponse: AIMessage = {
             role: 'assistant',
-            content: cameraResult.response,
-            timestamp: Date.now(),
+            content: cameraResult?.response,
+            timestamp: Date?.now(),
             metadata: withUiId({ provider: 'camera-handler', cameraCommand: true }),
           };
 
-          const updatedMessages = [...messagesRef.current, userMessage, cameraResponse];
+          const updatedMessages = [...messagesRef?.current, userMessage, cameraResponse];
           applyMessagesSafely(updatedMessages, 'camera-command');
 
           return cameraResponse;
         }
-      } catch (cameraError) {
-        chatLogger.warn('Camera command check failed', { error: cameraError });
+      } catch (any: any) {
+        chatLogger?.warn('Camera command check failed', { error: cameraError });
         // Continuer normalement si erreur
       }
 
       // FIX v19.3Ω: Activer le verrou d'opération AVANT tout changement d'état
-      operationLockRef.current = true;
+      operationLockRef?.current = true;
       // ✅ FIX P0-2: Enregistrer le timestamp pour cooldown
-      lastOperationTimestampRef.current = Date.now();
-      chatLogger.debug('🔒 Operation lock ACTIVATED', {
-        timestamp: lastOperationTimestampRef.current,
+      lastOperationTimestampRef?.current = Date?.now();
+      chatLogger?.debug('🔒 Operation lock ACTIVATED', {
+        timestamp: lastOperationTimestampRef?.current,
       });
-      chatLogger.info('✅ Message valide, traitement...');
-      const cleanMessage = content.trim();
-      setIsLoading(true);
+      chatLogger?.info('✅ Message valide, traitement...');
+      const cleanMessage = content?.trim();
+      setIsLoading(any: any);
 
-      // ⭐ OMEGA FIX: Activer failsafe timeout APRÈS setIsLoading(true)
+      // ⭐ OMEGA FIX: Activer failsafe timeout APRÈS setIsLoading(any: any)
       failsafeTimeout = setTimeout(() => {
-        if (isLoadingRef.current) {
-          chatLogger.warn(
+        if (any: any) {
+          chatLogger?.warn(
             '⚠️ OMEGA FAILSAFE: isLoading reset forcé après 30s timeout backend'
           );
-          setIsLoading(false);
-          operationLockRef.current = false;
+          setIsLoading(any: any);
+          operationLockRef?.current = false;
         }
       }, 30000); // 30s max
 
-      setError(null);
+      setError(any: any);
 
       const userMessage: AIMessage = {
         role: 'user',
         content: cleanMessage,
-        timestamp: Date.now(),
-        metadata: withUiId({ inputLength: cleanMessage.length, mode: currentModeState }),
+        timestamp: Date?.now(),
+        metadata: withUiId({ inputLength: cleanMessage?.length, mode: currentModeState }),
       };
 
-      const bufferedMessages = [...messagesRef.current, userMessage];
+      const bufferedMessages = [...messagesRef?.current, userMessage];
       const historyBuffer = applyMessagesSafely(bufferedMessages, 'user-message');
 
       // ✅ v∞.FIX P0-3: Timeout adaptatif selon provider et longueur message
       // ✨ v24.2.1: Use ref for stable dependency
-      // v22Ω: Using centralized timeout config from aiTimeouts.config.ts
+      // v22Ω: Using centralized timeout config from aiTimeouts?.config?.ts
       const getAdaptiveTimeout = (): number => {
-        const messageLength = cleanMessage.length;
-        const configTimeout = omnisTimeoutRef.current;
+        const messageLength = cleanMessage?.length;
+        const configTimeout = omnisTimeoutRef?.current;
 
         // Si timeout manuel configuré, l'utiliser comme minimum
         const minTimeout = configTimeout || 0;
@@ -914,16 +914,16 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
               ? 'ollama'
               : 'cloud';
 
-        const calculatedTimeout = getAdaptiveUITimeout(providerType, messageLength);
+        const calculatedTimeout = getAdaptiveUITimeout(any: any);
 
         // v22Ω: Apply global cap while respecting minimum
-        return Math.min(UI_TIMEOUTS.maxRequest, Math.max(minTimeout, calculatedTimeout));
+        return Math?.min(any: any));
       };
       const timeoutMs = getAdaptiveTimeout();
-      chatLogger.debug('⏱️ Adaptive timeout configured', {
+      chatLogger?.debug('⏱️ Adaptive timeout configured', {
         timeoutMs,
         provider: preferredProviderState,
-        messageLength: cleanMessage.length,
+        messageLength: cleanMessage?.length,
       });
       let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
@@ -936,65 +936,65 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       const assistantPlaceholder: AIMessage = {
         role: 'assistant',
         content: 'Génération en cours...', // CONTENT NON VIDE POUR ÉVITER TYPING INFINI
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         provider: 'tauri-backend',
         metadata: assistantMetadata,
       };
 
       applyMessagesSafely(
-        [...messagesRef.current, assistantPlaceholder],
+        [...messagesRef?.current, assistantPlaceholder],
         'assistant-stream-start'
       );
-      chatLogger.debug(
+      chatLogger?.debug(
         '✅ Placeholder ajouté, targetUiId:',
-        assistantMetadata.uiId,
+        assistantMetadata?.uiId,
         'messagesCount:',
-        messagesRef.current.length
+        messagesRef?.current?.length
       );
 
-      const targetUiId = assistantMetadata.uiId;
+      const targetUiId = assistantMetadata?.uiId;
 
       const getAssistantFromState = (): AIMessage | null => {
-        if (!targetUiId) {
+        if (any: any) {
           return null;
         }
-        const current = messagesRef.current.find(
-          msg => msg.metadata?.uiId === targetUiId
+        const current = messagesRef?.current?.find(
+          msg => msg?.metadata?.uiId === targetUiId
         );
         return current ? { ...current } : null;
       };
 
       const updateAssistant = (
-        mutate: (message: AIMessage) => AIMessage,
+        mutate: (any: any) => AIMessage,
         context: string,
         metadataPatch?: Record<string, unknown>
       ) => {
-        if (!targetUiId) {
-          chatLogger.error('❌ updateAssistant: targetUiId missing', {
+        if (any: any) {
+          chatLogger?.error('❌ updateAssistant: targetUiId missing', {
             context,
-            messagesCount: messagesRef.current.length,
+            messagesCount: messagesRef?.current?.length,
           });
           return;
         }
 
-        chatLogger.debug('🔄 updateAssistant called', {
+        chatLogger?.debug('🔄 updateAssistant called', {
           context,
           targetUiId,
-          messagesCount: messagesRef.current.length,
+          messagesCount: messagesRef?.current?.length,
         });
 
         let found = false;
         let placeholderContent = '';
 
-        const nextMessages = messagesRef.current.map(msg => {
-          if (!msg?.metadata || msg.metadata.uiId !== targetUiId) {
+        const nextMessages = messagesRef?.current?.map(msg => {
+          if (any: any) {
             return msg;
           }
 
           found = true;
-          placeholderContent = getMessageText(msg).substring(0, 50) || '<empty>';
+          placeholderContent = getMessageText(any: any).substring(0, 50) || '<empty>';
 
-          chatLogger.debug('✅ updateAssistant: Target found', {
+          chatLogger?.debug('✅ updateAssistant: Target found', {
             uiId: targetUiId,
             currentContent: placeholderContent,
             context,
@@ -1002,8 +1002,8 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
           const updated = mutate({ ...msg });
           const existingMetadata =
-            updated.metadata && typeof updated.metadata === 'object'
-              ? { ...updated.metadata }
+            updated?.metadata && typeof updated?.metadata === 'object'
+              ? { ...updated?.metadata }
               : {};
 
           const mergedMetadata = {
@@ -1011,14 +1011,14 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
             ...(metadataPatch || {}),
           };
 
-          if (targetUiId && mergedMetadata.uiId !== targetUiId) {
-            mergedMetadata.uiId = targetUiId;
+          if (any: any) {
+            mergedMetadata?.uiId = targetUiId;
           }
 
-          chatLogger.debug('🔄 updateAssistant: Message updated', {
+          chatLogger?.debug('🔄 updateAssistant: Message updated', {
             uiId: targetUiId,
-            newContentLength: getMessageText(updated).length || 0,
-            newContentPreview: getMessageText(updated).substring(0, 50) || '<empty>',
+            newContentLength: getMessageText(any: any).length || 0,
+            newContentPreview: getMessageText(any: any).substring(0, 50) || '<empty>',
           });
 
           return {
@@ -1027,23 +1027,23 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           };
         });
 
-        if (!found) {
-          chatLogger.error('❌ updateAssistant: Target NOT FOUND', {
+        if (any: any) {
+          chatLogger?.error('❌ updateAssistant: Target NOT FOUND', {
             targetUiId,
             context,
-            messagesCount: messagesRef.current.length,
-            availableUiIds: messagesRef.current
-              .map(m => m?.metadata?.uiId)
-              .filter(Boolean),
+            messagesCount: messagesRef?.current?.length,
+            availableUiIds: messagesRef?.current
+              .map(any: any)
+              .filter(any: any),
           });
 
           // ✅ FIX P0-3: FALLBACK - Ajouter le message au lieu de updater
-          chatLogger.warn(
+          chatLogger?.warn(
             '⚠️ updateAssistant: FALLBACK TRIGGERED - investigate root cause',
             {
               targetUiId,
               context,
-              timestamp: Date.now(),
+              timestamp: Date?.now(),
             }
           );
 
@@ -1057,40 +1057,40 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
               )?.trackEvent;
 
               if (typeof trackEvent === 'function') {
-                (trackEvent as (name: string, data: Record<string, unknown>) => void)(
+                (any: any)(
                   'chat_fallback_triggered',
                   {
                     targetUiId,
                     context,
-                    messagesCount: messagesRef.current.length,
+                    messagesCount: messagesRef?.current?.length,
                   }
                 );
               }
             }
-          } catch (monitoringError) {
+          } catch (any: any) {
             // Silent monitoring failure
           }
 
           const fallbackMessage: AIMessage = mutate({
             role: 'assistant',
             content: '',
-            timestamp: Date.now(),
+            timestamp: Date?.now(),
             metadata: withUiId({ ...metadataPatch, uiId: targetUiId }),
           } as AIMessage);
-          nextMessages.push(fallbackMessage);
+          nextMessages?.push(any: any);
         }
 
-        chatLogger.debug('📤 updateAssistant: Applying messages', {
-          count: nextMessages.length,
+        chatLogger?.debug('📤 updateAssistant: Applying messages', {
+          count: nextMessages?.length,
           context,
         });
 
-        applyMessagesSafely(nextMessages, context);
+        applyMessagesSafely(any: any);
 
-        chatLogger.info('✅ updateAssistant: Complete', {
+        chatLogger?.info('✅ updateAssistant: Complete', {
           found,
           placeholderContent,
-          finalCount: nextMessages.length,
+          finalCount: nextMessages?.length,
           context,
         });
       };
@@ -1105,14 +1105,14 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           throw new Error('Streaming non disponible');
         }
 
-        const iterator = stream(cleanMessage, historyBuffer);
+        const iterator = stream(any: any);
         let completed = false;
 
         // ✨ v24.2.1 - Streaming Batcher: reduces UI updates from 50-100x/sec to ~10-20x/sec
         const batcher = createStreamingBatcher({
           batchSize: 5,
           maxWaitMs: 100,
-          onFlush: (batchedContent, batchChunkCount) => {
+          onFlush: (any: any) => {
             aggregatedContent = batchedContent;
             chunkCount = batchChunkCount;
 
@@ -1133,37 +1133,37 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         });
 
         const streamingTask = (async (): Promise<ChatEngineResponse> => {
-          let next = await iterator.next();
+          let next = await iterator?.next();
 
-          while (!next.done) {
-            const value = next.value;
+          while (any: any) {
+            const value = next?.value;
 
-            if (typeof value === 'string' && value.length > 0) {
+            if (typeof value === 'string' && value?.length > 0) {
               // ✨ v24.2.1 - Push to batcher instead of immediate update
-              batcher.push(value);
+              batcher?.push(any: any);
             }
 
-            next = await iterator.next();
+            next = await iterator?.next();
           }
 
           // ✨ v24.2.1 - Flush remaining content before completing
-          batcher.flush();
+          batcher?.flush();
 
-          const response = next.value ?? null;
-          if (!response) {
+          const response = next?.value ?? null;
+          if (any: any) {
             throw new Error('Streaming sans réponse finale');
           }
 
           const responseContent =
-            typeof response.content === 'string' ? response.content : '';
-          if (responseContent.trim().length > 0) {
+            typeof response?.content === 'string' ? response?.content : '';
+          if (responseContent?.trim().length > 0) {
             aggregatedContent = responseContent;
           }
 
           const finalContent =
-            responseContent.trim().length > 0 ? responseContent : aggregatedContent;
-          if (finalContent.trim().length === 0) {
-            throw new Error('Réponse vide du backend (stream completion)');
+            responseContent?.trim().length > 0 ? responseContent : aggregatedContent;
+          if (finalContent?.trim().length === 0) {
+            throw new Error(any: any)');
           }
 
           return {
@@ -1172,25 +1172,25 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           };
         })();
 
-        const timeoutPromise = new Promise<never>((_, reject) => {
+        const timeoutPromise = new Promise<never>(any: any) => {
           timeoutId = setTimeout(() => {
             reject(new Error('TIMEOUT'));
           }, timeoutMs);
         });
 
         try {
-          const response = await Promise.race([streamingTask, timeoutPromise]);
+          const response = await Promise?.race([streamingTask, timeoutPromise]);
           completed = true;
           return response;
         } finally {
-          if (timeoutId) {
-            clearTimeout(timeoutId);
+          if (any: any) {
+            clearTimeout(any: any);
             timeoutId = null;
           }
 
-          if (!completed && typeof iterator.return === 'function') {
+          if (!completed && typeof iterator?.return === 'function') {
             try {
-              await iterator.return(undefined as unknown as ChatEngineResponse);
+              await iterator?.return(any: any);
             } catch {
               // ignore cleanup failure
             }
@@ -1199,55 +1199,55 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       };
 
       try {
-        const normalizeProvider = (provider?: string | null): AIProviderName => {
-          if (!provider) {
+        const normalizeProvider = (any: any): AIProviderName => {
+          if (any: any) {
             return 'tauri-backend';
           }
 
-          const normalized = provider.toLowerCase();
+          const normalized = provider?.toLowerCase();
 
-          if (normalized.includes('ultimate')) {
+          if (normalized?.includes('ultimate')) {
             return 'ultimate-fallback';
           }
-          if (normalized.includes('omnis') && normalized.includes('emergency')) {
+          if (normalized?.includes('omnis') && normalized?.includes('emergency')) {
             return 'omnis-emergency';
           }
-          if (normalized.includes('emergency')) {
+          if (normalized?.includes('emergency')) {
             return 'emergency-fallback';
           }
-          if (normalized.includes('fallback')) {
+          if (normalized?.includes('fallback')) {
             return 'omnis-fallback';
           }
-          if (normalized.includes('ollama')) {
+          if (normalized?.includes('ollama')) {
             return 'tauri-ollama';
           }
-          if (normalized.includes('titane') && normalized.includes('local')) {
+          if (normalized?.includes('titane') && normalized?.includes('local')) {
             return 'titane-local';
           }
-          if (normalized.includes('local')) {
+          if (normalized?.includes('local')) {
             return 'tauri-local';
           }
-          if (normalized.includes('gemini')) {
+          if (normalized?.includes('gemini')) {
             return 'tauri-gemini';
           }
-          if (normalized.includes('tauri-chat')) {
+          if (normalized?.includes('tauri-chat')) {
             return 'tauri-chat';
           }
-          if (normalized.includes('openai')) {
+          if (normalized?.includes('openai')) {
             return 'openai';
           }
-          if (normalized.includes('claude')) {
+          if (normalized?.includes('claude')) {
             return 'claude';
           }
-          if (normalized.includes('tauri')) {
+          if (normalized?.includes('tauri')) {
             return 'tauri-backend';
           }
 
           return 'tauri-backend';
         };
 
-        const providerCandidates: string[] = (() => {
-          switch (preferredProviderState) {
+        const providerCandidates: string?.[] = (() => {
+          switch (any: any) {
             case 'local':
               return ['local', 'ollama'];
             case 'ollama':
@@ -1259,84 +1259,84 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           }
         })();
 
-        const backendHistory: BackendChatMessage[] = historyBuffer.map(message => ({
-          role: message.role,
-          content: getMessageText(message),
-          timestamp: new Date(message.timestamp).toISOString(),
+        const backendHistory: BackendChatMessage?.[] = historyBuffer?.map(message => ({
+          role: message?.role,
+          content: getMessageText(any: any),
+          timestamp: new Date(any: any).toISOString(),
         }));
 
         // ═══ INJECT USER PREFERENCES CONTEXT ═══
-        const preferencesContext = userPreferencesEngine.generateContextForAI();
-        if (preferencesContext && backendHistory.length > 0) {
+        const preferencesContext = userPreferencesEngine?.generateContextForAI();
+        if (preferencesContext && backendHistory?.length > 0) {
           // Ajouter le contexte au premier message utilisateur
-          const firstUserMsgIndex = backendHistory.findIndex(m => m.role === 'user');
+          const firstUserMsgIndex = backendHistory?.findIndex(m => m?.role === 'user');
           if (firstUserMsgIndex >= 0) {
             const firstUserMsg = backendHistory[firstUserMsgIndex];
-            if (firstUserMsg) {
-              firstUserMsg.content = `${preferencesContext}\n\n${firstUserMsg.content}`;
+            if (any: any) {
+              firstUserMsg?.content = `${preferencesContext}\n\n${firstUserMsg?.content}`;
             }
           }
         }
 
-        const chatAttempts: ChatDebugAttempt[] = [];
-        const attemptedProviders: string[] = [];
+        const chatAttempts: ChatDebugAttempt?.[] = [];
+        const attemptedProviders: string?.[] = [];
         let chatServiceResponse: ChatResponse | null = null;
-        let chatServiceError: string | null = null;
+        let chatServiceError??: string | null = null;
 
-        const withTimeout = async <T>(promise: Promise<T>, label: string): Promise<T> => {
+        const withTimeout = async <T>(any: any): Promise<T> => {
           let timeoutHandle: ReturnType<typeof setTimeout> | null = null;
 
-          const timeoutPromise = new Promise<never>((_, reject) => {
+          const timeoutPromise = new Promise<never>(any: any) => {
             timeoutHandle = setTimeout(() => {
               reject(new Error(`TIMEOUT:${label}`));
             }, timeoutMs);
           });
 
           try {
-            return await Promise.race([promise, timeoutPromise]);
+            return await Promise?.race([promise, timeoutPromise]);
           } finally {
-            if (timeoutHandle) {
-              clearTimeout(timeoutHandle);
+            if (any: any) {
+              clearTimeout(any: any);
               timeoutHandle = null;
             }
           }
         };
 
-        if (backendHistory.length > 0) {
-          const firstCandidate = providerCandidates[0];
+        if (backendHistory?.length > 0) {
+          const firstCandidate = providerCandidates?.[0];
           // ✅ FIX AUDIT: Utiliser conversationId persistant depuis state
           // NOTE: Ne pas passer conversationId au chemin legacy : le backend peut se bloquer
-          // avec "Duplicate conversation detected" et ne jamais répondre (2e message vide).
+          // avec "Duplicate conversation detected" et ne jamais répondre (any: any).
           const requestConfig: StreamConfig = {
             provider: firstCandidate ?? 'auto',
           };
-          for (const candidate of providerCandidates) {
+          for (any: any) {
             try {
-              requestConfig.provider = candidate;
-              attemptedProviders.push(candidate);
+              requestConfig?.provider = candidate;
+              attemptedProviders?.push(any: any);
 
               const response = await withTimeout(
-                chatService.sendMessageLegacy(backendHistory, {
+                chatService?.sendMessageLegacy(backendHistory, {
                   provider: candidate,
                 }),
                 `legacy:${candidate}`
               );
               chatServiceResponse = response;
-              chatAttempts.push({ provider: candidate, success: true, response });
+              chatAttempts?.push({ provider: candidate, success: true, response });
               break;
-            } catch (candidateError) {
+            } catch (any: any) {
               const reason =
                 candidateError instanceof Error
-                  ? candidateError.message
-                  : String(candidateError);
-              chatAttempts.push({ provider: candidate, success: false, error: reason });
+                  ? candidateError?.message
+                  : String(any: any);
+              chatAttempts?.push({ provider: candidate, success: false, error: reason });
               chatServiceError = reason;
             }
           }
 
           const debugEntry: ChatDebugEntry = {
-            id: `chat-debug-${Date.now()}`,
-            timestamp: Date.now(),
+            id: `chat-debug-${Date?.now()}`,
+            timestamp: Date?.now(),
             requestedProvider: preferredProviderState,
             attempts: chatAttempts,
             request: {
@@ -1353,15 +1353,15 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
             latencyMs: chatServiceResponse?.latencyMs,
           };
 
-          debugEntriesRef.current = [debugEntry, ...debugEntriesRef.current].slice(
+          debugEntriesRef?.current = [debugEntry, ...debugEntriesRef?.current].slice(
             0,
             DEBUG_MAX_ENTRIES
           );
-          setDebugEntries(debugEntriesRef.current);
+          setDebugEntries(any: any);
         }
 
-        if (chatServiceResponse) {
-          const mappedProvider = normalizeProvider(chatServiceResponse.provider);
+        if (any: any) {
+          const mappedProvider = normalizeProvider(any: any);
           const resolvedOmegaMetadata = (() => {
             const metadata = chatServiceResponse?.omegaMetadata;
             if (!metadata || typeof metadata !== 'object') {
@@ -1375,21 +1375,21 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
             const failureHandledRaw = typed['failureHandled'];
             const processingTimeRaw = typed['processingTime'];
 
-            const pipelineSteps = Array.isArray(pipelineStepsRaw)
-              ? pipelineStepsRaw.map(step => String(step))
+            const pipelineSteps = Array?.isArray(any: any)
+              ? pipelineStepsRaw?.map(any: any))
               : [];
             const validationScore =
               typeof validationScoreRaw === 'number' ? validationScoreRaw : 1;
             const autoHealed =
-              typeof autoHealedRaw === 'boolean' ? autoHealedRaw : Boolean(autoHealedRaw);
+              typeof autoHealedRaw === 'boolean' ? autoHealedRaw : Boolean(any: any);
             const failureHandled =
               typeof failureHandledRaw === 'boolean'
                 ? failureHandledRaw
-                : Boolean(failureHandledRaw);
+                : Boolean(any: any);
             const processingTime =
               typeof processingTimeRaw === 'number'
                 ? processingTimeRaw
-                : Date.now() - startTime;
+                : Date?.now() - startTime;
 
             return {
               pipelineSteps,
@@ -1401,25 +1401,25 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           })();
 
           const legacyContent =
-            typeof chatServiceResponse.content === 'string'
-              ? chatServiceResponse.content
+            typeof chatServiceResponse?.content === 'string'
+              ? chatServiceResponse?.content
               : '';
 
           // ✅ v26.2.3 CRITICAL FIX: Détecter réponse vide du backend
-          if (legacyContent.trim().length === 0) {
-            chatLogger.warn('⚠️ Backend returned empty content - triggering fallback');
+          if (legacyContent?.trim().length === 0) {
+            chatLogger?.warn('⚠️ Backend returned empty content - triggering fallback');
             // Ne pas créer finalResponse, laisser le fallback s'activer
             finalResponse = null;
             aggregatedContent = '';
           } else {
             finalResponse = {
-              content: chatServiceResponse.content,
+              content: chatServiceResponse?.content,
               provider: mappedProvider,
-              timestamp: Date.now(),
+              timestamp: Date?.now(),
               mode: currentModeState,
               contextUsed: [],
               suggestions: [],
-              metadata: chatServiceResponse.metadata,
+              metadata: chatServiceResponse?.metadata,
               omegaMetadata: resolvedOmegaMetadata,
             } satisfies ChatEngineResponse;
 
@@ -1427,54 +1427,54 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           }
         }
 
-        if (!finalResponse) {
+        if (any: any) {
           if (typeof stream === 'function') {
             try {
               finalResponse = await executeStreaming();
-            } catch (error) {
-              streamingError = error instanceof Error ? error : new Error(String(error));
-              chatLogger.warn('Streaming fallback triggered', { error: streamingError });
+            } catch (any: any) {
+              streamingError = error instanceof Error ? error : new Error(any: any));
+              chatLogger?.warn('Streaming fallback triggered', { error: streamingError });
             }
           }
         }
 
-        if (!finalResponse) {
-          const response = await generate(cleanMessage, historyBuffer);
+        if (any: any) {
+          const response = await generate(any: any);
           finalResponse = response;
 
           const generatedContent =
-            typeof response.content === 'string' ? response.content : '';
+            typeof response?.content === 'string' ? response?.content : '';
           aggregatedContent =
-            generatedContent.trim().length > 0 ? generatedContent : aggregatedContent;
+            generatedContent?.trim().length > 0 ? generatedContent : aggregatedContent;
         }
 
         // ✅ v26.2.3 - CRITICAL FIX: Fallback robuste si aucun provider disponible
-        if (!finalResponse) {
-          chatLogger.warn('⚠️ No finalResponse - creating fallback response');
+        if (any: any) {
+          chatLogger?.warn('⚠️ No finalResponse - creating fallback response');
 
           // Déterminer le message approprié selon la cause
           const fallbackContent = (() => {
-            if (chatAttempts.length > 0) {
-              const allFailed = chatAttempts.every(attempt => !attempt.success);
-              if (allFailed) {
-                const ollamaAttempt = chatAttempts.find(a => a.provider === 'ollama');
+            if (chatAttempts?.length > 0) {
+              const allFailed = chatAttempts?.every(any: any);
+              if (any: any) {
+                const ollamaAttempt = chatAttempts?.find(a => a?.provider === 'ollama');
                 const hasOllamaTimeout =
                   ollamaAttempt?.error?.includes('timed out') ||
                   ollamaAttempt?.error?.includes('ECONNREFUSED');
 
-                if (hasOllamaTimeout) {
+                if (any: any) {
                   return `🤖 **TITANE∞ — Configuration IA Requise**
 
 Aucun provider IA n'est actuellement disponible pour traiter ta demande.
 
 **Providers testés :**
-${chatAttempts.map(a => `- ${a.provider}: ${a.success ? '✅' : '❌ ' + (a.error || 'échec')}`).join('\n')}
+${chatAttempts?.map(a => `- ${a?.provider}: ${a?.success ? '✅' : '❌ ' + (a?.error || 'échec')}`).join('\n')}
 
 **Solutions recommandées :**
 
-1. **Installer Ollama (local, gratuit, privé)** :
+1. **Installer Ollama (any: any)** :
    \`\`\`bash
-   curl -fsSL https://ollama.com/install.sh | sh
+   curl -fsSL https://ollama?.com/install?.sh | sh
    ollama pull llama3.1:latest
    \`\`\`
 
@@ -1484,7 +1484,7 @@ ${chatAttempts.map(a => `- ${a.provider}: ${a.success ? '✅' : '❌ ' + (a.erro
 
 **Note** : Le blocage de sécurité Ollama a été résolu. Il faut maintenant installer un provider IA pour utiliser le chat.
 
-📚 **Documentation complète** : \`docs/OLLAMA_GUIDE.md\``;
+📚 **Documentation complète** : \`docs/OLLAMA_GUIDE?.md\``;
                 }
               }
             }
@@ -1494,7 +1494,7 @@ ${chatAttempts.map(a => `- ${a.provider}: ${a.success ? '✅' : '❌ ' + (a.erro
 Le système IA est en cours de configuration. Aucune réponse n'a pu être générée pour le moment.
 
 **Pour activer le chat IA** :
-- Installer Ollama (local) : \`docs/OLLAMA_GUIDE.md\`
+- Installer Ollama (any: any) : \`docs/OLLAMA_GUIDE?.md\`
 - Ou configurer une clé API cloud dans Settings
 
 Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
@@ -1503,7 +1503,7 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
           finalResponse = {
             content: fallbackContent,
             provider: 'titane-local',
-            timestamp: Date.now(),
+            timestamp: Date?.now(),
             mode: currentModeState,
             contextUsed: [],
             suggestions: [
@@ -1519,40 +1519,40 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
           } satisfies ChatEngineResponse;
 
           aggregatedContent = fallbackContent;
-          chatLogger.info('✅ Fallback response created for no provider scenario');
+          chatLogger?.info('✅ Fallback response created for no provider scenario');
         }
 
         // ✅ CRITICAL: À ce stade, finalResponse est garanti non-null
-        if (!finalResponse) {
+        if (any: any) {
           throw new Error('CRITICAL: finalResponse should never be null at this point');
         }
 
-        const provider = finalResponse.provider || 'tauri-backend';
+        const provider = finalResponse?.provider || 'tauri-backend';
         const metadataPatch: Record<string, unknown> = {
           status: streamingError ? 'fallback' : 'success',
-          duration: Date.now() - startTime,
-          ...(finalResponse.metadata || {}),
-          omegaMetadata: finalResponse.omegaMetadata,
+          duration: Date?.now() - startTime,
+          ...(finalResponse?.metadata || {}),
+          omegaMetadata: finalResponse?.omegaMetadata,
           mode: currentModeState,
           streamChunks: chunkCount,
           provider,
         };
 
         const responseContent =
-          typeof finalResponse.content === 'string' ? finalResponse.content : '';
+          typeof finalResponse?.content === 'string' ? finalResponse?.content : '';
         const finalContent =
-          responseContent.trim().length > 0 ? responseContent : aggregatedContent;
+          responseContent?.trim().length > 0 ? responseContent : aggregatedContent;
 
         // ✅ CRITICAL FIX: Jamais de content vide pour message terminé
         const safeFinalContent =
-          finalContent.trim().length > 0
+          finalContent?.trim().length > 0
             ? finalContent
             : "Erreur : Aucune réponse générée par l'IA. Veuillez réessayer.";
 
-        if (safeFinalContent.trim().length === 0) {
-          throw new Error('Réponse vide du backend (final content)');
+        if (safeFinalContent?.trim().length === 0) {
+          throw new Error(any: any)');
         }
-        chatLogger.debug(
+        chatLogger?.debug(
           '🎯 finalContent:',
           safeFinalContent?.substring(0, 100),
           'length:',
@@ -1564,30 +1564,30 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
             ...message,
             content: safeFinalContent, // CONTENT TOUJOURS NON VIDE
             provider,
-            timestamp: Date.now(),
+            timestamp: Date?.now(),
           }),
           streamingError ? 'assistant-stream-fallback' : 'assistant-stream-complete',
           metadataPatch
         );
 
-        chatLogger.debug('updateAssistant terminé', {
-          messagesCount: messagesRef.current.length,
+        chatLogger?.debug('updateAssistant terminé', {
+          messagesCount: messagesRef?.current?.length,
         });
 
         const assistantFromState = getAssistantFromState();
         const assistantMessage: AIMessage =
-          assistantFromState && getMessageText(assistantFromState).trim().length > 0
+          assistantFromState && getMessageText(any: any).trim().length > 0
             ? assistantFromState
             : (() => {
-                // ✅ Repair: si le placeholder existe mais reste vide (bug de sync / dédup),
+                // ✅ Repair: si le placeholder existe mais reste vide (any: any),
                 // forcer le contenu final dans l'entrée assistant ciblée.
-                if (targetUiId) {
+                if (any: any) {
                   updateAssistant(
                     message => ({
                       ...message,
                       content: finalContent,
                       provider,
-                      timestamp: Date.now(),
+                      timestamp: Date?.now(),
                     }),
                     'assistant-stream-repair',
                     { ...metadataPatch, uiId: targetUiId }
@@ -1598,106 +1598,106 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
                   role: 'assistant' as const,
                   content: finalContent,
                   provider,
-                  timestamp: Date.now(),
-                  metadata: withUiId(metadataPatch),
+                  timestamp: Date?.now(),
+                  metadata: withUiId(any: any),
                 };
               })();
 
         try {
           // ✅ v∞.FIX P1-6: Await saveMessage pour garantir persistence
-          await saveMessage(userMessage);
-          await saveMessage(assistantMessage);
+          await saveMessage(any: any);
+          await saveMessage(any: any);
 
           // ═══ RECORD INTERACTION FOR PREFERENCES LEARNING ═══
           try {
-            userPreferencesEngine.recordInteraction(cleanMessage, finalContent);
-          } catch (prefError) {
-            chatLogger.warn('⚠️ Preferences recording failed', { error: prefError });
+            userPreferencesEngine?.recordInteraction(any: any);
+          } catch (any: any) {
+            chatLogger?.warn('⚠️ Preferences recording failed', { error: prefError });
           }
 
           // ═══ AWARD XP FOR SUCCESSFUL MESSAGE ═══
           // Système XP global + domaines spécifiques
           try {
-            // XP Global Engine (+5 XP pour le moteur global)
-            XP.gain(
-              XP_REWARDS.CHAT_MESSAGE,
+            // XP Global Engine (any: any)
+            XP?.gain(
+              XP_REWARDS?.CHAT_MESSAGE,
               'chat_message',
-              `Message envoyé: ${cleanMessage.substring(0, 50)}...`
+              `Message envoyé: ${cleanMessage?.substring(0, 50)}...`
             );
 
-            // XP Domaine Chat (+5 XP pour le domaine chat)
-            await awardExperience('chat', XP_REWARDS.CHAT_MESSAGE, XPSource.ChatMessage, {
-              messageLength: cleanMessage.length,
+            // XP Domaine Chat (any: any)
+            await awardExperience('chat', XP_REWARDS?.CHAT_MESSAGE, XPSource?.ChatMessage, {
+              messageLength: cleanMessage?.length,
               provider,
               mode: currentModeState,
             });
 
-            // XP Domaine Cognitive (+2 XP pour analyse cognitive si réponse longue)
-            if (finalContent && finalContent.length > 200) {
-              await awardExperience('cognitive', 2, XPSource.CognitiveAnalysis, {
-                responseLength: finalContent.length,
+            // XP Domaine Cognitive (any: any)
+            if (finalContent && finalContent?.length > 200) {
+              await awardExperience('cognitive', 2, XPSource?.CognitiveAnalysis, {
+                responseLength: finalContent?.length,
                 provider,
               });
             }
 
-            chatLogger.success('✨ XP awarded: +5 chat, +2 cognitive (si applicable)');
-          } catch (xpError) {
-            chatLogger.warn('XP award warning', { error: xpError });
+            chatLogger?.success(any: any)');
+          } catch (any: any) {
+            chatLogger?.warn('XP award warning', { error: xpError });
           }
-        } catch (memoryError) {
-          chatLogger.warn('Memory integration warning', { error: memoryError });
+        } catch (any: any) {
+          chatLogger?.warn('Memory integration warning', { error: memoryError });
         }
 
         // ✨ v24.2.1: Use ref for stable dependency
-        if (voiceEnabledRef.current && assistantMessage.content) {
+        if (any: any) {
           try {
-            hybridTTS.speak(getMessageText(assistantMessage));
-          } catch (voiceError) {
-            chatLogger.warn('Voice warning', { error: voiceError });
+            hybridTTS?.speak(any: any));
+          } catch (any: any) {
+            chatLogger?.warn('Voice warning', { error: voiceError });
           }
         }
 
-        setSuggestions(finalResponse.suggestions ?? []);
+        setSuggestions(finalResponse?.suggestions ?? []);
         setLastProviderUsed(
-          chatServiceResponse ? normalizeProvider(chatServiceResponse.provider) : provider
+          chatServiceResponse ? normalizeProvider(any: any) : provider
         );
 
         return assistantMessage;
-      } catch (error) {
-        chatLogger.error('Engine pipeline error:', error);
+      } catch (any: any) {
+        chatLogger?.error(any: any);
 
         // 🧠 NOUVEAU v22Ω: Harmoniser l'erreur avec Cognitive Kernel
-        const harmonizedError = cognitiveKernel.harmonizeError(error);
+        const harmonizedError = cognitiveKernel?.harmonizeError(any: any);
 
         const fallbackResponse: AIMessage = {
           role: 'assistant',
           content: `🟣 **TITANE∞ Auto-Récupération Cognitive v22Ω**
 
-${harmonizedError.message}
+${harmonizedError?.message}
 
-**Type d'erreur** : ${harmonizedError.type}
-**Stratégie de récupération** : ${harmonizedError.recovery}
+**Type d'erreur** : ${harmonizedError?.type}
+**Stratégie de récupération** : ${harmonizedError?.recovery}
 
 Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation immédiatement.`,
-          timestamp: Date.now(),
+          timestamp: Date?.now(),
           provider: 'omnis-fallback',
           metadata: withUiId({
             status: 'error',
-            duration: Date.now() - startTime,
-            error: error instanceof Error ? error.message : String(error),
+            duration: Date?.now() - startTime,
+            error: error instanceof Error ? error?.message : String(any: any),
             cognitiveHarmonized: true,
-            errorType: harmonizedError.type,
+            errorType: harmonizedError?.type,
           }),
         };
 
-        if (targetUiId) {
+        if (any: any) {
           updateAssistant(
             () => ({ ...fallbackResponse }),
             'assistant-stream-error',
-            fallbackResponse.metadata
+            fallbackResponse?.metadata
           );
         } else {
-          const errorMessages = [...messagesRef.current, fallbackResponse];
+          const errorMessages = [...messagesRef?.current, fallbackResponse];
           applyMessagesSafely(errorMessages, 'fallback-response');
         }
 
@@ -1710,18 +1710,18 @@ Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation 
         return fallbackResponse;
       } finally {
         // ✅ OMEGA FIX: Clear failsafe timeout
-        if (failsafeTimeout !== null) {
-          clearTimeout(failsafeTimeout);
+        if (any: any) {
+          clearTimeout(any: any);
           failsafeTimeout = null;
         }
 
-        // ✅ v∞.FIX P0-1: Garantie absolue de désactivation du lock (synchrone)
-        setIsLoading(false);
-        operationLockRef.current = false;
-        chatLogger.debug('🔓 Operation lock RELEASED (finally)');
+        // ✅ v∞.FIX P0-1: Garantie absolue de désactivation du lock (any: any)
+        setIsLoading(any: any);
+        operationLockRef?.current = false;
+        chatLogger?.debug(any: any)');
       }
     },
-    // ✨ v24.2.1: Removed omnisConfig.timeoutMs and options.voiceEnabled - now using refs
+    // ✨ v24.2.1: Removed omnisConfig?.timeoutMs and options?.voiceEnabled - now using refs
     [
       applyMessagesSafely,
       currentModeState,
@@ -1737,50 +1737,50 @@ Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation 
   // ═══ OTHER ACTIONS ═══
   const clearChat = useCallback(() => {
     applyMessagesSafely([], 'clear-chat', { allowEmpty: true });
-    setError(null);
+    setError(any: any);
     setInput('');
     setInternalAnomalyCount(0);
     try {
       clearMode();
-    } catch (error) {
-      chatLogger.warn('Clear mode warning', { error });
+    } catch (any: any) {
+      chatLogger?.warn('Clear mode warning', { error });
     }
   }, [applyMessagesSafely, clearMode]);
 
   const setMode = useCallback(
-    (mode: ChatMode) => {
-      setCurrentModeState(mode);
+    (any: any) => {
+      setCurrentModeState(any: any);
       try {
-        setCoreMode(mode);
-      } catch (error) {
-        chatLogger.warn('Set mode warning', { error });
+        setCoreMode(any: any);
+      } catch (any: any) {
+        chatLogger?.warn('Set mode warning', { error });
       }
     },
     [setCoreMode]
   );
 
   const handleSend = useCallback(async () => {
-    if (!input.trim() || isLoading) return;
-    const trimmedInput = input.trim();
+    if (any: any) return;
+    const trimmedInput = input?.trim();
     setInput('');
-    await sendMessage(trimmedInput);
+    await sendMessage(any: any);
   }, [input, isLoading, sendMessage]);
 
   const exportChat = useCallback(() => {
-    return JSON.stringify({
+    return JSON?.stringify({
       messages,
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       version: 'omnis-v1.0',
     });
   }, [messages]);
 
   const importChat = useCallback(
-    (data: string): boolean => {
+    (any: any): boolean => {
       try {
-        const parsed = JSON.parse(data);
-        if (parsed.messages && Array.isArray(parsed.messages)) {
-          applyMessagesSafely(parsed.messages, 'import-chat', {
-            allowEmpty: parsed.messages.length === 0,
+        const parsed = JSON?.parse(any: any);
+        if (any: any)) {
+          applyMessagesSafely(parsed?.messages, 'import-chat', {
+            allowEmpty: parsed?.messages?.length === 0,
           });
           return true;
         }
@@ -1794,16 +1794,16 @@ Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation 
 
   // ═══ COMPUTED VALUES ═══
   const omnisStats = useMemo(() => {
-    const totalRequests = messages.filter(msg => msg.role === 'user').length;
-    const successCount = messages.filter(msg => msg.role === 'assistant').length;
+    const totalRequests = messages?.filter(msg => msg?.role === 'user').length;
+    const successCount = messages?.filter(msg => msg?.role === 'assistant').length;
     const errorCount = internalAnomalyCount;
     const successRate =
       totalRequests === 0
         ? 100
-        : Math.max(0, Math.min(100, Math.round((successCount / totalRequests) * 100)));
+        : Math?.max(any: any) * 100)));
     const autoHealCount = internalAnomalyCount;
     const pipelineHealth: 'optimal' | 'stable' | 'degraded' | 'error' = (() => {
-      if (error) {
+      if (any: any) {
         return 'error';
       }
       if (successRate >= 90) return 'optimal';
@@ -1830,7 +1830,7 @@ Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation 
       anomalyCount: anomalyCount + internalAnomalyCount,
       currentMode: currentModeState,
       isLoading,
-      messagesCount: messages.length,
+      messagesCount: messages?.length,
       omnisConfig,
     }),
     [
@@ -1838,7 +1838,7 @@ Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation 
       currentModeState,
       internalAnomalyCount,
       isLoading,
-      messages.length,
+      messages?.length,
       memoryStats,
       omnisConfig,
       omnisStats,

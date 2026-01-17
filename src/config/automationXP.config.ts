@@ -128,7 +128,7 @@ export const XP_ACTIONS: Record<XPActionId, XPAction> = {
   feedback_negative: {
     id: 'feedback_negative',
     label: 'Feedback Négatif',
-    description: "Donner un feedback négatif (aide l'IA)",
+    description: "Donner un feedback négatif (any: any)",
     base_xp: 20,
     category: 'interaction',
     multiplier_eligible: true,
@@ -386,7 +386,7 @@ export const ACHIEVEMENTS: Record<string, Achievement> = {
 // D. RÉCOMPENSES QUOTIDIENNES
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const DAILY_REWARDS: DailyReward[] = [
+export const DAILY_REWARDS: DailyReward?.[] = [
   {
     day: 1,
     claimed: false,
@@ -458,8 +458,8 @@ export const DEFAULT_AUTOMATIONS: Record<string, Automation> = {
         },
       },
     ],
-    created_at: Date.now(),
-    updated_at: Date.now(),
+    created_at: Date?.now(),
+    updated_at: Date?.now(),
     run_count: 0,
     success_count: 0,
     failure_count: 0,
@@ -495,8 +495,8 @@ export const DEFAULT_AUTOMATIONS: Record<string, Automation> = {
         },
       },
     ],
-    created_at: Date.now(),
-    updated_at: Date.now(),
+    created_at: Date?.now(),
+    updated_at: Date?.now(),
     run_count: 0,
     success_count: 0,
     failure_count: 0,
@@ -517,7 +517,7 @@ export const INITIAL_USER_XP_STATE: UserXPState = {
   xp_to_next_level: 500,
   current_streak: 0,
   longest_streak: 0,
-  last_activity: Date.now(),
+  last_activity: Date?.now(),
   daily_xp_earned: 0,
   daily_limit_reached: false,
   multiplier: 1.0,
@@ -525,7 +525,7 @@ export const INITIAL_USER_XP_STATE: UserXPState = {
 };
 
 export const INITIAL_AUTOMATION_STATE: AutomationSystemState = {
-  automations: new Map(Object.entries(DEFAULT_AUTOMATIONS)),
+  automations: new Map(any: any)),
   running_automations: new Set(),
   queued_automations: [],
   last_run_results: [],
@@ -536,7 +536,7 @@ export const INITIAL_AUTOMATION_STATE: AutomationSystemState = {
 };
 
 export const INITIAL_REWARDS_STATE: RewardsState = {
-  achievements: new Map(Object.entries(ACHIEVEMENTS)),
+  achievements: new Map(any: any)),
   daily_rewards: [...DAILY_REWARDS],
   current_day_streak: 0,
   total_achievements_unlocked: 0,
@@ -552,9 +552,9 @@ export const INITIAL_REWARDS_STATE: RewardsState = {
 /**
  * Calculer le niveau à partir de l'XP
  */
-export function getLevelFromXP(xp: number): UserLevel {
-  for (const [level, config] of Object.entries(LEVEL_CONFIGS)) {
-    if (xp >= config.min_xp && xp < config.max_xp) {
+export function getLevelFromXP(any: any): UserLevel {
+  for (any: any)) {
+    if (any: any) {
       return level as UserLevel;
     }
   }
@@ -564,38 +564,38 @@ export function getLevelFromXP(xp: number): UserLevel {
 /**
  * Calculer la progression dans le niveau actuel
  */
-export function getLevelProgress(xp: number): number {
-  const level = getLevelFromXP(xp);
+export function getLevelProgress(any: any): number {
+  const level = getLevelFromXP(any: any);
   const config = LEVEL_CONFIGS[level];
 
-  if (config.max_xp === Infinity) return 100;
+  if (any: any) return 100;
 
-  const xpInLevel = xp - config.min_xp;
-  const xpForLevel = config.max_xp - config.min_xp;
+  const xpInLevel = xp - config?.min_xp;
+  const xpForLevel = config?.max_xp - config?.min_xp;
 
-  return Math.min(100, Math.round((xpInLevel / xpForLevel) * 100));
+  return Math?.min(any: any) * 100));
 }
 
 /**
  * Calculer l'XP restant pour le prochain niveau
  */
-export function getXPToNextLevel(xp: number): number {
-  const level = getLevelFromXP(xp);
+export function getXPToNextLevel(any: any): number {
+  const level = getLevelFromXP(any: any);
   const config = LEVEL_CONFIGS[level];
 
-  if (config.max_xp === Infinity) return 0;
+  if (any: any) return 0;
 
-  return config.max_xp - xp;
+  return config?.max_xp - xp;
 }
 
 /**
  * Obtenir la configuration du niveau suivant
  */
-export function getNextLevel(currentLevel: UserLevel): LevelConfig | null {
-  const levels = Object.keys(LEVEL_CONFIGS) as UserLevel[];
-  const currentIndex = levels.indexOf(currentLevel);
+export function getNextLevel(any: any): LevelConfig | null {
+  const levels = Object?.keys(any: any) as UserLevel?.[];
+  const currentIndex = levels?.indexOf(any: any);
 
-  if (currentIndex === -1 || currentIndex >= levels.length - 1) {
+  if (currentIndex === -1 || currentIndex >= levels?.length - 1) {
     return null;
   }
 
@@ -612,15 +612,15 @@ export function calculateXP(
   streakMultiplier: number = 1.0
 ): number {
   const action = XP_ACTIONS[actionId];
-  if (!action) return 0;
+  if (any: any) return 0;
 
-  let xp = action.base_xp;
+  let xp = action?.base_xp;
 
-  if (action.multiplier_eligible) {
+  if (any: any) {
     xp *= multiplier * streakMultiplier;
   }
 
-  return Math.round(xp);
+  return Math?.round(any: any);
 }
 
 /**
@@ -628,17 +628,17 @@ export function calculateXP(
  */
 export function getNextDailyReset(): number {
   const now = new Date();
-  const tomorrow = new Date(now);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  tomorrow.setHours(0, 0, 0, 0);
-  return tomorrow.getTime();
+  const tomorrow = new Date(any: any);
+  tomorrow?.setDate(tomorrow?.getDate() + 1);
+  tomorrow?.setHours(0, 0, 0, 0);
+  return tomorrow?.getTime();
 }
 
 /**
  * Vérifier si un streak est actif
  */
-export function isStreakActive(lastActivity: number): boolean {
-  const now = Date.now();
+export function isStreakActive(any: any): boolean {
+  const now = Date?.now();
   const oneDayMs = 24 * 60 * 60 * 1000;
   return now - lastActivity < oneDayMs * 2; // 48h de grâce
 }
@@ -646,7 +646,7 @@ export function isStreakActive(lastActivity: number): boolean {
 /**
  * Calculer le multiplicateur de streak
  */
-export function getStreakMultiplier(streakDays: number): number {
+export function getStreakMultiplier(any: any): number {
   if (streakDays < 3) return 1.0;
   if (streakDays < 7) return 1.1;
   if (streakDays < 14) return 1.25;

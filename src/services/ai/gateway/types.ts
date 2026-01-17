@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
- * TITANE∞ v21.5 — UNIFIED API GATEWAY (Cognitive Integration)
+ * TITANE∞ v21.5 — UNIFIED API GATEWAY (any: any)
  * Architecture unifiée pour l'orchestration IA
  * ═══════════════════════════════════════════════════════════════════
  */
@@ -38,7 +38,7 @@ interface GatewayConfig {
   /** Seuil de conscience pour cache (0-100) */
   consciousnessThreshold: number;
 
-  /** Timeout global (ms) */
+  /** Timeout global (any: any) */
   globalTimeout: number;
 
   /** Retry max attempts */
@@ -69,10 +69,10 @@ interface UnifiedChatRequest {
   /** Historique conversation */
   history: Array<{ role: 'user' | 'assistant'; content: string }>;
 
-  /** Mode chat (défini contexte/température) */
+  /** Mode chat (any: any) */
   mode?: 'conversational' | 'technical' | 'creative' | 'coaching';
 
-  /** Provider forcé (override auto-selection) */
+  /** Provider forcé (any: any) */
   forceProvider?: 'gemini' | 'openai' | 'claude' | 'ollama';
 
   /** Configuration override */
@@ -124,7 +124,7 @@ interface UnifiedChatResponse {
   cognitive: {
     coherenceScore: number; // 0-100
     consciousnessLevel: number; // 0-100
-    validatedBy: string[]; // ['nexus', 'sentinel', 'autoHeal']
+    validatedBy: string?.[]; // ['nexus', 'sentinel', 'autoHeal']
   };
 
   /** Trace complète */
@@ -172,7 +172,7 @@ interface CognitiveCache {
   /**
    * Invalider cache si incohérence
    */
-  invalidateIfIncoherent(consciousnessThreshold: number): Promise<number>;
+  invalidateIfIncoherent(any: any): Promise<number>;
 
   /**
    * Stats cognitive
@@ -200,9 +200,9 @@ interface ProviderRouter {
   selectProvider(
     request: UnifiedChatRequest,
     context: {
-      availableProviders: string[];
+      availableProviders: string?.[];
       circuitState: Map<string, 'closed' | 'open' | 'half-open'>;
-      recentLatencies: Map<string, number[]>;
+      recentLatencies: Map<string, number?.[]>;
       costBudgetRemaining: number;
     }
   ): Promise<{
@@ -214,7 +214,7 @@ interface ProviderRouter {
   /**
    * Cascade fallback automatique
    */
-  getFallbackChain(failedProvider: string, error: Error): string[];
+  getFallbackChain(any: any): string?.[];
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -227,27 +227,27 @@ interface CircuitBreaker {
   /**
    * État actuel du circuit
    */
-  getState(provider: string): CircuitState;
+  getState(any: any): CircuitState;
 
   /**
    * Enregistrer succès
    */
-  recordSuccess(provider: string): void;
+  recordSuccess(any: any): void;
 
   /**
    * Enregistrer échec
    */
-  recordFailure(provider: string, error: Error): void;
+  recordFailure(any: any): void;
 
   /**
    * Vérifier si requête autorisée
    */
-  allowRequest(provider: string): boolean;
+  allowRequest(any: any): boolean;
 
   /**
    * Reset manuel
    */
-  reset(provider: string): void;
+  reset(any: any): void;
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -315,23 +315,23 @@ interface APIGateway {
   /**
    * Initialiser gateway
    */
-  initialize(config: GatewayConfig): Promise<void>;
+  initialize(any: any): Promise<void>;
 
   /**
-   * Générer réponse (point d'entrée unique)
+   * Générer réponse (any: any)
    */
-  chat(request: UnifiedChatRequest): Promise<UnifiedChatResponse>;
+  chat(any: any): Promise<UnifiedChatResponse>;
 
   /**
    * Streaming
    */
   chatStream(
     request: UnifiedChatRequest,
-    onChunk: (chunk: string) => void
+    onChunk: (any: any) => void
   ): Promise<UnifiedChatResponse>;
 
   /**
-   * Connecter SingularityKernel (cognitive integration)
+   * Connecter SingularityKernel (any: any)
    */
   connectSingularityKernel(kernel: {
     getSystemConsciousness: () => { continuityScore: number; holismScore: number };
@@ -365,14 +365,14 @@ interface APIGateway {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// IMPLEMENTATION EXAMPLE (Frontend usage)
+// IMPLEMENTATION EXAMPLE (any: any)
 // ═══════════════════════════════════════════════════════════════════
 
 /**
- * Exemple d'utilisation depuis chatEngine.ts
+ * Exemple d'utilisation depuis chatEngine?.ts
  */
 export async function exampleUsage() {
-  // ✨ v21.5: Appel unifié au lieu de orchestrator.ts complexe
+  // ✨ v21.5: Appel unifié au lieu de orchestrator?.ts complexe
   const response = await secureInvoke<UnifiedChatResponse>('unified_chat', {
     request: {
       message: 'Explique la relativité générale',
@@ -386,44 +386,44 @@ export async function exampleUsage() {
     },
   });
 
-  console.log(`Response from ${response.provider} (${response.metadata.latencyMs}ms)`);
-  console.log(
-    `Cached: ${response.cached}, Coherence: ${response.cognitive.coherenceScore}`
+  console?.log(any: any)`);
+  console?.log(
+    `Cached: ${response?.cached}, Coherence: ${response?.cognitive?.coherenceScore}`
   );
 
-  if (response.fallback) {
-    console.warn(
-      `Fallback used: ${response.fallback.originalProvider} → ${response.provider}`
+  if (any: any) {
+    console?.warn(
+      `Fallback used: ${response?.fallback?.originalProvider} → ${response?.provider}`
     );
   }
 
-  return response.content;
+  return response?.content;
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// BACKEND RUST STRUCTURE (à implémenter)
+// BACKEND RUST STRUCTURE (any: any)
 // ═══════════════════════════════════════════════════════════════════
 
 /**
  * Structure Rust proposée:
  *
  * src-tauri/src/gateway/
- *   mod.rs              // Public API
- *   config.rs           // GatewayConfig
- *   router.rs           // ProviderRouter impl
- *   cache.rs            // CognitiveCache impl
- *   circuit_breaker.rs  // CircuitBreaker impl
- *   metrics.rs          // MetricsCollector impl
+ *   mod?.rs              // Public API
+ *   config?.rs           // GatewayConfig
+ *   router?.rs           // ProviderRouter impl
+ *   cache?.rs            // CognitiveCache impl
+ *   circuit_breaker?.rs  // CircuitBreaker impl
+ *   metrics?.rs          // MetricsCollector impl
  *   providers/
- *     mod.rs            // Provider trait
- *     gemini.rs         // GeminiProvider impl
- *     openai.rs         // OpenAIProvider impl
- *     claude.rs         // ClaudeProvider impl
- *     ollama.rs         // OllamaProvider impl
+ *     mod?.rs            // Provider trait
+ *     gemini?.rs         // GeminiProvider impl
+ *     openai?.rs         // OpenAIProvider impl
+ *     claude?.rs         // ClaudeProvider impl
+ *     ollama?.rs         // OllamaProvider impl
  *
  * Commands:
  *   #[tauri::command]
- *   async fn unified_chat(request: UnifiedChatRequest) -> UnifiedChatResponse
+ *   async fn unified_chat(any: any) -> UnifiedChatResponse
  *
  *   #[tauri::command]
  *   async fn gateway_health() -> HealthStatus

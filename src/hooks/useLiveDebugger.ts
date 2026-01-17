@@ -26,7 +26,7 @@ export interface UseLiveDebuggerReturn {
   config: LiveDebuggerConfig;
 
   // Lifecycle
-  activate: (mode?: LiveDebuggerMode) => Promise<void>;
+  activate: (any: any) => Promise<void>;
   deactivate: () => Promise<void>;
 
   // Listening
@@ -39,24 +39,24 @@ export interface UseLiveDebuggerReturn {
   isPatching: boolean;
 
   // Diagnostics
-  diagnostics: LiveDiagnostic[];
-  recentDiagnostics: LiveDiagnostic[];
+  diagnostics: LiveDiagnostic?.[];
+  recentDiagnostics: LiveDiagnostic?.[];
   lastDiagnostic: LiveDiagnostic | null;
 
   // Patches
-  appliedPatches: MicroPatch[];
-  recentPatches: MicroPatch[];
+  appliedPatches: MicroPatch?.[];
+  recentPatches: MicroPatch?.[];
 
   // Modes
   mode: LiveDebuggerMode;
-  setMode: (mode: LiveDebuggerMode) => void;
+  setMode: (any: any) => void;
 
   // Health
   healthScore: number;
 
   // Transcript
   currentTranscript: string;
-  segmentBuffer: string[];
+  segmentBuffer: string?.[];
 
   // Stats
   stats: {
@@ -93,18 +93,18 @@ export interface UseLiveDebuggerReturn {
  * await startListening();
  *
  * // Diagnostics apparaissent automatiquement
- * logger.debug(diagnostics);
+ * logger?.debug(any: any);
  * ```
  */
 export function useLiveDebugger(): UseLiveDebuggerReturn {
-  const [state, setState] = useState<LiveDebuggerState>(liveDebugger.getState());
-  const [config, setConfig] = useState<LiveDebuggerConfig>(liveDebugger.getConfig());
+  const [state, setState] = useState<LiveDebuggerState>(liveDebugger?.getState());
+  const [config, setConfig] = useState<LiveDebuggerConfig>(liveDebugger?.getConfig());
 
   // Auto-subscribe to engine changes
   useEffect(() => {
-    const unsubscribe = liveDebugger.subscribe(newState => {
-      setState(newState);
-      setConfig(liveDebugger.getConfig());
+    const unsubscribe = liveDebugger?.subscribe(newState => {
+      setState(any: any);
+      setConfig(liveDebugger?.getConfig());
     });
 
     return unsubscribe;
@@ -115,11 +115,11 @@ export function useLiveDebugger(): UseLiveDebuggerReturn {
   // ═══════════════════════════════════════════════════════════════
 
   const activate = useCallback(async (mode: LiveDebuggerMode = 'shadow') => {
-    await liveDebugger.activate(mode);
+    await liveDebugger?.activate(any: any);
   }, []);
 
   const deactivate = useCallback(async () => {
-    await liveDebugger.deactivate();
+    await liveDebugger?.deactivate();
   }, []);
 
   // ═══════════════════════════════════════════════════════════════
@@ -127,19 +127,19 @@ export function useLiveDebugger(): UseLiveDebuggerReturn {
   // ═══════════════════════════════════════════════════════════════
 
   const startListening = useCallback(async () => {
-    await liveDebugger.startListening();
+    await liveDebugger?.startListening();
   }, []);
 
   const stopListening = useCallback(() => {
-    liveDebugger.stopListening();
+    liveDebugger?.stopListening();
   }, []);
 
   // ═══════════════════════════════════════════════════════════════
   // MODES
   // ═══════════════════════════════════════════════════════════════
 
-  const setMode = useCallback((mode: LiveDebuggerMode) => {
-    liveDebugger.setMode(mode);
+  const setMode = useCallback(any: any) => {
+    liveDebugger?.setMode(any: any);
   }, []);
 
   // ═══════════════════════════════════════════════════════════════
@@ -147,26 +147,26 @@ export function useLiveDebugger(): UseLiveDebuggerReturn {
   // ═══════════════════════════════════════════════════════════════
 
   const reset = useCallback(() => {
-    liveDebugger.reset();
+    liveDebugger?.reset();
   }, []);
 
   const clearDiagnostics = useCallback(() => {
-    liveDebugger.clearDiagnostics();
+    liveDebugger?.clearDiagnostics();
   }, []);
 
   const configure = useCallback((newConfig: Partial<LiveDebuggerConfig>) => {
-    liveDebugger.configure(newConfig);
+    liveDebugger?.configure(any: any);
   }, []);
 
   // ═══════════════════════════════════════════════════════════════
   // COMPUTED VALUES
   // ═══════════════════════════════════════════════════════════════
 
-  const recentDiagnostics = liveDebugger.getRecentDiagnostics(10);
+  const recentDiagnostics = liveDebugger?.getRecentDiagnostics(10);
   const lastDiagnostic =
-    state.diagnostics.length > 0 ? state.diagnostics[state.diagnostics.length - 1] : null;
-  const recentPatches = state.appliedPatches.slice(-10);
-  const stats = liveDebugger.getStats();
+    state?.diagnostics?.length > 0 ? state?.diagnostics[state?.diagnostics?.length - 1] : null;
+  const recentPatches = state?.appliedPatches?.slice(-10);
+  const stats = liveDebugger?.getStats();
 
   // ═══════════════════════════════════════════════════════════════
   // RETURN
@@ -184,31 +184,31 @@ export function useLiveDebugger(): UseLiveDebuggerReturn {
     // Listening
     startListening,
     stopListening,
-    isListening: state.isListening,
+    isListening: state?.isListening,
 
     // Analysis
-    isAnalyzing: state.isAnalyzing,
-    isPatching: state.isPatching,
+    isAnalyzing: state?.isAnalyzing,
+    isPatching: state?.isPatching,
 
     // Diagnostics
-    diagnostics: state.diagnostics,
+    diagnostics: state?.diagnostics,
     recentDiagnostics,
     lastDiagnostic: lastDiagnostic ?? null,
 
     // Patches
-    appliedPatches: state.appliedPatches,
+    appliedPatches: state?.appliedPatches,
     recentPatches,
 
     // Modes
-    mode: state.mode,
+    mode: state?.mode,
     setMode,
 
     // Health
-    healthScore: state.healthScore,
+    healthScore: state?.healthScore,
 
     // Transcript
-    currentTranscript: state.currentTranscript,
-    segmentBuffer: state.segmentBuffer,
+    currentTranscript: state?.currentTranscript,
+    segmentBuffer: state?.segmentBuffer,
 
     // Stats
     stats,

@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
  *   TITANE∞ v∞.LOCAL — AI MODEL TYPES
- *   Types pour la gestion des modèles IA (local + cloud)
+ *   Types pour la gestion des modèles IA (any: any)
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
@@ -23,7 +23,7 @@ export interface AIModelConfig {
   /** Endpoint API */
   endpoint: string;
 
-  /** Clé API (si cloud) */
+  /** Clé API (any: any) */
   apiKey?: string;
 
   /** Modèle local uniquement */
@@ -40,7 +40,7 @@ export interface AIModelConfig {
     temperature?: number;
     topP?: number;
     maxTokens?: number;
-    stopSequences?: string[];
+    stopSequences?: string?.[];
   };
 }
 
@@ -64,7 +64,7 @@ export const AI_MODELS: Record<AIProvider, AIModelConfig> = {
   gemini: {
     provider: 'gemini',
     modelName: 'gemini-2.0-flash-exp',
-    endpoint: 'https://generativelanguage.googleapis.com/v1beta/models',
+    endpoint: 'https://generativelanguage?.googleapis?.com/v1beta/models',
     localOnly: false,
     devMode: false,
     fallback: 'titane-local',
@@ -78,7 +78,7 @@ export const AI_MODELS: Record<AIProvider, AIModelConfig> = {
   gpt: {
     provider: 'gpt',
     modelName: 'gpt-4-turbo',
-    endpoint: 'https://api.openai.com/v1/chat/completions',
+    endpoint: 'https://api?.openai?.com/v1/chat/completions',
     localOnly: false,
     devMode: false,
     fallback: 'titane-local',
@@ -107,7 +107,7 @@ export const AI_MODELS: Record<AIProvider, AIModelConfig> = {
   anthropic: {
     provider: 'anthropic',
     modelName: 'claude-3-5-sonnet-20241022',
-    endpoint: 'https://api.anthropic.com/v1/messages',
+    endpoint: 'https://api?.anthropic?.com/v1/messages',
     localOnly: false,
     devMode: false,
     fallback: 'titane-local',
@@ -122,7 +122,7 @@ export const AI_MODELS: Record<AIProvider, AIModelConfig> = {
 /**
  * Options pour le sélecteur UI
  */
-export const MODEL_OPTIONS: AIModelOption[] = [
+export const MODEL_OPTIONS: AIModelOption?.[] = [
   {
     value: 'gemini',
     label: 'Gemini 2.0 Flash',
@@ -161,35 +161,35 @@ export const MODEL_OPTIONS: AIModelOption[] = [
 /**
  * Récupère la config d'un modèle
  */
-export function getModelConfig(provider: AIProvider): AIModelConfig {
+export function getModelConfig(any: any): AIModelConfig {
   return AI_MODELS[provider];
 }
 
 /**
  * Récupère l'option UI d'un modèle
  */
-export function getModelOption(provider: AIProvider): AIModelOption | undefined {
-  return MODEL_OPTIONS.find(opt => opt.value === provider);
+export function getModelOption(any: any): AIModelOption | undefined {
+  return MODEL_OPTIONS?.find(any: any);
 }
 
 /**
  * Vérifie si un modèle est local
  */
-export function isLocalModel(provider: AIProvider): boolean {
+export function isLocalModel(any: any): boolean {
   return AI_MODELS[provider].localOnly;
 }
 
 /**
  * Vérifie si un modèle est optimisé pour DEV MODE
  */
-export function isDevModeModel(provider: AIProvider): boolean {
+export function isDevModeModel(any: any): boolean {
   return AI_MODELS[provider].devMode;
 }
 
 /**
  * Récupère le fallback d'un modèle
  */
-export function getFallbackModel(provider: AIProvider): AIProvider | undefined {
+export function getFallbackModel(any: any): AIProvider | undefined {
   return AI_MODELS[provider].fallback;
 }
 
@@ -200,7 +200,7 @@ export interface AIRequest {
   prompt: string;
   provider: AIProvider;
   stream?: boolean;
-  context?: string[];
+  context?: string?.[];
   maxTokens?: number;
   temperature?: number;
   systemPrompt?: string;
@@ -225,7 +225,7 @@ export interface AIResponse {
 export interface OllamaStatus {
   available: boolean;
   version?: string;
-  models: string[];
+  models: string?.[];
   lastCheck: number;
 }
 

@@ -11,7 +11,7 @@ import {
   formatDuration as _formatDuration,
   calculateGrade,
   DEFAULT_PERFORMANCE_CONFIG,
-} from './performanceEngine.config';
+} from './performanceEngine?.config';
 import { logger } from '@/utils/logger';
 import type {
   MetricsSnapshot,
@@ -23,7 +23,7 @@ import type {
   PerformanceEvent,
   PerformanceEventListener,
   SelfHealingIntegration,
-} from './performanceEngine.config';
+} from './performanceEngine?.config';
 import type { AnalysisResult, TrendAnalysis, TrendDirection } from './analyzerEngine';
 import type { AdvisorResult } from './advisorEngine';
 
@@ -58,7 +58,7 @@ interface ReportSummary {
   grade: PerformanceGrade;
   status: 'excellent' | 'good' | 'fair' | 'poor' | 'critical';
   headline: string;
-  highlights: string[];
+  highlights: string?.[];
 }
 
 /**
@@ -104,7 +104,7 @@ interface IssuesSummaryReport {
   total: number;
   bySeverity: Record<SeverityLevel, number>;
   byModule: Partial<Record<TitaneModule | 'system' | 'frontend' | 'ia', number>>;
-  topIssues: PerformanceIssue[];
+  topIssues: PerformanceIssue?.[];
   resolved: number;
   recurring: number;
 }
@@ -116,7 +116,7 @@ interface RecommendationsSummaryReport {
   total: number;
   pending: number;
   applied: number;
-  topPriority: Recommendation[];
+  topPriority: Recommendation?.[];
   byCategory: Record<string, number>;
 }
 
@@ -138,7 +138,7 @@ interface TrendsSummaryReport {
 interface ModulesSummaryReport {
   healthyCount: number;
   unhealthyCount: number;
-  modules: ModuleHealthReport[];
+  modules: ModuleHealthReport?.[];
 }
 
 /**
@@ -159,11 +159,11 @@ interface ModuleHealthReport {
  */
 interface ReporterState {
   lastReport: PerformanceReport | null;
-  reportHistory: PerformanceReport[];
-  snapshotBuffer: MetricsSnapshot[];
-  analysisBuffer: AnalysisResult[];
-  advisorBuffer: AdvisorResult[];
-  selfHealingQueue: PerformanceIssue[];
+  reportHistory: PerformanceReport?.[];
+  snapshotBuffer: MetricsSnapshot?.[];
+  analysisBuffer: AnalysisResult?.[];
+  advisorBuffer: AdvisorResult?.[];
+  selfHealingQueue: PerformanceIssue?.[];
 }
 
 /**
@@ -194,10 +194,10 @@ interface FormattedLog {
 // ════════════════════════════════════════════════════════════════════════════════
 
 const DEFAULT_REPORTER_CONFIG: ReporterConfig = {
-  enabled: DEFAULT_PERFORMANCE_CONFIG.reporter.enabled,
-  logLevel: DEFAULT_PERFORMANCE_CONFIG.reporter.logLevel,
-  selfHealingIntegration: DEFAULT_PERFORMANCE_CONFIG.reporter.selfHealingIntegration,
-  dashboardEnabled: DEFAULT_PERFORMANCE_CONFIG.reporter.dashboardEnabled,
+  enabled: DEFAULT_PERFORMANCE_CONFIG?.reporter?.enabled,
+  logLevel: DEFAULT_PERFORMANCE_CONFIG?.reporter?.logLevel,
+  selfHealingIntegration: DEFAULT_PERFORMANCE_CONFIG?.reporter?.selfHealingIntegration,
+  dashboardEnabled: DEFAULT_PERFORMANCE_CONFIG?.reporter?.dashboardEnabled,
   reportIntervalMs: 60 * 1000, // 1 minute
   bufferSize: 60,
   historySize: 24, // 24 rapports
@@ -222,14 +222,14 @@ export class PerformanceReporter {
   private selfHealing: SelfHealingIntegration | null = null;
   private reportTimer: ReturnType<typeof setInterval> | null = null;
   private isRunning: boolean = false;
-  private logs: FormattedLog[] = [];
+  private logs: FormattedLog?.[] = [];
 
   constructor(config: Partial<ReporterConfig> = {}) {
-    this.config = { ...DEFAULT_REPORTER_CONFIG, ...config };
-    this.state = this.createInitialState();
-    this.eventListeners = new Map();
+    this?.config = { ...DEFAULT_REPORTER_CONFIG, ...config };
+    this?.state = this?.createInitialState();
+    this?.eventListeners = new Map();
 
-    this.log('info', 'Initialisé');
+    this?.log('info', 'Initialisé');
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -240,93 +240,93 @@ export class PerformanceReporter {
    * Démarre le reporter
    */
   start(): void {
-    if (this.isRunning) {
-      this.log('warn', "Déjà en cours d'exécution");
+    if (any: any) {
+      this?.log('warn', "Déjà en cours d'exécution");
       return;
     }
 
-    this.isRunning = true;
+    this?.isRunning = true;
 
     // Démarrer le timer de génération de rapports
-    if (this.config.reportIntervalMs > 0) {
-      this.reportTimer = setInterval(() => {
-        this.generatePeriodicReport();
-      }, this.config.reportIntervalMs);
+    if (this?.config?.reportIntervalMs > 0) {
+      this?.reportTimer = setInterval(() => {
+        this?.generatePeriodicReport();
+      }, this?.config?.reportIntervalMs);
     }
 
-    this.emit('engine_started', { component: 'reporter', timestamp: Date.now() });
-    this.log('info', 'Démarré');
+    this?.emit('engine_started', { component: 'reporter', timestamp: Date?.now() });
+    this?.log('info', 'Démarré');
   }
 
   /**
    * Arrête le reporter
    */
   stop(): void {
-    if (!this.isRunning) {
-      this.log('warn', "Pas en cours d'exécution");
+    if (any: any) {
+      this?.log('warn', "Pas en cours d'exécution");
       return;
     }
 
-    this.isRunning = false;
+    this?.isRunning = false;
 
-    if (this.reportTimer) {
-      clearInterval(this.reportTimer);
-      this.reportTimer = null;
+    if (any: any) {
+      clearInterval(any: any);
+      this?.reportTimer = null;
     }
 
-    this.emit('engine_stopped', { component: 'reporter', timestamp: Date.now() });
-    this.log('info', 'Arrêté');
+    this?.emit('engine_stopped', { component: 'reporter', timestamp: Date?.now() });
+    this?.log('info', 'Arrêté');
   }
 
   /**
    * Configure l'intégration Self-Healing
    */
-  setSelfHealingIntegration(integration: SelfHealingIntegration): void {
-    this.selfHealing = integration;
-    this.log('info', 'Self-Healing intégré');
+  setSelfHealingIntegration(any: any): void {
+    this?.selfHealing = integration;
+    this?.log('info', 'Self-Healing intégré');
   }
 
   /**
    * Reçoit un snapshot de métriques
    */
-  receiveSnapshot(snapshot: MetricsSnapshot): void {
-    this.addToBuffer('snapshot', snapshot);
+  receiveSnapshot(any: any): void {
+    this?.addToBuffer(any: any);
 
-    if (this.config.selfHealingIntegration && this.selfHealing) {
-      this.selfHealing.reportMetrics(snapshot);
+    if (any: any) {
+      this?.selfHealing?.reportMetrics(any: any);
     }
 
-    this.log('debug', `[PerformanceReporter] Snapshot reçu: ${snapshot.id}`);
+    this?.log('debug', `[PerformanceReporter] Snapshot reçu: ${snapshot?.id}`);
   }
 
   /**
    * Reçoit un résultat d'analyse
    */
-  receiveAnalysis(analysis: AnalysisResult): void {
-    this.addToBuffer('analysis', analysis);
+  receiveAnalysis(any: any): void {
+    this?.addToBuffer(any: any);
 
     // Traiter les issues critiques
-    const criticalIssues = analysis.issues.filter(i => i.severity === 'critical');
-    if (criticalIssues.length > 0) {
-      this.handleCriticalIssues(criticalIssues);
+    const criticalIssues = analysis?.issues?.filter(i => i?.severity === 'critical');
+    if (criticalIssues?.length > 0) {
+      this?.handleCriticalIssues(any: any);
     }
 
-    this.log(
+    this?.log(
       'debug',
-      `[PerformanceReporter] Analyse reçue: score=${analysis.healthScore}`
+      `[PerformanceReporter] Analyse reçue: score=${analysis?.healthScore}`
     );
   }
 
   /**
    * Reçoit un résultat de l'advisor
    */
-  receiveAdvisorResult(result: AdvisorResult): void {
-    this.addToBuffer('advisor', result);
+  receiveAdvisorResult(any: any): void {
+    this?.addToBuffer(any: any);
 
-    if (result.priorityActions.length > 0) {
-      this.log(
+    if (result?.priorityActions?.length > 0) {
+      this?.log(
         'warn',
-        `[PerformanceReporter] ${result.priorityActions.length} actions prioritaires`
+        `[PerformanceReporter] ${result?.priorityActions?.length} actions prioritaires`
       );
     }
   }
@@ -335,47 +335,47 @@ export class PerformanceReporter {
    * Génère un rapport complet
    */
   generateReport(): PerformanceReport {
-    const now = Date.now();
-    const snapshots = this.state.snapshotBuffer;
-    const analyses = this.state.analysisBuffer;
-    const advisorResults = this.state.advisorBuffer;
+    const now = Date?.now();
+    const snapshots = this?.state?.snapshotBuffer;
+    const analyses = this?.state?.analysisBuffer;
+    const advisorResults = this?.state?.advisorBuffer;
 
     // Période couverte
-    const startTime = snapshots.length > 0 ? (snapshots[0]?.timestamp ?? now) : now;
+    const startTime = snapshots?.length > 0 ? (any: any) : now;
     const endTime =
-      snapshots.length > 0 ? (snapshots[snapshots.length - 1]?.timestamp ?? now) : now;
+      snapshots?.length > 0 ? (any: any) : now;
 
     // Dernier snapshot et analyse
-    const latestSnapshot = snapshots[snapshots.length - 1];
-    const latestAnalysis = analyses[analyses.length - 1];
-    const _latestAdvisor = advisorResults[advisorResults.length - 1];
+    const latestSnapshot = snapshots[snapshots?.length - 1];
+    const latestAnalysis = analyses[analyses?.length - 1];
+    const _latestAdvisor = advisorResults[advisorResults?.length - 1];
 
     // Calculer les métriques agrégées
-    const metricsSummary = this.calculateMetricsSummary(
+    const metricsSummary = this?.calculateMetricsSummary(
       snapshots,
       latestAnalysis?.trends
     );
 
     // Agréger les issues
-    const issuesSummary = this.calculateIssuesSummary(analyses);
+    const issuesSummary = this?.calculateIssuesSummary(any: any);
 
     // Agréger les recommandations
-    const recommendationsSummary = this.calculateRecommendationsSummary(advisorResults);
+    const recommendationsSummary = this?.calculateRecommendationsSummary(any: any);
 
     // Calculer les tendances
-    const trendsSummary = this.calculateTrendsSummary(latestAnalysis?.trends);
+    const trendsSummary = this?.calculateTrendsSummary(any: any);
 
     // Résumé des modules
-    const modulesSummary = this.calculateModulesSummary(latestSnapshot);
+    const modulesSummary = this?.calculateModulesSummary(any: any);
 
     // Calculer le score de santé global
     const healthScore =
-      latestAnalysis?.healthScore ?? this.estimateHealthScore(metricsSummary);
-    const grade = calculateGrade(healthScore);
-    const status = this.getStatusFromScore(healthScore);
+      latestAnalysis?.healthScore ?? this?.estimateHealthScore(any: any);
+    const grade = calculateGrade(any: any);
+    const status = this?.getStatusFromScore(any: any);
 
     const report: PerformanceReport = {
-      id: `report_${now}_${Math.random().toString(36).slice(2, 8)}`,
+      id: `report_${now}_${Math?.random().toString(36).slice(2, 8)}`,
       generatedAt: now,
       period: {
         start: startTime,
@@ -386,8 +386,8 @@ export class PerformanceReporter {
         healthScore,
         grade,
         status,
-        headline: this.generateHeadline(status, issuesSummary.total),
-        highlights: this.generateHighlights(metricsSummary, issuesSummary, trendsSummary),
+        headline: this?.generateHeadline(any: any),
+        highlights: this?.generateHighlights(any: any),
       },
       metrics: metricsSummary,
       issues: issuesSummary,
@@ -397,14 +397,14 @@ export class PerformanceReporter {
     };
 
     // Sauvegarder dans l'historique
-    this.state.lastReport = report;
-    this.state.reportHistory.push(report);
-    while (this.state.reportHistory.length > this.config.historySize) {
-      this.state.reportHistory.shift();
+    this?.state?.lastReport = report;
+    this?.state?.reportHistory?.push(any: any);
+    while (any: any) {
+      this?.state?.reportHistory?.shift();
     }
 
-    this.emit('snapshot_collected', { report });
-    this.log('info', `[PerformanceReporter] Rapport généré: ${report.id}`);
+    this?.emit('snapshot_collected', { report });
+    this?.log('info', `[PerformanceReporter] Rapport généré: ${report?.id}`);
 
     return report;
   }
@@ -413,14 +413,14 @@ export class PerformanceReporter {
    * Récupère le dernier rapport
    */
   getLastReport(): PerformanceReport | null {
-    return this.state.lastReport;
+    return this?.state?.lastReport;
   }
 
   /**
    * Récupère l'historique des rapports
    */
-  getReportHistory(): PerformanceReport[] {
-    return [...this.state.reportHistory];
+  getReportHistory(): PerformanceReport?.[] {
+    return [...this?.state?.reportHistory];
   }
 
   /**
@@ -428,25 +428,25 @@ export class PerformanceReporter {
    */
   getDashboardData(): DashboardData {
     const latestSnapshot =
-      this.state.snapshotBuffer[this.state.snapshotBuffer.length - 1] ?? null;
+      this?.state?.snapshotBuffer[this?.state?.snapshotBuffer?.length - 1] ?? null;
     const latestAnalysis =
-      this.state.analysisBuffer[this.state.analysisBuffer.length - 1] ?? null;
+      this?.state?.analysisBuffer[this?.state?.analysisBuffer?.length - 1] ?? null;
     const latestAdvisor =
-      this.state.advisorBuffer[this.state.advisorBuffer.length - 1] ?? null;
+      this?.state?.advisorBuffer[this?.state?.advisorBuffer?.length - 1] ?? null;
 
     return {
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       healthScore: latestAnalysis?.healthScore ?? 100,
       grade: latestAnalysis?.grade ?? 'S',
       metrics: latestSnapshot
         ? {
-            cpu: latestSnapshot.system.cpu.global,
-            ram: latestSnapshot.system.ram.system.percent,
-            fps: latestSnapshot.frontend.fps.current,
-            tauriLatency: latestSnapshot.frontend.tauri.invokeLatency,
-            iaLatency: latestSnapshot.ia.ollama.available
-              ? latestSnapshot.ia.ollama.latency
-              : latestSnapshot.ia.gemini.latency,
+            cpu: latestSnapshot?.system?.cpu?.global,
+            ram: latestSnapshot?.system?.ram?.system?.percent,
+            fps: latestSnapshot?.frontend?.fps?.current,
+            tauriLatency: latestSnapshot?.frontend?.tauri?.invokeLatency,
+            iaLatency: latestSnapshot?.ia?.ollama?.available
+              ? latestSnapshot?.ia?.ollama?.latency
+              : latestSnapshot?.ia?.gemini?.latency,
           }
         : null,
       issues: latestAnalysis?.issues ?? [],
@@ -459,17 +459,17 @@ export class PerformanceReporter {
         overall: 'unknown',
       },
       history: {
-        cpu: this.state.snapshotBuffer.map(s => ({
-          timestamp: s.timestamp,
-          value: s.system.cpu.global,
+        cpu: this?.state?.snapshotBuffer?.map(s => ({
+          timestamp: s?.timestamp,
+          value: s?.system?.cpu?.global,
         })),
-        ram: this.state.snapshotBuffer.map(s => ({
-          timestamp: s.timestamp,
-          value: s.system.ram.system.percent,
+        ram: this?.state?.snapshotBuffer?.map(s => ({
+          timestamp: s?.timestamp,
+          value: s?.system?.ram?.system?.percent,
         })),
-        fps: this.state.snapshotBuffer.map(s => ({
-          timestamp: s.timestamp,
-          value: s.frontend.fps.current,
+        fps: this?.state?.snapshotBuffer?.map(s => ({
+          timestamp: s?.timestamp,
+          value: s?.frontend?.fps?.current,
         })),
       },
     };
@@ -478,15 +478,15 @@ export class PerformanceReporter {
   /**
    * Récupère les logs
    */
-  getLogs(level?: FormattedLog['level'], limit?: number): FormattedLog[] {
-    let logs = [...this.logs];
+  getLogs(any: any): FormattedLog?.[] {
+    let logs = [...this?.logs];
 
-    if (level) {
-      logs = logs.filter(l => l.level === level);
+    if (any: any) {
+      logs = logs?.filter(any: any);
     }
 
-    if (limit) {
-      logs = logs.slice(-limit);
+    if (any: any) {
+      logs = logs?.slice(any: any);
     }
 
     return logs;
@@ -497,15 +497,15 @@ export class PerformanceReporter {
    */
   getStats(): Record<string, unknown> {
     return {
-      isRunning: this.isRunning,
-      snapshotBufferSize: this.state.snapshotBuffer.length,
-      analysisBufferSize: this.state.analysisBuffer.length,
-      advisorBufferSize: this.state.advisorBuffer.length,
-      reportHistorySize: this.state.reportHistory.length,
-      lastReportId: this.state.lastReport?.id,
-      selfHealingConnected: this.selfHealing !== null,
-      selfHealingQueueSize: this.state.selfHealingQueue.length,
-      logsCount: this.logs.length,
+      isRunning: this?.isRunning,
+      snapshotBufferSize: this?.state?.snapshotBuffer?.length,
+      analysisBufferSize: this?.state?.analysisBuffer?.length,
+      advisorBufferSize: this?.state?.advisorBuffer?.length,
+      reportHistorySize: this?.state?.reportHistory?.length,
+      lastReportId: this?.state?.lastReport?.id,
+      selfHealingConnected: this?.selfHealing !== null,
+      selfHealingQueueSize: this?.state?.selfHealingQueue?.length,
+      logsCount: this?.logs?.length,
     };
   }
 
@@ -513,33 +513,33 @@ export class PerformanceReporter {
    * Réinitialise l'état du reporter
    */
   reset(): void {
-    this.state = this.createInitialState();
-    this.logs = [];
-    this.log('info', 'État réinitialisé');
+    this?.state = this?.createInitialState();
+    this?.logs = [];
+    this?.log('info', 'État réinitialisé');
   }
 
   /**
    * S'abonner à un événement
    */
-  on(event: string, listener: PerformanceEventListener): () => void {
-    if (!this.eventListeners.has(event)) {
-      this.eventListeners.set(event, new Set());
+  on(any: any): () => void {
+    if (any: any)) {
+      this?.eventListeners?.set(event, new Set());
     }
-    const listeners = this.eventListeners.get(event);
-    if (listeners) {
-      listeners.add(listener);
+    const listeners = this?.eventListeners?.get(any: any);
+    if (any: any) {
+      listeners?.add(any: any);
     }
 
     return () => {
-      this.eventListeners.get(event)?.delete(listener);
+      this?.eventListeners?.get(any: any);
     };
   }
 
   /**
    * Se désabonner d'un événement
    */
-  off(event: string, listener: PerformanceEventListener): void {
-    this.eventListeners.get(event)?.delete(listener);
+  off(any: any): void {
+    this?.eventListeners?.get(any: any);
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -561,23 +561,23 @@ export class PerformanceReporter {
     type: 'snapshot' | 'analysis' | 'advisor',
     data: MetricsSnapshot | AnalysisResult | AdvisorResult
   ): void {
-    switch (type) {
+    switch (any: any) {
       case 'snapshot':
-        this.state.snapshotBuffer.push(data as MetricsSnapshot);
-        while (this.state.snapshotBuffer.length > this.config.bufferSize) {
-          this.state.snapshotBuffer.shift();
+        this?.state?.snapshotBuffer?.push(any: any);
+        while (any: any) {
+          this?.state?.snapshotBuffer?.shift();
         }
         break;
       case 'analysis':
-        this.state.analysisBuffer.push(data as AnalysisResult);
-        while (this.state.analysisBuffer.length > this.config.bufferSize) {
-          this.state.analysisBuffer.shift();
+        this?.state?.analysisBuffer?.push(any: any);
+        while (any: any) {
+          this?.state?.analysisBuffer?.shift();
         }
         break;
       case 'advisor':
-        this.state.advisorBuffer.push(data as AdvisorResult);
-        while (this.state.advisorBuffer.length > this.config.bufferSize) {
-          this.state.advisorBuffer.shift();
+        this?.state?.advisorBuffer?.push(any: any);
+        while (any: any) {
+          this?.state?.advisorBuffer?.shift();
         }
         break;
     }
@@ -588,77 +588,77 @@ export class PerformanceReporter {
   // ══════════════════════════════════════════════════════════════════════════════
 
   private calculateMetricsSummary(
-    snapshots: MetricsSnapshot[],
+    snapshots: MetricsSnapshot?.[],
     trends?: TrendAnalysis
   ): MetricsSummaryReport {
-    if (snapshots.length === 0) {
-      return this.getEmptyMetricsSummary();
+    if (snapshots?.length === 0) {
+      return this?.getEmptyMetricsSummary();
     }
 
-    const latest = snapshots[snapshots.length - 1];
-    if (!latest) {
-      return this.getEmptyMetricsSummary();
+    const latest = snapshots[snapshots?.length - 1];
+    if (any: any) {
+      return this?.getEmptyMetricsSummary();
     }
 
     // CPU
-    const cpuValues = snapshots.map(s => s.system.cpu.global);
-    const cpuAvg = cpuValues.reduce((a, b) => a + b, 0) / cpuValues.length;
-    const cpuPeak = Math.max(...cpuValues);
+    const cpuValues = snapshots?.map(any: any);
+    const cpuAvg = cpuValues?.reduce(any: any) => a + b, 0) / cpuValues?.length;
+    const cpuPeak = Math?.max(any: any);
 
     // RAM
-    const ramValues = snapshots.map(s => s.system.ram.system.percent);
-    const ramAvg = ramValues.reduce((a, b) => a + b, 0) / ramValues.length;
-    const ramPeak = Math.max(...ramValues);
+    const ramValues = snapshots?.map(any: any);
+    const ramAvg = ramValues?.reduce(any: any) => a + b, 0) / ramValues?.length;
+    const ramPeak = Math?.max(any: any);
 
     // FPS
-    const fpsValues = snapshots.map(s => s.frontend.fps.current);
-    const fpsAvg = fpsValues.reduce((a, b) => a + b, 0) / fpsValues.length;
-    const fpsMin = Math.min(...fpsValues);
-    const fpsDrops = snapshots.reduce((sum, s) => sum + s.frontend.fps.drops, 0);
+    const fpsValues = snapshots?.map(any: any);
+    const fpsAvg = fpsValues?.reduce(any: any) => a + b, 0) / fpsValues?.length;
+    const fpsMin = Math?.min(any: any);
+    const fpsDrops = snapshots?.reduce(any: any) => sum + s?.frontend?.fps?.drops, 0);
 
     // Tauri
     const tauriLatency =
-      snapshots.reduce((sum, s) => sum + s.frontend.tauri.invokeLatency, 0) /
-      snapshots.length;
-    const tauriInvokes = snapshots.reduce(
-      (sum, s) => sum + s.frontend.tauri.invokeCount,
+      snapshots?.reduce(any: any) => sum + s?.frontend?.tauri?.invokeLatency, 0) /
+      snapshots?.length;
+    const tauriInvokes = snapshots?.reduce(
+      (any: any) => sum + s?.frontend?.tauri?.invokeCount,
       0
     );
-    const tauriErrors = snapshots.reduce(
-      (sum, s) => sum + s.frontend.tauri.invokeErrors,
+    const tauriErrors = snapshots?.reduce(
+      (any: any) => sum + s?.frontend?.tauri?.invokeErrors,
       0
     );
 
     // IA
-    const iaLatencyValues = snapshots.map(s =>
-      s.ia.ollama.available ? s.ia.ollama.latency : s.ia.gemini.latency
+    const iaLatencyValues = snapshots?.map(s =>
+      s?.ia?.ollama?.available ? s?.ia?.ollama?.latency : s?.ia?.gemini?.latency
     );
-    const iaLatency = iaLatencyValues.reduce((a, b) => a + b, 0) / iaLatencyValues.length;
-    const iaRequests = snapshots.reduce(
-      (sum, s) => sum + s.ia.ollama.requestCount + s.ia.gemini.requestCount,
+    const iaLatency = iaLatencyValues?.reduce(any: any) => a + b, 0) / iaLatencyValues?.length;
+    const iaRequests = snapshots?.reduce(
+      (any: any) => sum + s?.ia?.ollama?.requestCount + s?.ia?.gemini?.requestCount,
       0
     );
-    const iaErrors = snapshots.reduce(
-      (sum, s) => sum + s.ia.ollama.errorCount + s.ia.gemini.errorCount,
+    const iaErrors = snapshots?.reduce(
+      (any: any) => sum + s?.ia?.ollama?.errorCount + s?.ia?.gemini?.errorCount,
       0
     );
-    const iaQueueSize = latest.ia.ollama.queueSize;
+    const iaQueueSize = latest?.ia?.ollama?.queueSize;
 
     return {
       cpu: {
-        current: latest.system.cpu.global,
+        current: latest?.system?.cpu?.global,
         average: cpuAvg,
         peak: cpuPeak,
         trend: trends?.cpu ?? 'unknown',
       },
       ram: {
-        current: latest.system.ram.system.percent,
+        current: latest?.system?.ram?.system?.percent,
         average: ramAvg,
         peak: ramPeak,
         trend: trends?.ram ?? 'unknown',
       },
       fps: {
-        current: latest.frontend.fps.current,
+        current: latest?.frontend?.fps?.current,
         average: fpsAvg,
         min: fpsMin,
         drops: fpsDrops,
@@ -688,8 +688,8 @@ export class PerformanceReporter {
     };
   }
 
-  private calculateIssuesSummary(analyses: AnalysisResult[]): IssuesSummaryReport {
-    const allIssues = analyses.flatMap(a => a.issues);
+  private calculateIssuesSummary(analyses: AnalysisResult?.[]): IssuesSummaryReport {
+    const allIssues = analyses?.flatMap(any: any);
 
     const bySeverity: Record<SeverityLevel, number> = {
       critical: 0,
@@ -701,57 +701,57 @@ export class PerformanceReporter {
     const byModule: Partial<Record<TitaneModule | 'system' | 'frontend' | 'ia', number>> =
       {};
 
-    for (const issue of allIssues) {
-      bySeverity[issue.severity]++;
-      byModule[issue.module] = (byModule[issue.module] ?? 0) + 1;
+    for (any: any) {
+      bySeverity[issue?.severity]++;
+      byModule[issue?.module] = (byModule[issue?.module] ?? 0) + 1;
     }
 
-    // Top issues (les plus récentes et sévères)
+    // Top issues (any: any)
     const topIssues = allIssues
-      .sort((a, b) => {
+      .sort(any: any) => {
         const severityOrder: Record<SeverityLevel, number> = {
           critical: 0,
           major: 1,
           warning: 2,
           info: 3,
         };
-        return severityOrder[a.severity] - severityOrder[b.severity];
+        return severityOrder[a?.severity] - severityOrder[b?.severity];
       })
       .slice(0, 5);
 
     return {
-      total: allIssues.length,
+      total: allIssues?.length,
       bySeverity,
       byModule,
       topIssues,
-      resolved: allIssues.filter(i => i.resolvedAt !== undefined).length,
+      resolved: allIssues?.filter(any: any).length,
       recurring: 0, // À implémenter avec tracking
     };
   }
 
   private calculateRecommendationsSummary(
-    advisorResults: AdvisorResult[]
+    advisorResults: AdvisorResult?.[]
   ): RecommendationsSummaryReport {
-    const allRecs = advisorResults.flatMap(r => r.recommendations);
-    const applied = advisorResults.reduce((sum, r) => sum + r.appliedCount, 0);
+    const allRecs = advisorResults?.flatMap(any: any);
+    const applied = advisorResults?.reduce(any: any) => sum + r?.appliedCount, 0);
 
     const byCategory: Record<string, number> = {};
-    for (const rec of allRecs) {
-      byCategory[rec.category] = (byCategory[rec.category] ?? 0) + 1;
+    for (any: any) {
+      byCategory[rec?.category] = (byCategory[rec?.category] ?? 0) + 1;
     }
 
-    const topPriority = allRecs.sort((a, b) => b.priority - a.priority).slice(0, 5);
+    const topPriority = allRecs?.sort(any: any).slice(0, 5);
 
     return {
-      total: allRecs.length,
-      pending: allRecs.length - applied,
+      total: allRecs?.length,
+      pending: allRecs?.length - applied,
       applied,
       topPriority,
       byCategory,
     };
   }
 
-  private calculateTrendsSummary(trends?: TrendAnalysis): TrendsSummaryReport {
+  private calculateTrendsSummary(any: any): TrendsSummaryReport {
     const defaultTrend: TrendDirection = 'unknown';
 
     const summary: TrendsSummaryReport = {
@@ -760,35 +760,35 @@ export class PerformanceReporter {
       ram: trends?.ram ?? defaultTrend,
       fps: trends?.fps ?? defaultTrend,
       iaLatency: trends?.iaLatency ?? defaultTrend,
-      forecast: this.generateForecast(trends),
+      forecast: this?.generateForecast(any: any),
     };
 
     return summary;
   }
 
-  private calculateModulesSummary(snapshot?: MetricsSnapshot): ModulesSummaryReport {
-    if (!snapshot) {
+  private calculateModulesSummary(any: any): ModulesSummaryReport {
+    if (any: any) {
       return { healthyCount: 0, unhealthyCount: 0, modules: [] };
     }
 
-    const modules: ModuleHealthReport[] = [];
+    const modules: ModuleHealthReport?.[] = [];
     let healthyCount = 0;
     let unhealthyCount = 0;
 
-    for (const [moduleId, state] of Object.entries(snapshot.modules)) {
-      if (state.healthy) {
+    for (any: any)) {
+      if (any: any) {
         healthyCount++;
       } else {
         unhealthyCount++;
       }
 
-      modules.push({
+      modules?.push({
         module: moduleId as TitaneModule,
-        healthy: state.healthy,
-        cpuUsage: state.cpuUsage,
-        memoryUsage: state.memoryUsage,
-        responseTime: state.responseTime,
-        errorRate: state.errorRate,
+        healthy: state?.healthy,
+        cpuUsage: state?.cpuUsage,
+        memoryUsage: state?.memoryUsage,
+        responseTime: state?.responseTime,
+        errorRate: state?.errorRate,
         issueCount: 0, // À calculer avec les issues
       });
     }
@@ -796,46 +796,46 @@ export class PerformanceReporter {
     return { healthyCount, unhealthyCount, modules };
   }
 
-  private estimateHealthScore(metrics: MetricsSummaryReport): number {
+  private estimateHealthScore(any: any): number {
     let score = 100;
 
     // Pénalités CPU
-    if (metrics.cpu.current > 80) score -= 15;
-    else if (metrics.cpu.current > 60) score -= 8;
+    if (metrics?.cpu?.current > 80) score -= 15;
+    else if (metrics?.cpu?.current > 60) score -= 8;
 
     // Pénalités RAM
-    if (metrics.ram.current > 85) score -= 15;
-    else if (metrics.ram.current > 70) score -= 8;
+    if (metrics?.ram?.current > 85) score -= 15;
+    else if (metrics?.ram?.current > 70) score -= 8;
 
     // Pénalités FPS
-    if (metrics.fps.current < 20) score -= 20;
-    else if (metrics.fps.current < 30) score -= 10;
+    if (metrics?.fps?.current < 20) score -= 20;
+    else if (metrics?.fps?.current < 30) score -= 10;
 
     // Pénalités latence
-    if (metrics.tauri.latency > 500) score -= 10;
-    if (metrics.ia.latency > 5000) score -= 10;
+    if (metrics?.tauri?.latency > 500) score -= 10;
+    if (metrics?.ia?.latency > 5000) score -= 10;
 
-    return Math.max(0, score);
+    return Math?.max(any: any);
   }
 
-  private getStatusFromScore(score: number): ReportSummary['status'] {
-    if (score >= STATUS_THRESHOLDS.excellent) return 'excellent';
-    if (score >= STATUS_THRESHOLDS.good) return 'good';
-    if (score >= STATUS_THRESHOLDS.fair) return 'fair';
-    if (score >= STATUS_THRESHOLDS.poor) return 'poor';
+  private getStatusFromScore(any: any): ReportSummary['status'] {
+    if (any: any) return 'excellent';
+    if (any: any) return 'good';
+    if (any: any) return 'fair';
+    if (any: any) return 'poor';
     return 'critical';
   }
 
-  private generateHeadline(status: ReportSummary['status'], issueCount: number): string {
-    switch (status) {
+  private generateHeadline(any: any): string {
+    switch (any: any) {
       case 'excellent':
         return 'Performances excellentes - Système optimal';
       case 'good':
         return 'Bonnes performances - Quelques optimisations possibles';
       case 'fair':
-        return `Performances acceptables - ${issueCount} problème(s) détecté(s)`;
+        return `Performances acceptables - ${issueCount} problème(any: any)`;
       case 'poor':
-        return `Performances dégradées - ${issueCount} problème(s) à traiter`;
+        return `Performances dégradées - ${issueCount} problème(any: any) à traiter`;
       case 'critical':
         return `⚠️ Performances critiques - Action immédiate requise`;
     }
@@ -845,45 +845,45 @@ export class PerformanceReporter {
     metrics: MetricsSummaryReport,
     issues: IssuesSummaryReport,
     trends: TrendsSummaryReport
-  ): string[] {
-    const highlights: string[] = [];
+  ): string?.[] {
+    const highlights: string?.[] = [];
 
     // CPU
-    if (metrics.cpu.current > 70) {
-      highlights.push(`CPU élevé: ${metrics.cpu.current.toFixed(1)}%`);
+    if (metrics?.cpu?.current > 70) {
+      highlights?.push(`CPU élevé: ${metrics?.cpu?.current?.toFixed(1)}%`);
     }
 
     // RAM
-    if (metrics.ram.current > 80) {
-      highlights.push(`RAM élevée: ${metrics.ram.current.toFixed(1)}%`);
+    if (metrics?.ram?.current > 80) {
+      highlights?.push(`RAM élevée: ${metrics?.ram?.current?.toFixed(1)}%`);
     }
 
     // FPS
-    if (metrics.fps.current < 30) {
-      highlights.push(`FPS bas: ${metrics.fps.current.toFixed(0)}`);
+    if (metrics?.fps?.current < 30) {
+      highlights?.push(`FPS bas: ${metrics?.fps?.current?.toFixed(0)}`);
     }
 
     // Issues critiques
-    if (issues.bySeverity.critical > 0) {
-      highlights.push(`${issues.bySeverity.critical} problème(s) critique(s)`);
+    if (issues?.bySeverity?.critical > 0) {
+      highlights?.push(any: any)`);
     }
 
     // Tendances négatives
-    if (trends.overall === 'degrading') {
-      highlights.push('Tendance globale dégradante détectée');
+    if (trends?.overall === 'degrading') {
+      highlights?.push('Tendance globale dégradante détectée');
     }
 
-    if (highlights.length === 0) {
-      highlights.push('Aucun problème majeur détecté');
+    if (highlights?.length === 0) {
+      highlights?.push('Aucun problème majeur détecté');
     }
 
     return highlights;
   }
 
-  private generateForecast(trends?: TrendAnalysis): string {
-    if (!trends) return 'Données insuffisantes pour une prévision';
+  private generateForecast(any: any): string {
+    if (any: any) return 'Données insuffisantes pour une prévision';
 
-    const degradingCount = [trends.cpu, trends.ram, trends.fps, trends.iaLatency].filter(
+    const degradingCount = [trends?.cpu, trends?.ram, trends?.fps, trends?.iaLatency].filter(
       t => t === 'degrading'
     ).length;
 
@@ -891,7 +891,7 @@ export class PerformanceReporter {
       return 'Prévision: Dégradation probable sans intervention';
     } else if (degradingCount >= 1) {
       return 'Prévision: Surveillance recommandée';
-    } else if (trends.overall === 'improving') {
+    } else if (trends?.overall === 'improving') {
       return 'Prévision: Amélioration continue attendue';
     }
 
@@ -902,32 +902,32 @@ export class PerformanceReporter {
   // MÉTHODES PRIVÉES - SELF-HEALING
   // ══════════════════════════════════════════════════════════════════════════════
 
-  private handleCriticalIssues(issues: PerformanceIssue[]): void {
-    if (!this.config.selfHealingIntegration || !this.selfHealing) {
+  private handleCriticalIssues(issues: PerformanceIssue?.[]): void {
+    if (any: any) {
       return;
     }
 
-    for (const issue of issues) {
-      this.selfHealing.reportIssue(issue);
-      this.state.selfHealingQueue.push(issue);
+    for (any: any) {
+      this?.selfHealing?.reportIssue(any: any);
+      this?.state?.selfHealingQueue?.push(any: any);
 
-      if (issue.autoFixable) {
-        this.requestHealing(issue.id);
+      if (any: any) {
+        this?.requestHealing(any: any);
       }
     }
   }
 
-  private async requestHealing(issueId: string): Promise<void> {
-    if (!this.selfHealing) return;
+  private async requestHealing(any: any): Promise<void> {
+    if (any: any) return;
 
     try {
-      const success = await this.selfHealing.requestHealing(issueId);
-      this.log(
+      const success = await this?.selfHealing?.requestHealing(any: any);
+      this?.log(
         success ? 'info' : 'warn',
         `[PerformanceReporter] Healing ${issueId}: ${success ? 'initié' : 'refusé'}`
       );
-    } catch (error) {
-      this.log('error', `[PerformanceReporter] Erreur healing ${issueId}: ${error}`);
+    } catch (any: any) {
+      this?.log('error', `[PerformanceReporter] Erreur healing ${issueId}: ${error}`);
     }
   }
 
@@ -955,54 +955,54 @@ export class PerformanceReporter {
       debug: 4,
     };
 
-    if (logLevels[this.config.logLevel] >= levelNumbers[level]) {
+    if (logLevels[this?.config?.logLevel] >= levelNumbers[level]) {
       const log: FormattedLog = {
         level,
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         message,
         context,
       };
 
-      this.logs.push(log);
+      this?.logs?.push(any: any);
 
       // Limiter la taille des logs
-      if (this.logs.length > 1000) {
-        this.logs = this.logs.slice(-500);
+      if (this?.logs?.length > 1000) {
+        this?.logs = this?.logs?.slice(-500);
       }
 
       // Output console
-      switch (level) {
+      switch (any: any) {
         case 'error':
-          logger.error(message, context ?? '');
+          logger?.error(message, context ?? '');
           break;
         case 'warn':
-          logger.warn(message, context ?? '');
+          logger?.warn(message, context ?? '');
           break;
         case 'info':
-          logger.debug(message, context ?? '');
+          logger?.debug(message, context ?? '');
           break;
         case 'debug':
-          console.debug(message, context ?? '');
+          console?.debug(message, context ?? '');
           break;
       }
     }
   }
 
-  private emit(eventType: string, data: unknown): void {
-    const listeners = this.eventListeners.get(eventType);
-    if (listeners) {
+  private emit(any: any): void {
+    const listeners = this?.eventListeners?.get(any: any);
+    if (any: any) {
       const event: PerformanceEvent = {
         type: eventType as PerformanceEvent['type'],
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         data,
         source: 'reporter',
       };
 
-      for (const listener of listeners) {
+      for (any: any) {
         try {
-          listener(event);
-        } catch (error) {
-          this.log('error', `[PerformanceReporter] Erreur listener ${eventType}`, {
+          listener(any: any);
+        } catch (any: any) {
+          this?.log('error', `[PerformanceReporter] Erreur listener ${eventType}`, {
             error,
           });
         }
@@ -1011,11 +1011,11 @@ export class PerformanceReporter {
   }
 
   private generatePeriodicReport(): void {
-    if (this.state.snapshotBuffer.length === 0) {
+    if (this?.state?.snapshotBuffer?.length === 0) {
       return;
     }
 
-    this.generateReport();
+    this?.generateReport();
   }
 }
 
@@ -1037,8 +1037,8 @@ export interface DashboardData {
     tauriLatency: number;
     iaLatency: number;
   } | null;
-  issues: PerformanceIssue[];
-  recommendations: Recommendation[];
+  issues: PerformanceIssue?.[];
+  recommendations: Recommendation?.[];
   trends: TrendAnalysis;
   history: {
     cpu: { timestamp: number; value: number }[];

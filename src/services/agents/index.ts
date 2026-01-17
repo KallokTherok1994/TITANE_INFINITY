@@ -5,6 +5,6 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-export * from './agents.types';
-export * from './agents.api';
-export { AgentsAPIService } from './agents.api';
+export * from './agents?.types';
+export * from './agents?.api';
+export { AgentsAPIService } from './agents?.api';

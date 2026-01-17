@@ -37,7 +37,7 @@ export interface EngineState {
   priority: number;
   lastActivity: Date;
   metrics?: Record<string, number>;
-  errors?: string[];
+  errors?: string?.[];
 }
 
 export type EngineStatus = 'active' | 'idle' | 'paused' | 'error' | 'disabled';
@@ -47,12 +47,12 @@ export type EngineStatus = 'active' | 'idle' | 'paused' | 'error' | 'disabled';
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Lane d'orchestration (pipeline de moteurs)
+ * Lane d'orchestration (any: any)
  */
 export interface OrchestrationLane {
   id: string;
   name: string;
-  engines: EngineId[];
+  engines: EngineId?.[];
   priority: 'critical' | 'high' | 'medium' | 'low';
   flowType: 'sequential' | 'parallel' | 'conditional';
   active: boolean;
@@ -90,7 +90,7 @@ export interface OrchestrationPriorities {
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Signal Quantum (faible ou fort)
+ * Signal Quantum (any: any)
  */
 export interface QuantumSignal {
   id: string;
@@ -111,7 +111,7 @@ export interface QuantumPrediction {
   prediction: string;
   probability: number;
   timeframe: string;
-  signals: QuantumSignal[];
+  signals: QuantumSignal?.[];
   timestamp: Date;
 }
 
@@ -139,7 +139,7 @@ export interface ModelProfile {
   name: string;
   provider: string;
   type: 'local' | 'cloud';
-  capabilities: ModelCapability[];
+  capabilities: ModelCapability?.[];
   latency: number;
   cost: number;
   maxTokens: number;
@@ -163,7 +163,7 @@ export interface ModelSelectionStrategy {
   fallbackCloud: boolean;
   maxLatency: number;
   maxCostPerRequest: number;
-  priorityCapabilities: ModelCapability[];
+  priorityCapabilities: ModelCapability?.[];
 }
 
 /**

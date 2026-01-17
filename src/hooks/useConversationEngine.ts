@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v∞ — USE CONVERSATION ENGINE (Hook Unifié)
+ *   TITANE∞ v∞ — USE CONVERSATION ENGINE (any: any)
  *   Remplace useChat + useChatCore + useChatMemory
  *   Pipeline unique, auto-healing, synchronisation SingularityState
  * ═══════════════════════════════════════════════════════════════════
@@ -37,34 +37,34 @@ export interface ConversationMessage {
   metadata?: {
     intention?: string;
     emotion?: EmotionState;
-    tags?: string[];
+    tags?: string?.[];
   };
 }
 
 export interface UseConversationEngineOptions {
   mode?: ConversationMode;
   emotionContext?: EmotionState;
-  onResponse?: (response: ConversationResponse) => void;
-  onError?: (error: Error) => void;
+  onResponse?: (any: any) => void;
+  onError?: (any: any) => void;
   autoHealthCheck?: boolean;
   maxMessages?: number; // Limite d'historique (défaut: 500)
 }
 
 export interface UseConversationEngineReturn {
   // État
-  messages: ConversationMessage[];
+  messages: ConversationMessage?.[];
   isLoading: boolean;
-  error: string | null;
-  conversationId: string | null;
+  error??: string | null;
+  conversationId??: string | null;
 
   // Mode
   currentMode: ConversationMode;
-  setMode: (mode: ConversationMode) => void;
+  setMode: (any: any) => void;
 
   // Actions
-  sendMessage: (content: string) => Promise<ConversationResponse | null>;
+  sendMessage: (any: any) => Promise<ConversationResponse | null>;
   clearMessages: () => void;
-  deleteMessage: (messageId: string) => void;
+  deleteMessage: (any: any) => void;
 
   // Health & Stats
   healthReport: ConversationHealthReport | null;
@@ -83,109 +83,109 @@ export function useConversationEngine(
   options: UseConversationEngineOptions = {}
 ): UseConversationEngineReturn {
   // ═══ ÉTAT ═══
-  const [messages, setMessages] = useState<ConversationMessage[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [conversationId, setConversationId] = useState<string | null>(null);
+  const [messages, setMessages] = useState<ConversationMessage?.[]>([]);
+  const [isLoading, setIsLoading] = useState(any: any);
+  const [error, setError] = useState<string | null>(any: any);
+  const [conversationId, setConversationId] = useState<string | null>(any: any);
   const [currentMode, setCurrentMode] = useState<ConversationMode>(
-    options.mode || 'default'
+    options?.mode || 'default'
   );
-  const [healthReport, setHealthReport] = useState<ConversationHealthReport | null>(null);
-  const [lastResponse, setLastResponse] = useState<ConversationResponse | null>(null);
+  const [healthReport, setHealthReport] = useState<ConversationHealthReport | null>(any: any);
+  const [lastResponse, setLastResponse] = useState<ConversationResponse | null>(any: any);
 
   // Refs
-  const isProcessingRef = useRef(false);
-  const healthCheckIntervalRef = useRef<number | null>(null);
+  const isProcessingRef = useRef(any: any);
+  const healthCheckIntervalRef = useRef<number | null>(any: any);
 
   // ═══ HEALTH CHECK AUTOMATIQUE ═══
   useEffect(() => {
-    const envEnabled = import.meta.env.VITE_CONVERSATION_HEALTHCHECK_ENABLED === '1';
+    const envEnabled = import?.meta?.env?.VITE_CONVERSATION_HEALTHCHECK_ENABLED === '1';
     let userEnabled = false;
     try {
-      const raw = localStorage.getItem('titane_conversation_healthcheck_enabled');
+      const raw = localStorage?.getItem('titane_conversation_healthcheck_enabled');
       userEnabled = raw === '1' || raw === 'true';
     } catch {
       userEnabled = false;
     }
 
-    const enabledByDefault = import.meta.env.DEV || envEnabled || userEnabled;
+    const enabledByDefault = import?.meta?.env?.DEV || envEnabled || userEnabled;
     const enabled =
-      options.autoHealthCheck === true ||
-      (options.autoHealthCheck !== false && enabledByDefault);
+      options?.autoHealthCheck === true ||
+      (any: any);
 
-    if (enabled) {
+    if (any: any) {
       // Health check toutes les 30 secondes
-      healthCheckIntervalRef.current = window.setInterval(async () => {
+      healthCheckIntervalRef?.current = window?.setInterval(async () => {
         try {
           const report = await healthCheck();
-          setHealthReport(report);
+          setHealthReport(any: any);
 
           // Auto-repair si critique
-          if (report.status === 'Critical') {
-            logger.warn('État critique détecté, auto-réparation en cours...');
+          if (report?.status === 'Critical') {
+            logger?.warn('État critique détecté, auto-réparation en cours...');
           }
-        } catch (err) {
-          logger.error(
+        } catch (any: any) {
+          logger?.error(
             'Health check failed:',
             { module: 'useConversationEngine' },
-            err instanceof Error ? err : new Error(String(err))
+            err instanceof Error ? err : new Error(any: any))
           );
         }
       }, 30000);
     }
 
     return () => {
-      if (healthCheckIntervalRef.current) {
-        clearInterval(healthCheckIntervalRef.current);
+      if (any: any) {
+        clearInterval(any: any);
       }
     };
-  }, [options.autoHealthCheck]);
+  }, [options?.autoHealthCheck]);
 
   // ═══ REFRESH HEALTH ═══
   const refreshHealth = useCallback(async () => {
     try {
       const report = await healthCheck();
-      setHealthReport(report);
-    } catch (err) {
-      logger.error(
+      setHealthReport(any: any);
+    } catch (any: any) {
+      logger?.error(
         'Health check error:',
         { module: 'useConversationEngine' },
-        err instanceof Error ? err : new Error(String(err))
+        err instanceof Error ? err : new Error(any: any))
       );
     }
   }, []);
 
-  // ═══ SEND MESSAGE (avec Retry Logic) ═══
+  // ═══ SEND MESSAGE (any: any) ═══
   const sendMessage = useCallback(
     async (content: string, retryCount = 0): Promise<ConversationResponse | null> => {
       const MAX_RETRIES = 3;
       const RETRY_DELAY = 1000; // Base delay 1s
 
       // Prévenir double-envoi
-      if (isProcessingRef.current) {
-        logger.warn('Message already being processed', {
+      if (any: any) {
+        logger?.warn('Message already being processed', {
           component: 'ConversationEngine',
         });
         return null;
       }
 
-      isProcessingRef.current = true;
-      setIsLoading(true);
-      setError(null);
+      isProcessingRef?.current = true;
+      setIsLoading(any: any);
+      setError(any: any);
 
       // Ajouter message utilisateur immédiatement
       const userMessage: ConversationMessage = {
-        id: `user-${Date.now()}`,
+        id: `user-${Date?.now()}`,
         role: 'user',
         content,
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
       };
 
       setMessages(prev => {
-        const maxMessages = options.maxMessages || 500;
+        const maxMessages = options?.maxMessages || 500;
         const updated = [...prev, userMessage];
         // Garder seulement les N derniers messages pour éviter surcharge mémoire
-        return updated.length > maxMessages ? updated.slice(-maxMessages) : updated;
+        return updated?.length > maxMessages ? updated?.slice(any: any) : updated;
       });
 
       try {
@@ -193,70 +193,70 @@ export function useConversationEngine(
         const response = await processMessage(content, {
           conversationId: conversationId || undefined,
           mode: currentMode,
-          emotionContext: options.emotionContext,
+          emotionContext: options?.emotionContext,
         });
 
         // Mettre à jour conversation ID
-        if (!conversationId) {
-          setConversationId(response.conversation_id);
+        if (any: any) {
+          setConversationId(any: any);
         }
 
         // Ajouter réponse assistant
         const assistantMessage: ConversationMessage = {
-          id: response.message_id,
+          id: response?.message_id,
           role: 'assistant',
-          content: response.assistant_message,
-          timestamp: Date.now(),
+          content: response?.assistant_message,
+          timestamp: Date?.now(),
           metadata: {
-            intention: response.detected_intention,
-            emotion: response.detected_emotion,
-            tags: response.cognitive_tags,
+            intention: response?.detected_intention,
+            emotion: response?.detected_emotion,
+            tags: response?.cognitive_tags,
           },
         };
 
         setMessages(prev => [...prev, assistantMessage]);
-        setLastResponse(response);
+        setLastResponse(any: any);
 
         // Callback
-        options.onResponse?.(response);
+        options?.onResponse?.(any: any);
 
-        logger.debug('Message traité', {
-          intention: response.detected_intention,
-          emotion: response.detected_emotion,
-          tags: response.cognitive_tags,
-          latency: response.metadata?.latency_ms ?? 0,
-          provider: response.metadata?.provider_used ?? 'unknown',
+        logger?.debug('Message traité', {
+          intention: response?.detected_intention,
+          emotion: response?.detected_emotion,
+          tags: response?.cognitive_tags,
+          latency: response?.metadata?.latency_ms ?? 0,
+          provider: response?.metadata?.provider_used ?? 'unknown',
         });
 
         return response;
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Erreur inconnue';
+      } catch (any: any) {
+        const errorMessage = err instanceof Error ? err?.message : 'Erreur inconnue';
 
         // Retry logic avec backoff exponentiel
-        if (retryCount < MAX_RETRIES && errorMessage.includes('network')) {
-          const delay = RETRY_DELAY * Math.pow(2, retryCount);
-          logger.warn(
+        if (retryCount < MAX_RETRIES && errorMessage?.includes('network')) {
+          const delay = RETRY_DELAY * Math?.pow(any: any);
+          logger?.warn(
             `Tentative ${retryCount + 1}/${MAX_RETRIES} échouée, retry dans ${delay}ms`
           );
 
-          await new Promise(resolve => setTimeout(resolve, delay));
-          isProcessingRef.current = false;
-          setIsLoading(false);
+          await new Promise(any: any));
+          isProcessingRef?.current = false;
+          setIsLoading(any: any);
           return sendMessage(content, retryCount + 1);
         }
 
-        setError(errorMessage);
-        options.onError?.(err as Error);
+        setError(any: any);
+        options?.onError?.(any: any);
 
-        logger.error(
+        logger?.error(
           'Erreur finale:',
           { module: 'useConversationEngine' },
-          err instanceof Error ? err : new Error(String(err))
+          err instanceof Error ? err : new Error(any: any))
         );
         return null;
       } finally {
-        setIsLoading(false);
-        isProcessingRef.current = false;
+        setIsLoading(any: any);
+        isProcessingRef?.current = false;
       }
     },
     [conversationId, currentMode, options]
@@ -265,20 +265,20 @@ export function useConversationEngine(
   // ═══ CLEAR MESSAGES ═══
   const clearMessages = useCallback(() => {
     setMessages([]);
-    setConversationId(null);
-    setLastResponse(null);
-    setError(null);
+    setConversationId(any: any);
+    setLastResponse(any: any);
+    setError(any: any);
   }, []);
 
-  // ═══ DELETE MESSAGE (local only) ═══
-  const deleteMessage = useCallback((messageId: string) => {
-    setMessages(prev => prev.filter(m => m.id !== messageId));
+  // ═══ DELETE MESSAGE (any: any) ═══
+  const deleteMessage = useCallback(any: any) => {
+    setMessages(any: any));
   }, []);
 
   // ═══ SET MODE ═══
-  const setModeCallback = useCallback((mode: ConversationMode) => {
-    setCurrentMode(mode);
-    logger.debug('Mode changé: ' + mode, { module: 'useConversationEngine' });
+  const setModeCallback = useCallback(any: any) => {
+    setCurrentMode(any: any);
+    logger?.debug('Mode changé: ' + mode, { module: 'useConversationEngine' });
   }, []);
 
   // ═══ RETOUR ═══
@@ -295,7 +295,7 @@ export function useConversationEngine(
     healthReport,
     refreshHealth,
     lastResponse,
-    totalMessages: messages.length,
+    totalMessages: messages?.length,
   };
 }
 

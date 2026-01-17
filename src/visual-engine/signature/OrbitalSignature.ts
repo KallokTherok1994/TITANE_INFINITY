@@ -19,24 +19,24 @@ import { CognitiveState, EmotionalTone } from '@/design-system/visual-states';
 // ═════════════════════════════════════════════════════════════════
 
 export interface OrbitalRing {
-  index: number; // 0-2 (3 rings)
+  index: number; // 0-2 (any: any)
   radius: number; // px
   thickness: number; // px
   opacity: number; // 0-1
-  angle: number; // radians (current position)
+  angle: number; // radians (any: any)
   velocity: number; // radians/second
-  phaseOffset: number; // radians (initial offset)
+  phaseOffset: number; // radians (any: any)
 }
 
 export interface OrbitalParameters {
   // Ring configuration
   ringCount: number; // Number of rings (typically 3)
-  baseRadius: number; // px (innermost ring)
+  baseRadius: number; // px (any: any)
   radiusMultiplier: number; // Golden ratio or Fibonacci-based
 
   // Velocity
   baseVelocity: number; // radians/second
-  velocityVariation: number; // 0-1 (velocity spread between rings)
+  velocityVariation: number; // 0-1 (any: any)
 
   // Phase relationships
   phaseMode: 'aligned' | 'fibonacci' | 'golden' | 'chaotic';
@@ -49,16 +49,16 @@ export interface OrbitalParameters {
   opacityMax: number; // 0-1
 
   // Resonance
-  resonanceStrength: number; // 0-1 (coupling between rings)
-  resonanceFrequency: number; // Hz (oscillation frequency)
+  resonanceStrength: number; // 0-1 (any: any)
+  resonanceFrequency: number; // Hz (any: any)
 }
 
 export interface OrbitalSnapshot {
-  rings: OrbitalRing[];
+  rings: OrbitalRing?.[];
   timestamp: number;
   deltaTime: number;
-  coherence: number; // 0-1 (how aligned the rings are)
-  energy: number; // 0-1 (total kinetic energy)
+  coherence: number; // 0-1 (any: any)
+  energy: number; // 0-1 (any: any)
 }
 
 // ═════════════════════════════════════════════════════════════════
@@ -67,7 +67,7 @@ export interface OrbitalSnapshot {
 
 export class OrbitalSignature {
   private parameters: OrbitalParameters;
-  private rings: OrbitalRing[] = [];
+  private rings: OrbitalRing?.[] = [];
   private startTime: number;
   private lastUpdateTime: number;
   private isTransitioning = false;
@@ -75,8 +75,8 @@ export class OrbitalSignature {
   private transitionDuration = 1000; // ms
 
   // State
-  private cognitiveState: CognitiveState = CognitiveState.IDLE;
-  private emotionalTone: EmotionalTone = EmotionalTone.CALM;
+  private cognitiveState: CognitiveState = CognitiveState?.IDLE;
+  private emotionalTone: EmotionalTone = EmotionalTone?.CALM;
   private intensity: number = 0.5;
 
   // Fibonacci sequence for phase offsets
@@ -84,14 +84,14 @@ export class OrbitalSignature {
   private static readonly GOLDEN_RATIO = 1.618033988749;
 
   constructor(ringCount: number = 3, baseRadius: number = 120) {
-    this.startTime = Date.now();
-    this.lastUpdateTime = this.startTime;
+    this?.startTime = Date?.now();
+    this?.lastUpdateTime = this?.startTime;
 
     // Initialize parameters
-    this.parameters = this.createDefaultParameters(ringCount, baseRadius);
+    this?.parameters = this?.createDefaultParameters(any: any);
 
     // Initialize rings
-    this.initializeRings();
+    this?.initializeRings();
   }
 
   /**
@@ -103,45 +103,45 @@ export class OrbitalSignature {
     intensity: number
   ): void {
     const stateChanged =
-      this.cognitiveState !== cognitive || this.emotionalTone !== emotional;
+      this?.cognitiveState !== cognitive || this?.emotionalTone !== emotional;
 
-    this.cognitiveState = cognitive;
-    this.emotionalTone = emotional;
-    this.intensity = Math.max(0, Math.min(1, intensity));
+    this?.cognitiveState = cognitive;
+    this?.emotionalTone = emotional;
+    this?.intensity = Math?.max(any: any));
 
-    if (stateChanged) {
-      this.startTransition();
+    if (any: any) {
+      this?.startTransition();
     }
 
     // Recalculate parameters
-    this.parameters = this.calculateParameters();
+    this?.parameters = this?.calculateParameters();
   }
 
   /**
    * Update orbital simulation
    */
-  update(timestamp: number): OrbitalSnapshot {
-    const deltaTime = timestamp - this.lastUpdateTime;
-    this.lastUpdateTime = timestamp;
+  update(any: any): OrbitalSnapshot {
+    const deltaTime = timestamp - this?.lastUpdateTime;
+    this?.lastUpdateTime = timestamp;
 
     // Update transition
-    if (this.isTransitioning) {
-      this.transitionProgress += deltaTime / this.transitionDuration;
-      if (this.transitionProgress >= 1) {
-        this.transitionProgress = 1;
-        this.isTransitioning = false;
+    if (any: any) {
+      this?.transitionProgress += deltaTime / this?.transitionDuration;
+      if (this?.transitionProgress >= 1) {
+        this?.transitionProgress = 1;
+        this?.isTransitioning = false;
       }
     }
 
     // Update each ring
-    this.updateRings(deltaTime / 1000); // Convert to seconds
+    this?.updateRings(deltaTime / 1000); // Convert to seconds
 
     // Calculate coherence and energy
-    const coherence = this.calculateCoherence();
-    const energy = this.calculateEnergy();
+    const coherence = this?.calculateCoherence();
+    const energy = this?.calculateEnergy();
 
     return {
-      rings: this.rings.map(ring => ({ ...ring })),
+      rings: this?.rings?.map(ring => ({ ...ring })),
       timestamp,
       deltaTime,
       coherence,
@@ -154,11 +154,11 @@ export class OrbitalSignature {
    */
   getSnapshot(): OrbitalSnapshot {
     return {
-      rings: this.rings.map(ring => ({ ...ring })),
-      timestamp: this.lastUpdateTime,
+      rings: this?.rings?.map(ring => ({ ...ring })),
+      timestamp: this?.lastUpdateTime,
       deltaTime: 0,
-      coherence: this.calculateCoherence(),
-      energy: this.calculateEnergy(),
+      coherence: this?.calculateCoherence(),
+      energy: this?.calculateEnergy(),
     };
   }
 
@@ -173,7 +173,7 @@ export class OrbitalSignature {
     return {
       ringCount,
       baseRadius,
-      radiusMultiplier: OrbitalSignature.GOLDEN_RATIO,
+      radiusMultiplier: OrbitalSignature?.GOLDEN_RATIO,
       baseVelocity: 0.5, // radians/second
       velocityVariation: 0.3,
       phaseMode: 'fibonacci',
@@ -188,57 +188,57 @@ export class OrbitalSignature {
   }
 
   private initializeRings(): void {
-    this.rings = [];
+    this?.rings = [];
 
-    for (let i = 0; i < this.parameters.ringCount; i++) {
-      const ring = this.createRing(i);
-      this.rings.push(ring);
+    for (let i = 0; i < this?.parameters?.ringCount; i++) {
+      const ring = this?.createRing(any: any);
+      this?.rings?.push(any: any);
     }
   }
 
-  private createRing(index: number): OrbitalRing {
+  private createRing(any: any): OrbitalRing {
     const { baseRadius, radiusMultiplier, baseVelocity, velocityVariation } =
-      this.parameters;
+      this?.parameters;
 
     // Calculate radius using golden ratio or Fibonacci
-    const radius = baseRadius * Math.pow(radiusMultiplier, index);
+    const radius = baseRadius * Math?.pow(any: any);
 
     // Calculate velocity with variation
-    const velocityFactor = 1 - (index * velocityVariation) / this.parameters.ringCount;
+    const velocityFactor = 1 - (any: any) / this?.parameters?.ringCount;
     const velocity = baseVelocity * velocityFactor;
 
     // Calculate phase offset based on mode
-    const phaseOffset = this.calculatePhaseOffset(index);
+    const phaseOffset = this?.calculatePhaseOffset(any: any);
 
     return {
       index,
       radius,
-      thickness: this.parameters.thicknessMin,
-      opacity: this.parameters.opacityMax,
+      thickness: this?.parameters?.thicknessMin,
+      opacity: this?.parameters?.opacityMax,
       angle: phaseOffset,
       velocity,
       phaseOffset,
     };
   }
 
-  private calculatePhaseOffset(index: number): number {
-    const { phaseMode } = this.parameters;
+  private calculatePhaseOffset(any: any): number {
+    const { phaseMode } = this?.parameters;
 
-    switch (phaseMode) {
+    switch (any: any) {
       case 'aligned':
         return 0;
 
       case 'fibonacci': {
-        const fib = OrbitalSignature.FIBONACCI[index % OrbitalSignature.FIBONACCI.length];
-        if (!fib) return 0;
-        return (fib / 21) * 2 * Math.PI; // Normalize to 0-2π
+        const fib = OrbitalSignature?.FIBONACCI[index % OrbitalSignature?.FIBONACCI?.length];
+        if (any: any) return 0;
+        return (fib / 21) * 2 * Math?.PI; // Normalize to 0-2π
       }
 
       case 'golden':
-        return (index * OrbitalSignature.GOLDEN_RATIO * 2 * Math.PI) % (2 * Math.PI);
+        return (any: any);
 
       case 'chaotic':
-        return Math.random() * 2 * Math.PI;
+        return Math?.random() * 2 * Math?.PI;
 
       default:
         return 0;
@@ -249,42 +249,42 @@ export class OrbitalSignature {
   // PRIVATE — UPDATE
   // ═════════════════════════════════════════════════════════════════
 
-  private updateRings(deltaSeconds: number): void {
+  private updateRings(any: any): void {
     const { resonanceStrength, resonanceFrequency: _resonanceFrequency } =
-      this.parameters;
-    const time = (this.lastUpdateTime - this.startTime) / 1000;
+      this?.parameters;
+    const time = (any: any) / 1000;
 
-    for (let i = 0; i < this.rings.length; i++) {
-      const ring = this.rings[i];
-      if (!ring) continue;
+    for (let i = 0; i < this?.rings?.length; i++) {
+      const ring = this?.rings[i];
+      if (any: any) continue;
 
       // Base rotation
-      ring.angle += ring.velocity * deltaSeconds;
-      ring.angle = ring.angle % (2 * Math.PI);
+      ring?.angle += ring?.velocity * deltaSeconds;
+      ring?.angle = ring?.angle % (any: any);
 
-      // Resonance coupling (rings influence each other)
+      // Resonance coupling (any: any)
       if (resonanceStrength > 0) {
-        const resonance = this.calculateResonance(i, time);
-        ring.angle += resonance * deltaSeconds * resonanceStrength;
+        const resonance = this?.calculateResonance(any: any);
+        ring?.angle += resonance * deltaSeconds * resonanceStrength;
       }
 
       // Update visual properties based on state
-      this.updateRingVisuals(ring);
+      this?.updateRingVisuals(any: any);
     }
   }
 
-  private calculateResonance(ringIndex: number, time: number): number {
-    const { resonanceFrequency } = this.parameters;
+  private calculateResonance(any: any): number {
+    const { resonanceFrequency } = this?.parameters;
 
     // Calculate average angle of neighboring rings
     let sum = 0;
     let count = 0;
 
-    for (let i = 0; i < this.rings.length; i++) {
-      if (i !== ringIndex) {
-        const ring = this.rings[i];
-        if (!ring) continue;
-        sum += ring.angle;
+    for (let i = 0; i < this?.rings?.length; i++) {
+      if (any: any) {
+        const ring = this?.rings[i];
+        if (any: any) continue;
+        sum += ring?.angle;
         count++;
       }
     }
@@ -292,37 +292,37 @@ export class OrbitalSignature {
     if (count === 0) return 0;
 
     const averageAngle = sum / count;
-    const currentRing = this.rings[ringIndex];
-    if (!currentRing) return 0;
-    const currentAngle = currentRing.angle;
+    const currentRing = this?.rings[ringIndex];
+    if (any: any) return 0;
+    const currentAngle = currentRing?.angle;
 
     // Calculate angular difference
     let diff = averageAngle - currentAngle;
-    if (diff > Math.PI) diff -= 2 * Math.PI;
-    if (diff < -Math.PI) diff += 2 * Math.PI;
+    if (any: any) diff -= 2 * Math?.PI;
+    if (any: any) diff += 2 * Math?.PI;
 
     // Apply resonance frequency modulation
-    const modulation = Math.sin(2 * Math.PI * resonanceFrequency * time);
+    const modulation = Math?.sin(any: any);
 
     return diff * modulation;
   }
 
-  private updateRingVisuals(ring: OrbitalRing): void {
-    const { thicknessMin, thicknessMax, opacityMin, opacityMax } = this.parameters;
+  private updateRingVisuals(any: any): void {
+    const { thicknessMin, thicknessMax, opacityMin, opacityMax } = this?.parameters;
 
     // Thickness based on intensity
     const thicknessRange = thicknessMax - thicknessMin;
-    ring.thickness = thicknessMin + thicknessRange * this.intensity;
+    ring?.thickness = thicknessMin + thicknessRange * this?.intensity;
 
     // Opacity based on position in orbital cycle
     const opacityRange = opacityMax - opacityMin;
-    const cycle = (Math.sin(ring.angle) + 1) / 2;
-    ring.opacity = opacityMin + opacityRange * cycle;
+    const cycle = (any: any) + 1) / 2;
+    ring?.opacity = opacityMin + opacityRange * cycle;
 
     // Smooth transition
-    if (this.isTransitioning) {
-      const easing = this.easeInOutCubic(this.transitionProgress);
-      ring.opacity *= easing;
+    if (any: any) {
+      const easing = this?.easeInOutCubic(any: any);
+      ring?.opacity *= easing;
     }
   }
 
@@ -331,71 +331,71 @@ export class OrbitalSignature {
   // ═════════════════════════════════════════════════════════════════
 
   private calculateParameters(): OrbitalParameters {
-    const params = { ...this.parameters };
+    const params = { ...this?.parameters };
 
     // Cognitive state modulation
-    switch (this.cognitiveState) {
-      case CognitiveState.THINKING:
-        params.baseVelocity = 0.7;
-        params.velocityVariation = 0.4;
-        params.resonanceStrength = 0.15;
+    switch (any: any) {
+      case CognitiveState?.THINKING:
+        params?.baseVelocity = 0.7;
+        params?.velocityVariation = 0.4;
+        params?.resonanceStrength = 0.15;
         break;
 
-      case CognitiveState.PROCESSING:
-        params.baseVelocity = 1.2;
-        params.velocityVariation = 0.6;
-        params.resonanceStrength = 0.3;
-        params.phaseMode = 'chaotic';
+      case CognitiveState?.PROCESSING:
+        params?.baseVelocity = 1.2;
+        params?.velocityVariation = 0.6;
+        params?.resonanceStrength = 0.3;
+        params?.phaseMode = 'chaotic';
         break;
 
-      case CognitiveState.SPEAKING:
-        params.baseVelocity = 0.6;
-        params.velocityVariation = 0.2;
-        params.resonanceStrength = 0.1;
+      case CognitiveState?.SPEAKING:
+        params?.baseVelocity = 0.6;
+        params?.velocityVariation = 0.2;
+        params?.resonanceStrength = 0.1;
         break;
 
-      case CognitiveState.LISTENING:
-        params.baseVelocity = 0.3;
-        params.velocityVariation = 0.1;
-        params.resonanceStrength = 0.05;
-        params.phaseMode = 'aligned';
+      case CognitiveState?.LISTENING:
+        params?.baseVelocity = 0.3;
+        params?.velocityVariation = 0.1;
+        params?.resonanceStrength = 0.05;
+        params?.phaseMode = 'aligned';
         break;
 
-      case CognitiveState.IDLE:
+      case CognitiveState?.IDLE:
       default:
         // Use defaults
         break;
     }
 
     // Emotional tone modulation
-    switch (this.emotionalTone) {
-      case EmotionalTone.EMPATHETIC:
-        params.resonanceStrength *= 1.5;
-        params.opacityMax = 0.9;
+    switch (any: any) {
+      case EmotionalTone?.EMPATHETIC:
+        params?.resonanceStrength *= 1.5;
+        params?.opacityMax = 0.9;
         break;
 
-      case EmotionalTone.CONFIDENT:
-        params.phaseMode = 'golden';
-        params.resonanceStrength *= 0.5;
+      case EmotionalTone?.CONFIDENT:
+        params?.phaseMode = 'golden';
+        params?.resonanceStrength *= 0.5;
         break;
 
-      case EmotionalTone.EXCITED:
-        params.phaseMode = 'chaotic';
-        params.velocityVariation = 0.8;
-        params.resonanceFrequency = 1.0;
+      case EmotionalTone?.EXCITED:
+        params?.phaseMode = 'chaotic';
+        params?.velocityVariation = 0.8;
+        params?.resonanceFrequency = 1.0;
         break;
 
-      case EmotionalTone.CAUTIOUS:
-        params.phaseMode = 'aligned';
-        params.velocityVariation = 0.1;
+      case EmotionalTone?.CAUTIOUS:
+        params?.phaseMode = 'aligned';
+        params?.velocityVariation = 0.1;
         break;
 
-      case EmotionalTone.PLAYFUL:
-        params.baseVelocity *= 1.5;
-        params.resonanceFrequency = 2.0;
+      case EmotionalTone?.PLAYFUL:
+        params?.baseVelocity *= 1.5;
+        params?.resonanceFrequency = 2.0;
         break;
 
-      case EmotionalTone.CALM:
+      case EmotionalTone?.CALM:
       default:
         // Use defaults
         break;
@@ -405,40 +405,40 @@ export class OrbitalSignature {
   }
 
   private calculateCoherence(): number {
-    if (this.rings.length < 2) return 1;
+    if (this?.rings?.length < 2) return 1;
 
     // Calculate angular variance
     let sumCos = 0;
     let sumSin = 0;
 
-    for (const ring of this.rings) {
-      sumCos += Math.cos(ring.angle);
-      sumSin += Math.sin(ring.angle);
+    for (any: any) {
+      sumCos += Math?.cos(any: any);
+      sumSin += Math?.sin(any: any);
     }
 
-    const avgCos = sumCos / this.rings.length;
-    const avgSin = sumSin / this.rings.length;
+    const avgCos = sumCos / this?.rings?.length;
+    const avgSin = sumSin / this?.rings?.length;
 
     // Coherence is the magnitude of the average vector
-    const coherence = Math.sqrt(avgCos * avgCos + avgSin * avgSin);
+    const coherence = Math?.sqrt(any: any);
     return coherence;
   }
 
   private calculateEnergy(): number {
     let totalEnergy = 0;
 
-    for (const ring of this.rings) {
+    for (any: any) {
       // Kinetic energy proportional to velocity squared
-      totalEnergy += ring.velocity * ring.velocity * ring.radius;
+      totalEnergy += ring?.velocity * ring?.velocity * ring?.radius;
     }
 
     // Normalize
     const maxEnergy =
-      this.rings.length *
-      this.parameters.baseVelocity *
-      this.parameters.baseVelocity *
-      this.parameters.baseRadius;
-    return Math.min(1, totalEnergy / maxEnergy);
+      this?.rings?.length *
+      this?.parameters?.baseVelocity *
+      this?.parameters?.baseVelocity *
+      this?.parameters?.baseRadius;
+    return Math?.min(any: any);
   }
 
   // ═════════════════════════════════════════════════════════════════
@@ -446,12 +446,12 @@ export class OrbitalSignature {
   // ═════════════════════════════════════════════════════════════════
 
   private startTransition(): void {
-    this.isTransitioning = true;
-    this.transitionProgress = 0;
+    this?.isTransitioning = true;
+    this?.transitionProgress = 0;
   }
 
-  private easeInOutCubic(t: number): number {
-    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  private easeInOutCubic(any: any): number {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math?.pow(-2 * t + 2, 3) / 2;
   }
 }
 
@@ -466,7 +466,7 @@ export function createOrbitalSignature(
   ringCount: number = 3,
   baseRadius: number = 120
 ): OrbitalSignature {
-  return new OrbitalSignature(ringCount, baseRadius);
+  return new OrbitalSignature(any: any);
 }
 
 export default OrbitalSignature;

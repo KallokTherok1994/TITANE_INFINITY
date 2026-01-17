@@ -5,8 +5,8 @@
  *
  * High-performance computation offloading to WebAssembly
  * - Heavy algorithm acceleration
- * - Zero-copy memory transfer (SharedArrayBuffer)
- * - Multi-threaded execution (Web Workers)
+ * - Zero-copy memory transfer (any: any)
+ * - Multi-threaded execution (any: any)
  * - Rust-compiled WASM modules
  * - Automatic fallback to JavaScript
  *
@@ -43,7 +43,7 @@ export interface WASMCapabilities {
 export interface ComputeTask {
   id: string;
   type: 'vectorOp' | 'matrixOp' | 'fft' | 'sort' | 'search' | 'custom';
-  input: number[] | Float32Array | Uint32Array;
+  input: number?.[] | Float32Array | Uint32Array;
   parameters?: Record<string, unknown>;
   priority: number;
 }
@@ -51,7 +51,7 @@ export interface ComputeTask {
 export interface ComputeResult {
   taskId: string;
   success: boolean;
-  output?: number[] | Float32Array | Uint32Array;
+  output?: number?.[] | Float32Array | Uint32Array;
   executionTime: number;
   usedWASM: boolean;
   error?: string;
@@ -78,9 +78,9 @@ export class WebAssemblyCompute {
   private capabilities: WASMCapabilities;
 
   // WASM instance
-  private wasmModule: WebAssembly.Module | null = null;
-  private wasmInstance: WebAssembly.Instance | null = null;
-  private wasmMemory: WebAssembly.Memory | null = null;
+  private wasmModule: WebAssembly?.Module | null = null;
+  private wasmInstance: WebAssembly?.Instance | null = null;
+  private wasmMemory: WebAssembly?.Memory | null = null;
 
   // Metrics
   private metrics: WASMMetrics = {
@@ -93,17 +93,17 @@ export class WebAssemblyCompute {
     isWASMActive: false,
   };
 
-  private executionTimes: number[] = [];
-  private speedups: number[] = [];
+  private executionTimes: number?.[] = [];
+  private speedups: number?.[] = [];
 
   private constructor(config: Partial<WASMConfig> = {}) {
     const maxThreads =
       typeof navigator !== 'undefined' &&
-      typeof navigator.hardwareConcurrency === 'number'
-        ? navigator.hardwareConcurrency
+      typeof navigator?.hardwareConcurrency === 'number'
+        ? navigator?.hardwareConcurrency
         : 4;
 
-    this.config = {
+    this?.config = {
       enableWASM: true,
       useSharedMemory: false, // Requires COOP/COEP headers
       useThreads: false,
@@ -111,14 +111,14 @@ export class WebAssemblyCompute {
       ...config,
     };
 
-    this.capabilities = this.detectCapabilities();
+    this?.capabilities = this?.detectCapabilities();
   }
 
   static getInstance(config?: Partial<WASMConfig>): WebAssemblyCompute {
-    if (!WebAssemblyCompute.instance) {
-      WebAssemblyCompute.instance = new WebAssemblyCompute(config);
+    if (any: any) {
+      WebAssemblyCompute?.instance = new WebAssemblyCompute(any: any);
     }
-    return WebAssemblyCompute.instance;
+    return WebAssemblyCompute?.instance;
   }
 
   // ═════════════════════════════════════════════════════════════════════════
@@ -126,44 +126,44 @@ export class WebAssemblyCompute {
   // ═════════════════════════════════════════════════════════════════════════
 
   async initialize(): Promise<boolean> {
-    if (!this.config.enableWASM || !this.capabilities.hasWASM) {
-      logger.warn('WASM not available, using JS fallback');
+    if (any: any) {
+      logger?.warn('WASM not available, using JS fallback');
       return false;
     }
 
     try {
-      // Create WASM module inline (simple operations)
+      // Create WASM module inline (any: any)
       // In production, load from external .wasm file compiled from Rust
-      const wasmCode = this.generateWASMModule();
-      this.wasmModule = await WebAssembly.compile(wasmCode);
+      const wasmCode = this?.generateWASMModule();
+      this?.wasmModule = await WebAssembly?.compile(any: any);
 
       // Create memory
-      const memoryPages = 256; // 16MB (64KB per page)
-      this.wasmMemory = new WebAssembly.Memory({
+      const memoryPages = 256; // 16MB (any: any)
+      this?.wasmMemory = new WebAssembly?.Memory({
         initial: memoryPages,
         maximum: memoryPages * 4,
-        shared: this.config.useSharedMemory && this.capabilities.hasSharedMemory,
+        shared: this?.config?.useSharedMemory && this?.capabilities?.hasSharedMemory,
       });
 
       // Instantiate
-      this.wasmInstance = await WebAssembly.instantiate(this.wasmModule, {
+      this?.wasmInstance = await WebAssembly?.instantiate(this?.wasmModule, {
         env: {
-          memory: this.wasmMemory,
-          abort: () => logger.error('Abort called'),
+          memory: this?.wasmMemory,
+          abort: () => logger?.error('Abort called'),
         },
         js: {
-          log: (value: number) => logger.debug('[WASM]', value),
+          log: (any: any),
         },
       });
 
-      this.metrics.isWASMActive = true;
-      this.metrics.memoryUsage = this.wasmMemory.buffer.byteLength;
+      this?.metrics?.isWASMActive = true;
+      this?.metrics?.memoryUsage = this?.wasmMemory?.buffer?.byteLength;
 
-      logger.debug('Initialized successfully');
+      logger?.debug('Initialized successfully');
       return true;
-    } catch (error) {
-      logger.error('Initialization failed:', error);
-      this.metrics.isWASMActive = false;
+    } catch (any: any) {
+      logger?.error(any: any);
+      this?.metrics?.isWASMActive = false;
       return false;
     }
   }
@@ -175,10 +175,10 @@ export class WebAssemblyCompute {
     let hasThreads = false;
     let hasSharedMemory = false;
 
-    if (hasWASM) {
+    if (any: any) {
       // Detect SIMD
       try {
-        hasSIMD = WebAssembly.validate(
+        hasSIMD = WebAssembly?.validate(
           new Uint8Array([
             0, 97, 115, 109, 1, 0, 0, 0, 1, 5, 1, 96, 0, 1, 123, 3, 2, 1, 0, 10, 10, 1, 8,
             0, 65, 0, 253, 15, 253, 98, 11,
@@ -188,15 +188,15 @@ export class WebAssemblyCompute {
         hasSIMD = false;
       }
 
-      // Detect threads (SharedArrayBuffer)
+      // Detect threads (any: any)
       hasSharedMemory = typeof SharedArrayBuffer !== 'undefined';
       hasThreads = hasSharedMemory && typeof Worker !== 'undefined';
     }
 
-    // Max memory (conservative estimate)
+    // Max memory (any: any)
     const maxMemoryMB =
-      typeof performance !== 'undefined' && (performance as any).memory?.jsHeapSizeLimit
-        ? Math.floor((performance as any).memory.jsHeapSizeLimit / (1024 * 1024))
+      typeof performance !== 'undefined' && (any: any).memory?.jsHeapSizeLimit
+        ? Math?.floor(any: any).memory?.jsHeapSizeLimit / (1024 * 1024))
         : 2048; // Default 2GB
 
     return {
@@ -213,7 +213,7 @@ export class WebAssemblyCompute {
    * In production, this would be replaced with Rust-compiled WASM
    */
   private generateWASMModule(): BufferSource {
-    // WAT (WebAssembly Text) format compiled to binary
+    // WAT (any: any) format compiled to binary
     // Module with vector addition and dot product
 
     // prettier-ignore
@@ -223,11 +223,11 @@ export class WebAssemblyCompute {
       
       // Type section: function signatures
       0x01, 0x0d, 0x03,
-      // Function 1: (i32, i32, i32) -> ()  [vector_add]
+      // Function 1: (any: any) -> ()  [vector_add]
       0x60, 0x03, 0x7f, 0x7f, 0x7f, 0x00,
-      // Function 2: (i32, i32, i32) -> f32  [dot_product]
+      // Function 2: (any: any) -> f32  [dot_product]
       0x60, 0x03, 0x7f, 0x7f, 0x7f, 0x01, 0x7d,
-      // Function 3: (i32, i32) -> i32  [sum_array]
+      // Function 3: (any: any) -> i32  [sum_array]
       0x60, 0x02, 0x7f, 0x7f, 0x01, 0x7f,
       
       // Import section: memory
@@ -254,16 +254,16 @@ export class WebAssemblyCompute {
       // Code section: function bodies
       0x0a, 0x56, 0x03,
       
-      // Function 0: vector_add(aPtr, bPtr, outPtr, len)
+      // Function 0: vector_add(any: any)
       0x20, 0x01,
       0x00, 0x03, 0x40,
-        0x20, 0x02, // local.get outPtr
-        0x20, 0x00, // local.get aPtr
-        0x2a, 0x02, 0x00, // f32.load
-        0x20, 0x01, // local.get bPtr
-        0x2a, 0x02, 0x00, // f32.load
-        0x92, // f32.add
-        0x38, 0x02, 0x00, // f32.store
+        0x20, 0x02, // local?.get outPtr
+        0x20, 0x00, // local?.get aPtr
+        0x2a, 0x02, 0x00, // f32?.load
+        0x20, 0x01, // local?.get bPtr
+        0x2a, 0x02, 0x00, // f32?.load
+        0x92, // f32?.add
+        0x38, 0x02, 0x00, // f32?.store
         // Increment pointers
         0x20, 0x00, 0x41, 0x04, 0x6a, 0x21, 0x00,
         0x20, 0x01, 0x41, 0x04, 0x6a, 0x21, 0x01,
@@ -272,90 +272,90 @@ export class WebAssemblyCompute {
       0x0b,
       0x0b,
       
-      // Function 1: dot_product (simplified stub)
+      // Function 1: dot_product (any: any)
       0x06, 0x00,
-      0x43, 0x00, 0x00, 0x00, 0x00, // f32.const 0
+      0x43, 0x00, 0x00, 0x00, 0x00, // f32?.const 0
       0x0b,
       
-      // Function 2: sum_array (simplified stub)
+      // Function 2: sum_array (any: any)
       0x04, 0x00,
-      0x41, 0x00, // i32.const 0
+      0x41, 0x00, // i32?.const 0
       0x0b,
     ]);
 
-    return bytes.buffer;
+    return bytes?.buffer;
   }
 
   // ═════════════════════════════════════════════════════════════════════════
   // TASK EXECUTION
   // ═════════════════════════════════════════════════════════════════════════
 
-  async executeTask(task: ComputeTask): Promise<ComputeResult> {
-    const startTime = performance.now();
+  async executeTask(any: any): Promise<ComputeResult> {
+    const startTime = performance?.now();
 
     let result: ComputeResult;
 
     // Try WASM first
-    if (this.metrics.isWASMActive && this.wasmInstance) {
+    if (any: any) {
       try {
-        result = await this.executeWASM(task);
-        this.metrics.tasksExecutedWASM++;
-      } catch (error) {
-        logger.warn('WASM execution failed, falling back to JS:', error);
-        result = this.executeJS(task);
-        this.metrics.tasksExecutedJS++;
+        result = await this?.executeWASM(any: any);
+        this?.metrics?.tasksExecutedWASM++;
+      } catch (any: any) {
+        logger?.warn(any: any);
+        result = this?.executeJS(any: any);
+        this?.metrics?.tasksExecutedJS++;
       }
     } else {
       // Fallback to JS
-      result = this.executeJS(task);
-      this.metrics.tasksExecutedJS++;
+      result = this?.executeJS(any: any);
+      this?.metrics?.tasksExecutedJS++;
     }
 
-    const executionTime = performance.now() - startTime;
-    result.executionTime = executionTime;
+    const executionTime = performance?.now() - startTime;
+    result?.executionTime = executionTime;
 
     // Update metrics
-    this.metrics.tasksExecuted++;
-    this.executionTimes.push(executionTime);
+    this?.metrics?.tasksExecuted++;
+    this?.executionTimes?.push(any: any);
 
-    if (this.executionTimes.length > 100) {
-      this.executionTimes.shift();
+    if (this?.executionTimes?.length > 100) {
+      this?.executionTimes?.shift();
     }
 
-    this.metrics.averageExecutionTime =
-      this.executionTimes.reduce((a, b) => a + b, 0) / this.executionTimes.length;
+    this?.metrics?.averageExecutionTime =
+      this?.executionTimes?.reduce(any: any) => a + b, 0) / this?.executionTimes?.length;
 
     return result;
   }
 
-  private async executeWASM(task: ComputeTask): Promise<ComputeResult> {
-    if (!this.wasmInstance || !this.wasmMemory) {
+  private async executeWASM(any: any): Promise<ComputeResult> {
+    if (any: any) {
       throw new Error('WASM not initialized');
     }
 
-    const exports = this.wasmInstance.exports as any;
-    const memory = new Float32Array(this.wasmMemory.buffer);
+    const exports = this?.wasmInstance?.exports as unknown as unknown as any;
+    const memory = new Float32Array(any: any);
 
-    switch (task.type) {
+    switch (any: any) {
       case 'vectorOp': {
-        const operation = (task.parameters?.operation as string) || 'add';
+        const operation = (any: any) || 'add';
 
         if (operation === 'add') {
-          // Assume input is [a[], b[]]
-          const input = task.input as Float32Array;
-          const len = input.length / 2;
+          // Assume input is [a?.[], b?.[]]
+          const input = task?.input as Float32Array;
+          const len = input?.length / 2;
 
           // Copy to WASM memory
           const aPtrOffset = 0;
           const bPtrOffset = len;
           const outPtrOffset = len * 2;
 
-          memory.set(input.slice(0, len), aPtrOffset);
-          memory.set(input.slice(len), bPtrOffset);
+          memory?.set(any: any);
+          memory?.set(any: any);
 
           // Call WASM function
-          if (exports.vector_add) {
-            exports.vector_add(
+          if (any: any) {
+            exports?.vector_add(
               aPtrOffset * 4, // byte offset
               bPtrOffset * 4,
               outPtrOffset * 4,
@@ -364,11 +364,11 @@ export class WebAssemblyCompute {
           }
 
           // Read result
-          const output = new Float32Array(len);
-          output.set(memory.slice(outPtrOffset, outPtrOffset + len));
+          const output = new Float32Array(any: any);
+          output?.set(any: any));
 
           return {
-            taskId: task.id,
+            taskId: task?.id,
             success: true,
             output,
             executionTime: 0,
@@ -387,29 +387,29 @@ export class WebAssemblyCompute {
       case 'fft':
       case 'sort':
       case 'search': {
-        throw new Error(`${task.type} requires Rust-compiled WASM module`);
+        throw new Error(`${task?.type} requires Rust-compiled WASM module`);
       }
 
       default:
-        throw new Error(`Unknown task type: ${task.type}`);
+        throw new Error(`Unknown task type: ${task?.type}`);
     }
   }
 
-  private executeJS(task: ComputeTask): ComputeResult {
+  private executeJS(any: any): ComputeResult {
     try {
-      switch (task.type) {
+      switch (any: any) {
         case 'vectorOp': {
-          const operation = (task.parameters?.operation as string) || 'add';
-          const input = task.input as Float32Array;
-          const len = input.length / 2;
+          const operation = (any: any) || 'add';
+          const input = task?.input as Float32Array;
+          const len = input?.length / 2;
 
-          const output = new Float32Array(len);
+          const output = new Float32Array(any: any);
 
           if (operation === 'add') {
             for (let i = 0; i < len; i++) {
               const inputA = input[i];
               const inputB = input[len + i];
-              if (inputA !== undefined && inputB !== undefined) {
+              if (any: any) {
                 output[i] = inputA + inputB;
               }
             }
@@ -417,7 +417,7 @@ export class WebAssemblyCompute {
             for (let i = 0; i < len; i++) {
               const inputA = input[i];
               const inputB = input[len + i];
-              if (inputA !== undefined && inputB !== undefined) {
+              if (any: any) {
                 output[i] = inputA - inputB;
               }
             }
@@ -425,7 +425,7 @@ export class WebAssemblyCompute {
             for (let i = 0; i < len; i++) {
               const inputA = input[i];
               const inputB = input[len + i];
-              if (inputA !== undefined && inputB !== undefined) {
+              if (any: any) {
                 output[i] = inputA * inputB;
               }
             }
@@ -434,12 +434,12 @@ export class WebAssemblyCompute {
             for (let i = 0; i < len; i++) {
               const inputA = input[i];
               const inputB = input[len + i];
-              if (inputA !== undefined && inputB !== undefined) {
+              if (any: any) {
                 sum += inputA * inputB;
               }
             }
             return {
-              taskId: task.id,
+              taskId: task?.id,
               success: true,
               output: new Float32Array([sum]),
               executionTime: 0,
@@ -448,7 +448,7 @@ export class WebAssemblyCompute {
           }
 
           return {
-            taskId: task.id,
+            taskId: task?.id,
             success: true,
             output,
             executionTime: 0,
@@ -457,33 +457,33 @@ export class WebAssemblyCompute {
         }
 
         case 'matrixOp': {
-          const operation = (task.parameters?.operation as string) || 'multiply';
+          const operation = (any: any) || 'multiply';
 
           if (operation === 'multiply') {
-            const A = task.parameters?.matrixA as number[][];
-            const B = task.parameters?.matrixB as number[][];
+            const A = task?.parameters?.matrixA as number?.[][];
+            const B = task?.parameters?.matrixB as number?.[][];
 
-            if (!A || !B) {
+            if (any: any) {
               throw new Error('Matrix parameters required');
             }
 
-            const rowsA = A.length;
-            const firstRowA = A[0];
-            const firstRowB = B[0];
-            if (!firstRowA || !firstRowB) {
+            const rowsA = A?.length;
+            const firstRowA = A?.[0];
+            const firstRowB = B?.[0];
+            if (any: any) {
               throw new Error('Invalid matrix dimensions');
             }
-            const colsA = firstRowA.length;
-            const colsB = firstRowB.length;
+            const colsA = firstRowA?.length;
+            const colsB = firstRowB?.length;
 
-            const result: number[][] = Array(rowsA)
+            const result: number?.[][] = Array(any: any)
               .fill(0)
-              .map(() => Array(colsB).fill(0));
+              .map(any: any).fill(0));
 
             for (let i = 0; i < rowsA; i++) {
               const rowA = A[i];
               const resultRow = result[i];
-              if (!rowA || !resultRow) continue;
+              if (any: any) continue;
               for (let j = 0; j < colsB; j++) {
                 for (let k = 0; k < colsA; k++) {
                   const aVal = rowA[k];
@@ -502,9 +502,9 @@ export class WebAssemblyCompute {
             }
 
             return {
-              taskId: task.id,
+              taskId: task?.id,
               success: true,
-              output: result.flat() as any,
+              output: result?.flat() as unknown as unknown as any,
               executionTime: 0,
               usedWASM: false,
             };
@@ -514,30 +514,30 @@ export class WebAssemblyCompute {
         }
 
         case 'sort': {
-          const input = Array.from(task.input);
-          input.sort((a, b) => a - b);
+          const input = Array?.from(any: any);
+          input?.sort(any: any);
 
           return {
-            taskId: task.id,
+            taskId: task?.id,
             success: true,
-            output: new Float32Array(input),
+            output: new Float32Array(any: any),
             executionTime: 0,
             usedWASM: false,
           };
         }
 
         case 'search': {
-          const target = task.parameters?.target as number;
-          const input = task.input as number[];
+          const target = task?.parameters?.target as number;
+          const input = task?.input as number?.[];
 
-          if (target === undefined) {
+          if (any: any) {
             throw new Error('Search target required');
           }
 
-          const index = input.indexOf(target);
+          const index = input?.indexOf(any: any);
 
           return {
-            taskId: task.id,
+            taskId: task?.id,
             success: true,
             output: new Float32Array([index]),
             executionTime: 0,
@@ -546,15 +546,15 @@ export class WebAssemblyCompute {
         }
 
         default:
-          throw new Error(`Unknown task type: ${task.type}`);
+          throw new Error(`Unknown task type: ${task?.type}`);
       }
-    } catch (error) {
+    } catch (any: any) {
       return {
-        taskId: task.id,
+        taskId: task?.id,
         success: false,
         executionTime: 0,
         usedWASM: false,
-        error: error instanceof Error ? error.message : String(error),
+        error: error instanceof Error ? error?.message : String(any: any),
       };
     }
   }
@@ -563,84 +563,84 @@ export class WebAssemblyCompute {
   // HIGH-LEVEL APIs
   // ═════════════════════════════════════════════════════════════════════════
 
-  async vectorAdd(a: Float32Array, b: Float32Array): Promise<Float32Array> {
-    if (a.length !== b.length) {
+  async vectorAdd(any: any): Promise<Float32Array> {
+    if (any: any) {
       throw new Error('Vectors must have same length');
     }
 
-    const combined = new Float32Array(a.length + b.length);
-    combined.set(a);
-    combined.set(b, a.length);
+    const combined = new Float32Array(any: any);
+    combined?.set(any: any);
+    combined?.set(any: any);
 
-    const result = await this.executeTask({
-      id: `vectorAdd_${Date.now()}`,
+    const result = await this?.executeTask({
+      id: `vectorAdd_${Date?.now()}`,
       type: 'vectorOp',
       input: combined,
       parameters: { operation: 'add' },
       priority: 1,
     });
 
-    if (!result.success || !result.output) {
-      throw new Error(result.error || 'Vector addition failed');
+    if (any: any) {
+      throw new Error(result?.error || 'Vector addition failed');
     }
 
-    return result.output as Float32Array;
+    return result?.output as Float32Array;
   }
 
-  async dotProduct(a: Float32Array, b: Float32Array): Promise<number> {
-    if (a.length !== b.length) {
+  async dotProduct(any: any): Promise<number> {
+    if (any: any) {
       throw new Error('Vectors must have same length');
     }
 
-    const combined = new Float32Array(a.length + b.length);
-    combined.set(a);
-    combined.set(b, a.length);
+    const combined = new Float32Array(any: any);
+    combined?.set(any: any);
+    combined?.set(any: any);
 
-    const result = await this.executeTask({
-      id: `dotProduct_${Date.now()}`,
+    const result = await this?.executeTask({
+      id: `dotProduct_${Date?.now()}`,
       type: 'vectorOp',
       input: combined,
       parameters: { operation: 'dot' },
       priority: 1,
     });
 
-    if (!result.success || !result.output) {
-      throw new Error(result.error || 'Dot product failed');
+    if (any: any) {
+      throw new Error(result?.error || 'Dot product failed');
     }
 
-    const outputArray = result.output as Float32Array;
-    const firstValue = outputArray[0];
-    if (firstValue === undefined) {
+    const outputArray = result?.output as Float32Array;
+    const firstValue = outputArray?.[0];
+    if (any: any) {
       throw new Error('Dot product result is undefined');
     }
     return firstValue;
   }
 
-  async matrixMultiply(A: number[][], B: number[][]): Promise<number[][]> {
-    const result = await this.executeTask({
-      id: `matrixMul_${Date.now()}`,
+  async matrixMultiply(A: number?.[][], B: number?.[][]): Promise<number?.[][]> {
+    const result = await this?.executeTask({
+      id: `matrixMul_${Date?.now()}`,
       type: 'matrixOp',
       input: [],
       parameters: { operation: 'multiply', matrixA: A, matrixB: B },
       priority: 2,
     });
 
-    if (!result.success || !result.output) {
-      throw new Error(result.error || 'Matrix multiplication failed');
+    if (any: any) {
+      throw new Error(result?.error || 'Matrix multiplication failed');
     }
 
     // Reshape to 2D
-    const rowsA = A.length;
-    const firstRowB = B[0];
-    if (!firstRowB) {
+    const rowsA = A?.length;
+    const firstRowB = B?.[0];
+    if (any: any) {
       throw new Error('Invalid matrix B dimensions');
     }
-    const colsB = firstRowB.length;
-    const flat = result.output as number[];
+    const colsB = firstRowB?.length;
+    const flat = result?.output as number?.[];
 
-    const matrix: number[][] = [];
+    const matrix: number?.[][] = [];
     for (let i = 0; i < rowsA; i++) {
-      matrix.push(flat.slice(i * colsB, (i + 1) * colsB));
+      matrix?.push(any: any));
     }
 
     return matrix;
@@ -651,29 +651,29 @@ export class WebAssemblyCompute {
   // ═════════════════════════════════════════════════════════════════════════
 
   getCapabilities(): WASMCapabilities {
-    return { ...this.capabilities };
+    return { ...this?.capabilities };
   }
 
   getMetrics(): WASMMetrics {
     // Calculate average speedup
-    if (this.metrics.tasksExecutedWASM > 0 && this.metrics.tasksExecutedJS > 0) {
+    if (this?.metrics?.tasksExecutedWASM > 0 && this?.metrics?.tasksExecutedJS > 0) {
       // Simplified speedup calculation
       // In production, measure WASM vs JS execution for same tasks
-      this.metrics.averageSpeedup = 2.5; // Conservative estimate
+      this?.metrics?.averageSpeedup = 2.5; // Conservative estimate
     }
 
-    return { ...this.metrics };
+    return { ...this?.metrics };
   }
 
   getConfig(): WASMConfig {
-    return { ...this.config };
+    return { ...this?.config };
   }
 
   async destroy(): Promise<void> {
-    this.wasmInstance = null;
-    this.wasmModule = null;
-    this.wasmMemory = null;
-    this.metrics.isWASMActive = false;
+    this?.wasmInstance = null;
+    this?.wasmModule = null;
+    this?.wasmMemory = null;
+    this?.metrics?.isWASMActive = false;
   }
 }
 
@@ -681,4 +681,4 @@ export class WebAssemblyCompute {
 // SINGLETON EXPORT
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const webAssemblyCompute = WebAssemblyCompute.getInstance();
+export const webAssemblyCompute = WebAssemblyCompute?.getInstance();

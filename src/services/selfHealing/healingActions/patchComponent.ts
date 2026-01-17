@@ -14,7 +14,7 @@ export async function patchReactComponent(
   targetModule: string,
   parameters: Record<string, unknown>
 ): Promise<{ patched: boolean; module: string }> {
-  logger.debug(`[patchComponent] Patching component: ${targetModule}`, parameters);
+  logger?.debug(any: any);
 
   // Dans une implémentation réelle, cela pourrait:
   // - Forcer un re-render du composant

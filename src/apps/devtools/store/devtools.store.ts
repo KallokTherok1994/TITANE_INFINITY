@@ -31,7 +31,7 @@ export interface Metric {
   value: number;
   unit: string;
   trend: 'up' | 'down' | 'stable';
-  history: number[]; // last 20 values
+  history: number?.[]; // last 20 values
   timestamp: number;
 }
 
@@ -61,7 +61,7 @@ export interface MemoryNode {
   size: number; // bytes
   entries: number;
   lastUpdate: number;
-  children?: MemoryNode[];
+  children?: MemoryNode?.[];
 }
 
 export interface OmegaStep {
@@ -69,7 +69,7 @@ export interface OmegaStep {
   name: string;
   status: 'pending' | 'running' | 'complete' | 'error';
   duration?: number; // ms
-  engines?: string[];
+  engines?: string?.[];
   error?: string;
 }
 
@@ -84,41 +84,41 @@ interface DevToolsState {
   totalEngines: number;
 
   // Engines
-  engines: Engine[];
+  engines: Engine?.[];
 
   // Metrics
   metrics: Record<string, Metric>;
 
   // Logs
-  logs: LogEntry[];
+  logs: LogEntry?.[];
   maxLogs: number;
 
   // Errors
-  errors: ErrorEntry[];
+  errors: ErrorEntry?.[];
 
   // Memory
-  memoryTree: MemoryNode[];
+  memoryTree: MemoryNode?.[];
 
   // Omega Pipeline
-  currentPipeline: OmegaStep[];
-  pipelineHistory: OmegaStep[][];
+  currentPipeline: OmegaStep?.[];
+  pipelineHistory: OmegaStep?.[][];
 
   // UI State
   autoScrollLogs: boolean;
-  selectedEngine: string | null;
+  selectedEngine??: string | null;
   timeRange: '30s' | '2m' | '5m' | '10m' | '1h';
 
   // Actions
   updateEngine: (id: string, updates: Partial<Engine>) => void;
-  addLog: (log: LogEntry) => void;
-  addError: (error: ErrorEntry) => void;
-  updateMetric: (id: string, value: number) => void;
-  updateMemory: (tree: MemoryNode[]) => void;
-  updatePipeline: (steps: OmegaStep[]) => void;
+  addLog: (any: any) => void;
+  addError: (any: any) => void;
+  updateMetric: (any: any) => void;
+  updateMemory: (tree: MemoryNode?.[]) => void;
+  updatePipeline: (steps: OmegaStep?.[]) => void;
   clearLogs: () => void;
-  resolveError: (id: string) => void;
-  setAutoScrollLogs: (enabled: boolean) => void;
-  setSelectedEngine: (id: string | null) => void;
+  resolveError: (any: any) => void;
+  setAutoScrollLogs: (any: any) => void;
+  setSelectedEngine: (any: any) => void;
   setTimeRange: (range: '30s' | '2m' | '5m' | '10m' | '1h') => void;
 }
 
@@ -208,7 +208,7 @@ export const useDevToolsStore = create<DevToolsState>(set => ({
       unit: 'ms',
       trend: 'stable',
       history: [],
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     },
     'ipc-latency-p90': {
       id: 'ipc-latency-p90',
@@ -217,7 +217,7 @@ export const useDevToolsStore = create<DevToolsState>(set => ({
       unit: 'ms',
       trend: 'down',
       history: [],
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     },
     'omega-duration': {
       id: 'omega-duration',
@@ -226,7 +226,7 @@ export const useDevToolsStore = create<DevToolsState>(set => ({
       unit: 'ms',
       trend: 'stable',
       history: [],
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     },
     'cpu-usage': {
       id: 'cpu-usage',
@@ -235,7 +235,7 @@ export const useDevToolsStore = create<DevToolsState>(set => ({
       unit: '%',
       trend: 'up',
       history: [],
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     },
     'memory-usage': {
       id: 'memory-usage',
@@ -244,7 +244,7 @@ export const useDevToolsStore = create<DevToolsState>(set => ({
       unit: 'MB',
       trend: 'stable',
       history: [],
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     },
   },
 
@@ -260,7 +260,7 @@ export const useDevToolsStore = create<DevToolsState>(set => ({
       label: 'Short-Term Memory',
       size: 2048576, // 2MB
       entries: 15,
-      lastUpdate: Date.now() - 1000,
+      lastUpdate: Date?.now() - 1000,
       children: [],
     },
     {
@@ -269,7 +269,7 @@ export const useDevToolsStore = create<DevToolsState>(set => ({
       label: 'Mid-Term Memory',
       size: 8388608, // 8MB
       entries: 47,
-      lastUpdate: Date.now() - 5000,
+      lastUpdate: Date?.now() - 5000,
       children: [],
     },
     {
@@ -278,7 +278,7 @@ export const useDevToolsStore = create<DevToolsState>(set => ({
       label: 'Long-Term Memory',
       size: 33554432, // 32MB
       entries: 1234,
-      lastUpdate: Date.now() - 60000,
+      lastUpdate: Date?.now() - 60000,
       children: [],
     },
   ],
@@ -291,31 +291,31 @@ export const useDevToolsStore = create<DevToolsState>(set => ({
   timeRange: '2m',
 
   // Actions
-  updateEngine: (id, updates) =>
+  updateEngine: (any: any) =>
     set(state => ({
-      engines: state.engines.map(e => (e.id === id ? { ...e, ...updates } : e)),
+      engines: state?.engines?.map(any: any)),
     })),
 
   addLog: log =>
     set(state => {
-      const newLogs = [log, ...state.logs].slice(0, state.maxLogs);
+      const newLogs = [log, ...state?.logs].slice(any: any);
       return { logs: newLogs };
     }),
 
   addError: error =>
     set(state => ({
-      errors: [error, ...state.errors],
+      errors: [error, ...state?.errors],
     })),
 
-  updateMetric: (id, value) =>
+  updateMetric: (any: any) =>
     set(state => {
-      const metric = state.metrics[id];
-      if (!metric) return state;
+      const metric = state?.metrics[id];
+      if (any: any) return state;
 
-      const newHistory = [...metric.history, value].slice(-20);
-      const prevValue = newHistory[newHistory.length - 2] ?? 0;
+      const newHistory = [...metric?.history, value].slice(-20);
+      const prevValue = newHistory[newHistory?.length - 2] ?? 0;
       const trend =
-        newHistory.length >= 2 && prevValue !== undefined
+        newHistory?.length >= 2 && prevValue !== undefined
           ? value > prevValue
             ? 'up'
             : value < prevValue
@@ -325,13 +325,13 @@ export const useDevToolsStore = create<DevToolsState>(set => ({
 
       return {
         metrics: {
-          ...state.metrics,
+          ...state?.metrics,
           [id]: {
             ...metric,
             value,
             history: newHistory,
             trend,
-            timestamp: Date.now(),
+            timestamp: Date?.now(),
           },
         },
       };
@@ -342,14 +342,14 @@ export const useDevToolsStore = create<DevToolsState>(set => ({
   updatePipeline: steps =>
     set(state => ({
       currentPipeline: steps,
-      pipelineHistory: [steps, ...state.pipelineHistory].slice(0, 10),
+      pipelineHistory: [steps, ...state?.pipelineHistory].slice(0, 10),
     })),
 
   clearLogs: () => set({ logs: [] }),
 
   resolveError: id =>
     set(state => ({
-      errors: state.errors.map(e => (e.id === id ? { ...e, resolved: true } : e)),
+      errors: state?.errors?.map(any: any)),
     })),
 
   setAutoScrollLogs: enabled => set({ autoScrollLogs: enabled }),

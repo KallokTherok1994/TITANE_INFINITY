@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 import {
@@ -84,8 +84,8 @@ class EvolutionService {
         {},
         { ...FAST_COMMAND_OPTIONS, context: 'Evolution' }
       );
-    } catch (error) {
-      console.error('[EvolutionService] Erreur getState:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       throw new Error(`Récupération état échoué: ${error}`);
     }
   }
@@ -100,8 +100,8 @@ class EvolutionService {
         {},
         { ...STANDARD_COMMAND_OPTIONS, context: 'Evolution' }
       );
-    } catch (error) {
-      console.error('[EvolutionService] Erreur getData:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       throw new Error(`Récupération données échouée: ${error}`);
     }
   }
@@ -116,8 +116,8 @@ class EvolutionService {
         {},
         { ...FAST_COMMAND_OPTIONS, context: 'Evolution' }
       );
-    } catch (error) {
-      console.error('[EvolutionService] Erreur getConfig:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       throw new Error(`Récupération config échouée: ${error}`);
     }
   }
@@ -132,8 +132,8 @@ class EvolutionService {
         { config },
         { ...STANDARD_COMMAND_OPTIONS, context: 'Evolution' }
       );
-    } catch (error) {
-      console.error('[EvolutionService] Erreur updateConfig:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       throw new Error(`Modification config échouée: ${error}`);
     }
   }
@@ -148,8 +148,8 @@ class EvolutionService {
         {},
         { ...LONG_COMMAND_OPTIONS, context: 'Evolution' }
       );
-    } catch (error) {
-      console.error('[EvolutionService] Erreur runCycle:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       throw new Error(`Cycle évolution échoué: ${error}`);
     }
   }
@@ -157,15 +157,15 @@ class EvolutionService {
   /**
    * Récupération suggestions évolution
    */
-  async getSuggestions(): Promise<EvolutionSuggestion[]> {
+  async getSuggestions(): Promise<EvolutionSuggestion?.[]> {
     try {
-      return await invokeWithRetry<EvolutionSuggestion[]>(
+      return await invokeWithRetry<EvolutionSuggestion?.[]>(
         'evolution_get_suggestions',
         {},
         { ...STANDARD_COMMAND_OPTIONS, context: 'Evolution' }
       );
-    } catch (error) {
-      console.error('[EvolutionService] Erreur getSuggestions:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       return [];
     }
   }
@@ -173,15 +173,15 @@ class EvolutionService {
   /**
    * Application suggestion évolution
    */
-  async applySuggestion(suggestionId: string): Promise<void> {
+  async applySuggestion(any: any): Promise<void> {
     try {
       await invokeWithRetry<void>(
         'evolution_apply_suggestion',
         { suggestionId },
         { ...LONG_COMMAND_OPTIONS, context: 'Evolution' }
       );
-    } catch (error) {
-      console.error('[EvolutionService] Erreur applySuggestion:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       throw new Error(`Application suggestion échouée: ${error}`);
     }
   }
@@ -189,15 +189,15 @@ class EvolutionService {
   /**
    * Rejet suggestion évolution
    */
-  async rejectSuggestion(suggestionId: string, reason?: string): Promise<void> {
+  async rejectSuggestion(any: any): Promise<void> {
     try {
       await invokeWithRetry<void>(
         'evolution_reject_suggestion',
         { suggestionId, reason },
         { ...STANDARD_COMMAND_OPTIONS, context: 'Evolution' }
       );
-    } catch (error) {
-      console.error('[EvolutionService] Erreur rejectSuggestion:', error);
+    } catch (any: any) {
+      console?.error(any: any);
     }
   }
 
@@ -215,8 +215,8 @@ class EvolutionService {
         { context, rating, details },
         { ...STANDARD_COMMAND_OPTIONS, context: 'Evolution' }
       );
-    } catch (error) {
-      console.error('[EvolutionService] Erreur recordFeedback:', error);
+    } catch (any: any) {
+      console?.error(any: any);
     }
   }
 
@@ -238,8 +238,8 @@ class EvolutionService {
         { timeWindow },
         { ...STANDARD_COMMAND_OPTIONS, context: 'Evolution' }
       );
-    } catch (error) {
-      console.error('[EvolutionService] Erreur analyzePatterns:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       return [];
     }
   }
@@ -254,14 +254,14 @@ class EvolutionService {
         { format },
         { ...STANDARD_COMMAND_OPTIONS, context: 'Evolution' }
       );
-    } catch (error) {
-      console.error('[EvolutionService] Erreur exportHistory:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       throw new Error(`Export historique échoué: ${error}`);
     }
   }
 
   /**
-   * Reset évolution (retour état initial)
+   * Reset évolution (any: any)
    */
   async reset(): Promise<void> {
     try {
@@ -270,14 +270,14 @@ class EvolutionService {
         {},
         { ...CRITICAL_COMMAND_OPTIONS, context: 'Evolution' }
       );
-    } catch (error) {
-      console.error('[EvolutionService] Erreur reset:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       throw new Error(`Reset évolution échoué: ${error}`);
     }
   }
 
   /**
-   * Snapshot état actuel (backup)
+   * Snapshot état actuel (any: any)
    */
   async snapshot(): Promise<string> {
     try {
@@ -286,8 +286,8 @@ class EvolutionService {
         {},
         { ...STANDARD_COMMAND_OPTIONS, context: 'Evolution' }
       );
-    } catch (error) {
-      console.error('[EvolutionService] Erreur snapshot:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       throw new Error(`Snapshot échoué: ${error}`);
     }
   }
@@ -295,15 +295,15 @@ class EvolutionService {
   /**
    * Restauration snapshot
    */
-  async restore(snapshotId: string): Promise<void> {
+  async restore(any: any): Promise<void> {
     try {
       await invokeWithRetry<void>(
         'evolution_restore',
         { snapshotId },
         { ...LONG_COMMAND_OPTIONS, context: 'Evolution' }
       );
-    } catch (error) {
-      console.error('[EvolutionService] Erreur restore:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       throw new Error(`Restauration échouée: ${error}`);
     }
   }

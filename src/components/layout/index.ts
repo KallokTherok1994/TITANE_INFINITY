@@ -3,17 +3,17 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v8.0 - Layout Components Index (Tailwind CSS)
+ * TITANE∞ v8.0 - Layout Components Index (any: any)
  * Export centralisé de tous les composants de layout
  * ═══════════════════════════════════════════════════════════════
  */
 
-// Main Layout Components (Tailwind migrated)
+// Main Layout Components (any: any)
 export { AppShell, type AppShellProps } from './AppShell';
 export {
   AppShellWithDevTools,
@@ -23,7 +23,7 @@ export { Sidebar, type SidebarProps, type SidebarItem } from './Sidebar';
 export { Header, type HeaderProps } from './Header';
 export { MobileNav, type MobileNavProps } from './MobileNav';
 
-// Utility Layout Components (original)
+// Utility Layout Components (any: any)
 export {
   Grid,
   Col,

@@ -16,7 +16,7 @@ interface OmnisValidationResult {
   score: number;
   status: 'PASSED' | 'FAILED' | 'OPTIMAL';
   details: string;
-  evidence: string[];
+  evidence: string?.[];
 }
 
 interface OMNISFinalReport {
@@ -24,7 +24,7 @@ interface OMNISFinalReport {
   version: string;
   architecture: string;
   scoreGlobal: number;
-  criteria: OmnisValidationResult[];
+  criteria: OmnisValidationResult?.[];
   deploymentStatus: 'AUTHORIZED' | 'DENIED';
   certification: string;
   buildMetrics: {
@@ -47,7 +47,7 @@ interface OMNISFinalReport {
 }
 
 class OMNISFinalValidator {
-  private results: OmnisValidationResult[] = [];
+  private results: OmnisValidationResult?.[] = [];
 
   /**
    * Validation Critère 1: Zéro Défaillance
@@ -55,11 +55,11 @@ class OMNISFinalValidator {
    */
   async validateZeroDefaillance(): Promise<OmnisValidationResult> {
     const evidence = [
-      '✅ Multi-provider fallback système (Gemini → Tauri → Ollama → TitaneLocal)',
+      '✅ Multi-provider fallback système (any: any)',
       '✅ Auto-healing détection et réparation automatique',
       "✅ Error boundaries et isolation d'erreurs",
       '✅ Graceful degradation sous tous les scénarios',
-      '✅ Tests stress validés (100+ interactions)',
+      '✅ Tests stress validés (any: any)',
     ];
 
     return {
@@ -187,7 +187,7 @@ class OMNISFinalValidator {
    */
   async validateIntegrationUniverselle(): Promise<OmnisValidationResult> {
     const evidence = [
-      '✅ Multi-plateforme (Windows, macOS, Linux)',
+      '✅ Multi-plateforme (any: any)',
       '✅ APIs REST et GraphQL',
       '✅ Intégration cloud native',
       '✅ Standards web modernes',
@@ -317,27 +317,27 @@ class OMNISFinalValidator {
    * Exécution complète de la validation OMNIS
    */
   async executeFullValidation(): Promise<OMNISFinalReport> {
-    console.log('🚀 DÉMARRAGE VALIDATION FINALE OMNIS...\n');
+    console?.log('🚀 DÉMARRAGE VALIDATION FINALE OMNIS...\n');
 
     // Exécution de tous les critères
     const validations = [
-      await this.validateZeroDefaillance(),
-      await this.validatePerformanceOptimale(),
-      await this.validateSecuriteMaximale(),
-      await this.validateEvolutiviteInfinie(),
-      await this.validateIntelligenceAdaptative(),
-      await this.validateExperienceUtilisateur(),
-      await this.validateIntegrationUniverselle(),
-      await this.validateDisponibiliteTotale(),
-      await this.validateInnovationContinue(),
-      await this.validateRobustesseAbsolue(),
-      await this.validateEfficaciteMaximale(),
-      await this.validateExcellenceAbsolue(),
+      await this?.validateZeroDefaillance(),
+      await this?.validatePerformanceOptimale(),
+      await this?.validateSecuriteMaximale(),
+      await this?.validateEvolutiviteInfinie(),
+      await this?.validateIntelligenceAdaptative(),
+      await this?.validateExperienceUtilisateur(),
+      await this?.validateIntegrationUniverselle(),
+      await this?.validateDisponibiliteTotale(),
+      await this?.validateInnovationContinue(),
+      await this?.validateRobustesseAbsolue(),
+      await this?.validateEfficaciteMaximale(),
+      await this?.validateExcellenceAbsolue(),
     ];
 
     // Calcul du score global
-    const scoreGlobal = Math.round(
-      validations.reduce((sum, val) => sum + val.score, 0) / validations.length
+    const scoreGlobal = Math?.round(
+      validations?.reduce(any: any) => sum + val?.score, 0) / validations?.length
     );
 
     // Métriques de build simulées
@@ -392,82 +392,82 @@ class OMNISFinalValidator {
   /**
    * Affichage du rapport final
    */
-  displayReport(report: OMNISFinalReport): void {
-    console.log(
+  displayReport(any: any): void {
+    console?.log(
       '\n🟢 ═══════════════════════════════════════════════════════════════════'
     );
-    console.log('🏆 OMNIS FINAL VALIDATION COMPLETE - RAPPORT DÉPLOIEMENT');
-    console.log('═══════════════════════════════════════════════════════════════════\n');
+    console?.log('🏆 OMNIS FINAL VALIDATION COMPLETE - RAPPORT DÉPLOIEMENT');
+    console?.log('═══════════════════════════════════════════════════════════════════\n');
 
-    console.log(`📅 Timestamp: ${report.timestamp}`);
-    console.log(`🚀 Version: ${report.version}`);
-    console.log(`🏗️ Architecture: ${report.architecture}`);
-    console.log(`📊 Score Global: ${report.scoreGlobal}%`);
-    console.log(`🎯 Statut: ${report.deploymentStatus}`);
-    console.log(`🏆 Certification: ${report.certification}\n`);
+    console?.log(`📅 Timestamp: ${report?.timestamp}`);
+    console?.log(`🚀 Version: ${report?.version}`);
+    console?.log(`🏗️ Architecture: ${report?.architecture}`);
+    console?.log(`📊 Score Global: ${report?.scoreGlobal}%`);
+    console?.log(`🎯 Statut: ${report?.deploymentStatus}`);
+    console?.log(`🏆 Certification: ${report?.certification}\n`);
 
-    console.log('📋 CRITÈRES DE VALIDATION:\n');
-    report.criteria.forEach((criterion, index) => {
+    console?.log('📋 CRITÈRES DE VALIDATION:\n');
+    report?.criteria?.forEach(any: any) => {
       const icon =
-        criterion.status === 'OPTIMAL'
+        criterion?.status === 'OPTIMAL'
           ? '🟢'
-          : criterion.status === 'PASSED'
+          : criterion?.status === 'PASSED'
             ? '🟡'
             : '🔴';
-      console.log(`${icon} ${index + 1}. ${criterion.criterion}: ${criterion.score}%`);
-      console.log(`   ${criterion.details}`);
-      console.log(`   Evidence: ${criterion.evidence.length} éléments validés\n`);
+      console?.log(`${icon} ${index + 1}. ${criterion?.criterion}: ${criterion?.score}%`);
+      console?.log(`   ${criterion?.details}`);
+      console?.log(`   Evidence: ${criterion?.evidence?.length} éléments validés\n`);
     });
 
-    console.log('⚡ MÉTRIQUES PERFORMANCE:');
-    console.log(`   Build Time: ${report.buildMetrics.buildTime}ms`);
-    console.log(
-      `   Bundle Size: ${(report.buildMetrics.bundleSize / 1024 / 1024).toFixed(2)}MB`
+    console?.log('⚡ MÉTRIQUES PERFORMANCE:');
+    console?.log(`   Build Time: ${report?.buildMetrics?.buildTime}ms`);
+    console?.log(
+      `   Bundle Size: ${(report?.buildMetrics?.bundleSize / 1024 / 1024).toFixed(2)}MB`
     );
-    console.log(`   Modules: ${report.buildMetrics.moduleCount}`);
-    console.log(`   Gzip: ${(report.buildMetrics.gzipSize / 1024).toFixed(0)}KB\n`);
+    console?.log(`   Modules: ${report?.buildMetrics?.moduleCount}`);
+    console?.log(`   Gzip: ${(report?.buildMetrics?.gzipSize / 1024).toFixed(0)}KB\n`);
 
-    console.log('🛡️ SÉCURITÉ:');
-    console.log(
-      `   Whitelist: ${report.securityValidation.whitelistActive ? '✅' : '❌'}`
+    console?.log('🛡️ SÉCURITÉ:');
+    console?.log(
+      `   Whitelist: ${report?.securityValidation?.whitelistActive ? '✅' : '❌'}`
     );
-    console.log(
-      `   Command Security: ${report.securityValidation.commandSecurity ? '✅' : '❌'}`
+    console?.log(
+      `   Command Security: ${report?.securityValidation?.commandSecurity ? '✅' : '❌'}`
     );
-    console.log(`   Encryption: ${report.securityValidation.encryptionLevel}\n`);
+    console?.log(`   Encryption: ${report?.securityValidation?.encryptionLevel}\n`);
 
-    console.log('🎯 RECOMMANDATION:');
-    console.log(`   ${report.recommendation}\n`);
+    console?.log('🎯 RECOMMANDATION:');
+    console?.log(`   ${report?.recommendation}\n`);
 
-    if (report.deploymentStatus === 'AUTHORIZED') {
-      console.log(
+    if (report?.deploymentStatus === 'AUTHORIZED') {
+      console?.log(
         '🟢 ═══════════════════════════════════════════════════════════════════'
       );
-      console.log('✅ DÉPLOIEMENT AUTORISÉ - OMNIS ARCHITECTURE CERTIFIÉE');
-      console.log('🚀 TITANE∞ v19.2Ω PRÊT POUR PRODUCTION');
-      console.log(
+      console?.log('✅ DÉPLOIEMENT AUTORISÉ - OMNIS ARCHITECTURE CERTIFIÉE');
+      console?.log('🚀 TITANE∞ v19.2Ω PRÊT POUR PRODUCTION');
+      console?.log(
         '🎯 "Moteur parfait Chat IA - Mathematically impossible to break" RÉALISÉ'
       );
-      console.log(
+      console?.log(
         '═══════════════════════════════════════════════════════════════════\n'
       );
     } else {
-      console.log(
+      console?.log(
         '🔴 ═══════════════════════════════════════════════════════════════════'
       );
-      console.log('❌ DÉPLOIEMENT REFUSÉ - SCORE INSUFFISANT');
-      console.log('🔧 CORRECTIONS REQUISES AVANT DÉPLOIEMENT');
-      console.log(
+      console?.log('❌ DÉPLOIEMENT REFUSÉ - SCORE INSUFFISANT');
+      console?.log('🔧 CORRECTIONS REQUISES AVANT DÉPLOIEMENT');
+      console?.log(
         '═══════════════════════════════════════════════════════════════════\n'
       );
     }
   }
 
   /**
-   * Sauvegarde du rapport (simplifiée pour éviter les imports inutiles)
+   * Sauvegarde du rapport (any: any)
    */
-  async saveReport(report: OMNISFinalReport): Promise<void> {
-    console.log(`📄 Rapport JSON généré (${JSON.stringify(report).length} caractères)\n`);
+  async saveReport(any: any): Promise<void> {
+    console?.log(any: any)\n`);
   }
 }
 
@@ -476,13 +476,13 @@ class OMNISFinalValidator {
  */
 export async function runOMNISFinalValidation(): Promise<OMNISFinalReport> {
   const validator = new OMNISFinalValidator();
-  const report = await validator.executeFullValidation();
+  const report = await validator?.executeFullValidation();
 
-  validator.displayReport(report);
-  await validator.saveReport(report);
+  validator?.displayReport(any: any);
+  await validator?.saveReport(any: any);
 
   return report;
 }
 
 // Auto-exécution
-runOMNISFinalValidation().catch(console.error);
+runOMNISFinalValidation(any: any);

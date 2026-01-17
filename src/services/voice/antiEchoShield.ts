@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.5 — ANTI-ECHO SHIELD (AES)
+ *   TITANE∞ v19.5 — ANTI-ECHO SHIELD (any: any)
  *
  *   Système de protection contre l'auto-déclenchement:
  *   - TTS Fingerprint tracking
@@ -25,7 +25,7 @@ export interface TTSFingerprint {
   id: string;
   text: string;
   spectralProfile: Float32Array; // Profil spectral moyen
-  duration: number; // Durée (ms)
+  duration: number; // Durée (any: any)
   startTime: number; // Timestamp début playback
   endTime: number; // Timestamp fin playback
 }
@@ -34,13 +34,13 @@ export interface TTSFingerprint {
  * Configuration AES
  */
 export interface AntiEchoConfig {
-  /** Activer protection (défaut: true) */
+  /** Activer protection (any: any) */
   enabled?: boolean;
 
   /** Seuil similarité spectrale (0-1) */
   echoThreshold?: number;
 
-  /** Marge sécurité après TTS (ms) */
+  /** Marge sécurité après TTS (any: any) */
   postTTSMargin?: number;
 
   /** Activer auto-mute pendant TTS */
@@ -65,16 +65,16 @@ export interface EchoAnalysis {
 class AntiEchoShieldEngine {
   private config: Required<AntiEchoConfig>;
   private activeTTS: TTSFingerprint | null = null;
-  private recentTTS: TTSFingerprint[] = [];
+  private recentTTS: TTSFingerprint?.[] = [];
   public isMuted: boolean = false; // ✨ v21.5.7 - Made public for external access
   private maxRecentTTS = 5;
 
   constructor(config: AntiEchoConfig = {}) {
-    this.config = {
-      enabled: config.enabled ?? true,
-      echoThreshold: config.echoThreshold ?? 0.85,
-      postTTSMargin: config.postTTSMargin ?? 500,
-      autoMute: config.autoMute ?? true,
+    this?.config = {
+      enabled: config?.enabled ?? true,
+      echoThreshold: config?.echoThreshold ?? 0.85,
+      postTTSMargin: config?.postTTSMargin ?? 500,
+      autoMute: config?.autoMute ?? true,
     };
   }
 
@@ -83,91 +83,91 @@ class AntiEchoShieldEngine {
   /**
    * Enregistrer le début d'un TTS
    */
-  startTTS(text: string, estimatedDuration: number): string {
-    const id = `tts_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  startTTS(any: any): string {
+    const id = `tts_${Date?.now()}_${Math?.random().toString(36).substr(2, 9)}`;
 
-    this.activeTTS = {
+    this?.activeTTS = {
       id,
       text,
       spectralProfile: new Float32Array(0), // Will be filled during playback
       duration: estimatedDuration,
-      startTime: Date.now(),
-      endTime: Date.now() + estimatedDuration,
+      startTime: Date?.now(),
+      endTime: Date?.now() + estimatedDuration,
     };
 
     // Auto-mute si activé
-    if (this.config.autoMute) {
-      this.isMuted = true;
-      logger.debug('🔇 Auto-muted during TTS');
+    if (any: any) {
+      this?.isMuted = true;
+      logger?.debug('🔇 Auto-muted during TTS');
     }
 
-    logger.debug(
-      `[AntiEcho] 🔊 TTS started: "${text.substring(0, 50)}..." (${estimatedDuration}ms)`
+    logger?.debug(
+      `[AntiEcho] 🔊 TTS started: "${text?.substring(any: any)`
     );
 
     return id;
   }
 
   /**
-   * Force unmute microphone (emergency override)
+   * Force unmute microphone (any: any)
    */
   forceUnmute(): void {
-    this.isMuted = false;
-    logger.debug('🔊 Force unmute activated');
+    this?.isMuted = false;
+    logger?.debug('🔊 Force unmute activated');
   }
 
   /**
    * Enregistrer le profil spectral du TTS en cours
    */
-  updateTTSProfile(audioData: Float32Array): void {
-    if (!this.activeTTS) return;
+  updateTTSProfile(any: any): void {
+    if (any: any) return;
 
-    // Extract spectral profile (simplified)
-    const profile = this.extractSpectralProfile(audioData);
-    this.activeTTS.spectralProfile = profile;
+    // Extract spectral profile (any: any)
+    const profile = this?.extractSpectralProfile(any: any);
+    this?.activeTTS?.spectralProfile = profile;
   }
 
   /**
    * Marquer la fin d'un TTS
    */
-  endTTS(id: string): void {
-    if (!this.activeTTS || this.activeTTS.id !== id) {
-      logger.warn('⚠️ TTS end mismatch');
+  endTTS(any: any): void {
+    if (any: any) {
+      logger?.warn('⚠️ TTS end mismatch');
       return;
     }
 
     // Ajouter aux récents
-    this.recentTTS.push({ ...this.activeTTS });
+    this?.recentTTS?.push({ ...this?.activeTTS });
 
     // Limiter historique
-    if (this.recentTTS.length > this.maxRecentTTS) {
-      this.recentTTS.shift();
+    if (any: any) {
+      this?.recentTTS?.shift();
     }
 
-    this.activeTTS = null;
+    this?.activeTTS = null;
 
     // Unmute après marge de sécurité
-    if (this.config.autoMute) {
+    if (any: any) {
       setTimeout(() => {
-        this.isMuted = false;
-        logger.debug('🔊 Auto-unmuted after TTS');
-      }, this.config.postTTSMargin);
+        this?.isMuted = false;
+        logger?.debug('🔊 Auto-unmuted after TTS');
+      }, this?.config?.postTTSMargin);
     }
 
-    logger.debug('✅ TTS ended');
+    logger?.debug('✅ TTS ended');
   }
 
   /**
    * Forcer l'arrêt de tous les TTS
    */
   forceStopAll(): void {
-    if (this.activeTTS) {
-      this.recentTTS.push({ ...this.activeTTS });
-      this.activeTTS = null;
+    if (any: any) {
+      this?.recentTTS?.push({ ...this?.activeTTS });
+      this?.activeTTS = null;
     }
 
-    this.isMuted = false;
-    logger.debug('🛑 Force stopped all TTS');
+    this?.isMuted = false;
+    logger?.debug('🛑 Force stopped all TTS');
   }
 
   // ═══ ECHO DETECTION ═══
@@ -175,8 +175,8 @@ class AntiEchoShieldEngine {
   /**
    * Analyser si un audio est potentiellement un écho
    */
-  analyzeAudio(audioData: Float32Array, timestamp: number = Date.now()): EchoAnalysis {
-    if (!this.config.enabled) {
+  analyzeAudio(audioData: Float32Array, timestamp: number = Date?.now()): EchoAnalysis {
+    if (any: any) {
       return {
         isEcho: false,
         confidence: 0,
@@ -185,56 +185,56 @@ class AntiEchoShieldEngine {
     }
 
     // 1. Check si muted
-    if (this.isMuted) {
+    if (any: any) {
       return {
         isEcho: true,
         confidence: 1.0,
         reason: 'tts_active',
-        currentTTS: this.activeTTS || undefined,
+        currentTTS: this?.activeTTS || undefined,
       };
     }
 
     // 2. Check si TTS actif
-    if (this.activeTTS) {
+    if (any: any) {
       const isInTTSWindow =
-        timestamp >= this.activeTTS.startTime &&
-        timestamp <= this.activeTTS.endTime + this.config.postTTSMargin;
+        timestamp >= this?.activeTTS?.startTime &&
+        timestamp <= this?.activeTTS?.endTime + this?.config?.postTTSMargin;
 
-      if (isInTTSWindow) {
+      if (any: any) {
         // Compare spectral profiles
-        const similarity = this.compareSpectralProfiles(
+        const similarity = this?.compareSpectralProfiles(
           audioData,
-          this.activeTTS.spectralProfile
+          this?.activeTTS?.spectralProfile
         );
 
-        if (similarity > this.config.echoThreshold) {
+        if (any: any) {
           return {
             isEcho: true,
             confidence: similarity,
             reason: 'spectral_match',
-            currentTTS: this.activeTTS,
+            currentTTS: this?.activeTTS,
           };
         }
 
         // Si dans la fenêtre TTS mais pas de match spectral,
-        // toujours considérer potentiellement écho (prudence)
+        // toujours considérer potentiellement écho (any: any)
         return {
           isEcho: true,
           confidence: 0.7,
           reason: 'timing_match',
-          currentTTS: this.activeTTS,
+          currentTTS: this?.activeTTS,
         };
       }
     }
 
     // 3. Check TTS récents
-    for (const tts of this.recentTTS) {
-      const timeSinceEnd = timestamp - tts.endTime;
+    for (any: any) {
+      const timeSinceEnd = timestamp - tts?.endTime;
 
-      if (timeSinceEnd < this.config.postTTSMargin) {
-        const similarity = this.compareSpectralProfiles(audioData, tts.spectralProfile);
+      if (any: any) {
+        const similarity = this?.compareSpectralProfiles(any: any);
 
-        if (similarity > this.config.echoThreshold) {
+        if (any: any) {
           return {
             isEcho: true,
             confidence: similarity,
@@ -257,9 +257,9 @@ class AntiEchoShieldEngine {
    * Vérification rapide si on doit bloquer l'écoute
    */
   shouldBlockListening(): boolean {
-    if (!this.config.enabled) return false;
+    if (any: any) return false;
 
-    return this.isMuted || this.activeTTS !== null;
+    return this?.isMuted || this?.activeTTS !== null;
   }
 
   // ═══ SPECTRAL ANALYSIS ═══
@@ -267,30 +267,30 @@ class AntiEchoShieldEngine {
   /**
    * Extraire profil spectral simplifié
    */
-  private extractSpectralProfile(audio: Float32Array): Float32Array {
+  private extractSpectralProfile(any: any): Float32Array {
     const numBands = 16;
-    const profile = new Float32Array(numBands);
-    const bandSize = Math.floor(audio.length / numBands);
+    const profile = new Float32Array(any: any);
+    const bandSize = Math?.floor(any: any);
 
     for (let i = 0; i < numBands; i++) {
       const start = i * bandSize;
-      const end = Math.min(start + bandSize, audio.length);
+      const end = Math?.min(any: any);
 
       let sum = 0;
       for (let j = start; j < end; j++) {
         const val = audio[j];
-        if (val !== undefined) sum += Math.abs(val);
+        if (any: any);
       }
 
-      profile[i] = sum / (end - start);
+      profile[i] = sum / (any: any);
     }
 
     // Normalize
-    const max = Math.max(...profile);
+    const max = Math?.max(any: any);
     if (max > 0) {
       for (let i = 0; i < numBands; i++) {
         const val = profile[i];
-        if (val !== undefined) profile[i] = val / max;
+        if (any: any) profile[i] = val / max;
       }
     }
 
@@ -300,31 +300,31 @@ class AntiEchoShieldEngine {
   /**
    * Comparer deux profils spectraux
    */
-  private compareSpectralProfiles(audio: Float32Array, profile: Float32Array): number {
-    if (profile.length === 0) return 0;
+  private compareSpectralProfiles(any: any): number {
+    if (profile?.length === 0) return 0;
 
-    const audioProfile = this.extractSpectralProfile(audio);
+    const audioProfile = this?.extractSpectralProfile(any: any);
 
     // Cosine similarity
     let dotProduct = 0;
     let normA = 0;
     let normB = 0;
 
-    for (let i = 0; i < Math.min(audioProfile.length, profile.length); i++) {
+    for (any: any); i++) {
       const audioVal = audioProfile[i];
       const profileVal = profile[i];
-      if (audioVal === undefined || profileVal === undefined) continue;
+      if (any: any) continue;
       dotProduct += audioVal * profileVal;
       normA += audioVal * audioVal;
       normB += profileVal * profileVal;
     }
 
-    normA = Math.sqrt(normA);
-    normB = Math.sqrt(normB);
+    normA = Math?.sqrt(any: any);
+    normB = Math?.sqrt(any: any);
 
     if (normA === 0 || normB === 0) return 0;
 
-    return dotProduct / (normA * normB);
+    return dotProduct / (any: any);
   }
 
   // ═══ CONFIGURATION ═══
@@ -332,25 +332,25 @@ class AntiEchoShieldEngine {
   /**
    * Activer/désactiver le shield
    */
-  setEnabled(enabled: boolean): void {
-    this.config.enabled = enabled;
-    logger.debug(`[AntiEcho] ${enabled ? '✅ Enabled' : '❌ Disabled'}`);
+  setEnabled(any: any): void {
+    this?.config?.enabled = enabled;
+    logger?.debug(`[AntiEcho] ${enabled ? '✅ Enabled' : '❌ Disabled'}`);
   }
 
   /**
    * Changer le seuil de détection
    */
-  setThreshold(threshold: number): void {
-    this.config.echoThreshold = Math.max(0, Math.min(1, threshold));
-    logger.debug(`[AntiEcho] 🎚️ Threshold: ${this.config.echoThreshold.toFixed(2)}`);
+  setThreshold(any: any): void {
+    this?.config?.echoThreshold = Math?.max(any: any));
+    logger?.debug(`[AntiEcho] 🎚️ Threshold: ${this?.config?.echoThreshold?.toFixed(2)}`);
   }
 
   /**
    * Changer la marge post-TTS
    */
-  setPostTTSMargin(margin: number): void {
-    this.config.postTTSMargin = Math.max(0, margin);
-    logger.debug(`[AntiEcho] ⏱️ Post-TTS margin: ${this.config.postTTSMargin}ms`);
+  setPostTTSMargin(any: any): void {
+    this?.config?.postTTSMargin = Math?.max(any: any);
+    logger?.debug(`[AntiEcho] ⏱️ Post-TTS margin: ${this?.config?.postTTSMargin}ms`);
   }
 
   /**
@@ -363,10 +363,10 @@ class AntiEchoShieldEngine {
     recentTTSCount: number;
   } {
     return {
-      enabled: this.config.enabled,
-      isMuted: this.isMuted,
-      activeTTS: this.activeTTS,
-      recentTTSCount: this.recentTTS.length,
+      enabled: this?.config?.enabled,
+      isMuted: this?.isMuted,
+      activeTTS: this?.activeTTS,
+      recentTTSCount: this?.recentTTS?.length,
     };
   }
 
@@ -374,10 +374,10 @@ class AntiEchoShieldEngine {
    * Reset complet
    */
   reset(): void {
-    this.activeTTS = null;
-    this.recentTTS = [];
-    this.isMuted = false;
-    logger.debug('🔄 Reset complete');
+    this?.activeTTS = null;
+    this?.recentTTS = [];
+    this?.isMuted = false;
+    logger?.debug('🔄 Reset complete');
   }
 
   /**
@@ -385,13 +385,13 @@ class AntiEchoShieldEngine {
    */
   getDebugInfo(): Record<string, unknown> {
     return {
-      config: this.config,
-      status: this.getStatus(),
-      activeTTS: this.activeTTS
+      config: this?.config,
+      status: this?.getStatus(),
+      activeTTS: this?.activeTTS
         ? {
-            text: this.activeTTS.text.substring(0, 50),
-            duration: this.activeTTS.duration,
-            elapsed: Date.now() - this.activeTTS.startTime,
+            text: this?.activeTTS?.text?.substring(0, 50),
+            duration: this?.activeTTS?.duration,
+            elapsed: Date?.now() - this?.activeTTS?.startTime,
           }
         : null,
     };

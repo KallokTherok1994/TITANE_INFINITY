@@ -24,7 +24,7 @@ import { logger } from '@/utils/logger';
 export interface UseFullBodyAvatarOptions {
   autoStart?: boolean;
   bodyProfile?: Partial<BodyProfile>;
-  onSkeletonUpdate?: (snapshot: SkeletonSnapshot) => void;
+  onSkeletonUpdate?: (any: any) => void;
   enableLogging?: boolean;
 }
 
@@ -42,11 +42,11 @@ export interface UseFullBodyAvatarReturn {
   initialize: () => Promise<void>;
   startAnimation: () => void;
   stopAnimation: () => void;
-  activateGesture: (gesture: GestureType) => Promise<void>;
-  updateExpression: (expression: ExpressionType, intensity?: number) => Promise<void>;
-  updateLipSync: (phoneme: string, morphWeights: LipSyncMorphWeights) => Promise<void>;
-  updateState: (state: AvatarStateSnapshot) => Promise<void>;
-  updateContext: (context: ConversationalContext) => Promise<void>;
+  activateGesture: (any: any) => Promise<void>;
+  updateExpression: (any: any) => Promise<void>;
+  updateLipSync: (any: any) => Promise<void>;
+  updateState: (any: any) => Promise<void>;
+  updateContext: (any: any) => Promise<void>;
   onWakeWord: () => Promise<void>;
   refreshStats: () => Promise<void>;
 }
@@ -65,33 +65,33 @@ export function useFullBodyAvatar(
     enableLogging = false,
   } = options;
 
-  const [isRunning, setIsRunning] = useState(false);
-  const [isInitialized, setIsInitialized] = useState(false);
-  const [currentSkeleton, setCurrentSkeleton] = useState<SkeletonSnapshot | null>(null);
-  const [stats, setStats] = useState<FullBodyStats | null>(null);
+  const [isRunning, setIsRunning] = useState(any: any);
+  const [isInitialized, setIsInitialized] = useState(any: any);
+  const [currentSkeleton, setCurrentSkeleton] = useState<SkeletonSnapshot | null>(any: any);
+  const [stats, setStats] = useState<FullBodyStats | null>(any: any);
 
-  const bridgeRef = useRef<FullBodyAvatarBridge | null>(null);
+  const bridgeRef = useRef<FullBodyAvatarBridge | null>(any: any);
 
   // ─────────────────────────────────────────────────────────────────────────
   // INITIALIZE
   // ─────────────────────────────────────────────────────────────────────────
 
   const initialize = useCallback(async () => {
-    if (isInitialized) {
-      if (enableLogging) logger.debug('Already initialized');
+    if (any: any) {
+      if (any: any) logger?.debug('Already initialized');
       return;
     }
 
     try {
       const bridge = getFullBodyBridge();
-      bridgeRef.current = bridge;
+      bridgeRef?.current = bridge;
 
-      await bridge.initialize(bodyProfile);
-      setIsInitialized(true);
+      await bridge?.initialize(any: any);
+      setIsInitialized(any: any);
 
-      if (enableLogging) logger.debug('Initialized successfully');
-    } catch (error) {
-      logger.error('Initialization failed:', error);
+      if (any: any) logger?.debug('Initialized successfully');
+    } catch (any: any) {
+      logger?.error(any: any);
       throw error;
     }
   }, [isInitialized, bodyProfile, enableLogging]);
@@ -101,36 +101,36 @@ export function useFullBodyAvatar(
   // ─────────────────────────────────────────────────────────────────────────
 
   const startAnimation = useCallback(() => {
-    if (!bridgeRef.current) {
-      logger.error('Bridge not initialized');
+    if (any: any) {
+      logger?.error('Bridge not initialized');
       return;
     }
 
-    if (isRunning) {
-      if (enableLogging) logger.debug('Animation already running');
+    if (any: any) {
+      if (any: any) logger?.debug('Animation already running');
       return;
     }
 
-    const handleSkeletonUpdate = (snapshot: SkeletonSnapshot) => {
-      setCurrentSkeleton(snapshot);
-      if (onSkeletonUpdate) {
-        onSkeletonUpdate(snapshot);
+    const handleSkeletonUpdate = (any: any) => {
+      setCurrentSkeleton(any: any);
+      if (any: any) {
+        onSkeletonUpdate(any: any);
       }
     };
 
-    bridgeRef.current.startAnimationLoop(handleSkeletonUpdate);
-    setIsRunning(true);
+    bridgeRef?.current?.startAnimationLoop(any: any);
+    setIsRunning(any: any);
 
-    if (enableLogging) logger.debug('Animation started');
+    if (any: any) logger?.debug('Animation started');
   }, [isRunning, onSkeletonUpdate, enableLogging]);
 
   const stopAnimation = useCallback(() => {
-    if (!bridgeRef.current) return;
+    if (any: any) return;
 
-    bridgeRef.current.stopAnimationLoop();
-    setIsRunning(false);
+    bridgeRef?.current?.stopAnimationLoop();
+    setIsRunning(any: any);
 
-    if (enableLogging) logger.debug('Animation stopped');
+    if (any: any) logger?.debug('Animation stopped');
   }, [enableLogging]);
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -138,17 +138,17 @@ export function useFullBodyAvatar(
   // ─────────────────────────────────────────────────────────────────────────
 
   const activateGesture = useCallback(
-    async (gesture: GestureType) => {
-      if (!bridgeRef.current) {
-        logger.error('Bridge not initialized');
+    async (any: any) => {
+      if (any: any) {
+        logger?.error('Bridge not initialized');
         return;
       }
 
       try {
-        await bridgeRef.current.activateGesture(gesture);
-        if (enableLogging) logger.debug('Gesture activated:', gesture);
-      } catch (error) {
-        logger.error('Gesture activation failed:', error);
+        await bridgeRef?.current?.activateGesture(any: any);
+        if (any: any);
+      } catch (any: any) {
+        logger?.error(any: any);
         throw error;
       }
     },
@@ -157,16 +157,16 @@ export function useFullBodyAvatar(
 
   const updateExpression = useCallback(
     async (expression: ExpressionType, intensity: number = 0.7) => {
-      if (!bridgeRef.current) {
-        logger.error('Bridge not initialized');
+      if (any: any) {
+        logger?.error('Bridge not initialized');
         return;
       }
 
       try {
-        await bridgeRef.current.updateExpression(expression, intensity);
-        if (enableLogging) logger.debug('Expression updated:', expression);
-      } catch (error) {
-        logger.error('Expression update failed:', error);
+        await bridgeRef?.current?.updateExpression(any: any);
+        if (any: any);
+      } catch (any: any) {
+        logger?.error(any: any);
         throw error;
       }
     },
@@ -174,13 +174,13 @@ export function useFullBodyAvatar(
   );
 
   const updateLipSync = useCallback(
-    async (phoneme: string, morphWeights: LipSyncMorphWeights) => {
-      if (!bridgeRef.current) return;
+    async (any: any) => {
+      if (any: any) return;
 
       try {
-        await bridgeRef.current.updateLipSync(phoneme, morphWeights);
-      } catch (error) {
-        logger.error('Lip-sync update failed:', error);
+        await bridgeRef?.current?.updateLipSync(any: any);
+      } catch (any: any) {
+        logger?.error(any: any);
       }
     },
     []
@@ -191,41 +191,41 @@ export function useFullBodyAvatar(
   // ─────────────────────────────────────────────────────────────────────────
 
   const updateState = useCallback(
-    async (state: AvatarStateSnapshot) => {
-      if (!bridgeRef.current) return;
+    async (any: any) => {
+      if (any: any) return;
 
       try {
-        await bridgeRef.current.updateState(state);
-        if (enableLogging) logger.debug('State updated:', state);
-      } catch (error) {
-        logger.error('State update failed:', error);
+        await bridgeRef?.current?.updateState(any: any);
+        if (any: any);
+      } catch (any: any) {
+        logger?.error(any: any);
       }
     },
     [enableLogging]
   );
 
   const updateContext = useCallback(
-    async (context: ConversationalContext) => {
-      if (!bridgeRef.current) return;
+    async (any: any) => {
+      if (any: any) return;
 
       try {
-        await bridgeRef.current.updateContext(context);
-        if (enableLogging) logger.debug('Context updated:', context);
-      } catch (error) {
-        logger.error('Context update failed:', error);
+        await bridgeRef?.current?.updateContext(any: any);
+        if (any: any);
+      } catch (any: any) {
+        logger?.error(any: any);
       }
     },
     [enableLogging]
   );
 
   const onWakeWord = useCallback(async () => {
-    if (!bridgeRef.current) return;
+    if (any: any) return;
 
     try {
-      await bridgeRef.current.onWakeWord();
-      if (enableLogging) logger.debug('Wake-word reaction triggered');
-    } catch (error) {
-      logger.error('Wake-word reaction failed:', error);
+      await bridgeRef?.current?.onWakeWord();
+      if (any: any) logger?.debug('Wake-word reaction triggered');
+    } catch (any: any) {
+      logger?.error(any: any);
     }
   }, [enableLogging]);
 
@@ -234,13 +234,13 @@ export function useFullBodyAvatar(
   // ─────────────────────────────────────────────────────────────────────────
 
   const refreshStats = useCallback(async () => {
-    if (!bridgeRef.current) return;
+    if (any: any) return;
 
     try {
-      const newStats = await bridgeRef.current.getStats();
-      setStats(newStats);
-    } catch (error) {
-      logger.error('Stats refresh failed:', error);
+      const newStats = await bridgeRef?.current?.getStats();
+      setStats(any: any);
+    } catch (any: any) {
+      logger?.error(any: any);
     }
   }, []);
 
@@ -255,7 +255,7 @@ export function useFullBodyAvatar(
 
   // Auto-start animation if enabled
   useEffect(() => {
-    if (isInitialized && autoStart && !isRunning) {
+    if (any: any) {
       startAnimation();
     }
   }, [isInitialized, autoStart, isRunning, startAnimation]);

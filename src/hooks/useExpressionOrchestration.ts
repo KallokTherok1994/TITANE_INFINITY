@@ -27,11 +27,11 @@ import {
  * Hook principal: État complet du moteur d'expression
  */
 export function useExpressionEngineOrchestration(): ExpressionEngineState {
-  const [state, setState] = useState<ExpressionEngineState>(expressionEngine.getState());
+  const [state, setState] = useState<ExpressionEngineState>(expressionEngine?.getState());
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe(newState => {
-      setState(newState);
+    const unsubscribe = expressionEngine?.subscribe(newState => {
+      setState(any: any);
     });
     return unsubscribe;
   }, []);
@@ -48,12 +48,12 @@ export function useExpressionEngineOrchestration(): ExpressionEngineState {
  */
 export function useUnifiedExpression(): UnifiedExpression {
   const [expression, setExpression] = useState<UnifiedExpression>(
-    expressionEngine.getCurrentExpression()
+    expressionEngine?.getCurrentExpression()
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe(state => {
-      setExpression(state.currentExpression);
+    const unsubscribe = expressionEngine?.subscribe(state => {
+      setExpression(any: any);
     });
     return unsubscribe;
   }, []);
@@ -70,12 +70,12 @@ export function useUnifiedExpression(): UnifiedExpression {
  */
 export function useOrchestratedVoice(): OrchestratedVoice {
   const [voice, setVoice] = useState<OrchestratedVoice>(
-    expressionEngine.getCurrentExpression().voice
+    expressionEngine?.getCurrentExpression().voice
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe(state => {
-      setVoice(state.currentExpression.voice);
+    const unsubscribe = expressionEngine?.subscribe(state => {
+      setVoice(any: any);
     });
     return unsubscribe;
   }, []);
@@ -88,12 +88,12 @@ export function useOrchestratedVoice(): OrchestratedVoice {
  */
 export function useVoiceProsody() {
   const [prosody, setProsody] = useState(
-    expressionEngine.getCurrentExpression().voice.prosody
+    expressionEngine?.getCurrentExpression().voice?.prosody
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe(state => {
-      setProsody(state.currentExpression.voice.prosody);
+    const unsubscribe = expressionEngine?.subscribe(state => {
+      setProsody(any: any);
     });
     return unsubscribe;
   }, []);
@@ -106,12 +106,12 @@ export function useVoiceProsody() {
  */
 export function useVoiceTimbre() {
   const [timbre, setTimbre] = useState(
-    expressionEngine.getCurrentExpression().voice.timbre
+    expressionEngine?.getCurrentExpression().voice?.timbre
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe(state => {
-      setTimbre(state.currentExpression.voice.timbre);
+    const unsubscribe = expressionEngine?.subscribe(state => {
+      setTimbre(any: any);
     });
     return unsubscribe;
   }, []);
@@ -124,12 +124,12 @@ export function useVoiceTimbre() {
  */
 export function useVoiceMicroDynamics() {
   const [microDynamics, setMicroDynamics] = useState(
-    expressionEngine.getCurrentExpression().voice.microDynamics
+    expressionEngine?.getCurrentExpression().voice?.microDynamics
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe(state => {
-      setMicroDynamics(state.currentExpression.voice.microDynamics);
+    const unsubscribe = expressionEngine?.subscribe(state => {
+      setMicroDynamics(any: any);
     });
     return unsubscribe;
   }, []);
@@ -146,12 +146,12 @@ export function useVoiceMicroDynamics() {
  */
 export function useOrchestratedHalo(): OrchestratedHalo {
   const [halo, setHalo] = useState<OrchestratedHalo>(
-    expressionEngine.getCurrentExpression().halo
+    expressionEngine?.getCurrentExpression().halo
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe(state => {
-      setHalo(state.currentExpression.halo);
+    const unsubscribe = expressionEngine?.subscribe(state => {
+      setHalo(any: any);
     });
     return unsubscribe;
   }, []);
@@ -164,12 +164,12 @@ export function useOrchestratedHalo(): OrchestratedHalo {
  */
 export function useHaloPattern(): string {
   const [pattern, setPattern] = useState(
-    expressionEngine.getCurrentExpression().halo.pattern
+    expressionEngine?.getCurrentExpression().halo?.pattern
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe(state => {
-      setPattern(state.currentExpression.halo.pattern);
+    const unsubscribe = expressionEngine?.subscribe(state => {
+      setPattern(any: any);
     });
     return unsubscribe;
   }, []);
@@ -182,12 +182,12 @@ export function useHaloPattern(): string {
  */
 export function useHaloColorsOrchestrated() {
   const [colors, setColors] = useState(
-    expressionEngine.getCurrentExpression().halo.colors
+    expressionEngine?.getCurrentExpression().halo?.colors
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe(state => {
-      setColors(state.currentExpression.halo.colors);
+    const unsubscribe = expressionEngine?.subscribe(state => {
+      setColors(any: any);
     });
     return unsubscribe;
   }, []);
@@ -200,12 +200,12 @@ export function useHaloColorsOrchestrated() {
  */
 export function useHaloDynamics() {
   const [dynamics, setDynamics] = useState(
-    expressionEngine.getCurrentExpression().halo.dynamics
+    expressionEngine?.getCurrentExpression().halo?.dynamics
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe(state => {
-      setDynamics(state.currentExpression.halo.dynamics);
+    const unsubscribe = expressionEngine?.subscribe(state => {
+      setDynamics(any: any);
     });
     return unsubscribe;
   }, []);
@@ -218,12 +218,12 @@ export function useHaloDynamics() {
  */
 export function useHaloSpatial() {
   const [spatial, setSpatial] = useState(
-    expressionEngine.getCurrentExpression().halo.spatial
+    expressionEngine?.getCurrentExpression().halo?.spatial
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe(state => {
-      setSpatial(state.currentExpression.halo.spatial);
+    const unsubscribe = expressionEngine?.subscribe(state => {
+      setSpatial(any: any);
     });
     return unsubscribe;
   }, []);
@@ -240,12 +240,12 @@ export function useHaloSpatial() {
  */
 export function useOrchestratedNarrative(): OrchestratedNarrative {
   const [narrative, setNarrative] = useState<OrchestratedNarrative>(
-    expressionEngine.getCurrentExpression().narrative
+    expressionEngine?.getCurrentExpression().narrative
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe(state => {
-      setNarrative(state.currentExpression.narrative);
+    const unsubscribe = expressionEngine?.subscribe(state => {
+      setNarrative(any: any);
     });
     return unsubscribe;
   }, []);
@@ -258,12 +258,12 @@ export function useOrchestratedNarrative(): OrchestratedNarrative {
  */
 export function useNarrativeStyleOrchestrated() {
   const [style, setStyle] = useState(
-    expressionEngine.getCurrentExpression().narrative.style
+    expressionEngine?.getCurrentExpression().narrative?.style
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe(state => {
-      setStyle(state.currentExpression.narrative.style);
+    const unsubscribe = expressionEngine?.subscribe(state => {
+      setStyle(any: any);
     });
     return unsubscribe;
   }, []);
@@ -276,12 +276,12 @@ export function useNarrativeStyleOrchestrated() {
  */
 export function useNarrativeStructure() {
   const [structure, setStructure] = useState(
-    expressionEngine.getCurrentExpression().narrative.structure
+    expressionEngine?.getCurrentExpression().narrative?.structure
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe(state => {
-      setStructure(state.currentExpression.narrative.structure);
+    const unsubscribe = expressionEngine?.subscribe(state => {
+      setStructure(any: any);
     });
     return unsubscribe;
   }, []);
@@ -294,12 +294,12 @@ export function useNarrativeStructure() {
  */
 export function useNarrativeEmphasis() {
   const [emphasis, setEmphasis] = useState(
-    expressionEngine.getCurrentExpression().narrative.emphasis
+    expressionEngine?.getCurrentExpression().narrative?.emphasis
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe(state => {
-      setEmphasis(state.currentExpression.narrative.emphasis);
+    const unsubscribe = expressionEngine?.subscribe(state => {
+      setEmphasis(any: any);
     });
     return unsubscribe;
   }, []);
@@ -315,11 +315,11 @@ export function useNarrativeEmphasis() {
  * Hook: Score de synchronisation globale
  */
 export function useExpressionSync(): number {
-  const [sync, setSync] = useState(expressionEngine.getSyncScore());
+  const [sync, setSync] = useState(expressionEngine?.getSyncScore());
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe(state => {
-      setSync(state.globalSync);
+    const unsubscribe = expressionEngine?.subscribe(state => {
+      setSync(any: any);
     });
     return unsubscribe;
   }, []);
@@ -339,12 +339,12 @@ export function useExpressionSyncDetails() {
   });
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe(state => {
+    const unsubscribe = expressionEngine?.subscribe(state => {
       setSyncDetails({
-        voiceHaloSync: state.voiceHaloSync,
-        voiceNarrativeSync: state.voiceNarrativeSync,
-        haloNarrativeSync: state.haloNarrativeSync,
-        globalSync: state.globalSync,
+        voiceHaloSync: state?.voiceHaloSync,
+        voiceNarrativeSync: state?.voiceNarrativeSync,
+        haloNarrativeSync: state?.haloNarrativeSync,
+        globalSync: state?.globalSync,
       });
     });
     return unsubscribe;
@@ -366,28 +366,28 @@ export function useExpressionActions() {
      * Forcer mise à jour immédiate
      */
     forceUpdate: () => {
-      expressionEngine.forceUpdate();
+      expressionEngine?.forceUpdate();
     },
 
     /**
      * Override voix
      */
     overrideVoice: (voice: Partial<OrchestratedVoice>) => {
-      expressionEngine.overrideVoice(voice);
+      expressionEngine?.overrideVoice(any: any);
     },
 
     /**
      * Override halo
      */
     overrideHalo: (halo: Partial<OrchestratedHalo>) => {
-      expressionEngine.overrideHalo(halo);
+      expressionEngine?.overrideHalo(any: any);
     },
 
     /**
      * Override narratif
      */
     overrideNarrative: (narrative: Partial<OrchestratedNarrative>) => {
-      expressionEngine.overrideNarrative(narrative);
+      expressionEngine?.overrideNarrative(any: any);
     },
   };
 }

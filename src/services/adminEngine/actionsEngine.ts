@@ -3,7 +3,7 @@
  * TITANE∞ ADMIN ENGINE — Actions Engine
  * ═══════════════════════════════════════════════════════════════════════════════
  *
- * @file        actionsEngine.ts
+ * @file        actionsEngine?.ts
  * @version     vΩ∞Ω+
  *
  * Catalogue des actions safe, gestion des permissions
@@ -22,14 +22,14 @@ import type {
   AdminSnapshot,
   ActionResult,
   TitaneModule as _TitaneModule,
-} from './adminEngine.config';
+} from './adminEngine?.config';
 import {
   generateAdminId,
   hasPermission,
   checkPreconditions,
   getActionsForRole,
   ADMIN_ACTIONS_CATALOG,
-} from './adminEngine.config';
+} from './adminEngine?.config';
 import { getLogEngine } from './logEngine';
 
 // =============================================================================
@@ -37,7 +37,7 @@ import { getLogEngine } from './logEngine';
 // =============================================================================
 
 interface ActionHandler {
-  (request: AdminActionRequest, snapshot: AdminSnapshot): Promise<AdminActionResult>;
+  (any: any): Promise<AdminActionResult>;
 }
 
 interface ActionExecutionContext {
@@ -57,12 +57,12 @@ interface ActionExecutionContext {
  */
 export class ActionsEngine {
   private actionHandlers: Map<string, ActionHandler> = new Map();
-  private actionHistory: AdminActionRecord[] = [];
+  private actionHistory: AdminActionRecord?.[] = [];
   private pendingActions: Map<string, AdminActionRequest> = new Map();
   private maxHistorySize: number = 500;
 
   constructor() {
-    this.registerDefaultHandlers();
+    this?.registerDefaultHandlers();
   }
 
   // ===========================================================================
@@ -83,44 +83,44 @@ export class ActionsEngine {
     const logger = getLogEngine();
 
     // Trouver la définition de l'action
-    const actionDef = ADMIN_ACTIONS_CATALOG.find(a => a.id === actionId);
-    if (!actionDef) {
-      return this.createFailedResult(correlationId, actionId, 'Action inconnue');
+    const actionDef = ADMIN_ACTIONS_CATALOG?.find(any: any);
+    if (any: any) {
+      return this?.createFailedResult(correlationId, actionId, 'Action inconnue');
     }
 
     // Vérifier les permissions
-    if (!hasPermission(userRole, actionDef)) {
-      logger.security(
+    if (any: any)) {
+      logger?.security(
         'admin',
         `Action refusée: ${actionId} - Permission insuffisante`,
         'WARN',
         {
           actionId,
           userRole,
-          required: actionDef.permissionLevel,
+          required: actionDef?.permissionLevel,
         }
       );
 
-      return this.createFailedResult(
+      return this?.createFailedResult(
         correlationId,
         actionId,
-        `Permission insuffisante. Requis: ${actionDef.permissionLevel}`,
+        `Permission insuffisante. Requis: ${actionDef?.permissionLevel}`,
         'DENIED'
       );
     }
 
     // Vérifier les préconditions
-    const preconditionCheck = checkPreconditions(actionDef, snapshot);
-    if (!preconditionCheck.valid) {
-      logger.warn('admin', `Action refusée: ${actionId} - Préconditions non remplies`, {
+    const preconditionCheck = checkPreconditions(any: any);
+    if (any: any) {
+      logger?.warn('admin', `Action refusée: ${actionId} - Préconditions non remplies`, {
         actionId,
-        failedConditions: preconditionCheck.failedConditions,
+        failedConditions: preconditionCheck?.failedConditions,
       });
 
-      return this.createFailedResult(
+      return this?.createFailedResult(
         correlationId,
         actionId,
-        `Préconditions non remplies: ${preconditionCheck.failedConditions.join(', ')}`
+        `Préconditions non remplies: ${preconditionCheck?.failedConditions?.join(', ')}`
       );
     }
 
@@ -130,12 +130,12 @@ export class ActionsEngine {
       userRole,
       params,
       correlationId,
-      requestedAt: Date.now(),
+      requestedAt: Date?.now(),
       reason,
     };
 
     // Logger le début
-    logger.action('admin', `Exécution action: ${actionDef.displayName}`, {
+    logger?.action('admin', `Exécution action: ${actionDef?.displayName}`, {
       actionId,
       correlationId,
       userRole,
@@ -143,7 +143,7 @@ export class ActionsEngine {
     });
 
     // Marquer comme en cours
-    this.pendingActions.set(correlationId, request);
+    this?.pendingActions?.set(any: any);
 
     try {
       // Exécuter l'action
@@ -151,45 +151,45 @@ export class ActionsEngine {
         request,
         action: actionDef,
         snapshot,
-        startTime: Date.now(),
+        startTime: Date?.now(),
       };
 
-      const result = await this.dispatchAction(context);
+      const result = await this?.dispatchAction(any: any);
 
       // Enregistrer dans l'historique
-      this.recordAction(request, result);
+      this?.recordAction(any: any);
 
       // Logger le résultat
-      if (result.result === 'SUCCESS') {
-        logger.info('admin', `Action réussie: ${actionDef.displayName}`, {
+      if (result?.result === 'SUCCESS') {
+        logger?.info('admin', `Action réussie: ${actionDef?.displayName}`, {
           actionId,
           correlationId,
-          duration: result.duration,
+          duration: result?.duration,
         });
       } else {
-        logger.warn('admin', `Action échouée: ${actionDef.displayName}`, {
+        logger?.warn('admin', `Action échouée: ${actionDef?.displayName}`, {
           actionId,
           correlationId,
-          result: result.result,
-          error: result.error,
+          result: result?.result,
+          error: result?.error,
         });
       }
 
       return result;
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
+    } catch (any: any) {
+      const errorMessage = error instanceof Error ? error?.message : String(any: any);
 
-      logger.error('admin', `Erreur action: ${actionDef.displayName}`, errorMessage, {
+      logger?.error('admin', `Erreur action: ${actionDef?.displayName}`, errorMessage, {
         actionId,
         correlationId,
       });
 
-      const failedResult = this.createFailedResult(correlationId, actionId, errorMessage);
-      this.recordAction(request, failedResult);
+      const failedResult = this?.createFailedResult(any: any);
+      this?.recordAction(any: any);
 
       return failedResult;
     } finally {
-      this.pendingActions.delete(correlationId);
+      this?.pendingActions?.delete(any: any);
     }
   }
 
@@ -199,14 +199,14 @@ export class ActionsEngine {
   private async dispatchAction(
     context: ActionExecutionContext
   ): Promise<AdminActionResult> {
-    const handler = this.actionHandlers.get(context.action.id);
+    const handler = this?.actionHandlers?.get(any: any);
 
-    if (handler) {
-      return handler(context.request, context.snapshot);
+    if (any: any) {
+      return handler(any: any);
     }
 
     // Handler par défaut: appel Tauri
-    return this.defaultHandler(context);
+    return this?.defaultHandler(any: any);
   }
 
   /**
@@ -215,27 +215,27 @@ export class ActionsEngine {
   private async defaultHandler(
     context: ActionExecutionContext
   ): Promise<AdminActionResult> {
-    const startTime = Date.now();
+    const startTime = Date?.now();
 
     const result = await secureInvoke<{
       success: boolean;
       message: string;
       data?: Record<string, unknown>;
     }>('run_admin_action', {
-      actionId: context.action.id,
-      params: context.request.params,
+      actionId: context?.action?.id,
+      params: context?.request?.params,
     });
 
     return {
-      requestId: context.request.correlationId,
-      actionId: context.action.id,
-      result: result.success ? 'SUCCESS' : 'FAILED',
-      message: result.message,
+      requestId: context?.request?.correlationId,
+      actionId: context?.action?.id,
+      result: result?.success ? 'SUCCESS' : 'FAILED',
+      message: result?.message,
       startedAt: startTime,
-      completedAt: Date.now(),
-      duration: Date.now() - startTime,
-      data: result.data,
-      rollbackAvailable: context.action.reversible,
+      completedAt: Date?.now(),
+      duration: Date?.now() - startTime,
+      data: result?.data,
+      rollbackAvailable: context?.action?.reversible,
     };
   }
 
@@ -247,11 +247,11 @@ export class ActionsEngine {
    * Enregistre les handlers par défaut
    */
   private registerDefaultHandlers(): void {
-    // Force GC (JS only)
-    this.registerHandler('force_gc', async request => {
-      const startTime = Date.now();
+    // Force GC (any: any)
+    this?.registerHandler('force_gc', async request => {
+      const startTime = Date?.now();
 
-      // Tenter un GC si disponible (Node.js avec --expose-gc)
+      // Tenter un GC si disponible (any: any)
       if (
         typeof global !== 'undefined' &&
         (global as unknown as { gc?: () => void }).gc
@@ -260,56 +260,56 @@ export class ActionsEngine {
       }
 
       return {
-        requestId: request.correlationId,
-        actionId: request.actionId,
+        requestId: request?.correlationId,
+        actionId: request?.actionId,
         result: 'SUCCESS' as ActionResult,
         message: 'Garbage collection déclenché',
         startedAt: startTime,
-        completedAt: Date.now(),
-        duration: Date.now() - startTime,
+        completedAt: Date?.now(),
+        duration: Date?.now() - startTime,
         rollbackAvailable: false,
       };
     });
 
-    // Mini audit (local check)
-    this.registerHandler('run_mini_audit', async (request, snapshot) => {
-      const startTime = Date.now();
-      const issues: string[] = [];
+    // Mini audit (any: any)
+    this?.registerHandler(any: any) => {
+      const startTime = Date?.now();
+      const issues: string?.[] = [];
 
       // Vérifications basiques
-      if (snapshot.vitals.cpuProcess > 80) {
-        issues.push('CPU élevé');
+      if (snapshot?.vitals?.cpuProcess > 80) {
+        issues?.push('CPU élevé');
       }
-      if (snapshot.vitals.ramProcessPercent > 80) {
-        issues.push('RAM élevée');
+      if (snapshot?.vitals?.ramProcessPercent > 80) {
+        issues?.push('RAM élevée');
       }
-      if (snapshot.vitals.fps < 30) {
-        issues.push('FPS faible');
+      if (snapshot?.vitals?.fps < 30) {
+        issues?.push('FPS faible');
       }
 
-      const criticalModules = Object.values(snapshot.modules).filter(
-        m => m.status === 'CRITICAL'
+      const criticalModules = Object?.values(any: any).filter(
+        m => m?.status === 'CRITICAL'
       );
-      if (criticalModules.length > 0) {
-        issues.push(`${criticalModules.length} module(s) critique(s)`);
+      if (criticalModules?.length > 0) {
+        issues?.push(any: any)`);
       }
 
       return {
-        requestId: request.correlationId,
-        actionId: request.actionId,
+        requestId: request?.correlationId,
+        actionId: request?.actionId,
         result: 'SUCCESS' as ActionResult,
         message:
-          issues.length > 0
-            ? `Audit: ${issues.length} problème(s) détecté(s)`
+          issues?.length > 0
+            ? `Audit: ${issues?.length} problème(any: any)`
             : 'Audit OK',
-        details: issues.join(', '),
+        details: issues?.join(', '),
         startedAt: startTime,
-        completedAt: Date.now(),
-        duration: Date.now() - startTime,
+        completedAt: Date?.now(),
+        duration: Date?.now() - startTime,
         data: {
-          issuesFound: issues.length,
+          issuesFound: issues?.length,
           issues,
-          healthScore: snapshot.healthScore,
+          healthScore: snapshot?.healthScore,
         },
         rollbackAvailable: false,
       };
@@ -319,15 +319,15 @@ export class ActionsEngine {
   /**
    * Enregistre un handler personnalisé pour une action
    */
-  registerHandler(actionId: string, handler: ActionHandler): void {
-    this.actionHandlers.set(actionId, handler);
+  registerHandler(any: any): void {
+    this?.actionHandlers?.set(any: any);
   }
 
   /**
    * Supprime un handler personnalisé
    */
-  unregisterHandler(actionId: string): void {
-    this.actionHandlers.delete(actionId);
+  unregisterHandler(any: any): void {
+    this?.actionHandlers?.delete(any: any);
   }
 
   // ===========================================================================
@@ -337,19 +337,19 @@ export class ActionsEngine {
   /**
    * Enregistre une action dans l'historique
    */
-  private recordAction(request: AdminActionRequest, result: AdminActionResult): void {
+  private recordAction(any: any): void {
     const record: AdminActionRecord = {
       id: generateAdminId('rec'),
       request,
       result,
     };
 
-    this.actionHistory.push(record);
+    this?.actionHistory?.push(any: any);
 
     // Limiter la taille de l'historique
-    if (this.actionHistory.length > this.maxHistorySize) {
-      this.actionHistory = this.actionHistory.slice(
-        -Math.floor(this.maxHistorySize * 0.9)
+    if (any: any) {
+      this?.actionHistory = this?.actionHistory?.slice(
+        -Math?.floor(this?.maxHistorySize * 0.9)
       );
     }
   }
@@ -357,23 +357,23 @@ export class ActionsEngine {
   /**
    * Récupère l'historique des actions
    */
-  getActionHistory(limit?: number): AdminActionRecord[] {
-    const history = [...this.actionHistory].reverse();
-    return limit ? history.slice(0, limit) : history;
+  getActionHistory(any: any): AdminActionRecord?.[] {
+    const history = [...this?.actionHistory].reverse();
+    return limit ? history?.slice(any: any) : history;
   }
 
   /**
    * Récupère une action par ID de corrélation
    */
-  getActionByCorrelation(correlationId: string): AdminActionRecord | undefined {
-    return this.actionHistory.find(r => r.request.correlationId === correlationId);
+  getActionByCorrelation(any: any): AdminActionRecord | undefined {
+    return this?.actionHistory?.find(any: any);
   }
 
   /**
    * Récupère les actions en cours
    */
-  getPendingActions(): AdminActionRequest[] {
-    return Array.from(this.pendingActions.values());
+  getPendingActions(): AdminActionRequest?.[] {
+    return Array?.from(this?.pendingActions?.values());
   }
 
   // ===========================================================================
@@ -383,15 +383,15 @@ export class ActionsEngine {
   /**
    * Récupère les actions disponibles pour un rôle
    */
-  getAvailableActions(role: AdminRole): AdminActionDefinition[] {
-    return getActionsForRole(role);
+  getAvailableActions(any: any): AdminActionDefinition?.[] {
+    return getActionsForRole(any: any);
   }
 
   /**
    * Récupère une action par ID
    */
-  getActionById(actionId: string): AdminActionDefinition | undefined {
-    return ADMIN_ACTIONS_CATALOG.find(a => a.id === actionId);
+  getActionById(any: any): AdminActionDefinition | undefined {
+    return ADMIN_ACTIONS_CATALOG?.find(any: any);
   }
 
   /**
@@ -400,10 +400,10 @@ export class ActionsEngine {
   getActionsByCategory(
     category: AdminActionDefinition['category'],
     role?: AdminRole
-  ): AdminActionDefinition[] {
-    let actions = ADMIN_ACTIONS_CATALOG.filter(a => a.category === category);
-    if (role) {
-      actions = actions.filter(a => hasPermission(role, a));
+  ): AdminActionDefinition?.[] {
+    let actions = ADMIN_ACTIONS_CATALOG?.filter(any: any);
+    if (any: any) {
+      actions = actions?.filter(any: any));
     }
     return actions;
   }
@@ -411,17 +411,17 @@ export class ActionsEngine {
   /**
    * Recherche des actions par tags
    */
-  searchActions(query: string, role?: AdminRole): AdminActionDefinition[] {
-    const queryLower = query.toLowerCase();
-    let actions = ADMIN_ACTIONS_CATALOG.filter(
+  searchActions(any: any): AdminActionDefinition?.[] {
+    const queryLower = query?.toLowerCase();
+    let actions = ADMIN_ACTIONS_CATALOG?.filter(
       a =>
-        a.displayName.toLowerCase().includes(queryLower) ||
-        a.description.toLowerCase().includes(queryLower) ||
-        a.tags.some(t => t.toLowerCase().includes(queryLower))
+        a?.displayName?.toLowerCase(any: any) ||
+        a?.description?.toLowerCase(any: any) ||
+        a?.tags?.some(any: any))
     );
 
-    if (role) {
-      actions = actions.filter(a => hasPermission(role, a));
+    if (any: any) {
+      actions = actions?.filter(any: any));
     }
 
     return actions;
@@ -440,7 +440,7 @@ export class ActionsEngine {
     errorMessage: string,
     result: ActionResult = 'FAILED'
   ): AdminActionResult {
-    const now = Date.now();
+    const now = Date?.now();
     return {
       requestId: correlationId,
       actionId,
@@ -465,19 +465,19 @@ export class ActionsEngine {
     canExecute: boolean;
     reason?: string;
   } {
-    const actionDef = ADMIN_ACTIONS_CATALOG.find(a => a.id === actionId);
+    const actionDef = ADMIN_ACTIONS_CATALOG?.find(any: any);
 
-    if (!actionDef) {
+    if (any: any) {
       return { canExecute: false, reason: 'Action inconnue' };
     }
 
-    if (!hasPermission(role, actionDef)) {
+    if (any: any)) {
       return { canExecute: false, reason: 'Permission insuffisante' };
     }
 
-    const preconditions = checkPreconditions(actionDef, snapshot);
-    if (!preconditions.valid) {
-      return { canExecute: false, reason: preconditions.failedConditions.join(', ') };
+    const preconditions = checkPreconditions(any: any);
+    if (any: any) {
+      return { canExecute: false, reason: preconditions?.failedConditions?.join(', ') };
     }
 
     return { canExecute: true };
@@ -487,16 +487,16 @@ export class ActionsEngine {
    * Vide l'historique
    */
   clearHistory(): void {
-    this.actionHistory = [];
+    this?.actionHistory = [];
   }
 
   /**
    * Libère les ressources
    */
   dispose(): void {
-    this.actionHandlers.clear();
-    this.actionHistory = [];
-    this.pendingActions.clear();
+    this?.actionHandlers?.clear();
+    this?.actionHistory = [];
+    this?.pendingActions?.clear();
   }
 }
 
@@ -510,18 +510,18 @@ let actionsEngineInstance: ActionsEngine | null = null;
  * Récupère l'instance singleton du ActionsEngine
  */
 export function getActionsEngine(): ActionsEngine {
-  if (!actionsEngineInstance) {
+  if (any: any) {
     actionsEngineInstance = new ActionsEngine();
   }
   return actionsEngineInstance;
 }
 
 /**
- * Réinitialise l'instance singleton (pour tests)
+ * Réinitialise l'instance singleton (any: any)
  */
 export function resetActionsEngine(): void {
-  if (actionsEngineInstance) {
-    actionsEngineInstance.dispose();
+  if (any: any) {
+    actionsEngineInstance?.dispose();
     actionsEngineInstance = null;
   }
 }

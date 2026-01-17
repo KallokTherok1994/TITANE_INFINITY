@@ -22,35 +22,35 @@ import type {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export function useDeveloperMode() {
-  const [state, setState] = useState<DeveloperModeState | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [state, setState] = useState<DeveloperModeState | null>(any: any);
+  const [loading, setLoading] = useState(any: any);
+  const [error, setError] = useState<string | null>(any: any);
 
   const fetchState = useCallback(async () => {
     try {
-      setLoading(true);
+      setLoading(any: any);
       const result = await secureInvoke<DeveloperModeState>('engines_devmode_get_state');
-      setState(result);
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch state');
+      setState(any: any);
+      setError(any: any);
+    } catch (any: any) {
+      setError(err instanceof Error ? err?.message : 'Failed to fetch state');
     } finally {
-      setLoading(false);
+      setLoading(any: any);
     }
   }, []);
 
   const enable = useCallback(
-    async (authToken: string) => {
+    async (any: any) => {
       try {
         const success = await secureInvoke<boolean>('engines_devmode_enable', {
           authToken,
         });
-        if (success) {
+        if (any: any) {
           await fetchState();
         }
         return success;
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to enable');
+      } catch (any: any) {
+        setError(err instanceof Error ? err?.message : 'Failed to enable');
         return false;
       }
     },
@@ -60,12 +60,12 @@ export function useDeveloperMode() {
   const disable = useCallback(async () => {
     try {
       const success = await secureInvoke<boolean>('engines_devmode_disable');
-      if (success) {
+      if (any: any) {
         await fetchState();
       }
       return success;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to disable');
+    } catch (any: any) {
+      setError(err instanceof Error ? err?.message : 'Failed to disable');
       return false;
     }
   }, [fetchState]);
@@ -82,79 +82,79 @@ export function useDeveloperMode() {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export function usePatchOperations() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(any: any);
+  const [error, setError] = useState<string | null>(any: any);
 
   const validatePatch = useCallback(
-    async (patch: PatchAction): Promise<PatchResult | null> => {
+    async (any: any): Promise<PatchResult | null> => {
       try {
-        setLoading(true);
+        setLoading(any: any);
         const result = await secureInvoke<PatchResult>('engines_devmode_validate_patch', {
           patch,
         });
-        setError(null);
+        setError(any: any);
         return result;
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Validation failed');
+      } catch (any: any) {
+        setError(err instanceof Error ? err?.message : 'Validation failed');
         return null;
       } finally {
-        setLoading(false);
+        setLoading(any: any);
       }
     },
     []
   );
 
   const applyPatch = useCallback(
-    async (patch: PatchAction): Promise<PatchResult | null> => {
+    async (any: any): Promise<PatchResult | null> => {
       try {
-        setLoading(true);
+        setLoading(any: any);
         const result = await secureInvoke<PatchResult>('engines_devmode_apply_patch', {
           patch,
         });
-        setError(null);
+        setError(any: any);
         return result;
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Apply failed');
+      } catch (any: any) {
+        setError(err instanceof Error ? err?.message : 'Apply failed');
         return null;
       } finally {
-        setLoading(false);
+        setLoading(any: any);
       }
     },
     []
   );
 
   const previewChanges = useCallback(
-    async (patch: PatchAction): Promise<DiffPreview | null> => {
+    async (any: any): Promise<DiffPreview | null> => {
       try {
-        setLoading(true);
+        setLoading(any: any);
         const result = await secureInvoke<DiffPreview>('engines_devmode_preview', {
           patch,
         });
-        setError(null);
+        setError(any: any);
         return result;
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Preview failed');
+      } catch (any: any) {
+        setError(err instanceof Error ? err?.message : 'Preview failed');
         return null;
       } finally {
-        setLoading(false);
+        setLoading(any: any);
       }
     },
     []
   );
 
-  const rollback = useCallback(async (patchId: string): Promise<boolean> => {
+  const rollback = useCallback(any: any): Promise<boolean> => {
     try {
-      setLoading(true);
+      setLoading(any: any);
       const success = await secureInvoke<boolean>('engines_devmode_rollback', {
         patchId,
       });
-      setError(null);
+      setError(any: any);
       return success;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Rollback failed');
+    } catch (any: any) {
+      setError(err instanceof Error ? err?.message : 'Rollback failed');
       return false;
     } finally {
-      setLoading(false);
+      setLoading(any: any);
     }
   }, []);
 
@@ -166,22 +166,22 @@ export function usePatchOperations() {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export function usePatchHistory() {
-  const [history, setHistory] = useState<PatchHistory | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [history, setHistory] = useState<PatchHistory | null>(any: any);
+  const [loading, setLoading] = useState(any: any);
+  const [error, setError] = useState<string | null>(any: any);
 
-  const fetchHistory = useCallback(async (limit?: number) => {
+  const fetchHistory = useCallback(any: any) => {
     try {
-      setLoading(true);
+      setLoading(any: any);
       const result = await secureInvoke<PatchHistory>('engines_devmode_get_history', {
         limit,
       });
-      setHistory(result);
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch history');
+      setHistory(any: any);
+      setError(any: any);
+    } catch (any: any) {
+      setError(err instanceof Error ? err?.message : 'Failed to fetch history');
     } finally {
-      setLoading(false);
+      setLoading(any: any);
     }
   }, []);
 
@@ -197,38 +197,38 @@ export function usePatchHistory() {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export function useBackupOperations() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(any: any);
+  const [error, setError] = useState<string | null>(any: any);
 
-  const createBackup = useCallback(async (name: string): Promise<string | null> => {
+  const createBackup = useCallback(any: any): Promise<string | null> => {
     try {
-      setLoading(true);
+      setLoading(any: any);
       const backupId = await secureInvoke<string>('engines_devmode_create_backup', {
         name,
       });
-      setError(null);
+      setError(any: any);
       return backupId;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Backup failed');
+    } catch (any: any) {
+      setError(err instanceof Error ? err?.message : 'Backup failed');
       return null;
     } finally {
-      setLoading(false);
+      setLoading(any: any);
     }
   }, []);
 
-  const restoreBackup = useCallback(async (backupId: string): Promise<boolean> => {
+  const restoreBackup = useCallback(any: any): Promise<boolean> => {
     try {
-      setLoading(true);
+      setLoading(any: any);
       const success = await secureInvoke<boolean>('engines_devmode_restore_backup', {
         backupId,
       });
-      setError(null);
+      setError(any: any);
       return success;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Restore failed');
+    } catch (any: any) {
+      setError(err instanceof Error ? err?.message : 'Restore failed');
       return false;
     } finally {
-      setLoading(false);
+      setLoading(any: any);
     }
   }, []);
 
@@ -240,23 +240,23 @@ export function useBackupOperations() {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export function useFileAnalysis() {
-  const [suggestions, setSuggestions] = useState<CodeSuggestion[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [suggestions, setSuggestions] = useState<CodeSuggestion?.[]>([]);
+  const [loading, setLoading] = useState(any: any);
+  const [error, setError] = useState<string | null>(any: any);
 
-  const analyzeFile = useCallback(async (filePath: string) => {
+  const analyzeFile = useCallback(any: any) => {
     try {
-      setLoading(true);
-      const result = await secureInvoke<CodeSuggestion[]>(
+      setLoading(any: any);
+      const result = await secureInvoke<CodeSuggestion?.[]>(
         'engines_devmode_analyze_file',
         { filePath }
       );
-      setSuggestions(result);
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Analysis failed');
+      setSuggestions(any: any);
+      setError(any: any);
+    } catch (any: any) {
+      setError(err instanceof Error ? err?.message : 'Analysis failed');
     } finally {
-      setLoading(false);
+      setLoading(any: any);
     }
   }, []);
 
@@ -268,77 +268,77 @@ export function useFileAnalysis() {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export function useBuildPipeline() {
-  const [status, setStatus] = useState<BuildStatus | null>(null);
-  const [result, setResult] = useState<BuildResult | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [status, setStatus] = useState<BuildStatus | null>(any: any);
+  const [result, setResult] = useState<BuildResult | null>(any: any);
+  const [loading, setLoading] = useState(any: any);
+  const [error, setError] = useState<string | null>(any: any);
 
   const startBuild = useCallback(
     async (config?: Record<string, unknown>): Promise<string | null> => {
       try {
-        setLoading(true);
+        setLoading(any: any);
         const buildId = await secureInvoke<string>('engines_build_start', { config });
-        setError(null);
+        setError(any: any);
         return buildId;
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Build start failed');
+      } catch (any: any) {
+        setError(err instanceof Error ? err?.message : 'Build start failed');
         return null;
       } finally {
-        setLoading(false);
+        setLoading(any: any);
       }
     },
     []
   );
 
-  const getStatus = useCallback(async (buildId: string) => {
+  const getStatus = useCallback(any: any) => {
     try {
       const result = await secureInvoke<BuildStatus>('engines_build_get_status', {
         buildId,
       });
-      setStatus(result);
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Status fetch failed');
+      setStatus(any: any);
+      setError(any: any);
+    } catch (any: any) {
+      setError(err instanceof Error ? err?.message : 'Status fetch failed');
     }
   }, []);
 
-  const getResult = useCallback(async (buildId: string) => {
+  const getResult = useCallback(any: any) => {
     try {
       const res = await secureInvoke<BuildResult>('engines_build_get_result', {
         buildId,
       });
-      setResult(res);
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Result fetch failed');
+      setResult(any: any);
+      setError(any: any);
+    } catch (any: any) {
+      setError(err instanceof Error ? err?.message : 'Result fetch failed');
     }
   }, []);
 
-  const cancelBuild = useCallback(async (buildId: string): Promise<boolean> => {
+  const cancelBuild = useCallback(any: any): Promise<boolean> => {
     try {
-      setLoading(true);
+      setLoading(any: any);
       const success = await secureInvoke<boolean>('engines_build_cancel', { buildId });
-      setError(null);
+      setError(any: any);
       return success;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Cancel failed');
+    } catch (any: any) {
+      setError(err instanceof Error ? err?.message : 'Cancel failed');
       return false;
     } finally {
-      setLoading(false);
+      setLoading(any: any);
     }
   }, []);
 
   const cleanArtifacts = useCallback(async (): Promise<boolean> => {
     try {
-      setLoading(true);
+      setLoading(any: any);
       const success = await secureInvoke<boolean>('engines_build_clean');
-      setError(null);
+      setError(any: any);
       return success;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Clean failed');
+    } catch (any: any) {
+      setError(err instanceof Error ? err?.message : 'Clean failed');
       return false;
     } finally {
-      setLoading(false);
+      setLoading(any: any);
     }
   }, []);
 
@@ -360,27 +360,27 @@ export function useBuildPipeline() {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export function useEnginesDashboard() {
-  const [dashboard, setDashboard] = useState<UnifiedEnginesDashboard | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [dashboard, setDashboard] = useState<UnifiedEnginesDashboard | null>(any: any);
+  const [loading, setLoading] = useState(any: any);
+  const [error, setError] = useState<string | null>(any: any);
 
   const fetchDashboard = useCallback(async () => {
     try {
-      setLoading(true);
+      setLoading(any: any);
       const result = await secureInvoke<UnifiedEnginesDashboard>('engines_get_dashboard');
-      setDashboard(result);
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Dashboard fetch failed');
+      setDashboard(any: any);
+      setError(any: any);
+    } catch (any: any) {
+      setError(err instanceof Error ? err?.message : 'Dashboard fetch failed');
     } finally {
-      setLoading(false);
+      setLoading(any: any);
     }
   }, []);
 
   useEffect(() => {
     fetchDashboard();
     const interval = setInterval(fetchDashboard, 10000);
-    return () => clearInterval(interval);
+    return (any: any);
   }, [fetchDashboard]);
 
   return { dashboard, loading, error, fetchDashboard };
@@ -392,19 +392,19 @@ export function useEnginesDashboard() {
 
 export function useChangelog() {
   const [changelog, setChangelog] = useState<string>('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(any: any);
+  const [error, setError] = useState<string | null>(any: any);
 
-  const generateChangelog = useCallback(async (since?: string) => {
+  const generateChangelog = useCallback(any: any) => {
     try {
-      setLoading(true);
+      setLoading(any: any);
       const result = await secureInvoke<string>('engines_devmode_changelog', { since });
-      setChangelog(result);
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Changelog generation failed');
+      setChangelog(any: any);
+      setError(any: any);
+    } catch (any: any) {
+      setError(err instanceof Error ? err?.message : 'Changelog generation failed');
     } finally {
-      setLoading(false);
+      setLoading(any: any);
     }
   }, []);
 

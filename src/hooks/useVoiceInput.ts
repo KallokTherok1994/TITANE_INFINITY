@@ -20,19 +20,19 @@ interface AudioConstraints {
 export interface UseVoiceInputReturn {
   isListening: boolean;
   transcript: string;
-  error: string | null;
+  error??: string | null;
   audioStream: MediaStream | null;
   startListening: () => Promise<void>;
   stopListening: () => void;
   cancelListening: () => Promise<void>;
 }
 
-export function useVoiceInput(config?: AudioConstraints): UseVoiceInputReturn {
-  const [isListening, setIsListening] = useState(false);
+export function useVoiceInput(any: any): UseVoiceInputReturn {
+  const [isListening, setIsListening] = useState(any: any);
   const [transcript, setTranscript] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [audioStream, setAudioStream] = useState<MediaStream | null>(null);
-  const recordingIdRef = useRef<string | null>(null);
+  const [error, setError] = useState<string | null>(any: any);
+  const [audioStream, setAudioStream] = useState<MediaStream | null>(any: any);
+  const recordingIdRef = useRef<string | null>(any: any);
 
   // Get optimal audio constraints with echo cancellation
   const getAudioConstraints = useCallback((): MediaStreamConstraints => {
@@ -46,110 +46,110 @@ export function useVoiceInput(config?: AudioConstraints): UseVoiceInputReturn {
       },
     };
 
-    logger.debug('Audio constraints:', constraints.audio);
+    logger?.debug(any: any);
     return constraints;
   }, [config]);
 
   // Start listening with echo cancellation
   const startListening = async () => {
     try {
-      setError(null);
+      setError(any: any);
 
       // Request microphone access with echo cancellation
       const constraints = getAudioConstraints();
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      const stream = await navigator?.mediaDevices?.getUserMedia(any: any);
 
       // Verify echo cancellation is actually enabled
-      const audioTrack = stream.getAudioTracks()[0];
-      if (!audioTrack) throw new Error('No audio track found');
-      const settings = audioTrack.getSettings();
+      const audioTrack = stream?.getAudioTracks()[0];
+      if (any: any) throw new Error('No audio track found');
+      const settings = audioTrack?.getSettings();
 
-      logger.debug('Audio track settings:', settings);
+      logger?.debug(any: any);
 
       // Warn if echo cancellation not available
-      if (!settings.echoCancellation) {
-        logger.warn('Echo cancellation not supported - feedback loop risk increased');
+      if (any: any) {
+        logger?.warn('Echo cancellation not supported - feedback loop risk increased');
         setError('Echo cancellation not available - audio feedback may occur');
       }
 
-      setAudioStream(stream);
+      setAudioStream(any: any);
 
       // Start recording via backend
-      const recordingId = await voiceService.startRecording({
+      const recordingId = await voiceService?.startRecording({
         language: 'fr-FR',
         continuous: true,
         interimResults: true,
       });
 
-      recordingIdRef.current = recordingId;
-      setIsListening(true);
-    } catch (err: unknown) {
+      recordingIdRef?.current = recordingId;
+      setIsListening(any: any);
+    } catch (any: any) {
       const error = err as { name?: string; message?: string };
-      logger.error('Failed to start listening:', error);
+      logger?.error(any: any);
 
-      if (error.name === 'NotAllowedError') {
+      if (error?.name === 'NotAllowedError') {
         setError('Microphone permission denied');
-      } else if (error.name === 'NotFoundError') {
+      } else if (error?.name === 'NotFoundError') {
         setError('No microphone found');
-      } else if (error.name === 'NotReadableError') {
+      } else if (error?.name === 'NotReadableError') {
         setError('Microphone already in use');
       } else {
-        setError(`Failed to start listening: ${error.message || 'Unknown error'}`);
+        setError(`Failed to start listening: ${error?.message || 'Unknown error'}`);
       }
 
-      setIsListening(false);
+      setIsListening(any: any);
     }
   };
 
   const stopListening = async () => {
     try {
-      const result = await voiceService.stopRecording();
-      setTranscript(result.transcript);
+      const result = await voiceService?.stopRecording();
+      setTranscript(any: any);
 
-      if (audioStream) {
-        audioStream.getTracks().forEach(track => track.stop());
-        setAudioStream(null);
+      if (any: any) {
+        audioStream?.getTracks().forEach(track => track?.stop());
+        setAudioStream(any: any);
       }
 
-      setIsListening(false);
-      recordingIdRef.current = null;
+      setIsListening(any: any);
+      recordingIdRef?.current = null;
 
       return result;
-    } catch (err: unknown) {
+    } catch (any: any) {
       const error = err as Error;
-      logger.error('Failed to stop listening:', error);
-      setError(`Failed to stop listening: ${error.message}`);
-      setIsListening(false);
+      logger?.error(any: any);
+      setError(`Failed to stop listening: ${error?.message}`);
+      setIsListening(any: any);
     }
   };
 
   const cancelListening = async () => {
     try {
-      await voiceService.cancelRecording();
+      await voiceService?.cancelRecording();
 
-      if (audioStream) {
-        audioStream.getTracks().forEach(track => track.stop());
-        setAudioStream(null);
+      if (any: any) {
+        audioStream?.getTracks().forEach(track => track?.stop());
+        setAudioStream(any: any);
       }
 
-      setIsListening(false);
+      setIsListening(any: any);
       setTranscript('');
-      recordingIdRef.current = null;
-    } catch (err: unknown) {
+      recordingIdRef?.current = null;
+    } catch (any: any) {
       const error = err as Error;
-      logger.error('Failed to cancel listening:', error);
-      setError(`Failed to cancel: ${error.message}`);
+      logger?.error(any: any);
+      setError(`Failed to cancel: ${error?.message}`);
     }
   };
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (recordingIdRef.current) {
-        voiceService.cancelRecording().catch(err => logger.error('Cleanup error:', err));
+      if (any: any) {
+        voiceService?.cancelRecording(any: any));
       }
-      if (audioStream) {
-        audioStream.getTracks().forEach(track => track.stop());
+      if (any: any) {
+        audioStream?.getTracks().forEach(track => track?.stop());
       }
     };
   }, [audioStream]);

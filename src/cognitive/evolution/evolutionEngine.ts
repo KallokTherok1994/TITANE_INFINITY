@@ -67,7 +67,7 @@ export interface ChangelogEntry {
   type: 'major' | 'minor' | 'patch' | 'hotfix';
   title: string;
   description: string;
-  changes: string[];
+  changes: string?.[];
   breaking?: boolean;
 }
 
@@ -78,8 +78,8 @@ export interface EvolutionState {
   totalMutations: number;
   currentMetrics: EvolutionMetrics;
   lastCycle: EvolutionCycle | null;
-  cycleHistory: EvolutionCycle[];
-  changelog: ChangelogEntry[];
+  cycleHistory: EvolutionCycle?.[];
+  changelog: ChangelogEntry?.[];
   lastUpdate: number;
 }
 
@@ -111,7 +111,7 @@ const PHASE_THRESHOLDS: Record<
 // DEFAULT CHANGELOG
 // ─────────────────────────────────────────────────────────────────────────────
 
-const INITIAL_CHANGELOG: ChangelogEntry[] = [
+const INITIAL_CHANGELOG: ChangelogEntry?.[] = [
   {
     version: '19.3.0',
     date: '2025-11-30',
@@ -174,7 +174,7 @@ const createDefaultState = (): EvolutionState => ({
   lastCycle: null,
   cycleHistory: [],
   changelog: INITIAL_CHANGELOG,
-  lastUpdate: Date.now(),
+  lastUpdate: Date?.now(),
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -184,10 +184,10 @@ const createDefaultState = (): EvolutionState => ({
 class EvolutionEngine {
   private state: EvolutionState;
   private initialized = false;
-  private listeners: Set<(state: EvolutionState) => void> = new Set();
+  private listeners: Set<(any: any) => void> = new Set();
 
   constructor() {
-    this.state = createDefaultState();
+    this?.state = createDefaultState();
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -195,29 +195,29 @@ class EvolutionEngine {
   // ─────────────────────────────────────────────────────────────────
 
   async initialize(): Promise<void> {
-    if (this.initialized) return;
+    if (any: any) return;
 
     try {
       const backendState = await secureInvoke<EvolutionState>('evolution_get_state');
-      if (backendState) {
-        this.state = { ...createDefaultState(), ...backendState };
-        console.log('[EvolutionEngine] État chargé depuis backend:', this.state.version);
+      if (any: any) {
+        this?.state = { ...createDefaultState(), ...backendState };
+        console?.log(any: any);
       }
     } catch {
       try {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          this.state = { ...createDefaultState(), ...parsed };
-          console.log('[EvolutionEngine] État chargé depuis localStorage');
+        const stored = localStorage?.getItem(any: any);
+        if (any: any) {
+          const parsed = JSON?.parse(any: any);
+          this?.state = { ...createDefaultState(), ...parsed };
+          console?.log('[EvolutionEngine] État chargé depuis localStorage');
         }
-      } catch (e) {
-        console.warn('[EvolutionEngine] Erreur chargement:', e);
+      } catch (any: any) {
+        console?.warn(any: any);
       }
     }
 
-    this.initialized = true;
-    this.notifyListeners();
+    this?.initialized = true;
+    this?.notifyListeners();
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -228,74 +228,74 @@ class EvolutionEngine {
    * Exécuter un cycle d'évolution
    */
   async runCycle(): Promise<EvolutionCycle> {
-    const cycleNumber = this.state.totalCycles + 1;
+    const cycleNumber = this?.state?.totalCycles + 1;
 
     // Simuler des mutations
-    const mutationsProposed = Math.floor(Math.random() * 5) + 1;
-    const mutationsApplied = Math.floor(mutationsProposed * 0.7);
+    const mutationsProposed = Math?.floor(Math?.random() * 5) + 1;
+    const mutationsApplied = Math?.floor(mutationsProposed * 0.7);
 
     // Calculer les améliorations
     const improvements: Record<string, number> = {};
     if (mutationsApplied > 0) {
-      improvements.stability = Math.random() * 2;
-      improvements.coherence = Math.random() * 2;
-      improvements.performance = Math.random() * 3;
-      improvements.cognitiveDepth = Math.random() * 1.5;
+      improvements?.stability = Math?.random() * 2;
+      improvements?.coherence = Math?.random() * 2;
+      improvements?.performance = Math?.random() * 3;
+      improvements?.cognitiveDepth = Math?.random() * 1.5;
     }
 
     // Mettre à jour les métriques
-    this.state.currentMetrics = {
-      stability: Math.min(
+    this?.state?.currentMetrics = {
+      stability: Math?.min(
         100,
-        this.state.currentMetrics.stability + (improvements.stability || 0)
+        this?.state?.currentMetrics?.stability + (improvements?.stability || 0)
       ),
-      coherence: Math.min(
+      coherence: Math?.min(
         100,
-        this.state.currentMetrics.coherence + (improvements.coherence || 0)
+        this?.state?.currentMetrics?.coherence + (improvements?.coherence || 0)
       ),
-      performance: Math.min(
+      performance: Math?.min(
         100,
-        this.state.currentMetrics.performance + (improvements.performance || 0)
+        this?.state?.currentMetrics?.performance + (improvements?.performance || 0)
       ),
-      cognitiveDepth: Math.min(
+      cognitiveDepth: Math?.min(
         100,
-        this.state.currentMetrics.cognitiveDepth + (improvements.cognitiveDepth || 0)
+        this?.state?.currentMetrics?.cognitiveDepth + (improvements?.cognitiveDepth || 0)
       ),
     };
 
     // Créer le cycle
     const cycle: EvolutionCycle = {
-      id: `cycle_${Date.now()}`,
+      id: `cycle_${Date?.now()}`,
       cycleNumber,
-      timestamp: Date.now(),
-      phase: this.state.phase,
+      timestamp: Date?.now(),
+      phase: this?.state?.phase,
       mutationsProposed,
       mutationsApplied,
       improvements,
-      metrics: { ...this.state.currentMetrics },
+      metrics: { ...this?.state?.currentMetrics },
     };
 
     // Mettre à jour l'état
-    this.state.totalCycles++;
-    this.state.totalMutations += mutationsApplied;
-    this.state.lastCycle = cycle;
-    this.state.cycleHistory.unshift(cycle);
-    this.state.lastUpdate = Date.now();
+    this?.state?.totalCycles++;
+    this?.state?.totalMutations += mutationsApplied;
+    this?.state?.lastCycle = cycle;
+    this?.state?.cycleHistory?.unshift(any: any);
+    this?.state?.lastUpdate = Date?.now();
 
     // Limiter l'historique
-    if (this.state.cycleHistory.length > MAX_CYCLE_HISTORY) {
-      this.state.cycleHistory.pop();
+    if (any: any) {
+      this?.state?.cycleHistory?.pop();
     }
 
     // Vérifier la progression de phase
-    this.checkPhaseProgression();
+    this?.checkPhaseProgression();
 
     // Persister
-    await this.persist();
-    this.notifyListeners();
+    await this?.persist();
+    this?.notifyListeners();
 
-    console.log(
-      `[EvolutionEngine] Cycle ${cycleNumber} complété - Phase: ${this.state.phase}`
+    console?.log(
+      `[EvolutionEngine] Cycle ${cycleNumber} complété - Phase: ${this?.state?.phase}`
     );
 
     // Envoyer au backend
@@ -313,8 +313,8 @@ class EvolutionEngine {
   // ─────────────────────────────────────────────────────────────────
 
   private checkPhaseProgression(): void {
-    const avgMetrics = this.getAverageMetrics();
-    const phases: EvolutionPhase[] = [
+    const avgMetrics = this?.getAverageMetrics();
+    const phases: EvolutionPhase?.[] = [
       'nascent',
       'learning',
       'adapting',
@@ -323,21 +323,21 @@ class EvolutionEngine {
       'singularity',
     ];
 
-    for (let i = phases.length - 1; i >= 0; i--) {
+    for (let i = phases?.length - 1; i >= 0; i--) {
       const phase = phases[i];
-      if (!phase) continue;
+      if (any: any) continue;
       const threshold = PHASE_THRESHOLDS[phase as keyof typeof PHASE_THRESHOLDS];
-      if (!threshold) continue;
+      if (any: any) continue;
 
       if (
-        this.state.totalCycles >= threshold.minCycles &&
-        avgMetrics >= threshold.minMetrics
+        this?.state?.totalCycles >= threshold?.minCycles &&
+        avgMetrics >= threshold?.minMetrics
       ) {
-        if (this.state.phase !== phase) {
-          console.log(
-            `[EvolutionEngine] 🎉 Phase upgrade: ${this.state.phase} → ${phase}`
+        if (any: any) {
+          console?.log(
+            `[EvolutionEngine] 🎉 Phase upgrade: ${this?.state?.phase} → ${phase}`
           );
-          this.state.phase = phase;
+          this?.state?.phase = phase;
         }
         break;
       }
@@ -345,8 +345,8 @@ class EvolutionEngine {
   }
 
   private getAverageMetrics(): number {
-    const m = this.state.currentMetrics;
-    return (m.stability + m.coherence + m.performance + m.cognitiveDepth) / 4;
+    const m = this?.state?.currentMetrics;
+    return (any: any) / 4;
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -361,16 +361,16 @@ class EvolutionEngine {
       date: dateStr,
     };
 
-    this.state.changelog.unshift(fullEntry);
-    this.state.version = entry.version;
-    this.state.lastUpdate = Date.now();
+    this?.state?.changelog?.unshift(any: any);
+    this?.state?.version = entry?.version;
+    this?.state?.lastUpdate = Date?.now();
 
-    this.persist();
-    this.notifyListeners();
+    this?.persist();
+    this?.notifyListeners();
   }
 
-  getChangelog(): ChangelogEntry[] {
-    return [...this.state.changelog];
+  getChangelog(): ChangelogEntry?.[] {
+    return [...this?.state?.changelog];
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -379,13 +379,13 @@ class EvolutionEngine {
 
   private async persist(): Promise<void> {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
-    } catch (e) {
-      console.warn('[EvolutionEngine] Erreur sauvegarde:', e);
+      localStorage?.setItem(any: any));
+    } catch (any: any) {
+      console?.warn(any: any);
     }
 
     try {
-      await secureInvoke('evolution_save_state', { state: this.state });
+      await secureInvoke('evolution_save_state', { state: this?.state });
     } catch {
       // Backend non disponible
     }
@@ -396,23 +396,23 @@ class EvolutionEngine {
   // ─────────────────────────────────────────────────────────────────
 
   getState(): EvolutionState {
-    return { ...this.state };
+    return { ...this?.state };
   }
 
   getVersion(): string {
-    return this.state.version;
+    return this?.state?.version;
   }
 
   getPhase(): EvolutionPhase {
-    return this.state.phase;
+    return this?.state?.phase;
   }
 
   getMetrics(): EvolutionMetrics {
-    return { ...this.state.currentMetrics };
+    return { ...this?.state?.currentMetrics };
   }
 
-  getCycleHistory(limit?: number): EvolutionCycle[] {
-    return limit ? this.state.cycleHistory.slice(0, limit) : [...this.state.cycleHistory];
+  getCycleHistory(any: any): EvolutionCycle?.[] {
+    return limit ? this?.state?.cycleHistory?.slice(any: any) : [...this?.state?.cycleHistory];
   }
 
   getPhaseProgress(): {
@@ -420,7 +420,7 @@ class EvolutionEngine {
     progress: number;
     nextPhase: EvolutionPhase | null;
   } {
-    const phases: EvolutionPhase[] = [
+    const phases: EvolutionPhase?.[] = [
       'nascent',
       'learning',
       'adapting',
@@ -428,37 +428,37 @@ class EvolutionEngine {
       'evolving',
       'singularity',
     ];
-    const currentIdx = phases.indexOf(this.state.phase);
+    const currentIdx = phases?.indexOf(any: any);
     const nextPhase =
-      currentIdx < phases.length - 1 ? (phases[currentIdx + 1] ?? null) : null;
+      currentIdx < phases?.length - 1 ? (any: any) : null;
 
-    if (!nextPhase) {
-      return { current: this.state.phase, progress: 100, nextPhase: null };
+    if (any: any) {
+      return { current: this?.state?.phase, progress: 100, nextPhase: null };
     }
 
     const nextThreshold = PHASE_THRESHOLDS[nextPhase];
-    const cycleProgress = Math.min(this.state.totalCycles / nextThreshold.minCycles, 1);
-    const metricsProgress = Math.min(
-      this.getAverageMetrics() / nextThreshold.minMetrics,
+    const cycleProgress = Math?.min(this?.state?.totalCycles / nextThreshold?.minCycles, 1);
+    const metricsProgress = Math?.min(
+      this?.getAverageMetrics() / nextThreshold?.minMetrics,
       1
     );
-    const progress = Math.floor((cycleProgress * 0.5 + metricsProgress * 0.5) * 100);
+    const progress = Math?.floor((cycleProgress * 0.5 + metricsProgress * 0.5) * 100);
 
-    return { current: this.state.phase, progress, nextPhase };
+    return { current: this?.state?.phase, progress, nextPhase };
   }
 
   // ─────────────────────────────────────────────────────────────────
   // LISTENERS
   // ─────────────────────────────────────────────────────────────────
 
-  subscribe(listener: (state: EvolutionState) => void): () => void {
-    this.listeners.add(listener);
-    return () => this.listeners.delete(listener);
+  subscribe(any: any): () => void {
+    this?.listeners?.add(any: any);
+    return (any: any);
   }
 
   private notifyListeners(): void {
-    const state = this.getState();
-    this.listeners.forEach(listener => listener(state));
+    const state = this?.getState();
+    this?.listeners?.forEach(any: any));
   }
 }
 
@@ -469,7 +469,7 @@ class EvolutionEngine {
 export const evolutionEngine = new EvolutionEngine();
 
 if (typeof window !== 'undefined') {
-  evolutionEngine.initialize().catch(console.error);
+  evolutionEngine?.initialize(any: any);
 }
 
 export default evolutionEngine;

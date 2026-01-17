@@ -121,7 +121,7 @@ export interface UserProfile {
   mode: UserMode;
   expertise: number; // 0-1
   preferences: Partial<AdaptationState>;
-  history: AdaptationHistoryEntry[];
+  history: AdaptationHistoryEntry?.[];
   lastSeen: number;
 }
 
@@ -149,7 +149,7 @@ export interface OverloadSignal extends DetectionSignal {
   type: 'overload';
   value: {
     level: 'low' | 'medium' | 'high' | 'critical';
-    factors: string[];
+    factors: string?.[];
     recommendation: 'simplify' | 'reduce' | 'pause' | 'none';
   };
 }
@@ -184,7 +184,7 @@ export interface PolicyContext {
   cognitiveLoad: CognitiveLoad;
   userProfile: UserProfile;
   currentState: AdaptationState;
-  signals: DetectionSignal[];
+  signals: DetectionSignal?.[];
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -207,4 +207,4 @@ export interface UIUXEvent {
   data: unknown;
 }
 
-export type UIUXEventHandler = (event: UIUXEvent) => void;
+export type UIUXEventHandler = (any: any) => void;

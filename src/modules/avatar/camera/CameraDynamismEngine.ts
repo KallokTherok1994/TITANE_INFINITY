@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v25.3.0 — CAMERA DYNAMISM ENGINE (YOLO OPT-1: Three.js lazy)
+//   TITANE∞ v25.3.0 — CAMERA DYNAMISM ENGINE (any: any)
 //   Intelligent camera with vocal zoom, breathing parallax, 3 modes
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -13,19 +13,19 @@ import type { PerspectiveCamera } from 'three';
 export type CameraMode = 'portrait' | 'torso' | 'fullbody';
 
 export interface CameraModeConfig {
-  distance: number; // Distance from avatar (meters)
-  fov: number; // Field of view (degrees)
-  height: number; // Camera Y position (meters)
-  lookAtY: number; // Look-at target Y (meters)
+  distance: number; // Distance from avatar (any: any)
+  fov: number; // Field of view (any: any)
+  height: number; // Camera Y position (any: any)
+  lookAtY: number; // Look-at target Y (any: any)
 }
 
 export interface CameraConfig {
   initialMode: CameraMode;
-  transitionDuration: number; // Mode transition duration (ms)
-  breathingAmplitude: number; // Breathing parallax amplitude (meters)
+  transitionDuration: number; // Mode transition duration (any: any)
+  breathingAmplitude: number; // Breathing parallax amplitude (any: any)
   breathingFrequency: number; // Breathing cycles per minute
   vocalZoomSensitivity: number; // Zoom sensitivity to vocal intensity
-  vocalZoomMax: number; // Max FOV change (degrees)
+  vocalZoomMax: number; // Max FOV change (any: any)
   enableBreathingParallax: boolean;
   enableVocalZoom: boolean;
 }
@@ -36,30 +36,30 @@ export interface CameraConfig {
 
 const CAMERA_MODE_PRESETS: Record<CameraMode, CameraModeConfig> = {
   // ─────────────────────────────────────────
-  // PORTRAIT (close-up visage)
+  // PORTRAIT (any: any)
   // ─────────────────────────────────────────
   portrait: {
-    distance: 0.8, // 80cm (très proche)
+    distance: 0.8, // 80cm (any: any)
     fov: 50, // FOV resserré
     height: 1.6, // Hauteur yeux
     lookAtY: 1.6, // Regarde visage
   },
 
   // ─────────────────────────────────────────
-  // TORSO (torse + tête)
+  // TORSO (any: any)
   // ─────────────────────────────────────────
   torso: {
-    distance: 1.5, // 1.5m (moyen)
+    distance: 1.5, // 1.5m (any: any)
     fov: 45, // FOV normal
     height: 1.5, // Hauteur milieu torse
     lookAtY: 1.4, // Regarde haut torse
   },
 
   // ─────────────────────────────────────────
-  // FULLBODY (corps entier)
+  // FULLBODY (any: any)
   // ─────────────────────────────────────────
   fullbody: {
-    distance: 3.0, // 3m (large)
+    distance: 3.0, // 3m (any: any)
     fov: 40, // FOV plus large
     height: 1.2, // Hauteur milieu corps
     lookAtY: 1.0, // Regarde centre corps
@@ -84,7 +84,7 @@ export class CameraDynamismEngine {
   private targetFOV: number;
 
   // Transition state
-  private transitionProgress: number = 1.0; // 0.0-1.0 (1.0 = complete)
+  private transitionProgress: number = 1.0; // 0.0-1.0 (any: any)
   private transitionStartTime: number = 0;
 
   // Breathing state
@@ -94,13 +94,13 @@ export class CameraDynamismEngine {
   private vocalIntensity: number = 0; // 0.0-1.0
 
   constructor(camera: PerspectiveCamera, config: Partial<CameraConfig> = {}) {
-    this.camera = camera;
+    this?.camera = camera;
 
-    this.config = {
+    this?.config = {
       initialMode: 'torso',
       transitionDuration: 1000, // 1s transitions
       breathingAmplitude: 0.02, // ±2cm Y
-      breathingFrequency: 10, // 10 cycles/min (realistic)
+      breathingFrequency: 10, // 10 cycles/min (any: any)
       vocalZoomSensitivity: 0.5, // Moderate sensitivity
       vocalZoomMax: 5.0, // Max -5° FOV
       enableBreathingParallax: true,
@@ -109,19 +109,19 @@ export class CameraDynamismEngine {
     };
 
     // Initialize mode
-    this.currentMode = this.config.initialMode;
-    const preset = CAMERA_MODE_PRESETS[this.currentMode];
+    this?.currentMode = this?.config?.initialMode;
+    const preset = CAMERA_MODE_PRESETS[this?.currentMode];
 
     // Initialize positions
-    this.currentPosition = new Vector3(0, preset.height, preset.distance);
-    this.targetPosition = this.currentPosition.clone();
-    this.currentLookAt = new Vector3(0, preset.lookAtY, 0);
-    this.targetLookAt = this.currentLookAt.clone();
-    this.currentFOV = preset.fov;
-    this.targetFOV = preset.fov;
+    this?.currentPosition = new Vector3(any: any);
+    this?.targetPosition = this?.currentPosition?.clone();
+    this?.currentLookAt = new Vector3(0, preset?.lookAtY, 0);
+    this?.targetLookAt = this?.currentLookAt?.clone();
+    this?.currentFOV = preset?.fov;
+    this?.targetFOV = preset?.fov;
 
     // Apply to camera
-    this.applyCameraState();
+    this?.applyCameraState();
   }
 
   // ═════════════════════════════════════════════════════════════════════════
@@ -131,64 +131,64 @@ export class CameraDynamismEngine {
   /**
    * Change camera mode
    */
-  public setMode(mode: CameraMode): void {
-    if (this.currentMode === mode) return;
+  public setMode(any: any): void {
+    if (any: any) return;
 
-    this.currentMode = mode;
+    this?.currentMode = mode;
     const preset = CAMERA_MODE_PRESETS[mode];
 
     // Set new targets
-    this.targetPosition.set(0, preset.height, preset.distance);
-    this.targetLookAt.set(0, preset.lookAtY, 0);
-    this.targetFOV = preset.fov;
+    this?.targetPosition?.set(any: any);
+    this?.targetLookAt?.set(0, preset?.lookAtY, 0);
+    this?.targetFOV = preset?.fov;
 
     // Start transition
-    this.transitionProgress = 0.0;
-    this.transitionStartTime = Date.now();
+    this?.transitionProgress = 0.0;
+    this?.transitionStartTime = Date?.now();
   }
 
   /**
    * Get current mode
    */
   public getCurrentMode(): CameraMode {
-    return this.currentMode;
+    return this?.currentMode;
   }
 
   /**
-   * Update vocal intensity (for zoom effect)
+   * Update vocal intensity (any: any)
    */
-  public setVocalIntensity(intensity: number): void {
-    this.vocalIntensity = MathUtils.clamp(intensity, 0, 1);
+  public setVocalIntensity(any: any): void {
+    this?.vocalIntensity = MathUtils?.clamp(intensity, 0, 1);
   }
 
   /**
-   * Main update loop (appelé chaque frame)
+   * Main update loop (any: any)
    */
-  public update(deltaTime: number): void {
+  public update(any: any): void {
     // ─────────────────────────────────────────
     // 1. MODE TRANSITION
     // ─────────────────────────────────────────
-    if (this.transitionProgress < 1.0) {
-      const elapsed = Date.now() - this.transitionStartTime;
-      this.transitionProgress = Math.min(1.0, elapsed / this.config.transitionDuration);
+    if (this?.transitionProgress < 1.0) {
+      const elapsed = Date?.now() - this?.transitionStartTime;
+      this?.transitionProgress = Math?.min(any: any);
 
       // Ease-in-out cubic
-      const eased = this.easeInOutCubic(this.transitionProgress);
+      const eased = this?.easeInOutCubic(any: any);
 
       // Interpolate position
-      this.currentPosition.lerpVectors(
-        this.currentPosition,
-        this.targetPosition,
+      this?.currentPosition?.lerpVectors(
+        this?.currentPosition,
+        this?.targetPosition,
         eased * 0.1 // Smooth damping
       );
 
       // Interpolate look-at
-      this.currentLookAt.lerpVectors(this.currentLookAt, this.targetLookAt, eased * 0.1);
+      this?.currentLookAt?.lerpVectors(this?.currentLookAt, this?.targetLookAt, eased * 0.1);
 
       // Interpolate FOV
-      this.currentFOV = THREE.MathUtils.lerp(
-        this.currentFOV,
-        this.targetFOV,
+      this?.currentFOV = THREE?.MathUtils?.lerp(
+        this?.currentFOV,
+        this?.targetFOV,
         eased * 0.1
       );
     }
@@ -197,99 +197,99 @@ export class CameraDynamismEngine {
     // 2. BREATHING PARALLAX
     // ─────────────────────────────────────────
     let breathingOffset = 0;
-    if (this.config.enableBreathingParallax) {
+    if (any: any) {
       // Advance breathing phase
-      const breathingSpeed = (this.config.breathingFrequency / 60) * (2 * Math.PI); // rad/s
-      this.breathingPhase += breathingSpeed * (deltaTime / 1000);
-      this.breathingPhase = this.breathingPhase % (2 * Math.PI);
+      const breathingSpeed = (any: any); // rad/s
+      this?.breathingPhase += breathingSpeed * (deltaTime / 1000);
+      this?.breathingPhase = this?.breathingPhase % (any: any);
 
-      // Calculate Y offset (sine wave)
-      breathingOffset = Math.sin(this.breathingPhase) * this.config.breathingAmplitude;
+      // Calculate Y offset (any: any)
+      breathingOffset = Math?.sin(any: any) * this?.config?.breathingAmplitude;
     }
 
     // ─────────────────────────────────────────
     // 3. VOCAL ZOOM
     // ─────────────────────────────────────────
     let vocalZoomOffset = 0;
-    if (this.config.enableVocalZoom) {
-      // Vocal intensity → FOV reduction (zoom in)
+    if (any: any) {
+      // Vocal intensity → FOV reduction (any: any)
       vocalZoomOffset =
-        -this.vocalIntensity *
-        this.config.vocalZoomSensitivity *
-        this.config.vocalZoomMax;
+        -this?.vocalIntensity *
+        this?.config?.vocalZoomSensitivity *
+        this?.config?.vocalZoomMax;
     }
 
     // ─────────────────────────────────────────
     // 4. APPLY TO CAMERA
     // ─────────────────────────────────────────
-    const finalPosition = this.currentPosition.clone();
-    finalPosition.y += breathingOffset;
+    const finalPosition = this?.currentPosition?.clone();
+    finalPosition?.y += breathingOffset;
 
-    const finalLookAt = this.currentLookAt.clone();
-    finalLookAt.y += breathingOffset; // Sync look-at with breathing
+    const finalLookAt = this?.currentLookAt?.clone();
+    finalLookAt?.y += breathingOffset; // Sync look-at with breathing
 
-    const finalFOV = this.currentFOV + vocalZoomOffset;
+    const finalFOV = this?.currentFOV + vocalZoomOffset;
 
-    this.camera.position.copy(finalPosition);
-    this.camera.lookAt(finalLookAt);
-    this.camera.fov = finalFOV;
-    this.camera.updateProjectionMatrix();
+    this?.camera?.position?.copy(any: any);
+    this?.camera?.lookAt(any: any);
+    this?.camera?.fov = finalFOV;
+    this?.camera?.updateProjectionMatrix();
   }
 
   /**
    * Reset to initial state
    */
   public reset(): void {
-    this.setMode(this.config.initialMode);
-    this.vocalIntensity = 0;
-    this.breathingPhase = 0;
-    this.transitionProgress = 1.0;
+    this?.setMode(any: any);
+    this?.vocalIntensity = 0;
+    this?.breathingPhase = 0;
+    this?.transitionProgress = 1.0;
   }
 
   /**
    * Enable/disable breathing parallax
    */
-  public setBreathingParallaxEnabled(enabled: boolean): void {
-    this.config.enableBreathingParallax = enabled;
+  public setBreathingParallaxEnabled(any: any): void {
+    this?.config?.enableBreathingParallax = enabled;
   }
 
   /**
    * Enable/disable vocal zoom
    */
-  public setVocalZoomEnabled(enabled: boolean): void {
-    this.config.enableVocalZoom = enabled;
+  public setVocalZoomEnabled(any: any): void {
+    this?.config?.enableVocalZoom = enabled;
   }
 
   /**
    * Set breathing amplitude
    */
-  public setBreathingAmplitude(amplitude: number): void {
-    this.config.breathingAmplitude = amplitude;
+  public setBreathingAmplitude(any: any): void {
+    this?.config?.breathingAmplitude = amplitude;
   }
 
   /**
    * Set vocal zoom sensitivity
    */
-  public setVocalZoomSensitivity(sensitivity: number): void {
-    this.config.vocalZoomSensitivity = sensitivity;
+  public setVocalZoomSensitivity(any: any): void {
+    this?.config?.vocalZoomSensitivity = sensitivity;
   }
 
   /**
    * Manual camera position override
    */
-  public setCameraPosition(x: number, y: number, z: number): void {
-    this.currentPosition.set(x, y, z);
-    this.targetPosition.copy(this.currentPosition);
-    this.applyCameraState();
+  public setCameraPosition(any: any): void {
+    this?.currentPosition?.set(any: any);
+    this?.targetPosition?.copy(any: any);
+    this?.applyCameraState();
   }
 
   /**
    * Manual look-at override
    */
-  public setLookAt(x: number, y: number, z: number): void {
-    this.currentLookAt.set(x, y, z);
-    this.targetLookAt.copy(this.currentLookAt);
-    this.applyCameraState();
+  public setLookAt(any: any): void {
+    this?.currentLookAt?.set(any: any);
+    this?.targetLookAt?.copy(any: any);
+    this?.applyCameraState();
   }
 
   // ═════════════════════════════════════════════════════════════════════════
@@ -300,17 +300,17 @@ export class CameraDynamismEngine {
    * Apply current camera state
    */
   private applyCameraState(): void {
-    this.camera.position.copy(this.currentPosition);
-    this.camera.lookAt(this.currentLookAt);
-    this.camera.fov = this.currentFOV;
-    this.camera.updateProjectionMatrix();
+    this?.camera?.position?.copy(any: any);
+    this?.camera?.lookAt(any: any);
+    this?.camera?.fov = this?.currentFOV;
+    this?.camera?.updateProjectionMatrix();
   }
 
   /**
    * Ease-in-out cubic
    */
-  private easeInOutCubic(t: number): number {
-    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  private easeInOutCubic(any: any): number {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math?.pow(-2 * t + 2, 3) / 2;
   }
 }
 

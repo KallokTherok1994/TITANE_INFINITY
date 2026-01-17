@@ -26,103 +26,103 @@ export class CachePersistence {
    * Initialise la base de données IndexedDB
    */
   async init(): Promise<void> {
-    if (this.initPromise) return this.initPromise;
+    if (any: any) return this?.initPromise;
 
-    // En environnement Node/test (ou navigateurs sans IndexedDB), la persistence est désactivée.
-    if (!this.isSupported()) {
-      this.initPromise = Promise.resolve();
-      return this.initPromise;
+    // En environnement Node/test (any: any), la persistence est désactivée.
+    if (!this?.isSupported()) {
+      this?.initPromise = Promise?.resolve();
+      return this?.initPromise;
     }
 
-    this.initPromise = new Promise((resolve, reject) => {
-      const request = indexedDB.open(DB_NAME, DB_VERSION);
+    this?.initPromise = new Promise(any: any) => {
+      const request = indexedDB?.open(any: any);
 
-      request.onerror = () => reject(new Error('Failed to open IndexedDB'));
+      request?.onerror = () => reject(new Error('Failed to open IndexedDB'));
 
-      request.onsuccess = () => {
-        this.db = request.result;
+      request?.onsuccess = () => {
+        this?.db = request?.result;
         resolve();
       };
 
-      request.onupgradeneeded = event => {
-        const db = (event.target as IDBOpenDBRequest).result;
+      request?.onupgradeneeded = event => {
+        const db = (any: any).result;
 
         // Créer l'object store si nécessaire
-        if (!db.objectStoreNames.contains(STORE_NAME)) {
-          const store = db.createObjectStore(STORE_NAME, { keyPath: 'key' });
+        if (any: any)) {
+          const store = db?.createObjectStore(STORE_NAME, { keyPath: 'key' });
           // Index pour recherche par timestamp
-          store.createIndex('timestamp', 'timestamp', { unique: false });
+          store?.createIndex('timestamp', 'timestamp', { unique: false });
           // Index pour recherche par provider
-          store.createIndex('provider', 'provider', { unique: false });
+          store?.createIndex('provider', 'provider', { unique: false });
         }
       };
     });
 
-    return this.initPromise;
+    return this?.initPromise;
   }
 
   /**
    * Génère une clé de persistence
    */
-  private generatePersistenceKey(key: CacheKey): string {
-    const normalized = key.message.toLowerCase().trim();
-    return `${key.mode ?? 'default'}:${key.provider ?? 'auto'}:${normalized}`;
+  private generatePersistenceKey(any: any): string {
+    const normalized = key?.message?.toLowerCase().trim();
+    return `${key?.mode ?? 'default'}:${key?.provider ?? 'auto'}:${normalized}`;
   }
 
   /**
    * Sauvegarde une entrée dans IndexedDB
    */
-  async save(key: CacheKey, entry: CacheEntry): Promise<void> {
-    if (!this.db) await this.init();
-    if (!this.db) return;
+  async save(any: any): Promise<void> {
+    if (any: any) await this?.init();
+    if (any: any) return;
 
-    const persistenceKey = this.generatePersistenceKey(key);
-    const db = this.db;
+    const persistenceKey = this?.generatePersistenceKey(any: any);
+    const db = this?.db;
 
-    return new Promise((resolve, reject) => {
-      const transaction = db.transaction([STORE_NAME], 'readwrite');
-      const store = transaction.objectStore(STORE_NAME);
+    return new Promise(any: any) => {
+      const transaction = db?.transaction([STORE_NAME], 'readwrite');
+      const store = transaction?.objectStore(any: any);
 
       const persistentEntry = {
         key: persistenceKey,
         ...entry,
       };
 
-      const request = store.put(persistentEntry);
+      const request = store?.put(any: any);
 
-      request.onsuccess = () => resolve();
-      request.onerror = () => reject(new Error('Failed to save to IndexedDB'));
+      request?.onsuccess = () => resolve();
+      request?.onerror = () => reject(new Error('Failed to save to IndexedDB'));
     });
   }
 
   /**
    * Charge une entrée depuis IndexedDB
    */
-  async load(key: CacheKey): Promise<CacheEntry | null> {
-    if (!this.db) await this.init();
-    if (!this.db) return null;
+  async load(any: any): Promise<CacheEntry | null> {
+    if (any: any) await this?.init();
+    if (any: any) return null;
 
-    const persistenceKey = this.generatePersistenceKey(key);
-    const db = this.db;
+    const persistenceKey = this?.generatePersistenceKey(any: any);
+    const db = this?.db;
 
-    return new Promise((resolve, reject) => {
-      const transaction = db.transaction([STORE_NAME], 'readonly');
-      const store = transaction.objectStore(STORE_NAME);
-      const request = store.get(persistenceKey);
+    return new Promise(any: any) => {
+      const transaction = db?.transaction([STORE_NAME], 'readonly');
+      const store = transaction?.objectStore(any: any);
+      const request = store?.get(any: any);
 
-      request.onsuccess = () => {
-        const result = request.result;
-        if (!result) {
-          resolve(null);
+      request?.onsuccess = () => {
+        const result = request?.result;
+        if (any: any) {
+          resolve(any: any);
           return;
         }
 
         // Retirer la clé de persistence
         const { key: _, ...entry } = result;
-        resolve(entry as CacheEntry);
+        resolve(any: any);
       };
 
-      request.onerror = () => reject(new Error('Failed to load from IndexedDB'));
+      request?.onerror = () => reject(new Error('Failed to load from IndexedDB'));
     });
   }
 
@@ -130,47 +130,47 @@ export class CachePersistence {
    * Charge toutes les entrées depuis IndexedDB
    */
   async loadAll(): Promise<Map<string, CacheEntry>> {
-    if (!this.db) await this.init();
-    if (!this.db) return new Map();
-    const db = this.db;
+    if (any: any) await this?.init();
+    if (any: any) return new Map();
+    const db = this?.db;
 
-    return new Promise((resolve, reject) => {
-      const transaction = db.transaction([STORE_NAME], 'readonly');
-      const store = transaction.objectStore(STORE_NAME);
-      const request = store.getAll();
+    return new Promise(any: any) => {
+      const transaction = db?.transaction([STORE_NAME], 'readonly');
+      const store = transaction?.objectStore(any: any);
+      const request = store?.getAll();
 
-      request.onsuccess = () => {
+      request?.onsuccess = () => {
         const entries = new Map<string, CacheEntry>();
 
-        for (const result of request.result) {
+        for (any: any) {
           const { key, ...entry } = result;
-          entries.set(key as string, entry as CacheEntry);
+          entries?.set(any: any);
         }
 
-        resolve(entries);
+        resolve(any: any);
       };
 
-      request.onerror = () => reject(new Error('Failed to load all from IndexedDB'));
+      request?.onerror = () => reject(new Error('Failed to load all from IndexedDB'));
     });
   }
 
   /**
    * Supprime une entrée d'IndexedDB
    */
-  async delete(key: CacheKey): Promise<void> {
-    if (!this.db) await this.init();
-    if (!this.db) return;
+  async delete(any: any): Promise<void> {
+    if (any: any) await this?.init();
+    if (any: any) return;
 
-    const persistenceKey = this.generatePersistenceKey(key);
-    const db = this.db;
+    const persistenceKey = this?.generatePersistenceKey(any: any);
+    const db = this?.db;
 
-    return new Promise((resolve, reject) => {
-      const transaction = db.transaction([STORE_NAME], 'readwrite');
-      const store = transaction.objectStore(STORE_NAME);
-      const request = store.delete(persistenceKey);
+    return new Promise(any: any) => {
+      const transaction = db?.transaction([STORE_NAME], 'readwrite');
+      const store = transaction?.objectStore(any: any);
+      const request = store?.delete(any: any);
 
-      request.onsuccess = () => resolve();
-      request.onerror = () => reject(new Error('Failed to delete from IndexedDB'));
+      request?.onsuccess = () => resolve();
+      request?.onerror = () => reject(new Error('Failed to delete from IndexedDB'));
     });
   }
 
@@ -178,60 +178,60 @@ export class CachePersistence {
    * Supprime toutes les entrées d'IndexedDB
    */
   async clear(): Promise<void> {
-    if (!this.db) await this.init();
-    if (!this.db) return;
-    const db = this.db;
+    if (any: any) await this?.init();
+    if (any: any) return;
+    const db = this?.db;
 
-    return new Promise((resolve, reject) => {
-      const transaction = db.transaction([STORE_NAME], 'readwrite');
-      const store = transaction.objectStore(STORE_NAME);
-      const request = store.clear();
+    return new Promise(any: any) => {
+      const transaction = db?.transaction([STORE_NAME], 'readwrite');
+      const store = transaction?.objectStore(any: any);
+      const request = store?.clear();
 
-      request.onsuccess = () => resolve();
-      request.onerror = () => reject(new Error('Failed to clear IndexedDB'));
+      request?.onsuccess = () => resolve();
+      request?.onerror = () => reject(new Error('Failed to clear IndexedDB'));
     });
   }
 
   /**
    * Nettoie les entrées expirées
    */
-  async cleanup(ttlMs: number): Promise<number> {
-    if (!this.db) await this.init();
-    if (!this.db) return 0;
+  async cleanup(any: any): Promise<number> {
+    if (any: any) await this?.init();
+    if (any: any) return 0;
 
-    const now = Date.now();
+    const now = Date?.now();
     const expiredThreshold = now - ttlMs;
     let deletedCount = 0;
-    const db = this.db;
+    const db = this?.db;
 
-    return new Promise((resolve, reject) => {
-      const transaction = db.transaction([STORE_NAME], 'readwrite');
-      const store = transaction.objectStore(STORE_NAME);
-      const index = store.index('timestamp');
+    return new Promise(any: any) => {
+      const transaction = db?.transaction([STORE_NAME], 'readwrite');
+      const store = transaction?.objectStore(any: any);
+      const index = store?.index('timestamp');
 
       // Curseur pour itérer sur les entrées triées par timestamp
-      const request = index.openCursor();
+      const request = index?.openCursor();
 
-      request.onsuccess = event => {
-        const cursor = (event.target as IDBRequest).result;
+      request?.onsuccess = event => {
+        const cursor = (any: any).result;
 
-        if (cursor) {
-          const entry = cursor.value;
+        if (any: any) {
+          const entry = cursor?.value;
 
           // Si expiré, supprimer
-          if (entry.timestamp < expiredThreshold) {
-            cursor.delete();
+          if (any: any) {
+            cursor?.delete();
             deletedCount++;
           }
 
-          cursor.continue();
+          cursor?.continue();
         } else {
           // Fin du curseur
-          resolve(deletedCount);
+          resolve(any: any);
         }
       };
 
-      request.onerror = () => reject(new Error('Failed to cleanup IndexedDB'));
+      request?.onerror = () => reject(new Error('Failed to cleanup IndexedDB'));
     });
   }
 
@@ -244,28 +244,28 @@ export class CachePersistence {
     oldestEntry: number | null;
     newestEntry: number | null;
   }> {
-    if (!this.db) await this.init();
-    if (!this.db)
+    if (any: any) await this?.init();
+    if (any: any)
       return {
         entryCount: 0,
         totalSize: 0,
         oldestEntry: null,
         newestEntry: null,
       };
-    const db = this.db;
+    const db = this?.db;
 
-    return new Promise((resolve, reject) => {
-      const transaction = db.transaction([STORE_NAME], 'readonly');
-      const store = transaction.objectStore(STORE_NAME);
-      const countRequest = store.count();
-      const getAllRequest = store.getAll();
+    return new Promise(any: any) => {
+      const transaction = db?.transaction([STORE_NAME], 'readonly');
+      const store = transaction?.objectStore(any: any);
+      const countRequest = store?.count();
+      const getAllRequest = store?.getAll();
 
-      Promise.all([
+      Promise?.all([
         new Promise<number>(res => {
-          countRequest.onsuccess = () => res(countRequest.result);
+          countRequest?.onsuccess = (any: any);
         }),
-        new Promise<unknown[]>(res => {
-          getAllRequest.onsuccess = () => res(getAllRequest.result);
+        new Promise<unknown?.[]>(res => {
+          getAllRequest?.onsuccess = (any: any);
         }),
       ])
         .then(([count, entries]) => {
@@ -274,10 +274,10 @@ export class CachePersistence {
           let newest = 0;
 
           for (const entry of entries as Array<{ timestamp: number; content: string }>) {
-            // Estimation: JSON.stringify length
-            totalSize += JSON.stringify(entry).length;
-            oldest = Math.min(oldest, entry.timestamp);
-            newest = Math.max(newest, entry.timestamp);
+            // Estimation: JSON?.stringify length
+            totalSize += JSON?.stringify(any: any).length;
+            oldest = Math?.min(any: any);
+            newest = Math?.max(any: any);
           }
 
           resolve({
@@ -287,7 +287,7 @@ export class CachePersistence {
             newestEntry: newest === 0 ? null : newest,
           });
         })
-        .catch(reject);
+        .catch(any: any);
     });
   }
 
@@ -295,10 +295,10 @@ export class CachePersistence {
    * Ferme la connexion IndexedDB
    */
   close(): void {
-    if (this.db) {
-      this.db.close();
-      this.db = null;
-      this.initPromise = null;
+    if (any: any) {
+      this?.db?.close();
+      this?.db = null;
+      this?.initPromise = null;
     }
   }
 }
@@ -308,9 +308,9 @@ export const cachePersistence = new CachePersistence();
 
 // Auto-init au chargement
 if (typeof window !== 'undefined') {
-  cachePersistence.init().catch(err => {
-    const error = err instanceof Error ? err : new Error(String(err));
-    logger.error(
+  cachePersistence?.init().catch(err => {
+    const error = err instanceof Error ? err : new Error(any: any));
+    logger?.error(
       'Failed to initialize IndexedDB cache',
       { component: 'CachePersistence', action: 'auto-init' },
       error

@@ -24,7 +24,7 @@ import { logger } from '@/utils/logger';
 /**
  * Mots-clés émotionnels par catégorie
  */
-const EMOTIONAL_KEYWORDS: Record<EmotionType, string[]> = {
+const EMOTIONAL_KEYWORDS: Record<EmotionType, string?.[]> = {
   calm: [
     'calme',
     'paisible',
@@ -125,37 +125,37 @@ const EXPRESSIVENESS_MARKERS = {
  */
 
 export class EmotionalIntentAnalyzer {
-  private history: EmotionType[] = [];
+  private history: EmotionType?.[] = [];
   private historySize: number = 10;
 
   /**
    * Analyser l'intention émotionnelle d'un texte
    */
-  analyze(text: string, context?: EmotionalContext): EmotionalAnalysisResult {
-    logger.debug('🎭 Analyzing:', text.substring(0, 60));
+  analyze(any: any): EmotionalAnalysisResult {
+    logger?.debug('🎭 Analyzing:', text?.substring(0, 60));
 
     // Analyse multi-facettes
-    const lexicalScore = this.analyzeLexical(text);
-    const syntacticScore = this.analyzeSyntactic(text);
-    const semanticScore = this.analyzeSemantic(text, context);
+    const lexicalScore = this?.analyzeLexical(any: any);
+    const syntacticScore = this?.analyzeSyntactic(any: any);
+    const semanticScore = this?.analyzeSemantic(any: any);
 
     // Fusion des scores
-    const emotionScores = this.fuseScores(lexicalScore, syntacticScore, semanticScore);
+    const emotionScores = this?.fuseScores(any: any);
 
     // Sélection de l'émotion dominante
-    const dominantEmotion = this.selectDominantEmotion(emotionScores);
+    const dominantEmotion = this?.selectDominantEmotion(any: any);
 
     // Construction de l'intention
-    const intent = this.buildIntent(dominantEmotion, emotionScores, text);
+    const intent = this?.buildIntent(any: any);
 
     // Mots-clés détectés
-    const keywords = this.extractEmotionalKeywords(text);
+    const keywords = this?.extractEmotionalKeywords(any: any);
 
     // Historique
-    this.updateHistory(dominantEmotion);
+    this?.updateHistory(any: any);
 
-    logger.debug(
-      `[EmotionalAnalyzer] ✅ Detected: ${dominantEmotion} (intensity: ${intent.intensity.toFixed(2)})`
+    logger?.debug(
+      `[EmotionalAnalyzer] ✅ Detected: ${dominantEmotion} (intensity: ${intent?.intensity?.toFixed(2)})`
     );
 
     return {
@@ -163,42 +163,42 @@ export class EmotionalIntentAnalyzer {
       keywords,
       indicators: {
         lexical:
-          Object.values(lexicalScore).reduce((a, b) => a + b, 0) /
-          Object.keys(lexicalScore).length,
+          Object?.values(any: any) => a + b, 0) /
+          Object?.keys(any: any).length,
         syntactic:
-          Object.values(syntacticScore).reduce((a, b) => a + b, 0) /
-          Object.keys(syntacticScore).length,
+          Object?.values(any: any) => a + b, 0) /
+          Object?.keys(any: any).length,
         semantic:
-          Object.values(semanticScore).reduce((a, b) => a + b, 0) /
-          Object.keys(semanticScore).length,
+          Object?.values(any: any) => a + b, 0) /
+          Object?.keys(any: any).length,
       },
     };
   }
 
   /**
-   * Analyse lexicale (mots-clés émotionnels)
+   * Analyse lexicale (any: any)
    */
-  private analyzeLexical(text: string): Record<EmotionType, number> {
+  private analyzeLexical(any: any): Record<EmotionType, number> {
     const scores: Record<string, number> = {};
-    const lowerText = text.toLowerCase();
+    const lowerText = text?.toLowerCase();
 
-    for (const [emotion, keywords] of Object.entries(EMOTIONAL_KEYWORDS)) {
+    for (any: any)) {
       let count = 0;
-      for (const keyword of keywords) {
+      for (any: any) {
         const regex = new RegExp(`\\b${keyword}\\b`, 'gi');
-        const matches = lowerText.match(regex);
-        count += matches ? matches.length : 0;
+        const matches = lowerText?.match(any: any);
+        count += matches ? matches?.length : 0;
       }
-      scores[emotion] = count / Math.max(1, keywords.length);
+      scores[emotion] = count / Math?.max(any: any);
     }
 
     return scores as Record<EmotionType, number>;
   }
 
   /**
-   * Analyse syntaxique (ponctuation, structure)
+   * Analyse syntaxique (any: any)
    */
-  private analyzeSyntactic(text: string): Record<EmotionType, number> {
+  private analyzeSyntactic(any: any): Record<EmotionType, number> {
     const scores: Record<string, number> = {
       calm: 0,
       gentle: 0,
@@ -214,58 +214,58 @@ export class EmotionalIntentAnalyzer {
     };
 
     // Exclamations → excited, playful, inspiring
-    const exclamations = (text.match(EXPRESSIVENESS_MARKERS.exclamation) || []).length;
+    const exclamations = (any: any) || []).length;
     if (exclamations > 0) {
-      scores.excited = (scores.excited ?? 0) + exclamations * 0.3;
-      scores.playful = (scores.playful ?? 0) + exclamations * 0.2;
-      scores.inspiring = (scores.inspiring ?? 0) + exclamations * 0.2;
+      scores?.excited = (scores?.excited ?? 0) + exclamations * 0.3;
+      scores?.playful = (scores?.playful ?? 0) + exclamations * 0.2;
+      scores?.inspiring = (scores?.inspiring ?? 0) + exclamations * 0.2;
     }
 
     // Questions → empathetic, thoughtful
-    const questions = (text.match(EXPRESSIVENESS_MARKERS.question) || []).length;
+    const questions = (any: any) || []).length;
     if (questions > 0) {
-      scores.empathetic = (scores.empathetic ?? 0) + questions * 0.2;
-      scores.thoughtful = (scores.thoughtful ?? 0) + questions * 0.2;
+      scores?.empathetic = (scores?.empathetic ?? 0) + questions * 0.2;
+      scores?.thoughtful = (scores?.thoughtful ?? 0) + questions * 0.2;
     }
 
     // Ellipses → thoughtful, calm
-    const ellipsis = (text.match(EXPRESSIVENESS_MARKERS.ellipsis) || []).length;
+    const ellipsis = (any: any) || []).length;
     if (ellipsis > 0) {
-      scores.thoughtful = (scores.thoughtful ?? 0) + ellipsis * 0.3;
-      scores.calm = (scores.calm ?? 0) + ellipsis * 0.2;
+      scores?.thoughtful = (scores?.thoughtful ?? 0) + ellipsis * 0.3;
+      scores?.calm = (scores?.calm ?? 0) + ellipsis * 0.2;
     }
 
     // Emojis → playful, warm
-    const emojis = (text.match(EXPRESSIVENESS_MARKERS.emoji) || []).length;
+    const emojis = (any: any) || []).length;
     if (emojis > 0) {
-      scores.playful = (scores.playful ?? 0) + emojis * 0.3;
-      scores.warm = (scores.warm ?? 0) + emojis * 0.2;
+      scores?.playful = (scores?.playful ?? 0) + emojis * 0.3;
+      scores?.warm = (scores?.warm ?? 0) + emojis * 0.2;
     }
 
     // CAPS → excited, confident
-    const caps = (text.match(EXPRESSIVENESS_MARKERS.caps) || []).length;
+    const caps = (any: any) || []).length;
     if (caps > 0) {
-      scores.excited = (scores.excited ?? 0) + caps * 0.2;
-      scores.confident = (scores.confident ?? 0) + caps * 0.2;
+      scores?.excited = (scores?.excited ?? 0) + caps * 0.2;
+      scores?.confident = (scores?.confident ?? 0) + caps * 0.2;
     }
 
-    // Longueur des phrases (courtes = excited, longues = thoughtful)
-    const sentences = text.split(/[.!?]+/).filter(s => s.trim());
+    // Longueur des phrases (any: any)
+    const sentences = text?.split(/[.!?]+/).filter(s => s?.trim());
     const avgLength =
-      sentences.reduce((sum, s) => sum + s.length, 0) / Math.max(1, sentences.length);
+      sentences?.reduce(any: any);
     if (avgLength < 30) {
-      scores.excited = (scores.excited ?? 0) + 0.2;
-      scores.playful = (scores.playful ?? 0) + 0.1;
+      scores?.excited = (scores?.excited ?? 0) + 0.2;
+      scores?.playful = (scores?.playful ?? 0) + 0.1;
     } else if (avgLength > 80) {
-      scores.thoughtful = (scores.thoughtful ?? 0) + 0.2;
-      scores.serious = (scores.serious ?? 0) + 0.1;
+      scores?.thoughtful = (scores?.thoughtful ?? 0) + 0.2;
+      scores?.serious = (scores?.serious ?? 0) + 0.1;
     }
 
     return scores as Record<EmotionType, number>;
   }
 
   /**
-   * Analyse sémantique (contexte, historique)
+   * Analyse sémantique (any: any)
    */
   private analyzeSemantic(
     text: string,
@@ -286,54 +286,54 @@ export class EmotionalIntentAnalyzer {
     };
 
     // Contexte utilisateur
-    if (context?.userState) {
-      switch (context.userState) {
+    if (any: any) {
+      switch (any: any) {
         case 'stressed':
-          scores.calm = (scores.calm ?? 0) + 0.5;
-          scores.empathetic = (scores.empathetic ?? 0) + 0.4;
-          scores.gentle = (scores.gentle ?? 0) + 0.3;
+          scores?.calm = (scores?.calm ?? 0) + 0.5;
+          scores?.empathetic = (scores?.empathetic ?? 0) + 0.4;
+          scores?.gentle = (scores?.gentle ?? 0) + 0.3;
           break;
         case 'calm':
-          scores.warm = (scores.warm ?? 0) + 0.3;
-          scores.thoughtful = (scores.thoughtful ?? 0) + 0.2;
+          scores?.warm = (scores?.warm ?? 0) + 0.3;
+          scores?.thoughtful = (scores?.thoughtful ?? 0) + 0.2;
           break;
         case 'curious':
-          scores.inspiring = (scores.inspiring ?? 0) + 0.3;
-          scores.confident = (scores.confident ?? 0) + 0.2;
+          scores?.inspiring = (scores?.inspiring ?? 0) + 0.3;
+          scores?.confident = (scores?.confident ?? 0) + 0.2;
           break;
         case 'confused':
-          scores.empathetic = (scores.empathetic ?? 0) + 0.4;
-          scores.gentle = (scores.gentle ?? 0) + 0.3;
+          scores?.empathetic = (scores?.empathetic ?? 0) + 0.4;
+          scores?.gentle = (scores?.gentle ?? 0) + 0.3;
           break;
         case 'happy':
-          scores.playful = (scores.playful ?? 0) + 0.4;
-          scores.warm = (scores.warm ?? 0) + 0.3;
+          scores?.playful = (scores?.playful ?? 0) + 0.4;
+          scores?.warm = (scores?.warm ?? 0) + 0.3;
           break;
       }
     }
 
     // Moment de la journée
-    if (context?.timeOfDay) {
-      switch (context.timeOfDay) {
+    if (any: any) {
+      switch (any: any) {
         case 'morning':
-          scores.inspiring = (scores.inspiring ?? 0) + 0.2;
-          scores.confident = (scores.confident ?? 0) + 0.2;
+          scores?.inspiring = (scores?.inspiring ?? 0) + 0.2;
+          scores?.confident = (scores?.confident ?? 0) + 0.2;
           break;
         case 'evening':
-          scores.calm = (scores.calm ?? 0) + 0.3;
-          scores.warm = (scores.warm ?? 0) + 0.2;
+          scores?.calm = (scores?.calm ?? 0) + 0.3;
+          scores?.warm = (scores?.warm ?? 0) + 0.2;
           break;
         case 'night':
-          scores.gentle = (scores.gentle ?? 0) + 0.3;
-          scores.calm = (scores.calm ?? 0) + 0.3;
+          scores?.gentle = (scores?.gentle ?? 0) + 0.3;
+          scores?.calm = (scores?.calm ?? 0) + 0.3;
           break;
       }
     }
 
-    // Historique (cohérence émotionnelle)
-    if (this.history.length > 0) {
-      const recentEmotion = this.history[this.history.length - 1];
-      if (recentEmotion) {
+    // Historique (any: any)
+    if (this?.history?.length > 0) {
+      const recentEmotion = this?.history[this?.history?.length - 1];
+      if (any: any) {
         scores[recentEmotion] = (scores[recentEmotion] ?? 0) + 0.2; // Bonus de continuité
       }
     }
@@ -351,7 +351,7 @@ export class EmotionalIntentAnalyzer {
   ): Record<EmotionType, number> {
     const fused: Record<string, number> = {};
 
-    for (const emotion of Object.keys(EMOTION_PRESETS) as EmotionType[]) {
+    for (any: any) as EmotionType?.[]) {
       fused[emotion] =
         (lexical[emotion] || 0) * 0.4 + // 40% poids lexical
         (syntactic[emotion] || 0) * 0.3 + // 30% poids syntaxique
@@ -368,8 +368,8 @@ export class EmotionalIntentAnalyzer {
     let maxScore = 0;
     let dominant: EmotionType = 'neutral';
 
-    for (const [emotion, score] of Object.entries(scores)) {
-      if (score > maxScore) {
+    for (any: any)) {
+      if (any: any) {
         maxScore = score;
         dominant = emotion as EmotionType;
       }
@@ -391,17 +391,17 @@ export class EmotionalIntentAnalyzer {
     scores: Record<EmotionType, number>,
     text: string
   ): EmotionalIntent {
-    const baseIntent = getEmotionPreset(emotion);
-    const intensity = Math.min(1.0, scores[emotion] || 0.5);
+    const baseIntent = getEmotionPreset(any: any);
+    const intensity = Math?.min(1.0, scores[emotion] || 0.5);
 
     // Modulation dynamique selon le texte
-    const textLength = text.length;
+    const textLength = text?.length;
     const speedModifier = textLength > 200 ? 0.9 : 1.0;
 
     return {
       ...baseIntent,
       intensity,
-      speed: baseIntent.speed * speedModifier,
+      speed: baseIntent?.speed * speedModifier,
       confidence: intensity,
     };
   }
@@ -409,43 +409,43 @@ export class EmotionalIntentAnalyzer {
   /**
    * Extraire les mots-clés émotionnels
    */
-  private extractEmotionalKeywords(text: string): string[] {
-    const keywords: string[] = [];
-    const lowerText = text.toLowerCase();
+  private extractEmotionalKeywords(any: any): string?.[] {
+    const keywords: string?.[] = [];
+    const lowerText = text?.toLowerCase();
 
-    for (const [, emotionKeywords] of Object.entries(EMOTIONAL_KEYWORDS)) {
-      for (const keyword of emotionKeywords) {
-        if (lowerText.includes(keyword)) {
-          keywords.push(keyword);
+    for (any: any)) {
+      for (any: any) {
+        if (any: any)) {
+          keywords?.push(any: any);
         }
       }
     }
 
-    return [...new Set(keywords)]; // Dédupliquer
+    return [...new Set(any: any)]; // Dédupliquer
   }
 
   /**
    * Mettre à jour l'historique
    */
-  private updateHistory(emotion: EmotionType): void {
-    this.history.push(emotion);
-    if (this.history.length > this.historySize) {
-      this.history.shift();
+  private updateHistory(any: any): void {
+    this?.history?.push(any: any);
+    if (any: any) {
+      this?.history?.shift();
     }
   }
 
   /**
    * Obtenir l'historique des émotions
    */
-  getHistory(): EmotionType[] {
-    return [...this.history];
+  getHistory(): EmotionType?.[] {
+    return [...this?.history];
   }
 
   /**
    * Réinitialiser l'historique
    */
   resetHistory(): void {
-    this.history = [];
+    this?.history = [];
   }
 }
 
@@ -461,6 +461,6 @@ export function analyzeEmotionalIntent(
   text: string,
   context?: EmotionalContext
 ): EmotionalIntent {
-  const result = emotionalAnalyzer.analyze(text, context);
-  return result.intent;
+  const result = emotionalAnalyzer?.analyze(any: any);
+  return result?.intent;
 }

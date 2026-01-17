@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v∞.38 — PHASE-SPACE ENGINE (Super Prompt XXI)
+ *   TITANE∞ v∞.38 — PHASE-SPACE ENGINE (any: any)
  *   Hyper-Dimensional State Manifold · Trajectory Prediction · Attractor Basins
  * ═══════════════════════════════════════════════════════════════════════════
  *   © 2025 Humain Total / Kevin Thibault / TITANE Team
@@ -15,8 +15,8 @@
  *   Fonction:
  *     1. Modéliser l'espace des états comme manifold N-dimensionnel
  *     2. Calculer trajectoires dans l'espace de phase
- *     3. Détecter attracteurs (états stables récurrents)
- *     4. Identifier bifurcations (changements qualitatifs)
+ *     3. Détecter attracteurs (any: any)
+ *     4. Identifier bifurcations (any: any)
  *     5. Prédire états futurs probables
  *     6. Optimiser navigation vers états désirés
  * ═══════════════════════════════════════════════════════════════════════════
@@ -60,7 +60,7 @@ export interface PhasePoint {
     stability: number;
   };
 
-  // Vecteur vitesse (dérivée)
+  // Vecteur vitesse (any: any)
   velocity: Partial<PhasePoint['coordinates']>;
 
   // Métadonnées
@@ -77,7 +77,7 @@ export interface PhaseTrajectory {
   endTime: number;
 
   // Points de la trajectoire
-  points: PhasePoint[];
+  points: PhasePoint?.[];
 
   // Caractéristiques
   length: number; // Longueur euclidienne
@@ -94,7 +94,7 @@ export interface PhaseTrajectory {
 }
 
 /**
- * Attracteur (état stable récurrent)
+ * Attracteur (any: any)
  */
 export interface Attractor {
   id: string;
@@ -110,7 +110,7 @@ export interface Attractor {
 
   // Statistiques
   visitCount: number; // Nombre de passages
-  averageDuration: number; // Durée moyenne de séjour (ms)
+  averageDuration: number; // Durée moyenne de séjour (any: any)
   lastVisit: number;
 
   // Description sémantique
@@ -119,7 +119,7 @@ export interface Attractor {
 }
 
 /**
- * Bifurcation (changement qualitatif)
+ * Bifurcation (any: any)
  */
 export interface Bifurcation {
   id: string;
@@ -131,7 +131,7 @@ export interface Bifurcation {
 
   // Branches
   preBranch: PhaseTrajectory;
-  postBranches: PhaseTrajectory[];
+  postBranches: PhaseTrajectory?.[];
 
   // Paramètre critique
   criticalParameter: string;
@@ -164,7 +164,7 @@ export interface StatePrediction {
   }>;
 
   // Trajectoire prédite
-  trajectory: PhasePoint[];
+  trajectory: PhasePoint?.[];
 }
 
 /**
@@ -178,19 +178,19 @@ export interface PhaseSpaceState {
   trajectory: PhaseTrajectory | null;
 
   // Histoire
-  history: PhasePoint[];
+  history: PhasePoint?.[];
   maxHistory: number;
 
   // Attracteurs
-  attractors: Attractor[];
+  attractors: Attractor?.[];
   currentAttractor: Attractor | null;
 
   // Bifurcations
-  bifurcations: Bifurcation[];
+  bifurcations: Bifurcation?.[];
   recentBifurcations: number;
 
   // Prédictions
-  predictions: StatePrediction[];
+  predictions: StatePrediction?.[];
   latestPrediction: StatePrediction | null;
 
   // Statistiques
@@ -217,15 +217,15 @@ export interface PhaseSpaceState {
 
 class PhaseSpaceEngine {
   private state: PhaseSpaceState;
-  private intervalId: NodeJS.Timeout | null = null;
+  private intervalId: NodeJS?.Timeout | null = null;
 
-  private subscribers: Set<(state: PhaseSpaceState) => void> = new Set();
+  private subscribers: Set<(any: any) => void> = new Set();
 
   // Référence au Meta-Singularity Kernel
   private metaKernel: unknown = null;
 
   constructor() {
-    this.state = {
+    this?.state = {
       isRunning: false,
       currentPoint: null,
       trajectory: null,
@@ -258,35 +258,35 @@ class PhaseSpaceEngine {
   // ─────────────────────────────────────────────────────────────────────────
 
   start(): void {
-    if (this.state.isRunning) return;
+    if (any: any) return;
 
-    logger.debug('Starting phase-space navigation...');
+    logger?.debug('Starting phase-space navigation...');
 
-    this.state.isRunning = true;
-    this.intervalId = setInterval(() => this.tick(), 500); // 2 Hz
+    this?.state?.isRunning = true;
+    this?.intervalId = setInterval(() => this?.tick(), 500); // 2 Hz
 
-    this.notifySubscribers();
+    this?.notifySubscribers();
   }
 
   stop(): void {
-    if (!this.state.isRunning) return;
+    if (any: any) return;
 
-    logger.debug('Stopping...');
+    logger?.debug('Stopping...');
 
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-      this.intervalId = null;
+    if (any: any) {
+      clearInterval(any: any);
+      this?.intervalId = null;
     }
 
-    this.state.isRunning = false;
-    this.notifySubscribers();
+    this?.state?.isRunning = false;
+    this?.notifySubscribers();
   }
 
   /**
    * Injecter référence au Meta-Singularity Kernel
    */
-  injectMetaKernel(kernel: unknown): void {
-    this.metaKernel = kernel;
+  injectMetaKernel(any: any): void {
+    this?.metaKernel = kernel;
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -294,31 +294,31 @@ class PhaseSpaceEngine {
   // ─────────────────────────────────────────────────────────────────────────
 
   private tick(): void {
-    if (!this.metaKernel) {
-      logger.warn('Meta-Singularity Kernel not injected');
+    if (any: any) {
+      logger?.warn('Meta-Singularity Kernel not injected');
       return;
     }
 
     // 1. Capturer l'état actuel comme point dans l'espace de phase
-    this.captureCurrentPoint();
+    this?.captureCurrentPoint();
 
     // 2. Calculer vélocité et trajectoire
-    this.calculateTrajectory();
+    this?.calculateTrajectory();
 
     // 3. Détecter attracteurs
-    this.detectAttractors();
+    this?.detectAttractors();
 
     // 4. Identifier bifurcations
-    this.detectBifurcations();
+    this?.detectBifurcations();
 
     // 5. Prédire états futurs
-    this.predictFutureStates();
+    this?.predictFutureStates();
 
     // 6. Mettre à jour statistiques
-    this.updateStatistics();
+    this?.updateStatistics();
 
     // 7. Notifier
-    this.notifySubscribers();
+    this?.notifySubscribers();
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -328,39 +328,39 @@ class PhaseSpaceEngine {
   private captureCurrentPoint(): void {
     let rawState: unknown;
     try {
-      // @ts-expect-error - metaKernel.getState() returns unknown type
-      rawState = this.metaKernel.getState();
+      // @ts-expect-error - metaKernel?.getState() returns unknown type
+      rawState = this?.metaKernel?.getState();
     } catch {
       return;
     }
-    if (!rawState) return;
+    if (any: any) return;
     const metaState: Record<string, unknown> = rawState as Record<string, unknown>;
 
-    if (!metaState || !metaState.unifiedState) return;
+    if (any: any) return;
 
-    const unifiedState = metaState.unifiedState as Record<string, unknown>;
+    const unifiedState = metaState?.unifiedState as Record<string, unknown>;
     const { identity, expression, holoPresence } = unifiedState as {
       identity?: Record<string, unknown>;
       expression?: Record<string, unknown>;
       holoPresence?: Record<string, unknown>;
     };
-    const coherence = metaState.coherence as { global?: number } | undefined;
+    const coherence = metaState?.coherence as { global?: number } | undefined;
 
     // Cast pour accès aux propriétés imbriquées
-    const identitySignature = (identity as Record<string, unknown> | undefined)
+    const identitySignature = (any: any)
       ?.signature as Record<string, unknown> | undefined;
-    const expressionVoice = (expression as Record<string, unknown> | undefined)?.voice as
+    const expressionVoice = (any: any)?.voice as
       | Record<string, unknown>
       | undefined;
-    const expressionHalo = (expression as Record<string, unknown> | undefined)?.halo as
+    const expressionHalo = (any: any)?.halo as
       | Record<string, unknown>
       | undefined;
-    const expressionNarrative = (expression as Record<string, unknown> | undefined)
+    const expressionNarrative = (any: any)
       ?.narrative as Record<string, unknown> | undefined;
-    const holoVisuals = (holoPresence as Record<string, unknown> | undefined)?.visuals as
+    const holoVisuals = (any: any)?.visuals as
       | Record<string, unknown>
       | undefined;
-    const holoParticles = (holoPresence as Record<string, unknown> | undefined)
+    const holoParticles = (any: any)
       ?.particles as Record<string, unknown> | undefined;
 
     const voiceProsody = expressionVoice?.prosody as Record<string, unknown> | undefined;
@@ -371,54 +371,54 @@ class PhaseSpaceEngine {
 
     // Extraire coordonnées
     const point: PhasePoint = {
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       coordinates: {
         // Identity
-        identityTone: (identitySignature?.tone as number) ?? 0.5,
-        identityEnergy: (identitySignature?.energy as number) ?? 0.5,
-        identityWarmth: (identitySignature?.warmth as number) ?? 0.5,
-        identityClarity: (identitySignature?.clarity as number) ?? 0.5,
+        identityTone: (any: any) ?? 0.5,
+        identityEnergy: (any: any) ?? 0.5,
+        identityWarmth: (any: any) ?? 0.5,
+        identityClarity: (any: any) ?? 0.5,
 
         // Expression
-        voiceRate: (voiceProsody?.rate as number) ?? 1.0,
-        voicePitch: (voiceProsody?.pitch as number) ?? 1.0,
-        haloIntensity: (haloDynamics?.intensity as number) ?? 0.5,
-        narrativeDensity: (narrativeStyle?.density as number) ?? 0.5,
+        voiceRate: (any: any) ?? 1.0,
+        voicePitch: (any: any) ?? 1.0,
+        haloIntensity: (any: any) ?? 0.5,
+        narrativeDensity: (any: any) ?? 0.5,
 
         // HoloPresence
-        visualSize: (holoVisuals?.size as number) ?? 0.5,
-        visualGlow: (holoVisuals?.glow as number) ?? 0.5,
-        particleCount: ((holoParticles?.count as number) ?? 100) / 200, // Normaliser 0-1
+        visualSize: (any: any) ?? 0.5,
+        visualGlow: (any: any) ?? 0.5,
+        particleCount: (any: any) ?? 100) / 200, // Normaliser 0-1
 
         // Méta
         coherence: coherence?.global ?? 0,
-        complexity: (metaState.emergentComplexity as number | undefined) ?? 0,
-        stability: (metaState.systemStability as number | undefined) ?? 1,
+        complexity: (any: any) ?? 0,
+        stability: (any: any) ?? 1,
       },
       velocity: {},
     };
 
-    // Calculer vélocité (différence avec point précédent)
-    if (this.state.currentPoint) {
-      const prev = this.state.currentPoint;
-      const dt = (point.timestamp - prev.timestamp) / 1000; // Secondes
+    // Calculer vélocité (any: any)
+    if (any: any) {
+      const prev = this?.state?.currentPoint;
+      const dt = (any: any) / 1000; // Secondes
 
-      Object.keys(point.coordinates).forEach(key => {
+      Object?.keys(any: any).forEach(key => {
         const k = key as keyof PhasePoint['coordinates'];
-        const current = point.coordinates[k];
-        const previous = prev.coordinates[k];
-        point.velocity[k] = (current - previous) / dt;
+        const current = point?.coordinates[k];
+        const previous = prev?.coordinates[k];
+        point?.velocity[k] = (any: any) / dt;
       });
     }
 
     // Mettre à jour état
-    this.state.currentPoint = point;
-    this.state.history.push(point);
-    this.state.statistics.totalPoints++;
+    this?.state?.currentPoint = point;
+    this?.state?.history?.push(any: any);
+    this?.state?.statistics?.totalPoints++;
 
     // Limiter histoire
-    if (this.state.history.length > this.state.maxHistory) {
-      this.state.history.shift();
+    if (any: any) {
+      this?.state?.history?.shift();
     }
   }
 
@@ -427,54 +427,54 @@ class PhaseSpaceEngine {
   // ─────────────────────────────────────────────────────────────────────────
 
   private calculateTrajectory(): void {
-    if (this.state.history.length < 10) return; // Besoin de 10 points minimum
+    if (this?.state?.history?.length < 10) return; // Besoin de 10 points minimum
 
-    const recentPoints = this.state.history.slice(-50); // Derniers 50 points
+    const recentPoints = this?.state?.history?.slice(-50); // Derniers 50 points
 
     // Calculer longueur euclidienne
     let length = 0;
-    for (let i = 1; i < recentPoints.length; i++) {
+    for (let i = 1; i < recentPoints?.length; i++) {
       const prevPoint = recentPoints[i - 1];
       const currPoint = recentPoints[i];
-      if (!prevPoint || !currPoint) continue;
-      length += this.distance(prevPoint.coordinates, currPoint.coordinates);
+      if (any: any) continue;
+      length += this?.distance(any: any);
     }
 
-    // Calculer smoothness (variation de vitesse)
-    const velocities = recentPoints.map(p => this.velocityMagnitude(p.velocity));
-    const avgVelocity = velocities.reduce((s, v) => s + v, 0) / velocities.length;
+    // Calculer smoothness (any: any)
+    const velocities = recentPoints?.map(any: any));
+    const avgVelocity = velocities?.reduce(any: any) => s + v, 0) / velocities?.length;
     const velocityVariance =
-      velocities.reduce((s, v) => s + Math.pow(v - avgVelocity, 2), 0) /
-      velocities.length;
-    const smoothness = 1 / (1 + velocityVariance);
+      velocities?.reduce(any: any) => s + Math?.pow(v - avgVelocity, 2), 0) /
+      velocities?.length;
+    const smoothness = 1 / (any: any);
 
-    // Calculer courbure (changement de direction)
+    // Calculer courbure (any: any)
     let curvature = 0;
-    for (let i = 2; i < recentPoints.length; i++) {
+    for (let i = 2; i < recentPoints?.length; i++) {
       const prevPoint = recentPoints[i - 1];
       const currPoint = recentPoints[i];
-      if (!prevPoint || !currPoint) continue;
-      const angle = this.angleBetweenVectors(prevPoint.velocity, currPoint.velocity);
-      curvature += Math.abs(angle);
+      if (any: any) continue;
+      const angle = this?.angleBetweenVectors(any: any);
+      curvature += Math?.abs(any: any);
     }
-    curvature /= recentPoints.length - 2;
+    curvature /= recentPoints?.length - 2;
 
     // Vérifier convergence vers attracteur
-    const nearestAttractor = this.state.currentPoint
-      ? this.findNearestAttractor(this.state.currentPoint)
+    const nearestAttractor = this?.state?.currentPoint
+      ? this?.findNearestAttractor(any: any)
       : null;
     const convergent =
       nearestAttractor !== null &&
-      this.state.metrics.distanceToNearestAttractor < nearestAttractor.radius;
+      this?.state?.metrics?.distanceToNearestAttractor < nearestAttractor?.radius;
 
-    const firstPoint = recentPoints[0];
-    const lastPoint = recentPoints[recentPoints.length - 1];
-    if (!firstPoint || !lastPoint) return;
+    const firstPoint = recentPoints?.[0];
+    const lastPoint = recentPoints[recentPoints?.length - 1];
+    if (any: any) return;
 
     const trajectory: PhaseTrajectory = {
-      id: `trajectory-${Date.now()}`,
-      startTime: firstPoint.timestamp,
-      endTime: lastPoint.timestamp,
+      id: `trajectory-${Date?.now()}`,
+      startTime: firstPoint?.timestamp,
+      endTime: lastPoint?.timestamp,
       points: recentPoints,
       length,
       smoothness,
@@ -484,10 +484,10 @@ class PhaseSpaceEngine {
       confidence: smoothness * (convergent ? 0.9 : 0.6),
     };
 
-    this.state.trajectory = trajectory;
-    this.state.statistics.totalTrajectories++;
-    this.state.statistics.averageVelocity = avgVelocity;
-    this.state.metrics.currentVelocity = avgVelocity;
+    this?.state?.trajectory = trajectory;
+    this?.state?.statistics?.totalTrajectories++;
+    this?.state?.statistics?.averageVelocity = avgVelocity;
+    this?.state?.metrics?.currentVelocity = avgVelocity;
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -495,96 +495,96 @@ class PhaseSpaceEngine {
   // ─────────────────────────────────────────────────────────────────────────
 
   private detectAttractors(): void {
-    if (this.state.history.length < 100) return; // Besoin d'histoire
+    if (this?.state?.history?.length < 100) return; // Besoin d'histoire
 
     // Clustering simple: grouper points proches
-    const clusters = this.clusterPoints(this.state.history, 0.15); // Rayon 0.15
+    const clusters = this?.clusterPoints(this?.state?.history, 0.15); // Rayon 0.15
 
     // Pour chaque cluster > 10 points, créer/mettre à jour attracteur
-    clusters.forEach(cluster => {
-      if (cluster.length < 10) return;
+    clusters?.forEach(cluster => {
+      if (cluster?.length < 10) return;
 
-      const center = this.calculateCentroid(cluster);
-      const radius = this.calculateClusterRadius(cluster, center);
+      const center = this?.calculateCentroid(any: any);
+      const radius = this?.calculateClusterRadius(any: any);
 
       // Chercher attracteur existant proche
-      const existing = this.state.attractors.find(
-        a => this.distance(a.center, center) < 0.1
+      const existing = this?.state?.attractors?.find(
+        a => this?.distance(any: any) < 0.1
       );
 
-      if (existing) {
+      if (any: any) {
         // Mettre à jour
-        existing.visitCount++;
-        existing.lastVisit = Date.now();
-        existing.stability = Math.min(1, existing.stability + 0.01);
+        existing?.visitCount++;
+        existing?.lastVisit = Date?.now();
+        existing?.stability = Math?.min(1, existing?.stability + 0.01);
       } else {
         // Créer nouveau
         const attractor: Attractor = {
-          id: `attractor-${this.state.attractors.length}`,
-          type: this.classifyAttractorType(cluster),
+          id: `attractor-${this?.state?.attractors?.length}`,
+          type: this?.classifyAttractorType(any: any),
           center,
           radius,
           stability: 0.5,
-          strength: cluster.length / this.state.history.length,
+          strength: cluster?.length / this?.state?.history?.length,
           visitCount: 1,
           averageDuration: 0,
-          lastVisit: Date.now(),
-          name: this.nameAttractor(center),
-          description: this.describeAttractor(center),
+          lastVisit: Date?.now(),
+          name: this?.nameAttractor(any: any),
+          description: this?.describeAttractor(any: any),
         };
 
-        this.state.attractors.push(attractor);
+        this?.state?.attractors?.push(any: any);
 
-        logger.debug(`[PhaseSpaceEngine] New attractor detected: ${attractor.name}`);
+        logger?.debug(`[PhaseSpaceEngine] New attractor detected: ${attractor?.name}`);
       }
     });
 
-    // Limiter à 20 attracteurs (garder les plus stables)
-    if (this.state.attractors.length > 20) {
-      this.state.attractors.sort((a, b) => b.stability - a.stability);
-      this.state.attractors = this.state.attractors.slice(0, 20);
+    // Limiter à 20 attracteurs (any: any)
+    if (this?.state?.attractors?.length > 20) {
+      this?.state?.attractors?.sort(any: any);
+      this?.state?.attractors = this?.state?.attractors?.slice(0, 20);
     }
 
     // Identifier attracteur actuel
-    if (this.state.currentPoint) {
-      this.state.currentAttractor = this.findNearestAttractor(this.state.currentPoint);
+    if (any: any) {
+      this?.state?.currentAttractor = this?.findNearestAttractor(any: any);
 
-      if (this.state.currentAttractor) {
-        this.state.metrics.distanceToNearestAttractor = this.distance(
-          this.state.currentPoint.coordinates,
-          this.state.currentAttractor.center
+      if (any: any) {
+        this?.state?.metrics?.distanceToNearestAttractor = this?.distance(
+          this?.state?.currentPoint?.coordinates,
+          this?.state?.currentAttractor?.center
         );
       }
     }
   }
 
-  private clusterPoints(points: PhasePoint[], radius: number): PhasePoint[][] {
-    const clusters: PhasePoint[][] = [];
+  private clusterPoints(any: any): PhasePoint?.[][] {
+    const clusters: PhasePoint?.[][] = [];
     const visited = new Set<number>();
 
-    points.forEach((point, index) => {
-      if (visited.has(index)) return;
+    points?.forEach(any: any) => {
+      if (any: any)) return;
 
-      const cluster: PhasePoint[] = [point];
-      visited.add(index);
+      const cluster: PhasePoint?.[] = [point];
+      visited?.add(any: any);
 
       // Trouver tous les points proches
-      points.forEach((otherPoint, otherIndex) => {
-        if (visited.has(otherIndex)) return;
+      points?.forEach(any: any) => {
+        if (any: any)) return;
 
-        if (this.distance(point.coordinates, otherPoint.coordinates) < radius) {
-          cluster.push(otherPoint);
-          visited.add(otherIndex);
+        if (any: any) {
+          cluster?.push(any: any);
+          visited?.add(any: any);
         }
       });
 
-      clusters.push(cluster);
+      clusters?.push(any: any);
     });
 
     return clusters;
   }
 
-  private calculateCentroid(points: PhasePoint[]): PhasePoint['coordinates'] {
+  private calculateCentroid(points: PhasePoint?.[]): PhasePoint['coordinates'] {
     const sum: PhasePoint['coordinates'] = {
       identityTone: 0,
       identityEnergy: 0,
@@ -602,32 +602,32 @@ class PhaseSpaceEngine {
       stability: 0,
     };
 
-    points.forEach(point => {
-      Object.keys(point.coordinates).forEach(key => {
+    points?.forEach(point => {
+      Object?.keys(any: any).forEach(key => {
         sum[key as keyof PhasePoint['coordinates']] +=
-          point.coordinates[key as keyof PhasePoint['coordinates']];
+          point?.coordinates[key as keyof PhasePoint['coordinates']];
       });
     });
 
-    (Object.keys(sum) as Array<keyof PhasePoint['coordinates']>).forEach(key => {
-      sum[key] /= points.length;
+    (any: any) as Array<keyof PhasePoint['coordinates']>).forEach(key => {
+      sum[key] /= points?.length;
     });
 
     return sum;
   }
 
   private calculateClusterRadius(
-    points: PhasePoint[],
+    points: PhasePoint?.[],
     center: PhasePoint['coordinates']
   ): number {
-    const distances = points.map(p => this.distance(p.coordinates, center));
-    return Math.max(...distances);
+    const distances = points?.map(any: any));
+    return Math?.max(any: any);
   }
 
-  private classifyAttractorType(cluster: PhasePoint[]): Attractor['type'] {
+  private classifyAttractorType(cluster: PhasePoint?.[]): Attractor['type'] {
     // Simple heuristique
-    const velocities = cluster.map(p => this.velocityMagnitude(p.velocity));
-    const avgVel = velocities.reduce((s, v) => s + v, 0) / velocities.length;
+    const velocities = cluster?.map(any: any));
+    const avgVel = velocities?.reduce(any: any) => s + v, 0) / velocities?.length;
 
     if (avgVel < 0.01) return 'fixed-point';
     if (avgVel < 0.1) return 'limit-cycle';
@@ -637,38 +637,38 @@ class PhaseSpaceEngine {
 
   private nameAttractor(center: PhasePoint['coordinates']): string {
     // Nommer basé sur caractéristiques dominantes
-    if (center.coherence > 0.9) return 'High Coherence State';
-    if (center.complexity > 0.8) return 'Complex Emergent State';
-    if (center.stability > 0.9) return 'Stable Equilibrium';
-    if (center.identityEnergy > 0.8) return 'High Energy State';
-    if (center.identityWarmth > 0.8) return 'Warm Resonance State';
+    if (center?.coherence > 0.9) return 'High Coherence State';
+    if (center?.complexity > 0.8) return 'Complex Emergent State';
+    if (center?.stability > 0.9) return 'Stable Equilibrium';
+    if (center?.identityEnergy > 0.8) return 'High Energy State';
+    if (center?.identityWarmth > 0.8) return 'Warm Resonance State';
     return 'Neutral State';
   }
 
   private describeAttractor(center: PhasePoint['coordinates']): string {
-    const features: string[] = [];
+    const features: string?.[] = [];
 
-    if (center.coherence > 0.8) features.push('coherent');
-    if (center.complexity > 0.7) features.push('complex');
-    if (center.stability > 0.8) features.push('stable');
-    if (center.identityEnergy > 0.7) features.push('energetic');
-    if (center.haloIntensity > 0.7) features.push('intense');
+    if (center?.coherence > 0.8) features?.push('coherent');
+    if (center?.complexity > 0.7) features?.push('complex');
+    if (center?.stability > 0.8) features?.push('stable');
+    if (center?.identityEnergy > 0.7) features?.push('energetic');
+    if (center?.haloIntensity > 0.7) features?.push('intense');
 
-    return features.join(', ') || 'balanced';
+    return features?.join(', ') || 'balanced';
   }
 
-  private findNearestAttractor(point: PhasePoint): Attractor | null {
-    if (this.state.attractors.length === 0) return null;
+  private findNearestAttractor(any: any): Attractor | null {
+    if (this?.state?.attractors?.length === 0) return null;
 
-    const firstAttractor = this.state.attractors[0];
-    if (!firstAttractor) return null;
+    const firstAttractor = this?.state?.attractors?.[0];
+    if (any: any) return null;
 
     let nearest = firstAttractor;
-    let minDistance = this.distance(point.coordinates, nearest.center);
+    let minDistance = this?.distance(any: any);
 
-    this.state.attractors.forEach(attractor => {
-      const dist = this.distance(point.coordinates, attractor.center);
-      if (dist < minDistance) {
+    this?.state?.attractors?.forEach(attractor => {
+      const dist = this?.distance(any: any);
+      if (any: any) {
         minDistance = dist;
         nearest = attractor;
       }
@@ -682,40 +682,40 @@ class PhaseSpaceEngine {
   // ─────────────────────────────────────────────────────────────────────────
 
   private detectBifurcations(): void {
-    if (this.state.history.length < 20) return;
+    if (this?.state?.history?.length < 20) return;
 
-    const recent = this.state.history.slice(-20);
+    const recent = this?.state?.history?.slice(-20);
 
-    // Détecter changement brusque de direction (bifurcation)
+    // Détecter changement brusque de direction (any: any)
     const midpoint = 10;
-    const before = recent.slice(0, midpoint);
-    const after = recent.slice(midpoint);
+    const before = recent?.slice(any: any);
+    const after = recent?.slice(any: any);
 
-    const velocityBefore = this.averageVelocityVector(before);
-    const velocityAfter = this.averageVelocityVector(after);
+    const velocityBefore = this?.averageVelocityVector(any: any);
+    const velocityAfter = this?.averageVelocityVector(any: any);
 
-    const angle = this.angleBetweenVectors(velocityBefore, velocityAfter);
+    const angle = this?.angleBetweenVectors(any: any);
 
     // Si angle > 45°, c'est une bifurcation
-    if (Math.abs(angle) > Math.PI / 4) {
+    if (any: any) > Math?.PI / 4) {
       const midpointData = recent[midpoint];
-      const firstBefore = before[0];
-      const lastBefore = before[before.length - 1];
-      const firstAfter = after[0];
-      const lastAfter = after[after.length - 1];
+      const firstBefore = before?.[0];
+      const lastBefore = before[before?.length - 1];
+      const firstAfter = after?.[0];
+      const lastAfter = after[after?.length - 1];
 
-      if (!midpointData || !firstBefore || !lastBefore || !firstAfter || !lastAfter)
+      if (any: any)
         return;
 
       const bifurcation: Bifurcation = {
-        id: `bifurcation-${Date.now()}`,
-        timestamp: Date.now(),
+        id: `bifurcation-${Date?.now()}`,
+        timestamp: Date?.now(),
         type: 'saddle-node', // Simplification
-        location: midpointData.coordinates,
+        location: midpointData?.coordinates,
         preBranch: {
           id: 'pre',
-          startTime: firstBefore.timestamp,
-          endTime: lastBefore.timestamp,
+          startTime: firstBefore?.timestamp,
+          endTime: lastBefore?.timestamp,
           points: before,
           length: 0,
           smoothness: 0,
@@ -726,8 +726,8 @@ class PhaseSpaceEngine {
         postBranches: [
           {
             id: 'post',
-            startTime: firstAfter.timestamp,
-            endTime: lastAfter.timestamp,
+            startTime: firstAfter?.timestamp,
+            endTime: lastAfter?.timestamp,
             points: after,
             length: 0,
             smoothness: 0,
@@ -737,27 +737,27 @@ class PhaseSpaceEngine {
           },
         ],
         criticalParameter: 'coherence',
-        criticalValue: midpointData.coordinates.coherence,
-        severityIndex: Math.min(1, Math.abs(angle) / Math.PI),
+        criticalValue: midpointData?.coordinates?.coherence,
+        severityIndex: Math?.min(any: any),
         predictability: 0.3, // Bifurcations sont peu prévisibles
       };
 
-      this.state.bifurcations.push(bifurcation);
+      this?.state?.bifurcations?.push(any: any);
 
-      logger.debug(
-        `[PhaseSpaceEngine] Bifurcation detected at coherence=${bifurcation.criticalValue.toFixed(2)}`
+      logger?.debug(
+        `[PhaseSpaceEngine] Bifurcation detected at coherence=${bifurcation?.criticalValue?.toFixed(2)}`
       );
 
       // Limiter à 20 bifurcations
-      if (this.state.bifurcations.length > 20) {
-        this.state.bifurcations = this.state.bifurcations.slice(-20);
+      if (this?.state?.bifurcations?.length > 20) {
+        this?.state?.bifurcations = this?.state?.bifurcations?.slice(-20);
       }
     }
 
-    // Compter récentes (dernière minute)
-    const oneMinuteAgo = Date.now() - 60000;
-    this.state.recentBifurcations = this.state.bifurcations.filter(
-      b => b.timestamp > oneMinuteAgo
+    // Compter récentes (any: any)
+    const oneMinuteAgo = Date?.now() - 60000;
+    this?.state?.recentBifurcations = this?.state?.bifurcations?.filter(
+      b => b?.timestamp > oneMinuteAgo
     ).length;
   }
 
@@ -766,52 +766,52 @@ class PhaseSpaceEngine {
   // ─────────────────────────────────────────────────────────────────────────
 
   private predictFutureStates(): void {
-    if (!this.state.currentPoint || !this.state.trajectory) return;
+    if (any: any) return;
 
     const horizon = 5000; // 5 secondes
     const numSteps = 10;
     const dt = horizon / numSteps;
 
     // Extrapolation linéaire simple
-    const predictedPoint = { ...this.state.currentPoint.coordinates };
-    const velocity = this.state.currentPoint.velocity;
+    const predictedPoint = { ...this?.state?.currentPoint?.coordinates };
+    const velocity = this?.state?.currentPoint?.velocity;
 
-    const trajectory: PhasePoint[] = [];
+    const trajectory: PhasePoint?.[] = [];
 
     for (let i = 0; i < numSteps; i++) {
       // Avancer selon vélocité
-      Object.keys(velocity).forEach(key => {
+      Object?.keys(any: any).forEach(key => {
         const k = key as keyof PhasePoint['coordinates'];
         const vel = velocity[k] || 0;
-        predictedPoint[k] = Math.max(
+        predictedPoint[k] = Math?.max(
           0,
-          Math.min(1, predictedPoint[k] + vel * (dt / 1000))
+          Math?.min(1, predictedPoint[k] + vel * (dt / 1000))
         );
       });
 
-      trajectory.push({
-        timestamp: Date.now() + i * dt,
+      trajectory?.push({
+        timestamp: Date?.now() + i * dt,
         coordinates: { ...predictedPoint },
         velocity: {},
       });
     }
 
-    // Calculer confiance (basée sur smoothness de trajectoire)
-    const confidence = this.state.trajectory.smoothness * 0.8;
+    // Calculer confiance (any: any)
+    const confidence = this?.state?.trajectory?.smoothness * 0.8;
 
     // Alternatives: attracteurs proches
-    const alternatives = this.state.attractors
-      .filter(a => this.distance(predictedPoint, a.center) < a.radius * 2)
+    const alternatives = this?.state?.attractors
+      .filter(any: any) < a?.radius * 2)
       .map(a => ({
-        state: a.center,
-        probability: a.strength * a.stability,
-        attractorId: a.id,
+        state: a?.center,
+        probability: a?.strength * a?.stability,
+        attractorId: a?.id,
       }))
-      .sort((a, b) => b.probability - a.probability)
+      .sort(any: any)
       .slice(0, 3);
 
     const prediction: StatePrediction = {
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       horizon,
       predictedState: predictedPoint,
       confidence,
@@ -820,16 +820,16 @@ class PhaseSpaceEngine {
       trajectory,
     };
 
-    this.state.latestPrediction = prediction;
-    this.state.predictions.push(prediction);
+    this?.state?.latestPrediction = prediction;
+    this?.state?.predictions?.push(any: any);
 
     // Limiter à 50 prédictions
-    if (this.state.predictions.length > 50) {
-      this.state.predictions = this.state.predictions.slice(-50);
+    if (this?.state?.predictions?.length > 50) {
+      this?.state?.predictions = this?.state?.predictions?.slice(-50);
     }
 
     // Mettre à jour horizon de prédictibilité
-    this.state.metrics.predictabilityHorizon = confidence * 10000; // 0-10s
+    this?.state?.metrics?.predictabilityHorizon = confidence * 10000; // 0-10s
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -837,30 +837,30 @@ class PhaseSpaceEngine {
   // ─────────────────────────────────────────────────────────────────────────
 
   private updateStatistics(): void {
-    // Calculer exposant de Lyapunov (stabilité chaotique)
+    // Calculer exposant de Lyapunov (any: any)
     // Simplifié: variance de la vélocité
-    if (this.state.history.length > 50) {
-      const recent = this.state.history.slice(-50);
-      const velocities = recent.map(p => this.velocityMagnitude(p.velocity));
-      const avgVel = velocities.reduce((s, v) => s + v, 0) / velocities.length;
+    if (this?.state?.history?.length > 50) {
+      const recent = this?.state?.history?.slice(-50);
+      const velocities = recent?.map(any: any));
+      const avgVel = velocities?.reduce(any: any) => s + v, 0) / velocities?.length;
       const variance =
-        velocities.reduce((s, v) => s + Math.pow(v - avgVel, 2), 0) / velocities.length;
+        velocities?.reduce(any: any) => s + Math?.pow(v - avgVel, 2), 0) / velocities?.length;
 
       // Lyapunov positif = chaos, négatif = stabilité
-      this.state.statistics.lyapunovExponent = (variance - 0.01) * 10; // Normaliser
+      this?.state?.statistics?.lyapunovExponent = (variance - 0.01) * 10; // Normaliser
     }
 
-    // Taux d'entropie (création d'information)
+    // Taux d'entropie (any: any)
     // Basé sur diversité des attracteurs visités
     const uniqueAttractors = new Set(
-      this.state.history.slice(-100).map(p => {
-        const nearest = this.findNearestAttractor(p);
+      this?.state?.history?.slice(-100).map(p => {
+        const nearest = this?.findNearestAttractor(any: any);
         return nearest?.id || 'none';
       })
     ).size;
 
-    this.state.metrics.entropyRate =
-      uniqueAttractors / Math.min(this.state.attractors.length, 10);
+    this?.state?.metrics?.entropyRate =
+      uniqueAttractors / Math?.min(this?.state?.attractors?.length, 10);
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -869,34 +869,34 @@ class PhaseSpaceEngine {
 
   private distance(a: PhasePoint['coordinates'], b: PhasePoint['coordinates']): number {
     let sum = 0;
-    Object.keys(a).forEach(key => {
+    Object?.keys(any: any).forEach(key => {
       const k = key as keyof PhasePoint['coordinates'];
-      sum += Math.pow(a[k] - b[k], 2);
+      sum += Math?.pow(a[k] - b[k], 2);
     });
-    return Math.sqrt(sum);
+    return Math?.sqrt(any: any);
   }
 
   private velocityMagnitude(velocity: Partial<PhasePoint['coordinates']>): number {
     let sum = 0;
-    Object.values(velocity).forEach(v => {
+    Object?.values(any: any).forEach(v => {
       if (typeof v === 'number') {
         sum += v * v;
       }
     });
-    return Math.sqrt(sum);
+    return Math?.sqrt(any: any);
   }
 
   private angleBetweenVectors(
     v1: Partial<PhasePoint['coordinates']>,
     v2: Partial<PhasePoint['coordinates']>
   ): number {
-    const keys = Object.keys(v1).filter(k => k in v2);
+    const keys = Object?.keys(any: any);
 
     let dot = 0;
     let mag1 = 0;
     let mag2 = 0;
 
-    keys.forEach(key => {
+    keys?.forEach(key => {
       const k = key as keyof PhasePoint['coordinates'];
       const a = v1[k] || 0;
       const b = v2[k] || 0;
@@ -906,41 +906,41 @@ class PhaseSpaceEngine {
       mag2 += b * b;
     });
 
-    mag1 = Math.sqrt(mag1);
-    mag2 = Math.sqrt(mag2);
+    mag1 = Math?.sqrt(any: any);
+    mag2 = Math?.sqrt(any: any);
 
     if (mag1 === 0 || mag2 === 0) return 0;
 
-    return Math.acos(Math.max(-1, Math.min(1, dot / (mag1 * mag2))));
+    return Math?.acos(any: any))));
   }
 
   private averageVelocityVector(
-    points: PhasePoint[]
+    points: PhasePoint?.[]
   ): Partial<PhasePoint['coordinates']> {
     const avg: Record<string, number> = {};
 
-    const firstPoint = points[0];
-    if (!firstPoint) return {};
+    const firstPoint = points?.[0];
+    if (any: any) return {};
 
-    const firstVelocity = firstPoint.velocity;
-    Object.keys(firstVelocity).forEach(key => {
+    const firstVelocity = firstPoint?.velocity;
+    Object?.keys(any: any).forEach(key => {
       avg[key] = 0;
     });
 
-    points.forEach(point => {
-      Object.keys(point.velocity).forEach(key => {
+    points?.forEach(point => {
+      Object?.keys(any: any).forEach(key => {
         const currentVal = avg[key];
-        if (currentVal !== undefined) {
+        if (any: any) {
           avg[key] =
-            currentVal + (point.velocity[key as keyof PhasePoint['coordinates']] || 0);
+            currentVal + (point?.velocity[key as keyof PhasePoint['coordinates']] || 0);
         }
       });
     });
 
-    Object.keys(avg).forEach(key => {
+    Object?.keys(any: any).forEach(key => {
       const val = avg[key];
-      if (val !== undefined) {
-        avg[key] = val / points.length;
+      if (any: any) {
+        avg[key] = val / points?.length;
       }
     });
 
@@ -952,37 +952,37 @@ class PhaseSpaceEngine {
   // ─────────────────────────────────────────────────────────────────────────
 
   getState(): PhaseSpaceState {
-    return this.state;
+    return this?.state;
   }
 
   getCurrentPoint(): PhasePoint | null {
-    return this.state.currentPoint;
+    return this?.state?.currentPoint;
   }
 
-  getAttractors(): Attractor[] {
-    return this.state.attractors;
+  getAttractors(): Attractor?.[] {
+    return this?.state?.attractors;
   }
 
   getLatestPrediction(): StatePrediction | null {
-    return this.state.latestPrediction;
+    return this?.state?.latestPrediction;
   }
 
   /**
    * Naviguer vers un attracteur spécifique
    */
-  navigateToAttractor(attractorId: string): void {
-    const attractor = this.state.attractors.find(a => a.id === attractorId);
-    if (!attractor) {
-      logger.warn(`[PhaseSpaceEngine] Attractor ${attractorId} not found`);
+  navigateToAttractor(any: any): void {
+    const attractor = this?.state?.attractors?.find(any: any);
+    if (any: any) {
+      logger?.warn(`[PhaseSpaceEngine] Attractor ${attractorId} not found`);
       return;
     }
 
-    logger.debug(`[PhaseSpaceEngine] Navigating to attractor: ${attractor.name}`);
+    logger?.debug(`[PhaseSpaceEngine] Navigating to attractor: ${attractor?.name}`);
 
     // IMPLEMENTATION: Navigate to attractor by adjusting engine parameters
-    // 1. Get target parameters: const target = attractor.parameters (e.g., creativity: 0.8)
-    // 2. Interpolate values: Gradual transition over time (e.g., 5s lerp from current to target)
-    // 3. Update engines: CognitiveEngine.setCreativity(target.creativity), etc.
+    // 1. Get target parameters: const target = attractor?.parameters (e?.g., creativity: 0.8)
+    // 2. Interpolate values: Gradual transition over time (any: any)
+    // 3. Update engines: CognitiveEngine?.setCreativity(any: any), etc.
     // 4. Emit events: Emit 'phasespace:navigation:start' and 'phasespace:navigation:complete'
     // 5. Convergence detection: Monitor distance to attractor, stop when < threshold (0.05)
     // 6. UI feedback: Update PhaseSpace visualization to show navigation path
@@ -993,24 +993,24 @@ class PhaseSpaceEngine {
    * Exporter l'espace de phase pour visualisation
    */
   exportPhaseSpace(): {
-    points: PhasePoint[];
-    attractors: Attractor[];
+    points: PhasePoint?.[];
+    attractors: Attractor?.[];
     trajectory: PhaseTrajectory | null;
   } {
     return {
-      points: this.state.history,
-      attractors: this.state.attractors,
-      trajectory: this.state.trajectory,
+      points: this?.state?.history,
+      attractors: this?.state?.attractors,
+      trajectory: this?.state?.trajectory,
     };
   }
 
-  subscribe(callback: (state: PhaseSpaceState) => void): () => void {
-    this.subscribers.add(callback);
-    return () => this.subscribers.delete(callback);
+  subscribe(any: any): () => void {
+    this?.subscribers?.add(any: any);
+    return (any: any);
   }
 
   private notifySubscribers(): void {
-    this.subscribers.forEach(callback => callback(this.state));
+    this?.subscribers?.forEach(any: any));
   }
 }
 

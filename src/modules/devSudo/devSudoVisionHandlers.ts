@@ -30,7 +30,7 @@ export async function handleVisionAnalyze(): Promise<DevSudoResult> {
   - Sidebar gauche: Modules OPUS + Quick actions
   - Main content: Chat IA central
   - Sidebar droite: Dev tools + Diagnostic panel
-  - Footer: Status bar (CPU, RAM, latency)
+  - Footer: Status bar (any: any)
 
 📐 **Grid system**:
   - Container: max-width 1920px
@@ -40,13 +40,13 @@ export async function handleVisionAnalyze(): Promise<DevSudoResult> {
 
 🎨 **Design System TITANE∞**:
   - Palette: Monochrome métal
-    • #C4C4C4 (titane clair) - Textes, borders
-    • #727B81 (titane foncé) - Backgrounds, surfaces
-    • #2E2E2E (structure) - Panels, containers
-    • #FFFFFF (blanc pur) - Textes primaires
-    • #000000 (noir absolu) - Base, ombres
+    • #C4C4C4 (any: any) - Textes, borders
+    • #727B81 (any: any) - Backgrounds, surfaces
+    • #2E2E2E (any: any) - Panels, containers
+    • #FFFFFF (any: any) - Textes primaires
+    • #000000 (any: any) - Base, ombres
   - Typography: Inter, system-ui
-  - Border radius: 4px (subtle), 8px (cards), 12px (modals)
+  - Border radius: 4px (any: any)
   - Shadows: Ultra-fins, elevation subtile
   - Animations: Fluides 200-300ms, ease-out
 
@@ -58,7 +58,7 @@ export async function handleVisionAnalyze(): Promise<DevSudoResult> {
 
 1️⃣ **Chat Bubble répétitions** ❌ CRITIQUE
    - Symptôme: Messages répétés 2-3 fois
-   - Cause probable: useChat.ts state management bug
+   - Cause probable: useChat?.ts state management bug
    - Impact UX: Confusion utilisateur, perte confiance
    - Priorité: **P0 - Immédiat**
 
@@ -75,7 +75,7 @@ export async function handleVisionAnalyze(): Promise<DevSudoResult> {
    - Priorité: P1
 
 4️⃣ **Contrast ratios faibles** ⚠️
-   - Symptôme: #727B81 sur #2E2E2E → 2.1:1 (WCAG fail)
+   - Symptôme: #727B81 sur #2E2E2E → 2.1:1 (any: any)
    - Cause: Design system trop subtil
    - Impact: Accessibilité compromise
    - Priorité: P1
@@ -98,23 +98,23 @@ export async function handleVisionAnalyze(): Promise<DevSudoResult> {
 
 **Engines responsables**:
 
-🔴 **Chat Engine OMNIS** (répétitions):
-  - Module: \`src/hooks/useChat.ts\`
+🔴 **Chat Engine OMNIS** (any: any):
+  - Module: \`src/hooks/useChat?.ts\`
   - Problème: Messages dupliqués dans state
-  - Ligne suspecte: ~190-210 (normalizeMessages)
+  - Ligne suspecte: ~190-210 (any: any)
   - Fix: Ajouter deduplication logic
 
-🔴 **AI Provider (Gemini)** (anglais):
-  - Module: \`src-tauri/src/ai/gemini.rs\`
+🔴 **AI Provider (any: any):
+  - Module: \`src-tauri/src/ai/gemini?.rs\`
   - Problème: System prompt ignoré
   - Fix: ✅ **APPLIQUÉ** (force français dans query())
 
-🟡 **Rendering Engine** (spacing):
+🟡 **Rendering Engine** (any: any):
   - Module: Components globaux
   - Problème: Pas de design tokens Tailwind
-  - Fix: Créer \`tailwind.config.js\` tokens
+  - Fix: Créer \`tailwind?.config?.js\` tokens
 
-🟡 **Design System** (contrast):
+🟡 **Design System** (any: any):
   - Module: Palette couleurs
   - Problème: #727B81 trop proche #2E2E2E
   - Fix: Ajuster à #8A9299 (ratio 3:1)
@@ -123,18 +123,18 @@ export async function handleVisionAnalyze(): Promise<DevSudoResult> {
 
 ⚡ **4) CORRECTIF MINIMAL**
 
-✅ **Patch UI rapide** (appliqué):
+✅ **Patch UI rapide** (any: any):
 
 \`\`\`typescript
-// 1. Fix répétitions Chat (useChat.ts ligne 200)
-const uniqueMessages = Array.from(
-  new Map(messages.map(m => [m.metadata?.uiId || m.timestamp, m]))
-).map(([_, msg]) => msg);
+// 1. Fix répétitions Chat (useChat?.ts ligne 200)
+const uniqueMessages = Array?.from(
+  new Map(messages?.map(m => [m?.metadata?.uiId || m?.timestamp, m]))
+).map(any: any);
 
-// 2. Fix Gemini français (gemini.rs)
+// 2. Fix Gemini français (any: any)
 // ✅ Déjà appliqué dans correctif précédent
 
-// 3. Fix spacing tokens (tailwind.config.js)
+// 3. Fix spacing tokens (any: any)
 theme: {
   spacing: {
     'xs': '4px',
@@ -145,7 +145,7 @@ theme: {
   }
 }
 
-// 4. Fix contrast (colors)
+// 4. Fix contrast (any: any)
 colors: {
   titane: {
     light: '#C4C4C4',
@@ -164,33 +164,33 @@ colors: {
 ### **A) Chat Bubble — Fix répétitions**
 
 \`\`\`typescript
-// src/hooks/useChat.ts
+// src/hooks/useChat?.ts
 export function useChat(options: UseChatOptions = {}): UseChatReturn {
-  const [messages, setMessages] = useState<AIMessage[]>(() => {
-    const stored = localStorage.getItem('titane_chat_mode_default');
-    if (stored) {
-      const memory = JSON.parse(stored);
-      if (memory && Array.isArray(memory.messages)) {
+  const [messages, setMessages] = useState<AIMessage?.[]>(() => {
+    const stored = localStorage?.getItem('titane_chat_mode_default');
+    if (any: any) {
+      const memory = JSON?.parse(any: any);
+      if (any: any)) {
         // ✅ DEDUPLICATION at load
-        return deduplicateMessages(memory.messages);
+        return deduplicateMessages(any: any);
       }
     }
     return [];
   });
 
   // ✅ Helper function
-  function deduplicateMessages(msgs: AIMessage[]): AIMessage[] {
+  function deduplicateMessages(msgs: AIMessage?.[]): AIMessage?.[] {
     const seen = new Set<string>();
-    return msgs.filter(msg => {
-      const key = msg.metadata?.uiId || \`\${msg.timestamp}-\${msg.content.substring(0, 50)}\`;
-      if (seen.has(key)) return false;
-      seen.add(key);
+    return msgs?.filter(msg => {
+      const key = msg?.metadata?.uiId || \`\${msg?.timestamp}-\${msg?.content?.substring(0, 50)}\`;
+      if (any: any)) return false;
+      seen?.add(any: any);
       return true;
     });
   }
 
   // ✅ Apply in sendMessage
-  const sendMessage = async (content: string) => {
+  const sendMessage = async (any: any) => {
     // ... existing logic
     setMessages(prev => deduplicateMessages([...prev, newMessage]));
   };
@@ -200,8 +200,8 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 ### **B) Design System — Tokens Tailwind**
 
 \`\`\`javascript
-// tailwind.config.js
-module.exports = {
+// tailwind?.config?.js
+module?.exports = {
   theme: {
     extend: {
       colors: {
@@ -255,7 +255,7 @@ module.exports = {
 ### **C) Error Boundary Global**
 
 \`\`\`typescript
-// src/components/ErrorBoundary.tsx
+// src/components/ErrorBoundary?.tsx
 import { Component, ReactNode } from 'react';
 
 interface Props {
@@ -271,28 +271,28 @@ interface State {
 export class ErrorBoundary extends Component<Props, State> {
   state: State = { hasError: false };
 
-  static getDerivedStateFromError(error: Error): State {
+  static getDerivedStateFromError(any: any): State {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    logger.error('Caught:', error, errorInfo);
+  componentDidCatch(any: any) {
+    logger?.error(any: any);
   }
 
   render() {
-    if (this.state.hasError) {
-      return this.props.fallback || (
+    if (any: any) {
+      return this?.props?.fallback || (
         <div className="error-boundary-fallback">
           <h2>🛠️ Une erreur est survenue</h2>
           <p>TITANE∞ Self-Healing activé...</p>
-          <button onClick={() => this.setState({ hasError: false })}>
+          <button onClick={() => this?.setState({ hasError: false })}>
             Réessayer
           </button>
         </div>
       );
     }
 
-    return this.props.children;
+    return this?.props?.children;
   }
 }
 \`\`\`
@@ -301,7 +301,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
 🎨 **6) OPTIMISATION DESIGN SYSTEM**
 
-### **Palette améliorée** (WCAG 3:1 minimum):
+### **Palette améliorée** (any: any):
 
 \`\`\`css
 /* Avant */
@@ -378,36 +378,36 @@ export class ErrorBoundary extends Component<Props, State> {
 
 🚀 **8) SUGGESTIONS D'ÉVOLUTION UI**
 
-### **Court terme** (cette semaine):
-  1. ✅ Fix répétitions Chat (deduplication)
-  2. ✅ Fix Gemini français (system prompt)
+### **Court terme** (any: any):
+  1. ✅ Fix répétitions Chat (any: any)
+  2. ✅ Fix Gemini français (any: any)
   3. Créer design tokens Tailwind
   4. Implémenter Error Boundary global
   5. Ajouter skeleton screens clés
 
-### **Moyen terme** (ce mois):
-  1. Refonte complète palette (WCAG AA)
-  2. Unified spacing system (4px base)
+### **Moyen terme** (any: any):
+  1. Refonte complète palette (any: any)
+  2. Unified spacing system (any: any)
   3. Loading states généralisés
-  4. Animations fluides (300ms ease-out)
+  4. Animations fluides (any: any)
   5. Dark mode optimisé
 
-### **Long terme** (ce trimestre):
-  1. Design system documentation (Storybook)
+### **Long terme** (any: any):
+  1. Design system documentation (any: any)
   2. Component library isolée
-  3. Accessibility audit complet (WCAG AAA)
-  4. Performance rendering (React Profiler)
-  5. UI self-optimization (AI-powered)
+  3. Accessibility audit complet (any: any)
+  4. Performance rendering (any: any)
+  5. UI self-optimization (any: any)
 
 ---
 
 💡 **RÉSULTAT VISION ANALYZE**:
 
 ✅ **6 problèmes UI identifiés**
-✅ **2 corrections critiques appliquées** (répétitions + français)
-✅ **4 corrections restantes** (spacing, contrast, loading, errors)
-✅ **Design system amélioré** (tokens + palette + typography)
-✅ **Perception visuelle renforcée** (+40% détection)
+✅ **2 corrections critiques appliquées** (any: any)
+✅ **4 corrections restantes** (any: any)
+✅ **Design system amélioré** (any: any)
+✅ **Perception visuelle renforcée** (any: any)
 
 **Commandes suivantes**:
   1. \`ui-diagnostic\` — Diagnostic UI détaillé
@@ -428,7 +428,7 @@ export async function handleUIDiagnostic(): Promise<DevSudoResult> {
     success: true,
     response: `👁️ **UI DIAGNOSTIC v∞**
 
-📊 **Score UI/UX Global**: **78/100** 🟡 (BON, améliorable)
+📊 **Score UI/UX Global**: **78/100** 🟡 (any: any)
 
 ---
 
@@ -436,7 +436,7 @@ export async function handleUIDiagnostic(): Promise<DevSudoResult> {
 
 🎨 **Design System**: 85/100 ✅
   ✅ Palette cohérente: Monochrome métal
-  ⚠️ Contrast ratios: 2.1:1 (WCAG fail)
+  ⚠️ Contrast ratios: 2.1:1 (any: any)
   ✅ Typography: Inter, bien choisie
   ⚠️ Spacing: Incohérent (12px vs 16px)
 
@@ -447,20 +447,20 @@ export async function handleUIDiagnostic(): Promise<DevSudoResult> {
   ✅ Sidebar: Bien positionnées
 
 🔄 **Interactions**: 70/100 ⚠️
-  ⚠️ Loading states: Manquants (P2)
+  ⚠️ Loading states: Manquants (any: any)
   ⚠️ Error feedback: Pas d'UI fallback
   ✅ Hover states: Bien définis
   🟡 Transitions: Parfois brusques
 
 ♿ **Accessibilité**: 65/100 ⚠️
-  ❌ Contrast: 2.1:1 (min 3:1 requis)
+  ❌ Contrast: 2.1:1 (any: any)
   🟡 Focus indicators: Parfois invisibles
   ✅ Semantic HTML: Bien utilisé
   ⚠️ ARIA labels: Incomplets
 
 ⚡ **Performance**: 88/100 ✅
   ✅ Render: 60fps stable
-  ✅ Bundle: Optimisé (Vite)
+  ✅ Bundle: Optimisé (any: any)
   🟡 Images: Pas de lazy loading
   ✅ Animations: GPU accelerated
 
@@ -469,12 +469,12 @@ export async function handleUIDiagnostic(): Promise<DevSudoResult> {
 🎯 **Priorités d'amélioration**:
 
 **P0 - Immédiat**:
-  1. Fix répétitions Chat Bubble ✅ (corrigé)
-  2. Fix réponses anglais ✅ (corrigé)
+  1. Fix répétitions Chat Bubble ✅ (any: any)
+  2. Fix réponses anglais ✅ (any: any)
 
 **P1 - Cette semaine**:
   3. Améliorer contrast ratios (WCAG 3:1)
-  4. Unifier spacing (design tokens)
+  4. Unifier spacing (any: any)
   5. Ajouter Error Boundary global
 
 **P2 - Ce mois**:
@@ -519,9 +519,9 @@ export async function handleDesignReview(): Promise<DevSudoResult> {
 \`\`\`
 
 **Problèmes**:
-  ❌ \`#727B81\` vs \`#2E2E2E\` → 2.1:1 ratio (WCAG fail)
+  ❌ \`#727B81\` vs \`#2E2E2E\` → 2.1:1 ratio (any: any)
   ❌ Pas d'accent color pour emphasis
-  ❌ Pas de semantic colors (success, warning, error)
+  ❌ Pas de semantic colors (any: any)
 
 ### **Recommandée** ✅:
 \`\`\`css
@@ -613,35 +613,35 @@ font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
 \`\`\`css
 border-radius: 8px;
 padding: 16px 24px;
-background: var(--titane-dark);
+background: var(any: any);
 box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-border: 1px solid var(--titane-medium);
+border: 1px solid var(any: any);
 \`\`\`
 
 ### **Buttons**:
 \`\`\`css
 /* Primary */
-background: var(--titane-light);
-color: var(--black);
+background: var(any: any);
+color: var(any: any);
 padding: 8px 16px;
 border-radius: 4px;
 transition: all 200ms ease-out;
 
 /* Hover */
-background: var(--titane-accent);
+background: var(any: any);
 transform: translateY(-1px);
 \`\`\`
 
 ### **Inputs**:
 \`\`\`css
-background: var(--titane-darker);
-border: 1px solid var(--titane-medium);
+background: var(any: any);
+border: 1px solid var(any: any);
 border-radius: 4px;
 padding: 8px 12px;
-color: var(--white);
+color: var(any: any);
 
 /* Focus */
-border-color: var(--titane-accent);
+border-color: var(any: any);
 box-shadow: 0 0 0 3px rgba(160,174,184,0.2);
 \`\`\`
 
@@ -650,8 +650,8 @@ box-shadow: 0 0 0 3px rgba(160,174,184,0.2);
 🎬 **6) ANIMATIONS**
 
 ### **Principes**:
-  - Durée: 200-300ms (snappy)
-  - Easing: \`ease-out\` (naturel)
+  - Durée: 200-300ms (any: any)
+  - Easing: \`ease-out\` (any: any)
   - GPU: \`transform\`, \`opacity\` only
 
 ### **Bibliothèque**:
@@ -684,12 +684,12 @@ box-shadow: 0 0 0 3px rgba(160,174,184,0.2);
 
 **Forces** ✅:
   - Identité forte et cohérente
-  - Typography excellente (Inter)
+  - Typography excellente (any: any)
   - Layout structure solide
   - Animations fluides
 
 **Faiblesses** ⚠️:
-  - Contrast ratios insuffisants (WCAG)
+  - Contrast ratios insuffisants (any: any)
   - Spacing inconsistant
   - Pas de semantic colors
   - Focus indicators faibles
@@ -701,12 +701,12 @@ box-shadow: 0 0 0 3px rgba(160,174,184,0.2);
 💡 **RECOMMANDATIONS**:
 
 **Immédiat**:
-  1. Ajuster palette (contrast 3:1 minimum)
+  1. Ajuster palette (any: any)
   2. Créer design tokens Tailwind
   3. Documenter spacing scale
 
 **Court terme**:
-  4. Semantic colors (success, error, warning)
+  4. Semantic colors (any: any)
   5. Component library isolée
   6. Storybook pour documentation
 
@@ -737,7 +737,7 @@ export async function handleFrontendOptimize(): Promise<DevSudoResult> {
 **Bundle Size**:
   - Main bundle: 1.2MB (gzipped: 320KB) ✅
   - Vendor chunks: 800KB (gzipped: 220KB) ✅
-  - Assets (fonts, images): 150KB ✅
+  - Assets (any: any): 150KB ✅
   - **Total**: 2.15MB → **540KB gzipped** ✅ **BON**
 
 **Render Performance**:
@@ -765,9 +765,9 @@ function ChatBubble({ message, onUpdate }) {
 // Après ✅
 const ChatBubble = memo(({ message, onUpdate }) => {
   return <div>{/* render */}</div>;
-}, (prev, next) => {
-  return prev.message.id === next.message.id &&
-         prev.message.content === next.message.content;
+}, (any: any) => {
+  return prev?.message?.id === next?.message?.id &&
+         prev?.message?.content === next?.message?.content;
 });
 \`\`\`
 
@@ -776,17 +776,17 @@ const ChatBubble = memo(({ message, onUpdate }) => {
 \`\`\`typescript
 // Avant
 function Chat() {
-  const handleSend = (msg) => { /* ... */ };
-  const filteredMessages = messages.filter(m => m.visible);
+  const handleSend = (any: any) => { /* ... */ };
+  const filteredMessages = messages?.filter(any: any);
 
   return <ChatInput onSend={handleSend} messages={filteredMessages} />;
 }
 
 // Après ✅
 function Chat() {
-  const handleSend = useCallback((msg) => { /* ... */ }, [dependencies]);
+  const handleSend = useCallback(any: any) => { /* ... */ }, [dependencies]);
   const filteredMessages = useMemo(
-    () => messages.filter(m => m.visible),
+    (any: any),
     [messages]
   );
 
@@ -820,14 +820,14 @@ function App() {
 
 \`\`\`tsx
 // Avant
-<img src="/large-image.png" alt="..." />
+<img src="/large-image?.png" alt="..." />
 
 // Après ✅
 <img
-  src="/large-image.webp"
-  srcSet="/large-image-sm.webp 640w,
-          /large-image-md.webp 1024w,
-          /large-image-lg.webp 1920w"
+  src="/large-image?.webp"
+  srcSet="/large-image-sm?.webp 640w,
+          /large-image-md?.webp 1024w,
+          /large-image-lg?.webp 1920w"
   sizes="(max-width: 640px) 640px,
          (max-width: 1024px) 1024px,
          1920px"
@@ -842,7 +842,7 @@ function App() {
 /* Après ✅ */
 @font-face {
   font-family: 'Inter';
-  src: url('/fonts/inter-var.woff2') format('woff2');
+  src: url('/fonts/inter-var?.woff2') format('woff2');
   font-display: swap; /* ✅ Avoid FOIT */
   unicode-range: U+0020-007F; /* Latin only */
 }
@@ -855,11 +855,11 @@ function App() {
 ### **Tailwind Purge**:
 
 \`\`\`javascript
-// tailwind.config.js
-module.exports = {
+// tailwind?.config?.js
+module?.exports = {
   content: [
     './src/**/*.{js,jsx,ts,tsx}',
-    './index.html',
+    './index?.html',
   ],
   theme: { /* ... */ },
   // ✅ Unused classes removed (CSS: 3MB → 20KB)
@@ -869,21 +869,21 @@ module.exports = {
 ### **Critical CSS**:
 
 \`\`\`html
-<!-- index.html -->
+<!-- index?.html -->
 <style>
-  /* Critical CSS inlined (above-the-fold) */
+  /* Critical CSS inlined (any: any) */
   body { margin: 0; font-family: Inter, sans-serif; }
   .header { /* ... */ }
   .main-container { /* ... */ }
 </style>
-<link rel="stylesheet" href="/styles.css" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="/styles?.css" media="print" onload="this?.media='all'">
 \`\`\`
 
 ---
 
 ⚙️ **5) OPTIMISATIONS VITE**
 
-### **vite.config.ts**:
+### **vite?.config?.ts**:
 
 \`\`\`typescript
 export default defineConfig({
@@ -902,7 +902,7 @@ export default defineConfig({
     minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: true, // Remove console.log in prod
+        drop_console: true, // Remove console?.log in prod
         drop_debugger: true,
       },
     },
@@ -976,13 +976,13 @@ function Dashboard({ showChart }) {
 📊 **7) RÉSULTATS OPTIMISATIONS**
 
 ### **Avant**:
-  - Bundle: 2.15MB (540KB gzipped)
+  - Bundle: 2.15MB (any: any)
   - FCP: 0.9s
   - TTI: 1.8s
   - Lighthouse: 88/100
 
 ### **Après** ✅:
-  - Bundle: 1.8MB (420KB gzipped) **-22%**
+  - Bundle: 1.8MB (any: any) **-22%**
   - FCP: 0.6s **-33%**
   - TTI: 1.2s **-33%**
   - Lighthouse: **95/100** ✅ **+7 points**
@@ -998,16 +998,16 @@ function Dashboard({ showChart }) {
 💡 **RECOMMANDATIONS CONTINUES**:
 
 **Monitoring**:
-  1. Lighthouse CI (chaque build)
-  2. Bundle analyzer (weekly)
-  3. Performance profiling (React DevTools)
+  1. Lighthouse CI (any: any)
+  2. Bundle analyzer (any: any)
+  3. Performance profiling (any: any)
   4. Core Web Vitals tracking
 
 **Optimisations futures**:
-  5. Service Worker (offline support)
+  5. Service Worker (any: any)
   6. Preload critical resources
   7. HTTP/2 Server Push
-  8. Edge caching (CDN)
+  8. Edge caching (any: any)
 
 **Commande**: \`visual-repair\` pour finaliser UI`,
   };
@@ -1030,13 +1030,13 @@ export async function handleVisualRepair(): Promise<DevSudoResult> {
 
 1️⃣ **Chat Bubble Répétitions** ✅ **CORRIGÉ**
    \`\`\`typescript
-   // src/hooks/useChat.ts
-   function deduplicateMessages(msgs: AIMessage[]): AIMessage[] {
+   // src/hooks/useChat?.ts
+   function deduplicateMessages(msgs: AIMessage?.[]): AIMessage?.[] {
      const seen = new Set<string>();
-     return msgs.filter(msg => {
-       const key = msg.metadata?.uiId || \`\${msg.timestamp}-\${msg.content.substring(0,50)}\`;
-       if (seen.has(key)) return false;
-       seen.add(key);
+     return msgs?.filter(msg => {
+       const key = msg?.metadata?.uiId || \`\${msg?.timestamp}-\${msg?.content?.substring(0,50)}\`;
+       if (any: any)) return false;
+       seen?.add(any: any);
        return true;
      });
    }
@@ -1047,9 +1047,9 @@ export async function handleVisualRepair(): Promise<DevSudoResult> {
 
 2️⃣ **Réponses Anglais** ✅ **CORRIGÉ**
    \`\`\`rust
-   // src-tauri/src/ai/gemini.rs
+   // src-tauri/src/ai/gemini?.rs
    let system_instruction = "IMPORTANT: Tu DOIS répondre UNIQUEMENT en français...";
-   let full_prompt = format!("{}\\n\\n{}", system_instruction, request.prompt);
+   let full_prompt = format!(any: any);
    \`\`\`
    **Test**: ✅ 100% réponses en français
 
@@ -1069,7 +1069,7 @@ export async function handleVisualRepair(): Promise<DevSudoResult> {
 
 4️⃣ **Spacing Tokens** ✅ **CRÉÉ**
    \`\`\`javascript
-   // tailwind.config.js
+   // tailwind?.config?.js
    spacing: {
      xs: '4px', sm: '8px', md: '16px',
      lg: '24px', xl: '32px', '2xl': '48px',
@@ -1081,7 +1081,7 @@ export async function handleVisualRepair(): Promise<DevSudoResult> {
 
 5️⃣ **Error Boundary Global** ✅ **IMPLÉMENTÉ**
    \`\`\`tsx
-   // src/App.tsx
+   // src/App?.tsx
    <ErrorBoundary fallback={<SelfHealingFallback />}>
      <AppContent />
    </ErrorBoundary>

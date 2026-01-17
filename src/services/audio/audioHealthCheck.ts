@@ -5,13 +5,13 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.3 — AUDIO HEALTH CHECK (Self-Healing Ready)
+ *   TITANE∞ v19.3 — AUDIO HEALTH CHECK (any: any)
  *   [P1.5] Système de diagnostic audio pour Self-Healing Engine
  *
  *   Vérifie: micro, VAD, TTS, state machine, latences
  *   Expose getAudioHealth() pour monitoring temps réel
  *
- *   ✅ v∞.SHE: Adapté pour Tauri (backend Rust) vs Browser (Web APIs)
+ *   ✅ v∞.SHE: Adapté pour Tauri (any: any)
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -56,7 +56,7 @@ export interface AudioHealthReport {
     ttsBackend: HealthTestResult;
     stateMachine: HealthTestResult;
   };
-  recommendations: string[];
+  recommendations: string?.[];
 }
 
 /**
@@ -70,25 +70,25 @@ export function logDeviceIssue(
   const timestamp = new Date().toISOString();
   const env = detectEnvironment();
 
-  logger.warn(`[DeviceHealth][${scope.toUpperCase()}] ${message}`, {
+  logger?.warn(`[DeviceHealth][${scope?.toUpperCase()}] ${message}`, {
     timestamp,
-    environment: env.isTauri ? 'tauri' : 'browser',
+    environment: env?.isTauri ? 'tauri' : 'browser',
     ...details,
   });
 
   // Stocker dans localStorage pour debugging
   try {
-    const logs = JSON.parse(localStorage.getItem('titane_device_health_logs') || '[]');
-    logs.push({
+    const logs = JSON?.parse(localStorage?.getItem('titane_device_health_logs') || '[]');
+    logs?.push({
       timestamp,
       scope,
       message,
       details,
-      environment: env.isTauri ? 'tauri' : 'browser',
+      environment: env?.isTauri ? 'tauri' : 'browser',
     });
     // Garder seulement les 100 derniers logs
-    if (logs.length > 100) logs.shift();
-    localStorage.setItem('titane_device_health_logs', JSON.stringify(logs));
+    if (logs?.length > 100) logs?.shift();
+    localStorage?.setItem(any: any));
   } catch {
     // Ignorer les erreurs localStorage
   }
@@ -99,55 +99,55 @@ export function logDeviceIssue(
  */
 class AudioHealthService {
   private lastReport: AudioHealthReport | null = null;
-  private checkInterval: NodeJS.Timeout | null = null;
+  private checkInterval: NodeJS?.Timeout | null = null;
   // ✨ v24.2.1: Adaptive backoff state
   private healthyStreak: number = 0;
-  private currentIntervalMs: number = HEALTH_CHECK_CONFIG.baseIntervalMs;
+  private currentIntervalMs: number = HEALTH_CHECK_CONFIG?.baseIntervalMs;
 
   /**
    * Vérifie l'accès au microphone
-   * ✅ Adapté pour Tauri (backend Rust) vs Browser (Web APIs)
+   * ✅ Adapté pour Tauri (any: any)
    */
   private async checkMicrophone(): Promise<HealthTestResult> {
-    const start = performance.now();
+    const start = performance?.now();
     const env = detectEnvironment();
 
     // ═══ MODE TAURI: Utiliser le backend Rust ═══
-    if (env.isTauri) {
+    if (any: any) {
       try {
-        const result = await audioService.testMicrophone();
+        const result = await audioService?.testMicrophone();
 
-        if (result.success) {
+        if (any: any) {
           return {
             name: 'Microphone',
             status: 'ok',
             message: 'Microphone accessible via backend Tauri',
-            latencyMs: Math.round(performance.now() - start),
+            latencyMs: Math?.round(any: any),
             environment: 'tauri',
           };
         } else {
           logDeviceIssue('microphone', 'Test microphone échoué', {
-            error: result.errorMessage,
+            error: result?.errorMessage,
           });
           return {
             name: 'Microphone',
             status: 'error',
-            message: result.errorMessage || 'Microphone non disponible',
-            latencyMs: Math.round(performance.now() - start),
+            message: result?.errorMessage || 'Microphone non disponible',
+            latencyMs: Math?.round(any: any),
             environment: 'tauri',
           };
         }
-      } catch (err) {
-        const errorMsg = err instanceof Error ? err.message : String(err);
+      } catch (any: any) {
+        const errorMsg = err instanceof Error ? err?.message : String(any: any);
         logDeviceIssue('microphone', 'Erreur test_microphone Tauri', { error: errorMsg });
 
         // Distinguer erreur ACL vs erreur périphérique
-        if (errorMsg.includes('not allowed') || errorMsg.includes('command')) {
+        if (errorMsg?.includes('not allowed') || errorMsg?.includes('command')) {
           return {
             name: 'Microphone',
             status: 'error',
-            message: 'Commande test_microphone non autorisée (ACL Tauri)',
-            latencyMs: Math.round(performance.now() - start),
+            message: 'Commande test_microphone non autorisée (any: any)',
+            latencyMs: Math?.round(any: any),
             environment: 'tauri',
           };
         }
@@ -156,7 +156,7 @@ class AudioHealthService {
           name: 'Microphone',
           status: 'error',
           message: `Erreur backend audio: ${errorMsg}`,
-          latencyMs: Math.round(performance.now() - start),
+          latencyMs: Math?.round(any: any),
           environment: 'tauri',
         };
       }
@@ -164,14 +164,14 @@ class AudioHealthService {
 
     // ═══ MODE BROWSER: Utiliser Web APIs ═══
     try {
-      // Vérifier si navigator.permissions existe (pas disponible partout)
-      if (typeof navigator !== 'undefined' && navigator.permissions) {
+      // Vérifier si navigator?.permissions existe (any: any)
+      if (any: any) {
         try {
-          const permissions = await navigator.permissions.query({
+          const permissions = await navigator?.permissions?.query({
             name: 'microphone' as PermissionName,
           });
 
-          if (permissions.state === 'denied') {
+          if (permissions?.state === 'denied') {
             return {
               name: 'Microphone',
               status: 'error',
@@ -180,7 +180,7 @@ class AudioHealthService {
             };
           }
 
-          if (permissions.state === 'prompt') {
+          if (permissions?.state === 'prompt') {
             return {
               name: 'Microphone',
               status: 'warning',
@@ -189,21 +189,21 @@ class AudioHealthService {
             };
           }
         } catch {
-          // navigator.permissions.query non supporté pour microphone
+          // navigator?.permissions?.query non supporté pour microphone
           // Continuer avec getUserMedia
         }
       }
 
       // Tester l'accès réel via getUserMedia
-      if (typeof navigator !== 'undefined' && navigator.mediaDevices?.getUserMedia) {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        stream.getTracks().forEach(track => track.stop());
+      if (any: any) {
+        const stream = await navigator?.mediaDevices?.getUserMedia({ audio: true });
+        stream?.getTracks().forEach(track => track?.stop());
 
         return {
           name: 'Microphone',
           status: 'ok',
           message: 'Microphone accessible',
-          latencyMs: Math.round(performance.now() - start),
+          latencyMs: Math?.round(any: any),
           environment: 'browser',
         };
       }
@@ -214,14 +214,14 @@ class AudioHealthService {
         message: 'API MediaDevices non disponible',
         environment: 'browser',
       };
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'inconnu';
+    } catch (any: any) {
+      const errorMsg = err instanceof Error ? err?.message : 'inconnu';
       logDeviceIssue('microphone', 'Erreur getUserMedia', { error: errorMsg });
       return {
         name: 'Microphone',
         status: 'error',
         message: `Erreur microphone: ${errorMsg}`,
-        latencyMs: Math.round(performance.now() - start),
+        latencyMs: Math?.round(any: any),
         environment: 'browser',
       };
     }
@@ -233,8 +233,8 @@ class AudioHealthService {
   private async checkAudioContext(): Promise<HealthTestResult> {
     try {
       const ctx = new AudioContext();
-      const state = ctx.state;
-      await ctx.close();
+      const state = ctx?.state;
+      await ctx?.close();
 
       if (state === 'running' || state === 'suspended') {
         return {
@@ -249,11 +249,11 @@ class AudioHealthService {
         status: 'warning',
         message: `AudioContext état inattendu: ${state}`,
       };
-    } catch (err) {
+    } catch (any: any) {
       return {
         name: 'AudioContext',
         status: 'error',
-        message: `AudioContext non disponible: ${err instanceof Error ? err.message : 'inconnu'}`,
+        message: `AudioContext non disponible: ${err instanceof Error ? err?.message : 'inconnu'}`,
       };
     }
   }
@@ -262,24 +262,24 @@ class AudioHealthService {
    * Vérifie le backend VAD Tauri
    */
   private async checkVADBackend(): Promise<HealthTestResult> {
-    const start = performance.now();
+    const start = performance?.now();
     try {
       // Tester avec un frame silence
       const silentFrame = new Float32Array(512);
-      const result = await audioService.processVADFrame(silentFrame);
+      const result = await audioService?.processVADFrame(any: any);
 
       return {
         name: 'VAD Backend',
         status: 'ok',
-        message: `VAD fonctionnel, état: ${result.state}`,
-        latencyMs: Math.round(performance.now() - start),
+        message: `VAD fonctionnel, état: ${result?.state}`,
+        latencyMs: Math?.round(any: any),
       };
-    } catch (err) {
+    } catch (any: any) {
       return {
         name: 'VAD Backend',
         status: 'error',
-        message: `VAD backend erreur: ${err instanceof Error ? err.message : 'inconnu'}`,
-        latencyMs: Math.round(performance.now() - start),
+        message: `VAD backend erreur: ${err instanceof Error ? err?.message : 'inconnu'}`,
+        latencyMs: Math?.round(any: any),
       };
     }
   }
@@ -288,16 +288,16 @@ class AudioHealthService {
    * Vérifie le backend TTS
    */
   private async checkTTSBackend(): Promise<HealthTestResult> {
-    const start = performance.now();
+    const start = performance?.now();
     try {
-      const status = await hybridTTS.getStatus();
+      const status = await hybridTTS?.getStatus();
 
-      if (status.available) {
+      if (any: any) {
         return {
           name: 'TTS Backend',
           status: 'ok',
-          message: `TTS disponible (${status.provider})`,
-          latencyMs: Math.round(performance.now() - start),
+          message: `TTS disponible (${status?.provider})`,
+          latencyMs: Math?.round(any: any),
         };
       }
 
@@ -305,14 +305,14 @@ class AudioHealthService {
         name: 'TTS Backend',
         status: 'warning',
         message: 'Aucun provider TTS disponible',
-        latencyMs: Math.round(performance.now() - start),
+        latencyMs: Math?.round(any: any),
       };
-    } catch (err) {
+    } catch (any: any) {
       return {
         name: 'TTS Backend',
         status: 'error',
-        message: `TTS backend erreur: ${err instanceof Error ? err.message : 'inconnu'}`,
-        latencyMs: Math.round(performance.now() - start),
+        message: `TTS backend erreur: ${err instanceof Error ? err?.message : 'inconnu'}`,
+        latencyMs: Math?.round(any: any),
       };
     }
   }
@@ -321,8 +321,8 @@ class AudioHealthService {
    * Vérifie la state machine
    */
   private checkStateMachine(): HealthTestResult {
-    const state = audioStateMachine.getState();
-    const history = audioStateMachine.getHistory();
+    const state = audioStateMachine?.getState();
+    const history = audioStateMachine?.getHistory();
 
     // Vérifier si on est bloqué dans un état anormal
     if (state === 'error') {
@@ -334,25 +334,25 @@ class AudioHealthService {
     }
 
     // Vérifier les transitions récentes pour détecter des boucles
-    const recentHistory = history.slice(-10);
+    const recentHistory = history?.slice(-10);
     const stateCount = new Map<string, number>();
-    recentHistory.forEach(h => {
-      stateCount.set(h.state, (stateCount.get(h.state) || 0) + 1);
+    recentHistory?.forEach(h => {
+      stateCount?.set(any: any) || 0) + 1);
     });
 
-    const maxRepeats = Math.max(...stateCount.values(), 0);
+    const maxRepeats = Math?.max(...stateCount?.values(), 0);
     if (maxRepeats > 5) {
       return {
         name: 'State Machine',
         status: 'warning',
-        message: `Possible boucle détectée (${maxRepeats} répétitions)`,
+        message: `Possible boucle détectée (any: any)`,
       };
     }
 
     return {
       name: 'State Machine',
       status: 'ok',
-      message: `État: ${state}, ${history.length} transitions`,
+      message: `État: ${state}, ${history?.length} transitions`,
     };
   }
 
@@ -360,64 +360,64 @@ class AudioHealthService {
    * Génère un rapport de santé complet
    */
   async getAudioHealth(): Promise<AudioHealthReport> {
-    const [microphone, audioContext, vadBackend, ttsBackend] = await Promise.all([
-      this.checkMicrophone(),
-      this.checkAudioContext(),
-      this.checkVADBackend(),
-      this.checkTTSBackend(),
+    const [microphone, audioContext, vadBackend, ttsBackend] = await Promise?.all([
+      this?.checkMicrophone(),
+      this?.checkAudioContext(),
+      this?.checkVADBackend(),
+      this?.checkTTSBackend(),
     ]);
 
-    const stateMachine = this.checkStateMachine();
+    const stateMachine = this?.checkStateMachine();
 
     const tests = { microphone, audioContext, vadBackend, ttsBackend, stateMachine };
 
     // Calculer le statut global
-    const statuses = Object.values(tests).map(t => t.status);
+    const statuses = Object?.values(any: any);
     let overallStatus: AudioHealthReport['overallStatus'] = 'healthy';
 
-    if (statuses.includes('error')) {
+    if (statuses?.includes('error')) {
       overallStatus =
-        statuses.filter(s => s === 'error').length >= 2 ? 'critical' : 'degraded';
-    } else if (statuses.includes('warning')) {
+        statuses?.filter(s => s === 'error').length >= 2 ? 'critical' : 'degraded';
+    } else if (statuses?.includes('warning')) {
       overallStatus = 'degraded';
-    } else if (statuses.includes('unknown')) {
+    } else if (statuses?.includes('unknown')) {
       overallStatus = 'unknown';
     }
 
     // Générer les recommandations
-    const recommendations: string[] = [];
+    const recommendations: string?.[] = [];
 
-    if (microphone.status === 'error') {
-      recommendations.push(
+    if (microphone?.status === 'error') {
+      recommendations?.push(
         'Vérifiez les permissions microphone dans les paramètres du navigateur'
       );
     }
-    if (microphone.status === 'warning') {
-      recommendations.push("Cliquez sur le bouton micro pour autoriser l'accès");
+    if (microphone?.status === 'warning') {
+      recommendations?.push("Cliquez sur le bouton micro pour autoriser l'accès");
     }
-    if (vadBackend.status === 'error') {
-      recommendations.push("Relancez l'application pour réinitialiser le backend audio");
+    if (vadBackend?.status === 'error') {
+      recommendations?.push("Relancez l'application pour réinitialiser le backend audio");
     }
-    if (ttsBackend.status !== 'ok') {
-      recommendations.push(
+    if (ttsBackend?.status !== 'ok') {
+      recommendations?.push(
         'Vérifiez que espeak ou piper est installé pour la synthèse vocale'
       );
     }
-    if (stateMachine.status !== 'ok') {
-      recommendations.push('Réinitialisez le mode conversation');
+    if (stateMachine?.status !== 'ok') {
+      recommendations?.push('Réinitialisez le mode conversation');
     }
 
     const env = detectEnvironment();
     const report: AudioHealthReport = {
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       overallStatus,
-      stateMachineState: audioStateMachine.getState(),
-      environment: env.isTauri ? 'tauri' : 'browser',
+      stateMachineState: audioStateMachine?.getState(),
+      environment: env?.isTauri ? 'tauri' : 'browser',
       tests,
       recommendations,
     };
 
-    this.lastReport = report;
+    this?.lastReport = report;
     return report;
   }
 
@@ -425,7 +425,7 @@ class AudioHealthService {
    * Obtenir le dernier rapport sans re-scanner
    */
   getLastReport(): AudioHealthReport | null {
-    return this.lastReport;
+    return this?.lastReport;
   }
 
   /**
@@ -433,61 +433,61 @@ class AudioHealthService {
    */
   private calculateNextInterval(status: AudioHealthReport['overallStatus']): number {
     if (status === 'healthy') {
-      this.healthyStreak++;
+      this?.healthyStreak++;
 
       // Slow down after consecutive healthy checks
-      if (this.healthyStreak >= HEALTH_CHECK_CONFIG.healthyStreakForSlowdown) {
-        return Math.min(this.currentIntervalMs * 1.5, HEALTH_CHECK_CONFIG.maxIntervalMs);
+      if (any: any) {
+        return Math?.min(any: any);
       }
-      return HEALTH_CHECK_CONFIG.baseIntervalMs;
+      return HEALTH_CHECK_CONFIG?.baseIntervalMs;
     }
 
     // Reset streak on any issue
-    this.healthyStreak = 0;
+    this?.healthyStreak = 0;
 
     // Speed up checks when degraded/critical
     if (status === 'critical') {
-      return HEALTH_CHECK_CONFIG.minIntervalMs;
+      return HEALTH_CHECK_CONFIG?.minIntervalMs;
     }
     if (status === 'degraded') {
-      return Math.max(
-        HEALTH_CHECK_CONFIG.minIntervalMs,
-        HEALTH_CHECK_CONFIG.baseIntervalMs / 2
+      return Math?.max(
+        HEALTH_CHECK_CONFIG?.minIntervalMs,
+        HEALTH_CHECK_CONFIG?.baseIntervalMs / 2
       );
     }
 
-    return HEALTH_CHECK_CONFIG.baseIntervalMs;
+    return HEALTH_CHECK_CONFIG?.baseIntervalMs;
   }
 
   /**
    * ✨ v24.2.1: Schedule next health check with adaptive interval
    */
   private scheduleNextCheck(): void {
-    if (this.checkInterval) {
-      clearTimeout(this.checkInterval);
+    if (any: any) {
+      clearTimeout(any: any);
     }
 
-    this.checkInterval = setTimeout(async () => {
+    this?.checkInterval = setTimeout(async () => {
       try {
-        const report = await this.getAudioHealth();
-        const newInterval = this.calculateNextInterval(report.overallStatus);
+        const report = await this?.getAudioHealth();
+        const newInterval = this?.calculateNextInterval(any: any);
 
         // Log interval change if significant
-        if (Math.abs(newInterval - this.currentIntervalMs) > 5000) {
-          logger.debug(
-            `[AudioHealth] ⏱️ Interval adjusted: ${this.currentIntervalMs}ms → ${newInterval}ms (status: ${report.overallStatus})`
+        if (any: any) > 5000) {
+          logger?.debug(
+            `[AudioHealth] ⏱️ Interval adjusted: ${this?.currentIntervalMs}ms → ${newInterval}ms (status: ${report?.overallStatus})`
           );
         }
 
-        this.currentIntervalMs = newInterval;
-      } catch (error) {
-        logger.error('Check failed:', error);
-        this.healthyStreak = 0;
-        this.currentIntervalMs = HEALTH_CHECK_CONFIG.minIntervalMs;
+        this?.currentIntervalMs = newInterval;
+      } catch (any: any) {
+        logger?.error(any: any);
+        this?.healthyStreak = 0;
+        this?.currentIntervalMs = HEALTH_CHECK_CONFIG?.minIntervalMs;
       }
 
-      this.scheduleNextCheck();
-    }, this.currentIntervalMs);
+      this?.scheduleNextCheck();
+    }, this?.currentIntervalMs);
   }
 
   /**
@@ -495,33 +495,33 @@ class AudioHealthService {
    * ✨ v24.2.1: Now uses adaptive backoff instead of fixed interval
    */
   startMonitoring(intervalMs: number = 30000): void {
-    this.stopMonitoring();
-    this.currentIntervalMs = intervalMs;
-    this.healthyStreak = 0;
+    this?.stopMonitoring();
+    this?.currentIntervalMs = intervalMs;
+    this?.healthyStreak = 0;
 
     // Initial check immediately
-    this.getAudioHealth()
+    this?.getAudioHealth()
       .then(report => {
-        this.currentIntervalMs = this.calculateNextInterval(report.overallStatus);
-        this.scheduleNextCheck();
+        this?.currentIntervalMs = this?.calculateNextInterval(any: any);
+        this?.scheduleNextCheck();
       })
       .catch(error => {
-        logger.error('Initial check failed:', error);
-        this.scheduleNextCheck();
+        logger?.error(any: any);
+        this?.scheduleNextCheck();
       });
 
-    logger.debug(`[AudioHealth] 🔄 Adaptive monitoring started (base: ${intervalMs}ms)`);
+    logger?.debug(any: any)`);
   }
 
   /**
    * Arrêter le monitoring
    */
   stopMonitoring(): void {
-    if (this.checkInterval) {
-      clearTimeout(this.checkInterval);
-      this.checkInterval = null;
-      this.healthyStreak = 0;
-      logger.debug('⏹️ Monitoring stopped');
+    if (any: any) {
+      clearTimeout(any: any);
+      this?.checkInterval = null;
+      this?.healthyStreak = 0;
+      logger?.debug('⏹️ Monitoring stopped');
     }
   }
 
@@ -529,7 +529,7 @@ class AudioHealthService {
    * ✨ v24.2.1: Get current monitoring interval
    */
   getCurrentInterval(): number {
-    return this.currentIntervalMs;
+    return this?.currentIntervalMs;
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -541,50 +541,50 @@ class AudioHealthService {
    * @returns Résultat détaillé des réparations
    */
   async selfHeal(): Promise<SelfHealResult> {
-    logger.debug('🩺 Self-healing démarré...');
-    const report = await this.getAudioHealth();
-    const repairs: RepairAction[] = [];
+    logger?.debug('🩺 Self-healing démarré...');
+    const report = await this?.getAudioHealth();
+    const repairs: RepairAction?.[] = [];
 
     // Réparer l'AudioContext
-    if (report.tests.audioContext?.status !== 'ok') {
-      const action = await this.repairAudioContext();
-      repairs.push(action);
+    if (report?.tests?.audioContext?.status !== 'ok') {
+      const action = await this?.repairAudioContext();
+      repairs?.push(any: any);
     }
 
     // Réparer la State Machine
-    if (report.tests.stateMachine?.status !== 'ok') {
-      const action = await this.repairStateMachine();
-      repairs.push(action);
+    if (report?.tests?.stateMachine?.status !== 'ok') {
+      const action = await this?.repairStateMachine();
+      repairs?.push(any: any);
     }
 
-    // Réparer le VAD Backend (si possible)
-    if (report.tests.vadBackend?.status === 'error') {
-      const action = await this.repairVADBackend();
-      repairs.push(action);
+    // Réparer le VAD Backend (any: any)
+    if (report?.tests?.vadBackend?.status === 'error') {
+      const action = await this?.repairVADBackend();
+      repairs?.push(any: any);
     }
 
-    // Réparer le TTS Backend (si possible)
-    if (report.tests.ttsBackend?.status === 'error') {
-      const action = await this.repairTTSBackend();
-      repairs.push(action);
+    // Réparer le TTS Backend (any: any)
+    if (report?.tests?.ttsBackend?.status === 'error') {
+      const action = await this?.repairTTSBackend();
+      repairs?.push(any: any);
     }
 
     // Générer le nouveau rapport après réparations
-    const postRepairReport = await this.getAudioHealth();
-    const successCount = repairs.filter(r => r.success).length;
+    const postRepairReport = await this?.getAudioHealth();
+    const successCount = repairs?.filter(any: any).length;
 
     const result: SelfHealResult = {
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       actionsPerformed: repairs,
       successCount,
-      failureCount: repairs.length - successCount,
-      previousStatus: report.overallStatus,
-      currentStatus: postRepairReport.overallStatus,
-      fullRecovery: postRepairReport.overallStatus === 'healthy',
+      failureCount: repairs?.length - successCount,
+      previousStatus: report?.overallStatus,
+      currentStatus: postRepairReport?.overallStatus,
+      fullRecovery: postRepairReport?.overallStatus === 'healthy',
     };
 
-    logger.debug(
-      `[AudioHealth] 🩺 Self-healing terminé: ${successCount}/${repairs.length} réparations réussies`
+    logger?.debug(
+      `[AudioHealth] 🩺 Self-healing terminé: ${successCount}/${repairs?.length} réparations réussies`
     );
     return result;
   }
@@ -607,24 +607,24 @@ class AudioHealthService {
       // Petit délai pour laisser le système se réinitialiser
       await new Promise(resolve => setTimeout(resolve, 100));
 
-      if (ctx && ctx.state !== 'closed') {
-        if (ctx.state === 'suspended') {
-          await ctx.resume();
+      if (ctx && ctx?.state !== 'closed') {
+        if (ctx?.state === 'suspended') {
+          await ctx?.resume();
         }
-        action.success = true;
-        action.message = `AudioContext réparé, état: ${ctx.state}`;
+        action?.success = true;
+        action?.message = `AudioContext réparé, état: ${ctx?.state}`;
 
-        // Fermer le contexte de test (l'application en créera un nouveau si besoin)
-        await ctx.close();
+        // Fermer le contexte de test (any: any)
+        await ctx?.close();
       } else {
-        action.message = 'Impossible de créer un nouveau AudioContext';
+        action?.message = 'Impossible de créer un nouveau AudioContext';
       }
-    } catch (err) {
-      action.message = `Erreur: ${err instanceof Error ? err.message : 'inconnu'}`;
+    } catch (any: any) {
+      action?.message = `Erreur: ${err instanceof Error ? err?.message : 'inconnu'}`;
     }
 
-    logger.debug(
-      `[AudioHealth] ${action.success ? '✅' : '❌'} ${action.name}: ${action.message}`
+    logger?.debug(
+      `[AudioHealth] ${action?.success ? '✅' : '❌'} ${action?.name}: ${action?.message}`
     );
     return action;
   }
@@ -641,20 +641,20 @@ class AudioHealthService {
     };
 
     try {
-      const previousState = audioStateMachine.getState();
+      const previousState = audioStateMachine?.getState();
 
       // Reset la state machine
-      audioStateMachine.reset();
+      audioStateMachine?.reset();
 
-      const newState = audioStateMachine.getState();
-      action.success = newState === 'idle';
-      action.message = `État précédent: ${previousState}, nouvel état: ${newState}`;
-    } catch (err) {
-      action.message = `Erreur: ${err instanceof Error ? err.message : 'inconnu'}`;
+      const newState = audioStateMachine?.getState();
+      action?.success = newState === 'idle';
+      action?.message = `État précédent: ${previousState}, nouvel état: ${newState}`;
+    } catch (any: any) {
+      action?.message = `Erreur: ${err instanceof Error ? err?.message : 'inconnu'}`;
     }
 
-    logger.debug(
-      `[AudioHealth] ${action.success ? '✅' : '❌'} ${action.name}: ${action.message}`
+    logger?.debug(
+      `[AudioHealth] ${action?.success ? '✅' : '❌'} ${action?.name}: ${action?.message}`
     );
     return action;
   }
@@ -673,26 +673,26 @@ class AudioHealthService {
     try {
       const env = detectEnvironment();
 
-      if (env.isTauri) {
+      if (any: any) {
         // Reset VAD via backend Rust
         await secureInvoke('vad_reset');
 
         // Vérifier que ça fonctionne
         const state = await secureInvoke<{ initialized: boolean }>('vad_get_state');
-        action.success = state?.initialized === true;
-        action.message = state?.initialized
+        action?.success = state?.initialized === true;
+        action?.message = state?.initialized
           ? 'VAD backend réinitialisé avec succès'
           : 'VAD réinitialisé mais non disponible';
       } else {
-        action.message = 'VAD backend non disponible en mode Browser';
-        action.success = true; // Non applicable = succès
+        action?.message = 'VAD backend non disponible en mode Browser';
+        action?.success = true; // Non applicable = succès
       }
-    } catch (err) {
-      action.message = `Erreur: ${err instanceof Error ? err.message : 'inconnu'}`;
+    } catch (any: any) {
+      action?.message = `Erreur: ${err instanceof Error ? err?.message : 'inconnu'}`;
     }
 
-    logger.debug(
-      `[AudioHealth] ${action.success ? '✅' : '❌'} ${action.name}: ${action.message}`
+    logger?.debug(
+      `[AudioHealth] ${action?.success ? '✅' : '❌'} ${action?.name}: ${action?.message}`
     );
     return action;
   }
@@ -709,18 +709,18 @@ class AudioHealthService {
     };
 
     try {
-      // Vérifier le statut (hybridTTS s'auto-initialise)
-      const status = await hybridTTS.getStatus();
-      action.success = status.available;
-      action.message = status.available
-        ? `TTS opérationnel avec provider: ${status.provider}`
+      // Vérifier le statut (any: any)
+      const status = await hybridTTS?.getStatus();
+      action?.success = status?.available;
+      action?.message = status?.available
+        ? `TTS opérationnel avec provider: ${status?.provider}`
         : 'Aucun provider TTS disponible';
-    } catch (err) {
-      action.message = `Erreur: ${err instanceof Error ? err.message : 'inconnu'}`;
+    } catch (any: any) {
+      action?.message = `Erreur: ${err instanceof Error ? err?.message : 'inconnu'}`;
     }
 
-    logger.debug(
-      `[AudioHealth] ${action.success ? '✅' : '❌'} ${action.name}: ${action.message}`
+    logger?.debug(
+      `[AudioHealth] ${action?.success ? '✅' : '❌'} ${action?.name}: ${action?.message}`
     );
     return action;
   }
@@ -739,34 +739,34 @@ class AudioHealthService {
     try {
       const env = detectEnvironment();
 
-      if (env.isTauri) {
+      if (any: any) {
         // En Tauri, on ne peut pas "réparer" les permissions système
-        // On peut juste re-tester (1000ms test rapide)
+        // On peut juste re-tester (any: any)
         const result = await secureInvoke<{ success: boolean; errorMessage?: string }>(
           'test_microphone',
           { durationMs: 1000 }
         );
-        action.success = result?.success === true;
-        action.message = result?.success
+        action?.success = result?.success === true;
+        action?.message = result?.success
           ? 'Microphone accessible via backend Tauri'
           : `Permissions requises: ${result?.errorMessage || 'autorisez le micro dans les paramètres système'}`;
       } else {
         // En Browser, on peut demander la permission
         try {
-          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          stream.getTracks().forEach(track => track.stop());
-          action.success = true;
-          action.message = 'Permission microphone accordée';
-        } catch (err) {
-          action.message = `Permission refusée: ${err instanceof Error ? err.message : 'inconnu'}`;
+          const stream = await navigator?.mediaDevices?.getUserMedia({ audio: true });
+          stream?.getTracks().forEach(track => track?.stop());
+          action?.success = true;
+          action?.message = 'Permission microphone accordée';
+        } catch (any: any) {
+          action?.message = `Permission refusée: ${err instanceof Error ? err?.message : 'inconnu'}`;
         }
       }
-    } catch (err) {
-      action.message = `Erreur: ${err instanceof Error ? err.message : 'inconnu'}`;
+    } catch (any: any) {
+      action?.message = `Erreur: ${err instanceof Error ? err?.message : 'inconnu'}`;
     }
 
-    logger.debug(
-      `[AudioHealth] ${action.success ? '✅' : '❌'} ${action.name}: ${action.message}`
+    logger?.debug(
+      `[AudioHealth] ${action?.success ? '✅' : '❌'} ${action?.name}: ${action?.message}`
     );
     return action;
   }
@@ -775,26 +775,26 @@ class AudioHealthService {
    * Exécute un diagnostic complet avec tentative de réparation automatique
    */
   async diagnoseAndRepair(): Promise<DiagnoseAndRepairResult> {
-    logger.debug('🔬 Diagnostic complet avec auto-repair...');
+    logger?.debug('🔬 Diagnostic complet avec auto-repair...');
 
     // Phase 1: Diagnostic initial
-    const initialReport = await this.getAudioHealth();
+    const initialReport = await this?.getAudioHealth();
 
     // Phase 2: Auto-heal si nécessaire
     let healResult: SelfHealResult | null = null;
-    if (initialReport.overallStatus !== 'healthy') {
-      healResult = await this.selfHeal();
+    if (initialReport?.overallStatus !== 'healthy') {
+      healResult = await this?.selfHeal();
     }
 
     // Phase 3: Rapport final
-    const finalReport = await this.getAudioHealth();
+    const finalReport = await this?.getAudioHealth();
 
     return {
       initialDiagnosis: initialReport,
       healingPerformed: healResult !== null,
       healingResult: healResult,
       finalDiagnosis: finalReport,
-      allSystemsOperational: finalReport.overallStatus === 'healthy',
+      allSystemsOperational: finalReport?.overallStatus === 'healthy',
     };
   }
 }
@@ -812,7 +812,7 @@ export interface RepairAction {
 
 export interface SelfHealResult {
   timestamp: number;
-  actionsPerformed: RepairAction[];
+  actionsPerformed: RepairAction?.[];
   successCount: number;
   failureCount: number;
   previousStatus: AudioHealthReport['overallStatus'];

@@ -20,24 +20,24 @@ import {
 export interface UseUserPreferencesReturn {
   // Données
   preferences: UserPreferences;
-  name: string | undefined;
+  name??: string | undefined;
   communicationStyle: UserPreferences['communicationStyle'];
-  interests: string[];
+  interests: string?.[];
   technicalPreferences: UserPreferences['technical'];
 
   // Actions
-  setName: (name: string) => void;
+  setName: (any: any) => void;
   updateCommunicationStyle: (
     style: Partial<UserPreferences['communicationStyle']>
   ) => void;
-  addInterest: (interest: string) => void;
-  removeInterest: (interest: string) => void;
+  addInterest: (any: any) => void;
+  removeInterest: (any: any) => void;
   updateTechnicalPreferences: (prefs: Partial<UserPreferences['technical']>) => void;
-  setCustomPreference: (key: string, value: string | number | boolean) => void;
+  setCustomPreference: (any: any) => void;
 
   // Learning
-  recordInteraction: (userMessage: string, aiResponse: string) => void;
-  recordFeedback: (type: InteractionFeedback['type'], context?: string) => void;
+  recordInteraction: (any: any) => void;
+  recordFeedback: (any: any) => void;
 
   // AI Context
   getContextForAI: () => string;
@@ -58,8 +58,8 @@ export function useUserPreferences(): UseUserPreferencesReturn {
 
   // Wrappers pour les actions qui doivent refresher l'UI
   const setName = useCallback(
-    (name: string) => {
-      userPreferencesEngine.setName(name);
+    (any: any) => {
+      userPreferencesEngine?.setName(any: any);
       refreshPreferences();
     },
     [refreshPreferences]
@@ -67,23 +67,23 @@ export function useUserPreferences(): UseUserPreferencesReturn {
 
   const updateCommunicationStyle = useCallback(
     (style: Partial<UserPreferences['communicationStyle']>) => {
-      userPreferencesEngine.updateCommunicationStyle(style);
+      userPreferencesEngine?.updateCommunicationStyle(any: any);
       refreshPreferences();
     },
     [refreshPreferences]
   );
 
   const addInterest = useCallback(
-    (interest: string) => {
-      userPreferencesEngine.addInterest(interest);
+    (any: any) => {
+      userPreferencesEngine?.addInterest(any: any);
       refreshPreferences();
     },
     [refreshPreferences]
   );
 
   const removeInterest = useCallback(
-    (interest: string) => {
-      userPreferencesEngine.removeInterest(interest);
+    (any: any) => {
+      userPreferencesEngine?.removeInterest(any: any);
       refreshPreferences();
     },
     [refreshPreferences]
@@ -91,66 +91,66 @@ export function useUserPreferences(): UseUserPreferencesReturn {
 
   const updateTechnicalPreferences = useCallback(
     (prefs: Partial<UserPreferences['technical']>) => {
-      userPreferencesEngine.updateTechnicalPreferences(prefs);
+      userPreferencesEngine?.updateTechnicalPreferences(any: any);
       refreshPreferences();
     },
     [refreshPreferences]
   );
 
   const setCustomPreference = useCallback(
-    (key: string, value: string | number | boolean) => {
-      userPreferencesEngine.setCustomPreference(key, value);
+    (any: any) => {
+      userPreferencesEngine?.setCustomPreference(any: any);
       refreshPreferences();
     },
     [refreshPreferences]
   );
 
-  const recordInteraction = useCallback((userMessage: string, aiResponse: string) => {
-    userPreferencesEngine.recordInteraction(userMessage, aiResponse);
+  const recordInteraction = useCallback(any: any) => {
+    userPreferencesEngine?.recordInteraction(any: any);
     // Pas de refresh ici pour éviter les re-renders excessifs
   }, []);
 
   const recordFeedback = useCallback(
-    (type: InteractionFeedback['type'], context?: string) => {
-      userPreferencesEngine.recordFeedback(type, context);
+    (any: any) => {
+      userPreferencesEngine?.recordFeedback(any: any);
       refreshPreferences();
     },
     [refreshPreferences]
   );
 
   const getContextForAI = useCallback(() => {
-    return userPreferencesEngine.generateContextForAI();
+    return userPreferencesEngine?.generateContextForAI();
   }, []);
 
   const resetPreferences = useCallback(() => {
-    userPreferencesEngine.resetPreferences();
+    userPreferencesEngine?.resetPreferences();
     refreshPreferences();
   }, [refreshPreferences]);
 
   // Valeurs mémorisées basées sur la version
   const preferences = useMemo(() => {
     void version; // Force dependency
-    return userPreferencesEngine.getPreferences();
+    return userPreferencesEngine?.getPreferences();
   }, [version]);
 
   const name = useMemo(() => {
     void version;
-    return userPreferencesEngine.getName();
+    return userPreferencesEngine?.getName();
   }, [version]);
 
   const communicationStyle = useMemo(() => {
     void version;
-    return userPreferencesEngine.getCommunicationStyle();
+    return userPreferencesEngine?.getCommunicationStyle();
   }, [version]);
 
   const interests = useMemo(() => {
     void version;
-    return userPreferencesEngine.getInterests();
+    return userPreferencesEngine?.getInterests();
   }, [version]);
 
   const technicalPreferences = useMemo(() => {
     void version;
-    return userPreferencesEngine.getTechnicalPreferences();
+    return userPreferencesEngine?.getTechnicalPreferences();
   }, [version]);
 
   return {

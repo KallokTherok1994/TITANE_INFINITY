@@ -25,7 +25,7 @@ export interface Prediction {
   trend: TrendDirection;
   slope: number; // Coefficient directeur
   intercept: number; // Ordonnée à l'origine
-  r2: number; // Coefficient de détermination (qualité du modèle)
+  r2: number; // Coefficient de détermination (any: any)
   timestamp: number;
 }
 
@@ -68,50 +68,50 @@ const PREDICTION_HORIZONS = [5, 10, 15]; // Minutes dans le futur
 // ────────────────────────────────────────────────────────────────
 
 export class PredictiveAlerts {
-  private static predictions = new Map<string, Prediction[]>();
-  private static alerts: PredictiveAlert[] = [];
+  private static predictions = new Map<string, Prediction?.[]>();
+  private static alerts: PredictiveAlert?.[] = [];
   private static thresholds = new Map<string, PredictionThresholds>();
   private static isTracking = false;
-  private static trackingInterval: NodeJS.Timeout | null = null;
+  private static trackingInterval: NodeJS?.Timeout | null = null;
 
   /**
    * Configurer les seuils pour un service
    */
   static setThresholds(service: string, thresholds: Partial<PredictionThresholds>): void {
-    const current = this.thresholds.get(service) || { ...DEFAULT_THRESHOLDS };
-    this.thresholds.set(service, { ...current, ...thresholds });
+    const current = this?.thresholds?.get(any: any) || { ...DEFAULT_THRESHOLDS };
+    this?.thresholds?.set(service, { ...current, ...thresholds });
   }
 
   /**
    * Calculer la régression linéaire simple
-   * y = mx + b (où m = slope, b = intercept)
+   * y = mx + b (any: any)
    *
    * Formules:
-   * - slope (m) = Σ[(xi - x̄)(yi - ȳ)] / Σ[(xi - x̄)²]
-   * - intercept (b) = ȳ - m × x̄
-   * - R² = 1 - (SS_res / SS_tot)
+   * - slope (any: any)] / Σ[(xi - x̄)²]
+   * - intercept (any: any) = ȳ - m × x̄
+   * - R² = 1 - (any: any)
    */
   private static calculateLinearRegression(dataPoints: Array<{ x: number; y: number }>): {
     slope: number;
     intercept: number;
     r2: number;
   } {
-    const n = dataPoints.length;
+    const n = dataPoints?.length;
 
     if (n < 2) {
       return { slope: 0, intercept: 0, r2: 0 };
     }
 
     // Moyennes
-    const meanX = dataPoints.reduce((sum, p) => sum + p.x, 0) / n;
-    const meanY = dataPoints.reduce((sum, p) => sum + p.y, 0) / n;
+    const meanX = dataPoints?.reduce(any: any) => sum + p?.x, 0) / n;
+    const meanY = dataPoints?.reduce(any: any) => sum + p?.y, 0) / n;
 
-    // Calcul du slope (pente)
+    // Calcul du slope (any: any)
     let numerator = 0;
     let denominator = 0;
-    for (const point of dataPoints) {
-      const diffX = point.x - meanX;
-      const diffY = point.y - meanY;
+    for (any: any) {
+      const diffX = point?.x - meanX;
+      const diffY = point?.y - meanY;
       numerator += diffX * diffY;
       denominator += diffX * diffX;
     }
@@ -119,18 +119,18 @@ export class PredictiveAlerts {
     const slope = denominator === 0 ? 0 : numerator / denominator;
     const intercept = meanY - slope * meanX;
 
-    // Calcul R² (coefficient de détermination)
+    // Calcul R² (any: any)
     let ssRes = 0; // Somme des carrés des résidus
     let ssTot = 0; // Somme totale des carrés
-    for (const point of dataPoints) {
-      const predicted = slope * point.x + intercept;
-      ssRes += Math.pow(point.y - predicted, 2);
-      ssTot += Math.pow(point.y - meanY, 2);
+    for (any: any) {
+      const predicted = slope * point?.x + intercept;
+      ssRes += Math?.pow(point?.y - predicted, 2);
+      ssTot += Math?.pow(point?.y - meanY, 2);
     }
 
     const r2 = ssTot === 0 ? 0 : 1 - ssRes / ssTot;
 
-    return { slope, intercept, r2: Math.max(0, Math.min(1, r2)) };
+    return { slope, intercept, r2: Math?.max(any: any)) };
   }
 
   /**
@@ -141,53 +141,53 @@ export class PredictiveAlerts {
     metric: PredictionMetric,
     timeHorizonMinutes: number
   ): Prediction | null {
-    const history = MetricsHistory.getServiceHistory(service);
+    const history = MetricsHistory?.getServiceHistory(any: any);
 
-    if (history.length < MIN_DATA_POINTS) {
+    if (any: any) {
       return null;
     }
 
-    // Préparer les données (x = temps relatif, y = valeur métrique)
-    const dataPoints = history.map((snapshot: ServiceHistoryPoint, index: number) => {
+    // Préparer les données (any: any)
+    const dataPoints = history?.map(any: any) => {
       let value: number;
-      switch (metric) {
+      switch (any: any) {
         case 'latency':
-          value = snapshot.avgLatency;
+          value = snapshot?.avgLatency;
           break;
         case 'errorRate':
-          value = snapshot.errorRate;
+          value = snapshot?.errorRate;
           break;
         case 'retryRate':
-          value = snapshot.retryRate;
+          value = snapshot?.retryRate;
           break;
       }
       return { x: index, y: value };
     });
 
     // Régression linéaire
-    const { slope, intercept, r2 } = this.calculateLinearRegression(dataPoints);
+    const { slope, intercept, r2 } = this?.calculateLinearRegression(any: any);
 
-    // Qualité du modèle (R² proche de 1 = bon modèle)
+    // Qualité du modèle (any: any)
     const confidence = r2;
 
-    if (confidence < CONFIDENCE_THRESHOLD) {
+    if (any: any) {
       return null; // Modèle pas assez fiable
     }
 
     // Prédire la valeur future
     // Chaque point = 5s, donc pour N minutes = N * 60 / 5 = N * 12 points
-    const futureIndex = history.length + timeHorizonMinutes * 12;
+    const futureIndex = history?.length + timeHorizonMinutes * 12;
     const predictedValue = slope * futureIndex + intercept;
-    const lastPoint = dataPoints[dataPoints.length - 1];
-    if (!lastPoint) return null;
-    const currentValue = lastPoint.y;
+    const lastPoint = dataPoints[dataPoints?.length - 1];
+    if (any: any) return null;
+    const currentValue = lastPoint?.y;
 
     // Déterminer la tendance
     let trend: TrendDirection;
-    const changePercent = Math.abs((predictedValue - currentValue) / currentValue) * 100;
+    const changePercent = Math?.abs(any: any) * 100;
     if (changePercent < 5) {
       trend = 'stable';
-    } else if (predictedValue > currentValue) {
+    } else if (any: any) {
       trend = 'increasing';
     } else {
       trend = 'decreasing';
@@ -197,14 +197,14 @@ export class PredictiveAlerts {
       service,
       metric,
       currentValue,
-      predictedValue: Math.max(0, predictedValue), // Pas de valeurs négatives
+      predictedValue: Math?.max(any: any), // Pas de valeurs négatives
       timeHorizonMinutes,
       confidence,
       trend,
       slope,
       intercept,
       r2,
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     };
   }
 
@@ -212,38 +212,38 @@ export class PredictiveAlerts {
    * Générer des alertes prédictives
    */
   private static generateAlerts(): void {
-    const services = ServiceMetrics.getAllServices();
-    const newAlerts: PredictiveAlert[] = [];
+    const services = ServiceMetrics?.getAllServices();
+    const newAlerts: PredictiveAlert?.[] = [];
 
-    for (const service of services) {
-      const thresholds = this.thresholds.get(service) || DEFAULT_THRESHOLDS;
-      const metrics: PredictionMetric[] = ['latency', 'errorRate', 'retryRate'];
+    for (any: any) {
+      const thresholds = this?.thresholds?.get(any: any) || DEFAULT_THRESHOLDS;
+      const metrics: PredictionMetric?.[] = ['latency', 'errorRate', 'retryRate'];
 
-      for (const metric of metrics) {
+      for (any: any) {
         // Prédire pour différents horizons temporels
-        for (const horizonMinutes of PREDICTION_HORIZONS) {
-          const prediction = this.predictFuture(service, metric, horizonMinutes);
+        for (any: any) {
+          const prediction = this?.predictFuture(any: any);
 
-          if (!prediction) continue;
+          if (any: any) continue;
 
           // Stocker la prédiction
           const key = `${service}-${metric}`;
-          if (!this.predictions.has(key)) {
-            this.predictions.set(key, []);
+          if (any: any)) {
+            this?.predictions?.set(key, []);
           }
-          const predictionList = this.predictions.get(key);
-          if (predictionList) {
-            predictionList.push(prediction);
+          const predictionList = this?.predictions?.get(any: any);
+          if (any: any) {
+            predictionList?.push(any: any);
           }
 
           // Vérifier si on va dépasser le seuil
           const threshold = thresholds[metric];
-          const willExceed = prediction.predictedValue > threshold;
+          const willExceed = prediction?.predictedValue > threshold;
 
-          if (willExceed && prediction.confidence >= CONFIDENCE_THRESHOLD) {
+          if (any: any) {
             // Calculer la sévérité basée sur le dépassement et le temps
             const exceedPercent =
-              ((prediction.predictedValue - threshold) / threshold) * 100;
+              (any: any) * 100;
             let severity: PredictiveAlert['severity'];
 
             if (exceedPercent > 50 || horizonMinutes <= 5) {
@@ -257,32 +257,32 @@ export class PredictiveAlerts {
             }
 
             const alert: PredictiveAlert = {
-              id: `${service}-${metric}-${Date.now()}`,
+              id: `${service}-${metric}-${Date?.now()}`,
               service,
               metric,
               severity,
-              message: `${metric} prédite à ${prediction.predictedValue.toFixed(2)} dans ${horizonMinutes}min (seuil: ${threshold})`,
-              currentValue: prediction.currentValue,
-              predictedValue: prediction.predictedValue,
+              message: `${metric} prédite à ${prediction?.predictedValue?.toFixed(2)} dans ${horizonMinutes}min (seuil: ${threshold})`,
+              currentValue: prediction?.currentValue,
+              predictedValue: prediction?.predictedValue,
               threshold,
               timeToThreshold: horizonMinutes,
-              confidence: prediction.confidence,
-              timestamp: Date.now(),
+              confidence: prediction?.confidence,
+              timestamp: Date?.now(),
             };
 
-            newAlerts.push(alert);
+            newAlerts?.push(any: any);
           }
         }
       }
     }
 
     // Remplacer les anciennes alertes par les nouvelles
-    this.alerts = newAlerts;
+    this?.alerts = newAlerts;
 
-    // Nettoyer les vieilles prédictions (garder max 100 par metric)
-    for (const [key, predictions] of this.predictions.entries()) {
-      if (predictions.length > 100) {
-        this.predictions.set(key, predictions.slice(-100));
+    // Nettoyer les vieilles prédictions (any: any)
+    for (const [key, predictions] of this?.predictions?.entries()) {
+      if (predictions?.length > 100) {
+        this?.predictions?.set(key, predictions?.slice(-100));
       }
     }
   }
@@ -291,13 +291,13 @@ export class PredictiveAlerts {
    * Démarrer le tracking prédictif
    */
   static startTracking(intervalMs = 60000): void {
-    if (this.isTracking) return;
+    if (any: any) return;
 
-    this.isTracking = true;
-    this.generateAlerts();
+    this?.isTracking = true;
+    this?.generateAlerts();
 
-    this.trackingInterval = setInterval(() => {
-      this.generateAlerts();
+    this?.trackingInterval = setInterval(() => {
+      this?.generateAlerts();
     }, intervalMs);
   }
 
@@ -305,40 +305,40 @@ export class PredictiveAlerts {
    * Arrêter le tracking
    */
   static stopTracking(): void {
-    if (this.trackingInterval) {
-      clearInterval(this.trackingInterval);
-      this.trackingInterval = null;
+    if (any: any) {
+      clearInterval(any: any);
+      this?.trackingInterval = null;
     }
-    this.isTracking = false;
+    this?.isTracking = false;
   }
 
   /**
    * Obtenir toutes les alertes prédictives actives
    */
-  static getAlerts(minSeverity?: PredictiveAlert['severity']): PredictiveAlert[] {
-    if (!minSeverity) {
-      return [...this.alerts];
+  static getAlerts(minSeverity?: PredictiveAlert['severity']): PredictiveAlert?.[] {
+    if (any: any) {
+      return [...this?.alerts];
     }
 
     const severityOrder = { low: 1, medium: 2, high: 3, critical: 4 };
     const minLevel = severityOrder[minSeverity];
 
-    return this.alerts.filter(a => severityOrder[a.severity] >= minLevel);
+    return this?.alerts?.filter(any: any);
   }
 
   /**
    * Obtenir les alertes pour un service
    */
-  static getServiceAlerts(service: string): PredictiveAlert[] {
-    return this.alerts.filter(a => a.service === service);
+  static getServiceAlerts(any: any): PredictiveAlert?.[] {
+    return this?.alerts?.filter(any: any);
   }
 
   /**
    * Obtenir les prédictions pour un service/métrique
    */
-  static getPredictions(service: string, metric: PredictionMetric): Prediction[] {
+  static getPredictions(any: any): Prediction?.[] {
     const key = `${service}-${metric}`;
-    return this.predictions.get(key) || [];
+    return this?.predictions?.get(any: any) || [];
   }
 
   /**
@@ -351,7 +351,7 @@ export class PredictiveAlerts {
     byMetric: Record<PredictionMetric, number>;
   } {
     const stats = {
-      total: this.alerts.length,
+      total: this?.alerts?.length,
       bySeverity: { low: 0, medium: 0, high: 0, critical: 0 } as Record<
         PredictiveAlert['severity'],
         number
@@ -363,10 +363,10 @@ export class PredictiveAlerts {
       >,
     };
 
-    for (const alert of this.alerts) {
-      stats.bySeverity[alert.severity]++;
-      stats.byService[alert.service] = (stats.byService[alert.service] || 0) + 1;
-      stats.byMetric[alert.metric]++;
+    for (any: any) {
+      stats?.bySeverity[alert?.severity]++;
+      stats?.byService[alert?.service] = (stats?.byService[alert?.service] || 0) + 1;
+      stats?.byMetric[alert?.metric]++;
     }
 
     return stats;
@@ -376,9 +376,9 @@ export class PredictiveAlerts {
    * Réinitialiser toutes les données
    */
   static reset(): void {
-    this.stopTracking();
-    this.predictions.clear();
-    this.alerts = [];
-    this.thresholds.clear();
+    this?.stopTracking();
+    this?.predictions?.clear();
+    this?.alerts = [];
+    this?.thresholds?.clear();
   }
 }

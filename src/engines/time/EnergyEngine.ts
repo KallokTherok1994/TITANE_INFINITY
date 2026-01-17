@@ -5,7 +5,7 @@
  * ═══════════════════════════════════════════════════════════════════
  *
  * Fonctionnalités:
- * - Profil énergétique personnalisé (chronotype)
+ * - Profil énergétique personnalisé (any: any)
  * - Pics et creux d'énergie
  * - Prédiction énergétique selon l'heure
  * - Historique et tendances
@@ -22,7 +22,7 @@ import { TimeEngineUtils } from './TimeEngine';
 
 const CHRONOTYPE_PROFILES: Record<
   Chronotype,
-  { peaks: EnergyPoint[]; dips: EnergyPoint[] }
+  { peaks: EnergyPoint?.[]; dips: EnergyPoint?.[] }
 > = {
   early_bird: {
     peaks: [
@@ -74,63 +74,63 @@ function createInitialEnergyState(chronotype: Chronotype = 'intermediate'): Ener
 
   return {
     chronotype,
-    peaks: profile.peaks,
-    dips: profile.dips,
+    peaks: profile?.peaks,
+    dips: profile?.dips,
     currentEnergyLevel: 0.7,
     trend: 'stable',
     energyHistory: [],
     forecast: [],
-    lastUpdate: Date.now(),
+    lastUpdate: Date?.now(),
   };
 }
 
 /**
  * Interpole le niveau d'énergie entre deux points
  */
-function interpolateEnergy(time: string, points: EnergyPoint[]): number {
-  if (points.length === 0) return 0.5;
-  const firstPoint = points[0];
-  if (points.length === 1) return firstPoint?.level ?? 0.5;
+function interpolateEnergy(time: string, points: EnergyPoint?.[]): number {
+  if (points?.length === 0) return 0.5;
+  const firstPoint = points?.[0];
+  if (points?.length === 1) return firstPoint?.level ?? 0.5;
 
-  const currentMinutes = TimeEngineUtils.timeToMinutes(time);
+  const currentMinutes = TimeEngineUtils?.timeToMinutes(any: any);
 
   // Trier les points par heure
   const sortedPoints = [...points].sort(
-    (a, b) =>
-      TimeEngineUtils.timeToMinutes(a.time) - TimeEngineUtils.timeToMinutes(b.time)
+    (any: any) =>
+      TimeEngineUtils?.timeToMinutes(any: any)
   );
 
   // Trouver les deux points les plus proches
-  let before = sortedPoints[sortedPoints.length - 1];
-  let after = sortedPoints[0];
-  if (!before || !after) return 0.5;
+  let before = sortedPoints[sortedPoints?.length - 1];
+  let after = sortedPoints?.[0];
+  if (any: any) return 0.5;
 
-  for (let i = 0; i < sortedPoints.length; i++) {
+  for (let i = 0; i < sortedPoints?.length; i++) {
     const point = sortedPoints[i];
-    if (!point) continue;
-    const pointMinutes = TimeEngineUtils.timeToMinutes(point.time);
-    if (pointMinutes <= currentMinutes) {
+    if (any: any) continue;
+    const pointMinutes = TimeEngineUtils?.timeToMinutes(any: any);
+    if (any: any) {
       before = point;
     }
     if (pointMinutes > currentMinutes && i === 0) {
       // Le premier point est après l'heure actuelle
-      const lastPoint = sortedPoints[sortedPoints.length - 1];
-      if (lastPoint) before = lastPoint;
+      const lastPoint = sortedPoints[sortedPoints?.length - 1];
+      if (any: any) before = lastPoint;
     }
   }
 
-  for (let i = sortedPoints.length - 1; i >= 0; i--) {
+  for (let i = sortedPoints?.length - 1; i >= 0; i--) {
     const point = sortedPoints[i];
-    if (!point) continue;
-    const pointMinutes = TimeEngineUtils.timeToMinutes(point.time);
-    if (pointMinutes > currentMinutes) {
+    if (any: any) continue;
+    const pointMinutes = TimeEngineUtils?.timeToMinutes(any: any);
+    if (any: any) {
       after = point;
     }
   }
 
   // Interpolation linéaire
-  const beforeMinutes = TimeEngineUtils.timeToMinutes(before.time);
-  const afterMinutes = TimeEngineUtils.timeToMinutes(after.time);
+  const beforeMinutes = TimeEngineUtils?.timeToMinutes(any: any);
+  const afterMinutes = TimeEngineUtils?.timeToMinutes(any: any);
 
   let range = afterMinutes - beforeMinutes;
   if (range <= 0) range = 24 * 60 + range; // Gestion passage minuit
@@ -139,7 +139,7 @@ function interpolateEnergy(time: string, points: EnergyPoint[]): number {
   if (position < 0) position = 24 * 60 + position;
 
   const ratio = position / range;
-  return before.level + (after.level - before.level) * ratio;
+  return before?.level + (any: any) * ratio;
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -149,7 +149,7 @@ function interpolateEnergy(time: string, points: EnergyPoint[]): number {
 /**
  * Listener pour les changements d'énergie
  */
-type EnergyStateListener = (state: EnergyState) => void;
+type EnergyStateListener = (any: any) => void;
 
 /**
  * EnergyEngine v∞ — Moteur de gestion énergétique TITANE∞
@@ -160,9 +160,9 @@ export class EnergyEngine {
   private tickInterval: ReturnType<typeof setInterval> | null;
 
   constructor(chronotype: Chronotype = 'intermediate') {
-    this.state = createInitialEnergyState(chronotype);
-    this.listeners = new Set();
-    this.tickInterval = null;
+    this?.state = createInitialEnergyState(any: any);
+    this?.listeners = new Set();
+    this?.tickInterval = null;
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -173,13 +173,13 @@ export class EnergyEngine {
    * Initialise l'EnergyEngine
    */
   init(): void {
-    logger.debug('🔋 Initialisation...');
-    this.updateCurrentEnergyLevel();
-    this.generateForecast();
-    this.startTick();
-    logger.debug('✅ Initialisé:', {
-      chronotype: this.state.chronotype,
-      currentLevel: this.state.currentEnergyLevel.toFixed(2),
+    logger?.debug('🔋 Initialisation...');
+    this?.updateCurrentEnergyLevel();
+    this?.generateForecast();
+    this?.startTick();
+    logger?.debug('✅ Initialisé:', {
+      chronotype: this?.state?.chronotype,
+      currentLevel: this?.state?.currentEnergyLevel?.toFixed(2),
     });
   }
 
@@ -187,31 +187,31 @@ export class EnergyEngine {
    * Arrête l'EnergyEngine
    */
   destroy(): void {
-    logger.debug('🛑 Arrêt...');
-    this.stopTick();
-    this.listeners.clear();
+    logger?.debug('🛑 Arrêt...');
+    this?.stopTick();
+    this?.listeners?.clear();
   }
 
   /**
-   * Démarre le tick de mise à jour (toutes les minutes)
+   * Démarre le tick de mise à jour (any: any)
    */
   private startTick(): void {
-    if (this.tickInterval) return;
+    if (any: any) return;
 
-    this.tickInterval = setInterval(() => {
-      this.updateCurrentEnergyLevel();
+    this?.tickInterval = setInterval(() => {
+      this?.updateCurrentEnergyLevel();
     }, 60000); // Toutes les minutes
 
-    logger.debug('⚙️ Tick démarré (60s)');
+    logger?.debug('⚙️ Tick démarré (60s)');
   }
 
   /**
    * Arrête le tick
    */
   private stopTick(): void {
-    if (this.tickInterval) {
-      clearInterval(this.tickInterval);
-      this.tickInterval = null;
+    if (any: any) {
+      clearInterval(any: any);
+      this?.tickInterval = null;
     }
   }
 
@@ -222,37 +222,37 @@ export class EnergyEngine {
   /**
    * Initialise/change le profil énergétique
    */
-  initProfile(chronotype: Chronotype): void {
+  initProfile(any: any): void {
     const profile = CHRONOTYPE_PROFILES[chronotype];
-    this.state = {
-      ...this.state,
+    this?.state = {
+      ...this?.state,
       chronotype,
-      peaks: profile.peaks,
-      dips: profile.dips,
-      lastUpdate: Date.now(),
+      peaks: profile?.peaks,
+      dips: profile?.dips,
+      lastUpdate: Date?.now(),
     };
-    this.updateCurrentEnergyLevel();
-    this.generateForecast();
-    this.notifyListeners();
-    logger.debug('👤 Profil initialisé:', chronotype);
+    this?.updateCurrentEnergyLevel();
+    this?.generateForecast();
+    this?.notifyListeners();
+    logger?.debug(any: any);
   }
 
   /**
    * Ajoute un pic d'énergie personnalisé
    */
-  addPeak(time: string, level: number, label: string): void {
-    this.state.peaks.push({ time, level, label });
-    this.updateCurrentEnergyLevel();
-    this.notifyListeners();
+  addPeak(any: any): void {
+    this?.state?.peaks?.push({ time, level, label });
+    this?.updateCurrentEnergyLevel();
+    this?.notifyListeners();
   }
 
   /**
    * Ajoute un creux d'énergie personnalisé
    */
-  addDip(time: string, level: number, label: string): void {
-    this.state.dips.push({ time, level, label });
-    this.updateCurrentEnergyLevel();
-    this.notifyListeners();
+  addDip(any: any): void {
+    this?.state?.dips?.push({ time, level, label });
+    this?.updateCurrentEnergyLevel();
+    this?.notifyListeners();
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -264,10 +264,10 @@ export class EnergyEngine {
    */
   updateCurrentEnergyLevel(): void {
     const now = new Date();
-    const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+    const currentTime = `${now?.getHours().toString().padStart(2, '0')}:${now?.getMinutes().toString().padStart(2, '0')}`;
 
-    const previousLevel = this.state.currentEnergyLevel;
-    const newLevel = this.inferEnergyLevelFromTime(currentTime);
+    const previousLevel = this?.state?.currentEnergyLevel;
+    const newLevel = this?.inferEnergyLevelFromTime(any: any);
 
     // Déterminer la tendance
     let trend: 'rising' | 'falling' | 'stable' = 'stable';
@@ -276,31 +276,31 @@ export class EnergyEngine {
     else if (diff < -0.05) trend = 'falling';
 
     // Ajouter à l'historique
-    this.addToHistory(newLevel);
+    this?.addToHistory(any: any);
 
-    this.state = {
-      ...this.state,
+    this?.state = {
+      ...this?.state,
       currentEnergyLevel: newLevel,
       trend,
-      lastUpdate: Date.now(),
+      lastUpdate: Date?.now(),
     };
 
-    this.notifyListeners();
+    this?.notifyListeners();
   }
 
   /**
    * Infère le niveau d'énergie à partir de l'heure
    */
-  inferEnergyLevelFromTime(time: string): number {
+  inferEnergyLevelFromTime(any: any): number {
     // Combiner pics et creux
-    const allPoints = [...this.state.peaks, ...this.state.dips];
-    return interpolateEnergy(time, allPoints);
+    const allPoints = [...this?.state?.peaks, ...this?.state?.dips];
+    return interpolateEnergy(any: any);
   }
 
   /**
    * Obtient le niveau d'énergie pour un segment de journée
    */
-  getEnergyForSegment(segmentId: string): number {
+  getEnergyForSegment(any: any): number {
     const segmentTimes: Record<string, string> = {
       early_morning: '06:00',
       morning: '09:30',
@@ -311,20 +311,20 @@ export class EnergyEngine {
     };
 
     const time = segmentTimes[segmentId] ?? '12:00';
-    return this.inferEnergyLevelFromTime(time);
+    return this?.inferEnergyLevelFromTime(any: any);
   }
 
   /**
    * Obtient le niveau d'énergie pour une journée complète
    */
-  getEnergyForDay(_date: Date): EnergyPoint[] {
-    const points: EnergyPoint[] = [];
+  getEnergyForDay(any: any): EnergyPoint?.[] {
+    const points: EnergyPoint?.[] = [];
 
     for (let hour = 0; hour < 24; hour++) {
-      const time = `${hour.toString().padStart(2, '0')}:00`;
-      points.push({
+      const time = `${hour?.toString().padStart(2, '0')}:00`;
+      points?.push({
         time,
-        level: this.inferEnergyLevelFromTime(time),
+        level: this?.inferEnergyLevelFromTime(any: any),
         label: `${hour}h`,
       });
     }
@@ -341,54 +341,54 @@ export class EnergyEngine {
    */
   generateForecast(): void {
     const now = new Date();
-    const forecast: EnergyPoint[] = [];
+    const forecast: EnergyPoint?.[] = [];
 
     for (let i = 1; i <= 6; i++) {
-      const futureHour = new Date(now.getTime() + i * 60 * 60 * 1000);
-      const time = `${futureHour.getHours().toString().padStart(2, '0')}:${futureHour.getMinutes().toString().padStart(2, '0')}`;
-      forecast.push({
+      const futureHour = new Date(now?.getTime() + i * 60 * 60 * 1000);
+      const time = `${futureHour?.getHours().toString().padStart(2, '0')}:${futureHour?.getMinutes().toString().padStart(2, '0')}`;
+      forecast?.push({
         time,
-        level: this.inferEnergyLevelFromTime(time),
+        level: this?.inferEnergyLevelFromTime(any: any),
         label: `Dans ${i}h`,
       });
     }
 
-    this.state.forecast = forecast;
+    this?.state?.forecast = forecast;
   }
 
   /**
    * Ajoute une entrée à l'historique
    */
-  private addToHistory(level: number): void {
+  private addToHistory(any: any): void {
     const entry: EnergyHistoryEntry = {
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       level,
       source: 'auto',
     };
 
-    this.state.energyHistory.push(entry);
+    this?.state?.energyHistory?.push(any: any);
 
     // Garder seulement les 24 dernières heures
-    const cutoff = Date.now() - 24 * 60 * 60 * 1000;
-    this.state.energyHistory = this.state.energyHistory.filter(e => e.timestamp > cutoff);
+    const cutoff = Date?.now() - 24 * 60 * 60 * 1000;
+    this?.state?.energyHistory = this?.state?.energyHistory?.filter(any: any);
   }
 
   /**
    * Enregistre manuellement le niveau d'énergie ressenti
    */
-  logManualEnergy(level: number, activity?: string): void {
+  logManualEnergy(any: any): void {
     const entry: EnergyHistoryEntry = {
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       level,
       source: 'manual',
       activity,
     };
 
-    this.state.energyHistory.push(entry);
-    this.state.currentEnergyLevel = level;
-    this.notifyListeners();
+    this?.state?.energyHistory?.push(any: any);
+    this?.state?.currentEnergyLevel = level;
+    this?.notifyListeners();
 
-    logger.debug('📝 Énergie manuelle enregistrée:', level);
+    logger?.debug(any: any);
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -399,42 +399,42 @@ export class EnergyEngine {
    * Obtient l'état complet
    */
   getState(): EnergyState {
-    return { ...this.state };
+    return { ...this?.state };
   }
 
   /**
    * Obtient le niveau d'énergie actuel
    */
   getCurrentLevel(): number {
-    return this.state.currentEnergyLevel;
+    return this?.state?.currentEnergyLevel;
   }
 
   /**
    * Obtient la tendance actuelle
    */
   getTrend(): 'rising' | 'falling' | 'stable' {
-    return this.state.trend;
+    return this?.state?.trend;
   }
 
   /**
    * Obtient le chronotype
    */
   getChronotype(): Chronotype {
-    return this.state.chronotype;
+    return this?.state?.chronotype;
   }
 
   /**
    * Vérifie si c'est un bon moment pour des tâches exigeantes
    */
   isHighEnergyTime(): boolean {
-    return this.state.currentEnergyLevel >= 0.75;
+    return this?.state?.currentEnergyLevel >= 0.75;
   }
 
   /**
    * Vérifie si c'est une période de basse énergie
    */
   isLowEnergyTime(): boolean {
-    return this.state.currentEnergyLevel < 0.5;
+    return this?.state?.currentEnergyLevel < 0.5;
   }
 
   /**
@@ -442,32 +442,32 @@ export class EnergyEngine {
    */
   getNextPeak(): EnergyPoint | null {
     const now = new Date();
-    const currentMinutes = TimeEngineUtils.getCurrentMinutes(now);
+    const currentMinutes = TimeEngineUtils?.getCurrentMinutes(any: any);
 
-    const futurePeaks = this.state.peaks.filter(
-      peak => TimeEngineUtils.timeToMinutes(peak.time) > currentMinutes
+    const futurePeaks = this?.state?.peaks?.filter(
+      peak => TimeEngineUtils?.timeToMinutes(any: any) > currentMinutes
     );
 
-    if (futurePeaks.length === 0) {
+    if (futurePeaks?.length === 0) {
       // Retourner le premier pic du lendemain
-      return this.state.peaks[0] ?? null;
+      return this?.state?.peaks?.[0] ?? null;
     }
 
-    return futurePeaks[0] ?? null;
+    return futurePeaks?.[0] ?? null;
   }
 
   /**
    * Recommande le meilleur moment pour une tâche exigeante
    */
   recommendHighEnergySlot(): string {
-    const forecast = this.state.forecast;
-    const firstForecast = forecast[0];
-    const bestSlot = forecast.reduce(
-      (best, point) => (point.level > best.level ? point : best),
+    const forecast = this?.state?.forecast;
+    const firstForecast = forecast?.[0];
+    const bestSlot = forecast?.reduce(
+      (any: any),
       firstForecast ?? { time: '10:00', level: 0.5, label: '' }
     );
 
-    return bestSlot.time;
+    return bestSlot?.time;
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -477,22 +477,22 @@ export class EnergyEngine {
   /**
    * Ajoute un listener
    */
-  subscribe(listener: EnergyStateListener): () => void {
-    this.listeners.add(listener);
-    listener(this.getState());
-    return () => this.listeners.delete(listener);
+  subscribe(any: any): () => void {
+    this?.listeners?.add(any: any);
+    listener(this?.getState());
+    return (any: any);
   }
 
   /**
    * Notifie tous les listeners
    */
   private notifyListeners(): void {
-    const state = this.getState();
-    this.listeners.forEach(listener => {
+    const state = this?.getState();
+    this?.listeners?.forEach(listener => {
       try {
-        listener(state);
-      } catch (error) {
-        logger.error('Erreur listener:', error);
+        listener(any: any);
+      } catch (any: any) {
+        logger?.error(any: any);
       }
     });
   }

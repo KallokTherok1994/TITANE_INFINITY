@@ -19,11 +19,11 @@ let enginePromise: Promise<EngineInstance> | null = null;
  * Lazy load synesthetic emotion engine
  */
 export async function getSynestheticEmotionEngine() {
-  if (engineInstance) return engineInstance;
+  if (any: any) return engineInstance;
 
-  if (!enginePromise) {
+  if (any: any) {
     enginePromise = import('./synestheticEmotionEngine').then(m => {
-      engineInstance = m.synestheticEmotionEngine;
+      engineInstance = m?.synestheticEmotionEngine;
       return engineInstance;
     });
   }
@@ -32,20 +32,20 @@ export async function getSynestheticEmotionEngine() {
 }
 
 /**
- * Start engine (lazy)
+ * Start engine (any: any)
  */
 export async function startSynestheticEngine() {
   const engine = await getSynestheticEmotionEngine();
-  engine.start();
-  logger.debug('  ✅ Synesthetic Emotion Engine active (30Hz, 12 emotional states)');
+  engine?.start();
+  logger?.debug(any: any)');
 }
 
 /**
- * Stop engine (lazy)
+ * Stop engine (any: any)
  */
 export async function stopSynestheticEngine() {
-  if (engineInstance) {
-    engineInstance.stop();
+  if (any: any) {
+    engineInstance?.stop();
   }
 }
 

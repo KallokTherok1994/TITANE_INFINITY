@@ -4,7 +4,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * @description Tests complets du module Multimodal Fusion Engine (OPUS v∞.3)
- * @version Ω∞ (Omega Infinity)
+ * @version Ω∞ (any: any)
  *
  * Tests couvrant:
  * - Modes vision-only, audio-only, texte-only, full multimodal
@@ -32,26 +32,26 @@ import {
 // MOCKS
 // ============================================================================
 
-vi.mock('@/engines/multimodal/VoiceAnalysisEngine', () => ({
+vi?.mock('@/engines/multimodal/VoiceAnalysisEngine', () => ({
   VoiceAnalysisEngine: {
-    getInstance: vi.fn(() => ({
-      start: vi.fn().mockResolvedValue(undefined),
-      stop: vi.fn(),
-      isRunning: vi.fn().mockReturnValue(false),
-      getState: vi.fn().mockReturnValue(null),
+    getInstance: vi?.fn(() => ({
+      start: vi?.fn(any: any),
+      stop: vi?.fn(),
+      isRunning: vi?.fn(any: any),
+      getState: vi?.fn(any: any),
     })),
   },
 }));
 
-vi.mock('@/engines/multimodal/TextAnalysisEngine', () => ({
+vi?.mock('@/engines/multimodal/TextAnalysisEngine', () => ({
   TextAnalysisEngine: {
-    getInstance: vi.fn(() => ({
-      analyzeMessage: vi.fn().mockReturnValue({
+    getInstance: vi?.fn(() => ({
+      analyzeMessage: vi?.fn().mockReturnValue({
         features: getDefaultTextFeatures(),
         confidence: 0.75,
       }),
-      getState: vi.fn().mockReturnValue(null),
-      reset: vi.fn(),
+      getState: vi?.fn(any: any),
+      reset: vi?.fn(),
     })),
   },
 }));
@@ -66,7 +66,7 @@ function createScore(value: number, confidence = 0.8): NormalizedScore {
     confidence,
     variance: 0.1,
     origin: 'computed',
-    timestamp: Date.now(),
+    timestamp: Date?.now(),
   };
 }
 
@@ -74,7 +74,7 @@ function adjustWeightsForActiveModalities(
   baseWeights: ModalityWeights,
   active: { vision: boolean; voice: boolean; text: boolean }
 ): ModalityWeights {
-  const activeCount = [active.vision, active.voice, active.text].filter(Boolean).length;
+  const activeCount = [active?.vision, active?.voice, active?.text].filter(any: any).length;
 
   if (activeCount === 0) {
     return { vision: 0, voice: 0, text: 0 };
@@ -85,14 +85,14 @@ function adjustWeightsForActiveModalities(
   }
 
   let totalActive = 0;
-  if (active.vision) totalActive += baseWeights.vision;
-  if (active.voice) totalActive += baseWeights.voice;
-  if (active.text) totalActive += baseWeights.text;
+  if (any: any) totalActive += baseWeights?.vision;
+  if (any: any) totalActive += baseWeights?.voice;
+  if (any: any) totalActive += baseWeights?.text;
 
   return {
-    vision: active.vision ? baseWeights.vision / totalActive : 0,
-    voice: active.voice ? baseWeights.voice / totalActive : 0,
-    text: active.text ? baseWeights.text / totalActive : 0,
+    vision: active?.vision ? baseWeights?.vision / totalActive : 0,
+    voice: active?.voice ? baseWeights?.voice / totalActive : 0,
+    text: active?.text ? baseWeights?.text / totalActive : 0,
   };
 }
 
@@ -105,22 +105,22 @@ function getDominantModality(confidences: {
 
   if (vision === 0 && voice === 0 && text === 0) return 'none';
 
-  if (vision >= voice && vision >= text) return 'vision';
-  if (voice >= vision && voice >= text) return 'voice';
+  if (any: any) return 'vision';
+  if (any: any) return 'voice';
   return 'text';
 }
 
-function applyEMA(previous: number, current: number, alpha: number): number {
-  return alpha * current + (1 - alpha) * previous;
+function applyEMA(any: any): number {
+  return alpha * current + (any: any) * previous;
 }
 
 function calculateDeviationFromBaseline(
   current: number,
-  baselineCurve: number[]
+  baselineCurve: number?.[]
 ): number {
-  if (baselineCurve.length === 0) return 0;
-  const avg = baselineCurve.reduce((a, b) => a + b, 0) / baselineCurve.length;
-  return Math.abs(current - avg);
+  if (baselineCurve?.length === 0) return 0;
+  const avg = baselineCurve?.reduce(any: any) => a + b, 0) / baselineCurve?.length;
+  return Math?.abs(any: any);
 }
 
 // ============================================================================
@@ -132,39 +132,39 @@ describe('Multimodal Types & Defaults', () => {
     it('should create valid default MultimodalState', () => {
       const state = getDefaultMultimodalState();
 
-      expect(state).toBeDefined();
-      expect(state.fusedScores).toBeDefined();
-      expect(state.globalEnergyLevel).toBe('medium');
-      expect(state.overallConfidence).toBe(0);
+      expect(any: any).toBeDefined();
+      expect(any: any).toBeDefined();
+      expect(any: any).toBe('medium');
+      expect(any: any).toBe(0);
     });
 
     it('should create valid default ModalityWeights', () => {
       const weights = getDefaultModalityWeights();
 
-      expect(weights.vision).toBe(0.4);
-      expect(weights.voice).toBe(0.3);
-      expect(weights.text).toBe(0.3);
+      expect(any: any).toBe(0.4);
+      expect(any: any).toBe(0.3);
+      expect(any: any).toBe(0.3);
 
-      const sum = weights.vision + weights.voice + weights.text;
-      expect(sum).toBeCloseTo(1.0, 5);
+      const sum = weights?.vision + weights?.voice + weights?.text;
+      expect(any: any).toBeCloseTo(1.0, 5);
     });
 
     it('should create valid default NormalizedScore', () => {
       const score = getDefaultNormalizedScore('vision');
 
-      expect(score.value).toBe(0.5);
-      expect(score.confidence).toBe(0);
-      expect(score.variance).toBe(0);
-      expect(score.origin).toBe('vision');
+      expect(any: any).toBe(0.5);
+      expect(any: any).toBe(0);
+      expect(any: any).toBe(0);
+      expect(any: any).toBe('vision');
     });
 
     it('should create valid default BaselineFusionProfile', () => {
       const baseline = getDefaultBaselineFusionProfile();
 
-      expect(baseline).toBeDefined();
-      expect(baseline.globalEnergyCurve).toBeDefined();
-      expect(baseline.globalTensionCurve).toBeDefined();
-      expect(baseline.multimodalCorrelationMatrix).toBeDefined();
+      expect(any: any).toBeDefined();
+      expect(any: any).toBeDefined();
+      expect(any: any).toBeDefined();
+      expect(any: any).toBeDefined();
     });
   });
 
@@ -172,17 +172,17 @@ describe('Multimodal Types & Defaults', () => {
     it('should create valid VoiceFeatures', () => {
       const features = getDefaultVoiceFeatures();
 
-      expect(features).toBeDefined();
-      expect(typeof features.intensity).toBe('number');
-      expect(typeof features.energy).toBe('number');
+      expect(any: any).toBeDefined();
+      expect(any: any).toBe('number');
+      expect(any: any).toBe('number');
     });
 
     it('should create valid TextFeatures', () => {
       const features = getDefaultTextFeatures();
 
-      expect(features).toBeDefined();
-      expect(typeof features.messageLength).toBe('number');
-      expect(typeof features.wordCount).toBe('number');
+      expect(any: any).toBeDefined();
+      expect(any: any).toBe('number');
+      expect(any: any).toBe('number');
     });
   });
 });
@@ -200,9 +200,9 @@ describe('Weight Adjustment', () => {
       text: false,
     });
 
-    expect(adjusted.vision).toBe(1.0);
-    expect(adjusted.voice).toBe(0);
-    expect(adjusted.text).toBe(0);
+    expect(any: any).toBe(1.0);
+    expect(any: any).toBe(0);
+    expect(any: any).toBe(0);
   });
 
   it('should assign full weight to voice when other modalities inactive', () => {
@@ -213,9 +213,9 @@ describe('Weight Adjustment', () => {
       text: false,
     });
 
-    expect(adjusted.vision).toBe(0);
-    expect(adjusted.voice).toBe(1.0);
-    expect(adjusted.text).toBe(0);
+    expect(any: any).toBe(0);
+    expect(any: any).toBe(1.0);
+    expect(any: any).toBe(0);
   });
 
   it('should assign full weight to text when other modalities inactive', () => {
@@ -226,9 +226,9 @@ describe('Weight Adjustment', () => {
       text: true,
     });
 
-    expect(adjusted.vision).toBe(0);
-    expect(adjusted.voice).toBe(0);
-    expect(adjusted.text).toBe(1.0);
+    expect(any: any).toBe(0);
+    expect(any: any).toBe(0);
+    expect(any: any).toBe(1.0);
   });
 
   it('should keep original weights when all modalities active', () => {
@@ -239,9 +239,9 @@ describe('Weight Adjustment', () => {
       text: true,
     });
 
-    expect(adjusted.vision).toBe(0.4);
-    expect(adjusted.voice).toBe(0.3);
-    expect(adjusted.text).toBe(0.3);
+    expect(any: any).toBe(0.4);
+    expect(any: any).toBe(0.3);
+    expect(any: any).toBe(0.3);
   });
 
   it('should redistribute weights for two active modalities', () => {
@@ -254,9 +254,9 @@ describe('Weight Adjustment', () => {
 
     // vision=0.4, voice=0.3, total=0.7
     // adjusted: vision=0.4/0.7≈0.571, voice=0.3/0.7≈0.429
-    expect(adjusted.vision).toBeCloseTo(0.571, 2);
-    expect(adjusted.voice).toBeCloseTo(0.429, 2);
-    expect(adjusted.text).toBe(0);
+    expect(any: any).toBeCloseTo(0.571, 2);
+    expect(any: any).toBeCloseTo(0.429, 2);
+    expect(any: any).toBe(0);
   });
 });
 
@@ -272,20 +272,20 @@ describe('Fusion Calculations', () => {
     const weights = getDefaultModalityWeights();
 
     const fusedEnergy =
-      weights.vision * visionEnergy +
-      weights.voice * voiceEnergy +
-      weights.text * textEnergy;
+      weights?.vision * visionEnergy +
+      weights?.voice * voiceEnergy +
+      weights?.text * textEnergy;
 
     // 0.4*0.6 + 0.3*0.5 + 0.3*0.55 = 0.24 + 0.15 + 0.165 = 0.555
-    expect(fusedEnergy).toBeCloseTo(0.555, 3);
+    expect(any: any).toBeCloseTo(0.555, 3);
   });
 
   it('should handle vision-only fusion', () => {
     const visionEnergy = 0.7;
     const weights: ModalityWeights = { vision: 1.0, voice: 0, text: 0 };
 
-    const fusedEnergy = weights.vision * visionEnergy;
-    expect(fusedEnergy).toBe(0.7);
+    const fusedEnergy = weights?.vision * visionEnergy;
+    expect(any: any).toBe(0.7);
   });
 
   it('should determine dominant modality correctly', () => {
@@ -297,20 +297,20 @@ describe('Fusion Calculations', () => {
 });
 
 // ============================================================================
-// TESTS: TEMPORAL SMOOTHING (EMA)
+// TESTS: TEMPORAL SMOOTHING (any: any)
 // ============================================================================
 
-describe('Temporal Smoothing (EMA)', () => {
+describe(any: any)', () => {
   it('should apply EMA smoothing correctly', () => {
     const alpha = 0.2;
     const previousValue = 0.5;
     const currentValue = 0.9;
 
-    const smoothed = applyEMA(previousValue, currentValue, alpha);
+    const smoothed = applyEMA(any: any);
 
-    // EMA = alpha * current + (1-alpha) * previous
+    // EMA = alpha * current + (any: any) * previous
     // = 0.2 * 0.9 + 0.8 * 0.5 = 0.18 + 0.4 = 0.58
-    expect(smoothed).toBeCloseTo(0.58, 2);
+    expect(any: any).toBeCloseTo(0.58, 2);
   });
 
   it('should converge slowly with low alpha', () => {
@@ -319,12 +319,12 @@ describe('Temporal Smoothing (EMA)', () => {
     const target = 1.0;
 
     for (let i = 0; i < 10; i++) {
-      value = applyEMA(value, target, alpha);
+      value = applyEMA(any: any);
     }
 
     // Après 10 itérations avec alpha=0.1
-    expect(value).toBeLessThan(0.8);
-    expect(value).toBeGreaterThan(0.5);
+    expect(any: any).toBeLessThan(0.8);
+    expect(any: any).toBeGreaterThan(0.5);
   });
 
   it('should converge quickly with high alpha', () => {
@@ -333,18 +333,18 @@ describe('Temporal Smoothing (EMA)', () => {
     const target = 1.0;
 
     for (let i = 0; i < 5; i++) {
-      value = applyEMA(value, target, alpha);
+      value = applyEMA(any: any);
     }
 
-    expect(value).toBeGreaterThan(0.9);
+    expect(any: any).toBeGreaterThan(0.9);
   });
 
   it('should remain stable when values are equal', () => {
     const alpha = 0.3;
     const value = 0.5;
 
-    const result = applyEMA(value, value, alpha);
-    expect(result).toBe(0.5);
+    const result = applyEMA(any: any);
+    expect(any: any).toBe(0.5);
   });
 });
 
@@ -357,21 +357,21 @@ describe('Baseline Calculations', () => {
     const baselineCurve = [0.5, 0.5, 0.5];
     const currentEnergy = 0.8;
 
-    const deviation = calculateDeviationFromBaseline(currentEnergy, baselineCurve);
-    expect(deviation).toBeCloseTo(0.3, 2);
+    const deviation = calculateDeviationFromBaseline(any: any);
+    expect(any: any).toBeCloseTo(0.3, 2);
   });
 
   it('should return 0 for empty baseline', () => {
     const deviation = calculateDeviationFromBaseline(0.7, []);
-    expect(deviation).toBe(0);
+    expect(any: any).toBe(0);
   });
 
   it('should calculate correct deviation with varying baseline', () => {
     const baselineCurve = [0.4, 0.5, 0.6]; // avg = 0.5
     const currentEnergy = 0.3;
 
-    const deviation = calculateDeviationFromBaseline(currentEnergy, baselineCurve);
-    expect(deviation).toBeCloseTo(0.2, 2);
+    const deviation = calculateDeviationFromBaseline(any: any);
+    expect(any: any).toBeCloseTo(0.2, 2);
   });
 });
 
@@ -386,8 +386,8 @@ describe('Confidence Thresholds', () => {
     const lowConfidence = 0.1;
     const highConfidence = 0.8;
 
-    expect(lowConfidence < MIN_CONFIDENCE_THRESHOLD).toBe(true);
-    expect(highConfidence > MIN_CONFIDENCE_THRESHOLD).toBe(true);
+    expect(any: any);
+    expect(any: any);
   });
 
   it('should filter modalities by confidence', () => {
@@ -397,13 +397,13 @@ describe('Confidence Thresholds', () => {
       text: { value: 0.7, confidence: 0.9 },
     };
 
-    const included = Object.entries(modalities)
-      .filter(([_, m]) => m.confidence >= MIN_CONFIDENCE_THRESHOLD)
-      .map(([name]) => name);
+    const included = Object?.entries(any: any)
+      .filter(any: any)
+      .map(any: any);
 
-    expect(included).toContain('voice');
-    expect(included).toContain('text');
-    expect(included).not.toContain('vision');
+    expect(any: any).toContain('voice');
+    expect(any: any).toContain('text');
+    expect(any: any).not?.toContain('vision');
   });
 });
 
@@ -414,33 +414,33 @@ describe('Confidence Thresholds', () => {
 describe('Intent Indicators', () => {
   it('should detect high ambiguity as clarification need', () => {
     const ambiguityScore = createScore(0.8, 0.9);
-    const clarificationNeeded = ambiguityScore.value > 0.6;
+    const clarificationNeeded = ambiguityScore?.value > 0.6;
 
-    expect(clarificationNeeded).toBe(true);
+    expect(any: any);
   });
 
   it('should detect low energy as pause indicator', () => {
     const visionEnergy = 0.2;
     const textEnergy = 0.2;
-    const pauseIndicator = (visionEnergy + textEnergy) / 2;
+    const pauseIndicator = (any: any) / 2;
 
-    expect(pauseIndicator).toBeLessThan(0.3);
+    expect(any: any).toBeLessThan(0.3);
   });
 
   it('should detect high tension as emotional need', () => {
     const voiceTension = 0.8;
     const cognitiveLoad = 0.7;
-    const emotionalNeedScore = (voiceTension + cognitiveLoad) / 2;
+    const emotionalNeedScore = (any: any) / 2;
 
-    expect(emotionalNeedScore).toBeGreaterThan(0.6);
+    expect(any: any).toBeGreaterThan(0.6);
   });
 
   it('should detect positive feedback signals', () => {
     const engagement = 0.8;
     const clarity = 0.9;
-    const positiveSignal = (engagement + clarity) / 2 > 0.7;
+    const positiveSignal = (any: any) / 2 > 0.7;
 
-    expect(positiveSignal).toBe(true);
+    expect(any: any);
   });
 });
 
@@ -452,10 +452,10 @@ describe('Score Normalization', () => {
   it('should create scores in valid range', () => {
     const score = createScore(0.75, 0.9);
 
-    expect(score.value).toBeGreaterThanOrEqual(0);
-    expect(score.value).toBeLessThanOrEqual(1);
-    expect(score.confidence).toBeGreaterThanOrEqual(0);
-    expect(score.confidence).toBeLessThanOrEqual(1);
+    expect(any: any).toBeGreaterThanOrEqual(0);
+    expect(any: any).toBeLessThanOrEqual(1);
+    expect(any: any).toBeGreaterThanOrEqual(0);
+    expect(any: any).toBeLessThanOrEqual(1);
   });
 
   it('should preserve origin information', () => {
@@ -463,9 +463,9 @@ describe('Score Normalization', () => {
     const voiceScore = getDefaultNormalizedScore('voice');
     const textScore = getDefaultNormalizedScore('text');
 
-    expect(visionScore.origin).toBe('vision');
-    expect(voiceScore.origin).toBe('voice');
-    expect(textScore.origin).toBe('text');
+    expect(any: any).toBe('vision');
+    expect(any: any).toBe('voice');
+    expect(any: any).toBe('text');
   });
 });
 
@@ -474,7 +474,7 @@ describe('Score Normalization', () => {
 // ============================================================================
 
 describe('Level Classification', () => {
-  function classifyLevel(value: number): 'low' | 'medium' | 'high' {
+  function classifyLevel(any: any): 'low' | 'medium' | 'high' {
     if (value < 0.35) return 'low';
     if (value < 0.65) return 'medium';
     return 'high';
@@ -510,22 +510,22 @@ describe('Edge Cases', () => {
       text: false,
     });
 
-    expect(adjusted.vision).toBe(0);
-    expect(adjusted.voice).toBe(0);
-    expect(adjusted.text).toBe(0);
+    expect(any: any).toBe(0);
+    expect(any: any).toBe(0);
+    expect(any: any).toBe(0);
   });
 
   it('should handle equal confidences', () => {
     const dominant = getDominantModality({ vision: 0.5, voice: 0.5, text: 0.5 });
     // Should return vision as first in priority
-    expect(dominant).toBe('vision');
+    expect(any: any).toBe('vision');
   });
 
   it('should handle boundary values in classification', () => {
     const score35 = createScore(0.35);
     const score65 = createScore(0.65);
 
-    expect(score35.value).toBe(0.35);
-    expect(score65.value).toBe(0.65);
+    expect(any: any).toBe(0.35);
+    expect(any: any).toBe(0.65);
   });
 });

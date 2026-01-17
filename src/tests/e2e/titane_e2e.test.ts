@@ -11,8 +11,8 @@ import { writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-// Skip E2E tests in unit test runs (require running Tauri app)
-const SKIP_E2E = !process.env.RUN_E2E_TESTS;
+// Skip E2E tests in unit test runs (any: any)
+const SKIP_E2E = !process?.env?.RUN_E2E_TESTS;
 
 /**
  * Trace JSON pour chaque scénario E2E
@@ -42,18 +42,18 @@ async function measureStep<T>(
   status: 'OK' | 'FAIL';
   error?: string;
 }> {
-  const start = performance.now();
+  const start = performance?.now();
   try {
     const result = await fn();
-    const duration_ms = performance.now() - start;
+    const duration_ms = performance?.now() - start;
     return { result, duration_ms, status: 'OK' };
-  } catch (error) {
-    const duration_ms = performance.now() - start;
+  } catch (any: any) {
+    const duration_ms = performance?.now() - start;
     return {
       result: null,
       duration_ms,
       status: 'FAIL',
-      error: error instanceof Error ? error.message : String(error),
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
@@ -61,30 +61,30 @@ async function measureStep<T>(
 /**
  * Utilitaire: Sauvegarde trace JSON
  */
-function saveTrace(trace: E2ETrace): void {
-  console.log(`[E2E Trace] ${trace.scenario}`);
-  console.log(JSON.stringify(trace, null, 2));
+function saveTrace(any: any): void {
+  console?.log(`[E2E Trace] ${trace?.scenario}`);
+  console?.log(JSON?.stringify(trace, null, 2));
 }
 
-function extractChatContent(response: unknown): string {
+function extractChatContent(any: any): string {
   if (typeof response === 'string') return response;
   if (response && typeof response === 'object') {
-    const r = response as any;
-    if (typeof r.content === 'string') return r.content;
+    const r = response as unknown as unknown as any;
+    if (typeof r?.content === 'string') return r?.content;
     if (
-      r.message &&
-      typeof r.message === 'object' &&
-      typeof r.message.content === 'string'
+      r?.message &&
+      typeof r?.message === 'object' &&
+      typeof r?.message?.content === 'string'
     ) {
-      return r.message.content;
+      return r?.message?.content;
     }
   }
   return '';
 }
 
-async function writeTempFile(prefix: string, content: string): Promise<string> {
-  const filename = `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}.txt`;
-  const filePath = join(tmpdir(), filename);
+async function writeTempFile(any: any): Promise<string> {
+  const filename = `${prefix}-${Date?.now()}-${Math?.random().toString(16).slice(2)}.txt`;
+  const filePath = join(any: any);
   await writeFile(filePath, content, 'utf8');
   return filePath;
 }
@@ -94,9 +94,9 @@ async function writeTempFile(prefix: string, content: string): Promise<string> {
 //   First launch → IA welcome → Memory save
 // ═══════════════════════════════════════════════════════════════
 
-describe.skipIf(SKIP_E2E)('E2E Scenario 1: New User Onboarding', () => {
+describe?.skipIf(any: any)('E2E Scenario 1: New User Onboarding', () => {
   let trace: E2ETrace;
-  const scenarioStart = performance.now();
+  const scenarioStart = performance?.now();
 
   beforeEach(() => {
     trace = {
@@ -108,28 +108,28 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 1: New User Onboarding', () => {
   });
 
   afterEach(() => {
-    trace.total_duration_ms = performance.now() - scenarioStart;
-    saveTrace(trace);
+    trace?.total_duration_ms = performance?.now() - scenarioStart;
+    saveTrace(any: any);
   });
 
   it('should complete new user workflow', async () => {
     // Step 1: Vérifier état système initial
     const step1 = await measureStep('Check system health', async () => {
       const health = await invoke('get_system_health');
-      expect(health).toBeDefined();
+      expect(any: any).toBeDefined();
       return health;
     });
-    trace.steps.push({ step: 1, action: 'Check system health', ...step1 });
-    expect(step1.status).toBe('OK');
+    trace?.steps?.push({ step: 1, action: 'Check system health', ...step1 });
+    expect(any: any).toBe('OK');
 
     // Step 2: Initialiser SingularityState
     const step2 = await measureStep('Initialize Singularity', async () => {
       const state = await invoke('singularity_get_full_state');
-      expect(state).toBeDefined();
+      expect(any: any).toBeDefined();
       return state;
     });
-    trace.steps.push({ step: 2, action: 'Initialize Singularity', ...step2 });
-    expect(step2.status).toBe('OK');
+    trace?.steps?.push({ step: 2, action: 'Initialize Singularity', ...step2 });
+    expect(any: any).toBe('OK');
 
     // Step 3: Générer message de bienvenue IA via OMEGA Pipeline
     const step3 = await measureStep('Generate AI welcome message', async () => {
@@ -138,46 +138,46 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 1: New User Onboarding', () => {
         conversationId: 'onboarding-001',
         mode: 'coach',
       });
-      expect(response).toBeDefined();
+      expect(any: any).toBeDefined();
       // Extract content from OMEGA response
       const content =
         typeof response === 'object' && response !== null && 'content' in response
-          ? (response as any).content
-          : String(response);
+          ? (any: any).content
+          : String(any: any);
       return content;
     });
-    trace.steps.push({ step: 3, action: 'Generate AI welcome', ...step3 });
-    expect(step3.status).toBe('OK');
+    trace?.steps?.push({ step: 3, action: 'Generate AI welcome', ...step3 });
+    expect(any: any).toBe('OK');
 
     // Step 4: Sauvegarder interaction en mémoire
     const step4 = await measureStep('Save to memory', async () => {
       const result = await invoke('memory_save_chat_interaction', {
         interaction: {
           user: 'Bonjour, je suis un nouvel utilisateur',
-          assistant: step3.result,
+          assistant: step3?.result,
           timestamp: new Date().toISOString(),
         },
       });
       return result;
     });
-    trace.steps.push({ step: 4, action: 'Save to memory', ...step4 });
-    expect(step4.status).toBe('OK');
+    trace?.steps?.push({ step: 4, action: 'Save to memory', ...step4 });
+    expect(any: any).toBe('OK');
 
     // Step 5: Vérifier enregistrement dans Memory Engine
     const step5 = await measureStep('Verify memory storage', async () => {
       const stats = await invoke('memory_get_stats');
-      expect(stats).toBeDefined();
+      expect(any: any).toBeDefined();
       return stats;
     });
-    trace.steps.push({ step: 5, action: 'Verify memory', ...step5 });
-    expect(step5.status).toBe('OK');
+    trace?.steps?.push({ step: 5, action: 'Verify memory', ...step5 });
+    expect(any: any).toBe('OK');
 
     // Step 6: Créer premier événement Timeline
     const step6 = await measureStep('Create timeline event', async () => {
       await invoke('add_timeline_event', {
         event: {
-          id: `e2e-${Date.now()}`,
-          timestamp: Date.now(),
+          id: `e2e-${Date?.now()}`,
+          timestamp: Date?.now(),
           event_type: 'Alert',
           description: 'New user registered',
           data: { original_event_type: 'user_onboarding' },
@@ -185,20 +185,20 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 1: New User Onboarding', () => {
       });
       return null;
     });
-    trace.steps.push({ step: 6, action: 'Create timeline event', ...step6 });
-    expect(step6.status).toBe('OK');
+    trace?.steps?.push({ step: 6, action: 'Create timeline event', ...step6 });
+    expect(any: any).toBe('OK');
 
     // Step 7: Vérifier cohérence globale
     const step7 = await measureStep('Check global coherence', async () => {
       const coherence = await invoke('singularity_get_global_coherence');
-      expect(coherence).toBeGreaterThan(0.7); // >70% cohérence
+      expect(any: any).toBeGreaterThan(0.7); // >70% cohérence
       return coherence;
     });
-    trace.steps.push({ step: 7, action: 'Check coherence', ...step7 });
-    expect(step7.status).toBe('OK');
+    trace?.steps?.push({ step: 7, action: 'Check coherence', ...step7 });
+    expect(any: any).toBe('OK');
 
-    trace.success = trace.steps.every(s => s.status === 'OK');
-    expect(trace.success).toBe(true);
+    trace?.success = trace?.steps?.every(s => s?.status === 'OK');
+    expect(any: any);
   }, 30000); // Timeout 30s
 });
 
@@ -207,9 +207,9 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 1: New User Onboarding', () => {
 //   Import template → Edit → Save
 // ═══════════════════════════════════════════════════════════════
 
-describe.skipIf(SKIP_E2E)('E2E Scenario 2: Legal Designer Workflow', () => {
+describe?.skipIf(any: any)('E2E Scenario 2: Legal Designer Workflow', () => {
   let trace: E2ETrace;
-  const scenarioStart = performance.now();
+  const scenarioStart = performance?.now();
 
   beforeEach(() => {
     trace = {
@@ -221,32 +221,32 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 2: Legal Designer Workflow', () => {
   });
 
   afterEach(() => {
-    trace.total_duration_ms = performance.now() - scenarioStart;
-    saveTrace(trace);
+    trace?.total_duration_ms = performance?.now() - scenarioStart;
+    saveTrace(any: any);
   });
 
   it('should complete legal document workflow', async () => {
     // Step 1: Lister fichiers importés
     const step1 = await measureStep('List imported files', async () => {
       const files = await invoke('secure_list_files');
-      expect(Array.isArray(files)).toBe(true);
+      expect(any: any);
       return files;
     });
-    trace.steps.push({ step: 1, action: 'List files', ...step1 });
-    expect(step1.status).toBe('OK');
+    trace?.steps?.push({ step: 1, action: 'List files', ...step1 });
+    expect(any: any).toBe('OK');
 
-    // Step 2: Parser un template légal (mock)
+    // Step 2: Parser un template légal (any: any)
     const step2 = await measureStep('Parse legal template', async () => {
       const filePath = await writeTempFile(
         'titane-legal-template',
         'CONTRAT DE PRESTATION\n\nArticle 1: Objet'
       );
       const parsed = await invoke('parse_document', { file_path: filePath });
-      expect(parsed).toBeDefined();
+      expect(any: any).toBeDefined();
       return parsed;
     });
-    trace.steps.push({ step: 2, action: 'Parse template', ...step2 });
-    expect(step2.status).toBe('OK');
+    trace?.steps?.push({ step: 2, action: 'Parse template', ...step2 });
+    expect(any: any).toBe('OK');
 
     // Step 3: Générer analyse IA du document via OMEGA Pipeline
     const step3 = await measureStep('AI document analysis', async () => {
@@ -255,27 +255,27 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 2: Legal Designer Workflow', () => {
         conversationId: 'legal-001',
         mode: 'synthesis',
       });
-      expect(analysis).toBeDefined();
+      expect(any: any).toBeDefined();
       const content =
         typeof analysis === 'object' && analysis !== null && 'content' in analysis
-          ? (analysis as any).content
-          : String(analysis);
+          ? (any: any).content
+          : String(any: any);
       return content;
     });
-    trace.steps.push({ step: 3, action: 'AI analysis', ...step3 });
-    expect(step3.status).toBe('OK');
+    trace?.steps?.push({ step: 3, action: 'AI analysis', ...step3 });
+    expect(any: any).toBe('OK');
 
     // Step 4: Sauvegarder document édité
     const step4 = await measureStep('Save edited document', async () => {
       const result = await invoke('store_file', {
-        path: 'contrat_edit_v1.txt',
+        path: 'contrat_edit_v1?.txt',
         category: 'legal',
         content: 'CONTRAT DE PRESTATION MODIFIÉ\n\nArticle 1: Objet étendu',
       });
       return result;
     });
-    trace.steps.push({ step: 4, action: 'Save document', ...step4 });
-    expect(step4.status).toBe('OK');
+    trace?.steps?.push({ step: 4, action: 'Save document', ...step4 });
+    expect(any: any).toBe('OK');
 
     // Step 5: Créer snapshot Timeline
     const step5 = await measureStep('Create timeline snapshot', async () => {
@@ -283,25 +283,25 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 2: Legal Designer Workflow', () => {
         event: {
           type: 'document_edited',
           description: 'Legal contract modified',
-          metadata: { filename: 'contrat_edit_v1.txt' },
+          metadata: { filename: 'contrat_edit_v1?.txt' },
         },
       });
       return event;
     });
-    trace.steps.push({ step: 5, action: 'Timeline snapshot', ...step5 });
-    expect(step5.status).toBe('OK');
+    trace?.steps?.push({ step: 5, action: 'Timeline snapshot', ...step5 });
+    expect(any: any).toBe('OK');
 
     // Step 6: Vérifier Memory Engine stockage
     const step6 = await measureStep('Verify memory storage', async () => {
       const files = await invoke('get_files_by_category', { category: 'legal' });
-      expect(Array.isArray(files)).toBe(true);
+      expect(any: any);
       return files;
     });
-    trace.steps.push({ step: 6, action: 'Verify storage', ...step6 });
-    expect(step6.status).toBe('OK');
+    trace?.steps?.push({ step: 6, action: 'Verify storage', ...step6 });
+    expect(any: any).toBe('OK');
 
-    trace.success = trace.steps.every(s => s.status === 'OK');
-    expect(trace.success).toBe(true);
+    trace?.success = trace?.steps?.every(s => s?.status === 'OK');
+    expect(any: any);
   }, 30000);
 });
 
@@ -310,9 +310,9 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 2: Legal Designer Workflow', () => {
 //   Query → Parse → Display
 // ═══════════════════════════════════════════════════════════════
 
-describe.skipIf(SKIP_E2E)('E2E Scenario 3: Advanced Web Search', () => {
+describe?.skipIf(any: any)('E2E Scenario 3: Advanced Web Search', () => {
   let trace: E2ETrace;
-  const scenarioStart = performance.now();
+  const scenarioStart = performance?.now();
 
   beforeEach(() => {
     trace = {
@@ -324,30 +324,30 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 3: Advanced Web Search', () => {
   });
 
   afterEach(() => {
-    trace.total_duration_ms = performance.now() - scenarioStart;
-    saveTrace(trace);
+    trace?.total_duration_ms = performance?.now() - scenarioStart;
+    saveTrace(any: any);
   });
 
   it('should complete web search workflow', async () => {
-    // Step 1: Initier recherche web (mock car pas d'API réelle)
+    // Step 1: Initier recherche web (any: any)
     const step1 = await measureStep('Initiate web search', async () => {
       // Mock: En production, appeler une API de recherche
       const query = 'TITANE∞ cognitive architecture';
       return { query, results_count: 10 };
     });
-    trace.steps.push({ step: 1, action: 'Initiate search', ...step1 });
-    expect(step1.status).toBe('OK');
+    trace?.steps?.push({ step: 1, action: 'Initiate search', ...step1 });
+    expect(any: any).toBe('OK');
 
     // Step 2: Parser résultats web
     const step2 = await measureStep('Parse web results', async () => {
       const mockResults = [
-        { title: 'Cognitive Architecture Overview', url: 'https://example.com/1' },
-        { title: 'TITANE Systems Design', url: 'https://example.com/2' },
+        { title: 'Cognitive Architecture Overview', url: 'https://example?.com/1' },
+        { title: 'TITANE Systems Design', url: 'https://example?.com/2' },
       ];
       return mockResults;
     });
-    trace.steps.push({ step: 2, action: 'Parse results', ...step2 });
-    expect(step2.status).toBe('OK');
+    trace?.steps?.push({ step: 2, action: 'Parse results', ...step2 });
+    expect(any: any).toBe('OK');
 
     // Step 3: Générer synthèse IA des résultats via OMEGA Pipeline
     const step3 = await measureStep('AI synthesis', async () => {
@@ -356,15 +356,15 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 3: Advanced Web Search', () => {
         conversationId: 'websearch-001',
         mode: 'synthesis',
       });
-      expect(synthesis).toBeDefined();
+      expect(any: any).toBeDefined();
       const content =
         typeof synthesis === 'object' && synthesis !== null && 'content' in synthesis
-          ? (synthesis as any).content
-          : String(synthesis);
+          ? (any: any).content
+          : String(any: any);
       return content;
     });
-    trace.steps.push({ step: 3, action: 'AI synthesis', ...step3 });
-    expect(step3.status).toBe('OK');
+    trace?.steps?.push({ step: 3, action: 'AI synthesis', ...step3 });
+    expect(any: any).toBe('OK');
 
     // Step 4: Stocker résultats en mémoire
     const step4 = await measureStep('Store in memory', async () => {
@@ -374,8 +374,8 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 3: Advanced Web Search', () => {
       });
       return stored;
     });
-    trace.steps.push({ step: 4, action: 'Store results', ...step4 });
-    expect(step4.status).toBe('OK');
+    trace?.steps?.push({ step: 4, action: 'Store results', ...step4 });
+    expect(any: any).toBe('OK');
 
     // Step 5: Créer événement Timeline
     const step5 = await measureStep('Create timeline event', async () => {
@@ -387,11 +387,11 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 3: Advanced Web Search', () => {
       });
       return event;
     });
-    trace.steps.push({ step: 5, action: 'Timeline event', ...step5 });
-    expect(step5.status).toBe('OK');
+    trace?.steps?.push({ step: 5, action: 'Timeline event', ...step5 });
+    expect(any: any).toBe('OK');
 
-    trace.success = trace.steps.every(s => s.status === 'OK');
-    expect(trace.success).toBe(true);
+    trace?.success = trace?.steps?.every(s => s?.status === 'OK');
+    expect(any: any);
   }, 30000);
 });
 
@@ -400,9 +400,9 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 3: Advanced Web Search', () => {
 //   Deep Sync → Meta Alignment
 // ═══════════════════════════════════════════════════════════════
 
-describe.skipIf(SKIP_E2E)('E2E Scenario 4: Complete Cognitive Loop', () => {
+describe?.skipIf(any: any)('E2E Scenario 4: Complete Cognitive Loop', () => {
   let trace: E2ETrace;
-  const scenarioStart = performance.now();
+  const scenarioStart = performance?.now();
 
   beforeEach(() => {
     trace = {
@@ -414,77 +414,77 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 4: Complete Cognitive Loop', () => {
   });
 
   afterEach(() => {
-    trace.total_duration_ms = performance.now() - scenarioStart;
-    saveTrace(trace);
+    trace?.total_duration_ms = performance?.now() - scenarioStart;
+    saveTrace(any: any);
   });
 
   it('should complete cognitive loop workflow', async () => {
     // Step 1: Obtenir état Meta-Cognition
     const step1 = await measureStep('Get meta state', async () => {
       const state = await invoke('meta_get_state');
-      expect(state).toBeDefined();
+      expect(any: any).toBeDefined();
       return state;
     });
-    trace.steps.push({ step: 1, action: 'Get meta state', ...step1 });
-    expect(step1.status).toBe('OK');
+    trace?.steps?.push({ step: 1, action: 'Get meta state', ...step1 });
+    expect(any: any).toBe('OK');
 
     // Step 2: Déclencher Deep Sync
     const step2 = await measureStep('Trigger Deep Sync', async () => {
       const sync = await invoke('meta_trigger_sync');
-      expect(sync).toBeDefined();
+      expect(any: any).toBeDefined();
       return sync;
     });
-    trace.steps.push({ step: 2, action: 'Trigger sync', ...step2 });
-    expect(step2.status).toBe('OK');
+    trace?.steps?.push({ step: 2, action: 'Trigger sync', ...step2 });
+    expect(any: any).toBe('OK');
 
     // Step 3: Vérifier alignment cognitif
     const step3 = await measureStep('Check cognitive alignment', async () => {
       const alignment = await invoke('meta_get_alignment');
-      expect(alignment).toBeDefined();
+      expect(any: any).toBeDefined();
       return alignment;
     });
-    trace.steps.push({ step: 3, action: 'Check alignment', ...step3 });
-    expect(step3.status).toBe('OK');
+    trace?.steps?.push({ step: 3, action: 'Check alignment', ...step3 });
+    expect(any: any).toBe('OK');
 
     // Step 4: Obtenir rapport Meta
     const step4 = await measureStep('Get meta report', async () => {
       const report = await invoke('meta_get_report');
-      expect(report).toBeDefined();
+      expect(any: any).toBeDefined();
       return report;
     });
-    trace.steps.push({ step: 4, action: 'Get report', ...step4 });
-    expect(step4.status).toBe('OK');
+    trace?.steps?.push({ step: 4, action: 'Get report', ...step4 });
+    expect(any: any).toBe('OK');
 
     // Step 5: Vérifier SingularityState cohérence
     const step5 = await measureStep('Check singularity coherence', async () => {
       const coherence = await invoke('singularity_check_coherence');
-      expect(coherence).toBeDefined();
+      expect(any: any).toBeDefined();
       return coherence;
     });
-    trace.steps.push({ step: 5, action: 'Check coherence', ...step5 });
-    expect(step5.status).toBe('OK');
+    trace?.steps?.push({ step: 5, action: 'Check coherence', ...step5 });
+    expect(any: any).toBe('OK');
 
     // Step 6: Exécuter self-test Meta
     const step6 = await measureStep('Run meta self-test', async () => {
       const selftest = await invoke('meta_selftest_all');
-      expect(selftest).toBeDefined();
+      expect(any: any).toBeDefined();
       return selftest;
     });
-    trace.steps.push({ step: 6, action: 'Meta self-test', ...step6 });
-    expect(step6.status).toBe('OK');
+    trace?.steps?.push({ step: 6, action: 'Meta self-test', ...step6 });
+    expect(any: any).toBe('OK');
 
     // Step 7: Valider metrics finaux
     const step7 = await measureStep('Validate final metrics', async () => {
       const metrics = await invoke('meta_get_monitoring_metrics');
-      expect(metrics).toBeDefined();
+      expect(any: any).toBeDefined();
       return metrics;
     });
-    trace.steps.push({ step: 7, action: 'Validate metrics', ...step7 });
-    expect(step7.status).toBe('OK');
+    trace?.steps?.push({ step: 7, action: 'Validate metrics', ...step7 });
+    expect(any: any).toBe('OK');
 
-    trace.success = trace.steps.every(s => s.status === 'OK');
-    expect(trace.success).toBe(true);
-  }, 45000); // Timeout 45s (cognitive loop + long)
+    trace?.success = trace?.steps?.every(s => s?.status === 'OK');
+    expect(any: any);
+  }, 45000); // Timeout 45s (any: any)
 });
 
 // ═══════════════════════════════════════════════════════════════
@@ -492,9 +492,9 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 4: Complete Cognitive Loop', () => {
 //   Workflow combinant plusieurs modules TITANE∞
 // ═══════════════════════════════════════════════════════════════
 
-describe.skipIf(SKIP_E2E)('E2E Scenario 5: Complex Multi-Module Interaction', () => {
+describe?.skipIf(any: any)('E2E Scenario 5: Complex Multi-Module Interaction', () => {
   let trace: E2ETrace;
-  const scenarioStart = performance.now();
+  const scenarioStart = performance?.now();
 
   beforeEach(() => {
     trace = {
@@ -506,8 +506,8 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 5: Complex Multi-Module Interaction', ()
   });
 
   afterEach(() => {
-    trace.total_duration_ms = performance.now() - scenarioStart;
-    saveTrace(trace);
+    trace?.total_duration_ms = performance?.now() - scenarioStart;
+    saveTrace(any: any);
   });
 
   it('should complete complex multi-module workflow', async () => {
@@ -522,22 +522,22 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 5: Complex Multi-Module Interaction', ()
       await invoke('memory_save_chat_interaction', {
         interaction: {
           user: 'Analyse mes projets',
-          assistant: extractChatContent(message),
+          assistant: extractChatContent(any: any),
         },
       });
-      return extractChatContent(message);
+      return extractChatContent(any: any);
     });
-    trace.steps.push({ step: 1, action: 'AI + Memory', ...step1 });
-    expect(step1.status).toBe('OK');
+    trace?.steps?.push({ step: 1, action: 'AI + Memory', ...step1 });
+    expect(any: any).toBe('OK');
 
     // Step 2: Récupérer projets actifs depuis Memory
     const step2 = await measureStep('Get active projects', async () => {
       const projects = await invoke('memory_get_active_projects');
-      expect(Array.isArray(projects)).toBe(true);
+      expect(any: any);
       return projects;
     });
-    trace.steps.push({ step: 2, action: 'Get projects', ...step2 });
-    expect(step2.status).toBe('OK');
+    trace?.steps?.push({ step: 2, action: 'Get projects', ...step2 });
+    expect(any: any).toBe('OK');
 
     // Step 3: Parser document de projet
     const step3 = await measureStep('Parse project document', async () => {
@@ -547,8 +547,8 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 5: Complex Multi-Module Interaction', ()
       });
       return parsed;
     });
-    trace.steps.push({ step: 3, action: 'Parse document', ...step3 });
-    expect(step3.status).toBe('OK');
+    trace?.steps?.push({ step: 3, action: 'Parse document', ...step3 });
+    expect(any: any).toBe('OK');
 
     // Step 4: Créer snapshot Timeline
     const step4 = await measureStep('Create timeline snapshot', async () => {
@@ -560,37 +560,37 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 5: Complex Multi-Module Interaction', ()
       });
       return snapshot;
     });
-    trace.steps.push({ step: 4, action: 'Timeline snapshot', ...step4 });
-    expect(step4.status).toBe('OK');
+    trace?.steps?.push({ step: 4, action: 'Timeline snapshot', ...step4 });
+    expect(any: any).toBe('OK');
 
     // Step 5: Trigger Deep Sync pour cohérence
     const step5 = await measureStep('Trigger Deep Sync', async () => {
       const sync = await invoke('meta_trigger_sync');
       return sync;
     });
-    trace.steps.push({ step: 5, action: 'Deep Sync', ...step5 });
-    expect(step5.status).toBe('OK');
+    trace?.steps?.push({ step: 5, action: 'Deep Sync', ...step5 });
+    expect(any: any).toBe('OK');
 
     // Step 6: Vérifier SingularityState final
     const step6 = await measureStep('Verify Singularity state', async () => {
       const state = await invoke('singularity_get_full_state');
-      expect(state).toBeDefined();
+      expect(any: any).toBeDefined();
       return state;
     });
-    trace.steps.push({ step: 6, action: 'Verify state', ...step6 });
-    expect(step6.status).toBe('OK');
+    trace?.steps?.push({ step: 6, action: 'Verify state', ...step6 });
+    expect(any: any).toBe('OK');
 
     // Step 7: Valider cohérence globale
     const step7 = await measureStep('Validate global coherence', async () => {
       const coherence = await invoke('singularity_get_global_coherence');
-      expect(coherence).toBeGreaterThan(0.7);
+      expect(any: any).toBeGreaterThan(0.7);
       return coherence;
     });
-    trace.steps.push({ step: 7, action: 'Validate coherence', ...step7 });
-    expect(step7.status).toBe('OK');
+    trace?.steps?.push({ step: 7, action: 'Validate coherence', ...step7 });
+    expect(any: any).toBe('OK');
 
-    trace.success = trace.steps.every(s => s.status === 'OK');
-    expect(trace.success).toBe(true);
+    trace?.success = trace?.steps?.every(s => s?.status === 'OK');
+    expect(any: any);
   }, 45000);
 });
 
@@ -602,5 +602,5 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 5: Complex Multi-Module Interaction', ()
  * Fonction utilitaire pour exporter toutes les traces E2E
  */
 export function exportE2ETraces(): void {
-  console.log('[E2E] All scenarios completed - traces exported');
+  console?.log('[E2E] All scenarios completed - traces exported');
 }

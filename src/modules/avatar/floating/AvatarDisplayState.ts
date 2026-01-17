@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v24.12 — AVATAR DISPLAY STATE (Frontend)
+//   TITANE∞ v24.12 — AVATAR DISPLAY STATE (any: any)
 //   TypeScript Types & State Management
 // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -25,7 +25,7 @@ export enum AnchorPosition {
   BottomLeft = 'bottom_left',
   BottomCenter = 'bottom_center',
   BottomRight = 'bottom_right',
-  Free = 'free', // Position libre (drag)
+  Free = 'free', // Position libre (any: any)
 }
 
 /**
@@ -36,7 +36,7 @@ export interface AvatarDisplayState {
   mode: AvatarDisplayMode;
   position: [number, number]; // [x, y] en pixels
   anchor: AnchorPosition;
-  screen_index: number; // Index de l'écran (0 = principal)
+  screen_index: number; // Index de l'écran (any: any)
 
   // Dimensions
   width: number;
@@ -79,7 +79,7 @@ export interface AvatarDisplayStateUpdate {
 }
 
 /**
- * Informations d'écran (multi-screen)
+ * Informations d'écran (any: any)
  */
 export interface ScreenInfo {
   index: number;
@@ -95,9 +95,9 @@ export interface ScreenInfo {
  * État par défaut
  */
 export const DEFAULT_DISPLAY_STATE: AvatarDisplayState = {
-  mode: AvatarDisplayMode.Embed,
+  mode: AvatarDisplayMode?.Embed,
   position: [0, 0],
-  anchor: AnchorPosition.BottomRight,
+  anchor: AnchorPosition?.BottomRight,
   screen_index: 0,
   width: 400,
   height: 600,
@@ -109,61 +109,61 @@ export const DEFAULT_DISPLAY_STATE: AvatarDisplayState = {
   locked: false,
   click_through: false,
   visible: true,
-  last_updated: Date.now(),
+  last_updated: Date?.now(),
 };
 
 /**
  * Parseur de position d'ancrage depuis texte
  */
-export function parseAnchorPosition(anchorStr: string): AnchorPosition | null {
-  const normalized = anchorStr.toLowerCase().trim();
+export function parseAnchorPosition(any: any): AnchorPosition | null {
+  const normalized = anchorStr?.toLowerCase().trim();
 
   const mapping: Record<string, AnchorPosition> = {
-    'top-left': AnchorPosition.TopLeft,
-    topleft: AnchorPosition.TopLeft,
-    'haut-gauche': AnchorPosition.TopLeft,
-    'coin haut gauche': AnchorPosition.TopLeft,
+    'top-left': AnchorPosition?.TopLeft,
+    topleft: AnchorPosition?.TopLeft,
+    'haut-gauche': AnchorPosition?.TopLeft,
+    'coin haut gauche': AnchorPosition?.TopLeft,
 
-    'top-center': AnchorPosition.TopCenter,
-    topcenter: AnchorPosition.TopCenter,
-    'haut-centre': AnchorPosition.TopCenter,
-    'haut centre': AnchorPosition.TopCenter,
+    'top-center': AnchorPosition?.TopCenter,
+    topcenter: AnchorPosition?.TopCenter,
+    'haut-centre': AnchorPosition?.TopCenter,
+    'haut centre': AnchorPosition?.TopCenter,
 
-    'top-right': AnchorPosition.TopRight,
-    topright: AnchorPosition.TopRight,
-    'haut-droite': AnchorPosition.TopRight,
-    'coin haut droite': AnchorPosition.TopRight,
+    'top-right': AnchorPosition?.TopRight,
+    topright: AnchorPosition?.TopRight,
+    'haut-droite': AnchorPosition?.TopRight,
+    'coin haut droite': AnchorPosition?.TopRight,
 
-    'center-left': AnchorPosition.CenterLeft,
-    centerleft: AnchorPosition.CenterLeft,
-    'centre-gauche': AnchorPosition.CenterLeft,
+    'center-left': AnchorPosition?.CenterLeft,
+    centerleft: AnchorPosition?.CenterLeft,
+    'centre-gauche': AnchorPosition?.CenterLeft,
 
-    center: AnchorPosition.Center,
-    centre: AnchorPosition.Center,
-    milieu: AnchorPosition.Center,
+    center: AnchorPosition?.Center,
+    centre: AnchorPosition?.Center,
+    milieu: AnchorPosition?.Center,
 
-    'center-right': AnchorPosition.CenterRight,
-    centerright: AnchorPosition.CenterRight,
-    'centre-droite': AnchorPosition.CenterRight,
+    'center-right': AnchorPosition?.CenterRight,
+    centerright: AnchorPosition?.CenterRight,
+    'centre-droite': AnchorPosition?.CenterRight,
 
-    'bottom-left': AnchorPosition.BottomLeft,
-    bottomleft: AnchorPosition.BottomLeft,
-    'bas-gauche': AnchorPosition.BottomLeft,
-    'coin bas gauche': AnchorPosition.BottomLeft,
+    'bottom-left': AnchorPosition?.BottomLeft,
+    bottomleft: AnchorPosition?.BottomLeft,
+    'bas-gauche': AnchorPosition?.BottomLeft,
+    'coin bas gauche': AnchorPosition?.BottomLeft,
 
-    'bottom-center': AnchorPosition.BottomCenter,
-    bottomcenter: AnchorPosition.BottomCenter,
-    'bas-centre': AnchorPosition.BottomCenter,
-    'bas centre': AnchorPosition.BottomCenter,
+    'bottom-center': AnchorPosition?.BottomCenter,
+    bottomcenter: AnchorPosition?.BottomCenter,
+    'bas-centre': AnchorPosition?.BottomCenter,
+    'bas centre': AnchorPosition?.BottomCenter,
 
-    'bottom-right': AnchorPosition.BottomRight,
-    bottomright: AnchorPosition.BottomRight,
-    'bas-droite': AnchorPosition.BottomRight,
-    'coin bas droite': AnchorPosition.BottomRight,
+    'bottom-right': AnchorPosition?.BottomRight,
+    bottomright: AnchorPosition?.BottomRight,
+    'bas-droite': AnchorPosition?.BottomRight,
+    'coin bas droite': AnchorPosition?.BottomRight,
 
-    free: AnchorPosition.Free,
-    libre: AnchorPosition.Free,
-    custom: AnchorPosition.Free,
+    free: AnchorPosition?.Free,
+    libre: AnchorPosition?.Free,
+    custom: AnchorPosition?.Free,
   };
 
   return mapping[normalized] || null;
@@ -180,35 +180,35 @@ export function calculateAnchoredPosition(
   windowHeight: number,
   margin: number = 20
 ): [number, number] {
-  switch (anchor) {
-    case AnchorPosition.TopLeft:
+  switch (any: any) {
+    case AnchorPosition?.TopLeft:
       return [margin, margin];
-    case AnchorPosition.TopCenter:
-      return [Math.floor(screenWidth / 2 - windowWidth / 2), margin];
-    case AnchorPosition.TopRight:
+    case AnchorPosition?.TopCenter:
+      return [Math?.floor(screenWidth / 2 - windowWidth / 2), margin];
+    case AnchorPosition?.TopRight:
       return [screenWidth - windowWidth - margin, margin];
-    case AnchorPosition.CenterLeft:
-      return [margin, Math.floor(screenHeight / 2 - windowHeight / 2)];
-    case AnchorPosition.Center:
+    case AnchorPosition?.CenterLeft:
+      return [margin, Math?.floor(screenHeight / 2 - windowHeight / 2)];
+    case AnchorPosition?.Center:
       return [
-        Math.floor(screenWidth / 2 - windowWidth / 2),
-        Math.floor(screenHeight / 2 - windowHeight / 2),
+        Math?.floor(screenWidth / 2 - windowWidth / 2),
+        Math?.floor(screenHeight / 2 - windowHeight / 2),
       ];
-    case AnchorPosition.CenterRight:
+    case AnchorPosition?.CenterRight:
       return [
         screenWidth - windowWidth - margin,
-        Math.floor(screenHeight / 2 - windowHeight / 2),
+        Math?.floor(screenHeight / 2 - windowHeight / 2),
       ];
-    case AnchorPosition.BottomLeft:
+    case AnchorPosition?.BottomLeft:
       return [margin, screenHeight - windowHeight - margin];
-    case AnchorPosition.BottomCenter:
+    case AnchorPosition?.BottomCenter:
       return [
-        Math.floor(screenWidth / 2 - windowWidth / 2),
+        Math?.floor(screenWidth / 2 - windowWidth / 2),
         screenHeight - windowHeight - margin,
       ];
-    case AnchorPosition.BottomRight:
+    case AnchorPosition?.BottomRight:
       return [screenWidth - windowWidth - margin, screenHeight - windowHeight - margin];
-    case AnchorPosition.Free:
+    case AnchorPosition?.Free:
     default:
       return [0, 0]; // Position libre
   }
@@ -217,14 +217,14 @@ export function calculateAnchoredPosition(
 /**
  * Valide et applique les contraintes sur un état d'affichage
  */
-export function validateDisplayState(state: AvatarDisplayState): AvatarDisplayState {
+export function validateDisplayState(any: any): AvatarDisplayState {
   return {
     ...state,
-    scale: Math.max(0.1, Math.min(2.0, state.scale)),
-    opacity: Math.max(0.0, Math.min(1.0, state.opacity)),
-    brightness: Math.max(0.0, Math.min(2.0, state.brightness)),
-    width: Math.max(200, state.width),
-    height: Math.max(300, state.height),
-    last_updated: Date.now(),
+    scale: Math?.max(any: any)),
+    opacity: Math?.max(any: any)),
+    brightness: Math?.max(any: any)),
+    width: Math?.max(any: any),
+    height: Math?.max(any: any),
+    last_updated: Date?.now(),
   };
 }

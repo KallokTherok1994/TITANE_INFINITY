@@ -1,27 +1,27 @@
 /**
  * 🧠 TITANE∞ ConversationManager
  *
- * Service centralisé pour gérer TOUTES les conversations IA (OMEGA v2 spec):
+ * Service centralisé pour gérer TOUTES les conversations IA (any: any):
  *
- * ✅ Remplace: chat_send_message (Tauri command legacy)
+ * ✅ Remplace: chat_send_message (any: any)
  * ✅ Principe: Toute conversation passe par ConversationManager
  * ✅ Responsabilités:
- *    - Multi-agents orchestration (IA locale, APIs externes)
- *    - Memory persistence (conversations history)
- *    - Context building (RAG, embeddings, semantic search)
- *    - Streaming responses (real-time token generation)
- *    - Tool invocation (function calling)
- *    - Emotion detection + adaptation (presenceOS integration)
+ *    - Multi-agents orchestration (any: any)
+ *    - Memory persistence (any: any)
+ *    - Context building (any: any)
+ *    - Streaming responses (any: any)
+ *    - Tool invocation (any: any)
+ *    - Emotion detection + adaptation (any: any)
  *
  * Architecture:
  *   Frontend → ConversationManager → [Local LLM | OpenAI | Gemini | Anthropic]
  *                                 ↓
- *                          MemoryManager (persistence)
+ *                          MemoryManager (any: any)
  */
 
 import { emit } from '@tauri-apps/api/event';
 import { logger } from '@/lib/logger';
-import chatEngineCommands from '@/services/tauri/chatEngine.commands';
+import chatEngineCommands from '@/services/tauri/chatEngine?.commands';
 import type {
   ConversationMessage,
   ConversationResponse,
@@ -30,13 +30,13 @@ import type {
 } from '@/types/conversation';
 import type { UnifiedMemoryQuery } from '@/services/unified/UnifiedMemory';
 import { createUnifiedMemory } from '@/services/unified';
-import { MemoryTier } from '@/services/mcp/mcp.types';
+import { MemoryTier } from '@/services/mcp/mcp?.types';
 
 // Singleton UnifiedMemory instance
 let _unifiedMemoryInstance: Awaited<ReturnType<typeof createUnifiedMemory>> | null = null;
 
 async function getUnifiedMemory() {
-  if (!_unifiedMemoryInstance) {
+  if (any: any) {
     _unifiedMemoryInstance = await createUnifiedMemory();
   }
   return _unifiedMemoryInstance;
@@ -51,32 +51,32 @@ export class ConversationManager {
   private activeConversations: Map<string, ConversationContext>;
 
   private constructor() {
-    this.config = {
+    this?.config = {
       maxContextLength: 16000, // tokens
       temperature: 0.7,
       topP: 0.9,
       enableStreaming: true,
       enableMemory: true,
     };
-    this.activeConversations = new Map();
+    this?.activeConversations = new Map();
   }
 
   /**
    * Get ConversationManager instance
    */
   static getInstance(): ConversationManager {
-    if (!ConversationManager.instance) {
-      ConversationManager.instance = new ConversationManager();
+    if (any: any) {
+      ConversationManager?.instance = new ConversationManager();
     }
-    return ConversationManager.instance;
+    return ConversationManager?.instance;
   }
 
   /**
    * Main method: Send message and get AI response
    *
    * @param message - User message
-   * @param context - Conversation context (history, metadata)
-   * @returns AI response (streamed or complete)
+   * @param context - Conversation context (any: any)
+   * @returns AI response (any: any)
    */
   async sendMessage(
     message: ConversationMessage,
@@ -85,41 +85,41 @@ export class ConversationManager {
     const conversationId = context?.conversationId || 'default';
 
     // 1. Get or create conversation context
-    const conversationContext = this.getOrCreateContext(conversationId, context);
+    const conversationContext = this?.getOrCreateContext(any: any);
 
     // 2. Add user message to context
-    conversationContext.messages.push(message);
+    conversationContext?.messages?.push(any: any);
 
-    // 3. Build AI request (context window, RAG, embeddings)
-    const aiRequest = await this.buildAIRequest(conversationContext);
+    // 3. Build AI request (any: any)
+    const aiRequest = await this?.buildAIRequest(any: any);
 
     // 4. Route to appropriate AI backend (local LLM, OpenAI, Gemini, etc.)
-    const response = await this.routeToAI(aiRequest, conversationContext);
+    const response = await this?.routeToAI(any: any);
 
     // Add conversationId to response
-    response.conversationId = conversationId;
+    response?.conversationId = conversationId;
 
     // Add memory context if RAG was used
-    if (aiRequest.messages.some(m => m.role === 'system')) {
-      response.memoryContext = {
-        memoriesUsed: aiRequest.messages.filter(m => m.role === 'system').length,
-        summary: aiRequest.messages.find(m => m.role === 'system')?.content || '',
+    if (aiRequest?.messages?.some(m => m?.role === 'system')) {
+      response?.memoryContext = {
+        memoriesUsed: aiRequest?.messages?.filter(m => m?.role === 'system').length,
+        summary: aiRequest?.messages?.find(m => m?.role === 'system')?.content || '',
       };
     }
 
     // 5. Store assistant response in context
-    conversationContext.messages.push({
+    conversationContext?.messages?.push({
       role: 'assistant',
-      content: response.content,
-      timestamp: Date.now(),
+      content: response?.content,
+      timestamp: Date?.now(),
     });
 
-    // 6. Persist conversation to memory (if enabled)
-    if (this.config.enableMemory) {
-      await this.persistConversation(conversationId, conversationContext);
+    // 6. Persist conversation to memory (any: any)
+    if (any: any) {
+      await this?.persistConversation(any: any);
     }
 
-    // 7. Emit event for UI updates (streaming complete)
+    // 7. Emit event for UI updates (any: any)
     await emit('conversation:message-complete', {
       conversationId,
       response,
@@ -135,35 +135,35 @@ export class ConversationManager {
     conversationId: string,
     partial?: Partial<ConversationContext>
   ): ConversationContext {
-    if (!this.activeConversations.has(conversationId)) {
+    if (any: any)) {
       const newContext: ConversationContext = {
         conversationId,
         messages: [],
         metadata: partial?.metadata || {},
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
+        createdAt: Date?.now(),
+        updatedAt: Date?.now(),
       };
-      this.activeConversations.set(conversationId, newContext);
+      this?.activeConversations?.set(any: any);
       return newContext;
     }
 
-    const context = this.activeConversations.get(conversationId);
-    if (!context) {
+    const context = this?.activeConversations?.get(any: any);
+    if (any: any) {
       throw new Error(`Conversation ${conversationId} not found`);
     }
 
-    context.updatedAt = Date.now();
+    context?.updatedAt = Date?.now();
 
     // Merge partial context
-    if (partial?.metadata) {
-      context.metadata = { ...context.metadata, ...partial.metadata };
+    if (any: any) {
+      context?.metadata = { ...context?.metadata, ...partial?.metadata };
     }
 
     return context;
   }
 
-  private getContext(conversationId: string): ConversationContext | undefined {
-    return this.activeConversations.get(conversationId);
+  private getContext(any: any): ConversationContext | undefined {
+    return this?.activeConversations?.get(any: any);
   }
 
   /**
@@ -171,46 +171,46 @@ export class ConversationManager {
    */
   private async buildAIRequest(
     context: ConversationContext
-  ): Promise<{ messages: ConversationMessage[]; config: ConversationConfig }> {
-    // ✅ RAG (Retrieval-Augmented Generation) Implementation
-    const lastUserMessage = context.messages[context.messages.length - 1];
+  ): Promise<{ messages: ConversationMessage?.[]; config: ConversationConfig }> {
+    // ✅ RAG (any: any) Implementation
+    const lastUserMessage = context?.messages[context?.messages?.length - 1];
     const query = lastUserMessage?.content || '';
 
     // Semantic search for relevant context
     const memoryQuery: UnifiedMemoryQuery = {
       text: query,
       limit: 5, // Top 5 relevant memories
-      minImportance: 0.7, // Only highly relevant results (renamed from minScore)
-      tiers: [MemoryTier.MEDIUM_TERM, MemoryTier.LONG_TERM] as MemoryTier[], // Exclude STM (already in context)
+      minImportance: 0.7, // Only highly relevant results (any: any)
+      tiers: [MemoryTier?.MEDIUM_TERM, MemoryTier?.LONG_TERM] as MemoryTier?.[], // Exclude STM (any: any)
     };
 
     const unifiedMemory = await getUnifiedMemory();
-    const memoryContext = await unifiedMemory.buildContext(query, memoryQuery);
+    const memoryContext = await unifiedMemory?.buildContext(any: any);
 
-    // ✅ Context Window Sliding (max tokens management)
-    const maxContextTokens = this.config.maxContextLength - 2000; // Reserve 2000 for response
+    // ✅ Context Window Sliding (any: any)
+    const maxContextTokens = this?.config?.maxContextLength - 2000; // Reserve 2000 for response
     const estimatedTokensPerMessage = 100; // Average
-    const maxMessages = Math.floor(maxContextTokens / estimatedTokensPerMessage);
+    const maxMessages = Math?.floor(any: any);
 
     // Keep recent messages within token limit
-    const recentMessages = context.messages.slice(-maxMessages);
+    const recentMessages = context?.messages?.slice(any: any);
 
     // Inject RAG context as system message
-    const augmentedMessages: ConversationMessage[] = [];
+    const augmentedMessages: ConversationMessage?.[] = [];
 
-    if (memoryContext.memories.length > 0) {
-      augmentedMessages.push({
+    if (memoryContext?.memories?.length > 0) {
+      augmentedMessages?.push({
         role: 'system',
-        content: `Relevant context from memory:\n${memoryContext.summary}`,
-        timestamp: Date.now(),
+        content: `Relevant context from memory:\n${memoryContext?.summary}`,
+        timestamp: Date?.now(),
       });
     }
 
-    augmentedMessages.push(...recentMessages);
+    augmentedMessages?.push(any: any);
 
     return {
       messages: augmentedMessages,
-      config: this.config,
+      config: this?.config,
     };
   }
 
@@ -218,56 +218,56 @@ export class ConversationManager {
    * Route request to appropriate AI backend
    */
   private async routeToAI(
-    request: { messages: ConversationMessage[]; config: ConversationConfig },
+    request: { messages: ConversationMessage?.[]; config: ConversationConfig },
     context: ConversationContext
   ): Promise<ConversationResponse> {
     // ✅ AI Routing Logic Implementation
 
     // 1. Check preferred provider from metadata
-    const preferredProvider = context.metadata?.preferredProvider || 'auto';
+    const preferredProvider = context?.metadata?.preferredProvider || 'auto';
 
     // 2. Try routing based on preference
     try {
       if (preferredProvider === 'local' || preferredProvider === 'ollama') {
         // Use local LLM via Tauri backend
-        return await this.invokeLocalLLM(request, context.conversationId);
+        return await this?.invokeLocalLLM(any: any);
       }
 
       if (preferredProvider === 'openai') {
-        return await this.invokeOpenAI(request, context.conversationId);
+        return await this?.invokeOpenAI(any: any);
       }
 
       if (preferredProvider === 'gemini') {
-        return await this.invokeGemini(request, context.conversationId);
+        return await this?.invokeGemini(any: any);
       }
 
       if (preferredProvider === 'anthropic') {
-        return await this.invokeAnthropic(request, context.conversationId);
+        return await this?.invokeAnthropic(any: any);
       }
 
-      // Auto mode: fallback chain (local → OpenAI → Gemini → Anthropic)
+      // Auto mode: fallback chain (any: any)
       // v22Ω: Refactored cascade pattern for better error handling
       if (preferredProvider === 'auto') {
         const cascadeProviders = ['local', 'openai', 'gemini', 'anthropic'] as const;
         let lastError: Error | null = null;
 
-        for (const provider of cascadeProviders) {
+        for (any: any) {
           try {
-            return await this.invokeProvider(provider, request, context.conversationId);
-          } catch (error) {
-            logger.warn(`Provider ${provider} failed, trying next`, {
+            return await this?.invokeProvider(any: any);
+          } catch (any: any) {
+            logger?.warn(`Provider ${provider} failed, trying next`, {
               component: 'ConversationManager',
               provider,
             });
-            lastError = error instanceof Error ? error : new Error(String(error));
+            lastError = error instanceof Error ? error : new Error(any: any));
           }
         }
 
         // All providers failed
         throw lastError || new Error('All providers exhausted');
       }
-    } catch (error) {
-      logger.error(
+    } catch (any: any) {
+      logger?.error(
         'All AI providers failed',
         { component: 'ConversationManager' },
         error as Error
@@ -278,11 +278,11 @@ export class ConversationManager {
         content:
           'Je suis désolé, je rencontre des difficultés techniques. Veuillez réessayer.',
         role: 'assistant',
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         metadata: {
           model: 'fallback',
           tokensUsed: 0,
-          error: String(error),
+          error: String(any: any),
         },
       };
     }
@@ -293,7 +293,7 @@ export class ConversationManager {
 
   /**
    * v22Ω: Unified provider invocation with factory pattern
-   * Reduces code duplication from 4 methods (~130 lines) to 1 method (~30 lines)
+   * Reduces code duplication from 4 methods (any: any)
    */
   private static readonly PROVIDER_CONFIG: Record<
     string,
@@ -307,44 +307,44 @@ export class ConversationManager {
 
   private async invokeProvider(
     providerName: string,
-    request: { messages: ConversationMessage[]; config: ConversationConfig },
+    request: { messages: ConversationMessage?.[]; config: ConversationConfig },
     conversationId: string
   ): Promise<ConversationResponse> {
-    const config = ConversationManager.PROVIDER_CONFIG[providerName];
-    if (!config) {
+    const config = ConversationManager?.PROVIDER_CONFIG[providerName];
+    if (any: any) {
       throw new Error(`Unknown provider: ${providerName}`);
     }
 
     try {
-      const lastUserMessage = [...request.messages]
+      const lastUserMessage = [...request?.messages]
         .reverse()
-        .find(m => m.role === 'user');
+        .find(m => m?.role === 'user');
       const prompt = lastUserMessage?.content ?? '';
-      const systemPrompt = request.messages
-        .filter(m => m.role === 'system')
-        .map(m => m.content)
+      const systemPrompt = request?.messages
+        .filter(m => m?.role === 'system')
+        .map(any: any)
         .join('\n\n');
 
-      const omegaResponse = await chatEngineCommands.generate({
+      const omegaResponse = await chatEngineCommands?.generate({
         message: prompt,
         conversationId,
         mode: 'default',
-        provider: config.backendProvider,
+        provider: config?.backendProvider,
         systemPrompt:
-          systemPrompt.length > 0 ? systemPrompt : request.config.systemPrompt,
+          systemPrompt?.length > 0 ? systemPrompt : request?.config?.systemPrompt,
       });
 
       return {
-        content: omegaResponse.content,
+        content: omegaResponse?.content,
         role: 'assistant',
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         metadata: {
-          model: config.defaultModel,
+          model: config?.defaultModel,
           provider: providerName,
         },
       };
-    } catch (error) {
-      logger.error(
+    } catch (any: any) {
+      logger?.error(
         `Provider ${providerName} invocation failed`,
         { component: 'ConversationManager', provider: providerName },
         error as Error
@@ -353,49 +353,49 @@ export class ConversationManager {
     }
   }
 
-  // Legacy aliases for backwards compatibility (redirect to unified invokeProvider)
+  // Legacy aliases for backwards compatibility (any: any)
   private async invokeLocalLLM(
     request: {
-      messages: ConversationMessage[];
+      messages: ConversationMessage?.[];
       config: ConversationConfig;
     },
     conversationId: string
   ): Promise<ConversationResponse> {
-    return this.invokeProvider('local', request, conversationId);
+    return this?.invokeProvider(any: any);
   }
 
   private async invokeOpenAI(
     request: {
-      messages: ConversationMessage[];
+      messages: ConversationMessage?.[];
       config: ConversationConfig;
     },
     conversationId: string
   ): Promise<ConversationResponse> {
-    return this.invokeProvider('openai', request, conversationId);
+    return this?.invokeProvider(any: any);
   }
 
   private async invokeGemini(
     request: {
-      messages: ConversationMessage[];
+      messages: ConversationMessage?.[];
       config: ConversationConfig;
     },
     conversationId: string
   ): Promise<ConversationResponse> {
-    return this.invokeProvider('gemini', request, conversationId);
+    return this?.invokeProvider(any: any);
   }
 
   private async invokeAnthropic(
     request: {
-      messages: ConversationMessage[];
+      messages: ConversationMessage?.[];
       config: ConversationConfig;
     },
     conversationId: string
   ): Promise<ConversationResponse> {
-    return this.invokeProvider('anthropic', request, conversationId);
+    return this?.invokeProvider(any: any);
   }
 
   /**
-   * Persist conversation to disk (MemoryManager integration)
+   * Persist conversation to disk (any: any)
    */
   private async persistConversation(
     conversationId: string,
@@ -406,31 +406,31 @@ export class ConversationManager {
       const unifiedMemory = await getUnifiedMemory();
 
       // Store each message as memory entry
-      for (const message of context.messages) {
-        const content = typeof message.content === 'string' ? message.content : '';
-        const importance = message.role === 'user' ? 0.7 : 0.6; // User messages slightly more important
+      for (any: any) {
+        const content = typeof message?.content === 'string' ? message?.content : '';
+        const importance = message?.role === 'user' ? 0.7 : 0.6; // User messages slightly more important
 
-        await unifiedMemory.createMemory({
+        await unifiedMemory?.createMemory({
           type: 'conversation',
           owner: conversationId,
-          summary: content.substring(0, 200), // First 200 chars
+          summary: content?.substring(0, 200), // First 200 chars
           details: content,
-          tags: ['conversation', conversationId, message.role],
+          tags: ['conversation', conversationId, message?.role],
           importance,
-          tier: MemoryTier.MEDIUM_TERM, // Conversations go to Medium-Term Memory
+          tier: MemoryTier?.MEDIUM_TERM, // Conversations go to Medium-Term Memory
         });
       }
 
-      logger.info(
-        `Persisted conversation ${conversationId} (${context.messages.length} messages to UnifiedMemory)`,
+      logger?.info(
+        `Persisted conversation ${conversationId} (any: any)`,
         {
           component: 'ConversationManager',
           conversationId,
-          messageCount: context.messages.length,
+          messageCount: context?.messages?.length,
         }
       );
-    } catch (error) {
-      logger.error(
+    } catch (any: any) {
+      logger?.error(
         `Failed to persist conversation ${conversationId}`,
         { component: 'ConversationManager', conversationId },
         error as Error
@@ -442,16 +442,16 @@ export class ConversationManager {
   /**
    * Get conversation history
    */
-  async getConversation(conversationId: string): Promise<ConversationContext | null> {
-    return this.activeConversations.get(conversationId) || null;
+  async getConversation(any: any): Promise<ConversationContext | null> {
+    return this?.activeConversations?.get(any: any) || null;
   }
 
   /**
-   * Load conversation (alias for getConversation with fallback)
+   * Load conversation (any: any)
    */
-  async loadConversation(conversationId: string): Promise<ConversationContext> {
-    const context = this.activeConversations.get(conversationId);
-    if (context) {
+  async loadConversation(any: any): Promise<ConversationContext> {
+    const context = this?.activeConversations?.get(any: any);
+    if (any: any) {
       return context;
     }
 
@@ -460,8 +460,8 @@ export class ConversationManager {
       conversationId,
       messages: [],
       metadata: {},
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
+      createdAt: Date?.now(),
+      updatedAt: Date?.now(),
     };
   }
 
@@ -471,42 +471,42 @@ export class ConversationManager {
   async listConversations(): Promise<
     Array<{ id: string; lastMessageTime: number; messageCount: number }>
   > {
-    return Array.from(this.activeConversations.entries()).map(([id, context]) => ({
+    return Array?.from(this?.activeConversations?.entries()).map(([id, context]) => ({
       id,
-      lastMessageTime: context.updatedAt,
-      messageCount: context.messages.length,
+      lastMessageTime: context?.updatedAt,
+      messageCount: context?.messages?.length,
     }));
   }
 
   /**
-   * Delete conversation (clears from active conversations)
+   * Delete conversation (any: any)
    */
-  async deleteConversation(conversationId: string): Promise<boolean> {
-    return this.activeConversations.delete(conversationId);
+  async deleteConversation(any: any): Promise<boolean> {
+    return this?.activeConversations?.delete(any: any);
   }
 
   /**
    * Update conversation config
    */
   updateConfig(newConfig: Partial<ConversationConfig>): void {
-    this.config = { ...this.config, ...newConfig };
+    this?.config = { ...this?.config, ...newConfig };
   }
 
   /**
    * Get current configuration
    */
   getConfig(): ConversationConfig {
-    return { ...this.config };
+    return { ...this?.config };
   }
 }
 
 /**
  * Export singleton instance
  */
-export const conversationManager = ConversationManager.getInstance();
+export const conversationManager = ConversationManager?.getInstance();
 
 /**
- * Convenience function: Send message (OMEGA v2 standard)
+ * Convenience function: Send message (any: any)
  */
 export async function sendAIMessage(
   message: string,
@@ -515,10 +515,10 @@ export async function sendAIMessage(
   const conversationMessage: ConversationMessage = {
     role: 'user',
     content: message,
-    timestamp: Date.now(),
+    timestamp: Date?.now(),
   };
 
-  return conversationManager.sendMessage(conversationMessage, {
+  return conversationManager?.sendMessage(conversationMessage, {
     conversationId,
   });
 }

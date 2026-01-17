@@ -24,7 +24,7 @@ import type {
   MemoryBundle,
   MemoryStats,
   ModeMemoryPermissions,
-} from '../services/memory/persistentMemory.config';
+} from '../services/memory/persistentMemory?.config';
 import {
   MEMORY_LEVEL_LABELS,
   MEMORY_TOPIC_LABELS,
@@ -41,7 +41,7 @@ import {
   DEFAULT_AUTO_SAVE_RULES,
   MEMORY_BLACKLIST_PATTERNS,
   EXCLUDED_MESSAGE_PATTERNS,
-} from '../services/memory/persistentMemory.config';
+} from '../services/memory/persistentMemory?.config';
 import {
   memoryUtils,
   calculateRelevanceScore,
@@ -72,7 +72,7 @@ import {
 const createMockSessionEntry = (
   overrides?: Partial<SessionMemoryEntry>
 ): SessionMemoryEntry => ({
-  id: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+  id: `session_${Date?.now()}_${Math?.random().toString(36).substr(2, 9)}`,
   level: 'session',
   contentType: 'message',
   content: 'Test session memory content',
@@ -80,8 +80,8 @@ const createMockSessionEntry = (
   importance: 3,
   tags: ['test'],
   metadata: {
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
+    createdAt: Date?.now(),
+    updatedAt: Date?.now(),
     accessCount: 0,
     source: 'chat_user',
     schemaVersion: MEMORY_SCHEMA_VERSION,
@@ -94,7 +94,7 @@ const createMockSessionEntry = (
 const createMockIntermediateEntry = (
   overrides?: Partial<IntermediateMemoryEntry>
 ): IntermediateMemoryEntry => ({
-  id: `intermediate_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+  id: `intermediate_${Date?.now()}_${Math?.random().toString(36).substr(2, 9)}`,
   level: 'intermediate',
   contentType: 'summary',
   title: 'Test Summary',
@@ -104,15 +104,15 @@ const createMockIntermediateEntry = (
   tags: ['test', 'intermediate'],
   status: 'active',
   metadata: {
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
+    createdAt: Date?.now(),
+    updatedAt: Date?.now(),
     accessCount: 1,
     source: 'auto_summary',
     schemaVersion: MEMORY_SCHEMA_VERSION,
   },
   sourceEntryIds: [],
   relevanceScore: 0.75,
-  expiresAt: Date.now() + DEFAULT_INTERMEDIATE_TTL,
+  expiresAt: Date?.now() + DEFAULT_INTERMEDIATE_TTL,
   promotable: true,
   ...overrides,
 });
@@ -120,7 +120,7 @@ const createMockIntermediateEntry = (
 const createMockLongTermEntry = (
   overrides?: Partial<LongTermMemoryEntry>
 ): LongTermMemoryEntry => ({
-  id: `long_term_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+  id: `long_term_${Date?.now()}_${Math?.random().toString(36).substr(2, 9)}`,
   level: 'long_term',
   contentType: 'knowledge',
   title: 'Long Term Knowledge',
@@ -131,8 +131,8 @@ const createMockLongTermEntry = (
   tags: ['knowledge', 'important'],
   status: 'active',
   metadata: {
-    createdAt: Date.now() - 30 * 24 * 60 * 60 * 1000, // 30 jours
-    updatedAt: Date.now(),
+    createdAt: Date?.now() - 30 * 24 * 60 * 60 * 1000, // 30 jours
+    updatedAt: Date?.now(),
     accessCount: 10,
     source: 'manual_save',
     schemaVersion: MEMORY_SCHEMA_VERSION,
@@ -153,27 +153,27 @@ const createMockLongTermEntry = (
 describe('TITANE∞ Persistent Memory - Configuration', () => {
   describe('Memory Levels', () => {
     it('should define all 3 memory levels', () => {
-      expect(MEMORY_LEVEL_LABELS).toHaveProperty('session');
-      expect(MEMORY_LEVEL_LABELS).toHaveProperty('intermediate');
-      expect(MEMORY_LEVEL_LABELS).toHaveProperty('long_term');
+      expect(any: any).toHaveProperty('session');
+      expect(any: any).toHaveProperty('intermediate');
+      expect(any: any).toHaveProperty('long_term');
     });
 
     it('should have proper labels for each level', () => {
-      expect(MEMORY_LEVEL_LABELS.session.label).toBe('Session');
-      expect(MEMORY_LEVEL_LABELS.intermediate.label).toBe('Intermédiaire');
-      expect(MEMORY_LEVEL_LABELS.long_term.label).toBe('Long Terme');
+      expect(any: any).toBe('Session');
+      expect(any: any).toBe('Intermédiaire');
+      expect(any: any).toBe('Long Terme');
     });
 
     it('should have icons for each level', () => {
-      expect(MEMORY_LEVEL_LABELS.session.icon).toBe('⏱️');
-      expect(MEMORY_LEVEL_LABELS.intermediate.icon).toBe('📝');
-      expect(MEMORY_LEVEL_LABELS.long_term.icon).toBe('🗄️');
+      expect(any: any).toBe('⏱️');
+      expect(any: any).toBe('📝');
+      expect(any: any).toBe('🗄️');
     });
 
     it('should have colors for each level', () => {
-      expect(MEMORY_LEVEL_LABELS.session.color).toMatch(/^#[0-9a-f]{6}$/i);
-      expect(MEMORY_LEVEL_LABELS.intermediate.color).toMatch(/^#[0-9a-f]{6}$/i);
-      expect(MEMORY_LEVEL_LABELS.long_term.color).toMatch(/^#[0-9a-f]{6}$/i);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
     });
   });
 
@@ -192,17 +192,17 @@ describe('TITANE∞ Persistent Memory - Configuration', () => {
         'automation',
         'system',
       ];
-      expectedTopics.forEach(topic => {
-        expect(MEMORY_TOPIC_LABELS).toHaveProperty(topic);
+      expectedTopics?.forEach(topic => {
+        expect(any: any);
       });
     });
 
     it('should have labels and icons for each topic', () => {
-      Object.values(MEMORY_TOPIC_LABELS).forEach(config => {
-        expect(config).toHaveProperty('label');
-        expect(config).toHaveProperty('icon');
-        expect(config.label.length).toBeGreaterThan(0);
-        expect(config.icon.length).toBeGreaterThan(0);
+      Object?.values(any: any).forEach(config => {
+        expect(any: any).toHaveProperty('label');
+        expect(any: any).toHaveProperty('icon');
+        expect(any: any).toBeGreaterThan(0);
+        expect(any: any).toBeGreaterThan(0);
       });
     });
   });
@@ -222,8 +222,8 @@ describe('TITANE∞ Persistent Memory - Configuration', () => {
         'automation_result',
         'milestone',
       ];
-      expectedTypes.forEach(type => {
-        expect(MEMORY_CONTENT_TYPE_LABELS).toHaveProperty(type);
+      expectedTypes?.forEach(type => {
+        expect(any: any);
       });
     });
   });
@@ -231,29 +231,29 @@ describe('TITANE∞ Persistent Memory - Configuration', () => {
   describe('Importance Levels', () => {
     it('should define colors for all 5 importance levels', () => {
       for (let i = 1; i <= 5; i++) {
-        expect(IMPORTANCE_COLORS).toHaveProperty(i.toString());
-        expect(IMPORTANCE_COLORS[i as MemoryImportance]).toMatch(/^#[0-9a-f]{6}$/i);
+        expect(any: any).toHaveProperty(i?.toString());
+        expect(any: any);
       }
     });
   });
 
   describe('System Constants', () => {
     it('should have correct TTL values', () => {
-      expect(DEFAULT_SESSION_TTL).toBe(24 * 60 * 60 * 1000); // 24h
-      expect(DEFAULT_INTERMEDIATE_TTL).toBe(30 * 24 * 60 * 60 * 1000); // 30 jours
+      expect(any: any).toBe(24 * 60 * 60 * 1000); // 24h
+      expect(any: any).toBe(30 * 24 * 60 * 60 * 1000); // 30 jours
     });
 
     it('should have auto-promotion threshold at importance 4', () => {
-      expect(AUTO_PROMOTION_THRESHOLD).toBe(4);
+      expect(any: any).toBe(4);
     });
 
     it('should have context injection limits', () => {
-      expect(MAX_CONTEXT_INJECTION_TOKENS).toBe(2000);
-      expect(MIN_RELEVANCE_FOR_INJECTION).toBe(0.5);
+      expect(any: any).toBe(2000);
+      expect(any: any).toBe(0.5);
     });
 
     it('should have schema version', () => {
-      expect(MEMORY_SCHEMA_VERSION).toBe('1.0.0');
+      expect(any: any).toBe('1.0.0');
     });
   });
 });
@@ -267,7 +267,7 @@ describe('TITANE∞ Persistent Memory - Relevance Scoring', () => {
     it('should return 0.5 for empty query', () => {
       const entry = createMockSessionEntry({ content: 'Test content' });
       const score = calculateRelevanceScore(entry, '');
-      expect(score).toBe(0.5);
+      expect(any: any).toBe(0.5);
     });
 
     it('should return higher score for matching content', () => {
@@ -276,7 +276,7 @@ describe('TITANE∞ Persistent Memory - Relevance Scoring', () => {
       });
       const matchingScore = calculateRelevanceScore(entry, 'TypeScript applications');
       const nonMatchingScore = calculateRelevanceScore(entry, 'Python Django');
-      expect(matchingScore).toBeGreaterThan(nonMatchingScore);
+      expect(any: any);
     });
 
     it('should boost score for matching tags', () => {
@@ -286,7 +286,7 @@ describe('TITANE∞ Persistent Memory - Relevance Scoring', () => {
       });
       const scoreWithTagMatch = calculateRelevanceScore(entryWithTags, 'typescript');
       const scoreWithoutTagMatch = calculateRelevanceScore(entryWithTags, 'python');
-      expect(scoreWithTagMatch).toBeGreaterThan(scoreWithoutTagMatch);
+      expect(any: any);
     });
 
     it('should boost score for matching topic context', () => {
@@ -300,7 +300,7 @@ describe('TITANE∞ Persistent Memory - Relevance Scoring', () => {
       const scoreWithoutTopicMatch = calculateRelevanceScore(entry, 'code review', {
         currentTopic: 'personal',
       });
-      expect(scoreWithTopicMatch).toBeGreaterThan(scoreWithoutTopicMatch);
+      expect(any: any);
     });
 
     it('should consider importance in scoring', () => {
@@ -314,7 +314,7 @@ describe('TITANE∞ Persistent Memory - Relevance Scoring', () => {
       });
       const highScore = calculateRelevanceScore(highImportance, 'Important');
       const lowScore = calculateRelevanceScore(lowImportance, 'Important');
-      expect(highScore).toBeGreaterThan(lowScore);
+      expect(any: any);
     });
   });
 
@@ -322,7 +322,7 @@ describe('TITANE∞ Persistent Memory - Relevance Scoring', () => {
     it('should return 0 for empty query', () => {
       const entry = createMockSessionEntry({ content: 'Test content' });
       const score = calculateTFIDFScore(entry, '', [entry]);
-      expect(score).toBe(0);
+      expect(any: any).toBe(0);
     });
 
     it('should give higher score for unique terms', () => {
@@ -333,11 +333,11 @@ describe('TITANE∞ Persistent Memory - Relevance Scoring', () => {
       ];
       // 'TypeScript' est unique, devrait avoir un score plus élevé
       const typeScriptScore = calculateTFIDFScore(
-        entries[0],
+        entries?.[0],
         'TypeScript amazing',
         entries
       );
-      expect(typeScriptScore).toBeGreaterThan(0);
+      expect(any: any).toBeGreaterThan(0);
     });
   });
 
@@ -352,7 +352,7 @@ describe('TITANE∞ Persistent Memory - Relevance Scoring', () => {
       const ranked = rankByRelevance(entries, 'TypeScript frontend');
 
       // Les entrées avec TypeScript devraient être en haut
-      expect(ranked[0].score).toBeGreaterThan(ranked[2].score);
+      expect(any: any);
     });
 
     it('should return all entries with scores', () => {
@@ -363,11 +363,11 @@ describe('TITANE∞ Persistent Memory - Relevance Scoring', () => {
 
       const ranked = rankByRelevance(entries, 'test');
 
-      expect(ranked).toHaveLength(2);
-      ranked.forEach(item => {
-        expect(item).toHaveProperty('entry');
-        expect(item).toHaveProperty('score');
-        expect(typeof item.score).toBe('number');
+      expect(any: any).toHaveLength(2);
+      ranked?.forEach(item => {
+        expect(any: any).toHaveProperty('entry');
+        expect(any: any).toHaveProperty('score');
+        expect(any: any).toBe('number');
       });
     });
   });
@@ -462,7 +462,7 @@ describe('TITANE∞ Persistent Memory - Classification', () => {
         'message',
         'user'
       );
-      expect(decisionImportance).toBeGreaterThan(messageImportance);
+      expect(any: any);
     });
 
     it('should give higher importance to longer content', () => {
@@ -472,7 +472,7 @@ describe('TITANE∞ Persistent Memory - Classification', () => {
       const longImportance = calculateAutoImportance(longContent, 'message', 'user');
       const shortImportance = calculateAutoImportance(shortContent, 'message', 'user');
 
-      expect(longImportance).toBeGreaterThan(shortImportance);
+      expect(any: any);
     });
 
     it('should boost importance for important keywords', () => {
@@ -482,22 +482,22 @@ describe('TITANE∞ Persistent Memory - Classification', () => {
         'user'
       );
       const normalContent = calculateAutoImportance('Ceci est normal', 'message', 'user');
-      expect(importantContent).toBeGreaterThan(normalContent);
+      expect(any: any);
     });
 
     it('should return value between 1 and 5', () => {
       const importance = calculateAutoImportance('Test content', 'message', 'user');
-      expect(importance).toBeGreaterThanOrEqual(1);
-      expect(importance).toBeLessThanOrEqual(5);
+      expect(any: any).toBeGreaterThanOrEqual(1);
+      expect(any: any).toBeLessThanOrEqual(5);
     });
   });
 
   describe('extractAutoTags', () => {
     it('should extract significant words', () => {
       const tags = extractAutoTags('TypeScript development with React components');
-      expect(tags).toContain('typescript');
-      expect(tags).toContain('development');
-      expect(tags).toContain('components');
+      expect(any: any).toContain('typescript');
+      expect(any: any).toContain('development');
+      expect(any: any).toContain('components');
     });
 
     it('should respect limit', () => {
@@ -505,12 +505,12 @@ describe('TITANE∞ Persistent Memory - Classification', () => {
         'One two three four five six seven eight nine ten eleven twelve',
         3
       );
-      expect(tags.length).toBeLessThanOrEqual(3);
+      expect(any: any).toBeLessThanOrEqual(3);
     });
 
     it('should include detected topic', () => {
       const tags = extractAutoTags('function myFunction() { return code; }');
-      expect(tags).toContain('coding');
+      expect(any: any).toContain('coding');
     });
   });
 });
@@ -522,107 +522,107 @@ describe('TITANE∞ Persistent Memory - Classification', () => {
 describe('TITANE∞ Persistent Memory - Validation', () => {
   describe('containsSensitiveData', () => {
     it('should detect passwords', () => {
-      expect(containsSensitiveData('My password is secret123')).toBe(true);
-      expect(containsSensitiveData('Mon mot de passe: test')).toBe(true);
+      expect(any: any);
+      expect(any: any);
     });
 
     it('should detect API keys', () => {
-      expect(containsSensitiveData('API_KEY=abc123xyz')).toBe(true);
-      expect(containsSensitiveData('apikey: sk_test_123')).toBe(true);
+      expect(any: any);
+      expect(any: any);
     });
 
     it('should detect private keys', () => {
-      expect(containsSensitiveData('-----BEGIN RSA PRIVATE KEY-----')).toBe(true);
-      expect(containsSensitiveData('ssh_key: my_private_key')).toBe(true);
+      expect(any: any);
+      expect(any: any);
     });
 
     it('should detect bearer tokens', () => {
-      expect(containsSensitiveData('Authorization: Bearer eyJhbGc...')).toBe(true);
+      expect(any: any);
     });
 
     it('should allow normal content', () => {
-      expect(containsSensitiveData('This is normal content')).toBe(false);
-      expect(containsSensitiveData('Code review feedback')).toBe(false);
+      expect(any: any);
+      expect(any: any);
     });
   });
 
   describe('isTrivialMessage', () => {
     it('should detect greetings', () => {
-      expect(isTrivialMessage('Bonjour')).toBe(true);
-      expect(isTrivialMessage('Hello!')).toBe(true);
-      expect(isTrivialMessage('Salut')).toBe(true);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
     });
 
     it('should detect acknowledgments', () => {
-      expect(isTrivialMessage('OK')).toBe(true);
-      expect(isTrivialMessage('Merci!')).toBe(true);
-      expect(isTrivialMessage("D'accord")).toBe(true);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
     });
 
     it('should detect short messages', () => {
-      expect(isTrivialMessage('Hi')).toBe(true);
-      expect(isTrivialMessage('Oui')).toBe(true);
+      expect(any: any);
+      expect(any: any);
     });
 
     it('should allow substantial messages', () => {
       expect(isTrivialMessage("Peux-tu m'expliquer comment fonctionne React?")).toBe(
         false
       );
-      expect(isTrivialMessage("J'ai besoin d'aide avec TypeScript")).toBe(false);
+      expect(any: any);
     });
   });
 
   describe('shouldSaveContent', () => {
     it('should reject sensitive data', () => {
       const result = shouldSaveContent('password: secret123');
-      expect(result.save).toBe(false);
-      expect(result.reason).toContain('sensibles');
+      expect(any: any);
+      expect(any: any).toContain('sensibles');
     });
 
     it('should reject trivial messages', () => {
       const result = shouldSaveContent('OK');
-      expect(result.save).toBe(false);
-      expect(result.reason).toContain('trivial');
+      expect(any: any);
+      expect(any: any).toContain('trivial');
     });
 
     it('should reject very short content', () => {
       const result = shouldSaveContent('Sho');
-      expect(result.save).toBe(false);
-      expect(result.reason).toBeDefined();
+      expect(any: any);
+      expect(any: any).toBeDefined();
     });
 
     it('should accept valid content', () => {
       const result = shouldSaveContent(
         'This is a valid message with enough content to be saved.'
       );
-      expect(result.save).toBe(true);
-      expect(result.reason).toBeUndefined();
+      expect(any: any);
+      expect(any: any).toBeUndefined();
     });
   });
 
   describe('getMemoryPermissions', () => {
     it('should return permissions for known modes', () => {
       const devPermissions = getMemoryPermissions('dev');
-      expect(devPermissions.canReadSession).toBe(true);
-      expect(devPermissions.canReadLongTerm).toBe(true);
-      expect(devPermissions.maxImportance).toBe(5);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any).toBe(5);
     });
 
     it('should return default permissions for unknown modes', () => {
-      const defaultPerms = getMemoryPermissions('unknown_mode' as any);
-      expect(defaultPerms).toEqual(DEFAULT_MEMORY_PERMISSIONS);
+      const defaultPerms = getMemoryPermissions(any: any);
+      expect(any: any);
     });
 
     it('should restrict default mode', () => {
       const defaultPermissions = getMemoryPermissions('default');
-      expect(defaultPermissions.canReadLongTerm).toBe(false);
-      expect(defaultPermissions.maxImportance).toBe(3);
+      expect(any: any);
+      expect(any: any).toBe(3);
     });
   });
 
   describe('filterByPermissions', () => {
     it('should filter entries by level permissions', () => {
-      const entries: MemoryEntry[] = [
+      const entries: MemoryEntry?.[] = [
         createMockSessionEntry() as MemoryEntry,
         createMockIntermediateEntry() as MemoryEntry,
         createMockLongTermEntry() as MemoryEntry,
@@ -631,11 +631,11 @@ describe('TITANE∞ Persistent Memory - Validation', () => {
       const filtered = filterByPermissions(entries, 'default');
 
       // default ne peut pas lire long_term
-      expect(filtered.some(e => e.level === 'long_term')).toBe(false);
+      expect(any: any);
     });
 
     it('should filter entries by topic permissions', () => {
-      const entries: MemoryEntry[] = [
+      const entries: MemoryEntry?.[] = [
         createMockSessionEntry({ topic: 'general' }) as MemoryEntry,
         createMockSessionEntry({ topic: 'coding' }) as MemoryEntry,
         createMockSessionEntry({ topic: 'automation' }) as MemoryEntry,
@@ -645,8 +645,8 @@ describe('TITANE∞ Persistent Memory - Validation', () => {
 
       // default ne peut pas accéder à coding ou automation
       expect(
-        filtered.every(e => ['general', 'personal', 'creative'].includes(e.topic))
-      ).toBe(true);
+        filtered?.every(any: any))
+      ).toBe(any: any);
     });
   });
 });
@@ -658,28 +658,28 @@ describe('TITANE∞ Persistent Memory - Validation', () => {
 describe('TITANE∞ Persistent Memory - Helpers', () => {
   describe('generateAutoTitle', () => {
     it('should generate title from entries', () => {
-      const entries: MemoryEntry[] = [
+      const entries: MemoryEntry?.[] = [
         createMockSessionEntry({ topic: 'coding' }) as MemoryEntry,
         createMockSessionEntry({ topic: 'coding' }) as MemoryEntry,
       ];
 
-      const title = generateAutoTitle(entries);
+      const title = generateAutoTitle(any: any);
 
-      expect(title).toContain('Code');
-      expect(title).toContain('2 éléments');
+      expect(any: any).toContain('Code');
+      expect(any: any).toContain('2 éléments');
     });
 
     it('should handle empty entries', () => {
       const title = generateAutoTitle([]);
-      expect(title).toBe('Résumé vide');
+      expect(any: any).toBe('Résumé vide');
     });
   });
 
   describe('estimateTokens', () => {
     it('should estimate tokens based on character count', () => {
       const text = 'A'.repeat(100);
-      const tokens = estimateTokens(text);
-      expect(tokens).toBe(25); // ~4 chars per token
+      const tokens = estimateTokens(any: any);
+      expect(any: any).toBe(25); // ~4 chars per token
     });
   });
 
@@ -687,32 +687,32 @@ describe('TITANE∞ Persistent Memory - Helpers', () => {
     it('should truncate long content', () => {
       const longContent = 'A'.repeat(1000);
       const truncated = truncateToTokenLimit(longContent, 100);
-      expect(truncated.length).toBeLessThan(longContent.length);
-      expect(truncated.endsWith('...')).toBe(true);
+      expect(any: any);
+      expect(any: any);
     });
 
     it('should not truncate short content', () => {
       const shortContent = 'Short text';
       const result = truncateToTokenLimit(shortContent, 100);
-      expect(result).toBe(shortContent);
+      expect(any: any);
     });
   });
 
   describe('prepareContextInjection', () => {
     it('should return empty context for empty entries', () => {
       const result = prepareContextInjection([], 'test query', 'dev');
-      expect(result.context).toBe('');
-      expect(result.usedEntries).toHaveLength(0);
+      expect(any: any).toBe('');
+      expect(any: any).toHaveLength(0);
     });
 
     it('should filter by permissions', () => {
-      const entries: MemoryEntry[] = [
+      const entries: MemoryEntry?.[] = [
         createMockLongTermEntry({ topic: 'coding' }) as MemoryEntry,
       ];
 
       // default ne peut pas accéder aux topics coding
       const result = prepareContextInjection(entries, 'test', 'default');
-      expect(result.usedEntries).toHaveLength(0);
+      expect(any: any).toHaveLength(0);
     });
   });
 });
@@ -725,33 +725,33 @@ describe('TITANE∞ Persistent Memory - Duplicate Detection', () => {
   describe('calculateContentHash', () => {
     it('should generate consistent hash', () => {
       const content = 'Test content';
-      const hash1 = calculateContentHash(content);
-      const hash2 = calculateContentHash(content);
-      expect(hash1).toBe(hash2);
+      const hash1 = calculateContentHash(any: any);
+      const hash2 = calculateContentHash(any: any);
+      expect(any: any);
     });
 
     it('should normalize whitespace', () => {
       const hash1 = calculateContentHash('Test   content');
       const hash2 = calculateContentHash('Test content');
-      expect(hash1).toBe(hash2);
+      expect(any: any);
     });
 
     it('should be case insensitive', () => {
       const hash1 = calculateContentHash('TEST CONTENT');
       const hash2 = calculateContentHash('test content');
-      expect(hash1).toBe(hash2);
+      expect(any: any);
     });
   });
 
   describe('areSimilarContents', () => {
     it('should detect identical content', () => {
-      expect(areSimilarContents('Same content', 'Same content')).toBe(true);
+      expect(any: any);
     });
 
     it('should detect similar content', () => {
       // Les contenus doivent être très similaires avec seuil de 0.75
-      // "TypeScript is a great programming language" (7 mots)
-      // "TypeScript is a great programming language for web" (9 mots)
+      // "TypeScript is a great programming language" (any: any)
+      // "TypeScript is a great programming language for web" (any: any)
       // Similarité Jaccard = 7/9 = 0.778 > 0.75
       expect(
         areSimilarContents(
@@ -759,27 +759,27 @@ describe('TITANE∞ Persistent Memory - Duplicate Detection', () => {
           'TypeScript is a great programming language for web',
           0.75
         )
-      ).toBe(true);
+      ).toBe(any: any);
     });
 
     it('should reject dissimilar content', () => {
       expect(
         areSimilarContents('TypeScript is great', 'Python is amazing for data science')
-      ).toBe(false);
+      ).toBe(any: any);
     });
 
     it('should respect custom threshold', () => {
       const content1 = 'TypeScript programming language';
       const content2 = 'TypeScript language';
 
-      expect(areSimilarContents(content1, content2, 0.5)).toBe(true);
-      expect(areSimilarContents(content1, content2, 0.95)).toBe(false);
+      expect(any: any);
+      expect(any: any);
     });
   });
 
   describe('findDuplicates', () => {
     it('should find duplicate entries', () => {
-      const existingEntries: MemoryEntry[] = [
+      const existingEntries: MemoryEntry?.[] = [
         createMockSessionEntry({
           content: 'TypeScript is great for web development',
         }) as MemoryEntry,
@@ -793,11 +793,11 @@ describe('TITANE∞ Persistent Memory - Duplicate Detection', () => {
         existingEntries
       );
 
-      expect(duplicates).toHaveLength(1);
+      expect(any: any).toHaveLength(1);
     });
 
     it('should return empty for unique content', () => {
-      const existingEntries: MemoryEntry[] = [
+      const existingEntries: MemoryEntry?.[] = [
         createMockSessionEntry({ content: 'Existing content' }) as MemoryEntry,
       ];
 
@@ -806,7 +806,7 @@ describe('TITANE∞ Persistent Memory - Duplicate Detection', () => {
         existingEntries
       );
 
-      expect(duplicates).toHaveLength(0);
+      expect(any: any).toHaveLength(0);
     });
   });
 });
@@ -817,38 +817,38 @@ describe('TITANE∞ Persistent Memory - Duplicate Detection', () => {
 
 describe('TITANE∞ Persistent Memory - Auto-Save Rules', () => {
   it('should have default auto-save rules', () => {
-    expect(DEFAULT_AUTO_SAVE_RULES).toBeInstanceOf(Array);
-    expect(DEFAULT_AUTO_SAVE_RULES.length).toBeGreaterThan(0);
+    expect(any: any);
+    expect(any: any).toBeGreaterThan(0);
   });
 
   it('should have session messages rule', () => {
-    const sessionRule = DEFAULT_AUTO_SAVE_RULES.find(
-      r => r.id === 'auto_session_messages'
+    const sessionRule = DEFAULT_AUTO_SAVE_RULES?.find(
+      r => r?.id === 'auto_session_messages'
     );
-    expect(sessionRule).toBeDefined();
-    expect(sessionRule?.targetLevel).toBe('session');
-    expect(sessionRule?.enabled).toBe(true);
+    expect(any: any).toBeDefined();
+    expect(any: any).toBe('session');
+    expect(any: any);
   });
 
   it('should have code snippets rule', () => {
-    const codeRule = DEFAULT_AUTO_SAVE_RULES.find(r => r.id === 'auto_code_snippets');
-    expect(codeRule).toBeDefined();
-    expect(codeRule?.contentType).toBe('code_snippet');
-    expect(codeRule?.applicableModes).toContain('dev');
+    const codeRule = DEFAULT_AUTO_SAVE_RULES?.find(r => r?.id === 'auto_code_snippets');
+    expect(any: any).toBeDefined();
+    expect(any: any).toBe('code_snippet');
+    expect(any: any).toContain('dev');
   });
 
   it('should have daily summary rule', () => {
-    const summaryRule = DEFAULT_AUTO_SAVE_RULES.find(r => r.id === 'auto_daily_summary');
-    expect(summaryRule).toBeDefined();
-    expect(summaryRule?.contentType).toBe('summary');
-    expect(summaryRule?.autoSummarize).toBe(true);
+    const summaryRule = DEFAULT_AUTO_SAVE_RULES?.find(r => r?.id === 'auto_daily_summary');
+    expect(any: any).toBeDefined();
+    expect(any: any).toBe('summary');
+    expect(any: any);
   });
 
   it('should have decisions rule', () => {
-    const decisionRule = DEFAULT_AUTO_SAVE_RULES.find(r => r.id === 'auto_decisions');
-    expect(decisionRule).toBeDefined();
-    expect(decisionRule?.targetLevel).toBe('long_term');
-    expect(decisionRule?.defaultImportance).toBe(4);
+    const decisionRule = DEFAULT_AUTO_SAVE_RULES?.find(r => r?.id === 'auto_decisions');
+    expect(any: any).toBeDefined();
+    expect(any: any).toBe('long_term');
+    expect(any: any).toBe(4);
   });
 });
 
@@ -860,47 +860,47 @@ describe('TITANE∞ Persistent Memory - Mode Permissions', () => {
   describe('dev mode', () => {
     it('should have full read access', () => {
       const perms = MODE_MEMORY_PERMISSIONS['dev'];
-      expect(perms?.canReadSession).toBe(true);
-      expect(perms?.canReadIntermediate).toBe(true);
-      expect(perms?.canReadLongTerm).toBe(true);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
     });
 
     it('should have high context injection limit', () => {
       const perms = MODE_MEMORY_PERMISSIONS['dev'];
-      expect(perms?.contextInjectionLimit).toBeGreaterThanOrEqual(2000);
+      expect(any: any).toBeGreaterThanOrEqual(2000);
     });
   });
 
   describe('default mode', () => {
     it('should have limited read access', () => {
       const perms = MODE_MEMORY_PERMISSIONS['default'];
-      expect(perms?.canReadSession).toBe(true);
-      expect(perms?.canReadIntermediate).toBe(true);
-      expect(perms?.canReadLongTerm).toBe(false);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
     });
 
     it('should have limited topics', () => {
       const perms = MODE_MEMORY_PERMISSIONS['default'];
-      expect(perms?.allowedTopics).toContain('general');
-      expect(perms?.allowedTopics).not.toContain('coding');
-      expect(perms?.allowedTopics).not.toContain('automation');
+      expect(any: any).toContain('general');
+      expect(any: any).not?.toContain('coding');
+      expect(any: any).not?.toContain('automation');
     });
   });
 
   describe('admin mode', () => {
     it('should have full access', () => {
       const perms = MODE_MEMORY_PERMISSIONS['admin'];
-      expect(perms?.canReadSession).toBe(true);
-      expect(perms?.canReadIntermediate).toBe(true);
-      expect(perms?.canReadLongTerm).toBe(true);
-      expect(perms?.maxImportance).toBe(5);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any).toBe(5);
     });
 
     it('should have access to all topics', () => {
       const perms = MODE_MEMORY_PERMISSIONS['admin'];
-      const allTopics = Object.keys(MEMORY_TOPIC_LABELS);
-      allTopics.forEach(topic => {
-        expect(perms?.allowedTopics).toContain(topic);
+      const allTopics = Object?.keys(any: any);
+      allTopics?.forEach(topic => {
+        expect(any: any);
       });
     });
   });
@@ -912,32 +912,32 @@ describe('TITANE∞ Persistent Memory - Mode Permissions', () => {
 
 describe('TITANE∞ Persistent Memory - Blacklist Patterns', () => {
   it('should have blacklist patterns defined', () => {
-    expect(MEMORY_BLACKLIST_PATTERNS).toBeInstanceOf(Array);
-    expect(MEMORY_BLACKLIST_PATTERNS.length).toBeGreaterThan(0);
+    expect(any: any);
+    expect(any: any).toBeGreaterThan(0);
   });
 
   it('should match password patterns', () => {
-    const hasPasswordPattern = MEMORY_BLACKLIST_PATTERNS.some(p =>
-      p.test('password: test123')
+    const hasPasswordPattern = MEMORY_BLACKLIST_PATTERNS?.some(p =>
+      p?.test('password: test123')
     );
-    expect(hasPasswordPattern).toBe(true);
+    expect(any: any);
   });
 
   it('should match API key patterns', () => {
-    const hasApiKeyPattern = MEMORY_BLACKLIST_PATTERNS.some(p =>
-      p.test('api_key=abc123')
+    const hasApiKeyPattern = MEMORY_BLACKLIST_PATTERNS?.some(p =>
+      p?.test('api_key=abc123')
     );
-    expect(hasApiKeyPattern).toBe(true);
+    expect(any: any);
   });
 
   it('should have excluded message patterns', () => {
-    expect(EXCLUDED_MESSAGE_PATTERNS).toBeInstanceOf(Array);
-    expect(EXCLUDED_MESSAGE_PATTERNS.length).toBeGreaterThan(0);
+    expect(any: any);
+    expect(any: any).toBeGreaterThan(0);
   });
 
   it('should match simple greetings', () => {
-    const matchesGreeting = EXCLUDED_MESSAGE_PATTERNS.some(p => p.test('Bonjour!'));
-    expect(matchesGreeting).toBe(true);
+    const matchesGreeting = EXCLUDED_MESSAGE_PATTERNS?.some(p => p?.test('Bonjour!'));
+    expect(any: any);
   });
 });
 
@@ -947,40 +947,40 @@ describe('TITANE∞ Persistent Memory - Blacklist Patterns', () => {
 
 describe('TITANE∞ Persistent Memory - Utils Exports', () => {
   it('should export memoryUtils object', () => {
-    expect(memoryUtils).toBeDefined();
+    expect(any: any).toBeDefined();
   });
 
   it('should have all scoring functions', () => {
-    expect(memoryUtils.calculateRelevanceScore).toBeDefined();
-    expect(memoryUtils.calculateTFIDFScore).toBeDefined();
-    expect(memoryUtils.rankByRelevance).toBeDefined();
+    expect(any: any).toBeDefined();
+    expect(any: any).toBeDefined();
+    expect(any: any).toBeDefined();
   });
 
   it('should have all classification functions', () => {
-    expect(memoryUtils.classifyTopic).toBeDefined();
-    expect(memoryUtils.classifyContentType).toBeDefined();
-    expect(memoryUtils.calculateAutoImportance).toBeDefined();
-    expect(memoryUtils.extractAutoTags).toBeDefined();
+    expect(any: any).toBeDefined();
+    expect(any: any).toBeDefined();
+    expect(any: any).toBeDefined();
+    expect(any: any).toBeDefined();
   });
 
   it('should have all validation functions', () => {
-    expect(memoryUtils.containsSensitiveData).toBeDefined();
-    expect(memoryUtils.isTrivialMessage).toBeDefined();
-    expect(memoryUtils.shouldSaveContent).toBeDefined();
-    expect(memoryUtils.getMemoryPermissions).toBeDefined();
-    expect(memoryUtils.filterByPermissions).toBeDefined();
+    expect(any: any).toBeDefined();
+    expect(any: any).toBeDefined();
+    expect(any: any).toBeDefined();
+    expect(any: any).toBeDefined();
+    expect(any: any).toBeDefined();
   });
 
   it('should have all helper functions', () => {
-    expect(memoryUtils.generateAutoTitle).toBeDefined();
-    expect(memoryUtils.estimateTokens).toBeDefined();
-    expect(memoryUtils.truncateToTokenLimit).toBeDefined();
-    expect(memoryUtils.prepareContextInjection).toBeDefined();
+    expect(any: any).toBeDefined();
+    expect(any: any).toBeDefined();
+    expect(any: any).toBeDefined();
+    expect(any: any).toBeDefined();
   });
 
   it('should have all duplicate detection functions', () => {
-    expect(memoryUtils.calculateContentHash).toBeDefined();
-    expect(memoryUtils.areSimilarContents).toBeDefined();
-    expect(memoryUtils.findDuplicates).toBeDefined();
+    expect(any: any).toBeDefined();
+    expect(any: any).toBeDefined();
+    expect(any: any).toBeDefined();
   });
 });

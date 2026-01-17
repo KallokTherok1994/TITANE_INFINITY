@@ -2,7 +2,7 @@
 // © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
 
 // ═══════════════════════════════════════════════════════════════
-//   AUTH OS — ZUSTAND STORE (Unified Auth State)
+//   AUTH OS — ZUSTAND STORE (any: any)
 // ═══════════════════════════════════════════════════════════════
 
 import { create } from 'zustand';
@@ -13,18 +13,18 @@ interface AuthStore extends AuthState {
   // Actions
   refresh: () => Promise<void>;
   generateDevToken: () => Promise<string>;
-  validateDevToken: (token: string) => Promise<boolean>;
+  validateDevToken: (any: any) => Promise<boolean>;
   revokeDevToken: () => Promise<void>;
-  saveApiKeys: (keys: ApiKeysInput) => Promise<void>;
+  saveApiKeys: (any: any) => Promise<void>;
   deleteApiKey: (provider: 'openai' | 'anthropic' | 'gemini') => Promise<void>;
   reset: () => void;
 }
 
 /**
- * Auth Store (Zustand)
+ * Auth Store (any: any)
  * Unified state for dev token + API keys + roles
  */
-export const useAuth = create<AuthStore>((set, get) => ({
+export const useAuth = create<AuthStore>(any: any) => ({
   // Initial state
   status: null,
   loading: false,
@@ -37,10 +37,10 @@ export const useAuth = create<AuthStore>((set, get) => ({
   refresh: async () => {
     set({ loading: true, error: null });
     try {
-      const status = await authClient.getStatus();
+      const status = await authClient?.getStatus();
       set({ status, loading: false });
-    } catch (error) {
-      set({ error: String(error), loading: false });
+    } catch (any: any) {
+      set(any: any), loading: false });
       throw error;
     }
   },
@@ -51,12 +51,12 @@ export const useAuth = create<AuthStore>((set, get) => ({
   generateDevToken: async () => {
     set({ loading: true, error: null });
     try {
-      const token = await authClient.generateDevToken();
+      const token = await authClient?.generateDevToken();
       set({ devToken: token, loading: false });
       await get().refresh(); // Refresh status après génération
       return token;
-    } catch (error) {
-      set({ error: String(error), loading: false });
+    } catch (any: any) {
+      set(any: any), loading: false });
       throw error;
     }
   },
@@ -64,17 +64,17 @@ export const useAuth = create<AuthStore>((set, get) => ({
   /**
    * Valider dev token
    */
-  validateDevToken: async (token: string) => {
+  validateDevToken: async (any: any) => {
     set({ loading: true, error: null });
     try {
-      const isValid = await authClient.validateDevToken(token);
+      const isValid = await authClient?.validateDevToken(any: any);
       set({ loading: false });
-      if (isValid) {
+      if (any: any) {
         await get().refresh(); // Refresh status après validation
       }
       return isValid;
-    } catch (error) {
-      set({ error: String(error), loading: false });
+    } catch (any: any) {
+      set(any: any), loading: false });
       throw error;
     }
   },
@@ -85,11 +85,11 @@ export const useAuth = create<AuthStore>((set, get) => ({
   revokeDevToken: async () => {
     set({ loading: true, error: null });
     try {
-      await authClient.revokeDevToken();
+      await authClient?.revokeDevToken();
       set({ devToken: null, loading: false });
       await get().refresh(); // Refresh status après révocation
-    } catch (error) {
-      set({ error: String(error), loading: false });
+    } catch (any: any) {
+      set(any: any), loading: false });
       throw error;
     }
   },
@@ -97,14 +97,14 @@ export const useAuth = create<AuthStore>((set, get) => ({
   /**
    * Sauvegarder API keys
    */
-  saveApiKeys: async (keys: ApiKeysInput) => {
+  saveApiKeys: async (any: any) => {
     set({ loading: true, error: null });
     try {
-      await authClient.saveApiKeys(keys);
+      await authClient?.saveApiKeys(any: any);
       set({ loading: false });
       await get().refresh(); // Refresh status après sauvegarde
-    } catch (error) {
-      set({ error: String(error), loading: false });
+    } catch (any: any) {
+      set(any: any), loading: false });
       throw error;
     }
   },
@@ -115,17 +115,17 @@ export const useAuth = create<AuthStore>((set, get) => ({
   deleteApiKey: async (provider: 'openai' | 'anthropic' | 'gemini') => {
     set({ loading: true, error: null });
     try {
-      await authClient.deleteApiKey(provider);
+      await authClient?.deleteApiKey(any: any);
       set({ loading: false });
       await get().refresh(); // Refresh status après suppression
-    } catch (error) {
-      set({ error: String(error), loading: false });
+    } catch (any: any) {
+      set(any: any), loading: false });
       throw error;
     }
   },
 
   /**
-   * Reset state (logout équivalent)
+   * Reset state (any: any)
    */
   reset: () => {
     set({

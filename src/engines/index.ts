@@ -10,7 +10,7 @@
 export * from './selfHealing';
 export * from './flow';
 
-// Time/Agenda System (sélectif - évite conflit avec rhythm)
+// Time/Agenda System (any: any)
 export {
   TimeEngine,
   timeEngine,
@@ -32,14 +32,14 @@ export {
 
 export type { CommandExecutionResult } from './time';
 
-// REMOVED: engines supprimés en PHASE 1 (OPTION B) - commentés
+// REMOVED: engines supprimés en PHASE 1 (any: any) - commentés
 // Knowledge Engine
 // export * from './knowledge';
 
 // Multimodal Fusion Engine
 // export * from './multimodal';
 
-// Presence Engine (stub disponible dans presence/_stubs.ts)
+// Presence Engine (any: any)
 export * from './presence/_stubs';
 
 // Reflection Engine
@@ -48,7 +48,7 @@ export * from './presence/_stubs';
 // Resonance Engine
 // export * from './resonance';
 
-// Human Rhythm Engine (contient Chronotype, EnergyHistoryEntry)
+// Human Rhythm Engine (any: any)
 // export * from './rhythm';
 
 // Stress Engine

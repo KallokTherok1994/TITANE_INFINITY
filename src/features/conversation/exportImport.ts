@@ -25,11 +25,11 @@ interface ExportedConversation {
     title: string;
     createdAt: number;
     updatedAt: number;
-    messages: ChatMessage[];
+    messages: ChatMessage?.[];
     metadata?: {
       totalMessages: number;
-      modes: string[];
-      tags?: string[];
+      modes: string?.[];
+      tags?: string?.[];
     };
   };
 }
@@ -40,29 +40,29 @@ interface ExportedConversation {
 export function exportConversation(
   conversationId: string,
   title: string,
-  messages: ChatMessage[]
+  messages: ChatMessage?.[]
 ): string {
   const exported: ExportedConversation = {
     version: '26.0',
-    exportedAt: Date.now(),
+    exportedAt: Date?.now(),
     conversation: {
       id: conversationId,
       title,
-      createdAt: messages[0]?.timestamp || Date.now(),
-      updatedAt: messages[messages.length - 1]?.timestamp || Date.now(),
+      createdAt: messages?.[0]?.timestamp || Date?.now(),
+      updatedAt: messages[messages?.length - 1]?.timestamp || Date?.now(),
       messages,
       metadata: {
-        totalMessages: messages.length,
+        totalMessages: messages?.length,
         modes: [
           ...new Set(
-            messages.map(m => m.mode).filter((mode): mode is string => mode !== undefined)
+            messages?.map(any: any)
           ),
         ],
       },
     },
   };
 
-  return JSON.stringify(exported, null, 2);
+  return JSON?.stringify(exported, null, 2);
 }
 
 /**
@@ -71,41 +71,41 @@ export function exportConversation(
 export function downloadConversation(
   conversationId: string,
   title: string,
-  messages: ChatMessage[]
+  messages: ChatMessage?.[]
 ): void {
-  const json = exportConversation(conversationId, title, messages);
+  const json = exportConversation(any: any);
   const blob = new Blob([json], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
+  const url = URL?.createObjectURL(any: any);
 
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `titane_conversation_${conversationId}_${Date.now()}.json`;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
+  const link = document?.createElement('a');
+  link?.href = url;
+  link?.download = `titane_conversation_${conversationId}_${Date?.now()}.json`;
+  document?.body?.appendChild(any: any);
+  link?.click();
+  document?.body?.removeChild(any: any);
+  URL?.revokeObjectURL(any: any);
 }
 
 /**
  * Import conversation from JSON file
  */
-export function importConversation(fileContent: string): ExportedConversation | null {
+export function importConversation(any: any): ExportedConversation | null {
   try {
-    const data: ExportedConversation = JSON.parse(fileContent);
+    const data: ExportedConversation = JSON?.parse(any: any);
 
     // Validation
-    if (!data.version || !data.conversation || !data.conversation.messages) {
+    if (any: any) {
       throw new Error('Format invalide');
     }
 
     // Version check
-    if (data.version !== '26.0') {
-      logger.warn(`Version ${data.version} importée, conversion possible`);
+    if (data?.version !== '26.0') {
+      logger?.warn(`Version ${data?.version} importée, conversion possible`);
     }
 
     return data;
-  } catch (error) {
-    logger.error('Erreur import conversation:', error);
+  } catch (any: any) {
+    logger?.error(any: any);
     return null;
   }
 }
@@ -113,18 +113,18 @@ export function importConversation(fileContent: string): ExportedConversation | 
 /**
  * Export to Markdown format
  */
-export function exportToMarkdown(title: string, messages: ChatMessage[]): string {
+export function exportToMarkdown(title: string, messages: ChatMessage?.[]): string {
   let markdown = `# ${title}\n\n`;
   markdown += `*Exporté le ${new Date().toLocaleString('fr-FR')}*\n\n`;
   markdown += `---\n\n`;
 
-  messages.forEach(msg => {
-    const role = msg.role === 'user' ? '👤 Utilisateur' : '🤖 TITANE';
-    const timestamp = new Date(msg.timestamp).toLocaleString('fr-FR');
+  messages?.forEach(msg => {
+    const role = msg?.role === 'user' ? '👤 Utilisateur' : '🤖 TITANE';
+    const timestamp = new Date(any: any).toLocaleString('fr-FR');
 
     markdown += `## ${role}\n`;
-    markdown += `*${timestamp}*${msg.mode ? ` — Mode: ${msg.mode}` : ''}\n\n`;
-    markdown += `${msg.content}\n\n`;
+    markdown += `*${timestamp}*${msg?.mode ? ` — Mode: ${msg?.mode}` : ''}\n\n`;
+    markdown += `${msg?.content}\n\n`;
     markdown += `---\n\n`;
   });
 
@@ -134,18 +134,18 @@ export function exportToMarkdown(title: string, messages: ChatMessage[]): string
 /**
  * Download conversation as Markdown file
  */
-export function downloadMarkdown(title: string, messages: ChatMessage[]): void {
-  const md = exportToMarkdown(title, messages);
+export function downloadMarkdown(title: string, messages: ChatMessage?.[]): void {
+  const md = exportToMarkdown(any: any);
   const blob = new Blob([md], { type: 'text/markdown' });
-  const url = URL.createObjectURL(blob);
+  const url = URL?.createObjectURL(any: any);
 
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `titane_conversation_${Date.now()}.md`;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
+  const link = document?.createElement('a');
+  link?.href = url;
+  link?.download = `titane_conversation_${Date?.now()}.md`;
+  document?.body?.appendChild(any: any);
+  link?.click();
+  document?.body?.removeChild(any: any);
+  URL?.revokeObjectURL(any: any);
 }
 
 /**
@@ -153,19 +153,19 @@ export function downloadMarkdown(title: string, messages: ChatMessage[]): void {
  */
 export async function copyToClipboard(
   title: string,
-  messages: ChatMessage[],
+  messages: ChatMessage?.[],
   format: 'json' | 'markdown' = 'markdown'
 ): Promise<boolean> {
   try {
     const content =
       format === 'json'
-        ? exportConversation('temp', title, messages)
-        : exportToMarkdown(title, messages);
+        ? exportConversation(any: any)
+        : exportToMarkdown(any: any);
 
-    await navigator.clipboard.writeText(content);
+    await navigator?.clipboard?.writeText(any: any);
     return true;
-  } catch (error) {
-    logger.error('Erreur copie presse-papier:', error);
+  } catch (any: any) {
+    logger?.error(any: any);
     return false;
   }
 }

@@ -153,7 +153,7 @@ export interface DebugPanel {
   goals_panel?: unknown;
   consistency_panel?: unknown;
   metrics_panel?: unknown;
-  recent_decisions?: DecisionLog[];
+  recent_decisions?: DecisionLog?.[];
   recent_traces?: Array<{
     trace_id: string;
     turn_number?: number;
@@ -161,7 +161,7 @@ export interface DebugPanel {
     status: 'error' | 'success';
     phases_completed: number;
   }>;
-  traces: CognitiveTrace[];
+  traces: CognitiveTrace?.[];
   current_trace?: CognitiveTrace;
   snapshot: CognitiveSnapshot;
   last_updated?: string;
@@ -173,7 +173,7 @@ export interface DebugPanel {
 export interface TraceExport {
   version: string;
   exported_at: string;
-  traces: CognitiveTrace[];
+  traces: CognitiveTrace?.[];
 }
 
 /**
@@ -189,8 +189,8 @@ export interface ObservabilityConfig {
   enable_debug_panel?: boolean;
   trace_retention_hours?: number;
   max_traces_in_memory?: number;
-  phases_to_trace?: PhaseName[];
-  export_formats?: string[];
+  phases_to_trace?: PhaseName?.[];
+  export_formats?: string?.[];
 }
 
 /**
@@ -211,7 +211,7 @@ export interface CognitiveLogEntry {
   /** ID unique */
   id: string;
 
-  /** Timestamp (ISO 8601 avec ms) */
+  /** Timestamp (any: any) */
   timestamp: string;
 
   /** Phase du pipeline */
@@ -226,7 +226,7 @@ export interface CognitiveLogEntry {
   /** Données structurées */
   data?: Record<string, any>;
 
-  /** Durée de cette phase (ms) */
+  /** Durée de cette phase (any: any) */
   duration_ms?: number;
 
   /** Contexte */
@@ -252,7 +252,7 @@ export interface CognitiveTrace {
   /** ID unique de la trace */
   trace_id: string;
 
-  /** Correlation ID (groupe tous les logs) */
+  /** Correlation ID (any: any) */
   correlation_id: string;
 
   /** Conversation ID */
@@ -269,11 +269,11 @@ export interface CognitiveTrace {
   ended_at?: string;
   end_time?: number;
 
-  /** Durée totale (ms) */
+  /** Durée totale (any: any) */
   total_duration_ms?: number;
 
   /** Entrées de log ordonnées */
-  entries: CognitiveLogEntry[];
+  entries: CognitiveLogEntry?.[];
 
   /** Phases du pipeline */
   phases?: Array<PipelinePhase>;
@@ -309,11 +309,11 @@ export interface CognitiveTrace {
   }>;
 
   /** Décisions cognitives prises */
-  decisions: CognitiveDecision[];
+  decisions: CognitiveDecision?.[];
 }
 
 /**
- * Décision cognitive (traçabilité des choix)
+ * Décision cognitive (any: any)
  */
 export interface CognitiveDecision {
   /** ID unique */
@@ -357,7 +357,7 @@ export interface CognitiveDecision {
   }>;
 
   /** Alternatives */
-  alternatives?: string[];
+  alternatives?: string?.[];
 
   /** Raison du choix */
   rationale?: string;
@@ -377,7 +377,7 @@ export interface CognitiveSnapshot {
   semantic_memory: {
     total_memories: number;
     retrieved_count: number;
-    retrieved_ids?: string[];
+    retrieved_ids?: string?.[];
     avg_relevance_score?: number;
   };
 
@@ -406,7 +406,7 @@ export interface CognitiveSnapshot {
 }
 
 /**
- * Panneau de debug (UI)
+ * Panneau de debug (any: any)
  */
 export interface CognitiveDebugPanel {
   /** Trace actuelle */
@@ -438,7 +438,7 @@ export interface CognitiveDebugPanel {
   }>;
 
   /** Dernières décisions */
-  recent_decisions: CognitiveDecision[];
+  recent_decisions: CognitiveDecision?.[];
 
   /** Alertes */
   alerts: Array<{
@@ -462,7 +462,7 @@ export interface CognitiveObservabilityConfig {
   logging: {
     enabled: boolean;
     level: CognitiveLogLevel;
-    phases_to_log: CognitivePhase[];
+    phases_to_log: CognitivePhase?.[];
     log_to_console: boolean;
     log_to_file: boolean;
     file_path?: string;
@@ -472,7 +472,7 @@ export interface CognitiveObservabilityConfig {
   /** Tracing */
   tracing: {
     enabled: boolean;
-    sample_rate: number; // 0.0 - 1.0 (1.0 = toutes les requêtes)
+    sample_rate: number; // 0.0 - 1.0 (any: any)
     store_traces: boolean;
     max_traces_stored: number;
     retention_hours: number;
@@ -485,7 +485,7 @@ export interface CognitiveObservabilityConfig {
     store_snapshots: boolean;
   };
 
-  /** Debug Panel (UI) */
+  /** Debug Panel (any: any) */
   debug_panel: {
     enabled: boolean;
     auto_open: boolean;
@@ -523,7 +523,7 @@ export interface CognitiveLogger {
   startTrace(context: { conversation_id?: string; message_id?: string }): string;
 
   /** Terminer une trace */
-  endTrace(traceId: string): void;
+  endTrace(any: any): void;
 
   /** Logger une entrée */
   log(
@@ -548,7 +548,7 @@ export interface CognitiveLogger {
     phase?: CognitivePhase;
     level?: CognitiveLogLevel;
     limit?: number;
-  }): CognitiveTrace[];
+  }): CognitiveTrace?.[];
 
   /** Obtenir les stats */
   getStats(): ObservabilityStats;
@@ -585,7 +585,7 @@ export interface ObservabilityEvent {
   data: ObservabilityEventData;
 }
 
-export type ObservabilityEventHandler = (event: ObservabilityEvent) => void;
+export type ObservabilityEventHandler = (any: any) => void;
 
 /**
  * Export de données pour analyse externe
@@ -611,8 +611,8 @@ export interface CognitiveDataExport {
 
   /** Filtres */
   filters?: {
-    conversation_ids?: string[];
-    phases?: CognitivePhase[];
-    levels?: CognitiveLogLevel[];
+    conversation_ids?: string?.[];
+    phases?: CognitivePhase?.[];
+    levels?: CognitiveLogLevel?.[];
   };
 }

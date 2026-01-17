@@ -60,7 +60,7 @@ export type {
   // Tab
   SystemCenterTab,
   TabConfig,
-} from './types/systemCenter.types';
+} from './types/systemCenter?.types';
 
 // Constants
-export { SYSTEM_CENTER_TABS } from './types/systemCenter.types';
+export { SYSTEM_CENTER_TABS } from './types/systemCenter?.types';

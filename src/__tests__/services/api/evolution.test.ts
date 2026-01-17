@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-const invokeWithRetryMock = vi.fn();
+const invokeWithRetryMock = vi?.fn();
 
-vi.mock('../../../lib/serviceInvoker', () => ({
+vi?.mock('../../../lib/serviceInvoker', () => ({
   invokeWithRetry: invokeWithRetryMock,
   STANDARD_COMMAND_OPTIONS: { timeout: 30000, retries: 3 },
   FAST_COMMAND_OPTIONS: { timeout: 5000, retries: 2 },
@@ -12,8 +12,8 @@ vi.mock('../../../lib/serviceInvoker', () => ({
 
 describe('evolutionService', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    vi.resetModules();
+    vi?.clearAllMocks();
+    vi?.resetModules();
   });
 
   it('getState() devrait appeler evolution_get_state et retourner le state', async () => {
@@ -25,60 +25,60 @@ describe('evolutionService', () => {
       timestamp: new Date().toISOString(),
     } as const;
 
-    invokeWithRetryMock.mockResolvedValueOnce(fakeState);
+    invokeWithRetryMock?.mockResolvedValueOnce(any: any);
 
     const { evolutionService } = await import('../../../services/api/evolution');
 
-    await expect(evolutionService.getState()).resolves.toEqual(fakeState);
-    expect(invokeWithRetryMock).toHaveBeenCalledWith(
+    await expect(any: any);
+    expect(any: any).toHaveBeenCalledWith(
       'evolution_get_state',
       {},
-      expect.objectContaining({ context: 'Evolution' })
+      expect?.objectContaining({ context: 'Evolution' })
     );
   });
 
   it("getSuggestions() devrait retourner [] en cas d'erreur", async () => {
-    invokeWithRetryMock.mockRejectedValueOnce(new Error('validation failed'));
+    invokeWithRetryMock?.mockRejectedValueOnce(new Error('validation failed'));
 
     const { evolutionService } = await import('../../../services/api/evolution');
 
-    await expect(evolutionService.getSuggestions()).resolves.toEqual([]);
+    await expect(evolutionService?.getSuggestions()).resolves?.toEqual([]);
   });
 
   it("rejectSuggestion() ne devrait pas throw en cas d'erreur", async () => {
-    invokeWithRetryMock.mockRejectedValueOnce(new Error('validation failed'));
+    invokeWithRetryMock?.mockRejectedValueOnce(new Error('validation failed'));
 
     const { evolutionService } = await import('../../../services/api/evolution');
 
     await expect(
-      evolutionService.rejectSuggestion('s-1', 'nope')
-    ).resolves.toBeUndefined();
-    expect(invokeWithRetryMock).toHaveBeenCalledWith(
+      evolutionService?.rejectSuggestion('s-1', 'nope')
+    ).resolves?.toBeUndefined();
+    expect(any: any).toHaveBeenCalledWith(
       'evolution_reject_suggestion',
       { suggestionId: 's-1', reason: 'nope' },
-      expect.objectContaining({ context: 'Evolution' })
+      expect?.objectContaining({ context: 'Evolution' })
     );
   });
 
   it("analyzePatterns() devrait retourner [] en cas d'erreur (default timeWindow=7)", async () => {
-    invokeWithRetryMock.mockRejectedValueOnce(new Error('validation failed'));
+    invokeWithRetryMock?.mockRejectedValueOnce(new Error('validation failed'));
 
     const { evolutionService } = await import('../../../services/api/evolution');
 
-    await expect(evolutionService.analyzePatterns()).resolves.toEqual([]);
-    expect(invokeWithRetryMock).toHaveBeenCalledWith(
+    await expect(evolutionService?.analyzePatterns()).resolves?.toEqual([]);
+    expect(any: any).toHaveBeenCalledWith(
       'evolution_analyze_patterns',
       { timeWindow: 7 },
-      expect.objectContaining({ context: 'Evolution' })
+      expect?.objectContaining({ context: 'Evolution' })
     );
   });
 
   it('exportHistory() devrait throw sur erreur', async () => {
-    invokeWithRetryMock.mockRejectedValueOnce(new Error('validation failed'));
+    invokeWithRetryMock?.mockRejectedValueOnce(new Error('validation failed'));
 
     const { evolutionService } = await import('../../../services/api/evolution');
 
-    await expect(evolutionService.exportHistory('json')).rejects.toThrow(
+    await expect(evolutionService?.exportHistory('json')).rejects?.toThrow(
       'Export historique échoué'
     );
   });

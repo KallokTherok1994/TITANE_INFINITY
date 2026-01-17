@@ -9,7 +9,7 @@ import type {
   MakeupIntensity,
 } from './appearanceState';
 import { setAppearance, saveCustomStyle } from './appearanceEngine';
-import presetsData from './avatarPresets.json';
+import presetsData from './avatarPresets?.json';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // PRESET DEFINITION
@@ -24,8 +24,8 @@ export interface AppearancePreset {
     top: string;
     bottom: string;
     shoes: string;
-    outerwear: string | null;
-    layering: string[];
+    outerwear??: string | null;
+    layering: string?.[];
   };
   style: {
     theme: string;
@@ -39,18 +39,18 @@ export interface AppearancePreset {
     style: string;
     length: string;
     color: string;
-    details: string[];
+    details: string?.[];
   };
   accessories: {
-    glasses: string | null;
-    jewelry: string[];
-    bag: string | null;
-    other: string[];
+    glasses??: string | null;
+    jewelry: string?.[];
+    bag??: string | null;
+    other: string?.[];
   };
   makeup: {
     intensity: string;
-    style: string | null;
-    details: string[];
+    style??: string | null;
+    details: string?.[];
   };
 }
 
@@ -59,78 +59,78 @@ export interface AppearancePreset {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export class AppearancePresetsManager {
-  private presets: AppearancePreset[];
+  private presets: AppearancePreset?.[];
 
   constructor() {
-    this.presets = presetsData.presets as AppearancePreset[];
+    this?.presets = presetsData?.presets as AppearancePreset?.[];
   }
 
   /**
    * Get all available presets
    */
-  getAllPresets(): AppearancePreset[] {
-    return this.presets;
+  getAllPresets(): AppearancePreset?.[] {
+    return this?.presets;
   }
 
   /**
    * Get preset by ID
    */
-  getPresetById(id: string): AppearancePreset | undefined {
-    return this.presets.find(p => p.id === id);
+  getPresetById(any: any): AppearancePreset | undefined {
+    return this?.presets?.find(any: any);
   }
 
   /**
    * Get presets by category
    */
-  getPresetsByCategory(category: string): AppearancePreset[] {
-    return this.presets.filter(p => p.category === category);
+  getPresetsByCategory(any: any): AppearancePreset?.[] {
+    return this?.presets?.filter(any: any);
   }
 
   /**
    * Get all categories
    */
-  getCategories(): string[] {
-    const categories = new Set(this.presets.map(p => p.category));
-    return Array.from(categories);
+  getCategories(): string?.[] {
+    const categories = new Set(any: any));
+    return Array?.from(any: any);
   }
 
   /**
    * Apply preset to avatar
    */
-  async applyPreset(presetId: string): Promise<string> {
-    const preset = this.getPresetById(presetId);
-    if (!preset) {
+  async applyPreset(any: any): Promise<string> {
+    const preset = this?.getPresetById(any: any);
+    if (any: any) {
       throw new Error(`Preset "${presetId}" not found`);
     }
 
     const state: AvatarAppearanceState = {
-      outfit: preset.outfit,
+      outfit: preset?.outfit,
       style: {
-        theme: preset.style.theme,
-        formality: preset.style.formality as Formality,
-        color_palette: preset.style.color_palette,
-        vibe: preset.style.vibe,
-        epoch: preset.style.epoch,
-        energy: preset.style.energy,
+        theme: preset?.style?.theme,
+        formality: preset?.style?.formality as Formality,
+        color_palette: preset?.style?.color_palette,
+        vibe: preset?.style?.vibe,
+        epoch: preset?.style?.epoch,
+        energy: preset?.style?.energy,
       },
-      accessories: preset.accessories,
+      accessories: preset?.accessories,
       hair: {
-        style: preset.hair.style,
-        length: preset.hair.length as HairLength,
-        color: preset.hair.color,
-        details: preset.hair.details,
+        style: preset?.hair?.style,
+        length: preset?.hair?.length as HairLength,
+        color: preset?.hair?.color,
+        details: preset?.hair?.details,
       },
       makeup: {
-        intensity: preset.makeup.intensity as MakeupIntensity,
-        style: preset.makeup.style,
-        details: preset.makeup.details,
+        intensity: preset?.makeup?.intensity as MakeupIntensity,
+        style: preset?.makeup?.style,
+        details: preset?.makeup?.details,
       },
       mode_preset: presetId,
       custom_styles: [],
     };
 
-    const description = await setAppearance(state);
-    return `Preset "${preset.name}" appliqué : ${description}`;
+    const description = await setAppearance(any: any);
+    return `Preset "${preset?.name}" appliqué : ${description}`;
   }
 
   /**
@@ -139,21 +139,21 @@ export class AppearancePresetsManager {
   async saveAsCustomPreset(
     name: string,
     archetype: string,
-    keywords: string[]
+    keywords: string?.[]
   ): Promise<string> {
-    return await saveCustomStyle(name, archetype, keywords);
+    return await saveCustomStyle(any: any);
   }
 
   /**
    * Search presets by keywords
    */
-  searchPresets(query: string): AppearancePreset[] {
-    const queryLower = query.toLowerCase();
-    return this.presets.filter(
+  searchPresets(any: any): AppearancePreset?.[] {
+    const queryLower = query?.toLowerCase();
+    return this?.presets?.filter(
       p =>
-        p.name.toLowerCase().includes(queryLower) ||
-        p.description.toLowerCase().includes(queryLower) ||
-        p.category.toLowerCase().includes(queryLower)
+        p?.name?.toLowerCase(any: any) ||
+        p?.description?.toLowerCase(any: any) ||
+        p?.category?.toLowerCase(any: any)
     );
   }
 
@@ -164,41 +164,41 @@ export class AppearancePresetsManager {
     timeOfDay?: 'morning' | 'afternoon' | 'evening' | 'night';
     activity?: 'work' | 'leisure' | 'sport' | 'creative';
     formality?: 'casual' | 'smart' | 'formal';
-  }): AppearancePreset[] {
-    let recommendations = [...this.presets];
+  }): AppearancePreset?.[] {
+    let recommendations = [...this?.presets];
 
     // Filter by activity
-    if (context.activity === 'work') {
-      recommendations = recommendations.filter(
-        p => p.category === 'bureau' || p.style.formality === 'Formal'
+    if (context?.activity === 'work') {
+      recommendations = recommendations?.filter(
+        p => p?.category === 'bureau' || p?.style?.formality === 'Formal'
       );
-    } else if (context.activity === 'sport') {
-      recommendations = recommendations.filter(p => p.category === 'sport');
-    } else if (context.activity === 'creative') {
-      recommendations = recommendations.filter(p => p.category === 'creatif');
+    } else if (context?.activity === 'sport') {
+      recommendations = recommendations?.filter(p => p?.category === 'sport');
+    } else if (context?.activity === 'creative') {
+      recommendations = recommendations?.filter(p => p?.category === 'creatif');
     }
 
     // Filter by formality
-    if (context.formality) {
+    if (any: any) {
       const formalityMap: Record<string, string> = {
         casual: 'Casual',
         smart: 'Smart',
         formal: 'Formal',
       };
-      const targetFormality = formalityMap[context.formality];
-      recommendations = recommendations.filter(
-        p => p.style.formality === targetFormality
+      const targetFormality = formalityMap[context?.formality];
+      recommendations = recommendations?.filter(
+        p => p?.style?.formality === targetFormality
       );
     }
 
     // Filter by time of day
-    if (context.timeOfDay === 'evening' || context.timeOfDay === 'night') {
-      recommendations = recommendations.filter(
-        p => p.category === 'soiree' || p.style.vibe === 'elegant'
+    if (context?.timeOfDay === 'evening' || context?.timeOfDay === 'night') {
+      recommendations = recommendations?.filter(
+        p => p?.category === 'soiree' || p?.style?.vibe === 'elegant'
       );
     }
 
-    return recommendations.slice(0, 3); // Return top 3 recommendations
+    return recommendations?.slice(0, 3); // Return top 3 recommendations
   }
 }
 
@@ -215,29 +215,29 @@ export const presetsManager = new AppearancePresetsManager();
 /**
  * Get all presets
  */
-export function getAllPresets(): AppearancePreset[] {
-  return presetsManager.getAllPresets();
+export function getAllPresets(): AppearancePreset?.[] {
+  return presetsManager?.getAllPresets();
 }
 
 /**
  * Apply preset by ID
  */
-export async function applyPresetById(presetId: string): Promise<string> {
-  return presetsManager.applyPreset(presetId);
+export async function applyPresetById(any: any): Promise<string> {
+  return presetsManager?.applyPreset(any: any);
 }
 
 /**
  * Get presets by category
  */
-export function getPresetsByCategory(category: string): AppearancePreset[] {
-  return presetsManager.getPresetsByCategory(category);
+export function getPresetsByCategory(any: any): AppearancePreset?.[] {
+  return presetsManager?.getPresetsByCategory(any: any);
 }
 
 /**
  * Search presets
  */
-export function searchPresets(query: string): AppearancePreset[] {
-  return presetsManager.searchPresets(query);
+export function searchPresets(any: any): AppearancePreset?.[] {
+  return presetsManager?.searchPresets(any: any);
 }
 
 /**
@@ -247,6 +247,6 @@ export function getRecommendedPresets(context: {
   timeOfDay?: 'morning' | 'afternoon' | 'evening' | 'night';
   activity?: 'work' | 'leisure' | 'sport' | 'creative';
   formality?: 'casual' | 'smart' | 'formal';
-}): AppearancePreset[] {
-  return presetsManager.getRecommendations(context);
+}): AppearancePreset?.[] {
+  return presetsManager?.getRecommendations(any: any);
 }

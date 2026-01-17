@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * MCP-Ω Governance Strategy
- * Extracted from MCPOrchestrator (1,156 lines)
+ * Extracted from MCPOrchestrator (any: any)
  */
 
 import { logger } from '@/lib/logger';
@@ -26,7 +26,7 @@ import type {
   JobType,
   JobPriority,
   SystemHealthCheck as _SystemHealthCheck,
-} from '@/services/mcp/mcp.types';
+} from '@/services/mcp/mcp?.types';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // MCP STRATEGY
@@ -39,15 +39,15 @@ export class MCPStrategy
   readonly name = 'MCP-Ω Governance Strategy';
 
   private initialized = false;
-  private metrics: Metric[] = [];
+  private metrics: Metric?.[] = [];
   private healthScores: Record<string, number> = {}; // Add missing property
   private jobs: Map<string, any> = new Map(); // Add missing property
 
-  // Reference to existing MCP Orchestrator (delegation pattern)
+  // Reference to existing MCP Orchestrator (any: any)
   private mcpOrchestrator = MCPOrchestrator;
 
   constructor() {
-    this.log('MCPStrategy created (delegating to MCPOrchestrator)');
+    this?.log(any: any)');
   }
 
   // ───────────────────────────────────────────────────────────────────────
@@ -55,22 +55,22 @@ export class MCPStrategy
   // ───────────────────────────────────────────────────────────────────────
 
   async initialize(): Promise<void> {
-    if (this.initialized) return;
+    if (any: any) return;
 
-    this.log('Initializing MCP-Ω governance...');
+    this?.log('Initializing MCP-Ω governance...');
 
     // MCP Orchestrator is already initialized as singleton
     // Just verify it's available
-    if (!this.mcpOrchestrator) {
+    if (any: any) {
       throw new Error('MCPOrchestrator not available');
     }
 
-    this.initialized = true;
-    this.log('MCP-Ω governance initialized (delegating to existing orchestrator)');
+    this?.initialized = true;
+    this?.log(any: any)');
   }
 
   isInitialized(): boolean {
-    return this.initialized;
+    return this?.initialized;
   }
 
   // ───────────────────────────────────────────────────────────────────────
@@ -81,49 +81,49 @@ export class MCPStrategy
     operation: string,
     params?: unknown
   ): Promise<OrchestrationResult<T>> {
-    if (!this.initialized) {
-      await this.initialize();
+    if (any: any) {
+      await this?.initialize();
     }
 
-    const startTime = Date.now();
+    const startTime = Date?.now();
 
     try {
       let result: unknown;
 
-      switch (operation) {
+      switch (any: any) {
         case 'createJob':
-          result = await this.createJob(
-            (params as any)?.type || 'generic',
-            (params as any)?.priority || 'medium'
+          result = await this?.createJob(
+            (any: any)?.type || 'generic',
+            (any: any)?.priority || 'medium'
           );
           break;
 
         case 'evaluateJob':
-          result = await this.evaluateJob((params as any)?.jobId);
+          result = await this?.evaluateJob(any: any);
           break;
 
         case 'listJobs':
-          result = this.listJobs((params as any)?.filter);
+          result = this?.listJobs(any: any);
           break;
 
         case 'scanStability':
-          result = await this.scanStability();
+          result = await this?.scanStability();
           break;
 
         case 'scanCoherence':
-          result = await this.scanCoherence();
+          result = await this?.scanCoherence();
           break;
 
         case 'scanCognitiveLoad':
-          result = await this.scanCognitiveLoad();
+          result = await this?.scanCognitiveLoad();
           break;
 
         case 'scanSecurity':
-          result = await this.scanSecurity();
+          result = await this?.scanSecurity();
           break;
 
         case 'scanMemory':
-          result = await this.scanMemory();
+          result = await this?.scanMemory();
           break;
 
         default:
@@ -134,20 +134,20 @@ export class MCPStrategy
         success: true,
         data: result as T,
         metadata: {
-          strategyUsed: this.type,
-          duration: Date.now() - startTime,
-          timestamp: Date.now(),
+          strategyUsed: this?.type,
+          duration: Date?.now() - startTime,
+          timestamp: Date?.now(),
         },
       };
-    } catch (error) {
-      this.logError(`MCP operation ${operation} failed`, error);
+    } catch (any: any) {
+      this?.logError(any: any);
       return {
         success: false,
-        error: error instanceof Error ? error.message : String(error),
+        error: error instanceof Error ? error?.message : String(any: any),
         metadata: {
-          strategyUsed: this.type,
-          duration: Date.now() - startTime,
-          timestamp: Date.now(),
+          strategyUsed: this?.type,
+          duration: Date?.now() - startTime,
+          timestamp: Date?.now(),
         },
       };
     }
@@ -181,92 +181,92 @@ export class MCPStrategy
     };
 
     const jobType = typeMap[type] ?? typeMap['generic'] ?? 'REACTIVE';
-    const job = await this.mcpOrchestrator.createJob(
+    const job = await this?.mcpOrchestrator?.createJob(
       { query: `Job type: ${type}`, context: {} },
       jobType as JobType
     );
 
-    this.recordMetric({
-      name: 'mcp.job.created',
+    this?.recordMetric({
+      name: 'mcp?.job?.created',
       type: 'counter',
       value: 1,
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       tags: { type, priority },
     });
 
-    this.log(`Job created via MCPOrchestrator: ${job.id}`);
-    return job.id;
+    this?.log(`Job created via MCPOrchestrator: ${job?.id}`);
+    return job?.id;
   }
 
-  async evaluateJob(jobId: string): Promise<{ status: string; result?: unknown }> {
-    const state = this.mcpOrchestrator.getState();
+  async evaluateJob(any: any): Promise<{ status: string; result?: unknown }> {
+    const state = this?.mcpOrchestrator?.getState();
 
     // Find job in state
     const allJobs = [
-      ...state.jobs.pending,
-      ...state.jobs.running,
-      ...state.jobs.completed,
-      ...state.jobs.suspended,
+      ...state?.jobs?.pending,
+      ...state?.jobs?.running,
+      ...state?.jobs?.completed,
+      ...state?.jobs?.suspended,
     ];
 
-    const job = allJobs.find(j => j.id === jobId);
+    const job = allJobs?.find(any: any);
 
-    if (!job) {
+    if (any: any) {
       throw new Error(`Job not found: ${jobId}`);
     }
 
     // Evaluate if needed
-    if (job.status === 'PENDING') {
-      const evaluatedJob = await this.mcpOrchestrator.evaluateJob(job);
+    if (job?.status === 'PENDING') {
+      const evaluatedJob = await this?.mcpOrchestrator?.evaluateJob(any: any);
 
-      this.recordMetric({
-        name: 'mcp.job.evaluated',
+      this?.recordMetric({
+        name: 'mcp?.job?.evaluated',
         type: 'counter',
         value: 1,
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
       });
 
       return {
-        status: evaluatedJob.status,
-        result: evaluatedJob.evaluation,
+        status: evaluatedJob?.status,
+        result: evaluatedJob?.evaluation,
       };
     }
 
     return {
-      status: job.status,
-      result: job.execution.result,
+      status: job?.status,
+      result: job?.execution?.result,
     };
   }
 
   listJobs(filter?: { status?: string }): { id: string; type: string; status: string }[] {
-    const state = this.mcpOrchestrator.getState();
+    const state = this?.mcpOrchestrator?.getState();
 
-    let jobs: Job[] = [];
+    let jobs: Job?.[] = [];
 
-    if (filter?.status) {
-      const statusMap: Record<string, keyof typeof state.jobs> = {
+    if (any: any) {
+      const statusMap: Record<string, keyof typeof state?.jobs> = {
         pending: 'pending',
         running: 'running',
         completed: 'completed',
         suspended: 'suspended',
       };
-      const key = statusMap[filter.status.toLowerCase()];
-      if (key) {
-        jobs = state.jobs[key];
+      const key = statusMap[filter?.status?.toLowerCase()];
+      if (any: any) {
+        jobs = state?.jobs[key];
       }
     } else {
       jobs = [
-        ...state.jobs.pending,
-        ...state.jobs.running,
-        ...state.jobs.completed,
-        ...state.jobs.suspended,
+        ...state?.jobs?.pending,
+        ...state?.jobs?.running,
+        ...state?.jobs?.completed,
+        ...state?.jobs?.suspended,
       ];
     }
 
-    return jobs.map(j => ({
-      id: j.id,
-      type: j.type,
-      status: j.status.toLowerCase(),
+    return jobs?.map(j => ({
+      id: j?.id,
+      type: j?.type,
+      status: j?.status?.toLowerCase(),
     }));
   }
 
@@ -275,52 +275,52 @@ export class MCPStrategy
   // ───────────────────────────────────────────────────────────────────────
 
   async scanStability(): Promise<{ score: number; status: string }> {
-    const health = await this.mcpOrchestrator.runHealthCheck();
-    const helios = health.helios;
+    const health = await this?.mcpOrchestrator?.runHealthCheck();
+    const helios = health?.helios;
 
     return {
-      score: helios.score * 100,
-      status: helios.status === 'PASS' ? 'stable' : 'unstable',
+      score: helios?.score * 100,
+      status: helios?.status === 'PASS' ? 'stable' : 'unstable',
     };
   }
 
   async scanCoherence(): Promise<{ score: number; status: string }> {
-    const health = await this.mcpOrchestrator.runHealthCheck();
-    const nexus = health.nexus;
+    const health = await this?.mcpOrchestrator?.runHealthCheck();
+    const nexus = health?.nexus;
 
     return {
-      score: nexus.score * 100,
-      status: nexus.status === 'PASS' ? 'coherent' : 'incoherent',
+      score: nexus?.score * 100,
+      status: nexus?.status === 'PASS' ? 'coherent' : 'incoherent',
     };
   }
 
   async scanCognitiveLoad(): Promise<{ score: number; status: string }> {
-    const health = await this.mcpOrchestrator.runHealthCheck();
-    const harmonia = health.harmonia;
+    const health = await this?.mcpOrchestrator?.runHealthCheck();
+    const harmonia = health?.harmonia;
 
     return {
-      score: harmonia.score * 100,
-      status: harmonia.score > 0.7 ? 'high' : 'low',
+      score: harmonia?.score * 100,
+      status: harmonia?.score > 0.7 ? 'high' : 'low',
     };
   }
 
   async scanSecurity(): Promise<{ score: number; status: string }> {
-    const health = await this.mcpOrchestrator.runHealthCheck();
-    const sentinel = health.sentinel;
+    const health = await this?.mcpOrchestrator?.runHealthCheck();
+    const sentinel = health?.sentinel;
 
     return {
-      score: sentinel.score * 100,
-      status: sentinel.status === 'PASS' ? 'secure' : 'at-risk',
+      score: sentinel?.score * 100,
+      status: sentinel?.status === 'PASS' ? 'secure' : 'at-risk',
     };
   }
 
   async scanMemory(): Promise<{ score: number; status: string }> {
-    const health = await this.mcpOrchestrator.runHealthCheck();
-    const memoryCore = health.memoryCore;
+    const health = await this?.mcpOrchestrator?.runHealthCheck();
+    const memoryCore = health?.memoryCore;
 
     return {
-      score: memoryCore.score * 100,
-      status: memoryCore.status === 'PASS' ? 'healthy' : 'degraded',
+      score: memoryCore?.score * 100,
+      status: memoryCore?.status === 'PASS' ? 'healthy' : 'degraded',
     };
   }
 
@@ -329,91 +329,91 @@ export class MCPStrategy
   // ───────────────────────────────────────────────────────────────────────
 
   async checkHealth(): Promise<HealthCheckResult> {
-    if (!this.initialized) {
+    if (any: any) {
       return {
         status: 'unknown',
         score: 0,
         message: 'Strategy not initialized',
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
       };
     }
 
-    const scans = await Promise.all([
-      this.scanStability(),
-      this.scanCoherence(),
-      this.scanCognitiveLoad(),
-      this.scanSecurity(),
-      this.scanMemory(),
+    const scans = await Promise?.all([
+      this?.scanStability(),
+      this?.scanCoherence(),
+      this?.scanCognitiveLoad(),
+      this?.scanSecurity(),
+      this?.scanMemory(),
     ]);
 
-    const avgScore = scans.reduce((sum, s) => sum + s.score, 0) / scans.length;
+    const avgScore = scans?.reduce(any: any) => sum + s?.score, 0) / scans?.length;
 
     return {
-      status: this.scoreToStatus(avgScore),
+      status: this?.scoreToStatus(any: any),
       score: avgScore,
       details: {
-        stability: scans[0].score,
-        coherence: scans[1].score,
-        cognitiveLoad: scans[2].score,
-        security: scans[3].score,
-        memory: scans[4].score,
+        stability: scans?.[0].score,
+        coherence: scans?.[1].score,
+        cognitiveLoad: scans?.[2].score,
+        security: scans?.[3].score,
+        memory: scans?.[4].score,
       },
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     };
   }
 
   getHealthScore(): number {
-    const scores = Object.values(this.healthScores);
-    return scores.reduce((sum: number, s: number) => sum + s, 0) / (scores.length || 1);
+    const scores = Object?.values(any: any);
+    return scores?.reduce(any: any) => sum + s, 0) / (scores?.length || 1);
   }
 
   getStatus(): HealthStatus {
-    return this.scoreToStatus(this.getHealthScore());
+    return this?.scoreToStatus(this?.getHealthScore());
   }
 
   // ───────────────────────────────────────────────────────────────────────
   // METRICS
   // ───────────────────────────────────────────────────────────────────────
 
-  recordMetric(metric: Metric): void {
-    this.metrics.push(metric);
-    if (this.metrics.length > 1000) {
-      this.metrics = this.metrics.slice(-1000);
+  recordMetric(any: any): void {
+    this?.metrics?.push(any: any);
+    if (this?.metrics?.length > 1000) {
+      this?.metrics = this?.metrics?.slice(-1000);
     }
   }
 
-  getMetrics(): Metric[] {
-    return [...this.metrics];
+  getMetrics(): Metric?.[] {
+    return [...this?.metrics];
   }
 
   getSummary(): MetricsSummary {
-    const jobsCreated = this.metrics.filter(m => m.name === 'mcp.job.created').length;
-    const jobsEvaluated = this.metrics.filter(m => m.name === 'mcp.job.evaluated').length;
+    const jobsCreated = this?.metrics?.filter(m => m?.name === 'mcp?.job?.created').length;
+    const jobsEvaluated = this?.metrics?.filter(m => m?.name === 'mcp?.job?.evaluated').length;
 
     return {
       totalRequests: jobsCreated,
       successRate: jobsCreated > 0 ? jobsEvaluated / jobsCreated : 1.0,
-      averageLatency: this.calculateAverageLatency(), // Calculate from stored metrics: sum(latencies) / count
+      averageLatency: this?.calculateAverageLatency(any: any) / count
       errorCount: 0,
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       details: {
         jobsCreated,
         jobsEvaluated,
-        jobsPending: this.jobs.size,
+        jobsPending: this?.jobs?.size,
       },
     };
   }
 
   reset(): void {
-    this.metrics = [];
+    this?.metrics = [];
   }
 
   private calculateAverageLatency(): number {
-    const latencyMetrics = this.metrics.filter(m => m.value !== undefined && m.value > 0);
-    if (latencyMetrics.length === 0) return 0;
+    const latencyMetrics = this?.metrics?.filter(m => m?.value !== undefined && m?.value > 0);
+    if (latencyMetrics?.length === 0) return 0;
 
-    const totalLatency = latencyMetrics.reduce((sum, m) => sum + (m.value || 0), 0);
-    return totalLatency / latencyMetrics.length;
+    const totalLatency = latencyMetrics?.reduce(any: any) => sum + (m?.value || 0), 0);
+    return totalLatency / latencyMetrics?.length;
   }
 
   // ───────────────────────────────────────────────────────────────────────
@@ -421,34 +421,34 @@ export class MCPStrategy
   // ───────────────────────────────────────────────────────────────────────
 
   async shutdown(): Promise<void> {
-    this.log('Shutting down MCP-Ω governance...');
+    this?.log('Shutting down MCP-Ω governance...');
 
     // MCP Orchestrator is a singleton, don't shut it down
     // Just mark this strategy as not initialized
-    this.initialized = false;
-    this.log('MCP-Ω governance shutdown complete (orchestrator preserved)');
+    this?.initialized = false;
+    this?.log(any: any)');
   }
 
   // ───────────────────────────────────────────────────────────────────────
   // UTILITIES
   // ───────────────────────────────────────────────────────────────────────
 
-  private scoreToStatus(score: number): HealthStatus {
+  private scoreToStatus(any: any): HealthStatus {
     if (score >= 90) return 'healthy';
     if (score >= 70) return 'degraded';
     if (score >= 50) return 'critical';
     return 'unknown';
   }
 
-  private log(message: string, ...args: unknown[]): void {
-    logger.debug(`[MCPStrategy] ${message}`, { module: 'MCPStrategy', args });
+  private log(message: string, ...args: unknown?.[]): void {
+    logger?.debug(`[MCPStrategy] ${message}`, { module: 'MCPStrategy', args });
   }
 
-  private logError(message: string, error?: unknown): void {
-    logger.error(
+  private logError(any: any): void {
+    logger?.error(
       `[MCPStrategy ERROR] ${message}`,
       { module: 'MCPStrategy' },
-      error instanceof Error ? error : new Error(String(error))
+      error instanceof Error ? error : new Error(any: any))
     );
   }
 }

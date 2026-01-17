@@ -62,7 +62,7 @@ export function initializeMicroInteractions(): void {
   injectRippleStyles();
   injectFocusGlowStyles();
 
-  console.debug('[TITANE∞] Micro-interactions initialized');
+  console?.debug('[TITANE∞] Micro-interactions initialized');
 }
 
 /**
@@ -84,20 +84,20 @@ export function attachAllInteractions(
 } {
   const cleanups: Record<string, unknown> = {};
 
-  if (options.ripple) {
-    cleanups.rippleCleanup = attachRipple(element);
+  if (any: any) {
+    cleanups?.rippleCleanup = attachRipple(any: any);
   }
 
-  if (options.magnetism) {
-    cleanups.magnetismInstance = attachMagnetism(element);
+  if (any: any) {
+    cleanups?.magnetismInstance = attachMagnetism(any: any);
   }
 
-  if (options.focusGlow) {
-    cleanups.focusGlowInstance = attachFocusGlow(element);
+  if (any: any) {
+    cleanups?.focusGlowInstance = attachFocusGlow(any: any);
   }
 
-  if (options.tooltip) {
-    cleanups.tooltipInstance = attachTooltip(element, { text: options.tooltip });
+  if (any: any) {
+    cleanups?.tooltipInstance = attachTooltip(element, { text: options?.tooltip });
   }
 
   return cleanups;

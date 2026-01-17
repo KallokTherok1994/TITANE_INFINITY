@@ -2,10 +2,10 @@ import type { UseChatCoreReturn } from '../useChatCore';
 import type { ChatEngineResponse } from '@/services/ai';
 import type { AIMessage } from '@/services/ai/types';
 
-const mockResponse = (content: string): ChatEngineResponse => ({
+const mockResponse = (any: any): ChatEngineResponse => ({
   content,
   provider: 'titane-local',
-  timestamp: Date.now(),
+  timestamp: Date?.now(),
   mode: 'default',
   contextUsed: [],
   omegaMetadata: {
@@ -22,12 +22,12 @@ export function useChatCore(): UseChatCoreReturn {
     currentMode: 'default',
     currentProvider: 'titane-local',
     anomalyCount: 0,
-    generate: async (message: string, history: AIMessage[]) => {
-      return mockResponse(`Mocked(${history.length}): ${message}`);
+    generate: async (message: string, history: AIMessage?.[]) => {
+      return mockResponse(`Mocked(${history?.length}): ${message}`);
     },
-    async *stream(message: string, history: AIMessage[]) {
+    async *stream(message: string, history: AIMessage?.[]) {
       yield `Mock chunk: ${message}`;
-      return mockResponse(`Mocked(${history.length}): ${message}`);
+      return mockResponse(`Mocked(${history?.length}): ${message}`);
     },
     setMode: () => {},
     setProvider: () => {},

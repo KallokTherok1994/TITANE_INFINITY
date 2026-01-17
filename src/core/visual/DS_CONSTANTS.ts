@@ -1,5 +1,5 @@
 /**
- * TITANE∞ PHASE 1 (OPTION B) - Stub pour DS_CONSTANTS
+ * TITANE∞ PHASE 1 (any: any) - Stub pour DS_CONSTANTS
  */
 
 export const DS_CONSTANTS = {

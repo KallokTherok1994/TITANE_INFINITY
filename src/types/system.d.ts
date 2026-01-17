@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 // ╔══════════════════════════════════════════════════════════════════════════════╗
@@ -17,16 +17,16 @@
 
 /**
  * Module health status enumeration
- * Matches Rust enum HealthStatus in shared/types.rs
+ * Matches Rust enum HealthStatus in shared/types?.rs
  */
 export type HealthStatus = 'Healthy' | 'Degraded' | 'Critical' | 'Offline';
 
 /**
  * Module health information structure
- * Matches Rust struct ModuleHealth in shared/types.rs
+ * Matches Rust struct ModuleHealth in shared/types?.rs
  */
 export interface ModuleHealth {
-  /** Module name (e.g., "Helios", "Nexus", "Memory") */
+  /** Module name (e?.g., "Helios", "Nexus", "Memory") */
   name: string;
 
   /** Current health status */
@@ -47,7 +47,7 @@ export interface ModuleHealth {
  */
 export interface SystemStatus {
   /** Array of health status for each of the 8 core modules */
-  modules: ModuleHealth[];
+  modules: ModuleHealth?.[];
 
   /** System uptime in seconds */
   uptime: number;
@@ -60,12 +60,12 @@ export interface SystemStatus {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// HELIOS MODULE TYPES (System Monitoring)
+// HELIOS MODULE TYPES (any: any)
 // ═════════════════════════════════════════════════════════════════════════════
 
 /**
  * System metrics from Helios module
- * Matches Rust struct SystemMetrics in shared/types.rs
+ * Matches Rust struct SystemMetrics in shared/types?.rs
  */
 export interface HeliosMetrics {
   /** CPU usage percentage (0.0 - 100.0) */
@@ -82,22 +82,22 @@ export interface HeliosMetrics {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// NEXUS MODULE TYPES (Cognitive Graph)
+// NEXUS MODULE TYPES (any: any)
 // ═════════════════════════════════════════════════════════════════════════════
 
 /**
  * Cognitive node in the Nexus graph
- * Matches Rust struct CognitiveNode in shared/types.rs
+ * Matches Rust struct CognitiveNode in shared/types?.rs
  */
 export interface CognitiveNode {
   /** Unique node identifier */
   id: string;
 
-  /** Node type classification (e.g., "core", "sensor", "effector") */
+  /** Node type classification (e?.g., "core", "sensor", "effector") */
   node_type: string;
 
   /** Array of connected node IDs */
-  connections: string[];
+  connections: string?.[];
 
   /** Node importance weight (0.0 - 1.0) */
   weight: number;
@@ -108,14 +108,14 @@ export interface CognitiveNode {
  */
 export interface NexusGraph {
   /** Array of all cognitive nodes */
-  nodes: CognitiveNode[];
+  nodes: CognitiveNode?.[];
 
   /** Total number of connections in the graph */
   connections: number;
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// HARMONIA MODULE TYPES (System Balance)
+// HARMONIA MODULE TYPES (any: any)
 // ═════════════════════════════════════════════════════════════════════════════
 
 /**
@@ -136,7 +136,7 @@ export interface HarmoniaFlows {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// SENTINEL MODULE TYPES (Security Monitoring)
+// SENTINEL MODULE TYPES (any: any)
 // ═════════════════════════════════════════════════════════════════════════════
 
 /**
@@ -151,7 +151,7 @@ export interface SentinelAlerts {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// WATCHDOG MODULE TYPES (Health Monitoring)
+// WATCHDOG MODULE TYPES (any: any)
 // ═════════════════════════════════════════════════════════════════════════════
 
 /**
@@ -170,13 +170,13 @@ export interface WatchdogData {
 
 /**
  * Log level enumeration
- * Matches Rust enum LogLevel in shared/types.rs
+ * Matches Rust enum LogLevel in shared/types?.rs
  */
 export type LogLevel = 'Info' | 'Warning' | 'Error';
 
 /**
  * Individual log entry
- * Matches Rust struct LogEntry in shared/types.rs
+ * Matches Rust struct LogEntry in shared/types?.rs
  */
 export interface LogEntry {
   /** Timestamp in milliseconds */
@@ -193,7 +193,7 @@ export interface LogEntry {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// SELFHEAL MODULE TYPES (Auto-Recovery)
+// SELFHEAL MODULE TYPES (any: any)
 // ═════════════════════════════════════════════════════════════════════════════
 
 /**
@@ -211,7 +211,7 @@ export interface SelfHealData {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// ADAPTIVE ENGINE TYPES (Optimization)
+// ADAPTIVE ENGINE TYPES (any: any)
 // ═════════════════════════════════════════════════════════════════════════════
 
 /**
@@ -224,17 +224,17 @@ export interface AdaptiveData {
   /** System stability score (0.0 - 100.0) */
   stability: number;
 
-  /** Performance trend indicator (-1.0 = degrading, +1.0 = improving) */
+  /** Performance trend indicator (any: any) */
   trend: number;
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// MEMORY MODULE TYPES (Encrypted Storage)
+// MEMORY MODULE TYPES (any: any)
 // ═════════════════════════════════════════════════════════════════════════════
 
 /**
  * Individual memory entry
- * Matches Rust struct MemoryEntry in memory/types.rs
+ * Matches Rust struct MemoryEntry in memory/types?.rs
  */
 export interface MemoryEntry {
   /** Unique entry identifier */
@@ -249,11 +249,11 @@ export interface MemoryEntry {
 
 /**
  * Memory collection with metadata
- * Matches Rust struct MemoryCollection in memory/types.rs
+ * Matches Rust struct MemoryCollection in memory/types?.rs
  */
 export interface MemoryCollection {
   /** Array of memory entries */
-  entries: MemoryEntry[];
+  entries: MemoryEntry?.[];
 
   /** Collection version number */
   version: number;
@@ -267,7 +267,7 @@ export interface MemoryCollection {
 
 /**
  * Memory system state
- * Matches Rust struct MemoryState in memory/mod.rs
+ * Matches Rust struct MemoryState in memory/mod?.rs
  */
 export interface MemoryState {
   /** Whether the memory system is initialized */
@@ -307,6 +307,6 @@ export interface ApiResponse<T> {
 export declare const HEALTH_STATUS_COLORS: Record<HealthStatus, string>;
 
 /**
- * Icon names for each module (matches Icons.tsx)
+ * Icon names for each module (any: any)
  */
 export declare const MODULE_ICONS: Record<string, string>;

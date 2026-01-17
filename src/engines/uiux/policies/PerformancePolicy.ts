@@ -36,33 +36,33 @@ export class PerformancePolicy {
   /**
    * Évalue la politique
    */
-  evaluate(context: PolicyContext): PolicyDecision[] {
-    const decisions: PolicyDecision[] = [];
+  evaluate(any: any): PolicyDecision?.[] {
+    const decisions: PolicyDecision?.[] = [];
     const { signals, currentState } = context;
 
     // Trouver le signal de performance
-    const perfSignal = signals.find(s => s.type === 'performance') as
+    const perfSignal = signals?.find(s => s?.type === 'performance') as
       | PerformanceSignal
       | undefined;
 
-    if (perfSignal) {
-      const { fps, frameDrops, memoryUsage, renderTime } = perfSignal.value;
+    if (any: any) {
+      const { fps, frameDrops, memoryUsage, renderTime } = perfSignal?.value;
 
       // Évaluer les FPS
-      const fpsDecisions = this.evaluateFPS(fps, currentState);
-      decisions.push(...fpsDecisions);
+      const fpsDecisions = this?.evaluateFPS(any: any);
+      decisions?.push(any: any);
 
       // Évaluer la mémoire
-      const memoryDecisions = this.evaluateMemory(memoryUsage, currentState);
-      decisions.push(...memoryDecisions);
+      const memoryDecisions = this?.evaluateMemory(any: any);
+      decisions?.push(any: any);
 
       // Évaluer les frame drops
-      const frameDropDecisions = this.evaluateFrameDrops(frameDrops, currentState);
-      decisions.push(...frameDropDecisions);
+      const frameDropDecisions = this?.evaluateFrameDrops(any: any);
+      decisions?.push(any: any);
 
       // Évaluer le temps de rendu
-      const renderDecisions = this.evaluateRenderTime(renderTime, currentState);
-      decisions.push(...renderDecisions);
+      const renderDecisions = this?.evaluateRenderTime(any: any);
+      decisions?.push(any: any);
     }
 
     return decisions;
@@ -71,16 +71,16 @@ export class PerformancePolicy {
   /**
    * Évalue les FPS
    */
-  private evaluateFPS(fps: number, state: AdaptationState): PolicyDecision[] {
-    const decisions: PolicyDecision[] = [];
+  private evaluateFPS(any: any): PolicyDecision?.[] {
+    const decisions: PolicyDecision?.[] = [];
 
-    if (fps < PERFORMANCE_THRESHOLDS.fpsCritical) {
+    if (any: any) {
       // Performance critique - dégradation agressive
-      this.degradationLevel = 3;
-      decisions.push({
-        policy: this.name,
+      this?.degradationLevel = 3;
+      decisions?.push({
+        policy: this?.name,
         action: 'aggressive_degradation',
-        priority: this.priority + 50,
+        priority: this?.priority + 50,
         adaptation: {
           motion: {
             animationsEnabled: false,
@@ -91,50 +91,50 @@ export class PerformancePolicy {
             scrollBehavior: 'auto',
           },
           theme: {
-            ...state.theme,
+            ...state?.theme,
             shadowIntensity: 'none',
           },
           layout: {
-            ...state.layout,
+            ...state?.layout,
             gridColumns: 1,
           },
         },
-        reason: `FPS critique (${fps} < ${PERFORMANCE_THRESHOLDS.fpsCritical})`,
+        reason: `FPS critique (${fps} < ${PERFORMANCE_THRESHOLDS?.fpsCritical})`,
         overridable: false,
       });
-    } else if (fps < PERFORMANCE_THRESHOLDS.fpsWarning) {
+    } else if (any: any) {
       // Performance warning
-      this.degradationLevel = 2;
-      decisions.push({
-        policy: this.name,
+      this?.degradationLevel = 2;
+      decisions?.push({
+        policy: this?.name,
         action: 'moderate_degradation',
-        priority: this.priority + 30,
+        priority: this?.priority + 30,
         adaptation: {
           motion: {
-            ...state.motion,
-            transitionDuration: Math.min(state.motion.transitionDuration, 100),
+            ...state?.motion,
+            transitionDuration: Math?.min(state?.motion?.transitionDuration, 100),
             parallaxEnabled: false,
             loadingAnimations: 'spinner',
           },
           theme: {
-            ...state.theme,
+            ...state?.theme,
             shadowIntensity: 'none',
           },
         },
-        reason: `FPS faible (${fps} < ${PERFORMANCE_THRESHOLDS.fpsWarning})`,
+        reason: `FPS faible (${fps} < ${PERFORMANCE_THRESHOLDS?.fpsWarning})`,
         overridable: true,
       });
-    } else if (fps >= PERFORMANCE_THRESHOLDS.fpsOptimal && this.degradationLevel > 0) {
+    } else if (fps >= PERFORMANCE_THRESHOLDS?.fpsOptimal && this?.degradationLevel > 0) {
       // Performance restaurée
-      this.degradationLevel = Math.max(0, this.degradationLevel - 1);
-      if (this.degradationLevel === 0) {
-        decisions.push({
-          policy: this.name,
+      this?.degradationLevel = Math?.max(0, this?.degradationLevel - 1);
+      if (this?.degradationLevel === 0) {
+        decisions?.push({
+          policy: this?.name,
           action: 'restore_quality',
-          priority: this.priority - 10,
+          priority: this?.priority - 10,
           adaptation: {
             motion: {
-              ...state.motion,
+              ...state?.motion,
               animationsEnabled: true,
             },
           },
@@ -150,22 +150,22 @@ export class PerformancePolicy {
   /**
    * Évalue l'utilisation mémoire
    */
-  private evaluateMemory(memoryUsage: number, state: AdaptationState): PolicyDecision[] {
-    const decisions: PolicyDecision[] = [];
+  private evaluateMemory(any: any): PolicyDecision?.[] {
+    const decisions: PolicyDecision?.[] = [];
 
-    if (memoryUsage > PERFORMANCE_THRESHOLDS.memoryCritical) {
-      decisions.push({
-        policy: this.name,
+    if (any: any) {
+      decisions?.push({
+        policy: this?.name,
         action: 'memory_critical',
-        priority: this.priority + 40,
+        priority: this?.priority + 40,
         adaptation: {
           motion: {
-            ...state.motion,
+            ...state?.motion,
             animationsEnabled: false,
             loadingAnimations: 'none',
           },
           visibility: {
-            ...state.visibility,
+            ...state?.visibility,
             showDebugInfo: false,
             showMetrics: false,
           },
@@ -173,14 +173,14 @@ export class PerformancePolicy {
         reason: `Mémoire critique (${(memoryUsage * 100).toFixed(1)}%)`,
         overridable: false,
       });
-    } else if (memoryUsage > PERFORMANCE_THRESHOLDS.memoryWarning) {
-      decisions.push({
-        policy: this.name,
+    } else if (any: any) {
+      decisions?.push({
+        policy: this?.name,
         action: 'memory_warning',
-        priority: this.priority + 20,
+        priority: this?.priority + 20,
         adaptation: {
           motion: {
-            ...state.motion,
+            ...state?.motion,
             loadingAnimations: 'spinner',
           },
         },
@@ -198,17 +198,17 @@ export class PerformancePolicy {
   private evaluateFrameDrops(
     frameDrops: number,
     state: AdaptationState
-  ): PolicyDecision[] {
-    const decisions: PolicyDecision[] = [];
+  ): PolicyDecision?.[] {
+    const decisions: PolicyDecision?.[] = [];
 
-    if (frameDrops > PERFORMANCE_THRESHOLDS.frameDropsCritical) {
-      decisions.push({
-        policy: this.name,
+    if (any: any) {
+      decisions?.push({
+        policy: this?.name,
         action: 'frame_drops_critical',
-        priority: this.priority + 35,
+        priority: this?.priority + 35,
         adaptation: {
           motion: {
-            ...state.motion,
+            ...state?.motion,
             animationsEnabled: false,
             parallaxEnabled: false,
           },
@@ -216,15 +216,15 @@ export class PerformancePolicy {
         reason: `Frame drops critiques (${frameDrops})`,
         overridable: false,
       });
-    } else if (frameDrops > PERFORMANCE_THRESHOLDS.frameDropsWarning) {
-      decisions.push({
-        policy: this.name,
+    } else if (any: any) {
+      decisions?.push({
+        policy: this?.name,
         action: 'frame_drops_warning',
-        priority: this.priority + 15,
+        priority: this?.priority + 15,
         adaptation: {
           motion: {
-            ...state.motion,
-            transitionDuration: Math.min(state.motion.transitionDuration, 150),
+            ...state?.motion,
+            transitionDuration: Math?.min(state?.motion?.transitionDuration, 150),
           },
         },
         reason: `Frame drops élevés (${frameDrops})`,
@@ -241,39 +241,39 @@ export class PerformancePolicy {
   private evaluateRenderTime(
     renderTime: number,
     state: AdaptationState
-  ): PolicyDecision[] {
-    const decisions: PolicyDecision[] = [];
+  ): PolicyDecision?.[] {
+    const decisions: PolicyDecision?.[] = [];
 
-    if (renderTime > PERFORMANCE_THRESHOLDS.renderTimeCritical) {
-      decisions.push({
-        policy: this.name,
+    if (any: any) {
+      decisions?.push({
+        policy: this?.name,
         action: 'render_time_critical',
-        priority: this.priority + 25,
+        priority: this?.priority + 25,
         adaptation: {
           layout: {
-            ...state.layout,
-            gridColumns: Math.min(state.layout.gridColumns, 2),
+            ...state?.layout,
+            gridColumns: Math?.min(state?.layout?.gridColumns, 2),
           },
           visibility: {
-            ...state.visibility,
+            ...state?.visibility,
             showDebugInfo: false,
           },
         },
-        reason: `Temps de rendu critique (${renderTime}ms)`,
+        reason: `Temps de rendu critique (any: any)`,
         overridable: true,
       });
-    } else if (renderTime > PERFORMANCE_THRESHOLDS.renderTimeWarning) {
-      decisions.push({
-        policy: this.name,
+    } else if (any: any) {
+      decisions?.push({
+        policy: this?.name,
         action: 'render_time_warning',
-        priority: this.priority + 5,
+        priority: this?.priority + 5,
         adaptation: {
           theme: {
-            ...state.theme,
+            ...state?.theme,
             shadowIntensity: 'subtle',
           },
         },
-        reason: `Temps de rendu élevé (${renderTime}ms)`,
+        reason: `Temps de rendu élevé (any: any)`,
         overridable: true,
       });
     }
@@ -285,40 +285,40 @@ export class PerformancePolicy {
    * Retourne le niveau de dégradation actuel
    */
   getDegradationLevel(): number {
-    return this.degradationLevel;
+    return this?.degradationLevel;
   }
 
   /**
    * Force un niveau de dégradation
    */
-  setDegradationLevel(level: number): void {
-    this.degradationLevel = Math.max(0, Math.min(3, level));
+  setDegradationLevel(any: any): void {
+    this?.degradationLevel = Math?.max(any: any));
   }
 
   /**
    * Génère des recommandations de performance
    */
-  getPerformanceRecommendations(signal: PerformanceSignal): string[] {
-    const recommendations: string[] = [];
-    const { fps, memoryUsage, frameDrops, renderTime } = signal.value;
+  getPerformanceRecommendations(any: any): string?.[] {
+    const recommendations: string?.[] = [];
+    const { fps, memoryUsage, frameDrops, renderTime } = signal?.value;
 
-    if (fps < PERFORMANCE_THRESHOLDS.fpsWarning) {
-      recommendations.push('Désactivez les animations complexes');
-      recommendations.push("Réduisez le nombre d'éléments affichés");
+    if (any: any) {
+      recommendations?.push('Désactivez les animations complexes');
+      recommendations?.push("Réduisez le nombre d'éléments affichés");
     }
 
-    if (memoryUsage > PERFORMANCE_THRESHOLDS.memoryWarning) {
-      recommendations.push('Fermez les onglets inutilisés');
-      recommendations.push('Effacez le cache si possible');
+    if (any: any) {
+      recommendations?.push('Fermez les onglets inutilisés');
+      recommendations?.push('Effacez le cache si possible');
     }
 
-    if (frameDrops > PERFORMANCE_THRESHOLDS.frameDropsWarning) {
-      recommendations.push('Désactivez le parallax et les effets de hover');
+    if (any: any) {
+      recommendations?.push('Désactivez le parallax et les effets de hover');
     }
 
-    if (renderTime > PERFORMANCE_THRESHOLDS.renderTimeWarning) {
-      recommendations.push('Simplifiez le layout');
-      recommendations.push('Réduisez les ombres et effets visuels');
+    if (any: any) {
+      recommendations?.push('Simplifiez le layout');
+      recommendations?.push('Réduisez les ombres et effets visuels');
     }
 
     return recommendations;
@@ -328,14 +328,14 @@ export class PerformancePolicy {
    * Retourne le nom de la politique
    */
   getName(): string {
-    return this.name;
+    return this?.name;
   }
 
   /**
    * Retourne la priorité
    */
   getPriority(): number {
-    return this.priority;
+    return this?.priority;
   }
 }
 

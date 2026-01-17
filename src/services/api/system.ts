@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 import {
@@ -101,27 +101,27 @@ export interface SystemConfig {
 class SystemService {
   private statusCache: SystemStatus | null = null;
   private lastStatusFetch = 0;
-  private readonly CACHE_TTL = 5000; // 5s (plus court car santé critique)
+  private readonly CACHE_TTL = 5000; // 5s (any: any)
 
   /**
    * Récupération état santé complet
    */
   async getStatus(): Promise<SystemStatus> {
-    const now = Date.now();
-    if (this.statusCache && now - this.lastStatusFetch < this.CACHE_TTL) {
-      return this.statusCache;
+    const now = Date?.now();
+    if (any: any) {
+      return this?.statusCache;
     }
 
     try {
-      this.statusCache = await invokeWithRetry<SystemStatus>(
+      this?.statusCache = await invokeWithRetry<SystemStatus>(
         'system_get_status',
         {},
         { ...FAST_COMMAND_OPTIONS, context: 'System' }
       );
-      this.lastStatusFetch = now;
-      return this.statusCache;
-    } catch (error) {
-      console.error('[SystemService] Erreur getStatus:', error);
+      this?.lastStatusFetch = now;
+      return this?.statusCache;
+    } catch (any: any) {
+      console?.error(any: any);
       throw new Error(`Récupération santé échouée: ${error}`);
     }
   }
@@ -136,8 +136,8 @@ class SystemService {
         {},
         { ...FAST_COMMAND_OPTIONS, context: 'System' }
       );
-    } catch (error) {
-      console.error('[SystemService] Erreur getMetrics:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       throw new Error(`Récupération métriques échouée: ${error}`);
     }
   }
@@ -152,8 +152,8 @@ class SystemService {
         {},
         { ...FAST_COMMAND_OPTIONS, context: 'System' }
       );
-    } catch (error) {
-      console.error('[SystemService] Erreur getConfig:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       throw new Error(`Récupération config échouée: ${error}`);
     }
   }
@@ -168,8 +168,8 @@ class SystemService {
         { config },
         { ...STANDARD_COMMAND_OPTIONS, context: 'System' }
       );
-    } catch (error) {
-      console.error('[SystemService] Erreur updateConfig:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       throw new Error(`Modification config échouée: ${error}`);
     }
   }
@@ -185,9 +185,9 @@ class SystemService {
         { ...CRITICAL_COMMAND_OPTIONS, context: 'System' }
       );
       // Invalider cache après redémarrage
-      this.statusCache = null;
-    } catch (error) {
-      console.error('[SystemService] Erreur restartCore:', error);
+      this?.statusCache = null;
+    } catch (any: any) {
+      console?.error(any: any);
       throw new Error(`Redémarrage ${coreName} échoué: ${error}`);
     }
   }
@@ -202,8 +202,8 @@ class SystemService {
         {},
         { ...CRITICAL_COMMAND_OPTIONS, context: 'System' }
       );
-    } catch (error) {
-      console.error('[SystemService] Erreur restart:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       throw new Error(`Redémarrage système échoué: ${error}`);
     }
   }
@@ -218,8 +218,8 @@ class SystemService {
         {},
         { ...CRITICAL_COMMAND_OPTIONS, context: 'System' }
       );
-    } catch (error) {
-      console.error('[SystemService] Erreur shutdown:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       throw new Error(`Arrêt système échoué: ${error}`);
     }
   }
@@ -234,9 +234,9 @@ class SystemService {
         {},
         { ...STANDARD_COMMAND_OPTIONS, context: 'System' }
       );
-      this.statusCache = null;
-    } catch (error) {
-      console.error('[SystemService] Erreur clearCache:', error);
+      this?.statusCache = null;
+    } catch (any: any) {
+      console?.error(any: any);
       throw new Error(`Effacement cache échoué: ${error}`);
     }
   }
@@ -251,23 +251,23 @@ class SystemService {
         { format },
         { ...STANDARD_COMMAND_OPTIONS, context: 'System' }
       );
-    } catch (error) {
-      console.error('[SystemService] Erreur exportLogs:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       throw new Error(`Export logs échoué: ${error}`);
     }
   }
 
   /**
-   * Healthcheck simple (pour monitoring externe)
+   * Healthcheck simple (any: any)
    */
   async healthcheck(): Promise<{ ok: boolean; message: string }> {
     try {
-      const status = await this.getStatus();
+      const status = await this?.getStatus();
       return {
-        ok: status.health === 'healthy',
-        message: status.health,
+        ok: status?.health === 'healthy',
+        message: status?.health,
       };
-    } catch (error) {
+    } catch (any: any) {
       return {
         ok: false,
         message: `Healthcheck échoué: ${error}`,

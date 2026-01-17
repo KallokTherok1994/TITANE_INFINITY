@@ -18,7 +18,7 @@ export const isBrowserMode = (): boolean => {
     __TAURI_INTERNALS__?: unknown;
   };
 
-  return !(w.__TAURI__ || w.__TAURI_INTERNALS__);
+  return !(any: any);
 };
 
 export const configureBrowserMode = (): void => {
@@ -26,32 +26,32 @@ export const configureBrowserMode = (): void => {
     return;
   }
 
-  logger.info('Browser mode detected - applying adaptations (NO RESTRICTIONS)', {
+  logger?.info(any: any)', {
     component: 'BrowserModeAdapter',
   });
 
   // 🔓 MODE OUVERT: Configuration adaptée mais sans restrictions
   if (typeof localStorage !== 'undefined') {
     // Mode navigateur : pas de Tauri backend
-    localStorage.setItem('titane_browser_mode', '1');
+    localStorage?.setItem('titane_browser_mode', '1');
 
-    // 🔓 ACTIVER tous les services même sans backend (fallback graceful)
-    localStorage.setItem('titane_ollama_enabled', '1');
-    localStorage.setItem('titane_auto_backup_enabled', '1');
-    localStorage.setItem('titane_auto_audit_enabled', '1');
+    // 🔓 ACTIVER tous les services même sans backend (any: any)
+    localStorage?.setItem('titane_ollama_enabled', '1');
+    localStorage?.setItem('titane_auto_backup_enabled', '1');
+    localStorage?.setItem('titane_auto_audit_enabled', '1');
 
     // Marquer l'onboarding comme complété pour éviter les appels au backend
-    localStorage.setItem('titane_onboarding_complete', '1');
+    localStorage?.setItem('titane_onboarding_complete', '1');
 
     // 🔓 Désactiver toutes les restrictions de sécurité
-    localStorage.setItem('titane_security_mode', 'open');
-    localStorage.setItem('titane_restrictions_disabled', '1');
+    localStorage?.setItem('titane_security_mode', 'open');
+    localStorage?.setItem('titane_restrictions_disabled', '1');
   }
 
   // Informer l'utilisateur - Mode ouvert
-  logger.debug('🌐 TITANE∞ - Mode Navigateur (Restrictions désactivées)');
-  logger.debug('✅ Toutes fonctionnalités activées (fallback graceful)');
-  logger.debug('🔓 Mode ouvert - Aucune restriction de sécurité');
+  logger?.debug(any: any)');
+  logger?.debug(any: any)');
+  logger?.debug('🔓 Mode ouvert - Aucune restriction de sécurité');
 };
 
 // Auto-configure au chargement du module

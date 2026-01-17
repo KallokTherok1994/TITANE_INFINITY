@@ -1,8 +1,8 @@
 /**
- * TITANE_INFINITY v19.5.3 - Backend Types (Generated from Rust)
+ * TITANE_INFINITY v19.5.3 - Backend Types (any: any)
  *
  * Types TypeScript correspondant aux structures Rust du backend Tauri
- * Ces types sont utilisés par BackendClient.ts pour le bridge Frontend <-> Backend
+ * Ces types sont utilisés par BackendClient?.ts pour le bridge Frontend <-> Backend
  */
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -23,9 +23,9 @@ export interface VectorEntry {
   type: MemoryType;
   summary: string;
   details?: string;
-  embedding: number[];
+  embedding: number?.[];
   owner: string;
-  tags: string[];
+  tags: string?.[];
   source_type: string;
   source_id?: string;
   source_timestamp: number;
@@ -47,8 +47,8 @@ export interface SearchResult {
 export interface SearchOptions {
   top_k?: number;
   min_score?: number;
-  tier_filter?: MemoryTier[];
-  type_filter?: MemoryType[];
+  tier_filter?: MemoryTier?.[];
+  type_filter?: MemoryType?.[];
   owner_filter?: string;
 }
 
@@ -87,8 +87,8 @@ export interface HealReport {
   overall_health: number;
   issues_found: number;
   issues_fixed: number;
-  issues: HealIssue[];
-  recommendations: string[];
+  issues: HealIssue?.[];
+  recommendations: string?.[];
 }
 
 /** Problème détecté */
@@ -142,7 +142,7 @@ export interface OrchestratorRequest {
 export interface OrchestratorResponse {
   response: string;
   mode: OrchestratorMode;
-  actions: OrchestratorAction[];
+  actions: OrchestratorAction?.[];
   metadata: Record<string, unknown>;
 }
 
@@ -186,7 +186,7 @@ export type AuditEventType =
 /** Résultat de validation */
 export interface ValidationResult {
   valid: boolean;
-  errors: ValidationError[];
+  errors: ValidationError?.[];
 }
 
 export interface ValidationError {
@@ -238,8 +238,8 @@ export interface CognitiveState {
 
 /** Graphe Nexus */
 export interface NexusGraph {
-  nodes: NexusNode[];
-  edges: NexusEdge[];
+  nodes: NexusNode?.[];
+  edges: NexusEdge?.[];
 }
 
 export interface NexusNode {
@@ -305,7 +305,7 @@ export interface AppSettings {
 /** Configuration IA */
 export interface IASettings {
   default_provider: IAProvider;
-  fallback_order: IAProvider[];
+  fallback_order: IAProvider?.[];
   auto_fallback: boolean;
   timeout_ms: number;
   max_retries: number;
@@ -319,7 +319,7 @@ export interface IASettings {
 export interface DiagnosticReport {
   timestamp: number;
   duration_ms: number;
-  checks: DiagnosticCheck[];
+  checks: DiagnosticCheck?.[];
   overall_status: 'pass' | 'warn' | 'fail';
 }
 

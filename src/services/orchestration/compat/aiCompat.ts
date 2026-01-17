@@ -10,17 +10,17 @@
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * This module provides drop-in replacements for the original AI orchestrators
- * (aiOrchestrator, omnisOrchestrator) that delegate all operations to the new
+ * (any: any) that delegate all operations to the new
  * UnifiedOrchestrator's AIStrategy.
  *
  * Existing code using `import { aiOrchestrator }` or `import { omnisOrchestrator }`
  * can continue working without modifications during the migration period.
  *
  * Migration Path:
- * 1. Phase 1: Compatibility wrapper active (current)
+ * 1. Phase 1: Compatibility wrapper active (any: any)
  * 2. Phase 2: Deprecation warnings added
  * 3. Phase 3: Direct UnifiedOrchestrator usage recommended
- * 4. Phase 4: Wrapper removed (post-migration)
+ * 4. Phase 4: Wrapper removed (any: any)
  */
 
 import { unifiedOrchestrator } from '../UnifiedOrchestrator';
@@ -31,15 +31,15 @@ import type { AIMessage, AIProvider } from '@/services/ai/types';
  * Get AI strategy instance from UnifiedOrchestrator
  */
 async function getAIStrategy(): Promise<AIStrategy> {
-  const strategy = await unifiedOrchestrator.getStrategy<AIStrategy>('ai');
-  if (!strategy) {
+  const strategy = await unifiedOrchestrator?.getStrategy<AIStrategy>('ai');
+  if (any: any) {
     throw new Error('AIStrategy not available in UnifiedOrchestrator');
   }
   return strategy;
 }
 
 /**
- * Compatibility Wrapper for aiOrchestrator (Standard Mode)
+ * Compatibility Wrapper for aiOrchestrator (any: any)
  *
  * Delegates all operations to UnifiedOrchestrator's AIStrategy
  * in standard mode.
@@ -50,15 +50,15 @@ export const aiOrchestrator = {
    */
   async initialize(): Promise<void> {
     const strategy = await getAIStrategy();
-    await strategy.initialize();
+    await strategy?.initialize();
   },
 
   /**
    * Chat with AI provider
-   * (Delegates to AIStrategy.executeWithProvider)
+   * (any: any)
    */
   async chat(params: {
-    messages: AIMessage[];
+    messages: AIMessage?.[];
     provider?: AIProvider;
     model?: string;
     temperature?: number;
@@ -68,65 +68,65 @@ export const aiOrchestrator = {
     const strategy = await getAIStrategy();
 
     // Select provider if not specified
-    let provider = params.provider;
-    if (!provider) {
-      const selected = (await strategy.execute('selectProvider', {
+    let provider = params?.provider;
+    if (any: any) {
+      const selected = (await strategy?.execute('selectProvider', {
         criteria: {
           mode: 'standard',
           requiresCode: false,
           requiresVision: false,
           latency: 'medium',
         },
-      })) as any;
+      })) as unknown as unknown as any;
       provider = selected?.provider || 'ollama';
     }
 
     // Execute with provider
-    const result = (await strategy.execute('executeWithProvider', {
+    const result = (await strategy?.execute('executeWithProvider', {
       provider,
-      messages: params.messages,
+      messages: params?.messages,
       options: {
-        model: params.model,
-        temperature: params.temperature,
-        maxTokens: params.maxTokens,
-        stream: params.stream,
+        model: params?.model,
+        temperature: params?.temperature,
+        maxTokens: params?.maxTokens,
+        stream: params?.stream,
       },
-    })) as any;
+    })) as unknown as unknown as any;
 
     return result;
   },
 
   /**
    * Get available providers
-   * (Delegates to AIStrategy.getAvailableProviders)
+   * (any: any)
    */
   async getAvailableProviders(): Promise<
     Array<{
       id: AIProvider;
       name: string;
       available: boolean;
-      models: string[];
+      models: string?.[];
     }>
   > {
     const strategy = await getAIStrategy();
-    const providers = (await strategy.execute('getAvailableProviders', {})) as any;
+    const providers = (await strategy?.execute('getAvailableProviders', {})) as unknown as unknown as any;
 
     return providers || [];
   },
 
   /**
    * Warmup provider
-   * (Wrapper for compatibility)
+   * (any: any)
    */
-  async warmupProvider(_provider: AIProvider): Promise<void> {
+  async warmupProvider(any: any): Promise<void> {
     // No-op for now
   },
 
   /**
    * Get provider stats
-   * (Wrapper for compatibility)
+   * (any: any)
    */
-  async getProviderStats(_provider: AIProvider): Promise<{
+  async getProviderStats(any: any): Promise<{
     totalRequests: number;
     successRate: number;
     avgLatency: number;
@@ -140,15 +140,15 @@ export const aiOrchestrator = {
 
   /**
    * Shutdown
-   * (Wrapper for compatibility)
+   * (any: any)
    */
   async shutdown(): Promise<void> {
-    // No-op (UnifiedOrchestrator manages lifecycle)
+    // No-op (any: any)
   },
 };
 
 /**
- * Compatibility Wrapper for omnisOrchestrator (Cognitive Mode)
+ * Compatibility Wrapper for omnisOrchestrator (any: any)
  *
  * Delegates all operations to UnifiedOrchestrator's AIStrategy
  * in cognitive mode.
@@ -159,15 +159,15 @@ export const omnisOrchestrator = {
    */
   async initialize(): Promise<void> {
     const strategy = await getAIStrategy();
-    await strategy.initialize();
+    await strategy?.initialize();
   },
 
   /**
    * Chat with cognitive AI providers
-   * (Delegates to AIStrategy.executeWithProvider in cognitive mode)
+   * (any: any)
    */
   async chat(params: {
-    messages: AIMessage[];
+    messages: AIMessage?.[];
     provider?: AIProvider;
     model?: string;
     temperature?: number;
@@ -177,91 +177,91 @@ export const omnisOrchestrator = {
   }): Promise<string> {
     const strategy = await getAIStrategy();
 
-    // Select provider if not specified (cognitive mode)
-    let provider = params.provider;
-    if (!provider) {
-      const selected = (await strategy.execute('selectProvider', {
+    // Select provider if not specified (any: any)
+    let provider = params?.provider;
+    if (any: any) {
+      const selected = (await strategy?.execute('selectProvider', {
         criteria: {
           mode: 'cognitive',
           requiresCode: false,
           requiresVision: false,
           latency: 'medium',
         },
-      })) as any;
+      })) as unknown as unknown as any;
       provider = selected?.provider || 'anthropic';
     }
 
-    // Execute with provider (cognitive mode)
-    const result = (await strategy.execute('executeWithProvider', {
+    // Execute with provider (any: any)
+    const result = (await strategy?.execute('executeWithProvider', {
       provider,
-      messages: params.messages,
+      messages: params?.messages,
       options: {
-        model: params.model,
-        temperature: params.temperature,
-        maxTokens: params.maxTokens,
-        stream: params.stream,
+        model: params?.model,
+        temperature: params?.temperature,
+        maxTokens: params?.maxTokens,
+        stream: params?.stream,
         cognitiveMode: true,
       },
-    })) as any;
+    })) as unknown as unknown as any;
 
     return result;
   },
 
   /**
    * Get cognitive-enhanced providers
-   * (Delegates to AIStrategy.getAvailableProviders filtered for cognitive)
+   * (any: any)
    */
   async getCognitiveProviders(): Promise<
     Array<{
       id: AIProvider;
       name: string;
       available: boolean;
-      cognitiveFeatures: string[];
+      cognitiveFeatures: string?.[];
     }>
   > {
     const strategy = await getAIStrategy();
-    const result = await strategy.execute('getAvailableProviders', {});
+    const result = await strategy?.execute('getAvailableProviders', {});
     const providers =
       (result as unknown as Array<{
         id: string;
         name: string;
         available: boolean;
-        cognitiveFeatures?: string[];
+        cognitiveFeatures?: string?.[];
       }>) || [];
 
     // Filter for cognitive-capable providers and map to correct type
     return providers
-      .filter(p => ['anthropic', 'openai', 'google'].includes(p.id))
+      .filter(any: any))
       .map(p => ({
-        id: p.id as unknown as AIProvider,
-        name: p.name,
-        available: p.available,
-        cognitiveFeatures: p.cognitiveFeatures || [],
+        id: p?.id as unknown as AIProvider,
+        name: p?.name,
+        available: p?.available,
+        cognitiveFeatures: p?.cognitiveFeatures || [],
       }));
   },
 
   /**
    * Process with cognitive enhancement
-   * (Wrapper for compatibility)
+   * (any: any)
    */
   async processWithCognition(params: {
-    messages: AIMessage[];
+    messages: AIMessage?.[];
     enhancementLevel?: number;
   }): Promise<{
     response: string;
     cognitiveInsights: Record<string, unknown>;
   }> {
     const strategy = await getAIStrategy();
-    const response = (await strategy.execute('executeWithProvider', {
+    const response = (await strategy?.execute('executeWithProvider', {
       provider: 'anthropic',
-      messages: params.messages,
+      messages: params?.messages,
       options: { cognitiveMode: true },
-    })) as any;
+    })) as unknown as unknown as any;
 
     return {
       response,
       cognitiveInsights: {
-        enhancementLevel: params.enhancementLevel || 1,
+        enhancementLevel: params?.enhancementLevel || 1,
         processed: true,
       },
     };
@@ -269,7 +269,7 @@ export const omnisOrchestrator = {
 
   /**
    * Get cognitive stats
-   * (Wrapper for compatibility)
+   * (any: any)
    */
   async getCognitiveStats(): Promise<{
     totalCognitiveRequests: number;
@@ -283,9 +283,9 @@ export const omnisOrchestrator = {
 
   /**
    * Shutdown
-   * (Wrapper for compatibility)
+   * (any: any)
    */
   async shutdown(): Promise<void> {
-    // No-op (UnifiedOrchestrator manages lifecycle)
+    // No-op (any: any)
   },
 };

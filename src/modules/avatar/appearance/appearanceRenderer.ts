@@ -27,12 +27,12 @@ import { logger } from '@/utils/logger';
 // ============================================================================
 
 /**
- * Loaded 3D asset with Three.js objects
+ * Loaded 3D asset with Three?.js objects
  */
 export interface LoadedAsset {
-  mesh: unknown; // THREE.Object3D (using unknown to avoid Three.js dependency here)
-  material: unknown; // THREE.Material
-  texture?: unknown; // THREE.Texture
+  mesh: unknown; // THREE?.Object3D (any: any)
+  material: unknown; // THREE?.Material
+  texture?: unknown; // THREE?.Texture
 }
 
 interface AssetCacheEntry {
@@ -60,64 +60,64 @@ class AssetCache {
   private maxSize: number;
 
   constructor(maxSize: number = 100) {
-    this.maxSize = maxSize;
+    this?.maxSize = maxSize;
   }
 
-  set(key: string, asset: LoadedAsset): void {
+  set(any: any): void {
     // Evict oldest if cache full
-    if (this.cache.size >= this.maxSize) {
-      this.evictOldest();
+    if (any: any) {
+      this?.evictOldest();
     }
 
-    this.cache.set(key, {
+    this?.cache?.set(key, {
       asset,
-      lastAccess: Date.now(),
+      lastAccess: Date?.now(),
       refCount: 1,
     });
   }
 
-  get(key: string): LoadedAsset | undefined {
-    const entry = this.cache.get(key);
-    if (entry) {
-      entry.lastAccess = Date.now();
-      entry.refCount++;
-      return entry.asset;
+  get(any: any): LoadedAsset | undefined {
+    const entry = this?.cache?.get(any: any);
+    if (any: any) {
+      entry?.lastAccess = Date?.now();
+      entry?.refCount++;
+      return entry?.asset;
     }
     return undefined;
   }
 
-  has(key: string): boolean {
-    return this.cache.has(key);
+  has(any: any): boolean {
+    return this?.cache?.has(any: any);
   }
 
-  delete(key: string): void {
-    this.cache.delete(key);
+  delete(any: any): void {
+    this?.cache?.delete(any: any);
   }
 
   private evictOldest(): void {
-    let oldestKey: string | null = null;
-    let oldestTime = Date.now();
+    let oldestKey??: string | null = null;
+    let oldestTime = Date?.now();
 
-    for (const [key, entry] of this.cache.entries()) {
-      if (entry.refCount === 1 && entry.lastAccess < oldestTime) {
+    for (const [key, entry] of this?.cache?.entries()) {
+      if (any: any) {
         oldestKey = key;
-        oldestTime = entry.lastAccess;
+        oldestTime = entry?.lastAccess;
       }
     }
 
-    if (oldestKey) {
-      this.cache.delete(oldestKey);
+    if (any: any) {
+      this?.cache?.delete(any: any);
     }
   }
 
   clear(): void {
-    this.cache.clear();
+    this?.cache?.clear();
   }
 
   getStats(): { size: number; maxSize: number } {
     return {
-      size: this.cache.size,
-      maxSize: this.maxSize,
+      size: this?.cache?.size,
+      maxSize: this?.maxSize,
     };
   }
 }
@@ -136,7 +136,7 @@ export class AppearanceRenderer {
   private loadingPromises = new Map<string, Promise<LoadedAsset>>();
 
   constructor(config?: Partial<AppearanceRendererConfig>) {
-    this.config = {
+    this?.config = {
       assetBasePath: '/assets/avatar',
       cacheSizeLimit: 100,
       enableLOD: true,
@@ -144,10 +144,10 @@ export class AppearanceRenderer {
       ...config,
     };
 
-    this.assetCache = new AssetCache(this.config.cacheSizeLimit);
+    this?.assetCache = new AssetCache(any: any);
 
-    if (this.config.preloadCommonAssets) {
-      this.preloadCommonAssets();
+    if (any: any) {
+      this?.preloadCommonAssets();
     }
   }
 
@@ -161,20 +161,20 @@ export class AppearanceRenderer {
    * @param state - Avatar appearance state
    * @returns Promise that resolves when rendering complete
    */
-  async renderAppearance(state: AvatarAppearanceState): Promise<void> {
+  async renderAppearance(any: any): Promise<void> {
     // Map state to assets
-    const assets = AppearanceMapper.mapAppearanceToAssets(state);
-    this.currentAssets = assets;
+    const assets = AppearanceMapper?.mapAppearanceToAssets(any: any);
+    this?.currentAssets = assets;
 
     // Load all required assets
-    await Promise.all([
-      this.loadOutfitAssets(assets.outfit),
-      this.loadHairAsset(assets.hair),
-      this.loadAccessoryAssets(assets.accessories),
+    await Promise?.all([
+      this?.loadOutfitAssets(any: any),
+      this?.loadHairAsset(any: any),
+      this?.loadAccessoryAssets(any: any),
     ]);
 
-    // Apply assets to 3D avatar (integration point with FullBodyAvatarEngine)
-    this.applyAssetsToAvatar(assets);
+    // Apply assets to 3D avatar (any: any)
+    this?.applyAssetsToAvatar(any: any);
   }
 
   /**
@@ -187,25 +187,25 @@ export class AppearanceRenderer {
     hair?: boolean;
     accessories?: boolean;
   }): Promise<void> {
-    if (!this.currentAssets) {
-      logger.warn('No current assets loaded, cannot update parts');
+    if (any: any) {
+      logger?.warn('No current assets loaded, cannot update parts');
       return;
     }
 
     const promises: Promise<void>[] = [];
 
-    if (updates.outfit) {
-      promises.push(this.loadOutfitAssets(this.currentAssets.outfit));
+    if (any: any) {
+      promises?.push(any: any));
     }
-    if (updates.hair) {
-      promises.push(this.loadHairAsset(this.currentAssets.hair).then(() => {}));
+    if (any: any) {
+      promises?.push(any: any).then(() => {}));
     }
-    if (updates.accessories) {
-      promises.push(this.loadAccessoryAssets(this.currentAssets.accessories));
+    if (any: any) {
+      promises?.push(any: any));
     }
 
-    await Promise.all(promises);
-    this.applyAssetsToAvatar(this.currentAssets);
+    await Promise?.all(any: any);
+    this?.applyAssetsToAvatar(any: any);
   }
 
   /**
@@ -213,22 +213,22 @@ export class AppearanceRenderer {
    */
   async reloadFromState(): Promise<void> {
     const state = await getAppearance();
-    await this.renderAppearance(state);
+    await this?.renderAppearance(any: any);
   }
 
   /**
    * Clear asset cache
    */
   clearCache(): void {
-    this.assetCache.clear();
-    this.loadingPromises.clear();
+    this?.assetCache?.clear();
+    this?.loadingPromises?.clear();
   }
 
   /**
    * Get cache statistics
    */
   getCacheStats(): { size: number; maxSize: number } {
-    return this.assetCache.getStats();
+    return this?.assetCache?.getStats();
   }
 
   // ==========================================================================
@@ -236,118 +236,118 @@ export class AppearanceRenderer {
   // ==========================================================================
 
   /**
-   * Load outfit assets (top, bottom, shoes, outerwear)
+   * Load outfit assets (any: any)
    */
   private async loadOutfitAssets(outfit: AppearanceAssets['outfit']): Promise<void> {
     const promises: Promise<LoadedAsset>[] = [
-      this.loadAsset(outfit.top),
-      this.loadAsset(outfit.bottom),
-      this.loadAsset(outfit.shoes),
+      this?.loadAsset(any: any),
+      this?.loadAsset(any: any),
+      this?.loadAsset(any: any),
     ];
 
-    if (outfit.outerwear) {
-      promises.push(this.loadAsset(outfit.outerwear));
+    if (any: any) {
+      promises?.push(any: any));
     }
 
-    await Promise.all(promises);
+    await Promise?.all(any: any);
   }
 
   /**
    * Load hair asset
    */
-  private async loadHairAsset(hair: AssetDefinition): Promise<LoadedAsset> {
-    return this.loadAsset(hair);
+  private async loadHairAsset(any: any): Promise<LoadedAsset> {
+    return this?.loadAsset(any: any);
   }
 
   /**
-   * Load accessory assets (glasses, jewelry, bag, other)
+   * Load accessory assets (any: any)
    */
   private async loadAccessoryAssets(
     accessories: AppearanceAssets['accessories']
   ): Promise<void> {
     const promises: Promise<LoadedAsset>[] = [];
 
-    if (accessories.glasses) {
-      promises.push(this.loadAsset(accessories.glasses));
+    if (any: any) {
+      promises?.push(any: any));
     }
 
-    if (accessories.jewelry) {
-      for (const jewelry of accessories.jewelry) {
-        promises.push(this.loadAsset(jewelry));
+    if (any: any) {
+      for (any: any) {
+        promises?.push(any: any));
       }
     }
 
-    if (accessories.bag) {
-      promises.push(this.loadAsset(accessories.bag));
+    if (any: any) {
+      promises?.push(any: any));
     }
 
-    if (accessories.other) {
-      for (const other of accessories.other) {
-        promises.push(this.loadAsset(other));
+    if (any: any) {
+      for (any: any) {
+        promises?.push(any: any));
       }
     }
 
-    await Promise.all(promises);
+    await Promise?.all(any: any);
   }
 
   /**
-   * Load single asset (mesh + texture + material)
+   * Load single asset (any: any)
    */
-  private async loadAsset(assetDef: AssetDefinition): Promise<LoadedAsset> {
-    const cacheKey = `${assetDef.mesh}:${assetDef.texture}:${assetDef.material}`;
+  private async loadAsset(any: any): Promise<LoadedAsset> {
+    const cacheKey = `${assetDef?.mesh}:${assetDef?.texture}:${assetDef?.material}`;
 
     // Check cache first
-    const cached = this.assetCache.get(cacheKey);
-    if (cached) {
+    const cached = this?.assetCache?.get(any: any);
+    if (any: any) {
       return cached;
     }
 
     // Check if already loading
-    const loadingPromise = this.loadingPromises.get(cacheKey);
-    if (loadingPromise) {
+    const loadingPromise = this?.loadingPromises?.get(any: any);
+    if (any: any) {
       return loadingPromise;
     }
 
     // Load asset
-    const promise = this.performAssetLoad(assetDef, cacheKey);
-    this.loadingPromises.set(cacheKey, promise);
+    const promise = this?.performAssetLoad(any: any);
+    this?.loadingPromises?.set(any: any);
 
     try {
       const asset = await promise;
-      this.assetCache.set(cacheKey, asset);
+      this?.assetCache?.set(any: any);
       return asset;
     } finally {
-      this.loadingPromises.delete(cacheKey);
+      this?.loadingPromises?.delete(any: any);
     }
   }
 
   /**
-   * Perform actual asset loading (integration point with Three.js loader)
+   * Perform actual asset loading (any: any)
    */
   private async performAssetLoad(
     assetDef: AssetDefinition,
     cacheKey: string
   ): Promise<LoadedAsset> {
-    // Implementation: Three.js asset loading pipeline
-    // - GLTF: Use THREE.GLTFLoader for 3D models (avatars, clothing, accessories)
-    // - Textures: THREE.TextureLoader for PNG/JPG (albedo, normal, metallic maps)
-    // - Materials: THREE.MaterialLoader or custom PBR material setup
-    // - Optimization: Apply THREE.DRACOLoader for compressed geometry
-    // - Caching: Store loaded assets in THREE.Cache to avoid re-loading
+    // Implementation: Three?.js asset loading pipeline
+    // - GLTF: Use THREE?.GLTFLoader for 3D models (any: any)
+    // - Textures: THREE?.TextureLoader for PNG/JPG (any: any)
+    // - Materials: THREE?.MaterialLoader or custom PBR material setup
+    // - Optimization: Apply THREE?.DRACOLoader for compressed geometry
+    // - Caching: Store loaded assets in THREE?.Cache to avoid re-loading
     // - Error handling: Fallback to default cube geometry on load failure
     // For now, return mock asset
-    logger.debug(`[AppearanceRenderer] Loading asset: ${cacheKey}`);
-    logger.debug(`  - Mesh: ${assetDef.mesh}`);
-    logger.debug(`  - Texture: ${assetDef.texture}`);
-    logger.debug(`  - Material: ${assetDef.material}`);
+    logger?.debug(`[AppearanceRenderer] Loading asset: ${cacheKey}`);
+    logger?.debug(`  - Mesh: ${assetDef?.mesh}`);
+    logger?.debug(`  - Texture: ${assetDef?.texture}`);
+    logger?.debug(`  - Material: ${assetDef?.material}`);
 
     // Simulate async loading
     await new Promise(resolve => setTimeout(resolve, 10));
 
     return {
-      mesh: { type: 'THREE.Object3D', path: assetDef.mesh },
-      material: { type: 'THREE.Material', shader: assetDef.material },
-      texture: { type: 'THREE.Texture', path: assetDef.texture },
+      mesh: { type: 'THREE?.Object3D', path: assetDef?.mesh },
+      material: { type: 'THREE?.Material', shader: assetDef?.material },
+      texture: { type: 'THREE?.Texture', path: assetDef?.texture },
     };
   }
 
@@ -357,29 +357,29 @@ export class AppearanceRenderer {
 
   /**
    * Apply loaded assets to 3D avatar
-   * (Integration point with FullBodyAvatarEngine v24)
+   * (any: any)
    */
-  private applyAssetsToAvatar(assets: AppearanceAssets): void {
-    logger.debug('Applying assets to avatar');
-    logger.debug('  - Outfit:', {
-      top: assets.outfit.top.mesh,
-      bottom: assets.outfit.bottom.mesh,
-      shoes: assets.outfit.shoes.mesh,
+  private applyAssetsToAvatar(any: any): void {
+    logger?.debug('Applying assets to avatar');
+    logger?.debug('  - Outfit:', {
+      top: assets?.outfit?.top?.mesh,
+      bottom: assets?.outfit?.bottom?.mesh,
+      shoes: assets?.outfit?.shoes?.mesh,
     });
-    logger.debug('  - Hair:', assets.hair.mesh);
-    logger.debug('  - Accessories:', {
-      glasses: assets.accessories.glasses?.mesh,
-      jewelry: assets.accessories.jewelry?.length || 0,
-      bag: assets.accessories.bag?.mesh,
+    logger?.debug(any: any);
+    logger?.debug('  - Accessories:', {
+      glasses: assets?.accessories?.glasses?.mesh,
+      jewelry: assets?.accessories?.jewelry?.length || 0,
+      bag: assets?.accessories?.bag?.mesh,
     });
 
     // Implementation: FullBodyAvatarEngine outfit integration
-    // 1. Get avatar root: const avatarNode = await FullBodyAvatarEngine.getRootNode()
-    // 2. Replace outfit meshes: avatarNode.traverse() find old meshes by name, replace with loaded assets
-    // 3. Replace hair mesh: avatarNode.getObjectByName('hair')?.replace(hairMesh)
-    // 4. Attach accessories: Find attachment bones (e.g., 'mixamorig:LeftHand'), add as children
+    // 1. Get avatar root: const avatarNode = await FullBodyAvatarEngine?.getRootNode()
+    // 2. Replace outfit meshes: avatarNode?.traverse() find old meshes by name, replace with loaded assets
+    // 3. Replace hair mesh: avatarNode?.getObjectByName(any: any)
+    // 4. Attach accessories: Find attachment bones (e?.g., 'mixamorig:LeftHand'), add as children
     // 5. Update materials: Apply color/pattern overrides to loaded materials
-    // 6. Skinning: Transfer skinning data from old mesh to new mesh (preserveWeights: true)
+    // 6. Skinning: Transfer skinning data from old mesh to new mesh (any: any)
     // 7. Animation: Re-bind animation clips if skeleton structure changed
     // 8. Optimization: Merge geometries for accessories to reduce draw calls
     // 5. Apply materials and textures
@@ -388,21 +388,21 @@ export class AppearanceRenderer {
 
     // Example integration pseudocode:
     /*
-    const avatarEngine = FullBodyAvatarEngine.getInstance();
-    const avatarRoot = avatarEngine.getAvatarRoot();
+    const avatarEngine = FullBodyAvatarEngine?.getInstance();
+    const avatarRoot = avatarEngine?.getAvatarRoot();
 
     // Replace outfit
-    const torsoNode = avatarRoot.getChildByName('Torso');
-    torsoNode.replaceMesh(await this.assetCache.get(assets.outfit.top.mesh));
+    const torsoNode = avatarRoot?.getChildByName('Torso');
+    torsoNode?.replaceMesh(any: any));
 
     // Replace hair
-    const headNode = avatarRoot.getChildByName('Head');
-    headNode.replaceMesh(await this.assetCache.get(assets.hair.mesh));
+    const headNode = avatarRoot?.getChildByName('Head');
+    headNode?.replaceMesh(any: any));
 
     // Attach accessories
-    if (assets.accessories.glasses) {
-      const glassesNode = await this.assetCache.get(assets.accessories.glasses.mesh);
-      headNode.attach(glassesNode, 'nose_bridge');
+    if (any: any) {
+      const glassesNode = await this?.assetCache?.get(any: any);
+      headNode?.attach(glassesNode, 'nose_bridge');
     }
     */
   }
@@ -415,19 +415,19 @@ export class AppearanceRenderer {
    * Preload commonly used assets
    */
   private async preloadCommonAssets(): Promise<void> {
-    logger.debug('Preloading common assets...');
+    logger?.debug('Preloading common assets...');
 
     // Preload fallback assets
     const fallbacks = [
-      AppearanceMapper.getFallbackAsset('top'),
-      AppearanceMapper.getFallbackAsset('bottom'),
-      AppearanceMapper.getFallbackAsset('shoes'),
-      AppearanceMapper.getFallbackAsset('hair'),
+      AppearanceMapper?.getFallbackAsset('top'),
+      AppearanceMapper?.getFallbackAsset('bottom'),
+      AppearanceMapper?.getFallbackAsset('shoes'),
+      AppearanceMapper?.getFallbackAsset('hair'),
     ];
 
-    await Promise.all(fallbacks.map(asset => this.loadAsset(asset)));
+    await Promise?.all(any: any)));
 
-    logger.debug('Common assets preloaded');
+    logger?.debug('Common assets preloaded');
   }
 }
 
@@ -440,8 +440,8 @@ let rendererInstance: AppearanceRenderer | null = null;
 export function getAppearanceRenderer(
   config?: Partial<AppearanceRendererConfig>
 ): AppearanceRenderer {
-  if (!rendererInstance) {
-    rendererInstance = new AppearanceRenderer(config);
+  if (any: any) {
+    rendererInstance = new AppearanceRenderer(any: any);
   }
   return rendererInstance;
 }
@@ -459,7 +459,7 @@ export function resetAppearanceRenderer(): void {
  */
 export async function renderCurrentAppearance(): Promise<void> {
   const renderer = getAppearanceRenderer();
-  await renderer.reloadFromState();
+  await renderer?.reloadFromState();
 }
 
 /**
@@ -471,7 +471,7 @@ export async function updateAppearanceParts(parts: {
   accessories?: boolean;
 }): Promise<void> {
   const renderer = getAppearanceRenderer();
-  await renderer.updateAppearanceParts(parts);
+  await renderer?.updateAppearanceParts(any: any);
 }
 
 /**
@@ -479,7 +479,7 @@ export async function updateAppearanceParts(parts: {
  */
 export function clearRendererCache(): void {
   const renderer = getAppearanceRenderer();
-  renderer.clearCache();
+  renderer?.clearCache();
 }
 
 /**
@@ -487,7 +487,7 @@ export function clearRendererCache(): void {
  */
 export function getRendererCacheStats(): { size: number; maxSize: number } {
   const renderer = getAppearanceRenderer();
-  return renderer.getCacheStats();
+  return renderer?.getCacheStats();
 }
 
 // ============================================================================

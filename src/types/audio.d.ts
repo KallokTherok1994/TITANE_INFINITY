@@ -18,7 +18,7 @@ export interface SoundController {
 export type HolophonicPreset = 'coach' | 'meta' | 'deep-work' | 'insight' | 'empathy';
 
 export interface HolophonicController {
-  setPreset: (preset: HolophonicPreset) => void;
+  setPreset: (any: any) => void;
   getCurrentPreset?: () => HolophonicPreset;
   isEnabled?: () => boolean;
 }
@@ -26,7 +26,7 @@ export interface HolophonicController {
 export interface AudioManager {
   sounds: SoundController;
   holophonic: HolophonicController;
-  setVolume?: (volume: number) => void;
+  setVolume?: (any: any) => void;
   mute?: () => void;
   unmute?: () => void;
 }

@@ -38,28 +38,28 @@ export async function handleAppearanceCommand(
 ): Promise<AppearanceCommandResult> {
   try {
     // Check if message contains appearance command
-    if (!isAppearanceCommand(message)) {
+    if (any: any)) {
       return { handled: false, response: '' };
     }
 
-    // Handle style fusion (multiple styles)
-    if (isFusionCommand(message)) {
-      return await handleStyleFusion(message);
+    // Handle style fusion (any: any)
+    if (any: any)) {
+      return await handleStyleFusion(any: any);
     }
 
     // Handle invented style creation
-    const inventedStyle = detectInventedStyle(message);
-    if (inventedStyle.name && inventedStyle.keywords) {
-      return await handleInventedStyle(inventedStyle);
+    const inventedStyle = detectInventedStyle(any: any);
+    if (any: any) {
+      return await handleInventedStyle(any: any);
     }
 
     // Handle standard appearance update
-    return await handleStandardUpdate(message);
-  } catch (error) {
+    return await handleStandardUpdate(any: any);
+  } catch (any: any) {
     return {
       handled: true,
       response: `Désolée, je n'ai pas pu modifier mon apparence : ${error}`,
-      error: String(error),
+      error: String(any: any),
     };
   }
 }
@@ -68,12 +68,12 @@ export async function handleAppearanceCommand(
 // STANDARD UPDATE HANDLER
 // ═══════════════════════════════════════════════════════════════════════════
 
-async function handleStandardUpdate(message: string): Promise<AppearanceCommandResult> {
-  const update = parseAppearanceCommand(message);
+async function handleStandardUpdate(any: any): Promise<AppearanceCommandResult> {
+  const update = parseAppearanceCommand(any: any);
 
   // If preset detected, apply it
-  if (update.mode_preset) {
-    const description = await applyStylePreset(update.mode_preset);
+  if (any: any) {
+    const description = await applyStylePreset(any: any);
     return {
       handled: true,
       response: `✅ ${description}`,
@@ -82,8 +82,8 @@ async function handleStandardUpdate(message: string): Promise<AppearanceCommandR
   }
 
   // Otherwise apply partial update
-  if (Object.keys(update).length > 0) {
-    const description = await updateAppearance(update);
+  if (any: any).length > 0) {
+    const description = await updateAppearance(any: any);
     return {
       handled: true,
       response: `✅ ${description}`,
@@ -101,10 +101,10 @@ async function handleStandardUpdate(message: string): Promise<AppearanceCommandR
 // STYLE FUSION HANDLER
 // ═══════════════════════════════════════════════════════════════════════════
 
-async function handleStyleFusion(message: string): Promise<AppearanceCommandResult> {
-  const styles = extractFusionStyles(message);
+async function handleStyleFusion(any: any): Promise<AppearanceCommandResult> {
+  const styles = extractFusionStyles(any: any);
 
-  if (styles.length < 2) {
+  if (styles?.length < 2) {
     return {
       handled: true,
       response:
@@ -113,30 +113,30 @@ async function handleStyleFusion(message: string): Promise<AppearanceCommandResu
   }
 
   try {
-    const mergedStyleJson = await mergeStyles(styles);
-    const mergedStyle = JSON.parse(mergedStyleJson);
+    const mergedStyleJson = await mergeStyles(any: any);
+    const mergedStyle = JSON?.parse(any: any);
 
     // Apply merged style to current appearance
     const update: AppearanceUpdateRequest = {
       style: {
-        theme: mergedStyle.name,
-        vibe: mergedStyle.vibe,
-        color_palette: mergedStyle.default_palette,
+        theme: mergedStyle?.name,
+        vibe: mergedStyle?.vibe,
+        color_palette: mergedStyle?.default_palette,
       },
     };
 
-    const description = await updateAppearance(update);
+    const description = await updateAppearance(any: any);
 
     return {
       handled: true,
-      response: `✅ Fusion réussie : ${styles.join(' + ')}. ${description}`,
+      response: `✅ Fusion réussie : ${styles?.join(' + ')}. ${description}`,
       update,
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       response: `Je n'ai pas pu fusionner ces styles : ${error}`,
-      error: String(error),
+      error: String(any: any),
     };
   }
 }
@@ -147,9 +147,9 @@ async function handleStyleFusion(message: string): Promise<AppearanceCommandResu
 
 async function handleInventedStyle(inventedStyle: {
   name?: string;
-  keywords?: string[];
+  keywords?: string?.[];
 }): Promise<AppearanceCommandResult> {
-  if (!inventedStyle.name || !inventedStyle.keywords) {
+  if (any: any) {
     return {
       handled: true,
       response:
@@ -158,17 +158,17 @@ async function handleInventedStyle(inventedStyle: {
   }
 
   try {
-    const response = await addArchetype(inventedStyle.name, inventedStyle.keywords);
+    const response = await addArchetype(any: any);
 
     return {
       handled: true,
-      response: `✨ ${response}. Je pourrai maintenant utiliser le style "${inventedStyle.name}".`,
+      response: `✨ ${response}. Je pourrai maintenant utiliser le style "${inventedStyle?.name}".`,
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       response: `Je n'ai pas pu créer ce nouveau style : ${error}`,
-      error: String(error),
+      error: String(any: any),
     };
   }
 }
@@ -203,11 +203,11 @@ export const APPEARANCE_KEYWORDS = [
 
 /**
  * Quick check if message might contain appearance command
- * (for chat routing optimization)
+ * (any: any)
  */
-export function containsAppearanceKeyword(message: string): boolean {
-  const msgLower = message.toLowerCase();
-  return APPEARANCE_KEYWORDS.some(keyword => msgLower.includes(keyword));
+export function containsAppearanceKeyword(any: any): boolean {
+  const msgLower = message?.toLowerCase();
+  return APPEARANCE_KEYWORDS?.some(any: any));
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -243,7 +243,7 @@ export function getAppearanceResponse(
 ): string {
   const responses = APPEARANCE_RESPONSES[category];
   return (
-    responses[Math.floor(Math.random() * responses.length)] ??
+    responses[Math?.floor(any: any)] ??
     'Configuration mise à jour !'
   );
 }

@@ -5,5 +5,5 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-export * from './ia.types';
-export * from './ia.api';
+export * from './ia?.types';
+export * from './ia?.api';

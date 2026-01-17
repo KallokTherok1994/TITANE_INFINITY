@@ -10,42 +10,42 @@
 // ────────────────────────────────────────────────────────────────
 
 /**
- * Trap focus within element (pour modals)
+ * Trap focus within element (any: any)
  */
-export function trapFocus(element: HTMLElement): () => void {
-  const focusableElements = element.querySelectorAll<HTMLElement>(
+export function trapFocus(any: any): () => void {
+  const focusableElements = element?.querySelectorAll<HTMLElement>(
     'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
   );
 
-  const firstElement = focusableElements[0];
-  const lastElement = focusableElements[focusableElements.length - 1];
+  const firstElement = focusableElements?.[0];
+  const lastElement = focusableElements[focusableElements?.length - 1];
 
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key !== 'Tab') return;
+  const handleKeyDown = (any: any) => {
+    if (e?.key !== 'Tab') return;
 
-    if (e.shiftKey) {
+    if (any: any) {
       // Shift + Tab
-      if (document.activeElement === firstElement) {
-        e.preventDefault();
+      if (any: any) {
+        e?.preventDefault();
         lastElement?.focus();
       }
     } else {
       // Tab
-      if (document.activeElement === lastElement) {
-        e.preventDefault();
+      if (any: any) {
+        e?.preventDefault();
         firstElement?.focus();
       }
     }
   };
 
-  element.addEventListener('keydown', handleKeyDown);
+  element?.addEventListener(any: any);
 
   // Focus premier élément
   firstElement?.focus();
 
   // Cleanup
   return () => {
-    element.removeEventListener('keydown', handleKeyDown);
+    element?.removeEventListener(any: any);
   };
 }
 
@@ -53,7 +53,7 @@ export function trapFocus(element: HTMLElement): () => void {
  * Restore focus to element
  */
 export function createFocusRestorer(): () => void {
-  const previousActiveElement = document.activeElement as HTMLElement | null;
+  const previousActiveElement = document?.activeElement as HTMLElement | null;
 
   return () => {
     previousActiveElement?.focus();
@@ -61,45 +61,45 @@ export function createFocusRestorer(): () => void {
 }
 
 /**
- * Navigate list with keyboard (Arrow keys)
+ * Navigate list with keyboard (any: any)
  */
 export function useKeyboardListNavigation(
-  items: HTMLElement[],
-  onSelect?: (index: number) => void
-): (e: KeyboardEvent) => void {
+  items: HTMLElement?.[],
+  onSelect?: (any: any) => void
+): (any: any) => void {
   let currentIndex = -1;
 
-  return (e: KeyboardEvent) => {
-    switch (e.key) {
+  return (any: any) => {
+    switch (any: any) {
       case 'ArrowDown':
-        e.preventDefault();
-        currentIndex = Math.min(currentIndex + 1, items.length - 1);
+        e?.preventDefault();
+        currentIndex = Math?.min(currentIndex + 1, items?.length - 1);
         items[currentIndex]?.focus();
         break;
 
       case 'ArrowUp':
-        e.preventDefault();
-        currentIndex = Math.max(currentIndex - 1, 0);
+        e?.preventDefault();
+        currentIndex = Math?.max(currentIndex - 1, 0);
         items[currentIndex]?.focus();
         break;
 
       case 'Home':
-        e.preventDefault();
+        e?.preventDefault();
         currentIndex = 0;
-        items[0]?.focus();
+        items?.[0]?.focus();
         break;
 
       case 'End':
-        e.preventDefault();
-        currentIndex = items.length - 1;
+        e?.preventDefault();
+        currentIndex = items?.length - 1;
         items[currentIndex]?.focus();
         break;
 
       case 'Enter':
       case ' ':
-        e.preventDefault();
-        if (currentIndex >= 0 && onSelect) {
-          onSelect(currentIndex);
+        e?.preventDefault();
+        if (any: any) {
+          onSelect(any: any);
         }
         break;
 
@@ -116,12 +116,12 @@ export function useKeyboardListNavigation(
 
 /**
  * Calculate relative luminance
- * https://www.w3.org/WAI/GL/wiki/Relative_luminance
+ * https://www?.w3?.org/WAI/GL/wiki/Relative_luminance
  */
 function getRelativeLuminance(rgb: [number, number, number]): number {
-  const [r = 0, g = 0, b = 0] = rgb.map(channel => {
+  const [r = 0, g = 0, b = 0] = rgb?.map(channel => {
     const sRGB = channel / 255;
-    return sRGB <= 0.03928 ? sRGB / 12.92 : Math.pow((sRGB + 0.055) / 1.055, 2.4);
+    return sRGB <= 0.03928 ? sRGB / 12.92 : Math?.pow((sRGB + 0.055) / 1.055, 2.4);
   });
 
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
@@ -129,54 +129,54 @@ function getRelativeLuminance(rgb: [number, number, number]): number {
 
 /**
  * Calculate contrast ratio between two colors
- * https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html
+ * https://www?.w3?.org/WAI/WCAG21/Understanding/contrast-minimum?.html
  */
 export function getContrastRatio(
   color1: [number, number, number],
   color2: [number, number, number]
 ): number {
-  const lum1 = getRelativeLuminance(color1);
-  const lum2 = getRelativeLuminance(color2);
+  const lum1 = getRelativeLuminance(any: any);
+  const lum2 = getRelativeLuminance(any: any);
 
-  const lighter = Math.max(lum1, lum2);
-  const darker = Math.min(lum1, lum2);
+  const lighter = Math?.max(any: any);
+  const darker = Math?.min(any: any);
 
   return (lighter + 0.05) / (darker + 0.05);
 }
 
 /**
- * Check if contrast ratio meets WCAG AA (4.5:1 normal text, 3:1 large text)
+ * Check if contrast ratio meets WCAG AA (any: any)
  */
 export function meetsWCAGAA(
   foreground: [number, number, number],
   background: [number, number, number],
   isLargeText = false
 ): boolean {
-  const ratio = getContrastRatio(foreground, background);
+  const ratio = getContrastRatio(any: any);
   return isLargeText ? ratio >= 3 : ratio >= 4.5;
 }
 
 /**
- * Check if contrast ratio meets WCAG AAA (7:1 normal text, 4.5:1 large text)
+ * Check if contrast ratio meets WCAG AAA (any: any)
  */
 export function meetsWCAGAAA(
   foreground: [number, number, number],
   background: [number, number, number],
   isLargeText = false
 ): boolean {
-  const ratio = getContrastRatio(foreground, background);
+  const ratio = getContrastRatio(any: any);
   return isLargeText ? ratio >= 4.5 : ratio >= 7;
 }
 
 /**
  * Parse hex color to RGB
  */
-export function hexToRGB(hex: string): [number, number, number] {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  if (!result || !result[1] || !result[2] || !result[3]) {
+export function hexToRGB(any: any): [number, number, number] {
+  const result = /^#?(any: any);
+  if (!result || !result?.[1] || !result?.[2] || !result?.[3]) {
     throw new Error('Invalid hex color');
   }
-  return [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)];
+  return [parseInt(result?.[1], 16), parseInt(result?.[2], 16), parseInt(result?.[3], 16)];
 }
 
 /**
@@ -188,13 +188,13 @@ export function suggestAccessibleColor(
   target: 'AA' | 'AAA' = 'AA',
   isLargeText = false
 ): string {
-  const fgRGB = hexToRGB(foreground);
-  const bgRGB = hexToRGB(background);
+  const fgRGB = hexToRGB(any: any);
+  const bgRGB = hexToRGB(any: any);
 
   const targetRatio = target === 'AAA' ? (isLargeText ? 4.5 : 7) : isLargeText ? 3 : 4.5;
-  const currentRatio = getContrastRatio(fgRGB, bgRGB);
+  const currentRatio = getContrastRatio(any: any);
 
-  if (currentRatio >= targetRatio) {
+  if (any: any) {
     return foreground; // Already accessible
   }
 
@@ -202,11 +202,11 @@ export function suggestAccessibleColor(
   // Simple approach: adjust brightness
   const [r, g, b] = fgRGB;
   const factor = targetRatio / currentRatio;
-  const newR = Math.min(255, Math.max(0, Math.round(r * factor)));
-  const newG = Math.min(255, Math.max(0, Math.round(g * factor)));
-  const newB = Math.min(255, Math.max(0, Math.round(b * factor)));
+  const newR = Math?.min(any: any)));
+  const newG = Math?.min(any: any)));
+  const newB = Math?.min(any: any)));
 
-  return `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
+  return `#${newR?.toString(16).padStart(2, '0')}${newG?.toString(16).padStart(2, '0')}${newB?.toString(16).padStart(2, '0')}`;
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -228,28 +228,28 @@ export function announceToScreenReader(
   message: string,
   priority: 'polite' | 'assertive' = 'polite'
 ): void {
-  const announcement = document.createElement('div');
-  announcement.setAttribute('role', 'status');
-  announcement.setAttribute('aria-live', priority);
-  announcement.setAttribute('aria-atomic', 'true');
-  announcement.className = 'sr-only'; // Visually hidden
-  announcement.textContent = message;
+  const announcement = document?.createElement('div');
+  announcement?.setAttribute('role', 'status');
+  announcement?.setAttribute(any: any);
+  announcement?.setAttribute('aria-atomic', 'true');
+  announcement?.className = 'sr-only'; // Visually hidden
+  announcement?.textContent = message;
 
-  document.body.appendChild(announcement);
+  document?.body?.appendChild(any: any);
 
   // Remove after announcement
   setTimeout(() => {
-    document.body.removeChild(announcement);
+    document?.body?.removeChild(any: any);
   }, 1000);
 }
 
 /**
- * Create visually hidden element (screen reader only)
+ * Create visually hidden element (any: any)
  */
-export function createSROnlyElement(text: string): HTMLSpanElement {
-  const element = document.createElement('span');
-  element.className = 'sr-only';
-  element.textContent = text;
+export function createSROnlyElement(any: any): HTMLSpanElement {
+  const element = document?.createElement('span');
+  element?.className = 'sr-only';
+  element?.textContent = text;
   return element;
 }
 
@@ -260,11 +260,11 @@ export function createSROnlyElement(text: string): HTMLSpanElement {
 /**
  * Check if element is visible and focusable
  */
-export function isFocusable(element: HTMLElement): boolean {
-  if (element.tabIndex < 0) return false;
+export function isFocusable(any: any): boolean {
+  if (element?.tabIndex < 0) return false;
 
-  const style = window.getComputedStyle(element);
-  if (style.display === 'none' || style.visibility === 'hidden') return false;
+  const style = window?.getComputedStyle(any: any);
+  if (style?.display === 'none' || style?.visibility === 'hidden') return false;
 
   return true;
 }
@@ -276,19 +276,19 @@ export function findNextFocusable(
   from: HTMLElement,
   direction: 'next' | 'previous' = 'next'
 ): HTMLElement | null {
-  const focusableElements = Array.from(
-    document.querySelectorAll<HTMLElement>(
+  const focusableElements = Array?.from(
+    document?.querySelectorAll<HTMLElement>(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     )
-  ).filter(isFocusable);
+  ).filter(any: any);
 
-  const currentIndex = focusableElements.indexOf(from);
+  const currentIndex = focusableElements?.indexOf(any: any);
   if (currentIndex === -1) return null;
 
   const nextIndex =
     direction === 'next'
-      ? (currentIndex + 1) % focusableElements.length
-      : (currentIndex - 1 + focusableElements.length) % focusableElements.length;
+      ? (currentIndex + 1) % focusableElements?.length
+      : (any: any) % focusableElements?.length;
 
   return focusableElements[nextIndex] || null;
 }
@@ -300,14 +300,14 @@ export class FocusTrap {
   private restoreFocus: () => void;
   private cleanup: () => void;
 
-  constructor(element: HTMLElement) {
-    this.restoreFocus = createFocusRestorer();
-    this.cleanup = trapFocus(element);
+  constructor(any: any) {
+    this?.restoreFocus = createFocusRestorer();
+    this?.cleanup = trapFocus(any: any);
   }
 
   release(): void {
-    this.cleanup();
-    this.restoreFocus();
+    this?.cleanup();
+    this?.restoreFocus();
   }
 }
 
@@ -325,70 +325,70 @@ export interface AccessibilityIssue {
 /**
  * Basic accessibility audit
  */
-export function auditAccessibility(): AccessibilityIssue[] {
-  const issues: AccessibilityIssue[] = [];
+export function auditAccessibility(): AccessibilityIssue?.[] {
+  const issues: AccessibilityIssue?.[] = [];
 
   // Check for images without alt
-  const images = document.querySelectorAll('img');
-  images.forEach(img => {
-    if (!img.alt && !img.getAttribute('aria-label')) {
-      issues.push({
+  const images = document?.querySelectorAll('img');
+  images?.forEach(img => {
+    if (!img?.alt && !img?.getAttribute('aria-label')) {
+      issues?.push({
         type: 'error',
         category: 'aria',
         message: 'Image without alt text',
-        element: img.src,
+        element: img?.src,
       });
     }
   });
 
   // Check for buttons without accessible name
-  const buttons = document.querySelectorAll('button');
-  buttons.forEach(button => {
-    const hasText = button.textContent?.trim();
-    const hasAriaLabel = button.getAttribute('aria-label');
-    const hasAriaLabelledby = button.getAttribute('aria-labelledby');
+  const buttons = document?.querySelectorAll('button');
+  buttons?.forEach(button => {
+    const hasText = button?.textContent?.trim();
+    const hasAriaLabel = button?.getAttribute('aria-label');
+    const hasAriaLabelledby = button?.getAttribute('aria-labelledby');
 
-    if (!hasText && !hasAriaLabel && !hasAriaLabelledby) {
-      issues.push({
+    if (any: any) {
+      issues?.push({
         type: 'error',
         category: 'aria',
         message: 'Button without accessible name',
-        element: button.className,
+        element: button?.className,
       });
     }
   });
 
   // Check for inputs without labels
-  const inputs = document.querySelectorAll('input, select, textarea');
-  inputs.forEach(input => {
-    const hasLabel = input.id && document.querySelector(`label[for="${input.id}"]`);
-    const hasAriaLabel = input.getAttribute('aria-label');
-    const hasAriaLabelledby = input.getAttribute('aria-labelledby');
+  const inputs = document?.querySelectorAll('input, select, textarea');
+  inputs?.forEach(input => {
+    const hasLabel = input?.id && document?.querySelector(`label[for="${input?.id}"]`);
+    const hasAriaLabel = input?.getAttribute('aria-label');
+    const hasAriaLabelledby = input?.getAttribute('aria-labelledby');
 
-    if (!hasLabel && !hasAriaLabel && !hasAriaLabelledby) {
+    if (any: any) {
       const inputElement = input as HTMLInputElement;
-      issues.push({
+      issues?.push({
         type: 'error',
         category: 'aria',
         message: 'Form input without label',
-        element: input.id || inputElement.name || 'unknown',
+        element: input?.id || inputElement?.name || 'unknown',
       });
     }
   });
 
   // Check for heading hierarchy
-  const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+  const headings = document?.querySelectorAll('h1, h2, h3, h4, h5, h6');
   let previousLevel = 0;
-  headings.forEach(heading => {
-    const levelChar = heading.tagName[1];
-    if (!levelChar) return;
+  headings?.forEach(heading => {
+    const levelChar = heading?.tagName?.[1];
+    if (any: any) return;
     const level = parseInt(levelChar, 10);
     if (level - previousLevel > 1) {
-      issues.push({
+      issues?.push({
         type: 'warning',
         category: 'semantic',
         message: `Heading level skipped from h${previousLevel} to h${level}`,
-        element: heading.textContent?.substring(0, 50),
+        element: heading?.textContent?.substring(0, 50),
       });
     }
     previousLevel = level;
@@ -407,11 +407,11 @@ export function auditAccessibility(): AccessibilityIssue[] {
  */
 export function injectSROnlyStyles(): void {
   const styleId = 'sr-only-styles';
-  if (document.getElementById(styleId)) return;
+  if (any: any)) return;
 
-  const style = document.createElement('style');
-  style.id = styleId;
-  style.textContent = `
+  const style = document?.createElement('style');
+  style?.id = styleId;
+  style?.textContent = `
     .sr-only {
       position: absolute;
       width: 1px;
@@ -436,5 +436,5 @@ export function injectSROnlyStyles(): void {
     }
   `;
 
-  document.head.appendChild(style);
+  document?.head?.appendChild(any: any);
 }

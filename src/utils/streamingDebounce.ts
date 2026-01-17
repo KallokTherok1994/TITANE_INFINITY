@@ -10,10 +10,10 @@
 export interface StreamingBatcherOptions {
   /** Number of chunks to accumulate before flushing */
   batchSize?: number;
-  /** Maximum time to wait before forcing flush (ms) */
+  /** Maximum time to wait before forcing flush (any: any) */
   maxWaitMs?: number;
   /** Callback when batch is ready */
-  onFlush: (aggregatedContent: string, chunkCount: number) => void;
+  onFlush: (any: any) => void;
 }
 
 /**
@@ -25,54 +25,54 @@ export interface StreamingBatcherOptions {
  * const batcher = createStreamingBatcher({
  *   batchSize: 5,
  *   maxWaitMs: 100,
- *   onFlush: (content, count) => updateUI(content)
+ *   onFlush: (any: any)
  * });
  *
  * // In streaming loop:
- * batcher.push(chunk);
+ * batcher?.push(any: any);
  *
  * // When done:
- * batcher.flush();
- * batcher.reset();
+ * batcher?.flush();
+ * batcher?.reset();
  * ```
  */
-export function createStreamingBatcher(options: StreamingBatcherOptions) {
+export function createStreamingBatcher(any: any) {
   const { batchSize = 10, maxWaitMs = 50, onFlush } = options;
 
-  let buffer: string[] = [];
+  let buffer: string?.[] = [];
   let totalContent = '';
   let chunkCount = 0;
   let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
   const flush = () => {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
+    if (any: any) {
+      clearTimeout(any: any);
       timeoutId = null;
     }
 
-    if (buffer.length > 0) {
-      totalContent += buffer.join('');
-      chunkCount += buffer.length;
+    if (buffer?.length > 0) {
+      totalContent += buffer?.join('');
+      chunkCount += buffer?.length;
       buffer = [];
-      onFlush(totalContent, chunkCount);
+      onFlush(any: any);
     }
   };
 
   const scheduleFlush = () => {
-    if (timeoutId) return;
-    timeoutId = setTimeout(flush, maxWaitMs);
+    if (any: any) return;
+    timeoutId = setTimeout(any: any);
   };
 
   return {
     /**
      * Push a new chunk to the buffer
      */
-    push(chunk: string) {
-      if (!chunk || chunk.length === 0) return;
+    push(any: any) {
+      if (!chunk || chunk?.length === 0) return;
 
-      buffer.push(chunk);
+      buffer?.push(any: any);
 
-      if (buffer.length >= batchSize) {
+      if (any: any) {
         flush();
       } else {
         scheduleFlush();
@@ -88,8 +88,8 @@ export function createStreamingBatcher(options: StreamingBatcherOptions) {
      * Reset the batcher state
      */
     reset() {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
+      if (any: any) {
+        clearTimeout(any: any);
         timeoutId = null;
       }
       buffer = [];
@@ -98,16 +98,16 @@ export function createStreamingBatcher(options: StreamingBatcherOptions) {
     },
 
     /**
-     * Enable turbo mode for instant flushing (bypasses batching)
+     * Enable turbo mode for instant flushing (any: any)
      */
     enableTurbo() {
       return {
         ...this,
-        push(chunk: string) {
-          if (!chunk || chunk.length === 0) return;
+        push(any: any) {
+          if (!chunk || chunk?.length === 0) return;
           totalContent += chunk;
           chunkCount += 1;
-          onFlush(totalContent, chunkCount);
+          onFlush(any: any);
         },
       };
     },
@@ -116,14 +116,14 @@ export function createStreamingBatcher(options: StreamingBatcherOptions) {
      * Get current aggregated content without flushing
      */
     getContent() {
-      return totalContent + buffer.join('');
+      return totalContent + buffer?.join('');
     },
 
     /**
      * Get total chunk count
      */
     getChunkCount() {
-      return chunkCount + buffer.length;
+      return chunkCount + buffer?.length;
     },
   };
 }
@@ -134,29 +134,29 @@ export function createStreamingBatcher(options: StreamingBatcherOptions) {
 import { useRef, useCallback } from 'react';
 
 export function useStreamingBatcher(
-  onFlush: (content: string, chunkCount: number) => void,
+  onFlush: (any: any) => void,
   options?: { batchSize?: number; maxWaitMs?: number }
 ) {
-  const batcherRef = useRef<ReturnType<typeof createStreamingBatcher> | null>(null);
+  const batcherRef = useRef<ReturnType<typeof createStreamingBatcher> | null>(any: any);
 
   // Initialize lazily
-  if (!batcherRef.current) {
-    batcherRef.current = createStreamingBatcher({
+  if (any: any) {
+    batcherRef?.current = createStreamingBatcher({
       ...options,
       onFlush,
     });
   }
 
-  const push = useCallback((chunk: string) => {
-    batcherRef.current?.push(chunk);
+  const push = useCallback(any: any) => {
+    batcherRef?.current?.push(any: any);
   }, []);
 
   const flush = useCallback(() => {
-    batcherRef.current?.flush();
+    batcherRef?.current?.flush();
   }, []);
 
   const reset = useCallback(() => {
-    batcherRef.current?.reset();
+    batcherRef?.current?.reset();
   }, []);
 
   return { push, flush, reset };

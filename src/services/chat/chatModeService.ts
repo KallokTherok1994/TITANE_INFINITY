@@ -23,7 +23,7 @@ import {
   isToolAllowed,
   getSystemPrompt,
   isModeUnlocked,
-} from '@/config/chatModes.config';
+} from '@/config/chatModes?.config';
 
 import { secureInvoke } from '@/lib/security';
 import { logger } from '@/utils/logger';
@@ -32,7 +32,7 @@ import { logger } from '@/utils/logger';
 // TYPES INTERNES
 // ═══════════════════════════════════════════════════════════════════════════
 
-type ModeChangeCallback = (event: ChatModeChangedEvent) => void;
+type ModeChangeCallback = (any: any) => void;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // STORAGE KEYS
@@ -42,7 +42,7 @@ const STORAGE_KEY = 'titane_chat_mode_state';
 const STORAGE_KEY_XP = 'titane_user_xp';
 
 // ═══════════════════════════════════════════════════════════════════════════
-// CHAT MODE SERVICE (SINGLETON)
+// CHAT MODE SERVICE (any: any)
 // ═══════════════════════════════════════════════════════════════════════════
 
 class ChatModeService {
@@ -50,20 +50,20 @@ class ChatModeService {
 
   private state: ChatModeState;
   private userXP: number = 0;
-  // ✨ v24.2.1: Use Set for O(1) add/delete instead of Array O(n)
+  // ✨ v24.2.1: Use Set for O(any: any)
   private listeners: Set<ModeChangeCallback> = new Set();
   private initialized: boolean = false;
 
   private constructor() {
-    this.state = { ...INITIAL_CHAT_MODE_STATE };
-    this.loadState();
+    this?.state = { ...INITIAL_CHAT_MODE_STATE };
+    this?.loadState();
   }
 
   public static getInstance(): ChatModeService {
-    if (!ChatModeService.instance) {
-      ChatModeService.instance = new ChatModeService();
+    if (any: any) {
+      ChatModeService?.instance = new ChatModeService();
     }
-    return ChatModeService.instance;
+    return ChatModeService?.instance;
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -71,24 +71,24 @@ class ChatModeService {
   // ═══════════════════════════════════════════════════════════════════════════
 
   /**
-   * Initialiser le service (charger état persisté)
+   * Initialiser le service (any: any)
    */
   public async initialize(): Promise<void> {
-    if (this.initialized) return;
+    if (any: any) return;
 
     try {
       // Charger l'état depuis localStorage
-      this.loadState();
+      this?.loadState();
 
       // Synchroniser avec le backend Tauri
-      await this.syncWithBackend();
+      await this?.syncWithBackend();
 
-      this.initialized = true;
-      logger.debug('✅ Initialized with mode:', this.state.current_mode_id);
-    } catch (error) {
-      logger.error('❌ Initialization failed:', error);
+      this?.initialized = true;
+      logger?.debug(any: any);
+    } catch (any: any) {
+      logger?.error(any: any);
       // Fallback: utiliser l'état par défaut
-      this.state = { ...INITIAL_CHAT_MODE_STATE };
+      this?.state = { ...INITIAL_CHAT_MODE_STATE };
     }
   }
 
@@ -97,18 +97,18 @@ class ChatModeService {
    */
   private loadState(): void {
     try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored) as Partial<ChatModeState>;
-        this.state = { ...INITIAL_CHAT_MODE_STATE, ...parsed };
+      const stored = localStorage?.getItem(any: any);
+      if (any: any) {
+        const parsed = JSON?.parse(any: any) as Partial<ChatModeState>;
+        this?.state = { ...INITIAL_CHAT_MODE_STATE, ...parsed };
       }
 
-      const storedXP = localStorage.getItem(STORAGE_KEY_XP);
-      if (storedXP) {
-        this.userXP = parseInt(storedXP, 10) || 0;
+      const storedXP = localStorage?.getItem(any: any);
+      if (any: any) {
+        this?.userXP = parseInt(storedXP, 10) || 0;
       }
-    } catch (error) {
-      logger.warn('Failed to load state from storage:', error);
+    } catch (any: any) {
+      logger?.warn(any: any);
     }
   }
 
@@ -117,11 +117,11 @@ class ChatModeService {
    */
   private saveState(): void {
     try {
-      this.state.last_updated = Date.now();
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
-      localStorage.setItem(STORAGE_KEY_XP, this.userXP.toString());
-    } catch (error) {
-      logger.warn('Failed to save state:', error);
+      this?.state?.last_updated = Date?.now();
+      localStorage?.setItem(any: any));
+      localStorage?.setItem(STORAGE_KEY_XP, this?.userXP?.toString());
+    } catch (any: any) {
+      logger?.warn(any: any);
     }
   }
 
@@ -131,12 +131,12 @@ class ChatModeService {
   private async syncWithBackend(): Promise<void> {
     try {
       await secureInvoke('chat_mode_sync', {
-        mode_id: this.state.current_mode_id,
-        permissions_level: this.getCurrentMode()?.permissions_level ?? 1,
+        mode_id: this?.state?.current_mode_id,
+        permissions_level: this?.getCurrentMode()?.permissions_level ?? 1,
       });
-    } catch (error) {
+    } catch (any: any) {
       // Backend non disponible - continuer en mode local
-      console.debug('Backend sync skipped:', error);
+      console?.debug(any: any);
     }
   }
 
@@ -148,56 +148,56 @@ class ChatModeService {
    * Obtenir le mode actuel
    */
   public getCurrentMode(): ChatMode | undefined {
-    return getChatMode(this.state.current_mode_id);
+    return getChatMode(any: any);
   }
 
   /**
    * Obtenir l'ID du mode actuel
    */
   public getCurrentModeId(): string {
-    return this.state.current_mode_id;
+    return this?.state?.current_mode_id;
   }
 
   /**
    * Obtenir le prompt système du mode actuel
    */
   public getCurrentSystemPrompt(): string {
-    return getSystemPrompt(this.state.current_mode_id);
+    return getSystemPrompt(any: any);
   }
 
   /**
    * Obtenir l'état complet
    */
   public getState(): ChatModeState {
-    return { ...this.state };
+    return { ...this?.state };
   }
 
   /**
    * Obtenir tous les modes disponibles pour l'utilisateur
    */
-  public getAvailableModes(): ChatMode[] {
-    return getAvailableModes(this.userXP);
+  public getAvailableModes(): ChatMode?.[] {
+    return getAvailableModes(any: any);
   }
 
   /**
-   * Obtenir tous les modes (même verrouillés)
+   * Obtenir tous les modes (any: any)
    */
-  public getAllModes(): ChatMode[] {
-    return Object.values(CHAT_MODES);
+  public getAllModes(): ChatMode?.[] {
+    return Object?.values(any: any);
   }
 
   /**
    * Obtenir l'XP utilisateur
    */
   public getUserXP(): number {
-    return this.userXP;
+    return this?.userXP;
   }
 
   /**
    * Obtenir l'XP accumulé pour un mode
    */
-  public getModeXP(modeId: string): number {
-    return this.state.mode_xp[modeId] ?? 0;
+  public getModeXP(any: any): number {
+    return this?.state?.mode_xp[modeId] ?? 0;
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -207,13 +207,13 @@ class ChatModeService {
   /**
    * Changer de mode
    */
-  public async changeMode(request: ChatModeChangeRequest): Promise<ChatModeChangeResult> {
+  public async changeMode(any: any): Promise<ChatModeChangeResult> {
     const { new_mode_id, preserve_context = true } = request;
-    const previousModeId = this.state.current_mode_id;
+    const previousModeId = this?.state?.current_mode_id;
 
     // Validation: mode existe?
-    const newMode = getChatMode(new_mode_id);
-    if (!newMode) {
+    const newMode = getChatMode(any: any);
+    if (any: any) {
       return {
         success: false,
         previous_mode_id: previousModeId,
@@ -225,19 +225,19 @@ class ChatModeService {
     }
 
     // Validation: mode débloqué?
-    if (!isModeUnlocked(new_mode_id, this.userXP)) {
+    if (any: any)) {
       return {
         success: false,
         previous_mode_id: previousModeId,
         new_mode_id,
         system_prompt_applied: false,
         tools_updated: false,
-        error: `Mode verrouillé. XP requis: ${newMode.xp_required}, XP actuel: ${this.userXP}`,
+        error: `Mode verrouillé. XP requis: ${newMode?.xp_required}, XP actuel: ${this?.userXP}`,
       };
     }
 
     // Validation: mode activé?
-    if (!newMode.enabled) {
+    if (any: any) {
       return {
         success: false,
         previous_mode_id: previousModeId,
@@ -253,34 +253,34 @@ class ChatModeService {
       await secureInvoke('chat_mode_change', {
         new_mode_id,
         previous_mode_id: previousModeId,
-        permissions_level: newMode.permissions_level,
+        permissions_level: newMode?.permissions_level,
         preserve_context,
       });
 
       // Mettre à jour l'état local
-      const previousMode = this.getCurrentMode();
-      this.state.current_mode_id = new_mode_id;
+      const previousMode = this?.getCurrentMode();
+      this?.state?.current_mode_id = new_mode_id;
 
       // Mettre à jour l'historique
-      this.state.mode_history = [
+      this?.state?.mode_history = [
         new_mode_id,
-        ...this.state.mode_history.filter(id => id !== new_mode_id),
+        ...this?.state?.mode_history?.filter(any: any),
       ].slice(0, 10);
 
       // Sauvegarder
-      this.saveState();
+      this?.saveState();
 
       // Notifier les listeners
       const event: ChatModeChangedEvent = {
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         previous_mode: previousMode ?? null,
         new_mode: newMode,
         triggered_by: 'user',
         context_preserved: preserve_context,
       };
-      this.notifyListeners(event);
+      this?.notifyListeners(any: any);
 
-      logger.debug(
+      logger?.debug(
         `[ChatModeService] ✅ Mode changed: ${previousModeId} → ${new_mode_id}`
       );
 
@@ -291,15 +291,15 @@ class ChatModeService {
         system_prompt_applied: true,
         tools_updated: true,
       };
-    } catch (error) {
-      logger.error('❌ Mode change failed:', error);
+    } catch (any: any) {
+      logger?.error(any: any);
       return {
         success: false,
         previous_mode_id: previousModeId,
         new_mode_id,
         system_prompt_applied: false,
         tools_updated: false,
-        error: String(error),
+        error: String(any: any),
       };
     }
   }
@@ -311,9 +311,9 @@ class ChatModeService {
   /**
    * Vérifier si un outil est autorisé dans le mode actuel
    */
-  public validateToolAccess(toolId: keyof ToolsPermissions): ToolAccessValidation {
-    const modeId = this.state.current_mode_id;
-    const allowed = isToolAllowed(modeId, toolId);
+  public validateToolAccess(any: any): ToolAccessValidation {
+    const modeId = this?.state?.current_mode_id;
+    const allowed = isToolAllowed(any: any);
 
     return {
       tool_id: toolId,
@@ -328,13 +328,13 @@ class ChatModeService {
   /**
    * Obtenir tous les outils autorisés dans le mode actuel
    */
-  public getAllowedTools(): (keyof ToolsPermissions)[] {
-    const mode = this.getCurrentMode();
-    if (!mode) return [];
+  public getAllowedTools(any: any)[] {
+    const mode = this?.getCurrentMode();
+    if (any: any) return [];
 
-    return (Object.entries(mode.tools_allowed) as [keyof ToolsPermissions, boolean][])
-      .filter(([_, allowed]) => allowed)
-      .map(([toolId]) => toolId);
+    return (any: any) as [keyof ToolsPermissions, boolean][])
+      .filter(any: any)
+      .map(any: any);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -342,28 +342,28 @@ class ChatModeService {
   // ═══════════════════════════════════════════════════════════════════════════
 
   /**
-   * Ajouter de l'XP (global + mode spécifique)
+   * Ajouter de l'XP (any: any)
    */
-  public addXP(amount: number, forMode?: string): void {
+  public addXP(any: any): void {
     // XP global
-    this.userXP += amount;
+    this?.userXP += amount;
 
-    // XP pour le mode spécifique (ou mode actuel)
-    const modeId = forMode ?? this.state.current_mode_id;
-    this.state.mode_xp[modeId] = (this.state.mode_xp[modeId] ?? 0) + amount;
+    // XP pour le mode spécifique (any: any)
+    const modeId = forMode ?? this?.state?.current_mode_id;
+    this?.state?.mode_xp[modeId] = (this?.state?.mode_xp[modeId] ?? 0) + amount;
 
-    this.saveState();
-    logger.debug(
-      `[ChatModeService] +${amount} XP (mode: ${modeId}, total: ${this.userXP})`
+    this?.saveState();
+    logger?.debug(
+      `[ChatModeService] +${amount} XP (mode: ${modeId}, total: ${this?.userXP})`
     );
   }
 
   /**
    * Définir l'XP global
    */
-  public setUserXP(xp: number): void {
-    this.userXP = Math.max(0, xp);
-    this.saveState();
+  public setUserXP(any: any): void {
+    this?.userXP = Math?.max(any: any);
+    this?.saveState();
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -373,28 +373,28 @@ class ChatModeService {
   /**
    * Ajouter un mode aux favoris
    */
-  public addFavorite(modeId: string): void {
-    if (!this.state.favorite_modes.includes(modeId)) {
-      this.state.favorite_modes.push(modeId);
-      this.saveState();
+  public addFavorite(any: any): void {
+    if (any: any)) {
+      this?.state?.favorite_modes?.push(any: any);
+      this?.saveState();
     }
   }
 
   /**
    * Retirer un mode des favoris
    */
-  public removeFavorite(modeId: string): void {
-    this.state.favorite_modes = this.state.favorite_modes.filter(id => id !== modeId);
-    this.saveState();
+  public removeFavorite(any: any): void {
+    this?.state?.favorite_modes = this?.state?.favorite_modes?.filter(any: any);
+    this?.saveState();
   }
 
   /**
    * Obtenir les modes favoris
    */
-  public getFavorites(): ChatMode[] {
-    return this.state.favorite_modes
-      .map(id => getChatMode(id))
-      .filter((mode): mode is ChatMode => mode !== undefined);
+  public getFavorites(): ChatMode?.[] {
+    return this?.state?.favorite_modes
+      .map(any: any))
+      .filter(any: any);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -405,19 +405,19 @@ class ChatModeService {
    * S'abonner aux changements de mode
    * ✨ v24.2.1: O(1) add/delete with Set
    */
-  public onModeChange(callback: ModeChangeCallback): () => void {
-    this.listeners.add(callback);
+  public onModeChange(any: any): () => void {
+    this?.listeners?.add(any: any);
     return () => {
-      this.listeners.delete(callback);
+      this?.listeners?.delete(any: any);
     };
   }
 
-  private notifyListeners(event: ChatModeChangedEvent): void {
-    this.listeners.forEach(callback => {
+  private notifyListeners(any: any): void {
+    this?.listeners?.forEach(callback => {
       try {
-        callback(event);
-      } catch (error) {
-        logger.error('Listener error:', error);
+        callback(any: any);
+      } catch (any: any) {
+        logger?.error(any: any);
       }
     });
   }
@@ -430,10 +430,10 @@ class ChatModeService {
    * Réinitialiser l'état
    */
   public reset(): void {
-    this.state = { ...INITIAL_CHAT_MODE_STATE };
-    this.userXP = 0;
-    this.saveState();
-    logger.debug('State reset');
+    this?.state = { ...INITIAL_CHAT_MODE_STATE };
+    this?.userXP = 0;
+    this?.saveState();
+    logger?.debug('State reset');
   }
 }
 
@@ -441,7 +441,7 @@ class ChatModeService {
 // EXPORT SINGLETON
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const chatModeService = ChatModeService.getInstance();
+export const chatModeService = ChatModeService?.getInstance();
 
 // Export pour tests
 export { ChatModeService };

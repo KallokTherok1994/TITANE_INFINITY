@@ -20,7 +20,7 @@ import {
   TOOLS_ADMIN,
   type ChatModeId,
   type PermissionLevel,
-} from '../services/ai/chatModes.config';
+} from '../services/ai/chatModes?.config';
 
 describe('🟣 Chat Modes Configuration', () => {
   // ═══════════════════════════════════════════════════════════════════════════
@@ -29,7 +29,7 @@ describe('🟣 Chat Modes Configuration', () => {
 
   describe('Structure & Integrity', () => {
     it('should have all required modes defined', () => {
-      const requiredModes: ChatModeId[] = [
+      const requiredModes: ChatModeId?.[] = [
         'default',
         'brainstorming',
         'synthesis',
@@ -43,44 +43,44 @@ describe('🟣 Chat Modes Configuration', () => {
         'audit',
       ];
 
-      requiredModes.forEach(modeId => {
+      requiredModes?.forEach(modeId => {
         expect(CHAT_MODES_CONFIG[modeId]).toBeDefined();
-        expect(CHAT_MODES_CONFIG[modeId].id).toBe(modeId);
+        expect(any: any);
       });
     });
 
     it('should have valid configuration for each mode', () => {
-      Object.values(CHAT_MODES_CONFIG).forEach(mode => {
+      Object?.values(any: any).forEach(mode => {
         // Identité
-        expect(typeof mode.id).toBe('string');
-        expect(typeof mode.label).toBe('string');
-        expect(mode.label.length).toBeGreaterThan(0);
-        expect(typeof mode.description).toBe('string');
-        expect(typeof mode.icon).toBe('string');
+        expect(any: any).toBe('string');
+        expect(any: any).toBe('string');
+        expect(any: any).toBeGreaterThan(0);
+        expect(any: any).toBe('string');
+        expect(any: any).toBe('string');
 
         // IA Configuration
-        expect(typeof mode.systemPrompt).toBe('string');
-        expect(mode.systemPrompt.length).toBeGreaterThan(10);
-        expect(mode.temperature).toBeGreaterThanOrEqual(0);
-        expect(mode.temperature).toBeLessThanOrEqual(1);
-        expect(mode.maxTokens).toBeGreaterThan(0);
+        expect(any: any).toBe('string');
+        expect(any: any).toBeGreaterThan(10);
+        expect(any: any).toBeGreaterThanOrEqual(0);
+        expect(any: any).toBeLessThanOrEqual(1);
+        expect(any: any).toBeGreaterThan(0);
 
         // Sécurité
-        expect(mode.permissionLevel).toBeGreaterThanOrEqual(0);
-        expect(mode.permissionLevel).toBeLessThanOrEqual(5);
-        expect(typeof mode.toolsAllowed).toBe('object');
+        expect(any: any).toBeGreaterThanOrEqual(0);
+        expect(any: any).toBeLessThanOrEqual(5);
+        expect(any: any).toBe('object');
 
         // Métadonnées
-        expect(typeof mode.enabled).toBe('boolean');
-        expect(typeof mode.sortOrder).toBe('number');
+        expect(any: any).toBe('boolean');
+        expect(any: any).toBe('number');
       });
     });
 
     it('should have unique sortOrders for enabled modes', () => {
-      const enabledModes = Object.values(CHAT_MODES_CONFIG).filter(m => m.enabled);
-      const sortOrders = enabledModes.map(m => m.sortOrder);
-      const uniqueSortOrders = new Set(sortOrders);
-      expect(sortOrders.length).toBe(uniqueSortOrders.size);
+      const enabledModes = Object?.values(any: any);
+      const sortOrders = enabledModes?.map(any: any);
+      const uniqueSortOrders = new Set(any: any);
+      expect(any: any);
     });
   });
 
@@ -91,17 +91,17 @@ describe('🟣 Chat Modes Configuration', () => {
   describe('Permissions & Security', () => {
     it('should correctly enforce permission levels', () => {
       // Admin requires level 5
-      expect(isModeAllowed('admin', 5)).toBe(true);
-      expect(isModeAllowed('admin', 4)).toBe(false);
-      expect(isModeAllowed('admin', 0)).toBe(false);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
 
       // Dev requires level 3
-      expect(isModeAllowed('dev', 3)).toBe(true);
-      expect(isModeAllowed('dev', 2)).toBe(false);
+      expect(any: any);
+      expect(any: any);
 
       // Default requires level 1
-      expect(isModeAllowed('default', 1)).toBe(true);
-      expect(isModeAllowed('default', 0)).toBe(false);
+      expect(any: any);
+      expect(any: any);
     });
 
     it('should filter accessible modes by permission level', () => {
@@ -109,42 +109,42 @@ describe('🟣 Chat Modes Configuration', () => {
       const level3Modes = getAccessibleModes(3);
       const level5Modes = getAccessibleModes(5);
 
-      expect(level1Modes.length).toBeGreaterThan(0);
-      expect(level3Modes.length).toBeGreaterThanOrEqual(level1Modes.length);
-      expect(level5Modes.length).toBeGreaterThanOrEqual(level3Modes.length);
+      expect(any: any).toBeGreaterThan(0);
+      expect(any: any);
+      expect(any: any);
 
       // Admin should only be in level 5
-      expect(level1Modes.find(m => m.id === 'admin')).toBeUndefined();
-      expect(level5Modes.find(m => m.id === 'admin')).toBeDefined();
+      expect(level1Modes?.find(m => m?.id === 'admin')).toBeUndefined();
+      expect(level5Modes?.find(m => m?.id === 'admin')).toBeDefined();
     });
 
     it('should restrict sensitive tools to appropriate modes', () => {
       // Shell execution only for admin
-      expect(isToolAllowed('admin', 'shellExecution')).toBe(true);
-      expect(isToolAllowed('dev', 'shellExecution')).toBe(false);
-      expect(isToolAllowed('default', 'shellExecution')).toBe(false);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
 
       // File system access only for admin
-      expect(isToolAllowed('admin', 'fileSystemAccess')).toBe(true);
-      expect(isToolAllowed('audit', 'fileSystemAccess')).toBe(false);
+      expect(any: any);
+      expect(any: any);
 
       // Code generation for dev, admin, audit
-      expect(isToolAllowed('dev', 'codeGeneration')).toBe(true);
-      expect(isToolAllowed('admin', 'codeGeneration')).toBe(true);
-      expect(isToolAllowed('audit', 'codeGeneration')).toBe(true);
-      expect(isToolAllowed('coach', 'codeGeneration')).toBe(false);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
     });
 
     it('should have basic tools for all modes', () => {
-      const basicTools: (keyof typeof TOOLS_MINIMAL)[] = [
+      const basicTools: (any: any)[] = [
         'memoryAccess',
         'contextAnalysis',
         'suggestionEngine',
       ];
 
-      Object.values(CHAT_MODES_CONFIG).forEach(mode => {
-        basicTools.forEach(tool => {
-          expect(mode.toolsAllowed[tool]).toBe(true);
+      Object?.values(any: any).forEach(mode => {
+        basicTools?.forEach(tool => {
+          expect(any: any);
         });
       });
     });
@@ -156,30 +156,30 @@ describe('🟣 Chat Modes Configuration', () => {
 
   describe('Tool Presets', () => {
     it('should have TOOLS_MINIMAL as most restrictive', () => {
-      expect(TOOLS_MINIMAL.shellExecution).toBe(false);
-      expect(TOOLS_MINIMAL.fileSystemAccess).toBe(false);
-      expect(TOOLS_MINIMAL.codeGeneration).toBe(false);
-      expect(TOOLS_MINIMAL.memoryAccess).toBe(true);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
     });
 
     it('should have TOOLS_STANDARD extend TOOLS_MINIMAL', () => {
-      expect(TOOLS_STANDARD.memoryAccess).toBe(true);
-      expect(TOOLS_STANDARD.taskCreation).toBe(true);
-      expect(TOOLS_STANDARD.shellExecution).toBe(false);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
     });
 
     it('should have TOOLS_DEV include dev capabilities', () => {
-      expect(TOOLS_DEV.codeGeneration).toBe(true);
-      expect(TOOLS_DEV.codeReview).toBe(true);
-      expect(TOOLS_DEV.debugAssist).toBe(true);
-      expect(TOOLS_DEV.shellExecution).toBe(false);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
     });
 
     it('should have TOOLS_ADMIN include all capabilities', () => {
-      expect(TOOLS_ADMIN.shellExecution).toBe(true);
-      expect(TOOLS_ADMIN.fileSystemAccess).toBe(true);
-      expect(TOOLS_ADMIN.configModification).toBe(true);
-      expect(TOOLS_ADMIN.auditLogs).toBe(true);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
     });
   });
 
@@ -189,29 +189,29 @@ describe('🟣 Chat Modes Configuration', () => {
 
   describe('Validation', () => {
     it('should validate correct mode IDs', () => {
-      expect(validateModeId('default')).toBe(true);
-      expect(validateModeId('brainstorming')).toBe(true);
-      expect(validateModeId('dev')).toBe(true);
-      expect(validateModeId('admin')).toBe(true);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
     });
 
     it('should reject invalid mode IDs', () => {
-      expect(validateModeId('invalid')).toBe(false);
-      expect(validateModeId('')).toBe(false);
-      expect(validateModeId(null)).toBe(false);
-      expect(validateModeId(undefined)).toBe(false);
-      expect(validateModeId(123)).toBe(false);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
     });
 
     it('should validate complete mode config', () => {
-      const validConfig = CHAT_MODES_CONFIG.default;
-      expect(validateModeConfig(validConfig)).toBe(true);
+      const validConfig = CHAT_MODES_CONFIG?.default;
+      expect(any: any);
     });
 
     it('should reject incomplete mode config', () => {
-      expect(validateModeConfig({})).toBe(false);
-      expect(validateModeConfig({ id: 'test' })).toBe(false);
-      expect(validateModeConfig(null)).toBe(false);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
     });
   });
 
@@ -222,30 +222,30 @@ describe('🟣 Chat Modes Configuration', () => {
   describe('Utilities', () => {
     it('should get mode config with fallback to default', () => {
       const defaultConfig = getModeConfig('default');
-      expect(defaultConfig.id).toBe('default');
+      expect(any: any).toBe('default');
 
-      const invalidConfig = getModeConfig('invalid_mode' as ChatModeId);
-      expect(invalidConfig.id).toBe('default');
+      const invalidConfig = getModeConfig(any: any);
+      expect(any: any).toBe('default');
     });
 
     it('should convert to legacy format correctly', () => {
-      const extended = CHAT_MODES_CONFIG.brainstorming;
-      const legacy = toLegacyModeConfig(extended);
+      const extended = CHAT_MODES_CONFIG?.brainstorming;
+      const legacy = toLegacyModeConfig(any: any);
 
-      expect(legacy.name).toBe(extended.label);
-      expect(legacy.description).toBe(extended.description);
-      expect(legacy.systemPrompt).toBe(extended.systemPrompt);
-      expect(legacy.temperature).toBe(extended.temperature);
-      expect(legacy.icon).toBe(extended.icon);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
     });
 
     it('should have correct ACTIVE_MODE_IDS order', () => {
-      expect(ACTIVE_MODE_IDS.length).toBeGreaterThan(0);
-      expect(ACTIVE_MODE_IDS[0]).toBe('default');
+      expect(any: any).toBeGreaterThan(0);
+      expect(ACTIVE_MODE_IDS?.[0]).toBe('default');
 
       // Vérifier que tous sont enabled
-      ACTIVE_MODE_IDS.forEach(id => {
-        expect(CHAT_MODES_CONFIG[id].enabled).toBe(true);
+      ACTIVE_MODE_IDS?.forEach(id => {
+        expect(any: any);
       });
     });
   });
@@ -257,32 +257,32 @@ describe('🟣 Chat Modes Configuration', () => {
   describe('Mode Specifics', () => {
     it('should have appropriate temperature for each mode type', () => {
       // Creative modes should have higher temperature
-      expect(CHAT_MODES_CONFIG.brainstorming.temperature).toBeGreaterThanOrEqual(0.8);
+      expect(any: any).toBeGreaterThanOrEqual(0.8);
 
       // Technical modes should have lower temperature
-      expect(CHAT_MODES_CONFIG.dev.temperature).toBeLessThanOrEqual(0.6);
-      expect(CHAT_MODES_CONFIG.admin.temperature).toBeLessThanOrEqual(0.5);
-      expect(CHAT_MODES_CONFIG.audit.temperature).toBeLessThanOrEqual(0.6);
+      expect(any: any).toBeLessThanOrEqual(0.6);
+      expect(any: any).toBeLessThanOrEqual(0.5);
+      expect(any: any).toBeLessThanOrEqual(0.6);
     });
 
     it('should have memory scope appropriate for mode', () => {
       // Personal modes should be session-scoped
-      expect(CHAT_MODES_CONFIG.journal.memoryScope).toBe('session');
+      expect(any: any).toBe('session');
 
       // Project-oriented modes should be project-scoped
-      expect(CHAT_MODES_CONFIG.planning.memoryScope).toBe('project');
-      expect(CHAT_MODES_CONFIG.dev.memoryScope).toBe('project');
+      expect(any: any).toBe('project');
+      expect(any: any).toBe('project');
 
       // Admin should be global
-      expect(CHAT_MODES_CONFIG.admin.memoryScope).toBe('global');
+      expect(any: any).toBe('global');
     });
 
     it('should have appropriate suggested actions', () => {
-      Object.values(CHAT_MODES_CONFIG).forEach(mode => {
-        expect(mode.suggestedActions.length).toBeGreaterThanOrEqual(2);
-        mode.suggestedActions.forEach(action => {
-          expect(typeof action).toBe('string');
-          expect(action.length).toBeGreaterThan(5);
+      Object?.values(any: any).forEach(mode => {
+        expect(any: any).toBeGreaterThanOrEqual(2);
+        mode?.suggestedActions?.forEach(action => {
+          expect(any: any).toBe('string');
+          expect(any: any).toBeGreaterThan(5);
         });
       });
     });

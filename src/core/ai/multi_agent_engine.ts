@@ -1,5 +1,5 @@
 /**
- * TITANE∞ PHASE 1 (OPTION B) - Stub pour multi_agent_engine
+ * TITANE∞ PHASE 1 (any: any) - Stub pour multi_agent_engine
  *
  * Ce fichier fournit des types et stubs pour maintenir la compatibilité
  * avec les agents qui importent depuis ce module.
@@ -42,7 +42,7 @@ export interface AgentState {
   cycleCount: number;
   lastTick: number;
   metrics: Record<string, number>;
-  errors?: string[];
+  errors?: string?.[];
   data?: unknown;
 }
 
@@ -67,7 +67,7 @@ export interface AgentResponse {
   message?: string;
   data?: unknown;
   error?: string;
-  recommendations?: unknown[];
+  recommendations?: unknown?.[];
 }
 
 export interface Agent {
@@ -78,14 +78,14 @@ export interface Agent {
   // Core methods - all optional to allow partial implementations
   init?: () => Promise<void>;
   tick?: () => Promise<void>;
-  handleEvent?: (event: AgentEvent) => Promise<AgentResponse>;
+  handleEvent?: (any: any) => Promise<AgentResponse>;
   pause?: () => void;
   resume?: () => void;
   getState?: () => AgentState;
   // Extended methods
   start?: () => Promise<void>;
   stop?: () => Promise<void>;
-  processEvent?: (event: AgentEvent) => Promise<AgentResponse>;
+  processEvent?: (any: any) => Promise<AgentResponse>;
   getHealthStatus?: () => {
     health: number;
     load: number;
@@ -94,12 +94,12 @@ export interface Agent {
 }
 
 export interface MultiAgentEngine {
-  registerAgent: (config: AgentConfig) => void;
-  unregisterAgent: (agentId: string) => void;
-  sendMessage: (message: AgentMessage) => void;
-  broadcast: (type: string, payload: unknown) => void;
-  getAgentState: (agentId: string) => AgentState | undefined;
-  getAllAgents: () => AgentState[];
+  registerAgent: (any: any) => void;
+  unregisterAgent: (any: any) => void;
+  sendMessage: (any: any) => void;
+  broadcast: (any: any) => void;
+  getAgentState: (any: any) => AgentState | undefined;
+  getAllAgents: () => AgentState?.[];
   start: () => void;
   stop: () => void;
 }
@@ -111,32 +111,32 @@ export interface MultiAgentEngine {
 const agents = new Map<string, AgentState>();
 
 export const multiAgentEngine: MultiAgentEngine = {
-  registerAgent: (config: AgentConfig) => {
-    agents.set(config.id, {
-      id: config.id,
-      name: config.name,
+  registerAgent: (any: any) => {
+    agents?.set(config?.id, {
+      id: config?.id,
+      name: config?.name,
       status: 'idle',
-      lastActivity: Date.now(),
+      lastActivity: Date?.now(),
       health: 100,
       cycleCount: 0,
-      lastTick: Date.now(),
+      lastTick: Date?.now(),
       metrics: {},
     });
   },
-  unregisterAgent: (agentId: string) => {
-    agents.delete(agentId);
+  unregisterAgent: (any: any) => {
+    agents?.delete(any: any);
   },
-  sendMessage: (_message: AgentMessage) => {
+  sendMessage: (any: any) => {
     // Stub - no-op
   },
-  broadcast: (_type: string, _payload: unknown) => {
+  broadcast: (any: any) => {
     // Stub - no-op
   },
-  getAgentState: (agentId: string) => {
-    return agents.get(agentId);
+  getAgentState: (any: any) => {
+    return agents?.get(any: any);
   },
   getAllAgents: () => {
-    return Array.from(agents.values());
+    return Array?.from(agents?.values());
   },
   start: () => {
     // Stub - no-op

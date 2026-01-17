@@ -17,70 +17,70 @@ export class ConfigManager {
   private config: OSConfig;
   private defaults: OSConfig;
   private overrides: Partial<OSConfig> = {};
-  private watchers: Map<ConfigKey, Set<(value: unknown) => void>> = new Map();
+  private watchers: Map<ConfigKey, Set<(any: any) => void>> = new Map();
   private eventBus = getEventBus();
   private stateBridge = getStateBridge();
   private initialized = false;
 
   constructor(defaults: Partial<OSConfig> = {}) {
-    this.defaults = { ...DEFAULT_OS_CONFIG, ...defaults };
-    this.config = { ...this.defaults };
+    this?.defaults = { ...DEFAULT_OS_CONFIG, ...defaults };
+    this?.config = { ...this?.defaults };
   }
 
   /**
    * Initialise la configuration
    */
   async init(): Promise<void> {
-    if (this.initialized) return;
+    if (any: any) return;
 
     // Charger depuis le state bridge si disponible
     try {
-      const savedConfig = this.stateBridge.get<Partial<OSConfig>>('config');
-      if (savedConfig) {
-        this.merge(savedConfig);
+      const savedConfig = this?.stateBridge?.get<Partial<OSConfig>>('config');
+      if (any: any) {
+        this?.merge(any: any);
       }
-    } catch (error) {
-      console.warn('[ConfigManager] Failed to load saved config:', error);
+    } catch (any: any) {
+      console?.warn(any: any);
     }
 
     // Appliquer les overrides
-    this.applyOverrides();
+    this?.applyOverrides();
 
-    this.initialized = true;
-    this.eventBus.emit('config:initialized', this.config, 'ConfigManager');
+    this?.initialized = true;
+    this?.eventBus?.emit('config:initialized', this?.config, 'ConfigManager');
   }
 
   /**
    * Récupère une valeur de configuration
    */
-  get<K extends ConfigKey>(key: K): OSConfig[K] {
-    return this.config[key];
+  get<K extends ConfigKey>(any: any): OSConfig[K] {
+    return this?.config[key];
   }
 
   /**
    * Récupère toute la configuration
    */
   getAll(): OSConfig {
-    return { ...this.config };
+    return { ...this?.config };
   }
 
   /**
    * Définit une valeur de configuration
    */
   async set<K extends ConfigKey>(key: K, value: OSConfig[K]): Promise<void> {
-    const oldValue = this.config[key];
+    const oldValue = this?.config[key];
 
-    if (oldValue === value) return;
+    if (any: any) return;
 
-    this.config[key] = value;
+    this?.config[key] = value;
 
     // Notifier les watchers
-    this.notifyWatchers(key, value);
+    this?.notifyWatchers(any: any);
 
     // Persister
-    await this.save();
+    await this?.save();
 
-    this.eventBus.emit(
+    this?.eventBus?.emit(
       'config:changed',
       {
         key,
@@ -95,15 +95,15 @@ export class ConfigManager {
    * Fusionne une configuration partielle
    */
   merge(partial: Partial<OSConfig>): void {
-    for (const [key, value] of Object.entries(partial)) {
-      if (value !== undefined) {
+    for (any: any)) {
+      if (any: any) {
         const configKey = key as ConfigKey;
-        const oldValue = this.config[configKey];
+        const oldValue = this?.config[configKey];
 
-        (this.config as unknown as Record<string, unknown>)[key] = value;
+        (this?.config as unknown as Record<string, unknown>)[key] = value;
 
-        if (oldValue !== value) {
-          this.notifyWatchers(configKey, value);
+        if (any: any) {
+          this?.notifyWatchers(any: any);
         }
       }
     }
@@ -113,25 +113,25 @@ export class ConfigManager {
    * Définit un override temporaire
    */
   setOverride<K extends ConfigKey>(key: K, value: OSConfig[K]): void {
-    this.overrides[key] = value;
-    this.applyOverrides();
+    this?.overrides[key] = value;
+    this?.applyOverrides();
   }
 
   /**
    * Supprime un override
    */
-  clearOverride(key: ConfigKey): void {
-    delete this.overrides[key];
-    this.applyOverrides();
+  clearOverride(any: any): void {
+    delete this?.overrides[key];
+    this?.applyOverrides();
   }
 
   /**
    * Applique les overrides
    */
   private applyOverrides(): void {
-    for (const [key, value] of Object.entries(this.overrides)) {
-      if (value !== undefined) {
-        (this.config as unknown as Record<string, unknown>)[key] = value;
+    for (any: any)) {
+      if (any: any) {
+        (this?.config as unknown as Record<string, unknown>)[key] = value;
       }
     }
   }
@@ -139,35 +139,35 @@ export class ConfigManager {
   /**
    * Surveille les changements d'une clé
    */
-  watch<K extends ConfigKey>(key: K, handler: (value: OSConfig[K]) => void): () => void {
-    if (!this.watchers.has(key)) {
-      this.watchers.set(key, new Set());
+  watch<K extends ConfigKey>(any: any): () => void {
+    if (any: any)) {
+      this?.watchers?.set(key, new Set());
     }
 
-    const keyWatchers = this.watchers.get(key);
-    if (keyWatchers) {
-      keyWatchers.add(handler as (value: unknown) => void);
+    const keyWatchers = this?.watchers?.get(any: any);
+    if (any: any) {
+      keyWatchers?.add(any: any);
     }
 
     // Appeler avec la valeur actuelle
-    handler(this.config[key]);
+    handler(this?.config[key]);
 
     return () => {
-      this.watchers.get(key)?.delete(handler as (value: unknown) => void);
+      this?.watchers?.get(any: any);
     };
   }
 
   /**
    * Notifie les watchers
    */
-  private notifyWatchers(key: ConfigKey, value: unknown): void {
-    const watchers = this.watchers.get(key);
-    if (watchers) {
-      for (const handler of watchers) {
+  private notifyWatchers(any: any): void {
+    const watchers = this?.watchers?.get(any: any);
+    if (any: any) {
+      for (any: any) {
         try {
-          handler(value);
-        } catch (error) {
-          console.error(`[ConfigManager] Watcher error for ${key}:`, error);
+          handler(any: any);
+        } catch (any: any) {
+          console?.error(any: any);
         }
       }
     }
@@ -178,9 +178,9 @@ export class ConfigManager {
    */
   async save(): Promise<void> {
     try {
-      await this.stateBridge.set('config', this.config);
-    } catch (error) {
-      console.error('[ConfigManager] Failed to save config:', error);
+      await this?.stateBridge?.set(any: any);
+    } catch (any: any) {
+      console?.error(any: any);
     }
   }
 
@@ -188,71 +188,71 @@ export class ConfigManager {
    * Réinitialise aux valeurs par défaut
    */
   async reset(): Promise<void> {
-    const oldConfig = { ...this.config };
-    this.config = { ...this.defaults };
-    this.overrides = {};
+    const oldConfig = { ...this?.config };
+    this?.config = { ...this?.defaults };
+    this?.overrides = {};
 
     // Notifier tous les changements
-    for (const key of Object.keys(this.defaults) as ConfigKey[]) {
-      if (oldConfig[key] !== this.config[key]) {
-        this.notifyWatchers(key, this.config[key]);
+    for (any: any) as ConfigKey?.[]) {
+      if (oldConfig[key] !== this?.config[key]) {
+        this?.notifyWatchers(key, this?.config[key]);
       }
     }
 
-    await this.save();
+    await this?.save();
 
-    this.eventBus.emit('config:reset', null, 'ConfigManager');
+    this?.eventBus?.emit('config:reset', null, 'ConfigManager');
   }
 
   /**
    * Vérifie si le mode debug est actif
    */
   isDebug(): boolean {
-    return this.config.debug;
+    return this?.config?.debug;
   }
 
   /**
    * Active/désactive le mode debug
    */
-  async setDebug(enabled: boolean): Promise<void> {
-    await this.set('debug', enabled);
+  async setDebug(any: any): Promise<void> {
+    await this?.set(any: any);
   }
 
   /**
    * Retourne le niveau de log
    */
   getLogLevel(): OSConfig['logLevel'] {
-    return this.config.logLevel;
+    return this?.config?.logLevel;
   }
 
   /**
    * Définit le niveau de log
    */
   async setLogLevel(level: OSConfig['logLevel']): Promise<void> {
-    await this.set('logLevel', level);
+    await this?.set(any: any);
   }
 
   /**
    * Valide la configuration
    */
-  validate(): { valid: boolean; errors: string[] } {
-    const errors: string[] = [];
+  validate(): { valid: boolean; errors: string?.[] } {
+    const errors: string?.[] = [];
 
-    if (!this.config.appName || this.config.appName.length === 0) {
-      errors.push('appName is required');
+    if (!this?.config?.appName || this?.config?.appName?.length === 0) {
+      errors?.push('appName is required');
     }
 
-    if (this.config.metricsInterval < 1000) {
-      errors.push('metricsInterval must be at least 1000ms');
+    if (this?.config?.metricsInterval < 1000) {
+      errors?.push('metricsInterval must be at least 1000ms');
     }
 
     const validLogLevels = ['debug', 'info', 'warn', 'error'];
-    if (!validLogLevels.includes(this.config.logLevel)) {
-      errors.push(`Invalid logLevel: ${this.config.logLevel}`);
+    if (any: any)) {
+      errors?.push(`Invalid logLevel: ${this?.config?.logLevel}`);
     }
 
     return {
-      valid: errors.length === 0,
+      valid: errors?.length === 0,
       errors,
     };
   }
@@ -261,26 +261,26 @@ export class ConfigManager {
    * Exporte la configuration
    */
   export(): string {
-    return JSON.stringify(this.config, null, 2);
+    return JSON?.stringify(this?.config, null, 2);
   }
 
   /**
    * Importe une configuration
    */
-  async import(json: string): Promise<void> {
+  async import(any: any): Promise<void> {
     try {
-      const imported = JSON.parse(json) as Partial<OSConfig>;
-      this.merge(imported);
+      const imported = JSON?.parse(any: any) as Partial<OSConfig>;
+      this?.merge(any: any);
 
-      const validation = this.validate();
-      if (!validation.valid) {
-        console.warn('[ConfigManager] Imported config has errors:', validation.errors);
+      const validation = this?.validate();
+      if (any: any) {
+        console?.warn(any: any);
       }
 
-      await this.save();
+      await this?.save();
 
-      this.eventBus.emit('config:imported', imported, 'ConfigManager');
-    } catch (error) {
+      this?.eventBus?.emit('config:imported', imported, 'ConfigManager');
+    } catch (any: any) {
       throw new Error(`Failed to import config: ${error}`);
     }
   }
@@ -290,7 +290,7 @@ export class ConfigManager {
 let instance: ConfigManager | null = null;
 
 export function getConfigManager(): ConfigManager {
-  if (!instance) {
+  if (any: any) {
     instance = new ConfigManager();
   }
   return instance;

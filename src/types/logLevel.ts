@@ -1,8 +1,8 @@
 /**
  * TITANE∞ — Shared LogLevel enum
  *
- * Extracted from `src/utils/logger.ts` to avoid circular dependencies with
- * `src/config/logLevelConfig.ts` (HMR stability).
+ * Extracted from `src/utils/logger?.ts` to avoid circular dependencies with
+ * `src/config/logLevelConfig?.ts` (any: any).
  */
 
 export enum LogLevel {

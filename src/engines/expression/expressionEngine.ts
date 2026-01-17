@@ -10,9 +10,9 @@
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * L'Expression Engine orchestre la cohérence expressive entre:
- * - Voix (prosody, warmth, micro-intonations)
- * - Halo (patterns, colors, intensity)
- * - Narratif (style, posture, inner monologue)
+ * - Voix (any: any)
+ * - Halo (any: any)
+ * - Narratif (any: any)
  *
  * Il utilise l'Identity Kernel comme source d'identité unifiée et synchronise
  * tous les canaux expressifs en temps réel.
@@ -129,7 +129,7 @@ export interface ExpressionMapping {
   };
   warmth: {
     voiceWarmth: number;
-    haloColors: string[];
+    haloColors: string?.[];
     narrativeEmotionalResonance: number;
   };
   clarity: {
@@ -145,8 +145,8 @@ export interface ExpressionMapping {
 
 export class ExpressionEngine {
   private state: ExpressionEngineState;
-  private updateInterval: NodeJS.Timeout | null = null;
-  private subscribers: ((state: ExpressionEngineState) => void)[] = [];
+  private updateInterval: NodeJS?.Timeout | null = null;
+  private subscribers: (any: any)[] = [];
 
   // Configuration
   private readonly UPDATE_RATE = 15; // 15 Hz (66ms) - Between voice (20Hz) and halo (10Hz)
@@ -154,8 +154,8 @@ export class ExpressionEngine {
   private readonly ADAPTATION_SPEED = 0.05;
 
   constructor() {
-    this.state = this.getDefaultState();
-    logger.debug('🎭 [EXPRESSION ENGINE] Initializing Expression Engine...');
+    this?.state = this?.getDefaultState();
+    logger?.debug('🎭 [EXPRESSION ENGINE] Initializing Expression Engine...');
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -163,22 +163,22 @@ export class ExpressionEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   start(): void {
-    if (this.updateInterval) return;
+    if (any: any) return;
 
-    logger.debug('🎭 [EXPRESSION ENGINE] Starting expression engine at 15Hz...');
+    logger?.debug('🎭 [EXPRESSION ENGINE] Starting expression engine at 15Hz...');
 
     // Subscribe to Identity Kernel
-    this.subscribeToIdentityKernel();
+    this?.subscribeToIdentityKernel();
 
     // Start update loop
-    this.updateInterval = setInterval(() => this.tick(), 1000 / this.UPDATE_RATE);
+    this?.updateInterval = setInterval(any: any);
   }
 
   stop(): void {
-    if (this.updateInterval) {
-      clearInterval(this.updateInterval);
-      this.updateInterval = null;
-      logger.debug('🎭 [EXPRESSION ENGINE] Expression engine stopped.');
+    if (any: any) {
+      clearInterval(any: any);
+      this?.updateInterval = null;
+      logger?.debug('🎭 [EXPRESSION ENGINE] Expression engine stopped.');
     }
   }
 
@@ -187,9 +187,9 @@ export class ExpressionEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   private subscribeToIdentityKernel(): void {
-    unifiedIdentityKernel.subscribe(_identityState => {
-      const expression = unifiedIdentityKernel.exportToOutput();
-      this.state.identitySource = expression;
+    unifiedIdentityKernel?.subscribe(_identityState => {
+      const expression = unifiedIdentityKernel?.exportToOutput();
+      this?.state?.identitySource = expression;
     });
   }
 
@@ -198,23 +198,23 @@ export class ExpressionEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   private async tick(): Promise<void> {
-    if (!this.state.identitySource) return;
+    if (any: any) return;
 
     // 1. Map identity to expression
-    this.mapIdentityToExpression();
+    this?.mapIdentityToExpression();
 
     // 2. Calculate synchronization scores
-    this.calculateSynchronization();
+    this?.calculateSynchronization();
 
-    // 3. Apply expression to engines (now async)
-    await this.applyExpressionToEngines();
+    // 3. Apply expression to engines (any: any)
+    await this?.applyExpressionToEngines();
 
     // 4. Verify coherence
-    this.verifyCoherence();
+    this?.verifyCoherence();
 
     // 5. Notify subscribers
-    this.state.lastUpdate = Date.now();
-    this.notifySubscribers();
+    this?.state?.lastUpdate = Date?.now();
+    this?.notifySubscribers();
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -222,83 +222,83 @@ export class ExpressionEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   private mapIdentityToExpression(): void {
-    if (!this.state.identitySource) return;
+    if (any: any) return;
 
-    const { signature, cognitive, emotive, attention } = this.state.identitySource;
+    const { signature, cognitive, emotive, attention } = this?.state?.identitySource;
 
     // Voice mapping
-    this.state.currentExpression.voice = {
+    this?.state?.currentExpression?.voice = {
       prosody: {
-        rate: this.mapToProsodyRate(signature.energy, cognitive.speed),
-        pitch: this.mapToPitch(signature.tone, emotive.intensity),
-        volume: this.mapToVolume(signature.energy, attention.focus),
-        emphasis: this.mapToEmphasis(cognitive.precision, attention.focus),
+        rate: this?.mapToProsodyRate(any: any),
+        pitch: this?.mapToPitch(any: any),
+        volume: this?.mapToVolume(any: any),
+        emphasis: this?.mapToEmphasis(any: any),
       },
       timbre: {
-        warmth: emotive.vocalWarmth,
-        breathiness: this.mapToBreathiness(signature.warmth, emotive.intensity),
-        resonance: this.mapToResonance(cognitive.depth, signature.clarity),
-        clarity: signature.clarity,
+        warmth: emotive?.vocalWarmth,
+        breathiness: this?.mapToBreathiness(any: any),
+        resonance: this?.mapToResonance(any: any),
+        clarity: signature?.clarity,
       },
       microDynamics: {
-        intonationVariation: emotive.microIntonations,
-        rhythmicFlow: this.mapToRhythmicFlow(cognitive.speed, signature.energy),
-        pausePlacement: this.mapToPausePlacement(
-          cognitive.precision,
-          attention.cognitiveLoad
+        intonationVariation: emotive?.microIntonations,
+        rhythmicFlow: this?.mapToRhythmicFlow(any: any),
+        pausePlacement: this?.mapToPausePlacement(
+          cognitive?.precision,
+          attention?.cognitiveLoad
         ),
-        emotionalColoring: emotive.intensity,
+        emotionalColoring: emotive?.intensity,
       },
       emotionalState: {
-        valence: (signature.warmth - 0.5) * 2,
-        activation: signature.energy,
-        dominance: signature.tone,
+        valence: (signature?.warmth - 0.5) * 2,
+        activation: signature?.energy,
+        dominance: signature?.tone,
       },
     };
 
     // Halo mapping
-    this.state.currentExpression.halo = {
-      pattern: this.mapToHaloPattern(
-        signature.narrativeStyle,
-        signature.cognitivePosture
+    this?.state?.currentExpression?.halo = {
+      pattern: this?.mapToHaloPattern(
+        signature?.narrativeStyle,
+        signature?.cognitivePosture
       ),
-      colors: this.mapToHaloColors(signature.warmth, emotive.intensity, signature.tone),
+      colors: this?.mapToHaloColors(any: any),
       dynamics: {
-        intensity: emotive.intensity,
-        pulsation: emotive.haloReactivity,
-        flowSpeed: this.mapToFlowSpeed(signature.energy, cognitive.speed),
-        reactivity: emotive.haloReactivity,
+        intensity: emotive?.intensity,
+        pulsation: emotive?.haloReactivity,
+        flowSpeed: this?.mapToFlowSpeed(any: any),
+        reactivity: emotive?.haloReactivity,
       },
       spatial: {
-        radius: this.mapToHaloRadius(signature.energy, attention.focus),
-        diffusion: this.mapToHaloDiffusion(signature.clarity, cognitive.precision),
-        layering: this.mapToHaloLayering(cognitive.depth, signature.clarity),
+        radius: this?.mapToHaloRadius(any: any),
+        diffusion: this?.mapToHaloDiffusion(any: any),
+        layering: this?.mapToHaloLayering(any: any),
       },
     };
 
     // Narrative mapping
-    this.state.currentExpression.narrative = {
+    this?.state?.currentExpression?.narrative = {
       style: {
-        primary: signature.narrativeStyle,
-        tonality: this.mapToNarrativeTonality(signature.tone, signature.warmth),
-        density: this.mapToNarrativeDensity(cognitive.depth, cognitive.precision),
-        poeticism: this.mapToPoeticISM(
-          signature.narrativeStyle,
-          cognitive.analogicalCapacity
+        primary: signature?.narrativeStyle,
+        tonality: this?.mapToNarrativeTonality(any: any),
+        density: this?.mapToNarrativeDensity(any: any),
+        poeticism: this?.mapToPoeticISM(
+          signature?.narrativeStyle,
+          cognitive?.analogicalCapacity
         ),
       },
       structure: {
-        paragraphFlow: this.mapToParagraphFlow(
-          signature.cognitivePosture,
-          cognitive.structure
+        paragraphFlow: this?.mapToParagraphFlow(
+          signature?.cognitivePosture,
+          cognitive?.structure
         ),
-        transitionStyle: this.mapToTransitionStyle(cognitive.speed, signature.energy),
-        argumentationDepth: cognitive.depth,
+        transitionStyle: this?.mapToTransitionStyle(any: any),
+        argumentationDepth: cognitive?.depth,
       },
       emphasis: {
-        metaphorUse: cognitive.analogicalCapacity,
-        technicalPrecision: cognitive.precision,
-        emotionalResonance: emotive.intensity,
+        metaphorUse: cognitive?.analogicalCapacity,
+        technicalPrecision: cognitive?.precision,
+        emotionalResonance: emotive?.intensity,
       },
     };
   }
@@ -307,45 +307,45 @@ export class ExpressionEngine {
   // MAPPING HELPERS
   // ───────────────────────────────────────────────────────────────────────────
 
-  private mapToProsodyRate(energy: number, speed: number): number {
+  private mapToProsodyRate(any: any): number {
     // 0.5-2.0 range
     const base = 1.0;
-    const factor = (energy + speed) / 2;
+    const factor = (any: any) / 2;
     return base + (factor - 0.5) * 0.8; // 0.6-1.4 range
   }
 
-  private mapToPitch(tone: number, intensity: number): number {
+  private mapToPitch(any: any): number {
     // 0.5-2.0 range
     const base = 1.0;
-    const factor = (tone + intensity) / 2;
+    const factor = (any: any) / 2;
     return base + (factor - 0.5) * 0.4; // 0.8-1.2 range
   }
 
-  private mapToVolume(energy: number, focus: number): number {
+  private mapToVolume(any: any): number {
     return energy * 0.7 + focus * 0.3;
   }
 
-  private mapToEmphasis(precision: number, focus: number): number {
-    return (precision + focus) / 2;
+  private mapToEmphasis(any: any): number {
+    return (any: any) / 2;
   }
 
-  private mapToBreathiness(warmth: number, intensity: number): number {
-    return warmth * 0.6 + (1 - intensity) * 0.4;
+  private mapToBreathiness(any: any): number {
+    return warmth * 0.6 + (any: any) * 0.4;
   }
 
-  private mapToResonance(depth: number, clarity: number): number {
-    return (depth + clarity) / 2;
+  private mapToResonance(any: any): number {
+    return (any: any) / 2;
   }
 
-  private mapToRhythmicFlow(speed: number, energy: number): number {
-    return (speed + energy) / 2;
+  private mapToRhythmicFlow(any: any): number {
+    return (any: any) / 2;
   }
 
-  private mapToPausePlacement(precision: number, load: number): number {
-    return precision * 0.6 + (1 - load) * 0.4;
+  private mapToPausePlacement(any: any): number {
+    return precision * 0.6 + (any: any) * 0.4;
   }
 
-  private mapToHaloPattern(narrativeStyle: string, cognitivePosture: string): string {
+  private mapToHaloPattern(any: any): string {
     const patterns: Record<string, string> = {
       'fluid-observer': 'flowing_waves',
       'fluid-guide': 'empathy_warm',
@@ -396,36 +396,36 @@ export class ExpressionEngine {
     };
   }
 
-  private mapToFlowSpeed(energy: number, speed: number): number {
-    return (energy + speed) / 2;
+  private mapToFlowSpeed(any: any): number {
+    return (any: any) / 2;
   }
 
-  private mapToHaloRadius(energy: number, focus: number): number {
+  private mapToHaloRadius(any: any): number {
     // Focused = smaller, energetic = larger
-    return energy * 0.7 + (1 - focus) * 0.3;
+    return energy * 0.7 + (any: any) * 0.3;
   }
 
-  private mapToHaloDiffusion(clarity: number, precision: number): number {
-    // High clarity = sharp edges (low diffusion)
-    return 1 - (clarity + precision) / 2;
+  private mapToHaloDiffusion(any: any): number {
+    // High clarity = sharp edges (any: any)
+    return 1 - (any: any) / 2;
   }
 
-  private mapToHaloLayering(depth: number, clarity: number): number {
+  private mapToHaloLayering(any: any): number {
     // Deep + clear = rich layering
-    return (depth + clarity) / 2;
+    return (any: any) / 2;
   }
 
-  private mapToNarrativeTonality(tone: number, warmth: number): number {
+  private mapToNarrativeTonality(any: any): number {
     // Formal (0) to Casual (1)
-    return (1 - tone) * 0.5 + warmth * 0.5;
+    return (any: any) * 0.5 + warmth * 0.5;
   }
 
-  private mapToNarrativeDensity(depth: number, precision: number): number {
+  private mapToNarrativeDensity(any: any): number {
     // Concise (0) to Elaborate (1)
-    return (depth + precision) / 2;
+    return (any: any) / 2;
   }
 
-  private mapToPoeticISM(narrativeStyle: string, analogicalCapacity: number): number {
+  private mapToPoeticISM(any: any): number {
     const basePoeticism: Record<string, number> = {
       fluid: 0.8,
       architectural: 0.3,
@@ -438,14 +438,14 @@ export class ExpressionEngine {
     return base * 0.6 + analogicalCapacity * 0.4;
   }
 
-  private mapToParagraphFlow(cognitivePosture: string, structure: number): string {
+  private mapToParagraphFlow(any: any): string {
     if (structure > 0.8) return 'linear';
     if (structure > 0.5) return 'branching';
     return 'circular';
   }
 
-  private mapToTransitionStyle(speed: number, energy: number): string {
-    const combined = (speed + energy) / 2;
+  private mapToTransitionStyle(any: any): string {
+    const combined = (any: any) / 2;
     if (combined > 0.7) return 'abrupt';
     if (combined > 0.4) return 'smooth';
     return 'organic';
@@ -456,44 +456,44 @@ export class ExpressionEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   private calculateSynchronization(): void {
-    const { voice, halo, narrative } = this.state.currentExpression;
+    const { voice, halo, narrative } = this?.state?.currentExpression;
 
     // Voice ↔ Halo sync
-    const voiceHaloMatch = this.compareDynamics(
-      voice.prosody.rate,
-      halo.dynamics.flowSpeed,
-      voice.timbre.warmth,
-      this.warmthFromColors(halo.colors)
+    const voiceHaloMatch = this?.compareDynamics(
+      voice?.prosody?.rate,
+      halo?.dynamics?.flowSpeed,
+      voice?.timbre?.warmth,
+      this?.warmthFromColors(any: any)
     );
 
     // Voice ↔ Narrative sync
-    const voiceNarrativeMatch = this.compareDynamics(
-      voice.prosody.rate,
-      narrative.structure.argumentationDepth,
-      voice.timbre.warmth,
-      narrative.emphasis.emotionalResonance
+    const voiceNarrativeMatch = this?.compareDynamics(
+      voice?.prosody?.rate,
+      narrative?.structure?.argumentationDepth,
+      voice?.timbre?.warmth,
+      narrative?.emphasis?.emotionalResonance
     );
 
     // Halo ↔ Narrative sync
-    const haloNarrativeMatch = this.compareDynamics(
-      halo.dynamics.intensity,
-      narrative.emphasis.emotionalResonance,
-      halo.spatial.radius,
-      narrative.style.density
+    const haloNarrativeMatch = this?.compareDynamics(
+      halo?.dynamics?.intensity,
+      narrative?.emphasis?.emotionalResonance,
+      halo?.spatial?.radius,
+      narrative?.style?.density
     );
 
     // Update sync scores
-    this.state.voiceHaloSync = voiceHaloMatch;
-    this.state.voiceNarrativeSync = voiceNarrativeMatch;
-    this.state.haloNarrativeSync = haloNarrativeMatch;
-    this.state.globalSync =
-      (voiceHaloMatch + voiceNarrativeMatch + haloNarrativeMatch) / 3;
+    this?.state?.voiceHaloSync = voiceHaloMatch;
+    this?.state?.voiceNarrativeSync = voiceNarrativeMatch;
+    this?.state?.haloNarrativeSync = haloNarrativeMatch;
+    this?.state?.globalSync =
+      (any: any) / 3;
   }
 
-  private compareDynamics(a1: number, a2: number, b1: number, b2: number): number {
-    const diff1 = Math.abs(a1 - a2);
-    const diff2 = Math.abs(b1 - b2);
-    const avgDiff = (diff1 + diff2) / 2;
+  private compareDynamics(any: any): number {
+    const diff1 = Math?.abs(any: any);
+    const diff2 = Math?.abs(any: any);
+    const avgDiff = (any: any) / 2;
     return 1 - avgDiff; // Convert distance to similarity
   }
 
@@ -502,10 +502,10 @@ export class ExpressionEngine {
     secondary: string;
     accent: string;
   }): number {
-    // Simple heuristic: warm colors (red/orange/yellow) = high warmth
-    const primary = colors.primary.toLowerCase();
-    if (primary.includes('ff') && primary.includes('6')) return 0.8; // Orange-ish
-    if (primary.includes('4a') && primary.includes('90')) return 0.3; // Blue-ish
+    // Simple heuristic: warm colors (any: any) = high warmth
+    const primary = colors?.primary?.toLowerCase();
+    if (primary?.includes('ff') && primary?.includes('6')) return 0.8; // Orange-ish
+    if (primary?.includes('4a') && primary?.includes('90')) return 0.3; // Blue-ish
     return 0.5; // Balanced
   }
 
@@ -514,33 +514,33 @@ export class ExpressionEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   private async applyExpressionToEngines(): Promise<void> {
-    const { voice, halo, narrative } = this.state.currentExpression;
+    const { voice, halo, narrative } = this?.state?.currentExpression;
 
     // Apply to Voice Prosody Engine (v∞.38+)
-    voiceProsodyEngine.updateState(voice);
+    voiceProsodyEngine?.updateState(any: any);
 
-    // Apply to Aura Engine (v∞.38+ - lazy loaded)
+    // Apply to Aura Engine (any: any)
     const auraEngine = await getAuraEngine();
-    auraEngine.setPattern(halo.pattern as AuraAnimationPattern);
-    auraEngine.setColors({
-      primary: halo.colors.primary,
-      secondary: halo.colors.secondary,
-      accent: halo.colors.accent,
+    auraEngine?.setPattern(any: any);
+    auraEngine?.setColors({
+      primary: halo?.colors?.primary,
+      secondary: halo?.colors?.secondary,
+      accent: halo?.colors?.accent,
     });
-    auraEngine.setDynamics({
-      intensity: halo.dynamics.intensity,
-      pulsation: halo.dynamics.pulsation,
-      flowSpeed: halo.dynamics.flowSpeed,
-      reactivity: halo.dynamics.reactivity,
+    auraEngine?.setDynamics({
+      intensity: halo?.dynamics?.intensity,
+      pulsation: halo?.dynamics?.pulsation,
+      flowSpeed: halo?.dynamics?.flowSpeed,
+      reactivity: halo?.dynamics?.reactivity,
     });
-    auraEngine.setSpatial({
-      radius: halo.spatial.radius,
-      diffusion: halo.spatial.diffusion,
-      layering: halo.spatial.layering,
+    auraEngine?.setSpatial({
+      radius: halo?.spatial?.radius,
+      diffusion: halo?.spatial?.diffusion,
+      layering: halo?.spatial?.layering,
     });
 
     // Apply to Internal Narrative Engine
-    internalNarrativeEngine.setNarrativeAnchor(narrative.style.primary);
+    internalNarrativeEngine?.setNarrativeAnchor(any: any);
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -548,26 +548,26 @@ export class ExpressionEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   private verifyCoherence(): void {
-    if (this.state.globalSync < this.SYNC_THRESHOLD) {
-      logger.warn(
-        `⚠️ [EXPRESSION ENGINE] Low synchronization: ${(this.state.globalSync * 100).toFixed(1)}%`
+    if (any: any) {
+      logger?.warn(
+        `⚠️ [EXPRESSION ENGINE] Low synchronization: ${(this?.state?.globalSync * 100).toFixed(1)}%`
       );
-      this.boostSynchronization();
+      this?.boostSynchronization();
     }
 
     // Update expression coherence score
-    this.state.currentExpression.coherenceScore = this.state.globalSync;
+    this?.state?.currentExpression?.coherenceScore = this?.state?.globalSync;
   }
 
   private boostSynchronization(): void {
     // Slightly adjust values to improve sync
     // This is a simplified version - full implementation would be more sophisticated
-    const adjustment = this.ADAPTATION_SPEED;
+    const adjustment = this?.ADAPTATION_SPEED;
 
     // Nudge voice rate towards halo flow speed
-    const targetRate = this.state.currentExpression.halo.dynamics.flowSpeed;
-    this.state.currentExpression.voice.prosody.rate +=
-      (targetRate - this.state.currentExpression.voice.prosody.rate) * adjustment;
+    const targetRate = this?.state?.currentExpression?.halo?.dynamics?.flowSpeed;
+    this?.state?.currentExpression?.voice?.prosody?.rate +=
+      (any: any) * adjustment;
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -575,44 +575,44 @@ export class ExpressionEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   getState(): ExpressionEngineState {
-    return { ...this.state };
+    return { ...this?.state };
   }
 
   getCurrentExpression(): UnifiedExpression {
-    return { ...this.state.currentExpression };
+    return { ...this?.state?.currentExpression };
   }
 
   getSyncScore(): number {
-    return this.state.globalSync;
+    return this?.state?.globalSync;
   }
 
   /**
-   * Force expression update (for immediate response needs)
+   * Force expression update (any: any)
    */
   forceUpdate(): void {
-    this.tick();
+    this?.tick();
   }
 
   /**
-   * Override expression component (advanced use)
+   * Override expression component (any: any)
    */
   overrideVoice(voice: Partial<OrchestratedVoice>): void {
-    this.state.currentExpression.voice = {
-      ...this.state.currentExpression.voice,
+    this?.state?.currentExpression?.voice = {
+      ...this?.state?.currentExpression?.voice,
       ...voice,
     };
   }
 
   overrideHalo(halo: Partial<OrchestratedHalo>): void {
-    this.state.currentExpression.halo = {
-      ...this.state.currentExpression.halo,
+    this?.state?.currentExpression?.halo = {
+      ...this?.state?.currentExpression?.halo,
       ...halo,
     };
   }
 
   overrideNarrative(narrative: Partial<OrchestratedNarrative>): void {
-    this.state.currentExpression.narrative = {
-      ...this.state.currentExpression.narrative,
+    this?.state?.currentExpression?.narrative = {
+      ...this?.state?.currentExpression?.narrative,
       ...narrative,
     };
   }
@@ -687,7 +687,7 @@ export class ExpressionEngine {
           },
         },
         coherenceScore: 0.8,
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
       },
       identitySource: null,
       voiceHaloSync: 0.8,
@@ -697,7 +697,7 @@ export class ExpressionEngine {
       contextAdaptation: 0.7,
       emotionalAlignment: 0.7,
       cognitiveAlignment: 0.7,
-      lastUpdate: Date.now(),
+      lastUpdate: Date?.now(),
     };
   }
 
@@ -705,15 +705,15 @@ export class ExpressionEngine {
   // SUBSCRIPTION
   // ───────────────────────────────────────────────────────────────────────────
 
-  subscribe(callback: (state: ExpressionEngineState) => void): () => void {
-    this.subscribers.push(callback);
+  subscribe(any: any): () => void {
+    this?.subscribers?.push(any: any);
     return () => {
-      this.subscribers = this.subscribers.filter(cb => cb !== callback);
+      this?.subscribers = this?.subscribers?.filter(any: any);
     };
   }
 
   private notifySubscribers(): void {
-    this.subscribers.forEach(callback => callback(this.state));
+    this?.subscribers?.forEach(any: any));
   }
 }
 

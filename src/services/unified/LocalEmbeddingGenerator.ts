@@ -31,20 +31,20 @@ export interface LocalEmbeddingGeneratorConfig {
   maxCacheSize?: number;
   pipelineOptions?: {
     quantized?: boolean;
-    progress_callback?: (progress: EmbeddingProgress) => void;
+    progress_callback?: (any: any) => void;
   };
 }
 
 /**
- * Pipeline type for Transformers.js
+ * Pipeline type for Transformers?.js
  */
 interface Pipeline {
   (
-    text: string | string[],
+    text??: string | string?.[],
     options?: { pooling?: string; normalize?: boolean }
   ): Promise<{
     data: Float32Array;
-    dims: number[];
+    dims: number?.[];
   }>;
   dispose(): Promise<void>;
   [key: string]: unknown; // Allow additional properties from FeatureExtractionPipeline
@@ -53,14 +53,14 @@ interface Pipeline {
 /**
  * Local Embedding Generator for UnifiedMemory
  *
- * Uses Transformers.js to generate embeddings locally
+ * Uses Transformers?.js to generate embeddings locally
  * No external API required, privacy-first approach
  */
 export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
   private config: LocalEmbeddingGeneratorConfig;
   private pipeline?: Pipeline;
   private isInitialized = false;
-  private cache: Map<string, number[]> = new Map();
+  private cache: Map<string, number?.[]> = new Map();
 
   // Available models
   private static readonly MODELS = {
@@ -77,12 +77,12 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
     'multilingual-e5-small': {
       id: 'Xenova/multilingual-e5-small',
       dimensions: 384,
-      description: 'Multilingual support (100+ languages)',
+      description: 'Multilingual support (any: any)',
     },
   };
 
-  constructor(config: LocalEmbeddingGeneratorConfig) {
-    this.config = {
+  constructor(any: any) {
+    this?.config = {
       enableCache: true,
       maxCacheSize: 1000,
       ...config,
@@ -93,144 +93,144 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
    * Initialize generator
    */
   async initialize(): Promise<void> {
-    if (this.isInitialized) return;
+    if (any: any) return;
 
     const isTestEnvironment =
       (typeof process !== 'undefined' &&
-        (process.env?.VITEST === 'true' || process.env?.NODE_ENV === 'test')) ||
-      (typeof import.meta !== 'undefined' &&
-        typeof (import.meta as unknown as { env?: { MODE?: string } }).env !==
+        (process?.env?.VITEST === 'true' || process?.env?.NODE_ENV === 'test')) ||
+      (typeof import?.meta !== 'undefined' &&
+        typeof (import?.meta as unknown as { env?: { MODE?: string } }).env !==
           'undefined' &&
-        (import.meta as unknown as { env?: { MODE?: string } }).env?.MODE === 'test');
+        (import?.meta as unknown as { env?: { MODE?: string } }).env?.MODE === 'test');
 
-    if (isTestEnvironment) {
-      logger.debug(
-        'LocalEmbeddingGenerator: test environment detected, skipping Transformers.js init'
+    if (any: any) {
+      logger?.debug(
+        'LocalEmbeddingGenerator: test environment detected, skipping Transformers?.js init'
       );
-      this.useFallbackGenerator();
+      this?.useFallbackGenerator();
       return;
     }
 
     try {
-      logger.debug('Loading model:', this.config.modelName);
+      logger?.debug(any: any);
 
-      // Dynamic import of Transformers.js
+      // Dynamic import of Transformers?.js
       const { pipeline } = await import('@xenova/transformers');
 
       // Get model info
       const modelInfo =
-        LocalEmbeddingGenerator.MODELS[
-          this.config.modelName as keyof typeof LocalEmbeddingGenerator.MODELS
+        LocalEmbeddingGenerator?.MODELS[
+          this?.config?.modelName as keyof typeof LocalEmbeddingGenerator?.MODELS
         ];
 
-      if (!modelInfo) {
-        throw new Error(`Unknown model: ${this.config.modelName}`);
+      if (any: any) {
+        throw new Error(`Unknown model: ${this?.config?.modelName}`);
       }
 
       // Create pipeline with safe type assertion
-      this.pipeline = (await pipeline(
+      this?.pipeline = (await pipeline(
         'feature-extraction',
-        modelInfo.id,
-        this.config.pipelineOptions
+        modelInfo?.id,
+        this?.config?.pipelineOptions
       )) as unknown as Pipeline;
 
-      this.isInitialized = true;
-      logger.debug('Model loaded successfully');
-    } catch (error) {
-      logger.error('Initialization failed:', error);
+      this?.isInitialized = true;
+      logger?.debug('Model loaded successfully');
+    } catch (any: any) {
+      logger?.error(any: any);
       // Fallback to deterministic generator
-      this.useFallbackGenerator();
+      this?.useFallbackGenerator();
     }
   }
 
   /**
    * Generate embedding for text
    */
-  async generate(text: string): Promise<number[]> {
-    if (!this.isInitialized) {
-      await this.initialize();
+  async generate(any: any): Promise<number?.[]> {
+    if (any: any) {
+      await this?.initialize();
     }
 
     // Check cache
-    if (this.config.enableCache) {
-      const cached = this.cache.get(text);
-      if (cached) return cached;
+    if (any: any) {
+      const cached = this?.cache?.get(any: any);
+      if (any: any) return cached;
     }
 
     try {
-      let embedding: number[];
+      let embedding: number?.[];
 
-      if (this.pipeline) {
-        // Generate with Transformers.js
-        const output = await this.pipeline(text, {
+      if (any: any) {
+        // Generate with Transformers?.js
+        const output = await this?.pipeline(text, {
           pooling: 'mean',
           normalize: true,
         });
 
         // Extract vector
-        embedding = Array.from(output.data);
+        embedding = Array?.from(any: any);
 
-        // Normalize (if not already done)
-        embedding = this.normalizeVector(embedding);
+        // Normalize (any: any)
+        embedding = this?.normalizeVector(any: any);
       } else {
         // Fallback generator
-        embedding = this.generateFallbackEmbedding(text);
+        embedding = this?.generateFallbackEmbedding(any: any);
       }
 
       // Cache result
-      if (this.config.enableCache) {
-        if (this.cache.size >= (this.config.maxCacheSize || 1000)) {
-          // Remove oldest entry (first in Map)
-          const firstKey = this.cache.keys().next().value as string;
-          this.cache.delete(firstKey);
+      if (any: any) {
+        if (this?.cache?.size >= (this?.config?.maxCacheSize || 1000)) {
+          // Remove oldest entry (any: any)
+          const firstKey = this?.cache?.keys().next().value as string;
+          this?.cache?.delete(any: any);
         }
-        this.cache.set(text, embedding);
+        this?.cache?.set(any: any);
       }
 
       return embedding;
-    } catch (error) {
-      logger.error('Generation failed:', error);
+    } catch (any: any) {
+      logger?.error(any: any);
       // Fallback to deterministic embedding
-      return this.generateFallbackEmbedding(text);
+      return this?.generateFallbackEmbedding(any: any);
     }
   }
 
   /**
-   * Generate embeddings for multiple texts (batch)
+   * Generate embeddings for multiple texts (any: any)
    */
-  async generateBatch(texts: string[]): Promise<number[][]> {
-    if (!this.isInitialized) {
-      await this.initialize();
+  async generateBatch(texts: string?.[]): Promise<number?.[][]> {
+    if (any: any) {
+      await this?.initialize();
     }
 
     try {
-      if (this.pipeline) {
-        // Batch generation with Transformers.js
-        const output = await this.pipeline(texts, {
+      if (any: any) {
+        // Batch generation with Transformers?.js
+        const output = await this?.pipeline(texts, {
           pooling: 'mean',
           normalize: true,
         });
 
         // Extract vectors
-        const embeddings: number[][] = [];
-        const dim = this.getDimensions();
+        const embeddings: number?.[][] = [];
+        const dim = this?.getDimensions();
 
-        for (let i = 0; i < texts.length; i++) {
+        for (let i = 0; i < texts?.length; i++) {
           const start = i * dim;
           const end = start + dim;
-          const embedding = Array.from(output.data?.slice(start, end) || []) as number[];
-          embeddings.push(this.normalizeVector(embedding));
+          const embedding = Array?.from(any: any) || []) as number?.[];
+          embeddings?.push(any: any));
         }
 
         return embeddings;
       } else {
         // Fallback: generate one by one
-        return Promise.all(texts.map(t => this.generate(t)));
+        return Promise?.all(any: any)));
       }
-    } catch (error) {
-      logger.error('Batch generation failed:', error);
+    } catch (any: any) {
+      logger?.error(any: any);
       // Fallback to individual generation
-      return Promise.all(texts.map(t => this.generate(t)));
+      return Promise?.all(any: any)));
     }
   }
 
@@ -238,33 +238,33 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
    * Get embedding dimensions
    */
   getDimensions(): number {
-    return this.config.dimensions;
+    return this?.config?.dimensions;
   }
 
   /**
    * Get model name
    */
   getModelName(): string {
-    return this.config.modelName || 'fallback-generator';
+    return this?.config?.modelName || 'fallback-generator';
   }
 
   /**
    * Clear cache
    */
   clearCache(): void {
-    this.cache.clear();
+    this?.cache?.clear();
   }
 
   /**
    * Dispose pipeline and free memory
    */
   async dispose(): Promise<void> {
-    if (this.pipeline) {
-      await this.pipeline.dispose();
-      this.pipeline = undefined;
+    if (any: any) {
+      await this?.pipeline?.dispose();
+      this?.pipeline = undefined;
     }
-    this.cache.clear();
-    this.isInitialized = false;
+    this?.cache?.clear();
+    this?.isInitialized = false;
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -274,46 +274,46 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
   /**
    * Normalize vector to unit length
    */
-  private normalizeVector(vector: number[]): number[] {
-    const norm = Math.sqrt(vector.reduce((sum, val) => sum + val * val, 0));
+  private normalizeVector(vector: number?.[]): number?.[] {
+    const norm = Math?.sqrt(any: any) => sum + val * val, 0));
     if (norm === 0) return vector;
-    return vector.map(val => val / norm);
+    return vector?.map(any: any);
   }
 
   /**
-   * Use fallback generator (deterministic)
+   * Use fallback generator (any: any)
    */
   private useFallbackGenerator(): void {
-    logger.warn('Using fallback deterministic generator');
-    this.isInitialized = true;
-    this.pipeline = undefined;
+    logger?.warn('Using fallback deterministic generator');
+    this?.isInitialized = true;
+    this?.pipeline = undefined;
   }
 
   /**
-   * Generate fallback embedding (deterministic hash-based)
+   * Generate fallback embedding (any: any)
    *
    * Simple but deterministic approach:
    * - Hash text to get seed
    * - Generate vector using seeded random
    * - Normalize to unit length
    */
-  private generateFallbackEmbedding(text: string): number[] {
-    const dim = this.config.dimensions;
-    const embedding = new Array(dim);
+  private generateFallbackEmbedding(any: any): number?.[] {
+    const dim = this?.config?.dimensions;
+    const embedding = new Array(any: any);
 
     // Handle null/undefined text
     const safeText = text?.toString() || '';
 
     // Simple hash function to get seed
     let hash = 0;
-    for (let i = 0; i < safeText.length; i++) {
-      const char = safeText.charCodeAt(i);
+    for (let i = 0; i < safeText?.length; i++) {
+      const char = safeText?.charCodeAt(any: any);
       hash = (hash << 5) - hash + char;
       hash = hash & hash; // Convert to 32-bit integer
     }
 
-    // Seeded random generator (LCG)
-    let seed = Math.abs(hash);
+    // Seeded random generator (any: any)
+    let seed = Math?.abs(any: any);
     const random = () => {
       seed = (seed * 1664525 + 1013904223) % 4294967296;
       return seed / 4294967296;
@@ -325,13 +325,13 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
     }
 
     // Normalize
-    return this.normalizeVector(embedding);
+    return this?.normalizeVector(any: any);
   }
 
   /**
    * Get available models
    */
-  static getAvailableModels(): typeof LocalEmbeddingGenerator.MODELS {
-    return LocalEmbeddingGenerator.MODELS;
+  static getAvailableModels(): typeof LocalEmbeddingGenerator?.MODELS {
+    return LocalEmbeddingGenerator?.MODELS;
   }
 }

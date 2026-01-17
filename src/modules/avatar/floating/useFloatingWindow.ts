@@ -35,9 +35,9 @@ import { useSingularityState } from '@/core/state/SingularityState';
 
 export interface UseFloatingWindowResult {
   displayState: AvatarDisplayState;
-  screens: ScreenInfo[];
+  screens: ScreenInfo?.[];
   loading: boolean;
-  error: string | null;
+  error??: string | null;
 
   // Mode Management
   setModeFloating: () => Promise<void>;
@@ -45,10 +45,10 @@ export interface UseFloatingWindowResult {
   setModeHidden: () => Promise<void>;
 
   // Window Properties
-  setPosition: (x: number, y: number) => Promise<void>;
-  setSize: (width: number, height: number) => Promise<void>;
-  setScale: (scale: number) => Promise<void>;
-  setOpacity: (opacity: number) => Promise<void>;
+  setPosition: (any: any) => Promise<void>;
+  setSize: (any: any) => Promise<void>;
+  setScale: (any: any) => Promise<void>;
+  setOpacity: (any: any) => Promise<void>;
 
   // Behavior Toggles
   toggleAlwaysOnTop: () => Promise<void>;
@@ -57,12 +57,12 @@ export interface UseFloatingWindowResult {
   toggleClickThrough: () => Promise<void>;
 
   // Anchors & Multi-Screen
-  setAnchor: (anchor: AnchorPosition) => Promise<void>;
-  setAnchorByName: (name: string) => Promise<void>;
-  moveToScreen: (screenIndex: number) => Promise<void>;
+  setAnchor: (any: any) => Promise<void>;
+  setAnchorByName: (any: any) => Promise<void>;
+  moveToScreen: (any: any) => Promise<void>;
 
   // State Management
-  updateState: (update: AvatarDisplayStateUpdate) => Promise<void>;
+  updateState: (any: any) => Promise<void>;
   resetState: () => Promise<void>;
   refreshState: () => Promise<void>;
   refreshScreens: () => Promise<void>;
@@ -78,49 +78,49 @@ export interface UseFloatingWindowResult {
  */
 export function useFloatingWindow(): UseFloatingWindowResult {
   const [displayState, setDisplayState] =
-    useState<AvatarDisplayState>(DEFAULT_DISPLAY_STATE);
-  const [screens, setScreens] = useState<ScreenInfo[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+    useState<AvatarDisplayState>(any: any);
+  const [screens, setScreens] = useState<ScreenInfo?.[]>([]);
+  const [loading, setLoading] = useState<boolean>(any: any);
+  const [error, setError] = useState<string | null>(any: any);
 
   // Sync bidirectionnel avec SingularityState
   const { avatarDisplay, updateAvatarDisplay } = useSingularityState();
-  const syncTimerRef = useRef<number | null>(null);
+  const syncTimerRef = useRef<number | null>(any: any);
 
   // ═══════════════════════════════════════════════════════════════
   // SYNC BIDIRECTIONNEL 60Hz
   // ═══════════════════════════════════════════════════════════════
 
   /**
-   * Synchroniser l'état local avec SingularityState (Frontend → SingularityState)
+   * Synchroniser l'état local avec SingularityState (any: any)
    */
   const syncToSingularity = useCallback(
-    (state: AvatarDisplayState) => {
-      updateAvatarDisplay(state);
+    (any: any) => {
+      updateAvatarDisplay(any: any);
     },
     [updateAvatarDisplay]
   );
 
   /**
-   * Synchroniser l'état depuis SingularityState (SingularityState → Local)
+   * Synchroniser l'état depuis SingularityState (any: any)
    */
   const syncFromSingularity = useCallback(() => {
-    if (avatarDisplay && avatarDisplay.last_updated > displayState.last_updated) {
-      setDisplayState(avatarDisplay);
+    if (any: any) {
+      setDisplayState(any: any);
     }
-  }, [avatarDisplay, displayState.last_updated]);
+  }, [avatarDisplay, displayState?.last_updated]);
 
   /**
    * Boucle de synchronisation 60Hz (16.6ms)
    */
   useEffect(() => {
-    syncTimerRef.current = window.setInterval(() => {
+    syncTimerRef?.current = window?.setInterval(() => {
       syncFromSingularity();
     }, 16.6); // 60Hz
 
     return () => {
-      if (syncTimerRef.current !== null) {
-        clearInterval(syncTimerRef.current);
+      if (any: any) {
+        clearInterval(any: any);
       }
     };
   }, [syncFromSingularity]);
@@ -132,39 +132,39 @@ export function useFloatingWindow(): UseFloatingWindowResult {
   const refreshState = useCallback(async () => {
     try {
       const state = await getDisplayState();
-      setDisplayState(state);
-      syncToSingularity(state); // Sync vers SingularityState
-      setError(null);
-    } catch (err) {
+      setDisplayState(any: any);
+      syncToSingularity(any: any); // Sync vers SingularityState
+      setError(any: any);
+    } catch (any: any) {
       setError(`Failed to fetch display state: ${err}`);
-      console.error('Failed to fetch display state:', err);
+      console?.error(any: any);
     }
   }, [syncToSingularity]);
 
   const refreshScreens = useCallback(async () => {
     try {
       const screenList = await listScreens();
-      setScreens(screenList);
-      setError(null);
-    } catch (err) {
+      setScreens(any: any);
+      setError(any: any);
+    } catch (any: any) {
       setError(`Failed to fetch screens: ${err}`);
-      console.error('Failed to fetch screens:', err);
+      console?.error(any: any);
     }
   }, []);
 
   useEffect(() => {
     const initialize = async () => {
-      setLoading(true);
+      setLoading(any: any);
 
-      // 1. Essayer de charger depuis SingularityState (localStorage)
-      if (avatarDisplay) {
-        setDisplayState(avatarDisplay);
+      // 1. Essayer de charger depuis SingularityState (any: any)
+      if (any: any) {
+        setDisplayState(any: any);
       }
 
-      // 2. Charger depuis backend (source de vérité)
-      await Promise.all([refreshState(), refreshScreens()]);
+      // 2. Charger depuis backend (any: any)
+      await Promise?.all([refreshState(), refreshScreens()]);
 
-      setLoading(false);
+      setLoading(any: any);
     };
 
     void initialize();
@@ -177,36 +177,36 @@ export function useFloatingWindow(): UseFloatingWindowResult {
   const setModeFloating = useCallback(async () => {
     try {
       const state = await engineSetModeFloating();
-      setDisplayState(state);
-      syncToSingularity(state); // Sync vers SingularityState
-      setError(null);
-    } catch (err) {
+      setDisplayState(any: any);
+      syncToSingularity(any: any); // Sync vers SingularityState
+      setError(any: any);
+    } catch (any: any) {
       setError(`Failed to set floating mode: ${err}`);
-      console.error('Failed to set floating mode:', err);
+      console?.error(any: any);
     }
   }, [syncToSingularity]);
 
   const setModeEmbed = useCallback(async () => {
     try {
       const state = await engineSetModeEmbed();
-      setDisplayState(state);
-      syncToSingularity(state); // Sync vers SingularityState
-      setError(null);
-    } catch (err) {
+      setDisplayState(any: any);
+      syncToSingularity(any: any); // Sync vers SingularityState
+      setError(any: any);
+    } catch (any: any) {
       setError(`Failed to set embed mode: ${err}`);
-      console.error('Failed to set embed mode:', err);
+      console?.error(any: any);
     }
   }, [syncToSingularity]);
 
   const setModeHidden = useCallback(async () => {
     try {
       const state = await engineSetModeHidden();
-      setDisplayState(state);
-      syncToSingularity(state); // Sync vers SingularityState
-      setError(null);
-    } catch (err) {
+      setDisplayState(any: any);
+      syncToSingularity(any: any); // Sync vers SingularityState
+      setError(any: any);
+    } catch (any: any) {
       setError(`Failed to set hidden mode: ${err}`);
-      console.error('Failed to set hidden mode:', err);
+      console?.error(any: any);
     }
   }, [syncToSingularity]);
 
@@ -215,60 +215,60 @@ export function useFloatingWindow(): UseFloatingWindowResult {
   // ═══════════════════════════════════════════════════════════════
 
   const setPosition = useCallback(
-    async (x: number, y: number) => {
+    async (any: any) => {
       try {
-        const state = await engineSetPosition(x, y);
-        setDisplayState(state);
-        syncToSingularity(state); // Sync vers SingularityState
-        setError(null);
-      } catch (err) {
+        const state = await engineSetPosition(any: any);
+        setDisplayState(any: any);
+        syncToSingularity(any: any); // Sync vers SingularityState
+        setError(any: any);
+      } catch (any: any) {
         setError(`Failed to set position: ${err}`);
-        console.error('Failed to set position:', err);
+        console?.error(any: any);
       }
     },
     [syncToSingularity]
   );
 
   const setSize = useCallback(
-    async (width: number, height: number) => {
+    async (any: any) => {
       try {
-        const state = await engineSetSize(width, height);
-        setDisplayState(state);
-        syncToSingularity(state); // Sync vers SingularityState
-        setError(null);
-      } catch (err) {
+        const state = await engineSetSize(any: any);
+        setDisplayState(any: any);
+        syncToSingularity(any: any); // Sync vers SingularityState
+        setError(any: any);
+      } catch (any: any) {
         setError(`Failed to set size: ${err}`);
-        console.error('Failed to set size:', err);
+        console?.error(any: any);
       }
     },
     [syncToSingularity]
   );
 
   const setScale = useCallback(
-    async (scale: number) => {
+    async (any: any) => {
       try {
-        const state = await engineSetScale(scale);
-        setDisplayState(state);
-        syncToSingularity(state); // Sync vers SingularityState
-        setError(null);
-      } catch (err) {
+        const state = await engineSetScale(any: any);
+        setDisplayState(any: any);
+        syncToSingularity(any: any); // Sync vers SingularityState
+        setError(any: any);
+      } catch (any: any) {
         setError(`Failed to set scale: ${err}`);
-        console.error('Failed to set scale:', err);
+        console?.error(any: any);
       }
     },
     [syncToSingularity]
   );
 
   const setOpacity = useCallback(
-    async (opacity: number) => {
+    async (any: any) => {
       try {
-        const state = await engineSetOpacity(opacity);
-        setDisplayState(state);
-        syncToSingularity(state); // Sync vers SingularityState
-        setError(null);
-      } catch (err) {
+        const state = await engineSetOpacity(any: any);
+        setDisplayState(any: any);
+        syncToSingularity(any: any); // Sync vers SingularityState
+        setError(any: any);
+      } catch (any: any) {
         setError(`Failed to set opacity: ${err}`);
-        console.error('Failed to set opacity:', err);
+        console?.error(any: any);
       }
     },
     [syncToSingularity]
@@ -280,96 +280,96 @@ export function useFloatingWindow(): UseFloatingWindowResult {
 
   const toggleAlwaysOnTop = useCallback(async () => {
     try {
-      const state = await engineSetAlwaysOnTop(!displayState.always_on_top);
-      setDisplayState(state);
-      syncToSingularity(state); // Sync vers SingularityState
-      setError(null);
-    } catch (err) {
+      const state = await engineSetAlwaysOnTop(any: any);
+      setDisplayState(any: any);
+      syncToSingularity(any: any); // Sync vers SingularityState
+      setError(any: any);
+    } catch (any: any) {
       setError(`Failed to toggle always on top: ${err}`);
-      console.error('Failed to toggle always on top:', err);
+      console?.error(any: any);
     }
-  }, [displayState.always_on_top, syncToSingularity]);
+  }, [displayState?.always_on_top, syncToSingularity]);
 
   const toggleLocked = useCallback(async () => {
     try {
-      const state = await engineSetLocked(!displayState.locked);
-      setDisplayState(state);
-      syncToSingularity(state); // Sync vers SingularityState
-      setError(null);
-    } catch (err) {
+      const state = await engineSetLocked(any: any);
+      setDisplayState(any: any);
+      syncToSingularity(any: any); // Sync vers SingularityState
+      setError(any: any);
+    } catch (any: any) {
       setError(`Failed to toggle locked: ${err}`);
-      console.error('Failed to toggle locked:', err);
+      console?.error(any: any);
     }
-  }, [displayState.locked, syncToSingularity]);
+  }, [displayState?.locked, syncToSingularity]);
 
   const toggleMirrorMode = useCallback(async () => {
     try {
-      const state = await engineSetMirrorMode(!displayState.mirror_mode);
-      setDisplayState(state);
-      syncToSingularity(state); // Sync vers SingularityState
-      setError(null);
-    } catch (err) {
+      const state = await engineSetMirrorMode(any: any);
+      setDisplayState(any: any);
+      syncToSingularity(any: any); // Sync vers SingularityState
+      setError(any: any);
+    } catch (any: any) {
       setError(`Failed to toggle mirror mode: ${err}`);
-      console.error('Failed to toggle mirror mode:', err);
+      console?.error(any: any);
     }
-  }, [displayState.mirror_mode, syncToSingularity]);
+  }, [displayState?.mirror_mode, syncToSingularity]);
 
   const toggleClickThrough = useCallback(async () => {
     try {
-      const state = await engineSetClickThrough(!displayState.click_through);
-      setDisplayState(state);
-      syncToSingularity(state); // Sync vers SingularityState
-      setError(null);
-    } catch (err) {
+      const state = await engineSetClickThrough(any: any);
+      setDisplayState(any: any);
+      syncToSingularity(any: any); // Sync vers SingularityState
+      setError(any: any);
+    } catch (any: any) {
       setError(`Failed to toggle click through: ${err}`);
-      console.error('Failed to toggle click through:', err);
+      console?.error(any: any);
     }
-  }, [displayState.click_through, syncToSingularity]);
+  }, [displayState?.click_through, syncToSingularity]);
 
   // ═══════════════════════════════════════════════════════════════
   // ANCHORS & MULTI-SCREEN
   // ═══════════════════════════════════════════════════════════════
 
   const setAnchor = useCallback(
-    async (anchor: AnchorPosition) => {
+    async (any: any) => {
       try {
-        const state = await engineSetAnchor(anchor);
-        setDisplayState(state);
-        syncToSingularity(state); // Sync vers SingularityState
-        setError(null);
-      } catch (err) {
+        const state = await engineSetAnchor(any: any);
+        setDisplayState(any: any);
+        syncToSingularity(any: any); // Sync vers SingularityState
+        setError(any: any);
+      } catch (any: any) {
         setError(`Failed to set anchor: ${err}`);
-        console.error('Failed to set anchor:', err);
+        console?.error(any: any);
       }
     },
     [syncToSingularity]
   );
 
   const setAnchorByName = useCallback(
-    async (name: string) => {
+    async (any: any) => {
       try {
-        const state = await engineSetAnchorByName(name);
-        setDisplayState(state);
-        syncToSingularity(state); // Sync vers SingularityState
-        setError(null);
-      } catch (err) {
+        const state = await engineSetAnchorByName(any: any);
+        setDisplayState(any: any);
+        syncToSingularity(any: any); // Sync vers SingularityState
+        setError(any: any);
+      } catch (any: any) {
         setError(`Failed to set anchor by name: ${err}`);
-        console.error('Failed to set anchor by name:', err);
+        console?.error(any: any);
       }
     },
     [syncToSingularity]
   );
 
   const moveToScreen = useCallback(
-    async (screenIndex: number) => {
+    async (any: any) => {
       try {
-        const state = await engineMoveToScreen(screenIndex);
-        setDisplayState(state);
-        syncToSingularity(state); // Sync vers SingularityState
-        setError(null);
-      } catch (err) {
+        const state = await engineMoveToScreen(any: any);
+        setDisplayState(any: any);
+        syncToSingularity(any: any); // Sync vers SingularityState
+        setError(any: any);
+      } catch (any: any) {
         setError(`Failed to move to screen: ${err}`);
-        console.error('Failed to move to screen:', err);
+        console?.error(any: any);
       }
     },
     [syncToSingularity]
@@ -380,15 +380,15 @@ export function useFloatingWindow(): UseFloatingWindowResult {
   // ═══════════════════════════════════════════════════════════════
 
   const updateState = useCallback(
-    async (update: AvatarDisplayStateUpdate) => {
+    async (any: any) => {
       try {
-        const state = await engineUpdateDisplayState(update);
-        setDisplayState(state);
-        syncToSingularity(state); // Sync vers SingularityState
-        setError(null);
-      } catch (err) {
+        const state = await engineUpdateDisplayState(any: any);
+        setDisplayState(any: any);
+        syncToSingularity(any: any); // Sync vers SingularityState
+        setError(any: any);
+      } catch (any: any) {
         setError(`Failed to update display state: ${err}`);
-        console.error('Failed to update display state:', err);
+        console?.error(any: any);
       }
     },
     [syncToSingularity]
@@ -397,12 +397,12 @@ export function useFloatingWindow(): UseFloatingWindowResult {
   const resetState = useCallback(async () => {
     try {
       const state = await engineResetDisplayState();
-      setDisplayState(state);
-      syncToSingularity(state); // Sync vers SingularityState
-      setError(null);
-    } catch (err) {
+      setDisplayState(any: any);
+      syncToSingularity(any: any); // Sync vers SingularityState
+      setError(any: any);
+    } catch (any: any) {
       setError(`Failed to reset display state: ${err}`);
-      console.error('Failed to reset display state:', err);
+      console?.error(any: any);
     }
   }, [syncToSingularity]);
 

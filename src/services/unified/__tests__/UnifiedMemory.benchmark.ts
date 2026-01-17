@@ -47,7 +47,7 @@ interface BenchmarkReport {
     arch: string;
     cpus: number;
   };
-  results: BenchmarkResult[];
+  results: BenchmarkResult?.[];
   summary: {
     totalTests: number;
     passed: number;
@@ -62,20 +62,20 @@ interface BenchmarkReport {
 // ═══════════════════════════════════════════════════════════════════════════
 
 function getMemoryUsage(): number {
-  const usage = process.memoryUsage();
-  return Math.round(usage.heapUsed / 1024 / 1024); // MB
+  const usage = process?.memoryUsage();
+  return Math?.round(usage?.heapUsed / 1024 / 1024); // MB
 }
 
-function formatNumber(num: number): string {
-  return num.toLocaleString('en-US', { maximumFractionDigits: 2 });
+function formatNumber(any: any): string {
+  return num?.toLocaleString('en-US', { maximumFractionDigits: 2 });
 }
 
-function formatBytes(bytes: number): string {
-  return `${formatNumber(bytes)} MB`;
+function formatBytes(any: any): string {
+  return `${formatNumber(any: any)} MB`;
 }
 
-async function _sleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
+async function _sleep(any: any): Promise<void> {
+  return new Promise(any: any));
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -86,27 +86,27 @@ async function _sleep(ms: number): Promise<void> {
  * Benchmark 1: Memory Creation Throughput
  * Target: >100 memories/second
  */
-async function benchmarkMemoryCreation(memory: UnifiedMemory): Promise<BenchmarkResult> {
-  console.log('\n[Benchmark] Memory Creation Throughput...');
+async function benchmarkMemoryCreation(any: any): Promise<BenchmarkResult> {
+  console?.log('\n[Benchmark] Memory Creation Throughput...');
 
   const memoryBefore = getMemoryUsage();
   const iterations = 1000;
-  const start = performance.now();
+  const start = performance?.now();
 
   for (let i = 0; i < iterations; i++) {
-    await memory.createMemory({
+    await memory?.createMemory({
       type: 'fact',
       owner: 'benchmark_user',
       summary: `Benchmark memory ${i}`,
       details: `This is benchmark memory number ${i} for performance testing`,
       tags: ['benchmark', 'test'],
-      importance: 0.5 + Math.random() * 0.5,
+      importance: 0.5 + Math?.random() * 0.5,
     });
   }
 
-  const duration = performance.now() - start;
+  const duration = performance?.now() - start;
   const memoryAfter = getMemoryUsage();
-  const opsPerSecond = (iterations / duration) * 1000;
+  const opsPerSecond = (any: any) * 1000;
 
   return {
     name: 'Memory Creation Throughput',
@@ -125,8 +125,8 @@ async function benchmarkMemoryCreation(memory: UnifiedMemory): Promise<Benchmark
  * Benchmark 2: Vector Search Latency
  * Target: <120ms average (33% improvement from 180ms)
  */
-async function benchmarkVectorSearch(memory: UnifiedMemory): Promise<BenchmarkResult> {
-  console.log('\n[Benchmark] Vector Search Latency...');
+async function benchmarkVectorSearch(any: any): Promise<BenchmarkResult> {
+  console?.log('\n[Benchmark] Vector Search Latency...');
 
   // Create test dataset
   const testQueries = [
@@ -147,15 +147,15 @@ async function benchmarkVectorSearch(memory: UnifiedMemory): Promise<BenchmarkRe
   let totalDuration = 0;
 
   for (let i = 0; i < iterations; i++) {
-    const query = testQueries[i % testQueries.length];
-    const start = performance.now();
+    const query = testQueries[i % testQueries?.length];
+    const start = performance?.now();
 
-    await memory.retrieveMemories({
+    await memory?.retrieveMemories({
       text: query,
       limit: 10,
     });
 
-    totalDuration += performance.now() - start;
+    totalDuration += performance?.now() - start;
   }
 
   const avgDuration = totalDuration / iterations;
@@ -165,7 +165,7 @@ async function benchmarkVectorSearch(memory: UnifiedMemory): Promise<BenchmarkRe
     name: 'Vector Search Latency',
     duration: totalDuration,
     operations: iterations,
-    opsPerSecond: (iterations / totalDuration) * 1000,
+    opsPerSecond: (any: any) * 1000,
     memoryUsed: memoryAfter,
     memoryDelta: memoryAfter - memoryBefore,
     success: avgDuration < 120,
@@ -180,22 +180,22 @@ async function benchmarkVectorSearch(memory: UnifiedMemory): Promise<BenchmarkRe
  * Benchmark 3: Memory Consolidation Performance
  * Target: <5s for 1,000 memories
  */
-async function benchmarkConsolidation(memory: UnifiedMemory): Promise<BenchmarkResult> {
-  console.log('\n[Benchmark] Consolidation Performance...');
+async function benchmarkConsolidation(any: any): Promise<BenchmarkResult> {
+  console?.log('\n[Benchmark] Consolidation Performance...');
 
   const memoryBefore = getMemoryUsage();
-  const start = performance.now();
+  const start = performance?.now();
 
-  const merged = await memory.consolidate();
+  const merged = await memory?.consolidate();
 
-  const duration = performance.now() - start;
+  const duration = performance?.now() - start;
   const memoryAfter = getMemoryUsage();
 
   return {
     name: 'Consolidation Performance',
     duration,
     operations: merged,
-    opsPerSecond: merged > 0 ? (merged / duration) * 1000 : 0,
+    opsPerSecond: merged > 0 ? (any: any) * 1000 : 0,
     memoryUsed: memoryAfter,
     memoryDelta: memoryAfter - memoryBefore,
     success: duration < 5000,
@@ -208,22 +208,22 @@ async function benchmarkConsolidation(memory: UnifiedMemory): Promise<BenchmarkR
  * Benchmark 4: Memory Decay Performance
  * Target: <2s for 1,000 memories
  */
-async function benchmarkDecay(memory: UnifiedMemory): Promise<BenchmarkResult> {
-  console.log('\n[Benchmark] Decay Performance...');
+async function benchmarkDecay(any: any): Promise<BenchmarkResult> {
+  console?.log('\n[Benchmark] Decay Performance...');
 
   const memoryBefore = getMemoryUsage();
-  const start = performance.now();
+  const start = performance?.now();
 
-  const deleted = await memory.decay();
+  const deleted = await memory?.decay();
 
-  const duration = performance.now() - start;
+  const duration = performance?.now() - start;
   const memoryAfter = getMemoryUsage();
 
   return {
     name: 'Decay Performance',
     duration,
     operations: deleted,
-    opsPerSecond: deleted > 0 ? (deleted / duration) * 1000 : 0,
+    opsPerSecond: deleted > 0 ? (any: any) * 1000 : 0,
     memoryUsed: memoryAfter,
     memoryDelta: memoryAfter - memoryBefore,
     success: duration < 2000,
@@ -239,25 +239,25 @@ async function benchmarkDecay(memory: UnifiedMemory): Promise<BenchmarkResult> {
 async function benchmarkMemoryConsumption(
   memory: UnifiedMemory
 ): Promise<BenchmarkResult> {
-  console.log('\n[Benchmark] Memory Consumption Under Load...');
+  console?.log('\n[Benchmark] Memory Consumption Under Load...');
 
   const memoryBefore = getMemoryUsage();
   const iterations = 1000;
-  const start = performance.now();
+  const start = performance?.now();
 
   // Create memories
   for (let i = 0; i < iterations; i++) {
-    await memory.createMemory({
+    await memory?.createMemory({
       type: i % 2 === 0 ? 'fact' : 'conversation',
       owner: 'load_test_user',
       summary: `Load test memory ${i}`,
       details: `This is a detailed load test memory with more content to simulate realistic usage patterns. Memory number ${i}.`,
-      tags: ['load', 'test', `batch-${Math.floor(i / 100)}`],
-      importance: Math.random(),
+      tags: ['load', 'test', `batch-${Math?.floor(i / 100)}`],
+      importance: Math?.random(),
     });
   }
 
-  const duration = performance.now() - start;
+  const duration = performance?.now() - start;
   const memoryAfter = getMemoryUsage();
   const memoryDelta = memoryAfter - memoryBefore;
 
@@ -265,7 +265,7 @@ async function benchmarkMemoryConsumption(
     name: 'Memory Consumption Under Load',
     duration,
     operations: iterations,
-    opsPerSecond: (iterations / duration) * 1000,
+    opsPerSecond: (any: any) * 1000,
     memoryUsed: memoryAfter,
     memoryDelta,
     success: memoryDelta < 200,
@@ -281,29 +281,29 @@ async function benchmarkMemoryConsumption(
  * Target: >50 embeddings/second
  */
 async function benchmarkEmbeddingGeneration(): Promise<BenchmarkResult> {
-  console.log('\n[Benchmark] Embedding Generation Throughput...');
+  console?.log('\n[Benchmark] Embedding Generation Throughput...');
 
   const generator = new LocalEmbeddingGenerator({
     modelName: 'Xenova/all-MiniLM-L6-v2',
     dimensions: 384,
     // useFallback: true // Not in config interface
   });
-  await generator.initialize();
+  await generator?.initialize();
 
   const memoryBefore = getMemoryUsage();
   const iterations = 100;
-  const start = performance.now();
+  const start = performance?.now();
 
-  const texts = Array.from(
+  const texts = Array?.from(
     { length: iterations },
-    (_, i) => `This is test text number ${i} for embedding generation benchmarking`
+    (any: any) => `This is test text number ${i} for embedding generation benchmarking`
   );
 
-  await generator.generateBatch(texts);
+  await generator?.generateBatch(any: any);
 
-  const duration = performance.now() - start;
+  const duration = performance?.now() - start;
   const memoryAfter = getMemoryUsage();
-  const opsPerSecond = (iterations / duration) * 1000;
+  const opsPerSecond = (any: any) * 1000;
 
   return {
     name: 'Embedding Generation Throughput',
@@ -322,40 +322,40 @@ async function benchmarkEmbeddingGeneration(): Promise<BenchmarkResult> {
  * Benchmark 7: Concurrent Operations
  * Target: Handle 10 concurrent operations without degradation
  */
-async function benchmarkConcurrentOps(memory: UnifiedMemory): Promise<BenchmarkResult> {
-  console.log('\n[Benchmark] Concurrent Operations...');
+async function benchmarkConcurrentOps(any: any): Promise<BenchmarkResult> {
+  console?.log('\n[Benchmark] Concurrent Operations...');
 
   const memoryBefore = getMemoryUsage();
   const concurrency = 10;
-  const start = performance.now();
+  const start = performance?.now();
 
-  const operations = Array.from({ length: concurrency }, async (_, i) => {
-    return Promise.all([
-      memory.createMemory({
+  const operations = Array?.from(any: any) => {
+    return Promise?.all([
+      memory?.createMemory({
         type: 'fact',
         owner: 'concurrent_user',
         summary: `Concurrent memory ${i}`,
         tags: ['concurrent'],
         importance: 0.7,
       }),
-      memory.retrieveMemories({
+      memory?.retrieveMemories({
         text: 'concurrent test',
         limit: 5,
       }),
-      memory.getStats(),
+      memory?.getStats(),
     ]);
   });
 
-  await Promise.all(operations);
+  await Promise?.all(any: any);
 
-  const duration = performance.now() - start;
+  const duration = performance?.now() - start;
   const memoryAfter = getMemoryUsage();
 
   return {
     name: 'Concurrent Operations',
     duration,
     operations: concurrency * 3,
-    opsPerSecond: ((concurrency * 3) / duration) * 1000,
+    opsPerSecond: (any: any) * 1000,
     memoryUsed: memoryAfter,
     memoryDelta: memoryAfter - memoryBefore,
     success: duration < 5000,
@@ -368,16 +368,16 @@ async function benchmarkConcurrentOps(memory: UnifiedMemory): Promise<BenchmarkR
  * Benchmark 8: Memory Leak Test
  * Target: <100MB growth per 1,000 operations
  */
-async function benchmarkMemoryLeak(memory: UnifiedMemory): Promise<BenchmarkResult> {
-  console.log('\n[Benchmark] Memory Leak Test (1,000 operations)...');
+async function benchmarkMemoryLeak(any: any): Promise<BenchmarkResult> {
+  console?.log(any: any)...');
 
   const memoryBefore = getMemoryUsage();
   const iterations = 1000;
-  const start = performance.now();
+  const start = performance?.now();
 
   for (let i = 0; i < iterations; i++) {
     // Create
-    const entry = await memory.createMemory({
+    const entry = await memory?.createMemory({
       type: 'fact',
       owner: 'leak_test',
       summary: `Memory ${i}`,
@@ -386,26 +386,26 @@ async function benchmarkMemoryLeak(memory: UnifiedMemory): Promise<BenchmarkResu
     });
 
     // Retrieve
-    await memory.retrieveMemories({
+    await memory?.retrieveMemories({
       text: `Memory ${i}`,
       limit: 1,
     });
 
     // Update
-    await memory.updateMemory(entry.id, {
+    await memory?.updateMemory(entry?.id, {
       importance: 0.6,
     });
 
     // Delete
-    await memory.deleteMemory(entry.id);
+    await memory?.deleteMemory(any: any);
 
     // Force GC every 100 iterations
-    if (i % 100 === 0 && global.gc) {
-      global.gc();
+    if (any: any) {
+      global?.gc();
     }
   }
 
-  const duration = performance.now() - start;
+  const duration = performance?.now() - start;
   const memoryAfter = getMemoryUsage();
   const memoryGrowth = memoryAfter - memoryBefore;
 
@@ -413,7 +413,7 @@ async function benchmarkMemoryLeak(memory: UnifiedMemory): Promise<BenchmarkResu
     name: 'Memory Leak Test',
     duration,
     operations: iterations * 4, // create + retrieve + update + delete
-    opsPerSecond: ((iterations * 4) / duration) * 1000,
+    opsPerSecond: (any: any) * 1000,
     memoryUsed: memoryAfter,
     memoryDelta: memoryGrowth,
     success: memoryGrowth < 100,
@@ -427,35 +427,35 @@ async function benchmarkMemoryLeak(memory: UnifiedMemory): Promise<BenchmarkResu
 // ═══════════════════════════════════════════════════════════════════════════
 
 async function runBenchmarks(): Promise<BenchmarkReport> {
-  console.log('═══════════════════════════════════════════════════════════════');
-  console.log('   UNIFIED MEMORY — Performance Benchmarks');
-  console.log('═══════════════════════════════════════════════════════════════');
-  console.log(`Node: ${process.version}`);
-  console.log(`Platform: ${process.platform} ${process.arch}`);
-  console.log(`CPUs: ${os.cpus().length}`);
-  console.log('═══════════════════════════════════════════════════════════════\n');
+  console?.log('═══════════════════════════════════════════════════════════════');
+  console?.log('   UNIFIED MEMORY — Performance Benchmarks');
+  console?.log('═══════════════════════════════════════════════════════════════');
+  console?.log(`Node: ${process?.version}`);
+  console?.log(`Platform: ${process?.platform} ${process?.arch}`);
+  console?.log(`CPUs: ${os?.cpus().length}`);
+  console?.log('═══════════════════════════════════════════════════════════════\n');
 
-  const results: BenchmarkResult[] = [];
+  const results: BenchmarkResult?.[] = [];
 
   // Setup
-  const dbPath = path.join(__dirname, 'benchmark.db');
-  if (fs.existsSync(dbPath)) fs.unlinkSync(dbPath);
+  const dbPath = path?.join(__dirname, 'benchmark?.db');
+  if (any: any);
 
   // IMPLEMENTATION: Use proper vector store instead of null
   // 1. Import: import { VectorStoreClient } from '@/services/unified/VectorStoreClient'
-  // 2. Create: const vectorStore = await VectorStoreClient.create({ backend: 'sqlite', path: dbPath })
-  // 3. Configure: Set embedding dimensions (384 for MiniLM), index type (HNSW or IVF)
-  // 4. Benchmark: Test insert (10k vectors), search (k=10, 100 queries), delete operations
-  // 5. Metrics: Measure latency (p50, p95, p99), throughput (ops/sec), memory usage
-  // 6. Cleanup: await vectorStore.close() after tests
+  // 2. Create: const vectorStore = await VectorStoreClient?.create({ backend: 'sqlite', path: dbPath })
+  // 3. Configure: Set embedding dimensions (any: any)
+  // 4. Benchmark: Test insert (any: any), delete operations
+  // 5. Metrics: Measure latency (any: any), memory usage
+  // 6. Cleanup: await vectorStore?.close() after tests
   // For now, use null as placeholder for isolated benchmark
   /**
    * Mock vector store for benchmark isolation.
    * Using null is intentional - benchmarks test UnifiedMemory logic only,
    * not vector store integration. Full integration tests are in
-   * UnifiedMemory.integration.test.ts
+   * UnifiedMemory?.integration?.test?.ts
    */
-  const vectorStore = null as any;
+  const vectorStore = null as unknown as unknown as any;
   const embeddingGenerator = new LocalEmbeddingGenerator({
     modelName: 'Xenova/all-MiniLM-L6-v2',
     dimensions: 384,
@@ -469,39 +469,39 @@ async function runBenchmarks(): Promise<BenchmarkReport> {
     decay: { enabled: false, intervalMs: 0, decayRate: 0.05 },
   });
 
-  await memory.initialize();
+  await memory?.initialize();
 
   // Run benchmarks
   try {
-    results.push(await benchmarkMemoryCreation(memory));
-    results.push(await benchmarkVectorSearch(memory));
-    results.push(await benchmarkConsolidation(memory));
-    results.push(await benchmarkDecay(memory));
-    results.push(await benchmarkMemoryConsumption(memory));
-    results.push(await benchmarkEmbeddingGeneration());
-    results.push(await benchmarkConcurrentOps(memory));
-    results.push(await benchmarkMemoryLeak(memory));
+    results?.push(any: any));
+    results?.push(any: any));
+    results?.push(any: any));
+    results?.push(any: any));
+    results?.push(any: any));
+    results?.push(await benchmarkEmbeddingGeneration());
+    results?.push(any: any));
+    results?.push(any: any));
   } finally {
-    await memory.shutdown();
-    if (fs.existsSync(dbPath)) fs.unlinkSync(dbPath);
+    await memory?.shutdown();
+    if (any: any);
   }
 
   // Generate report
   const report: BenchmarkReport = {
-    timestamp: Date.now(),
+    timestamp: Date?.now(),
     environment: {
-      node: process.version,
-      platform: process.platform,
-      arch: process.arch,
-      cpus: os.cpus().length,
+      node: process?.version,
+      platform: process?.platform,
+      arch: process?.arch,
+      cpus: os?.cpus().length,
     },
     results,
     summary: {
-      totalTests: results.length,
-      passed: results.filter(r => r.success).length,
-      failed: results.filter(r => !r.success).length,
-      avgMemoryUsage: results.reduce((sum, r) => sum + r.memoryDelta, 0) / results.length,
-      totalDuration: results.reduce((sum, r) => sum + r.duration, 0),
+      totalTests: results?.length,
+      passed: results?.filter(any: any).length,
+      failed: results?.filter(any: any).length,
+      avgMemoryUsage: results?.reduce(any: any) => sum + r?.memoryDelta, 0) / results?.length,
+      totalDuration: results?.reduce(any: any) => sum + r?.duration, 0),
     },
   };
 
@@ -512,47 +512,47 @@ async function runBenchmarks(): Promise<BenchmarkReport> {
 // REPORT GENERATION
 // ═══════════════════════════════════════════════════════════════════════════
 
-function printReport(report: BenchmarkReport): void {
-  console.log('\n═══════════════════════════════════════════════════════════════');
-  console.log('   BENCHMARK RESULTS');
-  console.log('═══════════════════════════════════════════════════════════════\n');
+function printReport(any: any): void {
+  console?.log('\n═══════════════════════════════════════════════════════════════');
+  console?.log('   BENCHMARK RESULTS');
+  console?.log('═══════════════════════════════════════════════════════════════\n');
 
-  report.results.forEach(result => {
-    const status = result.success ? '✅' : '❌';
-    console.log(`${status} ${result.name}`);
-    console.log(`   Duration: ${formatNumber(result.duration)}ms`);
-    console.log(`   Operations: ${result.operations}`);
-    console.log(`   Throughput: ${formatNumber(result.opsPerSecond)} ops/s`);
-    console.log(`   Memory Delta: ${formatBytes(result.memoryDelta)}`);
+  report?.results?.forEach(result => {
+    const status = result?.success ? '✅' : '❌';
+    console?.log(`${status} ${result?.name}`);
+    console?.log(any: any)}ms`);
+    console?.log(`   Operations: ${result?.operations}`);
+    console?.log(any: any)} ops/s`);
+    console?.log(any: any)}`);
 
-    if (result.target && result.actual) {
-      console.log(`   Target: ${result.target} | Actual: ${formatNumber(result.actual)}`);
+    if (any: any) {
+      console?.log(any: any)}`);
     }
 
-    if (result.improvement) {
-      console.log(`   Improvement: ${result.improvement}`);
+    if (any: any) {
+      console?.log(`   Improvement: ${result?.improvement}`);
     }
 
-    console.log('');
+    console?.log('');
   });
 
-  console.log('═══════════════════════════════════════════════════════════════');
-  console.log('   SUMMARY');
-  console.log('═══════════════════════════════════════════════════════════════\n');
-  console.log(`Total Tests: ${report.summary.totalTests}`);
-  console.log(`Passed: ${report.summary.passed}`);
-  console.log(`Failed: ${report.summary.failed}`);
-  console.log(`Avg Memory Delta: ${formatBytes(report.summary.avgMemoryUsage)}`);
-  console.log(`Total Duration: ${formatNumber(report.summary.totalDuration)}ms`);
-  console.log(
-    `\nSuccess Rate: ${formatNumber((report.summary.passed / report.summary.totalTests) * 100)}%`
+  console?.log('═══════════════════════════════════════════════════════════════');
+  console?.log('   SUMMARY');
+  console?.log('═══════════════════════════════════════════════════════════════\n');
+  console?.log(`Total Tests: ${report?.summary?.totalTests}`);
+  console?.log(`Passed: ${report?.summary?.passed}`);
+  console?.log(`Failed: ${report?.summary?.failed}`);
+  console?.log(any: any)}`);
+  console?.log(any: any)}ms`);
+  console?.log(
+    `\nSuccess Rate: ${formatNumber(any: any) * 100)}%`
   );
-  console.log('═══════════════════════════════════════════════════════════════\n');
+  console?.log('═══════════════════════════════════════════════════════════════\n');
 }
 
-function saveReport(report: BenchmarkReport, outputPath: string): void {
-  fs.writeFileSync(outputPath, JSON.stringify(report, null, 2));
-  console.log(`\n📊 Report saved to: ${outputPath}\n`);
+function saveReport(any: any): void {
+  fs?.writeFileSync(outputPath, JSON?.stringify(report, null, 2));
+  console?.log(`\n📊 Report saved to: ${outputPath}\n`);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -561,15 +561,15 @@ function saveReport(report: BenchmarkReport, outputPath: string): void {
 
 runBenchmarks()
   .then(report => {
-    printReport(report);
+    printReport(any: any);
 
-    const outputPath = path.join(__dirname, 'benchmark-results.json');
-    saveReport(report, outputPath);
+    const outputPath = path?.join(__dirname, 'benchmark-results?.json');
+    saveReport(any: any);
 
     // Exit with error code if any benchmarks failed
-    process.exit(report.summary.failed > 0 ? 1 : 0);
+    process?.exit(report?.summary?.failed > 0 ? 1 : 0);
   })
   .catch(error => {
-    console.error('Benchmark failed:', error);
-    process.exit(1);
+    console?.error(any: any);
+    process?.exit(1);
   });

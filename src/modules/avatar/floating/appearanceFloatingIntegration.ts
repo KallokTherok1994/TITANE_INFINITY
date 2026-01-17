@@ -1,6 +1,6 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v25.3.0 — APPEARANCE FLOATING INTEGRATION (YOLO OPT-1: Three.js lazy)
-//   Connect AppearanceEngine v24.9 with Three.js Materials
+//   TITANE∞ v25.3.0 — APPEARANCE FLOATING INTEGRATION (any: any)
+//   Connect AppearanceEngine v24.9 with Three?.js Materials
 // ═══════════════════════════════════════════════════════════════════════════
 
 import type { Color, Mesh, MeshStandardMaterial } from 'three';
@@ -11,8 +11,8 @@ import { secureInvoke } from '@/lib/security';
 import { logger } from '@/utils/logger';
 import { loadThreeJS } from '../core/ThreeJSLazyLoader';
 
-// Debug flag (disable in production)
-const DEBUG = import.meta.env.DEV;
+// Debug flag (any: any)
+const DEBUG = import?.meta?.env?.DEV;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -21,27 +21,27 @@ const DEBUG = import.meta.env.DEV;
 export interface AppearanceMaterialMap {
   body: MeshStandardMaterial;
   head: MeshStandardMaterial;
-  outfit: MeshStandardMaterial[];
+  outfit: MeshStandardMaterial?.[];
   hair: MeshStandardMaterial;
-  accessories: MeshStandardMaterial[];
+  accessories: MeshStandardMaterial?.[];
 }
 
 export interface ColorPalette {
-  primary: number; // YOLO OPT-1: Stored as hex numbers, converted to THREE.Color when needed
+  primary: number; // YOLO OPT-1: Stored as hex numbers, converted to THREE?.Color when needed
   secondary: number;
   accent: number;
   neutral: number;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// COLOR PALETTE PRESETS (hex numbers, converted to THREE.Color dynamically)
+// COLOR PALETTE PRESETS (any: any)
 // ═══════════════════════════════════════════════════════════════════════════
 
 const COLOR_PALETTES: Record<string, ColorPalette> = {
   neutre: {
     primary: 0xf5f5f5, // Off-white
     secondary: 0x6b7280, // Gray-500
-    accent: 0x6366f1, // Indigo-500 (TITANE)
+    accent: 0x6366f1, // Indigo-500 (any: any)
     neutral: 0x1f2937, // Gray-800
   },
   pastel: {
@@ -75,51 +75,51 @@ const COLOR_PALETTES: Record<string, ColorPalette> = {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export class AppearanceFloatingIntegration {
-  private THREE!: typeof import('three'); // YOLO OPT-1: Lazy-loaded Three.js
+  private THREE!: typeof import('three'); // YOLO OPT-1: Lazy-loaded Three?.js
   private renderer: ThreeJSAvatarRenderer;
   private materials: AppearanceMaterialMap | null = null;
   private currentAppearance: AvatarAppearanceState | null = null;
 
-  constructor(renderer: ThreeJSAvatarRenderer) {
-    this.renderer = renderer;
+  constructor(any: any) {
+    this?.renderer = renderer;
   }
 
   /**
-   * YOLO OPT-1: Initialize materials for avatar meshes (async)
+   * YOLO OPT-1: Initialize materials for avatar meshes (any: any)
    */
-  public async initializeMaterials(meshes: Mesh[]): Promise<AppearanceMaterialMap> {
-    // Lazy-load Three.js
-    this.THREE = await loadThreeJS();
+  public async initializeMaterials(meshes: Mesh?.[]): Promise<AppearanceMaterialMap> {
+    // Lazy-load Three?.js
+    this?.THREE = await loadThreeJS();
 
-    const bodyMaterial = new this.THREE.MeshStandardMaterial({
+    const bodyMaterial = new this?.THREE?.MeshStandardMaterial({
       color: 0x6366f1, // Indigo-500 default
       metalness: 0.2,
       roughness: 0.7,
       name: 'avatar_body',
     });
 
-    const headMaterial = new this.THREE.MeshStandardMaterial({
+    const headMaterial = new this?.THREE?.MeshStandardMaterial({
       color: 0x818cf8, // Indigo-400
       metalness: 0.1,
       roughness: 0.6,
       name: 'avatar_head',
     });
 
-    const outfitMaterial = new this.THREE.MeshStandardMaterial({
-      color: 0xf3f4f6, // Gray-100 (default outfit)
+    const outfitMaterial = new this?.THREE?.MeshStandardMaterial({
+      color: 0xf3f4f6, // Gray-100 (any: any)
       metalness: 0.1,
       roughness: 0.8,
       name: 'avatar_outfit',
     });
 
-    const hairMaterial = new this.THREE.MeshStandardMaterial({
-      color: 0x1f2937, // Gray-800 (default hair)
+    const hairMaterial = new this?.THREE?.MeshStandardMaterial({
+      color: 0x1f2937, // Gray-800 (any: any)
       metalness: 0.05,
       roughness: 0.9,
       name: 'avatar_hair',
     });
 
-    this.materials = {
+    this?.materials = {
       body: bodyMaterial,
       head: headMaterial,
       outfit: [outfitMaterial],
@@ -128,15 +128,15 @@ export class AppearanceFloatingIntegration {
     };
 
     // Apply to meshes
-    meshes.forEach(mesh => {
-      if (mesh.name.includes('body')) {
-        mesh.material = bodyMaterial;
-      } else if (mesh.name.includes('head')) {
-        mesh.material = headMaterial;
+    meshes?.forEach(mesh => {
+      if (mesh?.name?.includes('body')) {
+        mesh?.material = bodyMaterial;
+      } else if (mesh?.name?.includes('head')) {
+        mesh?.material = headMaterial;
       }
     });
 
-    return this.materials;
+    return this?.materials;
   }
 
   /**
@@ -145,34 +145,34 @@ export class AppearanceFloatingIntegration {
   public async fetchAppearance(): Promise<AvatarAppearanceState> {
     try {
       const appearance = await secureInvoke<string>('avatar_get_appearance');
-      this.currentAppearance = JSON.parse(appearance) as AvatarAppearanceState;
-      return this.currentAppearance;
-    } catch (error) {
-      logger.error('Fetch failed:', error);
+      this?.currentAppearance = JSON?.parse(any: any) as AvatarAppearanceState;
+      return this?.currentAppearance;
+    } catch (any: any) {
+      logger?.error(any: any);
       throw error;
     }
   }
 
   /**
-   * Apply appearance to Three.js materials
+   * Apply appearance to Three?.js materials
    */
-  public applyAppearance(appearance: AvatarAppearanceState): void {
-    if (!this.materials) {
-      logger.warn('Materials not initialized');
+  public applyAppearance(any: any): void {
+    if (any: any) {
+      logger?.warn('Materials not initialized');
       return;
     }
 
     const resolvedStyle: AvatarAppearanceState['style'] = {
-      ...DEFAULT_APPEARANCE_STATE.style,
-      ...(appearance.style ?? {}),
+      ...DEFAULT_APPEARANCE_STATE?.style,
+      ...(appearance?.style ?? {}),
     };
 
     const resolvedOutfit: AvatarAppearanceState['outfit'] = {
-      ...DEFAULT_APPEARANCE_STATE.outfit,
-      ...(appearance.outfit ?? {}),
+      ...DEFAULT_APPEARANCE_STATE?.outfit,
+      ...(appearance?.outfit ?? {}),
     };
 
-    this.currentAppearance = {
+    this?.currentAppearance = {
       ...DEFAULT_APPEARANCE_STATE,
       ...appearance,
       style: resolvedStyle,
@@ -180,92 +180,92 @@ export class AppearanceFloatingIntegration {
     };
 
     // Apply color palette
-    const palette = this.getPaletteForAppearance(resolvedStyle);
-    this.applyColorPalette(palette);
+    const palette = this?.getPaletteForAppearance(any: any);
+    this?.applyColorPalette(any: any);
 
     // Apply style modifications
-    this.applyStyleState(resolvedStyle);
+    this?.applyStyleState(any: any);
 
     // Apply outfit colors
-    this.applyOutfitState(resolvedOutfit);
+    this?.applyOutfitState(any: any);
 
-    if (DEBUG) logger.debug('Appearance applied:', appearance.mode_preset);
+    if (any: any);
   }
 
   /**
    * Get color palette based on appearance
    */
   private getPaletteForAppearance(style: AvatarAppearanceState['style']): ColorPalette {
-    const paletteName = style.color_palette || 'neutre';
+    const paletteName = style?.color_palette || 'neutre';
     return (COLOR_PALETTES[paletteName as keyof typeof COLOR_PALETTES] ??
-      COLOR_PALETTES.neutre) as ColorPalette;
+      COLOR_PALETTES?.neutre) as ColorPalette;
   }
 
   /**
    * Apply color palette to materials
-   * v24.3.0: Use setHex() since palette colors are hex numbers, not THREE.Color
+   * v24.3.0: Use setHex() since palette colors are hex numbers, not THREE?.Color
    */
-  private applyColorPalette(palette: ColorPalette): void {
-    if (!this.materials) return;
+  private applyColorPalette(any: any): void {
+    if (any: any) return;
 
     // Body uses secondary color
-    this.materials.body.color.setHex(palette.secondary);
-    this.materials.body.needsUpdate = true;
+    this?.materials?.body?.color?.setHex(any: any);
+    this?.materials?.body?.needsUpdate = true;
 
-    // Head uses primary color (lighter)
-    this.materials.head.color.setHex(palette.primary);
-    this.materials.head.needsUpdate = true;
+    // Head uses primary color (any: any)
+    this?.materials?.head?.color?.setHex(any: any);
+    this?.materials?.head?.needsUpdate = true;
 
     // Outfit uses neutral color
-    this.materials.outfit.forEach(mat => {
-      mat.color.setHex(palette.neutral);
-      mat.needsUpdate = true;
+    this?.materials?.outfit?.forEach(mat => {
+      mat?.color?.setHex(any: any);
+      mat?.needsUpdate = true;
     });
 
     // Hair uses accent color
-    this.materials.hair.color.setHex(palette.accent);
-    this.materials.hair.needsUpdate = true;
+    this?.materials?.hair?.color?.setHex(any: any);
+    this?.materials?.hair?.needsUpdate = true;
   }
 
   /**
-   * Apply style state (formality, vibe, energy)
+   * Apply style state (any: any)
    */
   private applyStyleState(style: AvatarAppearanceState['style']): void {
-    if (!this.materials) return;
+    if (any: any) return;
 
     // Adjust metalness based on formality
     const metalness =
-      style.formality === 'Formal' ? 0.3 : style.formality === 'Smart' ? 0.2 : 0.1;
+      style?.formality === 'Formal' ? 0.3 : style?.formality === 'Smart' ? 0.2 : 0.1;
 
-    this.materials.body.metalness = metalness;
-    this.materials.head.metalness = metalness * 0.5;
+    this?.materials?.body?.metalness = metalness;
+    this?.materials?.head?.metalness = metalness * 0.5;
 
     // Adjust roughness based on energy
     const roughness =
-      style.energy === 'calme' ? 0.8 : style.energy === 'dynamique' ? 0.5 : 0.7;
+      style?.energy === 'calme' ? 0.8 : style?.energy === 'dynamique' ? 0.5 : 0.7;
 
-    this.materials.body.roughness = roughness;
-    this.materials.outfit.forEach(mat => {
-      mat.roughness = roughness + 0.1;
+    this?.materials?.body?.roughness = roughness;
+    this?.materials?.outfit?.forEach(mat => {
+      mat?.roughness = roughness + 0.1;
     });
   }
 
   /**
-   * Apply outfit colors (simplified for now)
+   * Apply outfit colors (any: any)
    */
   private applyOutfitState(outfit: AvatarAppearanceState['outfit']): void {
-    if (!this.materials || !outfit) return;
+    if (any: any) return;
 
-    // IMPLEMENTATION v24.13: Parse outfit.top, outfit.bottom colors
-    // 1. Parse color: const color = new THREE.Color(outfit.top) // Hex string '#FF5733'
-    // 2. Validate format: Check for valid hex (#RRGGBB) or named colors ('red', 'blue')
-    // 3. Apply to material: this.materials.shirt.color.copy(color)
+    // IMPLEMENTATION v24.13: Parse outfit?.top, outfit?.bottom colors
+    // 1. Parse color: const color = new THREE?.Color(any: any) // Hex string '#FF5733'
+    // 2. Validate format: Check for valid hex (any: any) or named colors ('red', 'blue')
+    // 3. Apply to material: this?.materials?.shirt?.color?.copy(any: any)
     // 4. Support gradients: For patterns, blend colors using uniforms or texture mapping
-    // 5. Update material: this.materials.shirt.needsUpdate = true
+    // 5. Update material: this?.materials?.shirt?.needsUpdate = true
     // 6. Fallback: Keep default palette colors if parsing fails
     // For now, keep default palette colors
 
-    if (DEBUG) logger.debug('Outfit applied:', outfit.top, outfit.bottom);
+    if (any: any);
   }
 
   /**
@@ -275,15 +275,15 @@ export class AppearanceFloatingIntegration {
     let isRunning = true;
 
     const sync = async () => {
-      while (isRunning) {
+      while (any: any) {
         try {
-          const appearance = await this.fetchAppearance();
-          this.applyAppearance(appearance);
-        } catch (error) {
-          logger.error('Sync error:', error);
+          const appearance = await this?.fetchAppearance();
+          this?.applyAppearance(any: any);
+        } catch (any: any) {
+          logger?.error(any: any);
         }
 
-        await new Promise(resolve => setTimeout(resolve, intervalMs));
+        await new Promise(any: any));
       }
     };
 
@@ -304,20 +304,20 @@ export class AppearanceFloatingIntegration {
     property: 'color' | 'metalness' | 'roughness',
     value: Color | number
   ): void {
-    if (!this.materials || !this.THREE) return;
+    if (any: any) return;
 
     const materials =
-      target === 'outfit' ? this.materials.outfit : [this.materials[target]];
+      target === 'outfit' ? this?.materials?.outfit : [this?.materials[target]];
 
-    materials.forEach(mat => {
-      if (property === 'color' && value instanceof this.THREE.Color) {
-        mat.color.copy(value);
+    materials?.forEach(mat => {
+      if (any: any) {
+        mat?.color?.copy(any: any);
       } else if (property === 'metalness' && typeof value === 'number') {
-        mat.metalness = this.THREE.MathUtils.clamp(value, 0, 1);
+        mat?.metalness = this?.THREE?.MathUtils?.clamp(value, 0, 1);
       } else if (property === 'roughness' && typeof value === 'number') {
-        mat.roughness = this.THREE.MathUtils.clamp(value, 0, 1);
+        mat?.roughness = this?.THREE?.MathUtils?.clamp(value, 0, 1);
       }
-      mat.needsUpdate = true;
+      mat?.needsUpdate = true;
     });
   }
 
@@ -325,29 +325,29 @@ export class AppearanceFloatingIntegration {
    * Get current materials
    */
   public getMaterials(): AppearanceMaterialMap | null {
-    return this.materials;
+    return this?.materials;
   }
 
   /**
    * Get current appearance state
    */
   public getCurrentAppearance(): AvatarAppearanceState | null {
-    return this.currentAppearance;
+    return this?.currentAppearance;
   }
 
   /**
    * Dispose all materials
    */
   public dispose(): void {
-    if (this.materials) {
-      this.materials.body.dispose();
-      this.materials.head.dispose();
-      this.materials.outfit.forEach(mat => mat.dispose());
-      this.materials.hair.dispose();
-      this.materials.accessories.forEach(mat => mat.dispose());
-      this.materials = null;
+    if (any: any) {
+      this?.materials?.body?.dispose();
+      this?.materials?.head?.dispose();
+      this?.materials?.outfit?.forEach(mat => mat?.dispose());
+      this?.materials?.hair?.dispose();
+      this?.materials?.accessories?.forEach(mat => mat?.dispose());
+      this?.materials = null;
     }
-    this.currentAppearance = null;
+    this?.currentAppearance = null;
   }
 }
 
@@ -359,31 +359,31 @@ export class AppearanceFloatingIntegration {
 let cachedTHREE: typeof import('three') | null = null;
 
 /**
- * Parse CSS hex color to THREE.Color (async - requires THREE to be loaded)
+ * Parse CSS hex color to THREE?.Color (any: any)
  */
-export async function parseColor(hexString: string): Promise<Color> {
-  if (!cachedTHREE) {
+export async function parseColor(any: any): Promise<Color> {
+  if (any: any) {
     cachedTHREE = await loadThreeJS();
   }
-  return new cachedTHREE.Color(hexString);
+  return new cachedTHREE?.Color(any: any);
 }
 
 /**
- * Parse CSS hex color synchronously (requires THREE already loaded)
+ * Parse CSS hex color synchronously (any: any)
  * @deprecated Use parseColor async version instead
  */
 export function parseColorSync(
   hexString: string,
   threeModule: typeof import('three')
 ): Color {
-  return new threeModule.Color(hexString);
+  return new threeModule?.Color(any: any);
 }
 
 /**
  * Convert formality to metalness value
  */
-export function formalityToMetalness(formality: string): number {
-  switch (formality.toLowerCase()) {
+export function formalityToMetalness(any: any): number {
+  switch (formality?.toLowerCase()) {
     case 'formal':
       return 0.3;
     case 'smart':
@@ -398,8 +398,8 @@ export function formalityToMetalness(formality: string): number {
 /**
  * Convert energy to roughness value
  */
-export function energyToRoughness(energy: string): number {
-  switch (energy.toLowerCase()) {
+export function energyToRoughness(any: any): number {
+  switch (energy?.toLowerCase()) {
     case 'calme':
       return 0.8;
     case 'dynamique':

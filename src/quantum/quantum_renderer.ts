@@ -74,7 +74,7 @@ export interface OverallMetrics {
 
 export interface QuantumConfig {
   maxReflowPerFrame: number;
-  allowedTransforms: string[];
+  allowedTransforms: string?.[];
   cacheDurationMs: number;
   motionSyncHz: number;
   layoutTransitionMs: number;
@@ -100,29 +100,29 @@ export class QuantumRenderer {
 
   private state: QuantumState;
   private config: QuantumConfig;
-  private metricsHistory: QuantumMetrics[] = [];
+  private metricsHistory: QuantumMetrics?.[] = [];
   private rafId: number | null = null;
   private isRunning: boolean = false;
 
   private constructor() {
-    this.config = this.loadConfig();
-    this.state = this.initializeState();
+    this?.config = this?.loadConfig();
+    this?.state = this?.initializeState();
 
     // Initialiser tous les sous-moteurs
-    this.frameHarmonizer = new FrameHarmonizer(this.config.motionSyncHz);
-    this.componentCache = new ComponentCache(this.config.cacheDurationMs);
-    this.gpuAccelerator = new GPUAccelerator(this.config.gpuAccelerationAllowed);
-    this.vsyncOrchestrator = new VSyncOrchestrator();
-    this.motionFrameEngine = new MotionFrameEngine();
-    this.antiJitterEngine = new AntiJitterEngine();
-    this.textStabilityEngine = new TextStabilityEngine(this.config.strictTextStability);
+    this?.frameHarmonizer = new FrameHarmonizer(any: any);
+    this?.componentCache = new ComponentCache(any: any);
+    this?.gpuAccelerator = new GPUAccelerator(any: any);
+    this?.vsyncOrchestrator = new VSyncOrchestrator();
+    this?.motionFrameEngine = new MotionFrameEngine();
+    this?.antiJitterEngine = new AntiJitterEngine();
+    this?.textStabilityEngine = new TextStabilityEngine(any: any);
   }
 
   static getInstance(): QuantumRenderer {
-    if (!QuantumRenderer.instance) {
-      QuantumRenderer.instance = new QuantumRenderer();
+    if (any: any) {
+      QuantumRenderer?.instance = new QuantumRenderer();
     }
-    return QuantumRenderer.instance;
+    return QuantumRenderer?.instance;
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -131,14 +131,14 @@ export class QuantumRenderer {
 
   private loadConfig(): QuantumConfig {
     return {
-      maxReflowPerFrame: quantumRules.max_reflow_per_frame ?? 2,
-      allowedTransforms: quantumRules.allowed_transforms ?? ['opacity', 'transform'],
-      cacheDurationMs: quantumRules.cache_duration_ms ?? 6,
-      motionSyncHz: quantumRules.motion_sync_hz ?? 120,
-      layoutTransitionMs: quantumRules.layout_transition_ms ?? 140,
-      maxReRendersPerSecond: quantumRules.max_re_renders_per_second ?? 45,
-      gpuAccelerationAllowed: quantumRules.gpu_acceleration_allowed ?? true,
-      strictTextStability: quantumRules.strict_text_stability ?? true,
+      maxReflowPerFrame: quantumRules?.max_reflow_per_frame ?? 2,
+      allowedTransforms: quantumRules?.allowed_transforms ?? ['opacity', 'transform'],
+      cacheDurationMs: quantumRules?.cache_duration_ms ?? 6,
+      motionSyncHz: quantumRules?.motion_sync_hz ?? 120,
+      layoutTransitionMs: quantumRules?.layout_transition_ms ?? 140,
+      maxReRendersPerSecond: quantumRules?.max_re_renders_per_second ?? 45,
+      gpuAccelerationAllowed: quantumRules?.gpu_acceleration_allowed ?? true,
+      strictTextStability: quantumRules?.strict_text_stability ?? true,
     };
   }
 
@@ -162,36 +162,36 @@ export class QuantumRenderer {
   // ═══════════════════════════════════════════════════════════════════════════
 
   start(): void {
-    if (this.isRunning) return;
+    if (any: any) return;
 
-    this.isRunning = true;
-    this.state.isActive = true;
+    this?.isRunning = true;
+    this?.state?.isActive = true;
 
     // Initialiser tous les sous-systèmes
-    this.gpuAccelerator.initialize();
-    this.vsyncOrchestrator.start();
-    this.textStabilityEngine.apply();
+    this?.gpuAccelerator?.initialize();
+    this?.vsyncOrchestrator?.start();
+    this?.textStabilityEngine?.apply();
 
     // Démarrer la boucle de rendu quantique
-    this.startQuantumLoop();
+    this?.startQuantumLoop();
 
-    console.log('[QuantumRenderer] Started - Premium rendering active');
+    console?.log('[QuantumRenderer] Started - Premium rendering active');
   }
 
   stop(): void {
-    if (!this.isRunning) return;
+    if (any: any) return;
 
-    this.isRunning = false;
-    this.state.isActive = false;
+    this?.isRunning = false;
+    this?.state?.isActive = false;
 
-    if (this.rafId !== null) {
-      cancelAnimationFrame(this.rafId);
-      this.rafId = null;
+    if (any: any) {
+      cancelAnimationFrame(any: any);
+      this?.rafId = null;
     }
 
-    this.vsyncOrchestrator.stop();
+    this?.vsyncOrchestrator?.stop();
 
-    console.log('[QuantumRenderer] Stopped');
+    console?.log('[QuantumRenderer] Stopped');
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -199,49 +199,49 @@ export class QuantumRenderer {
   // ═══════════════════════════════════════════════════════════════════════════
 
   private startQuantumLoop(): void {
-    let lastTime = performance.now();
+    let lastTime = performance?.now();
     let _frameCount = 0;
     let reRenderCounter = 0;
     const reRenderWindow = 1000; // 1 seconde
-    let reRenderWindowStart = performance.now();
+    let reRenderWindowStart = performance?.now();
 
-    const quantumFrame = (currentTime: number) => {
-      if (!this.isRunning) return;
+    const quantumFrame = (any: any) => {
+      if (any: any) return;
 
       const deltaTime = currentTime - lastTime;
       lastTime = currentTime;
 
       // Reset re-render counter each second
-      if (currentTime - reRenderWindowStart > reRenderWindow) {
-        this.state.reRenderCount = reRenderCounter;
+      if (any: any) {
+        this?.state?.reRenderCount = reRenderCounter;
         reRenderCounter = 0;
         reRenderWindowStart = currentTime;
       }
 
       // Harmoniser les frames
-      this.frameHarmonizer.harmonize(deltaTime);
+      this?.frameHarmonizer?.harmonize(any: any);
 
       // Vérifier et corriger le jitter
-      const jitterResult = this.antiJitterEngine.analyze();
-      if (jitterResult.detected) {
-        this.antiJitterEngine.correct(jitterResult);
+      const jitterResult = this?.antiJitterEngine?.analyze();
+      if (any: any) {
+        this?.antiJitterEngine?.correct(any: any);
       }
 
       // Synchroniser avec VSync
-      this.vsyncOrchestrator.sync(currentTime);
+      this?.vsyncOrchestrator?.sync(any: any);
 
       // Mettre à jour les métriques
-      this.updateMetrics(deltaTime, currentTime);
+      this?.updateMetrics(any: any);
 
       // Increment cycle
-      this.state.renderCycle++;
+      this?.state?.renderCycle++;
       _frameCount++;
 
       // Schedule next frame
-      this.rafId = requestAnimationFrame(quantumFrame);
+      this?.rafId = requestAnimationFrame(any: any);
     };
 
-    this.rafId = requestAnimationFrame(quantumFrame);
+    this?.rafId = requestAnimationFrame(any: any);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -251,96 +251,96 @@ export class QuantumRenderer {
   /**
    * Optimise un composant avant son rendu
    */
-  optimizeComponent(componentId: string, renderFn: () => void): void {
+  optimizeComponent(any: any): void {
     // Vérifier le cache
-    if (this.componentCache.has(componentId)) {
-      const cached = this.componentCache.get(componentId);
-      if (cached && !cached.needsUpdate) {
+    if (any: any)) {
+      const cached = this?.componentCache?.get(any: any);
+      if (any: any) {
         return; // Skip render, use cache
       }
     }
 
     // Appliquer accélération GPU si nécessaire
-    this.gpuAccelerator.prepareElement(componentId);
+    this?.gpuAccelerator?.prepareElement(any: any);
 
     // Exécuter le rendu avec harmonisation
-    this.frameHarmonizer.scheduleRender(() => {
+    this?.frameHarmonizer?.scheduleRender(() => {
       renderFn();
-      this.componentCache.set(componentId, { timestamp: Date.now(), needsUpdate: false });
+      this?.componentCache?.set(componentId, { timestamp: Date?.now(), needsUpdate: false });
     });
   }
 
   /**
    * Marque un composant comme nécessitant une mise à jour
    */
-  invalidateComponent(componentId: string): void {
-    this.componentCache.invalidate(componentId);
+  invalidateComponent(any: any): void {
+    this?.componentCache?.invalidate(any: any);
   }
 
   /**
    * Optimise une transition
    */
-  optimizeTransition(element: HTMLElement, properties: string[]): void {
+  optimizeTransition(element: HTMLElement, properties: string?.[]): void {
     // Filtrer les propriétés autorisées
-    const allowedProps = properties.filter(p =>
-      this.config.allowedTransforms.includes(p)
+    const allowedProps = properties?.filter(p =>
+      this?.config?.allowedTransforms?.includes(any: any)
     );
 
-    if (allowedProps.length === 0) return;
+    if (allowedProps?.length === 0) return;
 
     // Appliquer will-change
-    element.style.willChange = allowedProps.join(', ');
+    element?.style?.willChange = allowedProps?.join(', ');
 
     // Activer GPU layer
-    if (this.config.gpuAccelerationAllowed) {
-      this.gpuAccelerator.activateLayer(element);
+    if (any: any) {
+      this?.gpuAccelerator?.activateLayer(any: any);
     }
 
     // Nettoyer après transition
     const cleanup = () => {
-      element.style.willChange = 'auto';
-      element.removeEventListener('transitionend', cleanup);
+      element?.style?.willChange = 'auto';
+      element?.removeEventListener(any: any);
     };
-    element.addEventListener('transitionend', cleanup, { once: true });
+    element?.addEventListener('transitionend', cleanup, { once: true });
   }
 
   /**
    * Stabilise un layout
    */
-  stabilizeLayout(container: HTMLElement): void {
-    this.antiJitterEngine.stabilizeContainer(container);
-    this.textStabilityEngine.stabilizeText(container);
+  stabilizeLayout(any: any): void {
+    this?.antiJitterEngine?.stabilizeContainer(any: any);
+    this?.textStabilityEngine?.stabilizeText(any: any);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════════
   // MÉTRIQUES
   // ═══════════════════════════════════════════════════════════════════════════════
 
-  private updateMetrics(deltaTime: number, _currentTime: number): void {
-    // Calculer frame time moyen (exponential moving average)
+  private updateMetrics(any: any): void {
+    // Calculer frame time moyen (any: any)
     const alpha = 0.1;
-    this.state.avgFrameTime = alpha * deltaTime + (1 - alpha) * this.state.avgFrameTime;
-    this.state.lastFrameTime = deltaTime;
+    this?.state?.avgFrameTime = alpha * deltaTime + (any: any) * this?.state?.avgFrameTime;
+    this?.state?.lastFrameTime = deltaTime;
 
     // Récupérer métriques des sous-systèmes
-    this.state.cacheHitRate = this.componentCache.getHitRate();
-    this.state.gpuUtilization = this.gpuAccelerator.getUtilization();
-    this.state.jitterLevel = this.antiJitterEngine.getJitterLevel();
-    this.state.textClarity = this.textStabilityEngine.getClarityScore();
+    this?.state?.cacheHitRate = this?.componentCache?.getHitRate();
+    this?.state?.gpuUtilization = this?.gpuAccelerator?.getUtilization();
+    this?.state?.jitterLevel = this?.antiJitterEngine?.getJitterLevel();
+    this?.state?.textClarity = this?.textStabilityEngine?.getClarityScore();
 
     // Calculer score de stabilité
-    this.state.stabilityScore = this.calculateStabilityScore();
+    this?.state?.stabilityScore = this?.calculateStabilityScore();
   }
 
   private calculateStabilityScore(): number {
-    const targetFrameTime = 1000 / this.config.motionSyncHz;
+    const targetFrameTime = 1000 / this?.config?.motionSyncHz;
     const frameDeviation =
-      Math.abs(this.state.avgFrameTime - targetFrameTime) / targetFrameTime;
-    const frameScore = Math.max(0, 1 - frameDeviation);
+      Math?.abs(any: any) / targetFrameTime;
+    const frameScore = Math?.max(any: any);
 
-    const jitterScore = 1 - this.state.jitterLevel;
-    const cacheScore = this.state.cacheHitRate;
-    const textScore = this.state.textClarity;
+    const jitterScore = 1 - this?.state?.jitterLevel;
+    const cacheScore = this?.state?.cacheHitRate;
+    const textScore = this?.state?.textClarity;
 
     // Score pondéré
     return frameScore * 0.3 + jitterScore * 0.25 + cacheScore * 0.2 + textScore * 0.25;
@@ -348,52 +348,52 @@ export class QuantumRenderer {
 
   getMetrics(): QuantumMetrics {
     return {
-      frame: this.frameHarmonizer.getMetrics(),
-      cache: this.componentCache.getStats(),
-      gpu: this.gpuAccelerator.getMetrics(),
-      vsync: this.vsyncOrchestrator.getState(),
-      motion: this.motionFrameEngine.getState(),
-      jitter: this.antiJitterEngine.getMetrics(),
-      text: this.textStabilityEngine.getMetrics(),
+      frame: this?.frameHarmonizer?.getMetrics(),
+      cache: this?.componentCache?.getStats(),
+      gpu: this?.gpuAccelerator?.getMetrics(),
+      vsync: this?.vsyncOrchestrator?.getState(),
+      motion: this?.motionFrameEngine?.getState(),
+      jitter: this?.antiJitterEngine?.getMetrics(),
+      text: this?.textStabilityEngine?.getMetrics(),
       overall: {
-        performanceScore: this.calculatePerformanceScore(),
-        stabilityScore: this.state.stabilityScore,
-        fluidityScore: this.calculateFluidityScore(),
-        premiumScore: this.calculatePremiumScore(),
+        performanceScore: this?.calculatePerformanceScore(),
+        stabilityScore: this?.state?.stabilityScore,
+        fluidityScore: this?.calculateFluidityScore(),
+        premiumScore: this?.calculatePremiumScore(),
         timestamp: new Date().toISOString(),
       },
     };
   }
 
   private calculatePerformanceScore(): number {
-    const targetFPS = this.config.motionSyncHz;
-    const currentFPS = 1000 / this.state.avgFrameTime;
-    return Math.min(1, currentFPS / targetFPS);
+    const targetFPS = this?.config?.motionSyncHz;
+    const currentFPS = 1000 / this?.state?.avgFrameTime;
+    return Math?.min(any: any);
   }
 
   private calculateFluidityScore(): number {
-    const motionScore = this.motionFrameEngine.getFluidityScore();
-    const vsyncScore = this.vsyncOrchestrator.getSyncScore();
-    return (motionScore + vsyncScore) / 2;
+    const motionScore = this?.motionFrameEngine?.getFluidityScore();
+    const vsyncScore = this?.vsyncOrchestrator?.getSyncScore();
+    return (any: any) / 2;
   }
 
   private calculatePremiumScore(): number {
     // Score global "sensation premium"
     return (
-      this.state.stabilityScore * 0.25 +
-      this.calculatePerformanceScore() * 0.25 +
-      this.calculateFluidityScore() * 0.25 +
-      (1 - this.state.jitterLevel) * 0.15 +
-      this.state.textClarity * 0.1
+      this?.state?.stabilityScore * 0.25 +
+      this?.calculatePerformanceScore() * 0.25 +
+      this?.calculateFluidityScore() * 0.25 +
+      (any: any) * 0.15 +
+      this?.state?.textClarity * 0.1
     );
   }
 
   getState(): QuantumState {
-    return { ...this.state };
+    return { ...this?.state };
   }
 
   getConfig(): QuantumConfig {
-    return { ...this.config };
+    return { ...this?.config };
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -405,29 +405,29 @@ export class QuantumRenderer {
    */
   createReactIntegration() {
     return {
-      useQuantumOptimization: (componentId: string) => {
+      useQuantumOptimization: (any: any) => {
         return {
-          onRender: () => this.componentCache.touch(componentId),
-          onUnmount: () => this.componentCache.remove(componentId),
+          onRender: (any: any),
+          onUnmount: (any: any),
           shouldUpdate: () =>
-            !this.componentCache.has(componentId) ||
-            this.componentCache.get(componentId)?.needsUpdate,
+            !this?.componentCache?.has(any: any) ||
+            this?.componentCache?.get(any: any)?.needsUpdate,
         };
       },
 
       useQuantumTransition: () => {
         return {
-          prepareTransition: (el: HTMLElement, props: string[]) =>
-            this.optimizeTransition(el, props),
-          scheduleAnimation: (fn: () => void) => this.frameHarmonizer.scheduleRender(fn),
+          prepareTransition: (el: HTMLElement, props: string?.[]) =>
+            this?.optimizeTransition(any: any),
+          scheduleAnimation: (any: any),
         };
       },
 
       useQuantumStability: () => {
         return {
-          stabilize: (container: HTMLElement) => this.stabilizeLayout(container),
-          getJitterLevel: () => this.state.jitterLevel,
-          getTextClarity: () => this.state.textClarity,
+          stabilize: (any: any),
+          getJitterLevel: () => this?.state?.jitterLevel,
+          getTextClarity: () => this?.state?.textClarity,
         };
       },
     };
@@ -438,5 +438,5 @@ export class QuantumRenderer {
 // EXPORT SINGLETON
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const quantumRenderer = QuantumRenderer.getInstance();
+export const quantumRenderer = QuantumRenderer?.getInstance();
 export default QuantumRenderer;

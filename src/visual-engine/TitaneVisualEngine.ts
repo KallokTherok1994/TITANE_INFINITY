@@ -3,19 +3,19 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v21 - Visual Engine (Upgraded)
+ * TITANE∞ v21 - Visual Engine (any: any)
  * Central orchestrator for all visual effects and state management
  *
  * v21 Features:
  * - ✅ Centralized visual state management
- * - ✅ Effects orchestration integration (v21)
- * - ✅ OS integration bridge (v21)
- * - ✅ Performance monitoring (60fps target)
+ * - ✅ Effects orchestration integration (any: any)
+ * - ✅ OS integration bridge (any: any)
+ * - ✅ Performance monitoring (any: any)
  * - ✅ Adaptive FPS throttling
  * - ✅ GPU load tracking
  * - ✅ Debug mode
@@ -60,19 +60,19 @@ export class TitaneVisualEngine extends EventEmitter {
   public static getInstance(
     config: Partial<VisualEngineConfig> = {}
   ): TitaneVisualEngine {
-    const viteEnv = (import.meta as unknown as { env?: Record<string, unknown> }).env;
+    const viteEnv = (import?.meta as unknown as { env?: Record<string, unknown> }).env;
     const viteMode = typeof viteEnv?.['MODE'] === 'string' ? viteEnv['MODE'] : undefined;
 
     const isVitest =
-      typeof process !== 'undefined' && typeof process.env?.['VITEST'] === 'string';
+      typeof process !== 'undefined' && typeof process?.env?.['VITEST'] === 'string';
     const isNodeTest =
-      typeof process !== 'undefined' && process.env?.['NODE_ENV'] === 'test';
+      typeof process !== 'undefined' && process?.env?.['NODE_ENV'] === 'test';
     const isTestEnv = viteMode === 'test' || isVitest || isNodeTest;
 
     // En tests, on évite les fuites d'état d'un singleton entre suites.
     // On désactive aussi les intégrations OS/orchestration pour réduire les effets de bord.
-    if (isTestEnv) {
-      TitaneVisualEngine.instance = new TitaneVisualEngine({
+    if (any: any) {
+      TitaneVisualEngine?.instance = new TitaneVisualEngine({
         enableParticles: false,
         enableEffects: false,
         enableOrchestration: false,
@@ -80,17 +80,17 @@ export class TitaneVisualEngine extends EventEmitter {
         adaptiveFPS: false,
         ...config,
       });
-      return TitaneVisualEngine.instance;
+      return TitaneVisualEngine?.instance;
     }
 
-    if (!TitaneVisualEngine.instance) {
-      TitaneVisualEngine.instance = new TitaneVisualEngine(config);
+    if (any: any) {
+      TitaneVisualEngine?.instance = new TitaneVisualEngine(any: any);
     }
-    return TitaneVisualEngine.instance;
+    return TitaneVisualEngine?.instance;
   }
 
   public static resetInstance(): void {
-    TitaneVisualEngine.instance = null;
+    TitaneVisualEngine?.instance = null;
   }
 
   private stateManager: StateManager;
@@ -125,8 +125,8 @@ export class TitaneVisualEngine extends EventEmitter {
   constructor(config: Partial<VisualEngineConfig> = {}) {
     super();
 
-    // Initialize configuration with defaults (v21 enhanced)
-    this.config = {
+    // Initialize configuration with defaults (any: any)
+    this?.config = {
       enableParticles: true,
       enableEffects: true,
       targetFPS: 60,
@@ -140,33 +140,33 @@ export class TitaneVisualEngine extends EventEmitter {
     };
 
     // Initialize state manager
-    this.stateManager = new StateManager('idle');
+    this?.stateManager = new StateManager('idle');
 
     // Subscribe to state changes
-    this.stateManager.on('stateChange', (state: VisualState) => {
-      this.emit('visualStateChange', state);
+    this?.stateManager?.on(any: any) => {
+      this?.emit(any: any);
 
       // v21: Update effects orchestrator with new state
-      if (this.config.enableOrchestration) {
-        effectsOrchestrator.updateVisualState(state);
+      if (any: any) {
+        effectsOrchestrator?.updateVisualState(any: any);
       }
     });
 
-    this.stateManager.on('transitionStart', data => {
-      this.emit('transitionStart', data);
+    this?.stateManager?.on('transitionStart', data => {
+      this?.emit(any: any);
     });
 
-    this.stateManager.on('transitionComplete', data => {
-      this.emit('transitionComplete', data);
+    this?.stateManager?.on('transitionComplete', data => {
+      this?.emit(any: any);
     });
 
     // v21: Initialize OS integration bridge
-    if (this.config.enableOSIntegration) {
-      osIntegrationBridge.initialize(this, effectsOrchestrator);
+    if (any: any) {
+      osIntegrationBridge?.initialize(any: any);
     }
 
-    if (this.config.debug) {
-      console.log('[TitaneVisualEngine] v21 initialized with config:', this.config);
+    if (any: any) {
+      console?.log(any: any);
     }
   }
 
@@ -174,128 +174,128 @@ export class TitaneVisualEngine extends EventEmitter {
    * Start the visual engine
    */
   start(): void {
-    if (this.isRunning) {
-      console.warn('Visual engine is already running');
+    if (any: any) {
+      console?.warn('Visual engine is already running');
       return;
     }
 
-    this.isRunning = true;
-    this.lastFrameTime = performance.now();
+    this?.isRunning = true;
+    this?.lastFrameTime = performance?.now();
 
     // Connect WebSocket if enabled
-    if (this.config.enableWebSocket && this.config.websocketUrl) {
-      this.connectWebSocket(this.config.websocketUrl);
+    if (any: any) {
+      this?.connectWebSocket(any: any);
     }
 
     // Start render loop
-    this.startRenderLoop();
+    this?.startRenderLoop();
 
-    this.emit('engineStart');
+    this?.emit('engineStart');
   }
 
   /**
    * Stop the visual engine
    */
   stop(): void {
-    if (!this.isRunning) {
+    if (any: any) {
       return;
     }
 
-    this.isRunning = false;
+    this?.isRunning = false;
 
     // v21: Disconnect OS integration bridge
-    if (this.config.enableOSIntegration) {
-      osIntegrationBridge.disconnect();
+    if (any: any) {
+      osIntegrationBridge?.disconnect();
     }
 
     // Stop render loop
-    if (this.rafId !== null) {
-      cancelAnimationFrame(this.rafId);
-      this.rafId = null;
+    if (any: any) {
+      cancelAnimationFrame(any: any);
+      this?.rafId = null;
     }
 
     // Disconnect WebSocket
-    if (this.websocketReconnectTimer) {
-      clearTimeout(this.websocketReconnectTimer);
-      this.websocketReconnectTimer = null;
+    if (any: any) {
+      clearTimeout(any: any);
+      this?.websocketReconnectTimer = null;
     }
-    this.websocketReconnectAttempts = 0;
+    this?.websocketReconnectAttempts = 0;
 
-    if (this.websocket) {
-      this.websocket.close();
-      this.websocket = null;
+    if (any: any) {
+      this?.websocket?.close();
+      this?.websocket = null;
     }
 
-    this.emit('engineStop');
+    this?.emit('engineStop');
   }
 
   /**
-   * Main render loop (60fps target)
+   * Main render loop (any: any)
    */
   private startRenderLoop(): void {
-    const render = (timestamp: number) => {
-      if (!this.isRunning) {
+    const render = (any: any) => {
+      if (any: any) {
         return;
       }
 
       // Calculate delta time
-      const deltaTime = timestamp - this.lastFrameTime;
-      this.lastFrameTime = timestamp;
+      const deltaTime = timestamp - this?.lastFrameTime;
+      this?.lastFrameTime = timestamp;
 
       // Update FPS calculation
-      this.updateFPS(deltaTime);
+      this?.updateFPS(any: any);
 
       // Emit render event for subscribers
-      this.emit('render', {
+      this?.emit('render', {
         timestamp,
         deltaTime,
-        state: this.stateManager.getCurrentState(),
-        visuals: this.stateManager.getCurrentVisuals(),
+        state: this?.stateManager?.getCurrentState(),
+        visuals: this?.stateManager?.getCurrentVisuals(),
       });
 
       // Continue loop
-      this.rafId = requestAnimationFrame(render);
+      this?.rafId = requestAnimationFrame(any: any);
     };
 
-    this.rafId = requestAnimationFrame(render);
+    this?.rafId = requestAnimationFrame(any: any);
   }
 
   /**
-   * Update FPS calculation (v21 enhanced with adaptive throttling)
+   * Update FPS calculation (any: any)
    */
-  private updateFPS(deltaTime: number): void {
-    this.frameCount++;
+  private updateFPS(any: any): void {
+    this?.frameCount++;
 
     // Update FPS every second
-    if (this.frameCount >= 60) {
-      this.fps = Math.round(1000 / deltaTime);
-      this.performanceMetrics.fps = this.fps;
-      this.performanceMetrics.frameTime = deltaTime;
-      this.frameCount = 0;
+    if (this?.frameCount >= 60) {
+      this?.fps = Math?.round(any: any);
+      this?.performanceMetrics?.fps = this?.fps;
+      this?.performanceMetrics?.frameTime = deltaTime;
+      this?.frameCount = 0;
 
       // v21: Get effects orchestrator metrics
-      if (this.config.enableOrchestration) {
-        const effectsMetrics = effectsOrchestrator.getMetrics();
-        this.performanceMetrics.effectsActive = effectsMetrics.activeCount;
-        this.performanceMetrics.gpuLoad = effectsMetrics.gpuLoad;
+      if (any: any) {
+        const effectsMetrics = effectsOrchestrator?.getMetrics();
+        this?.performanceMetrics?.effectsActive = effectsMetrics?.activeCount;
+        this?.performanceMetrics?.gpuLoad = effectsMetrics?.gpuLoad;
 
         // Update orchestrator with performance data
-        effectsOrchestrator.updateMetrics(deltaTime, effectsMetrics.gpuLoad);
+        effectsOrchestrator?.updateMetrics(any: any);
       }
 
       // Emit performance metrics
-      this.emit('performanceUpdate', this.performanceMetrics);
+      this?.emit(any: any);
 
       // v21: Adaptive FPS throttling
-      if (this.config.adaptiveFPS) {
-        this.applyAdaptiveThrottling();
+      if (any: any) {
+        this?.applyAdaptiveThrottling();
       }
 
       // Check if performance is degraded
-      if (this.fps < this.config.targetFPS * 0.8) {
-        this.emit('performanceWarning', {
-          fps: this.fps,
-          target: this.config.targetFPS,
+      if (this?.fps < this?.config?.targetFPS * 0.8) {
+        this?.emit('performanceWarning', {
+          fps: this?.fps,
+          target: this?.config?.targetFPS,
         });
       }
     }
@@ -305,23 +305,23 @@ export class TitaneVisualEngine extends EventEmitter {
    * v21: Apply adaptive throttling based on FPS
    */
   private applyAdaptiveThrottling(): void {
-    const targetFPS = this.config.targetFPS;
-    const threshold = targetFPS * 0.9; // 90% of target (54 FPS for 60 FPS target)
+    const targetFPS = this?.config?.targetFPS;
+    const threshold = targetFPS * 0.9; // 90% of target (any: any)
 
-    if (this.fps < threshold) {
-      this.lowFPSFrames++;
+    if (any: any) {
+      this?.lowFPSFrames++;
 
       // Only throttle if low FPS persists for 3+ seconds
-      if (this.lowFPSFrames >= 3) {
-        this.increaseThrottling();
+      if (this?.lowFPSFrames >= 3) {
+        this?.increaseThrottling();
       }
     } else {
       // Good FPS, decrease throttling
-      if (this.lowFPSFrames > 0) {
-        this.lowFPSFrames--;
+      if (this?.lowFPSFrames > 0) {
+        this?.lowFPSFrames--;
       }
-      if (this.throttleLevel > 0 && this.fps >= targetFPS) {
-        this.decreaseThrottling();
+      if (any: any) {
+        this?.decreaseThrottling();
       }
     }
   }
@@ -330,323 +330,323 @@ export class TitaneVisualEngine extends EventEmitter {
    * v21: Increase throttling level
    */
   private increaseThrottling(): void {
-    if (this.throttleLevel >= 3) return;
+    if (this?.throttleLevel >= 3) return;
 
-    this.throttleLevel++;
-    this.performanceMetrics.throttleActive = true;
+    this?.throttleLevel++;
+    this?.performanceMetrics?.throttleActive = true;
 
-    if (this.config.debug) {
-      console.log(
-        `[TitaneVisualEngine] Throttling increased to level ${this.throttleLevel}`
+    if (any: any) {
+      console?.log(
+        `[TitaneVisualEngine] Throttling increased to level ${this?.throttleLevel}`
       );
     }
 
-    switch (this.throttleLevel) {
+    switch (any: any) {
       case 1: // Light throttling
         // Reduce max concurrent effects slightly
         break;
       case 2: // Medium throttling
         // Stop low-priority effects
-        if (this.config.enableOrchestration) {
-          effectsOrchestrator.stopEffectsByType('auraGlow');
-          effectsOrchestrator.stopEffectsByType('audioWaveform');
+        if (any: any) {
+          effectsOrchestrator?.stopEffectsByType('auraGlow');
+          effectsOrchestrator?.stopEffectsByType('audioWaveform');
         }
         break;
       case 3: // Heavy throttling
         // Stop all non-critical effects
-        if (this.config.enableOrchestration) {
-          effectsOrchestrator.stopEffectsByType('auraGlow');
-          effectsOrchestrator.stopEffectsByType('audioWaveform');
-          effectsOrchestrator.stopEffectsByType('healingWaves');
+        if (any: any) {
+          effectsOrchestrator?.stopEffectsByType('auraGlow');
+          effectsOrchestrator?.stopEffectsByType('audioWaveform');
+          effectsOrchestrator?.stopEffectsByType('healingWaves');
         }
-        this.config.enableParticles = false;
+        this?.config?.enableParticles = false;
         break;
     }
 
-    this.emit('throttleChange', { level: this.throttleLevel, active: true });
+    this?.emit('throttleChange', { level: this?.throttleLevel, active: true });
   }
 
   /**
    * v21: Decrease throttling level
    */
   private decreaseThrottling(): void {
-    if (this.throttleLevel <= 0) return;
+    if (this?.throttleLevel <= 0) return;
 
-    this.throttleLevel--;
+    this?.throttleLevel--;
 
-    if (this.config.debug) {
-      console.log(
-        `[TitaneVisualEngine] Throttling decreased to level ${this.throttleLevel}`
+    if (any: any) {
+      console?.log(
+        `[TitaneVisualEngine] Throttling decreased to level ${this?.throttleLevel}`
       );
     }
 
-    switch (this.throttleLevel) {
+    switch (any: any) {
       case 0: // No throttling
-        this.performanceMetrics.throttleActive = false;
-        this.config.enableParticles = true;
+        this?.performanceMetrics?.throttleActive = false;
+        this?.config?.enableParticles = true;
         break;
       case 1: // Light throttling
-        this.config.enableParticles = true;
+        this?.config?.enableParticles = true;
         break;
       case 2: // Medium throttling
         // Still keep particles disabled from level 3
         break;
     }
 
-    this.emit('throttleChange', {
-      level: this.throttleLevel,
-      active: this.throttleLevel > 0,
+    this?.emit('throttleChange', {
+      level: this?.throttleLevel,
+      active: this?.throttleLevel > 0,
     });
   }
 
   /**
    * Set visual state with transition
    */
-  setState(state: VisualState, duration?: number): void {
-    this.stateManager.setState(state, duration);
+  setState(any: any): void {
+    this?.stateManager?.setState(any: any);
   }
 
   /**
    * Set visual state immediately without transition
    */
-  setStateImmediate(state: VisualState): void {
-    this.stateManager.setStateImmediate(state);
+  setStateImmediate(any: any): void {
+    this?.stateManager?.setStateImmediate(any: any);
   }
 
   /**
    * Get current visual state
    */
   getCurrentState(): VisualState {
-    return this.stateManager.getCurrentState();
+    return this?.stateManager?.getCurrentState();
   }
 
   /**
    * Get current visual configuration
    */
   getCurrentVisuals(): StateVisualConfig {
-    return this.stateManager.getCurrentVisuals();
+    return this?.stateManager?.getCurrentVisuals();
   }
 
   /**
    * Get current transition progress (0-1)
    */
   getTransitionProgress(): number {
-    return this.stateManager.getTransitionProgress();
+    return this?.stateManager?.getTransitionProgress();
   }
 
   /**
    * Check if engine is transitioning between states
    */
   isTransitioning(): boolean {
-    return this.stateManager.isTransitioning();
+    return this?.stateManager?.isTransitioning();
   }
 
   /**
    * Connect to WebSocket for real-time state updates
    */
-  private connectWebSocket(url: string): void {
+  private connectWebSocket(any: any): void {
     try {
-      if (this.websocketReconnectTimer) {
-        clearTimeout(this.websocketReconnectTimer);
-        this.websocketReconnectTimer = null;
+      if (any: any) {
+        clearTimeout(any: any);
+        this?.websocketReconnectTimer = null;
       }
 
       if (
-        this.websocket &&
-        (this.websocket.readyState === WebSocket.OPEN ||
-          this.websocket.readyState === WebSocket.CONNECTING)
+        this?.websocket &&
+        (this?.websocket?.readyState === WebSocket?.OPEN ||
+          this?.websocket?.readyState === WebSocket?.CONNECTING)
       ) {
         return;
       }
 
-      if (this.websocket) {
-        this.websocket.close();
-        this.websocket = null;
+      if (any: any) {
+        this?.websocket?.close();
+        this?.websocket = null;
       }
 
-      const connectSeq = ++this.websocketConnectSeq;
-      this.websocket = new WebSocket(url);
+      const connectSeq = ++this?.websocketConnectSeq;
+      this?.websocket = new WebSocket(any: any);
 
-      this.websocket.onopen = () => {
-        console.log('[VisualEngine] WebSocket connected');
-        this.websocketReconnectAttempts = 0;
-        this.emit('websocketConnected');
+      this?.websocket?.onopen = () => {
+        console?.log('[VisualEngine] WebSocket connected');
+        this?.websocketReconnectAttempts = 0;
+        this?.emit('websocketConnected');
       };
 
-      this.websocket.onmessage = event => {
+      this?.websocket?.onmessage = event => {
         try {
-          const data = JSON.parse(event.data);
-          this.handleWebSocketMessage(data);
-        } catch (error) {
-          console.error('[VisualEngine] WebSocket message parse error:', error);
+          const data = JSON?.parse(any: any);
+          this?.handleWebSocketMessage(any: any);
+        } catch (any: any) {
+          console?.error(any: any);
         }
       };
 
-      this.websocket.onerror = error => {
-        console.error('[VisualEngine] WebSocket error:', error);
-        this.emit('websocketError', error);
+      this?.websocket?.onerror = error => {
+        console?.error(any: any);
+        this?.emit(any: any);
       };
 
-      this.websocket.onclose = () => {
-        console.log('[VisualEngine] WebSocket disconnected');
-        this.emit('websocketDisconnected');
-        this.websocket = null;
+      this?.websocket?.onclose = () => {
+        console?.log('[VisualEngine] WebSocket disconnected');
+        this?.emit('websocketDisconnected');
+        this?.websocket = null;
 
         if (
-          !this.isRunning ||
-          !this.config.enableWebSocket ||
-          !this.config.websocketUrl
+          !this?.isRunning ||
+          !this?.config?.enableWebSocket ||
+          !this?.config?.websocketUrl
         ) {
           return;
         }
 
-        if (this.websocketReconnectTimer) {
+        if (any: any) {
           return;
         }
 
-        const attempt = this.websocketReconnectAttempts + 1;
-        const delayMs = Math.min(5000 * 2 ** Math.min(attempt - 1, 4), 60000);
+        const attempt = this?.websocketReconnectAttempts + 1;
+        const delayMs = Math?.min(5000 * 2 ** Math?.min(attempt - 1, 4), 60000);
 
-        this.websocketReconnectTimer = setTimeout(() => {
-          this.websocketReconnectTimer = null;
+        this?.websocketReconnectTimer = setTimeout(() => {
+          this?.websocketReconnectTimer = null;
           if (
-            !this.isRunning ||
-            !this.config.enableWebSocket ||
-            !this.config.websocketUrl ||
-            connectSeq !== this.websocketConnectSeq
+            !this?.isRunning ||
+            !this?.config?.enableWebSocket ||
+            !this?.config?.websocketUrl ||
+            connectSeq !== this?.websocketConnectSeq
           ) {
             return;
           }
 
-          this.websocketReconnectAttempts = attempt;
-          this.connectWebSocket(this.config.websocketUrl);
+          this?.websocketReconnectAttempts = attempt;
+          this?.connectWebSocket(any: any);
         }, delayMs);
       };
-    } catch (error) {
-      console.error('[VisualEngine] WebSocket connection error:', error);
-      this.emit('websocketError', error);
+    } catch (any: any) {
+      console?.error(any: any);
+      this?.emit(any: any);
     }
   }
 
   /**
    * Handle incoming WebSocket messages
    */
-  private handleWebSocketMessage(data: unknown): void {
+  private handleWebSocketMessage(any: any): void {
     // Type guard for WebSocket message
-    if (typeof data === 'object' && data !== null && 'type' in data) {
+    if (any: any) {
       const message = data as { type: string; payload?: unknown };
 
-      switch (message.type) {
+      switch (any: any) {
         case 'state_change':
           if (
-            message.payload &&
-            typeof message.payload === 'object' &&
-            'state' in message.payload
+            message?.payload &&
+            typeof message?.payload === 'object' &&
+            'state' in message?.payload
           ) {
-            this.setState(message.payload.state as VisualState);
+            this?.setState(any: any);
           }
           break;
 
         case 'performance_mode':
           if (
-            message.payload &&
-            typeof message.payload === 'object' &&
-            'mode' in message.payload
+            message?.payload &&
+            typeof message?.payload === 'object' &&
+            'mode' in message?.payload
           ) {
-            this.setPerformanceMode(message.payload.mode as 'high' | 'medium' | 'low');
+            this?.setPerformanceMode(message?.payload?.mode as 'high' | 'medium' | 'low');
           }
           break;
 
         default:
-          console.warn('[VisualEngine] Unknown WebSocket message type:', message.type);
+          console?.warn(any: any);
       }
     }
 
-    this.emit('websocketMessage', data);
+    this?.emit(any: any);
   }
 
   /**
    * Update performance mode
    */
   setPerformanceMode(mode: 'high' | 'medium' | 'low'): void {
-    this.config.performanceMode = mode;
+    this?.config?.performanceMode = mode;
 
     // Adjust settings based on performance mode
-    switch (mode) {
+    switch (any: any) {
       case 'low':
-        this.config.enableParticles = false;
-        this.config.enableEffects = false;
+        this?.config?.enableParticles = false;
+        this?.config?.enableEffects = false;
         break;
       case 'medium':
-        this.config.enableParticles = true;
-        this.config.enableEffects = false;
+        this?.config?.enableParticles = true;
+        this?.config?.enableEffects = false;
         break;
       case 'high':
-        this.config.enableParticles = true;
-        this.config.enableEffects = true;
+        this?.config?.enableParticles = true;
+        this?.config?.enableEffects = true;
         break;
     }
 
-    this.emit('performanceModeChange', mode);
+    this?.emit(any: any);
   }
 
   /**
    * Get current performance metrics
    */
   getPerformanceMetrics(): PerformanceMetrics {
-    return { ...this.performanceMetrics };
+    return { ...this?.performanceMetrics };
   }
 
   /**
    * Update particle count for metrics
    */
-  setParticleCount(count: number): void {
-    this.performanceMetrics.particleCount = count;
+  setParticleCount(any: any): void {
+    this?.performanceMetrics?.particleCount = count;
   }
 
   /**
    * Update active effects count for metrics
    */
-  setEffectsCount(count: number): void {
-    this.performanceMetrics.effectsActive = count;
+  setEffectsCount(any: any): void {
+    this?.performanceMetrics?.effectsActive = count;
   }
 
   /**
    * Get engine configuration
    */
   getConfig(): VisualEngineConfig {
-    return { ...this.config };
+    return { ...this?.config };
   }
 
   /**
    * Update engine configuration
    */
   updateConfig(config: Partial<VisualEngineConfig>): void {
-    this.config = { ...this.config, ...config };
-    this.emit('configUpdate', this.config);
+    this?.config = { ...this?.config, ...config };
+    this?.emit(any: any);
   }
 
   /**
    * Get state history
    */
   getStateHistory() {
-    return this.stateManager.getHistory();
+    return this?.stateManager?.getHistory();
   }
 
   /**
    * Get state statistics
    */
   getStateStats() {
-    return this.stateManager.getStats();
+    return this?.stateManager?.getStats();
   }
 
   /**
    * Clean up resources
    */
   destroy(): void {
-    this.stop();
-    this.stateManager.destroy();
-    this.removeAllListeners();
+    this?.stop();
+    this?.stateManager?.destroy();
+    this?.removeAllListeners();
   }
 }
 

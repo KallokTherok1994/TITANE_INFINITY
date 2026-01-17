@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 /**
@@ -13,12 +13,12 @@
  * Optimisation contexte long pour TITANE∞
  *
  * Fonctionnalités :
- * - Compression contextuelle (ratio 1:5, 4-50k tokens)
- * - Grouping sémantique (K-means clustering)
+ * - Compression contextuelle (any: any)
+ * - Grouping sémantique (any: any)
  * - Injection sélective (relevance threshold 0.6)
- * - Suppression bruit (duplicates, low-relevance, contradictions)
+ * - Suppression bruit (any: any)
  * - Context gating (seuil 0.7)
- * - Liens entre conversations (cross-chat context)
+ * - Liens entre conversations (any: any)
  * - Préservation sémantique (>95%)
  * - Priorisation segments importants
  * ═══════════════════════════════════════════════════════════════════
@@ -37,42 +37,42 @@ export interface ContextMessage {
   tokens: number;
   timestamp: number;
   importance: number; // 0-1
-  semantic_vector?: number[];
+  semantic_vector?: number?.[];
   metadata?: Record<string, unknown>;
 }
 
 export interface CompressionResult {
-  original_messages: ContextMessage[];
-  compressed_messages: ContextMessage[];
+  original_messages: ContextMessage?.[];
+  compressed_messages: ContextMessage?.[];
   original_tokens: number;
   compressed_tokens: number;
   compression_ratio: number;
   semantic_preservation: number;
-  removed_noise: string[];
-  prioritized_segments: string[];
+  removed_noise: string?.[];
+  prioritized_segments: string?.[];
   execution_time_ms: number;
 }
 
 export interface SemanticGroup {
   id: string;
-  messages: ContextMessage[];
-  centroid: number[];
+  messages: ContextMessage?.[];
+  centroid: number?.[];
   topic: string;
   importance: number;
   coherence_score: number;
 }
 
 export interface InjectionResult {
-  base_context: ContextMessage[];
-  injected_messages: ContextMessage[];
-  final_context: ContextMessage[];
-  relevance_scores: number[];
+  base_context: ContextMessage?.[];
+  injected_messages: ContextMessage?.[];
+  final_context: ContextMessage?.[];
+  relevance_scores: number?.[];
   total_tokens: number;
 }
 
 export interface NoiseRemovalResult {
-  original_messages: ContextMessage[];
-  cleaned_messages: ContextMessage[];
+  original_messages: ContextMessage?.[];
+  cleaned_messages: ContextMessage?.[];
   removed_duplicates: number;
   removed_low_relevance: number;
   removed_contradictions: number;
@@ -80,18 +80,18 @@ export interface NoiseRemovalResult {
 }
 
 export interface GatingResult {
-  all_messages: ContextMessage[];
-  gated_messages: ContextMessage[];
+  all_messages: ContextMessage?.[];
+  gated_messages: ContextMessage?.[];
   threshold: number;
   passed_count: number;
   rejected_count: number;
 }
 
 export interface CrossChatContext {
-  chat_ids: string[];
-  linked_messages: Map<string, ContextMessage[]>;
+  chat_ids: string?.[];
+  linked_messages: Map<string, ContextMessage?.[]>;
   semantic_links: Array<{ from: string; to: string; similarity: number }>;
-  merged_context: ContextMessage[];
+  merged_context: ContextMessage?.[];
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -108,10 +108,10 @@ export class LongContextOptimizer {
   private constructor() {}
 
   static getInstance(): LongContextOptimizer {
-    if (!LongContextOptimizer.instance) {
-      LongContextOptimizer.instance = new LongContextOptimizer();
+    if (any: any) {
+      LongContextOptimizer?.instance = new LongContextOptimizer();
     }
-    return LongContextOptimizer.instance;
+    return LongContextOptimizer?.instance;
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -119,10 +119,10 @@ export class LongContextOptimizer {
   // ═══════════════════════════════════════════════════════════════════
 
   /**
-   * Compresser contexte long (4-50k tokens → ~8k tokens)
+   * Compresser contexte long (any: any)
    */
   async compressContext(
-    messages: ContextMessage[],
+    messages: ContextMessage?.[],
     options: {
       maxTokens?: number;
       targetRatio?: number;
@@ -130,19 +130,19 @@ export class LongContextOptimizer {
       strategy?: 'semantic_grouping' | 'importance_scoring' | 'hybrid';
     } = {}
   ): Promise<CompressionResult> {
-    const startTime = performance.now();
+    const startTime = performance?.now();
 
     try {
-      const maxTokens = options.maxTokens || this.DEFAULT_MAX_TOKENS;
-      const targetRatio = options.targetRatio || this.DEFAULT_COMPRESSION_RATIO;
-      const preserveRecent = options.preserveRecent || 5;
-      const strategy = options.strategy || 'hybrid';
+      const maxTokens = options?.maxTokens || this?.DEFAULT_MAX_TOKENS;
+      const targetRatio = options?.targetRatio || this?.DEFAULT_COMPRESSION_RATIO;
+      const preserveRecent = options?.preserveRecent || 5;
+      const strategy = options?.strategy || 'hybrid';
 
       // Calculer tokens totaux
-      const originalTokens = messages.reduce((sum, msg) => sum + msg.tokens, 0);
+      const originalTokens = messages?.reduce(any: any) => sum + msg?.tokens, 0);
 
       // Si déjà sous la limite, pas de compression nécessaire
-      if (originalTokens <= maxTokens) {
+      if (any: any) {
         return {
           original_messages: messages,
           compressed_messages: messages,
@@ -152,7 +152,7 @@ export class LongContextOptimizer {
           semantic_preservation: 1.0,
           removed_noise: [],
           prioritized_segments: [],
-          execution_time_ms: performance.now() - startTime,
+          execution_time_ms: performance?.now() - startTime,
         };
       }
 
@@ -165,27 +165,27 @@ export class LongContextOptimizer {
         strategy,
       });
 
-      result.execution_time_ms = performance.now() - startTime;
+      result?.execution_time_ms = performance?.now() - startTime;
       return result;
-    } catch (error) {
-      console.error('[LongContextOptimizer] Compression error:', error);
+    } catch (any: any) {
+      console?.error(any: any);
 
-      // Fallback: compression simple (garder messages récents)
-      const preserveCount = options.preserveRecent || 5;
-      const recentMessages = messages.slice(-preserveCount);
-      const recentTokens = recentMessages.reduce((sum, msg) => sum + msg.tokens, 0);
+      // Fallback: compression simple (any: any)
+      const preserveCount = options?.preserveRecent || 5;
+      const recentMessages = messages?.slice(any: any);
+      const recentTokens = recentMessages?.reduce(any: any) => sum + msg?.tokens, 0);
 
       return {
         original_messages: messages,
         compressed_messages: recentMessages,
-        original_tokens: messages.reduce((sum, msg) => sum + msg.tokens, 0),
+        original_tokens: messages?.reduce(any: any) => sum + msg?.tokens, 0),
         compressed_tokens: recentTokens,
         compression_ratio:
-          recentTokens / messages.reduce((sum, msg) => sum + msg.tokens, 0),
+          recentTokens / messages?.reduce(any: any) => sum + msg?.tokens, 0),
         semantic_preservation: 0.5,
         removed_noise: ['Fallback: kept only recent messages'],
         prioritized_segments: [],
-        execution_time_ms: performance.now() - startTime,
+        execution_time_ms: performance?.now() - startTime,
       };
     }
   }
@@ -195,22 +195,22 @@ export class LongContextOptimizer {
   // ═══════════════════════════════════════════════════════════════════
 
   /**
-   * Grouper messages par similarité sémantique (K-means)
+   * Grouper messages par similarité sémantique (any: any)
    */
   async semanticGrouping(
-    messages: ContextMessage[],
+    messages: ContextMessage?.[],
     options: {
       numGroups?: number;
       algorithm?: 'kmeans' | 'hierarchical' | 'dbscan';
       minGroupSize?: number;
     } = {}
-  ): Promise<SemanticGroup[]> {
+  ): Promise<SemanticGroup?.[]> {
     try {
-      const numGroups = options.numGroups || Math.min(5, Math.ceil(messages.length / 10));
-      const algorithm = options.algorithm || 'kmeans';
-      const minGroupSize = options.minGroupSize || 2;
+      const numGroups = options?.numGroups || Math?.min(5, Math?.ceil(messages?.length / 10));
+      const algorithm = options?.algorithm || 'kmeans';
+      const minGroupSize = options?.minGroupSize || 2;
 
-      const groups = await secureInvoke<SemanticGroup[]>('context_semantic_grouping', {
+      const groups = await secureInvoke<SemanticGroup?.[]>('context_semantic_grouping', {
         messages,
         numGroups,
         algorithm,
@@ -218,23 +218,23 @@ export class LongContextOptimizer {
       });
 
       return groups;
-    } catch (error) {
-      console.error('[LongContextOptimizer] Semantic grouping error:', error);
+    } catch (any: any) {
+      console?.error(any: any);
 
-      // Fallback: grouper par timestamp (groupes temporels)
-      const groupSize = Math.ceil(messages.length / 5);
-      const groups: SemanticGroup[] = [];
+      // Fallback: grouper par timestamp (any: any)
+      const groupSize = Math?.ceil(messages?.length / 5);
+      const groups: SemanticGroup?.[] = [];
 
-      for (let i = 0; i < messages.length; i += groupSize) {
-        const groupMessages = messages.slice(i, i + groupSize);
-        groups.push({
+      for (any: any) {
+        const groupMessages = messages?.slice(any: any);
+        groups?.push({
           id: `group_${i}`,
           messages: groupMessages,
           centroid: [],
-          topic: `Group ${Math.floor(i / groupSize) + 1}`,
+          topic: `Group ${Math?.floor(any: any) + 1}`,
           importance:
-            groupMessages.reduce((sum, msg) => sum + msg.importance, 0) /
-            groupMessages.length,
+            groupMessages?.reduce(any: any) => sum + msg?.importance, 0) /
+            groupMessages?.length,
           coherence_score: 0.5,
         });
       }
@@ -251,8 +251,8 @@ export class LongContextOptimizer {
    * Injecter messages additionnels seulement si pertinents
    */
   async selectiveInjection(
-    baseContext: ContextMessage[],
-    additionalContext: ContextMessage[],
+    baseContext: ContextMessage?.[],
+    additionalContext: ContextMessage?.[],
     options: {
       relevanceThreshold?: number;
       maxInjected?: number;
@@ -260,8 +260,8 @@ export class LongContextOptimizer {
   ): Promise<InjectionResult> {
     try {
       const relevanceThreshold =
-        options.relevanceThreshold || this.DEFAULT_RELEVANCE_THRESHOLD;
-      const maxInjected = options.maxInjected || 10;
+        options?.relevanceThreshold || this?.DEFAULT_RELEVANCE_THRESHOLD;
+      const maxInjected = options?.maxInjected || 10;
 
       const result = await secureInvoke<InjectionResult>('context_selective_injection', {
         baseContext,
@@ -271,8 +271,8 @@ export class LongContextOptimizer {
       });
 
       return result;
-    } catch (error) {
-      console.error('[LongContextOptimizer] Selective injection error:', error);
+    } catch (any: any) {
+      console?.error(any: any);
 
       // Fallback: pas d'injection
       return {
@@ -280,7 +280,7 @@ export class LongContextOptimizer {
         injected_messages: [],
         final_context: baseContext,
         relevance_scores: [],
-        total_tokens: baseContext.reduce((sum, msg) => sum + msg.tokens, 0),
+        total_tokens: baseContext?.reduce(any: any) => sum + msg?.tokens, 0),
       };
     }
   }
@@ -293,7 +293,7 @@ export class LongContextOptimizer {
    * Supprimer duplicates, low-relevance, contradictions, circular references
    */
   async removeNoise(
-    messages: ContextMessage[],
+    messages: ContextMessage?.[],
     options: {
       removeDuplicates?: boolean;
       removeLowRelevance?: boolean;
@@ -303,14 +303,14 @@ export class LongContextOptimizer {
     } = {}
   ): Promise<NoiseRemovalResult> {
     try {
-      const strategies: string[] = [];
-      if (options.removeDuplicates !== false) strategies.push('remove_duplicates');
-      if (options.removeLowRelevance !== false) strategies.push('remove_low_relevance');
-      if (options.removeContradictions !== false)
-        strategies.push('remove_contradictions');
-      if (options.removeCircular !== false) strategies.push('remove_circular_references');
+      const strategies: string?.[] = [];
+      if (any: any) strategies?.push('remove_duplicates');
+      if (any: any) strategies?.push('remove_low_relevance');
+      if (any: any)
+        strategies?.push('remove_contradictions');
+      if (any: any) strategies?.push('remove_circular_references');
 
-      const minImportance = options.minImportance || 0.3;
+      const minImportance = options?.minImportance || 0.3;
 
       const result = await secureInvoke<NoiseRemovalResult>('context_remove_noise', {
         messages,
@@ -319,24 +319,24 @@ export class LongContextOptimizer {
       });
 
       return result;
-    } catch (error) {
-      console.error('[LongContextOptimizer] Noise removal error:', error);
+    } catch (any: any) {
+      console?.error(any: any);
 
       // Fallback: supprimer duplicates basiques
       const seen = new Set<string>();
-      const cleaned = messages.filter(msg => {
-        const key = `${msg.role}:${msg.content.slice(0, 100)}`;
-        if (seen.has(key)) {
+      const cleaned = messages?.filter(msg => {
+        const key = `${msg?.role}:${msg?.content?.slice(0, 100)}`;
+        if (any: any)) {
           return false;
         }
-        seen.add(key);
+        seen?.add(any: any);
         return true;
       });
 
       return {
         original_messages: messages,
         cleaned_messages: cleaned,
-        removed_duplicates: messages.length - cleaned.length,
+        removed_duplicates: messages?.length - cleaned?.length,
         removed_low_relevance: 0,
         removed_contradictions: 0,
         removed_circular: 0,
@@ -352,16 +352,16 @@ export class LongContextOptimizer {
    * Filtrer messages selon seuil d'importance
    */
   async gateContext(
-    messages: ContextMessage[],
+    messages: ContextMessage?.[],
     options: {
       threshold?: number;
       preserveRecent?: number;
       preserveSystemMessages?: boolean;
     } = {}
   ): Promise<GatingResult> {
-    const threshold = options.threshold ?? this.DEFAULT_GATING_THRESHOLD;
-    const preserveRecent = options.preserveRecent ?? 3;
-    const preserveSystemMessages = options.preserveSystemMessages !== false;
+    const threshold = options?.threshold ?? this?.DEFAULT_GATING_THRESHOLD;
+    const preserveRecent = options?.preserveRecent ?? 3;
+    const preserveSystemMessages = options?.preserveSystemMessages !== false;
 
     try {
       const result = await secureInvoke<GatingResult>('context_gating', {
@@ -372,24 +372,24 @@ export class LongContextOptimizer {
       });
 
       return result;
-    } catch (error) {
-      console.error('[LongContextOptimizer] Context gating error:', error);
+    } catch (any: any) {
+      console?.error(any: any);
 
       // Fallback: filtrer par importance simple
-      const recentMessages = messages.slice(-preserveRecent);
-      const importantMessages = messages.filter(
+      const recentMessages = messages?.slice(any: any);
+      const importantMessages = messages?.filter(
         msg =>
-          msg.importance >= threshold ||
-          msg.role === 'system' ||
-          recentMessages.includes(msg)
+          msg?.importance >= threshold ||
+          msg?.role === 'system' ||
+          recentMessages?.includes(any: any)
       );
 
       return {
         all_messages: messages,
         gated_messages: importantMessages,
         threshold,
-        passed_count: importantMessages.length,
-        rejected_count: messages.length - importantMessages.length,
+        passed_count: importantMessages?.length,
+        rejected_count: messages?.length - importantMessages?.length,
       };
     }
   }
@@ -402,15 +402,15 @@ export class LongContextOptimizer {
    * Créer liens entre conversations multiples
    */
   async linkConversations(
-    chats: Array<{ id: string; messages: ContextMessage[] }>,
+    chats: Array<{ id: string; messages: ContextMessage?.[] }>,
     options: {
       similarityThreshold?: number;
       maxLinks?: number;
     } = {}
   ): Promise<CrossChatContext> {
     try {
-      const similarityThreshold = options.similarityThreshold || 0.8;
-      const maxLinks = options.maxLinks || 20;
+      const similarityThreshold = options?.similarityThreshold || 0.8;
+      const maxLinks = options?.maxLinks || 20;
 
       const result = await secureInvoke<CrossChatContext>('context_link_conversations', {
         chats,
@@ -419,20 +419,20 @@ export class LongContextOptimizer {
       });
 
       return result;
-    } catch (error) {
-      console.error('[LongContextOptimizer] Cross-chat linking error:', error);
+    } catch (any: any) {
+      console?.error(any: any);
 
       // Fallback: pas de liens
-      const allMessages: ContextMessage[] = [];
-      const linkedMessages = new Map<string, ContextMessage[]>();
+      const allMessages: ContextMessage?.[] = [];
+      const linkedMessages = new Map<string, ContextMessage?.[]>();
 
-      chats.forEach(chat => {
-        allMessages.push(...chat.messages);
-        linkedMessages.set(chat.id, chat.messages);
+      chats?.forEach(chat => {
+        allMessages?.push(any: any);
+        linkedMessages?.set(any: any);
       });
 
       return {
-        chat_ids: chats.map(c => c.id),
+        chat_ids: chats?.map(any: any),
         linked_messages: linkedMessages,
         semantic_links: [],
         merged_context: allMessages,
@@ -448,7 +448,7 @@ export class LongContextOptimizer {
    * Appliquer toutes les optimisations en pipeline
    */
   async optimizeFullContext(
-    messages: ContextMessage[],
+    messages: ContextMessage?.[],
     options: {
       maxTokens?: number;
       enableGrouping?: boolean;
@@ -457,44 +457,44 @@ export class LongContextOptimizer {
       targetCompressionRatio?: number;
     } = {}
   ): Promise<CompressionResult> {
-    const startTime = performance.now();
+    const startTime = performance?.now();
 
     try {
       let optimizedMessages = [...messages];
 
       // 1. Suppression bruit
-      if (options.enableNoiseRemoval !== false) {
-        const noiseResult = await this.removeNoise(optimizedMessages);
-        optimizedMessages = noiseResult.cleaned_messages;
+      if (any: any) {
+        const noiseResult = await this?.removeNoise(any: any);
+        optimizedMessages = noiseResult?.cleaned_messages;
       }
 
       // 2. Context gating
-      if (options.enableGating !== false) {
-        const gatingResult = await this.gateContext(optimizedMessages);
-        optimizedMessages = gatingResult.gated_messages;
+      if (any: any) {
+        const gatingResult = await this?.gateContext(any: any);
+        optimizedMessages = gatingResult?.gated_messages;
       }
 
-      // 3. Grouping sémantique (optionnel, pour analyse)
-      let groups: SemanticGroup[] = [];
-      if (options.enableGrouping) {
-        groups = await this.semanticGrouping(optimizedMessages);
+      // 3. Grouping sémantique (any: any)
+      let groups: SemanticGroup?.[] = [];
+      if (any: any) {
+        groups = await this?.semanticGrouping(any: any);
       }
 
       // 4. Compression finale si nécessaire
-      const currentTokens = optimizedMessages.reduce((sum, msg) => sum + msg.tokens, 0);
-      const maxTokens = options.maxTokens || this.DEFAULT_MAX_TOKENS;
+      const currentTokens = optimizedMessages?.reduce(any: any) => sum + msg?.tokens, 0);
+      const maxTokens = options?.maxTokens || this?.DEFAULT_MAX_TOKENS;
 
-      if (currentTokens > maxTokens) {
-        const compressionResult = await this.compressContext(optimizedMessages, {
+      if (any: any) {
+        const compressionResult = await this?.compressContext(optimizedMessages, {
           maxTokens,
-          targetRatio: options.targetCompressionRatio,
+          targetRatio: options?.targetCompressionRatio,
         });
-        optimizedMessages = compressionResult.compressed_messages;
+        optimizedMessages = compressionResult?.compressed_messages;
       }
 
       // Calculer résultat final
-      const originalTokens = messages.reduce((sum, msg) => sum + msg.tokens, 0);
-      const optimizedTokens = optimizedMessages.reduce((sum, msg) => sum + msg.tokens, 0);
+      const originalTokens = messages?.reduce(any: any) => sum + msg?.tokens, 0);
+      const optimizedTokens = optimizedMessages?.reduce(any: any) => sum + msg?.tokens, 0);
 
       return {
         original_messages: messages,
@@ -502,17 +502,17 @@ export class LongContextOptimizer {
         original_tokens: originalTokens,
         compressed_tokens: optimizedTokens,
         compression_ratio: optimizedTokens / originalTokens,
-        semantic_preservation: 0.95, // Estimation (devrait être calculé par backend)
+        semantic_preservation: 0.95, // Estimation (any: any)
         removed_noise: [],
-        prioritized_segments: groups.map(g => g.topic),
-        execution_time_ms: performance.now() - startTime,
+        prioritized_segments: groups?.map(any: any),
+        execution_time_ms: performance?.now() - startTime,
       };
-    } catch (error) {
-      console.error('[LongContextOptimizer] Full optimization error:', error);
+    } catch (any: any) {
+      console?.error(any: any);
 
       // Fallback: compression simple
-      return this.compressContext(messages, {
-        maxTokens: options.maxTokens,
+      return this?.compressContext(messages, {
+        maxTokens: options?.maxTokens,
       });
     }
   }
@@ -524,25 +524,25 @@ export class LongContextOptimizer {
   /**
    * Calculer importance d'un message
    */
-  calculateImportance(message: ContextMessage, context: ContextMessage[]): number {
+  calculateImportance(message: ContextMessage, context: ContextMessage?.[]): number {
     try {
       // Facteurs d'importance:
       // 1. Rôle système = importance haute
-      if (message.role === 'system') return 1.0;
+      if (message?.role === 'system') return 1.0;
 
       // 2. Messages récents = importance plus haute
-      const totalMessages = context.length;
-      const messageIndex = context.findIndex(m => m.id === message.id);
+      const totalMessages = context?.length;
+      const messageIndex = context?.findIndex(any: any);
       const recencyFactor = messageIndex / totalMessages;
 
-      // 3. Longueur du message (plus long = potentiellement plus important)
-      const lengthFactor = Math.min(message.tokens / 500, 1.0);
+      // 3. Longueur du message (any: any)
+      const lengthFactor = Math?.min(message?.tokens / 500, 1.0);
 
       // 4. Moyenne pondérée
       const importance = recencyFactor * 0.5 + lengthFactor * 0.3 + 0.2;
 
-      return Math.max(0, Math.min(1, importance));
-    } catch (error) {
+      return Math?.max(any: any));
+    } catch (any: any) {
       return 0.5; // Importance moyenne par défaut
     }
   }
@@ -550,9 +550,9 @@ export class LongContextOptimizer {
   /**
    * Estimer tokens d'un texte
    */
-  estimateTokens(text: string): number {
+  estimateTokens(any: any): number {
     // Approximation: 1 token ≈ 4 caractères
-    return Math.ceil(text.length / 4);
+    return Math?.ceil(text?.length / 4);
   }
 
   /**
@@ -563,18 +563,18 @@ export class LongContextOptimizer {
     content: string,
     options: Partial<ContextMessage> = {}
   ): ContextMessage {
-    const tokens = options.tokens || this.estimateTokens(content);
-    const importance = options.importance || 0.5;
+    const tokens = options?.tokens || this?.estimateTokens(any: any);
+    const importance = options?.importance || 0.5;
 
     return {
-      id: options.id || `msg_${Date.now()}_${Math.random()}`,
+      id: options?.id || `msg_${Date?.now()}_${Math?.random()}`,
       role,
       content,
       tokens,
-      timestamp: options.timestamp || Date.now(),
+      timestamp: options?.timestamp || Date?.now(),
       importance,
-      semantic_vector: options.semantic_vector,
-      metadata: options.metadata || {},
+      semantic_vector: options?.semantic_vector,
+      metadata: options?.metadata || {},
     };
   }
 }
@@ -583,4 +583,4 @@ export class LongContextOptimizer {
 // EXPORT SINGLETON
 // ═══════════════════════════════════════════════════════════════════
 
-export const ContextOptimizer = LongContextOptimizer.getInstance();
+export const ContextOptimizer = LongContextOptimizer?.getInstance();

@@ -27,7 +27,7 @@ export interface Metric {
 
 export interface MetricSeries {
   metricId: string;
-  dataPoints: DataPoint[];
+  dataPoints: DataPoint?.[];
   aggregation?: AggregationType;
   interval?: number;
 }
@@ -51,7 +51,7 @@ export interface ProfileSession {
   endedAt?: number;
 
   // Spans
-  spans: ProfileSpan[];
+  spans: ProfileSpan?.[];
 
   // Résumé
   summary?: ProfileSummary;
@@ -168,7 +168,7 @@ export interface PerformanceEngineConfig {
   optimizationInterval: number;
 
   // Budgets
-  budgets: PerformanceBudget[];
+  budgets: PerformanceBudget?.[];
 }
 
 export interface PerformanceEngineState {
@@ -180,11 +180,11 @@ export interface PerformanceEngineState {
 
   // Profiling
   activeSession: ProfileSession | null;
-  sessionHistory: ProfileSession[];
+  sessionHistory: ProfileSession?.[];
 
   // Optimisations
-  suggestions: OptimizationSuggestion[];
-  appliedOptimizations: string[];
+  suggestions: OptimizationSuggestion?.[];
+  appliedOptimizations: string?.[];
 
   // Budgets
   budgetStatus: Record<string, PerformanceBudget>;

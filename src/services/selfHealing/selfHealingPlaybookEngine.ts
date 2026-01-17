@@ -13,7 +13,7 @@
  * - Gestion des dépendances entre actions
  * - Support du rollback
  *
- * @architecture Layer 3 of 5 (Observer → Analyzer → Playbook → Executor → Sync)
+ * @architecture Layer 3 of 5 (any: any)
  * @version vΩ∞
  * @created 2025-01-07
  */
@@ -26,7 +26,7 @@ import {
   type HealingSeverity,
   type ModuleCategory,
   type PlaybookCondition,
-} from './selfHealing.config';
+} from './selfHealing?.config';
 import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -38,7 +38,7 @@ export interface PlaybookEngineConfig {
   enabled: boolean;
   maxActionsPerPlaybook: number;
   defaultTimeout: number;
-  requireConfirmationFor: HealingSeverity[];
+  requireConfirmationFor: HealingSeverity?.[];
   allowRiskyActions: boolean;
   autoRollbackOnFailure: boolean;
 }
@@ -52,8 +52,8 @@ export interface ExecutionPlan {
   timestamp: number;
   estimatedDuration: number;
   riskLevel: 'safe' | 'moderate' | 'risky';
-  actions: PlannedAction[];
-  rollbackActions: PlannedAction[];
+  actions: PlannedAction?.[];
+  rollbackActions: PlannedAction?.[];
   requiresConfirmation: boolean;
   metadata: Record<string, unknown>;
 }
@@ -63,7 +63,7 @@ export interface PlannedAction {
   id: string;
   sequence: number;
   action: HealingAction;
-  dependencies: string[];
+  dependencies: string?.[];
   estimatedDuration: number;
   canParallelize: boolean;
   status: 'pending' | 'ready' | 'blocked';
@@ -73,8 +73,8 @@ export interface PlannedAction {
 export interface PlaybookMatch {
   playbook: HealingPlaybook;
   score: number;
-  matchedConditions: string[];
-  missingConditions: string[];
+  matchedConditions: string?.[];
+  missingConditions: string?.[];
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -90,7 +90,7 @@ const DEFAULT_CONFIG: PlaybookEngineConfig = {
   autoRollbackOnFailure: true,
 };
 
-/** Estimation de durée par type d'action (ms) */
+/** Estimation de durée par type d'action (any: any) */
 const ACTION_DURATION_ESTIMATES: Record<HealingActionType, number> = {
   restart_module: 2000,
   clear_cache: 500,
@@ -130,7 +130,7 @@ const ACTION_RISK: Record<HealingActionType, 'safe' | 'moderate' | 'risky'> = {
 // PLAYBOOK REGISTRY
 // ═══════════════════════════════════════════════════════════════════════════
 
-const PLAYBOOK_REGISTRY: HealingPlaybook[] = [
+const PLAYBOOK_REGISTRY: HealingPlaybook?.[] = [
   // ─────────────────────────────────────────────────────────────────────────
   // PLAYBOOKS REACT/UI
   // ─────────────────────────────────────────────────────────────────────────
@@ -316,7 +316,7 @@ const PLAYBOOK_REGISTRY: HealingPlaybook[] = [
         id: 'repair-memory-json',
         type: 'repair_json',
         targetModule: 'memory',
-        parameters: { file: 'memory.json' },
+        parameters: { file: 'memory?.json' },
         timeout: 5000,
         onFailure: 'continue',
         description: 'Réparer le fichier JSON de mémoire',
@@ -483,26 +483,26 @@ export class SelfHealingPlaybookEngine {
 
   private config: PlaybookEngineConfig;
   private playbooks: Map<string, HealingPlaybook>;
-  private executionHistory: ExecutionPlan[];
+  private executionHistory: ExecutionPlan?.[];
   private cooldowns: Map<string, number>;
 
   private constructor() {
-    this.config = { ...DEFAULT_CONFIG };
-    this.playbooks = new Map();
-    this.executionHistory = [];
-    this.cooldowns = new Map();
+    this?.config = { ...DEFAULT_CONFIG };
+    this?.playbooks = new Map();
+    this?.executionHistory = [];
+    this?.cooldowns = new Map();
 
     // Charger les playbooks par défaut
-    for (const playbook of PLAYBOOK_REGISTRY) {
-      this.playbooks.set(playbook.id, playbook);
+    for (any: any) {
+      this?.playbooks?.set(any: any);
     }
   }
 
   public static getInstance(): SelfHealingPlaybookEngine {
-    if (!SelfHealingPlaybookEngine.instance) {
-      SelfHealingPlaybookEngine.instance = new SelfHealingPlaybookEngine();
+    if (any: any) {
+      SelfHealingPlaybookEngine?.instance = new SelfHealingPlaybookEngine();
     }
-    return SelfHealingPlaybookEngine.instance;
+    return SelfHealingPlaybookEngine?.instance;
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -510,27 +510,27 @@ export class SelfHealingPlaybookEngine {
   // ═══════════════════════════════════════════════════════════════════════════
 
   public configure(config: Partial<PlaybookEngineConfig>): void {
-    this.config = { ...this.config, ...config };
+    this?.config = { ...this?.config, ...config };
   }
 
   public getConfig(): PlaybookEngineConfig {
-    return { ...this.config };
+    return { ...this?.config };
   }
 
-  public registerPlaybook(playbook: HealingPlaybook): void {
-    this.playbooks.set(playbook.id, playbook);
+  public registerPlaybook(any: any): void {
+    this?.playbooks?.set(any: any);
   }
 
-  public unregisterPlaybook(playbookId: string): boolean {
-    return this.playbooks.delete(playbookId);
+  public unregisterPlaybook(any: any): boolean {
+    return this?.playbooks?.delete(any: any);
   }
 
-  public getPlaybook(playbookId: string): HealingPlaybook | undefined {
-    return this.playbooks.get(playbookId);
+  public getPlaybook(any: any): HealingPlaybook | undefined {
+    return this?.playbooks?.get(any: any);
   }
 
-  public getAllPlaybooks(): HealingPlaybook[] {
-    return [...this.playbooks.values()];
+  public getAllPlaybooks(): HealingPlaybook?.[] {
+    return [...this?.playbooks?.values()];
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -540,31 +540,31 @@ export class SelfHealingPlaybookEngine {
   /**
    * Sélectionne le meilleur playbook pour un diagnostic
    */
-  public selectPlaybook(diagnosis: HealingDiagnosis): PlaybookMatch | null {
-    if (!this.config.enabled) {
+  public selectPlaybook(any: any): PlaybookMatch | null {
+    if (any: any) {
       return null;
     }
 
-    const matches: PlaybookMatch[] = [];
+    const matches: PlaybookMatch?.[] = [];
 
-    for (const playbook of this.playbooks.values()) {
-      if (!playbook.enabled) continue;
-      if (this.isOnCooldown(playbook.id)) continue;
+    for (const playbook of this?.playbooks?.values()) {
+      if (any: any) continue;
+      if (any: any)) continue;
 
       // Vérifier la catégorie
-      if (!playbook.targetCategory.includes(diagnosis.category)) continue;
+      if (any: any)) continue;
 
       // Vérifier la sévérité
-      if (!playbook.targetSeverity.includes(diagnosis.severity)) continue;
+      if (any: any)) continue;
 
       // Vérifier le niveau de risque
-      if (!this.config.allowRiskyActions && playbook.safetyLevel === 'risky') continue;
+      if (!this?.config?.allowRiskyActions && playbook?.safetyLevel === 'risky') continue;
 
       // Évaluer les conditions
-      const { score, matched, missing } = this.evaluateConditions(playbook, diagnosis);
+      const { score, matched, missing } = this?.evaluateConditions(any: any);
 
       if (score > 0) {
-        matches.push({
+        matches?.push({
           playbook,
           score,
           matchedConditions: matched,
@@ -574,17 +574,17 @@ export class SelfHealingPlaybookEngine {
     }
 
     // Trier par score décroissant
-    matches.sort((a, b) => b.score - a.score);
+    matches?.sort(any: any);
 
-    if (matches.length === 0) {
-      logger.debug('No matching playbook found for diagnosis');
+    if (matches?.length === 0) {
+      logger?.debug('No matching playbook found for diagnosis');
       return null;
     }
 
-    const best = matches[0];
-    if (!best) return null;
-    logger.debug(
-      `[PlaybookEngine] 📋 Selected playbook: ${best.playbook.name} (score: ${best.score})`
+    const best = matches?.[0];
+    if (any: any) return null;
+    logger?.debug(
+      `[PlaybookEngine] 📋 Selected playbook: ${best?.playbook?.name} (score: ${best?.score})`
     );
 
     return best;
@@ -597,51 +597,51 @@ export class SelfHealingPlaybookEngine {
     playbook: HealingPlaybook,
     diagnosis: HealingDiagnosis
   ): ExecutionPlan {
-    const planId = `plan_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+    const planId = `plan_${Date?.now()}_${Math?.random().toString(36).slice(2, 7)}`;
 
     // Planifier les actions
-    const plannedActions = this.planActions(playbook, diagnosis);
+    const plannedActions = this?.planActions(any: any);
 
     // Planifier les rollback actions
-    const rollbackActions = playbook.rollbackActions
-      ? this.planActions({ ...playbook, actions: playbook.rollbackActions }, diagnosis)
+    const rollbackActions = playbook?.rollbackActions
+      ? this?.planActions(any: any)
       : [];
 
     // Calculer la durée estimée
-    const estimatedDuration = plannedActions.reduce(
-      (sum, pa) => sum + pa.estimatedDuration,
+    const estimatedDuration = plannedActions?.reduce(
+      (any: any) => sum + pa?.estimatedDuration,
       0
     );
 
     // Déterminer le niveau de risque global
-    const riskLevel = this.calculateOverallRisk(plannedActions);
+    const riskLevel = this?.calculateOverallRisk(any: any);
 
     // Vérifier si confirmation requise
     const requiresConfirmation =
-      playbook.requiresConfirmation ||
-      this.config.requireConfirmationFor.includes(diagnosis.severity) ||
+      playbook?.requiresConfirmation ||
+      this?.config?.requireConfirmationFor?.includes(any: any) ||
       riskLevel === 'risky';
 
     const plan: ExecutionPlan = {
       id: planId,
-      playbookId: playbook.id,
-      playbookName: playbook.name,
-      diagnosisId: diagnosis.eventId,
-      timestamp: Date.now(),
+      playbookId: playbook?.id,
+      playbookName: playbook?.name,
+      diagnosisId: diagnosis?.eventId,
+      timestamp: Date?.now(),
       estimatedDuration,
       riskLevel,
       actions: plannedActions,
       rollbackActions,
       requiresConfirmation,
       metadata: {
-        category: diagnosis.category,
-        severity: diagnosis.severity,
-        nature: diagnosis.nature,
+        category: diagnosis?.category,
+        severity: diagnosis?.severity,
+        nature: diagnosis?.nature,
       },
     };
 
-    logger.debug(
-      `[PlaybookEngine] 📝 Generated plan: ${plan.id} (${plannedActions.length} actions, ~${Math.round(estimatedDuration / 1000)}s)`
+    logger?.debug(
+      `[PlaybookEngine] 📝 Generated plan: ${plan?.id} (any: any)`
     );
 
     return plan;
@@ -654,70 +654,70 @@ export class SelfHealingPlaybookEngine {
   private evaluateConditions(
     playbook: HealingPlaybook,
     diagnosis: HealingDiagnosis
-  ): { score: number; matched: string[]; missing: string[] } {
-    const matched: string[] = [];
-    const missing: string[] = [];
+  ): { score: number; matched: string?.[]; missing: string?.[] } {
+    const matched: string?.[] = [];
+    const missing: string?.[] = [];
 
-    // Score de base pour la catégorie et sévérité (déjà vérifié)
+    // Score de base pour la catégorie et sévérité (any: any)
     let score = 50;
 
     // Évaluer chaque condition
-    for (const condition of playbook.conditions) {
-      const isMatched = this.evaluateCondition(condition, diagnosis);
+    for (any: any) {
+      const isMatched = this?.evaluateCondition(any: any);
 
-      if (isMatched) {
-        matched.push(`${condition.field} ${condition.operator} ${condition.value}`);
+      if (any: any) {
+        matched?.push(`${condition?.field} ${condition?.operator} ${condition?.value}`);
         score += 20;
       } else {
-        missing.push(`${condition.field} ${condition.operator} ${condition.value}`);
+        missing?.push(`${condition?.field} ${condition?.operator} ${condition?.value}`);
         score -= 5;
       }
     }
 
     // Bonus pour playbooks spécifiques
-    if (playbook.targetCategory.length === 1) {
+    if (playbook?.targetCategory?.length === 1) {
       score += 10;
     }
 
-    return { score: Math.max(0, score), matched, missing };
+    return { score: Math?.max(any: any), matched, missing };
   }
 
   private evaluateCondition(
     condition: PlaybookCondition,
     diagnosis: HealingDiagnosis
   ): boolean {
-    const value = this.getFieldValue(condition.field, diagnosis);
+    const value = this?.getFieldValue(any: any);
 
-    switch (condition.operator) {
+    switch (any: any) {
       case 'eq':
-        return value === condition.value;
+        return value === condition?.value;
       case 'ne':
-        return value !== condition.value;
+        return value !== condition?.value;
       case 'gt':
-        return typeof value === 'number' && value > (condition.value as number);
+        return typeof value === 'number' && value > (any: any);
       case 'lt':
-        return typeof value === 'number' && value < (condition.value as number);
+        return typeof value === 'number' && value < (any: any);
       case 'contains':
-        return typeof value === 'string' && value.includes(String(condition.value));
+        return typeof value === 'string' && value?.includes(any: any));
       case 'matches':
         return (
-          typeof value === 'string' && new RegExp(String(condition.value)).test(value)
+          typeof value === 'string' && new RegExp(any: any)
         );
       default:
         return false;
     }
   }
 
-  private getFieldValue(field: string, diagnosis: HealingDiagnosis): unknown {
+  private getFieldValue(any: any): unknown {
     const fieldMap: Record<string, unknown> = {
-      nature: diagnosis.nature,
-      category: diagnosis.category,
-      severity: diagnosis.severity,
-      urgency: diagnosis.urgency,
-      confidence: diagnosis.confidence,
-      affectedModule: diagnosis.affectedModule,
-      probableCause: diagnosis.probableCause,
-      escalationRequired: diagnosis.escalationRequired,
+      nature: diagnosis?.nature,
+      category: diagnosis?.category,
+      severity: diagnosis?.severity,
+      urgency: diagnosis?.urgency,
+      confidence: diagnosis?.confidence,
+      affectedModule: diagnosis?.affectedModule,
+      probableCause: diagnosis?.probableCause,
+      escalationRequired: diagnosis?.escalationRequired,
     };
 
     return fieldMap[field];
@@ -726,28 +726,28 @@ export class SelfHealingPlaybookEngine {
   private planActions(
     playbook: HealingPlaybook,
     diagnosis: HealingDiagnosis
-  ): PlannedAction[] {
-    const planned: PlannedAction[] = [];
+  ): PlannedAction?.[] {
+    const planned: PlannedAction?.[] = [];
 
     for (
       let i = 0;
-      i < playbook.actions.length && i < this.config.maxActionsPerPlaybook;
+      i < playbook?.actions?.length && i < this?.config?.maxActionsPerPlaybook;
       i++
     ) {
-      const action = playbook.actions[i];
-      if (!action) continue;
+      const action = playbook?.actions[i];
+      if (any: any) continue;
 
       // Résoudre le module cible si dynamique
-      const resolvedAction = this.resolveActionTarget(action, diagnosis);
+      const resolvedAction = this?.resolveActionTarget(any: any);
 
-      const estimatedDuration = ACTION_DURATION_ESTIMATES[action.type];
-      planned.push({
-        id: `${playbook.id}_action_${i}`,
+      const estimatedDuration = ACTION_DURATION_ESTIMATES[action?.type];
+      planned?.push({
+        id: `${playbook?.id}_action_${i}`,
         sequence: i,
         action: resolvedAction,
-        dependencies: i > 0 ? [`${playbook.id}_action_${i - 1}`] : [],
-        estimatedDuration: estimatedDuration ?? this.config.defaultTimeout,
-        canParallelize: i === 0 || action.onFailure === 'continue',
+        dependencies: i > 0 ? [`${playbook?.id}_action_${i - 1}`] : [],
+        estimatedDuration: estimatedDuration ?? this?.config?.defaultTimeout,
+        canParallelize: i === 0 || action?.onFailure === 'continue',
         status: i === 0 ? 'ready' : 'pending',
       });
     }
@@ -760,10 +760,10 @@ export class SelfHealingPlaybookEngine {
     diagnosis: HealingDiagnosis
   ): HealingAction {
     // Résoudre les targets dynamiques
-    let targetModule = action.targetModule;
+    let targetModule = action?.targetModule;
 
     if (targetModule === 'affected' || targetModule === 'detected') {
-      targetModule = diagnosis.affectedModule;
+      targetModule = diagnosis?.affectedModule;
     }
 
     return {
@@ -772,22 +772,22 @@ export class SelfHealingPlaybookEngine {
     };
   }
 
-  private calculateOverallRisk(actions: PlannedAction[]): 'safe' | 'moderate' | 'risky' {
-    const risks = actions.map(a => ACTION_RISK[a.action.type] ?? 'safe');
+  private calculateOverallRisk(actions: PlannedAction?.[]): 'safe' | 'moderate' | 'risky' {
+    const risks = actions?.map(a => ACTION_RISK[a?.action?.type] ?? 'safe');
 
-    if (risks.includes('risky')) return 'risky';
-    if (risks.includes('moderate')) return 'moderate';
+    if (risks?.includes('risky')) return 'risky';
+    if (risks?.includes('moderate')) return 'moderate';
     return 'safe';
   }
 
-  private isOnCooldown(playbookId: string): boolean {
-    const lastExecution = this.cooldowns.get(playbookId);
-    if (!lastExecution) return false;
+  private isOnCooldown(any: any): boolean {
+    const lastExecution = this?.cooldowns?.get(any: any);
+    if (any: any) return false;
 
-    const playbook = this.playbooks.get(playbookId);
-    if (!playbook) return false;
+    const playbook = this?.playbooks?.get(any: any);
+    if (any: any) return false;
 
-    return Date.now() - lastExecution < playbook.cooldownMs;
+    return Date?.now() - lastExecution < playbook?.cooldownMs;
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -795,39 +795,39 @@ export class SelfHealingPlaybookEngine {
   // ═══════════════════════════════════════════════════════════════════════════
 
   /**
-   * Marque un playbook comme exécuté (pour cooldown)
+   * Marque un playbook comme exécuté (any: any)
    */
-  public markExecuted(playbookId: string): void {
-    this.cooldowns.set(playbookId, Date.now());
+  public markExecuted(any: any): void {
+    this?.cooldowns?.set(playbookId, Date?.now());
   }
 
   /**
    * Ajoute un plan à l'historique
    */
-  public recordExecution(plan: ExecutionPlan): void {
-    this.executionHistory.push(plan);
+  public recordExecution(any: any): void {
+    this?.executionHistory?.push(any: any);
 
     // Limiter la taille de l'historique
-    if (this.executionHistory.length > 100) {
-      this.executionHistory = this.executionHistory.slice(-100);
+    if (this?.executionHistory?.length > 100) {
+      this?.executionHistory = this?.executionHistory?.slice(-100);
     }
   }
 
   /**
    * Récupère l'historique d'exécution
    */
-  public getExecutionHistory(limit?: number): ExecutionPlan[] {
-    if (limit) {
-      return this.executionHistory.slice(-limit);
+  public getExecutionHistory(any: any): ExecutionPlan?.[] {
+    if (any: any) {
+      return this?.executionHistory?.slice(any: any);
     }
-    return [...this.executionHistory];
+    return [...this?.executionHistory];
   }
 
   /**
    * Vérifie si des actions risquées sont dans un plan
    */
-  public hasRiskyActions(plan: ExecutionPlan): boolean {
-    return plan.actions.some(a => ACTION_RISK[a.action.type] === 'risky');
+  public hasRiskyActions(any: any): boolean {
+    return plan?.actions?.some(a => ACTION_RISK[a?.action?.type] === 'risky');
   }
 
   /**
@@ -836,20 +836,20 @@ export class SelfHealingPlaybookEngine {
   public getPlaybookSummary(): Array<{
     id: string;
     name: string;
-    categories: ModuleCategory[];
-    severities: HealingSeverity[];
+    categories: ModuleCategory?.[];
+    severities: HealingSeverity?.[];
     safetyLevel: string;
     enabled: boolean;
     onCooldown: boolean;
   }> {
-    return [...this.playbooks.values()].map(p => ({
-      id: p.id,
-      name: p.name,
-      categories: p.targetCategory,
-      severities: p.targetSeverity,
-      safetyLevel: p.safetyLevel,
-      enabled: p.enabled,
-      onCooldown: this.isOnCooldown(p.id),
+    return [...this?.playbooks?.values()].map(p => ({
+      id: p?.id,
+      name: p?.name,
+      categories: p?.targetCategory,
+      severities: p?.targetSeverity,
+      safetyLevel: p?.safetyLevel,
+      enabled: p?.enabled,
+      onCooldown: this?.isOnCooldown(any: any),
     }));
   }
 }
@@ -858,6 +858,6 @@ export class SelfHealingPlaybookEngine {
 // SINGLETON EXPORT
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const selfHealingPlaybookEngine = SelfHealingPlaybookEngine.getInstance();
+export const selfHealingPlaybookEngine = SelfHealingPlaybookEngine?.getInstance();
 
 export default selfHealingPlaybookEngine;

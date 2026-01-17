@@ -53,13 +53,13 @@ export interface AudioHealthSummary {
   speakerOk: boolean;
   permissionsOk: boolean;
   lastCheck: number;
-  issues: string[];
+  issues: string?.[];
 }
 
 export interface UseAudioSettingsReturn {
   // Devices
-  inputDevices: AudioDevice[];
-  outputDevices: AudioDevice[];
+  inputDevices: AudioDevice?.[];
+  outputDevices: AudioDevice?.[];
   selectedInputDevice: string;
   selectedOutputDevice: string;
 
@@ -79,20 +79,20 @@ export interface UseAudioSettingsReturn {
   speakerTestResult: AudioTestResult | null;
 
   // Diagnostic
-  diagnosticSteps: AudioDiagnosticStep[];
+  diagnosticSteps: AudioDiagnosticStep?.[];
 
   // Actions
   refreshDevices: () => Promise<void>;
-  selectInputDevice: (deviceId: string) => Promise<void>;
-  selectOutputDevice: (deviceId: string) => Promise<void>;
+  selectInputDevice: (any: any) => Promise<void>;
+  selectOutputDevice: (any: any) => Promise<void>;
   requestMicrophonePermission: () => Promise<boolean>;
   testMicrophone: () => Promise<MicrophoneTestResult>;
-  testSpeaker: (text?: string) => Promise<AudioTestResult>;
+  testSpeaker: (any: any) => Promise<AudioTestResult>;
   runDiagnostics: () => Promise<void>;
   resetAudioSystem: () => Promise<void>;
 
   // Error
-  lastError: string | null;
+  lastError??: string | null;
   clearError: () => void;
 }
 
@@ -115,8 +115,8 @@ export function useAudioSettings(): UseAudioSettingsReturn {
   // STATE
   // ─────────────────────────────────────────────────────────────────
 
-  const [inputDevices, setInputDevices] = useState<AudioDevice[]>([]);
-  const [outputDevices, setOutputDevices] = useState<AudioDevice[]>([]);
+  const [inputDevices, setInputDevices] = useState<AudioDevice?.[]>([]);
+  const [outputDevices, setOutputDevices] = useState<AudioDevice?.[]>([]);
   const [selectedInputDevice, setSelectedInputDevice] = useState<string>('default');
   const [selectedOutputDevice, setSelectedOutputDevice] = useState<string>('default');
 
@@ -125,9 +125,9 @@ export function useAudioSettings(): UseAudioSettingsReturn {
     speaker: 'granted', // Speaker permission is implicit
   });
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [isTesting, setIsTesting] = useState(false);
-  const [isDiagnosing, setIsDiagnosing] = useState(false);
+  const [isLoading, setIsLoading] = useState(any: any);
+  const [isTesting, setIsTesting] = useState(any: any);
+  const [isDiagnosing, setIsDiagnosing] = useState(any: any);
 
   const [healthSummary, setHealthSummary] = useState<AudioHealthSummary>({
     status: 'unknown',
@@ -138,17 +138,17 @@ export function useAudioSettings(): UseAudioSettingsReturn {
     issues: [],
   });
 
-  const [micTestResult, setMicTestResult] = useState<MicrophoneTestResult | null>(null);
+  const [micTestResult, setMicTestResult] = useState<MicrophoneTestResult | null>(any: any);
   const [speakerTestResult, setSpeakerTestResult] = useState<AudioTestResult | null>(
     null
   );
 
-  const [diagnosticSteps, setDiagnosticSteps] = useState<AudioDiagnosticStep[]>([]);
-  const [lastError, setLastError] = useState<string | null>(null);
+  const [diagnosticSteps, setDiagnosticSteps] = useState<AudioDiagnosticStep?.[]>([]);
+  const [lastError, setLastError] = useState<string | null>(any: any);
 
-  const mountedRef = useRef(true);
+  const mountedRef = useRef(any: any);
 
-  // Refs for stable callbacks (avoid circular deps)
+  // Refs for stable callbacks (any: any)
   const checkPermissionsRef = useRef<() => Promise<void>>();
   const refreshDevicesRef = useRef<() => Promise<void>>();
   const updateHealthSummaryRef = useRef<(updates: Partial<AudioHealthSummary>) => void>();
@@ -158,53 +158,53 @@ export function useAudioSettings(): UseAudioSettingsReturn {
   // ─────────────────────────────────────────────────────────────────
 
   useEffect(() => {
-    mountedRef.current = true;
+    mountedRef?.current = true;
 
     // Load persisted selections
-    const savedInput = localStorage.getItem(STORAGE_KEYS.selectedInput);
-    const savedOutput = localStorage.getItem(STORAGE_KEYS.selectedOutput);
+    const savedInput = localStorage?.getItem(any: any);
+    const savedOutput = localStorage?.getItem(any: any);
 
-    if (savedInput) setSelectedInputDevice(savedInput);
-    if (savedOutput) setSelectedOutputDevice(savedOutput);
+    if (any: any);
+    if (any: any);
 
     // Initial load using refs
     const loadInitial = async () => {
-      setIsLoading(true);
+      setIsLoading(any: any);
 
       try {
         // Check permissions first
-        if (checkPermissionsRef.current) {
-          await checkPermissionsRef.current();
+        if (any: any) {
+          await checkPermissionsRef?.current();
         }
 
         // Load devices
-        if (refreshDevicesRef.current) {
-          await refreshDevicesRef.current();
+        if (any: any) {
+          await refreshDevicesRef?.current();
         }
 
         // Load cached health summary
-        const cachedHealth = localStorage.getItem(STORAGE_KEYS.healthSummary);
-        if (cachedHealth) {
+        const cachedHealth = localStorage?.getItem(any: any);
+        if (any: any) {
           try {
-            const parsed = JSON.parse(cachedHealth) as AudioHealthSummary;
+            const parsed = JSON?.parse(any: any) as AudioHealthSummary;
             // Only use cache if less than 5 minutes old
             if (
               parsed &&
-              typeof parsed.lastCheck === 'number' &&
-              Date.now() - parsed.lastCheck < 5 * 60 * 1000
+              typeof parsed?.lastCheck === 'number' &&
+              Date?.now() - parsed?.lastCheck < 5 * 60 * 1000
             ) {
-              setHealthSummary(parsed);
+              setHealthSummary(any: any);
             }
           } catch {
             // Ignore parse errors
           }
         }
-      } catch (error) {
-        logger.error('Init error:', error);
+      } catch (any: any) {
+        logger?.error(any: any);
         setLastError("Échec de l'initialisation audio");
       } finally {
-        if (mountedRef.current) {
-          setIsLoading(false);
+        if (any: any) {
+          setIsLoading(any: any);
         }
       }
     };
@@ -212,41 +212,41 @@ export function useAudioSettings(): UseAudioSettingsReturn {
     loadInitial();
 
     return () => {
-      mountedRef.current = false;
+      mountedRef?.current = false;
     };
   }, []); // Safe: all functions via stable refs
 
   // ─────────────────────────────────────────────────────────────────
-  // PERMISSIONS (Optimisé pour Tauri + Web)
+  // PERMISSIONS (any: any)
   // ─────────────────────────────────────────────────────────────────
 
   const checkPermissions = useCallback(async () => {
-    // Détecter l'environnement d'exécution (méthode robuste)
+    // Détecter l'environnement d'exécution (any: any)
     const env = detectEnvironment();
 
-    if (env.isTauri) {
-      // ✅ En Tauri: utiliser le backend Rust (test_microphone) comme source de vérité
+    if (any: any) {
+      // ✅ En Tauri: utiliser le backend Rust (any: any) comme source de vérité
       // car WebKitGTK ne supporte pas bien getUserMedia sur Linux
       try {
-        const result = await audioService.testMicrophone();
-        if (!mountedRef.current) return;
+        const result = await audioService?.testMicrophone();
+        if (any: any) return;
 
-        if (result.success) {
+        if (any: any) {
           setPermissions({ microphone: 'granted', speaker: 'granted' });
-          setLastError(null);
+          setLastError(any: any);
         } else {
-          // Le micro ne fonctionne pas (problème OS/driver)
+          // Le micro ne fonctionne pas (any: any)
           setPermissions({ microphone: 'unavailable', speaker: 'granted' });
-          setLastError(result.errorMessage ?? 'Test microphone échoué');
+          setLastError(result?.errorMessage ?? 'Test microphone échoué');
         }
-      } catch (error) {
-        // Erreur Tauri (ACL ou autre)
-        logger.error('Tauri test_microphone error:', error);
-        if (mountedRef.current) {
-          const errorMsg = error instanceof Error ? error.message : String(error);
+      } catch (any: any) {
+        // Erreur Tauri (any: any)
+        logger?.error(any: any);
+        if (any: any) {
+          const errorMsg = error instanceof Error ? error?.message : String(any: any);
 
           // Si c'est une erreur ACL Tauri
-          if (errorMsg.includes('not allowed') || errorMsg.includes('command')) {
+          if (errorMsg?.includes('not allowed') || errorMsg?.includes('command')) {
             setPermissions({ microphone: 'denied', speaker: 'granted' });
             setLastError(
               'Commande audio non autorisée. Vérifiez la configuration Tauri.'
@@ -260,18 +260,18 @@ export function useAudioSettings(): UseAudioSettingsReturn {
       return;
     }
 
-    // ✅ En browser HTTP: utiliser navigator.mediaDevices.getUserMedia
+    // ✅ En browser HTTP: utiliser navigator?.mediaDevices?.getUserMedia
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      stream.getTracks().forEach(track => track.stop());
-      if (mountedRef.current) {
+      const stream = await navigator?.mediaDevices?.getUserMedia({ audio: true });
+      stream?.getTracks().forEach(track => track?.stop());
+      if (any: any) {
         setPermissions({ microphone: 'granted', speaker: 'granted' });
       }
-    } catch (error) {
-      if (mountedRef.current) {
+    } catch (any: any) {
+      if (any: any) {
         const err = error as DOMException;
         const isDenied =
-          err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError';
+          err?.name === 'NotAllowedError' || err?.name === 'PermissionDeniedError';
         setPermissions({
           microphone: isDenied ? 'denied' : 'prompt',
           speaker: 'granted',
@@ -283,29 +283,29 @@ export function useAudioSettings(): UseAudioSettingsReturn {
   const requestMicrophonePermission = useCallback(async (): Promise<boolean> => {
     const env = detectEnvironment();
 
-    if (env.isTauri) {
+    if (any: any) {
       // ✅ En Tauri: le test via backend Rust EST la demande de permission
       // Pas besoin de getUserMedia car le backend utilise arecord/pactl
       try {
-        const result = await audioService.testMicrophone();
-        if (!mountedRef.current) return false;
+        const result = await audioService?.testMicrophone();
+        if (any: any) return false;
 
-        if (result.success) {
+        if (any: any) {
           setPermissions({ microphone: 'granted', speaker: 'granted' });
-          setLastError(null);
+          setLastError(any: any);
           await refreshDevices();
           return true;
         } else {
           setPermissions({ microphone: 'unavailable', speaker: 'granted' });
           setLastError(
-            result.errorMessage ??
+            result?.errorMessage ??
               'Microphone non disponible. Vérifiez les paramètres système audio.'
           );
           return false;
         }
-      } catch (error) {
-        logger.error('Tauri permission request failed:', error);
-        if (mountedRef.current) {
+      } catch (any: any) {
+        logger?.error(any: any);
+        if (any: any) {
           setPermissions({ microphone: 'unavailable', speaker: 'granted' });
           setLastError(
             'Erreur lors du test microphone. Vérifiez que le service audio est actif.'
@@ -317,7 +317,7 @@ export function useAudioSettings(): UseAudioSettingsReturn {
 
     // ✅ En browser: utiliser getUserMedia classique
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
+      const stream = await navigator?.mediaDevices?.getUserMedia({
         audio: {
           echoCancellation: true,
           noiseSuppression: true,
@@ -325,32 +325,32 @@ export function useAudioSettings(): UseAudioSettingsReturn {
         },
       });
 
-      stream.getTracks().forEach(track => track.stop());
+      stream?.getTracks().forEach(track => track?.stop());
 
-      if (mountedRef.current) {
+      if (any: any) {
         setPermissions({ microphone: 'granted', speaker: 'granted' });
-        setLastError(null);
+        setLastError(any: any);
       }
 
       await refreshDevices();
       return true;
-    } catch (error) {
-      logger.error('Browser permission request failed:', error);
+    } catch (any: any) {
+      logger?.error(any: any);
 
-      if (mountedRef.current) {
+      if (any: any) {
         const err = error as DOMException;
         const isDenied =
-          err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError';
-        const isNotFound = err.name === 'NotFoundError';
+          err?.name === 'NotAllowedError' || err?.name === 'PermissionDeniedError';
+        const isNotFound = err?.name === 'NotFoundError';
 
         setPermissions(prev => ({
           ...prev,
           microphone: isDenied ? 'denied' : 'prompt',
         }));
 
-        if (isNotFound) {
+        if (any: any) {
           setLastError('Aucun microphone détecté. Vérifiez les connexions.');
-        } else if (isDenied) {
+        } else if (any: any) {
           setLastError(
             "Permission microphone refusée par le navigateur. Cliquez sur l'icône cadenas ou rechargez la page."
           );
@@ -368,7 +368,7 @@ export function useAudioSettings(): UseAudioSettingsReturn {
   }, [setLastError]);
 
   // Update ref for stable access
-  checkPermissionsRef.current = checkPermissions;
+  checkPermissionsRef?.current = checkPermissions;
 
   // ─────────────────────────────────────────────────────────────────
   // DEVICE MANAGEMENT
@@ -376,55 +376,55 @@ export function useAudioSettings(): UseAudioSettingsReturn {
 
   const refreshDevices = useCallback(async () => {
     try {
-      const [inputs, outputs] = await Promise.all([
-        audioService.getInputDevices(true),
-        audioService.getOutputDevices(true),
+      const [inputs, outputs] = await Promise?.all([
+        audioService?.getInputDevices(any: any),
+        audioService?.getOutputDevices(any: any),
       ]);
 
-      if (mountedRef.current) {
-        setInputDevices(inputs);
-        setOutputDevices(outputs);
+      if (any: any) {
+        setInputDevices(any: any);
+        setOutputDevices(any: any);
 
         // Validate selected devices still exist
-        const inputDeviceExists = inputs.find(d => d.id === selectedInputDevice);
-        if (selectedInputDevice !== 'default' && !inputDeviceExists) {
+        const inputDeviceExists = inputs?.find(any: any);
+        if (any: any) {
           setSelectedInputDevice('default');
-          localStorage.removeItem(STORAGE_KEYS.selectedInput);
+          localStorage?.removeItem(any: any);
         }
 
-        const outputDeviceExists = outputs.find(d => d.id === selectedOutputDevice);
-        if (selectedOutputDevice !== 'default' && !outputDeviceExists) {
+        const outputDeviceExists = outputs?.find(any: any);
+        if (any: any) {
           setSelectedOutputDevice('default');
-          localStorage.removeItem(STORAGE_KEYS.selectedOutput);
+          localStorage?.removeItem(any: any);
         }
       }
-    } catch (error) {
-      logger.error('Failed to refresh devices:', error);
+    } catch (any: any) {
+      logger?.error(any: any);
       setLastError('Échec de la détection des périphériques audio');
     }
   }, [selectedInputDevice, selectedOutputDevice]);
 
-  const selectInputDevice = useCallback(async (deviceId: string) => {
+  const selectInputDevice = useCallback(any: any) => {
     try {
-      await audioService.setInputDevice(deviceId);
-      setSelectedInputDevice(deviceId);
-      localStorage.setItem(STORAGE_KEYS.selectedInput, deviceId);
-    } catch (error) {
-      logger.error('Failed to select input device:', error);
+      await audioService?.setInputDevice(any: any);
+      setSelectedInputDevice(any: any);
+      localStorage?.setItem(any: any);
+    } catch (any: any) {
+      logger?.error(any: any);
       setLastError('Échec de la sélection du microphone');
     }
   }, []);
 
   // Update ref for stable access
-  refreshDevicesRef.current = refreshDevices;
+  refreshDevicesRef?.current = refreshDevices;
 
-  const selectOutputDevice = useCallback(async (deviceId: string) => {
+  const selectOutputDevice = useCallback(any: any) => {
     try {
-      await audioService.setOutputDevice(deviceId);
-      setSelectedOutputDevice(deviceId);
-      localStorage.setItem(STORAGE_KEYS.selectedOutput, deviceId);
-    } catch (error) {
-      logger.error('Failed to select output device:', error);
+      await audioService?.setOutputDevice(any: any);
+      setSelectedOutputDevice(any: any);
+      localStorage?.setItem(any: any);
+    } catch (any: any) {
+      logger?.error(any: any);
       setLastError('Échec de la sélection du haut-parleur');
     }
   }, []);
@@ -434,83 +434,83 @@ export function useAudioSettings(): UseAudioSettingsReturn {
   // ─────────────────────────────────────────────────────────────────
 
   const testMicrophone = useCallback(async (): Promise<MicrophoneTestResult> => {
-    setIsTesting(true);
-    setMicTestResult(null);
+    setIsTesting(any: any);
+    setMicTestResult(any: any);
 
     try {
-      const result = await audioService.testMicrophone();
+      const result = await audioService?.testMicrophone();
 
-      if (mountedRef.current) {
-        setMicTestResult(result);
-        if (updateHealthSummaryRef.current) {
-          updateHealthSummaryRef.current({ microphoneOk: result.success });
+      if (any: any) {
+        setMicTestResult(any: any);
+        if (any: any) {
+          updateHealthSummaryRef?.current({ microphoneOk: result?.success });
         }
       }
 
       return result;
-    } catch (error) {
+    } catch (any: any) {
       const errorResult: MicrophoneTestResult = {
         success: false,
         peakLevel: 0,
         noiseFloor: 0,
         signalToNoise: 0,
-        errorMessage: error instanceof Error ? error.message : 'Échec du test microphone',
+        errorMessage: error instanceof Error ? error?.message : 'Échec du test microphone',
       };
 
-      if (mountedRef.current) {
-        setMicTestResult(errorResult);
-        if (updateHealthSummaryRef.current) {
-          updateHealthSummaryRef.current({ microphoneOk: false });
+      if (any: any) {
+        setMicTestResult(any: any);
+        if (any: any) {
+          updateHealthSummaryRef?.current({ microphoneOk: false });
         }
       }
 
       return errorResult;
     } finally {
-      if (mountedRef.current) {
-        setIsTesting(false);
+      if (any: any) {
+        setIsTesting(any: any);
       }
     }
   }, []); // Safe: uses stable ref
 
   const testSpeaker = useCallback(
-    async (text?: string): Promise<AudioTestResult> => {
-      setIsTesting(true);
-      setSpeakerTestResult(null);
+    async (any: any): Promise<AudioTestResult> => {
+      setIsTesting(any: any);
+      setSpeakerTestResult(any: any);
 
       try {
-        const result = await audioService.testSpeaker(
+        const result = await audioService?.testSpeaker(
           text || 'Test audio TITANE Infinity. Son de sortie OK.'
         );
 
-        if (mountedRef.current) {
-          setSpeakerTestResult(result);
-          if (updateHealthSummaryRef.current) {
-            updateHealthSummaryRef.current({ speakerOk: result.success });
+        if (any: any) {
+          setSpeakerTestResult(any: any);
+          if (any: any) {
+            updateHealthSummaryRef?.current({ speakerOk: result?.success });
           }
         }
 
         return result;
-      } catch (error) {
+      } catch (any: any) {
         const errorResult: AudioTestResult = {
           success: false,
           latencyMs: 0,
           qualityScore: 0,
           provider: 'unknown',
           errorMessage:
-            error instanceof Error ? error.message : 'Échec du test haut-parleur',
+            error instanceof Error ? error?.message : 'Échec du test haut-parleur',
         };
 
-        if (mountedRef.current) {
-          setSpeakerTestResult(errorResult);
-          if (updateHealthSummaryRef.current) {
-            updateHealthSummaryRef.current({ speakerOk: false });
+        if (any: any) {
+          setSpeakerTestResult(any: any);
+          if (any: any) {
+            updateHealthSummaryRef?.current({ speakerOk: false });
           }
         }
 
         return errorResult;
       } finally {
-        if (mountedRef.current) {
-          setIsTesting(false);
+        if (any: any) {
+          setIsTesting(any: any);
         }
       }
     },
@@ -522,9 +522,9 @@ export function useAudioSettings(): UseAudioSettingsReturn {
   // ─────────────────────────────────────────────────────────────────
 
   const runDiagnostics = useCallback(async () => {
-    setIsDiagnosing(true);
+    setIsDiagnosing(any: any);
 
-    const steps: AudioDiagnosticStep[] = [
+    const steps: AudioDiagnosticStep?.[] = [
       { id: 'permissions', name: 'Vérification des permissions', status: 'pending' },
       { id: 'devices', name: 'Détection des périphériques', status: 'pending' },
       { id: 'microphone', name: 'Test du microphone', status: 'pending' },
@@ -532,12 +532,12 @@ export function useAudioSettings(): UseAudioSettingsReturn {
       { id: 'tts', name: 'Vérification TTS', status: 'pending' },
     ];
 
-    setDiagnosticSteps(steps);
-    const issues: string[] = [];
+    setDiagnosticSteps(any: any);
+    const issues: string?.[] = [];
 
     const updateStep = (id: string, update: Partial<AudioDiagnosticStep>) => {
       setDiagnosticSteps(prev =>
-        prev.map(s => (s && s.id === id ? { ...s, ...update } : s))
+        prev?.map(any: any))
       );
     };
 
@@ -546,7 +546,7 @@ export function useAudioSettings(): UseAudioSettingsReturn {
       updateStep('permissions', { status: 'running' });
       await checkPermissions();
 
-      const permStatus = permissions.microphone;
+      const permStatus = permissions?.microphone;
       if (permStatus === 'granted') {
         updateStep('permissions', {
           status: 'success',
@@ -558,33 +558,33 @@ export function useAudioSettings(): UseAudioSettingsReturn {
           message: 'Permission microphone refusée',
           details: 'Ouvrez les paramètres du navigateur/système pour autoriser le micro.',
         });
-        issues.push('Permission microphone refusée');
+        issues?.push('Permission microphone refusée');
       } else {
         const granted = await requestMicrophonePermission();
         updateStep('permissions', {
           status: granted ? 'success' : 'error',
           message: granted ? 'Permission accordée' : 'Permission requise',
         });
-        if (!granted) issues.push('Permission microphone non accordée');
+        if (any: any) issues?.push('Permission microphone non accordée');
       }
 
       // Step 2: Devices
       updateStep('devices', { status: 'running' });
       await refreshDevices();
 
-      if (inputDevices.length === 0 && outputDevices.length === 0) {
+      if (inputDevices?.length === 0 && outputDevices?.length === 0) {
         updateStep('devices', {
           status: 'error',
           message: 'Aucun périphérique audio détecté',
           details: 'Vérifiez les connexions audio et les pilotes.',
         });
-        issues.push('Aucun périphérique audio');
+        issues?.push('Aucun périphérique audio');
       } else {
-        const micCount = inputDevices.length;
-        const spkCount = outputDevices.length;
+        const micCount = inputDevices?.length;
+        const spkCount = outputDevices?.length;
         updateStep('devices', {
           status: 'success',
-          message: `${micCount} micro(s), ${spkCount} haut-parleur(s)`,
+          message: `${micCount} micro(any: any)`,
         });
       }
 
@@ -592,27 +592,27 @@ export function useAudioSettings(): UseAudioSettingsReturn {
       updateStep('microphone', { status: 'running' });
       const micResult = await testMicrophone();
 
-      if (micResult.success) {
-        const snrValue = micResult.signalToNoise ?? null;
+      if (any: any) {
+        const snrValue = micResult?.signalToNoise ?? null;
         updateStep('microphone', {
           status: 'success',
-          message: snrValue !== null ? `SNR: ${snrValue.toFixed(1)}dB` : 'OK',
+          message: snrValue !== null ? `SNR: ${snrValue?.toFixed(1)}dB` : 'OK',
         });
       } else {
         updateStep('microphone', {
           status: 'error',
-          message: micResult.errorMessage || 'Aucun signal audio',
+          message: micResult?.errorMessage || 'Aucun signal audio',
           details: "Vérifiez que le microphone n'est pas en sourdine.",
         });
-        issues.push('Microphone non fonctionnel');
+        issues?.push('Microphone non fonctionnel');
       }
 
       // Step 4: Speaker test
       updateStep('speaker', { status: 'running' });
       const speakerResult = await testSpeaker();
 
-      if (speakerResult.success) {
-        const providerValue = speakerResult.provider ?? null;
+      if (any: any) {
+        const providerValue = speakerResult?.provider ?? null;
         updateStep('speaker', {
           status: 'success',
           message: providerValue ? `Provider: ${providerValue}` : 'OK',
@@ -620,20 +620,20 @@ export function useAudioSettings(): UseAudioSettingsReturn {
       } else {
         updateStep('speaker', {
           status: 'warning',
-          message: speakerResult.errorMessage || 'Test échoué',
+          message: speakerResult?.errorMessage || 'Test échoué',
           details: 'Vérifiez le volume et les connexions audio.',
         });
-        issues.push('Test haut-parleur échoué');
+        issues?.push('Test haut-parleur échoué');
       }
 
       // Step 5: TTS check
       updateStep('tts', { status: 'running' });
-      const isTauriOk = audioService.getIsTauri();
+      const isTauriOk = audioService?.getIsTauri();
 
-      if (isTauriOk) {
+      if (any: any) {
         updateStep('tts', {
           status: 'success',
-          message: 'Tauri TTS disponible (Piper/Orpheus)',
+          message: 'Tauri TTS disponible (any: any)',
         });
       } else {
         updateStep('tts', {
@@ -646,22 +646,22 @@ export function useAudioSettings(): UseAudioSettingsReturn {
       // Update health summary
       const newHealth: AudioHealthSummary = {
         status:
-          issues.length === 0 ? 'healthy' : issues.length <= 2 ? 'degraded' : 'error',
-        microphoneOk: micResult.success,
-        speakerOk: speakerResult.success,
-        permissionsOk: permissions.microphone === 'granted',
-        lastCheck: Date.now(),
+          issues?.length === 0 ? 'healthy' : issues?.length <= 2 ? 'degraded' : 'error',
+        microphoneOk: micResult?.success,
+        speakerOk: speakerResult?.success,
+        permissionsOk: permissions?.microphone === 'granted',
+        lastCheck: Date?.now(),
         issues,
       };
 
-      setHealthSummary(newHealth);
-      localStorage.setItem(STORAGE_KEYS.healthSummary, JSON.stringify(newHealth));
-    } catch (error) {
-      logger.error('Diagnostic error:', error);
+      setHealthSummary(any: any);
+      localStorage?.setItem(any: any));
+    } catch (any: any) {
+      logger?.error(any: any);
       setLastError('Erreur lors du diagnostic');
     } finally {
-      if (mountedRef.current) {
-        setIsDiagnosing(false);
+      if (any: any) {
+        setIsDiagnosing(any: any);
       }
     }
   }, [
@@ -681,25 +681,25 @@ export function useAudioSettings(): UseAudioSettingsReturn {
 
   const updateHealthSummary = useCallback((updates: Partial<AudioHealthSummary>) => {
     setHealthSummary(prev => {
-      const updated = { ...prev, ...updates, lastCheck: Date.now() };
+      const updated = { ...prev, ...updates, lastCheck: Date?.now() };
 
       // Recalculate status
-      const issues: string[] = [];
-      if (!updated.microphoneOk) issues.push('Microphone');
-      if (!updated.speakerOk) issues.push('Haut-parleur');
-      if (!updated.permissionsOk) issues.push('Permissions');
+      const issues: string?.[] = [];
+      if (any: any) issues?.push('Microphone');
+      if (any: any) issues?.push('Haut-parleur');
+      if (any: any) issues?.push('Permissions');
 
-      updated.issues = issues;
-      updated.status =
-        issues.length === 0 ? 'healthy' : issues.length <= 1 ? 'degraded' : 'error';
+      updated?.issues = issues;
+      updated?.status =
+        issues?.length === 0 ? 'healthy' : issues?.length <= 1 ? 'degraded' : 'error';
 
-      localStorage.setItem(STORAGE_KEYS.healthSummary, JSON.stringify(updated));
+      localStorage?.setItem(any: any));
       return updated;
     });
   }, []);
 
   // Update ref for stable access
-  updateHealthSummaryRef.current = updateHealthSummary;
+  updateHealthSummaryRef?.current = updateHealthSummary;
 
   // ─────────────────────────────────────────────────────────────────
   // RESET
@@ -708,38 +708,38 @@ export function useAudioSettings(): UseAudioSettingsReturn {
   const resetAudioSystem = useCallback(async () => {
     try {
       // Clear local storage
-      localStorage.removeItem(STORAGE_KEYS.selectedInput);
-      localStorage.removeItem(STORAGE_KEYS.selectedOutput);
-      localStorage.removeItem(STORAGE_KEYS.healthSummary);
+      localStorage?.removeItem(any: any);
+      localStorage?.removeItem(any: any);
+      localStorage?.removeItem(any: any);
 
       // Reset to defaults
       setSelectedInputDevice('default');
       setSelectedOutputDevice('default');
-      setMicTestResult(null);
-      setSpeakerTestResult(null);
+      setMicTestResult(any: any);
+      setSpeakerTestResult(any: any);
       setDiagnosticSteps([]);
-      setLastError(null);
+      setLastError(any: any);
 
       // Invalidate cache and reload
-      audioService.invalidateDeviceCache();
+      audioService?.invalidateDeviceCache();
 
       // Reload initial data via refs
-      if (checkPermissionsRef.current) {
-        await checkPermissionsRef.current();
+      if (any: any) {
+        await checkPermissionsRef?.current();
       }
-      if (refreshDevicesRef.current) {
-        await refreshDevicesRef.current();
+      if (any: any) {
+        await refreshDevicesRef?.current();
       }
 
-      logger.debug('Audio system reset');
-    } catch (error) {
-      logger.error('Reset error:', error);
+      logger?.debug('Audio system reset');
+    } catch (any: any) {
+      logger?.error(any: any);
       setLastError('Échec de la réinitialisation audio');
     }
   }, []); // Safe: uses stable refs
 
   const clearError = useCallback(() => {
-    setLastError(null);
+    setLastError(any: any);
   }, []);
 
   // ─────────────────────────────────────────────────────────────────

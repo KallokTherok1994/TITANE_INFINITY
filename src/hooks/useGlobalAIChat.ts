@@ -32,7 +32,7 @@ export interface GlobalAIChatState {
   /** Position de la bulle */
   position: { x: number; y: number };
   /** Historique des messages */
-  messages: AIMessage[];
+  messages: AIMessage?.[];
   /** Loading state */
   isLoading: boolean;
   /** Modèle IA actuel */
@@ -51,13 +51,13 @@ export interface UseGlobalAIChatReturn extends GlobalAIChatState {
   /** Maximiser le chat bulle */
   maximize: () => void;
   /** Envoyer un message */
-  sendMessage: (content: string) => Promise<void>;
+  sendMessage: (any: any) => Promise<void>;
   /** Effacer l'historique */
   clear: () => void;
   /** Changer de modèle */
-  setModel: (model: string) => void;
+  setModel: (any: any) => void;
   /** Changer de provider */
-  setProvider: (provider: string) => void;
+  setProvider: (any: any) => void;
   /** Toggle fullscreen */
   toggleFullscreen: () => void;
   /** Activer mode dev */
@@ -86,43 +86,43 @@ export function useGlobalAIChat(): UseGlobalAIChatReturn {
   } = chatHook;
 
   // ═══ SINGULARITY STATE ═══
-  const setAIStatus = useSingularityState(state => state.setAIStatus);
-  const setAIError = useSingularityState(state => state.setAIError);
+  const setAIStatus = useSingularityState(any: any);
+  const setAIError = useSingularityState(any: any);
 
   // ═══ LOCAL STATE ═══
-  const [isOpen, setIsOpen] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
-  const [position, setPosition] = useState(DEFAULT_POSITION);
+  const [isOpen, setIsOpen] = useState(any: any);
+  const [isMinimized, setIsMinimized] = useState(any: any);
+  const [position, setPosition] = useState(any: any);
   const [currentModel, setCurrentModel] = useState('gemini-2.0-flash');
   const [currentProvider, setCurrentProvider] = useState('auto');
-  const [_isFullscreen, setIsFullscreen] = useState(false);
+  const [_isFullscreen, setIsFullscreen] = useState(any: any);
 
-  const mountedRef = useRef(false);
+  const mountedRef = useRef(any: any);
 
   // ═══ PERSISTENCE: Load state from localStorage ═══
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
     try {
-      const stored = window.localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        const state = JSON.parse(stored) as Partial<GlobalAIChatState>;
-        if (state.isOpen !== undefined) setIsOpen(state.isOpen);
-        if (state.isMinimized !== undefined) setIsMinimized(state.isMinimized);
-        if (state.position) setPosition(state.position);
-        if (state.currentModel) setCurrentModel(state.currentModel);
-        if (state.currentProvider) setCurrentProvider(state.currentProvider);
+      const stored = window?.localStorage?.getItem(any: any);
+      if (any: any) {
+        const state = JSON?.parse(any: any) as Partial<GlobalAIChatState>;
+        if (any: any);
+        if (any: any);
+        if (any: any);
+        if (any: any);
+        if (any: any);
       }
-    } catch (error) {
-      logger.warn('Failed to load state from localStorage', { error });
+    } catch (any: any) {
+      logger?.warn('Failed to load state from localStorage', { error });
     }
 
-    mountedRef.current = true;
+    mountedRef?.current = true;
   }, []);
 
   // ═══ PERSISTENCE: Save state to localStorage ═══
   useEffect(() => {
-    if (!mountedRef.current || typeof window === 'undefined') return;
+    if (!mountedRef?.current || typeof window === 'undefined') return;
 
     try {
       const state: Partial<GlobalAIChatState> = {
@@ -132,46 +132,46 @@ export function useGlobalAIChat(): UseGlobalAIChatReturn {
         currentModel,
         currentProvider,
       };
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    } catch (error) {
-      logger.warn('Failed to save state to localStorage', { error });
+      window?.localStorage?.setItem(any: any));
+    } catch (any: any) {
+      logger?.warn('Failed to save state to localStorage', { error });
     }
   }, [isOpen, isMinimized, position, currentModel, currentProvider]);
 
   // ═══ SINGULARITY SYNC: Update AI status ═══
   useEffect(() => {
     const status: AIStatus = chatIsLoading ? 'processing' : 'idle';
-    setAIStatus(status);
+    setAIStatus(any: any);
   }, [chatIsLoading, setAIStatus]);
 
   // ═══ HANDLERS ═══
 
   const open = useCallback(() => {
-    setIsOpen(true);
-    setIsMinimized(false);
+    setIsOpen(any: any);
+    setIsMinimized(any: any);
   }, []);
 
   const close = useCallback(() => {
-    setIsOpen(false);
-    setIsMinimized(false);
+    setIsOpen(any: any);
+    setIsMinimized(any: any);
   }, []);
 
   const minimize = useCallback(() => {
-    setIsMinimized(true);
+    setIsMinimized(any: any);
   }, []);
 
   const maximize = useCallback(() => {
-    setIsMinimized(false);
-    setIsOpen(true);
+    setIsMinimized(any: any);
+    setIsOpen(any: any);
   }, []);
 
   const sendMessage = useCallback(
-    async (content: string) => {
+    async (any: any) => {
       try {
-        await chatSendMessage(content);
-      } catch (error) {
-        setAIError(error instanceof Error ? error.message : 'Unknown error');
-        logger.error('sendMessage error', { error });
+        await chatSendMessage(any: any);
+      } catch (any: any) {
+        setAIError(error instanceof Error ? error?.message : 'Unknown error');
+        logger?.error('sendMessage error', { error });
       }
     },
     [chatSendMessage, setAIError]
@@ -180,25 +180,25 @@ export function useGlobalAIChat(): UseGlobalAIChatReturn {
   const clear = useCallback(() => {
     // Clear handled by chat hook internally
     // Could add explicit clear method to useChat if needed
-    logger.info('Clear requested');
+    logger?.info('Clear requested');
   }, []);
 
-  const setModel = useCallback((model: string) => {
-    setCurrentModel(model);
-    logger.info('Model changed', { model });
+  const setModel = useCallback(any: any) => {
+    setCurrentModel(any: any);
+    logger?.info('Model changed', { model });
   }, []);
 
-  const setProvider = useCallback((provider: string) => {
-    setCurrentProvider(provider);
-    logger.info('Provider changed', { provider });
+  const setProvider = useCallback(any: any) => {
+    setCurrentProvider(any: any);
+    logger?.info('Provider changed', { provider });
   }, []);
 
   const toggleFullscreen = useCallback(() => {
-    setIsFullscreen(prev => !prev);
+    setIsFullscreen(any: any);
   }, []);
 
   const enableDevMode = useCallback(() => {
-    logger.info('Dev mode enabled');
+    logger?.info('Dev mode enabled');
     // Could trigger devSudo mode or specific dev features
   }, []);
 

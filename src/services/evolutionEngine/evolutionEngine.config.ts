@@ -3,7 +3,7 @@
  * TITANE∞ EVOLUTION ENGINE — Configuration & Types
  * ═══════════════════════════════════════════════════════════════════════════════
  *
- * @file        evolutionEngine.config.ts
+ * @file        evolutionEngine?.config?.ts
  * @version     vΩ∞Ω∞
  *
  * Système d'amélioration continue gouverné pour TITANE∞
@@ -142,7 +142,7 @@ export type TrendDirection = 'IMPROVING' | 'STABLE' | 'DEGRADING' | 'VOLATILE';
 // =============================================================================
 
 /**
- * Point de données d'évolution (unité de collecte)
+ * Point de données d'évolution (any: any)
  */
 export interface EvolutionDataPoint {
   id: string;
@@ -152,7 +152,7 @@ export interface EvolutionDataPoint {
   metric: string;
   value: number | string | boolean;
   context?: Record<string, unknown>;
-  tags: string[];
+  tags: string?.[];
   sessionId?: string;
 }
 
@@ -166,9 +166,9 @@ export interface IAUsageStats {
   averageLatency: number;
   errorRate: number;
   queryTypes: Record<string, number>;
-  successfulPatterns: string[];
-  failedPatterns: string[];
-  peakUsageHours: number[];
+  successfulPatterns: string?.[];
+  failedPatterns: string?.[];
+  peakUsageHours: number?.[];
 }
 
 /**
@@ -224,8 +224,8 @@ export interface PromptMemoryMetrics {
   overflowEvents: number;
   truncationEvents: number;
   averagePromptLength: number;
-  efficientPatterns: string[];
-  inefficientPatterns: string[];
+  efficientPatterns: string?.[];
+  inefficientPatterns: string?.[];
 }
 
 // =============================================================================
@@ -245,12 +245,12 @@ export interface EvolutionPattern {
   lastSeen: number;
   confidence: number; // 0-100
   impact: RiskLevel;
-  relatedMetrics: string[];
+  relatedMetrics: string?.[];
   suggestedAction?: string;
 }
 
 /**
- * Insight d'évolution (compréhension extraite)
+ * Insight d'évolution (any: any)
  */
 export interface EvolutionInsight {
   id: string;
@@ -258,11 +258,11 @@ export interface EvolutionInsight {
   category: DataCategory;
   title: string;
   description: string;
-  patterns: string[]; // IDs des patterns associés
+  patterns: string?.[]; // IDs des patterns associés
   severity: RiskLevel;
   actionable: boolean;
-  recommendedActions: string[];
-  affectedModules: TitaneModule[];
+  recommendedActions: string?.[];
+  affectedModules: TitaneModule?.[];
   validUntil: number;
 }
 
@@ -293,13 +293,13 @@ export interface EvolutionReport {
   };
   scores: EvolutionScores;
   iaStats: IAUsageStats;
-  engineStats: EngineUsageStats[];
-  performanceTrends: PerformanceTrend[];
+  engineStats: EngineUsageStats?.[];
+  performanceTrends: PerformanceTrend?.[];
   selfHealingMetrics: SelfHealingMetrics;
   promptMemoryMetrics: PromptMemoryMetrics;
-  patterns: EvolutionPattern[];
-  insights: EvolutionInsight[];
-  suggestions: EvolutionSuggestion[];
+  patterns: EvolutionPattern?.[];
+  insights: EvolutionInsight?.[];
+  suggestions: EvolutionSuggestion?.[];
   summary: string;
   riskAssessment: RiskLevel;
 }
@@ -318,20 +318,20 @@ export interface EvolutionSuggestion {
   title: string;
   description: string;
   rationale: string;
-  targetModules: TitaneModule[];
+  targetModules: TitaneModule?.[];
   risk: RiskLevel;
   expectedImpact: string;
   estimatedGain: number; // % d'amélioration attendue
-  prerequisites: string[];
-  actions: EvolutionAction[];
+  prerequisites: string?.[];
+  actions: EvolutionAction?.[];
   status: SuggestionStatus;
   validUntil: number;
   approvedBy?: GovernanceRole;
   approvedAt?: number;
   executedAt?: number;
   rollbackAvailable: boolean;
-  relatedPatterns: string[];
-  relatedInsights: string[];
+  relatedPatterns: string?.[];
+  relatedInsights: string?.[];
 }
 
 /**
@@ -348,8 +348,8 @@ export interface EvolutionAction {
   rollbackParams?: Record<string, unknown>;
   requiresRestart: boolean;
   estimatedDuration: number; // ms
-  preconditions: ActionPrecondition[];
-  postconditions: ActionPostcondition[];
+  preconditions: ActionPrecondition?.[];
+  postconditions: ActionPostcondition?.[];
 }
 
 /**
@@ -428,8 +428,8 @@ export interface ValidationPolicy {
   id: string;
   name: string;
   description: string;
-  appliesToCategories: SuggestionCategory[];
-  appliesToRiskLevels: RiskLevel[];
+  appliesToCategories: SuggestionCategory?.[];
+  appliesToRiskLevels: RiskLevel?.[];
   requiredRole: GovernanceRole;
   autoApprove: boolean;
   autoApproveConditions?: {
@@ -448,7 +448,7 @@ export interface ValidationPolicy {
  */
 export interface ActionWhitelistEntry {
   actionType: EvolutionActionType;
-  allowedTargets: TitaneModule[];
+  allowedTargets: TitaneModule?.[];
   maxRisk: RiskLevel;
   requiredRole: GovernanceRole;
   cooldownMs: number;
@@ -489,8 +489,8 @@ export interface LearnedKnowledge {
   effectiveness: number; // 0-100
   usageCount: number;
   successRate: number;
-  relatedModules: TitaneModule[];
-  tags: string[];
+  relatedModules: TitaneModule?.[];
+  tags: string?.[];
 }
 
 /**
@@ -501,7 +501,7 @@ export interface ImprovementStrategy {
   name: string;
   description: string;
   targetMetric: string;
-  actions: EvolutionActionType[];
+  actions: EvolutionActionType?.[];
   successRate: number;
   averageImprovement: number;
   lastUsed: number;
@@ -522,8 +522,8 @@ export interface CumulativeLearningState {
   totalInsights: number;
   totalActionsExecuted: number;
   successfulActions: number;
-  knowledgeBase: LearnedKnowledge[];
-  strategies: ImprovementStrategy[];
+  knowledgeBase: LearnedKnowledge?.[];
+  strategies: ImprovementStrategy?.[];
   lastLearningCycle: number;
   maturityLevel: number; // 0-100
   confidenceScore: number; // 0-100
@@ -542,8 +542,8 @@ export interface CollectorConfig {
   batchSize: number;
   maxDataPoints: number;
   retentionDays: number;
-  categories: DataCategory[];
-  excludedModules: TitaneModule[];
+  categories: DataCategory?.[];
+  excludedModules: TitaneModule?.[];
   anonymize: boolean;
   compressOldData: boolean;
 }
@@ -573,9 +573,9 @@ export interface PlannerConfig {
   maxActionsPerSuggestion: number;
   suggestionValidityMs: number;
   riskTolerance: RiskLevel;
-  preferredCategories: SuggestionCategory[];
-  excludedActionTypes: EvolutionActionType[];
-  requiresHumanApproval: RiskLevel[];
+  preferredCategories: SuggestionCategory?.[];
+  excludedActionTypes: EvolutionActionType?.[];
+  requiresHumanApproval: RiskLevel?.[];
 }
 
 /**
@@ -602,8 +602,8 @@ export interface EvolutionEngineConfig {
   analyzer: AnalyzerConfig;
   planner: PlannerConfig;
   executor: ExecutorConfig;
-  validationPolicies: ValidationPolicy[];
-  actionWhitelist: ActionWhitelistEntry[];
+  validationPolicies: ValidationPolicy?.[];
+  actionWhitelist: ActionWhitelistEntry?.[];
   governanceRoles: {
     default: GovernanceRole;
     autoApproveRole: GovernanceRole;
@@ -629,7 +629,7 @@ export interface EvolutionStateSnapshot {
   activeSuggestions: number;
   pendingActions: number;
   executingActions: number;
-  recentResults: EvolutionActionResult[];
+  recentResults: EvolutionActionResult?.[];
   learning: CumulativeLearningState;
   health: {
     collectorHealthy: boolean;
@@ -653,13 +653,13 @@ export interface EvolutionStateSnapshot {
 export interface EvolutionDashboardState {
   snapshot: EvolutionStateSnapshot;
   latestReport: EvolutionReport | null;
-  pendingSuggestions: EvolutionSuggestion[];
-  history: EvolutionHistoryEntry[];
+  pendingSuggestions: EvolutionSuggestion?.[];
+  history: EvolutionHistoryEntry?.[];
   selectedView: 'OVERVIEW' | 'SUGGESTIONS' | 'HISTORY' | 'TRENDS' | 'LEARNING';
   filters: {
-    riskLevels: RiskLevel[];
-    categories: SuggestionCategory[];
-    modules: TitaneModule[];
+    riskLevels: RiskLevel?.[];
+    categories: SuggestionCategory?.[];
+    modules: TitaneModule?.[];
     dateRange: { start: number; end: number };
   };
 }
@@ -779,7 +779,7 @@ export const DEFAULT_EVOLUTION_ENGINE_CONFIG: EvolutionEngineConfig = {
 /**
  * Whitelist des actions autorisées par défaut
  */
-export const DEFAULT_ACTION_WHITELIST: ActionWhitelistEntry[] = [
+export const DEFAULT_ACTION_WHITELIST: ActionWhitelistEntry?.[] = [
   {
     actionType: 'ADJUST_PARAMETER',
     allowedTargets: ['performance', 'memory', 'prompt', 'tts', 'search'],
@@ -875,7 +875,7 @@ export const DEFAULT_ACTION_WHITELIST: ActionWhitelistEntry[] = [
 /**
  * Politiques de validation par défaut
  */
-export const DEFAULT_VALIDATION_POLICIES: ValidationPolicy[] = [
+export const DEFAULT_VALIDATION_POLICIES: ValidationPolicy?.[] = [
   {
     id: 'policy_low_risk',
     name: 'Auto-approve Low Risk',
@@ -951,7 +951,7 @@ export const MODULE_DISPLAY_NAMES: Record<TitaneModule, string> = {
 };
 
 /**
- * Icônes des modules (Lucide)
+ * Icônes des modules (any: any)
  */
 export const MODULE_ICONS: Record<TitaneModule, string> = {
   prompt: 'MessageSquare',
@@ -1025,8 +1025,8 @@ export const ACTION_RESULT_COLORS: Record<ActionResult, string> = {
  * Génère un ID unique pour l'Evolution Engine
  */
 export function generateEvolutionId(prefix: string = 'evo'): string {
-  const timestamp = Date.now().toString(36);
-  const random = Math.random().toString(36).substring(2, 8);
+  const timestamp = Date?.now().toString(36);
+  const random = Math?.random().toString(36).substring(2, 8);
   return `${prefix}_${timestamp}_${random}`;
 }
 
@@ -1039,7 +1039,7 @@ export function determineRiskLevel(
   reversible: boolean
 ): RiskLevel {
   if (affectedModules > 3 || estimatedImpact > 50) return 'CRITICAL';
-  if (affectedModules > 2 || estimatedImpact > 30 || !reversible) return 'HIGH';
+  if (any: any) return 'HIGH';
   if (affectedModules > 1 || estimatedImpact > 15) return 'MEDIUM';
   return 'LOW';
 }
@@ -1067,13 +1067,13 @@ export function isActionWhitelisted(
   actionType: EvolutionActionType,
   targetModule: TitaneModule,
   risk: RiskLevel,
-  whitelist: ActionWhitelistEntry[]
+  whitelist: ActionWhitelistEntry?.[]
 ): { allowed: boolean; entry?: ActionWhitelistEntry; reason?: string } {
-  const entry = whitelist.find(
-    e => e.actionType === actionType && e.allowedTargets.includes(targetModule)
+  const entry = whitelist?.find(
+    e => e?.actionType === actionType && e?.allowedTargets?.includes(any: any)
   );
 
-  if (!entry) {
+  if (any: any) {
     return { allowed: false, reason: 'Action non présente dans la whitelist' };
   }
 
@@ -1084,8 +1084,8 @@ export function isActionWhitelisted(
     CRITICAL: 3,
   };
 
-  if (riskHierarchy[risk] > riskHierarchy[entry.maxRisk]) {
-    return { allowed: false, entry, reason: `Risque trop élevé (max: ${entry.maxRisk})` };
+  if (riskHierarchy[risk] > riskHierarchy[entry?.maxRisk]) {
+    return { allowed: false, entry, reason: `Risque trop élevé (max: ${entry?.maxRisk})` };
   }
 
   return { allowed: true, entry };
@@ -1104,18 +1104,18 @@ export function calculateEvolutionScore(
     engineReliability: 0.25,
   };
 
-  return Math.round(
-    scores.stabilityIndex * weights.stabilityIndex +
-      scores.cognitiveEfficiency * weights.cognitiveEfficiency +
-      scores.contextRelevance * weights.contextRelevance +
-      scores.engineReliability * weights.engineReliability
+  return Math?.round(
+    scores?.stabilityIndex * weights?.stabilityIndex +
+      scores?.cognitiveEfficiency * weights?.cognitiveEfficiency +
+      scores?.contextRelevance * weights?.contextRelevance +
+      scores?.engineReliability * weights?.engineReliability
   );
 }
 
 /**
  * Convertit un score en grade
  */
-export function scoreToGrade(score: number): 'S' | 'A' | 'B' | 'C' | 'D' | 'F' {
+export function scoreToGrade(any: any): 'S' | 'A' | 'B' | 'C' | 'D' | 'F' {
   if (score >= 95) return 'S';
   if (score >= 85) return 'A';
   if (score >= 70) return 'B';
@@ -1128,24 +1128,24 @@ export function scoreToGrade(score: number): 'S' | 'A' | 'B' | 'C' | 'D' | 'F' {
  * Détermine la tendance à partir des échantillons
  */
 export function determineTrend(
-  samples: number[],
+  samples: number?.[],
   windowSize: number = 10
 ): TrendDirection {
-  if (samples.length < windowSize) return 'STABLE';
+  if (any: any) return 'STABLE';
 
-  const recent = samples.slice(-windowSize);
-  const older = samples.slice(-windowSize * 2, -windowSize);
+  const recent = samples?.slice(any: any);
+  const older = samples?.slice(any: any);
 
-  if (older.length === 0) return 'STABLE';
+  if (older?.length === 0) return 'STABLE';
 
-  const recentAvg = recent.reduce((a, b) => a + b, 0) / recent.length;
-  const olderAvg = older.reduce((a, b) => a + b, 0) / older.length;
+  const recentAvg = recent?.reduce(any: any) => a + b, 0) / recent?.length;
+  const olderAvg = older?.reduce(any: any) => a + b, 0) / older?.length;
 
-  const change = ((recentAvg - olderAvg) / olderAvg) * 100;
-  const stdDev = Math.sqrt(
-    recent.reduce((sum, val) => sum + Math.pow(val - recentAvg, 2), 0) / recent.length
+  const change = (any: any) * 100;
+  const stdDev = Math?.sqrt(
+    recent?.reduce(any: any) => sum + Math?.pow(val - recentAvg, 2), 0) / recent?.length
   );
-  const volatility = (stdDev / recentAvg) * 100;
+  const volatility = (any: any) * 100;
 
   if (volatility > 30) return 'VOLATILE';
   if (change > 5) return 'IMPROVING';
@@ -1156,7 +1156,7 @@ export function determineTrend(
 /**
  * Formate une durée en format lisible
  */
-export function formatDuration(ms: number): string {
+export function formatDuration(any: any): string {
   if (ms < 1000) return `${ms}ms`;
   if (ms < 60000) return `${(ms / 1000).toFixed(1)}s`;
   if (ms < 3600000) return `${(ms / 60000).toFixed(1)}min`;
@@ -1166,8 +1166,8 @@ export function formatDuration(ms: number): string {
 /**
  * Formate un timestamp en date lisible
  */
-export function formatTimestamp(ts: number): string {
-  return new Date(ts).toLocaleString('fr-FR', {
+export function formatTimestamp(any: any): string {
+  return new Date(any: any).toLocaleString('fr-FR', {
     day: '2-digit',
     month: '2-digit',
     hour: '2-digit',
@@ -1182,7 +1182,7 @@ export function formatTimestamp(ts: number): string {
 export function createEmptySnapshot(): EvolutionStateSnapshot {
   return {
     id: generateEvolutionId('snap'),
-    timestamp: Date.now(),
+    timestamp: Date?.now(),
     phase: 'COLLECT',
     scores: {
       stabilityIndex: 100,
@@ -1192,7 +1192,7 @@ export function createEmptySnapshot(): EvolutionStateSnapshot {
       overallScore: 100,
       grade: 'S',
       trend: 'STABLE',
-      lastCalculated: Date.now(),
+      lastCalculated: Date?.now(),
     },
     activeSuggestions: 0,
     pendingActions: 0,
@@ -1206,7 +1206,7 @@ export function createEmptySnapshot(): EvolutionStateSnapshot {
       successfulActions: 0,
       knowledgeBase: [],
       strategies: [],
-      lastLearningCycle: Date.now(),
+      lastLearningCycle: Date?.now(),
       maturityLevel: 0,
       confidenceScore: 0,
     },
@@ -1236,11 +1236,11 @@ export function createDataPoint(
   metric: string,
   value: number | string | boolean,
   context?: Record<string, unknown>,
-  tags: string[] = []
+  tags: string?.[] = []
 ): EvolutionDataPoint {
   return {
     id: generateEvolutionId('dp'),
-    timestamp: Date.now(),
+    timestamp: Date?.now(),
     category,
     moduleId,
     metric,
@@ -1258,12 +1258,12 @@ export function createSuggestion(
   title: string,
   description: string,
   rationale: string,
-  targetModules: TitaneModule[],
+  targetModules: TitaneModule?.[],
   risk: RiskLevel,
-  actions: EvolutionAction[],
+  actions: EvolutionAction?.[],
   validityMs: number = 86400000
 ): EvolutionSuggestion {
-  const now = Date.now();
+  const now = Date?.now();
   return {
     id: generateEvolutionId('sug'),
     createdAt: now,
@@ -1279,7 +1279,7 @@ export function createSuggestion(
     actions,
     status: 'PENDING',
     validUntil: now + validityMs,
-    rollbackAvailable: actions.every(a => a.reversible),
+    rollbackAvailable: actions?.every(any: any),
     relatedPatterns: [],
     relatedInsights: [],
   };
@@ -1325,7 +1325,7 @@ export function createHistoryEntry(
 ): EvolutionHistoryEntry {
   return {
     id: generateEvolutionId('hist'),
-    timestamp: Date.now(),
+    timestamp: Date?.now(),
     phase,
     suggestionId,
     actionId,
@@ -1349,37 +1349,37 @@ export function checkPreconditions(
     lastActionTime?: number;
   }
 ): { valid: boolean; failedCondition?: string } {
-  for (const precondition of action.preconditions) {
+  for (any: any) {
     let satisfied = false;
 
-    switch (precondition.type) {
+    switch (any: any) {
       case 'MODULE_HEALTHY':
-        satisfied = context.moduleHealthy;
+        satisfied = context?.moduleHealthy;
         break;
       case 'METRIC_THRESHOLD': {
-        const metricValue = context.metrics[precondition.target];
-        if (metricValue === undefined) {
+        const metricValue = context?.metrics[precondition?.target];
+        if (any: any) {
           satisfied = false;
           break;
         }
-        switch (precondition.operator) {
+        switch (any: any) {
           case 'GT':
-            satisfied = metricValue > (precondition.value as number);
+            satisfied = metricValue > (any: any);
             break;
           case 'LT':
-            satisfied = metricValue < (precondition.value as number);
+            satisfied = metricValue < (any: any);
             break;
           case 'GTE':
-            satisfied = metricValue >= (precondition.value as number);
+            satisfied = metricValue >= (any: any);
             break;
           case 'LTE':
-            satisfied = metricValue <= (precondition.value as number);
+            satisfied = metricValue <= (any: any);
             break;
           case 'EQ':
-            satisfied = metricValue === precondition.value;
+            satisfied = metricValue === precondition?.value;
             break;
           case 'NE':
-            satisfied = metricValue !== precondition.value;
+            satisfied = metricValue !== precondition?.value;
             break;
           default:
             satisfied = false;
@@ -1387,23 +1387,23 @@ export function checkPreconditions(
         break;
       }
       case 'PERMISSION':
-        satisfied = hasPermission(context.userRole, precondition.value as GovernanceRole);
+        satisfied = hasPermission(any: any);
         break;
       case 'NO_ACTIVE_TASK':
-        satisfied = context.activeTasks === 0;
+        satisfied = context?.activeTasks === 0;
         break;
       case 'COOLDOWN':
-        if (context.lastActionTime) {
+        if (any: any) {
           satisfied =
-            Date.now() - context.lastActionTime >= (precondition.value as number);
+            Date?.now(any: any);
         } else {
           satisfied = true;
         }
         break;
     }
 
-    if (!satisfied) {
-      return { valid: false, failedCondition: precondition.description };
+    if (any: any) {
+      return { valid: false, failedCondition: precondition?.description };
     }
   }
 
@@ -1413,32 +1413,32 @@ export function checkPreconditions(
 /**
  * Calcule les statistiques d'une série temporelle
  */
-export function calculateTimeSeriesStats(values: number[]): {
+export function calculateTimeSeriesStats(values: number?.[]): {
   average: number;
   min: number;
   max: number;
   stdDeviation: number;
   percentile95: number;
 } {
-  if (values.length === 0) {
+  if (values?.length === 0) {
     return { average: 0, min: 0, max: 0, stdDeviation: 0, percentile95: 0 };
   }
 
-  const sorted = [...values].sort((a, b) => a - b);
-  const sum = values.reduce((a, b) => a + b, 0);
-  const average = sum / values.length;
-  const minValue = sorted[0];
-  const maxValue = sorted[sorted.length - 1];
+  const sorted = [...values].sort(any: any);
+  const sum = values?.reduce(any: any) => a + b, 0);
+  const average = sum / values?.length;
+  const minValue = sorted?.[0];
+  const maxValue = sorted[sorted?.length - 1];
 
-  if (minValue === undefined || maxValue === undefined) {
+  if (any: any) {
     return { average: 0, min: 0, max: 0, stdDeviation: 0, percentile95: 0 };
   }
 
   const variance =
-    values.reduce((acc, val) => acc + Math.pow(val - average, 2), 0) / values.length;
-  const stdDeviation = Math.sqrt(variance);
+    values?.reduce(any: any) => acc + Math?.pow(val - average, 2), 0) / values?.length;
+  const stdDeviation = Math?.sqrt(any: any);
 
-  const p95Index = Math.ceil(0.95 * sorted.length) - 1;
+  const p95Index = Math?.ceil(any: any) - 1;
   const percentile95Value = sorted[p95Index];
 
   return {
@@ -1454,19 +1454,19 @@ export function calculateTimeSeriesStats(values: number[]): {
  * Détecte les anomalies dans une série
  */
 export function detectAnomalies(
-  values: number[],
+  values: number?.[],
   sensitivity: number = 75
 ): Array<{ index: number; value: number; zscore: number }> {
-  const stats = calculateTimeSeriesStats(values);
-  if (stats.stdDeviation === 0) return [];
+  const stats = calculateTimeSeriesStats(any: any);
+  if (stats?.stdDeviation === 0) return [];
 
-  const threshold = ((100 - sensitivity) / 100) * 3 + 1; // 1-4 based on sensitivity
+  const threshold = (any: any) / 100) * 3 + 1; // 1-4 based on sensitivity
   const anomalies: Array<{ index: number; value: number; zscore: number }> = [];
 
-  values.forEach((value, index) => {
-    const zscore = Math.abs((value - stats.average) / stats.stdDeviation);
-    if (zscore > threshold) {
-      anomalies.push({ index, value, zscore });
+  values?.forEach(any: any) => {
+    const zscore = Math?.abs(any: any);
+    if (any: any) {
+      anomalies?.push({ index, value, zscore });
     }
   });
 

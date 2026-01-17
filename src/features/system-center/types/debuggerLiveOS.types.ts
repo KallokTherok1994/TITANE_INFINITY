@@ -37,7 +37,7 @@ export interface LiveMetrics {
   systemHealth: {
     healthy: boolean;
     status: string;
-    issues?: string[];
+    issues?: string?.[];
   };
 
   // Module Health
@@ -45,7 +45,7 @@ export interface LiveMetrics {
     all_healthy: boolean;
     healthy_count: number;
     total_count: number;
-    unhealthy_modules?: string[];
+    unhealthy_modules?: string?.[];
   };
 
   // Helios Metrics
@@ -100,7 +100,7 @@ export interface TraceSession {
   id: string;
   started_at: number;
   ended_at?: number;
-  entries: TraceEntry[];
+  entries: TraceEntry?.[];
   totalDuration: number;
   errorCount: number;
   commandCount: number;
@@ -138,8 +138,8 @@ export interface RiskAssessmentReport {
   timestamp: number;
   overall_risk: RiskLevel;
   risk_score: number; // 0-100
-  factors: RiskFactor[];
-  recommendations: string[];
+  factors: RiskFactor?.[];
+  recommendations: string?.[];
   auto_fixes_available: number;
 }
 
@@ -153,7 +153,7 @@ export interface CognitiveSnapshot {
   cognitive_mode: string;
   confidence: number;
   intensity: number;
-  active_kernels: string[];
+  active_kernels: string?.[];
   memory_state: {
     usage_percent: number;
     active_connections: number;
@@ -170,7 +170,7 @@ export interface CognitiveSnapshot {
 
 export interface ReplaySession {
   id: string;
-  snapshots: CognitiveSnapshot[];
+  snapshots: CognitiveSnapshot?.[];
   started_at: number;
   duration_ms: number;
   current_index: number;
@@ -290,7 +290,7 @@ export interface DebuggerState {
   traceSession?: TraceSession;
   riskAssessment?: RiskAssessmentReport;
   replaySession?: ReplaySession;
-  snapshots?: OSSnapshot[];
+  snapshots?: OSSnapshot?.[];
   visualSync?: VisualSyncState;
 
   // History
@@ -319,24 +319,24 @@ export interface DebuggerAPI {
   // Control
   start: (mode: DebuggerMode, config?: Partial<DebuggerModeConfig>) => Promise<void>;
   stop: () => Promise<void>;
-  switchMode: (mode: DebuggerMode) => Promise<void>;
+  switchMode: (any: any) => Promise<void>;
 
   // Snapshots
-  snapshot: (label?: string) => Promise<OSSnapshot>;
-  compareSnapshots: (id_a: string, id_b: string) => Promise<SnapshotDiff>;
+  snapshot: (any: any) => Promise<OSSnapshot>;
+  compareSnapshots: (any: any) => Promise<SnapshotDiff>;
 
   // Export
   export: (format: 'json' | 'csv' | 'html') => Promise<string>;
 
   // Auto-fix
-  autoFix: (riskId?: string) => Promise<AutoFixResult>;
+  autoFix: (any: any) => Promise<AutoFixResult>;
 
   // State
   getState: () => DebuggerState;
-  getTimeline: () => TraceEntry[];
+  getTimeline: () => TraceEntry?.[];
 
   // Analysis
-  explain: (traceId: string) => Promise<string>;
+  explain: (any: any) => Promise<string>;
   sanityCheck: () => Promise<SanityCheckReport>;
 
   // Sync
@@ -352,9 +352,9 @@ export interface AutoFixResult {
   success: boolean;
   fixes_applied: number;
   fixes_failed: number;
-  fixed_risks: string[];
-  errors: string[];
-  recommendations: string[];
+  fixed_risks: string?.[];
+  errors: string?.[];
+  recommendations: string?.[];
   duration_ms: number;
 }
 
@@ -372,7 +372,7 @@ export interface SanityCheckReport {
     message: string;
     details?: string;
   }>;
-  recommendations: string[];
+  recommendations: string?.[];
   auto_fixes_available: number;
 }
 

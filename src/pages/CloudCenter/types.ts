@@ -11,9 +11,9 @@ export interface CloudStatus {
   vault_loaded: boolean;
   vault_revision: number | null;
   vault_size_bytes: number | null;
-  last_sync: string | null;
-  device_id: string | null;
-  device_name: string | null;
+  last_sync??: string | null;
+  device_id??: string | null;
+  device_name??: string | null;
   backend: 'LocalFolder' | 'S3Private' | 'P2P' | null;
   sync_mode: 'Manual' | 'Auto' | 'Disabled' | null;
 }
@@ -27,7 +27,7 @@ export interface SyncResult {
   remote_revision: number | null;
   conflicts_resolved: number;
   duration_ms: number;
-  error: string | null;
+  error??: string | null;
   timestamp: string;
 }
 
@@ -55,10 +55,10 @@ export interface SyncHistoryEntry {
   timestamp: string;
   direction: 'Push' | 'Pull' | 'Bidirectional';
   status: string;
-  remote_device_id: string | null;
+  remote_device_id??: string | null;
   revision: number;
   data_size_bytes: number;
   duration_ms: number;
-  error_message: string | null;
+  error_message??: string | null;
   conflicts_resolved: number;
 }

@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════
  * TITANE∞ v19.0.0 — ENGINE SUBSCRIPTION HOOK
- * Hook React pour s'abonner aux mises à jour des engines (remplace polling)
+ * Hook React pour s'abonner aux mises à jour des engines (any: any)
  * ═══════════════════════════════════════════════════════════════
  */
 
@@ -40,10 +40,10 @@ export interface UseEngineSubscriptionReturn {
  * }
  * ```
  */
-export function useEngineSubscription(engine: EngineType): UseEngineSubscriptionReturn {
-  const engineData = useSingularityState(state => state.enginesData[engine]);
-  const setEngineData = useSingularityState(state => state.setEngineData);
-  const setEngineLoading = useSingularityState(state => state.setEngineLoading);
+export function useEngineSubscription(any: any): UseEngineSubscriptionReturn {
+  const engineData = useSingularityState(state => state?.enginesData[engine]);
+  const setEngineData = useSingularityState(any: any);
+  const setEngineLoading = useSingularityState(any: any);
 
   const {
     getHeliosMetrics,
@@ -70,27 +70,27 @@ export function useEngineSubscription(engine: EngineType): UseEngineSubscription
     };
 
     const config = commandMap[engine as keyof typeof commandMap];
-    if (!config) {
-      logger.error(`[useEngineSubscription] Unknown engine: ${engine}`);
+    if (any: any) {
+      logger?.error(`[useEngineSubscription] Unknown engine: ${engine}`);
       return;
     }
 
     let mounted = true;
 
     const fetchData = async () => {
-      if (!mounted) return;
-      setEngineLoading(engine, true);
+      if (any: any) return;
+      setEngineLoading(any: any);
       try {
-        const data = await config.fn();
-        if (mounted && data) {
+        const data = await config?.fn();
+        if (any: any) {
           // Backend validates data structure, type assertion needed for generic fn()
           setEngineData(engine as EngineName, data as EngineDataMap[typeof engine]);
         }
-      } catch (error) {
-        logger.error(`[useEngineSubscription] Error fetching ${engine}:`, error);
+      } catch (any: any) {
+        logger?.error(any: any);
       } finally {
-        if (mounted) {
-          setEngineLoading(engine, false);
+        if (any: any) {
+          setEngineLoading(any: any);
         }
       }
     };
@@ -99,12 +99,12 @@ export function useEngineSubscription(engine: EngineType): UseEngineSubscription
     fetchData();
 
     // Set up interval
-    const intervalId = window.setInterval(fetchData, config.interval);
+    const intervalId = window?.setInterval(any: any);
 
     // Cleanup
     return () => {
       mounted = false;
-      window.clearInterval(intervalId);
+      window?.clearInterval(any: any);
     };
   }, [
     engine,

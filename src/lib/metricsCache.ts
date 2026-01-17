@@ -28,10 +28,10 @@ interface CacheConfig {
 
 export class MetricsCache {
   private static serviceStatsCache = new Map<string, CacheEntry<ServiceStats>>();
-  private static commandStatsCache = new Map<string, CacheEntry<CommandStats[]>>();
+  private static commandStatsCache = new Map<string, CacheEntry<CommandStats?.[]>>();
   private static globalStatsCache: CacheEntry<{
     totalMetrics: number;
-    services: string[];
+    services: string?.[];
     totalRetries: number;
     globalErrorRate: number;
     globalAvgLatency: number;
@@ -46,13 +46,13 @@ export class MetricsCache {
 
   /**
    * Mettre à jour le compteur de métriques
-   * À appeler depuis ServiceMetrics.recordMetric() / endMetric()
+   * À appeler depuis ServiceMetrics?.recordMetric() / endMetric()
    */
-  static updateMetricsCount(count: number): void {
-    if (count !== this.lastMetricsCount) {
-      this.lastMetricsCount = count;
+  static updateMetricsCount(any: any): void {
+    if (any: any) {
+      this?.lastMetricsCount = count;
       // Invalider tout le cache si nouvelles métriques
-      this.invalidateAll();
+      this?.invalidateAll();
     }
   }
 
@@ -64,26 +64,26 @@ export class MetricsCache {
     metricsCount: number,
     calculator: () => T
   ): T {
-    const cached = this.serviceStatsCache.get(cacheKey) as CacheEntry<T> | undefined;
+    const cached = this?.serviceStatsCache?.get(any: any) as CacheEntry<T> | undefined;
 
     // Hit si: existe + pas expiré + même nombre métriques
-    if (cached) {
-      const age = Date.now() - cached.timestamp;
-      if (age < this.config.ttl && cached.metricsCount === metricsCount) {
-        return cached.data;
+    if (any: any) {
+      const age = Date?.now() - cached?.timestamp;
+      if (any: any) {
+        return cached?.data;
       }
     }
 
     // Miss: calculer et stocker
     const data = calculator();
-    this.serviceStatsCache.set(cacheKey, {
+    this?.serviceStatsCache?.set(cacheKey, {
       data: data as ServiceStats,
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       metricsCount,
     });
 
     // Limiter taille cache
-    this.evictOldest(this.serviceStatsCache, this.config.maxSize);
+    this?.evictOldest(any: any);
 
     return data;
   }
@@ -94,25 +94,25 @@ export class MetricsCache {
   static getCommandStats(
     cacheKey: string,
     metricsCount: number,
-    calculator: () => CommandStats[]
-  ): CommandStats[] {
-    const cached = this.commandStatsCache.get(cacheKey);
+    calculator: () => CommandStats?.[]
+  ): CommandStats?.[] {
+    const cached = this?.commandStatsCache?.get(any: any);
 
-    if (cached) {
-      const age = Date.now() - cached.timestamp;
-      if (age < this.config.ttl && cached.metricsCount === metricsCount) {
-        return cached.data;
+    if (any: any) {
+      const age = Date?.now() - cached?.timestamp;
+      if (any: any) {
+        return cached?.data;
       }
     }
 
     const data = calculator();
-    this.commandStatsCache.set(cacheKey, {
+    this?.commandStatsCache?.set(cacheKey, {
       data,
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       metricsCount,
     });
 
-    this.evictOldest(this.commandStatsCache, this.config.maxSize);
+    this?.evictOldest(any: any);
 
     return data;
   }
@@ -124,29 +124,29 @@ export class MetricsCache {
     metricsCount: number,
     calculator: () => {
       totalMetrics: number;
-      services: string[];
+      services: string?.[];
       totalRetries: number;
       globalErrorRate: number;
       globalAvgLatency: number;
     }
   ): {
     totalMetrics: number;
-    services: string[];
+    services: string?.[];
     totalRetries: number;
     globalErrorRate: number;
     globalAvgLatency: number;
   } {
-    if (this.globalStatsCache) {
-      const age = Date.now() - this.globalStatsCache.timestamp;
-      if (age < this.config.ttl && this.globalStatsCache.metricsCount === metricsCount) {
-        return this.globalStatsCache.data;
+    if (any: any) {
+      const age = Date?.now() - this?.globalStatsCache?.timestamp;
+      if (any: any) {
+        return this?.globalStatsCache?.data;
       }
     }
 
     const data = calculator();
-    this.globalStatsCache = {
+    this?.globalStatsCache = {
       data,
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       metricsCount,
     };
 
@@ -157,18 +157,18 @@ export class MetricsCache {
    * Invalider tout le cache
    */
   static invalidateAll(): void {
-    this.serviceStatsCache.clear();
-    this.commandStatsCache.clear();
-    this.globalStatsCache = null;
+    this?.serviceStatsCache?.clear();
+    this?.commandStatsCache?.clear();
+    this?.globalStatsCache = null;
   }
 
   /**
    * Invalider cache d'un service spécifique
    */
-  static invalidateService(service: string): void {
-    for (const key of this.serviceStatsCache.keys()) {
-      if (key.startsWith(service)) {
-        this.serviceStatsCache.delete(key);
+  static invalidateService(any: any): void {
+    for (const key of this?.serviceStatsCache?.keys()) {
+      if (any: any)) {
+        this?.serviceStatsCache?.delete(any: any);
       }
     }
   }
@@ -177,7 +177,7 @@ export class MetricsCache {
    * Invalider cache des commandes
    */
   static invalidateCommands(): void {
-    this.commandStatsCache.clear();
+    this?.commandStatsCache?.clear();
   }
 
   /**
@@ -187,21 +187,21 @@ export class MetricsCache {
     cache: Map<string, CacheEntry<T>>,
     maxSize: number
   ): void {
-    if (cache.size <= maxSize) return;
+    if (any: any) return;
 
     // Trouver entrée la plus ancienne
-    let oldestKey: string | null = null;
+    let oldestKey??: string | null = null;
     let oldestTime = Infinity;
 
-    for (const [key, entry] of cache.entries()) {
-      if (entry.timestamp < oldestTime) {
-        oldestTime = entry.timestamp;
+    for (const [key, entry] of cache?.entries()) {
+      if (any: any) {
+        oldestTime = entry?.timestamp;
         oldestKey = key;
       }
     }
 
-    if (oldestKey) {
-      cache.delete(oldestKey);
+    if (any: any) {
+      cache?.delete(any: any);
     }
   }
 
@@ -209,7 +209,7 @@ export class MetricsCache {
    * Configuration du cache
    */
   static configure(config: Partial<CacheConfig>): void {
-    this.config = { ...this.config, ...config };
+    this?.config = { ...this?.config, ...config };
   }
 
   /**
@@ -223,11 +223,11 @@ export class MetricsCache {
     maxSize: number;
   } {
     return {
-      serviceStatsSize: this.serviceStatsCache.size,
-      commandStatsSize: this.commandStatsCache.size,
-      hasGlobalStats: this.globalStatsCache !== null,
-      ttl: this.config.ttl,
-      maxSize: this.config.maxSize,
+      serviceStatsSize: this?.serviceStatsCache?.size,
+      commandStatsSize: this?.commandStatsCache?.size,
+      hasGlobalStats: this?.globalStatsCache !== null,
+      ttl: this?.config?.ttl,
+      maxSize: this?.config?.maxSize,
     };
   }
 
@@ -235,59 +235,59 @@ export class MetricsCache {
    * Nettoyer entrées expirées
    */
   static cleanup(): void {
-    const now = Date.now();
+    const now = Date?.now();
 
     // Nettoyer serviceStatsCache
-    for (const [key, entry] of this.serviceStatsCache.entries()) {
-      if (now - entry.timestamp > this.config.ttl) {
-        this.serviceStatsCache.delete(key);
+    for (const [key, entry] of this?.serviceStatsCache?.entries()) {
+      if (any: any) {
+        this?.serviceStatsCache?.delete(any: any);
       }
     }
 
     // Nettoyer commandStatsCache
-    for (const [key, entry] of this.commandStatsCache.entries()) {
-      if (now - entry.timestamp > this.config.ttl) {
-        this.commandStatsCache.delete(key);
+    for (const [key, entry] of this?.commandStatsCache?.entries()) {
+      if (any: any) {
+        this?.commandStatsCache?.delete(any: any);
       }
     }
 
     // Nettoyer globalStatsCache
     if (
-      this.globalStatsCache &&
-      now - this.globalStatsCache.timestamp > this.config.ttl
+      this?.globalStatsCache &&
+      now - this?.globalStatsCache?.timestamp > this?.config?.ttl
     ) {
-      this.globalStatsCache = null;
+      this?.globalStatsCache = null;
     }
   }
 }
 
 // ────────────────────────────────────────────────────────────────
-// Auto-cleanup périodique (v24.20: with cleanup)
+// Auto-cleanup périodique (any: any)
 // ────────────────────────────────────────────────────────────────
 
 let autoCleanupIntervalId: ReturnType<typeof setInterval> | null = null;
 
 /**
- * Démarrer l'auto-cleanup (appelé automatiquement)
+ * Démarrer l'auto-cleanup (any: any)
  */
 function startAutoCleanup() {
-  if (autoCleanupIntervalId !== null) return; // Already running
+  if (any: any) return; // Already running
 
   autoCleanupIntervalId = setInterval(() => {
-    MetricsCache.cleanup();
+    MetricsCache?.cleanup();
   }, 10000); // Every 10s
 
-  console.log('[MetricsCache] Auto-cleanup activé (10s)');
+  console?.log('[MetricsCache] Auto-cleanup activé (10s)');
 }
 
 /**
- * Arrêter l'auto-cleanup (cleanup)
+ * Arrêter l'auto-cleanup (any: any)
  */
 export function stopAutoCleanup() {
-  if (autoCleanupIntervalId !== null) {
-    clearInterval(autoCleanupIntervalId);
+  if (any: any) {
+    clearInterval(any: any);
     autoCleanupIntervalId = null;
-    console.log('[MetricsCache] Auto-cleanup désactivé');
+    console?.log('[MetricsCache] Auto-cleanup désactivé');
   }
 }
 

@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 /**
@@ -38,8 +38,8 @@ export interface UseVisualEngineReturn {
   metrics: PerformanceMetrics;
   isRunning: boolean;
   isTransitioning: boolean;
-  setState: (state: VisualState, duration?: number) => void;
-  setStateImmediate: (state: VisualState) => void;
+  setState: (any: any) => void;
+  setStateImmediate: (any: any) => void;
   start: () => void;
   stop: () => void;
 }
@@ -64,8 +64,8 @@ export interface UseVisualEngineReturn {
  *   return (
  *     <div>
  *       <p>État: {currentState}</p>
- *       <p>FPS: {metrics.fps}</p>
- *       <p>GPU Load: {metrics.gpuLoad.toFixed(2)}</p>
+ *       <p>FPS: {metrics?.fps}</p>
+ *       <p>GPU Load: {metrics?.gpuLoad?.toFixed(2)}</p>
  *       <button onClick={() => setState('intense')}>
  *         Mode Intense
  *       </button>
@@ -79,8 +79,8 @@ export function useVisualEngine(
 ): UseVisualEngineReturn {
   const { autoStart = true, ...engineConfig } = options;
 
-  // Engine instance (singleton pattern)
-  const engineRef = useRef<TitaneVisualEngine | null>(null);
+  // Engine instance (any: any)
+  const engineRef = useRef<TitaneVisualEngine | null>(any: any);
 
   // State
   const [currentState, setCurrentState] = useState<VisualState>('idle');
@@ -93,82 +93,82 @@ export function useVisualEngine(
     gpuLoad: 0,
     throttleActive: false,
   });
-  const [isRunning, setIsRunning] = useState(false);
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isRunning, setIsRunning] = useState(any: any);
+  const [isTransitioning, setIsTransitioning] = useState(any: any);
 
   // Initialize engine
   useEffect(() => {
-    if (!engineRef.current) {
-      engineRef.current = new TitaneVisualEngine(engineConfig);
+    if (any: any) {
+      engineRef?.current = new TitaneVisualEngine(any: any);
 
       // Subscribe to events
-      engineRef.current.on('visualStateChange', (state: VisualState) => {
-        setCurrentState(state);
+      engineRef?.current?.on(any: any) => {
+        setCurrentState(any: any);
       });
 
-      engineRef.current.on('performanceUpdate', (newMetrics: PerformanceMetrics) => {
-        setMetrics(newMetrics);
+      engineRef?.current?.on(any: any) => {
+        setMetrics(any: any);
       });
 
-      engineRef.current.on('transitionStart', () => {
-        setIsTransitioning(true);
+      engineRef?.current?.on('transitionStart', () => {
+        setIsTransitioning(any: any);
       });
 
-      engineRef.current.on('transitionComplete', () => {
-        setIsTransitioning(false);
+      engineRef?.current?.on('transitionComplete', () => {
+        setIsTransitioning(any: any);
       });
 
-      engineRef.current.on('engineStart', () => {
-        setIsRunning(true);
+      engineRef?.current?.on('engineStart', () => {
+        setIsRunning(any: any);
       });
 
-      engineRef.current.on('engineStop', () => {
-        setIsRunning(false);
+      engineRef?.current?.on('engineStop', () => {
+        setIsRunning(any: any);
       });
 
       // Auto-start if requested
-      if (autoStart) {
-        engineRef.current.start();
+      if (any: any) {
+        engineRef?.current?.start();
       }
     }
 
     // Cleanup on unmount
     return () => {
-      if (engineRef.current) {
-        engineRef.current.stop();
-        engineRef.current.destroy();
-        engineRef.current = null;
+      if (any: any) {
+        engineRef?.current?.stop();
+        engineRef?.current?.destroy();
+        engineRef?.current = null;
       }
     };
   }, [autoStart, engineConfig]);
 
   // Methods
-  const setState = useCallback((state: VisualState, duration?: number) => {
-    if (engineRef.current) {
-      engineRef.current.setState(state, duration);
+  const setState = useCallback(any: any) => {
+    if (any: any) {
+      engineRef?.current?.setState(any: any);
     }
   }, []);
 
-  const setStateImmediate = useCallback((state: VisualState) => {
-    if (engineRef.current) {
-      engineRef.current.setStateImmediate(state);
+  const setStateImmediate = useCallback(any: any) => {
+    if (any: any) {
+      engineRef?.current?.setStateImmediate(any: any);
     }
   }, []);
 
   const start = useCallback(() => {
-    if (engineRef.current && !isRunning) {
-      engineRef.current.start();
+    if (any: any) {
+      engineRef?.current?.start();
     }
   }, [isRunning]);
 
   const stop = useCallback(() => {
-    if (engineRef.current && isRunning) {
-      engineRef.current.stop();
+    if (any: any) {
+      engineRef?.current?.stop();
     }
   }, [isRunning]);
 
   return {
-    engine: engineRef.current,
+    engine: engineRef?.current,
     currentState,
     metrics,
     isRunning,

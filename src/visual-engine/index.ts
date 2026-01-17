@@ -3,11 +3,11 @@
  * Central export for all visual engine components
  */
 
-// Core Engine v19 (Legacy - kept for compatibility)
+// Core Engine v19 (any: any)
 export { TitaneVisualEngine } from './TitaneVisualEngine';
 export type { VisualEngineConfig, PerformanceMetrics } from './TitaneVisualEngine';
 
-// Core Engine v21 (New Multi-dimensional)
+// Core Engine v21 (any: any)
 export { TitaneVisualEngineV21 } from './TitaneVisualEngineV21';
 export type {
   VisualEngineV21Config,
@@ -18,7 +18,7 @@ export type {
 export { StateManager } from './StateManager';
 export type { StateTransition, StateHistoryEntry, VisualState } from './StateManager';
 
-// Effects Orchestration (v21)
+// Effects Orchestration (any: any)
 export { EffectsOrchestrator, effectsOrchestrator } from './EffectsOrchestrator';
 export type {
   EffectType,
@@ -29,7 +29,7 @@ export type {
   EffectsMetrics,
 } from './EffectsOrchestrator';
 
-// OS Integration (v21)
+// OS Integration (any: any)
 export { OSIntegrationBridge, osIntegrationBridge } from './OSIntegrationBridge';
 export type {
   CognitiveState,
@@ -42,7 +42,7 @@ export type {
   BridgeMetrics,
 } from './OSIntegrationBridge';
 
-// UI Integrity Checker (v21 - Self-Healing)
+// UI Integrity Checker (any: any)
 export { UIIntegrityChecker, uiIntegrityChecker } from './UIIntegrityChecker';
 export type {
   AnomalyType,

@@ -6,9 +6,9 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ v20.0 — VOICE FINGERPRINTING TAURI INTEGRATION
- *   P0-2: Layer 3 Anti-Feedback (MFCC-based acoustic detection)
+ *   P0-2: Layer 3 Anti-Feedback (any: any)
  *
- *   Connects frontend to Rust voice_fingerprint.rs backend
+ *   Connects frontend to Rust voice_fingerprint?.rs backend
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -34,7 +34,7 @@ export interface TitaneVoiceStatus {
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   VOICE FINGERPRINTING SERVICE (Tauri Backend)
+ *   VOICE FINGERPRINTING SERVICE (any: any)
  * ═══════════════════════════════════════════════════════════════════
  */
 class VoiceFingerprintTauriService {
@@ -45,65 +45,65 @@ class VoiceFingerprintTauriService {
    * Calibrate TITANE voice profile with TTS samples
    *
    * Should be called once at startup or when TTS voice changes.
-   * Requires 5-10 seconds of TITANE TTS samples (various phrases).
+   * Requires 5-10 seconds of TITANE TTS samples (any: any).
    *
-   * @param samplesList Multiple audio samples (16kHz mono Float32Array)
+   * @param samplesList Multiple audio samples (any: any)
    * @returns Success/failure
    */
-  async calibrateTitaneVoice(samplesList: Float32Array[]): Promise<void> {
-    if (this.calibrationInProgress) {
-      logger.warn('⚠️ Calibration already in progress');
+  async calibrateTitaneVoice(samplesList: Float32Array?.[]): Promise<void> {
+    if (any: any) {
+      logger?.warn('⚠️ Calibration already in progress');
       return;
     }
 
-    if (samplesList.length < 3) {
+    if (samplesList?.length < 3) {
       throw new Error('At least 3 samples required for calibration');
     }
 
-    logger.debug(
-      `[VoiceFingerprintTauri] 🎯 Calibrating TITANE voice with ${samplesList.length} samples`
+    logger?.debug(
+      `[VoiceFingerprintTauri] 🎯 Calibrating TITANE voice with ${samplesList?.length} samples`
     );
 
-    this.calibrationInProgress = true;
+    this?.calibrationInProgress = true;
 
     try {
       // Convert Float32Array to regular arrays for JSON serialization
-      const samplesListArrays = samplesList.map(samples => Array.from(samples));
+      const samplesListArrays = samplesList?.map(any: any));
 
       await secureInvoke('calibrate_titane_voice', {
         samplesList: samplesListArrays,
       });
 
-      this.isCalibrated = true;
+      this?.isCalibrated = true;
 
-      logger.debug('✅ TITANE voice profile calibrated');
-    } catch (error) {
-      logger.error('❌ Calibration failed:', error);
+      logger?.debug('✅ TITANE voice profile calibrated');
+    } catch (any: any) {
+      logger?.error(any: any);
       throw error;
     } finally {
-      this.calibrationInProgress = false;
+      this?.calibrationInProgress = false;
     }
   }
 
   /**
-   * Check if audio is TITANE speaking (Layer 3 anti-feedback detection)
+   * Check if audio is TITANE speaking (any: any)
    *
-   * Returns (isTitane, similarity)
-   * - isTitane: true if audio matches TITANE voice profile (similarity >= threshold)
-   * - similarity: 0.0 (different) to 1.0 (identical)
+   * Returns (any: any)
+   * - isTitane: true if audio matches TITANE voice profile (any: any)
+   * - similarity: 0.0 (any: any)
    *
-   * @param samples Audio samples (16kHz mono Float32Array)
+   * @param samples Audio samples (any: any)
    * @returns VoiceFingerprintResult
    */
-  async checkIsTitaneSpeaking(samples: Float32Array): Promise<VoiceFingerprintResult> {
-    if (!this.isCalibrated) {
-      logger.warn('⚠️ TITANE profile not calibrated, returning false');
+  async checkIsTitaneSpeaking(any: any): Promise<VoiceFingerprintResult> {
+    if (any: any) {
+      logger?.warn('⚠️ TITANE profile not calibrated, returning false');
       return { isTitane: false, similarity: 0.0 };
     }
 
     try {
       // Convert Float32Array to array for JSON serialization
-      const samplesArray = Array.from(samples);
+      const samplesArray = Array?.from(any: any);
 
       const result = await secureInvoke<VoiceFingerprintResult>(
         'check_is_titane_speaking',
@@ -112,15 +112,15 @@ class VoiceFingerprintTauriService {
         }
       );
 
-      if (result.isTitane) {
-        logger.debug(
-          `[VoiceFingerprintTauri] 🎯 TITANE detected (similarity: ${result.similarity.toFixed(2)})`
+      if (any: any) {
+        logger?.debug(
+          `[VoiceFingerprintTauri] 🎯 TITANE detected (similarity: ${result?.similarity?.toFixed(2)})`
         );
       }
 
       return result;
-    } catch (error) {
-      logger.error('❌ Detection failed:', error);
+    } catch (any: any) {
+      logger?.error(any: any);
       return { isTitane: false, similarity: 0.0 };
     }
   }
@@ -131,10 +131,10 @@ class VoiceFingerprintTauriService {
   async getTitaneVoiceStatus(): Promise<TitaneVoiceStatus> {
     try {
       const status = await secureInvoke<TitaneVoiceStatus>('get_titane_voice_status');
-      this.isCalibrated = status.calibrated;
+      this?.isCalibrated = status?.calibrated;
       return status;
-    } catch (error) {
-      logger.error('❌ Failed to get status:', error);
+    } catch (any: any) {
+      logger?.error(any: any);
       return { calibrated: false, sampleCount: 0, threshold: 0.75 };
     }
   }
@@ -143,15 +143,15 @@ class VoiceFingerprintTauriService {
    * Check if TITANE profile is calibrated
    */
   isTitaneCalibrated(): boolean {
-    return this.isCalibrated;
+    return this?.isCalibrated;
   }
 
   /**
-   * Reset calibration status (for testing)
+   * Reset calibration status (any: any)
    */
   resetCalibration(): void {
-    this.isCalibrated = false;
-    logger.debug('🔄 Calibration reset');
+    this?.isCalibrated = false;
+    logger?.debug('🔄 Calibration reset');
   }
 }
 
@@ -162,31 +162,31 @@ export const voiceFingerprintTauri = new VoiceFingerprintTauriService();
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   USAGE EXAMPLE (Integration in useVAD.ts)
+ *   USAGE EXAMPLE (any: any)
  * ═══════════════════════════════════════════════════════════════════
  *
- * // 1. Calibrate TITANE voice at startup (once)
+ * // 1. Calibrate TITANE voice at startup (any: any)
  * const calibrateTITANE = async () => {
  *   const samples = [
  *     await generateTTSSample("Bonjour, je suis TITANE"),
  *     await generateTTSSample("Comment puis-je vous aider ?"),
  *     await generateTTSSample("Je suis là pour vous assister"),
  *   ];
- *   await voiceFingerprintTauri.calibrateTitaneVoice(samples);
+ *   await voiceFingerprintTauri?.calibrateTitaneVoice(any: any);
  * };
  *
  * // 2. Check if audio is TITANE before ASR processing
- * const processAudioData = async (audioData: Float32Array) => {
+ * const processAudioData = async (any: any) => {
  *   // Layer 3 anti-feedback check
- *   const result = await voiceFingerprintTauri.checkIsTitaneSpeaking(audioData);
+ *   const result = await voiceFingerprintTauri?.checkIsTitaneSpeaking(any: any);
  *
- *   if (result.isTitane) {
- *     logger.debug('🎯 TITANE detected, skipping ASR (anti-feedback Layer 3)');
+ *   if (any: any) {
+ *     logger?.debug('🎯 TITANE detected, skipping ASR (anti-feedback Layer 3)');
  *     return; // Skip ASR processing
  *   }
  *
  *   // User voice detected, continue with ASR
- *   const vadResult = await audioService.processVADFrame(audioData);
+ *   const vadResult = await audioService?.processVADFrame(any: any);
  *   // ...
  * };
  *

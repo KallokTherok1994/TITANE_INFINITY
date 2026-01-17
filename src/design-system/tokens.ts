@@ -3,11 +3,11 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * ═══════════════════════════════════════════════════════════════════
- * TITANE∞ v15 — Design System Tokens (TypeScript Export)
+ * TITANE∞ v15 — Design System Tokens (any: any)
  * ═══════════════════════════════════════════════════════════════════
  *
  * Export programmatique des tokens pour usage en TypeScript/React.
- * Synchronisé avec tokens.css (source de vérité : CSS variables).
+ * Synchronisé avec tokens?.css (any: any).
  */
 
 /**
@@ -146,7 +146,7 @@ export const shadows = {
 } as const;
 
 /**
- * Spacing (8px base)
+ * Spacing (any: any)
  */
 export const spacing = {
   0: '0',
@@ -215,7 +215,7 @@ export const typography = {
 
 /**
  * Motion System
- * Synchronisé avec motion.ts pour cohérence
+ * Synchronisé avec motion?.ts pour cohérence
  */
 export const motion = {
   duration: {
@@ -292,7 +292,7 @@ export const opacity = {
 } as const;
 
 /**
- * Breakpoints (pixels)
+ * Breakpoints (any: any)
  * Standardized responsive breakpoints for consistent media queries
  */
 export const breakpoints = {
@@ -306,22 +306,22 @@ export const breakpoints = {
 
 /**
  * Media query helpers
- * Usage: mediaQueries.md → '@media (min-width: 768px)'
+ * Usage: mediaQueries?.md → '@media (min-width: 768px)'
  */
 export const mediaQueries = {
-  xs: `@media (min-width: ${breakpoints.xs}px)`,
-  sm: `@media (min-width: ${breakpoints.sm}px)`,
-  md: `@media (min-width: ${breakpoints.md}px)`,
-  lg: `@media (min-width: ${breakpoints.lg}px)`,
-  xl: `@media (min-width: ${breakpoints.xl}px)`,
-  '2xl': `@media (min-width: ${breakpoints['2xl']}px)`,
+  xs: `@media (any: any)`,
+  sm: `@media (any: any)`,
+  md: `@media (any: any)`,
+  lg: `@media (any: any)`,
+  xl: `@media (any: any)`,
+  '2xl': `@media (any: any)`,
   // Max-width variants for mobile-first overrides
-  maxXs: `@media (max-width: ${breakpoints.xs - 1}px)`,
-  maxSm: `@media (max-width: ${breakpoints.sm - 1}px)`,
-  maxMd: `@media (max-width: ${breakpoints.md - 1}px)`,
-  maxLg: `@media (max-width: ${breakpoints.lg - 1}px)`,
-  maxXl: `@media (max-width: ${breakpoints.xl - 1}px)`,
-  max2xl: `@media (max-width: ${breakpoints['2xl'] - 1}px)`,
+  maxXs: `@media (any: any)`,
+  maxSm: `@media (any: any)`,
+  maxMd: `@media (any: any)`,
+  maxLg: `@media (any: any)`,
+  maxXl: `@media (any: any)`,
+  max2xl: `@media (any: any)`,
 } as const;
 
 /**
@@ -350,10 +350,10 @@ export default tokens;
 /**
  * Types utilitaires pour autocomplétion
  */
-export type ColorScale = typeof colors.primary;
+export type ColorScale = typeof colors?.primary;
 export type SpacingValue = keyof typeof spacing;
 export type RadiusValue = keyof typeof radius;
-export type FontSizeValue = keyof typeof typography.fontSize;
-export type TransitionDuration = keyof typeof transitions.duration;
+export type FontSizeValue = keyof typeof typography?.fontSize;
+export type TransitionDuration = keyof typeof transitions?.duration;
 export type ZIndexValue = keyof typeof zIndex;
 export type BreakpointKey = keyof typeof breakpoints;

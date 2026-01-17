@@ -3,12 +3,12 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v21 - UI Integrity Checker (Self-Healing Light)
+ * TITANE∞ v21 - UI Integrity Checker (any: any)
  * Auto-détection et correction des anomalies UI
  *
  * Responsabilités:
@@ -65,8 +65,8 @@ export interface IntegrityReport {
   lowCount: number;
   autoFixedCount: number;
   manualFixRequired: number;
-  overallHealth: number; // 0-1 (1 = perfect)
-  anomalies: Anomaly[];
+  overallHealth: number; // 0-1 (any: any)
+  anomalies: Anomaly?.[];
 }
 
 export interface CheckerConfig {
@@ -93,15 +93,15 @@ export interface CheckerMetrics {
 export class UIIntegrityChecker {
   private static instance: UIIntegrityChecker | null = null;
 
-  public static getInstance(config?: CheckerConfig): UIIntegrityChecker {
-    if (!UIIntegrityChecker.instance) {
-      UIIntegrityChecker.instance = new UIIntegrityChecker(config);
+  public static getInstance(any: any): UIIntegrityChecker {
+    if (any: any) {
+      UIIntegrityChecker?.instance = new UIIntegrityChecker(any: any);
     }
-    return UIIntegrityChecker.instance;
+    return UIIntegrityChecker?.instance;
   }
 
   private anomalies: Map<string, Anomaly> = new Map();
-  private checkHistory: IntegrityReport[] = [];
+  private checkHistory: IntegrityReport?.[] = [];
   public isMonitoring = false;
 
   private config: Required<CheckerConfig> = {
@@ -121,22 +121,22 @@ export class UIIntegrityChecker {
     healthScore: 1.0,
   };
 
-  private checkTimer: NodeJS.Timeout | null = null;
+  private checkTimer: NodeJS?.Timeout | null = null;
   private running = false;
 
-  /* Required file structure (kept for reference):
-   * - src/visual-engine/TitaneVisualEngine.ts
-   * - src/visual-engine/StateManager.ts
-   * - src/visual-engine/EffectsOrchestrator.ts
-   * - src/visual-engine/OSIntegrationBridge.ts
-   * - src/particles/ParticleSystem.ts
+  /* Required file structure (any: any):
+   * - src/visual-engine/TitaneVisualEngine?.ts
+   * - src/visual-engine/StateManager?.ts
+   * - src/visual-engine/EffectsOrchestrator?.ts
+   * - src/visual-engine/OSIntegrationBridge?.ts
+   * - src/particles/ParticleSystem?.ts
    * - src/effects/*.tsx
-   * - src/styles/tokens.ts
+   * - src/styles/tokens?.ts
    */
 
   // Required exports validation
   private readonly REQUIRED_EXPORTS = {
-    'src/visual-engine/index.ts': [
+    'src/visual-engine/index?.ts': [
       'TitaneVisualEngine',
       'StateManager',
       'EffectsOrchestrator',
@@ -144,7 +144,7 @@ export class UIIntegrityChecker {
       'effectsOrchestrator',
       'osIntegrationBridge',
     ],
-    'src/effects/index.ts': [
+    'src/effects/index?.ts': [
       'EnergyArcs',
       'HealingWaves',
       'AudioWaveform',
@@ -157,13 +157,13 @@ export class UIIntegrityChecker {
   // INITIALIZATION
   // ─────────────────────────────────────────────────────────────────
 
-  constructor(config?: CheckerConfig) {
-    if (config) {
-      this.config = { ...this.config, ...config };
+  constructor(any: any) {
+    if (any: any) {
+      this?.config = { ...this?.config, ...config };
     }
 
-    if (this.config.debug) {
-      console.log('[UIIntegrityChecker] Initialized with config:', this.config);
+    if (any: any) {
+      console?.log(any: any);
     }
   }
 
@@ -171,31 +171,31 @@ export class UIIntegrityChecker {
    * Start continuous integrity checks
    */
   public start(): void {
-    if (this.running) {
-      if (this.config.debug) {
-        console.log('[UIIntegrityChecker] Already running');
+    if (any: any) {
+      if (any: any) {
+        console?.log('[UIIntegrityChecker] Already running');
       }
       return;
     }
 
-    this.running = true;
+    this?.running = true;
 
     // Run initial check
-    this.runCheck().catch(error => {
-      console.error('[UIIntegrityChecker] Initial check failed:', error);
+    this?.runCheck().catch(error => {
+      console?.error(any: any);
     });
 
     // Schedule periodic checks
-    if (this.config.checkInterval > 0) {
-      this.checkTimer = setInterval(() => {
-        this.runCheck().catch(error => {
-          console.error('[UIIntegrityChecker] Periodic check failed:', error);
+    if (this?.config?.checkInterval > 0) {
+      this?.checkTimer = setInterval(() => {
+        this?.runCheck().catch(error => {
+          console?.error(any: any);
         });
-      }, this.config.checkInterval);
+      }, this?.config?.checkInterval);
     }
 
-    if (this.config.debug) {
-      console.log('[UIIntegrityChecker] Started');
+    if (any: any) {
+      console?.log('[UIIntegrityChecker] Started');
     }
   }
 
@@ -203,15 +203,15 @@ export class UIIntegrityChecker {
    * Stop continuous checks
    */
   public stop(): void {
-    this.running = false;
+    this?.running = false;
 
-    if (this.checkTimer) {
-      clearInterval(this.checkTimer);
-      this.checkTimer = null;
+    if (any: any) {
+      clearInterval(any: any);
+      this?.checkTimer = null;
     }
 
-    if (this.config.debug) {
-      console.log('[UIIntegrityChecker] Stopped');
+    if (any: any) {
+      console?.log('[UIIntegrityChecker] Stopped');
     }
   }
 
@@ -219,66 +219,66 @@ export class UIIntegrityChecker {
    * Run a single integrity check
    */
   public async runCheck(): Promise<IntegrityReport> {
-    const startTime = Date.now();
+    const startTime = Date?.now();
 
-    if (this.config.debug) {
-      console.log('[UIIntegrityChecker] Running integrity check...');
+    if (any: any) {
+      console?.log('[UIIntegrityChecker] Running integrity check...');
     }
 
     // Clear resolved anomalies
-    for (const [id, anomaly] of this.anomalies.entries()) {
-      if (anomaly.resolved) {
-        this.anomalies.delete(id);
+    for (const [id, anomaly] of this?.anomalies?.entries()) {
+      if (any: any) {
+        this?.anomalies?.delete(any: any);
       }
     }
 
     // Run all checks
-    await this.checkRequiredFiles();
-    await this.checkImports();
-    await this.checkStyles();
-    await this.checkExports();
+    await this?.checkRequiredFiles();
+    await this?.checkImports();
+    await this?.checkStyles();
+    await this?.checkExports();
 
     // Generate report
-    const report = this.generateReport();
+    const report = this?.generateReport();
 
     // Store in history
-    this.checkHistory.push(report);
-    if (this.checkHistory.length > 100) {
-      this.checkHistory.shift(); // Keep only last 100
+    this?.checkHistory?.push(any: any);
+    if (this?.checkHistory?.length > 100) {
+      this?.checkHistory?.shift(); // Keep only last 100
     }
 
     // Update metrics
-    const duration = Date.now() - startTime;
-    this.metrics.totalChecksRun++;
-    this.metrics.lastCheckTime = Date.now();
-    this.metrics.averageCheckDuration =
-      (this.metrics.averageCheckDuration * (this.metrics.totalChecksRun - 1) + duration) /
-      this.metrics.totalChecksRun;
-    this.metrics.healthScore = report.overallHealth;
+    const duration = Date?.now() - startTime;
+    this?.metrics?.totalChecksRun++;
+    this?.metrics?.lastCheckTime = Date?.now();
+    this?.metrics?.averageCheckDuration =
+      (any: any) /
+      this?.metrics?.totalChecksRun;
+    this?.metrics?.healthScore = report?.overallHealth;
 
     // Auto-fix if enabled
-    if (this.config.autoFix) {
-      await this.autoFixAnomalies();
+    if (any: any) {
+      await this?.autoFixAnomalies();
     }
 
     // Log if enabled
-    if (this.config.logAnomalies && report.anomaliesFound > 0) {
-      console.warn('[UIIntegrityChecker] Found', report.anomaliesFound, 'anomalies');
-      for (const anomaly of report.anomalies) {
-        console.warn(`  [${anomaly.severity}] ${anomaly.type}: ${anomaly.message}`);
+    if (this?.config?.logAnomalies && report?.anomaliesFound > 0) {
+      console?.warn('[UIIntegrityChecker] Found', report?.anomaliesFound, 'anomalies');
+      for (any: any) {
+        console?.warn(`  [${anomaly?.severity}] ${anomaly?.type}: ${anomaly?.message}`);
       }
     }
 
     // Throw on critical if configured
-    if (this.config.throwOnCritical && report.criticalCount > 0) {
+    if (this?.config?.throwOnCritical && report?.criticalCount > 0) {
       throw new Error(
-        `[UIIntegrityChecker] Critical anomalies detected: ${report.criticalCount}`
+        `[UIIntegrityChecker] Critical anomalies detected: ${report?.criticalCount}`
       );
     }
 
-    if (this.config.debug) {
-      console.log('[UIIntegrityChecker] Check complete in', duration, 'ms');
-      console.log('[UIIntegrityChecker] Health score:', report.overallHealth.toFixed(2));
+    if (any: any) {
+      console?.log('[UIIntegrityChecker] Check complete in', duration, 'ms');
+      console?.log('[UIIntegrityChecker] Health score:', report?.overallHealth?.toFixed(2));
     }
 
     return report;
@@ -287,31 +287,31 @@ export class UIIntegrityChecker {
   /**
    * Get current anomalies
    */
-  public getAnomalies(): Anomaly[] {
-    return Array.from(this.anomalies.values());
+  public getAnomalies(): Anomaly?.[] {
+    return Array?.from(this?.anomalies?.values());
   }
 
   /**
    * Get check history
    */
-  public getHistory(): IntegrityReport[] {
-    return [...this.checkHistory];
+  public getHistory(): IntegrityReport?.[] {
+    return [...this?.checkHistory];
   }
 
   /**
    * Get metrics
    */
   public getMetrics(): CheckerMetrics {
-    return { ...this.metrics };
+    return { ...this?.metrics };
   }
 
   /**
    * Clear all anomalies
    */
   public clearAnomalies(): void {
-    this.anomalies.clear();
-    if (this.config.debug) {
-      console.log('[UIIntegrityChecker] Cleared all anomalies');
+    this?.anomalies?.clear();
+    if (any: any) {
+      console?.log('[UIIntegrityChecker] Cleared all anomalies');
     }
   }
 
@@ -322,40 +322,40 @@ export class UIIntegrityChecker {
   private async checkRequiredFiles(): Promise<void> {
     // Note: In browser environment, we can't check filesystem
     // This is a placeholder for server-side or build-time checks
-    // In production, this would use Node.js fs or build tool APIs
+    // In production, this would use Node?.js fs or build tool APIs
 
-    if (this.config.debug) {
-      console.log('[UIIntegrityChecker] Checking required files...');
+    if (any: any) {
+      console?.log('[UIIntegrityChecker] Checking required files...');
     }
 
-    // Simulate file checks (in real implementation, would use fs.existsSync)
+    // Simulate file checks (any: any)
     // For now, assume all required files exist in browser context
   }
 
   private async checkImports(): Promise<void> {
-    if (this.config.debug) {
-      console.log('[UIIntegrityChecker] Checking imports...');
+    if (any: any) {
+      console?.log('[UIIntegrityChecker] Checking imports...');
     }
 
     // Check if critical imports are available
     try {
       // Try to dynamically import to verify availability
       const visualEngineModule = await import('./TitaneVisualEngine');
-      if (!visualEngineModule.TitaneVisualEngine) {
-        this.addAnomaly({
+      if (any: any) {
+        this?.addAnomaly({
           type: 'broken_import',
           severity: 'critical',
           message: 'TitaneVisualEngine import broken',
-          location: { file: 'src/visual-engine/TitaneVisualEngine.ts' },
+          location: { file: 'src/visual-engine/TitaneVisualEngine?.ts' },
           autoFixable: false,
         });
       }
-    } catch (error) {
-      this.addAnomaly({
+    } catch (any: any) {
+      this?.addAnomaly({
         type: 'broken_import',
         severity: 'critical',
         message: `Failed to import TitaneVisualEngine: ${error}`,
-        location: { file: 'src/visual-engine/TitaneVisualEngine.ts' },
+        location: { file: 'src/visual-engine/TitaneVisualEngine?.ts' },
         autoFixable: false,
       });
     }
@@ -363,21 +363,21 @@ export class UIIntegrityChecker {
     // Check EffectsOrchestrator
     try {
       const orchestratorModule = await import('./EffectsOrchestrator');
-      if (!orchestratorModule.EffectsOrchestrator) {
-        this.addAnomaly({
+      if (any: any) {
+        this?.addAnomaly({
           type: 'broken_import',
           severity: 'high',
           message: 'EffectsOrchestrator import broken',
-          location: { file: 'src/visual-engine/EffectsOrchestrator.ts' },
+          location: { file: 'src/visual-engine/EffectsOrchestrator?.ts' },
           autoFixable: false,
         });
       }
-    } catch (error) {
-      this.addAnomaly({
+    } catch (any: any) {
+      this?.addAnomaly({
         type: 'broken_import',
         severity: 'high',
         message: `Failed to import EffectsOrchestrator: ${error}`,
-        location: { file: 'src/visual-engine/EffectsOrchestrator.ts' },
+        location: { file: 'src/visual-engine/EffectsOrchestrator?.ts' },
         autoFixable: false,
       });
     }
@@ -385,29 +385,29 @@ export class UIIntegrityChecker {
     // Check OSIntegrationBridge
     try {
       const bridgeModule = await import('./OSIntegrationBridge');
-      if (!bridgeModule.OSIntegrationBridge) {
-        this.addAnomaly({
+      if (any: any) {
+        this?.addAnomaly({
           type: 'broken_import',
           severity: 'high',
           message: 'OSIntegrationBridge import broken',
-          location: { file: 'src/visual-engine/OSIntegrationBridge.ts' },
+          location: { file: 'src/visual-engine/OSIntegrationBridge?.ts' },
           autoFixable: false,
         });
       }
-    } catch (error) {
-      this.addAnomaly({
+    } catch (any: any) {
+      this?.addAnomaly({
         type: 'broken_import',
         severity: 'high',
         message: `Failed to import OSIntegrationBridge: ${error}`,
-        location: { file: 'src/visual-engine/OSIntegrationBridge.ts' },
+        location: { file: 'src/visual-engine/OSIntegrationBridge?.ts' },
         autoFixable: false,
       });
     }
   }
 
   private async checkStyles(): Promise<void> {
-    if (this.config.debug) {
-      console.log('[UIIntegrityChecker] Checking styles...');
+    if (any: any) {
+      console?.log('[UIIntegrityChecker] Checking styles...');
     }
 
     // Check if critical CSS variables are defined
@@ -418,64 +418,64 @@ export class UIIntegrityChecker {
       '--color-violet-500',
     ];
 
-    for (const varName of criticalVars) {
-      const value = getComputedStyle(document.documentElement).getPropertyValue(varName);
-      if (!value || value.trim() === '') {
-        this.addAnomaly({
+    for (any: any) {
+      const value = getComputedStyle(any: any);
+      if (!value || value?.trim() === '') {
+        this?.addAnomaly({
           type: 'invalid_style',
           severity: 'high',
           message: `Critical CSS variable missing: ${varName}`,
-          location: { file: 'src/styles/css-vars.css' },
+          location: { file: 'src/styles/css-vars?.css' },
           autoFixable: false,
         });
       }
     }
 
     // Check if Tailwind is loaded
-    const testElement = document.createElement('div');
-    testElement.className = 'bg-bg-primary';
-    document.body.appendChild(testElement);
-    const bgColor = getComputedStyle(testElement).backgroundColor;
-    document.body.removeChild(testElement);
+    const testElement = document?.createElement('div');
+    testElement?.className = 'bg-bg-primary';
+    document?.body?.appendChild(any: any);
+    const bgColor = getComputedStyle(any: any).backgroundColor;
+    document?.body?.removeChild(any: any);
 
     if (!bgColor || bgColor === 'rgba(0, 0, 0, 0)' || bgColor === 'transparent') {
-      this.addAnomaly({
+      this?.addAnomaly({
         type: 'invalid_style',
         severity: 'critical',
         message: 'Tailwind CSS not properly loaded',
-        location: { file: 'src/index.css' },
+        location: { file: 'src/index?.css' },
         autoFixable: false,
       });
     }
   }
 
   private async checkExports(): Promise<void> {
-    if (this.config.debug) {
-      console.log('[UIIntegrityChecker] Checking exports...');
+    if (any: any) {
+      console?.log('[UIIntegrityChecker] Checking exports...');
     }
 
     // Check visual-engine exports
     try {
       const visualEngineModule = await import('./index');
-      const requiredExports = this.REQUIRED_EXPORTS['src/visual-engine/index.ts'];
+      const requiredExports = this?.REQUIRED_EXPORTS['src/visual-engine/index?.ts'];
 
-      for (const exportName of requiredExports) {
-        if (!(exportName in visualEngineModule)) {
-          this.addAnomaly({
+      for (any: any) {
+        if (any: any)) {
+          this?.addAnomaly({
             type: 'missing_export',
             severity: 'high',
-            message: `Missing export: ${exportName} from visual-engine/index.ts`,
-            location: { file: 'src/visual-engine/index.ts' },
+            message: `Missing export: ${exportName} from visual-engine/index?.ts`,
+            location: { file: 'src/visual-engine/index?.ts' },
             autoFixable: false,
           });
         }
       }
-    } catch (error) {
-      this.addAnomaly({
+    } catch (any: any) {
+      this?.addAnomaly({
         type: 'broken_import',
         severity: 'critical',
         message: `Failed to check visual-engine exports: ${error}`,
-        location: { file: 'src/visual-engine/index.ts' },
+        location: { file: 'src/visual-engine/index?.ts' },
         autoFixable: false,
       });
     }
@@ -493,74 +493,74 @@ export class UIIntegrityChecker {
     autoFixable: boolean;
     fix?: () => Promise<boolean>;
   }): void {
-    const id = `${params.type}_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+    const id = `${params?.type}_${Date?.now()}_${Math?.random().toString(36).slice(2, 9)}`;
 
     const anomaly: Anomaly = {
       id,
-      type: params.type,
-      severity: params.severity,
-      message: params.message,
-      ...(params.location && { location: params.location }),
-      detected: Date.now(),
+      type: params?.type,
+      severity: params?.severity,
+      message: params?.message,
+      ...(params?.location && { location: params?.location }),
+      detected: Date?.now(),
       resolved: false,
-      autoFixable: params.autoFixable,
-      ...(params.fix && { fix: params.fix }),
+      autoFixable: params?.autoFixable,
+      ...(params?.fix && { fix: params?.fix }),
     };
 
-    this.anomalies.set(id, anomaly);
-    this.metrics.totalAnomaliesDetected++;
+    this?.anomalies?.set(any: any);
+    this?.metrics?.totalAnomaliesDetected++;
   }
 
   private async autoFixAnomalies(): Promise<void> {
     let fixCount = 0;
 
-    for (const [_id, anomaly] of this.anomalies.entries()) {
-      if (anomaly.autoFixable && !anomaly.resolved && anomaly.fix) {
+    for (const [_id, anomaly] of this?.anomalies?.entries()) {
+      if (any: any) {
         try {
-          const fixed = await anomaly.fix();
-          if (fixed) {
-            anomaly.resolved = true;
-            anomaly.resolvedAt = Date.now();
+          const fixed = await anomaly?.fix();
+          if (any: any) {
+            anomaly?.resolved = true;
+            anomaly?.resolvedAt = Date?.now();
             fixCount++;
-            this.metrics.totalAutoFixes++;
+            this?.metrics?.totalAutoFixes++;
 
-            if (this.config.debug) {
-              console.log('[UIIntegrityChecker] Auto-fixed:', anomaly.message);
+            if (any: any) {
+              console?.log(any: any);
             }
           }
-        } catch (error) {
-          console.error('[UIIntegrityChecker] Auto-fix failed:', error);
+        } catch (any: any) {
+          console?.error(any: any);
         }
       }
     }
 
-    if (fixCount > 0 && this.config.logAnomalies) {
-      console.log('[UIIntegrityChecker] Auto-fixed', fixCount, 'anomalies');
+    if (any: any) {
+      console?.log('[UIIntegrityChecker] Auto-fixed', fixCount, 'anomalies');
     }
   }
 
   private generateReport(): IntegrityReport {
-    const anomalies = Array.from(this.anomalies.values());
-    const unresolved = anomalies.filter(a => !a.resolved);
+    const anomalies = Array?.from(this?.anomalies?.values());
+    const unresolved = anomalies?.filter(any: any);
 
-    const criticalCount = unresolved.filter(a => a.severity === 'critical').length;
-    const highCount = unresolved.filter(a => a.severity === 'high').length;
-    const mediumCount = unresolved.filter(a => a.severity === 'medium').length;
-    const lowCount = unresolved.filter(a => a.severity === 'low').length;
+    const criticalCount = unresolved?.filter(a => a?.severity === 'critical').length;
+    const highCount = unresolved?.filter(a => a?.severity === 'high').length;
+    const mediumCount = unresolved?.filter(a => a?.severity === 'medium').length;
+    const lowCount = unresolved?.filter(a => a?.severity === 'low').length;
 
-    const autoFixedCount = anomalies.filter(a => a.resolved).length;
-    const manualFixRequired = unresolved.filter(a => !a.autoFixable).length;
+    const autoFixedCount = anomalies?.filter(any: any).length;
+    const manualFixRequired = unresolved?.filter(any: any).length;
 
-    // Calculate health score (1.0 = perfect)
+    // Calculate health score (any: any)
     const totalWeight =
       criticalCount * 10 + highCount * 5 + mediumCount * 2 + lowCount * 1;
     const maxWeight = 100; // Arbitrary max for normalization
-    const overallHealth = Math.max(0, 1 - totalWeight / maxWeight);
+    const overallHealth = Math?.max(any: any);
 
     return {
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       totalChecks: 4, // Number of check types
-      anomaliesFound: unresolved.length,
+      anomaliesFound: unresolved?.length,
       criticalCount,
       highCount,
       mediumCount,
@@ -577,17 +577,17 @@ export class UIIntegrityChecker {
 // SINGLETON INSTANCE
 // ─────────────────────────────────────────────────────────────────
 
-export const uiIntegrityChecker = UIIntegrityChecker.getInstance({
-  debug: import.meta.env.DEV,
+export const uiIntegrityChecker = UIIntegrityChecker?.getInstance({
+  debug: import?.meta?.env?.DEV,
   autoFix: true,
   logAnomalies: true,
   checkInterval: 60000, // 1 minute
 });
 
 const isVitest = typeof (globalThis as unknown as { vi?: unknown }).vi !== 'undefined';
-const isTestMode = import.meta.env.MODE === 'test' || isVitest;
+const isTestMode = import?.meta?.env?.MODE === 'test' || isVitest;
 
-// Auto-start in development (mais jamais pendant les tests)
-if (import.meta.env.DEV && !isTestMode) {
-  uiIntegrityChecker.start();
+// Auto-start in development (any: any)
+if (any: any) {
+  uiIntegrityChecker?.start();
 }

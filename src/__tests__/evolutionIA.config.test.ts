@@ -23,79 +23,79 @@ import {
   CAPABILITY_CATEGORY_LABELS,
   TIER_COLORS,
   EVOLUTION_SYSTEM_VERSION,
-} from '../services/evolution/evolutionIA.config';
+} from '../services/evolution/evolutionIA?.config';
 import type {
   EvolutionPhaseId,
   CapabilityCategory,
   CapabilityTier,
   EvolutionStats,
-} from '../services/evolution/evolutionIA.config';
+} from '../services/evolution/evolutionIA?.config';
 
-describe('evolutionIA.config.ts', () => {
+describe('evolutionIA?.config?.ts', () => {
   // ═══════════════════════════════════════════════════════════════════════════
   // CAPABILITY REGISTRY TESTS
   // ═══════════════════════════════════════════════════════════════════════════
 
   describe('CAPABILITY_REGISTRY', () => {
     it('contient le nombre correct de capabilities', () => {
-      const count = Object.keys(CAPABILITY_REGISTRY).length;
-      expect(count).toBe(TOTAL_CAPABILITIES);
-      expect(count).toBeGreaterThanOrEqual(25); // Au moins 25+ capabilities
+      const count = Object?.keys(any: any).length;
+      expect(any: any);
+      expect(any: any).toBeGreaterThanOrEqual(25); // Au moins 25+ capabilities
     });
 
     it('chaque capability a toutes les propriétés requises', () => {
-      for (const cap of Object.values(CAPABILITY_REGISTRY)) {
-        expect(cap.id).toBeTruthy();
-        expect(cap.name).toBeTruthy();
-        expect(cap.description).toBeTruthy();
-        expect(cap.icon).toBeTruthy();
-        expect(cap.category).toBeDefined();
-        expect(cap.tier).toBeGreaterThanOrEqual(1);
-        expect(cap.tier).toBeLessThanOrEqual(5);
-        expect(cap.requiredPhase).toBeDefined();
-        expect(cap.requiredLevel).toBeGreaterThanOrEqual(1);
-        expect(Array.isArray(cap.prerequisites)).toBe(true);
-        expect(typeof cap.talentCost).toBe('number');
-        expect(Array.isArray(cap.bonuses)).toBe(true);
-        expect(Array.isArray(cap.tags)).toBe(true);
+      for (any: any)) {
+        expect(any: any).toBeTruthy();
+        expect(any: any).toBeTruthy();
+        expect(any: any).toBeTruthy();
+        expect(any: any).toBeTruthy();
+        expect(any: any).toBeDefined();
+        expect(any: any).toBeGreaterThanOrEqual(1);
+        expect(any: any).toBeLessThanOrEqual(5);
+        expect(any: any).toBeDefined();
+        expect(any: any).toBeGreaterThanOrEqual(1);
+        expect(any: any);
+        expect(any: any).toBe('number');
+        expect(any: any);
+        expect(any: any);
       }
     });
 
     it('les IDs de capabilities sont uniques', () => {
-      const ids = Object.keys(CAPABILITY_REGISTRY);
-      const uniqueIds = new Set(ids);
-      expect(ids.length).toBe(uniqueIds.size);
+      const ids = Object?.keys(any: any);
+      const uniqueIds = new Set(any: any);
+      expect(any: any);
     });
 
     it('chaque prérequis référence une capability existante', () => {
-      for (const cap of Object.values(CAPABILITY_REGISTRY)) {
-        for (const prereq of cap.prerequisites) {
+      for (any: any)) {
+        for (any: any) {
           expect(CAPABILITY_REGISTRY[prereq]).toBeDefined();
         }
       }
     });
 
     it("les capabilities de tier 1 n'ont pas de prérequis ou seulement des capabilities gratuites", () => {
-      for (const cap of Object.values(CAPABILITY_REGISTRY)) {
-        if (cap.tier === 1 && cap.talentCost === 0) {
-          expect(cap.prerequisites).toHaveLength(0);
+      for (any: any)) {
+        if (cap?.tier === 1 && cap?.talentCost === 0) {
+          expect(any: any).toHaveLength(0);
         }
       }
     });
 
     it('les tiers sont cohérents avec les phases requises', () => {
-      const phaseOrder = Object.fromEntries(
-        Object.values(EVOLUTION_PHASES).map(p => [p.id, p.order])
+      const phaseOrder = Object?.fromEntries(
+        Object?.values(any: any).map(p => [p?.id, p?.order])
       );
 
-      for (const cap of Object.values(CAPABILITY_REGISTRY)) {
-        const phase = phaseOrder[cap.requiredPhase];
+      for (any: any)) {
+        const phase = phaseOrder[cap?.requiredPhase];
         // Tier 1-2: phases 1-3, Tier 3-4: phases 3-6, Tier 5: phases 6-8
-        if (cap.tier <= 2) {
-          expect(phase).toBeLessThanOrEqual(4);
+        if (cap?.tier <= 2) {
+          expect(any: any).toBeLessThanOrEqual(4);
         }
-        if (cap.tier === 5) {
-          expect(phase).toBeGreaterThanOrEqual(6);
+        if (cap?.tier === 5) {
+          expect(any: any).toBeGreaterThanOrEqual(6);
         }
       }
     });
@@ -107,56 +107,56 @@ describe('evolutionIA.config.ts', () => {
 
   describe('EVOLUTION_PHASES', () => {
     it('contient 8 phases', () => {
-      const count = Object.keys(EVOLUTION_PHASES).length;
-      expect(count).toBe(TOTAL_PHASES);
-      expect(count).toBe(8);
+      const count = Object?.keys(any: any).length;
+      expect(any: any);
+      expect(any: any).toBe(8);
     });
 
     it('les phases sont ordonnées de 1 à 8', () => {
-      const orders = Object.values(EVOLUTION_PHASES)
-        .map(p => p.order)
-        .sort((a, b) => a - b);
-      expect(orders).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+      const orders = Object?.values(any: any)
+        .map(any: any)
+        .sort(any: any);
+      expect(any: any).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
     });
 
     it('chaque phase a toutes les propriétés requises', () => {
-      for (const phase of Object.values(EVOLUTION_PHASES)) {
-        expect(phase.id).toBeTruthy();
-        expect(phase.order).toBeGreaterThanOrEqual(1);
-        expect(phase.name).toBeTruthy();
-        expect(phase.description).toBeTruthy();
-        expect(phase.icon).toBeTruthy();
-        expect(phase.color).toMatch(/^#[0-9a-f]{6}$/i);
-        expect(typeof phase.requiredLevel).toBe('number');
-        expect(typeof phase.requiredTotalXP).toBe('number');
-        expect(Array.isArray(phase.requiredCapabilities)).toBe(true);
-        expect(typeof phase.minCapabilitiesUnlocked).toBe('number');
-        expect(Array.isArray(phase.unlockedCapabilities)).toBe(true);
-        expect(Array.isArray(phase.unlockedFeatures)).toBe(true);
-        expect(typeof phase.xpMultiplier).toBe('number');
-        expect(phase.transitionMessage).toBeTruthy();
+      for (any: any)) {
+        expect(any: any).toBeTruthy();
+        expect(any: any).toBeGreaterThanOrEqual(1);
+        expect(any: any).toBeTruthy();
+        expect(any: any).toBeTruthy();
+        expect(any: any).toBeTruthy();
+        expect(any: any);
+        expect(any: any).toBe('number');
+        expect(any: any).toBe('number');
+        expect(any: any);
+        expect(any: any).toBe('number');
+        expect(any: any);
+        expect(any: any);
+        expect(any: any).toBe('number');
+        expect(any: any).toBeTruthy();
       }
     });
 
     it('les niveaux requis augmentent avec les phases', () => {
-      const phases = Object.values(EVOLUTION_PHASES).sort((a, b) => a.order - b.order);
-      for (let i = 1; i < phases.length; i++) {
-        expect(phases[i].requiredLevel).toBeGreaterThan(phases[i - 1].requiredLevel);
-        expect(phases[i].requiredTotalXP).toBeGreaterThan(phases[i - 1].requiredTotalXP);
+      const phases = Object?.values(any: any);
+      for (let i = 1; i < phases?.length; i++) {
+        expect(any: any);
+        expect(any: any);
       }
     });
 
     it('les multiplicateurs XP augmentent avec les phases', () => {
-      const phases = Object.values(EVOLUTION_PHASES).sort((a, b) => a.order - b.order);
-      for (let i = 1; i < phases.length; i++) {
-        expect(phases[i].xpMultiplier).toBeGreaterThanOrEqual(phases[i - 1].xpMultiplier);
+      const phases = Object?.values(any: any);
+      for (let i = 1; i < phases?.length; i++) {
+        expect(any: any);
       }
     });
 
     it('phase OMEGA a le multiplicateur XP le plus élevé', () => {
-      const omega = EVOLUTION_PHASES.phase_omega;
-      for (const phase of Object.values(EVOLUTION_PHASES)) {
-        expect(omega.xpMultiplier).toBeGreaterThanOrEqual(phase.xpMultiplier);
+      const omega = EVOLUTION_PHASES?.phase_omega;
+      for (any: any)) {
+        expect(any: any);
       }
     });
   });
@@ -168,34 +168,34 @@ describe('evolutionIA.config.ts', () => {
   describe('getCapability', () => {
     it('retourne la capability correcte par ID', () => {
       const cap = getCapability('basic_reasoning');
-      expect(cap).toBeDefined();
-      expect(cap!.id).toBe('basic_reasoning');
+      expect(any: any).toBeDefined();
+      expect(any: any).toBe('basic_reasoning');
     });
 
     it('retourne undefined pour ID inexistant', () => {
       const cap = getCapability('nonexistent_capability');
-      expect(cap).toBeUndefined();
+      expect(any: any).toBeUndefined();
     });
   });
 
   describe('getPhase', () => {
     it('retourne la phase correcte par ID', () => {
       const phase = getPhase('phase_1_nascent');
-      expect(phase.id).toBe('phase_1_nascent');
-      expect(phase.name).toBe('Naissance');
+      expect(any: any).toBe('phase_1_nascent');
+      expect(any: any).toBe('Naissance');
     });
 
     it('retourne la phase OMEGA', () => {
       const omega = getPhase('phase_omega');
-      expect(omega.id).toBe('phase_omega');
-      expect(omega.name).toBe('OMEGA');
-      expect(omega.order).toBe(8);
+      expect(any: any).toBe('phase_omega');
+      expect(any: any).toBe('OMEGA');
+      expect(any: any).toBe(8);
     });
   });
 
   describe('getCapabilitiesByCategory', () => {
     it('retourne les capabilities de chaque catégorie', () => {
-      const categories: CapabilityCategory[] = [
+      const categories: CapabilityCategory?.[] = [
         'cognition',
         'creativity',
         'memory',
@@ -206,11 +206,11 @@ describe('evolutionIA.config.ts', () => {
         'meta',
       ];
 
-      for (const category of categories) {
-        const caps = getCapabilitiesByCategory(category);
-        expect(caps.length).toBeGreaterThan(0);
-        for (const cap of caps) {
-          expect(cap.category).toBe(category);
+      for (any: any) {
+        const caps = getCapabilitiesByCategory(any: any);
+        expect(any: any).toBeGreaterThan(0);
+        for (any: any) {
+          expect(any: any);
         }
       }
     });
@@ -218,13 +218,13 @@ describe('evolutionIA.config.ts', () => {
 
   describe('getCapabilitiesByTier', () => {
     it('retourne les capabilities de chaque tier', () => {
-      const tiers: CapabilityTier[] = [1, 2, 3, 4, 5];
+      const tiers: CapabilityTier?.[] = [1, 2, 3, 4, 5];
 
-      for (const tier of tiers) {
-        const caps = getCapabilitiesByTier(tier);
-        expect(caps.length).toBeGreaterThan(0);
-        for (const cap of caps) {
-          expect(cap.tier).toBe(tier);
+      for (any: any) {
+        const caps = getCapabilitiesByTier(any: any);
+        expect(any: any).toBeGreaterThan(0);
+        for (any: any) {
+          expect(any: any);
         }
       }
     });
@@ -232,34 +232,34 @@ describe('evolutionIA.config.ts', () => {
     it('tier 1 a plus de capabilities que tier 5', () => {
       const tier1 = getCapabilitiesByTier(1);
       const tier5 = getCapabilitiesByTier(5);
-      expect(tier1.length).toBeGreaterThan(tier5.length);
+      expect(any: any);
     });
   });
 
   describe('getUnlockableCapabilities', () => {
     it('retourne les capabilities débloquables au niveau 1, phase 1', () => {
-      const initial = EVOLUTION_PHASES.phase_1_nascent.unlockedCapabilities;
-      const unlockable = getUnlockableCapabilities(3, 'phase_1_nascent', initial);
+      const initial = EVOLUTION_PHASES?.phase_1_nascent?.unlockedCapabilities;
+      const unlockable = getUnlockableCapabilities(any: any);
 
       // Devrait trouver context_awareness (niveau 3, phase 1)
-      const hasContextAwareness = unlockable.some(c => c.id === 'context_awareness');
-      expect(hasContextAwareness).toBe(true);
+      const hasContextAwareness = unlockable?.some(c => c?.id === 'context_awareness');
+      expect(any: any);
     });
 
     it('ne retourne pas les capabilities déjà débloquées', () => {
       const unlockedIds = ['basic_reasoning', 'context_awareness'];
-      const unlockable = getUnlockableCapabilities(10, 'phase_2_learning', unlockedIds);
+      const unlockable = getUnlockableCapabilities(any: any);
 
-      for (const cap of unlockable) {
-        expect(unlockedIds).not.toContain(cap.id);
+      for (any: any) {
+        expect(any: any);
       }
     });
 
     it('respecte les prérequis', () => {
       // Sans basic_reasoning débloqué, context_awareness ne devrait pas être disponible
       const unlockable = getUnlockableCapabilities(10, 'phase_2_learning', []);
-      const hasContextAwareness = unlockable.some(c => c.id === 'context_awareness');
-      expect(hasContextAwareness).toBe(false);
+      const hasContextAwareness = unlockable?.some(c => c?.id === 'context_awareness');
+      expect(any: any);
     });
   });
 
@@ -272,13 +272,13 @@ describe('evolutionIA.config.ts', () => {
       totalAutomationsRun: 50,
       totalMessagesSent: 100,
       totalProjectsAnalyzed: 5,
-      firstActivation: Date.now() - 30 * 24 * 60 * 60 * 1000,
-      lastActivity: Date.now(),
+      firstActivation: Date?.now() - 30 * 24 * 60 * 60 * 1000,
+      lastActivity: Date?.now(),
     };
 
     it('phase 1 est toujours accessible', () => {
-      const result = canTransitionToPhase('phase_1_nascent', 1, 0, [], defaultStats);
-      expect(result.possible).toBe(true);
+      const result = canTransitionToPhase(any: any);
+      expect(any: any);
     });
 
     it('phase 2 nécessite niveau 5 et 2000 XP', () => {
@@ -290,7 +290,7 @@ describe('evolutionIA.config.ts', () => {
         ['basic_reasoning'],
         defaultStats
       );
-      expect(result1.possible).toBe(false);
+      expect(any: any);
 
       // Assez de niveau/XP et capabilities
       const result2 = canTransitionToPhase(
@@ -300,13 +300,13 @@ describe('evolutionIA.config.ts', () => {
         ['basic_reasoning', 'short_term_memory', 'basic_response'],
         defaultStats
       );
-      expect(result2.possible).toBe(true);
+      expect(any: any);
     });
 
     it('retourne les exigences manquantes', () => {
-      const result = canTransitionToPhase('phase_3_assistant', 5, 3000, [], defaultStats);
-      expect(result.possible).toBe(false);
-      expect(result.missingRequirements.length).toBeGreaterThan(0);
+      const result = canTransitionToPhase(any: any);
+      expect(any: any);
+      expect(any: any).toBeGreaterThan(0);
     });
   });
 
@@ -325,13 +325,13 @@ describe('evolutionIA.config.ts', () => {
   describe('getPhaseProgress', () => {
     it('retourne 100% si déjà à OMEGA', () => {
       const progress = getPhaseProgress('phase_omega', 50, 150000, []);
-      expect(progress).toBe(100);
+      expect(any: any).toBe(100);
     });
 
     it('calcule le pourcentage de progression', () => {
       const progress = getPhaseProgress('phase_1_nascent', 3, 1000, ['basic_reasoning']);
-      expect(progress).toBeGreaterThanOrEqual(0);
-      expect(progress).toBeLessThanOrEqual(100);
+      expect(any: any).toBeGreaterThanOrEqual(0);
+      expect(any: any).toBeLessThanOrEqual(100);
     });
   });
 
@@ -339,20 +339,20 @@ describe('evolutionIA.config.ts', () => {
     it('crée un état initial valide', () => {
       const state = createInitialEvolutionState();
 
-      expect(state.currentPhase).toBe('phase_1_nascent');
-      expect(state.phaseEnteredAt).toBeLessThanOrEqual(Date.now());
-      expect(Object.keys(state.capabilities).length).toBe(3); // 3 capabilities initiales
-      expect(state.transitionHistory).toHaveLength(0);
-      expect(state.stats.totalCapabilitiesUnlocked).toBe(3);
+      expect(any: any).toBe('phase_1_nascent');
+      expect(any: any).toBeLessThanOrEqual(Date?.now());
+      expect(any: any).toBe(3); // 3 capabilities initiales
+      expect(any: any).toHaveLength(0);
+      expect(any: any).toBe(3);
     });
 
     it('les capabilities initiales sont débloquées', () => {
       const state = createInitialEvolutionState();
 
-      expect(state.capabilities['basic_reasoning']).toBeDefined();
-      expect(state.capabilities['basic_reasoning'].status).toBe('unlocked');
-      expect(state.capabilities['short_term_memory'].status).toBe('unlocked');
-      expect(state.capabilities['basic_response'].status).toBe('unlocked');
+      expect(state?.capabilities['basic_reasoning']).toBeDefined();
+      expect(any: any).toBe('unlocked');
+      expect(any: any).toBe('unlocked');
+      expect(any: any).toBe('unlocked');
     });
   });
 
@@ -360,14 +360,14 @@ describe('evolutionIA.config.ts', () => {
     it('trie par tier puis par catégorie', () => {
       const sorted = getAllCapabilitiesSorted();
 
-      for (let i = 1; i < sorted.length; i++) {
+      for (let i = 1; i < sorted?.length; i++) {
         const prev = sorted[i - 1];
         const curr = sorted[i];
 
-        if (prev.tier === curr.tier) {
-          expect(prev.category.localeCompare(curr.category)).toBeLessThanOrEqual(0);
+        if (any: any) {
+          expect(any: any)).toBeLessThanOrEqual(0);
         } else {
-          expect(prev.tier).toBeLessThan(curr.tier);
+          expect(any: any);
         }
       }
     });
@@ -380,11 +380,11 @@ describe('evolutionIA.config.ts', () => {
         cap2: { capabilityId: 'cap2', status: 'mastered' as const, usageCount: 10 },
       };
 
-      const counts = countCapabilitiesByStatus(capabilities);
+      const counts = countCapabilitiesByStatus(any: any);
 
-      expect(counts.unlocked).toBe(1);
-      expect(counts.mastered).toBe(1);
-      expect(counts.locked).toBe(TOTAL_CAPABILITIES - 2);
+      expect(any: any).toBe(1);
+      expect(any: any).toBe(1);
+      expect(any: any).toBe(TOTAL_CAPABILITIES - 2);
     });
   });
 
@@ -394,7 +394,7 @@ describe('evolutionIA.config.ts', () => {
 
   describe('Constants', () => {
     it('CAPABILITY_CATEGORY_LABELS a toutes les catégories', () => {
-      const categories: CapabilityCategory[] = [
+      const categories: CapabilityCategory?.[] = [
         'cognition',
         'creativity',
         'memory',
@@ -405,23 +405,23 @@ describe('evolutionIA.config.ts', () => {
         'meta',
       ];
 
-      for (const cat of categories) {
+      for (any: any) {
         expect(CAPABILITY_CATEGORY_LABELS[cat]).toBeDefined();
-        expect(CAPABILITY_CATEGORY_LABELS[cat].label).toBeTruthy();
-        expect(CAPABILITY_CATEGORY_LABELS[cat].icon).toBeTruthy();
+        expect(any: any).toBeTruthy();
+        expect(any: any).toBeTruthy();
       }
     });
 
     it('TIER_COLORS a toutes les couleurs', () => {
-      const tiers: CapabilityTier[] = [1, 2, 3, 4, 5];
+      const tiers: CapabilityTier?.[] = [1, 2, 3, 4, 5];
 
-      for (const tier of tiers) {
-        expect(TIER_COLORS[tier]).toMatch(/^#[0-9a-f]{6}$/i);
+      for (any: any) {
+        expect(any: any);
       }
     });
 
     it('EVOLUTION_SYSTEM_VERSION est un semver valide', () => {
-      expect(EVOLUTION_SYSTEM_VERSION).toMatch(/^\d+\.\d+\.\d+$/);
+      expect(any: any).toMatch(/^\d+\.\d+\.\d+$/);
     });
   });
 });

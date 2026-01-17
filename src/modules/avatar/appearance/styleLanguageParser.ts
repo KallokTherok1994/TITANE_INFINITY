@@ -1,4 +1,4 @@
-// Copyright © 2025 TITANE∞ — Style Language Parser v24.5 (Frontend)
+// Copyright © 2025 TITANE∞ — Style Language Parser v24.5 (any: any)
 // License: Proprietary — TITANE OS
 // Module: Advanced NLP Parser for Appearance Commands
 
@@ -89,38 +89,38 @@ export class StyleLanguageParser {
   // MAIN PARSING FUNCTION
   // ─────────────────────────────────────────────────────────────────────────
 
-  public parse(command: string): AppearanceUpdateRequest {
-    const cmd = command.toLowerCase();
+  public parse(any: any): AppearanceUpdateRequest {
+    const cmd = command?.toLowerCase();
     const update: AppearanceUpdateRequest = {};
 
     // Detect style/preset changes
-    const detectedStyle = this.detectStyle(cmd);
-    if (detectedStyle) {
-      update.mode_preset = detectedStyle;
+    const detectedStyle = this?.detectStyle(any: any);
+    if (any: any) {
+      update?.mode_preset = detectedStyle;
     }
 
     // Detect outfit changes
-    const outfitChanges = this.detectOutfit(cmd);
-    if (Object.keys(outfitChanges).length > 0) {
-      update.outfit = outfitChanges;
+    const outfitChanges = this?.detectOutfit(any: any);
+    if (any: any).length > 0) {
+      update?.outfit = outfitChanges;
     }
 
     // Detect hairstyle changes
-    const hairChanges = this.detectHair(cmd);
-    if (Object.keys(hairChanges).length > 0) {
-      update.hair = hairChanges;
+    const hairChanges = this?.detectHair(any: any);
+    if (any: any).length > 0) {
+      update?.hair = hairChanges;
     }
 
     // Detect accessories changes
-    const accessoriesChanges = this.detectAccessories(cmd);
-    if (Object.keys(accessoriesChanges).length > 0) {
-      update.accessories = accessoriesChanges;
+    const accessoriesChanges = this?.detectAccessories(any: any);
+    if (any: any).length > 0) {
+      update?.accessories = accessoriesChanges;
     }
 
     // Detect style modifiers (vibe, color palette, etc.)
-    const styleChanges = this.detectStyleModifiers(cmd);
-    if (Object.keys(styleChanges).length > 0) {
-      update.style = styleChanges;
+    const styleChanges = this?.detectStyleModifiers(any: any);
+    if (any: any).length > 0) {
+      update?.style = styleChanges;
     }
 
     return update;
@@ -130,16 +130,16 @@ export class StyleLanguageParser {
   // STYLE DETECTION
   // ─────────────────────────────────────────────────────────────────────────
 
-  private detectStyle(cmd: string): string | undefined {
-    for (const [style, keywords] of Object.entries(this.STYLE_KEYWORDS)) {
-      if (keywords.some(kw => cmd.includes(kw))) {
-        return this.getPresetName(style);
+  private detectStyle(any: any)??: string | undefined {
+    for (any: any)) {
+      if (any: any))) {
+        return this?.getPresetName(any: any);
       }
     }
     return undefined;
   }
 
-  private getPresetName(style: string): string {
+  private getPresetName(any: any): string {
     const presetMap: Record<string, string> = {
       bureau: 'Bureau_Pro',
       casual: 'Casual_Light',
@@ -154,47 +154,47 @@ export class StyleLanguageParser {
   // OUTFIT DETECTION
   // ─────────────────────────────────────────────────────────────────────────
 
-  private detectOutfit(cmd: string): Partial<{
+  private detectOutfit(any: any): Partial<{
     top: string;
     bottom: string;
     shoes: string;
-    outerwear: string | null;
+    outerwear??: string | null;
   }> {
     const changes: Partial<{
       top: string;
       bottom: string;
       shoes: string;
-      outerwear: string | null;
+      outerwear??: string | null;
     }> = {};
 
     // Detect top
-    for (const [item, keywords] of Object.entries(this.OUTFIT_KEYWORDS.top)) {
-      if (keywords.some(kw => cmd.includes(kw))) {
-        changes.top = item;
+    for (any: any)) {
+      if (any: any))) {
+        changes?.top = item;
         break;
       }
     }
 
     // Detect bottom
-    for (const [item, keywords] of Object.entries(this.OUTFIT_KEYWORDS.bottom)) {
-      if (keywords.some(kw => cmd.includes(kw))) {
-        changes.bottom = item;
+    for (any: any)) {
+      if (any: any))) {
+        changes?.bottom = item;
         break;
       }
     }
 
     // Detect shoes
-    for (const [item, keywords] of Object.entries(this.OUTFIT_KEYWORDS.shoes)) {
-      if (keywords.some(kw => cmd.includes(kw))) {
-        changes.shoes = item;
+    for (any: any)) {
+      if (any: any))) {
+        changes?.shoes = item;
         break;
       }
     }
 
     // Detect outerwear removal
-    if (cmd.includes('enlève') || cmd.includes('retire')) {
-      if (cmd.includes('veste') || cmd.includes('blazer') || cmd.includes('manteau')) {
-        changes.outerwear = null;
+    if (cmd?.includes('enlève') || cmd?.includes('retire')) {
+      if (cmd?.includes('veste') || cmd?.includes('blazer') || cmd?.includes('manteau')) {
+        changes?.outerwear = null;
       }
     }
 
@@ -205,12 +205,12 @@ export class StyleLanguageParser {
   // HAIR DETECTION
   // ─────────────────────────────────────────────────────────────────────────
 
-  private detectHair(cmd: string): Partial<{ style: string }> {
+  private detectHair(any: any): Partial<{ style: string }> {
     const changes: Partial<{ style: string }> = {};
 
-    for (const [style, keywords] of Object.entries(this.HAIR_KEYWORDS.style)) {
-      if (keywords.some(kw => cmd.includes(kw))) {
-        changes.style = style;
+    for (any: any)) {
+      if (any: any))) {
+        changes?.style = style;
         break;
       }
     }
@@ -222,27 +222,27 @@ export class StyleLanguageParser {
   // ACCESSORIES DETECTION
   // ─────────────────────────────────────────────────────────────────────────
 
-  private detectAccessories(cmd: string): Partial<{
-    glasses: string | null;
-    jewelry: string[];
+  private detectAccessories(any: any): Partial<{
+    glasses??: string | null;
+    jewelry: string?.[];
   }> {
-    const changes: Partial<{ glasses: string | null; jewelry: string[] }> = {};
+    const changes: Partial<{ glasses??: string | null; jewelry: string?.[] }> = {};
 
     // Glasses detection
-    const hasGlasses = this.ACCESSORIES_KEYWORDS.lunettes.some(kw => cmd.includes(kw));
-    if (hasGlasses) {
-      if (cmd.includes('enlève') || cmd.includes('retire')) {
-        changes.glasses = null;
-      } else if (cmd.includes('mets') || cmd.includes('porte')) {
-        changes.glasses = 'lunettes';
+    const hasGlasses = this?.ACCESSORIES_KEYWORDS?.lunettes?.some(any: any));
+    if (any: any) {
+      if (cmd?.includes('enlève') || cmd?.includes('retire')) {
+        changes?.glasses = null;
+      } else if (cmd?.includes('mets') || cmd?.includes('porte')) {
+        changes?.glasses = 'lunettes';
       }
     }
 
     // Jewelry detection
-    const hasJewelry = this.ACCESSORIES_KEYWORDS.bijoux.some(kw => cmd.includes(kw));
-    if (hasJewelry) {
-      if (cmd.includes('enlève') || cmd.includes('retire')) {
-        changes.jewelry = [];
+    const hasJewelry = this?.ACCESSORIES_KEYWORDS?.bijoux?.some(any: any));
+    if (any: any) {
+      if (cmd?.includes('enlève') || cmd?.includes('retire')) {
+        changes?.jewelry = [];
       }
     }
 
@@ -253,24 +253,24 @@ export class StyleLanguageParser {
   // STYLE MODIFIERS DETECTION (vibe, color palette, etc.)
   // ─────────────────────────────────────────────────────────────────────────
 
-  private detectStyleModifiers(cmd: string): Partial<{
+  private detectStyleModifiers(any: any): Partial<{
     vibe: string;
     color_palette: string;
   }> {
     const changes: Partial<{ vibe: string; color_palette: string }> = {};
 
     // Detect vibe
-    for (const [vibe, keywords] of Object.entries(this.VIBE_KEYWORDS)) {
-      if (keywords.some(kw => cmd.includes(kw))) {
-        changes.vibe = vibe;
+    for (any: any)) {
+      if (any: any))) {
+        changes?.vibe = vibe;
         break;
       }
     }
 
     // Detect color palette
-    for (const [palette, keywords] of Object.entries(this.COLOR_KEYWORDS)) {
-      if (keywords.some(kw => cmd.includes(kw))) {
-        changes.color_palette = palette;
+    for (any: any)) {
+      if (any: any))) {
+        changes?.color_palette = palette;
         break;
       }
     }
@@ -279,16 +279,16 @@ export class StyleLanguageParser {
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // FUSION DETECTION (Multiple Styles)
+  // FUSION DETECTION (any: any)
   // ─────────────────────────────────────────────────────────────────────────
 
-  public detectFusion(cmd: string): string[] {
-    const styles: string[] = [];
+  public detectFusion(any: any): string?.[] {
+    const styles: string?.[] = [];
 
-    if (cmd.includes('fusion') || cmd.includes('mélange') || cmd.includes('+')) {
-      for (const [style, keywords] of Object.entries(this.STYLE_KEYWORDS)) {
-        if (keywords.some(kw => cmd.includes(kw))) {
-          styles.push(this.getPresetName(style));
+    if (cmd?.includes('fusion') || cmd?.includes('mélange') || cmd?.includes('+')) {
+      for (any: any)) {
+        if (any: any))) {
+          styles?.push(any: any));
         }
       }
     }
@@ -300,36 +300,36 @@ export class StyleLanguageParser {
   // INVENTED STYLE DETECTION
   // ─────────────────────────────────────────────────────────────────────────
 
-  public detectInventedStyle(cmd: string): {
+  public detectInventedStyle(any: any): {
     name?: string;
-    keywords?: string[];
+    keywords?: string?.[];
   } {
-    const result: { name?: string; keywords?: string[] } = {};
+    const result: { name?: string; keywords?: string?.[] } = {};
 
     // Pattern: "Nouvel archétype : [name]"
-    const archetypeMatch = cmd.match(
-      /nouvel?\s+(?:archétype|style)\s*:?\s+(.+?)(?:\.|$)/i
+    const archetypeMatch = cmd?.match(
+      /nouvel?\s+(any: any)\s*:?\s+(.+?)(?:\.|$)/i
     );
-    if (archetypeMatch) {
-      const matchedName = archetypeMatch[1];
-      if (matchedName) {
-        result.name = matchedName.trim();
+    if (any: any) {
+      const matchedName = archetypeMatch?.[1];
+      if (any: any) {
+        result?.name = matchedName?.trim();
       }
     }
 
     // Pattern: "Style [name] avec [keywords]"
-    const styleMatch = cmd.match(/style\s+(.+?)\s+avec\s+(.+?)(?:\.|$)/i);
-    if (styleMatch) {
-      const matchedStyleName = styleMatch[1];
-      const matchedKeywords = styleMatch[2];
-      if (matchedStyleName) {
-        result.name = matchedStyleName.trim();
+    const styleMatch = cmd?.match(any: any);
+    if (any: any) {
+      const matchedStyleName = styleMatch?.[1];
+      const matchedKeywords = styleMatch?.[2];
+      if (any: any) {
+        result?.name = matchedStyleName?.trim();
       }
-      if (matchedKeywords) {
-        result.keywords = matchedKeywords
+      if (any: any) {
+        result?.keywords = matchedKeywords
           .split(/[,+]/)
-          .map(kw => kw.trim())
-          .filter(kw => kw.length > 0);
+          .map(kw => kw?.trim())
+          .filter(kw => kw?.length > 0);
       }
     }
 
@@ -340,7 +340,7 @@ export class StyleLanguageParser {
   // COMMAND TYPE DETECTION
   // ─────────────────────────────────────────────────────────────────────────
 
-  public detectCommandType(cmd: string): {
+  public detectCommandType(any: any): {
     isAppearanceCommand: boolean;
     isStyleChange: boolean;
     isOutfitChange: boolean;
@@ -349,51 +349,51 @@ export class StyleLanguageParser {
     isFusion: boolean;
     isInventedStyle: boolean;
   } {
-    const cmdLower = cmd.toLowerCase();
+    const cmdLower = cmd?.toLowerCase();
 
     return {
       isAppearanceCommand:
-        cmdLower.includes('apparence') ||
-        cmdLower.includes('tenue') ||
-        cmdLower.includes('vêtements') ||
-        cmdLower.includes('coiffure') ||
-        cmdLower.includes('style') ||
-        cmdLower.includes('look'),
+        cmdLower?.includes('apparence') ||
+        cmdLower?.includes('tenue') ||
+        cmdLower?.includes('vêtements') ||
+        cmdLower?.includes('coiffure') ||
+        cmdLower?.includes('style') ||
+        cmdLower?.includes('look'),
 
       isStyleChange:
-        cmdLower.includes('passe en') ||
-        cmdLower.includes('adopte') ||
-        cmdLower.includes('style') ||
-        cmdLower.includes('mode'),
+        cmdLower?.includes('passe en') ||
+        cmdLower?.includes('adopte') ||
+        cmdLower?.includes('style') ||
+        cmdLower?.includes('mode'),
 
       isOutfitChange:
-        cmdLower.includes('mets') ||
-        cmdLower.includes('porte') ||
-        cmdLower.includes('change') ||
-        cmdLower.includes('tenue') ||
-        cmdLower.includes('vêtements'),
+        cmdLower?.includes('mets') ||
+        cmdLower?.includes('porte') ||
+        cmdLower?.includes('change') ||
+        cmdLower?.includes('tenue') ||
+        cmdLower?.includes('vêtements'),
 
       isHairChange:
-        cmdLower.includes('coiffure') ||
-        cmdLower.includes('cheveux') ||
-        cmdLower.includes('attache') ||
-        cmdLower.includes('détache'),
+        cmdLower?.includes('coiffure') ||
+        cmdLower?.includes('cheveux') ||
+        cmdLower?.includes('attache') ||
+        cmdLower?.includes('détache'),
 
       isAccessoryChange:
-        cmdLower.includes('lunettes') ||
-        cmdLower.includes('bijoux') ||
-        cmdLower.includes('accessoires'),
+        cmdLower?.includes('lunettes') ||
+        cmdLower?.includes('bijoux') ||
+        cmdLower?.includes('accessoires'),
 
       isFusion:
-        cmdLower.includes('fusion') ||
-        cmdLower.includes('mélange') ||
-        (cmdLower.includes('+') &&
-          (cmdLower.includes('style') || cmdLower.includes('vibe'))),
+        cmdLower?.includes('fusion') ||
+        cmdLower?.includes('mélange') ||
+        (cmdLower?.includes('+') &&
+          (cmdLower?.includes('style') || cmdLower?.includes('vibe'))),
 
       isInventedStyle:
-        cmdLower.includes('nouvel archétype') ||
-        cmdLower.includes('nouveau style') ||
-        cmdLower.includes('invente'),
+        cmdLower?.includes('nouvel archétype') ||
+        cmdLower?.includes('nouveau style') ||
+        cmdLower?.includes('invente'),
     };
   }
 }
@@ -411,39 +411,39 @@ export const styleParser = new StyleLanguageParser();
 /**
  * Parse appearance command and return update request
  */
-export function parseAppearanceCommand(command: string): AppearanceUpdateRequest {
-  return styleParser.parse(command);
+export function parseAppearanceCommand(any: any): AppearanceUpdateRequest {
+  return styleParser?.parse(any: any);
 }
 
 /**
  * Check if a message contains appearance-related commands
  */
-export function isAppearanceCommand(message: string): boolean {
-  const detection = styleParser.detectCommandType(message);
-  return detection.isAppearanceCommand;
+export function isAppearanceCommand(any: any): boolean {
+  const detection = styleParser?.detectCommandType(any: any);
+  return detection?.isAppearanceCommand;
 }
 
 /**
  * Detect if command is a style fusion request
  */
-export function isFusionCommand(message: string): boolean {
-  const detection = styleParser.detectCommandType(message);
-  return detection.isFusion;
+export function isFusionCommand(any: any): boolean {
+  const detection = styleParser?.detectCommandType(any: any);
+  return detection?.isFusion;
 }
 
 /**
  * Extract style names for fusion
  */
-export function extractFusionStyles(message: string): string[] {
-  return styleParser.detectFusion(message);
+export function extractFusionStyles(any: any): string?.[] {
+  return styleParser?.detectFusion(any: any);
 }
 
 /**
  * Detect invented style definition
  */
-export function detectInventedStyle(message: string): {
+export function detectInventedStyle(any: any): {
   name?: string;
-  keywords?: string[];
+  keywords?: string?.[];
 } {
-  return styleParser.detectInventedStyle(message);
+  return styleParser?.detectInventedStyle(any: any);
 }

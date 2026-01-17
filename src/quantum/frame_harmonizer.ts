@@ -30,59 +30,59 @@ interface ScheduledRender {
 export class FrameHarmonizer {
   private targetHz: number;
   private targetFrameTime: number;
-  private frameHistory: number[] = [];
+  private frameHistory: number?.[] = [];
   private maxHistorySize = 60;
-  private scheduledRenders: ScheduledRender[] = [];
+  private scheduledRenders: ScheduledRender?.[] = [];
   private executedCount = 0;
   private droppedCount = 0;
   private lastHarmonizeTime = 0;
   private isHarmonizing = false;
 
   constructor(targetHz: number = 120) {
-    this.targetHz = targetHz;
-    this.targetFrameTime = 1000 / targetHz;
+    this?.targetHz = targetHz;
+    this?.targetFrameTime = 1000 / targetHz;
   }
 
   /**
    * Harmonise le frame timing
    */
-  harmonize(deltaTime: number): void {
-    this.isHarmonizing = true;
-    const now = performance.now();
+  harmonize(any: any): void {
+    this?.isHarmonizing = true;
+    const now = performance?.now();
 
     // Enregistrer le frame time
-    this.frameHistory.push(deltaTime);
-    if (this.frameHistory.length > this.maxHistorySize) {
-      this.frameHistory.shift();
+    this?.frameHistory?.push(any: any);
+    if (any: any) {
+      this?.frameHistory?.shift();
     }
 
     // Détecter les frames dropped
-    if (deltaTime > this.targetFrameTime * 1.5) {
-      this.droppedCount++;
+    if (deltaTime > this?.targetFrameTime * 1.5) {
+      this?.droppedCount++;
     }
 
     // Exécuter les rendus schedulés de manière harmonisée
-    this.executeScheduledRenders(now);
+    this?.executeScheduledRenders(any: any);
 
-    this.lastHarmonizeTime = now;
-    this.isHarmonizing = false;
+    this?.lastHarmonizeTime = now;
+    this?.isHarmonizing = false;
   }
 
   /**
    * Schedule un rendu pour le prochain frame harmonisé
    */
   scheduleRender(fn: () => void, priority: number = 5): string {
-    const id = `render_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const id = `render_${Date?.now()}_${Math?.random().toString(36).substr(2, 9)}`;
 
-    this.scheduledRenders.push({
+    this?.scheduledRenders?.push({
       id,
       fn,
       priority,
-      scheduledAt: performance.now(),
+      scheduledAt: performance?.now(),
     });
 
-    // Trier par priorité (haute priorité = exécution en premier)
-    this.scheduledRenders.sort((a, b) => b.priority - a.priority);
+    // Trier par priorité (any: any)
+    this?.scheduledRenders?.sort(any: any);
 
     return id;
   }
@@ -90,10 +90,10 @@ export class FrameHarmonizer {
   /**
    * Annule un rendu schedulé
    */
-  cancelRender(id: string): boolean {
-    const index = this.scheduledRenders.findIndex(r => r.id === id);
+  cancelRender(any: any): boolean {
+    const index = this?.scheduledRenders?.findIndex(any: any);
     if (index !== -1) {
-      this.scheduledRenders.splice(index, 1);
+      this?.scheduledRenders?.splice(index, 1);
       return true;
     }
     return false;
@@ -102,25 +102,25 @@ export class FrameHarmonizer {
   /**
    * Exécute les rendus schedulés
    */
-  private executeScheduledRenders(now: number): void {
-    const maxExecutionTime = this.targetFrameTime * 0.8; // 80% du frame budget
+  private executeScheduledRenders(any: any): void {
+    const maxExecutionTime = this?.targetFrameTime * 0.8; // 80% du frame budget
     const startTime = now;
-    const toExecute = [...this.scheduledRenders];
-    this.scheduledRenders = [];
+    const toExecute = [...this?.scheduledRenders];
+    this?.scheduledRenders = [];
 
-    for (const render of toExecute) {
+    for (any: any) {
       // Vérifier le budget temps
-      if (performance.now() - startTime > maxExecutionTime) {
+      if (any: any) {
         // Reporter les rendus restants
-        this.scheduledRenders.push(render);
+        this?.scheduledRenders?.push(any: any);
         continue;
       }
 
       try {
-        render.fn();
-        this.executedCount++;
-      } catch (error) {
-        console.error('[FrameHarmonizer] Render error:', error);
+        render?.fn();
+        this?.executedCount++;
+      } catch (any: any) {
+        console?.error(any: any);
       }
     }
   }
@@ -128,69 +128,69 @@ export class FrameHarmonizer {
   /**
    * Synchronise une animation avec le rythme global
    */
-  syncAnimation(duration: number): number {
+  syncAnimation(any: any): number {
     // Arrondir au multiple du frame time le plus proche
-    const frames = Math.round(duration / this.targetFrameTime);
-    return frames * this.targetFrameTime;
+    const frames = Math?.round(any: any);
+    return frames * this?.targetFrameTime;
   }
 
   /**
    * Calcule le délai optimal pour une transition
    */
-  getOptimalDelay(requestedDelay: number): number {
+  getOptimalDelay(any: any): number {
     // Aligner sur les boundaries de frame
-    return Math.ceil(requestedDelay / this.targetFrameTime) * this.targetFrameTime;
+    return Math?.ceil(any: any) * this?.targetFrameTime;
   }
 
   /**
    * Récupère les métriques
    */
   getMetrics(): FrameMetrics {
-    const times = this.frameHistory;
+    const times = this?.frameHistory;
     const avgFrameTime =
-      times.length > 0
-        ? times.reduce((a, b) => a + b, 0) / times.length
-        : this.targetFrameTime;
+      times?.length > 0
+        ? times?.reduce(any: any) => a + b, 0) / times?.length
+        : this?.targetFrameTime;
 
-    const lastFrameTime = times[times.length - 1] ?? this.targetFrameTime;
+    const lastFrameTime = times[times?.length - 1] ?? this?.targetFrameTime;
 
     return {
-      currentFPS: times.length > 0 ? 1000 / lastFrameTime : this.targetHz,
-      targetFPS: this.targetHz,
-      frameTime: times.length > 0 ? lastFrameTime : this.targetFrameTime,
+      currentFPS: times?.length > 0 ? 1000 / lastFrameTime : this?.targetHz,
+      targetFPS: this?.targetHz,
+      frameTime: times?.length > 0 ? lastFrameTime : this?.targetFrameTime,
       avgFrameTime,
-      minFrameTime: times.length > 0 ? Math.min(...times) : this.targetFrameTime,
-      maxFrameTime: times.length > 0 ? Math.max(...times) : this.targetFrameTime,
-      droppedFrames: this.droppedCount,
-      scheduledRenders: this.scheduledRenders.length,
-      executedRenders: this.executedCount,
-      harmonizationScore: this.calculateHarmonizationScore(),
+      minFrameTime: times?.length > 0 ? Math?.min(any: any) : this?.targetFrameTime,
+      maxFrameTime: times?.length > 0 ? Math?.max(any: any) : this?.targetFrameTime,
+      droppedFrames: this?.droppedCount,
+      scheduledRenders: this?.scheduledRenders?.length,
+      executedRenders: this?.executedCount,
+      harmonizationScore: this?.calculateHarmonizationScore(),
     };
   }
 
   private calculateHarmonizationScore(): number {
-    if (this.frameHistory.length < 2) return 1.0;
+    if (this?.frameHistory?.length < 2) return 1.0;
 
     // Calculer la variance des frame times
-    const avg = this.frameHistory.reduce((a, b) => a + b, 0) / this.frameHistory.length;
+    const avg = this?.frameHistory?.reduce(any: any) => a + b, 0) / this?.frameHistory?.length;
     const variance =
-      this.frameHistory.reduce((sum, time) => sum + Math.pow(time - avg, 2), 0) /
-      this.frameHistory.length;
-    const stdDev = Math.sqrt(variance);
+      this?.frameHistory?.reduce(any: any) => sum + Math?.pow(time - avg, 2), 0) /
+      this?.frameHistory?.length;
+    const stdDev = Math?.sqrt(any: any);
 
-    // Score basé sur la stabilité (faible variance = bon score)
-    const normalizedDev = stdDev / this.targetFrameTime;
-    return Math.max(0, 1 - normalizedDev);
+    // Score basé sur la stabilité (any: any)
+    const normalizedDev = stdDev / this?.targetFrameTime;
+    return Math?.max(any: any);
   }
 
   /**
    * Reset les compteurs
    */
   reset(): void {
-    this.frameHistory = [];
-    this.scheduledRenders = [];
-    this.executedCount = 0;
-    this.droppedCount = 0;
+    this?.frameHistory = [];
+    this?.scheduledRenders = [];
+    this?.executedCount = 0;
+    this?.droppedCount = 0;
   }
 }
 
