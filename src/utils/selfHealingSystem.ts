@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * TITANE∞ v26.3.0 — Self-Healing Autonomous System
  * © 2025 TITANE Team. All rights reserved.

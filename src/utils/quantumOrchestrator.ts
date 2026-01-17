@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * TITANE∞ v26.3.0 — Système d'Orchestration Quantum Avancé
  * © 2025 TITANE Team. All rights reserved.

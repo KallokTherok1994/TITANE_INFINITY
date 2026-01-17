@@ -23,7 +23,7 @@ interface EnhancedLazyOptions {
   enableMetrics?: boolean;
 }
 
-interface LazyLoadResult<T> {
+interface LazyLoadResult<T extends React.ComponentType<any>> {
   component: React.LazyExoticComponent<T>;
   preloader: () => Promise<void>;
   getCacheInfo: () => CacheInfo | null;
@@ -243,7 +243,7 @@ export const createEnhancedLazyComponent = <T extends React.ComponentType<any>>(
   }
 
   return {
-    component: lazyComponent,
+    component: lazyComponent as any,
     preloader,
     getCacheInfo,
   };

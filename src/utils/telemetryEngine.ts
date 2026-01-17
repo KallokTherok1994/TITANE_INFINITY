@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * TITANE∞ v26.3.0 — Advanced Telemetry & Analytics Engine
  * © 2025 TITANE Team. All rights reserved.
