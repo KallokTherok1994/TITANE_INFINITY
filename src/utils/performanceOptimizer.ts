@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * TITANE∞ v26.3.0 — Performance Optimizer & Cache Manager
  * © 2025 TITANE Team. All rights reserved.

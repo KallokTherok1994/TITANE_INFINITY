@@ -214,7 +214,7 @@ class TitaneBootRecovery {
 
       // Importer App dynamiquement avec bon typage
       const AppModule = await import('../App');
-      const App = (AppModule as any).default || AppModule.App;
+      const App = (AppModule as any).default || (AppModule as any).App;
 
       // Importer React dynamiquement avec bon typage
       const ReactModule = await import('react');
