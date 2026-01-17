@@ -34,13 +34,14 @@ import { TitanStateProvider } from './context/TitanStateContext'; // ✨ v∞.MP
 import { AppShell, Sidebar, Header } from '@components/layout';
 import { Button } from './ui';
 // ✨ P3: Lazy-load XP bar for smaller initial bundle
-const XPBar = lazyWithDiagnostic(() =>
-  import('./components/experience/XPBar').then(m => ({ default: m.XPBar })),
+const XPBar = lazyWithDiagnostic(
+  () => import('./components/experience/XPBar').then(m => ({ default: m.XPBar })),
   'XPBar'
 );
 import { AutoHealErrorBoundary } from './components/AutoHealErrorBoundary';
 import { ErrorBoundary } from './components/ErrorBoundary'; // ✨ v19 - Security Hardening
 import { lazyWithDiagnostic, lazyWithTimeout } from './utils/lazyImportDiagnostic'; // ✨ BOOT-FIX - Diagnostic lazy imports
+import { loadCognitiveLayoutEngine, loadMotionSystem } from './utils/dynamicImports'; // ✨ BOOT-FIX - Safe imports
 import {
   detectEnvironment,
   shouldBlockLoading as _shouldBlockLoading,
@@ -59,17 +60,21 @@ import { initializeOllama } from './services/ai/providers/ollama'; // ✨ v21 - 
 // ✨ v25.4.1 - A11Y & Performance monitoring (utilities planned for future implementation)
 // ✨ CONSOLE MONITOR - Auto-Heal Integration
 import { consoleMonitor } from './services/monitoring/consoleMonitor';
+// ✨ Temporarily import ConsoleMonitorDashboard statically to fix boot issues
+import { ConsoleMonitorDashboard } from './components/dev/ConsoleMonitorDashboard';
 // ✨ v25.3.1 + P3: Lazy-load Aura components (heavy graphics)
-const QuantumParticles = lazyWithDiagnostic(() =>
-  import('./components/aura/QuantumParticles').then(m => ({
-    default: m.QuantumParticles,
-  })),
+const QuantumParticles = lazyWithDiagnostic(
+  () =>
+    import('./components/aura/QuantumParticles').then(m => ({
+      default: m.QuantumParticles,
+    })),
   'QuantumParticles'
 );
-const AuraControlPanel = lazyWithDiagnostic(() =>
-  import('./components/aura/AuraControlPanel').then(m => ({
-    default: m.AuraControlPanel,
-  })),
+const AuraControlPanel = lazyWithDiagnostic(
+  () =>
+    import('./components/aura/AuraControlPanel').then(m => ({
+      default: m.AuraControlPanel,
+    })),
   'AuraControlPanel'
 );
 import { useAura } from './hooks/useAuraOrchestrator';
@@ -103,37 +108,41 @@ if (typeof window !== 'undefined') {
 }
 
 // ✨ v24.3.0 - Lazy loaded pages (code splitting)
-const TimePage = lazyWithDiagnostic(() =>
-  import('./pages/TimePage').then(m => ({ default: m.TimePage })),
+const TimePage = lazyWithDiagnostic(
+  () => import('./pages/TimePage').then(m => ({ default: m.TimePage })),
   'TimePage'
 );
-const Experience = lazyWithDiagnostic(() =>
-  import('./pages/Experience').then(m => ({ default: m.Experience })),
+const Experience = lazyWithDiagnostic(
+  () => import('./pages/Experience').then(m => ({ default: m.Experience })),
   'Experience'
 );
-const Stats = lazyWithDiagnostic(() => 
-  import('./pages/Stats').then(m => ({ default: m.Stats })),
+const Stats = lazyWithDiagnostic(
+  () => import('./pages/Stats').then(m => ({ default: m.Stats })),
   'Stats'
 );
 
 // ✨ v24 - Performance: Lazy load SingularityMonitor
-const SingularityMonitor = lazyWithDiagnostic(() =>
-  import('./components/SingularityMonitor').then(m => ({ default: m.SingularityMonitor })),
+const SingularityMonitor = lazyWithDiagnostic(
+  () =>
+    import('./components/SingularityMonitor').then(m => ({
+      default: m.SingularityMonitor,
+    })),
   'SingularityMonitor'
 );
 
 // ✨ v∞.20.0 - Chat Bubble Global (Super Prompt #3)
 // ✨ PHASE 4.2 - Lazy load chat bubbles (defer ~150KB)
-const ChatBubble = lazyWithDiagnostic(() =>
-  import('./components/chat/ChatBubble').then(m => ({ default: m.ChatBubble })),
+const ChatBubble = lazyWithDiagnostic(
+  () => import('./components/chat/ChatBubble').then(m => ({ default: m.ChatBubble })),
   'ChatBubble'
 );
 
 // ✨ v24.3.0 - Cognitive Layout Control
-const CognitiveLayoutControl = lazyWithDiagnostic(() =>
-  import('./components/cognitive/CognitiveLayoutControl').then(m => ({
-    default: m.CognitiveLayoutControl,
-  })),
+const CognitiveLayoutControl = lazyWithDiagnostic(
+  () =>
+    import('./components/cognitive/CognitiveLayoutControl').then(m => ({
+      default: m.CognitiveLayoutControl,
+    })),
   'CognitiveLayoutControl'
 );
 
@@ -143,26 +152,26 @@ import { presenceOS } from './engines/presence/_stubs';
 type LazyModule<T> = { default: T };
 
 // ✨ v24.3.0 - Lazy loaded pages
-const PerformanceTest = lazyWithDiagnostic(() =>
-  import('./pages/PerformanceTest').then(m => ({ default: m.PerformanceTest })),
+const PerformanceTest = lazyWithDiagnostic(
+  () => import('./pages/PerformanceTest').then(m => ({ default: m.PerformanceTest })),
   'PerformanceTest'
 );
-const KnowledgeFusionPage = lazyWithDiagnostic(() => 
-  import('./ui/pages/KnowledgeFusionPage'),
+const KnowledgeFusionPage = lazyWithDiagnostic(
+  () => import('./ui/pages/KnowledgeFusionPage'),
   'KnowledgeFusionPage'
 );
-const CreationStudio = lazyWithDiagnostic(() => 
-  import('./ui/pages/CreationStudio'),
+const CreationStudio = lazyWithDiagnostic(
+  () => import('./ui/pages/CreationStudio'),
   'CreationStudio'
 );
-const EvolutionMonitor = lazyWithDiagnostic(() => 
-  import('./ui/pages/EvolutionMonitor'),
+const EvolutionMonitor = lazyWithDiagnostic(
+  () => import('./ui/pages/EvolutionMonitor'),
   'EvolutionMonitor'
 );
 
 // ✨ v24.3.0 - Core pages
-const AdminPage = lazyWithDiagnostic(() =>
-  import('./features/admin').then(m => ({ default: m.AdminPage })),
+const AdminPage = lazyWithDiagnostic(
+  () => import('./features/admin').then(m => ({ default: m.AdminPage })),
   'AdminPage'
 );
 const TitanePage = lazyWithTimeout(
@@ -185,30 +194,37 @@ const UltimateOptimizationDashboard = lazy(() =>
 );
 
 // ✨ v24.3.0 - Center modules
-const RealityCenter = lazyWithDiagnostic(() =>
-  import('./components/RealityCenter/RealityCenter').then(m => ({ default: m.default })),
+const RealityCenter = lazyWithDiagnostic(
+  () =>
+    import('./components/RealityCenter/RealityCenter').then(m => ({
+      default: m.default,
+    })),
   'RealityCenter'
 );
 
 // ✨ v26.1 CONSOLE MONITOR DASHBOARD - Dev-only monitoring UI
-const ConsoleMonitorDashboard = lazyWithDiagnostic(() =>
-  import('./components/dev/ConsoleMonitorDashboard').then(m => ({
-    default: m.ConsoleMonitorDashboard,
-  })),
-  'ConsoleMonitorDashboard'
-);
+// Temporarily disabled lazy loading to fix boot issues
+// const ConsoleMonitorDashboard = lazyWithDiagnostic(
+//   () =>
+//     import('./components/dev/ConsoleMonitorDashboard').then(m => ({
+//       default: m.ConsoleMonitorDashboard,
+//     })),
+//   'ConsoleMonitorDashboard'
+// );
 
 // ✨ v26.2 PREDICTIVE DASHBOARD - ML-like error prediction & correlation
-const PredictiveDashboard = lazyWithDiagnostic(() =>
-  import('./components/dev/PredictiveDashboard').then(m => ({
-    default: m.PredictiveDashboard,
-  })),
+const PredictiveDashboard = lazyWithDiagnostic(
+  () =>
+    import('./components/dev/PredictiveDashboard').then(m => ({
+      default: m.PredictiveDashboard,
+    })),
   'PredictiveDashboard'
 );
 
 // ✨ HYPER CENTER - Hyper-Intelligence Engine v∞ (OPUS #20)
-const HyperCenter = lazyWithDiagnostic(() =>
-  import('./components/HyperCenter/HyperCenter').then(m => ({ default: m.default })),
+const HyperCenter = lazyWithDiagnostic(
+  () =>
+    import('./components/HyperCenter/HyperCenter').then(m => ({ default: m.default })),
   'HyperCenter'
 );
 
@@ -561,7 +577,9 @@ const AppRouter: React.FC = () => {
     }
 
     console.log('🧠 [COGNITIVE] Loading Cognitive Layout Engine...');
-    import('./engines/cognitive/cognitiveLayoutEngine')
+
+    // Utilisation du wrapper sécurisé pour éviter les problèmes de dep-scan
+    loadCognitiveLayoutEngine()
       .then(({ cognitiveLayoutEngine }) => {
         if (!started) {
           cognitiveLayoutEngine.start();
@@ -584,15 +602,19 @@ const AppRouter: React.FC = () => {
   // ✨ OPT-10 - Lazy-load TITANE∞ Micro-Interactions
   useEffect(() => {
     logger.info('Loading TITANE∞ micro-interactions', { component: 'UIPolish' });
-    import('./ui/motion')
+
+    // Utilisation du wrapper sécurisé pour éviter les problèmes de dep-scan
+    loadMotionSystem()
       .then(({ initializeMicroInteractions }) => {
         try {
           initializeMicroInteractions();
+          console.log('✅ [MOTION] Micro-interactions initialized successfully');
           logger.info(
             'Micro-interactions initialized (Ripple, Magnetism, Focus Glow, Tooltips)',
             { component: 'UIPolish' }
           );
         } catch (error) {
+          console.error('❌ [MOTION] Failed to initialize micro-interactions:', error);
           logger.error(
             'Failed to initialize micro-interactions',
             { component: 'App', service: 'UIPolish' },
@@ -600,10 +622,11 @@ const AppRouter: React.FC = () => {
           );
         }
       })
-      .catch(err => {
+      .catch(error => {
+        console.error('❌ [MOTION] Failed to load motion module:', error);
         logger.warn('Failed to load motion module', {
           component: 'UIPolish',
-          error: err,
+          error: error,
         });
       });
   }, []);

@@ -250,6 +250,15 @@ async fn initialize_providers(state: &ChatOrchestratorState) {
         error: None,
     });
 
+    // GLM-4.6V (local multimodal)
+    status_list.push(ProviderStatus {
+        provider: "glm46v".to_string(),
+        available: false, // Will be checked via vLLM server
+        latency_ms: 0,
+        models: vec!["THUDM/glm-4v-9b".to_string()],
+        error: None,
+    });
+
     // Local fallback
     status_list.push(ProviderStatus {
         provider: "local".to_string(),
@@ -315,6 +324,21 @@ async fn is_provider_available(
                 Ok(client) => {
                     matches!(
                         client.get("http://localhost:11434/api/tags").send().await,
+                        Ok(resp) if resp.status().is_success()
+                    )
+                }
+                Err(_) => false,
+            }
+        }
+        "glm46v" => {
+            // Check if vLLM GLM-4.6V server is running on localhost:8000
+            match reqwest::Client::builder()
+                .timeout(std::time::Duration::from_millis(3000))
+                .build()
+            {
+                Ok(client) => {
+                    matches!(
+                        client.get("http://127.0.0.1:8000/v1/models").send().await,
                         Ok(resp) if resp.status().is_success()
                     )
                 }
@@ -548,6 +572,7 @@ pub async fn chat_send_message(
             "anthropic" => send_to_anthropic(&request, &state).await,
             "gemini" => send_to_gemini(&request, &state).await,
             "ollama" => send_to_ollama(&request, &state).await,
+            "glm46v" => send_to_glm46v(&request, &state).await,
             "local" => send_to_local(&request, &state).await,
             _ => {
                 last_error = Some(TAPIError::provider_unavailable(&provider));
@@ -1180,6 +1205,169 @@ pub async fn send_to_anthropic_internal(
     state: &ChatOrchestratorState,
 ) -> Result<ChatMessage, TAPIError> {
     send_to_anthropic(request, state).await
+}
+
+async fn send_to_glm46v(
+    request: &ChatRequest,
+    _state: &ChatOrchestratorState,
+) -> Result<ChatMessage, TAPIError> {
+    // GLM-4.6V local provider - calls vLLM server directly
+    let model = request.model.as_deref().unwrap_or("THUDM/glm-4v-9b");
+    let url = "http://127.0.0.1:8000/v1/chat/completions";
+
+    // Adaptive timeout for GLM-4.6V (local, can be slower for vision)
+    let timeout_secs = calculate_adaptive_timeout(request.message.len(), true);
+    println!(
+        "[CHAT] 🔮 GLM-4.6V API call: {} (adaptive timeout {}s)",
+        model, timeout_secs
+    );
+
+    // System prompt TITANE∞ en français
+    let system_prompt = request.system_prompt.as_deref().unwrap_or(
+        "Tu es TITANE∞, un assistant IA avancé créé par l'équipe TITANE avec capacités de vision. \
+         Tu peux analyser des images et répondre en français de manière claire, concise et utile. \
+         Tu es amical, professionnel et tu aides l'utilisateur avec ses questions. \
+         Si on te demande du code, tu fournis des exemples bien commentés en français. \
+         Lorsque tu vois une image, décris-la précisément et utilise cette information pour répondre.",
+    );
+
+    // Build OpenAI-compatible request body
+    let mut messages = vec![
+        serde_json::json!({
+            "role": "system",
+            "content": system_prompt
+        }),
+        serde_json::json!({
+            "role": "user",
+            "content": request.message
+        })
+    ];
+
+    // Add image support if present
+    if let Some(images) = &request.images {
+        if !images.is_empty() {
+            // For vision, modify the user message to include image
+            let image_url = &images[0]; // Support single image for now
+            messages[1] = serde_json::json!({
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": request.message},
+                    {"type": "image_url", "image_url": {"url": image_url}}
+                ]
+            });
+        }
+    }
+
+    let body = serde_json::json!({
+        "model": model,
+        "messages": messages,
+        "temperature": 0.7,
+        "max_tokens": 2048,
+    });
+
+    // HTTP client with adaptive timeout
+    let client = reqwest::Client::builder()
+        .timeout(std::time::Duration::from_secs(timeout_secs))
+        .build()
+        .map_err(|e| TAPIError::network(format!("HTTP client error: {}", e)))?;
+
+    // POST request (single attempt for local provider)
+    let response = client
+        .post(url)
+        .header("Content-Type", "application/json")
+        .json(&body)
+        .send()
+        .await
+        .map_err(|e| {
+            let msg = format!(
+                "GLM-4.6V connection error: {} (is vLLM running on :8000?)",
+                e
+            );
+            println!("[CHAT] ❌ {}", msg);
+            TAPIError::provider_unavailable("glm46v")
+        })?;
+
+    if !response.status().is_success() {
+        let status = response.status();
+        let error_text = response
+            .text()
+            .await
+            .unwrap_or_else(|_| "Unknown error".to_string());
+        return Err(TAPIError::network(format!(
+            "GLM-4.6V API error {}: {}",
+            status, error_text
+        )));
+    }
+
+    let response_json: serde_json::Value = response
+        .json()
+        .await
+        .map_err(|e| TAPIError::parse(format!("Failed to parse GLM-4.6V response: {}", e)))?;
+
+    let content = response_json
+        .get("choices")
+        .and_then(|c| c.get(0))
+        .and_then(|c0| c0.get("message"))
+        .and_then(|msg| msg.get("content"))
+        .and_then(|t| t.as_str())
+        .ok_or_else(|| {
+            let json_str = serde_json::to_string_pretty(&response_json)
+                .unwrap_or_else(|_| "<unparseable>".to_string());
+            TAPIError::parse(format!(
+                "GLM-4.6V response missing expected fields. Response: {}",
+                json_str
+            ))
+        })?
+        .to_string();
+
+    let tokens = response_json
+        .get("usage")
+        .and_then(|u| u.get("total_tokens"))
+        .and_then(|t| t.as_u64())
+        .map(|t| t as u32);
+
+    println!(
+        "[CHAT] ✅ GLM-4.6V success: {} chars, {} tokens",
+        content.len(),
+        tokens.unwrap_or(0)
+    );
+
+    Ok(ChatMessage {
+        id: uuid::Uuid::new_v4().to_string(),
+        role: "assistant".to_string(),
+        content,
+        timestamp: get_timestamp(),
+        provider: "glm46v".to_string(),
+        model: model.to_string(),
+        tokens,
+        multimodal: request.images.is_some(),
+    })
+}
+
+/// Public wrapper pour appel depuis chat_generate_commands
+pub async fn send_to_glm46v_internal(
+    request: &ChatRequest,
+    state: &ChatOrchestratorState,
+) -> Result<ChatMessage, TAPIError> {
+    send_to_glm46v(request, state).await
+}
+
+/// Internal GLM-4.6V health check for commands
+pub async fn check_glm46v_health_internal(state: &ChatOrchestratorState) -> Result<crate::overdrive::chat_orchestrator::ProviderStatus, String> {
+    let status_list = state.provider_status.read().await;
+    let glm46v_status = status_list
+        .iter()
+        .find(|s| s.provider == "glm46v")
+        .cloned()
+        .unwrap_or_else(|| crate::overdrive::chat_orchestrator::ProviderStatus {
+            provider: "glm46v".to_string(),
+            available: false,
+            latency_ms: 0,
+            models: vec!["THUDM/glm-4v-9b".to_string()],
+            error: Some("Provider not found".to_string()),
+        });
+
+    Ok(glm46v_status)
 }
 
 async fn send_to_local(

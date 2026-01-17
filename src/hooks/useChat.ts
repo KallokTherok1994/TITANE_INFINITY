@@ -57,6 +57,7 @@ type MaybeAIMessage = Partial<AIMessage> | null | undefined;
 
 // ✨ v24.3.0 - Cloud Providers Integration (OpenAI/Gemini/Anthropic)
 // ✨ v26.3.0 - Added GitHub Copilot provider
+// ✨ GLM-4.6V-Flash provider
 export type ProviderPreference =
   | 'auto'
   | 'local'
@@ -64,7 +65,8 @@ export type ProviderPreference =
   | 'openai'
   | 'gemini'
   | 'anthropic'
-  | 'copilot';
+  | 'copilot'
+  | 'glm46v';
 
 export interface ChatDebugAttempt {
   provider: string;
@@ -102,7 +104,8 @@ const isProviderPreference = (value: unknown): value is ProviderPreference =>
   value === 'openai' ||
   value === 'gemini' ||
   value === 'anthropic' ||
-  value === 'copilot';
+  value === 'copilot' ||
+  value === 'glm46v';
 
 const readStoredPreferredProvider = (): ProviderPreference => {
   if (typeof window === 'undefined') {

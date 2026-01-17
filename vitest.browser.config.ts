@@ -6,7 +6,7 @@
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import path from 'node:path';
-import { browser as playwrightBrowser } from '@vitest/browser-playwright';
+import { PlaywrightBrowserProvider as playwrightBrowser } from '@vitest/browser-playwright';
 
 export default defineConfig({
   plugins: [react()],
@@ -33,6 +33,9 @@ export default defineConfig({
       'src/tests/browser/**/*.test.ts',
       'src/modules/avatar/floating/floating.perf.test.ts',
     ],
+
+    // Ajout d'exclusions pour éviter le scan des entrées HTML inutiles
+    exclude: ['**/dashboard/**', '**/dist_stub/**', '**/playwright-report/**', '**/src-tauri/target/**'],
 
     // Performance test timeouts
     testTimeout: 60000, // 1 minute for WebGL tests

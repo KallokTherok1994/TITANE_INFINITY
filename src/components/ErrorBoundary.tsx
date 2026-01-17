@@ -109,14 +109,9 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     if (hasError) {
       // Gestion spécifique des erreurs de module script (boot errors)
       if (error?.message?.includes('Importing a module script failed')) {
-        return (
-          <BootErrorFallback 
-            error={error}
-            onRetry={this.handleReset}
-          />
-        );
+        return <BootErrorFallback error={error} onRetry={this.handleReset} />;
       }
-      
+
       // Fallback personnalisé
       if (fallback) {
         return fallback;

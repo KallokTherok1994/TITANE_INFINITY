@@ -6,26 +6,53 @@
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
+// 🛡️ ADVANCED BOOT RECOVERY SYSTEM
+import { titaneBootRecovery } from './utils/bootRecoverySystem';
+
+// 🧠 QUANTUM INTELLIGENCE INTEGRATION
+import { titaneQuantumIntelligence } from './utils/quantumIntelligence';
+import { titaneSelfHealing } from './utils/selfHealingSystem';
+import { titaneTelemetry } from './utils/telemetryEngine';
+
+// � QUANTUM ORCHESTRATOR
+import { titaneQuantumOrchestrator } from './utils/quantumOrchestrator';
+
+// 🌌 CONSCIOUSNESS DASHBOARD & SYSTEM HUB
+import ConsciousnessDashboard from './components/ConsciousnessDashboard';
+import SystemIntegrationHub from './components/SystemIntegrationHub';
+
 // 🛡️ ULTRA-EARLY GLOBAL ERROR HANDLERS (PREVENT SILENT CRASHES)
 if (typeof window !== 'undefined') {
-  // Capture synchronous errors during boot
+  // Advanced boot recovery integration
   window.addEventListener(
     'error',
     event => {
       if (event.error instanceof Error) {
+        const isBootError =
+          event.error.message.includes('Importing a module script failed') ||
+          event.error.message.includes('Loading chunk') ||
+          event.error.message.includes('dynamically imported module');
+
         console.error('🚨 [BOOT-ERROR] Synchronous error:', {
           message: event.error.message,
           stack: event.error.stack,
           filename: event.filename,
           lineno: event.lineno,
           colno: event.colno,
+          isBootCritical: isBootError,
         });
+
+        // Trigger intelligent boot recovery for critical errors
+        if (isBootError) {
+          console.log('🚀 [BOOT-RECOVERY] Triggering intelligent recovery...');
+          titaneBootRecovery.forceRecovery('safe_mode');
+        }
       }
     },
     true
   ); // Use capture phase to catch errors early
 
-  // Capture async rejections
+  // Capture async rejections with recovery
   window.addEventListener(
     'unhandledrejection',
     event => {
@@ -973,31 +1000,52 @@ try {
   const root = ReactDOM.createRoot(rootElement);
   bootDiagnostics.log('REACT', 'Root created successfully');
 
+  // 🎼 INITIALISATION ORCHESTRATEUR QUANTIQUE
+  console.log('🎼 [BOOT] Initializing Quantum Orchestrator...');
+  const orchestratorStatus = titaneQuantumOrchestrator.getOrchestrationStatus();
+  if (!orchestratorStatus.is_running) {
+    titaneQuantumOrchestrator.startOrchestration();
+    console.log('✅ [BOOT] Quantum Orchestrator initialized');
+  } else {
+    console.log('ℹ️ [BOOT] Quantum Orchestrator already running');
+  }
+
   root.render(
     <React.StrictMode>
-      <ErrorBoundary
-        context="App"
-        onError={(error, errorInfo) => {
-          bootDiagnostics.error('REACT', 'ErrorBoundary caught error', error);
-          logger.error(
-            'Production Error Boundary caught',
-            {
-              component: 'ErrorBoundary',
-              componentStack: errorInfo.componentStack,
-            },
-            error
-          );
-
-          // Hook for Sentry/LogRocket integration
-          if (window.Sentry) {
-            window.Sentry.captureException(error, {
-              contexts: { react: { componentStack: errorInfo.componentStack } },
-            });
+      <SystemIntegrationHub
+        onSystemEvent={event => {
+          // Logger les événements système critiques
+          if (event.severity === 'critical' || event.severity === 'error') {
+            logger.error(`System Event: ${event.type}`, event.data);
+          } else {
+            logger.info(`System Event: ${event.type}`, event.data);
           }
         }}
       >
-        <App />
-      </ErrorBoundary>
+        <ErrorBoundary
+          context="App"
+          onError={(error, errorInfo) => {
+            bootDiagnostics.error('REACT', 'ErrorBoundary caught error', error);
+            logger.error(
+              'Production Error Boundary caught',
+              {
+                component: 'ErrorBoundary',
+                componentStack: errorInfo.componentStack,
+              },
+              error
+            );
+
+            // Hook for Sentry/LogRocket integration
+            if (window.Sentry) {
+              window.Sentry.captureException(error, {
+                contexts: { react: { componentStack: errorInfo.componentStack } },
+              });
+            }
+          }}
+        >
+          <App />
+        </ErrorBoundary>
+      </SystemIntegrationHub>
     </React.StrictMode>
   );
 
