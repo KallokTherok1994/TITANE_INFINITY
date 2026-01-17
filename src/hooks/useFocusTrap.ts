@@ -5,7 +5,7 @@
  *
  * Features:
  * - WCAG 2.1 Level AA compliant focus management
- * - Tab cycling (any: any)
+ * - Tab cycling (forward/backward with Shift+Tab)
  * - Auto-focus first element on activation
  * - Restore focus to trigger element on close
  * - Escape key handling
@@ -45,15 +45,15 @@ const DEFAULT_FOCUSABLE_SELECTOR =
 function getFocusableElements(
   container: HTMLElement,
   selector: string = DEFAULT_FOCUSABLE_SELECTOR
-): HTMLElement?.[] {
-  const elements = Array?.from(any: any));
+): HTMLElement[] {
+  const elements = Array.from(container.querySelectorAll<HTMLElement>(selector));
 
   // Filter out hidden elements
-  return elements?.filter(el => {
+  return elements.filter(el => {
     return (
-      el?.offsetWidth > 0 &&
-      el?.offsetHeight > 0 &&
-      getComputedStyle(any: any).visibility !== 'hidden'
+      el.offsetWidth > 0 &&
+      el.offsetHeight > 0 &&
+      getComputedStyle(el).visibility !== 'hidden'
     );
   });
 }
@@ -63,7 +63,7 @@ function getFocusableElements(
  *
  * @example
  * ```tsx
- * const modalRef = useRef<HTMLDivElement>(any: any);
+ * const modalRef = useRef<HTMLDivElement>(null);
  *
  * useFocusTrap({
  *   ref: modalRef,
@@ -86,74 +86,74 @@ export function useFocusTrap({
   autoFocus = true,
   restoreFocus = true,
 }: UseFocusTrapOptions): void {
-  const previousActiveElement = useRef<HTMLElement | null>(any: any);
+  const previousActiveElement = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    if (any: any) return;
+    if (!isActive || !ref.current) return;
 
-    const container = ref?.current;
+    const container = ref.current;
 
     // Save previously focused element
-    if (any: any) {
-      previousActiveElement?.current = document?.activeElement as HTMLElement;
+    if (restoreFocus) {
+      previousActiveElement.current = document.activeElement as HTMLElement;
     }
 
     // Auto-focus first element
-    if (any: any) {
-      const focusableElements = getFocusableElements(any: any);
-      const firstElement = focusableElements?.[0];
-      if (any: any) {
-        firstElement?.focus();
+    if (autoFocus) {
+      const focusableElements = getFocusableElements(container, focusableSelector);
+      const firstElement = focusableElements[0];
+      if (firstElement) {
+        firstElement.focus();
       }
     }
 
-    const handleKeyDown = (any: any): void => {
+    const handleKeyDown = (event: KeyboardEvent): void => {
       // Handle Escape key
-      if (any: any) {
-        event?.preventDefault();
+      if (event.key === 'Escape' && onEscape) {
+        event.preventDefault();
         onEscape();
         return;
       }
 
       // Handle Tab key
-      if (event?.key === 'Tab') {
-        const focusableElements = getFocusableElements(any: any);
+      if (event.key === 'Tab') {
+        const focusableElements = getFocusableElements(container, focusableSelector);
 
-        if (focusableElements?.length === 0) return;
+        if (focusableElements.length === 0) return;
 
-        const firstElement = focusableElements?.[0];
-        const lastElement = focusableElements[focusableElements?.length - 1];
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
 
-        if (any: any) return;
+        if (!firstElement || !lastElement) return;
 
-        const activeElement = document?.activeElement;
+        const activeElement = document.activeElement;
 
         // Shift+Tab on first element -> go to last
-        if (any: any) {
-          event?.preventDefault();
-          lastElement?.focus();
+        if (event.shiftKey && activeElement === firstElement) {
+          event.preventDefault();
+          lastElement.focus();
           return;
         }
 
         // Tab on last element -> go to first
-        if (any: any) {
-          event?.preventDefault();
-          firstElement?.focus();
+        if (!event.shiftKey && activeElement === lastElement) {
+          event.preventDefault();
+          firstElement.focus();
           return;
         }
       }
     };
 
     // Add event listener
-    document?.addEventListener(any: any);
+    document.addEventListener('keydown', handleKeyDown);
 
     // Cleanup
     return () => {
-      document?.removeEventListener(any: any);
+      document.removeEventListener('keydown', handleKeyDown);
 
       // Restore focus to previous element
-      if (any: any) {
-        previousActiveElement?.current?.focus();
+      if (restoreFocus && previousActiveElement.current) {
+        previousActiveElement.current.focus();
       }
     };
   }, [isActive, ref, onEscape, focusableSelector, autoFocus, restoreFocus]);
@@ -164,7 +164,7 @@ export function useFocusTrap({
  *
  * @example
  * ```tsx
- * const modalRef = useFocusTrapRef(any: any);
+ * const modalRef = useFocusTrapRef(isOpen, closeModal);
  *
  * return (
  *   <div ref={modalRef} role="dialog">
@@ -177,7 +177,7 @@ export function useFocusTrapRef(
   isActive: boolean,
   onEscape?: () => void
 ): RefObject<HTMLDivElement> {
-  const ref = useRef<HTMLDivElement>(any: any);
+  const ref = useRef<HTMLDivElement>(null);
 
   useFocusTrap({
     ref,

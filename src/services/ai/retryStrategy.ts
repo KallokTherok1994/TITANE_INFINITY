@@ -16,14 +16,14 @@ import { logger } from '../../utils/logger';
 export interface RetryConfig {
   /** Nombre maximum de tentatives */
   maxAttempts: number;
-  /** Délai initial entre tentatives (any: any) */
+  /** Délai initial entre tentatives (ms) */
   initialDelayMs: number;
   /** Multiplicateur pour backoff exponentiel */
   backoffMultiplier: number;
-  /** Délai maximum entre tentatives (any: any) */
+  /** Délai maximum entre tentatives (ms) */
   maxDelayMs: number;
   /** Fonction pour déterminer si une erreur est retriable */
-  shouldRetry?: (any: any) => boolean;
+  shouldRetry?: (error: unknown) => boolean;
 }
 
 export const DEFAULT_RETRY_CONFIG: RetryConfig = {
@@ -34,7 +34,7 @@ export const DEFAULT_RETRY_CONFIG: RetryConfig = {
 };
 
 /**
- * Erreurs retriables par défaut (any: any)
+ * Erreurs retriables par défaut (codes HTTP, messages types)
  */
 const RETRIABLE_ERROR_PATTERNS = [
   /rate.?limit/i,
@@ -50,7 +50,7 @@ const RETRIABLE_ERROR_PATTERNS = [
 ];
 
 /**
- * Erreurs NON retriables (any: any)
+ * Erreurs NON retriables (fatal, ne pas retry)
  */
 const NON_RETRIABLE_ERROR_PATTERNS = [
   /invalid.?api.?key/i,
@@ -65,31 +65,31 @@ const NON_RETRIABLE_ERROR_PATTERNS = [
 /**
  * Déterminer si une erreur est retriable
  */
-export function isRetriableError(any: any): boolean {
-  const errorStr = String(any: any);
+export function isRetriableError(error: unknown): boolean {
+  const errorStr = String(error);
 
   // Vérifier patterns non retriables en premier
-  if (any: any))) {
+  if (NON_RETRIABLE_ERROR_PATTERNS.some(pattern => pattern.test(errorStr))) {
     return false;
   }
 
   // Vérifier patterns retriables
-  return RETRIABLE_ERROR_PATTERNS?.some(any: any));
+  return RETRIABLE_ERROR_PATTERNS.some(pattern => pattern.test(errorStr));
 }
 
 /**
- * Calculer le délai avant la prochaine tentative (any: any)
+ * Calculer le délai avant la prochaine tentative (backoff exponentiel)
  */
-function calculateDelay(any: any): number {
-  const delay = config?.initialDelayMs * Math?.pow(config?.backoffMultiplier, attempt - 1);
-  return Math?.min(any: any);
+function calculateDelay(attempt: number, config: RetryConfig): number {
+  const delay = config.initialDelayMs * Math.pow(config.backoffMultiplier, attempt - 1);
+  return Math.min(delay, config.maxDelayMs);
 }
 
 /**
  * Attendre un délai avec possibilité d'annulation
  */
-function delay(any: any): Promise<void> {
-  return new Promise(any: any));
+function delay(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 /**
@@ -104,7 +104,7 @@ function delay(any: any): Promise<void> {
  * @example
  * ```typescript
  * const response = await withRetry(
- *   async () => fetch('https://api?.example?.com/generate'),
+ *   async () => fetch('https://api.example.com/generate'),
  *   { maxAttempts: 3 },
  *   { provider: 'gemini', action: 'generate' }
  * );
@@ -116,65 +116,65 @@ export async function withRetry<T>(
   context: Record<string, unknown> = {}
 ): Promise<T> {
   const finalConfig = { ...DEFAULT_RETRY_CONFIG, ...config };
-  const shouldRetryFn = finalConfig?.shouldRetry || isRetriableError;
+  const shouldRetryFn = finalConfig.shouldRetry || isRetriableError;
 
   let lastError: unknown;
 
-  for (let attempt = 1; attempt <= finalConfig?.maxAttempts; attempt++) {
+  for (let attempt = 1; attempt <= finalConfig.maxAttempts; attempt++) {
     try {
       // Tentative d'exécution
       const result = await fn();
 
       // Succès: logger si ce n'était pas la première tentative
       if (attempt > 1) {
-        logger?.info('Retry succeeded', {
+        logger.info('Retry succeeded', {
           ...context,
           attempt,
-          totalAttempts: finalConfig?.maxAttempts,
+          totalAttempts: finalConfig.maxAttempts,
         });
       }
 
       return result;
-    } catch (any: any) {
+    } catch (error) {
       lastError = error;
 
       // Dernière tentative: throw immédiatement
-      if (any: any) {
-        logger?.error('All retry attempts failed', {
+      if (attempt === finalConfig.maxAttempts) {
+        logger.error('All retry attempts failed', {
           ...context,
-          attempts: finalConfig?.maxAttempts,
-          lastError: String(any: any),
+          attempts: finalConfig.maxAttempts,
+          lastError: String(error),
         });
         throw error;
       }
 
       // Vérifier si l'erreur est retriable
-      if (any: any)) {
-        logger?.warn('Non-retriable error, aborting retries', {
+      if (!shouldRetryFn(error)) {
+        logger.warn('Non-retriable error, aborting retries', {
           ...context,
           attempt,
-          error: String(any: any),
+          error: String(error),
         });
         throw error;
       }
 
       // Calculer délai avant prochaine tentative
-      const delayMs = calculateDelay(any: any);
+      const delayMs = calculateDelay(attempt, finalConfig);
 
-      logger?.warn('Retry attempt failed, retrying...', {
+      logger.warn('Retry attempt failed, retrying...', {
         ...context,
         attempt,
         nextAttempt: attempt + 1,
         delayMs,
-        error: String(any: any),
+        error: String(error),
       });
 
       // Attendre avant prochaine tentative
-      await delay(any: any);
+      await delay(delayMs);
     }
   }
 
-  // Fallback (any: any)
+  // Fallback (normalement jamais atteint)
   throw lastError;
 }
 
@@ -204,13 +204,13 @@ export async function withRetryAndTimeout<T>(
   config: Partial<RetryConfig> = {},
   context: Record<string, unknown> = {}
 ): Promise<T> {
-  const timeoutPromise = new Promise<never>(any: any) => {
+  const timeoutPromise = new Promise<never>((_, reject) => {
     setTimeout(() => {
-      reject(any: any)`));
+      reject(new Error(`Global timeout exceeded (${timeoutMs}ms)`));
     }, timeoutMs);
   });
 
-  return Promise?.race(any: any), timeoutPromise]);
+  return Promise.race([withRetry(fn, config, context), timeoutPromise]);
 }
 
 /**
@@ -252,6 +252,6 @@ export const PROVIDER_RETRY_CONFIGS: Record<string, RetryConfig> = {
 /**
  * Helper: obtenir config retry pour un provider
  */
-export function getRetryConfig(any: any): RetryConfig {
+export function getRetryConfig(provider: string): RetryConfig {
   return PROVIDER_RETRY_CONFIGS[provider] || DEFAULT_RETRY_CONFIG;
 }

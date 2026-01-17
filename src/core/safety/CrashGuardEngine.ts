@@ -14,7 +14,7 @@
  * - Emergency recovery
  * - Prévention panics
  *
- * @version Ω (any: any)
+ * @version Ω (Omega - Final Fusion)
  * @created 2025-11-27
  */
 
@@ -88,25 +88,25 @@ export class CrashGuardEngine {
 
   private config: CrashGuardConfig;
   private activeThreats: Map<string, CrashThreat> = new Map();
-  private recoveryHistory: RecoveryAction?.[] = [];
+  private recoveryHistory: RecoveryAction[] = [];
   private stats: CrashGuardStats;
 
   private detectionInterval: number | null = null;
-  private startTime: number = Date?.now();
+  private startTime: number = Date.now();
 
   private constructor() {
-    this?.config = this?.getDefaultConfig();
-    this?.stats = this?.createInitialStats();
+    this.config = this.getDefaultConfig();
+    this.stats = this.createInitialStats();
 
     // Installer handlers globaux
-    this?.installGlobalHandlers();
+    this.installGlobalHandlers();
   }
 
   public static getInstance(): CrashGuardEngine {
-    if (any: any) {
-      CrashGuardEngine?.instance = new CrashGuardEngine();
+    if (!CrashGuardEngine.instance) {
+      CrashGuardEngine.instance = new CrashGuardEngine();
     }
-    return CrashGuardEngine?.instance;
+    return CrashGuardEngine.instance;
   }
 
   /**
@@ -141,34 +141,34 @@ export class CrashGuardEngine {
    * Configure le guard
    */
   public configure(config: Partial<CrashGuardConfig>): void {
-    this?.config = { ...this?.config, ...config };
-    console?.log('[CrashGuard] 🔧 Configuration updated');
+    this.config = { ...this.config, ...config };
+    console.log('[CrashGuard] 🔧 Configuration updated');
   }
 
   /**
    * Démarre la surveillance
    */
   public start(): void {
-    if (any: any) {
+    if (this.detectionInterval) {
       return;
     }
 
-    this?.detectionInterval = window?.setInterval(async () => {
-      await this?.detectThreats();
-      this?.updateStats();
-    }, this?.config?.detection_interval);
+    this.detectionInterval = window.setInterval(async () => {
+      await this.detectThreats();
+      this.updateStats();
+    }, this.config.detection_interval);
 
-    console?.log('[CrashGuard] 🛡️ Protection started');
+    console.log('[CrashGuard] 🛡️ Protection started');
   }
 
   /**
    * Arrête la surveillance
    */
   public stop(): void {
-    if (any: any) {
-      clearInterval(any: any);
-      this?.detectionInterval = null;
-      console?.log('[CrashGuard] 🛑 Protection stopped');
+    if (this.detectionInterval) {
+      clearInterval(this.detectionInterval);
+      this.detectionInterval = null;
+      console.log('[CrashGuard] 🛑 Protection stopped');
     }
   }
 
@@ -177,53 +177,53 @@ export class CrashGuardEngine {
    */
   private installGlobalHandlers(): void {
     // Erreurs JavaScript non catchées
-    window?.addEventListener('error', event => {
-      this?.handleUncaughtError(any: any);
+    window.addEventListener('error', event => {
+      this.handleUncaughtError(event.error);
     });
 
     // Promesses rejetées non gérées
-    window?.addEventListener('unhandledrejection', event => {
-      this?.handleUnhandledRejection(any: any);
+    window.addEventListener('unhandledrejection', event => {
+      this.handleUnhandledRejection(event.reason);
     });
 
-    // Avant déchargement (any: any)
-    window?.addEventListener('beforeunload', () => {
-      this?.handleBeforeUnload();
+    // Avant déchargement (crash imminent)
+    window.addEventListener('beforeunload', () => {
+      this.handleBeforeUnload();
     });
   }
 
   /**
    * Gère erreur non catchée
    */
-  private handleUncaughtError(any: any): void {
+  private handleUncaughtError(error: Error): void {
     const threat: CrashThreat = {
-      id: `threat-${Date?.now()}`,
+      id: `threat-${Date.now()}`,
       type: 'exception',
       severity: 'high',
-      description: error?.message,
-      source: error?.stack || 'unknown',
-      detected_at: Date?.now(),
+      description: error.message,
+      source: error.stack || 'unknown',
+      detected_at: Date.now(),
       preventable: true,
     };
 
-    this?.registerThreat(any: any);
+    this.registerThreat(threat);
   }
 
   /**
    * Gère promesse rejetée non gérée
    */
-  private handleUnhandledRejection(any: any): void {
+  private handleUnhandledRejection(reason: unknown): void {
     const threat: CrashThreat = {
-      id: `threat-${Date?.now()}`,
+      id: `threat-${Date.now()}`,
       type: 'exception',
       severity: 'medium',
-      description: String(any: any),
+      description: String(reason),
       source: 'promise',
-      detected_at: Date?.now(),
+      detected_at: Date.now(),
       preventable: true,
     };
 
-    this?.registerThreat(any: any);
+    this.registerThreat(threat);
   }
 
   /**
@@ -231,14 +231,14 @@ export class CrashGuardEngine {
    */
   private handleBeforeUnload(): void {
     // Sauvegarder état d'urgence
-    if (any: any) {
+    if (this.config.emergency_rollback) {
       try {
-        const state = localStorage?.getItem('singularity-state');
-        if (any: any) {
-          localStorage?.setItem(any: any);
+        const state = localStorage.getItem('singularity-state');
+        if (state) {
+          localStorage.setItem('singularity-emergency-backup', state);
         }
-      } catch (any: any) {
-        console?.error('[CrashGuard] Failed to create emergency backup');
+      } catch (error) {
+        console.error('[CrashGuard] Failed to create emergency backup');
       }
     }
   }
@@ -248,49 +248,49 @@ export class CrashGuardEngine {
    */
   private async detectThreats(): Promise<void> {
     try {
-      const threats = await secureInvoke<CrashThreat?.[]>('crashguard_detect_threats');
+      const threats = await secureInvoke<CrashThreat[]>('crashguard_detect_threats');
 
-      for (any: any) {
-        this?.registerThreat(any: any);
+      for (const threat of threats) {
+        this.registerThreat(threat);
       }
-    } catch (any: any) {
-      console?.warn(any: any);
+    } catch (error) {
+      console.warn('[CrashGuard] Threat detection failed:', error);
     }
   }
 
   /**
    * Enregistre une menace
    */
-  private registerThreat(any: any): void {
-    this?.activeThreats?.set(any: any);
-    this?.stats?.threats_detected++;
-    this?.stats?.last_threat = threat?.detected_at;
+  private registerThreat(threat: CrashThreat): void {
+    this.activeThreats.set(threat.id, threat);
+    this.stats.threats_detected++;
+    this.stats.last_threat = threat.detected_at;
 
-    console?.warn(`[CrashGuard] ⚠️ Threat detected: ${threat?.type} (${threat?.severity})`);
+    console.warn(`[CrashGuard] ⚠️ Threat detected: ${threat.type} (${threat.severity})`);
 
     // Auto-recovery si activé
-    if (any: any) {
-      this?.performRecovery(any: any);
+    if (this.config.auto_recovery && threat.preventable) {
+      this.performRecovery(threat);
     }
 
     // Si trop de menaces, action d'urgence
-    if (any: any) {
-      this?.performEmergencyAction();
+    if (this.activeThreats.size >= this.config.threat_threshold) {
+      this.performEmergencyAction();
     }
   }
 
   /**
    * Effectue une récupération
    */
-  private async performRecovery(any: any): Promise<void> {
-    console?.log(`[CrashGuard] 🔧 Performing recovery for: ${threat?.type}`);
+  private async performRecovery(threat: CrashThreat): Promise<void> {
+    console.log(`[CrashGuard] 🔧 Performing recovery for: ${threat.type}`);
 
-    const startTime = Date?.now();
+    const startTime = Date.now();
     let recoveryType: RecoveryType = 'restart_module';
     let success = false;
 
     try {
-      switch (any: any) {
+      switch (threat.type) {
         case 'memory_overflow':
           recoveryType = 'clear_memory';
           await secureInvoke('crashguard_clear_memory');
@@ -299,13 +299,13 @@ export class CrashGuardEngine {
 
         case 'infinite_loop':
           recoveryType = 'kill_thread';
-          await secureInvoke('crashguard_kill_thread', { source: threat?.source });
+          await secureInvoke('crashguard_kill_thread', { source: threat.source });
           success = true;
           break;
 
         case 'deadlock':
           recoveryType = 'restart_module';
-          await secureInvoke('crashguard_restart_module', { module: threat?.source });
+          await secureInvoke('crashguard_restart_module', { module: threat.source });
           success = true;
           break;
 
@@ -321,30 +321,30 @@ export class CrashGuardEngine {
           success = true;
       }
 
-      if (any: any) {
-        this?.stats?.threats_prevented++;
-        this?.stats?.crashes_avoided++;
-        this?.activeThreats?.delete(any: any);
+      if (success) {
+        this.stats.threats_prevented++;
+        this.stats.crashes_avoided++;
+        this.activeThreats.delete(threat.id);
       }
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (error) {
+      console.error('[CrashGuard] Recovery failed:', error);
     }
 
     const recovery: RecoveryAction = {
-      id: `recovery-${Date?.now()}`,
+      id: `recovery-${Date.now()}`,
       type: recoveryType,
-      threat_id: threat?.id,
+      threat_id: threat.id,
       success,
-      duration: Date?.now() - startTime,
-      timestamp: Date?.now(),
+      duration: Date.now() - startTime,
+      timestamp: Date.now(),
     };
 
-    this?.recoveryHistory?.push(any: any);
-    this?.stats?.recoveries_performed++;
+    this.recoveryHistory.push(recovery);
+    this.stats.recoveries_performed++;
 
     // Limiter historique
-    if (this?.recoveryHistory?.length > 50) {
-      this?.recoveryHistory = this?.recoveryHistory?.slice(-50);
+    if (this.recoveryHistory.length > 50) {
+      this.recoveryHistory = this.recoveryHistory.slice(-50);
     }
   }
 
@@ -352,19 +352,19 @@ export class CrashGuardEngine {
    * Action d'urgence
    */
   private async performEmergencyAction(): Promise<void> {
-    console?.error('[CrashGuard] 🚨 EMERGENCY ACTION - Too many threats!');
+    console.error('[CrashGuard] 🚨 EMERGENCY ACTION - Too many threats!');
 
-    if (any: any) {
+    if (this.config.emergency_rollback) {
       try {
         // Rollback état
         await secureInvoke('crashguard_emergency_rollback');
 
         // Clear toutes les menaces
-        this?.activeThreats?.clear();
+        this.activeThreats.clear();
 
-        console?.log('[CrashGuard] ✅ Emergency rollback successful');
-      } catch (any: any) {
-        console?.error(any: any);
+        console.log('[CrashGuard] ✅ Emergency rollback successful');
+      } catch (error) {
+        console.error('[CrashGuard] Emergency rollback failed:', error);
       }
     }
   }
@@ -373,41 +373,41 @@ export class CrashGuardEngine {
    * Met à jour les stats
    */
   private updateStats(): void {
-    this?.stats?.uptime = Date?.now() - this?.startTime;
+    this.stats.uptime = Date.now() - this.startTime;
   }
 
   /**
    * Obtient les menaces actives
    */
-  public getActiveThreats(): CrashThreat?.[] {
-    return Array?.from(this?.activeThreats?.values());
+  public getActiveThreats(): CrashThreat[] {
+    return Array.from(this.activeThreats.values());
   }
 
   /**
    * Obtient l'historique de récupération
    */
-  public getRecoveryHistory(): RecoveryAction?.[] {
-    return [...this?.recoveryHistory];
+  public getRecoveryHistory(): RecoveryAction[] {
+    return [...this.recoveryHistory];
   }
 
   /**
    * Obtient les stats
    */
   public getStats(): CrashGuardStats {
-    this?.updateStats();
-    return { ...this?.stats };
+    this.updateStats();
+    return { ...this.stats };
   }
 
   /**
    * Réinitialise
    */
   public reset(): void {
-    this?.activeThreats?.clear();
-    this?.recoveryHistory = [];
-    this?.stats = this?.createInitialStats();
-    this?.startTime = Date?.now();
-    console?.log('[CrashGuard] ♻️ Reset complete');
+    this.activeThreats.clear();
+    this.recoveryHistory = [];
+    this.stats = this.createInitialStats();
+    this.startTime = Date.now();
+    console.log('[CrashGuard] ♻️ Reset complete');
   }
 }
 
-export const CrashGuard = CrashGuardEngine?.getInstance();
+export const CrashGuard = CrashGuardEngine.getInstance();

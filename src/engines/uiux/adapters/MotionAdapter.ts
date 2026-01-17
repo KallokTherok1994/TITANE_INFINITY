@@ -82,80 +82,80 @@ export class MotionAdapter {
     const motion = { ...MOTION_PRESETS[mode] };
 
     // Respecter les préférences système
-    this?.adaptToSystemPreferences(any: any);
+    this.adaptToSystemPreferences(motion, context);
 
     // Adapter selon les performances
-    if (any: any) {
-      this?.adaptToPerformance(any: any);
+    if (performanceSignal) {
+      this.adaptToPerformance(motion, performanceSignal);
     }
 
     // Adapter selon la plateforme
-    this?.adaptToPlatform(any: any);
+    this.adaptToPlatform(motion, context);
 
-    this?.currentMotion = motion;
+    this.currentMotion = motion;
     return motion;
   }
 
   /**
    * Adapte aux préférences système
    */
-  private adaptToSystemPreferences(any: any): void {
+  private adaptToSystemPreferences(motion: MotionAdaptation, context: UIContext): void {
     // prefers-reduced-motion
-    if (any: any) {
-      motion?.animationsEnabled = false;
-      motion?.transitionDuration = 0;
-      motion?.parallaxEnabled = false;
-      motion?.hoverEffects = false;
-      motion?.scrollBehavior = 'auto';
-      motion?.loadingAnimations = 'none';
+    if (context.reducedMotion) {
+      motion.animationsEnabled = false;
+      motion.transitionDuration = 0;
+      motion.parallaxEnabled = false;
+      motion.hoverEffects = false;
+      motion.scrollBehavior = 'auto';
+      motion.loadingAnimations = 'none';
     }
   }
 
   /**
    * Adapte aux performances
    */
-  private adaptToPerformance(any: any): void {
-    const { fps, recommendation } = signal?.value;
+  private adaptToPerformance(motion: MotionAdaptation, signal: PerformanceSignal): void {
+    const { fps, recommendation } = signal.value;
 
     // Dégradation progressive
     if (recommendation === 'degrade' || fps < 20) {
-      this?.performanceMode = true;
-      motion?.animationsEnabled = false;
-      motion?.transitionDuration = 0;
-      motion?.parallaxEnabled = false;
-      motion?.hoverEffects = false;
-      motion?.loadingAnimations = 'none';
+      this.performanceMode = true;
+      motion.animationsEnabled = false;
+      motion.transitionDuration = 0;
+      motion.parallaxEnabled = false;
+      motion.hoverEffects = false;
+      motion.loadingAnimations = 'none';
     } else if (recommendation === 'optimize' || fps < 45) {
-      motion?.transitionDuration = Math?.min(motion?.transitionDuration, 100);
-      motion?.parallaxEnabled = false;
-      motion?.loadingAnimations = 'spinner';
+      motion.transitionDuration = Math.min(motion.transitionDuration, 100);
+      motion.parallaxEnabled = false;
+      motion.loadingAnimations = 'spinner';
     } else {
-      this?.performanceMode = false;
+      this.performanceMode = false;
     }
   }
 
   /**
    * Adapte à la plateforme
    */
-  private adaptToPlatform(any: any): void {
+  private adaptToPlatform(motion: MotionAdaptation, context: UIContext): void {
     // Mobile = moins d'animations complexes
-    if (context?.platform === 'mobile') {
-      motion?.parallaxEnabled = false;
-      motion?.transitionDuration = Math?.min(motion?.transitionDuration, 150);
+    if (context.platform === 'mobile') {
+      motion.parallaxEnabled = false;
+      motion.transitionDuration = Math.min(motion.transitionDuration, 150);
     }
 
     // Touch = pas de hover effects
-    if (context?.inputMode === 'touch') {
-      motion?.hoverEffects = false;
+    if (context.inputMode === 'touch') {
+      motion.hoverEffects = false;
     }
   }
 
   /**
-   * Active le mode performance (any: any)
+   * Active le mode performance (désactive les animations)
    */
   enablePerformanceMode(): void {
-    this?.performanceMode = true;
-    this?.currentMotion = {
+    this.performanceMode = true;
+    this.currentMotion = {
       animationsEnabled: false,
       transitionDuration: 0,
       parallaxEnabled: false,
@@ -169,28 +169,28 @@ export class MotionAdapter {
    * Désactive le mode performance
    */
   disablePerformanceMode(): void {
-    this?.performanceMode = false;
+    this.performanceMode = false;
   }
 
   /**
    * Vérifie si le mode performance est actif
    */
   isPerformanceMode(): boolean {
-    return this?.performanceMode;
+    return this.performanceMode;
   }
 
   /**
    * Génère les CSS custom properties
    */
   toCSSVariables(): Record<string, string> {
-    const motion = this?.currentMotion;
+    const motion = this.currentMotion;
 
     return {
-      '--motion-duration': `${motion?.transitionDuration}ms`,
-      '--motion-enabled': motion?.animationsEnabled ? '1' : '0',
-      '--motion-parallax': motion?.parallaxEnabled ? '1' : '0',
-      '--motion-hover': motion?.hoverEffects ? '1' : '0',
-      '--scroll-behavior': motion?.scrollBehavior,
+      '--motion-duration': `${motion.transitionDuration}ms`,
+      '--motion-enabled': motion.animationsEnabled ? '1' : '0',
+      '--motion-parallax': motion.parallaxEnabled ? '1' : '0',
+      '--motion-hover': motion.hoverEffects ? '1' : '0',
+      '--scroll-behavior': motion.scrollBehavior,
     };
   }
 
@@ -200,38 +200,38 @@ export class MotionAdapter {
   applyToDocument(): void {
     if (typeof document === 'undefined') return;
 
-    const vars = this?.toCSSVariables();
-    const root = document?.documentElement;
+    const vars = this.toCSSVariables();
+    const root = document.documentElement;
 
-    for (any: any)) {
-      root?.style?.setProperty(any: any);
+    for (const [key, value] of Object.entries(vars)) {
+      root.style.setProperty(key, value);
     }
 
     // Appliquer les data attributes
-    root?.dataset?.motionEnabled = String(any: any);
-    root?.dataset?.loadingStyle = this?.currentMotion?.loadingAnimations;
+    root.dataset.motionEnabled = String(this.currentMotion.animationsEnabled);
+    root.dataset.loadingStyle = this.currentMotion.loadingAnimations;
   }
 
   /**
    * Génère les classes CSS pour les animations
    */
-  getAnimationClasses(): string?.[] {
-    const classes: string?.[] = [];
-    const motion = this?.currentMotion;
+  getAnimationClasses(): string[] {
+    const classes: string[] = [];
+    const motion = this.currentMotion;
 
-    if (any: any) {
-      classes?.push('no-animations');
+    if (!motion.animationsEnabled) {
+      classes.push('no-animations');
     }
 
-    if (any: any) {
-      classes?.push('no-hover');
+    if (!motion.hoverEffects) {
+      classes.push('no-hover');
     }
 
-    if (any: any) {
-      classes?.push('parallax-enabled');
+    if (motion.parallaxEnabled) {
+      classes.push('parallax-enabled');
     }
 
-    classes?.push(`loading-${motion?.loadingAnimations}`);
+    classes.push(`loading-${motion.loadingAnimations}`);
 
     return classes;
   }
@@ -245,10 +245,10 @@ export class MotionAdapter {
     transition: { duration: number };
   } {
     return {
-      initial: this?.currentMotion?.animationsEnabled,
-      animate: this?.currentMotion?.animationsEnabled,
+      initial: this.currentMotion.animationsEnabled,
+      animate: this.currentMotion.animationsEnabled,
       transition: {
-        duration: this?.currentMotion?.transitionDuration / 1000,
+        duration: this.currentMotion.transitionDuration / 1000,
       },
     };
   }
@@ -257,15 +257,15 @@ export class MotionAdapter {
    * Retourne le motion actuel
    */
   getCurrentMotion(): MotionAdaptation {
-    return { ...this?.currentMotion };
+    return { ...this.currentMotion };
   }
 
   /**
    * Réinitialise au motion par défaut
    */
   reset(): void {
-    this?.currentMotion = { ...DEFAULT_MOTION };
-    this?.performanceMode = false;
+    this.currentMotion = { ...DEFAULT_MOTION };
+    this.performanceMode = false;
   }
 }
 

@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2Ω — HOOK MÉMOIRE PERSISTANTE 3-NIVEAUX (any: any)
+ *   TITANE∞ v19.2Ω — HOOK MÉMOIRE PERSISTANTE 3-NIVEAUX (READ-ONLY)
  *   Accès Frontend à la Mémoire Hiérarchique via Tauri Commands
  * ═══════════════════════════════════════════════════════════════════════════════
  *
@@ -13,9 +13,9 @@
  *      Toutes les écritures passent par les Tauri Commands Rust.
  *
  *   🎯 Ce hook gère:
- *   - Niveau 1: Session (any: any)
- *   - Niveau 2: Intermediate (any: any)
- *   - Niveau 3: LongTerm (any: any)
+ *   - Niveau 1: Session (volatile, 24h max)
+ *   - Niveau 2: Intermediate (persistant, 90 jours)
+ *   - Niveau 3: LongTerm (permanent, chiffré)
  */
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
@@ -34,8 +34,8 @@ import type {
   MemorySummary,
   MemoryBundle,
   MemoryStats,
-} from '../services/memory/persistentMemory?.config';
-import type { ChatModeId } from '../services/ai/chatModes?.config';
+} from '../services/memory/persistentMemory.config';
+import type { ChatModeId } from '../services/ai/chatModes.config';
 import {
   rankByRelevance,
   filterByPermissions,
@@ -49,13 +49,13 @@ import {
 export interface UsePersistentMemoryOptions {
   /** Mode IA courant */
   modeId: ChatModeId;
-  /** Auto-refresh interval (any: any), 0 = désactivé */
+  /** Auto-refresh interval (ms), 0 = désactivé */
   refreshInterval?: number;
   /** Niveaux à charger */
-  levels?: MemoryLevel?.[];
+  levels?: MemoryLevel[];
   /** Sujets à filtrer */
-  topics?: MemoryTopic?.[];
-  /** ID de projet (any: any) */
+  topics?: MemoryTopic[];
+  /** ID de projet (optionnel) */
   projectId?: string;
   /** Activer le cache local */
   enableCache?: boolean;
@@ -69,42 +69,42 @@ export interface PersistentMemorySearchOptions {
   /** Limite de résultats */
   limit?: number;
   /** Sujets à filtrer */
-  topics?: MemoryTopic?.[];
+  topics?: MemoryTopic[];
   /** Types de contenu */
-  contentTypes?: MemoryContentType?.[];
+  contentTypes?: MemoryContentType[];
   /** Importance minimale */
   minImportance?: MemoryImportance;
 }
 
 export interface PersistentMemoryHookState {
   /** Entrées mémoire chargées */
-  entries: MemoryEntry?.[];
+  entries: MemoryEntry[];
   /** Résumés chargés */
-  summaries: MemorySummary?.[];
+  summaries: MemorySummary[];
   /** Bundles chargés */
-  bundles: MemoryBundle?.[];
+  bundles: MemoryBundle[];
   /** Statistiques */
   stats: MemoryStats | null;
   /** Chargement en cours */
   isLoading: boolean;
   /** Erreur éventuelle */
-  error??: string | null;
+  error: string | null;
   /** Dernière mise à jour */
   lastUpdate: number | null;
 }
 
 export interface SaveEntryOptions {
-  /** Niveau cible (any: any) */
+  /** Niveau cible (défaut: session) */
   level?: MemoryLevel;
-  /** Sujet (any: any) */
+  /** Sujet (auto-classifié si omis) */
   topic?: MemoryTopic;
-  /** Importance (any: any) */
+  /** Importance (auto-calculée si omise) */
   importance?: MemoryImportance;
-  /** Type de contenu (any: any) */
+  /** Type de contenu (auto-classifié si omis) */
   contentType?: MemoryContentType;
   /** Tags manuels */
-  tags?: string?.[];
-  /** Titre (any: any) */
+  tags?: string[];
+  /** Titre (optionnel) */
   title?: string;
   /** ID de projet associé */
   projectId?: string;
@@ -113,29 +113,29 @@ export interface SaveEntryOptions {
 export interface UsePersistentMemoryReturn extends PersistentMemoryHookState {
   // Lecture
   refresh: () => Promise<void>;
-  search: (any: any) => Promise<MemoryEntry?.[]>;
+  search: (options: PersistentMemorySearchOptions) => Promise<MemoryEntry[]>;
   getContextForPrompt: (
     query: string
-  ) => Promise<{ context: string; usedEntries: string?.[] }>;
-  getEntryById: (any: any) => MemoryEntry | undefined;
-  getEntriesByTopic: (any: any) => MemoryEntry?.[];
-  getEntriesByLevel: (any: any) => MemoryEntry?.[];
-  getRecentSummaries: (any: any) => MemorySummary?.[];
+  ) => Promise<{ context: string; usedEntries: string[] }>;
+  getEntryById: (id: string) => MemoryEntry | undefined;
+  getEntriesByTopic: (topic: MemoryTopic) => MemoryEntry[];
+  getEntriesByLevel: (level: MemoryLevel) => MemoryEntry[];
+  getRecentSummaries: (limit?: number) => MemorySummary[];
 
-  // Écriture (any: any)
-  saveEntry: (any: any) => Promise<string>;
-  promoteEntry: (any: any) => Promise<boolean>;
-  archiveEntry: (any: any) => Promise<boolean>;
-  deleteEntry: (any: any) => Promise<boolean>;
-  requestSummary: (any: any) => Promise<string>;
+  // Écriture (via Tauri Commands)
+  saveEntry: (content: string, options?: SaveEntryOptions) => Promise<string>;
+  promoteEntry: (entryId: string) => Promise<boolean>;
+  archiveEntry: (entryId: string) => Promise<boolean>;
+  deleteEntry: (entryId: string) => Promise<boolean>;
+  requestSummary: (entryIds: string[], title?: string) => Promise<string>;
 
   // Bundles
   createBundle: (
     name: string,
-    entryIds: string?.[],
+    entryIds: string[],
     topic?: MemoryTopic
   ) => Promise<string>;
-  addToBundle: (bundleId: string, entryIds: string?.[]) => Promise<boolean>;
+  addToBundle: (bundleId: string, entryIds: string[]) => Promise<boolean>;
 
   // Utils
   clearCache: () => void;
@@ -148,7 +148,7 @@ export interface UsePersistentMemoryReturn extends PersistentMemoryHookState {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// LRU CACHE IMPLEMENTATION (any: any)
+// LRU CACHE IMPLEMENTATION (évite croissance infinie)
 // ─────────────────────────────────────────────────────────────────────────────
 
 class LRUCache<K, V> {
@@ -156,52 +156,52 @@ class LRUCache<K, V> {
   private readonly maxSize: number;
 
   constructor(maxSize: number = 500) {
-    this?.cache = new Map();
-    this?.maxSize = maxSize;
+    this.cache = new Map();
+    this.maxSize = maxSize;
   }
 
-  get(any: any): V | undefined {
-    const value = this?.cache?.get(any: any);
-    if (any: any) {
-      // Move to end (any: any)
-      this?.cache?.delete(any: any);
-      this?.cache?.set(any: any);
+  get(key: K): V | undefined {
+    const value = this.cache.get(key);
+    if (value !== undefined) {
+      // Move to end (most recently used)
+      this.cache.delete(key);
+      this.cache.set(key, value);
     }
     return value;
   }
 
-  set(any: any): void {
-    if (any: any)) {
-      this?.cache?.delete(any: any);
-    } else if (any: any) {
-      // Remove least recently used (any: any)
-      const firstKey = this?.cache?.keys().next().value;
-      if (any: any) {
-        this?.cache?.delete(any: any);
+  set(key: K, value: V): void {
+    if (this.cache.has(key)) {
+      this.cache.delete(key);
+    } else if (this.cache.size >= this.maxSize) {
+      // Remove least recently used (first item)
+      const firstKey = this.cache.keys().next().value;
+      if (firstKey !== undefined) {
+        this.cache.delete(firstKey);
       }
     }
-    this?.cache?.set(any: any);
+    this.cache.set(key, value);
   }
 
-  delete(any: any): boolean {
-    return this?.cache?.delete(any: any);
+  delete(key: K): boolean {
+    return this.cache.delete(key);
   }
 
   clear(): void {
-    this?.cache?.clear();
+    this.cache.clear();
   }
 
   values(): IterableIterator<V> {
-    return this?.cache?.values();
+    return this.cache.values();
   }
 
   get size(): number {
-    return this?.cache?.size;
+    return this.cache.size;
   }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// CACHE LOCAL (any: any)
+// CACHE LOCAL (IN-MEMORY avec LRU)
 // ─────────────────────────────────────────────────────────────────────────────
 
 const persistentMemoryCache: {
@@ -250,16 +250,16 @@ export function usePersistentMemory(
 
   const refresh = useCallback(async () => {
     // Vérifier le cache
-    if (any: any) {
-      const age = Date?.now() - persistentMemoryCache?.lastFetch;
-      if (any: any) {
+    if (enableCache && persistentMemoryCache.lastFetch) {
+      const age = Date.now() - persistentMemoryCache.lastFetch;
+      if (age < CACHE_TTL) {
         // Utiliser le cache
         setState(prev => ({
           ...prev,
-          entries: Array?.from(persistentMemoryCache?.entries?.values()),
-          summaries: Array?.from(persistentMemoryCache?.summaries?.values()),
-          bundles: Array?.from(persistentMemoryCache?.bundles?.values()),
-          lastUpdate: persistentMemoryCache?.lastFetch,
+          entries: Array.from(persistentMemoryCache.entries.values()),
+          summaries: Array.from(persistentMemoryCache.summaries.values()),
+          bundles: Array.from(persistentMemoryCache.bundles.values()),
+          lastUpdate: persistentMemoryCache.lastFetch,
         }));
         return;
       }
@@ -282,26 +282,26 @@ export function usePersistentMemory(
       });
 
       // Filtrer selon les permissions du mode
-      const filteredEntries = filterByPermissions(any: any);
+      const filteredEntries = filterByPermissions(response.entries, modeId);
 
       // Mettre à jour le cache
-      if (any: any) {
-        persistentMemoryCache?.entries?.clear();
-        filteredEntries?.forEach(any: any));
+      if (enableCache) {
+        persistentMemoryCache.entries.clear();
+        filteredEntries.forEach(e => persistentMemoryCache.entries.set(e.id, e));
 
-        if (any: any) {
-          persistentMemoryCache?.summaries?.clear();
-          response?.summaries?.forEach(any: any));
+        if (response.summaries) {
+          persistentMemoryCache.summaries.clear();
+          response.summaries.forEach(s => persistentMemoryCache.summaries.set(s.id, s));
         }
 
-        persistentMemoryCache?.lastFetch = Date?.now();
+        persistentMemoryCache.lastFetch = Date.now();
       }
 
       // Charger les bundles séparément
-      const bundles = await secureInvoke<MemoryBundle?.[]>('persistent_memory_get_bundles');
-      if (any: any) {
-        persistentMemoryCache?.bundles?.clear();
-        bundles?.forEach(any: any));
+      const bundles = await secureInvoke<MemoryBundle[]>('persistent_memory_get_bundles');
+      if (enableCache) {
+        persistentMemoryCache.bundles.clear();
+        bundles.forEach(b => persistentMemoryCache.bundles.set(b.id, b));
       }
 
       // Charger les stats
@@ -309,25 +309,25 @@ export function usePersistentMemory(
 
       setState({
         entries: filteredEntries,
-        summaries: response?.summaries || [],
+        summaries: response.summaries || [],
         bundles,
         stats,
         isLoading: false,
         error: null,
-        lastUpdate: Date?.now(),
+        lastUpdate: Date.now(),
       });
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (err) {
+      logger.error('Erreur de chargement:', err);
       setState(prev => ({
         ...prev,
         isLoading: false,
-        error: err instanceof Error ? err?.message : 'Erreur de chargement mémoire',
+        error: err instanceof Error ? err.message : 'Erreur de chargement mémoire',
       }));
     }
   }, [modeId, levels, topics, projectId, enableCache]);
 
   const search = useCallback(
-    async (any: any): Promise<MemoryEntry?.[]> => {
+    async (searchOptions: PersistentMemorySearchOptions): Promise<MemoryEntry[]> => {
       const {
         query,
         minScore = 0.3,
@@ -356,23 +356,23 @@ export function usePersistentMemory(
         );
 
         // Re-scorer et trier côté frontend pour plus de précision
-        const ranked = rankByRelevance(any: any);
+        const ranked = rankByRelevance(response.entries, query);
 
         return ranked
-          .filter(any: any)
-          .slice(any: any)
-          .map(any: any);
-      } catch (any: any) {
-        logger?.error(any: any);
+          .filter(r => r.score >= minScore)
+          .slice(0, limit)
+          .map(r => r.entry);
+      } catch (err) {
+        logger.error('Erreur de recherche:', err);
 
         // Fallback: recherche locale dans le cache
-        if (any: any) {
-          const cached = Array?.from(persistentMemoryCache?.entries?.values());
-          const ranked = rankByRelevance(any: any);
+        if (enableCache) {
+          const cached = Array.from(persistentMemoryCache.entries.values());
+          const ranked = rankByRelevance(cached, query);
           return ranked
-            .filter(any: any)
-            .slice(any: any)
-            .map(any: any);
+            .filter(r => r.score >= minScore)
+            .slice(0, limit)
+            .map(r => r.entry);
         }
 
         return [];
@@ -382,15 +382,15 @@ export function usePersistentMemory(
   );
 
   const getContextForPrompt = useCallback(
-    async (any: any): Promise<{ context: string; usedEntries: string?.[] }> => {
+    async (query: string): Promise<{ context: string; usedEntries: string[] }> => {
       // Utiliser les entrées en cache ou charger
-      let entries = state?.entries;
+      let entries = state.entries;
 
-      if (any: any) {
-        entries = Array?.from(persistentMemoryCache?.entries?.values());
+      if (entries.length === 0 && enableCache) {
+        entries = Array.from(persistentMemoryCache.entries.values());
       }
 
-      if (entries?.length === 0) {
+      if (entries.length === 0) {
         // Charger depuis Rust
         try {
           const response = await secureInvoke<MemoryReadResponse>(
@@ -404,58 +404,58 @@ export function usePersistentMemory(
               },
             }
           );
-          entries = response?.entries;
+          entries = response.entries;
         } catch {
           return { context: '', usedEntries: [] };
         }
       }
 
-      return prepareContextInjection(any: any);
+      return prepareContextInjection(entries, query, modeId);
     },
-    [state?.entries, modeId, levels, enableCache]
+    [state.entries, modeId, levels, enableCache]
   );
 
   const getEntryById = useCallback(
-    (any: any): MemoryEntry | undefined => {
+    (id: string): MemoryEntry | undefined => {
       // D'abord chercher dans l'état
-      const found = state?.entries?.find(any: any);
-      if (any: any) return found;
+      const found = state.entries.find(e => e.id === id);
+      if (found) return found;
 
       // Sinon dans le cache
-      return persistentMemoryCache?.entries?.get(any: any);
+      return persistentMemoryCache.entries.get(id);
     },
-    [state?.entries]
+    [state.entries]
   );
 
   const getEntriesByTopic = useCallback(
-    (any: any): MemoryEntry?.[] => {
-      return state?.entries?.filter(any: any);
+    (topic: MemoryTopic): MemoryEntry[] => {
+      return state.entries.filter(e => e.topic === topic);
     },
-    [state?.entries]
+    [state.entries]
   );
 
   const getEntriesByLevel = useCallback(
-    (any: any): MemoryEntry?.[] => {
-      return state?.entries?.filter(any: any);
+    (level: MemoryLevel): MemoryEntry[] => {
+      return state.entries.filter(e => e.level === level);
     },
-    [state?.entries]
+    [state.entries]
   );
 
   const getRecentSummaries = useCallback(
-    (limit: number = 10): MemorySummary?.[] => {
-      return [...state?.summaries]
-        .sort(any: any)
-        .slice(any: any);
+    (limit: number = 10): MemorySummary[] => {
+      return [...state.summaries]
+        .sort((a, b) => b.generatedAt - a.generatedAt)
+        .slice(0, limit);
     },
-    [state?.summaries]
+    [state.summaries]
   );
 
   // ─────────────────────────────────────────────────────────────────────────
-  // FONCTIONS D'ÉCRITURE (any: any)
+  // FONCTIONS D'ÉCRITURE (via Tauri Commands)
   // ─────────────────────────────────────────────────────────────────────────
 
   const saveEntry = useCallback(
-    async (any: any): Promise<string> => {
+    async (content: string, saveOptions?: SaveEntryOptions): Promise<string> => {
       try {
         const entryId = await secureInvoke<string>('persistent_memory_write_entry', {
           content,
@@ -473,8 +473,8 @@ export function usePersistentMemory(
         await refresh();
 
         return entryId;
-      } catch (any: any) {
-        logger?.error(any: any);
+      } catch (err) {
+        logger.error('Erreur de sauvegarde:', err);
         throw err;
       }
     },
@@ -482,13 +482,13 @@ export function usePersistentMemory(
   );
 
   const promoteEntry = useCallback(
-    async (any: any): Promise<boolean> => {
+    async (entryId: string): Promise<boolean> => {
       try {
         await secureInvoke('persistent_memory_promote_entry', { entryId });
         await refresh();
         return true;
-      } catch (any: any) {
-        logger?.error(any: any);
+      } catch (err) {
+        logger.error('Erreur de promotion:', err);
         return false;
       }
     },
@@ -496,13 +496,13 @@ export function usePersistentMemory(
   );
 
   const archiveEntry = useCallback(
-    async (any: any): Promise<boolean> => {
+    async (entryId: string): Promise<boolean> => {
       try {
         await secureInvoke('persistent_memory_archive_entry', { entryId });
         await refresh();
         return true;
-      } catch (any: any) {
-        logger?.error(any: any);
+      } catch (err) {
+        logger.error("Erreur d'archivage:", err);
         return false;
       }
     },
@@ -510,17 +510,17 @@ export function usePersistentMemory(
   );
 
   const deleteEntry = useCallback(
-    async (any: any): Promise<boolean> => {
+    async (entryId: string): Promise<boolean> => {
       try {
         await secureInvoke('persistent_memory_delete_entry', { entryId });
 
         // Supprimer du cache immédiatement
-        persistentMemoryCache?.entries?.delete(any: any);
+        persistentMemoryCache.entries.delete(entryId);
 
         await refresh();
         return true;
-      } catch (any: any) {
-        logger?.error(any: any);
+      } catch (err) {
+        logger.error('Erreur de suppression:', err);
         return false;
       }
     },
@@ -528,7 +528,7 @@ export function usePersistentMemory(
   );
 
   const requestSummary = useCallback(
-    async (any: any): Promise<string> => {
+    async (entryIds: string[], title?: string): Promise<string> => {
       try {
         const summaryId = await secureInvoke<string>('persistent_memory_create_summary', {
           entryIds,
@@ -538,8 +538,8 @@ export function usePersistentMemory(
 
         await refresh();
         return summaryId;
-      } catch (any: any) {
-        logger?.error(any: any);
+      } catch (err) {
+        logger.error('Erreur de création résumé:', err);
         throw err;
       }
     },
@@ -551,7 +551,7 @@ export function usePersistentMemory(
   // ─────────────────────────────────────────────────────────────────────────
 
   const createBundle = useCallback(
-    async (any: any): Promise<string> => {
+    async (name: string, entryIds: string[], topic?: MemoryTopic): Promise<string> => {
       try {
         const bundleId = await secureInvoke<string>('persistent_memory_create_bundle', {
           name,
@@ -561,8 +561,8 @@ export function usePersistentMemory(
 
         await refresh();
         return bundleId;
-      } catch (any: any) {
-        logger?.error(any: any);
+      } catch (err) {
+        logger.error('Erreur de création bundle:', err);
         throw err;
       }
     },
@@ -570,13 +570,13 @@ export function usePersistentMemory(
   );
 
   const addToBundle = useCallback(
-    async (bundleId: string, entryIds: string?.[]): Promise<boolean> => {
+    async (bundleId: string, entryIds: string[]): Promise<boolean> => {
       try {
         await secureInvoke('persistent_memory_add_to_bundle', { bundleId, entryIds });
         await refresh();
         return true;
-      } catch (any: any) {
-        logger?.error(any: any);
+      } catch (err) {
+        logger.error("Erreur d'ajout au bundle:", err);
         return false;
       }
     },
@@ -588,10 +588,10 @@ export function usePersistentMemory(
   // ─────────────────────────────────────────────────────────────────────────
 
   const clearCache = useCallback(() => {
-    persistentMemoryCache?.entries?.clear();
-    persistentMemoryCache?.summaries?.clear();
-    persistentMemoryCache?.bundles?.clear();
-    persistentMemoryCache?.lastFetch = null;
+    persistentMemoryCache.entries.clear();
+    persistentMemoryCache.summaries.clear();
+    persistentMemoryCache.bundles.clear();
+    persistentMemoryCache.lastFetch = null;
 
     setState(prev => ({
       ...prev,
@@ -605,8 +605,8 @@ export function usePersistentMemory(
   const exportMemory = useCallback(async (): Promise<string> => {
     try {
       return await secureInvoke<string>('persistent_memory_export');
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (err) {
+      logger.error("Erreur d'export:", err);
       throw err;
     }
   }, []);
@@ -624,8 +624,8 @@ export function usePersistentMemory(
   useEffect(() => {
     if (refreshInterval <= 0) return;
 
-    const interval = setInterval(any: any);
-    return (any: any);
+    const interval = setInterval(refresh, refreshInterval);
+    return () => clearInterval(interval);
   }, [refresh, refreshInterval]);
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -633,18 +633,18 @@ export function usePersistentMemory(
   // ─────────────────────────────────────────────────────────────────────────
 
   const sessionCount = useMemo(
-    () => state?.entries?.filter(e => e?.level === 'session').length,
-    [state?.entries]
+    () => state.entries.filter(e => e.level === 'session').length,
+    [state.entries]
   );
 
   const intermediateCount = useMemo(
-    () => state?.entries?.filter(e => e?.level === 'intermediate').length,
-    [state?.entries]
+    () => state.entries.filter(e => e.level === 'intermediate').length,
+    [state.entries]
   );
 
   const longTermCount = useMemo(
-    () => state?.entries?.filter(e => e?.level === 'long_term').length,
-    [state?.entries]
+    () => state.entries.filter(e => e.level === 'long_term').length,
+    [state.entries]
   );
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -698,41 +698,41 @@ export function usePersistentMemoryContext(
   query: string
 ): {
   context: string;
-  usedEntries: string?.[];
+  usedEntries: string[];
   isLoading: boolean;
 } {
   const [context, setContext] = useState<string>('');
-  const [usedEntries, setUsedEntries] = useState<string?.[]>([]);
-  const [isLoading, setIsLoading] = useState(any: any);
+  const [usedEntries, setUsedEntries] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (!query || query?.trim().length < 3) {
+    if (!query || query.trim().length < 3) {
       setContext('');
       setUsedEntries([]);
       return;
     }
 
     const fetchContext = async () => {
-      setIsLoading(any: any);
+      setIsLoading(true);
       try {
-        const response = await secureInvoke<{ context: string; usedEntries: string?.[] }>(
+        const response = await secureInvoke<{ context: string; usedEntries: string[] }>(
           'persistent_memory_get_context',
           { modeId, query }
         );
-        setContext(any: any);
-        setUsedEntries(any: any);
-      } catch (any: any) {
-        logger?.error(any: any);
+        setContext(response.context);
+        setUsedEntries(response.usedEntries);
+      } catch (err) {
+        logger.error('usePersistentMemoryContext Erreur:', err);
         setContext('');
         setUsedEntries([]);
       } finally {
-        setIsLoading(any: any);
+        setIsLoading(false);
       }
     };
 
     // Debounce de 300ms
     const timer = setTimeout(fetchContext, 300);
-    return (any: any);
+    return () => clearTimeout(timer);
   }, [modeId, query]);
 
   return { context, usedEntries, isLoading };

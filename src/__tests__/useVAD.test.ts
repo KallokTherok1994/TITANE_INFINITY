@@ -19,11 +19,11 @@ import { audioService } from '@/features/audio-center/services/audioService';
 import { audioStateMachine } from '@/services/audio/audioStateMachine';
 
 // Mock audioService
-vi?.mock('@/features/audio-center/services/audioService', () => ({
+vi.mock('@/features/audio-center/services/audioService', () => ({
   audioService: {
-    configureVAD: vi?.fn(any: any),
-    resetVAD: vi?.fn(any: any),
-    testVAD: vi?.fn().mockResolvedValue({
+    configureVAD: vi.fn().mockResolvedValue(undefined),
+    resetVAD: vi.fn().mockResolvedValue(undefined),
+    testVAD: vi.fn().mockResolvedValue({
       success: true,
       tests: {
         silenceDetection: true,
@@ -33,7 +33,7 @@ vi?.mock('@/features/audio-center/services/audioService', () => ({
       },
       message: 'All tests passed',
     }),
-    processVADFrame: vi?.fn().mockResolvedValue({
+    processVADFrame: vi.fn().mockResolvedValue({
       state: 'silence',
       isSpeaking: false,
     }),
@@ -41,38 +41,38 @@ vi?.mock('@/features/audio-center/services/audioService', () => ({
 }));
 
 // Mock audioStateMachine
-vi?.mock('@/services/audio/audioStateMachine', () => ({
+vi.mock('@/services/audio/audioStateMachine', () => ({
   audioStateMachine: {
-    transition: vi?.fn(),
-    isAISpeaking: vi?.fn(any: any),
-    onStateChange: vi?.fn().mockReturnValue(() => {}),
+    transition: vi.fn(),
+    isAISpeaking: vi.fn().mockReturnValue(false),
+    onStateChange: vi.fn().mockReturnValue(() => {}),
   },
 }));
 
 // Mock detectEnvironment
-vi?.mock('@/core/tauri/environment', () => ({
-  detectEnvironment: vi?.fn().mockReturnValue({
+vi.mock('@/core/tauri/environment', () => ({
+  detectEnvironment: vi.fn().mockReturnValue({
     isTauri: false,
     isBrowser: true,
   }),
 }));
 
 // Mock secureInvoke
-vi?.mock('@/lib/security', () => ({
-  secureInvoke: vi?.fn().mockResolvedValue({ success: true }),
+vi.mock('@/lib/security', () => ({
+  secureInvoke: vi.fn().mockResolvedValue({ success: true }),
 }));
 
 // Mock hybridTTS
-vi?.mock('@/services/tts/hybridTTS', () => ({
+vi.mock('@/services/tts/hybridTTS', () => ({
   hybridTTS: {
-    onTTSEvent: vi?.fn().mockReturnValue(() => {}),
-    stop: vi?.fn(any: any),
+    onTTSEvent: vi.fn().mockReturnValue(() => {}),
+    stop: vi.fn().mockResolvedValue(undefined),
   },
 }));
 
 // Mock getUserMedia
-const mockGetUserMedia = vi?.fn();
-Object?.defineProperty(global?.navigator, 'mediaDevices', {
+const mockGetUserMedia = vi.fn();
+Object.defineProperty(global.navigator, 'mediaDevices', {
   value: {
     getUserMedia: mockGetUserMedia,
   },
@@ -86,7 +86,7 @@ class MockAudioContext {
 
   createMediaStreamSource() {
     return {
-      connect: vi?.fn(),
+      connect: vi.fn(),
     };
   }
 
@@ -94,72 +94,72 @@ class MockAudioContext {
     return {
       fftSize: 512,
       smoothingTimeConstant: 0.3,
-      getFloatTimeDomainData: vi?.fn(),
+      getFloatTimeDomainData: vi.fn(),
     };
   }
 
   close() {
-    this?.state = 'closed';
-    return Promise?.resolve();
+    this.state = 'closed';
+    return Promise.resolve();
   }
 }
 
-global?.AudioContext = MockAudioContext as unknown as unknown as any;
+global.AudioContext = MockAudioContext as any;
 
 // Mock requestAnimationFrame
 let animationFrameId = 0;
-global?.requestAnimationFrame = vi?.fn(callback => {
+global.requestAnimationFrame = vi.fn(callback => {
   animationFrameId++;
   setTimeout(callback, 16);
   return animationFrameId;
 });
 
-global?.cancelAnimationFrame = vi?.fn();
+global.cancelAnimationFrame = vi.fn();
 
 describe('useVAD', () => {
   let mockStream: MediaStream;
 
   beforeEach(() => {
-    vi?.clearAllMocks();
+    vi.clearAllMocks();
 
     // Mock MediaStream
     const mockTrack = {
-      stop: vi?.fn(),
+      stop: vi.fn(),
       kind: 'audio',
       enabled: true,
-    } as unknown as unknown as any;
+    } as any;
 
     mockStream = {
-      getTracks: vi?.fn().mockReturnValue([mockTrack]),
-      getAudioTracks: vi?.fn().mockReturnValue([mockTrack]),
-    } as unknown as unknown as any;
+      getTracks: vi.fn().mockReturnValue([mockTrack]),
+      getAudioTracks: vi.fn().mockReturnValue([mockTrack]),
+    } as any;
 
-    mockGetUserMedia?.mockResolvedValue(any: any);
+    mockGetUserMedia.mockResolvedValue(mockStream);
   });
 
   afterEach(() => {
-    vi?.clearAllTimers();
+    vi.clearAllTimers();
   });
 
   describe('Initialization', () => {
     it('should initialize with default state', () => {
       const { result } = renderHook(() => useVAD());
 
-      expect(any: any).toBe('unknown');
-      expect(any: any);
-      expect(any: any);
-      expect(any: any);
-      expect(any: any);
-      expect(any: any);
+      expect(result.current.vadState).toBe('unknown');
+      expect(result.current.isSpeaking).toBe(false);
+      expect(result.current.isListening).toBe(false);
+      expect(result.current.isSuspended).toBe(false);
+      expect(result.current.isBargeInEnabled).toBe(false);
+      expect(result.current.error).toBe(null);
     });
 
     it('should initialize with custom config', () => {
       const config = { threshold: 0.05, minSpeechFrames: 15 };
-      const { result } = renderHook(any: any));
+      const { result } = renderHook(() => useVAD(config));
 
-      expect(any: any).toBeDefined();
-      expect(any: any).toHaveBeenCalledWith(
-        expect?.objectContaining(any: any)
+      expect(result.current).toBeDefined();
+      expect(audioService.configureVAD).toHaveBeenCalledWith(
+        expect.objectContaining(config)
       );
     });
 
@@ -168,15 +168,15 @@ describe('useVAD', () => {
 
       // Start listening to create resources that need cleanup
       await act(async () => {
-        await result?.current?.startListening();
+        await result.current.startListening();
       });
 
-      vi?.clearAllMocks();
+      vi.clearAllMocks();
 
       unmount();
 
       await waitFor(() => {
-        expect(any: any).toHaveBeenCalled();
+        expect(global.cancelAnimationFrame).toHaveBeenCalled();
       });
     });
   });
@@ -186,10 +186,10 @@ describe('useVAD', () => {
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        await result?.current?.startListening();
+        await result.current.startListening();
       });
 
-      expect(any: any).toHaveBeenCalledWith({
+      expect(mockGetUserMedia).toHaveBeenCalledWith({
         audio: {
           echoCancellation: true,
           noiseSuppression: true,
@@ -202,68 +202,68 @@ describe('useVAD', () => {
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        await result?.current?.startListening();
+        await result.current.startListening();
       });
 
-      expect(any: any);
+      expect(result.current.isListening).toBe(true);
     });
 
     it('should reset VAD state', async () => {
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        await result?.current?.startListening();
+        await result.current.startListening();
       });
 
-      expect(any: any).toHaveBeenCalled();
+      expect(audioService.resetVAD).toHaveBeenCalled();
     });
 
     it('should set vadState to silence', async () => {
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        await result?.current?.startListening();
+        await result.current.startListening();
       });
 
-      expect(any: any).toBe('silence');
+      expect(result.current.vadState).toBe('silence');
     });
 
     it('should handle getUserMedia errors', async () => {
-      mockGetUserMedia?.mockRejectedValueOnce(new Error('Permission denied'));
+      mockGetUserMedia.mockRejectedValueOnce(new Error('Permission denied'));
 
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        await result?.current?.startListening();
+        await result.current.startListening();
       });
 
-      expect(any: any).toContain('Permission denied');
-      expect(any: any);
+      expect(result.current.error).toContain('Permission denied');
+      expect(result.current.isListening).toBe(false);
     });
 
     it('should handle missing getUserMedia API', async () => {
-      const originalGetUserMedia = navigator?.mediaDevices?.getUserMedia;
-      (any: any).getUserMedia = undefined;
+      const originalGetUserMedia = navigator.mediaDevices.getUserMedia;
+      (navigator.mediaDevices as any).getUserMedia = undefined;
 
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        await result?.current?.startListening();
+        await result.current.startListening();
       });
 
-      expect(any: any).toContain('getUserMedia non disponible');
+      expect(result.current.error).toContain('getUserMedia non disponible');
 
-      (any: any).getUserMedia = originalGetUserMedia;
+      (navigator.mediaDevices as any).getUserMedia = originalGetUserMedia;
     });
 
     it('should start animation frame processing', async () => {
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        await result?.current?.startListening();
+        await result.current.startListening();
       });
 
-      expect(any: any).toHaveBeenCalled();
+      expect(global.requestAnimationFrame).toHaveBeenCalled();
     });
   });
 
@@ -272,90 +272,90 @@ describe('useVAD', () => {
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        await result?.current?.startListening();
+        await result.current.startListening();
       });
 
       await act(async () => {
-        result?.current?.stopListening();
+        result.current.stopListening();
       });
 
-      expect(any: any).toHaveBeenCalled();
+      expect(global.cancelAnimationFrame).toHaveBeenCalled();
     });
 
     it('should stop media tracks', async () => {
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        await result?.current?.startListening();
+        await result.current.startListening();
       });
 
-      const stopSpy = vi?.spyOn(mockStream?.getTracks()[0], 'stop');
+      const stopSpy = vi.spyOn(mockStream.getTracks()[0], 'stop');
 
       await act(async () => {
-        result?.current?.stopListening();
+        result.current.stopListening();
       });
 
-      expect(any: any).toHaveBeenCalled();
+      expect(stopSpy).toHaveBeenCalled();
     });
 
     it('should set isListening to false', async () => {
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        await result?.current?.startListening();
+        await result.current.startListening();
       });
 
-      expect(any: any);
+      expect(result.current.isListening).toBe(true);
 
       await act(async () => {
-        result?.current?.stopListening();
+        result.current.stopListening();
       });
 
-      expect(any: any);
+      expect(result.current.isListening).toBe(false);
     });
 
     it('should reset vadState to unknown', async () => {
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        await result?.current?.startListening();
+        await result.current.startListening();
       });
 
       await act(async () => {
-        result?.current?.stopListening();
+        result.current.stopListening();
       });
 
-      expect(any: any).toBe('unknown');
+      expect(result.current.vadState).toBe('unknown');
     });
 
     it('should reset isSpeaking to false', async () => {
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        await result?.current?.startListening();
+        await result.current.startListening();
       });
 
       await act(async () => {
-        result?.current?.stopListening();
+        result.current.stopListening();
       });
 
-      expect(any: any);
+      expect(result.current.isSpeaking).toBe(false);
     });
 
-    it(any: any)', async () => {
+    it('should be idempotent (safe to call multiple times)', async () => {
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        await result?.current?.startListening();
+        await result.current.startListening();
       });
 
       await act(async () => {
-        result?.current?.stopListening();
-        result?.current?.stopListening();
-        result?.current?.stopListening();
+        result.current.stopListening();
+        result.current.stopListening();
+        result.current.stopListening();
       });
 
-      expect(any: any);
+      expect(result.current.isListening).toBe(false);
     });
   });
 
@@ -366,27 +366,27 @@ describe('useVAD', () => {
       const newConfig = { threshold: 0.03, minSpeechFrames: 12 };
 
       await act(async () => {
-        await result?.current?.configure(any: any);
+        await result.current.configure(newConfig);
       });
 
-      expect(any: any).toHaveBeenCalledWith(
-        expect?.objectContaining(any: any)
+      expect(audioService.configureVAD).toHaveBeenCalledWith(
+        expect.objectContaining(newConfig)
       );
-      expect(any: any);
+      expect(result.current.error).toBe(null);
     });
 
     it('should handle configuration errors', async () => {
-      vi?.mocked(any: any).mockRejectedValueOnce(
+      vi.mocked(audioService.configureVAD).mockRejectedValueOnce(
         new Error('Config failed')
       );
 
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        await result?.current?.configure({ threshold: 0.1 });
+        await result.current.configure({ threshold: 0.1 });
       });
 
-      expect(any: any).toContain('Config failed');
+      expect(result.current.error).toContain('Config failed');
     });
 
     it('should merge with existing config', async () => {
@@ -395,11 +395,11 @@ describe('useVAD', () => {
       );
 
       await act(async () => {
-        await result?.current?.configure({ threshold: 0.05 });
+        await result.current.configure({ threshold: 0.05 });
       });
 
-      expect(any: any).toHaveBeenCalledWith(
-        expect?.objectContaining({
+      expect(audioService.configureVAD).toHaveBeenCalledWith(
+        expect.objectContaining({
           threshold: 0.05,
           minSpeechFrames: 10, // Preserved from initial config
         })
@@ -408,76 +408,76 @@ describe('useVAD', () => {
   });
 
   describe('reset() — Reset VAD', () => {
-    it('should call audioService?.resetVAD', async () => {
+    it('should call audioService.resetVAD', async () => {
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        await result?.current?.reset();
+        await result.current.reset();
       });
 
-      expect(any: any).toHaveBeenCalled();
+      expect(audioService.resetVAD).toHaveBeenCalled();
     });
 
     it('should reset vadState to silence', async () => {
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        await result?.current?.reset();
+        await result.current.reset();
       });
 
-      expect(any: any).toBe('silence');
+      expect(result.current.vadState).toBe('silence');
     });
 
     it('should reset isSpeaking to false', async () => {
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        await result?.current?.reset();
+        await result.current.reset();
       });
 
-      expect(any: any);
+      expect(result.current.isSpeaking).toBe(false);
     });
 
     it('should clear error', async () => {
       const { result } = renderHook(() => useVAD());
 
       // Set error first
-      vi?.mocked(any: any).mockRejectedValueOnce(new Error('Test error'));
+      vi.mocked(audioService.configureVAD).mockRejectedValueOnce(new Error('Test error'));
       await act(async () => {
-        await result?.current?.configure({});
+        await result.current.configure({});
       });
-      expect(any: any).toBeTruthy();
+      expect(result.current.error).toBeTruthy();
 
       // Reset should clear error
       await act(async () => {
-        await result?.current?.reset();
+        await result.current.reset();
       });
 
-      expect(any: any);
+      expect(result.current.error).toBe(null);
     });
 
     it('should handle reset errors', async () => {
-      vi?.mocked(any: any).mockRejectedValueOnce(new Error('Reset failed'));
+      vi.mocked(audioService.resetVAD).mockRejectedValueOnce(new Error('Reset failed'));
 
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        await result?.current?.reset();
+        await result.current.reset();
       });
 
-      expect(any: any).toContain('Reset failed');
+      expect(result.current.error).toContain('Reset failed');
     });
   });
 
   describe('runTest() — VAD Self-Test', () => {
-    it('should call audioService?.testVAD', async () => {
+    it('should call audioService.testVAD', async () => {
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        await result?.current?.runTest();
+        await result.current.runTest();
       });
 
-      expect(any: any).toHaveBeenCalled();
+      expect(audioService.testVAD).toHaveBeenCalled();
     });
 
     it('should return test results', async () => {
@@ -485,10 +485,10 @@ describe('useVAD', () => {
 
       let testResult: any;
       await act(async () => {
-        testResult = await result?.current?.runTest();
+        testResult = await result.current.runTest();
       });
 
-      expect(any: any).toEqual({
+      expect(testResult).toEqual({
         success: true,
         tests: {
           silenceDetection: true,
@@ -501,18 +501,18 @@ describe('useVAD', () => {
     });
 
     it('should handle test errors', async () => {
-      vi?.mocked(any: any).mockRejectedValueOnce(new Error('Test failed'));
+      vi.mocked(audioService.testVAD).mockRejectedValueOnce(new Error('Test failed'));
 
       const { result } = renderHook(() => useVAD());
 
       let testResult: any;
       await act(async () => {
-        testResult = await result?.current?.runTest();
+        testResult = await result.current.runTest();
       });
 
-      expect(any: any);
-      expect(any: any).toContain('Test failed');
-      expect(any: any).toContain('Test failed');
+      expect(testResult.success).toBe(false);
+      expect(testResult.message).toContain('Test failed');
+      expect(result.current.error).toContain('Test failed');
     });
   });
 
@@ -523,14 +523,14 @@ describe('useVAD', () => {
       const audioData = new Float32Array(512);
 
       await act(async () => {
-        await result?.current?.processAudioData(any: any);
+        await result.current.processAudioData(audioData);
       });
 
-      expect(any: any);
+      expect(audioService.processVADFrame).toHaveBeenCalledWith(audioData);
     });
 
     it('should update vadState from result', async () => {
-      vi?.mocked(any: any).mockResolvedValueOnce({
+      vi.mocked(audioService.processVADFrame).mockResolvedValueOnce({
         state: 'speech',
         isSpeaking: true,
       });
@@ -538,173 +538,173 @@ describe('useVAD', () => {
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        await result?.current?.processAudioData(new Float32Array(512));
+        await result.current.processAudioData(new Float32Array(512));
       });
 
-      expect(any: any).toBe('speech');
-      expect(any: any);
+      expect(result.current.vadState).toBe('speech');
+      expect(result.current.isSpeaking).toBe(true);
     });
 
     it('should emit VAD_SPEECH_START on speech start', async () => {
       const { result } = renderHook(() => useVAD());
 
       // First frame: silence
-      vi?.mocked(any: any).mockResolvedValueOnce({
+      vi.mocked(audioService.processVADFrame).mockResolvedValueOnce({
         state: 'silence',
         isSpeaking: false,
       });
       await act(async () => {
-        await result?.current?.processAudioData(new Float32Array(512));
+        await result.current.processAudioData(new Float32Array(512));
       });
 
       // Second frame: speech detected
-      vi?.mocked(any: any).mockResolvedValueOnce({
+      vi.mocked(audioService.processVADFrame).mockResolvedValueOnce({
         state: 'speech',
         isSpeaking: true,
       });
       await act(async () => {
-        await result?.current?.processAudioData(new Float32Array(512));
+        await result.current.processAudioData(new Float32Array(512));
       });
 
-      expect(any: any).toHaveBeenCalledWith('VAD_SPEECH_START');
+      expect(audioStateMachine.transition).toHaveBeenCalledWith('VAD_SPEECH_START');
     });
 
     it('should emit VAD_SPEECH_END on speech end', async () => {
       const { result } = renderHook(() => useVAD());
 
       // First frame: speech
-      vi?.mocked(any: any).mockResolvedValueOnce({
+      vi.mocked(audioService.processVADFrame).mockResolvedValueOnce({
         state: 'speech',
         isSpeaking: true,
       });
       await act(async () => {
-        await result?.current?.processAudioData(new Float32Array(512));
+        await result.current.processAudioData(new Float32Array(512));
       });
 
-      vi?.clearAllMocks();
+      vi.clearAllMocks();
 
       // Second frame: silence
-      vi?.mocked(any: any).mockResolvedValueOnce({
+      vi.mocked(audioService.processVADFrame).mockResolvedValueOnce({
         state: 'silence',
         isSpeaking: false,
       });
       await act(async () => {
-        await result?.current?.processAudioData(new Float32Array(512));
+        await result.current.processAudioData(new Float32Array(512));
       });
 
-      expect(any: any).toHaveBeenCalledWith('VAD_SPEECH_END');
+      expect(audioStateMachine.transition).toHaveBeenCalledWith('VAD_SPEECH_END');
     });
 
     it('should handle processing errors', async () => {
-      vi?.mocked(any: any).mockRejectedValueOnce(
+      vi.mocked(audioService.processVADFrame).mockRejectedValueOnce(
         new Error('Processing error')
       );
 
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        await result?.current?.processAudioData(new Float32Array(512));
+        await result.current.processAudioData(new Float32Array(512));
       });
 
-      expect(any: any).toContain('Processing error');
+      expect(result.current.error).toContain('Processing error');
     });
 
-    it(any: any)', async () => {
+    it('should skip processing when suspended (anti-echo)', async () => {
       const { result } = renderHook(() => useVAD());
 
       // Suspend VAD
       await act(async () => {
-        result?.current?.suspendForTTS();
+        result.current.suspendForTTS();
       });
 
-      vi?.clearAllMocks();
+      vi.clearAllMocks();
 
       // Try to process audio
       await act(async () => {
-        await result?.current?.processAudioData(new Float32Array(512));
+        await result.current.processAudioData(new Float32Array(512));
       });
 
-      expect(any: any).not?.toHaveBeenCalled();
+      expect(audioService.processVADFrame).not.toHaveBeenCalled();
     });
   });
 
-  describe(any: any)', () => {
+  describe('Anti-Echo (suspendForTTS / resumeAfterTTS)', () => {
     it('should suspend VAD for TTS', async () => {
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        result?.current?.suspendForTTS();
+        result.current.suspendForTTS();
       });
 
-      expect(any: any);
-      expect(any: any).toBe('silence');
-      expect(any: any);
+      expect(result.current.isSuspended).toBe(true);
+      expect(result.current.vadState).toBe('silence');
+      expect(result.current.isSpeaking).toBe(false);
     });
 
     it('should resume VAD after TTS with delay', async () => {
-      vi?.useFakeTimers();
+      vi.useFakeTimers();
 
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        result?.current?.suspendForTTS();
+        result.current.suspendForTTS();
       });
 
-      expect(any: any);
+      expect(result.current.isSuspended).toBe(true);
 
       await act(async () => {
-        result?.current?.resumeAfterTTS(300);
+        result.current.resumeAfterTTS(300);
       });
 
       // Still suspended during delay
-      expect(any: any);
+      expect(result.current.isSuspended).toBe(true);
 
       // Fast-forward delay
       await act(async () => {
-        vi?.advanceTimersByTime(300);
+        vi.advanceTimersByTime(300);
       });
 
-      expect(any: any);
+      expect(result.current.isSuspended).toBe(false);
 
-      vi?.useRealTimers();
+      vi.useRealTimers();
     });
 
     it('should resume VAD with default delay', async () => {
-      vi?.useFakeTimers();
+      vi.useFakeTimers();
 
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        result?.current?.suspendForTTS();
+        result.current.suspendForTTS();
       });
 
       await act(async () => {
-        result?.current?.resumeAfterTTS(); // Default 200ms
+        result.current.resumeAfterTTS(); // Default 200ms
       });
 
       await act(async () => {
-        vi?.advanceTimersByTime(200);
+        vi.advanceTimersByTime(200);
       });
 
-      expect(any: any);
+      expect(result.current.isSuspended).toBe(false);
 
-      vi?.useRealTimers();
+      vi.useRealTimers();
     });
 
     it('should skip audio processing when suspended', async () => {
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        result?.current?.suspendForTTS();
+        result.current.suspendForTTS();
       });
 
-      vi?.clearAllMocks();
+      vi.clearAllMocks();
 
       await act(async () => {
-        await result?.current?.processAudioData(new Float32Array(512));
+        await result.current.processAudioData(new Float32Array(512));
       });
 
-      expect(any: any).not?.toHaveBeenCalled();
+      expect(audioService.processVADFrame).not.toHaveBeenCalled();
     });
   });
 
@@ -713,89 +713,89 @@ describe('useVAD', () => {
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        result?.current?.enableBargeIn();
+        result.current.enableBargeIn();
       });
 
-      expect(any: any);
+      expect(result.current.isBargeInEnabled).toBe(true);
     });
 
     it('should disable barge-in', async () => {
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        result?.current?.enableBargeIn();
+        result.current.enableBargeIn();
       });
 
-      expect(any: any);
+      expect(result.current.isBargeInEnabled).toBe(true);
 
       await act(async () => {
-        result?.current?.disableBargeIn();
+        result.current.disableBargeIn();
       });
 
-      expect(any: any);
+      expect(result.current.isBargeInEnabled).toBe(false);
     });
 
     it('should process audio when suspended if barge-in enabled', async () => {
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        result?.current?.suspendForTTS();
-        result?.current?.enableBargeIn();
+        result.current.suspendForTTS();
+        result.current.enableBargeIn();
       });
 
-      vi?.clearAllMocks();
+      vi.clearAllMocks();
 
-      vi?.mocked(any: any).mockResolvedValueOnce({
+      vi.mocked(audioService.processVADFrame).mockResolvedValueOnce({
         state: 'silence',
         isSpeaking: false,
       });
 
       await act(async () => {
-        await result?.current?.processAudioData(new Float32Array(512));
+        await result.current.processAudioData(new Float32Array(512));
       });
 
       // Should process even when suspended
-      expect(any: any).toHaveBeenCalled();
+      expect(audioService.processVADFrame).toHaveBeenCalled();
     });
 
     it('should emit BARGE_IN when speech detected during AI speaking', async () => {
-      vi?.mocked(any: any);
+      vi.mocked(audioStateMachine.isAISpeaking).mockReturnValue(true);
 
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        result?.current?.enableBargeIn();
+        result.current.enableBargeIn();
       });
 
-      vi?.mocked(any: any).mockResolvedValueOnce({
+      vi.mocked(audioService.processVADFrame).mockResolvedValueOnce({
         state: 'speech',
         isSpeaking: true,
       });
 
       await act(async () => {
-        await result?.current?.processAudioData(new Float32Array(512));
+        await result.current.processAudioData(new Float32Array(512));
       });
 
-      expect(any: any).toHaveBeenCalledWith('BARGE_IN');
+      expect(audioStateMachine.transition).toHaveBeenCalledWith('BARGE_IN');
     });
 
     it('should not emit BARGE_IN if barge-in disabled', async () => {
-      vi?.mocked(any: any);
+      vi.mocked(audioStateMachine.isAISpeaking).mockReturnValue(true);
 
       const { result } = renderHook(() => useVAD());
 
       // Barge-in disabled by default
 
-      vi?.mocked(any: any).mockResolvedValueOnce({
+      vi.mocked(audioService.processVADFrame).mockResolvedValueOnce({
         state: 'speech',
         isSpeaking: true,
       });
 
       await act(async () => {
-        await result?.current?.processAudioData(new Float32Array(512));
+        await result.current.processAudioData(new Float32Array(512));
       });
 
-      expect(any: any).not?.toHaveBeenCalledWith('BARGE_IN');
+      expect(audioStateMachine.transition).not.toHaveBeenCalledWith('BARGE_IN');
     });
   });
 
@@ -805,65 +805,65 @@ describe('useVAD', () => {
 
       // Start listening
       await act(async () => {
-        await result?.current?.startListening();
+        await result.current.startListening();
       });
-      expect(any: any);
+      expect(result.current.isListening).toBe(true);
 
       // Simulate speech detection
-      vi?.mocked(any: any).mockResolvedValueOnce({
+      vi.mocked(audioService.processVADFrame).mockResolvedValueOnce({
         state: 'speech',
         isSpeaking: true,
       });
       await act(async () => {
-        await result?.current?.processAudioData(new Float32Array(512));
+        await result.current.processAudioData(new Float32Array(512));
       });
-      expect(any: any);
+      expect(result.current.isSpeaking).toBe(true);
 
       // Stop listening
       await act(async () => {
-        result?.current?.stopListening();
+        result.current.stopListening();
       });
-      expect(any: any);
-      expect(any: any);
+      expect(result.current.isListening).toBe(false);
+      expect(result.current.isSpeaking).toBe(false);
     });
 
     it('should handle suspend → resume cycle', async () => {
-      vi?.useFakeTimers();
+      vi.useFakeTimers();
 
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        result?.current?.suspendForTTS();
+        result.current.suspendForTTS();
       });
-      expect(any: any);
+      expect(result.current.isSuspended).toBe(true);
 
       await act(async () => {
-        result?.current?.resumeAfterTTS(100);
+        result.current.resumeAfterTTS(100);
       });
 
       await act(async () => {
-        vi?.advanceTimersByTime(100);
+        vi.advanceTimersByTime(100);
       });
-      expect(any: any);
+      expect(result.current.isSuspended).toBe(false);
 
-      vi?.useRealTimers();
+      vi.useRealTimers();
     });
 
     it('should handle error recovery', async () => {
       const { result } = renderHook(() => useVAD());
 
       // Cause error
-      mockGetUserMedia?.mockRejectedValueOnce(new Error('Mic error'));
+      mockGetUserMedia.mockRejectedValueOnce(new Error('Mic error'));
       await act(async () => {
-        await result?.current?.startListening();
+        await result.current.startListening();
       });
-      expect(any: any).toBeTruthy();
+      expect(result.current.error).toBeTruthy();
 
       // Reset should clear error
       await act(async () => {
-        await result?.current?.reset();
+        await result.current.reset();
       });
-      expect(any: any);
+      expect(result.current.error).toBe(null);
     });
   });
 
@@ -873,97 +873,97 @@ describe('useVAD', () => {
 
       for (let i = 0; i < 3; i++) {
         await act(async () => {
-          await result?.current?.startListening();
+          await result.current.startListening();
         });
 
         await act(async () => {
-          result?.current?.stopListening();
+          result.current.stopListening();
         });
       }
 
-      expect(any: any);
+      expect(result.current.isListening).toBe(false);
     });
 
     it('should handle processAudioData without startListening', async () => {
       const { result } = renderHook(() => useVAD());
 
-      vi?.mocked(any: any).mockResolvedValueOnce({
+      vi.mocked(audioService.processVADFrame).mockResolvedValueOnce({
         state: 'silence',
         isSpeaking: false,
       });
 
       await act(async () => {
-        await result?.current?.processAudioData(new Float32Array(512));
+        await result.current.processAudioData(new Float32Array(512));
       });
 
       // Should not crash
-      expect(any: any).toBe('silence');
+      expect(result.current.vadState).toBe('silence');
     });
 
     it('should handle multiple suspend calls', async () => {
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        result?.current?.suspendForTTS();
-        result?.current?.suspendForTTS();
-        result?.current?.suspendForTTS();
+        result.current.suspendForTTS();
+        result.current.suspendForTTS();
+        result.current.suspendForTTS();
       });
 
-      expect(any: any);
+      expect(result.current.isSuspended).toBe(true);
     });
 
     it('should handle multiple resume calls', async () => {
-      vi?.useFakeTimers();
+      vi.useFakeTimers();
 
       const { result } = renderHook(() => useVAD());
 
       await act(async () => {
-        result?.current?.suspendForTTS();
+        result.current.suspendForTTS();
       });
 
       await act(async () => {
-        result?.current?.resumeAfterTTS(100);
-        result?.current?.resumeAfterTTS(100);
-        result?.current?.resumeAfterTTS(100);
+        result.current.resumeAfterTTS(100);
+        result.current.resumeAfterTTS(100);
+        result.current.resumeAfterTTS(100);
       });
 
       await act(async () => {
-        vi?.advanceTimersByTime(100);
+        vi.advanceTimersByTime(100);
       });
 
-      expect(any: any);
+      expect(result.current.isSuspended).toBe(false);
 
-      vi?.useRealTimers();
+      vi.useRealTimers();
     });
 
     it('should handle empty audio data', async () => {
       const { result } = renderHook(() => useVAD());
 
-      vi?.mocked(any: any).mockResolvedValueOnce({
+      vi.mocked(audioService.processVADFrame).mockResolvedValueOnce({
         state: 'silence',
         isSpeaking: false,
       });
 
       await act(async () => {
-        await result?.current?.processAudioData(new Float32Array(0));
+        await result.current.processAudioData(new Float32Array(0));
       });
 
-      expect(any: any).toHaveBeenCalled();
+      expect(audioService.processVADFrame).toHaveBeenCalled();
     });
 
     it('should handle very large audio data', async () => {
       const { result } = renderHook(() => useVAD());
 
-      vi?.mocked(any: any).mockResolvedValueOnce({
+      vi.mocked(audioService.processVADFrame).mockResolvedValueOnce({
         state: 'silence',
         isSpeaking: false,
       });
 
       await act(async () => {
-        await result?.current?.processAudioData(new Float32Array(100000));
+        await result.current.processAudioData(new Float32Array(100000));
       });
 
-      expect(any: any).toHaveBeenCalled();
+      expect(audioService.processVADFrame).toHaveBeenCalled();
     });
   });
 });

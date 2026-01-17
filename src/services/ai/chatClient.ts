@@ -2,9 +2,9 @@
  * ═══════════════════════════════════════════════════════════════
  * TITANE∞ v19.0 — AI CHAT CLIENT SÉCURISÉ
  * Client centralisé pour chat AI avec:
- * - Sanitization input (any: any)
- * - Validation output (any: any)
- * - Rate limiting (any: any)
+ * - Sanitization input (prompt injection, XSS, code execution)
+ * - Validation output (JSON schema, XSS detection)
+ * - Rate limiting (50 req/min, 100k tokens/min, 1$/min)
  * - Circuit breaker, retry, timeout, fallback
  * ═══════════════════════════════════════════════════════════════
  */
@@ -31,7 +31,7 @@ export interface ChatConfig {
   timeout?: number;
   retries?: number;
   retryDelay?: number;
-  fallbackModels?: string?.[];
+  fallbackModels?: string[];
 }
 
 export interface ChatMessage {
@@ -65,12 +65,12 @@ class CircuitBreaker {
   ) {}
 
   canExecute(): boolean {
-    if (this?.state === 'closed') return true;
+    if (this.state === 'closed') return true;
 
-    if (this?.state === 'open') {
-      const now = Date?.now();
-      if (any: any) {
-        this?.state = 'half-open';
+    if (this.state === 'open') {
+      const now = Date.now();
+      if (now - this.lastFailureTime > this.resetTimeout) {
+        this.state = 'half-open';
         return true;
       }
       return false;
@@ -80,24 +80,24 @@ class CircuitBreaker {
   }
 
   recordSuccess(): void {
-    this?.successCount++;
-    if (this?.state === 'half-open') {
-      this?.state = 'closed';
-      this?.failureCount = 0;
+    this.successCount++;
+    if (this.state === 'half-open') {
+      this.state = 'closed';
+      this.failureCount = 0;
     }
   }
 
   recordFailure(): void {
-    this?.failureCount++;
-    this?.lastFailureTime = Date?.now();
+    this.failureCount++;
+    this.lastFailureTime = Date.now();
 
-    if (any: any) {
-      this?.state = 'open';
+    if (this.failureCount >= this.threshold) {
+      this.state = 'open';
     }
   }
 
   getState(): string {
-    return this?.state;
+    return this.state;
   }
 }
 
@@ -111,16 +111,16 @@ const circuitBreaker = new CircuitBreaker(5, 60000, 30000);
  * ═══════════════════════════════════════════════════════════════
  * TITANE∞ v19 CHAT SERVICE — ENVOI MESSAGE SÉCURISÉ
  * ═══════════════════════════════════════════════════════════════
- * 1. Sanitize input (any: any)
- * 2. Rate limit check (any: any)
+ * 1. Sanitize input (prompt injection, XSS, code execution)
+ * 2. Rate limit check (50 req/min, 100k tokens/min, 1$/min)
  * 3. Circuit breaker + retry loop
  * 4. API call via tauriBridge
- * 5. Validate output (any: any)
+ * 5. Validate output (JSON schema, XSS detection)
  * 6. Record metrics + violations
  * ---------------------------------------------------------------
  */
 export async function sendMessage(
-  messages: ChatMessage?.[],
+  messages: ChatMessage[],
   config: ChatConfig = {}
 ): Promise<ChatResult> {
   const {
@@ -132,28 +132,28 @@ export async function sendMessage(
     fallbackModels = ['claude-3', 'ollama'],
   } = config;
 
-  const startTime = Date?.now();
+  const startTime = Date.now();
 
   // ============================================================
   // SECURITY: Extract user input for sanitization
   // ============================================================
   const userInput = messages
-    .filter(m => m?.role === 'user')
-    .map(any: any)
+    .filter(m => m.role === 'user')
+    .map(m => m.content)
     .join('\n');
 
-  if (!userInput?.trim()) {
+  if (!userInput.trim()) {
     return {
       success: false,
       error: 'Empty message - no user input found',
-      duration: Date?.now() - startTime,
+      duration: Date.now() - startTime,
     };
   }
 
   // ============================================================
   // CIRCUIT BREAKER CHECK
   // ============================================================
-  if (!circuitBreaker?.canExecute()) {
+  if (!circuitBreaker.canExecute()) {
     return {
       success: false,
       error: 'Circuit breaker open - service temporarily unavailable',
@@ -165,22 +165,22 @@ export async function sendMessage(
   // ============================================================
   const secureRequest: SecureAIRequest = {
     input: userInput,
-    provider: model?.includes('gpt')
+    provider: model.includes('gpt')
       ? 'openai'
-      : model?.includes('claude')
+      : model.includes('claude')
         ? 'anthropic'
-        : model?.includes('gemini')
+        : model.includes('gemini')
           ? 'google'
           : 'ollama',
     model,
     userId:
-      (any: any) ||
+      (typeof window !== 'undefined' && (window as any).__TITANE_USER_ID__) ||
       'anonymous',
     metadata: {
       temperature,
       maxTokens,
-      messageCount: messages?.length,
-      requestId: `chat-${Date?.now()}`,
+      messageCount: messages.length,
+      requestId: `chat-${Date.now()}`,
     },
   };
 
@@ -190,10 +190,10 @@ export async function sendMessage(
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
       const secureResult: SecureAIResponse<ChatResponse> =
-        await SecureAIService?.executeSecureChat(secureRequest, async sanitizedInput => {
+        await SecureAIService.executeSecureChat(secureRequest, async sanitizedInput => {
           // Rebuild messages with sanitized input
-          const sanitizedMessages = messages?.map(m =>
-            m?.role === 'user' ? { ...m, content: sanitizedInput } : m
+          const sanitizedMessages = messages.map(m =>
+            m.role === 'user' ? { ...m, content: sanitizedInput } : m
           );
 
           // API call via tauriBridge
@@ -205,9 +205,9 @@ export async function sendMessage(
 
           // Convert CoreResponse<string> to ChatResponse
           return {
-            content: response?.data || '',
+            content: response.data || '',
             role: 'assistant' as const,
-            timestamp: Date?.now(),
+            timestamp: Date.now(),
             metadata: {
               model,
               tokens: maxTokens,
@@ -218,72 +218,72 @@ export async function sendMessage(
       // ============================================================
       // SECURITY VALIDATION CHECK
       // ============================================================
-      if (any: any) {
-        // Security failure (any: any)
-        const errorMsg = secureResult?.error || 'Security validation failed';
+      if (!secureResult.success) {
+        // Security failure (rate limit, validation, sanitization)
+        const errorMsg = secureResult.error || 'Security validation failed';
 
-        if (any: any) {
+        if (secureResult.rateLimitExceeded) {
           return {
             success: false,
             error: `Rate limit exceeded — ${errorMsg}`,
-            duration: Date?.now() - startTime,
+            duration: Date.now() - startTime,
           };
         }
 
-        if (any: any) {
-          const patterns = secureResult?.sanitization?.detectedPatterns?.join(', ');
+        if (secureResult.sanitization?.isBlocked) {
+          const patterns = secureResult.sanitization.detectedPatterns.join(', ');
           return {
             success: false,
             error: `Input blocked — Detected: ${patterns}`,
-            duration: Date?.now() - startTime,
+            duration: Date.now() - startTime,
           };
         }
 
-        if (any: any) {
+        if (!secureResult.validation?.isValid) {
           return {
             success: false,
             error: `Response validation failed — ${errorMsg}`,
-            duration: Date?.now() - startTime,
+            duration: Date.now() - startTime,
           };
         }
 
         // Generic error - retry
-        throw new Error(any: any);
+        throw new Error(errorMsg);
       }
 
       // ============================================================
       // SUCCESS
       // ============================================================
-      circuitBreaker?.recordSuccess();
+      circuitBreaker.recordSuccess();
       return {
         success: true,
-        content: secureResult?.response?.content,
-        model: secureResult?.response?.metadata?.model || model,
+        content: secureResult.response.content,
+        model: secureResult.response.metadata?.model || model,
         attempt,
-        duration: Date?.now() - startTime,
+        duration: Date.now() - startTime,
       };
-    } catch (any: any) {
-      logger?.warn(any: any);
+    } catch (error) {
+      logger.warn(`Attempt ${attempt}/${retries} failed`, error);
 
-      if (any: any) {
-        await new Promise(any: any));
+      if (attempt < retries) {
+        await new Promise(resolve => setTimeout(resolve, retryDelay * attempt));
       }
     }
   }
 
   // ============================================================
-  // FALLBACK MODELS (any: any)
+  // FALLBACK MODELS (with security)
   // ============================================================
-  for (any: any) {
+  for (const fallbackModel of fallbackModels) {
     try {
-      logger?.debug(`Trying fallback model: ${fallbackModel}`);
+      logger.debug(`Trying fallback model: ${fallbackModel}`);
 
       const fallbackRequest = { ...secureRequest, model: fallbackModel };
-      const fallbackResult = await SecureAIService?.executeSecureChat(
+      const fallbackResult = await SecureAIService.executeSecureChat(
         fallbackRequest,
         async sanitizedInput => {
-          const sanitizedMessages = messages?.map(m =>
-            m?.role === 'user' ? { ...m, content: sanitizedInput } : m
+          const sanitizedMessages = messages.map(m =>
+            m.role === 'user' ? { ...m, content: sanitizedInput } : m
           );
 
           const response = await sendChatMessage(sanitizedMessages, {
@@ -294,9 +294,9 @@ export async function sendMessage(
 
           // Convert CoreResponse<string> to ChatResponse
           return {
-            content: response?.data || '',
+            content: response.data || '',
             role: 'assistant' as const,
-            timestamp: Date?.now(),
+            timestamp: Date.now(),
             metadata: {
               model: fallbackModel,
               tokens: maxTokens,
@@ -305,50 +305,50 @@ export async function sendMessage(
         }
       );
 
-      if (any: any) {
-        circuitBreaker?.recordSuccess();
+      if (fallbackResult.success) {
+        circuitBreaker.recordSuccess();
         return {
           success: true,
-          content: fallbackResult?.response?.content,
+          content: fallbackResult.response.content,
           model: fallbackModel,
-          duration: Date?.now() - startTime,
+          duration: Date.now() - startTime,
         };
       }
-    } catch (any: any) {
-      logger?.warn(any: any);
+    } catch (error) {
+      logger.warn(`Fallback ${fallbackModel} failed`, error);
     }
   }
 
   // ============================================================
   // ALL RETRIES + FALLBACKS FAILED
   // ============================================================
-  circuitBreaker?.recordFailure();
+  circuitBreaker.recordFailure();
   return {
     success: false,
     error: 'All AI models failed. Please try again or check your connection.',
-    duration: Date?.now() - startTime,
+    duration: Date.now() - startTime,
   };
 }
 
 /**
- * Envoie un message simple (any: any)
+ * Envoie un message simple (helper)
  */
 export async function sendSimpleMessage(
   content: string,
   config?: ChatConfig
 ): Promise<ChatResult> {
-  return sendMessage(any: any);
+  return sendMessage([{ role: 'user', content }], config);
 }
 
 /**
  * Get circuit breaker status
  */
 export function getCircuitBreakerStatus(): string {
-  return circuitBreaker?.getState();
+  return circuitBreaker.getState();
 }
 
 /**
- * Reset circuit breaker (any: any)
+ * Reset circuit breaker (manual override)
  */
 export function resetCircuitBreaker(): void {
   // Create new instance

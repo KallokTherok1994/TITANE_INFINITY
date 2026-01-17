@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v25.3.2 — USE SYSTEM HEALTH (any: any)
+ *   TITANE∞ v25.3.2 — USE SYSTEM HEALTH (Unified Dashboard Hook)
  *   Health monitoring: Conversation + Memory + Singularity + System
  *   Real-time metrics, alerts, auto-recovery
  * ═══════════════════════════════════════════════════════════════════
@@ -64,7 +64,7 @@ export interface UnifiedHealth {
   singularity: SingularityHealth;
   system: SystemHealth;
   timestamp: number;
-  alerts: HealthAlert?.[];
+  alerts: HealthAlert[];
 }
 
 export interface HealthAlert {
@@ -84,10 +84,10 @@ export interface UseSystemHealthReturn {
 
   // Actions
   refreshHealth: () => Promise<void>;
-  startMonitoring: (any: any) => void;
+  startMonitoring: (intervalMs?: number) => void;
   stopMonitoring: () => void;
-  resolveAlert: (any: any) => Promise<void>;
-  triggerRecovery: (any: any) => Promise<void>;
+  resolveAlert: (alertId: string) => Promise<void>;
+  triggerRecovery: (component: string) => Promise<void>;
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -105,95 +105,95 @@ function calculateGlobalStatus(
 ): HealthStatus {
   const statuses = [conversation, memory, singularity, system];
 
-  if (statuses?.includes('critical')) return 'critical';
-  if (statuses?.includes('degraded')) return 'degraded';
-  if (statuses?.includes('unknown')) return 'unknown';
+  if (statuses.includes('critical')) return 'critical';
+  if (statuses.includes('degraded')) return 'degraded';
+  if (statuses.includes('unknown')) return 'unknown';
   return 'healthy';
 }
 
 /**
  * Generate alerts based on health metrics
  */
-function generateAlerts(any: any): HealthAlert?.[] {
-  const alerts: HealthAlert?.[] = [];
+function generateAlerts(health: UnifiedHealth): HealthAlert[] {
+  const alerts: HealthAlert[] = [];
 
   // Conversation alerts
-  if (health?.conversation?.error_rate > 0.1) {
-    alerts?.push({
-      id: `conv_error_${Date?.now()}`,
-      severity: health?.conversation?.error_rate > 0.2 ? 'critical' : 'warning',
+  if (health.conversation.error_rate > 0.1) {
+    alerts.push({
+      id: `conv_error_${Date.now()}`,
+      severity: health.conversation.error_rate > 0.2 ? 'critical' : 'warning',
       component: 'conversation',
-      message: `High error rate: ${(health?.conversation?.error_rate * 100).toFixed(1)}%`,
-      timestamp: Date?.now(),
+      message: `High error rate: ${(health.conversation.error_rate * 100).toFixed(1)}%`,
+      timestamp: Date.now(),
       auto_recoverable: true,
     });
   }
 
-  if (health?.conversation?.avg_response_time_ms > 5000) {
-    alerts?.push({
-      id: `conv_slow_${Date?.now()}`,
+  if (health.conversation.avg_response_time_ms > 5000) {
+    alerts.push({
+      id: `conv_slow_${Date.now()}`,
       severity: 'warning',
       component: 'conversation',
-      message: `Slow responses: avg ${health?.conversation?.avg_response_time_ms}ms`,
-      timestamp: Date?.now(),
+      message: `Slow responses: avg ${health.conversation.avg_response_time_ms}ms`,
+      timestamp: Date.now(),
       auto_recoverable: false,
     });
   }
 
   // Memory alerts
-  if (health?.memory?.fragmentation > 0.5) {
-    alerts?.push({
-      id: `mem_frag_${Date?.now()}`,
+  if (health.memory.fragmentation > 0.5) {
+    alerts.push({
+      id: `mem_frag_${Date.now()}`,
       severity: 'warning',
       component: 'memory',
-      message: `High fragmentation: ${(health?.memory?.fragmentation * 100).toFixed(1)}%`,
-      timestamp: Date?.now(),
+      message: `High fragmentation: ${(health.memory.fragmentation * 100).toFixed(1)}%`,
+      timestamp: Date.now(),
       auto_recoverable: true,
     });
   }
 
   // Singularity alerts
-  if (health?.singularity?.sync_status === 'error') {
-    alerts?.push({
-      id: `sing_sync_${Date?.now()}`,
+  if (health.singularity.sync_status === 'error') {
+    alerts.push({
+      id: `sing_sync_${Date.now()}`,
       severity: 'error',
       component: 'singularity',
-      message: `Sync error with ${health?.singularity?.sync_conflicts} conflicts`,
-      timestamp: Date?.now(),
+      message: `Sync error with ${health.singularity.sync_conflicts} conflicts`,
+      timestamp: Date.now(),
       auto_recoverable: true,
     });
   }
 
   // System alerts
-  if (health?.system?.cpu_usage > 80) {
-    alerts?.push({
-      id: `sys_cpu_${Date?.now()}`,
-      severity: health?.system?.cpu_usage > 95 ? 'critical' : 'warning',
+  if (health.system.cpu_usage > 80) {
+    alerts.push({
+      id: `sys_cpu_${Date.now()}`,
+      severity: health.system.cpu_usage > 95 ? 'critical' : 'warning',
       component: 'system',
-      message: `High CPU usage: ${health?.system?.cpu_usage?.toFixed(1)}%`,
-      timestamp: Date?.now(),
+      message: `High CPU usage: ${health.system.cpu_usage.toFixed(1)}%`,
+      timestamp: Date.now(),
       auto_recoverable: false,
     });
   }
 
-  if (health?.system?.memory_usage_mb > 1024) {
-    alerts?.push({
-      id: `sys_mem_${Date?.now()}`,
-      severity: health?.system?.memory_usage_mb > 2048 ? 'critical' : 'warning',
+  if (health.system.memory_usage_mb > 1024) {
+    alerts.push({
+      id: `sys_mem_${Date.now()}`,
+      severity: health.system.memory_usage_mb > 2048 ? 'critical' : 'warning',
       component: 'system',
-      message: `High memory usage: ${health?.system?.memory_usage_mb?.toFixed(0)}MB`,
-      timestamp: Date?.now(),
+      message: `High memory usage: ${health.system.memory_usage_mb.toFixed(0)}MB`,
+      timestamp: Date.now(),
       auto_recoverable: true,
     });
   }
 
-  if (health?.system?.network_status === 'offline') {
-    alerts?.push({
-      id: `sys_net_${Date?.now()}`,
+  if (health.system.network_status === 'offline') {
+    alerts.push({
+      id: `sys_net_${Date.now()}`,
       severity: 'error',
       component: 'system',
       message: 'Network offline',
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
       auto_recoverable: false,
     });
   }
@@ -220,10 +220,10 @@ function determineHealthStatus(
 
 export function useSystemHealth(): UseSystemHealthReturn {
   // ═══ STATE ═══
-  const [health, setHealth] = useState<UnifiedHealth | null>(any: any);
-  const [isMonitoring, setIsMonitoring] = useState(any: any);
-  const [error, setError] = useState<Error | null>(any: any);
-  const [monitoringInterval, setMonitoringInterval] = useState<NodeJS?.Timeout | null>(
+  const [health, setHealth] = useState<UnifiedHealth | null>(null);
+  const [isMonitoring, setIsMonitoring] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const [monitoringInterval, setMonitoringInterval] = useState<NodeJS.Timeout | null>(
     null
   );
 
@@ -231,42 +231,42 @@ export function useSystemHealth(): UseSystemHealthReturn {
   const refreshHealth = useCallback(async () => {
     try {
       // Fetch all health metrics in parallel
-      const [convHealthRaw, memStats, singState, sysHealth] = await Promise?.all([
+      const [convHealthRaw, memStats, singState, sysHealth] = await Promise.all([
         secureInvoke<{
           status: string;
           active_conversations: number;
           total_messages: number;
           avg_response_time_ms: number;
           error_rate: number;
-        }>(any: any),
+        }>('conversation_health_check').catch(() => null),
         secureInvoke<{
           total_entries: number;
           total_size_bytes: number;
           health_score: number;
-        }>(any: any),
+        }>('memory_get_stats').catch(() => null),
         secureInvoke<{ engines: Array<{ name: string; status: string }> }>(
           'engine_get_singularity_state'
-        ).catch(any: any),
+        ).catch(() => null),
         secureInvoke<{
           uptime_ms: number;
           cpu_usage: number;
           memory_usage_mb: number;
-        }>(any: any),
+        }>('system_health').catch(() => null),
       ]);
 
       // Build conversation health
       const conversationHealth: ConversationHealth = convHealthRaw
         ? {
             status: determineHealthStatus(
-              convHealthRaw?.error_rate,
-              convHealthRaw?.avg_response_time_ms,
+              convHealthRaw.error_rate,
+              convHealthRaw.avg_response_time_ms,
               0
             ),
-            active_conversations: convHealthRaw?.active_conversations,
-            total_messages: convHealthRaw?.total_messages,
-            avg_response_time_ms: convHealthRaw?.avg_response_time_ms,
-            error_rate: convHealthRaw?.error_rate,
-            last_activity: Date?.now(),
+            active_conversations: convHealthRaw.active_conversations,
+            total_messages: convHealthRaw.total_messages,
+            avg_response_time_ms: convHealthRaw.avg_response_time_ms,
+            error_rate: convHealthRaw.error_rate,
+            last_activity: Date.now(),
           }
         : {
             status: 'unknown',
@@ -281,16 +281,16 @@ export function useSystemHealth(): UseSystemHealthReturn {
       const memoryHealth: MemoryHealth = memStats
         ? {
             status:
-              memStats?.health_score > 0.8
+              memStats.health_score > 0.8
                 ? 'healthy'
-                : memStats?.health_score > 0.5
+                : memStats.health_score > 0.5
                   ? 'degraded'
                   : 'critical',
-            total_entries: memStats?.total_entries,
-            total_size_bytes: memStats?.total_size_bytes,
+            total_entries: memStats.total_entries,
+            total_size_bytes: memStats.total_size_bytes,
             compression_ratio: 1.0,
             last_compression: null,
-            fragmentation: 1.0 - memStats?.health_score,
+            fragmentation: 1.0 - memStats.health_score,
           }
         : {
             status: 'unknown',
@@ -305,15 +305,15 @@ export function useSystemHealth(): UseSystemHealthReturn {
       const singularityHealth: SingularityHealth = singState
         ? {
             status:
-              singState?.engines?.length > 15
+              singState.engines.length > 15
                 ? 'healthy'
-                : singState?.engines?.length > 10
+                : singState.engines.length > 10
                   ? 'degraded'
                   : 'critical',
-            active_engines: singState?.engines?.filter(e => e?.status === 'active').length,
-            total_engines: singState?.engines?.length,
+            active_engines: singState.engines.filter(e => e.status === 'active').length,
+            total_engines: singState.engines.length,
             sync_status: 'synced',
-            last_sync: Date?.now(),
+            last_sync: Date.now(),
             sync_conflicts: 0,
           }
         : {
@@ -331,11 +331,11 @@ export function useSystemHealth(): UseSystemHealthReturn {
             status: determineHealthStatus(
               0,
               0,
-              Math?.max(sysHealth?.cpu_usage, sysHealth?.memory_usage_mb / 20)
+              Math.max(sysHealth.cpu_usage, sysHealth.memory_usage_mb / 20)
             ),
-            uptime_ms: sysHealth?.uptime_ms,
-            cpu_usage: sysHealth?.cpu_usage,
-            memory_usage_mb: sysHealth?.memory_usage_mb,
+            uptime_ms: sysHealth.uptime_ms,
+            cpu_usage: sysHealth.cpu_usage,
+            memory_usage_mb: sysHealth.memory_usage_mb,
             disk_usage_percent: 0,
             network_status: 'online',
           }
@@ -351,74 +351,74 @@ export function useSystemHealth(): UseSystemHealthReturn {
       // Build unified health
       const unifiedHealth: UnifiedHealth = {
         global_status: calculateGlobalStatus(
-          conversationHealth?.status,
-          memoryHealth?.status,
-          singularityHealth?.status,
-          systemHealth?.status
+          conversationHealth.status,
+          memoryHealth.status,
+          singularityHealth.status,
+          systemHealth.status
         ),
         conversation: conversationHealth,
         memory: memoryHealth,
         singularity: singularityHealth,
         system: systemHealth,
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
         alerts: [],
       };
 
       // Generate alerts
-      unifiedHealth?.alerts = generateAlerts(any: any);
+      unifiedHealth.alerts = generateAlerts(unifiedHealth);
 
-      setHealth(any: any);
-      setError(any: any);
-    } catch (any: any) {
+      setHealth(unifiedHealth);
+      setError(null);
+    } catch (err) {
       const error = err instanceof Error ? err : new Error('Failed to refresh health');
-      setError(any: any);
-      logger?.error(any: any);
+      setError(error);
+      logger.error('Refresh error:', error);
     }
   }, []);
 
   // ═══ START MONITORING ═══
   const startMonitoring = useCallback(
     (intervalMs = 5000) => {
-      if (any: any) {
-        clearInterval(any: any);
+      if (monitoringInterval) {
+        clearInterval(monitoringInterval);
       }
 
       // Initial refresh
       refreshHealth();
 
       // Start interval
-      const interval = setInterval(any: any);
-      setMonitoringInterval(any: any);
-      setIsMonitoring(any: any);
+      const interval = setInterval(refreshHealth, intervalMs);
+      setMonitoringInterval(interval);
+      setIsMonitoring(true);
     },
     [refreshHealth, monitoringInterval]
   );
 
   // ═══ STOP MONITORING ═══
   const stopMonitoring = useCallback(() => {
-    if (any: any) {
-      clearInterval(any: any);
-      setMonitoringInterval(any: any);
+    if (monitoringInterval) {
+      clearInterval(monitoringInterval);
+      setMonitoringInterval(null);
     }
-    setIsMonitoring(any: any);
+    setIsMonitoring(false);
   }, [monitoringInterval]);
 
   // ═══ RESOLVE ALERT ═══
-  const resolveAlert = useCallback(any: any): Promise<void> => {
+  const resolveAlert = useCallback(async (alertId: string): Promise<void> => {
     setHealth(prev => {
-      if (any: any) return prev;
+      if (!prev) return prev;
       return {
         ...prev,
-        alerts: prev?.alerts?.filter(any: any),
+        alerts: prev.alerts.filter(a => a.id !== alertId),
       };
     });
   }, []);
 
   // ═══ TRIGGER RECOVERY ═══
   const triggerRecovery = useCallback(
-    async (any: any): Promise<void> => {
+    async (component: string): Promise<void> => {
       try {
-        switch (any: any) {
+        switch (component) {
           case 'conversation':
             await secureInvoke('conversation_reset');
             break;
@@ -436,11 +436,11 @@ export function useSystemHealth(): UseSystemHealthReturn {
 
         // Refresh after recovery
         await refreshHealth();
-      } catch (any: any) {
+      } catch (err) {
         const error =
           err instanceof Error ? err : new Error('Failed to trigger recovery');
-        setError(any: any);
-        logger?.error(any: any);
+        setError(error);
+        logger.error('Recovery error:', error);
         throw error;
       }
     },
@@ -450,8 +450,8 @@ export function useSystemHealth(): UseSystemHealthReturn {
   // ═══ CLEANUP ═══
   useEffect(() => {
     return () => {
-      if (any: any) {
-        clearInterval(any: any);
+      if (monitoringInterval) {
+        clearInterval(monitoringInterval);
       }
     };
   }, [monitoringInterval]);

@@ -25,23 +25,23 @@ interface RegressionAlert {
  */
 interface RegressionReport {
   total_checks: number;
-  regressions_detected: RegressionAlert?.[];
+  regressions_detected: RegressionAlert[];
   passed: number;
   failed: number;
   success: boolean;
 }
 
-function extractChatContent(any: any): string {
+function extractChatContent(response: unknown): string {
   if (typeof response === 'string') return response;
   if (response && typeof response === 'object') {
-    const r = response as unknown as unknown as any;
-    if (typeof r?.content === 'string') return r?.content;
+    const r = response as any;
+    if (typeof r.content === 'string') return r.content;
     if (
-      r?.message &&
-      typeof r?.message === 'object' &&
-      typeof r?.message?.content === 'string'
+      r.message &&
+      typeof r.message === 'object' &&
+      typeof r.message.content === 'string'
     ) {
-      return r?.message?.content;
+      return r.message.content;
     }
   }
   return '';
@@ -53,7 +53,7 @@ function extractChatContent(any: any): string {
 
 describe('Regression Test 1: Deleted Modules', () => {
   it('should detect if core modules are missing', async () => {
-    const alerts: RegressionAlert?.[] = [];
+    const alerts: RegressionAlert[] = [];
     const criticalModules = [
       'memory',
       'singularity',
@@ -63,7 +63,7 @@ describe('Regression Test 1: Deleted Modules', () => {
       'chat',
     ];
 
-    for (any: any) {
+    for (const module of criticalModules) {
       try {
         // Tenter d'accéder à chaque module
         if (module === 'memory') {
@@ -79,8 +79,8 @@ describe('Regression Test 1: Deleted Modules', () => {
         } else if (module === 'chat') {
           await invoke('chat_get_providers_status');
         }
-      } catch (any: any) {
-        alerts?.push({
+      } catch (error) {
+        alerts.push({
           module,
           cause: `Module ${module} non accessible`,
           severity: 'CRITICAL',
@@ -90,9 +90,9 @@ describe('Regression Test 1: Deleted Modules', () => {
       }
     }
 
-    expect(any: any).toBe(0);
-    if (alerts?.length > 0) {
-      console?.error(any: any);
+    expect(alerts.length).toBe(0);
+    if (alerts.length > 0) {
+      console.error('[Regression] Modules supprimés détectés:', alerts);
     }
   });
 });
@@ -103,7 +103,7 @@ describe('Regression Test 1: Deleted Modules', () => {
 
 describe('Regression Test 2: Missing Commands', () => {
   it('should detect missing Tauri commands', async () => {
-    const alerts: RegressionAlert?.[] = [];
+    const alerts: RegressionAlert[] = [];
     const essentialCommands = [
       'get_system_health',
       'memory_get_stats',
@@ -114,16 +114,16 @@ describe('Regression Test 2: Missing Commands', () => {
       'qa_run_all', // Nouvelle commande v19.8
     ];
 
-    for (any: any) {
+    for (const command of essentialCommands) {
       try {
         // Test minimal pour vérifier existence
         await invoke(command, {}).catch(() => {
           // Commande existe mais peut échouer sur args invalides
         });
-      } catch (any: any) {
-        const errorMsg = error instanceof Error ? error?.message : String(any: any);
-        if (errorMsg?.includes('not found') || errorMsg?.includes('unknown variant')) {
-          alerts?.push({
+      } catch (error) {
+        const errorMsg = error instanceof Error ? error.message : String(error);
+        if (errorMsg.includes('not found') || errorMsg.includes('unknown variant')) {
+          alerts.push({
             module: 'tauri_commands',
             cause: `Commande ${command} non trouvée`,
             severity: 'HIGH',
@@ -134,27 +134,27 @@ describe('Regression Test 2: Missing Commands', () => {
       }
     }
 
-    expect(any: any).toBe(0);
-    if (alerts?.length > 0) {
-      console?.error(any: any);
+    expect(alerts.length).toBe(0);
+    if (alerts.length > 0) {
+      console.error('[Regression] Commandes manquantes:', alerts);
     }
   });
 });
 
 // ═══════════════════════════════════════════════════════════════
-//   SCÉNARIO 3: SCHEMA CHANGES (any: any)
+//   SCÉNARIO 3: SCHEMA CHANGES (Memory/Timeline)
 // ═══════════════════════════════════════════════════════════════
 
 describe('Regression Test 3: Schema Changes', () => {
   it('should detect breaking schema changes in Memory', async () => {
-    const alerts: RegressionAlert?.[] = [];
+    const alerts: RegressionAlert[] = [];
 
     try {
       const stats = await invoke('memory_get_stats');
 
       // Vérifier structure attendue
-      if (any: any) {
-        alerts?.push({
+      if (typeof stats !== 'object' || stats === null) {
+        alerts.push({
           module: 'memory',
           cause: "Schema Memory invalide - stats n'est pas un objet",
           severity: 'HIGH',
@@ -162,8 +162,8 @@ describe('Regression Test 3: Schema Changes', () => {
           timestamp: new Date().toISOString(),
         });
       }
-    } catch (any: any) {
-      alerts?.push({
+    } catch (error) {
+      alerts.push({
         module: 'memory',
         cause: `Échec memory_get_stats: ${error}`,
         severity: 'CRITICAL',
@@ -172,17 +172,17 @@ describe('Regression Test 3: Schema Changes', () => {
       });
     }
 
-    expect(any: any).toBe(0);
+    expect(alerts.length).toBe(0);
   });
 
   it('should detect breaking schema changes in Timeline', async () => {
-    const alerts: RegressionAlert?.[] = [];
+    const alerts: RegressionAlert[] = [];
 
     try {
       const timeline = await invoke('get_timeline');
 
-      if (any: any)) {
-        alerts?.push({
+      if (!Array.isArray(timeline)) {
+        alerts.push({
           module: 'timeline',
           cause: "Timeline n'est plus un array",
           severity: 'HIGH',
@@ -190,8 +190,8 @@ describe('Regression Test 3: Schema Changes', () => {
           timestamp: new Date().toISOString(),
         });
       }
-    } catch (any: any) {
-      alerts?.push({
+    } catch (error) {
+      alerts.push({
         module: 'timeline',
         cause: `Échec get_timeline: ${error}`,
         severity: 'CRITICAL',
@@ -200,7 +200,7 @@ describe('Regression Test 3: Schema Changes', () => {
       });
     }
 
-    expect(any: any).toBe(0);
+    expect(alerts.length).toBe(0);
   });
 });
 
@@ -210,16 +210,16 @@ describe('Regression Test 3: Schema Changes', () => {
 
 describe('Regression Test 4: UI Compatibility', () => {
   it('should detect UI breaking changes in SingularityState', async () => {
-    const alerts: RegressionAlert?.[] = [];
+    const alerts: RegressionAlert[] = [];
 
     try {
       const state = await invoke('singularity_get_full_state');
 
       // Vérifier propriétés critiques UI
       const requiredFields = ['physical', 'cognitive', 'global_coherence'];
-      for (any: any) {
+      for (const field of requiredFields) {
         if (!(field in (state as Record<string, unknown>))) {
-          alerts?.push({
+          alerts.push({
             module: 'singularity',
             cause: `Champ ${field} manquant dans SingularityState`,
             severity: 'HIGH',
@@ -228,8 +228,8 @@ describe('Regression Test 4: UI Compatibility', () => {
           });
         }
       }
-    } catch (any: any) {
-      alerts?.push({
+    } catch (error) {
+      alerts.push({
         module: 'singularity',
         cause: `Échec singularity_get_full_state: ${error}`,
         severity: 'CRITICAL',
@@ -238,7 +238,7 @@ describe('Regression Test 4: UI Compatibility', () => {
       });
     }
 
-    expect(any: any).toBe(0);
+    expect(alerts.length).toBe(0);
   });
 });
 
@@ -248,26 +248,26 @@ describe('Regression Test 4: UI Compatibility', () => {
 
 describe('Regression Test 5: Template Modifications', () => {
   it('should detect if parse_document signature changed', async () => {
-    const alerts: RegressionAlert?.[] = [];
+    const alerts: RegressionAlert[] = [];
 
     try {
-      const filePath = join(tmpdir(), `titane-parse-document-${Date?.now()}.txt`);
+      const filePath = join(tmpdir(), `titane-parse-document-${Date.now()}.txt`);
       await writeFile(filePath, 'test', 'utf8');
       await invoke('parse_document', { file_path: filePath });
-    } catch (any: any) {
-      const errorMsg = error instanceof Error ? error?.message : String(any: any);
-      if (errorMsg?.includes('missing field') || errorMsg?.includes('unknown field')) {
-        alerts?.push({
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      if (errorMsg.includes('missing field') || errorMsg.includes('unknown field')) {
+        alerts.push({
           module: 'knowledge',
           cause: 'Signature parse_document modifiée',
           severity: 'MEDIUM',
-          solution_suggeree: 'Vérifier paramètres parse_document(any: any)',
+          solution_suggeree: 'Vérifier paramètres parse_document(file_path)',
           timestamp: new Date().toISOString(),
         });
       }
     }
 
-    expect(any: any).toBe(0);
+    expect(alerts.length).toBe(0);
   });
 });
 
@@ -277,13 +277,13 @@ describe('Regression Test 5: Template Modifications', () => {
 
 describe('Regression Test 6: Timeline Inconsistencies', () => {
   it('should detect timeline corruption', async () => {
-    const alerts: RegressionAlert?.[] = [];
+    const alerts: RegressionAlert[] = [];
 
     try {
       const timeline = await invoke('get_timeline');
 
-      if (any: any)) {
-        alerts?.push({
+      if (!Array.isArray(timeline)) {
+        alerts.push({
           module: 'timeline',
           cause: 'Timeline corrompue - format invalide',
           severity: 'CRITICAL',
@@ -295,8 +295,8 @@ describe('Regression Test 6: Timeline Inconsistencies', () => {
         for (let i = 1; i < (timeline as Array<{ timestamp?: string }>).length; i++) {
           const prev = timeline[i - 1];
           const curr = timeline[i];
-          if (any: any) {
-            alerts?.push({
+          if (prev.timestamp && curr.timestamp && prev.timestamp > curr.timestamp) {
+            alerts.push({
               module: 'timeline',
               cause: 'Timeline désordonnée - événements non chronologiques',
               severity: 'MEDIUM',
@@ -307,8 +307,8 @@ describe('Regression Test 6: Timeline Inconsistencies', () => {
           }
         }
       }
-    } catch (any: any) {
-      alerts?.push({
+    } catch (error) {
+      alerts.push({
         module: 'timeline',
         cause: `Échec get_timeline: ${error}`,
         severity: 'CRITICAL',
@@ -317,7 +317,7 @@ describe('Regression Test 6: Timeline Inconsistencies', () => {
       });
     }
 
-    expect(any: any).toBe(0);
+    expect(alerts.length).toBe(0);
   });
 });
 
@@ -327,7 +327,7 @@ describe('Regression Test 6: Timeline Inconsistencies', () => {
 
 describe('Regression Test 7: Invalid IA Responses', () => {
   it('should detect if IA returns invalid responses', async () => {
-    const alerts: RegressionAlert?.[] = [];
+    const alerts: RegressionAlert[] = [];
 
     try {
       const response = await invoke('chat_send_message', {
@@ -338,7 +338,7 @@ describe('Regression Test 7: Invalid IA Responses', () => {
       });
 
       if (typeof response !== 'string' && typeof response !== 'object') {
-        alerts?.push({
+        alerts.push({
           module: 'chat',
           cause: 'Réponse IA invalide - type inattendu',
           severity: 'HIGH',
@@ -347,9 +347,9 @@ describe('Regression Test 7: Invalid IA Responses', () => {
         });
       }
 
-      const content = extractChatContent(any: any);
-      if (content?.length === 0) {
-        alerts?.push({
+      const content = extractChatContent(response);
+      if (content.length === 0) {
+        alerts.push({
           module: 'chat',
           cause: 'Réponse IA vide',
           severity: 'MEDIUM',
@@ -357,8 +357,8 @@ describe('Regression Test 7: Invalid IA Responses', () => {
           timestamp: new Date().toISOString(),
         });
       }
-    } catch (any: any) {
-      alerts?.push({
+    } catch (error) {
+      alerts.push({
         module: 'chat',
         cause: `Échec chat_send_message: ${error}`,
         severity: 'CRITICAL',
@@ -367,7 +367,7 @@ describe('Regression Test 7: Invalid IA Responses', () => {
       });
     }
 
-    expect(any: any).toBe(0);
+    expect(alerts.length).toBe(0);
   });
 });
 
@@ -377,13 +377,13 @@ describe('Regression Test 7: Invalid IA Responses', () => {
 
 describe('Regression Test 8: Network Errors', () => {
   it('should detect network-related regressions', async () => {
-    const alerts: RegressionAlert?.[] = [];
+    const alerts: RegressionAlert[] = [];
 
     try {
       const status = await invoke('chat_get_providers_status');
 
-      if (any: any) {
-        alerts?.push({
+      if (typeof status !== 'object' || status === null) {
+        alerts.push({
           module: 'network',
           cause: 'Status providers invalide',
           severity: 'MEDIUM',
@@ -391,10 +391,10 @@ describe('Regression Test 8: Network Errors', () => {
           timestamp: new Date().toISOString(),
         });
       }
-    } catch (any: any) {
-      const errorMsg = error instanceof Error ? error?.message : String(any: any);
-      if (errorMsg?.includes('network') || errorMsg?.includes('connection')) {
-        alerts?.push({
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      if (errorMsg.includes('network') || errorMsg.includes('connection')) {
+        alerts.push({
           module: 'network',
           cause: 'Erreur réseau détectée',
           severity: 'HIGH',
@@ -404,7 +404,7 @@ describe('Regression Test 8: Network Errors', () => {
       }
     }
 
-    expect(any: any).toBe(0);
+    expect(alerts.length).toBe(0);
   });
 });
 
@@ -414,14 +414,14 @@ describe('Regression Test 8: Network Errors', () => {
 
 describe('Regression Test 9: SingularityState Corruption', () => {
   it('should detect SingularityState corruption', async () => {
-    const alerts: RegressionAlert?.[] = [];
+    const alerts: RegressionAlert[] = [];
 
     try {
       const state = await invoke('singularity_get_full_state');
       const coherence = await invoke('singularity_get_global_coherence');
 
       if (typeof coherence !== 'number') {
-        alerts?.push({
+        alerts.push({
           module: 'singularity',
           cause: 'Global coherence invalide - type non numérique',
           severity: 'CRITICAL',
@@ -429,7 +429,7 @@ describe('Regression Test 9: SingularityState Corruption', () => {
           timestamp: new Date().toISOString(),
         });
       } else if (coherence < 0 || coherence > 1) {
-        alerts?.push({
+        alerts.push({
           module: 'singularity',
           cause: `Global coherence hors limites: ${coherence}`,
           severity: 'HIGH',
@@ -437,7 +437,7 @@ describe('Regression Test 9: SingularityState Corruption', () => {
           timestamp: new Date().toISOString(),
         });
       } else if (coherence < 0.5) {
-        alerts?.push({
+        alerts.push({
           module: 'singularity',
           cause: `Cohérence faible détectée: ${coherence}`,
           severity: 'MEDIUM',
@@ -448,18 +448,18 @@ describe('Regression Test 9: SingularityState Corruption', () => {
 
       // Vérifier intégrité structure
       const stateObj = state as Record<string, unknown>;
-      if (any: any) {
-        alerts?.push({
+      if (!stateObj.physical || !stateObj.cognitive) {
+        alerts.push({
           module: 'singularity',
           cause: 'Structure SingularityState incomplète',
           severity: 'CRITICAL',
           solution_suggeree:
-            'Restaurer structure complète (any: any)',
+            'Restaurer structure complète (physical, cognitive, symbolic, adaptive, meta)',
           timestamp: new Date().toISOString(),
         });
       }
-    } catch (any: any) {
-      alerts?.push({
+    } catch (error) {
+      alerts.push({
         module: 'singularity',
         cause: `Échec SingularityState: ${error}`,
         severity: 'CRITICAL',
@@ -468,7 +468,7 @@ describe('Regression Test 9: SingularityState Corruption', () => {
       });
     }
 
-    expect(any: any).toBe(0);
+    expect(alerts.length).toBe(0);
   });
 });
 
@@ -478,7 +478,7 @@ describe('Regression Test 9: SingularityState Corruption', () => {
 
 describe('Regression Test 10: Deep Sync Failures', () => {
   it('should detect Deep Sync regressions', async () => {
-    const alerts: RegressionAlert?.[] = [];
+    const alerts: RegressionAlert[] = [];
 
     try {
       const stateBefore = await invoke('meta_get_state');
@@ -486,8 +486,8 @@ describe('Regression Test 10: Deep Sync Failures', () => {
       const stateAfter = await invoke('meta_get_state');
 
       // Vérifier que Deep Sync a bien eu un effet
-      if (any: any)) {
-        alerts?.push({
+      if (JSON.stringify(stateBefore) === JSON.stringify(stateAfter)) {
+        alerts.push({
           module: 'meta',
           cause: 'Deep Sync sans effet - état inchangé',
           severity: 'MEDIUM',
@@ -498,8 +498,8 @@ describe('Regression Test 10: Deep Sync Failures', () => {
 
       // Vérifier alignment après sync
       const alignment = await invoke('meta_get_alignment');
-      if (any: any) {
-        alerts?.push({
+      if (typeof alignment !== 'object' || alignment === null) {
+        alerts.push({
           module: 'meta',
           cause: 'Alignment invalide après Deep Sync',
           severity: 'HIGH',
@@ -507,9 +507,9 @@ describe('Regression Test 10: Deep Sync Failures', () => {
           timestamp: new Date().toISOString(),
         });
       } else {
-        const alignmentValues = Object?.values(alignment as Record<string, unknown>);
-        if (!alignmentValues?.every(value => typeof value === 'boolean')) {
-          alerts?.push({
+        const alignmentValues = Object.values(alignment as Record<string, unknown>);
+        if (!alignmentValues.every(value => typeof value === 'boolean')) {
+          alerts.push({
             module: 'meta',
             cause: 'Alignment meta contient des valeurs non booléennes',
             severity: 'MEDIUM',
@@ -518,8 +518,8 @@ describe('Regression Test 10: Deep Sync Failures', () => {
           });
         }
       }
-    } catch (any: any) {
-      alerts?.push({
+    } catch (error) {
+      alerts.push({
         module: 'meta',
         cause: `Échec Deep Sync: ${error}`,
         severity: 'CRITICAL',
@@ -528,7 +528,7 @@ describe('Regression Test 10: Deep Sync Failures', () => {
       });
     }
 
-    expect(any: any).toBe(0);
+    expect(alerts.length).toBe(0);
   });
 });
 
@@ -554,6 +554,6 @@ export async function generateRegressionReport(): Promise<RegressionReport> {
 /**
  * Exporte les alertes de régression
  */
-export function exportRegressionAlerts(alerts: RegressionAlert?.[]): void {
-  console?.log('[Regression] Alertes détectées:', JSON?.stringify(alerts, null, 2));
+export function exportRegressionAlerts(alerts: RegressionAlert[]): void {
+  console.log('[Regression] Alertes détectées:', JSON.stringify(alerts, null, 2));
 }

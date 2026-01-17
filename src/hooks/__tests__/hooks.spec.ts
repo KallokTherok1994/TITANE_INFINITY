@@ -16,76 +16,76 @@ describe('useVisualState Hook', () => {
   let engine: TitaneVisualEngine;
 
   beforeEach(() => {
-    engine = TitaneVisualEngine?.getInstance();
+    engine = TitaneVisualEngine.getInstance();
   });
 
   afterEach(() => {
-    vi?.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should initialize with default visual state', () => {
-    const { result } = renderHook(any: any));
+    const { result } = renderHook(() => useVisualState(engine));
 
-    expect(any: any).toBeDefined();
-    expect(any: any);
-    expect(any: any);
-    expect(any: any);
+    expect(result.current.visuals).toBeDefined();
+    expect(result.current.visuals.background).toMatch(/^#[0-9a-f]{6}$/i);
+    expect(result.current.visuals.primary).toMatch(/^#[0-9a-f]{6}$/i);
+    expect(result.current.isTransitioning).toBe(false);
   });
 
   it('should detect transitions when engine state changes', async () => {
-    const { result } = renderHook(any: any));
+    const { result } = renderHook(() => useVisualState(engine));
 
     act(() => {
-      engine?.start();
-      engine?.setState('focus', 1000);
+      engine.start();
+      engine.setState('focus', 1000);
     });
 
     await waitFor(
       () => {
-        expect(any: any);
+        expect(result.current.isTransitioning).toBe(true);
       },
       { timeout: 100 }
     );
 
     await waitFor(
       () => {
-        expect(any: any);
+        expect(result.current.isTransitioning).toBe(false);
       },
       { timeout: 1200 }
     );
   });
 
   it('should update visuals when state changes', async () => {
-    const { result } = renderHook(any: any));
-    const initialBackground = result?.current?.visuals?.background;
+    const { result } = renderHook(() => useVisualState(engine));
+    const initialBackground = result.current.visuals.background;
 
     act(() => {
-      engine?.start();
-      engine?.setState('focus', 500);
+      engine.start();
+      engine.setState('focus', 500);
     });
 
     await waitFor(
       () => {
-        expect(any: any);
+        expect(result.current.visuals.background).not.toBe(initialBackground);
       },
       { timeout: 600 }
     );
   });
 
   it('should cleanup listeners on unmount', () => {
-    const { unmount } = renderHook(any: any));
-    const removeListenerSpy = vi?.spyOn(engine, 'removeListener');
+    const { unmount } = renderHook(() => useVisualState(engine));
+    const removeListenerSpy = vi.spyOn(engine, 'removeListener');
 
     unmount();
 
-    expect(any: any));
+    expect(removeListenerSpy).toHaveBeenCalledWith(expect.any(Function));
   });
 });
 
 describe('usePanelState Hook', () => {
   beforeEach(() => {
-    localStorage?.clear();
-    usePanelsStore?.getState().reset();
+    localStorage.clear();
+    usePanelsStore.getState().reset();
   });
 
   it('should initialize with default values', () => {
@@ -99,9 +99,9 @@ describe('usePanelState Hook', () => {
       })
     );
 
-    expect(any: any);
-    expect(any: any);
-    expect(any: any).toBe(100);
+    expect(result.current.isCollapsed).toBe(false);
+    expect(result.current.isVisible).toBe(true);
+    expect(result.current.zIndex).toBe(100);
   });
 
   it('should toggle collapsed state', () => {
@@ -115,19 +115,19 @@ describe('usePanelState Hook', () => {
       })
     );
 
-    expect(any: any);
+    expect(result.current.isCollapsed).toBe(false);
 
     act(() => {
-      result?.current?.toggle();
+      result.current.toggle();
     });
 
-    expect(any: any);
+    expect(result.current.isCollapsed).toBe(true);
 
     act(() => {
-      result?.current?.toggle();
+      result.current.toggle();
     });
 
-    expect(any: any);
+    expect(result.current.isCollapsed).toBe(false);
   });
 
   it('should bring panel to front and increase z-index', () => {
@@ -141,13 +141,13 @@ describe('usePanelState Hook', () => {
       })
     );
 
-    const initialZIndex = result?.current?.zIndex;
+    const initialZIndex = result.current.zIndex;
 
     act(() => {
-      result?.current?.bringToFront();
+      result.current.bringToFront();
     });
 
-    expect(any: any);
+    expect(result.current.zIndex).toBeGreaterThan(initialZIndex);
   });
 
   it('should persist state to localStorage when enabled', () => {
@@ -162,19 +162,19 @@ describe('usePanelState Hook', () => {
     );
 
     act(() => {
-      result?.current?.toggle();
+      result.current.toggle();
     });
 
-    const stored = localStorage?.getItem('titane-panel-test-panel-persist');
-    expect(any: any).toBeDefined();
-    const parsed = JSON?.parse(stored!);
-    expect(any: any);
+    const stored = localStorage.getItem('titane-panel-test-panel-persist');
+    expect(stored).toBeDefined();
+    const parsed = JSON.parse(stored!);
+    expect(parsed.isCollapsed).toBe(true);
   });
 
   it('should restore state from localStorage', () => {
-    localStorage?.setItem(
+    localStorage.setItem(
       'titane-panel-test-panel-restore',
-      JSON?.stringify({ isCollapsed: true, isVisible: false })
+      JSON.stringify({ isCollapsed: true, isVisible: false })
     );
 
     const { result } = renderHook(() =>
@@ -187,8 +187,8 @@ describe('usePanelState Hook', () => {
       })
     );
 
-    expect(any: any);
-    expect(any: any);
+    expect(result.current.isCollapsed).toBe(true);
+    expect(result.current.isVisible).toBe(false);
   });
 
   it('should hide panel', () => {
@@ -202,13 +202,13 @@ describe('usePanelState Hook', () => {
       })
     );
 
-    expect(any: any);
+    expect(result.current.isVisible).toBe(true);
 
     act(() => {
-      result?.current?.hide();
+      result.current.hide();
     });
 
-    expect(any: any);
+    expect(result.current.isVisible).toBe(false);
   });
 
   it('should show panel', () => {
@@ -222,126 +222,126 @@ describe('usePanelState Hook', () => {
       })
     );
 
-    expect(any: any);
+    expect(result.current.isVisible).toBe(false);
 
     act(() => {
-      result?.current?.show();
+      result.current.show();
     });
 
-    expect(any: any);
+    expect(result.current.isVisible).toBe(true);
   });
 });
 
 describe('useAdaptiveFPS Hook', () => {
   beforeEach(() => {
-    vi?.useFakeTimers();
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
-    vi?.restoreAllMocks();
-    vi?.useRealTimers();
+    vi.restoreAllMocks();
+    vi.useRealTimers();
   });
 
   it('should initialize with default metrics', () => {
     const { result } = renderHook(() => useAdaptiveFPS());
 
-    expect(any: any).toBeDefined();
-    expect(any: any).toBeGreaterThanOrEqual(0);
-    expect(any: any).toBeGreaterThanOrEqual(0);
-    expect(any: any).toBeGreaterThanOrEqual(0);
+    expect(result.current.metrics).toBeDefined();
+    expect(result.current.metrics.current).toBeGreaterThanOrEqual(0);
+    expect(result.current.metrics.average).toBeGreaterThanOrEqual(0);
+    expect(result.current.metrics.throttleLevel).toBeGreaterThanOrEqual(0);
   });
 
   it('should track FPS over time', async () => {
     const { result } = renderHook(() => useAdaptiveFPS());
 
-    const initialAverage = result?.current?.metrics?.average;
+    const initialAverage = result.current.metrics.average;
 
     act(() => {
-      vi?.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1000);
     });
 
-    expect(any: any).toBeGreaterThanOrEqual(0);
-    expect(any: any);
+    expect(result.current.metrics.average).toBeGreaterThanOrEqual(0);
+    expect(result.current.metrics.average).toBeGreaterThanOrEqual(initialAverage);
   });
 
   it('should detect performance degradation', async () => {
     const { result } = renderHook(() => useAdaptiveFPS());
 
     // Simulate low FPS by mocking performance
-    vi?.spyOn(performance, 'now').mockReturnValue(Date?.now());
+    vi.spyOn(performance, 'now').mockReturnValue(Date.now());
 
     act(() => {
-      vi?.advanceTimersByTime(5000);
+      vi.advanceTimersByTime(5000);
     });
 
-    expect(any: any).toBe('boolean');
+    expect(typeof result.current.isPerformanceDegraded).toBe('boolean');
   });
 
   it('should generate warnings when FPS drops', async () => {
     const { result } = renderHook(() => useAdaptiveFPS());
 
     act(() => {
-      vi?.advanceTimersByTime(10000);
+      vi.advanceTimersByTime(10000);
     });
 
-    expect(any: any).toBeDefined();
-    expect(any: any);
+    expect(result.current.warnings).toBeDefined();
+    expect(Array.isArray(result.current.warnings)).toBe(true);
   });
 
   it('should cleanup animation frame on unmount', () => {
     const { unmount } = renderHook(() => useAdaptiveFPS());
-    const cancelAnimationFrameSpy = vi?.spyOn(global, 'cancelAnimationFrame');
+    const cancelAnimationFrameSpy = vi.spyOn(global, 'cancelAnimationFrame');
 
     unmount();
 
-    expect(any: any).toHaveBeenCalled();
+    expect(cancelAnimationFrameSpy).toHaveBeenCalled();
   });
 });
 
 describe('useEffects Hook', () => {
   beforeEach(() => {
-    vi?.useFakeTimers();
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
-    vi?.restoreAllMocks();
-    vi?.useRealTimers();
+    vi.restoreAllMocks();
+    vi.useRealTimers();
   });
 
   it('should initialize with default metrics', () => {
     const { result } = renderHook(() => useEffects());
 
-    expect(any: any).toBeDefined();
-    expect(any: any).toBeGreaterThanOrEqual(0);
-    expect(any: any).toBeGreaterThanOrEqual(0);
+    expect(result.current.metrics).toBeDefined();
+    expect(result.current.metrics.totalTriggered).toBeGreaterThanOrEqual(0);
+    expect(result.current.metrics.gpuLoad).toBeGreaterThanOrEqual(0);
   });
 
   it('should track active effects', () => {
     const { result } = renderHook(() => useEffects());
 
-    expect(any: any).toBeDefined();
-    expect(any: any);
+    expect(result.current.activeEffects).toBeDefined();
+    expect(Array.isArray(result.current.activeEffects)).toBe(true);
   });
 
   it('should update metrics over time', async () => {
     const { result } = renderHook(() => useEffects());
 
-    const initialTotal = result?.current?.metrics?.totalTriggered;
+    const initialTotal = result.current.metrics.totalTriggered;
 
     act(() => {
-      vi?.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1000);
     });
 
-    expect(any: any);
+    expect(result.current.metrics.totalTriggered).toBeGreaterThanOrEqual(initialTotal);
   });
 
   it('should track GPU load', () => {
     const { result } = renderHook(() => useEffects());
 
-    expect(any: any).toBeDefined();
-    expect(any: any).toBe('number');
-    expect(any: any).toBeGreaterThanOrEqual(0);
-    expect(any: any).toBeLessThanOrEqual(1);
+    expect(result.current.metrics.gpuLoad).toBeDefined();
+    expect(typeof result.current.metrics.gpuLoad).toBe('number');
+    expect(result.current.metrics.gpuLoad).toBeGreaterThanOrEqual(0);
+    expect(result.current.metrics.gpuLoad).toBeLessThanOrEqual(1);
   });
 
   it('should cleanup listeners on unmount', () => {
@@ -350,15 +350,15 @@ describe('useEffects Hook', () => {
     unmount();
 
     // Verify no memory leaks by checking that intervals are cleared
-    expect(vi?.getTimerCount()).toBe(0);
+    expect(vi.getTimerCount()).toBe(0);
   });
 });
 
 describe('Hooks Integration Tests', () => {
   it('should work together: useVisualState + usePanelState', async () => {
-    const engine = TitaneVisualEngine?.getInstance();
+    const engine = TitaneVisualEngine.getInstance();
 
-    const { result: visualResult } = renderHook(any: any));
+    const { result: visualResult } = renderHook(() => useVisualState(engine));
     const { result: panelResult } = renderHook(() =>
       usePanelState({
         panelId: 'integration-test',
@@ -369,38 +369,38 @@ describe('Hooks Integration Tests', () => {
       })
     );
 
-    expect(any: any).toBeDefined();
-    expect(any: any);
+    expect(visualResult.current.visuals).toBeDefined();
+    expect(panelResult.current.isVisible).toBe(true);
 
     act(() => {
-      engine?.start();
-      engine?.setState('focus', 500);
-      panelResult?.current?.toggle();
+      engine.start();
+      engine.setState('focus', 500);
+      panelResult.current.toggle();
     });
 
     await waitFor(() => {
-      expect(any: any);
-      expect(any: any);
+      expect(visualResult.current.isTransitioning).toBe(true);
+      expect(panelResult.current.isCollapsed).toBe(true);
     });
   });
 
   it('should work together: useAdaptiveFPS + useEffects', async () => {
-    vi?.useFakeTimers();
+    vi.useFakeTimers();
 
     const { result: fpsResult } = renderHook(() => useAdaptiveFPS());
     const { result: effectsResult } = renderHook(() => useEffects());
 
-    expect(any: any).toBeDefined();
-    expect(any: any).toBeDefined();
+    expect(fpsResult.current.metrics).toBeDefined();
+    expect(effectsResult.current.metrics).toBeDefined();
 
     act(() => {
-      vi?.advanceTimersByTime(2000);
+      vi.advanceTimersByTime(2000);
     });
 
-    expect(any: any).toBeGreaterThanOrEqual(0);
-    expect(any: any).toBeGreaterThanOrEqual(0);
+    expect(fpsResult.current.metrics.average).toBeGreaterThanOrEqual(0);
+    expect(effectsResult.current.metrics.totalTriggered).toBeGreaterThanOrEqual(0);
 
-    vi?.restoreAllMocks();
-    vi?.useRealTimers();
+    vi.restoreAllMocks();
+    vi.useRealTimers();
   });
 });

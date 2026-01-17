@@ -11,7 +11,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 // OPUS v∞.4 - PREDICTIVE STATE ENGINE TESTS
 // ============================================================================
 
-// REMOVED: engines/predictive supprimé en PHASE 1 (any: any)
+// REMOVED: engines/predictive supprimé en PHASE 1 (OPTION B)
 import { PredictiveStateEngine } from '../engines/predictive/_stubs';
 import {
   getDefaultPredictiveState,
@@ -25,118 +25,118 @@ describe('OPUS v∞.4 - PredictiveStateEngine', () => {
   let engine: PredictiveStateEngine;
 
   beforeEach(() => {
-    PredictiveStateEngine?.resetInstance();
-    engine = PredictiveStateEngine?.getInstance();
+    PredictiveStateEngine.resetInstance();
+    engine = PredictiveStateEngine.getInstance();
   });
 
   afterEach(() => {
-    engine?.stop();
-    PredictiveStateEngine?.resetInstance();
+    engine.stop();
+    PredictiveStateEngine.resetInstance();
   });
 
   describe('Singleton Pattern', () => {
     it('devrait retourner la même instance', () => {
-      const instance1 = PredictiveStateEngine?.getInstance();
-      const instance2 = PredictiveStateEngine?.getInstance();
-      expect(any: any);
+      const instance1 = PredictiveStateEngine.getInstance();
+      const instance2 = PredictiveStateEngine.getInstance();
+      expect(instance1).toBe(instance2);
     });
 
     it('devrait créer une nouvelle instance après reset', () => {
-      const instance1 = PredictiveStateEngine?.getInstance();
-      PredictiveStateEngine?.resetInstance();
-      const instance2 = PredictiveStateEngine?.getInstance();
-      expect(any: any);
+      const instance1 = PredictiveStateEngine.getInstance();
+      PredictiveStateEngine.resetInstance();
+      const instance2 = PredictiveStateEngine.getInstance();
+      expect(instance1).not.toBe(instance2);
     });
   });
 
   describe('Cycle de vie', () => {
     it('devrait démarrer et arrêter correctement', () => {
-      expect(() => engine?.start()).not?.toThrow();
-      expect(() => engine?.stop()).not?.toThrow();
+      expect(() => engine.start()).not.toThrow();
+      expect(() => engine.stop()).not.toThrow();
     });
 
     it("devrait réinitialiser l'état", () => {
-      engine?.start();
+      engine.start();
       // Faire quelques observations
       const state = getDefaultMultimodalState();
-      engine?.processMultimodalState(any: any);
+      engine.processMultimodalState(state);
 
-      engine?.reset();
-      const predictiveState = engine?.getState();
-      expect(any: any).toBe(0);
+      engine.reset();
+      const predictiveState = engine.getState();
+      expect(predictiveState.lastUpdate).toBe(0);
     });
   });
 
   describe('Observation et analyse', () => {
     it('devrait accepter une observation multimodale', () => {
-      engine?.start();
+      engine.start();
       const state = getDefaultMultimodalState();
-      expect(any: any)).not?.toThrow();
+      expect(() => engine.processMultimodalState(state)).not.toThrow();
     });
 
     it("devrait mettre à jour l'état après observation", () => {
-      engine?.start();
+      engine.start();
       const state = getDefaultMultimodalState();
 
       // Plusieurs observations pour accumuler des données
       for (let i = 0; i < 5; i++) {
-        engine?.processMultimodalState(any: any);
+        engine.processMultimodalState(state);
       }
 
-      const predictiveState = engine?.getState();
-      expect(any: any).toBeGreaterThan(0);
+      const predictiveState = engine.getState();
+      expect(predictiveState.lastUpdate).toBeGreaterThan(0);
     });
 
     it('devrait calculer les tendances', () => {
-      engine?.start();
+      engine.start();
       const state = getDefaultMultimodalState();
 
       // Simuler une série d'observations
       for (let i = 0; i < 10; i++) {
-        engine?.processMultimodalState(any: any);
+        engine.processMultimodalState(state);
       }
 
-      const predictiveState = engine?.getState();
-      expect(any: any);
-      expect(any: any);
+      const predictiveState = engine.getState();
+      expect(['rising', 'falling', 'stable']).toContain(predictiveState.energyTrend);
+      expect(['rising', 'falling', 'stable']).toContain(predictiveState.tensionTrend);
     });
   });
 
   describe('Configuration', () => {
     it('devrait accepter une configuration partielle', () => {
-      expect(() => engine?.setConfig({ risingThreshold: 0.05 })).not?.toThrow();
+      expect(() => engine.setConfig({ risingThreshold: 0.05 })).not.toThrow();
     });
 
     it('devrait retourner la configuration', () => {
-      const config = engine?.getConfig();
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
+      const config = engine.getConfig();
+      expect(config).toBeDefined();
+      expect(config.risingThreshold).toBeDefined();
     });
   });
 
   describe('Résumé prédictif', () => {
     it('devrait générer un résumé', () => {
-      engine?.start();
+      engine.start();
       const state = getDefaultMultimodalState();
-      engine?.processMultimodalState(any: any);
+      engine.processMultimodalState(state);
 
-      const summary = engine?.generatePredictiveSummary();
-      expect(any: any).toBe('string');
-      expect(any: any).toBeGreaterThan(0);
+      const summary = engine.generatePredictiveSummary();
+      expect(typeof summary).toBe('string');
+      expect(summary.length).toBeGreaterThan(0);
     });
   });
 
   describe('Callbacks', () => {
     it("devrait notifier les mises à jour d'état", () => {
-      const callback = vi?.fn();
-      engine?.setStateUpdateCallback(any: any);
-      engine?.start();
+      const callback = vi.fn();
+      engine.setStateUpdateCallback(callback);
+      engine.start();
 
       const state = getDefaultMultimodalState();
-      engine?.processMultimodalState(any: any);
+      engine.processMultimodalState(state);
 
       // Le callback devrait être appelé
-      expect(any: any).toHaveBeenCalled();
+      expect(callback).toHaveBeenCalled();
     });
   });
 });
@@ -145,7 +145,7 @@ describe('OPUS v∞.4 - PredictiveStateEngine', () => {
 // OPUS v∞.5 - STRESS REGULATION ENGINE TESTS
 // ============================================================================
 
-// REMOVED: engines/stress supprimé en PHASE 1 (any: any)
+// REMOVED: engines/stress supprimé en PHASE 1 (OPTION B)
 // Commented out due to missing ../engines/stress/_stubs file
 /*
 import { StressRegulationEngine } from '../engines/stress/_stubs';
@@ -158,110 +158,110 @@ import {
 } from '../types/stressRegulation';
 
 describe('OPUS v∞.5 - StressRegulationEngine', () => {
-  let engine: ReturnType<typeof StressRegulationEngine?.getInstance>;
+  let engine: ReturnType<typeof StressRegulationEngine.getInstance>;
 
   beforeEach(() => {
-    StressRegulationEngine?.resetInstance();
-    engine = StressRegulationEngine?.getInstance();
+    StressRegulationEngine.resetInstance();
+    engine = StressRegulationEngine.getInstance();
   });
 
   afterEach(() => {
-    engine?.stop();
-    StressRegulationEngine?.resetInstance();
+    engine.stop();
+    StressRegulationEngine.resetInstance();
   });
 
   describe('Singleton Pattern', () => {
     it('devrait retourner la même instance', () => {
-      const instance1 = StressRegulationEngine?.getInstance();
-      const instance2 = StressRegulationEngine?.getInstance();
-      expect(any: any);
+      const instance1 = StressRegulationEngine.getInstance();
+      const instance2 = StressRegulationEngine.getInstance();
+      expect(instance1).toBe(instance2);
     });
   });
 
   describe('Cycle de vie', () => {
     it('devrait démarrer et arrêter correctement', () => {
-      expect(() => engine?.start()).not?.toThrow();
-      expect(() => engine?.stop()).not?.toThrow();
+      expect(() => engine.start()).not.toThrow();
+      expect(() => engine.stop()).not.toThrow();
     });
 
     it("devrait réinitialiser l'état", () => {
-      engine?.start();
-      engine?.reset();
-      const state = engine?.getState();
-      expect(any: any).toBe(0);
+      engine.start();
+      engine.reset();
+      const state = engine.getState();
+      expect(state.totalInterventions).toBe(0);
     });
   });
 
   describe('Évaluation des triggers', () => {
     it('devrait évaluer les conditions de déclenchement', () => {
-      engine?.start();
-      engine?.setAutoRegulationEnabled(any: any);
+      engine.start();
+      engine.setAutoRegulationEnabled(true);
 
       const multimodalState = getDefaultMultimodalState();
       const predictiveState = getDefaultPredictiveState();
 
-      const evaluation = engine?.shouldTriggerIntervention(
+      const evaluation = engine.shouldTriggerIntervention(
         multimodalState,
         predictiveState,
         0.5,
         false
       );
 
-      expect(any: any).toBeDefined();
-      expect(any: any).toBe('boolean');
-      expect(any: any).toBeDefined();
+      expect(evaluation).toBeDefined();
+      expect(typeof evaluation.shouldTrigger).toBe('boolean');
+      expect(evaluation.reason).toBeDefined();
     });
 
     it('devrait ne pas déclencher si auto-régulation désactivée', () => {
-      engine?.start();
-      engine?.setAutoRegulationEnabled(any: any);
+      engine.start();
+      engine.setAutoRegulationEnabled(false);
 
       const multimodalState = getDefaultMultimodalState();
       const predictiveState = getDefaultPredictiveState();
 
-      const evaluation = engine?.shouldTriggerIntervention(
+      const evaluation = engine.shouldTriggerIntervention(
         multimodalState,
         predictiveState,
         0.5,
         false
       );
 
-      expect(any: any);
-      expect(any: any).toContain('désactivée');
+      expect(evaluation.shouldTrigger).toBe(false);
+      expect(evaluation.reason).toContain('désactivée');
     });
   });
 
   describe("Sélection d'intervention", () => {
     it("devrait sélectionner un type d'intervention", () => {
-      engine?.start();
+      engine.start();
 
-      const recommendation = engine?.selectInterventionType();
+      const recommendation = engine.selectInterventionType();
 
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeGreaterThanOrEqual(0);
-      expect(any: any).toBeLessThanOrEqual(1);
+      expect(recommendation).toBeDefined();
+      expect(recommendation.type).toBeDefined();
+      expect(recommendation.protocol).toBeDefined();
+      expect(recommendation.confidence).toBeGreaterThanOrEqual(0);
+      expect(recommendation.confidence).toBeLessThanOrEqual(1);
     });
 
     it('devrait sélectionner en fonction du contexte', () => {
-      engine?.start();
+      engine.start();
 
-      const recommendation = engine?.selectInterventionType({
+      const recommendation = engine.selectInterventionType({
         stressLevel: 'high',
         agendaLoad: 0.9,
       });
 
-      expect(any: any).toBeDefined();
+      expect(recommendation).toBeDefined();
       expect(['breath', 'pause', 'body', 'focus', 'agenda', 'reassurance']).toContain(
-        recommendation?.type
+        recommendation.type
       );
     });
   });
 
   describe("Protocoles d'intervention", () => {
     it('devrait retourner un protocole valide', () => {
-      const types: InterventionType?.[] = [
+      const types: InterventionType[] = [
         'breath',
         'pause',
         'body',
@@ -270,71 +270,71 @@ describe('OPUS v∞.5 - StressRegulationEngine', () => {
         'reassurance',
       ];
 
-      for (any: any) {
-        const protocol = engine?.getProtocol(any: any);
-        expect(any: any).toBeDefined();
-        expect(any: any);
-        expect(any: any).toBeGreaterThan(0);
-        expect(any: any).toBeGreaterThan(0);
+      for (const type of types) {
+        const protocol = engine.getProtocol(type);
+        expect(protocol).toBeDefined();
+        expect(protocol.type).toBe(type);
+        expect(protocol.steps.length).toBeGreaterThan(0);
+        expect(protocol.durationSeconds).toBeGreaterThan(0);
       }
     });
 
     it('devrait avoir tous les protocoles définis', () => {
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
+      expect(ALL_PROTOCOLS.breath).toBeDefined();
+      expect(ALL_PROTOCOLS.pause).toBeDefined();
+      expect(ALL_PROTOCOLS.body).toBeDefined();
+      expect(ALL_PROTOCOLS.focus).toBeDefined();
+      expect(ALL_PROTOCOLS.agenda).toBeDefined();
+      expect(ALL_PROTOCOLS.reassurance).toBeDefined();
     });
   });
 
   describe("Exécution d'intervention", () => {
     it('devrait démarrer une intervention', () => {
-      engine?.start();
+      engine.start();
 
-      const protocol = engine?.startIntervention('breath');
+      const protocol = engine.startIntervention('breath');
 
-      expect(any: any).toBeDefined();
-      expect(any: any).toBe('breath');
+      expect(protocol).toBeDefined();
+      expect(protocol.type).toBe('breath');
 
-      const state = engine?.getState();
-      expect(any: any).toBe('breath');
-      expect(any: any).toBe(1);
+      const state = engine.getState();
+      expect(state.lastInterventionType).toBe('breath');
+      expect(state.totalInterventions).toBe(1);
     });
 
     it("devrait enregistrer le résultat d'une intervention", () => {
-      engine?.start();
-      engine?.startIntervention('breath');
+      engine.start();
+      engine.startIntervention('breath');
 
-      engine?.recordInterventionResult('breath', 'helpful', 0.6, 0.3);
+      engine.recordInterventionResult('breath', 'helpful', 0.6, 0.3);
 
-      const state = engine?.getState();
-      expect(any: any).toBe('helpful');
-      expect(any: any).toBe(1);
+      const state = engine.getState();
+      expect(state.lastInterventionResult).toBe('helpful');
+      expect(state.helpfulInterventions).toBe(1);
     });
   });
 
   describe('Apprentissage des poids', () => {
     it('devrait ajuster les poids après feedback positif', () => {
-      engine?.start();
-      const initialWeights = { ...engine?.getState().interventionWeights };
+      engine.start();
+      const initialWeights = { ...engine.getState().interventionWeights };
 
-      engine?.startIntervention('breath');
-      engine?.recordInterventionResult('breath', 'helpful', 0.6, 0.3);
+      engine.startIntervention('breath');
+      engine.recordInterventionResult('breath', 'helpful', 0.6, 0.3);
 
-      const newWeights = engine?.getState().interventionWeights;
-      expect(any: any);
+      const newWeights = engine.getState().interventionWeights;
+      expect(newWeights.breath).toBeGreaterThanOrEqual(initialWeights.breath);
     });
 
     it('devrait ajuster les poids après feedback négatif', () => {
-      engine?.start();
+      engine.start();
 
-      engine?.startIntervention('pause');
-      engine?.recordInterventionResult('pause', 'rejected', 0.5, 0.5);
+      engine.startIntervention('pause');
+      engine.recordInterventionResult('pause', 'rejected', 0.5, 0.5);
 
-      const state = engine?.getState();
-      expect(any: any).toBe(1);
+      const state = engine.getState();
+      expect(state.rejectedInterventions).toBe(1);
     });
   });
 });
@@ -344,7 +344,7 @@ describe('OPUS v∞.5 - StressRegulationEngine', () => {
 // OPUS v∞.6 - HUMAN RHYTHM ENGINE TESTS
 // ============================================================================
 
-// REMOVED: engines/rhythm supprimé en PHASE 1 (any: any)
+// REMOVED: engines/rhythm supprimé en PHASE 1 (OPTION B)
 // Commented out due to missing ../engines/rhythm/_stubs file
 /*
 import { HumanRhythmEngine } from '../engines/rhythm/_stubs';
@@ -361,188 +361,188 @@ import {
 } from '../types/humanRhythm';
 
 describe('OPUS v∞.6 - HumanRhythmEngine', () => {
-  let engine: ReturnType<typeof HumanRhythmEngine?.getInstance>;
+  let engine: ReturnType<typeof HumanRhythmEngine.getInstance>;
 
   beforeEach(() => {
-    HumanRhythmEngine?.resetInstance();
-    engine = HumanRhythmEngine?.getInstance();
+    HumanRhythmEngine.resetInstance();
+    engine = HumanRhythmEngine.getInstance();
   });
 
   afterEach(() => {
-    engine?.stop();
-    HumanRhythmEngine?.resetInstance();
+    engine.stop();
+    HumanRhythmEngine.resetInstance();
   });
 
   describe('Singleton Pattern', () => {
     it('devrait retourner la même instance', () => {
-      const instance1 = HumanRhythmEngine?.getInstance();
-      const instance2 = HumanRhythmEngine?.getInstance();
-      expect(any: any);
+      const instance1 = HumanRhythmEngine.getInstance();
+      const instance2 = HumanRhythmEngine.getInstance();
+      expect(instance1).toBe(instance2);
     });
   });
 
   describe('Cycle de vie', () => {
     it('devrait démarrer et arrêter correctement', () => {
-      expect(() => engine?.start()).not?.toThrow();
-      expect(() => engine?.stop()).not?.toThrow();
+      expect(() => engine.start()).not.toThrow();
+      expect(() => engine.stop()).not.toThrow();
     });
 
     it('devrait initialiser la date de démarrage', () => {
-      engine?.start();
-      const state = engine?.getState();
-      expect(any: any).toBeGreaterThan(0);
+      engine.start();
+      const state = engine.getState();
+      expect(state.learningStartDate).toBeGreaterThan(0);
     });
 
     it("devrait réinitialiser l'état", () => {
-      engine?.start();
-      engine?.recordEnergyObservation(0.8);
-      engine?.reset();
+      engine.start();
+      engine.recordEnergyObservation(0.8);
+      engine.reset();
 
-      const state = engine?.getState();
-      expect(any: any).toBe(0);
+      const state = engine.getState();
+      expect(state.totalDataPoints).toBe(0);
     });
   });
 
   describe("Observation d'énergie", () => {
     it('devrait enregistrer une observation', () => {
-      engine?.start();
-      expect(() => engine?.recordEnergyObservation(0.7)).not?.toThrow();
+      engine.start();
+      expect(() => engine.recordEnergyObservation(0.7)).not.toThrow();
     });
 
     it("devrait normaliser les valeurs d'énergie", () => {
-      engine?.start();
+      engine.start();
 
       // Valeur trop haute
-      engine?.recordEnergyObservation(1.5);
+      engine.recordEnergyObservation(1.5);
       // Valeur trop basse
-      engine?.recordEnergyObservation(-0.5);
+      engine.recordEnergyObservation(-0.5);
 
       // Pas d'erreur
-      expect(engine?.getState()).toBeDefined();
+      expect(engine.getState()).toBeDefined();
     });
 
     it("devrait ajouter à l'historique", () => {
-      engine?.start();
+      engine.start();
 
       // Forcer le flush du buffer avec suffisamment d'observations
       for (let i = 0; i < 15; i++) {
-        engine?.recordEnergyObservation(0.6);
+        engine.recordEnergyObservation(0.6);
       }
 
-      const state = engine?.getState();
-      expect(any: any).toBeGreaterThan(0);
+      const state = engine.getState();
+      expect(state.energyHistory.length).toBeGreaterThan(0);
     });
   });
 
   describe('État circadien', () => {
     it("devrait retourner l'état circadien actuel", () => {
-      engine?.start();
+      engine.start();
 
-      const circadian = engine?.getCurrentCircadianState();
+      const circadian = engine.getCurrentCircadianState();
 
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeGreaterThanOrEqual(0);
-      expect(any: any).toBeLessThanOrEqual(1);
+      expect(circadian).toBeDefined();
+      expect(circadian.currentMoment).toBeDefined();
+      expect(circadian.currentEnergy).toBeDefined();
+      expect(circadian.alertnessLevel).toBeGreaterThanOrEqual(0);
+      expect(circadian.alertnessLevel).toBeLessThanOrEqual(1);
     });
   });
 
   describe('Chronotype', () => {
     it('devrait retourner le chronotype détecté', () => {
-      engine?.start();
+      engine.start();
 
-      const { type, confidence } = engine?.getChronotype();
+      const { type, confidence } = engine.getChronotype();
 
-      expect(any: any);
-      expect(any: any);
+      expect(['earlyBird', 'neutral', 'nightOwl']).toContain(type);
+      expect(['low', 'medium', 'high']).toContain(confidence);
     });
 
     it('devrait commencer avec une confiance basse', () => {
-      engine?.start();
+      engine.start();
 
-      const { confidence } = engine?.getChronotype();
+      const { confidence } = engine.getChronotype();
 
-      expect(any: any).toBe('low');
+      expect(confidence).toBe('low');
     });
   });
 
   describe('Patterns', () => {
     it('devrait retourner le pattern journalier', () => {
-      engine?.start();
+      engine.start();
 
-      const dailyPattern = engine?.getDailyPattern();
+      const dailyPattern = engine.getDailyPattern();
 
-      expect(any: any).toBeDefined();
-      expect(any: any).toBe(6); // 6 moments de la journée
+      expect(dailyPattern).toBeDefined();
+      expect(dailyPattern.patterns.length).toBe(6); // 6 moments de la journée
     });
 
     it('devrait retourner le pattern hebdomadaire', () => {
-      engine?.start();
+      engine.start();
 
-      const weeklyPattern = engine?.getWeeklyPattern();
+      const weeklyPattern = engine.getWeeklyPattern();
 
-      expect(any: any).toBeDefined();
-      expect(any: any).toBe(7); // 7 jours
+      expect(weeklyPattern).toBeDefined();
+      expect(weeklyPattern.dayPatterns.length).toBe(7); // 7 jours
     });
   });
 
   describe('Recommandations de pacing', () => {
     it('devrait retourner une recommandation de pacing', () => {
-      engine?.start();
+      engine.start();
 
-      const pacing = engine?.getCurrentPacing();
+      const pacing = engine.getCurrentPacing();
 
-      expect(any: any).toBeDefined();
+      expect(pacing).toBeDefined();
       expect(['light', 'moderate', 'focused', 'deep']).toContain(
-        pacing?.suggestedIntensity
+        pacing.suggestedIntensity
       );
-      expect(any: any).toBeGreaterThan(0);
-      expect(any: any).toBeGreaterThan(0);
+      expect(pacing.suggestedBreakInterval).toBeGreaterThan(0);
+      expect(pacing.suggestedSessionLength).toBeGreaterThan(0);
     });
   });
 
   describe('Fenêtres optimales', () => {
     it('devrait retourner les fenêtres optimales', () => {
-      engine?.start();
+      engine.start();
 
-      const windows = engine?.getOptimalWindows();
+      const windows = engine.getOptimalWindows();
 
-      expect(any: any).toBeDefined();
-      expect(any: any);
+      expect(windows).toBeDefined();
+      expect(Array.isArray(windows)).toBe(true);
     });
 
     it('devrait filtrer par type de tâche', () => {
-      engine?.start();
+      engine.start();
 
-      const deepWorkWindows = engine?.getOptimalWindows('deepWork');
+      const deepWorkWindows = engine.getOptimalWindows('deepWork');
 
-      for (any: any) {
-        expect(any: any).toBe('deepWork');
+      for (const window of deepWorkWindows) {
+        expect(window.taskType).toBe('deepWork');
       }
     });
 
     it("devrait vérifier si c'est un bon moment pour une tâche", () => {
-      engine?.start();
+      engine.start();
 
-      const result = engine?.isGoodTimeFor('deepWork');
+      const result = engine.isGoodTimeFor('deepWork');
 
-      expect(any: any).toBeDefined();
-      expect(any: any).toBe('boolean');
-      expect(any: any).toBe('string');
-      expect(any: any).toBeGreaterThanOrEqual(0);
-      expect(any: any).toBeLessThanOrEqual(1);
+      expect(result).toBeDefined();
+      expect(typeof result.isGood).toBe('boolean');
+      expect(typeof result.reason).toBe('string');
+      expect(result.score).toBeGreaterThanOrEqual(0);
+      expect(result.score).toBeLessThanOrEqual(1);
     });
   });
 
   describe('Résumé', () => {
     it('devrait générer un résumé textuel', () => {
-      engine?.start();
+      engine.start();
 
-      const summary = engine?.generateRhythmSummary();
+      const summary = engine.generateRhythmSummary();
 
-      expect(any: any).toBe('string');
-      expect(any: any).toBeGreaterThan(0);
+      expect(typeof summary).toBe('string');
+      expect(summary.length).toBeGreaterThan(0);
     });
   });
 });
@@ -603,13 +603,13 @@ describe('Utilitaires Human Rhythm', () => {
 
   describe('isWeekend', () => {
     it('devrait identifier le weekend', () => {
-      expect(any: any);
-      expect(any: any);
+      expect(isWeekend('saturday')).toBe(true);
+      expect(isWeekend('sunday')).toBe(true);
     });
 
     it('devrait identifier la semaine', () => {
-      expect(any: any);
-      expect(any: any);
+      expect(isWeekend('monday')).toBe(false);
+      expect(isWeekend('friday')).toBe(false);
     });
   });
 });
@@ -623,31 +623,31 @@ describe('Utilitaires Human Rhythm', () => {
 /*
 describe('Intégration OPUS Engines', () => {
   let predictiveEngine: PredictiveStateEngine;
-  let stressEngine: ReturnType<typeof StressRegulationEngine?.getInstance>;
-  let rhythmEngine: ReturnType<typeof HumanRhythmEngine?.getInstance>;
+  let stressEngine: ReturnType<typeof StressRegulationEngine.getInstance>;
+  let rhythmEngine: ReturnType<typeof HumanRhythmEngine.getInstance>;
 
   beforeEach(() => {
-    PredictiveStateEngine?.resetInstance();
-    StressRegulationEngine?.resetInstance();
-    HumanRhythmEngine?.resetInstance();
+    PredictiveStateEngine.resetInstance();
+    StressRegulationEngine.resetInstance();
+    HumanRhythmEngine.resetInstance();
 
-    predictiveEngine = PredictiveStateEngine?.getInstance();
-    stressEngine = StressRegulationEngine?.getInstance();
-    rhythmEngine = HumanRhythmEngine?.getInstance();
+    predictiveEngine = PredictiveStateEngine.getInstance();
+    stressEngine = StressRegulationEngine.getInstance();
+    rhythmEngine = HumanRhythmEngine.getInstance();
 
-    predictiveEngine?.start();
-    stressEngine?.start();
-    rhythmEngine?.start();
+    predictiveEngine.start();
+    stressEngine.start();
+    rhythmEngine.start();
   });
 
   afterEach(() => {
-    predictiveEngine?.stop();
-    stressEngine?.stop();
-    rhythmEngine?.stop();
+    predictiveEngine.stop();
+    stressEngine.stop();
+    rhythmEngine.stop();
 
-    PredictiveStateEngine?.resetInstance();
-    StressRegulationEngine?.resetInstance();
-    HumanRhythmEngine?.resetInstance();
+    PredictiveStateEngine.resetInstance();
+    StressRegulationEngine.resetInstance();
+    HumanRhythmEngine.resetInstance();
   });
 
   it("devrait permettre une chaîne d'analyse complète", () => {
@@ -655,11 +655,11 @@ describe('Intégration OPUS Engines', () => {
     const multimodalState = getDefaultMultimodalState();
 
     // 2. Analyse prédictive
-    predictiveEngine?.processMultimodalState(any: any);
-    const predictiveState = predictiveEngine?.getState();
+    predictiveEngine.processMultimodalState(multimodalState);
+    const predictiveState = predictiveEngine.getState();
 
     // 3. Évaluation du stress
-    const trigger = stressEngine?.shouldTriggerIntervention(
+    const trigger = stressEngine.shouldTriggerIntervention(
       multimodalState,
       predictiveState,
       0.5,
@@ -667,27 +667,27 @@ describe('Intégration OPUS Engines', () => {
     );
 
     // 4. Observation du rythme
-    rhythmEngine?.observeFromMultimodal(any: any);
+    rhythmEngine.observeFromMultimodal(multimodalState, predictiveState);
 
     // Tout devrait fonctionner sans erreur
-    expect(any: any).toBeDefined();
-    expect(any: any).toBeDefined();
-    expect(rhythmEngine?.getState()).toBeDefined();
+    expect(predictiveState).toBeDefined();
+    expect(trigger).toBeDefined();
+    expect(rhythmEngine.getState()).toBeDefined();
   });
 
   it('devrait intégrer les recommandations de pacing avec le stress', () => {
-    rhythmEngine?.start();
+    rhythmEngine.start();
 
-    const pacing = rhythmEngine?.getCurrentPacing();
+    const pacing = rhythmEngine.getCurrentPacing();
 
     // Si pacing léger, suggérer une pause plus fréquente
-    if (pacing?.suggestedIntensity === 'light') {
-      expect(any: any).toBeLessThanOrEqual(20);
+    if (pacing.suggestedIntensity === 'light') {
+      expect(pacing.suggestedBreakInterval).toBeLessThanOrEqual(20);
     }
 
     // Si pacing intense, accepter des sessions plus longues
-    if (pacing?.suggestedIntensity === 'deep') {
-      expect(any: any).toBeGreaterThanOrEqual(60);
+    if (pacing.suggestedIntensity === 'deep') {
+      expect(pacing.suggestedSessionLength).toBeGreaterThanOrEqual(60);
     }
   });
 });

@@ -22,7 +22,7 @@ import { haloEngine } from '@/services/voice/haloEngine';
 
 describe('Audio State Machine Architecture — Phase 8', () => {
   beforeEach(() => {
-    audioStateMachine?.reset();
+    audioStateMachine.reset();
   });
 
   /**
@@ -31,7 +31,7 @@ describe('Audio State Machine Architecture — Phase 8', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should start in IDLE state', () => {
-    expect(audioStateMachine?.getCurrentState()).toBe('IDLE');
+    expect(audioStateMachine.getCurrentState()).toBe('IDLE');
   });
 
   /**
@@ -40,8 +40,8 @@ describe('Audio State Machine Architecture — Phase 8', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should transition from IDLE to LISTENING', () => {
-    audioStateMachine?.transition('START_RECORDING');
-    expect(audioStateMachine?.getCurrentState()).toBe('LISTENING');
+    audioStateMachine.transition('START_RECORDING');
+    expect(audioStateMachine.getCurrentState()).toBe('LISTENING');
   });
 
   /**
@@ -50,9 +50,9 @@ describe('Audio State Machine Architecture — Phase 8', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should transition from LISTENING to PROCESSING', () => {
-    audioStateMachine?.transition('START_RECORDING');
-    audioStateMachine?.transition('STOP_RECORDING');
-    expect(audioStateMachine?.getCurrentState()).toBe('PROCESSING');
+    audioStateMachine.transition('START_RECORDING');
+    audioStateMachine.transition('STOP_RECORDING');
+    expect(audioStateMachine.getCurrentState()).toBe('PROCESSING');
   });
 
   /**
@@ -61,10 +61,10 @@ describe('Audio State Machine Architecture — Phase 8', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should transition from PROCESSING to SPEAKING', () => {
-    audioStateMachine?.transition('START_RECORDING');
-    audioStateMachine?.transition('STOP_RECORDING');
-    audioStateMachine?.transition('START_TTS');
-    expect(audioStateMachine?.getCurrentState()).toBe('SPEAKING');
+    audioStateMachine.transition('START_RECORDING');
+    audioStateMachine.transition('STOP_RECORDING');
+    audioStateMachine.transition('START_TTS');
+    expect(audioStateMachine.getCurrentState()).toBe('SPEAKING');
   });
 
   /**
@@ -73,11 +73,11 @@ describe('Audio State Machine Architecture — Phase 8', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should transition from SPEAKING to IDLE', () => {
-    audioStateMachine?.transition('START_RECORDING');
-    audioStateMachine?.transition('STOP_RECORDING');
-    audioStateMachine?.transition('START_TTS');
-    audioStateMachine?.transition('END_TTS');
-    expect(audioStateMachine?.getCurrentState()).toBe('IDLE');
+    audioStateMachine.transition('START_RECORDING');
+    audioStateMachine.transition('STOP_RECORDING');
+    audioStateMachine.transition('START_TTS');
+    audioStateMachine.transition('END_TTS');
+    expect(audioStateMachine.getCurrentState()).toBe('IDLE');
   });
 
   /**
@@ -86,21 +86,21 @@ describe('Audio State Machine Architecture — Phase 8', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should complete full state loop', () => {
-    const states: string?.[] = [];
+    const states: string[] = [];
 
-    audioStateMachine?.transition('START_RECORDING');
-    states?.push(audioStateMachine?.getCurrentState());
+    audioStateMachine.transition('START_RECORDING');
+    states.push(audioStateMachine.getCurrentState());
 
-    audioStateMachine?.transition('STOP_RECORDING');
-    states?.push(audioStateMachine?.getCurrentState());
+    audioStateMachine.transition('STOP_RECORDING');
+    states.push(audioStateMachine.getCurrentState());
 
-    audioStateMachine?.transition('START_TTS');
-    states?.push(audioStateMachine?.getCurrentState());
+    audioStateMachine.transition('START_TTS');
+    states.push(audioStateMachine.getCurrentState());
 
-    audioStateMachine?.transition('END_TTS');
-    states?.push(audioStateMachine?.getCurrentState());
+    audioStateMachine.transition('END_TTS');
+    states.push(audioStateMachine.getCurrentState());
 
-    expect(any: any).toEqual(['LISTENING', 'PROCESSING', 'SPEAKING', 'IDLE']);
+    expect(states).toEqual(['LISTENING', 'PROCESSING', 'SPEAKING', 'IDLE']);
   });
 
   /**
@@ -109,9 +109,9 @@ describe('Audio State Machine Architecture — Phase 8', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should handle ERROR state transition', () => {
-    audioStateMachine?.transition('START_RECORDING');
-    audioStateMachine?.transition('ERROR');
-    expect(audioStateMachine?.getCurrentState()).toBe('ERROR');
+    audioStateMachine.transition('START_RECORDING');
+    audioStateMachine.transition('ERROR');
+    expect(audioStateMachine.getCurrentState()).toBe('ERROR');
   });
 
   /**
@@ -120,12 +120,12 @@ describe('Audio State Machine Architecture — Phase 8', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should reset from any state to IDLE', () => {
-    audioStateMachine?.transition('START_RECORDING');
-    audioStateMachine?.transition('STOP_RECORDING');
-    expect(audioStateMachine?.getCurrentState()).toBe('PROCESSING');
+    audioStateMachine.transition('START_RECORDING');
+    audioStateMachine.transition('STOP_RECORDING');
+    expect(audioStateMachine.getCurrentState()).toBe('PROCESSING');
 
-    audioStateMachine?.reset();
-    expect(audioStateMachine?.getCurrentState()).toBe('IDLE');
+    audioStateMachine.reset();
+    expect(audioStateMachine.getCurrentState()).toBe('IDLE');
   });
 
   /**
@@ -134,11 +134,11 @@ describe('Audio State Machine Architecture — Phase 8', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should handle invalid transitions gracefully', () => {
-    // IDLE → STOP_RECORDING (any: any)
-    audioStateMachine?.transition('STOP_RECORDING');
-    // Should remain in IDLE or transition to ERROR (any: any)
-    const state = audioStateMachine?.getCurrentState();
-    expect(any: any);
+    // IDLE → STOP_RECORDING (invalid)
+    audioStateMachine.transition('STOP_RECORDING');
+    // Should remain in IDLE or transition to ERROR (implementation-specific)
+    const state = audioStateMachine.getCurrentState();
+    expect(['IDLE', 'ERROR']).toContain(state);
   });
 
   /**
@@ -147,15 +147,15 @@ describe('Audio State Machine Architecture — Phase 8', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should handle multiple resets', () => {
-    audioStateMachine?.reset();
-    expect(audioStateMachine?.getCurrentState()).toBe('IDLE');
+    audioStateMachine.reset();
+    expect(audioStateMachine.getCurrentState()).toBe('IDLE');
 
-    audioStateMachine?.transition('START_RECORDING');
-    audioStateMachine?.reset();
-    expect(audioStateMachine?.getCurrentState()).toBe('IDLE');
+    audioStateMachine.transition('START_RECORDING');
+    audioStateMachine.reset();
+    expect(audioStateMachine.getCurrentState()).toBe('IDLE');
 
-    audioStateMachine?.reset();
-    expect(audioStateMachine?.getCurrentState()).toBe('IDLE');
+    audioStateMachine.reset();
+    expect(audioStateMachine.getCurrentState()).toBe('IDLE');
   });
 });
 
@@ -167,7 +167,7 @@ describe('Audio State Machine Architecture — Phase 8', () => {
 
 describe('Halo Engine Architecture — Phase 8', () => {
   beforeEach(() => {
-    haloEngine?.reset();
+    haloEngine.reset();
   });
 
   /**
@@ -176,7 +176,7 @@ describe('Halo Engine Architecture — Phase 8', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should start in idle state', () => {
-    expect(haloEngine?.getCurrentState()).toBe('idle');
+    expect(haloEngine.getCurrentState()).toBe('idle');
   });
 
   /**
@@ -185,8 +185,8 @@ describe('Halo Engine Architecture — Phase 8', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should start breathing animation', () => {
-    haloEngine?.startBreathing();
-    expect(haloEngine?.getCurrentState()).toBe('breathing');
+    haloEngine.startBreathing();
+    expect(haloEngine.getCurrentState()).toBe('breathing');
   });
 
   /**
@@ -195,11 +195,11 @@ describe('Halo Engine Architecture — Phase 8', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should stop breathing animation', () => {
-    haloEngine?.startBreathing();
-    expect(haloEngine?.getCurrentState()).toBe('breathing');
+    haloEngine.startBreathing();
+    expect(haloEngine.getCurrentState()).toBe('breathing');
 
-    haloEngine?.stopBreathing();
-    expect(haloEngine?.getCurrentState()).toBe('idle');
+    haloEngine.stopBreathing();
+    expect(haloEngine.getCurrentState()).toBe('idle');
   });
 
   /**
@@ -209,11 +209,11 @@ describe('Halo Engine Architecture — Phase 8', () => {
    */
   it('should handle multiple breathing cycles', () => {
     for (let i = 0; i < 5; i++) {
-      haloEngine?.startBreathing();
-      expect(haloEngine?.getCurrentState()).toBe('breathing');
+      haloEngine.startBreathing();
+      expect(haloEngine.getCurrentState()).toBe('breathing');
 
-      haloEngine?.stopBreathing();
-      expect(haloEngine?.getCurrentState()).toBe('idle');
+      haloEngine.stopBreathing();
+      expect(haloEngine.getCurrentState()).toBe('idle');
     }
   });
 
@@ -223,11 +223,11 @@ describe('Halo Engine Architecture — Phase 8', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should reset from breathing state', () => {
-    haloEngine?.startBreathing();
-    expect(haloEngine?.getCurrentState()).toBe('breathing');
+    haloEngine.startBreathing();
+    expect(haloEngine.getCurrentState()).toBe('breathing');
 
-    haloEngine?.reset();
-    expect(haloEngine?.getCurrentState()).toBe('idle');
+    haloEngine.reset();
+    expect(haloEngine.getCurrentState()).toBe('idle');
   });
 
   /**
@@ -236,9 +236,9 @@ describe('Halo Engine Architecture — Phase 8', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should handle double start breathing', () => {
-    haloEngine?.startBreathing();
-    haloEngine?.startBreathing(); // Should not cause error
-    expect(haloEngine?.getCurrentState()).toBe('breathing');
+    haloEngine.startBreathing();
+    haloEngine.startBreathing(); // Should not cause error
+    expect(haloEngine.getCurrentState()).toBe('breathing');
   });
 
   /**
@@ -247,8 +247,8 @@ describe('Halo Engine Architecture — Phase 8', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should handle stop breathing without start', () => {
-    haloEngine?.stopBreathing(); // Should not cause error
-    expect(haloEngine?.getCurrentState()).toBe('idle');
+    haloEngine.stopBreathing(); // Should not cause error
+    expect(haloEngine.getCurrentState()).toBe('idle');
   });
 });
 
@@ -260,8 +260,8 @@ describe('Halo Engine Architecture — Phase 8', () => {
 
 describe('Voice Architecture Integration — Phase 8', () => {
   beforeEach(() => {
-    audioStateMachine?.reset();
-    haloEngine?.reset();
+    audioStateMachine.reset();
+    haloEngine.reset();
   });
 
   /**
@@ -271,27 +271,27 @@ describe('Voice Architecture Integration — Phase 8', () => {
    */
   it('should synchronize Audio State Machine and Halo Engine', () => {
     // Start recording → Start breathing
-    audioStateMachine?.transition('START_RECORDING');
-    haloEngine?.startBreathing();
+    audioStateMachine.transition('START_RECORDING');
+    haloEngine.startBreathing();
 
-    expect(audioStateMachine?.getCurrentState()).toBe('LISTENING');
-    expect(haloEngine?.getCurrentState()).toBe('breathing');
+    expect(audioStateMachine.getCurrentState()).toBe('LISTENING');
+    expect(haloEngine.getCurrentState()).toBe('breathing');
 
-    // Stop recording → Processing (any: any)
-    audioStateMachine?.transition('STOP_RECORDING');
-    expect(audioStateMachine?.getCurrentState()).toBe('PROCESSING');
-    expect(haloEngine?.getCurrentState()).toBe('breathing');
+    // Stop recording → Processing (breathing continues)
+    audioStateMachine.transition('STOP_RECORDING');
+    expect(audioStateMachine.getCurrentState()).toBe('PROCESSING');
+    expect(haloEngine.getCurrentState()).toBe('breathing');
 
     // Start TTS → Stop breathing
-    audioStateMachine?.transition('START_TTS');
-    haloEngine?.stopBreathing();
+    audioStateMachine.transition('START_TTS');
+    haloEngine.stopBreathing();
 
-    expect(audioStateMachine?.getCurrentState()).toBe('SPEAKING');
-    expect(haloEngine?.getCurrentState()).toBe('idle');
+    expect(audioStateMachine.getCurrentState()).toBe('SPEAKING');
+    expect(haloEngine.getCurrentState()).toBe('idle');
 
     // End TTS → IDLE
-    audioStateMachine?.transition('END_TTS');
-    expect(audioStateMachine?.getCurrentState()).toBe('IDLE');
+    audioStateMachine.transition('END_TTS');
+    expect(audioStateMachine.getCurrentState()).toBe('IDLE');
   });
 
   /**
@@ -300,19 +300,19 @@ describe('Voice Architecture Integration — Phase 8', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should synchronize error recovery', () => {
-    audioStateMachine?.transition('START_RECORDING');
-    haloEngine?.startBreathing();
+    audioStateMachine.transition('START_RECORDING');
+    haloEngine.startBreathing();
 
     // Error occurs
-    audioStateMachine?.transition('ERROR');
-    haloEngine?.reset();
+    audioStateMachine.transition('ERROR');
+    haloEngine.reset();
 
-    expect(audioStateMachine?.getCurrentState()).toBe('ERROR');
-    expect(haloEngine?.getCurrentState()).toBe('idle');
+    expect(audioStateMachine.getCurrentState()).toBe('ERROR');
+    expect(haloEngine.getCurrentState()).toBe('idle');
 
     // Reset both
-    audioStateMachine?.reset();
-    expect(audioStateMachine?.getCurrentState()).toBe('IDLE');
+    audioStateMachine.reset();
+    expect(audioStateMachine.getCurrentState()).toBe('IDLE');
   });
 
   /**
@@ -323,20 +323,20 @@ describe('Voice Architecture Integration — Phase 8', () => {
   it('should handle multiple voice loops with sync', () => {
     for (let i = 0; i < 3; i++) {
       // Start
-      audioStateMachine?.transition('START_RECORDING');
-      haloEngine?.startBreathing();
+      audioStateMachine.transition('START_RECORDING');
+      haloEngine.startBreathing();
 
       // Process
-      audioStateMachine?.transition('STOP_RECORDING');
-      audioStateMachine?.transition('START_TTS');
-      haloEngine?.stopBreathing();
+      audioStateMachine.transition('STOP_RECORDING');
+      audioStateMachine.transition('START_TTS');
+      haloEngine.stopBreathing();
 
       // End
-      audioStateMachine?.transition('END_TTS');
+      audioStateMachine.transition('END_TTS');
 
       // Verify both back to idle
-      expect(audioStateMachine?.getCurrentState()).toBe('IDLE');
-      expect(haloEngine?.getCurrentState()).toBe('idle');
+      expect(audioStateMachine.getCurrentState()).toBe('IDLE');
+      expect(haloEngine.getCurrentState()).toBe('idle');
     }
   });
 });
@@ -354,10 +354,10 @@ describe('Voice Components Validation — Phase 8', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should have audioStateMachine available', () => {
-    expect(any: any).toBeDefined();
-    expect(any: any).toBe('function');
-    expect(any: any).toBe('function');
-    expect(any: any).toBe('function');
+    expect(audioStateMachine).toBeDefined();
+    expect(typeof audioStateMachine.transition).toBe('function');
+    expect(typeof audioStateMachine.getCurrentState).toBe('function');
+    expect(typeof audioStateMachine.reset).toBe('function');
   });
 
   /**
@@ -366,11 +366,11 @@ describe('Voice Components Validation — Phase 8', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should have haloEngine available', () => {
-    expect(any: any).toBeDefined();
-    expect(any: any).toBe('function');
-    expect(any: any).toBe('function');
-    expect(any: any).toBe('function');
-    expect(any: any).toBe('function');
+    expect(haloEngine).toBeDefined();
+    expect(typeof haloEngine.startBreathing).toBe('function');
+    expect(typeof haloEngine.stopBreathing).toBe('function');
+    expect(typeof haloEngine.getCurrentState).toBe('function');
+    expect(typeof haloEngine.reset).toBe('function');
   });
 
   /**
@@ -382,20 +382,20 @@ describe('Voice Components Validation — Phase 8', () => {
     const requiredStates = ['IDLE', 'LISTENING', 'PROCESSING', 'SPEAKING', 'ERROR'];
 
     // Test each state is reachable
-    audioStateMachine?.reset();
-    expect(audioStateMachine?.getCurrentState()).toBe('IDLE');
+    audioStateMachine.reset();
+    expect(audioStateMachine.getCurrentState()).toBe('IDLE');
 
-    audioStateMachine?.transition('START_RECORDING');
-    expect(any: any).toContain(audioStateMachine?.getCurrentState());
+    audioStateMachine.transition('START_RECORDING');
+    expect(requiredStates).toContain(audioStateMachine.getCurrentState());
 
-    audioStateMachine?.transition('STOP_RECORDING');
-    expect(any: any).toContain(audioStateMachine?.getCurrentState());
+    audioStateMachine.transition('STOP_RECORDING');
+    expect(requiredStates).toContain(audioStateMachine.getCurrentState());
 
-    audioStateMachine?.transition('START_TTS');
-    expect(any: any).toContain(audioStateMachine?.getCurrentState());
+    audioStateMachine.transition('START_TTS');
+    expect(requiredStates).toContain(audioStateMachine.getCurrentState());
 
-    audioStateMachine?.transition('ERROR');
-    expect(any: any).toContain(audioStateMachine?.getCurrentState());
+    audioStateMachine.transition('ERROR');
+    expect(requiredStates).toContain(audioStateMachine.getCurrentState());
   });
 
   /**
@@ -406,13 +406,13 @@ describe('Voice Components Validation — Phase 8', () => {
   it('should support all required halo states', () => {
     const requiredStates = ['idle', 'breathing'];
 
-    haloEngine?.reset();
-    expect(any: any).toContain(haloEngine?.getCurrentState());
+    haloEngine.reset();
+    expect(requiredStates).toContain(haloEngine.getCurrentState());
 
-    haloEngine?.startBreathing();
-    expect(any: any).toContain(haloEngine?.getCurrentState());
+    haloEngine.startBreathing();
+    expect(requiredStates).toContain(haloEngine.getCurrentState());
 
-    haloEngine?.stopBreathing();
-    expect(any: any).toContain(haloEngine?.getCurrentState());
+    haloEngine.stopBreathing();
+    expect(requiredStates).toContain(haloEngine.getCurrentState());
   });
 });

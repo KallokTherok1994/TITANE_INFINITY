@@ -124,7 +124,7 @@ export interface PhenomenonConfig {
   auraOpacity?: number;
 
   // Colors
-  colors?: string?.[];
+  colors?: string[];
 
   // Effects
   arcCount?: number;
@@ -158,15 +158,15 @@ export class VisualSemanticGrammar {
     engine: EngineState,
     intensity: number,
     metadata?: Record<string, unknown>
-  ): VisualPhenomenon?.[] {
-    const phenomena: VisualPhenomenon?.[] = [];
+  ): VisualPhenomenon[] {
+    const phenomena: VisualPhenomenon[] = [];
 
-    switch (any: any) {
-      case EngineState?.IDENTITY:
+    switch (engine) {
+      case EngineState.IDENTITY:
         // Identité → Signature lumineuse unique, pulsation distinctive
-        phenomena?.push({
-          id: `identity_signature_${Date?.now()}`,
-          type: PhenomenonType?.CORE_SIGNATURE,
+        phenomena.push({
+          id: `identity_signature_${Date.now()}`,
+          type: PhenomenonType.CORE_SIGNATURE,
           intensity,
           priority: 9,
           semanticMeaning: 'Signature visuelle identitaire de TITANE∞',
@@ -178,87 +178,87 @@ export class VisualSemanticGrammar {
         });
         break;
 
-      case EngineState?.ALIGNMENT:
+      case EngineState.ALIGNMENT:
         // Alignement → Cohérence orbitale, stabilité des anneaux
-        phenomena?.push({
-          id: `alignment_orbital_${Date?.now()}`,
-          type: PhenomenonType?.ORBITAL_RING_ACTIVATION,
+        phenomena.push({
+          id: `alignment_orbital_${Date.now()}`,
+          type: PhenomenonType.ORBITAL_RING_ACTIVATION,
           intensity,
           priority: 8,
           semanticMeaning: 'Anneaux orbitaux représentant la cohérence systémique',
           config: {
             orbitalSpeed: 1.0 * intensity,
             ringOpacity: 0.4 + intensity * 0.4,
-            ringCount: Math?.floor(2 + intensity * 2), // 2-4 anneaux
+            ringCount: Math.floor(2 + intensity * 2), // 2-4 anneaux
           },
         });
 
         if (intensity < 0.5) {
           // Alignement faible → Perturbation orbitale
-          phenomena?.push({
-            id: `alignment_perturbation_${Date?.now()}`,
-            type: PhenomenonType?.ORBITAL_RING_PERTURBATION,
+          phenomena.push({
+            id: `alignment_perturbation_${Date.now()}`,
+            type: PhenomenonType.ORBITAL_RING_PERTURBATION,
             intensity: 1 - intensity,
             priority: 7,
             semanticMeaning: "Perturbation orbitale indiquant perte d'alignement",
             config: {
-              glitchIntensity: 0.2 * (any: any),
+              glitchIntensity: 0.2 * (1 - intensity),
             },
           });
         }
         break;
 
-      case EngineState?.CORRECTION:
+      case EngineState.CORRECTION:
         // Correction → Arcs énergétiques, réparation visuelle
-        phenomena?.push({
-          id: `correction_arcs_${Date?.now()}`,
-          type: PhenomenonType?.ENERGY_ARCS,
+        phenomena.push({
+          id: `correction_arcs_${Date.now()}`,
+          type: PhenomenonType.ENERGY_ARCS,
           intensity,
           priority: 7,
           semanticMeaning: 'Arcs énergétiques de correction active',
           config: {
-            arcCount: Math?.floor(2 + intensity * 4), // 2-6 arcs
+            arcCount: Math.floor(2 + intensity * 4), // 2-6 arcs
             arcIntensity: 0.5 + intensity * 0.5,
           },
         });
         break;
 
-      case EngineState?.SELF_HEALING:
+      case EngineState.SELF_HEALING:
         // Auto-réparation → Vagues de guérison, lissage
-        phenomena?.push({
-          id: `healing_waves_${Date?.now()}`,
-          type: PhenomenonType?.HEALING_WAVES,
+        phenomena.push({
+          id: `healing_waves_${Date.now()}`,
+          type: PhenomenonType.HEALING_WAVES,
           intensity,
           duration: 2000,
           priority: 8,
           semanticMeaning: 'Vagues de guérison auto-réparatrices',
           config: {
-            waveCount: Math?.floor(3 + intensity * 3), // 3-6 vagues
+            waveCount: Math.floor(3 + intensity * 3), // 3-6 vagues
             waveSpeed: 0.8 + intensity * 0.4,
             glowColor: '#00FF88', // Vert guérison
           },
         });
         break;
 
-      case EngineState?.PERFORMANCE:
+      case EngineState.PERFORMANCE:
         // Performance → Densité particules adaptative
-        phenomena?.push({
-          id: `performance_particles_${Date?.now()}`,
-          type: PhenomenonType?.PARTICLE_DENSITY_SHIFT,
+        phenomena.push({
+          id: `performance_particles_${Date.now()}`,
+          type: PhenomenonType.PARTICLE_DENSITY_SHIFT,
           intensity,
           priority: 6,
           semanticMeaning: 'Densité particules adaptée à la charge système',
           config: {
-            particleDensity: Math?.max(0.3, 1.0 - intensity * 0.5), // Plus de charge = moins de particules
+            particleDensity: Math.max(0.3, 1.0 - intensity * 0.5), // Plus de charge = moins de particules
           },
         });
         break;
 
-      case EngineState?.EVOLUTION:
+      case EngineState.EVOLUTION:
         // Évolution → Transition de phase, changement de couleur
-        phenomena?.push({
-          id: `evolution_phase_${Date?.now()}`,
-          type: PhenomenonType?.PHASE_TRANSITION,
+        phenomena.push({
+          id: `evolution_phase_${Date.now()}`,
+          type: PhenomenonType.PHASE_TRANSITION,
           intensity,
           duration: 3000,
           priority: 9,
@@ -269,9 +269,9 @@ export class VisualSemanticGrammar {
           },
         });
 
-        phenomena?.push({
-          id: `evolution_spiral_${Date?.now()}`,
-          type: PhenomenonType?.PARTICLE_SPIRAL,
+        phenomena.push({
+          id: `evolution_spiral_${Date.now()}`,
+          type: PhenomenonType.PARTICLE_SPIRAL,
           intensity,
           duration: 2000,
           priority: 7,
@@ -282,26 +282,26 @@ export class VisualSemanticGrammar {
         });
         break;
 
-      case EngineState?.BEHAVIOR:
+      case EngineState.BEHAVIOR:
         // Comportement → Modulation émotionnelle des couleurs
-        phenomena?.push({
-          id: `behavior_color_${Date?.now()}`,
-          type: PhenomenonType?.AURA_COLOR_MORPH,
+        phenomena.push({
+          id: `behavior_color_${Date.now()}`,
+          type: PhenomenonType.AURA_COLOR_MORPH,
           intensity,
           priority: 6,
           semanticMeaning: 'Modulation couleur selon comportement',
           config: {
-            auraColor: (any: any) || '#4FB5FF',
+            auraColor: (metadata?.['emotionalColor'] as string) || '#4FB5FF',
             easingFunction: 'ease-in-out',
           },
         });
         break;
 
-      case EngineState?.AUDIT:
+      case EngineState.AUDIT:
         // Audit → Pulsation de validation
-        phenomena?.push({
-          id: `audit_pulse_${Date?.now()}`,
-          type: PhenomenonType?.CORE_PULSE,
+        phenomena.push({
+          id: `audit_pulse_${Date.now()}`,
+          type: PhenomenonType.CORE_PULSE,
           intensity,
           duration: 1000,
           priority: 5,
@@ -327,15 +327,15 @@ export class VisualSemanticGrammar {
   static translateOmegaStage(
     stage: OmegaPipelineStage,
     progress: number
-  ): VisualPhenomenon?.[] {
-    const phenomena: VisualPhenomenon?.[] = [];
+  ): VisualPhenomenon[] {
+    const phenomena: VisualPhenomenon[] = [];
 
-    switch (any: any) {
-      case OmegaPipelineStage?.STAGE_0:
+    switch (stage) {
+      case OmegaPipelineStage.STAGE_0:
         // Idle → Respiration lente
-        phenomena?.push({
-          id: `omega_idle_${Date?.now()}`,
-          type: PhenomenonType?.CORE_BREATH,
+        phenomena.push({
+          id: `omega_idle_${Date.now()}`,
+          type: PhenomenonType.CORE_BREATH,
           intensity: 0.3,
           priority: 3,
           semanticMeaning: 'Respiration au repos',
@@ -346,11 +346,11 @@ export class VisualSemanticGrammar {
         });
         break;
 
-      case OmegaPipelineStage?.STAGE_1:
+      case OmegaPipelineStage.STAGE_1:
         // Réception → Burst particules initial
-        phenomena?.push({
-          id: `omega_reception_${Date?.now()}`,
-          type: PhenomenonType?.PARTICLE_BURST,
+        phenomena.push({
+          id: `omega_reception_${Date.now()}`,
+          type: PhenomenonType.PARTICLE_BURST,
           intensity: 0.8,
           duration: 500,
           priority: 7,
@@ -362,13 +362,13 @@ export class VisualSemanticGrammar {
         });
         break;
 
-      case OmegaPipelineStage?.STAGE_2:
-      case OmegaPipelineStage?.STAGE_3:
-      case OmegaPipelineStage?.STAGE_4:
+      case OmegaPipelineStage.STAGE_2:
+      case OmegaPipelineStage.STAGE_3:
+      case OmegaPipelineStage.STAGE_4:
         // Processing → Arcs énergétiques soutenus
-        phenomena?.push({
-          id: `omega_processing_${Date?.now()}`,
-          type: PhenomenonType?.ENERGY_ARCS,
+        phenomena.push({
+          id: `omega_processing_${Date.now()}`,
+          type: PhenomenonType.ENERGY_ARCS,
           intensity: 0.6 + progress * 0.3,
           priority: 6,
           semanticMeaning: 'Traitement cognitif en cours',
@@ -378,23 +378,23 @@ export class VisualSemanticGrammar {
           },
         });
 
-        phenomena?.push({
-          id: `omega_orbital_${Date?.now()}`,
-          type: PhenomenonType?.ORBITAL_SPEED_CHANGE,
+        phenomena.push({
+          id: `omega_orbital_${Date.now()}`,
+          type: PhenomenonType.ORBITAL_SPEED_CHANGE,
           intensity: 0.8,
           priority: 5,
-          semanticMeaning: 'Vitesse orbitale augmentée (any: any)',
+          semanticMeaning: 'Vitesse orbitale augmentée (traitement actif)',
           config: {
             orbitalSpeed: 1.5,
           },
         });
         break;
 
-      case OmegaPipelineStage?.STAGE_8:
+      case OmegaPipelineStage.STAGE_8:
         // Livraison → Micro arcs électriques
-        phenomena?.push({
-          id: `omega_delivery_${Date?.now()}`,
-          type: PhenomenonType?.ENERGY_ARCS,
+        phenomena.push({
+          id: `omega_delivery_${Date.now()}`,
+          type: PhenomenonType.ENERGY_ARCS,
           intensity: 0.9,
           duration: 400,
           priority: 8,
@@ -407,12 +407,12 @@ export class VisualSemanticGrammar {
         });
         break;
 
-      case OmegaPipelineStage?.STAGE_9:
-      case OmegaPipelineStage?.STAGE_10:
+      case OmegaPipelineStage.STAGE_9:
+      case OmegaPipelineStage.STAGE_10:
         // Apprentissage/Intégration → Vagues de consolidation
-        phenomena?.push({
-          id: `omega_learning_${Date?.now()}`,
-          type: PhenomenonType?.HEALING_WAVES,
+        phenomena.push({
+          id: `omega_learning_${Date.now()}`,
+          type: PhenomenonType.HEALING_WAVES,
           intensity: 0.6,
           duration: 1500,
           priority: 6,
@@ -439,15 +439,15 @@ export class VisualSemanticGrammar {
   static translateMemoryState(
     memoryState: MemoryState,
     intensity: number
-  ): VisualPhenomenon?.[] {
-    const phenomena: VisualPhenomenon?.[] = [];
+  ): VisualPhenomenon[] {
+    const phenomena: VisualPhenomenon[] = [];
 
-    switch (any: any) {
-      case MemoryState?.STM_ACTIVE:
+    switch (memoryState) {
+      case MemoryState.STM_ACTIVE:
         // Mémoire court terme → Particules rapides
-        phenomena?.push({
-          id: `memory_stm_${Date?.now()}`,
-          type: PhenomenonType?.PARTICLE_SPEED_CHANGE,
+        phenomena.push({
+          id: `memory_stm_${Date.now()}`,
+          type: PhenomenonType.PARTICLE_SPEED_CHANGE,
           intensity,
           priority: 5,
           semanticMeaning: 'Activité mémoire court terme',
@@ -457,11 +457,11 @@ export class VisualSemanticGrammar {
         });
         break;
 
-      case MemoryState?.MTM_CONSOLIDATING:
+      case MemoryState.MTM_CONSOLIDATING:
         // Consolidation → Vagues lentes
-        phenomena?.push({
-          id: `memory_mtm_${Date?.now()}`,
-          type: PhenomenonType?.HEALING_WAVES,
+        phenomena.push({
+          id: `memory_mtm_${Date.now()}`,
+          type: PhenomenonType.HEALING_WAVES,
           intensity,
           duration: 2000,
           priority: 6,
@@ -474,11 +474,11 @@ export class VisualSemanticGrammar {
         });
         break;
 
-      case MemoryState?.LTM_RETRIEVING:
+      case MemoryState.LTM_RETRIEVING:
         // Récupération → Pulsation profonde
-        phenomena?.push({
-          id: `memory_ltm_retrieve_${Date?.now()}`,
-          type: PhenomenonType?.CORE_PULSE,
+        phenomena.push({
+          id: `memory_ltm_retrieve_${Date.now()}`,
+          type: PhenomenonType.CORE_PULSE,
           intensity,
           priority: 7,
           semanticMeaning: 'Récupération mémoire long terme',
@@ -490,11 +490,11 @@ export class VisualSemanticGrammar {
         });
         break;
 
-      case MemoryState?.LTM_SATURATED:
+      case MemoryState.LTM_SATURATED:
         // Saturation → Respiration lumineuse lente
-        phenomena?.push({
-          id: `memory_ltm_saturated_${Date?.now()}`,
-          type: PhenomenonType?.CORE_BREATH,
+        phenomena.push({
+          id: `memory_ltm_saturated_${Date.now()}`,
+          type: PhenomenonType.CORE_BREATH,
           intensity,
           priority: 8,
           semanticMeaning: 'Saturation mémoire long terme',
@@ -520,14 +520,14 @@ export class VisualSemanticGrammar {
   static translateSystemEvent(
     event: string,
     _metadata?: Record<string, unknown>
-  ): VisualPhenomenon?.[] {
-    const phenomena: VisualPhenomenon?.[] = [];
+  ): VisualPhenomenon[] {
+    const phenomena: VisualPhenomenon[] = [];
 
-    switch (any: any) {
+    switch (event) {
       case 'processing_start':
-        phenomena?.push({
-          id: `event_start_${Date?.now()}`,
-          type: PhenomenonType?.PARTICLE_BURST,
+        phenomena.push({
+          id: `event_start_${Date.now()}`,
+          type: PhenomenonType.PARTICLE_BURST,
           intensity: 0.9,
           duration: 600,
           priority: 8,
@@ -537,9 +537,9 @@ export class VisualSemanticGrammar {
         break;
 
       case 'error_detected':
-        phenomena?.push({
-          id: `event_error_${Date?.now()}`,
-          type: PhenomenonType?.GLITCH_EFFECT,
+        phenomena.push({
+          id: `event_error_${Date.now()}`,
+          type: PhenomenonType.GLITCH_EFFECT,
           intensity: 0.8,
           duration: 300,
           priority: 9,
@@ -549,9 +549,9 @@ export class VisualSemanticGrammar {
         break;
 
       case 'error_resolved':
-        phenomena?.push({
-          id: `event_resolved_${Date?.now()}`,
-          type: PhenomenonType?.HEALING_WAVES,
+        phenomena.push({
+          id: `event_resolved_${Date.now()}`,
+          type: PhenomenonType.HEALING_WAVES,
           intensity: 0.9,
           duration: 1500,
           priority: 8,
@@ -561,9 +561,9 @@ export class VisualSemanticGrammar {
         break;
 
       case 'voice_started':
-        phenomena?.push({
-          id: `event_voice_start_${Date?.now()}`,
-          type: PhenomenonType?.AUDIO_WAVEFORM,
+        phenomena.push({
+          id: `event_voice_start_${Date.now()}`,
+          type: PhenomenonType.AUDIO_WAVEFORM,
           intensity: 1.0,
           priority: 9,
           semanticMeaning: 'Voix activée',
@@ -572,9 +572,9 @@ export class VisualSemanticGrammar {
         break;
 
       case 'voice_ended':
-        phenomena?.push({
-          id: `event_voice_end_${Date?.now()}`,
-          type: PhenomenonType?.AURA_CONTRACTION,
+        phenomena.push({
+          id: `event_voice_end_${Date.now()}`,
+          type: PhenomenonType.AURA_CONTRACTION,
           intensity: 0.8,
           duration: 800,
           priority: 7,
@@ -584,9 +584,9 @@ export class VisualSemanticGrammar {
         break;
 
       case 'alignment_loss':
-        phenomena?.push({
-          id: `event_alignment_loss_${Date?.now()}`,
-          type: PhenomenonType?.ORBITAL_RING_PERTURBATION,
+        phenomena.push({
+          id: `event_alignment_loss_${Date.now()}`,
+          type: PhenomenonType.ORBITAL_RING_PERTURBATION,
           intensity: 0.6,
           duration: 1000,
           priority: 7,
@@ -596,9 +596,9 @@ export class VisualSemanticGrammar {
         break;
 
       case 'alignment_restored':
-        phenomena?.push({
-          id: `event_alignment_restored_${Date?.now()}`,
-          type: PhenomenonType?.ORBITAL_RING_ACTIVATION,
+        phenomena.push({
+          id: `event_alignment_restored_${Date.now()}`,
+          type: PhenomenonType.ORBITAL_RING_ACTIVATION,
           intensity: 0.9,
           duration: 1200,
           priority: 8,
@@ -622,7 +622,7 @@ export class VisualSemanticGrammar {
   static getSignaturePhenomenon(): VisualPhenomenon {
     return {
       id: 'titane_signature_permanent',
-      type: PhenomenonType?.CORE_SIGNATURE,
+      type: PhenomenonType.CORE_SIGNATURE,
       intensity: 1.0,
       priority: 10,
       semanticMeaning: 'Signature visuelle permanente TITANE∞',

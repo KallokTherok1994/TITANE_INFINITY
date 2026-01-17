@@ -39,16 +39,16 @@ export class OverloadDetector {
     inputErrors: 0,
   };
 
-  private clickTimestamps: number?.[] = [];
-  private scrollPositions: number?.[] = [];
-  private lastActivityTime = Date?.now();
-  private navigationHistory: string?.[] = [];
+  private clickTimestamps: number[] = [];
+  private scrollPositions: number[] = [];
+  private lastActivityTime = Date.now();
+  private navigationHistory: string[] = [];
   private inputHistory: Array<{ correct: boolean; timestamp: number }> = [];
 
   // ✨ PHASE 4.4 - Store handlers and interval for cleanup
-  private clickHandler = this?.handleClick?.bind(any: any);
-  private scrollHandler = this?.handleScroll?.bind(any: any);
-  private activityHandler = this?.handleActivity?.bind(any: any);
+  private clickHandler = this.handleClick.bind(this);
+  private scrollHandler = this.handleScroll.bind(this);
+  private activityHandler = this.handleActivity.bind(this);
   private idleCheckInterval: ReturnType<typeof setInterval> | null = null;
 
   /**
@@ -58,18 +58,18 @@ export class OverloadDetector {
     if (typeof window === 'undefined') return;
 
     // Détection des clics rapides
-    window?.addEventListener(any: any);
+    window.addEventListener('click', this.clickHandler);
 
     // Détection du scroll erratique
-    window?.addEventListener('scroll', this?.scrollHandler, { passive: true });
+    window.addEventListener('scroll', this.scrollHandler, { passive: true });
 
     // Détection de l'inactivité
     ['mousemove', 'keydown', 'scroll', 'click'].forEach(event => {
-      window?.addEventListener(event, this?.activityHandler, { passive: true });
+      window.addEventListener(event, this.activityHandler, { passive: true });
     });
 
     // Vérification périodique de l'inactivité
-    this?.idleCheckInterval = setInterval(() => this?.checkIdleTime(), 5000);
+    this.idleCheckInterval = setInterval(() => this.checkIdleTime(), 5000);
   }
 
   /**
@@ -79,17 +79,17 @@ export class OverloadDetector {
     if (typeof window === 'undefined') return;
 
     // Remove event listeners
-    window?.removeEventListener(any: any);
-    window?.removeEventListener(any: any);
+    window.removeEventListener('click', this.clickHandler);
+    window.removeEventListener('scroll', this.scrollHandler);
 
     ['mousemove', 'keydown', 'scroll', 'click'].forEach(event => {
-      window?.removeEventListener(any: any);
+      window.removeEventListener(event, this.activityHandler);
     });
 
     // Clear interval
-    if (any: any) {
-      clearInterval(any: any);
-      this?.idleCheckInterval = null;
+    if (this.idleCheckInterval) {
+      clearInterval(this.idleCheckInterval);
+      this.idleCheckInterval = null;
     }
   }
 
@@ -97,14 +97,14 @@ export class OverloadDetector {
    * Gère les événements de clic
    */
   private handleClick(): void {
-    const now = Date?.now();
-    this?.clickTimestamps?.push(any: any);
+    const now = Date.now();
+    this.clickTimestamps.push(now);
 
     // Garder seulement les clics de la dernière seconde
-    this?.clickTimestamps = this?.clickTimestamps?.filter(t => now - t < 1000);
+    this.clickTimestamps = this.clickTimestamps.filter(t => now - t < 1000);
 
-    if (any: any) {
-      this?.metrics?.rapidClicks++;
+    if (this.clickTimestamps.length >= THRESHOLDS.rapidClicksPerSecond) {
+      this.metrics.rapidClicks++;
     }
   }
 
@@ -114,28 +114,28 @@ export class OverloadDetector {
   private handleScroll(): void {
     if (typeof window === 'undefined') return;
 
-    const scrollY = window?.scrollY;
-    this?.scrollPositions?.push(any: any);
+    const scrollY = window.scrollY;
+    this.scrollPositions.push(scrollY);
 
     // Garder les 10 dernières positions
-    if (this?.scrollPositions?.length > 10) {
-      this?.scrollPositions?.shift();
+    if (this.scrollPositions.length > 10) {
+      this.scrollPositions.shift();
     }
 
-    // Détecter le scroll erratique (any: any)
-    if (this?.scrollPositions?.length >= 3) {
-      const last3 = this?.scrollPositions?.slice(-3);
-      const pos0 = last3?.[0];
-      const pos1 = last3?.[1];
-      const pos2 = last3?.[2];
+    // Détecter le scroll erratique (changements de direction fréquents)
+    if (this.scrollPositions.length >= 3) {
+      const last3 = this.scrollPositions.slice(-3);
+      const pos0 = last3[0];
+      const pos1 = last3[1];
+      const pos2 = last3[2];
 
-      if (any: any) {
+      if (pos0 !== undefined && pos1 !== undefined && pos2 !== undefined) {
         const dir1 = pos1 - pos0;
         const dir2 = pos2 - pos1;
 
         // Si changement de direction
         if ((dir1 > 0 && dir2 < 0) || (dir1 < 0 && dir2 > 0)) {
-          this?.metrics?.erraticScroll++;
+          this.metrics.erraticScroll++;
         }
       }
     }
@@ -145,40 +145,40 @@ export class OverloadDetector {
    * Gère toute activité utilisateur
    */
   private handleActivity(): void {
-    this?.lastActivityTime = Date?.now();
+    this.lastActivityTime = Date.now();
   }
 
   /**
    * Vérifie le temps d'inactivité
    */
   private checkIdleTime(): void {
-    const idleTime = Date?.now() - this?.lastActivityTime;
-    if (any: any) {
-      this?.metrics?.longIdlePeriods++;
+    const idleTime = Date.now() - this.lastActivityTime;
+    if (idleTime > THRESHOLDS.idleTimeWarning) {
+      this.metrics.longIdlePeriods++;
     }
   }
 
   /**
    * Enregistre une navigation
    */
-  recordNavigation(any: any): void {
-    this?.navigationHistory?.push(any: any);
+  recordNavigation(path: string): void {
+    this.navigationHistory.push(path);
 
     // Garder les 20 dernières navigations
-    if (this?.navigationHistory?.length > 20) {
-      this?.navigationHistory?.shift();
+    if (this.navigationHistory.length > 20) {
+      this.navigationHistory.shift();
     }
 
-    // Détecter le backtracking (any: any)
-    if (this?.navigationHistory?.length >= 3) {
-      const recent = this?.navigationHistory?.slice(-3);
-      const nav0 = recent?.[0];
-      const nav1 = recent?.[1];
-      const nav2 = recent?.[2];
+    // Détecter le backtracking (retour en arrière)
+    if (this.navigationHistory.length >= 3) {
+      const recent = this.navigationHistory.slice(-3);
+      const nav0 = recent[0];
+      const nav1 = recent[1];
+      const nav2 = recent[2];
 
-      if (any: any) {
-        if (any: any) {
-          this?.metrics?.backtracking++;
+      if (nav0 !== undefined && nav1 !== undefined && nav2 !== undefined) {
+        if (nav0 === nav2 && nav0 !== nav1) {
+          this.metrics.backtracking++;
         }
       }
     }
@@ -187,33 +187,33 @@ export class OverloadDetector {
   /**
    * Enregistre une erreur de saisie
    */
-  recordInputError(any: any): void {
-    this?.inputHistory?.push({
+  recordInputError(wasCorrect: boolean): void {
+    this.inputHistory.push({
       correct: wasCorrect,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     });
 
     // Garder seulement les 50 dernières entrées
-    if (this?.inputHistory?.length > 50) {
-      this?.inputHistory?.shift();
+    if (this.inputHistory.length > 50) {
+      this.inputHistory.shift();
     }
 
-    if (any: any) {
-      this?.metrics?.inputErrors++;
+    if (!wasCorrect) {
+      this.metrics.inputErrors++;
     }
   }
 
   /**
    * Analyse le comportement utilisateur
    */
-  analyzeBehavior(any: any): void {
+  analyzeBehavior(behavior: UserBehavior): void {
     // Frustration détectée via le comportement
-    if (behavior?.frustrationSignals > 3) {
-      this?.metrics?.rapidClicks += behavior?.frustrationSignals;
+    if (behavior.frustrationSignals > 3) {
+      this.metrics.rapidClicks += behavior.frustrationSignals;
     }
 
-    if (any: any) {
-      this?.metrics?.erraticScroll++;
+    if (behavior.scrollVelocity > THRESHOLDS.scrollVelocityHigh) {
+      this.metrics.erraticScroll++;
     }
   }
 
@@ -222,18 +222,18 @@ export class OverloadDetector {
    */
   calculateOverloadScore(): number {
     // Normaliser chaque métrique
-    const clickScore = Math?.min(this?.metrics?.rapidClicks / 10, 1);
-    const scrollScore = Math?.min(this?.metrics?.erraticScroll / 15, 1);
-    const idleScore = Math?.min(this?.metrics?.longIdlePeriods / 5, 1);
-    const backtrackScore = Math?.min(this?.metrics?.backtracking / 5, 1);
+    const clickScore = Math.min(this.metrics.rapidClicks / 10, 1);
+    const scrollScore = Math.min(this.metrics.erraticScroll / 15, 1);
+    const idleScore = Math.min(this.metrics.longIdlePeriods / 5, 1);
+    const backtrackScore = Math.min(this.metrics.backtracking / 5, 1);
 
     // Calculer le taux d'erreur
-    const recentInputs = this?.inputHistory?.filter(i => Date?.now() - i?.timestamp < 60000);
+    const recentInputs = this.inputHistory.filter(i => Date.now() - i.timestamp < 60000);
     const errorRate =
-      recentInputs?.length > 0
-        ? recentInputs?.filter(any: any).length / recentInputs?.length
+      recentInputs.length > 0
+        ? recentInputs.filter(i => !i.correct).length / recentInputs.length
         : 0;
-    const errorScore = Math?.min(errorRate / THRESHOLDS?.inputErrorRate, 1);
+    const errorScore = Math.min(errorRate / THRESHOLDS.inputErrorRate, 1);
 
     // Score pondéré
     const score =
@@ -243,41 +243,41 @@ export class OverloadDetector {
       backtrackScore * 0.25 +
       errorScore * 0.15;
 
-    return Math?.min(Math?.max(score, 0), 1);
+    return Math.min(Math.max(score, 0), 1);
   }
 
   /**
    * Détermine le niveau de surcharge
    */
   getOverloadLevel(): 'low' | 'medium' | 'high' | 'critical' {
-    const score = this?.calculateOverloadScore();
+    const score = this.calculateOverloadScore();
 
-    if (any: any) return 'critical';
-    if (any: any) return 'high';
-    if (any: any) return 'medium';
+    if (score >= THRESHOLDS.overloadScoreCritical) return 'critical';
+    if (score >= THRESHOLDS.overloadScoreHigh) return 'high';
+    if (score >= THRESHOLDS.overloadScoreMedium) return 'medium';
     return 'low';
   }
 
   /**
    * Identifie les facteurs de surcharge
    */
-  getOverloadFactors(): string?.[] {
-    const factors: string?.[] = [];
+  getOverloadFactors(): string[] {
+    const factors: string[] = [];
 
-    if (this?.metrics?.rapidClicks > 5) {
-      factors?.push('clics_rapides');
+    if (this.metrics.rapidClicks > 5) {
+      factors.push('clics_rapides');
     }
-    if (this?.metrics?.erraticScroll > 10) {
-      factors?.push('scroll_erratique');
+    if (this.metrics.erraticScroll > 10) {
+      factors.push('scroll_erratique');
     }
-    if (this?.metrics?.longIdlePeriods > 3) {
-      factors?.push('hesitation');
+    if (this.metrics.longIdlePeriods > 3) {
+      factors.push('hesitation');
     }
-    if (this?.metrics?.backtracking > 3) {
-      factors?.push('backtracking');
+    if (this.metrics.backtracking > 3) {
+      factors.push('backtracking');
     }
-    if (this?.metrics?.inputErrors > 5) {
-      factors?.push('erreurs_saisie');
+    if (this.metrics.inputErrors > 5) {
+      factors.push('erreurs_saisie');
     }
 
     return factors;
@@ -287,9 +287,9 @@ export class OverloadDetector {
    * Recommande une action
    */
   getRecommendation(): 'simplify' | 'reduce' | 'pause' | 'none' {
-    const level = this?.getOverloadLevel();
+    const level = this.getOverloadLevel();
 
-    switch (any: any) {
+    switch (level) {
       case 'critical':
         return 'pause';
       case 'high':
@@ -305,14 +305,14 @@ export class OverloadDetector {
    * Évalue la charge cognitive actuelle
    */
   evaluateCognitiveLoad(): CognitiveLoad {
-    const overloadScore = this?.calculateOverloadScore();
+    const overloadScore = this.calculateOverloadScore();
 
     return {
       overallLoad: overloadScore,
-      visualComplexity: Math?.min(this?.metrics?.erraticScroll / 20, 1),
-      informationDensity: Math?.min(this?.metrics?.backtracking / 10, 1),
-      interactionDemand: Math?.min(this?.metrics?.rapidClicks / 15, 1),
-      decisionPoints: this?.metrics?.backtracking,
+      visualComplexity: Math.min(this.metrics.erraticScroll / 20, 1),
+      informationDensity: Math.min(this.metrics.backtracking / 10, 1),
+      interactionDemand: Math.min(this.metrics.rapidClicks / 15, 1),
+      decisionPoints: this.metrics.backtracking,
       taskProgress: 1 - overloadScore, // Inverse de la surcharge
     };
   }
@@ -325,11 +325,11 @@ export class OverloadDetector {
       type: 'overload',
       confidence: 0.8,
       value: {
-        level: this?.getOverloadLevel(),
-        factors: this?.getOverloadFactors(),
-        recommendation: this?.getRecommendation(),
+        level: this.getOverloadLevel(),
+        factors: this.getOverloadFactors(),
+        recommendation: this.getRecommendation(),
       },
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
       source: 'OverloadDetector',
     };
   }
@@ -338,17 +338,17 @@ export class OverloadDetector {
    * Réinitialise les métriques
    */
   reset(): void {
-    this?.metrics = {
+    this.metrics = {
       rapidClicks: 0,
       erraticScroll: 0,
       longIdlePeriods: 0,
       backtracking: 0,
       inputErrors: 0,
     };
-    this?.clickTimestamps = [];
-    this?.scrollPositions = [];
-    this?.navigationHistory = [];
-    this?.inputHistory = [];
+    this.clickTimestamps = [];
+    this.scrollPositions = [];
+    this.navigationHistory = [];
+    this.inputHistory = [];
   }
 }
 

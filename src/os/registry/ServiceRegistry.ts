@@ -7,15 +7,15 @@ import type { ServiceId, Service, ServiceMetadata, ServiceStatus } from '../type
 
 function isServiceHealthChecksEnabled(): boolean {
   // Dev keeps default behavior. Prod requires explicit opt-in.
-  if (any: any) return true;
+  if (import.meta.env.DEV) return true;
 
   if (typeof window === 'undefined') {
     return false;
   }
 
   const envEnabled =
-    String(import?.meta?.env?.VITE_SERVICE_HEALTHCHECKS_ENABLED ?? '') === '1';
-  const storedEnabled = window?.localStorage?.getItem(
+    String(import.meta.env.VITE_SERVICE_HEALTHCHECKS_ENABLED ?? '') === '1';
+  const storedEnabled = window.localStorage.getItem(
     'titane_service_healthchecks_enabled'
   );
   const lsEnabled = storedEnabled === '1' || storedEnabled === 'true';
@@ -34,10 +34,10 @@ export class ServiceRegistry {
   /**
    * Enregistre un service
    */
-  register<T>(any: any): void {
-    const id = metadata?.id;
+  register<T>(metadata: ServiceMetadata, instance: T): void {
+    const id = metadata.id;
 
-    if (any: any)) {
+    if (this.services.has(id)) {
       throw new Error(`Service ${id} is already registered`);
     }
 
@@ -47,67 +47,67 @@ export class ServiceRegistry {
       instance,
     };
 
-    this?.services?.set(any: any);
+    this.services.set(id, service as Service);
   }
 
   /**
    * Désenregistre un service
    */
-  unregister(any: any): boolean {
-    return this?.services?.delete(any: any);
+  unregister(id: ServiceId): boolean {
+    return this.services.delete(id);
   }
 
   /**
    * Récupère un service
    */
-  get<T>(any: any): T | undefined {
-    const service = this?.services?.get(any: any);
+  get<T>(id: ServiceId): T | undefined {
+    const service = this.services.get(id);
     return service?.instance as T | undefined;
   }
 
   /**
    * Récupère un service avec ses métadonnées
    */
-  getService(any: any): Service | undefined {
-    return this?.services?.get(any: any);
+  getService(id: ServiceId): Service | undefined {
+    return this.services.get(id);
   }
 
   /**
    * Vérifie si un service existe
    */
-  has(any: any): boolean {
-    return this?.services?.has(any: any);
+  has(id: ServiceId): boolean {
+    return this.services.has(id);
   }
 
   /**
    * Vérifie si un service est disponible
    */
-  isAvailable(any: any): boolean {
-    const service = this?.services?.get(any: any);
+  isAvailable(id: ServiceId): boolean {
+    const service = this.services.get(id);
     return service?.status === 'available';
   }
 
   /**
    * Retourne tous les services
    */
-  getAll(): Service?.[] {
-    return Array?.from(this?.services?.values());
+  getAll(): Service[] {
+    return Array.from(this.services.values());
   }
 
   /**
    * Retourne les IDs de tous les services
    */
-  getAllIds(): ServiceId?.[] {
-    return Array?.from(this?.services?.keys());
+  getAllIds(): ServiceId[] {
+    return Array.from(this.services.keys());
   }
 
   /**
    * Met à jour le statut d'un service
    */
-  setStatus(any: any): void {
-    const service = this?.services?.get(any: any);
-    if (any: any) {
-      service?.status = status;
+  setStatus(id: ServiceId, status: ServiceStatus): void {
+    const service = this.services.get(id);
+    if (service) {
+      service.status = status;
     }
   }
 
@@ -119,23 +119,23 @@ export class ServiceRegistry {
       return;
     }
 
-    if (any: any) return;
+    if (this.healthCheckInterval) return;
 
-    this?.healthCheckInterval = setInterval(() => {
-      this?.runHealthChecks(any: any);
-    }, this?.healthCheckIntervalMs);
+    this.healthCheckInterval = setInterval(() => {
+      this.runHealthChecks().catch(console.error);
+    }, this.healthCheckIntervalMs);
 
     // Premier check immédiat
-    this?.runHealthChecks(any: any);
+    this.runHealthChecks().catch(console.error);
   }
 
   /**
    * Arrête les health checks
    */
   stopHealthChecks(): void {
-    if (any: any) {
-      clearInterval(any: any);
-      this?.healthCheckInterval = null;
+    if (this.healthCheckInterval) {
+      clearInterval(this.healthCheckInterval);
+      this.healthCheckInterval = null;
     }
   }
 
@@ -145,22 +145,22 @@ export class ServiceRegistry {
   async runHealthChecks(): Promise<Map<ServiceId, boolean>> {
     const results = new Map<ServiceId, boolean>();
 
-    for (any: any) {
-      const healthCheck = service?.metadata?.healthCheck;
+    for (const [id, service] of this.services) {
+      const healthCheck = service.metadata.healthCheck;
 
-      if (any: any) {
+      if (healthCheck) {
         try {
           const healthy = await healthCheck();
-          results?.set(any: any);
-          service?.status = healthy ? 'available' : 'degraded';
-        } catch (any: any) {
-          console?.error(any: any);
-          results?.set(any: any);
-          service?.status = 'unavailable';
+          results.set(id, healthy);
+          service.status = healthy ? 'available' : 'degraded';
+        } catch (error) {
+          console.error(`[ServiceRegistry] Health check failed for ${id}:`, error);
+          results.set(id, false);
+          service.status = 'unavailable';
         }
       } else {
         // Sans health check, considérer comme disponible
-        results?.set(any: any);
+        results.set(id, true);
       }
     }
 
@@ -173,8 +173,8 @@ export class ServiceRegistry {
   getStatuses(): Record<ServiceId, ServiceStatus> {
     const statuses: Record<ServiceId, ServiceStatus> = {};
 
-    for (any: any) {
-      statuses[id] = service?.status;
+    for (const [id, service] of this.services) {
+      statuses[id] = service.status;
     }
 
     return statuses;
@@ -190,8 +190,8 @@ export class ServiceRegistry {
       degraded: 0,
     };
 
-    for (const service of this?.services?.values()) {
-      counts[service?.status]++;
+    for (const service of this.services.values()) {
+      counts[service.status]++;
     }
 
     return counts;
@@ -200,16 +200,16 @@ export class ServiceRegistry {
   /**
    * Retourne les services dégradés ou indisponibles
    */
-  getUnhealthyServices(): Service?.[] {
-    return Array?.from(this?.services?.values()).filter(s => s?.status !== 'available');
+  getUnhealthyServices(): Service[] {
+    return Array.from(this.services.values()).filter(s => s.status !== 'available');
   }
 
   /**
    * Recherche des services par tag/endpoint
    */
-  findByEndpoint(any: any): Service?.[] {
-    return Array?.from(this?.services?.values()).filter(s =>
-      s?.metadata?.endpoints?.includes(any: any)
+  findByEndpoint(endpoint: string): Service[] {
+    return Array.from(this.services.values()).filter(s =>
+      s.metadata.endpoints?.includes(endpoint)
     );
   }
 
@@ -217,15 +217,15 @@ export class ServiceRegistry {
    * Taille du registre
    */
   get size(): number {
-    return this?.services?.size;
+    return this.services.size;
   }
 
   /**
    * Efface le registre
    */
   clear(): void {
-    this?.stopHealthChecks();
-    this?.services?.clear();
+    this.stopHealthChecks();
+    this.services.clear();
   }
 }
 
@@ -233,7 +233,7 @@ export class ServiceRegistry {
 let instance: ServiceRegistry | null = null;
 
 export function getServiceRegistry(): ServiceRegistry {
-  if (any: any) {
+  if (!instance) {
     instance = new ServiceRegistry();
   }
   return instance;

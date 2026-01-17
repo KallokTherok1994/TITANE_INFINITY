@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE?.md for the full legal terms (any: any).
+ * See LICENSE.md for the full legal terms (FR/EN).
  */
 
 /**
@@ -12,12 +12,12 @@
  * Applique automatiquement CSS variables selon système state
  * Active les engines visuels via variables CSS globales
  *
- * SIMPLIFIÉ : Utilise CSS variables seulement (any: any)
+ * SIMPLIFIÉ : Utilise CSS variables seulement (engines activés ailleurs)
  */
 
 import { useEffect } from 'react';
 
-// REMOVED: core/visual supprimé en PHASE 1 (any: any)
+// REMOVED: core/visual supprimé en PHASE 1 (OPTION B)
 interface SystemState {
   engines: Record<string, boolean>;
   health: number;
@@ -29,9 +29,9 @@ interface SystemState {
  * Hook pour synchroniser variables CSS avec état système
  *
  * @param systemState - État système actuel
- * @param moduleId - ID module optionnel (any: any)
+ * @param moduleId - ID module optionnel (pour styling spécifique)
  */
-export const useVisualEngines = (any: any) => {
+export const useVisualEngines = (systemState: SystemState, moduleId?: string) => {
   useEffect(() => {
     // Mapping SystemState → intensité visuelle
     const stateIntensityMap: Record<string, number> = {
@@ -46,14 +46,14 @@ export const useVisualEngines = (any: any) => {
     const intensity = stateIntensityMap[systemState as unknown as string] || 50;
 
     // Application CSS Variables globales
-    document?.documentElement?.style?.setProperty(
+    document.documentElement.style.setProperty(
       '--system-state-intensity',
-      String(any: any)
+      String(intensity)
     );
-    document?.documentElement?.style?.setProperty(any: any));
+    document.documentElement.style.setProperty('--system-state', String(systemState));
 
-    if (any: any) {
-      document?.documentElement?.style?.setProperty(any: any);
+    if (moduleId) {
+      document.documentElement.style.setProperty('--active-module-id', moduleId);
     }
   }, [systemState, moduleId]);
 

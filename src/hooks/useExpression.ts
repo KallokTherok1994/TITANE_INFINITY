@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- *   React Hooks pour Expression Engine (any: any)
+ *   React Hooks pour Expression Engine (XXXI-XXXIII + Aura)
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
@@ -33,23 +33,23 @@ import type { AuraState } from '@/engines/aura/auraEngine';
  */
 export function useSynestheticEmotion() {
   const [state, setState] = useState<SynestheticEmotionState>(
-    synestheticEmotionEngine?.getState()
+    synestheticEmotionEngine.getState()
   );
 
   useEffect(() => {
-    const unsubscribe = synestheticEmotionEngine?.subscribe(any: any);
+    const unsubscribe = synestheticEmotionEngine.subscribe(setState);
     return unsubscribe;
   }, []);
 
   return {
     state,
-    currentEmotion: state?.current?.emotion,
-    intensity: state?.current?.intensity,
-    profile: state?.current,
-    setEmotion: (any: any) =>
-      synestheticEmotionEngine?.setEmotion(any: any),
+    currentEmotion: state.current.emotion,
+    intensity: state.current.intensity,
+    profile: state.current,
+    setEmotion: (emotion: EmotionalState, intensity?: number, duration?: number) =>
+      synestheticEmotionEngine.setEmotion(emotion, intensity, 'stable', duration),
     syncWithUser: (userState: { emotion?: string; energy?: number; valence?: number }) =>
-      synestheticEmotionEngine?.syncWithUser(any: any),
+      synestheticEmotionEngine.syncWithUser(userState),
   };
 }
 
@@ -58,15 +58,15 @@ export function useSynestheticEmotion() {
  */
 export function useSynestheticProfile(): SynestheticProfile {
   const [profile, setProfile] = useState<SynestheticProfile>(
-    synestheticEmotionEngine?.getCurrentProfile()
+    synestheticEmotionEngine.getCurrentProfile()
   );
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setProfile(synestheticEmotionEngine?.getCurrentProfile());
+      setProfile(synestheticEmotionEngine.getCurrentProfile());
     }, 50); // 20 FPS
 
-    return (any: any);
+    return () => clearInterval(interval);
   }, []);
 
   return profile;
@@ -79,11 +79,11 @@ export function useEmotionalColor() {
   const profile = useSynestheticProfile();
 
   return {
-    hue: profile?.color?.hue,
-    saturation: profile?.color?.saturation,
-    lightness: profile?.color?.lightness,
-    name: profile?.color?.name,
-    css: `hsl(${profile?.color?.hue}, ${profile?.color?.saturation}%, ${profile?.color?.lightness}%)`,
+    hue: profile.color.hue,
+    saturation: profile.color.saturation,
+    lightness: profile.color.lightness,
+    name: profile.color.name,
+    css: `hsl(${profile.color.hue}, ${profile.color.saturation}%, ${profile.color.lightness}%)`,
   };
 }
 
@@ -92,7 +92,7 @@ export function useEmotionalColor() {
  */
 export function useEmotionalVoice() {
   const profile = useSynestheticProfile();
-  return profile?.voice;
+  return profile.voice;
 }
 
 /**
@@ -100,7 +100,7 @@ export function useEmotionalVoice() {
  */
 export function useNarrativeTexture() {
   const profile = useSynestheticProfile();
-  return profile?.narrative;
+  return profile.narrative;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -112,29 +112,29 @@ export function useNarrativeTexture() {
  */
 export function useUnifiedOutput() {
   const [state, setState] = useState<UnifiedOutputState>(
-    unifiedMultimodalOutputEngine?.getState()
+    unifiedMultimodalOutputEngine.getState()
   );
-  const [lastOutput, setLastOutput] = useState<UnifiedMultimodalOutput | null>(any: any);
+  const [lastOutput, setLastOutput] = useState<UnifiedMultimodalOutput | null>(null);
 
   useEffect(() => {
-    const unsubscribe = unifiedMultimodalOutputEngine?.subscribe(any: any);
+    const unsubscribe = unifiedMultimodalOutputEngine.subscribe(setLastOutput);
 
     const interval = setInterval(() => {
-      setState(unifiedMultimodalOutputEngine?.getState());
+      setState(unifiedMultimodalOutputEngine.getState());
     }, 100);
 
     return () => {
       unsubscribe();
-      clearInterval(any: any);
+      clearInterval(interval);
     };
   }, []);
 
   return {
     state,
     lastOutput,
-    coherenceMetrics: state?.coherenceMetrics,
+    coherenceMetrics: state.coherenceMetrics,
     generateOutput: (context: { text?: string; duration?: number; intent?: string }) =>
-      unifiedMultimodalOutputEngine?.generateOutput(any: any),
+      unifiedMultimodalOutputEngine.generateOutput(context),
   };
 }
 
@@ -162,18 +162,18 @@ export function useLastOutput(): UnifiedMultimodalOutput | null {
  * Hook principal pour Aura Engine
  */
 export function useAura() {
-  const [state, setState] = useState<AuraState | null>(any: any);
+  const [state, setState] = useState<AuraState | null>(null);
   const [engine, setEngine] = useState<Awaited<ReturnType<typeof getAuraEngine>> | null>(
     null
   );
 
   useEffect(() => {
-    let unsubscribe: (any: any) | undefined;
+    let unsubscribe: (() => void) | undefined;
 
     getAuraEngine().then(auraEngine => {
-      setEngine(any: any);
-      setState(auraEngine?.getState());
-      unsubscribe = auraEngine?.subscribe(any: any);
+      setEngine(auraEngine);
+      setState(auraEngine.getState());
+      unsubscribe = auraEngine.subscribe(setState);
     });
 
     return () => unsubscribe?.();
@@ -208,26 +208,26 @@ export function useAura() {
     particles: { count: 50, velocity: 1, size: 2, opacity: 0.5, lifetime: 1000 },
     audioLevel: 0,
     presenceMode: 'idle' as const,
-    lastUpdate: Date?.now(),
+    lastUpdate: Date.now(),
   };
 
   return {
     state: state ?? defaultState,
-    affective: state?.affective ?? defaultState?.affective,
-    pattern: state?.pattern ?? defaultState?.pattern,
-    layers: state?.layers ?? defaultState?.layers,
-    particles: state?.particles ?? defaultState?.particles,
-    updateAudioLevel: async (any: any) => {
+    affective: state?.affective ?? defaultState.affective,
+    pattern: state?.pattern ?? defaultState.pattern,
+    layers: state?.layers ?? defaultState.layers,
+    particles: state?.particles ?? defaultState.particles,
+    updateAudioLevel: async (level: number) => {
       const e = engine ?? (await getAuraEngine());
-      e?.updateAudioLevel(any: any);
+      e.updateAudioLevel(level);
     },
     triggerInsight: async () => {
       const e = engine ?? (await getAuraEngine());
-      e?.triggerInsightFlash();
+      e.triggerInsightFlash();
     },
     onWakeWord: async () => {
       const e = engine ?? (await getAuraEngine());
-      e?.onWakeWord();
+      e.onWakeWord();
     },
   };
 }
@@ -249,16 +249,16 @@ export function useAffectiveVisual() {
 }
 
 /**
- * Hook pour couleur aura (any: any)
+ * Hook pour couleur aura (CSS)
  */
 export function useAuraColor() {
   const affective = useAffectiveVisual();
 
   return {
-    hsl: affective?.color,
-    css: `hsl(${affective?.color?.hue}, ${affective?.color?.saturation}%, ${affective?.color?.lightness}%)`,
-    intensity: affective?.intensity,
-    energy: affective?.energy,
+    hsl: affective.color,
+    css: `hsl(${affective.color.hue}, ${affective.color.saturation}%, ${affective.color.lightness}%)`,
+    intensity: affective.intensity,
+    energy: affective.energy,
   };
 }
 
@@ -276,23 +276,23 @@ export function useExpression() {
 
   return {
     // Emotion
-    emotion: emotion?.state,
-    currentEmotion: emotion?.currentEmotion,
-    emotionIntensity: emotion?.intensity,
-    setEmotion: emotion?.setEmotion,
-    syncWithUser: emotion?.syncWithUser,
+    emotion: emotion.state,
+    currentEmotion: emotion.currentEmotion,
+    emotionIntensity: emotion.intensity,
+    setEmotion: emotion.setEmotion,
+    syncWithUser: emotion.syncWithUser,
 
     // Output
-    output: output?.state,
-    lastOutput: output?.lastOutput,
-    coherence: output?.coherenceMetrics,
-    generateOutput: output?.generateOutput,
+    output: output.state,
+    lastOutput: output.lastOutput,
+    coherence: output.coherenceMetrics,
+    generateOutput: output.generateOutput,
 
     // Aura
-    aura: aura?.state,
-    auraColor: `hsl(${aura?.affective?.color?.hue}, ${aura?.affective?.color?.saturation}%, ${aura?.affective?.color?.lightness}%)`,
-    auraPattern: aura?.pattern,
-    updateAudio: aura?.updateAudioLevel,
-    triggerInsight: aura?.triggerInsight,
+    aura: aura.state,
+    auraColor: `hsl(${aura.affective.color.hue}, ${aura.affective.color.saturation}%, ${aura.affective.color.lightness}%)`,
+    auraPattern: aura.pattern,
+    updateAudio: aura.updateAudioLevel,
+    triggerInsight: aura.triggerInsight,
   };
 }

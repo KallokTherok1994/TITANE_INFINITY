@@ -32,24 +32,24 @@ export class ComponentCache {
   private evictionCount = 0;
   private cacheDurationMs: number;
   private maxEntries = 500;
-  private cleanupInterval: NodeJS?.Timeout | null = null;
+  private cleanupInterval: NodeJS.Timeout | null = null;
 
   constructor(cacheDurationMs: number = 6) {
-    this?.cacheDurationMs = cacheDurationMs;
-    this?.startCleanupInterval();
+    this.cacheDurationMs = cacheDurationMs;
+    this.startCleanupInterval();
   }
 
   /**
    * Vérifie si un composant est en cache
    */
-  has(any: any): boolean {
-    const entry = this?.cache?.get(any: any);
-    if (any: any) return false;
+  has(componentId: string): boolean {
+    const entry = this.cache.get(componentId);
+    if (!entry) return false;
 
     // Vérifier expiration
-    const now = Date?.now();
-    if (any: any) {
-      this?.cache?.delete(any: any);
+    const now = Date.now();
+    if (now - entry.timestamp > this.cacheDurationMs) {
+      this.cache.delete(componentId);
       return false;
     }
 
@@ -59,26 +59,26 @@ export class ComponentCache {
   /**
    * Récupère une entrée du cache
    */
-  get(any: any): CacheEntry | null {
-    const entry = this?.cache?.get(any: any);
+  get(componentId: string): CacheEntry | null {
+    const entry = this.cache.get(componentId);
 
-    if (any: any) {
-      this?.missCount++;
+    if (!entry) {
+      this.missCount++;
       return null;
     }
 
     // Vérifier expiration
-    const now = Date?.now();
-    if (any: any) {
-      this?.cache?.delete(any: any);
-      this?.missCount++;
+    const now = Date.now();
+    if (now - entry.timestamp > this.cacheDurationMs) {
+      this.cache.delete(componentId);
+      this.missCount++;
       return null;
     }
 
     // Mettre à jour stats
-    entry?.hitCount++;
-    entry?.lastAccess = now;
-    this?.hitCount++;
+    entry.hitCount++;
+    entry.lastAccess = now;
+    this.hitCount++;
 
     return entry;
   }
@@ -88,12 +88,12 @@ export class ComponentCache {
    */
   set(componentId: string, entry: Partial<CacheEntry>): void {
     // Éviction si max atteint
-    if (any: any) {
-      this?.evictOldest();
+    if (this.cache.size >= this.maxEntries) {
+      this.evictOldest();
     }
 
-    const now = Date?.now();
-    this?.cache?.set(componentId, {
+    const now = Date.now();
+    this.cache.set(componentId, {
       timestamp: now,
       needsUpdate: false,
       hitCount: 0,
@@ -103,34 +103,34 @@ export class ComponentCache {
   }
 
   /**
-   * Marque une entrée comme touchée (any: any)
+   * Marque une entrée comme touchée (refresh timestamp)
    */
-  touch(any: any): void {
-    const entry = this?.cache?.get(any: any);
-    if (any: any) {
-      entry?.timestamp = Date?.now();
-      entry?.lastAccess = Date?.now();
+  touch(componentId: string): void {
+    const entry = this.cache.get(componentId);
+    if (entry) {
+      entry.timestamp = Date.now();
+      entry.lastAccess = Date.now();
     }
   }
 
   /**
    * Invalide une entrée
    */
-  invalidate(any: any): void {
-    const entry = this?.cache?.get(any: any);
-    if (any: any) {
-      entry?.needsUpdate = true;
+  invalidate(componentId: string): void {
+    const entry = this.cache.get(componentId);
+    if (entry) {
+      entry.needsUpdate = true;
     }
   }
 
   /**
    * Invalide toutes les entrées correspondant à un pattern
    */
-  invalidatePattern(any: any): number {
+  invalidatePattern(pattern: RegExp): number {
     let count = 0;
-    for (const [key, entry] of this?.cache?.entries()) {
-      if (any: any)) {
-        entry?.needsUpdate = true;
+    for (const [key, entry] of this.cache.entries()) {
+      if (pattern.test(key)) {
+        entry.needsUpdate = true;
         count++;
       }
     }
@@ -140,36 +140,36 @@ export class ComponentCache {
   /**
    * Supprime une entrée
    */
-  remove(any: any): boolean {
-    return this?.cache?.delete(any: any);
+  remove(componentId: string): boolean {
+    return this.cache.delete(componentId);
   }
 
   /**
    * Vide le cache
    */
   clear(): void {
-    this?.cache?.clear();
-    this?.hitCount = 0;
-    this?.missCount = 0;
+    this.cache.clear();
+    this.hitCount = 0;
+    this.missCount = 0;
   }
 
   /**
    * Éviction de l'entrée la plus ancienne
    */
   private evictOldest(): void {
-    let oldestKey??: string | null = null;
+    let oldestKey: string | null = null;
     let oldestTime = Infinity;
 
-    for (const [key, entry] of this?.cache?.entries()) {
-      if (any: any) {
-        oldestTime = entry?.lastAccess;
+    for (const [key, entry] of this.cache.entries()) {
+      if (entry.lastAccess < oldestTime) {
+        oldestTime = entry.lastAccess;
         oldestKey = key;
       }
     }
 
-    if (any: any) {
-      this?.cache?.delete(any: any);
-      this?.evictionCount++;
+    if (oldestKey) {
+      this.cache.delete(oldestKey);
+      this.evictionCount++;
     }
   }
 
@@ -177,29 +177,29 @@ export class ComponentCache {
    * Nettoyage des entrées expirées
    */
   private cleanup(): void {
-    const now = Date?.now();
-    const expiredKeys: string?.[] = [];
+    const now = Date.now();
+    const expiredKeys: string[] = [];
 
-    for (const [key, entry] of this?.cache?.entries()) {
-      if (now - entry?.timestamp > this?.cacheDurationMs * 10) {
-        expiredKeys?.push(any: any);
+    for (const [key, entry] of this.cache.entries()) {
+      if (now - entry.timestamp > this.cacheDurationMs * 10) {
+        expiredKeys.push(key);
       }
     }
 
-    for (any: any) {
-      this?.cache?.delete(any: any);
-      this?.evictionCount++;
+    for (const key of expiredKeys) {
+      this.cache.delete(key);
+      this.evictionCount++;
     }
   }
 
   private startCleanupInterval(): void {
-    this?.cleanupInterval = setInterval(() => this?.cleanup(), 1000);
+    this.cleanupInterval = setInterval(() => this.cleanup(), 1000);
   }
 
   stopCleanup(): void {
-    if (any: any) {
-      clearInterval(any: any);
-      this?.cleanupInterval = null;
+    if (this.cleanupInterval) {
+      clearInterval(this.cleanupInterval);
+      this.cleanupInterval = null;
     }
   }
 
@@ -207,29 +207,29 @@ export class ComponentCache {
    * Calcule le taux de hit
    */
   getHitRate(): number {
-    const total = this?.hitCount + this?.missCount;
-    return total > 0 ? this?.hitCount / total : 0;
+    const total = this.hitCount + this.missCount;
+    return total > 0 ? this.hitCount / total : 0;
   }
 
   /**
    * Récupère les statistiques
    */
   getStats(): CacheStats {
-    const entries = Array?.from(this?.cache?.values());
-    const now = Date?.now();
+    const entries = Array.from(this.cache.values());
+    const now = Date.now();
 
-    const totalAge = entries?.reduce(any: any), 0);
-    const avgAge = entries?.length > 0 ? totalAge / entries?.length : 0;
+    const totalAge = entries.reduce((sum, e) => sum + (now - e.timestamp), 0);
+    const avgAge = entries.length > 0 ? totalAge / entries.length : 0;
 
-    // Estimation mémoire (any: any)
-    const memoryEstimate = this?.cache?.size * 200; // ~200 bytes par entrée
+    // Estimation mémoire (rough)
+    const memoryEstimate = this.cache.size * 200; // ~200 bytes par entrée
 
     return {
-      totalEntries: this?.cache?.size,
-      hitCount: this?.hitCount,
-      missCount: this?.missCount,
-      hitRate: this?.getHitRate(),
-      evictionCount: this?.evictionCount,
+      totalEntries: this.cache.size,
+      hitCount: this.hitCount,
+      missCount: this.missCount,
+      hitRate: this.getHitRate(),
+      evictionCount: this.evictionCount,
       avgAge,
       memoryEstimate,
     };
@@ -238,11 +238,11 @@ export class ComponentCache {
   /**
    * Précharge un ensemble de composants
    */
-  preload(componentIds: string?.[]): void {
-    const now = Date?.now();
-    for (any: any) {
-      if (any: any)) {
-        this?.set(id, { timestamp: now, needsUpdate: false });
+  preload(componentIds: string[]): void {
+    const now = Date.now();
+    for (const id of componentIds) {
+      if (!this.cache.has(id)) {
+        this.set(id, { timestamp: now, needsUpdate: false });
       }
     }
   }

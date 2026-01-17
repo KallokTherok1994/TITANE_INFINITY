@@ -9,12 +9,12 @@
  *   Le cœur absolu · Identité vivante · Cohérence totale · Unification
  * ═══════════════════════════════════════════════════════════════════════════
  *
- * Le Unified Identity Kernel (any: any) est le centre de gravité cognitif de TITANE∞.
+ * Le Unified Identity Kernel (UIK) est le centre de gravité cognitif de TITANE∞.
  * Il unifie toutes les couches, maintient la cohérence interne, orchestre
  * l'attention/émotions/ton/posture, stabilise l'identité dans le temps.
  */
 
-// REMOVED: engines/predictive supprimé en PHASE 1 (any: any) - utilise stub temporaire
+// REMOVED: engines/predictive supprimé en PHASE 1 (OPTION B) - utilise stub temporaire
 import { predictiveReflectionEngine, type PredictiveFrame } from '../predictive/_stubs';
 import { logger } from '@/utils/logger';
 
@@ -51,7 +51,7 @@ export interface IdentitySignature {
   clarity: number; // 0..1 - Diffus → Cristallin
   narrativeStyle: NarrativeStyle;
   cognitivePosture: CognitivePosture;
-  coreValues: CoreValue?.[];
+  coreValues: CoreValue[];
 }
 
 /**
@@ -114,7 +114,7 @@ export interface EmotiveResonance {
  */
 export interface AttentionState {
   focus: number; // 0..1 - Diffus → Concentré
-  priorities: string?.[]; // Liste ordonnée
+  priorities: string[]; // Liste ordonnée
   cognitiveLoad: number; // 0..1 - Léger → Saturé
   transitionMode: 'idle' | 'shifting' | 'focused' | 'distributed';
 }
@@ -123,8 +123,8 @@ export interface AttentionState {
  * Racine mémorielle identitaire
  */
 export interface IdentityMemoryRoot {
-  evolutionHistory: EvolutionSnapshot?.[];
-  stylePatterns: StylePattern?.[];
+  evolutionHistory: EvolutionSnapshot[];
+  stylePatterns: StylePattern[];
   identityTrajectory: IdentityTrajectory;
   lastStableState: Date;
 }
@@ -146,14 +146,14 @@ export interface StylePattern {
   name: string;
   frequency: number; // Fréquence d'utilisation
   effectiveness: number; // Efficacité perçue
-  context: string?.[];
+  context: string[];
 }
 
 /**
  * Trajectoire identitaire
  */
 export interface IdentityTrajectory {
-  direction: number?.[]; // Vecteur multidimensionnel
+  direction: number[]; // Vecteur multidimensionnel
   velocity: number; // Vitesse d'évolution
   stability: number; // Stabilité de la trajectoire
 }
@@ -223,8 +223,8 @@ export interface IdentityKernelState {
 
 export class UnifiedIdentityKernel {
   private state: IdentityKernelState;
-  private updateInterval: NodeJS?.Timeout | null = null;
-  private subscribers: (any: any)[] = [];
+  private updateInterval: NodeJS.Timeout | null = null;
+  private subscribers: ((state: IdentityKernelState) => void)[] = [];
 
   // Paramètres de stabilisation
   private readonly COHERENCE_THRESHOLD = 0.75;
@@ -232,8 +232,8 @@ export class UnifiedIdentityKernel {
   private readonly IDENTITY_DRIFT_LIMIT = 0.05;
 
   constructor() {
-    this?.state = this?.getDefaultState();
-    logger?.debug('🌌 [IDENTITY KERNEL] Initializing Unified Identity Kernel...');
+    this.state = this.getDefaultState();
+    logger.debug('🌌 [IDENTITY KERNEL] Initializing Unified Identity Kernel...');
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -241,22 +241,22 @@ export class UnifiedIdentityKernel {
   // ───────────────────────────────────────────────────────────────────────────
 
   start(): void {
-    if (any: any) return;
+    if (this.updateInterval) return;
 
-    logger?.debug('🌌 [IDENTITY KERNEL] Starting identity kernel at 10Hz...');
+    logger.debug('🌌 [IDENTITY KERNEL] Starting identity kernel at 10Hz...');
 
     // Subscribe aux moteurs existants
-    this?.subscribeToEngines();
+    this.subscribeToEngines();
 
     // Démarrer update loop
-    this?.updateInterval = setInterval(() => this?.tick(), 100); // 10 Hz
+    this.updateInterval = setInterval(() => this.tick(), 100); // 10 Hz
   }
 
   stop(): void {
-    if (any: any) {
-      clearInterval(any: any);
-      this?.updateInterval = null;
-      logger?.debug('🌌 [IDENTITY KERNEL] Identity kernel stopped.');
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+      this.updateInterval = null;
+      logger.debug('🌌 [IDENTITY KERNEL] Identity kernel stopped.');
     }
   }
 
@@ -266,21 +266,21 @@ export class UnifiedIdentityKernel {
 
   private subscribeToEngines(): void {
     // Predictive Reflection Engine
-    predictiveReflectionEngine?.subscribe(frame => {
-      this?.state?.predictiveFrame = frame;
+    predictiveReflectionEngine.subscribe(frame => {
+      this.state.predictiveFrame = frame;
     });
 
     // Conscious Dynamics Model
-    consciousDynamicsModel?.subscribe(conscious => {
-      this?.state?.consciousState = conscious;
+    consciousDynamicsModel.subscribe(conscious => {
+      this.state.consciousState = conscious;
     });
 
     // Internal Narrative Engine
-    internalNarrativeEngine?.subscribe(narrative => {
-      this?.state?.narrativeEngine = narrative;
+    internalNarrativeEngine.subscribe(narrative => {
+      this.state.narrativeEngine = narrative;
     });
 
-    // Interoception Engine (any: any)
+    // Interoception Engine (pas de subscribe direct, on lit l'état)
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -289,29 +289,29 @@ export class UnifiedIdentityKernel {
 
   private tick(): void {
     // 1. Synchroniser avec interoception
-    this?.state?.interoceptionState = interoceptionEngine?.getState();
+    this.state.interoceptionState = interoceptionEngine.getState();
 
     // 2. Calculer cohérence globale
-    this?.calculateGlobalCoherence();
+    this.calculateGlobalCoherence();
 
     // 3. Réguler stabilité identitaire
-    this?.regulateIdentityStability();
+    this.regulateIdentityStability();
 
     // 4. Mettre à jour attention
-    this?.updateAttentionState();
+    this.updateAttentionState();
 
     // 5. Adapter profil cognitif
-    this?.adaptCognitiveProfile();
+    this.adaptCognitiveProfile();
 
     // 6. Harmoniser résonance émotive
-    this?.harmonizeEmotiveResonance();
+    this.harmonizeEmotiveResonance();
 
     // 7. Vérifier drift identitaire
-    this?.checkIdentityDrift();
+    this.checkIdentityDrift();
 
     // 8. Notification
-    this?.state?.lastUpdate = Date?.now();
-    this?.notifySubscribers();
+    this.state.lastUpdate = Date.now();
+    this.notifySubscribers();
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -323,34 +323,34 @@ export class UnifiedIdentityKernel {
     let factors = 0;
 
     // Facteur 1: Cohérence narrative
-    if (any: any) {
-      coherence += this?.state?.narrativeEngine?.coherenceScore;
+    if (this.state.narrativeEngine) {
+      coherence += this.state.narrativeEngine.coherenceScore;
       factors++;
     }
 
     // Facteur 2: Stabilité consciente
-    if (any: any) {
-      coherence += this?.state?.consciousState?.stability;
+    if (this.state.consciousState) {
+      coherence += this.state.consciousState.stability;
       factors++;
     }
 
-    // Facteur 3: Stabilité interoception (any: any)
-    if (any: any) {
-      coherence += this?.state?.interoceptionState?.homeostasis;
+    // Facteur 3: Stabilité interoception (homeostasis)
+    if (this.state.interoceptionState) {
+      coherence += this.state.interoceptionState.homeostasis;
       factors++;
     }
 
     // Facteur 4: Confiance prédictive
-    if (any: any) {
-      coherence += this?.state?.predictiveFrame?.confidence;
+    if (this.state.predictiveFrame) {
+      coherence += this.state.predictiveFrame.confidence;
       factors++;
     }
 
     // Facteur 5: Stabilité identitaire propre
-    coherence += this?.state?.identityStability;
+    coherence += this.state.identityStability;
     factors++;
 
-    this?.state?.globalCoherence = factors > 0 ? coherence / factors : 0.5;
+    this.state.globalCoherence = factors > 0 ? coherence / factors : 0.5;
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -360,13 +360,13 @@ export class UnifiedIdentityKernel {
   private regulateIdentityStability(): void {
     // Target = cohérence globale haute
     const target = 0.9;
-    const current = this?.state?.identityStability;
+    const current = this.state.identityStability;
 
     // Régulation douce
-    this?.state?.identityStability += (any: any) * this?.STABILITY_REGULATION;
+    this.state.identityStability += (target - current) * this.STABILITY_REGULATION;
 
     // Clamp
-    this?.state?.identityStability = this?.clamp(this?.state?.identityStability, 0.5, 1);
+    this.state.identityStability = this.clamp(this.state.identityStability, 0.5, 1);
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -375,20 +375,20 @@ export class UnifiedIdentityKernel {
 
   private updateAttentionState(): void {
     // Synchroniser focus avec conscious dynamics
-    if (any: any) {
-      this?.state?.attention?.focus = this?.state?.consciousState?.focus;
-      this?.state?.attention?.cognitiveLoad = this?.state?.consciousState?.innerPressure;
+    if (this.state.consciousState) {
+      this.state.attention.focus = this.state.consciousState.focus;
+      this.state.attention.cognitiveLoad = this.state.consciousState.innerPressure;
     }
 
     // Déterminer mode de transition
-    if (this?.state?.consciousState?.transitionState === 'shifting') {
-      this?.state?.attention?.transitionMode = 'shifting';
-    } else if (this?.state?.attention?.focus > 0.8) {
-      this?.state?.attention?.transitionMode = 'focused';
-    } else if (this?.state?.attention?.focus < 0.4) {
-      this?.state?.attention?.transitionMode = 'distributed';
+    if (this.state.consciousState?.transitionState === 'shifting') {
+      this.state.attention.transitionMode = 'shifting';
+    } else if (this.state.attention.focus > 0.8) {
+      this.state.attention.transitionMode = 'focused';
+    } else if (this.state.attention.focus < 0.4) {
+      this.state.attention.transitionMode = 'distributed';
     } else {
-      this?.state?.attention?.transitionMode = 'idle';
+      this.state.attention.transitionMode = 'idle';
     }
   }
 
@@ -397,25 +397,25 @@ export class UnifiedIdentityKernel {
   // ───────────────────────────────────────────────────────────────────────────
 
   private adaptCognitiveProfile(): void {
-    if (any: any) return;
+    if (!this.state.consciousState) return;
 
     // Adapter vitesse au tempo conscient
-    this?.state?.cognitiveProfile?.speed = this?.normalize(
-      this?.state?.consciousState?.tempo,
+    this.state.cognitiveProfile.speed = this.normalize(
+      this.state.consciousState.tempo,
       0.5,
       2
     );
 
     // Adapter profondeur
-    this?.state?.cognitiveProfile?.depth = this?.state?.consciousState?.depth;
+    this.state.cognitiveProfile.depth = this.state.consciousState.depth;
 
     // Adapter précision à la clarté
-    this?.state?.cognitiveProfile?.precision = this?.state?.consciousState?.clarity;
+    this.state.cognitiveProfile.precision = this.state.consciousState.clarity;
 
     // Adapter structure selon mode
     const structuredModes = ['analytic', 'singularity'];
-    this?.state?.cognitiveProfile?.structure = structuredModes?.includes(
-      this?.state?.consciousState?.mode
+    this.state.cognitiveProfile.structure = structuredModes.includes(
+      this.state.consciousState.mode
     )
       ? 0.8
       : 0.5;
@@ -426,28 +426,28 @@ export class UnifiedIdentityKernel {
   // ───────────────────────────────────────────────────────────────────────────
 
   private harmonizeEmotiveResonance(): void {
-    if (any: any) return;
+    if (!this.state.interoceptionState) return;
 
     // Intensité basée sur énergie + clarté
-    this?.state?.emotiveResonance?.intensity =
-      (any: any) / 2;
+    this.state.emotiveResonance.intensity =
+      (this.state.interoceptionState.energy + this.state.interoceptionState.clarity) / 2;
 
     // Chaleur vocale basée sur température émotionnelle
-    this?.state?.emotiveResonance?.vocalWarmth = this?.normalize(
-      this?.state?.interoceptionState?.emotionalTemperature,
+    this.state.emotiveResonance.vocalWarmth = this.normalize(
+      this.state.interoceptionState.emotionalTemperature,
       -1,
       1
     );
 
     // Réactivité du halo basée sur entropie
-    this?.state?.emotiveResonance?.haloReactivity = this?.state?.interoceptionState?.entropy;
+    this.state.emotiveResonance.haloReactivity = this.state.interoceptionState.entropy;
 
     // Nuances basées sur stabilité
-    this?.state?.emotiveResonance?.nuance = this?.state?.interoceptionState?.stability;
+    this.state.emotiveResonance.nuance = this.state.interoceptionState.stability;
 
     // Micro-intonations basées sur respiration
-    this?.state?.emotiveResonance?.microIntonations =
-      this?.state?.interoceptionState?.breathingPhase;
+    this.state.emotiveResonance.microIntonations =
+      this.state.interoceptionState.breathingPhase;
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -457,22 +457,22 @@ export class UnifiedIdentityKernel {
   private checkIdentityDrift(): void {
     // Comparer signature actuelle avec dernière stable
     const lastSnapshot =
-      this?.state?.memoryRoot?.evolutionHistory[
-        this?.state?.memoryRoot?.evolutionHistory?.length - 1
+      this.state.memoryRoot.evolutionHistory[
+        this.state.memoryRoot.evolutionHistory.length - 1
       ];
 
-    if (any: any) return;
+    if (!lastSnapshot) return;
 
-    const drift = this?.calculateSignatureDrift(
-      this?.state?.identitySignature,
-      lastSnapshot?.signature
+    const drift = this.calculateSignatureDrift(
+      this.state.identitySignature,
+      lastSnapshot.signature
     );
 
-    if (any: any) {
-      logger?.warn(
+    if (drift > this.IDENTITY_DRIFT_LIMIT) {
+      logger.warn(
         `⚠️ [IDENTITY KERNEL] Identity drift detected: ${(drift * 100).toFixed(1)}%`
       );
-      this?.correctIdentityDrift(any: any);
+      this.correctIdentityDrift(lastSnapshot.signature);
     }
   }
 
@@ -481,58 +481,58 @@ export class UnifiedIdentityKernel {
     reference: IdentitySignature
   ): number {
     const factors = [
-      Math?.abs(any: any),
-      Math?.abs(any: any),
-      Math?.abs(any: any),
-      Math?.abs(any: any),
+      Math.abs(current.tone - reference.tone),
+      Math.abs(current.energy - reference.energy),
+      Math.abs(current.warmth - reference.warmth),
+      Math.abs(current.clarity - reference.clarity),
     ];
 
-    return factors?.reduce(any: any) => sum + f, 0) / factors?.length;
+    return factors.reduce((sum, f) => sum + f, 0) / factors.length;
   }
 
-  private correctIdentityDrift(any: any): void {
+  private correctIdentityDrift(reference: IdentitySignature): void {
     // Correction douce vers référence
     const strength = 0.1;
 
-    this?.state?.identitySignature?.tone +=
-      (any: any) * strength;
-    this?.state?.identitySignature?.energy +=
-      (any: any) * strength;
-    this?.state?.identitySignature?.warmth +=
-      (any: any) * strength;
-    this?.state?.identitySignature?.clarity +=
-      (any: any) * strength;
+    this.state.identitySignature.tone +=
+      (reference.tone - this.state.identitySignature.tone) * strength;
+    this.state.identitySignature.energy +=
+      (reference.energy - this.state.identitySignature.energy) * strength;
+    this.state.identitySignature.warmth +=
+      (reference.warmth - this.state.identitySignature.warmth) * strength;
+    this.state.identitySignature.clarity +=
+      (reference.clarity - this.state.identitySignature.clarity) * strength;
   }
 
   // ───────────────────────────────────────────────────────────────────────────
   // MISE À JOUR DEPUIS CONTEXTE
   // ───────────────────────────────────────────────────────────────────────────
 
-  updateFromContext(any: any): void {
-    logger?.debug('🌌 [IDENTITY KERNEL] Updating from context...');
+  updateFromContext(context: ContextFrame): void {
+    logger.debug('🌌 [IDENTITY KERNEL] Updating from context...');
 
     // Adapter énergie à l'utilisateur
-    if (any: any) {
-      this?.state?.adaptation?.energyMatching = this?.clamp(context?.userEnergy * 0.8, 0.3, 1);
+    if (context.userEnergy !== undefined) {
+      this.state.adaptation.energyMatching = this.clamp(context.userEnergy * 0.8, 0.3, 1);
     }
 
     // Adapter mode conversationnel
-    if (any: any) {
-      this?.adaptToConversationMode(any: any);
+    if (context.conversationMode) {
+      this.adaptToConversationMode(context.conversationMode);
     }
 
     // Générer monologue interne si input
-    if (any: any) {
-      internalNarrativeEngine?.generateInnerMonologue({
-        userInput: context?.userInput,
-        emotionalState: context?.userEmotion,
-        cognitiveLoad: this?.state?.attention?.cognitiveLoad,
-        sessionDuration: context?.sessionDuration,
+    if (context.userInput) {
+      internalNarrativeEngine.generateInnerMonologue({
+        userInput: context.userInput,
+        emotionalState: context.userEmotion,
+        cognitiveLoad: this.state.attention.cognitiveLoad,
+        sessionDuration: context.sessionDuration,
       });
     }
   }
 
-  private adaptToConversationMode(any: any): void {
+  private adaptToConversationMode(mode: string): void {
     // Mapper mode conversation → narrative style
     const modeMapping: Record<string, NarrativeStyle> = {
       technical: 'technical',
@@ -542,9 +542,9 @@ export class UnifiedIdentityKernel {
       vision: 'visionary',
     };
 
-    const narrativeStyle = modeMapping[mode?.toLowerCase()];
-    if (any: any) {
-      this?.state?.identitySignature?.narrativeStyle = narrativeStyle;
+    const narrativeStyle = modeMapping[mode.toLowerCase()];
+    if (narrativeStyle) {
+      this.state.identitySignature.narrativeStyle = narrativeStyle;
     }
   }
 
@@ -553,50 +553,50 @@ export class UnifiedIdentityKernel {
   // ───────────────────────────────────────────────────────────────────────────
 
   alignBeforeResponse(): void {
-    logger?.debug('🌌 [IDENTITY KERNEL] Aligning before response...');
+    logger.debug('🌌 [IDENTITY KERNEL] Aligning before response...');
 
     // Vérifier cohérence
-    if (any: any) {
-      logger?.warn(
-        `⚠️ [IDENTITY KERNEL] Low coherence: ${(this?.state?.globalCoherence * 100).toFixed(1)}%`
+    if (this.state.globalCoherence < this.COHERENCE_THRESHOLD) {
+      logger.warn(
+        `⚠️ [IDENTITY KERNEL] Low coherence: ${(this.state.globalCoherence * 100).toFixed(1)}%`
       );
-      this?.reinforceCoherence();
+      this.reinforceCoherence();
     }
 
     // Stabiliser identité
-    this?.regulateIdentityStability();
+    this.regulateIdentityStability();
 
     // Harmoniser tous les états
-    this?.harmonizeAllStates();
+    this.harmonizeAllStates();
 
     // Créer snapshot
-    this?.createEvolutionSnapshot('pre-response-alignment');
+    this.createEvolutionSnapshot('pre-response-alignment');
   }
 
   private reinforceCoherence(): void {
     // Boost de clarté consciente
-    if (any: any) {
-      consciousDynamicsModel?.boostClarity(0.2);
+    if (this.state.consciousState) {
+      consciousDynamicsModel.boostClarity(0.2);
     }
 
     // Boost de stabilité interoception
-    if (any: any) {
+    if (this.state.interoceptionState) {
       // Pas d'API directe, mais on peut ajuster via context
     }
 
     // Réalignement narratif
-    if (any: any) {
-      internalNarrativeEngine?.setNarrativeAnchor(
-        this?.state?.identitySignature?.narrativeStyle
+    if (this.state.narrativeEngine) {
+      internalNarrativeEngine.setNarrativeAnchor(
+        this.state.identitySignature.narrativeStyle
       );
     }
   }
 
   private harmonizeAllStates(): void {
     // S'assurer que tous les états sont cohérents entre eux
-    this?.adaptCognitiveProfile();
-    this?.harmonizeEmotiveResonance();
-    this?.updateAttentionState();
+    this.adaptCognitiveProfile();
+    this.harmonizeEmotiveResonance();
+    this.updateAttentionState();
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -605,14 +605,14 @@ export class UnifiedIdentityKernel {
 
   exportToOutput(): IdentityExpressionPackage {
     return {
-      signature: { ...this?.state?.identitySignature },
-      cognitive: { ...this?.state?.cognitiveProfile },
-      emotive: { ...this?.state?.emotiveResonance },
-      narrative: { ...this?.state?.narrativeEngine },
-      attention: { ...this?.state?.attention },
-      adaptation: { ...this?.state?.adaptation },
-      coherenceScore: this?.state?.globalCoherence,
-      timestamp: Date?.now(),
+      signature: { ...this.state.identitySignature },
+      cognitive: { ...this.state.cognitiveProfile },
+      emotive: { ...this.state.emotiveResonance },
+      narrative: { ...this.state.narrativeEngine },
+      attention: { ...this.state.attention },
+      adaptation: { ...this.state.adaptation },
+      coherenceScore: this.state.globalCoherence,
+      timestamp: Date.now(),
     };
   }
 
@@ -620,19 +620,19 @@ export class UnifiedIdentityKernel {
   // MÉMOIRE D'ÉVOLUTION
   // ───────────────────────────────────────────────────────────────────────────
 
-  private createEvolutionSnapshot(any: any): void {
+  private createEvolutionSnapshot(context: string): void {
     const snapshot: EvolutionSnapshot = {
-      timestamp: Date?.now(),
-      signature: { ...this?.state?.identitySignature },
-      coherenceScore: this?.state?.globalCoherence,
+      timestamp: Date.now(),
+      signature: { ...this.state.identitySignature },
+      coherenceScore: this.state.globalCoherence,
       context,
     };
 
-    this?.state?.memoryRoot?.evolutionHistory?.push(any: any);
+    this.state.memoryRoot.evolutionHistory.push(snapshot);
 
     // Limiter historique à 100 snapshots
-    if (this?.state?.memoryRoot?.evolutionHistory?.length > 100) {
-      this?.state?.memoryRoot?.evolutionHistory?.shift();
+    if (this.state.memoryRoot.evolutionHistory.length > 100) {
+      this.state.memoryRoot.evolutionHistory.shift();
     }
   }
 
@@ -640,12 +640,12 @@ export class UnifiedIdentityKernel {
   // UTILITAIRES
   // ───────────────────────────────────────────────────────────────────────────
 
-  private clamp(any: any): number {
-    return Math?.max(any: any));
+  private clamp(value: number, min: number, max: number): number {
+    return Math.max(min, Math.min(max, value));
   }
 
-  private normalize(any: any): number {
-    return this?.clamp(any: any), 0, 1);
+  private normalize(value: number, min: number, max: number): number {
+    return this.clamp((value - min) / (max - min), 0, 1);
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -678,7 +678,7 @@ export class UnifiedIdentityKernel {
         haloReactivity: 0.5,
         microIntonations: 0.6,
       },
-      narrativeEngine: internalNarrativeEngine?.getState(),
+      narrativeEngine: internalNarrativeEngine.getState(),
       attention: {
         focus: 0.7,
         priorities: ['clarity', 'coherence', 'depth'],
@@ -706,7 +706,7 @@ export class UnifiedIdentityKernel {
       interoceptionState: null,
       globalCoherence: 0.8,
       identityStability: 0.9,
-      lastUpdate: Date?.now(),
+      lastUpdate: Date.now(),
     };
   }
 
@@ -715,43 +715,43 @@ export class UnifiedIdentityKernel {
   // ───────────────────────────────────────────────────────────────────────────
 
   getState(): IdentityKernelState {
-    return { ...this?.state };
+    return { ...this.state };
   }
 
   getSignature(): IdentitySignature {
-    return { ...this?.state?.identitySignature };
+    return { ...this.state.identitySignature };
   }
 
   getCoherence(): number {
-    return this?.state?.globalCoherence;
+    return this.state.globalCoherence;
   }
 
   getStability(): number {
-    return this?.state?.identityStability;
+    return this.state.identityStability;
   }
 
   /**
-   * Forcer une valeur identitaire (any: any)
+   * Forcer une valeur identitaire (usage avancé)
    */
-  setIdentityValue(any: any): void {
+  setIdentityValue(key: keyof IdentitySignature, value: unknown): void {
     // Type-safe assignment using indexed access
-    (any: any) = value;
-    this?.createEvolutionSnapshot(`manual-override-${key}`);
+    (this.state.identitySignature[key] as unknown) = value;
+    this.createEvolutionSnapshot(`manual-override-${key}`);
   }
 
   // ───────────────────────────────────────────────────────────────────────────
   // SUBSCRIPTION
   // ───────────────────────────────────────────────────────────────────────────
 
-  subscribe(any: any): () => void {
-    this?.subscribers?.push(any: any);
+  subscribe(callback: (state: IdentityKernelState) => void): () => void {
+    this.subscribers.push(callback);
     return () => {
-      this?.subscribers = this?.subscribers?.filter(any: any);
+      this.subscribers = this.subscribers.filter(cb => cb !== callback);
     };
   }
 
   private notifySubscribers(): void {
-    this?.subscribers?.forEach(any: any));
+    this.subscribers.forEach(callback => callback(this.state));
   }
 }
 

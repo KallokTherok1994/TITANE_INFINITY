@@ -46,14 +46,14 @@ export interface UseDeviceHealthReturn {
   // Actions
   scan: () => Promise<SystemHealthReport>;
   selfHeal: () => Promise<SelfHealingReport>;
-  repairDevice: (any: any) => Promise<RepairResult>;
+  repairDevice: (deviceId: string) => Promise<RepairResult>;
 
   // Monitoring
-  startMonitoring: (any: any) => void;
+  startMonitoring: (intervalMs?: number) => void;
   stopMonitoring: () => void;
 
   // Historique
-  repairHistory: RepairResult?.[];
+  repairHistory: RepairResult[];
   clearHistory: () => void;
 }
 
@@ -83,17 +83,17 @@ export function useDeviceHealth(
   } = options;
 
   // State
-  const [report, setReport] = useState<SystemHealthReport | null>(any: any);
-  const [isScanning, setIsScanning] = useState(any: any);
-  const [isHealing, setIsHealing] = useState(any: any);
+  const [report, setReport] = useState<SystemHealthReport | null>(null);
+  const [isScanning, setIsScanning] = useState(false);
+  const [isHealing, setIsHealing] = useState(false);
   const [lastHealingResult, setLastHealingResult] = useState<SelfHealingReport | null>(
     null
   );
-  const [repairHistory, setRepairHistory] = useState<RepairResult?.[]>([]);
+  const [repairHistory, setRepairHistory] = useState<RepairResult[]>([]);
 
   // Refs
-  const mountedRef = useRef(any: any);
-  const autoHealingRef = useRef(any: any);
+  const mountedRef = useRef(true);
+  const autoHealingRef = useRef(false);
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Actions
@@ -103,20 +103,20 @@ export function useDeviceHealth(
    * Lance l'auto-réparation complète
    */
   const selfHeal = useCallback(async (): Promise<SelfHealingReport> => {
-    setIsHealing(any: any);
+    setIsHealing(true);
     try {
-      const result = await deviceHealthService?.selfHeal();
-      if (any: any) {
-        setLastHealingResult(any: any);
-        setRepairHistory(deviceHealthService?.getRepairHistory());
+      const result = await deviceHealthService.selfHeal();
+      if (mountedRef.current) {
+        setLastHealingResult(result);
+        setRepairHistory(deviceHealthService.getRepairHistory());
         // Re-scan après healing
-        const newReport = await deviceHealthService?.scanAll();
-        setReport(any: any);
+        const newReport = await deviceHealthService.scanAll();
+        setReport(newReport);
       }
       return result;
     } finally {
-      if (any: any) {
-        setIsHealing(any: any);
+      if (mountedRef.current) {
+        setIsHealing(false);
       }
     }
   }, []);
@@ -125,28 +125,28 @@ export function useDeviceHealth(
    * Scanne tous les périphériques
    */
   const scan = useCallback(async (): Promise<SystemHealthReport> => {
-    setIsScanning(any: any);
+    setIsScanning(true);
     try {
-      const result = await deviceHealthService?.scanAll();
-      if (any: any) {
-        setReport(any: any);
+      const result = await deviceHealthService.scanAll();
+      if (mountedRef.current) {
+        setReport(result);
 
         // Auto-heal si critique et option activée
         if (
           autoHealOnCritical &&
-          result?.overallStatus === 'critical' &&
-          !autoHealingRef?.current
+          result.overallStatus === 'critical' &&
+          !autoHealingRef.current
         ) {
-          autoHealingRef?.current = true;
-          logger?.info('Critical status, auto-healing...');
+          autoHealingRef.current = true;
+          logger.info('Critical status, auto-healing...');
           await selfHeal();
-          autoHealingRef?.current = false;
+          autoHealingRef.current = false;
         }
       }
       return result;
     } finally {
-      if (any: any) {
-        setIsScanning(any: any);
+      if (mountedRef.current) {
+        setIsScanning(false);
       }
     }
   }, [autoHealOnCritical, selfHeal]);
@@ -155,19 +155,19 @@ export function useDeviceHealth(
    * Répare un périphérique spécifique
    */
   const repairDevice = useCallback(
-    async (any: any): Promise<RepairResult> => {
-      setIsHealing(any: any);
+    async (deviceId: string): Promise<RepairResult> => {
+      setIsHealing(true);
       try {
-        const result = await deviceHealthService?.repairDevice(any: any);
-        if (any: any) {
-          setRepairHistory(deviceHealthService?.getRepairHistory());
+        const result = await deviceHealthService.repairDevice(deviceId);
+        if (mountedRef.current) {
+          setRepairHistory(deviceHealthService.getRepairHistory());
           // Re-scan après réparation
           await scan();
         }
         return result;
       } finally {
-        if (any: any) {
-          setIsHealing(any: any);
+        if (mountedRef.current) {
+          setIsHealing(false);
         }
       }
     },
@@ -178,8 +178,8 @@ export function useDeviceHealth(
    * Démarre le monitoring
    */
   const startMonitoring = useCallback(
-    (any: any) => {
-      deviceHealthService?.startMonitoring(any: any);
+    (intervalMs: number = monitorInterval) => {
+      deviceHealthService.startMonitoring(intervalMs);
     },
     [monitorInterval]
   );
@@ -188,14 +188,14 @@ export function useDeviceHealth(
    * Arrête le monitoring
    */
   const stopMonitoring = useCallback(() => {
-    deviceHealthService?.stopMonitoring();
+    deviceHealthService.stopMonitoring();
   }, []);
 
   /**
    * Vide l'historique
    */
   const clearHistory = useCallback(() => {
-    deviceHealthService?.clearRepairHistory();
+    deviceHealthService.clearRepairHistory();
     setRepairHistory([]);
   }, []);
 
@@ -205,33 +205,33 @@ export function useDeviceHealth(
 
   // Initialisation
   useEffect(() => {
-    mountedRef?.current = true;
+    mountedRef.current = true;
 
     // S'abonner aux changements
-    const unsubscribe = deviceHealthService?.subscribe(newReport => {
-      if (any: any) {
-        setReport(any: any);
+    const unsubscribe = deviceHealthService.subscribe(newReport => {
+      if (mountedRef.current) {
+        setReport(newReport);
       }
     });
 
     // Charger l'historique existant
-    setRepairHistory(deviceHealthService?.getRepairHistory());
+    setRepairHistory(deviceHealthService.getRepairHistory());
 
     // Auto-scan si demandé
-    if (any: any) {
+    if (autoScan) {
       scan();
     }
 
     // Auto-monitor si demandé
-    if (any: any) {
-      deviceHealthService?.startMonitoring(any: any);
+    if (autoMonitor) {
+      deviceHealthService.startMonitoring(monitorInterval);
     }
 
     return () => {
-      mountedRef?.current = false;
+      mountedRef.current = false;
       unsubscribe();
-      if (any: any) {
-        deviceHealthService?.stopMonitoring();
+      if (autoMonitor) {
+        deviceHealthService.stopMonitoring();
       }
     };
   }, [autoScan, autoMonitor, monitorInterval, scan]);

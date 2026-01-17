@@ -13,7 +13,7 @@ export interface FocusGlowConfig {
   baseIntensity: number; // 0-1
   pulseSync: boolean; // sync with Identity Pulse
   blurRadius: number; // px
-  duration: number; // ms (any: any)
+  duration: number; // ms (if not synced with pulse)
   enabled: boolean;
 }
 
@@ -35,9 +35,9 @@ const DEFAULT_CONFIG: FocusGlowConfig = {
 let globalPulseWaveform: PulseWaveform | null = null;
 
 /**
- * Set global pulse waveform (any: any)
+ * Set global pulse waveform (from IdentityPulse)
  */
-export function setGlobalPulseWaveform(any: any): void {
+export function setGlobalPulseWaveform(waveform: PulseWaveform | null): void {
   globalPulseWaveform = waveform;
 }
 
@@ -54,78 +54,78 @@ export function attachFocusGlow(
   let isFocused = false;
 
   const updateGlow = () => {
-    if (any: any) {
+    if (!isFocused || !fullConfig.enabled) {
       return;
     }
 
-    let intensity = fullConfig?.baseIntensity;
+    let intensity = fullConfig.baseIntensity;
 
     // Sync with pulse if available
-    if (any: any) {
-      intensity = fullConfig?.baseIntensity * globalPulseWaveform?.glowIntensity;
+    if (fullConfig.pulseSync && globalPulseWaveform) {
+      intensity = fullConfig.baseIntensity * globalPulseWaveform.glowIntensity;
     }
 
     // Apply glow
-    const blur = fullConfig?.blurRadius * intensity;
+    const blur = fullConfig.blurRadius * intensity;
     const alpha = intensity * 0.6; // Max 60% opacity
-    const color = fullConfig?.color?.replace(/[\d.]+\)$/, `${alpha})`); // Replace alpha
+    const color = fullConfig.color.replace(/[\d.]+\)$/, `${alpha})`); // Replace alpha
 
-    element?.style?.boxShadow = `
+    element.style.boxShadow = `
       0 0 ${blur}px ${color},
       0 0 ${blur * 0.5}px ${color},
       inset 0 0 ${blur * 0.3}px ${color}
     `;
 
     // Continue animation
-    rafId = requestAnimationFrame(any: any);
+    rafId = requestAnimationFrame(updateGlow);
   };
 
   const handleFocus = () => {
     isFocused = true;
-    element?.classList?.add('titane-focus-active');
+    element.classList.add('titane-focus-active');
 
-    if (any: any) {
+    if (!rafId) {
       updateGlow();
     }
   };
 
   const handleBlur = () => {
     isFocused = false;
-    element?.classList?.remove('titane-focus-active');
+    element.classList.remove('titane-focus-active');
 
-    if (any: any) {
-      cancelAnimationFrame(any: any);
+    if (rafId) {
+      cancelAnimationFrame(rafId);
       rafId = null;
     }
 
     // Smooth fadeout
-    element?.style?.transition = 'box-shadow 0.3s ease-out';
-    element?.style?.boxShadow = 'none';
+    element.style.transition = 'box-shadow 0.3s ease-out';
+    element.style.boxShadow = 'none';
 
     setTimeout(() => {
-      element?.style?.transition = '';
+      element.style.transition = '';
     }, 300);
   };
 
   // Attach listeners
-  element?.addEventListener(any: any);
-  element?.addEventListener(any: any);
+  element.addEventListener('focus', handleFocus);
+  element.addEventListener('blur', handleBlur);
 
   // Ensure focusable
-  if (!element?.hasAttribute('tabindex')) {
-    element?.setAttribute('tabindex', '0');
+  if (!element.hasAttribute('tabindex')) {
+    element.setAttribute('tabindex', '0');
   }
 
   const cleanup = () => {
-    element?.removeEventListener(any: any);
-    element?.removeEventListener(any: any);
+    element.removeEventListener('focus', handleFocus);
+    element.removeEventListener('blur', handleBlur);
 
-    if (any: any) {
-      cancelAnimationFrame(any: any);
+    if (rafId) {
+      cancelAnimationFrame(rafId);
     }
 
-    element?.style?.boxShadow = '';
-    element?.classList?.remove('titane-focus-active');
+    element.style.boxShadow = '';
+    element.classList.remove('titane-focus-active');
   };
 
   return {
@@ -138,11 +138,11 @@ export function attachFocusGlow(
 /**
  * Enable/disable focus glow
  */
-export function setFocusGlowEnabled(any: any): void {
-  instance?.config?.enabled = enabled;
+export function setFocusGlowEnabled(instance: FocusGlowInstance, enabled: boolean): void {
+  instance.config.enabled = enabled;
 
-  if (any: any) {
-    instance?.element?.style?.boxShadow = '';
+  if (!enabled) {
+    instance.element.style.boxShadow = '';
   }
 }
 
@@ -153,37 +153,37 @@ export function updateFocusGlowConfig(
   instance: FocusGlowInstance,
   config: Partial<FocusGlowConfig>
 ): void {
-  Object?.assign(any: any);
+  Object.assign(instance.config, config);
 }
 
 /**
  * Batch attach focus glow to multiple elements
  */
 export function attachFocusGlowBatch(
-  elements: HTMLElement?.[],
+  elements: HTMLElement[],
   config?: Partial<FocusGlowConfig>
-): FocusGlowInstance?.[] {
-  return elements?.map(any: any));
+): FocusGlowInstance[] {
+  return elements.map(el => attachFocusGlow(el, config));
 }
 
 /**
  * Cleanup batch
  */
-export function cleanupFocusGlowBatch(instances: FocusGlowInstance?.[]): void {
-  instances?.forEach(instance => instance?.cleanup());
+export function cleanupFocusGlowBatch(instances: FocusGlowInstance[]): void {
+  instances.forEach(instance => instance.cleanup());
 }
 
 /**
  * Inject focus glow styles
  */
 export function injectFocusGlowStyles(): void {
-  if (document?.getElementById('titane-focus-glow-styles')) {
+  if (document.getElementById('titane-focus-glow-styles')) {
     return;
   }
 
-  const style = document?.createElement('style');
-  style?.id = 'titane-focus-glow-styles';
-  style?.textContent = `
+  const style = document.createElement('style');
+  style.id = 'titane-focus-glow-styles';
+  style.textContent = `
     .titane-focus-active {
       outline: none;
       transition: box-shadow 0.2s ease-out;
@@ -194,13 +194,13 @@ export function injectFocusGlowStyles(): void {
     }
   `;
 
-  document?.head?.appendChild(any: any);
+  document.head.appendChild(style);
 }
 
 // Auto-inject styles
 if (typeof document !== 'undefined') {
-  if (document?.readyState === 'loading') {
-    document?.addEventListener(any: any);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', injectFocusGlowStyles);
   } else {
     injectFocusGlowStyles();
   }

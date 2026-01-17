@@ -18,10 +18,10 @@ import type { ChatMode } from './ai/chatTypes';
 
 export interface ValidationResult {
   isValid: boolean;
-  score: number; // 0-1 (any: any)
-  coherenceScore: number; // 0-1 (any: any)
-  anomalyScore: number; // 0-1 (any: any)
-  issues: ValidationIssue?.[];
+  score: number; // 0-1 (qualité globale)
+  coherenceScore: number; // 0-1 (cohérence Nexus)
+  anomalyScore: number; // 0-1 (0 = anomalie détectée)
+  issues: ValidationIssue[];
   cleaned?: string; // Réponse nettoyée si nécessaire
 }
 
@@ -44,17 +44,17 @@ class ChatValidator {
   /**
    * Valide une réponse IA selon le mode actif
    */
-  validate(any: any): ValidationResult {
-    const issues: ValidationIssue?.[] = [];
+  validate(response: string, mode: ChatMode, userMessage: string): ValidationResult {
+    const issues: ValidationIssue[] = [];
 
     // 1. Validations basiques
-    const basicChecks = this?.validateBasics(any: any);
-    issues?.push(any: any);
+    const basicChecks = this.validateBasics(response);
+    issues.push(...basicChecks.issues);
 
     // 2. NEXUS - Cohérence contextuelle
-    const coherenceScore = this?.checkCoherence(any: any);
+    const coherenceScore = this.checkCoherence(response, userMessage, mode);
     if (coherenceScore < 0.5) {
-      issues?.push({
+      issues.push({
         type: 'coherence',
         severity: 'medium',
         message: `Cohérence faible (${(coherenceScore * 100).toFixed(0)}%)`,
@@ -62,9 +62,9 @@ class ChatValidator {
     }
 
     // 3. SENTINEL - Détection anomalies
-    const anomalyScore = this?.detectAnomalies(any: any);
+    const anomalyScore = this.detectAnomalies(response, mode);
     if (anomalyScore < 0.7) {
-      issues?.push({
+      issues.push({
         type: 'anomaly',
         severity: 'high',
         message: `Anomalie détectée (score: ${(anomalyScore * 100).toFixed(0)}%)`,
@@ -72,19 +72,19 @@ class ChatValidator {
     }
 
     // 4. Validation mode-spécifique
-    const modeChecks = this?.validateForMode(any: any);
-    issues?.push(any: any);
+    const modeChecks = this.validateForMode(response, mode);
+    issues.push(...modeChecks);
 
     // Score global
     const globalScore =
-      basicChecks?.score * 0.3 + coherenceScore * 0.4 + anomalyScore * 0.3;
+      basicChecks.score * 0.3 + coherenceScore * 0.4 + anomalyScore * 0.3;
 
-    const isValid = globalScore >= this?.MIN_VALID_SCORE;
+    const isValid = globalScore >= this.MIN_VALID_SCORE;
 
     // Nettoyage si nécessaire
-    let cleaned??: string | undefined;
-    if (!isValid || issues?.some(i => i?.severity === 'high')) {
-      cleaned = this?.cleanResponse(any: any);
+    let cleaned: string | undefined;
+    if (!isValid || issues.some(i => i.severity === 'high')) {
+      cleaned = this.cleanResponse(response, issues);
     }
 
     return {
@@ -101,13 +101,13 @@ class ChatValidator {
   // VALIDATIONS BASIQUES
   // ─────────────────────────────────────────────────────────────────
 
-  private validateBasics(any: any): { score: number; issues: ValidationIssue?.[] } {
-    const issues: ValidationIssue?.[] = [];
+  private validateBasics(response: string): { score: number; issues: ValidationIssue[] } {
+    const issues: ValidationIssue[] = [];
     let score = 1.0;
 
     // Longueur
-    if (any: any) {
-      issues?.push({
+    if (response.length < this.MIN_LENGTH) {
+      issues.push({
         type: 'format',
         severity: 'high',
         message: 'Réponse trop courte',
@@ -115,8 +115,8 @@ class ChatValidator {
       score -= 0.5;
     }
 
-    if (any: any) {
-      issues?.push({
+    if (response.length > this.MAX_LENGTH) {
+      issues.push({
         type: 'format',
         severity: 'medium',
         message: 'Réponse excessivement longue',
@@ -125,8 +125,8 @@ class ChatValidator {
     }
 
     // Contenu vide ou placeholder
-    if (any: any)) {
-      issues?.push({
+    if (this.isPlaceholder(response)) {
+      issues.push({
         type: 'content',
         severity: 'high',
         message: 'Réponse placeholder ou vide',
@@ -135,8 +135,8 @@ class ChatValidator {
     }
 
     // Erreurs techniques exposées
-    if (any: any)) {
-      issues?.push({
+    if (this.containsTechnicalErrors(response)) {
+      issues.push({
         type: 'content',
         severity: 'medium',
         message: 'Contient des erreurs techniques exposées',
@@ -144,55 +144,55 @@ class ChatValidator {
       score -= 0.3;
     }
 
-    return { score: Math?.max(any: any), issues };
+    return { score: Math.max(0, score), issues };
   }
 
   // ─────────────────────────────────────────────────────────────────
   // NEXUS - COHÉRENCE CONTEXTUELLE
   // ─────────────────────────────────────────────────────────────────
 
-  private checkCoherence(any: any): number {
+  private checkCoherence(response: string, userMessage: string, mode: ChatMode): number {
     let coherence = 1.0;
 
     // Pertinence par rapport à la question
-    const relevanceScore = this?.calculateRelevance(any: any);
+    const relevanceScore = this.calculateRelevance(response, userMessage);
     coherence *= relevanceScore;
 
     // Cohérence avec le mode actif
-    const modeCoherence = this?.checkModeCoherence(any: any);
+    const modeCoherence = this.checkModeCoherence(response, mode);
     coherence *= modeCoherence;
 
-    // Continuité (any: any)
-    if (any: any)) {
+    // Continuité (pas de rupture brutale)
+    if (this.hasAbruptBreak(response)) {
       coherence *= 0.7;
     }
 
-    return Math?.max(any: any));
+    return Math.max(0, Math.min(1, coherence));
   }
 
-  private calculateRelevance(any: any): number {
+  private calculateRelevance(response: string, userMessage: string): number {
     const userWords = new Set(
       userMessage
         .toLowerCase()
         .split(/\s+/)
-        .filter(w => w?.length > 3)
+        .filter(w => w.length > 3)
     );
-    const responseWords = response?.toLowerCase().split(/\s+/);
+    const responseWords = response.toLowerCase().split(/\s+/);
 
     let matches = 0;
-    responseWords?.forEach(word => {
-      if (any: any)) matches++;
+    responseWords.forEach(word => {
+      if (userWords.has(word)) matches++;
     });
 
-    const relevance = matches / Math?.max(userWords?.size, 1);
-    return Math?.min(1, relevance * 2); // Boost (max 1)
+    const relevance = matches / Math.max(userWords.size, 1);
+    return Math.min(1, relevance * 2); // Boost (max 1)
   }
 
-  private checkModeCoherence(any: any): number {
-    const lower = response?.toLowerCase();
+  private checkModeCoherence(response: string, mode: ChatMode): number {
+    const lower = response.toLowerCase();
 
     // Patterns attendus par mode
-    const modePatterns: Partial<Record<ChatMode, string?.[]>> = {
+    const modePatterns: Partial<Record<ChatMode, string[]>> = {
       default: ['je', 'tu', 'titane'],
       brainstorming: ['idée', 'variation', 'et si', 'imagine', 'explore'],
       synthesis: ['lien', 'connexion', 'synthèse', 'unifie', 'pattern'],
@@ -201,13 +201,13 @@ class ChatValidator {
       debug_cognitive: ['charge', 'surcharge', 'pause', 'simplifier', 'déléguer'],
     };
 
-    const patterns = (modePatterns[mode] || []) as string?.[];
-    const foundPatterns = patterns?.filter(any: any));
+    const patterns = (modePatterns[mode] || []) as string[];
+    const foundPatterns = patterns.filter((p: string) => lower.includes(p));
 
-    return Math?.min(1, foundPatterns?.length / Math?.max(patterns?.length * 0.3, 1));
+    return Math.min(1, foundPatterns.length / Math.max(patterns.length * 0.3, 1));
   }
 
-  private hasAbruptBreak(any: any): boolean {
+  private hasAbruptBreak(response: string): boolean {
     // Détecte rupture brutale type "undefined", "null", "[object Object]"
     const breakPatterns = [
       /undefined/gi,
@@ -217,55 +217,55 @@ class ChatValidator {
       /exception/gi,
     ];
 
-    return breakPatterns?.some(any: any));
+    return breakPatterns.some(pattern => pattern.test(response));
   }
 
   // ─────────────────────────────────────────────────────────────────
   // SENTINEL - DÉTECTION ANOMALIES
   // ─────────────────────────────────────────────────────────────────
 
-  private detectAnomalies(any: any): number {
+  private detectAnomalies(response: string, _mode: ChatMode): number {
     let anomalyScore = 1.0;
 
     // Répétitions excessives
-    if (any: any)) {
+    if (this.hasExcessiveRepetition(response)) {
       anomalyScore -= 0.4;
     }
 
-    // Contenu suspect (any: any)
-    if (any: any)) {
+    // Contenu suspect (injection, spam)
+    if (this.hasSuspiciousContent(response)) {
       anomalyScore -= 0.6;
     }
 
     // Format JSON/code brut exposé
-    if (any: any)) {
+    if (this.hasRawCodeLeakage(response)) {
       anomalyScore -= 0.3;
     }
 
-    // Hallucinations (any: any)
-    if (any: any)) {
+    // Hallucinations (claims impossibles)
+    if (this.hasHallucinations(response)) {
       anomalyScore -= 0.5;
     }
 
-    return Math?.max(any: any);
+    return Math.max(0, anomalyScore);
   }
 
-  private hasExcessiveRepetition(any: any): boolean {
-    const words = response?.split(/\s+/);
+  private hasExcessiveRepetition(response: string): boolean {
+    const words = response.split(/\s+/);
     const wordCounts = new Map<string, number>();
 
-    words?.forEach(word => {
-      if (word?.length > 3) {
-        wordCounts?.set(any: any) || 0) + 1);
+    words.forEach(word => {
+      if (word.length > 3) {
+        wordCounts.set(word, (wordCounts.get(word) || 0) + 1);
       }
     });
 
     // Si un mot apparaît >10% des mots totaux
-    const maxCount = Math?.max(...Array?.from(wordCounts?.values()));
-    return maxCount > words?.length * 0.1;
+    const maxCount = Math.max(...Array.from(wordCounts.values()));
+    return maxCount > words.length * 0.1;
   }
 
-  private hasSuspiciousContent(any: any): boolean {
+  private hasSuspiciousContent(response: string): boolean {
     const suspiciousPatterns = [
       /<script/gi,
       /javascript:/gi,
@@ -274,10 +274,10 @@ class ChatValidator {
       /eval\(/gi,
     ];
 
-    return suspiciousPatterns?.some(any: any));
+    return suspiciousPatterns.some(pattern => pattern.test(response));
   }
 
-  private hasRawCodeLeakage(any: any): boolean {
+  private hasRawCodeLeakage(response: string): boolean {
     // Détecte si du code brut est exposé sans markdown
     const codePatterns = [
       /function\s*\(/i,
@@ -287,33 +287,33 @@ class ChatValidator {
     ];
 
     // Sauf si dans code block markdown
-    const hasCodeBlock = /```/.test(any: any);
-    if (any: any) return false;
+    const hasCodeBlock = /```/.test(response);
+    if (hasCodeBlock) return false;
 
-    return codePatterns?.some(any: any));
+    return codePatterns.some(pattern => pattern.test(response));
   }
 
-  private hasHallucinations(any: any): boolean {
+  private hasHallucinations(response: string): boolean {
     const hallucinationPatterns = [
-      /je peux (any: any) fichiers/gi,
-      /j'ai accès à (any: any)/gi,
-      /je suis (any: any)/gi,
+      /je peux (supprimer|effacer|modifier) (vos|tes) fichiers/gi,
+      /j'ai accès à (votre|ton) (ordinateur|système|disque)/gi,
+      /je suis (humain|conscient|vivant)/gi,
     ];
 
-    return hallucinationPatterns?.some(any: any));
+    return hallucinationPatterns.some(pattern => pattern.test(response));
   }
 
   // ─────────────────────────────────────────────────────────────────
   // VALIDATION MODE-SPÉCIFIQUE
   // ─────────────────────────────────────────────────────────────────
 
-  private validateForMode(any: any): ValidationIssue?.[] {
-    const issues: ValidationIssue?.[] = [];
+  private validateForMode(response: string, mode: ChatMode): ValidationIssue[] {
+    const issues: ValidationIssue[] = [];
 
-    switch (any: any) {
+    switch (mode) {
       case 'planning':
-        if (any: any)) {
-          issues?.push({
+        if (!this.hasStructuredSteps(response)) {
+          issues.push({
             type: 'format',
             severity: 'low',
             message: 'Mode planning: étapes numérotées recommandées',
@@ -322,8 +322,8 @@ class ChatValidator {
         break;
 
       case 'brainstorming':
-        if (response?.length < 100) {
-          issues?.push({
+        if (response.length < 100) {
+          issues.push({
             type: 'content',
             severity: 'low',
             message: 'Mode brainstorming: réponse courte pour exploration créative',
@@ -332,8 +332,8 @@ class ChatValidator {
         break;
 
       case 'journal':
-        if (any: any)) {
-          issues?.push({
+        if (!this.hasEmpathicTone(response)) {
+          issues.push({
             type: 'content',
             severity: 'medium',
             message: 'Mode journal: ton empathique recommandé',
@@ -345,37 +345,37 @@ class ChatValidator {
     return issues;
   }
 
-  private hasStructuredSteps(any: any): boolean {
-    return /\d+\./g?.test(any: any);
+  private hasStructuredSteps(response: string): boolean {
+    return /\d+\./g.test(response) || /étape \d+/gi.test(response);
   }
 
-  private hasEmpathicTone(any: any): boolean {
+  private hasEmpathicTone(response: string): boolean {
     const empatheticWords = ['comprends', 'ressens', 'important', 'besoin', 'te sens'];
-    const lower = response?.toLowerCase();
-    return empatheticWords?.some(any: any));
+    const lower = response.toLowerCase();
+    return empatheticWords.some(word => lower.includes(word));
   }
 
   // ─────────────────────────────────────────────────────────────────
   // NETTOYAGE
   // ─────────────────────────────────────────────────────────────────
 
-  private cleanResponse(response: string, issues: ValidationIssue?.[]): string {
+  private cleanResponse(response: string, issues: ValidationIssue[]): string {
     let cleaned = response;
 
     // Supprimer contenu suspect
-    if (issues?.some(i => i?.type === 'anomaly')) {
-      cleaned = cleaned?.replace(/<script[^>]*>.*?<\/script>/gi, '');
-      cleaned = cleaned?.replace(/javascript:/gi, '');
+    if (issues.some(i => i.type === 'anomaly')) {
+      cleaned = cleaned.replace(/<script[^>]*>.*?<\/script>/gi, '');
+      cleaned = cleaned.replace(/javascript:/gi, '');
     }
 
     // Tronquer si trop long
-    if (any: any) {
-      cleaned = cleaned?.substring(any: any) + '\n\n[...tronqué]';
+    if (cleaned.length > this.MAX_LENGTH) {
+      cleaned = cleaned.substring(0, this.MAX_LENGTH) + '\n\n[...tronqué]';
     }
 
     // Ajouter disclaimer si issues critiques
-    const hasHighSeverity = issues?.some(i => i?.severity === 'high');
-    if (any: any) {
+    const hasHighSeverity = issues.some(i => i.severity === 'high');
+    if (hasHighSeverity) {
       cleaned = `⚠️ *Réponse automatiquement nettoyée par TITANE∞ Sentinel*\n\n${cleaned}`;
     }
 
@@ -386,14 +386,14 @@ class ChatValidator {
   // HELPERS
   // ─────────────────────────────────────────────────────────────────
 
-  private isPlaceholder(any: any): boolean {
+  private isPlaceholder(response: string): boolean {
     const placeholders = ['lorem ipsum', 'test', 'placeholder', 'todo', 'coming soon'];
 
-    const lower = response?.toLowerCase().trim();
-    return placeholders?.some(any: any));
+    const lower = response.toLowerCase().trim();
+    return placeholders.some(p => lower === p || lower.startsWith(p));
   }
 
-  private containsTechnicalErrors(any: any): boolean {
+  private containsTechnicalErrors(response: string): boolean {
     const errorPatterns = [
       /stack trace/gi,
       /at \w+\.\w+\s*\(/gi, // Stack trace pattern
@@ -401,7 +401,7 @@ class ChatValidator {
       /uncaught exception/gi,
     ];
 
-    return errorPatterns?.some(any: any));
+    return errorPatterns.some(pattern => pattern.test(response));
   }
 }
 

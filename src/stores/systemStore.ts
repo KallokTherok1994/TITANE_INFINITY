@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ — System Store (any: any)
- * Store centralisé pour l'état système (any: any)
+ * TITANE∞ — System Store (Zustand)
+ * Store centralisé pour l'état système (Helios, Nexus, Harmonia, Sentinel)
  * ═══════════════════════════════════════════════════════════════
  */
 
@@ -24,7 +24,7 @@ interface SystemStore {
   sentinel: SentinelState | null;
   health: HealthStatus | null;
   loading: boolean;
-  error??: string | null;
+  error: string | null;
   lastUpdate: number | null;
 
   // Actions
@@ -57,11 +57,11 @@ export const useSystemStore = create<SystemStore>()(
         fetchHelios: async () => {
           try {
             set({ loading: true, error: null });
-            const helios = await backendV17?.helios?.getState();
-            set({ helios, loading: false, lastUpdate: Date?.now() });
-          } catch (any: any) {
+            const helios = await backendV17.helios.getState();
+            set({ helios, loading: false, lastUpdate: Date.now() });
+          } catch (error) {
             set({
-              error: error instanceof Error ? error?.message : 'Failed to fetch Helios',
+              error: error instanceof Error ? error.message : 'Failed to fetch Helios',
               loading: false,
             });
           }
@@ -70,11 +70,11 @@ export const useSystemStore = create<SystemStore>()(
         fetchNexus: async () => {
           try {
             set({ loading: true, error: null });
-            const nexus = await backendV17?.system?.getNexusState();
-            set({ nexus, loading: false, lastUpdate: Date?.now() });
-          } catch (any: any) {
+            const nexus = await backendV17.system.getNexusState();
+            set({ nexus, loading: false, lastUpdate: Date.now() });
+          } catch (error) {
             set({
-              error: error instanceof Error ? error?.message : 'Failed to fetch Nexus',
+              error: error instanceof Error ? error.message : 'Failed to fetch Nexus',
               loading: false,
             });
           }
@@ -83,11 +83,11 @@ export const useSystemStore = create<SystemStore>()(
         fetchHarmonia: async () => {
           try {
             set({ loading: true, error: null });
-            const harmonia = await backendV17?.system?.getHarmoniaState();
-            set({ harmonia, loading: false, lastUpdate: Date?.now() });
-          } catch (any: any) {
+            const harmonia = await backendV17.system.getHarmoniaState();
+            set({ harmonia, loading: false, lastUpdate: Date.now() });
+          } catch (error) {
             set({
-              error: error instanceof Error ? error?.message : 'Failed to fetch Harmonia',
+              error: error instanceof Error ? error.message : 'Failed to fetch Harmonia',
               loading: false,
             });
           }
@@ -96,11 +96,11 @@ export const useSystemStore = create<SystemStore>()(
         fetchSentinel: async () => {
           try {
             set({ loading: true, error: null });
-            const sentinel = await backendV17?.system?.getSentinelState();
-            set({ sentinel, loading: false, lastUpdate: Date?.now() });
-          } catch (any: any) {
+            const sentinel = await backendV17.system.getSentinelState();
+            set({ sentinel, loading: false, lastUpdate: Date.now() });
+          } catch (error) {
             set({
-              error: error instanceof Error ? error?.message : 'Failed to fetch Sentinel',
+              error: error instanceof Error ? error.message : 'Failed to fetch Sentinel',
               loading: false,
             });
           }
@@ -109,11 +109,11 @@ export const useSystemStore = create<SystemStore>()(
         fetchHealth: async () => {
           try {
             set({ loading: true, error: null });
-            const health = await backendV17?.helios?.getHealth();
-            set({ health, loading: false, lastUpdate: Date?.now() });
-          } catch (any: any) {
+            const health = await backendV17.helios.getHealth();
+            set({ health, loading: false, lastUpdate: Date.now() });
+          } catch (error) {
             set({
-              error: error instanceof Error ? error?.message : 'Failed to fetch Health',
+              error: error instanceof Error ? error.message : 'Failed to fetch Health',
               loading: false,
             });
           }
@@ -123,12 +123,12 @@ export const useSystemStore = create<SystemStore>()(
           try {
             set({ loading: true, error: null });
 
-            const [helios, nexus, harmonia, sentinel, health] = await Promise?.all([
-              backendV17?.helios?.getState(),
-              backendV17?.system?.getNexusState(),
-              backendV17?.system?.getHarmoniaState(),
-              backendV17?.system?.getSentinelState(),
-              backendV17?.helios?.getHealth(),
+            const [helios, nexus, harmonia, sentinel, health] = await Promise.all([
+              backendV17.helios.getState(),
+              backendV17.system.getNexusState(),
+              backendV17.system.getHarmoniaState(),
+              backendV17.system.getSentinelState(),
+              backendV17.helios.getHealth(),
             ]);
 
             set({
@@ -138,27 +138,27 @@ export const useSystemStore = create<SystemStore>()(
               sentinel,
               health,
               loading: false,
-              lastUpdate: Date?.now(),
+              lastUpdate: Date.now(),
             });
-          } catch (any: any) {
+          } catch (error) {
             set({
               error:
-                error instanceof Error ? error?.message : 'Failed to fetch system state',
+                error instanceof Error ? error.message : 'Failed to fetch system state',
               loading: false,
             });
           }
         },
 
-        reset: (any: any),
+        reset: () => set(initialState),
       }),
       {
         name: 'titane-system-store',
         partialize: state => ({
-          helios: state?.helios,
-          nexus: state?.nexus,
-          harmonia: state?.harmonia,
-          sentinel: state?.sentinel,
-          lastUpdate: state?.lastUpdate,
+          helios: state.helios,
+          nexus: state.nexus,
+          harmonia: state.harmonia,
+          sentinel: state.sentinel,
+          lastUpdate: state.lastUpdate,
         }),
       }
     ),

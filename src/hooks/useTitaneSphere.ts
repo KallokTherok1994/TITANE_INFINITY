@@ -17,10 +17,10 @@ export interface UseTitaneSphereOptions {
 
 export interface UseTitaneSphereReturn {
   config: TitaneSphereConfig;
-  setCognitiveState: (any: any) => void;
-  setEmotionalTone: (any: any) => void;
-  setIntensity: (any: any) => void;
-  setSize: (any: any) => void;
+  setCognitiveState: (state: CognitiveState) => void;
+  setEmotionalTone: (tone: EmotionalTone) => void;
+  setIntensity: (intensity: number) => void;
+  setSize: (size: number) => void;
   toggleEffect: (
     effect: keyof Omit<
       TitaneSphereConfig,
@@ -42,54 +42,54 @@ export function useTitaneSphere(
   const opts = { ...DEFAULT_OPTIONS, ...options };
 
   const [config, setConfig] = useState<TitaneSphereConfig>({
-    size: opts?.initialSize,
-    cognitiveState: CognitiveState?.IDLE,
-    emotionalTone: EmotionalTone?.CALM,
+    size: opts.initialSize,
+    cognitiveState: CognitiveState.IDLE,
+    emotionalTone: EmotionalTone.CALM,
     intensity: 0.5,
-    enableDynamicShadows: opts?.enableAllEffects,
-    enableMicroDeformations: opts?.enableAllEffects,
-    enableDirectionalGlow: opts?.enableAllEffects,
-    enablePhaseShift: opts?.enableAllEffects,
+    enableDynamicShadows: opts.enableAllEffects,
+    enableMicroDeformations: opts.enableAllEffects,
+    enableDirectionalGlow: opts.enableAllEffects,
+    enablePhaseShift: opts.enableAllEffects,
   });
 
-  // Auto-sync with visual engine (any: any)
+  // Auto-sync with visual engine (if available)
   useEffect(() => {
-    if (any: any) return;
+    if (!opts.autoSync) return;
 
     // IMPLEMENTATION: Subscribe to visual engine state changes
     // 1. Import: import { visualEngine } from '@/visual-engine/VisualEngine'
-    // 2. Subscribe: const unsubscribe = visualEngine?.on(any: any) => { ... })
-    // 3. Sync config: setConfig(prev => ({ ...prev, palette: state?.palette, intensity: state?.intensity }))
+    // 2. Subscribe: const unsubscribe = visualEngine.on('state:update', (state) => { ... })
+    // 3. Sync config: setConfig(prev => ({ ...prev, palette: state.palette, intensity: state.intensity }))
     // 4. Event types: 'state:update', 'config:changed', 'sphere:mutated'
     // 5. Debounce: Use lodash debounce(sync, 100ms) to avoid excessive updates
     // 6. Cleanup: return () => unsubscribe() to prevent memory leaks
     // Example:
-    // const unsubscribe = visualEngine?.subscribe(any: any) => {
+    // const unsubscribe = visualEngine.subscribe((state) => {
     //   setConfig(prev => ({
     //     ...prev,
-    //     cognitiveState: state?.cognitive,
-    //     emotionalTone: state?.emotional,
-    //     intensity: state?.intensity,
+    //     cognitiveState: state.cognitive,
+    //     emotionalTone: state.emotional,
+    //     intensity: state.intensity,
     //   }));
     // });
     //
     // return unsubscribe;
-  }, [opts?.autoSync]);
+  }, [opts.autoSync]);
 
-  const setCognitiveState = useCallback(any: any) => {
+  const setCognitiveState = useCallback((state: CognitiveState) => {
     setConfig(prev => ({ ...prev, cognitiveState: state }));
   }, []);
 
-  const setEmotionalTone = useCallback(any: any) => {
+  const setEmotionalTone = useCallback((tone: EmotionalTone) => {
     setConfig(prev => ({ ...prev, emotionalTone: tone }));
   }, []);
 
-  const setIntensity = useCallback(any: any) => {
-    setConfig(any: any)) }));
+  const setIntensity = useCallback((intensity: number) => {
+    setConfig(prev => ({ ...prev, intensity: Math.max(0, Math.min(1, intensity)) }));
   }, []);
 
-  const setSize = useCallback(any: any) => {
-    setConfig(any: any)) }));
+  const setSize = useCallback((size: number) => {
+    setConfig(prev => ({ ...prev, size: Math.max(50, Math.min(1000, size)) }));
   }, []);
 
   const toggleEffect = useCallback(
@@ -109,16 +109,16 @@ export function useTitaneSphere(
 
   const reset = useCallback(() => {
     setConfig({
-      size: opts?.initialSize,
-      cognitiveState: CognitiveState?.IDLE,
-      emotionalTone: EmotionalTone?.CALM,
+      size: opts.initialSize,
+      cognitiveState: CognitiveState.IDLE,
+      emotionalTone: EmotionalTone.CALM,
       intensity: 0.5,
-      enableDynamicShadows: opts?.enableAllEffects,
-      enableMicroDeformations: opts?.enableAllEffects,
-      enableDirectionalGlow: opts?.enableAllEffects,
-      enablePhaseShift: opts?.enableAllEffects,
+      enableDynamicShadows: opts.enableAllEffects,
+      enableMicroDeformations: opts.enableAllEffects,
+      enableDirectionalGlow: opts.enableAllEffects,
+      enablePhaseShift: opts.enableAllEffects,
     });
-  }, [opts?.initialSize, opts?.enableAllEffects]);
+  }, [opts.initialSize, opts.enableAllEffects]);
 
   return {
     config,

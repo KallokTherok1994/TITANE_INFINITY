@@ -21,20 +21,20 @@ import { logger } from '@/utils/logger';
  *
  * useEffect(() => {
  *   // API call avec valeur debouncée
- *   fetchResults(any: any);
+ *   fetchResults(debouncedSearch);
  * }, [debouncedSearch]);
  * ```
  */
 export function useDebounce<T>(value: T, delay: number = 300): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(any: any);
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      setDebouncedValue(any: any);
+      setDebouncedValue(value);
     }, delay);
 
     return () => {
-      clearTimeout(any: any);
+      clearTimeout(handler);
     };
   }, [value, delay]);
 
@@ -44,8 +44,8 @@ export function useDebounce<T>(value: T, delay: number = 300): T {
 /**
  * Debounce callback type
  */
-type DebouncedFunction<TArgs extends unknown?.[]> = {
-  (any: any): void;
+type DebouncedFunction<TArgs extends unknown[]> = {
+  (...args: TArgs): void;
   cancel: () => void;
   flush: () => void;
 };
@@ -55,29 +55,29 @@ type DebouncedFunction<TArgs extends unknown?.[]> = {
  *
  * @example
  * ```tsx
- * const handleSearch = useDebouncedCallback(any: any) => {
- *   fetchResults(any: any);
+ * const handleSearch = useDebouncedCallback((query: string) => {
+ *   fetchResults(query);
  * }, 500);
  *
- * <input onChange={(any: any)} />
+ * <input onChange={(e) => handleSearch(e.target.value)} />
  * ```
  */
-export function useDebouncedCallback<TArgs extends unknown?.[]>(
-  callback: (any: any) => void,
+export function useDebouncedCallback<TArgs extends unknown[]>(
+  callback: (...args: TArgs) => void,
   delay: number = 300
 ): DebouncedFunction<TArgs> {
-  const timeoutRef = useRef<NodeJS?.Timeout | null>(any: any);
-  const callbackRef = useRef(any: any);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const callbackRef = useRef(callback);
 
   // Update callback ref when callback changes
   useEffect(() => {
-    callbackRef?.current = callback;
+    callbackRef.current = callback;
   }, [callback]);
 
   const cancel = useCallback(() => {
-    if (any: any) {
-      clearTimeout(any: any);
-      timeoutRef?.current = null;
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
     }
   }, []);
 
@@ -86,10 +86,10 @@ export function useDebouncedCallback<TArgs extends unknown?.[]>(
   }, [cancel]);
 
   const debouncedCallback = useCallback(
-    (any: any) => {
+    (...args: TArgs) => {
       cancel();
-      timeoutRef?.current = setTimeout(() => {
-        callbackRef?.current(any: any);
+      timeoutRef.current = setTimeout(() => {
+        callbackRef.current(...args);
       }, delay);
     },
     [delay, cancel]
@@ -112,32 +112,32 @@ export function useDebouncedCallback<TArgs extends unknown?.[]>(
  *
  * @example
  * ```tsx
- * const handleAsyncSearch = useDebouncedAsyncCallback(any: any) => {
- *   const results = await fetchResults(any: any);
- *   setResults(any: any);
+ * const handleAsyncSearch = useDebouncedAsyncCallback(async (query: string) => {
+ *   const results = await fetchResults(query);
+ *   setResults(results);
  * }, 500);
  * ```
  */
-export function useDebouncedAsyncCallback<TArgs extends unknown?.[], TReturn>(
-  callback: (any: any) => Promise<TReturn>,
+export function useDebouncedAsyncCallback<TArgs extends unknown[], TReturn>(
+  callback: (...args: TArgs) => Promise<TReturn>,
   delay: number = 300
 ): DebouncedFunction<TArgs> {
-  const timeoutRef = useRef<NodeJS?.Timeout | null>(any: any);
-  const callbackRef = useRef(any: any);
-  const abortControllerRef = useRef<AbortController | null>(any: any);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const callbackRef = useRef(callback);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
-    callbackRef?.current = callback;
+    callbackRef.current = callback;
   }, [callback]);
 
   const cancel = useCallback(() => {
-    if (any: any) {
-      clearTimeout(any: any);
-      timeoutRef?.current = null;
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
     }
-    if (any: any) {
-      abortControllerRef?.current?.abort();
-      abortControllerRef?.current = null;
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
     }
   }, []);
 
@@ -146,14 +146,14 @@ export function useDebouncedAsyncCallback<TArgs extends unknown?.[], TReturn>(
   }, [cancel]);
 
   const debouncedCallback = useCallback(
-    (any: any) => {
+    (...args: TArgs) => {
       cancel();
-      timeoutRef?.current = setTimeout(() => {
-        abortControllerRef?.current = new AbortController();
-        callbackRef?.current(any: any).catch(error => {
+      timeoutRef.current = setTimeout(() => {
+        abortControllerRef.current = new AbortController();
+        callbackRef.current(...args).catch(error => {
           // Ignore abort errors
-          if (error?.name !== 'AbortError') {
-            logger?.error(any: any);
+          if (error.name !== 'AbortError') {
+            logger.error('Debounced async callback error:', error);
           }
         });
       }, delay);

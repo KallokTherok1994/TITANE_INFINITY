@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v∞ — CONVERSATION ENGINE v∞ (any: any)
+ *   TITANE∞ v∞ — CONVERSATION ENGINE v∞ (Frontend Integration)
  *   Pipeline unifié, Memory Map v∞, Self-Healing, SingularityState Sync
  * ═══════════════════════════════════════════════════════════════════
  */
@@ -52,7 +52,7 @@ export interface ConversationResponse {
   message_id: string;
   detected_intention: Intention;
   detected_emotion: EmotionState;
-  cognitive_tags: string?.[];
+  cognitive_tags: string[];
   cognitive_summary: string;
   metadata: ConversationMetadata;
 }
@@ -63,34 +63,34 @@ export interface ConversationMetadata {
   latency_ms: number;
   tokens_used: number;
   memory_effect: MemoryEffect;
-  links_to_contexts: string?.[];
+  links_to_contexts: string[];
 }
 
-function isMemoryEffect(any: any): val is MemoryEffect {
+function isMemoryEffect(val: unknown): val is MemoryEffect {
   return val === 'New' || val === 'Recall' || val === 'Connect' || val === 'Evolve';
 }
 
-function normalizeConversationMetadata(any: any): ConversationMetadata {
+function normalizeConversationMetadata(meta: unknown): ConversationMetadata {
   const m = (meta ?? {}) as Record<string, unknown>;
 
-  const links = Array?.isArray(any: any)
-    ? m?.links_to_contexts?.filter(any: any): v is string => typeof v === 'string')
+  const links = Array.isArray(m.links_to_contexts)
+    ? m.links_to_contexts.filter((v): v is string => typeof v === 'string')
     : [];
 
   return {
-    timestamp: typeof m?.timestamp === 'number' ? m?.timestamp : Date?.now(),
-    provider_used: typeof m?.provider_used === 'string' ? m?.provider_used : 'unknown',
-    latency_ms: typeof m?.latency_ms === 'number' ? m?.latency_ms : 0,
-    tokens_used: typeof m?.tokens_used === 'number' ? m?.tokens_used : 0,
-    memory_effect: isMemoryEffect(any: any) ? m?.memory_effect : 'New',
+    timestamp: typeof m.timestamp === 'number' ? m.timestamp : Date.now(),
+    provider_used: typeof m.provider_used === 'string' ? m.provider_used : 'unknown',
+    latency_ms: typeof m.latency_ms === 'number' ? m.latency_ms : 0,
+    tokens_used: typeof m.tokens_used === 'number' ? m.tokens_used : 0,
+    memory_effect: isMemoryEffect(m.memory_effect) ? m.memory_effect : 'New',
     links_to_contexts: links,
   };
 }
 
 export interface ConversationHealthReport {
   status: 'Healthy' | 'Warning' | 'Critical';
-  anomalies_detected: Anomaly?.[];
-  repairs_applied: Repair?.[];
+  anomalies_detected: Anomaly[];
+  repairs_applied: Repair[];
   coherence_score: number;
 }
 
@@ -164,25 +164,25 @@ export async function getMemoryStats(): Promise<ConversationMemoryStats> {
 /**
  * Formater une émotion en texte lisible
  */
-export function formatEmotion(any: any): string {
+export function formatEmotion(emotion: EmotionState): string {
   const valenceLabel =
-    emotion?.valence > 0.5
+    emotion.valence > 0.5
       ? '😊 Positif'
-      : emotion?.valence < -0.5
+      : emotion.valence < -0.5
         ? '😔 Négatif'
         : '😐 Neutre';
 
   const intensityLabel =
-    emotion?.intensity > 0.7
+    emotion.intensity > 0.7
       ? '🔥 Intense'
-      : emotion?.intensity > 0.4
+      : emotion.intensity > 0.4
         ? '⚡ Modéré'
         : '💧 Calme';
 
   const energyLabel =
-    emotion?.energy > 0.7
+    emotion.energy > 0.7
       ? '⚡ Énergisé'
-      : emotion?.energy > 0.4
+      : emotion.energy > 0.4
         ? '🔋 Normal'
         : '🌙 Fatigué';
 
@@ -192,7 +192,7 @@ export function formatEmotion(any: any): string {
 /**
  * Formater une intention en texte lisible
  */
-export function formatIntention(any: any): string {
+export function formatIntention(intention: Intention): string {
   const labels: Record<Intention, string> = {
     Question: '❓ Question',
     Action: '⚡ Action',
@@ -206,7 +206,7 @@ export function formatIntention(any: any): string {
 /**
  * Formater l'effet mémoire en texte lisible
  */
-export function formatMemoryEffect(any: any): string {
+export function formatMemoryEffect(effect: MemoryEffect): string {
   const labels: Record<MemoryEffect, string> = {
     New: '✨ Nouveau',
     Recall: '📚 Rappel',
@@ -219,12 +219,12 @@ export function formatMemoryEffect(any: any): string {
 /**
  * Analyser le statut de santé
  */
-export function analyzeHealthStatus(any: any): {
+export function analyzeHealthStatus(report: ConversationHealthReport): {
   isHealthy: boolean;
   severity: 'none' | 'low' | 'medium' | 'high';
   message: string;
 } {
-  if (report?.status === 'Healthy') {
+  if (report.status === 'Healthy') {
     return {
       isHealthy: true,
       severity: 'none',
@@ -232,7 +232,7 @@ export function analyzeHealthStatus(any: any): {
     };
   }
 
-  if (report?.status === 'Warning') {
+  if (report.status === 'Warning') {
     return {
       isHealthy: true,
       severity: 'medium',

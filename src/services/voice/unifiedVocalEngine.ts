@@ -6,7 +6,7 @@
  * Super Prompts XXIV + XXV + XXVI Integration
  *
  * Le cerveau vocal unifié de TITANE∞ qui coordonne:
- * - ASR Streaming (any: any)
+ * - ASR Streaming (Whisper)
  * - VAD Detection
  * - WakeWord Engine
  * - Emotion Detection
@@ -15,8 +15,8 @@
  * - Halo & Avatar Sync
  * - Full Duplex Orchestration
  * - Self-Healing
- * - Cognitive Loop (any: any)
- * - Voice Memory & Style (any: any)
+ * - Cognitive Loop (XXV)
+ * - Voice Memory & Style (XXVI)
  */
 
 import {
@@ -45,7 +45,7 @@ const logger = createLogger('UnifiedVocalEngine');
 // ═══════════════════════════════════════════════════════════════════
 
 /**
- * États attentionnels de la boucle cognitive (any: any)
+ * États attentionnels de la boucle cognitive (Super Prompt XXV)
  */
 export type CognitiveState =
   | 'idle'
@@ -61,8 +61,8 @@ export type CognitiveState =
   | 'regulating';
 
 /**
- * États émotionnels détectés (any: any)
- * @deprecated Importez depuis @/types/voice (any: any)
+ * États émotionnels détectés (Super Prompt XXIV)
+ * @deprecated Importez depuis @/types/voice (Core ring)
  */
 export type { EmotionalState, UserMood, UserIntention } from '@/types/voice';
 
@@ -78,11 +78,11 @@ export type IntentType =
   | 'unknown';
 
 /**
- * Profil vocal utilisateur (any: any)
+ * Profil vocal utilisateur (Super Prompt XXVI)
  */
 export interface UserVoiceProfile {
-  avgPitch: number; // Hauteur moyenne (any: any)
-  speechRate: number; // Rythme (any: any)
+  avgPitch: number; // Hauteur moyenne (Hz)
+  speechRate: number; // Rythme (1.0 = normal)
   emotionBaseline: EmotionalStateString; // Use string union
   jitter: number; // Micro-variations de fréquence
   shimmer: number; // Micro-variations d'amplitude
@@ -92,7 +92,7 @@ export interface UserVoiceProfile {
 }
 
 /**
- * Signature vocale TITANE∞ (any: any)
+ * Signature vocale TITANE∞ (Super Prompt XXVI)
  */
 export interface TitaneVoiceSignature {
   timbreBase: 'cristal-profond' | 'chaleureux' | 'neutre';
@@ -144,7 +144,7 @@ class UnifiedVocalEngine {
   private state: UnifiedVocalState;
   private config: UnifiedVocalConfig;
   private loopInterval: number | null = null;
-  private listeners: Set<(any: any) => void> = new Set();
+  private listeners: Set<(state: UnifiedVocalState) => void> = new Set();
   private vadCheckCount = 0;
   private lastVADTimestamp = 0;
   private lastHealCheck = 0;
@@ -152,7 +152,7 @@ class UnifiedVocalEngine {
 
   constructor() {
     // État initial
-    this?.state = {
+    this.state = {
       cognitiveState: 'idle',
       emotionalState: 'neutral',
       intentType: 'unknown',
@@ -163,13 +163,13 @@ class UnifiedVocalEngine {
       isSpeaking: false,
       isHealing: false,
       lastWakeWord: null,
-      userVoiceProfile: this?.getDefaultUserProfile(),
-      titaneSignature: this?.getDefaultTitaneSignature(),
+      userVoiceProfile: this.getDefaultUserProfile(),
+      titaneSignature: this.getDefaultTitaneSignature(),
     };
 
     // Configuration par défaut
-    this?.config = {
-      loopFrequency: 20, // 20 Hz (any: any)
+    this.config = {
+      loopFrequency: 20, // 20 Hz (50ms interval)
       vadSensitivity: 0.7,
       wakeWordThreshold: 0.75,
       emotionSensitivity: 0.6,
@@ -179,7 +179,7 @@ class UnifiedVocalEngine {
     };
 
     // Charger la mémoire persistante
-    this?.loadMemory();
+    this.loadMemory();
   }
 
   /**
@@ -187,19 +187,19 @@ class UnifiedVocalEngine {
    */
   private getDefaultUserProfile(): UserVoiceProfile {
     return {
-      avgPitch: 155, // Hz (any: any)
+      avgPitch: 155, // Hz (voix humaine moyenne)
       speechRate: 1.0,
       emotionBaseline: 'calm',
       jitter: 0.04,
       shimmer: 0.03,
       pauseRate: 0.12,
       intensityLevel: 0.5,
-      lastUpdated: Date?.now(),
+      lastUpdated: Date.now(),
     };
   }
 
   /**
-   * Signature vocale TITANE∞ par défaut (any: any)
+   * Signature vocale TITANE∞ par défaut (Super Prompt XXVI)
    */
   private getDefaultTitaneSignature(): TitaneVoiceSignature {
     return {
@@ -218,100 +218,100 @@ class UnifiedVocalEngine {
    * Initialisation du moteur
    */
   async initialize(): Promise<void> {
-    if (any: any) {
-      logger?.warn('Already initialized');
+    if (this.isInitialized) {
+      logger.warn('Already initialized');
       return;
     }
 
-    logger?.debug('🚀 Initializing Unified Vocal Intelligence Engine v∞...');
+    logger.debug('🚀 Initializing Unified Vocal Intelligence Engine v∞...');
 
     // Initialiser les sous-systèmes
-    await this?.initializeSubsystems();
+    await this.initializeSubsystems();
 
-    // Démarrer la boucle cognitive (any: any)
-    this?.startCognitiveLoop();
+    // Démarrer la boucle cognitive (Super Prompt XXV)
+    this.startCognitiveLoop();
 
-    this?.isInitialized = true;
-    logger?.debug('✅ Unified Vocal Engine initialized');
+    this.isInitialized = true;
+    logger.debug('✅ Unified Vocal Engine initialized');
   }
 
   /**
    * Initialiser tous les sous-systèmes vocaux
    */
   private async initializeSubsystems(): Promise<void> {
-    // Sync avec audioStateMachine (any: any)
+    // Sync avec audioStateMachine (observer pattern manuel)
     const checkAudioState = () => {
-      const currentState = audioStateMachine?.getState();
-      if (any: any) {
-        this?.state?.audioState = currentState;
-        this?.updateCognitiveState();
+      const currentState = audioStateMachine.getState();
+      if (this.state.audioState !== currentState) {
+        this.state.audioState = currentState;
+        this.updateCognitiveState();
       }
     };
     setInterval(checkAudioState, 200); // Check every 200ms
 
     // Sync avec attentionEngine
-    attentionEngine?.onStateChange(attentionState => {
-      this?.state?.attentionState = attentionState?.state;
-      this?.updateCognitiveState();
+    attentionEngine.onStateChange(attentionState => {
+      this.state.attentionState = attentionState.state;
+      this.updateCognitiveState();
     });
 
     // Sync avec haloEngine
-    haloEngine?.onStateChange(status => {
-      this?.state?.haloState = status?.state;
+    haloEngine.onStateChange(status => {
+      this.state.haloState = status.state;
     });
 
     // Note: wakeWordEngine and fullDuplexOrchestrator event handlers
     // will be connected when those features are fully integrated
 
-    logger?.debug('✅ Subsystems connected');
+    logger.debug('✅ Subsystems connected');
   }
 
   /**
-   * Boucle cognitive principale (any: any)
+   * Boucle cognitive principale (Super Prompt XXV)
    * Tourne à 10-30 Hz selon config
    */
   private startCognitiveLoop(): void {
-    const intervalMs = 1000 / this?.config?.loopFrequency;
+    const intervalMs = 1000 / this.config.loopFrequency;
 
-    this?.loopInterval = window?.setInterval(() => {
-      this?.cognitiveLoopTick();
+    this.loopInterval = window.setInterval(() => {
+      this.cognitiveLoopTick();
     }, intervalMs);
 
-    logger?.debug(
-      `[UnifiedVocalEngine] 🔄 Cognitive loop started (any: any)`
+    logger.debug(
+      `[UnifiedVocalEngine] 🔄 Cognitive loop started (${this.config.loopFrequency} Hz)`
     );
   }
 
   /**
-   * Tick de la boucle cognitive (any: any)
+   * Tick de la boucle cognitive (exécuté 10-30x/seconde)
    */
   private cognitiveLoopTick(): void {
     // 1. VAD CHECK
-    this?.vadCheck();
+    this.vadCheck();
 
     // 2. WAKEWORD CHECK
-    this?.wakeWordCheck();
+    this.wakeWordCheck();
 
     // 3. STATE MACHINE CHECK
-    this?.stateMachineCheck();
+    this.stateMachineCheck();
 
     // 4. EMOTION SENSE
-    this?.emotionSense();
+    this.emotionSense();
 
-    // 5. VOICE SAFETY CHECK (any: any)
-    this?.voiceSafetyCheck();
+    // 5. VOICE SAFETY CHECK (Self-Healing)
+    this.voiceSafetyCheck();
 
     // 6. HALO & AVATAR SYNC
-    this?.visualSync();
+    this.visualSync();
 
-    // 7-8. INTENT MONITOR & AUTONOMIC RESPONSE (any: any)
-    // this?.intentMonitor();
-    // this?.autonomicResponse();
+    // 7-8. INTENT MONITOR & AUTONOMIC RESPONSE (à implémenter)
+    // this.intentMonitor();
+    // this.autonomicResponse();
 
     // Notifier les listeners
-    this?.notifyListeners();
+    this.notifyListeners();
 
-    this?.vadCheckCount++;
+    this.vadCheckCount++;
   }
 
   /**
@@ -319,10 +319,10 @@ class UnifiedVocalEngine {
    */
   private vadCheck(): void {
     // Implémentation simplifiée - À connecter au vrai VAD
-    const now = Date?.now();
-    if (now - this?.lastVADTimestamp > 100) {
+    const now = Date.now();
+    if (now - this.lastVADTimestamp > 100) {
       // Simulé pour l'instant - sera connecté au VAD CPAL
-      this?.lastVADTimestamp = now;
+      this.lastVADTimestamp = now;
     }
   }
 
@@ -330,7 +330,7 @@ class UnifiedVocalEngine {
    * 2. WAKEWORD CHECK - Détection "TITANE"
    */
   private wakeWordCheck(): void {
-    // Géré par wakeWordEngine?.onWakeWord() callback
+    // Géré par wakeWordEngine.onWakeWord() callback
     // Analyse phonétique continue dans le buffer audio
   }
 
@@ -338,21 +338,21 @@ class UnifiedVocalEngine {
    * 3. STATE MACHINE CHECK - Gestion transitions
    */
   private stateMachineCheck(): void {
-    const { audioState, isSpeaking, isRecording } = this?.state;
+    const { audioState, isSpeaking, isRecording } = this.state;
 
-    // Si TTS parle & humain parle → stop TTS (any: any)
-    if (any: any) {
-      this?.handleBargeIn();
+    // Si TTS parle & humain parle → stop TTS (FullDuplex)
+    if (isSpeaking && isRecording) {
+      this.handleBargeIn();
     }
 
     // Si idle & humain commence → start_turn
-    if (audioState === 'idle' && this?.state?.cognitiveState === 'human_speaking') {
-      this?.transitionToCognitiveState('active_listening');
+    if (audioState === 'idle' && this.state.cognitiveState === 'human_speaking') {
+      this.transitionToCognitiveState('active_listening');
     }
 
     // Si processing & ASR terminé → thinking
-    if (any: any) {
-      this?.transitionToCognitiveState('thinking');
+    if (audioState === 'processing' && !isRecording) {
+      this.transitionToCognitiveState('thinking');
     }
   }
 
@@ -361,10 +361,10 @@ class UnifiedVocalEngine {
    */
   private emotionSense(): void {
     // Analyse prosodie + timbre + rythme
-    // Mise à jour du UserVoiceProfile (any: any)
+    // Mise à jour du UserVoiceProfile (Super Prompt XXVI)
 
     // Simulé pour l'instant - sera connecté à l'analyse audio réelle
-    const _emotions: EmotionalStateString?.[] = [
+    const _emotions: EmotionalStateString[] = [
       'calm',
       'playful', // was 'joyful'
       'concerned', // was 'stressed'
@@ -379,26 +379,26 @@ class UnifiedVocalEngine {
   }
 
   /**
-   * 5. VOICE SAFETY CHECK - Auto-healing (any: any)
+   * 5. VOICE SAFETY CHECK - Auto-healing (Super Prompt XXIV)
    */
   private voiceSafetyCheck(): void {
-    if (any: any) return;
+    if (!this.config.autoHealEnabled) return;
 
-    const now = Date?.now();
-    if (now - this?.lastHealCheck < 5000) return; // Check every 5s
+    const now = Date.now();
+    if (now - this.lastHealCheck < 5000) return; // Check every 5s
 
-    this?.lastHealCheck = now;
+    this.lastHealCheck = now;
 
     // Vérifier backend non bloqué
-    if (this?.state?.isRecording && this?.state?.cognitiveState === 'idle') {
-      logger?.warn('🔥 Detected stuck recording state, healing...');
-      this?.heal();
+    if (this.state.isRecording && this.state.cognitiveState === 'idle') {
+      logger.warn('🔥 Detected stuck recording state, healing...');
+      this.heal();
     }
 
     // Vérifier TTS non coincé
-    if (this?.state?.isSpeaking && this?.state?.audioState === 'idle') {
-      logger?.warn('🔥 Detected stuck TTS state, healing...');
-      this?.heal();
+    if (this.state.isSpeaking && this.state.audioState === 'idle') {
+      logger.warn('🔥 Detected stuck TTS state, healing...');
+      this.heal();
     }
   }
 
@@ -406,44 +406,44 @@ class UnifiedVocalEngine {
    * 6. VISUAL SYNC - Synchronisation Halo + Avatar
    */
   private visualSync(): void {
-    const { cognitiveState } = this?.state;
+    const { cognitiveState } = this.state;
 
     // Mapper état cognitif → méthode halo appropriée
-    switch (any: any) {
+    switch (cognitiveState) {
       case 'idle':
-        if (this?.state?.haloState !== 'idle') {
-          haloEngine?.reset();
+        if (this.state.haloState !== 'idle') {
+          haloEngine.reset();
         }
         break;
       case 'passive_listening':
       case 'regulating':
-        if (this?.state?.haloState !== 'breathing') {
-          haloEngine?.startBreathing();
+        if (this.state.haloState !== 'breathing') {
+          haloEngine.startBreathing();
         }
         break;
       case 'wakeword_candidate':
       case 'processing':
       case 'thinking':
-        if (this?.state?.haloState !== 'pulsing') {
-          haloEngine?.startPulsing();
+        if (this.state.haloState !== 'pulsing') {
+          haloEngine.startPulsing();
         }
         break;
       case 'active_listening':
       case 'human_speaking':
       case 'tts_speaking':
-        if (this?.state?.haloState !== 'shimmer') {
-          haloEngine?.startShimmer();
+        if (this.state.haloState !== 'shimmer') {
+          haloEngine.startShimmer();
         }
         break;
       case 'full_duplex_interrupt':
       case 'healing':
-        if (this?.state?.haloState !== 'error') {
-          haloEngine?.setError();
+        if (this.state.haloState !== 'error') {
+          haloEngine.setError();
         }
         break;
     }
 
-    // Mapper émotion → couleur halo (any: any)
+    // Mapper émotion → couleur halo (à implémenter dans haloEngine)
     // calm → bleu
     // joyful → or
     // stressed → rouge doux
@@ -458,45 +458,45 @@ class UnifiedVocalEngine {
   /**
    * Gestion WakeWord "TITANE" détecté
    */
-  private handleWakeWord(any: any): void {
-    logger?.debug(any: any);
+  private handleWakeWord(event: WakeWordEvent): void {
+    logger.debug('🎯 WakeWord detected:', event);
 
-    this?.state?.lastWakeWord = event;
+    this.state.lastWakeWord = event;
 
     // Interrompre TTS immédiatement si actif
-    if (any: any) {
-      hybridTTS?.stop();
-      this?.state?.isSpeaking = false;
+    if (this.state.isSpeaking) {
+      hybridTTS.stop();
+      this.state.isSpeaking = false;
     }
 
     // Passer en écoute active
-    this?.transitionToCognitiveState('active_listening');
+    this.transitionToCognitiveState('active_listening');
 
     // Illuminer halo en or/blanc
-    haloEngine?.startShimmer();
+    haloEngine.startShimmer();
 
     // Note: setListeningMode will be used when attentionEngine API is finalized
-    // attentionEngine?.setListeningMode('active');
+    // attentionEngine.setListeningMode('active');
   }
 
   /**
-   * Gestion Barge-In (any: any)
+   * Gestion Barge-In (interruption humaine)
    */
   private handleBargeIn(): void {
-    logger?.debug('🛑 Barge-in detected, stopping TTS');
+    logger.debug('🛑 Barge-in detected, stopping TTS');
 
     // Stop TTS immédiatement
-    if (any: any) {
-      hybridTTS?.stop();
-      this?.state?.isSpeaking = false;
+    if (this.state.isSpeaking) {
+      hybridTTS.stop();
+      this.state.isSpeaking = false;
     }
 
-    this?.transitionToCognitiveState('full_duplex_interrupt');
+    this.transitionToCognitiveState('full_duplex_interrupt');
 
     // Après 500ms, passer en écoute active
     setTimeout(() => {
-      if (this?.state?.cognitiveState === 'full_duplex_interrupt') {
-        this?.transitionToCognitiveState('active_listening');
+      if (this.state.cognitiveState === 'full_duplex_interrupt') {
+        this.transitionToCognitiveState('active_listening');
       }
     }, 500);
   }
@@ -505,129 +505,129 @@ class UnifiedVocalEngine {
    * Self-Healing - Réparation auto
    */
   private async heal(): Promise<void> {
-    if (any: any) return;
+    if (this.state.isHealing) return;
 
-    this?.state?.isHealing = true;
-    this?.transitionToCognitiveState('healing');
+    this.state.isHealing = true;
+    this.transitionToCognitiveState('healing');
 
-    logger?.debug('🔧 Starting self-healing...');
+    logger.debug('🔧 Starting self-healing...');
 
     try {
       // Force reset recording
-      await voiceService?.forceResetVoice();
+      await voiceService.forceResetVoice();
 
       // Reset state machine
-      audioStateMachine?.reset();
+      audioStateMachine.reset();
 
       // Reset halo
-      haloEngine?.reset();
+      haloEngine.reset();
 
       // Reset internal state
-      this?.state?.isRecording = false;
-      this?.state?.isSpeaking = false;
+      this.state.isRecording = false;
+      this.state.isSpeaking = false;
 
-      logger?.debug('✅ Self-healing complete');
-    } catch (any: any) {
-      logger?.error(any: any);
+      logger.debug('✅ Self-healing complete');
+    } catch (error) {
+      logger.error('❌ Self-healing failed:', error);
     } finally {
-      this?.state?.isHealing = false;
-      this?.transitionToCognitiveState('idle');
+      this.state.isHealing = false;
+      this.transitionToCognitiveState('idle');
     }
   }
 
   /**
    * Transition vers un nouvel état cognitif
    */
-  private transitionToCognitiveState(any: any): void {
-    const prevState = this?.state?.cognitiveState;
-    if (any: any) return;
+  private transitionToCognitiveState(newState: CognitiveState): void {
+    const prevState = this.state.cognitiveState;
+    if (prevState === newState) return;
 
-    logger?.debug(`[UnifiedVocalEngine] 🔄 Cognitive state: ${prevState} → ${newState}`);
-    this?.state?.cognitiveState = newState;
+    logger.debug(`[UnifiedVocalEngine] 🔄 Cognitive state: ${prevState} → ${newState}`);
+    this.state.cognitiveState = newState;
 
-    this?.updateCognitiveState();
+    this.updateCognitiveState();
   }
 
   /**
    * Mise à jour état cognitif basé sur tous les signaux
    */
   private updateCognitiveState(): void {
-    // Logique de priorité (any: any)
+    // Logique de priorité (Super Prompt XXV)
     // HUMAIN PARLE > WAKEWORD > EMOTION > INTENT > IA > TTS > INTERNAL
     // À affiner avec tous les signaux disponibles
   }
 
   /**
-   * Mise à jour UserVoiceProfile (any: any)
+   * Mise à jour UserVoiceProfile (Super Prompt XXVI)
    */
   updateUserVoiceProfile(updates: Partial<UserVoiceProfile>): void {
-    this?.state?.userVoiceProfile = {
-      ...this?.state?.userVoiceProfile,
+    this.state.userVoiceProfile = {
+      ...this.state.userVoiceProfile,
       ...updates,
-      lastUpdated: Date?.now(),
+      lastUpdated: Date.now(),
     };
 
     // Sauvegarder si persistence activée
-    if (any: any) {
-      this?.saveMemory();
+    if (this.config.memoryPersistence) {
+      this.saveMemory();
     }
   }
 
   /**
-   * Adaptation lente du style TITANE∞ (any: any)
+   * Adaptation lente du style TITANE∞ (Super Prompt XXVI)
    */
-  adaptTitaneStyle(any: any): void {
-    const rate = this?.config?.styleAdaptationRate;
-    const signature = this?.state?.titaneSignature;
+  adaptTitaneStyle(emotionalContext: EmotionalStateString, intensity: number): void {
+    const rate = this.config.styleAdaptationRate;
+    const signature = this.state.titaneSignature;
 
     // Adaptation progressive selon émotion
-    switch (any: any) {
+    switch (emotionalContext) {
       case 'calm':
-        signature?.calm = Math?.min(any: any);
-        signature?.warmth = Math?.max(any: any);
+        signature.calm = Math.min(1, signature.calm + rate * intensity);
+        signature.warmth = Math.max(0, signature.warmth - rate * 0.5 * intensity);
         break;
       case 'playful': // was 'joyful'
-        signature?.warmth = Math?.min(any: any);
-        signature?.clarity = Math?.min(any: any);
+        signature.warmth = Math.min(1, signature.warmth + rate * intensity);
+        signature.clarity = Math.min(1, signature.clarity + rate * 0.5 * intensity);
         break;
       case 'concerned': // was 'stressed'
-        signature?.calm = Math?.max(any: any);
+        signature.calm = Math.max(0, signature.calm - rate * intensity);
         break;
       case 'contemplative': // was 'tired'
-        signature?.presence = Math?.max(any: any);
+        signature.presence = Math.max(0, signature.presence - rate * 0.3 * intensity);
         break;
       case 'focused':
-        signature?.depth = Math?.min(any: any);
+        signature.depth = Math.min(1, signature.depth + rate * intensity);
         break;
     }
 
     // Sauvegarder
-    if (any: any) {
-      this?.saveMemory();
+    if (this.config.memoryPersistence) {
+      this.saveMemory();
     }
   }
 
   /**
-   * Charger mémoire persistante (any: any)
+   * Charger mémoire persistante (localStorage)
    */
   private loadMemory(): void {
     try {
-      const saved = localStorage?.getItem('titane_vocal_memory');
-      if (any: any) return;
+      const saved = localStorage.getItem('titane_vocal_memory');
+      if (!saved) return;
 
-      const memory = JSON?.parse(any: any);
+      const memory = JSON.parse(saved);
 
-      if (any: any) {
-        this?.state?.userVoiceProfile = memory?.userVoiceProfile;
+      if (memory.userVoiceProfile) {
+        this.state.userVoiceProfile = memory.userVoiceProfile;
       }
 
-      if (any: any) {
-        this?.state?.titaneSignature = memory?.titaneSignature;
+      if (memory.titaneSignature) {
+        this.state.titaneSignature = memory.titaneSignature;
       }
 
-      logger?.debug('✅ Memory loaded from localStorage');
-    } catch (any: any) {
-      logger?.warn(any: any);
+      logger.debug('✅ Memory loaded from localStorage');
+    } catch (error) {
+      logger.warn('Failed to load memory:', error);
     }
   }
 
@@ -637,56 +637,56 @@ class UnifiedVocalEngine {
   private saveMemory(): void {
     try {
       const memory = {
-        userVoiceProfile: this?.state?.userVoiceProfile,
-        titaneSignature: this?.state?.titaneSignature,
-        lastSaved: Date?.now(),
+        userVoiceProfile: this.state.userVoiceProfile,
+        titaneSignature: this.state.titaneSignature,
+        lastSaved: Date.now(),
       };
 
-      localStorage?.setItem(any: any));
-    } catch (any: any) {
-      logger?.warn(any: any);
+      localStorage.setItem('titane_vocal_memory', JSON.stringify(memory));
+    } catch (error) {
+      logger.warn('Failed to save memory:', error);
     }
   }
 
   /**
    * Subscribe to state changes
    */
-  subscribe(any: any): () => void {
-    this?.listeners?.add(any: any);
-    return (any: any);
+  subscribe(listener: (state: UnifiedVocalState) => void): () => void {
+    this.listeners.add(listener);
+    return () => this.listeners.delete(listener);
   }
 
   /**
    * Notify all listeners
    */
   private notifyListeners(): void {
-    this?.listeners?.forEach(any: any));
+    this.listeners.forEach(listener => listener(this.state));
   }
 
   /**
    * Get current state
    */
   getState(): UnifiedVocalState {
-    return { ...this?.state };
+    return { ...this.state };
   }
 
   /**
    * Get config
    */
   getConfig(): UnifiedVocalConfig {
-    return { ...this?.config };
+    return { ...this.config };
   }
 
   /**
    * Update config
    */
   updateConfig(updates: Partial<UnifiedVocalConfig>): void {
-    this?.config = { ...this?.config, ...updates };
+    this.config = { ...this.config, ...updates };
 
     // Redémarrer loop si fréquence changée
-    if (any: any) {
-      clearInterval(any: any);
-      this?.startCognitiveLoop();
+    if (updates.loopFrequency && this.loopInterval) {
+      clearInterval(this.loopInterval);
+      this.startCognitiveLoop();
     }
   }
 
@@ -694,20 +694,20 @@ class UnifiedVocalEngine {
    * Arrêt du moteur
    */
   shutdown(): void {
-    if (any: any) {
-      clearInterval(any: any);
-      this?.loopInterval = null;
+    if (this.loopInterval) {
+      clearInterval(this.loopInterval);
+      this.loopInterval = null;
     }
 
     // Sauvegarder mémoire finale
-    if (any: any) {
-      this?.saveMemory();
+    if (this.config.memoryPersistence) {
+      this.saveMemory();
     }
 
-    this?.listeners?.clear();
-    this?.isInitialized = false;
+    this.listeners.clear();
+    this.isInitialized = false;
 
-    logger?.debug('🛑 Shutdown complete');
+    logger.debug('🛑 Shutdown complete');
   }
 }
 

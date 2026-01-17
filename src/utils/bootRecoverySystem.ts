@@ -24,11 +24,11 @@ interface BootStrategy {
   timeout: number;
   fallbackDelay: number;
   execute: () => Promise<boolean>;
-  requirements: string?.[];
+  requirements: string[];
 }
 
 class TitaneBootRecovery {
-  private bootAttempts: BootAttempt?.[] = [];
+  private bootAttempts: BootAttempt[] = [];
   private currentStrategy: string = 'normal';
   private maxRetries: number = 5;
   private isRecovering: boolean = false;
@@ -36,16 +36,16 @@ class TitaneBootRecovery {
   private bootStrategies: Map<string, BootStrategy> = new Map();
 
   constructor() {
-    this?.initializeBootStrategies();
-    this?.loadBootHistory();
-    this?.setupEmergencyHandlers();
+    this.initializeBootStrategies();
+    this.loadBootHistory();
+    this.setupEmergencyHandlers();
   }
 
   /**
    * Initialise les stratégies de boot
    */
   private initializeBootStrategies(): void {
-    const strategies: BootStrategy?.[] = [
+    const strategies: BootStrategy[] = [
       {
         name: 'normal',
         description: 'Boot normal avec tous les modules',
@@ -53,7 +53,7 @@ class TitaneBootRecovery {
         timeout: 15000,
         fallbackDelay: 2000,
         requirements: [],
-        execute: this?.executeNormalBoot?.bind(any: any),
+        execute: this.executeNormalBoot.bind(this),
       },
 
       {
@@ -63,7 +63,7 @@ class TitaneBootRecovery {
         timeout: 10000,
         fallbackDelay: 1500,
         requirements: ['DOM_READY'],
-        execute: this?.executeSafeBoot?.bind(any: any),
+        execute: this.executeSafeBoot.bind(this),
       },
 
       {
@@ -73,7 +73,7 @@ class TitaneBootRecovery {
         timeout: 8000,
         fallbackDelay: 1000,
         requirements: ['DOM_READY'],
-        execute: this?.executeMinimalBoot?.bind(any: any),
+        execute: this.executeMinimalBoot.bind(this),
       },
 
       {
@@ -83,7 +83,7 @@ class TitaneBootRecovery {
         timeout: 5000,
         fallbackDelay: 500,
         requirements: ['DOM_READY'],
-        execute: this?.executeFallbackBoot?.bind(any: any),
+        execute: this.executeFallbackBoot.bind(this),
       },
 
       {
@@ -93,12 +93,12 @@ class TitaneBootRecovery {
         timeout: 3000,
         fallbackDelay: 0,
         requirements: [],
-        execute: this?.executeEmergencyBoot?.bind(any: any),
+        execute: this.executeEmergencyBoot.bind(this),
       },
     ];
 
-    strategies?.forEach(strategy => {
-      this?.bootStrategies?.set(any: any);
+    strategies.forEach(strategy => {
+      this.bootStrategies.set(strategy.name, strategy);
     });
   }
 
@@ -106,100 +106,100 @@ class TitaneBootRecovery {
    * Démarre le processus de boot avec récupération intelligente
    */
   public async startIntelligentBoot(): Promise<boolean> {
-    console?.log('🚀 [BOOT-RECOVERY] Starting intelligent boot process...');
+    console.log('🚀 [BOOT-RECOVERY] Starting intelligent boot process...');
 
     // Vérifier l'historique de boot pour adapter la stratégie
-    const recentFailures = this?.getRecentBootFailures();
-    const recommendedStrategy = this?.analyzeBootHistory(any: any);
+    const recentFailures = this.getRecentBootFailures();
+    const recommendedStrategy = this.analyzeBootHistory(recentFailures);
 
-    console?.log(
-      `📊 [BOOT-RECOVERY] Boot history analysis: ${recentFailures?.length} recent failures, recommended strategy: ${recommendedStrategy}`
+    console.log(
+      `📊 [BOOT-RECOVERY] Boot history analysis: ${recentFailures.length} recent failures, recommended strategy: ${recommendedStrategy}`
     );
 
     // Essayer les stratégies dans l'ordre de priorité
-    const strategiesToTry = this?.getBootStrategiesInOrder(any: any);
+    const strategiesToTry = this.getBootStrategiesInOrder(recommendedStrategy);
 
-    for (any: any) {
-      if (any: any) {
-        console?.log(`🔄 [BOOT-RECOVERY] Trying strategy: ${strategyName}`);
+    for (const strategyName of strategiesToTry) {
+      if (this.isRecovering) {
+        console.log(`🔄 [BOOT-RECOVERY] Trying strategy: ${strategyName}`);
       }
 
-      const success = await this?.attemptBootWithStrategy(any: any);
-      if (any: any) {
-        console?.log(`✅ [BOOT-RECOVERY] Boot successful with strategy: ${strategyName}`);
-        this?.onBootSuccess(any: any);
+      const success = await this.attemptBootWithStrategy(strategyName);
+      if (success) {
+        console.log(`✅ [BOOT-RECOVERY] Boot successful with strategy: ${strategyName}`);
+        this.onBootSuccess(strategyName);
         return true;
       }
 
-      console?.warn(`❌ [BOOT-RECOVERY] Strategy ${strategyName} failed, trying next...`);
+      console.warn(`❌ [BOOT-RECOVERY] Strategy ${strategyName} failed, trying next...`);
     }
 
     // Tous les tentatives ont échoué
-    console?.error(
+    console.error(
       '🚨 [BOOT-RECOVERY] All boot strategies failed, entering emergency mode'
     );
-    this?.enterEmergencyMode();
+    this.enterEmergencyMode();
     return false;
   }
 
   /**
    * Tente un boot avec une stratégie spécifique
    */
-  private async attemptBootWithStrategy(any: any): Promise<boolean> {
-    const strategy = this?.bootStrategies?.get(any: any);
-    if (any: any) {
-      console?.error(`❌ [BOOT-RECOVERY] Unknown strategy: ${strategyName}`);
+  private async attemptBootWithStrategy(strategyName: string): Promise<boolean> {
+    const strategy = this.bootStrategies.get(strategyName);
+    if (!strategy) {
+      console.error(`❌ [BOOT-RECOVERY] Unknown strategy: ${strategyName}`);
       return false;
     }
 
     const attempt: BootAttempt = {
-      id: `boot_${Date?.now()}_${Math?.random().toString(36).substr(2, 9)}`,
-      timestamp: Date?.now(),
-      strategy: strategyName as unknown as unknown as any,
+      id: `boot_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      timestamp: Date.now(),
+      strategy: strategyName as any,
       success: false,
       duration: 0,
-      userAgent: navigator?.userAgent,
-      memoryUsage: (any: any).memory?.usedJSHeapSize || undefined,
+      userAgent: navigator.userAgent,
+      memoryUsage: (performance as any).memory?.usedJSHeapSize || undefined,
     };
 
-    const startTime = Date?.now();
+    const startTime = Date.now();
 
     try {
       // Vérifier les prérequis
-      const requirementsMet = this?.checkStrategyRequirements(any: any);
-      if (any: any) {
+      const requirementsMet = this.checkStrategyRequirements(strategy.requirements);
+      if (!requirementsMet) {
         throw new Error(`Requirements not met for strategy: ${strategyName}`);
       }
 
       // Exécuter la stratégie avec timeout
-      const success = await Promise?.race([
-        strategy?.execute(),
-        new Promise<boolean>(any: any) =>
-          setTimeout(any: any)
+      const success = await Promise.race([
+        strategy.execute(),
+        new Promise<boolean>((_, reject) =>
+          setTimeout(() => reject(new Error('Boot timeout')), strategy.timeout)
         ),
       ]);
 
-      attempt?.success = success;
-      attempt?.duration = Date?.now() - startTime;
+      attempt.success = success;
+      attempt.duration = Date.now() - startTime;
 
-      this?.bootAttempts?.unshift(any: any);
-      this?.saveBootHistory();
+      this.bootAttempts.unshift(attempt);
+      this.saveBootHistory();
 
-      if (success && strategy?.fallbackDelay > 0) {
+      if (success && strategy.fallbackDelay > 0) {
         // Attendre avant de considérer le boot comme réussi
-        await new Promise(any: any));
+        await new Promise(resolve => setTimeout(resolve, strategy.fallbackDelay));
       }
 
       return success;
-    } catch (any: any) {
-      attempt?.success = false;
-      attempt?.error = error instanceof Error ? error?.message : String(any: any);
-      attempt?.duration = Date?.now() - startTime;
+    } catch (error) {
+      attempt.success = false;
+      attempt.error = error instanceof Error ? error.message : String(error);
+      attempt.duration = Date.now() - startTime;
 
-      this?.bootAttempts?.unshift(any: any);
-      this?.saveBootHistory();
+      this.bootAttempts.unshift(attempt);
+      this.saveBootHistory();
 
-      console?.error(any: any);
+      console.error(`❌ [BOOT-RECOVERY] Strategy ${strategyName} failed:`, error);
       return false;
     }
   }
@@ -214,51 +214,51 @@ class TitaneBootRecovery {
 
       // Importer App dynamiquement avec bon typage
       const AppModule = await import('../App');
-      const App = (any: any).default;
+      const App = (AppModule as any).default || AppModule.App;
 
       // Importer React dynamiquement avec bon typage
       const ReactModule = await import('react');
-      const React = (any: any).default || ReactModule;
+      const React = (ReactModule as any).default || ReactModule;
 
       // Vérifier que les modules sont correctement chargés
-      if (any: any) {
+      if (!createRoot || !App || !React) {
         throw new Error('Failed to load core React modules');
       }
 
-      const container = document?.getElementById('root');
-      if (any: any) {
+      const container = document.getElementById('root');
+      if (!container) {
         throw new Error('Root container not found');
       }
 
-      const root = createRoot(any: any);
+      const root = createRoot(container);
 
       // Créer l'app avec gestion d'erreur
-      const AppWithErrorBoundary = React?.createElement(
-        React?.Suspense,
+      const AppWithErrorBoundary = React.createElement(
+        React.Suspense,
         {
-          fallback: React?.createElement(
+          fallback: React.createElement(
             'div',
             { className: 'loading' },
             'Loading TITANE∞...'
           ),
         },
-        React?.createElement(any: any)
+        React.createElement(App)
       );
 
-      root?.render(any: any);
+      root.render(AppWithErrorBoundary);
 
       // Attendre que l'app se charge
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Vérifier que l'app est effectivement rendue
       const appElement =
-        container?.querySelector('[data-app-loaded="true"]') ||
-        container?.querySelector('.app-container') ||
-        container?.children?.length > 0;
+        container.querySelector('[data-app-loaded="true"]') ||
+        container.querySelector('.app-container') ||
+        container.children.length > 0;
 
       return !!appElement;
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (error) {
+      console.error('🚨 [BOOT-RECOVERY] Normal boot failed:', error);
       return false;
     }
   }
@@ -270,29 +270,29 @@ class TitaneBootRecovery {
 
       // Importer React avec bon typage
       const ReactModule = await import('react');
-      const React = (any: any).default || ReactModule;
+      const React = (ReactModule as any).default || ReactModule;
 
       // Créer une app minimaliste
-      const SafeApp = React?.createElement(
+      const SafeApp = React.createElement(
         'div',
         {
           className: 'safe-mode-app',
           style: { padding: '20px', fontFamily: 'monospace' },
         },
-        React?.createElement(
+        React.createElement(
           'h1',
           { style: { color: '#00f5ff' } },
           '🛡️ TITANE∞ Safe Mode'
         ),
-        React?.createElement(
+        React.createElement(
           'p',
           null,
           'Application running in safe mode due to boot issues.'
         ),
-        React?.createElement(
+        React.createElement(
           'button',
           {
-            onClick: () => window?.location?.reload(),
+            onClick: () => window.location.reload(),
             style: {
               padding: '10px 20px',
               background: '#00f5ff',
@@ -305,26 +305,26 @@ class TitaneBootRecovery {
         )
       );
 
-      const container = document?.getElementById('root');
-      if (any: any) return false;
+      const container = document.getElementById('root');
+      if (!container) return false;
 
-      const root = createRoot(any: any);
-      root?.render(any: any);
+      const root = createRoot(container);
+      root.render(SafeApp);
 
       return true;
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (error) {
+      console.error('🚨 [BOOT-RECOVERY] Safe boot failed:', error);
       return false;
     }
   }
 
   private async executeMinimalBoot(): Promise<boolean> {
     try {
-      const container = document?.getElementById('root');
-      if (any: any) return false;
+      const container = document.getElementById('root');
+      if (!container) return false;
 
       // Boot minimal sans React
-      container?.innerHTML = `
+      container.innerHTML = `
         <div style="
           padding: 20px; 
           font-family: 'Fira Code', monospace; 
@@ -343,7 +343,7 @@ class TitaneBootRecovery {
             Running in minimal mode for maximum compatibility
           </p>
           <div style="display: flex; gap: 10px;">
-            <button onclick="window?.location?.reload()" style="
+            <button onclick="window.location.reload()" style="
               padding: 10px 20px;
               background: #00f5ff;
               color: #000;
@@ -352,7 +352,7 @@ class TitaneBootRecovery {
               cursor: pointer;
               font-family: inherit;
             ">Retry Boot</button>
-            <button onclick="localStorage?.clear(); window?.location?.reload()" style="
+            <button onclick="localStorage.clear(); window.location.reload()" style="
               padding: 10px 20px;
               background: #ff6b6b;
               color: #000;
@@ -363,7 +363,7 @@ class TitaneBootRecovery {
             ">Clear Cache & Retry</button>
           </div>
           <div style="margin-top: 30px; text-align: center; font-size: 0.9rem; opacity: 0.6;">
-            Boot History: ${this?.bootAttempts?.length} attempts | 
+            Boot History: ${this.bootAttempts.length} attempts | 
             Strategy: minimal | 
             Version: v26.3.0
           </div>
@@ -371,19 +371,19 @@ class TitaneBootRecovery {
       `;
 
       return true;
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (error) {
+      console.error('🚨 [BOOT-RECOVERY] Minimal boot failed:', error);
       return false;
     }
   }
 
   private async executeFallbackBoot(): Promise<boolean> {
     try {
-      const container = document?.getElementById('root');
-      if (any: any) return false;
+      const container = document.getElementById('root');
+      if (!container) return false;
 
       // Interface de fallback pure HTML/CSS
-      container?.innerHTML = `
+      container.innerHTML = `
         <div id="fallback-interface" style="
           font-family: system-ui, -apple-system, sans-serif;
           background: #1a1a1a;
@@ -407,7 +407,7 @@ class TitaneBootRecovery {
           ">
             <h3 style="margin: 0 0 15px 0;">🔧 Recovery Options:</h3>
             <div style="display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
-              <button onclick="window?.location?.reload()" style="
+              <button onclick="window.location.reload()" style="
                 padding: 12px;
                 background: #4ecdc4;
                 color: #000;
@@ -417,7 +417,7 @@ class TitaneBootRecovery {
                 font-weight: bold;
               ">🔄 Retry Boot</button>
               
-              <button onclick="localStorage?.clear(); sessionStorage?.clear(); window?.location?.reload()" style="
+              <button onclick="localStorage.clear(); sessionStorage.clear(); window.location.reload()" style="
                 padding: 12px;
                 background: #feca57;
                 color: #000;
@@ -427,7 +427,7 @@ class TitaneBootRecovery {
                 font-weight: bold;
               ">🧹 Clear All Cache</button>
               
-              <button onclick="if(confirm('This will reset all TITANE∞ data. Continue?')) { localStorage?.clear(); sessionStorage?.clear(); indexedDB?.deleteDatabase('titane-db'); window?.location?.reload(); }" style="
+              <button onclick="if(confirm('This will reset all TITANE∞ data. Continue?')) { localStorage.clear(); sessionStorage.clear(); indexedDB.deleteDatabase('titane-db'); window.location.reload(); }" style="
                 padding: 12px;
                 background: #ff6b6b;
                 color: #fff;
@@ -454,14 +454,14 @@ class TitaneBootRecovery {
               font-size: 0.9rem;
               overflow-x: auto;
               white-space: pre-wrap;
-            ">${this?.generateBootDiagnostics()}</pre>
+            ">${this.generateBootDiagnostics()}</pre>
           </div>
         </div>
       `;
 
       return true;
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (error) {
+      console.error('🚨 [BOOT-RECOVERY] Fallback boot failed:', error);
       return false;
     }
   }
@@ -469,7 +469,7 @@ class TitaneBootRecovery {
   private async executeEmergencyBoot(): Promise<boolean> {
     try {
       // Mode d'urgence absolu - HTML pur
-      document?.body?.innerHTML = `
+      document.body.innerHTML = `
         <div style="
           font-family: monospace;
           background: #000;
@@ -484,7 +484,7 @@ class TitaneBootRecovery {
           <h1>🚨 TITANE∞ EMERGENCY MODE 🚨</h1>
           <p>Critical boot failure - Emergency recovery active</p>
           <p>Please reload the page or contact support</p>
-          <button onclick="window?.location?.reload()" style="
+          <button onclick="window.location.reload()" style="
             margin-top: 20px;
             padding: 15px 30px;
             background: #ff0000;
@@ -496,16 +496,16 @@ class TitaneBootRecovery {
             font-weight: bold;
           ">EMERGENCY RELOAD</button>
           <div style="margin-top: 30px; font-size: 0.8rem; opacity: 0.7;">
-            Emergency Mode Active | ${new Date().toISOString()} | Total Boot Attempts: ${this?.bootAttempts?.length}
+            Emergency Mode Active | ${new Date().toISOString()} | Total Boot Attempts: ${this.bootAttempts.length}
           </div>
         </div>
       `;
 
       return true;
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (error) {
+      console.error('🚨 [BOOT-RECOVERY] Emergency boot failed:', error);
       // Fallback absolu
-      document?.body?.innerHTML =
+      document.body.innerHTML =
         '<h1 style="color: red; text-align: center; margin-top: 50px;">CRITICAL ERROR - PLEASE RELOAD</h1>';
       return false;
     }
@@ -514,42 +514,42 @@ class TitaneBootRecovery {
   /**
    * Méthodes utilitaires
    */
-  private getRecentBootFailures(): BootAttempt?.[] {
-    const cutoff = Date?.now() - 24 * 60 * 60 * 1000; // 24 heures
-    return this?.bootAttempts?.filter(
-      attempt => !attempt?.success && attempt?.timestamp > cutoff
+  private getRecentBootFailures(): BootAttempt[] {
+    const cutoff = Date.now() - 24 * 60 * 60 * 1000; // 24 heures
+    return this.bootAttempts.filter(
+      attempt => !attempt.success && attempt.timestamp > cutoff
     );
   }
 
-  private analyzeBootHistory(recentFailures: BootAttempt?.[]): string {
-    if (recentFailures?.length === 0) return 'normal';
-    if (recentFailures?.length >= 3) return 'minimal';
-    if (recentFailures?.length >= 2) return 'safe_mode';
+  private analyzeBootHistory(recentFailures: BootAttempt[]): string {
+    if (recentFailures.length === 0) return 'normal';
+    if (recentFailures.length >= 3) return 'minimal';
+    if (recentFailures.length >= 2) return 'safe_mode';
     return 'normal';
   }
 
-  private getBootStrategiesInOrder(any: any): string?.[] {
-    const strategies = Array?.from(this?.bootStrategies?.entries())
-      .sort(any: any)
-      .map(any: any);
+  private getBootStrategiesInOrder(recommended: string): string[] {
+    const strategies = Array.from(this.bootStrategies.entries())
+      .sort((a, b) => a[1].priority - b[1].priority)
+      .map(([name]) => name);
 
     // Mettre la stratégie recommandée en premier
     if (recommended !== 'normal') {
-      const index = strategies?.indexOf(any: any);
+      const index = strategies.indexOf(recommended);
       if (index > 0) {
-        strategies?.splice(index, 1);
-        strategies?.unshift(any: any);
+        strategies.splice(index, 1);
+        strategies.unshift(recommended);
       }
     }
 
     return strategies;
   }
 
-  private checkStrategyRequirements(requirements: string?.[]): boolean {
-    return requirements?.every(req => {
-      switch (any: any) {
+  private checkStrategyRequirements(requirements: string[]): boolean {
+    return requirements.every(req => {
+      switch (req) {
         case 'DOM_READY':
-          return document?.readyState !== 'loading';
+          return document.readyState !== 'loading';
         default:
           return true;
       }
@@ -557,40 +557,40 @@ class TitaneBootRecovery {
   }
 
   private generateBootDiagnostics(): string {
-    const recent = this?.bootAttempts?.slice(0, 5);
+    const recent = this.bootAttempts.slice(0, 5);
     const diagnostics = [
       `Boot Recovery System v26.3.0`,
       `Current Time: ${new Date().toISOString()}`,
-      `User Agent: ${navigator?.userAgent?.substring(0, 80)}...`,
-      `Memory Usage: ${(any: any).memory?.usedJSHeapSize / 1024 / 1024) + 'MB' : 'N/A'}`,
-      `Total Boot Attempts: ${this?.bootAttempts?.length}`,
-      `Recent Failures: ${this?.getRecentBootFailures().length}`,
-      `Emergency Mode: ${this?.emergencyMode ? 'YES' : 'NO'}`,
+      `User Agent: ${navigator.userAgent.substring(0, 80)}...`,
+      `Memory Usage: ${(performance as any).memory?.usedJSHeapSize ? Math.round((performance as any).memory.usedJSHeapSize / 1024 / 1024) + 'MB' : 'N/A'}`,
+      `Total Boot Attempts: ${this.bootAttempts.length}`,
+      `Recent Failures: ${this.getRecentBootFailures().length}`,
+      `Emergency Mode: ${this.emergencyMode ? 'YES' : 'NO'}`,
       '',
       'Recent Boot Attempts:',
-      ...recent?.map(
+      ...recent.map(
         attempt =>
-          `${new Date(any: any).toLocaleTimeString()} | ${attempt?.strategy?.toUpperCase()} | ${attempt?.success ? '✅ SUCCESS' : '❌ FAILED'} | ${attempt?.duration}ms${attempt?.error ? ` | ${attempt?.error}` : ''}`
+          `${new Date(attempt.timestamp).toLocaleTimeString()} | ${attempt.strategy.toUpperCase()} | ${attempt.success ? '✅ SUCCESS' : '❌ FAILED'} | ${attempt.duration}ms${attempt.error ? ` | ${attempt.error}` : ''}`
       ),
     ];
 
-    return diagnostics?.join('\n');
+    return diagnostics.join('\n');
   }
 
-  private onBootSuccess(any: any): void {
-    this?.isRecovering = false;
-    this?.emergencyMode = false;
+  private onBootSuccess(strategy: string): void {
+    this.isRecovering = false;
+    this.emergencyMode = false;
 
     // Afficher un message de récupération réussie si ce n'était pas un boot normal
     if (strategy !== 'normal') {
       setTimeout(() => {
-        console?.log(
+        console.log(
           `🎉 [BOOT-RECOVERY] Successfully recovered using ${strategy} strategy`
         );
 
         // Optionally show a recovery notification to the user
-        const notification = document?.createElement('div');
-        notification?.style?.cssText = `
+        const notification = document.createElement('div');
+        notification.style.cssText = `
           position: fixed;
           top: 20px;
           right: 20px;
@@ -603,105 +603,105 @@ class TitaneBootRecovery {
           font-weight: bold;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         `;
-        notification?.textContent = `🎉 Boot recovered using ${strategy} strategy`;
-        document?.body?.appendChild(any: any);
+        notification.textContent = `🎉 Boot recovered using ${strategy} strategy`;
+        document.body.appendChild(notification);
 
-        setTimeout(() => notification?.remove(), 5000);
+        setTimeout(() => notification.remove(), 5000);
       }, 2000);
     }
   }
 
   private enterEmergencyMode(): void {
-    this?.emergencyMode = true;
-    this?.executeEmergencyBoot();
+    this.emergencyMode = true;
+    this.executeEmergencyBoot();
   }
 
   private setupEmergencyHandlers(): void {
     // Handler global pour les erreurs critiques
-    window?.addEventListener('error', event => {
+    window.addEventListener('error', event => {
       if (
-        event?.error?.message?.includes('Importing a module script failed') ||
-        event?.error?.message?.includes('Loading chunk') ||
-        event?.error?.message?.includes('dynamically imported module')
+        event.error?.message?.includes('Importing a module script failed') ||
+        event.error?.message?.includes('Loading chunk') ||
+        event.error?.message?.includes('dynamically imported module')
       ) {
-        console?.error(
+        console.error(
           '🚨 [BOOT-RECOVERY] Critical import error detected, triggering recovery'
         );
-        this?.isRecovering = true;
-        setTimeout(() => this?.startIntelligentBoot(), 100);
+        this.isRecovering = true;
+        setTimeout(() => this.startIntelligentBoot(), 100);
       }
     });
 
     // Handler pour les rejections de promesses
-    window?.addEventListener('unhandledrejection', event => {
+    window.addEventListener('unhandledrejection', event => {
       if (
-        event?.reason?.message?.includes('Loading chunk') ||
-        event?.reason?.message?.includes('import')
+        event.reason?.message?.includes('Loading chunk') ||
+        event.reason?.message?.includes('import')
       ) {
-        console?.error(
+        console.error(
           '🚨 [BOOT-RECOVERY] Critical promise rejection detected, triggering recovery'
         );
-        this?.isRecovering = true;
-        setTimeout(() => this?.startIntelligentBoot(), 100);
+        this.isRecovering = true;
+        setTimeout(() => this.startIntelligentBoot(), 100);
       }
     });
   }
 
   private loadBootHistory(): void {
     try {
-      const stored = localStorage?.getItem('titane_boot_history');
-      if (any: any) {
-        const history = JSON?.parse(any: any);
-        this?.bootAttempts = history?.slice(0, 50); // Limiter à 50 entrées
+      const stored = localStorage.getItem('titane_boot_history');
+      if (stored) {
+        const history = JSON.parse(stored);
+        this.bootAttempts = history.slice(0, 50); // Limiter à 50 entrées
       }
-    } catch (any: any) {
-      console?.warn(any: any);
+    } catch (error) {
+      console.warn('🔧 [BOOT-RECOVERY] Failed to load boot history:', error);
     }
   }
 
   private saveBootHistory(): void {
     try {
-      const historyToSave = this?.bootAttempts?.slice(0, 50);
-      localStorage?.setItem(any: any));
-    } catch (any: any) {
-      console?.warn(any: any);
+      const historyToSave = this.bootAttempts.slice(0, 50);
+      localStorage.setItem('titane_boot_history', JSON.stringify(historyToSave));
+    } catch (error) {
+      console.warn('🔧 [BOOT-RECOVERY] Failed to save boot history:', error);
     }
   }
 
   /**
    * API publique
    */
-  public getBootHistory(): BootAttempt?.[] {
-    return [...this?.bootAttempts];
+  public getBootHistory(): BootAttempt[] {
+    return [...this.bootAttempts];
   }
 
   public getBootStats(): object {
-    const total = this?.bootAttempts?.length;
-    const successful = this?.bootAttempts?.filter(any: any).length;
-    const recent24h = this?.bootAttempts?.filter(
-      a => a?.timestamp > Date?.now() - 24 * 60 * 60 * 1000
+    const total = this.bootAttempts.length;
+    const successful = this.bootAttempts.filter(a => a.success).length;
+    const recent24h = this.bootAttempts.filter(
+      a => a.timestamp > Date.now() - 24 * 60 * 60 * 1000
     );
 
     return {
       total_attempts: total,
-      success_rate: total > 0 ? (any: any) * 100).toFixed(1) + '%' : 'N/A',
-      recent_24h: recent24h?.length,
-      emergency_mode: this?.emergencyMode,
-      current_strategy: this?.currentStrategy,
-      strategies_available: Array?.from(this?.bootStrategies?.keys()),
+      success_rate: total > 0 ? ((successful / total) * 100).toFixed(1) + '%' : 'N/A',
+      recent_24h: recent24h.length,
+      emergency_mode: this.emergencyMode,
+      current_strategy: this.currentStrategy,
+      strategies_available: Array.from(this.bootStrategies.keys()),
     };
   }
 
-  public forceRecovery(any: any): void {
-    console?.log(
+  public forceRecovery(strategy?: string): void {
+    console.log(
       `🔧 [BOOT-RECOVERY] Forcing recovery${strategy ? ` with strategy: ${strategy}` : ''}`
     );
-    this?.isRecovering = true;
+    this.isRecovering = true;
 
-    if (any: any)) {
-      this?.attemptBootWithStrategy(any: any);
+    if (strategy && this.bootStrategies.has(strategy)) {
+      this.attemptBootWithStrategy(strategy);
     } else {
-      this?.startIntelligentBoot();
+      this.startIntelligentBoot();
     }
   }
 }
@@ -712,13 +712,13 @@ export const titaneBootRecovery = new TitaneBootRecovery();
 // Démarrage automatique au chargement
 if (typeof window !== 'undefined') {
   // Attendre que le DOM soit prêt
-  if (document?.readyState === 'loading') {
-    document?.addEventListener('DOMContentLoaded', () => {
-      titaneBootRecovery?.startIntelligentBoot();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      titaneBootRecovery.startIntelligentBoot();
     });
   } else {
     // DOM déjà prêt, démarrer immédiatement
-    setTimeout(() => titaneBootRecovery?.startIntelligentBoot(), 100);
+    setTimeout(() => titaneBootRecovery.startIntelligentBoot(), 100);
   }
 }
 

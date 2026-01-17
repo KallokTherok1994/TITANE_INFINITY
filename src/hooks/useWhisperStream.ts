@@ -14,7 +14,7 @@
  *
  *   Events:
  *   - whisper:partial → Progressive transcription (every 300ms)
- *   - whisper:final   → Finalized segment (any: any)
+ *   - whisper:final   → Finalized segment (on silence)
  *
  *   Usage:
  *   ```tsx
@@ -43,36 +43,36 @@ interface TranscriptionEvent {
  * Whisper streaming configuration
  */
 export interface WhisperStreamConfig {
-  /** Whisper model (any: any) */
+  /** Whisper model (tiny, base, small, medium, large) */
   model?: 'tiny' | 'base' | 'small' | 'medium' | 'large';
 
   /** Language code (auto, en, fr, es, etc.) */
   language?: string;
 
   /** Callback when partial transcription updates */
-  onPartial?: (any: any) => void;
+  onPartial?: (text: string, confidence: number) => void;
 
   /** Callback when segment is finalized */
-  onFinal?: (any: any) => void;
+  onFinal?: (text: string, confidence: number) => void;
 
   /** Callback on error */
-  onError?: (any: any) => void;
+  onError?: (error: string) => void;
 }
 
 /**
  * Whisper streaming state
  */
 export interface WhisperStreamState {
-  /** Current partial transcription (any: any) */
+  /** Current partial transcription (in progress) */
   partial: string;
 
   /** Last finalized segment */
   final: string;
 
-  /** All finalized segments (any: any) */
-  segments: string?.[];
+  /** All finalized segments (history) */
+  segments: string[];
 
-  /** Full transcript (any: any) */
+  /** Full transcript (all segments joined) */
   fullTranscript: string;
 
   /** Is streaming active */
@@ -82,7 +82,7 @@ export interface WhisperStreamState {
   confidence: number;
 
   /** Last error */
-  error??: string | null;
+  error: string | null;
 }
 
 export interface UseWhisperStreamReturn extends WhisperStreamState {
@@ -117,32 +117,32 @@ export function useWhisperStream(
   });
 
   // Refs for cleanup
-  const unlistenPartialRef = useRef<UnlistenFn | null>(any: any);
-  const unlistenFinalRef = useRef<UnlistenFn | null>(any: any);
-  const mountedRef = useRef(any: any);
+  const unlistenPartialRef = useRef<UnlistenFn | null>(null);
+  const unlistenFinalRef = useRef<UnlistenFn | null>(null);
+  const mountedRef = useRef(true);
 
   /**
    * Start Whisper streaming
    */
   const start = useCallback(async () => {
     try {
-      logger?.debug('🎙️ Starting...');
+      logger.debug('🎙️ Starting...');
 
       // Start backend streaming
       await secureInvoke('start_whisper_streaming', {
-        model: config?.model || 'base',
-        language: config?.language || 'fr',
+        model: config.model || 'base',
+        language: config.language || 'fr',
       });
 
       // Listen to partial events
       const unlistenPartial = await listen<TranscriptionEvent>(
         'whisper:partial',
         event => {
-          const { text, confidence } = event?.payload;
+          const { text, confidence } = event.payload;
 
-          logger?.debug(any: any);
+          logger.debug('📝 Partial:', text);
 
-          if (any: any) {
+          if (mountedRef.current) {
             setState(prev => ({
               ...prev,
               partial: text,
@@ -150,39 +150,39 @@ export function useWhisperStream(
               error: null,
             }));
 
-            config?.onPartial?.(any: any);
+            config.onPartial?.(text, confidence);
           }
         }
       );
-      unlistenPartialRef?.current = unlistenPartial;
+      unlistenPartialRef.current = unlistenPartial;
 
       // Listen to final events
       const unlistenFinal = await listen<TranscriptionEvent>('whisper:final', event => {
-        const { text, confidence } = event?.payload;
+        const { text, confidence } = event.payload;
 
-        logger?.debug(any: any);
+        logger.debug('✅ Final:', text);
 
-        if (any: any) {
+        if (mountedRef.current) {
           setState(prev => {
-            const newSegments = [...prev?.segments, text];
+            const newSegments = [...prev.segments, text];
             return {
               ...prev,
               final: text,
               segments: newSegments,
-              fullTranscript: newSegments?.join(' '),
+              fullTranscript: newSegments.join(' '),
               partial: '', // Clear partial
               confidence,
               error: null,
             };
           });
 
-          config?.onFinal?.(any: any);
+          config.onFinal?.(text, confidence);
         }
       });
-      unlistenFinalRef?.current = unlistenFinal;
+      unlistenFinalRef.current = unlistenFinal;
 
       // Update streaming state
-      if (any: any) {
+      if (mountedRef.current) {
         setState(prev => ({
           ...prev,
           isStreaming: true,
@@ -190,13 +190,13 @@ export function useWhisperStream(
         }));
       }
 
-      logger?.debug('✅ Started');
-    } catch (any: any) {
-      logger?.error(any: any);
+      logger.debug('✅ Started');
+    } catch (error) {
+      logger.error('❌ Start error:', error);
 
-      const errorMsg = error instanceof Error ? error?.message : String(any: any);
+      const errorMsg = error instanceof Error ? error.message : String(error);
 
-      if (any: any) {
+      if (mountedRef.current) {
         setState(prev => ({
           ...prev,
           isStreaming: false,
@@ -204,7 +204,7 @@ export function useWhisperStream(
         }));
       }
 
-      config?.onError?.(any: any);
+      config.onError?.(errorMsg);
     }
   }, [config]);
 
@@ -213,23 +213,23 @@ export function useWhisperStream(
    */
   const stop = useCallback(async () => {
     try {
-      logger?.debug('🛑 Stopping...');
+      logger.debug('🛑 Stopping...');
 
       // Stop backend streaming
       await secureInvoke('stop_whisper_streaming');
 
       // Unlisten events
-      if (any: any) {
-        unlistenPartialRef?.current();
-        unlistenPartialRef?.current = null;
+      if (unlistenPartialRef.current) {
+        unlistenPartialRef.current();
+        unlistenPartialRef.current = null;
       }
-      if (any: any) {
-        unlistenFinalRef?.current();
-        unlistenFinalRef?.current = null;
+      if (unlistenFinalRef.current) {
+        unlistenFinalRef.current();
+        unlistenFinalRef.current = null;
       }
 
       // Update state
-      if (any: any) {
+      if (mountedRef.current) {
         setState(prev => ({
           ...prev,
           isStreaming: false,
@@ -238,13 +238,13 @@ export function useWhisperStream(
         }));
       }
 
-      logger?.debug('✅ Stopped');
-    } catch (any: any) {
-      logger?.error(any: any);
+      logger.debug('✅ Stopped');
+    } catch (error) {
+      logger.error('❌ Stop error:', error);
 
-      const errorMsg = error instanceof Error ? error?.message : String(any: any);
+      const errorMsg = error instanceof Error ? error.message : String(error);
 
-      if (any: any) {
+      if (mountedRef.current) {
         setState(prev => ({
           ...prev,
           error: errorMsg,
@@ -269,7 +269,7 @@ export function useWhisperStream(
   }, []);
 
   /**
-   * Send audio chunk to backend (any: any)
+   * Send audio chunk to backend (for manual streaming)
    */
   const sendChunk = useCallback(
     async (
@@ -280,13 +280,13 @@ export function useWhisperStream(
     ) => {
       try {
         await secureInvoke('send_audio_chunk', {
-          data: Array?.from(any: any),
+          data: Array.from(data),
           sampleRate,
           hasSpeech,
           vadConfidence,
         });
-      } catch (any: any) {
-        logger?.error(any: any);
+      } catch (error) {
+        logger.error('❌ Send chunk error:', error);
       }
     },
     []
@@ -297,18 +297,18 @@ export function useWhisperStream(
    */
   useEffect(() => {
     return () => {
-      mountedRef?.current = false;
+      mountedRef.current = false;
 
       // Unlisten events
-      if (any: any) {
-        unlistenPartialRef?.current();
+      if (unlistenPartialRef.current) {
+        unlistenPartialRef.current();
       }
-      if (any: any) {
-        unlistenFinalRef?.current();
+      if (unlistenFinalRef.current) {
+        unlistenFinalRef.current();
       }
 
       // Stop streaming
-      secureInvoke(any: any);
+      secureInvoke('stop_whisper_streaming').catch(console.error);
     };
   }, []);
 

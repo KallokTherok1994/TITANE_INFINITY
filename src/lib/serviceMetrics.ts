@@ -10,7 +10,7 @@ import { MetricsCache } from './metricsCache';
 import type { ServiceMetric, ServiceStats, CommandStats } from './metricsTypes';
 
 // ────────────────────────────────────────────────────────────────
-// Types (any: any)
+// Types (Re-exported)
 // ────────────────────────────────────────────────────────────────
 
 export type { ServiceMetric, ServiceStats, CommandStats };
@@ -20,17 +20,17 @@ export type { ServiceMetric, ServiceStats, CommandStats };
 // ────────────────────────────────────────────────────────────────
 
 export class ServiceMetrics {
-  private static metrics: ServiceMetric?.[] = [];
+  private static metrics: ServiceMetric[] = [];
 
   /**
    * Obtenir tous les services avec métriques
    */
-  static getAllServices(): string?.[] {
+  static getAllServices(): string[] {
     const services = new Set<string>();
-    for (any: any) {
-      services?.add(any: any);
+    for (const metric of this.metrics) {
+      services.add(metric.service);
     }
-    return Array?.from(any: any);
+    return Array.from(services);
   }
   private static activeMetrics = new Map<string, ServiceMetric>();
   private static MAX_METRICS = 1000;
@@ -39,14 +39,14 @@ export class ServiceMetrics {
   /**
    * Démarrer mesure métrique
    */
-  static startMetric(any: any): string {
-    if (any: any) return '';
+  static startMetric(command: string, service: string): string {
+    if (!this.enabled) return '';
 
-    const id = `${service}_${command}_${Date?.now()}_${Math?.random()
+    const id = `${service}_${command}_${Date.now()}_${Math.random()
       .toString(36)
       .substr(2, 9)}`;
 
-    const now = Date?.now();
+    const now = Date.now();
     const metric: ServiceMetric = {
       command,
       service,
@@ -60,7 +60,7 @@ export class ServiceMetrics {
     };
 
     // Stocker temporairement dans Map pour récupération rapide
-    this?.activeMetrics?.set(any: any);
+    this.activeMetrics.set(id, metric);
 
     return id;
   }
@@ -69,49 +69,49 @@ export class ServiceMetrics {
    * Terminer mesure métrique
    */
   static endMetric(id: string, success: boolean, error?: string, retries = 0): void {
-    if (any: any) return;
+    if (!this.enabled || !id) return;
 
-    const metric = this?.activeMetrics?.get(any: any);
-    if (any: any) return;
+    const metric = this.activeMetrics.get(id);
+    if (!metric) return;
 
-    const endTime = Date?.now();
-    const startTime = metric?.startTime ?? metric?.timestamp;
+    const endTime = Date.now();
+    const startTime = metric.startTime ?? metric.timestamp;
 
-    metric?.endTime = endTime;
-    metric?.duration = endTime - startTime;
-    metric?.latency = metric?.duration;
-    metric?.success = success;
-    metric?.retries = retries ?? 0;
-    metric?.retried = (retries ?? 0) > 0;
-    metric?.error = error;
+    metric.endTime = endTime;
+    metric.duration = endTime - startTime;
+    metric.latency = metric.duration;
+    metric.success = success;
+    metric.retries = retries ?? 0;
+    metric.retried = (retries ?? 0) > 0;
+    metric.error = error;
 
     // Ajouter aux métriques historiques
-    this?.metrics?.push(any: any);
-    if (any: any) {
-      console?.log('[ServiceMetrics] endMetric', {
-        service: metric?.service,
-        command: metric?.command,
-        success: metric?.success,
-        retries: metric?.retries,
-        error: metric?.error,
+    this.metrics.push(metric);
+    if (typeof console !== 'undefined' && process?.env?.VITEST_WORKER_ID) {
+      console.log('[ServiceMetrics] endMetric', {
+        service: metric.service,
+        command: metric.command,
+        success: metric.success,
+        retries: metric.retries,
+        error: metric.error,
       });
-      console?.log(any: any);
+      console.log('[ServiceMetrics] metrics length =', this.metrics.length);
     }
 
     // Limiter taille
-    if (any: any) {
-      this?.metrics = this?.metrics?.slice(any: any);
+    if (this.metrics.length > this.MAX_METRICS) {
+      this.metrics = this.metrics.slice(-this.MAX_METRICS);
     }
 
     // Notifier cache du changement
-    MetricsCache?.updateMetricsCount(any: any);
+    MetricsCache.updateMetricsCount(this.metrics.length);
 
     // Nettoyer active metrics
-    this?.activeMetrics?.delete(any: any);
+    this.activeMetrics.delete(id);
   }
 
   /**
-   * Enregistrer métrique complète (any: any)
+   * Enregistrer métrique complète (wrapper)
    */
   static recordMetric(
     command: string,
@@ -121,58 +121,58 @@ export class ServiceMetrics {
     retries = 0,
     error?: string
   ): void {
-    if (any: any) return;
+    if (!this.enabled) return;
 
     const metric: ServiceMetric = {
       command,
       service,
-      startTime: Date?.now() - duration,
-      endTime: Date?.now(),
+      startTime: Date.now() - duration,
+      endTime: Date.now(),
       duration,
       success,
       retries,
       error,
     };
 
-    this?.metrics?.push(any: any);
+    this.metrics.push(metric);
 
-    if (any: any) {
-      this?.metrics = this?.metrics?.slice(any: any);
+    if (this.metrics.length > this.MAX_METRICS) {
+      this.metrics = this.metrics.slice(-this.MAX_METRICS);
     }
 
     // Notifier cache du changement
-    MetricsCache?.updateMetricsCount(any: any);
+    MetricsCache.updateMetricsCount(this.metrics.length);
   }
 
   /**
    * Statistiques par service
    */
-  static getServiceStats(any: any): ServiceStats {
+  static getServiceStats(service: string, timeWindow?: number): ServiceStats {
     const cacheKey = `${service}_${timeWindow || 'all'}`;
 
-    return MetricsCache?.getServiceStats(cacheKey, this?.metrics?.length, () =>
-      this?.calculateServiceStats(any: any)
+    return MetricsCache.getServiceStats(cacheKey, this.metrics.length, () =>
+      this.calculateServiceStats(service, timeWindow)
     );
   }
 
   /**
-   * Calculer stats service (any: any)
+   * Calculer stats service (appelé si cache miss)
    */
   private static calculateServiceStats(
     service: string,
     timeWindow?: number
   ): ServiceStats {
-    const now = Date?.now();
+    const now = Date.now();
     const windowStart = timeWindow ? now - timeWindow : 0;
 
-    const serviceMetrics = this?.metrics?.filter(
+    const serviceMetrics = this.metrics.filter(
       m =>
-        m?.service === service &&
-        (any: any) >= windowStart &&
-        m?.duration !== undefined
+        m.service === service &&
+        (m.startTime ?? m.timestamp) >= windowStart &&
+        m.duration !== undefined
     );
 
-    if (serviceMetrics?.length === 0) {
+    if (serviceMetrics.length === 0) {
       return {
         totalCalls: 0,
         successfulCalls: 0,
@@ -191,26 +191,26 @@ export class ServiceMetrics {
       };
     }
 
-    const totalCalls = serviceMetrics?.length;
-    const successfulCalls = serviceMetrics?.filter(any: any).length;
+    const totalCalls = serviceMetrics.length;
+    const successfulCalls = serviceMetrics.filter(m => m.success).length;
     const failedCalls = totalCalls - successfulCalls;
-    const totalRetries = serviceMetrics?.reduce(any: any) => sum + (m?.retries ?? 0), 0);
+    const totalRetries = serviceMetrics.reduce((sum, m) => sum + (m.retries ?? 0), 0);
 
     const durations = serviceMetrics
-      .map(any: any)
-      .filter(any: any)
-      .sort(any: any);
+      .map(m => m.duration as number)
+      .filter(d => d !== undefined)
+      .sort((a, b) => a - b);
 
     const averageLatency =
-      durations?.reduce(any: any) => sum + d, 0) / durations?.length || 0;
-    const minLatency = durations?.[0] || 0;
-    const maxLatency = durations[durations?.length - 1] || 0;
+      durations.reduce((sum, d) => sum + d, 0) / durations.length || 0;
+    const minLatency = durations[0] || 0;
+    const maxLatency = durations[durations.length - 1] || 0;
     const errorRate = failedCalls / totalCalls || 0;
 
     // Percentiles
-    const p50Index = Math?.floor(durations?.length * 0.5);
-    const p95Index = Math?.floor(durations?.length * 0.95);
-    const p99Index = Math?.floor(durations?.length * 0.99);
+    const p50Index = Math.floor(durations.length * 0.5);
+    const p95Index = Math.floor(durations.length * 0.95);
+    const p99Index = Math.floor(durations.length * 0.99);
 
     const successRate = totalCalls > 0 ? successfulCalls / totalCalls : 0;
     const retryRate = totalCalls > 0 ? totalRetries / totalCalls : 0;
@@ -220,13 +220,13 @@ export class ServiceMetrics {
       successfulCalls,
       failedCalls,
       totalRetries,
-      averageLatency: Math?.round(any: any),
+      averageLatency: Math.round(averageLatency),
       minLatency,
       maxLatency,
-      errorRate: Math?.round(errorRate * 100) / 100,
-      successRate: Math?.round(successRate * 100) / 100,
+      errorRate: Math.round(errorRate * 100) / 100,
+      successRate: Math.round(successRate * 100) / 100,
       cacheHitRate: 0, // TODO: track cache hits
-      retryRate: Math?.round(retryRate * 100) / 100,
+      retryRate: Math.round(retryRate * 100) / 100,
       p50Latency: durations[p50Index] || 0,
       p95Latency: durations[p95Index] || 0,
       p99Latency: durations[p99Index] || 0,
@@ -236,152 +236,152 @@ export class ServiceMetrics {
   /**
    * Top commandes par volume
    */
-  static getTopCommands(limit = 10): CommandStats?.[] {
+  static getTopCommands(limit = 10): CommandStats[] {
     const cacheKey = `top_${limit}`;
 
-    return MetricsCache?.getCommandStats(cacheKey, this?.metrics?.length, () =>
-      this?.calculateTopCommands(any: any)
+    return MetricsCache.getCommandStats(cacheKey, this.metrics.length, () =>
+      this.calculateTopCommands(limit)
     );
   }
 
   /**
-   * Calculer top commandes (any: any)
+   * Calculer top commandes (appelé si cache miss)
    */
-  private static calculateTopCommands(any: any): CommandStats?.[] {
-    const commandMap = new Map<string, ServiceMetric?.[]>();
+  private static calculateTopCommands(limit: number): CommandStats[] {
+    const commandMap = new Map<string, ServiceMetric[]>();
 
-    for (any: any) {
-      const key = `${metric?.service}.${metric?.command}`;
-      if (any: any)) {
-        commandMap?.set(key, []);
+    for (const metric of this.metrics) {
+      const key = `${metric.service}.${metric.command}`;
+      if (!commandMap.has(key)) {
+        commandMap.set(key, []);
       }
-      const arr = commandMap?.get(any: any);
-      if (any: any);
+      const arr = commandMap.get(key);
+      if (arr) arr.push(metric);
     }
 
-    const commandStats: CommandStats?.[] = [];
+    const commandStats: CommandStats[] = [];
 
-    for (const [command, metrics] of Array?.from(commandMap?.entries())) {
+    for (const [command, metrics] of Array.from(commandMap.entries())) {
       const durations = metrics
-        .filter(any: any)
-        .map(any: any);
-      const avgLatency = durations?.reduce(any: any) => sum + d, 0) / durations?.length || 0;
-      const failed = metrics?.filter(any: any).length;
-      const errorRate = failed / metrics?.length || 0;
-      const lastCall = Math?.max(...metrics?.map(m => m?.startTime ?? m?.timestamp ?? 0));
+        .filter(m => m.duration !== undefined)
+        .map(m => m.duration as number);
+      const avgLatency = durations.reduce((sum, d) => sum + d, 0) / durations.length || 0;
+      const failed = metrics.filter(m => !m.success).length;
+      const errorRate = failed / metrics.length || 0;
+      const lastCall = Math.max(...metrics.map(m => m.startTime ?? m.timestamp ?? 0));
 
-      commandStats?.push({
+      commandStats.push({
         command,
-        calls: metrics?.length,
-        avgLatency: Math?.round(any: any),
-        errorRate: Math?.round(errorRate * 100) / 100,
+        calls: metrics.length,
+        avgLatency: Math.round(avgLatency),
+        errorRate: Math.round(errorRate * 100) / 100,
         lastCall,
       });
     }
 
-    return commandStats?.sort(any: any);
+    return commandStats.sort((a, b) => b.calls - a.calls).slice(0, limit);
   }
 
   /**
    * Commandes les plus lentes
    */
-  static getSlowestCommands(limit = 10): CommandStats?.[] {
+  static getSlowestCommands(limit = 10): CommandStats[] {
     const cacheKey = `slowest_${limit}`;
 
-    return MetricsCache?.getCommandStats(cacheKey, this?.metrics?.length, () =>
-      this?.calculateSlowestCommands(any: any)
+    return MetricsCache.getCommandStats(cacheKey, this.metrics.length, () =>
+      this.calculateSlowestCommands(limit)
     );
   }
 
   /**
-   * Calculer commandes lentes (any: any)
+   * Calculer commandes lentes (appelé si cache miss)
    */
-  private static calculateSlowestCommands(any: any): CommandStats?.[] {
-    const commandMap = new Map<string, ServiceMetric?.[]>();
+  private static calculateSlowestCommands(limit: number): CommandStats[] {
+    const commandMap = new Map<string, ServiceMetric[]>();
 
-    for (any: any) {
-      const key = `${metric?.service}.${metric?.command}`;
-      if (any: any)) {
-        commandMap?.set(key, []);
+    for (const metric of this.metrics) {
+      const key = `${metric.service}.${metric.command}`;
+      if (!commandMap.has(key)) {
+        commandMap.set(key, []);
       }
-      const arr = commandMap?.get(any: any);
-      if (any: any);
+      const arr = commandMap.get(key);
+      if (arr) arr.push(metric);
     }
 
-    const commandStats: CommandStats?.[] = [];
+    const commandStats: CommandStats[] = [];
 
-    for (const [command, metrics] of Array?.from(commandMap?.entries())) {
+    for (const [command, metrics] of Array.from(commandMap.entries())) {
       const durations = metrics
-        .filter(any: any)
-        .map(any: any);
-      if (durations?.length === 0) continue;
+        .filter(m => m.duration !== undefined)
+        .map(m => m.duration as number);
+      if (durations.length === 0) continue;
 
-      const avgLatency = durations?.reduce(any: any) => sum + d, 0) / durations?.length || 0;
-      const failed = metrics?.filter(any: any).length;
-      const errorRate = failed / metrics?.length || 0;
-      const lastCall = Math?.max(...metrics?.map(m => m?.startTime ?? m?.timestamp ?? 0));
+      const avgLatency = durations.reduce((sum, d) => sum + d, 0) / durations.length || 0;
+      const failed = metrics.filter(m => !m.success).length;
+      const errorRate = failed / metrics.length || 0;
+      const lastCall = Math.max(...metrics.map(m => m.startTime ?? m.timestamp ?? 0));
 
-      commandStats?.push({
+      commandStats.push({
         command,
-        calls: metrics?.length,
-        avgLatency: Math?.round(any: any),
-        errorRate: Math?.round(errorRate * 100) / 100,
+        calls: metrics.length,
+        avgLatency: Math.round(avgLatency),
+        errorRate: Math.round(errorRate * 100) / 100,
         lastCall,
       });
     }
 
-    return commandStats?.sort(any: any);
+    return commandStats.sort((a, b) => b.avgLatency - a.avgLatency).slice(0, limit);
   }
 
   /**
    * Commandes avec le plus d'erreurs
    */
-  static getErrorProneCommands(limit = 10): CommandStats?.[] {
+  static getErrorProneCommands(limit = 10): CommandStats[] {
     const cacheKey = `errors_${limit}`;
 
-    return MetricsCache?.getCommandStats(cacheKey, this?.metrics?.length, () =>
-      this?.calculateErrorProneCommands(any: any)
+    return MetricsCache.getCommandStats(cacheKey, this.metrics.length, () =>
+      this.calculateErrorProneCommands(limit)
     );
   }
 
   /**
-   * Calculer commandes avec erreurs (any: any)
+   * Calculer commandes avec erreurs (appelé si cache miss)
    */
-  private static calculateErrorProneCommands(any: any): CommandStats?.[] {
-    const commandMap = new Map<string, ServiceMetric?.[]>();
+  private static calculateErrorProneCommands(limit: number): CommandStats[] {
+    const commandMap = new Map<string, ServiceMetric[]>();
 
-    for (any: any) {
-      const key = `${metric?.service}.${metric?.command}`;
-      if (any: any)) {
-        commandMap?.set(key, []);
+    for (const metric of this.metrics) {
+      const key = `${metric.service}.${metric.command}`;
+      if (!commandMap.has(key)) {
+        commandMap.set(key, []);
       }
-      const arr = commandMap?.get(any: any);
-      if (any: any);
+      const arr = commandMap.get(key);
+      if (arr) arr.push(metric);
     }
 
-    const commandStats: CommandStats?.[] = [];
+    const commandStats: CommandStats[] = [];
 
-    for (const [command, metrics] of Array?.from(commandMap?.entries())) {
+    for (const [command, metrics] of Array.from(commandMap.entries())) {
       const durations = metrics
-        .filter(any: any)
-        .map(any: any);
-      const avgLatency = durations?.reduce(any: any) => sum + d, 0) / durations?.length || 0;
-      const failed = metrics?.filter(any: any).length;
-      const errorRate = failed / metrics?.length || 0;
-      const lastCall = Math?.max(...metrics?.map(m => m?.startTime ?? m?.timestamp ?? 0));
+        .filter(m => m.duration !== undefined)
+        .map(m => m.duration as number);
+      const avgLatency = durations.reduce((sum, d) => sum + d, 0) / durations.length || 0;
+      const failed = metrics.filter(m => !m.success).length;
+      const errorRate = failed / metrics.length || 0;
+      const lastCall = Math.max(...metrics.map(m => m.startTime ?? m.timestamp ?? 0));
 
       if (failed > 0) {
-        commandStats?.push({
+        commandStats.push({
           command,
-          calls: metrics?.length,
-          avgLatency: Math?.round(any: any),
-          errorRate: Math?.round(errorRate * 100) / 100,
+          calls: metrics.length,
+          avgLatency: Math.round(avgLatency),
+          errorRate: Math.round(errorRate * 100) / 100,
           lastCall,
         });
       }
     }
 
-    return commandStats?.sort(any: any);
+    return commandStats.sort((a, b) => b.errorRate - a.errorRate).slice(0, limit);
   }
 
   /**
@@ -389,44 +389,44 @@ export class ServiceMetrics {
    */
   static getGlobalStats(): {
     totalMetrics: number;
-    services: string?.[];
+    services: string[];
     totalRetries: number;
     globalErrorRate: number;
     globalAvgLatency: number;
   } {
-    return MetricsCache?.getGlobalStats(this?.metrics?.length, () =>
-      this?.calculateGlobalStats()
+    return MetricsCache.getGlobalStats(this.metrics.length, () =>
+      this.calculateGlobalStats()
     );
   }
 
   /**
-   * Calculer stats globales (any: any)
+   * Calculer stats globales (appelé si cache miss)
    */
   private static calculateGlobalStats(): {
     totalMetrics: number;
-    services: string?.[];
+    services: string[];
     totalRetries: number;
     globalErrorRate: number;
     globalAvgLatency: number;
   } {
-    const services = [...new Set(any: any))];
-    const totalRetries = this?.metrics?.reduce(any: any) => sum + (m?.retries ?? 0), 0);
-    const failed = this?.metrics?.filter(any: any).length;
-    const globalErrorRate = this?.metrics?.length > 0 ? failed / this?.metrics?.length : 0;
-    const durations = this?.metrics
-      .filter(any: any)
-      .map(any: any);
+    const services = [...new Set(this.metrics.map(m => m.service))];
+    const totalRetries = this.metrics.reduce((sum, m) => sum + (m.retries ?? 0), 0);
+    const failed = this.metrics.filter(m => !m.success).length;
+    const globalErrorRate = this.metrics.length > 0 ? failed / this.metrics.length : 0;
+    const durations = this.metrics
+      .filter(m => m.duration !== undefined)
+      .map(m => m.duration as number);
     const globalAvgLatency =
-      durations?.length > 0
-        ? durations?.reduce(any: any) => sum + d, 0) / durations?.length
+      durations.length > 0
+        ? durations.reduce((sum, d) => sum + d, 0) / durations.length
         : 0;
 
     return {
-      totalMetrics: this?.metrics?.length,
+      totalMetrics: this.metrics.length,
       services,
       totalRetries,
-      globalErrorRate: Math?.round(globalErrorRate * 100) / 100,
-      globalAvgLatency: Math?.round(any: any),
+      globalErrorRate: Math.round(globalErrorRate * 100) / 100,
+      globalAvgLatency: Math.round(globalAvgLatency),
     };
   }
 
@@ -434,23 +434,23 @@ export class ServiceMetrics {
    * Effacer métriques
    */
   static clear(): void {
-    this?.metrics = [];
-    this?.activeMetrics?.clear();
-    MetricsCache?.invalidateAll();
+    this.metrics = [];
+    this.activeMetrics.clear();
+    MetricsCache.invalidateAll();
   }
 
   /**
    * Activer/désactiver tracking
    */
-  static setEnabled(any: any): void {
-    this?.enabled = enabled;
+  static setEnabled(enabled: boolean): void {
+    this.enabled = enabled;
   }
 
   /**
    * Export métriques
    */
-  static export(): ServiceMetric?.[] {
-    return [...this?.metrics];
+  static export(): ServiceMetric[] {
+    return [...this.metrics];
   }
 }
 
@@ -461,26 +461,26 @@ export class ServiceMetrics {
 /**
  * Décorateur pour mesurer performance
  */
-export function measurePerformance(any: any) {
-  return function <T extends (this: unknown, ...args: unknown?.[]) => Promise<unknown>>(
+export function measurePerformance(service: string, command: string) {
+  return function <T extends (this: unknown, ...args: unknown[]) => Promise<unknown>>(
     _target: unknown,
     _propertyKey: string,
     descriptor: TypedPropertyDescriptor<T>
   ) {
-    const originalMethod = descriptor?.value;
-    if (any: any) return descriptor;
+    const originalMethod = descriptor.value;
+    if (!originalMethod) return descriptor;
 
-    descriptor?.value = async function (this: unknown, ...args: unknown?.[]) {
-      const metricId = ServiceMetrics?.startMetric(any: any);
+    descriptor.value = async function (this: unknown, ...args: unknown[]) {
+      const metricId = ServiceMetrics.startMetric(command, service);
       const retries = 0;
 
       try {
-        const result = await originalMethod?.apply(any: any);
-        ServiceMetrics?.endMetric(any: any);
+        const result = await originalMethod.apply(this, args);
+        ServiceMetrics.endMetric(metricId, true, undefined, retries);
         return result;
-      } catch (any: any) {
-        const errorMsg = error instanceof Error ? error?.message : String(any: any);
-        ServiceMetrics?.endMetric(any: any);
+      } catch (error) {
+        const errorMsg = error instanceof Error ? error.message : String(error);
+        ServiceMetrics.endMetric(metricId, false, errorMsg, retries);
         throw error;
       }
     } as T;

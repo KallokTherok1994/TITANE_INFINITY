@@ -11,7 +11,7 @@
 
 import { useState, useEffect } from 'react';
 
-// REMOVED: engines/presence supprimé en PHASE 1 (any: any) - utilise stub temporaire
+// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B) - utilise stub temporaire
 import {
   presenceOS,
   type PresenceState,
@@ -47,26 +47,26 @@ import {
  * Hook principal pour Presence OS
  */
 export function usePresenceOS() {
-  const [state, setState] = useState<PresenceState>(presenceOS?.getState());
+  const [state, setState] = useState<PresenceState>(presenceOS.getState());
 
   useEffect(() => {
-    const unsubscribe = presenceOS?.subscribe(any: any);
+    const unsubscribe = presenceOS.subscribe(setState);
     return unsubscribe;
   }, []);
 
   return {
     state,
-    mode: state?.mode,
-    cognitive: state?.cognitive,
-    affective: state?.affective,
-    expressive: state?.expressive,
-    spatial: state?.spatial,
-    auraPattern: state?.auraPattern,
-    coherence: state?.globalCoherence,
-    setMode: (any: any) =>
-      presenceOS?.setMode(any: any),
-    reactToUserInput: (any: any) =>
-      presenceOS?.reactToUserInput(any: any),
+    mode: state.mode,
+    cognitive: state.cognitive,
+    affective: state.affective,
+    expressive: state.expressive,
+    spatial: state.spatial,
+    auraPattern: state.auraPattern,
+    coherence: state.globalCoherence,
+    setMode: (mode: PresenceMode, immediate?: boolean) =>
+      presenceOS.setMode(mode, immediate),
+    reactToUserInput: (input: string, emotion?: string) =>
+      presenceOS.reactToUserInput(input, emotion),
   };
 }
 
@@ -74,10 +74,10 @@ export function usePresenceOS() {
  * Hook pour mode de présence actuel
  */
 export function usePresenceMode(): PresenceMode {
-  const [mode, setMode] = useState<PresenceMode>(any: any);
+  const [mode, setMode] = useState<PresenceMode>(presenceOS.getState().mode);
 
   useEffect(() => {
-    const unsubscribe = presenceOS?.subscribe(any: any));
+    const unsubscribe = presenceOS.subscribe(state => setMode(state.mode));
     return unsubscribe;
   }, []);
 
@@ -89,11 +89,11 @@ export function usePresenceMode(): PresenceMode {
  */
 export function useCognitiveState(): CognitiveState {
   const [cognitive, setCognitive] = useState<CognitiveState>(
-    presenceOS?.getState().cognitive
+    presenceOS.getState().cognitive
   );
 
   useEffect(() => {
-    const unsubscribe = presenceOS?.subscribe(any: any));
+    const unsubscribe = presenceOS.subscribe(state => setCognitive(state.cognitive));
     return unsubscribe;
   }, []);
 
@@ -105,11 +105,11 @@ export function useCognitiveState(): CognitiveState {
  */
 export function useAffectiveState(): AffectiveState {
   const [affective, setAffective] = useState<AffectiveState>(
-    presenceOS?.getState().affective
+    presenceOS.getState().affective
   );
 
   useEffect(() => {
-    const unsubscribe = presenceOS?.subscribe(any: any));
+    const unsubscribe = presenceOS.subscribe(state => setAffective(state.affective));
     return unsubscribe;
   }, []);
 
@@ -121,11 +121,11 @@ export function useAffectiveState(): AffectiveState {
  */
 export function useExpressiveState(): ExpressiveState {
   const [expressive, setExpressive] = useState<ExpressiveState>(
-    presenceOS?.getState().expressive
+    presenceOS.getState().expressive
   );
 
   useEffect(() => {
-    const unsubscribe = presenceOS?.subscribe(any: any));
+    const unsubscribe = presenceOS.subscribe(state => setExpressive(state.expressive));
     return unsubscribe;
   }, []);
 
@@ -136,10 +136,10 @@ export function useExpressiveState(): ExpressiveState {
  * Hook pour position spatiale
  */
 export function useSpatialPosition(): SpatialPosition {
-  const [spatial, setSpatial] = useState<SpatialPosition>(any: any);
+  const [spatial, setSpatial] = useState<SpatialPosition>(presenceOS.getState().spatial);
 
   useEffect(() => {
-    const unsubscribe = presenceOS?.subscribe(any: any));
+    const unsubscribe = presenceOS.subscribe(state => setSpatial(state.spatial));
     return unsubscribe;
   }, []);
 
@@ -151,12 +151,12 @@ export function useSpatialPosition(): SpatialPosition {
  */
 export function usePresenceCoherence(): number {
   const [coherence, setCoherence] = useState<number>(
-    presenceOS?.getState().globalCoherence
+    presenceOS.getState().globalCoherence
   );
 
   useEffect(() => {
-    const unsubscribe = presenceOS?.subscribe(state =>
-      setCoherence(any: any)
+    const unsubscribe = presenceOS.subscribe(state =>
+      setCoherence(state.globalCoherence)
     );
     return unsubscribe;
   }, []);
@@ -172,13 +172,13 @@ export function usePresenceModeControl() {
 
   return {
     currentMode: mode,
-    setInsight: () => presenceOS?.setMode('insight'),
-    setEmpathy: () => presenceOS?.setMode('empathy'),
-    setArchitect: () => presenceOS?.setMode('architect'),
-    setDeepWork: () => presenceOS?.setMode('deep-work'),
-    setSingularity: () => presenceOS?.setMode('singularity'),
-    setNeutral: () => presenceOS?.setMode('neutral'),
-    setListening: () => presenceOS?.setMode('listening'),
-    setProcessing: () => presenceOS?.setMode('processing'),
+    setInsight: () => presenceOS.setMode('insight'),
+    setEmpathy: () => presenceOS.setMode('empathy'),
+    setArchitect: () => presenceOS.setMode('architect'),
+    setDeepWork: () => presenceOS.setMode('deep-work'),
+    setSingularity: () => presenceOS.setMode('singularity'),
+    setNeutral: () => presenceOS.setMode('neutral'),
+    setListening: () => presenceOS.setMode('listening'),
+    setProcessing: () => presenceOS.setMode('processing'),
   };
 }

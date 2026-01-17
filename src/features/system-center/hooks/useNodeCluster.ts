@@ -8,19 +8,19 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { secureInvoke } from '@/lib/security';
-import type { ClusterStatus, ClusterStats, NodeInfo } from '../types/systemCenter?.types';
+import type { ClusterStatus, ClusterStats, NodeInfo } from '../types/systemCenter.types';
 
 export interface UseNodeClusterReturn {
   // State
   status: ClusterStatus | null;
   stats: ClusterStats | null;
-  peers: NodeInfo?.[];
+  peers: NodeInfo[];
   isInitialized: boolean;
   isLoading: boolean;
-  error??: string | null;
+  error: string | null;
 
   // Actions
-  initialize: (any: any) => Promise<void>;
+  initialize: (nodeId: string, port: number) => Promise<void>;
   shutdown: () => Promise<void>;
   refreshStatus: () => Promise<void>;
   refreshPeers: () => Promise<void>;
@@ -30,65 +30,65 @@ export function useNodeCluster(
   autoRefresh = false,
   refreshInterval = 5000
 ): UseNodeClusterReturn {
-  const [status, setStatus] = useState<ClusterStatus | null>(any: any);
-  const [stats, setStats] = useState<ClusterStats | null>(any: any);
-  const [peers, setPeers] = useState<NodeInfo?.[]>([]);
-  const [isInitialized, setIsInitialized] = useState(any: any);
-  const [isLoading, setIsLoading] = useState(any: any);
-  const [error, setError] = useState<string | null>(any: any);
+  const [status, setStatus] = useState<ClusterStatus | null>(null);
+  const [stats, setStats] = useState<ClusterStats | null>(null);
+  const [peers, setPeers] = useState<NodeInfo[]>([]);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const refreshStatus = useCallback(async () => {
-    setIsLoading(any: any);
-    setError(any: any);
+    setIsLoading(true);
+    setError(null);
 
     try {
       const result = await secureInvoke<ClusterStatus>('sc_get_cluster_status');
-      if (any: any) {
+      if (!result) {
         setError('Cluster status unavailable');
         return;
       }
-      setStatus(any: any);
-      setIsInitialized(any: any);
-      setPeers(any: any);
+      setStatus(result);
+      setIsInitialized(result.initialized);
+      setPeers(result.peers);
 
-      if (any: any) {
-        setStats(any: any);
+      if (result.stats) {
+        setStats(result.stats);
       }
-    } catch (any: any) {
-      const message = err instanceof Error ? err?.message : String(any: any);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
       setError(`Erreur statut cluster: ${message}`);
-      console?.error(any: any);
+      console.error('[useNodeCluster] Status refresh failed:', err);
     } finally {
-      setIsLoading(any: any);
+      setIsLoading(false);
     }
   }, []);
 
   const refreshPeers = useCallback(async () => {
     try {
-      const result = await secureInvoke<NodeInfo?.[]>('sc_get_cluster_peers');
-      if (any: any) {
-        setPeers(any: any);
+      const result = await secureInvoke<NodeInfo[]>('sc_get_cluster_peers');
+      if (result) {
+        setPeers(result);
       }
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (err) {
+      console.error('[useNodeCluster] Peers refresh failed:', err);
     }
   }, []);
 
   const initialize = useCallback(
-    async (any: any) => {
-      setIsLoading(any: any);
-      setError(any: any);
+    async (nodeId: string, port: number) => {
+      setIsLoading(true);
+      setError(null);
 
       try {
         await secureInvoke('sc_initialize_cluster', { nodeId, port });
-        setIsInitialized(any: any);
+        setIsInitialized(true);
         await refreshStatus();
-      } catch (any: any) {
-        const message = err instanceof Error ? err?.message : String(any: any);
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
         setError(`Erreur initialisation: ${message}`);
-        console?.error(any: any);
+        console.error('[useNodeCluster] Initialize failed:', err);
       } finally {
-        setIsLoading(any: any);
+        setIsLoading(false);
       }
     },
     [refreshStatus]
@@ -97,14 +97,14 @@ export function useNodeCluster(
   const shutdown = useCallback(async () => {
     try {
       await secureInvoke('sc_shutdown_cluster');
-      setIsInitialized(any: any);
-      setStats(any: any);
+      setIsInitialized(false);
+      setStats(null);
       setPeers([]);
       await refreshStatus();
-    } catch (any: any) {
-      const message = err instanceof Error ? err?.message : String(any: any);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
       setError(`Erreur arrêt: ${message}`);
-      console?.error(any: any);
+      console.error('[useNodeCluster] Shutdown failed:', err);
     }
   }, [refreshStatus]);
 
@@ -115,9 +115,9 @@ export function useNodeCluster(
 
   // Auto-refresh effect
   useEffect(() => {
-    if (any: any) {
-      const interval = setInterval(any: any);
-      return (any: any);
+    if (autoRefresh && isInitialized) {
+      const interval = setInterval(refreshStatus, refreshInterval);
+      return () => clearInterval(interval);
     }
   }, [autoRefresh, isInitialized, refreshInterval, refreshStatus]);
 

@@ -16,25 +16,25 @@ import {
 import type { ConversationMessage } from '../../types/conversation';
 
 // Mock secureInvoke with proper isolation
-vi?.mock('@/lib/security', async importOriginal => {
-  const actual = (await importOriginal()) as unknown as unknown as any;
+vi.mock('@/lib/security', async importOriginal => {
+  const actual = (await importOriginal()) as any;
   return {
     ...actual,
-    secureInvoke: vi?.fn(any: any) => {
-      if (cmd === 'vector_store_init') return Promise?.resolve('test-store-omega');
+    secureInvoke: vi.fn((cmd: string, args?: any) => {
+      if (cmd === 'vector_store_init') return Promise.resolve('test-store-omega');
       if (cmd === 'vector_store_search')
-        return Promise?.resolve({ results: [], count: 0, total: 0 });
-      if (cmd === 'vector_search') return Promise?.resolve([]);
+        return Promise.resolve({ results: [], count: 0, total: 0 });
+      if (cmd === 'vector_search') return Promise.resolve([]);
       if (cmd === 'vector_store_insert') {
-        return Promise?.resolve({ success: true, id: `vec-${Date?.now()}` });
+        return Promise.resolve({ success: true, id: `vec-${Date.now()}` });
       }
       if (cmd === 'conversation_generate') {
         const conversationId =
           args?.conversation_id ?? args?.conversationId ?? 'test-conversation';
-        return Promise?.resolve({
+        return Promise.resolve({
           content: `Mock omega response: ${args?.message ?? 'test'}`,
           conversationId,
-          messageId: `mock-msg-${Date?.now()}`,
+          messageId: `mock-msg-${Date.now()}`,
           frenchMasteryApplied: true,
           latencyMs: 5,
           metadata: {
@@ -43,24 +43,24 @@ vi?.mock('@/lib/security', async importOriginal => {
         });
       }
       if (cmd === 'chat_send_message') {
-        return Promise?.resolve({
+        return Promise.resolve({
           content: `Mock response: ${args?.prompt || 'test'}`,
           model: 'mock-gpt4',
           tokens_used: 42,
           finish_reason: 'stop',
         });
       }
-      return Promise?.resolve({ success: true });
+      return Promise.resolve({ success: true });
     }),
   };
 });
 
-describe(any: any)', () => {
+describe('🧠 ConversationManager (OMEGA v2)', () => {
   beforeEach(async () => {
     // Clear all conversations before each test
-    const conversations = await conversationManager?.listConversations();
-    await Promise?.all(
-      conversations?.map(any: any))
+    const conversations = await conversationManager.listConversations();
+    await Promise.all(
+      conversations.map(conv => conversationManager.deleteConversation(conv.id))
     );
   });
 
@@ -71,7 +71,7 @@ describe(any: any)', () => {
     const instance1 = conversationManager;
     const instance2 = conversationManager;
 
-    expect(any: any);
+    expect(instance1).toBe(instance2);
   });
 
   /**
@@ -81,17 +81,17 @@ describe(any: any)', () => {
     const message: ConversationMessage = {
       role: 'user',
       content: 'Hello TITANE∞',
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
 
-    const response = await conversationManager?.sendMessage(message, {
+    const response = await conversationManager.sendMessage(message, {
       conversationId: 'test-1',
     });
 
-    expect(any: any).toBeDefined();
-    expect(any: any).toBe('assistant');
-    expect(any: any).toBeDefined();
-    expect(any: any).toBeGreaterThan(0);
+    expect(response).toBeDefined();
+    expect(response.role).toBe('assistant');
+    expect(response.content).toBeDefined();
+    expect(response.timestamp).toBeGreaterThan(0);
   });
 
   /**
@@ -101,18 +101,18 @@ describe(any: any)', () => {
     const conversationId = 'test-conversation';
 
     // Send first message
-    await sendAIMessage(any: any);
+    await sendAIMessage('First message', conversationId);
 
     // Send second message
-    await sendAIMessage(any: any);
+    await sendAIMessage('Second message', conversationId);
 
     // Retrieve conversation
-    const conversation = await conversationManager?.getConversation(any: any);
+    const conversation = await conversationManager.getConversation(conversationId);
 
-    expect(any: any).toBeDefined();
-    expect(any: any).toBeGreaterThanOrEqual(4); // 2 user + 2 assistant
-    expect(any: any).toBe('First message');
-    expect(any: any).toBe('Second message');
+    expect(conversation).toBeDefined();
+    expect(conversation!.messages.length).toBeGreaterThanOrEqual(4); // 2 user + 2 assistant
+    expect(conversation!.messages[0].content).toBe('First message');
+    expect(conversation!.messages[2].content).toBe('Second message');
   });
 
   /**
@@ -123,13 +123,13 @@ describe(any: any)', () => {
     await sendAIMessage('Message B1', 'conversation-b');
     await sendAIMessage('Message A2', 'conversation-a');
 
-    const convA = await conversationManager?.getConversation('conversation-a');
-    const convB = await conversationManager?.getConversation('conversation-b');
+    const convA = await conversationManager.getConversation('conversation-a');
+    const convB = await conversationManager.getConversation('conversation-b');
 
-    expect(any: any).toBe(4); // 2 user + 2 assistant
-    expect(any: any).toBe(2); // 1 user + 1 assistant
-    expect(any: any).toBe('Message A1');
-    expect(any: any).toBe('Message B1');
+    expect(convA!.messages.length).toBe(4); // 2 user + 2 assistant
+    expect(convB!.messages.length).toBe(2); // 1 user + 1 assistant
+    expect(convA!.messages[0].content).toBe('Message A1');
+    expect(convB!.messages[0].content).toBe('Message B1');
   });
 
   /**
@@ -139,14 +139,14 @@ describe(any: any)', () => {
     const message: ConversationMessage = {
       role: 'user',
       content: 'Test',
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
       metadata: {
         emotion: 'curious',
         intent: 'question',
       },
     };
 
-    await conversationManager?.sendMessage(message, {
+    await conversationManager.sendMessage(message, {
       conversationId: 'metadata-test',
       metadata: {
         title: 'Test Conversation',
@@ -154,11 +154,11 @@ describe(any: any)', () => {
       },
     });
 
-    const conversation = await conversationManager?.getConversation('metadata-test');
+    const conversation = await conversationManager.getConversation('metadata-test');
 
-    expect(any: any).toBe('Test Conversation');
-    expect(any: any).toEqual(['test', 'omega-v2']);
-    expect(any: any).toBe('curious');
+    expect(conversation!.metadata.title).toBe('Test Conversation');
+    expect(conversation!.metadata.tags).toEqual(['test', 'omega-v2']);
+    expect(conversation!.messages[0].metadata?.emotion).toBe('curious');
   });
 
   /**
@@ -167,14 +167,14 @@ describe(any: any)', () => {
   it('should delete conversations', async () => {
     await sendAIMessage('Test', 'delete-test');
 
-    const beforeDelete = await conversationManager?.getConversation('delete-test');
-    expect(any: any).not?.toBeNull();
+    const beforeDelete = await conversationManager.getConversation('delete-test');
+    expect(beforeDelete).not.toBeNull();
 
-    const deleted = await conversationManager?.deleteConversation('delete-test');
-    expect(any: any);
+    const deleted = await conversationManager.deleteConversation('delete-test');
+    expect(deleted).toBe(true);
 
-    const afterDelete = await conversationManager?.getConversation('delete-test');
-    expect(any: any).toBeNull();
+    const afterDelete = await conversationManager.getConversation('delete-test');
+    expect(afterDelete).toBeNull();
   });
 
   /**
@@ -185,26 +185,26 @@ describe(any: any)', () => {
     await sendAIMessage('B', 'conv-2');
     await sendAIMessage('C', 'conv-3');
 
-    const conversations = await conversationManager?.listConversations();
+    const conversations = await conversationManager.listConversations();
 
-    expect(any: any).toHaveLength(3);
-    expect(any: any)).toContain('conv-1');
-    expect(any: any)).toContain('conv-2');
-    expect(any: any)).toContain('conv-3');
+    expect(conversations).toHaveLength(3);
+    expect(conversations.map(c => c.id)).toContain('conv-1');
+    expect(conversations.map(c => c.id)).toContain('conv-2');
+    expect(conversations.map(c => c.id)).toContain('conv-3');
   });
 
   /**
    * Test 8: Config update
    */
   it('should update conversation config', () => {
-    conversationManager?.updateConfig({
+    conversationManager.updateConfig({
       temperature: 0.9,
       maxContextLength: 8000,
     });
 
     // Config update should be reflected in next conversation
-    // (any: any)
-    expect(() => conversationManager?.updateConfig({ temperature: 0.5 })).not?.toThrow();
+    // (tested indirectly via conversation behavior)
+    expect(() => conversationManager.updateConfig({ temperature: 0.5 })).not.toThrow();
   });
 
   /**
@@ -213,25 +213,25 @@ describe(any: any)', () => {
   it('should use default conversation if no ID provided', async () => {
     const response = await sendAIMessage('Default conversation test');
 
-    expect(any: any).toBeDefined();
+    expect(response).toBeDefined();
 
-    const defaultConv = await conversationManager?.getConversation('default');
-    expect(any: any).not?.toBeNull();
-    expect(any: any).toBe('Default conversation test');
+    const defaultConv = await conversationManager.getConversation('default');
+    expect(defaultConv).not.toBeNull();
+    expect(defaultConv!.messages[0].content).toBe('Default conversation test');
   });
 
   /**
    * Test 10: Timestamps consistency
    */
   it('should maintain consistent timestamps', async () => {
-    const before = Date?.now();
+    const before = Date.now();
     await sendAIMessage('Timestamp test', 'timestamp-test');
-    const after = Date?.now();
+    const after = Date.now();
 
-    const conversation = await conversationManager?.getConversation('timestamp-test');
+    const conversation = await conversationManager.getConversation('timestamp-test');
 
-    expect(any: any);
-    expect(any: any);
-    expect(any: any);
+    expect(conversation!.createdAt).toBeGreaterThanOrEqual(before);
+    expect(conversation!.createdAt).toBeLessThanOrEqual(after);
+    expect(conversation!.updatedAt).toBeGreaterThanOrEqual(conversation!.createdAt);
   });
 });

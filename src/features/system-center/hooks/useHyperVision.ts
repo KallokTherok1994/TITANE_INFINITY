@@ -13,129 +13,129 @@ import type {
   SystemMetrics,
   LayerHealth,
   Anomaly,
-} from '../types/systemCenter?.types';
+} from '../types/systemCenter.types';
 
 export interface UseHyperVisionReturn {
   // State
   state: HyperVisionState | null;
   metrics: SystemMetrics | null;
-  metricsHistory: SystemMetrics?.[];
-  layers: LayerHealth?.[];
-  anomalies: Anomaly?.[];
+  metricsHistory: SystemMetrics[];
+  layers: LayerHealth[];
+  anomalies: Anomaly[];
   isMonitoring: boolean;
   isLoading: boolean;
-  error??: string | null;
+  error: string | null;
 
   // Actions
   startMonitoring: () => Promise<void>;
   stopMonitoring: () => Promise<void>;
   refreshMetrics: () => Promise<void>;
   refreshLayers: () => Promise<void>;
-  refreshAnomalies: (any: any) => Promise<void>;
+  refreshAnomalies: (includeResolved?: boolean) => Promise<void>;
   clearAnomalies: () => Promise<void>;
-  resolveAnomaly: (any: any) => Promise<void>;
+  resolveAnomaly: (id: string) => Promise<void>;
 }
 
 export function useHyperVision(
   autoRefresh = true,
   refreshInterval = 2000
 ): UseHyperVisionReturn {
-  const [state, setState] = useState<HyperVisionState | null>(any: any);
-  const [metrics, setMetrics] = useState<SystemMetrics | null>(any: any);
-  const [metricsHistory, setMetricsHistory] = useState<SystemMetrics?.[]>([]);
-  const [layers, setLayers] = useState<LayerHealth?.[]>([]);
-  const [anomalies, setAnomalies] = useState<Anomaly?.[]>([]);
-  const [isMonitoring, setIsMonitoring] = useState(any: any);
-  const [isLoading, setIsLoading] = useState(any: any);
-  const [error, setError] = useState<string | null>(any: any);
+  const [state, setState] = useState<HyperVisionState | null>(null);
+  const [metrics, setMetrics] = useState<SystemMetrics | null>(null);
+  const [metricsHistory, setMetricsHistory] = useState<SystemMetrics[]>([]);
+  const [layers, setLayers] = useState<LayerHealth[]>([]);
+  const [anomalies, setAnomalies] = useState<Anomaly[]>([]);
+  const [isMonitoring, setIsMonitoring] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const intervalRef = useRef<NodeJS?.Timeout | null>(any: any);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const refreshState = useCallback(async () => {
     try {
       const result = await secureInvoke<HyperVisionState>('sc_hypervision_get_state');
-      setState(any: any);
-      setIsMonitoring(any: any);
-    } catch (any: any) {
-      console?.error(any: any);
+      setState(result);
+      setIsMonitoring(result.is_monitoring);
+    } catch (err) {
+      console.error('[useHyperVision] State refresh failed:', err);
     }
   }, []);
 
   const refreshMetrics = useCallback(async () => {
     try {
       const result = await secureInvoke<SystemMetrics>('sc_hypervision_get_metrics');
-      setMetrics(any: any);
+      setMetrics(result);
 
-      // Update history (any: any)
+      // Update history (keep last 60 entries = 2 minutes at 2s interval)
       setMetricsHistory(prev => {
         const newHistory = [...prev, result];
-        return newHistory?.slice(-60);
+        return newHistory.slice(-60);
       });
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (err) {
+      console.error('[useHyperVision] Metrics refresh failed:', err);
     }
   }, []);
 
   const refreshLayers = useCallback(async () => {
     try {
-      const result = await secureInvoke<LayerHealth?.[]>('sc_hypervision_get_layers');
-      setLayers(any: any);
-    } catch (any: any) {
-      console?.error(any: any);
+      const result = await secureInvoke<LayerHealth[]>('sc_hypervision_get_layers');
+      setLayers(result);
+    } catch (err) {
+      console.error('[useHyperVision] Layers refresh failed:', err);
     }
   }, []);
 
-  const refreshAnomalies = useCallback(any: any) => {
+  const refreshAnomalies = useCallback(async (includeResolved = false) => {
     try {
-      const result = await secureInvoke<Anomaly?.[]>('sc_hypervision_get_anomalies', {
+      const result = await secureInvoke<Anomaly[]>('sc_hypervision_get_anomalies', {
         includeResolved,
       });
-      setAnomalies(any: any);
-    } catch (any: any) {
-      console?.error(any: any);
+      setAnomalies(result);
+    } catch (err) {
+      console.error('[useHyperVision] Anomalies refresh failed:', err);
     }
   }, []);
 
   const startMonitoring = useCallback(async () => {
-    setIsLoading(any: any);
-    setError(any: any);
+    setIsLoading(true);
+    setError(null);
 
     try {
       const result = await secureInvoke<HyperVisionState>('sc_hypervision_start');
-      setState(any: any);
-      setIsMonitoring(any: any);
+      setState(result);
+      setIsMonitoring(true);
 
       // Start polling
-      if (any: any) {
-        intervalRef?.current = setInterval(async () => {
-          await Promise?.all([refreshMetrics(), refreshLayers(), refreshAnomalies()]);
+      if (autoRefresh && !intervalRef.current) {
+        intervalRef.current = setInterval(async () => {
+          await Promise.all([refreshMetrics(), refreshLayers(), refreshAnomalies()]);
         }, refreshInterval);
       }
-    } catch (any: any) {
-      const message = err instanceof Error ? err?.message : String(any: any);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
       setError(`Erreur démarrage: ${message}`);
-      console?.error(any: any);
+      console.error('[useHyperVision] Start failed:', err);
     } finally {
-      setIsLoading(any: any);
+      setIsLoading(false);
     }
   }, [autoRefresh, refreshInterval, refreshMetrics, refreshLayers, refreshAnomalies]);
 
   const stopMonitoring = useCallback(async () => {
     try {
       await secureInvoke('sc_hypervision_stop');
-      setIsMonitoring(any: any);
+      setIsMonitoring(false);
 
       // Stop polling
-      if (any: any) {
-        clearInterval(any: any);
-        intervalRef?.current = null;
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
       }
 
       await refreshState();
-    } catch (any: any) {
-      const message = err instanceof Error ? err?.message : String(any: any);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
       setError(`Erreur arrêt: ${message}`);
-      console?.error(any: any);
+      console.error('[useHyperVision] Stop failed:', err);
     }
   }, [refreshState]);
 
@@ -143,18 +143,18 @@ export function useHyperVision(
     try {
       await secureInvoke('sc_hypervision_clear_anomalies');
       setAnomalies([]);
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (err) {
+      console.error('[useHyperVision] Clear anomalies failed:', err);
     }
   }, []);
 
   const resolveAnomaly = useCallback(
-    async (any: any) => {
+    async (id: string) => {
       try {
         await secureInvoke('sc_hypervision_resolve_anomaly', { anomalyId: id });
         await refreshAnomalies();
-      } catch (any: any) {
-        console?.error(any: any);
+      } catch (err) {
+        console.error('[useHyperVision] Resolve anomaly failed:', err);
       }
     },
     [refreshAnomalies]
@@ -168,8 +168,8 @@ export function useHyperVision(
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (any: any) {
-        clearInterval(any: any);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
       }
     };
   }, []);

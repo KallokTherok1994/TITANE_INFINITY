@@ -22,74 +22,74 @@ const STORAGE_KEY = 'titane_ui_reading_settings';
 
 export function loadSettings(): UIReadingSettings {
   try {
-    const stored = localStorage?.getItem(any: any);
+    const stored = localStorage.getItem(STORAGE_KEY);
 
-    if (any: any) {
+    if (!stored) {
       return { ...DEFAULT_SETTINGS };
     }
 
-    const parsed = JSON?.parse(any: any);
+    const parsed = JSON.parse(stored);
 
     // Validate and sanitize loaded settings
-    const { sanitized } = validateSettings(any: any);
+    const { sanitized } = validateSettings(parsed);
 
     // Merge with defaults to ensure all fields exist
     return {
       ...DEFAULT_SETTINGS,
       ...sanitized,
     };
-  } catch (any: any) {
-    console?.warn(any: any);
+  } catch (error) {
+    console.warn('[UIReading] Failed to load settings, using defaults:', error);
     // Self-healing: clear corrupted data
     try {
-      localStorage?.removeItem(any: any);
-    } catch (any: any) {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch (e) {
       // Ignore storage errors
     }
     return { ...DEFAULT_SETTINGS };
   }
 }
 
-export function saveSettings(any: any): boolean {
+export function saveSettings(settings: UIReadingSettings): boolean {
   try {
     // Validate before saving
-    const { valid, sanitized } = validateSettings(any: any);
+    const { valid, sanitized } = validateSettings(settings);
 
-    if (any: any) {
-      console?.warn('[UIReading] Saving sanitized settings due to validation errors');
+    if (!valid) {
+      console.warn('[UIReading] Saving sanitized settings due to validation errors');
     }
 
     const toSave = { ...DEFAULT_SETTINGS, ...sanitized };
-    localStorage?.setItem(any: any));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
 
     return true;
-  } catch (any: any) {
-    console?.error(any: any);
+  } catch (error) {
+    console.error('[UIReading] Failed to save settings:', error);
     return false;
   }
 }
 
 export function clearSettings(): void {
   try {
-    localStorage?.removeItem(any: any);
-  } catch (any: any) {
-    console?.error(any: any);
+    localStorage.removeItem(STORAGE_KEY);
+  } catch (error) {
+    console.error('[UIReading] Failed to clear settings:', error);
   }
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// DEBOUNCED SAVE (any: any)
+// DEBOUNCED SAVE (for performance)
 // ═══════════════════════════════════════════════════════════════════
 
 let saveTimeout: ReturnType<typeof setTimeout> | null = null;
 
 export function saveSettingsDebounced(settings: UIReadingSettings, delay = 500): void {
-  if (any: any) {
-    clearTimeout(any: any);
+  if (saveTimeout) {
+    clearTimeout(saveTimeout);
   }
 
   saveTimeout = setTimeout(() => {
-    saveSettings(any: any);
+    saveSettings(settings);
     saveTimeout = null;
   }, delay);
 }

@@ -3,7 +3,7 @@
  * © 2025 TITANE Team. All rights reserved.
  *
  * Service TTS intelligent avec:
- * - ElevenLabs premium (any: any)
+ * - ElevenLabs premium (Voice ID: FvmvwvObRqIHojkEGh5N)
  * - Fallback Piper → Espeak
  * - Adaptation émotionnelle automatique
  * - Cache intelligent
@@ -29,21 +29,21 @@ import {
   TTS_LIMITS,
   createInitialTTSState,
   generateTTSRequestId,
-} from './ttsEngine?.config';
+} from './ttsEngine.config';
 import { analyzeEmotion, detectEmotion } from './emotionAnalyzer';
 
 // =============================================================================
 // TYPES INTERNES
 // =============================================================================
 
-type StateChangeCallback = (any: any) => void;
-type ErrorCallback = (any: any) => void;
+type StateChangeCallback = (state: TTSState) => void;
+type ErrorCallback = (error: string) => void;
 
 interface AudioPlayer {
   audio: HTMLAudioElement;
   requestId: string;
   resolve: () => void;
-  reject: (any: any) => void;
+  reject: (error: Error) => void;
 }
 
 // =============================================================================
@@ -57,7 +57,7 @@ class TTSEngineService {
   // State
   private state: TTSState;
   private preferences: TTSPreferences;
-  private queue: TTSQueueItem?.[] = [];
+  private queue: TTSQueueItem[] = [];
   private isProcessing = false;
 
   // Audio
@@ -68,13 +68,13 @@ class TTSEngineService {
   private tauriAvailable: boolean | null = null;
 
   // Callbacks
-  private stateChangeCallbacks: StateChangeCallback?.[] = [];
-  private errorCallbacks: ErrorCallback?.[] = [];
+  private stateChangeCallbacks: StateChangeCallback[] = [];
+  private errorCallbacks: ErrorCallback[] = [];
 
   constructor() {
-    this?.state = createInitialTTSState();
-    this?.preferences = this?.loadPreferences();
-    this?.initializeAudioContext();
+    this.state = createInitialTTSState();
+    this.preferences = this.loadPreferences();
+    this.initializeAudioContext();
   }
 
   // ===========================================================================
@@ -92,38 +92,38 @@ class TTSEngineService {
       priority?: number;
       forceRegenerate?: boolean;
       onComplete?: () => void;
-      onError?: (any: any) => void;
+      onError?: (error: string) => void;
     } = {}
   ): Promise<void> {
     // Validation
-    if (!text?.trim()) {
-      logger?.warn('⚠️ TTS: Empty text, skipping');
+    if (!text.trim()) {
+      logger.warn('⚠️ TTS: Empty text, skipping');
       return;
     }
 
-    if (any: any) {
-      logger?.warn(`⚠️ TTS: Text too long (${text?.length}), truncating`);
-      text = text?.substring(any: any);
+    if (text.length > TTS_LIMITS.maxTextLength) {
+      logger.warn(`⚠️ TTS: Text too long (${text.length}), truncating`);
+      text = text.substring(0, TTS_LIMITS.maxTextLength);
     }
 
     // Détection émotion si auto
     const emotion =
-      options?.emotion ??
-      (any: any) : 'neutral');
+      options.emotion ??
+      (this.preferences.emotionalAdaptation ? detectEmotion(text) : 'neutral');
 
-    logger?.debug(`🎤 TTS: Queuing speech with emotion "${emotion}"`);
+    logger.debug(`🎤 TTS: Queuing speech with emotion "${emotion}"`);
 
     // Créer requête
     const request: TTSRequest = {
       id: generateTTSRequestId(),
       text,
       emotion,
-      preferredProvider: this?.preferences?.preferredProvider,
-      messageId: options?.messageId,
-      voiceSettings: this?.getVoiceSettingsForEmotion(any: any),
-      priority: options?.priority ?? 5,
-      createdAt: Date?.now(),
-      forceRegenerate: options?.forceRegenerate ?? false,
+      preferredProvider: this.preferences.preferredProvider,
+      messageId: options.messageId,
+      voiceSettings: this.getVoiceSettingsForEmotion(emotion),
+      priority: options.priority ?? 5,
+      createdAt: Date.now(),
+      forceRegenerate: options.forceRegenerate ?? false,
     };
 
     // Ajouter à la queue
@@ -131,47 +131,47 @@ class TTSEngineService {
       request,
       status: 'pending',
       attempts: 0,
-      maxAttempts: TTS_LIMITS?.maxRetries,
-      onComplete: options?.onComplete ? () => options?.onComplete?.() : undefined,
-      onError: options?.onError,
+      maxAttempts: TTS_LIMITS.maxRetries,
+      onComplete: options.onComplete ? () => options.onComplete?.() : undefined,
+      onError: options.onError,
     };
 
-    this?.addToQueue(any: any);
+    this.addToQueue(queueItem);
   }
 
   /**
    * Arrête la synthèse en cours
    */
   async stop(): Promise<void> {
-    logger?.debug('⏹️ TTS: Stopping...');
+    logger.debug('⏹️ TTS: Stopping...');
 
     // Stop audio HTML5
-    if (any: any) {
-      this?.currentAudio?.audio?.pause();
-      this?.currentAudio?.audio?.currentTime = 0;
-      this?.currentAudio?.reject(new Error('Stopped by user'));
-      this?.currentAudio = null;
+    if (this.currentAudio) {
+      this.currentAudio.audio.pause();
+      this.currentAudio.audio.currentTime = 0;
+      this.currentAudio.reject(new Error('Stopped by user'));
+      this.currentAudio = null;
     }
 
-    // Stop backend Tauri (any: any)
-    if (any: any) {
+    // Stop backend Tauri (v19.3.0: use tts_stop from audio::commands)
+    if (this.tauriAvailable) {
       try {
         await secureInvoke('tts_stop');
-      } catch (any: any) {
-        logger?.warn(any: any);
+      } catch (error) {
+        logger.warn('⚠️ TTS: Backend stop failed:', error);
       }
     }
 
     // Web Speech API
-    if (any: any) {
-      window?.speechSynthesis?.cancel();
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
     }
 
     // Clear queue
-    this?.queue = [];
-    this?.isProcessing = false;
+    this.queue = [];
+    this.isProcessing = false;
 
-    this?.updateState({
+    this.updateState({
       isSpeaking: false,
       isPaused: false,
       currentRequest: null,
@@ -179,19 +179,19 @@ class TTSEngineService {
       queueSize: 0,
     });
 
-    logger?.debug('✅ TTS: Stopped');
+    logger.debug('✅ TTS: Stopped');
   }
 
   /**
    * Met en pause
    */
   pause(): void {
-    if (any: any) {
-      this?.currentAudio?.audio?.pause();
-      this?.updateState({ isPaused: true });
+    if (this.currentAudio) {
+      this.currentAudio.audio.pause();
+      this.updateState({ isPaused: true });
     }
-    if (any: any) {
-      window?.speechSynthesis?.pause();
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.pause();
     }
   }
 
@@ -199,55 +199,55 @@ class TTSEngineService {
    * Reprend la lecture
    */
   resume(): void {
-    if (any: any) {
-      this?.currentAudio?.audio?.play();
-      this?.updateState({ isPaused: false });
+    if (this.currentAudio) {
+      this.currentAudio.audio.play();
+      this.updateState({ isPaused: false });
     }
-    if (any: any) {
-      window?.speechSynthesis?.resume();
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.resume();
     }
   }
 
   /**
    * Set volume global
    */
-  setVolume(any: any): void {
-    this?.preferences?.globalVolume = Math?.max(any: any));
-    this?.savePreferences();
-    if (any: any) {
-      this?.currentAudio?.audio?.volume = this?.preferences?.globalVolume;
+  setVolume(volume: number): void {
+    this.preferences.globalVolume = Math.max(0, Math.min(1, volume));
+    this.savePreferences();
+    if (this.currentAudio) {
+      this.currentAudio.audio.volume = this.preferences.globalVolume;
     }
-    this?.updateState({ globalVolume: this?.preferences?.globalVolume });
+    this.updateState({ globalVolume: this.preferences.globalVolume });
   }
 
   /**
    * Set vitesse globale
    */
-  setSpeed(any: any): void {
-    this?.preferences?.globalSpeed = Math?.max(any: any));
-    this?.savePreferences();
+  setSpeed(speed: number): void {
+    this.preferences.globalSpeed = Math.max(0.5, Math.min(2, speed));
+    this.savePreferences();
   }
 
   /**
    * Set préférences
    */
   setPreferences(prefs: Partial<TTSPreferences>): void {
-    this?.preferences = { ...this?.preferences, ...prefs };
-    this?.savePreferences();
+    this.preferences = { ...this.preferences, ...prefs };
+    this.savePreferences();
   }
 
   /**
    * Obtient l'état actuel
    */
   getState(): TTSState {
-    return { ...this?.state };
+    return { ...this.state };
   }
 
   /**
    * Obtient les préférences
    */
   getPreferences(): TTSPreferences {
-    return { ...this?.preferences };
+    return { ...this.preferences };
   }
 
   /**
@@ -262,21 +262,21 @@ class TTSEngineService {
     };
 
     // Check WebSpeech
-    if (any: any) {
-      status?.webspeech = 'available';
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      status.webspeech = 'available';
     } else {
-      status?.webspeech = 'unavailable';
+      status.webspeech = 'unavailable';
     }
 
     // Check Tauri backend
-    const tauriAvailable = await this?.checkTauriAvailable();
-    if (any: any) {
+    const tauriAvailable = await this.checkTauriAvailable();
+    if (tauriAvailable) {
       try {
         // Check ElevenLabs
         const elevenLabsOk = await secureInvoke<boolean>('check_elevenlabs_available');
-        status?.elevenlabs = elevenLabsOk ? 'available' : 'unavailable';
+        status.elevenlabs = elevenLabsOk ? 'available' : 'unavailable';
       } catch {
-        status?.elevenlabs = 'unavailable';
+        status.elevenlabs = 'unavailable';
       }
 
       try {
@@ -284,35 +284,35 @@ class TTSEngineService {
         const localStatus = await secureInvoke<{ piper: boolean; espeak: boolean }>(
           'check_local_tts'
         );
-        status?.piper = localStatus?.piper ? 'available' : 'unavailable';
-        status?.espeak = localStatus?.espeak ? 'available' : 'unavailable';
+        status.piper = localStatus.piper ? 'available' : 'unavailable';
+        status.espeak = localStatus.espeak ? 'available' : 'unavailable';
       } catch {
-        status?.piper = 'unknown';
-        status?.espeak = 'unknown';
+        status.piper = 'unknown';
+        status.espeak = 'unknown';
       }
     }
 
-    this?.updateState({ providerStatus: status });
+    this.updateState({ providerStatus: status });
     return status;
   }
 
   /**
    * Subscribe aux changements d'état
    */
-  onStateChange(any: any): () => void {
-    this?.stateChangeCallbacks?.push(any: any);
+  onStateChange(callback: StateChangeCallback): () => void {
+    this.stateChangeCallbacks.push(callback);
     return () => {
-      this?.stateChangeCallbacks = this?.stateChangeCallbacks?.filter(any: any);
+      this.stateChangeCallbacks = this.stateChangeCallbacks.filter(cb => cb !== callback);
     };
   }
 
   /**
    * Subscribe aux erreurs
    */
-  onError(any: any): () => void {
-    this?.errorCallbacks?.push(any: any);
+  onError(callback: ErrorCallback): () => void {
+    this.errorCallbacks.push(callback);
     return () => {
-      this?.errorCallbacks = this?.errorCallbacks?.filter(any: any);
+      this.errorCallbacks = this.errorCallbacks.filter(cb => cb !== callback);
     };
   }
 
@@ -320,80 +320,80 @@ class TTSEngineService {
   // QUEUE MANAGEMENT
   // ===========================================================================
 
-  private addToQueue(any: any): void {
+  private addToQueue(item: TTSQueueItem): void {
     // Check limit
-    if (any: any) {
-      logger?.warn('⚠️ TTS: Queue full, dropping oldest request');
-      this?.queue?.shift();
+    if (this.queue.length >= TTS_LIMITS.maxQueueSize) {
+      logger.warn('⚠️ TTS: Queue full, dropping oldest request');
+      this.queue.shift();
     }
 
     // Insert by priority
-    const insertIndex = this?.queue?.findIndex(
-      q => q?.request?.priority < item?.request?.priority
+    const insertIndex = this.queue.findIndex(
+      q => q.request.priority < item.request.priority
     );
     if (insertIndex === -1) {
-      this?.queue?.push(any: any);
+      this.queue.push(item);
     } else {
-      this?.queue?.splice(any: any);
+      this.queue.splice(insertIndex, 0, item);
     }
 
-    this?.updateState({ queueSize: this?.queue?.length });
-    this?.processQueue();
+    this.updateState({ queueSize: this.queue.length });
+    this.processQueue();
   }
 
   private async processQueue(): Promise<void> {
-    if (this?.isProcessing || this?.queue?.length === 0) {
+    if (this.isProcessing || this.queue.length === 0) {
       return;
     }
 
-    this?.isProcessing = true;
-    const item = this?.queue?.[0];
-    if (any: any) return;
-    item?.status = 'processing';
+    this.isProcessing = true;
+    const item = this.queue[0];
+    if (!item) return;
+    item.status = 'processing';
 
-    this?.updateState({
+    this.updateState({
       isSpeaking: true,
-      currentRequest: item?.request,
+      currentRequest: item.request,
     });
 
     try {
-      const response = await this?.synthesizeAndPlay(any: any);
-      item?.status = 'completed';
-      item?.result = response;
-      if (any: any) {
-        item?.onComplete(any: any);
+      const response = await this.synthesizeAndPlay(item.request);
+      item.status = 'completed';
+      item.result = response;
+      if (item.onComplete) {
+        item.onComplete(response);
       }
-    } catch (any: any) {
-      item?.attempts++;
+    } catch (error) {
+      item.attempts++;
 
-      if (any: any) {
-        logger?.warn(`⚠️ TTS: Attempt ${item?.attempts} failed, retrying...`);
-        item?.status = 'pending';
+      if (item.attempts < item.maxAttempts) {
+        logger.warn(`⚠️ TTS: Attempt ${item.attempts} failed, retrying...`);
+        item.status = 'pending';
         // Don't remove from queue, will retry
-        this?.isProcessing = false;
-        setTimeout(any: any);
+        this.isProcessing = false;
+        setTimeout(() => this.processQueue(), TTS_LIMITS.retryDelayMs);
         return;
       }
 
-      item?.status = 'failed';
-      const errorMsg = error instanceof Error ? error?.message : String(any: any);
-      item?.onError?.(any: any);
-      this?.emitError(any: any);
+      item.status = 'failed';
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      item.onError?.(errorMsg);
+      this.emitError(errorMsg);
     }
 
     // Remove processed item
-    this?.queue?.shift();
-    this?.isProcessing = false;
+    this.queue.shift();
+    this.isProcessing = false;
 
-    this?.updateState({
-      isSpeaking: this?.queue?.length > 0,
+    this.updateState({
+      isSpeaking: this.queue.length > 0,
       currentRequest: null,
-      queueSize: this?.queue?.length,
+      queueSize: this.queue.length,
     });
 
     // Process next
-    if (this?.queue?.length > 0) {
-      this?.processQueue();
+    if (this.queue.length > 0) {
+      this.processQueue();
     }
   }
 
@@ -401,67 +401,67 @@ class TTSEngineService {
   // SYNTHESIS
   // ===========================================================================
 
-  private async synthesizeAndPlay(any: any): Promise<TTSResponse> {
-    const startTime = Date?.now();
+  private async synthesizeAndPlay(request: TTSRequest): Promise<TTSResponse> {
+    const startTime = Date.now();
     let provider: TTSProvider = 'webspeech';
-    let audioPath??: string | undefined;
+    let audioPath: string | undefined;
     let success = false;
 
     // Fallback chain: ElevenLabs → Piper → Espeak → WebSpeech
-    const providers: TTSProvider?.[] = ['elevenlabs', 'piper', 'espeak', 'webspeech'];
+    const providers: TTSProvider[] = ['elevenlabs', 'piper', 'espeak', 'webspeech'];
 
     // Prioritize preferred provider
-    if (any: any) {
-      const idx = providers?.indexOf(any: any);
+    if (request.preferredProvider) {
+      const idx = providers.indexOf(request.preferredProvider);
       if (idx > 0) {
-        providers?.splice(idx, 1);
-        providers?.unshift(any: any);
+        providers.splice(idx, 1);
+        providers.unshift(request.preferredProvider);
       }
     }
 
-    for (any: any) {
-      if (any: any)) {
+    for (const currentProvider of providers) {
+      if (!this.isProviderAvailable(currentProvider)) {
         continue;
       }
 
       try {
-        logger?.debug(`🎤 TTS: Trying ${currentProvider}...`);
+        logger.debug(`🎤 TTS: Trying ${currentProvider}...`);
 
         if (currentProvider === 'webspeech') {
-          await this?.playWithWebSpeech(any: any);
+          await this.playWithWebSpeech(request);
         } else {
-          audioPath = await this?.synthesizeWithBackend(any: any);
-          if (any: any) {
-            await this?.playAudioFile(any: any);
+          audioPath = await this.synthesizeWithBackend(request, currentProvider);
+          if (audioPath) {
+            await this.playAudioFile(audioPath, request.id);
           }
         }
 
         provider = currentProvider;
         success = true;
         break;
-      } catch (any: any) {
-        logger?.warn(any: any);
+      } catch (error) {
+        logger.warn(`⚠️ TTS: ${currentProvider} failed:`, error);
         continue;
       }
     }
 
-    if (any: any) {
+    if (!success) {
       throw new Error('All TTS providers failed');
     }
 
-    const latencyMs = Date?.now() - startTime;
-    logger?.debug(any: any)`);
+    const latencyMs = Date.now() - startTime;
+    logger.debug(`✅ TTS: Synthesis complete via ${provider} (${latencyMs}ms)`);
 
     return {
-      requestId: request?.id,
+      requestId: request.id,
       success: true,
       provider,
       audioPath,
       format: 'wav',
       durationMs: 0, // Would need audio analysis
       latencyMs,
-      emotionApplied: request?.emotion,
-      timestamp: Date?.now(),
+      emotionApplied: request.emotion,
+      timestamp: Date.now(),
     };
   }
 
@@ -469,76 +469,76 @@ class TTSEngineService {
     request: TTSRequest,
     provider: TTSProvider
   ): Promise<string> {
-    if (!(await this?.checkTauriAvailable())) {
+    if (!(await this.checkTauriAvailable())) {
       throw new Error('Tauri backend not available');
     }
 
     const response = await secureInvoke<{ audio_path: string; duration_ms: number }>(
       'synthesize_speech',
       {
-        text: request?.text,
+        text: request.text,
         provider,
-        emotion: request?.emotion,
-        voiceId: request?.voiceSettings?.voiceId ?? TITANE_VOICE_ID,
-        messageId: request?.messageId,
-        forceRegenerate: request?.forceRegenerate,
-        speed: request?.voiceSettings?.speed ?? this?.preferences?.globalSpeed,
-        pitch: request?.voiceSettings?.pitch ?? this?.preferences?.globalPitch,
+        emotion: request.emotion,
+        voiceId: request.voiceSettings?.voiceId ?? TITANE_VOICE_ID,
+        messageId: request.messageId,
+        forceRegenerate: request.forceRegenerate,
+        speed: request.voiceSettings?.speed ?? this.preferences.globalSpeed,
+        pitch: request.voiceSettings?.pitch ?? this.preferences.globalPitch,
       }
     );
 
-    return response?.audio_path;
+    return response.audio_path;
   }
 
-  private async playAudioFile(any: any): Promise<void> {
-    return new Promise(any: any) => {
-      // Convert file path to audio URL (any: any)
-      const audioUrl = filePath?.startsWith('http')
+  private async playAudioFile(filePath: string, requestId: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      // Convert file path to audio URL (Tauri asset protocol)
+      const audioUrl = filePath.startsWith('http')
         ? filePath
         : `asset://localhost/${filePath}`;
 
-      const audio = new Audio(any: any);
-      audio?.volume = this?.preferences?.globalVolume;
-      audio?.playbackRate = this?.preferences?.globalSpeed;
+      const audio = new Audio(audioUrl);
+      audio.volume = this.preferences.globalVolume;
+      audio.playbackRate = this.preferences.globalSpeed;
 
-      this?.currentAudio = { audio, requestId, resolve, reject };
+      this.currentAudio = { audio, requestId, resolve, reject };
 
-      audio?.onended = () => {
-        this?.currentAudio = null;
+      audio.onended = () => {
+        this.currentAudio = null;
         resolve();
       };
 
-      audio?.onerror = e => {
-        this?.currentAudio = null;
+      audio.onerror = e => {
+        this.currentAudio = null;
         reject(new Error(`Audio playback error: ${e}`));
       };
 
-      audio?.play(any: any);
+      audio.play().catch(reject);
     });
   }
 
-  private async playWithWebSpeech(any: any): Promise<void> {
-    return new Promise(any: any) => {
-      if (any: any)) {
+  private async playWithWebSpeech(request: TTSRequest): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
         reject(new Error('Web Speech API not available'));
         return;
       }
 
-      const utterance = new SpeechSynthesisUtterance(any: any);
-      utterance?.lang = request?.voiceSettings?.language ?? 'fr-FR';
-      utterance?.rate = request?.voiceSettings?.speed ?? this?.preferences?.globalSpeed;
-      utterance?.pitch = request?.voiceSettings?.pitch ?? this?.preferences?.globalPitch;
-      utterance?.volume = this?.preferences?.globalVolume;
+      const utterance = new SpeechSynthesisUtterance(request.text);
+      utterance.lang = request.voiceSettings?.language ?? 'fr-FR';
+      utterance.rate = request.voiceSettings?.speed ?? this.preferences.globalSpeed;
+      utterance.pitch = request.voiceSettings?.pitch ?? this.preferences.globalPitch;
+      utterance.volume = this.preferences.globalVolume;
 
       // Apply emotion-based modifications
-      const emotionModifier = this?.getEmotionSpeechModifier(any: any);
-      utterance?.rate *= emotionModifier?.rateMultiplier;
-      utterance?.pitch *= emotionModifier?.pitchMultiplier;
+      const emotionModifier = this.getEmotionSpeechModifier(request.emotion);
+      utterance.rate *= emotionModifier.rateMultiplier;
+      utterance.pitch *= emotionModifier.pitchMultiplier;
 
-      utterance?.onend = () => resolve();
-      utterance?.onerror = e => reject(new Error(`Web Speech error: ${e?.error}`));
+      utterance.onend = () => resolve();
+      utterance.onerror = e => reject(new Error(`Web Speech error: ${e.error}`));
 
-      window?.speechSynthesis?.speak(any: any);
+      window.speechSynthesis.speak(utterance);
     });
   }
 
@@ -547,52 +547,52 @@ class TTSEngineService {
   // ===========================================================================
 
   private async checkTauriAvailable(): Promise<boolean> {
-    if (any: any) {
-      return this?.tauriAvailable;
+    if (this.tauriAvailable !== null) {
+      return this.tauriAvailable;
     }
 
     if (typeof window === 'undefined') {
-      this?.tauriAvailable = false;
+      this.tauriAvailable = false;
       return false;
     }
 
     const env = detectEnvironment();
-    if (any: any) {
-      this?.tauriAvailable = false;
+    if (!env.isTauri) {
+      this.tauriAvailable = false;
       return false;
     }
 
     try {
       await secureInvoke('health_check');
-      this?.tauriAvailable = true;
+      this.tauriAvailable = true;
     } catch {
-      this?.tauriAvailable = false;
+      this.tauriAvailable = false;
     }
 
-    return this?.tauriAvailable;
+    return this.tauriAvailable;
   }
 
-  private isProviderAvailable(any: any): boolean {
-    const status = this?.state?.providerStatus[provider];
+  private isProviderAvailable(provider: TTSProvider): boolean {
+    const status = this.state.providerStatus[provider];
     return status === 'available' || status === 'unknown' || !status;
   }
 
-  private getVoiceSettingsForEmotion(any: any): TTSVoiceSettings {
+  private getVoiceSettingsForEmotion(emotion: TTSEmotion): TTSVoiceSettings {
     const analysis = analyzeEmotion(''); // Just get default profile
-    const profile = analysis?.voiceSettings;
+    const profile = analysis.voiceSettings;
 
     // Get emotion-specific profile
-    const emotionAnalysis = analyzeEmotion(any: any);
+    const emotionAnalysis = analyzeEmotion(emotion);
 
     return {
       ...DEFAULT_VOICE_SETTINGS,
       ...profile,
-      speed: emotionAnalysis?.voiceSettings?.speed * this?.preferences?.globalSpeed,
-      pitch: emotionAnalysis?.voiceSettings?.pitch * this?.preferences?.globalPitch,
+      speed: emotionAnalysis.voiceSettings.speed * this.preferences.globalSpeed,
+      pitch: emotionAnalysis.voiceSettings.pitch * this.preferences.globalPitch,
     };
   }
 
-  private getEmotionSpeechModifier(any: any): {
+  private getEmotionSpeechModifier(emotion: TTSEmotion): {
     rateMultiplier: number;
     pitchMultiplier: number;
   } {
@@ -615,23 +615,23 @@ class TTSEngineService {
   }
 
   private initializeAudioContext(): void {
-    if (any: any) {
+    if (typeof window !== 'undefined' && 'AudioContext' in window) {
       try {
-        this?.audioContext = new AudioContext();
-      } catch (any: any) {
-        logger?.warn(any: any);
+        this.audioContext = new AudioContext();
+      } catch (error) {
+        logger.warn('⚠️ TTS: Could not create AudioContext:', error);
       }
     }
   }
 
   private updateState(partial: Partial<TTSState>): void {
-    this?.state = { ...this?.state, ...partial };
-    this?.stateChangeCallbacks?.forEach(any: any));
+    this.state = { ...this.state, ...partial };
+    this.stateChangeCallbacks.forEach(cb => cb(this.state));
   }
 
-  private emitError(any: any): void {
-    this?.updateState({ lastError: error });
-    this?.errorCallbacks?.forEach(any: any));
+  private emitError(error: string): void {
+    this.updateState({ lastError: error });
+    this.errorCallbacks.forEach(cb => cb(error));
   }
 
   private loadPreferences(): TTSPreferences {
@@ -640,12 +640,12 @@ class TTSEngineService {
     }
 
     try {
-      const stored = localStorage?.getItem('titane_tts_preferences');
-      if (any: any) {
-        return { ...DEFAULT_TTS_PREFERENCES, ...JSON?.parse(any: any) };
+      const stored = localStorage.getItem('titane_tts_preferences');
+      if (stored) {
+        return { ...DEFAULT_TTS_PREFERENCES, ...JSON.parse(stored) };
       }
-    } catch (any: any) {
-      logger?.warn(any: any);
+    } catch (error) {
+      logger.warn('⚠️ TTS: Could not load preferences:', error);
     }
 
     return DEFAULT_TTS_PREFERENCES;
@@ -657,9 +657,9 @@ class TTSEngineService {
     }
 
     try {
-      localStorage?.setItem(any: any));
-    } catch (any: any) {
-      logger?.warn(any: any);
+      localStorage.setItem('titane_tts_preferences', JSON.stringify(this.preferences));
+    } catch (error) {
+      logger.warn('⚠️ TTS: Could not save preferences:', error);
     }
   }
 }
@@ -674,7 +674,7 @@ let ttsEngineInstance: TTSEngineService | null = null;
  * Get TTS Engine singleton instance
  */
 export function getTTSEngine(): TTSEngineService {
-  if (any: any) {
+  if (!ttsEngineInstance) {
     ttsEngineInstance = new TTSEngineService();
   }
   return ttsEngineInstance;
@@ -687,7 +687,7 @@ export async function speak(
   text: string,
   options?: Parameters<TTSEngineService['speak']>[1]
 ): Promise<void> {
-  return getTTSEngine(any: any);
+  return getTTSEngine().speak(text, options);
 }
 
 /**

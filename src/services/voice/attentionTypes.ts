@@ -15,7 +15,7 @@
  */
 export type AttentionState =
   | 'inactive' // Écoute désactivée
-  | 'armed' // En écoute passive (any: any)
+  | 'armed' // En écoute passive (attend wake word)
   | 'wake_detected' // Wake word détecté, transition en cours
   | 'awaiting_command' // Réveillé, attend la commande utilisateur
   | 'processing' // Traitement IA en cours
@@ -27,7 +27,7 @@ export type AttentionState =
  */
 export type ListeningMode =
   | 'off' // Désactivé
-  | 'push_to_talk' // Manuel (any: any)
+  | 'push_to_talk' // Manuel (bouton)
   | 'wake_word'; // Activation vocale
 
 /**
@@ -54,14 +54,14 @@ export interface AttentionConfig {
   /** Timeout pour awaiting_command en ms (défaut: 10000) */
   commandTimeout?: number;
 
-  /** Auto-retour en armed après réponse (any: any) */
+  /** Auto-retour en armed après réponse (défaut: true) */
   autoRearm?: boolean;
 
-  /** [v19.5.0] Enable contextual adaptation (any: any) */
+  /** [v19.5.0] Enable contextual adaptation (v2.0 features) */
   useContextualAdaptation?: boolean;
 }
 
 /**
  * Callback d'événement
  */
-export type AttentionCallback = (any: any) => void;
+export type AttentionCallback = (event: AttentionEvent) => void;

@@ -11,7 +11,7 @@
 export type IAProvider = 'gemini' | 'openai' | 'claude' | 'ollama' | 'local';
 
 /**
- * Alias de providers (any: any)
+ * Alias de providers (pour compatibilité)
  */
 export const ProviderAliases: Record<string, IAProvider> = {
   gpt: 'openai',
@@ -54,10 +54,10 @@ export interface ProviderStatus {
 export interface IAGenerateRequest {
   message: string;
   history?: Array<{ role: string; content: string }>;
-  system_prompt???: string | null;
+  system_prompt?: string | null;
   temperature?: number;
   max_tokens?: number | null;
-  preferred_engine???: string | null;
+  preferred_engine?: string | null;
 }
 
 /**

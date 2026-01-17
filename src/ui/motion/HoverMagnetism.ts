@@ -7,9 +7,9 @@
  */
 
 export interface MagnetismConfig {
-  strength: number; // 0-1 (any: any)
-  radius: number; // px (any: any)
-  ease: number; // 0-1 (any: any)
+  strength: number; // 0-1 (force d'attraction)
+  radius: number; // px (rayon d'influence)
+  ease: number; // 0-1 (lissage du mouvement)
   enabled: boolean;
 }
 
@@ -41,31 +41,31 @@ export function attachMagnetism(
   let currentY = 0;
   let rafId: number | null = null;
 
-  const handleMouseMove = (any: any) => {
-    if (any: any) return;
+  const handleMouseMove = (event: MouseEvent) => {
+    if (!fullConfig.enabled) return;
 
-    const rect = element?.getBoundingClientRect();
-    const centerX = rect?.left + rect?.width / 2;
-    const centerY = rect?.top + rect?.height / 2;
+    const rect = element.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
 
-    const mouseX = event?.clientX;
-    const mouseY = event?.clientY;
+    const mouseX = event.clientX;
+    const mouseY = event.clientY;
 
     const dx = mouseX - centerX;
     const dy = mouseY - centerY;
-    const distance = Math?.sqrt(any: any);
+    const distance = Math.sqrt(dx * dx + dy * dy);
 
-    if (any: any) {
+    if (distance < fullConfig.radius) {
       // Calculate attraction
-      const influence = 1 - distance / fullConfig?.radius;
-      const pullX = dx * influence * fullConfig?.strength;
-      const pullY = dy * influence * fullConfig?.strength;
+      const influence = 1 - distance / fullConfig.radius;
+      const pullX = dx * influence * fullConfig.strength;
+      const pullY = dy * influence * fullConfig.strength;
 
       targetX = pullX;
       targetY = pullY;
 
       // Start animation loop if not already running
-      if (any: any) {
+      if (!rafId) {
         animate();
       }
     } else {
@@ -82,45 +82,45 @@ export function attachMagnetism(
 
   const animate = () => {
     // Smooth interpolation
-    currentX += (any: any) * fullConfig?.ease;
-    currentY += (any: any) * fullConfig?.ease;
+    currentX += (targetX - currentX) * fullConfig.ease;
+    currentY += (targetY - currentY) * fullConfig.ease;
 
     // Apply transform
-    element?.style?.transform = `translate(any: any)`;
+    element.style.transform = `translate(${currentX}px, ${currentY}px)`;
 
     // Check if animation should continue
     const threshold = 0.01;
     if (
-      Math?.abs(any: any) > threshold ||
-      Math?.abs(any: any) > threshold
+      Math.abs(targetX - currentX) > threshold ||
+      Math.abs(targetY - currentY) > threshold
     ) {
-      rafId = requestAnimationFrame(any: any);
+      rafId = requestAnimationFrame(animate);
     } else {
       // Close enough, stop
-      element?.style?.transform = `translate(any: any)`;
+      element.style.transform = `translate(${targetX}px, ${targetY}px)`;
       rafId = null;
     }
   };
 
   // Ensure element has transition
-  element?.style?.transition = 'transform 0.1s ease-out';
-  element?.style?.willChange = 'transform';
+  element.style.transition = 'transform 0.1s ease-out';
+  element.style.willChange = 'transform';
 
   // Attach listeners
-  document?.addEventListener(any: any);
-  element?.addEventListener(any: any);
+  document.addEventListener('mousemove', handleMouseMove);
+  element.addEventListener('mouseleave', handleMouseLeave);
 
   const cleanup = () => {
-    document?.removeEventListener(any: any);
-    element?.removeEventListener(any: any);
+    document.removeEventListener('mousemove', handleMouseMove);
+    element.removeEventListener('mouseleave', handleMouseLeave);
 
-    if (any: any) {
-      cancelAnimationFrame(any: any);
+    if (rafId) {
+      cancelAnimationFrame(rafId);
     }
 
-    element?.style?.transform = '';
-    element?.style?.transition = '';
-    element?.style?.willChange = '';
+    element.style.transform = '';
+    element.style.transition = '';
+    element.style.willChange = '';
   };
 
   return {
@@ -133,11 +133,11 @@ export function attachMagnetism(
 /**
  * Enable/disable magnetism
  */
-export function setMagnetismEnabled(any: any): void {
-  instance?.config?.enabled = enabled;
+export function setMagnetismEnabled(instance: MagnetismInstance, enabled: boolean): void {
+  instance.config.enabled = enabled;
 
-  if (any: any) {
-    instance?.element?.style?.transform = '';
+  if (!enabled) {
+    instance.element.style.transform = '';
   }
 }
 
@@ -148,24 +148,24 @@ export function updateMagnetismConfig(
   instance: MagnetismInstance,
   config: Partial<MagnetismConfig>
 ): void {
-  Object?.assign(any: any);
+  Object.assign(instance.config, config);
 }
 
 /**
  * Batch attach magnetism to multiple elements
  */
 export function attachMagnetismBatch(
-  elements: HTMLElement?.[],
+  elements: HTMLElement[],
   config?: Partial<MagnetismConfig>
-): MagnetismInstance?.[] {
-  return elements?.map(any: any));
+): MagnetismInstance[] {
+  return elements.map(el => attachMagnetism(el, config));
 }
 
 /**
  * Cleanup batch
  */
-export function cleanupMagnetismBatch(instances: MagnetismInstance?.[]): void {
-  instances?.forEach(instance => instance?.cleanup());
+export function cleanupMagnetismBatch(instances: MagnetismInstance[]): void {
+  instances.forEach(instance => instance.cleanup());
 }
 
 export default {

@@ -17,7 +17,7 @@ export type HealingSeverity = 'info' | 'low' | 'medium' | 'high' | 'critical';
 export type ModuleCategory =
   | 'react' // Composants UI
   | 'tauri' // Backend Rust
-  | 'ia' // Pipelines IA (any: any)
+  | 'ia' // Pipelines IA (Ollama, Gemini)
   | 'tts' // Synthèse vocale
   | 'memory' // Mémoire persistante
   | 'automation' // Playbooks automation
@@ -76,7 +76,7 @@ export interface ModuleState {
   category: ModuleCategory;
   status: ModuleStatus;
   lastCheck: number;
-  lastError??: string | null;
+  lastError: string | null;
   errorCount: number;
   healAttempts: number;
   lastHealTime: number | null;
@@ -108,9 +108,9 @@ export interface HealingDiagnosis {
   probableCause: string;
   severity: HealingSeverity;
   urgency: number; // 1-10
-  potentialImpact: string?.[];
-  suggestedActions: HealingActionType?.[];
-  historicalPatterns: string?.[];
+  potentialImpact: string[];
+  suggestedActions: HealingActionType[];
+  historicalPatterns: string[];
   escalationRequired: boolean;
   confidence: number; // 0-1
 }
@@ -120,16 +120,16 @@ export interface HealingPlaybook {
   id: string;
   name: string;
   description: string;
-  targetCategory: ModuleCategory?.[];
-  targetSeverity: HealingSeverity?.[];
-  conditions: PlaybookCondition?.[];
-  actions: HealingAction?.[];
+  targetCategory: ModuleCategory[];
+  targetSeverity: HealingSeverity[];
+  conditions: PlaybookCondition[];
+  actions: HealingAction[];
   maxRetries: number;
   cooldownMs: number;
   requiresConfirmation: boolean;
   safetyLevel: 'safe' | 'moderate' | 'risky';
   reversible: boolean;
-  rollbackActions?: HealingAction?.[];
+  rollbackActions?: HealingAction[];
   enabled: boolean;
 }
 
@@ -137,7 +137,7 @@ export interface HealingPlaybook {
 export interface PlaybookCondition {
   field: string;
   operator: 'eq' | 'ne' | 'gt' | 'lt' | 'contains' | 'matches';
-  value??: string | number | boolean;
+  value: string | number | boolean;
 }
 
 /** Action de réparation */
@@ -163,21 +163,21 @@ export interface HealingImpactReport {
   result: HealingResult;
   stateBeforeHealing: Record<string, unknown>;
   stateAfterHealing: Record<string, unknown>;
-  modulesAffected: string?.[];
-  sideEffects: string?.[];
-  recommendations: string?.[];
+  modulesAffected: string[];
+  sideEffects: string[];
+  recommendations: string[];
   xpAwarded: number;
 }
 
-/** Profil de self-healing (any: any) */
+/** Profil de self-healing (apprentissage) */
 export interface SelfHealingProfile {
   totalAnomaliesDetected: number;
   totalRepairsAttempted: number;
   totalRepairsSuccessful: number;
   successRate: number;
   averageRepairTime: number;
-  recurringPatterns: PatternRecord?.[];
-  adaptedPlaybooks: string?.[];
+  recurringPatterns: PatternRecord[];
+  adaptedPlaybooks: string[];
   healingXP: number;
   evolutionLevel: number;
   lastEvolutionTime: number;
@@ -189,7 +189,7 @@ export interface PatternRecord {
   description: string;
   occurrences: number;
   lastOccurrence: number;
-  associatedPlaybook??: string | null;
+  associatedPlaybook: string | null;
   autoResolved: boolean;
 }
 
@@ -349,14 +349,14 @@ export interface AnomalyDefinition {
   name: string;
   category: ModuleCategory;
   description: string;
-  detectionPattern??: string | RegExp;
+  detectionPattern: string | RegExp;
   defaultSeverity: HealingSeverity;
-  suggestedPlaybooks: string?.[];
+  suggestedPlaybooks: string[];
   autoHealable: boolean;
 }
 
 /** Catalogue des anomalies par catégorie */
-export const ANOMALY_CATALOG: AnomalyDefinition?.[] = [
+export const ANOMALY_CATALOG: AnomalyDefinition[] = [
   // ═══════════════════════════════════════════════════════════════════════════
   // REACT / UI
   // ═══════════════════════════════════════════════════════════════════════════
@@ -365,7 +365,7 @@ export const ANOMALY_CATALOG: AnomalyDefinition?.[] = [
     name: 'React Render Error',
     category: 'react',
     description: "Erreur lors du rendu d'un composant React",
-    detectionPattern: /Error: (any: any)/,
+    detectionPattern: /Error: (Minified React error|Cannot read|undefined is not)/,
     defaultSeverity: 'high',
     suggestedPlaybooks: ['restart-component', 'clear-react-cache'],
     autoHealable: true,
@@ -395,7 +395,7 @@ export const ANOMALY_CATALOG: AnomalyDefinition?.[] = [
     name: 'Hook Rules Violation',
     category: 'react',
     description: 'Violation des règles des hooks React',
-    detectionPattern: /Rendered (any: any) hooks than during the previous render/,
+    detectionPattern: /Rendered (more|fewer) hooks than during the previous render/,
     defaultSeverity: 'high',
     suggestedPlaybooks: ['restart-component'],
     autoHealable: false,
@@ -419,7 +419,7 @@ export const ANOMALY_CATALOG: AnomalyDefinition?.[] = [
     name: 'Tauri Command Error',
     category: 'tauri',
     description: "Erreur lors de l'exécution d'une commande Tauri",
-    detectionPattern: /Tauri (any: any)/i,
+    detectionPattern: /Tauri (command|invoke) (failed|error)/i,
     defaultSeverity: 'medium',
     suggestedPlaybooks: ['retry-command', 'fallback-frontend'],
     autoHealable: true,
@@ -443,7 +443,7 @@ export const ANOMALY_CATALOG: AnomalyDefinition?.[] = [
     name: 'Ollama Offline',
     category: 'ia',
     description: "Le serveur Ollama n'est pas accessible",
-    detectionPattern: /Ollama (any: any)/i,
+    detectionPattern: /Ollama (offline|unavailable|connection refused)/i,
     defaultSeverity: 'high',
     suggestedPlaybooks: ['restart-ollama', 'fallback-gemini'],
     autoHealable: true,
@@ -453,7 +453,7 @@ export const ANOMALY_CATALOG: AnomalyDefinition?.[] = [
     name: 'Gemini API Error',
     category: 'ia',
     description: "Erreur de l'API Gemini",
-    detectionPattern: /Gemini (any: any)/i,
+    detectionPattern: /Gemini (error|failed|rate limit|quota)/i,
     defaultSeverity: 'medium',
     suggestedPlaybooks: ['fallback-ollama', 'retry-with-backoff'],
     autoHealable: true,
@@ -473,7 +473,7 @@ export const ANOMALY_CATALOG: AnomalyDefinition?.[] = [
     name: 'IA Pipeline Timeout',
     category: 'ia',
     description: 'Le pipeline IA a expiré',
-    detectionPattern: /IA (any: any)|inference timeout/i,
+    detectionPattern: /IA (timeout|timed out)|inference timeout/i,
     defaultSeverity: 'high',
     suggestedPlaybooks: ['cancel-request', 'fallback-provider'],
     autoHealable: true,
@@ -487,7 +487,7 @@ export const ANOMALY_CATALOG: AnomalyDefinition?.[] = [
     name: 'TTS Synthesis Error',
     category: 'tts',
     description: 'Erreur lors de la synthèse vocale',
-    detectionPattern: /TTS (any: any)/i,
+    detectionPattern: /TTS (error|failed|synthesis)/i,
     defaultSeverity: 'medium',
     suggestedPlaybooks: ['restart-tts', 'fallback-webspeech'],
     autoHealable: true,
@@ -497,7 +497,7 @@ export const ANOMALY_CATALOG: AnomalyDefinition?.[] = [
     name: 'TTS Audio Missing',
     category: 'tts',
     description: 'Le fichier audio généré est manquant',
-    detectionPattern: /audio (any: any)/i,
+    detectionPattern: /audio (missing|not found|empty)/i,
     defaultSeverity: 'low',
     suggestedPlaybooks: ['regenerate-audio', 'clear-tts-cache'],
     autoHealable: true,
@@ -507,7 +507,7 @@ export const ANOMALY_CATALOG: AnomalyDefinition?.[] = [
     name: 'ElevenLabs Quota Exceeded',
     category: 'tts',
     description: 'Quota ElevenLabs dépassé',
-    detectionPattern: /elevenlabs.*(any: any)/i,
+    detectionPattern: /elevenlabs.*(quota|limit|exceeded)/i,
     defaultSeverity: 'medium',
     suggestedPlaybooks: ['fallback-piper', 'fallback-espeak'],
     autoHealable: true,
@@ -521,7 +521,7 @@ export const ANOMALY_CATALOG: AnomalyDefinition?.[] = [
     name: 'Memory JSON Corrupted',
     category: 'memory',
     description: 'Fichier JSON de mémoire corrompu',
-    detectionPattern: /JSON (any: any)/i,
+    detectionPattern: /JSON (parse error|corrupted|invalid)/i,
     defaultSeverity: 'high',
     suggestedPlaybooks: ['repair-json', 'rebuild-memory-index'],
     autoHealable: true,
@@ -531,7 +531,7 @@ export const ANOMALY_CATALOG: AnomalyDefinition?.[] = [
     name: 'Memory File Unreadable',
     category: 'memory',
     description: 'Fichier mémoire illisible',
-    detectionPattern: /memory file (any: any)/i,
+    detectionPattern: /memory file (unreadable|permission denied|not found)/i,
     defaultSeverity: 'high',
     suggestedPlaybooks: ['restore-backup', 'regenerate-memory'],
     autoHealable: true,
@@ -541,7 +541,7 @@ export const ANOMALY_CATALOG: AnomalyDefinition?.[] = [
     name: 'Memory Encryption Failure',
     category: 'memory',
     description: 'Échec du chiffrement/déchiffrement mémoire',
-    detectionPattern: /encryption (any: any)|decrypt/i,
+    detectionPattern: /encryption (failed|error)|decrypt/i,
     defaultSeverity: 'critical',
     suggestedPlaybooks: ['reset-encryption-keys'],
     autoHealable: false,
@@ -565,7 +565,7 @@ export const ANOMALY_CATALOG: AnomalyDefinition?.[] = [
     name: 'Memory Leak Detected',
     category: 'performance',
     description: 'Fuite mémoire détectée',
-    detectionPattern: /memory (any: any)/i,
+    detectionPattern: /memory (leak|growing|exceeded)/i,
     defaultSeverity: 'high',
     suggestedPlaybooks: ['gc-force', 'restart-module'],
     autoHealable: true,
@@ -575,7 +575,7 @@ export const ANOMALY_CATALOG: AnomalyDefinition?.[] = [
     name: 'Low FPS',
     category: 'performance',
     description: 'Framerate trop bas',
-    detectionPattern: /fps.*(any: any)/i,
+    detectionPattern: /fps.*(low|<30|dropped)/i,
     defaultSeverity: 'medium',
     suggestedPlaybooks: ['reduce-animations', 'clear-render-cache'],
     autoHealable: true,
@@ -585,7 +585,7 @@ export const ANOMALY_CATALOG: AnomalyDefinition?.[] = [
     name: 'WebView Stall',
     category: 'performance',
     description: 'WebView bloqué ou non responsive',
-    detectionPattern: /webview.*(any: any)/i,
+    detectionPattern: /webview.*(stall|frozen|unresponsive)/i,
     defaultSeverity: 'critical',
     suggestedPlaybooks: ['reload-webview'],
     autoHealable: true,
@@ -599,7 +599,7 @@ export const ANOMALY_CATALOG: AnomalyDefinition?.[] = [
     name: 'Disk Full',
     category: 'io',
     description: 'Espace disque insuffisant',
-    detectionPattern: /disk (any: any)/i,
+    detectionPattern: /disk (full|space|ENOSPC)/i,
     defaultSeverity: 'critical',
     suggestedPlaybooks: ['clear-temp-files', 'clear-cache'],
     autoHealable: true,
@@ -623,7 +623,7 @@ export const ANOMALY_CATALOG: AnomalyDefinition?.[] = [
     name: 'Automation Playbook Crash',
     category: 'automation',
     description: "Un playbook d'automatisation a crashé",
-    detectionPattern: /playbook (any: any)/i,
+    detectionPattern: /playbook (crash|failed|error)/i,
     defaultSeverity: 'medium',
     suggestedPlaybooks: ['abort-playbook', 'rollback-playbook'],
     autoHealable: true,
@@ -633,7 +633,7 @@ export const ANOMALY_CATALOG: AnomalyDefinition?.[] = [
     name: 'Automation Invalid Return',
     category: 'automation',
     description: "Retour invalide d'une automatisation",
-    detectionPattern: /automation.*(any: any) return/i,
+    detectionPattern: /automation.*(invalid|unexpected) return/i,
     defaultSeverity: 'low',
     suggestedPlaybooks: ['retry-automation'],
     autoHealable: true,
@@ -644,7 +644,7 @@ export const ANOMALY_CATALOG: AnomalyDefinition?.[] = [
 // CATALOGUE DES PLAYBOOKS STANDARDS
 // =============================================================================
 
-export const STANDARD_PLAYBOOKS: HealingPlaybook?.[] = [
+export const STANDARD_PLAYBOOKS: HealingPlaybook[] = [
   // ═══════════════════════════════════════════════════════════════════════════
   // PLAYBOOKS REACT
   // ═══════════════════════════════════════════════════════════════════════════
@@ -987,18 +987,18 @@ export const STANDARD_PLAYBOOKS: HealingPlaybook?.[] = [
 
 /** Génère un ID unique pour un événement */
 export function generateHealingEventId(): string {
-  return `heal-${Date?.now()}-${Math?.random().toString(36).substring(2, 9)}`;
+  return `heal-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 }
 
 /** Génère un ID unique pour une exécution */
 export function generateExecutionId(): string {
-  return `exec-${Date?.now()}-${Math?.random().toString(36).substring(2, 9)}`;
+  return `exec-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 }
 
 /** Crée un VitalsSnapshot initial */
 export function createInitialVitals(): VitalsSnapshot {
   return {
-    timestamp: Date?.now(),
+    timestamp: Date.now(),
     cpu_usage: 0,
     memory_usage: 0,
     fps: 60,
@@ -1025,30 +1025,30 @@ export function createInitialProfile(): SelfHealingProfile {
     adaptedPlaybooks: [],
     healingXP: 0,
     evolutionLevel: 1,
-    lastEvolutionTime: Date?.now(),
+    lastEvolutionTime: Date.now(),
   };
 }
 
 /** Trouve un playbook par ID */
-export function findPlaybookById(any: any): HealingPlaybook | undefined {
-  return STANDARD_PLAYBOOKS?.find(any: any);
+export function findPlaybookById(id: string): HealingPlaybook | undefined {
+  return STANDARD_PLAYBOOKS.find(p => p.id === id);
 }
 
 /** Trouve une anomalie par ID */
-export function findAnomalyById(any: any): AnomalyDefinition | undefined {
-  return ANOMALY_CATALOG?.find(any: any);
+export function findAnomalyById(id: string): AnomalyDefinition | undefined {
+  return ANOMALY_CATALOG.find(a => a.id === id);
 }
 
 /** Filtre les playbooks par catégorie et sévérité */
 export function filterPlaybooks(
   category: ModuleCategory,
   severity: HealingSeverity
-): HealingPlaybook?.[] {
-  return STANDARD_PLAYBOOKS?.filter(
+): HealingPlaybook[] {
+  return STANDARD_PLAYBOOKS.filter(
     p =>
-      p?.enabled &&
-      p?.targetCategory?.includes(any: any) &&
-      p?.targetSeverity?.includes(any: any)
+      p.enabled &&
+      p.targetCategory.includes(category) &&
+      p.targetSeverity.includes(severity)
   );
 }
 

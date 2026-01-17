@@ -14,10 +14,10 @@
  * const { engine, currentState, currentConfig, setCognitiveState } = useVisualStateStoreV21();
  *
  * // Change cognitive state
- * setCognitiveState(any: any);
+ * setCognitiveState(CognitiveState.THINKING);
  *
  * // Change emotional tone
- * setEmotionalTone(any: any);
+ * setEmotionalTone(EmotionalTone.EXCITED);
  *
  * // Set system load
  * setSystemLoad(75); // 75%
@@ -43,7 +43,7 @@ interface VisualStateStoreV21 {
   // Engine instance
   engine: TitaneVisualEngineV21 | null;
 
-  // State (any: any)
+  // State (multi-dimensional)
   currentState: TitaneState;
   currentConfig: VisualConfig | null;
   isTransitioning: boolean;
@@ -60,15 +60,15 @@ interface VisualStateStoreV21 {
   startEngine: () => void;
   stopEngine: () => void;
 
-  // Actions - State management (any: any)
-  setState: (any: any) => void;
-  setStateImmediate: (any: any) => void;
-  setCognitiveState: (any: any) => void;
-  setEmotionalTone: (any: any) => void;
-  setSystemLoad: (any: any) => void;
-  setConversationContext: (any: any) => void;
-  setCustomConfig: (any: any) => void;
-  clearCustomConfig: (any: any) => void;
+  // Actions - State management (multi-dimensional)
+  setState: (state: TitaneState, duration?: number) => void;
+  setStateImmediate: (state: TitaneState) => void;
+  setCognitiveState: (cognitive: CognitiveState, duration?: number) => void;
+  setEmotionalTone: (emotional: EmotionalTone, duration?: number) => void;
+  setSystemLoad: (load: number, duration?: number) => void;
+  setConversationContext: (context: ConversationContext, duration?: number) => void;
+  setCustomConfig: (override: Partial<VisualConfig>, duration?: number) => void;
+  clearCustomConfig: (duration?: number) => void;
 
   // Actions - Configuration
   updateEngineConfig: (config: Partial<VisualEngineV21Config>) => void;
@@ -76,16 +76,16 @@ interface VisualStateStoreV21 {
 }
 
 /**
- * Default initial state (any: any)
+ * Default initial state (IDLE + CALM)
  */
 const DEFAULT_INITIAL_STATE: TitaneState = {
-  cognitive: CognitiveState?.IDLE,
-  emotional: EmotionalTone?.CALM,
+  cognitive: CognitiveState.IDLE,
+  emotional: EmotionalTone.CALM,
   systemLoad: 0,
-  conversationContext: ConversationContext?.WAITING,
+  conversationContext: ConversationContext.WAITING,
 };
 
-export const useVisualStateStoreV21 = create<VisualStateStoreV21>(any: any) => ({
+export const useVisualStateStoreV21 = create<VisualStateStoreV21>((set, get) => ({
   // Initial state
   engine: null,
   currentState: DEFAULT_INITIAL_STATE,
@@ -111,50 +111,50 @@ export const useVisualStateStoreV21 = create<VisualStateStoreV21>(any: any) => (
     const { engine } = get();
 
     // Destroy existing engine if any
-    if (any: any) {
-      engine?.destroy();
+    if (engine) {
+      engine.destroy();
     }
 
     // Create new engine
-    const newEngine = new TitaneVisualEngineV21(any: any);
+    const newEngine = new TitaneVisualEngineV21(initialState, config);
 
     // Subscribe to engine events
-    newEngine?.on(any: any) => {
+    newEngine.on('stateChange', (state: TitaneState) => {
       set({ currentState: state });
     });
 
-    newEngine?.on(any: any) => {
+    newEngine.on('configChange', (config: VisualConfig) => {
       set({ currentConfig: config });
     });
 
-    newEngine?.on('transitionStart', () => {
+    newEngine.on('transitionStart', () => {
       set({ isTransitioning: true });
     });
 
-    newEngine?.on('transitionComplete', () => {
+    newEngine.on('transitionComplete', () => {
       set({ isTransitioning: false });
     });
 
-    newEngine?.on(any: any) => {
+    newEngine.on('performanceUpdate', (metrics: PerformanceMetrics) => {
       set({ performanceMetrics: metrics });
     });
 
-    // Register callbacks for real-time updates (any: any)
-    newEngine?.onStateChange(state => {
+    // Register callbacks for real-time updates (more efficient than events)
+    newEngine.onStateChange(state => {
       set({ currentState: state });
     });
 
-    newEngine?.onConfigChange(config => {
+    newEngine.onConfigChange(config => {
       set({ currentConfig: config });
     });
 
     set({
       engine: newEngine,
-      currentState: newEngine?.getCurrentState(),
-      currentConfig: newEngine?.getCurrentConfig(),
+      currentState: newEngine.getCurrentState(),
+      currentConfig: newEngine.getCurrentConfig(),
     });
 
-    console?.log('[VisualStateStoreV21] Engine initialized', {
+    console.log('[VisualStateStoreV21] Engine initialized', {
       state: initialState,
       config,
     });
@@ -165,8 +165,8 @@ export const useVisualStateStoreV21 = create<VisualStateStoreV21>(any: any) => (
    */
   destroyEngine: () => {
     const { engine } = get();
-    if (any: any) {
-      engine?.destroy();
+    if (engine) {
+      engine.destroy();
       set({
         engine: null,
         currentState: DEFAULT_INITIAL_STATE,
@@ -181,10 +181,10 @@ export const useVisualStateStoreV21 = create<VisualStateStoreV21>(any: any) => (
    */
   startEngine: () => {
     const { engine } = get();
-    if (any: any) {
-      engine?.start();
+    if (engine) {
+      engine.start();
     } else {
-      console?.warn(
+      console.warn(
         '[VisualStateStoreV21] Engine not initialized. Call initEngine() first.'
       );
     }
@@ -195,24 +195,24 @@ export const useVisualStateStoreV21 = create<VisualStateStoreV21>(any: any) => (
    */
   stopEngine: () => {
     const { engine } = get();
-    if (any: any) {
-      engine?.stop();
+    if (engine) {
+      engine.stop();
     }
   },
 
   // ═════════════════════════════════════════════════════════════════
-  // STATE MANAGEMENT (any: any)
+  // STATE MANAGEMENT (MULTI-DIMENSIONAL)
   // ═════════════════════════════════════════════════════════════════
 
   /**
    * Set complete TitaneState with transition
    */
-  setState: (any: any) => {
+  setState: (state, duration) => {
     const { engine } = get();
-    if (any: any) {
-      engine?.setState(any: any);
+    if (engine) {
+      engine.setState(state, duration);
     } else {
-      console?.warn('[VisualStateStoreV21] Engine not initialized');
+      console.warn('[VisualStateStoreV21] Engine not initialized');
     }
   },
 
@@ -221,70 +221,70 @@ export const useVisualStateStoreV21 = create<VisualStateStoreV21>(any: any) => (
    */
   setStateImmediate: state => {
     const { engine } = get();
-    if (any: any) {
-      engine?.setStateImmediate(any: any);
+    if (engine) {
+      engine.setStateImmediate(state);
     } else {
-      console?.warn('[VisualStateStoreV21] Engine not initialized');
+      console.warn('[VisualStateStoreV21] Engine not initialized');
     }
   },
 
   /**
-   * Set cognitive state only (any: any)
+   * Set cognitive state only (keep other dimensions)
    */
-  setCognitiveState: (any: any) => {
+  setCognitiveState: (cognitive, duration) => {
     const { engine } = get();
-    if (any: any) {
-      engine?.setCognitiveState(any: any);
+    if (engine) {
+      engine.setCognitiveState(cognitive, duration);
     } else {
-      console?.warn('[VisualStateStoreV21] Engine not initialized');
+      console.warn('[VisualStateStoreV21] Engine not initialized');
     }
   },
 
   /**
-   * Set emotional tone only (any: any)
+   * Set emotional tone only (keep other dimensions)
    */
-  setEmotionalTone: (any: any) => {
+  setEmotionalTone: (emotional, duration) => {
     const { engine } = get();
-    if (any: any) {
-      engine?.setEmotionalTone(any: any);
+    if (engine) {
+      engine.setEmotionalTone(emotional, duration);
     } else {
-      console?.warn('[VisualStateStoreV21] Engine not initialized');
+      console.warn('[VisualStateStoreV21] Engine not initialized');
     }
   },
 
   /**
    * Set system load percentage (0-100)
    */
-  setSystemLoad: (any: any) => {
+  setSystemLoad: (load, duration) => {
     const { engine } = get();
-    if (any: any) {
-      engine?.setSystemLoad(any: any);
+    if (engine) {
+      engine.setSystemLoad(load, duration);
     } else {
-      console?.warn('[VisualStateStoreV21] Engine not initialized');
+      console.warn('[VisualStateStoreV21] Engine not initialized');
     }
   },
 
   /**
-   * Set conversation context only (any: any)
+   * Set conversation context only (keep other dimensions)
    */
-  setConversationContext: (any: any) => {
+  setConversationContext: (context, duration) => {
     const { engine } = get();
-    if (any: any) {
-      engine?.setConversationContext(any: any);
+    if (engine) {
+      engine.setConversationContext(context, duration);
     } else {
-      console?.warn('[VisualStateStoreV21] Engine not initialized');
+      console.warn('[VisualStateStoreV21] Engine not initialized');
     }
   },
 
   /**
    * Set custom visual config override
    */
-  setCustomConfig: (any: any) => {
+  setCustomConfig: (override, duration) => {
     const { engine } = get();
-    if (any: any) {
-      engine?.setCustomConfig(any: any);
+    if (engine) {
+      engine.setCustomConfig(override, duration);
     } else {
-      console?.warn('[VisualStateStoreV21] Engine not initialized');
+      console.warn('[VisualStateStoreV21] Engine not initialized');
     }
   },
 
@@ -293,10 +293,10 @@ export const useVisualStateStoreV21 = create<VisualStateStoreV21>(any: any) => (
    */
   clearCustomConfig: duration => {
     const { engine } = get();
-    if (any: any) {
-      engine?.clearCustomConfig(any: any);
+    if (engine) {
+      engine.clearCustomConfig(duration);
     } else {
-      console?.warn('[VisualStateStoreV21] Engine not initialized');
+      console.warn('[VisualStateStoreV21] Engine not initialized');
     }
   },
 
@@ -309,22 +309,22 @@ export const useVisualStateStoreV21 = create<VisualStateStoreV21>(any: any) => (
    */
   updateEngineConfig: config => {
     const { engine } = get();
-    if (any: any) {
-      engine?.updateConfig(any: any);
+    if (engine) {
+      engine.updateConfig(config);
     } else {
-      console?.warn('[VisualStateStoreV21] Engine not initialized');
+      console.warn('[VisualStateStoreV21] Engine not initialized');
     }
   },
 
   /**
-   * Set performance mode (any: any)
+   * Set performance mode (adjusts visual quality)
    */
   setPerformanceMode: mode => {
     const { engine } = get();
-    if (any: any) {
-      engine?.setPerformanceMode(any: any);
+    if (engine) {
+      engine.setPerformanceMode(mode);
     } else {
-      console?.warn('[VisualStateStoreV21] Engine not initialized');
+      console.warn('[VisualStateStoreV21] Engine not initialized');
     }
   },
 }));
@@ -333,35 +333,35 @@ export const useVisualStateStoreV21 = create<VisualStateStoreV21>(any: any) => (
  * Hook for easy access to engine instance
  */
 export function useVisualEngine(): TitaneVisualEngineV21 | null {
-  return useVisualStateStoreV21(any: any);
+  return useVisualStateStoreV21(state => state.engine);
 }
 
 /**
  * Hook for current TitaneState
  */
 export function useCurrentState(): TitaneState {
-  return useVisualStateStoreV21(any: any);
+  return useVisualStateStoreV21(state => state.currentState);
 }
 
 /**
  * Hook for current VisualConfig
  */
 export function useCurrentConfig(): VisualConfig | null {
-  return useVisualStateStoreV21(any: any);
+  return useVisualStateStoreV21(state => state.currentConfig);
 }
 
 /**
  * Hook for transition status
  */
 export function useIsTransitioning(): boolean {
-  return useVisualStateStoreV21(any: any);
+  return useVisualStateStoreV21(state => state.isTransitioning);
 }
 
 /**
  * Hook for performance metrics
  */
 export function usePerformanceMetrics(): PerformanceMetrics {
-  return useVisualStateStoreV21(any: any);
+  return useVisualStateStoreV21(state => state.performanceMetrics);
 }
 
 export default useVisualStateStoreV21;

@@ -21,7 +21,7 @@ export interface PatchAction {
   patch_type: PatchType;
   file_path: string;
   description: string;
-  changes: PatchChange?.[];
+  changes: PatchChange[];
   severity: ChangeSeverity;
   requires_review: boolean;
 }
@@ -44,12 +44,12 @@ export interface PatchResult {
   success: boolean;
   patch_id: string;
   applied_at: string;
-  affected_files: string?.[];
+  affected_files: string[];
   backup_id: string;
   validation_passed: boolean;
   tests_passed: boolean;
-  errors: string?.[];
-  warnings: string?.[];
+  errors: string[];
+  warnings: string[];
 }
 
 export interface TestRunResult {
@@ -71,7 +71,7 @@ export interface PatchHistoryEntry {
   applied_at: string;
   status: 'Applied' | 'Rolled Back' | 'Failed';
   severity: ChangeSeverity;
-  affected_files: string?.[];
+  affected_files: string[];
   author: string;
 }
 
@@ -80,18 +80,18 @@ export interface PatchHistory {
   successful: number;
   failed: number;
   rolled_back: number;
-  patches: PatchHistoryEntry?.[];
+  patches: PatchHistoryEntry[];
 }
 
 export interface DeveloperModeState {
   enabled: boolean;
-  authorized_user??: string | null;
-  session_start??: string | null;
+  authorized_user: string | null;
+  session_start: string | null;
   patches_this_session: number;
   pending_patches: number;
-  last_activity??: string | null;
+  last_activity: string | null;
   security_level: 'Standard' | 'Elevated' | 'Admin';
-  features_enabled: string?.[];
+  features_enabled: string[];
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -104,12 +104,12 @@ export interface SecurityValidation {
   permissions_ok: boolean;
   no_dangerous_patterns: boolean;
   audit_logged: boolean;
-  violations: string?.[];
+  violations: string[];
 }
 
 export interface DiffPreview {
   file_path: string;
-  changes: DiffChange?.[];
+  changes: DiffChange[];
   total_additions: number;
   total_deletions: number;
   risk_score: number;
@@ -119,8 +119,8 @@ export interface DiffChange {
   change_type: 'Addition' | 'Deletion' | 'Modification';
   line_number: number;
   content: string;
-  context_before: string?.[];
-  context_after: string?.[];
+  context_before: string[];
+  context_after: string[];
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -143,8 +143,8 @@ export interface FileAnalysis {
   language: string;
   lines_of_code: number;
   complexity_score: number;
-  suggestions: CodeSuggestion?.[];
-  potential_issues: string?.[];
+  suggestions: CodeSuggestion[];
+  potential_issues: string[];
   last_modified: string;
 }
 
@@ -158,19 +158,19 @@ export interface BuildStatus {
   progress: number;
   message: string;
   started_at: string;
-  completed_at??: string | null;
+  completed_at: string | null;
 }
 
 export interface BuildResult {
   success: boolean;
   build_id: string;
   version: string;
-  artifacts: string?.[];
+  artifacts: string[];
   duration_ms: number;
   size_bytes: number;
-  optimizations: string?.[];
-  warnings: string?.[];
-  errors: string?.[];
+  optimizations: string[];
+  warnings: string[];
+  errors: string[];
 }
 
 export interface BuildConfig {
@@ -179,7 +179,7 @@ export interface BuildConfig {
   optimize: boolean;
   strip_symbols: boolean;
   include_debug_info: boolean;
-  custom_flags: string?.[];
+  custom_flags: string[];
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -188,9 +188,9 @@ export interface BuildConfig {
 
 export interface DevModeDashboard {
   state: DeveloperModeState;
-  recent_patches: PatchHistoryEntry?.[];
-  pending_suggestions: CodeSuggestion?.[];
-  active_builds: BuildStatus?.[];
+  recent_patches: PatchHistoryEntry[];
+  pending_suggestions: CodeSuggestion[];
+  active_builds: BuildStatus[];
   system_health: 'healthy' | 'degraded' | 'critical';
   last_updated: string;
 }
@@ -198,7 +198,7 @@ export interface DevModeDashboard {
 export interface UnifiedEnginesDashboard {
   qa: {
     state: unknown;
-    last_run??: string | null;
+    last_run: string | null;
   };
   monitoring: {
     state: unknown;

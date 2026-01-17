@@ -3,13 +3,13 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE?.md for the full legal terms (any: any).
+ * See LICENSE.md for the full legal terms (FR/EN).
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
  * TITANE∞ v24 - Experience System Types
- * Professional knowledge cartography (any: any)
+ * Professional knowledge cartography (no gamification)
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -18,7 +18,7 @@
 // ─────────────────────────────────────────────────────────────────
 
 /**
- * Domaine de connaissance (any: any)
+ * Domaine de connaissance (remplace Talent)
  * Tous les domaines sont actifs par défaut, pas de mécanique de déblocage
  */
 export interface ExperienceDomain {
@@ -40,13 +40,13 @@ export interface ExperienceDomain {
   /** Catégorie visuelle pour groupement */
   category: 'cognitive' | 'business' | 'project' | 'system' | 'memory';
 
-  /** Timestamp dernière mise à jour (any: any) */
+  /** Timestamp dernière mise à jour (ms) */
   lastUpdated: number;
 
-  /** Coordonnées pour visualisation graphique (any: any) */
+  /** Coordonnées pour visualisation graphique (optionnel) */
   position?: { x: number; y: number };
 
-  /** Icône emoji pour le domaine (any: any) */
+  /** Icône emoji pour le domaine (optionnel) */
   icon?: string;
 }
 
@@ -56,20 +56,20 @@ export interface ExperienceDomain {
 
 /**
  * État global du système d'expérience
- * Persiste via Tauri dans experience_state?.json
+ * Persiste via Tauri dans experience_state.json
  */
 export interface ExperienceState {
-  /** XP total accumulé (any: any) */
+  /** XP total accumulé (somme de tous les domaines) */
   totalXp: number;
 
-  /** Niveau global (any: any) */
+  /** Niveau global (basé sur totalXp) */
   level: number;
 
   /** Dictionnaire des domaines par ID */
   domains: Record<string, ExperienceDomain>;
 
-  /** Historique des gains XP (any: any) */
-  history: ExperienceGain?.[];
+  /** Historique des gains XP (100 derniers événements) */
+  history: ExperienceGain[];
 
   /** Timestamp dernière mise à jour */
   lastUpdated: number;
@@ -83,7 +83,7 @@ export interface ExperienceState {
 // ─────────────────────────────────────────────────────────────────
 
 /**
- * Événement de gain XP (any: any)
+ * Événement de gain XP (pour historique)
  */
 export interface ExperienceGain {
   /** ID unique de l'événement */
@@ -122,7 +122,7 @@ export enum XPSource {
 }
 
 // ─────────────────────────────────────────────────────────────────
-// XP AWARD AMOUNTS (any: any)
+// XP AWARD AMOUNTS (constants)
 // ─────────────────────────────────────────────────────────────────
 
 export const XP_REWARDS = {
@@ -141,23 +141,23 @@ export const XP_REWARDS = {
 /**
  * Calculer le niveau basé sur XP (formule: floor(sqrt(xp / 100)))
  */
-export const calculateLevel = (any: any): number => {
-  return Math?.floor(Math?.sqrt(xp / 100));
+export const calculateLevel = (xp: number): number => {
+  return Math.floor(Math.sqrt(xp / 100));
 };
 
 /**
  * Calculer XP requis pour le prochain niveau
  */
-export const xpForNextLevel = (any: any): number => {
+export const xpForNextLevel = (currentLevel: number): number => {
   return (currentLevel + 1) ** 2 * 100;
 };
 
 /**
  * Calculer progression vers le prochain niveau (0-1)
  */
-export const calculateProgress = (any: any): number => {
+export const calculateProgress = (currentXp: number, currentLevel: number): number => {
   const currentLevelXp = currentLevel ** 2 * 100;
-  const nextLevelXp = xpForNextLevel(any: any);
+  const nextLevelXp = xpForNextLevel(currentLevel);
   const xpInCurrentLevel = currentXp - currentLevelXp;
   const xpNeededForNextLevel = nextLevelXp - currentLevelXp;
   return xpInCurrentLevel / xpNeededForNextLevel;
@@ -181,7 +181,7 @@ export const createDefaultExperienceState = (): ExperienceState => ({
       xp: 0,
       level: 0,
       category: 'cognitive',
-      lastUpdated: Date?.now(),
+      lastUpdated: Date.now(),
       icon: '🧠',
       position: { x: 400, y: 100 },
     },
@@ -192,7 +192,7 @@ export const createDefaultExperienceState = (): ExperienceState => ({
       xp: 0,
       level: 0,
       category: 'business',
-      lastUpdated: Date?.now(),
+      lastUpdated: Date.now(),
       icon: '💼',
       position: { x: 200, y: 250 },
     },
@@ -203,7 +203,7 @@ export const createDefaultExperienceState = (): ExperienceState => ({
       xp: 0,
       level: 0,
       category: 'memory',
-      lastUpdated: Date?.now(),
+      lastUpdated: Date.now(),
       icon: '📂',
       position: { x: 600, y: 250 },
     },
@@ -214,7 +214,7 @@ export const createDefaultExperienceState = (): ExperienceState => ({
       xp: 0,
       level: 0,
       category: 'cognitive',
-      lastUpdated: Date?.now(),
+      lastUpdated: Date.now(),
       icon: '💬',
       position: { x: 300, y: 400 },
     },
@@ -225,12 +225,12 @@ export const createDefaultExperienceState = (): ExperienceState => ({
       xp: 0,
       level: 0,
       category: 'system',
-      lastUpdated: Date?.now(),
+      lastUpdated: Date.now(),
       icon: '⚙️',
       position: { x: 500, y: 400 },
     },
   },
   history: [],
-  lastUpdated: Date?.now(),
+  lastUpdated: Date.now(),
   version: '1.0.0',
 });

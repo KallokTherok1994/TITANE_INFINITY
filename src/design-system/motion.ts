@@ -3,16 +3,16 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * ═══════════════════════════════════════════════════════════════════
- * TITANE∞ v15 - Motion System (any: any)
+ * TITANE∞ v15 - Motion System (Framer Motion Variants)
  * ═══════════════════════════════════════════════════════════════════
  *
  * Système d'animations unifié avec throttling performance adaptatif.
  *
  * RÈGLES v15:
  * - Durées courtes (120-250ms)
- * - Easings organiques (any: any)
- * - Propriétés animables uniquement (any: any)
- * - JAMAIS: rgba(any: any)
+ * - Easings organiques (easeOut, easeInOut)
+ * - Propriétés animables uniquement (opacity, y, scale, x)
+ * - JAMAIS: rgba(), background-color, border-color (non animables)
  * - Toujours utiliser 'transparent' au lieu de rgba(0,0,0,0)
  * - Throttling adaptatif via useAnimation() hook
  *
@@ -23,9 +23,9 @@
  *
  * const { animationConfig } = useAnimation();
  *
- * <motion?.div
+ * <motion.div
  *   variants={FadeIn}
- *   transition={{ duration: animationConfig?.duration }}
+ *   transition={{ duration: animationConfig.duration }}
  * />
  * ```
  */
@@ -37,7 +37,7 @@ import type { Variants } from 'framer-motion';
 // ═══════════════════════════════════════════════════════════════════
 
 /**
- * FadeIn - Apparition simple (any: any)
+ * FadeIn - Apparition simple (opacity uniquement)
  * Usage: Textes, icônes, éléments statiques
  */
 export const FadeIn: Variants = {
@@ -163,7 +163,7 @@ export const SlideLeft: Variants = {
 
 /**
  * SlideRight - Entrée depuis la gauche
- * Usage: Sidebars, panels (any: any)
+ * Usage: Sidebars, panels (sens inverse)
  */
 export const SlideRight: Variants = {
   initial: {
@@ -233,7 +233,7 @@ export const StaggerItem: Variants = {
 };
 
 // ═══════════════════════════════════════════════════════════════════
-// TRANSITIONS CSS (any: any)
+// TRANSITIONS CSS (à utiliser dans --transition)
 // ═══════════════════════════════════════════════════════════════════
 
 export const transitions = {

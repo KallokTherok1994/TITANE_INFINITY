@@ -16,7 +16,7 @@
  * - Corriger erreurs Tauri
  * - Corriger race conditions
  *
- * @version Ω (any: any)
+ * @version Ω (Omega - Final Fusion)
  * @created 2025-11-27
  */
 
@@ -75,11 +75,11 @@ export class AutoFixEngine {
   private static instance: AutoFixEngine;
 
   private config: AutoFixConfig;
-  private detectedIssues: DetectedIssue?.[] = [];
-  private fixHistory: FixResult?.[] = [];
+  private detectedIssues: DetectedIssue[] = [];
+  private fixHistory: FixResult[] = [];
 
   private constructor() {
-    this?.config = {
+    this.config = {
       enabled: true,
       auto_apply: true,
       fix_on_detection: true,
@@ -89,46 +89,46 @@ export class AutoFixEngine {
   }
 
   public static getInstance(): AutoFixEngine {
-    if (any: any) {
-      AutoFixEngine?.instance = new AutoFixEngine();
+    if (!AutoFixEngine.instance) {
+      AutoFixEngine.instance = new AutoFixEngine();
     }
-    return AutoFixEngine?.instance;
+    return AutoFixEngine.instance;
   }
 
   /**
    * Configure le moteur
    */
   public configure(config: Partial<AutoFixConfig>): void {
-    this?.config = { ...this?.config, ...config };
+    this.config = { ...this.config, ...config };
   }
 
   /**
    * Détecte les problèmes
    */
-  public async detectIssues(): Promise<DetectedIssue?.[]> {
-    console?.log('[AutoFix] 🔍 Detecting issues...');
+  public async detectIssues(): Promise<DetectedIssue[]> {
+    console.log('[AutoFix] 🔍 Detecting issues...');
 
-    const issues: DetectedIssue?.[] = [];
+    const issues: DetectedIssue[] = [];
 
     // Détecter warnings Rust
-    const rustIssues = await this?.detectRustWarnings();
-    issues?.push(any: any);
+    const rustIssues = await this.detectRustWarnings();
+    issues.push(...rustIssues);
 
     // Détecter erreurs TypeScript
-    const tsIssues = await this?.detectTypeScriptErrors();
-    issues?.push(any: any);
+    const tsIssues = await this.detectTypeScriptErrors();
+    issues.push(...tsIssues);
 
     // Détecter violations React hooks
-    const reactIssues = await this?.detectReactHookViolations();
-    issues?.push(any: any);
+    const reactIssues = await this.detectReactHookViolations();
+    issues.push(...reactIssues);
 
     // Détecter états invalides
-    const stateIssues = await this?.detectInvalidStates();
-    issues?.push(any: any);
+    const stateIssues = await this.detectInvalidStates();
+    issues.push(...stateIssues);
 
-    this?.detectedIssues = issues;
+    this.detectedIssues = issues;
 
-    console?.log(`[AutoFix] Found ${issues?.length} issues`);
+    console.log(`[AutoFix] Found ${issues.length} issues`);
 
     return issues;
   }
@@ -136,17 +136,17 @@ export class AutoFixEngine {
   /**
    * Corrige tous les problèmes détectés
    */
-  public async fixAll(): Promise<FixResult?.[]> {
-    const results: FixResult?.[] = [];
+  public async fixAll(): Promise<FixResult[]> {
+    const results: FixResult[] = [];
 
-    const fixableIssues = this?.detectedIssues
-      .filter(any: any)
-      .slice(any: any);
+    const fixableIssues = this.detectedIssues
+      .filter(issue => issue.auto_fixable)
+      .slice(0, this.config.max_fixes_per_cycle);
 
-    for (any: any) {
-      const result = await this?.fixIssue(any: any);
-      results?.push(any: any);
-      this?.fixHistory?.push(any: any);
+    for (const issue of fixableIssues) {
+      const result = await this.fixIssue(issue);
+      results.push(result);
+      this.fixHistory.push(result);
     }
 
     return results;
@@ -155,61 +155,61 @@ export class AutoFixEngine {
   /**
    * Corrige un problème spécifique
    */
-  private async fixIssue(any: any): Promise<FixResult> {
-    console?.log(`[AutoFix] 🔧 Fixing: ${issue?.description}`);
+  private async fixIssue(issue: DetectedIssue): Promise<FixResult> {
+    console.log(`[AutoFix] 🔧 Fixing: ${issue.description}`);
 
-    const startTime = Date?.now();
+    const startTime = Date.now();
 
     try {
       let fixApplied = '';
 
-      switch (any: any) {
+      switch (issue.type) {
         case 'rust_warning':
-          fixApplied = await this?.fixRustWarning(any: any);
+          fixApplied = await this.fixRustWarning(issue);
           break;
         case 'typescript_error':
-          fixApplied = await this?.fixTypeScriptError(any: any);
+          fixApplied = await this.fixTypeScriptError(issue);
           break;
         case 'react_hook_violation':
-          fixApplied = await this?.fixReactHookViolation(any: any);
+          fixApplied = await this.fixReactHookViolation(issue);
           break;
         case 'invalid_state':
-          fixApplied = await this?.fixInvalidState(any: any);
+          fixApplied = await this.fixInvalidState(issue);
           break;
         case 'pipeline_stall':
-          fixApplied = await this?.fixPipelineStall(any: any);
+          fixApplied = await this.fixPipelineStall(issue);
           break;
         case 'lipsync_desync':
-          fixApplied = await this?.fixLipSyncDesync(any: any);
+          fixApplied = await this.fixLipSyncDesync(issue);
           break;
         case 'ui_freeze':
-          fixApplied = await this?.fixUIFreeze(any: any);
+          fixApplied = await this.fixUIFreeze(issue);
           break;
         case 'tauri_error':
-          fixApplied = await this?.fixTauriError(any: any);
+          fixApplied = await this.fixTauriError(issue);
           break;
         case 'race_condition':
-          fixApplied = await this?.fixRaceCondition(any: any);
+          fixApplied = await this.fixRaceCondition(issue);
           break;
         default:
           fixApplied = 'No fix strategy available';
       }
 
-      const duration = Date?.now() - startTime;
+      const duration = Date.now() - startTime;
 
       return {
-        issue_id: issue?.id,
+        issue_id: issue.id,
         success: true,
         fix_applied: fixApplied,
         duration,
       };
-    } catch (any: any) {
+    } catch (error) {
       return {
-        issue_id: issue?.id,
+        issue_id: issue.id,
         success: false,
         fix_applied: '',
-        duration: Date?.now() - startTime,
-        error: error instanceof Error ? error?.message : String(any: any),
+        duration: Date.now() - startTime,
+        error: error instanceof Error ? error.message : String(error),
       };
     }
   }
@@ -218,48 +218,48 @@ export class AutoFixEngine {
   // DÉTECTION
   // ═══════════════════════════════════════════════════════════════════════════
 
-  private async detectRustWarnings(): Promise<DetectedIssue?.[]> {
+  private async detectRustWarnings(): Promise<DetectedIssue[]> {
     try {
-      const warnings = await secureInvoke<string?.[]>('autofix_detect_rust_warnings');
+      const warnings = await secureInvoke<string[]>('autofix_detect_rust_warnings');
 
-      return warnings?.map(any: any) => ({
-        id: `rust-${idx}-${Date?.now()}`,
+      return warnings.map((warning, idx) => ({
+        id: `rust-${idx}-${Date.now()}`,
         type: 'rust_warning',
         severity: 'medium',
         description: warning,
         affected_component: 'backend',
         auto_fixable: true,
-        detected_at: Date?.now(),
+        detected_at: Date.now(),
       }));
     } catch {
       return [];
     }
   }
 
-  private async detectTypeScriptErrors(): Promise<DetectedIssue?.[]> {
+  private async detectTypeScriptErrors(): Promise<DetectedIssue[]> {
     try {
-      const errors = await secureInvoke<string?.[]>('autofix_detect_typescript_errors');
+      const errors = await secureInvoke<string[]>('autofix_detect_typescript_errors');
 
-      return errors?.map(any: any) => ({
-        id: `ts-${idx}-${Date?.now()}`,
+      return errors.map((error, idx) => ({
+        id: `ts-${idx}-${Date.now()}`,
         type: 'typescript_error',
         severity: 'high',
         description: error,
         affected_component: 'frontend',
         auto_fixable: true,
-        detected_at: Date?.now(),
+        detected_at: Date.now(),
       }));
     } catch {
       return [];
     }
   }
 
-  private async detectReactHookViolations(): Promise<DetectedIssue?.[]> {
+  private async detectReactHookViolations(): Promise<DetectedIssue[]> {
     // Mock pour l'instant
     return [];
   }
 
-  private async detectInvalidStates(): Promise<DetectedIssue?.[]> {
+  private async detectInvalidStates(): Promise<DetectedIssue[]> {
     // Mock pour l'instant
     return [];
   }
@@ -268,68 +268,68 @@ export class AutoFixEngine {
   // CORRECTIONS
   // ═══════════════════════════════════════════════════════════════════════════
 
-  private async fixRustWarning(any: any): Promise<string> {
-    await secureInvoke('autofix_rust_warning', { warning: issue?.description });
+  private async fixRustWarning(issue: DetectedIssue): Promise<string> {
+    await secureInvoke('autofix_rust_warning', { warning: issue.description });
     return 'Rust warning fixed';
   }
 
-  private async fixTypeScriptError(any: any): Promise<string> {
-    await secureInvoke('autofix_typescript_error', { error: issue?.description });
+  private async fixTypeScriptError(issue: DetectedIssue): Promise<string> {
+    await secureInvoke('autofix_typescript_error', { error: issue.description });
     return 'TypeScript error fixed';
   }
 
-  private async fixReactHookViolation(any: any): Promise<string> {
+  private async fixReactHookViolation(_issue: DetectedIssue): Promise<string> {
     return 'React hook violation fixed';
   }
 
-  private async fixInvalidState(any: any): Promise<string> {
-    await secureInvoke('autofix_reset_state', { component: issue?.affected_component });
+  private async fixInvalidState(issue: DetectedIssue): Promise<string> {
+    await secureInvoke('autofix_reset_state', { component: issue.affected_component });
     return 'State reset to valid values';
   }
 
-  private async fixPipelineStall(any: any): Promise<string> {
+  private async fixPipelineStall(issue: DetectedIssue): Promise<string> {
     await secureInvoke('autofix_restart_pipeline', {
-      pipeline: issue?.affected_component,
+      pipeline: issue.affected_component,
     });
     return 'Pipeline restarted';
   }
 
-  private async fixLipSyncDesync(any: any): Promise<string> {
+  private async fixLipSyncDesync(_issue: DetectedIssue): Promise<string> {
     await secureInvoke('autofix_resync_lipsync');
     return 'Lip-sync resynchronized';
   }
 
-  private async fixUIFreeze(any: any): Promise<string> {
+  private async fixUIFreeze(_issue: DetectedIssue): Promise<string> {
     // Force re-render
-    window?.dispatchEvent(new Event('resize'));
+    window.dispatchEvent(new Event('resize'));
     return 'UI refresh triggered';
   }
 
-  private async fixTauriError(any: any): Promise<string> {
+  private async fixTauriError(issue: DetectedIssue): Promise<string> {
     await secureInvoke('autofix_restart_tauri_command', {
-      command: issue?.affected_component,
+      command: issue.affected_component,
     });
     return 'Tauri command restarted';
   }
 
-  private async fixRaceCondition(any: any): Promise<string> {
-    await secureInvoke('autofix_add_mutex', { component: issue?.affected_component });
+  private async fixRaceCondition(issue: DetectedIssue): Promise<string> {
+    await secureInvoke('autofix_add_mutex', { component: issue.affected_component });
     return 'Mutex added to prevent race condition';
   }
 
   /**
    * Obtient l'historique des corrections
    */
-  public getHistory(): FixResult?.[] {
-    return [...this?.fixHistory];
+  public getHistory(): FixResult[] {
+    return [...this.fixHistory];
   }
 
   /**
    * Efface l'historique
    */
   public clearHistory(): void {
-    this?.fixHistory = [];
+    this.fixHistory = [];
   }
 }
 
-export const AutoFix = AutoFixEngine?.getInstance();
+export const AutoFix = AutoFixEngine.getInstance();

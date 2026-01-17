@@ -20,12 +20,12 @@ export function useUIReading() {
 export function useZoom() {
   const { settings, zoomIn, zoomOut, resetZoom, setZoom } = useUIReadingContext();
   return {
-    zoomLevel: settings?.zoomLevel,
+    zoomLevel: settings.zoomLevel,
     zoomIn,
     zoomOut,
     resetZoom,
     setZoom,
-    zoomPercent: Math?.round(settings?.zoomLevel * 100),
+    zoomPercent: Math.round(settings.zoomLevel * 100),
   };
 }
 
@@ -40,11 +40,11 @@ export function useTypography() {
   } = useUIReadingContext();
 
   return {
-    fontSizeBase: settings?.fontSizeBase,
-    fontFamily: settings?.fontFamily,
-    lineHeight: settings?.lineHeight,
-    letterSpacing: settings?.letterSpacing,
-    maxContentWidth: settings?.maxContentWidth,
+    fontSizeBase: settings.fontSizeBase,
+    fontFamily: settings.fontFamily,
+    lineHeight: settings.lineHeight,
+    letterSpacing: settings.letterSpacing,
+    maxContentWidth: settings.maxContentWidth,
     setFontSize,
     setFontFamily,
     setLineHeight,
@@ -56,7 +56,7 @@ export function useTypography() {
 export function useFullscreen() {
   const { settings, toggleFullscreen } = useUIReadingContext();
   return {
-    isFullscreen: settings?.isFullscreen,
+    isFullscreen: settings.isFullscreen,
     toggleFullscreen,
   };
 }
@@ -64,7 +64,7 @@ export function useFullscreen() {
 export function usePresets() {
   const { settings, applyPreset, resetAll } = useUIReadingContext();
   return {
-    currentPreset: settings?.preset,
+    currentPreset: settings.preset,
     applyPreset,
     resetAll,
   };

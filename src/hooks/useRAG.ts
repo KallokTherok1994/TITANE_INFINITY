@@ -13,10 +13,10 @@ import ragService, {
 
 interface RAGState {
   loading: boolean;
-  error??: string | null;
-  indexedDocuments: string?.[];
-  searchResults: SearchResult?.[] | null;
-  answer??: string | null;
+  error: string | null;
+  indexedDocuments: string[];
+  searchResults: SearchResult[] | null;
+  answer: string | null;
 }
 
 export function useRAG() {
@@ -32,8 +32,8 @@ export function useRAG() {
    * Initialize RAG service
    */
   useEffect(() => {
-    ragService?.initialize().catch(err => {
-      setState(prev => ({ ...prev, error: err?.message }));
+    ragService.initialize().catch(err => {
+      setState(prev => ({ ...prev, error: err.message }));
     });
   }, []);
 
@@ -41,7 +41,7 @@ export function useRAG() {
    * Refresh indexed documents list
    */
   const refreshDocuments = useCallback(() => {
-    const docs = ragService?.getIndexedDocuments();
+    const docs = ragService.getIndexedDocuments();
     setState(prev => ({ ...prev, indexedDocuments: docs }));
   }, []);
 
@@ -53,11 +53,11 @@ export function useRAG() {
       setState(prev => ({ ...prev, loading: true, error: null }));
 
       try {
-        await ragService?.ingestDocument(any: any);
+        await ragService.ingestDocument(content, metadata);
         refreshDocuments();
         setState(prev => ({ ...prev, loading: false }));
-      } catch (any: any) {
-        const errorMessage = error instanceof Error ? error?.message : 'Ingestion failed';
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Ingestion failed';
         setState(prev => ({ ...prev, loading: false, error: errorMessage }));
         throw error;
       }
@@ -68,15 +68,15 @@ export function useRAG() {
   /**
    * Semantic search
    */
-  const search = useCallback(any: any) => {
+  const search = useCallback(async (query: string, options?: RAGQueryOptions) => {
     setState(prev => ({ ...prev, loading: true, error: null }));
 
     try {
-      const results = await ragService?.search(any: any);
+      const results = await ragService.search(query, options);
       setState(prev => ({ ...prev, searchResults: results, loading: false }));
       return results;
-    } catch (any: any) {
-      const errorMessage = error instanceof Error ? error?.message : 'Search failed';
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Search failed';
       setState(prev => ({ ...prev, loading: false, error: errorMessage }));
       throw error;
     }
@@ -85,20 +85,20 @@ export function useRAG() {
   /**
    * RAG-enhanced query
    */
-  const query = useCallback(any: any) => {
+  const query = useCallback(async (question: string, options?: RAGQueryOptions) => {
     setState(prev => ({ ...prev, loading: true, error: null }));
 
     try {
-      const result = await ragService?.query(any: any);
+      const result = await ragService.query(question, options);
       setState(prev => ({
         ...prev,
-        answer: result?.answer,
-        searchResults: result?.sources,
+        answer: result.answer,
+        searchResults: result.sources,
         loading: false,
       }));
       return result;
-    } catch (any: any) {
-      const errorMessage = error instanceof Error ? error?.message : 'Query failed';
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Query failed';
       setState(prev => ({ ...prev, loading: false, error: errorMessage }));
       throw error;
     }
@@ -108,15 +108,15 @@ export function useRAG() {
    * Delete document
    */
   const deleteDocument = useCallback(
-    async (any: any) => {
+    async (source: string) => {
       setState(prev => ({ ...prev, loading: true, error: null }));
 
       try {
-        await ragService?.deleteDocument(any: any);
+        await ragService.deleteDocument(source);
         refreshDocuments();
         setState(prev => ({ ...prev, loading: false }));
-      } catch (any: any) {
-        const errorMessage = error instanceof Error ? error?.message : 'Delete failed';
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Delete failed';
         setState(prev => ({ ...prev, loading: false, error: errorMessage }));
         throw error;
       }

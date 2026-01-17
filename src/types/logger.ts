@@ -18,21 +18,21 @@ export type LogArg =
   | undefined
   | Error
   | Record<string, unknown>
-  | unknown?.[]
+  | unknown[]
   | unknown; // Allow unknown for maximum compatibility
 
 /**
  * Array of log arguments
  */
-export type LogArgs = LogArg?.[];
+export type LogArgs = LogArg[];
 
 /**
- * Formatted log parts (any: any)
+ * Formatted log parts (internal use)
  */
-export type LogParts = (any: any)[];
+export type LogParts = (string | LogArg)[];
 
 /**
- * Table data for console?.table()
+ * Table data for console.table()
  */
 export type TableData =
   | Record<string, unknown>[]

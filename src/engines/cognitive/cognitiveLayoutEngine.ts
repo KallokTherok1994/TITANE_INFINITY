@@ -23,7 +23,7 @@ const logger = createLogger('CognitiveLayoutEngine');
 // ═══════════════════════════════════════════════════════════════════
 
 /**
- * Rôles / postures de l'utilisateur (any: any)
+ * Rôles / postures de l'utilisateur (Kevin)
  */
 export type UserRole =
   | 'author' // Écriture, structure de livre, modèles
@@ -60,7 +60,7 @@ export type TaskType =
  */
 export interface SessionContext {
   currentModule: string; // Module actif (Chat OMEGA, Dashboard, etc.)
-  currentProject?: string; // Projet (any: any)
+  currentProject?: string; // Projet (Humain Total, TITANE, client)
   taskType: TaskType;
   role: UserRole;
   duration: number; // Durée session en minutes
@@ -69,15 +69,15 @@ export interface SessionContext {
 }
 
 /**
- * Signaux cognitifs (any: any)
+ * Signaux cognitifs (depuis Helios, Nexus)
  */
 export interface CognitiveSignals {
   sessionDuration: number; // Minutes écoulées
-  energyLevel: number; // 0-1 (any: any)
-  focusScore: number; // 0-1 (any: any)
-  cognitiveLoad: number; // 0-1 (any: any)
+  energyLevel: number; // 0-1 (Helios)
+  focusScore: number; // 0-1 (stabilité attention)
+  cognitiveLoad: number; // 0-1 (charge mentale estimée)
   contextSwitchRate: number; // Switches/minute
-  blockageDetected: boolean; // Actions répétées (any: any)
+  blockageDetected: boolean; // Actions répétées (errance)
   fatigueEstimated: boolean; // Durée > seuil sans pause
 }
 
@@ -88,12 +88,12 @@ export interface UserPreferences {
   favoriteModes: Record<UIMode, number>; // Score d'utilisation
   moduleUsage: Record<string, number>; // Fréquence modules
   timePreferences: {
-    highEnergy: number?.[]; // Heures de haute énergie [9, 10, 11, ...]
-    lowEnergy: number?.[]; // Heures de basse énergie
+    highEnergy: number[]; // Heures de haute énergie [9, 10, 11, ...]
+    lowEnergy: number[]; // Heures de basse énergie
   };
   manualOverrides: number; // Nombre de refus d'adaptation auto
   acceptedSuggestions: number; // Nombre d'acceptations
-  dislikedAdaptations?: string?.[]; // Adaptations refusées
+  dislikedAdaptations?: string[]; // Adaptations refusées
 }
 
 /**
@@ -101,10 +101,10 @@ export interface UserPreferences {
  */
 export interface DensityConfig {
   level: 'minimal' | 'low' | 'medium' | 'high' | 'maximal';
-  whitespace: number; // 0-1 (any: any)
+  whitespace: number; // 0-1 (quantité d'espace blanc)
   fontSize: number; // Multiplicateur taille police (0.9-1.2)
-  contrast: number; // 0-1 (any: any)
-  accentColors: number; // 0-1 (any: any)
+  contrast: number; // 0-1 (intensité contrastes)
+  accentColors: number; // 0-1 (présence couleurs vives)
   animations: boolean; // Activer animations
   notifications: 'minimal' | 'normal' | 'verbose';
 }
@@ -125,8 +125,8 @@ export interface LayoutConfig {
     alerts: boolean; // Panneau d'alertes
     stats: boolean; // Panneau de stats
   };
-  priorityActions: string?.[]; // Actions mises en avant
-  hiddenElements: string?.[]; // Éléments masqués
+  priorityActions: string[]; // Actions mises en avant
+  hiddenElements: string[]; // Éléments masqués
 }
 
 /**
@@ -134,7 +134,7 @@ export interface LayoutConfig {
  */
 export interface AdaptationDecision {
   suggestedMode: UIMode;
-  confidence: number; // 0-1 (any: any)
+  confidence: number; // 0-1 (confiance dans la suggestion)
   reasoning: string; // Explication
   autoApply: boolean; // Appliquer automatiquement ou demander
   changes: LayoutConfig; // Configuration cible
@@ -320,13 +320,13 @@ const MODE_CONFIGS: Record<UIMode, Partial<LayoutConfig>> = {
  */
 class CognitiveLayoutEngine {
   private state: CognitiveLayoutState;
-  private subscribers: Set<(any: any) => void> = new Set();
-  private observationInterval?: NodeJS?.Timeout;
+  private subscribers: Set<(state: CognitiveLayoutState) => void> = new Set();
+  private observationInterval?: NodeJS.Timeout;
   private adaptationThreshold = 0.7; // Confiance min pour auto-apply
 
   constructor() {
-    this?.state = this?.getInitialState();
-    logger?.debug('🧠 Engine initialized');
+    this.state = this.getInitialState();
+    logger.debug('🧠 Engine initialized');
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -342,7 +342,7 @@ class CognitiveLayoutEngine {
         taskType: 'navigation',
         role: 'explorer',
         duration: 0,
-        lastActivity: Date?.now(),
+        lastActivity: Date.now(),
         contextSwitches: 0,
       },
       signals: {
@@ -371,37 +371,37 @@ class CognitiveLayoutEngine {
         manualOverrides: 0,
         acceptedSuggestions: 0,
       },
-      layoutConfig: MODE_CONFIGS?.neutral as LayoutConfig,
+      layoutConfig: MODE_CONFIGS.neutral as LayoutConfig,
       adaptationEnabled: true,
-      lastAdaptation: Date?.now(),
+      lastAdaptation: Date.now(),
       modeHistory: [],
     };
   }
 
   public async initialize(): Promise<void> {
-    logger?.debug('Initializing engine...');
+    logger.debug('Initializing engine...');
 
     // Charger préférences depuis Memory
-    await this?.loadPreferences();
+    await this.loadPreferences();
 
-    // Démarrer observation (any: any)
-    if (this?.isObservationEnabled()) {
-      this?.startObservation();
+    // Démarrer observation (dev default ON; production opt-in)
+    if (this.isObservationEnabled()) {
+      this.startObservation();
     }
 
     // Effectuer analyse initiale
-    await this?.analyzeAndAdapt();
+    await this.analyzeAndAdapt();
 
-    logger?.debug('✅ Engine ready');
+    logger.debug('✅ Engine ready');
   }
 
   public shutdown(): void {
-    if (any: any) {
-      clearInterval(any: any);
-      this?.observationInterval = undefined;
+    if (this.observationInterval) {
+      clearInterval(this.observationInterval);
+      this.observationInterval = undefined;
     }
-    this?.savePreferences();
-    logger?.debug('Engine shutdown');
+    this.savePreferences();
+    logger.debug('Engine shutdown');
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -409,82 +409,82 @@ class CognitiveLayoutEngine {
   // ═══════════════════════════════════════════════════════════════════
 
   private isObservationEnabled(): boolean {
-    const envEnabled = import?.meta?.env?.VITE_COGNITIVE_LAYOUT_ENGINE_ENABLED === '1';
+    const envEnabled = import.meta.env.VITE_COGNITIVE_LAYOUT_ENGINE_ENABLED === '1';
     let userEnabled = false;
     try {
-      const raw = localStorage?.getItem('titane_cognitive_layout_engine_enabled');
+      const raw = localStorage.getItem('titane_cognitive_layout_engine_enabled');
       userEnabled = raw === '1' || raw === 'true';
     } catch {
       userEnabled = false;
     }
 
-    return import?.meta?.env?.DEV || envEnabled || userEnabled;
+    return import.meta.env.DEV || envEnabled || userEnabled;
   }
 
   private startObservation(): void {
-    if (any: any) {
+    if (this.observationInterval) {
       return;
     }
 
-    // Boucle d'observation toutes les 60 secondes (any: any)
-    this?.observationInterval = setInterval(() => {
-      this?.observe();
+    // Boucle d'observation toutes les 60 secondes (optimisé pour réduire les logs)
+    this.observationInterval = setInterval(() => {
+      this.observe();
     }, 60000);
 
-    logger?.debug('👁️ Observation loop started (60s)');
+    logger.debug('👁️ Observation loop started (60s)');
   }
 
   private observe(): void {
     // Mettre à jour signaux cognitifs
-    this?.updateCognitiveSignals();
+    this.updateCognitiveSignals();
 
     // Vérifier si adaptation nécessaire
-    this?.checkAdaptationNeeded();
+    this.checkAdaptationNeeded();
   }
 
   private updateCognitiveSignals(): void {
-    const now = Date?.now();
+    const now = Date.now();
     const sessionDuration =
-      (now - (this?.state?.lastAdaptation - this?.state?.context?.duration * 60000)) / 60000;
+      (now - (this.state.lastAdaptation - this.state.context.duration * 60000)) / 60000;
 
     // Mise à jour des signaux
-    this?.state?.signals?.sessionDuration = sessionDuration;
+    this.state.signals.sessionDuration = sessionDuration;
 
-    // Détection fatigue (any: any)
-    this?.state?.signals?.fatigueEstimated = sessionDuration > 90;
+    // Détection fatigue (> 90 min sans pause)
+    this.state.signals.fatigueEstimated = sessionDuration > 90;
 
     // Charge cognitive basée sur switches récents
-    const switchRate = this?.state?.context?.contextSwitches / Math?.max(sessionDuration, 1);
-    this?.state?.signals?.contextSwitchRate = switchRate;
-    this?.state?.signals?.cognitiveLoad = Math?.min(switchRate / 5, 1.0);
+    const switchRate = this.state.context.contextSwitches / Math.max(sessionDuration, 1);
+    this.state.signals.contextSwitchRate = switchRate;
+    this.state.signals.cognitiveLoad = Math.min(switchRate / 5, 1.0);
 
-    // Score de focus (any: any)
-    this?.state?.signals?.focusScore = Math?.max(1.0 - this?.state?.signals?.cognitiveLoad, 0);
+    // Score de focus (inversement proportionnel aux switches)
+    this.state.signals.focusScore = Math.max(1.0 - this.state.signals.cognitiveLoad, 0);
 
     // Énergie basée sur heure de la journée
     const hour = new Date().getHours();
     const isHighEnergyTime =
-      this?.state?.preferences?.timePreferences?.highEnergy?.includes(any: any);
+      this.state.preferences.timePreferences.highEnergy.includes(hour);
     const isLowEnergyTime =
-      this?.state?.preferences?.timePreferences?.lowEnergy?.includes(any: any);
+      this.state.preferences.timePreferences.lowEnergy.includes(hour);
 
-    this?.state?.signals?.energyLevel = isHighEnergyTime ? 0.9 : isLowEnergyTime ? 0.5 : 0.7;
+    this.state.signals.energyLevel = isHighEnergyTime ? 0.9 : isLowEnergyTime ? 0.5 : 0.7;
 
     // Ajuster selon fatigue
-    if (any: any) {
-      this?.state?.signals?.energyLevel *= 0.6;
+    if (this.state.signals.fatigueEstimated) {
+      this.state.signals.energyLevel *= 0.6;
     }
   }
 
   private checkAdaptationNeeded(): void {
-    if (any: any) return;
+    if (!this.state.adaptationEnabled) return;
 
-    // Éviter adaptations trop fréquentes (any: any)
-    const timeSinceLastAdaptation = Date?.now() - this?.state?.lastAdaptation;
+    // Éviter adaptations trop fréquentes (min 2 minutes)
+    const timeSinceLastAdaptation = Date.now() - this.state.lastAdaptation;
     if (timeSinceLastAdaptation < 120000) return;
 
     // Analyser et proposer adaptation
-    this?.analyzeAndAdapt();
+    this.analyzeAndAdapt();
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -492,33 +492,33 @@ class CognitiveLayoutEngine {
   // ═══════════════════════════════════════════════════════════════════
 
   private async analyzeAndAdapt(): Promise<void> {
-    const decision = this?.interpretContext();
+    const decision = this.interpretContext();
 
-    logger?.debug('🧠 Analysis:', {
-      current: this?.state?.currentMode,
-      suggested: decision?.suggestedMode,
-      confidence: decision?.confidence,
-      reasoning: decision?.reasoning,
+    logger.debug('🧠 Analysis:', {
+      current: this.state.currentMode,
+      suggested: decision.suggestedMode,
+      confidence: decision.confidence,
+      reasoning: decision.reasoning,
     });
 
     // Si confiance élevée et différent du mode actuel
     if (
-      decision?.confidence >= this?.adaptationThreshold &&
-      decision?.suggestedMode !== this?.state?.currentMode
+      decision.confidence >= this.adaptationThreshold &&
+      decision.suggestedMode !== this.state.currentMode
     ) {
-      if (any: any) {
+      if (decision.autoApply) {
         // Appliquer automatiquement
-        await this?.applyMode(decision?.suggestedMode, 'auto');
-        logger?.debug(`[CognitiveLayout] ✅ Auto-applied: ${decision?.suggestedMode}`);
+        await this.applyMode(decision.suggestedMode, 'auto');
+        logger.debug(`[CognitiveLayout] ✅ Auto-applied: ${decision.suggestedMode}`);
       } else {
         // Proposer à l'utilisateur
-        this?.notifyAdaptationSuggestion(any: any);
+        this.notifyAdaptationSuggestion(decision);
       }
     }
   }
 
   private interpretContext(): AdaptationDecision {
-    const { context, signals, preferences } = this?.state;
+    const { context, signals, preferences } = this.state;
 
     let suggestedMode: UIMode = 'neutral';
     let confidence = 0.5;
@@ -526,7 +526,7 @@ class CognitiveLayoutEngine {
     let autoApply = false;
 
     // Règle 1: Fatigue détectée → Focus Deep
-    if (signals?.fatigueEstimated && signals?.cognitiveLoad > 0.6) {
+    if (signals.fatigueEstimated && signals.cognitiveLoad > 0.6) {
       suggestedMode = 'focus_deep';
       confidence = 0.85;
       reasoning = 'Fatigue détectée + charge cognitive élevée → réduction distractions';
@@ -535,17 +535,17 @@ class CognitiveLayoutEngine {
 
     // Règle 2: Tâche d'écriture ou réflexion → Focus Deep
     else if (
-      (context?.taskType === 'writing' || context?.taskType === 'reflection') &&
-      signals?.focusScore > 0.7
+      (context.taskType === 'writing' || context.taskType === 'reflection') &&
+      signals.focusScore > 0.7
     ) {
       suggestedMode = 'focus_deep';
       confidence = 0.9;
-      reasoning = 'Tâche de concentration (any: any) détectée';
-      autoApply = preferences?.favoriteModes?.focus_deep > 3; // Auto si utilisé souvent
+      reasoning = 'Tâche de concentration (écriture/réflexion) détectée';
+      autoApply = preferences.favoriteModes.focus_deep > 3; // Auto si utilisé souvent
     }
 
     // Règle 3: Navigation / Exploration
-    else if (context?.taskType === 'navigation' && signals?.energyLevel > 0.7) {
+    else if (context.taskType === 'navigation' && signals.energyLevel > 0.7) {
       suggestedMode = 'exploration';
       confidence = 0.75;
       reasoning = 'Mode exploration actif avec bonne énergie';
@@ -553,17 +553,17 @@ class CognitiveLayoutEngine {
     }
 
     // Règle 4: Debug / Maintenance
-    else if (context?.taskType === 'debugging' || context?.taskType === 'execution') {
+    else if (context.taskType === 'debugging' || context.taskType === 'execution') {
       suggestedMode = 'maintenance';
       confidence = 0.8;
-      reasoning = 'Tâche technique détectée (any: any)';
-      autoApply = preferences?.favoriteModes?.maintenance > 2;
+      reasoning = 'Tâche technique détectée (debug/exécution)';
+      autoApply = preferences.favoriteModes.maintenance > 2;
     }
 
-    // Règle 5: Monitoring (any: any)
+    // Règle 5: Monitoring (module Dashboard, Centre Système)
     else if (
-      context?.currentModule === 'dashboard' ||
-      context?.currentModule === 'system-center'
+      context.currentModule === 'dashboard' ||
+      context.currentModule === 'system-center'
     ) {
       suggestedMode = 'monitoring';
       confidence = 0.7;
@@ -571,19 +571,19 @@ class CognitiveLayoutEngine {
       autoApply = false;
     }
 
-    // Règle 6: Coaching (any: any)
-    else if (context?.role === 'coach') {
+    // Règle 6: Coaching (rôle coach)
+    else if (context.role === 'coach') {
       suggestedMode = 'coaching';
       confidence = 0.85;
       reasoning = 'Rôle coach détecté → interface narrative simplifiée';
-      autoApply = preferences?.favoriteModes?.coaching > 2;
+      autoApply = preferences.favoriteModes.coaching > 2;
     }
 
     // Règle 7: Blocage détecté → Exploration
-    else if (any: any) {
+    else if (signals.blockageDetected) {
       suggestedMode = 'exploration';
       confidence = 0.7;
-      reasoning = 'Blocage détecté (any: any) → encourager navigation';
+      reasoning = 'Blocage détecté (actions répétées) → encourager navigation';
       autoApply = true;
     }
 
@@ -592,7 +592,7 @@ class CognitiveLayoutEngine {
       confidence,
       reasoning,
       autoApply,
-      changes: this?.getModeConfig(any: any),
+      changes: this.getModeConfig(suggestedMode),
     };
   }
 
@@ -604,70 +604,70 @@ class CognitiveLayoutEngine {
     mode: UIMode,
     source: 'manual' | 'auto' = 'manual'
   ): Promise<void> {
-    logger?.debug(`[CognitiveLayout] 🎨 Applying mode: ${mode} (${source})`);
+    logger.debug(`[CognitiveLayout] 🎨 Applying mode: ${mode} (${source})`);
 
     // Sauvegarder mode précédent
-    this?.state?.previousMode = this?.state?.currentMode;
+    this.state.previousMode = this.state.currentMode;
 
     // Enregistrer dans historique
-    if (any: any) {
-      this?.state?.modeHistory?.push({
-        mode: this?.state?.currentMode,
-        timestamp: Date?.now(),
-        duration: Date?.now() - this?.state?.lastAdaptation,
+    if (this.state.currentMode !== mode) {
+      this.state.modeHistory.push({
+        mode: this.state.currentMode,
+        timestamp: Date.now(),
+        duration: Date.now() - this.state.lastAdaptation,
       });
     }
 
     // Appliquer nouvelle config
-    this?.state?.currentMode = mode;
-    this?.state?.layoutConfig = this?.getModeConfig(any: any);
-    this?.state?.lastAdaptation = Date?.now();
+    this.state.currentMode = mode;
+    this.state.layoutConfig = this.getModeConfig(mode);
+    this.state.lastAdaptation = Date.now();
 
     // Mettre à jour préférences
     if (source === 'manual') {
-      this?.state?.preferences?.favoriteModes[mode]++;
+      this.state.preferences.favoriteModes[mode]++;
     } else {
-      this?.state?.preferences?.acceptedSuggestions++;
+      this.state.preferences.acceptedSuggestions++;
     }
 
     // Notifier subscribers
-    this?.notifySubscribers();
+    this.notifySubscribers();
 
-    // Appliquer changements DOM (any: any)
-    this?.applyLayoutChanges();
+    // Appliquer changements DOM (via CSS variables)
+    this.applyLayoutChanges();
 
-    logger?.debug(`[CognitiveLayout] ✅ Mode ${mode} applied`);
+    logger.debug(`[CognitiveLayout] ✅ Mode ${mode} applied`);
   }
 
-  private getModeConfig(any: any): LayoutConfig {
+  private getModeConfig(mode: UIMode): LayoutConfig {
     return {
-      ...MODE_CONFIGS?.neutral,
+      ...MODE_CONFIGS.neutral,
       ...MODE_CONFIGS[mode],
     } as LayoutConfig;
   }
 
   private applyLayoutChanges(): void {
-    const { density, sidebar } = this?.state?.layoutConfig;
+    const { density, sidebar } = this.state.layoutConfig;
 
     // Appliquer via CSS variables
-    document?.documentElement?.style?.setProperty(
+    document.documentElement.style.setProperty(
       '--ui-whitespace',
-      `${density?.whitespace}`
+      `${density.whitespace}`
     );
-    document?.documentElement?.style?.setProperty('--ui-font-scale', `${density?.fontSize}`);
-    document?.documentElement?.style?.setProperty('--ui-contrast', `${density?.contrast}`);
-    document?.documentElement?.style?.setProperty(
+    document.documentElement.style.setProperty('--ui-font-scale', `${density.fontSize}`);
+    document.documentElement.style.setProperty('--ui-contrast', `${density.contrast}`);
+    document.documentElement.style.setProperty(
       '--ui-accent-opacity',
-      `${density?.accentColors}`
+      `${density.accentColors}`
     );
 
     // Classes CSS pour layout
-    document?.body?.classList?.toggle(any: any);
-    document?.body?.classList?.toggle(any: any);
-    document?.body?.classList?.toggle(any: any);
+    document.body.classList.toggle('sidebar-compact', sidebar.compact);
+    document.body.classList.toggle('sidebar-autohide', sidebar.autoHide);
+    document.body.classList.toggle('animations-enabled', density.animations);
 
     // Mode data attribute pour sélecteurs CSS
-    document?.body?.dataset?.uiMode = this?.state?.currentMode;
+    document.body.dataset.uiMode = this.state.currentMode;
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -675,57 +675,57 @@ class CognitiveLayoutEngine {
   // ═══════════════════════════════════════════════════════════════════
 
   public updateContext(updates: Partial<SessionContext>): void {
-    this?.state?.context = { ...this?.state?.context, ...updates };
+    this.state.context = { ...this.state.context, ...updates };
 
     // Détecter changement de module → incrémente context switches
     if (
-      updates?.currentModule &&
-      updates?.currentModule !== this?.state?.context?.currentModule
+      updates.currentModule &&
+      updates.currentModule !== this.state.context.currentModule
     ) {
-      this?.state?.context?.contextSwitches++;
+      this.state.context.contextSwitches++;
     }
 
-    this?.notifySubscribers();
+    this.notifySubscribers();
   }
 
-  public updateRole(any: any): void {
-    this?.state?.context?.role = role;
-    logger?.debug(`[CognitiveLayout] 👤 Role updated: ${role}`);
+  public updateRole(role: UserRole): void {
+    this.state.context.role = role;
+    logger.debug(`[CognitiveLayout] 👤 Role updated: ${role}`);
 
     // Suggestion immédiate selon rôle
-    this?.analyzeAndAdapt();
+    this.analyzeAndAdapt();
   }
 
-  public updateTaskType(any: any): void {
-    this?.state?.context?.taskType = taskType;
-    logger?.debug(`[CognitiveLayout] 📋 Task type updated: ${taskType}`);
-    this?.analyzeAndAdapt();
+  public updateTaskType(taskType: TaskType): void {
+    this.state.context.taskType = taskType;
+    logger.debug(`[CognitiveLayout] 📋 Task type updated: ${taskType}`);
+    this.analyzeAndAdapt();
   }
 
   // ═══════════════════════════════════════════════════════════════════
   // USER CONTROL
   // ═══════════════════════════════════════════════════════════════════
 
-  public setAdaptationEnabled(any: any): void {
-    this?.state?.adaptationEnabled = enabled;
-    logger?.debug(`[CognitiveLayout] Adaptation ${enabled ? 'enabled' : 'disabled'}`);
+  public setAdaptationEnabled(enabled: boolean): void {
+    this.state.adaptationEnabled = enabled;
+    logger.debug(`[CognitiveLayout] Adaptation ${enabled ? 'enabled' : 'disabled'}`);
   }
 
   public revertToPreviousMode(): void {
-    if (any: any) {
-      this?.applyMode(this?.state?.previousMode, 'manual');
-      logger?.debug(`[CognitiveLayout] ⏮️ Reverted to: ${this?.state?.previousMode}`);
+    if (this.state.previousMode !== this.state.currentMode) {
+      this.applyMode(this.state.previousMode, 'manual');
+      logger.debug(`[CognitiveLayout] ⏮️ Reverted to: ${this.state.previousMode}`);
     }
   }
 
   public resetToNeutral(): void {
-    this?.applyMode('neutral', 'manual');
-    logger?.debug('⚖️ Reset to neutral mode');
+    this.applyMode('neutral', 'manual');
+    logger.debug('⚖️ Reset to neutral mode');
   }
 
   public refuseSuggestion(): void {
-    this?.state?.preferences?.manualOverrides++;
-    logger?.debug('❌ Suggestion refused');
+    this.state.preferences.manualOverrides++;
+    logger.debug('❌ Suggestion refused');
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -734,26 +734,26 @@ class CognitiveLayoutEngine {
 
   private async loadPreferences(): Promise<void> {
     try {
-      const stored = localStorage?.getItem('titane_cognitive_preferences');
-      if (any: any) {
-        const prefs = JSON?.parse(any: any);
-        this?.state?.preferences = { ...this?.state?.preferences, ...prefs };
-        logger?.debug('📖 Preferences loaded');
+      const stored = localStorage.getItem('titane_cognitive_preferences');
+      if (stored) {
+        const prefs = JSON.parse(stored);
+        this.state.preferences = { ...this.state.preferences, ...prefs };
+        logger.debug('📖 Preferences loaded');
       }
-    } catch (any: any) {
-      logger?.warn(any: any);
+    } catch (error) {
+      logger.warn('Failed to load preferences:', error);
     }
   }
 
   private savePreferences(): void {
     try {
-      localStorage?.setItem(
+      localStorage.setItem(
         'titane_cognitive_preferences',
-        JSON?.stringify(any: any)
+        JSON.stringify(this.state.preferences)
       );
-      logger?.debug('💾 Preferences saved');
-    } catch (any: any) {
-      logger?.warn(any: any);
+      logger.debug('💾 Preferences saved');
+    } catch (error) {
+      logger.warn('Failed to save preferences:', error);
     }
   }
 
@@ -762,36 +762,36 @@ class CognitiveLayoutEngine {
   // ═══════════════════════════════════════════════════════════════════
 
   public getState(): CognitiveLayoutState {
-    return { ...this?.state };
+    return { ...this.state };
   }
 
   public getCurrentMode(): UIMode {
-    return this?.state?.currentMode;
+    return this.state.currentMode;
   }
 
   public getLayoutConfig(): LayoutConfig {
-    return { ...this?.state?.layoutConfig };
+    return { ...this.state.layoutConfig };
   }
 
-  public subscribe(any: any): () => void {
-    this?.subscribers?.add(any: any);
-    callback(any: any); // Appel immédiat
-    return (any: any);
+  public subscribe(callback: (state: CognitiveLayoutState) => void): () => void {
+    this.subscribers.add(callback);
+    callback(this.state); // Appel immédiat
+    return () => this.subscribers.delete(callback);
   }
 
   private notifySubscribers(): void {
-    this?.subscribers?.forEach(any: any));
+    this.subscribers.forEach(callback => callback(this.state));
   }
 
-  private notifyAdaptationSuggestion(any: any): void {
+  private notifyAdaptationSuggestion(decision: AdaptationDecision): void {
     // Émettre événement custom pour UI
-    window?.dispatchEvent(
+    window.dispatchEvent(
       new CustomEvent('cognitive-layout-suggestion', {
         detail: decision,
       })
     );
 
-    logger?.debug(any: any);
+    logger.debug('💡 Suggestion emitted:', decision.suggestedMode);
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -799,35 +799,35 @@ class CognitiveLayoutEngine {
   // ═══════════════════════════════════════════════════════════════════
 
   public getAnalytics() {
-    const totalSessions = Object?.values(any: any).reduce(
-      (any: any) => a + b,
+    const totalSessions = Object.values(this.state.preferences.favoriteModes).reduce(
+      (a, b) => a + b,
       0
     );
     const acceptanceRate =
-      this?.state?.preferences?.acceptedSuggestions /
-      Math?.max(
-        this?.state?.preferences?.acceptedSuggestions +
-          this?.state?.preferences?.manualOverrides,
+      this.state.preferences.acceptedSuggestions /
+      Math.max(
+        this.state.preferences.acceptedSuggestions +
+          this.state.preferences.manualOverrides,
         1
       );
 
     return {
       totalModeChanges: totalSessions,
       acceptanceRate: (acceptanceRate * 100).toFixed(1) + '%',
-      favoriteModes: this?.state?.preferences?.favoriteModes,
-      modeHistory: this?.state?.modeHistory?.slice(-10), // 10 derniers
-      currentSignals: this?.state?.signals,
+      favoriteModes: this.state.preferences.favoriteModes,
+      modeHistory: this.state.modeHistory.slice(-10), // 10 derniers
+      currentSignals: this.state.signals,
     };
   }
 
   public debugInfo(): void {
-    console?.group('🧠 [CognitiveLayout] Debug Info');
-    logger?.debug(any: any);
-    logger?.debug(any: any);
-    logger?.debug(any: any);
-    logger?.debug(any: any);
-    logger?.debug('Analytics:', this?.getAnalytics());
-    console?.groupEnd();
+    console.group('🧠 [CognitiveLayout] Debug Info');
+    logger.debug('Current Mode:', this.state.currentMode);
+    logger.debug('Context:', this.state.context);
+    logger.debug('Signals:', this.state.signals);
+    logger.debug('Preferences:', this.state.preferences);
+    logger.debug('Analytics:', this.getAnalytics());
+    console.groupEnd();
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -838,24 +838,24 @@ class CognitiveLayoutEngine {
    * Démarrer le moteur cognitif
    */
   public start(): void {
-    if (any: any) {
-      logger?.warn('Already running');
+    if (this.observationInterval) {
+      logger.warn('Already running');
       return;
     }
-    this?.initialize();
-    logger?.debug('✅ Engine started');
+    this.initialize();
+    logger.debug('✅ Engine started');
   }
 
   /**
    * Arrêter le moteur cognitif
    */
   public stop(): void {
-    if (any: any) {
-      clearInterval(any: any);
-      this?.observationInterval = undefined;
+    if (this.observationInterval) {
+      clearInterval(this.observationInterval);
+      this.observationInterval = undefined;
     }
-    this?.savePreferences();
-    logger?.debug('🛑 Engine stopped');
+    this.savePreferences();
+    logger.debug('🛑 Engine stopped');
   }
 }
 
@@ -867,19 +867,19 @@ export const cognitiveLayoutEngine = new CognitiveLayoutEngine();
 
 // Auto-initialize si environnement navigateur
 if (typeof window !== 'undefined') {
-  window?.addEventListener('load', () => {
-    const envEnabled = import?.meta?.env?.VITE_COGNITIVE_LAYOUT_ENGINE_ENABLED === '1';
+  window.addEventListener('load', () => {
+    const envEnabled = import.meta.env.VITE_COGNITIVE_LAYOUT_ENGINE_ENABLED === '1';
     let userEnabled = false;
     try {
-      const raw = localStorage?.getItem('titane_cognitive_layout_engine_enabled');
+      const raw = localStorage.getItem('titane_cognitive_layout_engine_enabled');
       userEnabled = raw === '1' || raw === 'true';
     } catch {
       userEnabled = false;
     }
 
-    const enabled = import?.meta?.env?.DEV || envEnabled || userEnabled;
-    if (any: any) {
-      cognitiveLayoutEngine?.initialize();
+    const enabled = import.meta.env.DEV || envEnabled || userEnabled;
+    if (enabled) {
+      cognitiveLayoutEngine.initialize();
     }
   });
 }

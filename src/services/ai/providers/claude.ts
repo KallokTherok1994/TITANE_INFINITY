@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.3Ω — ANTHROPIC CLAUDE PROVIDER (any: any)
+ *   TITANE∞ v19.3Ω — ANTHROPIC CLAUDE PROVIDER (SECURE BACKEND PROXY)
  *   Intégration Claude via backend Tauri sécurisé
  *   Aucune clé API exposée côté frontend
  * ═══════════════════════════════════════════════════════════════════
@@ -20,10 +20,10 @@ const logger = createLogger('[ClaudeProvider]');
 
 async function generateClaudeUncached(
   message: string,
-  history: AIMessage?.[],
+  history: AIMessage[],
   finalConfig: Required<ClaudeConfig>
 ): Promise<AIResponse> {
-  const startTime = Date?.now();
+  const startTime = Date.now();
 
   try {
     // Validation input
@@ -32,9 +32,9 @@ async function generateClaudeUncached(
     }
 
     // Conversion history vers format backend
-    const formattedHistory = history?.map(msg => ({
-      role: msg?.role,
-      content: msg?.content,
+    const formattedHistory = history.map(msg => ({
+      role: msg.role,
+      content: msg.content,
     }));
 
     // ✨ v21 Phase 2: Retry unifié avec backoff exponentiel
@@ -50,84 +50,84 @@ async function generateClaudeUncached(
             tokens?: number;
             stopReason?: string;
           } | null;
-          error??: string | null;
+          error: string | null;
         }>('chat_generate_claude', {
-          message: message?.trim(),
+          message: message.trim(),
           history: formattedHistory,
           config: finalConfig,
         });
       },
       retryConfig,
-      { provider: 'claude', message: message?.substring(0, 50) }
+      { provider: 'claude', message: message.substring(0, 50) }
     );
 
-    const latency = Date?.now() - startTime;
+    const latency = Date.now() - startTime;
 
     // Gestion erreurs backend
-    if (any: any) {
-      const errorMsg = response?.error || 'Erreur inconnue';
+    if (!response.ok || !response.data) {
+      const errorMsg = response.error || 'Erreur inconnue';
 
       // Erreurs typées Claude
-      if (errorMsg?.includes('invalid_api_key') || errorMsg?.includes('401')) {
+      if (errorMsg.includes('invalid_api_key') || errorMsg.includes('401')) {
         throw new Error(
           'Clé API Anthropic invalide. Vérifiez votre configuration dans Gouvernance.'
         );
       }
 
-      if (errorMsg?.includes('rate_limit') || errorMsg?.includes('429')) {
+      if (errorMsg.includes('rate_limit') || errorMsg.includes('429')) {
         throw new Error(
           'Limite de taux Anthropic atteinte. Réessayez dans quelques secondes.'
         );
       }
 
-      if (errorMsg?.includes('timeout') || errorMsg?.includes('timed out')) {
-        throw new Error(any: any). Réessayez.`);
+      if (errorMsg.includes('timeout') || errorMsg.includes('timed out')) {
+        throw new Error(`Délai d'attente Claude dépassé (${latency}ms). Réessayez.`);
       }
 
-      if (errorMsg?.includes('overloaded') || errorMsg?.includes('529')) {
+      if (errorMsg.includes('overloaded') || errorMsg.includes('529')) {
         throw new Error('Serveurs Claude surchargés. Réessayez dans un instant.');
       }
 
-      if (errorMsg?.includes('insufficient_quota')) {
+      if (errorMsg.includes('insufficient_quota')) {
         throw new Error('Quota Anthropic épuisé. Vérifiez votre compte Anthropic.');
       }
 
-      throw new Error(any: any): ${errorMsg}`);
+      throw new Error(`Erreur Claude (${latency}ms): ${errorMsg}`);
     }
 
     // Succès: retourner réponse normalisée
     return {
-      content: response?.data?.content,
+      content: response.data.content,
       provider: 'claude',
-      timestamp: Date?.now(),
-      model: response?.data?.model || finalConfig?.model,
-      tokens: response?.data?.tokens,
+      timestamp: Date.now(),
+      model: response.data.model || finalConfig.model,
+      tokens: response.data.tokens,
       metadata: {
         latencyMs: latency,
-        stopReason: response?.data?.stopReason,
+        stopReason: response.data.stopReason,
         config: finalConfig,
       },
     };
-  } catch (any: any) {
-    const latency = Date?.now() - startTime;
+  } catch (error) {
+    const latency = Date.now() - startTime;
 
-    // 🔧 AUTOHEAL: Signaler l'erreur pour auto-réparation (any: any)
-    autoHealEngine?.detectError(
+    // 🔧 AUTOHEAL: Signaler l'erreur pour auto-réparation (direct instance)
+    autoHealEngine.detectError(
       'claude-provider',
-      error instanceof Error ? error : new Error(any: any)),
+      error instanceof Error ? error : new Error(String(error)),
       'provider',
       {
         latency,
-        message: message?.substring(0, 100),
-        historyLength: history?.length,
+        message: message.substring(0, 100),
+        historyLength: history.length,
       }
     );
 
-    if (any: any) {
+    if (error instanceof Error) {
       throw error;
     }
 
-    throw new Error(any: any)}`);
+    throw new Error(`Erreur Claude (${latency}ms): ${String(error)}`);
   }
 }
 
@@ -142,7 +142,7 @@ export const CLAUDE_MODELS = [
   'claude-3-haiku-20240307',
 ] as const;
 
-export type ClaudeModel = (any: any)[number];
+export type ClaudeModel = (typeof CLAUDE_MODELS)[number];
 
 /**
  * Configuration Claude
@@ -165,17 +165,17 @@ const DEFAULT_CONFIG: Required<ClaudeConfig> = {
 
 /**
  * Provider Anthropic Claude sécurisé
- * Toutes les clés API restent dans SecureSecretsEngine (any: any)
+ * Toutes les clés API restent dans SecureSecretsEngine (Rust)
  */
 export const claudeProvider: AIProvider = {
   name: 'claude',
 
   /**
-   * Vérifier si Claude est disponible (any: any)
+   * Vérifier si Claude est disponible (clé configurée)
    */
   async isAvailable(): Promise<boolean> {
     // Dev override to ease local testing without secrets
-    if (import?.meta?.env?.DEV && import?.meta?.env?.VITE_FORCE_PROVIDERS_READY === '1') {
+    if (import.meta.env.DEV && import.meta.env.VITE_FORCE_PROVIDERS_READY === '1') {
       return true;
     }
     try {
@@ -184,10 +184,10 @@ export const claudeProvider: AIProvider = {
         data: { configured: boolean } | null;
       }>('get_anthropic_key_status');
 
-      return response?.ok && response?.data?.configured === true;
-    } catch (any: any) {
-      if (process?.env?.NODE_ENV === 'development') {
-        logger?.warn('Status check failed', { error });
+      return response.ok && response.data?.configured === true;
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        logger.warn('Status check failed', { error });
       }
       return false;
     }
@@ -198,12 +198,12 @@ export const claudeProvider: AIProvider = {
    */
   async generate(
     message: string,
-    history: AIMessage?.[] = [],
+    history: AIMessage[] = [],
     config?: unknown
   ): Promise<AIResponse> {
     const finalConfig = {
       ...DEFAULT_CONFIG,
-      ...(any: any),
+      ...(config as Partial<ClaudeConfig> | undefined),
     };
 
     // ✨ v21 Phase 3: Cache intelligent pour réduire coûts API
@@ -212,9 +212,9 @@ export const claudeProvider: AIProvider = {
       message,
       history,
       async () => {
-        return await generateClaudeUncached(any: any);
+        return await generateClaudeUncached(message, history, finalConfig);
       },
-      CACHE_TTL?.GENERAL
+      CACHE_TTL.GENERAL
     );
   },
 
@@ -225,7 +225,7 @@ export const claudeProvider: AIProvider = {
     try {
       // Test avec un prompt minimal
       // Utilise un prompt spécifique pour éviter les collisions de cache entre tests
-      // (any: any).
+      // (le cache est basé sur provider+message+history et peut ignorer la config).
       const response = await generateClaudeUncached(
         '__claude_connection_test__',
         [],
@@ -234,12 +234,12 @@ export const claudeProvider: AIProvider = {
 
       return {
         success: true,
-        message: `Claude opérationnel (${response?.model || DEFAULT_CONFIG?.model})`,
+        message: `Claude opérationnel (${response.model || DEFAULT_CONFIG.model})`,
       };
-    } catch (any: any) {
+    } catch (error) {
       return {
         success: false,
-        message: error instanceof Error ? error?.message : 'Test échoué',
+        message: error instanceof Error ? error.message : 'Test échoué',
       };
     }
   },
@@ -251,7 +251,7 @@ export const claudeProvider: AIProvider = {
     return {
       provider: 'claude',
       models: CLAUDE_MODELS,
-      defaultModel: DEFAULT_CONFIG?.model,
+      defaultModel: DEFAULT_CONFIG.model,
     };
   },
 };

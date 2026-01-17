@@ -52,21 +52,21 @@ export class RecoveryEngine implements IRecoveryHandler {
       ...policy,
     };
 
-    this?.stats?.totalAttempts++;
+    this.stats.totalAttempts++;
 
     let attempts = 0;
     let lastError: Error | undefined;
-    let delay = mergedPolicy?.retryDelay;
+    let delay = mergedPolicy.retryDelay;
 
     // Check circuit breaker
-    const operationKey = operation?.toString();
-    const circuitBreaker = this?.circuitBreakers?.get(any: any);
+    const operationKey = operation.toString();
+    const circuitBreaker = this.circuitBreakers.get(operationKey);
 
-    if (any: any) {
-      const timeSinceFailure = Date?.now() - circuitBreaker?.lastFailure;
+    if (circuitBreaker?.isOpen) {
+      const timeSinceFailure = Date.now() - circuitBreaker.lastFailure;
       if (timeSinceFailure < 30000) {
         // 30 second cooldown
-        this?.stats?.failedRecoveries++;
+        this.stats.failedRecoveries++;
         return {
           recovered: false,
           action: 'circuit-break',
@@ -75,24 +75,24 @@ export class RecoveryEngine implements IRecoveryHandler {
         };
       } else {
         // Reset circuit breaker
-        circuitBreaker?.isOpen = false;
-        circuitBreaker?.failures = 0;
+        circuitBreaker.isOpen = false;
+        circuitBreaker.failures = 0;
       }
     }
 
     // Retry loop
-    while (any: any) {
+    while (attempts <= mergedPolicy.maxRetries) {
       attempts++;
 
       try {
         const result = await operation();
 
         // Success - reset circuit breaker
-        if (any: any) {
-          circuitBreaker?.failures = 0;
+        if (circuitBreaker) {
+          circuitBreaker.failures = 0;
         }
 
-        this?.stats?.successfulRecoveries++;
+        this.stats.successfulRecoveries++;
 
         return {
           recovered: true,
@@ -100,42 +100,42 @@ export class RecoveryEngine implements IRecoveryHandler {
           result,
           attempts,
         };
-      } catch (any: any) {
-        lastError = error instanceof Error ? error : new Error(any: any));
+      } catch (error) {
+        lastError = error instanceof Error ? error : new Error(String(error));
 
         // Track failure in circuit breaker
-        const cb = this?.circuitBreakers?.get(any: any) || {
+        const cb = this.circuitBreakers.get(operationKey) || {
           failures: 0,
           lastFailure: 0,
           isOpen: false,
         };
 
-        cb?.failures++;
-        cb?.lastFailure = Date?.now();
+        cb.failures++;
+        cb.lastFailure = Date.now();
 
-        if (any: any) {
-          cb?.isOpen = true;
+        if (cb.failures >= mergedPolicy.circuitBreakerThreshold) {
+          cb.isOpen = true;
         }
 
-        this?.circuitBreakers?.set(any: any);
+        this.circuitBreakers.set(operationKey, cb);
 
         // Last attempt failed
-        if (any: any) {
+        if (attempts > mergedPolicy.maxRetries) {
           break;
         }
 
         // Wait before retry with exponential backoff
-        await this?.sleep(any: any);
-        delay *= mergedPolicy?.backoffMultiplier;
+        await this.sleep(delay);
+        delay *= mergedPolicy.backoffMultiplier;
       }
     }
 
     // All retries failed
-    this?.stats?.failedRecoveries++;
+    this.stats.failedRecoveries++;
 
     return {
       recovered: false,
-      action: mergedPolicy?.fallbackEnabled ? 'fallback' : 'abort',
+      action: mergedPolicy.fallbackEnabled ? 'fallback' : 'abort',
       attempts,
       error: lastError?.message || 'Unknown error',
     };
@@ -149,14 +149,14 @@ export class RecoveryEngine implements IRecoveryHandler {
     successfulRecoveries: number;
     failedRecoveries: number;
   } {
-    return { ...this?.stats };
+    return { ...this.stats };
   }
 
   /**
    * Reset recovery statistics
    */
   resetStats(): void {
-    this?.stats = {
+    this.stats = {
       totalAttempts: 0,
       successfulRecoveries: 0,
       failedRecoveries: 0,
@@ -166,30 +166,30 @@ export class RecoveryEngine implements IRecoveryHandler {
   /**
    * Get circuit breaker status
    */
-  getCircuitBreakerStatus(any: any):
+  getCircuitBreakerStatus(operationKey: string):
     | {
         failures: number;
         isOpen: boolean;
       }
     | undefined {
-    return this?.circuitBreakers?.get(any: any);
+    return this.circuitBreakers.get(operationKey);
   }
 
   /**
    * Reset circuit breaker
    */
-  resetCircuitBreaker(any: any): void {
-    this?.circuitBreakers?.delete(any: any);
+  resetCircuitBreaker(operationKey: string): void {
+    this.circuitBreakers.delete(operationKey);
   }
 
   /**
    * Reset all circuit breakers
    */
   resetAllCircuitBreakers(): void {
-    this?.circuitBreakers?.clear();
+    this.circuitBreakers.clear();
   }
 
-  private sleep(any: any): Promise<void> {
-    return new Promise(any: any));
+  private sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }

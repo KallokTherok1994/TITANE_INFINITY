@@ -21,8 +21,8 @@ export interface PromptRole {
   label: string;
   mission: string;
   style: string;
-  useCases: string?.[];
-  limits: string?.[];
+  useCases: string[];
+  limits: string[];
   systemPrompt: string;
 }
 
@@ -33,7 +33,7 @@ export interface PromptEmotionState {
 }
 
 export interface PromptMemorySlice {
-  sources: string?.[];
+  sources: string[];
   data: Record<string, unknown>;
 }
 
@@ -42,14 +42,14 @@ export interface PromptContext {
   modeIcon?: string;
   emotionState?: PromptEmotionState;
   memory?: PromptMemorySlice;
-  annotations?: string?.[];
+  annotations?: string[];
 }
 
 export interface ProviderOverride {
   instructions?: string;
   maxTokens?: number;
   temperature?: number;
-  stopSequences?: string?.[];
+  stopSequences?: string[];
 }
 
 export interface TitanePromptProfile {
@@ -58,7 +58,7 @@ export interface TitanePromptProfile {
   description: string;
   roleId: string;
   baseSystemPrompt: string;
-  safetyDirectives: PromptSafetyDirective?.[];
+  safetyDirectives: PromptSafetyDirective[];
   providerOverrides?: Partial<Record<Provider, ProviderOverride>>;
 }
 

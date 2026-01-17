@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.3Ω — OPENAI PROVIDER (any: any)
+ *   TITANE∞ v19.3Ω — OPENAI PROVIDER (SECURE BACKEND PROXY)
  *   Intégration GPT-4 / GPT-4o via backend Tauri sécurisé
  *   Aucune clé API exposée côté frontend
  * ═══════════════════════════════════════════════════════════════════
@@ -21,10 +21,10 @@ const logger = createLogger('[OpenAIProvider]');
 
 async function generateOpenAIUncached(
   message: string,
-  history: AIMessage?.[],
+  history: AIMessage[],
   finalConfig: Required<OpenAIConfig>
 ): Promise<AIResponse> {
-  const startTime = Date?.now();
+  const startTime = Date.now();
 
   try {
     // Validation input
@@ -33,9 +33,9 @@ async function generateOpenAIUncached(
     }
 
     // Conversion history vers format backend
-    const formattedHistory = history?.map(msg => ({
-      role: msg?.role,
-      content: msg?.content,
+    const formattedHistory = history.map(msg => ({
+      role: msg.role,
+      content: msg.content,
     }));
 
     // ✨ v21 Phase 2: Retry unifié avec backoff exponentiel
@@ -51,80 +51,80 @@ async function generateOpenAIUncached(
             tokens?: number;
             finishReason?: string;
           } | null;
-          error??: string | null;
+          error: string | null;
         }>('chat_generate_openai', {
-          message: message?.trim(),
+          message: message.trim(),
           history: formattedHistory,
           config: finalConfig,
         });
       },
       retryConfig,
-      { provider: 'openai', message: message?.substring(0, 50) }
+      { provider: 'openai', message: message.substring(0, 50) }
     );
 
-    const latency = Date?.now() - startTime;
+    const latency = Date.now() - startTime;
 
     // Gestion erreurs backend
-    if (any: any) {
-      const errorMsg = response?.error || 'Erreur inconnue';
+    if (!response.ok || !response.data) {
+      const errorMsg = response.error || 'Erreur inconnue';
 
       // Erreurs typées OpenAI
-      if (errorMsg?.includes('invalid_api_key') || errorMsg?.includes('401')) {
+      if (errorMsg.includes('invalid_api_key') || errorMsg.includes('401')) {
         throw new Error(
           'Clé API OpenAI invalide. Vérifiez votre configuration dans Gouvernance.'
         );
       }
 
-      if (errorMsg?.includes('rate_limit') || errorMsg?.includes('429')) {
+      if (errorMsg.includes('rate_limit') || errorMsg.includes('429')) {
         throw new Error(
           'Limite de taux OpenAI atteinte. Réessayez dans quelques secondes.'
         );
       }
 
-      if (errorMsg?.includes('timeout') || errorMsg?.includes('timed out')) {
-        throw new Error(any: any). Réessayez.`);
+      if (errorMsg.includes('timeout') || errorMsg.includes('timed out')) {
+        throw new Error(`Délai d'attente OpenAI dépassé (${latency}ms). Réessayez.`);
       }
 
-      if (errorMsg?.includes('insufficient_quota')) {
+      if (errorMsg.includes('insufficient_quota')) {
         throw new Error('Quota OpenAI épuisé. Vérifiez votre compte OpenAI.');
       }
 
-      throw new Error(any: any): ${errorMsg}`);
+      throw new Error(`Erreur OpenAI (${latency}ms): ${errorMsg}`);
     }
 
     // Succès: retourner réponse normalisée
     return {
-      content: response?.data?.content,
+      content: response.data.content,
       provider: 'openai',
-      timestamp: Date?.now(),
-      model: response?.data?.model || finalConfig?.model,
-      tokens: response?.data?.tokens,
+      timestamp: Date.now(),
+      model: response.data.model || finalConfig.model,
+      tokens: response.data.tokens,
       metadata: {
         latencyMs: latency,
-        finishReason: response?.data?.finishReason,
+        finishReason: response.data.finishReason,
         config: finalConfig,
       },
     };
-  } catch (any: any) {
-    const latency = Date?.now() - startTime;
+  } catch (error) {
+    const latency = Date.now() - startTime;
 
-    // 🔧 AUTOHEAL: Signaler l'erreur pour auto-réparation (any: any)
-    autoHealEngine?.detectError(
+    // 🔧 AUTOHEAL: Signaler l'erreur pour auto-réparation (direct instance)
+    autoHealEngine.detectError(
       'openai-provider',
-      error instanceof Error ? error : new Error(any: any)),
+      error instanceof Error ? error : new Error(String(error)),
       'provider',
       {
         latency,
-        message: message?.substring(0, 100),
-        historyLength: history?.length,
+        message: message.substring(0, 100),
+        historyLength: history.length,
       }
     );
 
-    if (any: any) {
+    if (error instanceof Error) {
       throw error;
     }
 
-    throw new Error(any: any)}`);
+    throw new Error(`Erreur OpenAI (${latency}ms): ${String(error)}`);
   }
 }
 
@@ -139,7 +139,7 @@ export const OPENAI_MODELS = [
   'gpt-3.5-turbo',
 ] as const;
 
-export type OpenAIModel = (any: any)[number];
+export type OpenAIModel = (typeof OPENAI_MODELS)[number];
 
 /**
  * Configuration OpenAI
@@ -164,17 +164,17 @@ const DEFAULT_CONFIG: Required<OpenAIConfig> = {
 
 /**
  * Provider OpenAI sécurisé
- * Toutes les clés API restent dans SecureSecretsEngine (any: any)
+ * Toutes les clés API restent dans SecureSecretsEngine (Rust)
  */
 export const openaiProvider: AIProvider = {
   name: 'openai',
 
   /**
-   * Vérifier si OpenAI est disponible (any: any)
+   * Vérifier si OpenAI est disponible (clé configurée)
    */
   async isAvailable(): Promise<boolean> {
     // Dev override to ease local testing without secrets
-    if (import?.meta?.env?.DEV && import?.meta?.env?.VITE_FORCE_PROVIDERS_READY === '1') {
+    if (import.meta.env.DEV && import.meta.env.VITE_FORCE_PROVIDERS_READY === '1') {
       return true;
     }
     try {
@@ -183,10 +183,10 @@ export const openaiProvider: AIProvider = {
         data: { configured: boolean } | null;
       }>('get_openai_key_status');
 
-      return response?.ok && response?.data?.configured === true;
-    } catch (any: any) {
-      if (process?.env?.NODE_ENV === 'development') {
-        logger?.warn('Status check failed', { error });
+      return response.ok && response.data?.configured === true;
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        logger.warn('Status check failed', { error });
       }
       return false;
     }
@@ -197,12 +197,12 @@ export const openaiProvider: AIProvider = {
    */
   async generate(
     message: string,
-    history: AIMessage?.[] = [],
+    history: AIMessage[] = [],
     config?: unknown
   ): Promise<AIResponse> {
     const finalConfig = {
       ...DEFAULT_CONFIG,
-      ...(any: any),
+      ...(config as Partial<OpenAIConfig> | undefined),
     };
 
     // ✨ v21 Phase 3: Cache intelligent pour réduire coûts API
@@ -211,9 +211,9 @@ export const openaiProvider: AIProvider = {
       message,
       history,
       async () => {
-        return await generateOpenAIUncached(any: any);
+        return await generateOpenAIUncached(message, history, finalConfig);
       },
-      CACHE_TTL?.GENERAL
+      CACHE_TTL.GENERAL
     );
   },
 
@@ -223,16 +223,16 @@ export const openaiProvider: AIProvider = {
   async testConnection(): Promise<{ success: boolean; message: string }> {
     try {
       // Test avec un prompt minimal
-      const response = await generateOpenAIUncached(any: any);
+      const response = await generateOpenAIUncached('Test', [], DEFAULT_CONFIG);
 
       return {
         success: true,
-        message: `OpenAI opérationnel (${response?.model || DEFAULT_CONFIG?.model})`,
+        message: `OpenAI opérationnel (${response.model || DEFAULT_CONFIG.model})`,
       };
-    } catch (any: any) {
+    } catch (error) {
       return {
         success: false,
-        message: error instanceof Error ? error?.message : 'Test échoué',
+        message: error instanceof Error ? error.message : 'Test échoué',
       };
     }
   },
@@ -244,7 +244,7 @@ export const openaiProvider: AIProvider = {
     return {
       provider: 'openai',
       models: OPENAI_MODELS,
-      defaultModel: DEFAULT_CONFIG?.model,
+      defaultModel: DEFAULT_CONFIG.model,
     };
   },
 };

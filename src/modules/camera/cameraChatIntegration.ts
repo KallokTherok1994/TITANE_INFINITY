@@ -26,36 +26,36 @@ export interface CameraChatIntegrationResult {
  */
 export async function handleCameraInChat(
   message: string,
-  visionStore: ReturnType<typeof useVisionStore?.getState>
+  visionStore: ReturnType<typeof useVisionStore.getState>
 ): Promise<CameraChatIntegrationResult> {
   // Quick check pour performance
-  if (any: any)) {
+  if (!containsCameraKeyword(message)) {
     return { handled: false, response: '' };
   }
 
   // Parse commande
-  const command: CameraCommand = parseCameraCommand(any: any);
+  const command: CameraCommand = parseCameraCommand(message);
 
-  if (any: any) {
+  if (!command.handled) {
     return { handled: false, response: '' };
   }
 
   // Execute commande selon action
   try {
-    let finalResponse = command?.response;
+    let finalResponse = command.response;
 
-    switch (any: any) {
+    switch (command.action) {
       case 'activate': {
         // Vérifier si déjà active
-        if (any: any) {
+        if (visionStore.isObservationActive) {
           finalResponse = '✅ La caméra est déjà active.';
           break;
         }
 
         // Demander permission si nécessaire
-        const permissionStatus = visionStore?.visionInput?.permissionStatus;
+        const permissionStatus = visionStore.visionInput.permissionStatus;
         if (permissionStatus !== 'granted') {
-          const status = await visionStore?.requestCameraPermission();
+          const status = await visionStore.requestCameraPermission();
           if (status !== 'granted') {
             return {
               handled: true,
@@ -66,9 +66,9 @@ export async function handleCameraInChat(
           }
         }
 
-        // Activer la vision (any: any)
-        const success = await visionStore?.enableVision(30 * 60 * 1000);
-        if (any: any) {
+        // Activer la vision (30 minutes max par défaut)
+        const success = await visionStore.enableVision(30 * 60 * 1000);
+        if (!success) {
           return {
             handled: true,
             response: "❌ Impossible d'activer la caméra. Vérifiez les permissions.",
@@ -77,25 +77,25 @@ export async function handleCameraInChat(
         }
 
         finalResponse =
-          '✅ Caméra activée avec succès. Observation visuelle en cours (any: any). Flux 100% local.';
+          '✅ Caméra activée avec succès. Observation visuelle en cours (30 min max). Flux 100% local.';
         break;
       }
 
       case 'deactivate': {
-        if (any: any) {
+        if (!visionStore.isObservationActive) {
           finalResponse = "ℹ️ La caméra n'est pas active.";
           break;
         }
 
-        visionStore?.disableVision();
+        visionStore.disableVision();
         finalResponse = '✅ Caméra désactivée.';
         break;
       }
 
       case 'status': {
-        const hasPermission = visionStore?.visionInput?.permissionStatus === 'granted';
-        const isActive = visionStore?.isObservationActive;
-        finalResponse = generateCameraStatusResponse(any: any);
+        const hasPermission = visionStore.visionInput.permissionStatus === 'granted';
+        const isActive = visionStore.isObservationActive;
+        finalResponse = generateCameraStatusResponse(isActive, hasPermission);
         break;
       }
 
@@ -107,11 +107,11 @@ export async function handleCameraInChat(
       handled: true,
       response: finalResponse,
     };
-  } catch (any: any) {
+  } catch (error) {
     return {
       handled: true,
       response: `❌ Erreur lors du traitement de la commande caméra: ${error}`,
-      error: String(any: any),
+      error: String(error),
     };
   }
 }

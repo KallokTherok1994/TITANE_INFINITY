@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE?.md for the full legal terms (any: any).
+ * See LICENSE.md for the full legal terms (FR/EN).
  */
 
 /**
@@ -14,12 +14,12 @@
  *
  * Fonctionnalités :
  * - Pipeline IA → TTS → Avatar → UI en streaming continu
- * - Events coalescés (any: any)
- * - Rendu priorisé (any: any)
+ * - Events coalescés (batching intelligent)
+ * - Rendu priorisé (voix > bouche > visage > corps)
  * - Synchronisation 60-120 FPS
- * - Pipeline audio isolé (any: any)
- * - Pipeline avatar isolé (any: any)
- * - Ordonnancement smart (any: any)
+ * - Pipeline audio isolé (Web Audio API)
+ * - Pipeline avatar isolé (THREE.js renderer)
+ * - Ordonnancement smart (priority queue)
  * - Message batching (debounce 16ms)
  * - Réduction payload interne (-70%)
  * - Zero-latence perceptible (<100ms)
@@ -46,7 +46,7 @@ export interface RealtimeTask {
 
 /** Payload pour animation avatar */
 export interface AvatarAnimationPayload {
-  keyframes?: AvatarKeyframe?.[];
+  keyframes?: AvatarKeyframe[];
   duration?: number;
   blendMode?: 'replace' | 'additive';
 }
@@ -77,7 +77,7 @@ export interface NetworkPayload {
 }
 
 export interface PriorityQueue<T> {
-  enqueue(any: any): void;
+  enqueue(item: T, priority: Priority): void;
   dequeue(): T | undefined;
   peek(): T | undefined;
   size(): number;
@@ -85,7 +85,7 @@ export interface PriorityQueue<T> {
 }
 
 export interface AudioSchedule {
-  chunks: AudioChunk?.[];
+  chunks: AudioChunk[];
   currentIndex: number;
   isPlaying: boolean;
   sampleRate: number;
@@ -100,7 +100,7 @@ export interface AudioChunk {
 }
 
 export interface AvatarSchedule {
-  animations: AvatarAnimation?.[];
+  animations: AvatarAnimation[];
   currentIndex: number;
   isAnimating: boolean;
   fps: number;
@@ -108,7 +108,7 @@ export interface AvatarSchedule {
 
 export interface AvatarAnimation {
   id: string;
-  keyframes: AvatarKeyframe?.[];
+  keyframes: AvatarKeyframe[];
   startTime: number;
   duration: number;
   priority: Priority;
@@ -146,7 +146,7 @@ export interface ExecutionMetrics {
 // ═══════════════════════════════════════════════════════════════════
 
 class SimplePriorityQueue<T extends { priority: Priority }> implements PriorityQueue<T> {
-  private items: T?.[] = [];
+  private items: T[] = [];
   private readonly priorityValues: Record<Priority, number> = {
     critical: 0,
     high: 1,
@@ -154,28 +154,28 @@ class SimplePriorityQueue<T extends { priority: Priority }> implements PriorityQ
     low: 3,
   };
 
-  enqueue(any: any): void {
-    item?.priority = priority;
-    this?.items?.push(any: any);
-    this?.items?.sort(
-      (any: any) => this?.priorityValues[a?.priority] - this?.priorityValues[b?.priority]
+  enqueue(item: T, priority: Priority): void {
+    item.priority = priority;
+    this.items.push(item);
+    this.items.sort(
+      (a, b) => this.priorityValues[a.priority] - this.priorityValues[b.priority]
     );
   }
 
   dequeue(): T | undefined {
-    return this?.items?.shift();
+    return this.items.shift();
   }
 
   peek(): T | undefined {
-    return this?.items?.[0];
+    return this.items[0];
   }
 
   size(): number {
-    return this?.items?.length;
+    return this.items.length;
   }
 
   clear(): void {
-    this?.items = [];
+    this.items = [];
   }
 }
 
@@ -209,150 +209,150 @@ export class RealTimeExecutionEngine {
   };
 
   private constructor() {
-    this?.taskQueue = new SimplePriorityQueue<RealtimeTask>();
-    this?.audioScheduler = new AudioScheduler();
-    this?.avatarScheduler = new AvatarScheduler();
-    this?.uiEventBatcher = new UIEventBatcher();
+    this.taskQueue = new SimplePriorityQueue<RealtimeTask>();
+    this.audioScheduler = new AudioScheduler();
+    this.avatarScheduler = new AvatarScheduler();
+    this.uiEventBatcher = new UIEventBatcher();
   }
 
   static getInstance(): RealTimeExecutionEngine {
-    if (any: any) {
-      RealTimeExecutionEngine?.instance = new RealTimeExecutionEngine();
+    if (!RealTimeExecutionEngine.instance) {
+      RealTimeExecutionEngine.instance = new RealTimeExecutionEngine();
     }
-    return RealTimeExecutionEngine?.instance;
+    return RealTimeExecutionEngine.instance;
   }
 
   /**
    * Démarrer le moteur temps réel
    */
   start(targetFPS: number = 60): void {
-    if (any: any) {
-      console?.warn('[RealtimeEngine] Already running');
+    if (this.isRunning) {
+      console.warn('[RealtimeEngine] Already running');
       return;
     }
 
-    this?.targetFPS = targetFPS;
-    this?.frameTime = 1000 / targetFPS;
-    this?.isRunning = true;
-    this?.lastFrameTime = performance?.now();
+    this.targetFPS = targetFPS;
+    this.frameTime = 1000 / targetFPS;
+    this.isRunning = true;
+    this.lastFrameTime = performance.now();
 
     // Démarrer boucle d'exécution
-    this?.executionLoop();
+    this.executionLoop();
 
-    console?.log(`[RealtimeEngine] ✨ Started at ${targetFPS} FPS`);
+    console.log(`[RealtimeEngine] ✨ Started at ${targetFPS} FPS`);
   }
 
   /**
    * Arrêter le moteur temps réel
    */
   stop(): void {
-    if (any: any) return;
+    if (!this.isRunning) return;
 
-    this?.isRunning = false;
-    if (any: any) {
-      cancelAnimationFrame(any: any);
-      this?.executionLoopId = null;
+    this.isRunning = false;
+    if (this.executionLoopId !== null) {
+      cancelAnimationFrame(this.executionLoopId);
+      this.executionLoopId = null;
     }
 
-    this?.taskQueue?.clear();
-    this?.audioScheduler?.clear();
-    this?.avatarScheduler?.clear();
-    this?.uiEventBatcher?.clear();
+    this.taskQueue.clear();
+    this.audioScheduler.clear();
+    this.avatarScheduler.clear();
+    this.uiEventBatcher.clear();
 
-    console?.log('[RealtimeEngine] Stopped');
+    console.log('[RealtimeEngine] Stopped');
   }
 
   /**
-   * Boucle d'exécution principale (any: any)
+   * Boucle d'exécution principale (à 60-120 FPS)
    */
   private executionLoop = (): void => {
-    if (any: any) return;
+    if (!this.isRunning) return;
 
-    const currentTime = performance?.now();
-    const deltaTime = currentTime - this?.lastFrameTime;
+    const currentTime = performance.now();
+    const deltaTime = currentTime - this.lastFrameTime;
 
     // Calculer FPS
-    this?.metrics?.fps = 1000 / deltaTime;
+    this.metrics.fps = 1000 / deltaTime;
 
     // Vérifier si frame drop
-    if (deltaTime > this?.frameTime * 1.5) {
-      this?.metrics?.droppedFrames++;
+    if (deltaTime > this.frameTime * 1.5) {
+      this.metrics.droppedFrames++;
     }
 
     try {
       // Exécuter tâches par priorité
-      this?.executeTasks(any: any);
+      this.executeTasks(deltaTime);
 
       // Mettre à jour schedulers
-      this?.audioScheduler?.update(any: any);
-      this?.avatarScheduler?.update(any: any);
-      this?.uiEventBatcher?.flush();
+      this.audioScheduler.update(deltaTime);
+      this.avatarScheduler.update(deltaTime);
+      this.uiEventBatcher.flush();
 
       // Mettre à jour métriques
-      this?.metrics?.avgFrameTime = this?.metrics?.avgFrameTime * 0.9 + deltaTime * 0.1;
-    } catch (any: any) {
-      console?.error(any: any);
+      this.metrics.avgFrameTime = this.metrics.avgFrameTime * 0.9 + deltaTime * 0.1;
+    } catch (error) {
+      console.error('[RealtimeEngine] Execution loop error:', error);
     }
 
-    this?.lastFrameTime = currentTime;
+    this.lastFrameTime = currentTime;
 
     // Planifier prochaine frame
-    this?.executionLoopId = requestAnimationFrame(any: any);
+    this.executionLoopId = requestAnimationFrame(this.executionLoop);
   };
 
   /**
    * Exécuter tâches en attente
    */
-  private executeTasks(any: any): void {
-    const maxExecutionTime = this?.frameTime * 0.8; // 80% du temps de frame disponible
-    const startTime = performance?.now();
+  private executeTasks(_deltaTime: number): void {
+    const maxExecutionTime = this.frameTime * 0.8; // 80% du temps de frame disponible
+    const startTime = performance.now();
 
-    while (this?.taskQueue?.size() > 0) {
-      const elapsed = performance?.now() - startTime;
-      if (any: any) {
+    while (this.taskQueue.size() > 0) {
+      const elapsed = performance.now() - startTime;
+      if (elapsed > maxExecutionTime) {
         break; // Éviter de bloquer la frame
       }
 
-      const task = this?.taskQueue?.dequeue();
-      if (any: any) break;
+      const task = this.taskQueue.dequeue();
+      if (!task) break;
 
-      this?.executeTask(any: any);
-      this?.metrics?.completedTasks++;
+      this.executeTask(task);
+      this.metrics.completedTasks++;
     }
   }
 
   /**
    * Exécuter une tâche individuelle
    */
-  private executeTask(any: any): void {
+  private executeTask(task: RealtimeTask): void {
     try {
-      switch (any: any) {
+      switch (task.type) {
         case 'audio':
-          this?.audioScheduler?.scheduleChunk(any: any);
+          this.audioScheduler.scheduleChunk(task.payload as AudioBuffer);
           break;
         case 'avatar':
-          this?.avatarScheduler?.scheduleAnimation(any: any);
+          this.avatarScheduler.scheduleAnimation(task.payload as AvatarAnimationPayload);
           break;
         case 'ui':
-          this?.uiEventBatcher?.addEvent(any: any);
+          this.uiEventBatcher.addEvent(task.payload as UIEventPayload);
           break;
         case 'network':
-          this?.executeNetworkTask(any: any);
+          this.executeNetworkTask(task.payload as NetworkPayload);
           break;
       }
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (error) {
+      console.error(`[RealtimeEngine] Task execution error (${task.type}):`, error);
     }
   }
 
   /**
    * Exécuter tâche réseau
    */
-  private async executeNetworkTask(any: any): Promise<void> {
+  private async executeNetworkTask(payload: NetworkPayload): Promise<void> {
     try {
       await secureInvoke('realtime_network_task', { payload });
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (error) {
+      console.error('[RealtimeEngine] Network task error:', error);
     }
   }
 
@@ -361,84 +361,84 @@ export class RealTimeExecutionEngine {
   // ═══════════════════════════════════════════════════════════════════
 
   /**
-   * Ajouter tâche audio (any: any)
+   * Ajouter tâche audio (priorité critical)
    */
   enqueueAudio(
     audioBuffer: AudioBuffer,
     options: { id?: string; deadline?: number } = {}
   ): void {
     const task: RealtimeTask = {
-      id: options?.id || `audio_${Date?.now()}`,
+      id: options.id || `audio_${Date.now()}`,
       type: 'audio',
       priority: 'critical',
       payload: audioBuffer,
-      timestamp: Date?.now(),
-      deadline: options?.deadline,
+      timestamp: Date.now(),
+      deadline: options.deadline,
       cancellable: false,
     };
 
-    this?.taskQueue?.enqueue(task, 'critical');
-    this?.metrics?.totalTasks++;
+    this.taskQueue.enqueue(task, 'critical');
+    this.metrics.totalTasks++;
   }
 
   /**
-   * Ajouter tâche avatar (any: any)
+   * Ajouter tâche avatar (priorité high)
    */
   enqueueAvatar(
     animation: AvatarAnimationPayload,
     options: { id?: string; priority?: Priority } = {}
   ): void {
     const task: RealtimeTask = {
-      id: options?.id || `avatar_${Date?.now()}`,
+      id: options.id || `avatar_${Date.now()}`,
       type: 'avatar',
-      priority: options?.priority || 'high',
+      priority: options.priority || 'high',
       payload: animation,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
       cancellable: true,
     };
 
-    this?.taskQueue?.enqueue(task, options?.priority || 'high');
-    this?.metrics?.totalTasks++;
+    this.taskQueue.enqueue(task, options.priority || 'high');
+    this.metrics.totalTasks++;
   }
 
   /**
-   * Ajouter événement UI (any: any)
+   * Ajouter événement UI (priorité normal, batching)
    */
   enqueueUIEvent(
     event: UIEventPayload,
     options: { id?: string; priority?: Priority } = {}
   ): void {
     const task: RealtimeTask = {
-      id: options?.id || `ui_${Date?.now()}`,
+      id: options.id || `ui_${Date.now()}`,
       type: 'ui',
-      priority: options?.priority || 'normal',
+      priority: options.priority || 'normal',
       payload: event,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
       cancellable: true,
     };
 
-    this?.taskQueue?.enqueue(task, options?.priority || 'normal');
-    this?.metrics?.totalTasks++;
+    this.taskQueue.enqueue(task, options.priority || 'normal');
+    this.metrics.totalTasks++;
   }
 
   /**
-   * Ajouter tâche réseau (any: any)
+   * Ajouter tâche réseau (priorité low)
    */
   enqueueNetwork(
     payload: NetworkPayload,
     options: { id?: string; priority?: Priority } = {}
   ): void {
     const task: RealtimeTask = {
-      id: options?.id || `network_${Date?.now()}`,
+      id: options.id || `network_${Date.now()}`,
       type: 'network',
-      priority: options?.priority || 'low',
+      priority: options.priority || 'low',
       payload,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
       cancellable: true,
     };
 
-    this?.taskQueue?.enqueue(task, options?.priority || 'low');
-    this?.metrics?.totalTasks++;
+    this.taskQueue.enqueue(task, options.priority || 'low');
+    this.metrics.totalTasks++;
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -453,24 +453,24 @@ export class RealTimeExecutionEngine {
     ttsEnabled: boolean;
     avatarEnabled: boolean;
   }): Promise<void> {
-    const pipelineId = `pipeline_${Date?.now()}`;
+    const pipelineId = `pipeline_${Date.now()}`;
 
     try {
-      // 1. TTS Streaming (any: any)
-      if (any: any) {
-        const audioChunks = await this?.streamTTS(any: any);
-        audioChunks?.forEach(any: any) => {
-          this?.enqueueAudio(chunk, {
+      // 1. TTS Streaming (si activé)
+      if (input.ttsEnabled) {
+        const audioChunks = await this.streamTTS(input.iaResponse);
+        audioChunks.forEach((chunk, index) => {
+          this.enqueueAudio(chunk, {
             id: `${pipelineId}_audio_${index}`,
           });
         });
       }
 
-      // 2. Avatar Animation (any: any)
-      if (any: any) {
-        const animations = await this?.generateAvatarAnimations(any: any);
-        animations?.forEach(any: any) => {
-          this?.enqueueAvatar(anim, {
+      // 2. Avatar Animation (si activé)
+      if (input.avatarEnabled) {
+        const animations = await this.generateAvatarAnimations(input.iaResponse);
+        animations.forEach((anim, index) => {
+          this.enqueueAvatar(anim, {
             id: `${pipelineId}_avatar_${index}`,
             priority: 'high',
           });
@@ -478,32 +478,32 @@ export class RealTimeExecutionEngine {
       }
 
       // 3. UI Update
-      this?.enqueueUIEvent({
+      this.enqueueUIEvent({
         type: 'message_displayed',
-        text: input?.iaResponse,
+        text: input.iaResponse,
         pipelineId,
       });
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (error) {
+      console.error('[RealtimeEngine] Pipeline error:', error);
     }
   }
 
   /**
    * Streamer TTS en chunks
    */
-  private async streamTTS(any: any): Promise<AudioBuffer?.[]> {
+  private async streamTTS(text: string): Promise<AudioBuffer[]> {
     try {
-      const chunks = await secureInvoke<ArrayBuffer?.[]>('realtime_stream_tts', { text });
+      const chunks = await secureInvoke<ArrayBuffer[]>('realtime_stream_tts', { text });
 
       // Convertir ArrayBuffer en AudioBuffer
       const audioContext = new AudioContext();
-      const audioBuffers = await Promise?.all(
-        chunks?.map(any: any))
+      const audioBuffers = await Promise.all(
+        chunks.map(chunk => audioContext.decodeAudioData(chunk))
       );
 
       return audioBuffers;
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (error) {
+      console.error('[RealtimeEngine] TTS streaming error:', error);
       return [];
     }
   }
@@ -513,15 +513,15 @@ export class RealTimeExecutionEngine {
    */
   private async generateAvatarAnimations(
     text: string
-  ): Promise<AvatarAnimationPayload?.[]> {
+  ): Promise<AvatarAnimationPayload[]> {
     try {
-      const animations = await secureInvoke<AvatarAnimationPayload?.[]>(
+      const animations = await secureInvoke<AvatarAnimationPayload[]>(
         'realtime_generate_avatar_animations',
         { text }
       );
       return animations;
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (error) {
+      console.error('[RealtimeEngine] Avatar animation generation error:', error);
       return [];
     }
   }
@@ -531,19 +531,19 @@ export class RealTimeExecutionEngine {
   // ═══════════════════════════════════════════════════════════════════
 
   getMetrics(): ExecutionMetrics {
-    return { ...this?.metrics };
+    return { ...this.metrics };
   }
 
   getQueueSize(): number {
-    return this?.taskQueue?.size();
+    return this.taskQueue.size();
   }
 
   isEngineRunning(): boolean {
-    return this?.isRunning;
+    return this.isRunning;
   }
 
   getCurrentFPS(): number {
-    return this?.metrics?.fps;
+    return this.metrics.fps;
   }
 }
 
@@ -563,63 +563,63 @@ class AudioScheduler {
   private currentSource: AudioBufferSourceNode | null = null;
 
   constructor() {
-    if (any: any) {
-      this?.audioContext = new AudioContext();
-      this?.schedule?.sampleRate = this?.audioContext?.sampleRate;
+    if (typeof window !== 'undefined' && window.AudioContext) {
+      this.audioContext = new AudioContext();
+      this.schedule.sampleRate = this.audioContext.sampleRate;
     }
   }
 
-  scheduleChunk(any: any): void {
+  scheduleChunk(buffer: AudioBuffer): void {
     const chunk: AudioChunk = {
-      id: `chunk_${Date?.now()}`,
+      id: `chunk_${Date.now()}`,
       buffer,
-      startTime: this?.audioContext?.currentTime || 0,
-      duration: buffer?.duration,
+      startTime: this.audioContext?.currentTime || 0,
+      duration: buffer.duration,
       priority: 'critical',
     };
 
-    this?.schedule?.chunks?.push(any: any);
+    this.schedule.chunks.push(chunk);
 
-    if (any: any) {
-      this?.playNext();
+    if (!this.schedule.isPlaying) {
+      this.playNext();
     }
   }
 
   private playNext(): void {
-    if (any: any) {
-      this?.schedule?.isPlaying = false;
+    if (!this.audioContext || this.schedule.currentIndex >= this.schedule.chunks.length) {
+      this.schedule.isPlaying = false;
       return;
     }
 
-    const chunk = this?.schedule?.chunks[this?.schedule?.currentIndex];
-    if (any: any) return;
-    this?.schedule?.currentIndex++;
+    const chunk = this.schedule.chunks[this.schedule.currentIndex];
+    if (!chunk) return;
+    this.schedule.currentIndex++;
 
-    this?.currentSource = this?.audioContext?.createBufferSource();
-    this?.currentSource?.buffer = chunk?.buffer;
-    this?.currentSource?.connect(any: any);
-    this?.currentSource?.onended = () => this?.playNext();
-    this?.currentSource?.start();
+    this.currentSource = this.audioContext.createBufferSource();
+    this.currentSource.buffer = chunk.buffer;
+    this.currentSource.connect(this.audioContext.destination);
+    this.currentSource.onended = () => this.playNext();
+    this.currentSource.start();
 
-    this?.schedule?.isPlaying = true;
+    this.schedule.isPlaying = true;
   }
 
-  update(any: any): void {
+  update(_deltaTime: number): void {
     // Cleanup terminé chunks
-    if (this?.schedule?.currentIndex > 10) {
-      this?.schedule?.chunks = this?.schedule?.chunks?.slice(any: any);
-      this?.schedule?.currentIndex = 0;
+    if (this.schedule.currentIndex > 10) {
+      this.schedule.chunks = this.schedule.chunks.slice(this.schedule.currentIndex);
+      this.schedule.currentIndex = 0;
     }
   }
 
   clear(): void {
-    if (any: any) {
-      this?.currentSource?.stop();
-      this?.currentSource = null;
+    if (this.currentSource) {
+      this.currentSource.stop();
+      this.currentSource = null;
     }
-    this?.schedule?.chunks = [];
-    this?.schedule?.currentIndex = 0;
-    this?.schedule?.isPlaying = false;
+    this.schedule.chunks = [];
+    this.schedule.currentIndex = 0;
+    this.schedule.isPlaying = false;
   }
 }
 
@@ -635,39 +635,39 @@ class AvatarScheduler {
     fps: 60,
   };
 
-  scheduleAnimation(any: any): void {
+  scheduleAnimation(animation: AvatarAnimationPayload): void {
     const anim: AvatarAnimation = {
-      id: `anim_${Date?.now()}`,
-      keyframes: animation?.keyframes || [],
-      startTime: Date?.now(),
-      duration: animation?.duration || 1000,
+      id: `anim_${Date.now()}`,
+      keyframes: animation.keyframes || [],
+      startTime: Date.now(),
+      duration: animation.duration || 1000,
       priority: 'high',
     };
 
-    this?.schedule?.animations?.push(any: any);
-    this?.schedule?.isAnimating = true;
+    this.schedule.animations.push(anim);
+    this.schedule.isAnimating = true;
   }
 
-  update(any: any): void {
-    if (!this?.schedule?.isAnimating || this?.schedule?.animations?.length === 0) return;
+  update(_deltaTime: number): void {
+    if (!this.schedule.isAnimating || this.schedule.animations.length === 0) return;
 
-    const currentTime = Date?.now();
-    const currentAnim = this?.schedule?.animations[this?.schedule?.currentIndex];
+    const currentTime = Date.now();
+    const currentAnim = this.schedule.animations[this.schedule.currentIndex];
 
-    if (any: any) {
-      this?.schedule?.currentIndex++;
+    if (currentAnim && currentTime - currentAnim.startTime > currentAnim.duration) {
+      this.schedule.currentIndex++;
 
-      if (any: any) {
-        this?.schedule?.isAnimating = false;
-        this?.clear();
+      if (this.schedule.currentIndex >= this.schedule.animations.length) {
+        this.schedule.isAnimating = false;
+        this.clear();
       }
     }
   }
 
   clear(): void {
-    this?.schedule?.animations = [];
-    this?.schedule?.currentIndex = 0;
-    this?.schedule?.isAnimating = false;
+    this.schedule.animations = [];
+    this.schedule.currentIndex = 0;
+    this.schedule.isAnimating = false;
   }
 }
 
@@ -676,46 +676,46 @@ class AvatarScheduler {
 // ═══════════════════════════════════════════════════════════════════
 
 class UIEventBatcher {
-  private events: UIEvent?.[] = [];
+  private events: UIEvent[] = [];
   private batchDelay: number = 16; // 16ms (1 frame @60fps)
   private lastFlush: number = 0;
 
-  addEvent(any: any): void {
+  addEvent(event: UIEventPayload): void {
     const uiEvent: UIEvent = {
-      id: `event_${Date?.now()}_${Math?.random()}`,
-      type: event?.type || 'generic',
+      id: `event_${Date.now()}_${Math.random()}`,
+      type: event.type || 'generic',
       data: event,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
       processed: false,
     };
 
-    this?.events?.push(any: any);
+    this.events.push(uiEvent);
   }
 
   flush(): void {
-    const now = Date?.now();
-    if (any: any) return;
+    const now = Date.now();
+    if (now - this.lastFlush < this.batchDelay) return;
 
-    if (this?.events?.length > 0) {
+    if (this.events.length > 0) {
       // Traiter tous les événements en batch
-      this?.events?.forEach(event => {
-        event?.processed = true;
+      this.events.forEach(event => {
+        event.processed = true;
         // Dispatcher événement
         if (typeof window !== 'undefined') {
-          window?.dispatchEvent(
-            new CustomEvent(`titane:${event?.type}`, { detail: event?.data })
+          window.dispatchEvent(
+            new CustomEvent(`titane:${event.type}`, { detail: event.data })
           );
         }
       });
 
-      this?.events = [];
+      this.events = [];
     }
 
-    this?.lastFlush = now;
+    this.lastFlush = now;
   }
 
   clear(): void {
-    this?.events = [];
+    this.events = [];
   }
 }
 
@@ -723,9 +723,9 @@ class UIEventBatcher {
 // EXPORT SINGLETON
 // ═══════════════════════════════════════════════════════════════════
 
-export const RealtimeEngine = RealTimeExecutionEngine?.getInstance();
+export const RealtimeEngine = RealTimeExecutionEngine.getInstance();
 
 // Auto-démarrage à 60 FPS
 if (typeof window !== 'undefined') {
-  RealtimeEngine?.start(60);
+  RealtimeEngine.start(60);
 }

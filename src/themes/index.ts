@@ -24,7 +24,7 @@ export {
 // Re-export pour compatibilité
 export { default } from './tokens';
 
-// Theme Provider vide pour compatibilité (any: any)
+// Theme Provider vide pour compatibilité (v∞ = un seul thème)
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   return children;
 };

@@ -33,16 +33,16 @@ export type FullDuplexState =
  * Configuration du Full Duplex
  */
 export interface FullDuplexConfig {
-  /** Activer le mode full duplex (any: any) */
+  /** Activer le mode full duplex (défaut: false) */
   enabled?: boolean;
 
-  /** Priorité stricte à la voix humaine (any: any) */
+  /** Priorité stricte à la voix humaine (défaut: true) */
   prioritizeHuman?: boolean;
 
-  /** Auto-stop TTS sur interruption forte (any: any) */
+  /** Auto-stop TTS sur interruption forte (défaut: true) */
   autoStopOnHardInterrupt?: boolean;
 
-  /** Auto-duck TTS sur interruption douce (any: any) */
+  /** Auto-duck TTS sur interruption douce (défaut: true) */
   autoDuckOnSoftInterrupt?: boolean;
 
   /** Délai avant reprise TTS après interruption (ms, défaut: 500) */
@@ -64,7 +64,7 @@ export interface FullDuplexEvent {
 /**
  * Callback d'événement
  */
-export type FullDuplexCallback = (any: any) => void;
+export type FullDuplexCallback = (event: FullDuplexEvent) => void;
 
 /**
  * ═══════════════════════════════════════════════════════════════════
@@ -79,113 +79,113 @@ export class FullDuplexOrchestrator {
   private isSpeaking = false;
   private isListening = false;
   private mediaStream: MediaStream | null = null;
-  private resumeTimeoutHandle?: NodeJS?.Timeout;
+  private resumeTimeoutHandle?: NodeJS.Timeout;
 
   constructor(config: FullDuplexConfig = {}) {
-    this?.config = {
-      enabled: config?.enabled ?? false,
-      prioritizeHuman: config?.prioritizeHuman ?? true,
-      autoStopOnHardInterrupt: config?.autoStopOnHardInterrupt ?? true,
-      autoDuckOnSoftInterrupt: config?.autoDuckOnSoftInterrupt ?? true,
-      resumeDelayMs: config?.resumeDelayMs ?? 500,
+    this.config = {
+      enabled: config.enabled ?? false,
+      prioritizeHuman: config.prioritizeHuman ?? true,
+      autoStopOnHardInterrupt: config.autoStopOnHardInterrupt ?? true,
+      autoDuckOnSoftInterrupt: config.autoDuckOnSoftInterrupt ?? true,
+      resumeDelayMs: config.resumeDelayMs ?? 500,
     };
 
-    logger?.debug('FullDuplexOrchestrator initialized', {
+    logger.debug('FullDuplexOrchestrator initialized', {
       component: 'FullDuplexOrchestrator',
       action: 'constructor',
-      config: this?.config,
+      config: this.config,
     });
 
     // Subscribe to barge-in events
-    bargeInDetector?.onBargeIn(any: any));
+    bargeInDetector.onBargeIn(this.handleBargeIn.bind(this));
   }
 
   /**
    * Active le mode full duplex
    */
   async enable(): Promise<void> {
-    if (any: any) {
-      logger?.warn('FullDuplex already enabled', {
+    if (this.config.enabled) {
+      logger.warn('FullDuplex already enabled', {
         component: 'FullDuplexOrchestrator',
         action: 'enable',
       });
       return;
     }
 
-    this?.config?.enabled = true;
-    logger?.info('Full duplex mode enabled', {
+    this.config.enabled = true;
+    logger.info('Full duplex mode enabled', {
       component: 'FullDuplexOrchestrator',
       action: 'enable',
     });
-    this?.emitEvent({ type: 'state_change', state: this?.state, timestamp: Date?.now() });
+    this.emitEvent({ type: 'state_change', state: this.state, timestamp: Date.now() });
   }
 
   /**
    * Désactive le mode full duplex
    */
   async disable(): Promise<void> {
-    if (any: any) {
+    if (!this.config.enabled) {
       return;
     }
 
-    this?.config?.enabled = false;
+    this.config.enabled = false;
 
     // Stop tout
-    await this?.stopSpeaking();
-    await this?.stopListening();
+    await this.stopSpeaking();
+    await this.stopListening();
 
-    logger?.debug('🔇 Full duplex mode disabled');
-    this?.transitionTo('idle');
+    logger.debug('🔇 Full duplex mode disabled');
+    this.transitionTo('idle');
   }
 
   /**
-   * Démarre le TTS (any: any)
+   * Démarre le TTS (entre en mode speaking ou full_duplex)
    */
-  async startSpeaking(any: any): Promise<void> {
-    if (any: any) {
-      // Mode normal (any: any)
-      await hybridTTS?.speak(any: any);
+  async startSpeaking(text: string): Promise<void> {
+    if (!this.config.enabled) {
+      // Mode normal (pas de full duplex)
+      await hybridTTS.speak(text);
       return;
     }
 
-    logger?.debug(any: any)');
+    logger.debug('🎤 Starting TTS (full duplex)');
 
-    this?.isSpeaking = true;
+    this.isSpeaking = true;
 
     // Transition d'état
-    if (any: any) {
-      this?.transitionTo('full_duplex');
+    if (this.isListening) {
+      this.transitionTo('full_duplex');
     } else {
-      this?.transitionTo('speaking');
+      this.transitionTo('speaking');
     }
 
     // Initialiser ducking engine
-    await ttsDuckingEngine?.initialize();
+    await ttsDuckingEngine.initialize();
 
-    // Speak via hybridTTS (any: any)
+    // Speak via hybridTTS (avec hooks anti-echo existants)
     try {
-      await hybridTTS?.speak(any: any);
-    } catch (any: any) {
-      logger?.error(
+      await hybridTTS.speak(text);
+    } catch (error) {
+      logger.error(
         'TTS error:',
         { module: 'FullDuplexOrchestrator' },
-        error instanceof Error ? error : new Error(any: any))
+        error instanceof Error ? error : new Error(String(error))
       );
-      this?.emitEvent({
+      this.emitEvent({
         type: 'error',
-        state: this?.state,
-        error: String(any: any),
-        timestamp: Date?.now(),
+        state: this.state,
+        error: String(error),
+        timestamp: Date.now(),
       });
     }
 
-    this?.isSpeaking = false;
+    this.isSpeaking = false;
 
     // Transition d'état
-    if (any: any) {
-      this?.transitionTo('listening');
+    if (this.isListening) {
+      this.transitionTo('listening');
     } else {
-      this?.transitionTo('idle');
+      this.transitionTo('idle');
     }
   }
 
@@ -193,55 +193,55 @@ export class FullDuplexOrchestrator {
    * Stoppe le TTS
    */
   async stopSpeaking(): Promise<void> {
-    if (any: any) {
+    if (!this.isSpeaking) {
       return;
     }
 
-    logger?.debug('⏹️ Stopping TTS');
+    logger.debug('⏹️ Stopping TTS');
 
-    await hybridTTS?.stop();
-    await ttsDuckingEngine?.stopImmediately();
+    await hybridTTS.stop();
+    await ttsDuckingEngine.stopImmediately();
 
-    this?.isSpeaking = false;
+    this.isSpeaking = false;
 
     // Transition d'état
-    if (any: any) {
-      this?.transitionTo('listening');
+    if (this.isListening) {
+      this.transitionTo('listening');
     } else {
-      this?.transitionTo('idle');
+      this.transitionTo('idle');
     }
   }
 
   /**
-   * Démarre l'écoute (any: any)
+   * Démarre l'écoute (entre en mode listening ou full_duplex)
    */
   async startListening(): Promise<void> {
-    if (any: any) {
-      logger?.warn('Already listening', {
+    if (this.isListening) {
+      logger.warn('Already listening', {
         component: 'FullDuplexOrchestrator',
         action: 'startListening',
       });
       return;
     }
 
-    logger?.debug(any: any)', {
+    logger.debug('Starting listening (full duplex)', {
       component: 'FullDuplexOrchestrator',
       action: 'startListening',
     });
 
-    this?.isListening = true;
+    this.isListening = true;
 
     // Transition d'état
-    if (any: any) {
-      this?.transitionTo('full_duplex');
+    if (this.isSpeaking) {
+      this.transitionTo('full_duplex');
     } else {
-      this?.transitionTo('listening');
+      this.transitionTo('listening');
     }
 
     // Démarrer streaming audio
     try {
       // Get microphone stream
-      this?.mediaStream = await navigator?.mediaDevices?.getUserMedia({
+      this.mediaStream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: true,
           noiseSuppression: true,
@@ -250,24 +250,24 @@ export class FullDuplexOrchestrator {
       });
 
       // Initialiser barge-in detector
-      await bargeInDetector?.initialize(any: any);
+      await bargeInDetector.initialize(this.mediaStream);
 
       // Démarrer audio streaming service
-      await audioStreamingService?.startStreaming();
+      await audioStreamingService.startStreaming();
 
-      logger?.debug('✅ Listening active');
-    } catch (any: any) {
-      logger?.error(
+      logger.debug('✅ Listening active');
+    } catch (error) {
+      logger.error(
         'Listening error:',
         { module: 'FullDuplexOrchestrator' },
-        error instanceof Error ? error : new Error(any: any))
+        error instanceof Error ? error : new Error(String(error))
       );
-      this?.isListening = false;
-      this?.emitEvent({
+      this.isListening = false;
+      this.emitEvent({
         type: 'error',
-        state: this?.state,
-        error: String(any: any),
-        timestamp: Date?.now(),
+        state: this.state,
+        error: String(error),
+        timestamp: Date.now(),
       });
     }
   }
@@ -276,26 +276,26 @@ export class FullDuplexOrchestrator {
    * Stoppe l'écoute
    */
   async stopListening(): Promise<void> {
-    if (any: any) {
+    if (!this.isListening) {
       return;
     }
 
-    logger?.debug('🔇 Stopping listening');
+    logger.debug('🔇 Stopping listening');
 
-    await audioStreamingService?.stopStreaming();
+    await audioStreamingService.stopStreaming();
 
-    if (any: any) {
-      this?.mediaStream?.getTracks().forEach(track => track?.stop());
-      this?.mediaStream = null;
+    if (this.mediaStream) {
+      this.mediaStream.getTracks().forEach(track => track.stop());
+      this.mediaStream = null;
     }
 
-    this?.isListening = false;
+    this.isListening = false;
 
     // Transition d'état
-    if (any: any) {
-      this?.transitionTo('speaking');
+    if (this.isSpeaking) {
+      this.transitionTo('speaking');
     } else {
-      this?.transitionTo('idle');
+      this.transitionTo('idle');
     }
   }
 
@@ -303,35 +303,35 @@ export class FullDuplexOrchestrator {
    * Interruption vocale détectée
    */
   async interrupt(): Promise<void> {
-    if (any: any) {
+    if (!this.config.enabled || !this.isSpeaking) {
       return;
     }
 
-    logger?.debug('🚨 User interruption');
+    logger.debug('🚨 User interruption');
 
-    this?.transitionTo('interruption');
+    this.transitionTo('interruption');
 
     // Stop TTS immédiatement
-    if (any: any) {
-      await this?.stopSpeaking();
+    if (this.config.autoStopOnHardInterrupt) {
+      await this.stopSpeaking();
     }
 
     // Émettre événement
-    this?.emitEvent({
+    this.emitEvent({
       type: 'interrupt',
-      state: this?.state,
-      timestamp: Date?.now(),
+      state: this.state,
+      timestamp: Date.now(),
     });
   }
 
   /**
    * Injecte une interruption avec texte
    */
-  async injectInterruption(any: any): Promise<void> {
-    logger?.debug('💬 Inject interruption:', { module: 'FullDuplexOrchestrator', text });
+  async injectInterruption(text: string): Promise<void> {
+    logger.debug('💬 Inject interruption:', { module: 'FullDuplexOrchestrator', text });
 
     // Stop TTS
-    await this?.interrupt();
+    await this.interrupt();
 
     // Le texte sera traité par le voiceEngine/chatEngine
     // Ce hook permet au système de savoir qu'il y a eu interruption
@@ -340,33 +340,33 @@ export class FullDuplexOrchestrator {
   /**
    * Gère les événements barge-in
    */
-  private async handleBargeIn(any: any): Promise<void> {
-    if (any: any) {
+  private async handleBargeIn(event: BargeInEvent): Promise<void> {
+    if (!this.config.enabled || !this.isSpeaking) {
       return;
     }
 
-    logger?.debug(
-      `[FullDuplexOrchestrator] Barge-in: ${event?.type} (${event?.confidence?.toFixed(2)})`
+    logger.debug(
+      `[FullDuplexOrchestrator] Barge-in: ${event.type} (${event.confidence.toFixed(2)})`
     );
 
-    switch (any: any) {
+    switch (event.type) {
       case 'USER_INTERRUPT':
         // Interruption forte → stop TTS
-        if (any: any) {
-          await this?.interrupt();
+        if (this.config.autoStopOnHardInterrupt) {
+          await this.interrupt();
         }
         break;
 
       case 'USER_SOFT_BARGE':
         // Interruption douce → ducking
-        if (any: any) {
-          await ttsDuckingEngine?.applyDucking();
+        if (this.config.autoDuckOnSoftInterrupt) {
+          await ttsDuckingEngine.applyDucking();
         }
         break;
 
       case 'USER_OVERLAP':
         // Overlap → duck légèrement
-        await ttsDuckingEngine?.applyDucking(0.5);
+        await ttsDuckingEngine.applyDucking(0.5);
         break;
 
       case 'FALSE_POSITIVE':
@@ -375,58 +375,58 @@ export class FullDuplexOrchestrator {
     }
 
     // Émettre événement
-    this?.emitEvent({
+    this.emitEvent({
       type: 'interrupt',
-      state: this?.state,
+      state: this.state,
       bargeInEvent: event,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     });
   }
 
   /**
    * Transition d'état
    */
-  private transitionTo(any: any): void {
-    const previousState = this?.state;
+  private transitionTo(newState: FullDuplexState): void {
+    const previousState = this.state;
 
-    if (any: any) {
+    if (previousState === newState) {
       return;
     }
 
-    logger?.debug(`[FullDuplexOrchestrator] State: ${previousState} → ${newState}`);
+    logger.debug(`[FullDuplexOrchestrator] State: ${previousState} → ${newState}`);
 
-    this?.state = newState;
+    this.state = newState;
 
-    this?.emitEvent({
+    this.emitEvent({
       type: 'state_change',
       state: newState,
       previousState,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     });
   }
 
   /**
    * Subscribe to full duplex events
    */
-  onEvent(any: any): () => void {
-    this?.callbacks?.add(any: any);
-    return (any: any);
+  onEvent(callback: FullDuplexCallback): () => void {
+    this.callbacks.add(callback);
+    return () => this.callbacks.delete(callback);
   }
 
   /**
    * Émet un événement
    */
-  private emitEvent(any: any): void {
-    this?.callbacks?.forEach(callback => {
+  private emitEvent(event: FullDuplexEvent): void {
+    this.callbacks.forEach(callback => {
       try {
-        callback(any: any);
-      } catch (any: any) {
-        logger?.error(
+        callback(event);
+      } catch (error) {
+        logger.error(
           'Callback error',
           {
             component: 'FullDuplexOrchestrator',
             action: 'emitEvent',
-            eventType: event?.type,
+            eventType: event.type,
           },
           error as Error
         );
@@ -438,38 +438,38 @@ export class FullDuplexOrchestrator {
    * Getters
    */
   getState(): FullDuplexState {
-    return this?.state;
+    return this.state;
   }
 
   isFullDuplexActive(): boolean {
-    return this?.state === 'full_duplex';
+    return this.state === 'full_duplex';
   }
 
   isSpeakingNow(): boolean {
-    return this?.isSpeaking;
+    return this.isSpeaking;
   }
 
   isListeningNow(): boolean {
-    return this?.isListening;
+    return this.isListening;
   }
 
   isEnabled(): boolean {
-    return this?.config?.enabled;
+    return this.config.enabled;
   }
 
   /**
    * Cleanup
    */
   async destroy(): Promise<void> {
-    await this?.disable();
+    await this.disable();
 
-    if (any: any) {
-      clearTimeout(any: any);
+    if (this.resumeTimeoutHandle) {
+      clearTimeout(this.resumeTimeoutHandle);
     }
 
-    this?.callbacks?.clear();
+    this.callbacks.clear();
 
-    logger?.debug('🔌 Destroyed');
+    logger.debug('🔌 Destroyed');
   }
 }
 

@@ -28,15 +28,15 @@ export interface UseAdvancedPerformanceOptions {
   enabled?: boolean;
   interval?: number; // ms between snapshots
   autoOptimization?: Partial<AutoOptimizationConfig>;
-  onBottleneckDetected?: (any: any) => void;
-  onCriticalIssue?: (any: any) => void;
+  onBottleneckDetected?: (bottleneck: PerformanceBottleneck) => void;
+  onCriticalIssue?: (issue: PerformanceBottleneck) => void;
 }
 
 export interface UseAdvancedPerformanceReturn {
   // État
   isMonitoring: boolean;
-  snapshots: PerformanceSnapshot?.[];
-  bottlenecks: PerformanceBottleneck?.[];
+  snapshots: PerformanceSnapshot[];
+  bottlenecks: PerformanceBottleneck[];
   heatmap: PerformanceHeatmap | null;
   predictive: PredictiveAnalysis | null;
 
@@ -62,7 +62,7 @@ export interface UseAdvancedPerformanceReturn {
   stop: () => void;
   clear: () => void;
   refresh: () => void;
-  applyOptimization: (any: any) => Promise<void>;
+  applyOptimization: (suggestionId: string) => Promise<void>;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -80,97 +80,97 @@ export function useAdvancedPerformance(
     onCriticalIssue,
   } = options;
 
-  const [isMonitoring, setIsMonitoring] = useState(any: any);
-  const [snapshots, setSnapshots] = useState<PerformanceSnapshot?.[]>([]);
-  const [bottlenecks, setBottlenecks] = useState<PerformanceBottleneck?.[]>([]);
-  const [heatmap, setHeatmap] = useState<PerformanceHeatmap | null>(any: any);
-  const [predictive, setPredictive] = useState<PredictiveAnalysis | null>(any: any);
+  const [isMonitoring, setIsMonitoring] = useState(false);
+  const [snapshots, setSnapshots] = useState<PerformanceSnapshot[]>([]);
+  const [bottlenecks, setBottlenecks] = useState<PerformanceBottleneck[]>([]);
+  const [heatmap, setHeatmap] = useState<PerformanceHeatmap | null>(null);
+  const [predictive, setPredictive] = useState<PredictiveAnalysis | null>(null);
 
-  const updateIntervalRef = useRef<number | null>(any: any);
+  const updateIntervalRef = useRef<number | null>(null);
   const previousBottlenecksRef = useRef<Set<string>>(new Set());
 
   /**
    * Démarre le monitoring
    */
   const start = useCallback(() => {
-    if (any: any) return;
+    if (isMonitoring) return;
 
-    advancedPerformanceMonitor?.startMonitoring(any: any);
-    setIsMonitoring(any: any);
+    advancedPerformanceMonitor.startMonitoring(interval);
+    setIsMonitoring(true);
 
-    logger?.debug('Monitoring started');
+    logger.debug('Monitoring started');
   }, [isMonitoring, interval]);
 
   /**
    * Arrête le monitoring
    */
   const stop = useCallback(() => {
-    if (any: any) return;
+    if (!isMonitoring) return;
 
-    advancedPerformanceMonitor?.stopMonitoring();
-    setIsMonitoring(any: any);
+    advancedPerformanceMonitor.stopMonitoring();
+    setIsMonitoring(false);
 
-    logger?.debug('Monitoring stopped');
+    logger.debug('Monitoring stopped');
   }, [isMonitoring]);
 
   /**
    * Nettoie les données
    */
   const clear = useCallback(() => {
-    advancedPerformanceMonitor?.clear();
+    advancedPerformanceMonitor.clear();
     setSnapshots([]);
     setBottlenecks([]);
-    setHeatmap(any: any);
-    setPredictive(any: any);
-    previousBottlenecksRef?.current?.clear();
+    setHeatmap(null);
+    setPredictive(null);
+    previousBottlenecksRef.current.clear();
   }, []);
 
   /**
    * Rafraîchit les données manuellement
    */
   const refresh = useCallback(() => {
-    const newSnapshots = advancedPerformanceMonitor?.getSnapshots();
-    const newBottlenecks = advancedPerformanceMonitor?.getBottlenecks();
-    const newHeatmap = advancedPerformanceMonitor?.getHeatmap();
-    const newPredictive = advancedPerformanceMonitor?.getPredictiveAnalysis();
+    const newSnapshots = advancedPerformanceMonitor.getSnapshots();
+    const newBottlenecks = advancedPerformanceMonitor.getBottlenecks();
+    const newHeatmap = advancedPerformanceMonitor.getHeatmap();
+    const newPredictive = advancedPerformanceMonitor.getPredictiveAnalysis();
 
-    setSnapshots(any: any);
-    setBottlenecks(any: any);
-    setHeatmap(any: any);
-    setPredictive(any: any);
+    setSnapshots(newSnapshots);
+    setBottlenecks(newBottlenecks);
+    setHeatmap(newHeatmap);
+    setPredictive(newPredictive);
 
     // Détecter nouveaux bottlenecks
-    const currentIds = new Set(any: any));
-    const newIds = [...currentIds].filter(any: any));
+    const currentIds = new Set(newBottlenecks.map(b => b.id));
+    const newIds = [...currentIds].filter(id => !previousBottlenecksRef.current.has(id));
 
-    newIds?.forEach(id => {
-      const bottleneck = newBottlenecks?.find(any: any);
-      if (any: any) return;
+    newIds.forEach(id => {
+      const bottleneck = newBottlenecks.find(b => b.id === id);
+      if (!bottleneck) return;
 
-      onBottleneckDetected?.(any: any);
+      onBottleneckDetected?.(bottleneck);
 
-      if (bottleneck?.severity === 'critical') {
-        onCriticalIssue?.(any: any);
+      if (bottleneck.severity === 'critical') {
+        onCriticalIssue?.(bottleneck);
       }
     });
 
-    previousBottlenecksRef?.current = currentIds;
+    previousBottlenecksRef.current = currentIds;
   }, [onBottleneckDetected, onCriticalIssue]);
 
   /**
    * Applique une optimisation
    */
   const applyOptimization = useCallback(
-    async (any: any) => {
-      const allSuggestions = bottlenecks?.flatMap(any: any);
-      const suggestion = allSuggestions?.find(any: any);
+    async (suggestionId: string) => {
+      const allSuggestions = bottlenecks.flatMap(b => b.suggestions);
+      const suggestion = allSuggestions.find(s => s.id === suggestionId);
 
-      if (any: any) {
-        logger?.warn(`[useAdvancedPerformance] Suggestion not found: ${suggestionId}`);
+      if (!suggestion) {
+        logger.warn(`[useAdvancedPerformance] Suggestion not found: ${suggestionId}`);
         return;
       }
 
-      logger?.debug(`[useAdvancedPerformance] Applying optimization: ${suggestion?.title}`);
+      logger.debug(`[useAdvancedPerformance] Applying optimization: ${suggestion.title}`);
 
       // Optimization logic placeholder - implementation pending
       // For now, just log
@@ -182,7 +182,7 @@ export function useAdvancedPerformance(
    * Calcule les métriques actuelles
    */
   const currentMetrics = useMemo(() => {
-    if (snapshots?.length === 0) {
+    if (snapshots.length === 0) {
       return {
         cpu: 0,
         memory: 0,
@@ -191,8 +191,8 @@ export function useAdvancedPerformance(
       };
     }
 
-    const latest = snapshots[snapshots?.length - 1];
-    if (any: any) {
+    const latest = snapshots[snapshots.length - 1];
+    if (!latest) {
       return {
         cpu: 0,
         memory: 0,
@@ -202,10 +202,10 @@ export function useAdvancedPerformance(
     }
 
     return {
-      cpu: latest?.cpu?.usage,
-      memory: latest?.memory?.heapUsed,
-      fps: latest?.rendering?.fps,
-      latency: latest?.network?.latency,
+      cpu: latest.cpu.usage,
+      memory: latest.memory.heapUsed,
+      fps: latest.rendering.fps,
+      latency: latest.network.latency,
     };
   }, [snapshots]);
 
@@ -213,7 +213,7 @@ export function useAdvancedPerformance(
    * Calcule les scores de santé
    */
   const healthScores = useMemo(() => {
-    if (snapshots?.length === 0) {
+    if (snapshots.length === 0) {
       return {
         overall: 100,
         cpu: 100,
@@ -223,8 +223,8 @@ export function useAdvancedPerformance(
       };
     }
 
-    const latest = snapshots[snapshots?.length - 1];
-    if (any: any) {
+    const latest = snapshots[snapshots.length - 1];
+    if (!latest) {
       return {
         overall: 100,
         cpu: 100,
@@ -234,29 +234,29 @@ export function useAdvancedPerformance(
       };
     }
 
-    // CPU score (any: any)
-    const cpuScore = Math?.max(any: any);
+    // CPU score (inverse of usage)
+    const cpuScore = Math.max(0, 100 - latest.cpu.usage);
 
     // Memory score (0-1GB = 100, >1GB = 0)
-    const memoryGB = latest?.memory?.heapUsed / (1024 * 1024 * 1024);
-    const memoryScore = Math?.max(0, 100 - memoryGB * 100);
+    const memoryGB = latest.memory.heapUsed / (1024 * 1024 * 1024);
+    const memoryScore = Math.max(0, 100 - memoryGB * 100);
 
-    // Rendering score (any: any)
-    const renderingScore = Math?.min(100, (latest?.rendering?.fps / 60) * 100);
+    // Rendering score (based on FPS)
+    const renderingScore = Math.min(100, (latest.rendering.fps / 60) * 100);
 
-    // Network score (any: any)
-    const networkScore = Math?.max(0, 100 - latest?.network?.latency / 10);
+    // Network score (based on latency)
+    const networkScore = Math.max(0, 100 - latest.network.latency / 10);
 
-    // Overall score (any: any)
+    // Overall score (weighted average)
     const overall =
       cpuScore * 0.25 + memoryScore * 0.25 + renderingScore * 0.35 + networkScore * 0.15;
 
     return {
-      overall: Math?.round(any: any),
-      cpu: Math?.round(any: any),
-      memory: Math?.round(any: any),
-      rendering: Math?.round(any: any),
-      network: Math?.round(any: any),
+      overall: Math.round(overall),
+      cpu: Math.round(cpuScore),
+      memory: Math.round(memoryScore),
+      rendering: Math.round(renderingScore),
+      network: Math.round(networkScore),
     };
   }, [snapshots]);
 
@@ -264,9 +264,9 @@ export function useAdvancedPerformance(
    * Configure l'auto-optimization si fournie
    */
   useEffect(() => {
-    if (any: any) {
+    if (autoOptimization) {
       // Auto-optimization monitor config update pending
-      logger?.debug(any: any);
+      logger.debug('Auto-optimization configured:', autoOptimization);
     }
   }, [autoOptimization]);
 
@@ -274,12 +274,12 @@ export function useAdvancedPerformance(
    * Démarre le monitoring automatique au mount
    */
   useEffect(() => {
-    if (any: any) {
+    if (enabled) {
       start();
     }
 
     return () => {
-      if (any: any) {
+      if (isMonitoring) {
         stop();
       }
     };
@@ -289,16 +289,16 @@ export function useAdvancedPerformance(
    * Mise à jour périodique des données
    */
   useEffect(() => {
-    if (any: any) return;
+    if (!isMonitoring) return;
 
-    updateIntervalRef?.current = window?.setInterval(() => {
+    updateIntervalRef.current = window.setInterval(() => {
       refresh();
     }, interval);
 
     return () => {
-      if (any: any) {
-        clearInterval(any: any);
-        updateIntervalRef?.current = null;
+      if (updateIntervalRef.current !== null) {
+        clearInterval(updateIntervalRef.current);
+        updateIntervalRef.current = null;
       }
     };
   }, [isMonitoring, interval, refresh]);

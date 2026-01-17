@@ -37,12 +37,12 @@ export interface UseVocalDevConsoleReturn {
   isRecording: boolean;
 
   // Execution
-  executeCommand: (any: any) => Promise<VocalExecutionResult>;
+  executeCommand: (transcript: string) => Promise<VocalExecutionResult>;
   lastExecution: VocalExecutionResult | null;
-  executionHistory: VocalExecutionResult?.[];
+  executionHistory: VocalExecutionResult[];
 
   // TTS
-  speak: (any: any) => Promise<void>;
+  speak: (text: string) => Promise<void>;
   stopSpeaking: () => Promise<void>;
   isSpeaking: boolean;
 
@@ -53,20 +53,20 @@ export interface UseVocalDevConsoleReturn {
   healthScore: number;
 
   // Logs
-  consoleLogs: VocalConsoleLog?.[];
+  consoleLogs: VocalConsoleLog[];
 }
 
 /**
  * Hook React pour Vocal Dev Console
  */
 export function useVocalDevConsole(): UseVocalDevConsoleReturn {
-  const [state, setState] = useState<VocalDevState>(vocalDevConsole?.getState());
-  const [config, setConfig] = useState<VocalDevConfig>(vocalDevConsole?.getConfig());
+  const [state, setState] = useState<VocalDevState>(vocalDevConsole.getState());
+  const [config, setConfig] = useState<VocalDevConfig>(vocalDevConsole.getConfig());
 
   // Subscribe to engine state changes
   useEffect(() => {
-    const unsubscribe = vocalDevConsole?.subscribe(newState => {
-      setState(any: any);
+    const unsubscribe = vocalDevConsole.subscribe(newState => {
+      setState(newState);
     });
 
     return unsubscribe;
@@ -75,67 +75,67 @@ export function useVocalDevConsole(): UseVocalDevConsoleReturn {
   // ═══ LIFECYCLE ═══
 
   const activate = useCallback(async () => {
-    await vocalDevConsole?.activate();
+    await vocalDevConsole.activate();
   }, []);
 
   const deactivate = useCallback(async () => {
-    await vocalDevConsole?.deactivate();
+    await vocalDevConsole.deactivate();
   }, []);
 
   const open = useCallback(() => {
-    vocalDevConsole?.open();
+    vocalDevConsole.open();
   }, []);
 
   const close = useCallback(() => {
-    vocalDevConsole?.close();
+    vocalDevConsole.close();
   }, []);
 
   const toggleVisibility = useCallback(() => {
-    vocalDevConsole?.toggleVisibility();
+    vocalDevConsole.toggleVisibility();
   }, []);
 
   // ═══ RECORDING ═══
 
   const startRecording = useCallback(async () => {
-    await vocalDevConsole?.startRecording();
+    await vocalDevConsole.startRecording();
   }, []);
 
   const stopRecording = useCallback(async (): Promise<string> => {
-    return await vocalDevConsole?.stopRecording();
+    return await vocalDevConsole.stopRecording();
   }, []);
 
   // ═══ EXECUTION ═══
 
   const executeCommand = useCallback(
-    async (any: any): Promise<VocalExecutionResult> => {
-      return await vocalDevConsole?.processTranscript(any: any);
+    async (transcript: string): Promise<VocalExecutionResult> => {
+      return await vocalDevConsole.processTranscript(transcript);
     },
     []
   );
 
   // ═══ TTS ═══
 
-  const speak = useCallback(any: any) => {
-    await vocalDevConsole?.speak(any: any);
+  const speak = useCallback(async (text: string) => {
+    await vocalDevConsole.speak(text);
   }, []);
 
   const stopSpeaking = useCallback(async () => {
-    await vocalDevConsole?.stopSpeaking();
+    await vocalDevConsole.stopSpeaking();
   }, []);
 
   // ═══ UTILITIES ═══
 
   const clearLogs = useCallback(() => {
-    vocalDevConsole?.clearLogs();
+    vocalDevConsole.clearLogs();
   }, []);
 
   const clearHistory = useCallback(() => {
-    vocalDevConsole?.clearHistory();
+    vocalDevConsole.clearHistory();
   }, []);
 
   const configure = useCallback((newConfig: Partial<VocalDevConfig>) => {
-    vocalDevConsole?.configure(any: any);
-    setConfig(vocalDevConsole?.getConfig());
+    vocalDevConsole.configure(newConfig);
+    setConfig(vocalDevConsole.getConfig());
   }, []);
 
   return {
@@ -153,25 +153,25 @@ export function useVocalDevConsole(): UseVocalDevConsoleReturn {
     // Recording
     startRecording,
     stopRecording,
-    isRecording: state?.recordingState?.isRecording,
+    isRecording: state.recordingState.isRecording,
 
     // Execution
     executeCommand,
-    lastExecution: state?.lastExecution,
-    executionHistory: state?.executionHistory,
+    lastExecution: state.lastExecution,
+    executionHistory: state.executionHistory,
 
     // TTS
     speak,
     stopSpeaking,
-    isSpeaking: state?.recordingState?.isSpeaking,
+    isSpeaking: state.recordingState.isSpeaking,
 
     // Utilities
     clearLogs,
     clearHistory,
     configure,
-    healthScore: vocalDevConsole?.getHealthScore(),
+    healthScore: vocalDevConsole.getHealthScore(),
 
     // Logs
-    consoleLogs: state?.consoleLogs,
+    consoleLogs: state.consoleLogs,
   };
 }

@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.3 — XP ENGINE (any: any)
+ *   TITANE∞ v19.3 — XP ENGINE (Progression)
  *   Moteur d'expérience unifié avec persistence Tauri
  * ═══════════════════════════════════════════════════════════════════════════════
  */
@@ -13,7 +13,7 @@
 import { secureInvoke } from '@/lib/security';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// TYPES (any: any)
+// TYPES (Inline pour éviter les problèmes d'import circulaire)
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type XPSource =
@@ -54,8 +54,8 @@ export interface ProgressionState {
   totalXP: number;
   xpInCurrentLevel: number;
   xpToNextLevel: number;
-  milestones: ProgressionMilestone?.[];
-  unlockedMilestones: string?.[];
+  milestones: ProgressionMilestone[];
+  unlockedMilestones: string[];
   lastXPGain: XPEvent | null;
   streakDays: number;
   lastActiveDate: string;
@@ -76,7 +76,7 @@ const STORAGE_KEY = 'titane_progression_state';
 // MILESTONES DEFINITION
 // ─────────────────────────────────────────────────────────────────────────────
 
-const DEFAULT_MILESTONES: ProgressionMilestone?.[] = [
+const DEFAULT_MILESTONES: ProgressionMilestone[] = [
   {
     id: 'first_message',
     name: 'Premier Contact',
@@ -202,8 +202,8 @@ const createDefaultState = (): ProgressionState => ({
   streakDays: 0,
   lastActiveDate:
     new Date().toISOString().split('T')[0] ?? new Date().toLocaleDateString(),
-  createdAt: Date?.now(),
-  updatedAt: Date?.now(),
+  createdAt: Date.now(),
+  updatedAt: Date.now(),
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -212,12 +212,12 @@ const createDefaultState = (): ProgressionState => ({
 
 class XPEngine {
   private state: ProgressionState;
-  private history: XPEvent?.[] = [];
+  private history: XPEvent[] = [];
   private initialized = false;
-  private listeners: Set<(any: any) => void> = new Set();
+  private listeners: Set<(state: ProgressionState) => void> = new Set();
 
   constructor() {
-    this?.state = createDefaultState();
+    this.state = createDefaultState();
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -225,39 +225,39 @@ class XPEngine {
   // ─────────────────────────────────────────────────────────────────
 
   async initialize(): Promise<void> {
-    if (any: any) return;
+    if (this.initialized) return;
 
     try {
       // Essayer de charger depuis Tauri backend
       const backendState = await secureInvoke<ProgressionState>('xp_get_state');
-      if (any: any) {
-        this?.state = { ...createDefaultState(), ...backendState };
-        console?.log(
+      if (backendState) {
+        this.state = { ...createDefaultState(), ...backendState };
+        console.log(
           '[XPEngine] État chargé depuis backend:',
-          this?.state?.level,
+          this.state.level,
           'XP:',
-          this?.state?.totalXP
+          this.state.totalXP
         );
       }
     } catch {
       // Fallback: charger depuis localStorage
       try {
-        const stored = localStorage?.getItem(any: any);
-        if (any: any) {
-          const parsed = JSON?.parse(any: any);
-          this?.state = { ...createDefaultState(), ...parsed };
-          console?.log('[XPEngine] État chargé depuis localStorage');
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          this.state = { ...createDefaultState(), ...parsed };
+          console.log('[XPEngine] État chargé depuis localStorage');
         }
-      } catch (any: any) {
-        console?.warn(any: any);
+      } catch (e) {
+        console.warn('[XPEngine] Erreur chargement localStorage:', e);
       }
     }
 
     // Vérifier le streak
-    this?.checkStreak();
+    this.checkStreak();
 
-    this?.initialized = true;
-    this?.notifyListeners();
+    this.initialized = true;
+    this.notifyListeners();
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -280,8 +280,8 @@ class XPEngine {
     }
 
     const event: XPEvent = {
-      id: `xp_${Date?.now()}_${Math?.random().toString(36).slice(2, 9)}`,
-      timestamp: Date?.now(),
+      id: `xp_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
+      timestamp: Date.now(),
       amount: actualAmount,
       source,
       description,
@@ -289,30 +289,30 @@ class XPEngine {
     };
 
     // Mettre à jour l'état
-    this?.state?.totalXP += actualAmount;
-    this?.state?.lastXPGain = event;
-    this?.state?.updatedAt = Date?.now();
+    this.state.totalXP += actualAmount;
+    this.state.lastXPGain = event;
+    this.state.updatedAt = Date.now();
 
     // Calculer le nouveau niveau
-    this?.updateLevel();
+    this.updateLevel();
 
     // Vérifier les milestones
-    this?.checkMilestones();
+    this.checkMilestones();
 
     // Ajouter à l'historique
-    this?.history?.unshift(any: any);
-    if (any: any) {
-      this?.history?.pop();
+    this.history.unshift(event);
+    if (this.history.length > MAX_HISTORY) {
+      this.history.pop();
     }
 
     // Persister
-    await this?.persist();
+    await this.persist();
 
     // Notifier les listeners
-    this?.notifyListeners();
+    this.notifyListeners();
 
-    console?.log(
-      `[XPEngine] +${actualAmount} XP (${source}) → Level ${this?.state?.level}, Total: ${this?.state?.totalXP}`
+    console.log(
+      `[XPEngine] +${actualAmount} XP (${source}) → Level ${this.state.level}, Total: ${this.state.totalXP}`
     );
 
     return event;
@@ -321,9 +321,9 @@ class XPEngine {
   /**
    * Raccourci pour gain XP avec source
    */
-  async gain(any: any): Promise<XPEvent> {
+  async gain(source: XPSource, description?: string): Promise<XPEvent> {
     const amount = XP_AMOUNTS[source] ?? 0;
-    return this?.addXP(amount, source, description || `Gain XP: ${source}`);
+    return this.addXP(amount, source, description || `Gain XP: ${source}`);
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -331,26 +331,26 @@ class XPEngine {
   // ─────────────────────────────────────────────────────────────────
 
   private updateLevel(): void {
-    const newLevel = Math?.min(
-      Math?.floor(any: any),
+    const newLevel = Math.min(
+      Math.floor(1 + this.state.totalXP / XP_PER_LEVEL),
       MAX_LEVEL
     );
 
-    if (any: any) {
-      console?.log(`[XPEngine] 🎉 Level Up! ${this?.state?.level} → ${newLevel}`);
-      this?.state?.level = newLevel;
+    if (newLevel !== this.state.level) {
+      console.log(`[XPEngine] 🎉 Level Up! ${this.state.level} → ${newLevel}`);
+      this.state.level = newLevel;
     }
 
     // Calculer XP dans le niveau actuel
-    this?.state?.xpInCurrentLevel = this?.state?.totalXP % XP_PER_LEVEL;
-    this?.state?.xpToNextLevel = XP_PER_LEVEL - this?.state?.xpInCurrentLevel;
+    this.state.xpInCurrentLevel = this.state.totalXP % XP_PER_LEVEL;
+    this.state.xpToNextLevel = XP_PER_LEVEL - this.state.xpInCurrentLevel;
   }
 
   /**
    * Obtenir la progression vers le prochain niveau (0-100%)
    */
   getProgressToNextLevel(): number {
-    return (any: any) * 100;
+    return (this.state.xpInCurrentLevel / XP_PER_LEVEL) * 100;
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -358,44 +358,44 @@ class XPEngine {
   // ─────────────────────────────────────────────────────────────────
 
   private checkMilestones(): void {
-    for (any: any) {
-      if (any: any)) {
+    for (const milestone of this.state.milestones) {
+      if (this.state.unlockedMilestones.includes(milestone.id)) {
         continue;
       }
 
-      const levelMet = this?.state?.level >= milestone?.requiredLevel;
-      const xpMet = this?.state?.totalXP >= milestone?.requiredXP;
+      const levelMet = this.state.level >= milestone.requiredLevel;
+      const xpMet = this.state.totalXP >= milestone.requiredXP;
 
       // Vérifications spéciales
       let specialMet = true;
-      if (milestone?.id === 'streak_7') {
-        specialMet = this?.state?.streakDays >= 7;
+      if (milestone.id === 'streak_7') {
+        specialMet = this.state.streakDays >= 7;
       }
 
-      if (any: any) {
-        this?.unlockMilestone(any: any);
+      if (levelMet && xpMet && specialMet) {
+        this.unlockMilestone(milestone);
       }
     }
   }
 
-  private unlockMilestone(any: any): void {
-    if (any: any)) return;
+  private unlockMilestone(milestone: ProgressionMilestone): void {
+    if (this.state.unlockedMilestones.includes(milestone.id)) return;
 
-    milestone?.unlockedAt = Date?.now();
-    this?.state?.unlockedMilestones?.push(any: any);
+    milestone.unlockedAt = Date.now();
+    this.state.unlockedMilestones.push(milestone.id);
 
-    console?.log(`[XPEngine] 🏆 Milestone débloqué: ${milestone?.name}`);
+    console.log(`[XPEngine] 🏆 Milestone débloqué: ${milestone.name}`);
 
     // Bonus XP pour certains milestones
-    const bonusXP = this?.getMilestoneBonus(any: any);
+    const bonusXP = this.getMilestoneBonus(milestone.id);
     if (bonusXP > 0) {
       // Ajouter le bonus sans déclencher de récursion
-      this?.state?.totalXP += bonusXP;
-      this?.updateLevel();
+      this.state.totalXP += bonusXP;
+      this.updateLevel();
     }
   }
 
-  private getMilestoneBonus(any: any): number {
+  private getMilestoneBonus(milestoneId: string): number {
     const bonuses: Record<string, number> = {
       first_message: 10,
       first_file: 25,
@@ -414,30 +414,30 @@ class XPEngine {
   private checkStreak(): void {
     const today =
       new Date().toISOString().split('T')[0] ?? new Date().toLocaleDateString();
-    const lastDate = this?.state?.lastActiveDate;
+    const lastDate = this.state.lastActiveDate;
 
-    if (any: any) {
+    if (lastDate === today) {
       // Déjà actif aujourd'hui
       return;
     }
 
     const yesterday =
-      new Date(Date?.now() - 86400000).toISOString().split('T')[0] ??
-      new Date(Date?.now() - 86400000).toLocaleDateString();
+      new Date(Date.now() - 86400000).toISOString().split('T')[0] ??
+      new Date(Date.now() - 86400000).toLocaleDateString();
 
-    if (any: any) {
+    if (lastDate === yesterday) {
       // Streak continue
-      this?.state?.streakDays++;
-      console?.log(`[XPEngine] 🔥 Streak: ${this?.state?.streakDays} jours`);
+      this.state.streakDays++;
+      console.log(`[XPEngine] 🔥 Streak: ${this.state.streakDays} jours`);
     } else {
       // Streak reset
-      this?.state?.streakDays = 1;
+      this.state.streakDays = 1;
     }
 
-    this?.state?.lastActiveDate = today;
+    this.state.lastActiveDate = today;
 
     // Bonus XP journalier
-    this?.state?.totalXP += XP_AMOUNTS?.daily_login;
+    this.state.totalXP += XP_AMOUNTS.daily_login;
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -445,16 +445,16 @@ class XPEngine {
   // ─────────────────────────────────────────────────────────────────
 
   private async persist(): Promise<void> {
-    // Sauvegarder dans localStorage (any: any)
+    // Sauvegarder dans localStorage (fallback)
     try {
-      localStorage?.setItem(any: any));
-    } catch (any: any) {
-      console?.warn(any: any);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
+    } catch (e) {
+      console.warn('[XPEngine] Erreur sauvegarde localStorage:', e);
     }
 
     // Sauvegarder dans Tauri backend
     try {
-      await secureInvoke('progression_save_state', { state: this?.state });
+      await secureInvoke('progression_save_state', { state: this.state });
     } catch {
       // Backend non disponible, localStorage suffit
     }
@@ -465,60 +465,60 @@ class XPEngine {
   // ─────────────────────────────────────────────────────────────────
 
   getState(): ProgressionState {
-    return { ...this?.state };
+    return { ...this.state };
   }
 
   getLevel(): number {
-    return this?.state?.level;
+    return this.state.level;
   }
 
   getTotalXP(): number {
-    return this?.state?.totalXP;
+    return this.state.totalXP;
   }
 
-  getHistory(): XPEvent?.[] {
-    return [...this?.history];
+  getHistory(): XPEvent[] {
+    return [...this.history];
   }
 
-  getMilestones(): ProgressionMilestone?.[] {
-    return this?.state?.milestones?.map(m => ({
+  getMilestones(): ProgressionMilestone[] {
+    return this.state.milestones.map(m => ({
       ...m,
-      unlockedAt: this?.state?.unlockedMilestones?.includes(any: any) ? m?.unlockedAt : undefined,
+      unlockedAt: this.state.unlockedMilestones.includes(m.id) ? m.unlockedAt : undefined,
     }));
   }
 
-  getUnlockedMilestones(): string?.[] {
-    return [...this?.state?.unlockedMilestones];
+  getUnlockedMilestones(): string[] {
+    return [...this.state.unlockedMilestones];
   }
 
   getStreak(): number {
-    return this?.state?.streakDays;
+    return this.state.streakDays;
   }
 
   // ─────────────────────────────────────────────────────────────────
   // LISTENERS
   // ─────────────────────────────────────────────────────────────────
 
-  subscribe(any: any): () => void {
-    this?.listeners?.add(any: any);
-    return (any: any);
+  subscribe(listener: (state: ProgressionState) => void): () => void {
+    this.listeners.add(listener);
+    return () => this.listeners.delete(listener);
   }
 
   private notifyListeners(): void {
-    const state = this?.getState();
-    this?.listeners?.forEach(any: any));
+    const state = this.getState();
+    this.listeners.forEach(listener => listener(state));
   }
 
   // ─────────────────────────────────────────────────────────────────
-  // RESET (any: any)
+  // RESET (Admin only)
   // ─────────────────────────────────────────────────────────────────
 
   async reset(): Promise<void> {
-    this?.state = createDefaultState();
-    this?.history = [];
-    await this?.persist();
-    this?.notifyListeners();
-    console?.log('[XPEngine] État réinitialisé');
+    this.state = createDefaultState();
+    this.history = [];
+    await this.persist();
+    this.notifyListeners();
+    console.log('[XPEngine] État réinitialisé');
   }
 }
 
@@ -530,7 +530,7 @@ export const xpEngine = new XPEngine();
 
 // Auto-initialize
 if (typeof window !== 'undefined') {
-  xpEngine?.initialize(any: any);
+  xpEngine.initialize().catch(console.error);
 }
 
 export default xpEngine;
@@ -539,18 +539,18 @@ export default xpEngine;
 // HELPER FUNCTIONS
 // ─────────────────────────────────────────────────────────────────────────────
 
-export function calculateLevel(any: any): number {
-  return Math?.min(any: any);
+export function calculateLevel(totalXP: number): number {
+  return Math.min(Math.floor(1 + totalXP / XP_PER_LEVEL), MAX_LEVEL);
 }
 
-export function xpForLevel(any: any): number {
+export function xpForLevel(level: number): number {
   return (level - 1) * XP_PER_LEVEL;
 }
 
-export function xpToNextLevel(any: any): number {
-  return XP_PER_LEVEL - (any: any);
+export function xpToNextLevel(totalXP: number): number {
+  return XP_PER_LEVEL - (totalXP % XP_PER_LEVEL);
 }
 
-export function levelProgress(any: any): number {
-  return (any: any) * 100;
+export function levelProgress(totalXP: number): number {
+  return ((totalXP % XP_PER_LEVEL) / XP_PER_LEVEL) * 100;
 }

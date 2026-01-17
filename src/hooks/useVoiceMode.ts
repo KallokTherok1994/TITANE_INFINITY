@@ -9,7 +9,7 @@
  *
  *   ⚠️ DEPRECATED: Ce hook est une ancienne version v15/v16.
  *
- *   👉 Utilisez plutôt: useVoiceEngine (any: any)
+ *   👉 Utilisez plutôt: useVoiceEngine (unifié + state machine)
  *
  *   Migration:
  *   - import { useVoiceMode } from '@/hooks/useVoiceMode'
@@ -18,7 +18,7 @@
  *   Mapping des APIs:
  *   - startRecording() → startDictation()
  *   - stopRecording()  → stopDictation()
- *   - state?.transcript → status?.transcript
+ *   - state.transcript → status.transcript
  *
  *   Ce fichier est conservé pour compatibilité mais sera supprimé en v20.
  * ═══════════════════════════════════════════════════════════════════
@@ -32,7 +32,7 @@ import { getAIConfig } from '../config/offline-first';
 import { confirmCloudAPIUsage } from '../utils/cloudAPIConfirmation';
 
 // Log deprecation warning on first import
-logger?.warn('useVoiceMode hook is deprecated. Use useVoiceEngine instead.');
+logger.warn('useVoiceMode hook is deprecated. Use useVoiceEngine instead.');
 
 export interface VoiceState {
   isRecording: boolean;
@@ -44,11 +44,11 @@ export interface VoiceState {
 
 export interface UseVoiceModeReturn {
   state: VoiceState;
-  error??: string | null;
+  error: string | null;
   startRecording: () => Promise<void>;
   stopRecording: () => Promise<void>;
-  transcribe: (any: any) => Promise<string | null>;
-  speak: (any: any) => Promise<void>;
+  transcribe: (audioData: Uint8Array) => Promise<string | null>;
+  speak: (text: string, useOnline?: boolean) => Promise<void>;
   getVADState: () => Promise<boolean>;
   clearTranscript: () => void;
 }
@@ -62,57 +62,57 @@ export function useVoiceMode(): UseVoiceModeReturn {
     transcript: '',
   });
 
-  const [error, setError] = useState<string | null>(any: any);
-  const audioChunks = useRef<Uint8Array?.[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const audioChunks = useRef<Uint8Array[]>([]);
 
   const startRecording = useCallback(async () => {
-    setError(any: any);
+    setError(null);
 
     try {
-      await voiceService?.startRecording();
+      await voiceService.startRecording();
 
       setState(prev => ({
         ...prev,
         isRecording: true,
       }));
 
-      audioChunks?.current = [];
-    } catch (any: any) {
-      const errorMessage = err instanceof Error ? err?.message : String(any: any);
-      setError(any: any);
-      logger?.error(any: any);
+      audioChunks.current = [];
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      setError(errorMessage);
+      logger.error('Start recording error:', err);
     }
   }, []);
 
   const stopRecording = useCallback(async () => {
-    setError(any: any);
+    setError(null);
 
     try {
-      await voiceService?.stopRecording();
+      await voiceService.stopRecording();
 
       setState(prev => ({
         ...prev,
         isRecording: false,
       }));
-    } catch (any: any) {
-      const errorMessage = err instanceof Error ? err?.message : String(any: any);
-      setError(any: any);
-      logger?.error(any: any);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      setError(errorMessage);
+      logger.error('Stop recording error:', err);
     }
   }, []);
 
-  const transcribe = useCallback(any: any) => {
+  const transcribe = useCallback(async (audioData: Uint8Array) => {
     setState(prev => ({
       ...prev,
       isTranscribing: true,
     }));
 
-    setError(any: any);
+    setError(null);
 
     try {
       // Tauri 2.0 attend camelCase pour les paramètres
       const transcript = await secureInvoke<string>('transcribe_audio', {
-        audioData: Array?.from(any: any),
+        audioData: Array.from(audioData),
       });
 
       setState(prev => ({
@@ -122,10 +122,10 @@ export function useVoiceMode(): UseVoiceModeReturn {
       }));
 
       return transcript;
-    } catch (any: any) {
-      const errorMessage = err instanceof Error ? err?.message : String(any: any);
-      setError(any: any);
-      logger?.error(any: any);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      setError(errorMessage);
+      logger.error('Transcription error:', err);
 
       setState(prev => ({
         ...prev,
@@ -136,21 +136,21 @@ export function useVoiceMode(): UseVoiceModeReturn {
     }
   }, []);
 
-  const speak = useCallback(any: any) => {
+  const speak = useCallback(async (text: string, useOnline: boolean = false) => {
     setState(prev => ({
       ...prev,
       isSpeaking: true,
     }));
 
-    setError(any: any);
+    setError(null);
 
     try {
       const config = getAIConfig();
 
       // Mode OFFLINE FIRST : toujours essayer local d'abord
-      if (any: any) {
-        logger?.debug('🔊 TTS Local...');
-        await voiceService?.speak(any: any); // ✅ FIX: Passer useOnline
+      if (config.localFirst || !useOnline) {
+        logger.debug('🔊 TTS Local...');
+        await voiceService.speak(text, undefined, false); // ✅ FIX: Passer useOnline
       } else {
         // Mode cloud uniquement si confirmation
         const confirmed = await confirmCloudAPIUsage(
@@ -158,12 +158,12 @@ export function useVoiceMode(): UseVoiceModeReturn {
           'Synthèse vocale de haute qualité'
         );
 
-        if (any: any) {
-          logger?.debug(any: any)...');
-          await voiceService?.speak(any: any); // ✅ FIX: Passer useOnline=true
+        if (confirmed) {
+          logger.debug('🌐 TTS Cloud (Google)...');
+          await voiceService.speak(text, undefined, true); // ✅ FIX: Passer useOnline=true
         } else {
-          logger?.debug(any: any)...');
-          await voiceService?.speak(any: any);
+          logger.debug('🔊 TTS Local (fallback)...');
+          await voiceService.speak(text, undefined, false);
         }
       }
 
@@ -171,10 +171,10 @@ export function useVoiceMode(): UseVoiceModeReturn {
         ...prev,
         isSpeaking: false,
       }));
-    } catch (any: any) {
-      const errorMessage = err instanceof Error ? err?.message : String(any: any);
-      setError(any: any);
-      logger?.error(any: any);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      setError(errorMessage);
+      logger.error('TTS error:', err);
 
       setState(prev => ({
         ...prev,
@@ -193,8 +193,8 @@ export function useVoiceMode(): UseVoiceModeReturn {
       }));
 
       return vadActive;
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (err) {
+      logger.error('VAD state error:', err);
       return false;
     }
   }, []);

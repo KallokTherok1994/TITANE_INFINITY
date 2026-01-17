@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE?.md for the full legal terms (any: any).
+ * See LICENSE.md for the full legal terms (FR/EN).
  */
 
 // ⚡ TITANE∞ v23 — Adaptive UI
@@ -31,96 +31,96 @@ export class AdaptiveUI {
     visualNoise: 'normal',
   };
 
-  private listeners: Array<(any: any) => void> = [];
+  private listeners: Array<(config: AdaptiveUIConfig) => void> = [];
 
   /**
    * Adapter l'UI selon le rythme utilisateur
    */
-  adaptToUserRhythm(any: any): void {
+  adaptToUserRhythm(rhythm: UserRhythm): void {
     // 🚀 Utilisateur rapide → Augmenter lisibilité, contraste
-    if (rhythm?.speed === 'fast') {
-      this?.config?.density = 'compact';
-      this?.config?.contrast = 'high';
-      this?.config?.animationSpeed = 'fast';
-      this?.config?.glowIntensity = 'strong';
-      this?.config?.visualNoise = 'minimal';
+    if (rhythm.speed === 'fast') {
+      this.config.density = 'compact';
+      this.config.contrast = 'high';
+      this.config.animationSpeed = 'fast';
+      this.config.glowIntensity = 'strong';
+      this.config.visualNoise = 'minimal';
     }
 
     // 🐌 Utilisateur lent → Adoucir, respirer
-    else if (rhythm?.speed === 'slow') {
-      this?.config?.density = 'spacious';
-      this?.config?.contrast = 'medium';
-      this?.config?.animationSpeed = 'slow';
-      this?.config?.glowIntensity = 'subtle';
-      this?.config?.visualNoise = 'rich';
+    else if (rhythm.speed === 'slow') {
+      this.config.density = 'spacious';
+      this.config.contrast = 'medium';
+      this.config.animationSpeed = 'slow';
+      this.config.glowIntensity = 'subtle';
+      this.config.visualNoise = 'rich';
     }
 
     // 😴 Fatigue détectée → Simplifier
-    if (rhythm?.fatigue > 0.5) {
-      this?.config?.density = 'comfortable';
-      this?.config?.animationSpeed = 'slow';
-      this?.config?.glowIntensity = 'subtle';
-      this?.config?.visualNoise = 'minimal';
+    if (rhythm.fatigue > 0.5) {
+      this.config.density = 'comfortable';
+      this.config.animationSpeed = 'slow';
+      this.config.glowIntensity = 'subtle';
+      this.config.visualNoise = 'minimal';
     }
 
     // 🎯 Focus élevé → Stabiliser
-    if (rhythm?.focus > 0.7) {
-      this?.config?.animationSpeed = 'slow';
-      this?.config?.visualNoise = 'minimal';
+    if (rhythm.focus > 0.7) {
+      this.config.animationSpeed = 'slow';
+      this.config.visualNoise = 'minimal';
     }
 
     // 🔍 Exploration → Enrichir
-    if (rhythm?.pattern === 'exploring') {
-      this?.config?.density = 'comfortable';
-      this?.config?.glowIntensity = 'medium';
-      this?.config?.visualNoise = 'normal';
+    if (rhythm.pattern === 'exploring') {
+      this.config.density = 'comfortable';
+      this.config.glowIntensity = 'medium';
+      this.config.visualNoise = 'normal';
     }
 
-    this?.notifyListeners();
+    this.notifyListeners();
   }
 
   /**
    * Adapter l'UI selon l'état système
    */
-  adaptToSystemState(any: any): void {
-    switch (any: any) {
+  adaptToSystemState(state: SystemState): void {
+    switch (state) {
       case 'danger':
       case 'warning':
         // Surcharge système → Réduire bruit visuel, augmenter clarté
-        this?.config?.density = 'comfortable';
-        this?.config?.contrast = 'high';
-        this?.config?.animationSpeed = 'disabled';
-        this?.config?.glowIntensity = 'strong';
-        this?.config?.visualNoise = 'minimal';
+        this.config.density = 'comfortable';
+        this.config.contrast = 'high';
+        this.config.animationSpeed = 'disabled';
+        this.config.glowIntensity = 'strong';
+        this.config.visualNoise = 'minimal';
         break;
 
       case 'stable':
         // Système stable → UI normale
-        this?.config?.density = 'comfortable';
-        this?.config?.contrast = 'medium';
-        this?.config?.animationSpeed = 'normal';
-        this?.config?.glowIntensity = 'medium';
-        this?.config?.visualNoise = 'normal';
+        this.config.density = 'comfortable';
+        this.config.contrast = 'medium';
+        this.config.animationSpeed = 'normal';
+        this.config.glowIntensity = 'medium';
+        this.config.visualNoise = 'normal';
         break;
 
       case 'offline':
         // Système offline → UI minimaliste
-        this?.config?.density = 'compact';
-        this?.config?.contrast = 'low';
-        this?.config?.animationSpeed = 'disabled';
-        this?.config?.glowIntensity = 'subtle';
-        this?.config?.visualNoise = 'minimal';
+        this.config.density = 'compact';
+        this.config.contrast = 'low';
+        this.config.animationSpeed = 'disabled';
+        this.config.glowIntensity = 'subtle';
+        this.config.visualNoise = 'minimal';
         break;
     }
 
-    this?.notifyListeners();
+    this.notifyListeners();
   }
 
   /**
    * Obtenir la configuration actuelle
    */
   getConfig(): AdaptiveUIConfig {
-    return { ...this?.config };
+    return { ...this.config };
   }
 
   /**
@@ -158,20 +158,20 @@ export class AdaptiveUI {
     };
 
     return {
-      '--adaptive-density': densityMap[this?.config?.density],
-      '--adaptive-contrast': contrastMap[this?.config?.contrast],
-      '--adaptive-animation-speed': animSpeedMap[this?.config?.animationSpeed],
-      '--adaptive-glow-intensity': glowMap[this?.config?.glowIntensity],
+      '--adaptive-density': densityMap[this.config.density],
+      '--adaptive-contrast': contrastMap[this.config.contrast],
+      '--adaptive-animation-speed': animSpeedMap[this.config.animationSpeed],
+      '--adaptive-glow-intensity': glowMap[this.config.glowIntensity],
     };
   }
 
   /**
    * S'abonner aux changements
    */
-  onChange(any: any): () => void {
-    this?.listeners?.push(any: any);
+  onChange(callback: (config: AdaptiveUIConfig) => void): () => void {
+    this.listeners.push(callback);
     return () => {
-      this?.listeners = this?.listeners?.filter(any: any);
+      this.listeners = this.listeners.filter(cb => cb !== callback);
     };
   }
 
@@ -179,21 +179,21 @@ export class AdaptiveUI {
    * Notifier les listeners
    */
   private notifyListeners(): void {
-    this?.listeners?.forEach(any: any));
+    this.listeners.forEach(callback => callback(this.config));
   }
 
   /**
    * Réinitialiser à la configuration par défaut
    */
   reset(): void {
-    this?.config = {
+    this.config = {
       density: 'comfortable',
       contrast: 'medium',
       animationSpeed: 'normal',
       glowIntensity: 'medium',
       visualNoise: 'normal',
     };
-    this?.notifyListeners();
+    this.notifyListeners();
   }
 }
 

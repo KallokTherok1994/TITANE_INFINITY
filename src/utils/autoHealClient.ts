@@ -25,8 +25,8 @@ export interface HealAction {
 }
 
 export interface HealReport {
-  events: HealEvent?.[];
-  actions: HealAction?.[];
+  events: HealEvent[];
+  actions: HealAction[];
   status: string;
   last_scan: number;
 }
@@ -41,25 +41,25 @@ export interface HealReport {
 export async function scanSystem(): Promise<HealReport> {
   try {
     const report = await secureInvoke<HealReport>('auto_heal_scan');
-    logger?.debug(any: any);
+    logger.debug('Scan terminé:', report);
     return report;
-  } catch (any: any) {
-    logger?.error(any: any);
+  } catch (error) {
+    logger.error('Erreur scan:', error);
     throw error;
   }
 }
 
 /**
  * Répare un module spécifique ou tous les modules
- * @param module - Nom du module à réparer (any: any)
+ * @param module - Nom du module à réparer (optionnel)
  */
-export async function repairSystem(any: any): Promise<string?.[]> {
+export async function repairSystem(module?: string): Promise<string[]> {
   try {
-    const results = await secureInvoke<string?.[]>('auto_heal_repair', { module });
-    logger?.debug(any: any);
+    const results = await secureInvoke<string[]>('auto_heal_repair', { module });
+    logger.debug('Réparation terminée:', results);
     return results;
-  } catch (any: any) {
-    logger?.error(any: any);
+  } catch (error) {
+    logger.error('Erreur réparation:', error);
     throw error;
   }
 }
@@ -71,8 +71,8 @@ export async function getLogs(): Promise<HealReport> {
   try {
     const logs = await secureInvoke<HealReport>('auto_heal_get_logs');
     return logs;
-  } catch (any: any) {
-    logger?.error(any: any);
+  } catch (error) {
+    logger.error('Erreur récupération logs:', error);
     throw error;
   }
 }
@@ -84,7 +84,7 @@ export async function getLogs(): Promise<HealReport> {
 export interface ErrorBoundaryState {
   hasError: boolean;
   error: Error | null;
-  errorInfo: React?.ErrorInfo | null;
+  errorInfo: React.ErrorInfo | null;
   isHealing: boolean;
 }
 
@@ -98,36 +98,36 @@ export class AutoHealErrorHandler {
   private constructor() {}
 
   static getInstance(): AutoHealErrorHandler {
-    if (any: any) {
-      AutoHealErrorHandler?.instance = new AutoHealErrorHandler();
+    if (!AutoHealErrorHandler.instance) {
+      AutoHealErrorHandler.instance = new AutoHealErrorHandler();
     }
-    return AutoHealErrorHandler?.instance;
+    return AutoHealErrorHandler.instance;
   }
 
   /**
    * Gère une erreur React et tente de la réparer
    */
-  async handleError(any: any): Promise<void> {
-    logger?.error(any: any);
+  async handleError(error: Error, errorInfo: React.ErrorInfo): Promise<void> {
+    logger.error('Erreur React détectée:', error, errorInfo);
 
-    if (any: any) {
-      logger?.warn('Réparation déjà en cours, ignoré');
+    if (this.healingInProgress) {
+      logger.warn('Réparation déjà en cours, ignoré');
       return;
     }
 
-    this?.healingInProgress = true;
+    this.healingInProgress = true;
 
     try {
       // Identifier le module concerné par l'erreur
-      const module = this?.identifyModule(any: any);
+      const module = this.identifyModule(error, errorInfo);
 
       // Scanner le système
       const report = await scanSystem();
-      logger?.debug(any: any);
+      logger.debug('Rapport scan:', report);
 
       // Réparer le module identifié
-      if (any: any) {
-        await repairSystem(any: any);
+      if (module) {
+        await repairSystem(module);
       } else {
         await repairSystem(); // Réparation complète
       }
@@ -136,23 +136,23 @@ export class AutoHealErrorHandler {
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Recharger l'application
-      window?.location?.reload();
-    } catch (any: any) {
-      logger?.error(any: any);
+      window.location.reload();
+    } catch (error) {
+      logger.error('Échec auto-réparation:', error);
     } finally {
-      this?.healingInProgress = false;
+      this.healingInProgress = false;
     }
   }
 
   /**
    * Identifie le module concerné par une erreur
    */
-  private identifyModule(any: any)??: string | undefined {
-    const stack = errorInfo?.componentStack || error?.stack || '';
+  private identifyModule(error: Error, errorInfo: React.ErrorInfo): string | undefined {
+    const stack = errorInfo.componentStack || error.stack || '';
 
-    if (stack?.includes('Chat')) return 'chat_ia';
-    if (stack?.includes('Router') || stack?.includes('Route')) return 'router';
-    if (stack?.includes('Menu') || stack?.includes('Navigation')) return 'router';
+    if (stack.includes('Chat')) return 'chat_ia';
+    if (stack.includes('Router') || stack.includes('Route')) return 'router';
+    if (stack.includes('Menu') || stack.includes('Navigation')) return 'router';
 
     return undefined;
   }
@@ -170,46 +170,46 @@ export class AutoHealMonitor {
   private checkInterval = 30000; // 30 secondes
 
   start(): void {
-    if (any: any) {
-      logger?.warn('Monitor déjà démarré');
+    if (this.intervalId) {
+      logger.warn('Monitor déjà démarré');
       return;
     }
 
-    logger?.debug('Démarrage monitoring...');
+    logger.debug('Démarrage monitoring...');
 
-    this?.intervalId = window?.setInterval(async () => {
+    this.intervalId = window.setInterval(async () => {
       try {
         const report = await scanSystem();
 
         // Vérifier si des erreurs critiques sont détectées
-        const criticalErrors = report?.events?.filter(
-          e => e?.severity === 'critical' || e?.severity === 'error'
+        const criticalErrors = report.events.filter(
+          e => e.severity === 'critical' || e.severity === 'error'
         );
 
-        if (criticalErrors?.length > 0) {
-          logger?.warn(any: any);
+        if (criticalErrors.length > 0) {
+          logger.warn('Erreurs critiques détectées:', criticalErrors);
           // Auto-réparation
           await repairSystem();
         }
-      } catch (any: any) {
-        logger?.error(any: any);
+      } catch (error) {
+        logger.error('Erreur monitoring:', error);
       }
-    }, this?.checkInterval);
+    }, this.checkInterval);
   }
 
   stop(): void {
-    if (any: any) {
-      clearInterval(any: any);
-      this?.intervalId = null;
-      logger?.debug('Monitoring arrêté');
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+      logger.debug('Monitoring arrêté');
     }
   }
 
-  setCheckInterval(any: any): void {
-    this?.checkInterval = ms;
-    if (any: any) {
-      this?.stop();
-      this?.start();
+  setCheckInterval(ms: number): void {
+    this.checkInterval = ms;
+    if (this.intervalId) {
+      this.stop();
+      this.start();
     }
   }
 }
@@ -222,7 +222,7 @@ export const autoHealClient = {
   scan: scanSystem,
   repair: repairSystem,
   getLogs,
-  errorHandler: AutoHealErrorHandler?.getInstance(),
+  errorHandler: AutoHealErrorHandler.getInstance(),
   monitor: new AutoHealMonitor(),
 };
 

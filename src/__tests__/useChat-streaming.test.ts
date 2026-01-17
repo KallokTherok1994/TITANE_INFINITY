@@ -3,7 +3,7 @@ import { render, act, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 
 // Mock useChatCore to provide a stream implementation
-vi?.mock('@hooks/useChatCore', () => {
+vi.mock('@hooks/useChatCore', () => {
   return {
     useChatCore: () => ({
       currentMode: 'default',
@@ -16,7 +16,7 @@ vi?.mock('@hooks/useChatCore', () => {
         return {
           content: 'Hello world',
           provider: 'test-provider',
-          timestamp: Date?.now(),
+          timestamp: Date.now(),
           mode: 'default',
           contextUsed: [],
           suggestions: [],
@@ -31,9 +31,9 @@ vi?.mock('@hooks/useChatCore', () => {
 
 import { useChat } from '@/hooks/useChat';
 
-function TestHost(any: any) => void }) {
+function TestHost(props: { onReady: (api: any) => void }) {
   const api = useChat();
-  React?.useEffect(any: any), [api]);
+  React.useEffect(() => props.onReady(api), [api]);
   return null;
 }
 
@@ -42,8 +42,8 @@ describe('useChat streaming flow', () => {
     let apiRef: any = null;
 
     render(
-      React?.createElement(TestHost, {
-        onReady: (any: any) => {
+      React.createElement(TestHost, {
+        onReady: (api: any) => {
           apiRef = api;
         },
       })
@@ -52,13 +52,13 @@ describe('useChat streaming flow', () => {
     await act(async () => {
       // send 10 messages sequentially and verify final responses
       for (let i = 0; i < 10; i++) {
-        const promise = apiRef?.sendMessage(`test streaming ${i}`);
+        const promise = apiRef.sendMessage(`test streaming ${i}`);
         // wait a bit for streaming to push updates
         await new Promise(resolve => setTimeout(resolve, 50));
         const assistantMessage = await promise;
 
-        expect(any: any).toBeDefined();
-        expect(any: any).toContain('Hello world');
+        expect(assistantMessage).toBeDefined();
+        expect(assistantMessage.content).toContain('Hello world');
       }
     });
   });

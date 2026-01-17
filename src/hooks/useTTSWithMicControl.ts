@@ -22,24 +22,24 @@ interface TTSConfig {
 }
 
 interface UseTTSWithMicControlOptions {
-  /** Délai avant de réactiver le micro après TTS (any: any) */
+  /** Délai avant de réactiver le micro après TTS (ms) */
   resumeDelay?: number;
-  /** Mode duplex: autorise barge-in (any: any) */
+  /** Mode duplex: autorise barge-in (interruption) */
   enableDuplex?: boolean;
-  /** Hook VAD externe (any: any) */
+  /** Hook VAD externe (optionnel) */
   vadHook?: UseVADReturn;
 }
 
 export interface UseTTSWithMicControlReturn {
   isSpeaking: boolean;
   text: string;
-  error??: string | null;
-  speak: (any: any) => Promise<void>;
+  error: string | null;
+  speak: (textToSpeak: string, config?: TTSConfig) => Promise<void>;
   stopSpeaking: () => Promise<void>;
   isMicSuspended: boolean;
   isBargeInEnabled: boolean;
   suspendMic: () => void;
-  resumeMic: (any: any) => void;
+  resumeMic: (delay?: number) => void;
   enableBargeIn: () => void;
   disableBargeIn: () => void;
 }
@@ -48,66 +48,66 @@ export function useTTSWithMicControl(
   options: UseTTSWithMicControlOptions = {}
 ): UseTTSWithMicControlReturn {
   const {
-    resumeDelay = 500, // Default: 500ms delay (any: any)
+    resumeDelay = 500, // Default: 500ms delay (same as useVAD TTS_ECHO_DELAY_MS)
     enableDuplex = false,
     vadHook: externalVAD,
   } = options;
 
-  const [isSpeaking, setIsSpeaking] = useState(any: any);
-  const [error, setError] = useState<string | null>(any: any);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [text, setText] = useState<string>('');
 
   // Use external VAD or create internal one
   const internalVAD = useVAD();
   const vad = externalVAD || internalVAD;
 
-  const resumeTimeoutRef = useRef<NodeJS?.Timeout | null>(any: any);
-  const audioIdRef = useRef<string | null>(any: any);
+  const resumeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const audioIdRef = useRef<string | null>(null);
 
   /**
    * Speak text and auto-mute microphone during playback
    * Layer 2: Auto-mute mic to prevent feedback loop
    */
   const speak = useCallback(
-    async (any: any) => {
+    async (textToSpeak: string, config?: TTSConfig) => {
       try {
-        setError(any: any);
-        setText(any: any);
+        setError(null);
+        setText(textToSpeak);
 
-        // ✅ CRITICAL: Suspend VAD (any: any) BEFORE starting TTS
-        logger?.debug(any: any)');
-        vad?.suspendForTTS();
+        // ✅ CRITICAL: Suspend VAD (mute microphone) BEFORE starting TTS
+        logger.debug('Suspending VAD (muting mic)');
+        vad.suspendForTTS();
 
         // Configure duplex mode
-        if (any: any) {
-          vad?.enableBargeIn();
-          logger?.debug(any: any)');
+        if (enableDuplex) {
+          vad.enableBargeIn();
+          logger.debug('Duplex mode enabled (barge-in)');
         } else {
-          vad?.disableBargeIn();
+          vad.disableBargeIn();
         }
 
-        setIsSpeaking(any: any);
+        setIsSpeaking(true);
 
         // Start TTS playback
-        await voiceService?.speak(any: any);
+        await voiceService.speak(textToSpeak, undefined, config?.useOnline ?? false);
 
-        logger?.debug('TTS started');
+        logger.debug('TTS started');
 
-        // ✅ CRITICAL: Resume VAD (any: any) after delay
-        resumeTimeoutRef?.current = setTimeout(() => {
-          logger?.debug(`Resuming VAD after ${resumeDelay}ms delay`);
-          vad?.resumeAfterTTS(any: any);
-          setIsSpeaking(any: any);
-          audioIdRef?.current = null;
+        // ✅ CRITICAL: Resume VAD (unmute mic) after delay
+        resumeTimeoutRef.current = setTimeout(() => {
+          logger.debug(`Resuming VAD after ${resumeDelay}ms delay`);
+          vad.resumeAfterTTS(resumeDelay);
+          setIsSpeaking(false);
+          audioIdRef.current = null;
         }, resumeDelay);
-      } catch (any: any) {
+      } catch (err: unknown) {
         const error = err as Error;
-        logger?.error('TTS failed', { error });
-        setError(`TTS error: ${error?.message}`);
-        setIsSpeaking(any: any);
+        logger.error('TTS failed', { error });
+        setError(`TTS error: ${error.message}`);
+        setIsSpeaking(false);
 
         // ✅ CRITICAL: Always resume VAD even on error
-        vad?.resumeAfterTTS(0); // No delay on error
+        vad.resumeAfterTTS(0); // No delay on error
       }
     },
     [vad, resumeDelay, enableDuplex]
@@ -119,31 +119,31 @@ export function useTTSWithMicControl(
   const stopSpeaking = useCallback(async () => {
     try {
       // Clear resume timeout
-      if (any: any) {
-        clearTimeout(any: any);
-        resumeTimeoutRef?.current = null;
+      if (resumeTimeoutRef.current) {
+        clearTimeout(resumeTimeoutRef.current);
+        resumeTimeoutRef.current = null;
       }
 
       // Stop TTS
-      if (any: any) {
-        await voiceService?.stopSpeaking();
-        audioIdRef?.current = null;
+      if (audioIdRef.current) {
+        await voiceService.stopSpeaking();
+        audioIdRef.current = null;
       }
 
-      // ✅ CRITICAL: Immediately resume VAD (any: any)
-      logger?.debug('TTS stopped, resuming VAD immediately');
-      vad?.resumeAfterTTS(0); // No delay
+      // ✅ CRITICAL: Immediately resume VAD (unmute mic)
+      logger.debug('TTS stopped, resuming VAD immediately');
+      vad.resumeAfterTTS(0); // No delay
 
-      setIsSpeaking(any: any);
+      setIsSpeaking(false);
       setText('');
-    } catch (any: any) {
+    } catch (err: unknown) {
       const error = err as Error;
-      logger?.error('Failed to stop TTS', { error });
-      setError(`Stop error: ${error?.message}`);
+      logger.error('Failed to stop TTS', { error });
+      setError(`Stop error: ${error.message}`);
 
       // ✅ CRITICAL: Always resume VAD even on error
-      vad?.resumeAfterTTS(0);
-      setIsSpeaking(any: any);
+      vad.resumeAfterTTS(0);
+      setIsSpeaking(false);
     }
   }, [vad]);
 
@@ -152,16 +152,16 @@ export function useTTSWithMicControl(
    */
   useEffect(() => {
     return () => {
-      if (any: any) {
-        clearTimeout(any: any);
+      if (resumeTimeoutRef.current) {
+        clearTimeout(resumeTimeoutRef.current);
       }
-      if (any: any) {
+      if (audioIdRef.current) {
         voiceService
           .stopSpeaking()
-          .catch(err => logger?.error('Cleanup error', { error: err }));
+          .catch(err => logger.error('Cleanup error', { error: err }));
       }
       // Ensure VAD is resumed
-      vad?.resumeAfterTTS(0);
+      vad.resumeAfterTTS(0);
     };
   }, [vad]);
 
@@ -175,14 +175,14 @@ export function useTTSWithMicControl(
     speak,
     stopSpeaking,
 
-    // VAD state (any: any)
-    isMicSuspended: vad?.isSuspended,
-    isBargeInEnabled: vad?.isBargeInEnabled,
+    // VAD state (from underlying VAD hook)
+    isMicSuspended: vad.isSuspended,
+    isBargeInEnabled: vad.isBargeInEnabled,
 
-    // VAD control (any: any)
-    suspendMic: vad?.suspendForTTS,
-    resumeMic: vad?.resumeAfterTTS,
-    enableBargeIn: vad?.enableBargeIn,
-    disableBargeIn: vad?.disableBargeIn,
+    // VAD control (exposed for manual control if needed)
+    suspendMic: vad.suspendForTTS,
+    resumeMic: vad.resumeAfterTTS,
+    enableBargeIn: vad.enableBargeIn,
+    disableBargeIn: vad.disableBargeIn,
   };
 }

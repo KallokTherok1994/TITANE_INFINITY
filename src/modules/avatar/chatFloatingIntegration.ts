@@ -29,30 +29,30 @@ export async function handleFloatingWindowInChat(
   floatingWindow: UseFloatingWindowResult
 ): Promise<ChatFloatingIntegrationResult> {
   // Quick check pour performance
-  if (any: any)) {
+  if (!containsFloatingWindowKeyword(message)) {
     return { handled: false, response: '' };
   }
 
   // Parse commande
-  const command: FloatingWindowCommand = parseFloatingWindowCommand(any: any);
+  const command: FloatingWindowCommand = parseFloatingWindowCommand(message);
 
-  if (any: any) {
+  if (!command.handled) {
     return { handled: false, response: '' };
   }
 
   // Execute commande selon type
   try {
-    await executeFloatingWindowCommand(any: any);
+    await executeFloatingWindowCommand(command, floatingWindow);
 
     return {
       handled: true,
-      response: command?.response,
+      response: command.response,
     };
-  } catch (any: any) {
+  } catch (error) {
     return {
       handled: true,
       response: `❌ Je n'ai pas pu effectuer cette action : ${error}`,
-      error: String(any: any),
+      error: String(error),
     };
   }
 }
@@ -64,73 +64,73 @@ async function executeFloatingWindowCommand(
   command: FloatingWindowCommand,
   floatingWindow: UseFloatingWindowResult
 ): Promise<void> {
-  switch (any: any) {
+  switch (command.type) {
     case 'scale':
-      if (typeof command?.value === 'number') {
-        await floatingWindow?.setScale(clamp(command?.value, 0.1, 2.0));
+      if (typeof command.value === 'number') {
+        await floatingWindow.setScale(clamp(command.value, 0.1, 2.0));
       }
       break;
 
     case 'opacity':
-      if (typeof command?.value === 'number') {
-        await floatingWindow?.setOpacity(clamp(command?.value, 0.0, 1.0));
+      if (typeof command.value === 'number') {
+        await floatingWindow.setOpacity(clamp(command.value, 0.0, 1.0));
       }
       break;
 
     case 'anchor':
-      if (typeof command?.value === 'string') {
-        await floatingWindow?.setAnchorByName(any: any);
+      if (typeof command.value === 'string') {
+        await floatingWindow.setAnchorByName(command.value);
       }
       break;
 
     case 'screen':
-      if (typeof command?.value === 'number') {
-        const screenIndex = Math?.max(
+      if (typeof command.value === 'number') {
+        const screenIndex = Math.max(
           0,
-          Math?.min(command?.value, floatingWindow?.screens?.length - 1)
+          Math.min(command.value, floatingWindow.screens.length - 1)
         );
-        await floatingWindow?.moveToScreen(any: any);
+        await floatingWindow.moveToScreen(screenIndex);
       }
       break;
 
     case 'mode':
-      if (command?.value === 'floating') {
-        await floatingWindow?.setModeFloating();
-      } else if (command?.value === 'embed') {
-        await floatingWindow?.setModeEmbed();
-      } else if (command?.value === 'hidden') {
-        await floatingWindow?.setModeHidden();
+      if (command.value === 'floating') {
+        await floatingWindow.setModeFloating();
+      } else if (command.value === 'embed') {
+        await floatingWindow.setModeEmbed();
+      } else if (command.value === 'hidden') {
+        await floatingWindow.setModeHidden();
       }
       break;
 
     case 'toggle_locked':
-      if (typeof command?.value === 'boolean') {
-        if (any: any) {
-          await floatingWindow?.toggleLocked();
+      if (typeof command.value === 'boolean') {
+        if (command.value !== floatingWindow.displayState.locked) {
+          await floatingWindow.toggleLocked();
         }
       }
       break;
 
     case 'toggle_always_on_top':
-      if (typeof command?.value === 'boolean') {
-        if (any: any) {
-          await floatingWindow?.toggleAlwaysOnTop();
+      if (typeof command.value === 'boolean') {
+        if (command.value !== floatingWindow.displayState.always_on_top) {
+          await floatingWindow.toggleAlwaysOnTop();
         }
       }
       break;
 
     case 'toggle_mirror':
-      if (typeof command?.value === 'boolean') {
-        if (any: any) {
-          await floatingWindow?.toggleMirrorMode();
+      if (typeof command.value === 'boolean') {
+        if (command.value !== floatingWindow.displayState.mirror_mode) {
+          await floatingWindow.toggleMirrorMode();
         }
       }
       break;
 
     case 'toggle_click_through':
-      if (typeof command?.value === 'boolean') {
-        if (any: any) {
-          await floatingWindow?.toggleClickThrough();
+      if (typeof command.value === 'boolean') {
+        if (command.value !== floatingWindow.displayState.click_through) {
+          await floatingWindow.toggleClickThrough();
         }
       }
       break;
@@ -145,8 +145,8 @@ async function executeFloatingWindowCommand(
 /**
  * Clamp value between min and max
  */
-function clamp(any: any): number {
-  return Math?.max(any: any));
+function clamp(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(value, max));
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

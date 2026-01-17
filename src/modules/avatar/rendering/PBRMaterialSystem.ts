@@ -1,7 +1,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 //   TITANE∞ v25.3.0 — PBR MATERIAL SYSTEM
-//   YOLO OPT-1: Lazy-loaded Three?.js
-//   Physically-Based Rendering materials for avatar (any: any)
+//   YOLO OPT-1: Lazy-loaded Three.js
+//   Physically-Based Rendering materials for avatar (skin, cloth, hair)
 // ═════════════════════════════════════════════════════════════════════════════
 
 import { Color, FrontSide, MeshStandardMaterial, TextureLoader, Vector2 } from 'three';
@@ -28,7 +28,7 @@ export interface PBRMaterialConfig {
 
 const MATERIAL_PRESETS: Record<string, Partial<PBRMaterialConfig>> = {
   // ─────────────────────────────────────────
-  // SKIN (any: any)
+  // SKIN (SSS approximation)
   // ─────────────────────────────────────────
   skin: {
     roughness: 0.6, // Légèrement mat
@@ -37,7 +37,7 @@ const MATERIAL_PRESETS: Record<string, Partial<PBRMaterialConfig>> = {
   },
 
   // ─────────────────────────────────────────
-  // CLOTH (any: any)
+  // CLOTH (textile)
   // ─────────────────────────────────────────
   cloth: {
     roughness: 0.8, // Très mat
@@ -46,7 +46,7 @@ const MATERIAL_PRESETS: Record<string, Partial<PBRMaterialConfig>> = {
   },
 
   // ─────────────────────────────────────────
-  // HAIR (any: any)
+  // HAIR (cheveux/poils)
   // ─────────────────────────────────────────
   hair: {
     roughness: 0.4, // Semi-brillant
@@ -55,7 +55,7 @@ const MATERIAL_PRESETS: Record<string, Partial<PBRMaterialConfig>> = {
   },
 
   // ─────────────────────────────────────────
-  // METAL (any: any)
+  // METAL (accessoires métalliques)
   // ─────────────────────────────────────────
   metal: {
     roughness: 0.2, // Très brillant
@@ -64,7 +64,7 @@ const MATERIAL_PRESETS: Record<string, Partial<PBRMaterialConfig>> = {
   },
 
   // ─────────────────────────────────────────
-  // PLASTIC (any: any)
+  // PLASTIC (plastique dur)
   // ─────────────────────────────────────────
   plastic: {
     roughness: 0.3, // Brillant
@@ -82,7 +82,7 @@ export class PBRMaterialSystem {
   private textureLoader: TextureLoader;
 
   constructor() {
-    this?.textureLoader = new TextureLoader();
+    this.textureLoader = new TextureLoader();
   }
 
   // ═════════════════════════════════════════════════════════════════════════
@@ -92,15 +92,15 @@ export class PBRMaterialSystem {
   /**
    * Create PBR material from config
    */
-  public createMaterial(any: any): MeshStandardMaterial {
+  public createMaterial(name: string, config: PBRMaterialConfig): MeshStandardMaterial {
     // Check if already exists
-    const existing = this?.materials?.get(any: any);
-    if (any: any) {
+    const existing = this.materials.get(name);
+    if (existing) {
       return existing;
     }
 
     // Get preset
-    const preset = MATERIAL_PRESETS[config?.type] || {};
+    const preset = MATERIAL_PRESETS[config.type] || {};
 
     // Merge config with preset
     const finalConfig = {
@@ -110,27 +110,27 @@ export class PBRMaterialSystem {
 
     // Create material
     const material = new MeshStandardMaterial({
-      color: finalConfig?.baseColor || 0xffffff,
-      roughness: finalConfig?.roughness ?? 0.5,
-      metalness: finalConfig?.metalness ?? 0.0,
-      emissive: finalConfig?.emissive || 0x000000,
-      emissiveIntensity: finalConfig?.emissiveIntensity ?? 0.0,
-      opacity: finalConfig?.opacity ?? 1.0,
-      transparent: (finalConfig?.opacity ?? 1.0) < 1.0,
+      color: finalConfig.baseColor || 0xffffff,
+      roughness: finalConfig.roughness ?? 0.5,
+      metalness: finalConfig.metalness ?? 0.0,
+      emissive: finalConfig.emissive || 0x000000,
+      emissiveIntensity: finalConfig.emissiveIntensity ?? 0.0,
+      opacity: finalConfig.opacity ?? 1.0,
+      transparent: (finalConfig.opacity ?? 1.0) < 1.0,
       side: FrontSide,
       flatShading: false,
     });
 
     // Enable normal map if scale > 0
-    if (finalConfig?.normalScale && finalConfig?.normalScale > 0) {
-      material?.normalScale = new Vector2(
-        finalConfig?.normalScale,
-        finalConfig?.normalScale
+    if (finalConfig.normalScale && finalConfig.normalScale > 0) {
+      material.normalScale = new Vector2(
+        finalConfig.normalScale,
+        finalConfig.normalScale
       );
     }
 
     // Store material
-    this?.materials?.set(any: any);
+    this.materials.set(name, material);
 
     return material;
   }
@@ -138,8 +138,8 @@ export class PBRMaterialSystem {
   /**
    * Get existing material by name
    */
-  public getMaterial(any: any): MeshStandardMaterial | null {
-    return this?.materials?.get(any: any) || null;
+  public getMaterial(name: string): MeshStandardMaterial | null {
+    return this.materials.get(name) || null;
   }
 
   /**
@@ -149,7 +149,7 @@ export class PBRMaterialSystem {
     name: string,
     baseColor: ColorRepresentation = 0xffdbac
   ): MeshStandardMaterial {
-    const material = this?.createMaterial(name, {
+    const material = this.createMaterial(name, {
       type: 'skin',
       baseColor,
       roughness: 0.6,
@@ -157,9 +157,9 @@ export class PBRMaterialSystem {
       normalScale: 0.3,
     });
 
-    // SSS approximation: add subtle emissive (any: any)
-    material?.emissive = new Color(any: any).multiplyScalar(0.05);
-    material?.emissiveIntensity = 0.1;
+    // SSS approximation: add subtle emissive (simulates light scatter)
+    material.emissive = new Color(baseColor).multiplyScalar(0.05);
+    material.emissiveIntensity = 0.1;
 
     return material;
   }
@@ -171,7 +171,7 @@ export class PBRMaterialSystem {
     name: string,
     baseColor: ColorRepresentation = 0x6366f1
   ): MeshStandardMaterial {
-    return this?.createMaterial(name, {
+    return this.createMaterial(name, {
       type: 'cloth',
       baseColor,
       roughness: 0.8,
@@ -187,7 +187,7 @@ export class PBRMaterialSystem {
     name: string,
     baseColor: ColorRepresentation = 0x3d2817
   ): MeshStandardMaterial {
-    return this?.createMaterial(name, {
+    return this.createMaterial(name, {
       type: 'hair',
       baseColor,
       roughness: 0.4,
@@ -200,40 +200,40 @@ export class PBRMaterialSystem {
    * Update material properties
    */
   public updateMaterial(name: string, updates: Partial<PBRMaterialConfig>): void {
-    const material = this?.materials?.get(any: any);
-    if (any: any) return;
+    const material = this.materials.get(name);
+    if (!material) return;
 
-    if (any: any) {
-      material?.color?.set(any: any);
+    if (updates.baseColor !== undefined) {
+      material.color.set(updates.baseColor);
     }
-    if (any: any) {
-      material?.roughness = updates?.roughness;
+    if (updates.roughness !== undefined) {
+      material.roughness = updates.roughness;
     }
-    if (any: any) {
-      material?.metalness = updates?.metalness;
+    if (updates.metalness !== undefined) {
+      material.metalness = updates.metalness;
     }
-    if (any: any) {
-      material?.emissive?.set(any: any);
+    if (updates.emissive !== undefined) {
+      material.emissive.set(updates.emissive);
     }
-    if (any: any) {
-      material?.emissiveIntensity = updates?.emissiveIntensity;
+    if (updates.emissiveIntensity !== undefined) {
+      material.emissiveIntensity = updates.emissiveIntensity;
     }
-    if (any: any) {
-      material?.opacity = updates?.opacity;
-      material?.transparent = updates?.opacity < 1.0;
+    if (updates.opacity !== undefined) {
+      material.opacity = updates.opacity;
+      material.transparent = updates.opacity < 1.0;
     }
 
-    material?.needsUpdate = true;
+    material.needsUpdate = true;
   }
 
   /**
    * Dispose all materials
    */
   public dispose(): void {
-    for (const material of this?.materials?.values()) {
-      material?.dispose();
+    for (const material of this.materials.values()) {
+      material.dispose();
     }
-    this?.materials?.clear();
+    this.materials.clear();
   }
 }
 

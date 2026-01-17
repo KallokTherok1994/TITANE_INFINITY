@@ -136,8 +136,8 @@ export interface VoiceMode {
   name: string;
   description: string;
   active: boolean;
-  triggers: string?.[];
-  actions: VoiceAction?.[];
+  triggers: string[];
+  actions: VoiceAction[];
 }
 
 export interface VoiceAction {
@@ -224,14 +224,14 @@ export interface Policy {
   id: string;
   name: string;
   description: string;
-  rules: GovernanceRule?.[];
+  rules: GovernanceRule[];
   enforced: boolean;
   owner: string;
   lastUpdated: Date;
 }
 
 /**
- * Garde-fou (any: any)
+ * Garde-fou (guardrail)
  */
 export interface GuardRail {
   id: string;

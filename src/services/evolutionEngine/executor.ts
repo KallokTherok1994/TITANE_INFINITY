@@ -1,9 +1,9 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
- * TITANE∞ EVOLUTION ENGINE — Executor (any: any)
+ * TITANE∞ EVOLUTION ENGINE — Executor (Evolution Executor)
  * ═══════════════════════════════════════════════════════════════════════════════
  *
- * @file        executor?.ts
+ * @file        executor.ts
  * @version     vΩ∞Ω∞
  *
  * Exécute les actions d'évolution de manière sécurisée et contrôlée
@@ -25,7 +25,7 @@ import type {
   ExecutorConfig,
   ActionWhitelistEntry,
   ValidationPolicy,
-} from './evolutionEngine?.config';
+} from './evolutionEngine.config';
 import {
   generateEvolutionId,
   hasPermission,
@@ -34,7 +34,7 @@ import {
   DEFAULT_EXECUTOR_CONFIG,
   DEFAULT_ACTION_WHITELIST,
   DEFAULT_VALIDATION_POLICIES,
-} from './evolutionEngine?.config';
+} from './evolutionEngine.config';
 import { getPlanner } from './planner';
 
 // =============================================================================
@@ -43,14 +43,14 @@ import { getPlanner } from './planner';
 
 interface ExecutorState {
   executingActions: Map<string, EvolutionActionRequest>;
-  history: EvolutionHistoryEntry?.[];
+  history: EvolutionHistoryEntry[];
   lastActionTime: Map<string, number>;
   dailyActionCounts: Map<string, number>;
   lastDayReset: number;
 }
 
-type ActionResultListener = (any: any) => void;
-type HistoryListener = (any: any) => void;
+type ActionResultListener = (result: EvolutionActionResult) => void;
+type HistoryListener = (entry: EvolutionHistoryEntry) => void;
 
 // =============================================================================
 // EXECUTOR CLASS
@@ -62,21 +62,21 @@ type HistoryListener = (any: any) => void;
  */
 export class Executor {
   private config: ExecutorConfig;
-  private whitelist: ActionWhitelistEntry?.[];
-  private policies: ValidationPolicy?.[];
+  private whitelist: ActionWhitelistEntry[];
+  private policies: ValidationPolicy[];
   private state: ExecutorState;
   private resultListeners: Set<ActionResultListener> = new Set();
   private historyListeners: Set<HistoryListener> = new Set();
 
   constructor(
     config?: Partial<ExecutorConfig>,
-    whitelist?: ActionWhitelistEntry?.[],
-    policies?: ValidationPolicy?.[]
+    whitelist?: ActionWhitelistEntry[],
+    policies?: ValidationPolicy[]
   ) {
-    this?.config = { ...DEFAULT_EXECUTOR_CONFIG, ...config };
-    this?.whitelist = whitelist || DEFAULT_ACTION_WHITELIST;
-    this?.policies = policies || DEFAULT_VALIDATION_POLICIES;
-    this?.state = this?.createInitialState();
+    this.config = { ...DEFAULT_EXECUTOR_CONFIG, ...config };
+    this.whitelist = whitelist || DEFAULT_ACTION_WHITELIST;
+    this.policies = policies || DEFAULT_VALIDATION_POLICIES;
+    this.state = this.createInitialState();
   }
 
   // ===========================================================================
@@ -89,7 +89,7 @@ export class Executor {
       history: [],
       lastActionTime: new Map(),
       dailyActionCounts: new Map(),
-      lastDayReset: Date?.now(),
+      lastDayReset: Date.now(),
     };
   }
 
@@ -104,34 +104,34 @@ export class Executor {
     suggestionId: string,
     userRole: GovernanceRole,
     reason?: string
-  ): Promise<EvolutionActionResult?.[]> {
+  ): Promise<EvolutionActionResult[]> {
     const planner = getPlanner();
-    const suggestion = planner?.getSuggestionById(any: any);
+    const suggestion = planner.getSuggestionById(suggestionId);
 
-    if (any: any) {
+    if (!suggestion) {
       throw new Error(`Suggestion non trouvée: ${suggestionId}`);
     }
 
-    if (suggestion?.status !== 'APPROVED') {
-      throw new Error(`Suggestion non approuvée: ${suggestion?.status}`);
+    if (suggestion.status !== 'APPROVED') {
+      throw new Error(`Suggestion non approuvée: ${suggestion.status}`);
     }
 
-    const results: EvolutionActionResult?.[] = [];
+    const results: EvolutionActionResult[] = [];
 
-    for (any: any) {
-      const result = await this?.executeAction(any: any);
-      results?.push(any: any);
+    for (const action of suggestion.actions) {
+      const result = await this.executeAction(suggestion, action, userRole, reason);
+      results.push(result);
 
       // Arrêter si une action échoue et rollbackOnFailure est activé
-      if (any: any) {
+      if (result.result === 'FAILED' && this.config.rollbackOnFailure) {
         break;
       }
     }
 
     // Marquer la suggestion comme exécutée
-    const allSuccess = results?.every(r => r?.result === 'SUCCESS');
-    if (any: any) {
-      planner?.markExecuted(any: any);
+    const allSuccess = results.every(r => r.result === 'SUCCESS');
+    if (allSuccess) {
+      planner.markExecuted(suggestionId);
     }
 
     return results;
@@ -149,92 +149,92 @@ export class Executor {
   ): Promise<EvolutionActionResult> {
     const request: EvolutionActionRequest = {
       correlationId: generateEvolutionId('req'),
-      suggestionId: suggestion?.id,
-      actionId: action?.id,
+      suggestionId: suggestion.id,
+      actionId: action.id,
       requestedBy: userRole,
-      requestedAt: Date?.now(),
+      requestedAt: Date.now(),
       reason,
       dryRun,
     };
 
     // ==== COUCHE 1: VALIDATION DES PERMISSIONS ====
-    const permissionCheck = this?.checkPermissions(any: any);
-    if (any: any) {
-      return this?.createDeniedResult(
+    const permissionCheck = this.checkPermissions(action, userRole);
+    if (!permissionCheck.valid) {
+      return this.createDeniedResult(
         request,
         action,
-        permissionCheck?.reason || 'Permission refusée'
+        permissionCheck.reason || 'Permission refusée'
       );
     }
 
     // ==== COUCHE 2: VALIDATION SELF-HEALING ====
-    if (any: any) {
-      const healingCheck = await this?.checkSelfHealing(any: any);
-      if (any: any) {
-        return this?.createDeniedResult(
+    if (this.config.requiresSelfHealingCheck) {
+      const healingCheck = await this.checkSelfHealing(action);
+      if (!healingCheck.valid) {
+        return this.createDeniedResult(
           request,
           action,
-          healingCheck?.reason || 'Self-Healing refusé'
+          healingCheck.reason || 'Self-Healing refusé'
         );
       }
     }
 
     // ==== COUCHE 3: VALIDATION WHITELIST ====
     const whitelistCheck = isActionWhitelisted(
-      action?.type,
-      action?.targetModule,
-      action?.risk,
-      this?.whitelist
+      action.type,
+      action.targetModule,
+      action.risk,
+      this.whitelist
     );
-    if (any: any) {
-      return this?.createDeniedResult(
+    if (!whitelistCheck.allowed) {
+      return this.createDeniedResult(
         request,
         action,
-        whitelistCheck?.reason || 'Non dans whitelist'
+        whitelistCheck.reason || 'Non dans whitelist'
       );
     }
 
     // ==== VÉRIFICATION COOLDOWN ====
-    const cooldownCheck = this?.checkCooldown(any: any);
-    if (any: any) {
-      return this?.createDeniedResult(
+    const cooldownCheck = this.checkCooldown(action, whitelistCheck.entry);
+    if (!cooldownCheck.valid) {
+      return this.createDeniedResult(
         request,
         action,
-        cooldownCheck?.reason || 'Cooldown actif'
+        cooldownCheck.reason || 'Cooldown actif'
       );
     }
 
     // ==== VÉRIFICATION LIMITE QUOTIDIENNE ====
-    const dailyLimitCheck = this?.checkDailyLimit(any: any);
-    if (any: any) {
-      return this?.createDeniedResult(
+    const dailyLimitCheck = this.checkDailyLimit(action, whitelistCheck.entry);
+    if (!dailyLimitCheck.valid) {
+      return this.createDeniedResult(
         request,
         action,
-        dailyLimitCheck?.reason || 'Limite quotidienne'
+        dailyLimitCheck.reason || 'Limite quotidienne'
       );
     }
 
     // ==== VÉRIFICATION CONCURRENCE ====
-    if (any: any) {
-      return this?.createDeniedResult(request, action, "Trop d'actions en cours");
+    if (this.state.executingActions.size >= this.config.maxConcurrentActions) {
+      return this.createDeniedResult(request, action, "Trop d'actions en cours");
     }
 
     // ==== DRY RUN ====
-    if (any: any) {
+    if (dryRun) {
       return {
-        requestId: request?.correlationId,
-        actionId: action?.id,
+        requestId: request.correlationId,
+        actionId: action.id,
         result: 'SUCCESS',
         message: '[DRY RUN] Action validée mais non exécutée',
-        startedAt: Date?.now(),
-        completedAt: Date?.now(),
+        startedAt: Date.now(),
+        completedAt: Date.now(),
         duration: 0,
         changes: [],
       };
     }
 
     // ==== EXÉCUTION ====
-    return this?.performAction(any: any);
+    return this.performAction(request, action);
   }
 
   // ===========================================================================
@@ -249,26 +249,26 @@ export class Executor {
     userRole: GovernanceRole
   ): { valid: boolean; reason?: string } {
     // Trouver la politique applicable
-    const policy = this?.policies?.find(any: any));
+    const policy = this.policies.find(p => p.appliesToRiskLevels.includes(action.risk));
 
-    if (any: any) {
-      if (any: any)) {
+    if (policy) {
+      if (!hasPermission(userRole, policy.requiredRole)) {
         return {
           valid: false,
-          reason: `Rôle ${policy?.requiredRole} requis pour risque ${action?.risk}`,
+          reason: `Rôle ${policy.requiredRole} requis pour risque ${action.risk}`,
         };
       }
     }
 
     // Vérifier dans la whitelist
-    const entry = this?.whitelist?.find(
-      e => e?.actionType === action?.type && e?.allowedTargets?.includes(any: any)
+    const entry = this.whitelist.find(
+      e => e.actionType === action.type && e.allowedTargets.includes(action.targetModule)
     );
 
-    if (any: any)) {
+    if (entry && !hasPermission(userRole, entry.requiredRole)) {
       return {
         valid: false,
-        reason: `Rôle ${entry?.requiredRole} requis pour cette action`,
+        reason: `Rôle ${entry.requiredRole} requis pour cette action`,
       };
     }
 
@@ -285,15 +285,15 @@ export class Executor {
       const result = await secureInvoke<{ allowed: boolean; reason?: string }>(
         'check_evolution_action',
         {
-          actionType: action?.type,
-          targetModule: action?.targetModule,
-          risk: action?.risk,
+          actionType: action.type,
+          targetModule: action.targetModule,
+          risk: action.risk,
         }
       );
 
-      return { valid: result?.allowed, reason: result?.reason };
+      return { valid: result.allowed, reason: result.reason };
     } catch {
-      // Si Self-Healing n'est pas disponible, autoriser par défaut (any: any)
+      // Si Self-Healing n'est pas disponible, autoriser par défaut (mode dégradé)
       return { valid: true };
     }
   }
@@ -305,17 +305,17 @@ export class Executor {
     action: EvolutionAction,
     entry?: ActionWhitelistEntry
   ): { valid: boolean; reason?: string } {
-    const key = `${action?.type}:${action?.targetModule}`;
-    const lastTime = this?.state?.lastActionTime?.get(any: any);
+    const key = `${action.type}:${action.targetModule}`;
+    const lastTime = this.state.lastActionTime.get(key);
 
-    if (any: any) {
-      const cooldown = entry?.cooldownMs || this?.config?.cooldownBetweenActions;
-      const elapsed = Date?.now() - lastTime;
+    if (lastTime) {
+      const cooldown = entry?.cooldownMs || this.config.cooldownBetweenActions;
+      const elapsed = Date.now() - lastTime;
 
-      if (any: any) {
+      if (elapsed < cooldown) {
         return {
           valid: false,
-          reason: `Cooldown: attendre ${Math?.ceil(any: any) / 1000)}s`,
+          reason: `Cooldown: attendre ${Math.ceil((cooldown - elapsed) / 1000)}s`,
         };
       }
     }
@@ -331,22 +331,22 @@ export class Executor {
     entry?: ActionWhitelistEntry
   ): { valid: boolean; reason?: string } {
     // Reset quotidien si nécessaire
-    const now = Date?.now();
+    const now = Date.now();
     const dayMs = 24 * 60 * 60 * 1000;
-    if (any: any) {
-      this?.state?.dailyActionCounts?.clear();
-      this?.state?.lastDayReset = now;
+    if (now - this.state.lastDayReset > dayMs) {
+      this.state.dailyActionCounts.clear();
+      this.state.lastDayReset = now;
     }
 
-    if (any: any) return { valid: true };
+    if (!entry?.dailyLimit) return { valid: true };
 
-    const key = `${action?.type}:${action?.targetModule}`;
-    const count = this?.state?.dailyActionCounts?.get(any: any) || 0;
+    const key = `${action.type}:${action.targetModule}`;
+    const count = this.state.dailyActionCounts.get(key) || 0;
 
-    if (any: any) {
+    if (count >= entry.dailyLimit) {
       return {
         valid: false,
-        reason: `Limite quotidienne atteinte (${entry?.dailyLimit})`,
+        reason: `Limite quotidienne atteinte (${entry.dailyLimit})`,
       };
     }
 
@@ -364,87 +364,87 @@ export class Executor {
     request: EvolutionActionRequest,
     action: EvolutionAction
   ): Promise<EvolutionActionResult> {
-    const startTime = Date?.now();
+    const startTime = Date.now();
 
     // Enregistrer l'action en cours
-    this?.state?.executingActions?.set(any: any);
+    this.state.executingActions.set(request.correlationId, request);
 
     try {
       // Créer backup si nécessaire
-      let backupId??: string | undefined;
-      if (any: any) {
-        backupId = await this?.createBackup(any: any);
+      let backupId: string | undefined;
+      if (this.config.createBackupBeforeAction) {
+        backupId = await this.createBackup(action);
       }
 
       // Exécuter via Rust backend
-      const result = await this?.invokeAction(any: any);
+      const result = await this.invokeAction(action, request);
 
       // Mettre à jour les compteurs
-      const key = `${action?.type}:${action?.targetModule}`;
-      this?.state?.lastActionTime?.set(key, Date?.now());
-      this?.state?.dailyActionCounts?.set(
+      const key = `${action.type}:${action.targetModule}`;
+      this.state.lastActionTime.set(key, Date.now());
+      this.state.dailyActionCounts.set(
         key,
-        (any: any) || 0) + 1
+        (this.state.dailyActionCounts.get(key) || 0) + 1
       );
 
       // Créer le résultat
       const actionResult: EvolutionActionResult = {
-        requestId: request?.correlationId,
-        actionId: action?.id,
-        result: result?.success ? 'SUCCESS' : 'FAILED',
-        message: result?.message,
+        requestId: request.correlationId,
+        actionId: action.id,
+        result: result.success ? 'SUCCESS' : 'FAILED',
+        message: result.message,
         startedAt: startTime,
-        completedAt: Date?.now(),
-        duration: Date?.now() - startTime,
-        changes: result?.changes || [],
-        metrics: result?.metrics,
-        error: result?.error,
+        completedAt: Date.now(),
+        duration: Date.now() - startTime,
+        changes: result.changes || [],
+        metrics: result.metrics,
+        error: result.error,
         rollbackId: backupId,
       };
 
       // Logger dans l'historique
-      this?.addHistoryEntry(
+      this.addHistoryEntry(
         'EXECUTE',
-        request?.requestedBy,
-        `Exécution ${action?.type} sur ${action?.targetModule}`,
+        request.requestedBy,
+        `Exécution ${action.type} sur ${action.targetModule}`,
         { action, result: actionResult },
-        actionResult?.result,
-        request?.suggestionId,
-        action?.id
+        actionResult.result,
+        request.suggestionId,
+        action.id
       );
 
       // Notifier les listeners
-      this?.notifyResultListeners(any: any);
+      this.notifyResultListeners(actionResult);
 
       return actionResult;
-    } catch (any: any) {
+    } catch (error) {
       const errorResult: EvolutionActionResult = {
-        requestId: request?.correlationId,
-        actionId: action?.id,
+        requestId: request.correlationId,
+        actionId: action.id,
         result: 'FAILED',
         message: "Erreur lors de l'exécution",
         startedAt: startTime,
-        completedAt: Date?.now(),
-        duration: Date?.now() - startTime,
+        completedAt: Date.now(),
+        duration: Date.now() - startTime,
         changes: [],
-        error: error instanceof Error ? error?.message : String(any: any),
+        error: error instanceof Error ? error.message : String(error),
       };
 
-      this?.addHistoryEntry(
+      this.addHistoryEntry(
         'EXECUTE',
-        request?.requestedBy,
-        `Échec ${action?.type} sur ${action?.targetModule}`,
-        { action, error: errorResult?.error },
+        request.requestedBy,
+        `Échec ${action.type} sur ${action.targetModule}`,
+        { action, error: errorResult.error },
         'FAILED',
-        request?.suggestionId,
-        action?.id
+        request.suggestionId,
+        action.id
       );
 
-      this?.notifyResultListeners(any: any);
+      this.notifyResultListeners(errorResult);
 
       return errorResult;
     } finally {
-      this?.state?.executingActions?.delete(any: any);
+      this.state.executingActions.delete(request.correlationId);
     }
   }
 
@@ -465,11 +465,11 @@ export class Executor {
     };
     error?: string;
   }> {
-    const timeout = action?.estimatedDuration * 2 || this?.config?.defaultTimeout;
+    const timeout = action.estimatedDuration * 2 || this.config.defaultTimeout;
 
     // Créer une promesse avec timeout
-    const timeoutPromise = new Promise<never>(any: any) => {
-      setTimeout(any: any);
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      setTimeout(() => reject(new Error('Timeout')), timeout);
     });
 
     const actionPromise = secureInvoke<{
@@ -483,25 +483,25 @@ export class Executor {
       };
       error?: string;
     }>('run_evolution_action', {
-      actionType: action?.type,
-      targetModule: action?.targetModule,
-      parameters: action?.parameters,
-      requestId: request?.correlationId,
+      actionType: action.type,
+      targetModule: action.targetModule,
+      parameters: action.parameters,
+      requestId: request.correlationId,
     });
 
-    return Promise?.race([actionPromise, timeoutPromise]);
+    return Promise.race([actionPromise, timeoutPromise]);
   }
 
   /**
    * Crée un backup avant l'action
    */
-  private async createBackup(any: any): Promise<string | undefined> {
+  private async createBackup(action: EvolutionAction): Promise<string | undefined> {
     try {
       const result = await secureInvoke<{ backupId: string }>('create_evolution_backup', {
-        targetModule: action?.targetModule,
-        actionType: action?.type,
+        targetModule: action.targetModule,
+        actionType: action.type,
       });
-      return result?.backupId;
+      return result.backupId;
     } catch {
       return undefined;
     }
@@ -518,14 +518,14 @@ export class Executor {
     result: EvolutionActionResult,
     userRole: GovernanceRole
   ): Promise<EvolutionActionResult> {
-    if (any: any) {
+    if (!result.rollbackId) {
       return {
         requestId: generateEvolutionId('req'),
-        actionId: result?.actionId,
+        actionId: result.actionId,
         result: 'FAILED',
         message: 'Aucun backup disponible pour rollback',
-        startedAt: Date?.now(),
-        completedAt: Date?.now(),
+        startedAt: Date.now(),
+        completedAt: Date.now(),
         duration: 0,
         changes: [],
       };
@@ -534,42 +534,42 @@ export class Executor {
     try {
       const rollbackResult = await secureInvoke<{ success: boolean; message: string }>(
         'rollback_evolution_action',
-        { backupId: result?.rollbackId }
+        { backupId: result.rollbackId }
       );
 
       const actionResult: EvolutionActionResult = {
         requestId: generateEvolutionId('req'),
-        actionId: result?.actionId,
-        result: rollbackResult?.success ? 'ROLLED_BACK' : 'FAILED',
-        message: rollbackResult?.message,
-        startedAt: Date?.now(),
-        completedAt: Date?.now(),
+        actionId: result.actionId,
+        result: rollbackResult.success ? 'ROLLED_BACK' : 'FAILED',
+        message: rollbackResult.message,
+        startedAt: Date.now(),
+        completedAt: Date.now(),
         duration: 0,
         changes: [],
       };
 
-      this?.addHistoryEntry(
+      this.addHistoryEntry(
         'EXECUTE',
         userRole,
-        `Rollback action ${result?.actionId}`,
+        `Rollback action ${result.actionId}`,
         { originalResult: result, rollbackResult: actionResult },
-        actionResult?.result,
+        actionResult.result,
         undefined,
-        result?.actionId
+        result.actionId
       );
 
       return actionResult;
-    } catch (any: any) {
+    } catch (error) {
       return {
         requestId: generateEvolutionId('req'),
-        actionId: result?.actionId,
+        actionId: result.actionId,
         result: 'FAILED',
         message: 'Erreur lors du rollback',
-        startedAt: Date?.now(),
-        completedAt: Date?.now(),
+        startedAt: Date.now(),
+        completedAt: Date.now(),
         duration: 0,
         changes: [],
-        error: error instanceof Error ? error?.message : String(any: any),
+        error: error instanceof Error ? error.message : String(error),
       };
     }
   }
@@ -584,27 +584,27 @@ export class Executor {
     reason: string
   ): EvolutionActionResult {
     const result: EvolutionActionResult = {
-      requestId: request?.correlationId,
-      actionId: action?.id,
+      requestId: request.correlationId,
+      actionId: action.id,
       result: 'DENIED',
       message: reason,
-      startedAt: Date?.now(),
-      completedAt: Date?.now(),
+      startedAt: Date.now(),
+      completedAt: Date.now(),
       duration: 0,
       changes: [],
     };
 
-    this?.addHistoryEntry(
+    this.addHistoryEntry(
       'VALIDATE',
-      request?.requestedBy,
-      `Refusé: ${action?.type} sur ${action?.targetModule}`,
+      request.requestedBy,
+      `Refusé: ${action.type} sur ${action.targetModule}`,
       { reason },
       'DENIED',
-      request?.suggestionId,
-      action?.id
+      request.suggestionId,
+      action.id
     );
 
-    this?.notifyResultListeners(any: any);
+    this.notifyResultListeners(result);
 
     return result;
   }
@@ -628,19 +628,19 @@ export class Executor {
       actionId
     );
 
-    this?.state?.history?.push(any: any);
+    this.state.history.push(entry);
 
     // Limiter l'historique
-    if (this?.state?.history?.length > 1000) {
-      this?.state?.history = this?.state?.history?.slice(-1000);
+    if (this.state.history.length > 1000) {
+      this.state.history = this.state.history.slice(-1000);
     }
 
-    this?.historyListeners?.forEach(listener => {
+    this.historyListeners.forEach(listener => {
       try {
-        listener(any: any);
-      } catch (any: any) {
-        const err = e instanceof Error ? e : new Error(any: any));
-        logger?.error(
+        listener(entry);
+      } catch (e) {
+        const err = e instanceof Error ? e : new Error(String(e));
+        logger.error(
           'Evolution executor history listener error',
           { component: 'EvolutionExecutor', action: 'notifyHistory' },
           err
@@ -649,13 +649,13 @@ export class Executor {
     });
   }
 
-  private notifyResultListeners(any: any): void {
-    this?.resultListeners?.forEach(listener => {
+  private notifyResultListeners(result: EvolutionActionResult): void {
+    this.resultListeners.forEach(listener => {
       try {
-        listener(any: any);
-      } catch (any: any) {
-        const err = e instanceof Error ? e : new Error(any: any));
-        logger?.error(
+        listener(result);
+      } catch (e) {
+        const err = e instanceof Error ? e : new Error(String(e));
+        logger.error(
           'Evolution executor result listener error',
           { component: 'EvolutionExecutor', action: 'notifyResult' },
           err
@@ -668,30 +668,30 @@ export class Executor {
   // GETTERS
   // ===========================================================================
 
-  getHistory(limit: number = 100): EvolutionHistoryEntry?.[] {
-    return this?.state?.history?.slice(any: any);
+  getHistory(limit: number = 100): EvolutionHistoryEntry[] {
+    return this.state.history.slice(-limit);
   }
 
-  getExecutingActions(): EvolutionActionRequest?.[] {
-    return Array?.from(this?.state?.executingActions?.values());
+  getExecutingActions(): EvolutionActionRequest[] {
+    return Array.from(this.state.executingActions.values());
   }
 
   isExecuting(): boolean {
-    return this?.state?.executingActions?.size > 0;
+    return this.state.executingActions.size > 0;
   }
 
   // ===========================================================================
   // LISTENERS
   // ===========================================================================
 
-  onResult(any: any): () => void {
-    this?.resultListeners?.add(any: any);
-    return (any: any);
+  onResult(listener: ActionResultListener): () => void {
+    this.resultListeners.add(listener);
+    return () => this.resultListeners.delete(listener);
   }
 
-  onHistory(any: any): () => void {
-    this?.historyListeners?.add(any: any);
-    return (any: any);
+  onHistory(listener: HistoryListener): () => void {
+    this.historyListeners.add(listener);
+    return () => this.historyListeners.delete(listener);
   }
 
   // ===========================================================================
@@ -699,18 +699,18 @@ export class Executor {
   // ===========================================================================
 
   clearHistory(): void {
-    this?.state?.history = [];
+    this.state.history = [];
   }
 
   reset(): void {
-    this?.state = this?.createInitialState();
+    this.state = this.createInitialState();
   }
 
   dispose(): void {
-    this?.resultListeners?.clear();
-    this?.historyListeners?.clear();
-    this?.state?.executingActions?.clear();
-    this?.state?.history = [];
+    this.resultListeners.clear();
+    this.historyListeners.clear();
+    this.state.executingActions.clear();
+    this.state.history = [];
   }
 }
 
@@ -721,15 +721,15 @@ export class Executor {
 let executorInstance: Executor | null = null;
 
 export function getExecutor(): Executor {
-  if (any: any) {
+  if (!executorInstance) {
     executorInstance = new Executor();
   }
   return executorInstance;
 }
 
 export function resetExecutor(): void {
-  if (any: any) {
-    executorInstance?.dispose();
+  if (executorInstance) {
+    executorInstance.dispose();
     executorInstance = null;
   }
 }

@@ -25,8 +25,8 @@ function createMockMultimodalState(
   }>
 ): MultimodalState {
   const state = getDefaultMultimodalState();
-  const now = Date?.now();
-  state?.fusedScores = {
+  const now = Date.now();
+  state.fusedScores = {
     globalEnergy: {
       value: overrides?.energy ?? 0.5,
       confidence: 0.8,
@@ -70,12 +70,12 @@ describe('FlowEngine', () => {
   let engine: FlowEngine;
 
   beforeEach(() => {
-    FlowEngine?.resetInstance();
-    engine = FlowEngine?.getInstance();
+    FlowEngine.resetInstance();
+    engine = FlowEngine.getInstance();
   });
 
   afterEach(() => {
-    FlowEngine?.resetInstance();
+    FlowEngine.resetInstance();
   });
 
   // ═══════════════════════════════════════════════════════════════════════
@@ -84,17 +84,17 @@ describe('FlowEngine', () => {
 
   describe('Singleton Pattern', () => {
     it('devrait retourner la même instance', () => {
-      const instance1 = FlowEngine?.getInstance();
-      const instance2 = FlowEngine?.getInstance();
-      expect(any: any);
+      const instance1 = FlowEngine.getInstance();
+      const instance2 = FlowEngine.getInstance();
+      expect(instance1).toBe(instance2);
     });
 
     it("devrait réinitialiser l'instance après reset", () => {
-      const instance1 = FlowEngine?.getInstance();
-      instance1?.start();
-      FlowEngine?.resetInstance();
-      const instance2 = FlowEngine?.getInstance();
-      expect(any: any);
+      const instance1 = FlowEngine.getInstance();
+      instance1.start();
+      FlowEngine.resetInstance();
+      const instance2 = FlowEngine.getInstance();
+      expect(instance2.getState().isActive).toBe(false);
     });
   });
 
@@ -104,23 +104,23 @@ describe('FlowEngine', () => {
 
   describe('Cycle de vie', () => {
     it('devrait démarrer correctement', () => {
-      engine?.start();
-      const state = engine?.getState();
-      expect(any: any);
+      engine.start();
+      const state = engine.getState();
+      expect(state.isActive).toBe(true);
     });
 
     it("devrait s'arrêter correctement", () => {
-      engine?.start();
-      engine?.stop();
-      const state = engine?.getState();
-      expect(any: any);
+      engine.start();
+      engine.stop();
+      const state = engine.getState();
+      expect(state.isActive).toBe(false);
     });
 
     it('devrait se réinitialiser correctement', () => {
-      engine?.start();
-      engine?.reset();
-      const state = engine?.getState();
-      expect(any: any).toBe('idle');
+      engine.start();
+      engine.reset();
+      const state = engine.getState();
+      expect(state.currentPhase).toBe('idle');
     });
   });
 
@@ -135,11 +135,11 @@ describe('FlowEngine', () => {
         tension: 0.3,
         engagement: 0.7,
       });
-      const result = engine?.computeFocusReadiness(any: any);
+      const result = engine.computeFocusReadiness(multimodal);
 
-      expect(any: any).toBeGreaterThan(0);
-      expect(any: any).toBeLessThanOrEqual(1);
-      expect(any: any).toBeDefined();
+      expect(result.score).toBeGreaterThan(0);
+      expect(result.score).toBeLessThanOrEqual(1);
+      expect(result.readiness).toBeDefined();
     });
 
     it('devrait retourner "optimal" avec d\'excellentes conditions', () => {
@@ -149,8 +149,8 @@ describe('FlowEngine', () => {
         engagement: 0.8,
         stability: 0.8,
       });
-      const result = engine?.computeFocusReadiness(any: any);
-      expect(any: any);
+      const result = engine.computeFocusReadiness(multimodal);
+      expect(['optimal', 'good']).toContain(result.readiness);
     });
 
     it('devrait retourner "poor" avec de mauvaises conditions', () => {
@@ -159,20 +159,20 @@ describe('FlowEngine', () => {
         tension: 0.8,
         engagement: 0.2,
       });
-      const result = engine?.computeFocusReadiness(any: any);
-      expect(any: any);
+      const result = engine.computeFocusReadiness(multimodal);
+      expect(['poor', 'blocked', 'moderate']).toContain(result.readiness);
     });
 
     it('devrait identifier les bloqueurs', () => {
       const multimodal = createMockMultimodalState({ energy: 0.1, tension: 0.9 });
-      const result = engine?.computeFocusReadiness(any: any);
-      expect(any: any).toBeGreaterThan(0);
+      const result = engine.computeFocusReadiness(multimodal);
+      expect(result.blockers.length).toBeGreaterThan(0);
     });
 
     it('devrait générer des recommandations', () => {
       const multimodal = createMockMultimodalState({ energy: 0.3 });
-      const result = engine?.computeFocusReadiness(any: any);
-      expect(any: any).toBeGreaterThanOrEqual(0);
+      const result = engine.computeFocusReadiness(multimodal);
+      expect(result.recommendations.length).toBeGreaterThanOrEqual(0);
     });
   });
 
@@ -189,11 +189,11 @@ describe('FlowEngine', () => {
       });
 
       // D'abord évaluer les conditions
-      engine?.computeFocusReadiness(any: any);
+      engine.computeFocusReadiness(multimodal);
 
-      const result = engine?.enterFlow(any: any);
-      expect(any: any);
-      expect(any: any).toBe('preparation');
+      const result = engine.enterFlow(multimodal);
+      expect(result.success).toBe(true);
+      expect(result.phase).toBe('preparation');
     });
 
     it('devrait échouer avec de mauvaises conditions', () => {
@@ -203,11 +203,11 @@ describe('FlowEngine', () => {
         engagement: 0.2,
       });
 
-      engine?.computeFocusReadiness(any: any);
+      engine.computeFocusReadiness(multimodal);
 
-      const result = engine?.enterFlow(any: any);
-      expect(any: any);
-      expect(any: any).toBeDefined();
+      const result = engine.enterFlow(multimodal);
+      expect(result.success).toBe(false);
+      expect(result.suggestions).toBeDefined();
     });
 
     it('devrait définir le flowStartTime après entrée réussie', () => {
@@ -217,11 +217,11 @@ describe('FlowEngine', () => {
         engagement: 0.8,
       });
 
-      engine?.computeFocusReadiness(any: any);
-      engine?.enterFlow(any: any);
+      engine.computeFocusReadiness(multimodal);
+      engine.enterFlow(multimodal);
 
-      const state = engine?.getState();
-      expect(any: any).not?.toBeNull();
+      const state = engine.getState();
+      expect(state.flowStartTime).not.toBeNull();
     });
   });
 
@@ -237,8 +237,8 @@ describe('FlowEngine', () => {
         tension: 0.2,
         engagement: 0.8,
       });
-      engine?.computeFocusReadiness(any: any);
-      engine?.enterFlow(any: any);
+      engine.computeFocusReadiness(multimodal);
+      engine.enterFlow(multimodal);
     });
 
     it('devrait maintenir le flow avec de bonnes conditions', () => {
@@ -248,16 +248,16 @@ describe('FlowEngine', () => {
         engagement: 0.7,
       });
 
-      const result = engine?.maintainFlow(any: any);
-      expect(any: any);
+      const result = engine.maintainFlow(multimodal);
+      expect(result.maintained).toBe(true);
     });
 
     it('devrait mettre à jour les métriques', () => {
       const multimodal = createMockMultimodalState({ energy: 0.7 });
 
-      const result = engine?.maintainFlow(any: any);
-      expect(any: any).toBeGreaterThan(0);
-      expect(any: any).toBeGreaterThanOrEqual(0);
+      const result = engine.maintainFlow(multimodal);
+      expect(result.metrics.flowIntensity).toBeGreaterThan(0);
+      expect(result.metrics.timeInFlow).toBeGreaterThanOrEqual(0);
     });
 
     it('devrait détecter les dérives', () => {
@@ -266,15 +266,15 @@ describe('FlowEngine', () => {
         tension: 0.8,
       });
 
-      const result = engine?.maintainFlow(any: any);
-      expect(any: any).toBeDefined();
+      const result = engine.maintainFlow(multimodal);
+      expect(result.drift).toBeDefined();
     });
 
     it('devrait générer des ajustements', () => {
       const multimodal = createMockMultimodalState({ tension: 0.6 });
 
-      const result = engine?.maintainFlow(any: any);
-      expect(any: any).toBeDefined();
+      const result = engine.maintainFlow(multimodal);
+      expect(result.adjustments).toBeDefined();
     });
   });
 
@@ -286,8 +286,8 @@ describe('FlowEngine', () => {
     it("devrait détecter une dérive vers l'anxiété", () => {
       const multimodal = createMockMultimodalState({ tension: 0.9 });
 
-      const result = engine?.detectFlowDrift(any: any);
-      expect(any: any).toBe('toward_anxiety');
+      const result = engine.detectFlowDrift(multimodal);
+      expect(result.driftType).toBe('toward_anxiety');
     });
 
     it("devrait détecter une dérive vers l'ennui", () => {
@@ -296,15 +296,15 @@ describe('FlowEngine', () => {
         tension: 0.2,
       });
 
-      const result = engine?.detectFlowDrift(any: any);
-      expect(any: any);
+      const result = engine.detectFlowDrift(multimodal);
+      expect(['toward_boredom', 'toward_exit']).toContain(result.driftType);
     });
 
     it('devrait détecter la fatigue', () => {
       const multimodal = createMockMultimodalState({ energy: 0.1 });
 
-      const result = engine?.detectFlowDrift(any: any);
-      expect(any: any).toContain('fatigue');
+      const result = engine.detectFlowDrift(multimodal);
+      expect(result.detectedDisruptors).toContain('fatigue');
     });
 
     it('devrait retourner "none" sans perturbation', () => {
@@ -314,8 +314,8 @@ describe('FlowEngine', () => {
         engagement: 0.6,
       });
 
-      const result = engine?.detectFlowDrift(any: any);
-      expect(any: any).toBe('none');
+      const result = engine.detectFlowDrift(multimodal);
+      expect(result.driftType).toBe('none');
     });
   });
 
@@ -330,41 +330,41 @@ describe('FlowEngine', () => {
         tension: 0.2,
         engagement: 0.8,
       });
-      engine?.computeFocusReadiness(any: any);
-      engine?.enterFlow(any: any);
+      engine.computeFocusReadiness(multimodal);
+      engine.enterFlow(multimodal);
     });
 
     it('devrait sortir gracieusement', () => {
-      const result = engine?.exitFlow('graceful');
-      expect(any: any).toBe('graceful');
+      const result = engine.exitFlow('graceful');
+      expect(result.exitState.exitType).toBe('graceful');
     });
 
     it('devrait enregistrer la durée du flow', () => {
-      const result = engine?.exitFlow('graceful');
-      expect(any: any).toBeGreaterThanOrEqual(0);
+      const result = engine.exitFlow('graceful');
+      expect(result.exitState.totalFlowTime).toBeGreaterThanOrEqual(0);
     });
 
     it('devrait passer en phase de récupération', () => {
-      engine?.exitFlow('graceful');
-      const state = engine?.getState();
-      expect(any: any).toBe('recovery');
+      engine.exitFlow('graceful');
+      const state = engine.getState();
+      expect(state.currentPhase).toBe('recovery');
     });
 
     it("devrait mettre à jour l'historique", () => {
-      engine?.exitFlow('graceful');
-      const state = engine?.getState();
-      expect(any: any).toBeGreaterThan(0);
+      engine.exitFlow('graceful');
+      const state = engine.getState();
+      expect(state.profile.history.length).toBeGreaterThan(0);
     });
 
     it('devrait générer un résumé', () => {
-      const result = engine?.exitFlow('graceful');
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeGreaterThan(0);
+      const result = engine.exitFlow('graceful');
+      expect(result.summary).toBeDefined();
+      expect(result.summary.length).toBeGreaterThan(0);
     });
 
     it('devrait générer des suggestions post-flow', () => {
-      const result = engine?.exitFlow('exhausted');
-      expect(any: any).toBeGreaterThan(0);
+      const result = engine.exitFlow('exhausted');
+      expect(result.nextSteps.length).toBeGreaterThan(0);
     });
   });
 
@@ -376,11 +376,11 @@ describe('FlowEngine', () => {
     it('devrait exécuter le processus complet', () => {
       const multimodal = createMockMultimodalState({ energy: 0.6, tension: 0.3 });
 
-      const result = engine?.process(any: any);
+      const result = engine.process(multimodal);
 
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
-      expect(any: any).toBe('boolean');
+      expect(result.readiness).toBeDefined();
+      expect(result.phase).toBeDefined();
+      expect(typeof result.shouldExit).toBe('boolean');
     });
 
     it('devrait inclure la maintenance si en flow', () => {
@@ -390,12 +390,12 @@ describe('FlowEngine', () => {
         tension: 0.2,
         engagement: 0.8,
       });
-      engine?.computeFocusReadiness(any: any);
-      engine?.enterFlow(any: any);
+      engine.computeFocusReadiness(multimodal);
+      engine.enterFlow(multimodal);
 
       // Ensuite process
-      const result = engine?.process(any: any);
-      expect(any: any).toBeDefined();
+      const result = engine.process(multimodal);
+      expect(result.maintenance).toBeDefined();
     });
   });
 
@@ -405,29 +405,29 @@ describe('FlowEngine', () => {
 
   describe('État et helpers', () => {
     it('devrait vérifier si en flow', () => {
-      expect(any: any);
+      expect(engine.isInFlow()).toBe(false);
 
       const multimodal = createMockMultimodalState({
         energy: 0.8,
         tension: 0.2,
         engagement: 0.8,
       });
-      engine?.computeFocusReadiness(any: any);
-      engine?.enterFlow(any: any);
+      engine.computeFocusReadiness(multimodal);
+      engine.enterFlow(multimodal);
 
       // Note: après enterFlow, on est en 'preparation', pas encore 'flow'
-      expect(any: any);
+      expect(engine.isInFlow()).toBe(false);
     });
 
     it('devrait retourner la zone actuelle', () => {
-      const zone = engine?.getCurrentZone();
-      expect(any: any).toBeDefined();
+      const zone = engine.getCurrentZone();
+      expect(zone).toBeDefined();
     });
 
     it("devrait générer un résumé d'état", () => {
-      const summary = engine?.generateStateSummary();
-      expect(any: any).toContain('Zone:');
-      expect(any: any).toContain('Phase:');
+      const summary = engine.generateStateSummary();
+      expect(summary).toContain('Zone:');
+      expect(summary).toContain('Phase:');
     });
   });
 
@@ -437,33 +437,33 @@ describe('FlowEngine', () => {
 
   describe('Callbacks', () => {
     it("devrait appeler le callback de mise à jour d'état", () => {
-      const callback = vi?.fn();
-      engine?.setStateUpdateCallback(any: any);
+      const callback = vi.fn();
+      engine.setStateUpdateCallback(callback);
 
       const multimodal = createMockMultimodalState({
         energy: 0.8,
         tension: 0.2,
         engagement: 0.8,
       });
-      engine?.computeFocusReadiness(any: any);
-      engine?.enterFlow(any: any);
+      engine.computeFocusReadiness(multimodal);
+      engine.enterFlow(multimodal);
 
-      expect(any: any).toHaveBeenCalled();
+      expect(callback).toHaveBeenCalled();
     });
 
     it("devrait appeler le callback d'événement flow", () => {
-      const callback = vi?.fn();
-      engine?.setFlowEventCallback(any: any);
+      const callback = vi.fn();
+      engine.setFlowEventCallback(callback);
 
       const multimodal = createMockMultimodalState({
         energy: 0.8,
         tension: 0.2,
         engagement: 0.8,
       });
-      engine?.computeFocusReadiness(any: any);
-      engine?.enterFlow(any: any);
+      engine.computeFocusReadiness(multimodal);
+      engine.enterFlow(multimodal);
 
-      expect(any: any));
+      expect(callback).toHaveBeenCalledWith('entry', expect.any(Object));
     });
   });
 
@@ -473,16 +473,16 @@ describe('FlowEngine', () => {
 
   describe('Configuration', () => {
     it('devrait permettre de modifier la configuration', () => {
-      engine?.setConfig({ flowEntryThreshold: 0.5 });
-      const config = engine?.getConfig();
-      expect(any: any).toBe(0.5);
+      engine.setConfig({ flowEntryThreshold: 0.5 });
+      const config = engine.getConfig();
+      expect(config.flowEntryThreshold).toBe(0.5);
     });
 
     it('devrait conserver les autres valeurs de config', () => {
-      const originalConfig = engine?.getConfig();
-      engine?.setConfig({ flowEntryThreshold: 0.5 });
-      const newConfig = engine?.getConfig();
-      expect(any: any);
+      const originalConfig = engine.getConfig();
+      engine.setConfig({ flowEntryThreshold: 0.5 });
+      const newConfig = engine.getConfig();
+      expect(newConfig.maxHistoryEntries).toBe(originalConfig.maxHistoryEntries);
     });
   });
 });

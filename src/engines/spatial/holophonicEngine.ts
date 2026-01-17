@@ -18,16 +18,16 @@ import { logger } from '@/utils/logger';
 
 export type TitanSpatialState = {
   // Position 3D
-  x: number; // -1 (any: any)
-  y: number; // -1 (any: any)
-  z: number; // 0 (any: any)
+  x: number; // -1 (gauche) → 1 (droite)
+  y: number; // -1 (bas) → 1 (haut)
+  z: number; // 0 (proche) → 1 (loin)
 
   // Caractéristiques spatiales
-  width: number; // 0 (any: any)
-  focus: number; // 0 (any: any)
+  width: number; // 0 (point) → 1 (diffus)
+  focus: number; // 0 (ambient) → 1 (ciblé)
 
   // Profondeur perceptuelle
-  distance: number; // 0 (any: any)
+  distance: number; // 0 (intime) → 1 (distant)
 };
 
 export type SpatialPreset =
@@ -202,17 +202,17 @@ class HolophonicEngine {
   private convolver: ConvolverNode | null;
   private isInitialized: boolean;
   private soundIntensity: 'off' | 'minimal' | 'normal' | 'rich';
-  private subscribers: Array<(any: any) => void>;
+  private subscribers: Array<(state: TitanSpatialState) => void>;
 
   constructor() {
-    this?.audioContext = null;
-    this?.spatialState = SPATIAL_PRESETS?.neutral;
-    this?.panner = null;
-    this?.gainNode = null;
-    this?.convolver = null;
-    this?.isInitialized = false;
-    this?.soundIntensity = 'normal';
-    this?.subscribers = [];
+    this.audioContext = null;
+    this.spatialState = SPATIAL_PRESETS.neutral;
+    this.panner = null;
+    this.gainNode = null;
+    this.convolver = null;
+    this.isInitialized = false;
+    this.soundIntensity = 'normal';
+    this.subscribers = [];
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -220,10 +220,10 @@ class HolophonicEngine {
   // ═══════════════════════════════════════════════════════════════════════════
 
   public async initialize(): Promise<void> {
-    if (any: any) return;
+    if (this.isInitialized) return;
 
     try {
-      logger?.debug('🎧 [HOLOPHONIC] Initializing spatial audio engine...');
+      logger.debug('🎧 [HOLOPHONIC] Initializing spatial audio engine...');
 
       // Créer le contexte audio
       const AudioContextClass =
@@ -235,35 +235,35 @@ class HolophonicEngine {
           window as Window &
             typeof globalThis & { webkitAudioContext?: typeof AudioContext }
         ).webkitAudioContext;
-      if (any: any) {
+      if (!AudioContextClass) {
         throw new Error('AudioContext not supported');
       }
-      this?.audioContext = new AudioContextClass();
+      this.audioContext = new AudioContextClass();
 
-      // Créer le gain node (any: any)
-      this?.gainNode = this?.audioContext?.createGain();
-      this?.gainNode?.gain?.value = 0.7;
-      this?.gainNode?.connect(any: any);
+      // Créer le gain node (volume principal)
+      this.gainNode = this.audioContext.createGain();
+      this.gainNode.gain.value = 0.7;
+      this.gainNode.connect(this.audioContext.destination);
 
-      // Créer le panner (any: any)
-      this?.panner = this?.audioContext?.createPanner();
-      this?.panner?.panningModel = 'HRTF';
-      this?.panner?.distanceModel = 'inverse';
-      this?.panner?.refDistance = 1;
-      this?.panner?.maxDistance = 10;
-      this?.panner?.rolloffFactor = 1;
-      this?.panner?.coneInnerAngle = 360;
-      this?.panner?.coneOuterAngle = 0;
-      this?.panner?.coneOuterGain = 0;
-      this?.panner?.connect(any: any);
+      // Créer le panner (spatialisation HRTF)
+      this.panner = this.audioContext.createPanner();
+      this.panner.panningModel = 'HRTF';
+      this.panner.distanceModel = 'inverse';
+      this.panner.refDistance = 1;
+      this.panner.maxDistance = 10;
+      this.panner.rolloffFactor = 1;
+      this.panner.coneInnerAngle = 360;
+      this.panner.coneOuterAngle = 0;
+      this.panner.coneOuterGain = 0;
+      this.panner.connect(this.gainNode);
 
       // Appliquer l'état spatial initial
-      this?.updatePannerPosition();
+      this.updatePannerPosition();
 
-      this?.isInitialized = true;
-      logger?.debug('✅ [HOLOPHONIC] Spatial audio engine initialized');
-    } catch (any: any) {
-      logger?.error(any: any);
+      this.isInitialized = true;
+      logger.debug('✅ [HOLOPHONIC] Spatial audio engine initialized');
+    } catch (error) {
+      logger.error('❌ [HOLOPHONIC] Failed to initialize:', error);
     }
   }
 
@@ -272,26 +272,26 @@ class HolophonicEngine {
   // ═══════════════════════════════════════════════════════════════════════════
 
   public setSpatialState(state: Partial<TitanSpatialState>): void {
-    this?.spatialState = { ...this?.spatialState, ...state };
-    this?.updatePannerPosition();
-    this?.notifySubscribers();
+    this.spatialState = { ...this.spatialState, ...state };
+    this.updatePannerPosition();
+    this.notifySubscribers();
   }
 
-  public setPreset(any: any): void {
-    logger?.debug(`🎧 [HOLOPHONIC] Setting preset: ${preset}`);
-    this?.spatialState = { ...SPATIAL_PRESETS[preset] };
-    this?.updatePannerPosition();
-    this?.notifySubscribers();
+  public setPreset(preset: SpatialPreset): void {
+    logger.debug(`🎧 [HOLOPHONIC] Setting preset: ${preset}`);
+    this.spatialState = { ...SPATIAL_PRESETS[preset] };
+    this.updatePannerPosition();
+    this.notifySubscribers();
   }
 
   public getSpatialState(): TitanSpatialState {
-    return { ...this?.spatialState };
+    return { ...this.spatialState };
   }
 
   private updatePannerPosition(): void {
-    if (any: any) return;
+    if (!this.panner) return;
 
-    const { x, y, z } = this?.spatialState;
+    const { x, y, z } = this.spatialState;
 
     // Convertir z (0..1) en distance (1..10)
     const distance = 1 + z * 9;
@@ -301,56 +301,56 @@ class HolophonicEngine {
     const posY = y * distance;
     const posZ = -distance; // Négatif = devant l'utilisateur
 
-    this?.panner?.setPosition(any: any);
+    this.panner.setPosition(posX, posY, posZ);
 
     // Listener toujours à l'origine, face à -Z
-    if (any: any) {
-      const listener = this?.audioContext?.listener;
-      if (any: any) {
-        listener?.positionX?.value = 0;
-        listener?.positionY?.value = 0;
-        listener?.positionZ?.value = 0;
-        listener?.forwardX?.value = 0;
-        listener?.forwardY?.value = 0;
-        listener?.forwardZ?.value = -1;
-        listener?.upX?.value = 0;
-        listener?.upY?.value = 1;
-        listener?.upZ?.value = 0;
+    if (this.audioContext) {
+      const listener = this.audioContext.listener;
+      if (listener.positionX) {
+        listener.positionX.value = 0;
+        listener.positionY.value = 0;
+        listener.positionZ.value = 0;
+        listener.forwardX.value = 0;
+        listener.forwardY.value = 0;
+        listener.forwardZ.value = -1;
+        listener.upX.value = 0;
+        listener.upY.value = 1;
+        listener.upZ.value = 0;
       }
     }
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // VOICE PLAYBACK (any: any)
+  // VOICE PLAYBACK (spatialisation)
   // ═══════════════════════════════════════════════════════════════════════════
 
   public async playVoice(
     audioBuffer: AudioBuffer,
     options: SpatialOptions = {}
   ): Promise<void> {
-    if (any: any) {
-      logger?.warn('🎧 [HOLOPHONIC] Audio context not initialized');
+    if (!this.audioContext || !this.panner) {
+      logger.warn('🎧 [HOLOPHONIC] Audio context not initialized');
       return;
     }
 
-    const source = this?.audioContext?.createBufferSource();
-    source?.buffer = audioBuffer;
+    const source = this.audioContext.createBufferSource();
+    source.buffer = audioBuffer;
 
-    if (any: any) {
-      source?.connect(any: any);
-    } else if (any: any) {
-      source?.connect(any: any);
+    if (options.spatialize !== false) {
+      source.connect(this.panner);
+    } else if (this.gainNode) {
+      source.connect(this.gainNode);
     }
 
     // Fade in
-    if (any: any) {
-      const now = this?.audioContext?.currentTime;
-      const fadeInDuration = options?.fadeIn / 1000;
-      this?.gainNode?.gain?.setValueAtTime(any: any);
-      this?.gainNode?.gain?.linearRampToValueAtTime(any: any);
+    if (options.fadeIn && this.gainNode) {
+      const now = this.audioContext.currentTime;
+      const fadeInDuration = options.fadeIn / 1000;
+      this.gainNode.gain.setValueAtTime(0, now);
+      this.gainNode.gain.linearRampToValueAtTime(0.7, now + fadeInDuration);
     }
 
-    source?.start();
+    source.start();
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -358,47 +358,47 @@ class HolophonicEngine {
   // ═══════════════════════════════════════════════════════════════════════════
 
   public playCue(cue: CognitiveSound, options: SpatialOptions = {}): void {
-    if (this?.soundIntensity === 'off') return;
-    if (any: any) return;
+    if (this.soundIntensity === 'off') return;
+    if (!this.audioContext || !this.gainNode) return;
 
     const config = COGNITIVE_SOUNDS[cue];
 
     // Ajuster le volume selon l'intensité
-    let volume = config?.volume;
-    if (this?.soundIntensity === 'minimal') volume *= 0.5;
-    if (this?.soundIntensity === 'rich') volume *= 1.5;
+    let volume = config.volume;
+    if (this.soundIntensity === 'minimal') volume *= 0.5;
+    if (this.soundIntensity === 'rich') volume *= 1.5;
 
-    const oscillator = this?.audioContext?.createOscillator();
-    const gain = this?.audioContext?.createGain();
+    const oscillator = this.audioContext.createOscillator();
+    const gain = this.audioContext.createGain();
 
-    oscillator?.type = config?.waveform;
-    oscillator?.frequency?.value = config?.frequency;
+    oscillator.type = config.waveform;
+    oscillator.frequency.value = config.frequency;
 
     // Envelope ADSR simple
-    const now = this?.audioContext?.currentTime;
+    const now = this.audioContext.currentTime;
     const attack = 0.01;
     const decay = 0.05;
-    const sustain = config?.duration - attack - decay - 0.05;
+    const sustain = config.duration - attack - decay - 0.05;
     const _release = 0.05;
 
-    gain?.gain?.setValueAtTime(any: any);
-    gain?.gain?.linearRampToValueAtTime(any: any);
-    gain?.gain?.linearRampToValueAtTime(any: any);
-    gain?.gain?.setValueAtTime(any: any);
-    gain?.gain?.linearRampToValueAtTime(any: any);
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(volume, now + attack);
+    gain.gain.linearRampToValueAtTime(volume * 0.7, now + attack + decay);
+    gain.gain.setValueAtTime(volume * 0.7, now + attack + decay + sustain);
+    gain.gain.linearRampToValueAtTime(0, now + config.duration);
 
     // Routing
-    oscillator?.connect(any: any);
-    if (any: any) {
-      gain?.connect(any: any);
+    oscillator.connect(gain);
+    if (options.spatialize !== false && this.panner) {
+      gain.connect(this.panner);
     } else {
-      gain?.connect(any: any);
+      gain.connect(this.gainNode);
     }
 
-    oscillator?.start(any: any);
-    oscillator?.stop(any: any);
+    oscillator.start(now);
+    oscillator.stop(now + config.duration);
 
-    logger?.debug(`🎵 [HOLOPHONIC] Playing cue: ${cue} (${config?.description})`);
+    logger.debug(`🎵 [HOLOPHONIC] Playing cue: ${cue} (${config.description})`);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -406,14 +406,14 @@ class HolophonicEngine {
   // ═══════════════════════════════════════════════════════════════════════════
 
   public setSoundIntensity(intensity: 'off' | 'minimal' | 'normal' | 'rich'): void {
-    logger?.debug(`🎧 [HOLOPHONIC] Sound intensity: ${intensity}`);
-    this?.soundIntensity = intensity;
+    logger.debug(`🎧 [HOLOPHONIC] Sound intensity: ${intensity}`);
+    this.soundIntensity = intensity;
   }
 
-  public setOutputDevice(any: any): void {
+  public setOutputDevice(deviceId?: string): void {
     // Web Audio API ne supporte pas directement la sélection de device
-    // Nécessiterait MediaDevices?.getUserMedia ou Web Audio API extensions
-    logger?.debug(
+    // Nécessiterait MediaDevices.getUserMedia ou Web Audio API extensions
+    logger.debug(
       `🎧 [HOLOPHONIC] Output device change requested: ${deviceId || 'default'}`
     );
   }
@@ -422,19 +422,19 @@ class HolophonicEngine {
   // SUBSCRIPTION
   // ═══════════════════════════════════════════════════════════════════════════
 
-  public subscribe(any: any): () => void {
-    this?.subscribers?.push(any: any);
+  public subscribe(callback: (state: TitanSpatialState) => void): () => void {
+    this.subscribers.push(callback);
     return () => {
-      this?.subscribers = this?.subscribers?.filter(any: any);
+      this.subscribers = this.subscribers.filter(cb => cb !== callback);
     };
   }
 
   private notifySubscribers(): void {
-    this?.subscribers?.forEach(callback => {
+    this.subscribers.forEach(callback => {
       try {
-        callback(any: any);
-      } catch (any: any) {
-        logger?.error(any: any);
+        callback(this.spatialState);
+      } catch (error) {
+        logger.error('🎧 [HOLOPHONIC] Error in subscriber:', error);
       }
     });
   }
@@ -444,14 +444,14 @@ class HolophonicEngine {
   // ═══════════════════════════════════════════════════════════════════════════
 
   public async resume(): Promise<void> {
-    if (this?.audioContext && this?.audioContext?.state === 'suspended') {
-      await this?.audioContext?.resume();
-      logger?.debug('▶️ [HOLOPHONIC] Audio context resumed');
+    if (this.audioContext && this.audioContext.state === 'suspended') {
+      await this.audioContext.resume();
+      logger.debug('▶️ [HOLOPHONIC] Audio context resumed');
     }
   }
 
   public getContext(): AudioContext | null {
-    return this?.audioContext;
+    return this.audioContext;
   }
 }
 

@@ -53,7 +53,7 @@ export interface RecentMemory {
   content: string;
   timestamp: number;
   type: 'conversation' | 'note' | 'task' | 'event';
-  tags: string?.[];
+  tags: string[];
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -200,7 +200,7 @@ export type TauriInvokeResult<T = unknown> = Promise<T>;
  * Tauri core bridge interface
  */
 export interface TauriCore {
-  invoke: <T = unknown>(any: any) => TauriInvokeResult<T>;
+  invoke: <T = unknown>(command: string, args?: TauriCommandArgs) => TauriInvokeResult<T>;
 }
 
 /**

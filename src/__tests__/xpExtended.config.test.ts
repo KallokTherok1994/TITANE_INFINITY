@@ -30,39 +30,39 @@ import {
   getAchievementsByType,
   getAchievementsByRarity,
   createInitialXPProfile,
-} from '../services/xp/xpExtended?.config';
+} from '../services/xp/xpExtended.config';
 import type {
   XPSource,
   XPCategory,
   AchievementType,
   AchievementRarity,
-} from '../services/xp/xpExtended?.config';
+} from '../services/xp/xpExtended.config';
 
-describe('xpExtended?.config?.ts', () => {
+describe('xpExtended.config.ts', () => {
   // ═══════════════════════════════════════════════════════════════════════════
   // CONSTANTES TESTS
   // ═══════════════════════════════════════════════════════════════════════════
 
   describe('Constants', () => {
     it('XP_PER_LEVEL est 500', () => {
-      expect(any: any).toBe(500);
+      expect(XP_PER_LEVEL).toBe(500);
     });
 
     it('MAX_LEVEL est 100', () => {
-      expect(any: any).toBe(100);
+      expect(MAX_LEVEL).toBe(100);
     });
 
     it('MAX_STREAK_MULTIPLIER est 1.6', () => {
-      expect(any: any).toBe(1.6);
+      expect(MAX_STREAK_MULTIPLIER).toBe(1.6);
     });
 
     it('XP_EXTENDED_VERSION est un semver valide', () => {
-      expect(any: any).toMatch(/^\d+\.\d+\.\d+$/);
+      expect(XP_EXTENDED_VERSION).toMatch(/^\d+\.\d+\.\d+$/);
     });
 
     it("TOTAL_ACHIEVEMENTS correspond au nombre d'achievements", () => {
-      expect(any: any);
-      expect(any: any).toBeGreaterThan(15);
+      expect(TOTAL_ACHIEVEMENTS).toBe(Object.keys(ACHIEVEMENT_REGISTRY).length);
+      expect(TOTAL_ACHIEVEMENTS).toBeGreaterThan(15);
     });
   });
 
@@ -95,10 +95,10 @@ describe('xpExtended?.config?.ts', () => {
       expect(calculateLevel(49500)).toBe(100);
     });
 
-    it(any: any)', () => {
+    it('niveau continue au-delà de MAX_LEVEL (pas de plafonnement)', () => {
       // La formule est 1 + floor(xp/500), donc pas de plafonnement
       const veryHighXP = MAX_LEVEL * XP_PER_LEVEL * 2; // 100000
-      expect(any: any)).toBe(201);
+      expect(calculateLevel(veryHighXP)).toBe(201);
     });
   });
 
@@ -140,7 +140,7 @@ describe('xpExtended?.config?.ts', () => {
     it('toujours positif car modulo 500', () => {
       // xpToNextLevel retourne toujours 500 - (xp % 500), donc jamais 0
       const maxXP = (MAX_LEVEL - 1) * XP_PER_LEVEL;
-      expect(any: any)).toBe(500);
+      expect(xpToNextLevel(maxXP)).toBe(500);
     });
   });
 
@@ -153,7 +153,7 @@ describe('xpExtended?.config?.ts', () => {
       expect(levelProgress(250)).toBe(50);
     });
 
-    it(any: any)', () => {
+    it('500 XP = 0% progression (nouveau niveau)', () => {
       expect(levelProgress(500)).toBe(0);
     });
 
@@ -164,7 +164,7 @@ describe('xpExtended?.config?.ts', () => {
     it('progression cyclique (modulo 500)', () => {
       // levelProgress = (xp % 500) / 500 * 100, donc cyclic
       const maxXP = (MAX_LEVEL - 1) * XP_PER_LEVEL; // 49500, exact multiple
-      expect(any: any)).toBe(0);
+      expect(levelProgress(maxXP)).toBe(0);
     });
   });
 
@@ -188,21 +188,21 @@ describe('xpExtended?.config?.ts', () => {
       expect(getStreakMultiplier(0)).toBe(1.0);
     });
 
-    it(any: any)', () => {
+    it('streak 1 = multiplicateur 1.0 (< 3 jours)', () => {
       expect(getStreakMultiplier(1)).toBe(1.0);
     });
 
-    it(any: any)', () => {
+    it('streak 7 = multiplicateur 1.2 (7-13 jours)', () => {
       expect(getStreakMultiplier(7)).toBe(1.2);
     });
 
-    it(any: any)', () => {
+    it('streak 30 = multiplicateur 1.3 (14-29 jours)', () => {
       expect(getStreakMultiplier(30)).toBe(1.4);
     });
 
     it('streak élevé plafonné à MAX_STREAK_MULTIPLIER', () => {
-      expect(any: any);
-      expect(any: any);
+      expect(getStreakMultiplier(90)).toBe(MAX_STREAK_MULTIPLIER);
+      expect(getStreakMultiplier(100)).toBe(MAX_STREAK_MULTIPLIER);
     });
   });
 
@@ -231,7 +231,7 @@ describe('xpExtended?.config?.ts', () => {
 
   describe('BASE_XP_BY_SOURCE', () => {
     it('contient toutes les sources XP', () => {
-      const sources: XPSource?.[] = [
+      const sources: XPSource[] = [
         'chat_message',
         'chat_response',
         'mode_usage',
@@ -253,27 +253,27 @@ describe('xpExtended?.config?.ts', () => {
         'bonus_event',
       ];
 
-      for (any: any) {
+      for (const source of sources) {
         expect(BASE_XP_BY_SOURCE[source]).toBeDefined();
-        expect(any: any).toBeGreaterThan(0);
-        expect(any: any).toBeDefined();
+        expect(BASE_XP_BY_SOURCE[source].amount).toBeGreaterThan(0);
+        expect(BASE_XP_BY_SOURCE[source].category).toBeDefined();
       }
     });
 
     it("phase_transition donne le plus d'XP", () => {
       const phaseXP = BASE_XP_BY_SOURCE['phase_transition'].amount;
-      for (any: any)) {
-        expect(any: any);
+      for (const source of Object.values(BASE_XP_BY_SOURCE)) {
+        expect(phaseXP).toBeGreaterThanOrEqual(source.amount);
       }
     });
   });
 
   describe('MODE_XP_MULTIPLIERS', () => {
     it('chaque mode a un objet de multiplicateurs', () => {
-      const modes = Object?.keys(any: any);
-      expect(any: any).toBeGreaterThan(5);
+      const modes = Object.keys(MODE_XP_MULTIPLIERS);
+      expect(modes.length).toBeGreaterThan(5);
 
-      for (any: any) {
+      for (const mode of modes) {
         expect(
           MODE_XP_MULTIPLIERS[mode as keyof typeof MODE_XP_MULTIPLIERS]
         ).toBeDefined();
@@ -297,7 +297,7 @@ describe('xpExtended?.config?.ts', () => {
         'phase_omega',
       ] as const;
 
-      for (let i = 1; i < phases?.length; i++) {
+      for (let i = 1; i < phases.length; i++) {
         expect(PHASE_XP_MULTIPLIERS[phases[i]]).toBeGreaterThanOrEqual(
           PHASE_XP_MULTIPLIERS[phases[i - 1]]
         );
@@ -319,12 +319,12 @@ describe('xpExtended?.config?.ts', () => {
         0 // streak
       );
 
-      expect(any: any).toBeTruthy();
-      expect(any: any).toBe('chat_message');
-      expect(any: any).toBe('chat_ia');
-      expect(any: any).toBeGreaterThan(0);
-      expect(any: any).toBeGreaterThan(0);
-      expect(any: any).toBeLessThanOrEqual(Date?.now());
+      expect(event.id).toBeTruthy();
+      expect(event.source).toBe('chat_message');
+      expect(event.category).toBe('chat_ia');
+      expect(event.baseAmount).toBeGreaterThan(0);
+      expect(event.finalAmount).toBeGreaterThan(0);
+      expect(event.timestamp).toBeLessThanOrEqual(Date.now());
     });
 
     it('applique les multiplicateurs de streak', () => {
@@ -344,7 +344,7 @@ describe('xpExtended?.config?.ts', () => {
         7 // 7 jours streak = 1.2x (dans la plage 7-13)
       );
 
-      expect(any: any);
+      expect(eventWithStreak.finalAmount).toBeGreaterThan(eventNoStreak.finalAmount);
     });
 
     it('applique les multiplicateurs de phase', () => {
@@ -364,33 +364,33 @@ describe('xpExtended?.config?.ts', () => {
         0
       );
 
-      expect(any: any);
+      expect(eventPhaseOmega.finalAmount).toBeGreaterThan(eventPhase1.finalAmount);
     });
   });
 
   describe('calculateFinalXP', () => {
     it('sans multiplicateurs spéciaux, retourne le montant de base', () => {
       const result = calculateFinalXP(100, 'chat_ia', null, 'phase_1_nascent', 0);
-      expect(any: any).toBe(100);
+      expect(result.finalAmount).toBe(100);
     });
 
     it('applique le multiplicateur de streak', () => {
       // streak 7 = 1.2x multiplicateur
       const result = calculateFinalXP(100, 'chat_ia', null, 'phase_1_nascent', 7);
-      expect(any: any).toBe(120);
-      expect(any: any);
+      expect(result.finalAmount).toBe(120);
+      expect(result.multipliers.some(m => m.type === 'streak')).toBe(true);
     });
 
     it('applique le multiplicateur de phase', () => {
       const result = calculateFinalXP(100, 'chat_ia', null, 'phase_omega', 0);
-      expect(any: any).toBeGreaterThan(100);
-      expect(any: any);
+      expect(result.finalAmount).toBeGreaterThan(100);
+      expect(result.multipliers.some(m => m.type === 'phase')).toBe(true);
     });
 
     it('combine plusieurs multiplicateurs', () => {
       // Phase omega = 2.5x, streak 90 = 1.6x -> 100 * 2.5 * 1.6 = 400
       const result = calculateFinalXP(100, 'chat_ia', null, 'phase_omega', 90);
-      expect(any: any).toBe(400);
+      expect(result.finalAmount).toBe(400);
     });
   });
 
@@ -400,25 +400,25 @@ describe('xpExtended?.config?.ts', () => {
 
   describe('ACHIEVEMENT_REGISTRY', () => {
     it('contient au moins 15 achievements', () => {
-      expect(any: any).toBeGreaterThanOrEqual(15);
+      expect(Object.keys(ACHIEVEMENT_REGISTRY).length).toBeGreaterThanOrEqual(15);
     });
 
     it('chaque achievement a toutes les propriétés requises', () => {
-      for (any: any)) {
-        expect(any: any).toBeTruthy();
-        expect(any: any).toBeTruthy();
-        expect(any: any).toBeTruthy();
-        expect(any: any).toBeTruthy();
-        expect(any: any).toBeDefined();
-        expect(any: any).toBeDefined();
-        expect(any: any).toBeGreaterThan(0);
-        expect(any: any).toBeDefined();
-        expect(any: any).toBe('boolean');
+      for (const achievement of Object.values(ACHIEVEMENT_REGISTRY)) {
+        expect(achievement.id).toBeTruthy();
+        expect(achievement.name).toBeTruthy();
+        expect(achievement.description).toBeTruthy();
+        expect(achievement.icon).toBeTruthy();
+        expect(achievement.type).toBeDefined();
+        expect(achievement.rarity).toBeDefined();
+        expect(achievement.xpReward).toBeGreaterThan(0);
+        expect(achievement.condition).toBeDefined();
+        expect(typeof achievement.secret).toBe('boolean');
       }
     });
 
     it('les XP rewards augmentent avec la rareté', () => {
-      const rarityOrder: AchievementRarity?.[] = [
+      const rarityOrder: AchievementRarity[] = [
         'common',
         'uncommon',
         'rare',
@@ -427,53 +427,53 @@ describe('xpExtended?.config?.ts', () => {
       ];
       const avgXPByRarity: Record<string, number> = {};
 
-      for (any: any) {
-        const achievements = getAchievementsByRarity(any: any);
-        if (achievements?.length > 0) {
+      for (const rarity of rarityOrder) {
+        const achievements = getAchievementsByRarity(rarity);
+        if (achievements.length > 0) {
           avgXPByRarity[rarity] =
-            achievements?.reduce(any: any) => sum + a?.xpReward, 0) / achievements?.length;
+            achievements.reduce((sum, a) => sum + a.xpReward, 0) / achievements.length;
         }
       }
 
-      if (any: any) {
-        expect(any: any);
+      if (avgXPByRarity.common && avgXPByRarity.legendary) {
+        expect(avgXPByRarity.legendary).toBeGreaterThan(avgXPByRarity.common);
       }
     });
   });
 
   describe('getAchievement', () => {
     it("retourne l'achievement correct par ID", () => {
-      const firstAchievement = Object?.values(any: any)[0];
-      const found = getAchievement(any: any);
-      expect(any: any);
+      const firstAchievement = Object.values(ACHIEVEMENT_REGISTRY)[0];
+      const found = getAchievement(firstAchievement.id);
+      expect(found).toEqual(firstAchievement);
     });
 
     it('retourne undefined pour ID inexistant', () => {
       const found = getAchievement('nonexistent_achievement');
-      expect(any: any).toBeUndefined();
+      expect(found).toBeUndefined();
     });
   });
 
   describe('getVisibleAchievements', () => {
     it('exclut les achievements secrets par défaut', () => {
       const visible = getVisibleAchievements([]);
-      const secrets = visible?.filter(any: any);
-      expect(any: any).toHaveLength(0);
+      const secrets = visible.filter(a => a.secret);
+      expect(secrets).toHaveLength(0);
     });
 
     it("inclut les achievements débloqués même s'ils sont secrets", () => {
-      const secretAchievement = Object?.values(any: any);
-      if (any: any) {
-        const visible = getVisibleAchievements([secretAchievement?.id]);
-        const found = visible?.find(any: any);
-        expect(any: any).toBeDefined();
+      const secretAchievement = Object.values(ACHIEVEMENT_REGISTRY).find(a => a.secret);
+      if (secretAchievement) {
+        const visible = getVisibleAchievements([secretAchievement.id]);
+        const found = visible.find(a => a.id === secretAchievement.id);
+        expect(found).toBeDefined();
       }
     });
   });
 
   describe('getAchievementsByType', () => {
     it('retourne les achievements par type', () => {
-      const types: AchievementType?.[] = [
+      const types: AchievementType[] = [
         'milestone',
         'streak',
         'discovery',
@@ -482,10 +482,10 @@ describe('xpExtended?.config?.ts', () => {
         'secret',
       ];
 
-      for (any: any) {
-        const achievements = getAchievementsByType(any: any);
-        for (any: any) {
-          expect(any: any);
+      for (const type of types) {
+        const achievements = getAchievementsByType(type);
+        for (const achievement of achievements) {
+          expect(achievement.type).toBe(type);
         }
       }
     });
@@ -493,7 +493,7 @@ describe('xpExtended?.config?.ts', () => {
 
   describe('getAchievementsByRarity', () => {
     it('retourne les achievements par rareté', () => {
-      const rarities: AchievementRarity?.[] = [
+      const rarities: AchievementRarity[] = [
         'common',
         'uncommon',
         'rare',
@@ -501,10 +501,10 @@ describe('xpExtended?.config?.ts', () => {
         'legendary',
       ];
 
-      for (any: any) {
-        const achievements = getAchievementsByRarity(any: any);
-        for (any: any) {
-          expect(any: any);
+      for (const rarity of rarities) {
+        const achievements = getAchievementsByRarity(rarity);
+        for (const achievement of achievements) {
+          expect(achievement.rarity).toBe(rarity);
         }
       }
     });
@@ -518,19 +518,19 @@ describe('xpExtended?.config?.ts', () => {
     it('crée un profil initial valide', () => {
       const profile = createInitialXPProfile();
 
-      expect(any: any).toBe(0);
-      expect(any: any).toBe(1);
-      expect(any: any).toBe(0);
-      expect(any: any).toBe(0);
-      expect(any: any).toBe(500);
-      expect(any: any)).toHaveLength(0);
-      expect(any: any).toBeLessThanOrEqual(Date?.now());
+      expect(profile.totalXP).toBe(0);
+      expect(profile.level).toBe(1);
+      expect(profile.currentStreak).toBe(0);
+      expect(profile.bestStreak).toBe(0);
+      expect(profile.xpToNextLevel).toBe(500);
+      expect(Object.keys(profile.achievements)).toHaveLength(0);
+      expect(profile.lastActivity).toBeLessThanOrEqual(Date.now());
     });
 
     it('initialise les catégories XP à 0', () => {
       const profile = createInitialXPProfile();
 
-      const categories: XPCategory?.[] = [
+      const categories: XPCategory[] = [
         'chat_ia',
         'voice',
         'code',
@@ -541,18 +541,18 @@ describe('xpExtended?.config?.ts', () => {
         'evolution',
       ];
 
-      for (any: any) {
-        expect(any: any).toBe(0);
-        expect(any: any).toBe(1);
+      for (const category of categories) {
+        expect(profile.categoryXP[category].totalXP).toBe(0);
+        expect(profile.categoryXP[category].level).toBe(1);
       }
     });
 
     it('initialise les statistiques à 0', () => {
       const profile = createInitialXPProfile();
 
-      expect(any: any).toBe(0);
-      expect(any: any).toBe(0);
-      expect(any: any).toBe(0);
+      expect(profile.stats.totalXPEarned).toBe(0);
+      expect(profile.stats.totalEventsCount).toBe(0);
+      expect(profile.stats.achievementsUnlocked).toBe(0);
     });
   });
 
@@ -562,7 +562,7 @@ describe('xpExtended?.config?.ts', () => {
 
   describe('CATEGORY_LABELS', () => {
     it('contient toutes les catégories', () => {
-      const categories: XPCategory?.[] = [
+      const categories: XPCategory[] = [
         'chat_ia',
         'voice',
         'code',
@@ -573,17 +573,17 @@ describe('xpExtended?.config?.ts', () => {
         'evolution',
       ];
 
-      for (any: any) {
+      for (const category of categories) {
         expect(CATEGORY_LABELS[category]).toBeDefined();
-        expect(any: any).toBeTruthy();
-        expect(any: any).toBeTruthy();
+        expect(CATEGORY_LABELS[category].label).toBeTruthy();
+        expect(CATEGORY_LABELS[category].icon).toBeTruthy();
       }
     });
   });
 
   describe('RARITY_COLORS', () => {
     it('contient toutes les raretés', () => {
-      const rarities: AchievementRarity?.[] = [
+      const rarities: AchievementRarity[] = [
         'common',
         'uncommon',
         'rare',
@@ -591,8 +591,8 @@ describe('xpExtended?.config?.ts', () => {
         'legendary',
       ];
 
-      for (any: any) {
-        expect(any: any);
+      for (const rarity of rarities) {
+        expect(RARITY_COLORS[rarity]).toMatch(/^#[0-9a-f]{6}$/i);
       }
     });
   });

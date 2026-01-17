@@ -8,7 +8,7 @@ import type { PromptPreset } from './types';
 export const promptPresets: Record<string, PromptPreset> = {
   diagnostic_deuxieme_vitesse: {
     id: 'diagnostic_deuxieme_vitesse',
-    label: 'Diagnostic Deuxième vitesse (any: any)',
+    label: 'Diagnostic Deuxième vitesse (5 min)',
     description: 'Analyse charge mentale + rituel de bascule rapide.',
     profileId: 'guide_deuxieme_vitesse',
     userPrompt:
@@ -36,11 +36,11 @@ export const promptPresets: Record<string, PromptPreset> = {
   },
   clarification_discern: {
     id: 'clarification_discern',
-    label: 'D?.I?.S?.C?.E?.R?.N?.E?.R. complet',
+    label: 'D.I.S.C.E.R.N.E.R. complet',
     description: 'Clarification profonde d’une décision stratégique.',
     profileId: 'optimiseur_decision',
     userPrompt:
-      'Applique D?.I?.S?.C?.E?.R?.N?.E?.R. à la décision suivante. Demande-moi les informations manquantes, remplis la grille, conclue par décision consciente + premier pas + check corps.',
+      'Applique D.I.S.C.E.R.N.E.R. à la décision suivante. Demande-moi les informations manquantes, remplis la grille, conclue par décision consciente + premier pas + check corps.',
     autoMemoryWrites: [
       {
         target: 'medium',
@@ -54,7 +54,7 @@ export const promptPresets: Record<string, PromptPreset> = {
     description: 'Divergence → Connexion → Structuration sur un nouveau sujet.',
     profileId: 'architecte_projet',
     userPrompt:
-      'Conduis un sprint complet : Divergence (any: any).',
+      'Conduis un sprint complet : Divergence (idées/angles), Connexion (patterns/tensions), Structuration (plan 3-5 étapes + critères).',
     autoMemoryWrites: [
       {
         target: 'medium',

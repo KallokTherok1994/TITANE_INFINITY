@@ -2,7 +2,7 @@
  * TITANE∞ v26.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
- * 🔍 LAZY IMPORT DIAGNOSTIC UTILITY (any: any)
+ * 🔍 LAZY IMPORT DIAGNOSTIC UTILITY (ENHANCED)
  * Diagnostic avancé avec monitoring et optimisation de performance
  */
 
@@ -16,7 +16,7 @@ const monitoringIntegration = integrateWithLazyDiagnostic();
 interface LazyImportOptions {
   timeout?: number;
   retries?: number;
-  fallback?: React?.ComponentType;
+  fallback?: React.ComponentType;
   preload?: boolean;
   cacheKey?: string;
 }
@@ -30,32 +30,32 @@ interface DiagnosticInfo {
   retryAttempt?: number;
   cacheHit?: boolean;
 }
-export const lazyWithDiagnostic = <T extends React?.ComponentType<any>>(
+export const lazyWithDiagnostic = <T extends React.ComponentType<any>>(
   factory: () => Promise<{ default: T }>,
   label: string
-): React?.LazyExoticComponent<T> => {
-  return React?.lazy(async () => {
-    console?.log(`[LAZY-DIAGNOSTIC] Tentative chargement: ${label}`);
+): React.LazyExoticComponent<T> => {
+  return React.lazy(async () => {
+    console.log(`[LAZY-DIAGNOSTIC] Tentative chargement: ${label}`);
     try {
-      const startTime = performance?.now();
+      const startTime = performance.now();
       const module = await factory();
-      const loadTime = performance?.now() - startTime;
-      console?.log(`[LAZY-SUCCESS] ${label} chargé en ${loadTime?.toFixed(2)}ms`);
+      const loadTime = performance.now() - startTime;
+      console.log(`[LAZY-SUCCESS] ${label} chargé en ${loadTime.toFixed(2)}ms`);
       return module;
-    } catch (any: any) {
-      console?.error(`[LAZY-IMPORT-FAIL] ${label}:`, {
-        message: error?.message,
-        name: error?.name,
-        stack: error?.stack,
-        cause: error?.cause,
+    } catch (error: any) {
+      console.error(`[LAZY-IMPORT-FAIL] ${label}:`, {
+        message: error.message,
+        name: error.name,
+        stack: error.stack,
+        cause: error.cause,
       });
 
       // Log diagnostic spécifique pour les erreurs de module script
-      if (error?.message?.includes('Importing a module script failed')) {
-        console?.error(`[MODULE-SCRIPT-FAIL] ${label}:`, {
+      if (error.message?.includes('Importing a module script failed')) {
+        console.error(`[MODULE-SCRIPT-FAIL] ${label}:`, {
           errorType: 'MODULE_SCRIPT_FAILED',
-          userAgent: navigator?.userAgent,
-          baseURL: document?.baseURI,
+          userAgent: navigator.userAgent,
+          baseURL: document.baseURI,
           timestamp: new Date().toISOString(),
         });
       }
@@ -68,39 +68,39 @@ export const lazyWithDiagnostic = <T extends React?.ComponentType<any>>(
 /**
  * Lazy import avec timeout et retry
  */
-export const lazyWithTimeout = <T extends React?.ComponentType<any>>(
+export const lazyWithTimeout = <T extends React.ComponentType<any>>(
   factory: () => Promise<{ default: T }>,
   options: { timeoutMs?: number; label?: string; retries?: number } = {}
-): React?.LazyExoticComponent<T> => {
+): React.LazyExoticComponent<T> => {
   const { timeoutMs = 10000, label = 'UnknownComponent', retries = 1 } = options;
 
-  return React?.lazy(async () => {
+  return React.lazy(async () => {
     let lastError: Error | null = null;
 
     for (let attempt = 0; attempt <= retries; attempt++) {
       try {
-        console?.log(`[LAZY-TIMEOUT] Tentative ${attempt + 1}/${retries + 1}: ${label}`);
+        console.log(`[LAZY-TIMEOUT] Tentative ${attempt + 1}/${retries + 1}: ${label}`);
 
-        const timeoutPromise = new Promise<never>(any: any) => {
+        const timeoutPromise = new Promise<never>((_, reject) => {
           setTimeout(
-            (any: any)`)),
+            () => reject(new Error(`Timeout loading ${label} (${timeoutMs}ms)`)),
             timeoutMs
           );
         });
 
         const loadPromise = factory();
-        const result = await Promise?.race([loadPromise, timeoutPromise]);
+        const result = await Promise.race([loadPromise, timeoutPromise]);
 
-        console?.log(`[LAZY-SUCCESS] ${label} chargé (tentative ${attempt + 1})`);
+        console.log(`[LAZY-SUCCESS] ${label} chargé (tentative ${attempt + 1})`);
         return result;
-      } catch (any: any) {
+      } catch (error: any) {
         lastError = error;
-        console?.error(any: any);
+        console.error(`[LAZY-TIMEOUT-FAIL] ${label} (tentative ${attempt + 1}):`, error);
 
-        if (any: any) {
-          const delay = Math?.pow(any: any) * 1000; // Exponential backoff
-          console?.log(`[LAZY-RETRY] Nouvel essai dans ${delay}ms...`);
-          await new Promise(any: any));
+        if (attempt < retries) {
+          const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
+          console.log(`[LAZY-RETRY] Nouvel essai dans ${delay}ms...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
         }
       }
     }

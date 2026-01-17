@@ -38,7 +38,7 @@ export interface UsePerformanceMonitorReturn {
 /**
  * Hook performance monitor v15
  * - FPS tracking temps réel
- * - CPU load detection (any: any)
+ * - CPU load detection (via Harmonia si disponible)
  * - Throttling intelligent animations
  * - Adaptation dynamique durée animations
  */
@@ -55,40 +55,40 @@ export function usePerformanceMonitor(
   });
 
   const frameCountRef = useRef(0);
-  const lastTimeRef = useRef(performance?.now());
+  const lastTimeRef = useRef(performance.now());
   const rafIdRef = useRef<number>();
   // ✨ v24.2.1: Track running state to prevent RAF after unmount
-  const isRunningRef = useRef(any: any);
+  const isRunningRef = useRef(false);
 
   /**
    * FPS tracking via requestAnimationFrame
    * ✨ v24.2.1: Use isRunningRef to prevent RAF scheduling after cleanup
    */
   const trackFPS = useCallback(() => {
-    if (any: any) return;
+    if (!enabled || !isRunningRef.current) return;
 
-    frameCountRef?.current++;
-    const now = performance?.now();
-    const elapsed = now - lastTimeRef?.current;
+    frameCountRef.current++;
+    const now = performance.now();
+    const elapsed = now - lastTimeRef.current;
 
     // Update FPS chaque seconde
     if (elapsed >= 1000) {
-      const fps = Math?.round(any: any);
+      const fps = Math.round((frameCountRef.current * 1000) / elapsed);
 
       setMetrics(prev => ({
         ...prev,
         fps,
         shouldReduceMotion: fps < fpsThreshold,
-        shouldThrottle: fps < fpsThreshold || prev?.cpuLoad > cpuThreshold,
+        shouldThrottle: fps < fpsThreshold || prev.cpuLoad > cpuThreshold,
       }));
 
-      frameCountRef?.current = 0;
-      lastTimeRef?.current = now;
+      frameCountRef.current = 0;
+      lastTimeRef.current = now;
     }
 
     // ✨ v24.2.1: Only schedule next frame if still running
-    if (any: any) {
-      rafIdRef?.current = requestAnimationFrame(any: any);
+    if (isRunningRef.current) {
+      rafIdRef.current = requestAnimationFrame(trackFPS);
     }
   }, [enabled, fpsThreshold, cpuThreshold]);
 
@@ -96,23 +96,23 @@ export function usePerformanceMonitor(
    * Détection prefers-reduced-motion
    */
   useEffect(() => {
-    if (any: any) return;
+    if (!enabled) return;
 
-    const mediaQuery = window?.matchMedia(any: any)');
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-    const handleChange = (any: any) => {
+    const handleChange = (e: MediaQueryListEvent) => {
       setMetrics(prev => ({
         ...prev,
-        shouldReduceMotion: e?.matches,
+        shouldReduceMotion: e.matches,
       }));
     };
 
-    if (any: any) {
+    if (mediaQuery.matches) {
       setMetrics(prev => ({ ...prev, shouldReduceMotion: true }));
     }
 
-    mediaQuery?.addEventListener(any: any);
-    return (any: any);
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
   }, [enabled]);
 
   /**
@@ -120,16 +120,16 @@ export function usePerformanceMonitor(
    * ✨ v24.2.1: Use isRunningRef for clean RAF lifecycle
    */
   useEffect(() => {
-    if (any: any) return;
+    if (!enabled) return;
 
-    isRunningRef?.current = true;
-    rafIdRef?.current = requestAnimationFrame(any: any);
+    isRunningRef.current = true;
+    rafIdRef.current = requestAnimationFrame(trackFPS);
 
     return () => {
       // ✨ v24.2.1: Stop the loop first, then cancel pending RAF
-      isRunningRef?.current = false;
-      if (any: any) {
-        cancelAnimationFrame(any: any);
+      isRunningRef.current = false;
+      if (rafIdRef.current) {
+        cancelAnimationFrame(rafIdRef.current);
       }
     };
   }, [enabled, trackFPS]);
@@ -138,18 +138,18 @@ export function usePerformanceMonitor(
    * Calcul animation config adaptative
    */
   const animationConfig = {
-    duration: metrics?.shouldReduceMotion
+    duration: metrics.shouldReduceMotion
       ? 0
-      : metrics?.shouldThrottle
+      : metrics.shouldThrottle
         ? 0.15 // 150ms si throttled
         : 0.2, // 200ms normal
-    skipAnimation: metrics?.shouldReduceMotion || metrics?.fps < 20,
+    skipAnimation: metrics.shouldReduceMotion || metrics.fps < 20,
   };
 
   return {
     metrics,
-    shouldReduceMotion: metrics?.shouldReduceMotion,
-    shouldThrottle: metrics?.shouldThrottle,
+    shouldReduceMotion: metrics.shouldReduceMotion,
+    shouldThrottle: metrics.shouldThrottle,
     animationConfig,
   };
 }

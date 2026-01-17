@@ -45,26 +45,26 @@ export class AttentionEngine {
   private mode: ListeningMode = 'off';
   private config: Required<AttentionConfig>;
   private callbacks: Set<AttentionCallback> = new Set();
-  private commandTimeoutHandle?: NodeJS?.Timeout;
-  private cooldownTimeoutHandle?: NodeJS?.Timeout;
+  private commandTimeoutHandle?: NodeJS.Timeout;
+  private cooldownTimeoutHandle?: NodeJS.Timeout;
   private lastWakeEvent?: WakeWordEvent;
 
   constructor(config: AttentionConfig = {}) {
-    this?.config = {
-      mode: config?.mode ?? 'off',
-      cooldownDuration: config?.cooldownDuration ?? 1000,
-      commandTimeout: config?.commandTimeout ?? 10000,
-      autoRearm: config?.autoRearm ?? true,
-      useContextualAdaptation: config?.useContextualAdaptation ?? false,
+    this.config = {
+      mode: config.mode ?? 'off',
+      cooldownDuration: config.cooldownDuration ?? 1000,
+      commandTimeout: config.commandTimeout ?? 10000,
+      autoRearm: config.autoRearm ?? true,
+      useContextualAdaptation: config.useContextualAdaptation ?? false,
     };
 
-    this?.mode = this?.config?.mode;
+    this.mode = this.config.mode;
 
-    logger?.debug(any: any);
+    logger.debug('🧠 Initialized:', this.config);
 
     // [v19.5.0] Configure contextual adaptation if enabled
-    if (any: any) {
-      this?.enableContextualAdaptation();
+    if (this.config.useContextualAdaptation) {
+      this.enableContextualAdaptation();
     }
   }
 
@@ -72,23 +72,23 @@ export class AttentionEngine {
    * [v19.5.0] Enable contextual adaptation
    */
   private enableContextualAdaptation(): void {
-    logger?.debug('🧠 Enabling contextual adaptation...');
+    logger.debug('🧠 Enabling contextual adaptation...');
     // Contextual attention is already initialized, just log
-    logger?.debug('✅ Contextual adaptation ready');
+    logger.debug('✅ Contextual adaptation ready');
   }
 
   /**
    * [v19.5.0] Toggle contextual adaptation dynamically
    */
-  setContextualAdaptation(any: any): void {
-    this?.config?.useContextualAdaptation = enabled;
-    logger?.debug(
+  setContextualAdaptation(enabled: boolean): void {
+    this.config.useContextualAdaptation = enabled;
+    logger.debug(
       `[AttentionEngine] ${enabled ? '✅' : '🔇'} Contextual adaptation ${enabled ? 'enabled' : 'disabled'}`
     );
   }
 
   /**
-   * [v19.5.0] Update environment context (any: any)
+   * [v19.5.0] Update environment context (noise, distance, quality)
    */
   updateEnvironmentContext(context: {
     noiseLevel?: number;
@@ -96,65 +96,65 @@ export class AttentionEngine {
     signalQuality?: 'excellent' | 'good' | 'fair' | 'poor';
     multipleVoices?: boolean;
   }): void {
-    if (any: any) {
+    if (!this.config.useContextualAdaptation) {
       return;
     }
 
-    contextualAttentionV2?.updateEnvironment({
-      ambientNoiseLevel: context?.noiseLevel,
-      microphoneDistance: context?.voiceDistance || 'unknown',
+    contextualAttentionV2.updateEnvironment({
+      ambientNoiseLevel: context.noiseLevel,
+      microphoneDistance: context.voiceDistance || 'unknown',
       signalQuality:
-        context?.signalQuality === 'excellent'
+        context.signalQuality === 'excellent'
           ? 1.0
-          : context?.signalQuality === 'good'
+          : context.signalQuality === 'good'
             ? 0.75
-            : context?.signalQuality === 'fair'
+            : context.signalQuality === 'fair'
               ? 0.5
               : 0.25,
-      multipleVoices: context?.multipleVoices || false,
-      lastMeasured: Date?.now(),
+      multipleVoices: context.multipleVoices || false,
+      lastMeasured: Date.now(),
     });
-    logger?.debug(any: any);
+    logger.debug('🌍 Environment context updated:', context);
   }
 
   /**
-   * [v19.5.0] Update application context (any: any)
+   * [v19.5.0] Update application context (mode, tasks)
    */
   updateApplicationContext(context: {
     mode?: 'normal' | 'focus' | 'background';
     criticalTask?: boolean;
     highFalsePositives?: boolean;
   }): void {
-    if (any: any) {
+    if (!this.config.useContextualAdaptation) {
       return;
     }
 
-    contextualAttentionV2?.updateApplication(any: any);
-    logger?.debug(any: any);
+    contextualAttentionV2.updateApplication(context);
+    logger.debug('📱 Application context updated:', context);
   }
 
   /**
    * [v19.5.0] Get adapted threshold from contextual attention
    */
   getAdaptedThreshold(): number {
-    if (any: any) {
+    if (!this.config.useContextualAdaptation) {
       return 0.7; // Default threshold
     }
 
-    return contextualAttentionV2?.getAdaptedConfig().wakeThreshold;
+    return contextualAttentionV2.getAdaptedConfig().wakeThreshold;
   }
 
   /**
    * [v19.5.0] Get active contextual rules
    */
   getActiveRules(): Array<{ name: string; priority: number }> {
-    if (any: any) {
+    if (!this.config.useContextualAdaptation) {
       return [];
     }
 
     // Get triggered rules from contextual attention
-    const _config = contextualAttentionV2?.getAdaptedConfig();
-    // Return empty array for now (any: any)
+    const _config = contextualAttentionV2.getAdaptedConfig();
+    // Return empty array for now (rules not directly exposed)
     return [];
   }
 
@@ -162,76 +162,76 @@ export class AttentionEngine {
    * Obtenir l'état actuel
    */
   getState(): AttentionState {
-    return this?.state;
+    return this.state;
   }
 
   /**
    * Obtenir le mode actuel
    */
   getMode(): ListeningMode {
-    return this?.mode;
+    return this.mode;
   }
 
   /**
-   * Activer l'écoute active (any: any)
+   * Activer l'écoute active (wake word)
    */
   activate(): void {
-    logger?.debug('🔊 Activating wake word listening');
-    this?.mode = 'wake_word';
-    this?.transitionTo('armed', 'User activated wake word mode');
+    logger.debug('🔊 Activating wake word listening');
+    this.mode = 'wake_word';
+    this.transitionTo('armed', 'User activated wake word mode');
   }
 
   /**
    * Désactiver l'écoute active
    */
   deactivate(): void {
-    logger?.debug('🔇 Deactivating wake word listening');
-    this?.mode = 'off';
-    this?.clearTimeouts();
-    this?.transitionTo('inactive', 'User deactivated wake word mode');
+    logger.debug('🔇 Deactivating wake word listening');
+    this.mode = 'off';
+    this.clearTimeouts();
+    this.transitionTo('inactive', 'User deactivated wake word mode');
   }
 
   /**
    * Basculer en mode push-to-talk
    */
   setPushToTalk(): void {
-    logger?.debug('🎤 Switching to push-to-talk mode');
-    this?.mode = 'push_to_talk';
-    this?.clearTimeouts();
-    this?.transitionTo('inactive', 'Switched to push-to-talk');
+    logger.debug('🎤 Switching to push-to-talk mode');
+    this.mode = 'push_to_talk';
+    this.clearTimeouts();
+    this.transitionTo('inactive', 'Switched to push-to-talk');
   }
 
   /**
    * Traiter un événement de wake word
    */
-  handleWakeWord(any: any): void {
-    if (this?.state !== 'armed') {
-      logger?.warn(any: any);
+  handleWakeWord(wakeEvent: WakeWordEvent): void {
+    if (this.state !== 'armed') {
+      logger.warn('⚠️ Wake word detected but not in armed state:', this.state);
       return;
     }
 
-    logger?.debug(any: any);
-    this?.lastWakeEvent = wakeEvent;
+    logger.debug('🎯 Wake word detected:', wakeEvent);
+    this.lastWakeEvent = wakeEvent;
 
     // Transition vers wake_detected
-    this?.transitionTo(
+    this.transitionTo(
       'wake_detected',
-      `Wake word: ${wakeEvent?.matchedVariant}`,
+      `Wake word: ${wakeEvent.matchedVariant}`,
       wakeEvent
     );
 
     // Selon le mode
-    if (wakeEvent?.mode === 'wake_only') {
+    if (wakeEvent.mode === 'wake_only') {
       // Passer en awaiting_command avec timeout
       setTimeout(() => {
-        this?.transitionTo('awaiting_command', 'Awaiting user command');
-        this?.startCommandTimeout();
+        this.transitionTo('awaiting_command', 'Awaiting user command');
+        this.startCommandTimeout();
       }, 100);
     } else {
       // one_shot : la commande est déjà dans cleanedText
-      // On passe directement en processing (any: any)
+      // On passe directement en processing (sera géré par VoiceRouter)
       setTimeout(() => {
-        this?.transitionTo('awaiting_command', 'One-shot command ready');
+        this.transitionTo('awaiting_command', 'One-shot command ready');
       }, 100);
     }
   }
@@ -240,34 +240,34 @@ export class AttentionEngine {
    * Démarrer le traitement IA
    */
   startProcessing(): void {
-    logger?.debug('🤖 Starting AI processing');
-    this?.clearCommandTimeout();
-    this?.transitionTo('processing', 'AI processing started');
+    logger.debug('🤖 Starting AI processing');
+    this.clearCommandTimeout();
+    this.transitionTo('processing', 'AI processing started');
   }
 
   /**
    * Démarrer la réponse TTS
    */
   startResponding(): void {
-    logger?.debug('🔊 Starting TTS response');
-    this?.transitionTo('responding', 'TTS started');
+    logger.debug('🔊 Starting TTS response');
+    this.transitionTo('responding', 'TTS started');
   }
 
   /**
-   * Fin de la réponse (any: any)
+   * Fin de la réponse (retour en armed ou cooldown)
    */
   endResponse(): void {
-    logger?.debug('✅ Response complete');
+    logger.debug('✅ Response complete');
 
-    if (this?.config?.autoRearm && this?.mode === 'wake_word') {
+    if (this.config.autoRearm && this.mode === 'wake_word') {
       // Cooldown puis armed
-      this?.transitionTo('cooldown', 'Cooldown before rearming');
+      this.transitionTo('cooldown', 'Cooldown before rearming');
 
-      this?.cooldownTimeoutHandle = setTimeout(() => {
-        this?.transitionTo('armed', 'Auto-rearmed after cooldown');
-      }, this?.config?.cooldownDuration);
+      this.cooldownTimeoutHandle = setTimeout(() => {
+        this.transitionTo('armed', 'Auto-rearmed after cooldown');
+      }, this.config.cooldownDuration);
     } else {
-      this?.transitionTo('inactive', 'Response complete, not rearming');
+      this.transitionTo('inactive', 'Response complete, not rearming');
     }
   }
 
@@ -275,13 +275,13 @@ export class AttentionEngine {
    * Annuler/Reset
    */
   cancel(): void {
-    logger?.debug('🛑 Cancelling current attention flow');
-    this?.clearTimeouts();
+    logger.debug('🛑 Cancelling current attention flow');
+    this.clearTimeouts();
 
-    if (this?.mode === 'wake_word') {
-      this?.transitionTo('armed', 'Cancelled, back to armed');
+    if (this.mode === 'wake_word') {
+      this.transitionTo('armed', 'Cancelled, back to armed');
     } else {
-      this?.transitionTo('inactive', 'Cancelled');
+      this.transitionTo('inactive', 'Cancelled');
     }
   }
 
@@ -289,14 +289,14 @@ export class AttentionEngine {
    * Réinitialiser complètement
    */
   reset(): void {
-    logger?.debug('🔄 Resetting attention engine');
-    this?.clearTimeouts();
-    this?.lastWakeEvent = undefined;
+    logger.debug('🔄 Resetting attention engine');
+    this.clearTimeouts();
+    this.lastWakeEvent = undefined;
 
-    if (this?.mode === 'wake_word') {
-      this?.transitionTo('armed', 'Reset to armed');
+    if (this.mode === 'wake_word') {
+      this.transitionTo('armed', 'Reset to armed');
     } else {
-      this?.transitionTo('inactive', 'Reset to inactive');
+      this.transitionTo('inactive', 'Reset to inactive');
     }
   }
 
@@ -304,18 +304,18 @@ export class AttentionEngine {
    * Obtenir le dernier événement de wake word
    */
   getLastWakeEvent(): WakeWordEvent | undefined {
-    return this?.lastWakeEvent;
+    return this.lastWakeEvent;
   }
 
   /**
    * Souscrire aux événements
    */
-  onStateChange(any: any): () => void {
-    this?.callbacks?.add(any: any);
+  onStateChange(callback: AttentionCallback): () => void {
+    this.callbacks.add(callback);
 
     // Return unsubscribe function
     return () => {
-      this?.callbacks?.delete(any: any);
+      this.callbacks.delete(callback);
     };
   }
 
@@ -323,11 +323,11 @@ export class AttentionEngine {
    * Mettre à jour la configuration
    */
   updateConfig(updates: Partial<AttentionConfig>): void {
-    this?.config = {
-      ...this?.config,
+    this.config = {
+      ...this.config,
       ...updates,
     };
-    logger?.debug(any: any);
+    logger.debug('🔧 Config updated:', this.config);
   }
 
   /**
@@ -338,29 +338,29 @@ export class AttentionEngine {
     reason?: string,
     wakeEvent?: WakeWordEvent
   ): void {
-    if (any: any) return;
+    if (this.state === newState) return;
 
-    const previousState = this?.state;
-    this?.state = newState;
+    const previousState = this.state;
+    this.state = newState;
 
     const event: AttentionEvent = {
       state: newState,
       previousState,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
       wakeEvent,
       reason,
     };
 
-    logger?.debug(
+    logger.debug(
       `[AttentionEngine] 🔄 ${previousState} → ${newState}${reason ? ` (${reason})` : ''}`
     );
 
     // Notifier les callbacks
-    this?.callbacks?.forEach(cb => {
+    this.callbacks.forEach(cb => {
       try {
-        cb(any: any);
-      } catch (any: any) {
-        logger?.error(any: any);
+        cb(event);
+      } catch (err) {
+        logger.error('Callback error:', err);
       }
     });
   }
@@ -369,21 +369,21 @@ export class AttentionEngine {
    * Démarrer le timeout de commande
    */
   private startCommandTimeout(): void {
-    this?.clearCommandTimeout();
+    this.clearCommandTimeout();
 
-    this?.commandTimeoutHandle = setTimeout(() => {
-      logger?.warn('⏱️ Command timeout, returning to armed');
-      this?.transitionTo('armed', 'Command timeout');
-    }, this?.config?.commandTimeout);
+    this.commandTimeoutHandle = setTimeout(() => {
+      logger.warn('⏱️ Command timeout, returning to armed');
+      this.transitionTo('armed', 'Command timeout');
+    }, this.config.commandTimeout);
   }
 
   /**
    * Nettoyer le timeout de commande
    */
   private clearCommandTimeout(): void {
-    if (any: any) {
-      clearTimeout(any: any);
-      this?.commandTimeoutHandle = undefined;
+    if (this.commandTimeoutHandle) {
+      clearTimeout(this.commandTimeoutHandle);
+      this.commandTimeoutHandle = undefined;
     }
   }
 
@@ -391,11 +391,11 @@ export class AttentionEngine {
    * Nettoyer tous les timeouts
    */
   private clearTimeouts(): void {
-    this?.clearCommandTimeout();
+    this.clearCommandTimeout();
 
-    if (any: any) {
-      clearTimeout(any: any);
-      this?.cooldownTimeoutHandle = undefined;
+    if (this.cooldownTimeoutHandle) {
+      clearTimeout(this.cooldownTimeoutHandle);
+      this.cooldownTimeoutHandle = undefined;
     }
   }
 }

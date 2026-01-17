@@ -3,14 +3,14 @@
  * TITANE∞ PERFORMANCE ENGINE — Metrics Collector
  * ═══════════════════════════════════════════════════════════════════════════
  *
- * @file        metricsCollector?.ts
+ * @file        metricsCollector.ts
  * @version     vΩ∞Ω+
  * @phase       B.1 — Collecte Multi-Source
  *
  * RESPONSABILITÉS:
  * - Collecte métriques système via Tauri/Rust
  * - Collecte métriques frontend via Performance API
- * - Collecte métriques IA (any: any)
+ * - Collecte métriques IA (Ollama, Gemini, Internal)
  * - Collecte métriques par module TITANE∞
  * - Agrégation en snapshots
  *
@@ -23,7 +23,7 @@ import {
   generateSnapshotId,
   createEmptySnapshot,
   DEFAULT_PERFORMANCE_CONFIG,
-} from './performanceEngine?.config';
+} from './performanceEngine.config';
 import type {
   MetricsSnapshot,
   SystemMetrics,
@@ -35,7 +35,7 @@ import type {
   TitaneModule,
   PerformanceEvent,
   PerformanceEventListener,
-} from './performanceEngine?.config';
+} from './performanceEngine.config';
 
 // =============================================================================
 // TYPES COLLECTEUR
@@ -83,49 +83,49 @@ export interface CollectorStats {
 
 class FPSMonitor {
   private frameCount = 0;
-  private lastTime = performance?.now();
+  private lastTime = performance.now();
   private fps = 60;
-  private fpsHistory: number?.[] = [];
+  private fpsHistory: number[] = [];
   private rafId: number | null = null;
   private running = false;
 
   start(): void {
-    if (any: any) return;
-    this?.running = true;
-    this?.lastTime = performance?.now();
-    this?.frameCount = 0;
-    this?.tick();
+    if (this.running) return;
+    this.running = true;
+    this.lastTime = performance.now();
+    this.frameCount = 0;
+    this.tick();
   }
 
   stop(): void {
-    this?.running = false;
-    if (any: any) {
-      cancelAnimationFrame(any: any);
-      this?.rafId = null;
+    this.running = false;
+    if (this.rafId !== null) {
+      cancelAnimationFrame(this.rafId);
+      this.rafId = null;
     }
   }
 
   private tick = (): void => {
-    if (any: any) return;
+    if (!this.running) return;
 
-    this?.frameCount++;
-    const now = performance?.now();
-    const elapsed = now - this?.lastTime;
+    this.frameCount++;
+    const now = performance.now();
+    const elapsed = now - this.lastTime;
 
     if (elapsed >= 1000) {
-      this?.fps = Math?.round(any: any);
-      this?.fpsHistory?.push(any: any);
+      this.fps = Math.round((this.frameCount * 1000) / elapsed);
+      this.fpsHistory.push(this.fps);
 
-      // Garder les 60 dernières mesures (any: any)
-      if (this?.fpsHistory?.length > 60) {
-        this?.fpsHistory?.shift();
+      // Garder les 60 dernières mesures (1 minute)
+      if (this.fpsHistory.length > 60) {
+        this.fpsHistory.shift();
       }
 
-      this?.frameCount = 0;
-      this?.lastTime = now;
+      this.frameCount = 0;
+      this.lastTime = now;
     }
 
-    this?.rafId = requestAnimationFrame(any: any);
+    this.rafId = requestAnimationFrame(this.tick);
   };
 
   getMetrics(): {
@@ -135,20 +135,20 @@ class FPSMonitor {
     max: number;
     drops: number;
   } {
-    const history = this?.fpsHistory?.length > 0 ? this?.fpsHistory : [60];
+    const history = this.fpsHistory.length > 0 ? this.fpsHistory : [60];
     return {
-      current: this?.fps,
-      average: Math?.round(any: any),
-      min: Math?.min(any: any),
-      max: Math?.max(any: any),
-      drops: history?.filter(f => f < 30).length,
+      current: this.fps,
+      average: Math.round(history.reduce((a, b) => a + b, 0) / history.length),
+      min: Math.min(...history),
+      max: Math.max(...history),
+      drops: history.filter(f => f < 30).length,
     };
   }
 
   reset(): void {
-    this?.fpsHistory = [];
-    this?.fps = 60;
-    this?.frameCount = 0;
+    this.fpsHistory = [];
+    this.fps = 60;
+    this.frameCount = 0;
   }
 }
 
@@ -157,17 +157,17 @@ class FPSMonitor {
 // =============================================================================
 
 class RenderTimeTracker {
-  private renderTimes: number?.[] = [];
+  private renderTimes: number[] = [];
   private rerenderCount = 0;
-  private lastResetTime = Date?.now();
+  private lastResetTime = Date.now();
 
-  recordRender(any: any): void {
-    this?.renderTimes?.push(any: any);
-    this?.rerenderCount++;
+  recordRender(duration: number): void {
+    this.renderTimes.push(duration);
+    this.rerenderCount++;
 
     // Garder les 100 dernières mesures
-    if (this?.renderTimes?.length > 100) {
-      this?.renderTimes?.shift();
+    if (this.renderTimes.length > 100) {
+      this.renderTimes.shift();
     }
   }
 
@@ -177,22 +177,22 @@ class RenderTimeTracker {
     rerenderCount: number;
     slowRenders: number;
   } {
-    const times = this?.renderTimes;
-    const elapsed = (any: any) / 1000;
-    const lastTime = times[times?.length - 1];
+    const times = this.renderTimes;
+    const elapsed = (Date.now() - this.lastResetTime) / 1000;
+    const lastTime = times[times.length - 1];
 
     return {
       lastTime: lastTime ?? 0,
-      averageTime: times?.length > 0 ? times?.reduce(any: any) => a + b, 0) / times?.length : 0,
-      rerenderCount: elapsed > 0 ? Math?.round(any: any) : 0,
-      slowRenders: times?.filter(t => t > 16).length,
+      averageTime: times.length > 0 ? times.reduce((a, b) => a + b, 0) / times.length : 0,
+      rerenderCount: elapsed > 0 ? Math.round(this.rerenderCount / elapsed) : 0,
+      slowRenders: times.filter(t => t > 16).length,
     };
   }
 
   reset(): void {
-    this?.renderTimes = [];
-    this?.rerenderCount = 0;
-    this?.lastResetTime = Date?.now();
+    this.renderTimes = [];
+    this.rerenderCount = 0;
+    this.lastResetTime = Date.now();
   }
 }
 
@@ -201,18 +201,18 @@ class RenderTimeTracker {
 // =============================================================================
 
 class InvokeLatencyTracker {
-  private latencies: number?.[] = [];
+  private latencies: number[] = [];
   private invokeCount = 0;
   private errorCount = 0;
 
-  recordInvoke(any: any): void {
-    this?.latencies?.push(any: any);
-    this?.invokeCount++;
-    if (any: any) this?.errorCount++;
+  recordInvoke(duration: number, success: boolean): void {
+    this.latencies.push(duration);
+    this.invokeCount++;
+    if (!success) this.errorCount++;
 
     // Garder les 100 dernières mesures
-    if (this?.latencies?.length > 100) {
-      this?.latencies?.shift();
+    if (this.latencies.length > 100) {
+      this.latencies.shift();
     }
   }
 
@@ -223,18 +223,18 @@ class InvokeLatencyTracker {
   } {
     return {
       invokeLatency:
-        this?.latencies?.length > 0
-          ? this?.latencies?.reduce(any: any) => a + b, 0) / this?.latencies?.length
+        this.latencies.length > 0
+          ? this.latencies.reduce((a, b) => a + b, 0) / this.latencies.length
           : 0,
-      invokeCount: this?.invokeCount,
-      invokeErrors: this?.errorCount,
+      invokeCount: this.invokeCount,
+      invokeErrors: this.errorCount,
     };
   }
 
   reset(): void {
-    this?.latencies = [];
-    this?.invokeCount = 0;
-    this?.errorCount = 0;
+    this.latencies = [];
+    this.invokeCount = 0;
+    this.errorCount = 0;
   }
 }
 
@@ -243,10 +243,10 @@ class InvokeLatencyTracker {
 // =============================================================================
 
 class IAMetricsTracker {
-  private ollamaLatencies: number?.[] = [];
-  private geminiLatencies: number?.[] = [];
-  private ollamaTokens: number?.[] = [];
-  private geminiTokens: number?.[] = [];
+  private ollamaLatencies: number[] = [];
+  private geminiLatencies: number[] = [];
+  private ollamaTokens: number[] = [];
+  private geminiTokens: number[] = [];
   private ollamaErrors = 0;
   private geminiErrors = 0;
   private ollamaRequests = 0;
@@ -255,56 +255,56 @@ class IAMetricsTracker {
   private ollamaAvailable = false;
   private geminiAvailable = false;
 
-  recordOllamaRequest(any: any): void {
-    this?.ollamaLatencies?.push(any: any);
-    this?.ollamaTokens?.push(any: any);
-    this?.ollamaRequests++;
-    if (any: any) this?.ollamaErrors++;
-    this?.ollamaAvailable = success;
+  recordOllamaRequest(latency: number, tokens: number, success: boolean): void {
+    this.ollamaLatencies.push(latency);
+    this.ollamaTokens.push(tokens);
+    this.ollamaRequests++;
+    if (!success) this.ollamaErrors++;
+    this.ollamaAvailable = success;
 
-    if (this?.ollamaLatencies?.length > 50) this?.ollamaLatencies?.shift();
-    if (this?.ollamaTokens?.length > 50) this?.ollamaTokens?.shift();
+    if (this.ollamaLatencies.length > 50) this.ollamaLatencies.shift();
+    if (this.ollamaTokens.length > 50) this.ollamaTokens.shift();
   }
 
-  recordGeminiRequest(any: any): void {
-    this?.geminiLatencies?.push(any: any);
-    this?.geminiTokens?.push(any: any);
-    this?.geminiRequests++;
-    if (any: any) this?.geminiErrors++;
-    this?.geminiAvailable = success;
+  recordGeminiRequest(latency: number, tokens: number, success: boolean): void {
+    this.geminiLatencies.push(latency);
+    this.geminiTokens.push(tokens);
+    this.geminiRequests++;
+    if (!success) this.geminiErrors++;
+    this.geminiAvailable = success;
 
-    if (this?.geminiLatencies?.length > 50) this?.geminiLatencies?.shift();
-    if (this?.geminiTokens?.length > 50) this?.geminiTokens?.shift();
+    if (this.geminiLatencies.length > 50) this.geminiLatencies.shift();
+    if (this.geminiTokens.length > 50) this.geminiTokens.shift();
   }
 
-  setQueueSize(any: any): void {
-    this?.queueSize = size;
+  setQueueSize(size: number): void {
+    this.queueSize = size;
   }
 
-  setAvailability(any: any): void {
-    this?.ollamaAvailable = ollama;
-    this?.geminiAvailable = gemini;
+  setAvailability(ollama: boolean, gemini: boolean): void {
+    this.ollamaAvailable = ollama;
+    this.geminiAvailable = gemini;
   }
 
   getMetrics(): IAMetrics {
-    const avgArray = (arr: number?.[]) =>
-      arr?.length > 0 ? arr?.reduce(any: any) => a + b, 0) / arr?.length : 0;
+    const avgArray = (arr: number[]) =>
+      arr.length > 0 ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
 
     return {
       ollama: {
-        latency: avgArray(any: any),
-        tokensPerSec: avgArray(any: any),
-        requestCount: this?.ollamaRequests,
-        errorCount: this?.ollamaErrors,
-        queueSize: this?.queueSize,
-        available: this?.ollamaAvailable,
+        latency: avgArray(this.ollamaLatencies),
+        tokensPerSec: avgArray(this.ollamaTokens),
+        requestCount: this.ollamaRequests,
+        errorCount: this.ollamaErrors,
+        queueSize: this.queueSize,
+        available: this.ollamaAvailable,
       },
       gemini: {
-        latency: avgArray(any: any),
-        tokensPerSec: avgArray(any: any),
-        requestCount: this?.geminiRequests,
-        errorCount: this?.geminiErrors,
-        available: this?.geminiAvailable,
+        latency: avgArray(this.geminiLatencies),
+        tokensPerSec: avgArray(this.geminiTokens),
+        requestCount: this.geminiRequests,
+        errorCount: this.geminiErrors,
+        available: this.geminiAvailable,
       },
       internal: {
         promptEngineTime: 0,
@@ -315,14 +315,14 @@ class IAMetricsTracker {
   }
 
   reset(): void {
-    this?.ollamaLatencies = [];
-    this?.geminiLatencies = [];
-    this?.ollamaTokens = [];
-    this?.geminiTokens = [];
-    this?.ollamaErrors = 0;
-    this?.geminiErrors = 0;
-    this?.ollamaRequests = 0;
-    this?.geminiRequests = 0;
+    this.ollamaLatencies = [];
+    this.geminiLatencies = [];
+    this.ollamaTokens = [];
+    this.geminiTokens = [];
+    this.ollamaErrors = 0;
+    this.geminiErrors = 0;
+    this.ollamaRequests = 0;
+    this.geminiRequests = 0;
   }
 }
 
@@ -331,10 +331,10 @@ class IAMetricsTracker {
 // =============================================================================
 
 class VoiceMetricsTracker {
-  private asrLatencies: number?.[] = [];
-  private ttsLatencies: number?.[] = [];
-  private omegaLatencies: number?.[] = [];
-  private asrConfidences: number?.[] = [];
+  private asrLatencies: number[] = [];
+  private ttsLatencies: number[] = [];
+  private omegaLatencies: number[] = [];
+  private asrConfidences: number[] = [];
   private asrErrors = 0;
   private ttsErrors = 0;
   private omegaErrors = 0;
@@ -349,25 +349,25 @@ class VoiceMetricsTracker {
   private ttsAvailable = false;
   private omegaBreakdowns: Array<{ asrMs: number; iaMs: number; ttsMs: number }> = [];
 
-  recordASRRequest(any: any): void {
-    this?.asrLatencies?.push(any: any);
-    this?.asrConfidences?.push(any: any);
-    this?.asrRequests++;
-    if (any: any) this?.asrErrors++;
-    this?.asrAvailable = success;
+  recordASRRequest(latency: number, confidence: number, success: boolean): void {
+    this.asrLatencies.push(latency);
+    this.asrConfidences.push(confidence);
+    this.asrRequests++;
+    if (!success) this.asrErrors++;
+    this.asrAvailable = success;
 
-    if (this?.asrLatencies?.length > 50) this?.asrLatencies?.shift();
-    if (this?.asrConfidences?.length > 50) this?.asrConfidences?.shift();
+    if (this.asrLatencies.length > 50) this.asrLatencies.shift();
+    if (this.asrConfidences.length > 50) this.asrConfidences.shift();
   }
 
-  recordTTSRequest(any: any): void {
-    this?.ttsLatencies?.push(any: any);
-    this?.ttsRequests++;
-    this?.ttsProvider = provider;
-    if (any: any) this?.ttsErrors++;
-    this?.ttsAvailable = success;
+  recordTTSRequest(latency: number, provider: string, success: boolean): void {
+    this.ttsLatencies.push(latency);
+    this.ttsRequests++;
+    this.ttsProvider = provider;
+    if (!success) this.ttsErrors++;
+    this.ttsAvailable = success;
 
-    if (this?.ttsLatencies?.length > 50) this?.ttsLatencies?.shift();
+    if (this.ttsLatencies.length > 50) this.ttsLatencies.shift();
   }
 
   recordOmegaRequest(
@@ -375,101 +375,101 @@ class VoiceMetricsTracker {
     breakdown: { asrMs: number; iaMs: number; ttsMs: number },
     success: boolean
   ): void {
-    this?.omegaLatencies?.push(any: any);
-    this?.omegaBreakdowns?.push(any: any);
-    this?.omegaRequests++;
-    if (any: any) this?.omegaErrors++;
+    this.omegaLatencies.push(totalLatency);
+    this.omegaBreakdowns.push(breakdown);
+    this.omegaRequests++;
+    if (!success) this.omegaErrors++;
 
-    if (this?.omegaLatencies?.length > 50) this?.omegaLatencies?.shift();
-    if (this?.omegaBreakdowns?.length > 50) this?.omegaBreakdowns?.shift();
+    if (this.omegaLatencies.length > 50) this.omegaLatencies.shift();
+    if (this.omegaBreakdowns.length > 50) this.omegaBreakdowns.shift();
   }
 
-  recordFeedbackDetection(any: any): void {
-    this?.feedbackDetections++;
-    if (any: any) this?.feedbackFalsePositives++;
+  recordFeedbackDetection(isFalsePositive: boolean): void {
+    this.feedbackDetections++;
+    if (isFalsePositive) this.feedbackFalsePositives++;
   }
 
   recordVADSuspension(): void {
-    this?.vadSuspensions++;
+    this.vadSuspensions++;
   }
 
-  setAvailability(any: any): void {
-    this?.asrAvailable = asr;
-    this?.ttsAvailable = tts;
+  setAvailability(asr: boolean, tts: boolean): void {
+    this.asrAvailable = asr;
+    this.ttsAvailable = tts;
   }
 
   getMetrics(): VoiceMetrics {
-    const avgArray = (arr: number?.[]) =>
-      arr?.length > 0 ? arr?.reduce(any: any) => a + b, 0) / arr?.length : 0;
+    const avgArray = (arr: number[]) =>
+      arr.length > 0 ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
 
     const avgBreakdown =
-      this?.omegaBreakdowns?.length > 0
+      this.omegaBreakdowns.length > 0
         ? {
-            asrMs: avgArray(any: any)),
-            iaMs: avgArray(any: any)),
-            ttsMs: avgArray(any: any)),
+            asrMs: avgArray(this.omegaBreakdowns.map(b => b.asrMs)),
+            iaMs: avgArray(this.omegaBreakdowns.map(b => b.iaMs)),
+            ttsMs: avgArray(this.omegaBreakdowns.map(b => b.ttsMs)),
           }
         : { asrMs: 0, iaMs: 0, ttsMs: 0 };
 
     return {
       asr: {
-        latency: avgArray(any: any),
-        requestCount: this?.asrRequests,
-        errorCount: this?.asrErrors,
+        latency: avgArray(this.asrLatencies),
+        requestCount: this.asrRequests,
+        errorCount: this.asrErrors,
         successRate:
-          this?.asrRequests > 0
-            ? (any: any) / this?.asrRequests
+          this.asrRequests > 0
+            ? (this.asrRequests - this.asrErrors) / this.asrRequests
             : 1.0,
-        averageConfidence: avgArray(any: any),
-        available: this?.asrAvailable,
+        averageConfidence: avgArray(this.asrConfidences),
+        available: this.asrAvailable,
       },
       tts: {
-        latency: avgArray(any: any),
-        requestCount: this?.ttsRequests,
-        errorCount: this?.ttsErrors,
+        latency: avgArray(this.ttsLatencies),
+        requestCount: this.ttsRequests,
+        errorCount: this.ttsErrors,
         successRate:
-          this?.ttsRequests > 0
-            ? (any: any) / this?.ttsRequests
+          this.ttsRequests > 0
+            ? (this.ttsRequests - this.ttsErrors) / this.ttsRequests
             : 1.0,
-        provider: this?.ttsProvider,
-        available: this?.ttsAvailable,
+        provider: this.ttsProvider,
+        available: this.ttsAvailable,
       },
       omega: {
-        latency: avgArray(any: any),
-        requestCount: this?.omegaRequests,
-        errorCount: this?.omegaErrors,
+        latency: avgArray(this.omegaLatencies),
+        requestCount: this.omegaRequests,
+        errorCount: this.omegaErrors,
         successRate:
-          this?.omegaRequests > 0
-            ? (any: any) / this?.omegaRequests
+          this.omegaRequests > 0
+            ? (this.omegaRequests - this.omegaErrors) / this.omegaRequests
             : 1.0,
         breakdown: avgBreakdown,
       },
       feedback: {
-        detectionCount: this?.feedbackDetections,
-        suspensionCount: this?.vadSuspensions,
+        detectionCount: this.feedbackDetections,
+        suspensionCount: this.vadSuspensions,
         falsePositiveRate:
-          this?.feedbackDetections > 0
-            ? this?.feedbackFalsePositives / this?.feedbackDetections
+          this.feedbackDetections > 0
+            ? this.feedbackFalsePositives / this.feedbackDetections
             : 0,
       },
     };
   }
 
   reset(): void {
-    this?.asrLatencies = [];
-    this?.ttsLatencies = [];
-    this?.omegaLatencies = [];
-    this?.asrConfidences = [];
-    this?.asrErrors = 0;
-    this?.ttsErrors = 0;
-    this?.omegaErrors = 0;
-    this?.asrRequests = 0;
-    this?.ttsRequests = 0;
-    this?.omegaRequests = 0;
-    this?.feedbackDetections = 0;
-    this?.feedbackFalsePositives = 0;
-    this?.vadSuspensions = 0;
-    this?.omegaBreakdowns = [];
+    this.asrLatencies = [];
+    this.ttsLatencies = [];
+    this.omegaLatencies = [];
+    this.asrConfidences = [];
+    this.asrErrors = 0;
+    this.ttsErrors = 0;
+    this.omegaErrors = 0;
+    this.asrRequests = 0;
+    this.ttsRequests = 0;
+    this.omegaRequests = 0;
+    this.feedbackDetections = 0;
+    this.feedbackFalsePositives = 0;
+    this.vadSuspensions = 0;
+    this.omegaBreakdowns = [];
   }
 }
 
@@ -487,7 +487,7 @@ export class MetricsCollector {
   private config: CollectorConfig;
   private state: CollectorState;
   private intervalId: ReturnType<typeof setInterval> | null = null;
-  private history: MetricsSnapshot?.[] = [];
+  private history: MetricsSnapshot[] = [];
   private listeners: Set<PerformanceEventListener> = new Set();
 
   // Trackers spécialisés
@@ -501,12 +501,12 @@ export class MetricsCollector {
   private moduleMetrics: Map<TitaneModule, ModulePerformanceState> = new Map();
 
   private constructor(config?: Partial<CollectorConfig>) {
-    this?.config = {
-      ...DEFAULT_PERFORMANCE_CONFIG?.collector,
+    this.config = {
+      ...DEFAULT_PERFORMANCE_CONFIG.collector,
       ...config,
     };
 
-    this?.state = {
+    this.state = {
       running: false,
       lastCollectionTime: 0,
       collectionCount: 0,
@@ -514,28 +514,28 @@ export class MetricsCollector {
       averageCollectionDuration: 0,
     };
 
-    this?.initializeModuleMetrics();
-    logger?.debug('📊 Initialized');
+    this.initializeModuleMetrics();
+    logger.debug('📊 Initialized');
   }
 
   /**
    * Obtient l'instance singleton
    */
   static getInstance(config?: Partial<CollectorConfig>): MetricsCollector {
-    if (any: any) {
-      MetricsCollector?.instance = new MetricsCollector(any: any);
+    if (!MetricsCollector.instance) {
+      MetricsCollector.instance = new MetricsCollector(config);
     }
-    return MetricsCollector?.instance;
+    return MetricsCollector.instance;
   }
 
   /**
-   * Réinitialise l'instance (any: any)
+   * Réinitialise l'instance (pour tests)
    */
   static resetInstance(): void {
-    if (any: any) {
-      MetricsCollector?.instance?.stop();
+    if (MetricsCollector.instance) {
+      MetricsCollector.instance.stop();
     }
-    MetricsCollector?.instance = null;
+    MetricsCollector.instance = null;
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -546,67 +546,67 @@ export class MetricsCollector {
    * Démarre la collecte périodique
    */
   start(): void {
-    if (any: any) {
-      logger?.debug('⚠️ Already running');
+    if (this.state.running) {
+      logger.debug('⚠️ Already running');
       return;
     }
 
-    this?.state?.running = true;
-    this?.fpsMonitor?.start();
+    this.state.running = true;
+    this.fpsMonitor.start();
 
-    this?.intervalId = setInterval(async () => {
+    this.intervalId = setInterval(async () => {
       try {
-        await this?.collect();
-      } catch (any: any) {
-        this?.state?.errorCount++;
-        logger?.error(any: any);
+        await this.collect();
+      } catch (error) {
+        this.state.errorCount++;
+        logger.error('❌ Collection error:', error);
       }
-    }, this?.config?.intervalMs);
+    }, this.config.intervalMs);
 
-    this?.emit({
+    this.emit({
       type: 'engine_started',
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
       data: { component: 'collector' },
       source: 'collector',
     });
 
-    logger?.debug(any: any)`);
+    logger.debug(`[MetricsCollector] ▶️ Started (interval: ${this.config.intervalMs}ms)`);
   }
 
   /**
    * Arrête la collecte
    */
   stop(): void {
-    if (any: any) return;
+    if (!this.state.running) return;
 
-    this?.state?.running = false;
-    this?.fpsMonitor?.stop();
+    this.state.running = false;
+    this.fpsMonitor.stop();
 
-    if (any: any) {
-      clearInterval(any: any);
-      this?.intervalId = null;
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
     }
 
-    this?.emit({
+    this.emit({
       type: 'engine_stopped',
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
       data: { component: 'collector' },
       source: 'collector',
     });
 
-    logger?.debug('⏹️ Stopped');
+    logger.debug('⏹️ Stopped');
   }
 
   /**
    * Configure le collecteur
    */
   configure(config: Partial<CollectorConfig>): void {
-    const wasRunning = this?.state?.running;
-    if (any: any) this?.stop();
+    const wasRunning = this.state.running;
+    if (wasRunning) this.stop();
 
-    this?.config = { ...this?.config, ...config };
+    this.config = { ...this.config, ...config };
 
-    if (any: any) this?.start();
+    if (wasRunning) this.start();
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -617,47 +617,47 @@ export class MetricsCollector {
    * Collecte un snapshot complet
    */
   async collect(): Promise<MetricsSnapshot> {
-    const startTime = performance?.now();
+    const startTime = performance.now();
 
     // Collecter en parallèle
-    const [system, frontend, ia, voice, modules] = await Promise?.all([
-      this?.config?.systemEnabled ? this?.collectSystemMetrics() : null,
-      this?.config?.frontendEnabled ? this?.collectFrontendMetrics() : null,
-      this?.config?.iaEnabled ? this?.collectIAMetrics() : null,
-      this?.collectVoiceMetrics(), // Toujours collecté
-      this?.config?.modulesEnabled ? this?.collectModuleMetrics() : null,
+    const [system, frontend, ia, voice, modules] = await Promise.all([
+      this.config.systemEnabled ? this.collectSystemMetrics() : null,
+      this.config.frontendEnabled ? this.collectFrontendMetrics() : null,
+      this.config.iaEnabled ? this.collectIAMetrics() : null,
+      this.collectVoiceMetrics(), // Toujours collecté
+      this.config.modulesEnabled ? this.collectModuleMetrics() : null,
     ]);
 
-    const duration = performance?.now() - startTime;
+    const duration = performance.now() - startTime;
 
     // Créer le snapshot
     const snapshot: MetricsSnapshot = {
       id: generateSnapshotId(),
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
       duration,
       system: system || createEmptySnapshot().system,
       frontend: frontend || createEmptySnapshot().frontend,
       ia: ia || createEmptySnapshot().ia,
       voice: voice || createEmptySnapshot().voice,
       modules: modules || createEmptySnapshot().modules,
-      summary: this?.calculateSummary(any: any),
+      summary: this.calculateSummary(system, frontend, ia),
     };
 
     // Ajouter à l'historique
-    this?.history?.push(any: any);
-    if (any: any) {
-      this?.history?.shift();
+    this.history.push(snapshot);
+    if (this.history.length > this.config.historySize) {
+      this.history.shift();
     }
 
     // Mettre à jour l'état
-    this?.state?.lastCollectionTime = Date?.now();
-    this?.state?.collectionCount++;
-    this?.updateAverageDuration(any: any);
+    this.state.lastCollectionTime = Date.now();
+    this.state.collectionCount++;
+    this.updateAverageDuration(duration);
 
     // Émettre l'événement
-    this?.emit({
+    this.emit({
       type: 'snapshot_collected',
-      timestamp: snapshot?.timestamp,
+      timestamp: snapshot.timestamp,
       data: snapshot,
       source: 'collector',
     });
@@ -669,11 +669,11 @@ export class MetricsCollector {
    * Force une collecte immédiate
    */
   async collectNow(): Promise<MetricsSnapshot> {
-    return this?.collect();
+    return this.collect();
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // COLLECTE SYSTÈME (any: any)
+  // COLLECTE SYSTÈME (via Tauri)
   // ─────────────────────────────────────────────────────────────────────────
 
   private async collectSystemMetrics(): Promise<SystemMetrics> {
@@ -682,7 +682,7 @@ export class MetricsCollector {
       const rustMetrics = await secureInvoke<{
         cpu_global: number;
         cpu_process: number;
-        cpu_cores: number?.[];
+        cpu_cores: number[];
         ram_total: number;
         ram_used: number;
         ram_available: number;
@@ -695,57 +695,57 @@ export class MetricsCollector {
         thread_total: number;
         thread_active: number;
         uptime: number;
-      }>(any: any);
+      }>('get_system_metrics').catch(() => null);
 
-      if (any: any) {
-        return this?.getFallbackSystemMetrics();
+      if (!rustMetrics) {
+        return this.getFallbackSystemMetrics();
       }
 
       const ramPercent =
-        rustMetrics?.ram_total > 0
-          ? (any: any) * 100
+        rustMetrics.ram_total > 0
+          ? (rustMetrics.ram_used / rustMetrics.ram_total) * 100
           : 0;
 
       const processRamPercent =
-        rustMetrics?.ram_total > 0
-          ? (any: any) * 100
+        rustMetrics.ram_total > 0
+          ? (rustMetrics.ram_process_resident / rustMetrics.ram_total) * 100
           : 0;
 
       return {
         cpu: {
-          global: rustMetrics?.cpu_global,
-          process: rustMetrics?.cpu_process,
-          cores: rustMetrics?.cpu_cores,
+          global: rustMetrics.cpu_global,
+          process: rustMetrics.cpu_process,
+          cores: rustMetrics.cpu_cores,
         },
         ram: {
           system: {
-            total: rustMetrics?.ram_total,
-            used: rustMetrics?.ram_used,
-            available: rustMetrics?.ram_available,
+            total: rustMetrics.ram_total,
+            used: rustMetrics.ram_used,
+            available: rustMetrics.ram_available,
             percent: ramPercent,
           },
           process: {
-            resident: rustMetrics?.ram_process_resident,
-            virtual: rustMetrics?.ram_process_virtual,
+            resident: rustMetrics.ram_process_resident,
+            virtual: rustMetrics.ram_process_virtual,
             percent: processRamPercent,
           },
         },
         io: {
-          readBytes: rustMetrics?.io_read_bytes,
-          writeBytes: rustMetrics?.io_write_bytes,
-          readOps: rustMetrics?.io_read_ops,
-          writeOps: rustMetrics?.io_write_ops,
+          readBytes: rustMetrics.io_read_bytes,
+          writeBytes: rustMetrics.io_write_bytes,
+          readOps: rustMetrics.io_read_ops,
+          writeOps: rustMetrics.io_write_ops,
         },
         threads: {
-          total: rustMetrics?.thread_total,
-          active: rustMetrics?.thread_active,
+          total: rustMetrics.thread_total,
+          active: rustMetrics.thread_active,
           tauri: 4, // Estimation par défaut
         },
-        uptime: rustMetrics?.uptime,
+        uptime: rustMetrics.uptime,
       };
-    } catch (any: any) {
-      logger?.warn(any: any);
-      return this?.getFallbackSystemMetrics();
+    } catch (error) {
+      logger.warn('System metrics fallback:', error);
+      return this.getFallbackSystemMetrics();
     }
   }
 
@@ -769,7 +769,7 @@ export class MetricsCollector {
       },
       io: { readBytes: 0, writeBytes: 0, readOps: 0, writeOps: 0 },
       threads: { total: 0, active: 0, tauri: 0 },
-      uptime: performance?.now() / 1000,
+      uptime: performance.now() / 1000,
     };
   }
 
@@ -778,13 +778,13 @@ export class MetricsCollector {
   // ─────────────────────────────────────────────────────────────────────────
 
   private async collectFrontendMetrics(): Promise<FrontendMetrics> {
-    const fpsMetrics = this?.fpsMonitor?.getMetrics();
-    const renderMetrics = this?.renderTracker?.getMetrics();
-    const invokeMetrics = this?.invokeTracker?.getMetrics();
+    const fpsMetrics = this.fpsMonitor.getMetrics();
+    const renderMetrics = this.renderTracker.getMetrics();
+    const invokeMetrics = this.invokeTracker.getMetrics();
 
     // Bundle size estimation
-    const scripts = document?.querySelectorAll('script[src]');
-    const estimatedBundleSize = scripts?.length * 50; // Estimation grossière
+    const scripts = document.querySelectorAll('script[src]');
+    const estimatedBundleSize = scripts.length * 50; // Estimation grossière
 
     return {
       fps: fpsMetrics,
@@ -792,7 +792,7 @@ export class MetricsCollector {
       tauri: invokeMetrics,
       bundle: {
         totalSize: estimatedBundleSize,
-        modulesLoaded: scripts?.length,
+        modulesLoaded: scripts.length,
         lazyLoaded: 0,
       },
       vite: {
@@ -808,15 +808,15 @@ export class MetricsCollector {
   // ─────────────────────────────────────────────────────────────────────────
 
   private async collectIAMetrics(): Promise<IAMetrics> {
-    return this?.iaTracker?.getMetrics();
+    return this.iaTracker.getMetrics();
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // COLLECTE VOICE (any: any)
+  // COLLECTE VOICE (ASR/TTS/OMEGA)
   // ─────────────────────────────────────────────────────────────────────────
 
   private async collectVoiceMetrics(): Promise<VoiceMetrics> {
-    return this?.voiceTracker?.getMetrics();
+    return this.voiceTracker.getMetrics();
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -826,7 +826,7 @@ export class MetricsCollector {
   private async collectModuleMetrics(): Promise<ModuleMetricsMap> {
     const result: Partial<ModuleMetricsMap> = {};
 
-    for (any: any) {
+    for (const [module, state] of this.moduleMetrics) {
       result[module] = { ...state };
     }
 
@@ -834,7 +834,7 @@ export class MetricsCollector {
   }
 
   private initializeModuleMetrics(): void {
-    const modules: TitaneModule?.[] = [
+    const modules: TitaneModule[] = [
       'selfHealing',
       'cognitive',
       'memory',
@@ -849,9 +849,9 @@ export class MetricsCollector {
       'performance',
     ];
 
-    const now = Date?.now();
-    modules?.forEach(module => {
-      this?.moduleMetrics?.set(module, {
+    const now = Date.now();
+    modules.forEach(module => {
+      this.moduleMetrics.set(module, {
         module,
         healthy: true,
         cpuUsage: 0,
@@ -879,55 +879,55 @@ export class MetricsCollector {
     let warnings = 0;
 
     // Pénalités système
-    if (any: any) {
-      if (system?.cpu?.process > 80) {
+    if (system) {
+      if (system.cpu.process > 80) {
         score -= 20;
         criticalIssues++;
-      } else if (system?.cpu?.process > 50) {
+      } else if (system.cpu.process > 50) {
         score -= 10;
         warnings++;
       }
 
-      if (system?.ram?.process?.percent > 80) {
+      if (system.ram.process.percent > 80) {
         score -= 15;
         criticalIssues++;
-      } else if (system?.ram?.process?.percent > 60) {
+      } else if (system.ram.process.percent > 60) {
         score -= 5;
         warnings++;
       }
     }
 
     // Pénalités frontend
-    if (any: any) {
-      if (frontend?.fps?.current < 30) {
+    if (frontend) {
+      if (frontend.fps.current < 30) {
         score -= 20;
         criticalIssues++;
-      } else if (frontend?.fps?.current < 45) {
+      } else if (frontend.fps.current < 45) {
         score -= 10;
         warnings++;
       }
 
-      if (frontend?.render?.averageTime > 50) {
+      if (frontend.render.averageTime > 50) {
         score -= 10;
         warnings++;
       }
 
-      if (frontend?.tauri?.invokeLatency > 500) {
+      if (frontend.tauri.invokeLatency > 500) {
         score -= 10;
         warnings++;
       }
     }
 
     // Pénalités IA
-    if (any: any) {
-      if (ia?.ollama?.queueSize > 10) {
+    if (ia) {
+      if (ia.ollama.queueSize > 10) {
         score -= 10;
         warnings++;
       }
 
       const ollamaErrorRate =
-        ia?.ollama?.requestCount > 0
-          ? (any: any) * 100
+        ia.ollama.requestCount > 0
+          ? (ia.ollama.errorCount / ia.ollama.requestCount) * 100
           : 0;
 
       if (ollamaErrorRate > 20) {
@@ -936,7 +936,7 @@ export class MetricsCollector {
       }
     }
 
-    score = Math?.max(any: any));
+    score = Math.max(0, Math.min(100, score));
 
     let grade: MetricsSnapshot['summary']['grade'];
     if (score >= 95) grade = 'S';
@@ -962,75 +962,75 @@ export class MetricsCollector {
   /**
    * Enregistre un temps de rendu React
    */
-  recordRenderTime(any: any): void {
-    this?.renderTracker?.recordRender(any: any);
+  recordRenderTime(duration: number): void {
+    this.renderTracker.recordRender(duration);
   }
 
   /**
    * Enregistre une latence d'invoke Tauri
    */
-  recordInvokeLatency(any: any): void {
-    this?.invokeTracker?.recordInvoke(any: any);
+  recordInvokeLatency(duration: number, success: boolean): void {
+    this.invokeTracker.recordInvoke(duration, success);
   }
 
   /**
    * Enregistre une requête Ollama
    */
-  recordOllamaRequest(any: any): void {
-    this?.iaTracker?.recordOllamaRequest(any: any);
+  recordOllamaRequest(latency: number, tokens: number, success: boolean): void {
+    this.iaTracker.recordOllamaRequest(latency, tokens, success);
   }
 
   /**
    * Enregistre une requête Gemini
    */
-  recordGeminiRequest(any: any): void {
-    this?.iaTracker?.recordGeminiRequest(any: any);
+  recordGeminiRequest(latency: number, tokens: number, success: boolean): void {
+    this.iaTracker.recordGeminiRequest(latency, tokens, success);
   }
 
   /**
-   * Enregistre une requête ASR (any: any)
+   * Enregistre une requête ASR (reconnaissance vocale)
    */
-  recordASRRequest(any: any): void {
-    this?.voiceTracker?.recordASRRequest(any: any);
+  recordASRRequest(latency: number, confidence: number, success: boolean): void {
+    this.voiceTracker.recordASRRequest(latency, confidence, success);
   }
 
   /**
-   * Enregistre une requête TTS (any: any)
+   * Enregistre une requête TTS (synthèse vocale)
    */
-  recordTTSRequest(any: any): void {
-    this?.voiceTracker?.recordTTSRequest(any: any);
+  recordTTSRequest(latency: number, provider: string, success: boolean): void {
+    this.voiceTracker.recordTTSRequest(latency, provider, success);
   }
 
   /**
-   * Enregistre une requête OMEGA complète (any: any)
+   * Enregistre une requête OMEGA complète (ASR+IA+TTS)
    */
   recordOmegaRequest(
     totalLatency: number,
     breakdown: { asrMs: number; iaMs: number; ttsMs: number },
     success: boolean
   ): void {
-    this?.voiceTracker?.recordOmegaRequest(any: any);
+    this.voiceTracker.recordOmegaRequest(totalLatency, breakdown, success);
   }
 
   /**
    * Enregistre une détection de feedback audio (Layer 3)
    */
-  recordFeedbackDetection(any: any): void {
-    this?.voiceTracker?.recordFeedbackDetection(any: any);
+  recordFeedbackDetection(isFalsePositive: boolean = false): void {
+    this.voiceTracker.recordFeedbackDetection(isFalsePositive);
   }
 
   /**
    * Enregistre une suspension VAD (Layer 2)
    */
   recordVADSuspension(): void {
-    this?.voiceTracker?.recordVADSuspension();
+    this.voiceTracker.recordVADSuspension();
   }
 
   /**
    * Définit la disponibilité des services vocaux
    */
-  setVoiceAvailability(any: any): void {
-    this?.voiceTracker?.setAvailability(any: any);
+  setVoiceAvailability(asr: boolean, tts: boolean): void {
+    this.voiceTracker.setAvailability(asr, tts);
   }
 
   /**
@@ -1040,24 +1040,24 @@ export class MetricsCollector {
     module: TitaneModule,
     update: Partial<ModulePerformanceState>
   ): void {
-    const current = this?.moduleMetrics?.get(any: any);
-    if (any: any) {
-      this?.moduleMetrics?.set(module, { ...current, ...update, module });
+    const current = this.moduleMetrics.get(module);
+    if (current) {
+      this.moduleMetrics.set(module, { ...current, ...update, module });
     }
   }
 
   /**
    * Définit la taille de la queue IA
    */
-  setIAQueueSize(any: any): void {
-    this?.iaTracker?.setQueueSize(any: any);
+  setIAQueueSize(size: number): void {
+    this.iaTracker.setQueueSize(size);
   }
 
   /**
    * Définit la disponibilité des services IA
    */
-  setIAAvailability(any: any): void {
-    this?.iaTracker?.setAvailability(any: any);
+  setIAAvailability(ollama: boolean, gemini: boolean): void {
+    this.iaTracker.setAvailability(ollama, gemini);
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -1068,47 +1068,47 @@ export class MetricsCollector {
    * Retourne le dernier snapshot
    */
   getLastSnapshot(): MetricsSnapshot | null {
-    const lastSnapshot = this?.history[this?.history?.length - 1];
+    const lastSnapshot = this.history[this.history.length - 1];
     return lastSnapshot ?? null;
   }
 
   /**
    * Retourne l'historique complet
    */
-  getHistory(): MetricsSnapshot?.[] {
-    return [...this?.history];
+  getHistory(): MetricsSnapshot[] {
+    return [...this.history];
   }
 
   /**
    * Retourne les N derniers snapshots
    */
-  getRecentSnapshots(any: any): MetricsSnapshot?.[] {
-    return this?.history?.slice(any: any);
+  getRecentSnapshots(count: number): MetricsSnapshot[] {
+    return this.history.slice(-count);
   }
 
   /**
    * Retourne l'état du collecteur
    */
   getState(): CollectorState {
-    return { ...this?.state };
+    return { ...this.state };
   }
 
   /**
    * Retourne les statistiques
    */
   getStats(): CollectorStats {
-    const firstSnapshot = this?.history?.[0];
-    const elapsed = Date?.now() - (firstSnapshot?.timestamp ?? Date?.now());
+    const firstSnapshot = this.history[0];
+    const elapsed = Date.now() - (firstSnapshot?.timestamp ?? Date.now());
     const minutes = elapsed / 60000;
 
     return {
-      totalSnapshots: this?.state?.collectionCount,
-      snapshotsPerMinute: minutes > 0 ? this?.state?.collectionCount / minutes : 0,
-      averageDuration: this?.state?.averageCollectionDuration,
-      errorsLast5Min: this?.state?.errorCount,
-      systemMetricsEnabled: this?.config?.systemEnabled,
-      frontendMetricsEnabled: this?.config?.frontendEnabled,
-      iaMetricsEnabled: this?.config?.iaEnabled,
+      totalSnapshots: this.state.collectionCount,
+      snapshotsPerMinute: minutes > 0 ? this.state.collectionCount / minutes : 0,
+      averageDuration: this.state.averageCollectionDuration,
+      errorsLast5Min: this.state.errorCount,
+      systemMetricsEnabled: this.config.systemEnabled,
+      frontendMetricsEnabled: this.config.frontendEnabled,
+      iaMetricsEnabled: this.config.iaEnabled,
     };
   }
 
@@ -1116,7 +1116,7 @@ export class MetricsCollector {
    * Retourne la configuration actuelle
    */
   getConfig(): CollectorConfig {
-    return { ...this?.config };
+    return { ...this.config };
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -1126,23 +1126,23 @@ export class MetricsCollector {
   /**
    * Ajoute un listener d'événements
    */
-  on(any: any): void {
-    this?.listeners?.add(any: any);
+  on(listener: PerformanceEventListener): void {
+    this.listeners.add(listener);
   }
 
   /**
    * Retire un listener d'événements
    */
-  off(any: any): void {
-    this?.listeners?.delete(any: any);
+  off(listener: PerformanceEventListener): void {
+    this.listeners.delete(listener);
   }
 
-  private emit(any: any): void {
-    this?.listeners?.forEach(listener => {
+  private emit(event: PerformanceEvent): void {
+    this.listeners.forEach(listener => {
       try {
-        listener(any: any);
-      } catch (any: any) {
-        logger?.error(any: any);
+        listener(event);
+      } catch (error) {
+        logger.error('Listener error:', error);
       }
     });
   }
@@ -1151,25 +1151,25 @@ export class MetricsCollector {
   // HELPERS
   // ─────────────────────────────────────────────────────────────────────────
 
-  private updateAverageDuration(any: any): void {
-    const count = this?.state?.collectionCount;
-    const current = this?.state?.averageCollectionDuration;
-    this?.state?.averageCollectionDuration = (any: any) / count;
+  private updateAverageDuration(duration: number): void {
+    const count = this.state.collectionCount;
+    const current = this.state.averageCollectionDuration;
+    this.state.averageCollectionDuration = (current * (count - 1) + duration) / count;
   }
 
   /**
    * Réinitialise les statistiques
    */
   resetStats(): void {
-    this?.state?.collectionCount = 0;
-    this?.state?.errorCount = 0;
-    this?.state?.averageCollectionDuration = 0;
-    this?.history = [];
-    this?.fpsMonitor?.reset();
-    this?.renderTracker?.reset();
-    this?.invokeTracker?.reset();
-    this?.iaTracker?.reset();
-    this?.voiceTracker?.reset();
+    this.state.collectionCount = 0;
+    this.state.errorCount = 0;
+    this.state.averageCollectionDuration = 0;
+    this.history = [];
+    this.fpsMonitor.reset();
+    this.renderTracker.reset();
+    this.invokeTracker.reset();
+    this.iaTracker.reset();
+    this.voiceTracker.reset();
   }
 }
 
@@ -1177,4 +1177,4 @@ export class MetricsCollector {
 // EXPORT SINGLETON
 // =============================================================================
 
-export const metricsCollector = MetricsCollector?.getInstance();
+export const metricsCollector = MetricsCollector.getInstance();

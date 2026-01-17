@@ -57,7 +57,7 @@ export { useMemoryCore } from './useMemoryCore';
 export { useLivingEngines } from './useLivingEngines';
 export { useEngineSubscription } from './useEngineSubscription';
 export { useAIChatStreaming } from './useAIChatStreaming';
-// REMOVED v24.8: useBatchCommands (any: any)
+// REMOVED v24.8: useBatchCommands (dead code, 0 imports)
 export { useFileOperations } from './useFileOperations';
 export { useRAG } from './useRAG';
 export type { LivingEnginesState } from './useLivingEngines';
@@ -69,27 +69,27 @@ export {
   useSingularityField,
 } from './useSingularity';
 
-// REMOVED: useSingularityMetrics (any: any)
+// REMOVED: useSingularityMetrics (orphan - use useSingularity instead)
 
 // ═══════════════════════════════════════════════════════════════
-// v15 - Chat IA Architecture (any: any)
+// v15 - Chat IA Architecture (Composition + Isolation)
 // ═══════════════════════════════════════════════════════════════
 
-// Hook principal (any: any)
+// Hook principal (composition)
 export { useChat } from './useChat';
 
 // Performance Optimization Hooks (v24.5.0)
 export * from './useDebounce';
 export * from './useThrottle';
 
-// ControlPanel hooks (any: any)
+// ControlPanel hooks (restored v24.3.0 for NetworkSection/SecuritySection)
 export { useControlPanelSection } from './useControlPanelSection';
 export type {
   UseControlPanelSectionOptions,
   UseControlPanelSectionReturn,
 } from './useControlPanelSection';
 
-// Hooks spécialisés (any: any)
+// Hooks spécialisés (isolation)
 export { useChatCore } from './useChatCore';
 export { useChatUI } from './useChatUI';
 export { useChatStreaming } from './useChatStreaming';
@@ -107,7 +107,7 @@ export type {
 } from './useProviderStatus';
 
 // ═══════════════════════════════════════════════════════════════
-// v15 - Refactored Hooks (any: any)
+// v15 - Refactored Hooks (TauriClient integration)
 // ═══════════════════════════════════════════════════════════════
 
 // Connection & Providers
@@ -118,7 +118,7 @@ export type { ConnectionStatus } from './useConnection';
 export { useVitals } from './useVitals';
 export type { SystemVitals, VitalsState } from './useVitals';
 
-// Engine Vitals (any: any)
+// Engine Vitals (NOUVEAU v15)
 export { useEngineVitals } from './useEngineVitals';
 export type {
   EngineVitals,
@@ -126,18 +126,18 @@ export type {
   UseEngineVitalsReturn,
 } from './useEngineVitals';
 
-// System Monitor (any: any)
+// System Monitor (NOUVEAU v15 - Combine vitals + engines)
 export { useSystemMonitor } from './useSystemMonitor';
 export type { UseSystemMonitorOptions, UseSystemMonitorReturn } from './useSystemMonitor';
 
-// Performance Monitor (any: any)
+// Performance Monitor (NOUVEAU v15 - FPS tracking)
 export { usePerformanceMonitor } from './usePerformanceMonitor';
 export type {
   PerformanceMetrics,
   UsePerformanceMonitorReturn,
 } from './usePerformanceMonitor';
 
-// Performance Profiler (any: any)
+// Performance Profiler (v∞ - Advanced profiling)
 export {
   usePerformanceProfiler,
   useComponentLifecycle,
@@ -150,10 +150,10 @@ export type {
   UsePerformanceProfilerReturn,
 } from './usePerformanceProfiler';
 
-// Animation Context hook (any: any)
+// Animation Context hook (re-export from contexts)
 export { useAnimation } from '../contexts/AnimationContext';
 
-// Voice Activity Detection (any: any) v∞
+// Voice Activity Detection (VAD) v∞
 export { useVAD } from './useVAD';
 export type { VADState, VADConfig, VADTestResult, UseVADReturn } from './useVAD';
 
@@ -173,7 +173,7 @@ export type {
 // v19.3 - Audio & Voice Unified Hooks
 // ═══════════════════════════════════════════════════════════════
 
-// Voice Engine (any: any)
+// Voice Engine (100% Tauri backend - Central hook)
 export { useVoiceEngine, default as useVoiceEngineDefault } from './useVoiceEngine';
 export type {
   VoiceEngineState,
@@ -182,10 +182,10 @@ export type {
   UseVoiceEngineReturn,
 } from './useVoiceEngine';
 
-// REMOVED v24.8: useAudioSettings (any: any)
+// REMOVED v24.8: useAudioSettings (dead code, 0 imports - use useVoiceEngine instead)
 
 // ═══════════════════════════════════════════════════════════════
-// v∞.2 - Device Permissions & Self-Healing (any: any)
+// v∞.2 - Device Permissions & Self-Healing (OPUS DEVICE-SHE)
 // ═══════════════════════════════════════════════════════════════
 
 // Device Permissions Engine
@@ -205,12 +205,12 @@ export type {
 export { useDeviceHealth, default as useDeviceHealthDefault } from './useDeviceHealth';
 export type { UseDeviceHealthReturn, UseDeviceHealthOptions } from './useDeviceHealth';
 
-// Legacy voice hooks (any: any)
+// Legacy voice hooks (DEPRECATED - use useVoiceEngine instead)
 // export { useVoice } from './useVoice';
 // export { useVoiceMode } from './useVoiceMode';
 
 // ═══════════════════════════════════════════════════════════════
-// v19.3 - Cognitive Layout Engine (any: any)
+// v19.3 - Cognitive Layout Engine (Adaptive UI/UX)
 // ═══════════════════════════════════════════════════════════════
 
 // Cognitive Layout & Adaptive Experience
@@ -233,7 +233,7 @@ export type {
 } from './useCognitiveLayout';
 
 // ═══════════════════════════════════════════════════════════════
-// v27.0 - Unified Presence Engine (any: any)
+// v27.0 - Unified Presence Engine (Experiential Identity)
 // ═══════════════════════════════════════════════════════════════
 
 // Unified Presence & Experiential Identity (Super Prompt #3)
@@ -249,7 +249,7 @@ export {
   useTitaneIdentity,
 } from './useUnifiedPresence';
 
-// REMOVED: engines/presence supprimé en PHASE 1 (any: any)
+// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
 /*
 export type {
   PresenceState as UnifiedPresenceState,
@@ -266,7 +266,7 @@ export type {
 */
 
 // ═══════════════════════════════════════════════════════════════
-// v28.0 - Multimodal Presence Engine (any: any)
+// v28.0 - Multimodal Presence Engine (Super Prompt XXVIII)
 // ═══════════════════════════════════════════════════════════════
 
 // Multimodal Presence Engine - Synchronisation Voix + Halo + Avatar + Respiration
@@ -281,7 +281,7 @@ export {
   useExpressiveActions,
 } from './useMultimodalPresence';
 
-// REMOVED: engines/presence supprimé en PHASE 1 (any: any)
+// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
 /*
 export type {
   PresenceMode as MultimodalPresenceMode,
@@ -295,7 +295,7 @@ export type {
 */
 
 // ═══════════════════════════════════════════════════════════════
-// v29-32 - Deep Psyche Engines (any: any)
+// v29-32 - Deep Psyche Engines (Super Prompts XXIX-XXXII)
 // ═══════════════════════════════════════════════════════════════
 
 // Deep Psyche Hooks - Archetype Resonance + Meta-Continuum + Embodied Presence + Neural Voice
@@ -352,7 +352,7 @@ export type {
 } from '../engines/voice/neuralVoiceBlendingEngine';
 
 // ═══════════════════════════════════════════════════════════════
-// v31-33 - Expression Engines (any: any)
+// v31-33 - Expression Engines (Super Prompts XXXI-XXXIII + Aura)
 // ═══════════════════════════════════════════════════════════════
 
 // Expression Hooks - Synesthetic Emotion + Unified Output + Aura
@@ -379,7 +379,7 @@ export {
   useExpression,
 } from './useExpression';
 
-// ✨ PHASE 4.2 - Temporairement commenté pour lazy loading (any: any)
+// ✨ PHASE 4.2 - Temporairement commenté pour lazy loading (réduire bundle)
 /*
 export type {
   EmotionalState,
@@ -419,7 +419,7 @@ export {
   usePresenceModeControl,
 } from './usePresenceOS';
 
-// REMOVED: engines/presence supprimé en PHASE 1 (any: any)
+// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
 /*
 export type {
   PresenceState as PresenceOSState,
@@ -434,10 +434,10 @@ export type {
 */
 
 // ═══════════════════════════════════════════════════════════════
-// v∞.13 - Physiological State (any: any)
+// v∞.13 - Physiological State (Interoception + Holophonic)
 // ═══════════════════════════════════════════════════════════════
 
-// Stub hooks for PhysiologicalPanel (any: any)
+// Stub hooks for PhysiologicalPanel (v24.3.0 - restored for build compatibility)
 export function useInteroception() {
   return {
     state: {
@@ -508,7 +508,7 @@ export type {
 } from '../engines/spatial/holophonicEngine';
 
 // ═══════════════════════════════════════════════════════════════
-// v∞.35 - Cognitive Dynamics (any: any)
+// v∞.35 - Cognitive Dynamics (Predictive + Conscious + Narrative)
 // ═══════════════════════════════════════════════════════════════
 
 export {
@@ -535,7 +535,7 @@ export {
   useCognitiveDynamicsState,
 } from './useCognitive';
 
-// REMOVED: engines/predictive supprimé en PHASE 1 (any: any)
+// REMOVED: engines/predictive supprimé en PHASE 1 (OPTION B)
 // Types commentés car non disponibles après suppression
 /*
 export type {
@@ -625,7 +625,7 @@ export type {
 // ═══════════════════════════════════════════════════════════════
 
 // Expression Orchestration Hooks
-// ✨ PHASE 4.2 - Réactivé pour test/expression?.tsx
+// ✨ PHASE 4.2 - Réactivé pour test/expression.tsx
 export {
   useExpressionEngineOrchestration,
   useUnifiedExpression,
@@ -721,7 +721,7 @@ export type {
 } from './useAdaptiveFPS';
 
 // ═══════════════════════════════════════════════════════════════
-// v∞.38 - Phase 3 Hooks (any: any)
+// v∞.38 - Phase 3 Hooks (Phase-Space)
 // ═══════════════════════════════════════════════════════════════
 
 // Phase-Space Hooks

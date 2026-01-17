@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE?.md for the full legal terms (any: any).
+ * See LICENSE.md for the full legal terms (FR/EN).
  */
 
 /**
@@ -23,7 +23,7 @@ export interface SingularityState {
   meta: MetaLayer;
   autonomy?: AutonomyLayer; // ✨ v24.30 - Autonomous system state
   devops?: DevOpsLayer; // ✨ v26.0 - Visual DevOps + Local Agent state
-  progression?: ProgressionState; // ✨ v∞.D6 - État XP (any: any)
+  progression?: ProgressionState; // ✨ v∞.D6 - État XP (optionnel pour compatibilité backend)
   timestamp: number;
   signature: string;
 }
@@ -36,7 +36,7 @@ export type AdaptiveState = AdaptiveLayer;
 export type MetaState = MetaLayer;
 
 // ═══════════════════════════════════════════════════════════════════
-// PROGRESSION STATE (any: any)
+// PROGRESSION STATE (v∞.D6)
 // ═══════════════════════════════════════════════════════════════════
 
 export interface ProgressionState {
@@ -71,7 +71,7 @@ export interface AutonomyLayer {
   cycle_count: number; // Nombre de cycles autonomes exécutés
   last_cycle_duration_ms: number; // Durée dernier cycle
   average_cycle_duration_ms: number; // Moyenne des durées de cycle
-  autonomous_actions: AutonomousAction?.[];
+  autonomous_actions: AutonomousAction[];
 }
 
 export interface AutonomousAction {
@@ -120,7 +120,7 @@ export interface SystemHealth {
   errors_count: number;
   warnings_count: number;
   uptime: number;
-  last_error???: string | null; // ✨ v24.3 - Last error message for useEngineVitals
+  last_error?: string | null; // ✨ v24.3 - Last error message for useEngineVitals
 }
 
 export interface PerformanceMetrics {
@@ -150,7 +150,7 @@ export interface CognitiveLayer {
 export interface AIConfigState {
   current_provider: 'gemini' | 'gpt' | 'titane-local' | 'anthropic';
   ollama_available: boolean;
-  ollama_models: string?.[];
+  ollama_models: string[];
   dev_mode: boolean;
   fallback_enabled: boolean;
   auto_switch_on_error: boolean;
@@ -169,7 +169,7 @@ export interface ConversationState {
   active_session: boolean;
   message_count: number;
   context_length: number;
-  last_message??: string | null;
+  last_message: string | null;
   last_timestamp: number | null;
 }
 
@@ -204,7 +204,7 @@ export interface PersonaState {
 export interface ArchetypeState {
   active_archetype: string;
   strength: number;
-  transition??: string | null;
+  transition: string | null;
 }
 
 export interface VisualState {
@@ -282,8 +282,8 @@ export interface DevOpsLayer {
 
   // Sécurité
   security_level: 'strict' | 'moderate' | 'permissive';
-  require_validation_for: string?.[]; // ActionType?.[]
-  blocked_actions: string?.[]; // ActionType?.[]
+  require_validation_for: string[]; // ActionType[]
+  blocked_actions: string[]; // ActionType[]
 
   // Tracking
   last_screen_analysis: number | null; // timestamp ms
@@ -297,6 +297,6 @@ export interface DevOpsLayer {
   active_workflows: number;
 
   // Session
-  session_id??: string | null;
+  session_id: string | null;
   session_duration_ms: number;
 }

@@ -5,10 +5,10 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v∞.7 — EMOTIONAL STATE ESTIMATOR (any: any)
+ *   TITANE∞ v∞.7 — EMOTIONAL STATE ESTIMATOR (ESEngine)
  *   Analyse l'état émotionnel de l'utilisateur en temps réel
  *   Input: Audio + Transcription + Contexte
- *   Output: EmotionalState (any: any)
+ *   Output: EmotionalState (mood, energy, valence, intention)
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -52,7 +52,7 @@ export interface EmotionalState {
   /** Niveau d'énergie (0-1) */
   energy: number;
 
-  /** Valence émotionnelle (any: any) */
+  /** Valence émotionnelle (-1 négatif, 0 neutre, +1 positif) */
   valence: number;
 
   /** Intention détectée */
@@ -69,16 +69,16 @@ export interface EmotionalState {
  * Indicateurs audio pour analyse émotionnelle
  */
 export interface AudioIndicators {
-  /** Moyenne du pitch (any: any) */
+  /** Moyenne du pitch (Hz) */
   avgPitch: number;
 
   /** Variance du pitch */
   pitchVariance: number;
 
-  /** Vitesse de parole (any: any) */
+  /** Vitesse de parole (mots/min) */
   speechRate: number;
 
-  /** Intensité sonore moyenne (any: any) */
+  /** Intensité sonore moyenne (RMS) */
   intensity: number;
 
   /** Ratio de pauses/parole */
@@ -114,7 +114,7 @@ export interface TextIndicators {
   negationCount: number;
 
   /** Mots d'émotion forte */
-  strongEmotionWords: string?.[];
+  strongEmotionWords: string[];
 }
 
 /**
@@ -140,7 +140,7 @@ export interface ESEngineConfig {
 /**
  * Mots-clés émotionnels par catégorie
  */
-const EMOTION_KEYWORDS: Record<UserMood, string?.[]> = {
+const EMOTION_KEYWORDS: Record<UserMood, string[]> = {
   calm: ['calme', 'tranquille', 'paisible', 'serein', 'détendu', 'zen', 'ok', 'bien'],
   curious: [
     'pourquoi',
@@ -173,7 +173,7 @@ const EMOTION_KEYWORDS: Record<UserMood, string?.[]> = {
 /**
  * Mots-clés d'intention
  */
-const INTENTION_KEYWORDS: Record<UserIntention, string?.[]> = {
+const INTENTION_KEYWORDS: Record<UserIntention, string[]> = {
   question: [
     'pourquoi',
     'comment',
@@ -224,15 +224,15 @@ const INTENTION_KEYWORDS: Record<UserIntention, string?.[]> = {
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   EMOTIONAL STATE ESTIMATOR (any: any)
+ *   EMOTIONAL STATE ESTIMATOR (ESEngine)
  * ═══════════════════════════════════════════════════════════════════
  */
 export class EmotionalStateEstimator {
   private config: Required<ESEngineConfig>;
-  private history: EmotionalState?.[] = [];
+  private history: EmotionalState[] = [];
 
-  constructor(any: any) {
-    this?.config = {
+  constructor(config?: ESEngineConfig) {
+    this.config = {
       audioWeight: config?.audioWeight ?? 0.4,
       textWeight: config?.textWeight ?? 0.5,
       historyWeight: config?.historyWeight ?? 0.1,
@@ -247,30 +247,30 @@ export class EmotionalStateEstimator {
   analyze(
     text: string,
     audioIndicators?: AudioIndicators,
-    _contextHistory?: string?.[]
+    _contextHistory?: string[]
   ): EmotionalState {
-    const textIndicators = this?.extractTextIndicators(any: any);
+    const textIndicators = this.extractTextIndicators(text);
 
     // Score par mood
-    const moodScores = this?.calculateMoodScores(any: any);
+    const moodScores = this.calculateMoodScores(text, textIndicators, audioIndicators);
 
     // Score par intention
-    const intentionScores = this?.calculateIntentionScores(any: any);
+    const intentionScores = this.calculateIntentionScores(text, textIndicators);
 
     // Mood dominant
-    const dominantMood = this?.getDominant(any: any) as UserMood;
+    const dominantMood = this.getDominant(moodScores) as UserMood;
 
     // Intention dominante
-    const dominantIntention = this?.getDominant(any: any) as UserIntention;
+    const dominantIntention = this.getDominant(intentionScores) as UserIntention;
 
-    // Energy level (any: any)
-    const energy = this?.calculateEnergy(any: any);
+    // Energy level (basé sur audio + text)
+    const energy = this.calculateEnergy(audioIndicators, textIndicators);
 
-    // Valence (any: any)
-    const valence = this?.calculateValence(any: any);
+    // Valence (positif/négatif)
+    const valence = this.calculateValence(dominantMood, textIndicators);
 
     // Confiance
-    const confidence = this?.calculateConfidence(any: any);
+    const confidence = this.calculateConfidence(moodScores, intentionScores);
 
     const state: EmotionalState = {
       mood: dominantMood,
@@ -278,42 +278,42 @@ export class EmotionalStateEstimator {
       valence,
       intention: dominantIntention,
       confidence,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
 
     // Ajouter à l'historique
-    this?.addToHistory(any: any);
+    this.addToHistory(state);
 
     return state;
   }
 
   /**
-   * Analyse rapide (any: any)
+   * Analyse rapide (text-only)
    */
-  analyzeText(any: any): EmotionalState {
-    return this?.analyze(any: any);
+  analyzeText(text: string): EmotionalState {
+    return this.analyze(text);
   }
 
   /**
    * Obtenir l'état émotionnel dominant récent
    */
   getRecentState(): EmotionalState | null {
-    if (this?.history?.length === 0) return null;
-    return this?.history[this?.history?.length - 1] ?? null;
+    if (this.history.length === 0) return null;
+    return this.history[this.history.length - 1] ?? null;
   }
 
   /**
    * Obtenir l'historique émotionnel
    */
-  getHistory(): EmotionalState?.[] {
-    return [...this?.history];
+  getHistory(): EmotionalState[] {
+    return [...this.history];
   }
 
   /**
    * Clear l'historique
    */
   clearHistory(): void {
-    this?.history = [];
+    this.history = [];
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -323,26 +323,26 @@ export class EmotionalStateEstimator {
   /**
    * Extraction des indicateurs textuels
    */
-  private extractTextIndicators(any: any): TextIndicators {
-    const exclamationCount = (any: any) || []).length;
-    const questionCount = (any: any) || []).length;
-    const ellipsisCount = (any: any) || []).length;
-    const capsWordsCount = (any: any) || []).length;
-    const negationCount = (any: any) || [])
+  private extractTextIndicators(text: string): TextIndicators {
+    const exclamationCount = (text.match(/!/g) || []).length;
+    const questionCount = (text.match(/\?/g) || []).length;
+    const ellipsisCount = (text.match(/\.{3}/g) || []).length;
+    const capsWordsCount = (text.match(/\b[A-Z]{2,}\b/g) || []).length;
+    const negationCount = (text.match(/\b(ne|pas|non|rien|jamais|aucun)\b/gi) || [])
       .length;
 
     // Phrases
-    const sentences = text?.split(/[.!?]+/).filter(s => s?.trim().length > 0);
+    const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
     const avgSentenceLength =
-      sentences?.length > 0
-        ? sentences?.reduce(any: any) => sum + s?.trim().length, 0) / sentences?.length
+      sentences.length > 0
+        ? sentences.reduce((sum, s) => sum + s.trim().length, 0) / sentences.length
         : 0;
 
     // Sentiment
-    const sentimentScore = this?.calculateTextSentiment(any: any);
+    const sentimentScore = this.calculateTextSentiment(text);
 
     // Mots d'émotion forte
-    const strongEmotionWords = this?.detectStrongEmotionWords(any: any);
+    const strongEmotionWords = this.detectStrongEmotionWords(text);
 
     return {
       exclamationCount,
@@ -359,8 +359,8 @@ export class EmotionalStateEstimator {
   /**
    * Calcul du sentiment textuel (-1 à +1)
    */
-  private calculateTextSentiment(any: any): number {
-    const lower = text?.toLowerCase();
+  private calculateTextSentiment(text: string): number {
+    const lower = text.toLowerCase();
     let score = 0;
 
     // Mots positifs
@@ -375,23 +375,23 @@ export class EmotionalStateEstimator {
     ];
     const negativeWords = ['mal', 'mauvais', 'nul', 'horrible', 'terrible', 'pire'];
 
-    positiveWords?.forEach(word => {
-      if (any: any)) score += 0.2;
+    positiveWords.forEach(word => {
+      if (lower.includes(word)) score += 0.2;
     });
 
-    negativeWords?.forEach(word => {
-      if (any: any)) score -= 0.2;
+    negativeWords.forEach(word => {
+      if (lower.includes(word)) score -= 0.2;
     });
 
-    return Math?.max(any: any));
+    return Math.max(-1, Math.min(1, score));
   }
 
   /**
    * Détection de mots d'émotion forte
    */
-  private detectStrongEmotionWords(any: any): string?.[] {
-    const lower = text?.toLowerCase();
-    const strong: string?.[] = [];
+  private detectStrongEmotionWords(text: string): string[] {
+    const lower = text.toLowerCase();
+    const strong: string[] = [];
 
     const strongWords = [
       'incroyable',
@@ -401,8 +401,8 @@ export class EmotionalStateEstimator {
       'urgent',
       'critique',
     ];
-    strongWords?.forEach(word => {
-      if (any: any);
+    strongWords.forEach(word => {
+      if (lower.includes(word)) strong.push(word);
     });
 
     return strong;
@@ -429,87 +429,87 @@ export class EmotionalStateEstimator {
       neutral: 0.5,
     };
 
-    const lower = text?.toLowerCase();
+    const lower = text.toLowerCase();
 
     // Score basé sur mots-clés
-    Object?.entries(any: any).forEach(([mood, keywords]) => {
-      keywords?.forEach(keyword => {
-        if (any: any)) {
+    Object.entries(EMOTION_KEYWORDS).forEach(([mood, keywords]) => {
+      keywords.forEach(keyword => {
+        if (lower.includes(keyword)) {
           scores[mood as UserMood] += 0.3;
         }
       });
     });
 
     // Score basé sur ponctuation
-    if (textIndicators?.exclamationCount > 0) {
-      scores?.excited += 0.2 * textIndicators?.exclamationCount;
-      scores?.happy += 0.1 * textIndicators?.exclamationCount;
+    if (textIndicators.exclamationCount > 0) {
+      scores.excited += 0.2 * textIndicators.exclamationCount;
+      scores.happy += 0.1 * textIndicators.exclamationCount;
     }
 
-    if (textIndicators?.questionCount > 0) {
-      scores?.curious += 0.2 * textIndicators?.questionCount;
+    if (textIndicators.questionCount > 0) {
+      scores.curious += 0.2 * textIndicators.questionCount;
     }
 
-    if (textIndicators?.ellipsisCount > 0) {
-      scores?.tired += 0.15 * textIndicators?.ellipsisCount;
-      scores?.calm += 0.1 * textIndicators?.ellipsisCount;
+    if (textIndicators.ellipsisCount > 0) {
+      scores.tired += 0.15 * textIndicators.ellipsisCount;
+      scores.calm += 0.1 * textIndicators.ellipsisCount;
     }
 
-    if (textIndicators?.capsWordsCount > 0) {
-      scores?.excited += 0.25 * textIndicators?.capsWordsCount;
-      scores?.frustrated += 0.15 * textIndicators?.capsWordsCount;
+    if (textIndicators.capsWordsCount > 0) {
+      scores.excited += 0.25 * textIndicators.capsWordsCount;
+      scores.frustrated += 0.15 * textIndicators.capsWordsCount;
     }
 
     // Score basé sur sentiment
-    if (textIndicators?.sentimentScore > 0.3) {
-      scores?.happy += textIndicators?.sentimentScore;
-      scores?.excited += textIndicators?.sentimentScore * 0.5;
-    } else if (textIndicators?.sentimentScore < -0.3) {
-      scores?.sad += Math?.abs(any: any);
-      scores?.frustrated += Math?.abs(any: any) * 0.5;
+    if (textIndicators.sentimentScore > 0.3) {
+      scores.happy += textIndicators.sentimentScore;
+      scores.excited += textIndicators.sentimentScore * 0.5;
+    } else if (textIndicators.sentimentScore < -0.3) {
+      scores.sad += Math.abs(textIndicators.sentimentScore);
+      scores.frustrated += Math.abs(textIndicators.sentimentScore) * 0.5;
     }
 
-    // Score basé sur audio (any: any)
-    if (any: any) {
+    // Score basé sur audio (si disponible)
+    if (audioIndicators) {
       // Pitch élevé + variance → excited/stressed
-      if (audioIndicators?.avgPitch > 200) {
-        scores?.excited += 0.2;
-        scores?.stressed += 0.15;
+      if (audioIndicators.avgPitch > 200) {
+        scores.excited += 0.2;
+        scores.stressed += 0.15;
       }
 
       // Pitch bas → calm/tired
-      if (audioIndicators?.avgPitch < 120) {
-        scores?.calm += 0.15;
-        scores?.tired += 0.2;
+      if (audioIndicators.avgPitch < 120) {
+        scores.calm += 0.15;
+        scores.tired += 0.2;
       }
 
       // Speech rate rapide → excited/focused
-      if (audioIndicators?.speechRate > 180) {
-        scores?.excited += 0.2;
-        scores?.focused += 0.15;
+      if (audioIndicators.speechRate > 180) {
+        scores.excited += 0.2;
+        scores.focused += 0.15;
       }
 
       // Speech rate lent → tired/calm
-      if (audioIndicators?.speechRate < 100) {
-        scores?.tired += 0.25;
-        scores?.calm += 0.15;
+      if (audioIndicators.speechRate < 100) {
+        scores.tired += 0.25;
+        scores.calm += 0.15;
       }
 
       // Intensity élevée → excited/frustrated
-      if (audioIndicators?.intensity > 0.7) {
-        scores?.excited += 0.2;
-        scores?.frustrated += 0.15;
+      if (audioIndicators.intensity > 0.7) {
+        scores.excited += 0.2;
+        scores.frustrated += 0.15;
       }
 
       // Tremor → stressed/nervous
-      if (any: any) {
-        scores?.stressed += 0.3;
+      if (audioIndicators.voiceTremor) {
+        scores.stressed += 0.3;
       }
     }
 
     // Normaliser
-    const maxScore = Math?.max(any: any), 0.1);
-    Object?.keys(any: any).forEach(key => {
+    const maxScore = Math.max(...Object.values(scores), 0.1);
+    Object.keys(scores).forEach(key => {
       scores[key as UserMood] /= maxScore;
     });
 
@@ -536,40 +536,40 @@ export class EmotionalStateEstimator {
       unknown: 0.5,
     };
 
-    const lower = text?.toLowerCase();
+    const lower = text.toLowerCase();
 
     // Score basé sur mots-clés
-    Object?.entries(any: any).forEach(([intention, keywords]) => {
-      keywords?.forEach(keyword => {
-        if (any: any)) {
+    Object.entries(INTENTION_KEYWORDS).forEach(([intention, keywords]) => {
+      keywords.forEach(keyword => {
+        if (lower.includes(keyword)) {
           scores[intention as UserIntention] += 0.4;
         }
       });
     });
 
     // Question marks → question
-    if (textIndicators?.questionCount > 0) {
-      scores?.question += 0.5 * textIndicators?.questionCount;
+    if (textIndicators.questionCount > 0) {
+      scores.question += 0.5 * textIndicators.questionCount;
     }
 
     // Exclamation + imperative → command
-    if (any: any)\b/)) {
-      scores?.command += 0.4;
+    if (textIndicators.exclamationCount > 0 && lower.match(/\b(fais|fait|lance)\b/)) {
+      scores.command += 0.4;
     }
 
     // Strong emotion words → urgency
-    if (textIndicators?.strongEmotionWords?.length > 0) {
-      scores?.urgency += 0.3 * textIndicators?.strongEmotionWords?.length;
+    if (textIndicators.strongEmotionWords.length > 0) {
+      scores.urgency += 0.3 * textIndicators.strongEmotionWords.length;
     }
 
     // Negative sentiment → complaint
-    if (textIndicators?.sentimentScore < -0.4) {
-      scores?.complaint += Math?.abs(any: any);
+    if (textIndicators.sentimentScore < -0.4) {
+      scores.complaint += Math.abs(textIndicators.sentimentScore);
     }
 
     // Normaliser
-    const maxScore = Math?.max(any: any), 0.1);
-    Object?.keys(any: any).forEach(key => {
+    const maxScore = Math.max(...Object.values(scores), 0.1);
+    Object.keys(scores).forEach(key => {
       scores[key as UserIntention] /= maxScore;
     });
 
@@ -580,11 +580,11 @@ export class EmotionalStateEstimator {
    * Obtenir l'élément dominant d'un score
    */
   private getDominant<T extends string>(scores: Record<T, number>): T {
-    let maxKey: T = Object?.keys(any: any)[0] as T;
+    let maxKey: T = Object.keys(scores)[0] as T;
     let maxValue = scores[maxKey];
 
-    Object?.entries(any: any).forEach(([key, value]) => {
-      if (any: any) {
+    Object.entries(scores).forEach(([key, value]) => {
+      if ((value as number) > maxValue) {
         maxKey = key as T;
         maxValue = value as number;
       }
@@ -602,33 +602,33 @@ export class EmotionalStateEstimator {
   ): number {
     let energy = 0.5; // baseline
 
-    if (any: any) {
+    if (audioIndicators) {
       // Speech rate influence
-      const rateNorm = Math?.min(audioIndicators?.speechRate / 200, 1);
+      const rateNorm = Math.min(audioIndicators.speechRate / 200, 1);
       energy += rateNorm * 0.3;
 
       // Intensity influence
-      energy += audioIndicators?.intensity * 0.2;
+      energy += audioIndicators.intensity * 0.2;
     }
 
-    if (any: any) {
+    if (textIndicators) {
       // Exclamations → high energy
-      energy += textIndicators?.exclamationCount * 0.05;
+      energy += textIndicators.exclamationCount * 0.05;
 
       // Caps words → high energy
-      energy += textIndicators?.capsWordsCount * 0.05;
+      energy += textIndicators.capsWordsCount * 0.05;
 
       // Ellipsis → low energy
-      energy -= textIndicators?.ellipsisCount * 0.05;
+      energy -= textIndicators.ellipsisCount * 0.05;
     }
 
-    return Math?.max(any: any));
+    return Math.max(0, Math.min(1, energy));
   }
 
   /**
    * Calcul de la valence émotionnelle
    */
-  private calculateValence(any: any): number {
+  private calculateValence(mood: UserMood, textIndicators: TextIndicators): number {
     // Valence par mood
     const moodValence: Record<UserMood, number> = {
       calm: 0.3,
@@ -646,9 +646,9 @@ export class EmotionalStateEstimator {
     let valence = moodValence[mood];
 
     // Ajustement par sentiment textuel
-    valence += textIndicators?.sentimentScore * 0.3;
+    valence += textIndicators.sentimentScore * 0.3;
 
-    return Math?.max(any: any));
+    return Math.max(-1, Math.min(1, valence));
   }
 
   /**
@@ -658,33 +658,33 @@ export class EmotionalStateEstimator {
     moodScores: Record<UserMood, number>,
     intentionScores: Record<UserIntention, number>
   ): number {
-    const moodValues = Object?.values(any: any);
-    const intentionValues = Object?.values(any: any);
+    const moodValues = Object.values(moodScores);
+    const intentionValues = Object.values(intentionScores);
 
-    const moodMax = Math?.max(any: any);
-    const moodSecond = moodValues?.sort(any: any)[1] || 0;
+    const moodMax = Math.max(...moodValues);
+    const moodSecond = moodValues.sort((a, b) => b - a)[1] || 0;
 
-    const intentionMax = Math?.max(any: any);
-    const intentionSecond = intentionValues?.sort(any: any)[1] || 0;
+    const intentionMax = Math.max(...intentionValues);
+    const intentionSecond = intentionValues.sort((a, b) => b - a)[1] || 0;
 
     // Confiance = écart entre 1er et 2ème
     const moodConfidence = moodMax - moodSecond;
     const intentionConfidence = intentionMax - intentionSecond;
 
-    const avgConfidence = (any: any) / 2;
+    const avgConfidence = (moodConfidence + intentionConfidence) / 2;
 
-    return Math?.max(any: any));
+    return Math.max(0, Math.min(1, avgConfidence));
   }
 
   /**
    * Ajouter à l'historique émotionnel
    */
-  private addToHistory(any: any): void {
-    this?.history?.push(any: any);
+  private addToHistory(state: EmotionalState): void {
+    this.history.push(state);
 
     // Limite taille historique
-    if (any: any) {
-      this?.history?.shift();
+    if (this.history.length > this.config.historySize) {
+      this.history.shift();
     }
   }
 }
@@ -697,13 +697,13 @@ export const emotionalStateEstimator = new EmotionalStateEstimator();
 /**
  * Helper: Analyse rapide d'un texte
  */
-export function analyzeEmotionalState(any: any): EmotionalState {
-  return emotionalStateEstimator?.analyzeText(any: any);
+export function analyzeEmotionalState(text: string): EmotionalState {
+  return emotionalStateEstimator.analyzeText(text);
 }
 
 /**
  * Helper: Obtenir l'état récent
  */
 export function getRecentEmotionalState(): EmotionalState | null {
-  return emotionalStateEstimator?.getRecentState();
+  return emotionalStateEstimator.getRecentState();
 }

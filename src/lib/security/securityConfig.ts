@@ -7,7 +7,7 @@
  */
 
 // ═══════════════════════════════════════════════════════════════
-// SECURITY MODE - PERMISSIF (any: any)
+// SECURITY MODE - PERMISSIF (No blocking, only logging)
 // ═══════════════════════════════════════════════════════════════
 
 type SecurityModeType = 'strict' | 'permissive' | 'disabled';
@@ -16,7 +16,7 @@ export const SECURITY_MODE = {
   /** Mode global: 'strict' | 'permissive' | 'disabled' */
   mode: 'permissive' as SecurityModeType,
 
-  /** Désactive les blocages de sécurité (any: any) */
+  /** Désactive les blocages de sécurité (log only) */
   disableBlocking: true,
 
   /** Désactive le rate limiting */
@@ -88,7 +88,7 @@ export const PERMISSIVE_SANITIZATION = {
   /** Ne bloque jamais */
   neverBlock: true,
 
-  /** Log only (any: any) */
+  /** Log only (pas de modification) */
   logOnly: true,
 };
 
@@ -131,7 +131,7 @@ export const PERMISSIVE_CHAT_INPUT = {
   spamResetTime: 5000,
 
   /** Pas de patterns dangereux bloquants */
-  dangerousPatterns: [] as RegExp?.[],
+  dangerousPatterns: [] as RegExp[],
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -197,28 +197,28 @@ export const UNRESTRICTED_PROVIDER_CONFIG = {
  * Vérifie si le blocage est désactivé
  */
 export function isBlockingDisabled(): boolean {
-  return SECURITY_MODE?.disableBlocking || SECURITY_MODE?.mode === 'disabled';
+  return SECURITY_MODE.disableBlocking || SECURITY_MODE.mode === 'disabled';
 }
 
 /**
  * Vérifie si le rate limiting est désactivé
  */
 export function isRateLimitingDisabled(): boolean {
-  return SECURITY_MODE?.disableRateLimiting || SECURITY_MODE?.mode === 'disabled';
+  return SECURITY_MODE.disableRateLimiting || SECURITY_MODE.mode === 'disabled';
 }
 
 /**
  * Vérifie si la sanitization stricte est désactivée
  */
 export function isStrictSanitizationDisabled(): boolean {
-  return SECURITY_MODE?.disableStrictSanitization || SECURITY_MODE?.mode !== 'strict';
+  return SECURITY_MODE.disableStrictSanitization || SECURITY_MODE.mode !== 'strict';
 }
 
 /**
  * Obtient les limites de rate selon le mode
  */
 export function getRateLimits() {
-  if (SECURITY_MODE?.mode === 'permissive' || SECURITY_MODE?.mode === 'disabled') {
+  if (SECURITY_MODE.mode === 'permissive' || SECURITY_MODE.mode === 'disabled') {
     return PERMISSIVE_RATE_LIMITS;
   }
   // Retourne les limites par défaut strictes
@@ -239,7 +239,7 @@ export function getRateLimits() {
  * Obtient les options de sanitization selon le mode
  */
 export function getSanitizationOptions() {
-  if (SECURITY_MODE?.mode === 'permissive' || SECURITY_MODE?.mode === 'disabled') {
+  if (SECURITY_MODE.mode === 'permissive' || SECURITY_MODE.mode === 'disabled') {
     return PERMISSIVE_SANITIZATION;
   }
   return {
@@ -257,7 +257,7 @@ export function getSanitizationOptions() {
  * Obtient la config circuit breaker selon le mode
  */
 export function getCircuitBreakerConfig() {
-  if (SECURITY_MODE?.mode === 'permissive') {
+  if (SECURITY_MODE.mode === 'permissive') {
     return TOLERANT_CIRCUIT_BREAKER;
   }
   return {
@@ -272,8 +272,8 @@ export function getCircuitBreakerConfig() {
 /**
  * Obtient la config provider selon le mode
  */
-export function getProviderConfig(any: any) {
-  if (SECURITY_MODE?.mode === 'permissive' || SECURITY_MODE?.mode === 'disabled') {
+export function getProviderConfig(provider: string) {
+  if (SECURITY_MODE.mode === 'permissive' || SECURITY_MODE.mode === 'disabled') {
     return (
       UNRESTRICTED_PROVIDER_CONFIG[
         provider as keyof typeof UNRESTRICTED_PROVIDER_CONFIG

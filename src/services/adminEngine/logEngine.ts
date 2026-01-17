@@ -3,7 +3,7 @@
  * TITANE∞ ADMIN ENGINE — Log Engine
  * ═══════════════════════════════════════════════════════════════════════════════
  *
- * @file        logEngine?.ts
+ * @file        logEngine.ts
  * @version     vΩ∞Ω+
  *
  * Timeline unifiée, filtrage performant, recherche textuelle
@@ -23,12 +23,12 @@ import type {
   EventSource,
   RetentionConfig,
   PurgeResult,
-} from './adminEngine?.config';
+} from './adminEngine.config';
 import {
   createLogRecord,
   createAdminEvent,
   DEFAULT_RETENTION_CONFIG,
-} from './adminEngine?.config';
+} from './adminEngine.config';
 
 // =============================================================================
 // LOG ENGINE CLASS
@@ -39,19 +39,19 @@ import {
  * Timeline unifiée avec filtrage et recherche
  */
 export class LogEngine {
-  private logs: AdminLogRecord?.[] = [];
-  private events: AdminEvent?.[] = [];
+  private logs: AdminLogRecord[] = [];
+  private events: AdminEvent[] = [];
   private config: RetentionConfig;
-  private listeners: Set<(any: any) => void> = new Set();
-  private eventListeners: Set<(any: any) => void> = new Set();
-  private purgeIntervalId: NodeJS?.Timeout | null = null;
+  private listeners: Set<(log: AdminLogRecord) => void> = new Set();
+  private eventListeners: Set<(event: AdminEvent) => void> = new Set();
+  private purgeIntervalId: NodeJS.Timeout | null = null;
 
   constructor(config?: Partial<RetentionConfig>) {
-    this?.config = { ...DEFAULT_RETENTION_CONFIG, ...config };
+    this.config = { ...DEFAULT_RETENTION_CONFIG, ...config };
 
     // Démarrer la purge automatique si activée
-    if (any: any) {
-      this?.startAutoPurge();
+    if (this.config.autoPurgeEnabled) {
+      this.startAutoPurge();
     }
   }
 
@@ -69,7 +69,7 @@ export class LogEngine {
     message: string,
     details?: string,
     context: Record<string, unknown> = {},
-    tags: string?.[] = []
+    tags: string[] = []
   ): AdminLogRecord {
     const record = createLogRecord(
       severity,
@@ -80,23 +80,23 @@ export class LogEngine {
       context,
       tags
     );
-    this?.addLog(any: any);
+    this.addLog(record);
     return record;
   }
 
   /**
    * Ajoute un log existant au buffer
    */
-  addLog(any: any): void {
-    this?.logs?.push(any: any);
+  addLog(record: AdminLogRecord): void {
+    this.logs.push(record);
 
     // Vérifier la taille du buffer
-    if (any: any) {
-      this?.logs = this?.logs?.slice(-Math?.floor(this?.config?.maxLogBufferSize * 0.9));
+    if (this.logs.length > this.config.maxLogBufferSize) {
+      this.logs = this.logs.slice(-Math.floor(this.config.maxLogBufferSize * 0.9));
     }
 
     // Notifier les listeners
-    this?.notifyLogListeners(any: any);
+    this.notifyLogListeners(record);
   }
 
   /**
@@ -107,7 +107,7 @@ export class LogEngine {
     message: string,
     context?: Record<string, unknown>
   ): AdminLogRecord {
-    return this?.log(any: any);
+    return this.log('DEBUG', 'INFO', moduleId, message, undefined, context);
   }
 
   info(
@@ -115,7 +115,7 @@ export class LogEngine {
     message: string,
     context?: Record<string, unknown>
   ): AdminLogRecord {
-    return this?.log(any: any);
+    return this.log('INFO', 'INFO', moduleId, message, undefined, context);
   }
 
   warn(
@@ -123,7 +123,7 @@ export class LogEngine {
     message: string,
     context?: Record<string, unknown>
   ): AdminLogRecord {
-    return this?.log(any: any);
+    return this.log('WARN', 'WARN', moduleId, message, undefined, context);
   }
 
   error(
@@ -132,7 +132,7 @@ export class LogEngine {
     details?: string,
     context?: Record<string, unknown>
   ): AdminLogRecord {
-    return this?.log(any: any);
+    return this.log('ERROR', 'ERROR', moduleId, message, details, context);
   }
 
   critical(
@@ -141,7 +141,7 @@ export class LogEngine {
     details?: string,
     context?: Record<string, unknown>
   ): AdminLogRecord {
-    return this?.log(any: any);
+    return this.log('CRITICAL', 'ERROR', moduleId, message, details, context);
   }
 
   action(
@@ -149,7 +149,7 @@ export class LogEngine {
     message: string,
     context?: Record<string, unknown>
   ): AdminLogRecord {
-    return this?.log('INFO', 'ACTION', moduleId, message, undefined, context, ['action']);
+    return this.log('INFO', 'ACTION', moduleId, message, undefined, context, ['action']);
   }
 
   system(
@@ -157,7 +157,7 @@ export class LogEngine {
     message: string,
     context?: Record<string, unknown>
   ): AdminLogRecord {
-    return this?.log('INFO', 'SYSTEM', moduleId, message, undefined, context, ['system']);
+    return this.log('INFO', 'SYSTEM', moduleId, message, undefined, context, ['system']);
   }
 
   security(
@@ -166,7 +166,7 @@ export class LogEngine {
     severity: LogSeverity = 'WARN',
     context?: Record<string, unknown>
   ): AdminLogRecord {
-    return this?.log(severity, 'SECURITY', moduleId, message, undefined, context, [
+    return this.log(severity, 'SECURITY', moduleId, message, undefined, context, [
       'security',
     ]);
   }
@@ -198,15 +198,15 @@ export class LogEngine {
       impact,
       data
     );
-    this?.events?.push(any: any);
+    this.events.push(event);
 
     // Vérifier la taille du buffer
-    if (any: any) {
-      this?.events = this?.events?.slice(-Math?.floor(this?.config?.maxEventBufferSize * 0.9));
+    if (this.events.length > this.config.maxEventBufferSize) {
+      this.events = this.events.slice(-Math.floor(this.config.maxEventBufferSize * 0.9));
     }
 
     // Notifier les listeners
-    this?.notifyEventListeners(any: any);
+    this.notifyEventListeners(event);
 
     return event;
   }
@@ -214,10 +214,10 @@ export class LogEngine {
   /**
    * Marque un événement comme résolu
    */
-  resolveEvent(any: any): boolean {
-    const event = this?.events?.find(any: any);
-    if (any: any) {
-      event?.resolved = true;
+  resolveEvent(eventId: string): boolean {
+    const event = this.events.find(e => e.id === eventId);
+    if (event) {
+      event.resolved = true;
       return true;
     }
     return false;
@@ -226,10 +226,10 @@ export class LogEngine {
   /**
    * Lie des événements entre eux
    */
-  linkEvents(eventId: string, relatedIds: string?.[]): void {
-    const event = this?.events?.find(any: any);
-    if (any: any) {
-      event?.relatedEvents = [...new Set([...event?.relatedEvents, ...relatedIds])];
+  linkEvents(eventId: string, relatedIds: string[]): void {
+    const event = this.events.find(e => e.id === eventId);
+    if (event) {
+      event.relatedEvents = [...new Set([...event.relatedEvents, ...relatedIds])];
     }
   }
 
@@ -240,75 +240,75 @@ export class LogEngine {
   /**
    * Recherche des logs avec filtres
    */
-  searchLogs(any: any): LogSearchResult {
-    const startTime = performance?.now();
-    let results = [...this?.logs];
+  searchLogs(filters: LogFilters): LogSearchResult {
+    const startTime = performance.now();
+    let results = [...this.logs];
 
     // Filtrer par période
-    if (any: any) {
-      const startTime = filters?.startTime;
-      results = results?.filter(any: any);
+    if (filters.startTime !== undefined) {
+      const startTime = filters.startTime;
+      results = results.filter(log => log.timestamp >= startTime);
     }
-    if (any: any) {
-      const endTime = filters?.endTime;
-      results = results?.filter(any: any);
+    if (filters.endTime !== undefined) {
+      const endTime = filters.endTime;
+      results = results.filter(log => log.timestamp <= endTime);
     }
 
     // Filtrer par modules
-    if (filters?.modules && filters?.modules?.length > 0) {
-      const modules = filters?.modules;
-      results = results?.filter(any: any));
+    if (filters.modules && filters.modules.length > 0) {
+      const modules = filters.modules;
+      results = results.filter(log => modules.includes(log.moduleId));
     }
 
     // Filtrer par sévérités
-    if (filters?.severities && filters?.severities?.length > 0) {
-      const severities = filters?.severities;
-      results = results?.filter(any: any));
+    if (filters.severities && filters.severities.length > 0) {
+      const severities = filters.severities;
+      results = results.filter(log => severities.includes(log.severity));
     }
 
     // Filtrer par catégories
-    if (filters?.categories && filters?.categories?.length > 0) {
-      const categories = filters?.categories;
-      results = results?.filter(any: any));
+    if (filters.categories && filters.categories.length > 0) {
+      const categories = filters.categories;
+      results = results.filter(log => categories.includes(log.category));
     }
 
     // Filtrer par tags
-    if (filters?.tags && filters?.tags?.length > 0) {
-      const tags = filters?.tags;
-      results = results?.filter(any: any)));
+    if (filters.tags && filters.tags.length > 0) {
+      const tags = filters.tags;
+      results = results.filter(log => tags.some(tag => log.tags.includes(tag)));
     }
 
     // Recherche textuelle
-    if (filters?.searchText && filters?.searchText?.trim()) {
-      const searchLower = filters?.searchText?.toLowerCase();
-      results = results?.filter(
+    if (filters.searchText && filters.searchText.trim()) {
+      const searchLower = filters.searchText.toLowerCase();
+      results = results.filter(
         log =>
-          log?.message?.toLowerCase(any: any) ||
-          log?.details?.toLowerCase(any: any) ||
-          log?.tags?.some(any: any))
+          log.message.toLowerCase().includes(searchLower) ||
+          log.details?.toLowerCase().includes(searchLower) ||
+          log.tags.some(tag => tag.toLowerCase().includes(searchLower))
       );
     }
 
     // Tri
-    const sortOrder = filters?.sortOrder || 'desc';
-    results?.sort(any: any) =>
-      sortOrder === 'desc' ? b?.timestamp - a?.timestamp : a?.timestamp - b?.timestamp
+    const sortOrder = filters.sortOrder || 'desc';
+    results.sort((a, b) =>
+      sortOrder === 'desc' ? b.timestamp - a.timestamp : a.timestamp - b.timestamp
     );
 
     // Total avant pagination
-    const totalCount = results?.length;
+    const totalCount = results.length;
 
     // Pagination
-    const limit = filters?.limit || 100;
-    const offset = filters?.offset || 0;
-    results = results?.slice(any: any);
+    const limit = filters.limit || 100;
+    const offset = filters.offset || 0;
+    results = results.slice(offset, offset + limit);
 
     return {
       logs: results,
       totalCount,
-      page: Math?.floor(any: any) + 1,
+      page: Math.floor(offset / limit) + 1,
       pageSize: limit,
-      searchTimeMs: performance?.now() - startTime,
+      searchTimeMs: performance.now() - startTime,
     };
   }
 
@@ -323,32 +323,32 @@ export class LogEngine {
       resolved?: boolean;
       since?: number;
     } = {}
-  ): AdminEvent?.[] {
-    let results = [...this?.events];
+  ): AdminEvent[] {
+    let results = [...this.events];
 
-    if (any: any) {
-      results = results?.filter(any: any);
+    if (options.moduleId) {
+      results = results.filter(e => e.moduleId === options.moduleId);
     }
 
-    if (any: any) {
-      results = results?.filter(any: any);
+    if (options.source) {
+      results = results.filter(e => e.source === options.source);
     }
 
-    if (any: any) {
-      results = results?.filter(any: any);
+    if (options.resolved !== undefined) {
+      results = results.filter(e => e.resolved === options.resolved);
     }
 
-    if (any: any) {
-      const since = options?.since;
-      results = results?.filter(any: any);
+    if (options.since !== undefined) {
+      const since = options.since;
+      results = results.filter(e => e.timestamp >= since);
     }
 
     // Trier par timestamp décroissant
-    results?.sort(any: any);
+    results.sort((a, b) => b.timestamp - a.timestamp);
 
     // Limiter
-    if (any: any) {
-      results = results?.slice(any: any);
+    if (options.limit) {
+      results = results.slice(0, options.limit);
     }
 
     return results;
@@ -357,22 +357,22 @@ export class LogEngine {
   /**
    * Récupère les logs récents
    */
-  getRecentLogs(count: number = 100): AdminLogRecord?.[] {
-    return this?.logs?.slice(any: any).reverse();
+  getRecentLogs(count: number = 100): AdminLogRecord[] {
+    return this.logs.slice(-count).reverse();
   }
 
   /**
    * Récupère les événements récents
    */
-  getRecentEvents(count: number = 50): AdminEvent?.[] {
-    return this?.events?.slice(any: any).reverse();
+  getRecentEvents(count: number = 50): AdminEvent[] {
+    return this.events.slice(-count).reverse();
   }
 
   /**
    * Récupère les logs par corrélation ID
    */
-  getLogsByCorrelation(any: any): AdminLogRecord?.[] {
-    return this?.logs?.filter(any: any);
+  getLogsByCorrelation(correlationId: string): AdminLogRecord[] {
+    return this.logs.filter(log => log.correlationId === correlationId);
   }
 
   // ===========================================================================
@@ -390,7 +390,7 @@ export class LogEngine {
     last24h: number;
     lastHour: number;
   } {
-    const now = Date?.now();
+    const now = Date.now();
     const oneHourAgo = now - 3600000;
     const oneDayAgo = now - 86400000;
 
@@ -416,17 +416,17 @@ export class LogEngine {
     let last24h = 0;
     let lastHour = 0;
 
-    for (any: any) {
-      bySeverity[log?.severity]++;
-      byCategory[log?.category]++;
-      byModule[log?.moduleId] = (byModule[log?.moduleId] || 0) + 1;
+    for (const log of this.logs) {
+      bySeverity[log.severity]++;
+      byCategory[log.category]++;
+      byModule[log.moduleId] = (byModule[log.moduleId] || 0) + 1;
 
-      if (any: any) last24h++;
-      if (any: any) lastHour++;
+      if (log.timestamp >= oneDayAgo) last24h++;
+      if (log.timestamp >= oneHourAgo) lastHour++;
     }
 
     return {
-      total: this?.logs?.length,
+      total: this.logs.length,
       bySeverity,
       byCategory,
       byModule,
@@ -442,29 +442,29 @@ export class LogEngine {
   /**
    * Purge les logs anciens
    */
-  purgeLogs(any: any): PurgeResult {
-    const days = olderThanDays ?? this?.config?.logsRetentionDays;
-    const cutoffTime = Date?.now() - days * 24 * 60 * 60 * 1000;
+  purgeLogs(olderThanDays?: number): PurgeResult {
+    const days = olderThanDays ?? this.config.logsRetentionDays;
+    const cutoffTime = Date.now() - days * 24 * 60 * 60 * 1000;
 
-    const originalCount = this?.logs?.length;
-    const logsToKeep = this?.logs?.filter(any: any);
-    const deletedCount = originalCount - logsToKeep?.length;
+    const originalCount = this.logs.length;
+    const logsToKeep = this.logs.filter(log => log.timestamp >= cutoffTime);
+    const deletedCount = originalCount - logsToKeep.length;
 
-    this?.logs = logsToKeep;
+    this.logs = logsToKeep;
 
     const result: PurgeResult = {
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
       dataType: 'LOGS',
       deletedCount,
       freedBytes: deletedCount * 200, // Estimation ~200 bytes par log
       backupCreated: false,
       success: true,
-      message: `${deletedCount} logs supprimés (any: any)`,
+      message: `${deletedCount} logs supprimés (plus anciens que ${days} jours)`,
     };
 
     // Logger la purge
     if (deletedCount > 0) {
-      this?.system('admin', `Purge logs: ${deletedCount} entrées supprimées`, {
+      this.system('admin', `Purge logs: ${deletedCount} entrées supprimées`, {
         olderThanDays: days,
         deletedCount,
       });
@@ -476,18 +476,18 @@ export class LogEngine {
   /**
    * Purge les événements anciens
    */
-  purgeEvents(any: any): PurgeResult {
-    const days = olderThanDays ?? this?.config?.eventsRetentionDays;
-    const cutoffTime = Date?.now() - days * 24 * 60 * 60 * 1000;
+  purgeEvents(olderThanDays?: number): PurgeResult {
+    const days = olderThanDays ?? this.config.eventsRetentionDays;
+    const cutoffTime = Date.now() - days * 24 * 60 * 60 * 1000;
 
-    const originalCount = this?.events?.length;
-    const eventsToKeep = this?.events?.filter(any: any);
-    const deletedCount = originalCount - eventsToKeep?.length;
+    const originalCount = this.events.length;
+    const eventsToKeep = this.events.filter(event => event.timestamp >= cutoffTime);
+    const deletedCount = originalCount - eventsToKeep.length;
 
-    this?.events = eventsToKeep;
+    this.events = eventsToKeep;
 
     return {
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
       dataType: 'EVENTS',
       deletedCount,
       freedBytes: deletedCount * 500,
@@ -498,20 +498,20 @@ export class LogEngine {
   }
 
   /**
-   * Purge tout (any: any)
+   * Purge tout (logs + événements)
    */
-  purgeAll(any: any): PurgeResult {
-    const logsResult = this?.purgeLogs(any: any);
-    const eventsResult = this?.purgeEvents(any: any);
+  purgeAll(olderThanDays?: number): PurgeResult {
+    const logsResult = this.purgeLogs(olderThanDays);
+    const eventsResult = this.purgeEvents(olderThanDays);
 
     return {
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
       dataType: 'ALL',
-      deletedCount: logsResult?.deletedCount + eventsResult?.deletedCount,
-      freedBytes: logsResult?.freedBytes + eventsResult?.freedBytes,
+      deletedCount: logsResult.deletedCount + eventsResult.deletedCount,
+      freedBytes: logsResult.freedBytes + eventsResult.freedBytes,
       backupCreated: false,
-      success: logsResult?.success && eventsResult?.success,
-      message: `${logsResult?.deletedCount} logs et ${eventsResult?.deletedCount} événements supprimés`,
+      success: logsResult.success && eventsResult.success,
+      message: `${logsResult.deletedCount} logs et ${eventsResult.deletedCount} événements supprimés`,
     };
   }
 
@@ -519,12 +519,12 @@ export class LogEngine {
    * Démarre la purge automatique
    */
   private startAutoPurge(): void {
-    if (any: any) return;
+    if (this.purgeIntervalId !== null) return;
 
-    const intervalMs = this?.config?.autoPurgeIntervalHours * 60 * 60 * 1000;
+    const intervalMs = this.config.autoPurgeIntervalHours * 60 * 60 * 1000;
 
-    this?.purgeIntervalId = setInterval(() => {
-      this?.purgeAll();
+    this.purgeIntervalId = setInterval(() => {
+      this.purgeAll();
     }, intervalMs);
   }
 
@@ -532,9 +532,9 @@ export class LogEngine {
    * Arrête la purge automatique
    */
   stopAutoPurge(): void {
-    if (any: any) {
-      clearInterval(any: any);
-      this?.purgeIntervalId = null;
+    if (this.purgeIntervalId !== null) {
+      clearInterval(this.purgeIntervalId);
+      this.purgeIntervalId = null;
     }
   }
 
@@ -545,35 +545,35 @@ export class LogEngine {
   /**
    * Ajoute un listener pour les nouveaux logs
    */
-  onLog(any: any): () => void {
-    this?.listeners?.add(any: any);
-    return (any: any);
+  onLog(callback: (log: AdminLogRecord) => void): () => void {
+    this.listeners.add(callback);
+    return () => this.listeners.delete(callback);
   }
 
   /**
    * Ajoute un listener pour les nouveaux événements
    */
-  onEvent(any: any): () => void {
-    this?.eventListeners?.add(any: any);
-    return (any: any);
+  onEvent(callback: (event: AdminEvent) => void): () => void {
+    this.eventListeners.add(callback);
+    return () => this.eventListeners.delete(callback);
   }
 
-  private notifyLogListeners(any: any): void {
-    for (any: any) {
+  private notifyLogListeners(log: AdminLogRecord): void {
+    for (const listener of this.listeners) {
       try {
-        listener(any: any);
-      } catch (any: any) {
-        console?.error(any: any);
+        listener(log);
+      } catch (error) {
+        console.error('[LogEngine] Erreur listener log:', error);
       }
     }
   }
 
-  private notifyEventListeners(any: any): void {
-    for (any: any) {
+  private notifyEventListeners(event: AdminEvent): void {
+    for (const listener of this.eventListeners) {
       try {
-        listener(any: any);
-      } catch (any: any) {
-        console?.error(any: any);
+        listener(event);
+      } catch (error) {
+        console.error('[LogEngine] Erreur listener event:', error);
       }
     }
   }
@@ -585,36 +585,36 @@ export class LogEngine {
   /**
    * Exporte les logs en JSON
    */
-  exportLogs(any: any): string {
-    const logs = filters ? this?.searchLogs(any: any).logs : this?.logs;
-    return JSON?.stringify(logs, null, 2);
+  exportLogs(filters?: LogFilters): string {
+    const logs = filters ? this.searchLogs(filters).logs : this.logs;
+    return JSON.stringify(logs, null, 2);
   }
 
   /**
    * Exporte les événements en JSON
    */
   exportEvents(): string {
-    return JSON?.stringify(this?.events, null, 2);
+    return JSON.stringify(this.events, null, 2);
   }
 
   /**
    * Importe des logs depuis JSON
    */
-  importLogs(any: any): number {
+  importLogs(json: string): number {
     try {
-      const logs = JSON?.parse(any: any) as AdminLogRecord?.[];
+      const logs = JSON.parse(json) as AdminLogRecord[];
       let imported = 0;
 
-      for (any: any) {
+      for (const log of logs) {
         // Vérifier que le log a un ID unique
-        if (any: any)) {
-          this?.logs?.push(any: any);
+        if (!this.logs.some(l => l.id === log.id)) {
+          this.logs.push(log);
           imported++;
         }
       }
 
       // Trier par timestamp
-      this?.logs?.sort(any: any);
+      this.logs.sort((a, b) => a.timestamp - b.timestamp);
 
       return imported;
     } catch {
@@ -627,27 +627,27 @@ export class LogEngine {
   // ===========================================================================
 
   /**
-   * Vide tous les logs (any: any)
+   * Vide tous les logs (pour tests)
    */
   clear(): void {
-    this?.logs = [];
-    this?.events = [];
+    this.logs = [];
+    this.events = [];
   }
 
   /**
    * Met à jour la configuration
    */
   updateConfig(config: Partial<RetentionConfig>): void {
-    this?.config = { ...this?.config, ...config };
+    this.config = { ...this.config, ...config };
 
     // Redémarrer l'auto-purge si nécessaire
     if (
-      config?.autoPurgeEnabled !== undefined ||
-      config?.autoPurgeIntervalHours !== undefined
+      config.autoPurgeEnabled !== undefined ||
+      config.autoPurgeIntervalHours !== undefined
     ) {
-      this?.stopAutoPurge();
-      if (any: any) {
-        this?.startAutoPurge();
+      this.stopAutoPurge();
+      if (this.config.autoPurgeEnabled) {
+        this.startAutoPurge();
       }
     }
   }
@@ -656,9 +656,9 @@ export class LogEngine {
    * Libère les ressources
    */
   dispose(): void {
-    this?.stopAutoPurge();
-    this?.listeners?.clear();
-    this?.eventListeners?.clear();
+    this.stopAutoPurge();
+    this.listeners.clear();
+    this.eventListeners.clear();
   }
 }
 
@@ -672,18 +672,18 @@ let logEngineInstance: LogEngine | null = null;
  * Récupère l'instance singleton du LogEngine
  */
 export function getLogEngine(): LogEngine {
-  if (any: any) {
+  if (!logEngineInstance) {
     logEngineInstance = new LogEngine();
   }
   return logEngineInstance;
 }
 
 /**
- * Réinitialise l'instance singleton (any: any)
+ * Réinitialise l'instance singleton (pour tests)
  */
 export function resetLogEngine(): void {
-  if (any: any) {
-    logEngineInstance?.dispose();
+  if (logEngineInstance) {
+    logEngineInstance.dispose();
     logEngineInstance = null;
   }
 }

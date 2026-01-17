@@ -3,12 +3,12 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE?.md for the full legal terms (any: any).
+ * See LICENSE.md for the full legal terms (FR/EN).
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v21 - panelsStore (any: any)
+ * TITANE∞ v21 - panelsStore (Zustand)
  * Store global pour gestion d'état de tous les panels
  *
  * Features:
@@ -35,13 +35,13 @@ export interface PanelConfig {
   isPinned: boolean; // Pin to stay always visible
   zIndex: number;
 
-  // Position (any: any)
+  // Position (null = auto-position)
   position: {
     x: number | null;
     y: number | null;
   };
 
-  // Size (any: any)
+  // Size (null = auto-size)
   size: {
     width: number | null;
     height: number | null;
@@ -80,7 +80,7 @@ export interface PanelsState {
   maxZIndex: number;
 
   // Panel actuellement au focus
-  focusedPanelId??: string | null;
+  focusedPanelId: string | null;
 
   // Mobile mode
   isMobileView: boolean;
@@ -95,44 +95,44 @@ export interface PanelsState {
 export interface PanelsStoreActions {
   // Panel Management
   registerPanel: (config: Partial<PanelConfig> & { id: string }) => void;
-  unregisterPanel: (any: any) => void;
-  getPanel: (any: any) => PanelConfig | undefined;
+  unregisterPanel: (id: string) => void;
+  getPanel: (id: string) => PanelConfig | undefined;
 
   // Visibility
-  showPanel: (any: any) => void;
-  hidePanel: (any: any) => void;
-  togglePanel: (any: any) => void;
+  showPanel: (id: string) => void;
+  hidePanel: (id: string) => void;
+  togglePanel: (id: string) => void;
   // Alias attendu par certains tests/consommateurs
-  toggleVisibility: (any: any) => void;
+  toggleVisibility: (id: string) => void;
 
   // Collapse
-  collapsePanel: (any: any) => void;
-  expandPanel: (any: any) => void;
-  toggleCollapse: (any: any) => void;
+  collapsePanel: (id: string) => void;
+  expandPanel: (id: string) => void;
+  toggleCollapse: (id: string) => void;
 
   // Z-Index Management
-  bringToFront: (any: any) => void;
-  sendToBack: (any: any) => void;
+  bringToFront: (id: string) => void;
+  sendToBack: (id: string) => void;
 
   // Position & Size
   updatePosition(id: string, position: { x: number; y: number }): void;
-  updatePosition(any: any): void;
+  updatePosition(id: string, x: number, y: number): void;
   updateSize(id: string, size: { width: number; height: number }): void;
-  updateSize(any: any): void;
-  resetPosition: (any: any) => void;
-  resetSize: (any: any) => void;
+  updateSize(id: string, width: number, height: number): void;
+  resetPosition: (id: string) => void;
+  resetSize: (id: string) => void;
 
   // Pin
-  pinPanel: (any: any) => void;
-  unpinPanel: (any: any) => void;
-  togglePin: (any: any) => void;
+  pinPanel: (id: string) => void;
+  unpinPanel: (id: string) => void;
+  togglePin: (id: string) => void;
 
   // Focus
-  setFocus: (any: any) => void;
+  setFocus: (id: string) => void;
   clearFocus: () => void;
 
   // Mobile
-  setMobileView: (any: any) => void;
+  setMobileView: (isMobile: boolean) => void;
   applyMobileLayout: () => void;
 
   // Layouts
@@ -149,9 +149,9 @@ export interface PanelsStoreActions {
   expandAll: () => void;
 
   // Helpers
-  getVisiblePanels: () => PanelConfig?.[];
-  getCollapsedPanels: () => PanelConfig?.[];
-  getPinnedPanels: () => PanelConfig?.[];
+  getVisiblePanels: () => PanelConfig[];
+  getCollapsedPanels: () => PanelConfig[];
+  getPinnedPanels: () => PanelConfig[];
 }
 
 /**
@@ -171,7 +171,7 @@ const defaultPanelConfig: Omit<PanelConfig, 'id' | 'title'> = {
   size: { width: null, height: null },
   hiddenOnMobile: false,
   collapsedOnMobile: true,
-  lastInteraction: Date?.now(),
+  lastInteraction: Date.now(),
   interactionCount: 0,
 };
 
@@ -209,7 +209,7 @@ const defaultPanelConfig: Omit<PanelConfig, 'id' | 'title'> = {
 export const usePanelsStore = create<PanelsStore>()(
   devtools(
     persist(
-      (any: any) => ({
+      (set, get) => ({
         // ═══════════════════════════════════════════════════════════
         // STATE INITIAL
         // ═══════════════════════════════════════════════════════════
@@ -226,21 +226,21 @@ export const usePanelsStore = create<PanelsStore>()(
 
         registerPanel: config => {
           set(state => {
-            const newPanels = new Map(any: any);
-            const existingPanel = newPanels?.get(any: any);
+            const newPanels = new Map(state.panels);
+            const existingPanel = newPanels.get(config.id);
 
             // Si panel existe, merge config
-            if (any: any) {
-              newPanels?.set(config?.id, {
+            if (existingPanel) {
+              newPanels.set(config.id, {
                 ...existingPanel,
                 ...config,
               });
             } else {
               // Nouveau panel
-              newPanels?.set(config?.id, {
+              newPanels.set(config.id, {
                 ...defaultPanelConfig,
                 ...config,
-                title: config?.title || config?.id,
+                title: config.title || config.id,
               });
             }
 
@@ -250,17 +250,17 @@ export const usePanelsStore = create<PanelsStore>()(
 
         unregisterPanel: id => {
           set(state => {
-            const newPanels = new Map(any: any);
-            newPanels?.delete(any: any);
+            const newPanels = new Map(state.panels);
+            newPanels.delete(id);
             return {
               panels: newPanels,
-              focusedPanelId: state?.focusedPanelId === id ? null : state?.focusedPanelId,
+              focusedPanelId: state.focusedPanelId === id ? null : state.focusedPanelId,
             };
           });
         },
 
         getPanel: id => {
-          return get(any: any);
+          return get().panels.get(id);
         },
 
         // ═══════════════════════════════════════════════════════════
@@ -269,15 +269,15 @@ export const usePanelsStore = create<PanelsStore>()(
 
         showPanel: id => {
           set(state => {
-            const panel = state?.panels?.get(any: any);
-            if (any: any) return state;
+            const panel = state.panels.get(id);
+            if (!panel) return state;
 
-            const newPanels = new Map(any: any);
-            newPanels?.set(id, {
+            const newPanels = new Map(state.panels);
+            newPanels.set(id, {
               ...panel,
               isVisible: true,
-              lastInteraction: Date?.now(),
-              interactionCount: panel?.interactionCount + 1,
+              lastInteraction: Date.now(),
+              interactionCount: panel.interactionCount + 1,
             });
 
             return { panels: newPanels };
@@ -286,35 +286,35 @@ export const usePanelsStore = create<PanelsStore>()(
 
         hidePanel: id => {
           set(state => {
-            const panel = state?.panels?.get(any: any);
-            if (any: any) return state;
+            const panel = state.panels.get(id);
+            if (!panel) return state;
 
-            const newPanels = new Map(any: any);
-            newPanels?.set(id, {
+            const newPanels = new Map(state.panels);
+            newPanels.set(id, {
               ...panel,
               isVisible: false,
-              lastInteraction: Date?.now(),
-              interactionCount: panel?.interactionCount + 1,
+              lastInteraction: Date.now(),
+              interactionCount: panel.interactionCount + 1,
             });
 
             return {
               panels: newPanels,
-              focusedPanelId: state?.focusedPanelId === id ? null : state?.focusedPanelId,
+              focusedPanelId: state.focusedPanelId === id ? null : state.focusedPanelId,
             };
           });
         },
 
         togglePanel: id => {
-          const panel = get(any: any);
-          if (any: any) {
-            get(any: any);
+          const panel = get().panels.get(id);
+          if (panel?.isVisible) {
+            get().hidePanel(id);
           } else {
-            get(any: any);
+            get().showPanel(id);
           }
         },
 
         toggleVisibility: id => {
-          get(any: any);
+          get().togglePanel(id);
         },
 
         // ═══════════════════════════════════════════════════════════
@@ -323,14 +323,14 @@ export const usePanelsStore = create<PanelsStore>()(
 
         collapsePanel: id => {
           set(state => {
-            const panel = state?.panels?.get(any: any);
-            if (any: any) return state;
+            const panel = state.panels.get(id);
+            if (!panel) return state;
 
-            const newPanels = new Map(any: any);
-            newPanels?.set(id, {
+            const newPanels = new Map(state.panels);
+            newPanels.set(id, {
               ...panel,
               isCollapsed: true,
-              lastInteraction: Date?.now(),
+              lastInteraction: Date.now(),
             });
 
             return { panels: newPanels };
@@ -339,14 +339,14 @@ export const usePanelsStore = create<PanelsStore>()(
 
         expandPanel: id => {
           set(state => {
-            const panel = state?.panels?.get(any: any);
-            if (any: any) return state;
+            const panel = state.panels.get(id);
+            if (!panel) return state;
 
-            const newPanels = new Map(any: any);
-            newPanels?.set(id, {
+            const newPanels = new Map(state.panels);
+            newPanels.set(id, {
               ...panel,
               isCollapsed: false,
-              lastInteraction: Date?.now(),
+              lastInteraction: Date.now(),
             });
 
             return { panels: newPanels };
@@ -354,11 +354,11 @@ export const usePanelsStore = create<PanelsStore>()(
         },
 
         toggleCollapse: id => {
-          const panel = get(any: any);
-          if (any: any) {
-            get(any: any);
+          const panel = get().panels.get(id);
+          if (panel?.isCollapsed) {
+            get().expandPanel(id);
           } else {
-            get(any: any);
+            get().collapsePanel(id);
           }
         },
 
@@ -368,17 +368,17 @@ export const usePanelsStore = create<PanelsStore>()(
 
         bringToFront: id => {
           set(state => {
-            const panel = state?.panels?.get(any: any);
-            if (any: any) return state;
+            const panel = state.panels.get(id);
+            if (!panel) return state;
 
-            const newMaxZ = state?.maxZIndex + 1;
-            const newPanels = new Map(any: any);
+            const newMaxZ = state.maxZIndex + 1;
+            const newPanels = new Map(state.panels);
 
-            newPanels?.set(id, {
+            newPanels.set(id, {
               ...panel,
               zIndex: newMaxZ,
-              lastInteraction: Date?.now(),
-              interactionCount: panel?.interactionCount + 1,
+              lastInteraction: Date.now(),
+              interactionCount: panel.interactionCount + 1,
             });
 
             return {
@@ -391,14 +391,14 @@ export const usePanelsStore = create<PanelsStore>()(
 
         sendToBack: id => {
           set(state => {
-            const panel = state?.panels?.get(any: any);
-            if (any: any) return state;
+            const panel = state.panels.get(id);
+            if (!panel) return state;
 
-            const newPanels = new Map(any: any);
-            newPanels?.set(id, {
+            const newPanels = new Map(state.panels);
+            newPanels.set(id, {
               ...panel,
               zIndex: 10, // Base z-index
-              lastInteraction: Date?.now(),
+              lastInteraction: Date.now(),
             });
 
             return { panels: newPanels };
@@ -415,19 +415,19 @@ export const usePanelsStore = create<PanelsStore>()(
           y?: number
         ) => {
           set(state => {
-            const panel = state?.panels?.get(any: any);
-            if (any: any) return state;
+            const panel = state.panels.get(id);
+            if (!panel) return state;
 
             const position =
               typeof positionOrX === 'number'
                 ? { x: positionOrX, y: y ?? 0 }
                 : positionOrX;
 
-            const newPanels = new Map(any: any);
-            newPanels?.set(id, {
+            const newPanels = new Map(state.panels);
+            newPanels.set(id, {
               ...panel,
               position,
-              lastInteraction: Date?.now(),
+              lastInteraction: Date.now(),
             });
 
             return { panels: newPanels };
@@ -440,19 +440,19 @@ export const usePanelsStore = create<PanelsStore>()(
           height?: number
         ) => {
           set(state => {
-            const panel = state?.panels?.get(any: any);
-            if (any: any) return state;
+            const panel = state.panels.get(id);
+            if (!panel) return state;
 
             const size =
               typeof sizeOrWidth === 'number'
                 ? { width: sizeOrWidth, height: height ?? 0 }
                 : sizeOrWidth;
 
-            const newPanels = new Map(any: any);
-            newPanels?.set(id, {
+            const newPanels = new Map(state.panels);
+            newPanels.set(id, {
               ...panel,
               size,
-              lastInteraction: Date?.now(),
+              lastInteraction: Date.now(),
             });
 
             return { panels: newPanels };
@@ -461,11 +461,11 @@ export const usePanelsStore = create<PanelsStore>()(
 
         resetPosition: id => {
           set(state => {
-            const panel = state?.panels?.get(any: any);
-            if (any: any) return state;
+            const panel = state.panels.get(id);
+            if (!panel) return state;
 
-            const newPanels = new Map(any: any);
-            newPanels?.set(id, {
+            const newPanels = new Map(state.panels);
+            newPanels.set(id, {
               ...panel,
               position: { x: null, y: null },
             });
@@ -476,11 +476,11 @@ export const usePanelsStore = create<PanelsStore>()(
 
         resetSize: id => {
           set(state => {
-            const panel = state?.panels?.get(any: any);
-            if (any: any) return state;
+            const panel = state.panels.get(id);
+            if (!panel) return state;
 
-            const newPanels = new Map(any: any);
-            newPanels?.set(id, {
+            const newPanels = new Map(state.panels);
+            newPanels.set(id, {
               ...panel,
               size: { width: null, height: null },
             });
@@ -495,11 +495,11 @@ export const usePanelsStore = create<PanelsStore>()(
 
         pinPanel: id => {
           set(state => {
-            const panel = state?.panels?.get(any: any);
-            if (any: any) return state;
+            const panel = state.panels.get(id);
+            if (!panel) return state;
 
-            const newPanels = new Map(any: any);
-            newPanels?.set(id, {
+            const newPanels = new Map(state.panels);
+            newPanels.set(id, {
               ...panel,
               isPinned: true,
             });
@@ -510,11 +510,11 @@ export const usePanelsStore = create<PanelsStore>()(
 
         unpinPanel: id => {
           set(state => {
-            const panel = state?.panels?.get(any: any);
-            if (any: any) return state;
+            const panel = state.panels.get(id);
+            if (!panel) return state;
 
-            const newPanels = new Map(any: any);
-            newPanels?.set(id, {
+            const newPanels = new Map(state.panels);
+            newPanels.set(id, {
               ...panel,
               isPinned: false,
             });
@@ -524,11 +524,11 @@ export const usePanelsStore = create<PanelsStore>()(
         },
 
         togglePin: id => {
-          const panel = get(any: any);
-          if (any: any) {
-            get(any: any);
+          const panel = get().panels.get(id);
+          if (panel?.isPinned) {
+            get().unpinPanel(id);
           } else {
-            get(any: any);
+            get().pinPanel(id);
           }
         },
 
@@ -537,7 +537,7 @@ export const usePanelsStore = create<PanelsStore>()(
         // ═══════════════════════════════════════════════════════════
 
         setFocus: id => {
-          get(any: any);
+          get().bringToFront(id);
         },
 
         clearFocus: () => {
@@ -551,20 +551,20 @@ export const usePanelsStore = create<PanelsStore>()(
         setMobileView: isMobile => {
           set({ isMobileView: isMobile });
 
-          if (any: any) {
+          if (isMobile) {
             get().applyMobileLayout();
           }
         },
 
         applyMobileLayout: () => {
           set(state => {
-            const newPanels = new Map(any: any);
+            const newPanels = new Map(state.panels);
 
-            newPanels?.forEach(any: any) => {
-              newPanels?.set(id, {
+            newPanels.forEach((panel, id) => {
+              newPanels.set(id, {
                 ...panel,
-                isVisible: panel?.hiddenOnMobile ? false : panel?.isVisible,
-                isCollapsed: panel?.collapsedOnMobile ? true : panel?.isCollapsed,
+                isVisible: panel.hiddenOnMobile ? false : panel.isVisible,
+                isCollapsed: panel.collapsedOnMobile ? true : panel.isCollapsed,
                 position: { x: null, y: null }, // Reset position
               });
             });
@@ -580,16 +580,16 @@ export const usePanelsStore = create<PanelsStore>()(
         applyLayout: layout => {
           set({ currentLayout: layout });
 
-          switch (any: any) {
+          switch (layout) {
             case 'minimal':
-              // Mode minimal: ne garder visible que le chat (any: any)
-              get(any: any) => {
-                if (any: any) {
-                  get(any: any);
+              // Mode minimal: ne garder visible que le chat (et les panels épinglés)
+              get().panels.forEach((panel, id) => {
+                if (panel.isPinned) {
+                  get().showPanel(id);
                   return;
                 }
 
-                get(any: any);
+                get().hidePanel(id);
               });
 
               // Le chat est l'ancre du layout minimal
@@ -621,13 +621,13 @@ export const usePanelsStore = create<PanelsStore>()(
 
         resetAllPanels: () => {
           set(state => {
-            const newPanels = new Map(any: any);
+            const newPanels = new Map(state.panels);
 
-            newPanels?.forEach(any: any) => {
-              newPanels?.set(id, {
+            newPanels.forEach((panel, id) => {
+              newPanels.set(id, {
                 ...defaultPanelConfig,
-                id: panel?.id,
-                title: panel?.title,
+                id: panel.id,
+                title: panel.title,
               });
             });
 
@@ -642,9 +642,9 @@ export const usePanelsStore = create<PanelsStore>()(
 
         reset: () => {
           try {
-            localStorage?.removeItem('titane-panels-store');
+            localStorage.removeItem('titane-panels-store');
           } catch {
-            // ignore (any: any)
+            // ignore (non-browser / restricted storage)
           }
 
           set({
@@ -661,26 +661,26 @@ export const usePanelsStore = create<PanelsStore>()(
         // ═══════════════════════════════════════════════════════════
 
         showAll: () => {
-          get(any: any) => {
-            get(any: any);
+          get().panels.forEach((_, id) => {
+            get().showPanel(id);
           });
         },
 
         hideAll: () => {
-          get(any: any) => {
-            get(any: any);
+          get().panels.forEach((_, id) => {
+            get().hidePanel(id);
           });
         },
 
         collapseAll: () => {
-          get(any: any) => {
-            get(any: any);
+          get().panels.forEach((_, id) => {
+            get().collapsePanel(id);
           });
         },
 
         expandAll: () => {
-          get(any: any) => {
-            get(any: any);
+          get().panels.forEach((_, id) => {
+            get().expandPanel(id);
           });
         },
 
@@ -689,15 +689,15 @@ export const usePanelsStore = create<PanelsStore>()(
         // ═══════════════════════════════════════════════════════════
 
         getVisiblePanels: () => {
-          return Array?.from(any: any);
+          return Array.from(get().panels.values()).filter(p => p.isVisible);
         },
 
         getCollapsedPanels: () => {
-          return Array?.from(any: any);
+          return Array.from(get().panels.values()).filter(p => p.isCollapsed);
         },
 
         getPinnedPanels: () => {
-          return Array?.from(any: any);
+          return Array.from(get().panels.values()).filter(p => p.isPinned);
         },
       }),
       {
@@ -705,32 +705,32 @@ export const usePanelsStore = create<PanelsStore>()(
         // Sérialiser Map en array pour localStorage
         storage: {
           getItem: name => {
-            const str = localStorage?.getItem(any: any);
-            if (any: any) return null;
+            const str = localStorage.getItem(name);
+            if (!str) return null;
 
-            const data = JSON?.parse(any: any);
-            if (any: any) {
-              data?.state?.panels = new Map(any: any);
+            const data = JSON.parse(str);
+            if (data.state?.panels) {
+              data.state.panels = new Map(data.state.panels);
             }
             return data;
           },
-          setItem: (any: any) => {
+          setItem: (name, value) => {
             const data = {
               ...value,
               state: {
-                ...value?.state,
-                panels: Array?.from(value?.state?.panels?.entries()),
+                ...value.state,
+                panels: Array.from(value.state.panels.entries()),
               },
             };
-            localStorage?.setItem(any: any));
+            localStorage.setItem(name, JSON.stringify(data));
           },
-          removeItem: name => localStorage?.removeItem(any: any),
+          removeItem: name => localStorage.removeItem(name),
         },
       }
     ),
     {
       name: 'TITANE∞ Panels Store',
-      enabled: import?.meta?.env?.DEV,
+      enabled: import.meta.env.DEV,
     }
   )
 );
@@ -740,33 +740,33 @@ export const usePanelsStore = create<PanelsStore>()(
  */
 export const panelsSelectors = {
   // Panel spécifique
-  panel: (any: any),
+  panel: (id: string) => (state: PanelsStore) => state.panels.get(id),
 
   // Panels visibles
-  visiblePanels: (any: any) => state?.getVisiblePanels(),
+  visiblePanels: (state: PanelsStore) => state.getVisiblePanels(),
 
   // Focused panel
-  focusedPanel: (any: any) =>
-    state?.focusedPanelId ? state?.panels?.get(any: any) : null,
+  focusedPanel: (state: PanelsStore) =>
+    state.focusedPanelId ? state.panels.get(state.focusedPanelId) : null,
 
   // Is mobile
-  isMobile: (any: any) => state?.isMobileView,
+  isMobile: (state: PanelsStore) => state.isMobileView,
 
   // Current layout
-  layout: (any: any) => state?.currentLayout,
+  layout: (state: PanelsStore) => state.currentLayout,
 };
 
 /**
  * Hook helper pour un panel spécifique
  */
-export const usePanel = (any: any));
+export const usePanel = (id: string) => usePanelsStore(state => state.panels.get(id));
 
 /**
  * Hook helper pour les panels visibles
  */
-export const useVisiblePanels = (any: any);
+export const useVisiblePanels = () => usePanelsStore(panelsSelectors.visiblePanels);
 
 /**
  * Hook helper pour le panel au focus
  */
-export const useFocusedPanel = (any: any);
+export const useFocusedPanel = () => usePanelsStore(panelsSelectors.focusedPanel);

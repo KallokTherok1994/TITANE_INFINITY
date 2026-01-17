@@ -11,6 +11,7 @@
 
 import { test } from '@playwright/test';
 
+/* eslint-disable no-undef */
 test.describe.skip('User Flows (LEGACY - HTTP mode disabled)', () => {
   test('chat flow: send message and receive response', async () => {
     console.warn('⚠️ Test skipped: Tauri asset-only mode - no HTTP server');

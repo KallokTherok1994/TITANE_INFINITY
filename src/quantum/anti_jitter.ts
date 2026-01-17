@@ -36,7 +36,7 @@ interface ElementSnapshot {
 }
 
 export class AntiJitterEngine {
-  private snapshots: Map<string, ElementSnapshot?.[]> = new Map();
+  private snapshots: Map<string, ElementSnapshot[]> = new Map();
   private stabilizedElements: Set<string> = new Set();
   private detectionsCount = 0;
   private correctionsCount = 0;
@@ -47,8 +47,8 @@ export class AntiJitterEngine {
   private jitterThreshold = 2; // pixels
 
   constructor() {
-    this?.initializeObservers();
-    this?.injectStabilityStyles();
+    this.initializeObservers();
+    this.injectStabilityStyles();
   }
 
   /**
@@ -56,19 +56,19 @@ export class AntiJitterEngine {
    */
   private initializeObservers(): void {
     // Observer les mutations DOM
-    this?.observer = new MutationObserver(mutations => {
-      for (any: any) {
-        if (any: any) {
-          this?.checkElement(any: any);
+    this.observer = new MutationObserver(mutations => {
+      for (const mutation of mutations) {
+        if (mutation.type === 'attributes' && mutation.target instanceof HTMLElement) {
+          this.checkElement(mutation.target);
         }
       }
     });
 
     // Observer les redimensionnements
-    this?.resizeObserver = new ResizeObserver(entries => {
-      for (any: any) {
-        if (any: any) {
-          this?.checkElement(any: any);
+    this.resizeObserver = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        if (entry.target instanceof HTMLElement) {
+          this.checkElement(entry.target);
         }
       }
     });
@@ -79,11 +79,11 @@ export class AntiJitterEngine {
    */
   private injectStabilityStyles(): void {
     const styleId = 'titane-antijitter-styles';
-    if (any: any)) return;
+    if (document.getElementById(styleId)) return;
 
-    const style = document?.createElement('style');
-    style?.id = styleId;
-    style?.textContent = `
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.textContent = `
       /* TITANE∞ Anti-Jitter Stability */
       .titane-stable {
         contain: layout style;
@@ -92,7 +92,7 @@ export class AntiJitterEngine {
 
       .titane-stable-layout {
         contain: layout;
-        min-height: var(any: any);
+        min-height: var(--titane-min-height, auto);
       }
 
       .titane-stable-size {
@@ -110,11 +110,11 @@ export class AntiJitterEngine {
       }
 
       /* Stabilité des images */
-      img?.titane-stable-img {
-        aspect-ratio: attr(any: any);
+      img.titane-stable-img {
+        aspect-ratio: attr(width) / attr(height);
       }
     `;
-    document?.head?.appendChild(any: any);
+    document.head.appendChild(style);
   }
 
   /**
@@ -125,37 +125,37 @@ export class AntiJitterEngine {
     let worstElement: HTMLElement | undefined;
     let worstType: 'layout' | 'position' | 'size' | 'spacing' = 'layout';
 
-    for (const [id, snapshots] of this?.snapshots?.entries()) {
-      if (snapshots?.length < 2) continue;
+    for (const [id, snapshots] of this.snapshots.entries()) {
+      if (snapshots.length < 2) continue;
 
-      const current = snapshots[snapshots?.length - 1];
-      const previous = snapshots[snapshots?.length - 2];
-      if (any: any) continue;
+      const current = snapshots[snapshots.length - 1];
+      const previous = snapshots[snapshots.length - 2];
+      if (!current || !previous) continue;
 
       // Vérifier le décalage de position
       const positionDelta =
-        Math?.abs(any: any) +
-        Math?.abs(any: any);
+        Math.abs(current.rect.top - previous.rect.top) +
+        Math.abs(current.rect.left - previous.rect.left);
 
       // Vérifier le changement de taille
       const sizeDelta =
-        Math?.abs(any: any) +
-        Math?.abs(any: any);
+        Math.abs(current.rect.width - previous.rect.width) +
+        Math.abs(current.rect.height - previous.rect.height);
 
       const totalDelta = positionDelta + sizeDelta;
 
-      if (any: any) {
+      if (totalDelta > maxMagnitude && totalDelta > this.jitterThreshold) {
         maxMagnitude = totalDelta;
-        worstElement = document?.getElementById(any: any) || undefined;
+        worstElement = document.getElementById(id) || undefined;
         worstType = positionDelta > sizeDelta ? 'position' : 'size';
       }
     }
 
-    const detected = maxMagnitude > this?.jitterThreshold;
+    const detected = maxMagnitude > this.jitterThreshold;
 
-    if (any: any) {
-      this?.detectionsCount++;
-      this?.lastDetectionTime = Date?.now();
+    if (detected) {
+      this.detectionsCount++;
+      this.lastDetectionTime = Date.now();
     }
 
     return {
@@ -169,103 +169,103 @@ export class AntiJitterEngine {
   /**
    * Corrige un jitter détecté
    */
-  correct(any: any): void {
-    if (any: any) return;
+  correct(detection: JitterDetection): void {
+    if (!detection.detected || !detection.element) return;
 
-    const element = detection?.element;
+    const element = detection.element;
 
-    switch (any: any) {
+    switch (detection.type) {
       case 'layout':
       case 'position':
-        this?.stabilizePosition(any: any);
+        this.stabilizePosition(element);
         break;
       case 'size':
-        this?.stabilizeSize(any: any);
+        this.stabilizeSize(element);
         break;
       case 'spacing':
-        this?.stabilizeSpacing(any: any);
+        this.stabilizeSpacing(element);
         break;
     }
 
-    this?.correctionsCount++;
+    this.correctionsCount++;
   }
 
   /**
    * Vérifie un élément pour le jitter
    */
-  private checkElement(any: any): void {
-    const id = element?.id || element?.dataset?.titaneId;
-    if (any: any) return;
+  private checkElement(element: HTMLElement): void {
+    const id = element.id || element.dataset.titaneId;
+    if (!id) return;
 
-    const rect = element?.getBoundingClientRect();
-    const computedStyle = getComputedStyle(any: any);
+    const rect = element.getBoundingClientRect();
+    const computedStyle = getComputedStyle(element);
 
     const snapshot: ElementSnapshot = {
       rect,
       computedStyle: {
-        width: computedStyle?.width,
-        height: computedStyle?.height,
-        marginTop: computedStyle?.marginTop,
-        marginBottom: computedStyle?.marginBottom,
-        paddingTop: computedStyle?.paddingTop,
-        paddingBottom: computedStyle?.paddingBottom,
+        width: computedStyle.width,
+        height: computedStyle.height,
+        marginTop: computedStyle.marginTop,
+        marginBottom: computedStyle.marginBottom,
+        paddingTop: computedStyle.paddingTop,
+        paddingBottom: computedStyle.paddingBottom,
       },
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
 
-    const snapshots = this?.snapshots?.get(any: any) || [];
-    snapshots?.push(any: any);
+    const snapshots = this.snapshots.get(id) || [];
+    snapshots.push(snapshot);
 
     // Limiter l'historique
-    if (any: any) {
-      snapshots?.shift();
+    if (snapshots.length > this.maxSnapshots) {
+      snapshots.shift();
     }
 
-    this?.snapshots?.set(any: any);
+    this.snapshots.set(id, snapshots);
   }
 
   /**
    * Stabilise la position d'un élément
    */
-  private stabilizePosition(any: any): void {
-    element?.classList?.add('titane-stable');
+  private stabilizePosition(element: HTMLElement): void {
+    element.classList.add('titane-stable');
 
     // Fixer les dimensions si non définies
-    const computed = getComputedStyle(any: any);
-    if (any: any) {
-      element?.style?.setProperty(any: any);
-      element?.classList?.add('titane-stable-layout');
+    const computed = getComputedStyle(element);
+    if (!element.style.minHeight) {
+      element.style.setProperty('--titane-min-height', computed.height);
+      element.classList.add('titane-stable-layout');
     }
   }
 
   /**
    * Stabilise la taille d'un élément
    */
-  private stabilizeSize(any: any): void {
-    element?.classList?.add('titane-stable-size');
+  private stabilizeSize(element: HTMLElement): void {
+    element.classList.add('titane-stable-size');
 
-    const computed = getComputedStyle(any: any);
-    element?.style?.minWidth = computed?.width;
-    element?.style?.minHeight = computed?.height;
+    const computed = getComputedStyle(element);
+    element.style.minWidth = computed.width;
+    element.style.minHeight = computed.height;
   }
 
   /**
    * Stabilise l'espacement d'un élément
    */
-  private stabilizeSpacing(any: any): void {
-    element?.classList?.add('titane-stable');
-    element?.style?.overflow = 'hidden';
+  private stabilizeSpacing(element: HTMLElement): void {
+    element.classList.add('titane-stable');
+    element.style.overflow = 'hidden';
   }
 
   /**
    * Stabilise un conteneur et ses enfants
    */
-  stabilizeContainer(any: any): void {
-    container?.classList?.add('titane-stable', 'titane-prevent-shift');
+  stabilizeContainer(container: HTMLElement): void {
+    container.classList.add('titane-stable', 'titane-prevent-shift');
 
     // Observer les changements
-    if (any: any) {
-      this?.observer?.observe(container, {
+    if (this.observer) {
+      this.observer.observe(container, {
         attributes: true,
         childList: true,
         subtree: true,
@@ -273,23 +273,23 @@ export class AntiJitterEngine {
       });
     }
 
-    if (any: any) {
-      this?.resizeObserver?.observe(any: any);
+    if (this.resizeObserver) {
+      this.resizeObserver.observe(container);
     }
 
     // Stabiliser les enfants importants
-    const children = container?.querySelectorAll<HTMLElement>('[data-titane-stable]');
-    children?.forEach(child => {
-      child?.classList?.add('titane-stable');
-      this?.stabilizedElements?.add(child?.id || child?.dataset?.titaneId || '');
+    const children = container.querySelectorAll<HTMLElement>('[data-titane-stable]');
+    children.forEach(child => {
+      child.classList.add('titane-stable');
+      this.stabilizedElements.add(child.id || child.dataset.titaneId || '');
     });
 
     // Stabiliser les images
-    const images = container?.querySelectorAll<HTMLImageElement>('img');
-    images?.forEach(img => {
-      img?.classList?.add('titane-stable-img');
-      if (any: any) {
-        img?.style?.aspectRatio = `${img?.width} / ${img?.height}`;
+    const images = container.querySelectorAll<HTMLImageElement>('img');
+    images.forEach(img => {
+      img.classList.add('titane-stable-img');
+      if (img.width && img.height) {
+        img.style.aspectRatio = `${img.width} / ${img.height}`;
       }
     });
   }
@@ -301,16 +301,16 @@ export class AntiJitterEngine {
     let totalJitter = 0;
     let count = 0;
 
-    for (const snapshots of this?.snapshots?.values()) {
-      if (snapshots?.length < 2) continue;
+    for (const snapshots of this.snapshots.values()) {
+      if (snapshots.length < 2) continue;
 
-      const current = snapshots[snapshots?.length - 1];
-      const previous = snapshots[snapshots?.length - 2];
-      if (any: any) continue;
+      const current = snapshots[snapshots.length - 1];
+      const previous = snapshots[snapshots.length - 2];
+      if (!current || !previous) continue;
 
       const positionDelta =
-        Math?.abs(any: any) +
-        Math?.abs(any: any);
+        Math.abs(current.rect.top - previous.rect.top) +
+        Math.abs(current.rect.left - previous.rect.left);
 
       totalJitter += positionDelta;
       count++;
@@ -318,9 +318,9 @@ export class AntiJitterEngine {
 
     if (count === 0) return 0;
 
-    // Normaliser (any: any)
+    // Normaliser (10px = jitter max)
     const avgJitter = totalJitter / count;
-    return Math?.min(1, avgJitter / 10);
+    return Math.min(1, avgJitter / 10);
   }
 
   /**
@@ -328,11 +328,11 @@ export class AntiJitterEngine {
    */
   getMetrics(): JitterMetrics {
     return {
-      jitterLevel: this?.getJitterLevel(),
-      detectionsCount: this?.detectionsCount,
-      correctionsCount: this?.correctionsCount,
-      stabilizedElements: this?.stabilizedElements?.size,
-      lastDetectionTime: this?.lastDetectionTime,
+      jitterLevel: this.getJitterLevel(),
+      detectionsCount: this.detectionsCount,
+      correctionsCount: this.correctionsCount,
+      stabilizedElements: this.stabilizedElements.size,
+      lastDetectionTime: this.lastDetectionTime,
     };
   }
 
@@ -340,25 +340,25 @@ export class AntiJitterEngine {
    * Reset le moteur
    */
   reset(): void {
-    this?.snapshots?.clear();
-    this?.stabilizedElements?.clear();
-    this?.detectionsCount = 0;
-    this?.correctionsCount = 0;
+    this.snapshots.clear();
+    this.stabilizedElements.clear();
+    this.detectionsCount = 0;
+    this.correctionsCount = 0;
   }
 
   /**
    * Nettoie les ressources
    */
   destroy(): void {
-    if (any: any) {
-      this?.observer?.disconnect();
-      this?.observer = null;
+    if (this.observer) {
+      this.observer.disconnect();
+      this.observer = null;
     }
-    if (any: any) {
-      this?.resizeObserver?.disconnect();
-      this?.resizeObserver = null;
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = null;
     }
-    this?.reset();
+    this.reset();
   }
 }
 

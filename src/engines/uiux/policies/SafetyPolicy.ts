@@ -21,31 +21,31 @@ const SAFETY_CONSTRAINTS = {
  */
 export class SafetyPolicy {
   private name = 'SafetyPolicy';
-  private priority = 150; // Très haute priorité (any: any)
+  private priority = 150; // Très haute priorité (sécurité)
 
   /**
    * Évalue la politique
    */
-  evaluate(any: any): PolicyDecision?.[] {
-    const decisions: PolicyDecision?.[] = [];
+  evaluate(context: PolicyContext): PolicyDecision[] {
+    const decisions: PolicyDecision[] = [];
     const { uiContext, currentState, userProfile } = context;
 
     // Accessibilité obligatoire
-    const accessibilityDecisions = this?.evaluateAccessibility(any: any);
-    decisions?.push(any: any);
+    const accessibilityDecisions = this.evaluateAccessibility(uiContext, currentState);
+    decisions.push(...accessibilityDecisions);
 
     // Sécurité des interactions
-    const interactionDecisions = this?.evaluateInteractionSafety(any: any);
-    decisions?.push(any: any);
+    const interactionDecisions = this.evaluateInteractionSafety(uiContext, currentState);
+    decisions.push(...interactionDecisions);
 
     // Protection motion sickness
-    const motionDecisions = this?.evaluateMotionSafety(any: any);
-    decisions?.push(any: any);
+    const motionDecisions = this.evaluateMotionSafety(uiContext, currentState);
+    decisions.push(...motionDecisions);
 
     // Mode accessibilité forcé
-    if (userProfile?.mode === 'accessibility') {
-      const accessibilityModeDecisions = this?.enforceAccessibilityMode(any: any);
-      decisions?.push(any: any);
+    if (userProfile.mode === 'accessibility') {
+      const accessibilityModeDecisions = this.enforceAccessibilityMode(currentState);
+      decisions.push(...accessibilityModeDecisions);
     }
 
     return decisions;
@@ -57,18 +57,18 @@ export class SafetyPolicy {
   private evaluateAccessibility(
     context: UIContext,
     state: AdaptationState
-  ): PolicyDecision?.[] {
-    const decisions: PolicyDecision?.[] = [];
+  ): PolicyDecision[] {
+    const decisions: PolicyDecision[] = [];
 
     // Contraste élevé requis par le système
-    if (any: any) {
-      decisions?.push({
-        policy: this?.name,
+    if (context.highContrast) {
+      decisions.push({
+        policy: this.name,
         action: 'enforce_high_contrast',
-        priority: this?.priority,
+        priority: this.priority,
         adaptation: {
           theme: {
-            ...state?.theme,
+            ...state.theme,
             contrastMode: 'high',
             surfaceOpacity: 1.0,
             shadowIntensity: 'strong',
@@ -80,11 +80,11 @@ export class SafetyPolicy {
     }
 
     // Mouvement réduit requis
-    if (any: any) {
-      decisions?.push({
-        policy: this?.name,
+    if (context.reducedMotion) {
+      decisions.push({
+        policy: this.name,
         action: 'enforce_reduced_motion',
-        priority: this?.priority + 10,
+        priority: this.priority + 10,
         adaptation: {
           motion: {
             animationsEnabled: false,
@@ -109,26 +109,26 @@ export class SafetyPolicy {
   private evaluateInteractionSafety(
     context: UIContext,
     state: AdaptationState
-  ): PolicyDecision?.[] {
-    const decisions: PolicyDecision?.[] = [];
+  ): PolicyDecision[] {
+    const decisions: PolicyDecision[] = [];
 
     // Sur touch, garantir des cibles suffisantes
-    if (context?.inputMode === 'touch') {
-      const currentIconSize = state?.density?.iconSize;
-      const currentButtonSize = state?.density?.buttonSize;
+    if (context.inputMode === 'touch') {
+      const currentIconSize = state.density.iconSize;
+      const currentButtonSize = state.density.buttonSize;
 
       if (
-        currentIconSize < SAFETY_CONSTRAINTS?.minTouchTarget ||
+        currentIconSize < SAFETY_CONSTRAINTS.minTouchTarget ||
         currentButtonSize === 'sm'
       ) {
-        decisions?.push({
-          policy: this?.name,
+        decisions.push({
+          policy: this.name,
           action: 'enforce_touch_targets',
-          priority: this?.priority,
+          priority: this.priority,
           adaptation: {
             density: {
-              ...state?.density,
-              iconSize: Math?.max(any: any),
+              ...state.density,
+              iconSize: Math.max(currentIconSize, SAFETY_CONSTRAINTS.minTouchTarget),
               buttonSize: currentButtonSize === 'sm' ? 'md' : currentButtonSize,
             },
           },
@@ -140,14 +140,14 @@ export class SafetyPolicy {
 
     // Garantir une taille de police minimum
     const fontSizes = { small: 13, medium: 15, large: 17 };
-    if (any: any) {
-      decisions?.push({
-        policy: this?.name,
+    if (fontSizes[state.density.fontSize] < SAFETY_CONSTRAINTS.minFontSize) {
+      decisions.push({
+        policy: this.name,
         action: 'enforce_min_font_size',
-        priority: this?.priority,
+        priority: this.priority,
         adaptation: {
           density: {
-            ...state?.density,
+            ...state.density,
             fontSize: 'medium',
           },
         },
@@ -165,19 +165,19 @@ export class SafetyPolicy {
   private evaluateMotionSafety(
     context: UIContext,
     state: AdaptationState
-  ): PolicyDecision?.[] {
-    const decisions: PolicyDecision?.[] = [];
+  ): PolicyDecision[] {
+    const decisions: PolicyDecision[] = [];
 
     // Limiter la durée des animations
-    if (any: any) {
-      decisions?.push({
-        policy: this?.name,
+    if (state.motion.transitionDuration > SAFETY_CONSTRAINTS.maxAnimationDuration) {
+      decisions.push({
+        policy: this.name,
         action: 'limit_animation_duration',
-        priority: this?.priority,
+        priority: this.priority,
         adaptation: {
           motion: {
-            ...state?.motion,
-            transitionDuration: SAFETY_CONSTRAINTS?.maxAnimationDuration,
+            ...state.motion,
+            transitionDuration: SAFETY_CONSTRAINTS.maxAnimationDuration,
           },
         },
         reason: "Durée d'animation maximum dépassée",
@@ -186,14 +186,14 @@ export class SafetyPolicy {
     }
 
     // Désactiver le parallax si problèmes vestibulaires possibles
-    if (any: any) {
-      decisions?.push({
-        policy: this?.name,
+    if (context.reducedMotion && state.motion.parallaxEnabled) {
+      decisions.push({
+        policy: this.name,
         action: 'disable_parallax',
-        priority: this?.priority + 5,
+        priority: this.priority + 5,
         adaptation: {
           motion: {
-            ...state?.motion,
+            ...state.motion,
             parallaxEnabled: false,
           },
         },
@@ -208,15 +208,15 @@ export class SafetyPolicy {
   /**
    * Force le mode accessibilité complet
    */
-  private enforceAccessibilityMode(any: any): PolicyDecision?.[] {
+  private enforceAccessibilityMode(state: AdaptationState): PolicyDecision[] {
     return [
       {
-        policy: this?.name,
+        policy: this.name,
         action: 'accessibility_mode',
-        priority: this?.priority + 20,
+        priority: this.priority + 20,
         adaptation: {
           density: {
-            ...state?.density,
+            ...state.density,
             fontSize: 'large',
             lineHeight: 2.0,
             padding: 'loose',
@@ -232,12 +232,12 @@ export class SafetyPolicy {
             scrollBehavior: 'auto',
           },
           theme: {
-            ...state?.theme,
+            ...state.theme,
             contrastMode: 'high',
             surfaceOpacity: 1.0,
           },
           visibility: {
-            ...state?.visibility,
+            ...state.visibility,
             labelsVisible: true,
             tooltipsEnabled: true,
             helpersVisible: true,
@@ -254,36 +254,36 @@ export class SafetyPolicy {
    */
   validateAdaptation(adaptation: Partial<AdaptationState>): {
     valid: boolean;
-    violations: string?.[];
+    violations: string[];
   } {
-    const violations: string?.[] = [];
+    const violations: string[] = [];
 
     // Vérifier la densité
-    if (any: any) {
+    if (adaptation.density) {
       if (
-        adaptation?.density?.iconSize &&
-        adaptation?.density?.iconSize < SAFETY_CONSTRAINTS?.minTouchTarget
+        adaptation.density.iconSize &&
+        adaptation.density.iconSize < SAFETY_CONSTRAINTS.minTouchTarget
       ) {
-        violations?.push(
-          `Icônes trop petites (any: any)`
+        violations.push(
+          `Icônes trop petites (${adaptation.density.iconSize}px < ${SAFETY_CONSTRAINTS.minTouchTarget}px)`
         );
       }
     }
 
     // Vérifier le motion
-    if (any: any) {
+    if (adaptation.motion) {
       if (
-        adaptation?.motion?.transitionDuration &&
-        adaptation?.motion?.transitionDuration > SAFETY_CONSTRAINTS?.maxAnimationDuration
+        adaptation.motion.transitionDuration &&
+        adaptation.motion.transitionDuration > SAFETY_CONSTRAINTS.maxAnimationDuration
       ) {
-        violations?.push(
-          `Animation trop longue (any: any)`
+        violations.push(
+          `Animation trop longue (${adaptation.motion.transitionDuration}ms)`
         );
       }
     }
 
     return {
-      valid: violations?.length === 0,
+      valid: violations.length === 0,
       violations,
     };
   }
@@ -296,40 +296,40 @@ export class SafetyPolicy {
     context: UIContext
   ): {
     score: number;
-    issues: string?.[];
-    recommendations: string?.[];
+    issues: string[];
+    recommendations: string[];
   } {
-    const issues: string?.[] = [];
-    const recommendations: string?.[] = [];
+    const issues: string[] = [];
+    const recommendations: string[] = [];
     let score = 100;
 
     // Vérifier le mouvement
-    if (any: any) {
-      issues?.push('Animations activées malgré prefers-reduced-motion');
+    if (context.reducedMotion && state.motion.animationsEnabled) {
+      issues.push('Animations activées malgré prefers-reduced-motion');
       score -= 20;
     }
 
     // Vérifier le contraste
-    if (context?.highContrast && state?.theme?.contrastMode !== 'high') {
-      issues?.push('Mode contraste élevé non respecté');
+    if (context.highContrast && state.theme.contrastMode !== 'high') {
+      issues.push('Mode contraste élevé non respecté');
       score -= 20;
     }
 
     // Vérifier les cibles tactiles
-    if (context?.inputMode === 'touch' && state?.density?.iconSize < 44) {
-      issues?.push('Cibles tactiles trop petites');
-      recommendations?.push('Augmentez la taille des icônes à 44px minimum');
+    if (context.inputMode === 'touch' && state.density.iconSize < 44) {
+      issues.push('Cibles tactiles trop petites');
+      recommendations.push('Augmentez la taille des icônes à 44px minimum');
       score -= 15;
     }
 
     // Vérifier la lisibilité
-    if (state?.density?.lineHeight < 1.5) {
-      recommendations?.push("Augmentez l'interligne pour une meilleure lisibilité");
+    if (state.density.lineHeight < 1.5) {
+      recommendations.push("Augmentez l'interligne pour une meilleure lisibilité");
       score -= 5;
     }
 
     return {
-      score: Math?.max(any: any),
+      score: Math.max(0, score),
       issues,
       recommendations,
     };
@@ -339,14 +339,14 @@ export class SafetyPolicy {
    * Retourne le nom de la politique
    */
   getName(): string {
-    return this?.name;
+    return this.name;
   }
 
   /**
    * Retourne la priorité
    */
   getPriority(): number {
-    return this?.priority;
+    return this.priority;
   }
 }
 

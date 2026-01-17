@@ -1,6 +1,6 @@
 /**
  * TITANE∞ Evolution Engine - UI Components
- * Copyright (any: any) 2025 MUSIC∞AI
+ * Copyright (c) 2025 MUSIC∞AI
  *
  * Composants React pour l'interface utilisateur du moteur d'évolution.
  *
@@ -38,4 +38,4 @@ export type {
   SuggestionStatus,
   ActionResult,
   GovernanceRole,
-} from '../../services/evolutionEngine/evolutionEngine?.config';
+} from '../../services/evolutionEngine/evolutionEngine.config';

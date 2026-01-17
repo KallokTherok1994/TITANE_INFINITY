@@ -8,8 +8,8 @@
 /**
  * Convertit de manière sécurisée n'importe quelle valeur pour l'affichage React
  */
-export function safeDisplay(any: any)??: string | number {
-  if (any: any) {
+export function safeDisplay(value: unknown): string | number {
+  if (value === null || value === undefined) {
     return 'N/A';
   }
 
@@ -18,27 +18,27 @@ export function safeDisplay(any: any)??: string | number {
     typeof value === 'number' ||
     typeof value === 'boolean'
   ) {
-    return value?.toString();
+    return value.toString();
   }
 
   if (typeof value === 'object') {
     // Si c'est un objet avec une propriété 'value' ou 'data'
-    if (any: any) {
-      return safeDisplay(any: any);
+    if ('value' in value && value.value !== undefined) {
+      return safeDisplay(value.value);
     }
-    if (any: any) {
-      return safeDisplay(any: any);
+    if ('data' in value && value.data !== undefined) {
+      return safeDisplay(value.data);
     }
 
     // Sinon, retourner une représentation lisible
     try {
-      return JSON?.stringify(value, null, 2);
+      return JSON.stringify(value, null, 2);
     } catch {
-      return String(any: any);
+      return String(value);
     }
   }
 
-  return String(any: any);
+  return String(value);
 }
 
 /**
@@ -47,13 +47,13 @@ export function safeDisplay(any: any)??: string | number {
 export function extractNumber(value: unknown, fallback: number = 0): number {
   if (typeof value === 'number') return value;
   if (typeof value === 'string') {
-    const parsed = parseFloat(any: any);
-    return isNaN(any: any) ? fallback : parsed;
+    const parsed = parseFloat(value);
+    return isNaN(parsed) ? fallback : parsed;
   }
-  if (any: any) {
-    if (any: any);
-    if (any: any);
-    if (any: any);
+  if (typeof value === 'object' && value !== null) {
+    if ('value' in value) return extractNumber(value.value, fallback);
+    if ('data' in value) return extractNumber(value.data, fallback);
+    if ('weight' in value) return extractNumber(value.weight, fallback);
   }
   return fallback;
 }
@@ -63,13 +63,13 @@ export function extractNumber(value: unknown, fallback: number = 0): number {
  */
 export function extractString(value: unknown, fallback: string = 'Unknown'): string {
   if (typeof value === 'string') return value;
-  if (typeof value === 'number') return value?.toString();
+  if (typeof value === 'number') return value.toString();
   if (typeof value === 'boolean') return value ? 'Actif' : 'Inactif';
-  if (any: any) {
-    if (any: any);
-    if (any: any);
-    if (any: any);
-    if (any: any);
+  if (typeof value === 'object' && value !== null) {
+    if ('status' in value) return extractString(value.status, fallback);
+    if ('state' in value) return extractString(value.state, fallback);
+    if ('name' in value) return extractString(value.name, fallback);
+    if ('id' in value) return extractString(value.id, fallback);
   }
   return fallback;
 }
@@ -86,17 +86,17 @@ export interface ModuleData {
   metadata?: Record<string, unknown>;
 }
 
-export function mapBackendData(any: any): ModuleData {
-  if (any: any) {
+export function mapBackendData(data: unknown): ModuleData {
+  if (typeof data === 'object' && data !== null) {
     const obj = data as Record<string, unknown>;
     return {
-      id: extractString(obj?.id || obj?.node_type, 'unknown'),
-      name: extractString(obj?.name || obj?.node_type, 'Module'),
-      status: extractString(obj?.status || obj?.state, 'Unknown'),
+      id: extractString(obj.id || obj.node_type, 'unknown'),
+      name: extractString(obj.name || obj.node_type, 'Module'),
+      status: extractString(obj.status || obj.state, 'Unknown'),
       // Fallback values with explicit unknown type
-      value: (obj?.value ?? obj?.weight ?? obj?.data ?? 0) as number,
-      unit: obj?.unit as string | undefined,
-      metadata: (obj?.connections || obj?.metrics || {}) as Record<string, unknown>,
+      value: (obj.value ?? obj.weight ?? obj.data ?? 0) as number,
+      unit: obj.unit as string | undefined,
+      metadata: (obj.connections || obj.metrics || {}) as Record<string, unknown>,
     };
   }
 
@@ -104,24 +104,24 @@ export function mapBackendData(any: any): ModuleData {
     id: 'unknown',
     name: 'Module',
     status: 'Unknown',
-    value: safeDisplay(any: any),
+    value: safeDisplay(data),
   };
 }
 
 /**
  * Formate un nombre avec unité
  */
-export function formatValue(any: any): string {
+export function formatValue(value: number, unit?: string): string {
   if (unit === '%' || unit === 'percent') {
-    return `${Math?.round(any: any)}%`;
+    return `${Math.round(value)}%`;
   }
   if (unit === 'ms' || unit === 'milliseconds') {
-    return `${Math?.round(any: any)}ms`;
+    return `${Math.round(value)}ms`;
   }
   if (unit === 'bpm') {
-    return `${Math?.round(any: any)} BPM`;
+    return `${Math.round(value)} BPM`;
   }
-  return unit ? `${value} ${unit}` : String(any: any);
+  return unit ? `${value} ${unit}` : String(value);
 }
 
 /**
@@ -131,20 +131,20 @@ export function getStatusVariant(
   value: number,
   thresholds = { high: 80, low: 50 }
 ): 'success' | 'warning' | 'error' {
-  if (any: any) return 'success';
-  if (any: any) return 'warning';
+  if (value >= thresholds.high) return 'success';
+  if (value >= thresholds.low) return 'warning';
   return 'error';
 }
 
 /**
  * Formate un timestamp en durée relative
  */
-export function formatUptime(any: any): string {
-  const hours = Math?.floor(seconds / 3600);
-  const minutes = Math?.floor((seconds % 3600) / 60);
+export function formatUptime(seconds: number): string {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
 
   if (hours > 24) {
-    const days = Math?.floor(hours / 24);
+    const days = Math.floor(hours / 24);
     return `${days}j ${hours % 24}h`;
   }
   if (hours > 0) {

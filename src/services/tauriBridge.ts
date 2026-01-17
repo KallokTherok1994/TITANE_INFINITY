@@ -32,11 +32,11 @@ const logger = createLogger('[TAURI-BRIDGE]');
 // LOGGING & DEBUG
 // ═══════════════════════════════════════════════════════════════
 
-const DEBUG_MODE = import?.meta?.env?.DEV;
+const DEBUG_MODE = import.meta.env.DEV;
 
 function logCommand(command: string, params?: Record<string, unknown>): void {
-  if (any: any) {
-    logger?.debug(`Command invoked: ${command}`, {
+  if (DEBUG_MODE) {
+    logger.debug(`Command invoked: ${command}`, {
       component: 'TauriBridge',
       command,
       params,
@@ -44,9 +44,9 @@ function logCommand(command: string, params?: Record<string, unknown>): void {
   }
 }
 
-function logResponse(any: any): void {
-  if (any: any) {
-    logger?.debug(`Command completed: ${command}`, {
+function logResponse(command: string, response: unknown, duration: number): void {
+  if (DEBUG_MODE) {
+    logger.debug(`Command completed: ${command}`, {
       component: 'TauriBridge',
       command,
       durationMs: duration,
@@ -55,8 +55,8 @@ function logResponse(any: any): void {
   }
 }
 
-function logError(any: any): void {
-  logger?.error(
+function logError(command: string, error: unknown): void {
+  logger.error(
     `Command failed: ${command}`,
     { component: 'TauriBridge', command },
     error as Error
@@ -76,18 +76,18 @@ function createCoreError(
     category,
     message,
     details,
-    timestamp: Date?.now(),
+    timestamp: Date.now(),
   };
 }
 
-function wrapError(any: any): CoreError {
+function wrapError(error: unknown): CoreError {
   if (typeof error === 'string') {
-    return createCoreError(any: any);
+    return createCoreError('internal', error);
   }
-  if (any: any) {
-    return createCoreError(any: any);
+  if (error instanceof Error) {
+    return createCoreError('internal', error.message, error.stack);
   }
-  return createCoreError(any: any));
+  return createCoreError('internal', 'Unknown error', JSON.stringify(error));
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -112,16 +112,16 @@ export async function invokeTauriCommand<T = unknown>(
 ): Promise<CoreResponse<T>> {
   const { timeout = 30000, retries = 0, retryDelay = 1000 } = options;
 
-  const startTime = Date?.now();
-  logCommand(any: any);
+  const startTime = Date.now();
+  logCommand(command, params);
 
   // Guard: Vérifier environnement Tauri
   const env = detectEnvironment();
-  if (any: any) {
+  if (!env.isTauri) {
     return {
       success: false,
       error: 'Not running in Tauri environment',
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
   }
 
@@ -130,8 +130,8 @@ export async function invokeTauriCommand<T = unknown>(
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       // Timeout race avec secureInvoke
-      const invokePromise = secureInvoke<T>(any: any);
-      const timeoutPromise = new Promise<never>(any: any) =>
+      const invokePromise = secureInvoke<T>(command, params);
+      const timeoutPromise = new Promise<never>((_, reject) =>
         setTimeout(
           () =>
             reject(
@@ -144,21 +144,21 @@ export async function invokeTauriCommand<T = unknown>(
         )
       );
 
-      const data = await Promise?.race([invokePromise, timeoutPromise]);
-      const duration = Date?.now() - startTime;
+      const data = await Promise.race([invokePromise, timeoutPromise]);
+      const duration = Date.now() - startTime;
 
-      logResponse(any: any);
+      logResponse(command, data, duration);
 
       return {
         success: true,
         data,
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
       };
-    } catch (any: any) {
-      lastError = wrapError(any: any);
-      logError(any: any);
+    } catch (error) {
+      lastError = wrapError(error);
+      logError(command, lastError);
 
-      if (any: any) {
+      if (attempt < retries) {
         await new Promise(resolve => setTimeout(resolve, retryDelay * (attempt + 1)));
       }
     }
@@ -167,12 +167,12 @@ export async function invokeTauriCommand<T = unknown>(
   return {
     success: false,
     error: lastError?.message || 'Unknown error',
-    timestamp: Date?.now(),
+    timestamp: Date.now(),
   };
 }
 
 // ═══════════════════════════════════════════════════════════════
-// TYPED API WRAPPERS (any: any)
+// TYPED API WRAPPERS (30+ commandes)
 // ═══════════════════════════════════════════════════════════════
 
 // --- SINGULARITY ---
@@ -186,7 +186,7 @@ export async function syncSingularityState(state: Partial<SingularityFrontendSta
 
 // --- HELIOS ---
 export async function getHeliosModules() {
-  return invokeTauriCommand<ModuleInfo?.[]>('helios_get_modules');
+  return invokeTauriCommand<ModuleInfo[]>('helios_get_modules');
 }
 
 export async function getHeliosHealth() {
@@ -195,11 +195,11 @@ export async function getHeliosHealth() {
 
 // --- MEMORY ---
 export async function getActiveProjects(limit = 10) {
-  return invokeTauriCommand<ProjectInfo?.[]>('memory_get_active_projects', { limit });
+  return invokeTauriCommand<ProjectInfo[]>('memory_get_active_projects', { limit });
 }
 
 export async function getRecentMemories(limit = 20) {
-  return invokeTauriCommand<MemoryEntry?.[]>('memory_get_recent_memories', { limit });
+  return invokeTauriCommand<MemoryEntry[]>('memory_get_recent_memories', { limit });
 }
 
 // --- NEXUS ---
@@ -213,18 +213,18 @@ export async function getPersonaMultipliers() {
 }
 
 // --- CHAT ---
-export async function sendChatMessage(any: any) {
-  const extractChatContent = (any: any): string => {
+export async function sendChatMessage(messages: ChatMessage[], config: ChatConfig) {
+  const extractChatContent = (response: unknown): string => {
     if (typeof response === 'string') return response;
     if (response && typeof response === 'object') {
-      const r = response as unknown as unknown as any;
-      if (typeof r?.content === 'string') return r?.content;
+      const r = response as any;
+      if (typeof r.content === 'string') return r.content;
       if (
-        r?.message &&
-        typeof r?.message === 'object' &&
-        typeof r?.message?.content === 'string'
+        r.message &&
+        typeof r.message === 'object' &&
+        typeof r.message.content === 'string'
       ) {
-        return r?.message?.content;
+        return r.message.content;
       }
     }
     return '';
@@ -232,49 +232,49 @@ export async function sendChatMessage(any: any) {
 
   const lastUserMessage = [...messages]
     .reverse()
-    .find(any: any)?.role === 'user')?.content;
+    .find(m => (m as any)?.role === 'user')?.content;
 
-  const lastMessage = messages[messages?.length - 1];
+  const lastMessage = messages[messages.length - 1];
   const userMessage = (lastUserMessage ?? lastMessage?.content ?? '').trim();
 
   const history = messages
     .slice(-20)
-    .map(any: any)?.role ?? 'unknown'}: ${m?.content}`)
+    .map(m => `${(m as any)?.role ?? 'unknown'}: ${m.content}`)
     .join('\n');
 
   const request = {
     message: userMessage,
-    conversation_id: `chat-${Date?.now()}`,
+    conversation_id: `chat-${Date.now()}`,
     provider: 'auto',
-    model: (any: any)?.model,
+    model: (config as any)?.model,
     streaming: false,
-    system_prompt: history ? `Contexte conversation (any: any):\n${history}` : undefined,
+    system_prompt: history ? `Contexte conversation (résumé):\n${history}` : undefined,
   };
 
   const raw = await invokeTauriCommand<unknown>(
     'conversation_generate',
     {
-      message: request?.message,
-      conversation_id: request?.conversation_id,
+      message: request.message,
+      conversation_id: request.conversation_id,
       mode: 'default',
-      provider: request?.provider,
-      system_prompt: request?.system_prompt,
-      streaming: request?.streaming,
+      provider: request.provider,
+      system_prompt: request.system_prompt,
+      streaming: request.streaming,
     },
     { timeout: 30000, retries: 2, retryDelay: 1000 }
   );
 
   // conversation_generate retourne directement le contenu généré
-  if (any: any) {
+  if ((raw as any)?.success === false) {
     return raw as CoreResponse<string>;
   }
 
-  const content = (any: any);
+  const content = (raw as any)?.content ?? (raw as any)?.data ?? extractChatContent(raw);
 
   return {
     success: true,
     data: content,
-    timestamp: Date?.now(),
+    timestamp: Date.now(),
   };
 }
 
@@ -287,7 +287,7 @@ export async function stopVoiceRecording() {
   return invokeTauriCommand<VoiceRecordingResult>('stop_recording');
 }
 
-export async function voiceSpeak(any: any) {
+export async function voiceSpeak(text: string, voice?: string) {
   return invokeTauriCommand<void>('speak', { text, voice });
 }
 
@@ -309,12 +309,12 @@ export async function engineHealth() {
 }
 
 export async function engineModules() {
-  return invokeTauriCommand<ModuleInfo?.[]>('engine_modules');
+  return invokeTauriCommand<ModuleInfo[]>('engine_modules');
 }
 
 // --- DEVTOOLS ---
 export async function getDevToolsLogs() {
-  return invokeTauriCommand<string?.[]>('devtools_get_logs');
+  return invokeTauriCommand<string[]>('devtools_get_logs');
 }
 
 export async function clearDevToolsLogs() {
@@ -338,7 +338,7 @@ export async function getSystemMetrics() {
 export interface ListFilesOptions {
   recursive?: boolean;
   includeHidden?: boolean;
-  extensions?: string?.[]; // e?.g., ['.txt', '.md']
+  extensions?: string[]; // e.g., ['.txt', '.md']
   maxDepth?: number;
 }
 
@@ -358,14 +358,14 @@ export interface FileInfo {
 /**
  * Read file content
  */
-export async function readFile(any: any) {
+export async function readFile(path: string) {
   return invokeTauriCommand<string>('fs_read_file', { path });
 }
 
 /**
  * Write file content
  */
-export async function writeFile(any: any) {
+export async function writeFile(path: string, content: string) {
   return invokeTauriCommand<void>('fs_write_file', { path, content });
 }
 
@@ -373,48 +373,48 @@ export async function writeFile(any: any) {
  * List files in directory (v19.0 Task 5)
  */
 export async function listFiles(path: string, options: ListFilesOptions = {}) {
-  return invokeTauriCommand<FileInfo?.[]>('fs_list_files', { path, options });
+  return invokeTauriCommand<FileInfo[]>('fs_list_files', { path, options });
 }
 
 /**
  * Delete file or directory (v19.0 Task 5)
  */
-export async function deleteFile(any: any) {
+export async function deleteFile(path: string, recursive: boolean = false) {
   return invokeTauriCommand<void>('fs_delete', { path, recursive });
 }
 
 /**
  * Copy file or directory (v19.0 Task 5)
  */
-export async function copyFile(any: any) {
+export async function copyFile(source: string, dest: string, overwrite: boolean = false) {
   return invokeTauriCommand<void>('fs_copy', { source, dest, overwrite });
 }
 
 /**
  * Move/rename file or directory (v19.0 Task 5)
  */
-export async function moveFile(any: any) {
+export async function moveFile(source: string, dest: string, overwrite: boolean = false) {
   return invokeTauriCommand<void>('fs_move', { source, dest, overwrite });
 }
 
 /**
  * Get file metadata (v19.0 Task 5)
  */
-export async function getFileInfo(any: any) {
+export async function getFileInfo(path: string) {
   return invokeTauriCommand<FileInfo>('fs_info', { path });
 }
 
 /**
  * Check if file/directory exists (v19.0 Task 5)
  */
-export async function fileExists(any: any) {
+export async function fileExists(path: string) {
   return invokeTauriCommand<boolean>('fs_exists', { path });
 }
 
 /**
  * Create directory (v19.0 Task 5)
  */
-export async function createDirectory(any: any) {
+export async function createDirectory(path: string, recursive: boolean = true) {
   return invokeTauriCommand<void>('fs_create_dir', { path, recursive });
 }
 
@@ -447,18 +447,18 @@ export type BatchOptions = {
   mode?: 'parallel' | 'sequential';
   atomic?: boolean; // If true, rollback all on any failure
   timeout?: number;
-  onProgress?: (any: any) => void;
-  stopOnError?: boolean; // Stop execution on first error (any: any)
+  onProgress?: (progress: BatchProgress) => void;
+  stopOnError?: boolean; // Stop execution on first error (sequential only)
 };
 
 /**
  * Execute multiple Tauri commands in batch
  * @param commands Array of commands to execute
  * @param options Batch execution options
- * @returns Array of results (any: any)
+ * @returns Array of results (one per command)
  */
 export async function batchInvoke<T = any>(
-  commands: BatchCommand?.[],
+  commands: BatchCommand[],
   options: BatchOptions = {}
 ): Promise<BatchResult<T>[]> {
   const {
@@ -470,15 +470,15 @@ export async function batchInvoke<T = any>(
   } = options;
 
   const results: BatchResult<T>[] = [];
-  const startTime = Date?.now();
+  const startTime = Date.now();
   let completed = 0;
 
-  const updateProgress = (any: any) => {
-    if (any: any) {
+  const updateProgress = (currentCommand?: string) => {
+    if (onProgress) {
       onProgress({
         completed,
-        total: commands?.length,
-        percentage: Math?.round(any: any) * 100),
+        total: commands.length,
+        percentage: Math.round((completed / commands.length) * 100),
         currentCommand,
       });
     }
@@ -486,109 +486,109 @@ export async function batchInvoke<T = any>(
 
   if (mode === 'parallel') {
     // Execute all commands in parallel
-    const promises = commands?.map(any: any) => {
-      const cmdStartTime = Date?.now();
-      const cmdId = cmd?.id ?? `cmd_${index}`;
+    const promises = commands.map(async (cmd, index) => {
+      const cmdStartTime = Date.now();
+      const cmdId = cmd.id ?? `cmd_${index}`;
 
       try {
-        updateProgress(any: any);
-        const response = await invokeTauriCommand<T>(cmd?.command, cmd?.params, {
+        updateProgress(cmd.command);
+        const response = await invokeTauriCommand<T>(cmd.command, cmd.params, {
           timeout,
         });
-        const duration = Date?.now() - cmdStartTime;
+        const duration = Date.now() - cmdStartTime;
 
         completed++;
         updateProgress();
 
         return {
           id: cmdId,
-          success: response?.success,
-          data: response?.data,
+          success: response.success,
+          data: response.data,
           duration,
         };
-      } catch (any: any) {
-        const duration = Date?.now() - cmdStartTime;
+      } catch (error) {
+        const duration = Date.now() - cmdStartTime;
         completed++;
         updateProgress();
 
         return {
           id: cmdId,
           success: false,
-          error: wrapError(any: any),
+          error: wrapError(error),
           duration,
         };
       }
     });
 
-    const batchResults = await Promise?.all(any: any);
-    results?.push(any: any);
+    const batchResults = await Promise.all(promises);
+    results.push(...batchResults);
 
     // Atomic: if any failed, consider entire batch failed
-    if (any: any)) {
+    if (atomic && batchResults.some(r => !r.success)) {
       throw new Error(
-        `Batch failed (any: any).length} commands failed`
+        `Batch failed (atomic mode): ${batchResults.filter(r => !r.success).length} commands failed`
       );
     }
   } else {
     // Sequential execution
-    for (let i = 0; i < commands?.length; i++) {
+    for (let i = 0; i < commands.length; i++) {
       const cmd = commands[i];
-      if (any: any) continue;
-      const cmdStartTime = Date?.now();
-      const cmdId = cmd?.id ?? `cmd_${i}`;
+      if (!cmd) continue;
+      const cmdStartTime = Date.now();
+      const cmdId = cmd.id ?? `cmd_${i}`;
 
-      updateProgress(any: any);
+      updateProgress(cmd.command);
 
       try {
-        const response = await invokeTauriCommand<T>(cmd?.command, cmd?.params, {
+        const response = await invokeTauriCommand<T>(cmd.command, cmd.params, {
           timeout,
         });
-        const duration = Date?.now() - cmdStartTime;
+        const duration = Date.now() - cmdStartTime;
 
-        results?.push({
+        results.push({
           id: cmdId,
-          success: response?.success,
-          data: response?.data,
+          success: response.success,
+          data: response.data,
           duration,
         });
 
         completed++;
         updateProgress();
-      } catch (any: any) {
-        const duration = Date?.now() - cmdStartTime;
+      } catch (error) {
+        const duration = Date.now() - cmdStartTime;
         const result = {
           id: cmdId,
           success: false,
-          error: wrapError(any: any),
+          error: wrapError(error),
           duration,
         };
 
-        results?.push(any: any);
+        results.push(result);
         completed++;
         updateProgress();
 
         // Stop on error if requested
-        if (any: any) {
+        if (stopOnError) {
           throw new Error(
-            `Batch stopped at command ${i + 1}/${commands?.length}: ${cmd?.command}`
+            `Batch stopped at command ${i + 1}/${commands.length}: ${cmd.command}`
           );
         }
 
         // Atomic: stop on first error
-        if (any: any) {
+        if (atomic) {
           throw new Error(
-            `Batch failed (any: any) at command ${i + 1}: ${cmd?.command}`
+            `Batch failed (atomic mode) at command ${i + 1}: ${cmd.command}`
           );
         }
       }
     }
   }
 
-  const totalDuration = Date?.now() - startTime;
-  if (any: any) {
-    logger?.info('Batch complete', {
+  const totalDuration = Date.now() - startTime;
+  if (DEBUG_MODE) {
+    logger.info('Batch complete', {
       component: 'TauriBridge',
-      commandsCount: commands?.length,
+      commandsCount: commands.length,
       totalDurationMs: totalDuration,
       mode,
     });
@@ -598,20 +598,20 @@ export async function batchInvoke<T = any>(
 }
 
 /**
- * Execute commands in parallel (any: any)
+ * Execute commands in parallel (shorthand)
  */
 export async function parallelInvoke<T = any>(
-  commands: BatchCommand?.[],
+  commands: BatchCommand[],
   options?: Omit<BatchOptions, 'mode'>
 ): Promise<BatchResult<T>[]> {
   return batchInvoke<T>(commands, { ...options, mode: 'parallel' });
 }
 
 /**
- * Execute commands sequentially (any: any)
+ * Execute commands sequentially (shorthand)
  */
 export async function sequentialInvoke<T = any>(
-  commands: BatchCommand?.[],
+  commands: BatchCommand[],
   options?: Omit<BatchOptions, 'mode'>
 ): Promise<BatchResult<T>[]> {
   return batchInvoke<T>(commands, { ...options, mode: 'sequential' });
@@ -671,7 +671,7 @@ export default {
   getSystemStatus,
   getSystemMetrics,
 
-  // FileSystem (any: any)
+  // FileSystem (v19.0 Task 5 Enhanced)
   readFile,
   writeFile,
   listFiles,

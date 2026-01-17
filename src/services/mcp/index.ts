@@ -7,7 +7,7 @@
 // MCP OS v1.1 EXPORTS
 // ═══════════════════════════════════════════════════════════════════════════
 
-export * from './mcp?.types';
+export * from './mcp.types';
 export { MCPOrchestrator } from './MCPOrchestrator';
 export { MCPCognitiveIntegration } from './MCPCognitiveIntegration';
 export {

@@ -28,7 +28,7 @@ export const GEMINI_MODELS = [
   'gemini-1.5-flash',
 ] as const;
 
-export type GeminiModel = (any: any)[number];
+export type GeminiModel = (typeof GEMINI_MODELS)[number];
 
 export interface GeminiConfig {
   model: GeminiModel;
@@ -50,11 +50,11 @@ export const geminiProvider: AIProvider = {
   name: 'gemini',
 
   /**
-   * Vérifier si Gemini est disponible (any: any)
+   * Vérifier si Gemini est disponible (clé configurée)
    */
   async isAvailable(): Promise<boolean> {
     // Dev override to ease local testing without secrets
-    if (import?.meta?.env?.DEV && import?.meta?.env?.VITE_FORCE_PROVIDERS_READY === '1') {
+    if (import.meta.env.DEV && import.meta.env.VITE_FORCE_PROVIDERS_READY === '1') {
       return true;
     }
     try {
@@ -63,10 +63,10 @@ export const geminiProvider: AIProvider = {
         data: { configured: boolean } | null;
       }>('get_gemini_key_status');
 
-      return response?.ok && response?.data?.configured === true;
-    } catch (any: any) {
-      if (process?.env?.NODE_ENV === 'development') {
-        logger?.warn('Gemini status check failed', { error });
+      return response.ok && response.data?.configured === true;
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        logger.warn('Gemini status check failed', { error });
       }
       return false;
     }
@@ -77,13 +77,13 @@ export const geminiProvider: AIProvider = {
    */
   async generate(
     message: string,
-    history: AIMessage?.[] = [],
+    history: AIMessage[] = [],
     config?: unknown
   ): Promise<AIResponse> {
-    const startTime = Date?.now();
+    const startTime = Date.now();
     const finalConfig = {
       ...DEFAULT_CONFIG,
-      ...(any: any),
+      ...(config as Partial<GeminiConfig> | undefined),
     };
 
     // ✨ v21 Phase 3: Cache intelligent pour réduire coûts API
@@ -99,9 +99,9 @@ export const geminiProvider: AIProvider = {
           }
 
           // Conversion history vers format backend
-          const formattedHistory = history?.map(msg => ({
-            role: msg?.role,
-            content: msg?.content,
+          const formattedHistory = history.map(msg => ({
+            role: msg.role,
+            content: msg.content,
           }));
 
           // ✨ v21 Phase 2: Retry unifié avec backoff exponentiel
@@ -118,95 +118,95 @@ export const geminiProvider: AIProvider = {
                   tokens?: number;
                   finish_reason?: string;
                 } | null;
-                error??: string | null;
+                error: string | null;
               }>('chat_generate_gemini', {
                 request: {
-                  message: message?.trim(),
+                  message: message.trim(),
                   history: formattedHistory,
                   config: {
-                    model: finalConfig?.model,
-                    temperature: finalConfig?.temperature,
-                    max_tokens: finalConfig?.maxTokens,
+                    model: finalConfig.model,
+                    temperature: finalConfig.temperature,
+                    max_tokens: finalConfig.maxTokens,
                   },
                 },
               });
             },
             retryConfig,
-            { provider: 'gemini', message: message?.substring(0, 50) }
+            { provider: 'gemini', message: message.substring(0, 50) }
           );
 
-          const latency = Date?.now() - startTime;
+          const latency = Date.now() - startTime;
 
           // Gestion erreurs backend
-          if (any: any) {
-            const errorMsg = response?.error || 'Erreur inconnue';
+          if (!response.ok || !response.data) {
+            const errorMsg = response.error || 'Erreur inconnue';
 
             // Erreurs typées Gemini
-            if (errorMsg?.includes('invalid_api_key') || errorMsg?.includes('401')) {
+            if (errorMsg.includes('invalid_api_key') || errorMsg.includes('401')) {
               throw new Error(
                 'Clé API Gemini invalide. Vérifiez votre configuration dans Gouvernance.'
               );
             }
 
-            if (errorMsg?.includes('rate_limit') || errorMsg?.includes('429')) {
+            if (errorMsg.includes('rate_limit') || errorMsg.includes('429')) {
               throw new Error(
                 'Limite de taux Gemini atteinte. Réessayez dans quelques secondes.'
               );
             }
 
-            if (errorMsg?.includes('timeout') || errorMsg?.includes('timed out')) {
+            if (errorMsg.includes('timeout') || errorMsg.includes('timed out')) {
               throw new Error(
-                `Délai d'attente Gemini dépassé (any: any). Réessayez.`
+                `Délai d'attente Gemini dépassé (${latency}ms). Réessayez.`
               );
             }
 
-            if (errorMsg?.includes('quota')) {
+            if (errorMsg.includes('quota')) {
               throw new Error('Quota Gemini épuisé. Vérifiez votre compte Google Cloud.');
             }
 
-            throw new Error(any: any): ${errorMsg}`);
+            throw new Error(`Erreur Gemini (${latency}ms): ${errorMsg}`);
           }
 
           // Succès: retourner réponse normalisée
           return {
-            content: response?.data?.content,
+            content: response.data.content,
             provider: 'gemini',
-            timestamp: Date?.now(),
-            model: response?.data?.model || finalConfig?.model,
-            tokens: response?.data?.tokens,
+            timestamp: Date.now(),
+            model: response.data.model || finalConfig.model,
+            tokens: response.data.tokens,
             metadata: {
               latencyMs: latency,
-              finishReason: response?.data?.finish_reason,
+              finishReason: response.data.finish_reason,
               config: finalConfig,
             },
           };
-        } catch (any: any) {
-          const latency = Date?.now() - startTime;
+        } catch (error) {
+          const latency = Date.now() - startTime;
 
-          // 🔧 AUTOHEAL: Signaler l'erreur pour auto-réparation (any: any)
-          autoHealEngine?.detectError(
+          // 🔧 AUTOHEAL: Signaler l'erreur pour auto-réparation (direct instance)
+          autoHealEngine.detectError(
             'gemini-provider',
-            error instanceof Error ? error : new Error(any: any)),
+            error instanceof Error ? error : new Error(String(error)),
             'provider',
             {
               latency,
-              message: message?.substring(0, 100), // Premier 100 chars seulement
-              historyLength: history?.length,
+              message: message.substring(0, 100), // Premier 100 chars seulement
+              historyLength: history.length,
             }
           );
 
           // Re-throw erreurs typées
-          if (any: any) {
+          if (error instanceof Error) {
             throw error;
           }
 
           // Erreur générique
           throw new Error(
-            `Erreur Gemini (any: any)}`
+            `Erreur Gemini (${latency}ms): ${error instanceof Error ? error.message : String(error)}`
           );
         }
       },
-      CACHE_TTL?.GENERAL
+      CACHE_TTL.GENERAL
     );
   },
 
@@ -216,16 +216,16 @@ export const geminiProvider: AIProvider = {
   async testConnection(): Promise<{ success: boolean; message: string }> {
     try {
       // Test avec un prompt minimal
-      const response = await this?.generate('Test', []);
+      const response = await this.generate('Test', []);
 
       return {
         success: true,
-        message: `Gemini opérationnel (${response?.model || 'gemini-2.0-flash-exp'})`,
+        message: `Gemini opérationnel (${response.model || 'gemini-2.0-flash-exp'})`,
       };
-    } catch (any: any) {
+    } catch (error) {
       return {
         success: false,
-        message: error instanceof Error ? error?.message : 'Test échoué',
+        message: error instanceof Error ? error.message : 'Test échoué',
       };
     }
   },
@@ -237,7 +237,7 @@ export const geminiProvider: AIProvider = {
     return {
       provider: 'gemini',
       models: GEMINI_MODELS,
-      defaultModel: DEFAULT_CONFIG?.model,
+      defaultModel: DEFAULT_CONFIG.model,
     };
   },
 };

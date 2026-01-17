@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ — UI Store (any: any)
+ * TITANE∞ — UI Store (Zustand)
  * Store pour l'état de l'interface utilisateur
  * ═══════════════════════════════════════════════════════════════
  */
@@ -14,21 +14,21 @@ interface UIStore {
   sidebarWidth: number;
   expPanelOpen: boolean;
   modalOpen: boolean;
-  modalContent: React?.ReactNode | null;
-  toasts: Toast?.[];
+  modalContent: React.ReactNode | null;
+  toasts: Toast[];
   loading: boolean;
 
   // Actions
   toggleSidebar: () => void;
-  setSidebarCollapsed: (any: any) => void;
-  setSidebarWidth: (any: any) => void;
+  setSidebarCollapsed: (collapsed: boolean) => void;
+  setSidebarWidth: (width: number) => void;
   openExpPanel: () => void;
   closeExpPanel: () => void;
-  openModal: (any: any) => void;
+  openModal: (content: React.ReactNode) => void;
   closeModal: () => void;
   addToast: (toast: Omit<Toast, 'id'>) => void;
-  removeToast: (any: any) => void;
-  setLoading: (any: any) => void;
+  removeToast: (id: string) => void;
+  setLoading: (loading: boolean) => void;
 }
 
 interface Toast {
@@ -56,7 +56,7 @@ export const useUIStore = create<UIStore>()(
 
         toggleSidebar: () =>
           set(state => ({
-            sidebarCollapsed: !state?.sidebarCollapsed,
+            sidebarCollapsed: !state.sidebarCollapsed,
           })),
 
         setSidebarCollapsed: collapsed => set({ sidebarCollapsed: collapsed }),
@@ -80,26 +80,26 @@ export const useUIStore = create<UIStore>()(
           }),
 
         addToast: toast => {
-          const id = crypto?.randomUUID();
+          const id = crypto.randomUUID();
           const fullToast: Toast = { ...toast, id };
 
           set(state => ({
-            toasts: [...state?.toasts, fullToast],
+            toasts: [...state.toasts, fullToast],
           }));
 
           // Auto-remove after duration
-          if (any: any) {
+          if (toast.duration !== undefined) {
             setTimeout(() => {
               set(state => ({
-                toasts: state?.toasts?.filter(any: any),
+                toasts: state.toasts.filter(t => t.id !== id),
               }));
-            }, toast?.duration);
+            }, toast.duration);
           }
         },
 
         removeToast: id =>
           set(state => ({
-            toasts: state?.toasts?.filter(any: any),
+            toasts: state.toasts.filter(t => t.id !== id),
           })),
 
         setLoading: loading => set({ loading }),
@@ -107,8 +107,8 @@ export const useUIStore = create<UIStore>()(
       {
         name: 'titane-ui-store',
         partialize: state => ({
-          sidebarCollapsed: state?.sidebarCollapsed,
-          sidebarWidth: state?.sidebarWidth,
+          sidebarCollapsed: state.sidebarCollapsed,
+          sidebarWidth: state.sidebarWidth,
         }),
       }
     ),

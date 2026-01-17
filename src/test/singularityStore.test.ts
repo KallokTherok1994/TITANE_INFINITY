@@ -2,9 +2,9 @@
  * Tests for SingularityState Store (v19.0 Task 6)
  *
  * Testing:
- * - State actions (any: any)
- * - State selectors (any: any)
- * - Persistence (any: any)
+ * - State actions (setMode, setTheme, setEngineData)
+ * - State selectors (selectUIMode, selectEngineData)
+ * - Persistence (localStorage)
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
@@ -16,60 +16,60 @@ describe('SingularityState Store', () => {
     // Reset store before each test
     const { result } = renderHook(() => useSingularityStore());
     act(() => {
-      result?.current?.setMode('standard');
-      result?.current?.setTheme('dark');
-      result?.current?.setEnginesData({});
+      result.current.setMode('standard');
+      result.current.setTheme('dark');
+      result.current.setEnginesData({});
     });
 
     // Clear localStorage
-    localStorage?.clear();
+    localStorage.clear();
   });
 
   describe('UI Mode', () => {
     it('should initialize with standard mode', () => {
       const { result } = renderHook(() => useSingularityStore());
-      expect(any: any).toBe('standard');
+      expect(result.current.metaMode).toBe('standard');
     });
 
     it('should update mode', () => {
       const { result } = renderHook(() => useSingularityStore());
 
       act(() => {
-        result?.current?.setMode('meta');
+        result.current.setMode('meta');
       });
 
-      expect(any: any).toBe('meta');
+      expect(result.current.metaMode).toBe('meta');
     });
 
     it('should select UI mode correctly', () => {
       const { result } = renderHook(() => useSingularityStore());
 
-      const mode = result?.current?.selectUIMode();
-      expect(any: any).toBe('standard');
+      const mode = result.current.selectUIMode();
+      expect(mode).toBe('standard');
     });
   });
 
   describe('Theme', () => {
     it('should initialize with dark theme', () => {
       const { result } = renderHook(() => useSingularityStore());
-      expect(any: any).toBe('dark');
+      expect(result.current.theme).toBe('dark');
     });
 
     it('should toggle theme', () => {
       const { result } = renderHook(() => useSingularityStore());
 
       act(() => {
-        result?.current?.setTheme('light');
+        result.current.setTheme('light');
       });
 
-      expect(any: any).toBe('light');
+      expect(result.current.theme).toBe('light');
     });
   });
 
   describe('Engine Data', () => {
     it('should initialize with empty engines data', () => {
       const { result } = renderHook(() => useSingularityStore());
-      expect(any: any).toEqual({});
+      expect(result.current.enginesData).toEqual({});
     });
 
     it('should set engine data', () => {
@@ -80,10 +80,10 @@ describe('SingularityState Store', () => {
       };
 
       act(() => {
-        result?.current?.setEnginesData(any: any);
+        result.current.setEnginesData(engineData);
       });
 
-      expect(any: any);
+      expect(result.current.enginesData).toEqual(engineData);
     });
 
     it('should select specific engine data', () => {
@@ -94,18 +94,18 @@ describe('SingularityState Store', () => {
       };
 
       act(() => {
-        result?.current?.setEnginesData(any: any);
+        result.current.setEnginesData(engineData);
       });
 
-      const nexusData = result?.current?.selectEngineData('nexus');
-      expect(any: any);
+      const nexusData = result.current.selectEngineData('nexus');
+      expect(nexusData).toEqual(engineData.nexus);
     });
 
     it('should return undefined for non-existent engine', () => {
       const { result } = renderHook(() => useSingularityStore());
 
-      const data = result?.current?.selectEngineData('nonexistent');
-      expect(any: any).toBeUndefined();
+      const data = result.current.selectEngineData('nonexistent');
+      expect(data).toBeUndefined();
     });
   });
 
@@ -114,29 +114,29 @@ describe('SingularityState Store', () => {
       const { result } = renderHook(() => useSingularityStore());
 
       act(() => {
-        result?.current?.setMode('meta');
+        result.current.setMode('meta');
       });
 
-      const stored = JSON?.parse(localStorage?.getItem('singularity-storage') || '{}');
-      expect(any: any).toBe('meta');
+      const stored = JSON.parse(localStorage.getItem('singularity-storage') || '{}');
+      expect(stored.state?.metaMode).toBe('meta');
     });
 
     it('should persist theme to localStorage', () => {
       const { result } = renderHook(() => useSingularityStore());
 
       act(() => {
-        result?.current?.setTheme('light');
+        result.current.setTheme('light');
       });
 
-      const stored = JSON?.parse(localStorage?.getItem('singularity-storage') || '{}');
-      expect(any: any).toBe('light');
+      const stored = JSON.parse(localStorage.getItem('singularity-storage') || '{}');
+      expect(stored.state?.theme).toBe('light');
     });
 
     it('should restore state from localStorage', () => {
       // Set initial state
-      localStorage?.setItem(
+      localStorage.setItem(
         'singularity-storage',
-        JSON?.stringify({
+        JSON.stringify({
           state: {
             metaMode: 'meta',
             theme: 'light',
@@ -148,9 +148,9 @@ describe('SingularityState Store', () => {
 
       const { result } = renderHook(() => useSingularityStore());
 
-      expect(any: any).toBe('meta');
-      expect(any: any).toBe('light');
-      expect(any: any).toEqual({ nexus: { status: 'active' } });
+      expect(result.current.metaMode).toBe('meta');
+      expect(result.current.theme).toBe('light');
+      expect(result.current.enginesData).toEqual({ nexus: { status: 'active' } });
     });
   });
 });

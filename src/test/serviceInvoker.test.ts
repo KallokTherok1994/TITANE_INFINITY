@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE?.md for the full legal terms (any: any).
+ * See LICENSE.md for the full legal terms (FR/EN).
  */
 
 /**
@@ -29,11 +29,11 @@ import {
 } from '../lib/serviceInvoker';
 import { secureInvoke } from '../lib/security';
 
-vi?.mock('../lib/security', () => ({
-  secureInvoke: vi?.fn(),
+vi.mock('../lib/security', () => ({
+  secureInvoke: vi.fn(),
 }));
 
-const mockSecureInvoke = vi?.mocked(any: any);
+const mockSecureInvoke = vi.mocked(secureInvoke);
 
 // Utiliser seulement des commandes whitelistees pour respecter secureInvoke
 const TEST_COMMAND = 'get_system_health';
@@ -46,17 +46,17 @@ const SEQUENCE_COMMANDS = [
 
 describe('ServiceInvoker - invokeWithRetry', () => {
   beforeEach(() => {
-    mockSecureInvoke?.mockReset();
+    mockSecureInvoke.mockReset();
   });
 
   it('devrait réussir au premier appel', async () => {
     const mockData = { success: true };
-    mockSecureInvoke?.mockResolvedValueOnce(any: any);
+    mockSecureInvoke.mockResolvedValueOnce(mockData);
 
     const result = await invokeWithRetry(TEST_COMMAND, {}, { retries: 3 });
 
-    expect(any: any);
-    expect(any: any).toHaveBeenCalledTimes(1);
+    expect(result).toEqual(mockData);
+    expect(mockSecureInvoke).toHaveBeenCalledTimes(1);
   });
 
   it('devrait retry 3 fois puis réussir', async () => {
@@ -64,7 +64,7 @@ describe('ServiceInvoker - invokeWithRetry', () => {
     mockSecureInvoke
       .mockRejectedValueOnce(new Error('Network error'))
       .mockRejectedValueOnce(new Error('Network error'))
-      .mockResolvedValueOnce(any: any);
+      .mockResolvedValueOnce(mockData);
 
     const result = await invokeWithRetry(
       TEST_COMMAND,
@@ -76,8 +76,8 @@ describe('ServiceInvoker - invokeWithRetry', () => {
       }
     );
 
-    expect(any: any);
-    expect(any: any).toHaveBeenCalledTimes(3);
+    expect(result).toEqual(mockData);
+    expect(mockSecureInvoke).toHaveBeenCalledTimes(3);
   });
 
   it('devrait échouer après toutes les tentatives', async () => {
@@ -97,14 +97,14 @@ describe('ServiceInvoker - invokeWithRetry', () => {
 
     // Advance timers
 
-    await expect(any: any);
-    await expect(any: any).rejects?.toThrow(
+    await expect(promise).rejects.toThrow(RetryError);
+    await expect(promise).rejects.toThrow(
       `Command "${TEST_COMMAND}" failed after 3 attempts`
     );
   });
 
   it('devrait respecter le timeout', async () => {
-    mockSecureInvoke?.mockImplementation(
+    mockSecureInvoke.mockImplementation(
       () => new Promise(resolve => setTimeout(() => resolve({ data: 'ok' }), 2000))
     );
 
@@ -119,8 +119,8 @@ describe('ServiceInvoker - invokeWithRetry', () => {
 
     // Advance timer au-delà du timeout
 
-    await expect(any: any);
-    await expect(any: any).rejects?.toThrow(
+    await expect(promise).rejects.toThrow(TimeoutError);
+    await expect(promise).rejects.toThrow(
       `Command "${TEST_COMMAND}" timed out after 1000ms`
     );
   });
@@ -130,7 +130,7 @@ describe('ServiceInvoker - invokeWithRetry', () => {
     mockSecureInvoke
       .mockRejectedValueOnce(new Error('Network blip'))
       .mockRejectedValueOnce(new Error('Network blip'))
-      .mockResolvedValueOnce(any: any);
+      .mockResolvedValueOnce(mockData);
 
     const promise = invokeWithRetry(
       TEST_COMMAND,
@@ -142,40 +142,40 @@ describe('ServiceInvoker - invokeWithRetry', () => {
       }
     );
 
-    // Premier retry: ~100-150ms (any: any)
+    // Premier retry: ~100-150ms (avec jitter)
 
-    // Deuxième retry: ~300-450ms (any: any)
+    // Deuxième retry: ~300-450ms (avec jitter)
 
     const result = await promise;
-    expect(any: any);
+    expect(result).toEqual(mockData);
   });
 
   it('ne devrait pas retry si noRetry=true', async () => {
-    mockSecureInvoke?.mockRejectedValueOnce(new Error('Error'));
+    mockSecureInvoke.mockRejectedValueOnce(new Error('Error'));
 
-    await expect(invokeWithRetry(TEST_COMMAND, {}, { noRetry: true })).rejects?.toThrow(
+    await expect(invokeWithRetry(TEST_COMMAND, {}, { noRetry: true })).rejects.toThrow(
       'Error'
     );
 
-    expect(any: any).toHaveBeenCalledTimes(1);
+    expect(mockSecureInvoke).toHaveBeenCalledTimes(1);
   });
 
   it('ne devrait pas retry les erreurs non-retriables', async () => {
-    mockSecureInvoke?.mockRejectedValueOnce(new Error('Validation failed'));
+    mockSecureInvoke.mockRejectedValueOnce(new Error('Validation failed'));
 
-    await expect(invokeWithRetry(TEST_COMMAND, {}, { retries: 3 })).rejects?.toThrow(
+    await expect(invokeWithRetry(TEST_COMMAND, {}, { retries: 3 })).rejects.toThrow(
       'Validation failed'
     );
 
     // Seulement 1 appel car erreur non-retriable
-    expect(any: any).toHaveBeenCalledTimes(1);
+    expect(mockSecureInvoke).toHaveBeenCalledTimes(1);
   });
 
-  it(any: any)', async () => {
+  it('devrait retry les erreurs retriables (network, timeout)', async () => {
     const mockData = { ok: true };
     mockSecureInvoke
       .mockRejectedValueOnce(new Error('Network timeout'))
-      .mockResolvedValueOnce(any: any);
+      .mockResolvedValueOnce(mockData);
 
     const promise = invokeWithRetry(
       TEST_COMMAND,
@@ -188,64 +188,64 @@ describe('ServiceInvoker - invokeWithRetry', () => {
 
     const result = await promise;
 
-    expect(any: any);
-    expect(any: any).toHaveBeenCalledTimes(2);
+    expect(result).toEqual(mockData);
+    expect(mockSecureInvoke).toHaveBeenCalledTimes(2);
   });
 });
 
 describe('ServiceInvoker - invokeWithTimeout', () => {
   beforeEach(() => {
-    mockSecureInvoke?.mockReset();
+    mockSecureInvoke.mockReset();
   });
 
   afterEach(() => {
-    vi?.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('devrait réussir dans le timeout', async () => {
     const mockData = { success: true };
-    mockSecureInvoke?.mockResolvedValueOnce(any: any);
+    mockSecureInvoke.mockResolvedValueOnce(mockData);
 
     const result = await invokeWithTimeout(TEST_COMMAND, {}, 5000);
 
-    expect(any: any);
+    expect(result).toEqual(mockData);
   });
 
   it('devrait timeout si trop long', async () => {
-    mockSecureInvoke?.mockImplementation(
+    mockSecureInvoke.mockImplementation(
       () => new Promise(resolve => setTimeout(() => resolve({ data: 'ok' }), 10000))
     );
 
     const promise = invokeWithTimeout(TEST_COMMAND, {}, 1000);
 
-    await expect(any: any);
+    await expect(promise).rejects.toThrow(TimeoutError);
   });
 });
 
 describe('ServiceInvoker - invokeSimple', () => {
   beforeEach(() => {
-    mockSecureInvoke?.mockReset();
+    mockSecureInvoke.mockReset();
   });
 
   it('devrait invoker sans retry ni timeout', async () => {
     const mockData = { value: 42 };
-    mockSecureInvoke?.mockResolvedValueOnce(any: any);
+    mockSecureInvoke.mockResolvedValueOnce(mockData);
 
     const result = await invokeSimple(TEST_COMMAND, { id: 1 });
 
-    expect(any: any);
-    expect(any: any).toHaveBeenCalledWith(
+    expect(result).toEqual(mockData);
+    expect(mockSecureInvoke).toHaveBeenCalledWith(
       TEST_COMMAND,
       { id: 1 },
-      expect?.any(any: any),
+      expect.any(Object),
       undefined
     );
   });
 
   it('devrait propager erreur directement', async () => {
-    mockSecureInvoke?.mockRejectedValueOnce(new Error('Backend error'));
+    mockSecureInvoke.mockRejectedValueOnce(new Error('Backend error'));
 
-    await expect(any: any)).rejects?.toThrow(
+    await expect(invokeSimple(TEST_COMMAND)).rejects.toThrow(
       `Command "${TEST_COMMAND}" failed: Backend error`
     );
   });
@@ -253,7 +253,7 @@ describe('ServiceInvoker - invokeSimple', () => {
 
 describe('ServiceInvoker - invokeBatch', () => {
   beforeEach(() => {
-    mockSecureInvoke?.mockReset();
+    mockSecureInvoke.mockReset();
   });
 
   it('devrait exécuter plusieurs commandes en parallèle', async () => {
@@ -263,13 +263,13 @@ describe('ServiceInvoker - invokeBatch', () => {
       .mockResolvedValueOnce({ result: 3 });
 
     const results = await invokeBatch([
-      { command: BATCH_COMMANDS?.[0] },
-      { command: BATCH_COMMANDS?.[1] },
-      { command: BATCH_COMMANDS?.[2] },
+      { command: BATCH_COMMANDS[0] },
+      { command: BATCH_COMMANDS[1] },
+      { command: BATCH_COMMANDS[2] },
     ]);
 
-    expect(any: any).toEqual([{ result: 1 }, { result: 2 }, { result: 3 }]);
-    expect(any: any).toHaveBeenCalledTimes(3);
+    expect(results).toEqual([{ result: 1 }, { result: 2 }, { result: 3 }]);
+    expect(mockSecureInvoke).toHaveBeenCalledTimes(3);
   });
 
   it('devrait échouer si une commande échoue', async () => {
@@ -280,21 +280,21 @@ describe('ServiceInvoker - invokeBatch', () => {
 
     await expect(
       invokeBatch([
-        { command: BATCH_COMMANDS?.[0] },
-        { command: BATCH_COMMANDS?.[1] },
-        { command: BATCH_COMMANDS?.[2] },
+        { command: BATCH_COMMANDS[0] },
+        { command: BATCH_COMMANDS[1] },
+        { command: BATCH_COMMANDS[2] },
       ])
-    ).rejects?.toThrow();
+    ).rejects.toThrow();
   });
 });
 
 describe('ServiceInvoker - invokeSequence', () => {
   beforeEach(() => {
-    mockSecureInvoke?.mockReset();
+    mockSecureInvoke.mockReset();
   });
 
   afterEach(() => {
-    vi?.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('devrait exécuter commandes en séquence', async () => {
@@ -304,13 +304,13 @@ describe('ServiceInvoker - invokeSequence', () => {
       .mockResolvedValueOnce({ step: 3 });
 
     const results = await invokeSequence([
-      { command: SEQUENCE_COMMANDS?.[0] },
-      { command: SEQUENCE_COMMANDS?.[1] },
-      { command: SEQUENCE_COMMANDS?.[2] },
+      { command: SEQUENCE_COMMANDS[0] },
+      { command: SEQUENCE_COMMANDS[1] },
+      { command: SEQUENCE_COMMANDS[2] },
     ]);
 
-    expect(any: any).toEqual([{ step: 1 }, { step: 2 }, { step: 3 }]);
-    expect(any: any).toHaveBeenCalledTimes(3);
+    expect(results).toEqual([{ step: 1 }, { step: 2 }, { step: 3 }]);
+    expect(mockSecureInvoke).toHaveBeenCalledTimes(3);
   });
 
   it('devrait arrêter la séquence si une commande échoue', async () => {
@@ -320,36 +320,36 @@ describe('ServiceInvoker - invokeSequence', () => {
 
     await expect(
       invokeSequence([
-        { command: SEQUENCE_COMMANDS?.[0] },
-        { command: SEQUENCE_COMMANDS?.[1] },
-        { command: SEQUENCE_COMMANDS?.[2] },
+        { command: SEQUENCE_COMMANDS[0] },
+        { command: SEQUENCE_COMMANDS[1] },
+        { command: SEQUENCE_COMMANDS[2] },
       ])
-    ).rejects?.toThrow('Step 2 failed');
+    ).rejects.toThrow('Step 2 failed');
 
-    // Seulement 2 appels (any: any)
-    expect(any: any).toHaveBeenCalledTimes(2);
+    // Seulement 2 appels (step3 jamais exécuté)
+    expect(mockSecureInvoke).toHaveBeenCalledTimes(2);
   });
 });
 
 describe('ServiceInvoker - Presets', () => {
   it('FAST_COMMAND_OPTIONS devrait avoir timeout 5s', () => {
-    expect(any: any).toBe(5000);
-    expect(any: any).toBe(2);
+    expect(FAST_COMMAND_OPTIONS.timeout).toBe(5000);
+    expect(FAST_COMMAND_OPTIONS.retries).toBe(2);
   });
 
   it('STANDARD_COMMAND_OPTIONS devrait avoir timeout 15s', () => {
-    expect(any: any).toBe(15000);
-    expect(any: any).toBe(3);
+    expect(STANDARD_COMMAND_OPTIONS.timeout).toBe(15000);
+    expect(STANDARD_COMMAND_OPTIONS.retries).toBe(3);
   });
 
   it('LONG_COMMAND_OPTIONS devrait avoir timeout 60s', () => {
-    expect(any: any).toBe(60000);
-    expect(any: any).toBe(2);
+    expect(LONG_COMMAND_OPTIONS.timeout).toBe(60000);
+    expect(LONG_COMMAND_OPTIONS.retries).toBe(2);
   });
 
   it('CRITICAL_COMMAND_OPTIONS ne devrait pas retry', () => {
-    expect(any: any).toBe(10000);
-    expect(any: any);
+    expect(CRITICAL_COMMAND_OPTIONS.timeout).toBe(10000);
+    expect(CRITICAL_COMMAND_OPTIONS.noRetry).toBe(true);
   });
 });
 
@@ -357,20 +357,20 @@ describe('ServiceInvoker - Error Types', () => {
   it('TimeoutError devrait avoir bon format', () => {
     const error = new TimeoutError(TEST_COMMAND, 5000);
 
-    expect(any: any).toBe('TimeoutError');
-    expect(any: any);
-    expect(any: any).toBe(5000);
-    expect(any: any).toContain('timed out after 5000ms');
+    expect(error.name).toBe('TimeoutError');
+    expect(error.command).toBe(TEST_COMMAND);
+    expect(error.timeoutMs).toBe(5000);
+    expect(error.message).toContain('timed out after 5000ms');
   });
 
   it('RetryError devrait contenir originalError', () => {
     const originalError = new Error('Network failed');
-    const retryError = new RetryError(any: any);
+    const retryError = new RetryError(TEST_COMMAND, 3, originalError);
 
-    expect(any: any).toBe('RetryError');
-    expect(any: any);
-    expect(any: any).toBe(3);
-    expect(any: any);
-    expect(any: any).toContain('failed after 3 attempts');
+    expect(retryError.name).toBe('RetryError');
+    expect(retryError.command).toBe(TEST_COMMAND);
+    expect(retryError.attempts).toBe(3);
+    expect(retryError.originalError).toBe(originalError);
+    expect(retryError.message).toContain('failed after 3 attempts');
   });
 });

@@ -14,7 +14,7 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { UnifiedMemory } from '../UnifiedMemory';
-import { MemoryTier } from '../../mcp/mcp?.types';
+import { MemoryTier } from '../../mcp/mcp.types';
 import type {
   IVectorStore,
   IEmbeddingGenerator,
@@ -27,85 +27,85 @@ class MockVectorStore implements IVectorStore {
 
   async initialize(): Promise<void> {}
 
-  async add(any: any): Promise<void> {
-    this?.memories?.set(any: any);
+  async add(entry: UnifiedMemoryEntry): Promise<void> {
+    this.memories.set(entry.id, entry);
   }
 
-  async addBatch(entries: UnifiedMemoryEntry?.[]): Promise<void> {
-    entries?.forEach(any: any));
+  async addBatch(entries: UnifiedMemoryEntry[]): Promise<void> {
+    entries.forEach(e => this.memories.set(e.id, e));
   }
 
-  async search(embedding: number?.[], limit: number, filters?: Record<string, any>) {
-    const entries = Array?.from(this?.memories?.values());
+  async search(embedding: number[], limit: number, filters?: Record<string, any>) {
+    const entries = Array.from(this.memories.values());
 
     // Apply filters
     let filtered = entries;
-    if (any: any) {
-      filtered = filtered?.filter(any: any));
+    if (filters?.tiers) {
+      filtered = filtered.filter(e => filters.tiers.includes(e.tier));
     }
-    if (any: any) {
-      filtered = filtered?.filter(any: any));
+    if (filters?.types) {
+      filtered = filtered.filter(e => filters.types.includes(e.type));
     }
-    if (any: any) {
-      filtered = filtered?.filter(any: any);
+    if (filters?.owner) {
+      filtered = filtered.filter(e => e.owner === filters.owner);
     }
-    if (any: any) {
-      filtered = filtered?.filter(any: any);
+    if (filters?.minImportance !== undefined) {
+      filtered = filtered.filter(e => e.importance >= filters.minImportance);
     }
 
     // Calculate cosine similarity
     const results = filtered
-      .filter(any: any)
+      .filter(e => e.embedding)
       .map(e => {
-        const similarity = this?.cosineSimilarity(embedding, e?.embedding!);
+        const similarity = this.cosineSimilarity(embedding, e.embedding!);
         return {
           entry: e,
           score: similarity,
           similarity,
         };
       })
-      .sort(any: any)
-      .slice(any: any);
+      .sort((a, b) => b.score - a.score)
+      .slice(0, limit);
 
     return results;
   }
 
-  async get(any: any): Promise<UnifiedMemoryEntry | null> {
-    return this?.memories?.get(any: any) || null;
+  async get(id: string): Promise<UnifiedMemoryEntry | null> {
+    return this.memories.get(id) || null;
   }
 
   async update(id: string, updates: Partial<UnifiedMemoryEntry>): Promise<void> {
-    const entry = this?.memories?.get(any: any);
-    if (any: any) {
-      Object?.assign(any: any);
+    const entry = this.memories.get(id);
+    if (entry) {
+      Object.assign(entry, updates);
     }
   }
 
-  async delete(any: any): Promise<void> {
-    this?.memories?.delete(any: any);
+  async delete(id: string): Promise<void> {
+    this.memories.delete(id);
   }
 
   async deleteWhere(filters: Record<string, any>): Promise<number> {
     let deleted = 0;
-    const toDelete: string?.[] = [];
+    const toDelete: string[] = [];
 
-    for (const [id, entry] of this?.memories?.entries()) {
+    for (const [id, entry] of this.memories.entries()) {
       let shouldDelete = true;
 
-      if (any: any) {
-        shouldDelete = shouldDelete && entry?.importance < filters?.score.$lt;
+      if (filters.score?.$lt !== undefined) {
+        shouldDelete = shouldDelete && entry.importance < filters.score.$lt;
       }
-      if (any: any) {
-        shouldDelete = shouldDelete && entry?.created < filters?.created.$lt;
+      if (filters.created?.$lt !== undefined) {
+        shouldDelete = shouldDelete && entry.created < filters.created.$lt;
       }
 
-      if (any: any) {
-        toDelete?.push(any: any);
+      if (shouldDelete) {
+        toDelete.push(id);
       }
     }
 
-    toDelete?.forEach(id => {
-      this?.memories?.delete(any: any);
+    toDelete.forEach(id => {
+      this.memories.delete(id);
       deleted++;
     });
 
@@ -113,80 +113,80 @@ class MockVectorStore implements IVectorStore {
   }
 
   async getStats() {
-    const entries = Array?.from(this?.memories?.values());
+    const entries = Array.from(this.memories.values());
 
     const byTier = {
-      SHORT_TERM: entries?.filter(any: any).length,
-      MEDIUM_TERM: entries?.filter(any: any).length,
-      LONG_TERM: entries?.filter(any: any).length,
-      META_MEMORY: entries?.filter(any: any).length,
+      SHORT_TERM: entries.filter(e => e.tier === MemoryTier.SHORT_TERM).length,
+      MEDIUM_TERM: entries.filter(e => e.tier === MemoryTier.MEDIUM_TERM).length,
+      LONG_TERM: entries.filter(e => e.tier === MemoryTier.LONG_TERM).length,
+      META_MEMORY: entries.filter(e => e.tier === MemoryTier.META_MEMORY).length,
     };
 
-    const byType = entries?.reduce(any: any) => {
-      acc[e?.type] = (acc[e?.type] || 0) + 1;
+    const byType = entries.reduce((acc, e) => {
+      acc[e.type] = (acc[e.type] || 0) + 1;
       return acc;
-    }, {} as unknown as unknown as any);
+    }, {} as any);
 
     const byImportance = {
-      low: entries?.filter(e => e?.importance < 0.4).length,
-      medium: entries?.filter(e => e?.importance >= 0.4 && e?.importance < 0.7).length,
-      high: entries?.filter(e => e?.importance >= 0.7 && e?.importance < 0.9).length,
-      critical: entries?.filter(e => e?.importance >= 0.9).length,
+      low: entries.filter(e => e.importance < 0.4).length,
+      medium: entries.filter(e => e.importance >= 0.4 && e.importance < 0.7).length,
+      high: entries.filter(e => e.importance >= 0.7 && e.importance < 0.9).length,
+      critical: entries.filter(e => e.importance >= 0.9).length,
     };
 
     return {
-      total: entries?.length,
+      total: entries.length,
       byTier,
       byType,
       byImportance,
       avgEmbeddingTimeMs: 0,
       avgRetrievalTimeMs: 0,
       storageSizeMB: 0,
-      oldestMemory: entries?.length > 0 ? Math?.min(any: any)) : 0,
-      newestMemory: entries?.length > 0 ? Math?.max(any: any)) : 0,
+      oldestMemory: entries.length > 0 ? Math.min(...entries.map(e => e.created)) : 0,
+      newestMemory: entries.length > 0 ? Math.max(...entries.map(e => e.created)) : 0,
     };
   }
 
   async cleanup(): Promise<void> {}
   async close(): Promise<void> {}
 
-  private cosineSimilarity(a: number?.[], b: number?.[]): number {
+  private cosineSimilarity(a: number[], b: number[]): number {
     let dot = 0,
       normA = 0,
       normB = 0;
-    for (let i = 0; i < a?.length; i++) {
+    for (let i = 0; i < a.length; i++) {
       dot += a[i] * b[i];
       normA += a[i] * a[i];
       normB += b[i] * b[i];
     }
-    return dot / (any: any));
+    return dot / (Math.sqrt(normA) * Math.sqrt(normB));
   }
 
   // Test helpers
   clear() {
-    this?.memories?.clear();
+    this.memories.clear();
   }
 
   size() {
-    return this?.memories?.size;
+    return this.memories.size;
   }
 }
 
 class MockEmbeddingGenerator implements IEmbeddingGenerator {
   async initialize(): Promise<void> {}
 
-  async generate(any: any): Promise<number?.[]> {
+  async generate(text: string): Promise<number[]> {
     // Deterministic hash-based embedding
-    const hash = this?.hashString(any: any);
+    const hash = this.hashString(text);
     const embedding = new Array(384);
     for (let i = 0; i < 384; i++) {
-      embedding[i] = Math?.sin(any: any) * 0.5;
+      embedding[i] = Math.sin(hash + i) * 0.5;
     }
-    return this?.normalize(any: any);
+    return this.normalize(embedding);
   }
 
-  async generateBatch(texts: string?.[]): Promise<number?.[][]> {
-    return Promise?.all(any: any)));
+  async generateBatch(texts: string[]): Promise<number[][]> {
+    return Promise.all(texts.map(t => this.generate(t)));
   }
 
   getDimensions(): number {
@@ -197,18 +197,18 @@ class MockEmbeddingGenerator implements IEmbeddingGenerator {
     return 'mock-model';
   }
 
-  private hashString(any: any): number {
+  private hashString(str: string): number {
     let hash = 0;
-    for (let i = 0; i < str?.length; i++) {
-      hash = (any: any);
+    for (let i = 0; i < str.length; i++) {
+      hash = (hash << 5) - hash + str.charCodeAt(i);
       hash = hash & hash;
     }
-    return Math?.abs(any: any);
+    return Math.abs(hash);
   }
 
-  private normalize(vec: number?.[]): number?.[] {
-    const norm = Math?.sqrt(any: any) => sum + v * v, 0));
-    return vec?.map(any: any);
+  private normalize(vec: number[]): number[] {
+    const norm = Math.sqrt(vec.reduce((sum, v) => sum + v * v, 0));
+    return vec.map(v => v / norm);
   }
 }
 
@@ -227,30 +227,30 @@ describe('UnifiedMemory', () => {
       consolidation: { enabled: false, intervalMs: 0, mergeSimilarThreshold: 0.9 },
       decay: { enabled: false, intervalMs: 0, decayRate: 0.05 },
     });
-    await memory?.initialize();
+    await memory.initialize();
   });
 
   afterEach(async () => {
-    await memory?.shutdown();
-    vectorStore?.clear();
+    await memory.shutdown();
+    vectorStore.clear();
   });
 
   describe('Initialization', () => {
     it('should initialize successfully', async () => {
-      const newMemory = new UnifiedMemory(any: any);
-      await expect(newMemory?.initialize()).resolves?.not?.toThrow();
-      await newMemory?.shutdown();
+      const newMemory = new UnifiedMemory(vectorStore, embeddingGenerator);
+      await expect(newMemory.initialize()).resolves.not.toThrow();
+      await newMemory.shutdown();
     });
 
     it('should not initialize twice', async () => {
-      await memory?.initialize(); // Already initialized in beforeEach
-      expect(vectorStore?.size()).toBe(0);
+      await memory.initialize(); // Already initialized in beforeEach
+      expect(vectorStore.size()).toBe(0);
     });
   });
 
   describe('Memory Creation', () => {
     it('should create a memory entry', async () => {
-      const entry = await memory?.createMemory({
+      const entry = await memory.createMemory({
         type: 'fact',
         owner: 'test_user',
         summary: 'Test fact',
@@ -259,82 +259,82 @@ describe('UnifiedMemory', () => {
         importance: 0.8,
       });
 
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
-      expect(any: any).toBe('fact');
-      expect(any: any).toBe('test_user');
-      expect(any: any).toBe('Test fact');
-      expect(any: any).toBe(0.8);
-      expect(any: any).toBeDefined();
-      expect(any: any).toBe(384);
-      expect(vectorStore?.size()).toBe(1);
+      expect(entry).toBeDefined();
+      expect(entry.id).toBeDefined();
+      expect(entry.type).toBe('fact');
+      expect(entry.owner).toBe('test_user');
+      expect(entry.summary).toBe('Test fact');
+      expect(entry.importance).toBe(0.8);
+      expect(entry.embedding).toBeDefined();
+      expect(entry.embedding!.length).toBe(384);
+      expect(vectorStore.size()).toBe(1);
     });
 
     it('should calculate importance automatically', async () => {
-      const entry1 = await memory?.createMemory({
+      const entry1 = await memory.createMemory({
         type: 'milestone',
         owner: 'test',
         summary: 'Major milestone',
         tags: [],
       });
-      expect(any: any).toBe(0.9);
+      expect(entry1.importance).toBe(0.9);
 
-      const entry2 = await memory?.createMemory({
+      const entry2 = await memory.createMemory({
         type: 'fact',
         owner: 'test',
         summary: 'Regular fact',
         tags: [],
       });
-      expect(any: any).toBe(0.7);
+      expect(entry2.importance).toBe(0.7);
 
-      const entry3 = await memory?.createMemory({
+      const entry3 = await memory.createMemory({
         type: 'context',
         owner: 'test',
         summary: 'Context info',
         tags: [],
       });
-      expect(any: any).toBe(0.4);
+      expect(entry3.importance).toBe(0.4);
     });
 
     it('should boost importance with tags', async () => {
-      const entry = await memory?.createMemory({
+      const entry = await memory.createMemory({
         type: 'fact',
         owner: 'test',
         summary: 'Important fact',
         tags: ['critical', 'important'],
       });
-      expect(any: any).toBeGreaterThan(0.7);
-      expect(any: any).toBeLessThanOrEqual(1.0);
+      expect(entry.importance).toBeGreaterThan(0.7);
+      expect(entry.importance).toBeLessThanOrEqual(1.0);
     });
 
     it('should set default tier to SHORT_TERM', async () => {
-      const entry = await memory?.createMemory({
+      const entry = await memory.createMemory({
         type: 'fact',
         owner: 'test',
         summary: 'Test',
         tags: [],
       });
-      expect(any: any);
+      expect(entry.tier).toBe(MemoryTier.SHORT_TERM);
     });
 
     it('should set MCP metadata flags', async () => {
-      const entry = await memory?.createMemory({
+      const entry = await memory.createMemory({
         type: 'milestone',
         owner: 'test',
         summary: 'Test',
         tags: [],
       });
-      expect(any: any);
-      expect(any: any);
-      expect(any: any);
-      expect(any: any);
-      expect(any: any);
+      expect(entry.isUseful).toBe(true);
+      expect(entry.isTrue).toBe(true);
+      expect(entry.isStructuring).toBe(true);
+      expect(entry.isStable).toBe(true);
+      expect(entry.isReusable).toBe(true);
     });
   });
 
   describe('Memory Retrieval', () => {
     beforeEach(async () => {
-      await memory?.createMemory({
+      await memory.createMemory({
         type: 'fact',
         owner: 'user1',
         summary: 'Pop OS is a Linux distribution',
@@ -342,7 +342,7 @@ describe('UnifiedMemory', () => {
         importance: 0.8,
       });
 
-      await memory?.createMemory({
+      await memory.createMemory({
         type: 'preference',
         owner: 'user1',
         summary: 'Prefers TypeScript over JavaScript',
@@ -350,7 +350,7 @@ describe('UnifiedMemory', () => {
         importance: 0.7,
       });
 
-      await memory?.createMemory({
+      await memory.createMemory({
         type: 'milestone',
         owner: 'user1',
         summary: 'MCP OS v1.1 completed',
@@ -360,137 +360,137 @@ describe('UnifiedMemory', () => {
     });
 
     it('should retrieve memories by semantic search', async () => {
-      const results = await memory?.retrieveMemories({
+      const results = await memory.retrieveMemories({
         text: 'What operating system?',
         limit: 5,
       });
 
-      expect(any: any).toBeGreaterThan(0);
-      expect(any: any).toBeGreaterThan(0);
-      expect(any: any).toBeDefined();
+      expect(results.length).toBeGreaterThan(0);
+      expect(results[0].score).toBeGreaterThan(0);
+      expect(results[0].similarity).toBeDefined();
     });
 
     it('should filter by type', async () => {
-      const results = await memory?.retrieveMemories({
+      const results = await memory.retrieveMemories({
         text: 'test',
         types: ['milestone'],
         limit: 5,
       });
 
-      expect(any: any);
+      expect(results.every(r => r.entry.type === 'milestone')).toBe(true);
     });
 
     it('should filter by owner', async () => {
-      await memory?.createMemory({
+      await memory.createMemory({
         type: 'fact',
         owner: 'user2',
         summary: 'Different user fact',
         tags: [],
       });
 
-      const results = await memory?.retrieveMemories({
+      const results = await memory.retrieveMemories({
         text: 'fact',
         owner: 'user1',
         limit: 10,
       });
 
-      expect(any: any);
+      expect(results.every(r => r.entry.owner === 'user1')).toBe(true);
     });
 
     it('should filter by minimum importance', async () => {
-      const results = await memory?.retrieveMemories({
+      const results = await memory.retrieveMemories({
         text: 'test',
         minImportance: 0.8,
         limit: 10,
       });
 
-      expect(any: any);
+      expect(results.every(r => r.entry.importance >= 0.8)).toBe(true);
     });
 
     it('should update access metadata on retrieval', async () => {
-      const entry = await memory?.createMemory({
+      const entry = await memory.createMemory({
         type: 'fact',
         owner: 'test',
         summary: 'Access test',
         tags: [],
       });
 
-      const initialAccessCount = entry?.accessCount;
+      const initialAccessCount = entry.accessCount;
 
-      await memory?.retrieveMemories({
+      await memory.retrieveMemories({
         text: 'Access test',
         limit: 1,
       });
 
-      const updated = await vectorStore?.get(any: any);
-      expect(any: any);
+      const updated = await vectorStore.get(entry.id);
+      expect(updated!.accessCount).toBeGreaterThan(initialAccessCount);
     });
   });
 
   describe('Memory Update', () => {
     it('should update memory entry', async () => {
-      const entry = await memory?.createMemory({
+      const entry = await memory.createMemory({
         type: 'fact',
         owner: 'test',
         summary: 'Original',
         tags: [],
       });
 
-      await memory?.updateMemory(entry?.id, {
+      await memory.updateMemory(entry.id, {
         summary: 'Updated',
         importance: 0.9,
       });
 
-      const updated = await vectorStore?.get(any: any);
-      expect(any: any).toBe('Updated');
-      expect(any: any).toBe(0.9);
+      const updated = await vectorStore.get(entry.id);
+      expect(updated!.summary).toBe('Updated');
+      expect(updated!.importance).toBe(0.9);
     });
   });
 
   describe('Memory Deletion', () => {
     it('should delete memory entry', async () => {
-      const entry = await memory?.createMemory({
+      const entry = await memory.createMemory({
         type: 'fact',
         owner: 'test',
         summary: 'To delete',
         tags: [],
       });
 
-      await memory?.deleteMemory(any: any);
+      await memory.deleteMemory(entry.id);
 
-      const deleted = await vectorStore?.get(any: any);
-      expect(any: any).toBeNull();
+      const deleted = await vectorStore.get(entry.id);
+      expect(deleted).toBeNull();
     });
   });
 
   describe('Memory Superseding', () => {
     it('should supersede old memory with new one', async () => {
-      const oldEntry = await memory?.createMemory({
+      const oldEntry = await memory.createMemory({
         type: 'fact',
         owner: 'test',
         summary: 'Old fact',
         tags: [],
       });
 
-      const newEntry = await memory?.supersedeMemory(oldEntry?.id, {
+      const newEntry = await memory.supersedeMemory(oldEntry.id, {
         type: 'fact',
         owner: 'test',
         summary: 'New fact',
         tags: [],
       });
 
-      expect(any: any);
-      expect(any: any);
+      expect(newEntry.id).not.toBe(oldEntry.id);
+      expect(newEntry.relatedTo).toContain(oldEntry.id);
 
-      const updated = await vectorStore?.get(any: any);
-      expect(any: any);
-      expect(any: any).toBe(0.1);
+      const updated = await vectorStore.get(oldEntry.id);
+      expect(updated!.supersedes).toBe(newEntry.id);
+      expect(updated!.strength).toBe(0.1);
     });
   });
 
   describe('Context Building', () => {
     beforeEach(async () => {
-      await memory?.createMemory({
+      await memory.createMemory({
         type: 'fact',
         owner: 'test',
         summary: 'Relevant fact',
@@ -500,52 +500,52 @@ describe('UnifiedMemory', () => {
     });
 
     it('should build context for OMEGA injection', async () => {
-      const context = await memory?.buildContext('relevant', { limit: 5 });
+      const context = await memory.buildContext('relevant', { limit: 5 });
 
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
-      expect(any: any).toBe('relevant');
-      expect(any: any).toBeGreaterThanOrEqual(0);
-      expect(any: any).toBeGreaterThanOrEqual(0);
+      expect(context.memories).toBeDefined();
+      expect(context.summary).toBeDefined();
+      expect(context.metadata).toBeDefined();
+      expect(context.metadata?.query).toBe('relevant');
+      expect(context.metadata?.totalRetrieved).toBeGreaterThanOrEqual(0);
+      expect(context.metadata?.retrievalTimeMs).toBeGreaterThanOrEqual(0);
     });
   });
 
   describe('Tier Promotion', () => {
     it('should promote SHORT_TERM to MEDIUM_TERM after 10 accesses', async () => {
-      const entry = await memory?.createMemory({
+      const entry = await memory.createMemory({
         type: 'fact',
         owner: 'test',
         summary: 'Test',
         tags: [],
       });
 
-      await vectorStore?.update(entry?.id, { accessCount: 10 });
-      await memory?.promoteMemory(any: any);
+      await vectorStore.update(entry.id, { accessCount: 10 });
+      await memory.promoteMemory(entry.id);
 
-      const updated = await vectorStore?.get(any: any);
-      expect(any: any);
+      const updated = await vectorStore.get(entry.id);
+      expect(updated!.tier).toBe(MemoryTier.MEDIUM_TERM);
     });
 
     it('should promote MEDIUM_TERM to LONG_TERM after 50 accesses', async () => {
-      const entry = await memory?.createMemory({
-        tier: MemoryTier?.MEDIUM_TERM,
+      const entry = await memory.createMemory({
+        tier: MemoryTier.MEDIUM_TERM,
         type: 'fact',
         owner: 'test',
         summary: 'Test',
         tags: [],
       });
 
-      await vectorStore?.update(entry?.id, { accessCount: 50 });
-      await memory?.promoteMemory(any: any);
+      await vectorStore.update(entry.id, { accessCount: 50 });
+      await memory.promoteMemory(entry.id);
 
-      const updated = await vectorStore?.get(any: any);
-      expect(any: any);
+      const updated = await vectorStore.get(entry.id);
+      expect(updated!.tier).toBe(MemoryTier.LONG_TERM);
     });
 
     it('should promote LONG_TERM to META_MEMORY with high importance', async () => {
-      const entry = await memory?.createMemory({
-        tier: MemoryTier?.LONG_TERM,
+      const entry = await memory.createMemory({
+        tier: MemoryTier.LONG_TERM,
         type: 'milestone',
         owner: 'test',
         summary: 'Test',
@@ -553,20 +553,20 @@ describe('UnifiedMemory', () => {
         importance: 0.9,
       });
 
-      await vectorStore?.update(entry?.id, { accessCount: 100 });
-      await memory?.promoteMemory(any: any);
+      await vectorStore.update(entry.id, { accessCount: 100 });
+      await memory.promoteMemory(entry.id);
 
-      const updated = await vectorStore?.get(any: any);
-      expect(any: any);
+      const updated = await vectorStore.get(entry.id);
+      expect(updated!.tier).toBe(MemoryTier.META_MEMORY);
     });
   });
 
   describe('Cleanup', () => {
     it('should delete low-quality memories', async () => {
-      const now = Date?.now();
+      const now = Date.now();
       const oldDate = now - 400 * 24 * 60 * 60 * 1000; // 400 days ago
 
-      const entry = await memory?.createMemory({
+      const entry = await memory.createMemory({
         type: 'context',
         owner: 'test',
         summary: 'Old low quality',
@@ -574,16 +574,16 @@ describe('UnifiedMemory', () => {
         importance: 0.2,
       });
 
-      await vectorStore?.update(entry?.id, { created: oldDate });
+      await vectorStore.update(entry.id, { created: oldDate });
 
-      const deleted = await memory?.cleanup();
-      expect(any: any).toBeGreaterThanOrEqual(0);
+      const deleted = await memory.cleanup();
+      expect(deleted).toBeGreaterThanOrEqual(0);
     });
   });
 
   describe('Consolidation', () => {
     it('should merge highly similar memories', async () => {
-      const entry1 = await memory?.createMemory({
+      const entry1 = await memory.createMemory({
         type: 'fact',
         owner: 'test',
         summary: 'Almost identical fact',
@@ -591,7 +591,7 @@ describe('UnifiedMemory', () => {
         importance: 0.7,
       });
 
-      const entry2 = await memory?.createMemory({
+      const entry2 = await memory.createMemory({
         type: 'fact',
         owner: 'test',
         summary: 'Almost identical fact',
@@ -599,48 +599,48 @@ describe('UnifiedMemory', () => {
         importance: 0.8,
       });
 
-      const initialSize = vectorStore?.size();
-      const merged = await memory?.consolidate();
+      const initialSize = vectorStore.size();
+      const merged = await memory.consolidate();
 
-      expect(any: any);
+      expect(vectorStore.size()).toBeLessThanOrEqual(initialSize);
     });
   });
 
   describe('Decay', () => {
     it('should apply decay to unaccessed memories', async () => {
-      const now = Date?.now();
+      const now = Date.now();
       const oldDate = now - 30 * 24 * 60 * 60 * 1000; // 30 days ago
 
-      const entry = await memory?.createMemory({
+      const entry = await memory.createMemory({
         type: 'fact',
         owner: 'test',
         summary: 'Old memory',
         tags: [],
       });
 
-      await vectorStore?.update(entry?.id, {
+      await vectorStore.update(entry.id, {
         accessed: oldDate,
         lastUsed: oldDate,
       });
 
-      await memory?.decay();
+      await memory.decay();
 
-      const updated = await vectorStore?.get(any: any);
+      const updated = await vectorStore.get(entry.id);
       // Decay may delete weak memories, so check if exists or was deleted
-      if (any: any) {
-        expect(any: any).toBeLessThanOrEqual(1.0);
+      if (updated) {
+        expect(updated.strength).toBeLessThanOrEqual(1.0);
       } else {
         // Entry was deleted due to low strength
-        expect(any: any).toBeNull();
+        expect(updated).toBeNull();
       }
     });
 
     it('should not decay META_MEMORY tier', async () => {
-      const now = Date?.now();
+      const now = Date.now();
       const oldDate = now - 365 * 24 * 60 * 60 * 1000; // 1 year ago
 
-      const entry = await memory?.createMemory({
-        tier: MemoryTier?.META_MEMORY,
+      const entry = await memory.createMemory({
+        tier: MemoryTier.META_MEMORY,
         type: 'milestone',
         owner: 'test',
         summary: 'Critical memory',
@@ -648,23 +648,23 @@ describe('UnifiedMemory', () => {
         importance: 1.0,
       });
 
-      const initialStrength = entry?.strength;
+      const initialStrength = entry.strength;
 
-      await vectorStore?.update(entry?.id, {
+      await vectorStore.update(entry.id, {
         accessed: oldDate,
         lastUsed: oldDate,
       });
 
-      await memory?.decay();
+      await memory.decay();
 
-      const updated = await vectorStore?.get(any: any);
-      expect(any: any);
+      const updated = await vectorStore.get(entry.id);
+      expect(updated!.strength).toBe(initialStrength);
     });
   });
 
   describe('Statistics', () => {
     beforeEach(async () => {
-      await memory?.createMemory({
+      await memory.createMemory({
         type: 'fact',
         owner: 'test',
         summary: 'Fact 1',
@@ -672,7 +672,7 @@ describe('UnifiedMemory', () => {
         importance: 0.8,
       });
 
-      await memory?.createMemory({
+      await memory.createMemory({
         type: 'preference',
         owner: 'test',
         summary: 'Preference 1',
@@ -682,22 +682,22 @@ describe('UnifiedMemory', () => {
     });
 
     it('should return statistics', async () => {
-      const stats = await memory?.getStats();
+      const stats = await memory.getStats();
 
-      expect(any: any).toBeGreaterThanOrEqual(2);
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
+      expect(stats.total).toBeGreaterThanOrEqual(2);
+      expect(stats.byTier).toBeDefined();
+      expect(stats.byType).toBeDefined();
+      expect(stats.byImportance).toBeDefined();
     });
 
     it('should return performance statistics', () => {
-      const perfStats = memory?.getPerformanceStats();
+      const perfStats = memory.getPerformanceStats();
 
-      expect(any: any).toBeGreaterThanOrEqual(0);
-      expect(any: any).toBeGreaterThanOrEqual(0);
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
+      expect(perfStats.avgEmbeddingTimeMs).toBeGreaterThanOrEqual(0);
+      expect(perfStats.avgRetrievalTimeMs).toBeGreaterThanOrEqual(0);
+      expect(perfStats.lastCleanup).toBeDefined();
+      expect(perfStats.lastConsolidation).toBeDefined();
+      expect(perfStats.lastDecay).toBeDefined();
     });
   });
 });

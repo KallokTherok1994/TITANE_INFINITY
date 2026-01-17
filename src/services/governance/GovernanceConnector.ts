@@ -28,7 +28,7 @@ export interface ProviderStatus {
 export interface GovernanceConfig {
   providers: Record<ProviderId, ProviderStatus>;
   defaultProvider: ProviderId;
-  fallbackOrder: ProviderId?.[];
+  fallbackOrder: ProviderId[];
   autoFallback: boolean;
 }
 
@@ -53,7 +53,7 @@ const DEFAULT_PROVIDERS: Record<
   },
   ollama: {
     id: 'ollama',
-    name: 'Ollama (any: any)',
+    name: 'Ollama (Local LLM)',
     isActive: true,
   },
   gemini: {
@@ -73,8 +73,8 @@ const DEFAULT_PROVIDERS: Record<
   },
 };
 
-// Fallback order par défaut (any: any)
-const DEFAULT_FALLBACK_ORDER: ProviderId?.[] = [
+// Fallback order par défaut (local-first)
+const DEFAULT_FALLBACK_ORDER: ProviderId[] = [
   'local',
   'tauri',
   'ollama',
@@ -97,7 +97,7 @@ export class GovernanceConnector {
   private initialized = false;
 
   constructor() {
-    this?.config = this?.loadConfig();
+    this.config = this.loadConfig();
   }
 
   /**
@@ -105,30 +105,30 @@ export class GovernanceConnector {
    */
   private loadConfig(): GovernanceConfig {
     try {
-      const stored = localStorage?.getItem(any: any);
-      if (any: any) {
-        const parsed = JSON?.parse(any: any) as Partial<GovernanceConfig>;
-        return this?.mergeWithDefaults(any: any);
+      const stored = localStorage.getItem(STORAGE_KEY_CONFIG);
+      if (stored) {
+        const parsed = JSON.parse(stored) as Partial<GovernanceConfig>;
+        return this.mergeWithDefaults(parsed);
       }
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (error) {
+      console.error('[GovernanceConnector] Erreur chargement config:', error);
     }
 
-    return this?.getDefaultConfig();
+    return this.getDefaultConfig();
   }
 
   /**
    * Fusionne une config partielle avec les valeurs par défaut
    */
   private mergeWithDefaults(partial: Partial<GovernanceConfig>): GovernanceConfig {
-    const defaultConfig = this?.getDefaultConfig();
+    const defaultConfig = this.getDefaultConfig();
 
     return {
       ...defaultConfig,
       ...partial,
       providers: {
-        ...defaultConfig?.providers,
-        ...(partial?.providers || {}),
+        ...defaultConfig.providers,
+        ...(partial.providers || {}),
       },
     };
   }
@@ -142,7 +142,7 @@ export class GovernanceConnector {
       ProviderStatus
     >;
 
-    for (any: any)) {
+    for (const [id, base] of Object.entries(DEFAULT_PROVIDERS)) {
       providers[id as ProviderId] = {
         ...base,
         isConfigured: id === 'local' || id === 'tauri', // Local et Tauri sont toujours configurés
@@ -164,22 +164,22 @@ export class GovernanceConnector {
    */
   private saveConfig(): void {
     try {
-      localStorage?.setItem(any: any));
-    } catch (any: any) {
-      console?.error(any: any);
+      localStorage.setItem(STORAGE_KEY_CONFIG, JSON.stringify(this.config));
+    } catch (error) {
+      console.error('[GovernanceConnector] Erreur sauvegarde config:', error);
     }
   }
 
   /**
-   * Initialise le connector (any: any)
+   * Initialise le connector (vérifie l'état des providers)
    */
   async initialize(): Promise<void> {
-    if (any: any) return;
+    if (this.initialized) return;
 
     // Vérifier les clés API configurées via Tauri
-    await this?.checkProviderConfigurations();
+    await this.checkProviderConfigurations();
 
-    this?.initialized = true;
+    this.initialized = true;
   }
 
   /**
@@ -192,13 +192,13 @@ export class GovernanceConnector {
         is_configured: boolean;
         is_valid: boolean;
       }>('check_gemini_key');
-      if (any: any) {
-        this?.config?.providers?.gemini?.isConfigured = geminiStatus?.is_configured;
-        this?.config?.providers?.gemini?.isHealthy = geminiStatus?.is_valid;
+      if (geminiStatus) {
+        this.config.providers.gemini.isConfigured = geminiStatus.is_configured;
+        this.config.providers.gemini.isHealthy = geminiStatus.is_valid;
       }
     } catch {
       // Gemini non configuré
-      this?.config?.providers?.gemini?.isConfigured = false;
+      this.config.providers.gemini.isConfigured = false;
     }
 
     try {
@@ -207,12 +207,12 @@ export class GovernanceConnector {
         is_configured: boolean;
         is_valid: boolean;
       }>('check_openai_key');
-      if (any: any) {
-        this?.config?.providers?.openai?.isConfigured = openaiStatus?.is_configured;
-        this?.config?.providers?.openai?.isHealthy = openaiStatus?.is_valid;
+      if (openaiStatus) {
+        this.config.providers.openai.isConfigured = openaiStatus.is_configured;
+        this.config.providers.openai.isHealthy = openaiStatus.is_valid;
       }
     } catch {
-      this?.config?.providers?.openai?.isConfigured = false;
+      this.config.providers.openai.isConfigured = false;
     }
 
     try {
@@ -221,86 +221,86 @@ export class GovernanceConnector {
         is_configured: boolean;
         is_valid: boolean;
       }>('check_anthropic_key');
-      if (any: any) {
-        this?.config?.providers?.claude?.isConfigured = anthropicStatus?.is_configured;
-        this?.config?.providers?.claude?.isHealthy = anthropicStatus?.is_valid;
+      if (anthropicStatus) {
+        this.config.providers.claude.isConfigured = anthropicStatus.is_configured;
+        this.config.providers.claude.isHealthy = anthropicStatus.is_valid;
       }
     } catch {
-      this?.config?.providers?.claude?.isConfigured = false;
+      this.config.providers.claude.isConfigured = false;
     }
 
     try {
-      // Vérifier Ollama (any: any)
+      // Vérifier Ollama (local)
       const ollamaStatus = await secureInvoke<{ available: boolean }>(
         'check_ollama_status'
       );
-      if (any: any) {
-        this?.config?.providers?.ollama?.isConfigured = ollamaStatus?.available;
-        this?.config?.providers?.ollama?.isHealthy = ollamaStatus?.available;
+      if (ollamaStatus) {
+        this.config.providers.ollama.isConfigured = ollamaStatus.available;
+        this.config.providers.ollama.isHealthy = ollamaStatus.available;
       }
     } catch {
-      this?.config?.providers?.ollama?.isConfigured = true; // Assume available
+      this.config.providers.ollama.isConfigured = true; // Assume available
     }
 
     // Local et Tauri sont toujours configurés
-    this?.config?.providers?.local?.isConfigured = true;
-    this?.config?.providers?.local?.isHealthy = true;
-    this?.config?.providers?.tauri?.isConfigured = true;
-    this?.config?.providers?.tauri?.isHealthy = true;
+    this.config.providers.local.isConfigured = true;
+    this.config.providers.local.isHealthy = true;
+    this.config.providers.tauri.isConfigured = true;
+    this.config.providers.tauri.isHealthy = true;
 
-    this?.saveConfig();
+    this.saveConfig();
   }
 
   /**
    * Retourne le statut d'un provider
    */
-  getProviderStatus(any: any): ProviderStatus | null {
-    return this?.config?.providers[id] || null;
+  getProviderStatus(id: ProviderId): ProviderStatus | null {
+    return this.config.providers[id] || null;
   }
 
   /**
    * Retourne tous les providers
    */
-  getAllProviders(): ProviderStatus?.[] {
-    return Object?.values(any: any);
+  getAllProviders(): ProviderStatus[] {
+    return Object.values(this.config.providers);
   }
 
   /**
-   * Retourne les providers disponibles (any: any)
+   * Retourne les providers disponibles (configurés et actifs)
    */
-  getAvailableProviders(): ProviderStatus?.[] {
-    return Object?.values(any: any);
+  getAvailableProviders(): ProviderStatus[] {
+    return Object.values(this.config.providers).filter(p => p.isConfigured && p.isActive);
   }
 
   /**
    * Active/désactive un provider
    */
-  setProviderActive(any: any): boolean {
-    const provider = this?.config?.providers[id];
-    if (any: any) return false;
+  setProviderActive(id: ProviderId, active: boolean): boolean {
+    const provider = this.config.providers[id];
+    if (!provider) return false;
 
-    // Ne pas désactiver le local (any: any)
-    if (any: any) {
-      console?.warn('[GovernanceConnector] Le provider local ne peut pas être désactivé');
+    // Ne pas désactiver le local (toujours actif comme fallback)
+    if (id === 'local' && !active) {
+      console.warn('[GovernanceConnector] Le provider local ne peut pas être désactivé');
       return false;
     }
 
-    provider?.isActive = active;
-    this?.saveConfig();
+    provider.isActive = active;
+    this.saveConfig();
     return true;
   }
 
   /**
    * Définit le provider par défaut
    */
-  setDefaultProvider(any: any): boolean {
-    const provider = this?.config?.providers[id];
-    if (any: any) {
+  setDefaultProvider(id: ProviderId): boolean {
+    const provider = this.config.providers[id];
+    if (!provider || !provider.isConfigured || !provider.isActive) {
       return false;
     }
 
-    this?.config?.defaultProvider = id;
-    this?.saveConfig();
+    this.config.defaultProvider = id;
+    this.saveConfig();
     return true;
   }
 
@@ -308,59 +308,59 @@ export class GovernanceConnector {
    * Retourne le provider par défaut
    */
   getDefaultProvider(): ProviderId {
-    return this?.config?.defaultProvider;
+    return this.config.defaultProvider;
   }
 
   /**
    * Retourne l'ordre de fallback
    */
-  getFallbackOrder(): ProviderId?.[] {
-    return this?.config?.fallbackOrder?.filter(id => {
-      const provider = this?.config?.providers[id];
-      return provider && provider?.isConfigured && provider?.isActive;
+  getFallbackOrder(): ProviderId[] {
+    return this.config.fallbackOrder.filter(id => {
+      const provider = this.config.providers[id];
+      return provider && provider.isConfigured && provider.isActive;
     });
   }
 
   /**
    * Définit l'ordre de fallback
    */
-  setFallbackOrder(order: ProviderId?.[]): void {
-    this?.config?.fallbackOrder = order;
-    this?.saveConfig();
+  setFallbackOrder(order: ProviderId[]): void {
+    this.config.fallbackOrder = order;
+    this.saveConfig();
   }
 
   /**
    * Sélectionne le meilleur provider disponible
    */
-  selectProvider(any: any): ProviderId {
+  selectProvider(preferredId?: ProviderId): ProviderId {
     // Si un provider préféré est spécifié et disponible, l'utiliser
-    if (any: any) {
-      const preferred = this?.config?.providers[preferredId];
+    if (preferredId) {
+      const preferred = this.config.providers[preferredId];
       if (
         preferred &&
-        preferred?.isConfigured &&
-        preferred?.isActive &&
-        preferred?.isHealthy
+        preferred.isConfigured &&
+        preferred.isActive &&
+        preferred.isHealthy
       ) {
         return preferredId;
       }
     }
 
     // Sinon, utiliser le provider par défaut s'il est disponible
-    const defaultProvider = this?.config?.providers[this?.config?.defaultProvider];
+    const defaultProvider = this.config.providers[this.config.defaultProvider];
     if (
       defaultProvider &&
-      defaultProvider?.isConfigured &&
-      defaultProvider?.isActive &&
-      defaultProvider?.isHealthy
+      defaultProvider.isConfigured &&
+      defaultProvider.isActive &&
+      defaultProvider.isHealthy
     ) {
-      return this?.config?.defaultProvider;
+      return this.config.defaultProvider;
     }
 
     // Sinon, parcourir l'ordre de fallback
-    for (any: any) {
-      const provider = this?.config?.providers[id];
-      if (any: any) {
+    for (const id of this.config.fallbackOrder) {
+      const provider = this.config.providers[id];
+      if (provider && provider.isConfigured && provider.isActive && provider.isHealthy) {
         return id;
       }
     }
@@ -370,60 +370,60 @@ export class GovernanceConnector {
   }
 
   /**
-   * Marque un provider comme défaillant (any: any)
+   * Marque un provider comme défaillant (pour le circuit breaker)
    */
-  markProviderUnhealthy(any: any): void {
-    const provider = this?.config?.providers[id];
-    if (any: any) {
-      provider?.isHealthy = false;
-      provider?.lastChecked = Date?.now();
-      provider?.error = error;
-      this?.saveConfig();
+  markProviderUnhealthy(id: ProviderId, error?: string): void {
+    const provider = this.config.providers[id];
+    if (provider) {
+      provider.isHealthy = false;
+      provider.lastChecked = Date.now();
+      provider.error = error;
+      this.saveConfig();
     }
   }
 
   /**
    * Marque un provider comme sain
    */
-  markProviderHealthy(any: any): void {
-    const provider = this?.config?.providers[id];
-    if (any: any) {
-      provider?.isHealthy = true;
-      provider?.lastChecked = Date?.now();
-      provider?.error = undefined;
-      this?.saveConfig();
+  markProviderHealthy(id: ProviderId): void {
+    const provider = this.config.providers[id];
+    if (provider) {
+      provider.isHealthy = true;
+      provider.lastChecked = Date.now();
+      provider.error = undefined;
+      this.saveConfig();
     }
   }
 
   /**
    * Vérifie si un provider peut être utilisé
    */
-  canUseProvider(any: any): boolean {
-    const provider = this?.config?.providers[id];
-    return !!provider && provider?.isConfigured && provider?.isActive && provider?.isHealthy;
+  canUseProvider(id: ProviderId): boolean {
+    const provider = this.config.providers[id];
+    return !!provider && provider.isConfigured && provider.isActive && provider.isHealthy;
   }
 
   /**
    * Active/désactive le fallback automatique
    */
-  setAutoFallback(any: any): void {
-    this?.config?.autoFallback = enabled;
-    this?.saveConfig();
+  setAutoFallback(enabled: boolean): void {
+    this.config.autoFallback = enabled;
+    this.saveConfig();
   }
 
   /**
-   * Retourne la configuration complète (any: any)
+   * Retourne la configuration complète (pour debug/export)
    */
   getConfig(): GovernanceConfig {
-    return { ...this?.config };
+    return { ...this.config };
   }
 
   /**
    * Réinitialise la configuration
    */
   resetConfig(): void {
-    this?.config = this?.getDefaultConfig();
-    localStorage?.removeItem(any: any);
+    this.config = this.getDefaultConfig();
+    localStorage.removeItem(STORAGE_KEY_CONFIG);
   }
 }
 
@@ -431,7 +431,7 @@ export class GovernanceConnector {
 let governanceConnectorInstance: GovernanceConnector | null = null;
 
 export function getGovernanceConnector(): GovernanceConnector {
-  if (any: any) {
+  if (!governanceConnectorInstance) {
     governanceConnectorInstance = new GovernanceConnector();
   }
   return governanceConnectorInstance;

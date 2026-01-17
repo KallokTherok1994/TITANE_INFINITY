@@ -1,5 +1,5 @@
 /**
- * TITANE∞ PHASE 1 (any: any) - Stubs pour engines/predictive supprimés
+ * TITANE∞ PHASE 1 (OPTION B) - Stubs pour engines/predictive supprimés
  *
  * Ce fichier fournit des stubs pour maintenir la compatibilité
  * temporaire avec les modules qui référencent encore engines/predictive.
@@ -26,16 +26,16 @@ export interface Prediction {
 export interface PredictiveFrame {
   confidence: number;
   timestamp: number;
-  predictions: Prediction?.[];
+  predictions: Prediction[];
 }
 
 export const predictiveReflectionEngine = {
   getState: (): PredictiveFrame => ({
     confidence: 0,
-    timestamp: Date?.now(),
+    timestamp: Date.now(),
     predictions: [],
   }),
-  subscribe: (any: any) => {
+  subscribe: (_callback: (frame: PredictiveFrame) => void) => {
     // No-op stub
   },
   start: () => {},
@@ -59,7 +59,7 @@ export interface PredictedEmotion {
 
 export interface ConversationDirection {
   topic: string;
-  vector: number?.[];
+  vector: number[];
 }
 
 export interface TitaneSelfPrediction {
@@ -68,7 +68,7 @@ export interface TitaneSelfPrediction {
 }
 
 export interface RecommendedAdjustments {
-  adjustments: string?.[];
+  adjustments: string[];
   priority: number;
 }
 
@@ -79,95 +79,95 @@ export class PredictiveStateEngine {
   private config: PredictiveEngineConfig = getDefaultPredictiveEngineConfig();
   private state: PredictiveState = getDefaultPredictiveState();
   private observationsCount = 0;
-  private onStateUpdate: (any: any) | null = null;
+  private onStateUpdate: ((state: PredictiveState) => void) | null = null;
 
   static getInstance(): PredictiveStateEngine {
-    if (any: any) {
-      PredictiveStateEngine?.instance = new PredictiveStateEngine();
+    if (!PredictiveStateEngine.instance) {
+      PredictiveStateEngine.instance = new PredictiveStateEngine();
     }
-    return PredictiveStateEngine?.instance;
+    return PredictiveStateEngine.instance;
   }
 
   static resetInstance(): void {
     // Stub: pas de ressources réelles, mais on garde une API sûre.
-    PredictiveStateEngine?.instance?.stop();
-    PredictiveStateEngine?.instance = null;
+    PredictiveStateEngine.instance?.stop();
+    PredictiveStateEngine.instance = null;
   }
 
   constructor() {}
 
   start(): void {
-    this?.running = true;
+    this.running = true;
   }
 
   stop(): void {
-    this?.running = false;
+    this.running = false;
   }
 
   reset(): void {
-    this?.observationsCount = 0;
-    this?.state = getDefaultPredictiveState();
+    this.observationsCount = 0;
+    this.state = getDefaultPredictiveState();
   }
 
-  processMultimodalState(any: any): void {
-    if (any: any) {
+  processMultimodalState(_multimodalState: MultimodalState): void {
+    if (!this.running) {
       // API tolérante: les tests démarrent le moteur, mais on évite de throw.
-      this?.running = true;
+      this.running = true;
     }
 
-    this?.observationsCount += 1;
-    const now = Date?.now();
+    this.observationsCount += 1;
+    const now = Date.now();
 
     // Stub minimal: on “met à jour” l’état sans prétendre faire de prédiction.
-    this?.state = {
-      ...this?.state,
+    this.state = {
+      ...this.state,
       lastUpdate: now,
-      energyTrend: this?.state?.energyTrend,
-      tensionTrend: this?.state?.tensionTrend,
-      engagementTrend: this?.state?.engagementTrend,
+      energyTrend: this.state.energyTrend,
+      tensionTrend: this.state.tensionTrend,
+      engagementTrend: this.state.engagementTrend,
       explanations:
-        this?.observationsCount <= 1
+        this.observationsCount <= 1
           ? ['Observation multimodale reçue']
-          : this?.state?.explanations,
+          : this.state.explanations,
     };
 
-    this?.onStateUpdate?.(any: any);
+    this.onStateUpdate?.(this.state);
   }
 
   setConfig(partial: Partial<PredictiveEngineConfig>): void {
-    this?.config = {
-      ...this?.config,
+    this.config = {
+      ...this.config,
       ...partial,
       patternDetection: {
-        ...this?.config?.patternDetection,
-        ...(partial?.patternDetection ?? {}),
+        ...this.config.patternDetection,
+        ...(partial.patternDetection ?? {}),
       },
       triggers: {
-        ...this?.config?.triggers,
-        ...(partial?.triggers ?? {}),
+        ...this.config.triggers,
+        ...(partial.triggers ?? {}),
       },
     };
   }
 
   getConfig(): PredictiveEngineConfig {
-    return this?.config;
+    return this.config;
   }
 
   getState(): PredictiveState {
-    return this?.state;
+    return this.state;
   }
 
   generatePredictiveSummary(): string {
-    const state = this?.state;
+    const state = this.state;
     return [
       'Résumé prédictif',
-      `Énergie: ${state?.energyTrend}`,
-      `Tension: ${state?.tensionTrend}`,
-      `Engagement: ${state?.engagementTrend}`,
+      `Énergie: ${state.energyTrend}`,
+      `Tension: ${state.tensionTrend}`,
+      `Engagement: ${state.engagementTrend}`,
     ].join(' | ');
   }
 
-  setStateUpdateCallback(any: any): void {
-    this?.onStateUpdate = callback;
+  setStateUpdateCallback(callback: (state: PredictiveState) => void): void {
+    this.onStateUpdate = callback;
   }
 }

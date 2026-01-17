@@ -94,8 +94,8 @@ export interface MetricsSummary {
  * Metrics provider interface
  */
 export interface IMetricsProvider {
-  recordMetric(any: any): void;
-  getMetrics(): Metric?.[];
+  recordMetric(metric: Metric): void;
+  getMetrics(): Metric[];
   getSummary(): MetricsSummary;
   reset(): void;
 }
@@ -175,7 +175,7 @@ export interface ValidationIssue {
  */
 export interface ValidationResult {
   valid: boolean;
-  issues: ValidationIssue?.[];
+  issues: ValidationIssue[];
   score?: number; // 0-100
 }
 
@@ -183,8 +183,8 @@ export interface ValidationResult {
  * Validator interface
  */
 export interface IValidator<T = unknown> {
-  validate(any: any): ValidationResult;
-  validateAsync(any: any): Promise<ValidationResult>;
+  validate(data: T): ValidationResult;
+  validateAsync(data: T): Promise<ValidationResult>;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -199,7 +199,7 @@ export interface IOrchestrationStrategy extends IHealthMonitor, IMetricsProvider
   readonly name: string;
 
   /**
-   * Initialize strategy (any: any)
+   * Initialize strategy (lazy loading)
    */
   initialize(): Promise<void>;
 
@@ -234,7 +234,7 @@ export interface MCPJobOperation {
     type: string,
     priority: 'low' | 'medium' | 'high' | 'critical'
   ): Promise<string>;
-  evaluateJob(any: any): Promise<{ status: string; result?: unknown }>;
+  evaluateJob(jobId: string): Promise<{ status: string; result?: unknown }>;
   listJobs(filter?: { status?: string }): { id: string; type: string; status: string }[];
 }
 
@@ -257,21 +257,21 @@ export interface MCPHealthOperation {
  * Memory operation types
  */
 export interface CognitiveMemoryOperation {
-  storeMemory(any: any): Promise<string>;
+  storeMemory(content: string, importance?: number): Promise<string>;
   retrieveMemories(
     query: string,
     limit?: number
   ): Promise<Array<{ content: string; score: number }>>;
-  processConversation(messages: unknown?.[]): Promise<void>;
+  processConversation(messages: unknown[]): Promise<void>;
 }
 
 /**
  * Goal tracking operations
  */
 export interface CognitiveGoalOperation {
-  setGoal(any: any): Promise<string>;
-  checkGoalProgress(any: any): Promise<{ achieved: boolean; progress: number }>;
-  validateConsistency(any: any): Promise<{ violations: string?.[]; score: number }>;
+  setGoal(description: string, context?: string): Promise<string>;
+  checkGoalProgress(goalId: string): Promise<{ achieved: boolean; progress: number }>;
+  validateConsistency(text: string): Promise<{ violations: string[]; score: number }>;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -297,8 +297,8 @@ export interface AIProviderOperation {
     preferLocal?: boolean;
     maxLatency?: number;
   }): Promise<AIProviderInfo>;
-  getAvailableProviders(): AIProviderInfo?.[];
-  executeWithProvider(any: any): Promise<{ response: string }>;
+  getAvailableProviders(): AIProviderInfo[];
+  executeWithProvider(providerId: string, prompt: string): Promise<{ response: string }>;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -319,8 +319,8 @@ export interface QuantumSignal {
  * Quantum operations
  */
 export interface QuantumOperation {
-  predictNextState(any: any): Promise<QuantumSignal>;
-  syncRealtime(any: any): Promise<{ synced: boolean; drift: number }>;
+  predictNextState(context: unknown): Promise<QuantumSignal>;
+  syncRealtime(fps?: number): Promise<{ synced: boolean; drift: number }>;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -361,7 +361,7 @@ export interface UnifiedOrchestratorConfig {
  */
 export interface OrchestratorState {
   initialized: boolean;
-  activeStrategies: OrchestrationStrategyType?.[];
+  activeStrategies: OrchestrationStrategyType[];
   healthStatus: HealthStatus;
   metrics: MetricsSummary;
   lastUpdate: number;

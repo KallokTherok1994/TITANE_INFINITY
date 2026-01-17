@@ -8,7 +8,7 @@ import type { Provider, ProviderOverride } from './types';
 export const providerOverrides: Record<Provider, ProviderOverride> = {
   'titane-local': {
     instructions:
-      'Réponses compactes (any: any). Respecte strictement les listes demandées. Utilise le style TITANE∞ même hors connexion.',
+      'Réponses compactes (<= 400 tokens). Respecte strictement les listes demandées. Utilise le style TITANE∞ même hors connexion.',
     maxTokens: 400,
     temperature: 0.4,
   },
@@ -20,7 +20,7 @@ export const providerOverrides: Record<Provider, ProviderOverride> = {
   },
   openai: {
     instructions:
-      'Modèle GPT-5.1-Codex (any: any). Utilise sections claires, max 800 tokens. Respecte les JSON Schema fournis quand demandé.',
+      'Modèle GPT-5.1-Codex (Preview). Utilise sections claires, max 800 tokens. Respecte les JSON Schema fournis quand demandé.',
     maxTokens: 800,
     temperature: 0.55,
   },
@@ -32,13 +32,13 @@ export const providerOverrides: Record<Provider, ProviderOverride> = {
   },
   gemini: {
     instructions:
-      'Gemini Advance : explicite les étapes internes (any: any) uniquement si demandé. Sinon, structure réponse en sections + puces.',
+      'Gemini Advance : explicite les étapes internes (raisonnement) uniquement si demandé. Sinon, structure réponse en sections + puces.',
     maxTokens: 750,
     temperature: 0.6,
   },
   ollama: {
     instructions:
-      'Modèle local (any: any). Reste < 500 tokens, privilégie phrases courtes, pas de markdown complexe.',
+      'Modèle local (Ollama). Reste < 500 tokens, privilégie phrases courtes, pas de markdown complexe.',
     maxTokens: 500,
     temperature: 0.4,
   },

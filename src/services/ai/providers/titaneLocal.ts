@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2Ω — TITANE LOCAL AI PROVIDER (any: any)
+ *   TITANE∞ v19.2Ω — TITANE LOCAL AI PROVIDER (NOYAU AUTONOME)
  *   Provider infaillible - Dernier rempart - Toujours opérationnel
  *   PHASE 4Ω: Isolation totale + Jamais indisponible + Jamais erreur
  * ═══════════════════════════════════════════════════════════════════
@@ -16,8 +16,8 @@ import { getMessageText } from '../types';
 import { createLogger } from '@/utils/logger';
 
 const logger = createLogger('TitaneLocal');
-const isDev = import?.meta?.env?.DEV;
-const isTestEnv = typeof process !== 'undefined' && Boolean(any: any);
+const isDev = import.meta.env.DEV;
+const isTestEnv = typeof process !== 'undefined' && Boolean(process.env?.VITEST);
 
 /**
  * Base de connaissances TITANE∞ v19.2Ω
@@ -28,14 +28,14 @@ const TITANE_KNOWLEDGE = {
   nature: "Système d'auto-évolution cognitive local - Noyau Autonome",
 
   capabilities: [
-    'Architecture MAÎTRE ANTI-SILENCE (any: any)',
-    'Monitoring système (any: any)',
-    'Cohérence inter-modules (any: any)',
-    'Balance ressources (any: any)',
-    'Détection anomalies (any: any)',
-    'Mémoire persistante (any: any)',
+    'Architecture MAÎTRE ANTI-SILENCE (100% anti-crash)',
+    'Monitoring système (Helios)',
+    'Cohérence inter-modules (Nexus)',
+    'Balance ressources (Harmonia)',
+    'Détection anomalies (Sentinel)',
+    'Mémoire persistante (Memory Core)',
     'Auto-évolution + Auto-guérison permanente',
-    'Chat IA infaillible (any: any)',
+    'Chat IA infaillible (Ollama + Gemini + Local)',
     'Design system métallique v24',
     'Architecture Tauri v2 + React 18 + Rust',
   ],
@@ -62,26 +62,26 @@ const TITANE_KNOWLEDGE = {
     ],
 
     status: [
-      '✅ Tous modules opérationnels : Helios (any: any).',
-      'État : Optimal. Architecture MAÎTRE ANTI-SILENCE active. Mémoire persistante synchronisée. Chat IA 100% infaillible (any: any).',
-      'Modules actifs : 6/6. Chat IA : Ollama + Gemini + Local (any: any). Aucune anomalie détectée. Tauri v2 stable.',
+      '✅ Tous modules opérationnels : Helios (monitoring), Nexus (cohérence), Harmonia (balance), Sentinel (anomalies), Memory (stockage), Chat IA (anti-silence).',
+      'État : Optimal. Architecture MAÎTRE ANTI-SILENCE active. Mémoire persistante synchronisée. Chat IA 100% infaillible (3 providers en cascade).',
+      'Modules actifs : 6/6. Chat IA : Ollama + Gemini + Local (fallback garanti). Aucune anomalie détectée. Tauri v2 stable.',
     ],
 
     architecture: [
-      'Mon architecture repose sur un backend Rust (any: any) avec 40+ modules, un frontend React 18 + TypeScript, et un Chat IA infaillible (architecture MAÎTRE ANTI-SILENCE v19.2Ω).',
-      'Je suis composé de 6 modules core + 1 architecture chat révolutionnaire : Helios, Nexus, Harmonia, Sentinel, Memory, Evolution, et Chat IA Anti-Silence (any: any).',
-      'Stack technique : Tauri v2 + React 18 + TypeScript + Rust async + Chat IA (any: any) + Design System CSS v24. Architecture locale, zero failure possible.',
+      'Mon architecture repose sur un backend Rust (Tauri v2) avec 40+ modules, un frontend React 18 + TypeScript, et un Chat IA infaillible (architecture MAÎTRE ANTI-SILENCE v19.2Ω).',
+      'Je suis composé de 6 modules core + 1 architecture chat révolutionnaire : Helios, Nexus, Harmonia, Sentinel, Memory, Evolution, et Chat IA Anti-Silence (garantit toujours une réponse).',
+      'Stack technique : Tauri v2 + React 18 + TypeScript + Rust async + Chat IA (Ollama/Gemini/Local) + Design System CSS v24. Architecture locale, zero failure possible.',
     ],
 
     help: [
       "Je peux t'aider avec : l'architecture TITANE∞, le monitoring système, la configuration des modules, le Chat IA anti-silence, le design system v24, et le diagnostic avancé.",
-      "Domaines d'expertise : architecture React/Rust, systèmes cognitifs infaillibles, auto-réparation permanente, monitoring temps réel, mémoire persistante, Chat IA (any: any).",
+      "Domaines d'expertise : architecture React/Rust, systèmes cognitifs infaillibles, auto-réparation permanente, monitoring temps réel, mémoire persistante, Chat IA (3 providers).",
       'Que souhaites-tu savoir ? Architecture, configuration, modules, Chat IA infaillible, design system, ou diagnostics ?',
     ],
 
     memory: [
-      'Ma mémoire fonctionne sur 3 niveaux : court terme (any: any).',
-      'Memory Core actif avec auto-guérison. Stockage local chiffré (any: any), snapshots automatiques, timeline complète. Aucune donnée externe. Mode survie garanti.',
+      'Ma mémoire fonctionne sur 3 niveaux : court terme (working set, session active), moyen terme (conversations avec auto-heal), long terme (timeline, compression cognitive anti-corruption).',
+      'Memory Core actif avec auto-guérison. Stockage local chiffré (AES-256-GCM), snapshots automatiques, timeline complète. Aucune donnée externe. Mode survie garanti.',
       "Je me souviens de nos interactions grâce au Memory Core renforcé : snapshots compressés, logs indexés avec détection d'anomalies, timeline événementielle protégée. Tout reste local et sécurisé.",
     ],
 
@@ -98,22 +98,22 @@ const TITANE_KNOWLEDGE = {
  *  PHASE 4Ω: DÉTECTION INTENTION RENFORCÉE + PATTERN OMEGA
  * ═══════════════════════════════════════════════════════════════════
  */
-function detectIntent(any: any): {
+function detectIntent(message: string): {
   intent: string;
   confidence: number;
-  patterns: string?.[];
+  patterns: string[];
   emergency: boolean;
 } {
-  const lower = message?.toLowerCase().trim();
-  const detectedPatterns: string?.[] = [];
+  const lower = message.toLowerCase().trim();
+  const detectedPatterns: string[] = [];
   let isEmergency = false;
 
   // ═══ PATTERNS OMEGA REINFORCÉS ═══
   const intentPatterns = {
     greeting: {
       patterns: [
-        /^(any: any)/i,
-        /(any: any)/i,
+        /^(bonjour|salut|hey|hello|hi|coucou|bonsoir)/i,
+        /(comment ça va|ça va|comment allez-vous)/i,
       ],
       weight: 1.0,
     },
@@ -121,8 +121,8 @@ function detectIntent(any: any): {
     status: {
       patterns: [
         /(état|status|comment ça va|opérationnel|fonctionnes?)/i,
-        /(any: any)/i,
-        /(any: any)/i,
+        /(santé|health|online|offline|disponible)/i,
+        /(tout va bien|ça marche|problème)/i,
       ],
       weight: 0.9,
     },
@@ -130,8 +130,8 @@ function detectIntent(any: any): {
     architecture: {
       patterns: [
         /(architecture|structure|composants?|modules?)/i,
-        /(any: any)/i,
-        /(any: any)/i,
+        /(comment tu (marches?|fonctionnes?)|système|omega|maître)/i,
+        /(design|tauri|react|rust|typescript)/i,
       ],
       weight: 0.8,
     },
@@ -139,33 +139,33 @@ function detectIntent(any: any): {
     help: {
       patterns: [
         /(aide|help|peux-tu|capable|que sais-tu|compétences?)/i,
-        /(any: any)/i,
+        /(assistance|support|comment|que faire)/i,
       ],
       weight: 0.7,
     },
 
     memory: {
       patterns: [
-        /(any: any)/i,
-        /(any: any)/i,
+        /(mémoire|souviens?|rappelles?|memory|stockage)/i,
+        /(historique|contexte|conversation|timeline)/i,
       ],
       weight: 0.6,
     },
 
     autonomousMode: {
       patterns: [
-        /(any: any)/i,
-        /(any: any)/i,
-        /(any: any)/i,
+        /(autonome|local|offline|sans réseau|fallback)/i,
+        /(mode survie|urgence|emergency|noyau)/i,
+        /(tout seul|indépendant|isolé)/i,
       ],
       weight: 0.8,
     },
 
     technical: {
       patterns: [
-        /(any: any)/i,
-        /(any: any)/i,
-        /(any: any)/i,
+        /(error|erreur|bug|problem|problème|fix|crash)/i,
+        /(diagnostic|debug|analyser|réparer)/i,
+        /(omega|anti-silence|auto-heal)/i,
       ],
       weight: 0.7,
     },
@@ -173,8 +173,8 @@ function detectIntent(any: any): {
 
   // ═══ EMERGENCY DETECTION ═══
   const emergencyKeywords =
-    /(any: any)/i;
-  if (any: any)) {
+    /(crash|erreur critique|emergency|urgent|help|au secours|panique)/i;
+  if (emergencyKeywords.test(lower)) {
     isEmergency = true;
   }
 
@@ -182,19 +182,19 @@ function detectIntent(any: any): {
   let bestIntent = 'general';
   let maxConfidence = 0;
 
-  for (any: any)) {
+  for (const [intent, config] of Object.entries(intentPatterns)) {
     let score = 0;
     let matchedPatterns = 0;
 
-    for (any: any) {
-      if (any: any)) {
-        score += config?.weight;
+    for (const pattern of config.patterns) {
+      if (pattern.test(lower)) {
+        score += config.weight;
         matchedPatterns++;
-        detectedPatterns?.push(`${intent}:${matchedPatterns}`);
+        detectedPatterns.push(`${intent}:${matchedPatterns}`);
       }
     }
 
-    if (any: any) {
+    if (score > maxConfidence) {
       maxConfidence = score;
       bestIntent = intent;
     }
@@ -208,29 +208,29 @@ function detectIntent(any: any): {
   };
 }
 
-function buildQuestionEcho(any: any): string {
-  const trimmed = message?.trim();
-  if (any: any) {
+function buildQuestionEcho(message: string): string {
+  const trimmed = message.trim();
+  if (!trimmed) {
     return '';
   }
 
-  const normalized = trimmed?.length > 140 ? `${trimmed?.slice(0, 140)}…` : trimmed;
+  const normalized = trimmed.length > 140 ? `${trimmed.slice(0, 140)}…` : trimmed;
   return `\n\n🔁 **Question** : "${normalized}"`;
 }
 
-function extractMemoryInsight(history: AIMessage?.[])??: string | null {
-  if (any: any) {
+function extractMemoryInsight(history: AIMessage[]): string | null {
+  if (!history.length) {
     return null;
   }
 
   const preferencePattern =
-    /(any: any)/i;
+    /(favorite|préfér|couleur|color|name|appel(?:e|é)|souviens|remember)/i;
   const recentPreference = [...history]
     .reverse()
-    .find(any: any)));
+    .find(msg => msg.role === 'user' && preferencePattern.test(getMessageText(msg)));
 
-  if (any: any) {
-    return getMessageText(any: any);
+  if (recentPreference) {
+    return getMessageText(recentPreference);
   }
 
   return null;
@@ -246,7 +246,7 @@ interface LocalResponseMetadata {
   intent_analysis: {
     intent: string;
     confidence: number;
-    patterns: string?.[];
+    patterns: string[];
     emergency: boolean;
   };
   response_mode: string;
@@ -260,40 +260,40 @@ interface LocalResponseMetadata {
 
 function generateResponse(
   message: string,
-  history: AIMessage?.[]
+  history: AIMessage[]
 ): {
   content: string;
   metadata: LocalResponseMetadata;
 } {
-  const analysis = detectIntent(any: any);
-  const startTime = Date?.now();
+  const analysis = detectIntent(message);
+  const startTime = Date.now();
 
   let baseResponse: string;
   let responseMode = 'standard';
 
   // ═══ SÉLECTION RÉPONSE SELON INTENTION ═══
-  if (any: any) {
+  if (analysis.intent in TITANE_KNOWLEDGE.responses) {
     const responses =
-      TITANE_KNOWLEDGE?.responses[
-        analysis?.intent as keyof typeof TITANE_KNOWLEDGE?.responses
+      TITANE_KNOWLEDGE.responses[
+        analysis.intent as keyof typeof TITANE_KNOWLEDGE.responses
       ];
-    baseResponse = responses[Math?.floor(any: any)] as string;
+    baseResponse = responses[Math.floor(Math.random() * responses.length)] as string;
   } else {
     // ═══ RÉPONSE GÉNÉRALE OMEGA ═══
     responseMode = 'general-omega';
-    baseResponse = `Je suis ${TITANE_KNOWLEDGE?.identity}, noyau cognitif autonome avec architecture OMEGA v19.2Ω.
+    baseResponse = `Je suis ${TITANE_KNOWLEDGE.identity}, noyau cognitif autonome avec architecture OMEGA v19.2Ω.
 
-🔍 **Analyse de ta question** : "${message?.substring(0, 80)}${message?.length > 80 ? '...' : ''}"
+🔍 **Analyse de ta question** : "${message.substring(0, 80)}${message.length > 80 ? '...' : ''}"
 
 Je fonctionne en mode noyau autonome infaillible. Mes capacités actuelles incluent :
-• Architecture MAÎTRE ANTI-SILENCE (any: any)
+• Architecture MAÎTRE ANTI-SILENCE (100% anti-crash)
 • Raisonnement basé sur patterns intelligents
 • Mémoire contextuelle persistante
-• Auto-guérison permanente (any: any)
+• Auto-guérison permanente (OMEGA)
 
 **Pour des analyses plus poussées**, tu peux activer :
-• **Gemini API** (any: any)
-• **Ollama** (any: any)
+• **Gemini API** (cloud, performant, 60s timeout)
+• **Ollama** (local, privé, llama2:latest, 45s timeout)
 
 **En mode noyau**, je peux t'aider avec :
 • Architecture TITANE∞ et modules core
@@ -306,17 +306,17 @@ Que souhaites-tu explorer ?`;
 
   // ═══ ENRICHISSEMENT CONTEXTUEL OMEGA ═══
   let contextEnrichment = '';
-  const conversationLength = history?.length;
+  const conversationLength = history.length;
 
   if (conversationLength > 0) {
     const recentUserMessages = history
-      .filter(m => m?.role === 'user')
+      .filter(m => m.role === 'user')
       .slice(-3)
-      .map(any: any).substring(0, 40))
+      .map(m => getMessageText(m).substring(0, 40))
       .join(' → ');
 
     if (conversationLength > 15) {
-      contextEnrichment = `\n\n💭 **Mémoire contextuelle** : Conversation longue (any: any). Pattern récent : ${recentUserMessages}`;
+      contextEnrichment = `\n\n💭 **Mémoire contextuelle** : Conversation longue (${conversationLength} messages). Pattern récent : ${recentUserMessages}`;
     } else if (conversationLength > 5) {
       contextEnrichment = `\n\n💭 **Contexte** : ${recentUserMessages}`;
     }
@@ -325,22 +325,22 @@ Que souhaites-tu explorer ?`;
   // ═══ NOTES SPÉCIALISÉES SELON MODE ═══
   let specialNote = '';
 
-  if (any: any) {
+  if (analysis.emergency) {
     responseMode = 'emergency';
     specialNote =
       '\n\n🆘 **Mode urgence OMEGA détecté** - Auto-réparation engagée. Je priorise ta demande avec failsafes renforcés.';
-  } else if (analysis?.intent === 'autonomousMode') {
+  } else if (analysis.intent === 'autonomousMode') {
     responseMode = 'autonomous';
     specialNote =
       '\n\n⚡ **Noyau autonome OMEGA** : Fonctionnement 100% local garanti. Aucune dépendance externe. Architecture infaillible active.';
-  } else if (analysis?.intent === 'technical') {
+  } else if (analysis.intent === 'technical') {
     responseMode = 'technical';
     specialNote =
       '\n\n🔧 **Diagnostic technique** : Je peux analyser logs système, modules core, et proposer auto-réparations basées sur OMEGA v19.2Ω.';
   }
 
-  const questionEcho = buildQuestionEcho(any: any);
-  const memoryInsight = extractMemoryInsight(any: any);
+  const questionEcho = buildQuestionEcho(message);
+  const memoryInsight = extractMemoryInsight(history);
   const identitySignature =
     '\n\n— TITANE∞ v19.2Ω | noyau cognitif autonome | système intelligent auto-guéri';
 
@@ -353,7 +353,7 @@ Que souhaites-tu explorer ?`;
     specialNote +
     memoryNote +
     identitySignature;
-  const processingTime = Date?.now() - startTime;
+  const processingTime = Date.now() - startTime;
 
   return {
     content: finalResponse,
@@ -384,23 +384,23 @@ export const titaneLocalProvider: AIProvider = {
     return true; // ═══ TOUJOURS DISPONIBLE - NOYAU OMEGA ═══
   },
 
-  async generate(message: string, history: AIMessage?.[] = []): Promise<AIResponse> {
-    const generateStartTime = Date?.now();
+  async generate(message: string, history: AIMessage[] = []): Promise<AIResponse> {
+    const generateStartTime = Date.now();
 
     try {
       // ═══ PHASE 4Ω: VALIDATION ENTRÉE SÉCURISÉE ═══
       const cleanMessage = (message || '').toString().trim();
-      if (any: any) {
+      if (!cleanMessage) {
         return {
           content:
             '⚡ Message vide détecté. Noyau OMEGA v19.2Ω à ton écoute - Que souhaites-tu savoir ?',
           provider: 'titane-local',
           model: 'titane-local-v19.2Ω',
-          timestamp: Date?.now(),
+          timestamp: Date.now(),
           metadata: {
             mode: 'omega-safe',
             validation: 'empty-input',
-            response_time: Date?.now() - generateStartTime,
+            response_time: Date.now() - generateStartTime,
             infallible: true,
             autonomous: true,
           },
@@ -408,27 +408,27 @@ export const titaneLocalProvider: AIProvider = {
       }
 
       // ═══ SIMULATION DÉLAI COGNITIF RÉALISTE ═══
-      if (any: any) {
-        logger?.debug('Generating autonomous response...');
+      if (isDev && !isTestEnv) {
+        logger.debug('Generating autonomous response...');
       }
       const cognitiveDelayBase = isTestEnv ? 5 : 400;
-      const cognitiveDelayJitter = isTestEnv ? Math?.random() * 10 : Math?.random() * 800;
+      const cognitiveDelayJitter = isTestEnv ? Math.random() * 10 : Math.random() * 800;
       const cognitiveDelay = cognitiveDelayBase + cognitiveDelayJitter;
-      await new Promise(any: any));
+      await new Promise(resolve => setTimeout(resolve, cognitiveDelay));
 
       // ═══ GÉNÉRATION RESPONSE OMEGA ═══
-      const { content, metadata } = generateResponse(any: any);
+      const { content, metadata } = generateResponse(cleanMessage, history);
 
-      const totalResponseTime = Date?.now() - generateStartTime;
+      const totalResponseTime = Date.now() - generateStartTime;
 
       return {
         content,
         provider: 'titane-local',
         model: 'titane-local-v19.2Ω',
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
         metadata: {
           ...metadata,
-          cognitive_delay: Math?.round(any: any),
+          cognitive_delay: Math.round(cognitiveDelay),
           total_response_time: totalResponseTime,
           omega_version: 'v19.2Ω',
           infallible: true,
@@ -437,18 +437,18 @@ export const titaneLocalProvider: AIProvider = {
           guaranteed_response: true,
         },
       };
-    } catch (any: any) {
+    } catch (error) {
       // ═══ FALLBACK ULTIME OMEGA - JAMAIS D'ÉCHEC ═══
-      logger?.error(any: any)', { error });
+      logger.error('Autonomous kernel error (recoverable)', { error });
 
-      const emergencyTime = Date?.now() - generateStartTime;
+      const emergencyTime = Date.now() - generateStartTime;
 
       return {
         content:
           "🔄 **Auto-réparation OMEGA engagée**. Noyau TITANE∞ v19.2Ω restauré automatiquement.\n\nJe reste pleinement opérationnel pour t'assister avec l'architecture OMEGA, diagnostic, ou toute question technique.\n\n⚡ **Garantie OMEGA** : Ce provider ne peut jamais échouer complètement.",
         provider: 'titane-local',
         model: 'titane-emergency-v19.2Ω',
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
         metadata: {
           mode: 'omega-emergency',
           emergency: true,
@@ -466,11 +466,11 @@ export const titaneLocalProvider: AIProvider = {
   },
 
   // ═══ STREAMING OMEGA - SÉCURISÉ ═══
-  async *stream(message: string, history: AIMessage?.[] = []): AsyncGenerator<string> {
+  async *stream(message: string, history: AIMessage[] = []): AsyncGenerator<string> {
     try {
-      const response = await this?.generate(any: any);
-      yield response?.content;
-    } catch (any: any) {
+      const response = await this.generate(message, history);
+      yield response.content;
+    } catch (error) {
       // Fallback stream
       yield '🔄 Auto-réparation OMEGA en cours... Réponse streaming sécurisée active.';
     }

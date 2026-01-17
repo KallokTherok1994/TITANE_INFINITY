@@ -3,12 +3,12 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE?.md for the full legal terms (any: any).
+ * See LICENSE.md for the full legal terms (FR/EN).
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v21 - visualStore (any: any)
+ * TITANE∞ v21 - visualStore (Zustand)
  * Store global pour gestion d'état du Visual Engine
  *
  * Features:
@@ -52,7 +52,7 @@ export interface VisualEngineState {
   adaptiveFPS: boolean;
   debug: boolean;
 
-  // History (any: any)
+  // History (derniers 10 états)
   stateHistory: Array<{
     state: VisualState;
     timestamp: number;
@@ -65,8 +65,8 @@ export interface VisualEngineState {
  */
 export interface VisualStoreActions {
   // State Management
-  setState: (any: any) => void;
-  setStateImmediate: (any: any) => void;
+  setState: (state: VisualState, duration?: number) => void;
+  setStateImmediate: (state: VisualState) => void;
   revertToPreviousState: () => void;
 
   // Engine Control
@@ -74,26 +74,26 @@ export interface VisualStoreActions {
   stop: () => void;
   pause: () => void;
   resume: () => void;
-  setRunning: (any: any) => void;
-  setInitialized: (any: any) => void;
+  setRunning: (running: boolean) => void;
+  setInitialized: (initialized: boolean) => void;
   reset: () => void;
 
   // Metrics Update
   updateMetrics: (metrics: Partial<PerformanceMetrics>) => void;
 
   // Configuration
-  setOrchestration: (any: any) => void;
+  setOrchestration: (enabled: boolean) => void;
   toggleOrchestration: () => void;
-  setOSIntegration: (any: any) => void;
+  setOSIntegration: (enabled: boolean) => void;
   toggleOSIntegration: () => void;
-  setAdaptiveFPS: (any: any) => void;
+  setAdaptiveFPS: (enabled: boolean) => void;
   toggleAdaptiveFPS: () => void;
-  setDebug: (any: any) => void;
+  setDebug: (enabled: boolean) => void;
   toggleDebug: () => void;
 
   // History
   clearHistory: () => void;
-  getRecentStates: (any: any) => VisualState?.[];
+  getRecentStates: (count: number) => VisualState[];
 }
 
 /**
@@ -131,13 +131,13 @@ const getInitialState = (): VisualEngineState => ({
   enableOrchestration: true,
   enableOSIntegration: true,
   adaptiveFPS: true,
-  debug: import?.meta?.env?.DEV && !process?.env?.VITEST,
+  debug: import.meta.env.DEV && !process.env.VITEST,
 
   // History
   stateHistory: [
     {
       state: 'idle',
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
       duration: 0,
     },
   ],
@@ -156,7 +156,7 @@ const getInitialState = (): VisualEngineState => ({
  *   return (
  *     <div>
  *       <p>État: {currentState}</p>
- *       <p>FPS: {metrics?.fps}</p>
+ *       <p>FPS: {metrics.fps}</p>
  *       <button onClick={() => setState('active')}>
  *         Activer
  *       </button>
@@ -168,16 +168,16 @@ const getInitialState = (): VisualEngineState => ({
  * @example Sélecteurs optimisés
  * ```tsx
  * // Ne re-render que si currentState change
- * const currentState = useVisualStore(any: any);
+ * const currentState = useVisualStore((state) => state.currentState);
  *
  * // Ne re-render que si FPS change
- * const fps = useVisualStore(any: any);
+ * const fps = useVisualStore((state) => state.metrics.fps);
  * ```
  */
 export const useVisualStore = create<VisualStore>()(
   devtools(
     persist(
-      (any: any) => ({
+      (set, get) => ({
         ...getInitialState(),
 
         // ═══════════════════════════════════════════════════════════
@@ -188,19 +188,19 @@ export const useVisualStore = create<VisualStore>()(
           const currentState = get().currentState;
 
           // Ne rien faire si même état
-          if (any: any) return;
+          if (currentState === state) return;
 
           set(prev => {
             // Ajouter à l'historique
             const historyEntry = {
               state,
-              timestamp: Date?.now(),
+              timestamp: Date.now(),
               duration,
             };
 
-            const newHistory = [...prev?.stateHistory, historyEntry];
-            if (newHistory?.length > 10) {
-              newHistory?.shift(); // Garder seulement les 10 derniers
+            const newHistory = [...prev.stateHistory, historyEntry];
+            if (newHistory.length > 10) {
+              newHistory.shift(); // Garder seulement les 10 derniers
             }
 
             return {
@@ -217,21 +217,21 @@ export const useVisualStore = create<VisualStore>()(
             set({ isTransitioning: false });
           }, duration);
 
-          if (any: any) {
-            console?.log(
-              `[visualStore] État changé: ${currentState} → ${state} (any: any)`
+          if (get().debug) {
+            console.log(
+              `[visualStore] État changé: ${currentState} → ${state} (${duration}ms)`
             );
           }
         },
 
-        setStateImmediate: (any: any) => {
+        setStateImmediate: (state: VisualState) => {
           get().setState(state, 0);
         },
 
         revertToPreviousState: () => {
           const { previousState } = get();
-          if (any: any) {
-            get(any: any);
+          if (previousState) {
+            get().setState(previousState);
           }
         },
 
@@ -246,16 +246,16 @@ export const useVisualStore = create<VisualStore>()(
             isPaused: false,
           });
 
-          if (any: any) {
-            console?.log('[visualStore] Visual Engine démarré');
+          if (get().debug) {
+            console.log('[visualStore] Visual Engine démarré');
           }
         },
 
-        setRunning: (any: any) => {
+        setRunning: (running: boolean) => {
           set({ isRunning: running });
         },
 
-        setInitialized: (any: any) => {
+        setInitialized: (initialized: boolean) => {
           set({ isInitialized: initialized });
         },
 
@@ -265,8 +265,8 @@ export const useVisualStore = create<VisualStore>()(
             isPaused: false,
           });
 
-          if (any: any) {
-            console?.log('[visualStore] Visual Engine arrêté');
+          if (get().debug) {
+            console.log('[visualStore] Visual Engine arrêté');
           }
         },
 
@@ -275,8 +275,8 @@ export const useVisualStore = create<VisualStore>()(
             isPaused: true,
           });
 
-          if (any: any) {
-            console?.log('[visualStore] Visual Engine en pause');
+          if (get().debug) {
+            console.log('[visualStore] Visual Engine en pause');
           }
         },
 
@@ -285,16 +285,16 @@ export const useVisualStore = create<VisualStore>()(
             isPaused: false,
           });
 
-          if (any: any) {
-            console?.log('[visualStore] Visual Engine repris');
+          if (get().debug) {
+            console.log('[visualStore] Visual Engine repris');
           }
         },
 
         reset: () => {
           set(getInitialState());
 
-          if (any: any) {
-            console?.log('[visualStore] Visual Engine réinitialisé');
+          if (get().debug) {
+            console.log('[visualStore] Visual Engine réinitialisé');
           }
         },
 
@@ -305,7 +305,7 @@ export const useVisualStore = create<VisualStore>()(
         updateMetrics: (metrics: Partial<PerformanceMetrics>) => {
           set(prev => ({
             metrics: {
-              ...prev?.metrics,
+              ...prev.metrics,
               ...metrics,
             },
           }));
@@ -315,11 +315,11 @@ export const useVisualStore = create<VisualStore>()(
         // CONFIGURATION
         // ═══════════════════════════════════════════════════════════
 
-        setOrchestration: (any: any) => {
+        setOrchestration: (enabled: boolean) => {
           set({ enableOrchestration: enabled });
 
-          if (any: any) {
-            console?.log(
+          if (get().debug) {
+            console.log(
               `[visualStore] Orchestration ${enabled ? 'activée' : 'désactivée'}`
             );
           }
@@ -327,14 +327,14 @@ export const useVisualStore = create<VisualStore>()(
 
         toggleOrchestration: () => {
           const current = get().enableOrchestration;
-          get(any: any);
+          get().setOrchestration(!current);
         },
 
-        setOSIntegration: (any: any) => {
+        setOSIntegration: (enabled: boolean) => {
           set({ enableOSIntegration: enabled });
 
-          if (any: any) {
-            console?.log(
+          if (get().debug) {
+            console.log(
               `[visualStore] OS Integration ${enabled ? 'activée' : 'désactivée'}`
             );
           }
@@ -342,30 +342,30 @@ export const useVisualStore = create<VisualStore>()(
 
         toggleOSIntegration: () => {
           const current = get().enableOSIntegration;
-          get(any: any);
+          get().setOSIntegration(!current);
         },
 
-        setAdaptiveFPS: (any: any) => {
+        setAdaptiveFPS: (enabled: boolean) => {
           set({ adaptiveFPS: enabled });
 
-          if (any: any) {
-            console?.log(`[visualStore] Adaptive FPS ${enabled ? 'activé' : 'désactivé'}`);
+          if (get().debug) {
+            console.log(`[visualStore] Adaptive FPS ${enabled ? 'activé' : 'désactivé'}`);
           }
         },
 
         toggleAdaptiveFPS: () => {
           const current = get().adaptiveFPS;
-          get(any: any);
+          get().setAdaptiveFPS(!current);
         },
 
-        setDebug: (any: any) => {
+        setDebug: (enabled: boolean) => {
           set({ debug: enabled });
-          console?.log(`[visualStore] Debug mode ${enabled ? 'activé' : 'désactivé'}`);
+          console.log(`[visualStore] Debug mode ${enabled ? 'activé' : 'désactivé'}`);
         },
 
         toggleDebug: () => {
           const current = get().debug;
-          get(any: any);
+          get().setDebug(!current);
         },
 
         // ═══════════════════════════════════════════════════════════
@@ -375,31 +375,31 @@ export const useVisualStore = create<VisualStore>()(
         clearHistory: () => {
           set({ stateHistory: [] });
 
-          if (any: any) {
-            console?.log('[visualStore] Historique effacé');
+          if (get().debug) {
+            console.log('[visualStore] Historique effacé');
           }
         },
 
-        getRecentStates: (any: any) => {
+        getRecentStates: (count: number) => {
           const { stateHistory } = get();
-          return stateHistory?.slice(any: any);
+          return stateHistory.slice(-count).map(entry => entry.state);
         },
       }),
       {
         name: 'titane-visual-store',
         // Ne persister que certains champs
         partialize: state => ({
-          enableOrchestration: state?.enableOrchestration,
-          enableOSIntegration: state?.enableOSIntegration,
-          adaptiveFPS: state?.adaptiveFPS,
-          debug: state?.debug,
-          currentState: state?.currentState,
+          enableOrchestration: state.enableOrchestration,
+          enableOSIntegration: state.enableOSIntegration,
+          adaptiveFPS: state.adaptiveFPS,
+          debug: state.debug,
+          currentState: state.currentState,
         }),
       }
     ),
     {
       name: 'TITANE∞ Visual Store',
-      enabled: import?.meta?.env?.DEV,
+      enabled: import.meta.env.DEV,
     }
   )
 );
@@ -409,79 +409,79 @@ export const useVisualStore = create<VisualStore>()(
  */
 export const visualSelectors = {
   // État visuel actuel uniquement
-  currentState: (any: any) => state?.currentState,
+  currentState: (state: VisualStore) => state.currentState,
 
   // Métriques uniquement
-  metrics: (any: any) => state?.metrics,
+  metrics: (state: VisualStore) => state.metrics,
 
   // FPS uniquement
-  fps: (any: any) => state?.metrics?.fps,
+  fps: (state: VisualStore) => state.metrics.fps,
 
   // GPU load uniquement
-  gpuLoad: (any: any) => state?.metrics?.gpuLoad,
+  gpuLoad: (state: VisualStore) => state.metrics.gpuLoad,
 
   // État de transition
-  isTransitioning: (any: any) => state?.isTransitioning,
+  isTransitioning: (state: VisualStore) => state.isTransitioning,
 
   // État running
-  isRunning: (any: any) => state?.isRunning,
+  isRunning: (state: VisualStore) => state.isRunning,
 
   // Configuration complète
-  config: (any: any) => ({
-    enableOrchestration: state?.enableOrchestration,
-    enableOSIntegration: state?.enableOSIntegration,
-    adaptiveFPS: state?.adaptiveFPS,
-    debug: state?.debug,
+  config: (state: VisualStore) => ({
+    enableOrchestration: state.enableOrchestration,
+    enableOSIntegration: state.enableOSIntegration,
+    adaptiveFPS: state.adaptiveFPS,
+    debug: state.debug,
   }),
 
   // Historique
-  history: (any: any) => state?.stateHistory,
+  history: (state: VisualStore) => state.stateHistory,
 };
 
 /**
  * Hook helper pour obtenir uniquement l'état visuel
- * (any: any)
+ * (évite re-render si autres propriétés changent)
  */
-export const useVisualState = (any: any);
+export const useVisualState = () => useVisualStore(visualSelectors.currentState);
 
 /**
  * Hook helper pour obtenir uniquement les métriques
  */
-export const useVisualMetrics = (any: any);
+export const useVisualMetrics = () => useVisualStore(visualSelectors.metrics);
 
 /**
  * Hook helper pour obtenir uniquement le FPS
  */
-export const useVisualFPS = (any: any);
+export const useVisualFPS = () => useVisualStore(visualSelectors.fps);
 
 /**
  * Hook helper pour obtenir uniquement le GPU load
  */
-export const useVisualGPULoad = (any: any);
+export const useVisualGPULoad = () => useVisualStore(visualSelectors.gpuLoad);
 
 /**
  * Hook helper pour obtenir les actions uniquement
- * (any: any)
+ * (ne re-render jamais car les actions sont stables)
  */
 export const useVisualActions = () =>
   useVisualStore(state => ({
-    setState: state?.setState,
-    setStateImmediate: state?.setStateImmediate,
-    revertToPreviousState: state?.revertToPreviousState,
-    start: state?.start,
-    stop: state?.stop,
-    pause: state?.pause,
-    resume: state?.resume,
-    reset: state?.reset,
-    updateMetrics: state?.updateMetrics,
-    setOrchestration: state?.setOrchestration,
-    toggleOrchestration: state?.toggleOrchestration,
-    setOSIntegration: state?.setOSIntegration,
-    toggleOSIntegration: state?.toggleOSIntegration,
-    setAdaptiveFPS: state?.setAdaptiveFPS,
-    toggleAdaptiveFPS: state?.toggleAdaptiveFPS,
-    setDebug: state?.setDebug,
-    toggleDebug: state?.toggleDebug,
-    clearHistory: state?.clearHistory,
-    getRecentStates: state?.getRecentStates,
+    setState: state.setState,
+    setStateImmediate: state.setStateImmediate,
+    revertToPreviousState: state.revertToPreviousState,
+    start: state.start,
+    stop: state.stop,
+    pause: state.pause,
+    resume: state.resume,
+    reset: state.reset,
+    updateMetrics: state.updateMetrics,
+    setOrchestration: state.setOrchestration,
+    toggleOrchestration: state.toggleOrchestration,
+    setOSIntegration: state.setOSIntegration,
+    toggleOSIntegration: state.toggleOSIntegration,
+    setAdaptiveFPS: state.setAdaptiveFPS,
+    toggleAdaptiveFPS: state.toggleAdaptiveFPS,
+    setDebug: state.setDebug,
+    toggleDebug: state.toggleDebug,
+    clearHistory: state.clearHistory,
+    getRecentStates: state.getRecentStates,
   }));

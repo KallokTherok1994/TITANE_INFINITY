@@ -1,18 +1,18 @@
 /**
- * TITANE∞ v21 — Visual Event Model (any: any)
+ * TITANE∞ v21 — Visual Event Model (VEM)
  * Modèle événementiel unifié pour le système visuel
  *
  * Le VEM déclare TOUS les événements visuels de TITANE∞ :
  * - Événements cognitifs (thinking, processing, etc.)
- * - Événements conversationnels (any: any)
- * - Événements émotionnels (any: any)
- * - Événements système (any: any)
- * - Événements pipeline OMEGA (any: any)
- * - Événements auto-réparation (any: any)
+ * - Événements conversationnels (message received/sent)
+ * - Événements émotionnels (emotion shift, empathy boost)
+ * - Événements système (load increase/decrease, performance)
+ * - Événements pipeline OMEGA (step start/end, error)
+ * - Événements auto-réparation (healing start/wave/complete)
  *
  * Chaque événement possède :
  * - Nom unique
- * - Priorité (any: any)
+ * - Priorité (pour résolution de conflits)
  * - Effets visuels associés
  * - Règles d'inhibition/préemption
  * - Durées minimales
@@ -50,18 +50,18 @@ export type VisualEffectType =
   | 'vortex';
 
 export enum EventPriority {
-  CRITICAL = 100, // Highest priority (any: any)
-  HIGH = 75, // Important (any: any)
-  MEDIUM = 50, // Normal (any: any)
-  LOW = 25, // Background (any: any)
-  AMBIENT = 10, // Lowest (any: any)
+  CRITICAL = 100, // Highest priority (errors, healing critical)
+  HIGH = 75, // Important (processing, pipeline steps)
+  MEDIUM = 50, // Normal (thinking, messages)
+  LOW = 25, // Background (idle, listening)
+  AMBIENT = 10, // Lowest (ambient effects)
 }
 
 export interface VisualEffect {
   type: VisualEffectType;
   intensity: number; // 0-1
-  duration: number; // ms (any: any)
-  delay: number; // ms (any: any)
+  duration: number; // ms (0 = infinite)
+  delay: number; // ms (delay before starting)
   color?: string;
   parameters?: Record<string, unknown>;
 }
@@ -73,19 +73,19 @@ export interface VisualEvent {
   priority: EventPriority;
 
   // Effects
-  effects: VisualEffect?.[];
+  effects: VisualEffect[];
 
   // Timing
-  minDuration: number; // ms (any: any)
-  maxDuration: number; // ms (any: any)
+  minDuration: number; // ms (minimum duration before preemption)
+  maxDuration: number; // ms (0 = infinite)
 
   // Conflict resolution
-  inhibits: string?.[]; // Events that cannot run with this one
-  preempts: string?.[]; // Events that this one replaces
+  inhibits: string[]; // Events that cannot run with this one
+  preempts: string[]; // Events that this one replaces
 
   // Metadata
   description: string;
-  tags: string?.[];
+  tags: string[];
 }
 
 // ═════════════════════════════════════════════════════════════════
@@ -100,7 +100,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
   thinking_start: {
     name: 'thinking_start',
     type: 'cognitive',
-    priority: EventPriority?.MEDIUM,
+    priority: EventPriority.MEDIUM,
     effects: [
       {
         type: 'pulse',
@@ -132,7 +132,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
   thinking_progress: {
     name: 'thinking_progress',
     type: 'cognitive',
-    priority: EventPriority?.MEDIUM,
+    priority: EventPriority.MEDIUM,
     effects: [
       {
         type: 'pulse',
@@ -158,7 +158,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
   thinking_peak: {
     name: 'thinking_peak',
     type: 'cognitive',
-    priority: EventPriority?.HIGH,
+    priority: EventPriority.HIGH,
     effects: [
       {
         type: 'glow',
@@ -190,7 +190,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
   thinking_end: {
     name: 'thinking_end',
     type: 'cognitive',
-    priority: EventPriority?.MEDIUM,
+    priority: EventPriority.MEDIUM,
     effects: [
       {
         type: 'pulse',
@@ -216,7 +216,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
   processing: {
     name: 'processing',
     type: 'cognitive',
-    priority: EventPriority?.HIGH,
+    priority: EventPriority.HIGH,
     effects: [
       {
         type: 'vortex',
@@ -252,7 +252,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
   message_received: {
     name: 'message_received',
     type: 'conversational',
-    priority: EventPriority?.MEDIUM,
+    priority: EventPriority.MEDIUM,
     effects: [
       {
         type: 'ripple',
@@ -279,7 +279,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
   message_sent: {
     name: 'message_sent',
     type: 'conversational',
-    priority: EventPriority?.MEDIUM,
+    priority: EventPriority.MEDIUM,
     effects: [
       {
         type: 'ripple',
@@ -306,7 +306,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
   conversation_start: {
     name: 'conversation_start',
     type: 'conversational',
-    priority: EventPriority?.MEDIUM,
+    priority: EventPriority.MEDIUM,
     effects: [
       {
         type: 'glow',
@@ -332,7 +332,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
   conversation_end: {
     name: 'conversation_end',
     type: 'conversational',
-    priority: EventPriority?.LOW,
+    priority: EventPriority.LOW,
     effects: [
       {
         type: 'pulse',
@@ -356,7 +356,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
   emotion_shift: {
     name: 'emotion_shift',
     type: 'emotional',
-    priority: EventPriority?.MEDIUM,
+    priority: EventPriority.MEDIUM,
     effects: [
       {
         type: 'color_shift',
@@ -382,7 +382,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
   empathy_boost: {
     name: 'empathy_boost',
     type: 'emotional',
-    priority: EventPriority?.MEDIUM,
+    priority: EventPriority.MEDIUM,
     effects: [
       {
         type: 'glow',
@@ -409,7 +409,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
   analytic_focus: {
     name: 'analytic_focus',
     type: 'emotional',
-    priority: EventPriority?.MEDIUM,
+    priority: EventPriority.MEDIUM,
     effects: [
       {
         type: 'orbital_shift',
@@ -440,7 +440,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
   load_increase: {
     name: 'load_increase',
     type: 'system',
-    priority: EventPriority?.LOW,
+    priority: EventPriority.LOW,
     effects: [
       {
         type: 'pulse',
@@ -466,7 +466,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
   load_decrease: {
     name: 'load_decrease',
     type: 'system',
-    priority: EventPriority?.LOW,
+    priority: EventPriority.LOW,
     effects: [
       {
         type: 'pulse',
@@ -486,7 +486,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
   performance_drop: {
     name: 'performance_drop',
     type: 'system',
-    priority: EventPriority?.HIGH,
+    priority: EventPriority.HIGH,
     effects: [
       {
         type: 'glitch',
@@ -506,7 +506,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
   performance_recover: {
     name: 'performance_recover',
     type: 'system',
-    priority: EventPriority?.MEDIUM,
+    priority: EventPriority.MEDIUM,
     effects: [
       {
         type: 'ripple',
@@ -536,7 +536,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
   omega_step_start: {
     name: 'omega_step_start',
     type: 'pipeline',
-    priority: EventPriority?.MEDIUM,
+    priority: EventPriority.MEDIUM,
     effects: [
       {
         type: 'pulse',
@@ -562,7 +562,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
   omega_step_end: {
     name: 'omega_step_end',
     type: 'pipeline',
-    priority: EventPriority?.MEDIUM,
+    priority: EventPriority.MEDIUM,
     effects: [
       {
         type: 'particle_burst',
@@ -582,7 +582,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
   omega_error: {
     name: 'omega_error',
     type: 'pipeline',
-    priority: EventPriority?.CRITICAL,
+    priority: EventPriority.CRITICAL,
     effects: [
       {
         type: 'glitch',
@@ -609,7 +609,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
   omega_complete: {
     name: 'omega_complete',
     type: 'pipeline',
-    priority: EventPriority?.MEDIUM,
+    priority: EventPriority.MEDIUM,
     effects: [
       {
         type: 'ripple',
@@ -639,7 +639,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
   healing_start: {
     name: 'healing_start',
     type: 'healing',
-    priority: EventPriority?.HIGH,
+    priority: EventPriority.HIGH,
     effects: [
       {
         type: 'healing_wave',
@@ -667,7 +667,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
   healing_wave: {
     name: 'healing_wave',
     type: 'healing',
-    priority: EventPriority?.HIGH,
+    priority: EventPriority.HIGH,
     effects: [
       {
         type: 'healing_wave',
@@ -693,7 +693,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
   healing_complete: {
     name: 'healing_complete',
     type: 'healing',
-    priority: EventPriority?.MEDIUM,
+    priority: EventPriority.MEDIUM,
     effects: [
       {
         type: 'particle_burst',
@@ -731,7 +731,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
   user_click: {
     name: 'user_click',
     type: 'user_interaction',
-    priority: EventPriority?.LOW,
+    priority: EventPriority.LOW,
     effects: [
       {
         type: 'ripple',
@@ -751,7 +751,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
   user_hover: {
     name: 'user_hover',
     type: 'user_interaction',
-    priority: EventPriority?.AMBIENT,
+    priority: EventPriority.AMBIENT,
     effects: [
       {
         type: 'glow',
@@ -775,7 +775,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
   notification: {
     name: 'notification',
     type: 'notification',
-    priority: EventPriority?.MEDIUM,
+    priority: EventPriority.MEDIUM,
     effects: [
       {
         type: 'pulse',
@@ -805,7 +805,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
   idle: {
     name: 'idle',
     type: 'cognitive',
-    priority: EventPriority?.AMBIENT,
+    priority: EventPriority.AMBIENT,
     effects: [
       {
         type: 'pulse',
@@ -818,7 +818,7 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
     maxDuration: 0,
     inhibits: [],
     preempts: [],
-    description: 'Idle state (any: any)',
+    description: 'Idle state (ambient)',
     tags: ['idle', 'ambient'],
   },
 };
@@ -830,47 +830,47 @@ export const VISUAL_EVENTS: Record<string, VisualEvent> = {
 /**
  * Get event by name
  */
-export function getEvent(any: any): VisualEvent | undefined {
+export function getEvent(name: string): VisualEvent | undefined {
   return VISUAL_EVENTS[name];
 }
 
 /**
  * Get all events of a given type
  */
-export function getEventsByType(any: any): VisualEvent?.[] {
-  return Object?.values(any: any);
+export function getEventsByType(type: VisualEventType): VisualEvent[] {
+  return Object.values(VISUAL_EVENTS).filter(event => event.type === type);
 }
 
 /**
  * Get all events with priority >= threshold
  */
-export function getEventsByPriority(any: any): VisualEvent?.[] {
-  return Object?.values(any: any);
+export function getEventsByPriority(minPriority: EventPriority): VisualEvent[] {
+  return Object.values(VISUAL_EVENTS).filter(event => event.priority >= minPriority);
 }
 
 /**
  * Check if event1 inhibits event2
  */
-export function isInhibited(any: any): boolean {
+export function isInhibited(event1: string, event2: string): boolean {
   const e1 = VISUAL_EVENTS[event1];
-  if (any: any) return false;
-  return e1?.inhibits?.includes(any: any);
+  if (!e1) return false;
+  return e1.inhibits.includes(event2);
 }
 
 /**
  * Check if event1 preempts event2
  */
-export function preempts(any: any): boolean {
+export function preempts(event1: string, event2: string): boolean {
   const e1 = VISUAL_EVENTS[event1];
-  if (any: any) return false;
-  return e1?.preempts?.includes(any: any);
+  if (!e1) return false;
+  return e1.preempts.includes(event2);
 }
 
 /**
  * List all event names
  */
-export function getAllEventNames(): string?.[] {
-  return Object?.keys(any: any);
+export function getAllEventNames(): string[] {
+  return Object.keys(VISUAL_EVENTS);
 }
 
 export default VISUAL_EVENTS;

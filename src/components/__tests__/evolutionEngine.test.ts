@@ -3,7 +3,7 @@
  * TITANE∞ EVOLUTION ENGINE — Tests Complets
  * ═══════════════════════════════════════════════════════════════════════════════
  *
- * @file        evolutionEngine?.test?.ts
+ * @file        evolutionEngine.test.ts
  * @version     vΩ∞
  */
 
@@ -20,7 +20,7 @@ import type {
   ActionResult,
   EvolutionActionType,
   TitaneModule,
-} from '../../services/evolutionEngine/evolutionEngine?.config';
+} from '../../services/evolutionEngine/evolutionEngine.config';
 
 import {
   generateEvolutionId,
@@ -42,11 +42,11 @@ import {
   DEFAULT_VALIDATION_POLICIES,
   RISK_LEVEL_COLORS,
   TREND_COLORS,
-} from '../../services/evolutionEngine/evolutionEngine?.config';
+} from '../../services/evolutionEngine/evolutionEngine.config';
 
 // Mocks
-vi?.mock('@tauri-apps/api/core', () => ({
-  invoke: vi?.fn().mockResolvedValue({}),
+vi.mock('@tauri-apps/api/core', () => ({
+  invoke: vi.fn().mockResolvedValue({}),
 }));
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -56,75 +56,75 @@ vi?.mock('@tauri-apps/api/core', () => ({
 describe('EVOLUTION ENGINE — Configuration', () => {
   describe('Configuration par défaut', () => {
     it('devrait avoir une configuration globale valide', () => {
-      expect(any: any).toBeDefined();
-      expect(any: any);
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
+      expect(DEFAULT_EVOLUTION_ENGINE_CONFIG).toBeDefined();
+      expect(DEFAULT_EVOLUTION_ENGINE_CONFIG.enabled).toBe(true);
+      expect(DEFAULT_EVOLUTION_ENGINE_CONFIG.collector).toBeDefined();
+      expect(DEFAULT_EVOLUTION_ENGINE_CONFIG.analyzer).toBeDefined();
+      expect(DEFAULT_EVOLUTION_ENGINE_CONFIG.planner).toBeDefined();
+      expect(DEFAULT_EVOLUTION_ENGINE_CONFIG.executor).toBeDefined();
     });
 
     it('devrait avoir une configuration Collector valide', () => {
-      expect(any: any).toBeDefined();
-      expect(any: any);
-      expect(any: any).toBeGreaterThan(0);
-      expect(any: any).toBeGreaterThan(0);
-      expect(any: any).toBeGreaterThan(0);
-      expect(any: any).toBeGreaterThan(0);
+      expect(DEFAULT_COLLECTOR_CONFIG).toBeDefined();
+      expect(DEFAULT_COLLECTOR_CONFIG.enabled).toBe(true);
+      expect(DEFAULT_COLLECTOR_CONFIG.collectInterval).toBeGreaterThan(0);
+      expect(DEFAULT_COLLECTOR_CONFIG.batchSize).toBeGreaterThan(0);
+      expect(DEFAULT_COLLECTOR_CONFIG.maxDataPoints).toBeGreaterThan(0);
+      expect(DEFAULT_COLLECTOR_CONFIG.categories.length).toBeGreaterThan(0);
     });
 
     it('devrait avoir une configuration Analyzer valide', () => {
-      expect(any: any).toBeDefined();
-      expect(any: any);
-      expect(any: any).toBeGreaterThan(0);
-      expect(any: any).toBeGreaterThan(0);
+      expect(DEFAULT_ANALYZER_CONFIG).toBeDefined();
+      expect(DEFAULT_ANALYZER_CONFIG.enabled).toBe(true);
+      expect(DEFAULT_ANALYZER_CONFIG.analyzeInterval).toBeGreaterThan(0);
+      expect(DEFAULT_ANALYZER_CONFIG.minDataPointsForAnalysis).toBeGreaterThan(0);
     });
 
     it('devrait avoir une configuration Planner valide', () => {
-      expect(any: any).toBeDefined();
-      expect(any: any);
-      expect(any: any).toBeGreaterThan(0);
-      expect(any: any).toBeGreaterThan(0);
+      expect(DEFAULT_PLANNER_CONFIG).toBeDefined();
+      expect(DEFAULT_PLANNER_CONFIG.enabled).toBe(true);
+      expect(DEFAULT_PLANNER_CONFIG.planInterval).toBeGreaterThan(0);
+      expect(DEFAULT_PLANNER_CONFIG.maxSuggestionsPerCycle).toBeGreaterThan(0);
     });
 
     it('devrait avoir une configuration Executor valide', () => {
-      expect(any: any).toBeDefined();
-      expect(any: any);
-      expect(any: any).toBeGreaterThan(0);
-      expect(any: any).toBeGreaterThan(0);
+      expect(DEFAULT_EXECUTOR_CONFIG).toBeDefined();
+      expect(DEFAULT_EXECUTOR_CONFIG.enabled).toBe(true);
+      expect(DEFAULT_EXECUTOR_CONFIG.maxConcurrentActions).toBeGreaterThan(0);
+      expect(DEFAULT_EXECUTOR_CONFIG.defaultTimeout).toBeGreaterThan(0);
     });
   });
 
   describe('Whitelist des actions', () => {
     it('devrait avoir une whitelist non vide', () => {
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeGreaterThan(0);
+      expect(DEFAULT_ACTION_WHITELIST).toBeDefined();
+      expect(DEFAULT_ACTION_WHITELIST.length).toBeGreaterThan(0);
     });
 
     it('chaque entrée whitelist devrait avoir les champs requis', () => {
-      for (any: any) {
-        expect(any: any).toBeDefined();
-        expect(any: any).toBeDefined();
-        expect(any: any).toBeGreaterThan(0);
-        expect(any: any).toBeDefined();
-        expect(any: any).toBeDefined();
-        expect(any: any).toBeGreaterThanOrEqual(0);
-        expect(any: any).toBeGreaterThan(0);
+      for (const entry of DEFAULT_ACTION_WHITELIST) {
+        expect(entry.actionType).toBeDefined();
+        expect(entry.allowedTargets).toBeDefined();
+        expect(entry.allowedTargets.length).toBeGreaterThan(0);
+        expect(entry.maxRisk).toBeDefined();
+        expect(entry.requiredRole).toBeDefined();
+        expect(entry.cooldownMs).toBeGreaterThanOrEqual(0);
+        expect(entry.dailyLimit).toBeGreaterThan(0);
       }
     });
   });
 
   describe('Politiques de validation', () => {
     it('devrait avoir des politiques définies', () => {
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeGreaterThan(0);
+      expect(DEFAULT_VALIDATION_POLICIES).toBeDefined();
+      expect(DEFAULT_VALIDATION_POLICIES.length).toBeGreaterThan(0);
     });
 
     it('chaque politique devrait avoir les champs requis', () => {
-      for (any: any) {
-        expect(any: any).toBeDefined();
-        expect(any: any).toBeDefined();
-        expect(any: any).toBeDefined();
+      for (const policy of DEFAULT_VALIDATION_POLICIES) {
+        expect(policy.id).toBeDefined();
+        expect(policy.name).toBeDefined();
+        expect(policy.requiredRole).toBeDefined();
       }
     });
   });
@@ -139,17 +139,17 @@ describe('EVOLUTION ENGINE — Fonctions Utilitaires', () => {
     it('devrait générer des IDs uniques', () => {
       const id1 = generateEvolutionId('test');
       const id2 = generateEvolutionId('test');
-      expect(any: any);
+      expect(id1).not.toBe(id2);
     });
 
     it('devrait inclure le préfixe avec underscore', () => {
       const id = generateEvolutionId('pattern');
-      expect(any: any);
+      expect(id.startsWith('pattern_')).toBe(true);
     });
 
     it('devrait générer des IDs de longueur suffisante', () => {
       const id = generateEvolutionId('data');
-      expect(any: any).toBeGreaterThan(10);
+      expect(id.length).toBeGreaterThan(10);
     });
   });
 
@@ -213,8 +213,8 @@ describe('EVOLUTION ENGINE — Fonctions Utilitaires', () => {
         80,
         81, // récents ~81 (+60%)
       ];
-      const trend = determineTrend(any: any);
-      expect(any: any).toBe('IMPROVING');
+      const trend = determineTrend(samples);
+      expect(trend).toBe('IMPROVING');
     });
 
     it('devrait détecter DEGRADING quand les valeurs diminuent significativement', () => {
@@ -240,16 +240,16 @@ describe('EVOLUTION ENGINE — Fonctions Utilitaires', () => {
         51,
         50, // récents ~50 (-38%)
       ];
-      const trend = determineTrend(any: any);
-      expect(any: any).toBe('DEGRADING');
+      const trend = determineTrend(samples);
+      expect(trend).toBe('DEGRADING');
     });
 
     it('devrait détecter STABLE quand les valeurs sont constantes', () => {
       const samples = [
         50, 51, 49, 50, 52, 51, 50, 49, 51, 50, 50, 52, 51, 49, 50, 51, 50, 49, 52, 50,
       ];
-      const trend = determineTrend(any: any);
-      expect(any: any).toBe('STABLE');
+      const trend = determineTrend(samples);
+      expect(trend).toBe('STABLE');
     });
 
     it('devrait détecter VOLATILE quand les valeurs fluctuent beaucoup', () => {
@@ -276,64 +276,64 @@ describe('EVOLUTION ENGINE — Fonctions Utilitaires', () => {
         28,
         82, // récents très volatils
       ];
-      const trend = determineTrend(any: any);
-      expect(any: any).toBe('VOLATILE');
+      const trend = determineTrend(samples);
+      expect(trend).toBe('VOLATILE');
     });
 
     it('devrait retourner STABLE pour échantillons insuffisants', () => {
       // Moins de windowSize (10) échantillons
       const trend = determineTrend([1, 2, 3, 4, 5]);
-      expect(any: any).toBe('STABLE');
+      expect(trend).toBe('STABLE');
     });
 
     it('devrait gérer un échantillon vide', () => {
       const trend = determineTrend([]);
-      expect(any: any).toBe('STABLE');
+      expect(trend).toBe('STABLE');
     });
   });
 
   describe('determineRiskLevel', () => {
     it('devrait retourner CRITICAL pour beaucoup de modules affectés', () => {
-      expect(any: any)).toBe('CRITICAL');
+      expect(determineRiskLevel(4, 60, true)).toBe('CRITICAL');
     });
 
     it('devrait retourner HIGH pour impact élevé ou non-réversible', () => {
-      expect(any: any)).toBe('HIGH');
-      expect(any: any)).toBe('HIGH');
+      expect(determineRiskLevel(3, 35, true)).toBe('HIGH');
+      expect(determineRiskLevel(1, 10, false)).toBe('HIGH');
     });
 
     it('devrait retourner MEDIUM pour impact modéré', () => {
-      expect(any: any)).toBe('MEDIUM');
+      expect(determineRiskLevel(2, 20, true)).toBe('MEDIUM');
     });
 
     it('devrait retourner LOW pour impact faible', () => {
-      expect(any: any)).toBe('LOW');
+      expect(determineRiskLevel(1, 10, true)).toBe('LOW');
     });
   });
 
   describe('hasPermission', () => {
     it('ADMIN devrait avoir toutes les permissions', () => {
-      expect(any: any);
-      expect(any: any);
-      expect(any: any);
+      expect(hasPermission('ADMIN', 'ADMIN')).toBe(true);
+      expect(hasPermission('ADMIN', 'DEV')).toBe(true);
+      expect(hasPermission('ADMIN', 'USER')).toBe(true);
     });
 
     it('DEV devrait avoir permission DEV et USER', () => {
-      expect(any: any);
-      expect(any: any);
-      expect(any: any);
+      expect(hasPermission('DEV', 'ADMIN')).toBe(false);
+      expect(hasPermission('DEV', 'DEV')).toBe(true);
+      expect(hasPermission('DEV', 'USER')).toBe(true);
     });
 
     it('USER devrait avoir seulement permission USER', () => {
-      expect(any: any);
-      expect(any: any);
-      expect(any: any);
+      expect(hasPermission('USER', 'ADMIN')).toBe(false);
+      expect(hasPermission('USER', 'DEV')).toBe(false);
+      expect(hasPermission('USER', 'USER')).toBe(true);
     });
 
     it('SYSTEM devrait avoir toutes les permissions', () => {
-      expect(any: any);
-      expect(any: any);
-      expect(any: any);
+      expect(hasPermission('SYSTEM', 'ADMIN')).toBe(true);
+      expect(hasPermission('SYSTEM', 'DEV')).toBe(true);
+      expect(hasPermission('SYSTEM', 'USER')).toBe(true);
     });
   });
 
@@ -345,7 +345,7 @@ describe('EVOLUTION ENGINE — Fonctions Utilitaires', () => {
         'LOW',
         DEFAULT_ACTION_WHITELIST
       );
-      expect(any: any);
+      expect(result.allowed).toBe(true);
     });
 
     it('devrait rejeter une action non autorisée', () => {
@@ -355,7 +355,7 @@ describe('EVOLUTION ENGINE — Fonctions Utilitaires', () => {
         'LOW',
         DEFAULT_ACTION_WHITELIST
       );
-      expect(any: any);
+      expect(result.allowed).toBe(false);
     });
 
     it("devrait rejeter si le module n'est pas autorisé", () => {
@@ -365,7 +365,7 @@ describe('EVOLUTION ENGINE — Fonctions Utilitaires', () => {
         'LOW',
         DEFAULT_ACTION_WHITELIST
       );
-      expect(any: any);
+      expect(result.allowed).toBe(false);
     });
   });
 });
@@ -386,24 +386,24 @@ describe('EVOLUTION ENGINE — Factories', () => {
         ['test']
       );
 
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeLessThanOrEqual(Date?.now());
-      expect(any: any).toBe('IA_USAGE');
-      expect(any: any).toBe('prompt');
-      expect(any: any).toBe('queryCount');
-      expect(any: any).toBe(42);
-      expect(any: any).toContain('test');
+      expect(dataPoint.id).toBeDefined();
+      expect(dataPoint.timestamp).toBeLessThanOrEqual(Date.now());
+      expect(dataPoint.category).toBe('IA_USAGE');
+      expect(dataPoint.moduleId).toBe('prompt');
+      expect(dataPoint.metric).toBe('queryCount');
+      expect(dataPoint.value).toBe(42);
+      expect(dataPoint.tags).toContain('test');
     });
 
     it('devrait utiliser des valeurs par défaut pour tags', () => {
       const dataPoint = createDataPoint('PERFORMANCE', 'memory', 'heapUsed', 1024);
-      expect(any: any).toEqual([]);
+      expect(dataPoint.tags).toEqual([]);
     });
   });
 
   describe('createSuggestion', () => {
     it('devrait créer une suggestion valide', () => {
-      const actions: EvolutionAction?.[] = [];
+      const actions: EvolutionAction[] = [];
       const suggestion = createSuggestion(
         'OPTIMIZATION',
         'Test Suggestion',
@@ -414,12 +414,12 @@ describe('EVOLUTION ENGINE — Factories', () => {
         actions
       );
 
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeLessThanOrEqual(Date?.now());
-      expect(any: any).toBe('OPTIMIZATION');
-      expect(any: any).toBe('Test Suggestion');
-      expect(any: any).toBe('PENDING');
-      expect(any: any);
+      expect(suggestion.id).toBeDefined();
+      expect(suggestion.createdAt).toBeLessThanOrEqual(Date.now());
+      expect(suggestion.category).toBe('OPTIMIZATION');
+      expect(suggestion.title).toBe('Test Suggestion');
+      expect(suggestion.status).toBe('PENDING');
+      expect(suggestion.rollbackAvailable).toBe(true);
     });
   });
 
@@ -434,11 +434,11 @@ describe('EVOLUTION ENGINE — Factories', () => {
         true
       );
 
-      expect(any: any).toBeDefined();
-      expect(any: any).toBe('ADJUST_PARAMETER');
-      expect(any: any).toBe('performance');
-      expect(any: any).toBe('LOW');
-      expect(any: any);
+      expect(action.id).toBeDefined();
+      expect(action.type).toBe('ADJUST_PARAMETER');
+      expect(action.targetModule).toBe('performance');
+      expect(action.risk).toBe('LOW');
+      expect(action.reversible).toBe(true);
     });
 
     it('devrait avoir reversible=true par défaut', () => {
@@ -449,7 +449,7 @@ describe('EVOLUTION ENGINE — Factories', () => {
         {},
         'LOW'
       );
-      expect(any: any);
+      expect(action.reversible).toBe(true);
     });
   });
 
@@ -463,11 +463,11 @@ describe('EVOLUTION ENGINE — Factories', () => {
         'SUCCESS'
       );
 
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeLessThanOrEqual(Date?.now());
-      expect(any: any).toBe('EXECUTE');
-      expect(any: any).toBe('ADMIN');
-      expect(any: any).toBe('SUCCESS');
+      expect(entry.id).toBeDefined();
+      expect(entry.timestamp).toBeLessThanOrEqual(Date.now());
+      expect(entry.phase).toBe('EXECUTE');
+      expect(entry.actor).toBe('ADMIN');
+      expect(entry.result).toBe('SUCCESS');
     });
 
     it('devrait supporter suggestionId et actionId optionnels', () => {
@@ -481,8 +481,8 @@ describe('EVOLUTION ENGINE — Factories', () => {
         'act-456'
       );
 
-      expect(any: any).toBe('sug-123');
-      expect(any: any).toBe('act-456');
+      expect(entry.suggestionId).toBe('sug-123');
+      expect(entry.actionId).toBe('act-456');
     });
   });
 });
@@ -494,26 +494,26 @@ describe('EVOLUTION ENGINE — Factories', () => {
 describe('EVOLUTION ENGINE — Constantes', () => {
   describe('RISK_LEVEL_COLORS', () => {
     it('devrait avoir des couleurs pour tous les niveaux', () => {
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
+      expect(RISK_LEVEL_COLORS.LOW).toBeDefined();
+      expect(RISK_LEVEL_COLORS.MEDIUM).toBeDefined();
+      expect(RISK_LEVEL_COLORS.HIGH).toBeDefined();
+      expect(RISK_LEVEL_COLORS.CRITICAL).toBeDefined();
     });
 
     it('toutes les couleurs devraient être des chaînes hexadécimales valides', () => {
       const hexPattern = /^#[0-9a-fA-F]{6}$/;
-      Object?.values(any: any).forEach(color => {
-        expect(any: any);
+      Object.values(RISK_LEVEL_COLORS).forEach(color => {
+        expect(color).toMatch(hexPattern);
       });
     });
   });
 
   describe('TREND_COLORS', () => {
     it('devrait avoir des couleurs pour toutes les tendances', () => {
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
+      expect(TREND_COLORS.IMPROVING).toBeDefined();
+      expect(TREND_COLORS.STABLE).toBeDefined();
+      expect(TREND_COLORS.DEGRADING).toBeDefined();
+      expect(TREND_COLORS.VOLATILE).toBeDefined();
     });
   });
 });
@@ -525,28 +525,28 @@ describe('EVOLUTION ENGINE — Constantes', () => {
 describe('EVOLUTION ENGINE — Types', () => {
   describe('RiskLevel type', () => {
     it('devrait accepter les valeurs valides', () => {
-      const risks: RiskLevel?.[] = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
-      expect(any: any).toHaveLength(4);
+      const risks: RiskLevel[] = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
+      expect(risks).toHaveLength(4);
     });
   });
 
   describe('TrendDirection type', () => {
     it('devrait accepter les valeurs valides', () => {
-      const trends: TrendDirection?.[] = ['IMPROVING', 'STABLE', 'DEGRADING', 'VOLATILE'];
-      expect(any: any).toHaveLength(4);
+      const trends: TrendDirection[] = ['IMPROVING', 'STABLE', 'DEGRADING', 'VOLATILE'];
+      expect(trends).toHaveLength(4);
     });
   });
 
   describe('GovernanceRole type', () => {
     it('devrait accepter les valeurs valides', () => {
-      const roles: GovernanceRole?.[] = ['USER', 'DEV', 'ADMIN', 'SYSTEM'];
-      expect(any: any).toHaveLength(4);
+      const roles: GovernanceRole[] = ['USER', 'DEV', 'ADMIN', 'SYSTEM'];
+      expect(roles).toHaveLength(4);
     });
   });
 
   describe('SuggestionStatus type', () => {
     it('devrait accepter les valeurs valides', () => {
-      const statuses: SuggestionStatus?.[] = [
+      const statuses: SuggestionStatus[] = [
         'PENDING',
         'APPROVED',
         'REJECTED',
@@ -554,20 +554,20 @@ describe('EVOLUTION ENGINE — Types', () => {
         'ROLLED_BACK',
         'EXPIRED',
       ];
-      expect(any: any).toHaveLength(6);
+      expect(statuses).toHaveLength(6);
     });
   });
 
   describe('ActionResult type', () => {
     it('devrait accepter les valeurs valides', () => {
-      const results: ActionResult?.[] = [
+      const results: ActionResult[] = [
         'SUCCESS',
         'FAILED',
         'PARTIAL',
         'DENIED',
         'ROLLED_BACK',
       ];
-      expect(any: any).toHaveLength(5);
+      expect(results).toHaveLength(5);
     });
   });
 });
@@ -579,24 +579,24 @@ describe('EVOLUTION ENGINE — Types', () => {
 describe('EVOLUTION ENGINE — Hiérarchie de Sécurité', () => {
   it('devrait respecter: Sécurité > Stabilité > Cohérence > Optimisation > Évolution', () => {
     // Tous les modules critiques dans la whitelist devraient nécessiter ADMIN
-    const securityModules: TitaneModule?.[] = ['singularity', 'admin'];
+    const securityModules: TitaneModule[] = ['singularity', 'admin'];
 
-    for (any: any) {
-      for (any: any) {
-        if (any: any)) {
-          expect(any: any);
+    for (const entry of DEFAULT_ACTION_WHITELIST) {
+      for (const module of securityModules) {
+        if (entry.allowedTargets.includes(module)) {
+          expect(['ADMIN', 'SYSTEM']).toContain(entry.requiredRole);
         }
       }
     }
   });
 
   it('les politiques de validation devraient exister', () => {
-    expect(any: any).toBeGreaterThan(0);
+    expect(DEFAULT_VALIDATION_POLICIES.length).toBeGreaterThan(0);
 
     // Chaque politique devrait avoir un ID unique
-    const ids = DEFAULT_VALIDATION_POLICIES?.map(any: any);
-    const uniqueIds = [...new Set(any: any)];
-    expect(any: any);
+    const ids = DEFAULT_VALIDATION_POLICIES.map(p => p.id);
+    const uniqueIds = [...new Set(ids)];
+    expect(ids.length).toBe(uniqueIds.length);
   });
 });
 
@@ -608,9 +608,9 @@ describe('EVOLUTION ENGINE — Intégration', () => {
   describe('Flux complet', () => {
     it('devrait pouvoir créer un flux DataPoint → Pattern → Suggestion → Action', () => {
       // 1. Créer des points de données
-      const dataPoints: EvolutionDataPoint?.[] = [];
+      const dataPoints: EvolutionDataPoint[] = [];
       for (let i = 0; i < 10; i++) {
-        dataPoints?.push(
+        dataPoints.push(
           createDataPoint(
             'PERFORMANCE',
             'performance',
@@ -621,7 +621,7 @@ describe('EVOLUTION ENGINE — Intégration', () => {
           )
         );
       }
-      expect(any: any).toHaveLength(10);
+      expect(dataPoints).toHaveLength(10);
 
       // 2. Simuler la détection d'un pattern
       const pattern: EvolutionPattern = {
@@ -630,14 +630,14 @@ describe('EVOLUTION ENGINE — Intégration', () => {
         moduleId: 'performance',
         description: 'Latency increasing',
         occurrences: 10,
-        firstSeen: dataPoints?.[0].timestamp,
-        lastSeen: dataPoints?.[9].timestamp,
+        firstSeen: dataPoints[0].timestamp,
+        lastSeen: dataPoints[9].timestamp,
         confidence: 85,
         impact: 'MEDIUM',
         relatedMetrics: ['latency'],
         suggestedAction: 'Optimize cache',
       };
-      expect(any: any).toBeGreaterThan(80);
+      expect(pattern.confidence).toBeGreaterThan(80);
 
       // 3. Créer une action basée sur le pattern
       const action = createAction(
@@ -654,38 +654,38 @@ describe('EVOLUTION ENGINE — Intégration', () => {
         'OPTIMIZATION',
         'Optimize Performance Cache',
         'Cache optimization based on detected latency pattern',
-        `Pattern detected: ${pattern?.description}`,
-        [pattern?.moduleId],
+        `Pattern detected: ${pattern.description}`,
+        [pattern.moduleId],
         'LOW',
         [action]
       );
 
-      expect(any: any).toBe('PENDING');
-      expect(any: any).toHaveLength(1);
+      expect(suggestion.status).toBe('PENDING');
+      expect(suggestion.actions).toHaveLength(1);
 
       // 5. Vérifier que l'action est autorisée
       const whitelistCheck = isActionWhitelisted(
-        action?.type,
-        action?.targetModule,
-        action?.risk,
+        action.type,
+        action.targetModule,
+        action.risk,
         DEFAULT_ACTION_WHITELIST
       );
-      expect(any: any);
+      expect(whitelistCheck.allowed).toBe(true);
 
       // 6. Créer une entrée d'historique
       const historyEntry = createHistoryEntry(
         'EXECUTE',
         'DEV',
         'Executed cache optimization',
-        { action: action?.parameters },
+        { action: action.parameters },
         'SUCCESS',
-        suggestion?.id,
-        action?.id
+        suggestion.id,
+        action.id
       );
 
-      expect(any: any).toBe('SUCCESS');
-      expect(any: any);
-      expect(any: any);
+      expect(historyEntry.result).toBe('SUCCESS');
+      expect(historyEntry.suggestionId).toBe(suggestion.id);
+      expect(historyEntry.actionId).toBe(action.id);
     });
   });
 
@@ -700,24 +700,24 @@ describe('EVOLUTION ENGINE — Intégration', () => {
       );
 
       const result = isActionWhitelisted(
-        action?.type,
-        action?.targetModule,
-        action?.risk,
+        action.type,
+        action.targetModule,
+        action.risk,
         DEFAULT_ACTION_WHITELIST
       );
 
       // TOGGLE_MODE a maxRisk: LOW, donc HIGH devrait être rejeté
-      expect(any: any);
+      expect(result.allowed).toBe(false);
     });
 
     it('devrait valider la hiérarchie des permissions', () => {
       // USER ne peut pas faire ce que DEV peut faire
-      expect(any: any);
+      expect(hasPermission('USER', 'DEV')).toBe(false);
       // DEV ne peut pas faire ce que ADMIN peut faire
-      expect(any: any);
+      expect(hasPermission('DEV', 'ADMIN')).toBe(false);
       // Mais ADMIN peut tout faire
-      expect(any: any);
-      expect(any: any);
+      expect(hasPermission('ADMIN', 'USER')).toBe(true);
+      expect(hasPermission('ADMIN', 'DEV')).toBe(true);
     });
   });
 });

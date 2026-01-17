@@ -14,7 +14,7 @@
  */
 
 // ─────────────────────────────────────────────────────────────────
-// 🧠 v22Ω: Cognitive Kernel (any: any)
+// 🧠 v22Ω: Cognitive Kernel (depuis services/ai)
 // ─────────────────────────────────────────────────────────────────
 export { cognitiveKernel } from '../../services/ai/cognitiveKernel';
 export type {
@@ -27,7 +27,7 @@ export type {
 } from '../../services/ai/cognitiveKernel';
 
 // ─────────────────────────────────────────────────────────────────
-// 🌌 v∞Ω: Meta-Kernel (any: any)
+// 🌌 v∞Ω: Meta-Kernel (Super-Conscience Système) (depuis services/ai)
 // ─────────────────────────────────────────────────────────────────
 export { metaKernel } from '../../services/ai/metaKernel';
 export type {
@@ -46,7 +46,7 @@ export type {
 } from '../../services/ai/metaKernel';
 
 // ─────────────────────────────────────────────────────────────────
-// 🜂 vΩ∞: Singularity Kernel (any: any)
+// 🜂 vΩ∞: Singularity Kernel (OS Cognitif Total) (depuis services/ai)
 // ─────────────────────────────────────────────────────────────────
 export { singularityKernel } from '../../services/ai/singularityKernel';
 export type {

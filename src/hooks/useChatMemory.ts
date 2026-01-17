@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v15 — USE CHAT MEMORY (any: any)
+ *   TITANE∞ v15 — USE CHAT MEMORY (Synchro Backend)
  *   Hook isolé: Synchronisation mémoire backend uniquement
  * ═══════════════════════════════════════════════════════════════════
  */
@@ -27,14 +27,14 @@ export interface UseChatMemoryOptions {
 }
 
 export interface UseChatMemoryReturn {
-  messagesForMode: AIMessage?.[];
+  messagesForMode: AIMessage[];
   memoryStats: {
     count: number;
     sizeMB: number;
     compressed: boolean;
   };
-  loadHistory: () => AIMessage?.[];
-  saveMessage: (any: any) => void;
+  loadHistory: () => AIMessage[];
+  saveMessage: (message: AIMessage) => void;
   clearMode: () => void;
   compactIfNeeded: () => { cleaned: boolean; sizeMB: number };
   awardXP: (
@@ -52,8 +52,8 @@ export interface UseChatMemoryReturn {
  * - XP attribution
  * - 0 UI, 0 génération IA
  */
-export function useChatMemory(any: any): UseChatMemoryReturn {
-  const [messagesForMode, setMessagesForMode] = useState<AIMessage?.[]>([]);
+export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryReturn {
+  const [messagesForMode, setMessagesForMode] = useState<AIMessage[]>([]);
   const [memoryStats, setMemoryStats] = useState({
     count: 0,
     sizeMB: 0,
@@ -64,99 +64,99 @@ export function useChatMemory(any: any): UseChatMemoryReturn {
    * Load history on mode change
    */
   useEffect(() => {
-    const history = chatMemoryCompactor?.loadForMode(any: any);
-    setMessagesForMode(any: any);
+    const history = chatMemoryCompactor.loadForMode(options.mode);
+    setMessagesForMode(history);
 
     // Update stats
-    const stats = chatMemoryCompactor?.getStats(any: any);
+    const stats = chatMemoryCompactor.getStats(options.mode);
     setMemoryStats({
-      count: history?.length,
-      sizeMB: stats?.sizeMB,
-      compressed: stats?.compressed,
+      count: history.length,
+      sizeMB: stats.sizeMB,
+      compressed: stats.compressed,
     });
 
-    const verboseMemory = import?.meta?.env?.VITE_CHAT_MEMORY_VERBOSE === '1';
-    if (verboseMemory || history?.length > 0) {
-      logger?.debug(`Loaded ${history?.length} messages for mode ${options?.mode}`);
+    const verboseMemory = import.meta.env.VITE_CHAT_MEMORY_VERBOSE === '1';
+    if (verboseMemory || history.length > 0) {
+      logger.debug(`Loaded ${history.length} messages for mode ${options.mode}`);
     }
 
     // Auto-cleanup si enabled
-    if (any: any) {
-      const cleanup = chatMemoryCompactor?.autoCleanupIfNeeded();
-      if (any: any) {
-        logger?.info(any: any)`);
+    if (options.autoCleanup) {
+      const cleanup = chatMemoryCompactor.autoCleanupIfNeeded();
+      if (cleanup.cleaned) {
+        logger.info(`Memory cleaned (was ${cleanup.sizeMB.toFixed(2)}MB)`);
       }
     }
-  }, [options?.mode, options?.autoCleanup]);
+  }, [options.mode, options.autoCleanup]);
 
   /**
    * Load history manuel
    */
   const loadHistory = useCallback(() => {
-    const history = chatMemoryCompactor?.loadForMode(any: any);
-    setMessagesForMode(any: any);
+    const history = chatMemoryCompactor.loadForMode(options.mode);
+    setMessagesForMode(history);
     return history;
-  }, [options?.mode]);
+  }, [options.mode]);
 
   /**
    * Save message
-   * FIX v15.1: Ne plus mettre à jour messagesForMode ici (any: any)
+   * FIX v15.1: Ne plus mettre à jour messagesForMode ici (évite re-render cascade)
    * La sauvegarde en localStorage est suffisante, l'UI gère son propre state
    */
   const saveMessage = useCallback(
-    (any: any) => {
-      const updatedMessages = chatMemoryCompactor?.addMessageToMode(any: any);
+    (message: AIMessage) => {
+      const updatedMessages = chatMemoryCompactor.addMessageToMode(options.mode, message);
 
       // FIX v15.1: Ne plus faire setMessagesForMode ici!
       // Cela déclenchait un re-render de useChat qui écrasait l'UI
       // L'historique sera rechargé uniquement au changement de mode
 
       // Update stats seulement
-      const stats = chatMemoryCompactor?.getStats(any: any);
+      const stats = chatMemoryCompactor.getStats(options.mode);
       setMemoryStats({
-        count: updatedMessages?.length,
-        sizeMB: stats?.sizeMB,
-        compressed: stats?.compressed,
+        count: updatedMessages.length,
+        sizeMB: stats.sizeMB,
+        compressed: stats.compressed,
       });
 
-      logger?.debug(
-        `Message saved (mode: ${options?.mode}, total: ${updatedMessages?.length})`
+      logger.debug(
+        `Message saved (mode: ${options.mode}, total: ${updatedMessages.length})`
       );
     },
-    [options?.mode]
+    [options.mode]
   );
 
   /**
    * Clear mode
    */
   const clearMode = useCallback(() => {
-    chatMemoryCompactor?.clearMode(any: any);
+    chatMemoryCompactor.clearMode(options.mode);
     setMessagesForMode([]);
     setMemoryStats({ count: 0, sizeMB: 0, compressed: false });
 
-    logger?.debug(`Mode ${options?.mode} cleared`);
-  }, [options?.mode]);
+    logger.debug(`Mode ${options.mode} cleared`);
+  }, [options.mode]);
 
   /**
    * Compact if needed
    */
   const compactIfNeeded = useCallback(() => {
-    return chatMemoryCompactor?.autoCleanupIfNeeded();
+    return chatMemoryCompactor.autoCleanupIfNeeded();
   }, []);
 
   /**
-   * Award XP (any: any)
+   * Award XP (backend sync)
    */
   const awardXP = useCallback(
-    async (any: any) => {
+    async (domain: string, amount: number, messageLength: number, provider: string) => {
       try {
-        await awardExperience(domain, amount, XPSource?.ChatMessage, {
+        await awardExperience(domain, amount, XPSource.ChatMessage, {
           messageLength,
           provider,
         });
-        logger?.debug(`+${amount} XP awarded to ${domain}`);
-      } catch (any: any) {
-        logger?.warn(any: any);
+        logger.debug(`+${amount} XP awarded to ${domain}`);
+      } catch (err) {
+        logger.warn('XP award failed (non-blocking):', err);
       }
     },
     []

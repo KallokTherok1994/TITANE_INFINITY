@@ -6,7 +6,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
  *   TITANE∞ v19.2Ω — UTILITAIRES MÉMOIRE PERSISTANTE
- *   Scoring, Classification, Helpers Résumés (any: any)
+ *   Scoring, Classification, Helpers Résumés (READ-ONLY Frontend)
  * ═══════════════════════════════════════════════════════════════════════════════
  *
  *   ⚠️ IMPORTANT: Ce module ne fait AUCUNE écriture mémoire.
@@ -19,7 +19,7 @@ import type {
   MemoryContentType,
   MemoryImportance,
   ModeMemoryPermissions,
-} from './persistentMemory?.config';
+} from './persistentMemory.config';
 import {
   MODE_MEMORY_PERMISSIONS,
   DEFAULT_MEMORY_PERMISSIONS,
@@ -28,8 +28,8 @@ import {
   MIN_RELEVANCE_FOR_INJECTION,
   MAX_CONTEXT_INJECTION_TOKENS,
   MEMORY_TOPIC_LABELS,
-} from './persistentMemory?.config';
-import type { ChatModeId } from '../ai/chatModes?.config';
+} from './persistentMemory.config';
+import type { ChatModeId } from '../ai/chatModes.config';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SCORING DE PERTINENCE
@@ -48,60 +48,60 @@ export function calculateRelevanceScore(
   context?: {
     currentTopic?: MemoryTopic;
     currentProject?: string;
-    recentTags?: string?.[];
+    recentTags?: string[];
   }
 ): number {
-  if (!query || query?.trim().length === 0) {
+  if (!query || query.trim().length === 0) {
     return 0.5; // Score neutre si pas de requête
   }
 
-  const queryLower = query?.toLowerCase();
-  const queryWords = queryLower?.split(/\s+/).filter(w => w?.length > 2);
+  const queryLower = query.toLowerCase();
+  const queryWords = queryLower.split(/\s+/).filter(w => w.length > 2);
 
   let score = 0;
   let maxScore = 0;
 
-  // 1. Correspondance du contenu (any: any)
-  const contentLower = entry?.content?.toLowerCase();
-  const contentMatches = queryWords?.filter(any: any)).length;
-  const contentScore = queryWords?.length > 0 ? contentMatches / queryWords?.length : 0;
+  // 1. Correspondance du contenu (40% du score)
+  const contentLower = entry.content.toLowerCase();
+  const contentMatches = queryWords.filter(w => contentLower.includes(w)).length;
+  const contentScore = queryWords.length > 0 ? contentMatches / queryWords.length : 0;
   score += contentScore * 0.4;
   maxScore += 0.4;
 
-  // 2. Correspondance des tags (any: any)
-  if (entry?.tags?.length > 0) {
-    const tagMatches = entry?.tags?.filter(tag =>
-      queryWords?.some(any: any))
+  // 2. Correspondance des tags (20% du score)
+  if (entry.tags.length > 0) {
+    const tagMatches = entry.tags.filter(tag =>
+      queryWords.some(w => tag.toLowerCase().includes(w))
     ).length;
-    const tagScore = tagMatches / entry?.tags?.length;
+    const tagScore = tagMatches / entry.tags.length;
     score += tagScore * 0.2;
   }
   maxScore += 0.2;
 
-  // 3. Correspondance du sujet (any: any)
-  if (any: any) {
+  // 3. Correspondance du sujet (15% du score)
+  if (context?.currentTopic && entry.topic === context.currentTopic) {
     score += 0.15;
   }
   maxScore += 0.15;
 
-  // 4. Correspondance du projet (any: any)
-  if (any: any) {
+  // 4. Correspondance du projet (10% du score)
+  if (context?.currentProject && entry.metadata?.projectId === context.currentProject) {
     score += 0.1;
   }
   maxScore += 0.1;
 
-  // 5. Importance (any: any)
-  const importanceScore = entry?.importance / 5;
+  // 5. Importance (10% du score)
+  const importanceScore = entry.importance / 5;
   score += importanceScore * 0.1;
   maxScore += 0.1;
 
-  // 6. Récence (any: any)
-  const ageHours = (any: any) / (1000 * 60 * 60);
-  const recencyScore = Math?.max(0, 1 - ageHours / (24 * 30)); // Décroît sur 30 jours
+  // 6. Récence (5% du score)
+  const ageHours = (Date.now() - entry.metadata?.createdAt) / (1000 * 60 * 60);
+  const recencyScore = Math.max(0, 1 - ageHours / (24 * 30)); // Décroît sur 30 jours
   score += recencyScore * 0.05;
   maxScore += 0.05;
 
-  return Math?.min(any: any);
+  return Math.min(1, score / maxScore);
 }
 
 /**
@@ -110,52 +110,52 @@ export function calculateRelevanceScore(
 export function calculateTFIDFScore(
   entry: MemoryEntry,
   query: string,
-  corpus: MemoryEntry?.[]
+  corpus: MemoryEntry[]
 ): number {
   const queryTerms = query
     .toLowerCase()
     .split(/\s+/)
-    .filter(t => t?.length > 2);
-  if (queryTerms?.length === 0) return 0;
+    .filter(t => t.length > 2);
+  if (queryTerms.length === 0) return 0;
 
-  const contentTerms = entry?.content?.toLowerCase().split(/\s+/);
+  const contentTerms = entry.content.toLowerCase().split(/\s+/);
 
   let score = 0;
 
-  for (any: any) {
+  for (const term of queryTerms) {
     // TF: Term Frequency dans le document
-    const tf = contentTerms?.filter(any: any)).length / contentTerms?.length;
+    const tf = contentTerms.filter(t => t.includes(term)).length / contentTerms.length;
 
     // IDF: Inverse Document Frequency
-    const docsWithTerm = corpus?.filter(e =>
-      e?.content?.toLowerCase(any: any)
+    const docsWithTerm = corpus.filter(e =>
+      e.content.toLowerCase().includes(term)
     ).length;
-    const idf = Math?.log((corpus?.length + 1) / (docsWithTerm + 1)) + 1;
+    const idf = Math.log((corpus.length + 1) / (docsWithTerm + 1)) + 1;
 
     score += tf * idf;
   }
 
-  return Math?.min(any: any);
+  return Math.min(1, score / queryTerms.length);
 }
 
 /**
  * Classe les entrées par score de pertinence
  */
 export function rankByRelevance(
-  entries: MemoryEntry?.[],
+  entries: MemoryEntry[],
   query: string,
   context?: {
     currentTopic?: MemoryTopic;
     currentProject?: string;
-    recentTags?: string?.[];
+    recentTags?: string[];
   }
 ): Array<{ entry: MemoryEntry; score: number }> {
-  const scored = entries?.map(entry => ({
+  const scored = entries.map(entry => ({
     entry,
-    score: calculateRelevanceScore(any: any),
+    score: calculateRelevanceScore(entry, query, context),
   }));
 
-  return scored?.sort(any: any);
+  return scored.sort((a, b) => b.score - a.score);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -163,7 +163,7 @@ export function rankByRelevance(
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** Keywords par sujet pour classification automatique */
-const TOPIC_KEYWORDS: Record<MemoryTopic, string?.[]> = {
+const TOPIC_KEYWORDS: Record<MemoryTopic, string[]> = {
   general: [],
   coding: [
     'code',
@@ -258,7 +258,7 @@ const TOPIC_KEYWORDS: Record<MemoryTopic, string?.[]> = {
 };
 
 /** Keywords par type de contenu */
-const CONTENT_TYPE_KEYWORDS: Record<MemoryContentType, string?.[]> = {
+const CONTENT_TYPE_KEYWORDS: Record<MemoryContentType, string[]> = {
   message: [],
   summary: ['résumé', 'en bref', 'récapitulatif', 'synthèse'],
   knowledge: ['savoir', 'connaissance', 'fait', 'information', 'définition'],
@@ -275,36 +275,36 @@ const CONTENT_TYPE_KEYWORDS: Record<MemoryContentType, string?.[]> = {
 /**
  * Classifie automatiquement le sujet d'un contenu
  */
-export function classifyTopic(any: any): MemoryTopic {
-  const contentLower = content?.toLowerCase();
+export function classifyTopic(content: string): MemoryTopic {
+  const contentLower = content.toLowerCase();
 
   const scores: Record<MemoryTopic, number> = {} as Record<MemoryTopic, number>;
 
-  for (any: any)) {
-    if (keywords?.length === 0) continue;
-    const matches = keywords?.filter(any: any)).length;
-    scores[topic as MemoryTopic] = matches / keywords?.length;
+  for (const [topic, keywords] of Object.entries(TOPIC_KEYWORDS)) {
+    if (keywords.length === 0) continue;
+    const matches = keywords.filter(kw => contentLower.includes(kw)).length;
+    scores[topic as MemoryTopic] = matches / keywords.length;
   }
 
-  const bestTopic = Object?.entries(any: any).reduce(
+  const bestTopic = Object.entries(scores).reduce(
     (best, [topic, score]) =>
-      score > best?.score ? { topic: topic as MemoryTopic, score } : best,
+      score > best.score ? { topic: topic as MemoryTopic, score } : best,
     { topic: 'general' as MemoryTopic, score: 0 }
   );
 
-  return bestTopic?.score > 0.1 ? bestTopic?.topic : 'general';
+  return bestTopic.score > 0.1 ? bestTopic.topic : 'general';
 }
 
 /**
  * Classifie automatiquement le type de contenu
  */
-export function classifyContentType(any: any): MemoryContentType {
-  const contentLower = content?.toLowerCase();
+export function classifyContentType(content: string): MemoryContentType {
+  const contentLower = content.toLowerCase();
 
-  // Détection code en priorité (any: any)
+  // Détection code en priorité (pattern spécifique)
   if (
-    content?.includes('```') ||
-    /^(any: any)
+    content.includes('```') ||
+    /^(const|let|var|function|class|import|export|def|pub|fn)\s/.test(content)
   ) {
     return 'code_snippet';
   }
@@ -314,19 +314,19 @@ export function classifyContentType(any: any): MemoryContentType {
     number
   >;
 
-  for (any: any)) {
-    if (keywords?.length === 0) continue;
-    const matches = keywords?.filter(any: any)).length;
-    scores[type as MemoryContentType] = matches / keywords?.length;
+  for (const [type, keywords] of Object.entries(CONTENT_TYPE_KEYWORDS)) {
+    if (keywords.length === 0) continue;
+    const matches = keywords.filter(kw => contentLower.includes(kw)).length;
+    scores[type as MemoryContentType] = matches / keywords.length;
   }
 
-  const bestType = Object?.entries(any: any).reduce(
+  const bestType = Object.entries(scores).reduce(
     (best, [type, score]) =>
-      score > best?.score ? { type: type as MemoryContentType, score } : best,
+      score > best.score ? { type: type as MemoryContentType, score } : best,
     { type: 'message' as MemoryContentType, score: 0 }
   );
 
-  return bestType?.score > 0.15 ? bestType?.type : 'message';
+  return bestType.score > 0.15 ? bestType.type : 'message';
 }
 
 /**
@@ -340,18 +340,18 @@ export function calculateAutoImportance(
   let importance = 2; // Base
 
   // Types de contenu importants
-  if (any: any)) {
+  if (['decision', 'knowledge', 'reference', 'milestone'].includes(contentType)) {
     importance += 2;
-  } else if (any: any)) {
+  } else if (['code_snippet', 'project_context'].includes(contentType)) {
     importance += 1;
   }
 
-  // Longueur du contenu (any: any)
-  if (content?.length > 1000) importance += 1;
-  else if (content?.length > 500) importance += 0.5;
+  // Longueur du contenu (messages longs = plus importants)
+  if (content.length > 1000) importance += 1;
+  else if (content.length > 500) importance += 0.5;
 
   // Présence de listes ou structure
-  if (content?.includes('\n-') || content?.includes('\n1.')) importance += 0.5;
+  if (content.includes('\n-') || content.includes('\n1.')) importance += 0.5;
 
   // Keywords d'importance
   const importantKeywords = [
@@ -362,44 +362,44 @@ export function calculateAutoImportance(
     'ne pas oublier',
     'rappel',
   ];
-  if (any: any))) {
+  if (importantKeywords.some(kw => content.toLowerCase().includes(kw))) {
     importance += 1;
   }
 
-  return Math?.min(any: any))) as MemoryImportance;
+  return Math.min(5, Math.max(1, Math.round(importance))) as MemoryImportance;
 }
 
 /**
  * Extrait les tags automatiquement du contenu
  */
-export function extractAutoTags(content: string, limit: number = 5): string?.[] {
-  const contentLower = content?.toLowerCase();
-  const tags: string?.[] = [];
+export function extractAutoTags(content: string, limit: number = 5): string[] {
+  const contentLower = content.toLowerCase();
+  const tags: string[] = [];
 
-  // Extraire tous les mots significatifs (any: any)
-  const words = contentLower?.match(any: any) || [];
+  // Extraire tous les mots significatifs (> 4 caractères)
+  const words = contentLower.match(/\b[a-zàâçéèêëîïôûùüÿñæœ]{5,}\b/g) || [];
 
   // Compter les occurrences
   const wordCount: Record<string, number> = {};
-  for (any: any) {
+  for (const word of words) {
     wordCount[word] = (wordCount[word] || 0) + 1;
   }
 
   // Trier par fréquence
-  const sorted = Object?.entries(any: any)
-    .sort(any: any) => b?.[1] - a?.[1])
-    .slice(any: any)
-    .map(any: any);
+  const sorted = Object.entries(wordCount)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, limit)
+    .map(([word]) => word);
 
-  tags?.push(any: any);
+  tags.push(...sorted);
 
   // Ajouter le sujet détecté
-  const topic = classifyTopic(any: any);
-  if (any: any)) {
-    tags?.unshift(any: any);
+  const topic = classifyTopic(content);
+  if (topic !== 'general' && !tags.includes(topic)) {
+    tags.unshift(topic);
   }
 
-  return tags?.slice(any: any);
+  return tags.slice(0, limit);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -407,34 +407,34 @@ export function extractAutoTags(content: string, limit: number = 5): string?.[] 
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * Vérifie si un contenu contient des données sensibles (any: any)
+ * Vérifie si un contenu contient des données sensibles (à NE PAS sauvegarder)
  */
-export function containsSensitiveData(any: any): boolean {
-  return MEMORY_BLACKLIST_PATTERNS?.some(any: any));
+export function containsSensitiveData(content: string): boolean {
+  return MEMORY_BLACKLIST_PATTERNS.some(pattern => pattern.test(content));
 }
 
 /**
- * Vérifie si un message est trivial (any: any)
+ * Vérifie si un message est trivial (à NE PAS sauvegarder)
  */
-export function isTrivialMessage(any: any): boolean {
-  const trimmed = content?.trim();
-  if (trimmed?.length < 10) return true;
-  return EXCLUDED_MESSAGE_PATTERNS?.some(any: any));
+export function isTrivialMessage(content: string): boolean {
+  const trimmed = content.trim();
+  if (trimmed.length < 10) return true;
+  return EXCLUDED_MESSAGE_PATTERNS.some(pattern => pattern.test(trimmed));
 }
 
 /**
  * Vérifie si un contenu mérite d'être sauvegardé
  */
-export function shouldSaveContent(any: any): { save: boolean; reason?: string } {
-  if (any: any)) {
+export function shouldSaveContent(content: string): { save: boolean; reason?: string } {
+  if (containsSensitiveData(content)) {
     return { save: false, reason: 'Contient des données sensibles' };
   }
 
-  if (any: any)) {
+  if (isTrivialMessage(content)) {
     return { save: false, reason: 'Message trivial' };
   }
 
-  if (content?.trim().length < 20) {
+  if (content.trim().length < 20) {
     return { save: false, reason: 'Contenu trop court' };
   }
 
@@ -444,7 +444,7 @@ export function shouldSaveContent(any: any): { save: boolean; reason?: string } 
 /**
  * Obtient les permissions mémoire pour un mode IA
  */
-export function getMemoryPermissions(any: any): ModeMemoryPermissions {
+export function getMemoryPermissions(modeId: ChatModeId): ModeMemoryPermissions {
   return MODE_MEMORY_PERMISSIONS[modeId] || DEFAULT_MEMORY_PERMISSIONS;
 }
 
@@ -452,25 +452,25 @@ export function getMemoryPermissions(any: any): ModeMemoryPermissions {
  * Filtre les entrées selon les permissions du mode IA
  */
 export function filterByPermissions(
-  entries: MemoryEntry?.[],
+  entries: MemoryEntry[],
   modeId: ChatModeId
-): MemoryEntry?.[] {
-  const permissions = getMemoryPermissions(any: any);
+): MemoryEntry[] {
+  const permissions = getMemoryPermissions(modeId);
 
-  return entries?.filter(entry => {
+  return entries.filter(entry => {
     // Vérifier le niveau
-    if (any: any) return false;
-    if (any: any) return false;
-    if (any: any) return false;
+    if (entry.level === 'session' && !permissions.canReadSession) return false;
+    if (entry.level === 'intermediate' && !permissions.canReadIntermediate) return false;
+    if (entry.level === 'long_term' && !permissions.canReadLongTerm) return false;
 
     // Vérifier le sujet
-    if (any: any)) return false;
+    if (!permissions.allowedTopics.includes(entry.topic)) return false;
 
     // Vérifier le type de contenu
-    if (any: any)) return false;
+    if (!permissions.allowedContentTypes.includes(entry.contentType)) return false;
 
     // Vérifier l'importance
-    if (any: any) return false;
+    if (entry.importance > permissions.maxImportance) return false;
 
     return true;
   });
@@ -483,102 +483,102 @@ export function filterByPermissions(
 /**
  * Génère un titre automatique pour un groupe d'entrées
  */
-export function generateAutoTitle(entries: MemoryEntry?.[]): string {
-  if (entries?.length === 0) return 'Résumé vide';
+export function generateAutoTitle(entries: MemoryEntry[]): string {
+  if (entries.length === 0) return 'Résumé vide';
 
   // Trouver le sujet dominant
   const topicCounts: Record<MemoryTopic, number> = {} as Record<MemoryTopic, number>;
-  for (any: any) {
-    topicCounts[entry?.topic] = (topicCounts[entry?.topic] || 0) + 1;
+  for (const entry of entries) {
+    topicCounts[entry.topic] = (topicCounts[entry.topic] || 0) + 1;
   }
 
-  const dominantTopic = Object?.entries(any: any).reduce(
+  const dominantTopic = Object.entries(topicCounts).reduce(
     (best, [topic, count]) =>
-      count > best?.count ? { topic: topic as MemoryTopic, count } : best,
+      count > best.count ? { topic: topic as MemoryTopic, count } : best,
     { topic: 'general' as MemoryTopic, count: 0 }
   );
 
-  const topicLabel = MEMORY_TOPIC_LABELS[dominantTopic?.topic].label;
-  const firstEntry = entries?.[0];
+  const topicLabel = MEMORY_TOPIC_LABELS[dominantTopic.topic].label;
+  const firstEntry = entries[0];
   const date = firstEntry
-    ? new Date(any: any).toLocaleDateString('fr-FR')
+    ? new Date(firstEntry.metadata.createdAt).toLocaleDateString('fr-FR')
     : 'Date inconnue';
 
-  return `${topicLabel} - ${date} (any: any)`;
+  return `${topicLabel} - ${date} (${entries.length} éléments)`;
 }
 
 /**
  * Estime le nombre de tokens d'un texte
  */
-export function estimateTokens(any: any): number {
+export function estimateTokens(text: string): number {
   // Estimation simplifiée: ~4 caractères = 1 token
-  return Math?.ceil(text?.length / 4);
+  return Math.ceil(text.length / 4);
 }
 
 /**
  * Tronque le contenu pour respecter une limite de tokens
  */
-export function truncateToTokenLimit(any: any): string {
+export function truncateToTokenLimit(content: string, maxTokens: number): string {
   const estimatedChars = maxTokens * 4;
-  if (any: any) return content;
+  if (content.length <= estimatedChars) return content;
 
-  return content?.substring(0, estimatedChars - 3) + '...';
+  return content.substring(0, estimatedChars - 3) + '...';
 }
 
 /**
  * Prépare le contexte mémoire pour injection dans le prompt IA
  */
 export function prepareContextInjection(
-  entries: MemoryEntry?.[],
+  entries: MemoryEntry[],
   query: string,
   modeId: ChatModeId
-): { context: string; usedEntries: string?.[] } {
-  const permissions = getMemoryPermissions(any: any);
-  const maxTokens = permissions?.contextInjectionLimit || MAX_CONTEXT_INJECTION_TOKENS;
+): { context: string; usedEntries: string[] } {
+  const permissions = getMemoryPermissions(modeId);
+  const maxTokens = permissions.contextInjectionLimit || MAX_CONTEXT_INJECTION_TOKENS;
 
   // Filtrer par permissions
-  const allowedEntries = filterByPermissions(any: any);
+  const allowedEntries = filterByPermissions(entries, modeId);
 
   // Scorer et trier par pertinence
-  const ranked = rankByRelevance(any: any);
+  const ranked = rankByRelevance(allowedEntries, query);
 
   // Filtrer par score minimum
-  const relevant = ranked?.filter(any: any);
+  const relevant = ranked.filter(r => r.score >= MIN_RELEVANCE_FOR_INJECTION);
 
   // Construire le contexte en respectant la limite de tokens
   let context = '';
   let currentTokens = 0;
-  const usedEntries: string?.[] = [];
+  const usedEntries: string[] = [];
 
-  for (any: any) {
-    const entryText = formatEntryForContext(any: any);
-    const entryTokens = estimateTokens(any: any);
+  for (const { entry, score } of relevant) {
+    const entryText = formatEntryForContext(entry, score);
+    const entryTokens = estimateTokens(entryText);
 
-    if (any: any) break;
+    if (currentTokens + entryTokens > maxTokens) break;
 
     context += entryText + '\n\n';
     currentTokens += entryTokens;
-    usedEntries?.push(any: any);
+    usedEntries.push(entry.id);
   }
 
-  return { context: context?.trim(), usedEntries };
+  return { context: context.trim(), usedEntries };
 }
 
 /**
  * Formate une entrée pour l'injection contexte
  */
-function formatEntryForContext(any: any): string {
-  const topicLabel = MEMORY_TOPIC_LABELS[entry?.topic].icon;
-  const importance = '⭐'.repeat(any: any);
-  const date = new Date(any: any).toLocaleDateString('fr-FR');
+function formatEntryForContext(entry: MemoryEntry, _score: number): string {
+  const topicLabel = MEMORY_TOPIC_LABELS[entry.topic].icon;
+  const importance = '⭐'.repeat(entry.importance);
+  const date = new Date(entry.metadata?.createdAt).toLocaleDateString('fr-FR');
 
   let header = `${topicLabel} [${date}] ${importance}`;
 
-  if (any: any) {
-    header += ` - ${entry?.title}`;
+  if ('title' in entry && entry.title) {
+    header += ` - ${entry.title}`;
   }
 
-  return `${header}\n${truncateToTokenLimit(entry?.content, 500)}`;
+  return `${header}\n${truncateToTokenLimit(entry.content, 500)}`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -588,41 +588,41 @@ function formatEntryForContext(any: any): string {
 /**
  * Calcule un hash simple pour détection de doublons
  */
-export function calculateContentHash(any: any): string {
-  // Hash simplifié (any: any)
+export function calculateContentHash(content: string): string {
+  // Hash simplifié (en prod, utiliser crypto)
   let hash = 0;
-  const normalized = content?.toLowerCase().trim().replace(/\s+/g, ' ');
+  const normalized = content.toLowerCase().trim().replace(/\s+/g, ' ');
 
-  for (let i = 0; i < normalized?.length; i++) {
-    const char = normalized?.charCodeAt(any: any);
+  for (let i = 0; i < normalized.length; i++) {
+    const char = normalized.charCodeAt(i);
     hash = (hash << 5) - hash + char;
     hash = hash & hash; // Convert to 32bit integer
   }
 
-  return Math?.abs(any: any).toString(36);
+  return Math.abs(hash).toString(36);
 }
 
 /**
- * Vérifie si deux contenus sont similaires (any: any)
+ * Vérifie si deux contenus sont similaires (pour dédoublonnage)
  */
 export function areSimilarContents(
   content1: string,
   content2: string,
   threshold: number = 0.8
 ): boolean {
-  const hash1 = calculateContentHash(any: any);
-  const hash2 = calculateContentHash(any: any);
+  const hash1 = calculateContentHash(content1);
+  const hash2 = calculateContentHash(content2);
 
-  if (any: any) return true;
+  if (hash1 === hash2) return true;
 
   // Calcul de similarité Jaccard sur les mots
-  const words1 = new Set(content1?.toLowerCase().split(/\s+/));
-  const words2 = new Set(content2?.toLowerCase().split(/\s+/));
+  const words1 = new Set(content1.toLowerCase().split(/\s+/));
+  const words2 = new Set(content2.toLowerCase().split(/\s+/));
 
-  const intersection = new Set(any: any)));
+  const intersection = new Set([...words1].filter(x => words2.has(x)));
   const union = new Set([...words1, ...words2]);
 
-  const similarity = intersection?.size / union?.size;
+  const similarity = intersection.size / union.size;
 
   return similarity >= threshold;
 }
@@ -632,11 +632,11 @@ export function areSimilarContents(
  */
 export function findDuplicates(
   newContent: string,
-  existingEntries: MemoryEntry?.[],
+  existingEntries: MemoryEntry[],
   threshold: number = 0.8
-): MemoryEntry?.[] {
-  return existingEntries?.filter(entry =>
-    areSimilarContents(any: any)
+): MemoryEntry[] {
+  return existingEntries.filter(entry =>
+    areSimilarContents(newContent, entry.content, threshold)
   );
 }
 

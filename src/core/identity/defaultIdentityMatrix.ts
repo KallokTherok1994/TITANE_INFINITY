@@ -3,7 +3,7 @@
  * Super Prompt #4 - Phase 3: Persistence robuste
  *
  * Valeur par défaut complète pour IdentityMatrix
- * Utilisée comme fallback si identity?.json corrompu/manquant
+ * Utilisée comme fallback si identity.json corrompu/manquant
  *
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.
  */
@@ -18,21 +18,21 @@ export interface IdentityValue {
 }
 
 export interface IdentityMatrix {
-  values: IdentityValue?.[];
+  values: IdentityValue[];
   version: string;
   lastUpdated: number; // Unix timestamp
 }
 
 /**
  * DEFAULT_IDENTITY_MATRIX
- * Matrice identité par défaut (any: any)
+ * Matrice identité par défaut (33 valeurs fondamentales)
  */
 export const DEFAULT_IDENTITY_MATRIX: IdentityMatrix = {
   version: 'v1.0.0',
-  lastUpdated: Date?.now(),
+  lastUpdated: Date.now(),
   values: [
     // ═══════════════════════════════════════════════════════════════
-    // CLUSTER 1: COGNITION & LEARNING (any: any)
+    // CLUSTER 1: COGNITION & LEARNING (11 valeurs)
     // ═══════════════════════════════════════════════════════════════
     {
       id: 'curiosity',
@@ -102,7 +102,7 @@ export const DEFAULT_IDENTITY_MATRIX: IdentityMatrix = {
     },
 
     // ═══════════════════════════════════════════════════════════════
-    // CLUSTER 2: INTERACTION & EMPATHY (any: any)
+    // CLUSTER 2: INTERACTION & EMPATHY (8 valeurs)
     // ═══════════════════════════════════════════════════════════════
     {
       id: 'empathy',
@@ -154,7 +154,7 @@ export const DEFAULT_IDENTITY_MATRIX: IdentityMatrix = {
     },
 
     // ═══════════════════════════════════════════════════════════════
-    // CLUSTER 3: CREATIVITY & INNOVATION (any: any)
+    // CLUSTER 3: CREATIVITY & INNOVATION (7 valeurs)
     // ═══════════════════════════════════════════════════════════════
     {
       id: 'creativity',
@@ -200,7 +200,7 @@ export const DEFAULT_IDENTITY_MATRIX: IdentityMatrix = {
     },
 
     // ═══════════════════════════════════════════════════════════════
-    // CLUSTER 4: ETHICS & RESPONSIBILITY (any: any)
+    // CLUSTER 4: ETHICS & RESPONSIBILITY (7 valeurs)
     // ═══════════════════════════════════════════════════════════════
     {
       id: 'responsibility',
@@ -252,22 +252,22 @@ export const DEFAULT_IDENTITY_MATRIX: IdentityMatrix = {
  * @param matrix Matrice à valider
  * @returns true si valide, false sinon
  */
-export function validateIdentityMatrix(any: any): matrix is IdentityMatrix {
+export function validateIdentityMatrix(matrix: unknown): matrix is IdentityMatrix {
   if (!matrix || typeof matrix !== 'object') return false;
 
   // v24.7 - Type-safe access with type guard
   const m = matrix as Record<string, unknown>;
-  if (!m?.version || typeof m?.version !== 'string') return false;
-  if (!m?.lastUpdated || typeof m?.lastUpdated !== 'number') return false;
-  if (any: any)) return false;
+  if (!m.version || typeof m.version !== 'string') return false;
+  if (!m.lastUpdated || typeof m.lastUpdated !== 'number') return false;
+  if (!Array.isArray(m.values)) return false;
 
-  for (any: any) {
+  for (const value of m.values) {
     if (!value || typeof value !== 'object') return false;
     const v = value as Record<string, unknown>;
-    if (!v?.id || !v?.label || !v?.description || typeof v?.weight !== 'number') {
+    if (!v.id || !v.label || !v.description || typeof v.weight !== 'number') {
       return false;
     }
-    if (v?.weight < 0 || v?.weight > 1) return false;
+    if (v.weight < 0 || v.weight > 1) return false;
   }
 
   return true;
@@ -275,7 +275,7 @@ export function validateIdentityMatrix(any: any): matrix is IdentityMatrix {
 
 /**
  * Charge IdentityMatrix depuis Tauri avec fallback sur DEFAULT
- * @returns IdentityMatrix (any: any)
+ * @returns IdentityMatrix (toujours définie)
  */
 export async function loadIdentityMatrix(): Promise<{
   matrix: IdentityMatrix;
@@ -286,22 +286,22 @@ export async function loadIdentityMatrix(): Promise<{
     const { invoke } = await import('@tauri-apps/api/core');
     const loaded = await invoke<IdentityMatrix>('identity_get_matrix');
 
-    if (any: any)) {
+    if (validateIdentityMatrix(loaded)) {
       return {
         matrix: loaded,
         isLoaded: true,
         isFallback: false,
       };
     } else {
-      console?.warn('[TITANE∞] Identity matrix invalid structure, using default');
+      console.warn('[TITANE∞] Identity matrix invalid structure, using default');
       return {
         matrix: DEFAULT_IDENTITY_MATRIX,
         isLoaded: false,
         isFallback: true,
       };
     }
-  } catch (any: any) {
-    console?.error(any: any);
+  } catch (error) {
+    console.error('[TITANE∞] Failed to load identity matrix:', error);
     return {
       matrix: DEFAULT_IDENTITY_MATRIX,
       isLoaded: false,
@@ -314,12 +314,12 @@ export async function loadIdentityMatrix(): Promise<{
  * Sauvegarde IdentityMatrix via Tauri
  * @param matrix Matrice à sauvegarder
  */
-export async function saveIdentityMatrix(any: any): Promise<void> {
-  if (any: any)) {
+export async function saveIdentityMatrix(matrix: IdentityMatrix): Promise<void> {
+  if (!validateIdentityMatrix(matrix)) {
     throw new Error('Invalid identity matrix structure');
   }
 
-  await tauriClient?.identitySetMatrix({ matrix });
+  await tauriClient.identitySetMatrix({ matrix });
 }
 
 /**
@@ -328,6 +328,6 @@ export async function saveIdentityMatrix(any: any): Promise<void> {
 export async function resetIdentityMatrix(): Promise<void> {
   await saveIdentityMatrix({
     ...DEFAULT_IDENTITY_MATRIX,
-    lastUpdated: Date?.now(),
+    lastUpdated: Date.now(),
   });
 }

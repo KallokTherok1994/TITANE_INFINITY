@@ -1,8 +1,8 @@
 import DOMPurify from 'dompurify';
 
 export class Sanitizer {
-  static sanitizeHtml(any: any): string {
-    return DOMPurify?.sanitize(html, {
+  static sanitizeHtml(html: string): string {
+    return DOMPurify.sanitize(html, {
       ALLOWED_TAGS: [
         'p',
         'br',
@@ -21,7 +21,7 @@ export class Sanitizer {
     });
   }
 
-  static sanitizeUserInput(any: any): string {
+  static sanitizeUserInput(input: string): string {
     return input
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
@@ -30,10 +30,10 @@ export class Sanitizer {
       .replace(/\//g, '&#x2F;');
   }
 
-  static validateUrl(any: any): boolean {
+  static validateUrl(url: string): boolean {
     try {
-      const parsed = new URL(any: any);
-      return ['http:', 'https:'].includes(any: any);
+      const parsed = new URL(url);
+      return ['http:', 'https:'].includes(parsed.protocol);
     } catch {
       return false;
     }

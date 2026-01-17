@@ -7,7 +7,7 @@
  * @license MIT
  *
  * CAPACITÉS :
- * - Analyse captures d'écran (any: any)
+ * - Analyse captures d'écran (code, UI, terminal, logs)
  * - Détection visuelle intelligente
  * - Diagnostic technique automatique
  * - Génération scripts/commandes DevOps
@@ -42,22 +42,22 @@ class VisualDevOpsEngine {
 
   private enabled: boolean = false;
   private currentSession: CollaborationSession | null = null;
-  private analysisHistory: ScreenAnalysis?.[] = [];
-  private actionHistory: DevOpsAction?.[] = [];
+  private analysisHistory: ScreenAnalysis[] = [];
+  private actionHistory: DevOpsAction[] = [];
 
   // Limites
   private readonly MAX_HISTORY = 50;
   private readonly _MAX_SESSION_DURATION_MS = 8 * 60 * 60 * 1000; // 8 heures
 
   private constructor() {
-    console?.log('[VisualDevOpsEngine] Initialized v25.5');
+    console.log('[VisualDevOpsEngine] Initialized v25.5');
   }
 
   public static getInstance(): VisualDevOpsEngine {
-    if (any: any) {
-      VisualDevOpsEngine?.instance = new VisualDevOpsEngine();
+    if (!VisualDevOpsEngine.instance) {
+      VisualDevOpsEngine.instance = new VisualDevOpsEngine();
     }
-    return VisualDevOpsEngine?.instance;
+    return VisualDevOpsEngine.instance;
   }
 
   // ==========================================================================
@@ -65,52 +65,52 @@ class VisualDevOpsEngine {
   // ==========================================================================
 
   public async enable(): Promise<void> {
-    this?.resetStateForTests();
+    this.resetStateForTests();
 
-    if (any: any) {
-      console?.log('[VisualDevOpsEngine] Already enabled');
-      if (!this?.currentSession || this?.currentSession?.interactions?.length > 0) {
-        this?.currentSession = this?.createSession();
+    if (this.enabled) {
+      console.log('[VisualDevOpsEngine] Already enabled');
+      if (!this.currentSession || this.currentSession.interactions.length > 0) {
+        this.currentSession = this.createSession();
       }
       return;
     }
 
-    console?.log('[VisualDevOpsEngine] Enabling...');
-    this?.enabled = true;
+    console.log('[VisualDevOpsEngine] Enabling...');
+    this.enabled = true;
 
     // Démarrer session collaboration
-    this?.currentSession = this?.createSession();
+    this.currentSession = this.createSession();
 
-    console?.log('[VisualDevOpsEngine] Enabled successfully');
+    console.log('[VisualDevOpsEngine] Enabled successfully');
   }
 
   public async disable(): Promise<void> {
-    if (any: any) return;
+    if (!this.enabled) return;
 
-    console?.log('[VisualDevOpsEngine] Disabling...');
-    this?.enabled = false;
+    console.log('[VisualDevOpsEngine] Disabling...');
+    this.enabled = false;
 
     // Sauvegarder session si nécessaire
-    if (any: any) {
-      await this?.saveSession(any: any);
-      this?.currentSession = null;
+    if (this.currentSession) {
+      await this.saveSession(this.currentSession);
+      this.currentSession = null;
     }
 
-    console?.log('[VisualDevOpsEngine] Disabled');
+    console.log('[VisualDevOpsEngine] Disabled');
   }
 
   public isEnabled(): boolean {
-    return this?.enabled;
+    return this.enabled;
   }
 
   // ==========================================================================
-  // SCREEN ANALYSIS (any: any)
+  // SCREEN ANALYSIS (Analyse Visuelle)
   // ==========================================================================
 
   /**
    * Analyser une capture d'écran
    *
-   * @param imageBase64 - Image encodée en base64 (any: any)
+   * @param imageBase64 - Image encodée en base64 (optionnel)
    * @param context - Contexte fourni par l'utilisateur
    * @returns Analyse complète de l'écran
    */
@@ -118,11 +118,11 @@ class VisualDevOpsEngine {
     imageBase64?: string,
     context?: string
   ): Promise<ScreenAnalysis> {
-    console?.log('[VisualDevOpsEngine] Analyzing screen...');
+    console.log('[VisualDevOpsEngine] Analyzing screen...');
 
     const analysis: ScreenAnalysis = {
-      id: this?.generateId(),
-      timestamp: Date?.now(),
+      id: this.generateId(),
+      timestamp: Date.now(),
       image_base64: imageBase64,
       detected_elements: [],
       context_type: 'unknown',
@@ -146,11 +146,11 @@ class VisualDevOpsEngine {
       confidence: 0,
     };
 
-    // Analyser avec backend (any: any)
-    if (any: any) {
+    // Analyser avec backend (si image fournie)
+    if (imageBase64) {
       try {
         const backendAnalysis = await secureInvoke<{
-          detected_elements: DetectedElement?.[];
+          detected_elements: DetectedElement[];
           context_type: string;
           confidence: number;
         }>('visual_devops_analyze_screen', {
@@ -158,43 +158,43 @@ class VisualDevOpsEngine {
           context,
         });
 
-        analysis?.detected_elements = backendAnalysis?.detected_elements;
-        analysis?.context_type = backendAnalysis?.context_type as unknown as unknown as any;
-        analysis?.confidence = backendAnalysis?.confidence;
-      } catch (any: any) {
-        console?.warn('[VisualDevOpsEngine] Backend analysis failed, using fallback');
-        analysis?.confidence = 0.3;
+        analysis.detected_elements = backendAnalysis.detected_elements;
+        analysis.context_type = backendAnalysis.context_type as any;
+        analysis.confidence = backendAnalysis.confidence;
+      } catch (error) {
+        console.warn('[VisualDevOpsEngine] Backend analysis failed, using fallback');
+        analysis.confidence = 0.3;
       }
     }
 
     // Extraire contenu technique
-    analysis?.technical_content = this?.extractTechnicalContent(
-      analysis?.detected_elements,
+    analysis.technical_content = this.extractTechnicalContent(
+      analysis.detected_elements,
       context
     );
-    this?.enrichTechnicalContentFromContext(any: any);
+    this.enrichTechnicalContentFromContext(analysis.technical_content, context);
 
     // Diagnostiquer
-    analysis?.diagnosis = await this?.diagnoseScreen(any: any);
+    analysis.diagnosis = await this.diagnoseScreen(analysis);
 
     // Sauvegarder dans historique
-    this?.addToHistory(any: any);
+    this.addToHistory('analysis', analysis);
 
     // Enregistrer interaction
-    if (any: any) {
-      this?.currentSession?.interactions?.push({
-        timestamp: Date?.now(),
+    if (this.currentSession) {
+      this.currentSession.interactions.push({
+        timestamp: Date.now(),
         type: 'screen_analysis',
-        content: `Screen analyzed: ${analysis?.context_type}`,
+        content: `Screen analyzed: ${analysis.context_type}`,
         data: analysis,
       });
     }
 
-    console?.log('[VisualDevOpsEngine] Screen analysis complete:', {
-      context_type: analysis?.context_type,
-      elements_found: analysis?.detected_elements?.length,
-      errors_found: analysis?.technical_content?.errors_detected?.length,
-      confidence: analysis?.confidence,
+    console.log('[VisualDevOpsEngine] Screen analysis complete:', {
+      context_type: analysis.context_type,
+      elements_found: analysis.detected_elements.length,
+      errors_found: analysis.technical_content.errors_detected.length,
+      confidence: analysis.confidence,
     });
 
     return analysis;
@@ -204,7 +204,7 @@ class VisualDevOpsEngine {
    * Extraire contenu technique des éléments détectés
    */
   private extractTechnicalContent(
-    elements: DetectedElement?.[],
+    elements: DetectedElement[],
     _contextHint?: string
   ): TechnicalContent {
     const content: TechnicalContent = {
@@ -216,45 +216,45 @@ class VisualDevOpsEngine {
     };
 
     // Analyser chaque élément
-    for (any: any) {
-      if (any: any) {
+    for (const element of elements) {
+      if (element.type === 'code_block' && element.code_snippet) {
         // Détecter langage
-        const lang = this?.detectLanguage(any: any);
-        if (any: any)) {
-          content?.languages_detected?.push(any: any);
+        const lang = this.detectLanguage(element.code_snippet);
+        if (lang && !content.languages_detected.includes(lang)) {
+          content.languages_detected.push(lang);
         }
 
         // Détecter frameworks
-        const frameworks = this?.detectFrameworks(any: any);
-        content?.frameworks_detected?.push(any: any);
+        const frameworks = this.detectFrameworks(element.code_snippet);
+        content.frameworks_detected.push(...frameworks);
       }
 
-      if (any: any) {
+      if (element.type === 'error_message' && element.text_content) {
         // Parser erreur
-        const error = this?.parseError(any: any);
-        if (any: any) {
-          content?.errors_detected?.push(any: any);
+        const error = this.parseError(element.text_content);
+        if (error) {
+          content.errors_detected.push(error);
         }
       }
 
-      if (any: any) {
+      if (element.type === 'terminal_output' && element.text_content) {
         // Extraire commandes
-        const commands = this?.extractCommands(any: any);
-        content?.terminal_commands?.push(any: any);
+        const commands = this.extractCommands(element.text_content);
+        content.terminal_commands?.push(...commands);
       }
 
-      if (any: any) {
+      if (element.type === 'stack_trace' && element.text_content) {
         // Parser stack trace
-        const error = this?.parseStackTrace(any: any);
-        if (any: any) {
-          content?.errors_detected?.push(any: any);
+        const error = this.parseStackTrace(element.text_content);
+        if (error) {
+          content.errors_detected.push(error);
         }
       }
     }
 
     // Déduplication
-    content?.languages_detected = [...new Set(any: any)];
-    content?.frameworks_detected = [...new Set(any: any)];
+    content.languages_detected = [...new Set(content.languages_detected)];
+    content.frameworks_detected = [...new Set(content.frameworks_detected)];
 
     return content;
   }
@@ -262,7 +262,7 @@ class VisualDevOpsEngine {
   /**
    * Diagnostiquer l'écran analysé
    */
-  private async diagnoseScreen(any: any): Promise<Diagnosis> {
+  private async diagnoseScreen(analysis: ScreenAnalysis): Promise<Diagnosis> {
     const diagnosis: Diagnosis = {
       summary: '',
       issues_found: [],
@@ -279,48 +279,48 @@ class VisualDevOpsEngine {
     const { technical_content, context_type } = analysis;
 
     // Diagnostiquer erreurs
-    if (technical_content?.errors_detected?.length > 0) {
-      for (any: any) {
+    if (technical_content.errors_detected.length > 0) {
+      for (const error of technical_content.errors_detected) {
         const issue = {
-          id: this?.generateId(),
+          id: this.generateId(),
           type: 'bug' as const,
-          severity: error?.severity,
-          title: `${error?.error_type} error detected`,
-          description: error?.message,
-          affected_files: error?.file_path ? [error?.file_path] : [],
-          auto_fixable: error?.suggested_fixes?.length > 0,
+          severity: error.severity,
+          title: `${error.error_type} error detected`,
+          description: error.message,
+          affected_files: error.file_path ? [error.file_path] : [],
+          auto_fixable: error.suggested_fixes.length > 0,
         };
 
-        diagnosis?.issues_found?.push(any: any);
-        diagnosis?.root_causes?.push(any: any));
-        diagnosis?.recommended_actions?.push(any: any);
+        diagnosis.issues_found.push(issue);
+        diagnosis.root_causes.push(...this.identifyRootCauses(error));
+        diagnosis.recommended_actions.push(...error.suggested_fixes);
       }
 
-      diagnosis?.summary = `Found ${technical_content?.errors_detected?.length} error(any: any)`;
-      diagnosis?.impact_assessment?.risk_level = this?.assessRiskLevel(
-        technical_content?.errors_detected
+      diagnosis.summary = `Found ${technical_content.errors_detected.length} error(s)`;
+      diagnosis.impact_assessment.risk_level = this.assessRiskLevel(
+        technical_content.errors_detected
       );
     } else if (context_type === 'code_editor') {
-      diagnosis?.summary = 'Code editor detected, no errors visible';
-      diagnosis?.recommended_actions?.push(
+      diagnosis.summary = 'Code editor detected, no errors visible';
+      diagnosis.recommended_actions.push(
         'Review code for potential improvements',
         'Run tests to validate functionality'
       );
     } else if (context_type === 'terminal') {
-      diagnosis?.summary = 'Terminal session detected';
-      diagnosis?.recommended_actions?.push(
+      diagnosis.summary = 'Terminal session detected';
+      diagnosis.recommended_actions.push(
         'Review command output',
         'Check for warnings or errors'
       );
     } else {
-      diagnosis?.summary = `${context_type} context detected`;
+      diagnosis.summary = `${context_type} context detected`;
     }
 
     return diagnosis;
   }
 
   // ==========================================================================
-  // DEVOPS ACTIONS (any: any)
+  // DEVOPS ACTIONS (Actions Assistées)
   // ==========================================================================
 
   /**
@@ -328,17 +328,17 @@ class VisualDevOpsEngine {
    *
    * @param analysis - Analyse d'écran
    * @param actionType - Type d'action souhaité
-   * @returns Action DevOps proposée (any: any)
+   * @returns Action DevOps proposée (nécessite validation)
    */
   public async proposeAction(
     analysis: ScreenAnalysis,
     actionType: ActionType
   ): Promise<DevOpsAction> {
-    console?.log(any: any);
+    console.log('[VisualDevOpsEngine] Proposing action:', actionType);
 
     const action: DevOpsAction = {
-      id: this?.generateId(),
-      timestamp: Date?.now(),
+      id: this.generateId(),
+      timestamp: Date.now(),
       action_type: actionType,
       description: '',
       validation_required: true,
@@ -347,96 +347,96 @@ class VisualDevOpsEngine {
     };
 
     // Générer contenu selon type d'action
-    switch (any: any) {
+    switch (actionType) {
       case 'fix_error':
-        action?.description = 'Fix detected errors';
-        action?.code_patch = await this?.generateErrorFix(any: any);
+        action.description = 'Fix detected errors';
+        action.code_patch = await this.generateErrorFix(analysis);
         break;
 
       case 'build':
-        action?.description = 'Build project';
-        action?.script_generated = await this?.generateBuildScript(any: any);
+        action.description = 'Build project';
+        action.script_generated = await this.generateBuildScript(analysis);
         break;
 
       case 'test':
-        action?.description = 'Run tests';
-        action?.commands = await this?.generateTestCommands(any: any);
+        action.description = 'Run tests';
+        action.commands = await this.generateTestCommands(analysis);
         break;
 
       case 'optimize':
-        action?.description = 'Optimize code/build';
-        action?.script_generated = await this?.generateOptimizationScript(any: any);
+        action.description = 'Optimize code/build';
+        action.script_generated = await this.generateOptimizationScript(analysis);
         break;
 
       case 'generate_script':
-        action?.description = 'Generate custom script';
-        action?.script_generated = await this?.generateCustomScript(any: any);
+        action.description = 'Generate custom script';
+        action.script_generated = await this.generateCustomScript(analysis);
         break;
 
       default:
-        action?.description = `Perform ${actionType}`;
-        action?.commands = await this?.generateGenericCommands(any: any);
+        action.description = `Perform ${actionType}`;
+        action.commands = await this.generateGenericCommands(actionType, analysis);
     }
 
     // Vérifications de sécurité
-    action?.security_checks = await this?.performSecurityChecks(any: any);
+    action.security_checks = await this.performSecurityChecks(action);
 
     // Sauvegarder dans historique
-    this?.addToHistory(any: any);
+    this.addToHistory('action', action);
 
     // Enregistrer interaction
-    if (any: any) {
-      this?.currentSession?.interactions?.push({
-        timestamp: Date?.now(),
+    if (this.currentSession) {
+      this.currentSession.interactions.push({
+        timestamp: Date.now(),
         type: 'agent_proposal',
-        content: `Proposed action: ${action?.description}`,
+        content: `Proposed action: ${action.description}`,
         data: action,
       });
     }
 
-    console?.log('[VisualDevOpsEngine] Action proposed:', {
+    console.log('[VisualDevOpsEngine] Action proposed:', {
       type: actionType,
-      validation_required: action?.validation_required,
-      security_checks: action?.security_checks?.length,
+      validation_required: action.validation_required,
+      security_checks: action.security_checks.length,
     });
 
     return action;
   }
 
   /**
-   * Valider une action (any: any)
+   * Valider une action (simulation - réel sera côté UI)
    */
   public async validateAction(
     actionId: string,
     approved: boolean,
     userNote?: string
   ): Promise<void> {
-    const action = this?.actionHistory?.find(any: any);
-    if (any: any) {
+    const action = this.actionHistory.find(a => a.id === actionId);
+    if (!action) {
       throw new Error(`Action ${actionId} not found`);
     }
 
-    if (any: any) {
-      action?.status = 'validated';
-      console?.log(any: any);
+    if (approved) {
+      action.status = 'validated';
+      console.log('[VisualDevOpsEngine] Action validated:', actionId);
 
       // Enregistrer validation
-      if (any: any) {
-        this?.currentSession?.interactions?.push({
-          timestamp: Date?.now(),
+      if (this.currentSession) {
+        this.currentSession.interactions.push({
+          timestamp: Date.now(),
           type: 'validation',
-          content: `Action validated: ${action?.description}`,
+          content: `Action validated: ${action.description}`,
           data: { action_id: actionId, user_note: userNote },
         });
       }
     } else {
-      action?.status = 'rejected';
-      console?.log(any: any);
+      action.status = 'rejected';
+      console.log('[VisualDevOpsEngine] Action rejected:', actionId);
     }
   }
 
   /**
-   * Marquer action comme exécutée (any: any)
+   * Marquer action comme exécutée (appelé après exécution manuelle)
    */
   public async markActionExecuted(
     actionId: string,
@@ -444,50 +444,50 @@ class VisualDevOpsEngine {
     output?: string,
     error?: string
   ): Promise<void> {
-    const action = this?.actionHistory?.find(any: any);
-    if (any: any) {
+    const action = this.actionHistory.find(a => a.id === actionId);
+    if (!action) {
       throw new Error(`Action ${actionId} not found`);
     }
 
-    action?.status = success ? 'executed' : 'failed';
-    const duration = Math?.max(any: any);
+    action.status = success ? 'executed' : 'failed';
+    const duration = Math.max(1, Date.now() - action.timestamp);
 
-    action?.result = {
+    action.result = {
       success,
       output,
       error,
       duration_ms: duration,
     };
 
-    console?.log('[VisualDevOpsEngine] Action executed:', {
+    console.log('[VisualDevOpsEngine] Action executed:', {
       id: actionId,
       success,
-      duration_ms: action?.result?.duration_ms,
+      duration_ms: action.result.duration_ms,
     });
 
     // Enregistrer résultat
-    if (any: any) {
-      this?.currentSession?.interactions?.push({
-        timestamp: Date?.now(),
+    if (this.currentSession) {
+      this.currentSession.interactions.push({
+        timestamp: Date.now(),
         type: 'execution_result',
         content: success ? 'Action succeeded' : 'Action failed',
-        data: action?.result,
+        data: action.result,
       });
     }
   }
 
   // ==========================================================================
-  // SCRIPT GENERATION (any: any)
+  // SCRIPT GENERATION (Génération Scripts)
   // ==========================================================================
 
   private async generateErrorFix(
     analysis: ScreenAnalysis
   ): Promise<CodePatch | undefined> {
-    const errors = analysis?.technical_content?.errors_detected;
-    if (errors?.length === 0) return undefined;
+    const errors = analysis.technical_content.errors_detected;
+    if (errors.length === 0) return undefined;
 
-    const firstError = errors?.[0];
-    if (!firstError || !firstError?.file_path || !firstError?.suggested_fixes?.[0])
+    const firstError = errors[0];
+    if (!firstError || !firstError.file_path || !firstError.suggested_fixes[0])
       return undefined;
 
     // Appeler backend pour générer patch
@@ -497,39 +497,39 @@ class VisualDevOpsEngine {
       });
 
       return patch;
-    } catch (any: any) {
-      console?.warn('[VisualDevOpsEngine] Fix generation failed');
+    } catch (error) {
+      console.warn('[VisualDevOpsEngine] Fix generation failed');
 
       // Fallback: patch minimal
       return {
-        file_path: firstError?.file_path,
+        file_path: firstError.file_path,
         original_code: '// Original code with error',
-        patched_code: `// Fixed: ${firstError?.suggested_fixes?.[0] ?? 'Apply fix'}`,
+        patched_code: `// Fixed: ${firstError.suggested_fixes[0] ?? 'Apply fix'}`,
         diff: '// Diff would be here',
-        explanation: firstError?.suggested_fixes?.[0] ?? 'Apply recommended fix',
+        explanation: firstError.suggested_fixes[0] ?? 'Apply recommended fix',
         risk_level: 'moderate',
         backup_recommended: true,
       };
     }
   }
 
-  private async generateBuildScript(any: any): Promise<GeneratedScript> {
-    const frameworks = analysis?.technical_content?.frameworks_detected;
-    const isTauri = frameworks?.includes('tauri');
-    const isReact = frameworks?.includes('react');
+  private async generateBuildScript(analysis: ScreenAnalysis): Promise<GeneratedScript> {
+    const frameworks = analysis.technical_content.frameworks_detected;
+    const isTauri = frameworks.includes('tauri');
+    const isReact = frameworks.includes('react');
 
     let content = '#!/bin/bash\n\n';
-    content += '# TITANE∞ Build Script (any: any)\n';
+    content += '# TITANE∞ Build Script (Generated by VisualDevOpsEngine)\n';
     content += '# This script must be reviewed and executed manually\n\n';
     content += 'set -e # Exit on error\n\n';
 
-    if (any: any) {
+    if (isTauri) {
       content += '# Build Tauri application\n';
       content += 'echo "🔨 Building Tauri app..."\n';
       content += 'corepack pnpm run build || exit 1\n';
       content += 'cargo tauri build || exit 1\n';
       content += 'echo "✅ Build complete"\n';
-    } else if (any: any) {
+    } else if (isReact) {
       content += '# Build React application\n';
       content += 'echo "⚡ Building React app..."\n';
       content += 'corepack pnpm run build || exit 1\n';
@@ -544,34 +544,34 @@ class VisualDevOpsEngine {
     return {
       script_type: 'bash',
       content,
-      file_path: 'build_generated?.sh',
+      file_path: 'build_generated.sh',
       execution_mode: 'manual',
       estimated_duration: '2-5 minutes',
       safety_level: 'safe',
       description: 'Build script for detected project type',
       usage_instructions: [
         'Review the script content',
-        'Make it executable: chmod +x build_generated?.sh',
-        'Run: ./build_generated?.sh',
+        'Make it executable: chmod +x build_generated.sh',
+        'Run: ./build_generated.sh',
         'Check build artifacts in dist/ or target/',
       ],
     };
   }
 
-  private async generateTestCommands(any: any): Promise<Command?.[]> {
-    const commands: Command?.[] = [];
+  private async generateTestCommands(analysis: ScreenAnalysis): Promise<Command[]> {
+    const commands: Command[] = [];
 
-    const frameworks = analysis?.technical_content?.frameworks_detected;
-    const languages = analysis?.technical_content?.languages_detected;
+    const frameworks = analysis.technical_content.frameworks_detected;
+    const languages = analysis.technical_content.languages_detected;
 
-    const addCommand = (any: any) => {
-      const exists = commands?.some(
+    const addCommand = (command: Command) => {
+      const exists = commands.some(
         existing =>
-          existing?.command === command?.command &&
-          JSON?.stringify(any: any)
+          existing.command === command.command &&
+          JSON.stringify(existing.args) === JSON.stringify(command.args)
       );
-      if (any: any) {
-        commands?.push(any: any);
+      if (!exists) {
+        commands.push(command);
       }
     };
 
@@ -584,16 +584,16 @@ class VisualDevOpsEngine {
       safety_level: 'safe',
     };
 
-    if (languages?.includes('typescript') || frameworks?.includes('react')) {
+    if (languages.includes('typescript') || frameworks.includes('react')) {
       addCommand({
         ...defaultPnpmCommand,
         description: 'Run TypeScript/React tests',
       });
     } else {
-      addCommand(any: any);
+      addCommand(defaultPnpmCommand);
     }
 
-    if (languages?.includes('rust') || frameworks?.includes('tauri')) {
+    if (languages.includes('rust') || frameworks.includes('tauri')) {
       addCommand({
         command: 'cargo',
         args: ['test'],
@@ -618,7 +618,7 @@ class VisualDevOpsEngine {
     content += '# Clean build artifacts\n';
     content += 'echo "🧹 Cleaning..."\n';
     content += 'rm -rf dist/ build/ node_modules/.cache/\n';
-    content += 'cargo clean --manifest-path src-tauri/Cargo?.toml 2>/dev/null || true\n\n';
+    content += 'cargo clean --manifest-path src-tauri/Cargo.toml 2>/dev/null || true\n\n';
     content += '# Optimize dependencies\n';
     content += 'echo "📦 Optimizing dependencies..."\n';
     content += 'corepack pnpm dedupe || true\n\n';
@@ -630,7 +630,7 @@ class VisualDevOpsEngine {
     return {
       script_type: 'bash',
       content,
-      file_path: 'optimize_generated?.sh',
+      file_path: 'optimize_generated.sh',
       execution_mode: 'manual',
       estimated_duration: '3-7 minutes',
       safety_level: 'moderate',
@@ -638,14 +638,14 @@ class VisualDevOpsEngine {
       usage_instructions: [
         'Backup your project first',
         'Review script content',
-        'chmod +x optimize_generated?.sh',
-        './optimize_generated?.sh',
+        'chmod +x optimize_generated.sh',
+        './optimize_generated.sh',
         'Test thoroughly after optimization',
       ],
     };
   }
 
-  private async generateCustomScript(any: any): Promise<GeneratedScript> {
+  private async generateCustomScript(analysis: ScreenAnalysis): Promise<GeneratedScript> {
     // Script générique basé sur contexte
     const content = `#!/bin/bash
 
@@ -655,8 +655,8 @@ class VisualDevOpsEngine {
 echo "🔧 Custom operation starting..."
 
 # Add your commands here
-echo "Context: ${analysis?.context_type}"
-echo "Detected: ${analysis?.technical_content?.languages_detected?.join(', ')}"
+echo "Context: ${analysis.context_type}"
+echo "Detected: ${analysis.technical_content.languages_detected.join(', ')}"
 
 echo "✅ Operation complete"
 `;
@@ -664,7 +664,7 @@ echo "✅ Operation complete"
     return {
       script_type: 'bash',
       content,
-      file_path: 'custom_generated?.sh',
+      file_path: 'custom_generated.sh',
       execution_mode: 'manual',
       estimated_duration: 'varies',
       safety_level: 'safe',
@@ -672,8 +672,8 @@ echo "✅ Operation complete"
       usage_instructions: [
         'Edit script with your specific commands',
         'Review and test in safe environment',
-        'chmod +x custom_generated?.sh',
-        './custom_generated?.sh',
+        'chmod +x custom_generated.sh',
+        './custom_generated.sh',
       ],
     };
   }
@@ -681,13 +681,13 @@ echo "✅ Operation complete"
   private async generateGenericCommands(
     actionType: ActionType,
     _analysis: ScreenAnalysis
-  ): Promise<Command?.[]> {
+  ): Promise<Command[]> {
     // Commandes génériques selon type d'action
-    const commands: Command?.[] = [];
+    const commands: Command[] = [];
 
-    switch (any: any) {
+    switch (actionType) {
       case 'deploy':
-        commands?.push({
+        commands.push({
           command: 'pnpm',
           args: ['run', 'build'],
           description: 'Build for deployment',
@@ -698,7 +698,7 @@ echo "✅ Operation complete"
         break;
 
       case 'clean_artifacts':
-        commands?.push({
+        commands.push({
           command: 'rm',
           args: ['-rf', 'dist/', 'build/', 'target/'],
           description: 'Clean build artifacts',
@@ -709,7 +709,7 @@ echo "✅ Operation complete"
         break;
 
       case 'install_deps':
-        commands?.push({
+        commands.push({
           command: 'corepack',
           args: ['pnpm', 'install'],
           description: 'Install dependencies',
@@ -727,12 +727,12 @@ echo "✅ Operation complete"
   // SECURITY CHECKS
   // ==========================================================================
 
-  private async performSecurityChecks(any: any): Promise<SecurityCheck?.[]> {
-    const checks: SecurityCheck?.[] = [];
+  private async performSecurityChecks(action: DevOpsAction): Promise<SecurityCheck[]> {
+    const checks: SecurityCheck[] = [];
 
     // Check 1: No sudo required
-    const requiresSudo = action?.commands?.some(any: any) || false;
-    checks?.push({
+    const requiresSudo = action.commands?.some(cmd => cmd.requires_sudo) || false;
+    checks.push({
       check_type: 'no_sudo_required',
       status: requiresSudo ? 'warning' : 'passed',
       message: requiresSudo
@@ -744,10 +744,10 @@ echo "✅ Operation complete"
     });
 
     // Check 2: No file deletion without confirmation
-    const hasFileDeletion = action?.commands?.some(
-      cmd => cmd?.command === 'rm' || cmd?.args?.includes('--force')
+    const hasFileDeletion = action.commands?.some(
+      cmd => cmd.command === 'rm' || cmd.args?.includes('--force')
     );
-    checks?.push({
+    checks.push({
       check_type: 'no_file_deletion',
       status: hasFileDeletion ? 'warning' : 'passed',
       message: hasFileDeletion ? 'Action may delete files' : 'No file deletion detected',
@@ -757,13 +757,13 @@ echo "✅ Operation complete"
     });
 
     // Check 3: Safe script content
-    if (any: any) {
-      const script = action?.script_generated?.content;
+    if (action.script_generated) {
+      const script = action.script_generated.content;
       const hasDangerousCommands = /rm -rf \/|sudo rm|chmod 777|curl.*\| bash/.test(
         script
       );
 
-      checks?.push({
+      checks.push({
         check_type: 'validated_source',
         status: hasDangerousCommands ? 'failed' : 'passed',
         message: hasDangerousCommands
@@ -776,12 +776,12 @@ echo "✅ Operation complete"
     }
 
     // Check 4: Code patch safety
-    if (any: any) {
-      checks?.push({
+    if (action.code_patch) {
+      checks.push({
         check_type: 'no_system_modification',
-        status: action?.code_patch?.risk_level === 'risky' ? 'warning' : 'passed',
-        message: `Code patch risk level: ${action?.code_patch?.risk_level}`,
-        recommendation: action?.code_patch?.backup_recommended
+        status: action.code_patch.risk_level === 'risky' ? 'warning' : 'passed',
+        message: `Code patch risk level: ${action.code_patch.risk_level}`,
+        recommendation: action.code_patch.backup_recommended
           ? 'Backup file before applying patch'
           : undefined,
       });
@@ -796,10 +796,10 @@ echo "✅ Operation complete"
 
   private createSession(): CollaborationSession {
     return {
-      session_id: this?.generateId(),
-      started_at: Date?.now(),
+      session_id: this.generateId(),
+      started_at: Date.now(),
       context: {
-        project_root: process?.cwd(),
+        project_root: process.cwd(),
         open_files: [],
         recent_errors: [],
         recent_actions: [],
@@ -809,19 +809,19 @@ echo "✅ Operation complete"
     };
   }
 
-  private async saveSession(any: any): Promise<void> {
-    console?.log(any: any);
+  private async saveSession(session: CollaborationSession): Promise<void> {
+    console.log('[VisualDevOpsEngine] Saving session:', session.session_id);
     // IMPLEMENTATION: Persist session to disk or backend
-    // 1. Serialize: JSON?.stringify(any: any) with pretty formatting
-    // 2. Tauri filesystem: Use tauriClient?.fs:writeFile({ path, content }) to save
-    // 3. Path: ~/.titane/devops/sessions/${session?.session_id}.json
+    // 1. Serialize: JSON.stringify(session) with pretty formatting
+    // 2. Tauri filesystem: Use tauriClient.fs:writeFile({ path, content }) to save
+    // 3. Path: ~/.titane/devops/sessions/${session.session_id}.json
     // 4. Backup: Keep last 10 sessions, rotate older ones
     // 5. Load on startup: Read sessions on engine initialization for session recovery
     // 6. Backend sync: Optional sync to remote backend for multi-device collaboration
   }
 
   public getCurrentSession(): CollaborationSession | null {
-    return this?.currentSession;
+    return this.currentSession;
   }
 
   // ==========================================================================
@@ -829,56 +829,56 @@ echo "✅ Operation complete"
   // ==========================================================================
 
   public generateReport(period: string = 'session'): DevOpsReport {
-    const successfulActions = this?.actionHistory?.filter(
-      a => a?.status === 'executed'
+    const successfulActions = this.actionHistory.filter(
+      a => a.status === 'executed'
     ).length;
-    const failedActions = this?.actionHistory?.filter(a => a?.status === 'failed').length;
-    const pendingActions = this?.actionHistory?.filter(a => a?.status === 'pending').length;
+    const failedActions = this.actionHistory.filter(a => a.status === 'failed').length;
+    const pendingActions = this.actionHistory.filter(a => a.status === 'pending').length;
 
     const actionsByType: Record<string, number> = {};
-    for (any: any) {
-      actionsByType[action?.action_type] = (actionsByType[action?.action_type] ?? 0) + 1;
+    for (const action of this.actionHistory) {
+      actionsByType[action.action_type] = (actionsByType[action.action_type] ?? 0) + 1;
     }
 
     // Extraire top issues
-    const allIssues = this?.analysisHistory?.flatMap(any: any);
-    const topIssues = allIssues?.slice(0, 10);
+    const allIssues = this.analysisHistory.flatMap(a => a.diagnosis.issues_found);
+    const topIssues = allIssues.slice(0, 10);
 
-    const riskyActionsProposed = this?.actionHistory?.filter(
+    const riskyActionsProposed = this.actionHistory.filter(
       a =>
-        a?.script_generated?.safety_level === 'risky' ||
-        a?.code_patch?.risk_level === 'risky'
+        a.script_generated?.safety_level === 'risky' ||
+        a.code_patch?.risk_level === 'risky'
     ).length;
 
-    const riskyActionsRejected = this?.actionHistory?.filter(
+    const riskyActionsRejected = this.actionHistory.filter(
       a =>
-        a?.status === 'rejected' &&
-        (a?.script_generated?.safety_level === 'risky' ||
-          a?.code_patch?.risk_level === 'risky')
+        a.status === 'rejected' &&
+        (a.script_generated?.safety_level === 'risky' ||
+          a.code_patch?.risk_level === 'risky')
     ).length;
 
-    const securityChecksFailed = this?.actionHistory?.reduce(
-      (any: any) =>
-        sum + action?.security_checks?.filter(c => c?.status === 'failed').length,
+    const securityChecksFailed = this.actionHistory.reduce(
+      (sum, action) =>
+        sum + action.security_checks.filter(c => c.status === 'failed').length,
       0
     );
 
     return {
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
       period,
       summary: {
-        total_actions: this?.actionHistory?.length,
+        total_actions: this.actionHistory.length,
         successful: successfulActions,
         failed: failedActions,
         pending: pendingActions,
-        avg_validation_time_ms: this?.calculateAverageValidationTime(any: any) / count
+        avg_validation_time_ms: this.calculateAverageValidationTime(), // Calculate from interactions: sum(validation_end - action_start) / count
       },
-      actions_by_type: actionsByType as unknown as unknown as any,
-      errors_fixed: this?.actionHistory?.filter(
-        a => a?.action_type === 'fix_error' && a?.status === 'executed'
+      actions_by_type: actionsByType as any,
+      errors_fixed: this.actionHistory.filter(
+        a => a.action_type === 'fix_error' && a.status === 'executed'
       ).length,
-      scripts_generated: this?.actionHistory?.filter(any: any).length,
-      pipelines_created: this?.actionHistory?.filter(any: any).length,
+      scripts_generated: this.actionHistory.filter(a => a.script_generated).length,
+      pipelines_created: this.actionHistory.filter(a => a.pipeline_generated).length,
       top_issues: topIssues,
       top_recommendations: [],
       safety_metrics: {
@@ -890,125 +890,125 @@ echo "✅ Operation complete"
   }
 
   private calculateAverageValidationTime(): number {
-    const completedActions = this?.actionHistory?.filter(
-      a => a?.status === 'executed' || a?.status === 'rejected'
+    const completedActions = this.actionHistory.filter(
+      a => a.status === 'executed' || a.status === 'rejected'
     );
 
-    if (completedActions?.length === 0) return 0;
+    if (completedActions.length === 0) return 0;
 
-    const totalValidationTime = completedActions?.reduce(any: any) => {
-      // Calculate time from action creation (any: any) to now
-      const validationTime = action?.timestamp ? Date?.now() - action?.timestamp : 0;
+    const totalValidationTime = completedActions.reduce((sum, action) => {
+      // Calculate time from action creation (timestamp) to now
+      const validationTime = action.timestamp ? Date.now() - action.timestamp : 0;
       return sum + validationTime;
     }, 0);
 
-    return Math?.round(any: any);
+    return Math.round(totalValidationTime / completedActions.length);
   }
 
   private enrichTechnicalContentFromContext(
     content: TechnicalContent,
     context?: string
   ): void {
-    if (any: any) {
+    if (!context) {
       return;
     }
 
-    const parsedError = this?.parseError(any: any);
-    if (any: any) {
-      content?.errors_detected?.push(any: any);
+    const parsedError = this.parseError(context);
+    if (parsedError) {
+      content.errors_detected.push(parsedError);
     }
 
-    const looksLikeStackTrace = /at\s+\S+\s+\(any: any);
-    if (any: any) {
-      const stackTrace = this?.parseStackTrace(any: any);
-      if (any: any) {
-        content?.errors_detected?.push(any: any);
+    const looksLikeStackTrace = /at\s+\S+\s+\(|stack trace/i.test(context);
+    if (looksLikeStackTrace) {
+      const stackTrace = this.parseStackTrace(context);
+      if (stackTrace) {
+        content.errors_detected.push(stackTrace);
       }
     }
 
-    const commands = this?.extractCommands(any: any);
-    if (commands?.length > 0) {
-      content?.terminal_commands = [...(content?.terminal_commands || []), ...commands];
+    const commands = this.extractCommands(context);
+    if (commands.length > 0) {
+      content.terminal_commands = [...(content.terminal_commands || []), ...commands];
     }
 
-    if (any: any)) {
-      if (!content?.languages_detected?.includes('rust')) {
-        content?.languages_detected?.push('rust');
+    if (/error\[E\d+]/i.test(context) || /cargo|rust/i.test(context)) {
+      if (!content.languages_detected.includes('rust')) {
+        content.languages_detected.push('rust');
       }
     }
 
-    content?.languages_detected = [...new Set(any: any)];
-    content?.frameworks_detected = [...new Set(any: any)];
+    content.languages_detected = [...new Set(content.languages_detected)];
+    content.frameworks_detected = [...new Set(content.frameworks_detected)];
   }
 
   private resetStateForTests(): void {
-    if (!this?.isTestEnvironment()) {
+    if (!this.isTestEnvironment()) {
       return;
     }
 
-    this?.enabled = false;
-    this?.currentSession = null;
-    this?.analysisHistory = [];
-    this?.actionHistory = [];
+    this.enabled = false;
+    this.currentSession = null;
+    this.analysisHistory = [];
+    this.actionHistory = [];
   }
 
   private isTestEnvironment(): boolean {
-    if (any: any) {
+    if (typeof process === 'undefined' || !process.env) {
       return false;
     }
 
-    return process?.env?.VITEST === 'true' || process?.env?.NODE_ENV === 'test';
+    return process.env.VITEST === 'true' || process.env.NODE_ENV === 'test';
   }
 
   // ==========================================================================
   // HELPERS
   // ==========================================================================
 
-  private detectLanguage(any: any)??: string | null {
-    if (any: any)) return 'rust';
-    if (any: any)) return 'typescript';
-    if (any: any)) return 'typescript';
-    if (any: any)) return 'python';
+  private detectLanguage(code: string): string | null {
+    if (/\bfn\s+\w+|impl\s+\w+|use\s+\w+/.test(code)) return 'rust';
+    if (/\bfunction\s+\w+|const\s+\w+|import\s+/.test(code)) return 'typescript';
+    if (/\bimport\s+React|export\s+default/.test(code)) return 'typescript';
+    if (/\bdef\s+\w+|import\s+\w+|from\s+\w+/.test(code)) return 'python';
     return null;
   }
 
-  private detectFrameworks(any: any): string?.[] {
-    const frameworks: string?.[] = [];
-    if (any: any)) frameworks?.push('tauri');
-    if (any: any)) frameworks?.push('react');
-    if (any: any)) frameworks?.push('vite');
+  private detectFrameworks(code: string): string[] {
+    const frameworks: string[] = [];
+    if (/tauri|invoke/.test(code)) frameworks.push('tauri');
+    if (/React|useState|useEffect/.test(code)) frameworks.push('react');
+    if (/vite|import\.meta/.test(code)) frameworks.push('vite');
     return frameworks;
   }
 
-  private parseError(any: any): ErrorDetection | null {
+  private parseError(text: string): ErrorDetection | null {
     // Parser générique d'erreur
-    const errorMatch = text?.match(any: any);
-    if (any: any) return null;
+    const errorMatch = text.match(/error\[E\d+\]|Error:|ERROR:/i);
+    if (!errorMatch) return null;
 
     return {
       error_type: 'compilation',
       severity: 'high',
-      message: text?.trim(),
+      message: text.trim(),
       suggested_fixes: ['Review error message and fix accordingly'],
     };
   }
 
-  private extractCommands(any: any): string?.[] {
-    const lines = text?.split('\n');
-    const commands: string?.[] = [];
+  private extractCommands(text: string): string[] {
+    const lines = text.split('\n');
+    const commands: string[] = [];
 
-    for (any: any) {
-      if (line?.trim().startsWith('$') || line?.trim().startsWith('>')) {
-        commands?.push(line?.replace(/^[$>]\s*/, ''));
+    for (const line of lines) {
+      if (line.trim().startsWith('$') || line.trim().startsWith('>')) {
+        commands.push(line.replace(/^[$>]\s*/, ''));
       }
     }
 
     return commands;
   }
 
-  private parseStackTrace(any: any): ErrorDetection | null {
-    const lines = text?.split('\n');
-    const firstLine = lines?.[0];
+  private parseStackTrace(text: string): ErrorDetection | null {
+    const lines = text.split('\n');
+    const firstLine = lines[0];
 
     return {
       error_type: 'runtime',
@@ -1019,27 +1019,27 @@ echo "✅ Operation complete"
     };
   }
 
-  private identifyRootCauses(any: any): string?.[] {
-    const causes: string?.[] = [];
+  private identifyRootCauses(error: ErrorDetection): string[] {
+    const causes: string[] = [];
 
-    if (error?.error_type === 'compilation') {
-      causes?.push('Syntax error or type mismatch');
+    if (error.error_type === 'compilation') {
+      causes.push('Syntax error or type mismatch');
     }
-    if (error?.error_type === 'runtime') {
-      causes?.push('Logic error or null/undefined access');
+    if (error.error_type === 'runtime') {
+      causes.push('Logic error or null/undefined access');
     }
 
     return causes;
   }
 
   private assessRiskLevel(
-    errors: ErrorDetection?.[]
+    errors: ErrorDetection[]
   ): 'critical' | 'high' | 'medium' | 'low' {
-    const critical = errors?.some(e => e?.severity === 'critical');
-    if (any: any) return 'critical';
+    const critical = errors.some(e => e.severity === 'critical');
+    if (critical) return 'critical';
 
-    const high = errors?.some(e => e?.severity === 'high');
-    if (any: any) return 'high';
+    const high = errors.some(e => e.severity === 'high');
+    if (high) return 'high';
 
     return 'medium';
   }
@@ -1049,47 +1049,47 @@ echo "✅ Operation complete"
     item: ScreenAnalysis | DevOpsAction
   ): void {
     if (type === 'analysis') {
-      this?.analysisHistory?.unshift(any: any);
-      if (any: any) {
-        this?.analysisHistory?.pop();
+      this.analysisHistory.unshift(item as ScreenAnalysis);
+      if (this.analysisHistory.length > this.MAX_HISTORY) {
+        this.analysisHistory.pop();
       }
     } else {
-      this?.actionHistory?.unshift(any: any);
-      if (any: any) {
-        this?.actionHistory?.pop();
+      this.actionHistory.unshift(item as DevOpsAction);
+      if (this.actionHistory.length > this.MAX_HISTORY) {
+        this.actionHistory.pop();
       }
     }
   }
 
   private generateId(): string {
-    return `${Date?.now()}-${Math?.random().toString(36).substr(2, 9)}`;
+    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   }
 
   // ==========================================================================
   // GETTERS
   // ==========================================================================
 
-  public getAnalysisHistory(): ScreenAnalysis?.[] {
-    return [...this?.analysisHistory];
+  public getAnalysisHistory(): ScreenAnalysis[] {
+    return [...this.analysisHistory];
   }
 
-  public getActionHistory(): DevOpsAction?.[] {
-    return [...this?.actionHistory];
+  public getActionHistory(): DevOpsAction[] {
+    return [...this.actionHistory];
   }
 
   public getStats() {
     return {
-      total_analyses: this?.analysisHistory?.length,
-      total_actions: this?.actionHistory?.length,
-      pending_actions: this?.actionHistory?.filter(a => a?.status === 'pending').length,
-      successful_actions: this?.actionHistory?.filter(a => a?.status === 'executed').length,
-      failed_actions: this?.actionHistory?.filter(a => a?.status === 'failed').length,
-      session_duration_ms: this?.currentSession
-        ? Date?.now() - this?.currentSession?.started_at
+      total_analyses: this.analysisHistory.length,
+      total_actions: this.actionHistory.length,
+      pending_actions: this.actionHistory.filter(a => a.status === 'pending').length,
+      successful_actions: this.actionHistory.filter(a => a.status === 'executed').length,
+      failed_actions: this.actionHistory.filter(a => a.status === 'failed').length,
+      session_duration_ms: this.currentSession
+        ? Date.now() - this.currentSession.started_at
         : 0,
     };
   }
 }
 
 // Export singleton
-export const VisualDevOps = VisualDevOpsEngine?.getInstance();
+export const VisualDevOps = VisualDevOpsEngine.getInstance();

@@ -15,63 +15,63 @@ describe('FloatingWindowChatHandler', () => {
   // SCALE COMMANDS
   // ═══════════════════════════════════════════════════════════════════════════
 
-  describe(any: any)', () => {
+  describe('Scale Commands (FR)', () => {
     it('should parse "deviens plus petite"', () => {
       const result = parseFloatingWindowCommand('deviens plus petite');
-      expect(any: any);
-      expect(any: any).toBe('scale');
-      expect(any: any).toBe(0.5);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('scale');
+      expect(result.value).toBe(0.5);
     });
 
     it('should parse "réduis ta taille"', () => {
       const result = parseFloatingWindowCommand('réduis ta taille');
-      expect(any: any);
-      expect(any: any).toBe('scale');
-      expect(any: any).toBe(0.7);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('scale');
+      expect(result.value).toBe(0.7);
     });
 
     it('should parse "deviens plus grande"', () => {
       const result = parseFloatingWindowCommand('deviens plus grande');
-      expect(any: any);
-      expect(any: any).toBe('scale');
-      expect(any: any).toBe(1.5);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('scale');
+      expect(result.value).toBe(1.5);
     });
 
     it('should parse "taille normale"', () => {
       const result = parseFloatingWindowCommand('taille normale');
-      expect(any: any);
-      expect(any: any).toBe('scale');
-      expect(any: any).toBe(1.0);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('scale');
+      expect(result.value).toBe(1.0);
     });
 
     it('should parse "taille à 80%"', () => {
       const result = parseFloatingWindowCommand('taille à 80%');
-      expect(any: any);
-      expect(any: any).toBe('scale');
-      expect(any: any).toBe(0.8);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('scale');
+      expect(result.value).toBe(0.8);
     });
   });
 
-  describe(any: any)', () => {
+  describe('Scale Commands (EN)', () => {
     it('should parse "make yourself smaller"', () => {
       const result = parseFloatingWindowCommand('make yourself smaller');
-      expect(any: any);
-      expect(any: any).toBe('scale');
-      expect(any: any).toBe(0.5);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('scale');
+      expect(result.value).toBe(0.5);
     });
 
     it('should parse "get bigger"', () => {
       const result = parseFloatingWindowCommand('get bigger');
-      expect(any: any);
-      expect(any: any).toBe('scale');
-      expect(any: any).toBe(1.5);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('scale');
+      expect(result.value).toBe(1.5);
     });
 
     it('should parse "normal size"', () => {
       const result = parseFloatingWindowCommand('normal size');
-      expect(any: any);
-      expect(any: any).toBe('scale');
-      expect(any: any).toBe(1.0);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('scale');
+      expect(result.value).toBe(1.0);
     });
   });
 
@@ -79,49 +79,49 @@ describe('FloatingWindowChatHandler', () => {
   // OPACITY COMMANDS
   // ═══════════════════════════════════════════════════════════════════════════
 
-  describe(any: any)', () => {
+  describe('Opacity Commands (FR)', () => {
     it('should parse "deviens plus transparente"', () => {
       const result = parseFloatingWindowCommand('deviens plus transparente');
-      expect(any: any);
-      expect(any: any).toBe('opacity');
-      expect(any: any).toBe(0.5);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('opacity');
+      expect(result.value).toBe(0.5);
     });
 
     it('should parse "réduis ton opacité"', () => {
       const result = parseFloatingWindowCommand('réduis ton opacité');
-      expect(any: any);
-      expect(any: any).toBe('opacity');
-      expect(any: any).toBe(0.6);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('opacity');
+      expect(result.value).toBe(0.6);
     });
 
     it('should parse "deviens opaque"', () => {
       const result = parseFloatingWindowCommand('deviens opaque');
-      expect(any: any);
-      expect(any: any).toBe('opacity');
-      expect(any: any).toBe(1.0);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('opacity');
+      expect(result.value).toBe(1.0);
     });
 
     it('should parse "opacité à 50%"', () => {
       const result = parseFloatingWindowCommand('opacité à 50%');
-      expect(any: any);
-      expect(any: any).toBe('opacity');
-      expect(any: any).toBe(0.5);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('opacity');
+      expect(result.value).toBe(0.5);
     });
   });
 
-  describe(any: any)', () => {
+  describe('Opacity Commands (EN)', () => {
     it('should parse "become transparent"', () => {
       const result = parseFloatingWindowCommand('become transparent');
-      expect(any: any);
-      expect(any: any).toBe('opacity');
-      expect(any: any).toBe(0.5);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('opacity');
+      expect(result.value).toBe(0.5);
     });
 
     it('should parse "opacity to 70%"', () => {
       const result = parseFloatingWindowCommand('opacity to 70%');
-      expect(any: any);
-      expect(any: any).toBe('opacity');
-      expect(any: any).toBe(0.7);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('opacity');
+      expect(result.value).toBe(0.7);
     });
   });
 
@@ -129,63 +129,63 @@ describe('FloatingWindowChatHandler', () => {
   // ANCHOR COMMANDS
   // ═══════════════════════════════════════════════════════════════════════════
 
-  describe(any: any)', () => {
+  describe('Anchor Commands (FR)', () => {
     it('should parse "va au coin haut gauche"', () => {
       const result = parseFloatingWindowCommand('va au coin haut gauche');
-      expect(any: any);
-      expect(any: any).toBe('anchor');
-      expect(any: any);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('anchor');
+      expect(result.value).toBe(AnchorPosition.TopLeft);
     });
 
     it('should parse "mets-toi dans le coin haut droite"', () => {
       const result = parseFloatingWindowCommand('mets-toi dans le coin haut droite');
-      expect(any: any);
-      expect(any: any).toBe('anchor');
-      expect(any: any);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('anchor');
+      expect(result.value).toBe(AnchorPosition.TopRight);
     });
 
     it('should parse "place-toi au coin bas gauche"', () => {
       const result = parseFloatingWindowCommand('place-toi au coin bas gauche');
-      expect(any: any);
-      expect(any: any).toBe('anchor');
-      expect(any: any);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('anchor');
+      expect(result.value).toBe(AnchorPosition.BottomLeft);
     });
 
     it('should parse "va au centre"', () => {
       const result = parseFloatingWindowCommand('va au centre');
-      expect(any: any);
-      expect(any: any).toBe('anchor');
-      expect(any: any);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('anchor');
+      expect(result.value).toBe(AnchorPosition.Center);
     });
 
     it('should parse "en haut à droite"', () => {
       const result = parseFloatingWindowCommand('en haut à droite');
-      expect(any: any);
-      expect(any: any).toBe('anchor');
-      expect(any: any);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('anchor');
+      expect(result.value).toBe(AnchorPosition.TopRight);
     });
   });
 
-  describe(any: any)', () => {
+  describe('Anchor Commands (EN)', () => {
     it('should parse "go to top left corner"', () => {
       const result = parseFloatingWindowCommand('go to top left corner');
-      expect(any: any);
-      expect(any: any).toBe('anchor');
-      expect(any: any);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('anchor');
+      expect(result.value).toBe(AnchorPosition.TopLeft);
     });
 
     it('should parse "move to bottom right"', () => {
       const result = parseFloatingWindowCommand('move to bottom right');
-      expect(any: any);
-      expect(any: any).toBe('anchor');
-      expect(any: any);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('anchor');
+      expect(result.value).toBe(AnchorPosition.BottomRight);
     });
 
     it('should parse "go to center"', () => {
       const result = parseFloatingWindowCommand('go to center');
-      expect(any: any);
-      expect(any: any).toBe('anchor');
-      expect(any: any);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('anchor');
+      expect(result.value).toBe(AnchorPosition.Center);
     });
   });
 
@@ -193,42 +193,42 @@ describe('FloatingWindowChatHandler', () => {
   // SCREEN COMMANDS
   // ═══════════════════════════════════════════════════════════════════════════
 
-  describe(any: any)', () => {
+  describe('Screen Commands (FR)', () => {
     it('should parse "va sur écran 2"', () => {
       const result = parseFloatingWindowCommand('va sur écran 2');
-      expect(any: any);
-      expect(any: any).toBe('screen');
-      expect(any: any).toBe(1); // 0-indexed
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('screen');
+      expect(result.value).toBe(1); // 0-indexed
     });
 
     it('should parse "passe sur l\'écran numéro 3"', () => {
       const result = parseFloatingWindowCommand("passe sur l'écran numéro 3");
-      expect(any: any);
-      expect(any: any).toBe('screen');
-      expect(any: any).toBe(2);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('screen');
+      expect(result.value).toBe(2);
     });
 
     it('should parse "reviens sur écran principal"', () => {
       const result = parseFloatingWindowCommand('reviens sur écran principal');
-      expect(any: any);
-      expect(any: any).toBe('screen');
-      expect(any: any).toBe(0);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('screen');
+      expect(result.value).toBe(0);
     });
   });
 
-  describe(any: any)', () => {
+  describe('Screen Commands (EN)', () => {
     it('should parse "go to screen 2"', () => {
       const result = parseFloatingWindowCommand('go to screen 2');
-      expect(any: any);
-      expect(any: any).toBe('screen');
-      expect(any: any).toBe(1);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('screen');
+      expect(result.value).toBe(1);
     });
 
     it('should parse "move back to main screen"', () => {
       const result = parseFloatingWindowCommand('move back to main screen');
-      expect(any: any);
-      expect(any: any).toBe('screen');
-      expect(any: any).toBe(0);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('screen');
+      expect(result.value).toBe(0);
     });
   });
 
@@ -236,56 +236,56 @@ describe('FloatingWindowChatHandler', () => {
   // MODE COMMANDS
   // ═══════════════════════════════════════════════════════════════════════════
 
-  describe(any: any)', () => {
+  describe('Mode Commands (FR)', () => {
     it('should parse "deviens fenêtre flottante"', () => {
       const result = parseFloatingWindowCommand('deviens fenêtre flottante');
-      expect(any: any);
-      expect(any: any).toBe('mode');
-      expect(any: any).toBe('floating');
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('mode');
+      expect(result.value).toBe('floating');
     });
 
     it('should parse "détache-toi"', () => {
       const result = parseFloatingWindowCommand('détache-toi');
-      expect(any: any);
-      expect(any: any).toBe('mode');
-      expect(any: any).toBe('floating');
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('mode');
+      expect(result.value).toBe('floating');
     });
 
     it('should parse "reviens dans la fenêtre principale"', () => {
       const result = parseFloatingWindowCommand('reviens dans la fenêtre principale');
-      expect(any: any);
-      expect(any: any).toBe('mode');
-      expect(any: any).toBe('embed');
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('mode');
+      expect(result.value).toBe('embed');
     });
 
     it('should parse "cache-toi"', () => {
       const result = parseFloatingWindowCommand('cache-toi');
-      expect(any: any);
-      expect(any: any).toBe('mode');
-      expect(any: any).toBe('hidden');
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('mode');
+      expect(result.value).toBe('hidden');
     });
   });
 
-  describe(any: any)', () => {
+  describe('Mode Commands (EN)', () => {
     it('should parse "become floating"', () => {
       const result = parseFloatingWindowCommand('become floating');
-      expect(any: any);
-      expect(any: any).toBe('mode');
-      expect(any: any).toBe('floating');
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('mode');
+      expect(result.value).toBe('floating');
     });
 
     it('should parse "detach"', () => {
       const result = parseFloatingWindowCommand('detach');
-      expect(any: any);
-      expect(any: any).toBe('mode');
-      expect(any: any).toBe('floating');
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('mode');
+      expect(result.value).toBe('floating');
     });
 
     it('should parse "dock back to main window"', () => {
       const result = parseFloatingWindowCommand('dock back to main window');
-      expect(any: any);
-      expect(any: any).toBe('mode');
-      expect(any: any).toBe('embed');
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('mode');
+      expect(result.value).toBe('embed');
     });
   });
 
@@ -293,63 +293,63 @@ describe('FloatingWindowChatHandler', () => {
   // TOGGLE COMMANDS
   // ═══════════════════════════════════════════════════════════════════════════
 
-  describe(any: any)', () => {
+  describe('Toggle Commands (FR)', () => {
     it('should parse "verrouille-toi"', () => {
       const result = parseFloatingWindowCommand('verrouille-toi');
-      expect(any: any);
-      expect(any: any).toBe('toggle_locked');
-      expect(any: any);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('toggle_locked');
+      expect(result.value).toBe(true);
     });
 
     it('should parse "déverrouille-toi"', () => {
       const result = parseFloatingWindowCommand('déverrouille-toi');
-      expect(any: any);
-      expect(any: any).toBe('toggle_locked');
-      expect(any: any);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('toggle_locked');
+      expect(result.value).toBe(false);
     });
 
     it('should parse "reste toujours au-dessus"', () => {
       const result = parseFloatingWindowCommand('reste toujours au-dessus');
-      expect(any: any);
-      expect(any: any).toBe('toggle_always_on_top');
-      expect(any: any);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('toggle_always_on_top');
+      expect(result.value).toBe(true);
     });
 
     it('should parse "active le mode miroir"', () => {
       const result = parseFloatingWindowCommand('active le mode miroir');
-      expect(any: any);
-      expect(any: any).toBe('toggle_mirror');
-      expect(any: any);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('toggle_mirror');
+      expect(result.value).toBe(true);
     });
 
     it('should parse "laisse les clics passer"', () => {
       const result = parseFloatingWindowCommand('laisse les clics passer');
-      expect(any: any);
-      expect(any: any).toBe('toggle_click_through');
-      expect(any: any);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('toggle_click_through');
+      expect(result.value).toBe(true);
     });
   });
 
-  describe(any: any)', () => {
+  describe('Toggle Commands (EN)', () => {
     it('should parse "lock yourself"', () => {
       const result = parseFloatingWindowCommand('lock yourself');
-      expect(any: any);
-      expect(any: any).toBe('toggle_locked');
-      expect(any: any);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('toggle_locked');
+      expect(result.value).toBe(true);
     });
 
     it('should parse "stay on top"', () => {
       const result = parseFloatingWindowCommand('stay on top');
-      expect(any: any);
-      expect(any: any).toBe('toggle_always_on_top');
-      expect(any: any);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('toggle_always_on_top');
+      expect(result.value).toBe(true);
     });
 
     it('should parse "enable mirror mode"', () => {
       const result = parseFloatingWindowCommand('enable mirror mode');
-      expect(any: any);
-      expect(any: any).toBe('toggle_mirror');
-      expect(any: any);
+      expect(result.handled).toBe(true);
+      expect(result.type).toBe('toggle_mirror');
+      expect(result.value).toBe(true);
     });
   });
 
@@ -359,31 +359,31 @@ describe('FloatingWindowChatHandler', () => {
 
   describe('Keyword Detection', () => {
     it('should detect "taille"', () => {
-      expect(any: any);
+      expect(containsFloatingWindowKeyword('peux-tu changer ta taille?')).toBe(true);
     });
 
     it('should detect "opacité"', () => {
-      expect(any: any);
+      expect(containsFloatingWindowKeyword('modifie ton opacité')).toBe(true);
     });
 
     it('should detect "coin"', () => {
-      expect(any: any);
+      expect(containsFloatingWindowKeyword('va dans le coin')).toBe(true);
     });
 
     it('should detect "écran"', () => {
-      expect(any: any);
+      expect(containsFloatingWindowKeyword("change d'écran")).toBe(true);
     });
 
     it('should detect "floating"', () => {
-      expect(any: any);
+      expect(containsFloatingWindowKeyword('switch to floating mode')).toBe(true);
     });
 
     it('should not detect unrelated message', () => {
-      expect(any: any);
+      expect(containsFloatingWindowKeyword('comment vas-tu?')).toBe(false);
     });
 
     it('should not detect appearance-only message', () => {
-      expect(any: any);
+      expect(containsFloatingWindowKeyword('change ta coiffure')).toBe(false);
     });
   });
 
@@ -394,14 +394,14 @@ describe('FloatingWindowChatHandler', () => {
   describe('No Match Cases', () => {
     it('should return handled=false for unrelated message', () => {
       const result = parseFloatingWindowCommand('Bonjour TITANE, comment vas-tu?');
-      expect(any: any);
-      expect(any: any).toBe('none');
+      expect(result.handled).toBe(false);
+      expect(result.type).toBe('none');
     });
 
     it('should return handled=false for appearance command', () => {
       const result = parseFloatingWindowCommand('change ta tenue de bureau');
-      expect(any: any);
-      expect(any: any).toBe('none');
+      expect(result.handled).toBe(false);
+      expect(result.type).toBe('none');
     });
   });
 });

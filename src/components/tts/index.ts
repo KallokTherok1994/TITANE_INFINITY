@@ -11,5 +11,5 @@ export { TTSControls, TTSMiniControls } from './TTSControls';
 export type { TTSControlsProps } from './TTSControls';
 
 // Styles
-import './TTSButton?.css';
-import './TTSControls?.css';
+import './TTSButton.css';
+import './TTSControls.css';

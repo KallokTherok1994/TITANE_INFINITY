@@ -1,15 +1,15 @@
 /**
- * TITANE∞ v∞ — Inner Dialogue Controller (any: any)
+ * TITANE∞ v∞ — Inner Dialogue Controller (IDC)
  *
  * Super Prompt XXVII: Le moteur de pensée interne de TITANE∞
  *
  * Gère:
- * - Pensée silencieuse (any: any)
+ * - Pensée silencieuse (inner voice) vs parole externe (outer voice)
  * - Auto-régulation mentale
  * - Cohérence identitaire
- * - Transitions cognitives structurées (any: any)
+ * - Transitions cognitives structurées (8 étapes)
  * - Préparation des réponses vocales
- * - Synchronisation halo interne (any: any)
+ * - Synchronisation halo interne (couleurs mentales)
  * - Réflexion profonde vs pensée rapide
  *
  * © 2025 TITANE Team. All rights reserved.
@@ -49,7 +49,7 @@ export type ThoughtType =
   | 'memory_recall'; // Rappel mémoire
 
 /**
- * Couleur mentale interne (any: any)
+ * Couleur mentale interne (reflétée dans le halo)
  */
 export type MentalColor =
   | 'blue' // Pensée rapide/logique
@@ -65,12 +65,12 @@ export type MentalColor =
   | 'white'; // Neutre
 
 /**
- * Pensée interne (any: any)
+ * Pensée interne (log invisible)
  */
 export interface InnerThought {
   id: string;
   type: ThoughtType;
-  step: number; // 1-8 (any: any)
+  step: number; // 1-8 (8-step inner process)
   content: string; // La pensée elle-même
   timestamp: number;
   mentalColor: MentalColor;
@@ -84,18 +84,18 @@ export interface InnerThought {
 export interface InnerDialogueState {
   thinkingState: ThinkingState;
   currentThought: InnerThought | null;
-  thoughtHistory: InnerThought?.[]; // Dernières 20 pensées
+  thoughtHistory: InnerThought[]; // Dernières 20 pensées
   mentalColor: MentalColor;
   isThinking: boolean; // True si inner process actif
-  lastProcessedInput??: string | null;
-  lastPreparedResponse??: string | null;
+  lastProcessedInput: string | null;
+  lastPreparedResponse: string | null;
 }
 
 /**
  * Configuration du IDC
  */
 export interface InnerDialogueConfig {
-  /** Activer/désactiver le inner dialogue (any: any) */
+  /** Activer/désactiver le inner dialogue (default: true) */
   enabled?: boolean;
 
   /** Durée max pensée rapide en ms (default: 100) */
@@ -107,17 +107,17 @@ export interface InnerDialogueConfig {
   /** Taille historique pensées (default: 20) */
   historySize?: number;
 
-  /** Log pensées dans console (any: any) */
+  /** Log pensées dans console (default: false - sécurité) */
   debugMode?: boolean;
 
-  /** Sync halo avec état mental (any: any) */
+  /** Sync halo avec état mental (default: true) */
   syncHalo?: boolean;
 }
 
 /**
  * Callback pour changements d'état
  */
-export type InnerDialogueCallback = (any: any) => void;
+export type InnerDialogueCallback = (state: InnerDialogueState) => void;
 
 // ═══════════════════════════════════════════════════════════════════
 // INNER DIALOGUE CONTROLLER CLASS
@@ -130,16 +130,16 @@ class InnerDialogueController {
   private thoughtCounter = 0;
 
   constructor(config: InnerDialogueConfig = {}) {
-    this?.config = {
-      enabled: config?.enabled ?? true,
-      fastThinkingMaxDuration: config?.fastThinkingMaxDuration ?? 100,
-      slowThinkingMinDuration: config?.slowThinkingMinDuration ?? 500,
-      historySize: config?.historySize ?? 20,
-      debugMode: config?.debugMode ?? false,
-      syncHalo: config?.syncHalo ?? true,
+    this.config = {
+      enabled: config.enabled ?? true,
+      fastThinkingMaxDuration: config.fastThinkingMaxDuration ?? 100,
+      slowThinkingMinDuration: config.slowThinkingMinDuration ?? 500,
+      historySize: config.historySize ?? 20,
+      debugMode: config.debugMode ?? false,
+      syncHalo: config.syncHalo ?? true,
     };
 
-    this?.state = {
+    this.state = {
       thinkingState: 'silent',
       currentThought: null,
       thoughtHistory: [],
@@ -157,25 +157,25 @@ class InnerDialogueController {
   /**
    * Subscribe aux changements d'état
    */
-  subscribe(any: any): () => void {
-    this?.callbacks?.add(any: any);
-    return (any: any);
+  subscribe(callback: InnerDialogueCallback): () => void {
+    this.callbacks.add(callback);
+    return () => this.callbacks.delete(callback);
   }
 
   /**
    * Get current state
    */
   getState(): InnerDialogueState {
-    return { ...this?.state };
+    return { ...this.state };
   }
 
   /**
    * Enable/disable inner dialogue
    */
-  setEnabled(any: any): void {
-    this?.config?.enabled = enabled;
-    if (any: any) {
-      this?.transition('silent');
+  setEnabled(enabled: boolean): void {
+    this.config.enabled = enabled;
+    if (!enabled && this.state.isThinking) {
+      this.transition('silent');
     }
   }
 
@@ -193,61 +193,61 @@ class InnerDialogueController {
    * 8. Expression → Préparer la réponse finale
    *
    * @param userInput L'input utilisateur
-   * @returns La réponse préparée (any: any)
+   * @returns La réponse préparée (après 8 étapes internes)
    */
-  async processBeforeSpeaking(any: any): Promise<string> {
-    if (any: any) {
-      // Si désactivé, retourner directement l'input (any: any)
+  async processBeforeSpeaking(userInput: string): Promise<string> {
+    if (!this.config.enabled) {
+      // Si désactivé, retourner directement l'input (mode passthrough)
       return userInput;
     }
 
-    this?.state?.isThinking = true;
-    this?.state?.lastProcessedInput = userInput;
-    this?.notifyCallbacks();
+    this.state.isThinking = true;
+    this.state.lastProcessedInput = userInput;
+    this.notifyCallbacks();
 
     try {
       // INNER_STEP_1: Perception
-      const thought1 = await this?.innerStep1_Perception(any: any);
-      await this?.waitThinkingDelay();
+      const thought1 = await this.innerStep1_Perception(userInput);
+      await this.waitThinkingDelay();
 
       // INNER_STEP_2: Context
-      const thought2 = await this?.innerStep2_Context(any: any);
-      await this?.waitThinkingDelay();
+      const thought2 = await this.innerStep2_Context(thought1);
+      await this.waitThinkingDelay();
 
       // INNER_STEP_3: Intent
-      const thought3 = await this?.innerStep3_Intent(any: any);
-      await this?.waitThinkingDelay();
+      const thought3 = await this.innerStep3_Intent(thought2);
+      await this.waitThinkingDelay();
 
       // INNER_STEP_4: Plan
-      const thought4 = await this?.innerStep4_Plan(any: any);
-      await this?.waitThinkingDelay();
+      const thought4 = await this.innerStep4_Plan(thought3);
+      await this.waitThinkingDelay();
 
       // INNER_STEP_5: Coherence
-      const thought5 = await this?.innerStep5_Coherence(any: any);
-      await this?.waitThinkingDelay();
+      const thought5 = await this.innerStep5_Coherence(thought4);
+      await this.waitThinkingDelay();
 
       // INNER_STEP_6: Emotion
-      const thought6 = await this?.innerStep6_Emotion(any: any);
-      await this?.waitThinkingDelay();
+      const thought6 = await this.innerStep6_Emotion(thought5);
+      await this.waitThinkingDelay();
 
       // INNER_STEP_7: Validation
-      const thought7 = await this?.innerStep7_Validation(any: any);
-      await this?.waitThinkingDelay();
+      const thought7 = await this.innerStep7_Validation(thought6);
+      await this.waitThinkingDelay();
 
-      // INNER_STEP_8: Expression (any: any)
-      const finalResponse = await this?.innerStep8_Expression(any: any);
+      // INNER_STEP_8: Expression (préparation finale)
+      const finalResponse = await this.innerStep8_Expression(thought7);
 
-      this?.state?.lastPreparedResponse = finalResponse;
-      this?.state?.isThinking = false;
-      this?.transition('silent');
-      this?.notifyCallbacks();
+      this.state.lastPreparedResponse = finalResponse;
+      this.state.isThinking = false;
+      this.transition('silent');
+      this.notifyCallbacks();
 
       return finalResponse;
-    } catch (any: any) {
-      logger?.error(any: any);
-      this?.state?.isThinking = false;
-      this?.transition('silent');
-      this?.notifyCallbacks();
+    } catch (error) {
+      logger.error('Error in inner process:', error);
+      this.state.isThinking = false;
+      this.transition('silent');
+      this.notifyCallbacks();
       return userInput; // Fallback
     }
   }
@@ -256,9 +256,9 @@ class InnerDialogueController {
    * Quick thinking (pensée rapide, <100ms)
    * Pour réactions immédiates, réflexes
    */
-  async quickThink(any: any): Promise<string> {
-    this?.transition('fast_thinking');
-    const _thought = this?.createThought({
+  async quickThink(input: string): Promise<string> {
+    this.transition('fast_thinking');
+    const _thought = this.createThought({
       type: 'perception',
       step: 0,
       content: `Quick reaction to: "${input}"`,
@@ -267,8 +267,8 @@ class InnerDialogueController {
       coherenceScore: 0.95,
     });
 
-    await this?.waitMs(50); // Very fast
-    this?.transition('silent');
+    await this.waitMs(50); // Very fast
+    this.transition('silent');
     return input; // Pass-through for quick reactions
   }
 
@@ -276,9 +276,9 @@ class InnerDialogueController {
    * Deep reflection (réflexion profonde, >500ms)
    * Pour introspection, alignement identitaire
    */
-  async deepReflect(any: any): Promise<void> {
-    this?.transition('deep_reflection');
-    const _thought2 = this?.createThought({
+  async deepReflect(topic: string): Promise<void> {
+    this.transition('deep_reflection');
+    const _thought2 = this.createThought({
       type: 'intuition',
       step: 0,
       content: `Deep reflection on: "${topic}"`,
@@ -287,17 +287,17 @@ class InnerDialogueController {
       coherenceScore: 0.9,
     });
 
-    await this?.waitMs(1000); // Long reflection
-    this?.transition('silent');
+    await this.waitMs(1000); // Long reflection
+    this.transition('silent');
   }
 
   /**
-   * Self-correct (any: any)
+   * Self-correct (auto-correction)
    * Détecte et corrige incohérences avant de parler
    */
-  async selfCorrect(any: any): Promise<string> {
-    this?.transition('self_correcting');
-    const _thought3 = this?.createThought({
+  async selfCorrect(response: string): Promise<string> {
+    this.transition('self_correcting');
+    const _thought3 = this.createThought({
       type: 'correction',
       step: 0,
       content: `Correcting potential issues in response`,
@@ -306,35 +306,35 @@ class InnerDialogueController {
       coherenceScore: 0.95,
     });
 
-    await this?.waitMs(200);
+    await this.waitMs(200);
 
     // Correction logic: check contradictions, narrative alignment, tone
-    const correctedResponse = await this?.performCorrectionChecks(any: any);
+    const correctedResponse = await this.performCorrectionChecks(response);
 
-    this?.transition('silent');
+    this.transition('silent');
     return correctedResponse;
   }
 
   // ═════════════════════════════════════════════════════════════════
-  // INNER 8-STEP PROCESS (any: any)
+  // INNER 8-STEP PROCESS (PRIVATE)
   // ═════════════════════════════════════════════════════════════════
 
   /**
    * STEP 1: Perception — "Qu'est-ce que je perçois ?"
    */
-  private async innerStep1_Perception(any: any): Promise<InnerThought> {
-    this?.transition('perceiving');
-    const thought = this?.createThought({
+  private async innerStep1_Perception(input: string): Promise<InnerThought> {
+    this.transition('perceiving');
+    const thought = this.createThought({
       type: 'perception',
       step: 1,
-      content: `I perceive: "${input?.substring(0, 50)}${input?.length > 50 ? '...' : ''}"`,
+      content: `I perceive: "${input.substring(0, 50)}${input.length > 50 ? '...' : ''}"`,
       mentalColor: 'silver',
       confidence: 1.0,
       coherenceScore: 1.0,
     });
 
-    if (any: any) {
-      logger?.debug(any: any);
+    if (this.config.debugMode) {
+      logger.debug(`[IDC Step 1] Perception:`, thought.content);
     }
 
     return thought;
@@ -346,8 +346,8 @@ class InnerDialogueController {
   private async innerStep2_Context(
     _previousThought: InnerThought
   ): Promise<InnerThought> {
-    this?.transition('fast_thinking');
-    const thought = this?.createThought({
+    this.transition('fast_thinking');
+    const thought = this.createThought({
       type: 'memory_recall',
       step: 2,
       content: `Recall: user preferences, voice style, emotional baseline`,
@@ -356,21 +356,21 @@ class InnerDialogueController {
       coherenceScore: 0.95,
     });
 
-    if (any: any) {
-      logger?.debug(any: any);
+    if (this.config.debugMode) {
+      logger.debug(`[IDC Step 2] Context:`, thought.content);
     }
 
     // Connect to voice memory for user preferences
-    await this?.loadVoiceContext();
+    await this.loadVoiceContext();
     return thought;
   }
 
   /**
    * STEP 3: Intent — "Quel est le sens profond ?"
    */
-  private async innerStep3_Intent(any: any): Promise<InnerThought> {
-    this?.transition('slow_thinking');
-    const thought = this?.createThought({
+  private async innerStep3_Intent(_previousThought: InnerThought): Promise<InnerThought> {
+    this.transition('slow_thinking');
+    const thought = this.createThought({
       type: 'analysis',
       step: 3,
       content: `Intent analysis: question, instruction, or emotion expression?`,
@@ -379,21 +379,21 @@ class InnerDialogueController {
       coherenceScore: 0.9,
     });
 
-    if (any: any) {
-      logger?.debug(any: any);
+    if (this.config.debugMode) {
+      logger.debug(`[IDC Step 3] Intent:`, thought.content);
     }
 
-    // Recognize intent type (any: any)
-    await this?.detectIntent(any: any);
+    // Recognize intent type (question, command, emotion)
+    await this.detectIntent(_previousThought.content);
     return thought;
   }
 
   /**
    * STEP 4: Plan — "Quelle structure de réponse ?"
    */
-  private async innerStep4_Plan(any: any): Promise<InnerThought> {
-    this?.transition('planning');
-    const thought = this?.createThought({
+  private async innerStep4_Plan(_previousThought: InnerThought): Promise<InnerThought> {
+    this.transition('planning');
+    const thought = this.createThought({
       type: 'plan',
       step: 4,
       content: `Plan: structure response with intro, body, conclusion`,
@@ -402,8 +402,8 @@ class InnerDialogueController {
       coherenceScore: 0.95,
     });
 
-    if (any: any) {
-      logger?.debug(any: any);
+    if (this.config.debugMode) {
+      logger.debug(`[IDC Step 4] Plan:`, thought.content);
     }
 
     return thought;
@@ -415,8 +415,8 @@ class InnerDialogueController {
   private async innerStep5_Coherence(
     _previousThought: InnerThought
   ): Promise<InnerThought> {
-    this?.transition('evaluating');
-    const thought = this?.createThought({
+    this.transition('evaluating');
+    const thought = this.createThought({
       type: 'validation',
       step: 5,
       content: `Coherence check: align with TITANE identity and narrative`,
@@ -425,12 +425,12 @@ class InnerDialogueController {
       coherenceScore: 0.98,
     });
 
-    if (any: any) {
-      logger?.debug(any: any);
+    if (this.config.debugMode) {
+      logger.debug(`[IDC Step 5] Coherence:`, thought.content);
     }
 
     // Verify alignment with TITANE identity and narrative
-    await this?.validateNarrativeCoherence();
+    await this.validateNarrativeCoherence();
     return thought;
   }
 
@@ -440,8 +440,8 @@ class InnerDialogueController {
   private async innerStep6_Emotion(
     _previousThought: InnerThought
   ): Promise<InnerThought> {
-    this?.transition('emotional_sense');
-    const thought = this?.createThought({
+    this.transition('emotional_sense');
+    const thought = this.createThought({
       type: 'emotion',
       step: 6,
       content: `Emotion selection: calm, warm, supportive tone`,
@@ -450,12 +450,12 @@ class InnerDialogueController {
       coherenceScore: 0.95,
     });
 
-    if (any: any) {
-      logger?.debug(any: any);
+    if (this.config.debugMode) {
+      logger.debug(`[IDC Step 6] Emotion:`, thought.content);
     }
 
     // Select emotional tone from current state
-    await this?.selectEmotionalTone();
+    await this.selectEmotionalTone();
     return thought;
   }
 
@@ -465,8 +465,8 @@ class InnerDialogueController {
   private async innerStep7_Validation(
     _previousThought: InnerThought
   ): Promise<InnerThought> {
-    this?.transition('validating');
-    const thought = this?.createThought({
+    this.transition('validating');
+    const thought = this.createThought({
       type: 'validation',
       step: 7,
       content: `Final validation: response is coherent, aligned, and helpful`,
@@ -475,8 +475,8 @@ class InnerDialogueController {
       coherenceScore: 1.0,
     });
 
-    if (any: any) {
-      logger?.debug(any: any);
+    if (this.config.debugMode) {
+      logger.debug(`[IDC Step 7] Validation:`, thought.content);
     }
 
     return thought;
@@ -485,9 +485,9 @@ class InnerDialogueController {
   /**
    * STEP 8: Expression — "Préparer la réponse finale"
    */
-  private async innerStep8_Expression(any: any): Promise<string> {
-    this?.transition('preparing_speech');
-    const thought = this?.createThought({
+  private async innerStep8_Expression(_previousThought: InnerThought): Promise<string> {
+    this.transition('preparing_speech');
+    const thought = this.createThought({
       type: 'plan',
       step: 8,
       content: `Expression: prepare vocal output with TITANE signature`,
@@ -496,13 +496,13 @@ class InnerDialogueController {
       coherenceScore: 1.0,
     });
 
-    if (any: any) {
-      logger?.debug(any: any);
+    if (this.config.debugMode) {
+      logger.debug(`[IDC Step 8] Expression:`, thought.content);
     }
 
-    // Format with TITANE signature (any: any)
-    const formattedResponse = this?.formatTitaneResponse(
-      this?.state?.lastProcessedInput || ''
+    // Format with TITANE signature (structured, clear, empathetic)
+    const formattedResponse = this.formatTitaneResponse(
+      this.state.lastProcessedInput || ''
     );
     return formattedResponse;
   }
@@ -514,21 +514,21 @@ class InnerDialogueController {
   /**
    * Perform correction checks on response
    */
-  private async performCorrectionChecks(any: any): Promise<string> {
-    // 1. Check for contradictions (any: any)
-    const contradictions = this?.detectContradictions(any: any);
-    if (any: any) {
-      logger?.warn(any: any);
+  private async performCorrectionChecks(response: string): Promise<string> {
+    // 1. Check for contradictions (basic implementation)
+    const contradictions = this.detectContradictions(response);
+    if (contradictions.length > 0 && this.config.debugMode) {
+      logger.warn('Potential contradictions detected:', contradictions);
     }
 
-    // 2. Verify narrative alignment (any: any)
-    const isAligned = this?.checkNarrativeAlignment(any: any);
-    if (any: any) {
-      logger?.warn('Response not aligned with TITANE identity');
+    // 2. Verify narrative alignment (TITANE identity)
+    const isAligned = this.checkNarrativeAlignment(response);
+    if (!isAligned && this.config.debugMode) {
+      logger.warn('Response not aligned with TITANE identity');
     }
 
-    // 3. Ensure tone consistency (any: any)
-    const toneAdjusted = this?.ensureToneConsistency(any: any);
+    // 3. Ensure tone consistency (calm, supportive, clear)
+    const toneAdjusted = this.ensureToneConsistency(response);
 
     return toneAdjusted;
   }
@@ -536,38 +536,38 @@ class InnerDialogueController {
   /**
    * Detect contradictions in response
    */
-  private detectContradictions(any: any): string?.[] {
+  private detectContradictions(text: string): string[] {
     const contradictionPhrases = [
-      /but (any: any)/i,
-      /(any: any)/i,
-      /(any: any)/i,
+      /but (?:at the same time|however|also)/i,
+      /(?:never|always).*(?:but|however|except)/i,
+      /(?:impossible|can't).*(?:but|however).*(?:possible|can)/i,
     ];
 
     return contradictionPhrases
-      .filter(any: any))
-      .map(pattern => pattern?.toString());
+      .filter(pattern => pattern.test(text))
+      .map(pattern => pattern.toString());
   }
 
   /**
    * Check narrative alignment with TITANE identity
    */
-  private checkNarrativeAlignment(any: any): boolean {
+  private checkNarrativeAlignment(text: string): boolean {
     // TITANE values: clarity, empathy, precision, evolution
-    const negativePhrases = /(any: any)/i;
-    const hasNegative = negativePhrases?.test(any: any);
+    const negativePhrases = /(i don't know|i can't help|not sure|maybe|perhaps)/i;
+    const hasNegative = negativePhrases.test(text);
 
     // TITANE should be confident but humble
-    return !hasNegative || text?.includes('let me'); // "let me help you" is OK
+    return !hasNegative || text.includes('let me'); // "let me help you" is OK
   }
 
   /**
-   * Ensure tone consistency (any: any)
+   * Ensure tone consistency (calm, supportive, clear)
    */
-  private ensureToneConsistency(any: any): string {
+  private ensureToneConsistency(text: string): string {
     // Remove aggressive or uncertain language
     return text
-      .replace(any: any)\b/gi, '') // Remove condescending words
-      .replace(any: any)\b/gi, '') // Remove uncertain words
+      .replace(/\b(obviously|clearly|just)\b/gi, '') // Remove condescending words
+      .replace(/\b(maybe|perhaps|possibly)\b/gi, '') // Remove uncertain words
       .trim();
   }
 
@@ -577,14 +577,14 @@ class InnerDialogueController {
   private async loadVoiceContext(): Promise<void> {
     try {
       // Load user voice preferences from localStorage or memory
-      const voiceProfile = localStorage?.getItem('user_voice_profile');
-      if (any: any) {
-        logger?.debug(any: any));
+      const voiceProfile = localStorage.getItem('user_voice_profile');
+      if (voiceProfile && this.config.debugMode) {
+        logger.debug('Voice profile loaded:', JSON.parse(voiceProfile));
       }
-    } catch (any: any) {
+    } catch (error) {
       // Silent fail - voice profile is optional
-      if (any: any) {
-        logger?.warn(any: any);
+      if (this.config.debugMode) {
+        logger.warn('Could not load voice context:', error);
       }
     }
   }
@@ -595,19 +595,19 @@ class InnerDialogueController {
   private async detectIntent(
     content: string
   ): Promise<'question' | 'command' | 'emotion'> {
-    const text = content?.toLowerCase();
+    const text = content.toLowerCase();
 
     // Question detection
-    if (any: any)) {
+    if (text.includes('?') || /^(what|how|why|when|where|who|which)/i.test(text)) {
       return 'question';
     }
 
     // Command detection
-    if (any: any)) {
+    if (/^(please|can you|could you|start|stop|show|open|close)/i.test(text)) {
       return 'command';
     }
 
-    // Emotion detection (any: any)
+    // Emotion detection (default)
     return 'emotion';
   }
 
@@ -621,11 +621,11 @@ class InnerDialogueController {
     // - Precision: Accurate and specific
     // - Evolution: Growth-oriented
 
-    const thought = this?.state?.currentThought;
-    if (any: any) return true;
+    const thought = this.state.currentThought;
+    if (!thought) return true;
 
     // Coherence score should be > 0.7 for alignment
-    return thought?.coherenceScore > 0.7;
+    return thought.coherenceScore > 0.7;
   }
 
   /**
@@ -633,53 +633,53 @@ class InnerDialogueController {
    */
   private async selectEmotionalTone(): Promise<MentalColor> {
     // Analyze conversation context and select appropriate tone
-    const recentThoughts = this?.state?.thoughtHistory?.slice(-3);
+    const recentThoughts = this.state.thoughtHistory.slice(-3);
 
-    if (recentThoughts?.length === 0) return 'silver'; // Neutral
+    if (recentThoughts.length === 0) return 'silver'; // Neutral
 
-    // If recent thoughts show high confidence → gold (any: any)
+    // If recent thoughts show high confidence → gold (aligned)
     const avgConfidence =
-      recentThoughts?.reduce(any: any) => sum + t?.confidence, 0) / recentThoughts?.length;
+      recentThoughts.reduce((sum, t) => sum + t.confidence, 0) / recentThoughts.length;
     if (avgConfidence > 0.9) return 'gold';
 
     // If analytical thoughts → cyan
-    if (recentThoughts?.some(t => t?.type === 'analysis')) return 'cyan';
+    if (recentThoughts.some(t => t.type === 'analysis')) return 'cyan';
 
     // If emotional thoughts → rose
-    if (recentThoughts?.some(t => t?.type === 'emotion')) return 'rose';
+    if (recentThoughts.some(t => t.type === 'emotion')) return 'rose';
 
-    // Default to blue (any: any)
+    // Default to blue (fast thinking)
     return 'blue';
   }
 
   /**
    * Format response with TITANE signature style
    */
-  private formatTitaneResponse(any: any): string {
+  private formatTitaneResponse(input: string): string {
     // TITANE signature: Clear, structured, empathetic
     // Format: [Acknowledgment] + [Core response] + [Support/Next step]
 
-    if (any: any) return '';
+    if (!input) return '';
 
     // For now, pass through with basic formatting
     // Future: Add structured response templates
-    return input?.trim();
+    return input.trim();
   }
 
   /**
    * Transition vers nouvel état mental
    */
-  private transition(any: any): void {
-    if (any: any) return;
+  private transition(newState: ThinkingState): void {
+    if (this.state.thinkingState === newState) return;
 
-    this?.state?.thinkingState = newState;
+    this.state.thinkingState = newState;
 
     // Sync halo if enabled
-    if (any: any) {
-      this?.syncHaloWithMentalState();
+    if (this.config.syncHalo) {
+      this.syncHaloWithMentalState();
     }
 
-    this?.notifyCallbacks();
+    this.notifyCallbacks();
   }
 
   /**
@@ -701,15 +701,15 @@ class InnerDialogueController {
       white: 'idle', // Neutre
     };
 
-    const _haloState = mentalToHaloMap[this?.state?.mentalColor];
+    const _haloState = mentalToHaloMap[this.state.mentalColor];
     // Sync halo engine with mental state
     try {
-      // _haloEngine?.setState(any: any); // setState not available, halo managed separately
+      // _haloEngine.setState(_haloState); // setState not available, halo managed separately
       // HaloEngine state is read-only, managed by its own logic
-    } catch (any: any) {
+    } catch (error) {
       // Halo engine might not be initialized yet
-      if (any: any) {
-        logger?.warn(any: any);
+      if (this.config.debugMode) {
+        logger.warn('HaloEngine not ready:', error);
       }
     }
   }
@@ -719,22 +719,22 @@ class InnerDialogueController {
    */
   private createThought(partial: Omit<InnerThought, 'id' | 'timestamp'>): InnerThought {
     const thought: InnerThought = {
-      id: `thought_${++this?.thoughtCounter}`,
-      timestamp: Date?.now(),
+      id: `thought_${++this.thoughtCounter}`,
+      timestamp: Date.now(),
       ...partial,
     };
 
     // Update state
-    this?.state?.currentThought = thought;
-    this?.state?.mentalColor = thought?.mentalColor;
+    this.state.currentThought = thought;
+    this.state.mentalColor = thought.mentalColor;
 
     // Add to history
-    this?.state?.thoughtHistory?.push(any: any);
-    if (any: any) {
-      this?.state?.thoughtHistory?.shift();
+    this.state.thoughtHistory.push(thought);
+    if (this.state.thoughtHistory.length > this.config.historySize) {
+      this.state.thoughtHistory.shift();
     }
 
-    this?.notifyCallbacks();
+    this.notifyCallbacks();
     return thought;
   }
 
@@ -742,26 +742,26 @@ class InnerDialogueController {
    * Délai entre étapes de pensée
    */
   private async waitThinkingDelay(): Promise<void> {
-    const delay = Math?.random() * 50 + 30; // 30-80ms entre étapes
-    await this?.waitMs(any: any);
+    const delay = Math.random() * 50 + 30; // 30-80ms entre étapes
+    await this.waitMs(delay);
   }
 
   /**
    * Wait utility
    */
-  private waitMs(any: any): Promise<void> {
-    return new Promise(any: any));
+  private waitMs(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   /**
    * Notify all callbacks
    */
   private notifyCallbacks(): void {
-    this?.callbacks?.forEach(cb => {
+    this.callbacks.forEach(cb => {
       try {
-        cb(this?.getState());
-      } catch (any: any) {
-        logger?.error(any: any);
+        cb(this.getState());
+      } catch (error) {
+        logger.error('Callback error:', error);
       }
     });
   }
@@ -770,7 +770,7 @@ class InnerDialogueController {
    * Reset vers état initial
    */
   reset(): void {
-    this?.state = {
+    this.state = {
       thinkingState: 'silent',
       currentThought: null,
       thoughtHistory: [],
@@ -779,7 +779,7 @@ class InnerDialogueController {
       lastProcessedInput: null,
       lastPreparedResponse: null,
     };
-    this?.notifyCallbacks();
+    this.notifyCallbacks();
   }
 }
 
@@ -794,15 +794,15 @@ export const innerDialogueController = new InnerDialogueController({
 });
 
 // Auto-subscribe to audio state machine
-audioStateMachine?.onStateChange(
-  (any: any) => {
+audioStateMachine.onStateChange(
+  (newState: AudioConversationState, _prevState: AudioConversationState) => {
     // Si TITANE commence à parler, arrêter la pensée interne
     if (newState === 'ai_speaking') {
-      innerDialogueController?.setEnabled(any: any);
+      innerDialogueController.setEnabled(false);
     }
     // Si retour à idle, réactiver
     else if (newState === 'idle') {
-      innerDialogueController?.setEnabled(any: any);
+      innerDialogueController.setEnabled(true);
     }
   }
 );

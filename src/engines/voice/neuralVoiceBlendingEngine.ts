@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- *   TITANE∞ SUPER PROMPT X (any: any) — NEURAL VOICE BLENDING ENGINE
+ *   TITANE∞ SUPER PROMPT X (Revisited) — NEURAL VOICE BLENDING ENGINE
  *   Hybrid Timbre Modeling · Voice Identity Kernel · Style Transfer · Evolution
  * ═══════════════════════════════════════════════════════════════════════════
  *
@@ -14,11 +14,11 @@
  * adaptative.
  *
  * ARCHITECTURE:
- * 1. VOICE IDENTITY KERNEL (any: any) — Profil non-biométrique
- * 2. HYBRID VOICE MIXING ENGINE (any: any) — Mélange adaptatif
+ * 1. VOICE IDENTITY KERNEL (VIK) — Profil non-biométrique
+ * 2. HYBRID VOICE MIXING ENGINE (HVME) — Mélange adaptatif
  * 3. PROSODY STYLE TRANSFER — Transfert de style prosodique
- * 4. TIMBRE SYNTHESIS LAYER (any: any) — Synthèse neuronale
- * 5. ADAPTIVE VOICE EVOLUTION LOOP (any: any) — Apprentissage continu
+ * 4. TIMBRE SYNTHESIS LAYER (TSL) — Synthèse neuronale
+ * 5. ADAPTIVE VOICE EVOLUTION LOOP (AVEL) — Apprentissage continu
  * 6. COGNITIVE TONE ALIGNMENT — Tonalité cognitive contextuelle
  * 7. MICRO-EXPRESSION OVERLAY — Relief sonore subtil
  * 8. VOICE SIGNATURE STABILIZATION — Cohérence identitaire
@@ -36,16 +36,16 @@ import type { EmotionalState } from '@/types/voice';
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Profil d'identité vocale (any: any)
+ * Profil d'identité vocale (Voice Identity Kernel)
  */
 export interface VoiceIdentityProfile {
-  /** Vecteur timbre spectral (any: any) */
-  timbreVector: number?.[];
-  /** Brillance (any: any) */
+  /** Vecteur timbre spectral (abstrait, non-biométrique) */
+  timbreVector: number[];
+  /** Brillance (0-1, 0 = sombre, 1 = brillant) */
   brightness: number;
-  /** Chaleur (any: any) */
+  /** Chaleur (0-1, 0 = froide, 1 = chaleureuse) */
   warmth: number;
-  /** Rugosité (any: any) */
+  /** Rugosité (0-1, 0 = lisse, 1 = texturé) */
   roughness: number;
   /** Forme d'intonation */
   intonationShape: 'flat' | 'ascending' | 'descending' | 'curved' | 'wave';
@@ -73,8 +73,8 @@ export interface VoiceBlendRatio {
  * Profil prosodique
  */
 export interface ProsodyProfile {
-  /** Pauses naturelles (any: any) */
-  pauseDurations: number?.[];
+  /** Pauses naturelles (ms) */
+  pauseDurations: number[];
   /** Micro-hésitations */
   microHesitations: boolean;
   /** Montée tonale phrases affirmatives */
@@ -139,7 +139,7 @@ export interface NeuralVoiceBlendState {
   /** Tonalité cognitive active */
   cognitiveTone: CognitiveTone;
   /** Micro-expressions en cours */
-  microExpressions: VoicalMicroExpression?.[];
+  microExpressions: VoicalMicroExpression[];
   /** Signature vocale stable */
   voiceSignature: string;
   /** Nombre de sessions d'apprentissage */
@@ -165,7 +165,7 @@ export interface NeuralVoiceBlendConfig {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// PRESETS (any: any)
+// PRESETS (Profils de base selon archétype)
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const BASE_VOICE_PROFILES: Record<ArchetypeType, VoiceIdentityProfile> = {
@@ -218,11 +218,11 @@ export const BASE_VOICE_PROFILES: Record<ArchetypeType, VoiceIdentityProfile> = 
 class NeuralVoiceBlendingEngine {
   private state: NeuralVoiceBlendState;
   private config: NeuralVoiceBlendConfig;
-  private callbacks: Set<(any: any) => void> = new Set();
+  private callbacks: Set<(state: NeuralVoiceBlendState) => void> = new Set();
   private observedPreferences: Map<string, number> = new Map();
 
   constructor(config: Partial<NeuralVoiceBlendConfig> = {}) {
-    this?.config = {
+    this.config = {
       enableAdaptiveLearning: true,
       learningRate: 0.05,
       minStability: 0.8,
@@ -230,7 +230,7 @@ class NeuralVoiceBlendingEngine {
       ...config,
     };
 
-    this?.state = this?.initializeState();
+    this.state = this.initializeState();
   }
 
   /**
@@ -238,7 +238,7 @@ class NeuralVoiceBlendingEngine {
    */
   private initializeState(): NeuralVoiceBlendState {
     return {
-      currentProfile: BASE_VOICE_PROFILES?.sage, // Default
+      currentProfile: BASE_VOICE_PROFILES.sage, // Default
       blendRatio: {
         synthetic: 0.6,
         inspired: 0.4,
@@ -257,48 +257,48 @@ class NeuralVoiceBlendingEngine {
       voiceSignature: 'TITANE∞-Voice-v1.0',
       learningSessionCount: 0,
       identityCoherence: 1.0,
-      lastUpdate: Date?.now(),
+      lastUpdate: Date.now(),
     };
   }
 
   /**
    * Générer profil voix hybride basé sur contexte
    */
-  generateHybridProfile(any: any): VoiceIdentityProfile {
-    const baseProfile = BASE_VOICE_PROFILES[context?.archetype];
-    const blendRatio = this?.calculateBlendRatio(any: any);
+  generateHybridProfile(context: VoiceContext): VoiceIdentityProfile {
+    const baseProfile = BASE_VOICE_PROFILES[context.archetype];
+    const blendRatio = this.calculateBlendRatio(context);
 
     // Interpolate with learned preferences
-    const learnedAdjustments = this?.getLearnedAdjustments(any: any);
+    const learnedAdjustments = this.getLearnedAdjustments(context);
 
     const hybrid: VoiceIdentityProfile = {
-      timbreVector: baseProfile?.timbreVector?.map(any: any) =>
-        this?.lerp(any: any)
+      timbreVector: baseProfile.timbreVector.map((v, i) =>
+        this.lerp(v, learnedAdjustments.timbreVector?.[i] ?? v, this.config.learningRate)
       ),
-      brightness: this?.lerp(
-        baseProfile?.brightness,
-        learnedAdjustments?.brightness || baseProfile?.brightness,
-        blendRatio?.inspired * 0.3
+      brightness: this.lerp(
+        baseProfile.brightness,
+        learnedAdjustments.brightness || baseProfile.brightness,
+        blendRatio.inspired * 0.3
       ),
-      warmth: this?.lerp(
-        baseProfile?.warmth,
-        learnedAdjustments?.warmth || baseProfile?.warmth,
-        blendRatio?.inspired * 0.5
+      warmth: this.lerp(
+        baseProfile.warmth,
+        learnedAdjustments.warmth || baseProfile.warmth,
+        blendRatio.inspired * 0.5
       ),
-      roughness: baseProfile?.roughness,
-      intonationShape: baseProfile?.intonationShape,
-      pace: this?.lerp(
-        baseProfile?.pace,
-        learnedAdjustments?.pace || baseProfile?.pace,
-        blendRatio?.inspired * 0.2
+      roughness: baseProfile.roughness,
+      intonationShape: baseProfile.intonationShape,
+      pace: this.lerp(
+        baseProfile.pace,
+        learnedAdjustments.pace || baseProfile.pace,
+        blendRatio.inspired * 0.2
       ),
-      articulation: baseProfile?.articulation,
-      breathingPattern: baseProfile?.breathingPattern,
+      articulation: baseProfile.articulation,
+      breathingPattern: baseProfile.breathingPattern,
     };
 
-    this?.state?.currentProfile = hybrid;
-    this?.state?.blendRatio = blendRatio;
-    this?.state?.lastUpdate = Date?.now();
+    this.state.currentProfile = hybrid;
+    this.state.blendRatio = blendRatio;
+    this.state.lastUpdate = Date.now();
 
     return hybrid;
   }
@@ -306,13 +306,13 @@ class NeuralVoiceBlendingEngine {
   /**
    * Calculer ratio de mélange selon contexte
    */
-  private calculateBlendRatio(any: any): VoiceBlendRatio {
+  private calculateBlendRatio(context: VoiceContext): VoiceBlendRatio {
     let synthetic = 0.6;
     let inspired = 0.4;
     let ctxt = 'default';
 
     // Adapter selon émotion
-    switch (any: any) {
+    switch (context.emotionState) {
       case 'concerned':
         synthetic = 0.2;
         inspired = 0.8;
@@ -337,7 +337,7 @@ class NeuralVoiceBlendingEngine {
     }
 
     // Adapter selon archétype
-    switch (any: any) {
+    switch (context.archetype) {
       case 'sage':
         synthetic += 0.1;
         inspired -= 0.1;
@@ -357,7 +357,7 @@ class NeuralVoiceBlendingEngine {
     }
 
     // Clamp
-    synthetic = Math?.max(any: any));
+    synthetic = Math.max(0.1, Math.min(0.9, synthetic));
     inspired = 1 - synthetic;
 
     return { synthetic, inspired, context: ctxt };
@@ -366,9 +366,9 @@ class NeuralVoiceBlendingEngine {
   /**
    * Obtenir ajustements appris
    */
-  private getLearnedAdjustments(any: any): Partial<VoiceIdentityProfile> {
-    const key = `${context?.archetype}-${context?.emotionState}`;
-    const preference = this?.observedPreferences?.get(any: any) || 0.5;
+  private getLearnedAdjustments(context: VoiceContext): Partial<VoiceIdentityProfile> {
+    const key = `${context.archetype}-${context.emotionState}`;
+    const preference = this.observedPreferences.get(key) || 0.5;
 
     return {
       timbreVector: [0, 0, 0, 0],
@@ -381,43 +381,43 @@ class NeuralVoiceBlendingEngine {
   /**
    * Générer profil prosodique selon contexte
    */
-  generateProsody(any: any): ProsodyProfile {
-    const prosody: ProsodyProfile = { ...this?.state?.prosody };
+  generateProsody(context: VoiceContext): ProsodyProfile {
+    const prosody: ProsodyProfile = { ...this.state.prosody };
 
     // Adapter selon archétype
-    switch (any: any) {
+    switch (context.archetype) {
       case 'sage':
-        prosody?.pauseDurations = [300, 500, 800];
-        prosody?.rhythm = 'slow';
-        prosody?.tonicAccent = 'rounded';
+        prosody.pauseDurations = [300, 500, 800];
+        prosody.rhythm = 'slow';
+        prosody.tonicAccent = 'rounded';
         break;
       case 'gardien':
-        prosody?.pauseDurations = [200, 400, 600];
-        prosody?.rhythm = 'moderate';
-        prosody?.tonicAccent = 'neutral';
+        prosody.pauseDurations = [200, 400, 600];
+        prosody.rhythm = 'moderate';
+        prosody.tonicAccent = 'neutral';
         break;
       case 'muse':
-        prosody?.pauseDurations = [150, 300, 450];
-        prosody?.rhythm = 'fast';
-        prosody?.tonicAccent = 'sharp';
-        prosody?.microHesitations = true;
+        prosody.pauseDurations = [150, 300, 450];
+        prosody.rhythm = 'fast';
+        prosody.tonicAccent = 'sharp';
+        prosody.microHesitations = true;
         break;
       case 'architecte':
-        prosody?.pauseDurations = [200, 350, 500];
-        prosody?.rhythm = 'moderate';
-        prosody?.tonicAccent = 'sharp';
-        prosody?.microHesitations = false;
+        prosody.pauseDurations = [200, 350, 500];
+        prosody.rhythm = 'moderate';
+        prosody.tonicAccent = 'sharp';
+        prosody.microHesitations = false;
         break;
     }
 
-    this?.state?.prosody = prosody;
+    this.state.prosody = prosody;
     return prosody;
   }
 
   /**
    * Déterminer tonalité cognitive
    */
-  determineCognitiveTone(any: any): CognitiveTone {
+  determineCognitiveTone(context: VoiceContext): CognitiveTone {
     // Mapping archétype → tonalité
     const archetypeToneMap: Record<ArchetypeType, CognitiveTone> = {
       sage: 'soothing',
@@ -426,34 +426,34 @@ class NeuralVoiceBlendingEngine {
       architecte: 'analytical',
     };
 
-    let tone = archetypeToneMap[context?.archetype];
+    let tone = archetypeToneMap[context.archetype];
 
     // Override selon émotion
-    if (context?.emotionState === 'concerned') {
+    if (context.emotionState === 'concerned') {
       tone = 'empathetic';
-    } else if (context?.emotionState === 'playful') {
+    } else if (context.emotionState === 'playful') {
       tone = 'warm';
-    } else if (context?.emotionState === 'focused') {
+    } else if (context.emotionState === 'focused') {
       tone = 'professional';
     }
 
-    this?.state?.cognitiveTone = tone;
+    this.state.cognitiveTone = tone;
     return tone;
   }
 
   /**
    * Injecter micro-expressions vocales
    */
-  injectMicroExpressions(any: any): VoicalMicroExpression?.[] {
-    if (any: any) return [];
+  injectMicroExpressions(text: string, context: VoiceContext): VoicalMicroExpression[] {
+    if (!this.config.enableMicroExpressions) return [];
 
-    const expressions: VoicalMicroExpression?.[] = [];
-    const words = text?.split(' ');
-    const wordCount = words?.length;
+    const expressions: VoicalMicroExpression[] = [];
+    const words = text.split(' ');
+    const wordCount = words.length;
 
     // Breath au début si phrase longue
     if (wordCount > 15) {
-      expressions?.push({
+      expressions.push({
         type: 'breath',
         position: 0.05,
         intensity: 0.3,
@@ -463,7 +463,7 @@ class NeuralVoiceBlendingEngine {
 
     // Pause mi-phrase
     if (wordCount > 8) {
-      expressions?.push({
+      expressions.push({
         type: 'pause',
         position: 0.5,
         intensity: 0.4,
@@ -473,10 +473,10 @@ class NeuralVoiceBlendingEngine {
 
     // Intonation shift selon tonalité
     if (
-      this?.state?.cognitiveTone === 'empathetic' ||
-      this?.state?.cognitiveTone === 'warm'
+      this.state.cognitiveTone === 'empathetic' ||
+      this.state.cognitiveTone === 'warm'
     ) {
-      expressions?.push({
+      expressions.push({
         type: 'intonation_shift',
         position: 0.7,
         intensity: 0.5,
@@ -485,8 +485,8 @@ class NeuralVoiceBlendingEngine {
     }
 
     // Volume dip pour emphasis
-    if (context?.intensity > 0.7) {
-      expressions?.push({
+    if (context.intensity > 0.7) {
+      expressions.push({
         type: 'volume_dip',
         position: 0.3,
         intensity: 0.3,
@@ -494,32 +494,32 @@ class NeuralVoiceBlendingEngine {
       });
     }
 
-    this?.state?.microExpressions = expressions;
+    this.state.microExpressions = expressions;
     return expressions;
   }
 
   /**
-   * Apprendre de session (any: any)
+   * Apprendre de session (évolution adaptative)
    */
   learnFromSession(context: VoiceContext, userFeedback?: { satisfaction: number }): void {
-    if (any: any) return;
+    if (!this.config.enableAdaptiveLearning) return;
 
-    const key = `${context?.archetype}-${context?.emotionState}`;
-    const currentPref = this?.observedPreferences?.get(any: any) || 0.5;
+    const key = `${context.archetype}-${context.emotionState}`;
+    const currentPref = this.observedPreferences.get(key) || 0.5;
 
     // Update preference
     const feedbackScore = userFeedback?.satisfaction || 0.7; // Default neutral
     const newPref =
-      currentPref + (any: any) * this?.config?.learningRate;
+      currentPref + (feedbackScore - currentPref) * this.config.learningRate;
 
-    this?.observedPreferences?.set(any: any);
-    this?.state?.learningSessionCount++;
+    this.observedPreferences.set(key, newPref);
+    this.state.learningSessionCount++;
 
-    // Update identity coherence (any: any)
-    this?.state?.identityCoherence = Math?.min(1, this?.state?.identityCoherence + 0.001);
+    // Update identity coherence (slow increase)
+    this.state.identityCoherence = Math.min(1, this.state.identityCoherence + 0.001);
 
-    logger?.debug(
-      `🎤 [VOICE-BLEND] Learning session ${this?.state?.learningSessionCount} — ${key} → ${Math?.round(newPref * 100)}%`
+    logger.debug(
+      `🎤 [VOICE-BLEND] Learning session ${this.state.learningSessionCount} — ${key} → ${Math.round(newPref * 100)}%`
     );
   }
 
@@ -527,21 +527,21 @@ class NeuralVoiceBlendingEngine {
    * Stabiliser signature vocale
    */
   stabilizeSignature(): void {
-    if (any: any) {
-      logger?.debug('⚠️ [VOICE-BLEND] Signature instable, stabilisation...');
+    if (this.state.identityCoherence < this.config.minStability) {
+      logger.debug('⚠️ [VOICE-BLEND] Signature instable, stabilisation...');
 
       // Force convergence vers profil dominant
-      const dominant = archetypeResonanceEngine?.getDominantProfile();
-      this?.state?.currentProfile = BASE_VOICE_PROFILES[dominant?.type];
-      this?.state?.identityCoherence = this?.config?.minStability;
+      const dominant = archetypeResonanceEngine.getDominantProfile();
+      this.state.currentProfile = BASE_VOICE_PROFILES[dominant.type];
+      this.state.identityCoherence = this.config.minStability;
     }
 
     // Update signature version
-    const version = `v${Math?.floor(this?.state?.learningSessionCount / 10)}.${this?.state?.learningSessionCount % 10}`;
-    this?.state?.voiceSignature = `TITANE∞-Voice-${version}`;
+    const version = `v${Math.floor(this.state.learningSessionCount / 10)}.${this.state.learningSessionCount % 10}`;
+    this.state.voiceSignature = `TITANE∞-Voice-${version}`;
 
-    logger?.debug(
-      `🎙️ [VOICE-BLEND] Voice signature stabilized: ${this?.state?.voiceSignature}`
+    logger.debug(
+      `🎙️ [VOICE-BLEND] Voice signature stabilized: ${this.state.voiceSignature}`
     );
   }
 
@@ -555,18 +555,18 @@ class NeuralVoiceBlendingEngine {
     profile: VoiceIdentityProfile;
     prosody: ProsodyProfile;
     tone: CognitiveTone;
-    microExpressions: VoicalMicroExpression?.[];
+    microExpressions: VoicalMicroExpression[];
   } {
-    const profile = this?.generateHybridProfile(any: any);
-    const prosody = this?.generateProsody(any: any);
-    const tone = this?.determineCognitiveTone(any: any);
-    const microExpressions = this?.injectMicroExpressions(any: any);
+    const profile = this.generateHybridProfile(context);
+    const prosody = this.generateProsody(context);
+    const tone = this.determineCognitiveTone(context);
+    const microExpressions = this.injectMicroExpressions(text, context);
 
-    logger?.debug(
-      `🎤 [VOICE-BLEND] Voice generated: ${tone} ${context?.archetype} (any: any)`
+    logger.debug(
+      `🎤 [VOICE-BLEND] Voice generated: ${tone} ${context.archetype} (blend: ${Math.round(this.state.blendRatio.inspired * 100)}% inspired)`
     );
 
-    this?.notifyCallbacks();
+    this.notifyCallbacks();
 
     return {
       profile,
@@ -580,26 +580,26 @@ class NeuralVoiceBlendingEngine {
    * Obtenir état actuel
    */
   getState(): NeuralVoiceBlendState {
-    return { ...this?.state };
+    return { ...this.state };
   }
 
   /**
    * Subscribe aux changements
    */
-  subscribe(any: any): () => void {
-    this?.callbacks?.add(any: any);
-    return (any: any);
+  subscribe(callback: (state: NeuralVoiceBlendState) => void): () => void {
+    this.callbacks.add(callback);
+    return () => this.callbacks.delete(callback);
   }
 
   /**
    * Notifier les callbacks
    */
   private notifyCallbacks(): void {
-    this?.callbacks?.forEach(cb => {
+    this.callbacks.forEach(cb => {
       try {
-        cb(any: any);
-      } catch (any: any) {
-        logger?.error(any: any);
+        cb(this.state);
+      } catch (error) {
+        logger.error('Callback error:', error);
       }
     });
   }
@@ -607,8 +607,8 @@ class NeuralVoiceBlendingEngine {
   /**
    * Interpolation linéaire
    */
-  private lerp(any: any): number {
-    return a + (any: any) * t;
+  private lerp(a: number, b: number, t: number): number {
+    return a + (b - a) * t;
   }
 }
 

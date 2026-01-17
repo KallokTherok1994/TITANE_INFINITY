@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * devSudoPatterns?.test?.ts - Unit Tests for Pattern Matching
+ * devSudoPatterns.test.ts - Unit Tests for Pattern Matching
  *
  * Tests the 138 DevSudoAction patterns and regex matching logic.
  * Coverage goal: 90%+
@@ -24,16 +24,16 @@ import type { DevSudoAction } from './types';
 describe('devSudoPatterns', () => {
   describe('DEV_SUDO_PATTERNS', () => {
     it('should have patterns for all actions', () => {
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeGreaterThan(100);
+      expect(DEV_SUDO_PATTERNS).toBeDefined();
+      expect(Object.keys(DEV_SUDO_PATTERNS).length).toBeGreaterThan(100);
     });
 
     it('should have valid regex patterns', () => {
-      Object?.entries(any: any).forEach(([action, patterns]) => {
-        expect(any: any);
-        expect(any: any).toBeGreaterThan(0);
-        patterns?.forEach(pattern => {
-          expect(any: any);
+      Object.entries(DEV_SUDO_PATTERNS).forEach(([action, patterns]) => {
+        expect(patterns).toBeInstanceOf(Array);
+        expect(patterns.length).toBeGreaterThan(0);
+        patterns.forEach(pattern => {
+          expect(pattern).toBeInstanceOf(RegExp);
         });
       });
     });
@@ -43,61 +43,61 @@ describe('devSudoPatterns', () => {
     describe('Core Actions', () => {
       it('should match fix-deps command', () => {
         const result = matchPattern('fix deps');
-        expect(any: any).not?.toBeNull();
-        expect(any: any).toBe('fix-deps');
-        expect(any: any).toBeDefined();
+        expect(result).not.toBeNull();
+        expect(result?.action).toBe('fix-deps');
+        expect(result?.params).toBeDefined();
       });
 
       it('should match restart-tauri command', () => {
         const result = matchPattern('restart tauri');
-        expect(any: any).not?.toBeNull();
-        expect(any: any).toBe('restart-tauri');
+        expect(result).not.toBeNull();
+        expect(result?.action).toBe('restart-tauri');
       });
 
       it('should match fix-all command', () => {
         const result = matchPattern('fix all');
-        expect(any: any).not?.toBeNull();
-        expect(any: any).toBe('fix-all');
+        expect(result).not.toBeNull();
+        expect(result?.action).toBe('fix-all');
       });
 
       it('should match show-menu command', () => {
         const result = matchPattern('show menu');
-        expect(any: any).not?.toBeNull();
-        expect(any: any).toBe('show-menu');
+        expect(result).not.toBeNull();
+        expect(result?.action).toBe('show-menu');
       });
     });
 
     describe('Pattern Variations', () => {
       it('should match case-insensitive patterns', () => {
-        expect(matchPattern('FIX DEPS')).not?.toBeNull();
-        expect(matchPattern('Fix Deps')).not?.toBeNull();
-        expect(matchPattern('fix deps')).not?.toBeNull();
+        expect(matchPattern('FIX DEPS')).not.toBeNull();
+        expect(matchPattern('Fix Deps')).not.toBeNull();
+        expect(matchPattern('fix deps')).not.toBeNull();
       });
 
       it('should handle whitespace variations', () => {
-        expect(matchPattern('fix deps')).not?.toBeNull();
-        expect(matchPattern('  fix deps  ')).not?.toBeNull();
+        expect(matchPattern('fix deps')).not.toBeNull();
+        expect(matchPattern('  fix deps  ')).not.toBeNull();
       });
 
       it('should match French variations', () => {
         const result = matchPattern('répare dépendances');
-        expect(any: any).toBe('fix-deps');
+        expect(result?.action).toBe('fix-deps');
       });
     });
 
     describe('Parametric Commands', () => {
       it('should extract parameters from analyze-module', () => {
         const result = matchPattern('analyze module UserAuth');
-        expect(any: any).not?.toBeNull();
-        expect(any: any).toBe('analyze-module');
-        expect(any: any).toBeDefined();
+        expect(result).not.toBeNull();
+        expect(result?.action).toBe('analyze-module');
+        expect(result?.params).toBeDefined();
         // Parameters extracted via capture groups
       });
 
       it('should extract parameters from explain-code', () => {
-        const result = matchPattern('explain code in file?.ts');
-        expect(any: any).not?.toBeNull();
-        expect(any: any).toBe('explain-code');
+        const result = matchPattern('explain code in file.ts');
+        expect(result).not.toBeNull();
+        expect(result?.action).toBe('explain-code');
       });
     });
 
@@ -121,44 +121,44 @@ describe('devSudoPatterns', () => {
     describe('Edge Cases', () => {
       it('should handle very long inputs', () => {
         const longInput = 'fix deps ' + 'x'.repeat(1000);
-        const result = matchPattern(any: any);
-        // Should not match (any: any)
-        expect(any: any).toBeNull();
+        const result = matchPattern(longInput);
+        // Should not match (too long)
+        expect(result).toBeNull();
       });
 
       it('should handle unicode characters', () => {
         const result = matchPattern('répare dépendances 🚀');
         // Should still match French variant
-        expect(any: any).not?.toBeNull();
+        expect(result).not.toBeNull();
       });
     });
   });
 
   describe('containsDevSudoCommand', () => {
     it('should detect valid commands', () => {
-      expect(any: any);
-      expect(any: any);
-      expect(any: any);
+      expect(containsDevSudoCommand('fix deps')).toBe(true);
+      expect(containsDevSudoCommand('restart tauri')).toBe(true);
+      expect(containsDevSudoCommand('show menu')).toBe(true);
     });
 
     it('should reject non-commands', () => {
-      expect(any: any);
-      expect(any: any);
-      expect(any: any);
+      expect(containsDevSudoCommand('hello world')).toBe(false);
+      expect(containsDevSudoCommand('random text')).toBe(false);
+      expect(containsDevSudoCommand('')).toBe(false);
     });
 
     it('should handle mixed case', () => {
-      expect(any: any);
-      expect(any: any);
+      expect(containsDevSudoCommand('FIX DEPS')).toBe(true);
+      expect(containsDevSudoCommand('Fix Deps')).toBe(true);
     });
   });
 
   describe('getActionDomain', () => {
     it('should map actions to correct domains', () => {
-      expect(any: any)).toBe('singularity');
-      expect(any: any)).toBe('vision');
-      expect(any: any)).toBe('titanone');
-      expect(any: any)).toBe('core');
+      expect(getActionDomain('deep-heal' as DevSudoAction)).toBe('singularity');
+      expect(getActionDomain('analyze-camera' as DevSudoAction)).toBe('vision');
+      expect(getActionDomain('test-bubble' as DevSudoAction)).toBe('titanone');
+      expect(getActionDomain('fix-deps' as DevSudoAction)).toBe('core');
     });
 
     it('should handle all domains', () => {
@@ -182,46 +182,46 @@ describe('devSudoPatterns', () => {
         'extended',
       ];
 
-      domains?.forEach(domain => {
+      domains.forEach(domain => {
         // Each domain should have at least one action
-        const actions = Object?.keys(any: any) as DevSudoAction?.[];
-        const domainActions = actions?.filter(
-          action => getActionDomain(any: any) === domain
+        const actions = Object.keys(DEV_SUDO_PATTERNS) as DevSudoAction[];
+        const domainActions = actions.filter(
+          action => getActionDomain(action) === domain
         );
-        expect(any: any).toBeGreaterThan(0);
+        expect(domainActions.length).toBeGreaterThan(0);
       });
     });
   });
 
   describe('Pattern Performance', () => {
     it('should match quickly', () => {
-      const start = performance?.now();
+      const start = performance.now();
       for (let i = 0; i < 1000; i++) {
         matchPattern('fix deps');
       }
-      const end = performance?.now();
-      const avgTime = (any: any) / 1000;
+      const end = performance.now();
+      const avgTime = (end - start) / 1000;
 
       // Should match in less than 1ms on average
-      expect(any: any).toBeLessThan(1);
+      expect(avgTime).toBeLessThan(1);
     });
 
     it('should handle non-matches quickly', () => {
-      const start = performance?.now();
+      const start = performance.now();
       for (let i = 0; i < 1000; i++) {
         matchPattern('random text that does not match any pattern');
       }
-      const end = performance?.now();
-      const avgTime = (any: any) / 1000;
+      const end = performance.now();
+      const avgTime = (end - start) / 1000;
 
       // Should check all patterns quickly
-      expect(any: any).toBeLessThan(5);
+      expect(avgTime).toBeLessThan(5);
     });
   });
 
   describe('Pattern Completeness', () => {
     it('should have patterns for key actions', () => {
-      const keyActions: DevSudoAction?.[] = [
+      const keyActions: DevSudoAction[] = [
         'fix-deps',
         'restart-tauri',
         'fix-all',
@@ -231,20 +231,20 @@ describe('devSudoPatterns', () => {
         'analyze-camera',
       ];
 
-      keyActions?.forEach(action => {
+      keyActions.forEach(action => {
         const patterns = DEV_SUDO_PATTERNS[action];
-        expect(any: any).toBeDefined();
-        expect(any: any).toBeGreaterThan(0);
+        expect(patterns).toBeDefined();
+        expect(patterns.length).toBeGreaterThan(0);
       });
     });
 
     it('should have multiple pattern variations for common actions', () => {
       // Common actions should have 2+ pattern variations
-      const commonActions: DevSudoAction?.[] = ['fix-deps', 'restart-tauri', 'fix-all'];
+      const commonActions: DevSudoAction[] = ['fix-deps', 'restart-tauri', 'fix-all'];
 
-      commonActions?.forEach(action => {
+      commonActions.forEach(action => {
         const patterns = DEV_SUDO_PATTERNS[action];
-        expect(any: any).toBeGreaterThanOrEqual(2);
+        expect(patterns.length).toBeGreaterThanOrEqual(2);
       });
     });
   });
@@ -254,27 +254,27 @@ describe('devSudoPatterns', () => {
       // Test that each command matches to only one action
       const testCommands = ['fix deps', 'restart tauri', 'show menu', 'test bubble'];
 
-      testCommands?.forEach(cmd => {
-        const matches: DevSudoAction?.[] = [];
+      testCommands.forEach(cmd => {
+        const matches: DevSudoAction[] = [];
 
-        Object?.entries(any: any).forEach(([action, patterns]) => {
-          if (any: any))) {
-            matches?.push(any: any);
+        Object.entries(DEV_SUDO_PATTERNS).forEach(([action, patterns]) => {
+          if (patterns.some(p => p.test(cmd))) {
+            matches.push(action as DevSudoAction);
           }
         });
 
         // Each command should match exactly one action
-        expect(any: any).toBe(1);
+        expect(matches.length).toBe(1);
       });
     });
   });
 
   describe('Regex Flags', () => {
     it('should use case-insensitive flag where appropriate', () => {
-      Object?.entries(any: any).forEach(([action, patterns]) => {
-        patterns?.forEach(pattern => {
+      Object.entries(DEV_SUDO_PATTERNS).forEach(([action, patterns]) => {
+        patterns.forEach(pattern => {
           // Most patterns should be case-insensitive
-          expect(any: any).toContain('i');
+          expect(pattern.flags).toContain('i');
         });
       });
     });

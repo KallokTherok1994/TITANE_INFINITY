@@ -54,7 +54,7 @@ export interface StepProps {
  */
 export interface CustomizationStepProps extends StepProps {
   preferences: OnboardingPreferences;
-  onChange: (any: any) => void;
+  onChange: (preferences: OnboardingPreferences) => void;
 }
 
 /**

@@ -35,7 +35,7 @@ export enum MemoryImportance {
  * Structure d'une entrée mémoire sémantique
  */
 export interface SemanticMemoryEntry {
-  /** ID unique (any: any) */
+  /** ID unique (UUID v4) */
   id: string;
 
   /** Type de mémoire */
@@ -44,10 +44,10 @@ export interface SemanticMemoryEntry {
   /** Propriétaire/contexte (user_id, conversation_id, etc.) */
   owner: string;
 
-  /** Résumé court (any: any) */
+  /** Résumé court (max 200 chars, pour affichage rapide) */
   summary: string;
 
-  /** Détails complets (any: any) */
+  /** Détails complets (optionnel, pour contexte riche) */
   details?: string;
 
   /** Source de cette mémoire */
@@ -59,10 +59,10 @@ export interface SemanticMemoryEntry {
   };
 
   /** Tags pour catégorisation */
-  tags: string?.[];
+  tags: string[];
 
-  /** Embedding vectoriel (any: any) */
-  embedding: number?.[];
+  /** Embedding vectoriel (384D ou 768D selon le modèle) */
+  embedding: number[];
 
   /** Score d'importance (0.0 - 1.0) */
   importance: number;
@@ -73,7 +73,7 @@ export interface SemanticMemoryEntry {
   access_count: number; // Nombre de fois rappelée
 
   /** Métadonnées de relation */
-  related_to?: string?.[]; // IDs d'autres mémoires liées
+  related_to?: string[]; // IDs d'autres mémoires liées
   supersedes?: string; // ID d'une mémoire obsolète remplacée
 
   /** Validité */
@@ -85,13 +85,13 @@ export interface SemanticMemoryEntry {
  * Query pour retrieval sémantique
  */
 export interface SemanticMemoryQuery {
-  /** Texte de la query (any: any) */
+  /** Texte de la query (sera vectorisé) */
   text: string;
 
   /** Filtres optionnels */
   filters?: {
-    types?: SemanticMemoryType?.[];
-    tags?: string?.[];
+    types?: SemanticMemoryType[];
+    tags?: string[];
     owner?: string;
     min_importance?: number;
     max_age_days?: number;
@@ -119,7 +119,7 @@ export interface SemanticMemoryResult {
   entry: SemanticMemoryEntry;
   score: number; // Score global (0.0 - 1.0)
   similarity: number; // Similarité cosine (0.0 - 1.0)
-  relevance_reason?: string; // Explication du rappel (any: any)
+  relevance_reason?: string; // Explication du rappel (debug)
 }
 
 /**
@@ -127,7 +127,7 @@ export interface SemanticMemoryResult {
  */
 export interface MemoryContext {
   /** Souvenirs pertinents */
-  memories: SemanticMemoryResult?.[];
+  memories: SemanticMemoryResult[];
 
   /** Résumé textuel pour injection dans prompt */
   summary: string;
@@ -204,7 +204,7 @@ export interface SemanticMemoryStats {
 }
 
 /**
- * Interface du VectorStore (any: any)
+ * Interface du VectorStore (abstraction)
  * Permet de swapper l'implémentation (Qdrant, Chroma, custom, etc.)
  */
 export interface VectorStore {
@@ -212,26 +212,26 @@ export interface VectorStore {
   initialize(): Promise<void>;
 
   /** Ajouter une entrée */
-  add(any: any): Promise<void>;
+  add(entry: SemanticMemoryEntry): Promise<void>;
 
   /** Ajouter plusieurs entrées en batch */
-  addBatch(entries: SemanticMemoryEntry?.[]): Promise<void>;
+  addBatch(entries: SemanticMemoryEntry[]): Promise<void>;
 
   /** Recherche par similarité */
   search(
-    embedding: number?.[],
+    embedding: number[],
     limit: number,
     filters?: Record<string, any>
-  ): Promise<SemanticMemoryResult?.[]>;
+  ): Promise<SemanticMemoryResult[]>;
 
   /** Récupérer par ID */
-  get(any: any): Promise<SemanticMemoryEntry | null>;
+  get(id: string): Promise<SemanticMemoryEntry | null>;
 
   /** Mettre à jour une entrée */
   update(id: string, updates: Partial<SemanticMemoryEntry>): Promise<void>;
 
   /** Supprimer une entrée */
-  delete(any: any): Promise<void>;
+  delete(id: string): Promise<void>;
 
   /** Supprimer par filtre */
   deleteWhere(filters: Record<string, any>): Promise<number>;
@@ -254,10 +254,10 @@ export interface EmbeddingGenerator {
   initialize(): Promise<void>;
 
   /** Générer un embedding pour un texte */
-  generate(any: any): Promise<number?.[]>;
+  generate(text: string): Promise<number[]>;
 
   /** Générer plusieurs embeddings en batch */
-  generateBatch(texts: string?.[]): Promise<number?.[][]>;
+  generateBatch(texts: string[]): Promise<number[][]>;
 
   /** Dimensions du vecteur */
   getDimensions(): number;
@@ -267,7 +267,7 @@ export interface EmbeddingGenerator {
 }
 
 /**
- * Événements du moteur de mémoire (any: any)
+ * Événements du moteur de mémoire (pour observability)
  */
 export interface MemoryEvent {
   type:
@@ -280,4 +280,4 @@ export interface MemoryEvent {
   data: Record<string, unknown>;
 }
 
-export type MemoryEventHandler = (any: any) => void;
+export type MemoryEventHandler = (event: MemoryEvent) => void;

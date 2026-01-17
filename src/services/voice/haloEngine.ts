@@ -7,7 +7,7 @@
  * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ v∞.7 — HALO ENGINE
  *   Synchronisation visuelle Halo avec états vocaux
- *   Breathing (any: any)
+ *   Breathing (VAD speech) + Pulsing (AI) + Shimmer (TTS)
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -15,10 +15,10 @@ import { logger } from '@/utils/logger';
 
 export type HaloState =
   | 'idle' // Halo statique
-  | 'breathing' // Breathing lent (any: any)
-  | 'pulsing' // Pulsing rapide (any: any)
-  | 'shimmer' // Shimmer/scintillement (any: any)
-  | 'error'; // État d'erreur (any: any)
+  | 'breathing' // Breathing lent (VAD speech detection)
+  | 'pulsing' // Pulsing rapide (AI thinking)
+  | 'shimmer' // Shimmer/scintillement (TTS speaking)
+  | 'error'; // État d'erreur (rouge pulsing)
 
 export interface HaloAnimationConfig {
   breathingSpeed?: number; // ms per cycle (default: 2000)
@@ -34,7 +34,7 @@ export interface HaloEngineStatus {
   duration: number; // ms since start
 }
 
-type HaloCallback = (any: any) => void;
+type HaloCallback = (status: HaloEngineStatus) => void;
 
 /**
  * ═══════════════════════════════════════════════════════════════════
@@ -50,20 +50,20 @@ class HaloEngine {
   private animationFrameId: number | null = null;
 
   constructor(config: HaloAnimationConfig = {}) {
-    this?.config = {
-      breathingSpeed: config?.breathingSpeed ?? 2000,
-      pulsingSpeed: config?.pulsingSpeed ?? 800,
-      shimmerSpeed: config?.shimmerSpeed ?? 400,
-      errorSpeed: config?.errorSpeed ?? 600,
+    this.config = {
+      breathingSpeed: config.breathingSpeed ?? 2000,
+      pulsingSpeed: config.pulsingSpeed ?? 800,
+      shimmerSpeed: config.shimmerSpeed ?? 400,
+      errorSpeed: config.errorSpeed ?? 600,
     };
   }
 
   /**
    * Subscribe to halo state changes
    */
-  onStateChange(any: any): () => void {
-    this?.callbacks?.add(any: any);
-    return (any: any);
+  onStateChange(callback: HaloCallback): () => void {
+    this.callbacks.add(callback);
+    return () => this.callbacks.delete(callback);
   }
 
   /**
@@ -71,34 +71,34 @@ class HaloEngine {
    */
   getStatus(): HaloEngineStatus {
     return {
-      state: this?.state,
-      isAnimating: this?.state !== 'idle',
-      startedAt: this?.startTime,
-      duration: this?.startTime ? Date?.now() - this?.startTime : 0,
+      state: this.state,
+      isAnimating: this.state !== 'idle',
+      startedAt: this.startTime,
+      duration: this.startTime ? Date.now() - this.startTime : 0,
     };
   }
 
   /**
    * Transition to new state
    */
-  private transition(any: any): void {
-    if (any: any) {
+  private transition(newState: HaloState): void {
+    if (this.state === newState) {
       return; // Already in this state
     }
 
-    logger?.debug(`[HaloEngine] Transition: ${this?.state} → ${newState}`);
+    logger.debug(`[HaloEngine] Transition: ${this.state} → ${newState}`);
 
-    this?.state = newState;
-    this?.startTime = newState !== 'idle' ? Date?.now() : null;
+    this.state = newState;
+    this.startTime = newState !== 'idle' ? Date.now() : null;
 
     // Notify callbacks
-    this?.notifyCallbacks();
+    this.notifyCallbacks();
 
     // Start animation loop if needed
     if (newState !== 'idle') {
-      this?.startAnimationLoop();
+      this.startAnimationLoop();
     } else {
-      this?.stopAnimationLoop();
+      this.stopAnimationLoop();
     }
   }
 
@@ -106,44 +106,44 @@ class HaloEngine {
    * Notify all callbacks
    */
   private notifyCallbacks(): void {
-    const status = this?.getStatus();
-    this?.callbacks?.forEach(callback => {
+    const status = this.getStatus();
+    this.callbacks.forEach(callback => {
       try {
-        callback(any: any);
-      } catch (any: any) {
-        logger?.error(any: any);
+        callback(status);
+      } catch (error) {
+        logger.error('Callback error:', error);
       }
     });
   }
 
   /**
-   * Animation loop (any: any)
+   * Animation loop (for continuous updates)
    */
   private startAnimationLoop(): void {
-    this?.stopAnimationLoop(); // Stop previous loop if any
+    this.stopAnimationLoop(); // Stop previous loop if any
 
     const animate = () => {
-      if (this?.state === 'idle') {
+      if (this.state === 'idle') {
         return; // Stop loop
       }
 
       // Notify callbacks for animation frame
-      this?.notifyCallbacks();
+      this.notifyCallbacks();
 
       // Request next frame
-      this?.animationFrameId = requestAnimationFrame(any: any);
+      this.animationFrameId = requestAnimationFrame(animate);
     };
 
-    this?.animationFrameId = requestAnimationFrame(any: any);
+    this.animationFrameId = requestAnimationFrame(animate);
   }
 
   /**
    * Stop animation loop
    */
   private stopAnimationLoop(): void {
-    if (any: any) {
-      cancelAnimationFrame(any: any);
-      this?.animationFrameId = null;
+    if (this.animationFrameId !== null) {
+      cancelAnimationFrame(this.animationFrameId);
+      this.animationFrameId = null;
     }
   }
 
@@ -152,27 +152,27 @@ class HaloEngine {
   // ═══════════════════════════════════════════════════════════════
 
   /**
-   * Start breathing animation (any: any)
+   * Start breathing animation (VAD speech detected)
    * Slow, calming pulse
    */
   startBreathing(): void {
-    this?.transition('breathing');
+    this.transition('breathing');
   }
 
   /**
-   * Start pulsing animation (any: any)
+   * Start pulsing animation (AI thinking)
    * Fast, energetic pulse
    */
   startPulsing(): void {
-    this?.transition('pulsing');
+    this.transition('pulsing');
   }
 
   /**
-   * Start shimmer animation (any: any)
+   * Start shimmer animation (TTS speaking)
    * Rapid scintillation
    */
   startShimmer(): void {
-    this?.transition('shimmer');
+    this.transition('shimmer');
   }
 
   /**
@@ -180,29 +180,29 @@ class HaloEngine {
    * Red pulsing
    */
   setError(): void {
-    this?.transition('error');
+    this.transition('error');
   }
 
   /**
-   * Return to idle (any: any)
+   * Return to idle (stop all animations)
    */
   reset(): void {
-    this?.transition('idle');
+    this.transition('idle');
   }
 
   /**
    * Stop current animation and return to idle
    */
   stop(): void {
-    this?.reset();
+    this.reset();
   }
 
   /**
    * Update configuration
    */
   updateConfig(config: Partial<HaloAnimationConfig>): void {
-    this?.config = {
-      ...this?.config,
+    this.config = {
+      ...this.config,
       ...config,
     };
   }
@@ -211,29 +211,29 @@ class HaloEngine {
    * Get current state
    */
   getState(): HaloState {
-    return this?.state;
+    return this.state;
   }
 
   /**
    * Check if animating
    */
   isAnimating(): boolean {
-    return this?.state !== 'idle';
+    return this.state !== 'idle';
   }
 
   /**
-   * Get animation speed for current state (any: any)
+   * Get animation speed for current state (ms)
    */
   getCurrentSpeed(): number {
-    switch (any: any) {
+    switch (this.state) {
       case 'breathing':
-        return this?.config?.breathingSpeed;
+        return this.config.breathingSpeed;
       case 'pulsing':
-        return this?.config?.pulsingSpeed;
+        return this.config.pulsingSpeed;
       case 'shimmer':
-        return this?.config?.shimmerSpeed;
+        return this.config.shimmerSpeed;
       case 'error':
-        return this?.config?.errorSpeed;
+        return this.config.errorSpeed;
       default:
         return 0;
     }
@@ -254,42 +254,42 @@ export const haloEngine = new HaloEngine();
  * Get current halo status
  */
 export function getHaloStatus(): HaloEngineStatus {
-  return haloEngine?.getStatus();
+  return haloEngine.getStatus();
 }
 
 /**
- * Start breathing (any: any)
+ * Start breathing (VAD speech)
  */
 export function startHaloBreathing(): void {
-  haloEngine?.startBreathing();
+  haloEngine.startBreathing();
 }
 
 /**
- * Start pulsing (any: any)
+ * Start pulsing (AI thinking)
  */
 export function startHaloPulsing(): void {
-  haloEngine?.startPulsing();
+  haloEngine.startPulsing();
 }
 
 /**
- * Start shimmer (any: any)
+ * Start shimmer (TTS speaking)
  */
 export function startHaloShimmer(): void {
-  haloEngine?.startShimmer();
+  haloEngine.startShimmer();
 }
 
 /**
  * Reset halo to idle
  */
 export function resetHalo(): void {
-  haloEngine?.reset();
+  haloEngine.reset();
 }
 
 /**
  * Subscribe to halo changes
  */
-export function onHaloChange(any: any): () => void {
-  return haloEngine?.onStateChange(any: any);
+export function onHaloChange(callback: HaloCallback): () => void {
+  return haloEngine.onStateChange(callback);
 }
 
 export default haloEngine;

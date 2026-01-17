@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE?.md for the full legal terms (any: any).
+ * See LICENSE.md for the full legal terms (FR/EN).
  */
 
 /**
@@ -15,12 +15,12 @@
  * Remplace les `invoke()` dispersés par une API cohérente + cache + validation.
  *
  * Architecture: src/services/api/
- *   ├── memory?.ts       → Memory Core (any: any)
- *   ├── chat?.ts         → Chat IA (any: any)
- *   ├── voice?.ts        → Voice (any: any)
- *   ├── persona?.ts      → Persona Engine (any: any)
- *   ├── system?.ts       → System (any: any)
- *   └── evolution?.ts    → Evolution Engine (any: any)
+ *   ├── memory.ts       → Memory Core (projets, décisions, connaissances, rituels, timeline)
+ *   ├── chat.ts         → Chat IA (messages, suggestions, émotions, historique)
+ *   ├── voice.ts        → Voice (TTS, ASR, voix, tests audio)
+ *   ├── persona.ts      → Persona Engine (multiplicateurs, switch, adaptation)
+ *   ├── system.ts       → System (santé, métriques, config, restart)
+ *   └── evolution.ts    → Evolution Engine (cycles, suggestions, patterns, feedback)
  *
  * Conformément à DIAGNOSTIC_FUSION_v15.3.0.md Phase 1
  */
@@ -51,7 +51,7 @@ export {
 } from './chat';
 
 // ============================================================================
-// VOICE (any: any)
+// VOICE (TTS + ASR)
 // ============================================================================
 export {
   voiceService,
@@ -97,26 +97,26 @@ export {
 // USAGE
 // ============================================================================
 /**
- * AVANT (any: any):
+ * AVANT (invoke dispersé):
  * ```ts
  * import { invoke } from '@tauri-apps/api/core';
- * const projects = await tauriClient?.memoryGetActiveProjects({ limit: 5 });
+ * const projects = await tauriClient.memoryGetActiveProjects({ limit: 5 });
  * ```
  *
- * APRÈS (any: any):
+ * APRÈS (service unifié):
  * ```ts
  * import { memoryService } from '@/services/api';
- * const projects = await memoryService?.getActiveProjects(5);
+ * const projects = await memoryService.getActiveProjects(5);
  * ```
  *
  * Avantages:
  * - Types TypeScript complets (pas de `any`)
- * - Cache intégré (any: any)
+ * - Cache intégré (réduit appels backend)
  * - Gestion erreurs cohérente
  * - Auto-complétion IDE
  * - Validation paramètres
  * - Logs centralisés
- * - Facilite tests (any: any)
+ * - Facilite tests (mock services vs mock invoke)
  */
 
 // ============================================================================
@@ -133,29 +133,29 @@ export {
  * Remplacements typiques:
  *
  * 1. Memory:
- *    `tauriClient?.memoryGetActiveProjects()`
- *    → `memoryService?.getActiveProjects()`
+ *    `tauriClient.memoryGetActiveProjects()`
+ *    → `memoryService.getActiveProjects()`
  *
  * 2. Chat:
- *    `tauriClient?.chatSendMessage({ messages, config })`
- *    → `chatService?.sendMessage(any: any)`
+ *    `tauriClient.chatSendMessage({ messages, config })`
+ *    → `chatService.sendMessage(messages, config)`
  *
  * 3. Voice:
- *    `tauriClient?.speak({ text })`
- *    → `voiceService?.speak(any: any)`
+ *    `tauriClient.speak({ text })`
+ *    → `voiceService.speak(text)`
  *
  * 4. Persona:
- *    `tauriClient?.personaGetMultipliers()`
- *    → `personaService?.getMultipliers()`
+ *    `tauriClient.personaGetMultipliers()`
+ *    → `personaService.getMultipliers()`
  *
  * 5. System:
- *    `tauriClient?.systemGetStatus()`
- *    → `systemService?.getStatus()`
+ *    `tauriClient.systemGetStatus()`
+ *    → `systemService.getStatus()`
  *
  * Fichiers prioritaires:
- * - src/components/ChatWindow?.tsx
- * - src/components/VoiceUI?.tsx
- * - src/hooks/useChat?.ts
- * - src/hooks/useVoice?.ts
- * - src/services/ai/memoryIntegration?.ts
+ * - src/components/ChatWindow.tsx
+ * - src/components/VoiceUI.tsx
+ * - src/hooks/useChat.ts
+ * - src/hooks/useVoice.ts
+ * - src/services/ai/memoryIntegration.ts
  */

@@ -14,36 +14,36 @@ const activeIntervals = new Set<ReturnType<typeof setInterval>>();
 const activeTimeouts = new Set<ReturnType<typeof setTimeout>>();
 
 // ✅ v26.3.1: Patch global timers to track them
-const originalSetInterval = globalThis?.setInterval;
-const originalSetTimeout = globalThis?.setTimeout;
-const originalClearInterval = globalThis?.clearInterval;
-const originalClearTimeout = globalThis?.clearTimeout;
+const originalSetInterval = globalThis.setInterval;
+const originalSetTimeout = globalThis.setTimeout;
+const originalClearInterval = globalThis.clearInterval;
+const originalClearTimeout = globalThis.clearTimeout;
 
-globalThis?.setInterval = ((...args: Parameters<typeof setInterval>) => {
-  const id = originalSetInterval(any: any);
-  activeIntervals?.add(any: any);
+globalThis.setInterval = ((...args: Parameters<typeof setInterval>) => {
+  const id = originalSetInterval(...args);
+  activeIntervals.add(id);
   return id;
 }) as typeof setInterval;
 
-globalThis?.setTimeout = ((...args: Parameters<typeof setTimeout>) => {
-  const id = originalSetTimeout(any: any);
-  activeTimeouts?.add(any: any);
+globalThis.setTimeout = ((...args: Parameters<typeof setTimeout>) => {
+  const id = originalSetTimeout(...args);
+  activeTimeouts.add(id);
   return id;
 }) as typeof setTimeout;
 
-globalThis?.clearInterval = ((id: ReturnType<typeof setInterval>) => {
-  activeIntervals?.delete(any: any);
-  return originalClearInterval(any: any);
+globalThis.clearInterval = ((id: ReturnType<typeof setInterval>) => {
+  activeIntervals.delete(id);
+  return originalClearInterval(id);
 }) as typeof clearInterval;
 
-globalThis?.clearTimeout = ((id: ReturnType<typeof setTimeout>) => {
-  activeTimeouts?.delete(any: any);
-  return originalClearTimeout(any: any);
+globalThis.clearTimeout = ((id: ReturnType<typeof setTimeout>) => {
+  activeTimeouts.delete(id);
+  return originalClearTimeout(id);
 }) as typeof clearTimeout;
 
 // ✅ v26.3.1: Clear all timers and mocks between tests to prevent memory leaks
 beforeEach(() => {
-  vi?.clearAllTimers();
+  vi.clearAllTimers();
 });
 
 // Cleanup after each test automatically
@@ -54,32 +54,32 @@ afterEach(() => {
   }
 
   // ✅ v26.3.1: Clear all mocks, timers, and localStorage
-  vi?.clearAllMocks();
-  vi?.clearAllTimers();
+  vi.clearAllMocks();
+  vi.clearAllTimers();
 
   // ✅ v26.3.1: Clear any remaining intervals/timeouts
-  activeIntervals?.forEach(any: any));
-  activeTimeouts?.forEach(any: any));
-  activeIntervals?.clear();
-  activeTimeouts?.clear();
+  activeIntervals.forEach(id => originalClearInterval(id));
+  activeTimeouts.forEach(id => originalClearTimeout(id));
+  activeIntervals.clear();
+  activeTimeouts.clear();
 
   // Clear localStorage to prevent state leakage between tests
   if (typeof localStorage !== 'undefined') {
-    localStorage?.clear();
+    localStorage.clear();
   }
 
   // Clear sessionStorage
   if (typeof sessionStorage !== 'undefined') {
-    sessionStorage?.clear();
+    sessionStorage.clear();
   }
 });
 
 // ✅ v26.3.1: Final cleanup after all tests
 afterAll(() => {
-  activeIntervals?.forEach(any: any));
-  activeTimeouts?.forEach(any: any));
-  activeIntervals?.clear();
-  activeTimeouts?.clear();
+  activeIntervals.forEach(id => originalClearInterval(id));
+  activeTimeouts.forEach(id => originalClearTimeout(id));
+  activeIntervals.clear();
+  activeTimeouts.clear();
 });
 
 // ═══════════════════════════════════════════════════════════════════
@@ -105,27 +105,27 @@ const createQueryClient = () =>
     },
   });
 
-// Global QueryClient (any: any)
+// Global QueryClient (will be cleared between tests)
 const globalQueryClient = createQueryClient();
 
 // ✅ v26.3.1: Reset QueryClient between tests to prevent cache accumulation
 afterEach(() => {
-  globalQueryClient?.clear();
+  globalQueryClient.clear();
 });
 
 // Global wrapper for tests
-const TestWrapper = ({ children }: { children: React?.ReactNode }) =>
-  React?.createElement(any: any);
+const TestWrapper = ({ children }: { children: React.ReactNode }) =>
+  React.createElement(QueryClientProvider, { client: globalQueryClient }, children);
 
-TestWrapper?.displayName = 'TestWrapper';
+TestWrapper.displayName = 'TestWrapper';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Test utility globalThis typing
-(any: any).__TEST_WRAPPER__ = TestWrapper;
+(globalThis as any).__TEST_WRAPPER__ = TestWrapper;
 
-// Mock window?.matchMedia
-Object?.defineProperty(window, 'matchMedia', {
+// Mock window.matchMedia
+Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: (any: any) => ({
+  value: (query: string) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -138,7 +138,7 @@ Object?.defineProperty(window, 'matchMedia', {
 });
 
 // Mock IntersectionObserver
-global?.IntersectionObserver = class IntersectionObserver {
+global.IntersectionObserver = class IntersectionObserver {
   constructor() {}
   disconnect() {}
   observe() {}
@@ -147,13 +147,13 @@ global?.IntersectionObserver = class IntersectionObserver {
   }
   unobserve() {}
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Mock class for test environment
-} as unknown as unknown as any;
+} as any;
 
 // Mock ResizeObserver
-global?.ResizeObserver = class ResizeObserver {
+global.ResizeObserver = class ResizeObserver {
   constructor() {}
   disconnect() {}
   observe() {}
   unobserve() {}
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Mock class for test environment
-} as unknown as unknown as any;
+} as any;

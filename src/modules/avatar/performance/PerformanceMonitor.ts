@@ -9,7 +9,7 @@ import { logger } from '@/utils/logger';
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
 
-// Extended Performance interface with memory property (any: any)
+// Extended Performance interface with memory property (Chrome/Edge only)
 interface PerformanceMemory {
   usedJSHeapSize: number;
   totalJSHeapSize: number;
@@ -22,15 +22,15 @@ interface PerformanceWithMemory extends Performance {
 
 export interface PerformanceMetrics {
   fps: number; // Current FPS
-  averageFps: number; // Average FPS (any: any)
-  minFps: number; // Minimum FPS (any: any)
-  maxFps: number; // Maximum FPS (any: any)
-  frameTime: number; // Frame time (any: any)
+  averageFps: number; // Average FPS (last 60 frames)
+  minFps: number; // Minimum FPS (last 60 frames)
+  maxFps: number; // Maximum FPS (last 60 frames)
+  frameTime: number; // Frame time (ms)
   cpuUsage: number; // CPU usage estimate (0-100%)
   gpuUsage: number; // GPU usage estimate (0-100%)
-  memoryUsed: number; // Memory used (any: any)
-  memoryTotal: number; // Memory total (any: any)
-  drawCalls: number; // Render draw calls (any: any)
+  memoryUsed: number; // Memory used (MB)
+  memoryTotal: number; // Memory total (MB)
+  drawCalls: number; // Render draw calls (from renderer)
   triangles: number; // Total triangles rendered
   resolution: number; // Current render resolution scale (0.5-1.0)
 }
@@ -42,7 +42,7 @@ export interface PerformanceConfig {
   drsMinScale: number; // Min resolution scale (0.5 = 50%)
   drsMaxScale: number; // Max resolution scale (1.0 = 100%)
   drsAdjustSpeed: number; // DRS adjustment speed (0.01-0.1)
-  logInterval: number; // Console log interval (any: any) - 0 = disabled
+  logInterval: number; // Console log interval (ms) - 0 = disabled
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -53,8 +53,8 @@ export class PerformanceMonitor {
   private config: PerformanceConfig;
 
   // Frame timing
-  private frameHistory: number?.[] = [];
-  private lastFrameTime: number = performance?.now();
+  private frameHistory: number[] = [];
+  private lastFrameTime: number = performance.now();
   private frameCount: number = 0;
 
   // Performance state
@@ -65,7 +65,7 @@ export class PerformanceMonitor {
   private lastLogTime: number = 0;
 
   constructor(config: Partial<PerformanceConfig> = {}) {
-    this?.config = {
+    this.config = {
       targetFps: 60,
       minFps: 45,
       enableDRS: true,
@@ -77,7 +77,7 @@ export class PerformanceMonitor {
     };
 
     // Initialize metrics
-    this?.currentMetrics = {
+    this.currentMetrics = {
       fps: 0,
       averageFps: 0,
       minFps: 0,
@@ -101,66 +101,66 @@ export class PerformanceMonitor {
    * Begin frame measurement
    */
   public beginFrame(): void {
-    this?.lastFrameTime = performance?.now();
+    this.lastFrameTime = performance.now();
   }
 
   /**
    * End frame measurement
    */
   public endFrame(): void {
-    const now = performance?.now();
-    const frameTime = now - this?.lastFrameTime;
-    this?.frameCount++;
+    const now = performance.now();
+    const frameTime = now - this.lastFrameTime;
+    this.frameCount++;
 
-    // Add to history (any: any)
-    this?.frameHistory?.push(any: any);
-    if (this?.frameHistory?.length > 60) {
-      this?.frameHistory?.shift();
+    // Add to history (keep last 60 frames)
+    this.frameHistory.push(frameTime);
+    if (this.frameHistory.length > 60) {
+      this.frameHistory.shift();
     }
 
     // Calculate FPS
-    this?.currentMetrics?.fps = 1000 / frameTime;
-    this?.currentMetrics?.frameTime = frameTime;
+    this.currentMetrics.fps = 1000 / frameTime;
+    this.currentMetrics.frameTime = frameTime;
 
     // Calculate average FPS
     const avgFrameTime =
-      this?.frameHistory?.reduce(any: any) => a + b, 0) / this?.frameHistory?.length;
-    this?.currentMetrics?.averageFps = 1000 / avgFrameTime;
+      this.frameHistory.reduce((a, b) => a + b, 0) / this.frameHistory.length;
+    this.currentMetrics.averageFps = 1000 / avgFrameTime;
 
     // Calculate min/max FPS
-    const minFrameTime = Math?.min(any: any);
-    const maxFrameTime = Math?.max(any: any);
-    this?.currentMetrics?.minFps = 1000 / maxFrameTime;
-    this?.currentMetrics?.maxFps = 1000 / minFrameTime;
+    const minFrameTime = Math.min(...this.frameHistory);
+    const maxFrameTime = Math.max(...this.frameHistory);
+    this.currentMetrics.minFps = 1000 / maxFrameTime;
+    this.currentMetrics.maxFps = 1000 / minFrameTime;
 
-    // Update memory (any: any)
+    // Update memory (if available)
     const perfWithMemory = performance as PerformanceWithMemory;
-    if (any: any) {
-      const memory = perfWithMemory?.memory;
-      this?.currentMetrics?.memoryUsed = memory?.usedJSHeapSize / (1024 * 1024);
-      this?.currentMetrics?.memoryTotal = memory?.jsHeapSizeLimit / (1024 * 1024);
+    if ('memory' in performance && perfWithMemory.memory) {
+      const memory = perfWithMemory.memory;
+      this.currentMetrics.memoryUsed = memory.usedJSHeapSize / (1024 * 1024);
+      this.currentMetrics.memoryTotal = memory.jsHeapSizeLimit / (1024 * 1024);
     }
 
-    // Estimate CPU usage (any: any)
-    this?.currentMetrics?.cpuUsage = Math?.min(
+    // Estimate CPU usage (rough approximation)
+    this.currentMetrics.cpuUsage = Math.min(
       100,
-      (any: any)) * 100
+      (frameTime / (1000 / this.config.targetFps)) * 100
     );
 
     // Dynamic Resolution Scaling
-    if (any: any) {
-      this?.updateDRS();
+    if (this.config.enableDRS) {
+      this.updateDRS();
     }
 
     // Periodic logging
-    if (any: any) {
-      this?.logMetrics();
-      this?.lastLogTime = now;
+    if (this.config.logInterval > 0 && now - this.lastLogTime > this.config.logInterval) {
+      this.logMetrics();
+      this.lastLogTime = now;
     }
   }
 
   /**
-   * Update renderer info (any: any)
+   * Update renderer info (call after render)
    */
   public updateRendererInfo(info: {
     render?: {
@@ -168,9 +168,9 @@ export class PerformanceMonitor {
       triangles?: number;
     };
   }): void {
-    if (any: any) {
-      this?.currentMetrics?.drawCalls = info?.render?.calls || 0;
-      this?.currentMetrics?.triangles = info?.render?.triangles || 0;
+    if (info.render) {
+      this.currentMetrics.drawCalls = info.render.calls || 0;
+      this.currentMetrics.triangles = info.render.triangles || 0;
     }
   }
 
@@ -178,31 +178,31 @@ export class PerformanceMonitor {
    * Get current metrics
    */
   public getMetrics(): PerformanceMetrics {
-    return { ...this?.currentMetrics };
+    return { ...this.currentMetrics };
   }
 
   /**
-   * Get current resolution scale (any: any)
+   * Get current resolution scale (for DRS)
    */
   public getResolutionScale(): number {
-    return this?.currentResolutionScale;
+    return this.currentResolutionScale;
   }
 
   /**
    * Check if performance is acceptable
    */
   public isPerformanceGood(): boolean {
-    return this?.currentMetrics?.averageFps >= this?.config?.minFps;
+    return this.currentMetrics.averageFps >= this.config.minFps;
   }
 
   /**
    * Reset statistics
    */
   public reset(): void {
-    this?.frameHistory = [];
-    this?.frameCount = 0;
-    this?.currentResolutionScale = 1.0;
-    this?.lastLogTime = 0;
+    this.frameHistory = [];
+    this.frameCount = 0;
+    this.currentResolutionScale = 1.0;
+    this.lastLogTime = 0;
   }
 
   // ═════════════════════════════════════════════════════════════════════════
@@ -213,39 +213,39 @@ export class PerformanceMonitor {
    * Update Dynamic Resolution Scaling
    */
   private updateDRS(): void {
-    const { averageFps } = this?.currentMetrics;
-    const { targetFps, drsMinScale, drsMaxScale, drsAdjustSpeed } = this?.config;
+    const { averageFps } = this.currentMetrics;
+    const { targetFps, drsMinScale, drsMaxScale, drsAdjustSpeed } = this.config;
 
     // If FPS below target, reduce resolution
     if (averageFps < targetFps * 0.95) {
-      this?.currentResolutionScale = Math?.max(
+      this.currentResolutionScale = Math.max(
         drsMinScale,
-        this?.currentResolutionScale - drsAdjustSpeed
+        this.currentResolutionScale - drsAdjustSpeed
       );
     }
     // If FPS above target, increase resolution
     else if (averageFps > targetFps * 1.05) {
-      this?.currentResolutionScale = Math?.min(
+      this.currentResolutionScale = Math.min(
         drsMaxScale,
-        this?.currentResolutionScale + drsAdjustSpeed / 2 // Slower increase
+        this.currentResolutionScale + drsAdjustSpeed / 2 // Slower increase
       );
     }
 
-    this?.currentMetrics?.resolution = this?.currentResolutionScale;
+    this.currentMetrics.resolution = this.currentResolutionScale;
   }
 
   /**
    * Log metrics to console
    */
   private logMetrics(): void {
-    logger?.debug('Metrics:', {
-      fps: `${this?.currentMetrics?.fps?.toFixed(1)} (avg: ${this?.currentMetrics?.averageFps?.toFixed(1)}, min: ${this?.currentMetrics?.minFps?.toFixed(1)}, max: ${this?.currentMetrics?.maxFps?.toFixed(1)})`,
-      frameTime: `${this?.currentMetrics?.frameTime?.toFixed(2)}ms`,
-      cpu: `${this?.currentMetrics?.cpuUsage?.toFixed(1)}%`,
-      memory: `${this?.currentMetrics?.memoryUsed?.toFixed(1)}MB / ${this?.currentMetrics?.memoryTotal?.toFixed(1)}MB`,
-      drawCalls: this?.currentMetrics?.drawCalls,
-      triangles: this?.currentMetrics?.triangles,
-      resolution: `${(this?.currentMetrics?.resolution * 100).toFixed(0)}%`,
+    logger.debug('Metrics:', {
+      fps: `${this.currentMetrics.fps.toFixed(1)} (avg: ${this.currentMetrics.averageFps.toFixed(1)}, min: ${this.currentMetrics.minFps.toFixed(1)}, max: ${this.currentMetrics.maxFps.toFixed(1)})`,
+      frameTime: `${this.currentMetrics.frameTime.toFixed(2)}ms`,
+      cpu: `${this.currentMetrics.cpuUsage.toFixed(1)}%`,
+      memory: `${this.currentMetrics.memoryUsed.toFixed(1)}MB / ${this.currentMetrics.memoryTotal.toFixed(1)}MB`,
+      drawCalls: this.currentMetrics.drawCalls,
+      triangles: this.currentMetrics.triangles,
+      resolution: `${(this.currentMetrics.resolution * 100).toFixed(0)}%`,
     });
   }
 }
@@ -257,22 +257,22 @@ export class PerformanceMonitor {
 export class FPSLimiter {
   private targetFps: number;
   private interval: number;
-  private lastTime: number = performance?.now();
+  private lastTime: number = performance.now();
 
   constructor(targetFps: number = 60) {
-    this?.targetFps = targetFps;
-    this?.interval = 1000 / targetFps;
+    this.targetFps = targetFps;
+    this.interval = 1000 / targetFps;
   }
 
   /**
    * Check if should render this frame
    */
   public shouldRender(): boolean {
-    const now = performance?.now();
-    const delta = now - this?.lastTime;
+    const now = performance.now();
+    const delta = now - this.lastTime;
 
-    if (any: any) {
-      this?.lastTime = now - (any: any);
+    if (delta >= this.interval) {
+      this.lastTime = now - (delta % this.interval);
       return true;
     }
 
@@ -282,9 +282,9 @@ export class FPSLimiter {
   /**
    * Set target FPS
    */
-  public setTargetFps(any: any): void {
-    this?.targetFps = fps;
-    this?.interval = 1000 / fps;
+  public setTargetFps(fps: number): void {
+    this.targetFps = fps;
+    this.interval = 1000 / fps;
   }
 }
 

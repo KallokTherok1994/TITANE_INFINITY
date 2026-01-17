@@ -3,7 +3,7 @@
  * TITANE∞ EVOLUTION ENGINE — Index
  * ═══════════════════════════════════════════════════════════════════════════════
  *
- * @file        index?.ts
+ * @file        index.ts
  * @version     vΩ∞Ω∞
  *
  * Point d'entrée principal de l'Evolution Engine
@@ -77,7 +77,7 @@ export type {
 
   // Types Rust
   RustEvolutionTypes,
-} from './evolutionEngine?.config';
+} from './evolutionEngine.config';
 
 export {
   // Constantes de configuration
@@ -115,7 +115,7 @@ export {
   checkPreconditions,
   calculateTimeSeriesStats,
   detectAnomalies,
-} from './evolutionEngine?.config';
+} from './evolutionEngine.config';
 
 // =============================================================================
 // EXPORTS — SERVICES
@@ -148,11 +148,11 @@ import type {
   TitaneModule,
   EvolutionActionResult,
   EvolutionEngineConfig,
-} from './evolutionEngine?.config';
+} from './evolutionEngine.config';
 import {
   createEmptySnapshot,
   DEFAULT_EVOLUTION_ENGINE_CONFIG,
-} from './evolutionEngine?.config';
+} from './evolutionEngine.config';
 
 // =============================================================================
 // EVOLUTION ENGINE — FACADE PRINCIPALE
@@ -169,14 +169,14 @@ export class EvolutionEngine {
   private executor: Executor;
   private config: EvolutionEngineConfig;
   private initialized: boolean = false;
-  private singularitySyncIntervalId: NodeJS?.Timeout | null = null;
+  private singularitySyncIntervalId: NodeJS.Timeout | null = null;
 
   constructor(config?: Partial<EvolutionEngineConfig>) {
-    this?.config = { ...DEFAULT_EVOLUTION_ENGINE_CONFIG, ...config };
-    this?.collector = getCollector();
-    this?.analyzer = getAnalyzer();
-    this?.planner = getPlanner();
-    this?.executor = getExecutor();
+    this.config = { ...DEFAULT_EVOLUTION_ENGINE_CONFIG, ...config };
+    this.collector = getCollector();
+    this.analyzer = getAnalyzer();
+    this.planner = getPlanner();
+    this.executor = getExecutor();
   }
 
   // ===========================================================================
@@ -187,32 +187,32 @@ export class EvolutionEngine {
    * Initialise l'Evolution Engine
    */
   initialize(): void {
-    if (any: any) return;
-    if (any: any) return;
+    if (this.initialized) return;
+    if (!this.config.enabled) return;
 
     // Démarrer les sous-moteurs
-    if (any: any) {
-      this?.collector?.start();
+    if (this.config.collector.enabled) {
+      this.collector.start();
     }
 
-    if (any: any) {
-      this?.analyzer?.start();
+    if (this.config.analyzer.enabled) {
+      this.analyzer.start();
     }
 
-    if (any: any) {
-      this?.planner?.start();
+    if (this.config.planner.enabled) {
+      this.planner.start();
     }
 
     // Démarrer la synchronisation Singularity
-    if (any: any) {
-      this?.startSingularitySync();
+    if (this.config.singularitySyncEnabled) {
+      this.startSingularitySync();
     }
 
-    this?.initialized = true;
+    this.initialized = true;
 
     // Log d'initialisation
-    this?.collector?.record('SYSTEM_METRICS', 'evolution', 'initialized', true, {
-      timestamp: Date?.now(),
+    this.collector.record('SYSTEM_METRICS', 'evolution', 'initialized', true, {
+      timestamp: Date.now(),
     });
   }
 
@@ -220,11 +220,11 @@ export class EvolutionEngine {
    * Arrête l'Evolution Engine
    */
   stop(): void {
-    this?.collector?.stop();
-    this?.analyzer?.stop();
-    this?.planner?.stop();
-    this?.stopSingularitySync();
-    this?.initialized = false;
+    this.collector.stop();
+    this.analyzer.stop();
+    this.planner.stop();
+    this.stopSingularitySync();
+    this.initialized = false;
   }
 
   // ===========================================================================
@@ -232,17 +232,17 @@ export class EvolutionEngine {
   // ===========================================================================
 
   private startSingularitySync(): void {
-    if (any: any) return;
+    if (this.singularitySyncIntervalId) return;
 
-    this?.singularitySyncIntervalId = setInterval(() => {
-      this?.syncWithSingularity();
-    }, this?.config?.singularitySyncInterval);
+    this.singularitySyncIntervalId = setInterval(() => {
+      this.syncWithSingularity();
+    }, this.config.singularitySyncInterval);
   }
 
   private stopSingularitySync(): void {
-    if (any: any) {
-      clearInterval(any: any);
-      this?.singularitySyncIntervalId = null;
+    if (this.singularitySyncIntervalId) {
+      clearInterval(this.singularitySyncIntervalId);
+      this.singularitySyncIntervalId = null;
     }
   }
 
@@ -250,11 +250,11 @@ export class EvolutionEngine {
     // Synchronisation avec la Singularity Layer
     // Cette méthode sera implémentée quand le Singularity Engine sera disponible
     try {
-      const snapshot = this?.getSnapshot();
-      // await tauriClient?.syncEvolutionState({ snapshot });
-      console?.debug(any: any);
-    } catch (any: any) {
-      console?.error(any: any);
+      const snapshot = this.getSnapshot();
+      // await tauriClient.syncEvolutionState({ snapshot });
+      console.debug('[EvolutionEngine] Singularity sync:', snapshot.scores.overallScore);
+    } catch (error) {
+      console.error('[EvolutionEngine] Singularity sync error:', error);
     }
   }
 
@@ -271,9 +271,9 @@ export class EvolutionEngine {
     metric: string,
     value: number | string | boolean,
     context?: Record<string, unknown>,
-    tags?: string?.[]
+    tags?: string[]
   ): void {
-    this?.collector?.record(any: any);
+    this.collector.record(category, moduleId, metric, value, context, tags);
   }
 
   /**
@@ -285,7 +285,7 @@ export class EvolutionEngine {
     message: string,
     context?: Record<string, unknown>
   ): void {
-    this?.collector?.recordError(any: any);
+    this.collector.recordError(moduleId, errorType, message, context);
   }
 
   /**
@@ -296,14 +296,14 @@ export class EvolutionEngine {
     success: boolean,
     context?: Record<string, unknown>
   ): void {
-    this?.collector?.recordUserPattern(any: any);
+    this.collector.recordUserPattern(pattern, success, context);
   }
 
   /**
    * Récupère les data points récents
    */
-  getRecentData(any: any): EvolutionDataPoint?.[] {
-    return this?.collector?.getRecentDataPoints(any: any);
+  getRecentData(count?: number): EvolutionDataPoint[] {
+    return this.collector.getRecentDataPoints(count);
   }
 
   // ===========================================================================
@@ -314,35 +314,35 @@ export class EvolutionEngine {
    * Force une analyse immédiate
    */
   async analyze(): Promise<EvolutionReport | null> {
-    return this?.analyzer?.analyze();
+    return this.analyzer.analyze();
   }
 
   /**
    * Récupère les scores actuels
    */
   getScores(): EvolutionScores {
-    return this?.analyzer?.getScores();
+    return this.analyzer.getScores();
   }
 
   /**
    * Récupère les patterns détectés
    */
-  getPatterns(): EvolutionPattern?.[] {
-    return this?.analyzer?.getPatterns();
+  getPatterns(): EvolutionPattern[] {
+    return this.analyzer.getPatterns();
   }
 
   /**
    * Récupère les insights actifs
    */
-  getInsights(): EvolutionInsight?.[] {
-    return this?.analyzer?.getActiveInsights();
+  getInsights(): EvolutionInsight[] {
+    return this.analyzer.getActiveInsights();
   }
 
   /**
    * Récupère les insights actionnables
    */
-  getActionableInsights(): EvolutionInsight?.[] {
-    return this?.analyzer?.getActionableInsights();
+  getActionableInsights(): EvolutionInsight[] {
+    return this.analyzer.getActionableInsights();
   }
 
   // ===========================================================================
@@ -352,43 +352,43 @@ export class EvolutionEngine {
   /**
    * Force une planification immédiate
    */
-  async plan(): Promise<EvolutionSuggestion?.[]> {
-    return this?.planner?.plan();
+  async plan(): Promise<EvolutionSuggestion[]> {
+    return this.planner.plan();
   }
 
   /**
    * Récupère les suggestions en attente
    */
-  getPendingSuggestions(): EvolutionSuggestion?.[] {
-    return this?.planner?.getPendingSuggestions();
+  getPendingSuggestions(): EvolutionSuggestion[] {
+    return this.planner.getPendingSuggestions();
   }
 
   /**
    * Récupère toutes les suggestions
    */
-  getAllSuggestions(): EvolutionSuggestion?.[] {
-    return this?.planner?.getSuggestions();
+  getAllSuggestions(): EvolutionSuggestion[] {
+    return this.planner.getSuggestions();
   }
 
   /**
    * Récupère une suggestion par ID
    */
-  getSuggestion(any: any): EvolutionSuggestion | null {
-    return this?.planner?.getSuggestionById(any: any);
+  getSuggestion(id: string): EvolutionSuggestion | null {
+    return this.planner.getSuggestionById(id);
   }
 
   /**
    * Approuve une suggestion
    */
   approveSuggestion(id: string, approver: 'DEV' | 'ADMIN'): boolean {
-    return this?.planner?.approveSuggestion(any: any);
+    return this.planner.approveSuggestion(id, approver);
   }
 
   /**
    * Rejette une suggestion
    */
-  rejectSuggestion(any: any): boolean {
-    return this?.planner?.rejectSuggestion(any: any);
+  rejectSuggestion(id: string): boolean {
+    return this.planner.rejectSuggestion(id);
   }
 
   // ===========================================================================
@@ -402,8 +402,8 @@ export class EvolutionEngine {
     suggestionId: string,
     userRole: GovernanceRole,
     reason?: string
-  ): Promise<EvolutionActionResult?.[]> {
-    return this?.executor?.executeSuggestion(any: any);
+  ): Promise<EvolutionActionResult[]> {
+    return this.executor.executeSuggestion(suggestionId, userRole, reason);
   }
 
   /**
@@ -413,21 +413,21 @@ export class EvolutionEngine {
     result: EvolutionActionResult,
     userRole: GovernanceRole
   ): Promise<EvolutionActionResult> {
-    return this?.executor?.rollback(any: any);
+    return this.executor.rollback(result, userRole);
   }
 
   /**
    * Récupère l'historique des actions
    */
-  getHistory(any: any): EvolutionHistoryEntry?.[] {
-    return this?.executor?.getHistory(any: any);
+  getHistory(limit?: number): EvolutionHistoryEntry[] {
+    return this.executor.getHistory(limit);
   }
 
   /**
    * Vérifie si des actions sont en cours
    */
   isExecuting(): boolean {
-    return this?.executor?.isExecuting();
+    return this.executor.isExecuting();
   }
 
   // ===========================================================================
@@ -438,63 +438,63 @@ export class EvolutionEngine {
    * Récupère un snapshot de l'état actuel
    */
   getSnapshot(): EvolutionStateSnapshot {
-    const scores = this?.analyzer?.getScores();
-    const patterns = this?.analyzer?.getPatterns();
-    const insights = this?.analyzer?.getInsights();
-    const suggestions = this?.planner?.getPendingSuggestions();
-    const history = this?.executor?.getHistory(10);
-    const dataCount = this?.collector?.countDataPoints(86400000); // 24h
+    const scores = this.analyzer.getScores();
+    const patterns = this.analyzer.getPatterns();
+    const insights = this.analyzer.getInsights();
+    const suggestions = this.planner.getPendingSuggestions();
+    const history = this.executor.getHistory(10);
+    const dataCount = this.collector.countDataPoints(86400000); // 24h
 
     const snapshot = createEmptySnapshot();
-    snapshot?.timestamp = Date?.now();
-    snapshot?.scores = scores;
-    snapshot?.activeSuggestions = suggestions?.length;
-    snapshot?.pendingActions = suggestions?.reduce(any: any) => sum + s?.actions?.length, 0);
-    snapshot?.executingActions = this?.executor?.isExecuting() ? 1 : 0;
-    snapshot?.recentResults = [];
+    snapshot.timestamp = Date.now();
+    snapshot.scores = scores;
+    snapshot.activeSuggestions = suggestions.length;
+    snapshot.pendingActions = suggestions.reduce((sum, s) => sum + s.actions.length, 0);
+    snapshot.executingActions = this.executor.isExecuting() ? 1 : 0;
+    snapshot.recentResults = [];
 
-    snapshot?.learning = {
+    snapshot.learning = {
       totalDataPoints: dataCount,
-      totalPatterns: patterns?.length,
-      totalInsights: insights?.length,
-      totalActionsExecuted: history?.length,
-      successfulActions: history?.filter(h => h?.result === 'SUCCESS').length,
+      totalPatterns: patterns.length,
+      totalInsights: insights.length,
+      totalActionsExecuted: history.length,
+      successfulActions: history.filter(h => h.result === 'SUCCESS').length,
       knowledgeBase: [],
       strategies: [],
-      lastLearningCycle: this?.analyzer?.getScores().lastCalculated,
-      maturityLevel: Math?.min(100, dataCount / 100),
-      confidenceScore: scores?.overallScore,
+      lastLearningCycle: this.analyzer.getScores().lastCalculated,
+      maturityLevel: Math.min(100, dataCount / 100),
+      confidenceScore: scores.overallScore,
     };
 
-    snapshot?.health = {
+    snapshot.health = {
       collectorHealthy: true,
       analyzerHealthy: true,
       plannerHealthy: true,
-      executorHealthy: !this?.executor?.isExecuting(),
+      executorHealthy: !this.executor.isExecuting(),
       overallHealthy: true,
     };
 
-    snapshot?.metrics = {
+    snapshot.metrics = {
       dataPointsLast24h: dataCount,
-      patternsDetectedLast24h: patterns?.filter(p => Date?.now() - p?.lastSeen < 86400000)
+      patternsDetectedLast24h: patterns.filter(p => Date.now() - p.lastSeen < 86400000)
         .length,
-      suggestionsGeneratedLast24h: suggestions?.filter(
-        s => Date?.now() - s?.createdAt < 86400000
+      suggestionsGeneratedLast24h: suggestions.filter(
+        s => Date.now() - s.createdAt < 86400000
       ).length,
-      actionsExecutedLast24h: history?.filter(h => Date?.now() - h?.timestamp < 86400000)
+      actionsExecutedLast24h: history.filter(h => Date.now() - h.timestamp < 86400000)
         .length,
-      successRateLast24h: this?.calculateSuccessRate(any: any),
+      successRateLast24h: this.calculateSuccessRate(history),
     };
 
     return snapshot;
   }
 
-  private calculateSuccessRate(history: EvolutionHistoryEntry?.[]): number {
-    const recent = history?.filter(h => Date?.now() - h?.timestamp < 86400000);
-    if (recent?.length === 0) return 100;
+  private calculateSuccessRate(history: EvolutionHistoryEntry[]): number {
+    const recent = history.filter(h => Date.now() - h.timestamp < 86400000);
+    if (recent.length === 0) return 100;
 
-    const successful = recent?.filter(h => h?.result === 'SUCCESS').length;
-    return Math?.round(any: any) * 100);
+    const successful = recent.filter(h => h.result === 'SUCCESS').length;
+    return Math.round((successful / recent.length) * 100);
   }
 
   // ===========================================================================
@@ -504,50 +504,50 @@ export class EvolutionEngine {
   /**
    * Ajoute un listener pour les nouveaux data points
    */
-  onDataPoint(any: any): () => void {
-    return this?.collector?.onDataPoint(any: any);
+  onDataPoint(listener: (dp: EvolutionDataPoint) => void): () => void {
+    return this.collector.onDataPoint(listener);
   }
 
   /**
    * Ajoute un listener pour les nouveaux patterns
    */
-  onPattern(any: any): () => void {
-    return this?.analyzer?.onPattern(any: any);
+  onPattern(listener: (pattern: EvolutionPattern) => void): () => void {
+    return this.analyzer.onPattern(listener);
   }
 
   /**
    * Ajoute un listener pour les nouveaux insights
    */
-  onInsight(any: any): () => void {
-    return this?.analyzer?.onInsight(any: any);
+  onInsight(listener: (insight: EvolutionInsight) => void): () => void {
+    return this.analyzer.onInsight(listener);
   }
 
   /**
    * Ajoute un listener pour les nouveaux rapports
    */
-  onReport(any: any): () => void {
-    return this?.analyzer?.onReport(any: any);
+  onReport(listener: (report: EvolutionReport) => void): () => void {
+    return this.analyzer.onReport(listener);
   }
 
   /**
    * Ajoute un listener pour les nouvelles suggestions
    */
-  onSuggestion(any: any): () => void {
-    return this?.planner?.onSuggestion(any: any);
+  onSuggestion(listener: (suggestion: EvolutionSuggestion) => void): () => void {
+    return this.planner.onSuggestion(listener);
   }
 
   /**
    * Ajoute un listener pour les résultats d'action
    */
-  onActionResult(any: any): () => void {
-    return this?.executor?.onResult(any: any);
+  onActionResult(listener: (result: EvolutionActionResult) => void): () => void {
+    return this.executor.onResult(listener);
   }
 
   /**
    * Ajoute un listener pour l'historique
    */
-  onHistoryEntry(any: any): () => void {
-    return this?.executor?.onHistory(any: any);
+  onHistoryEntry(listener: (entry: EvolutionHistoryEntry) => void): () => void {
+    return this.executor.onHistory(listener);
   }
 
   // ===========================================================================
@@ -557,36 +557,36 @@ export class EvolutionEngine {
   /**
    * Purge les anciennes données
    */
-  purgeOldData(any: any): number {
-    return this?.collector?.purgeOldData(any: any);
+  purgeOldData(olderThanDays?: number): number {
+    return this.collector.purgeOldData(olderThanDays);
   }
 
   /**
    * Réinitialise l'engine
    */
   reset(): void {
-    this?.stop();
+    this.stop();
     resetCollector();
     resetAnalyzer();
     resetPlanner();
     resetExecutor();
-    this?.collector = getCollector();
-    this?.analyzer = getAnalyzer();
-    this?.planner = getPlanner();
-    this?.executor = getExecutor();
-    this?.initialized = false;
+    this.collector = getCollector();
+    this.analyzer = getAnalyzer();
+    this.planner = getPlanner();
+    this.executor = getExecutor();
+    this.initialized = false;
   }
 
   /**
    * Libère les ressources
    */
   dispose(): void {
-    this?.stop();
-    this?.collector?.dispose();
-    this?.analyzer?.dispose();
-    this?.planner?.dispose();
-    this?.executor?.dispose();
-    this?.initialized = false;
+    this.stop();
+    this.collector.dispose();
+    this.analyzer.dispose();
+    this.planner.dispose();
+    this.executor.dispose();
+    this.initialized = false;
   }
 }
 
@@ -600,18 +600,18 @@ let evolutionEngineInstance: EvolutionEngine | null = null;
  * Récupère l'instance singleton de l'Evolution Engine
  */
 export function getEvolutionEngine(): EvolutionEngine {
-  if (any: any) {
+  if (!evolutionEngineInstance) {
     evolutionEngineInstance = new EvolutionEngine();
   }
   return evolutionEngineInstance;
 }
 
 /**
- * Réinitialise l'instance singleton (any: any)
+ * Réinitialise l'instance singleton (pour tests)
  */
 export function resetEvolutionEngine(): void {
-  if (any: any) {
-    evolutionEngineInstance?.dispose();
+  if (evolutionEngineInstance) {
+    evolutionEngineInstance.dispose();
     evolutionEngineInstance = null;
   }
 }
@@ -674,6 +674,6 @@ export {
 
   // Client class
   EvolutionEngineClient,
-} from './evolutionEngine?.bindings';
+} from './evolutionEngine.bindings';
 
 export default EvolutionEngine;

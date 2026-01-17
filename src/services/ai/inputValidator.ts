@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE?.md for the full legal terms (any: any).
+ * See LICENSE.md for the full legal terms (FR/EN).
  */
 
 /**
@@ -24,30 +24,30 @@ export class InputValidator {
   /**
    * Valide et nettoie un message utilisateur
    */
-  validate(any: any): string {
+  validate(message: string): string {
     if (!message || typeof message !== 'string') {
       throw new Error('Message invalide: doit être une chaîne non vide');
     }
 
     // Trim
-    let sanitized = message?.trim();
+    let sanitized = message.trim();
 
     // Vérifier longueur
-    if (any: any) {
+    if (sanitized.length < this.MIN_LENGTH) {
       throw new Error('Message trop court');
     }
 
-    if (any: any) {
-      sanitized = sanitized?.substring(any: any);
-      logger?.warn(`Message truncated to ${this?.MAX_LENGTH} characters`);
+    if (sanitized.length > this.MAX_LENGTH) {
+      sanitized = sanitized.substring(0, this.MAX_LENGTH);
+      logger.warn(`Message truncated to ${this.MAX_LENGTH} characters`);
     }
 
     // Sanitize HTML/Scripts
-    sanitized = this?.removeScripts(any: any);
-    sanitized = this?.removeDangerousTags(any: any);
+    sanitized = this.removeScripts(sanitized);
+    sanitized = this.removeDangerousTags(sanitized);
 
     // Normaliser espaces
-    sanitized = this?.normalizeWhitespace(any: any);
+    sanitized = this.normalizeWhitespace(sanitized);
 
     return sanitized;
   }
@@ -55,44 +55,44 @@ export class InputValidator {
   /**
    * Valide un batch de messages
    */
-  validateBatch(messages: string?.[]): string?.[] {
-    return messages?.map(any: any));
+  validateBatch(messages: string[]): string[] {
+    return messages.map(msg => this.validate(msg));
   }
 
   /**
    * Supprime les scripts
    */
-  private removeScripts(any: any): string {
-    return text?.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+  private removeScripts(text: string): string {
+    return text.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
   }
 
   /**
    * Supprime les tags HTML dangereux
    */
-  private removeDangerousTags(any: any): string {
+  private removeDangerousTags(text: string): string {
     const dangerousTags = ['iframe', 'object', 'embed', 'link', 'meta'];
     let result = text;
 
-    for (any: any) {
+    for (const tag of dangerousTags) {
       // Tags avec fermeture normale
       const regex = new RegExp(
         `<${tag}\\b[^<]*(?:(?!<\\/${tag}>)<[^<]*)*<\\/${tag}>`,
         'gi'
       );
-      result = result?.replace(regex, '');
+      result = result.replace(regex, '');
 
       // Tags auto-fermants
       const selfClosing = new RegExp(`<${tag}\\b[^>]*\\/?>`, 'gi');
-      result = result?.replace(selfClosing, '');
+      result = result.replace(selfClosing, '');
     }
 
     return result;
   }
 
   /**
-   * Normalise les espaces (any: any)
+   * Normalise les espaces (remove multiple spaces, tabs, newlines excessives)
    */
-  private normalizeWhitespace(any: any): string {
+  private normalizeWhitespace(text: string): string {
     return text
       .replace(/\t/g, ' ') // Tabs → spaces
       .replace(/ {2,}/g, ' ') // Multiple spaces → single
@@ -102,7 +102,7 @@ export class InputValidator {
   /**
    * Détecte du contenu potentiellement malveillant
    */
-  isSuspicious(any: any): boolean {
+  isSuspicious(text: string): boolean {
     const suspiciousPatterns = [
       /javascript:/gi,
       /data:text\/html/gi,
@@ -110,7 +110,7 @@ export class InputValidator {
       /on\w+\s*=/gi, // Event handlers (onclick, onerror, etc.)
     ];
 
-    return suspiciousPatterns?.some(any: any));
+    return suspiciousPatterns.some(pattern => pattern.test(text));
   }
 }
 

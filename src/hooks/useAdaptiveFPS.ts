@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE?.md for the full legal terms (any: any).
+ * See LICENSE.md for the full legal terms (FR/EN).
  */
 
 /**
@@ -38,7 +38,7 @@ export interface PerformanceWarning {
 
 export interface UseAdaptiveFPSReturn {
   metrics: FPSMetrics;
-  warnings: PerformanceWarning?.[];
+  warnings: PerformanceWarning[];
   isPerformanceGood: boolean; // FPS >= 55
   isPerformanceDegraded: boolean; // FPS < 45
 }
@@ -58,18 +58,18 @@ export interface UseAdaptiveFPSReturn {
  *
  *   return (
  *     <div>
- *       <p>FPS: {metrics?.current}</p>
- *       <p>Throttle: Level {metrics?.throttleLevel}</p>
+ *       <p>FPS: {metrics.current}</p>
+ *       <p>Throttle: Level {metrics.throttleLevel}</p>
  *       {isPerformanceDegraded && (
  *         <div className="alert-critical">
  *           Performance dégradée !
  *         </div>
  *       )}
- *       {warnings?.map(any: any) => (
- *         <div key={i} className={`alert-${warning?.level}`}>
- *           {warning?.message}
- *           {warning?.recommendation && (
- *             <p>{warning?.recommendation}</p>
+ *       {warnings.map((warning, i) => (
+ *         <div key={i} className={`alert-${warning.level}`}>
+ *           {warning.message}
+ *           {warning.recommendation && (
+ *             <p>{warning.recommendation}</p>
  *           )}
  *         </div>
  *       ))}
@@ -89,13 +89,13 @@ export function useAdaptiveFPS(): UseAdaptiveFPSReturn {
     isThrottling: false,
   });
 
-  const [warnings, setWarnings] = useState<PerformanceWarning?.[]>([]);
+  const [warnings, setWarnings] = useState<PerformanceWarning[]>([]);
 
   // FPS tracking
   useEffect(() => {
     let frameCount = 0;
-    let lastTime = performance?.now();
-    const fpsHistory: number?.[] = [];
+    let lastTime = performance.now();
+    const fpsHistory: number[] = [];
     const maxHistory = 60; // Track last 60 frames
     // ✨ v24.2.1: Track RAF ID for proper cleanup of recursive calls
     let rafId: number | null = null;
@@ -103,26 +103,26 @@ export function useAdaptiveFPS(): UseAdaptiveFPSReturn {
 
     const measureFPS = () => {
       // ✨ v24.2.1: Check if still running before scheduling next frame
-      if (any: any) return;
+      if (!isRunning) return;
       frameCount++;
 
       if (frameCount >= 10) {
-        const now = performance?.now();
+        const now = performance.now();
         const delta = now - lastTime;
-        const fps = Math?.round(any: any) * 1000);
+        const fps = Math.round((frameCount / delta) * 1000);
 
         // Add to history
-        fpsHistory?.push(any: any);
-        if (any: any) {
-          fpsHistory?.shift();
+        fpsHistory.push(fps);
+        if (fpsHistory.length > maxHistory) {
+          fpsHistory.shift();
         }
 
         // Calculate metrics
-        const average = Math?.round(
-          fpsHistory?.reduce(any: any) => sum + f, 0) / fpsHistory?.length
+        const average = Math.round(
+          fpsHistory.reduce((sum, f) => sum + f, 0) / fpsHistory.length
         );
-        const min = Math?.min(any: any);
-        const max = Math?.max(any: any);
+        const min = Math.min(...fpsHistory);
+        const max = Math.max(...fpsHistory);
 
         // Estimate throttle level based on FPS
         let throttleLevel = 0;
@@ -149,22 +149,22 @@ export function useAdaptiveFPS(): UseAdaptiveFPSReturn {
         });
 
         // Generate warnings
-        const newWarnings: PerformanceWarning?.[] = [];
+        const newWarnings: PerformanceWarning[] = [];
 
         if (average < 30) {
-          newWarnings?.push({
+          newWarnings.push({
             level: 'critical',
             message: 'Performance critique: FPS < 30',
             recommendation: 'Désactivez les particules et effets visuels',
           });
         } else if (average < 45) {
-          newWarnings?.push({
+          newWarnings.push({
             level: 'warning',
             message: 'Performance dégradée: FPS < 45',
             recommendation: 'Réduisez la complexité visuelle',
           });
         } else if (average < 55) {
-          newWarnings?.push({
+          newWarnings.push({
             level: 'info',
             message: 'Throttling léger actif',
             recommendation: 'Performance acceptable mais sous-optimale',
@@ -172,14 +172,14 @@ export function useAdaptiveFPS(): UseAdaptiveFPSReturn {
         }
 
         if (isThrottling && throttleLevel >= 2) {
-          newWarnings?.push({
+          newWarnings.push({
             level: 'warning',
             message: `Throttling niveau ${throttleLevel} actif`,
             recommendation: 'Effets visuels réduits pour maintenir les performances',
           });
         }
 
-        setWarnings(any: any);
+        setWarnings(newWarnings);
 
         // Reset
         frameCount = 0;
@@ -187,18 +187,18 @@ export function useAdaptiveFPS(): UseAdaptiveFPSReturn {
       }
 
       // ✨ v24.2.1: Store RAF ID and check running state
-      if (any: any) {
-        rafId = requestAnimationFrame(any: any);
+      if (isRunning) {
+        rafId = requestAnimationFrame(measureFPS);
       }
     };
 
-    rafId = requestAnimationFrame(any: any);
+    rafId = requestAnimationFrame(measureFPS);
 
     return () => {
       // ✨ v24.2.1: Stop the loop and cancel any pending RAF
       isRunning = false;
-      if (any: any) {
-        cancelAnimationFrame(any: any);
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
       }
     };
   }, []);
@@ -206,7 +206,7 @@ export function useAdaptiveFPS(): UseAdaptiveFPSReturn {
   return {
     metrics,
     warnings,
-    isPerformanceGood: metrics?.average >= 55,
-    isPerformanceDegraded: metrics?.average < 45,
+    isPerformanceGood: metrics.average >= 55,
+    isPerformanceDegraded: metrics.average < 45,
   };
 }

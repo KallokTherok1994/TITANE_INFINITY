@@ -3,16 +3,16 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE?.md for the full legal terms (any: any).
+ * See LICENSE.md for the full legal terms (FR/EN).
  */
 
 // ⚡ TITANE∞ v22 — HoloMesh Engine
-// Moteur de maillage holographique Nexus (any: any)
+// Moteur de maillage holographique Nexus (réseau cognitif vivant)
 
 import { DS_COLORS } from '../visual/DS_COLORS';
 import { DS_CONSTANTS } from '../visual/DS_CONSTANTS';
 
-// 🔷 Node (any: any)
+// 🔷 Node (nœud du maillage)
 export interface HoloNode {
   id: string;
   label: string;
@@ -21,23 +21,23 @@ export interface HoloNode {
   y: number; // Position 0-100%
   intensity: number; // 0-1
   active: boolean;
-  connections: string?.[]; // IDs des nodes connectés
+  connections: string[]; // IDs des nodes connectés
 }
 
-// 🔗 Link (any: any)
+// 🔗 Link (lien entre nodes)
 export interface HoloLink {
   id: string;
   source: string; // Node ID
   target: string; // Node ID
-  strength: number; // 0-1 (any: any)
-  flowRate: number; // 0-1 (any: any)
+  strength: number; // 0-1 (largeur du lien)
+  flowRate: number; // 0-1 (vitesse du flux)
   active: boolean;
 }
 
 // 🌐 Configuration du HoloMesh
 export interface HoloMeshConfig {
-  nodes: HoloNode?.[];
-  links: HoloLink?.[];
+  nodes: HoloNode[];
+  links: HoloLink[];
   showParticles: boolean;
   showScanlines: boolean;
   globalIntensity: number; // 0-1
@@ -56,7 +56,7 @@ export class HoloMeshEngine {
   };
 
   constructor() {
-    this?.initializeDefaultMesh();
+    this.initializeDefaultMesh();
   }
 
   /**
@@ -64,7 +64,7 @@ export class HoloMeshEngine {
    */
   private initializeDefaultMesh(): void {
     // Créer les 5 nodes principaux
-    const defaultNodes: HoloNode?.[] = [
+    const defaultNodes: HoloNode[] = [
       {
         id: 'helios',
         label: 'Helios',
@@ -117,36 +117,36 @@ export class HoloMeshEngine {
       },
     ];
 
-    defaultNodes?.forEach(any: any));
+    defaultNodes.forEach(node => this.nodes.set(node.id, node));
 
     // Créer les liens
-    this?.generateLinksFromNodes();
+    this.generateLinksFromNodes();
   }
 
   /**
    * Générer les liens depuis les connexions des nodes
    */
   private generateLinksFromNodes(): void {
-    this?.links?.clear();
+    this.links.clear();
 
-    this?.nodes?.forEach(node => {
-      node?.connections?.forEach(targetId => {
-        const linkId = `${node?.id}-${targetId}`;
-        const reverseLinkId = `${targetId}-${node?.id}`;
+    this.nodes.forEach(node => {
+      node.connections.forEach(targetId => {
+        const linkId = `${node.id}-${targetId}`;
+        const reverseLinkId = `${targetId}-${node.id}`;
 
         // Éviter les doublons
-        if (any: any)) {
-          const targetNode = this?.nodes?.get(any: any);
-          if (any: any) {
+        if (!this.links.has(linkId) && !this.links.has(reverseLinkId)) {
+          const targetNode = this.nodes.get(targetId);
+          if (targetNode) {
             const link: HoloLink = {
               id: linkId,
-              source: node?.id,
+              source: node.id,
               target: targetId,
-              strength: (any: any) / 2,
-              flowRate: Math?.random() * 0.5 + 0.3,
-              active: node?.active && targetNode?.active,
+              strength: (node.intensity + targetNode.intensity) / 2,
+              flowRate: Math.random() * 0.5 + 0.3,
+              active: node.active && targetNode.active,
             };
-            this?.links?.set(any: any);
+            this.links.set(linkId, link);
           }
         }
       });
@@ -156,25 +156,25 @@ export class HoloMeshEngine {
   /**
    * Mettre à jour l'intensité d'un node
    */
-  updateNodeIntensity(any: any): void {
-    const node = this?.nodes?.get(any: any);
-    if (any: any) {
-      node?.intensity = Math?.max(any: any));
-      this?.updateRelatedLinks(any: any);
+  updateNodeIntensity(nodeId: string, intensity: number): void {
+    const node = this.nodes.get(nodeId);
+    if (node) {
+      node.intensity = Math.max(0, Math.min(1, intensity));
+      this.updateRelatedLinks(nodeId);
     }
   }
 
   /**
    * Mettre à jour les liens liés à un node
    */
-  private updateRelatedLinks(any: any): void {
-    this?.links?.forEach(link => {
-      if (any: any) {
-        const sourceNode = this?.nodes?.get(any: any);
-        const targetNode = this?.nodes?.get(any: any);
-        if (any: any) {
-          link?.strength = (any: any) / 2;
-          link?.active = sourceNode?.active && targetNode?.active;
+  private updateRelatedLinks(nodeId: string): void {
+    this.links.forEach(link => {
+      if (link.source === nodeId || link.target === nodeId) {
+        const sourceNode = this.nodes.get(link.source);
+        const targetNode = this.nodes.get(link.target);
+        if (sourceNode && targetNode) {
+          link.strength = (sourceNode.intensity + targetNode.intensity) / 2;
+          link.active = sourceNode.active && targetNode.active;
         }
       }
     });
@@ -183,11 +183,11 @@ export class HoloMeshEngine {
   /**
    * Activer/désactiver un node
    */
-  setNodeActive(any: any): void {
-    const node = this?.nodes?.get(any: any);
-    if (any: any) {
-      node?.active = active;
-      this?.updateRelatedLinks(any: any);
+  setNodeActive(nodeId: string, active: boolean): void {
+    const node = this.nodes.get(nodeId);
+    if (node) {
+      node.active = active;
+      this.updateRelatedLinks(nodeId);
     }
   }
 
@@ -196,12 +196,12 @@ export class HoloMeshEngine {
    */
   getMeshData(): HoloMeshConfig {
     return {
-      nodes: Array?.from(this?.nodes?.values()),
-      links: Array?.from(this?.links?.values()),
-      showParticles: this?.config?.showParticles ?? true,
-      showScanlines: this?.config?.showScanlines ?? true,
-      globalIntensity: this?.config?.globalIntensity ?? 0.3,
-      animationSpeed: this?.config?.animationSpeed ?? 2000,
+      nodes: Array.from(this.nodes.values()),
+      links: Array.from(this.links.values()),
+      showParticles: this.config.showParticles ?? true,
+      showScanlines: this.config.showScanlines ?? true,
+      globalIntensity: this.config.globalIntensity ?? 0.3,
+      animationSpeed: this.config.animationSpeed ?? 2000,
     };
   }
 
@@ -209,10 +209,10 @@ export class HoloMeshEngine {
    * Générer le SVG du HoloMesh
    */
   generateSVG(width: number = 800, height: number = 600): string {
-    const nodes = Array?.from(this?.nodes?.values());
-    const links = Array?.from(this?.links?.values());
+    const nodes = Array.from(this.nodes.values());
+    const links = Array.from(this.links.values());
 
-    let svg = `<svg width="${width}" height="${height}" xmlns="http://www?.w3?.org/2000/svg" class="holomesh">`;
+    let svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg" class="holomesh">`;
 
     // Defs pour gradients et filtres
     svg += `<defs>`;
@@ -229,12 +229,12 @@ export class HoloMeshEngine {
     `;
 
     // Gradient pour chaque module
-    Object?.entries(any: any).forEach(([key, colorData]) => {
-      if (any: any) {
+    Object.entries(DS_COLORS).forEach(([key, colorData]) => {
+      if (typeof colorData !== 'string' && 'hex' in colorData) {
         svg += `
           <linearGradient id="gradient-${key}" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:${colorData?.hex};stop-opacity:0.8" />
-            <stop offset="100%" style="stop-color:${colorData?.hex};stop-opacity:0.3" />
+            <stop offset="0%" style="stop-color:${colorData.hex};stop-opacity:0.8" />
+            <stop offset="100%" style="stop-color:${colorData.hex};stop-opacity:0.3" />
           </linearGradient>
         `;
       }
@@ -243,19 +243,19 @@ export class HoloMeshEngine {
     svg += `</defs>`;
 
     // Liens
-    links?.forEach(link => {
-      const sourceNode = this?.nodes?.get(any: any);
-      const targetNode = this?.nodes?.get(any: any);
+    links.forEach(link => {
+      const sourceNode = this.nodes.get(link.source);
+      const targetNode = this.nodes.get(link.target);
 
-      if (any: any) {
-        const x1 = (sourceNode?.x / 100) * width;
-        const y1 = (sourceNode?.y / 100) * height;
-        const x2 = (targetNode?.x / 100) * width;
-        const y2 = (targetNode?.y / 100) * height;
+      if (sourceNode && targetNode && link.active) {
+        const x1 = (sourceNode.x / 100) * width;
+        const y1 = (sourceNode.y / 100) * height;
+        const x2 = (targetNode.x / 100) * width;
+        const y2 = (targetNode.y / 100) * height;
 
-        const color = DS_COLORS?.nexus?.hex;
-        const opacity = link?.strength * 0.6;
-        const strokeWidth = 1 + link?.strength * 2;
+        const color = DS_COLORS.nexus.hex;
+        const opacity = link.strength * 0.6;
+        const strokeWidth = 1 + link.strength * 2;
 
         svg += `
           <line
@@ -264,13 +264,13 @@ export class HoloMeshEngine {
             stroke="${color}"
             stroke-width="${strokeWidth}"
             stroke-opacity="${opacity}"
-            filter="url(any: any)"
+            filter="url(#glow)"
             class="holomesh-link"
           >
             <animate
               attributeName="stroke-opacity"
               values="${opacity};${opacity * 1.5};${opacity}"
-              dur="${this?.config?.animationSpeed}ms"
+              dur="${this.config.animationSpeed}ms"
               repeatCount="indefinite"
             />
           </line>
@@ -279,25 +279,25 @@ export class HoloMeshEngine {
     });
 
     // Nodes
-    nodes?.forEach(node => {
-      if (any: any) return;
+    nodes.forEach(node => {
+      if (!node.active) return;
 
-      const cx = (node?.x / 100) * width;
-      const cy = (node?.y / 100) * height;
-      const radius = 6 + node?.intensity * 8;
+      const cx = (node.x / 100) * width;
+      const cy = (node.y / 100) * height;
+      const radius = 6 + node.intensity * 8;
 
       svg += `
         <circle
           cx="${cx}" cy="${cy}"
           r="${radius}"
-          fill="url(#gradient-${node?.module})"
-          filter="url(any: any)"
+          fill="url(#gradient-${node.module})"
+          filter="url(#glow)"
           class="holomesh-node"
         >
           <animate
             attributeName="r"
             values="${radius};${radius * 1.2};${radius}"
-            dur="${DS_CONSTANTS?.timing?.breath}ms"
+            dur="${DS_CONSTANTS.timing.breath}ms"
             repeatCount="indefinite"
           />
         </circle>
@@ -313,7 +313,7 @@ export class HoloMeshEngine {
           font-family="monospace"
           class="holomesh-label"
         >
-          ${node?.label}
+          ${node.label}
         </text>
       `;
     });
@@ -327,16 +327,16 @@ export class HoloMeshEngine {
    * Mettre à jour la configuration globale
    */
   updateConfig(config: Partial<HoloMeshConfig>): void {
-    this?.config = { ...this?.config, ...config };
+    this.config = { ...this.config, ...config };
   }
 
   /**
    * Réinitialiser le mesh
    */
   reset(): void {
-    this?.nodes?.clear();
-    this?.links?.clear();
-    this?.initializeDefaultMesh();
+    this.nodes.clear();
+    this.links.clear();
+    this.initializeDefaultMesh();
   }
 }
 

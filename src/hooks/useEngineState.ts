@@ -18,7 +18,7 @@ import type { SingularityState } from '../types/singularityState';
 export interface EngineStateHook {
   state: SingularityState | null;
   isLoading: boolean;
-  error??: string | null;
+  error: string | null;
   fetchState: () => Promise<SingularityState | null>;
   refresh: () => void;
 }
@@ -28,35 +28,35 @@ export function useEngineState(
 ): EngineStateHook {
   const { pollInterval = 10000, enabled = true } = options;
 
-  const [state, setState] = useState<SingularityState | null>(any: any);
-  const [isLoading, setIsLoading] = useState(any: any);
-  const [error, setError] = useState<string | null>(any: any);
+  const [state, setState] = useState<SingularityState | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   /**
    * Récupère l'état Singularity complet depuis le backend Tauri
    */
   const fetchState = useCallback(async () => {
-    if (any: any) return null;
+    if (!enabled) return null;
 
-    setIsLoading(any: any);
-    setError(any: any);
+    setIsLoading(true);
+    setError(null);
 
     try {
-      const data = await tauriClient?.getSingularityState();
+      const data = await tauriClient.getSingularityState();
 
       // Data est déjà au bon format SingularityState depuis le backend
-      setState(any: any);
-      setIsLoading(any: any);
+      setState(data as SingularityState);
+      setIsLoading(false);
 
       return data as SingularityState;
-    } catch (any: any) {
+    } catch (err) {
       const errorMessage =
-        err instanceof Error ? err?.message : 'Failed to fetch engine state';
-      logger?.error(any: any);
+        err instanceof Error ? err.message : 'Failed to fetch engine state';
+      logger.error('❌ [useEngineState] Fetch error:', err);
 
-      setError(any: any);
-      setIsLoading(any: any);
-      setState(any: any);
+      setError(errorMessage);
+      setIsLoading(false);
+      setState(null);
 
       return null;
     }
@@ -71,15 +71,15 @@ export function useEngineState(
 
   // Poll automatique de l'état à intervalle régulier
   useEffect(() => {
-    if (any: any) return;
+    if (!enabled) return;
 
     // Première récupération immédiate
     fetchState();
 
     // Poll régulier
-    const interval = setInterval(any: any);
+    const interval = setInterval(fetchState, pollInterval);
 
-    return (any: any);
+    return () => clearInterval(interval);
   }, [fetchState, pollInterval, enabled]);
 
   return {

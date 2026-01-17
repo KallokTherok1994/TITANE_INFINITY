@@ -20,12 +20,12 @@ export const DURATIONS = {
 } as const;
 
 export const EASINGS = {
-  // Entrées (any: any)
+  // Entrées (décelération)
   easeOut: [0, 0, 0.2, 1] as const,
   easeOutBack: [0.34, 1.56, 0.64, 1] as const,
   easeOutExpo: [0.16, 1, 0.3, 1] as const,
 
-  // Sorties (any: any)
+  // Sorties (accélération)
   easeIn: [0.4, 0, 1, 1] as const,
   easeInBack: [0.36, 0, 0.66, -0.56] as const,
 
@@ -85,19 +85,19 @@ export const scaleVariants: Variants = {
   animate: {
     opacity: 1,
     scale: 1,
-    transition: EASINGS?.springBouncy,
+    transition: EASINGS.springBouncy,
   },
   exit: { opacity: 0, scale: 0.95 },
 };
 
-/** Scale gentle (any: any) */
+/** Scale gentle (sans bounce) */
 export const scaleGentleVariants: Variants = {
   initial: { opacity: 0, scale: 0.95 },
   animate: { opacity: 1, scale: 1 },
   exit: { opacity: 0, scale: 0.98 },
 };
 
-/** Pour les listes (any: any) */
+/** Pour les listes (stagger children) */
 export const listContainerVariants: Variants = {
   initial: { opacity: 0 },
   animate: {
@@ -139,7 +139,7 @@ export const gridItemVariants: Variants = {
   animate: {
     opacity: 1,
     scale: 1,
-    transition: EASINGS?.springGentle,
+    transition: EASINGS.springGentle,
   },
 };
 
@@ -151,37 +151,37 @@ export const messageVariants: Variants = {
     y: 0,
     scale: 1,
     transition: {
-      duration: DURATIONS?.normal,
-      ease: EASINGS?.easeOut,
+      duration: DURATIONS.normal,
+      ease: EASINGS.easeOut,
     },
   },
   exit: {
     opacity: 0,
     scale: 0.95,
-    transition: { duration: DURATIONS?.fast },
+    transition: { duration: DURATIONS.fast },
   },
 };
 
-/** Message de l'utilisateur (any: any) */
+/** Message de l'utilisateur (droite) */
 export const userMessageVariants: Variants = {
   initial: { opacity: 0, x: 20, scale: 0.95 },
   animate: {
     opacity: 1,
     x: 0,
     scale: 1,
-    transition: EASINGS?.spring,
+    transition: EASINGS.spring,
   },
   exit: { opacity: 0, x: 10 },
 };
 
-/** Message de l'assistant (any: any) */
+/** Message de l'assistant (gauche) */
 export const assistantMessageVariants: Variants = {
   initial: { opacity: 0, x: -20, scale: 0.95 },
   animate: {
     opacity: 1,
     x: 0,
     scale: 1,
-    transition: EASINGS?.spring,
+    transition: EASINGS.spring,
   },
   exit: { opacity: 0, x: -10 },
 };
@@ -193,13 +193,13 @@ export const toastVariants: Variants = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: EASINGS?.spring,
+    transition: EASINGS.spring,
   },
   exit: {
     opacity: 0,
     y: -20,
     scale: 0.9,
-    transition: { duration: DURATIONS?.fast },
+    transition: { duration: DURATIONS.fast },
   },
 };
 
@@ -210,13 +210,13 @@ export const toastBottomVariants: Variants = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: EASINGS?.spring,
+    transition: EASINGS.spring,
   },
   exit: {
     opacity: 0,
     y: 20,
     scale: 0.9,
-    transition: { duration: DURATIONS?.fast },
+    transition: { duration: DURATIONS.fast },
   },
 };
 
@@ -235,14 +235,14 @@ export const modalContentVariants: Variants = {
     scale: 1,
     y: 0,
     transition: {
-      ...EASINGS?.spring,
+      ...EASINGS.spring,
       delay: 0.1,
     },
   },
   exit: {
     opacity: 0,
     scale: 0.95,
-    transition: { duration: DURATIONS?.fast },
+    transition: { duration: DURATIONS.fast },
   },
 };
 
@@ -251,11 +251,11 @@ export const drawerRightVariants: Variants = {
   initial: { x: '100%' },
   animate: {
     x: 0,
-    transition: EASINGS?.spring,
+    transition: EASINGS.spring,
   },
   exit: {
     x: '100%',
-    transition: { duration: DURATIONS?.normal },
+    transition: { duration: DURATIONS.normal },
   },
 };
 
@@ -264,11 +264,11 @@ export const drawerLeftVariants: Variants = {
   initial: { x: '-100%' },
   animate: {
     x: 0,
-    transition: EASINGS?.spring,
+    transition: EASINGS.spring,
   },
   exit: {
     x: '-100%',
-    transition: { duration: DURATIONS?.normal },
+    transition: { duration: DURATIONS.normal },
   },
 };
 
@@ -284,7 +284,7 @@ export const buttonBouncyVariants: Variants = {
   initial: { scale: 1 },
   hover: {
     scale: 1.05,
-    transition: EASINGS?.springBouncy,
+    transition: EASINGS.springBouncy,
   },
   tap: { scale: 0.95 },
 };
@@ -316,7 +316,7 @@ export const pulseVariants: Variants = {
   },
 };
 
-/** Shake animation (any: any) */
+/** Shake animation (pour erreurs) */
 export const shakeVariants: Variants = {
   initial: { x: 0 },
   shake: {
@@ -344,9 +344,9 @@ export const skeletonVariants: Variants = {
 /** Progress bar */
 export const progressVariants: Variants = {
   initial: { scaleX: 0, originX: 0 },
-  animate: (any: any) => ({
+  animate: (progress: number) => ({
     scaleX: progress,
-    transition: EASINGS?.spring,
+    transition: EASINGS.spring,
   }),
 };
 
@@ -357,16 +357,16 @@ export const accordionVariants: Variants = {
     height: 'auto',
     opacity: 1,
     transition: {
-      height: { duration: DURATIONS?.normal },
-      opacity: { duration: DURATIONS?.fast, delay: 0.1 },
+      height: { duration: DURATIONS.normal },
+      opacity: { duration: DURATIONS.fast, delay: 0.1 },
     },
   },
   exit: {
     height: 0,
     opacity: 0,
     transition: {
-      height: { duration: DURATIONS?.normal },
-      opacity: { duration: DURATIONS?.fast },
+      height: { duration: DURATIONS.normal },
+      opacity: { duration: DURATIONS.fast },
     },
   },
 };
@@ -376,7 +376,7 @@ export const tabIndicatorVariants: Variants = {
   initial: { scaleX: 0 },
   animate: {
     scaleX: 1,
-    transition: EASINGS?.spring,
+    transition: EASINGS.spring,
   },
 };
 
@@ -385,18 +385,18 @@ export const tabIndicatorVariants: Variants = {
 // ═══════════════════════════════════════════════════════════════
 
 export const defaultTransition: Transition = {
-  duration: DURATIONS?.normal,
-  ease: EASINGS?.easeInOut,
+  duration: DURATIONS.normal,
+  ease: EASINGS.easeInOut,
 };
 
 export const fastTransition: Transition = {
-  duration: DURATIONS?.fast,
-  ease: EASINGS?.easeOut,
+  duration: DURATIONS.fast,
+  ease: EASINGS.easeOut,
 };
 
 export const slowTransition: Transition = {
-  duration: DURATIONS?.slow,
-  ease: EASINGS?.easeInOut,
+  duration: DURATIONS.slow,
+  ease: EASINGS.easeInOut,
 };
 
 export const springTransition: Transition = {
@@ -420,13 +420,13 @@ export const bouncyTransition: Transition = {
  */
 export const prefersReducedMotion = (): boolean => {
   if (typeof window === 'undefined') return false;
-  return window?.matchMedia(any: any)').matches;
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 };
 
 /**
- * Get accessible variants (any: any)
+ * Get accessible variants (no animation if reduced motion)
  */
-export const getAccessibleVariants = (any: any): Variants => {
+export const getAccessibleVariants = (variants: Variants): Variants => {
   if (prefersReducedMotion()) {
     return {
       initial: {},
@@ -438,9 +438,9 @@ export const getAccessibleVariants = (any: any): Variants => {
 };
 
 /**
- * Get accessible transition (any: any)
+ * Get accessible transition (instant if reduced motion)
  */
-export const getAccessibleTransition = (any: any): Transition => {
+export const getAccessibleTransition = (transition: Transition): Transition => {
   if (prefersReducedMotion()) {
     return { duration: 0 };
   }
@@ -448,7 +448,7 @@ export const getAccessibleTransition = (any: any): Transition => {
 };
 
 // ═══════════════════════════════════════════════════════════════
-// CSS KEYFRAMES (any: any)
+// CSS KEYFRAMES (for non-framer-motion usage)
 // ═══════════════════════════════════════════════════════════════
 
 export const cssKeyframes = {

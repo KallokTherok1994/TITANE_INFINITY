@@ -17,7 +17,7 @@ export enum GoalStatus {
   PENDING = 'pending', // En attente de démarrage
   IN_PROGRESS = 'in_progress', // En cours
   COMPLETED = 'completed', // Terminé
-  BLOCKED = 'blocked', // Bloqué (any: any)
+  BLOCKED = 'blocked', // Bloqué (dépendance)
   ABANDONED = 'abandoned', // Abandonné
 }
 
@@ -41,14 +41,14 @@ export interface SubGoal {
   /** Label court */
   label: string;
 
-  /** Description détaillée (any: any) */
+  /** Description détaillée (optionnel) */
   description?: string;
 
   /** Statut */
   status: GoalStatus;
 
-  /** Dépendances (any: any) */
-  depends_on?: string?.[];
+  /** Dépendances (IDs d'autres subgoals) */
+  depends_on?: string[];
 
   /** Progression estimée (0.0 - 1.0) */
   progress?: number;
@@ -73,10 +73,10 @@ export interface ConversationGoal {
   description?: string;
 
   /** Sous-objectifs */
-  subgoals: SubGoal?.[];
+  subgoals: SubGoal[];
 
   /** Contraintes à respecter */
-  constraints: string?.[];
+  constraints: string[];
 
   /** Contexte clé */
   context_keys?: Record<string, any>;
@@ -140,11 +140,11 @@ export interface ConversationFact {
   valid_from: string;
   valid_until?: string;
 
-  /** Remplace un autre fait (any: any) */
+  /** Remplace un autre fait (ID) */
   supersedes?: string;
 
   /** Tags */
-  tags?: string?.[];
+  tags?: string[];
 
   /** Métadonnées */
   created_at: string;
@@ -162,10 +162,10 @@ export interface ConsistencyState {
   goals: ConversationGoal;
 
   /** Base de faits */
-  facts: ConversationFact?.[];
+  facts: ConversationFact[];
 
   /** Historique de vérifications */
-  checks_history: ConsistencyCheck?.[];
+  checks_history: ConsistencyCheck[];
 
   /** Score de cohérence global (0.0 - 1.0) */
   consistency_score: number;
@@ -247,18 +247,18 @@ export interface ConsistencyCheck {
   message_content?: string;
 
   /** Violations détectées */
-  violations: ConsistencyViolation?.[];
+  violations: ConsistencyViolation[];
 
   /** Score de cohérence (0.0 - 1.0) */
   score: number;
 
-  /** Temps de vérification (any: any) */
+  /** Temps de vérification (ms) */
   check_duration_ms: number;
 
   /** Action prise */
   action?: 'none' | 'corrected' | 'flagged' | 'rejected';
 
-  /** Texte corrigé (any: any) */
+  /** Texte corrigé (si correction appliquée) */
   corrected_text?: string;
 }
 
@@ -270,12 +270,12 @@ export interface ConsistencyContext {
   main_goal?: string;
 
   /** Sous-objectifs en cours */
-  active_subgoals: string?.[];
+  active_subgoals: string[];
 
   /** Contraintes à respecter */
-  constraints: string?.[];
+  constraints: string[];
 
-  /** Faits clés (any: any) */
+  /** Faits clés (top 10 max) */
   key_facts: Array<{
     statement: string;
     confidence: number;
@@ -390,4 +390,4 @@ export interface ConsistencyEvent {
   data: Record<string, unknown>;
 }
 
-export type ConsistencyEventHandler = (any: any) => void;
+export type ConsistencyEventHandler = (event: ConsistencyEvent) => void;

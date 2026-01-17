@@ -16,7 +16,7 @@ describe('AIStrategy', () => {
   });
 
   afterEach(async () => {
-    await strategy?.shutdown();
+    await strategy.shutdown();
   });
 
   // ───────────────────────────────────────────────────────────────────────
@@ -25,24 +25,24 @@ describe('AIStrategy', () => {
 
   describe('Initialization', () => {
     it('should create strategy', () => {
-      expect(any: any).toBeDefined();
-      expect(any: any).toBe('ai');
-      expect(any: any);
+      expect(strategy).toBeDefined();
+      expect(strategy.type).toBe('ai');
+      expect(strategy.isInitialized()).toBe(false);
     });
 
     it('should initialize dual AI orchestrators', async () => {
-      await strategy?.initialize();
-      expect(any: any);
+      await strategy.initialize();
+      expect(strategy.isInitialized()).toBe(true);
     });
 
     it('should support standard mode by default', async () => {
-      await strategy?.initialize();
-      expect(any: any);
+      await strategy.initialize();
+      expect(strategy.isInitialized()).toBe(true);
     });
 
     it('should support cognitive mode', async () => {
-      await strategy?.initialize(); // Mode cognitive via selectProvider criteria
-      expect(any: any);
+      await strategy.initialize(); // Mode cognitive via selectProvider criteria
+      expect(strategy.isInitialized()).toBe(true);
     });
   });
 
@@ -52,68 +52,68 @@ describe('AIStrategy', () => {
 
   describe('Provider Selection', () => {
     beforeEach(async () => {
-      await strategy?.initialize();
+      await strategy.initialize();
     });
 
     it('should select provider based on criteria', async () => {
-      const selected = await strategy?.selectProvider({
+      const selected = await strategy.selectProvider({
         mode: 'standard',
         requiresCode: false,
         requiresVision: false,
         latency: 'fast',
       });
 
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
+      expect(selected).toBeDefined();
+      expect(selected.id).toBeDefined();
     });
 
     it('should select local provider for fast latency', async () => {
-      const selected = await strategy?.selectProvider({
+      const selected = await strategy.selectProvider({
         mode: 'standard',
         latency: 'fast',
       });
 
       // AIProviderInfo returns 'id' field
-      expect(any: any).toBe('ollama');
+      expect(selected.id).toBe('ollama');
     });
 
     it('should select cloud provider for cognitive mode', async () => {
-      const selected = await strategy?.selectProvider({
+      const selected = await strategy.selectProvider({
         mode: 'cognitive',
         requiresCode: true,
       });
 
       // AIProviderInfo returns 'id' field
-      expect(any: any);
+      expect(['anthropic', 'openai', 'google']).toContain(selected.id);
     });
 
     it('should select vision-capable provider', async () => {
-      const selected = await strategy?.selectProvider({
+      const selected = await strategy.selectProvider({
         requiresVision: true,
       });
 
-      expect(any: any).toBeDefined();
+      expect(selected.id).toBeDefined();
     });
 
     it('should provide health score', async () => {
-      const selected = await strategy?.selectProvider({
+      const selected = await strategy.selectProvider({
         mode: 'standard',
       });
 
       // AIProviderInfo returns healthScore, not reason
-      expect(any: any).toBeDefined();
-      expect(any: any).toBe('number');
+      expect(selected.healthScore).toBeDefined();
+      expect(typeof selected.healthScore).toBe('number');
     });
 
     it('should calculate health score in range', async () => {
-      const selected = await strategy?.selectProvider({
+      const selected = await strategy.selectProvider({
         mode: 'cognitive',
         requiresCode: true,
       });
 
-      // healthScore is 0.5-1.0 (any: any)
-      expect(any: any).toBeGreaterThanOrEqual(0);
-      expect(any: any).toBeLessThanOrEqual(1);
+      // healthScore is 0.5-1.0 (confidence range in implementation)
+      expect(selected.healthScore).toBeGreaterThanOrEqual(0);
+      expect(selected.healthScore).toBeLessThanOrEqual(1);
     });
   });
 
@@ -123,33 +123,33 @@ describe('AIStrategy', () => {
 
   describe('Available Providers', () => {
     beforeEach(async () => {
-      await strategy?.initialize();
+      await strategy.initialize();
     });
 
     it('should get available providers', () => {
       // getAvailableProviders is synchronous
-      const providers = strategy?.getAvailableProviders();
+      const providers = strategy.getAvailableProviders();
 
-      expect(any: any);
-      expect(any: any).toBeGreaterThan(0);
+      expect(Array.isArray(providers)).toBe(true);
+      expect(providers.length).toBeGreaterThan(0);
     });
 
     it('should include provider details', () => {
-      const providers = strategy?.getAvailableProviders();
-      const first = providers?.[0];
+      const providers = strategy.getAvailableProviders();
+      const first = providers[0];
 
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
+      expect(first.id).toBeDefined();
+      expect(first.name).toBeDefined();
       // AIProviderInfo uses isAvailable, not available
-      expect(any: any).toBe('boolean');
+      expect(typeof first.isAvailable).toBe('boolean');
     });
 
     it('should include health scores', () => {
-      const providers = strategy?.getAvailableProviders();
-      const withHealth = providers?.find(any: any);
+      const providers = strategy.getAvailableProviders();
+      const withHealth = providers.find(p => p.healthScore !== undefined);
 
-      expect(any: any).toBeDefined();
-      expect(any: any).toBe('number');
+      expect(withHealth).toBeDefined();
+      expect(typeof withHealth?.healthScore).toBe('number');
     });
   });
 
@@ -159,44 +159,44 @@ describe('AIStrategy', () => {
 
   describe('Execution', () => {
     beforeEach(async () => {
-      await strategy?.initialize();
+      await strategy.initialize();
     });
 
     it('should execute with provider', async () => {
-      // executeWithProvider takes (any: any)
-      const response = await strategy?.executeWithProvider('ollama', 'Hello');
+      // executeWithProvider takes (providerId: string, prompt: string)
+      const response = await strategy.executeWithProvider('ollama', 'Hello');
 
-      expect(any: any).toBeDefined();
-      expect(any: any).toHaveProperty('response');
-      expect(any: any).toBe('string');
+      expect(response).toBeDefined();
+      expect(response).toHaveProperty('response');
+      expect(typeof response.response).toBe('string');
     });
 
     it('should execute with different provider', async () => {
-      const response = await strategy?.executeWithProvider('anthropic', 'Test');
+      const response = await strategy.executeWithProvider('anthropic', 'Test');
 
-      expect(any: any).toBeDefined();
-      expect(any: any).toHaveProperty('response');
+      expect(response).toBeDefined();
+      expect(response).toHaveProperty('response');
     });
 
     it('should handle execution errors', async () => {
       // Invalid provider should fail gracefully
-      const result = await strategy?.executeWithProvider(
+      const result = await strategy.executeWithProvider(
         'invalid-provider',
         'Test prompt'
       );
 
-      // Should still return a response object (any: any)
-      expect(any: any).toBeDefined();
-      expect(any: any).toBe('string');
+      // Should still return a response object (fallback behavior)
+      expect(result).toBeDefined();
+      expect(typeof result.response).toBe('string');
     });
 
     it('should return a non-empty response', async () => {
-      const response = await strategy?.executeWithProvider('ollama', 'Stream test');
+      const response = await strategy.executeWithProvider('ollama', 'Stream test');
 
-      expect(any: any).toBeDefined();
-      expect(any: any).toBe('string');
-      expect(any: any).toBeGreaterThan(0);
-      expect(any: any).not?.toContain('Stub response');
+      expect(response).toBeDefined();
+      expect(typeof response.response).toBe('string');
+      expect(response.response.length).toBeGreaterThan(0);
+      expect(response.response).not.toContain('Stub response');
     });
   });
 
@@ -206,32 +206,32 @@ describe('AIStrategy', () => {
 
   describe('Dual Mode Operation', () => {
     it('should switch to cognitive mode', async () => {
-      await strategy?.initialize(); // Mode cognitive via selectProvider criteria
+      await strategy.initialize(); // Mode cognitive via selectProvider criteria
 
-      const selected = await strategy?.selectProvider({
+      const selected = await strategy.selectProvider({
         mode: 'cognitive',
       });
 
       // AIProviderInfo returns 'id' field, not 'provider'
-      expect(any: any).toMatch(/anthropic|openai|google/);
+      expect(selected.id).toMatch(/anthropic|openai|google/);
     });
 
     it('should use standard mode by default', async () => {
-      await strategy?.initialize();
+      await strategy.initialize();
 
-      const selected = await strategy?.selectProvider({});
+      const selected = await strategy.selectProvider({});
 
       // AIProviderInfo returns 'id' field, not 'provider'
-      expect(any: any).toBe('ollama');
+      expect(selected.id).toBe('ollama');
     });
 
     it('should execute in cognitive mode', async () => {
-      await strategy?.initialize(); // Mode cognitive via selectProvider criteria
+      await strategy.initialize(); // Mode cognitive via selectProvider criteria
 
-      // executeWithProvider takes (any: any) - string params
-      const response = await strategy?.executeWithProvider('anthropic', 'Cognitive test');
+      // executeWithProvider takes (providerId, prompt) - string params
+      const response = await strategy.executeWithProvider('anthropic', 'Cognitive test');
 
-      expect(any: any).toBeDefined();
+      expect(response).toBeDefined();
     });
   });
 
@@ -241,29 +241,29 @@ describe('AIStrategy', () => {
 
   describe('Health Monitoring', () => {
     beforeEach(async () => {
-      await strategy?.initialize();
+      await strategy.initialize();
     });
 
     it('should check health', async () => {
-      const health = await strategy?.checkHealth();
+      const health = await strategy.checkHealth();
 
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeGreaterThanOrEqual(0);
+      expect(health.status).toBeDefined();
+      expect(health.score).toBeGreaterThanOrEqual(0);
     });
 
     it('should aggregate health from both modes', async () => {
-      await strategy?.initialize(); // Mode cognitive via selectProvider criteria
+      await strategy.initialize(); // Mode cognitive via selectProvider criteria
 
-      const health = await strategy?.checkHealth();
+      const health = await strategy.checkHealth();
 
-      expect(any: any).toBeDefined();
+      expect(health.details).toBeDefined();
     });
 
     it('should get health score', () => {
-      const score = strategy?.getHealthScore();
+      const score = strategy.getHealthScore();
 
-      expect(any: any).toBeGreaterThanOrEqual(0);
-      expect(any: any).toBeLessThanOrEqual(100);
+      expect(score).toBeGreaterThanOrEqual(0);
+      expect(score).toBeLessThanOrEqual(100);
     });
   });
 
@@ -273,39 +273,39 @@ describe('AIStrategy', () => {
 
   describe('Metrics', () => {
     beforeEach(async () => {
-      await strategy?.initialize();
+      await strategy.initialize();
     });
 
     it('should record metrics', async () => {
-      // executeWithProvider takes (any: any) - string params
-      await strategy?.executeWithProvider('ollama', 'Test');
+      // executeWithProvider takes (providerId, prompt) - string params
+      await strategy.executeWithProvider('ollama', 'Test');
 
-      const metrics = strategy?.getMetrics();
-      expect(any: any).toBeGreaterThan(0);
+      const metrics = strategy.getMetrics();
+      expect(metrics.length).toBeGreaterThan(0);
     });
 
     it('should get metrics summary', async () => {
-      await strategy?.selectProvider({ mode: 'standard' });
+      await strategy.selectProvider({ mode: 'standard' });
 
-      const summary = strategy?.getSummary();
-      expect(any: any).toBeGreaterThan(0);
+      const summary = strategy.getSummary();
+      expect(summary.totalRequests).toBeGreaterThan(0);
     });
 
     it('should aggregate metrics from both modes', async () => {
-      await strategy?.initialize(); // Mode cognitive via selectProvider criteria
-      // executeWithProvider takes (any: any) - string params
-      await strategy?.executeWithProvider('anthropic', 'Test');
+      await strategy.initialize(); // Mode cognitive via selectProvider criteria
+      // executeWithProvider takes (providerId, prompt) - string params
+      await strategy.executeWithProvider('anthropic', 'Test');
 
-      const summary = strategy?.getSummary();
-      expect(any: any).toBeGreaterThan(0);
+      const summary = strategy.getSummary();
+      expect(summary.totalRequests).toBeGreaterThan(0);
     });
 
     it('should reset metrics', async () => {
-      await strategy?.selectProvider({ mode: 'standard' });
-      strategy?.reset();
+      await strategy.selectProvider({ mode: 'standard' });
+      strategy.reset();
 
-      const metrics = strategy?.getMetrics();
-      expect(any: any).toBe(0);
+      const metrics = strategy.getMetrics();
+      expect(metrics.length).toBe(0);
     });
   });
 
@@ -315,37 +315,37 @@ describe('AIStrategy', () => {
 
   describe('Strategy Execute', () => {
     beforeEach(async () => {
-      await strategy?.initialize();
+      await strategy.initialize();
     });
 
     it('should execute selectProvider operation', async () => {
-      const result = await strategy?.execute('selectProvider', {
+      const result = await strategy.execute('selectProvider', {
         criteria: { mode: 'standard' },
       });
 
-      expect(any: any).toBeDefined();
+      expect(result).toBeDefined();
     });
 
     it('should execute getAvailableProviders operation', async () => {
-      const result = await strategy?.execute('getAvailableProviders', {});
+      const result = await strategy.execute('getAvailableProviders', {});
 
-      expect(any: any);
-      expect(any: any);
+      expect(result.success).toBe(true);
+      expect(Array.isArray(result.data)).toBe(true);
     });
 
     it('should execute executeWithProvider operation', async () => {
-      const result = await strategy?.execute('executeWithProvider', {
+      const result = await strategy.execute('executeWithProvider', {
         provider: 'ollama',
         messages: [{ role: 'user', content: 'Test' }],
       });
 
-      expect(any: any).toBeDefined();
+      expect(result).toBeDefined();
     });
 
     it('should handle invalid operation', async () => {
-      const result = await strategy?.execute('invalidOp', {});
-      expect(any: any);
-      expect(any: any).toContain('Unknown AI operation');
+      const result = await strategy.execute('invalidOp', {});
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('Unknown AI operation');
     });
   });
 
@@ -355,17 +355,17 @@ describe('AIStrategy', () => {
 
   describe('Shutdown', () => {
     it('should shutdown gracefully', async () => {
-      await strategy?.initialize();
-      await strategy?.shutdown();
+      await strategy.initialize();
+      await strategy.shutdown();
 
-      expect(any: any);
+      expect(strategy.isInitialized()).toBe(false);
     });
 
     it('should shutdown both modes', async () => {
-      await strategy?.initialize(); // Mode cognitive via selectProvider criteria
-      await strategy?.shutdown();
+      await strategy.initialize(); // Mode cognitive via selectProvider criteria
+      await strategy.shutdown();
 
-      expect(any: any);
+      expect(strategy.isInitialized()).toBe(false);
     });
   });
 });

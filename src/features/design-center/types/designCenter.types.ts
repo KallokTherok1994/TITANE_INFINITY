@@ -52,7 +52,7 @@ export interface TypographyTokens {
   fontFamily: string;
   /** Famille de police monospace */
   fontFamilyMono: string;
-  /** Taille de base (any: any) */
+  /** Taille de base (small/medium/large) */
   fontSize: 'small' | 'medium' | 'large';
   /** Facteur d'échelle de police (0.8 - 1.4) */
   fontScale: number;
@@ -186,10 +186,10 @@ export interface UIThemeContextState {
   /** En cours de chargement */
   isLoading: boolean;
   /** Erreur éventuelle */
-  error??: string | null;
-  /** Thème modifié (any: any) */
+  error: string | null;
+  /** Thème modifié (non sauvegardé) */
   isDirty: boolean;
-  /** Version précédente (any: any) */
+  /** Version précédente (pour undo) */
   previousTokens: UIThemeTokens | null;
 }
 
@@ -267,7 +267,7 @@ export interface UICommandResult {
   success: boolean;
   /** Message */
   message: string;
-  /** Valeur précédente (any: any) */
+  /** Valeur précédente (pour undo) */
   previousValue?: unknown;
   /** Valeur actuelle */
   currentValue?: unknown;
@@ -277,7 +277,7 @@ export interface UICommandResult {
  * Autorisation pour commandes IA
  */
 export interface UICommandAuthorization {
-  /** Utilisateur autorisé (any: any) */
+  /** Utilisateur autorisé (Kevin uniquement) */
   authorizedUser: 'kevin';
   /** ID de session */
   sessionId: string;
@@ -299,7 +299,7 @@ export interface DesignCenterTab {
   id: string;
   /** Libellé */
   label: string;
-  /** Icône (any: any) */
+  /** Icône (emoji ou composant) */
   icon: string;
   /** Description */
   description: string;
@@ -310,7 +310,7 @@ export interface DesignCenterTab {
 /**
  * Onglets disponibles
  */
-export const DESIGN_CENTER_TABS: DesignCenterTab?.[] = [
+export const DESIGN_CENTER_TABS: DesignCenterTab[] = [
   {
     id: 'design-system',
     label: 'Design System',
@@ -408,18 +408,18 @@ export const DEFAULT_UI_THEME_TOKENS: UIThemeTokens = {
 /**
  * Vérifie si un objet est un UIThemeTokens valide
  */
-export function isValidUIThemeTokens(any: any): obj is UIThemeTokens {
+export function isValidUIThemeTokens(obj: unknown): obj is UIThemeTokens {
   if (!obj || typeof obj !== 'object') return false;
   const tokens = obj as UIThemeTokens;
   return (
-    typeof tokens?.version === 'string' &&
-    typeof tokens?.name === 'string' &&
-    typeof tokens?.colors === 'object' &&
-    typeof tokens?.colors?.primary === 'string' &&
-    typeof tokens?.typography === 'object' &&
-    typeof tokens?.spacing === 'object' &&
-    typeof tokens?.borders === 'object' &&
-    typeof tokens?.animations === 'object'
+    typeof tokens.version === 'string' &&
+    typeof tokens.name === 'string' &&
+    typeof tokens.colors === 'object' &&
+    typeof tokens.colors.primary === 'string' &&
+    typeof tokens.typography === 'object' &&
+    typeof tokens.spacing === 'object' &&
+    typeof tokens.borders === 'object' &&
+    typeof tokens.animations === 'object'
   );
 }
 
@@ -430,12 +430,12 @@ export function mergeWithDefaults(partial: Partial<UIThemeTokens>): UIThemeToken
   return {
     ...DEFAULT_UI_THEME_TOKENS,
     ...partial,
-    colors: { ...DEFAULT_UI_THEME_TOKENS?.colors, ...partial?.colors },
-    typography: { ...DEFAULT_UI_THEME_TOKENS?.typography, ...partial?.typography },
-    spacing: { ...DEFAULT_UI_THEME_TOKENS?.spacing, ...partial?.spacing },
-    borders: { ...DEFAULT_UI_THEME_TOKENS?.borders, ...partial?.borders },
-    animations: { ...DEFAULT_UI_THEME_TOKENS?.animations, ...partial?.animations },
-    contrast: { ...DEFAULT_UI_THEME_TOKENS?.contrast, ...partial?.contrast },
-    shadows: { ...DEFAULT_UI_THEME_TOKENS?.shadows, ...partial?.shadows },
+    colors: { ...DEFAULT_UI_THEME_TOKENS.colors, ...partial.colors },
+    typography: { ...DEFAULT_UI_THEME_TOKENS.typography, ...partial.typography },
+    spacing: { ...DEFAULT_UI_THEME_TOKENS.spacing, ...partial.spacing },
+    borders: { ...DEFAULT_UI_THEME_TOKENS.borders, ...partial.borders },
+    animations: { ...DEFAULT_UI_THEME_TOKENS.animations, ...partial.animations },
+    contrast: { ...DEFAULT_UI_THEME_TOKENS.contrast, ...partial.contrast },
+    shadows: { ...DEFAULT_UI_THEME_TOKENS.shadows, ...partial.shadows },
   };
 }

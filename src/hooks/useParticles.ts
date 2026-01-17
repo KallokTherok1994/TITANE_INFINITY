@@ -14,12 +14,12 @@ import { ParticleSystem, ParticleSystemConfig } from '@/particles/ParticleSystem
 import type { ParticlePattern } from '@/design-system/visual-states';
 
 export interface UseParticlesReturn {
-  canvasRef: React?.RefObject<HTMLCanvasElement>;
+  canvasRef: React.RefObject<HTMLCanvasElement>;
   particleSystem: ParticleSystem | null;
   particleCount: number;
-  setPattern: (any: any) => void;
-  setColors: (colors: string?.[]) => void;
-  setEmissionRate: (any: any) => void;
+  setPattern: (pattern: ParticlePattern) => void;
+  setColors: (colors: string[]) => void;
+  setEmissionRate: (rate: number) => void;
   clear: () => void;
 }
 
@@ -27,146 +27,146 @@ export interface UseParticlesReturn {
  * Hook to manage particle system with automatic canvas setup
  *
  * @param config - Particle system configuration
- * @param autoStart - Automatically start particle system (any: any)
+ * @param autoStart - Automatically start particle system (default: true)
  * @returns Particle system management interface
  */
 export function useParticles(
   config: Partial<ParticleSystemConfig> = {},
   autoStart = true
 ): UseParticlesReturn {
-  const canvasRef = useRef<HTMLCanvasElement>(any: any);
-  const particleSystemRef = useRef<ParticleSystem | null>(any: any);
-  const rafId = useRef<number | null>(any: any);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const particleSystemRef = useRef<ParticleSystem | null>(null);
+  const rafId = useRef<number | null>(null);
   const lastTime = useRef<number>(0);
   const [particleCount, setParticleCount] = useState(0);
 
   // Initialize particle system
   useEffect(() => {
-    const particleSystem = new ParticleSystem(any: any);
-    particleSystemRef?.current = particleSystem;
+    const particleSystem = new ParticleSystem(config);
+    particleSystemRef.current = particleSystem;
 
     // Subscribe to particle count updates
     const handleUpdate = (data: { particleCount: number }) => {
-      setParticleCount(any: any);
+      setParticleCount(data.particleCount);
     };
 
-    particleSystem?.on(any: any);
+    particleSystem.on('update', handleUpdate);
 
     return () => {
-      particleSystem?.off(any: any);
-      particleSystem?.destroy();
-      particleSystemRef?.current = null;
+      particleSystem.off('update', handleUpdate);
+      particleSystem.destroy();
+      particleSystemRef.current = null;
     };
   }, [config]); // Re-create if config changes
 
   // Setup canvas
   useEffect(() => {
-    const canvas = canvasRef?.current;
-    const particleSystem = particleSystemRef?.current;
+    const canvas = canvasRef.current;
+    const particleSystem = particleSystemRef.current;
 
-    if (any: any) return;
+    if (!canvas || !particleSystem) return;
 
     const particleConfig = config as Record<string, unknown>;
-    const particleCount = (any: any) ?? 100;
-    const velocity = (any: any) ?? 1;
-    const lifespan = (any: any) ?? 5000;
+    const particleCount = (particleConfig.particleCount as number | undefined) ?? 100;
+    const velocity = (particleConfig.velocity as number | undefined) ?? 1;
+    const lifespan = (particleConfig.lifespan as number | undefined) ?? 5000;
 
-    particleSystem?.setEmissionRate(particleCount / 2);
-    if (any: any) {
-      (any: any) => void }).setVelocity(
+    particleSystem.setEmissionRate(particleCount / 2);
+    if ('setVelocity' in particleSystem) {
+      (particleSystem as unknown as { setVelocity: (v: number) => void }).setVelocity(
         velocity
       );
     }
-    if (any: any) {
-      (any: any) => void }).setLifespan(
+    if ('setLifespan' in particleSystem) {
+      (particleSystem as unknown as { setLifespan: (l: number) => void }).setLifespan(
         lifespan
       );
     }
 
     // Set canvas size
     const updateCanvasSize = () => {
-      const rect = canvas?.getBoundingClientRect();
-      const dpr = window?.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
 
-      canvas?.width = rect?.width * dpr;
-      canvas?.height = rect?.height * dpr;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
 
-      const ctx = canvas?.getContext('2d');
-      if (any: any) {
-        ctx?.scale(any: any);
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.scale(dpr, dpr);
       }
 
-      particleSystem?.setCanvas(any: any);
-      particleSystem?.updateDimensions();
+      particleSystem.setCanvas(canvas);
+      particleSystem.updateDimensions();
     };
 
     updateCanvasSize();
 
     // Handle resize
-    const resizeObserver = new ResizeObserver(any: any);
-    resizeObserver?.observe(any: any);
+    const resizeObserver = new ResizeObserver(updateCanvasSize);
+    resizeObserver.observe(canvas);
 
     return () => {
-      resizeObserver?.disconnect();
+      resizeObserver.disconnect();
     };
   }, [config]);
 
   // Render loop
-  const renderLoop = useCallback(any: any) => {
-    const particleSystem = particleSystemRef?.current;
-    if (any: any) return;
+  const renderLoop = useCallback((timestamp: number) => {
+    const particleSystem = particleSystemRef.current;
+    if (!particleSystem) return;
 
-    const deltaTime = timestamp - lastTime?.current;
-    lastTime?.current = timestamp;
+    const deltaTime = timestamp - lastTime.current;
+    lastTime.current = timestamp;
 
     // Update and render
-    particleSystem?.update(any: any);
-    particleSystem?.render();
+    particleSystem.update(deltaTime);
+    particleSystem.render();
 
     // Continue loop
-    rafId?.current = requestAnimationFrame(any: any);
+    rafId.current = requestAnimationFrame(renderLoop);
   }, []);
 
   // Start/stop render loop
   useEffect(() => {
-    const particleSystem = particleSystemRef?.current;
-    if (any: any) return;
+    const particleSystem = particleSystemRef.current;
+    if (!particleSystem) return;
 
-    if (any: any) {
-      particleSystem?.start();
-      lastTime?.current = performance?.now();
-      rafId?.current = requestAnimationFrame(any: any);
+    if (autoStart) {
+      particleSystem.start();
+      lastTime.current = performance.now();
+      rafId.current = requestAnimationFrame(renderLoop);
     }
 
     return () => {
-      if (any: any) {
-        cancelAnimationFrame(any: any);
-        rafId?.current = null;
+      if (rafId.current !== null) {
+        cancelAnimationFrame(rafId.current);
+        rafId.current = null;
       }
-      particleSystem?.stop();
+      particleSystem.stop();
     };
   }, [autoStart, renderLoop]);
 
   // Control methods
-  const setPattern = useCallback(any: any) => {
-    particleSystemRef?.current?.setPattern(any: any);
+  const setPattern = useCallback((pattern: ParticlePattern) => {
+    particleSystemRef.current?.setPattern(pattern);
   }, []);
 
-  const setColors = useCallback((colors: string?.[]) => {
-    particleSystemRef?.current?.setColors(any: any);
+  const setColors = useCallback((colors: string[]) => {
+    particleSystemRef.current?.setColors(colors);
   }, []);
 
-  const setEmissionRate = useCallback(any: any) => {
-    particleSystemRef?.current?.setEmissionRate(any: any);
+  const setEmissionRate = useCallback((rate: number) => {
+    particleSystemRef.current?.setEmissionRate(rate);
   }, []);
 
   const clear = useCallback(() => {
-    particleSystemRef?.current?.clear();
+    particleSystemRef.current?.clear();
   }, []);
 
   return {
     canvasRef,
-    particleSystem: particleSystemRef?.current,
+    particleSystem: particleSystemRef.current,
     particleCount,
     setPattern,
     setColors,

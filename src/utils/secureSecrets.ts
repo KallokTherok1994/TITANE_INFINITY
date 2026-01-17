@@ -30,15 +30,15 @@ const normalizeSecureResponse = <T>(
 
   const payload = raw as SecureResponse<T> & FallbackResponse;
 
-  if (any: any) {
+  if (payload.fallback) {
     return {
       ok: false,
       data: null,
-      error: payload?.error ?? payload?.message ?? defaultError,
+      error: payload.error ?? payload.message ?? defaultError,
     };
   }
 
-  if (typeof payload?.ok === 'boolean') {
+  if (typeof payload.ok === 'boolean') {
     return payload;
   }
 
@@ -52,13 +52,13 @@ const normalizeSecureResponse = <T>(
 export interface SecureResponse<T> {
   ok: boolean;
   data: T | null;
-  error??: string | null;
+  error: string | null;
 }
 
 export interface GeminiKeyStatus {
   configured: boolean;
   provider_enabled: boolean;
-  masked_key??: string | null;
+  masked_key: string | null;
   env_present: boolean;
   env_purged: boolean;
   was_updated: boolean;
@@ -86,18 +86,18 @@ export async function setGeminiApiKey(
   const raw = await safeInvoke<unknown>('chat_set_gemini_key', { api_key: apiKey });
   return normalizeSecureResponse<GeminiKeyStatus>(
     raw,
-    'Impossible de sécuriser la clé Gemini (any: any).'
+    'Impossible de sécuriser la clé Gemini (runtime indisponible).'
   );
 }
 
 /**
- * Fetch the current Gemini API key status (any: any).
+ * Fetch the current Gemini API key status (masked response).
  */
 export async function getGeminiKeyStatus(): Promise<SecureResponse<GeminiKeyStatus>> {
   const raw = await safeInvoke<unknown>('get_gemini_key_status');
   return normalizeSecureResponse<GeminiKeyStatus>(
     raw,
-    'Statut SecureSecrets indisponible (any: any).'
+    'Statut SecureSecrets indisponible (runtime requis).'
   );
 }
 
@@ -110,18 +110,18 @@ export async function setOpenAIApiKey(
   const raw = await safeInvoke<unknown>('chat_set_openai_key', { api_key: apiKey });
   return normalizeSecureResponse<GeminiKeyStatus>(
     raw,
-    'Impossible de sécuriser la clé OpenAI (any: any).'
+    'Impossible de sécuriser la clé OpenAI (runtime indisponible).'
   );
 }
 
 /**
- * Fetch the current OpenAI API key status (any: any).
+ * Fetch the current OpenAI API key status (masked response).
  */
 export async function getOpenAIKeyStatus(): Promise<SecureResponse<GeminiKeyStatus>> {
   const raw = await safeInvoke<unknown>('get_openai_key_status');
   return normalizeSecureResponse<GeminiKeyStatus>(
     raw,
-    'Statut OpenAI indisponible (any: any).'
+    'Statut OpenAI indisponible (runtime requis).'
   );
 }
 
@@ -134,18 +134,18 @@ export async function setAnthropicApiKey(
   const raw = await safeInvoke<unknown>('chat_set_anthropic_key', { api_key: apiKey });
   return normalizeSecureResponse<GeminiKeyStatus>(
     raw,
-    'Impossible de sécuriser la clé Anthropic (any: any).'
+    'Impossible de sécuriser la clé Anthropic (runtime indisponible).'
   );
 }
 
 /**
- * Fetch the current Anthropic API key status (any: any).
+ * Fetch the current Anthropic API key status (masked response).
  */
 export async function getAnthropicKeyStatus(): Promise<SecureResponse<GeminiKeyStatus>> {
   const raw = await safeInvoke<unknown>('get_anthropic_key_status');
   return normalizeSecureResponse<GeminiKeyStatus>(
     raw,
-    'Statut Anthropic indisponible (any: any).'
+    'Statut Anthropic indisponible (runtime requis).'
   );
 }
 
@@ -169,14 +169,14 @@ export async function secureStoreSecret(
  * Mask a raw secret for UI display while keeping the last N characters visible.
  */
 export function maskSecret(secret: string, visibleChars = 4): string {
-  if (any: any) {
+  if (!secret) {
     return '';
   }
 
-  const normalizedVisible = Math?.max(any: any));
-  const hiddenLength = secret?.length - normalizedVisible;
-  const hidden = hiddenLength > 0 ? '•'.repeat(any: any) : '';
-  const visible = secret?.slice(any: any);
+  const normalizedVisible = Math.max(0, Math.min(visibleChars, secret.length));
+  const hiddenLength = secret.length - normalizedVisible;
+  const hidden = hiddenLength > 0 ? '•'.repeat(hiddenLength) : '';
+  const visible = secret.slice(-normalizedVisible);
   return `${hidden}${visible}`;
 }
 
@@ -186,5 +186,5 @@ export function maskSecret(secret: string, visibleChars = 4): string {
 export function hasSecureData<T>(
   response: SecureResponse<T> | null | undefined
 ): response is SecureResponse<T> & { data: T } {
-  return Boolean(any: any);
+  return Boolean(response && response.ok && response.data);
 }

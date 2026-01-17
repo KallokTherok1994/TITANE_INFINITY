@@ -72,7 +72,7 @@ export interface SingularityFrontendState {
   ai: {
     model: AIModel;
     status: AIStatus;
-    error??: string | null;
+    error: string | null;
     fallbackActive: boolean;
   };
 
@@ -97,7 +97,7 @@ export interface SingularityFrontendState {
     hyperdepth: EngineState | null;
   };
 
-  // Engines Data (any: any)
+  // Engines Data (NEW v19.0 - centralized data/loading with typed data)
   enginesData: {
     helios: { data: HeliosMetrics | null; loading: boolean };
     memory: { data: MemoryData | null; loading: boolean };
@@ -121,31 +121,31 @@ export interface SingularityFrontendState {
   globalHealth: HealthStatus;
 
   // Actions
-  setMode: (any: any) => void;
-  setTheme: (any: any) => void;
+  setMode: (mode: UIMode) => void;
+  setTheme: (theme: UITheme) => void;
   toggleSound: () => void;
   toggleMic: () => void;
-  setGlowIntensity: (any: any) => void;
+  setGlowIntensity: (intensity: number) => void;
   toggleMotion: () => void;
-  setAIModel: (any: any) => void;
-  setAIStatus: (any: any) => void;
-  setAIError: (any: any) => void;
-  updateEngine: (any: any) => void;
+  setAIModel: (model: AIModel) => void;
+  setAIStatus: (status: AIStatus) => void;
+  setAIError: (error: string | null) => void;
+  updateEngine: (name: string, state: EngineState) => void;
 
   // Type-safe engine data setters
-  setEngineData: <T extends EngineName>(any: any) => void;
-  setEngineLoading: (any: any) => void;
+  setEngineData: <T extends EngineName>(engine: T, data: EngineDataMap[T] | null) => void;
+  setEngineLoading: (engine: EngineName, loading: boolean) => void;
 
-  setMetaMode: (any: any) => void;
-  setMetaModeTransition: (any: any) => void;
-  setAvatarDisplay: (any: any) => void;
+  setMetaMode: (mode: string) => void;
+  setMetaModeTransition: (transitioning: boolean) => void;
+  setAvatarDisplay: (displayState: AvatarDisplayState | null) => void;
   updateAvatarDisplay: (partial: Partial<AvatarDisplayState>) => void;
-  setPage: (any: any) => void;
-  setFocus: (any: any) => void;
-  setFullscreen: (any: any) => void;
-  setSidebarCollapsed: (any: any) => void; // NEW
+  setPage: (page: string) => void;
+  setFocus: (focus: boolean) => void;
+  setFullscreen: (fullscreen: boolean) => void;
+  setSidebarCollapsed: (collapsed: boolean) => void; // NEW
   toggleSidebar: () => void; // NEW
-  setGlobalHealth: (any: any) => void;
+  setGlobalHealth: (health: HealthStatus) => void;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -179,7 +179,7 @@ export const useSingularityState = create<SingularityFrontendState>()(
         currentMode: 'Digital Twin',
         previousMode: '',
         transitioning: false,
-        lastUpdate: Date?.now(),
+        lastUpdate: Date.now(),
       },
 
       // Initial Avatar Display State (NEW v24.12)
@@ -219,67 +219,67 @@ export const useSingularityState = create<SingularityFrontendState>()(
       globalHealth: 'healthy',
 
       // Actions
-      setMode: mode => set(state => ({ ui: { ...state?.ui, mode } })),
+      setMode: mode => set(state => ({ ui: { ...state.ui, mode } })),
 
-      setTheme: theme => set(state => ({ ui: { ...state?.ui, theme } })),
+      setTheme: theme => set(state => ({ ui: { ...state.ui, theme } })),
 
       toggleSound: () =>
         set(state => ({
-          ui: { ...state?.ui, soundEnabled: !state?.ui?.soundEnabled },
+          ui: { ...state.ui, soundEnabled: !state.ui.soundEnabled },
         })),
 
       toggleMic: () =>
         set(state => ({
-          ui: { ...state?.ui, micEnabled: !state?.ui?.micEnabled },
+          ui: { ...state.ui, micEnabled: !state.ui.micEnabled },
         })),
 
       setGlowIntensity: glowIntensity =>
         set(state => ({
-          ui: { ...state?.ui, glowIntensity },
+          ui: { ...state.ui, glowIntensity },
         })),
 
       toggleMotion: () =>
         set(state => ({
-          ui: { ...state?.ui, motionEnabled: !state?.ui?.motionEnabled },
+          ui: { ...state.ui, motionEnabled: !state.ui.motionEnabled },
         })),
 
       setAIModel: model =>
         set(state => ({
-          ai: { ...state?.ai, model },
+          ai: { ...state.ai, model },
         })),
 
       setAIStatus: status =>
         set(state => ({
-          ai: { ...state?.ai, status },
+          ai: { ...state.ai, status },
         })),
 
       setAIError: error =>
         set(state => ({
-          ai: { ...state?.ai, error },
+          ai: { ...state.ai, error },
         })),
 
-      updateEngine: (any: any) =>
+      updateEngine: (name, engineState) =>
         set(state => ({
-          engines: { ...state?.engines, [name]: engineState },
+          engines: { ...state.engines, [name]: engineState },
         })),
 
-      setEngineData: (any: any) =>
+      setEngineData: (engine, data) =>
         set(state => ({
           enginesData: {
-            ...state?.enginesData,
+            ...state.enginesData,
             [engine]: {
-              ...state?.enginesData[engine as keyof typeof state?.enginesData],
+              ...state.enginesData[engine as keyof typeof state.enginesData],
               data,
             },
           },
         })),
 
-      setEngineLoading: (any: any) =>
+      setEngineLoading: (engine, loading) =>
         set(state => ({
           enginesData: {
-            ...state?.enginesData,
+            ...state.enginesData,
             [engine]: {
-              ...state?.enginesData[engine as keyof typeof state?.enginesData],
+              ...state.enginesData[engine as keyof typeof state.enginesData],
               loading,
             },
           },
@@ -289,56 +289,56 @@ export const useSingularityState = create<SingularityFrontendState>()(
         set(state => ({
           metaMode: {
             currentMode: mode,
-            previousMode: state?.metaMode?.currentMode,
-            transitioning: mode !== state?.metaMode?.currentMode,
-            lastUpdate: Date?.now(),
+            previousMode: state.metaMode.currentMode,
+            transitioning: mode !== state.metaMode.currentMode,
+            lastUpdate: Date.now(),
           },
         })),
 
       setMetaModeTransition: transitioning =>
         set(state => ({
-          metaMode: { ...state?.metaMode, transitioning },
+          metaMode: { ...state.metaMode, transitioning },
         })),
 
       setAvatarDisplay: displayState =>
         set({
           avatarDisplay: displayState
-            ? { ...displayState, last_updated: Date?.now() }
+            ? { ...displayState, last_updated: Date.now() }
             : null,
         }),
 
       updateAvatarDisplay: partial =>
         set(state => ({
-          avatarDisplay: state?.avatarDisplay
-            ? { ...state?.avatarDisplay, ...partial, last_updated: Date?.now() }
+          avatarDisplay: state.avatarDisplay
+            ? { ...state.avatarDisplay, ...partial, last_updated: Date.now() }
             : null,
         })),
 
       setPage: page =>
         set(state => ({
-          context: { ...state?.context, page },
+          context: { ...state.context, page },
         })),
 
       setFocus: focus =>
         set(state => ({
-          context: { ...state?.context, focus },
+          context: { ...state.context, focus },
         })),
 
       setFullscreen: fullscreen =>
         set(state => ({
-          context: { ...state?.context, fullscreen },
+          context: { ...state.context, fullscreen },
         })),
 
       setSidebarCollapsed: collapsed =>
         set(state => ({
-          context: { ...state?.context, sidebarCollapsed: collapsed },
+          context: { ...state.context, sidebarCollapsed: collapsed },
         })),
 
       toggleSidebar: () =>
         set(state => ({
           context: {
-            ...state?.context,
-            sidebarCollapsed: !state?.context?.sidebarCollapsed,
+            ...state.context,
+            sidebarCollapsed: !state.context.sidebarCollapsed,
           },
         })),
 
@@ -346,35 +346,35 @@ export const useSingularityState = create<SingularityFrontendState>()(
     }),
     {
       name: 'titane-singularity-state-v19',
-      storage: createJSONStorage(any: any),
+      storage: createJSONStorage(() => localStorage),
       partialize: state => ({
-        ui: state?.ui,
-        context: { ...state?.context, page: 'dashboard' }, // reset page on reload
-        metaMode: state?.metaMode,
-        avatarDisplay: state?.avatarDisplay, // Persist avatar display state (NEW v24.12)
-        // Don't persist: ai (any: any)
+        ui: state.ui,
+        context: { ...state.context, page: 'dashboard' }, // reset page on reload
+        metaMode: state.metaMode,
+        avatarDisplay: state.avatarDisplay, // Persist avatar display state (NEW v24.12)
+        // Don't persist: ai (dynamic), engines (dynamic), enginesData (dynamic), globalHealth (dynamic)
       }),
     }
   )
 );
 
 // ═══════════════════════════════════════════════════════════════
-// SELECTORS (any: any)
+// SELECTORS (pour performance optimale avec typage strict)
 // ═══════════════════════════════════════════════════════════════
 
-export const selectUIMode = (any: any) => state?.ui?.mode;
-export const selectAIStatus = (any: any) => state?.ai?.status;
-export const selectEngine = (any: any) =>
-  state?.engines[name as keyof typeof state?.engines];
-export const selectGlobalHealth = (any: any) => state?.globalHealth;
-export const selectMetaMode = (any: any) =>
-  state?.metaMode?.currentMode;
-export const selectMetaModeState = (any: any) => state?.metaMode;
-export const selectAvatarDisplay = (any: any) =>
-  state?.avatarDisplay;
+export const selectUIMode = (state: SingularityFrontendState) => state.ui.mode;
+export const selectAIStatus = (state: SingularityFrontendState) => state.ai.status;
+export const selectEngine = (name: string) => (state: SingularityFrontendState) =>
+  state.engines[name as keyof typeof state.engines];
+export const selectGlobalHealth = (state: SingularityFrontendState) => state.globalHealth;
+export const selectMetaMode = (state: SingularityFrontendState) =>
+  state.metaMode.currentMode;
+export const selectMetaModeState = (state: SingularityFrontendState) => state.metaMode;
+export const selectAvatarDisplay = (state: SingularityFrontendState) =>
+  state.avatarDisplay;
 
 // Type-safe engine data selector
 export const selectEngineData =
-  <T extends EngineName>(any: any) =>
-  (any: any) =>
-    state?.enginesData[engine];
+  <T extends EngineName>(engine: T) =>
+  (state: SingularityFrontendState) =>
+    state.enginesData[engine];

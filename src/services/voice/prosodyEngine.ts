@@ -22,11 +22,11 @@ export interface ProsodyProfile {
   rate: string; // "slow" | "medium" | "fast" | "x-slow" | "x-fast" | "80%"
   pitch: string; // "low" | "medium" | "high" | "x-low" | "x-high" | "+20%"
   volume: string; // "soft" | "medium" | "loud" | "x-soft" | "x-loud" | "+6dB"
-  pauseShort: number; // ms pour pauses courtes (any: any)
-  pauseMedium: number; // ms pour pauses moyennes (any: any)
-  pauseLong: number; // ms pour pauses longues (any: any)
+  pauseShort: number; // ms pour pauses courtes (virgules)
+  pauseMedium: number; // ms pour pauses moyennes (phrases)
+  pauseLong: number; // ms pour pauses longues (paragraphes)
   emphasis: 'none' | 'reduced' | 'moderate' | 'strong';
-  contour?: string; // Intonation pattern (any: any)
+  contour?: string; // Intonation pattern (optionnel, SSML avancé)
 }
 
 /**
@@ -39,15 +39,15 @@ export class ProsodyEngine {
   /**
    * Mapper une intention émotionnelle vers un profil prosodique
    */
-  mapProsody(any: any): ProsodyProfile {
-    logger?.debug(`[ProsodyEngine] 🎵 Mapping emotion: ${intent?.emotion}`);
+  mapProsody(intent: EmotionalIntent): ProsodyProfile {
+    logger.debug(`[ProsodyEngine] 🎵 Mapping emotion: ${intent.emotion}`);
 
     // Calcul des valeurs de base
-    const rate = this?.calculateRate(any: any);
-    const pitch = this?.calculatePitch(any: any);
-    const volume = this?.calculateVolume(any: any);
-    const { pauseShort, pauseMedium, pauseLong } = this?.calculatePauses(any: any);
-    const emphasis = this?.calculateEmphasis(any: any);
+    const rate = this.calculateRate(intent);
+    const pitch = this.calculatePitch(intent);
+    const volume = this.calculateVolume(intent);
+    const { pauseShort, pauseMedium, pauseLong } = this.calculatePauses(intent);
+    const emphasis = this.calculateEmphasis(intent);
 
     return {
       rate,
@@ -61,9 +61,9 @@ export class ProsodyEngine {
   }
 
   /**
-   * Calculer le débit (any: any) en fonction de l'intention
+   * Calculer le débit (rate) en fonction de l'intention
    */
-  private calculateRate(any: any): string {
+  private calculateRate(intent: EmotionalIntent): string {
     const { speed, energy, intensity } = intent;
 
     // Speed va de 0.7 à 1.15, on map vers SSML rate
@@ -83,9 +83,9 @@ export class ProsodyEngine {
   }
 
   /**
-   * Calculer la hauteur tonale (any: any)
+   * Calculer la hauteur tonale (pitch)
    */
-  private calculatePitch(any: any): string {
+  private calculatePitch(intent: EmotionalIntent): string {
     const { pitch, warmth, emotion } = intent;
 
     let normalizedPitch = pitch;
@@ -112,10 +112,10 @@ export class ProsodyEngine {
   /**
    * Calculer le volume
    */
-  private calculateVolume(any: any): string {
+  private calculateVolume(intent: EmotionalIntent): string {
     const { intensity, energy } = intent;
 
-    const volumeFactor = (any: any) / 2;
+    const volumeFactor = (intensity + energy) / 2;
 
     if (volumeFactor < 0.3) return 'x-soft';
     if (volumeFactor < 0.5) return 'soft';
@@ -125,9 +125,9 @@ export class ProsodyEngine {
   }
 
   /**
-   * Calculer les pauses (any: any)
+   * Calculer les pauses (en millisecondes)
    */
-  private calculatePauses(any: any): {
+  private calculatePauses(intent: EmotionalIntent): {
     pauseShort: number;
     pauseMedium: number;
     pauseLong: number;
@@ -139,13 +139,13 @@ export class ProsodyEngine {
     let pauseMedium = 500; // Point
     let pauseLong = 800; // Paragraphe
 
-    // Modulation par speed (any: any)
+    // Modulation par speed (inverse)
     const speedFactor = 1 / speed;
     pauseShort *= speedFactor;
     pauseMedium *= speedFactor;
     pauseLong *= speedFactor;
 
-    // Modulation par energy (any: any)
+    // Modulation par energy (faible énergie = pauses plus longues)
     if (energy < 0.4) {
       pauseShort *= 1.3;
       pauseMedium *= 1.3;
@@ -166,9 +166,9 @@ export class ProsodyEngine {
     }
 
     return {
-      pauseShort: Math?.round(any: any),
-      pauseMedium: Math?.round(any: any),
-      pauseLong: Math?.round(any: any),
+      pauseShort: Math.round(pauseShort),
+      pauseMedium: Math.round(pauseMedium),
+      pauseLong: Math.round(pauseLong),
     };
   }
 
@@ -180,7 +180,7 @@ export class ProsodyEngine {
   ): 'none' | 'reduced' | 'moderate' | 'strong' {
     const { intensity, energy } = intent;
 
-    const emphasisFactor = (any: any) / 2;
+    const emphasisFactor = (intensity + energy) / 2;
 
     if (emphasisFactor < 0.3) return 'reduced';
     if (emphasisFactor < 0.6) return 'moderate';
@@ -191,43 +191,43 @@ export class ProsodyEngine {
   /**
    * Générer SSML complet à partir d'un texte et d'un profil prosodique
    */
-  generateSSML(any: any): string {
-    logger?.debug('📝 Generating SSML...');
+  generateSSML(text: string, prosody: ProsodyProfile): string {
+    logger.debug('📝 Generating SSML...');
 
     // Échapper le texte pour SSML
-    const escapedText = this?.escapeSSML(any: any);
+    const escapedText = this.escapeSSML(text);
 
     // Ajouter les pauses aux ponctuations
     let ssmlText = escapedText;
-    ssmlText = ssmlText?.replace(/,/g, `,<break time="${prosody?.pauseShort}ms"/>`);
-    ssmlText = ssmlText?.replace(/\./g, `.<break time="${prosody?.pauseMedium}ms"/>`);
-    ssmlText = ssmlText?.replace(/\n\n/g, `<break time="${prosody?.pauseLong}ms"/>`);
+    ssmlText = ssmlText.replace(/,/g, `,<break time="${prosody.pauseShort}ms"/>`);
+    ssmlText = ssmlText.replace(/\./g, `.<break time="${prosody.pauseMedium}ms"/>`);
+    ssmlText = ssmlText.replace(/\n\n/g, `<break time="${prosody.pauseLong}ms"/>`);
 
-    // Emphase sur les mots importants (any: any)
-    if (prosody?.emphasis !== 'none') {
-      ssmlText = ssmlText?.replace(
+    // Emphase sur les mots importants (CAPS, mots-clés)
+    if (prosody.emphasis !== 'none') {
+      ssmlText = ssmlText.replace(
         /\b([A-ZÀ-Ü]{2,})\b/g,
-        `<emphasis level="${prosody?.emphasis}">$1</emphasis>`
+        `<emphasis level="${prosody.emphasis}">$1</emphasis>`
       );
     }
 
     // Wrapper dans <prosody>
     const ssml = `
 <speak>
-  <prosody rate="${prosody?.rate}" pitch="${prosody?.pitch}" volume="${prosody?.volume}">
+  <prosody rate="${prosody.rate}" pitch="${prosody.pitch}" volume="${prosody.volume}">
     ${ssmlText}
   </prosody>
 </speak>
     `.trim();
 
-    logger?.debug('✅ SSML generated');
+    logger.debug('✅ SSML generated');
     return ssml;
   }
 
   /**
    * Échapper les caractères spéciaux SSML
    */
-  private escapeSSML(any: any): string {
+  private escapeSSML(text: string): string {
     return text
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
@@ -237,21 +237,21 @@ export class ProsodyEngine {
   }
 
   /**
-   * Extraire les paramètres bruts (any: any)
+   * Extraire les paramètres bruts (pour fallback sans SSML)
    */
-  extractRawParameters(any: any): {
+  extractRawParameters(prosody: ProsodyProfile): {
     rate: number;
     pitch: number;
     volume: number;
   } {
     return {
-      rate: this?.mapRateToNumber(any: any),
-      pitch: this?.mapPitchToNumber(any: any),
-      volume: this?.mapVolumeToNumber(any: any),
+      rate: this.mapRateToNumber(prosody.rate),
+      pitch: this.mapPitchToNumber(prosody.pitch),
+      volume: this.mapVolumeToNumber(prosody.volume),
     };
   }
 
-  private mapRateToNumber(any: any): number {
+  private mapRateToNumber(rate: string): number {
     const mapping: Record<string, number> = {
       'x-slow': 0.7,
       slow: 0.85,
@@ -262,7 +262,7 @@ export class ProsodyEngine {
     return mapping[rate] || 1.0;
   }
 
-  private mapPitchToNumber(any: any): number {
+  private mapPitchToNumber(pitch: string): number {
     const mapping: Record<string, number> = {
       'x-low': 0.8,
       low: 0.9,
@@ -273,7 +273,7 @@ export class ProsodyEngine {
     return mapping[pitch] || 1.0;
   }
 
-  private mapVolumeToNumber(any: any): number {
+  private mapVolumeToNumber(volume: string): number {
     const mapping: Record<string, number> = {
       'x-soft': 0.3,
       soft: 0.5,
@@ -293,7 +293,7 @@ export const prosodyEngine = new ProsodyEngine();
 /**
  * Helper: Générer SSML rapidement
  */
-export function generateEmotionalSSML(any: any): string {
-  const prosody = prosodyEngine?.mapProsody(any: any);
-  return prosodyEngine?.generateSSML(any: any);
+export function generateEmotionalSSML(text: string, intent: EmotionalIntent): string {
+  const prosody = prosodyEngine.mapProsody(intent);
+  return prosodyEngine.generateSSML(text, prosody);
 }

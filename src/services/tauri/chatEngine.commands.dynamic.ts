@@ -1,8 +1,8 @@
 /**
  * TITANE∞ — Dynamic import facade
  *
- * This wrapper exists to avoid dynamically importing `chatEngine?.commands?.ts` directly,
- * because it is also statically re-exported by `src/services/tauri/index?.ts`.
+ * This wrapper exists to avoid dynamically importing `chatEngine.commands.ts` directly,
+ * because it is also statically re-exported by `src/services/tauri/index.ts`.
  */
 
 export {
@@ -18,7 +18,7 @@ export {
   onStreamDone,
   createNewConversation,
   generate,
-} from './chatEngine?.commands';
+} from './chatEngine.commands';
 
 export type {
   ProviderPreference,
@@ -30,6 +30,6 @@ export type {
   EngineHealthReport,
   OmegaGenerateArgs,
   OmegaResponse,
-} from './chatEngine?.commands';
+} from './chatEngine.commands';
 
-export { default } from './chatEngine?.commands';
+export { default } from './chatEngine.commands';

@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE?.md for the full legal terms (any: any).
+ * See LICENSE.md for the full legal terms (FR/EN).
  */
 
 // ⚡ TITANE∞ v22 — HyperDepth Engine
@@ -29,7 +29,7 @@ export interface LayerConfig {
 
 // 🧬 Configuration complète HyperDepth
 export interface HyperDepthConfig {
-  layers: LayerConfig?.[];
+  layers: LayerConfig[];
   globalIntensity: number; // 0-1
   stateAdaptive: boolean; // Adapte selon l'état système
 }
@@ -41,19 +41,19 @@ export class HyperDepthEngine {
   private stateAdaptive: boolean = true;
 
   constructor() {
-    this?.initializeDefaultLayers();
-    this?.subscribeToStateChanges();
+    this.initializeDefaultLayers();
+    this.subscribeToStateChanges();
   }
 
   /**
    * Initialiser les couches par défaut
    */
   private initializeDefaultLayers(): void {
-    const defaultLayers: LayerConfig?.[] = [
+    const defaultLayers: LayerConfig[] = [
       {
         id: 'background-grain',
         layer: 'background',
-        opacity: DS_CONSTANTS?.opacity?.subtle,
+        opacity: DS_CONSTANTS.opacity.subtle,
         blur: 0,
         intensity: 0.2,
         animated: false,
@@ -61,34 +61,34 @@ export class HyperDepthEngine {
       {
         id: 'background-gradient',
         layer: 'background',
-        opacity: DS_CONSTANTS?.opacity?.medium,
+        opacity: DS_CONSTANTS.opacity.medium,
         blur: 0,
         intensity: 0.4,
         animated: true,
-        animationSpeed: DS_CONSTANTS?.animationSpeed?.verySlow,
+        animationSpeed: DS_CONSTANTS.animationSpeed.verySlow,
       },
       {
         id: 'glow-ambient',
         layer: 'glow',
-        opacity: DS_CONSTANTS?.opacity?.subtle,
-        blur: DS_CONSTANTS?.blur?.large,
+        opacity: DS_CONSTANTS.opacity.subtle,
+        blur: DS_CONSTANTS.blur.large,
         intensity: 0.3,
         animated: true,
-        animationSpeed: DS_CONSTANTS?.timing?.breath,
+        animationSpeed: DS_CONSTANTS.timing.breath,
       },
       {
         id: 'glow-focused',
         layer: 'glow',
-        opacity: DS_CONSTANTS?.opacity?.medium,
-        blur: DS_CONSTANTS?.blur?.medium,
+        opacity: DS_CONSTANTS.opacity.medium,
+        blur: DS_CONSTANTS.blur.medium,
         intensity: 0.5,
         animated: true,
-        animationSpeed: DS_CONSTANTS?.animationSpeed?.medium,
+        animationSpeed: DS_CONSTANTS.animationSpeed.medium,
       },
       {
         id: 'mesh-grid',
         layer: 'mesh',
-        opacity: DS_CONSTANTS?.opacity?.ghost,
+        opacity: DS_CONSTANTS.opacity.ghost,
         blur: 0,
         intensity: 0.15,
         animated: false,
@@ -96,24 +96,24 @@ export class HyperDepthEngine {
       {
         id: 'mesh-organic',
         layer: 'mesh',
-        opacity: DS_CONSTANTS?.opacity?.subtle,
-        blur: DS_CONSTANTS?.blur?.min,
+        opacity: DS_CONSTANTS.opacity.subtle,
+        blur: DS_CONSTANTS.blur.min,
         intensity: 0.2,
         animated: true,
-        animationSpeed: DS_CONSTANTS?.animationSpeed?.slow,
+        animationSpeed: DS_CONSTANTS.animationSpeed.slow,
       },
     ];
 
-    defaultLayers?.forEach(any: any));
+    defaultLayers.forEach(layer => this.layers.set(layer.id, layer));
   }
 
   /**
    * S'abonner aux changements d'état système
    */
   private subscribeToStateChanges(): void {
-    if (any: any) {
-      stateEngine?.onStateChange(any: any) => {
-        this?.adaptToState(any: any);
+    if (this.stateAdaptive) {
+      stateEngine.onStateChange((state, _config) => {
+        this.adaptToState(state);
       });
     }
   }
@@ -121,18 +121,18 @@ export class HyperDepthEngine {
   /**
    * Adapter les couches selon l'état système
    */
-  private adaptToState(any: any): void {
-    const stateConfig = stateEngine?.getStateConfig(any: any);
+  private adaptToState(state: SystemState): void {
+    const stateConfig = stateEngine.getStateConfig(state);
 
     // Ajuster l'intensité globale
-    this?.globalIntensity = stateConfig?.intensity;
+    this.globalIntensity = stateConfig.intensity;
 
     // Ajuster les couches glow
-    this?.layers?.forEach(layer => {
-      if (layer?.layer === 'glow') {
-        layer?.intensity = stateConfig?.intensity;
-        layer?.blur = stateConfig?.blur;
-        layer?.opacity = stateConfig?.opacity * 0.5;
+    this.layers.forEach(layer => {
+      if (layer.layer === 'glow') {
+        layer.intensity = stateConfig.intensity;
+        layer.blur = stateConfig.blur;
+        layer.opacity = stateConfig.opacity * 0.5;
       }
     });
   }
@@ -140,17 +140,17 @@ export class HyperDepthEngine {
   /**
    * Obtenir une couche spécifique
    */
-  getLayer(any: any): LayerConfig | undefined {
-    return this?.layers?.get(any: any);
+  getLayer(layerId: string): LayerConfig | undefined {
+    return this.layers.get(layerId);
   }
 
   /**
    * Mettre à jour une couche
    */
   updateLayer(layerId: string, updates: Partial<LayerConfig>): void {
-    const layer = this?.layers?.get(any: any);
-    if (any: any) {
-      Object?.assign(any: any);
+    const layer = this.layers.get(layerId);
+    if (layer) {
+      Object.assign(layer, updates);
     }
   }
 
@@ -158,16 +158,16 @@ export class HyperDepthEngine {
    * Générer le CSS pour une couche background
    */
   generateBackgroundCSS(state: SystemState = 'stable'): Record<string, string> {
-    const stateConfig = stateEngine?.getStateConfig(any: any);
-    const variants = DS_COLORS?.diamant?.variants as Record<string, string>;
-    const color1 = variants['950'] || DS_COLORS?.diamant?.variants?.light;
-    const color2 = variants['900'] || DS_COLORS?.diamant?.variants?.dark;
+    const stateConfig = stateEngine.getStateConfig(state);
+    const variants = DS_COLORS.diamant.variants as Record<string, string>;
+    const color1 = variants['950'] || DS_COLORS.diamant.variants.light;
+    const color2 = variants['900'] || DS_COLORS.diamant.variants.dark;
 
     return {
       background: `
         radial-gradient(
           ellipse at top,
-          ${rgba(stateConfig?.colorRgb, 0.05)},
+          ${rgba(stateConfig.colorRgb, 0.05)},
           transparent 50%
         ),
         linear-gradient(
@@ -177,7 +177,7 @@ export class HyperDepthEngine {
         )
       `,
       backgroundAttachment: 'fixed',
-      '--depth-bg-intensity': this?.globalIntensity?.toString(),
+      '--depth-bg-intensity': this.globalIntensity.toString(),
     };
   }
 
@@ -185,10 +185,10 @@ export class HyperDepthEngine {
    * Générer le CSS pour la couche glow
    */
   generateGlowLayerCSS(state: SystemState = 'stable'): Record<string, string> {
-    const stateConfig = stateEngine?.getStateConfig(any: any);
-    const glowLayer = this?.layers?.get('glow-ambient');
+    const stateConfig = stateEngine.getStateConfig(state);
+    const glowLayer = this.layers.get('glow-ambient');
 
-    if (any: any) return {};
+    if (!glowLayer) return {};
 
     return {
       position: 'fixed',
@@ -198,13 +198,13 @@ export class HyperDepthEngine {
       width: '80%',
       height: '80%',
       borderRadius: '50%',
-      background: `radial-gradient(circle, ${rgba(stateConfig?.colorRgb, glowLayer?.intensity * 0.3)}, transparent 70%)`,
-      filter: `blur(any: any)`,
-      opacity: glowLayer?.opacity?.toString(),
+      background: `radial-gradient(circle, ${rgba(stateConfig.colorRgb, glowLayer.intensity * 0.3)}, transparent 70%)`,
+      filter: `blur(${glowLayer.blur}px)`,
+      opacity: glowLayer.opacity.toString(),
       pointerEvents: 'none',
       zIndex: '0',
-      animation: glowLayer?.animated
-        ? `glow-breathe ${glowLayer?.animationSpeed}ms ease-in-out infinite`
+      animation: glowLayer.animated
+        ? `glow-breathe ${glowLayer.animationSpeed}ms ease-in-out infinite`
         : 'none',
     };
   }
@@ -213,8 +213,8 @@ export class HyperDepthEngine {
    * Générer le CSS pour la couche mesh
    */
   generateMeshLayerCSS(): Record<string, string> {
-    const meshLayer = this?.layers?.get('mesh-grid');
-    if (any: any) return {};
+    const meshLayer = this.layers.get('mesh-grid');
+    if (!meshLayer) return {};
 
     return {
       position: 'fixed',
@@ -223,11 +223,11 @@ export class HyperDepthEngine {
       width: '100%',
       height: '100%',
       backgroundImage: `
-        linear-gradient(any: any)} 1px, transparent 1px),
-        linear-gradient(any: any)} 1px, transparent 1px)
+        linear-gradient(${rgba(DS_COLORS.diamant.rgb, meshLayer.intensity)} 1px, transparent 1px),
+        linear-gradient(90deg, ${rgba(DS_COLORS.diamant.rgb, meshLayer.intensity)} 1px, transparent 1px)
       `,
       backgroundSize: '40px 40px',
-      opacity: meshLayer?.opacity?.toString(),
+      opacity: meshLayer.opacity.toString(),
       pointerEvents: 'none',
       zIndex: '0',
     };
@@ -242,9 +242,9 @@ export class HyperDepthEngine {
     meshLayer: Record<string, string>;
   } {
     return {
-      background: this?.generateBackgroundCSS(any: any),
-      glowLayer: this?.generateGlowLayerCSS(any: any),
-      meshLayer: this?.generateMeshLayerCSS(),
+      background: this.generateBackgroundCSS(state),
+      glowLayer: this.generateGlowLayerCSS(state),
+      meshLayer: this.generateMeshLayerCSS(),
     };
   }
 
@@ -283,18 +283,18 @@ export class HyperDepthEngine {
   /**
    * Définir l'intensité globale
    */
-  setGlobalIntensity(any: any): void {
-    this?.globalIntensity = Math?.max(any: any));
-    this?.layers?.forEach(layer => {
-      layer?.intensity = this?.globalIntensity;
+  setGlobalIntensity(intensity: number): void {
+    this.globalIntensity = Math.max(0, Math.min(1, intensity));
+    this.layers.forEach(layer => {
+      layer.intensity = this.globalIntensity;
     });
   }
 
   /**
    * Activer/désactiver l'adaptation à l'état
    */
-  setStateAdaptive(any: any): void {
-    this?.stateAdaptive = adaptive;
+  setStateAdaptive(adaptive: boolean): void {
+    this.stateAdaptive = adaptive;
   }
 
   /**
@@ -302,9 +302,9 @@ export class HyperDepthEngine {
    */
   getConfig(): HyperDepthConfig {
     return {
-      layers: Array?.from(this?.layers?.values()),
-      globalIntensity: this?.globalIntensity,
-      stateAdaptive: this?.stateAdaptive,
+      layers: Array.from(this.layers.values()),
+      globalIntensity: this.globalIntensity,
+      stateAdaptive: this.stateAdaptive,
     };
   }
 
@@ -312,9 +312,9 @@ export class HyperDepthEngine {
    * Réinitialiser les couches
    */
   reset(): void {
-    this?.layers?.clear();
-    this?.globalIntensity = 0.3;
-    this?.initializeDefaultLayers();
+    this.layers.clear();
+    this.globalIntensity = 0.3;
+    this.initializeDefaultLayers();
   }
 }
 

@@ -22,14 +22,14 @@ interface SpeechRecognitionErrorEvent extends Event {
 
 interface SpeechRecognitionResultList {
   readonly length: number;
-  item(any: any): SpeechRecognitionResult;
+  item(index: number): SpeechRecognitionResult;
   [index: number]: SpeechRecognitionResult;
 }
 
 interface SpeechRecognitionResult {
   readonly isFinal: boolean;
   readonly length: number;
-  item(any: any): SpeechRecognitionAlternative;
+  item(index: number): SpeechRecognitionAlternative;
   [index: number]: SpeechRecognitionAlternative;
 }
 
@@ -44,10 +44,10 @@ interface SpeechRecognition extends EventTarget {
   lang: string;
   maxAlternatives?: number;
 
-  onstart: (any: any) | null;
-  onend: (any: any) | null;
-  onerror: (any: any) | null;
-  onresult: (any: any) | null;
+  onstart: ((this: SpeechRecognition, ev: Event) => unknown) | null;
+  onend: ((this: SpeechRecognition, ev: Event) => unknown) | null;
+  onerror: ((this: SpeechRecognition, ev: SpeechRecognitionErrorEvent) => unknown) | null;
+  onresult: ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => unknown) | null;
 
   start(): void;
   stop(): void;

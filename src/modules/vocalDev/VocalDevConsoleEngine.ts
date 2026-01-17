@@ -10,20 +10,20 @@
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * Fusion complète:
- * - IA Bulle (any: any)
- * - Console Dev (any: any)
- * - Module Audio (any: any)
- * - Self-Healing Engine (any: any)
- * - Pipeline IA (any: any)
+ * - IA Bulle (chat conversationnel)
+ * - Console Dev (terminal technique)
+ * - Module Audio (micro + TTS + VAD)
+ * - Self-Healing Engine (auto-correction)
+ * - Pipeline IA (TITANE-LOCAL / Claude / Gemini)
  * - Commandes Dev SUDO vocales
  *
  * Workflow:
  * 1. Écoute voix Kevin → VAD détection
- * 2. Transcription audio → texte (any: any)
+ * 2. Transcription audio → texte (Whisper/Google)
  * 3. Interprétation intention → dev/chat/heal/system
  * 4. Exécution commande → patch/log/diagnostic
  * 5. Réponse textuelle → console
- * 6. Réponse vocale → TTS (any: any)
+ * 6. Réponse vocale → TTS (optionnel)
  * 7. Synchronisation Singularity → état global
  *
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.
@@ -51,7 +51,7 @@ export type VocalDevMode = 'dev' | 'chat' | 'heal' | 'system' | 'idle';
 export interface VocalIntent {
   type: 'dev' | 'chat' | 'heal' | 'system';
   confidence: number; // 0.0-1.0
-  keywords: string?.[];
+  keywords: string[];
   rawCommand: string;
   parsedAction?: string;
   target?: string;
@@ -66,7 +66,7 @@ export interface VocalRecordingState {
   isTranscribing: boolean;
   isSpeaking: boolean;
   vadActive: boolean; // Voice Activity Detection
-  audioBuffer: Uint8Array?.[];
+  audioBuffer: Uint8Array[];
   duration: number; // ms
 }
 
@@ -80,7 +80,7 @@ export interface VocalExecutionResult {
   exitCode: number;
   duration: number;
   timestamp: number;
-  errors?: string?.[];
+  errors?: string[];
   patch?: VocalPatch;
   ttsResponse?: string;
 }
@@ -121,11 +121,11 @@ export interface VocalDevState {
   currentIntent: VocalIntent | null;
   lastCommand: string;
   lastExecution: VocalExecutionResult | null;
-  executionHistory: VocalExecutionResult?.[];
-  consoleLogs: VocalConsoleLog?.[];
-  pendingPatches: VocalPatch?.[];
+  executionHistory: VocalExecutionResult[];
+  consoleLogs: VocalConsoleLog[];
+  pendingPatches: VocalPatch[];
   healthScore: number; // 0-100
-  lastError??: string | null;
+  lastError: string | null;
 }
 
 /**
@@ -182,22 +182,22 @@ export class VocalDevConsoleEngine {
     debugMode: false,
   };
 
-  private listeners: Set<(any: any) => void> = new Set();
-  private recordingTimer: NodeJS?.Timeout | null = null;
+  private listeners: Set<(state: VocalDevState) => void> = new Set();
+  private recordingTimer: NodeJS.Timeout | null = null;
   private recordingStartTime: number = 0;
 
   /**
    * Singleton pattern
    */
   public static getInstance(): VocalDevConsoleEngine {
-    if (any: any) {
-      VocalDevConsoleEngine?.instance = new VocalDevConsoleEngine();
+    if (!VocalDevConsoleEngine.instance) {
+      VocalDevConsoleEngine.instance = new VocalDevConsoleEngine();
     }
-    return VocalDevConsoleEngine?.instance;
+    return VocalDevConsoleEngine.instance;
   }
 
   private constructor() {
-    this?.log('info', '🎤 Vocal Dev Console Engine v∞ initialized');
+    this.log('info', '🎤 Vocal Dev Console Engine v∞ initialized');
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -208,22 +208,22 @@ export class VocalDevConsoleEngine {
    * Configure le moteur
    */
   public configure(config: Partial<VocalDevConfig>): void {
-    this?.config = { ...this?.config, ...config };
-    this?.log(any: any)}`);
+    this.config = { ...this.config, ...config };
+    this.log('info', `Configuration updated: ${JSON.stringify(config)}`);
   }
 
   /**
    * Obtenir configuration actuelle
    */
   public getConfig(): VocalDevConfig {
-    return { ...this?.config };
+    return { ...this.config };
   }
 
   /**
    * Obtenir état actuel
    */
   public getState(): VocalDevState {
-    return { ...this?.state };
+    return { ...this.state };
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -234,29 +234,29 @@ export class VocalDevConsoleEngine {
    * Active le moteur vocal
    */
   public async activate(): Promise<void> {
-    if (any: any) {
-      this?.log('warning', 'Vocal Dev Console already active');
+    if (this.state.isActive) {
+      this.log('warning', 'Vocal Dev Console already active');
       return;
     }
 
     try {
       // Test microphone disponibilité
-      await this?.testMicrophone();
+      await this.testMicrophone();
 
       // Test TTS disponibilité
-      await this?.testTTS();
+      await this.testTTS();
 
       // Activer VAD
-      await this?.activateVAD();
+      await this.activateVAD();
 
-      this?.state?.isActive = true;
-      this?.state?.mode = 'idle';
-      this?.log('success', '🎤 Vocal Dev Console activated');
-      this?.notifyListeners();
-    } catch (any: any) {
-      const errorMsg = error instanceof Error ? error?.message : String(any: any);
-      this?.state?.lastError = errorMsg;
-      this?.log('error', `Failed to activate vocal console: ${errorMsg}`);
+      this.state.isActive = true;
+      this.state.mode = 'idle';
+      this.log('success', '🎤 Vocal Dev Console activated');
+      this.notifyListeners();
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      this.state.lastError = errorMsg;
+      this.log('error', `Failed to activate vocal console: ${errorMsg}`);
       throw error;
     }
   }
@@ -265,26 +265,26 @@ export class VocalDevConsoleEngine {
    * Désactive le moteur vocal
    */
   public async deactivate(): Promise<void> {
-    if (any: any) return;
+    if (!this.state.isActive) return;
 
     try {
       // Stop recording si en cours
-      if (any: any) {
-        await this?.stopRecording();
+      if (this.state.recordingState.isRecording) {
+        await this.stopRecording();
       }
 
       // Stop TTS si en cours
-      if (any: any) {
-        await this?.stopSpeaking();
+      if (this.state.recordingState.isSpeaking) {
+        await this.stopSpeaking();
       }
 
-      this?.state?.isActive = false;
-      this?.state?.mode = 'idle';
-      this?.log('info', 'Vocal Dev Console deactivated');
-      this?.notifyListeners();
-    } catch (any: any) {
-      const errorMsg = error instanceof Error ? error?.message : String(any: any);
-      this?.log('error', `Failed to deactivate: ${errorMsg}`);
+      this.state.isActive = false;
+      this.state.mode = 'idle';
+      this.log('info', 'Vocal Dev Console deactivated');
+      this.notifyListeners();
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      this.log('error', `Failed to deactivate: ${errorMsg}`);
     }
   }
 
@@ -292,63 +292,63 @@ export class VocalDevConsoleEngine {
    * Afficher/masquer console
    */
   public toggleVisibility(): void {
-    this?.state?.isVisible = !this?.state?.isVisible;
-    this?.log('info', `Console ${this?.state?.isVisible ? 'visible' : 'hidden'}`);
-    this?.notifyListeners();
+    this.state.isVisible = !this.state.isVisible;
+    this.log('info', `Console ${this.state.isVisible ? 'visible' : 'hidden'}`);
+    this.notifyListeners();
   }
 
   /**
-   * Ouvrir console (any: any)
+   * Ouvrir console (ex: auto-open sur erreur)
    */
   public open(): void {
-    this?.state?.isVisible = true;
-    this?.notifyListeners();
+    this.state.isVisible = true;
+    this.notifyListeners();
   }
 
   /**
    * Fermer console
    */
   public close(): void {
-    this?.state?.isVisible = false;
-    this?.notifyListeners();
+    this.state.isVisible = false;
+    this.notifyListeners();
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // RECORDING (any: any)
+  // RECORDING (AUDIO CAPTURE)
   // ═══════════════════════════════════════════════════════════════════════════
 
   /**
    * Commence enregistrement vocal
    */
   public async startRecording(): Promise<void> {
-    if (any: any) {
-      this?.log('warning', 'Already recording');
+    if (this.state.recordingState.isRecording) {
+      this.log('warning', 'Already recording');
       return;
     }
 
     try {
       // Reset audio buffer
-      this?.state?.recordingState?.audioBuffer = [];
-      this?.state?.recordingState?.isRecording = true;
-      this?.recordingStartTime = Date?.now();
+      this.state.recordingState.audioBuffer = [];
+      this.state.recordingState.isRecording = true;
+      this.recordingStartTime = Date.now();
 
       // Start backend recording
       await secureInvoke('voice_start_recording', {
-        language: this?.config?.language,
+        language: this.config.language,
       });
 
       // Start duration timer
-      this?.recordingTimer = setInterval(() => {
-        this?.state?.recordingState?.duration = Date?.now() - this?.recordingStartTime;
-        this?.notifyListeners();
+      this.recordingTimer = setInterval(() => {
+        this.state.recordingState.duration = Date.now() - this.recordingStartTime;
+        this.notifyListeners();
       }, 100);
 
-      this?.log('info', '🎤 Recording started');
-      this?.notifyListeners();
-    } catch (any: any) {
-      const errorMsg = error instanceof Error ? error?.message : String(any: any);
-      this?.state?.lastError = errorMsg;
-      this?.log('error', `Failed to start recording: ${errorMsg}`);
+      this.log('info', '🎤 Recording started');
+      this.notifyListeners();
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      this.state.lastError = errorMsg;
+      this.log('error', `Failed to start recording: ${errorMsg}`);
       throw error;
     }
   }
@@ -357,44 +357,44 @@ export class VocalDevConsoleEngine {
    * Arrête enregistrement et transcrit
    */
   public async stopRecording(): Promise<string> {
-    if (any: any) {
-      this?.log('warning', 'Not recording');
+    if (!this.state.recordingState.isRecording) {
+      this.log('warning', 'Not recording');
       return '';
     }
 
     try {
       // Clear timer
-      if (any: any) {
-        clearInterval(any: any);
-        this?.recordingTimer = null;
+      if (this.recordingTimer) {
+        clearInterval(this.recordingTimer);
+        this.recordingTimer = null;
       }
 
-      this?.state?.recordingState?.isRecording = false;
-      this?.state?.recordingState?.isTranscribing = true;
-      this?.notifyListeners();
+      this.state.recordingState.isRecording = false;
+      this.state.recordingState.isTranscribing = true;
+      this.notifyListeners();
 
       // Stop backend recording + transcribe
       const result = await secureInvoke<{ text: string; confidence: number }>(
         'voice_stop_recording'
       );
 
-      const transcript = result?.text || '';
-      this?.state?.recordingState?.isTranscribing = false;
-      this?.state?.recordingState?.duration = 0;
+      const transcript = result.text || '';
+      this.state.recordingState.isTranscribing = false;
+      this.state.recordingState.duration = 0;
 
-      this?.log(
+      this.log(
         'success',
-        `🎤 Transcription: "${transcript}" (confidence: ${result?.confidence?.toFixed(2)})`
+        `🎤 Transcription: "${transcript}" (confidence: ${result.confidence.toFixed(2)})`
       );
-      this?.notifyListeners();
+      this.notifyListeners();
 
       return transcript;
-    } catch (any: any) {
-      const errorMsg = error instanceof Error ? error?.message : String(any: any);
-      this?.state?.lastError = errorMsg;
-      this?.log('error', `Failed to stop recording: ${errorMsg}`);
-      this?.state?.recordingState?.isTranscribing = false;
-      this?.notifyListeners();
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      this.state.lastError = errorMsg;
+      this.log('error', `Failed to stop recording: ${errorMsg}`);
+      this.state.recordingState.isTranscribing = false;
+      this.notifyListeners();
       return '';
     }
   }
@@ -404,19 +404,19 @@ export class VocalDevConsoleEngine {
   // ═══════════════════════════════════════════════════════════════════════════
 
   /**
-   * Execute commande vocale complète (any: any)
+   * Execute commande vocale complète (workflow principal)
    */
   public async executeVoiceCommand(): Promise<VocalExecutionResult | null> {
     try {
       // 1. Start recording
-      await this?.startRecording();
+      await this.startRecording();
 
-      // Wait for user to stop manually (any: any)
+      // Wait for user to stop manually (or auto-stop after VAD silence)
       // Note: Caller should stop recording manually via stopRecording()
       return null;
-    } catch (any: any) {
-      const errorMsg = error instanceof Error ? error?.message : String(any: any);
-      this?.log('error', `Voice command execution failed: ${errorMsg}`);
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      this.log('error', `Voice command execution failed: ${errorMsg}`);
       return null;
     }
   }
@@ -424,80 +424,80 @@ export class VocalDevConsoleEngine {
   /**
    * Process transcript → interpret → execute → respond
    */
-  public async processTranscript(any: any): Promise<VocalExecutionResult> {
-    const startTime = Date?.now();
+  public async processTranscript(transcript: string): Promise<VocalExecutionResult> {
+    const startTime = Date.now();
 
     try {
-      this?.state?.lastCommand = transcript;
-      this?.log('info', `Processing command: "${transcript}"`);
+      this.state.lastCommand = transcript;
+      this.log('info', `Processing command: "${transcript}"`);
 
       // 1. Interpret intent
-      const intent = await this?.interpretIntent(any: any);
-      this?.state?.currentIntent = intent;
-      this?.state?.mode = intent?.type;
-      this?.notifyListeners();
+      const intent = await this.interpretIntent(transcript);
+      this.state.currentIntent = intent;
+      this.state.mode = intent.type;
+      this.notifyListeners();
 
-      this?.log(
+      this.log(
         'info',
-        `Intent detected: ${intent?.type} (confidence: ${intent?.confidence?.toFixed(2)})`
+        `Intent detected: ${intent.type} (confidence: ${intent.confidence.toFixed(2)})`
       );
 
       // 2. Route to appropriate handler
       let output = '';
       let exitCode = 0;
-      let errors: string?.[] = [];
+      let errors: string[] = [];
       let patch: VocalPatch | undefined;
 
-      switch (any: any) {
+      switch (intent.type) {
         case 'dev':
-          (any: any));
+          ({ output, exitCode, errors, patch } = await this.handleDevIntent(intent));
           break;
         case 'chat':
-          output = await this?.handleChatIntent(any: any);
+          output = await this.handleChatIntent(intent);
           break;
         case 'heal':
-          (any: any));
+          ({ output, patch } = await this.handleHealIntent(intent));
           break;
         case 'system':
-          output = await this?.handleSystemIntent(any: any);
+          output = await this.handleSystemIntent(intent);
           break;
       }
 
-      const duration = Date?.now() - startTime;
+      const duration = Date.now() - startTime;
 
       // 3. Create execution result
       const result: VocalExecutionResult = {
         intent,
-        action: intent?.parsedAction || intent?.rawCommand,
+        action: intent.parsedAction || intent.rawCommand,
         output,
         exitCode,
         duration,
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
         errors,
         patch,
       };
 
       // 4. TTS response if enabled
-      if (any: any) {
-        const ttsText = this?.generateTTSResponse(any: any);
-        result?.ttsResponse = ttsText;
-        await this?.speak(any: any);
+      if (this.config.ttsEnabled && output) {
+        const ttsText = this.generateTTSResponse(result);
+        result.ttsResponse = ttsText;
+        await this.speak(ttsText);
       }
 
       // 5. Save to history
-      this?.state?.lastExecution = result;
-      this?.state?.executionHistory?.unshift(any: any);
-      if (any: any) {
-        this?.state?.executionHistory?.pop();
+      this.state.lastExecution = result;
+      this.state.executionHistory.unshift(result);
+      if (this.state.executionHistory.length > this.config.maxHistorySize) {
+        this.state.executionHistory.pop();
       }
 
-      this?.log('success', `Command executed in ${duration}ms`);
-      this?.notifyListeners();
+      this.log('success', `Command executed in ${duration}ms`);
+      this.notifyListeners();
 
       return result;
-    } catch (any: any) {
-      const errorMsg = error instanceof Error ? error?.message : String(any: any);
-      const duration = Date?.now() - startTime;
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      const duration = Date.now() - startTime;
 
       const result: VocalExecutionResult = {
         intent: {
@@ -510,14 +510,14 @@ export class VocalDevConsoleEngine {
         output: `Error: ${errorMsg}`,
         exitCode: 1,
         duration,
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
         errors: [errorMsg],
       };
 
-      this?.state?.lastExecution = result;
-      this?.state?.lastError = errorMsg;
-      this?.log('error', `Execution failed: ${errorMsg}`);
-      this?.notifyListeners();
+      this.state.lastExecution = result;
+      this.state.lastError = errorMsg;
+      this.log('error', `Execution failed: ${errorMsg}`);
+      this.notifyListeners();
 
       return result;
     }
@@ -530,8 +530,8 @@ export class VocalDevConsoleEngine {
   /**
    * Interprète l'intention depuis le transcript
    */
-  private async interpretIntent(any: any): Promise<VocalIntent> {
-    const lower = transcript?.toLowerCase();
+  private async interpretIntent(transcript: string): Promise<VocalIntent> {
+    const lower = transcript.toLowerCase();
 
     // Dev intent patterns
     const devPatterns = [
@@ -564,13 +564,13 @@ export class VocalDevConsoleEngine {
     ];
 
     // Calculate confidence scores
-    const devScore = devPatterns?.filter(any: any)).length / devPatterns?.length;
+    const devScore = devPatterns.filter(p => p.test(lower)).length / devPatterns.length;
     const chatScore =
-      chatPatterns?.filter(any: any)).length / chatPatterns?.length;
+      chatPatterns.filter(p => p.test(lower)).length / chatPatterns.length;
     const healScore =
-      healPatterns?.filter(any: any)).length / healPatterns?.length;
+      healPatterns.filter(p => p.test(lower)).length / healPatterns.length;
     const systemScore =
-      systemPatterns?.filter(any: any)).length / systemPatterns?.length;
+      systemPatterns.filter(p => p.test(lower)).length / systemPatterns.length;
 
     // Determine intent type
     const scores = {
@@ -579,9 +579,9 @@ export class VocalDevConsoleEngine {
       heal: healScore,
       system: systemScore,
     };
-    const maxScore = Math?.max(any: any));
+    const maxScore = Math.max(...Object.values(scores));
     const intentType =
-      (any: any) as Array<'dev' | 'chat' | 'heal' | 'system'>).find(
+      (Object.keys(scores) as Array<'dev' | 'chat' | 'heal' | 'system'>).find(
         key => scores[key] === maxScore
       ) || 'chat';
 
@@ -593,12 +593,12 @@ export class VocalDevConsoleEngine {
       ...systemPatterns,
     ];
     const keywords = allPatterns
-      .filter(any: any))
+      .filter(p => p.test(lower))
       .map(p => {
-        const match = lower?.match(any: any);
-        return match ? match?.[0] : '';
+        const match = lower.match(p);
+        return match ? match[0] : '';
       })
-      .filter(any: any);
+      .filter(Boolean);
 
     return {
       type: intentType,
@@ -617,9 +617,9 @@ export class VocalDevConsoleEngine {
    */
   private async handleDevIntent(
     intent: VocalIntent
-  ): Promise<{ output: string; exitCode: number; errors: string?.[]; patch?: VocalPatch }> {
+  ): Promise<{ output: string; exitCode: number; errors: string[]; patch?: VocalPatch }> {
     try {
-      const command = intent?.rawCommand;
+      const command = intent.rawCommand;
 
       // Route to Tauri backend dev command
       const result = await secureInvoke<{ output: string; exitCode: number }>(
@@ -630,12 +630,12 @@ export class VocalDevConsoleEngine {
       );
 
       return {
-        output: result?.output,
-        exitCode: result?.exitCode,
-        errors: result?.exitCode !== 0 ? ['Command failed'] : [],
+        output: result.output,
+        exitCode: result.exitCode,
+        errors: result.exitCode !== 0 ? ['Command failed'] : [],
       };
-    } catch (any: any) {
-      const errorMsg = error instanceof Error ? error?.message : String(any: any);
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
       return {
         output: `Error executing dev command: ${errorMsg}`,
         exitCode: 1,
@@ -647,10 +647,10 @@ export class VocalDevConsoleEngine {
   /**
    * Handler pour intention CHAT
    */
-  private async handleChatIntent(any: any): Promise<string> {
+  private async handleChatIntent(intent: VocalIntent): Promise<string> {
     try {
       // Route to AI provider based on config
-      const provider = this?.config?.aiProvider;
+      const provider = this.config.aiProvider;
 
       let response = '';
 
@@ -658,22 +658,22 @@ export class VocalDevConsoleEngine {
         // Try TITANE-LOCAL first
         try {
           const result = await secureInvoke<{ response: string }>('ai_query_local', {
-            prompt: intent?.rawCommand,
+            prompt: intent.rawCommand,
           });
-          response = result?.response;
+          response = result.response;
         } catch {
           // Fallback to Claude if TITANE-LOCAL unavailable
-          response = await this?.queryClaude(any: any);
+          response = await this.queryClaude(intent.rawCommand);
         }
       } else if (provider === 'claude') {
-        response = await this?.queryClaude(any: any);
+        response = await this.queryClaude(intent.rawCommand);
       } else if (provider === 'gemini') {
-        response = await this?.queryGemini(any: any);
+        response = await this.queryGemini(intent.rawCommand);
       }
 
       return response;
-    } catch (any: any) {
-      const errorMsg = error instanceof Error ? error?.message : String(any: any);
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
       return `Error executing chat: ${errorMsg}`;
     }
   }
@@ -686,32 +686,32 @@ export class VocalDevConsoleEngine {
   ): Promise<{ output: string; patch?: VocalPatch }> {
     try {
       // Trigger auto-heal engine
-      const target = intent?.target || 'all';
+      const target = intent.target || 'all';
 
       // Run diagnostic first
-      const diagnostics = await secureInvoke<{ issues: string?.[] }>('dev_diagnostic', {
+      const diagnostics = await secureInvoke<{ issues: string[] }>('dev_diagnostic', {
         target,
       });
 
-      if (diagnostics?.issues?.length === 0) {
+      if (diagnostics.issues.length === 0) {
         return { output: '✅ No issues detected. System healthy.' };
       }
 
-      // Trigger self-healing (any: any)
-      const healResult = await unifiedHealingFacade?.heal({
+      // Trigger self-healing (direct instance)
+      const healResult = await unifiedHealingFacade.heal({
         source: 'vocal-dev',
-        error: new Error(`Issues: ${diagnostics?.issues?.join(', ')}`),
+        error: new Error(`Issues: ${diagnostics.issues.join(', ')}`),
         type: 'validation',
-        metadata: { target, issues: diagnostics?.issues, timestamp: Date?.now() },
+        metadata: { target, issues: diagnostics.issues, timestamp: Date.now() },
       });
 
-      const healingId = healResult?.actionId ?? healResult?.errorId ?? 'unknown';
+      const healingId = healResult.actionId ?? healResult.errorId ?? 'unknown';
 
       return {
-        output: `🩹 Auto-healing triggered:\n${diagnostics?.issues?.map(i => `- ${i}`).join('\n')}\n\nHealing ID: ${healingId}`,
+        output: `🩹 Auto-healing triggered:\n${diagnostics.issues.map(i => `- ${i}`).join('\n')}\n\nHealing ID: ${healingId}`,
       };
-    } catch (any: any) {
-      const errorMsg = error instanceof Error ? error?.message : String(any: any);
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
       return {
         output: `Error executing heal: ${errorMsg}`,
       };
@@ -721,28 +721,28 @@ export class VocalDevConsoleEngine {
   /**
    * Handler pour intention SYSTEM
    */
-  private async handleSystemIntent(any: any): Promise<string> {
-    const lower = intent?.rawCommand?.toLowerCase();
+  private async handleSystemIntent(intent: VocalIntent): Promise<string> {
+    const lower = intent.rawCommand.toLowerCase();
 
     // Console visibility commands
-    if (any: any)) {
-      this?.open();
+    if (/ouvre|affiche|show/.test(lower) && /console|terminal/.test(lower)) {
+      this.open();
       return 'Console opened';
     }
 
-    if (any: any)) {
-      this?.close();
+    if (/ferme|cache|hide/.test(lower) && /console|terminal/.test(lower)) {
+      this.close();
       return 'Console closed';
     }
 
     // Mode vocal commands
-    if (any: any)) {
-      await this?.activate();
+    if (/active|enable|start/.test(lower) && /vocal|voice|micro/.test(lower)) {
+      await this.activate();
       return 'Vocal mode activated';
     }
 
-    if (any: any)) {
-      await this?.deactivate();
+    if (/désactive|disable|stop/.test(lower) && /vocal|voice|micro/.test(lower)) {
+      await this.deactivate();
       return 'Vocal mode deactivated';
     }
 
@@ -756,13 +756,13 @@ export class VocalDevConsoleEngine {
   /**
    * Query Claude
    */
-  private async queryClaude(any: any): Promise<string> {
+  private async queryClaude(prompt: string): Promise<string> {
     try {
       const result = await secureInvoke<{ response: string }>('ai_query_claude', {
         prompt,
       });
-      return result?.response;
-    } catch (any: any) {
+      return result.response;
+    } catch (error) {
       throw new Error(`Claude query failed: ${error}`);
     }
   }
@@ -770,38 +770,38 @@ export class VocalDevConsoleEngine {
   /**
    * Query Gemini
    */
-  private async queryGemini(any: any): Promise<string> {
+  private async queryGemini(prompt: string): Promise<string> {
     try {
       const result = await secureInvoke<{ response: string }>('ai_query_gemini', {
         prompt,
       });
-      return result?.response;
-    } catch (any: any) {
+      return result.response;
+    } catch (error) {
       throw new Error(`Gemini query failed: ${error}`);
     }
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // TTS (any: any)
+  // TTS (TEXT-TO-SPEECH)
   // ═══════════════════════════════════════════════════════════════════════════
 
   /**
    * Speak text via TTS
    */
-  public async speak(any: any): Promise<void> {
+  public async speak(text: string): Promise<void> {
     try {
-      this?.state?.recordingState?.isSpeaking = true;
-      this?.notifyListeners();
+      this.state.recordingState.isSpeaking = true;
+      this.notifyListeners();
 
-      await hybridTTS?.speak(any: any);
+      await hybridTTS.speak(text);
 
-      this?.state?.recordingState?.isSpeaking = false;
-      this?.notifyListeners();
-    } catch (any: any) {
-      const errorMsg = error instanceof Error ? error?.message : String(any: any);
-      this?.log('error', `TTS failed: ${errorMsg}`);
-      this?.state?.recordingState?.isSpeaking = false;
-      this?.notifyListeners();
+      this.state.recordingState.isSpeaking = false;
+      this.notifyListeners();
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      this.log('error', `TTS failed: ${errorMsg}`);
+      this.state.recordingState.isSpeaking = false;
+      this.notifyListeners();
     }
   }
 
@@ -810,34 +810,34 @@ export class VocalDevConsoleEngine {
    */
   public async stopSpeaking(): Promise<void> {
     try {
-      await hybridTTS?.stop();
-      this?.state?.recordingState?.isSpeaking = false;
-      this?.notifyListeners();
-    } catch (any: any) {
-      const errorMsg = error instanceof Error ? error?.message : String(any: any);
-      this?.log('error', `Stop TTS failed: ${errorMsg}`);
+      await hybridTTS.stop();
+      this.state.recordingState.isSpeaking = false;
+      this.notifyListeners();
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      this.log('error', `Stop TTS failed: ${errorMsg}`);
     }
   }
 
   /**
    * Generate TTS-friendly response from execution result
    */
-  private generateTTSResponse(any: any): string {
+  private generateTTSResponse(result: VocalExecutionResult): string {
     const { intent, exitCode, errors } = result;
 
     if (exitCode !== 0) {
-      return `Erreur lors de l'exécution de la commande ${intent?.type}. ${errors?.join('. ')}`;
+      return `Erreur lors de l'exécution de la commande ${intent.type}. ${errors?.join('. ')}`;
     }
 
-    switch (any: any) {
+    switch (intent.type) {
       case 'dev':
         return 'Commande développement exécutée avec succès.';
       case 'chat':
-        return result?.output?.slice(0, 200); // Truncate long responses
+        return result.output.slice(0, 200); // Truncate long responses
       case 'heal':
         return 'Auto-correction effectuée.';
       case 'system':
-        return result?.output;
+        return result.output;
       default:
         return 'Commande exécutée.';
     }
@@ -853,8 +853,8 @@ export class VocalDevConsoleEngine {
   private async testMicrophone(): Promise<void> {
     try {
       await secureInvoke('test_microphone');
-      this?.log('success', '🎤 Microphone available');
-    } catch (any: any) {
+      this.log('success', '🎤 Microphone available');
+    } catch (error) {
       throw new Error('Microphone not available');
     }
   }
@@ -864,29 +864,29 @@ export class VocalDevConsoleEngine {
    */
   private async testTTS(): Promise<void> {
     try {
-      const status = await hybridTTS?.getStatus();
-      if (any: any) {
+      const status = await hybridTTS.getStatus();
+      if (!status.available) {
         throw new Error('TTS not available');
       }
-      this?.log('success', '🔊 TTS available');
-    } catch (any: any) {
+      this.log('success', '🔊 TTS available');
+    } catch (error) {
       throw new Error('TTS not available');
     }
   }
 
   /**
-   * Activer VAD (any: any)
+   * Activer VAD (Voice Activity Detection)
    */
   private async activateVAD(): Promise<void> {
     try {
       await secureInvoke('vad_configure', {
-        threshold: this?.config?.vadThreshold,
+        threshold: this.config.vadThreshold,
         minSpeechFrames: 10,
         minSilenceFrames: 20,
       });
-      this?.log('success', '🎙️ VAD activated');
-    } catch (any: any) {
-      this?.log(any: any)');
+      this.log('success', '🎙️ VAD activated');
+    } catch (error) {
+      this.log('warning', 'VAD activation failed (continuing without VAD)');
     }
   }
 
@@ -899,21 +899,21 @@ export class VocalDevConsoleEngine {
     metadata?: Record<string, unknown>
   ): void {
     const logEntry: VocalConsoleLog = {
-      id: `log-${Date?.now()}-${Math?.random().toString(36).slice(2, 9)}`,
-      timestamp: Date?.now(),
+      id: `log-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+      timestamp: Date.now(),
       level,
       message,
       metadata,
     };
 
-    this?.state?.consoleLogs?.unshift(any: any);
-    if (this?.state?.consoleLogs?.length > 500) {
-      this?.state?.consoleLogs?.pop();
+    this.state.consoleLogs.unshift(logEntry);
+    if (this.state.consoleLogs.length > 500) {
+      this.state.consoleLogs.pop();
     }
 
     // Console output in dev mode
-    if (any: any) {
-      logger?.info(`[VocalDev:${level}] ${message} ${metadata || ''}`);
+    if (this.config.debugMode) {
+      logger.info(`[VocalDev:${level}] ${message} ${metadata || ''}`);
     }
   }
 
@@ -921,16 +921,16 @@ export class VocalDevConsoleEngine {
    * Clear logs console
    */
   public clearLogs(): void {
-    this?.state?.consoleLogs = [];
-    this?.notifyListeners();
+    this.state.consoleLogs = [];
+    this.notifyListeners();
   }
 
   /**
    * Clear execution history
    */
   public clearHistory(): void {
-    this?.state?.executionHistory = [];
-    this?.notifyListeners();
+    this.state.executionHistory = [];
+    this.notifyListeners();
   }
 
   /**
@@ -938,31 +938,31 @@ export class VocalDevConsoleEngine {
    */
   public getHealthScore(): number {
     // Calculate based on recent errors and success rate
-    const recentExecutions = this?.state?.executionHistory?.slice(0, 10);
-    if (recentExecutions?.length === 0) return 100;
+    const recentExecutions = this.state.executionHistory.slice(0, 10);
+    if (recentExecutions.length === 0) return 100;
 
-    const successCount = recentExecutions?.filter(e => e?.exitCode === 0).length;
-    return Math?.round(any: any) * 100);
+    const successCount = recentExecutions.filter(e => e.exitCode === 0).length;
+    return Math.round((successCount / recentExecutions.length) * 100);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // LISTENERS (any: any)
+  // LISTENERS (OBSERVABILITY)
   // ═══════════════════════════════════════════════════════════════════════════
 
   /**
    * Subscribe to state changes
    */
-  public subscribe(any: any): () => void {
-    this?.listeners?.add(any: any);
-    return (any: any);
+  public subscribe(listener: (state: VocalDevState) => void): () => void {
+    this.listeners.add(listener);
+    return () => this.listeners.delete(listener);
   }
 
   /**
    * Notify all listeners
    */
   private notifyListeners(): void {
-    const stateCopy = this?.getState();
-    this?.listeners?.forEach(any: any));
+    const stateCopy = this.getState();
+    this.listeners.forEach(listener => listener(stateCopy));
   }
 }
 
@@ -970,4 +970,4 @@ export class VocalDevConsoleEngine {
 // SINGLETON EXPORT
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const vocalDevConsole = VocalDevConsoleEngine?.getInstance();
+export const vocalDevConsole = VocalDevConsoleEngine.getInstance();

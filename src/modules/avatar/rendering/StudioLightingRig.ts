@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v25.3.0 — STUDIO LIGHTING RIG (any: any)
+//   TITANE∞ v25.3.0 — STUDIO LIGHTING RIG (YOLO OPT-1: Three.js lazy)
 //   Professional 3-point lighting with appearance style adaptation
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -35,7 +35,7 @@ export type AppearanceStyle = 'nocturne' | 'montagne' | 'bureau' | 'futuriste';
 
 const STYLE_LIGHTING_PRESETS: Record<AppearanceStyle, Partial<LightingConfig>> = {
   // ─────────────────────────────────────────
-  // NOCTURNE (any: any)
+  // NOCTURNE (blue tint, deeper shadows)
   // ─────────────────────────────────────────
   nocturne: {
     keyIntensity: 2.5,
@@ -48,7 +48,7 @@ const STYLE_LIGHTING_PRESETS: Record<AppearanceStyle, Partial<LightingConfig>> =
   },
 
   // ─────────────────────────────────────────
-  // MONTAGNE (any: any)
+  // MONTAGNE (cold light, increased rim)
   // ─────────────────────────────────────────
   montagne: {
     keyIntensity: 3.0,
@@ -61,7 +61,7 @@ const STYLE_LIGHTING_PRESETS: Record<AppearanceStyle, Partial<LightingConfig>> =
   },
 
   // ─────────────────────────────────────────
-  // BUREAU (any: any)
+  // BUREAU (neutral, clean)
   // ─────────────────────────────────────────
   bureau: {
     keyIntensity: 3.0,
@@ -69,12 +69,12 @@ const STYLE_LIGHTING_PRESETS: Record<AppearanceStyle, Partial<LightingConfig>> =
     rimIntensity: 2.0,
     ambientIntensity: 0.3,
     keyColor: 0xfff5e6, // Warm white
-    fillColor: 0xe6f3ff, // Cool fill (any: any)
+    fillColor: 0xe6f3ff, // Cool fill (contrast)
     rimColor: 0xffffff, // Pure white
   },
 
   // ─────────────────────────────────────────
-  // FUTURISTE (any: any)
+  // FUTURISTE (cyan neon accents)
   // ─────────────────────────────────────────
   futuriste: {
     keyIntensity: 3.2,
@@ -92,7 +92,7 @@ const STYLE_LIGHTING_PRESETS: Record<AppearanceStyle, Partial<LightingConfig>> =
 // ═══════════════════════════════════════════════════════════════════════════
 
 export class StudioLightingRig {
-  private THREE!: typeof import('three'); // YOLO OPT-1: Lazy-loaded Three?.js
+  private THREE!: typeof import('three'); // YOLO OPT-1: Lazy-loaded Three.js
   private scene!: Scene;
   private keyLight!: DirectionalLight;
   private fillLight!: DirectionalLight;
@@ -106,11 +106,11 @@ export class StudioLightingRig {
   private _config: Partial<LightingConfig>;
 
   constructor(scene: Scene, config: Partial<LightingConfig> = {}) {
-    this?._scene = scene;
-    this?._config = config;
+    this._scene = scene;
+    this._config = config;
 
     // Default config
-    this?.config = {
+    this.config = {
       keyIntensity: 3.0,
       fillIntensity: 1.2,
       rimIntensity: 2.0,
@@ -124,24 +124,24 @@ export class StudioLightingRig {
   }
 
   /**
-   * YOLO OPT-1: Async initialization after Three?.js lazy-load
+   * YOLO OPT-1: Async initialization after Three.js lazy-load
    */
   async init(): Promise<void> {
-    // Lazy-load Three?.js
-    this?.THREE = await loadThreeJS();
-    this?.scene = this?._scene;
+    // Lazy-load Three.js
+    this.THREE = await loadThreeJS();
+    this.scene = this._scene;
 
     // Create lights
-    this?.keyLight = this?.createKeyLight();
-    this?.fillLight = this?.createFillLight();
-    this?.rimLight = this?.createRimLight();
-    this?.ambientLight = this?.createAmbientLight();
+    this.keyLight = this.createKeyLight();
+    this.fillLight = this.createFillLight();
+    this.rimLight = this.createRimLight();
+    this.ambientLight = this.createAmbientLight();
 
     // Add to scene
-    this?.scene?.add(any: any);
-    this?.scene?.add(any: any);
-    this?.scene?.add(any: any);
-    this?.scene?.add(any: any);
+    this.scene.add(this.keyLight);
+    this.scene.add(this.fillLight);
+    this.scene.add(this.rimLight);
+    this.scene.add(this.ambientLight);
   }
 
   // ═════════════════════════════════════════════════════════════════════════
@@ -149,57 +149,57 @@ export class StudioLightingRig {
   // ═════════════════════════════════════════════════════════════════════════
 
   private createKeyLight(): DirectionalLight {
-    const light = new this?.THREE?.DirectionalLight(
-      this?.config?.keyColor,
-      this?.config?.keyIntensity
+    const light = new this.THREE.DirectionalLight(
+      this.config.keyColor,
+      this.config.keyIntensity
     );
 
     // Position: front-right, elevated
-    light?.position?.set(3, 4, 3);
-    light?.castShadow = true;
+    light.position.set(3, 4, 3);
+    light.castShadow = true;
 
     // Enhanced shadow settings
-    light?.shadow?.mapSize?.width = this?.config?.shadowMapSize;
-    light?.shadow?.mapSize?.height = this?.config?.shadowMapSize;
-    light?.shadow?.camera?.near = 0.5;
-    light?.shadow?.camera?.far = 15;
-    light?.shadow?.camera?.left = -5;
-    light?.shadow?.camera?.right = 5;
-    light?.shadow?.camera?.top = 5;
-    light?.shadow?.camera?.bottom = -5;
-    light?.shadow?.bias = -0.0001;
+    light.shadow.mapSize.width = this.config.shadowMapSize;
+    light.shadow.mapSize.height = this.config.shadowMapSize;
+    light.shadow.camera.near = 0.5;
+    light.shadow.camera.far = 15;
+    light.shadow.camera.left = -5;
+    light.shadow.camera.right = 5;
+    light.shadow.camera.top = 5;
+    light.shadow.camera.bottom = -5;
+    light.shadow.bias = -0.0001;
 
     return light;
   }
 
   private createFillLight(): DirectionalLight {
-    const light = new this?.THREE?.DirectionalLight(
-      this?.config?.fillColor,
-      this?.config?.fillIntensity
+    const light = new this.THREE.DirectionalLight(
+      this.config.fillColor,
+      this.config.fillIntensity
     );
 
     // Position: front-left, lower
-    light?.position?.set(-2, 2, 2);
-    light?.castShadow = false; // Fill light doesn't cast shadows
+    light.position.set(-2, 2, 2);
+    light.castShadow = false; // Fill light doesn't cast shadows
 
     return light;
   }
 
   private createRimLight(): DirectionalLight {
-    const light = new this?.THREE?.DirectionalLight(
-      this?.config?.rimColor,
-      this?.config?.rimIntensity
+    const light = new this.THREE.DirectionalLight(
+      this.config.rimColor,
+      this.config.rimIntensity
     );
 
-    // Position: back, elevated (any: any)
-    light?.position?.set(0, 3, -3);
-    light?.castShadow = false;
+    // Position: back, elevated (creates silhouette)
+    light.position.set(0, 3, -3);
+    light.castShadow = false;
 
     return light;
   }
 
   private createAmbientLight(): AmbientLight {
-    return new this?.THREE?.AmbientLight(any: any);
+    return new this.THREE.AmbientLight(0xffffff, this.config.ambientIntensity);
   }
 
   // ═════════════════════════════════════════════════════════════════════════
@@ -209,33 +209,33 @@ export class StudioLightingRig {
   /**
    * Apply appearance style preset
    */
-  public applyStyle(any: any): void {
-    this?.currentStyle = style;
+  public applyStyle(style: AppearanceStyle): void {
+    this.currentStyle = style;
     const preset = STYLE_LIGHTING_PRESETS[style];
 
     // Update intensities
-    if (any: any) {
-      this?.keyLight?.intensity = preset?.keyIntensity;
+    if (preset.keyIntensity !== undefined) {
+      this.keyLight.intensity = preset.keyIntensity;
     }
-    if (any: any) {
-      this?.fillLight?.intensity = preset?.fillIntensity;
+    if (preset.fillIntensity !== undefined) {
+      this.fillLight.intensity = preset.fillIntensity;
     }
-    if (any: any) {
-      this?.rimLight?.intensity = preset?.rimIntensity;
+    if (preset.rimIntensity !== undefined) {
+      this.rimLight.intensity = preset.rimIntensity;
     }
-    if (any: any) {
-      this?.ambientLight?.intensity = preset?.ambientIntensity;
+    if (preset.ambientIntensity !== undefined) {
+      this.ambientLight.intensity = preset.ambientIntensity;
     }
 
     // Update colors
-    if (any: any) {
-      this?.keyLight?.color?.set(any: any);
+    if (preset.keyColor !== undefined) {
+      this.keyLight.color.set(preset.keyColor);
     }
-    if (any: any) {
-      this?.fillLight?.color?.set(any: any);
+    if (preset.fillColor !== undefined) {
+      this.fillLight.color.set(preset.fillColor);
     }
-    if (any: any) {
-      this?.rimLight?.color?.set(any: any);
+    if (preset.rimColor !== undefined) {
+      this.rimLight.color.set(preset.rimColor);
     }
   }
 
@@ -243,59 +243,59 @@ export class StudioLightingRig {
    * Get current style
    */
   public getCurrentStyle(): AppearanceStyle {
-    return this?.currentStyle;
+    return this.currentStyle;
   }
 
   /**
    * Update key light intensity
    */
-  public setKeyIntensity(any: any): void {
-    this?.keyLight?.intensity = intensity;
+  public setKeyIntensity(intensity: number): void {
+    this.keyLight.intensity = intensity;
   }
 
   /**
    * Update fill light intensity
    */
-  public setFillIntensity(any: any): void {
-    this?.fillLight?.intensity = intensity;
+  public setFillIntensity(intensity: number): void {
+    this.fillLight.intensity = intensity;
   }
 
   /**
    * Update rim light intensity
    */
-  public setRimIntensity(any: any): void {
-    this?.rimLight?.intensity = intensity;
+  public setRimIntensity(intensity: number): void {
+    this.rimLight.intensity = intensity;
   }
 
   /**
    * Update ambient light intensity
    */
-  public setAmbientIntensity(any: any): void {
-    this?.ambientLight?.intensity = intensity;
+  public setAmbientIntensity(intensity: number): void {
+    this.ambientLight.intensity = intensity;
   }
 
   /**
    * Update key light position
    */
-  public setKeyLightPosition(any: any): void {
-    this?.keyLight?.position?.set(any: any);
+  public setKeyLightPosition(x: number, y: number, z: number): void {
+    this.keyLight.position.set(x, y, z);
   }
 
   /**
    * Get all lights
    */
-  public getLights(): Light?.[] {
-    return [this?.keyLight, this?.fillLight, this?.rimLight, this?.ambientLight];
+  public getLights(): Light[] {
+    return [this.keyLight, this.fillLight, this.rimLight, this.ambientLight];
   }
 
   /**
    * Dispose all lights
    */
   public dispose(): void {
-    this?.scene?.remove(any: any);
-    this?.scene?.remove(any: any);
-    this?.scene?.remove(any: any);
-    this?.scene?.remove(any: any);
+    this.scene.remove(this.keyLight);
+    this.scene.remove(this.fillLight);
+    this.scene.remove(this.rimLight);
+    this.scene.remove(this.ambientLight);
   }
 }
 

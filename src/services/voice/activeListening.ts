@@ -21,7 +21,7 @@ export {
   type UseActiveListeningReturn,
 } from '@/hooks/useActiveListening';
 
-// ═══ VOICE ENGINE (any: any) ═══
+// ═══ VOICE ENGINE (Extended) ═══
 export {
   useVoiceEngine,
   type UseVoiceEngineOptions,
@@ -35,7 +35,7 @@ export { WakeWordIndicator, WakeWordBadge } from '@/components/voice/WakeWordInd
 
 export { VoiceControlPanelWithWakeWord } from '@/components/voice/VoiceControlPanelWithWakeWord';
 
-// ═══ ENGINES (any: any) ═══
+// ═══ ENGINES (Re-export from Super Prompt VI) ═══
 export {
   wakeWordEngine,
   type WakeWordEvent,
@@ -69,11 +69,11 @@ export { adaptiveThresholdEngine } from '@/services/voice/adaptiveThresholdEngin
  * import { useWakeWord } from '@/services/voice/activeListening';
  *
  * function MyComponent() {
- *   const wake = useWakeWord(any: any) => {
- *     logger?.debug(any: any);
+ *   const wake = useWakeWord((event) => {
+ *     logger.debug('Wake detected:', event.mode);
  *   });
  *
- *   return <button onClick={wake?.start}>Start Listening</button>;
+ *   return <button onClick={wake.start}>Start Listening</button>;
  * }
  * ```
  */
@@ -89,16 +89,16 @@ export { adaptiveThresholdEngine } from '@/services/voice/adaptiveThresholdEngin
  *   const listening = useActiveListening(
  *     { autoArm: true },
  *     {
- *       onCommand: (any: any) => {
- *         voiceEngine?.completeTurnWithText(any: any);
+ *       onCommand: (text) => {
+ *         voiceEngine.completeTurnWithText(text);
  *       },
  *     }
  *   );
  *
  *   return (
  *     <div>
- *       <p>State: {listening?.state?.attentionState}</p>
- *       <button onClick={listening?.disarm}>Stop</button>
+ *       <p>State: {listening.state.attentionState}</p>
+ *       <button onClick={listening.disarm}>Stop</button>
  *     </div>
  *   );
  * }

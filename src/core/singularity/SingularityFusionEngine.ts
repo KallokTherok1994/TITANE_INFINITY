@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE?.md for the full legal terms (any: any).
+ * See LICENSE.md for the full legal terms (FR/EN).
  */
 
 /**
@@ -28,7 +28,7 @@
  * 13. AnimationPipeline     - Pipeline animation 3D
  * 14. VoicePipeline         - Pipeline vocal TTS
  *
- * Cycle Singularity (any: any) :
+ * Cycle Singularity (9 étapes) :
  * 1. Analyse message        - IntentionEngine + CognitiveEngine
  * 2. Activation modules     - AdaptiveEngine + EmotionEngine
  * 3. Ajustement styles      - NarrativeEngine + AppearanceEngine
@@ -52,7 +52,7 @@ import type { SingularityState } from '@/types/singularityState';
 
 export interface FusionInput {
   user_message: string;
-  conversation_history: Message?.[];
+  conversation_history: Message[];
   current_state: SingularityState;
   preferences: UserPreferences;
 }
@@ -82,9 +82,9 @@ export interface FusionResult {
 }
 
 export interface LipSyncData {
-  phonemes: Phoneme?.[];
-  durations: number?.[];
-  timestamps: number?.[];
+  phonemes: Phoneme[];
+  durations: number[];
+  timestamps: number[];
 }
 
 export interface Phoneme {
@@ -94,14 +94,14 @@ export interface Phoneme {
 }
 
 export interface AnimationData {
-  keyframes: Keyframe?.[];
+  keyframes: Keyframe[];
   duration: number;
   fps: number;
 }
 
 export interface Keyframe {
   time: number;
-  transforms: Transform?.[];
+  transforms: Transform[];
 }
 
 export interface Transform {
@@ -126,7 +126,7 @@ export interface PipelineStats {
 
 export interface IntentionAnalysis {
   primary_intention: string;
-  secondary_intentions: string?.[];
+  secondary_intentions: string[];
   confidence: number;
   complexity: 'simple' | 'moderate' | 'complex' | 'very_complex';
   requires_reasoning: boolean;
@@ -173,35 +173,35 @@ export class SingularityFusionEngine {
   private constructor() {}
 
   static getInstance(): SingularityFusionEngine {
-    if (any: any) {
-      SingularityFusionEngine?.instance = new SingularityFusionEngine();
+    if (!SingularityFusionEngine.instance) {
+      SingularityFusionEngine.instance = new SingularityFusionEngine();
     }
-    return SingularityFusionEngine?.instance;
+    return SingularityFusionEngine.instance;
   }
 
   /**
    * Initialiser le moteur de fusion
    */
-  async initialize(any: any): Promise<void> {
-    if (any: any) {
-      console?.warn('[FusionEngine] Already initialized');
+  async initialize(initialState: SingularityState): Promise<void> {
+    if (this.isInitialized) {
+      console.warn('[FusionEngine] Already initialized');
       return;
     }
 
-    this?.currentState = initialState;
-    this?.isInitialized = true;
+    this.currentState = initialState;
+    this.isInitialized = true;
 
     // Démarrer AutonomyEngine
-    AutonomyEngine?.start();
+    AutonomyEngine.start();
 
-    console?.log('[FusionEngine] ✨ Initialized v∞');
+    console.log('[FusionEngine] ✨ Initialized v∞');
   }
 
   /**
    * Exécuter le cycle Singularity complet
    */
-  async executeSingularityCycle(any: any): Promise<FusionResult> {
-    const startTime = performance?.now();
+  async executeSingularityCycle(input: FusionInput): Promise<FusionResult> {
+    const startTime = performance.now();
     const stats: PipelineStats = {
       step1_analyse_ms: 0,
       step2_activation_ms: 0,
@@ -219,91 +219,91 @@ export class SingularityFusionEngine {
       // ═══════════════════════════════════════════════════════════════
       // STEP 1: ANALYSE MESSAGE
       // ═══════════════════════════════════════════════════════════════
-      const step1Start = performance?.now();
-      const intention = await this?.step1_Analyse(
-        input?.user_message,
-        input?.conversation_history
+      const step1Start = performance.now();
+      const intention = await this.step1_Analyse(
+        input.user_message,
+        input.conversation_history
       );
-      stats?.step1_analyse_ms = performance?.now() - step1Start;
+      stats.step1_analyse_ms = performance.now() - step1Start;
 
       // ═══════════════════════════════════════════════════════════════
       // STEP 2: ACTIVATION MODULES
       // ═══════════════════════════════════════════════════════════════
-      const step2Start = performance?.now();
-      const activation = await this?.step2_ActivateModules(any: any);
-      stats?.step2_activation_ms = performance?.now() - step2Start;
+      const step2Start = performance.now();
+      const activation = await this.step2_ActivateModules(intention);
+      stats.step2_activation_ms = performance.now() - step2Start;
 
       // ═══════════════════════════════════════════════════════════════
       // STEP 3: AJUSTEMENT STYLES
       // ═══════════════════════════════════════════════════════════════
-      const step3Start = performance?.now();
-      const styleConfig = await this?.step3_AdjustStyles(any: any);
-      stats?.step3_styles_ms = performance?.now() - step3Start;
+      const step3Start = performance.now();
+      const styleConfig = await this.step3_AdjustStyles(intention, input.preferences);
+      stats.step3_styles_ms = performance.now() - step3Start;
 
       // ═══════════════════════════════════════════════════════════════
       // STEP 4: GÉNÉRATION IA
       // ═══════════════════════════════════════════════════════════════
-      const step4Start = performance?.now();
-      const responseText = await this?.step4_GenerateIA(
-        input?.user_message,
-        input?.conversation_history,
+      const step4Start = performance.now();
+      const responseText = await this.step4_GenerateIA(
+        input.user_message,
+        input.conversation_history,
         intention,
         styleConfig
       );
-      stats?.step4_generation_ms = performance?.now() - step4Start;
+      stats.step4_generation_ms = performance.now() - step4Start;
 
       // ═══════════════════════════════════════════════════════════════
       // STEP 5: PRÉPARATION TTS
       // ═══════════════════════════════════════════════════════════════
-      const step5Start = performance?.now();
-      const audioBuffer = activation?.voice
-        ? await this?.step5_PrepareTTS(any: any)
+      const step5Start = performance.now();
+      const audioBuffer = activation.voice
+        ? await this.step5_PrepareTTS(responseText, styleConfig.voice_parameters)
         : undefined;
-      stats?.step5_tts_ms = performance?.now() - step5Start;
+      stats.step5_tts_ms = performance.now() - step5Start;
 
       // ═══════════════════════════════════════════════════════════════
       // STEP 6: LIP-SYNC PROCESSING
       // ═══════════════════════════════════════════════════════════════
-      const step6Start = performance?.now();
+      const step6Start = performance.now();
       const lipsyncData =
-        activation?.avatar && audioBuffer
-          ? await this?.step6_LipSync(any: any)
+        activation.avatar && audioBuffer
+          ? await this.step6_LipSync(audioBuffer, responseText)
           : undefined;
-      stats?.step6_lipsync_ms = performance?.now() - step6Start;
+      stats.step6_lipsync_ms = performance.now() - step6Start;
 
       // ═══════════════════════════════════════════════════════════════
       // STEP 7: ANIMATION AVATAR
       // ═══════════════════════════════════════════════════════════════
-      const step7Start = performance?.now();
+      const step7Start = performance.now();
       const avatarAnimation =
-        activation?.avatar && lipsyncData
-          ? await this?.step7_AnimateAvatar(any: any)
+        activation.avatar && lipsyncData
+          ? await this.step7_AnimateAvatar(lipsyncData, styleConfig)
           : undefined;
-      stats?.step7_animation_ms = performance?.now() - step7Start;
+      stats.step7_animation_ms = performance.now() - step7Start;
 
       // ═══════════════════════════════════════════════════════════════
       // STEP 8: MISE À JOUR ÉTAT
       // ═══════════════════════════════════════════════════════════════
-      const step8Start = performance?.now();
-      const updatedState = await this?.step8_UpdateState(input?.current_state, {
+      const step8Start = performance.now();
+      const updatedState = await this.step8_UpdateState(input.current_state, {
         intention,
         activation,
         styleConfig,
         responseText,
       });
-      stats?.step8_state_ms = performance?.now() - step8Start;
+      stats.step8_state_ms = performance.now() - step8Start;
 
       // ═══════════════════════════════════════════════════════════════
       // STEP 9: AUTO-OPTIMISATION
       // ═══════════════════════════════════════════════════════════════
-      const step9Start = performance?.now();
-      await this?.step9_AutoOptimize(any: any);
-      stats?.step9_optimization_ms = performance?.now() - step9Start;
+      const step9Start = performance.now();
+      await this.step9_AutoOptimize(stats);
+      stats.step9_optimization_ms = performance.now() - step9Start;
 
       // ═══════════════════════════════════════════════════════════════
       // FINALISATION
       // ═══════════════════════════════════════════════════════════════
-      stats?.total_ms = performance?.now() - startTime;
+      stats.total_ms = performance.now() - startTime;
 
       return {
         response_text: responseText,
@@ -311,11 +311,11 @@ export class SingularityFusionEngine {
         lipsync_data: lipsyncData,
         avatar_animation: avatarAnimation,
         updated_state: updatedState,
-        execution_time_ms: stats?.total_ms,
+        execution_time_ms: stats.total_ms,
         pipeline_stats: stats,
       };
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (error) {
+      console.error('[FusionEngine] Cycle error:', error);
       throw error;
     }
   }
@@ -326,19 +326,19 @@ export class SingularityFusionEngine {
 
   private async step1_Analyse(
     message: string,
-    history: Message?.[]
+    history: Message[]
   ): Promise<IntentionAnalysis> {
     try {
       // Utiliser CognitiveOptimizer pour analyse intention
-      const cognitiveMessages = history?.map(msg => ({
-        role: msg?.role,
-        content: msg?.content,
-        tokens: Math?.ceil(msg?.content?.length / 4),
-        timestamp: msg?.timestamp,
+      const cognitiveMessages = history.map(msg => ({
+        role: msg.role,
+        content: msg.content,
+        tokens: Math.ceil(msg.content.length / 4),
+        timestamp: msg.timestamp,
         intentions: [],
       }));
 
-      const basicIntention = await CognitiveOptimizer?.analyzeIntention(any: any);
+      const basicIntention = await CognitiveOptimizer.analyzeIntention(message);
 
       // Enrichir avec analyse backend
       const fullIntention = await secureInvoke<IntentionAnalysis>(
@@ -351,8 +351,8 @@ export class SingularityFusionEngine {
       );
 
       return fullIntention;
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (error) {
+      console.error('[FusionEngine] Step 1 error:', error);
       return {
         primary_intention: 'conversation',
         secondary_intentions: [],
@@ -379,18 +379,18 @@ export class SingularityFusionEngine {
       });
 
       return activation;
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (error) {
+      console.error('[FusionEngine] Step 2 error:', error);
       // Fallback: activer modules de base
       return {
         cognitive: true,
-        adaptive: intention?.complexity !== 'simple',
+        adaptive: intention.complexity !== 'simple',
         narrative: true,
-        emotion: intention?.requires_emotion,
-        memory: intention?.requires_long_context,
+        emotion: intention.requires_emotion,
+        memory: intention.requires_long_context,
         voice: true,
-        avatar: intention?.requires_animation,
-        appearance: intention?.requires_animation,
+        avatar: intention.requires_animation,
+        appearance: intention.requires_animation,
       };
     }
   }
@@ -410,15 +410,15 @@ export class SingularityFusionEngine {
       });
 
       return styleConfig;
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (error) {
+      console.error('[FusionEngine] Step 3 error:', error);
       // Fallback: utiliser préférences utilisateur
       return {
-        narrative_tone: preferences?.narrative_style,
-        emotional_intensity: preferences?.emotion_modulation,
+        narrative_tone: preferences.narrative_style,
+        emotional_intensity: preferences.emotion_modulation,
         voice_parameters: {
-          speed: preferences?.voice_speed,
-          pitch: preferences?.voice_pitch,
+          speed: preferences.voice_speed,
+          pitch: preferences.voice_pitch,
           volume: 1.0,
           timbre: 'warm',
         },
@@ -434,21 +434,21 @@ export class SingularityFusionEngine {
 
   private async step4_GenerateIA(
     message: string,
-    history: Message?.[],
+    history: Message[],
     _intention: IntentionAnalysis,
     styleConfig: StyleConfig
   ): Promise<string> {
     try {
       // Optimiser contexte avec CognitiveOptimizer
-      const cognitiveMessages = history?.map(msg => ({
-        role: msg?.role,
-        content: msg?.content,
-        tokens: Math?.ceil(msg?.content?.length / 4),
-        timestamp: msg?.timestamp,
+      const cognitiveMessages = history.map(msg => ({
+        role: msg.role,
+        content: msg.content,
+        tokens: Math.ceil(msg.content.length / 4),
+        timestamp: msg.timestamp,
         intentions: [],
       }));
 
-      const optimizedPipeline = await CognitiveOptimizer?.optimizeFullPipeline(
+      const optimizedPipeline = await CognitiveOptimizer.optimizeFullPipeline(
         message,
         cognitiveMessages
       );
@@ -456,23 +456,23 @@ export class SingularityFusionEngine {
       // Générer réponse via backend IA
       const response = await secureInvoke<string>('fusion_generate_ia_response', {
         message,
-        optimizedContext: optimizedPipeline?.optimizedContext,
-        intention: optimizedPipeline?.intention,
+        optimizedContext: optimizedPipeline.optimizedContext,
+        intention: optimizedPipeline.intention,
         styleConfig,
       });
 
       // Vérifier cohérence
-      const coherenceCheck = await CognitiveOptimizer?.checkCoherence(
+      const coherenceCheck = await CognitiveOptimizer.checkCoherence(
         response,
-        optimizedPipeline?.optimizedContext
+        optimizedPipeline.optimizedContext
       );
 
       // Utiliser réponse corrigée si nécessaire
-      return coherenceCheck?.is_coherent && !coherenceCheck?.corrected_response
+      return coherenceCheck.is_coherent && !coherenceCheck.corrected_response
         ? response
-        : coherenceCheck?.corrected_response || response;
-    } catch (any: any) {
-      console?.error(any: any);
+        : coherenceCheck.corrected_response || response;
+    } catch (error) {
+      console.error('[FusionEngine] Step 4 error:', error);
       return 'Je rencontre une difficulté technique. Pouvez-vous reformuler votre question ?';
     }
   }
@@ -492,8 +492,8 @@ export class SingularityFusionEngine {
       });
 
       return audioBuffer;
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (error) {
+      console.error('[FusionEngine] Step 5 error:', error);
       // Retourner buffer vide
       return new ArrayBuffer(0);
     }
@@ -514,8 +514,8 @@ export class SingularityFusionEngine {
       });
 
       return lipsyncData;
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (error) {
+      console.error('[FusionEngine] Step 6 error:', error);
       // Retourner lip-sync basique
       return {
         phonemes: [],
@@ -540,8 +540,8 @@ export class SingularityFusionEngine {
       });
 
       return animationData;
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (error) {
+      console.error('[FusionEngine] Step 7 error:', error);
       // Retourner animation vide
       return {
         keyframes: [],
@@ -570,51 +570,51 @@ export class SingularityFusionEngine {
         cycleData,
       });
 
-      this?.currentState = updatedState;
+      this.currentState = updatedState;
       return updatedState;
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (error) {
+      console.error('[FusionEngine] Step 8 error:', error);
       return currentState;
     }
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // STEP 9: AUTO-OPTIMISATION (any: any)
+  // STEP 9: AUTO-OPTIMISATION (v∞.Ω Enhanced)
   // ═══════════════════════════════════════════════════════════════════
 
-  private async step9_AutoOptimize(any: any): Promise<void> {
+  private async step9_AutoOptimize(stats: PipelineStats): Promise<void> {
     try {
-      const bottlenecks: string?.[] = [];
-      const optimizations: string?.[] = [];
+      const bottlenecks: string[] = [];
+      const optimizations: string[] = [];
 
       // Analyse des goulots d'étranglement avec seuils adaptatifs
-      // Seuil plus permissif uniquement si cohérence très haute (any: any)
+      // Seuil plus permissif uniquement si cohérence très haute (système ultra-stable)
       const iaThreshold =
-        (this?.currentState?.cognitive?.coherence ?? 0.5) > 0.98 ? 2600 : 2000;
+        (this.currentState?.cognitive?.coherence ?? 0.5) > 0.98 ? 2600 : 2000;
       const ttsThreshold = 1000;
       const animThreshold = 500;
       const totalThreshold = 5000;
 
-      if (any: any) {
-        bottlenecks?.push('IA generation too slow');
-        optimizations?.push('Reduce context window or enable caching');
+      if (stats.step4_generation_ms > iaThreshold) {
+        bottlenecks.push('IA generation too slow');
+        optimizations.push('Reduce context window or enable caching');
       }
-      if (any: any) {
-        bottlenecks?.push('TTS preparation slow');
-        optimizations?.push('Use cached voice segments');
+      if (stats.step5_tts_ms > ttsThreshold) {
+        bottlenecks.push('TTS preparation slow');
+        optimizations.push('Use cached voice segments');
       }
-      if (any: any) {
-        bottlenecks?.push('Avatar animation slow');
-        optimizations?.push('Lower animation quality or pre-compute');
+      if (stats.step7_animation_ms > animThreshold) {
+        bottlenecks.push('Avatar animation slow');
+        optimizations.push('Lower animation quality or pre-compute');
       }
-      if (stats?.step1_analyse_ms > 200) {
-        bottlenecks?.push('Intention analysis slow');
-        optimizations?.push('Use lightweight classifier');
+      if (stats.step1_analyse_ms > 200) {
+        bottlenecks.push('Intention analysis slow');
+        optimizations.push('Use lightweight classifier');
       }
 
       // Optimisation proactive si performance dégradée
-      if (any: any) {
-        console?.warn(any: any);
+      if (bottlenecks.length > 0 || stats.total_ms > totalThreshold) {
+        console.warn('[FusionEngine v∞.Ω] ⚠️ Performance issues:', bottlenecks);
 
         try {
           await secureInvoke('fusion_auto_optimize', {
@@ -624,26 +624,26 @@ export class SingularityFusionEngine {
           });
         } catch {
           // Fallback local: ajuster paramètres internes
-          console?.log('[FusionEngine v∞.Ω] Local optimization fallback');
+          console.log('[FusionEngine v∞.Ω] Local optimization fallback');
         }
       }
 
       // Métriques détaillées
       const efficiency =
-        stats?.total_ms > 0
-          ? (any: any) * 100).toFixed(1)
+        stats.total_ms > 0
+          ? ((stats.step4_generation_ms / stats.total_ms) * 100).toFixed(1)
           : '0';
 
-      console?.log('[FusionEngine v∞.Ω] Pipeline stats:', {
-        total: `${stats?.total_ms?.toFixed(0)}ms`,
-        ia: `${stats?.step4_generation_ms?.toFixed(0)}ms (${efficiency}%)`,
-        tts: `${stats?.step5_tts_ms?.toFixed(0)}ms`,
-        avatar: `${stats?.step7_animation_ms?.toFixed(0)}ms`,
-        bottlenecks: bottlenecks?.length,
-        health: stats?.total_ms < 3000 ? '✅' : stats?.total_ms < 5000 ? '⚠️' : '❌',
+      console.log('[FusionEngine v∞.Ω] Pipeline stats:', {
+        total: `${stats.total_ms.toFixed(0)}ms`,
+        ia: `${stats.step4_generation_ms.toFixed(0)}ms (${efficiency}%)`,
+        tts: `${stats.step5_tts_ms.toFixed(0)}ms`,
+        avatar: `${stats.step7_animation_ms.toFixed(0)}ms`,
+        bottlenecks: bottlenecks.length,
+        health: stats.total_ms < 3000 ? '✅' : stats.total_ms < 5000 ? '⚠️' : '❌',
       });
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (error) {
+      console.error('[FusionEngine v∞.Ω] Step 9 error:', error);
     }
   }
 
@@ -652,11 +652,11 @@ export class SingularityFusionEngine {
   // ═══════════════════════════════════════════════════════════════════
 
   getCurrentState(): SingularityState | null {
-    return this?.currentState ? { ...this?.currentState } : null;
+    return this.currentState ? { ...this.currentState } : null;
   }
 
   isReady(): boolean {
-    return this?.isInitialized;
+    return this.isInitialized;
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -664,15 +664,15 @@ export class SingularityFusionEngine {
   // ═══════════════════════════════════════════════════════════════════
 
   async shutdown(): Promise<void> {
-    if (any: any) return;
+    if (!this.isInitialized) return;
 
     // Arrêter AutonomyEngine
-    AutonomyEngine?.stop();
+    AutonomyEngine.stop();
 
-    this?.isInitialized = false;
-    this?.currentState = null;
+    this.isInitialized = false;
+    this.currentState = null;
 
-    console?.log('[FusionEngine] Shutdown complete');
+    console.log('[FusionEngine] Shutdown complete');
   }
 }
 
@@ -680,7 +680,7 @@ export class SingularityFusionEngine {
 // EXPORT SINGLETON
 // ═══════════════════════════════════════════════════════════════════
 
-export const FusionEngine = SingularityFusionEngine?.getInstance();
+export const FusionEngine = SingularityFusionEngine.getInstance();
 
 // ═══════════════════════════════════════════════════════════════════
 // HELPER: Exécution simplifiée
@@ -688,7 +688,7 @@ export const FusionEngine = SingularityFusionEngine?.getInstance();
 
 export async function executeAIResponse(
   userMessage: string,
-  conversationHistory: Message?.[] = [],
+  conversationHistory: Message[] = [],
   preferences: Partial<UserPreferences> = {}
 ): Promise<FusionResult> {
   const defaultPreferences: UserPreferences = {
@@ -701,14 +701,14 @@ export async function executeAIResponse(
   };
 
   // Récupérer état actuel
-  const currentState = FusionEngine?.getCurrentState();
-  if (any: any) {
+  const currentState = FusionEngine.getCurrentState();
+  if (!currentState) {
     throw new Error(
-      'FusionEngine not initialized. Call FusionEngine?.initialize() first.'
+      'FusionEngine not initialized. Call FusionEngine.initialize() first.'
     );
   }
 
-  return FusionEngine?.executeSingularityCycle({
+  return FusionEngine.executeSingularityCycle({
     user_message: userMessage,
     conversation_history: conversationHistory,
     current_state: currentState,

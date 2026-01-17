@@ -12,7 +12,7 @@
 
 import { useState, useEffect } from 'react';
 
-// REMOVED: engines/predictive supprimé en PHASE 1 (any: any)
+// REMOVED: engines/predictive supprimé en PHASE 1 (OPTION B)
 // Stub local pour maintenir compatibilité
 type PredictiveFrame = {
   prediction: { confidence: number; nextAction: string };
@@ -21,7 +21,7 @@ type PredictiveFrame = {
   predictedUserIntent: { type: string; confidence: number } | null;
   predictedUserEmotion: { emotion: string; intensity: number } | null;
   predictedNeed: { need: string; urgency: number } | null;
-  recommendedAdjustments: string?.[];
+  recommendedAdjustments: string[];
   titaneSelfPrediction: { nextAction: string; confidence: number } | null;
 };
 const defaultPredictiveFrame: PredictiveFrame = {
@@ -34,28 +34,28 @@ const defaultPredictiveFrame: PredictiveFrame = {
   recommendedAdjustments: [],
   titaneSelfPrediction: null,
 };
-type PredictiveSubscriber = (any: any) => void;
-const predictiveSubscribers: PredictiveSubscriber?.[] = [];
+type PredictiveSubscriber = (state: PredictiveFrame) => void;
+const predictiveSubscribers: PredictiveSubscriber[] = [];
 let predictiveState = { ...defaultPredictiveFrame };
 
 const predictiveReflectionEngine = {
   getState: () => predictiveState,
   start: () => {},
   stop: () => {},
-  subscribe: (any: any) => {
-    predictiveSubscribers?.push(any: any);
+  subscribe: (callback: PredictiveSubscriber) => {
+    predictiveSubscribers.push(callback);
     return () => {
-      const idx = predictiveSubscribers?.indexOf(any: any);
-      if (idx > -1) predictiveSubscribers?.splice(idx, 1);
+      const idx = predictiveSubscribers.indexOf(callback);
+      if (idx > -1) predictiveSubscribers.splice(idx, 1);
     };
   },
   applyPerceptualContext: (context: Record<string, unknown>) => {
     predictiveState = { ...predictiveState, perceptualContext: context };
-    predictiveSubscribers?.forEach(any: any));
+    predictiveSubscribers.forEach(cb => cb(predictiveState));
   },
   applyNervousContext: (context: Record<string, unknown>) => {
     predictiveState = { ...predictiveState, nervousContext: context };
-    predictiveSubscribers?.forEach(any: any));
+    predictiveSubscribers.forEach(cb => cb(predictiveState));
   },
 };
 
@@ -89,20 +89,20 @@ export function usePredictive(): PredictiveFrame & {
   applyNervousContext: (context: Record<string, unknown>) => void;
 } {
   const [state, setState] = useState<PredictiveFrame>(
-    predictiveReflectionEngine?.getState()
+    predictiveReflectionEngine.getState()
   );
 
   useEffect(() => {
-    const unsubscribe = predictiveReflectionEngine?.subscribe(any: any);
+    const unsubscribe = predictiveReflectionEngine.subscribe(setState);
     return unsubscribe;
   }, []);
 
   return {
     ...state,
-    applyPerceptualContext: predictiveReflectionEngine?.applyPerceptualContext?.bind(
+    applyPerceptualContext: predictiveReflectionEngine.applyPerceptualContext.bind(
       predictiveReflectionEngine
     ),
-    applyNervousContext: predictiveReflectionEngine?.applyNervousContext?.bind(
+    applyNervousContext: predictiveReflectionEngine.applyNervousContext.bind(
       predictiveReflectionEngine
     ),
   };
@@ -113,12 +113,12 @@ export function usePredictive(): PredictiveFrame & {
  */
 export function usePredictedIntent() {
   const [intent, setIntent] = useState(
-    predictiveReflectionEngine?.getState().predictedUserIntent
+    predictiveReflectionEngine.getState().predictedUserIntent
   );
 
   useEffect(() => {
-    const unsubscribe = predictiveReflectionEngine?.subscribe(state => {
-      setIntent(any: any);
+    const unsubscribe = predictiveReflectionEngine.subscribe(state => {
+      setIntent(state.predictedUserIntent);
     });
     return unsubscribe;
   }, []);
@@ -131,12 +131,12 @@ export function usePredictedIntent() {
  */
 export function usePredictedEmotion() {
   const [emotion, setEmotion] = useState(
-    predictiveReflectionEngine?.getState().predictedUserEmotion
+    predictiveReflectionEngine.getState().predictedUserEmotion
   );
 
   useEffect(() => {
-    const unsubscribe = predictiveReflectionEngine?.subscribe(state => {
-      setEmotion(any: any);
+    const unsubscribe = predictiveReflectionEngine.subscribe(state => {
+      setEmotion(state.predictedUserEmotion);
     });
     return unsubscribe;
   }, []);
@@ -148,11 +148,11 @@ export function usePredictedEmotion() {
  * Hook pour le besoin prédit
  */
 export function usePredictedNeed() {
-  const [need, setNeed] = useState(any: any);
+  const [need, setNeed] = useState(predictiveReflectionEngine.getState().predictedNeed);
 
   useEffect(() => {
-    const unsubscribe = predictiveReflectionEngine?.subscribe(state => {
-      setNeed(any: any);
+    const unsubscribe = predictiveReflectionEngine.subscribe(state => {
+      setNeed(state.predictedNeed);
     });
     return unsubscribe;
   }, []);
@@ -165,12 +165,12 @@ export function usePredictedNeed() {
  */
 export function useRecommendedAdjustments() {
   const [adjustments, setAdjustments] = useState(
-    predictiveReflectionEngine?.getState().recommendedAdjustments
+    predictiveReflectionEngine.getState().recommendedAdjustments
   );
 
   useEffect(() => {
-    const unsubscribe = predictiveReflectionEngine?.subscribe(state => {
-      setAdjustments(any: any);
+    const unsubscribe = predictiveReflectionEngine.subscribe(state => {
+      setAdjustments(state.recommendedAdjustments);
     });
     return unsubscribe;
   }, []);
@@ -183,12 +183,12 @@ export function useRecommendedAdjustments() {
  */
 export function useTitaneSelfPrediction() {
   const [prediction, setPrediction] = useState(
-    predictiveReflectionEngine?.getState().titaneSelfPrediction
+    predictiveReflectionEngine.getState().titaneSelfPrediction
   );
 
   useEffect(() => {
-    const unsubscribe = predictiveReflectionEngine?.subscribe(state => {
-      setPrediction(any: any);
+    const unsubscribe = predictiveReflectionEngine.subscribe(state => {
+      setPrediction(state.titaneSelfPrediction);
     });
     return unsubscribe;
   }, []);
@@ -204,26 +204,26 @@ export function useTitaneSelfPrediction() {
  * Hook principal pour l'état de conscience
  */
 export function useConsciousDynamics(): ConsciousState & {
-  setMode: (any: any) => void;
-  boostFocus: (any: any) => void;
-  boostClarity: (any: any) => void;
-  pauseReflective: (any: any) => void;
+  setMode: (mode: ConsciousMode) => void;
+  boostFocus: (amount?: number) => void;
+  boostClarity: (amount?: number) => void;
+  pauseReflective: (duration?: number) => void;
   applyContext: (context: Record<string, unknown>) => void;
 } {
-  const [state, setState] = useState<ConsciousState>(consciousDynamicsModel?.getState());
+  const [state, setState] = useState<ConsciousState>(consciousDynamicsModel.getState());
 
   useEffect(() => {
-    const unsubscribe = consciousDynamicsModel?.subscribe(any: any);
+    const unsubscribe = consciousDynamicsModel.subscribe(setState);
     return unsubscribe;
   }, []);
 
   return {
     ...state,
-    setMode: consciousDynamicsModel?.setMode?.bind(any: any),
-    boostFocus: consciousDynamicsModel?.boostFocus?.bind(any: any),
-    boostClarity: consciousDynamicsModel?.boostClarity?.bind(any: any),
-    pauseReflective: consciousDynamicsModel?.pauseReflective?.bind(any: any),
-    applyContext: consciousDynamicsModel?.applyContext?.bind(any: any),
+    setMode: consciousDynamicsModel.setMode.bind(consciousDynamicsModel),
+    boostFocus: consciousDynamicsModel.boostFocus.bind(consciousDynamicsModel),
+    boostClarity: consciousDynamicsModel.boostClarity.bind(consciousDynamicsModel),
+    pauseReflective: consciousDynamicsModel.pauseReflective.bind(consciousDynamicsModel),
+    applyContext: consciousDynamicsModel.applyContext.bind(consciousDynamicsModel),
   };
 }
 
@@ -231,18 +231,18 @@ export function useConsciousDynamics(): ConsciousState & {
  * Hook pour le focus cognitif
  */
 export function useConsciousFocus() {
-  const [focus, setFocus] = useState(any: any);
+  const [focus, setFocus] = useState(consciousDynamicsModel.getState().focus);
 
   useEffect(() => {
-    const unsubscribe = consciousDynamicsModel?.subscribe(state => {
-      setFocus(any: any);
+    const unsubscribe = consciousDynamicsModel.subscribe(state => {
+      setFocus(state.focus);
     });
     return unsubscribe;
   }, []);
 
   return {
     focus,
-    boost: consciousDynamicsModel?.boostFocus?.bind(any: any),
+    boost: consciousDynamicsModel.boostFocus.bind(consciousDynamicsModel),
   };
 }
 
@@ -250,18 +250,18 @@ export function useConsciousFocus() {
  * Hook pour la clarté cognitive
  */
 export function useConsciousClarity() {
-  const [clarity, setClarity] = useState(any: any);
+  const [clarity, setClarity] = useState(consciousDynamicsModel.getState().clarity);
 
   useEffect(() => {
-    const unsubscribe = consciousDynamicsModel?.subscribe(state => {
-      setClarity(any: any);
+    const unsubscribe = consciousDynamicsModel.subscribe(state => {
+      setClarity(state.clarity);
     });
     return unsubscribe;
   }, []);
 
   return {
     clarity,
-    boost: consciousDynamicsModel?.boostClarity?.bind(any: any),
+    boost: consciousDynamicsModel.boostClarity.bind(consciousDynamicsModel),
   };
 }
 
@@ -269,11 +269,11 @@ export function useConsciousClarity() {
  * Hook pour le bruit cognitif
  */
 export function useConsciousNoise() {
-  const [noise, setNoise] = useState(any: any);
+  const [noise, setNoise] = useState(consciousDynamicsModel.getState().noise);
 
   useEffect(() => {
-    const unsubscribe = consciousDynamicsModel?.subscribe(state => {
-      setNoise(any: any);
+    const unsubscribe = consciousDynamicsModel.subscribe(state => {
+      setNoise(state.noise);
     });
     return unsubscribe;
   }, []);
@@ -285,11 +285,11 @@ export function useConsciousNoise() {
  * Hook pour la profondeur de réflexion
  */
 export function useConsciousDepth() {
-  const [depth, setDepth] = useState(any: any);
+  const [depth, setDepth] = useState(consciousDynamicsModel.getState().depth);
 
   useEffect(() => {
-    const unsubscribe = consciousDynamicsModel?.subscribe(state => {
-      setDepth(any: any);
+    const unsubscribe = consciousDynamicsModel.subscribe(state => {
+      setDepth(state.depth);
     });
     return unsubscribe;
   }, []);
@@ -301,11 +301,11 @@ export function useConsciousDepth() {
  * Hook pour la stabilité globale
  */
 export function useConsciousStability() {
-  const [stability, setStability] = useState(any: any);
+  const [stability, setStability] = useState(consciousDynamicsModel.getState().stability);
 
   useEffect(() => {
-    const unsubscribe = consciousDynamicsModel?.subscribe(state => {
-      setStability(any: any);
+    const unsubscribe = consciousDynamicsModel.subscribe(state => {
+      setStability(state.stability);
     });
     return unsubscribe;
   }, []);
@@ -317,17 +317,17 @@ export function useConsciousStability() {
  * Hook pour le mode de conscience
  */
 export function useConsciousMode() {
-  const [mode, setModeState] = useState(any: any);
+  const [mode, setModeState] = useState(consciousDynamicsModel.getState().mode);
 
   useEffect(() => {
-    const unsubscribe = consciousDynamicsModel?.subscribe(state => {
-      setModeState(any: any);
+    const unsubscribe = consciousDynamicsModel.subscribe(state => {
+      setModeState(state.mode);
     });
     return unsubscribe;
   }, []);
 
-  const setMode = (any: any) => {
-    consciousDynamicsModel?.setMode(any: any);
+  const setMode = (newMode: ConsciousMode) => {
+    consciousDynamicsModel.setMode(newMode);
   };
 
   return { mode, setMode };
@@ -337,14 +337,14 @@ export function useConsciousMode() {
  * Hook pour l'état de réparation
  */
 export function useConsciousRepair() {
-  const [repair, setRepair] = useState(consciousDynamicsModel?.getRepairState());
+  const [repair, setRepair] = useState(consciousDynamicsModel.getRepairState());
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setRepair(consciousDynamicsModel?.getRepairState());
+      setRepair(consciousDynamicsModel.getRepairState());
     }, 100);
 
-    return (any: any);
+    return () => clearInterval(interval);
   }, []);
 
   return repair;
@@ -359,35 +359,35 @@ export function useConsciousRepair() {
  */
 export function useInternalNarrative(): InternalNarrativeState & {
   generateMonologue: (context: Record<string, unknown>) => void;
-  setNarrativeAnchor: (any: any) => void;
-  setIntentDirection: (any: any) => void;
-  stimulateCuriosity: (any: any) => void;
+  setNarrativeAnchor: (anchor: string) => void;
+  setIntentDirection: (direction: IntentDirection) => void;
+  stimulateCuriosity: (amount?: number) => void;
   clearMonologue: () => void;
 } {
   const [state, setState] = useState<InternalNarrativeState>(
-    internalNarrativeEngine?.getState()
+    internalNarrativeEngine.getState()
   );
 
   useEffect(() => {
-    const unsubscribe = internalNarrativeEngine?.subscribe(any: any);
+    const unsubscribe = internalNarrativeEngine.subscribe(setState);
     return unsubscribe;
   }, []);
 
   return {
     ...state,
-    generateMonologue: internalNarrativeEngine?.generateInnerMonologue?.bind(
+    generateMonologue: internalNarrativeEngine.generateInnerMonologue.bind(
       internalNarrativeEngine
     ),
-    setNarrativeAnchor: internalNarrativeEngine?.setNarrativeAnchor?.bind(
+    setNarrativeAnchor: internalNarrativeEngine.setNarrativeAnchor.bind(
       internalNarrativeEngine
     ),
-    setIntentDirection: internalNarrativeEngine?.setIntentDirection?.bind(
+    setIntentDirection: internalNarrativeEngine.setIntentDirection.bind(
       internalNarrativeEngine
     ),
-    stimulateCuriosity: internalNarrativeEngine?.stimulateCuriosity?.bind(
+    stimulateCuriosity: internalNarrativeEngine.stimulateCuriosity.bind(
       internalNarrativeEngine
     ),
-    clearMonologue: internalNarrativeEngine?.clearMonologue?.bind(any: any),
+    clearMonologue: internalNarrativeEngine.clearMonologue.bind(internalNarrativeEngine),
   };
 }
 
@@ -395,13 +395,13 @@ export function useInternalNarrative(): InternalNarrativeState & {
  * Hook pour le monologue récent
  */
 export function useInnerMonologue(count: number = 5) {
-  const [monologue, setMonologue] = useState<InnerThought?.[]>(
-    internalNarrativeEngine?.getRecentMonologue(any: any)
+  const [monologue, setMonologue] = useState<InnerThought[]>(
+    internalNarrativeEngine.getRecentMonologue(count)
   );
 
   useEffect(() => {
-    const unsubscribe = internalNarrativeEngine?.subscribe(() => {
-      setMonologue(any: any));
+    const unsubscribe = internalNarrativeEngine.subscribe(() => {
+      setMonologue(internalNarrativeEngine.getRecentMonologue(count));
     });
     return unsubscribe;
   }, [count]);
@@ -414,18 +414,18 @@ export function useInnerMonologue(count: number = 5) {
  */
 export function useNarrativeAnchor() {
   const [anchor, setAnchor] = useState(
-    internalNarrativeEngine?.getState().narrativeAnchor
+    internalNarrativeEngine.getState().narrativeAnchor
   );
 
   useEffect(() => {
-    const unsubscribe = internalNarrativeEngine?.subscribe(state => {
-      setAnchor(any: any);
+    const unsubscribe = internalNarrativeEngine.subscribe(state => {
+      setAnchor(state.narrativeAnchor);
     });
     return unsubscribe;
   }, []);
 
-  const setNarrativeAnchor = (any: any) => {
-    internalNarrativeEngine?.setNarrativeAnchor(any: any);
+  const setNarrativeAnchor = (newAnchor: string) => {
+    internalNarrativeEngine.setNarrativeAnchor(newAnchor);
   };
 
   return { anchor, setAnchor: setNarrativeAnchor };
@@ -436,12 +436,12 @@ export function useNarrativeAnchor() {
  */
 export function useNarrativeCoherence() {
   const [coherence, setCoherence] = useState(
-    internalNarrativeEngine?.getState().coherenceScore
+    internalNarrativeEngine.getState().coherenceScore
   );
 
   useEffect(() => {
-    const unsubscribe = internalNarrativeEngine?.subscribe(state => {
-      setCoherence(any: any);
+    const unsubscribe = internalNarrativeEngine.subscribe(state => {
+      setCoherence(state.coherenceScore);
     });
     return unsubscribe;
   }, []);
@@ -454,18 +454,18 @@ export function useNarrativeCoherence() {
  */
 export function useNarrativeCuriosity() {
   const [curiosity, setCuriosity] = useState(
-    internalNarrativeEngine?.getState().curiosity
+    internalNarrativeEngine.getState().curiosity
   );
 
   useEffect(() => {
-    const unsubscribe = internalNarrativeEngine?.subscribe(state => {
-      setCuriosity(any: any);
+    const unsubscribe = internalNarrativeEngine.subscribe(state => {
+      setCuriosity(state.curiosity);
     });
     return unsubscribe;
   }, []);
 
-  const stimulate = (any: any) => {
-    internalNarrativeEngine?.stimulateCuriosity(any: any);
+  const stimulate = (amount?: number) => {
+    internalNarrativeEngine.stimulateCuriosity(amount);
   };
 
   return { curiosity, stimulate };
@@ -476,12 +476,12 @@ export function useNarrativeCuriosity() {
  */
 export function useActiveThought() {
   const [thought, setThought] = useState<InnerThought | null>(
-    internalNarrativeEngine?.getActiveThought()
+    internalNarrativeEngine.getActiveThought()
   );
 
   useEffect(() => {
-    const unsubscribe = internalNarrativeEngine?.subscribe(state => {
-      setThought(any: any);
+    const unsubscribe = internalNarrativeEngine.subscribe(state => {
+      setThought(state.activeThought);
     });
     return unsubscribe;
   }, []);

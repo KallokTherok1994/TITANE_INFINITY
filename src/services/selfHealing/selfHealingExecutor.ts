@@ -13,7 +13,7 @@
  * - Communication avec le backend Rust
  * - Notifications utilisateur
  *
- * @architecture Layer 4 of 5 (any: any)
+ * @architecture Layer 4 of 5 (Observer → Analyzer → Playbook → Executor → Sync)
  * @version vΩ∞
  * @created 2025-01-07
  */
@@ -26,7 +26,7 @@ import {
   type HealingActionType,
   type HealingResult,
   type HealingImpactReport,
-} from './selfHealing?.config';
+} from './selfHealing.config';
 import { type ExecutionPlan, type PlannedAction } from './selfHealingPlaybookEngine';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -71,17 +71,17 @@ export interface PlanExecutionResult {
   actionsSucceeded: number;
   actionsFailed: number;
   actionsSkipped: number;
-  results: ActionResult?.[];
+  results: ActionResult[];
   rollbackPerformed: boolean;
-  rollbackResults?: ActionResult?.[];
+  rollbackResults?: ActionResult[];
   impactReport: HealingImpactReport;
 }
 
 /** État d'exécution en cours */
 export interface ExecutionState {
   isExecuting: boolean;
-  currentPlanId??: string | null;
-  currentActionId??: string | null;
+  currentPlanId: string | null;
+  currentActionId: string | null;
   progress: number;
   startTime: number | null;
 }
@@ -111,98 +111,98 @@ const DEFAULT_CONFIG: ExecutorConfig = {
 // ACTION HANDLERS
 // ═══════════════════════════════════════════════════════════════════════════
 
-type ActionHandler = (any: any) => Promise<unknown>;
+type ActionHandler = (action: HealingAction) => Promise<unknown>;
 
 const ACTION_HANDLERS: Record<HealingActionType, ActionHandler> = {
   restart_module: async action => {
     return secureInvoke('selfheal_restart_module', {
-      module: action?.targetModule,
-      force: action?.parameters?.force ?? false,
+      module: action.targetModule,
+      force: action.parameters.force ?? false,
     });
   },
 
   clear_cache: async action => {
     return secureInvoke('selfheal_clear_cache', {
-      module: action?.targetModule,
-      cacheType: action?.parameters?.type ?? 'all',
+      module: action.targetModule,
+      cacheType: action.parameters.type ?? 'all',
     });
   },
 
   regenerate_config: async action => {
     return secureInvoke('selfheal_regenerate_config', {
-      module: action?.targetModule,
-      template: action?.parameters?.template ?? 'default',
+      module: action.targetModule,
+      template: action.parameters.template ?? 'default',
     });
   },
 
   repair_json: async action => {
     return secureInvoke('selfheal_repair_json', {
-      file: action?.parameters?.file,
-      backup: action?.parameters?.backup ?? true,
+      file: action.parameters.file,
+      backup: action.parameters.backup ?? true,
     });
   },
 
   rebuild_memory: async action => {
     return secureInvoke('selfheal_rebuild_memory', {
-      scope: action?.parameters?.type ?? 'full',
-      preserveRecent: action?.parameters?.preserveRecent ?? true,
+      scope: action.parameters.type ?? 'full',
+      preserveRecent: action.parameters.preserveRecent ?? true,
     });
   },
 
   fallback_provider: async action => {
-    const providers = action?.parameters?.providers as string?.[] | undefined;
+    const providers = action.parameters.providers as string[] | undefined;
     return secureInvoke('selfheal_switch_provider', {
-      module: action?.targetModule,
+      module: action.targetModule,
       providers: providers ?? [],
     });
   },
 
   reset_state: async action => {
     return secureInvoke('selfheal_reset_state', {
-      module: action?.targetModule,
-      scope: action?.parameters?.scope ?? 'module',
-      source: action?.parameters?.source,
+      module: action.targetModule,
+      scope: action.parameters.scope ?? 'module',
+      source: action.parameters.source,
     });
   },
 
   restart_worker: async action => {
     return secureInvoke('selfheal_restart_worker', {
-      module: action?.targetModule,
-      graceful: action?.parameters?.graceful ?? true,
+      module: action.targetModule,
+      graceful: action.parameters.graceful ?? true,
     });
   },
 
   patch_component: async action => {
     // Patch côté frontend via React
     const { patchReactComponent } = await import('./healingActions/patchComponent');
-    return patchReactComponent(any: any);
+    return patchReactComponent(action.targetModule, action.parameters);
   },
 
   restart_process: async action => {
     return secureInvoke('selfheal_restart_process', {
-      module: action?.targetModule,
-      emergency: action?.parameters?.emergency ?? false,
+      module: action.targetModule,
+      emergency: action.parameters.emergency ?? false,
     });
   },
 
   sync_state: async action => {
     return secureInvoke('selfheal_sync_state', {
-      module: action?.targetModule,
-      force: action?.parameters?.force ?? false,
+      module: action.targetModule,
+      force: action.parameters.force ?? false,
     });
   },
 
   mini_audit: async action => {
     return secureInvoke('selfheal_mini_audit', {
-      module: action?.targetModule,
-      depth: action?.parameters?.depth ?? 'standard',
+      module: action.targetModule,
+      depth: action.parameters.depth ?? 'standard',
     });
   },
 
   isolate_module: async action => {
     return secureInvoke('selfheal_isolate_module', {
-      module: action?.targetModule,
-      reason: action?.parameters?.reason ?? 'auto-healing',
+      module: action.targetModule,
+      reason: action.parameters.reason ?? 'auto-healing',
     });
   },
 
@@ -221,29 +221,29 @@ export class SelfHealingExecutor {
 
   private config: ExecutorConfig;
   private state: ExecutionState;
-  private executionHistory: PlanExecutionResult?.[];
+  private executionHistory: PlanExecutionResult[];
   private progressCallbacks: Set<ProgressCallback>;
   private abortController: AbortController | null;
 
   private constructor() {
-    this?.config = { ...DEFAULT_CONFIG };
-    this?.state = {
+    this.config = { ...DEFAULT_CONFIG };
+    this.state = {
       isExecuting: false,
       currentPlanId: null,
       currentActionId: null,
       progress: 0,
       startTime: null,
     };
-    this?.executionHistory = [];
-    this?.progressCallbacks = new Set();
-    this?.abortController = null;
+    this.executionHistory = [];
+    this.progressCallbacks = new Set();
+    this.abortController = null;
   }
 
   public static getInstance(): SelfHealingExecutor {
-    if (any: any) {
-      SelfHealingExecutor?.instance = new SelfHealingExecutor();
+    if (!SelfHealingExecutor.instance) {
+      SelfHealingExecutor.instance = new SelfHealingExecutor();
     }
-    return SelfHealingExecutor?.instance;
+    return SelfHealingExecutor.instance;
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -251,20 +251,20 @@ export class SelfHealingExecutor {
   // ═══════════════════════════════════════════════════════════════════════════
 
   public configure(config: Partial<ExecutorConfig>): void {
-    this?.config = { ...this?.config, ...config };
+    this.config = { ...this.config, ...config };
   }
 
   public getConfig(): ExecutorConfig {
-    return { ...this?.config };
+    return { ...this.config };
   }
 
   public getState(): ExecutionState {
-    return { ...this?.state };
+    return { ...this.state };
   }
 
-  public onProgress(any: any): () => void {
-    this?.progressCallbacks?.add(any: any);
-    return (any: any);
+  public onProgress(callback: ProgressCallback): () => void {
+    this.progressCallbacks.add(callback);
+    return () => this.progressCallbacks.delete(callback);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -274,74 +274,74 @@ export class SelfHealingExecutor {
   /**
    * Exécute un plan de réparation complet
    */
-  public async executePlan(any: any): Promise<PlanExecutionResult> {
-    if (any: any) {
+  public async executePlan(plan: ExecutionPlan): Promise<PlanExecutionResult> {
+    if (!this.config.enabled) {
       throw new Error('Executor is disabled');
     }
 
-    if (any: any) {
+    if (this.state.isExecuting) {
       throw new Error('Another plan is already executing');
     }
 
     // Initialiser l'état
-    this?.state = {
+    this.state = {
       isExecuting: true,
-      currentPlanId: plan?.id,
+      currentPlanId: plan.id,
       currentActionId: null,
       progress: 0,
-      startTime: Date?.now(),
+      startTime: Date.now(),
     };
 
-    this?.abortController = new AbortController();
+    this.abortController = new AbortController();
 
-    logger?.debug(`[SelfHealingExecutor] 🚀 Starting plan: ${plan?.playbookName}`);
+    logger.debug(`[SelfHealingExecutor] 🚀 Starting plan: ${plan.playbookName}`);
 
     // Notifier le début
-    if (any: any) {
-      await this?.emitNotification('healing_start', {
-        planId: plan?.id,
-        playbookName: plan?.playbookName,
-        estimatedDuration: plan?.estimatedDuration,
+    if (this.config.notifyOnStart) {
+      await this.emitNotification('healing_start', {
+        planId: plan.id,
+        playbookName: plan.playbookName,
+        estimatedDuration: plan.estimatedDuration,
       });
     }
 
-    const startTime = Date?.now();
-    const results: ActionResult?.[] = [];
+    const startTime = Date.now();
+    const results: ActionResult[] = [];
     let rollbackPerformed = false;
-    let rollbackResults: ActionResult?.[] | undefined;
+    let rollbackResults: ActionResult[] | undefined;
     let needsRollback = false;
 
     try {
       // Exécuter les actions
-      for (let i = 0; i < plan?.actions?.length; i++) {
-        const plannedAction = plan?.actions[i];
-        if (any: any) continue;
+      for (let i = 0; i < plan.actions.length; i++) {
+        const plannedAction = plan.actions[i];
+        if (!plannedAction) continue;
 
         // Vérifier l'annulation
-        if (any: any) {
-          results?.push(any: any));
+        if (this.abortController.signal.aborted) {
+          results.push(this.createSkippedResult(plannedAction));
           continue;
         }
 
         // Mettre à jour l'état
-        this?.state?.currentActionId = plannedAction?.id;
-        this?.state?.progress = (any: any) * 100;
-        this?.notifyProgress();
+        this.state.currentActionId = plannedAction.id;
+        this.state.progress = (i / plan.actions.length) * 100;
+        this.notifyProgress();
 
         // Exécuter l'action
-        const result = await this?.executeAction(any: any);
-        results?.push(any: any);
+        const result = await this.executeAction(plannedAction);
+        results.push(result);
 
         // Notifier la progression
-        this?.notifyProgress(any: any);
+        this.notifyProgress(result);
 
         // Gérer l'échec selon la politique
-        if (result?.status === 'failed' || result?.status === 'timeout') {
-          if (plannedAction?.action?.onFailure === 'abort') {
-            logger?.debug(`[SelfHealingExecutor] ❌ Aborting plan due to failed action`);
-            needsRollback = this?.config?.autoRollback && plan?.rollbackActions?.length > 0;
+        if (result.status === 'failed' || result.status === 'timeout') {
+          if (plannedAction.action.onFailure === 'abort') {
+            logger.debug(`[SelfHealingExecutor] ❌ Aborting plan due to failed action`);
+            needsRollback = this.config.autoRollback && plan.rollbackActions.length > 0;
             break;
-          } else if (plannedAction?.action?.onFailure === 'rollback') {
+          } else if (plannedAction.action.onFailure === 'rollback') {
             needsRollback = true;
             break;
           }
@@ -350,34 +350,34 @@ export class SelfHealingExecutor {
       }
 
       // Rollback si nécessaire
-      if (needsRollback && plan?.rollbackActions?.length > 0) {
-        logger?.debug(`[SelfHealingExecutor] 🔄 Performing rollback...`);
-        rollbackResults = await this?.executeRollback(any: any);
+      if (needsRollback && plan.rollbackActions.length > 0) {
+        logger.debug(`[SelfHealingExecutor] 🔄 Performing rollback...`);
+        rollbackResults = await this.executeRollback(plan.rollbackActions);
         rollbackPerformed = true;
       }
-    } catch (any: any) {
-      const err = error instanceof Error ? error : new Error(any: any));
-      logger?.error(
+    } catch (error) {
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
         'SelfHealing plan execution failed',
-        { component: 'SelfHealingExecutor', action: 'executePlan', planId: plan?.id },
+        { component: 'SelfHealingExecutor', action: 'executePlan', planId: plan.id },
         err
       );
 
-      if (any: any) {
-        await this?.emitNotification('healing_error', {
-          planId: plan?.id,
-          error: error instanceof Error ? error?.message : String(any: any),
+      if (this.config.notifyOnError) {
+        await this.emitNotification('healing_error', {
+          planId: plan.id,
+          error: error instanceof Error ? error.message : String(error),
         });
       }
     }
 
     // Calculer les statistiques
-    const endTime = Date?.now();
-    const succeeded = results?.filter(r => r?.status === 'success').length;
-    const failed = results?.filter(
-      r => r?.status === 'failed' || r?.status === 'timeout'
+    const endTime = Date.now();
+    const succeeded = results.filter(r => r.status === 'success').length;
+    const failed = results.filter(
+      r => r.status === 'failed' || r.status === 'timeout'
     ).length;
-    const skipped = results?.filter(r => r?.status === 'skipped').length;
+    const skipped = results.filter(r => r.status === 'skipped').length;
 
     // Déterminer le statut global
     let status: HealingResult;
@@ -385,26 +385,26 @@ export class SelfHealingExecutor {
       status = 'success';
     } else if (succeeded > 0 && failed > 0) {
       status = 'partial';
-    } else if (any: any) {
+    } else if (failed === results.length) {
       status = 'failed';
-    } else if (any: any) {
+    } else if (rollbackPerformed) {
       status = 'failed';
     } else {
       status = 'partial';
     }
 
     // Créer le rapport d'impact
-    const impactReport = this?.generateImpactReport(any: any);
+    const impactReport = this.generateImpactReport(plan, results, startTime, endTime);
 
     // Construire le résultat
     const executionResult: PlanExecutionResult = {
-      planId: plan?.id,
-      playbookId: plan?.playbookId,
+      planId: plan.id,
+      playbookId: plan.playbookId,
       status,
       startTime,
       endTime,
       duration: endTime - startTime,
-      actionsExecuted: results?.length,
+      actionsExecuted: results.length,
       actionsSucceeded: succeeded,
       actionsFailed: failed,
       actionsSkipped: skipped,
@@ -415,34 +415,34 @@ export class SelfHealingExecutor {
     };
 
     // Enregistrer dans l'historique
-    this?.executionHistory?.push(any: any);
-    if (this?.executionHistory?.length > 50) {
-      this?.executionHistory = this?.executionHistory?.slice(-50);
+    this.executionHistory.push(executionResult);
+    if (this.executionHistory.length > 50) {
+      this.executionHistory = this.executionHistory.slice(-50);
     }
 
     // Réinitialiser l'état
-    this?.state = {
+    this.state = {
       isExecuting: false,
       currentPlanId: null,
       currentActionId: null,
       progress: 100,
       startTime: null,
     };
-    this?.abortController = null;
+    this.abortController = null;
 
     // Notifier la fin
-    if (any: any) {
-      await this?.emitNotification('healing_complete', {
-        planId: plan?.id,
+    if (this.config.notifyOnComplete) {
+      await this.emitNotification('healing_complete', {
+        planId: plan.id,
         status,
-        duration: executionResult?.duration,
+        duration: executionResult.duration,
         succeeded,
         failed,
       });
     }
 
-    logger?.debug(
-      `[SelfHealingExecutor] ✅ Plan completed: ${status} (any: any)`
+    logger.debug(
+      `[SelfHealingExecutor] ✅ Plan completed: ${status} (${succeeded}/${results.length} succeeded)`
     );
 
     return executionResult;
@@ -451,23 +451,23 @@ export class SelfHealingExecutor {
   /**
    * Exécute une action individuelle
    */
-  private async executeAction(any: any): Promise<ActionResult> {
+  private async executeAction(plannedAction: PlannedAction): Promise<ActionResult> {
     const { action } = plannedAction;
-    const startTime = Date?.now();
+    const startTime = Date.now();
 
-    logger?.debug(
-      `[SelfHealingExecutor] 🔧 Executing: ${action?.type} on ${action?.targetModule}`
+    logger.debug(
+      `[SelfHealingExecutor] 🔧 Executing: ${action.type} on ${action.targetModule}`
     );
 
     // Mode dry run
-    if (any: any) {
+    if (this.config.dryRunMode) {
       return {
-        actionId: plannedAction?.id,
-        type: action?.type,
-        targetModule: action?.targetModule,
+        actionId: plannedAction.id,
+        type: action.type,
+        targetModule: action.targetModule,
         status: 'success',
         startTime,
-        endTime: Date?.now(),
+        endTime: Date.now(),
         duration: 0,
         output: { dryRun: true },
         rollbackRequired: false,
@@ -476,25 +476,25 @@ export class SelfHealingExecutor {
 
     try {
       // Créer un timeout
-      const timeoutPromise = new Promise<never>(any: any) => {
-        setTimeout(any: any);
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => reject(new Error('Action timeout')), action.timeout);
       });
 
       // Obtenir le handler
-      const handler = ACTION_HANDLERS[action?.type];
-      if (any: any) {
-        throw new Error(`No handler for action type: ${action?.type}`);
+      const handler = ACTION_HANDLERS[action.type];
+      if (!handler) {
+        throw new Error(`No handler for action type: ${action.type}`);
       }
 
       // Exécuter avec timeout
-      const output = await Promise?.race(any: any), timeoutPromise]);
+      const output = await Promise.race([handler(action), timeoutPromise]);
 
-      const endTime = Date?.now();
+      const endTime = Date.now();
 
       return {
-        actionId: plannedAction?.id,
-        type: action?.type,
-        targetModule: action?.targetModule,
+        actionId: plannedAction.id,
+        type: action.type,
+        targetModule: action.targetModule,
         status: 'success',
         startTime,
         endTime,
@@ -502,33 +502,33 @@ export class SelfHealingExecutor {
         output,
         rollbackRequired: false,
       };
-    } catch (any: any) {
-      const endTime = Date?.now();
-      const isTimeout = error instanceof Error && error?.message === 'Action timeout';
+    } catch (error) {
+      const endTime = Date.now();
+      const isTimeout = error instanceof Error && error.message === 'Action timeout';
 
-      const err = error instanceof Error ? error : new Error(any: any));
-      logger?.error(
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
         'SelfHealing action failed',
         {
           component: 'SelfHealingExecutor',
           action: 'executeAction',
-          actionType: action?.type,
-          targetModule: action?.targetModule,
+          actionType: action.type,
+          targetModule: action.targetModule,
           timeout: isTimeout,
         },
         err
       );
 
       return {
-        actionId: plannedAction?.id,
-        type: action?.type,
-        targetModule: action?.targetModule,
+        actionId: plannedAction.id,
+        type: action.type,
+        targetModule: action.targetModule,
         status: isTimeout ? 'timeout' : 'failed',
         startTime,
         endTime,
         duration: endTime - startTime,
-        error: error instanceof Error ? error?.message : String(any: any),
-        rollbackRequired: action?.onFailure === 'rollback',
+        error: error instanceof Error ? error.message : String(error),
+        rollbackRequired: action.onFailure === 'rollback',
       };
     }
   }
@@ -537,18 +537,18 @@ export class SelfHealingExecutor {
    * Exécute les actions de rollback
    */
   private async executeRollback(
-    rollbackActions: PlannedAction?.[]
-  ): Promise<ActionResult?.[]> {
-    const results: ActionResult?.[] = [];
+    rollbackActions: PlannedAction[]
+  ): Promise<ActionResult[]> {
+    const results: ActionResult[] = [];
 
-    for (any: any) {
-      const result = await this?.executeAction(any: any);
-      results?.push(any: any);
+    for (const action of rollbackActions) {
+      const result = await this.executeAction(action);
+      results.push(result);
 
       // On continue même si le rollback échoue
-      if (result?.status !== 'success') {
-        logger?.warn(
-          `[SelfHealingExecutor] ⚠️ Rollback action failed: ${action?.action?.type}`
+      if (result.status !== 'success') {
+        logger.warn(
+          `[SelfHealingExecutor] ⚠️ Rollback action failed: ${action.action.type}`
         );
       }
     }
@@ -559,14 +559,14 @@ export class SelfHealingExecutor {
   /**
    * Crée un résultat pour une action ignorée
    */
-  private createSkippedResult(any: any): ActionResult {
+  private createSkippedResult(plannedAction: PlannedAction): ActionResult {
     return {
-      actionId: plannedAction?.id,
-      type: plannedAction?.action?.type,
-      targetModule: plannedAction?.action?.targetModule,
+      actionId: plannedAction.id,
+      type: plannedAction.action.type,
+      targetModule: plannedAction.action.targetModule,
       status: 'skipped',
-      startTime: Date?.now(),
-      endTime: Date?.now(),
+      startTime: Date.now(),
+      endTime: Date.now(),
       duration: 0,
       rollbackRequired: false,
     };
@@ -577,13 +577,13 @@ export class SelfHealingExecutor {
    */
   private generateImpactReport(
     plan: ExecutionPlan,
-    results: ActionResult?.[],
+    results: ActionResult[],
     startTime: number,
     endTime: number
   ): HealingImpactReport {
-    const succeeded = results?.filter(r => r?.status === 'success').length;
-    const failed = results?.filter(
-      r => r?.status === 'failed' || r?.status === 'timeout'
+    const succeeded = results.filter(r => r.status === 'success').length;
+    const failed = results.filter(
+      r => r.status === 'failed' || r.status === 'timeout'
     ).length;
 
     // Calculer XP basé sur la réussite
@@ -595,22 +595,22 @@ export class SelfHealingExecutor {
       }
     }
 
-    const modulesAffected = [...new Set(any: any))];
+    const modulesAffected = [...new Set(results.map(r => r.targetModule))];
 
     return {
-      playbookId: plan?.playbookId,
-      executionId: plan?.id,
+      playbookId: plan.playbookId,
+      executionId: plan.id,
       startTime,
       endTime,
       duration: endTime - startTime,
-      actionsExecuted: results?.length,
+      actionsExecuted: results.length,
       actionsFailed: failed,
-      result: failed === 0 ? 'success' : failed === results?.length ? 'failed' : 'partial',
+      result: failed === 0 ? 'success' : failed === results.length ? 'failed' : 'partial',
       stateBeforeHealing: {},
       stateAfterHealing: {},
       modulesAffected,
       sideEffects: [],
-      recommendations: this?.generateRecommendations(any: any),
+      recommendations: this.generateRecommendations(results),
       xpAwarded,
     };
   }
@@ -618,28 +618,28 @@ export class SelfHealingExecutor {
   /**
    * Génère des recommandations basées sur les résultats
    */
-  private generateRecommendations(results: ActionResult?.[]): string?.[] {
-    const recommendations: string?.[] = [];
+  private generateRecommendations(results: ActionResult[]): string[] {
+    const recommendations: string[] = [];
 
-    const failures = results?.filter(r => r?.status === 'failed' || r?.status === 'timeout');
+    const failures = results.filter(r => r.status === 'failed' || r.status === 'timeout');
 
-    if (failures?.length > 0) {
-      recommendations?.push(
+    if (failures.length > 0) {
+      recommendations.push(
         'Certaines actions ont échoué. Vérifiez les logs pour plus de détails.'
       );
     }
 
-    const timeouts = results?.filter(r => r?.status === 'timeout');
-    if (timeouts?.length > 0) {
-      recommendations?.push(
+    const timeouts = results.filter(r => r.status === 'timeout');
+    if (timeouts.length > 0) {
+      recommendations.push(
         'Des timeouts ont été détectés. Considérez augmenter les délais ou optimiser les modules.'
       );
     }
 
-    const slowActions = results?.filter(r => r?.duration > 5000);
-    if (slowActions?.length > 0) {
-      recommendations?.push(
-        `${slowActions?.length} action(any: any) ont pris plus de 5 secondes. Performance à surveiller.`
+    const slowActions = results.filter(r => r.duration > 5000);
+    if (slowActions.length > 0) {
+      recommendations.push(
+        `${slowActions.length} action(s) ont pris plus de 5 secondes. Performance à surveiller.`
       );
     }
 
@@ -650,27 +650,27 @@ export class SelfHealingExecutor {
   // NOTIFICATIONS
   // ═══════════════════════════════════════════════════════════════════════════
 
-  private async emitNotification(any: any): Promise<void> {
+  private async emitNotification(type: string, data: unknown): Promise<void> {
     try {
-      await emit(any: any);
-    } catch (any: any) {
-      const err = error instanceof Error ? error : new Error(any: any));
-      logger?.warn('Failed to emit selfhealing notification', {
+      await emit(`selfheal://${type}`, data);
+    } catch (error) {
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.warn('Failed to emit selfhealing notification', {
         component: 'SelfHealingExecutor',
         action: 'emitNotification',
         type,
-        error: err?.message,
+        error: err.message,
       });
     }
   }
 
-  private notifyProgress(any: any): void {
-    for (any: any) {
+  private notifyProgress(actionResult?: ActionResult): void {
+    for (const callback of this.progressCallbacks) {
       try {
-        callback(any: any);
-      } catch (any: any) {
-        const err = error instanceof Error ? error : new Error(any: any));
-        logger?.error(
+        callback(this.state, actionResult);
+      } catch (error) {
+        const err = error instanceof Error ? error : new Error(String(error));
+        logger.error(
           'SelfHealing progress callback error',
           { component: 'SelfHealingExecutor', action: 'notifyProgress' },
           err
@@ -687,9 +687,9 @@ export class SelfHealingExecutor {
    * Annule l'exécution en cours
    */
   public abort(): void {
-    if (any: any) {
-      this?.abortController?.abort();
-      logger?.debug('Execution aborted');
+    if (this.abortController) {
+      this.abortController.abort();
+      logger.debug('Execution aborted');
     }
   }
 
@@ -697,25 +697,25 @@ export class SelfHealingExecutor {
    * Vérifie si une exécution est en cours
    */
   public isExecuting(): boolean {
-    return this?.state?.isExecuting;
+    return this.state.isExecuting;
   }
 
   /**
    * Récupère l'historique d'exécution
    */
-  public getExecutionHistory(any: any): PlanExecutionResult?.[] {
-    if (any: any) {
-      return this?.executionHistory?.slice(any: any);
+  public getExecutionHistory(limit?: number): PlanExecutionResult[] {
+    if (limit) {
+      return this.executionHistory.slice(-limit);
     }
-    return [...this?.executionHistory];
+    return [...this.executionHistory];
   }
 
   /**
    * Active/désactive le mode dry run
    */
-  public setDryRunMode(any: any): void {
-    this?.config?.dryRunMode = enabled;
-    logger?.debug(`[SelfHealingExecutor] Dry run mode: ${enabled}`);
+  public setDryRunMode(enabled: boolean): void {
+    this.config.dryRunMode = enabled;
+    logger.debug(`[SelfHealingExecutor] Dry run mode: ${enabled}`);
   }
 }
 
@@ -723,6 +723,6 @@ export class SelfHealingExecutor {
 // SINGLETON EXPORT
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const selfHealingExecutor = SelfHealingExecutor?.getInstance();
+export const selfHealingExecutor = SelfHealingExecutor.getInstance();
 
 export default selfHealingExecutor;
