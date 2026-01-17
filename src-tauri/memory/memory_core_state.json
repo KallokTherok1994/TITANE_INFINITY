@@ -2,6 +2,111 @@
   "snapshots": [],
   "logs": [
     {
+      "id": "ui-1768613563004-x9xc3z2e",
+      "timestamp": 1768613563004,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768613562726-u3nn25h5",
+      "timestamp": 1768613562726,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768613543064-5gsfhdqo",
+      "timestamp": 1768613543064,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768613542703-z8s478hz",
+      "timestamp": 1768613542703,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768613534470-z6o6reut",
+      "timestamp": 1768613534470,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768613534376-z1kjqlky",
+      "timestamp": 1768613534376,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768613533210-zrpo5auh",
+      "timestamp": 1768613533210,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Importing a module script failed. (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XO35FAC6.js?v=3eb75b34:903:34)"
+    },
+    {
+      "id": "ui-1768613532989-s7azfm4j",
+      "timestamp": 1768613532989,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768613532870-krmwuci7",
+      "timestamp": 1768613532870,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768613460190-i4tjo9ry",
+      "timestamp": 1768613460190,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768613460095-0d5z13ld",
+      "timestamp": 1768613460095,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768613459364-smork03i",
+      "timestamp": 1768613459364,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Importing a module script failed. (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XO35FAC6.js?v=3eb75b34:903:34)"
+    },
+    {
+      "id": "ui-1768613458674-urj02law",
+      "timestamp": 1768613458674,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768613458633-mj2qs1lq",
+      "timestamp": 1768613458633,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Importing a module script failed. (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XO35FAC6.js?v=3eb75b34:903:34)"
+    },
+    {
+      "id": "ui-1768613458075-ln5rcnzl",
+      "timestamp": 1768613458075,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
       "id": "ui-1768595928435-wt30ute4",
       "timestamp": 1768595928435,
       "level": "Info",
@@ -3097,7 +3202,7 @@
   "knowledge": [],
   "rituals": [],
   "metadata": {
-    "last_validation_ts": 1768595928623,
+    "last_validation_ts": 1768613563067,
     "last_compaction_ts": null
   }
 }
