@@ -92,6 +92,7 @@
     "cline:verify": "bash -c 'for hook in TaskStart PreToolUse PostToolUse UserPromptSubmit; do echo \"Testing $hook...\"; test -x .clinerules/hooks/$hook && echo \"✅ $hook\" || echo \"❌ $hook\"; done'",
     "verify:bootfix": "bash scripts/verify/verify-bootfix.sh",
     "verify:preprod": "bash scripts/verify/verify-preprod.sh",
+    "guard:pm": "bash scripts/verify/guard-pnpm-only.sh",
     "doctor": "node scripts/doctor.cjs",
     "e2e:driver": "./scripts/e2e/ensure-webkit-webdriver.sh && tauri-driver --native-driver /usr/bin/WebKitWebDriver",
     "e2e": "concurrently --kill-others-on-fail \"pnpm run e2e:driver\" \"pnpm run dev:tauri\" \"wdio run ./e2e/wdio.conf.ts\""

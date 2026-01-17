@@ -30,7 +30,7 @@ log "${BLUE}══════════════════════�
 
 # Environment info
 log "Node: $(node --version 2>/dev/null || echo 'N/A')"
-log "PNPM: $(pnpm --version 2>/dev/null || echo 'N/A')"
+log "NPM: $(npm --version 2>/dev/null || echo 'N/A')"
 log "CWD: $(pwd)"
 log "Port to check: $PORT"
 log ""
@@ -108,5 +108,5 @@ log "${BLUE}Starting Vite dev server...${NC}"
 # Execute the actual Vite command with proper environment
 export PATH="/home/titane-os/.local/share/pnpm:/usr/local/bin:/usr/bin:$PATH"
 
-# The original command from Tauri config
-exec pnpm exec vite dev --host 127.0.0.1 --port "$PORT" --strictPort 2>&1 | tee -a "$LOG_FILE"
+# The original command from Tauri config - CORRECTED: PNPM-only
+exec /home/titane-os/.local/share/pnpm/pnpm exec vite dev --host 127.0.0.1 --port "$PORT" --strictPort 2>&1 | tee -a "$LOG_FILE"
