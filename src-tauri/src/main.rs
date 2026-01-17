@@ -11,6 +11,20 @@
 #![allow(dead_code)]
 #![allow(deprecated)] // Migration to conversation_engine::conversation_generate in progress
 
+#[tauri::command]
+async fn get_readiness_status(
+    chat_state: State<'_, overdrive::chat_orchestrator::ChatOrchestratorState>,
+) -> Result<serde_json::Value, String> {
+    // Check if providers are initialized
+    let providers = overdrive::chat_orchestrator::chat_get_providers_status(chat_state).await?;
+    let ready = !providers.is_empty();
+    Ok(serde_json::json!({
+        "ready": ready,
+        "providers": providers,
+        "timestamp": crate::core::utils::now_ms()
+    }))
+}
+
 // ═══════════════════════════════════════════════════════════════
 // TITANE∞ HARDENING: Import Hygiene v19.5.2
 // DO NOT REMOVE: Each import is actively used in production code
@@ -19,6 +33,7 @@
 // Tauri core (Manager trait required for .path() and .get_webview_window())
 // Required for both app_data_dir access and DevTools auto-open
 use tauri::Manager;
+use tauri::State;
 
 // TITANE∞ command modules
 use std::sync::Arc;
@@ -735,6 +750,8 @@ fn main() {
             );
         })
         .invoke_handler(tauri::generate_handler![
+            // Readiness check
+            get_readiness_status,
             // Frontend OS bridge compatibility
             state_bridge_commands::ping,
             state_bridge_commands::get_system_state,
