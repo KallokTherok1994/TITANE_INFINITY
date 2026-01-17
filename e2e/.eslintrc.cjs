@@ -15,7 +15,7 @@ module.exports = {
     $$: 'readonly'
   },
   extends: [
-    '../.eslintrc.js'
+    '../.eslintrc.cjs'
   ],
   rules: {
     '@typescript-eslint/no-var-requires': 'off',

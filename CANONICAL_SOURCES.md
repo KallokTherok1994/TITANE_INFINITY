@@ -1,16 +1,16 @@
 # CANONICAL SOURCES - TITANE∞ v26.3.0
 
 **Date de scellement :** 17/01/2026 01:31 UTC-5  
-**Version canonique :** 26.3.0 (code > docs)  
+**Version canonique :** 26.3.0 (code > docs)
 
 ## 🔐 VERSION RÉELLE DU SYSTÈME
 
 ### Source of Truth
-- **Code** : v26.3.0 (tauri.conf.json, Cargo.toml)
+- **Code** : v26.3.0 (package.json, tauri.conf.json, Cargo.toml)
 - **Docs** : v26.3.0 (descriptions cohérentes)
-- **Package.json** : v26.3.2 ❌ **INCOHÉRENT** (doit être corrigé à v26.3.0)
+- **Toutes sources** : ✅ **COHÉRENTES** - v26.3.0 partout
 
-**Décision :** Version canonique = 26.3.0 (code prime sur docs)
+**Décision :** Version canonique = 26.3.0 (cohérence parfaite)
 
 ## 📋 FICHIERS CANONIQUES (SOURCE OF TRUTH)
 

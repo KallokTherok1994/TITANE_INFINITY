@@ -8,7 +8,7 @@
   "build": {
     "devUrl": "http://localhost:5173",
     "beforeDevCommand": "bash scripts/tauri/before-dev.sh",
-    "beforeBuildCommand": "cd /home/titane-os/Documents/GitHub/TITANE_INFINITY && pnpm exec vite build",
+    "beforeBuildCommand": "cd /home/titane-os/Documents/GitHub/TITANE_INFINITY && /home/titane-os/.local/share/pnpm/pnpm exec vite build",
     "frontendDist": "../dist"
   },
   "bundle": {
