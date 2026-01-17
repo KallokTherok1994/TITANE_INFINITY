@@ -2,19 +2,23 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import { fileURLToPath } from 'node:url';
+import autoprefixer from 'autoprefixer';
 
 const ROOT_DIR = fileURLToPath(new URL('.', import.meta.url));
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    // Suppression de rollup-plugin-postcss pour éviter les erreurs de type
+  ],
   root: ROOT_DIR,
   publicDir: 'public',
-  
+
   // Configuration pour les dépendances et modules
   optimizeDeps: {
     // Force re-optimization si nécessaire (via env var)
     force: process.env.VITE_FORCE_OPTIMIZE === '1',
-    
+
     // Inclure les dépendances problématiques
     include: [
       'react',
@@ -25,14 +29,22 @@ export default defineConfig({
       'framer-motion',
       'lucide-react',
     ],
-    
+
     // Exclure les modules qui causent des problèmes
     exclude: [
       'events', // Mock events module, don't pre-bundle
       // Modules qui doivent être chargés directement
     ],
+
+    // Configuration pour éviter les scans de dépendances sur certains patterns
+    entries: [
+      'src/main.tsx',
+      '!src/engines/**/*',
+      '!src/ui/motion/**/*',
+      '!src/**/*.lazy.*',
+    ],
   },
-  
+
   // Configuration ESM
   esbuild: {
     target: 'esnext',
@@ -40,7 +52,7 @@ export default defineConfig({
     drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
     legalComments: 'none',
   },
-  
+
   server: {
     host: '127.0.0.1',
     port: 5173,
@@ -49,6 +61,7 @@ export default defineConfig({
     cors: true,
     hmr: {
       port: 5173,
+      overlay: false, // Désactive l'overlay HMR pour éviter les erreurs bloquantes
     },
     // SPA fallback for client-side routing
     middlewareMode: false,

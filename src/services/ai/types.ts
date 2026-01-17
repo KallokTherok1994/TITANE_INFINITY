@@ -15,10 +15,10 @@ import type { PromptContext } from '@/core/prompts';
  * ═══════════════════════════════════════════════════════════════════
  */
 
-// Multimodal content types for future vision API support
+// Multimodal content types for vision API support (GLM-4.6V-Flash compatible)
 export type AIMessageContentPart =
   | { type: 'text'; text: string }
-  | { type: 'image_url'; image_url: { url: string } };
+  | { type: 'image_url'; image_url: { url: string } }; // Supports data: URLs for base64 images
 
 export interface AIMessage {
   role: 'user' | 'assistant' | 'system';
@@ -70,6 +70,7 @@ export type AIProviderName =
   | 'openai'
   | 'claude'
   | 'copilot' // ✨ v26.3 - GitHub Copilot provider
+  | 'glm46v' // ✨ GLM-4.6V-Flash provider
   | 'fallback'
   | 'emergency-fallback'
   | 'ultimate-fallback'
@@ -79,6 +80,7 @@ export type AIProviderName =
 
 // ✨ v21 - Provider choice for UI selection
 // ✨ v26.3 - Added GitHub Copilot provider
+// ✨ GLM-4.6V-Flash provider
 export type ProviderChoice =
   | 'auto'
   | 'openai'
@@ -86,6 +88,7 @@ export type ProviderChoice =
   | 'gemini'
   | 'ollama'
   | 'copilot'
+  | 'glm46v'
   | 'local';
 
 /** Response metadata interface with known fields */
@@ -163,6 +166,7 @@ export type AIProviderId =
   | 'gemini'
   | 'ollama'
   | 'copilot'
+  | 'glm46v'
   | 'local';
 
 /**

@@ -3,12 +3,14 @@ export const config = {
   specs: ['./e2e/**/*.test.js'],
   exclude: [],
   maxInstances: 1,
-  capabilities: [{
-    browserName: 'chrome',
-    'goog:chromeOptions': {
-      args: ['--headless', '--disable-gpu']
-    }
-  }],
+  capabilities: [
+    {
+      browserName: 'chrome',
+      'goog:chromeOptions': {
+        args: ['--headless', '--disable-gpu'],
+      },
+    },
+  ],
   logLevel: 'info',
   bail: 0,
   baseUrl: 'http://localhost:5173',
@@ -20,6 +22,6 @@ export const config = {
   reporters: ['spec'],
   mochaOpts: {
     ui: 'bdd',
-    timeout: 60000
-  }
+    timeout: 60000,
+  },
 };

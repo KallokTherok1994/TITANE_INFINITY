@@ -45,10 +45,7 @@
   ],
   "success_criteria": {
     "exit_code": 0,
-    "artifacts_created": [
-      "*.AppImage",
-      "*.deb"
-    ],
+    "artifacts_created": ["*.AppImage", "*.deb"],
     "size_limit_mb": 100,
     "no_forbidden_content": true
   },

@@ -63,6 +63,7 @@ const PROVIDER_PREFERENCE_LABELS: Record<ProviderPreference, string> = {
   gemini: 'Google Gemini 2.0',
   anthropic: 'Anthropic Claude',
   copilot: 'GitHub Copilot',
+  glm46v: 'GLM-4.6V-Flash (local multimodal)',
 };
 
 const PROVIDER_DISPLAY_NAMES: Record<string, string> = {
