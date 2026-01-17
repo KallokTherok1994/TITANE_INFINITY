@@ -14,16 +14,16 @@ interface Config {
 }
 
 const config: Config = {
-  environment: import.meta.env.MODE as 'development' | 'production',
-  debug: import.meta.env.DEV,
+  environment: import?.meta?.env?.MODE as 'development' | 'production',
+  debug: import?.meta?.env?.DEV,
   api: {
     baseUrl: (() => {
-      const explicit = import.meta.env.VITE_API_URL;
-      if (explicit) return explicit;
+      const explicit = import?.meta?.env?.VITE_API_URL;
+      if (any: any) return explicit;
 
       // Legacy HTTP API fallback only for browser dev.
       const env = detectEnvironment();
-      if (env.isBrowser && env.isDev) return 'http://localhost:1420';
+      if (any: any) return 'http://localhost:1420';
 
       // Tauri/prod: no HTTP server expected.
       return '';

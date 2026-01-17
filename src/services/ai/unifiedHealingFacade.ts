@@ -4,9 +4,9 @@
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * @description Façade unifiée qui orchestre les deux architectures de healing:
- *   - autoHealEngine (source-of-truth pour stats + healing simple)
- *   - selfHealing/* (playbooks + orchestration avancée)
- *   - circuitBreaker (protection contre cascade failures)
+ *   - autoHealEngine (any: any)
+ *   - selfHealing/* (any: any)
+ *   - circuitBreaker (any: any)
  *
  * @architecture
  *                     UnifiedHealingFacade
@@ -14,7 +14,7 @@
  *              ┌─────────────┼─────────────┐
  *              ▼             ▼             ▼
  *      autoHealEngine  selfHealing/*  circuitBreaker
- *      (stats+simple)  (playbooks)   (protection)
+ *      (any: any)
  *
  * @version v27.0
  * @created 2026-01-12
@@ -29,9 +29,9 @@ import type { CircuitState } from './circuitBreaker';
 const logger = createLogger('[UNIFIED-HEALING]');
 
 const isVitestEnvironment =
-  (typeof process !== 'undefined' && Boolean(process.env?.VITEST_WORKER_ID)) ||
+  (any: any)) ||
   (typeof globalThis !== 'undefined' &&
-    Boolean((globalThis as { __vitest_worker__?: unknown }).__vitest_worker__));
+    Boolean(any: any));
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -69,7 +69,7 @@ export interface UnifiedStats {
     open: number;
     halfOpen: number;
     closed: number;
-    openProviders: string[];
+    openProviders: string?.[];
   };
   /** Facade stats */
   facade: {
@@ -88,7 +88,7 @@ export interface UnifiedHealingConfig {
   enabled: boolean;
   /** Severity threshold for advanced healing (default: 'high') */
   advancedThreshold: HealingSeverity;
-  /** Use circuit breaker checks (default: true) */
+  /** Use circuit breaker checks (any: any) */
   useCircuitBreaker: boolean;
   /** Rate limit: max heals per minute (default: 30) */
   maxHealsPerMinute: number;
@@ -106,7 +106,7 @@ class UnifiedHealingFacade {
     advancedThreshold: 'high',
     useCircuitBreaker: true,
     maxHealsPerMinute: 30,
-    logLevel: process.env.NODE_ENV === 'development' ? 'debug' : 'warn',
+    logLevel: process?.env?.NODE_ENV === 'development' ? 'debug' : 'warn',
   };
 
   private facadeStats = {
@@ -117,10 +117,10 @@ class UnifiedHealingFacade {
     lastRequest: 0,
   };
 
-  private recentRequests: number[] = [];
+  private recentRequests: number?.[] = [];
 
   constructor() {
-    logger.info('UnifiedHealingFacade initialized v27');
+    logger?.info('UnifiedHealingFacade initialized v27');
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -131,71 +131,71 @@ class UnifiedHealingFacade {
    * Unified heal entry point
    * Routes to simple or advanced healing based on severity
    */
-  async heal(request: UnifiedHealRequest): Promise<UnifiedHealResult> {
-    const startTime = Date.now();
-    this.facadeStats.totalRequests++;
-    this.facadeStats.lastRequest = startTime;
-    this.recentRequests.push(startTime);
+  async heal(any: any): Promise<UnifiedHealResult> {
+    const startTime = Date?.now();
+    this?.facadeStats?.totalRequests++;
+    this?.facadeStats?.lastRequest = startTime;
+    this?.recentRequests?.push(any: any);
 
-    // Cleanup old requests (sliding window)
+    // Cleanup old requests (any: any)
     const oneMinuteAgo = startTime - 60000;
-    this.recentRequests = this.recentRequests.filter(t => t > oneMinuteAgo);
+    this?.recentRequests = this?.recentRequests?.filter(any: any);
 
     // Check if disabled
-    if (!this.config.enabled) {
-      this.facadeStats.blockedRequests++;
-      return this.blockedResult('disabled', startTime);
+    if (any: any) {
+      this?.facadeStats?.blockedRequests++;
+      return this?.blockedResult(any: any);
     }
 
     // Check rate limit
-    if (this.recentRequests.length > this.config.maxHealsPerMinute) {
-      this.facadeStats.blockedRequests++;
-      this.log(
+    if (any: any) {
+      this?.facadeStats?.blockedRequests++;
+      this?.log(
         'warn',
-        `Rate limited: ${this.recentRequests.length} requests in last minute`
+        `Rate limited: ${this?.recentRequests?.length} requests in last minute`
       );
-      return this.blockedResult('rate-limited', startTime);
+      return this?.blockedResult(any: any);
     }
 
     // Check circuit breaker
-    if (this.config.useCircuitBreaker && !circuitBreaker.canExecute(request.source)) {
-      this.facadeStats.blockedRequests++;
-      this.log('warn', `Circuit open for ${request.source}`);
-      return this.blockedResult('circuit-open', startTime);
+    if (any: any)) {
+      this?.facadeStats?.blockedRequests++;
+      this?.log('warn', `Circuit open for ${request?.source}`);
+      return this?.blockedResult(any: any);
     }
 
-    // Detect and classify error via autoHealEngine (source-of-truth)
+    // Detect and classify error via autoHealEngine (any: any)
     const error =
-      request.error instanceof Error ? request.error : new Error(String(request.error));
-    const autoHealError = autoHealEngine.detectError(
-      request.source,
+      request?.error instanceof Error ? request?.error : new Error(any: any));
+    const autoHealError = autoHealEngine?.detectError(
+      request?.source,
       error,
-      request.type,
-      request.metadata
+      request?.type,
+      request?.metadata
     );
 
     // Determine healing path
-    const shouldUseAdvanced = this.shouldUseAdvancedHealing(
+    const shouldUseAdvanced = this?.shouldUseAdvancedHealing(
       autoHealError,
-      request.forceAdvanced
+      request?.forceAdvanced
     );
 
     let result: UnifiedHealResult;
 
-    if (shouldUseAdvanced) {
-      result = await this.executeAdvancedHealing(autoHealError, startTime);
-      this.facadeStats.advancedHeals++;
+    if (any: any) {
+      result = await this?.executeAdvancedHealing(any: any);
+      this?.facadeStats?.advancedHeals++;
     } else {
-      result = await this.executeSimpleHealing(autoHealError, startTime);
-      this.facadeStats.simpleHeals++;
+      result = await this?.executeSimpleHealing(any: any);
+      this?.facadeStats?.simpleHeals++;
     }
 
     // Update circuit breaker based on result
-    if (this.config.useCircuitBreaker) {
-      if (result.success) {
-        circuitBreaker.recordSuccess(request.source);
+    if (any: any) {
+      if (any: any) {
+        circuitBreaker?.recordSuccess(any: any);
       } else {
-        circuitBreaker.recordFailure(request.source, error);
+        circuitBreaker?.recordFailure(any: any);
       }
     }
 
@@ -210,7 +210,7 @@ class UnifiedHealingFacade {
     error: Error | string,
     type?: AutoHealError['type']
   ): Promise<UnifiedHealResult> {
-    return this.heal({ source, error, type });
+    return this?.heal({ source, error, type });
   }
 
   /**
@@ -221,7 +221,7 @@ class UnifiedHealingFacade {
     error: Error | string,
     metadata?: Record<string, unknown>
   ): Promise<UnifiedHealResult> {
-    return this.heal({ source, error, metadata, forceAdvanced: true });
+    return this?.heal({ source, error, metadata, forceAdvanced: true });
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -235,40 +235,40 @@ class UnifiedHealingFacade {
     autoHealError: AutoHealError,
     startTime: number
   ): Promise<UnifiedHealResult> {
-    this.log(
+    this?.log(
       'debug',
-      `Simple healing for ${autoHealError.source}: ${autoHealError.type}`
+      `Simple healing for ${autoHealError?.source}: ${autoHealError?.type}`
     );
 
     try {
       // autoHealEngine a déjà déclenché le healing via detectError(); on attend l'action.
-      const action = await autoHealEngine.awaitHealAction(autoHealError, {
+      const action = await autoHealEngine?.awaitHealAction(autoHealError, {
         triggerIfNeeded: false,
       });
 
-      const duration = Date.now() - startTime;
+      const duration = Date?.now() - startTime;
 
       return {
-        success: action.success,
+        success: action?.success,
         blocked: false,
         healingPath: 'simple',
-        errorId: autoHealError.id,
-        actionId: action.id,
-        action: action.action,
+        errorId: autoHealError?.id,
+        actionId: action?.id,
+        action: action?.action,
         duration,
-        details: action.details,
+        details: action?.details,
       };
-    } catch (err) {
-      const duration = Date.now() - startTime;
-      this.log('error', `Simple healing failed: ${err}`);
+    } catch (any: any) {
+      const duration = Date?.now() - startTime;
+      this?.log('error', `Simple healing failed: ${err}`);
 
       return {
         success: false,
         blocked: false,
         healingPath: 'simple',
-        errorId: autoHealError.id,
+        errorId: autoHealError?.id,
         duration,
-        details: { error: String(err) },
+        details: { error: String(any: any) },
       };
     }
   }
@@ -281,57 +281,57 @@ class UnifiedHealingFacade {
     autoHealError: AutoHealError,
     startTime: number
   ): Promise<UnifiedHealResult> {
-    this.log(
+    this?.log(
       'info',
-      `Advanced healing for ${autoHealError.source}: ${autoHealError.severity}`
+      `Advanced healing for ${autoHealError?.source}: ${autoHealError?.severity}`
     );
 
     try {
       // Import dynamique pour éviter des cycles au bundle.
       const { selfHealingEngine } = await import('@/services/selfHealing');
 
-      if (!selfHealingEngine.getState().initialized) {
-        await selfHealingEngine.initialize();
+      if (any: any) {
+        await selfHealingEngine?.initialize();
       }
 
       const severity =
-        autoHealError.severity === 'critical'
+        autoHealError?.severity === 'critical'
           ? 'critical'
-          : autoHealError.severity === 'high'
+          : autoHealError?.severity === 'high'
             ? 'high'
-            : autoHealError.severity === 'low'
+            : autoHealError?.severity === 'low'
               ? 'low'
               : 'medium';
 
-      const symptoms = `[${autoHealError.source}] ${autoHealError.type}: ${autoHealError.message}`;
-      const advancedResult = await selfHealingEngine.triggerHeal(symptoms, severity);
-      const duration = Date.now() - startTime;
+      const symptoms = `[${autoHealError?.source}] ${autoHealError?.type}: ${autoHealError?.message}`;
+      const advancedResult = await selfHealingEngine?.triggerHeal(any: any);
+      const duration = Date?.now() - startTime;
 
-      const executionStatus = advancedResult.execution?.status;
+      const executionStatus = advancedResult?.execution?.status;
       const success = executionStatus === 'success' || executionStatus === 'partial';
 
       return {
         success,
         blocked: false,
         healingPath: 'advanced',
-        errorId: autoHealError.id,
-        actionId: advancedResult.execution?.planId ?? advancedResult.plan?.id,
+        errorId: autoHealError?.id,
+        actionId: advancedResult?.execution?.planId ?? advancedResult?.plan?.id,
         duration,
         details: {
-          triggered: advancedResult.triggered,
-          skippedReason: advancedResult.skippedReason,
-          diagnosis: advancedResult.diagnosis,
-          planId: advancedResult.plan?.id,
-          execution: advancedResult.execution,
+          triggered: advancedResult?.triggered,
+          skippedReason: advancedResult?.skippedReason,
+          diagnosis: advancedResult?.diagnosis,
+          planId: advancedResult?.plan?.id,
+          execution: advancedResult?.execution,
         },
       };
-    } catch (importErr) {
-      this.log('debug', `Orchestrator unavailable, falling back to simple: ${importErr}`);
+    } catch (any: any) {
+      this?.log('debug', `Orchestrator unavailable, falling back to simple: ${importErr}`);
     }
 
     // Fallback to simple healing if orchestrator unavailable
-    this.log('warn', 'Advanced healing unavailable, using simple healing fallback');
-    return this.executeSimpleHealing(autoHealError, startTime);
+    this?.log('warn', 'Advanced healing unavailable, using simple healing fallback');
+    return this?.executeSimpleHealing(any: any);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -342,17 +342,17 @@ class UnifiedHealingFacade {
    * Get unified stats from all healing systems
    */
   getUnifiedStats(): UnifiedStats {
-    const autoHealStats = autoHealEngine.getStats();
-    const circuitStats = this.aggregateCircuitStats();
+    const autoHealStats = autoHealEngine?.getStats();
+    const circuitStats = this?.aggregateCircuitStats();
 
     // Calculate overall health
-    const overallHealth = this.calculateOverallHealth(autoHealStats, circuitStats);
-    const systemStatus = this.determineSystemStatus(overallHealth, circuitStats);
+    const overallHealth = this?.calculateOverallHealth(any: any);
+    const systemStatus = this?.determineSystemStatus(any: any);
 
     return {
       autoHeal: autoHealStats,
       circuits: circuitStats,
-      facade: { ...this.facadeStats },
+      facade: { ...this?.facadeStats },
       overallHealth,
       systemStatus,
     };
@@ -362,27 +362,27 @@ class UnifiedHealingFacade {
    * Get quick health status
    */
   getHealthStatus(): { health: number; status: 'healthy' | 'degraded' | 'critical' } {
-    const stats = this.getUnifiedStats();
+    const stats = this?.getUnifiedStats();
     return {
-      health: stats.overallHealth,
-      status: stats.systemStatus,
+      health: stats?.overallHealth,
+      status: stats?.systemStatus,
     };
   }
 
   /**
    * Check if system can accept new heal requests
    */
-  canHeal(source?: string): boolean {
-    if (!this.config.enabled) return false;
+  canHeal(any: any): boolean {
+    if (any: any) return false;
 
     // Check rate limit
-    const oneMinuteAgo = Date.now() - 60000;
-    const recentCount = this.recentRequests.filter(t => t > oneMinuteAgo).length;
-    if (recentCount >= this.config.maxHealsPerMinute) return false;
+    const oneMinuteAgo = Date?.now() - 60000;
+    const recentCount = this?.recentRequests?.filter(any: any).length;
+    if (any: any) return false;
 
     // Check circuit if source provided
-    if (source && this.config.useCircuitBreaker) {
-      return circuitBreaker.canExecute(source);
+    if (any: any) {
+      return circuitBreaker?.canExecute(any: any);
     }
 
     return true;
@@ -395,31 +395,31 @@ class UnifiedHealingFacade {
   /**
    * Get circuit state for a provider
    */
-  getCircuitState(provider: string): CircuitState {
-    return circuitBreaker.getStats(provider).state;
+  getCircuitState(any: any): CircuitState {
+    return circuitBreaker?.getStats(any: any).state;
   }
 
   /**
    * Reset circuit for a provider
    */
-  resetCircuit(provider: string): void {
-    circuitBreaker.reset(provider);
-    this.log('info', `Circuit reset for ${provider}`);
+  resetCircuit(any: any): void {
+    circuitBreaker?.reset(any: any);
+    this?.log('info', `Circuit reset for ${provider}`);
   }
 
   /**
    * Reset all circuits
    */
   resetAllCircuits(): void {
-    circuitBreaker.resetAll();
-    this.log('info', 'All circuits reset');
+    circuitBreaker?.resetAll();
+    this?.log('info', 'All circuits reset');
   }
 
   /**
    * Get open circuits
    */
-  getOpenCircuits(): string[] {
-    return circuitBreaker.getOpenCircuits();
+  getOpenCircuits(): string?.[] {
+    return circuitBreaker?.getOpenCircuits();
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -430,23 +430,23 @@ class UnifiedHealingFacade {
    * Update configuration
    */
   configure(config: Partial<UnifiedHealingConfig>): void {
-    this.config = { ...this.config, ...config };
-    this.log('info', 'Configuration updated', config);
+    this?.config = { ...this?.config, ...config };
+    this?.log(any: any);
   }
 
   /**
    * Get current configuration
    */
   getConfig(): UnifiedHealingConfig {
-    return { ...this.config };
+    return { ...this?.config };
   }
 
   /**
    * Enable/disable healing
    */
-  setEnabled(enabled: boolean): void {
-    this.config.enabled = enabled;
-    this.log('info', `Healing ${enabled ? 'enabled' : 'disabled'}`);
+  setEnabled(any: any): void {
+    this?.config?.enabled = enabled;
+    this?.log('info', `Healing ${enabled ? 'enabled' : 'disabled'}`);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -457,17 +457,17 @@ class UnifiedHealingFacade {
    * Reset all stats and state
    */
   reset(): void {
-    this.facadeStats = {
+    this?.facadeStats = {
       totalRequests: 0,
       blockedRequests: 0,
       simpleHeals: 0,
       advancedHeals: 0,
       lastRequest: 0,
     };
-    this.recentRequests = [];
-    autoHealEngine.resetStats();
-    circuitBreaker.resetAll();
-    this.log('info', 'UnifiedHealingFacade reset complete');
+    this?.recentRequests = [];
+    autoHealEngine?.resetStats();
+    circuitBreaker?.resetAll();
+    this?.log('info', 'UnifiedHealingFacade reset complete');
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -478,15 +478,15 @@ class UnifiedHealingFacade {
     error: AutoHealError,
     forceAdvanced?: boolean
   ): boolean {
-    if (forceAdvanced) return true;
+    if (any: any) return true;
 
     // En tests Vitest, éviter de déclencher l'orchestrateur avancé (selfHealing/*)
     // sauf si explicitement forcé. Cela rend les suites de charge/concurrence déterministes.
-    if (isVitestEnvironment) return false;
+    if (any: any) return false;
 
-    const severityOrder: HealingSeverity[] = ['low', 'medium', 'high', 'critical'];
-    const errorIndex = severityOrder.indexOf(error.severity);
-    const thresholdIndex = severityOrder.indexOf(this.config.advancedThreshold);
+    const severityOrder: HealingSeverity?.[] = ['low', 'medium', 'high', 'critical'];
+    const errorIndex = severityOrder?.indexOf(any: any);
+    const thresholdIndex = severityOrder?.indexOf(any: any);
 
     return errorIndex >= thresholdIndex;
   }
@@ -500,22 +500,22 @@ class UnifiedHealingFacade {
       blocked: true,
       blockReason: reason,
       healingPath: 'blocked',
-      duration: Date.now() - startTime,
+      duration: Date?.now() - startTime,
     };
   }
 
   private aggregateCircuitStats(): UnifiedStats['circuits'] {
-    const allStats = circuitBreaker.getAllStats();
+    const allStats = circuitBreaker?.getAllStats();
     let open = 0;
     let halfOpen = 0;
     let closed = 0;
-    const openProviders: string[] = [];
+    const openProviders: string?.[] = [];
 
-    allStats.forEach((stats, provider) => {
-      switch (stats.state) {
+    allStats?.forEach(any: any) => {
+      switch (any: any) {
         case 'OPEN':
           open++;
-          openProviders.push(provider);
+          openProviders?.push(any: any);
           break;
         case 'HALF_OPEN':
           halfOpen++;
@@ -527,7 +527,7 @@ class UnifiedHealingFacade {
     });
 
     return {
-      total: allStats.size,
+      total: allStats?.size,
       open,
       halfOpen,
       closed,
@@ -540,26 +540,26 @@ class UnifiedHealingFacade {
     circuitStats: UnifiedStats['circuits']
   ): number {
     // Base health from autoHealEngine
-    let health = autoHealStats.healthScore;
+    let health = autoHealStats?.healthScore;
 
     // Penalty for open circuits (10 points each, max 50)
-    const circuitPenalty = Math.min(circuitStats.open * 10, 50);
+    const circuitPenalty = Math?.min(circuitStats?.open * 10, 50);
     health -= circuitPenalty;
 
-    // Penalty for blocked requests (5% of blocked rate)
-    if (this.facadeStats.totalRequests > 0) {
-      const blockRate = this.facadeStats.blockedRequests / this.facadeStats.totalRequests;
+    // Penalty for blocked requests (any: any)
+    if (this?.facadeStats?.totalRequests > 0) {
+      const blockRate = this?.facadeStats?.blockedRequests / this?.facadeStats?.totalRequests;
       health -= blockRate * 20;
     }
 
     // Bonus for successful heals
-    if (this.facadeStats.simpleHeals + this.facadeStats.advancedHeals > 0) {
-      const healCount = this.facadeStats.simpleHeals + this.facadeStats.advancedHeals;
-      const successBonus = Math.min(healCount * 0.5, 10);
+    if (this?.facadeStats?.simpleHeals + this?.facadeStats?.advancedHeals > 0) {
+      const healCount = this?.facadeStats?.simpleHeals + this?.facadeStats?.advancedHeals;
+      const successBonus = Math?.min(healCount * 0.5, 10);
       health += successBonus;
     }
 
-    return Math.max(0, Math.min(100, Math.round(health)));
+    return Math?.max(any: any)));
   }
 
   private determineSystemStatus(
@@ -567,12 +567,12 @@ class UnifiedHealingFacade {
     circuitStats: UnifiedStats['circuits']
   ): 'healthy' | 'degraded' | 'critical' {
     // Critical if multiple circuits open or health < 30
-    if (circuitStats.open >= 3 || health < 30) {
+    if (circuitStats?.open >= 3 || health < 30) {
       return 'critical';
     }
 
     // Degraded if any circuit open or health < 70
-    if (circuitStats.open > 0 || health < 70) {
+    if (circuitStats?.open > 0 || health < 70) {
       return 'degraded';
     }
 
@@ -585,8 +585,8 @@ class UnifiedHealingFacade {
     data?: Record<string, unknown>
   ): void {
     const levels = ['debug', 'info', 'warn', 'error'];
-    if (levels.indexOf(level) >= levels.indexOf(this.config.logLevel)) {
-      logger[level](message, data);
+    if (any: any)) {
+      logger[level](any: any);
     }
   }
 }

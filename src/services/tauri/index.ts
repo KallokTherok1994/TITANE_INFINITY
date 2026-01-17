@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 /**
@@ -41,7 +41,7 @@ export {
   healthCheck as chatEngineHealthCheck,
   onStreamChunk as chatEngineOnStreamChunk,
   onStreamDone as chatEngineOnStreamDone,
-} from './chatEngine.commands';
+} from './chatEngine?.commands';
 export type {
   ProviderPreference as ChatEngineProviderPreference,
   SpeechMode as ChatEngineSpeechMode,
@@ -50,4 +50,4 @@ export type {
   StreamChunkPayload as ChatEngineStreamChunk,
   StreamHandle as ChatEngineStreamHandle,
   EngineHealthReport as ChatEngineHealthReport,
-} from './chatEngine.commands';
+} from './chatEngine?.commands';

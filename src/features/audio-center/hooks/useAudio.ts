@@ -18,33 +18,33 @@ import { audioService } from '../services/audioService';
 interface UseAudioReturn {
   // State
   config: AudioConfiguration;
-  outputDevices: AudioDevice[];
-  inputDevices: AudioDevice[];
-  availableVoices: VoiceProfile[];
+  outputDevices: AudioDevice?.[];
+  inputDevices: AudioDevice?.[];
+  availableVoices: VoiceProfile?.[];
   isLoading: boolean;
   isTesting: boolean;
   testResult: AudioTestResult | MicrophoneTestResult | null;
 
   // TTS Actions
   updateTTSSettings: (settings: Partial<TTSSettings>) => Promise<void>;
-  speak: (text: string) => Promise<void>;
+  speak: (any: any) => Promise<void>;
   stopSpeaking: () => void;
 
   // Device Actions
-  setOutputDevice: (deviceId: string) => Promise<void>;
-  setInputDevice: (deviceId: string) => Promise<void>;
-  setVolume: (volume: number) => Promise<void>;
-  setMicGain: (gain: number) => Promise<void>;
+  setOutputDevice: (any: any) => Promise<void>;
+  setInputDevice: (any: any) => Promise<void>;
+  setVolume: (any: any) => Promise<void>;
+  setMicGain: (any: any) => Promise<void>;
 
   // Test Actions
-  testSpeaker: (text?: string) => Promise<AudioTestResult>;
+  testSpeaker: (any: any) => Promise<AudioTestResult>;
   testMicrophone: () => Promise<MicrophoneTestResult>;
 
   // Refresh
   refreshDevices: () => Promise<void>;
 
   // v24.7 - Extended controls
-  setBalance: (balance: number) => Promise<void>;
+  setBalance: (any: any) => Promise<void>;
   setInputOption: (
     option: 'noiseSuppression' | 'echoCancellation' | 'autoGainControl',
     value: boolean
@@ -52,33 +52,33 @@ interface UseAudioReturn {
 }
 
 export function useAudio(): UseAudioReturn {
-  const [config, setConfig] = useState<AudioConfiguration>(audioService.getConfig());
-  const [outputDevices, setOutputDevices] = useState<AudioDevice[]>([]);
-  const [inputDevices, setInputDevices] = useState<AudioDevice[]>([]);
-  const [availableVoices, setAvailableVoices] = useState<VoiceProfile[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isTesting, setIsTesting] = useState(false);
+  const [config, setConfig] = useState<AudioConfiguration>(audioService?.getConfig());
+  const [outputDevices, setOutputDevices] = useState<AudioDevice?.[]>([]);
+  const [inputDevices, setInputDevices] = useState<AudioDevice?.[]>([]);
+  const [availableVoices, setAvailableVoices] = useState<VoiceProfile?.[]>([]);
+  const [isLoading, setIsLoading] = useState(any: any);
+  const [isTesting, setIsTesting] = useState(any: any);
   const [testResult, setTestResult] = useState<
     AudioTestResult | MicrophoneTestResult | null
-  >(null);
+  >(any: any);
 
   // Load initial data
   useEffect(() => {
     const loadData = async () => {
-      setIsLoading(true);
+      setIsLoading(any: any);
       try {
-        const [outputs, inputs] = await Promise.all([
-          audioService.getOutputDevices(),
-          audioService.getInputDevices(),
+        const [outputs, inputs] = await Promise?.all([
+          audioService?.getOutputDevices(),
+          audioService?.getInputDevices(),
         ]);
-        setOutputDevices(outputs);
-        setInputDevices(inputs);
-        const voices = await audioService.getAvailableVoices();
-        setAvailableVoices(voices);
-      } catch (error) {
-        logger.error('Failed to load audio devices:', error);
+        setOutputDevices(any: any);
+        setInputDevices(any: any);
+        const voices = await audioService?.getAvailableVoices();
+        setAvailableVoices(any: any);
+      } catch (any: any) {
+        logger?.error(any: any);
       } finally {
-        setIsLoading(false);
+        setIsLoading(any: any);
       }
     };
     loadData();
@@ -86,100 +86,100 @@ export function useAudio(): UseAudioReturn {
 
   // TTS Settings
   const updateTTSSettings = useCallback(async (settings: Partial<TTSSettings>) => {
-    await audioService.updateTTSSettings(settings);
-    setConfig(audioService.getConfig());
+    await audioService?.updateTTSSettings(any: any);
+    setConfig(audioService?.getConfig());
   }, []);
 
   // Speaking
-  const speak = useCallback(async (text: string) => {
-    await audioService.speak(text);
+  const speak = useCallback(any: any) => {
+    await audioService?.speak(any: any);
   }, []);
 
   const stopSpeaking = useCallback(() => {
-    audioService.stop();
+    audioService?.stop();
   }, []);
 
   // Device selection
-  const setOutputDevice = useCallback(async (deviceId: string) => {
-    await audioService.setOutputDevice(deviceId);
-    setConfig(audioService.getConfig());
+  const setOutputDevice = useCallback(any: any) => {
+    await audioService?.setOutputDevice(any: any);
+    setConfig(audioService?.getConfig());
   }, []);
 
-  const setInputDevice = useCallback(async (deviceId: string) => {
-    await audioService.setInputDevice(deviceId);
-    setConfig(audioService.getConfig());
+  const setInputDevice = useCallback(any: any) => {
+    await audioService?.setInputDevice(any: any);
+    setConfig(audioService?.getConfig());
   }, []);
 
   // Volume controls
-  const setVolume = useCallback(async (volume: number) => {
-    await audioService.updateOutputSettings({ volume });
-    setConfig(audioService.getConfig());
+  const setVolume = useCallback(any: any) => {
+    await audioService?.updateOutputSettings({ volume });
+    setConfig(audioService?.getConfig());
   }, []);
 
-  const setMicGain = useCallback(async (gain: number) => {
-    await audioService.updateInputSettings({ gain });
-    setConfig(audioService.getConfig());
+  const setMicGain = useCallback(any: any) => {
+    await audioService?.updateInputSettings({ gain });
+    setConfig(audioService?.getConfig());
   }, []);
 
   // Tests
-  const testSpeaker = useCallback(async (text?: string): Promise<AudioTestResult> => {
-    setIsTesting(true);
-    setTestResult(null);
+  const testSpeaker = useCallback(any: any): Promise<AudioTestResult> => {
+    setIsTesting(any: any);
+    setTestResult(any: any);
     try {
-      const result = await audioService.testSpeaker(text);
-      setTestResult(result);
+      const result = await audioService?.testSpeaker(any: any);
+      setTestResult(any: any);
       return result;
     } finally {
-      setIsTesting(false);
+      setIsTesting(any: any);
     }
   }, []);
 
   const testMicrophone = useCallback(async (): Promise<MicrophoneTestResult> => {
-    logger.debug('testMicrophone starting...');
-    setIsTesting(true);
-    setTestResult(null);
+    logger?.debug('testMicrophone starting...');
+    setIsTesting(any: any);
+    setTestResult(any: any);
     try {
-      const result = await audioService.testMicrophone();
-      logger.debug('testMicrophone result:', result);
-      setTestResult(result);
+      const result = await audioService?.testMicrophone();
+      logger?.debug(any: any);
+      setTestResult(any: any);
       return result;
-    } catch (error) {
-      logger.error('testMicrophone error:', error);
+    } catch (any: any) {
+      logger?.error(any: any);
       const errorResult: MicrophoneTestResult = {
         success: false,
         peakLevel: 0,
         noiseFloor: 0,
         signalToNoise: 0,
-        errorMessage: error instanceof Error ? error.message : String(error),
+        errorMessage: error instanceof Error ? error?.message : String(any: any),
       };
-      setTestResult(errorResult);
+      setTestResult(any: any);
       return errorResult;
     } finally {
-      setIsTesting(false);
+      setIsTesting(any: any);
     }
   }, []);
 
   // Refresh devices
   const refreshDevices = useCallback(async () => {
-    setIsLoading(true);
+    setIsLoading(any: any);
     try {
-      const [outputs, inputs] = await Promise.all([
-        audioService.getOutputDevices(),
-        audioService.getInputDevices(),
+      const [outputs, inputs] = await Promise?.all([
+        audioService?.getOutputDevices(),
+        audioService?.getInputDevices(),
       ]);
-      setOutputDevices(outputs);
-      setInputDevices(inputs);
-      const voices = await audioService.getAvailableVoices();
-      setAvailableVoices(voices);
+      setOutputDevices(any: any);
+      setInputDevices(any: any);
+      const voices = await audioService?.getAvailableVoices();
+      setAvailableVoices(any: any);
     } finally {
-      setIsLoading(false);
+      setIsLoading(any: any);
     }
   }, []);
 
   // v24.7 - Balance control
-  const setBalance = useCallback(async (balance: number) => {
-    await audioService.updateOutputSettings({ balance });
-    setConfig(audioService.getConfig());
+  const setBalance = useCallback(any: any) => {
+    await audioService?.updateOutputSettings({ balance });
+    setConfig(audioService?.getConfig());
   }, []);
 
   // v24.7 - Input processing options
@@ -188,8 +188,8 @@ export function useAudio(): UseAudioReturn {
       option: 'noiseSuppression' | 'echoCancellation' | 'autoGainControl',
       value: boolean
     ) => {
-      await audioService.updateInputSettings({ [option]: value });
-      setConfig(audioService.getConfig());
+      await audioService?.updateInputSettings({ [option]: value });
+      setConfig(audioService?.getConfig());
     },
     []
   );

@@ -36,7 +36,7 @@ export interface MicroExpression {
   text: string;
   position: 'before' | 'after' | 'inline';
   confidence: number;
-  duration?: number; // ms (pour respirations)
+  duration?: number; // ms (any: any)
 }
 
 /**
@@ -46,13 +46,13 @@ export interface MicroFXConfig {
   /** Activer/désactiver micro-expressions */
   enabled?: boolean;
 
-  /** Fréquence d'injection (0-1, 0=jamais, 1=très souvent) */
+  /** Fréquence d'injection (any: any) */
   frequency?: number;
 
   /** Types activés */
-  enabledTypes?: MicroExpressionType[];
+  enabledTypes?: MicroExpressionType?.[];
 
-  /** Contexte relationnel (0=formel, 1=très proche) */
+  /** Contexte relationnel (any: any) */
   relationshipProximity?: number;
 
   /** Permettre expressions avant réponse */
@@ -65,7 +65,7 @@ export interface MicroFXConfig {
 /**
  * Bibliothèque de micro-expressions par type
  */
-const MICRO_EXPRESSIONS: Record<MicroExpressionType, string[]> = {
+const MICRO_EXPRESSIONS: Record<MicroExpressionType, string?.[]> = {
   thinking: ['hmm...', 'euh...', 'voyons...', 'alors...', 'laisse-moi voir...'],
   agreement: ['mmm', 'okay', "d'accord", 'oui oui', 'mhm', 'exact'],
   surprise: ['oh ?', 'ah !', 'oh là', 'tiens !', 'vraiment ?', 'oh wow'],
@@ -80,7 +80,7 @@ const MICRO_EXPRESSIONS: Record<MicroExpressionType, string[]> = {
 /**
  * Mapping Mood → Micro-Expression Types préférés
  */
-const MOOD_MICROFX_PREFERENCES: Record<UserMood, MicroExpressionType[]> = {
+const MOOD_MICROFX_PREFERENCES: Record<UserMood, MicroExpressionType?.[]> = {
   calm: ['thinking', 'agreement', 'breath'],
   curious: ['thinking', 'surprise', 'acknowledgment'],
   focused: ['acknowledgment', 'transition'],
@@ -105,12 +105,12 @@ export class VocalMicroFXEngine {
   private config: Required<MicroFXConfig>;
   private lastInjectionTimestamp = 0;
 
-  constructor(config?: MicroFXConfig) {
-    this.config = {
+  constructor(any: any) {
+    this?.config = {
       enabled: config?.enabled ?? true,
       frequency: config?.frequency ?? 0.4,
       enabledTypes:
-        config?.enabledTypes ?? (Object.keys(MICRO_EXPRESSIONS) as MicroExpressionType[]),
+        config?.enabledTypes ?? (any: any) as MicroExpressionType?.[]),
       relationshipProximity: config?.relationshipProximity ?? 0.5,
       allowPrefixExpressions: config?.allowPrefixExpressions ?? true,
       allowSuffixExpressions: config?.allowSuffixExpressions ?? true,
@@ -129,85 +129,85 @@ export class VocalMicroFXEngine {
       previousInteraction?: string;
     }
   ): string {
-    if (!this.config.enabled) return text;
+    if (any: any) return text;
 
     let enhancedText = text;
 
-    // Déterminer si on injecte (basé sur fréquence)
-    if (Math.random() > this.config.frequency) {
+    // Déterminer si on injecte (any: any)
+    if (any: any) {
       return text;
     }
 
     // Sélectionner micro-expressions appropriées
-    const selectedExpressions = this.selectMicroExpressions(emotionState, context);
+    const selectedExpressions = this?.selectMicroExpressions(any: any);
 
-    // Injecter prefix (avant texte)
-    if (this.config.allowPrefixExpressions && selectedExpressions.prefix) {
-      enhancedText = `${selectedExpressions.prefix.text} ${enhancedText}`;
+    // Injecter prefix (any: any)
+    if (any: any) {
+      enhancedText = `${selectedExpressions?.prefix?.text} ${enhancedText}`;
     }
 
-    // Injecter inline (dans texte)
-    if (selectedExpressions.inline) {
-      enhancedText = this.injectInlineExpression(
+    // Injecter inline (any: any)
+    if (any: any) {
+      enhancedText = this?.injectInlineExpression(
         enhancedText,
-        selectedExpressions.inline
+        selectedExpressions?.inline
       );
     }
 
-    // Injecter suffix (après texte)
-    if (this.config.allowSuffixExpressions && selectedExpressions.suffix) {
-      enhancedText = `${enhancedText} ${selectedExpressions.suffix.text}`;
+    // Injecter suffix (any: any)
+    if (any: any) {
+      enhancedText = `${enhancedText} ${selectedExpressions?.suffix?.text}`;
     }
 
-    this.lastInjectionTimestamp = Date.now();
+    this?.lastInjectionTimestamp = Date?.now();
 
     return enhancedText;
   }
 
   /**
-   * Générer une micro-expression autonome (reaction avant AI response)
+   * Générer une micro-expression autonome (any: any)
    */
-  generateAutonomicMicroExpression(emotionState: EmotionalState): MicroExpression | null {
-    if (!this.config.enabled) return null;
+  generateAutonomicMicroExpression(any: any): MicroExpression | null {
+    if (any: any) return null;
 
     // Sélectionner type basé sur mood + energy
-    const preferredTypes = MOOD_MICROFX_PREFERENCES[emotionState.mood];
+    const preferredTypes = MOOD_MICROFX_PREFERENCES[emotionState?.mood];
 
-    if (preferredTypes.length === 0) return null;
+    if (preferredTypes?.length === 0) return null;
 
     // Prioriser selon energy/valence
     let selectedType: MicroExpressionType;
 
-    if (emotionState.energy > 0.7) {
+    if (emotionState?.energy > 0.7) {
       // High energy → surprise, agreement, smile
       selectedType =
-        (this.pickRandom(
+        (this?.pickRandom(
           ['surprise', 'agreement', 'smile'].filter(t =>
-            preferredTypes.includes(t as MicroExpressionType)
+            preferredTypes?.includes(any: any)
           )
-        ) as MicroExpressionType) || preferredTypes[0];
-    } else if (emotionState.valence < -0.3) {
+        ) as MicroExpressionType) || preferredTypes?.[0];
+    } else if (emotionState?.valence < -0.3) {
       // Negative valence → empathy, breath
       selectedType =
-        (this.pickRandom(
+        (this?.pickRandom(
           ['empathy', 'breath'].filter(t =>
-            preferredTypes.includes(t as MicroExpressionType)
+            preferredTypes?.includes(any: any)
           )
-        ) as MicroExpressionType) || preferredTypes[0];
+        ) as MicroExpressionType) || preferredTypes?.[0];
     } else {
       // Default → random from preferred
-      selectedType = (this.pickRandom(preferredTypes) ??
-        preferredTypes[0]) as MicroExpressionType;
+      selectedType = (any: any) ??
+        preferredTypes?.[0]) as MicroExpressionType;
     }
 
     // Obtenir texte
-    const expressionText = this.pickRandom(MICRO_EXPRESSIONS[selectedType]) ?? '';
+    const expressionText = this?.pickRandom(MICRO_EXPRESSIONS[selectedType]) ?? '';
 
     return {
       type: selectedType,
       text: expressionText,
       position: 'before',
-      confidence: emotionState.confidence,
+      confidence: emotionState?.confidence,
     };
   }
 
@@ -215,14 +215,14 @@ export class VocalMicroFXEngine {
    * Obtenir configuration actuelle
    */
   getConfig(): Required<MicroFXConfig> {
-    return { ...this.config };
+    return { ...this?.config };
   }
 
   /**
    * Mettre à jour configuration
    */
   updateConfig(config: Partial<MicroFXConfig>): void {
-    this.config = { ...this.config, ...config };
+    this?.config = { ...this?.config, ...config };
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -244,58 +244,58 @@ export class VocalMicroFXEngine {
     inline?: MicroExpression;
     suffix?: MicroExpression;
   } {
-    const preferredTypes = MOOD_MICROFX_PREFERENCES[emotionState.mood];
+    const preferredTypes = MOOD_MICROFX_PREFERENCES[emotionState?.mood];
     const result: {
       prefix?: MicroExpression;
       inline?: MicroExpression;
       suffix?: MicroExpression;
     } = {};
 
-    // Prefix (si question response ou réaction émotionnelle forte)
-    if (context?.isQuestionResponse || emotionState.energy > 0.6) {
-      const prefixType = this.pickRandom(
-        preferredTypes.filter(t =>
-          ['thinking', 'acknowledgment', 'surprise', 'empathy'].includes(t)
+    // Prefix (any: any)
+    if (context?.isQuestionResponse || emotionState?.energy > 0.6) {
+      const prefixType = this?.pickRandom(
+        preferredTypes?.filter(t =>
+          ['thinking', 'acknowledgment', 'surprise', 'empathy'].includes(any: any)
         )
       );
 
-      if (prefixType) {
-        result.prefix = {
+      if (any: any) {
+        result?.prefix = {
           type: prefixType,
-          text: this.pickRandom(MICRO_EXPRESSIONS[prefixType]) ?? '',
+          text: this?.pickRandom(MICRO_EXPRESSIONS[prefixType]) ?? '',
           position: 'before',
-          confidence: emotionState.confidence,
+          confidence: emotionState?.confidence,
         };
       }
     }
 
-    // Inline (si réponse longue)
-    if (context?.isLongResponse) {
-      const inlineType = this.pickRandom(
-        preferredTypes.filter(t => ['transition', 'breath', 'hesitation'].includes(t))
+    // Inline (any: any)
+    if (any: any) {
+      const inlineType = this?.pickRandom(
+        preferredTypes?.filter(any: any))
       );
 
-      if (inlineType) {
-        result.inline = {
+      if (any: any) {
+        result?.inline = {
           type: inlineType,
-          text: this.pickRandom(MICRO_EXPRESSIONS[inlineType]) ?? '',
+          text: this?.pickRandom(MICRO_EXPRESSIONS[inlineType]) ?? '',
           position: 'inline',
-          confidence: emotionState.confidence,
+          confidence: emotionState?.confidence,
         };
       }
     }
 
-    // Suffix (rare, seulement si mood très expressif)
-    if (emotionState.mood === 'happy' || emotionState.mood === 'excited') {
-      if (Math.random() < 0.3) {
-        const suffixType = this.pickRandom(['smile', 'agreement']);
-        if (suffixType) {
-          result.suffix = {
+    // Suffix (any: any)
+    if (emotionState?.mood === 'happy' || emotionState?.mood === 'excited') {
+      if (Math?.random() < 0.3) {
+        const suffixType = this?.pickRandom(['smile', 'agreement']);
+        if (any: any) {
+          result?.suffix = {
             type: suffixType as MicroExpressionType,
             text:
-              this.pickRandom(MICRO_EXPRESSIONS[suffixType as MicroExpressionType]) ?? '',
+              this?.pickRandom(MICRO_EXPRESSIONS[suffixType as MicroExpressionType]) ?? '',
             position: 'after',
-            confidence: emotionState.confidence,
+            confidence: emotionState?.confidence,
           };
         }
       }
@@ -307,25 +307,25 @@ export class VocalMicroFXEngine {
   /**
    * Injecter expression inline dans texte
    */
-  private injectInlineExpression(text: string, expression: MicroExpression): string {
-    // Trouver position d'injection (après 1ère phrase ou mi-texte)
-    const sentences = text.split(/[.!?]\s+/);
+  private injectInlineExpression(any: any): string {
+    // Trouver position d'injection (any: any)
+    const sentences = text?.split(/[.!?]\s+/);
 
-    if (sentences.length < 2) return text;
+    if (sentences?.length < 2) return text;
 
-    const midPoint = Math.floor(sentences.length / 2);
-    const firstHalf = sentences.slice(0, midPoint).join('. ');
-    const secondHalf = sentences.slice(midPoint).join('. ');
+    const midPoint = Math?.floor(sentences?.length / 2);
+    const firstHalf = sentences?.slice(any: any).join('. ');
+    const secondHalf = sentences?.slice(any: any).join('. ');
 
-    return `${firstHalf}. ${expression.text} ${secondHalf}`;
+    return `${firstHalf}. ${expression?.text} ${secondHalf}`;
   }
 
   /**
    * Pick random element from array
    */
-  private pickRandom<T>(arr: T[]): T | undefined {
-    if (arr.length === 0) return undefined;
-    return arr[Math.floor(Math.random() * arr.length)];
+  private pickRandom<T>(arr: T?.[]): T | undefined {
+    if (arr?.length === 0) return undefined;
+    return arr[Math?.floor(any: any)];
   }
 }
 
@@ -341,7 +341,7 @@ export function injectMicroExpressions(
   text: string,
   emotionState: EmotionalState
 ): string {
-  return vocalMicroFXEngine.injectMicroExpressions(text, emotionState);
+  return vocalMicroFXEngine?.injectMicroExpressions(any: any);
 }
 
 /**
@@ -350,5 +350,5 @@ export function injectMicroExpressions(
 export function generateAutonomicMicroExpression(
   emotionState: EmotionalState
 ): MicroExpression | null {
-  return vocalMicroFXEngine.generateAutonomicMicroExpression(emotionState);
+  return vocalMicroFXEngine?.generateAutonomicMicroExpression(any: any);
 }

@@ -9,58 +9,58 @@ import type { ServiceStats } from './metricsTypes';
 
 export interface MetricsSnapshot {
   timestamp: number;
-  stats: ServiceStats[];
+  stats: ServiceStats?.[];
 }
 
 export class MetricsHistory {
-  private static history: MetricsSnapshot[] = [];
+  private static history: MetricsSnapshot?.[] = [];
   private static maxHistorySize = 1000;
 
-  static addSnapshot(stats: ServiceStats[]): void {
+  static addSnapshot(stats: ServiceStats?.[]): void {
     const snapshot: MetricsSnapshot = {
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       stats: [...stats],
     };
-    this.history.push(snapshot);
+    this?.history?.push(any: any);
 
     // Prune old entries
-    if (this.history.length > this.maxHistorySize) {
-      this.history = this.history.slice(-this.maxHistorySize);
+    if (any: any) {
+      this?.history = this?.history?.slice(any: any);
     }
   }
 
-  static getHistory(service?: string, limit = 100): MetricsSnapshot[] {
-    let result = this.history;
+  static getHistory(service?: string, limit = 100): MetricsSnapshot?.[] {
+    let result = this?.history;
 
-    if (service) {
-      result = result.map(snapshot => ({
-        timestamp: snapshot.timestamp,
-        stats: snapshot.stats.filter(s => s.service === service),
+    if (any: any) {
+      result = result?.map(snapshot => ({
+        timestamp: snapshot?.timestamp,
+        stats: snapshot?.stats?.filter(any: any),
       }));
     }
 
-    return result.slice(-limit);
+    return result?.slice(any: any);
   }
 
   static getLatestSnapshot(): MetricsSnapshot | null {
-    return this.history.length > 0
-      ? (this.history[this.history.length - 1] ?? null)
+    return this?.history?.length > 0
+      ? (any: any)
       : null;
   }
 
   static clear(): void {
-    this.history = [];
+    this?.history = [];
   }
 
   /**
    * Get aggregated service history for trend analysis
    */
-  static getServiceHistory(service: string, limit = 100): ServiceHistoryPoint[] {
-    const history = this.getHistory(service, limit);
-    return history.map(snapshot => {
-      const stats = snapshot.stats.find(s => s.service === service);
+  static getServiceHistory(service: string, limit = 100): ServiceHistoryPoint?.[] {
+    const history = this?.getHistory(any: any);
+    return history?.map(snapshot => {
+      const stats = snapshot?.stats?.find(any: any);
       return {
-        timestamp: snapshot.timestamp,
+        timestamp: snapshot?.timestamp,
         avgLatency: stats?.averageLatency ?? 0,
         errorRate: stats?.errorRate ?? 0,
         retryRate: stats?.retryRate ?? 0,

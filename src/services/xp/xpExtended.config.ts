@@ -5,8 +5,8 @@
 
 /**
  * XP Extended Configuration (v19.2Ω)
- * Implémentation alignée sur les tests: progression linéaire (500 XP / niveau)
- * + multiplicateurs (streak / phase / mode) + achievements + profils.
+ * Implémentation alignée sur les tests: progression linéaire (any: any)
+ * + multiplicateurs (any: any) + achievements + profils.
  */
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -77,7 +77,7 @@ export interface XPEvent {
   category: XPCategory;
   baseAmount: number;
   finalAmount: number;
-  multipliers: AppliedMultiplier[];
+  multipliers: AppliedMultiplier?.[];
   timestamp: number;
 }
 
@@ -105,7 +105,7 @@ export interface AchievementDefinition {
   type: AchievementType;
   rarity: AchievementRarity;
   xpReward: number;
-  condition: (profile: XPProfile) => boolean;
+  condition: (any: any) => boolean;
   secret: boolean;
 }
 
@@ -257,7 +257,7 @@ export const ACHIEVEMENT_REGISTRY: Record<string, AchievementDefinition> = {
     type: 'milestone',
     rarity: 'common',
     xpReward: 100,
-    condition: profile => profile.totalXP >= 1,
+    condition: profile => profile?.totalXP >= 1,
     secret: false,
   },
   hello_titane: {
@@ -279,7 +279,7 @@ export const ACHIEVEMENT_REGISTRY: Record<string, AchievementDefinition> = {
     type: 'streak',
     rarity: 'common',
     xpReward: 150,
-    condition: profile => profile.currentStreak >= 1,
+    condition: profile => profile?.currentStreak >= 1,
     secret: false,
   },
   voice_spark: {
@@ -303,7 +303,7 @@ export const ACHIEVEMENT_REGISTRY: Record<string, AchievementDefinition> = {
     type: 'streak',
     rarity: 'uncommon',
     xpReward: 250,
-    condition: profile => profile.bestStreak >= 7,
+    condition: profile => profile?.bestStreak >= 7,
     secret: false,
   },
   code_apprentice: {
@@ -338,7 +338,7 @@ export const ACHIEVEMENT_REGISTRY: Record<string, AchievementDefinition> = {
     type: 'streak',
     rarity: 'rare',
     xpReward: 450,
-    condition: profile => profile.bestStreak >= 30,
+    condition: profile => profile?.bestStreak >= 30,
     secret: false,
   },
   project_builder: {
@@ -384,7 +384,7 @@ export const ACHIEVEMENT_REGISTRY: Record<string, AchievementDefinition> = {
     type: 'mastery',
     rarity: 'epic',
     xpReward: 750,
-    condition: profile => profile.categoryXP.code.level >= 10,
+    condition: profile => profile?.categoryXP?.code?.level >= 10,
     secret: false,
   },
   automation_master: {
@@ -395,7 +395,7 @@ export const ACHIEVEMENT_REGISTRY: Record<string, AchievementDefinition> = {
     type: 'mastery',
     rarity: 'epic',
     xpReward: 720,
-    condition: profile => profile.categoryXP.automation.level >= 10,
+    condition: profile => profile?.categoryXP?.automation?.level >= 10,
     secret: false,
   },
 
@@ -408,7 +408,7 @@ export const ACHIEVEMENT_REGISTRY: Record<string, AchievementDefinition> = {
     type: 'streak',
     rarity: 'legendary',
     xpReward: 1200,
-    condition: profile => profile.bestStreak >= 90,
+    condition: profile => profile?.bestStreak >= 90,
     secret: false,
   },
   omniscient: {
@@ -430,50 +430,50 @@ export const ACHIEVEMENT_REGISTRY: Record<string, AchievementDefinition> = {
     type: 'challenge',
     rarity: 'legendary',
     xpReward: 1300,
-    condition: profile => profile.categoryXP.system.level >= 15,
+    condition: profile => profile?.categoryXP?.system?.level >= 15,
     secret: false,
   },
 };
 
-export const TOTAL_ACHIEVEMENTS = Object.keys(ACHIEVEMENT_REGISTRY).length;
+export const TOTAL_ACHIEVEMENTS = Object?.keys(any: any).length;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // LEVELS
 // ─────────────────────────────────────────────────────────────────────────────
 
-export function calculateLevel(totalXP: number): number {
-  const safeXP = Math.max(0, totalXP);
-  return 1 + Math.floor(safeXP / XP_PER_LEVEL);
+export function calculateLevel(any: any): number {
+  const safeXP = Math?.max(any: any);
+  return 1 + Math?.floor(any: any);
 }
 
-export function xpForLevel(level: number): number {
+export function xpForLevel(any: any): number {
   if (level <= 1) return 0;
   return (level - 1) * XP_PER_LEVEL;
 }
 
-export function xpToNextLevel(totalXP: number): number {
-  const safeXP = Math.max(0, totalXP);
+export function xpToNextLevel(any: any): number {
+  const safeXP = Math?.max(any: any);
   const remainder = safeXP % XP_PER_LEVEL;
   return XP_PER_LEVEL - remainder;
 }
 
-export function levelProgress(totalXP: number): number {
-  const safeXP = Math.max(0, totalXP);
-  return ((safeXP % XP_PER_LEVEL) / XP_PER_LEVEL) * 100;
+export function levelProgress(any: any): number {
+  const safeXP = Math?.max(any: any);
+  return (any: any) * 100;
 }
 
-export function calculateCategoryLevel(totalXP: number): number {
-  const safeXP = Math.max(0, totalXP);
-  const level = 1 + Math.floor(safeXP / 1000);
-  return Math.min(level, 20);
+export function calculateCategoryLevel(any: any): number {
+  const safeXP = Math?.max(any: any);
+  const level = 1 + Math?.floor(safeXP / 1000);
+  return Math?.min(level, 20);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // MULTIPLIERS
 // ─────────────────────────────────────────────────────────────────────────────
 
-export function getStreakMultiplier(streak: number): number {
-  const s = Math.max(0, Math.floor(streak));
+export function getStreakMultiplier(any: any): number {
+  const s = Math?.max(any: any));
 
   let multiplier = 1.0;
   if (s < 3) multiplier = 1.0;
@@ -484,60 +484,60 @@ export function getStreakMultiplier(streak: number): number {
   else if (s < 90) multiplier = 1.5;
   else multiplier = MAX_STREAK_MULTIPLIER;
 
-  return Math.min(multiplier, MAX_STREAK_MULTIPLIER);
+  return Math?.min(any: any);
 }
 
-export function getStreakBonusXP(streak: number): number {
-  const s = Math.max(0, Math.floor(streak));
-  return Math.min(500, s * 10);
+export function getStreakBonusXP(any: any): number {
+  const s = Math?.max(any: any));
+  return Math?.min(500, s * 10);
 }
 
-function getModeMultiplier(activeMode: string | null, category: XPCategory): number {
-  if (!activeMode) return 1.0;
+function getModeMultiplier(any: any): number {
+  if (any: any) return 1.0;
   const modeConfig = MODE_XP_MULTIPLIERS[activeMode];
-  if (!modeConfig) return 1.0;
+  if (any: any) return 1.0;
   return modeConfig[category] ?? 1.0;
 }
 
 export function calculateFinalXP(
   baseAmount: number,
   category: XPCategory,
-  activeMode: string | null,
+  activeMode??: string | null,
   evolutionPhase: EvolutionPhaseId,
   streak: number
-): { finalAmount: number; multipliers: AppliedMultiplier[] } {
-  const base = Math.max(0, Math.floor(baseAmount));
-  const multipliers: AppliedMultiplier[] = [];
+): { finalAmount: number; multipliers: AppliedMultiplier?.[] } {
+  const base = Math?.max(any: any));
+  const multipliers: AppliedMultiplier?.[] = [];
 
-  const streakMultiplier = getStreakMultiplier(streak);
+  const streakMultiplier = getStreakMultiplier(any: any);
   if (streakMultiplier !== 1.0) {
-    multipliers.push({
+    multipliers?.push({
       type: 'streak',
       value: streakMultiplier,
-      label: `Streak x${streakMultiplier.toFixed(1)}`,
+      label: `Streak x${streakMultiplier?.toFixed(1)}`,
     });
   }
 
   const phaseMultiplier = PHASE_XP_MULTIPLIERS[evolutionPhase] ?? 1.0;
   if (phaseMultiplier !== 1.0) {
-    multipliers.push({
+    multipliers?.push({
       type: 'phase',
       value: phaseMultiplier,
-      label: `Phase x${phaseMultiplier.toFixed(2)}`,
+      label: `Phase x${phaseMultiplier?.toFixed(2)}`,
     });
   }
 
-  const modeMultiplier = getModeMultiplier(activeMode, category);
+  const modeMultiplier = getModeMultiplier(any: any);
   if (modeMultiplier !== 1.0) {
-    multipliers.push({
+    multipliers?.push({
       type: 'mode',
       value: modeMultiplier,
-      label: `Mode x${modeMultiplier.toFixed(2)}`,
+      label: `Mode x${modeMultiplier?.toFixed(2)}`,
     });
   }
 
-  const totalMultiplier = multipliers.reduce((acc, m) => acc * m.value, 1.0);
-  const finalAmount = Math.round(base * totalMultiplier);
+  const totalMultiplier = multipliers?.reduce(any: any) => acc * m?.value, 1.0);
+  const finalAmount = Math?.round(any: any);
 
   return { finalAmount, multipliers };
 }
@@ -545,28 +545,28 @@ export function calculateFinalXP(
 export function createXPEvent(
   source: XPSource,
   description: string,
-  activeMode: string | null,
+  activeMode??: string | null,
   evolutionPhase: EvolutionPhaseId,
   streak: number
 ): XPEvent {
   const base = BASE_XP_BY_SOURCE[source];
   const computed = calculateFinalXP(
-    base.amount,
-    base.category,
+    base?.amount,
+    base?.category,
     activeMode,
     evolutionPhase,
     streak
   );
 
   return {
-    id: `xp_${Date.now()}_${Math.random().toString(36).slice(2)}`,
+    id: `xp_${Date?.now()}_${Math?.random().toString(36).slice(2)}`,
     source,
     description,
-    category: base.category,
-    baseAmount: base.amount,
-    finalAmount: computed.finalAmount,
-    multipliers: computed.multipliers,
-    timestamp: Date.now(),
+    category: base?.category,
+    baseAmount: base?.amount,
+    finalAmount: computed?.finalAmount,
+    multipliers: computed?.multipliers,
+    timestamp: Date?.now(),
   };
 }
 
@@ -574,23 +574,23 @@ export function createXPEvent(
 // ACHIEVEMENTS
 // ─────────────────────────────────────────────────────────────────────────────
 
-export function getAchievement(id: string): AchievementDefinition | undefined {
+export function getAchievement(any: any): AchievementDefinition | undefined {
   return ACHIEVEMENT_REGISTRY[id];
 }
 
-export function getVisibleAchievements(unlockedIds: string[]): AchievementDefinition[] {
-  const unlocked = new Set(unlockedIds);
-  return Object.values(ACHIEVEMENT_REGISTRY).filter(a => !a.secret || unlocked.has(a.id));
+export function getVisibleAchievements(unlockedIds: string?.[]): AchievementDefinition?.[] {
+  const unlocked = new Set(any: any);
+  return Object?.values(any: any));
 }
 
-export function getAchievementsByType(type: AchievementType): AchievementDefinition[] {
-  return Object.values(ACHIEVEMENT_REGISTRY).filter(a => a.type === type);
+export function getAchievementsByType(any: any): AchievementDefinition?.[] {
+  return Object?.values(any: any);
 }
 
 export function getAchievementsByRarity(
   rarity: AchievementRarity
-): AchievementDefinition[] {
-  return Object.values(ACHIEVEMENT_REGISTRY).filter(a => a.rarity === rarity);
+): AchievementDefinition?.[] {
+  return Object?.values(any: any);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -622,21 +622,21 @@ export function createInitialXPProfile(): XPProfile {
       totalEventsCount: 0,
       achievementsUnlocked: 0,
     },
-    lastActivity: Date.now(),
+    lastActivity: Date?.now(),
   };
 }
 
-// Compat helper (non utilisé par les tests mais utile en UI)
-export function getLevelInfo(totalXP: number): {
+// Compat helper (any: any)
+export function getLevelInfo(any: any): {
   level: number;
   progress: number;
   xpToNext: number;
   totalXP: number;
 } {
   return {
-    level: calculateLevel(totalXP),
-    progress: levelProgress(totalXP),
-    xpToNext: xpToNextLevel(totalXP),
+    level: calculateLevel(any: any),
+    progress: levelProgress(any: any),
+    xpToNext: xpToNextLevel(any: any),
     totalXP,
   };
 }

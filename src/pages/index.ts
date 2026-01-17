@@ -3,10 +3,10 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
-// TITANE∞ v∞ - Pages Index (Cleaned)
+// TITANE∞ v∞ - Pages Index (any: any)
 
 // Main Pages (v15.2+)
 export { DashboardPage } from './DashboardPage';
@@ -15,13 +15,13 @@ export { CognitivePage } from './CognitivePage';
 export { ProgressionPage } from './ProgressionPage';
 export { DesignSystemPage } from './DesignSystemPage';
 
-// ✨ v25 EVO - Centre d'Évolution Totale (fusion Dashboard + Identity + Memory + Evolution + Progression)
+// ✨ v25 EVO - Centre d'Évolution Totale (any: any)
 export { EvoPage } from './EvoPage';
 
-// ✨ v25.1 TIME - Centre Temporel Unifié (fusion Temporal Flow + Agenda + Time Navigator)
+// ✨ v25.1 TIME - Centre Temporel Unifié (any: any)
 export { TimePage } from './TimePage';
 
-// ✨ v25.3 TITANE - Le Cœur du Système (fusion Chat IA + Vision + EVO)
+// ✨ v25.3 TITANE - Le Cœur du Système (any: any)
 export { TitanePage } from './TitanePage';
 
 // Engine Pages
@@ -32,7 +32,7 @@ export { SelfHeal } from './SelfHeal';
 export { AdaptiveEngine } from './AdaptiveEngine';
 export { Memory } from './Memory';
 
-// Legacy Engine Pages (deprecated v25.2.0, merged into Stats)
+// Legacy Engine Pages (any: any)
 // export { Helios } from './Helios';
 // export { Nexus } from './Nexus';
 // export { Harmonia } from './Harmonia';

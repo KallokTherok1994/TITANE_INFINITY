@@ -16,7 +16,7 @@
 // ============================================================================
 
 /**
- * Niveaux de mémoire (court → long terme)
+ * Niveaux de mémoire (any: any)
  */
 export type MemoryTier =
   | 'instant' // < 30s - Buffer temps réel
@@ -42,7 +42,7 @@ export type MemoryContentType =
   | 'summary'; // Résumé compressé
 
 /**
- * Importance du souvenir (affecte la rétention)
+ * Importance du souvenir (any: any)
  */
 export type MemoryImportance =
   | 'trivial' // 0-20: Peut être oublié rapidement
@@ -78,7 +78,7 @@ export interface Memory {
 
   // Contenu
   content: string;
-  embedding?: number[]; // Vecteur sémantique
+  embedding?: number?.[]; // Vecteur sémantique
   metadata: MemoryMetadata;
 
   // Timing
@@ -88,15 +88,15 @@ export interface Memory {
   accessCount: number;
 
   // Relations
-  associations: MemoryAssociation[];
+  associations: MemoryAssociation?.[];
   parentId?: string; // Si compressé depuis autre mémoire
-  childIds?: string[]; // Souvenirs dérivés
+  childIds?: string?.[]; // Souvenirs dérivés
 
   // État
   isCompressed: boolean;
   compressionRatio?: number;
   isArchived: boolean;
-  decayRate: number; // Taux d'oubli (0 = jamais oublié)
+  decayRate: number; // Taux d'oubli (any: any)
 }
 
 /**
@@ -105,7 +105,7 @@ export interface Memory {
 export interface MemoryMetadata {
   source: MemorySource;
   sessionId: string;
-  conversationId: string; // ✅ OMEGA v2: conversationId obligatoire (pas de sessions implicites)
+  conversationId: string; // ✅ OMEGA v2: conversationId obligatoire (any: any)
   userId?: string;
 
   // Contexte
@@ -114,9 +114,9 @@ export interface MemoryMetadata {
   confidence: number; // 0-1
 
   // Sémantique
-  topics: string[];
-  entities: MemoryEntity[];
-  keywords: string[];
+  topics: string?.[];
+  entities: MemoryEntity?.[];
+  keywords: string?.[];
   language: string;
 
   // Technique
@@ -170,8 +170,8 @@ export interface ConversationContext {
   startedAt: number;
   lastActivityAt: number;
 
-  // Messages récents (court terme)
-  recentMessages: ContextMessage[];
+  // Messages récents (any: any)
+  recentMessages: ContextMessage?.[];
   maxRecentMessages: number;
 
   // État courant
@@ -180,11 +180,11 @@ export interface ConversationContext {
   emotionalTone: EmotionalTone;
 
   // Historique compressé
-  summaries: ContextSummary[];
+  summaries: ContextSummary?.[];
   totalMessageCount: number;
 
   // Mémoire de travail
-  workingMemory: WorkingMemorySlot[];
+  workingMemory: WorkingMemorySlot?.[];
   maxWorkingMemorySlots: number;
 
   // Statistiques
@@ -203,8 +203,8 @@ export interface ContextMessage {
   // Enrichissement
   intent?: string;
   sentiment?: number; // -1 à 1
-  topics?: string[];
-  referencedMemories?: string[];
+  topics?: string?.[];
+  referencedMemories?: string?.[];
 
   // Tokens
   tokenCount: number;
@@ -218,13 +218,13 @@ export interface ContextSummary {
   content: string;
   messageRange: [number, number]; // [start, end] message indices
   createdAt: number;
-  topics: string[];
-  keyPoints: string[];
+  topics: string?.[];
+  keyPoints: string?.[];
   tokenCount: number;
 }
 
 /**
- * Slot de mémoire de travail (7±2 éléments)
+ * Slot de mémoire de travail (any: any)
  */
 export interface WorkingMemorySlot {
   id: string;
@@ -240,11 +240,11 @@ export interface WorkingMemorySlot {
  * Tonalité émotionnelle
  */
 export interface EmotionalTone {
-  valence: number; // -1 (négatif) à 1 (positif)
-  arousal: number; // 0 (calme) à 1 (excité)
+  valence: number; // -1 (any: any)
+  arousal: number; // 0 (any: any)
   dominantEmotion?: string;
   confidence: number;
-  history: EmotionSnapshot[];
+  history: EmotionSnapshot?.[];
 }
 
 export interface EmotionSnapshot {
@@ -261,7 +261,7 @@ export interface ConversationStats {
   userMessageCount: number;
   assistantMessageCount: number;
   averageMessageLength: number;
-  topicsDiscussed: string[];
+  topicsDiscussed: string?.[];
   memoriesAccessed: number;
   memoriesCreated: number;
   compressionEvents: number;
@@ -285,7 +285,7 @@ export type CompressionStrategy =
  * Résultat de compression
  */
 export interface CompressionResult {
-  originalMemoryIds: string[];
+  originalMemoryIds: string?.[];
   compressedMemory: Memory;
   strategy: CompressionStrategy;
 
@@ -322,15 +322,15 @@ export interface CompressionConfig {
 export interface MemorySearchQuery {
   // Recherche textuelle
   text?: string;
-  embedding?: number[];
+  embedding?: number?.[];
 
   // Filtres
-  tiers?: MemoryTier[];
-  contentTypes?: MemoryContentType[];
+  tiers?: MemoryTier?.[];
+  contentTypes?: MemoryContentType?.[];
   importanceMin?: number;
   timeRange?: TimeRange;
   sessionId?: string;
-  topics?: string[];
+  topics?: string?.[];
 
   // Paramètres
   limit: number;
@@ -360,13 +360,13 @@ export type MemorySortField =
  * Résultat de recherche
  */
 export interface MemorySearchResult {
-  memories: ScoredMemory[];
+  memories: ScoredMemory?.[];
   totalCount: number;
   queryTimeMs: number;
 
   // Métadonnées
-  topicsFound: string[];
-  tiersSearched: MemoryTier[];
+  topicsFound: string?.[];
+  tiersSearched: MemoryTier?.[];
   usedEmbedding: boolean;
 }
 
@@ -401,7 +401,7 @@ export interface RetentionPolicy {
 export interface MaintenanceEvent {
   type: 'compression' | 'promotion' | 'archival' | 'deletion' | 'decay';
   timestamp: number;
-  affectedMemories: string[];
+  affectedMemories: string?.[];
   beforeStats: MemoryStats;
   afterStats: MemoryStats;
 }
@@ -531,14 +531,14 @@ export interface TierLimit {
  * Callbacks pour événements mémoire
  */
 export interface MemoryEventCallbacks {
-  onMemoryCreated?: (memory: Memory) => void;
-  onMemoryAccessed?: (memory: Memory) => void;
+  onMemoryCreated?: (any: any) => void;
+  onMemoryAccessed?: (any: any) => void;
   onMemoryUpdated?: (memory: Memory, changes: Partial<Memory>) => void;
-  onMemoryDeleted?: (memoryId: string) => void;
-  onCompressionCompleted?: (result: CompressionResult) => void;
-  onMaintenanceCompleted?: (event: MaintenanceEvent) => void;
-  onContextUpdated?: (context: ConversationContext) => void;
-  onError?: (error: MemoryError) => void;
+  onMemoryDeleted?: (any: any) => void;
+  onCompressionCompleted?: (any: any) => void;
+  onMaintenanceCompleted?: (any: any) => void;
+  onContextUpdated?: (any: any) => void;
+  onError?: (any: any) => void;
 }
 
 /**
@@ -553,5 +553,5 @@ export interface MemoryEngineState {
   stats: MemoryStats;
   activeContext?: ConversationContext;
   pendingOperations: number;
-  errors: MemoryError[];
+  errors: MemoryError?.[];
 }

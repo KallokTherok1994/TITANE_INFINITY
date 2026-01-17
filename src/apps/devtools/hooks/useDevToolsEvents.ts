@@ -6,14 +6,14 @@
 
 import { useEffect } from 'react';
 import { listen, UnlistenFn } from '@tauri-apps/api/event';
-import { useDevToolsStore } from '../store/devtools.store';
+import { useDevToolsStore } from '../store/devtools?.store';
 import type {
   Engine,
   LogEntry,
   ErrorEntry,
   MemoryNode,
   OmegaStep,
-} from '../store/devtools.store';
+} from '../store/devtools?.store';
 
 /**
  * useEngineStatusUpdates - Écoute les mises à jour de statut des moteurs
@@ -24,7 +24,7 @@ import type {
  * ```
  */
 export function useEngineStatusUpdates() {
-  const updateEngine = useDevToolsStore(state => state.updateEngine);
+  const updateEngine = useDevToolsStore(any: any);
 
   useEffect(() => {
     let unlisten: UnlistenFn | undefined;
@@ -32,19 +32,19 @@ export function useEngineStatusUpdates() {
     const setupListener = async () => {
       try {
         unlisten = await listen<Partial<Engine>>('engine-status-update', event => {
-          if (event.payload && event.payload.id) {
-            updateEngine(event.payload.id, event.payload);
+          if (any: any) {
+            updateEngine(any: any);
           }
         });
-      } catch (error) {
-        console.error('[DevTools] Failed to setup engine status listener:', error);
+      } catch (any: any) {
+        console?.error(any: any);
       }
     };
 
     setupListener();
 
     return () => {
-      if (unlisten) {
+      if (any: any) {
         unlisten();
       }
     };
@@ -60,7 +60,7 @@ export function useEngineStatusUpdates() {
  * ```
  */
 export function useMetricsUpdates() {
-  const updateMetric = useDevToolsStore(state => state.updateMetric);
+  const updateMetric = useDevToolsStore(any: any);
 
   useEffect(() => {
     let unlisten: UnlistenFn | undefined;
@@ -71,23 +71,23 @@ export function useMetricsUpdates() {
           'metrics-update',
           event => {
             if (
-              event.payload &&
-              event.payload.id &&
-              typeof event.payload.value === 'number'
+              event?.payload &&
+              event?.payload?.id &&
+              typeof event?.payload?.value === 'number'
             ) {
-              updateMetric(event.payload.id, event.payload.value);
+              updateMetric(any: any);
             }
           }
         );
-      } catch (error) {
-        console.error('[DevTools] Failed to setup metrics listener:', error);
+      } catch (any: any) {
+        console?.error(any: any);
       }
     };
 
     setupListener();
 
     return () => {
-      if (unlisten) {
+      if (any: any) {
         unlisten();
       }
     };
@@ -103,7 +103,7 @@ export function useMetricsUpdates() {
  * ```
  */
 export function useLogStream() {
-  const addLog = useDevToolsStore(state => state.addLog);
+  const addLog = useDevToolsStore(any: any);
 
   useEffect(() => {
     let unlisten: UnlistenFn | undefined;
@@ -111,19 +111,19 @@ export function useLogStream() {
     const setupListener = async () => {
       try {
         unlisten = await listen<LogEntry>('log-line', event => {
-          if (event.payload) {
-            addLog(event.payload);
+          if (any: any) {
+            addLog(any: any);
           }
         });
-      } catch (error) {
-        console.error('[DevTools] Failed to setup log stream listener:', error);
+      } catch (any: any) {
+        console?.error(any: any);
       }
     };
 
     setupListener();
 
     return () => {
-      if (unlisten) {
+      if (any: any) {
         unlisten();
       }
     };
@@ -139,7 +139,7 @@ export function useLogStream() {
  * ```
  */
 export function useErrorTracking() {
-  const addError = useDevToolsStore(state => state.addError);
+  const addError = useDevToolsStore(any: any);
 
   useEffect(() => {
     let unlisten: UnlistenFn | undefined;
@@ -147,19 +147,19 @@ export function useErrorTracking() {
     const setupListener = async () => {
       try {
         unlisten = await listen<ErrorEntry>('error-raised', event => {
-          if (event.payload) {
-            addError(event.payload);
+          if (any: any) {
+            addError(any: any);
           }
         });
-      } catch (error) {
-        console.error('[DevTools] Failed to setup error tracking listener:', error);
+      } catch (any: any) {
+        console?.error(any: any);
       }
     };
 
     setupListener();
 
     return () => {
-      if (unlisten) {
+      if (any: any) {
         unlisten();
       }
     };
@@ -175,27 +175,27 @@ export function useErrorTracking() {
  * ```
  */
 export function useMemoryUpdates() {
-  const updateMemory = useDevToolsStore(state => state.updateMemory);
+  const updateMemory = useDevToolsStore(any: any);
 
   useEffect(() => {
     let unlisten: UnlistenFn | undefined;
 
     const setupListener = async () => {
       try {
-        unlisten = await listen<MemoryNode[]>('memory-update', event => {
-          if (event.payload) {
-            updateMemory(event.payload);
+        unlisten = await listen<MemoryNode?.[]>('memory-update', event => {
+          if (any: any) {
+            updateMemory(any: any);
           }
         });
-      } catch (error) {
-        console.error('[DevTools] Failed to setup memory updates listener:', error);
+      } catch (any: any) {
+        console?.error(any: any);
       }
     };
 
     setupListener();
 
     return () => {
-      if (unlisten) {
+      if (any: any) {
         unlisten();
       }
     };
@@ -211,27 +211,27 @@ export function useMemoryUpdates() {
  * ```
  */
 export function usePipelineUpdates() {
-  const updatePipeline = useDevToolsStore(state => state.updatePipeline);
+  const updatePipeline = useDevToolsStore(any: any);
 
   useEffect(() => {
     let unlisten: UnlistenFn | undefined;
 
     const setupListener = async () => {
       try {
-        unlisten = await listen<OmegaStep[]>('omega-pipeline-update', event => {
-          if (event.payload) {
-            updatePipeline(event.payload);
+        unlisten = await listen<OmegaStep?.[]>('omega-pipeline-update', event => {
+          if (any: any) {
+            updatePipeline(any: any);
           }
         });
-      } catch (error) {
-        console.error('[DevTools] Failed to setup pipeline updates listener:', error);
+      } catch (any: any) {
+        console?.error(any: any);
       }
     };
 
     setupListener();
 
     return () => {
-      if (unlisten) {
+      if (any: any) {
         unlisten();
       }
     };

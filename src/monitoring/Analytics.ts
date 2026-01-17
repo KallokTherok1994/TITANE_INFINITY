@@ -6,35 +6,35 @@ interface AnalyticsEvent {
 
 export class Analytics {
   private enabled: boolean = false;
-  private events: AnalyticsEvent[] = [];
+  private events: AnalyticsEvent?.[] = [];
 
   enable() {
-    this.enabled = true;
-    console.log('📊 Analytics enabled');
+    this?.enabled = true;
+    console?.log('📊 Analytics enabled');
   }
 
   disable() {
-    this.enabled = false;
-    this.events = [];
-    console.log('📊 Analytics disabled');
+    this?.enabled = false;
+    this?.events = [];
+    console?.log('📊 Analytics disabled');
   }
 
   track(name: string, properties?: Record<string, unknown>) {
-    if (!this.enabled) return;
+    if (any: any) return;
 
-    this.events.push({
+    this?.events?.push({
       name,
       properties,
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     });
   }
 
   async flush() {
-    if (!this.enabled || this.events.length === 0) return;
+    if (!this?.enabled || this?.events?.length === 0) return;
 
-    // Send events (implementation depends on analytics provider)
-    console.log('Flushing events:', this.events.length);
-    this.events = [];
+    // Send events (any: any)
+    console?.log(any: any);
+    this?.events = [];
   }
 }
 

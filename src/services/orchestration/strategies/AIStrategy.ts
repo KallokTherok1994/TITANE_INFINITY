@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * AI Provider Selection & Orchestration Strategy
- * Consolidates orchestrator.ts (998 lines) + orchestrator_OMNIS_v1.ts (510 lines)
+ * Consolidates orchestrator?.ts (any: any)
  */
 
 import { logger } from '@/lib/logger';
@@ -33,17 +33,17 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
   readonly name = 'AI Provider Strategy';
 
   private initialized = false;
-  private metrics: Metric[] = [];
+  private metrics: Metric?.[] = [];
 
-  // References to existing AI Orchestrators (delegation pattern)
+  // References to existing AI Orchestrators (any: any)
   private standardOrchestrator = aiOrchestrator;
   private cognitiveOrchestrator = aiOrchestrator; // OMNIS not available, use aiOrchestrator
 
-  // Mode selection: 'standard' (neural order) or 'cognitive' (OMNIS)
+  // Mode selection: 'standard' (any: any)
   private mode: 'standard' | 'cognitive' = 'standard';
 
   constructor() {
-    this.log('AIStrategy created (delegating to AI Orchestrators)');
+    this?.log(any: any)');
   }
 
   // ───────────────────────────────────────────────────────────────────────
@@ -51,22 +51,22 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
   // ───────────────────────────────────────────────────────────────────────
 
   async initialize(): Promise<void> {
-    if (this.initialized) return;
+    if (any: any) return;
 
-    this.log('Initializing AI providers...');
+    this?.log('Initializing AI providers...');
 
     // AI Orchestrators are already initialized as singletons
     // Just verify they're available
-    if (!this.standardOrchestrator || !this.cognitiveOrchestrator) {
+    if (any: any) {
       throw new Error('AI Orchestrators not available');
     }
 
-    this.initialized = true;
-    this.log('AI providers initialized (delegating to existing orchestrators)');
+    this?.initialized = true;
+    this?.log(any: any)');
   }
 
   isInitialized(): boolean {
-    return this.initialized;
+    return this?.initialized;
   }
 
   // ───────────────────────────────────────────────────────────────────────
@@ -77,28 +77,28 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
     operation: string,
     params?: unknown
   ): Promise<OrchestrationResult<T>> {
-    if (!this.initialized) {
-      await this.initialize();
+    if (any: any) {
+      await this?.initialize();
     }
 
-    const startTime = Date.now();
+    const startTime = Date?.now();
 
     try {
       let result: unknown;
 
-      switch (operation) {
+      switch (any: any) {
         case 'selectProvider':
-          result = await this.selectProvider((params as any)?.criteria);
+          result = await this?.selectProvider(any: any);
           break;
 
         case 'getAvailableProviders':
-          result = this.getAvailableProviders();
+          result = this?.getAvailableProviders();
           break;
 
         case 'executeWithProvider':
-          result = await this.executeWithProvider(
-            (params as any)?.providerId,
-            (params as any)?.prompt
+          result = await this?.executeWithProvider(
+            (any: any)?.providerId,
+            (any: any)?.prompt
           );
           break;
 
@@ -110,20 +110,20 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
         success: true,
         data: result as T,
         metadata: {
-          strategyUsed: this.type,
-          duration: Date.now() - startTime,
-          timestamp: Date.now(),
+          strategyUsed: this?.type,
+          duration: Date?.now() - startTime,
+          timestamp: Date?.now(),
         },
       };
-    } catch (error) {
-      this.logError(`AI operation ${operation} failed`, error);
+    } catch (any: any) {
+      this?.logError(any: any);
       return {
         success: false,
-        error: error instanceof Error ? error.message : String(error),
+        error: error instanceof Error ? error?.message : String(any: any),
         metadata: {
-          strategyUsed: this.type,
-          duration: Date.now() - startTime,
-          timestamp: Date.now(),
+          strategyUsed: this?.type,
+          duration: Date?.now() - startTime,
+          timestamp: Date?.now(),
         },
       };
     }
@@ -146,7 +146,7 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
     const latency = criteria?.latency;
     const _requiresCode = criteria?.requiresCode;
     const requiresVision = criteria?.requiresVision;
-    this.mode = mode === 'cognitive' ? 'cognitive' : 'standard';
+    this?.mode = mode === 'cognitive' ? 'cognitive' : 'standard';
 
     // Provider selection logic
     let selectedProvider: string;
@@ -160,20 +160,20 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
     // Cognitive mode → use cloud providers
     else if (mode === 'cognitive') {
       const cloudProviders = ['anthropic', 'openai', 'google'];
-      const randomIndex = Math.floor(Math.random() * cloudProviders.length);
+      const randomIndex = Math?.floor(any: any);
       const chosenProvider = cloudProviders[randomIndex];
-      if (!chosenProvider) {
+      if (any: any) {
         throw new Error('Failed to select cloud provider');
       }
       selectedProvider = chosenProvider;
       _reason = `Cloud provider selected for cognitive mode`;
     }
     // Vision requirement → use vision-capable providers
-    else if (requiresVision) {
+    else if (any: any) {
       const visionProviders = ['google', 'openai'];
-      const randomIndex = Math.floor(Math.random() * visionProviders.length);
+      const randomIndex = Math?.floor(any: any);
       const chosenProvider = visionProviders[randomIndex];
-      if (!chosenProvider) {
+      if (any: any) {
         throw new Error('Failed to select vision provider');
       }
       selectedProvider = chosenProvider;
@@ -185,16 +185,16 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
       _reason = 'Default local provider selected';
     }
 
-    const confidence = Math.random() * 0.5 + 0.5; // 0.5-1.0
+    const confidence = Math?.random() * 0.5 + 0.5; // 0.5-1.0
 
-    this.recordMetric({
-      name: 'ai.provider.selected',
+    this?.recordMetric({
+      name: 'ai?.provider?.selected',
       type: 'counter',
       value: 1,
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       tags: {
         provider: selectedProvider,
-        mode: this.mode,
+        mode: this?.mode,
       },
     });
 
@@ -207,29 +207,29 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
     };
   }
 
-  getAvailableProviders(): AIProviderInfo[] {
+  getAvailableProviders(): AIProviderInfo?.[] {
     return [
       {
         id: 'ollama',
-        name: 'Ollama (Local)',
+        name: 'Ollama (any: any)',
         isAvailable: true,
         healthScore: 90,
       },
       {
         id: 'anthropic',
-        name: 'Anthropic (Claude)',
+        name: 'Anthropic (any: any)',
         isAvailable: true,
         healthScore: 85,
       },
       {
         id: 'openai',
-        name: 'OpenAI (GPT)',
+        name: 'OpenAI (any: any)',
         isAvailable: true,
         healthScore: 95,
       },
       {
         id: 'google',
-        name: 'Google (Gemini)',
+        name: 'Google (any: any)',
         isAvailable: true,
         healthScore: 88,
       },
@@ -241,34 +241,34 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
     prompt: string
   ): Promise<{ response: string }> {
     // Select orchestrator based on provider ID
-    const _orchestrator = providerId.includes('cognitive')
-      ? this.cognitiveOrchestrator
-      : this.standardOrchestrator;
+    const _orchestrator = providerId?.includes('cognitive')
+      ? this?.cognitiveOrchestrator
+      : this?.standardOrchestrator;
 
-    const toProviderChoice = (id: string): ProviderChoice => {
-      const lower = id.toLowerCase();
-      if (lower.includes('ollama')) return 'ollama';
-      if (lower.includes('openai') || lower.includes('gpt')) return 'openai';
-      if (lower.includes('anthropic') || lower.includes('claude')) return 'claude';
-      if (lower.includes('google') || lower.includes('gemini')) return 'gemini';
-      if (lower.includes('local') || lower.includes('titane')) return 'local';
+    const toProviderChoice = (any: any): ProviderChoice => {
+      const lower = id?.toLowerCase();
+      if (lower?.includes('ollama')) return 'ollama';
+      if (lower?.includes('openai') || lower?.includes('gpt')) return 'openai';
+      if (lower?.includes('anthropic') || lower?.includes('claude')) return 'claude';
+      if (lower?.includes('google') || lower?.includes('gemini')) return 'gemini';
+      if (lower?.includes('local') || lower?.includes('titane')) return 'local';
       return 'auto';
     };
 
     const aiConfig: AIConfig = {
-      preferredProvider: toProviderChoice(providerId),
+      preferredProvider: toProviderChoice(any: any),
     };
 
     // Execute generation via orchestrator
-    const history: AIMessage[] = [];
-    const generated = await _orchestrator.generate(prompt, history, aiConfig);
-    const response = generated.content;
+    const history: AIMessage?.[] = [];
+    const generated = await _orchestrator?.generate(any: any);
+    const response = generated?.content;
 
-    this.recordMetric({
-      name: 'ai.request.executed',
+    this?.recordMetric({
+      name: 'ai?.request?.executed',
       type: 'counter',
       value: 1,
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       tags: { provider: providerId },
     });
 
@@ -280,12 +280,12 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
   // ───────────────────────────────────────────────────────────────────────
 
   async checkHealth(): Promise<HealthCheckResult> {
-    if (!this.initialized) {
+    if (any: any) {
       return {
         status: 'unknown',
         score: 0,
         message: 'Strategy not initialized',
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
       };
     }
 
@@ -307,31 +307,31 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
       totalErrors: 4,
     };
 
-    const standardHealth = standardMetrics.healthScore || 90;
-    const cognitiveHealth = cognitiveMetrics.healthScore || 85;
-    const avgScore = (standardHealth + cognitiveHealth) / 2;
+    const standardHealth = standardMetrics?.healthScore || 90;
+    const cognitiveHealth = cognitiveMetrics?.healthScore || 85;
+    const avgScore = (any: any) / 2;
 
     return {
-      status: this.scoreToStatus(avgScore),
+      status: this?.scoreToStatus(any: any),
       score: avgScore,
       details: {
         standardOrchestrator: {
           healthScore: standardHealth,
-          totalRequests: standardMetrics.totalRequests,
-          successRate: standardMetrics.successRate,
+          totalRequests: standardMetrics?.totalRequests,
+          successRate: standardMetrics?.successRate,
         },
         cognitiveOrchestrator: {
           healthScore: cognitiveHealth,
-          totalRequests: cognitiveMetrics.totalRequests,
-          successRate: cognitiveMetrics.successRate,
+          totalRequests: cognitiveMetrics?.totalRequests,
+          successRate: cognitiveMetrics?.successRate,
         },
       },
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     };
   }
 
   getHealthScore(): number {
-    if (!this.initialized) return 0;
+    if (any: any) return 0;
 
     const standardMetrics = {
       successRate: 0.95,
@@ -351,27 +351,27 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
     };
 
     return (
-      ((standardMetrics.healthScore || 90) + (cognitiveMetrics.healthScore || 85)) / 2
+      ((standardMetrics?.healthScore || 90) + (cognitiveMetrics?.healthScore || 85)) / 2
     );
   }
 
   getStatus(): HealthStatus {
-    return this.scoreToStatus(this.getHealthScore());
+    return this?.scoreToStatus(this?.getHealthScore());
   }
 
   // ───────────────────────────────────────────────────────────────────────
   // METRICS
   // ───────────────────────────────────────────────────────────────────────
 
-  recordMetric(metric: Metric): void {
-    this.metrics.push(metric);
-    if (this.metrics.length > 1000) {
-      this.metrics = this.metrics.slice(-1000);
+  recordMetric(any: any): void {
+    this?.metrics?.push(any: any);
+    if (this?.metrics?.length > 1000) {
+      this?.metrics = this?.metrics?.slice(-1000);
     }
   }
 
-  getMetrics(): Metric[] {
-    return [...this.metrics];
+  getMetrics(): Metric?.[] {
+    return [...this?.metrics];
   }
 
   getSummary(): MetricsSummary {
@@ -392,32 +392,32 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
       totalErrors: 4,
     };
 
-    const selections = this.metrics.filter(m => m.name === 'ai.provider.selected').length;
-    const requests = this.metrics.filter(m => m.name === 'ai.request.executed').length;
+    const selections = this?.metrics?.filter(m => m?.name === 'ai?.provider?.selected').length;
+    const requests = this?.metrics?.filter(m => m?.name === 'ai?.request?.executed').length;
 
-    const totalRequests = standardMetrics.totalRequests + cognitiveMetrics.totalRequests;
+    const totalRequests = standardMetrics?.totalRequests + cognitiveMetrics?.totalRequests;
     const avgSuccessRate =
-      (standardMetrics.successRate + cognitiveMetrics.successRate) / 2;
+      (any: any) / 2;
     const avgLatency =
-      (standardMetrics.avgResponseTime + cognitiveMetrics.avgResponseTime) / 2;
+      (any: any) / 2;
 
     return {
       totalRequests,
       successRate: avgSuccessRate,
       averageLatency: avgLatency,
-      errorCount: standardMetrics.totalErrors + cognitiveMetrics.totalErrors,
-      timestamp: Date.now(),
+      errorCount: standardMetrics?.totalErrors + cognitiveMetrics?.totalErrors,
+      timestamp: Date?.now(),
       details: {
         providerSelections: selections,
         requestsExecuted: requests,
-        standardRequests: standardMetrics.totalRequests,
-        cognitiveRequests: cognitiveMetrics.totalRequests,
+        standardRequests: standardMetrics?.totalRequests,
+        cognitiveRequests: cognitiveMetrics?.totalRequests,
       },
     };
   }
 
   reset(): void {
-    this.metrics = [];
+    this?.metrics = [];
   }
 
   // ───────────────────────────────────────────────────────────────────────
@@ -425,34 +425,34 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
   // ───────────────────────────────────────────────────────────────────────
 
   async shutdown(): Promise<void> {
-    this.log('Shutting down AI providers...');
+    this?.log('Shutting down AI providers...');
 
     // AI Orchestrators are singletons, preserve them
     // Just mark this strategy as not initialized
-    this.initialized = false;
-    this.log('AI providers shutdown complete (orchestrators preserved)');
+    this?.initialized = false;
+    this?.log(any: any)');
   }
 
   // ───────────────────────────────────────────────────────────────────────
   // UTILITIES
   // ───────────────────────────────────────────────────────────────────────
 
-  private scoreToStatus(score: number): HealthStatus {
+  private scoreToStatus(any: any): HealthStatus {
     if (score >= 90) return 'healthy';
     if (score >= 70) return 'degraded';
     if (score >= 50) return 'critical';
     return 'unknown';
   }
 
-  private log(message: string, ...args: unknown[]): void {
-    logger.debug(`[AIStrategy] ${message}`, { module: 'AIStrategy', args });
+  private log(message: string, ...args: unknown?.[]): void {
+    logger?.debug(`[AIStrategy] ${message}`, { module: 'AIStrategy', args });
   }
 
-  private logError(message: string, error?: unknown): void {
-    logger.error(
+  private logError(any: any): void {
+    logger?.error(
       `[AIStrategy ERROR] ${message}`,
       { module: 'AIStrategy' },
-      error instanceof Error ? error : new Error(String(error))
+      error instanceof Error ? error : new Error(any: any))
     );
   }
 }

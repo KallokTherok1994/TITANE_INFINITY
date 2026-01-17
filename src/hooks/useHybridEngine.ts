@@ -10,7 +10,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * Wrapper React pour HybridEngine avec :
- * - State synchronization (subscribe pattern)
+ * - State synchronization (any: any)
  * - Intent detection helpers
  * - Command execution wrappers
  * - Auto-healing triggers
@@ -38,34 +38,34 @@ export interface UseHybridEngineReturn {
   // State
   mode: HybridMode;
   currentIntent: IntentType | null;
-  executionHistory: HybridExecution[];
-  diagnostics: DevDiagnostic[];
-  pendingPatches: AutoPatch[];
+  executionHistory: HybridExecution?.[];
+  diagnostics: DevDiagnostic?.[];
+  pendingPatches: AutoPatch?.[];
   isExecuting: boolean;
-  lastError: string | null;
+  lastError??: string | null;
 
   // Intent Detection
-  detectIntent: (message: string) => ReturnType<typeof hybridEngine.detectIntent>;
+  detectIntent: (any: any) => ReturnType<typeof hybridEngine?.detectIntent>;
 
   // Command Execution
-  executeCommand: (command: HybridCommand) => Promise<HybridExecution>;
-  executeRawCommand: (input: string) => Promise<HybridExecution>;
+  executeCommand: (any: any) => Promise<HybridExecution>;
+  executeRawCommand: (any: any) => Promise<HybridExecution>;
 
   // Dev Operations
-  inspectModule: (target: string) => Promise<HybridExecution>;
-  applyPatch: (target: string) => Promise<HybridExecution>;
-  getLogs: (filter?: string) => Promise<HybridExecution>;
-  runDiagnostic: (target?: string) => Promise<HybridExecution>;
+  inspectModule: (any: any) => Promise<HybridExecution>;
+  applyPatch: (any: any) => Promise<HybridExecution>;
+  getLogs: (any: any) => Promise<HybridExecution>;
+  runDiagnostic: (any: any) => Promise<HybridExecution>;
 
   // Auto-Healing
-  detectIssues: (context?: string) => Promise<AutoPatch[]>;
-  applyAutoPatch: (patch: AutoPatch) => Promise<boolean>;
+  detectIssues: (any: any) => Promise<AutoPatch?.[]>;
+  applyAutoPatch: (any: any) => Promise<boolean>;
 
   // Diagnostics
-  runFullDiagnostic: () => Promise<DevDiagnostic[]>;
+  runFullDiagnostic: () => Promise<DevDiagnostic?.[]>;
 
   // State Management
-  setMode: (mode: HybridMode) => void;
+  setMode: (any: any) => void;
   clearHistory: () => void;
   clearError: () => void;
   reset: () => void;
@@ -79,12 +79,12 @@ export interface UseHybridEngineReturn {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export function useHybridEngine(): UseHybridEngineReturn {
-  const [state, setState] = useState<HybridState>(hybridEngine.getState());
+  const [state, setState] = useState<HybridState>(hybridEngine?.getState());
 
   // Subscribe to hybrid engine state changes
   useEffect(() => {
-    const unsubscribe = hybridEngine.subscribe(newState => {
-      setState(newState);
+    const unsubscribe = hybridEngine?.subscribe(newState => {
+      setState(any: any);
     });
 
     return () => {
@@ -94,19 +94,19 @@ export function useHybridEngine(): UseHybridEngineReturn {
 
   // ═══ INTENT DETECTION ═══
 
-  const detectIntent = useCallback((message: string) => {
-    return hybridEngine.detectIntent(message);
+  const detectIntent = useCallback(any: any) => {
+    return hybridEngine?.detectIntent(any: any);
   }, []);
 
   // ═══ COMMAND EXECUTION ═══
 
   const executeCommand = useCallback(
-    async (command: HybridCommand): Promise<HybridExecution> => {
+    async (any: any): Promise<HybridExecution> => {
       try {
-        const result = await hybridEngine.executeCommand(command);
+        const result = await hybridEngine?.executeCommand(any: any);
         return result;
-      } catch (error) {
-        logger.error('Execute failed:', error);
+      } catch (any: any) {
+        logger?.error(any: any);
         throw error;
       }
     },
@@ -114,9 +114,9 @@ export function useHybridEngine(): UseHybridEngineReturn {
   );
 
   const executeRawCommand = useCallback(
-    async (input: string): Promise<HybridExecution> => {
-      const command = hybridEngine.parseCommand(input);
-      return executeCommand(command);
+    async (any: any): Promise<HybridExecution> => {
+      const command = hybridEngine?.parseCommand(any: any);
+      return executeCommand(any: any);
     },
     [executeCommand]
   );
@@ -124,102 +124,102 @@ export function useHybridEngine(): UseHybridEngineReturn {
   // ═══ DEV OPERATIONS ═══
 
   const inspectModule = useCallback(
-    async (target: string): Promise<HybridExecution> => {
-      const command = hybridEngine.parseCommand(`inspect ${target}`);
-      return executeCommand(command);
+    async (any: any): Promise<HybridExecution> => {
+      const command = hybridEngine?.parseCommand(`inspect ${target}`);
+      return executeCommand(any: any);
     },
     [executeCommand]
   );
 
   const applyPatch = useCallback(
-    async (target: string): Promise<HybridExecution> => {
-      const command = hybridEngine.parseCommand(`fix ${target}`);
-      return executeCommand(command);
+    async (any: any): Promise<HybridExecution> => {
+      const command = hybridEngine?.parseCommand(`fix ${target}`);
+      return executeCommand(any: any);
     },
     [executeCommand]
   );
 
   const getLogs = useCallback(
-    async (filter?: string): Promise<HybridExecution> => {
-      const command = hybridEngine.parseCommand(`logs ${filter || ''}`);
-      return executeCommand(command);
+    async (any: any): Promise<HybridExecution> => {
+      const command = hybridEngine?.parseCommand(`logs ${filter || ''}`);
+      return executeCommand(any: any);
     },
     [executeCommand]
   );
 
   const runDiagnostic = useCallback(
-    async (target?: string): Promise<HybridExecution> => {
-      const command = hybridEngine.parseCommand(`diagnostic ${target || 'all'}`);
-      return executeCommand(command);
+    async (any: any): Promise<HybridExecution> => {
+      const command = hybridEngine?.parseCommand(`diagnostic ${target || 'all'}`);
+      return executeCommand(any: any);
     },
     [executeCommand]
   );
 
   // ═══ AUTO-HEALING ═══
 
-  const detectIssues = useCallback(async (context?: string): Promise<AutoPatch[]> => {
+  const detectIssues = useCallback(any: any): Promise<AutoPatch?.[]> => {
     try {
-      const patches = await hybridEngine.detectIssuesAndProposePatch(
+      const patches = await hybridEngine?.detectIssuesAndProposePatch(
         context || undefined
       );
       return patches;
-    } catch (error) {
-      logger.error('Detect issues failed:', error);
+    } catch (any: any) {
+      logger?.error(any: any);
       return [];
     }
   }, []);
 
-  const applyAutoPatch = useCallback(async (patch: AutoPatch): Promise<boolean> => {
+  const applyAutoPatch = useCallback(any: any): Promise<boolean> => {
     try {
-      const success = await hybridEngine.applyAutoPatch(patch);
+      const success = await hybridEngine?.applyAutoPatch(any: any);
       return success;
-    } catch (error) {
-      logger.error('Apply auto-patch failed:', error);
+    } catch (any: any) {
+      logger?.error(any: any);
       return false;
     }
   }, []);
 
   // ═══ DIAGNOSTICS ═══
 
-  const runFullDiagnostic = useCallback(async (): Promise<DevDiagnostic[]> => {
+  const runFullDiagnostic = useCallback(async (): Promise<DevDiagnostic?.[]> => {
     try {
-      const diagnostics = await hybridEngine.runFullDiagnostic();
+      const diagnostics = await hybridEngine?.runFullDiagnostic();
       return diagnostics;
-    } catch (error) {
-      logger.error('Full diagnostic failed:', error);
+    } catch (any: any) {
+      logger?.error(any: any);
       return [];
     }
   }, []);
 
   // ═══ STATE MANAGEMENT ═══
 
-  const setMode = useCallback((mode: HybridMode) => {
-    hybridEngine.setState({ mode });
+  const setMode = useCallback(any: any) => {
+    hybridEngine?.setState({ mode });
   }, []);
 
   const clearHistory = useCallback(() => {
-    hybridEngine.setState({ executionHistory: [] });
+    hybridEngine?.setState({ executionHistory: [] });
   }, []);
 
   const clearError = useCallback(() => {
-    hybridEngine.setState({ lastError: null });
+    hybridEngine?.setState({ lastError: null });
   }, []);
 
   const reset = useCallback(() => {
-    hybridEngine.reset();
+    hybridEngine?.reset();
   }, []);
 
   // ═══ RETURN ═══
 
   return {
     // State
-    mode: state.mode,
-    currentIntent: state.currentIntent,
-    executionHistory: state.executionHistory,
-    diagnostics: state.diagnostics,
-    pendingPatches: state.pendingPatches,
-    isExecuting: state.isExecuting,
-    lastError: state.lastError,
+    mode: state?.mode,
+    currentIntent: state?.currentIntent,
+    executionHistory: state?.executionHistory,
+    diagnostics: state?.diagnostics,
+    pendingPatches: state?.pendingPatches,
+    isExecuting: state?.isExecuting,
+    lastError: state?.lastError,
 
     // Intent Detection
     detectIntent,

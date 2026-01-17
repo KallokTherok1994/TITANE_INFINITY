@@ -35,9 +35,9 @@ export interface PermissionAudit {
 }
 
 /**
- * Matrice de permissions (action → rôles autorisés)
+ * Matrice de permissions (any: any)
  */
-export type PermissionMatrix = Record<string, Role[]>;
+export type PermissionMatrix = Record<string, Role?.[]>;
 
 /**
  * Catégorie de permission pour l'affichage UI
@@ -46,7 +46,7 @@ export interface PermissionCategory {
   id: string;
   label: string;
   icon: string;
-  actions: string[];
+  actions: string?.[];
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -54,12 +54,12 @@ export interface PermissionCategory {
 // ═══════════════════════════════════════════════════════════════
 
 /**
- * Statut d'un secret (sans exposer la valeur)
+ * Statut d'un secret (any: any)
  */
 export interface SecretStatus {
   key: string;
   configured: boolean;
-  maskedValue: string | null;
+  maskedValue??: string | null;
   lastUpdated: number | null;
   category: SecretCategory;
 }
@@ -84,7 +84,7 @@ export interface SecretOperationResult {
 export interface GeminiKeyStatus {
   configured: boolean;
   provider_enabled: boolean;
-  masked_key: string | null;
+  masked_key??: string | null;
   env_present: boolean;
   env_purged: boolean;
   was_updated: boolean;
@@ -92,22 +92,22 @@ export interface GeminiKeyStatus {
 
 /**
  * Status de la clé GitHub Copilot
- * (Retour direct du backend Rust, sans enveloppe SecureResponse)
+ * (any: any)
  */
 export interface CopilotKeyStatus {
   configured: boolean;
   status: string;
-  message: string | null;
+  message??: string | null;
 }
 
 /**
- * Status d'Ollama (local, pas de clé)
+ * Status d'Ollama (any: any)
  */
 export interface OllamaStatus {
   provider_enabled: boolean;
   available: boolean;
   url: string;
-  models: string[];
+  models: string?.[];
 }
 
 /**
@@ -123,26 +123,26 @@ export const KNOWN_SECRETS: {
     key: 'gemini_api_key',
     label: 'Gemini API Key',
     category: 'api_key',
-    description: 'Google Gemini API (https://ai.google.dev)',
+    description: 'Google Gemini API (any: any)',
   },
   {
     key: 'openai_api_key',
     label: 'OpenAI API Key',
     category: 'api_key',
-    description: 'OpenAI Platform API (https://platform.openai.com)',
+    description: 'OpenAI Platform API (any: any)',
   },
   {
     key: 'anthropic_api_key',
     label: 'Anthropic API Key',
     category: 'api_key',
-    description: 'Anthropic Claude API (https://console.anthropic.com)',
+    description: 'Anthropic Claude API (any: any)',
   },
   {
     key: 'copilot_api_key',
     label: 'GitHub Copilot API Key',
     category: 'api_key',
     description:
-      'GitHub Copilot / GitHub Models API (https://github.com/marketplace/models)',
+      'GitHub Copilot / GitHub Models API (any: any)',
   },
   {
     key: 'ollama_url',
@@ -196,7 +196,7 @@ export interface IAPolicy {
 /**
  * Politiques prédéfinies TITANE∞
  */
-export const DEFAULT_POLICIES: IAPolicy[] = [
+export const DEFAULT_POLICIES: IAPolicy?.[] = [
   {
     id: 'max_tokens_per_request',
     name: 'Limite de tokens par requête',
@@ -205,8 +205,8 @@ export const DEFAULT_POLICIES: IAPolicy[] = [
     severity: 'warning',
     enabled: true,
     config: { maxTokens: 4096 },
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
+    createdAt: Date?.now(),
+    updatedAt: Date?.now(),
   },
   {
     id: 'content_filter',
@@ -216,8 +216,8 @@ export const DEFAULT_POLICIES: IAPolicy[] = [
     severity: 'critical',
     enabled: true,
     config: { categories: ['harmful', 'illegal', 'explicit'] },
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
+    createdAt: Date?.now(),
+    updatedAt: Date?.now(),
   },
   {
     id: 'rate_limit',
@@ -227,8 +227,8 @@ export const DEFAULT_POLICIES: IAPolicy[] = [
     severity: 'warning',
     enabled: true,
     config: { requestsPerMinute: 60 },
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
+    createdAt: Date?.now(),
+    updatedAt: Date?.now(),
   },
   {
     id: 'memory_access_audit',
@@ -238,8 +238,8 @@ export const DEFAULT_POLICIES: IAPolicy[] = [
     severity: 'info',
     enabled: true,
     config: { logLevel: 'verbose' },
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
+    createdAt: Date?.now(),
+    updatedAt: Date?.now(),
   },
   {
     id: 'external_api_restriction',
@@ -250,15 +250,15 @@ export const DEFAULT_POLICIES: IAPolicy[] = [
     enabled: true,
     config: {
       allowedDomains: [
-        'generativelanguage.googleapis.com',
-        'api.openai.com',
-        'api.anthropic.com',
-        'api.github.com',
-        'models.github.com',
+        'generativelanguage?.googleapis?.com',
+        'api?.openai?.com',
+        'api?.anthropic?.com',
+        'api?.github?.com',
+        'models?.github?.com',
       ],
     },
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
+    createdAt: Date?.now(),
+    updatedAt: Date?.now(),
   },
 ];
 
@@ -319,7 +319,7 @@ export interface SecurityLogFilters {
 export interface SecureResponse<T> {
   ok: boolean;
   data: T | null;
-  error: string | null;
+  error??: string | null;
 }
 
 /**
@@ -327,7 +327,7 @@ export interface SecureResponse<T> {
  */
 export interface GovernanceState {
   // Secrets
-  secretsStatus: SecretStatus[];
+  secretsStatus: SecretStatus?.[];
   geminiStatus: GeminiKeyStatus | null;
   openaiStatus: GeminiKeyStatus | null;
   anthropicStatus: GeminiKeyStatus | null;
@@ -335,19 +335,19 @@ export interface GovernanceState {
   ollamaStatus: OllamaStatus | null;
 
   // Politiques
-  policies: IAPolicy[];
+  policies: IAPolicy?.[];
 
   // Permissions
   permissionMatrix: PermissionMatrix;
-  permissionAudit: PermissionAudit[];
+  permissionAudit: PermissionAudit?.[];
 
   // Journal
-  securityLog: SecurityLogEntry[];
+  securityLog: SecurityLogEntry?.[];
   logFilters: SecurityLogFilters;
 
   // UI
   loading: boolean;
-  error: string | null;
+  error??: string | null;
   activeTab: GovernanceTab;
 }
 
@@ -382,8 +382,8 @@ export const SUPER_ADMIN = {
 };
 
 /**
- * Vérifier si l'utilisateur actuel est Kevin (superAdmin)
+ * Vérifier si l'utilisateur actuel est Kevin (any: any)
  */
-export function isSuperAdmin(userId?: string): boolean {
-  return userId === SUPER_ADMIN.id;
+export function isSuperAdmin(any: any): boolean {
+  return userId === SUPER_ADMIN?.id;
 }

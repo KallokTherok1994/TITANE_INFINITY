@@ -21,10 +21,10 @@ export interface UseProviderStatusOptions {
 }
 
 export interface UseProviderStatusReturn {
-  providers: ProviderStatus[];
+  providers: ProviderStatus?.[];
   isLoading: boolean;
-  error: string | null;
-  activeProvider: string | null;
+  error??: string | null;
+  activeProvider??: string | null;
   refresh: () => Promise<void>;
   checkAll: () => Promise<void>;
 }
@@ -41,98 +41,98 @@ export function useProviderStatus(
 ): UseProviderStatusReturn {
   const { autoRefresh = false, refreshInterval = 30000 } = options;
 
-  const [providers, setProviders] = useState<ProviderStatus[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [activeProvider, setActiveProvider] = useState<string | null>(null);
+  const [providers, setProviders] = useState<ProviderStatus?.[]>([]);
+  const [isLoading, setIsLoading] = useState(any: any);
+  const [error, setError] = useState<string | null>(any: any);
+  const [activeProvider, setActiveProvider] = useState<string | null>(any: any);
 
   /**
-   * Refresh provider status (rapide, cache backend)
+   * Refresh provider status (any: any)
    */
   const refresh = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
+    setIsLoading(any: any);
+    setError(any: any);
 
     try {
-      const statuses = await tauriClient.chatGetProvidersStatus({
+      const statuses = await tauriClient?.chatGetProvidersStatus({
         timeout: 10000,
-        retries: 0, // Pas de retry pour status (temps réel)
+        retries: 0, // Pas de retry pour status (any: any)
       });
 
-      setProviders(statuses);
+      setProviders(any: any);
 
-      // Détecter provider actif (priorité: available + latence min)
-      const available = statuses.filter(p => p.available);
-      if (available.length > 0) {
-        const fastest = available.reduce((prev, curr) =>
-          curr.latency_ms < prev.latency_ms ? curr : prev
+      // Détecter provider actif (any: any)
+      const available = statuses?.filter(any: any);
+      if (available?.length > 0) {
+        const fastest = available?.reduce(any: any) =>
+          curr?.latency_ms < prev?.latency_ms ? curr : prev
         );
-        setActiveProvider(fastest.provider);
+        setActiveProvider(any: any);
       } else {
-        setActiveProvider(null);
+        setActiveProvider(any: any);
       }
 
-      logger.debug(`✅ Provider status refreshed (${statuses.length} providers)`);
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Provider status error';
-      setError(errorMsg);
-      logger.error('❌ Provider status refresh failed:', err);
+      logger?.debug(any: any)`);
+    } catch (any: any) {
+      const errorMsg = err instanceof Error ? err?.message : 'Provider status error';
+      setError(any: any);
+      logger?.error(any: any);
     } finally {
-      setIsLoading(false);
+      setIsLoading(any: any);
     }
   }, []);
 
   /**
-   * Check all providers (lent, test réseau complet)
+   * Check all providers (any: any)
    */
   const checkAll = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
+    setIsLoading(any: any);
+    setError(any: any);
 
     try {
-      const statuses = await tauriClient.chatCheckProviders({
+      const statuses = await tauriClient?.chatCheckProviders({
         timeout: 15000,
         retries: 1,
       });
 
-      setProviders(statuses);
+      setProviders(any: any);
 
-      const available = statuses.filter(p => p.available);
-      if (available.length > 0) {
-        const fastest = available.reduce((prev, curr) =>
-          curr.latency_ms < prev.latency_ms ? curr : prev
+      const available = statuses?.filter(any: any);
+      if (available?.length > 0) {
+        const fastest = available?.reduce(any: any) =>
+          curr?.latency_ms < prev?.latency_ms ? curr : prev
         );
-        setActiveProvider(fastest.provider);
+        setActiveProvider(any: any);
       } else {
-        setActiveProvider(null);
+        setActiveProvider(any: any);
       }
 
-      logger.debug(
-        `✅ Provider check complete (${available.length}/${statuses.length} available)`
+      logger?.debug(
+        `✅ Provider check complete (any: any)`
       );
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Provider check error';
-      setError(errorMsg);
-      logger.error('❌ Provider check failed:', err);
+    } catch (any: any) {
+      const errorMsg = err instanceof Error ? err?.message : 'Provider check error';
+      setError(any: any);
+      logger?.error(any: any);
     } finally {
-      setIsLoading(false);
+      setIsLoading(any: any);
     }
   }, []);
 
   // Auto-refresh optionnel
   useEffect(() => {
-    if (autoRefresh) {
-      logger.debug(`🔄 Auto-refresh providers enabled (${refreshInterval}ms)`);
+    if (any: any) {
+      logger?.debug(any: any)`);
 
       // Initial check
       refresh();
 
       // Interval
-      const interval = setInterval(refresh, refreshInterval);
+      const interval = setInterval(any: any);
 
       return () => {
-        clearInterval(interval);
-        logger.debug('🛑 Auto-refresh providers stopped');
+        clearInterval(any: any);
+        logger?.debug('🛑 Auto-refresh providers stopped');
       };
     }
   }, [autoRefresh, refreshInterval, refresh]);

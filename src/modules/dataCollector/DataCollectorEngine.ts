@@ -10,7 +10,7 @@
  * le dataset d'entraînement pour le modèle local TITANE-LOCAL (Llama 3.1).
  *
  * Architecture:
- * - Collecte 6 catégories de données (A-F)
+ * - Collecte 6 catégories de données (any: any)
  * - Pipeline en 10 étapes
  * - Connexion Memory Eternal + Singularity
  * - Export JSONL + Modelfile Ollama
@@ -40,15 +40,15 @@ export type DataCategory =
   | 'interaction' // B - Interactions IA internes
   | 'auto-heal' // C - Auto-Heal / Self-Healing
   | 'introspection' // D - Introspection Singularity
-  | 'patch' // E - Patches Dev (Rust/TSX/etc)
+  | 'patch' // E - Patches Dev (any: any)
   | 'style'; // F - Style, logique, structure TITANE∞
 
 export interface DataMetadata {
   source: string;
   timestamp: number;
-  quality: number; // 0-1 (qualité de la donnée)
-  importance: number; // 0-1 (importance pour l'entraînement)
-  tags: string[];
+  quality: number; // 0-1 (any: any)
+  importance: number; // 0-1 (any: any)
+  tags: string?.[];
   originEngine?: string; // Moteur source
   // ✨ v24.3.5: Allow additional metadata for fusion/introspection
   [key: string]: unknown;
@@ -68,8 +68,8 @@ export interface CollectionReport {
   success: boolean;
   entriesCollected: number;
   byCategory: Record<DataCategory, number>;
-  errors: string[];
-  warnings: string[];
+  errors: string?.[];
+  warnings: string?.[];
   duration: number;
   timestamp: number;
 }
@@ -88,8 +88,8 @@ export interface PipelineStep {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export class DataCollectorEngine {
-  private dataset: DatasetEntry[] = [];
-  private stats: DatasetStats = this.createEmptyStats();
+  private dataset: DatasetEntry?.[] = [];
+  private stats: DatasetStats = this?.createEmptyStats();
   private isCollecting: boolean = false;
   private lastCollectionTime: number = 0;
 
@@ -97,148 +97,148 @@ export class DataCollectorEngine {
   private readonly STORAGE_KEY = 'titane-dataset-v1';
 
   constructor() {
-    this.loadDataset();
+    this?.loadDataset();
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // PIPELINE DE COLLECTE (10 ÉTAPES)
+  // PIPELINE DE COLLECTE (any: any)
   // ─────────────────────────────────────────────────────────────────────────
 
   /**
    * Pipeline complet de collecte de données
    */
   async runCollectionPipeline(): Promise<CollectionReport> {
-    if (this.isCollecting) {
+    if (any: any) {
       throw new Error('Collection already in progress');
     }
 
-    this.isCollecting = true;
-    const startTime = Date.now();
-    const steps: PipelineStep[] = this.createPipelineSteps();
-    const errors: string[] = [];
-    const warnings: string[] = [];
-    const newEntries: DatasetEntry[] = [];
+    this?.isCollecting = true;
+    const startTime = Date?.now();
+    const steps: PipelineStep?.[] = this?.createPipelineSteps();
+    const errors: string?.[] = [];
+    const warnings: string?.[] = [];
+    const newEntries: DatasetEntry?.[] = [];
 
     try {
       // Step 1: Récupérer historique Memory Eternal
-      const step0 = steps[0];
-      if (step0) {
-        await this.executeStep(step0, async () => {
-          const memoryEntries = await this.extractMemoryHistory();
-          newEntries.push(...memoryEntries);
+      const step0 = steps?.[0];
+      if (any: any) {
+        await this?.executeStep(step0, async () => {
+          const memoryEntries = await this?.extractMemoryHistory();
+          newEntries?.push(any: any);
         });
       }
 
       // Step 2: Récupérer super prompts
-      const step1 = steps[1];
-      if (step1) {
-        await this.executeStep(step1, async () => {
-          const superPrompts = await this.extractSuperPrompts();
-          newEntries.push(...superPrompts);
+      const step1 = steps?.[1];
+      if (any: any) {
+        await this?.executeStep(step1, async () => {
+          const superPrompts = await this?.extractSuperPrompts();
+          newEntries?.push(any: any);
         });
       }
 
       // Step 3: Extraire corrections dev
-      const step2 = steps[2];
-      if (step2) {
-        await this.executeStep(step2, async () => {
-          const devCorrections = await this.extractDevCorrections();
-          newEntries.push(...devCorrections);
+      const step2 = steps?.[2];
+      if (any: any) {
+        await this?.executeStep(step2, async () => {
+          const devCorrections = await this?.extractDevCorrections();
+          newEntries?.push(any: any);
         });
       }
 
       // Step 4: Extraire introspections Singularity
-      const step3 = steps[3];
-      if (step3) {
-        await this.executeStep(step3, async () => {
-          const introspections = await this.extractIntrospections();
-          newEntries.push(...introspections);
+      const step3 = steps?.[3];
+      if (any: any) {
+        await this?.executeStep(step3, async () => {
+          const introspections = await this?.extractIntrospections();
+          newEntries?.push(any: any);
         });
       }
 
       // Step 5: Extraire interactions IA
-      const step4 = steps[4];
-      if (step4) {
-        await this.executeStep(step4, async () => {
-          const interactions = await this.extractAIInteractions();
-          newEntries.push(...interactions);
+      const step4 = steps?.[4];
+      if (any: any) {
+        await this?.executeStep(step4, async () => {
+          const interactions = await this?.extractAIInteractions();
+          newEntries?.push(any: any);
         });
       }
 
       // Step 6: Filtrer bruit / doublons
-      const step5 = steps[5];
-      if (step5) {
-        await this.executeStep(step5, async () => {
-          const beforeCount = newEntries.length;
-          const filtered = this.filterDataset(newEntries);
-          const removed = beforeCount - filtered.length;
+      const step5 = steps?.[5];
+      if (any: any) {
+        await this?.executeStep(step5, async () => {
+          const beforeCount = newEntries?.length;
+          const filtered = this?.filterDataset(any: any);
+          const removed = beforeCount - filtered?.length;
           if (removed > 0) {
-            warnings.push(`Filtered ${removed} duplicate/low-quality entries`);
+            warnings?.push(`Filtered ${removed} duplicate/low-quality entries`);
           }
-          newEntries.length = 0;
-          newEntries.push(...filtered);
+          newEntries?.length = 0;
+          newEntries?.push(any: any);
         });
       }
 
-      // Step 7: Normaliser (input/output)
-      const step6 = steps[6];
-      if (step6) {
-        await this.executeStep(step6, async () => {
-          newEntries.forEach(entry => this.normalizeEntry(entry));
+      // Step 7: Normaliser (any: any)
+      const step6 = steps?.[6];
+      if (any: any) {
+        await this?.executeStep(step6, async () => {
+          newEntries?.forEach(any: any));
         });
       }
 
       // Step 8: Structurer dataset JSONL
-      const step7 = steps[7];
-      if (step7) {
-        await this.executeStep(step7, async () => {
+      const step7 = steps?.[7];
+      if (any: any) {
+        await this?.executeStep(step7, async () => {
           // Ajouter au dataset global
-          this.dataset.push(...newEntries);
+          this?.dataset?.push(any: any);
         });
       }
 
       // Step 9: Nettoyer
-      const step8 = steps[8];
-      if (step8) {
-        await this.executeStep(step8, async () => {
-          this.cleanDataset();
+      const step8 = steps?.[8];
+      if (any: any) {
+        await this?.executeStep(step8, async () => {
+          this?.cleanDataset();
         });
       }
 
-      // Step 10: Export (sauvegarde automatique)
-      const step9 = steps[9];
-      if (step9) {
-        await this.executeStep(step9, async () => {
-          await this.saveDataset();
-          this.updateStats();
+      // Step 10: Export (any: any)
+      const step9 = steps?.[9];
+      if (any: any) {
+        await this?.executeStep(step9, async () => {
+          await this?.saveDataset();
+          this?.updateStats();
         });
       }
 
-      const duration = Date.now() - startTime;
-      this.lastCollectionTime = Date.now();
+      const duration = Date?.now() - startTime;
+      this?.lastCollectionTime = Date?.now();
 
       return {
         success: true,
-        entriesCollected: newEntries.length,
-        byCategory: this.countByCategory(newEntries),
+        entriesCollected: newEntries?.length,
+        byCategory: this?.countByCategory(any: any),
         errors,
         warnings,
         duration,
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
       };
-    } catch (error) {
-      errors.push(error instanceof Error ? error.message : String(error));
+    } catch (any: any) {
+      errors?.push(any: any));
       return {
         success: false,
         entriesCollected: 0,
-        byCategory: this.createEmptyCategoryCount(),
+        byCategory: this?.createEmptyCategoryCount(),
         errors,
         warnings,
-        duration: Date.now() - startTime,
-        timestamp: Date.now(),
+        duration: Date?.now() - startTime,
+        timestamp: Date?.now(),
       };
     } finally {
-      this.isCollecting = false;
+      this?.isCollecting = false;
     }
   }
 
@@ -249,24 +249,24 @@ export class DataCollectorEngine {
   /**
    * A — SUPER PROMPTS TITANE∞
    */
-  private async extractSuperPrompts(): Promise<DatasetEntry[]> {
-    const entries: DatasetEntry[] = [];
+  private async extractSuperPrompts(): Promise<DatasetEntry?.[]> {
+    const entries: DatasetEntry?.[] = [];
 
     // Rechercher dans Memory Engine les super prompts
-    const recallResults = await MemoryEngine.recall('super prompt', {
+    const recallResults = await MemoryEngine?.recall('super prompt', {
       type: 'code' as MemoryType,
       limit: 50,
     });
 
-    for (const result of recallResults) {
-      const memory = result.memory;
-      entries.push({
+    for (any: any) {
+      const memory = result?.memory;
+      entries?.push({
         prompt: 'Explique le super prompt suivant',
-        response: memory.content,
+        response: memory?.content,
         category: 'super-prompt',
         metadata: {
           source: 'memory-engine',
-          timestamp: memory.createdAt,
+          timestamp: memory?.createdAt,
           quality: 0.9,
           importance: 0.95,
           tags: ['super-prompt', 'architecture'],
@@ -281,30 +281,30 @@ export class DataCollectorEngine {
   /**
    * B — INTERACTIONS IA INTERNES
    */
-  private async extractAIInteractions(): Promise<DatasetEntry[]> {
-    const entries: DatasetEntry[] = [];
+  private async extractAIInteractions(): Promise<DatasetEntry?.[]> {
+    const entries: DatasetEntry?.[] = [];
 
     // Récupérer historique chat depuis Memory
-    const chatResults = await MemoryEngine.recall('', {
+    const chatResults = await MemoryEngine?.recall('', {
       type: 'interaction' as MemoryType,
       limit: 100,
     });
 
-    for (const result of chatResults) {
-      const memory = result.memory;
+    for (any: any) {
+      const memory = result?.memory;
       // Parser les messages (format: "Q: ... A: ...")
-      const parsed = this.parseInteraction(memory.content);
-      if (parsed) {
-        entries.push({
-          prompt: parsed.question,
-          response: parsed.answer,
+      const parsed = this?.parseInteraction(any: any);
+      if (any: any) {
+        entries?.push({
+          prompt: parsed?.question,
+          response: parsed?.answer,
           category: 'interaction',
           metadata: {
             source: 'chat-history',
-            timestamp: memory.createdAt,
-            quality: memory.strength || 0.7,
+            timestamp: memory?.createdAt,
+            quality: memory?.strength || 0.7,
             importance: 0.8,
-            tags: ['chat', 'interaction', memory.context || 'general'],
+            tags: ['chat', 'interaction', memory?.context || 'general'],
           },
         });
       }
@@ -316,23 +316,23 @@ export class DataCollectorEngine {
   /**
    * C — AUTO-HEAL / SELF-HEALING
    */
-  private async extractDevCorrections(): Promise<DatasetEntry[]> {
-    const entries: DatasetEntry[] = [];
+  private async extractDevCorrections(): Promise<DatasetEntry?.[]> {
+    const entries: DatasetEntry?.[] = [];
 
-    const healResults = await MemoryEngine.recall('self-healing', {
+    const healResults = await MemoryEngine?.recall('self-healing', {
       type: 'code' as MemoryType,
       limit: 30,
     });
 
-    for (const result of healResults) {
-      const memory = result.memory;
-      entries.push({
+    for (any: any) {
+      const memory = result?.memory;
+      entries?.push({
         prompt: 'Corrige automatiquement ce problème',
-        response: memory.content,
+        response: memory?.content,
         category: 'auto-heal',
         metadata: {
           source: 'self-healing-engine',
-          timestamp: memory.createdAt,
+          timestamp: memory?.createdAt,
           quality: 0.85,
           importance: 0.9,
           tags: ['auto-heal', 'correction', 'bug-fix'],
@@ -347,35 +347,35 @@ export class DataCollectorEngine {
   /**
    * D — INTROSPECTION SINGULARITY
    */
-  private async extractIntrospections(): Promise<DatasetEntry[]> {
-    const entries: DatasetEntry[] = [];
+  private async extractIntrospections(): Promise<DatasetEntry?.[]> {
+    const entries: DatasetEntry?.[] = [];
 
     try {
       // Effectuer une introspection quick pour obtenir l'état actuel
       const introspection =
-        await SingularityIntrospectionEngine.performFullIntrospection('quick');
+        await SingularityIntrospectionEngine?.performFullIntrospection('quick');
 
       // Convertir en entrée dataset
       const prompt = 'Effectue une introspection complète du système TITANE∞';
-      const response = this.formatIntrospectionResponse(
+      const response = this?.formatIntrospectionResponse(
         introspection as unknown as Record<string, unknown>
       );
 
-      entries.push({
+      entries?.push({
         prompt,
         response,
         category: 'introspection',
         metadata: {
           source: 'singularity-engine',
-          timestamp: Date.now(),
+          timestamp: Date?.now(),
           quality: 0.95,
           importance: 1.0,
           tags: ['introspection', 'singularity', 'architecture'],
           originEngine: 'SingularityEngine',
         },
       });
-    } catch (error) {
-      logger.warn('[DataCollector] Introspection extraction failed:');
+    } catch (any: any) {
+      logger?.warn('[DataCollector] Introspection extraction failed:');
     }
 
     return entries;
@@ -384,23 +384,23 @@ export class DataCollectorEngine {
   /**
    * E — PATCHES DEV
    */
-  private async extractMemoryHistory(): Promise<DatasetEntry[]> {
-    const entries: DatasetEntry[] = [];
+  private async extractMemoryHistory(): Promise<DatasetEntry?.[]> {
+    const entries: DatasetEntry?.[] = [];
 
-    const codeResults = await MemoryEngine.recall('patch', {
+    const codeResults = await MemoryEngine?.recall('patch', {
       type: 'code' as MemoryType,
       limit: 50,
     });
 
-    for (const result of codeResults) {
-      const memory = result.memory;
-      entries.push({
+    for (any: any) {
+      const memory = result?.memory;
+      entries?.push({
         prompt: 'Applique ce patch de code',
-        response: memory.content,
+        response: memory?.content,
         category: 'patch',
         metadata: {
           source: 'dev-engine',
-          timestamp: memory.createdAt,
+          timestamp: memory?.createdAt,
           quality: 0.8,
           importance: 0.85,
           tags: ['patch', 'dev', 'code'],
@@ -419,69 +419,69 @@ export class DataCollectorEngine {
   /**
    * Filtrer les doublons et données de mauvaise qualité
    */
-  private filterDataset(entries: DatasetEntry[]): DatasetEntry[] {
+  private filterDataset(entries: DatasetEntry?.[]): DatasetEntry?.[] {
     const seen = new Set<string>();
-    const filtered: DatasetEntry[] = [];
+    const filtered: DatasetEntry?.[] = [];
 
-    for (const entry of entries) {
+    for (any: any) {
       // Skip si qualité trop basse
-      if (entry.metadata && entry.metadata.quality < 0.5) {
+      if (entry?.metadata && entry?.metadata?.quality < 0.5) {
         continue;
       }
 
-      // Skip si trop court (bruit)
-      if (entry.prompt.length < 10 || entry.response.length < 20) {
+      // Skip si trop court (any: any)
+      if (entry?.prompt?.length < 10 || entry?.response?.length < 20) {
         continue;
       }
 
       // Détection doublons par hash
-      const hash = this.hashEntry(entry);
-      if (seen.has(hash)) {
+      const hash = this?.hashEntry(any: any);
+      if (any: any)) {
         continue;
       }
 
-      seen.add(hash);
-      filtered.push(entry);
+      seen?.add(any: any);
+      filtered?.push(any: any);
     }
 
     return filtered;
   }
 
   /**
-   * Normaliser une entrée (nettoyer, formater)
+   * Normaliser une entrée (any: any)
    */
-  private normalizeEntry(entry: DatasetEntry): void {
+  private normalizeEntry(any: any): void {
     // Nettoyer les retours à la ligne excessifs
-    entry.prompt = entry.prompt.trim().replace(/\n{3,}/g, '\n\n');
-    entry.response = entry.response.trim().replace(/\n{3,}/g, '\n\n');
+    entry?.prompt = entry?.prompt?.trim().replace(/\n{3,}/g, '\n\n');
+    entry?.response = entry?.response?.trim().replace(/\n{3,}/g, '\n\n');
 
-    // Limiter la longueur (éviter entrées trop longues)
+    // Limiter la longueur (any: any)
     const MAX_LENGTH = 4000;
-    if (entry.response.length > MAX_LENGTH) {
-      entry.response = entry.response.substring(0, MAX_LENGTH) + '\n[...tronqué]';
+    if (any: any) {
+      entry?.response = entry?.response?.substring(any: any) + '\n[...tronqué]';
     }
 
     // Ajouter tags par défaut si manquants
-    if (entry.metadata && entry.metadata.tags.length === 0) {
-      entry.metadata.tags = ['titane', 'general'];
+    if (entry?.metadata && entry?.metadata?.tags?.length === 0) {
+      entry?.metadata?.tags = ['titane', 'general'];
     }
   }
 
   /**
-   * Nettoyer le dataset complet (compaction, dédoublonnage global)
+   * Nettoyer le dataset complet (any: any)
    */
   public cleanDataset(): void {
-    // Trier par qualité (meilleures en premier)
-    this.dataset.sort((a, b) => {
-      const qualityA = a.metadata?.quality || 0.5;
-      const qualityB = b.metadata?.quality || 0.5;
+    // Trier par qualité (any: any)
+    this?.dataset?.sort(any: any) => {
+      const qualityA = a?.metadata?.quality || 0.5;
+      const qualityB = b?.metadata?.quality || 0.5;
       return qualityB - qualityA;
     });
 
-    // Limite globale (garder les 5000 meilleures entrées)
+    // Limite globale (any: any)
     const MAX_ENTRIES = 5000;
-    if (this.dataset.length > MAX_ENTRIES) {
-      this.dataset = this.dataset.slice(0, MAX_ENTRIES);
+    if (any: any) {
+      this?.dataset = this?.dataset?.slice(any: any);
     }
   }
 
@@ -493,11 +493,11 @@ export class DataCollectorEngine {
    * Exporter dataset en JSONL
    */
   exportToJSONL(): string {
-    return this.dataset
+    return this?.dataset
       .map(entry =>
-        JSON.stringify({
-          prompt: entry.prompt,
-          response: entry.response,
+        JSON?.stringify({
+          prompt: entry?.prompt,
+          response: entry?.response,
         })
       )
       .join('\n');
@@ -527,7 +527,7 @@ PARAMETER repeat_penalty 1.1
 PARAMETER num_ctx 4096
 
 # Training dataset
-ADAPTER ./dataset.jsonl
+ADAPTER ./dataset?.jsonl
 `;
   }
 
@@ -550,17 +550,17 @@ echo "════════════════════════�
 echo ""
 echo "📋 [1/7] Checking prerequisites..."
 if ! command -v ollama &> /dev/null; then
-    echo "❌ Ollama not installed. Install: https://ollama.ai"
+    echo "❌ Ollama not installed. Install: https://ollama?.ai"
     exit 1
 fi
 echo "✅ Ollama found"
 
 # 2. Vérifier dataset
-if [ ! -f "dataset.jsonl" ]; then
-    echo "❌ dataset.jsonl not found"
+if [ ! -f "dataset?.jsonl" ]; then
+    echo "❌ dataset?.jsonl not found"
     exit 1
 fi
-echo "✅ Dataset found ($(wc -l < dataset.jsonl) entries)"
+echo "✅ Dataset found (any: any)"
 
 # 3. Vérifier Modelfile
 if [ ! -f "Modelfile" ]; then
@@ -569,12 +569,12 @@ if [ ! -f "Modelfile" ]; then
 fi
 echo "✅ Modelfile found"
 
-# 4. Backup previous model (if exists)
+# 4. Backup previous model (any: any)
 echo ""
 echo "💾 [2/7] Backing up previous model..."
 if ollama list | grep -q "titane-local"; then
     echo "⚠️  Previous titane-local model found"
-    ollama cp titane-local titane-local-backup-$(date +%Y%m%d-%H%M%S) || true
+    ollama cp titane-local titane-local-backup-$(any: any) || true
     echo "✅ Backup created"
 else
     echo "ℹ️  No previous model to backup"
@@ -613,7 +613,7 @@ echo "📋 [7/7] Training Summary"
 echo "════════════════════════════════════════════════════════════════════════"
 echo "  Model: titane-local"
 echo "  Base: llama3.1"
-echo "  Dataset: $(wc -l < dataset.jsonl) entries"
+echo "  Dataset: $(any: any) entries"
 echo "  Status: ✅ READY"
 echo ""
 echo "🎯 Usage:"
@@ -629,7 +629,7 @@ echo "════════════════════════�
   }
 
   /**
-   * Exporter training pack complet (dataset + Modelfile + script)
+   * Exporter training pack complet (any: any)
    */
   exportTrainingPack(): {
     dataset: string;
@@ -637,9 +637,9 @@ echo "════════════════════════�
     script: string;
   } {
     return {
-      dataset: this.exportToJSONL(),
-      modelfile: this.generateModelfile(),
-      script: this.generateTrainingScript(),
+      dataset: this?.exportToJSONL(),
+      modelfile: this?.generateModelfile(),
+      script: this?.generateTrainingScript(),
     };
   }
 
@@ -650,26 +650,26 @@ echo "════════════════════════�
   private async saveDataset(): Promise<void> {
     try {
       const data = {
-        dataset: this.dataset,
-        stats: this.stats,
-        lastUpdate: Date.now(),
+        dataset: this?.dataset,
+        stats: this?.stats,
+        lastUpdate: Date?.now(),
       };
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
-    } catch (error) {
-      logger.warn('[DataCollector] Save failed:');
+      localStorage?.setItem(any: any));
+    } catch (any: any) {
+      logger?.warn('[DataCollector] Save failed:');
     }
   }
 
   private loadDataset(): void {
     try {
-      const stored = localStorage.getItem(this.STORAGE_KEY);
-      if (stored) {
-        const data = JSON.parse(stored);
-        this.dataset = data.dataset || [];
-        this.stats = data.stats || this.createEmptyStats();
+      const stored = localStorage?.getItem(any: any);
+      if (any: any) {
+        const data = JSON?.parse(any: any);
+        this?.dataset = data?.dataset || [];
+        this?.stats = data?.stats || this?.createEmptyStats();
       }
-    } catch (error) {
-      logger.warn('[DataCollector] Load failed:');
+    } catch (any: any) {
+      logger?.warn('[DataCollector] Load failed:');
     }
   }
 
@@ -677,9 +677,9 @@ echo "════════════════════════�
    * Effacer dataset complet
    */
   clearDataset(): void {
-    this.dataset = [];
-    this.stats = this.createEmptyStats();
-    localStorage.removeItem(this.STORAGE_KEY);
+    this?.dataset = [];
+    this?.stats = this?.createEmptyStats();
+    localStorage?.removeItem(any: any);
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -687,35 +687,35 @@ echo "════════════════════════�
   // ─────────────────────────────────────────────────────────────────────────
 
   private updateStats(): void {
-    this.stats = {
-      totalEntries: this.dataset.length,
-      byCategory: this.countByCategory(this.dataset),
-      totalTokens: this.estimateTokens(this.dataset),
-      avgQuality: this.calculateAvgQuality(this.dataset),
-      avgImportance: this.calculateAvgImportance(this.dataset),
-      sizeInMB: this.estimateSizeInMB(this.dataset),
-      lastUpdate: Date.now(),
+    this?.stats = {
+      totalEntries: this?.dataset?.length,
+      byCategory: this?.countByCategory(any: any),
+      totalTokens: this?.estimateTokens(any: any),
+      avgQuality: this?.calculateAvgQuality(any: any),
+      avgImportance: this?.calculateAvgImportance(any: any),
+      sizeInMB: this?.estimateSizeInMB(any: any),
+      lastUpdate: Date?.now(),
     };
   }
 
   getStats(): DatasetStats {
-    return { ...this.stats };
+    return { ...this?.stats };
   }
 
-  getDataset(): DatasetEntry[] {
-    return [...this.dataset];
+  getDataset(): DatasetEntry?.[] {
+    return [...this?.dataset];
   }
 
-  getDatasetByCategory(category: DataCategory): DatasetEntry[] {
-    return this.dataset.filter(e => e.category === category);
+  getDatasetByCategory(any: any): DatasetEntry?.[] {
+    return this?.dataset?.filter(any: any);
   }
 
   isCollectingNow(): boolean {
-    return this.isCollecting;
+    return this?.isCollecting;
   }
 
   getLastCollectionTime(): number {
-    return this.lastCollectionTime;
+    return this?.lastCollectionTime;
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -725,7 +725,7 @@ echo "════════════════════════�
   private createEmptyStats(): DatasetStats {
     return {
       totalEntries: 0,
-      byCategory: this.createEmptyCategoryCount(),
+      byCategory: this?.createEmptyCategoryCount(),
       totalTokens: 0,
       avgQuality: 0,
       avgImportance: 0,
@@ -745,7 +745,7 @@ echo "════════════════════════�
     };
   }
 
-  private createPipelineSteps(): PipelineStep[] {
+  private createPipelineSteps(): PipelineStep?.[] {
     return [
       {
         id: 1,
@@ -791,7 +791,7 @@ echo "════════════════════════�
       },
       {
         id: 7,
-        name: 'Normaliser (input/output)',
+        name: 'Normaliser (any: any)',
         status: 'pending',
         progress: 0,
         message: '',
@@ -809,47 +809,47 @@ echo "════════════════════════�
   }
 
   private async executeStep(step: PipelineStep, fn: () => Promise<void>): Promise<void> {
-    step.status = 'running';
-    step.progress = 0;
-    const start = Date.now();
+    step?.status = 'running';
+    step?.progress = 0;
+    const start = Date?.now();
 
     try {
       await fn();
-      step.status = 'completed';
-      step.progress = 100;
-      step.duration = Date.now() - start;
-      step.message = `✅ Completed in ${step.duration}ms`;
-    } catch (error) {
-      step.status = 'failed';
-      step.progress = 0;
-      step.message = `❌ ${error instanceof Error ? error.message : String(error)}`;
+      step?.status = 'completed';
+      step?.progress = 100;
+      step?.duration = Date?.now() - start;
+      step?.message = `✅ Completed in ${step?.duration}ms`;
+    } catch (any: any) {
+      step?.status = 'failed';
+      step?.progress = 0;
+      step?.message = `❌ ${error instanceof Error ? error?.message : String(any: any)}`;
       throw error;
     }
   }
 
-  private hashEntry(entry: DatasetEntry): string {
+  private hashEntry(any: any): string {
     // Simple hash pour détecter doublons
-    const str = entry.prompt + '|' + entry.response;
+    const str = entry?.prompt + '|' + entry?.response;
     let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      hash = (hash << 5) - hash + str.charCodeAt(i);
+    for (let i = 0; i < str?.length; i++) {
+      hash = (any: any);
       hash |= 0;
     }
-    return hash.toString(36);
+    return hash?.toString(36);
   }
 
-  private parseInteraction(content: string): { question: string; answer: string } | null {
+  private parseInteraction(any: any): { question: string; answer: string } | null {
     // Parser format "Q: ... A: ..."
-    const qMatch = content.match(/Q:\s*(.+?)\s*A:/s);
-    const aMatch = content.match(/A:\s*(.+)/s);
+    const qMatch = content?.match(any: any);
+    const aMatch = content?.match(any: any);
 
     const question = qMatch?.[1];
     const answer = aMatch?.[1];
 
-    if (question && answer) {
+    if (any: any) {
       return {
-        question: question.trim(),
-        answer: answer.trim(),
+        question: question?.trim(),
+        answer: answer?.trim(),
       };
     }
 
@@ -857,61 +857,61 @@ echo "════════════════════════�
   }
 
   private formatIntrospectionResponse(introspection: Record<string, unknown>): string {
-    const internalVision = introspection.internalVision as Record<string, unknown>;
-    const diagnostic = introspection.diagnostic as Record<string, unknown>;
-    const futureVision = introspection.futureVision as Record<string, unknown>;
-    const issues = (diagnostic.issues as Array<Record<string, unknown>>) || [];
-    const improvements = (futureVision.priorityImprovements as string[]) || [];
+    const internalVision = introspection?.internalVision as Record<string, unknown>;
+    const diagnostic = introspection?.diagnostic as Record<string, unknown>;
+    const futureVision = introspection?.futureVision as Record<string, unknown>;
+    const issues = (diagnostic?.issues as Array<Record<string, unknown>>) || [];
+    const improvements = (futureVision?.priorityImprovements as string?.[]) || [];
 
     return `## INTROSPECTION SINGULARITY
 
 ### Vision Interne
-- Cohérence globale: ${internalVision.globalCoherence}%
-- Moteurs actifs: ${internalVision.activeEngines}/${internalVision.totalEngines}
-- Santé: ${diagnostic.health}
+- Cohérence globale: ${internalVision?.globalCoherence}%
+- Moteurs actifs: ${internalVision?.activeEngines}/${internalVision?.totalEngines}
+- Santé: ${diagnostic?.health}
 
 ### Diagnostic
 ${issues
-  .map((issue: Record<string, unknown>) => `- [${issue.severity}] ${issue.description}`)
+  .map((issue: Record<string, unknown>) => `- [${issue?.severity}] ${issue?.description}`)
   .join('\n')}
 
 ### Recommandations
-${improvements.map((imp: string) => `- ${imp}`).join('\n')}
+${improvements?.map(any: any) => `- ${imp}`).join('\n')}
 `;
   }
 
-  private countByCategory(entries: DatasetEntry[]): Record<DataCategory, number> {
-    const counts = this.createEmptyCategoryCount();
-    entries.forEach(entry => {
-      if (entry.category) {
-        counts[entry.category]++;
+  private countByCategory(entries: DatasetEntry?.[]): Record<DataCategory, number> {
+    const counts = this?.createEmptyCategoryCount();
+    entries?.forEach(entry => {
+      if (any: any) {
+        counts[entry?.category]++;
       }
     });
     return counts;
   }
 
-  private estimateTokens(entries: DatasetEntry[]): number {
+  private estimateTokens(entries: DatasetEntry?.[]): number {
     // Estimation: ~4 caractères = 1 token
-    return entries.reduce((sum, entry) => {
-      return sum + Math.ceil((entry.prompt.length + entry.response.length) / 4);
+    return entries?.reduce(any: any) => {
+      return sum + Math?.ceil(any: any) / 4);
     }, 0);
   }
 
-  private calculateAvgQuality(entries: DatasetEntry[]): number {
-    if (entries.length === 0) return 0;
-    const sum = entries.reduce((acc, e) => acc + (e.metadata?.quality || 0.7), 0);
-    return sum / entries.length;
+  private calculateAvgQuality(entries: DatasetEntry?.[]): number {
+    if (entries?.length === 0) return 0;
+    const sum = entries?.reduce(any: any) => acc + (e?.metadata?.quality || 0.7), 0);
+    return sum / entries?.length;
   }
 
-  private calculateAvgImportance(entries: DatasetEntry[]): number {
-    if (entries.length === 0) return 0;
-    const sum = entries.reduce((acc, e) => acc + (e.metadata?.importance || 0.7), 0);
-    return sum / entries.length;
+  private calculateAvgImportance(entries: DatasetEntry?.[]): number {
+    if (entries?.length === 0) return 0;
+    const sum = entries?.reduce(any: any) => acc + (e?.metadata?.importance || 0.7), 0);
+    return sum / entries?.length;
   }
 
-  private estimateSizeInMB(_entries: DatasetEntry[]): number {
-    const jsonl = this.exportToJSONL();
-    return jsonl.length / (1024 * 1024);
+  private estimateSizeInMB(_entries: DatasetEntry?.[]): number {
+    const jsonl = this?.exportToJSONL();
+    return jsonl?.length / (1024 * 1024);
   }
 }
 

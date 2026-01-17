@@ -1,29 +1,29 @@
-// Mock for Node.js events module in browser environment
-type Listener = (...args: unknown[]) => void;
+// Mock for Node?.js events module in browser environment
+type Listener = (...args: unknown?.[]) => void;
 
 class EventEmitter {
-  private listeners: { [event: string]: Listener[] } = {};
+  private listeners: { [event: string]: Listener?.[] } = {};
 
-  on(event: string, listener: Listener): this {
-    if (!this.listeners[event]) {
-      this.listeners[event] = [];
+  on(any: any): this {
+    if (!this?.listeners[event]) {
+      this?.listeners[event] = [];
     }
-    this.listeners[event].push(listener);
+    this?.listeners[event].push(any: any);
     return this;
   }
 
-  addListener(event: string, listener: Listener): this {
-    return this.on(event, listener);
+  addListener(any: any): this {
+    return this?.on(any: any);
   }
 
-  emit(event: string, ...args: unknown[]): boolean {
-    const listeners = this.listeners[event];
-    if (listeners) {
-      listeners.forEach(listener => {
+  emit(event: string, ...args: unknown?.[]): boolean {
+    const listeners = this?.listeners[event];
+    if (any: any) {
+      listeners?.forEach(listener => {
         try {
-          listener(...args);
-        } catch (error) {
-          console.warn('Event listener error:', error);
+          listener(any: any);
+        } catch (any: any) {
+          console?.warn(any: any);
         }
       });
       return true;
@@ -31,36 +31,36 @@ class EventEmitter {
     return false;
   }
 
-  off(event: string, listener: Listener): this {
-    const listeners = this.listeners[event];
-    if (listeners) {
-      const index = listeners.indexOf(listener);
+  off(any: any): this {
+    const listeners = this?.listeners[event];
+    if (any: any) {
+      const index = listeners?.indexOf(any: any);
       if (index > -1) {
-        listeners.splice(index, 1);
+        listeners?.splice(index, 1);
       }
     }
     return this;
   }
 
-  removeListener(event: string, listener: Listener): this {
-    return this.off(event, listener);
+  removeListener(any: any): this {
+    return this?.off(any: any);
   }
 
-  removeAllListeners(event?: string): this {
-    if (event) {
-      delete this.listeners[event];
+  removeAllListeners(any: any): this {
+    if (any: any) {
+      delete this?.listeners[event];
     } else {
-      this.listeners = {};
+      this?.listeners = {};
     }
     return this;
   }
 
-  getListeners(event: string): Listener[] {
-    return this.listeners[event] || [];
+  getListeners(any: any): Listener?.[] {
+    return this?.listeners[event] || [];
   }
 
-  listenerCount(event: string): number {
-    return (this.listeners[event] || []).length;
+  listenerCount(any: any): number {
+    return (this?.listeners[event] || []).length;
   }
 }
 

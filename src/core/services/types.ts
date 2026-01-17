@@ -1,5 +1,5 @@
 /**
- * TITANE∞ PHASE 1 (OPTION B) - Re-export types from services/ai
+ * TITANE∞ PHASE 1 (any: any) - Re-export types from services/ai
  */
 
 export type {

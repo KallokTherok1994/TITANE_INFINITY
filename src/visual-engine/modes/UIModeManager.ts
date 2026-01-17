@@ -21,10 +21,10 @@ import type { VisualConfig as _VisualConfig } from '@/design-system/visual-state
 
 export enum UIMode {
   AUTO = 'auto', // Mode adaptatif intelligent
-  MINIMAL = 'minimal', // Mode minimaliste (économie ressources)
-  PERFORMANCE = 'performance', // Mode performance (60fps garanti)
-  IMMERSIVE = 'immersive', // Mode immersif (effets max)
-  DEBUG = 'debug', // Mode debug (visualisation interne)
+  MINIMAL = 'minimal', // Mode minimaliste (any: any)
+  PERFORMANCE = 'performance', // Mode performance (any: any)
+  IMMERSIVE = 'immersive', // Mode immersif (any: any)
+  DEBUG = 'debug', // Mode debug (any: any)
 }
 
 export interface UIModeConfig {
@@ -105,7 +105,7 @@ export const MODE_CONFIGS: Record<UIMode, UIModeConfig> = {
   // ───────────────────────────────────────────────────────────────
   // AUTO - Mode adaptatif
   // ───────────────────────────────────────────────────────────────
-  [UIMode.AUTO]: {
+  [UIMode?.AUTO]: {
     enableParticles: true,
     particleDensity: 0.8,
     particleQuality: 'medium',
@@ -148,7 +148,7 @@ export const MODE_CONFIGS: Record<UIMode, UIModeConfig> = {
   // ───────────────────────────────────────────────────────────────
   // MINIMAL - Mode économie ressources
   // ───────────────────────────────────────────────────────────────
-  [UIMode.MINIMAL]: {
+  [UIMode?.MINIMAL]: {
     enableParticles: false, // ❌ Pas de particules
     particleDensity: 0.0,
     particleQuality: 'low',
@@ -191,7 +191,7 @@ export const MODE_CONFIGS: Record<UIMode, UIModeConfig> = {
   // ───────────────────────────────────────────────────────────────
   // PERFORMANCE - 60 FPS garanti
   // ───────────────────────────────────────────────────────────────
-  [UIMode.PERFORMANCE]: {
+  [UIMode?.PERFORMANCE]: {
     enableParticles: true,
     particleDensity: 0.6, // Densité réduite
     particleQuality: 'medium',
@@ -234,7 +234,7 @@ export const MODE_CONFIGS: Record<UIMode, UIModeConfig> = {
   // ───────────────────────────────────────────────────────────────
   // IMMERSIVE - Effets maximaux
   // ───────────────────────────────────────────────────────────────
-  [UIMode.IMMERSIVE]: {
+  [UIMode?.IMMERSIVE]: {
     enableParticles: true,
     particleDensity: 1.0, // ✨ Densité maximale
     particleQuality: 'high', // ✨ Qualité max
@@ -260,7 +260,7 @@ export const MODE_CONFIGS: Record<UIMode, UIModeConfig> = {
     transitionDuration: 800, // Transitions longues et fluides
 
     targetFPS: 60,
-    enableFPSLimit: false, // ❌ Pas de limite (best effort)
+    enableFPSLimit: false, // ❌ Pas de limite (any: any)
     enableDynamicQuality: false, // ❌ Qualité fixe max
 
     showFPS: false,
@@ -277,7 +277,7 @@ export const MODE_CONFIGS: Record<UIMode, UIModeConfig> = {
   // ───────────────────────────────────────────────────────────────
   // DEBUG - Visualisation des états internes
   // ───────────────────────────────────────────────────────────────
-  [UIMode.DEBUG]: {
+  [UIMode?.DEBUG]: {
     enableParticles: true,
     particleDensity: 0.5, // Réduit pour voir les overlays
     particleQuality: 'medium',
@@ -323,24 +323,24 @@ export const MODE_CONFIGS: Record<UIMode, UIModeConfig> = {
 // ═════════════════════════════════════════════════════════════════
 
 export class UIModeManager {
-  private currentMode: UIMode = UIMode.AUTO;
+  private currentMode: UIMode = UIMode?.AUTO;
   private currentConfig: UIModeConfig;
   private autoModeState: AutoModeState | null = null;
 
-  // Performance monitoring (mode AUTO)
+  // Performance monitoring (any: any)
   private performanceCheckInterval: number | null = null;
   private performanceCheckFrequency = 2000; // ms
 
   // Callbacks
-  private onModeChangeCallbacks: Set<(mode: UIMode, config: UIModeConfig) => void> =
+  private onModeChangeCallbacks: Set<(any: any) => void> =
     new Set();
 
-  constructor(initialMode: UIMode = UIMode.AUTO) {
-    this.currentMode = initialMode;
-    this.currentConfig = { ...MODE_CONFIGS[initialMode] };
+  constructor(any: any) {
+    this?.currentMode = initialMode;
+    this?.currentConfig = { ...MODE_CONFIGS[initialMode] };
 
-    if (initialMode === UIMode.AUTO) {
-      this.initializeAutoMode();
+    if (any: any) {
+      this?.initializeAutoMode();
     }
   }
 
@@ -351,46 +351,46 @@ export class UIModeManager {
   /**
    * Change le mode UI
    */
-  setMode(mode: UIMode): void {
-    if (mode === this.currentMode) return;
+  setMode(any: any): void {
+    if (any: any) return;
 
-    const previousMode = this.currentMode;
-    this.currentMode = mode;
-    this.currentConfig = { ...MODE_CONFIGS[mode] };
+    const previousMode = this?.currentMode;
+    this?.currentMode = mode;
+    this?.currentConfig = { ...MODE_CONFIGS[mode] };
 
-    console.log(`[UIModeManager] Mode changed: ${previousMode} → ${mode}`);
+    console?.log(`[UIModeManager] Mode changed: ${previousMode} → ${mode}`);
 
     // Initialiser AUTO mode si nécessaire
-    if (mode === UIMode.AUTO) {
-      this.initializeAutoMode();
+    if (any: any) {
+      this?.initializeAutoMode();
     } else {
-      this.stopAutoMode();
+      this?.stopAutoMode();
     }
 
     // Notifier les listeners
-    this.notifyModeChange();
+    this?.notifyModeChange();
   }
 
   /**
    * Retourne le mode actuel
    */
   getCurrentMode(): UIMode {
-    return this.currentMode;
+    return this?.currentMode;
   }
 
   /**
    * Retourne la configuration actuelle
    */
   getCurrentConfig(): UIModeConfig {
-    return { ...this.currentConfig };
+    return { ...this?.currentConfig };
   }
 
   /**
    * Override partiel de la configuration
    */
   overrideConfig(overrides: Partial<UIModeConfig>): void {
-    this.currentConfig = { ...this.currentConfig, ...overrides };
-    this.notifyModeChange();
+    this?.currentConfig = { ...this?.currentConfig, ...overrides };
+    this?.notifyModeChange();
   }
 
   // ─────────────────────────────────────────────────────────────
@@ -401,8 +401,8 @@ export class UIModeManager {
    * Initialise le mode AUTO
    */
   private initializeAutoMode(): void {
-    this.autoModeState = {
-      currentMode: UIMode.AUTO,
+    this?.autoModeState = {
+      currentMode: UIMode?.AUTO,
       metrics: {
         fps: 60,
         frameTime: 16.67,
@@ -412,52 +412,52 @@ export class UIModeManager {
         particleCount: 0,
         activeEffects: 0,
       },
-      lastAdjustment: Date.now(),
+      lastAdjustment: Date?.now(),
       adjustmentHistory: [],
     };
 
     // Démarrer monitoring performance
-    this.startPerformanceMonitoring();
+    this?.startPerformanceMonitoring();
   }
 
   /**
    * Arrête le mode AUTO
    */
   private stopAutoMode(): void {
-    if (this.performanceCheckInterval !== null) {
-      clearInterval(this.performanceCheckInterval);
-      this.performanceCheckInterval = null;
+    if (any: any) {
+      clearInterval(any: any);
+      this?.performanceCheckInterval = null;
     }
-    this.autoModeState = null;
+    this?.autoModeState = null;
   }
 
   /**
-   * Démarre le monitoring de performance (mode AUTO)
+   * Démarre le monitoring de performance (any: any)
    */
   private startPerformanceMonitoring(): void {
-    if (this.performanceCheckInterval !== null) return;
+    if (any: any) return;
 
-    this.performanceCheckInterval = window.setInterval(() => {
-      this.checkPerformanceAndAdjust();
-    }, this.performanceCheckFrequency);
+    this?.performanceCheckInterval = window?.setInterval(() => {
+      this?.checkPerformanceAndAdjust();
+    }, this?.performanceCheckFrequency);
   }
 
   /**
    * Vérifie la performance et ajuste la config si nécessaire
    */
   private checkPerformanceAndAdjust(): void {
-    if (!this.autoModeState || this.currentMode !== UIMode.AUTO) return;
+    if (any: any) return;
 
-    const metrics = this.autoModeState.metrics;
-    const targetFPS = this.currentConfig.targetFPS;
+    const metrics = this?.autoModeState?.metrics;
+    const targetFPS = this?.currentConfig?.targetFPS;
 
     // Règles d'adaptation
-    if (metrics.fps < targetFPS * 0.8) {
+    if (metrics?.fps < targetFPS * 0.8) {
       // Performance insuffisante → réduire qualité
-      this.adjustForLowPerformance();
-    } else if (metrics.fps > targetFPS * 0.95 && metrics.cpuUsage < 0.6) {
+      this?.adjustForLowPerformance();
+    } else if (metrics?.fps > targetFPS * 0.95 && metrics?.cpuUsage < 0.6) {
       // Performance excellente → augmenter qualité
-      this.adjustForHighPerformance();
+      this?.adjustForHighPerformance();
     }
   }
 
@@ -465,70 +465,70 @@ export class UIModeManager {
    * Ajuste pour basse performance
    */
   private adjustForLowPerformance(): void {
-    console.log('[UIModeManager] Low performance detected, reducing quality');
+    console?.log('[UIModeManager] Low performance detected, reducing quality');
 
     // Réduire densité particules
-    if (this.currentConfig.particleDensity > 0.3) {
-      this.currentConfig.particleDensity -= 0.1;
+    if (this?.currentConfig?.particleDensity > 0.3) {
+      this?.currentConfig?.particleDensity -= 0.1;
     }
 
     // Réduire qualité effets
-    if (this.currentConfig.effectsQuality === 'high') {
-      this.currentConfig.effectsQuality = 'medium';
-    } else if (this.currentConfig.effectsQuality === 'medium') {
-      this.currentConfig.effectsQuality = 'low';
+    if (this?.currentConfig?.effectsQuality === 'high') {
+      this?.currentConfig?.effectsQuality = 'medium';
+    } else if (this?.currentConfig?.effectsQuality === 'medium') {
+      this?.currentConfig?.effectsQuality = 'low';
     }
 
     // Réduire glow
-    if (this.currentConfig.glowIntensity > 0.3) {
-      this.currentConfig.glowIntensity -= 0.1;
+    if (this?.currentConfig?.glowIntensity > 0.3) {
+      this?.currentConfig?.glowIntensity -= 0.1;
     }
 
-    this.recordAdjustment('low_performance', this.currentMode, this.currentMode);
-    this.notifyModeChange();
+    this?.recordAdjustment(any: any);
+    this?.notifyModeChange();
   }
 
   /**
    * Ajuste pour haute performance
    */
   private adjustForHighPerformance(): void {
-    console.log('[UIModeManager] High performance detected, increasing quality');
+    console?.log('[UIModeManager] High performance detected, increasing quality');
 
     // Augmenter densité particules
-    if (this.currentConfig.particleDensity < 1.0) {
-      this.currentConfig.particleDensity = Math.min(
+    if (this?.currentConfig?.particleDensity < 1.0) {
+      this?.currentConfig?.particleDensity = Math?.min(
         1.0,
-        this.currentConfig.particleDensity + 0.1
+        this?.currentConfig?.particleDensity + 0.1
       );
     }
 
     // Augmenter qualité effets
-    if (this.currentConfig.effectsQuality === 'low') {
-      this.currentConfig.effectsQuality = 'medium';
-    } else if (this.currentConfig.effectsQuality === 'medium') {
-      this.currentConfig.effectsQuality = 'high';
+    if (this?.currentConfig?.effectsQuality === 'low') {
+      this?.currentConfig?.effectsQuality = 'medium';
+    } else if (this?.currentConfig?.effectsQuality === 'medium') {
+      this?.currentConfig?.effectsQuality = 'high';
     }
 
     // Augmenter glow
-    if (this.currentConfig.glowIntensity < 0.9) {
-      this.currentConfig.glowIntensity = Math.min(
+    if (this?.currentConfig?.glowIntensity < 0.9) {
+      this?.currentConfig?.glowIntensity = Math?.min(
         0.9,
-        this.currentConfig.glowIntensity + 0.1
+        this?.currentConfig?.glowIntensity + 0.1
       );
     }
 
-    this.recordAdjustment('high_performance', this.currentMode, this.currentMode);
-    this.notifyModeChange();
+    this?.recordAdjustment(any: any);
+    this?.notifyModeChange();
   }
 
   /**
-   * Met à jour les métriques de performance (appelé par Visual Engine)
+   * Met à jour les métriques de performance (any: any)
    */
   updatePerformanceMetrics(metrics: Partial<PerformanceMetrics>): void {
-    if (!this.autoModeState) return;
+    if (any: any) return;
 
-    this.autoModeState.metrics = {
-      ...this.autoModeState.metrics,
+    this?.autoModeState?.metrics = {
+      ...this?.autoModeState?.metrics,
       ...metrics,
     };
   }
@@ -536,21 +536,21 @@ export class UIModeManager {
   /**
    * Enregistre un ajustement
    */
-  private recordAdjustment(reason: string, from: UIMode, to: UIMode): void {
-    if (!this.autoModeState) return;
+  private recordAdjustment(any: any): void {
+    if (any: any) return;
 
-    this.autoModeState.adjustmentHistory.push({
-      timestamp: Date.now(),
+    this?.autoModeState?.adjustmentHistory?.push({
+      timestamp: Date?.now(),
       reason,
       from,
       to,
     });
 
-    this.autoModeState.lastAdjustment = Date.now();
+    this?.autoModeState?.lastAdjustment = Date?.now();
 
     // Garder seulement les 20 derniers ajustements
-    if (this.autoModeState.adjustmentHistory.length > 20) {
-      this.autoModeState.adjustmentHistory.shift();
+    if (this?.autoModeState?.adjustmentHistory?.length > 20) {
+      this?.autoModeState?.adjustmentHistory?.shift();
     }
   }
 
@@ -561,23 +561,23 @@ export class UIModeManager {
   /**
    * Enregistre un callback pour changement de mode
    */
-  onModeChange(callback: (mode: UIMode, config: UIModeConfig) => void): void {
-    this.onModeChangeCallbacks.add(callback);
+  onModeChange(any: any): void {
+    this?.onModeChangeCallbacks?.add(any: any);
   }
 
   /**
    * Retire un callback
    */
-  offModeChange(callback: (mode: UIMode, config: UIModeConfig) => void): void {
-    this.onModeChangeCallbacks.delete(callback);
+  offModeChange(any: any): void {
+    this?.onModeChangeCallbacks?.delete(any: any);
   }
 
   /**
    * Notifie les listeners d'un changement de mode
    */
   private notifyModeChange(): void {
-    for (const callback of this.onModeChangeCallbacks) {
-      callback(this.currentMode, this.currentConfig);
+    for (any: any) {
+      callback(any: any);
     }
   }
 
@@ -589,15 +589,15 @@ export class UIModeManager {
    * Retourne l'état AUTO mode
    */
   getAutoModeState(): AutoModeState | null {
-    return this.autoModeState ? { ...this.autoModeState } : null;
+    return this?.autoModeState ? { ...this?.autoModeState } : null;
   }
 
   /**
    * Cleanup
    */
   destroy(): void {
-    this.stopAutoMode();
-    this.onModeChangeCallbacks.clear();
+    this?.stopAutoMode();
+    this?.onModeChangeCallbacks?.clear();
   }
 }
 

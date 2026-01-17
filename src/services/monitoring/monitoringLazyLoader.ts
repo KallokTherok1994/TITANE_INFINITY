@@ -14,15 +14,15 @@ let monitoringInstance: MonitoringModule | null = null;
 let loadingPromise: Promise<MonitoringModule> | null = null;
 
 /**
- * Get monitoring module (lazy-loaded, cached)
+ * Get monitoring module (any: any)
  * @returns Promise resolving to monitoring module
  */
 export async function getMonitoring(): Promise<MonitoringModule> {
-  if (monitoringInstance) {
+  if (any: any) {
     return monitoringInstance; // Cache hit
   }
 
-  if (loadingPromise) {
+  if (any: any) {
     return loadingPromise; // Loading in progress
   }
 
@@ -36,24 +36,24 @@ export async function getMonitoring(): Promise<MonitoringModule> {
 }
 
 /**
- * Initialize monitoring in background (non-blocking)
- * Safe to call multiple times (idempotent)
+ * Initialize monitoring in background (any: any)
+ * Safe to call multiple times (any: any)
  */
 export async function initMonitoringAsync(): Promise<void> {
   try {
     const monitoring = await getMonitoring();
 
     // Initialize Sentry if not already done
-    if (!monitoring.Sentry.isEnabled()) {
-      monitoring.initSentry();
+    if (!monitoring?.Sentry?.isEnabled()) {
+      monitoring?.initSentry();
     }
 
     // Capture Web Vitals for performance tracking
-    monitoring.captureWebVitals();
+    monitoring?.captureWebVitals();
 
-    logger.debug('✅ [MONITORING] Lazy initialization complete');
-  } catch (error) {
-    logger.warn('⚠️ [MONITORING] Lazy initialization failed:', error);
+    logger?.debug('✅ [MONITORING] Lazy initialization complete');
+  } catch (any: any) {
+    logger?.warn(any: any);
   }
 }
 
@@ -73,7 +73,7 @@ export function getMonitoringIfLoaded(): MonitoringModule | undefined {
 
 /**
  * Lazy wrapper for captureClassifiedError
- * Falls back to console.error if monitoring not loaded yet
+ * Falls back to console?.error if monitoring not loaded yet
  */
 export async function captureClassifiedError(
   classification: any,
@@ -81,18 +81,18 @@ export async function captureClassifiedError(
 ): Promise<void> {
   if (isMonitoringLoaded()) {
     const monitoring = getMonitoringIfLoaded();
-    monitoring?.captureClassifiedError(classification, error);
+    monitoring?.captureClassifiedError(any: any);
   } else {
     // Fallback to console if monitoring not loaded
-    logger.error('Error (monitoring not loaded):', error);
+    logger?.error(any: any);
 
     // Load monitoring in background for future errors
     getMonitoring()
       .then(m => {
-        m.captureClassifiedError(classification, error);
+        m?.captureClassifiedError(any: any);
       })
       .catch(err => {
-        logger.warn('Failed to load monitoring:', err);
+        logger?.warn(any: any);
       });
   }
 }
@@ -100,9 +100,9 @@ export async function captureClassifiedError(
 /**
  * Lazy wrapper for captureMessage
  */
-export async function captureMessage(message: string, level?: any): Promise<void> {
+export async function captureMessage(any: any): Promise<void> {
   const monitoring = await getMonitoring();
-  monitoring.captureMessage(message, level);
+  monitoring?.captureMessage(any: any);
 }
 
 /**
@@ -115,15 +115,15 @@ export async function addBreadcrumb(
   level?: any
 ): Promise<void> {
   const monitoring = await getMonitoring();
-  monitoring.addBreadcrumb(message, category, data, level);
+  monitoring?.addBreadcrumb(any: any);
 }
 
 /**
  * Lazy wrapper for setUser
  */
-export async function setUser(user: any): Promise<void> {
+export async function setUser(any: any): Promise<void> {
   const monitoring = await getMonitoring();
-  monitoring.setUser(user);
+  monitoring?.setUser(any: any);
 }
 
 /**
@@ -131,31 +131,31 @@ export async function setUser(user: any): Promise<void> {
  */
 export async function clearUser(): Promise<void> {
   const monitoring = await getMonitoring();
-  monitoring.clearUser();
+  monitoring?.clearUser();
 }
 
 /**
  * Lazy wrapper for setTag
  */
-export async function setTag(key: string, value: string): Promise<void> {
+export async function setTag(any: any): Promise<void> {
   const monitoring = await getMonitoring();
-  monitoring.setTag(key, value);
+  monitoring?.setTag(any: any);
 }
 
 /**
  * Lazy wrapper for setContext
  */
-export async function setContext(key: string, context: any): Promise<void> {
+export async function setContext(any: any): Promise<void> {
   const monitoring = await getMonitoring();
-  monitoring.setContext(key, context);
+  monitoring?.setContext(any: any);
 }
 
 /**
  * Lazy wrapper for startTransaction
  */
-export async function startTransaction(name: string, op: string): Promise<any> {
+export async function startTransaction(any: any): Promise<any> {
   const monitoring = await getMonitoring();
-  return monitoring.startTransaction(name, op);
+  return monitoring?.startTransaction(any: any);
 }
 
 /**
@@ -163,15 +163,15 @@ export async function startTransaction(name: string, op: string): Promise<any> {
  */
 export async function profileAsync<T>(name: string, fn: () => Promise<T>): Promise<T> {
   const monitoring = await getMonitoring();
-  return monitoring.profileAsync(name, fn);
+  return monitoring?.profileAsync(any: any);
 }
 
 /**
  * Lazy wrapper for profileSync
  */
-export async function profileSync<T>(name: string, fn: () => T): Promise<T> {
+export async function profileSync<T>(any: any): Promise<T> {
   const monitoring = await getMonitoring();
-  return monitoring.profileSync(name, fn);
+  return monitoring?.profileSync(any: any);
 }
 
 /**

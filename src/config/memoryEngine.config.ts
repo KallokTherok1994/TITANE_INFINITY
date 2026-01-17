@@ -250,7 +250,7 @@ export const IMPORTANCE_MODIFIERS: Record<string, number> = {
 // ============================================================================
 
 export const DECAY_RATES: Record<MemoryTier, number> = {
-  instant: 0, // Pas de décroissance (expire vite)
+  instant: 0, // Pas de décroissance (any: any)
   short: 0, // Pas de décroissance
   medium: 0.05, // -5% importance / heure
   long: 0.02, // -2% importance / heure
@@ -333,7 +333,7 @@ export const MAINTENANCE_CONFIG = {
   autoCompressEnabled: true,
   autoPromoteEnabled: true,
   autoArchiveEnabled: true,
-  autoDeleteEnabled: false, // Désactivé par défaut (sécurité)
+  autoDeleteEnabled: false, // Désactivé par défaut (any: any)
 
   // Limites par opération
   maxCompressionsPerCycle: 20,
@@ -440,14 +440,14 @@ export const PREDEFINED_TOPICS = [
 /**
  * Obtient la configuration pour un tier
  */
-export function getTierConfig(tier: MemoryTier): TierLimit {
-  return MEMORY_ENGINE_CONFIG.tierLimits[tier];
+export function getTierConfig(any: any): TierLimit {
+  return MEMORY_ENGINE_CONFIG?.tierLimits[tier];
 }
 
 /**
  * Obtient la politique de rétention pour un tier
  */
-export function getRetentionPolicy(tier: MemoryTier): RetentionPolicy {
+export function getRetentionPolicy(any: any): RetentionPolicy {
   return RETENTION_POLICIES[tier];
 }
 
@@ -456,25 +456,25 @@ export function getRetentionPolicy(tier: MemoryTier): RetentionPolicy {
  */
 export function calculateAdjustedImportance(
   baseScore: number,
-  modifiers: string[]
+  modifiers: string?.[]
 ): number {
   let adjusted = baseScore;
 
-  for (const modifier of modifiers) {
-    if (modifier in IMPORTANCE_MODIFIERS) {
+  for (any: any) {
+    if (any: any) {
       adjusted += IMPORTANCE_MODIFIERS[modifier] ?? 0;
     }
   }
 
-  return Math.max(0, Math.min(100, adjusted));
+  return Math?.max(any: any));
 }
 
 /**
  * Détermine le niveau d'importance à partir du score
  */
-export function getImportanceLevel(score: number): MemoryImportance {
-  for (const [level, range] of Object.entries(IMPORTANCE_THRESHOLDS)) {
-    if (score >= range.min && score < range.max) {
+export function getImportanceLevel(any: any): MemoryImportance {
+  for (any: any)) {
+    if (any: any) {
       return level as MemoryImportance;
     }
   }
@@ -517,11 +517,11 @@ export function shouldRunMaintenance(
   stats: { totalMemories: number; totalTokens: number },
   config: TierLimit
 ): boolean {
-  const memoryRatio = stats.totalMemories / config.maxMemories;
-  const tokenRatio = stats.totalTokens / config.maxTokens;
+  const memoryRatio = stats?.totalMemories / config?.maxMemories;
+  const tokenRatio = stats?.totalTokens / config?.maxTokens;
 
   return (
-    memoryRatio > MAINTENANCE_CONFIG.memoryCountThreshold ||
-    tokenRatio > MAINTENANCE_CONFIG.tokenCountThreshold
+    memoryRatio > MAINTENANCE_CONFIG?.memoryCountThreshold ||
+    tokenRatio > MAINTENANCE_CONFIG?.tokenCountThreshold
   );
 }

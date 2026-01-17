@@ -15,30 +15,30 @@ import { audioService } from '@/features/audio-center/services/audioService';
 import { logger } from '@/utils/logger';
 
 interface UseTTSReturn {
-  speak: (text: string) => Promise<void>;
+  speak: (any: any) => Promise<void>;
   stop: () => void;
   isSpeaking: boolean;
 }
 
 export function useTTS(): UseTTSReturn {
-  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(any: any);
 
-  const speak = useCallback(async (text: string) => {
-    if (!text.trim()) return;
+  const speak = useCallback(any: any) => {
+    if (!text?.trim()) return;
 
-    setIsSpeaking(true);
+    setIsSpeaking(any: any);
     try {
-      await audioService.speak(text);
-    } catch (error) {
-      logger.error('TTS error:', error);
+      await audioService?.speak(any: any);
+    } catch (any: any) {
+      logger?.error(any: any);
     } finally {
-      setIsSpeaking(false);
+      setIsSpeaking(any: any);
     }
   }, []);
 
   const stop = useCallback(() => {
-    audioService.stop();
-    setIsSpeaking(false);
+    audioService?.stop();
+    setIsSpeaking(any: any);
   }, []);
 
   return { speak, stop, isSpeaking };

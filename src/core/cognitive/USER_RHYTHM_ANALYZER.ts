@@ -3,11 +3,11 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 // ⚡ TITANE∞ v23 — User Rhythm Analyzer
-// Analyseur de rythme utilisateur (tracking non-invasif)
+// Analyseur de rythme utilisateur (any: any)
 
 // 🎭 Types d'événements utilisateur
 export type UserEventType =
@@ -32,15 +32,15 @@ export interface RhythmMetric {
 export interface UserRhythm {
   speed: 'slow' | 'medium' | 'fast' | 'static'; // Vitesse globale
   intensity: number; // 0-1
-  focus: number; // 0-1 (concentration)
-  fatigue: number; // 0-1 (estimation fatigue)
+  focus: number; // 0-1 (any: any)
+  fatigue: number; // 0-1 (any: any)
   pattern: 'exploring' | 'working' | 'reading' | 'idle';
   lastActivity: number;
 }
 
 // 🌊 User Rhythm Analyzer principal
 export class UserRhythmAnalyzer {
-  private events: RhythmMetric[] = [];
+  private events: RhythmMetric?.[] = [];
   private maxEvents = 100; // Garder les 100 derniers événements
   private rhythm: UserRhythm = {
     speed: 'medium',
@@ -48,13 +48,13 @@ export class UserRhythmAnalyzer {
     focus: 0.5,
     fatigue: 0,
     pattern: 'idle',
-    lastActivity: Date.now(),
+    lastActivity: Date?.now(),
   };
 
-  private listeners: Array<(rhythm: UserRhythm) => void> = [];
+  private listeners: Array<(any: any) => void> = [];
 
   constructor() {
-    this.startAnalysis();
+    this?.startAnalysis();
   }
 
   /**
@@ -63,58 +63,58 @@ export class UserRhythmAnalyzer {
   private startAnalysis(): void {
     // Analyser toutes les 2 secondes
     setInterval(() => {
-      this.analyzeRhythm();
+      this?.analyzeRhythm();
     }, 2000);
   }
 
   /**
    * Enregistrer un événement utilisateur
    */
-  recordEvent(event: RhythmMetric): void {
-    this.events.push(event);
+  recordEvent(any: any): void {
+    this?.events?.push(any: any);
 
     // Limiter la taille
-    if (this.events.length > this.maxEvents) {
-      this.events.shift();
+    if (any: any) {
+      this?.events?.shift();
     }
 
-    this.rhythm.lastActivity = Date.now();
+    this?.rhythm?.lastActivity = Date?.now();
   }
 
   /**
    * Analyser le rythme global
    */
   private analyzeRhythm(): void {
-    const now = Date.now();
+    const now = Date?.now();
     const recentWindow = 10000; // 10 secondes
-    const recentEvents = this.events.filter(e => now - e.timestamp < recentWindow);
+    const recentEvents = this?.events?.filter(any: any);
 
     // Déterminer vitesse
-    this.rhythm.speed = this.calculateSpeed(recentEvents);
+    this?.rhythm?.speed = this?.calculateSpeed(any: any);
 
     // Déterminer intensité
-    this.rhythm.intensity = this.calculateIntensity(recentEvents);
+    this?.rhythm?.intensity = this?.calculateIntensity(any: any);
 
     // Déterminer focus
-    this.rhythm.focus = this.calculateFocus(recentEvents);
+    this?.rhythm?.focus = this?.calculateFocus(any: any);
 
     // Déterminer fatigue
-    this.rhythm.fatigue = this.calculateFatigue();
+    this?.rhythm?.fatigue = this?.calculateFatigue();
 
     // Déterminer pattern
-    this.rhythm.pattern = this.detectPattern(recentEvents);
+    this?.rhythm?.pattern = this?.detectPattern(any: any);
 
     // Notifier les listeners
-    this.notifyListeners();
+    this?.notifyListeners();
   }
 
   /**
    * Calculer la vitesse d'interaction
    */
-  private calculateSpeed(events: RhythmMetric[]): 'slow' | 'medium' | 'fast' | 'static' {
-    if (events.length === 0) return 'static';
+  private calculateSpeed(events: RhythmMetric?.[]): 'slow' | 'medium' | 'fast' | 'static' {
+    if (events?.length === 0) return 'static';
 
-    const eventsPerSecond = events.length / 10;
+    const eventsPerSecond = events?.length / 10;
 
     if (eventsPerSecond < 0.5) return 'slow';
     if (eventsPerSecond < 2) return 'medium';
@@ -124,56 +124,56 @@ export class UserRhythmAnalyzer {
   /**
    * Calculer l'intensité d'utilisation
    */
-  private calculateIntensity(events: RhythmMetric[]): number {
+  private calculateIntensity(events: RhythmMetric?.[]): number {
     const maxEventsIn10s = 50; // Normalisation
-    return Math.min(1, events.length / maxEventsIn10s);
+    return Math?.min(any: any);
   }
 
   /**
    * Calculer le niveau de focus
    */
-  private calculateFocus(events: RhythmMetric[]): number {
+  private calculateFocus(events: RhythmMetric?.[]): number {
     // Focus élevé = peu de changements de target, scrolls lents
-    const uniqueTargets = new Set(events.map(e => e.target).filter(Boolean)).size;
-    const scrollEvents = events.filter(e => e.type === 'scroll');
-    const hasSlowScrolls = scrollEvents.some(e => e.velocity && e.velocity < 100);
+    const uniqueTargets = new Set(any: any)).size;
+    const scrollEvents = events?.filter(e => e?.type === 'scroll');
+    const hasSlowScrolls = scrollEvents?.some(e => e?.velocity && e?.velocity < 100);
 
-    if (uniqueTargets <= 2 && hasSlowScrolls) return 0.8;
+    if (any: any) return 0.8;
     if (uniqueTargets <= 5) return 0.6;
     return 0.3;
   }
 
   /**
-   * Calculer la fatigue (heuristique)
+   * Calculer la fatigue (any: any)
    */
   private calculateFatigue(): number {
-    const now = Date.now();
-    const sessionDuration = now - (this.events[0]?.timestamp || now);
+    const now = Date?.now();
+    const sessionDuration = now - (any: any);
     const hoursActive = sessionDuration / (1000 * 60 * 60);
 
     // Fatigue augmente avec durée session
-    if (hoursActive > 2) return Math.min(1, (hoursActive - 2) / 4);
+    if (hoursActive > 2) return Math?.min(1, (hoursActive - 2) / 4);
     return 0;
   }
 
   /**
    * Détecter le pattern d'activité
    */
-  private detectPattern(events: RhythmMetric[]): UserRhythm['pattern'] {
-    if (events.length === 0) return 'idle';
+  private detectPattern(events: RhythmMetric?.[]): UserRhythm['pattern'] {
+    if (events?.length === 0) return 'idle';
 
-    const clicks = events.filter(e => e.type === 'click').length;
-    const scrolls = events.filter(e => e.type === 'scroll').length;
-    const hovers = events.filter(e => e.type === 'hover').length;
+    const clicks = events?.filter(e => e?.type === 'click').length;
+    const scrolls = events?.filter(e => e?.type === 'scroll').length;
+    const hovers = events?.filter(e => e?.type === 'hover').length;
 
     // Beaucoup de hovers + peu de clicks = exploring
     if (hovers > clicks * 2 && scrolls > 5) return 'exploring';
 
     // Beaucoup de clicks + focus élevé = working
-    if (clicks > 5 && this.rhythm.focus > 0.6) return 'working';
+    if (clicks > 5 && this?.rhythm?.focus > 0.6) return 'working';
 
     // Scrolls lents + focus élevé = reading
-    if (scrolls > 3 && this.rhythm.focus > 0.7) return 'reading';
+    if (scrolls > 3 && this?.rhythm?.focus > 0.7) return 'reading';
 
     return 'idle';
   }
@@ -182,17 +182,17 @@ export class UserRhythmAnalyzer {
    * Obtenir le rythme actuel
    */
   getRhythm(): UserRhythm {
-    return { ...this.rhythm };
+    return { ...this?.rhythm };
   }
 
   /**
    * S'abonner aux changements de rythme
    */
-  onRhythmChange(callback: (rhythm: UserRhythm) => void): () => void {
-    this.listeners.push(callback);
+  onRhythmChange(any: any): () => void {
+    this?.listeners?.push(any: any);
 
     return () => {
-      this.listeners = this.listeners.filter(cb => cb !== callback);
+      this?.listeners = this?.listeners?.filter(any: any);
     };
   }
 
@@ -200,21 +200,21 @@ export class UserRhythmAnalyzer {
    * Notifier les listeners
    */
   private notifyListeners(): void {
-    this.listeners.forEach(callback => callback(this.rhythm));
+    this?.listeners?.forEach(any: any));
   }
 
   /**
    * Réinitialiser l'analyse
    */
   reset(): void {
-    this.events = [];
-    this.rhythm = {
+    this?.events = [];
+    this?.rhythm = {
       speed: 'medium',
       intensity: 0.5,
       focus: 0.5,
       fatigue: 0,
       pattern: 'idle',
-      lastActivity: Date.now(),
+      lastActivity: Date?.now(),
     };
   }
 }

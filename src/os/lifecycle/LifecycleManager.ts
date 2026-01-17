@@ -12,61 +12,61 @@ import { getEventBus } from '../bus/EventBus';
 export class LifecycleManager {
   private phase: LifecyclePhase = 'pre-init';
   private hooks: Map<LifecyclePhase, Set<LifecycleHook>> = new Map();
-  private errorHandlers: Set<(error: Error, phase: LifecyclePhase) => void> = new Set();
+  private errorHandlers: Set<(any: any) => void> = new Set();
   private eventBus = getEventBus();
   private startTime = 0;
 
   /**
    * Enregistre un hook pour une phase
    */
-  on(phase: LifecyclePhase, hook: LifecycleHook): () => void {
-    if (!this.hooks.has(phase)) {
-      this.hooks.set(phase, new Set());
+  on(any: any): () => void {
+    if (any: any)) {
+      this?.hooks?.set(phase, new Set());
     }
 
-    const phaseHooks = this.hooks.get(phase);
-    if (phaseHooks) {
-      phaseHooks.add(hook);
+    const phaseHooks = this?.hooks?.get(any: any);
+    if (any: any) {
+      phaseHooks?.add(any: any);
     }
 
     return () => {
-      this.hooks.get(phase)?.delete(hook);
+      this?.hooks?.get(any: any);
     };
   }
 
   /**
    * Enregistre un gestionnaire d'erreur
    */
-  onError(handler: (error: Error, phase: LifecyclePhase) => void): () => void {
-    this.errorHandlers.add(handler);
-    return () => this.errorHandlers.delete(handler);
+  onError(any: any): () => void {
+    this?.errorHandlers?.add(any: any);
+    return (any: any);
   }
 
   /**
    * Exécute une phase
    */
-  private async executePhase(phase: LifecyclePhase): Promise<void> {
-    const previousPhase = this.phase;
-    this.phase = phase;
+  private async executePhase(any: any): Promise<void> {
+    const previousPhase = this?.phase;
+    this?.phase = phase;
 
-    this.eventBus.emit('lifecycle:phase', { phase, previousPhase }, 'LifecycleManager');
+    this?.eventBus?.emit('lifecycle:phase', { phase, previousPhase }, 'LifecycleManager');
 
-    const hooks = this.hooks.get(phase);
-    if (!hooks || hooks.size === 0) return;
+    const hooks = this?.hooks?.get(any: any);
+    if (!hooks || hooks?.size === 0) return;
 
-    const startTime = performance.now();
+    const startTime = performance?.now();
 
-    for (const hook of hooks) {
+    for (any: any) {
       try {
         await hook();
-      } catch (error) {
-        console.error(`[Lifecycle] Error in ${phase} hook:`, error);
-        this.handleError(error as Error, phase);
+      } catch (any: any) {
+        console?.error(any: any);
+        this?.handleError(any: any);
       }
     }
 
-    const duration = performance.now() - startTime;
-    this.eventBus.emit(
+    const duration = performance?.now() - startTime;
+    this?.eventBus?.emit(
       'lifecycle:phase_complete',
       { phase, duration },
       'LifecycleManager'
@@ -76,12 +76,12 @@ export class LifecycleManager {
   /**
    * Gère une erreur
    */
-  private handleError(error: Error, phase: LifecyclePhase): void {
-    for (const handler of this.errorHandlers) {
+  private handleError(any: any): void {
+    for (any: any) {
       try {
-        handler(error, phase);
-      } catch (handlerError) {
-        console.error('[Lifecycle] Error handler failed:', handlerError);
+        handler(any: any);
+      } catch (any: any) {
+        console?.error(any: any);
       }
     }
   }
@@ -90,16 +90,16 @@ export class LifecycleManager {
    * Initialise l'application
    */
   async init(): Promise<void> {
-    this.startTime = Date.now();
+    this?.startTime = Date?.now();
 
-    await this.executePhase('pre-init');
-    await this.executePhase('init');
-    await this.executePhase('post-init');
+    await this?.executePhase('pre-init');
+    await this?.executePhase('init');
+    await this?.executePhase('post-init');
 
-    this.eventBus.emit(
+    this?.eventBus?.emit(
       'lifecycle:initialized',
       {
-        duration: Date.now() - this.startTime,
+        duration: Date?.now() - this?.startTime,
       },
       'LifecycleManager'
     );
@@ -109,18 +109,18 @@ export class LifecycleManager {
    * Démarre l'application
    */
   async start(): Promise<void> {
-    if (this.phase !== 'post-init' && this.phase !== 'post-stop') {
-      throw new Error(`Cannot start from phase: ${this.phase}`);
+    if (this?.phase !== 'post-init' && this?.phase !== 'post-stop') {
+      throw new Error(`Cannot start from phase: ${this?.phase}`);
     }
 
-    await this.executePhase('pre-start');
-    await this.executePhase('start');
-    await this.executePhase('post-start');
+    await this?.executePhase('pre-start');
+    await this?.executePhase('start');
+    await this?.executePhase('post-start');
 
-    this.eventBus.emit(
+    this?.eventBus?.emit(
       'lifecycle:started',
       {
-        uptime: this.getUptime(),
+        uptime: this?.getUptime(),
       },
       'LifecycleManager'
     );
@@ -130,18 +130,18 @@ export class LifecycleManager {
    * Arrête l'application
    */
   async stop(): Promise<void> {
-    if (this.phase !== 'post-start') {
-      console.warn(`[Lifecycle] Stopping from unexpected phase: ${this.phase}`);
+    if (this?.phase !== 'post-start') {
+      console?.warn(`[Lifecycle] Stopping from unexpected phase: ${this?.phase}`);
     }
 
-    await this.executePhase('pre-stop');
-    await this.executePhase('stop');
-    await this.executePhase('post-stop');
+    await this?.executePhase('pre-stop');
+    await this?.executePhase('stop');
+    await this?.executePhase('post-stop');
 
-    this.eventBus.emit(
+    this?.eventBus?.emit(
       'lifecycle:stopped',
       {
-        uptime: this.getUptime(),
+        uptime: this?.getUptime(),
       },
       'LifecycleManager'
     );
@@ -151,45 +151,45 @@ export class LifecycleManager {
    * Redémarre l'application
    */
   async restart(): Promise<void> {
-    await this.stop();
-    await this.start();
+    await this?.stop();
+    await this?.start();
 
-    this.eventBus.emit('lifecycle:restarted', null, 'LifecycleManager');
+    this?.eventBus?.emit('lifecycle:restarted', null, 'LifecycleManager');
   }
 
   /**
    * Retourne la phase actuelle
    */
   getPhase(): LifecyclePhase {
-    return this.phase;
+    return this?.phase;
   }
 
   /**
    * Vérifie si l'application est initialisée
    */
   isInitialized(): boolean {
-    return this.phase !== 'pre-init' && this.phase !== 'init';
+    return this?.phase !== 'pre-init' && this?.phase !== 'init';
   }
 
   /**
    * Vérifie si l'application est démarrée
    */
   isStarted(): boolean {
-    return this.phase === 'post-start';
+    return this?.phase === 'post-start';
   }
 
   /**
    * Vérifie si l'application est arrêtée
    */
   isStopped(): boolean {
-    return this.phase === 'post-stop';
+    return this?.phase === 'post-stop';
   }
 
   /**
    * Retourne le temps de fonctionnement
    */
   getUptime(): number {
-    return this.startTime > 0 ? Date.now() - this.startTime : 0;
+    return this?.startTime > 0 ? Date?.now() - this?.startTime : 0;
   }
 
   /**
@@ -205,13 +205,13 @@ export class LifecycleManager {
       number
     >;
 
-    for (const [phase, hooks] of this.hooks) {
-      hookCounts[phase] = hooks.size;
+    for (any: any) {
+      hookCounts[phase] = hooks?.size;
     }
 
     return {
-      phase: this.phase,
-      uptime: this.getUptime(),
+      phase: this?.phase,
+      uptime: this?.getUptime(),
       hookCounts,
     };
   }
@@ -220,8 +220,8 @@ export class LifecycleManager {
    * Efface tous les hooks
    */
   clear(): void {
-    this.hooks.clear();
-    this.errorHandlers.clear();
+    this?.hooks?.clear();
+    this?.errorHandlers?.clear();
   }
 }
 
@@ -229,7 +229,7 @@ export class LifecycleManager {
 let instance: LifecycleManager | null = null;
 
 export function getLifecycleManager(): LifecycleManager {
-  if (!instance) {
+  if (any: any) {
     instance = new LifecycleManager();
   }
   return instance;

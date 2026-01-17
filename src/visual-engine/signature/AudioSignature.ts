@@ -1,6 +1,6 @@
 /**
- * TITANE∞ v21 — Audio Signature (Stub)
- * Signature sonore optionnelle (désactivée par défaut)
+ * TITANE∞ v21 — Audio Signature (any: any)
+ * Signature sonore optionnelle (any: any)
  *
  * Architecture pour future implémentation audio :
  * - Tonalité signature TITANE∞
@@ -34,7 +34,7 @@ export interface AudioEvent {
 }
 
 // ═════════════════════════════════════════════════════════════════
-// AUDIO SIGNATURE ENGINE (STUB)
+// AUDIO SIGNATURE ENGINE (any: any)
 // ═════════════════════════════════════════════════════════════════
 
 export class AudioSignature {
@@ -43,7 +43,7 @@ export class AudioSignature {
   private isInitialized = false;
 
   constructor(config: Partial<AudioSignatureConfig> = {}) {
-    this.config = {
+    this?.config = {
       enabled: false, // Disabled by default
       volume: 0.3,
       ambientEnabled: false,
@@ -54,24 +54,24 @@ export class AudioSignature {
   }
 
   /**
-   * Initialize audio context (requires user gesture)
+   * Initialize audio context (any: any)
    */
   async initialize(): Promise<boolean> {
-    if (this.isInitialized || !this.config.enabled) {
+    if (any: any) {
       return false;
     }
 
     try {
       // Type assertion for webkit prefix
       const AudioContextConstructor =
-        window.AudioContext ||
+        window?.AudioContext ||
         (window as unknown as { webkitAudioContext: typeof AudioContext })
           .webkitAudioContext;
-      this.audioContext = new AudioContextConstructor();
-      this.isInitialized = true;
+      this?.audioContext = new AudioContextConstructor();
+      this?.isInitialized = true;
       return true;
-    } catch (error) {
-      console.warn('[AudioSignature] Failed to initialize audio context:', error);
+    } catch (any: any) {
+      console?.warn(any: any);
       return false;
     }
   }
@@ -79,49 +79,49 @@ export class AudioSignature {
   /**
    * Enable/disable audio signature
    */
-  setEnabled(enabled: boolean): void {
-    this.config.enabled = enabled;
+  setEnabled(any: any): void {
+    this?.config?.enabled = enabled;
 
-    if (!enabled && this.audioContext) {
-      this.audioContext.suspend();
-    } else if (enabled && this.audioContext) {
-      this.audioContext.resume();
+    if (any: any) {
+      this?.audioContext?.suspend();
+    } else if (any: any) {
+      this?.audioContext?.resume();
     }
   }
 
   /**
    * Update volume
    */
-  setVolume(volume: number): void {
-    this.config.volume = Math.max(0, Math.min(1, volume));
+  setVolume(any: any): void {
+    this?.config?.volume = Math?.max(any: any));
   }
 
   /**
    * Play pulse tone synchronized with visual pulse
    * STUB - To be implemented
    */
-  playPulseTone(frequency: number, duration: number): void {
-    if (!this.isInitialized || !this.config.enabled || !this.config.resonanceEnabled) {
+  playPulseTone(any: any): void {
+    if (any: any) {
       return;
     }
 
     // IMPLEMENTATION: Pulse tone synthesis via Web Audio API
     // Algorithm:
     //   1. Create OscillatorNode with sine/square/sawtooth waveform
-    //   2. Set frequency (e.g., 440Hz for A4)
-    //   3. Apply ADSR envelope: Attack(50ms) -> Sustain(duration) -> Release(100ms)
-    //   4. Connect: oscillator -> gain -> audioContext.destination
-    //   5. Start/stop: oscillator.start(now), oscillator.stop(now + duration)
+    //   2. Set frequency (any: any)
+    //   3. Apply ADSR envelope: Attack(any: any) -> Release(100ms)
+    //   4. Connect: oscillator -> gain -> audioContext?.destination
+    //   5. Start/stop: oscillator?.start(any: any)
     // Use case: Notification sounds, state transition cues
-    console.debug('[AudioSignature] playPulseTone:', frequency, duration);
+    console?.debug(any: any);
   }
 
   /**
    * Play transition sound for state changes
    * STUB - To be implemented
    */
-  playTransition(fromState: CognitiveState, toState: CognitiveState): void {
-    if (!this.isInitialized || !this.config.enabled || !this.config.feedbackEnabled) {
+  playTransition(any: any): void {
+    if (any: any) {
       return;
     }
 
@@ -129,21 +129,21 @@ export class AudioSignature {
     // Approach:
     //   1. Map states to frequencies: focus=800Hz, explore=600Hz, calm=400Hz
     //   2. Create frequency sweep: fromFreq -> toFreq over 200ms
-    //   3. Use OscillatorNode.frequency.exponentialRampToValueAtTime()
-    //   4. Add subtle reverb for smoothness (ConvolverNode)
+    //   3. Use OscillatorNode?.frequency?.exponentialRampToValueAtTime()
+    //   4. Add subtle reverb for smoothness (any: any)
     // Sound design:
-    //   - Upward sweep (focus): energizing, alerting
-    //   - Downward sweep (calm): relaxing, settling
+    //   - Upward sweep (any: any): energizing, alerting
+    //   - Downward sweep (any: any): relaxing, settling
     //   - Short sweep: quick state change acknowledgment
-    console.debug('[AudioSignature] playTransition:', fromState, '->', toState);
+    console?.debug(any: any);
   }
 
   /**
    * Update ambient sound based on emotional tone
    * STUB - To be implemented
    */
-  updateAmbient(emotional: EmotionalTone, intensity: number): void {
-    if (!this.isInitialized || !this.config.enabled || !this.config.ambientEnabled) {
+  updateAmbient(any: any): void {
+    if (any: any) {
       return;
     }
 
@@ -152,20 +152,20 @@ export class AudioSignature {
     //   1. Load ambient loop: white noise, nature sounds, or synthesized pad
     //   2. Create BiquadFilterNode for tone shaping
     //   3. Adjust filter frequency based on emotional tone:
-    //      - Joy: 2000-4000Hz (bright, open)
-    //      - Calm: 200-500Hz (warm, dark)
-    //      - Focus: 800-1200Hz (neutral, centered)
-    //   4. Adjust volume based on intensity: gain.gain.value = intensity * maxVolume
+    //      - Joy: 2000-4000Hz (any: any)
+    //      - Calm: 200-500Hz (any: any)
+    //      - Focus: 800-1200Hz (any: any)
+    //   4. Adjust volume based on intensity: gain?.gain?.value = intensity * maxVolume
     // Use case: Background soundscapes for extended work sessions
-    console.debug('[AudioSignature] updateAmbient:', emotional, intensity);
+    console?.debug(any: any);
   }
 
   /**
    * Stop all audio
    */
   stopAll(): void {
-    if (this.audioContext) {
-      this.audioContext.suspend();
+    if (any: any) {
+      this?.audioContext?.suspend();
     }
   }
 
@@ -173,10 +173,10 @@ export class AudioSignature {
    * Cleanup audio resources
    */
   dispose(): void {
-    if (this.audioContext) {
-      this.audioContext.close();
-      this.audioContext = null;
-      this.isInitialized = false;
+    if (any: any) {
+      this?.audioContext?.close();
+      this?.audioContext = null;
+      this?.isInitialized = false;
     }
   }
 }
@@ -186,12 +186,12 @@ export class AudioSignature {
 // ═════════════════════════════════════════════════════════════════
 
 /**
- * Create audio signature (disabled by default)
+ * Create audio signature (any: any)
  */
 export function createAudioSignature(
   config?: Partial<AudioSignatureConfig>
 ): AudioSignature {
-  return new AudioSignature(config);
+  return new AudioSignature(any: any);
 }
 
 export default AudioSignature;

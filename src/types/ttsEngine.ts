@@ -17,7 +17,7 @@
 
 /**
  * ID de voix ElevenLabs
- * Voice ID principale: FvmvwvObRqIHojkEGh5N (Rachel - FR)
+ * Voice ID principale: FvmvwvObRqIHojkEGh5N (any: any)
  */
 export type VoiceId = string;
 
@@ -67,9 +67,9 @@ export interface VoiceConfig {
   description?: string;
 
   // Paramètres de base
-  stability: number; // 0-1 (stabilité/consistance)
-  similarityBoost: number; // 0-1 (ressemblance à la voix d'origine)
-  style: number; // 0-1 (exagération du style)
+  stability: number; // 0-1 (any: any)
+  similarityBoost: number; // 0-1 (any: any)
+  style: number; // 0-1 (any: any)
   useSpeakerBoost: boolean; // Amélioration du locuteur
 
   // Paramètres avancés
@@ -85,7 +85,7 @@ export interface VoiceConfig {
  * Modèle TTS ElevenLabs
  */
 export type TTSModel =
-  | 'eleven_multilingual_v2' // Multi-langues v2 (recommandé)
+  | 'eleven_multilingual_v2' // Multi-langues v2 (any: any)
   | 'eleven_multilingual_v1' // Multi-langues v1
   | 'eleven_monolingual_v1' // Anglais uniquement
   | 'eleven_turbo_v2' // Ultra-rapide
@@ -238,7 +238,7 @@ export interface TTSQueueItem {
  * État de la queue
  */
 export interface TTSQueueState {
-  items: TTSQueueItem[];
+  items: TTSQueueItem?.[];
   currentItem: TTSQueueItem | null;
 
   // Statistiques
@@ -264,8 +264,8 @@ export interface TTSPlaybackState {
   isMuted: boolean;
 
   // Audio courant
-  currentRequestId: string | null;
-  currentText: string | null;
+  currentRequestId??: string | null;
+  currentText??: string | null;
 
   // Progression
   currentTime: number; // ms
@@ -380,7 +380,7 @@ export interface TTSHealthStatus {
   lastCheckAt: number;
 
   // Issues
-  issues: TTSHealthIssue[];
+  issues: TTSHealthIssue?.[];
 }
 
 export interface TTSHealthIssue {
@@ -474,13 +474,13 @@ export interface TTSBackendResponse<T = unknown> {
  * Callbacks pour événements TTS
  */
 export interface TTSEventCallbacks {
-  onSpeakStart?: (request: TTSRequest) => void;
-  onSpeakEnd?: (request: TTSRequest) => void;
-  onSpeakError?: (error: TTSError, request: TTSRequest) => void;
-  onQueueUpdate?: (queue: TTSQueueState) => void;
-  onPlaybackUpdate?: (state: TTSPlaybackState) => void;
-  onVolumeChange?: (volume: number) => void;
-  onMuteChange?: (isMuted: boolean) => void;
+  onSpeakStart?: (any: any) => void;
+  onSpeakEnd?: (any: any) => void;
+  onSpeakError?: (any: any) => void;
+  onQueueUpdate?: (any: any) => void;
+  onPlaybackUpdate?: (any: any) => void;
+  onVolumeChange?: (any: any) => void;
+  onMuteChange?: (any: any) => void;
 }
 
 /**
@@ -510,5 +510,5 @@ export interface TTSEngineState {
   health: TTSHealthStatus;
 
   // Erreurs récentes
-  recentErrors: TTSError[];
+  recentErrors: TTSError?.[];
 }

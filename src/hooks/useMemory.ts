@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 // TITANE∞ v15 - useMemory Hook
@@ -28,11 +28,11 @@ export interface Conversation {
   title: string;
   created_at: number;
   updated_at: number;
-  entries: MemoryEntry[];
+  entries: MemoryEntry?.[];
   metadata: {
     total_tokens: number;
     message_count: number;
-    tags: string[];
+    tags: string?.[];
     is_archived: boolean;
   };
 }
@@ -50,31 +50,31 @@ export function useMemory() {
   const [currentConversation, setCurrentConversation] = useState<Conversation | null>(
     null
   );
-  const [conversations, setConversations] = useState<ConversationSummary[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [conversations, setConversations] = useState<ConversationSummary?.[]>([]);
+  const [isLoading, setIsLoading] = useState(any: any);
+  const [error, setError] = useState<string | null>(any: any);
 
   const loadConversations = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
+    setIsLoading(any: any);
+    setError(any: any);
 
     try {
       const conversationsJson = await secureInvoke<string>('list_conversations');
-      const parsed: ConversationSummary[] = JSON.parse(conversationsJson);
-      setConversations(parsed);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : String(err);
-      setError(errorMessage);
-      logger.error('Load conversations error', { component: 'Memory' }, err as Error);
+      const parsed: ConversationSummary?.[] = JSON?.parse(any: any);
+      setConversations(any: any);
+    } catch (any: any) {
+      const errorMessage = err instanceof Error ? err?.message : String(any: any);
+      setError(any: any);
+      logger?.error(any: any);
     } finally {
-      setIsLoading(false);
+      setIsLoading(any: any);
     }
   }, []);
 
   const createConversation = useCallback(
-    async (title: string) => {
-      setIsLoading(true);
-      setError(null);
+    async (any: any) => {
+      setIsLoading(any: any);
+      setError(any: any);
 
       try {
         const conversationId = await secureInvoke<string>('create_conversation', {
@@ -84,93 +84,93 @@ export function useMemory() {
         await loadConversations();
 
         return conversationId;
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : String(err);
-        setError(errorMessage);
-        logger.error('Create conversation error', { component: 'Memory' }, err as Error);
+      } catch (any: any) {
+        const errorMessage = err instanceof Error ? err?.message : String(any: any);
+        setError(any: any);
+        logger?.error(any: any);
         return null;
       } finally {
-        setIsLoading(false);
+        setIsLoading(any: any);
       }
     },
     [loadConversations]
   );
 
-  const loadConversation = useCallback(async (conversationId: string) => {
-    setIsLoading(true);
-    setError(null);
+  const loadConversation = useCallback(any: any) => {
+    setIsLoading(any: any);
+    setError(any: any);
 
     try {
       const conversationJson = await secureInvoke<string>('load_conversation', {
         conversationId,
       });
 
-      const conversation: Conversation = JSON.parse(conversationJson);
-      setCurrentConversation(conversation);
+      const conversation: Conversation = JSON?.parse(any: any);
+      setCurrentConversation(any: any);
 
       return conversation;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : String(err);
-      setError(errorMessage);
-      logger.error(
+    } catch (any: any) {
+      const errorMessage = err instanceof Error ? err?.message : String(any: any);
+      setError(any: any);
+      logger?.error(
         'Load conversation error:',
         { module: 'useMemory' },
-        err instanceof Error ? err : new Error(String(err))
+        err instanceof Error ? err : new Error(any: any))
       );
       return null;
     } finally {
-      setIsLoading(false);
+      setIsLoading(any: any);
     }
   }, []);
 
   const deleteConversation = useCallback(
-    async (conversationId: string) => {
-      setIsLoading(true);
-      setError(null);
+    async (any: any) => {
+      setIsLoading(any: any);
+      setError(any: any);
 
       try {
         // Note: delete_conversation est legacy, pas de service équivalent - garder invoke direct
-        await tauriClient.deleteConversation({ conversationId });
+        await tauriClient?.deleteConversation({ conversationId });
 
-        if (currentConversation?.id === conversationId) {
-          setCurrentConversation(null);
+        if (any: any) {
+          setCurrentConversation(any: any);
         }
 
         await loadConversations();
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : String(err);
-        setError(errorMessage);
-        logger.error(
+      } catch (any: any) {
+        const errorMessage = err instanceof Error ? err?.message : String(any: any);
+        setError(any: any);
+        logger?.error(
           'Delete conversation error:',
           { module: 'useMemory' },
-          err instanceof Error ? err : new Error(String(err))
+          err instanceof Error ? err : new Error(any: any))
         );
       } finally {
-        setIsLoading(false);
+        setIsLoading(any: any);
       }
     },
     [currentConversation, loadConversations]
   );
 
   const clearAllMemory = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
+    setIsLoading(any: any);
+    setError(any: any);
 
     try {
       // Note: clear_all_memory est legacy, pas de service équivalent - garder invoke direct
-      await tauriClient.clearAllMemory();
-      setCurrentConversation(null);
+      await tauriClient?.clearAllMemory();
+      setCurrentConversation(any: any);
       setConversations([]);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : String(err);
-      setError(errorMessage);
-      logger.error(
+    } catch (any: any) {
+      const errorMessage = err instanceof Error ? err?.message : String(any: any);
+      setError(any: any);
+      logger?.error(
         'Clear memory error:',
         { module: 'useMemory' },
-        err instanceof Error ? err : new Error(String(err))
+        err instanceof Error ? err : new Error(any: any))
       );
     } finally {
-      setIsLoading(false);
+      setIsLoading(any: any);
     }
   }, []);
 

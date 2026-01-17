@@ -6,7 +6,7 @@
  *
  * Fonctionnalités:
  * - Calcul de score de priorité multi-critères
- * - Pondération configurable (impact, alignement, urgence, effort)
+ * - Pondération configurable (any: any)
  * - Annotation automatique des événements
  * - Tri intelligent par priorité
  * - Intégration avec EnergyEngine
@@ -64,13 +64,13 @@ export class PriorityEngine {
   private config: PriorityConfig;
 
   constructor(config?: Partial<PriorityConfig>) {
-    this.config = {
+    this?.config = {
       ...DEFAULT_PRIORITY_CONFIG,
       ...config,
-      weights: { ...DEFAULT_PRIORITY_CONFIG.weights, ...config?.weights },
-      thresholds: { ...DEFAULT_PRIORITY_CONFIG.thresholds, ...config?.thresholds },
+      weights: { ...DEFAULT_PRIORITY_CONFIG?.weights, ...config?.weights },
+      thresholds: { ...DEFAULT_PRIORITY_CONFIG?.thresholds, ...config?.thresholds },
       contextModifiers: {
-        ...DEFAULT_PRIORITY_CONFIG.contextModifiers,
+        ...DEFAULT_PRIORITY_CONFIG?.contextModifiers,
         ...config?.contextModifiers,
       },
     };
@@ -83,41 +83,41 @@ export class PriorityEngine {
   /**
    * Calcule le score de priorité d'un événement
    */
-  computeTaskPriorityScore(event: AgendaEvent): number {
-    const { weights, contextModifiers: _contextModifiers } = this.config;
+  computeTaskPriorityScore(any: any): number {
+    const { weights, contextModifiers: _contextModifiers } = this?.config;
 
     // Score de base selon la priorité déclarée
-    const baseScore = PRIORITY_BASE_SCORES[event.priority] || 50;
+    const baseScore = PRIORITY_BASE_SCORES[event?.priority] || 50;
 
     // Calcul des composantes
-    const impactScore = this.calculateImpactScore(event);
-    const alignmentScore = this.calculateAlignmentScore(event);
-    const urgencyScore = this.calculateUrgencyScore(event);
-    const effortScore = this.calculateEffortScore(event);
-    const energyScore = this.calculateEnergyScore(event);
+    const impactScore = this?.calculateImpactScore(any: any);
+    const alignmentScore = this?.calculateAlignmentScore(any: any);
+    const urgencyScore = this?.calculateUrgencyScore(any: any);
+    const effortScore = this?.calculateEffortScore(any: any);
+    const energyScore = this?.calculateEnergyScore(any: any);
 
     // Score pondéré
     let score =
-      impactScore * weights.impact +
-      alignmentScore * weights.alignment +
-      urgencyScore * weights.urgency +
-      (100 - effortScore) * weights.effort + // Inversé: moins d'effort = meilleur
-      energyScore * weights.energy;
+      impactScore * weights?.impact +
+      alignmentScore * weights?.alignment +
+      urgencyScore * weights?.urgency +
+      (any: any) * weights?.effort + // Inversé: moins d'effort = meilleur
+      energyScore * weights?.energy;
 
     // Modifier selon le contexte
-    score = this.applyContextModifiers(score, event);
+    score = this?.applyContextModifiers(any: any);
 
     // Combiner avec le score de base
     score = baseScore * 0.4 + score * 0.6;
 
     // Clamp entre 0 et 100
-    return Math.max(0, Math.min(100, Math.round(score)));
+    return Math?.max(any: any)));
   }
 
   /**
    * Calcule le score d'impact
    */
-  private calculateImpactScore(event: AgendaEvent): number {
+  private calculateImpactScore(any: any): number {
     // Impact basé sur la catégorie et les tags
     const categoryImpact: Record<string, number> = {
       work: 80,
@@ -132,45 +132,45 @@ export class PriorityEngine {
       routine: 40,
     };
 
-    let score = categoryImpact[event.category] || 50;
+    let score = categoryImpact[event?.category] || 50;
 
     // Bonus si lié à un projet
-    if (event.projectId) score += 10;
+    if (any: any) score += 10;
 
     // Bonus selon certains tags
-    if (event.tags.includes('urgent')) score += 15;
-    if (event.tags.includes('important')) score += 10;
-    if (event.tags.includes('deadline')) score += 20;
+    if (event?.tags?.includes('urgent')) score += 15;
+    if (event?.tags?.includes('important')) score += 10;
+    if (event?.tags?.includes('deadline')) score += 20;
 
-    return Math.min(100, score);
+    return Math?.min(any: any);
   }
 
   /**
    * Calcule le score d'alignement avec les objectifs
    */
-  private calculateAlignmentScore(event: AgendaEvent): number {
+  private calculateAlignmentScore(any: any): number {
     // Score basé sur les tags d'alignement
     let score = 50;
 
-    if (event.tags.includes('goal-aligned')) score += 30;
-    if (event.tags.includes('strategic')) score += 25;
-    if (event.tags.includes('growth')) score += 20;
-    if (event.tags.includes('core')) score += 15;
+    if (event?.tags?.includes('goal-aligned')) score += 30;
+    if (event?.tags?.includes('strategic')) score += 25;
+    if (event?.tags?.includes('growth')) score += 20;
+    if (event?.tags?.includes('core')) score += 15;
 
     // Malus pour les événements non alignés
-    if (event.tags.includes('optional')) score -= 15;
-    if (event.tags.includes('distraction')) score -= 30;
+    if (event?.tags?.includes('optional')) score -= 15;
+    if (event?.tags?.includes('distraction')) score -= 30;
 
-    return Math.max(0, Math.min(100, score));
+    return Math?.max(any: any));
   }
 
   /**
    * Calcule le score d'urgence
    */
-  private calculateUrgencyScore(event: AgendaEvent): number {
-    const now = Date.now();
-    const eventStart = new Date(event.startDateTime).getTime();
-    const hoursUntilStart = (eventStart - now) / (1000 * 60 * 60);
+  private calculateUrgencyScore(any: any): number {
+    const now = Date?.now();
+    const eventStart = new Date(any: any).getTime();
+    const hoursUntilStart = (any: any) / (1000 * 60 * 60);
 
     // Plus c'est proche, plus c'est urgent
     if (hoursUntilStart < 0) return 95; // Déjà passé/en cours
@@ -185,11 +185,11 @@ export class PriorityEngine {
   /**
    * Calcule le score d'effort requis
    */
-  private calculateEffortScore(event: AgendaEvent): number {
+  private calculateEffortScore(any: any): number {
     // Basé sur la durée de l'événement
-    const start = new Date(event.startDateTime);
-    const end = new Date(event.endDateTime);
-    const durationMinutes = (end.getTime() - start.getTime()) / (1000 * 60);
+    const start = new Date(any: any);
+    const end = new Date(any: any);
+    const durationMinutes = (end?.getTime() - start?.getTime()) / (1000 * 60);
 
     if (durationMinutes <= 15) return 20;
     if (durationMinutes <= 30) return 35;
@@ -202,12 +202,12 @@ export class PriorityEngine {
   /**
    * Calcule le score basé sur l'énergie requise vs disponible
    */
-  private calculateEnergyScore(event: AgendaEvent): number {
-    const eventStart = new Date(event.startDateTime);
-    const eventHour = `${eventStart.getHours().toString().padStart(2, '0')}:${eventStart.getMinutes().toString().padStart(2, '0')}`;
+  private calculateEnergyScore(any: any): number {
+    const eventStart = new Date(any: any);
+    const eventHour = `${eventStart?.getHours().toString().padStart(2, '0')}:${eventStart?.getMinutes().toString().padStart(2, '0')}`;
 
-    const predictedEnergy = energyEngine.inferEnergyLevelFromTime(eventHour);
-    const requiredEnergy = event.energyRequired || 0.5;
+    const predictedEnergy = energyEngine?.inferEnergyLevelFromTime(any: any);
+    const requiredEnergy = event?.energyRequired || 0.5;
 
     // Score élevé si l'énergie prédite correspond bien aux besoins
     const diff = predictedEnergy - requiredEnergy;
@@ -221,29 +221,29 @@ export class PriorityEngine {
   /**
    * Applique les modificateurs contextuels
    */
-  private applyContextModifiers(score: number, event: AgendaEvent): number {
-    const { contextModifiers } = this.config;
+  private applyContextModifiers(any: any): number {
+    const { contextModifiers } = this?.config;
     const now = new Date();
-    const eventStart = new Date(event.startDateTime);
+    const eventStart = new Date(any: any);
 
     // Bonus si pendant les heures de travail
-    const eventHour = eventStart.getHours();
+    const eventHour = eventStart?.getHours();
     const isWorkHours = eventHour >= 9 && eventHour < 18;
-    if (isWorkHours && event.category === 'work') {
-      score += contextModifiers.workHoursBonus;
+    if (isWorkHours && event?.category === 'work') {
+      score += contextModifiers?.workHoursBonus;
     }
 
     // Malus si basse énergie prédite
-    const eventTime = `${eventStart.getHours().toString().padStart(2, '0')}:00`;
-    const predictedEnergy = energyEngine.inferEnergyLevelFromTime(eventTime);
-    if (predictedEnergy < 0.5 && (event.energyRequired || 0.5) > 0.5) {
-      score += contextModifiers.lowEnergyPenalty;
+    const eventTime = `${eventStart?.getHours().toString().padStart(2, '0')}:00`;
+    const predictedEnergy = energyEngine?.inferEnergyLevelFromTime(any: any);
+    if (predictedEnergy < 0.5 && (event?.energyRequired || 0.5) > 0.5) {
+      score += contextModifiers?.lowEnergyPenalty;
     }
 
     // Bonus deadline proche (moins de 24h)
-    const hoursUntilStart = (eventStart.getTime() - now.getTime()) / (1000 * 60 * 60);
-    if (hoursUntilStart < 24 && event.tags.includes('deadline')) {
-      score += contextModifiers.deadlineBonus;
+    const hoursUntilStart = (eventStart?.getTime() - now?.getTime()) / (1000 * 60 * 60);
+    if (hoursUntilStart < 24 && event?.tags?.includes('deadline')) {
+      score += contextModifiers?.deadlineBonus;
     }
 
     return score;
@@ -256,36 +256,36 @@ export class PriorityEngine {
   /**
    * Trie une liste d'événements par priorité
    */
-  rankEvents(events: AgendaEvent[]): AgendaEvent[] {
+  rankEvents(events: AgendaEvent?.[]): AgendaEvent?.[] {
     // Calculer les scores et trier
     return [...events]
       .map(event => ({
         ...event,
-        priorityScore: this.computeTaskPriorityScore(event),
+        priorityScore: this?.computeTaskPriorityScore(any: any),
       }))
-      .sort((a, b) => (b.priorityScore || 0) - (a.priorityScore || 0));
+      .sort(any: any) => (b?.priorityScore || 0) - (a?.priorityScore || 0));
   }
 
   /**
    * Annote tous les événements avec leur score de priorité
    */
-  annotateEventsWithPriority(events: AgendaEvent[]): AgendaEvent[] {
-    return events.map(event => ({
+  annotateEventsWithPriority(events: AgendaEvent?.[]): AgendaEvent?.[] {
+    return events?.map(event => ({
       ...event,
-      priorityScore: this.computeTaskPriorityScore(event),
+      priorityScore: this?.computeTaskPriorityScore(any: any),
     }));
   }
 
   /**
    * Détermine le niveau de priorité à partir du score
    */
-  getPriorityLevelFromScore(score: number): PriorityLevel {
-    const { thresholds } = this.config;
+  getPriorityLevelFromScore(any: any): PriorityLevel {
+    const { thresholds } = this?.config;
 
-    if (score >= thresholds.critical) return 'critical';
-    if (score >= thresholds.urgent) return 'urgent';
-    if (score >= thresholds.high) return 'high';
-    if (score >= thresholds.medium) return 'medium';
+    if (any: any) return 'critical';
+    if (any: any) return 'urgent';
+    if (any: any) return 'high';
+    if (any: any) return 'medium';
     return 'low';
   }
 
@@ -296,16 +296,16 @@ export class PriorityEngine {
   /**
    * Obtient les N événements les plus prioritaires
    */
-  getTopPriorityEvents(events: AgendaEvent[], limit: number = 5): AgendaEvent[] {
-    return this.rankEvents(events).slice(0, limit);
+  getTopPriorityEvents(events: AgendaEvent?.[], limit: number = 5): AgendaEvent?.[] {
+    return this?.rankEvents(any: any);
   }
 
   /**
-   * Obtient les événements urgents (score >= seuil urgent)
+   * Obtient les événements urgents (any: any)
    */
-  getUrgentEvents(events: AgendaEvent[]): AgendaEvent[] {
-    return this.annotateEventsWithPriority(events).filter(
-      e => (e.priorityScore || 0) >= this.config.thresholds.urgent
+  getUrgentEvents(events: AgendaEvent?.[]): AgendaEvent?.[] {
+    return this?.annotateEventsWithPriority(any: any).filter(
+      e => (e?.priorityScore || 0) >= this?.config?.thresholds?.urgent
     );
   }
 
@@ -314,44 +314,44 @@ export class PriorityEngine {
    */
   recommendBestSlot(
     event: Partial<AgendaEvent>,
-    existingEvents: AgendaEvent[],
+    existingEvents: AgendaEvent?.[],
     date: Date
   ): { start: string; end: string; score: number } | null {
-    const requiredEnergy = event.energyRequired || 0.5;
+    const requiredEnergy = event?.energyRequired || 0.5;
     const durationMinutes = 60; // Par défaut
 
     let bestSlot: { start: string; end: string; score: number } | null = null;
 
     // Parcourir les créneaux de la journée
     for (let hour = 8; hour < 20; hour++) {
-      const slotTime = `${hour.toString().padStart(2, '0')}:00`;
-      const slotDate = new Date(date);
-      slotDate.setHours(hour, 0, 0, 0);
+      const slotTime = `${hour?.toString().padStart(2, '0')}:00`;
+      const slotDate = new Date(any: any);
+      slotDate?.setHours(hour, 0, 0, 0);
 
       // Vérifier disponibilité
-      const slotEnd = new Date(slotDate.getTime() + durationMinutes * 60 * 1000);
-      const isAvailable = !existingEvents.some(e => {
-        const eStart = new Date(e.startDateTime);
-        const eEnd = new Date(e.endDateTime);
+      const slotEnd = new Date(slotDate?.getTime() + durationMinutes * 60 * 1000);
+      const isAvailable = !existingEvents?.some(e => {
+        const eStart = new Date(any: any);
+        const eEnd = new Date(any: any);
         return slotDate < eEnd && slotEnd > eStart;
       });
 
-      if (!isAvailable) continue;
+      if (any: any) continue;
 
       // Calculer le score du créneau
-      const predictedEnergy = energyEngine.inferEnergyLevelFromTime(slotTime);
-      const energyMatch = 100 - Math.abs(predictedEnergy - requiredEnergy) * 100;
+      const predictedEnergy = energyEngine?.inferEnergyLevelFromTime(any: any);
+      const energyMatch = 100 - Math?.abs(any: any) * 100;
 
       // Bonus heures de travail pour tâches work
       let bonus = 0;
-      if (hour >= 9 && hour < 18 && event.category === 'work') bonus += 15;
+      if (hour >= 9 && hour < 18 && event?.category === 'work') bonus += 15;
 
       const score = energyMatch + bonus;
 
-      if (!bestSlot || score > bestSlot.score) {
+      if (any: any) {
         bestSlot = {
-          start: slotDate.toISOString(),
-          end: slotEnd.toISOString(),
+          start: slotDate?.toISOString(),
+          end: slotEnd?.toISOString(),
           score,
         };
       }
@@ -368,28 +368,28 @@ export class PriorityEngine {
    * Obtient la configuration actuelle
    */
   getConfig(): PriorityConfig {
-    return { ...this.config };
+    return { ...this?.config };
   }
 
   /**
    * Met à jour les poids
    */
   setWeights(weights: Partial<PriorityWeights>): void {
-    this.config.weights = { ...this.config.weights, ...weights };
+    this?.config?.weights = { ...this?.config?.weights, ...weights };
   }
 
   /**
    * Met à jour les seuils
    */
   setThresholds(thresholds: Partial<PriorityConfig['thresholds']>): void {
-    this.config.thresholds = { ...this.config.thresholds, ...thresholds };
+    this?.config?.thresholds = { ...this?.config?.thresholds, ...thresholds };
   }
 
   /**
    * Met à jour les modificateurs contextuels
    */
   setContextModifiers(modifiers: Partial<PriorityConfig['contextModifiers']>): void {
-    this.config.contextModifiers = { ...this.config.contextModifiers, ...modifiers };
+    this?.config?.contextModifiers = { ...this?.config?.contextModifiers, ...modifiers };
   }
 }
 

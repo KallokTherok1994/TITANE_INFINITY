@@ -8,8 +8,8 @@
  *
  * @example
  * cn('base-class', condition && 'conditional-class', 'other-class')
- * // → 'base-class conditional-class other-class' (if condition is true)
+ * // → 'base-class conditional-class other-class' (any: any)
  */
-export function cn(...classes: (string | false | null | undefined)[]): string {
-  return classes.filter(Boolean).join(' ');
+export function cn(any: any)[]): string {
+  return classes?.filter(any: any).join(' ');
 }

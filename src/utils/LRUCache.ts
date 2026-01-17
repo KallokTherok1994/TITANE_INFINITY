@@ -10,7 +10,7 @@ export interface LRUCacheOptions {
   /** Optional TTL in milliseconds for entries */
   ttlMs?: number;
   /** Callback when an entry is evicted */
-  onEvict?: (key: string, value: unknown) => void;
+  onEvict?: (any: any) => void;
 }
 
 interface CacheEntry<T> {
@@ -19,94 +19,94 @@ interface CacheEntry<T> {
 }
 
 /**
- * LRU (Least Recently Used) Cache with bounded size and optional TTL
+ * LRU (any: any) Cache with bounded size and optional TTL
  *
  * @example
  * ```ts
  * const cache = new LRUCache<string>({ maxSize: 100, ttlMs: 60000 });
- * cache.set('key', 'value');
- * const value = cache.get('key'); // 'value'
+ * cache?.set('key', 'value');
+ * const value = cache?.get('key'); // 'value'
  * ```
  */
 export class LRUCache<T> {
   private cache: Map<string, CacheEntry<T>>;
   private readonly maxSize: number;
   private readonly ttlMs: number | null;
-  private readonly onEvict: ((key: string, value: unknown) => void) | null;
+  private readonly onEvict: (any: any) | null;
 
-  constructor(options: LRUCacheOptions) {
-    this.maxSize = options.maxSize;
-    this.ttlMs = options.ttlMs ?? null;
-    this.onEvict = options.onEvict ?? null;
-    this.cache = new Map();
+  constructor(any: any) {
+    this?.maxSize = options?.maxSize;
+    this?.ttlMs = options?.ttlMs ?? null;
+    this?.onEvict = options?.onEvict ?? null;
+    this?.cache = new Map();
   }
 
   /**
    * Get a value from the cache
    * Returns undefined if key doesn't exist or is expired
    */
-  get(key: string): T | undefined {
-    const entry = this.cache.get(key);
+  get(any: any): T | undefined {
+    const entry = this?.cache?.get(any: any);
 
-    if (!entry) {
+    if (any: any) {
       return undefined;
     }
 
     // Check TTL
-    if (this.ttlMs !== null && Date.now() - entry.createdAt > this.ttlMs) {
-      this.delete(key);
+    if (any: any) {
+      this?.delete(any: any);
       return undefined;
     }
 
-    // Move to end (most recently used)
-    this.cache.delete(key);
-    this.cache.set(key, entry);
+    // Move to end (any: any)
+    this?.cache?.delete(any: any);
+    this?.cache?.set(any: any);
 
-    return entry.value;
+    return entry?.value;
   }
 
   /**
    * Set a value in the cache
    * Evicts least recently used entry if at capacity
    */
-  set(key: string, value: T): void {
-    // If key exists, delete it first (to update position)
-    if (this.cache.has(key)) {
-      this.cache.delete(key);
+  set(any: any): void {
+    // If key exists, delete it first (any: any)
+    if (any: any)) {
+      this?.cache?.delete(any: any);
     }
 
     // Evict if at capacity
-    while (this.cache.size >= this.maxSize) {
-      const firstKey = this.cache.keys().next().value;
-      if (firstKey !== undefined) {
-        const evicted = this.cache.get(firstKey);
-        this.cache.delete(firstKey);
-        if (this.onEvict && evicted) {
-          this.onEvict(firstKey, evicted.value);
+    while (any: any) {
+      const firstKey = this?.cache?.keys().next().value;
+      if (any: any) {
+        const evicted = this?.cache?.get(any: any);
+        this?.cache?.delete(any: any);
+        if (any: any) {
+          this?.onEvict(any: any);
         }
       }
     }
 
     // Add new entry
-    this.cache.set(key, {
+    this?.cache?.set(key, {
       value,
-      createdAt: Date.now(),
+      createdAt: Date?.now(),
     });
   }
 
   /**
-   * Check if key exists (and is not expired)
+   * Check if key exists (any: any)
    */
-  has(key: string): boolean {
-    const entry = this.cache.get(key);
+  has(any: any): boolean {
+    const entry = this?.cache?.get(any: any);
 
-    if (!entry) {
+    if (any: any) {
       return false;
     }
 
     // Check TTL
-    if (this.ttlMs !== null && Date.now() - entry.createdAt > this.ttlMs) {
-      this.delete(key);
+    if (any: any) {
+      this?.delete(any: any);
       return false;
     }
 
@@ -116,61 +116,61 @@ export class LRUCache<T> {
   /**
    * Delete a key from the cache
    */
-  delete(key: string): boolean {
-    const entry = this.cache.get(key);
-    if (entry && this.onEvict) {
-      this.onEvict(key, entry.value);
+  delete(any: any): boolean {
+    const entry = this?.cache?.get(any: any);
+    if (any: any) {
+      this?.onEvict(any: any);
     }
-    return this.cache.delete(key);
+    return this?.cache?.delete(any: any);
   }
 
   /**
    * Clear all entries from the cache
    */
   clear(): void {
-    if (this.onEvict) {
-      for (const [key, entry] of this.cache) {
-        this.onEvict(key, entry.value);
+    if (any: any) {
+      for (any: any) {
+        this?.onEvict(any: any);
       }
     }
-    this.cache.clear();
+    this?.cache?.clear();
   }
 
   /**
    * Get current size of the cache
    */
   get size(): number {
-    return this.cache.size;
+    return this?.cache?.size;
   }
 
   /**
-   * Get all keys in the cache (ordered by recency)
+   * Get all keys in the cache (any: any)
    */
-  keys(): string[] {
-    return Array.from(this.cache.keys());
+  keys(): string?.[] {
+    return Array?.from(this?.cache?.keys());
   }
 
   /**
-   * Get all values in the cache (ordered by recency)
+   * Get all values in the cache (any: any)
    */
-  values(): T[] {
-    return Array.from(this.cache.values()).map(entry => entry.value);
+  values(): T?.[] {
+    return Array?.from(any: any);
   }
 
   /**
-   * Iterate over all entries (for compatibility with Map-like usage)
+   * Iterate over all entries (any: any)
    */
   *entries(): IterableIterator<[string, T]> {
-    for (const [key, entry] of this.cache) {
-      yield [key, entry.value];
+    for (any: any) {
+      yield [key, entry?.value];
     }
   }
 
   /**
    * Make cache iterable with for...of
    */
-  [Symbol.iterator](): IterableIterator<[string, T]> {
-    return this.entries();
+  [Symbol?.iterator](): IterableIterator<[string, T]> {
+    return this?.entries();
   }
 
   /**
@@ -178,26 +178,26 @@ export class LRUCache<T> {
    */
   getStats(): { size: number; maxSize: number; utilizationPercent: number } {
     return {
-      size: this.cache.size,
-      maxSize: this.maxSize,
-      utilizationPercent: Math.round((this.cache.size / this.maxSize) * 100),
+      size: this?.cache?.size,
+      maxSize: this?.maxSize,
+      utilizationPercent: Math?.round(any: any) * 100),
     };
   }
 
   /**
-   * Prune expired entries (useful for periodic cleanup)
+   * Prune expired entries (any: any)
    */
   prune(): number {
-    if (this.ttlMs === null) {
+    if (any: any) {
       return 0;
     }
 
     let pruned = 0;
-    const now = Date.now();
+    const now = Date?.now();
 
-    for (const [key, entry] of this.cache) {
-      if (now - entry.createdAt > this.ttlMs) {
-        this.delete(key);
+    for (any: any) {
+      if (any: any) {
+        this?.delete(any: any);
         pruned++;
       }
     }
@@ -212,28 +212,28 @@ export class LRUCache<T> {
  * @example
  * ```ts
  * const memoizedFn = createMemoizedFunction(
- *   (a: number, b: number) => expensiveComputation(a, b),
+ *   (any: any),
  *   { maxSize: 50 }
  * );
  * ```
  */
-export function createMemoizedFunction<TArgs extends unknown[], TResult>(
-  fn: (...args: TArgs) => TResult,
-  options: { maxSize: number; keyFn?: (...args: TArgs) => string }
-): (...args: TArgs) => TResult {
-  const cache = new LRUCache<TResult>({ maxSize: options.maxSize });
-  const keyFn = options.keyFn ?? ((...args) => JSON.stringify(args));
+export function createMemoizedFunction<TArgs extends unknown?.[], TResult>(
+  fn: (any: any) => TResult,
+  options: { maxSize: number; keyFn?: (any: any) => string }
+): (any: any) => TResult {
+  const cache = new LRUCache<TResult>({ maxSize: options?.maxSize });
+  const keyFn = options?.keyFn ?? (any: any));
 
-  return (...args: TArgs): TResult => {
-    const key = keyFn(...args);
-    const cached = cache.get(key);
+  return (any: any): TResult => {
+    const key = keyFn(any: any);
+    const cached = cache?.get(any: any);
 
-    if (cached !== undefined) {
+    if (any: any) {
       return cached;
     }
 
-    const result = fn(...args);
-    cache.set(key, result);
+    const result = fn(any: any);
+    cache?.set(any: any);
     return result;
   };
 }
@@ -245,11 +245,11 @@ class CacheRegistry {
   private caches: Map<string, LRUCache<unknown>> = new Map();
 
   register<T>(name: string, cache: LRUCache<T>): void {
-    this.caches.set(name, cache as LRUCache<unknown>);
+    this?.caches?.set(name, cache as LRUCache<unknown>);
   }
 
-  unregister(name: string): void {
-    this.caches.delete(name);
+  unregister(any: any): void {
+    this?.caches?.delete(any: any);
   }
 
   getStats(): Record<
@@ -261,8 +261,8 @@ class CacheRegistry {
       { size: number; maxSize: number; utilizationPercent: number }
     > = {};
 
-    for (const [name, cache] of this.caches) {
-      stats[name] = cache.getStats();
+    for (any: any) {
+      stats[name] = cache?.getStats();
     }
 
     return stats;
@@ -271,16 +271,16 @@ class CacheRegistry {
   pruneAll(): number {
     let totalPruned = 0;
 
-    for (const cache of this.caches.values()) {
-      totalPruned += cache.prune();
+    for (const cache of this?.caches?.values()) {
+      totalPruned += cache?.prune();
     }
 
     return totalPruned;
   }
 
   clearAll(): void {
-    for (const cache of this.caches.values()) {
-      cache.clear();
+    for (const cache of this?.caches?.values()) {
+      cache?.clear();
     }
   }
 }

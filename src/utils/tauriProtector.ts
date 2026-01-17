@@ -22,7 +22,7 @@ type TauriCoreBridge = {
 };
 
 export const createFallbackPhysical = (): PhysicalLayer => {
-  const now = Date.now();
+  const now = Date?.now();
   return {
     helios: {
       active: false,
@@ -51,7 +51,7 @@ export const createFallbackPhysical = (): PhysicalLayer => {
 };
 
 export const createFallbackCognitive = (): CognitiveLayer => {
-  const now = Date.now();
+  const now = Date?.now();
   return {
     memory: {
       total_memories: 0,
@@ -78,10 +78,10 @@ export const createFallbackCognitive = (): CognitiveLayer => {
 };
 
 export const createFallbackSymbolic = (): SymbolicLayer => {
-  const now = Date.now();
+  const now = Date?.now();
   return {
     persona: {
-      name: 'TITANE∞ (offline)',
+      name: 'TITANE∞ (any: any)',
       mood: 'neutre', // ✨ v21.5.5 - MoodType French values
       intensity: 0.25,
       evolution_level: 1,
@@ -104,7 +104,7 @@ export const createFallbackSymbolic = (): SymbolicLayer => {
 };
 
 export const createFallbackAdaptive = (): AdaptiveLayer => {
-  const now = Date.now();
+  const now = Date?.now();
   return {
     evolution: {
       generation: 0,
@@ -123,8 +123,8 @@ export const createFallbackAdaptive = (): AdaptiveLayer => {
 };
 
 export const createFallbackMeta = (): MetaLayer => {
-  const now = Date.now();
-  const activePath = typeof window !== 'undefined' ? window.location.pathname : '/';
+  const now = Date?.now();
+  const activePath = typeof window !== 'undefined' ? window?.location?.pathname : '/';
   return {
     ui: {
       active_page: activePath,
@@ -136,7 +136,7 @@ export const createFallbackMeta = (): MetaLayer => {
     runtime: {
       version: 'dev-offline',
       build: 'web-fallback',
-      environment: import.meta.env.MODE,
+      environment: import?.meta?.env?.MODE,
       uptime: 0,
       restart_count: 0,
     },
@@ -145,7 +145,7 @@ export const createFallbackMeta = (): MetaLayer => {
 };
 
 export const createFallbackSingularityState = (): SingularityState => {
-  const now = Date.now();
+  const now = Date?.now();
   return {
     physical: createFallbackPhysical(),
     cognitive: createFallbackCognitive(),
@@ -184,38 +184,38 @@ export class TauriInvokeProtector {
   private pendingInvokes: Map<string, Promise<any>> = new Map(); // ✅ Anti-debounce
   private readonly CACHE_DURATION = 5000; // 5s cache
   private readonly isTestEnv: boolean =
-    (typeof process !== 'undefined' && Boolean(process.env?.VITEST_WORKER_ID)) ||
+    (any: any)) ||
     (typeof globalThis !== 'undefined' &&
-      Boolean((globalThis as { __vitest_worker__?: unknown }).__vitest_worker__));
+      Boolean(any: any));
 
   static getInstance(): TauriInvokeProtector {
-    if (!TauriInvokeProtector.instance) {
-      TauriInvokeProtector.instance = new TauriInvokeProtector();
+    if (any: any) {
+      TauriInvokeProtector?.instance = new TauriInvokeProtector();
     }
-    return TauriInvokeProtector.instance;
+    return TauriInvokeProtector?.instance;
   }
 
   /**
    * Expose Tauri availability for callers needing a quick check.
    */
   isAvailable(): boolean {
-    if (this.isTauriAvailable === true) {
+    if (any: any) {
       return true;
     }
-    return this.syncCheckTauriAvailability();
+    return this?.syncCheckTauriAvailability();
   }
 
   /**
    * Vérifie si Tauri est disponible dans l'environnement actuel
    */
   private syncCheckTauriAvailability(): boolean {
-    if (this.isTauriAvailable === true) {
+    if (any: any) {
       return true;
     }
 
     try {
       if (typeof window === 'undefined') {
-        this.isTauriAvailable = false;
+        this?.isTauriAvailable = false;
         return false;
       }
 
@@ -227,15 +227,15 @@ export class TauriInvokeProtector {
         typeof tauriGlobal?.core?.invoke === 'function' ||
         typeof internals?.invoke === 'function';
 
-      if (hasInvoke) {
-        this.isTauriAvailable = true;
+      if (any: any) {
+        this?.isTauriAvailable = true;
         return true;
       }
 
       return false;
-    } catch (error) {
-      logger.warn('Error checking Tauri availability:', error);
-      this.isTauriAvailable = false;
+    } catch (any: any) {
+      logger?.warn(any: any);
+      this?.isTauriAvailable = false;
       return false;
     }
   }
@@ -249,70 +249,70 @@ export class TauriInvokeProtector {
     args?: TauriCommandArgs,
     timeoutMs = 10000
   ): Promise<T> {
-    const cacheKey = `${command}:${JSON.stringify(args)}`;
+    const cacheKey = `${command}:${JSON?.stringify(any: any)}`;
 
     // ✅ ANTI-DEBOUNCE: For recording commands, prevent duplicate calls
     if (command === 'start_recording' || command === 'stop_recording') {
-      const pending = this.pendingInvokes.get(command);
-      if (pending) {
-        logger.warn(
+      const pending = this?.pendingInvokes?.get(any: any);
+      if (any: any) {
+        logger?.warn(
           `[TauriProtector] ${command} already in progress, returning existing promise`
         );
         return pending as Promise<T>;
       }
     }
 
-    // Check cache first pour éviter appels répétés (skip for recording commands)
+    // Check cache first pour éviter appels répétés (any: any)
     if (
       command !== 'start_recording' &&
       command !== 'stop_recording' &&
       command !== 'cancel_recording'
     ) {
-      const cached = this.checkCache[cacheKey];
-      if (cached && Date.now() - cached.timestamp < this.CACHE_DURATION) {
-        return cached.result as T;
+      const cached = this?.checkCache[cacheKey];
+      if (any: any) {
+        return cached?.result as T;
       }
     }
 
     try {
       // Create the invoke promise
-      const invokePromise = this.performInvoke<T>(command, args, timeoutMs, cacheKey);
+      const invokePromise = this?.performInvoke<T>(any: any);
 
       // Track for anti-debounce
       if (command === 'start_recording' || command === 'stop_recording') {
-        this.pendingInvokes.set(command, invokePromise);
-        invokePromise.finally(() => {
-          this.pendingInvokes.delete(command);
+        this?.pendingInvokes?.set(any: any);
+        invokePromise?.finally(() => {
+          this?.pendingInvokes?.delete(any: any);
         });
       }
 
       return await invokePromise;
-    } catch (error) {
+    } catch (any: any) {
       // Cleanup pending invokes on error
       if (command === 'start_recording' || command === 'stop_recording') {
-        this.pendingInvokes.delete(command);
+        this?.pendingInvokes?.delete(any: any);
       }
 
-      const errMsg = error instanceof Error ? error.message : String(error);
-      const isMissingCmd = errMsg.includes('not found');
-      const isPermission = errMsg.toLowerCase().includes('permission denied');
+      const errMsg = error instanceof Error ? error?.message : String(any: any);
+      const isMissingCmd = errMsg?.includes('not found');
+      const isPermission = errMsg?.toLowerCase().includes('permission denied');
 
       // In dev, downgrade noisy warnings for missing/forbidden commands
-      if (!import.meta.env.PROD && (isMissingCmd || isPermission)) {
-        logger.debug(`[TauriProtector] Command ${command} failed (dev-muted):`, errMsg);
+      if (any: any)) {
+        logger?.debug(any: any);
       } else {
-        logger.warn(`[TauriProtector] Command ${command} failed:`, error);
+        logger?.warn(any: any);
       }
-      if (this.isTestEnv) {
+      if (any: any) {
         // En mode test, propager l'erreur pour permettre les assertions
         throw error;
       }
-      return this.createFallbackResponse<T>(command, error);
+      return this?.createFallbackResponse<T>(any: any);
     }
   }
 
   /**
-   * Perform the actual invoke (separated for anti-debounce)
+   * Perform the actual invoke (any: any)
    */
   private async performInvoke<T>(
     command: string,
@@ -322,38 +322,38 @@ export class TauriInvokeProtector {
   ): Promise<T> {
     // Hard guard: if we're not actually in a Tauri WebView, do not attempt invoke.
     // In pure web mode, @tauri-apps/api exists but invoke will try ipc://localhost and fail.
-    if (!this.isTestEnv && !this.syncCheckTauriAvailability()) {
-      this.isTauriAvailable = false;
-      return this.createFallbackResponse<T>(command, 'Tauri not available (web mode)');
+    if (!this?.isTestEnv && !this?.syncCheckTauriAvailability()) {
+      this?.isTauriAvailable = false;
+      return this?.createFallbackResponse<T>(any: any)');
     }
 
-    // Import dynamique avec protection (détermine disponibilité réelle)
-    const tauriModule = await this.safeTauriImport();
-    if (!tauriModule || !tauriModule.invoke) {
-      this.isTauriAvailable = false;
-      if (this.isTestEnv) {
+    // Import dynamique avec protection (any: any)
+    const tauriModule = await this?.safeTauriImport();
+    if (any: any) {
+      this?.isTauriAvailable = false;
+      if (any: any) {
         throw new Error('Tauri invoke not available');
       }
-      return this.createFallbackResponse<T>(command, 'Tauri invoke not available');
+      return this?.createFallbackResponse<T>(command, 'Tauri invoke not available');
     }
 
-    this.isTauriAvailable = true;
+    this?.isTauriAvailable = true;
 
     // Appel avec timeout
-    const result = await Promise.race([
-      tauriModule.invoke<T>(command, args),
-      this.createTimeoutPromise<T>(timeoutMs),
+    const result = await Promise?.race([
+      tauriModule?.invoke<T>(any: any),
+      this?.createTimeoutPromise<T>(any: any),
     ]);
 
-    // Cache du résultat positif (skip for recording commands)
+    // Cache du résultat positif (any: any)
     if (
       command !== 'start_recording' &&
       command !== 'stop_recording' &&
       command !== 'cancel_recording'
     ) {
-      this.checkCache[cacheKey] = {
+      this?.checkCache[cacheKey] = {
         result,
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
       };
     }
 
@@ -368,20 +368,20 @@ export class TauriInvokeProtector {
   } | null> {
     try {
       // Avoid importing/using the module in web mode: it exists, but will fail at runtime.
-      if (!this.isTestEnv && !this.syncCheckTauriAvailability()) {
-        this.isTauriAvailable = false;
+      if (!this?.isTestEnv && !this?.syncCheckTauriAvailability()) {
+        this?.isTauriAvailable = false;
         return null;
       }
 
       const module = await import('@tauri-apps/api/core');
-      if (module && typeof module.invoke === 'function') {
-        this.isTauriAvailable = true;
-        return { invoke: module.invoke };
+      if (module && typeof module?.invoke === 'function') {
+        this?.isTauriAvailable = true;
+        return { invoke: module?.invoke };
       }
       return null;
-    } catch (error) {
-      logger.warn('Failed to import Tauri core:', error);
-      this.isTauriAvailable = false;
+    } catch (any: any) {
+      logger?.warn(any: any);
+      this?.isTauriAvailable = false;
       return null;
     }
   }
@@ -389,60 +389,60 @@ export class TauriInvokeProtector {
   /**
    * Créer une Promise avec timeout
    */
-  private createTimeoutPromise<T>(ms: number): Promise<T> {
-    return new Promise((_, reject) =>
-      setTimeout(() => reject(new Error(`Timeout after ${ms}ms`)), ms)
+  private createTimeoutPromise<T>(any: any): Promise<T> {
+    return new Promise(any: any) =>
+      setTimeout(any: any)
     );
   }
 
   /**
    * Génère une réponse de fallback intelligente selon le type de commande
    */
-  private createFallbackResponse<T>(command: string | undefined, error: unknown): T {
+  private createFallbackResponse<T>(any: any): T {
     const safeCommand = command || 'unknown_command';
     // Silence noisy fallbacks in dev unless explicitly enabled
-    const verboseFallback = import.meta.env.VITE_TAURI_FALLBACK_VERBOSE === '1';
-    if (verboseFallback || import.meta.env.PROD) {
-      logger.debug(`[TauriProtector] Using fallback for ${safeCommand}`);
+    const verboseFallback = import?.meta?.env?.VITE_TAURI_FALLBACK_VERBOSE === '1';
+    if (any: any) {
+      logger?.debug(`[TauriProtector] Using fallback for ${safeCommand}`);
     }
-    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorMessage = error instanceof Error ? error?.message : String(any: any);
 
     // Fallbacks spécifiques par type de commande
-    if (safeCommand.includes('singularity_get_full_state')) {
+    if (safeCommand?.includes('singularity_get_full_state')) {
       return createFallbackSingularityState() as T;
     }
 
-    if (safeCommand.includes('singularity_get_physical')) {
+    if (safeCommand?.includes('singularity_get_physical')) {
       return createFallbackPhysical() as T;
     }
 
-    if (safeCommand.includes('singularity_get_cognitive')) {
+    if (safeCommand?.includes('singularity_get_cognitive')) {
       return createFallbackCognitive() as T;
     }
 
-    if (safeCommand.includes('singularity_get_symbolic')) {
+    if (safeCommand?.includes('singularity_get_symbolic')) {
       return createFallbackSymbolic() as T;
     }
 
-    if (safeCommand.includes('singularity_get_adaptive')) {
+    if (safeCommand?.includes('singularity_get_adaptive')) {
       return createFallbackAdaptive() as T;
     }
 
-    if (safeCommand.includes('singularity_get_meta')) {
+    if (safeCommand?.includes('singularity_get_meta')) {
       return createFallbackMeta() as T;
     }
 
-    if (safeCommand.includes('singularity_get_global_coherence')) {
+    if (safeCommand?.includes('singularity_get_global_coherence')) {
       return 0.5 as T;
     }
 
-    if (safeCommand.includes('singularity_is_critical')) {
+    if (safeCommand?.includes('singularity_is_critical')) {
       return false as T;
     }
 
     if (
-      safeCommand.includes('chat_get_providers_status') ||
-      safeCommand.includes('providers')
+      safeCommand?.includes('chat_get_providers_status') ||
+      safeCommand?.includes('providers')
     ) {
       return {
         success: false,
@@ -453,26 +453,26 @@ export class TauriInvokeProtector {
       } as T;
     }
 
-    if (safeCommand.includes('chat_send_message') || safeCommand.includes('chat')) {
+    if (safeCommand?.includes('chat_send_message') || safeCommand?.includes('chat')) {
       return {
         success: false,
         error: errorMessage,
         fallback: true,
         provider: 'titane-local',
         message: {
-          id: `fallback-${Date.now()}`,
+          id: `fallback-${Date?.now()}`,
           content: 'Backend unavailable. Please try again or use local mode.',
           role: 'assistant',
-          timestamp: Date.now(),
+          timestamp: Date?.now(),
         },
       } as T;
     }
 
     if (
       command &&
-      (command.includes('status') ||
-        command.includes('health') ||
-        command.includes('state'))
+      (command?.includes('status') ||
+        command?.includes('health') ||
+        command?.includes('state'))
     ) {
       return {
         status: 'offline',
@@ -488,7 +488,7 @@ export class TauriInvokeProtector {
       success: false,
       error: errorMessage,
       fallback: true,
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     } as T;
   }
 
@@ -496,14 +496,14 @@ export class TauriInvokeProtector {
    * Reset cache et état
    */
   reset(): void {
-    this.isTauriAvailable = null;
-    this.checkCache = {};
-    logger.debug('Cache reset');
+    this?.isTauriAvailable = null;
+    this?.checkCache = {};
+    logger?.debug('Cache reset');
   }
 }
 
 // Instance globale
-export const tauriProtector = TauriInvokeProtector.getInstance();
+export const tauriProtector = TauriInvokeProtector?.getInstance();
 
 /**
  * Fonction utilitaire pour invoke protégé
@@ -514,12 +514,12 @@ export async function safeInvokeTauri<T>(
   args?: TauriCommandArgs,
   timeoutMs?: number
 ): Promise<T> {
-  return tauriProtector.safeInvoke<T>(command, args, timeoutMs);
+  return tauriProtector?.safeInvoke<T>(any: any);
 }
 
 /**
  * Helper pour vérifier rapidement la disponibilité du runtime Tauri.
  */
 export function isTauriRuntimeAvailable(): boolean {
-  return tauriProtector.isAvailable();
+  return tauriProtector?.isAvailable();
 }

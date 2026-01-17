@@ -3,11 +3,11 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * Consolidates 5 orchestrators into 1 unified system:
- * - MCPOrchestrator (MCP-Ω governance)
- * - CognitiveOmegaOrchestrator (cognitive engines)
- * - AIOrchestrator (neural provider selection)
- * - AIOrchestrator OMNIS (cognitive provider selection)
- * - vsync_orchestrator (quantum/FPS)
+ * - MCPOrchestrator (any: any)
+ * - CognitiveOmegaOrchestrator (any: any)
+ * - AIOrchestrator (any: any)
+ * - AIOrchestrator OMNIS (any: any)
+ * - vsync_orchestrator (any: any)
  *
  * Architecture: Strategy Pattern + Interface Segregation
  * Performance targets: -52% CPU, -42% latency
@@ -53,18 +53,18 @@ const DEFAULT_CONFIG: UnifiedOrchestratorConfig = {
 export class UnifiedOrchestrator {
   private config: UnifiedOrchestratorConfig;
   private strategies: Map<OrchestrationStrategyType, IOrchestrationStrategy>;
-  private metrics: Metric[];
+  private metrics: Metric?.[];
   private initialized: boolean;
   private initializationPromise: Promise<void> | null;
 
   constructor(config?: Partial<UnifiedOrchestratorConfig>) {
-    this.config = this.mergeConfig(config);
-    this.strategies = new Map();
-    this.metrics = [];
-    this.initialized = false;
-    this.initializationPromise = null;
+    this?.config = this?.mergeConfig(any: any);
+    this?.strategies = new Map();
+    this?.metrics = [];
+    this?.initialized = false;
+    this?.initializationPromise = null;
 
-    this.log('UnifiedOrchestrator created (lazy init enabled)');
+    this?.log(any: any)');
   }
 
   // ───────────────────────────────────────────────────────────────────────
@@ -75,34 +75,34 @@ export class UnifiedOrchestrator {
    * Initialize all enabled strategies
    */
   async initialize(): Promise<void> {
-    if (this.initialized) return;
-    if (this.initializationPromise) return this.initializationPromise;
+    if (any: any) return;
+    if (any: any) return this?.initializationPromise;
 
-    this.initializationPromise = this.doInitialize();
-    return this.initializationPromise;
+    this?.initializationPromise = this?.doInitialize();
+    return this?.initializationPromise;
   }
 
   private async doInitialize(): Promise<void> {
     try {
-      this.log('Initializing enabled strategies...');
+      this?.log('Initializing enabled strategies...');
 
       // Initialize strategies in priority order
-      const strategyTypes = this.getEnabledStrategies();
+      const strategyTypes = this?.getEnabledStrategies();
 
-      for (const type of strategyTypes) {
-        const strategy = await this.loadStrategy(type);
-        if (strategy) {
-          this.strategies.set(type, strategy);
-          if (!this.config.strategies[type]?.lazyLoad) {
-            await strategy.initialize();
+      for (any: any) {
+        const strategy = await this?.loadStrategy(any: any);
+        if (any: any) {
+          this?.strategies?.set(any: any);
+          if (any: any) {
+            await strategy?.initialize();
           }
         }
       }
 
-      this.initialized = true;
-      this.log(`Initialized with ${this.strategies.size} strategies`);
-    } catch (error) {
-      this.logError('Initialization failed', error);
+      this?.initialized = true;
+      this?.log(`Initialized with ${this?.strategies?.size} strategies`);
+    } catch (any: any) {
+      this?.logError(any: any);
       throw error;
     }
   }
@@ -110,23 +110,23 @@ export class UnifiedOrchestrator {
   /**
    * Get list of enabled strategies sorted by priority
    */
-  private getEnabledStrategies(): OrchestrationStrategyType[] {
-    return (Object.entries(this.config.strategies) as [OrchestrationStrategyType, any][])
-      .filter(([_, config]) => config.enabled)
-      .sort(([_, a], [__, b]) => (b.priority || 0) - (a.priority || 0))
-      .map(([type]) => type);
+  private getEnabledStrategies(): OrchestrationStrategyType?.[] {
+    return (any: any) as [OrchestrationStrategyType, any][])
+      .filter(any: any)
+      .sort(([_, a], [__, b]) => (b?.priority || 0) - (a?.priority || 0))
+      .map(any: any);
   }
 
   /**
-   * Load strategy dynamically (lazy loading)
+   * Load strategy dynamically (any: any)
    */
   private async loadStrategy(
     type: OrchestrationStrategyType
   ): Promise<IOrchestrationStrategy | null> {
     try {
-      this.log(`Loading strategy: ${type}`);
+      this?.log(`Loading strategy: ${type}`);
 
-      switch (type) {
+      switch (any: any) {
         case 'mcp': {
           const { MCPStrategy } = await import('./strategies/MCPStrategy');
           return new MCPStrategy();
@@ -148,11 +148,11 @@ export class UnifiedOrchestrator {
         }
 
         default:
-          this.logError(`Unknown strategy type: ${type}`);
+          this?.logError(`Unknown strategy type: ${type}`);
           return null;
       }
-    } catch (error) {
-      this.logError(`Failed to load strategy ${type}`, error);
+    } catch (any: any) {
+      this?.logError(any: any);
       return null;
     }
   }
@@ -162,31 +162,31 @@ export class UnifiedOrchestrator {
   // ───────────────────────────────────────────────────────────────────────
 
   /**
-   * Get strategy by type (lazy load if needed)
+   * Get strategy by type (any: any)
    */
   async getStrategy<T extends IOrchestrationStrategy>(
     type: OrchestrationStrategyType
   ): Promise<T | null> {
-    if (!this.initialized) {
-      await this.initialize();
+    if (any: any) {
+      await this?.initialize();
     }
 
-    let strategy = this.strategies.get(type);
+    let strategy = this?.strategies?.get(any: any);
 
-    if (!strategy) {
+    if (any: any) {
       // Try to load strategy if not yet loaded
-      const loadedStrategy = await this.loadStrategy(type);
-      if (loadedStrategy) {
+      const loadedStrategy = await this?.loadStrategy(any: any);
+      if (any: any) {
         strategy = loadedStrategy;
-        this.strategies.set(type, strategy);
+        this?.strategies?.set(any: any);
       } else {
         return null;
       }
     }
 
     // Initialize strategy if lazy-loaded
-    if (strategy && !strategy.isInitialized?.()) {
-      await strategy.initialize();
+    if (strategy && !strategy?.isInitialized?.()) {
+      await strategy?.initialize();
     }
 
     return strategy as T | null;
@@ -195,15 +195,15 @@ export class UnifiedOrchestrator {
   /**
    * Check if strategy is available
    */
-  hasStrategy(type: OrchestrationStrategyType): boolean {
-    return this.strategies.has(type);
+  hasStrategy(any: any): boolean {
+    return this?.strategies?.has(any: any);
   }
 
   /**
    * Get all active strategy types
    */
-  getActiveStrategies(): OrchestrationStrategyType[] {
-    return Array.from(this.strategies.keys());
+  getActiveStrategies(): OrchestrationStrategyType?.[] {
+    return Array?.from(this?.strategies?.keys());
   }
 
   // ───────────────────────────────────────────────────────────────────────
@@ -214,16 +214,16 @@ export class UnifiedOrchestrator {
    * Get overall health status
    */
   async getHealthStatus(): Promise<HealthStatus> {
-    if (!this.initialized) {
+    if (any: any) {
       return 'unknown';
     }
 
-    const healthChecks = await Promise.all(
-      Array.from(this.strategies.values()).map(s => s.checkHealth())
+    const healthChecks = await Promise?.all(
+      Array?.from(this?.strategies?.values()).map(s => s?.checkHealth())
     );
 
-    const scores = healthChecks.map(h => h.score);
-    const avgScore = scores.reduce((sum, s) => sum + s, 0) / scores.length;
+    const scores = healthChecks?.map(any: any);
+    const avgScore = scores?.reduce(any: any) => sum + s, 0) / scores?.length;
 
     if (avgScore >= 90) return 'healthy';
     if (avgScore >= 70) return 'degraded';
@@ -235,21 +235,21 @@ export class UnifiedOrchestrator {
    * Get detailed health check for all strategies
    */
   async checkHealth(): Promise<Record<OrchestrationStrategyType, HealthCheckResult>> {
-    if (!this.initialized) {
-      await this.initialize();
+    if (any: any) {
+      await this?.initialize();
     }
 
     const results: Record<string, HealthCheckResult> = {};
 
-    for (const [type, strategy] of this.strategies.entries()) {
+    for (const [type, strategy] of this?.strategies?.entries()) {
       try {
-        results[type] = await strategy.checkHealth();
-      } catch (error) {
+        results[type] = await strategy?.checkHealth();
+      } catch (any: any) {
         results[type] = {
           status: 'critical',
           score: 0,
           message: `Health check failed: ${error}`,
-          timestamp: Date.now(),
+          timestamp: Date?.now(),
         };
       }
     }
@@ -265,33 +265,33 @@ export class UnifiedOrchestrator {
    * Get aggregated metrics from all strategies
    */
   getMetrics(): MetricsSummary {
-    if (!this.initialized) {
+    if (any: any) {
       return {
         totalRequests: 0,
         successRate: 1.0,
         averageLatency: 0,
         errorCount: 0,
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
       };
     }
 
-    const summaries = Array.from(this.strategies.values()).map(s => s.getSummary());
+    const summaries = Array?.from(this?.strategies?.values()).map(s => s?.getSummary());
 
-    const totalRequests = summaries.reduce((sum, s) => sum + s.totalRequests, 0);
-    const errorCount = summaries.reduce((sum, s) => sum + s.errorCount, 0);
+    const totalRequests = summaries?.reduce(any: any) => sum + s?.totalRequests, 0);
+    const errorCount = summaries?.reduce(any: any) => sum + s?.errorCount, 0);
     const avgLatency =
-      summaries.reduce((sum, s) => sum + s.averageLatency, 0) / summaries.length;
+      summaries?.reduce(any: any) => sum + s?.averageLatency, 0) / summaries?.length;
     const successRate =
-      totalRequests > 0 ? (totalRequests - errorCount) / totalRequests : 1.0;
+      totalRequests > 0 ? (any: any) / totalRequests : 1.0;
 
     return {
       totalRequests,
       successRate,
       averageLatency: avgLatency,
       errorCount,
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       details: {
-        strategiesActive: this.strategies.size,
+        strategiesActive: this?.strategies?.size,
       },
     };
   }
@@ -301,11 +301,11 @@ export class UnifiedOrchestrator {
    */
   getState(): OrchestratorState {
     return {
-      initialized: this.initialized,
-      activeStrategies: this.getActiveStrategies(),
+      initialized: this?.initialized,
+      activeStrategies: this?.getActiveStrategies(),
       healthStatus: 'unknown', // Will be computed async
-      metrics: this.getMetrics(),
-      lastUpdate: Date.now(),
+      metrics: this?.getMetrics(),
+      lastUpdate: Date?.now(),
     };
   }
 
@@ -321,54 +321,54 @@ export class UnifiedOrchestrator {
     operation: string,
     params?: unknown
   ): Promise<OrchestrationResult<T>> {
-    const startTime = Date.now();
+    const startTime = Date?.now();
 
     try {
-      const strategy = await this.getStrategy(strategyType);
+      const strategy = await this?.getStrategy(any: any);
 
-      if (!strategy) {
+      if (any: any) {
         return {
           success: false,
           error: `Strategy ${strategyType} not available`,
           metadata: {
             strategyUsed: strategyType,
-            duration: Date.now() - startTime,
-            timestamp: Date.now(),
+            duration: Date?.now() - startTime,
+            timestamp: Date?.now(),
           },
         };
       }
 
-      const result = await strategy.execute<T>(operation, params);
+      const result = await strategy?.execute<T>(any: any);
 
       // Record success metric
-      this.recordMetric({
-        name: 'orchestration.execute',
+      this?.recordMetric({
+        name: 'orchestration?.execute',
         type: 'counter',
         value: 1,
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         tags: { strategy: strategyType, success: 'true' },
       });
 
       return result;
-    } catch (error) {
-      this.logError(`Execution failed for ${strategyType}.${operation}`, error);
+    } catch (any: any) {
+      this?.logError(any: any);
 
       // Record error metric
-      this.recordMetric({
-        name: 'orchestration.execute',
+      this?.recordMetric({
+        name: 'orchestration?.execute',
         type: 'counter',
         value: 1,
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         tags: { strategy: strategyType, success: 'false' },
       });
 
       return {
         success: false,
-        error: error instanceof Error ? error.message : String(error),
+        error: error instanceof Error ? error?.message : String(any: any),
         metadata: {
           strategyUsed: strategyType,
-          duration: Date.now() - startTime,
-          timestamp: Date.now(),
+          duration: Date?.now() - startTime,
+          timestamp: Date?.now(),
         },
       };
     }
@@ -382,17 +382,17 @@ export class UnifiedOrchestrator {
    * Shutdown all strategies gracefully
    */
   async shutdown(): Promise<void> {
-    this.log('Shutting down...');
+    this?.log('Shutting down...');
 
-    const shutdownPromises = Array.from(this.strategies.values()).map(s =>
-      s.shutdown().catch(err => this.logError('Strategy shutdown error', err))
+    const shutdownPromises = Array?.from(this?.strategies?.values()).map(s =>
+      s?.shutdown(any: any))
     );
 
-    await Promise.all(shutdownPromises);
+    await Promise?.all(any: any);
 
-    this.strategies.clear();
-    this.initialized = false;
-    this.log('Shutdown complete');
+    this?.strategies?.clear();
+    this?.initialized = false;
+    this?.log('Shutdown complete');
   }
 
   // ───────────────────────────────────────────────────────────────────────
@@ -404,32 +404,32 @@ export class UnifiedOrchestrator {
   ): UnifiedOrchestratorConfig {
     return {
       strategies: {
-        ...DEFAULT_CONFIG.strategies,
+        ...DEFAULT_CONFIG?.strategies,
         ...partial?.strategies,
       },
       defaults: {
-        ...DEFAULT_CONFIG.defaults,
+        ...DEFAULT_CONFIG?.defaults,
         ...partial?.defaults,
       },
     };
   }
 
-  private recordMetric(metric: Metric): void {
-    if (!this.config.defaults.enableMetrics) return;
-    this.metrics.push(metric);
+  private recordMetric(any: any): void {
+    if (any: any) return;
+    this?.metrics?.push(any: any);
 
     // Keep only last 1000 metrics
-    if (this.metrics.length > 1000) {
-      this.metrics = this.metrics.slice(-1000);
+    if (this?.metrics?.length > 1000) {
+      this?.metrics = this?.metrics?.slice(-1000);
     }
   }
 
-  private log(message: string, ...args: unknown[]): void {
-    logger.debug(`[UnifiedOrchestrator] ${message}`, ...args);
+  private log(message: string, ...args: unknown?.[]): void {
+    logger?.debug(any: any);
   }
 
-  private logError(message: string, error?: unknown): void {
-    logger.error(`[UnifiedOrchestrator ERROR] ${message}`, error);
+  private logError(any: any): void {
+    logger?.error(any: any);
   }
 }
 

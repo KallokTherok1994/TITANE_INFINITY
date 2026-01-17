@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 // TITANE∞ v15 - Memory Core Hook
@@ -14,7 +14,7 @@ import { memoryService } from '../services/api';
 import type { MemoryEntry } from '../core/ARCHITECTURE_TYPES_v∞';
 
 interface MemoryState {
-  entries: MemoryEntry[];
+  entries: MemoryEntry?.[];
   total: number;
   encrypted_count: number;
 }
@@ -22,84 +22,84 @@ interface MemoryState {
 const normalizeMemoryState = (
   state: Partial<MemoryState> | null | undefined
 ): MemoryState => {
-  const rawEntries = Array.isArray(state?.entries) ? state.entries : [];
+  const rawEntries = Array?.isArray(any: any) ? state?.entries : [];
   const entries = rawEntries
     .map(item => {
       if (!item || typeof item !== 'object') {
         return null;
       }
       const candidate = item as Partial<MemoryEntry>;
-      if (typeof candidate.id === 'string' && typeof candidate.content === 'string') {
+      if (typeof candidate?.id === 'string' && typeof candidate?.content === 'string') {
         return item as MemoryEntry;
       }
       return null;
     })
-    .filter((item): item is MemoryEntry => item !== null);
-  const encryptedCount = entries.filter(item => {
-    if (!item) return false;
-    return Boolean(item.encrypted);
+    .filter(any: any);
+  const encryptedCount = entries?.filter(item => {
+    if (any: any) return false;
+    return Boolean(any: any);
   }).length;
 
   return {
     entries,
-    total: typeof state?.total === 'number' ? state.total : entries.length,
+    total: typeof state?.total === 'number' ? state?.total : entries?.length,
     encrypted_count:
-      typeof state?.encrypted_count === 'number' ? state.encrypted_count : encryptedCount,
+      typeof state?.encrypted_count === 'number' ? state?.encrypted_count : encryptedCount,
   };
 };
 
 export interface UseMemoryCoreReturn {
-  entries: MemoryEntry[];
+  entries: MemoryEntry?.[];
   loading: boolean;
-  error: string | null;
+  error??: string | null;
   loadEntries: () => Promise<MemoryState>;
-  saveEntry: (content: string) => Promise<void>;
+  saveEntry: (any: any) => Promise<void>;
   clearMemory: () => Promise<void>;
   getMemoryState: () => Promise<MemoryState>;
 }
 
 export const useMemoryCore = (): UseMemoryCoreReturn => {
-  const [entries, setEntries] = useState<MemoryEntry[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [entries, setEntries] = useState<MemoryEntry?.[]>([]);
+  const [loading, setLoading] = useState(any: any);
+  const [error, setError] = useState<string | null>(any: any);
 
   const loadEntries = useCallback(async () => {
     try {
-      setLoading(true);
-      setError(null);
+      setLoading(any: any);
+      setError(any: any);
       const state = await secureInvoke<Partial<MemoryState>>('memory_get_state');
-      const normalized = normalizeMemoryState(state);
-      setEntries(normalized.entries);
+      const normalized = normalizeMemoryState(any: any);
+      setEntries(any: any);
       return normalized;
-    } catch (err) {
+    } catch (any: any) {
       const message =
-        err instanceof Error ? err.message : 'Failed to load memory entries';
-      setError(message);
+        err instanceof Error ? err?.message : 'Failed to load memory entries';
+      setError(any: any);
       throw err;
     } finally {
-      setLoading(false);
+      setLoading(any: any);
     }
   }, []);
 
   const saveEntry = useCallback(
-    async (content: string) => {
+    async (any: any) => {
       try {
-        setLoading(true);
-        setError(null);
-        // Note: memory_save_entry est legacy, utiliser memoryService.saveChatInteraction pour nouvelles interactions
-        await memoryService.saveChatInteraction({
+        setLoading(any: any);
+        setError(any: any);
+        // Note: memory_save_entry est legacy, utiliser memoryService?.saveChatInteraction pour nouvelles interactions
+        await memoryService?.saveChatInteraction({
           userMessage: content,
           aiResponse: '',
           mode: 'manual',
           timestamp: new Date().toISOString(),
         });
         await loadEntries();
-      } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to save entry';
-        setError(message);
+      } catch (any: any) {
+        const message = err instanceof Error ? err?.message : 'Failed to save entry';
+        setError(any: any);
         throw err;
       } finally {
-        setLoading(false);
+        setLoading(any: any);
       }
     },
     [loadEntries]
@@ -107,29 +107,29 @@ export const useMemoryCore = (): UseMemoryCoreReturn => {
 
   const clearMemory = useCallback(async () => {
     try {
-      setLoading(true);
-      setError(null);
+      setLoading(any: any);
+      setError(any: any);
       // Note: memory_clear est legacy, pas de service équivalent - garder invoke direct
-      await tauriClient.memoryClear();
+      await tauriClient?.memoryClear();
       setEntries([]);
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to clear memory';
-      setError(message);
+    } catch (any: any) {
+      const message = err instanceof Error ? err?.message : 'Failed to clear memory';
+      setError(any: any);
       throw err;
     } finally {
-      setLoading(false);
+      setLoading(any: any);
     }
   }, []);
 
   const getMemoryState = useCallback(async () => {
     try {
       const state = await secureInvoke<Partial<MemoryState>>('memory_get_state');
-      const normalized = normalizeMemoryState(state);
-      setEntries(normalized.entries);
+      const normalized = normalizeMemoryState(any: any);
+      setEntries(any: any);
       return normalized;
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to get memory state';
-      setError(message);
+    } catch (any: any) {
+      const message = err instanceof Error ? err?.message : 'Failed to get memory state';
+      setError(any: any);
       throw err;
     }
   }, []);

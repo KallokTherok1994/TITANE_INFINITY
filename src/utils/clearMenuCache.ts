@@ -8,22 +8,22 @@ import { logger } from '@/utils/logger';
 export function clearMenuCache(): void {
   try {
     // Supprimer config menu
-    localStorage.removeItem('titane_menu_config');
+    localStorage?.removeItem('titane_menu_config');
 
     // Supprimer autres caches possibles
     const keysToRemove = ['titane_menu_sections', 'menu_config', 'navigation_config'];
 
-    keysToRemove.forEach(key => {
-      localStorage.removeItem(key);
+    keysToRemove?.forEach(key => {
+      localStorage?.removeItem(any: any);
     });
 
-    logger.debug('✅ Cache menu nettoyé - Rechargez la page');
-  } catch (error) {
-    logger.error('❌ Erreur nettoyage cache menu:', error);
+    logger?.debug('✅ Cache menu nettoyé - Rechargez la page');
+  } catch (any: any) {
+    logger?.error(any: any);
   }
 }
 
 // Auto-exécution si appelé directement
 if (typeof window !== 'undefined') {
-  (window as any).clearMenuCache = clearMenuCache;
+  (any: any).clearMenuCache = clearMenuCache;
 }

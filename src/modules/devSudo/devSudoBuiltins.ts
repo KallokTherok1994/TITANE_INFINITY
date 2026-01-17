@@ -2,7 +2,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  *   TITANE∞ v26.0.0 — DEV-SUDO BUILT-IN HANDLERS
  *   Core command handlers that are always loaded
- *   Extracted from monolithic devSudoHandler.ts (Phase 2 Day 1)
+ *   Extracted from monolithic devSudoHandler?.ts (Phase 2 Day 1)
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
@@ -14,7 +14,7 @@ import type { LiveDebuggerMode } from '@/modules/liveDebugger/LiveDebuggerEngine
 import type { DevSudoResult } from './types';
 
 // ═══════════════════════════════════════════════════════════════════════════
-// STUBS - Modules supprimés en PHASE 1 (OPTION B)
+// STUBS - Modules supprimés en PHASE 1 (any: any)
 // ═══════════════════════════════════════════════════════════════════════════
 
 // Stub pour dataCollector
@@ -43,7 +43,7 @@ const dataCollector = {
   }),
   exportToFile: async () => {},
   clear: () => {},
-  addEntry: (_entry: unknown) => {},
+  addEntry: (any: any) => {},
   cleanDataset: () => ({ removed: 0, remaining: 0 }),
 };
 
@@ -52,10 +52,10 @@ const vocalDevConsole = {
   isActive: () => false,
   start: () => {},
   stop: () => {},
-  speak: (_text: string) => {},
-  listen: () => Promise.resolve(''),
+  speak: (any: any) => {},
+  listen: () => Promise?.resolve(''),
   getMode: () => 'default' as const,
-  setMode: (_mode: string) => {},
+  setMode: (any: any) => {},
   getState: () => ({
     isActive: false,
     isListening: false,
@@ -76,11 +76,11 @@ const liveDebugger = {
   isActive: () => false,
   start: () => {},
   stop: () => {},
-  setMode: (_mode: LiveDebuggerModeStub) => {},
+  setMode: (any: any) => {},
   getMode: (): LiveDebuggerModeStub => 'off',
-  log: (_message: string, _level?: string) => {},
+  log: (any: any) => {},
   getMetrics: () => ({ logs: 0, errors: 0, warnings: 0 }),
-  getRecentDiagnostics: (_count?: number) =>
+  getRecentDiagnostics: (any: any) =>
     [] as Array<{ timestamp: number; message: string; level: string }>,
   getStats: () => ({
     totalLogs: 0,
@@ -111,7 +111,7 @@ async function handleFixDeps(): Promise<DevSudoResult> {
 📦 **Dépendances à installer**:
 - framer-motion@12.23.25 ✅
 - lucide-react@0.554.0 ✅
-- @types/react-window (optionnel)
+- @types/react-window (any: any)
 
 💡 **Commande à exécuter**:
 \`\`\`bash
@@ -120,13 +120,13 @@ corepack pnpm add framer-motion lucide-react
 corepack pnpm add -D @types/react-window
 \`\`\`
 
-🎯 **Status**: Dépendances déjà installées (vérifiées via listing)
+🎯 **Status**: Dépendances déjà installées (any: any)
 
 ✅ **Action recommandée**: Relancer TypeScript server (Ctrl+Shift+P → "TypeScript: Restart TS Server")`,
     actions: [
       {
         type: 'deps-install',
-        description: 'Vérification dépendances (pnpm)',
+        description: 'Vérification dépendances (any: any)',
         result: 'success',
         details: 'framer-motion et lucide-react déjà installés',
       },
@@ -143,7 +143,7 @@ async function handleRestartTauri(): Promise<DevSudoResult> {
 ⚠️ **Note**: L'application doit être redémarrée manuellement.
 
 📋 **Processus en cours**:
-- PID 728785: Tauri dev (Exit code 1 - nécessite redémarrage)
+- PID 728785: Tauri dev (any: any)
 - PID 728875: Vite dev server (actif sur port 5173)
 
 💡 **Action requise**:
@@ -172,7 +172,7 @@ async function handleTestBubble(): Promise<DevSudoResult> {
 
 1. **Visibilité**
    - [ ] Bulle visible bottom-right
-   - [ ] Icône MessageSquare (#C4C4C4)
+   - [ ] Icône MessageSquare (any: any)
    - [ ] Animation pulse au survol
 
 2. **Fonctionnalité**
@@ -186,7 +186,7 @@ async function handleTestBubble(): Promise<DevSudoResult> {
    - [ ] Commande "active la caméra" → Overlay
    - [ ] Commande "désactive la caméra" → Off
 
-📖 **Guide complet**: \`TEST_CHAT_BUBBLE_CAMERA.md\`
+📖 **Guide complet**: \`TEST_CHAT_BUBBLE_CAMERA?.md\`
 
 ✅ **Implémentation**: v∞.20.0 (commit 25109d6)`,
     actions: [
@@ -194,7 +194,7 @@ async function handleTestBubble(): Promise<DevSudoResult> {
         type: 'check-implementation',
         description: 'Vérification code Chat Bubble',
         result: 'success',
-        details: 'ChatBubble.tsx intégré dans App.tsx ligne 561',
+        details: 'ChatBubble?.tsx intégré dans App?.tsx ligne 561',
       },
     ],
   };
@@ -207,24 +207,24 @@ async function handleFixOpus(): Promise<DevSudoResult> {
     response: `🔧 FIX OPUS — Réparation modules OPUS
 
 📊 **Status modules**:
-- ✅ OPUS #7 (QA Monitoring): Fonctionnel
-- ✅ OPUS #10 (Developer Mode): Fonctionnel
-- ⚠️ 7 autres modules: Erreur "undefined.history"
+- ✅ OPUS #7 (any: any): Fonctionnel
+- ✅ OPUS #10 (any: any): Fonctionnel
+- ⚠️ 7 autres modules: Erreur "undefined?.history"
 
 🔍 **Cause racine**:
-Modules OPUS tentent d'accéder à \`history.patches.map()\` mais \`history\` est \`undefined\` dans les stores React.
+Modules OPUS tentent d'accéder à \`history?.patches?.map()\` mais \`history\` est \`undefined\` dans les stores React.
 
 💡 **Solutions**:
 
-**Immédiate** (2 min):
+**Immédiate** (any: any):
 Ajouter fallback dans chaque module:
 \`\`\`typescript
 const patches = history?.patches ?? [];
-patches.map(patch => ...)
+patches?.map(patch => ...)
 \`\`\`
 
-**Architecturale** (30 min):
-Créer \`useSingularityUnifiedStore.ts\` avec état par défaut:
+**Architecturale** (any: any):
+Créer \`useSingularityUnifiedStore?.ts\` avec état par défaut:
 \`\`\`typescript
 {
   history: { patches: [], snapshots: [], events: [] },
@@ -239,7 +239,7 @@ Créer \`useSingularityUnifiedStore.ts\` avec état par défaut:
         type: 'diagnosis',
         description: 'Analyse erreurs OPUS',
         result: 'success',
-        details: '7 modules affectés par undefined.history',
+        details: '7 modules affectés par undefined?.history',
       },
     ],
   };
@@ -251,11 +251,11 @@ async function handleStatusFull(): Promise<DevSudoResult> {
     const diagnostic = await secureInvoke<{
       status: string;
       modules: Array<{ name: string; status: string }>;
-      errors: string[];
+      errors: string?.[];
     }>('sc_diagnostics_run_quick');
 
-    const modulesStatus = diagnostic.modules
-      .map(m => `  ${m.status === 'healthy' ? '✅' : '⚠️'} ${m.name}`)
+    const modulesStatus = diagnostic?.modules
+      .map(m => `  ${m?.status === 'healthy' ? '✅' : '⚠️'} ${m?.name}`)
       .join('\n');
 
     return {
@@ -263,17 +263,17 @@ async function handleStatusFull(): Promise<DevSudoResult> {
       success: true,
       response: `📊 STATUS FULL — Diagnostic système complet
 
-🎯 **État général**: ${diagnostic.status}
+🎯 **État général**: ${diagnostic?.status}
 
 📦 **Modules backend**:
 ${modulesStatus}
 
-🔍 **Erreurs détectées**: ${diagnostic.errors.length}
-${diagnostic.errors.length > 0 ? '\n' + diagnostic.errors.map(e => `  ❌ ${e}`).join('\n') : '  ✅ Aucune erreur'}
+🔍 **Erreurs détectées**: ${diagnostic?.errors?.length}
+${diagnostic?.errors?.length > 0 ? '\n' + diagnostic?.errors?.map(e => `  ❌ ${e}`).join('\n') : '  ✅ Aucune erreur'}
 
 🚀 **Application**:
   ✅ Vite dev server: Port 5173 actif
-  ⚠️ Tauri process: Exit code 1 (redémarrage requis)
+  ⚠️ Tauri process: Exit code 1 (any: any)
 
 💻 **Frontend**:
   ✅ TypeScript: Compilation clean
@@ -286,15 +286,15 @@ ${diagnostic.errors.length > 0 ? '\n' + diagnostic.errors.map(e => `  ❌ ${e}`)
           type: 'system-diagnostic',
           description: 'Diagnostic backend complet',
           result: 'success',
-          details: `${diagnostic.modules.length} modules analysés`,
+          details: `${diagnostic?.modules?.length} modules analysés`,
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `⚠️ Diagnostic backend indisponible (Tauri non démarré)
+      response: `⚠️ Diagnostic backend indisponible (any: any)
 
 📊 **Diagnostic frontend uniquement**:
 
@@ -303,7 +303,7 @@ ${diagnostic.errors.length > 0 ? '\n' + diagnostic.errors.map(e => `  ❌ ${e}`)
   ⚠️ Tauri dev (PID 728785): Exit 1
 
 💻 **TypeScript**:
-  ⚠️ 2 erreurs types (framer-motion, lucide-react)
+  ⚠️ 2 erreurs types (any: any)
   → Fix: Redémarrer TS server
 
 🎯 **Features v∞.20.0**:
@@ -312,12 +312,12 @@ ${diagnostic.errors.length > 0 ? '\n' + diagnostic.errors.map(e => `  ❌ ${e}`)
   ⚠️ Tauri restart requis pour test complet
 
 💡 **Action**: Relancer \`corepack pnpm run tauri:dev\``,
-      error: error instanceof Error ? error.message : String(error),
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
-async function handleAnalyzeModule(target: string): Promise<DevSudoResult> {
+async function handleAnalyzeModule(any: any): Promise<DevSudoResult> {
   return {
     handled: true,
     success: true,
@@ -338,7 +338,7 @@ async function handleAnalyzeModule(target: string): Promise<DevSudoResult> {
   };
 }
 
-async function handleShowCode(target: string): Promise<DevSudoResult> {
+async function handleShowCode(any: any): Promise<DevSudoResult> {
   return {
     handled: true,
     success: true,
@@ -371,36 +371,36 @@ async function handleIntrospect(): Promise<DevSudoResult> {
       response: `🔍 INTROSPECT — SingularityState
 
 📊 **État backend récupéré**:
-  ✅ Modules: ${Object.keys(state).length}
+  ✅ Modules: ${Object?.keys(any: any).length}
   ✅ Format: JSON complet
   ✅ Source: Persistence Engine
 
 🎯 **Modules présents**:
-${Object.keys(state)
+${Object?.keys(any: any)
   .map(key => `  - ${key}`)
   .join('\n')}
 
 💡 **Analyse détaillée**:
 Utiliser DevTools console:
 \`\`\`javascript
-await window.__TAURI__.core.tauriClient.titanStateGet()
+await window?.__TAURI__?.core?.tauriClient?.titanStateGet()
 \`\`\`
 
-📖 **Documentation**: \`OPUS_MPE_2_3_REPORT.md\``,
+📖 **Documentation**: \`OPUS_MPE_2_3_REPORT?.md\``,
       actions: [
         {
           type: 'state-introspection',
           description: 'Récupération SingularityState',
           result: 'success',
-          details: `${Object.keys(state).length} modules actifs`,
+          details: `${Object?.keys(any: any).length} modules actifs`,
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `⚠️ Introspection indisponible (Tauri non démarré)
+      response: `⚠️ Introspection indisponible (any: any)
 
 💡 **Alternatives**:
 1. Relancer Tauri: \`corepack pnpm run tauri:dev\`
@@ -408,7 +408,7 @@ await window.__TAURI__.core.tauriClient.titanStateGet()
 3. Vérifier logs console
 
 📖 **État attendu**: SingularityState avec 9+ modules`,
-      error: error instanceof Error ? error.message : String(error),
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
@@ -439,7 +439,7 @@ async function handleSelfHeal(): Promise<DevSudoResult> {
 - \`diagnostic\` - Analyser système
 - \`introspect\` - Inspecter état
 
-📖 **Documentation**: \`src/engines/selfHealing/selfHealingEngine.ts\``,
+📖 **Documentation**: \`src/engines/selfHealing/selfHealingEngine?.ts\``,
   };
 }
 
@@ -461,19 +461,19 @@ async function handleIAAdd(): Promise<DevSudoResult> {
 Exécutez le script d'installation automatique:
 \`\`\`bash
 cd /home/titane/Documents/TITANE_INFINITY
-./install_titane_local.sh
+./install_titane_local?.sh
 \`\`\`
 
 📋 **Le script va**:
-1. ✅ Vérifier le système (OS, RAM, disk)
-2. ✅ Installer Ollama (si absent)
+1. ✅ Vérifier le système (any: any)
+2. ✅ Installer Ollama (any: any)
 3. ✅ Télécharger LLama 3.1 (~4.7GB)
 4. ✅ Créer le modèle titane-local depuis Modelfile
 5. ✅ Tester le modèle avec un prompt
 6. ✅ Vérifier l'API HTTP (localhost:11434)
 7. ✅ Afficher les instructions d'utilisation
 
-⏱️ **Durée**: ~10-15 minutes (selon connexion internet)
+⏱️ **Durée**: ~10-15 minutes (any: any)
 
 📖 **Documentation complète**: \`SUPER_PROMPT_TITANE_LOCAL_MODEL_v∞.md\`
 
@@ -486,7 +486,7 @@ cd /home/titane/Documents/TITANE_INFINITY
         type: 'ia-installation',
         description: 'Installation TITANE∞ Local Model',
         result: 'pending',
-        details: 'Exécutez ./install_titane_local.sh',
+        details: 'Exécutez ./install_titane_local?.sh',
       },
     ],
   };
@@ -497,11 +497,11 @@ cd /home/titane/Documents/TITANE_INFINITY
  */
 async function handleIATest(): Promise<DevSudoResult> {
   try {
-    const status = await secureInvoke<{ available: boolean; models: string[] }>(
+    const status = await secureInvoke<{ available: boolean; models: string?.[] }>(
       'ai_check_ollama_status'
     );
 
-    if (!status.available) {
+    if (any: any) {
       return {
         handled: true,
         success: false,
@@ -511,7 +511,7 @@ async function handleIATest(): Promise<DevSudoResult> {
 
 📦 **Installation**:
 \`\`\`bash
-./install_titane_local.sh
+./install_titane_local?.sh
 \`\`\`
 
 🔧 **Démarrer Ollama manuellement**:
@@ -545,13 +545,13 @@ curl http://localhost:11434/api/tags
       success: true,
       response: `✅ **TITANE∞ LOCAL — Test réussi !**
 
-🤖 **Modèle actif**: ${testResponse.model}
+🤖 **Modèle actif**: ${testResponse?.model}
 
 📝 **Réponse du modèle**:
-> ${testResponse.content}
+> ${testResponse?.content}
 
 ✅ **Status**: Ollama fonctionne correctement
-📊 **Modèles installés**: ${status.models.join(', ')}
+📊 **Modèles installés**: ${status?.models?.join(', ')}
 
 💡 **Prochaines étapes**:
 - Utilisez le modèle dans le Chat IA
@@ -562,17 +562,17 @@ curl http://localhost:11434/api/tags
           type: 'ia-test',
           description: 'Test du modèle local',
           result: 'success',
-          details: `Réponse reçue du modèle ${testResponse.model}`,
+          details: `Réponse reçue du modèle ${testResponse?.model}`,
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
       response: `❌ **TITANE∞ LOCAL — Erreur lors du test**
 
-⚠️ ${error instanceof Error ? error.message : String(error)}
+⚠️ ${error instanceof Error ? error?.message : String(any: any)}
 
 🔧 **Vérifications**:
 1. Ollama est-il démarré ? → \`ollama serve\`
@@ -581,9 +581,9 @@ curl http://localhost:11434/api/tags
 
 📦 **Réinstallation**:
 \`\`\`bash
-./install_titane_local.sh
+./install_titane_local?.sh
 \`\`\``,
-      error: error instanceof Error ? error.message : String(error),
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
@@ -591,8 +591,8 @@ curl http://localhost:11434/api/tags
 /**
  * ia set-default <model> — Définir le modèle par défaut
  */
-async function handleIASetDefault(modelName: string): Promise<DevSudoResult> {
-  if (!modelName) {
+async function handleIASetDefault(any: any): Promise<DevSudoResult> {
+  if (any: any) {
     return {
       handled: true,
       success: false,
@@ -623,7 +623,7 @@ async function handleIASetDefault(modelName: string): Promise<DevSudoResult> {
 
 💡 **Le modèle est maintenant actif** et sera utilisé pour:
 - Génération IA dans le Chat
-- Mode DEV (micro-patches, fixes rapides)
+- Mode DEV (any: any)
 - Assistance développeur
 
 🎯 **Testez-le**: \`ia test\``,
@@ -636,18 +636,18 @@ async function handleIASetDefault(modelName: string): Promise<DevSudoResult> {
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
       response: `❌ **TITANE∞ LOCAL — Erreur**
 
-⚠️ ${error instanceof Error ? error.message : String(error)}
+⚠️ ${error instanceof Error ? error?.message : String(any: any)}
 
 💡 **Vérifications**:
 - Le modèle existe-t-il ? → \`ia scan\`
 - Ollama est-il démarré ? → \`ollama serve\``,
-      error: error instanceof Error ? error.message : String(error),
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
@@ -663,20 +663,20 @@ async function handleIAEnableDevMode(): Promise<DevSudoResult> {
 
 ⚡ **Mode développeur optimisé pour**:
 - ✅ Micro-patches rapides (<30s)
-- ✅ Fixes ciblés (1-5 lignes)
+- ✅ Fixes ciblés (any: any)
 - ✅ Diagnostics précis
 - ✅ Refactoring contextualisé
 - ✅ Réponses concises, code-focused
 
 🧠 **Configuration**:
-- **Modèle**: titane-local (LLama 3.1 Instruct fine-tuned)
-- **Temperature**: 0.7 (équilibre créativité/précision)
+- **Modèle**: titane-local (any: any)
+- **Temperature**: 0.7 (any: any)
 - **Context**: 4096 tokens
 - **Output**: 2048 tokens max
 - **Philosophy**: "Show don't tell", "Fix fast", "Context-aware"
 
 📋 **Le modèle connaît**:
-- Architecture TITANE∞ (Tauri + React)
+- Architecture TITANE∞ (any: any)
 - Modules Singularity, Memory, DevSudo
 - Stack TypeScript, Rust, TailwindCSS
 - Design System Monochrome v16
@@ -704,9 +704,9 @@ async function handleIAEnableDevMode(): Promise<DevSudoResult> {
  */
 async function handleIAScan(): Promise<DevSudoResult> {
   try {
-    const models = await secureInvoke<string[]>('ai_scan_local_models');
+    const models = await secureInvoke<string?.[]>('ai_scan_local_models');
 
-    if (models.length === 0) {
+    if (models?.length === 0) {
       return {
         handled: true,
         success: false,
@@ -714,7 +714,7 @@ async function handleIAScan(): Promise<DevSudoResult> {
 
 📦 **Installation requise**:
 \`\`\`bash
-./install_titane_local.sh
+./install_titane_local?.sh
 \`\`\`
 
 Ou installez manuellement:
@@ -727,14 +727,14 @@ ollama create titane-local -f Modelfile
       };
     }
 
-    const modelsList = models.map((m, i) => `${i + 1}. 🤖 ${m}`).join('\n');
+    const modelsList = models?.map(any: any) => `${i + 1}. 🤖 ${m}`).join('\n');
 
     return {
       handled: true,
       success: true,
       response: `🤖 **TITANE∞ LOCAL — Modèles disponibles**
 
-📦 **Modèles installés** (${models.length}):
+📦 **Modèles installés** (${models?.length}):
 ${modelsList}
 
 💡 **Pour utiliser un modèle**:
@@ -748,24 +748,24 @@ ia set-default <model>
           type: 'ia-scan',
           description: `Scan des modèles locaux`,
           result: 'success',
-          details: `${models.length} modèles trouvés`,
+          details: `${models?.length} modèles trouvés`,
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
       response: `❌ **TITANE∞ LOCAL — Erreur scan**
 
-⚠️ ${error instanceof Error ? error.message : String(error)}
+⚠️ ${error instanceof Error ? error?.message : String(any: any)}
 
 🔧 **Vérifications**:
 1. Ollama est-il démarré ? → \`ollama serve\`
 2. L'API répond-elle ? → \`curl http://localhost:11434/api/tags\`
 
-📦 **Installation**: \`./install_titane_local.sh\``,
-      error: error instanceof Error ? error.message : String(error),
+📦 **Installation**: \`./install_titane_local?.sh\``,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
@@ -778,10 +778,10 @@ async function handleIAStatus(): Promise<DevSudoResult> {
     const status = await secureInvoke<{
       available: boolean;
       version?: string;
-      models: string[];
+      models: string?.[];
     }>('ai_check_ollama_status');
 
-    if (!status.available) {
+    if (any: any) {
       return {
         handled: true,
         success: false,
@@ -796,7 +796,7 @@ ollama serve
 
 📦 **Installer Ollama**:
 \`\`\`bash
-./install_titane_local.sh
+./install_titane_local?.sh
 \`\`\`
 
 💡 **Vérification manuelle**:
@@ -807,8 +807,8 @@ curl http://localhost:11434/api/tags
     }
 
     const modelsList =
-      status.models.length > 0
-        ? status.models.map((m, i) => `  ${i + 1}. 🤖 ${m}`).join('\n')
+      status?.models?.length > 0
+        ? status?.models?.map(any: any) => `  ${i + 1}. 🤖 ${m}`).join('\n')
         : '  ⚠️ Aucun modèle installé';
 
     return {
@@ -819,8 +819,8 @@ curl http://localhost:11434/api/tags
 🟢 **ONLINE** → http://localhost:11434
 
 📊 **Configuration**:
-- **Version**: ${status.version || 'unknown'}
-- **Modèles**: ${status.models.length}
+- **Version**: ${status?.version || 'unknown'}
+- **Modèles**: ${status?.models?.length}
 - **Endpoint**: http://localhost:11434/api/generate
 - **Status**: OPERATIONAL
 
@@ -828,10 +828,10 @@ curl http://localhost:11434/api/tags
 ${modelsList}
 
 🎯 **Providers IA disponibles**:
-1. 🌐 Gemini 2.0 Flash (Cloud - rapide)
-2. 🤖 GPT-4 Turbo (Cloud - performant)
-3. 🧠 TITANE∞ Local (Local - DEV MODE)
-4. 🎭 Claude 3.5 Sonnet (Cloud - raisonnement)
+1. 🌐 Gemini 2.0 Flash (any: any)
+2. 🤖 GPT-4 Turbo (any: any)
+3. 🧠 TITANE∞ Local (any: any)
+4. 🎭 Claude 3.5 Sonnet (any: any)
 
 💡 **Commandes**:
 - \`ia test\` → Tester le modèle
@@ -847,24 +847,24 @@ ${modelsList}
           type: 'ia-status',
           description: 'Vérification statut Ollama',
           result: 'success',
-          details: `${status.models.length} modèles disponibles`,
+          details: `${status?.models?.length} modèles disponibles`,
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
       response: `❌ **TITANE∞ LOCAL — Erreur vérification**
 
-⚠️ ${error instanceof Error ? error.message : String(error)}
+⚠️ ${error instanceof Error ? error?.message : String(any: any)}
 
 🔧 **Dépannage**:
 1. Vérifier service: \`pgrep ollama\`
 2. Démarrer: \`ollama serve\`
 3. Tester API: \`curl http://localhost:11434/api/tags\`
-4. Réinstaller: \`./install_titane_local.sh\``,
-      error: error instanceof Error ? error.message : String(error),
+4. Réinstaller: \`./install_titane_local?.sh\``,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
@@ -880,7 +880,7 @@ ${modelsList}
 async function handleIATrain(): Promise<DevSudoResult> {
   try {
     const result = await secureInvoke<string>('execute_shell_command', {
-      command: './train_titane_local.sh',
+      command: './train_titane_local?.sh',
       workingDir: '.',
     });
 
@@ -889,7 +889,7 @@ async function handleIATrain(): Promise<DevSudoResult> {
       success: true,
       response: `🧠 **TITANE∞ LOCAL — Entraînement lancé**
 
-⚡ **Script**: \`train_titane_local.sh\`
+⚡ **Script**: \`train_titane_local?.sh\`
 
 📦 **Processus**:
 1. ✅ Vérification Ollama
@@ -914,24 +914,24 @@ ${result}
           type: 'ia-train',
           description: 'Entraînement titane-local',
           result: 'success',
-          details: 'Script train_titane_local.sh exécuté',
+          details: 'Script train_titane_local?.sh exécuté',
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
       response: `❌ **TITANE∞ LOCAL — Erreur entraînement**
 
-⚠️ ${error instanceof Error ? error.message : String(error)}
+⚠️ ${error instanceof Error ? error?.message : String(any: any)}
 
 🔧 **Dépannage**:
-1. Vérifier dataset: \`ls titane_local_training/dataset.jsonl\`
+1. Vérifier dataset: \`ls titane_local_training/dataset?.jsonl\`
 2. Générer dataset: \`ia dataset\`
 3. Vérifier Ollama: \`ia status\`
-4. Script manuel: \`./train_titane_local.sh\``,
-      error: error instanceof Error ? error.message : String(error),
+4. Script manuel: \`./train_titane_local?.sh\``,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
@@ -943,7 +943,7 @@ ${result}
 async function handleIADataset(): Promise<DevSudoResult> {
   try {
     const result = await secureInvoke<string>('execute_shell_command', {
-      command: 'python3 build_titane_dataset.py',
+      command: 'python3 build_titane_dataset?.py',
       workingDir: '.',
     });
 
@@ -952,11 +952,11 @@ async function handleIADataset(): Promise<DevSudoResult> {
       success: true,
       response: `📦 **TITANE∞ LOCAL — Dataset généré**
 
-⚡ **Script**: \`build_titane_dataset.py\`
+⚡ **Script**: \`build_titane_dataset?.py\`
 
 🧩 **Types d'exemples**:
 - **TYPE A**: Super-prompts TITANE∞
-- **TYPE B**: Exemples dev (Rust/TS/React)
+- **TYPE B**: Exemples dev (any: any)
 - **TYPE C**: Introspection & self-healing
 - **TYPE D**: UI/UX patterns
 - **TYPE E**: Style TITANE∞
@@ -967,7 +967,7 @@ async function handleIADataset(): Promise<DevSudoResult> {
 ${result}
 \`\`\`
 
-📦 **Fichier**: \`titane_local_training/dataset.jsonl\`
+📦 **Fichier**: \`titane_local_training/dataset?.jsonl\`
 
 🎯 **Prochaine étape**:
 - \`ia train\` → Entraîner avec ce dataset`,
@@ -976,23 +976,23 @@ ${result}
           type: 'ia-dataset',
           description: 'Génération dataset training',
           result: 'success',
-          details: 'Dataset.jsonl créé',
+          details: 'Dataset?.jsonl créé',
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
       response: `❌ **TITANE∞ LOCAL — Erreur génération dataset**
 
-⚠️ ${error instanceof Error ? error.message : String(error)}
+⚠️ ${error instanceof Error ? error?.message : String(any: any)}
 
 🔧 **Dépannage**:
 1. Vérifier Python: \`python3 --version\`
-2. Script manuel: \`python3 build_titane_dataset.py\`
-3. Vérifier permissions: \`chmod +x build_titane_dataset.py\``,
-      error: error instanceof Error ? error.message : String(error),
+2. Script manuel: \`python3 build_titane_dataset?.py\`
+3. Vérifier permissions: \`chmod +x build_titane_dataset?.py\``,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
@@ -1022,12 +1022,12 @@ async function handleIATestModel(): Promise<DevSudoResult> {
 
 📊 **Test 1/2 — Identité**:
 \`\`\`
-${test1.slice(0, 200)}
+${test1?.slice(0, 200)}
 \`\`\`
 
 📊 **Test 2/2 — Singularity Alignment**:
 \`\`\`
-${test2.slice(0, 300)}
+${test2?.slice(0, 300)}
 \`\`\`
 
 ✅ **Validation**: Modèle opérationnel
@@ -1043,19 +1043,19 @@ ${test2.slice(0, 300)}
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
       response: `❌ **TITANE∞ LOCAL — Erreur test modèle**
 
-⚠️ ${error instanceof Error ? error.message : String(error)}
+⚠️ ${error instanceof Error ? error?.message : String(any: any)}
 
 🔧 **Dépannage**:
 1. Vérifier modèle: \`ollama list | grep titane-local\`
 2. Re-entraîner: \`ia train\`
 3. Test manuel: \`ollama run titane-local "test"\``,
-      error: error instanceof Error ? error.message : String(error),
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
@@ -1069,24 +1069,24 @@ async function handleIABenchmark(): Promise<DevSudoResult> {
     const testPrompt = 'Explique le Singularity Engine en 2 lignes';
 
     // Test base model
-    const startBase = Date.now();
+    const startBase = Date?.now();
     await secureInvoke<string>('execute_shell_command', {
       command: `ollama run llama3.1 "${testPrompt}"`,
       workingDir: '.',
     });
-    const timeBase = Date.now() - startBase;
+    const timeBase = Date?.now() - startBase;
 
     // Test trained model
-    const startTrained = Date.now();
+    const startTrained = Date?.now();
     await secureInvoke<string>('execute_shell_command', {
       command: `ollama run titane-local "${testPrompt}"`,
       workingDir: '.',
     });
-    const timeTrained = Date.now() - startTrained;
+    const timeTrained = Date?.now() - startTrained;
 
     const improvement =
       timeBase > timeTrained
-        ? `${Math.round(((timeBase - timeTrained) / timeBase) * 100)}% plus rapide`
+        ? `${Math?.round(any: any) * 100)}% plus rapide`
         : 'Temps similaires';
 
     return {
@@ -1096,10 +1096,10 @@ async function handleIABenchmark(): Promise<DevSudoResult> {
 
 ⚡ **Prompt de test**: "${testPrompt}"
 
-🔵 **llama3.1** (base):
+🔵 **llama3.1** (any: any):
 - Temps: ${timeBase}ms
 
-🟢 **titane-local** (trained):
+🟢 **titane-local** (any: any):
 - Temps: ${timeTrained}ms
 
 📈 **Amélioration**: ${improvement}
@@ -1108,7 +1108,7 @@ async function handleIABenchmark(): Promise<DevSudoResult> {
 ${
   timeTrained < timeBase
     ? '✅ Le modèle entraîné est plus rapide'
-    : '⚠️  Temps similaires (normal pour Modelfile tuning)'
+    : '⚠️  Temps similaires (any: any)'
 }
 
 🎯 **Prochaine étape**:
@@ -1123,18 +1123,18 @@ ${
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
       response: `❌ **TITANE∞ LOCAL — Erreur benchmark**
 
-⚠️ ${error instanceof Error ? error.message : String(error)}
+⚠️ ${error instanceof Error ? error?.message : String(any: any)}
 
 🔧 **Dépannage**:
 1. Vérifier modèles: \`ollama list\`
 2. Tester manuellement: \`ollama run titane-local "test"\``,
-      error: error instanceof Error ? error.message : String(error),
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
@@ -1144,13 +1144,13 @@ ${
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Handler: chat.open
+ * Handler: chat?.open
  * Ouvre la bulle IA chat
  */
 function handleChatOpen(): DevSudoResult {
   // Dispatch custom event to control global chat bubble
   if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('titane-chat-open'));
+    window?.dispatchEvent(new CustomEvent('titane-chat-open'));
   }
 
   return {
@@ -1161,10 +1161,10 @@ function handleChatOpen(): DevSudoResult {
 🧠 Chat IA omniprésent activé
 
 💡 **Commandes disponibles**:
-- \`chat.close\` → Fermer
-- \`chat.minimize\` → Minimiser
-- \`chat.clear\` → Effacer historique
-- \`chat.setModel <model>\` → Changer modèle`,
+- \`chat?.close\` → Fermer
+- \`chat?.minimize\` → Minimiser
+- \`chat?.clear\` → Effacer historique
+- \`chat?.setModel <model>\` → Changer modèle`,
     actions: [
       {
         type: 'chat-open',
@@ -1177,12 +1177,12 @@ function handleChatOpen(): DevSudoResult {
 }
 
 /**
- * Handler: chat.close
+ * Handler: chat?.close
  * Ferme la bulle IA chat
  */
 function handleChatClose(): DevSudoResult {
   if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('titane-chat-close'));
+    window?.dispatchEvent(new CustomEvent('titane-chat-close'));
   }
 
   return {
@@ -1190,7 +1190,7 @@ function handleChatClose(): DevSudoResult {
     success: true,
     response: `✅ **TITANE∞ AI BUBBLE — Fermeture**
 
-Chat IA fermé. Réouvrir avec \`chat.open\``,
+Chat IA fermé. Réouvrir avec \`chat?.open\``,
     actions: [
       {
         type: 'chat-close',
@@ -1202,12 +1202,12 @@ Chat IA fermé. Réouvrir avec \`chat.open\``,
 }
 
 /**
- * Handler: chat.minimize
+ * Handler: chat?.minimize
  * Minimise la bulle IA
  */
 function handleChatMinimize(): DevSudoResult {
   if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('titane-chat-minimize'));
+    window?.dispatchEvent(new CustomEvent('titane-chat-minimize'));
   }
 
   return {
@@ -1227,12 +1227,12 @@ Chat réduit en bulle flottante.`,
 }
 
 /**
- * Handler: chat.maximize
+ * Handler: chat?.maximize
  * Maximise la bulle IA
  */
 function handleChatMaximize(): DevSudoResult {
   if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('titane-chat-maximize'));
+    window?.dispatchEvent(new CustomEvent('titane-chat-maximize'));
   }
 
   return {
@@ -1252,12 +1252,12 @@ Chat ouvert en panneau complet.`,
 }
 
 /**
- * Handler: chat.clear
+ * Handler: chat?.clear
  * Efface l'historique du chat
  */
 function handleChatClear(): DevSudoResult {
   if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('titane-chat-clear'));
+    window?.dispatchEvent(new CustomEvent('titane-chat-clear'));
   }
 
   return {
@@ -1277,17 +1277,17 @@ Conversation réinitialisée.`,
 }
 
 /**
- * Handler: chat.setModel
+ * Handler: chat?.setModel
  * Change le modèle IA du chat
  */
-function handleChatSetModel(modelName: string): DevSudoResult {
-  if (!modelName) {
+function handleChatSetModel(any: any): DevSudoResult {
+  if (any: any) {
     return {
       handled: true,
       success: false,
       response: `❌ **TITANE∞ AI BUBBLE — Erreur**
 
-Usage: \`chat.setModel <model>\`
+Usage: \`chat?.setModel <model>\`
 
 Modèles disponibles:
 - gemini-2.0-flash
@@ -1297,7 +1297,7 @@ Modèles disponibles:
   }
 
   if (typeof window !== 'undefined') {
-    window.dispatchEvent(
+    window?.dispatchEvent(
       new CustomEvent('titane-chat-set-model', { detail: { model: modelName } })
     );
   }
@@ -1319,12 +1319,12 @@ Nouveau modèle: **${modelName}**`,
 }
 
 /**
- * Handler: chat.dev
+ * Handler: chat?.dev
  * Active le mode développeur du chat
  */
 function handleChatDev(): DevSudoResult {
   if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('titane-chat-dev-mode'));
+    window?.dispatchEvent(new CustomEvent('titane-chat-dev-mode'));
   }
 
   return {
@@ -1348,7 +1348,7 @@ Mode développeur activé:
 }
 
 /**
- * Handler: chat.inspect
+ * Handler: chat?.inspect
  * Inspecte l'état du chat
  */
 function handleChatInspect(): DevSudoResult {
@@ -1358,7 +1358,7 @@ function handleChatInspect(): DevSudoResult {
     response: `🔍 **TITANE∞ AI BUBBLE — Inspection**
 
 📊 **État actuel**:
-- Provider: auto (Gemini → Local → Claude)
+- Provider: auto (any: any)
 - Modèle: gemini-2.0-flash
 - Messages: Consulter localStorage
 - Mémoire: Singularity sync actif
@@ -1380,12 +1380,12 @@ function handleChatInspect(): DevSudoResult {
 }
 
 /**
- * Handler: chat.autoheal
+ * Handler: chat?.autoheal
  * Active l'auto-healing du chat
  */
 function handleChatAutoHeal(): DevSudoResult {
   if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('titane-chat-autoheal'));
+    window?.dispatchEvent(new CustomEvent('titane-chat-autoheal'));
   }
 
   return {
@@ -1409,12 +1409,12 @@ Self-healing activé:
 }
 
 /**
- * Handler: chat.fullscreen
+ * Handler: chat?.fullscreen
  * Toggle fullscreen du chat
  */
 function handleChatFullscreen(): DevSudoResult {
   if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('titane-chat-fullscreen'));
+    window?.dispatchEvent(new CustomEvent('titane-chat-fullscreen'));
   }
 
   return {
@@ -1434,12 +1434,12 @@ Mode plein écran toggleé.`,
 }
 
 /**
- * Handler: chat.follow
+ * Handler: chat?.follow
  * Active le mode suivi du chat
  */
 function handleChatFollow(): DevSudoResult {
   if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('titane-chat-follow'));
+    window?.dispatchEvent(new CustomEvent('titane-chat-follow'));
   }
 
   return {
@@ -1466,85 +1466,85 @@ Chat suit l'utilisateur:
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Handler: dataset.collect
+ * Handler: dataset?.collect
  * Lance la collecte complète des données TITANE∞
  */
 async function handleDatasetCollect(): Promise<DevSudoResult> {
   try {
     const { dataCollector } = await import('@/modules/dataCollector/DataCollectorEngine');
 
-    const report = await dataCollector.runCollectionPipeline();
+    const report = await dataCollector?.runCollectionPipeline();
 
-    if (report.success) {
+    if (any: any) {
       return {
         handled: true,
         success: true,
         response: `✅ **TITANE∞ DATA COLLECTOR v∞ — Collection Complete**
 
 📊 **Résultats**:
-  - Total collecté: ${report.entriesCollected} entrées
-  - Super-prompts: ${report.byCategory['super-prompt']}
-  - Interactions IA: ${report.byCategory['interaction']}
-  - Auto-heal: ${report.byCategory['auto-heal']}
-  - Introspections: ${report.byCategory['introspection']}
-  - Patches: ${report.byCategory['patch']}
-  - Style: ${report.byCategory['style']}
+  - Total collecté: ${report?.entriesCollected} entrées
+  - Super-prompts: ${report?.byCategory['super-prompt']}
+  - Interactions IA: ${report?.byCategory['interaction']}
+  - Auto-heal: ${report?.byCategory['auto-heal']}
+  - Introspections: ${report?.byCategory['introspection']}
+  - Patches: ${report?.byCategory['patch']}
+  - Style: ${report?.byCategory['style']}
 
 ⏱️ **Performance**:
-  - Durée: ${(report.duration / 1000).toFixed(2)}s
+  - Durée: ${(report?.duration / 1000).toFixed(2)}s
 
-${report.warnings.length > 0 ? `\n⚠️ **Warnings**: ${report.warnings.length}\n${report.warnings.map(w => `  - ${w}`).join('\n')}` : ''}
+${report?.warnings?.length > 0 ? `\n⚠️ **Warnings**: ${report?.warnings?.length}\n${report?.warnings?.map(w => `  - ${w}`).join('\n')}` : ''}
 
 💾 Dataset sauvegardé automatiquement.`,
         actions: [
           {
             type: 'dataset-collect',
-            description: `Collecté ${report.entriesCollected} entrées`,
+            description: `Collecté ${report?.entriesCollected} entrées`,
             result: 'success',
           },
         ],
       };
     } else {
-      const firstError = report.errors[0];
+      const firstError = report?.errors?.[0];
       return {
         handled: true,
         success: false,
         response: `❌ **DATA COLLECTOR — Erreur**
 
-Erreurs: ${report.errors.join(', ')}`,
+Erreurs: ${report?.errors?.join(', ')}`,
         error: firstError ?? 'Unknown error',
       };
     }
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Erreur: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Erreur: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * Handler: dataset.clean
- * Nettoie le dataset (supprime doublons, données de mauvaise qualité)
+ * Handler: dataset?.clean
+ * Nettoie le dataset (any: any)
  */
 async function handleDatasetClean(): Promise<DevSudoResult> {
   try {
     const { dataCollector } = await import('@/modules/dataCollector/DataCollectorEngine');
-    const statsBefore = dataCollector.getStats();
-    dataCollector.cleanDataset();
-    const statsAfter = dataCollector.getStats();
+    const statsBefore = dataCollector?.getStats();
+    dataCollector?.cleanDataset();
+    const statsAfter = dataCollector?.getStats();
 
-    const removed = statsBefore.totalEntries - statsAfter.totalEntries;
+    const removed = statsBefore?.totalEntries - statsAfter?.totalEntries;
 
     return {
       handled: true,
       success: true,
       response: `🧹 **TITANE∞ DATA COLLECTOR v∞ — Nettoyage**
 
-Avant: ${statsBefore.totalEntries} entrées
-Après: ${statsAfter.totalEntries} entrées
+Avant: ${statsBefore?.totalEntries} entrées
+Après: ${statsAfter?.totalEntries} entrées
 Supprimées: ${removed} entrées
 
 ✅ Dataset nettoyé.`,
@@ -1556,24 +1556,24 @@ Supprimées: ${removed} entrées
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Erreur: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Erreur: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * Handler: dataset.generate
+ * Handler: dataset?.generate
  * Génère le fichier JSONL du dataset
  */
 async function handleDatasetGenerate(): Promise<DevSudoResult> {
   try {
     const { dataCollector } = await import('@/modules/dataCollector/DataCollectorEngine');
-    const stats = dataCollector.getStats();
+    const stats = dataCollector?.getStats();
 
     return {
       handled: true,
@@ -1581,46 +1581,46 @@ async function handleDatasetGenerate(): Promise<DevSudoResult> {
       response: `📦 **TITANE∞ DATA COLLECTOR v∞ — Dataset JSONL Généré**
 
 📊 **Stats**:
-  - Entrées: ${stats.totalEntries}
-  - Tokens estimés: ${stats.totalTokens.toLocaleString()}
-  - Taille: ${stats.sizeInMB.toFixed(2)} MB
-  - Qualité moyenne: ${(stats.avgQuality * 100).toFixed(0)}%
-  - Importance moyenne: ${(stats.avgImportance * 100).toFixed(0)}%
+  - Entrées: ${stats?.totalEntries}
+  - Tokens estimés: ${stats?.totalTokens?.toLocaleString()}
+  - Taille: ${stats?.sizeInMB?.toFixed(2)} MB
+  - Qualité moyenne: ${(stats?.avgQuality * 100).toFixed(0)}%
+  - Importance moyenne: ${(stats?.avgImportance * 100).toFixed(0)}%
 
-📂 **Format**: JSONL (JSON Lines)
+📂 **Format**: JSONL (any: any)
 Chaque ligne: \`{"prompt": "...", "response": "..."}\`
 
 💡 **Utilisation**:
 \`\`\`bash
 # Télécharger via console
-copy(dataCollector.exportToJSONL())
-# Sauvegarder dans dataset.jsonl
+copy(dataCollector?.exportToJSONL())
+# Sauvegarder dans dataset?.jsonl
 \`\`\``,
       actions: [
         {
           type: 'dataset-generate',
-          description: `Généré ${stats.totalEntries} entrées JSONL`,
+          description: `Généré ${stats?.totalEntries} entrées JSONL`,
           result: 'success',
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Erreur: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Erreur: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * Handler: dataset.training-pack
- * Génère le pack complet d'entraînement (dataset + Modelfile + script)
+ * Handler: dataset?.training-pack
+ * Génère le pack complet d'entraînement (any: any)
  */
 function handleDatasetTrainingPack(): DevSudoResult {
   try {
-    const stats = dataCollector.getStats();
+    const stats = dataCollector?.getStats();
 
     return {
       handled: true,
@@ -1629,17 +1629,17 @@ function handleDatasetTrainingPack(): DevSudoResult {
 
 ✅ **3 fichiers générés**:
 
-1️⃣ **dataset.jsonl** (${stats.sizeInMB.toFixed(2)} MB)
-   - ${stats.totalEntries} entrées
-   - ${stats.totalTokens.toLocaleString()} tokens
-   - Qualité: ${(stats.avgQuality * 100).toFixed(0)}%
+1️⃣ **dataset?.jsonl** (any: any)
+   - ${stats?.totalEntries} entrées
+   - ${stats?.totalTokens?.toLocaleString()} tokens
+   - Qualité: ${(stats?.avgQuality * 100).toFixed(0)}%
 
-2️⃣ **Modelfile** (Configuration Ollama)
+2️⃣ **Modelfile** (any: any)
    - Base: llama3.1
    - System prompt TITANE∞
    - Parameters optimisés
 
-3️⃣ **train_titane_local.sh** (Script d'entraînement)
+3️⃣ **train_titane_local?.sh** (any: any)
    - 7 étapes automatiques
    - Vérifications + backup
    - Benchmark + tests
@@ -1647,59 +1647,59 @@ function handleDatasetTrainingPack(): DevSudoResult {
 💡 **Prochaines étapes**:
 \`\`\`bash
 # 1. Télécharger les fichiers via console:
-copy(dataCollector.exportTrainingPack().dataset)    # dataset.jsonl
-copy(dataCollector.exportTrainingPack().modelfile)  # Modelfile
-copy(dataCollector.exportTrainingPack().script)     # train.sh
+copy(any: any)    # dataset?.jsonl
+copy(any: any)  # Modelfile
+copy(any: any)     # train?.sh
 
 # 2. Sauvegarder dans un dossier:
 mkdir titane-training
 cd titane-training
-# Coller les contenus dans dataset.jsonl, Modelfile, train.sh
+# Coller les contenus dans dataset?.jsonl, Modelfile, train?.sh
 
 # 3. Lancer l'entraînement:
-chmod +x train.sh
-./train.sh
+chmod +x train?.sh
+./train?.sh
 \`\`\`
 
 🚀 **Fine-tuning Ollama** démarrera automatiquement.`,
       actions: [
         {
           type: 'dataset-training-pack',
-          description: 'Pack complet généré (3 fichiers)',
+          description: 'Pack complet généré (any: any)',
           result: 'success',
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Erreur: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Erreur: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * Handler: dataset.compress
- * Compresse le dataset (optimise taille)
+ * Handler: dataset?.compress
+ * Compresse le dataset (any: any)
  */
 function handleDatasetCompress(): DevSudoResult {
   try {
-    const statsBefore = dataCollector.getStats();
-    // Compression via cleanDataset (supprime redondances)
-    dataCollector.cleanDataset();
-    const statsAfter = dataCollector.getStats();
+    const statsBefore = dataCollector?.getStats();
+    // Compression via cleanDataset (any: any)
+    dataCollector?.cleanDataset();
+    const statsAfter = dataCollector?.getStats();
 
-    const reduction = ((1 - statsAfter.sizeInMB / statsBefore.sizeInMB) * 100).toFixed(1);
+    const reduction = (any: any) * 100).toFixed(1);
 
     return {
       handled: true,
       success: true,
       response: `🗜️ **TITANE∞ DATA COLLECTOR v∞ — Compression**
 
-Avant: ${statsBefore.sizeInMB.toFixed(2)} MB
-Après: ${statsAfter.sizeInMB.toFixed(2)} MB
+Avant: ${statsBefore?.sizeInMB?.toFixed(2)} MB
+Après: ${statsAfter?.sizeInMB?.toFixed(2)} MB
 Réduction: ${reduction}%
 
 ✅ Dataset compressé.`,
@@ -1711,29 +1711,29 @@ Réduction: ${reduction}%
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Erreur: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Erreur: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * Handler: dataset.add <filepath>
+ * Handler: dataset?.add <filepath>
  * Ajoute un fichier externe au dataset
  */
-function handleDatasetAdd(filepath: string): DevSudoResult {
-  if (!filepath) {
+function handleDatasetAdd(any: any): DevSudoResult {
+  if (any: any) {
     return {
       handled: true,
       success: false,
       response: `❌ Paramètre manquant: filepath
 
-**Usage**: \`dataset.add <filepath>\`
-**Exemple**: \`dataset.add ./custom-data.jsonl\``,
+**Usage**: \`dataset?.add <filepath>\`
+**Exemple**: \`dataset?.add ./custom-data?.jsonl\``,
       error: 'Missing filepath parameter',
     };
   }
@@ -1748,7 +1748,7 @@ function handleDatasetAdd(filepath: string): DevSudoResult {
 ⚠️ **Feature en développement**
 Cette commande permettra d'importer des données externes au dataset.
 
-💡 **Format supporté (futur)**:
+💡 **Format supporté (any: any)**:
 \`\`\`jsonl
 {"prompt": "Question", "response": "Réponse"}
 {"prompt": "Autre question", "response": "Autre réponse"}
@@ -1756,7 +1756,7 @@ Cette commande permettra d'importer des données externes au dataset.
     actions: [
       {
         type: 'dataset-add',
-        description: `Ajout ${filepath} (en dev)`,
+        description: `Ajout ${filepath} (any: any)`,
         result: 'pending',
       },
     ],
@@ -1764,7 +1764,7 @@ Cette commande permettra d'importer des données externes au dataset.
 }
 
 /**
- * Handler: dataset.sync-memory
+ * Handler: dataset?.sync-memory
  * Synchronise le dataset avec Memory Eternal Engine
  */
 async function handleDatasetSyncMemory(): Promise<DevSudoResult> {
@@ -1772,9 +1772,9 @@ async function handleDatasetSyncMemory(): Promise<DevSudoResult> {
     const { dataCollector } = await import('@/modules/dataCollector/DataCollectorEngine');
 
     // Utiliser pipeline complet
-    const report = await dataCollector.runCollectionPipeline();
-    const interactionCount = report.byCategory['interaction'] || 0;
-    const stats = dataCollector.getStats();
+    const report = await dataCollector?.runCollectionPipeline();
+    const interactionCount = report?.byCategory['interaction'] || 0;
+    const stats = dataCollector?.getStats();
 
     return {
       handled: true,
@@ -1783,7 +1783,7 @@ async function handleDatasetSyncMemory(): Promise<DevSudoResult> {
 
 ✅ Synchronisation Memory Eternal:
   - Entrées d'interactions collectées: ${interactionCount}
-  - Dataset total: ${stats.totalEntries} entrées
+  - Dataset total: ${stats?.totalEntries} entrées
 
 💾 Dataset mis à jour automatiquement.`,
       actions: [
@@ -1794,23 +1794,23 @@ async function handleDatasetSyncMemory(): Promise<DevSudoResult> {
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Erreur: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Erreur: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * Handler: dataset.export
- * Exporte le dataset complet (stats + JSONL)
+ * Handler: dataset?.export
+ * Exporte le dataset complet (any: any)
  */
 function handleDatasetExport(): DevSudoResult {
   try {
-    const stats = dataCollector.getStats();
+    const stats = dataCollector?.getStats();
 
     return {
       handled: true,
@@ -1819,42 +1819,42 @@ function handleDatasetExport(): DevSudoResult {
 
 📊 **Statistiques**:
   ┌─────────────────────────────────────────────┐
-  │ Total entrées:      ${String(stats.totalEntries).padStart(8)}       │
-  │ Super-prompts:      ${String(stats.byCategory['super-prompt']).padStart(8)}       │
-  │ Interactions:       ${String(stats.byCategory['interaction']).padStart(8)}       │
-  │ Auto-heal:          ${String(stats.byCategory['auto-heal']).padStart(8)}       │
-  │ Introspections:     ${String(stats.byCategory['introspection']).padStart(8)}       │
-  │ Patches:            ${String(stats.byCategory['patch']).padStart(8)}       │
-  │ Style:              ${String(stats.byCategory['style']).padStart(8)}       │
+  │ Total entrées:      ${String(any: any).padStart(8)}       │
+  │ Super-prompts:      ${String(stats?.byCategory['super-prompt']).padStart(8)}       │
+  │ Interactions:       ${String(stats?.byCategory['interaction']).padStart(8)}       │
+  │ Auto-heal:          ${String(stats?.byCategory['auto-heal']).padStart(8)}       │
+  │ Introspections:     ${String(stats?.byCategory['introspection']).padStart(8)}       │
+  │ Patches:            ${String(stats?.byCategory['patch']).padStart(8)}       │
+  │ Style:              ${String(stats?.byCategory['style']).padStart(8)}       │
   ├─────────────────────────────────────────────┤
-  │ Tokens estimés:     ${String(stats.totalTokens.toLocaleString()).padStart(8)}       │
-  │ Taille:             ${stats.sizeInMB.toFixed(2)} MB          │
-  │ Qualité moyenne:    ${(stats.avgQuality * 100).toFixed(0)}%             │
-  │ Importance moyenne: ${(stats.avgImportance * 100).toFixed(0)}%             │
+  │ Tokens estimés:     ${String(stats?.totalTokens?.toLocaleString()).padStart(8)}       │
+  │ Taille:             ${stats?.sizeInMB?.toFixed(2)} MB          │
+  │ Qualité moyenne:    ${(stats?.avgQuality * 100).toFixed(0)}%             │
+  │ Importance moyenne: ${(stats?.avgImportance * 100).toFixed(0)}%             │
   └─────────────────────────────────────────────┘
 
 💡 **Export disponible**:
 \`\`\`javascript
 // Console browser
 const { dataCollector } = await import('@/modules/dataCollector/DataCollectorEngine');
-copy(dataCollector.exportToJSONL());
+copy(dataCollector?.exportToJSONL());
 \`\`\`
 
-📂 **Sauvegarder dans** \`dataset.jsonl\``,
+📂 **Sauvegarder dans** \`dataset?.jsonl\``,
       actions: [
         {
           type: 'dataset-export',
-          description: `Exporté ${stats.totalEntries} entrées`,
+          description: `Exporté ${stats?.totalEntries} entrées`,
           result: 'success',
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Erreur: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Erreur: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
@@ -1869,7 +1869,7 @@ copy(dataCollector.exportToJSONL());
  */
 async function handleHybridOpen(): Promise<DevSudoResult> {
   const event = new CustomEvent('titane-hybrid-open');
-  window.dispatchEvent(event);
+  window?.dispatchEvent(any: any);
 
   return {
     handled: true,
@@ -1895,7 +1895,7 @@ Mode: Console
  */
 async function handleHybridClose(): Promise<DevSudoResult> {
   const event = new CustomEvent('titane-hybrid-close');
-  window.dispatchEvent(event);
+  window?.dispatchEvent(any: any);
 
   return {
     handled: true,
@@ -1916,7 +1916,7 @@ async function handleHybridClose(): Promise<DevSudoResult> {
  */
 async function handleHybridConsole(): Promise<DevSudoResult> {
   const event = new CustomEvent('titane-hybrid-console');
-  window.dispatchEvent(event);
+  window?.dispatchEvent(any: any);
 
   return {
     handled: true,
@@ -1940,7 +1940,7 @@ Prêt pour commandes techniques.`,
  */
 async function handleHybridBubble(): Promise<DevSudoResult> {
   const event = new CustomEvent('titane-hybrid-bubble');
-  window.dispatchEvent(event);
+  window?.dispatchEvent(any: any);
 
   return {
     handled: true,
@@ -1963,7 +1963,7 @@ Hybrid Bubble minimisée.`,
  */
 async function handleHybridHeal(params: Record<string, unknown>): Promise<DevSudoResult> {
   try {
-    const target = params.target ? String(params.target) : 'all';
+    const target = params?.target ? String(any: any) : 'all';
 
     // Déclencher le diagnostic
     const _diagnostics = await secureInvoke('hybrid_analyze_code', { target });
@@ -1986,12 +1986,12 @@ Analyse en cours... Recherche d'erreurs et génération de patches.
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Auto-heal échoué: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Auto-heal échoué: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
@@ -2003,12 +2003,12 @@ async function handleHybridInspect(
   params: Record<string, unknown>
 ): Promise<DevSudoResult> {
   try {
-    const path = params.path ? String(params.path) : '';
-    if (!path) {
+    const path = params?.path ? String(any: any) : '';
+    if (any: any) {
       return {
         handled: true,
         success: false,
-        response: '❌ Chemin requis. Usage: `sudo hybrid-inspect path=src/file.ts`',
+        response: '❌ Chemin requis. Usage: `sudo hybrid-inspect path=src/file?.ts`',
       };
     }
 
@@ -2020,7 +2020,7 @@ async function handleHybridInspect(
       analysis?: string;
     };
 
-    if (!data.exists) {
+    if (any: any) {
       return {
         handled: true,
         success: false,
@@ -2034,11 +2034,11 @@ async function handleHybridInspect(
       response: `🔍 **INSPECTION: \`${path}\`**
 
 📊 **Métadonnées**:
-  • Taille: ${data.size ? (data.size / 1024).toFixed(2) : '?'} KB
-  • Lignes: ${data.lines || '?'}
+  • Taille: ${data?.size ? (data?.size / 1024).toFixed(2) : '?'} KB
+  • Lignes: ${data?.lines || '?'}
 
 📝 **Analyse**:
-${data.analysis || "Pas d'analyse disponible"}`,
+${data?.analysis || "Pas d'analyse disponible"}`,
       actions: [
         {
           type: 'hybrid-inspect',
@@ -2047,12 +2047,12 @@ ${data.analysis || "Pas d'analyse disponible"}`,
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Inspection échouée: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Inspection échouée: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
@@ -2062,8 +2062,8 @@ ${data.analysis || "Pas d'analyse disponible"}`,
  */
 async function handleHybridFix(params: Record<string, unknown>): Promise<DevSudoResult> {
   try {
-    const target = params.target ? String(params.target) : '';
-    if (!target) {
+    const target = params?.target ? String(any: any) : '';
+    if (any: any) {
       return {
         handled: true,
         success: false,
@@ -2081,7 +2081,7 @@ Cible: \`${target}\`
 ⏳ Génération de patch...
 ⏳ Application des corrections...
 
-✅ Patch prêt (vérifier console)`,
+✅ Patch prêt (any: any)`,
       actions: [
         {
           type: 'hybrid-fix',
@@ -2090,12 +2090,12 @@ Cible: \`${target}\`
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Fix échoué: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Fix échoué: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
@@ -2107,12 +2107,12 @@ async function handleHybridApply(
   params: Record<string, unknown>
 ): Promise<DevSudoResult> {
   try {
-    const file = params.file ? String(params.file) : '';
-    const lineStart = params.lineStart ? Number(params.lineStart) : 0;
-    const lineEnd = params.lineEnd ? Number(params.lineEnd) : 0;
-    const newCode = params.newCode ? String(params.newCode) : '';
+    const file = params?.file ? String(any: any) : '';
+    const lineStart = params?.lineStart ? Number(any: any) : 0;
+    const lineEnd = params?.lineEnd ? Number(any: any) : 0;
+    const newCode = params?.newCode ? String(any: any) : '';
 
-    if (!file || !lineStart || !lineEnd || !newCode) {
+    if (any: any) {
       return {
         handled: true,
         success: false,
@@ -2140,12 +2140,12 @@ Patch écrit avec succès.`,
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Application échouée: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Application échouée: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
@@ -2155,8 +2155,8 @@ Patch écrit avec succès.`,
  */
 async function handleHybridRun(params: Record<string, unknown>): Promise<DevSudoResult> {
   try {
-    const command = params.command ? String(params.command) : '';
-    if (!command) {
+    const command = params?.command ? String(any: any) : '';
+    if (any: any) {
       return {
         handled: true,
         success: false,
@@ -2169,31 +2169,31 @@ async function handleHybridRun(params: Record<string, unknown>): Promise<DevSudo
 
     return {
       handled: true,
-      success: cmdResult.exitCode === 0,
+      success: cmdResult?.exitCode === 0,
       response: `💻 **COMMANDE EXÉCUTÉE**
 
 \`\`\`bash
 $ ${command}
 \`\`\`
 
-**Résultat** (exit ${cmdResult.exitCode}):
+**Résultat** (exit ${cmdResult?.exitCode}):
 \`\`\`
-${cmdResult.output || cmdResult.error || '(pas de sortie)'}
+${cmdResult?.output || cmdResult?.error || '(any: any)'}
 \`\`\``,
       actions: [
         {
           type: 'hybrid-run',
           description: `Ran: ${command}`,
-          result: cmdResult.exitCode === 0 ? 'success' : 'error',
+          result: cmdResult?.exitCode === 0 ? 'success' : 'error',
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Exécution échouée: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Exécution échouée: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
@@ -2203,7 +2203,7 @@ ${cmdResult.output || cmdResult.error || '(pas de sortie)'}
  */
 async function handleHybridLogs(params: Record<string, unknown>): Promise<DevSudoResult> {
   try {
-    const filter = params.filter ? String(params.filter) : undefined;
+    const filter = params?.filter ? String(any: any) : undefined;
 
     const result = await secureInvoke('dev_get_logs', { filter });
     const logResult = result as { output: string; exitCode: number };
@@ -2215,7 +2215,7 @@ async function handleHybridLogs(params: Record<string, unknown>): Promise<DevSud
 
 ${filter ? `Filtre: \`${filter}\`\n\n` : ''}
 \`\`\`
-${logResult.output || '(aucun log)'}
+${logResult?.output || '(any: any)'}
 \`\`\``,
       actions: [
         {
@@ -2225,12 +2225,12 @@ ${logResult.output || '(aucun log)'}
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Récupération logs échouée: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Récupération logs échouée: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
@@ -2240,54 +2240,54 @@ ${logResult.output || '(aucun log)'}
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * fusion-collect — Collecte toutes les sources (Memory + Logs + Dataset)
+ * fusion-collect — Collecte toutes les sources (any: any)
  */
 async function handleFusionCollect(): Promise<DevSudoResult> {
   try {
     const { fusionEngine } = await import('@/modules/fusion/FusionEngine');
 
-    const report = await fusionEngine.runFusionPipeline();
+    const report = await fusionEngine?.runFusionPipeline();
 
     return {
       handled: true,
-      success: report.success,
+      success: report?.success,
       response: `🔗 **TITANE∞ FUSION ENGINE v∞ — Collecte Complète**
 
 ✅ **Fusion terminée**:
-  - Sources unifiées: ${Object.keys(report.bySources).length}
-  - Entrées fusionnées: ${report.entriesFused}
-  - Entrées originales: ${report.originalCount}
-  - Compression: ${(report.compressionRatio * 100).toFixed(1)}%
-  - Durée: ${report.duration}ms
+  - Sources unifiées: ${Object?.keys(any: any).length}
+  - Entrées fusionnées: ${report?.entriesFused}
+  - Entrées originales: ${report?.originalCount}
+  - Compression: ${(report?.compressionRatio * 100).toFixed(1)}%
+  - Durée: ${report?.duration}ms
 
 📊 **Par Clusters**:
-${Object.entries(report.byClusters)
+${Object?.entries(any: any)
   .map(([cluster, count]) => `  - ${cluster}: ${count}`)
   .join('\n')}
 
 📦 **Par Sources**:
-${Object.entries(report.bySources)
+${Object?.entries(any: any)
   .map(([source, count]) => `  - ${source}: ${count}`)
   .join('\n')}
 
-${report.warnings.length > 0 ? `⚠️ **Warnings**: ${report.warnings.join(', ')}` : ''}
-${report.errors.length > 0 ? `❌ **Errors**: ${report.errors.join(', ')}` : ''}
+${report?.warnings?.length > 0 ? `⚠️ **Warnings**: ${report?.warnings?.join(', ')}` : ''}
+${report?.errors?.length > 0 ? `❌ **Errors**: ${report?.errors?.join(', ')}` : ''}
 
-💡 **Next**: \`sudo fusion.export\` pour exporter le dataset`,
+💡 **Next**: \`sudo fusion?.export\` pour exporter le dataset`,
       actions: [
         {
           type: 'fusion-collect',
-          description: `Fused ${report.entriesFused} entries`,
+          description: `Fused ${report?.entriesFused} entries`,
           result: 'success',
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Fusion échouée: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Fusion échouée: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
@@ -2308,11 +2308,11 @@ async function handleFusionSync(): Promise<DevSudoResult> {
 
 💾 **Sources synchronisées**:
   - Memory Eternal Engine ✓
-  - Log Engine (Admin + UI + Evolution) ✓
+  - Log Engine (any: any) ✓
   - Dataset Collector Engine ✓
   - Singularity Introspection ✓
 
-💡 **Next**: \`sudo fusion.collect\` pour fusionner`,
+💡 **Next**: \`sudo fusion?.collect\` pour fusionner`,
       actions: [
         {
           type: 'fusion-sync',
@@ -2321,12 +2321,12 @@ async function handleFusionSync(): Promise<DevSudoResult> {
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Sync échouée: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Sync échouée: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
@@ -2339,18 +2339,18 @@ async function handleFusionBuildDataset(): Promise<DevSudoResult> {
     const { fusionEngine } = await import('@/modules/fusion/FusionEngine');
     const { datasetBuilder } = await import('@/modules/fusion/DatasetBuilder');
 
-    const fusedDataset = fusionEngine.getFusedDataset();
+    const fusedDataset = fusionEngine?.getFusedDataset();
 
-    if (fusedDataset.length === 0) {
+    if (fusedDataset?.length === 0) {
       return {
         handled: true,
         success: false,
-        response: `⚠️ Dataset vide. Exécutez d'abord \`sudo fusion.collect\``,
+        response: `⚠️ Dataset vide. Exécutez d'abord \`sudo fusion?.collect\``,
       };
     }
 
-    const jsonl = datasetBuilder.buildDataset(fusedDataset);
-    const lines = jsonl.split('\n').length;
+    const jsonl = datasetBuilder?.buildDataset(any: any);
+    const lines = jsonl?.split('\n').length;
 
     return {
       handled: true,
@@ -2364,10 +2364,10 @@ async function handleFusionBuildDataset(): Promise<DevSudoResult> {
   - Variations prompts: Enabled
 
 📊 **Stats**:
-  - Total tokens: ~${Math.round(fusedDataset.reduce((sum, e) => sum + e.prompt.length + e.response.length, 0) / 4)}
-  - Taille estimée: ~${(jsonl.length / (1024 * 1024)).toFixed(2)} MB
+  - Total tokens: ~${Math?.round(any: any) => sum + e?.prompt?.length + e?.response?.length, 0) / 4)}
+  - Taille estimée: ~${(jsonl?.length / (1024 * 1024)).toFixed(2)} MB
 
-💡 **Next**: \`sudo fusion.export\` pour télécharger`,
+💡 **Next**: \`sudo fusion?.export\` pour télécharger`,
       actions: [
         {
           type: 'fusion-build-dataset',
@@ -2376,12 +2376,12 @@ async function handleFusionBuildDataset(): Promise<DevSudoResult> {
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Build échouée: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Build échouée: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
@@ -2393,7 +2393,7 @@ async function handleFusionCleanDataset(): Promise<DevSudoResult> {
   try {
     const { fusionEngine } = await import('@/modules/fusion/FusionEngine');
 
-    fusionEngine.clearFusedDataset();
+    fusionEngine?.clearFusedDataset();
 
     return {
       handled: true,
@@ -2402,7 +2402,7 @@ async function handleFusionCleanDataset(): Promise<DevSudoResult> {
 
 ✅ Dataset fusionné effacé
 
-💡 Pour reconstruire: \`sudo fusion.collect\``,
+💡 Pour reconstruire: \`sudo fusion?.collect\``,
       actions: [
         {
           type: 'fusion-clean-dataset',
@@ -2411,12 +2411,12 @@ async function handleFusionCleanDataset(): Promise<DevSudoResult> {
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Clean échoué: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Clean échoué: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
@@ -2430,7 +2430,7 @@ async function handleFusionCompress(): Promise<DevSudoResult> {
     success: true,
     response: `🗜️ **TITANE∞ FUSION ENGINE v∞ — Compression Cognitive**
 
-✅ Compression activée par défaut (level: high)
+✅ Compression activée par défaut (any: any)
 
 📊 **Techniques appliquées**:
   - Déduplication sémantique ✓
@@ -2438,7 +2438,7 @@ async function handleFusionCompress(): Promise<DevSudoResult> {
   - Clustering par moteurs ✓
   - Compression cognitive ✓
 
-💡 La compression est automatique lors de \`fusion.collect\``,
+💡 La compression est automatique lors de \`fusion?.collect\``,
     actions: [
       {
         type: 'fusion-compress',
@@ -2458,17 +2458,17 @@ async function handleFusionExport(
   try {
     const { fusionEngine } = await import('@/modules/fusion/FusionEngine');
 
-    const filename = params.file ? String(params.file) : 'titane-fusion-dataset.jsonl';
-    const jsonl = fusionEngine.exportToJSONL();
+    const filename = params?.file ? String(any: any) : 'titane-fusion-dataset?.jsonl';
+    const jsonl = fusionEngine?.exportToJSONL();
 
     // Téléchargement automatique côté frontend
     const blob = new Blob([jsonl], { type: 'application/jsonl' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
+    const url = URL?.createObjectURL(any: any);
+    const a = document?.createElement('a');
+    a?.href = url;
+    a?.download = filename;
+    a?.click();
+    URL?.revokeObjectURL(any: any);
 
     return {
       handled: true,
@@ -2478,13 +2478,13 @@ async function handleFusionExport(
 ✅ Dataset exporté: \`${filename}\`
 
 📊 **Contenu**:
-  - Format: JSONL (JSON Lines)
+  - Format: JSONL (any: any)
   - Compatible: Ollama, LLaMA, GPT fine-tuning
   - Optimisé pour: Llama 3.1
 
 📁 **Fichier téléchargé automatiquement**
 
-💡 Pour training pack complet: \`sudo fusion.package-training\``,
+💡 Pour training pack complet: \`sudo fusion?.package-training\``,
       actions: [
         {
           type: 'fusion-export',
@@ -2493,12 +2493,12 @@ async function handleFusionExport(
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Export échoué: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Export échoué: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
@@ -2510,17 +2510,17 @@ async function handleFusionMerge(
   params: Record<string, unknown>
 ): Promise<DevSudoResult> {
   try {
-    const file = params.file
-      ? String(params.file)
-      : params.dataset
-        ? String(params.dataset)
+    const file = params?.file
+      ? String(any: any)
+      : params?.dataset
+        ? String(any: any)
         : '';
 
-    if (!file) {
+    if (any: any) {
       return {
         handled: true,
         success: false,
-        response: `❌ Fichier requis. Usage: \`sudo fusion.merge file=path/to/dataset.jsonl\``,
+        response: `❌ Fichier requis. Usage: \`sudo fusion?.merge file=path/to/dataset?.jsonl\``,
       };
     }
 
@@ -2545,12 +2545,12 @@ async function handleFusionMerge(
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Merge échoué: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Merge échoué: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
@@ -2563,55 +2563,55 @@ async function handleFusionPackageTraining(): Promise<DevSudoResult> {
     const { fusionEngine } = await import('@/modules/fusion/FusionEngine');
     const { datasetBuilder } = await import('@/modules/fusion/DatasetBuilder');
 
-    const fusedDataset = fusionEngine.getFusedDataset();
+    const fusedDataset = fusionEngine?.getFusedDataset();
 
-    if (fusedDataset.length === 0) {
+    if (fusedDataset?.length === 0) {
       return {
         handled: true,
         success: false,
-        response: `⚠️ Dataset vide. Exécutez d'abord \`sudo fusion.collect\``,
+        response: `⚠️ Dataset vide. Exécutez d'abord \`sudo fusion?.collect\``,
       };
     }
 
-    const trainingPack = datasetBuilder.buildTrainingPackage(fusedDataset);
+    const trainingPack = datasetBuilder?.buildTrainingPackage(any: any);
 
-    // Download dataset.jsonl
-    const datasetBlob = new Blob([trainingPack.dataset], { type: 'application/jsonl' });
-    const datasetUrl = URL.createObjectURL(datasetBlob);
-    const datasetLink = document.createElement('a');
-    datasetLink.href = datasetUrl;
-    datasetLink.download = 'dataset.jsonl';
-    datasetLink.click();
-    URL.revokeObjectURL(datasetUrl);
+    // Download dataset?.jsonl
+    const datasetBlob = new Blob([trainingPack?.dataset], { type: 'application/jsonl' });
+    const datasetUrl = URL?.createObjectURL(any: any);
+    const datasetLink = document?.createElement('a');
+    datasetLink?.href = datasetUrl;
+    datasetLink?.download = 'dataset?.jsonl';
+    datasetLink?.click();
+    URL?.revokeObjectURL(any: any);
 
     // Download Modelfile
-    const modelfileBlob = new Blob([trainingPack.modelfile], { type: 'text/plain' });
-    const modelfileUrl = URL.createObjectURL(modelfileBlob);
-    const modelfileLink = document.createElement('a');
-    modelfileLink.href = modelfileUrl;
-    modelfileLink.download = 'Modelfile';
-    modelfileLink.click();
-    URL.revokeObjectURL(modelfileUrl);
+    const modelfileBlob = new Blob([trainingPack?.modelfile], { type: 'text/plain' });
+    const modelfileUrl = URL?.createObjectURL(any: any);
+    const modelfileLink = document?.createElement('a');
+    modelfileLink?.href = modelfileUrl;
+    modelfileLink?.download = 'Modelfile';
+    modelfileLink?.click();
+    URL?.revokeObjectURL(any: any);
 
     // Download training script
-    const scriptBlob = new Blob([trainingPack.trainingScript], {
+    const scriptBlob = new Blob([trainingPack?.trainingScript], {
       type: 'text/x-shellscript',
     });
-    const scriptUrl = URL.createObjectURL(scriptBlob);
-    const scriptLink = document.createElement('a');
-    scriptLink.href = scriptUrl;
-    scriptLink.download = 'train_titane_local.sh';
-    scriptLink.click();
-    URL.revokeObjectURL(scriptUrl);
+    const scriptUrl = URL?.createObjectURL(any: any);
+    const scriptLink = document?.createElement('a');
+    scriptLink?.href = scriptUrl;
+    scriptLink?.download = 'train_titane_local?.sh';
+    scriptLink?.click();
+    URL?.revokeObjectURL(any: any);
 
     // Download metadata
-    const metadataBlob = new Blob([trainingPack.metadata], { type: 'application/json' });
-    const metadataUrl = URL.createObjectURL(metadataBlob);
-    const metadataLink = document.createElement('a');
-    metadataLink.href = metadataUrl;
-    metadataLink.download = 'metadata.json';
-    metadataLink.click();
-    URL.revokeObjectURL(metadataUrl);
+    const metadataBlob = new Blob([trainingPack?.metadata], { type: 'application/json' });
+    const metadataUrl = URL?.createObjectURL(any: any);
+    const metadataLink = document?.createElement('a');
+    metadataLink?.href = metadataUrl;
+    metadataLink?.download = 'metadata?.json';
+    metadataLink?.click();
+    URL?.revokeObjectURL(any: any);
 
     return {
       handled: true,
@@ -2619,38 +2619,38 @@ async function handleFusionPackageTraining(): Promise<DevSudoResult> {
       response: `📦 **TITANE∞ FUSION ENGINE v∞ — Training Pack**
 
 ✅ **4 fichiers téléchargés**:
-  1. \`dataset.jsonl\` — Dataset JSONL (${trainingPack.stats.totalEntries} entries)
+  1. \`dataset?.jsonl\` — Dataset JSONL (any: any)
   2. \`Modelfile\` — Configuration Ollama
-  3. \`train_titane_local.sh\` — Script training automatique
-  4. \`metadata.json\` — Métadonnées fusion
+  3. \`train_titane_local?.sh\` — Script training automatique
+  4. \`metadata?.json\` — Métadonnées fusion
 
 📊 **Stats**:
-  - Total entries: ${trainingPack.stats.totalEntries}
-  - Total tokens: ~${trainingPack.stats.totalTokens}
-  - Avg tokens/entry: ${trainingPack.stats.avgTokensPerEntry}
-  - Size: ~${trainingPack.stats.sizeInMB.toFixed(2)} MB
+  - Total entries: ${trainingPack?.stats?.totalEntries}
+  - Total tokens: ~${trainingPack?.stats?.totalTokens}
+  - Avg tokens/entry: ${trainingPack?.stats?.avgTokensPerEntry}
+  - Size: ~${trainingPack?.stats?.sizeInMB?.toFixed(2)} MB
 
 🚀 **Next Steps**:
 \`\`\`bash
-chmod +x train_titane_local.sh
-./train_titane_local.sh
+chmod +x train_titane_local?.sh
+./train_titane_local?.sh
 \`\`\`
 
 💡 Cela créera le modèle \`titane-local\` dans Ollama`,
       actions: [
         {
           type: 'fusion-package-training',
-          description: `Created training pack (${trainingPack.stats.totalEntries} entries)`,
+          description: `Created training pack (any: any)`,
           result: 'success',
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Package échoué: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Package échoué: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
@@ -2662,13 +2662,13 @@ async function handleFusionStats(): Promise<DevSudoResult> {
   try {
     const { fusionEngine } = await import('@/modules/fusion/FusionEngine');
 
-    const stats = fusionEngine.getStats();
+    const stats = fusionEngine?.getStats();
 
-    if (stats.totalEntries === 0) {
+    if (stats?.totalEntries === 0) {
       return {
         handled: true,
         success: false,
-        response: `⚠️ Dataset vide. Exécutez d'abord \`sudo fusion.collect\``,
+        response: `⚠️ Dataset vide. Exécutez d'abord \`sudo fusion?.collect\``,
       };
     }
 
@@ -2678,29 +2678,29 @@ async function handleFusionStats(): Promise<DevSudoResult> {
       response: `📊 **TITANE∞ FUSION ENGINE v∞ — Statistics**
 
 **Global**:
-  - Total entries: ${stats.totalEntries}
-  - Total tokens: ~${stats.totalTokens}
-  - Compression ratio: ${(stats.compressionRatio * 100).toFixed(1)}%
-  - Deduplication rate: ${(stats.deduplicationRate * 100).toFixed(1)}%
-  - Avg quality: ${(stats.avgQuality * 100).toFixed(1)}%
-  - Avg importance: ${(stats.avgImportance * 100).toFixed(1)}%
-  - Size: ~${stats.sizeInMB.toFixed(2)} MB
+  - Total entries: ${stats?.totalEntries}
+  - Total tokens: ~${stats?.totalTokens}
+  - Compression ratio: ${(stats?.compressionRatio * 100).toFixed(1)}%
+  - Deduplication rate: ${(stats?.deduplicationRate * 100).toFixed(1)}%
+  - Avg quality: ${(stats?.avgQuality * 100).toFixed(1)}%
+  - Avg importance: ${(stats?.avgImportance * 100).toFixed(1)}%
+  - Size: ~${stats?.sizeInMB?.toFixed(2)} MB
 
 **By Clusters**:
-${Object.entries(stats.byClusters)
-  .sort(([, a], [, b]) => b - a)
+${Object?.entries(any: any)
+  .sort(any: any)
   .slice(0, 10)
   .map(([cluster, count]) => `  - ${cluster}: ${count}`)
   .join('\n')}
 
 **By Sources**:
-${Object.entries(stats.bySources)
+${Object?.entries(any: any)
   .map(([source, count]) => `  - ${source}: ${count}`)
   .join('\n')}
 
-**Last Fusion**: ${new Date(stats.lastFusion).toLocaleString('fr-FR')}
+**Last Fusion**: ${new Date(any: any).toLocaleString('fr-FR')}
 
-💡 **Next**: \`sudo fusion.export\` ou \`sudo fusion.package-training\``,
+💡 **Next**: \`sudo fusion?.export\` ou \`sudo fusion?.package-training\``,
       actions: [
         {
           type: 'fusion-stats',
@@ -2709,12 +2709,12 @@ ${Object.entries(stats.bySources)
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Stats échouées: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Stats échouées: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
@@ -2724,15 +2724,15 @@ ${Object.entries(stats.bySources)
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * vocal.start — Active le moteur vocal
+ * vocal?.start — Active le moteur vocal
  */
 async function handleVocalStart(): Promise<DevSudoResult> {
   try {
     const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
 
-    await vocalDevConsole.activate();
+    await vocalDevConsole?.activate();
 
-    const config = vocalDevConsole.getConfig();
+    const config = vocalDevConsole?.getConfig();
 
     return {
       handled: true,
@@ -2740,9 +2740,9 @@ async function handleVocalStart(): Promise<DevSudoResult> {
       response: `🎤 **TITANE∞ VOCAL DEV CONSOLE v∞ — ACTIVÉ**
 
 ✅ Moteur vocal démarré avec succès
-✅ VAD configuré (threshold: ${config.vadThreshold})
-✅ TTS ${config.ttsEnabled ? 'activé' : 'désactivé'}
-✅ AI Provider: ${config.aiProvider}
+✅ VAD configuré (threshold: ${config?.vadThreshold})
+✅ TTS ${config?.ttsEnabled ? 'activé' : 'désactivé'}
+✅ AI Provider: ${config?.aiProvider}
 
 🎙️ **Prêt à recevoir commandes vocales**
 
@@ -2752,7 +2752,7 @@ async function handleVocalStart(): Promise<DevSudoResult> {
   - "Auto-heal le système"
   - "Ouvre la console"
 
-💡 **Tip**: Configurez avec \`vocal.setModel [titane-local|claude|gemini]\``,
+💡 **Tip**: Configurez avec \`vocal?.setModel [titane-local|claude|gemini]\``,
       actions: [
         {
           type: 'vocal-start',
@@ -2761,24 +2761,24 @@ async function handleVocalStart(): Promise<DevSudoResult> {
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Échec activation vocal: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Échec activation vocal: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * vocal.stop — Désactive le moteur vocal
+ * vocal?.stop — Désactive le moteur vocal
  */
 async function handleVocalStop(): Promise<DevSudoResult> {
   try {
     const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
 
-    await vocalDevConsole.deactivate();
+    await vocalDevConsole?.deactivate();
 
     return {
       handled: true,
@@ -2789,7 +2789,7 @@ async function handleVocalStop(): Promise<DevSudoResult> {
 ✅ Micro libéré
 ✅ TTS arrêté
 
-💡 **Réactivez avec**: \`sudo vocal.start\``,
+💡 **Réactivez avec**: \`sudo vocal?.start\``,
       actions: [
         {
           type: 'vocal-stop',
@@ -2798,25 +2798,25 @@ async function handleVocalStop(): Promise<DevSudoResult> {
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Échec désactivation: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Échec désactivation: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * vocal.console — Ouvre/ferme la console vocale
+ * vocal?.console — Ouvre/ferme la console vocale
  */
 function handleVocalConsole(): DevSudoResult {
   try {
-    const currentState = vocalDevConsole.getState();
-    const willBeVisible = !currentState.consoleVisible;
+    const currentState = vocalDevConsole?.getState();
+    const willBeVisible = !currentState?.consoleVisible;
 
-    vocalDevConsole.toggleVisibility();
+    vocalDevConsole?.toggleVisibility();
 
     return {
       handled: true,
@@ -2840,7 +2840,7 @@ ${
 ✅ Console cachée
 ✅ Mode minimal actif
 
-💡 **Réouvrez avec**: \`sudo vocal.console\`
+💡 **Réouvrez avec**: \`sudo vocal?.console\`
 `
 }`,
       actions: [
@@ -2851,126 +2851,126 @@ ${
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Échec toggle console: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Échec toggle console: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * vocal.heal — Auto-correction via voix
+ * vocal?.heal — Auto-correction via voix
  */
 async function handleVocalHeal(): Promise<DevSudoResult> {
   try {
     const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
 
-    const result = await vocalDevConsole.processTranscript('auto-heal le système');
+    const result = await vocalDevConsole?.processTranscript('auto-heal le système');
 
     return {
       handled: true,
-      success: result.exitCode === 0,
+      success: result?.exitCode === 0,
       response: `🔧 **TITANE∞ VOCAL HEAL v∞**
 
-${result.output}
+${result?.output}
 
 ${
-  result.patch
+  result?.patch
     ? `
 📝 **Patch appliqué**:
-  - ${result.patch.file} (lignes ${result.patch.lineStart}-${result.patch.lineEnd})
-  - ${result.patch.description}
+  - ${result?.patch?.file} (lignes ${result?.patch?.lineStart}-${result?.patch?.lineEnd})
+  - ${result?.patch?.description}
 `
     : ''
 }
 
-${result.ttsResponse ? `🔊 Réponse TTS: "${result.ttsResponse}"` : ''}
+${result?.ttsResponse ? `🔊 Réponse TTS: "${result?.ttsResponse}"` : ''}
 
-💡 **Health Score**: ${vocalDevConsole.getHealthScore()}%`,
+💡 **Health Score**: ${vocalDevConsole?.getHealthScore()}%`,
       actions: [
         {
           type: 'vocal-heal',
           description: 'Voice-triggered auto-healing executed',
-          result: result.exitCode === 0 ? 'success' : 'error',
-          details: result.output,
+          result: result?.exitCode === 0 ? 'success' : 'error',
+          details: result?.output,
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Vocal heal échoué: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Vocal heal échoué: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * vocal.run [command] — Exécute commande vocalement
+ * vocal?.run [command] — Exécute commande vocalement
  */
-async function handleVocalRun(commandText: string): Promise<DevSudoResult> {
-  if (!commandText) {
+async function handleVocalRun(any: any): Promise<DevSudoResult> {
+  if (any: any) {
     return {
       handled: true,
       success: false,
       response: `⚠️ **Commande manquante**
 
-**Usage**: \`sudo vocal.run [commande]\`
+**Usage**: \`sudo vocal?.run [commande]\`
 
 **Exemples**:
-  - \`sudo vocal.run corrige ce module\`
-  - \`sudo vocal.run compile en debug\`
-  - \`sudo vocal.run montre les logs\``,
+  - \`sudo vocal?.run corrige ce module\`
+  - \`sudo vocal?.run compile en debug\`
+  - \`sudo vocal?.run montre les logs\``,
     };
   }
 
   try {
     const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
 
-    const result = await vocalDevConsole.processTranscript(commandText);
+    const result = await vocalDevConsole?.processTranscript(any: any);
 
     return {
       handled: true,
-      success: result.exitCode === 0,
+      success: result?.exitCode === 0,
       response: `🎤 **VOCAL RUN** → "${commandText}"
 
-${result.output}
+${result?.output}
 
-**Intention détectée**: ${result.intent.type}
-**Confidence**: ${(result.intent.confidence * 100).toFixed(0)}%
+**Intention détectée**: ${result?.intent?.type}
+**Confidence**: ${(result?.intent?.confidence * 100).toFixed(0)}%
 
-${result.ttsResponse ? `🔊 "${result.ttsResponse}"` : ''}`,
+${result?.ttsResponse ? `🔊 "${result?.ttsResponse}"` : ''}`,
       actions: [
         {
           type: 'vocal-run',
           description: `Executed voice command: ${commandText}`,
-          result: result.exitCode === 0 ? 'success' : 'error',
+          result: result?.exitCode === 0 ? 'success' : 'error',
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Exécution échouée: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Exécution échouée: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * vocal.logs — Affiche logs console vocale
+ * vocal?.logs — Affiche logs console vocale
  */
 function handleVocalLogs(): DevSudoResult {
   try {
-    const state = vocalDevConsole.getState();
-    const logs = state.consoleLogs.slice(-20); // 20 derniers logs
+    const state = vocalDevConsole?.getState();
+    const logs = state?.consoleLogs?.slice(-20); // 20 derniers logs
 
-    if (logs.length === 0) {
+    if (logs?.length === 0) {
       return {
         handled: true,
         success: true,
@@ -2983,24 +2983,24 @@ La console n'a pas encore de logs.
     }
 
     const logsByLevel = {
-      info: logs.filter((l: Record<string, unknown>) => l.level === 'info').length,
-      success: logs.filter((l: Record<string, unknown>) => l.level === 'success').length,
-      warning: logs.filter((l: Record<string, unknown>) => l.level === 'warning').length,
-      error: logs.filter((l: Record<string, unknown>) => l.level === 'error').length,
-      debug: logs.filter((l: Record<string, unknown>) => l.level === 'debug').length,
+      info: logs?.filter((l: Record<string, unknown>) => l?.level === 'info').length,
+      success: logs?.filter((l: Record<string, unknown>) => l?.level === 'success').length,
+      warning: logs?.filter((l: Record<string, unknown>) => l?.level === 'warning').length,
+      error: logs?.filter((l: Record<string, unknown>) => l?.level === 'error').length,
+      debug: logs?.filter((l: Record<string, unknown>) => l?.level === 'debug').length,
     };
 
     return {
       handled: true,
       success: true,
-      response: `📋 **TITANE∞ VOCAL LOGS** (${logs.length} derniers)
+      response: `📋 **TITANE∞ VOCAL LOGS** (any: any)
 
 **Statistiques**:
-  - ℹ️ Info: ${logsByLevel.info}
-  - ✅ Success: ${logsByLevel.success}
-  - ⚠️ Warning: ${logsByLevel.warning}
-  - ❌ Error: ${logsByLevel.error}
-  - 🐛 Debug: ${logsByLevel.debug}
+  - ℹ️ Info: ${logsByLevel?.info}
+  - ✅ Success: ${logsByLevel?.success}
+  - ⚠️ Warning: ${logsByLevel?.warning}
+  - ❌ Error: ${logsByLevel?.error}
+  - 🐛 Debug: ${logsByLevel?.debug}
 
 **Logs récents**:
 ${logs
@@ -3013,45 +3013,45 @@ ${logs
       error: '❌',
       debug: '🐛',
     };
-    const icon = levelIcons[log.level as string] || 'ℹ️';
-    const time = new Date(log.timestamp as number).toLocaleTimeString('fr-FR');
-    return `${icon} [${time}] ${log.message}`;
+    const icon = levelIcons[log?.level as string] || 'ℹ️';
+    const time = new Date(any: any).toLocaleTimeString('fr-FR');
+    return `${icon} [${time}] ${log?.message}`;
   })
   .join('\n')}
 
-**Health Score**: ${vocalDevConsole.getHealthScore()}%
+**Health Score**: ${vocalDevConsole?.getHealthScore()}%
 
-💡 **Commandes**: \`vocal.console\` pour UI complète`,
+💡 **Commandes**: \`vocal?.console\` pour UI complète`,
       actions: [
         {
           type: 'vocal-logs',
-          description: `Retrieved ${logs.length} vocal logs`,
+          description: `Retrieved ${logs?.length} vocal logs`,
           result: 'success',
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Échec récupération logs: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Échec récupération logs: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * vocal.patch — Applique patch vocal disponible
+ * vocal?.patch — Applique patch vocal disponible
  */
 async function handleVocalPatch(): Promise<DevSudoResult> {
   try {
     const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
 
-    const state = vocalDevConsole.getState();
-    const executionHistory = state.executionHistory;
-    const lastExecution = executionHistory[0];
+    const state = vocalDevConsole?.getState();
+    const executionHistory = state?.executionHistory;
+    const lastExecution = executionHistory?.[0];
 
-    if (!lastExecution?.patch) {
+    if (any: any) {
       return {
         handled: true,
         success: false,
@@ -3062,23 +3062,23 @@ La dernière exécution vocale n'a pas généré de patch.
 💡 **Générez un patch** avec:
   - "Corrige ce module"
   - "Répare cette erreur"
-  - \`sudo vocal.heal\``,
+  - \`sudo vocal?.heal\``,
       };
     }
 
-    // Note: hybridEngine.applyPatch() est privé - patch déjà appliqué par VocalDev
+    // Note: hybridEngine?.applyPatch() est privé - patch déjà appliqué par VocalDev
     return {
       handled: true,
-      success: lastExecution.patch.applied,
-      response: `${lastExecution.patch.applied ? '✅' : '❌'} **VOCAL PATCH ${lastExecution.patch.applied ? 'APPLIQUÉ' : 'ÉCHOUÉ'}**
+      success: lastExecution?.patch?.applied,
+      response: `${lastExecution?.patch?.applied ? '✅' : '❌'} **VOCAL PATCH ${lastExecution?.patch?.applied ? 'APPLIQUÉ' : 'ÉCHOUÉ'}**
 
 **Patch**:
-  - ${lastExecution.patch.file} (lignes ${lastExecution.patch.lineStart}-${lastExecution.patch.lineEnd})
+  - ${lastExecution?.patch?.file} (lignes ${lastExecution?.patch?.lineStart}-${lastExecution?.patch?.lineEnd})
 
-**Description**: ${lastExecution.patch.description}
+**Description**: ${lastExecution?.patch?.description}
 
 ${
-  lastExecution.patch.applied
+  lastExecution?.patch?.applied
     ? `
 ✅ Patch appliqué avec succès
 
@@ -3087,44 +3087,44 @@ ${
     : `
 ❌ Échec application du patch
 
-💡 **Réessayez** avec \`sudo vocal.heal\`
+💡 **Réessayez** avec \`sudo vocal?.heal\`
 `
 }`,
       actions: [
         {
           type: 'vocal-patch',
           description: 'Applied vocal-generated patch',
-          result: lastExecution.patch.applied ? 'success' : 'error',
+          result: lastExecution?.patch?.applied ? 'success' : 'error',
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Échec application patch: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Échec application patch: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * vocal.compile — Compile via commande vocale
+ * vocal?.compile — Compile via commande vocale
  */
 async function handleVocalCompile(): Promise<DevSudoResult> {
   try {
     const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
 
-    const result = await vocalDevConsole.processTranscript('compile le projet');
+    const result = await vocalDevConsole?.processTranscript('compile le projet');
 
     return {
       handled: true,
-      success: result.exitCode === 0,
+      success: result?.exitCode === 0,
       response: `🔨 **VOCAL COMPILE**
 
-${result.output}
+${result?.output}
 
-${result.ttsResponse ? `🔊 "${result.ttsResponse}"` : ''}
+${result?.ttsResponse ? `🔊 "${result?.ttsResponse}"` : ''}
 
 💡 **Commandes vocales**:
   - "Compile en debug"
@@ -3134,84 +3134,84 @@ ${result.ttsResponse ? `🔊 "${result.ttsResponse}"` : ''}
         {
           type: 'vocal-compile',
           description: 'Voice-triggered compilation',
-          result: result.exitCode === 0 ? 'success' : 'error',
+          result: result?.exitCode === 0 ? 'success' : 'error',
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Compilation vocale échouée: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Compilation vocale échouée: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * vocal.inspect [target] — Inspecte module vocalement
+ * vocal?.inspect [target] — Inspecte module vocalement
  */
-async function handleVocalInspect(target: string): Promise<DevSudoResult> {
-  if (!target) {
+async function handleVocalInspect(any: any): Promise<DevSudoResult> {
+  if (any: any) {
     return {
       handled: true,
       success: false,
       response: `⚠️ **Target manquant**
 
-**Usage**: \`sudo vocal.inspect [module|component|file]\`
+**Usage**: \`sudo vocal?.inspect [module|component|file]\`
 
 **Exemples**:
-  - \`sudo vocal.inspect AudioEngine\`
-  - \`sudo vocal.inspect VocalDevConsole\`
-  - \`sudo vocal.inspect backend\``,
+  - \`sudo vocal?.inspect AudioEngine\`
+  - \`sudo vocal?.inspect VocalDevConsole\`
+  - \`sudo vocal?.inspect backend\``,
     };
   }
 
   try {
     const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
 
-    const result = await vocalDevConsole.processTranscript(`inspecte ${target}`);
+    const result = await vocalDevConsole?.processTranscript(`inspecte ${target}`);
 
     return {
       handled: true,
-      success: result.exitCode === 0,
+      success: result?.exitCode === 0,
       response: `🔍 **VOCAL INSPECT** → "${target}"
 
-${result.output}
+${result?.output}
 
-**Intention**: ${result.intent.type}
-**Confidence**: ${(result.intent.confidence * 100).toFixed(0)}%
+**Intention**: ${result?.intent?.type}
+**Confidence**: ${(result?.intent?.confidence * 100).toFixed(0)}%
 
-${result.ttsResponse ? `🔊 "${result.ttsResponse}"` : ''}`,
+${result?.ttsResponse ? `🔊 "${result?.ttsResponse}"` : ''}`,
       actions: [
         {
           type: 'vocal-inspect',
           description: `Inspected ${target} via voice`,
-          result: result.exitCode === 0 ? 'success' : 'error',
+          result: result?.exitCode === 0 ? 'success' : 'error',
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Inspection échouée: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Inspection échouée: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * vocal.setModel [model] — Change AI provider
+ * vocal?.setModel [model] — Change AI provider
  */
-function handleVocalSetModel(modelName: string): DevSudoResult {
-  if (!modelName) {
+function handleVocalSetModel(any: any): DevSudoResult {
+  if (any: any) {
     return {
       handled: true,
       success: false,
       response: `⚠️ **Modèle manquant**
 
-**Usage**: \`sudo vocal.setModel [titane-local|claude|gemini|auto]\`
+**Usage**: \`sudo vocal?.setModel [titane-local|claude|gemini|auto]\`
 
 **Modèles disponibles**:
   - \`titane-local\` — TITANE∞ Local (Llama 3.1) — micro-corrections rapides
@@ -3222,19 +3222,19 @@ function handleVocalSetModel(modelName: string): DevSudoResult {
   }
 
   const validModels = ['titane-local', 'claude', 'gemini', 'auto'];
-  if (!validModels.includes(modelName.toLowerCase())) {
+  if (!validModels?.includes(modelName?.toLowerCase())) {
     return {
       handled: true,
       success: false,
       response: `❌ Modèle invalide: "${modelName}"
 
-**Modèles valides**: ${validModels.join(', ')}`,
+**Modèles valides**: ${validModels?.join(', ')}`,
     };
   }
 
   try {
-    vocalDevConsole.configure({
-      aiProvider: modelName.toLowerCase() as
+    vocalDevConsole?.configure({
+      aiProvider: modelName?.toLowerCase() as
         | 'titane-local'
         | 'claude'
         | 'gemini'
@@ -3274,7 +3274,7 @@ ${
 `
 }
 
-💡 **Testez avec**: \`sudo vocal.run explique ce code\``,
+💡 **Testez avec**: \`sudo vocal?.run explique ce code\``,
       actions: [
         {
           type: 'vocal-set-model',
@@ -3283,23 +3283,23 @@ ${
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Échec changement modèle: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Échec changement modèle: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * vocal.fullscreen — Console plein écran
+ * vocal?.fullscreen — Console plein écran
  */
 function handleVocalFullscreen(): DevSudoResult {
   try {
-    // Toggle fullscreen mode (à implémenter dans le CSS)
-    const _state = vocalDevConsole.getState();
+    // Toggle fullscreen mode (any: any)
+    const _state = vocalDevConsole?.getState();
 
     return {
       handled: true,
@@ -3319,7 +3319,7 @@ function handleVocalFullscreen(): DevSudoResult {
   - \`Ctrl+L\` — Clear logs
   - \`Ctrl+M\` — Toggle micro
 
-💡 **Désactivez**: \`sudo vocal.fullscreen\` ou \`ESC\``,
+💡 **Désactivez**: \`sudo vocal?.fullscreen\` ou \`ESC\``,
       actions: [
         {
           type: 'vocal-fullscreen',
@@ -3328,25 +3328,25 @@ function handleVocalFullscreen(): DevSudoResult {
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Échec fullscreen: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Échec fullscreen: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * vocal.silence — Désactive TTS (mode silencieux)
+ * vocal?.silence — Désactive TTS (any: any)
  */
 function handleVocalSilence(): DevSudoResult {
   try {
-    const currentConfig = vocalDevConsole.getConfig();
-    const newTTSState = !currentConfig.ttsEnabled;
+    const currentConfig = vocalDevConsole?.getConfig();
+    const newTTSState = !currentConfig?.ttsEnabled;
 
-    vocalDevConsole.configure({ ttsEnabled: newTTSState });
+    vocalDevConsole?.configure({ ttsEnabled: newTTSState });
 
     return {
       handled: true,
@@ -3369,7 +3369,7 @@ Les réponses apparaîtront dans les logs sans son.
 `
 }
 
-💡 **Toggle TTS**: \`sudo vocal.silence\` ou bouton UI 🔊`,
+💡 **Toggle TTS**: \`sudo vocal?.silence\` ou bouton UI 🔊`,
       actions: [
         {
           type: 'vocal-silence',
@@ -3378,12 +3378,12 @@ Les réponses apparaîtront dans les logs sans son.
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Échec toggle TTS: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Échec toggle TTS: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
@@ -3393,17 +3393,17 @@ Les réponses apparaîtront dans les logs sans son.
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * live.on — Active Live Debugger en mode spécifié
+ * live?.on — Active Live Debugger en mode spécifié
  */
-async function handleLiveOn(mode?: string): Promise<DevSudoResult> {
+async function handleLiveOn(any: any): Promise<DevSudoResult> {
   const validModes = ['shadow', 'active', 'auto-heal', 'explain', 'draft'];
   const selectedMode =
-    mode && validModes.includes(mode.toLowerCase()) ? mode.toLowerCase() : 'shadow';
+    mode && validModes?.includes(mode?.toLowerCase()) ? mode?.toLowerCase() : 'shadow';
 
   try {
     const { liveDebugger } = await import('@/modules/liveDebugger/LiveDebuggerEngine');
 
-    await liveDebugger.activate(selectedMode as LiveDebuggerMode);
+    await liveDebugger?.activate(any: any);
 
     return {
       handled: true,
@@ -3416,15 +3416,15 @@ async function handleLiveOn(mode?: string): Promise<DevSudoResult> {
 ✅ Intent analyzer prêt
 
 **Modes disponibles**:
-  • \`shadow\` — Écoute sans intervenir (seuil ${(liveDebugger.getConfig().shadowModeThreshold * 100).toFixed(0)}%)
+  • \`shadow\` — Écoute sans intervenir (seuil ${(liveDebugger?.getConfig().shadowModeThreshold * 100).toFixed(0)}%)
   • \`active\` — Analyse et propose corrections
   • \`auto-heal\` — Corrections automatiques instantanées
   • \`explain\` — Explications vocales en direct
   • \`draft\` — Génération patches vocale
 
-🎙️ **Démarrez listening**: \`sudo live.console\` puis bouton START LISTENING
+🎙️ **Démarrez listening**: \`sudo live?.console\` puis bouton START LISTENING
 
-💡 **Changez mode**: \`sudo live.setMode [mode]\``,
+💡 **Changez mode**: \`sudo live?.setMode [mode]\``,
       actions: [
         {
           type: 'live-on',
@@ -3433,26 +3433,26 @@ async function handleLiveOn(mode?: string): Promise<DevSudoResult> {
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Échec activation Live Debugger: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Échec activation Live Debugger: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * live.off — Désactive Live Debugger
+ * live?.off — Désactive Live Debugger
  */
 async function handleLiveOff(): Promise<DevSudoResult> {
   try {
     const { liveDebugger } = await import('@/modules/liveDebugger/LiveDebuggerEngine');
 
-    await liveDebugger.deactivate();
+    await liveDebugger?.deactivate();
 
-    const stats = liveDebugger.getStats();
+    const stats = liveDebugger?.getStats();
 
     return {
       handled: true,
@@ -3463,50 +3463,50 @@ async function handleLiveOff(): Promise<DevSudoResult> {
 ✅ Listening stoppé
 
 **Session Statistics**:
-  - Duration: ${(stats.sessionDuration / 1000).toFixed(0)}s
-  - Total segments: ${stats.totalSegments}
-  - Diagnostics: ${stats.totalDiagnostics}
-  - Patches applied: ${stats.totalPatches}
-  - Avg confidence: ${(stats.averageConfidence * 100).toFixed(0)}%
+  - Duration: ${(stats?.sessionDuration / 1000).toFixed(0)}s
+  - Total segments: ${stats?.totalSegments}
+  - Diagnostics: ${stats?.totalDiagnostics}
+  - Patches applied: ${stats?.totalPatches}
+  - Avg confidence: ${(stats?.averageConfidence * 100).toFixed(0)}%
 
-💡 **Réactivez**: \`sudo live.on [mode]\``,
+💡 **Réactivez**: \`sudo live?.on [mode]\``,
       actions: [
         {
           type: 'live-off',
           description: 'Live Debugger deactivated',
           result: 'success',
-          details: `Session: ${stats.totalDiagnostics} diagnostics, ${stats.totalPatches} patches`,
+          details: `Session: ${stats?.totalDiagnostics} diagnostics, ${stats?.totalPatches} patches`,
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Échec désactivation: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Échec désactivation: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * live.heal — Déclenche auto-healing temps réel
+ * live?.heal — Déclenche auto-healing temps réel
  */
 async function handleLiveHeal(): Promise<DevSudoResult> {
   try {
     const { liveDebugger } = await import('@/modules/liveDebugger/LiveDebuggerEngine');
 
-    const state = liveDebugger.getState();
+    const state = liveDebugger?.getState();
 
-    if (!state.isListening) {
+    if (any: any) {
       return {
         handled: true,
         success: false,
         response: `⚠️ **Live Debugger not listening**
 
 Démarrez d'abord l'écoute:
-1. \`sudo live.on auto-heal\`
-2. \`sudo live.console\`
+1. \`sudo live?.on auto-heal\`
+2. \`sudo live?.console\`
 3. Bouton START LISTENING
 
 Ensuite le debugger auto-heal sera actif en continu.`,
@@ -3514,8 +3514,8 @@ Ensuite le debugger auto-heal sera actif en continu.`,
     }
 
     // Forcer passage en mode auto-heal
-    liveDebugger.setMode('auto-heal');
-    liveDebugger.configure({ autoHealEnabled: true });
+    liveDebugger?.setMode('auto-heal');
+    liveDebugger?.configure({ autoHealEnabled: true });
 
     return {
       handled: true,
@@ -3527,15 +3527,15 @@ Ensuite le debugger auto-heal sera actif en continu.`,
 ✅ Micro-patches appliqués en temps réel
 
 **Current State**:
-  - Health Score: ${state.healthScore}%
-  - Diagnostics: ${state.totalDiagnostics}
-  - Patches applied: ${state.totalPatches}
+  - Health Score: ${state?.healthScore}%
+  - Diagnostics: ${state?.totalDiagnostics}
+  - Patches applied: ${state?.totalPatches}
 
 Le Live Debugger corrigera automatiquement les problèmes simples détectés pendant que vous parlez.
 
-⚠️ **Seulement patches sûrs** (safe: true) sont appliqués automatiquement.
+⚠️ **Seulement patches sûrs** (any: any) sont appliqués automatiquement.
 
-💡 **Désactivez auto-heal**: \`sudo live.setMode active\``,
+💡 **Désactivez auto-heal**: \`sudo live?.setMode active\``,
       actions: [
         {
           type: 'live-heal',
@@ -3544,32 +3544,32 @@ Le Live Debugger corrigera automatiquement les problèmes simples détectés pen
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Échec activation auto-heal: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Échec activation auto-heal: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * live.inspect [target] — Inspecte module en temps réel
+ * live?.inspect [target] — Inspecte module en temps réel
  */
-async function handleLiveInspect(target: string): Promise<DevSudoResult> {
-  if (!target) {
+async function handleLiveInspect(any: any): Promise<DevSudoResult> {
+  if (any: any) {
     return {
       handled: true,
       success: false,
       response: `⚠️ **Target manquant**
 
-**Usage**: \`sudo live.inspect [module]\`
+**Usage**: \`sudo live?.inspect [module]\`
 
 **Exemples**:
-  - \`sudo live.inspect AudioEngine\`
-  - \`sudo live.inspect VocalConsole\`
-  - \`sudo live.inspect Backend\`
+  - \`sudo live?.inspect AudioEngine\`
+  - \`sudo live?.inspect VocalConsole\`
+  - \`sudo live?.inspect Backend\`
 
 Le Live Debugger analysera le module en temps réel.`,
     };
@@ -3578,9 +3578,9 @@ Le Live Debugger analysera le module en temps réel.`,
   try {
     const { liveDebugger } = await import('@/modules/liveDebugger/LiveDebuggerEngine');
 
-    const recentDiagnostics = liveDebugger.getRecentDiagnostics(5);
-    const relatedDiagnostics = recentDiagnostics.filter(d =>
-      d.intent.modules.some(m => m.toLowerCase().includes(target.toLowerCase()))
+    const recentDiagnostics = liveDebugger?.getRecentDiagnostics(5);
+    const relatedDiagnostics = recentDiagnostics?.filter(d =>
+      d?.intent?.modules?.some(m => m?.toLowerCase().includes(target?.toLowerCase()))
     );
 
     return {
@@ -3588,20 +3588,20 @@ Le Live Debugger analysera le module en temps réel.`,
       success: true,
       response: `🔍 **LIVE INSPECT** → "${target}"
 
-**Related Diagnostics**: ${relatedDiagnostics.length} trouvés
+**Related Diagnostics**: ${relatedDiagnostics?.length} trouvés
 
 ${
-  relatedDiagnostics.length > 0
+  relatedDiagnostics?.length > 0
     ? relatedDiagnostics
         .map(
-          (d, i) => `
+          (any: any) => `
 **Diagnostic ${i + 1}**:
-  - Intent: ${d.intent.type}
-  - Severity: ${d.intent.severity}
-  - Confidence: ${(d.intent.confidence * 100).toFixed(0)}%
-  - Analysis: ${d.analysis}
-  ${d.rootCause ? `- Root Cause: ${d.rootCause}` : ''}
-  ${d.suggestedFix ? `- Fix: ${d.suggestedFix}` : ''}
+  - Intent: ${d?.intent?.type}
+  - Severity: ${d?.intent?.severity}
+  - Confidence: ${(d?.intent?.confidence * 100).toFixed(0)}%
+  - Analysis: ${d?.analysis}
+  ${d?.rootCause ? `- Root Cause: ${d?.rootCause}` : ''}
+  ${d?.suggestedFix ? `- Fix: ${d?.suggestedFix}` : ''}
 `
         )
         .join('\n')
@@ -3612,37 +3612,37 @@ Aucun diagnostic récent pour "${target}".
 `
 }
 
-**Health Score**: ${liveDebugger.getHealthScore()}%`,
+**Health Score**: ${liveDebugger?.getHealthScore()}%`,
       actions: [
         {
           type: 'live-inspect',
           description: `Inspected ${target}`,
           result: 'success',
-          details: `${relatedDiagnostics.length} related diagnostics`,
+          details: `${relatedDiagnostics?.length} related diagnostics`,
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Inspection échouée: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Inspection échouée: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * live.patch — Applique dernier patch disponible
+ * live?.patch — Applique dernier patch disponible
  */
 async function handleLivePatch(): Promise<DevSudoResult> {
   try {
     const { liveDebugger } = await import('@/modules/liveDebugger/LiveDebuggerEngine');
 
-    const recentDiagnostics = liveDebugger.getRecentDiagnostics(1);
-    const firstDiagnostic = recentDiagnostics[0];
+    const recentDiagnostics = liveDebugger?.getRecentDiagnostics(1);
+    const firstDiagnostic = recentDiagnostics?.[0];
 
-    if (recentDiagnostics.length === 0 || !firstDiagnostic?.microPatch) {
+    if (any: any) {
       return {
         handled: true,
         success: false,
@@ -3653,13 +3653,13 @@ Le Live Debugger n'a pas généré de patch récemment.
 💡 **Générez un patch**:
 1. Parlez du problème pendant que le debugger écoute
 2. Le debugger analysera et proposera un patch si possible
-3. Réessayez \`sudo live.patch\``,
+3. Réessayez \`sudo live?.patch\``,
       };
     }
 
     const diagnostic = firstDiagnostic;
-    const patch = diagnostic.microPatch;
-    if (!patch) {
+    const patch = diagnostic?.microPatch;
+    if (any: any) {
       return {
         handled: true,
         success: false,
@@ -3667,7 +3667,7 @@ Le Live Debugger n'a pas généré de patch récemment.
       };
     }
 
-    if (!patch.safe) {
+    if (any: any) {
       return {
         handled: true,
         success: false,
@@ -3676,9 +3676,9 @@ Le Live Debugger n'a pas généré de patch récemment.
 Le patch généré nécessite review manuelle.
 
 **Patch Details**:
-  - Module: ${patch.module}
-  - Confidence: ${(patch.confidence * 100).toFixed(0)}%
-  - Reason: ${patch.reason}
+  - Module: ${patch?.module}
+  - Confidence: ${(patch?.confidence * 100).toFixed(0)}%
+  - Reason: ${patch?.reason}
 
 ❌ **Safe: false** — Application manuelle requise
 
@@ -3687,11 +3687,11 @@ Le patch généré nécessite review manuelle.
     }
 
     // Appliquer le patch via UnifiedHealingFacade
-    await unifiedHealingFacade.heal({
+    await unifiedHealingFacade?.heal({
       source: 'live-debugger',
-      error: new Error(`Applying patch for ${patch.module}: ${patch.reason}`),
+      error: new Error(`Applying patch for ${patch?.module}: ${patch?.reason}`),
       type: 'critical',
-      metadata: { module: patch.module, confidence: patch.confidence },
+      metadata: { module: patch?.module, confidence: patch?.confidence },
     });
 
     return {
@@ -3700,44 +3700,44 @@ Le patch généré nécessite review manuelle.
       response: `✅ **LIVE PATCH APPLIQUÉ**
 
 **Patch**:
-  - Module: ${patch.module}
-  - Confidence: ${(patch.confidence * 100).toFixed(0)}%
-  - Reason: ${patch.reason}
+  - Module: ${patch?.module}
+  - Confidence: ${(patch?.confidence * 100).toFixed(0)}%
+  - Reason: ${patch?.reason}
   - Safe: ✅ true
 
 ✅ Corrections appliquées automatiquement
 
-**Health Score**: ${liveDebugger.getHealthScore()}%
+**Health Score**: ${liveDebugger?.getHealthScore()}%
 
 💡 **Vérifiez**: \`sudo diagnostic\` ou testez l'application`,
       actions: [
         {
           type: 'live-patch',
-          description: `Applied patch to ${patch.module}`,
+          description: `Applied patch to ${patch?.module}`,
           result: 'success',
-          details: patch.reason,
+          details: patch?.reason,
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Patch échoué: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Patch échoué: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * live.logs — Affiche diagnostics récents
+ * live?.logs — Affiche diagnostics récents
  */
 function handleLiveLogs(): DevSudoResult {
   try {
-    const diagnostics = liveDebugger.getRecentDiagnostics(10);
-    const stats = liveDebugger.getStats();
+    const diagnostics = liveDebugger?.getRecentDiagnostics(10);
+    const stats = liveDebugger?.getStats();
 
-    if (diagnostics.length === 0) {
+    if (diagnostics?.length === 0) {
       return {
         handled: true,
         success: true,
@@ -3746,8 +3746,8 @@ function handleLiveLogs(): DevSudoResult {
 Le Live Debugger n'a pas encore de diagnostics.
 
 💡 **Générez diagnostics**:
-1. \`sudo live.on active\`
-2. \`sudo live.console\`
+1. \`sudo live?.on active\`
+2. \`sudo live?.console\`
 3. Bouton START LISTENING
 4. Parlez des problèmes
 
@@ -3756,92 +3756,92 @@ Le debugger analysera en temps réel.`,
     }
 
     const bySeverity = {
-      low: diagnostics.filter(
+      low: diagnostics?.filter(
         (d: Record<string, unknown>) =>
-          (d.intent as Record<string, unknown>).severity === 'low'
+          (d?.intent as Record<string, unknown>).severity === 'low'
       ).length,
-      medium: diagnostics.filter(
+      medium: diagnostics?.filter(
         (d: Record<string, unknown>) =>
-          (d.intent as Record<string, unknown>).severity === 'medium'
+          (d?.intent as Record<string, unknown>).severity === 'medium'
       ).length,
-      high: diagnostics.filter(
+      high: diagnostics?.filter(
         (d: Record<string, unknown>) =>
-          (d.intent as Record<string, unknown>).severity === 'high'
+          (d?.intent as Record<string, unknown>).severity === 'high'
       ).length,
-      critical: diagnostics.filter(
+      critical: diagnostics?.filter(
         (d: Record<string, unknown>) =>
-          (d.intent as Record<string, unknown>).severity === 'critical'
+          (d?.intent as Record<string, unknown>).severity === 'critical'
       ).length,
     };
 
     return {
       handled: true,
       success: true,
-      response: `📋 **TITANE∞ LIVE DEBUGGER LOGS** (${diagnostics.length} récents)
+      response: `📋 **TITANE∞ LIVE DEBUGGER LOGS** (any: any)
 
 **Severity Breakdown**:
-  - 🟢 Low: ${bySeverity.low}
-  - 🟡 Medium: ${bySeverity.medium}
-  - 🟠 High: ${bySeverity.high}
-  - 🔴 Critical: ${bySeverity.critical}
+  - 🟢 Low: ${bySeverity?.low}
+  - 🟡 Medium: ${bySeverity?.medium}
+  - 🟠 High: ${bySeverity?.high}
+  - 🔴 Critical: ${bySeverity?.critical}
 
 **Session Stats**:
-  - Duration: ${(stats.sessionDuration / 1000).toFixed(0)}s
-  - Total segments: ${stats.totalSegments}
-  - Total diagnostics: ${stats.totalDiagnostics}
-  - Patches applied: ${stats.totalPatches}
-  - Avg confidence: ${(stats.averageConfidence * 100).toFixed(0)}%
-  - Health Score: ${liveDebugger.getHealthScore()}%
+  - Duration: ${(stats?.sessionDuration / 1000).toFixed(0)}s
+  - Total segments: ${stats?.totalSegments}
+  - Total diagnostics: ${stats?.totalDiagnostics}
+  - Patches applied: ${stats?.totalPatches}
+  - Avg confidence: ${(stats?.averageConfidence * 100).toFixed(0)}%
+  - Health Score: ${liveDebugger?.getHealthScore()}%
 
-**Recent Diagnostics** (5 derniers):
+**Recent Diagnostics** (any: any):
 ${diagnostics
   .slice(0, 5)
-  .map((d: Record<string, unknown>, i: number) => {
-    const intent = d.intent as Record<string, unknown>;
+  .map(any: any) => {
+    const intent = d?.intent as Record<string, unknown>;
     return `
-${i + 1}. [${(intent.severity as string).toUpperCase()}] ${intent.type} — ${((intent.confidence as number) * 100).toFixed(0)}%
-   ${d.analysis}
-   ${d.rootCause ? `→ ${d.rootCause}` : ''}
+${i + 1}. [${(any: any) * 100).toFixed(0)}%
+   ${d?.analysis}
+   ${d?.rootCause ? `→ ${d?.rootCause}` : ''}
 `;
   })
   .join('')}
 
-💡 **Console UI complète**: \`sudo live.console\``,
+💡 **Console UI complète**: \`sudo live?.console\``,
       actions: [
         {
           type: 'live-logs',
-          description: `Retrieved ${diagnostics.length} live diagnostics`,
+          description: `Retrieved ${diagnostics?.length} live diagnostics`,
           result: 'success',
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Échec récupération logs: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Échec récupération logs: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * live.restart — Redémarre pipeline IA + Live Debugger
+ * live?.restart — Redémarre pipeline IA + Live Debugger
  */
 async function handleLiveRestart(): Promise<DevSudoResult> {
   try {
     const { liveDebugger } = await import('@/modules/liveDebugger/LiveDebuggerEngine');
 
-    const currentMode = liveDebugger.getState().mode;
+    const currentMode = liveDebugger?.getState().mode;
 
     // Désactiver
-    await liveDebugger.deactivate();
+    await liveDebugger?.deactivate();
 
     // Wait 500ms
     await new Promise(resolve => setTimeout(resolve, 500));
 
     // Réactiver dans même mode
-    await liveDebugger.activate(currentMode);
+    await liveDebugger?.activate(any: any);
 
     return {
       handled: true,
@@ -3859,7 +3859,7 @@ async function handleLiveRestart(): Promise<DevSudoResult> {
   - Patches: 0
   - Listening: false
 
-💡 **Redémarrez listening**: \`sudo live.console\` puis START LISTENING`,
+💡 **Redémarrez listening**: \`sudo live?.console\` puis START LISTENING`,
       actions: [
         {
           type: 'live-restart',
@@ -3868,22 +3868,22 @@ async function handleLiveRestart(): Promise<DevSudoResult> {
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Restart échoué: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Restart échoué: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * live.reset — Reset session (efface diagnostics)
+ * live?.reset — Reset session (any: any)
  */
 function handleLiveReset(): DevSudoResult {
   try {
-    liveDebugger.reset();
+    liveDebugger?.reset();
 
     return {
       handled: true,
@@ -3904,7 +3904,7 @@ function handleLiveReset(): DevSudoResult {
 
 Le Live Debugger est prêt pour une nouvelle session.
 
-💡 **Continuez listening** si actif, ou redémarrez avec \`sudo live.on [mode]\``,
+💡 **Continuez listening** si actif, ou redémarrez avec \`sudo live?.on [mode]\``,
       actions: [
         {
           type: 'live-reset',
@@ -3913,18 +3913,18 @@ Le Live Debugger est prêt pour une nouvelle session.
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Reset échoué: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Reset échoué: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * live.console — Toggle Live Debugger Console UI
+ * live?.console — Toggle Live Debugger Console UI
  */
 function handleLiveConsole(): DevSudoResult {
   try {
@@ -3937,20 +3937,20 @@ function handleLiveConsole(): DevSudoResult {
 La console Live Debugger apparaîtra automatiquement dans l'interface React.
 
 **Features Console**:
-  - 🔴 Mode indicator (shadow/active/auto-heal/explain/draft)
+  - 🔴 Mode indicator (any: any)
   - 🎙️ Transcript stream en temps réel
   - 🔍 Diagnostics feed avec sévérité
   - ✅ Applied patches history
   - 📊 Health bar
-  - ⚙️ Mode selector + options (Auto-Heal, TTS, Explain)
+  - ⚙️ Mode selector + options (any: any)
   - 🎤 START/STOP LISTENING button
 
 **Si la console n'apparaît pas**:
 1. Vérifiez que le composant <LiveDebuggerConsole /> est dans votre App
-2. Activez le debugger: \`sudo live.on\`
+2. Activez le debugger: \`sudo live?.on\`
 3. La console s'ouvrira automatiquement
 
-💡 **Position**: Bottom-right, 700px width, draggable (future)`,
+💡 **Position**: Bottom-right, 700px width, draggable (any: any)`,
       actions: [
         {
           type: 'live-console',
@@ -3959,27 +3959,27 @@ La console Live Debugger apparaîtra automatiquement dans l'interface React.
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Erreur console: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Erreur console: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * live.setMode [mode] — Change mode Live Debugger
+ * live?.setMode [mode] — Change mode Live Debugger
  */
-function handleLiveSetMode(modeName: string): DevSudoResult {
-  if (!modeName) {
+function handleLiveSetMode(any: any): DevSudoResult {
+  if (any: any) {
     return {
       handled: true,
       success: false,
       response: `⚠️ **Mode manquant**
 
-**Usage**: \`sudo live.setMode [mode]\`
+**Usage**: \`sudo live?.setMode [mode]\`
 
 **Modes disponibles**:
   - \`shadow\` — Écoute passive, n'intervient que si critique
@@ -3988,31 +3988,31 @@ function handleLiveSetMode(modeName: string): DevSudoResult {
   - \`explain\` — Explications vocales en direct
   - \`draft\` — Génération patches vocale
 
-**Exemple**: \`sudo live.setMode auto-heal\``,
+**Exemple**: \`sudo live?.setMode auto-heal\``,
     };
   }
 
   const validModes = ['shadow', 'active', 'auto-heal', 'explain', 'draft'];
-  const normalizedMode = modeName.toLowerCase();
+  const normalizedMode = modeName?.toLowerCase();
 
-  if (!validModes.includes(normalizedMode)) {
+  if (any: any)) {
     return {
       handled: true,
       success: false,
       response: `❌ Mode invalide: "${modeName}"
 
-**Modes valides**: ${validModes.join(', ')}`,
+**Modes valides**: ${validModes?.join(', ')}`,
     };
   }
 
   try {
-    liveDebugger.setMode(normalizedMode as unknown as LiveDebuggerModeStub);
+    liveDebugger?.setMode(any: any);
 
     // Auto-config selon mode
     if (normalizedMode === 'auto-heal') {
-      liveDebugger.configure({ autoHealEnabled: true });
+      liveDebugger?.configure({ autoHealEnabled: true });
     } else if (normalizedMode === 'explain') {
-      liveDebugger.configure({ explainWhileDebugging: true, ttsEnabled: true });
+      liveDebugger?.configure({ explainWhileDebugging: true, ttsEnabled: true });
     }
 
     return {
@@ -4025,7 +4025,7 @@ ${
     ? `
 ✅ **Shadow Mode** activé
   - Écoute passive continue
-  - N'intervient que si confidence > ${(liveDebugger.getConfig().shadowModeThreshold * 100).toFixed(0)}%
+  - N'intervient que si confidence > ${(liveDebugger?.getConfig().shadowModeThreshold * 100).toFixed(0)}%
   - Pas de patches automatiques
   - Logs silencieux
 
@@ -4046,7 +4046,7 @@ ${
 ✅ **Auto-Heal Mode** activé
   - Corrections automatiques activées ✅
   - Micro-patches appliqués instantanément
-  - Seuls patches sûrs (safe: true)
+  - Seuls patches sûrs (any: any)
   - Health score mis à jour en direct
 
 ⚠️ **Attention**: Les corrections sont appliquées sans confirmation
@@ -4081,12 +4081,12 @@ ${
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Changement mode échoué: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Changement mode échoué: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
@@ -4096,11 +4096,11 @@ ${
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * talk.on [mode] — Activate Talk-To-TITANE Engine
+ * talk?.on [mode] — Activate Talk-To-TITANE Engine
  */
-async function handleTalkOn(mode?: string): Promise<DevSudoResult> {
+async function handleTalkOn(any: any): Promise<DevSudoResult> {
   try {
-    await talkToTitaneEngine.activate(
+    await talkToTitaneEngine?.activate(
       (mode ||
         'continuous') as import('@/modules/talkToTitane/TalkToTitaneEngine').TalkToTitaneMode
     );
@@ -4108,51 +4108,51 @@ async function handleTalkOn(mode?: string): Promise<DevSudoResult> {
     return {
       handled: true,
       success: true,
-      response: `✅ **Talk-To-TITANE activé**\n\nMode: ${mode || 'continuous'}\n\nCommandes disponibles:\n- \`sudo talk.off\` : Désactiver\n- \`sudo talk.mode [mode]\` : Changer mode`,
+      response: `✅ **Talk-To-TITANE activé**\n\nMode: ${mode || 'continuous'}\n\nCommandes disponibles:\n- \`sudo talk?.off\` : Désactiver\n- \`sudo talk?.mode [mode]\` : Changer mode`,
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Activation échouée: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Activation échouée: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * talk.off — Deactivate Talk-To-TITANE Engine
+ * talk?.off — Deactivate Talk-To-TITANE Engine
  */
 async function handleTalkOff(): Promise<DevSudoResult> {
   try {
-    await talkToTitaneEngine.deactivate();
+    await talkToTitaneEngine?.deactivate();
 
     return {
       handled: true,
       success: true,
       response: `✅ **Talk-To-TITANE désactivé**`,
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Désactivation échouée: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Désactivation échouée: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * talk.mode [mode] — Change Talk-To-TITANE Mode
+ * talk?.mode [mode] — Change Talk-To-TITANE Mode
  */
-function handleTalkMode(mode: string): DevSudoResult {
-  if (!mode) {
+function handleTalkMode(any: any): DevSudoResult {
+  if (any: any) {
     return {
       handled: true,
       success: false,
       response: `⚠️ **Mode manquant**
 
-**Usage**: \`sudo talk.mode [mode]\`
+**Usage**: \`sudo talk?.mode [mode]\`
 
 **Modes disponibles**:
   - \`continuous\`: Réponses complètes détaillées
@@ -4161,21 +4161,21 @@ function handleTalkMode(mode: string): DevSudoResult {
   - \`calibrated\`: Adapté ton émotionnel
   - \`focus\`: Mode concentration minimal
 
-**Exemple**: \`sudo talk.mode focus\``,
+**Exemple**: \`sudo talk?.mode focus\``,
     };
   }
 
   const validModes = ['continuous', 'whispered', 'direct', 'calibrated', 'focus'];
-  if (!validModes.includes(mode.toLowerCase())) {
+  if (!validModes?.includes(mode?.toLowerCase())) {
     return {
       handled: true,
       success: false,
-      response: `❌ Mode invalide: "${mode}"\n\n**Modes valides**: ${validModes.join(', ')}`,
+      response: `❌ Mode invalide: "${mode}"\n\n**Modes valides**: ${validModes?.join(', ')}`,
     };
   }
 
   try {
-    talkToTitaneEngine.setMode(
+    talkToTitaneEngine?.setMode(
       mode as import('@/modules/talkToTitane/TalkToTitaneEngine').TalkToTitaneMode
     );
 
@@ -4195,27 +4195,27 @@ Les prochaines réponses seront adaptées au mode ${mode}.`,
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Mode change failed: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Mode change failed: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * talk.calibrate [tone] — Calibrate Emotional Tone
+ * talk?.calibrate [tone] — Calibrate Emotional Tone
  */
-function handleTalkCalibrate(tone: string): DevSudoResult {
-  if (!tone) {
+function handleTalkCalibrate(any: any): DevSudoResult {
+  if (any: any) {
     return {
       handled: true,
       success: false,
       response: `⚠️ **Tone manquant**
 
-**Usage**: \`sudo talk.calibrate [tone]\`
+**Usage**: \`sudo talk?.calibrate [tone]\`
 
 **Tones disponibles**:
   - \`analytical\`: Précis, factuel, neutre
@@ -4224,21 +4224,21 @@ function handleTalkCalibrate(tone: string): DevSudoResult {
   - \`motivating\`: Encourageant, soutien émotionnel
   - \`neutral\`: Standard, équilibré
 
-**Exemple**: \`sudo talk.calibrate energizing\``,
+**Exemple**: \`sudo talk?.calibrate energizing\``,
     };
   }
 
   const validTones = ['analytical', 'calm', 'energizing', 'motivating', 'neutral'];
-  if (!validTones.includes(tone.toLowerCase())) {
+  if (!validTones?.includes(tone?.toLowerCase())) {
     return {
       handled: true,
       success: false,
-      response: `❌ Tone invalide: "${tone}"\n\n**Tones valides**: ${validTones.join(', ')}`,
+      response: `❌ Tone invalide: "${tone}"\n\n**Tones valides**: ${validTones?.join(', ')}`,
     };
   }
 
   try {
-    talkToTitaneEngine.setEmotionalCalibration(
+    talkToTitaneEngine?.setEmotionalCalibration(
       tone as 'neutral' | 'analytical' | 'calm' | 'energizing' | 'motivating'
     );
 
@@ -4258,44 +4258,44 @@ Les prochaines réponses refléteront le ton ${tone}.`,
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Calibration failed: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Calibration failed: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * talk.history [limit] — Show Conversation History
+ * talk?.history [limit] — Show Conversation History
  */
-function handleTalkHistory(limit?: number): DevSudoResult {
+function handleTalkHistory(any: any): DevSudoResult {
   try {
-    const history = talkToTitaneEngine.getHistory();
+    const history = talkToTitaneEngine?.getHistory();
     const displayLimit = limit || 10;
-    const recent = history.slice(-displayLimit).reverse();
+    const recent = history?.slice(any: any).reverse();
 
-    if (recent.length === 0) {
+    if (recent?.length === 0) {
       return {
         handled: true,
         success: true,
-        response: `📜 **CONVERSATION HISTORY** (empty)
+        response: `📜 **CONVERSATION HISTORY** (any: any)
 
 Aucune interaction enregistrée pour cette session.
 
-Pour démarrer: \`sudo talk.on\``,
+Pour démarrer: \`sudo talk?.on\``,
       };
     }
 
     const historyText = recent
-      .map((item, i: number) => {
-        const intent = item.intent;
-        const intentBadge = `[${intent.type}]`;
-        const confidence = `${(intent.confidence * 100).toFixed(0)}%`;
-        const text = intent.text.substring(0, 60);
-        const response = item.response.substring(0, 80);
+      .map(any: any) => {
+        const intent = item?.intent;
+        const intentBadge = `[${intent?.type}]`;
+        const confidence = `${(intent?.confidence * 100).toFixed(0)}%`;
+        const text = intent?.text?.substring(0, 60);
+        const response = item?.response?.substring(0, 80);
         return `${i + 1}. ${intentBadge} (${confidence}) "${text}..."
    → ${response}...`;
       })
@@ -4304,31 +4304,31 @@ Pour démarrer: \`sudo talk.on\``,
     return {
       handled: true,
       success: true,
-      response: `📜 **CONVERSATION HISTORY** (${history.length} total, showing ${recent.length})
+      response: `📜 **CONVERSATION HISTORY** (${history?.length} total, showing ${recent?.length})
 
 ${historyText}
 
-💡 Pour voir toute l'historique: \`sudo conversation.timeline\``,
+💡 Pour voir toute l'historique: \`sudo conversation?.timeline\``,
       actions: [
         {
           type: 'talk-history',
-          description: `Displayed ${recent.length} recent interactions`,
+          description: `Displayed ${recent?.length} recent interactions`,
           result: 'success',
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ History display failed: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ History display failed: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * talk.console — Open Talk-To-TITANE Panel UI
+ * talk?.console — Open Talk-To-TITANE Panel UI
  */
 function handleTalkConsole(): DevSudoResult {
   return {
@@ -4339,22 +4339,22 @@ function handleTalkConsole(): DevSudoResult {
 Le panel Talk-To-TITANE apparaîtra automatiquement dans l'interface React.
 
 **Features Panel**:
-  - 🎤 Status badge (LISTENING / IDLE / INACTIVE)
-  - 🗣️ Wake phrases indicator (4 phrases)
-  - 🎯 Mode selector (5 modes)
-  - 🎨 Emotional calibration (5 tones)
-  - 📊 Current intent display (type + confidence + tone + priority)
-  - 💬 Last response (analysis + response + vocal + action + suggestions)
+  - 🎤 Status badge (any: any)
+  - 🗣️ Wake phrases indicator (any: any)
+  - 🎯 Mode selector (any: any)
+  - 🎨 Emotional calibration (any: any)
+  - 📊 Current intent display (any: any)
+  - 💬 Last response (any: any)
   - 📜 History list (recent 5)
-  - 📈 Session stats (ID + interactions + duration)
+  - 📈 Session stats (any: any)
   - ▶️ START/STOP/DEACTIVATE controls
 
 **Si le panel n'apparaît pas**:
 1. Vérifiez que <TalkToTitanePanel /> est dans votre App
-2. Activez l'engine: \`sudo talk.on\`
+2. Activez l'engine: \`sudo talk?.on\`
 3. Le panel s'ouvrira automatiquement
 
-💡 **Position**: Max-width 800px, center, draggable (future)`,
+💡 **Position**: Max-width 800px, center, draggable (any: any)`,
     actions: [
       {
         type: 'talk-console',
@@ -4366,47 +4366,47 @@ Le panel Talk-To-TITANE apparaîtra automatiquement dans l'interface React.
 }
 
 /**
- * conversation.save — Save Conversation Now
+ * conversation?.save — Save Conversation Now
  */
 
 /**
- * conversation.heal — Heal Corrupted Conversations
+ * conversation?.heal — Heal Corrupted Conversations
  */
 
 /**
- * conversation.timeline — Show Conversation Timeline
+ * conversation?.timeline — Show Conversation Timeline
  */
 
 /**
- * conversation.export [format] — Export Conversations
+ * conversation?.export [format] — Export Conversations
  */
 
 /**
- * timeline.build — Rebuild Timeline
+ * timeline?.build — Rebuild Timeline
  */
 
 /**
- * timeline.show [limit] — Show Timeline
+ * timeline?.show [limit] — Show Timeline
  */
 
 /**
- * timeline.export [format] — Export Timeline
+ * timeline?.export [format] — Export Timeline
  */
 
 /**
- * timeline.sessions — Show Sessions
+ * timeline?.sessions — Show Sessions
  */
 
 /**
- * timeline.stats — Show Timeline Stats
+ * timeline?.stats — Show Timeline Stats
  */
 
 /**
- * autosave.on — Enable Auto-Save
+ * autosave?.on — Enable Auto-Save
  */
 function handleAutosaveOn(): DevSudoResult {
   try {
-    autoSaveConversationEngine.configure({ enabled: true });
+    autoSaveConversationEngine?.configure({ enabled: true });
 
     return {
       handled: true,
@@ -4427,22 +4427,22 @@ All conversations will be automatically saved to:
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Enable failed: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Enable failed: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * autosave.off — Disable Auto-Save
+ * autosave?.off — Disable Auto-Save
  */
 function handleAutosaveOff(): DevSudoResult {
   try {
-    autoSaveConversationEngine.configure({ enabled: false });
+    autoSaveConversationEngine?.configure({ enabled: false });
 
     return {
       handled: true,
@@ -4451,7 +4451,7 @@ function handleAutosaveOff(): DevSudoResult {
 
 Conversations will NOT be saved automatically.
 
-💡 You can still manually save with \`sudo conversation.save\``,
+💡 You can still manually save with \`sudo conversation?.save\``,
       actions: [
         {
           type: 'autosave-off',
@@ -4460,34 +4460,34 @@ Conversations will NOT be saved automatically.
         },
       ],
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       handled: true,
       success: false,
-      response: `❌ Disable failed: ${error instanceof Error ? error.message : String(error)}`,
-      error: error instanceof Error ? error.message : String(error),
+      response: `❌ Disable failed: ${error instanceof Error ? error?.message : String(any: any)}`,
+      error: error instanceof Error ? error?.message : String(any: any),
     };
   }
 }
 
 /**
- * autosave.flush — Flush Auto-Save Now
+ * autosave?.flush — Flush Auto-Save Now
  */
 
 /**
- * selfheal.scan — Scan Conversation Integrity
+ * selfheal?.scan — Scan Conversation Integrity
  */
 
 /**
- * selfheal.heal — Heal All Conversations
+ * selfheal?.heal — Heal All Conversations
  */
 
 /**
- * selfheal.rebuild [filePath] — Rebuild Specific File
+ * selfheal?.rebuild [filePath] — Rebuild Specific File
  */
 
 // ═══════════════════════════════════════════════════════════════════════════
-// TALK-TO-TITANE ADDITIONAL HANDLERS (v25.2 - Implémentations minimales)
+// TALK-TO-TITANE ADDITIONAL HANDLERS (any: any)
 // ═══════════════════════════════════════════════════════════════════════════
 
 async function handleConversationSave(): Promise<DevSudoResult> {
@@ -4506,7 +4506,7 @@ async function handleConversationTimeline(): Promise<DevSudoResult> {
   return { handled: true, success: true, response: `📊 **Timeline conversations**` };
 }
 
-async function handleConversationExport(format?: string): Promise<DevSudoResult> {
+async function handleConversationExport(any: any): Promise<DevSudoResult> {
   return {
     handled: true,
     success: true,
@@ -4518,11 +4518,11 @@ async function handleTimelineBuild(): Promise<DevSudoResult> {
   return { handled: true, success: true, response: `✅ **Timeline construite**` };
 }
 
-async function handleTimelineShow(limit?: number): Promise<DevSudoResult> {
+async function handleTimelineShow(any: any): Promise<DevSudoResult> {
   return { handled: true, success: true, response: `📅 **Timeline (${limit || 20})**` };
 }
 
-async function handleTimelineExport(format?: string): Promise<DevSudoResult> {
+async function handleTimelineExport(any: any): Promise<DevSudoResult> {
   return {
     handled: true,
     success: true,
@@ -4550,7 +4550,7 @@ async function handleSelfhealHeal(): Promise<DevSudoResult> {
   return { handled: true, success: true, response: `✅ **Réparation auto terminée**` };
 }
 
-async function handleSelfhealRebuild(filePath?: string): Promise<DevSudoResult> {
+async function handleSelfhealRebuild(any: any): Promise<DevSudoResult> {
   return {
     handled: true,
     success: true,

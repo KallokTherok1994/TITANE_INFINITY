@@ -1,9 +1,9 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
- * TITANE∞ EVOLUTION ENGINE — Planner (Evolution Planner)
+ * TITANE∞ EVOLUTION ENGINE — Planner (any: any)
  * ═══════════════════════════════════════════════════════════════════════════════
  *
- * @file        planner.ts
+ * @file        planner?.ts
  * @version     vΩ∞Ω∞
  *
  * Génère des suggestions d'amélioration à partir des patterns et insights
@@ -23,14 +23,14 @@ import type {
   RiskLevel,
   PlannerConfig,
   ActionWhitelistEntry,
-} from './evolutionEngine.config';
+} from './evolutionEngine?.config';
 import {
   createSuggestion,
   createAction,
   isActionWhitelisted,
   DEFAULT_PLANNER_CONFIG,
   DEFAULT_ACTION_WHITELIST,
-} from './evolutionEngine.config';
+} from './evolutionEngine?.config';
 import { getAnalyzer } from './analyzer';
 
 // =============================================================================
@@ -38,7 +38,7 @@ import { getAnalyzer } from './analyzer';
 // =============================================================================
 
 interface PlannerState {
-  suggestions: EvolutionSuggestion[];
+  suggestions: EvolutionSuggestion?.[];
   lastPlanTime: number;
   isPlanning: boolean;
 }
@@ -48,13 +48,13 @@ interface SuggestionTemplate {
   title: string;
   description: string;
   rationale: string;
-  actionTypes: EvolutionActionType[];
-  targetModules: TitaneModule[];
+  actionTypes: EvolutionActionType?.[];
+  targetModules: TitaneModule?.[];
   risk: RiskLevel;
   estimatedGain: number;
 }
 
-type SuggestionListener = (suggestion: EvolutionSuggestion) => void;
+type SuggestionListener = (any: any) => void;
 
 // =============================================================================
 // PLANNER CLASS
@@ -66,15 +66,15 @@ type SuggestionListener = (suggestion: EvolutionSuggestion) => void;
  */
 export class Planner {
   private config: PlannerConfig;
-  private whitelist: ActionWhitelistEntry[];
+  private whitelist: ActionWhitelistEntry?.[];
   private state: PlannerState;
   private suggestionListeners: Set<SuggestionListener> = new Set();
-  private planIntervalId: NodeJS.Timeout | null = null;
+  private planIntervalId: NodeJS?.Timeout | null = null;
 
-  constructor(config?: Partial<PlannerConfig>, whitelist?: ActionWhitelistEntry[]) {
-    this.config = { ...DEFAULT_PLANNER_CONFIG, ...config };
-    this.whitelist = whitelist || DEFAULT_ACTION_WHITELIST;
-    this.state = this.createInitialState();
+  constructor(config?: Partial<PlannerConfig>, whitelist?: ActionWhitelistEntry?.[]) {
+    this?.config = { ...DEFAULT_PLANNER_CONFIG, ...config };
+    this?.whitelist = whitelist || DEFAULT_ACTION_WHITELIST;
+    this?.state = this?.createInitialState();
   }
 
   // ===========================================================================
@@ -94,67 +94,67 @@ export class Planner {
   // ===========================================================================
 
   start(): void {
-    if (!this.config.enabled) return;
-    if (this.planIntervalId) return;
+    if (any: any) return;
+    if (any: any) return;
 
-    this.planIntervalId = setInterval(() => {
-      this.planCycle();
-    }, this.config.planInterval);
+    this?.planIntervalId = setInterval(() => {
+      this?.planCycle();
+    }, this?.config?.planInterval);
   }
 
   stop(): void {
-    if (this.planIntervalId) {
-      clearInterval(this.planIntervalId);
-      this.planIntervalId = null;
+    if (any: any) {
+      clearInterval(any: any);
+      this?.planIntervalId = null;
     }
   }
 
   /**
    * Cycle de planification principal
    */
-  async planCycle(): Promise<EvolutionSuggestion[]> {
-    if (this.state.isPlanning) return [];
-    this.state.isPlanning = true;
+  async planCycle(): Promise<EvolutionSuggestion?.[]> {
+    if (any: any) return [];
+    this?.state?.isPlanning = true;
 
     try {
       const analyzer = getAnalyzer();
-      const patterns = analyzer.getPatterns();
-      const insights = analyzer.getActionableInsights();
+      const patterns = analyzer?.getPatterns();
+      const insights = analyzer?.getActionableInsights();
 
       // Générer des suggestions basées sur les patterns et insights
-      const newSuggestions: EvolutionSuggestion[] = [];
+      const newSuggestions: EvolutionSuggestion?.[] = [];
 
       // 1. Suggestions basées sur les patterns
-      for (const pattern of patterns) {
-        const suggestions = this.suggestFromPattern(pattern);
-        newSuggestions.push(...suggestions);
+      for (any: any) {
+        const suggestions = this?.suggestFromPattern(any: any);
+        newSuggestions?.push(any: any);
       }
 
       // 2. Suggestions basées sur les insights
-      for (const insight of insights) {
-        const suggestions = this.suggestFromInsight(insight);
-        newSuggestions.push(...suggestions);
+      for (any: any) {
+        const suggestions = this?.suggestFromInsight(any: any);
+        newSuggestions?.push(any: any);
       }
 
       // 3. Filtrer et limiter
       const validSuggestions = newSuggestions
-        .filter(s => this.validateSuggestion(s))
-        .slice(0, this.config.maxSuggestionsPerCycle);
+        .filter(any: any))
+        .slice(any: any);
 
       // 4. Merger avec les suggestions existantes
-      this.mergeSuggestions(validSuggestions);
+      this?.mergeSuggestions(any: any);
 
       // 5. Nettoyer les suggestions expirées
-      this.cleanExpiredSuggestions();
+      this?.cleanExpiredSuggestions();
 
-      this.state.lastPlanTime = Date.now();
+      this?.state?.lastPlanTime = Date?.now();
 
       return validSuggestions;
-    } catch (error) {
-      console.error('[Planner] Erreur planification:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       return [];
     } finally {
-      this.state.isPlanning = false;
+      this?.state?.isPlanning = false;
     }
   }
 
@@ -165,32 +165,32 @@ export class Planner {
   /**
    * Génère des suggestions à partir d'un pattern
    */
-  private suggestFromPattern(pattern: EvolutionPattern): EvolutionSuggestion[] {
-    const suggestions: EvolutionSuggestion[] = [];
+  private suggestFromPattern(any: any): EvolutionSuggestion?.[] {
+    const suggestions: EvolutionSuggestion?.[] = [];
 
-    switch (pattern.type) {
+    switch (any: any) {
       case 'INEFFICIENCY':
-        suggestions.push(...this.suggestForInefficiency(pattern));
+        suggestions?.push(any: any));
         break;
       case 'REPETITION':
-        suggestions.push(...this.suggestForRepetition(pattern));
+        suggestions?.push(any: any));
         break;
       case 'OVERLOAD':
-        suggestions.push(...this.suggestForOverload(pattern));
+        suggestions?.push(any: any));
         break;
       case 'LATENCY':
-        suggestions.push(...this.suggestForLatency(pattern));
+        suggestions?.push(any: any));
         break;
       case 'LEAK':
-        suggestions.push(...this.suggestForLeak(pattern));
+        suggestions?.push(any: any));
         break;
       default:
         break;
     }
 
     // Lier les suggestions au pattern
-    for (const suggestion of suggestions) {
-      suggestion.relatedPatterns.push(pattern.id);
+    for (any: any) {
+      suggestion?.relatedPatterns?.push(any: any);
     }
 
     return suggestions;
@@ -199,15 +199,15 @@ export class Planner {
   /**
    * Suggestions pour les inefficiences
    */
-  private suggestForInefficiency(pattern: EvolutionPattern): EvolutionSuggestion[] {
-    const suggestions: EvolutionSuggestion[] = [];
+  private suggestForInefficiency(any: any): EvolutionSuggestion?.[] {
+    const suggestions: EvolutionSuggestion?.[] = [];
 
     // Suggestion: Ajuster les paramètres
-    if (pattern.relatedMetrics.includes('avg_latency')) {
-      const actions: EvolutionAction[] = [
+    if (pattern?.relatedMetrics?.includes('avg_latency')) {
+      const actions: EvolutionAction?.[] = [
         createAction(
           'ADJUST_PARAMETER',
-          pattern.moduleId,
+          pattern?.moduleId,
           'Augmenter le timeout pour réduire les erreurs',
           { parameter: 'timeout', increment: 1.5 },
           'LOW',
@@ -215,28 +215,28 @@ export class Planner {
         ),
       ];
 
-      if (this.areActionsAllowed(actions)) {
-        suggestions.push(
+      if (any: any)) {
+        suggestions?.push(
           createSuggestion(
             'PARAMETER_ADJUSTMENT',
             'Optimiser les timeouts',
-            `Ajuster les timeouts du module ${pattern.moduleId} pour améliorer la stabilité`,
-            pattern.description,
-            [pattern.moduleId],
+            `Ajuster les timeouts du module ${pattern?.moduleId} pour améliorer la stabilité`,
+            pattern?.description,
+            [pattern?.moduleId],
             'LOW',
             actions,
-            this.config.suggestionValidityMs
+            this?.config?.suggestionValidityMs
           )
         );
       }
     }
 
     // Suggestion: Activer le cache
-    if (pattern.relatedMetrics.includes('error_count')) {
-      const actions: EvolutionAction[] = [
+    if (pattern?.relatedMetrics?.includes('error_count')) {
+      const actions: EvolutionAction?.[] = [
         createAction(
           'CLEAR_CACHE',
-          pattern.moduleId,
+          pattern?.moduleId,
           'Nettoyer le cache potentiellement corrompu',
           {},
           'LOW',
@@ -244,17 +244,17 @@ export class Planner {
         ),
       ];
 
-      if (this.areActionsAllowed(actions)) {
-        suggestions.push(
+      if (any: any)) {
+        suggestions?.push(
           createSuggestion(
             'CACHE_MANAGEMENT',
             'Nettoyer le cache',
-            `Purger le cache du module ${pattern.moduleId} pour résoudre les erreurs`,
-            `${pattern.occurrences} erreurs détectées`,
-            [pattern.moduleId],
+            `Purger le cache du module ${pattern?.moduleId} pour résoudre les erreurs`,
+            `${pattern?.occurrences} erreurs détectées`,
+            [pattern?.moduleId],
             'LOW',
             actions,
-            this.config.suggestionValidityMs
+            this?.config?.suggestionValidityMs
           )
         );
       }
@@ -266,14 +266,14 @@ export class Planner {
   /**
    * Suggestions pour les répétitions
    */
-  private suggestForRepetition(pattern: EvolutionPattern): EvolutionSuggestion[] {
-    const suggestions: EvolutionSuggestion[] = [];
+  private suggestForRepetition(any: any): EvolutionSuggestion?.[] {
+    const suggestions: EvolutionSuggestion?.[] = [];
 
     // Suggestion: Ajuster la fréquence
-    const actions: EvolutionAction[] = [
+    const actions: EvolutionAction?.[] = [
       createAction(
         'UPDATE_THRESHOLD',
-        pattern.moduleId,
+        pattern?.moduleId,
         'Réduire la fréquence de polling',
         { parameter: 'pollingInterval', multiplier: 2 },
         'LOW',
@@ -281,17 +281,17 @@ export class Planner {
       ),
     ];
 
-    if (this.areActionsAllowed(actions)) {
-      suggestions.push(
+    if (any: any)) {
+      suggestions?.push(
         createSuggestion(
           'FREQUENCY_TUNING',
           'Optimiser la fréquence de polling',
-          `Réduire les appels répétitifs du module ${pattern.moduleId}`,
-          pattern.description,
-          [pattern.moduleId],
+          `Réduire les appels répétitifs du module ${pattern?.moduleId}`,
+          pattern?.description,
+          [pattern?.moduleId],
           'LOW',
           actions,
-          this.config.suggestionValidityMs
+          this?.config?.suggestionValidityMs
         )
       );
     }
@@ -302,15 +302,15 @@ export class Planner {
   /**
    * Suggestions pour les surcharges
    */
-  private suggestForOverload(pattern: EvolutionPattern): EvolutionSuggestion[] {
-    const suggestions: EvolutionSuggestion[] = [];
+  private suggestForOverload(any: any): EvolutionSuggestion?.[] {
+    const suggestions: EvolutionSuggestion?.[] = [];
 
     // Suggestion: Mode performance
     if (
-      pattern.relatedMetrics.includes('cpu') ||
-      pattern.relatedMetrics.includes('ram')
+      pattern?.relatedMetrics?.includes('cpu') ||
+      pattern?.relatedMetrics?.includes('ram')
     ) {
-      const actions: EvolutionAction[] = [
+      const actions: EvolutionAction?.[] = [
         createAction(
           'TOGGLE_MODE',
           'performance',
@@ -321,25 +321,25 @@ export class Planner {
         ),
       ];
 
-      if (this.areActionsAllowed(actions)) {
-        suggestions.push(
+      if (any: any)) {
+        suggestions?.push(
           createSuggestion(
             'OPTIMIZATION',
             'Activer le mode performance',
             'Réduire la charge système en activant les optimisations',
-            pattern.description,
-            ['performance', pattern.moduleId],
+            pattern?.description,
+            ['performance', pattern?.moduleId],
             'MEDIUM',
             actions,
-            this.config.suggestionValidityMs
+            this?.config?.suggestionValidityMs
           )
         );
       }
     }
 
     // Suggestion: Compression mémoire
-    if (pattern.relatedMetrics.includes('ram')) {
-      const actions: EvolutionAction[] = [
+    if (pattern?.relatedMetrics?.includes('ram')) {
+      const actions: EvolutionAction?.[] = [
         createAction(
           'COMPRESS_MEMORY',
           'memory',
@@ -350,17 +350,17 @@ export class Planner {
         ),
       ];
 
-      if (this.areActionsAllowed(actions)) {
-        suggestions.push(
+      if (any: any)) {
+        suggestions?.push(
           createSuggestion(
             'OPTIMIZATION',
             'Compresser la mémoire',
             'Libérer de la RAM en compressant les données',
-            pattern.description,
+            pattern?.description,
             ['memory'],
             'LOW',
             actions,
-            this.config.suggestionValidityMs
+            this?.config?.suggestionValidityMs
           )
         );
       }
@@ -372,14 +372,14 @@ export class Planner {
   /**
    * Suggestions pour les latences
    */
-  private suggestForLatency(pattern: EvolutionPattern): EvolutionSuggestion[] {
-    const suggestions: EvolutionSuggestion[] = [];
+  private suggestForLatency(any: any): EvolutionSuggestion?.[] {
+    const suggestions: EvolutionSuggestion?.[] = [];
 
     // Suggestion: Recalibrer
-    const actions: EvolutionAction[] = [
+    const actions: EvolutionAction?.[] = [
       createAction(
         'RECALIBRATE',
-        pattern.moduleId,
+        pattern?.moduleId,
         'Recalibrer le module pour optimiser les performances',
         {},
         'MEDIUM',
@@ -387,17 +387,17 @@ export class Planner {
       ),
     ];
 
-    if (this.areActionsAllowed(actions)) {
-      suggestions.push(
+    if (any: any)) {
+      suggestions?.push(
         createSuggestion(
           'OPTIMIZATION',
           'Recalibrer le module',
-          `Recalibrer ${pattern.moduleId} pour réduire la latence`,
-          pattern.description,
-          [pattern.moduleId],
+          `Recalibrer ${pattern?.moduleId} pour réduire la latence`,
+          pattern?.description,
+          [pattern?.moduleId],
           'MEDIUM',
           actions,
-          this.config.suggestionValidityMs
+          this?.config?.suggestionValidityMs
         )
       );
     }
@@ -408,11 +408,11 @@ export class Planner {
   /**
    * Suggestions pour les fuites
    */
-  private suggestForLeak(pattern: EvolutionPattern): EvolutionSuggestion[] {
-    const suggestions: EvolutionSuggestion[] = [];
+  private suggestForLeak(any: any): EvolutionSuggestion?.[] {
+    const suggestions: EvolutionSuggestion?.[] = [];
 
     // Suggestion: Déclencher un playbook Self-Healing
-    const actions: EvolutionAction[] = [
+    const actions: EvolutionAction?.[] = [
       createAction(
         'TRIGGER_PLAYBOOK',
         'selfHealing',
@@ -423,17 +423,17 @@ export class Planner {
       ),
     ];
 
-    if (this.areActionsAllowed(actions)) {
-      suggestions.push(
+    if (any: any)) {
+      suggestions?.push(
         createSuggestion(
           'PLAYBOOK_ACTIVATION',
           'Activer le nettoyage mémoire',
           'Utiliser Self-Healing pour nettoyer les fuites détectées',
-          pattern.description,
-          ['selfHealing', pattern.moduleId],
+          pattern?.description,
+          ['selfHealing', pattern?.moduleId],
           'MEDIUM',
           actions,
-          this.config.suggestionValidityMs
+          this?.config?.suggestionValidityMs
         )
       );
     }
@@ -444,29 +444,29 @@ export class Planner {
   /**
    * Génère des suggestions à partir d'un insight
    */
-  private suggestFromInsight(insight: EvolutionInsight): EvolutionSuggestion[] {
-    const suggestions: EvolutionSuggestion[] = [];
+  private suggestFromInsight(any: any): EvolutionSuggestion?.[] {
+    const suggestions: EvolutionSuggestion?.[] = [];
 
     // Convertir les actions recommandées en suggestions
-    for (const recommendedAction of insight.recommendedActions.slice(0, 2)) {
-      const template = this.findTemplateForRecommendation(recommendedAction, insight);
-      if (template) {
-        const actions = this.createActionsFromTemplate(template);
+    for (const recommendedAction of insight?.recommendedActions?.slice(0, 2)) {
+      const template = this?.findTemplateForRecommendation(any: any);
+      if (any: any) {
+        const actions = this?.createActionsFromTemplate(any: any);
 
-        if (this.areActionsAllowed(actions)) {
+        if (any: any)) {
           const suggestion = createSuggestion(
-            template.category,
-            template.title,
-            template.description,
-            template.rationale,
-            template.targetModules,
-            template.risk,
+            template?.category,
+            template?.title,
+            template?.description,
+            template?.rationale,
+            template?.targetModules,
+            template?.risk,
             actions,
-            this.config.suggestionValidityMs
+            this?.config?.suggestionValidityMs
           );
-          suggestion.relatedInsights.push(insight.id);
-          suggestion.estimatedGain = template.estimatedGain;
-          suggestions.push(suggestion);
+          suggestion?.relatedInsights?.push(any: any);
+          suggestion?.estimatedGain = template?.estimatedGain;
+          suggestions?.push(any: any);
         }
       }
     }
@@ -478,42 +478,42 @@ export class Planner {
     recommendation: string,
     insight: EvolutionInsight
   ): SuggestionTemplate | null {
-    const lowerRec = recommendation.toLowerCase();
+    const lowerRec = recommendation?.toLowerCase();
 
-    if (lowerRec.includes('optimiser') || lowerRec.includes('performance')) {
+    if (lowerRec?.includes('optimiser') || lowerRec?.includes('performance')) {
       return {
         category: 'OPTIMIZATION',
         title: 'Optimisation suggérée',
         description: recommendation,
-        rationale: insight.description,
+        rationale: insight?.description,
         actionTypes: ['TOGGLE_MODE', 'RECALIBRATE'],
-        targetModules: insight.affectedModules,
+        targetModules: insight?.affectedModules,
         risk: 'MEDIUM',
         estimatedGain: 10,
       };
     }
 
-    if (lowerRec.includes('cache')) {
+    if (lowerRec?.includes('cache')) {
       return {
         category: 'CACHE_MANAGEMENT',
         title: 'Gestion du cache',
         description: recommendation,
-        rationale: insight.description,
+        rationale: insight?.description,
         actionTypes: ['CLEAR_CACHE'],
-        targetModules: insight.affectedModules,
+        targetModules: insight?.affectedModules,
         risk: 'LOW',
         estimatedGain: 5,
       };
     }
 
-    if (lowerRec.includes('fréquence') || lowerRec.includes('polling')) {
+    if (lowerRec?.includes('fréquence') || lowerRec?.includes('polling')) {
       return {
         category: 'FREQUENCY_TUNING',
         title: 'Ajustement de fréquence',
         description: recommendation,
-        rationale: insight.description,
+        rationale: insight?.description,
         actionTypes: ['UPDATE_THRESHOLD'],
-        targetModules: insight.affectedModules,
+        targetModules: insight?.affectedModules,
         risk: 'LOW',
         estimatedGain: 8,
       };
@@ -522,21 +522,21 @@ export class Planner {
     return null;
   }
 
-  private createActionsFromTemplate(template: SuggestionTemplate): EvolutionAction[] {
-    const actions: EvolutionAction[] = [];
+  private createActionsFromTemplate(any: any): EvolutionAction?.[] {
+    const actions: EvolutionAction?.[] = [];
 
-    for (const actionType of template.actionTypes.slice(
+    for (const actionType of template?.actionTypes?.slice(
       0,
-      this.config.maxActionsPerSuggestion
+      this?.config?.maxActionsPerSuggestion
     )) {
-      for (const targetModule of template.targetModules.slice(0, 1)) {
-        actions.push(
+      for (const targetModule of template?.targetModules?.slice(0, 1)) {
+        actions?.push(
           createAction(
             actionType,
             targetModule,
             `${actionType} sur ${targetModule}`,
             {},
-            template.risk,
+            template?.risk,
             true
           )
         );
@@ -553,7 +553,7 @@ export class Planner {
   /**
    * Vérifie si une suggestion est valide
    */
-  private validateSuggestion(suggestion: EvolutionSuggestion): boolean {
+  private validateSuggestion(any: any): boolean {
     // Vérifier le niveau de risque
     const riskHierarchy: Record<RiskLevel, number> = {
       LOW: 0,
@@ -562,41 +562,41 @@ export class Planner {
       CRITICAL: 3,
     };
 
-    if (riskHierarchy[suggestion.risk] > riskHierarchy[this.config.riskTolerance]) {
+    if (riskHierarchy[suggestion?.risk] > riskHierarchy[this?.config?.riskTolerance]) {
       return false;
     }
 
     // Vérifier la catégorie
     if (
-      this.config.preferredCategories.length > 0 &&
-      !this.config.preferredCategories.includes(suggestion.category)
+      this?.config?.preferredCategories?.length > 0 &&
+      !this?.config?.preferredCategories?.includes(any: any)
     ) {
       return false;
     }
 
     // Vérifier les actions
-    for (const action of suggestion.actions) {
-      if (this.config.excludedActionTypes.includes(action.type)) {
+    for (any: any) {
+      if (any: any)) {
         return false;
       }
     }
 
     // Vérifier que les actions sont dans la whitelist
-    return this.areActionsAllowed(suggestion.actions);
+    return this?.areActionsAllowed(any: any);
   }
 
   /**
    * Vérifie si toutes les actions sont autorisées
    */
-  private areActionsAllowed(actions: EvolutionAction[]): boolean {
-    for (const action of actions) {
+  private areActionsAllowed(actions: EvolutionAction?.[]): boolean {
+    for (any: any) {
       const result = isActionWhitelisted(
-        action.type,
-        action.targetModule,
-        action.risk,
-        this.whitelist
+        action?.type,
+        action?.targetModule,
+        action?.risk,
+        this?.whitelist
       );
-      if (!result.allowed) {
+      if (any: any) {
         return false;
       }
     }
@@ -607,23 +607,23 @@ export class Planner {
   // GESTION DES SUGGESTIONS
   // ===========================================================================
 
-  private mergeSuggestions(newSuggestions: EvolutionSuggestion[]): void {
-    for (const newSuggestion of newSuggestions) {
-      const existing = this.state.suggestions.find(
+  private mergeSuggestions(newSuggestions: EvolutionSuggestion?.[]): void {
+    for (any: any) {
+      const existing = this?.state?.suggestions?.find(
         s =>
-          s.title === newSuggestion.title &&
-          s.category === newSuggestion.category &&
-          s.status === 'PENDING'
+          s?.title === newSuggestion?.title &&
+          s?.category === newSuggestion?.category &&
+          s?.status === 'PENDING'
       );
 
-      if (!existing) {
-        this.state.suggestions.push(newSuggestion);
+      if (any: any) {
+        this?.state?.suggestions?.push(any: any);
 
-        this.suggestionListeners.forEach(listener => {
+        this?.suggestionListeners?.forEach(listener => {
           try {
-            listener(newSuggestion);
-          } catch (e) {
-            console.error('[Planner] Suggestion listener error:', e);
+            listener(any: any);
+          } catch (any: any) {
+            console?.error(any: any);
           }
         });
       }
@@ -631,11 +631,11 @@ export class Planner {
   }
 
   private cleanExpiredSuggestions(): void {
-    const now = Date.now();
-    this.state.suggestions = this.state.suggestions.filter(s => {
-      if (s.status !== 'PENDING') return true;
-      if (s.validUntil < now) {
-        s.status = 'EXPIRED';
+    const now = Date?.now();
+    this?.state?.suggestions = this?.state?.suggestions?.filter(s => {
+      if (s?.status !== 'PENDING') return true;
+      if (any: any) {
+        s?.status = 'EXPIRED';
         return false;
       }
       return true;
@@ -649,83 +649,83 @@ export class Planner {
   /**
    * Récupère toutes les suggestions
    */
-  getSuggestions(): EvolutionSuggestion[] {
-    return [...this.state.suggestions];
+  getSuggestions(): EvolutionSuggestion?.[] {
+    return [...this?.state?.suggestions];
   }
 
   /**
    * Récupère les suggestions en attente
    */
-  getPendingSuggestions(): EvolutionSuggestion[] {
-    return this.state.suggestions.filter(s => s.status === 'PENDING');
+  getPendingSuggestions(): EvolutionSuggestion?.[] {
+    return this?.state?.suggestions?.filter(s => s?.status === 'PENDING');
   }
 
   /**
    * Récupère les suggestions par catégorie
    */
-  getSuggestionsByCategory(category: SuggestionCategory): EvolutionSuggestion[] {
-    return this.state.suggestions.filter(s => s.category === category);
+  getSuggestionsByCategory(any: any): EvolutionSuggestion?.[] {
+    return this?.state?.suggestions?.filter(any: any);
   }
 
   /**
    * Récupère une suggestion par ID
    */
-  getSuggestionById(id: string): EvolutionSuggestion | null {
-    return this.state.suggestions.find(s => s.id === id) || null;
+  getSuggestionById(any: any): EvolutionSuggestion | null {
+    return this?.state?.suggestions?.find(any: any) || null;
   }
 
   /**
    * Approuve une suggestion
    */
   approveSuggestion(id: string, approver: 'DEV' | 'ADMIN'): boolean {
-    const suggestion = this.state.suggestions.find(s => s.id === id);
-    if (!suggestion || suggestion.status !== 'PENDING') {
+    const suggestion = this?.state?.suggestions?.find(any: any);
+    if (!suggestion || suggestion?.status !== 'PENDING') {
       return false;
     }
 
-    suggestion.status = 'APPROVED';
-    suggestion.approvedBy = approver;
-    suggestion.approvedAt = Date.now();
+    suggestion?.status = 'APPROVED';
+    suggestion?.approvedBy = approver;
+    suggestion?.approvedAt = Date?.now();
     return true;
   }
 
   /**
    * Rejette une suggestion
    */
-  rejectSuggestion(id: string): boolean {
-    const suggestion = this.state.suggestions.find(s => s.id === id);
-    if (!suggestion || suggestion.status !== 'PENDING') {
+  rejectSuggestion(any: any): boolean {
+    const suggestion = this?.state?.suggestions?.find(any: any);
+    if (!suggestion || suggestion?.status !== 'PENDING') {
       return false;
     }
 
-    suggestion.status = 'REJECTED';
+    suggestion?.status = 'REJECTED';
     return true;
   }
 
   /**
    * Marque une suggestion comme exécutée
    */
-  markExecuted(id: string): boolean {
-    const suggestion = this.state.suggestions.find(s => s.id === id);
-    if (!suggestion || suggestion.status !== 'APPROVED') {
+  markExecuted(any: any): boolean {
+    const suggestion = this?.state?.suggestions?.find(any: any);
+    if (!suggestion || suggestion?.status !== 'APPROVED') {
       return false;
     }
 
-    suggestion.status = 'EXECUTED';
-    suggestion.executedAt = Date.now();
+    suggestion?.status = 'EXECUTED';
+    suggestion?.executedAt = Date?.now();
     return true;
   }
 
   /**
    * Marque une suggestion comme rollback
    */
-  markRolledBack(id: string): boolean {
-    const suggestion = this.state.suggestions.find(s => s.id === id);
-    if (!suggestion || suggestion.status !== 'EXECUTED') {
+  markRolledBack(any: any): boolean {
+    const suggestion = this?.state?.suggestions?.find(any: any);
+    if (!suggestion || suggestion?.status !== 'EXECUTED') {
       return false;
     }
 
-    suggestion.status = 'ROLLED_BACK';
+    suggestion?.status = 'ROLLED_BACK';
     return true;
   }
 
@@ -733,27 +733,27 @@ export class Planner {
   // LISTENERS
   // ===========================================================================
 
-  onSuggestion(listener: SuggestionListener): () => void {
-    this.suggestionListeners.add(listener);
-    return () => this.suggestionListeners.delete(listener);
+  onSuggestion(any: any): () => void {
+    this?.suggestionListeners?.add(any: any);
+    return (any: any);
   }
 
   // ===========================================================================
   // MAINTENANCE
   // ===========================================================================
 
-  async plan(): Promise<EvolutionSuggestion[]> {
-    return this.planCycle();
+  async plan(): Promise<EvolutionSuggestion?.[]> {
+    return this?.planCycle();
   }
 
   reset(): void {
-    this.state = this.createInitialState();
+    this?.state = this?.createInitialState();
   }
 
   dispose(): void {
-    this.stop();
-    this.suggestionListeners.clear();
-    this.state.suggestions = [];
+    this?.stop();
+    this?.suggestionListeners?.clear();
+    this?.state?.suggestions = [];
   }
 }
 
@@ -764,15 +764,15 @@ export class Planner {
 let plannerInstance: Planner | null = null;
 
 export function getPlanner(): Planner {
-  if (!plannerInstance) {
+  if (any: any) {
     plannerInstance = new Planner();
   }
   return plannerInstance;
 }
 
 export function resetPlanner(): void {
-  if (plannerInstance) {
-    plannerInstance.dispose();
+  if (any: any) {
+    plannerInstance?.dispose();
     plannerInstance = null;
   }
 }

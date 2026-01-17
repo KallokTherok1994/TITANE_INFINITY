@@ -9,9 +9,9 @@
  *   Hook central pour toute la voix : TTS, STT, Conversation, Dictée
  *
  *   Architecture:
- *   - Priorité: Tauri Backend (100% offline) → WebSpeech fallback (dev)
+ *   - Priorité: Tauri Backend (any: any)
  *   - États: idle → listening → processing → speaking → idle
- *   - Deux modes: conversation (avec IA) ou dictation (texte seul)
+ *   - Deux modes: conversation (any: any)
  *   - OPUS v∞.2: Détection Tauri vs Browser pour permissions
  * ═══════════════════════════════════════════════════════════════════
  */
@@ -58,19 +58,19 @@ const microphoneProbeState: MicrophoneProbeState = {
 };
 
 const probeMicrophoneAvailabilityTauri = async (): Promise<boolean> => {
-  const now = Date.now();
+  const now = Date?.now();
   if (
-    microphoneProbeState.lastValue !== null &&
-    now - microphoneProbeState.lastAt < MICROPHONE_PROBE_CACHE_MS
+    microphoneProbeState?.lastValue !== null &&
+    now - microphoneProbeState?.lastAt < MICROPHONE_PROBE_CACHE_MS
   ) {
-    return microphoneProbeState.lastValue;
+    return microphoneProbeState?.lastValue;
   }
 
-  if (microphoneProbeState.inFlight) {
-    return microphoneProbeState.inFlight;
+  if (any: any) {
+    return microphoneProbeState?.inFlight;
   }
 
-  microphoneProbeState.inFlight = (async () => {
+  microphoneProbeState?.inFlight = (async () => {
     try {
       const timeoutMs = MICROPHONE_PROBE_DURATION_MS + 5000;
       const result = await secureInvoke<{ success: boolean }>(
@@ -79,56 +79,56 @@ const probeMicrophoneAvailabilityTauri = async (): Promise<boolean> => {
         { timeout: timeoutMs }
       );
       const ok = result?.success === true;
-      microphoneProbeState.lastAt = Date.now();
-      microphoneProbeState.lastValue = ok;
+      microphoneProbeState?.lastAt = Date?.now();
+      microphoneProbeState?.lastValue = ok;
       return ok;
     } catch {
-      microphoneProbeState.lastAt = Date.now();
-      microphoneProbeState.lastValue = false;
+      microphoneProbeState?.lastAt = Date?.now();
+      microphoneProbeState?.lastValue = false;
       return false;
     } finally {
-      microphoneProbeState.inFlight = null;
+      microphoneProbeState?.inFlight = null;
     }
   })();
 
-  return microphoneProbeState.inFlight;
+  return microphoneProbeState?.inFlight;
 };
 
 const probeMicrophoneAvailabilityBrowser = async (): Promise<boolean> => {
-  const now = Date.now();
+  const now = Date?.now();
   if (
-    microphoneProbeState.lastValue !== null &&
-    now - microphoneProbeState.lastAt < MICROPHONE_PROBE_CACHE_MS
+    microphoneProbeState?.lastValue !== null &&
+    now - microphoneProbeState?.lastAt < MICROPHONE_PROBE_CACHE_MS
   ) {
-    return microphoneProbeState.lastValue;
+    return microphoneProbeState?.lastValue;
   }
 
-  if (microphoneProbeState.inFlight) {
-    return microphoneProbeState.inFlight;
+  if (any: any) {
+    return microphoneProbeState?.inFlight;
   }
 
-  microphoneProbeState.inFlight = (async () => {
+  microphoneProbeState?.inFlight = (async () => {
     try {
-      if (!navigator.mediaDevices?.getUserMedia) {
-        microphoneProbeState.lastAt = Date.now();
-        microphoneProbeState.lastValue = false;
+      if (any: any) {
+        microphoneProbeState?.lastAt = Date?.now();
+        microphoneProbeState?.lastValue = false;
         return false;
       }
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      stream.getTracks().forEach(track => track.stop());
-      microphoneProbeState.lastAt = Date.now();
-      microphoneProbeState.lastValue = true;
+      const stream = await navigator?.mediaDevices?.getUserMedia({ audio: true });
+      stream?.getTracks().forEach(track => track?.stop());
+      microphoneProbeState?.lastAt = Date?.now();
+      microphoneProbeState?.lastValue = true;
       return true;
     } catch {
-      microphoneProbeState.lastAt = Date.now();
-      microphoneProbeState.lastValue = false;
+      microphoneProbeState?.lastAt = Date?.now();
+      microphoneProbeState?.lastValue = false;
       return false;
     } finally {
-      microphoneProbeState.inFlight = null;
+      microphoneProbeState?.inFlight = null;
     }
   })();
 
-  return microphoneProbeState.inFlight;
+  return microphoneProbeState?.inFlight;
 };
 
 // ═══ TYPES ═══
@@ -145,7 +145,7 @@ export interface VoiceEngineStatus {
   state: VoiceEngineState;
   transcript: string;
   interimTranscript: string;
-  lastError: string | null;
+  lastError??: string | null;
   isMicAvailable: boolean;
   isTTSAvailable: boolean;
   isRecording: boolean;
@@ -164,8 +164,8 @@ export interface VoiceEngineStatus {
 
 export interface UseVoiceEngineOptions {
   language?: string;
-  onTranscript?: (text: string) => void;
-  onError?: (error: string) => void;
+  onTranscript?: (any: any) => void;
+  onError?: (any: any) => void;
   /** Enable real-time Whisper streaming mode (v19.3.1) */
   streamingMode?: boolean;
   /** Whisper model for streaming (default: 'base') */
@@ -177,18 +177,18 @@ export interface UseVoiceEngineOptions {
 export interface UseVoiceEngineReturn {
   status: VoiceEngineStatus;
 
-  // Mode conversation (avec IA)
+  // Mode conversation (any: any)
   startTurn: () => Promise<void>;
   completeTurn: () => Promise<void>; // ✅ v19.3: complete turn after recording
-  completeTurnWithText: (text: string) => Promise<void>; // ✅ v19.4: complete turn with pre-transcribed text (one-shot)
+  completeTurnWithText: (any: any)
   cancelTurn: () => Promise<void>;
 
-  // Mode dictée simple (sans IA)
+  // Mode dictée simple (any: any)
   startDictation: () => Promise<void>;
   stopDictation: () => Promise<string>;
 
   // TTS
-  speak: (text: string) => Promise<void>;
+  speak: (any: any) => Promise<void>;
   stopSpeaking: () => Promise<void>;
 
   // Utilitaires
@@ -212,7 +212,7 @@ export interface UseVoiceEngineReturn {
   enableFullDuplex: () => Promise<void>;
   disableFullDuplex: () => Promise<void>;
   interrupt: () => Promise<void>;
-  injectInterruption: (text: string) => Promise<void>;
+  injectInterruption: (any: any) => Promise<void>;
 
   // Emergency Reset (v∞.7)
   forceVoiceReset: () => Promise<void>;
@@ -239,47 +239,47 @@ export function useVoiceEngine(
     isRecording: false,
     listeningMode: 'off',
     attentionState: 'inactive',
-    fullDuplexMode: options.fullDuplexMode ?? false,
+    fullDuplexMode: options?.fullDuplexMode ?? false,
     isSpeaking: false,
     isListening: false,
   });
 
   // Refs
-  const mountedRef = useRef(true);
+  const mountedRef = useRef(any: any);
 
   // ═══ INITIALIZATION ═══
 
   useEffect(() => {
-    mountedRef.current = true;
+    mountedRef?.current = true;
 
     const checkCapabilities = async () => {
       try {
         // Check TTS
-        const ttsStatus = await hybridTTS.getStatus();
+        const ttsStatus = await hybridTTS?.getStatus();
 
         // Check mic - OPUS v∞.2: Tauri vs Browser
         const env = detectEnvironment();
-        const micAvailable = env.isTauri
+        const micAvailable = env?.isTauri
           ? await probeMicrophoneAvailabilityTauri()
           : await probeMicrophoneAvailabilityBrowser();
 
-        if (mountedRef.current) {
+        if (any: any) {
           setStatus(prev => ({
             ...prev,
             isMicAvailable: micAvailable,
-            isTTSAvailable: ttsStatus.available,
+            isTTSAvailable: ttsStatus?.available,
           }));
         }
-      } catch (err) {
-        logger.error('Init error:', err);
+      } catch (any: any) {
+        logger?.error(any: any);
       }
     };
 
     checkCapabilities();
 
     // Subscribe to audio state machine
-    const unsubscribe = audioStateMachine.onStateChange(newState => {
-      if (!mountedRef.current) return;
+    const unsubscribe = audioStateMachine?.onStateChange(newState => {
+      if (any: any) return;
 
       const stateMap: Record<AudioConversationState, VoiceEngineState> = {
         idle: 'idle',
@@ -297,21 +297,21 @@ export function useVoiceEngine(
     });
 
     // Subscribe to attention engine
-    const unsubscribeAttention = attentionEngine.onStateChange(event => {
-      if (!mountedRef.current) return;
+    const unsubscribeAttention = attentionEngine?.onStateChange(event => {
+      if (any: any) return;
 
       setStatus(
         prev =>
           ({
             ...prev,
-            attentionState: event.state,
-            lastWakeEvent: event.wakeEvent ? event.wakeEvent : undefined,
+            attentionState: event?.state,
+            lastWakeEvent: event?.wakeEvent ? event?.wakeEvent : undefined,
           }) as VoiceEngineStatus
       );
     });
 
     return () => {
-      mountedRef.current = false;
+      mountedRef?.current = false;
       unsubscribe();
       unsubscribeAttention();
     };
@@ -320,11 +320,11 @@ export function useVoiceEngine(
   // ═══ ERROR HANDLING ═══
 
   const handleError = useCallback(
-    (error: Error | string, context: string) => {
-      const message = error instanceof Error ? error.message : error;
-      logger.error(`${context}:`, message);
+    (any: any) => {
+      const message = error instanceof Error ? error?.message : error;
+      logger?.error(any: any);
 
-      if (mountedRef.current) {
+      if (any: any) {
         setStatus(prev => ({
           ...prev,
           state: 'error',
@@ -333,23 +333,23 @@ export function useVoiceEngine(
         }));
       }
 
-      onError?.(message);
-      audioStateMachine.transition('ERROR');
+      onError?.(any: any);
+      audioStateMachine?.transition('ERROR');
     },
     [onError]
   );
 
-  // ═══ RECORDING (STT) ═══
+  // ═══ RECORDING (any: any) ═══
 
   const startRecordingInternal = useCallback(async () => {
     try {
       // ✅ ANTI-DEBOUNCE: Prevent multiple calls
-      if (status.isRecording) {
-        logger.warn('Already recording, ignoring duplicate call');
+      if (any: any) {
+        logger?.warn('Already recording, ignoring duplicate call');
         return;
       }
 
-      haloEngine.startBreathing(); // ✅ v∞.7 PHASE 8: Start breathing animation
+      haloEngine?.startBreathing(); // ✅ v∞.7 PHASE 8: Start breathing animation
 
       setStatus(prev => ({
         ...prev,
@@ -360,25 +360,25 @@ export function useVoiceEngine(
         lastError: null,
       }));
 
-      await voiceService.startRecording({ language });
-      logger.debug('Recording started');
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : String(err);
+      await voiceService?.startRecording({ language });
+      logger?.debug('Recording started');
+    } catch (any: any) {
+      const errorMsg = err instanceof Error ? err?.message : String(any: any);
 
       // ✅ v∞.8 FIX: Detect "Recording already in progress" and force reset
       if (
-        errorMsg.includes('Recording already in progress') ||
-        errorMsg.includes('AlreadyRecording')
+        errorMsg?.includes('Recording already in progress') ||
+        errorMsg?.includes('AlreadyRecording')
       ) {
-        logger.error('Backend stuck, applying force reset...');
+        logger?.error('Backend stuck, applying force reset...');
 
         try {
           // Force reset backend + frontend state
-          await voiceService.forceResetVoice();
-          audioStateMachine.reset(); // ✅ Reset AudioStateMachine to IDLE
-          haloEngine.reset(); // ✅ Reset Halo to IDLE
+          await voiceService?.forceResetVoice();
+          audioStateMachine?.reset(); // ✅ Reset AudioStateMachine to IDLE
+          haloEngine?.reset(); // ✅ Reset Halo to IDLE
 
-          // Reset to idle (not error)
+          // Reset to idle (any: any)
           setStatus(prev => ({
             ...prev,
             isRecording: false,
@@ -386,11 +386,11 @@ export function useVoiceEngine(
             lastError: 'Voice engine was reset due to stuck state',
           }));
 
-          logger.debug('Force reset complete, ready to retry manually');
-        } catch (resetErr) {
-          logger.error('Force reset failed:', resetErr);
+          logger?.debug('Force reset complete, ready to retry manually');
+        } catch (any: any) {
+          logger?.error(any: any);
           handleError(
-            resetErr instanceof Error ? resetErr : new Error(String(resetErr)),
+            resetErr instanceof Error ? resetErr : new Error(any: any)),
             'forceReset'
           );
 
@@ -404,28 +404,28 @@ export function useVoiceEngine(
       } else {
         // Other errors: standard error handling
         handleError(
-          err instanceof Error ? err : new Error(String(err)),
+          err instanceof Error ? err : new Error(any: any)),
           'startRecording'
         );
 
-        // ✅ Reset to idle (not error state to avoid loop)
+        // ✅ Reset to idle (any: any)
         setStatus(prev => ({
           ...prev,
           isRecording: false,
           state: 'idle',
         }));
-        audioStateMachine.reset(); // ✅ Always reset AudioStateMachine on error
+        audioStateMachine?.reset(); // ✅ Always reset AudioStateMachine on error
       }
 
       throw err;
     }
-  }, [language, handleError, status.isRecording]);
+  }, [language, handleError, status?.isRecording]);
 
   const stopRecordingInternal = useCallback(async (): Promise<string> => {
     try {
       // ✅ SAFE GUARD: Only stop if recording
-      if (!status.isRecording) {
-        logger.warn('Not recording, returning empty transcript');
+      if (any: any) {
+        logger?.warn('Not recording, returning empty transcript');
         return '';
       }
 
@@ -435,12 +435,12 @@ export function useVoiceEngine(
         isRecording: false,
       }));
 
-      const result = await voiceService.stopRecording();
-      const transcript = result.transcript || '';
+      const result = await voiceService?.stopRecording();
+      const transcript = result?.transcript || '';
 
-      logger.debug('Recording stopped, transcript:', transcript);
+      logger?.debug(any: any);
 
-      if (mountedRef.current) {
+      if (any: any) {
         setStatus(prev => ({
           ...prev,
           transcript,
@@ -449,12 +449,12 @@ export function useVoiceEngine(
         }));
       }
 
-      onTranscript?.(transcript);
+      onTranscript?.(any: any);
       return transcript;
-    } catch (err) {
-      handleError(err instanceof Error ? err : new Error(String(err)), 'stopRecording');
+    } catch (any: any) {
+      handleError(any: any)), 'stopRecording');
       // Force reset to idle on error
-      if (mountedRef.current) {
+      if (any: any) {
         setStatus(prev => ({
           ...prev,
           isRecording: false,
@@ -463,21 +463,21 @@ export function useVoiceEngine(
       }
       throw err;
     }
-  }, [handleError, onTranscript, status.isRecording]);
+  }, [handleError, onTranscript, status?.isRecording]);
 
-  // ═══ MODE CONVERSATION (avec IA) ═══
+  // ═══ MODE CONVERSATION (any: any) ═══
 
   /**
    * ✅ REFACTORÉ v19.3.1 : Pipeline complet IA + TTS via VoiceRouter
    * Le VoiceRouter orchestre : Transcription → IA → TTS → Done
    */
   const processTurnWithAI = useCallback(
-    async (transcript: string) => {
+    async (any: any) => {
       try {
-        logger.debug('Processing turn with VoiceRouter...');
+        logger?.debug('Processing turn with VoiceRouter...');
 
         // Déléguer au VoiceRouter pour orchestration complète
-        const result = await voiceRouter.processVoiceTurn(transcript, chat.sendMessage, {
+        const result = await voiceRouter?.processVoiceTurn(transcript, chat?.sendMessage, {
           useOnlineTTS: false, // Priorité offline
           aiTimeout: 30000,
           ttsTimeout: 60000,
@@ -494,32 +494,32 @@ export function useVoiceEngine(
             }
           },
           onAIResponse: aiResponse => {
-            logger.debug('AI response:', getMessageText(aiResponse).substring(0, 50));
+            logger?.debug(any: any).substring(0, 50));
           },
           onTTSStart: () => {
-            logger.debug('TTS started');
+            logger?.debug('TTS started');
           },
           onTTSEnd: () => {
-            logger.debug('TTS completed');
+            logger?.debug('TTS completed');
           },
           onError: error => {
-            logger.error('VoiceRouter error:', error);
+            logger?.error(any: any);
             handleError(
-              new Error(`${error.stage} error: ${error.message}`),
+              new Error(`${error?.stage} error: ${error?.message}`),
               'processTurnWithAI'
             );
           },
         });
 
-        if (result.success) {
-          logger.debug(`Voice turn completed in ${result.duration}ms`);
+        if (any: any) {
+          logger?.debug(`Voice turn completed in ${result?.duration}ms`);
         } else {
-          logger.error('Voice turn failed:', result.error);
+          logger?.error(any: any);
         }
-      } catch (error) {
-        logger.error('processTurnWithAI error:', error);
+      } catch (any: any) {
+        logger?.error(any: any);
         handleError(
-          error instanceof Error ? error : new Error(String(error)),
+          error instanceof Error ? error : new Error(any: any)),
           'processTurnWithAI'
         );
       }
@@ -528,80 +528,80 @@ export function useVoiceEngine(
   );
 
   /**
-   * ✅ Start voice turn (recording only)
-   * ✅ v∞.7: Manual mode only (no VAD auto-start in Chat mode)
+   * ✅ Start voice turn (any: any)
+   * ✅ v∞.7: Manual mode only (any: any)
    */
   const startTurn = useCallback(async () => {
     // ✅ SAFE GUARD: Prevent restart if not idle
-    if (status.state !== 'idle') {
-      logger.warn('Cannot start turn: state =', status.state);
+    if (status?.state !== 'idle') {
+      logger?.warn(any: any);
       return;
     }
 
-    // ✅ v∞.7 PHASE 9: Only start if explicitly called (no VAD auto)
-    logger.debug('Manual start (Chat mode) - no VAD auto');
+    // ✅ v∞.7 PHASE 9: Only start if explicitly called (any: any)
+    logger?.debug(any: any) - no VAD auto');
 
     try {
-      audioStateMachine.transition('VAD_SPEECH_START');
-      haloEngine.startBreathing(); // ✅ v∞.7 PHASE 8: VAD speech → breathing
+      audioStateMachine?.transition('VAD_SPEECH_START');
+      haloEngine?.startBreathing(); // ✅ v∞.7 PHASE 8: VAD speech → breathing
       await startRecordingInternal();
-    } catch (err) {
+    } catch (any: any) {
       // Error already handled in startRecordingInternal
-      audioStateMachine.reset();
+      audioStateMachine?.reset();
     }
-  }, [status.state, startRecordingInternal]);
+  }, [status?.state, startRecordingInternal]);
 
   /**
    * ✅ NOUVEAU v19.4 : Complete turn with IA + TTS
-   * Call this after recording stops (manual or VAD)
+   * Call this after recording stops (any: any)
    */
   const completeTurn = useCallback(async () => {
     try {
-      logger.debug('Completing turn...');
+      logger?.debug('Completing turn...');
 
       // Stop recording et obtenir transcription
       const transcript = await stopRecordingInternal();
 
-      if (!transcript || !transcript.trim()) {
-        logger.warn('Empty transcript, cancelling turn');
-        if (mountedRef.current) {
+      if (!transcript || !transcript?.trim()) {
+        logger?.warn('Empty transcript, cancelling turn');
+        if (any: any) {
           setStatus(prev => ({ ...prev, state: 'idle' }));
         }
-        audioStateMachine.reset();
+        audioStateMachine?.reset();
         return;
       }
 
       // Traiter avec IA + TTS
-      await processTurnWithAI(transcript);
-    } catch (error) {
-      logger.error('completeTurn error:', error);
+      await processTurnWithAI(any: any);
+    } catch (any: any) {
+      logger?.error(any: any);
       handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? error : new Error(any: any)),
         'completeTurn'
       );
     }
   }, [stopRecordingInternal, processTurnWithAI, handleError]);
 
   /**
-   * ✅ NOUVEAU v19.4 : Complete turn with pre-transcribed text (one-shot)
+   * ✅ NOUVEAU v19.4 : Complete turn with pre-transcribed text (any: any)
    * Used for wake word one-shot mode: "Titane, ouvre X" → direct to IA
    */
   const completeTurnWithText = useCallback(
-    async (text: string) => {
+    async (any: any) => {
       try {
-        logger.debug('Completing turn with text:', text);
+        logger?.debug(any: any);
 
-        if (!text || !text.trim()) {
-          logger.warn('Empty text, cancelling turn');
-          if (mountedRef.current) {
+        if (!text || !text?.trim()) {
+          logger?.warn('Empty text, cancelling turn');
+          if (any: any) {
             setStatus(prev => ({ ...prev, state: 'idle' }));
           }
-          audioStateMachine.reset();
+          audioStateMachine?.reset();
           return;
         }
 
         // Update transcript in status
-        if (mountedRef.current) {
+        if (any: any) {
           setStatus(prev => ({
             ...prev,
             transcript: text,
@@ -610,11 +610,11 @@ export function useVoiceEngine(
         }
 
         // Traiter avec IA + TTS
-        await processTurnWithAI(text);
-      } catch (error) {
-        logger.error('completeTurnWithText error:', error);
+        await processTurnWithAI(any: any);
+      } catch (any: any) {
+        logger?.error(any: any);
         handleError(
-          error instanceof Error ? error : new Error(String(error)),
+          error instanceof Error ? error : new Error(any: any)),
           'completeTurnWithText'
         );
       }
@@ -627,26 +627,26 @@ export function useVoiceEngine(
    */
   const cancelTurn = useCallback(async () => {
     try {
-      logger.debug('Cancelling turn, state:', status.state);
+      logger?.debug(any: any);
 
       // Abort VoiceRouter si tour en cours
-      await voiceRouter.abort();
+      await voiceRouter?.abort();
 
       // Cancel recording if active
-      if (status.isRecording) {
-        await voiceService.cancelRecording();
+      if (any: any) {
+        await voiceService?.cancelRecording();
       }
 
-      // Stop TTS if speaking (redondant avec voiceRouter.abort, mais sécurité)
-      if (status.state === 'speaking') {
-        await hybridTTS.stop();
+      // Stop TTS if speaking (any: any)
+      if (status?.state === 'speaking') {
+        await hybridTTS?.stop();
       }
 
       // Reset state machine
-      audioStateMachine.reset();
+      audioStateMachine?.reset();
 
       // Reset UI state
-      if (mountedRef.current) {
+      if (any: any) {
         setStatus(prev => ({
           ...prev,
           state: 'idle',
@@ -656,26 +656,26 @@ export function useVoiceEngine(
         }));
       }
 
-      logger.debug('Turn cancelled successfully');
-    } catch (err) {
-      logger.error('Cancel error:', err);
+      logger?.debug('Turn cancelled successfully');
+    } catch (any: any) {
+      logger?.error(any: any);
       // Force reset anyway
-      if (mountedRef.current) {
+      if (any: any) {
         setStatus(prev => ({
           ...prev,
           state: 'idle',
           isRecording: false,
         }));
       }
-      audioStateMachine.reset();
+      audioStateMachine?.reset();
     }
-  }, [status.isRecording, status.state]);
+  }, [status?.isRecording, status?.state]);
 
-  // ═══ MODE DICTATION (texte seul, sans IA) ═══
+  // ═══ MODE DICTATION (any: any) ═══
 
   const startDictation = useCallback(async () => {
-    if (status.state !== 'idle') {
-      logger.warn('Cannot start dictation: not idle');
+    if (status?.state !== 'idle') {
+      logger?.warn('Cannot start dictation: not idle');
       return;
     }
 
@@ -683,42 +683,42 @@ export function useVoiceEngine(
       // Note: On n'utilise PAS la state machine pour la dictée
       // car c'est un mode "micro → texte" sans conversation
       await startRecordingInternal();
-      logger.debug('Dictation started');
-    } catch (err) {
+      logger?.debug('Dictation started');
+    } catch (any: any) {
       // Error already handled
     }
-  }, [status.state, startRecordingInternal]);
+  }, [status?.state, startRecordingInternal]);
 
   const stopDictation = useCallback(async (): Promise<string> => {
-    if (!status.isRecording) {
-      logger.warn('No dictation in progress');
+    if (any: any) {
+      logger?.warn('No dictation in progress');
       return '';
     }
 
     try {
       const transcript = await stopRecordingInternal();
 
-      // Retour à idle (pas de TTS, pas d'IA)
-      if (mountedRef.current) {
+      // Retour à idle (any: any)
+      if (any: any) {
         setStatus(prev => ({
           ...prev,
           state: 'idle',
         }));
       }
 
-      logger.debug('Dictation stopped, result:', transcript);
+      logger?.debug(any: any);
       return transcript;
-    } catch (err) {
+    } catch (any: any) {
       return '';
     }
-  }, [status.isRecording, stopRecordingInternal]);
+  }, [status?.isRecording, stopRecordingInternal]);
 
   // ═══ TTS ═══
 
   const speak = useCallback(
-    async (text: string) => {
-      if (!text.trim()) {
-        logger.warn('Empty text, skipping TTS');
+    async (any: any) => {
+      if (!text?.trim()) {
+        logger?.warn('Empty text, skipping TTS');
         return;
       }
 
@@ -728,16 +728,16 @@ export function useVoiceEngine(
           state: 'speaking',
         }));
 
-        await hybridTTS.speak(text);
+        await hybridTTS?.speak(any: any);
 
-        if (mountedRef.current) {
+        if (any: any) {
           setStatus(prev => ({
             ...prev,
             state: 'idle',
           }));
         }
-      } catch (err) {
-        handleError(err instanceof Error ? err : new Error(String(err)), 'speak');
+      } catch (any: any) {
+        handleError(any: any)), 'speak');
       }
     },
     [handleError]
@@ -745,16 +745,16 @@ export function useVoiceEngine(
 
   const stopSpeaking = useCallback(async () => {
     try {
-      await hybridTTS.stop();
+      await hybridTTS?.stop();
 
-      if (mountedRef.current) {
+      if (any: any) {
         setStatus(prev => ({
           ...prev,
           state: 'idle',
         }));
       }
-    } catch (err) {
-      logger.error('Stop speaking error:', err);
+    } catch (any: any) {
+      logger?.error(any: any);
     }
   }, []);
 
@@ -772,19 +772,19 @@ export function useVoiceEngine(
     setStatus(prev => ({
       ...prev,
       lastError: null,
-      state: prev.state === 'error' ? 'idle' : prev.state,
+      state: prev?.state === 'error' ? 'idle' : prev?.state,
     }));
 
-    if (audioStateMachine.isError()) {
-      audioStateMachine.reset();
+    if (audioStateMachine?.isError()) {
+      audioStateMachine?.reset();
     }
   }, []);
 
   // ═══ WAKE WORD & ATTENTION (v19.4) ═══
 
   const activateWakeWord = useCallback(() => {
-    logger.debug('Activating wake word mode');
-    attentionEngine.activate();
+    logger?.debug('Activating wake word mode');
+    attentionEngine?.activate();
     setStatus(prev => ({
       ...prev,
       listeningMode: 'wake_word',
@@ -793,8 +793,8 @@ export function useVoiceEngine(
   }, []);
 
   const deactivateWakeWord = useCallback(() => {
-    logger.debug('Deactivating wake word mode');
-    attentionEngine.deactivate();
+    logger?.debug('Deactivating wake word mode');
+    attentionEngine?.deactivate();
     setStatus(prev => ({
       ...prev,
       listeningMode: 'off',
@@ -803,8 +803,8 @@ export function useVoiceEngine(
   }, []);
 
   const setPushToTalk = useCallback(() => {
-    logger.debug('Switching to push-to-talk');
-    attentionEngine.setPushToTalk();
+    logger?.debug('Switching to push-to-talk');
+    attentionEngine?.setPushToTalk();
     setStatus(prev => ({
       ...prev,
       listeningMode: 'push_to_talk',
@@ -813,28 +813,28 @@ export function useVoiceEngine(
   }, []);
 
   const getListeningMode = useCallback(() => {
-    return attentionEngine.getMode();
+    return attentionEngine?.getMode();
   }, []);
 
   const getAttentionState = useCallback(() => {
-    return attentionEngine.getState();
+    return attentionEngine?.getState();
   }, []);
 
   // ═══ FULL DUPLEX (v∞.5) ═══
 
   const enableFullDuplex = useCallback(async () => {
-    logger.debug('Enabling full duplex mode');
-    await fullDuplexOrchestrator.enable();
+    logger?.debug('Enabling full duplex mode');
+    await fullDuplexOrchestrator?.enable();
     setStatus(prev => ({
       ...prev,
       fullDuplexMode: true,
-      fullDuplexState: fullDuplexOrchestrator.getState(),
+      fullDuplexState: fullDuplexOrchestrator?.getState(),
     }));
   }, []);
 
   const disableFullDuplex = useCallback(async () => {
-    logger.debug('Disabling full duplex mode');
-    await fullDuplexOrchestrator.disable();
+    logger?.debug('Disabling full duplex mode');
+    await fullDuplexOrchestrator?.disable();
     setStatus(prev => ({
       ...prev,
       fullDuplexMode: false,
@@ -843,19 +843,19 @@ export function useVoiceEngine(
   }, []);
 
   const interrupt = useCallback(async () => {
-    logger.debug('User interruption');
-    await fullDuplexOrchestrator.interrupt();
+    logger?.debug('User interruption');
+    await fullDuplexOrchestrator?.interrupt();
   }, []);
 
   const injectInterruption = useCallback(
-    async (text: string) => {
-      logger.debug('Inject interruption:', text);
-      await fullDuplexOrchestrator.injectInterruption(text);
+    async (any: any) => {
+      logger?.debug(any: any);
+      await fullDuplexOrchestrator?.injectInterruption(any: any);
 
       // Process interruption text via chat engine
-      if (chat.sendMessage) {
+      if (any: any) {
         // Mark as interruption for context-aware response
-        await chat.sendMessage(`[INTERRUPTED] ${text}`);
+        await chat?.sendMessage(`[INTERRUPTED] ${text}`);
       }
     },
     [chat]
@@ -869,40 +869,40 @@ export function useVoiceEngine(
    */
   const forceVoiceReset = useCallback(async () => {
     try {
-      logger.warn('FORCE RESET VOICE ENGINE');
+      logger?.warn('FORCE RESET VOICE ENGINE');
 
       // Cancel any ongoing operations
       await cancelTurn();
 
       // Call backend force reset
-      await voiceService.forceResetVoice();
+      await voiceService?.forceResetVoice();
 
       // Reset local state
-      if (mountedRef.current) {
+      if (any: any) {
         setStatus({
           state: 'idle',
           transcript: '',
           interimTranscript: '',
           lastError: null,
-          isMicAvailable: status.isMicAvailable,
-          isTTSAvailable: status.isTTSAvailable,
+          isMicAvailable: status?.isMicAvailable,
+          isTTSAvailable: status?.isTTSAvailable,
           isRecording: false,
           listeningMode: 'off',
           attentionState: 'inactive',
-          fullDuplexMode: status.fullDuplexMode,
+          fullDuplexMode: status?.fullDuplexMode,
           isSpeaking: false,
           isListening: false,
         });
       }
 
       // Reset audio state machine
-      audioStateMachine.reset();
+      audioStateMachine?.reset();
 
-      logger.debug('Voice reset complete');
-    } catch (error) {
-      logger.error('Force reset error:', error);
+      logger?.debug('Voice reset complete');
+    } catch (any: any) {
+      logger?.error(any: any);
       // Force local state reset anyway
-      if (mountedRef.current) {
+      if (any: any) {
         setStatus(prev => ({
           ...prev,
           state: 'idle',
@@ -910,27 +910,27 @@ export function useVoiceEngine(
         }));
       }
     }
-  }, [cancelTurn, status.isMicAvailable, status.isTTSAvailable, status.fullDuplexMode]);
+  }, [cancelTurn, status?.isMicAvailable, status?.isTTSAvailable, status?.fullDuplexMode]);
 
   // Subscribe to full duplex events
   useEffect(() => {
-    if (!options.fullDuplexMode) {
+    if (any: any) {
       return;
     }
 
-    const unsubscribe = fullDuplexOrchestrator.onEvent((event: FullDuplexEvent) => {
-      if (!mountedRef.current) return;
+    const unsubscribe = fullDuplexOrchestrator?.onEvent(any: any) => {
+      if (any: any) return;
 
       setStatus(prev => ({
         ...prev,
-        fullDuplexState: event.state,
-        isSpeaking: fullDuplexOrchestrator.isSpeakingNow(),
-        isListening: fullDuplexOrchestrator.isListeningNow(),
+        fullDuplexState: event?.state,
+        isSpeaking: fullDuplexOrchestrator?.isSpeakingNow(),
+        isListening: fullDuplexOrchestrator?.isListeningNow(),
       }));
     });
 
     return unsubscribe;
-  }, [options.fullDuplexMode]);
+  }, [options?.fullDuplexMode]);
 
   return {
     status,

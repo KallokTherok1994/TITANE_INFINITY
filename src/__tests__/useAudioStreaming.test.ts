@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v26.x — Proprietary License
+ * TITANE_INFINITY v26?.x — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
@@ -8,20 +8,20 @@ import { renderHook, act } from '@/test-utils';
 import { useAudioStreaming, useStreamingState } from '@/hooks/useAudioStreaming';
 
 let stateListener:
-  | ((state: 'Idle' | 'Listening' | 'Recording' | 'Processing') => void)
+  | (any: any)
   | null = null;
-let chunkListener: ((chunk: number[]) => void) | null = null;
+let chunkListener: (any: any) | null = null;
 
-const unsubscribeState = vi.fn();
-const unsubscribeChunk = vi.fn();
+const unsubscribeState = vi?.fn();
+const unsubscribeChunk = vi?.fn();
 
-vi.mock('../services/audio/audioStreaming', () => {
+vi?.mock('../services/audio/audioStreaming', () => {
   const audioStreamingService = {
-    onStateChange: vi.fn((cb: (state: any) => void) => {
+    onStateChange: vi?.fn(any: any) => {
       stateListener = cb;
       return unsubscribeState;
     }),
-    onAudioChunk: vi.fn((cb: (chunk: number[]) => void) => {
+    onAudioChunk: vi?.fn(any: any) => {
       chunkListener = cb;
       return unsubscribeChunk;
     }),
@@ -32,7 +32,7 @@ vi.mock('../services/audio/audioStreaming', () => {
     stopStreaming: vi
       .fn<
         () => Promise<{
-          audioData: number[];
+          audioData: number?.[];
           durationMs: number;
           sampleRate: number;
           hasSpeech: boolean;
@@ -46,7 +46,7 @@ vi.mock('../services/audio/audioStreaming', () => {
         hasSpeech: true,
         vadConfidence: 0.9,
       }),
-    forceStop: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
+    forceStop: vi?.fn<(any: any),
 
     getStats: vi
       .fn<
@@ -62,7 +62,7 @@ vi.mock('../services/audio/audioStreaming', () => {
         isActive: true,
       }),
 
-    isActive: vi.fn<() => boolean>().mockReturnValue(false),
+    isActive: vi?.fn<(any: any),
   };
 
   return {
@@ -75,36 +75,36 @@ import { audioStreamingService } from '../services/audio/audioStreaming';
 
 describe('useAudioStreaming', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    vi.useFakeTimers();
+    vi?.clearAllMocks();
+    vi?.useFakeTimers();
     stateListener = null;
     chunkListener = null;
 
-    vi.spyOn(console, 'warn').mockImplementation(() => {});
-    vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi?.spyOn(console, 'warn').mockImplementation(() => {});
+    vi?.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
-    vi.clearAllTimers();
-    vi.useRealTimers();
-    vi.restoreAllMocks();
+    vi?.clearAllTimers();
+    vi?.useRealTimers();
+    vi?.restoreAllMocks();
   });
 
   it('initialise l’état par défaut', () => {
     const { result } = renderHook(() => useAudioStreaming());
 
-    expect(result.current.isStreaming).toBe(false);
-    expect(result.current.state).toBe('Idle');
-    expect(result.current.stats).toBe(null);
-    expect(result.current.error).toBe(null);
-    expect(result.current.sessionId).toBe(null);
+    expect(any: any);
+    expect(any: any).toBe('Idle');
+    expect(any: any);
+    expect(any: any);
+    expect(any: any);
 
-    expect(audioStreamingService.onStateChange).toHaveBeenCalledTimes(1);
-    expect(audioStreamingService.onAudioChunk).toHaveBeenCalledTimes(1);
+    expect(any: any).toHaveBeenCalledTimes(1);
+    expect(any: any).toHaveBeenCalledTimes(1);
   });
 
   it('ne se ré-abonne pas sur rerender et utilise la dernière callback onStateChange', async () => {
-    const onStateChangeA = vi.fn();
+    const onStateChangeA = vi?.fn();
     const { result, rerender } = renderHook(
       ({
         cb,
@@ -116,33 +116,33 @@ describe('useAudioStreaming', () => {
       }
     );
 
-    expect(audioStreamingService.onStateChange).toHaveBeenCalledTimes(1);
+    expect(any: any).toHaveBeenCalledTimes(1);
 
     await act(async () => {
       stateListener?.('Listening');
     });
 
-    expect(result.current.state).toBe('Listening');
-    expect(onStateChangeA).toHaveBeenCalledWith('Listening');
+    expect(any: any).toBe('Listening');
+    expect(any: any).toHaveBeenCalledWith('Listening');
 
-    const onStateChangeB = vi.fn();
+    const onStateChangeB = vi?.fn();
     rerender({ cb: onStateChangeB });
 
-    expect(audioStreamingService.onStateChange).toHaveBeenCalledTimes(1);
+    expect(any: any).toHaveBeenCalledTimes(1);
 
     await act(async () => {
       stateListener?.('Recording');
     });
 
-    expect(result.current.state).toBe('Recording');
-    expect(onStateChangeA).toHaveBeenCalledTimes(1);
-    expect(onStateChangeB).toHaveBeenCalledWith('Recording');
+    expect(any: any).toBe('Recording');
+    expect(any: any).toHaveBeenCalledTimes(1);
+    expect(any: any).toHaveBeenCalledWith('Recording');
   });
 
   it('utilise la dernière callback onAudioChunk après rerender', async () => {
-    const onAudioChunkA = vi.fn();
+    const onAudioChunkA = vi?.fn();
     const { rerender } = renderHook(
-      ({ cb }: { cb: (chunk: number[]) => void }) =>
+      ({ cb }: { cb: (chunk: number?.[]) => void }) =>
         useAudioStreaming({ onAudioChunk: cb }),
       {
         initialProps: { cb: onAudioChunkA },
@@ -152,38 +152,38 @@ describe('useAudioStreaming', () => {
     await act(async () => {
       chunkListener?.([1, 2]);
     });
-    expect(onAudioChunkA).toHaveBeenCalledWith([1, 2]);
+    expect(any: any).toHaveBeenCalledWith([1, 2]);
 
-    const onAudioChunkB = vi.fn();
+    const onAudioChunkB = vi?.fn();
     rerender({ cb: onAudioChunkB });
 
     await act(async () => {
       chunkListener?.([3, 4]);
     });
 
-    expect(onAudioChunkA).toHaveBeenCalledTimes(1);
-    expect(onAudioChunkB).toHaveBeenCalledWith([3, 4]);
+    expect(any: any).toHaveBeenCalledTimes(1);
+    expect(any: any).toHaveBeenCalledWith([3, 4]);
   });
 
   it('startStreaming met à jour sessionId/isStreaming et lance le polling stats', async () => {
     const { result } = renderHook(() => useAudioStreaming());
 
     await act(async () => {
-      await result.current.startStreaming();
+      await result?.current?.startStreaming();
     });
 
-    expect(result.current.isStreaming).toBe(true);
+    expect(any: any);
 
-    expect(audioStreamingService.startStreaming).toHaveBeenCalledTimes(1);
-    expect(result.current.isStreaming).toBe(true);
-    expect(result.current.sessionId).toBe('session-1');
+    expect(any: any).toHaveBeenCalledTimes(1);
+    expect(any: any);
+    expect(any: any).toBe('session-1');
 
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(500);
+      await vi?.advanceTimersByTimeAsync(500);
     });
 
-    expect(audioStreamingService.getStats).toHaveBeenCalledTimes(1);
-    expect(result.current.stats).toEqual({
+    expect(any: any).toHaveBeenCalledTimes(1);
+    expect(any: any).toEqual({
       availableSamples: 42,
       totalWritten: 100,
       isActive: true,
@@ -191,19 +191,19 @@ describe('useAudioStreaming', () => {
   });
 
   it('stopStreaming retourne le résultat, reset l’état, et appelle onStreamingComplete', async () => {
-    const onStreamingComplete = vi.fn();
+    const onStreamingComplete = vi?.fn();
     const { result } = renderHook(() => useAudioStreaming({ onStreamingComplete }));
 
     await act(async () => {
-      await result.current.startStreaming();
+      await result?.current?.startStreaming();
     });
 
     const stopResult = await act(async () => {
-      return await result.current.stopStreaming();
+      return await result?.current?.stopStreaming();
     });
 
-    expect(audioStreamingService.stopStreaming).toHaveBeenCalledTimes(1);
-    expect(stopResult).toEqual({
+    expect(any: any).toHaveBeenCalledTimes(1);
+    expect(any: any).toEqual({
       audioData: [1, 2, 3],
       durationMs: 1000,
       sampleRate: 16000,
@@ -211,11 +211,11 @@ describe('useAudioStreaming', () => {
       vadConfidence: 0.9,
     });
 
-    expect(result.current.isStreaming).toBe(false);
-    expect(result.current.sessionId).toBe(null);
-    expect(result.current.state).toBe('Idle');
+    expect(any: any);
+    expect(any: any);
+    expect(any: any).toBe('Idle');
 
-    expect(onStreamingComplete).toHaveBeenCalledWith({
+    expect(any: any).toHaveBeenCalledWith({
       audioData: [1, 2, 3],
       durationMs: 1000,
       sampleRate: 16000,
@@ -228,66 +228,66 @@ describe('useAudioStreaming', () => {
     const { result } = renderHook(() => useAudioStreaming());
 
     await act(async () => {
-      await result.current.startStreaming();
+      await result?.current?.startStreaming();
     });
 
     await act(async () => {
-      await result.current.forceStop();
+      await result?.current?.forceStop();
     });
 
-    expect(audioStreamingService.forceStop).toHaveBeenCalledTimes(1);
-    expect(result.current.isStreaming).toBe(false);
-    expect(result.current.sessionId).toBe(null);
-    expect(result.current.state).toBe('Idle');
-    expect(result.current.stats).toBe(null);
+    expect(any: any).toHaveBeenCalledTimes(1);
+    expect(any: any);
+    expect(any: any);
+    expect(any: any).toBe('Idle');
+    expect(any: any);
   });
 
   it('cleanup unsubscribe et stoppe le polling stats au unmount', async () => {
     const { result, unmount } = renderHook(() => useAudioStreaming());
 
     await act(async () => {
-      await result.current.startStreaming();
+      await result?.current?.startStreaming();
     });
 
-    expect(result.current.isStreaming).toBe(true);
+    expect(any: any);
 
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(500);
+      await vi?.advanceTimersByTimeAsync(500);
     });
 
-    expect(audioStreamingService.getStats).toHaveBeenCalledTimes(1);
+    expect(any: any).toHaveBeenCalledTimes(1);
 
     unmount();
 
-    expect(unsubscribeState).toHaveBeenCalledTimes(1);
-    expect(unsubscribeChunk).toHaveBeenCalledTimes(1);
+    expect(any: any).toHaveBeenCalledTimes(1);
+    expect(any: any).toHaveBeenCalledTimes(1);
 
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(2000);
+      await vi?.advanceTimersByTimeAsync(2000);
     });
 
-    expect(audioStreamingService.getStats).toHaveBeenCalledTimes(1);
+    expect(any: any).toHaveBeenCalledTimes(1);
   });
 });
 
 describe('useStreamingState', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi?.clearAllMocks();
     stateListener = null;
   });
 
   it('expose state + isActive, et réagit aux événements de state', async () => {
-    vi.mocked(audioStreamingService.isActive).mockReturnValue(true);
+    vi?.mocked(any: any);
 
     const { result } = renderHook(() => useStreamingState());
 
-    expect(result.current.isActive).toBe(true);
-    expect(result.current.state).toBe('Idle');
+    expect(any: any);
+    expect(any: any).toBe('Idle');
 
     await act(async () => {
       stateListener?.('Processing');
     });
 
-    expect(result.current.state).toBe('Processing');
+    expect(any: any).toBe('Processing');
   });
 });

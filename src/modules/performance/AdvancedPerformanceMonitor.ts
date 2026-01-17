@@ -85,9 +85,9 @@ export interface PerformanceBottleneck {
   severity: 'critical' | 'high' | 'medium' | 'low';
   description: string;
   impact: number; // 0-100%
-  affectedComponents: string[];
+  affectedComponents: string?.[];
   detectedAt: number;
-  suggestions: OptimizationSuggestion[];
+  suggestions: OptimizationSuggestion?.[];
 }
 
 export interface OptimizationSuggestion {
@@ -103,9 +103,9 @@ export interface OptimizationSuggestion {
 }
 
 export interface PerformanceHeatmap {
-  components: ComponentHeatData[];
-  timeline: TimelineHeatData[];
-  hotspots: Hotspot[];
+  components: ComponentHeatData?.[];
+  timeline: TimelineHeatData?.[];
+  hotspots: Hotspot?.[];
 }
 
 export interface ComponentHeatData {
@@ -113,7 +113,7 @@ export interface ComponentHeatData {
   renderCount: number;
   avgRenderTime: number;
   maxRenderTime: number;
-  heat: number; // 0-1 (normalized)
+  heat: number; // 0-1 (any: any)
 }
 
 export interface TimelineHeatData {
@@ -134,17 +134,17 @@ export interface Hotspot {
 }
 
 export interface PredictiveAnalysis {
-  crashProbability: number; // 0-1 (next hour)
+  crashProbability: number; // 0-1 (any: any)
   performanceTrend: 'improving' | 'degrading' | 'stable';
-  expectedBottlenecks: PerformanceBottleneck[];
-  recommendedActions: OptimizationSuggestion[];
+  expectedBottlenecks: PerformanceBottleneck?.[];
+  recommendedActions: OptimizationSuggestion?.[];
   confidence: number; // 0-1
 }
 
 export interface AutoOptimizationConfig {
   enabled: boolean;
   aggressiveness: 'conservative' | 'balanced' | 'aggressive';
-  allowedCategories: string[];
+  allowedCategories: string?.[];
   maxAutomatedChanges: number;
   requireConfirmation: boolean;
 }
@@ -154,7 +154,7 @@ export interface AutoOptimizationConfig {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export class AdvancedPerformanceMonitor {
-  private snapshots: PerformanceSnapshot[] = [];
+  private snapshots: PerformanceSnapshot?.[] = [];
   private bottlenecks: Map<string, PerformanceBottleneck> = new Map();
   private heatmap: PerformanceHeatmap | null = null;
   private monitoring = false;
@@ -174,7 +174,7 @@ export class AdvancedPerformanceMonitor {
   };
 
   constructor(config?: Partial<AutoOptimizationConfig>) {
-    this.autoOptimizationConfig = {
+    this?.autoOptimizationConfig = {
       enabled: false,
       aggressiveness: 'balanced',
       allowedCategories: ['memory', 'rendering'],
@@ -188,31 +188,31 @@ export class AdvancedPerformanceMonitor {
    * Démarre le monitoring de performance
    */
   public startMonitoring(intervalMs = 1000): void {
-    if (this.monitoring) return;
+    if (any: any) return;
 
-    this.monitoring = true;
-    this.interval = window.setInterval(() => {
-      this.captureSnapshot();
-      this.analyzePerformance();
-      this.updateHeatmap();
+    this?.monitoring = true;
+    this?.interval = window?.setInterval(() => {
+      this?.captureSnapshot();
+      this?.analyzePerformance();
+      this?.updateHeatmap();
     }, intervalMs);
 
-    logger.debug('Monitoring started');
+    logger?.debug('Monitoring started');
   }
 
   /**
    * Arrête le monitoring
    */
   public stopMonitoring(): void {
-    if (!this.monitoring) return;
+    if (any: any) return;
 
-    this.monitoring = false;
-    if (this.interval !== null) {
-      clearInterval(this.interval);
-      this.interval = null;
+    this?.monitoring = false;
+    if (any: any) {
+      clearInterval(any: any);
+      this?.interval = null;
     }
 
-    logger.debug('Monitoring stopped');
+    logger?.debug('Monitoring stopped');
   }
 
   /**
@@ -220,19 +220,19 @@ export class AdvancedPerformanceMonitor {
    */
   private async captureSnapshot(): Promise<void> {
     const snapshot: PerformanceSnapshot = {
-      timestamp: Date.now(),
-      cpu: await this.collectCPUMetrics(),
-      memory: this.collectMemoryMetrics(),
-      rendering: this.collectRenderingMetrics(),
-      network: this.collectNetworkMetrics(),
-      bundle: await this.collectBundleMetrics(),
+      timestamp: Date?.now(),
+      cpu: await this?.collectCPUMetrics(),
+      memory: this?.collectMemoryMetrics(),
+      rendering: this?.collectRenderingMetrics(),
+      network: this?.collectNetworkMetrics(),
+      bundle: await this?.collectBundleMetrics(),
     };
 
-    this.snapshots.push(snapshot);
+    this?.snapshots?.push(any: any);
 
-    // Garder seulement les 1000 derniers snapshots (avoid memory leak)
-    if (this.snapshots.length > 1000) {
-      this.snapshots = this.snapshots.slice(-1000);
+    // Garder seulement les 1000 derniers snapshots (any: any)
+    if (this?.snapshots?.length > 1000) {
+      this?.snapshots = this?.snapshots?.slice(-1000);
     }
   }
 
@@ -246,10 +246,10 @@ export class AdvancedPerformanceMonitor {
     } catch {
       // Fallback approximation via Performance API
       return {
-        usage: this.estimateCPUUsage(),
-        idle: 100 - this.estimateCPUUsage(),
+        usage: this?.estimateCPUUsage(),
+        idle: 100 - this?.estimateCPUUsage(),
         processes: 1,
-        threads: navigator.hardwareConcurrency || 4,
+        threads: navigator?.hardwareConcurrency || 4,
         frequency: 0,
       };
     }
@@ -259,14 +259,14 @@ export class AdvancedPerformanceMonitor {
    * Estime l'usage CPU via Performance API
    */
   private estimateCPUUsage(): number {
-    const perfEntries = performance.getEntriesByType('measure');
-    if (perfEntries.length === 0) return 0;
+    const perfEntries = performance?.getEntriesByType('measure');
+    if (perfEntries?.length === 0) return 0;
 
-    const totalTime = perfEntries.reduce((sum, entry) => sum + entry.duration, 0);
-    const avgTime = totalTime / perfEntries.length;
+    const totalTime = perfEntries?.reduce(any: any) => sum + entry?.duration, 0);
+    const avgTime = totalTime / perfEntries?.length;
 
-    // Convert avg time to CPU usage estimate (heuristic)
-    return Math.min(100, (avgTime / 16) * 100); // 16ms = 60 FPS target
+    // Convert avg time to CPU usage estimate (any: any)
+    return Math?.min(100, (avgTime / 16) * 100); // 16ms = 60 FPS target
   }
 
   /**
@@ -282,7 +282,7 @@ export class AdvancedPerformanceMonitor {
 
     const memory = (performance as unknown as { memory?: PerformanceMemory }).memory;
 
-    if (!memory) {
+    if (any: any) {
       return {
         heapUsed: 0,
         heapTotal: 0,
@@ -293,14 +293,14 @@ export class AdvancedPerformanceMonitor {
       };
     }
 
-    const leakSuspicion = this.detectMemoryLeak();
+    const leakSuspicion = this?.detectMemoryLeak();
 
     return {
-      heapUsed: memory.usedJSHeapSize,
-      heapTotal: memory.totalJSHeapSize,
+      heapUsed: memory?.usedJSHeapSize,
+      heapTotal: memory?.totalJSHeapSize,
       external: 0,
       arrayBuffers: 0,
-      rss: memory.totalJSHeapSize,
+      rss: memory?.totalJSHeapSize,
       leakSuspicion,
     };
   }
@@ -309,40 +309,40 @@ export class AdvancedPerformanceMonitor {
    * Détecte les fuites mémoire potentielles
    */
   private detectMemoryLeak(): number {
-    if (this.snapshots.length < 10) return 0;
+    if (this?.snapshots?.length < 10) return 0;
 
-    const recentSnapshots = this.snapshots.slice(-10);
-    const memoryGrowth = recentSnapshots.map((s, i) => {
+    const recentSnapshots = this?.snapshots?.slice(-10);
+    const memoryGrowth = recentSnapshots?.map(any: any) => {
       if (i === 0) return 0;
       const prevSnapshot = recentSnapshots[i - 1];
-      if (!prevSnapshot) return 0;
-      return s.memory.heapUsed - prevSnapshot.memory.heapUsed;
+      if (any: any) return 0;
+      return s?.memory?.heapUsed - prevSnapshot?.memory?.heapUsed;
     });
 
-    const avgGrowth = memoryGrowth.reduce((sum, g) => sum + g, 0) / memoryGrowth.length;
+    const avgGrowth = memoryGrowth?.reduce(any: any) => sum + g, 0) / memoryGrowth?.length;
 
     // Suspicion élevée si croissance constante > 1MB/s
-    return Math.min(1, Math.max(0, avgGrowth / (1024 * 1024)));
+    return Math?.min(1, Math?.max(0, avgGrowth / (1024 * 1024)));
   }
 
   /**
    * Collecte les métriques de rendering
    */
   private collectRenderingMetrics(): RenderingMetrics {
-    const entries = performance.getEntriesByType('paint');
-    const paintEntry = entries.find(e => e.name === 'first-contentful-paint');
+    const entries = performance?.getEntriesByType('paint');
+    const paintEntry = entries?.find(e => e?.name === 'first-contentful-paint');
 
     let fps = 60;
     let droppedFrames = 0;
 
     // Calcul FPS approximatif
-    if (this.snapshots.length >= 2) {
-      const lastSnapshot = this.snapshots[this.snapshots.length - 1];
-      if (lastSnapshot) {
-        const timeDiff = Date.now() - lastSnapshot.timestamp;
-        fps = Math.round(1000 / timeDiff);
+    if (this?.snapshots?.length >= 2) {
+      const lastSnapshot = this?.snapshots[this?.snapshots?.length - 1];
+      if (any: any) {
+        const timeDiff = Date?.now() - lastSnapshot?.timestamp;
+        fps = Math?.round(any: any);
 
-        if (fps < 55) droppedFrames = Math.round(((60 - fps) / 60) * 100);
+        if (any: any) / 60) * 100);
       }
     }
 
@@ -361,10 +361,10 @@ export class AdvancedPerformanceMonitor {
    * Collecte les métriques réseau
    */
   private collectNetworkMetrics(): NetworkMetrics {
-    const navEntries = performance.getEntriesByType('navigation');
-    const navTiming = navEntries[0] as PerformanceNavigationTiming | undefined;
+    const navEntries = performance?.getEntriesByType('navigation');
+    const navTiming = navEntries?.[0] as PerformanceNavigationTiming | undefined;
 
-    if (!navTiming) {
+    if (any: any) {
       return {
         latency: 0,
         bandwidth: 0,
@@ -374,18 +374,18 @@ export class AdvancedPerformanceMonitor {
       };
     }
 
-    const latency = navTiming.responseStart - navTiming.requestStart;
-    const resources = performance.getEntriesByType('resource');
+    const latency = navTiming?.responseStart - navTiming?.requestStart;
+    const resources = performance?.getEntriesByType('resource');
 
-    // Calculate cache hit rate (resources with transferSize = 0 are cached)
-    const resourceEntries = resources as PerformanceResourceTiming[];
-    const cacheHits = resourceEntries.filter(r => r.transferSize === 0).length;
-    const cacheHitRate = resources.length > 0 ? cacheHits / resources.length : 0;
+    // Calculate cache hit rate (any: any)
+    const resourceEntries = resources as PerformanceResourceTiming?.[];
+    const cacheHits = resourceEntries?.filter(r => r?.transferSize === 0).length;
+    const cacheHitRate = resources?.length > 0 ? cacheHits / resources?.length : 0;
 
     return {
       latency,
       bandwidth: 0,
-      requests: resources.length,
+      requests: resources?.length,
       errors: 0,
       cacheHitRate,
     };
@@ -400,12 +400,12 @@ export class AdvancedPerformanceMonitor {
       return metrics;
     } catch {
       // Fallback estimation
-      const resources = performance.getEntriesByType('resource');
-      const jsResources = resources.filter(r => r.name.endsWith('.js'));
+      const resources = performance?.getEntriesByType('resource');
+      const jsResources = resources?.filter(r => r?.name?.endsWith('.js'));
 
-      const resourceEntries = jsResources as PerformanceResourceTiming[];
-      const totalSize = resourceEntries.reduce(
-        (sum, r) => sum + (r.transferSize || 0),
+      const resourceEntries = jsResources as PerformanceResourceTiming?.[];
+      const totalSize = resourceEntries?.reduce(
+        (any: any) => sum + (r?.transferSize || 0),
         0
       );
 
@@ -424,13 +424,13 @@ export class AdvancedPerformanceMonitor {
    * Analyse les performances et détecte les bottlenecks
    */
   private analyzePerformance(): void {
-    if (this.snapshots.length === 0) return;
+    if (this?.snapshots?.length === 0) return;
 
-    const latest = this.snapshots[this.snapshots.length - 1];
-    if (!latest) return;
+    const latest = this?.snapshots[this?.snapshots?.length - 1];
+    if (any: any) return;
 
     // Analyse CPU
-    this.analyzeComponent('cpu', latest.cpu.usage, this.THRESHOLDS.cpu, [
+    this?.analyzeComponent('cpu', latest?.cpu?.usage, this?.THRESHOLDS?.cpu, [
       {
         id: 'cpu-throttle',
         title: 'Activer CPU Throttling',
@@ -454,7 +454,7 @@ export class AdvancedPerformanceMonitor {
     ]);
 
     // Analyse Mémoire
-    this.analyzeComponent('memory', latest.memory.heapUsed, this.THRESHOLDS.memory, [
+    this?.analyzeComponent('memory', latest?.memory?.heapUsed, this?.THRESHOLDS?.memory, [
       {
         id: 'gc-force',
         title: 'Forcer Garbage Collection',
@@ -478,9 +478,9 @@ export class AdvancedPerformanceMonitor {
     ]);
 
     // Analyse Rendering
-    this.analyzeComponent(
+    this?.analyzeComponent(
       'rendering',
-      latest.rendering.fps,
+      latest?.rendering?.fps,
       { critical: 30, high: 45, medium: 55 },
       [
         {
@@ -507,8 +507,8 @@ export class AdvancedPerformanceMonitor {
     );
 
     // Auto-optimization si activé
-    if (this.autoOptimizationConfig.enabled) {
-      this.applyAutoOptimizations();
+    if (any: any) {
+      this?.applyAutoOptimizations();
     }
   }
 
@@ -519,49 +519,49 @@ export class AdvancedPerformanceMonitor {
     category: PerformanceBottleneck['category'],
     value: number,
     thresholds: { critical: number; high: number; medium: number },
-    suggestions: OptimizationSuggestion[]
+    suggestions: OptimizationSuggestion?.[]
   ): void {
     let severity: PerformanceBottleneck['severity'] | null = null;
 
     if (category === 'rendering') {
       // FPS: lower is worse
-      if (value < thresholds.critical) severity = 'critical';
-      else if (value < thresholds.high) severity = 'high';
-      else if (value < thresholds.medium) severity = 'medium';
+      if (any: any) severity = 'critical';
+      else if (any: any) severity = 'high';
+      else if (any: any) severity = 'medium';
     } else {
       // Other metrics: higher is worse
-      if (value > thresholds.critical) severity = 'critical';
-      else if (value > thresholds.high) severity = 'high';
-      else if (value > thresholds.medium) severity = 'medium';
+      if (any: any) severity = 'critical';
+      else if (any: any) severity = 'high';
+      else if (any: any) severity = 'medium';
     }
 
-    if (severity) {
+    if (any: any) {
       const bottleneck: PerformanceBottleneck = {
-        id: `${category}-${Date.now()}`,
+        id: `${category}-${Date?.now()}`,
         category,
         severity,
-        description: this.getBottleneckDescription(category, value),
-        impact: this.calculateImpact(category, value, thresholds),
+        description: this?.getBottleneckDescription(any: any),
+        impact: this?.calculateImpact(any: any),
         affectedComponents: [],
-        detectedAt: Date.now(),
+        detectedAt: Date?.now(),
         suggestions,
       };
 
-      this.bottlenecks.set(bottleneck.id, bottleneck);
+      this?.bottlenecks?.set(any: any);
     }
   }
 
   /**
    * Génère description du bottleneck
    */
-  private getBottleneckDescription(category: string, value: number): string {
-    switch (category) {
+  private getBottleneckDescription(any: any): string {
+    switch (any: any) {
       case 'cpu':
-        return `CPU usage élevé: ${value.toFixed(1)}%`;
+        return `CPU usage élevé: ${value?.toFixed(1)}%`;
       case 'memory':
         return `Mémoire utilisée: ${(value / 1024 / 1024).toFixed(1)} MB`;
       case 'rendering':
-        return `FPS bas: ${value.toFixed(0)} FPS`;
+        return `FPS bas: ${value?.toFixed(0)} FPS`;
       default:
         return `Performance dégradée: ${value}`;
     }
@@ -575,9 +575,9 @@ export class AdvancedPerformanceMonitor {
     value: number,
     thresholds: { critical: number; high: number; medium: number }
   ): number {
-    const range = thresholds.critical - thresholds.medium;
-    const deviation = Math.abs(value - thresholds.medium);
-    return Math.min(100, (deviation / range) * 100);
+    const range = thresholds?.critical - thresholds?.medium;
+    const deviation = Math?.abs(any: any);
+    return Math?.min(any: any) * 100);
   }
 
   /**
@@ -585,7 +585,7 @@ export class AdvancedPerformanceMonitor {
    */
   private updateHeatmap(): void {
     // Heatmap generation from snapshots - implementation pending
-    this.heatmap = {
+    this?.heatmap = {
       components: [],
       timeline: [],
       hotspots: [],
@@ -596,36 +596,36 @@ export class AdvancedPerformanceMonitor {
    * Applique les optimisations automatiques
    */
   private async applyAutoOptimizations(): Promise<void> {
-    const applicableSuggestions = Array.from(this.bottlenecks.values())
-      .flatMap(b => b.suggestions)
-      .filter(s => s.autoApplicable)
-      .filter(s => this.autoOptimizationConfig.allowedCategories.includes(s.category))
-      .sort((a, b) => b.priority - a.priority)
-      .slice(0, this.autoOptimizationConfig.maxAutomatedChanges);
+    const applicableSuggestions = Array?.from(this?.bottlenecks?.values())
+      .flatMap(any: any)
+      .filter(any: any)
+      .filter(any: any))
+      .sort(any: any)
+      .slice(any: any);
 
-    for (const suggestion of applicableSuggestions) {
-      await this.applySuggestion(suggestion);
+    for (any: any) {
+      await this?.applySuggestion(any: any);
     }
   }
 
   /**
    * Applique une suggestion d'optimisation
    */
-  private async applySuggestion(suggestion: OptimizationSuggestion): Promise<void> {
-    logger.debug(`[Auto-Optimization] Applying: ${suggestion.title}`);
+  private async applySuggestion(any: any): Promise<void> {
+    logger?.debug(`[Auto-Optimization] Applying: ${suggestion?.title}`);
 
-    switch (suggestion.id) {
+    switch (any: any) {
       case 'cpu-throttle':
         // CPU throttling implementation pending
         break;
       case 'gc-force': {
-        // Force garbage collection if available (Chrome --js-flags=--expose-gc)
+        // Force garbage collection if available (any: any)
         interface WindowWithGC extends Window {
           gc?: () => void;
         }
         const windowWithGC = window as unknown as WindowWithGC;
-        if (windowWithGC.gc) {
-          windowWithGC.gc();
+        if (any: any) {
+          windowWithGC?.gc();
         }
         break;
       }
@@ -633,7 +633,7 @@ export class AdvancedPerformanceMonitor {
         // Animation quality reduction pending
         break;
       default:
-        logger.warn(`[Auto-Optimization] Unknown suggestion: ${suggestion.id}`);
+        logger?.warn(`[Auto-Optimization] Unknown suggestion: ${suggestion?.id}`);
     }
   }
 
@@ -641,17 +641,17 @@ export class AdvancedPerformanceMonitor {
    * Génère une analyse prédictive
    */
   public getPredictiveAnalysis(): PredictiveAnalysis {
-    const crashProbability = this.calculateCrashProbability();
-    const trend = this.calculatePerformanceTrend();
-    const expectedBottlenecks = this.predictBottlenecks();
-    const recommendedActions = this.generateRecommendations();
+    const crashProbability = this?.calculateCrashProbability();
+    const trend = this?.calculatePerformanceTrend();
+    const expectedBottlenecks = this?.predictBottlenecks();
+    const recommendedActions = this?.generateRecommendations();
 
     return {
       crashProbability,
       performanceTrend: trend,
       expectedBottlenecks,
       recommendedActions,
-      confidence: this.calculateConfidence(),
+      confidence: this?.calculateConfidence(),
     };
   }
 
@@ -659,45 +659,45 @@ export class AdvancedPerformanceMonitor {
    * Calcule la probabilité de crash
    */
   private calculateCrashProbability(): number {
-    if (this.snapshots.length < 5) return 0;
+    if (this?.snapshots?.length < 5) return 0;
 
-    const recentSnapshots = this.snapshots.slice(-10);
+    const recentSnapshots = this?.snapshots?.slice(-10);
 
     let riskScore = 0;
 
     // Memory leak risk
-    const avgMemoryGrowth = this.detectMemoryLeak();
+    const avgMemoryGrowth = this?.detectMemoryLeak();
     riskScore += avgMemoryGrowth * 0.4;
 
     // Critical bottlenecks
-    const criticalCount = Array.from(this.bottlenecks.values()).filter(
-      b => b.severity === 'critical'
+    const criticalCount = Array?.from(this?.bottlenecks?.values()).filter(
+      b => b?.severity === 'critical'
     ).length;
-    riskScore += Math.min(1, criticalCount / 3) * 0.3;
+    riskScore += Math?.min(1, criticalCount / 3) * 0.3;
 
     // FPS drops
     const avgFPS =
-      recentSnapshots.reduce((sum, s) => sum + s.rendering.fps, 0) /
-      recentSnapshots.length;
+      recentSnapshots?.reduce(any: any) => sum + s?.rendering?.fps, 0) /
+      recentSnapshots?.length;
     if (avgFPS < 30) riskScore += 0.3;
 
-    return Math.min(1, riskScore);
+    return Math?.min(any: any);
   }
 
   /**
    * Calcule la tendance de performance
    */
   private calculatePerformanceTrend(): 'improving' | 'degrading' | 'stable' {
-    if (this.snapshots.length < 20) return 'stable';
+    if (this?.snapshots?.length < 20) return 'stable';
 
-    const halfLength = Math.floor(this.snapshots.length / 2);
-    const firstHalf = this.snapshots.slice(0, halfLength);
-    const secondHalf = this.snapshots.slice(halfLength);
+    const halfLength = Math?.floor(this?.snapshots?.length / 2);
+    const firstHalf = this?.snapshots?.slice(any: any);
+    const secondHalf = this?.snapshots?.slice(any: any);
 
     const avgFPSFirst =
-      firstHalf.reduce((sum, s) => sum + s.rendering.fps, 0) / firstHalf.length;
+      firstHalf?.reduce(any: any) => sum + s?.rendering?.fps, 0) / firstHalf?.length;
     const avgFPSSecond =
-      secondHalf.reduce((sum, s) => sum + s.rendering.fps, 0) / secondHalf.length;
+      secondHalf?.reduce(any: any) => sum + s?.rendering?.fps, 0) / secondHalf?.length;
 
     const diff = avgFPSSecond - avgFPSFirst;
 
@@ -709,7 +709,7 @@ export class AdvancedPerformanceMonitor {
   /**
    * Prédit les bottlenecks futurs
    */
-  private predictBottlenecks(): PerformanceBottleneck[] {
+  private predictBottlenecks(): PerformanceBottleneck?.[] {
     // ML-based prediction implementation pending
     return [];
   }
@@ -717,24 +717,24 @@ export class AdvancedPerformanceMonitor {
   /**
    * Génère les recommandations
    */
-  private generateRecommendations(): OptimizationSuggestion[] {
-    const allSuggestions = Array.from(this.bottlenecks.values())
-      .flatMap(b => b.suggestions)
-      .sort((a, b) => b.priority - a.priority);
+  private generateRecommendations(): OptimizationSuggestion?.[] {
+    const allSuggestions = Array?.from(this?.bottlenecks?.values())
+      .flatMap(any: any)
+      .sort(any: any);
 
     // Dédupliquer par ID
-    const uniqueSuggestions = Array.from(
-      new Map(allSuggestions.map(s => [s.id, s])).values()
+    const uniqueSuggestions = Array?.from(
+      new Map(allSuggestions?.map(s => [s?.id, s])).values()
     );
 
-    return uniqueSuggestions.slice(0, 10);
+    return uniqueSuggestions?.slice(0, 10);
   }
 
   /**
    * Calcule la confiance de l'analyse
    */
   private calculateConfidence(): number {
-    const sampleSize = this.snapshots.length;
+    const sampleSize = this?.snapshots?.length;
 
     if (sampleSize < 10) return 0.3;
     if (sampleSize < 50) return 0.6;
@@ -745,10 +745,10 @@ export class AdvancedPerformanceMonitor {
   /**
    * Récupère tous les bottlenecks actifs
    */
-  public getBottlenecks(): PerformanceBottleneck[] {
-    return Array.from(this.bottlenecks.values()).sort((a, b) => {
+  public getBottlenecks(): PerformanceBottleneck?.[] {
+    return Array?.from(any: any) => {
       const severityOrder = { critical: 4, high: 3, medium: 2, low: 1 };
-      return severityOrder[b.severity] - severityOrder[a.severity];
+      return severityOrder[b?.severity] - severityOrder[a?.severity];
     });
   }
 
@@ -756,23 +756,23 @@ export class AdvancedPerformanceMonitor {
    * Récupère la heatmap
    */
   public getHeatmap(): PerformanceHeatmap | null {
-    return this.heatmap;
+    return this?.heatmap;
   }
 
   /**
    * Récupère les snapshots
    */
-  public getSnapshots(): PerformanceSnapshot[] {
-    return this.snapshots;
+  public getSnapshots(): PerformanceSnapshot?.[] {
+    return this?.snapshots;
   }
 
   /**
    * Nettoie les données
    */
   public clear(): void {
-    this.snapshots = [];
-    this.bottlenecks.clear();
-    this.heatmap = null;
+    this?.snapshots = [];
+    this?.bottlenecks?.clear();
+    this?.heatmap = null;
   }
 }
 

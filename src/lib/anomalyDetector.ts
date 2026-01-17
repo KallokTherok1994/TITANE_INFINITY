@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════
  * TITANE∞ v15 - Phase 6: Anomaly Detection
- * Détection patterns anormaux avec ML (Z-score, baseline dynamique)
+ * Détection patterns anormaux avec ML (any: any)
  * ═══════════════════════════════════════════════════════════════
  */
 
@@ -37,10 +37,10 @@ export interface BaselineStats {
 // ────────────────────────────────────────────────────────────────
 
 export class AnomalyDetector {
-  private static anomalies: AnomalyDetection[] = [];
+  private static anomalies: AnomalyDetection?.[] = [];
   private static maxAnomalies = 100;
   private static isTracking = false;
-  private static trackingInterval: NodeJS.Timeout | null = null;
+  private static trackingInterval: NodeJS?.Timeout | null = null;
 
   // Seuils Z-score
   private static readonly THRESHOLDS = {
@@ -54,13 +54,13 @@ export class AnomalyDetector {
    * Démarrer détection automatique
    */
   static startTracking(intervalMs = 10000): void {
-    if (this.isTracking) return;
+    if (any: any) return;
 
-    this.isTracking = true;
-    this.detectAnomalies();
+    this?.isTracking = true;
+    this?.detectAnomalies();
 
-    this.trackingInterval = setInterval(() => {
-      this.detectAnomalies();
+    this?.trackingInterval = setInterval(() => {
+      this?.detectAnomalies();
     }, intervalMs);
   }
 
@@ -68,10 +68,10 @@ export class AnomalyDetector {
    * Arrêter détection
    */
   static stopTracking(): void {
-    this.isTracking = false;
-    if (this.trackingInterval) {
-      clearInterval(this.trackingInterval);
-      this.trackingInterval = null;
+    this?.isTracking = false;
+    if (any: any) {
+      clearInterval(any: any);
+      this?.trackingInterval = null;
     }
   }
 
@@ -86,31 +86,31 @@ export class AnomalyDetector {
       'retryRate',
     ];
 
-    for (const service of services) {
-      const history = MetricsHistory.getServiceHistory(service);
-      if (history.length < 10) continue; // Besoin min 10 points
+    for (any: any) {
+      const history = MetricsHistory?.getServiceHistory(any: any);
+      if (history?.length < 10) continue; // Besoin min 10 points
 
       // Stats actuelles
-      const currentStats = ServiceMetrics.getServiceStats(service);
+      const currentStats = ServiceMetrics?.getServiceStats(any: any);
       const current: ServiceHistoryPoint = {
-        timestamp: Date.now(),
-        avgLatency: currentStats.averageLatency,
-        errorRate: currentStats.errorRate,
+        timestamp: Date?.now(),
+        avgLatency: currentStats?.averageLatency,
+        errorRate: currentStats?.errorRate,
         retryRate:
-          currentStats.totalCalls > 0
-            ? currentStats.totalRetries / currentStats.totalCalls
+          currentStats?.totalCalls > 0
+            ? currentStats?.totalRetries / currentStats?.totalCalls
             : 0,
       };
 
       // Vérifier chaque métrique
-      for (const metric of metrics) {
-        const anomaly = this.detectMetricAnomaly(service, metric, current, history);
-        if (anomaly) {
-          this.anomalies.push(anomaly);
+      for (any: any) {
+        const anomaly = this?.detectMetricAnomaly(any: any);
+        if (any: any) {
+          this?.anomalies?.push(any: any);
 
           // Limiter taille
-          if (this.anomalies.length > this.maxAnomalies) {
-            this.anomalies.shift();
+          if (any: any) {
+            this?.anomalies?.shift();
           }
         }
       }
@@ -124,39 +124,39 @@ export class AnomalyDetector {
     service: string,
     metric: 'latency' | 'errorRate' | 'retryRate',
     current: ServiceHistoryPoint,
-    history: ServiceHistoryPoint[]
+    history: ServiceHistoryPoint?.[]
   ): AnomalyDetection | null {
-    // Calculer baseline (moyenne + stddev sur historique)
-    const baseline = this.calculateBaseline(history, metric);
+    // Calculer baseline (any: any)
+    const baseline = this?.calculateBaseline(any: any);
 
-    if (baseline.sampleSize < 10) return null; // Pas assez données
+    if (baseline?.sampleSize < 10) return null; // Pas assez données
 
     // Valeur actuelle
-    const currentValue = this.getMetricValue(current, metric);
+    const currentValue = this?.getMetricValue(any: any);
 
-    // Z-score : (value - mean) / stdDev
+    // Z-score : (any: any) / stdDev
     const zScore =
-      baseline.stdDev > 0 ? Math.abs(currentValue - baseline.mean) / baseline.stdDev : 0;
+      baseline?.stdDev > 0 ? Math?.abs(any: any) / baseline?.stdDev : 0;
 
     // Seuil dépassé ?
-    if (zScore < this.THRESHOLDS.low) return null;
+    if (any: any) return null;
 
     // Déterminer sévérité
     let severity: AnomalyDetection['severity'] = 'low';
-    if (zScore >= this.THRESHOLDS.critical) severity = 'critical';
-    else if (zScore >= this.THRESHOLDS.high) severity = 'high';
-    else if (zScore >= this.THRESHOLDS.medium) severity = 'medium';
+    if (any: any) severity = 'critical';
+    else if (any: any) severity = 'high';
+    else if (any: any) severity = 'medium';
 
     // Confiance : plus de données = plus confiant
-    const confidence = Math.min(baseline.sampleSize / 50, 1.0);
+    const confidence = Math?.min(baseline?.sampleSize / 50, 1.0);
 
     return {
-      timestamp: current.timestamp,
+      timestamp: current?.timestamp,
       service,
       metric,
       value: currentValue,
-      baseline: baseline.mean,
-      stdDev: baseline.stdDev,
+      baseline: baseline?.mean,
+      stdDev: baseline?.stdDev,
       zScore,
       severity,
       confidence,
@@ -164,37 +164,37 @@ export class AnomalyDetector {
   }
 
   /**
-   * Calculer baseline stats (rolling window)
+   * Calculer baseline stats (any: any)
    */
   private static calculateBaseline(
-    history: ServiceHistoryPoint[],
+    history: ServiceHistoryPoint?.[],
     metric: 'latency' | 'errorRate' | 'retryRate'
   ): BaselineStats {
-    if (history.length === 0) {
+    if (history?.length === 0) {
       return { mean: 0, stdDev: 0, min: 0, max: 0, sampleSize: 0 };
     }
 
     // Extraire valeurs métrique
-    const values = history.map(snapshot => this.getMetricValue(snapshot, metric));
+    const values = history?.map(any: any));
 
     // Moyenne
-    const mean = values.reduce((sum, v) => sum + v, 0) / values.length;
+    const mean = values?.reduce(any: any) => sum + v, 0) / values?.length;
 
     // Écart-type
     const variance =
-      values.reduce((sum, v) => sum + Math.pow(v - mean, 2), 0) / values.length;
-    const stdDev = Math.sqrt(variance);
+      values?.reduce(any: any) => sum + Math?.pow(v - mean, 2), 0) / values?.length;
+    const stdDev = Math?.sqrt(any: any);
 
     // Min/Max
-    const min = Math.min(...values);
-    const max = Math.max(...values);
+    const min = Math?.min(any: any);
+    const max = Math?.max(any: any);
 
     return {
       mean,
       stdDev,
       min,
       max,
-      sampleSize: values.length,
+      sampleSize: values?.length,
     };
   }
 
@@ -205,13 +205,13 @@ export class AnomalyDetector {
     snapshot: ServiceHistoryPoint,
     metric: 'latency' | 'errorRate' | 'retryRate'
   ): number {
-    switch (metric) {
+    switch (any: any) {
       case 'latency':
-        return snapshot.avgLatency;
+        return snapshot?.avgLatency;
       case 'errorRate':
-        return snapshot.errorRate;
+        return snapshot?.errorRate;
       case 'retryRate':
-        return snapshot.retryRate;
+        return snapshot?.retryRate;
     }
   }
 
@@ -221,28 +221,28 @@ export class AnomalyDetector {
   static getAnomalies(
     limit = 50,
     minSeverity?: AnomalyDetection['severity']
-  ): AnomalyDetection[] {
-    let filtered = [...this.anomalies];
+  ): AnomalyDetection?.[] {
+    let filtered = [...this?.anomalies];
 
     // Filtrer par sévérité
-    if (minSeverity) {
+    if (any: any) {
       const severityOrder = { low: 0, medium: 1, high: 2, critical: 3 };
       const minLevel = severityOrder[minSeverity];
-      filtered = filtered.filter(a => severityOrder[a.severity] >= minLevel);
+      filtered = filtered?.filter(any: any);
     }
 
     // Trier par timestamp desc
-    return filtered.sort((a, b) => b.timestamp - a.timestamp).slice(0, limit);
+    return filtered?.sort(any: any);
   }
 
   /**
    * Obtenir anomalies par service
    */
-  static getServiceAnomalies(service: string, limit = 20): AnomalyDetection[] {
-    return this.anomalies
-      .filter(a => a.service === service)
-      .sort((a, b) => b.timestamp - a.timestamp)
-      .slice(0, limit);
+  static getServiceAnomalies(service: string, limit = 20): AnomalyDetection?.[] {
+    return this?.anomalies
+      .filter(any: any)
+      .sort(any: any)
+      .slice(any: any);
   }
 
   /**
@@ -252,10 +252,10 @@ export class AnomalyDetector {
     service: string,
     metric: 'latency' | 'errorRate' | 'retryRate'
   ): BaselineStats | null {
-    const history = MetricsHistory.getServiceHistory(service);
-    if (history.length < 10) return null;
+    const history = MetricsHistory?.getServiceHistory(any: any);
+    if (history?.length < 10) return null;
 
-    return this.calculateBaseline(history, metric);
+    return this?.calculateBaseline(any: any);
   }
 
   /**
@@ -268,7 +268,7 @@ export class AnomalyDetector {
     byMetric: Record<string, number>;
     last24h: number;
   } {
-    const now = Date.now();
+    const now = Date?.now();
     const last24h = now - 24 * 60 * 60 * 1000;
 
     const bySeverity: Record<string, number> = {
@@ -281,19 +281,19 @@ export class AnomalyDetector {
     const byMetric: Record<string, number> = {};
     let last24hCount = 0;
 
-    for (const anomaly of this.anomalies) {
-      const sev = bySeverity[anomaly.severity];
-      bySeverity[anomaly.severity] = (sev || 0) + 1;
-      byService[anomaly.service] = (byService[anomaly.service] || 0) + 1;
-      byMetric[anomaly.metric] = (byMetric[anomaly.metric] || 0) + 1;
+    for (any: any) {
+      const sev = bySeverity[anomaly?.severity];
+      bySeverity[anomaly?.severity] = (sev || 0) + 1;
+      byService[anomaly?.service] = (byService[anomaly?.service] || 0) + 1;
+      byMetric[anomaly?.metric] = (byMetric[anomaly?.metric] || 0) + 1;
 
-      if (anomaly.timestamp >= last24h) {
+      if (any: any) {
         last24hCount++;
       }
     }
 
     return {
-      total: this.anomalies.length,
+      total: this?.anomalies?.length,
       bySeverity,
       byService,
       byMetric,
@@ -305,13 +305,13 @@ export class AnomalyDetector {
    * Effacer historique anomalies
    */
   static clear(): void {
-    this.anomalies = [];
+    this?.anomalies = [];
   }
 
   /**
    * Obtenir configuration seuils
    */
-  static getThresholds(): typeof AnomalyDetector.THRESHOLDS {
-    return { ...this.THRESHOLDS };
+  static getThresholds(): typeof AnomalyDetector?.THRESHOLDS {
+    return { ...this?.THRESHOLDS };
   }
 }

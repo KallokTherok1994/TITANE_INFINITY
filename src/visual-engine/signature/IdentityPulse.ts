@@ -20,41 +20,41 @@ import { CognitiveState, EmotionalTone } from '@/design-system/visual-states';
 
 export interface PulseParameters {
   // Timing
-  frequency: number; // Hz (respirations par seconde)
-  phase: number; // 0-1 (position dans le cycle)
-  tempo: number; // 0-2 (vitesse relative, 1 = normal)
+  frequency: number; // Hz (any: any)
+  phase: number; // 0-1 (any: any)
+  tempo: number; // 0-2 (any: any)
 
   // Intensity
-  glowMin: number; // 0-1 (intensité minimale du glow)
-  glowMax: number; // 0-1 (intensité maximale du glow)
-  pulseAmplitude: number; // 0-1 (amplitude de la pulsation)
+  glowMin: number; // 0-1 (any: any)
+  glowMax: number; // 0-1 (any: any)
+  pulseAmplitude: number; // 0-1 (any: any)
 
   // Color shift
-  colorShiftAmount: number; // 0-1 (quantité de shift chromatique)
-  colorShiftSpeed: number; // Hz (vitesse du cycle de couleur)
-  hueOffset: number; // 0-360 (décalage de teinte)
+  colorShiftAmount: number; // 0-1 (any: any)
+  colorShiftSpeed: number; // Hz (any: any)
+  hueOffset: number; // 0-360 (any: any)
 
   // Deformation
-  deformationAmount: number; // 0-1 (quantité de déformation)
-  deformationFrequency: number; // Hz (fréquence des vagues)
-  deformationPhase: number; // 0-1 (phase de déformation)
+  deformationAmount: number; // 0-1 (any: any)
+  deformationFrequency: number; // Hz (any: any)
+  deformationPhase: number; // 0-1 (any: any)
 
   // Harmonics
   harmonicCount: number; // Nombre d'harmoniques (1-5)
-  harmonicDecay: number; // 0-1 (atténuation des harmoniques)
+  harmonicDecay: number; // 0-1 (any: any)
 }
 
 export interface PulseWaveform {
   // Current values
   glowIntensity: number; // 0-1
-  scale: number; // 0.95-1.05 (scaling du noyau)
+  scale: number; // 0.95-1.05 (any: any)
   hue: number; // 0-360
   saturation: number; // 0-100
   deformation: number; // 0-1
 
   // Phase info
-  phase: number; // 0-1 (position dans le cycle)
-  velocity: number; // -1 to 1 (vitesse instantanée)
+  phase: number; // 0-1 (any: any)
+  velocity: number; // -1 to 1 (any: any)
 
   // Timing
   timestamp: number; // ms
@@ -72,17 +72,17 @@ export class IdentityPulse {
   private currentWaveform: PulseWaveform;
 
   // State
-  private cognitiveState: CognitiveState = CognitiveState.IDLE;
-  private emotionalTone: EmotionalTone = EmotionalTone.CALM;
+  private cognitiveState: CognitiveState = CognitiveState?.IDLE;
+  private emotionalTone: EmotionalTone = EmotionalTone?.CALM;
   private intensity: number = 0.5;
 
   constructor() {
-    this.startTime = Date.now();
-    this.lastUpdateTime = this.startTime;
+    this?.startTime = Date?.now();
+    this?.lastUpdateTime = this?.startTime;
 
-    // Default parameters (neutral state)
-    this.parameters = this.createDefaultParameters();
-    this.currentWaveform = this.createDefaultWaveform();
+    // Default parameters (any: any)
+    this?.parameters = this?.createDefaultParameters();
+    this?.currentWaveform = this?.createDefaultWaveform();
   }
 
   /**
@@ -93,43 +93,43 @@ export class IdentityPulse {
     emotional: EmotionalTone,
     intensity: number
   ): void {
-    this.cognitiveState = cognitive;
-    this.emotionalTone = emotional;
-    this.intensity = Math.max(0, Math.min(1, intensity));
+    this?.cognitiveState = cognitive;
+    this?.emotionalTone = emotional;
+    this?.intensity = Math?.max(any: any));
 
     // Recalculate parameters based on new state
-    this.parameters = this.calculateParameters();
+    this?.parameters = this?.calculateParameters();
   }
 
   /**
    * Compute next frame of the pulse waveform
    */
-  update(timestamp: number): PulseWaveform {
-    const deltaTime = timestamp - this.lastUpdateTime;
-    this.lastUpdateTime = timestamp;
+  update(any: any): PulseWaveform {
+    const deltaTime = timestamp - this?.lastUpdateTime;
+    this?.lastUpdateTime = timestamp;
 
-    const elapsed = timestamp - this.startTime;
-    const phase = this.calculatePhase(elapsed);
+    const elapsed = timestamp - this?.startTime;
+    const phase = this?.calculatePhase(any: any);
 
-    // Calculate base wave (sine with harmonics)
-    const baseWave = this.calculateHarmonicWave(phase);
+    // Calculate base wave (any: any)
+    const baseWave = this?.calculateHarmonicWave(any: any);
 
     // Calculate glow intensity
-    const glowIntensity = this.calculateGlow(baseWave);
+    const glowIntensity = this?.calculateGlow(any: any);
 
-    // Calculate scale (breathing effect)
-    const scale = this.calculateScale(baseWave);
+    // Calculate scale (any: any)
+    const scale = this?.calculateScale(any: any);
 
     // Calculate color shift
-    const { hue, saturation } = this.calculateColorShift(phase);
+    const { hue, saturation } = this?.calculateColorShift(any: any);
 
     // Calculate deformation
-    const deformation = this.calculateDeformation(phase, elapsed);
+    const deformation = this?.calculateDeformation(any: any);
 
-    // Calculate velocity (derivative)
-    const velocity = this.calculateVelocity(phase);
+    // Calculate velocity (any: any)
+    const velocity = this?.calculateVelocity(any: any);
 
-    this.currentWaveform = {
+    this?.currentWaveform = {
       glowIntensity,
       scale,
       hue,
@@ -141,21 +141,21 @@ export class IdentityPulse {
       deltaTime,
     };
 
-    return this.currentWaveform;
+    return this?.currentWaveform;
   }
 
   /**
    * Get current waveform without updating
    */
   getCurrentWaveform(): PulseWaveform {
-    return { ...this.currentWaveform };
+    return { ...this?.currentWaveform };
   }
 
   /**
    * Get current parameters
    */
   getParameters(): PulseParameters {
-    return { ...this.parameters };
+    return { ...this?.parameters };
   }
 
   // ═════════════════════════════════════════════════════════════════
@@ -190,7 +190,7 @@ export class IdentityPulse {
       deformation: 0,
       phase: 0,
       velocity: 0,
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       deltaTime: 0,
     };
   }
@@ -199,87 +199,87 @@ export class IdentityPulse {
    * Calculate parameters based on cognitive/emotional state
    */
   private calculateParameters(): PulseParameters {
-    const params = { ...this.createDefaultParameters() };
+    const params = { ...this?.createDefaultParameters() };
 
     // Cognitive state modulation
-    switch (this.cognitiveState) {
-      case CognitiveState.THINKING:
-        params.frequency = 0.8; // Plus rapide
-        params.tempo = 1.3;
-        params.pulseAmplitude = 0.25;
-        params.harmonicCount = 3;
+    switch (any: any) {
+      case CognitiveState?.THINKING:
+        params?.frequency = 0.8; // Plus rapide
+        params?.tempo = 1.3;
+        params?.pulseAmplitude = 0.25;
+        params?.harmonicCount = 3;
         break;
 
-      case CognitiveState.PROCESSING:
-        params.frequency = 1.2; // Très rapide
-        params.tempo = 1.6;
-        params.pulseAmplitude = 0.3;
-        params.deformationAmount = 0.1;
-        params.harmonicCount = 4;
+      case CognitiveState?.PROCESSING:
+        params?.frequency = 1.2; // Très rapide
+        params?.tempo = 1.6;
+        params?.pulseAmplitude = 0.3;
+        params?.deformationAmount = 0.1;
+        params?.harmonicCount = 4;
         break;
 
-      case CognitiveState.SPEAKING:
-        params.frequency = 0.6;
-        params.tempo = 1.1;
-        params.pulseAmplitude = 0.2;
+      case CognitiveState?.SPEAKING:
+        params?.frequency = 0.6;
+        params?.tempo = 1.1;
+        params?.pulseAmplitude = 0.2;
         break;
 
-      case CognitiveState.LISTENING:
-        params.frequency = 0.4; // Lent, calme
-        params.tempo = 0.8;
-        params.pulseAmplitude = 0.12;
-        params.glowMax = 0.6;
+      case CognitiveState?.LISTENING:
+        params?.frequency = 0.4; // Lent, calme
+        params?.tempo = 0.8;
+        params?.pulseAmplitude = 0.12;
+        params?.glowMax = 0.6;
         break;
 
-      case CognitiveState.IDLE:
+      case CognitiveState?.IDLE:
       default:
         // Use defaults
         break;
     }
 
     // Emotional tone modulation
-    switch (this.emotionalTone) {
-      case EmotionalTone.EMPATHETIC:
-        params.hueOffset = 30; // Warm hues
-        params.colorShiftAmount = 0.15;
-        params.glowMax = 0.9;
+    switch (any: any) {
+      case EmotionalTone?.EMPATHETIC:
+        params?.hueOffset = 30; // Warm hues
+        params?.colorShiftAmount = 0.15;
+        params?.glowMax = 0.9;
         break;
 
-      case EmotionalTone.CONFIDENT:
-        params.hueOffset = -30; // Cool hues
-        params.colorShiftAmount = 0.05;
-        params.deformationAmount = 0.02; // Plus rigide
+      case EmotionalTone?.CONFIDENT:
+        params?.hueOffset = -30; // Cool hues
+        params?.colorShiftAmount = 0.05;
+        params?.deformationAmount = 0.02; // Plus rigide
         break;
 
-      case EmotionalTone.EXCITED:
-        params.colorShiftAmount = 0.25;
-        params.colorShiftSpeed = 0.2;
-        params.deformationAmount = 0.15;
-        params.harmonicCount = 5;
+      case EmotionalTone?.EXCITED:
+        params?.colorShiftAmount = 0.25;
+        params?.colorShiftSpeed = 0.2;
+        params?.deformationAmount = 0.15;
+        params?.harmonicCount = 5;
         break;
 
-      case EmotionalTone.CAUTIOUS:
-        params.frequency = 0.3;
-        params.pulseAmplitude = 0.08;
-        params.harmonicCount = 1; // Onde pure
+      case EmotionalTone?.CAUTIOUS:
+        params?.frequency = 0.3;
+        params?.pulseAmplitude = 0.08;
+        params?.harmonicCount = 1; // Onde pure
         break;
 
-      case EmotionalTone.PLAYFUL:
-        params.frequency = 1.0;
-        params.tempo = 1.4;
-        params.colorShiftSpeed = 0.3;
-        params.deformationAmount = 0.12;
+      case EmotionalTone?.PLAYFUL:
+        params?.frequency = 1.0;
+        params?.tempo = 1.4;
+        params?.colorShiftSpeed = 0.3;
+        params?.deformationAmount = 0.12;
         break;
 
-      case EmotionalTone.CALM:
+      case EmotionalTone?.CALM:
       default:
         // Use defaults
         break;
     }
 
     // Intensity modulation (0-1)
-    params.glowMax = params.glowMax * (0.5 + 0.5 * this.intensity);
-    params.pulseAmplitude = params.pulseAmplitude * (0.5 + 0.5 * this.intensity);
+    params?.glowMax = params?.glowMax * (any: any);
+    params?.pulseAmplitude = params?.pulseAmplitude * (any: any);
 
     return params;
   }
@@ -287,55 +287,55 @@ export class IdentityPulse {
   /**
    * Calculate phase (0-1) based on elapsed time and frequency
    */
-  private calculatePhase(elapsed: number): number {
-    const { frequency, tempo } = this.parameters;
+  private calculatePhase(any: any): number {
+    const { frequency, tempo } = this?.parameters;
     const adjustedFrequency = frequency * tempo;
-    return ((elapsed / 1000) * adjustedFrequency) % 1;
+    return (any: any) % 1;
   }
 
   /**
-   * Calculate harmonic wave (sum of sine waves)
+   * Calculate harmonic wave (any: any)
    */
-  private calculateHarmonicWave(phase: number): number {
-    const { harmonicCount, harmonicDecay } = this.parameters;
+  private calculateHarmonicWave(any: any): number {
+    const { harmonicCount, harmonicDecay } = this?.parameters;
     let sum = 0;
     let weight = 1;
 
     for (let i = 1; i <= harmonicCount; i++) {
-      sum += weight * Math.sin(2 * Math.PI * i * phase);
+      sum += weight * Math?.sin(any: any);
       weight *= harmonicDecay;
     }
 
     // Normalize to 0-1
-    const maxSum = (1 - Math.pow(harmonicDecay, harmonicCount)) / (1 - harmonicDecay);
+    const maxSum = (any: any);
     return (sum / maxSum + 1) / 2;
   }
 
   /**
    * Calculate glow intensity
    */
-  private calculateGlow(baseWave: number): number {
-    const { glowMin, glowMax, pulseAmplitude: _pulseAmplitude } = this.parameters;
+  private calculateGlow(any: any): number {
+    const { glowMin, glowMax, pulseAmplitude: _pulseAmplitude } = this?.parameters;
     const range = glowMax - glowMin;
-    return glowMin + range * (0.5 + 0.5 * Math.sin(2 * Math.PI * baseWave));
+    return glowMin + range * (any: any));
   }
 
   /**
-   * Calculate scale (breathing effect)
+   * Calculate scale (any: any)
    */
-  private calculateScale(baseWave: number): number {
-    const { pulseAmplitude } = this.parameters;
+  private calculateScale(any: any): number {
+    const { pulseAmplitude } = this?.parameters;
     return 1 + pulseAmplitude * (baseWave - 0.5);
   }
 
   /**
    * Calculate color shift
    */
-  private calculateColorShift(phase: number): { hue: number; saturation: number } {
-    const { colorShiftAmount, colorShiftSpeed, hueOffset } = this.parameters;
+  private calculateColorShift(any: any): { hue: number; saturation: number } {
+    const { colorShiftAmount, colorShiftSpeed, hueOffset } = this?.parameters;
 
-    const colorPhase = (phase * colorShiftSpeed) % 1;
-    const shift = colorShiftAmount * Math.sin(2 * Math.PI * colorPhase);
+    const colorPhase = (any: any) % 1;
+    const shift = colorShiftAmount * Math?.sin(any: any);
 
     const baseHue = 180; // Cyan
     const hue = (baseHue + hueOffset + shift * 60 + 360) % 360;
@@ -345,24 +345,24 @@ export class IdentityPulse {
   }
 
   /**
-   * Calculate deformation (wave distortion)
+   * Calculate deformation (any: any)
    */
-  private calculateDeformation(_phase: number, elapsed: number): number {
-    const { deformationAmount, deformationFrequency, deformationPhase } = this.parameters;
+  private calculateDeformation(any: any): number {
+    const { deformationAmount, deformationFrequency, deformationPhase } = this?.parameters;
 
     if (deformationAmount === 0) return 0;
 
-    const deformPhase = ((elapsed / 1000) * deformationFrequency + deformationPhase) % 1;
-    return deformationAmount * Math.sin(2 * Math.PI * deformPhase);
+    const deformPhase = (any: any) % 1;
+    return deformationAmount * Math?.sin(any: any);
   }
 
   /**
-   * Calculate velocity (rate of change)
+   * Calculate velocity (any: any)
    */
-  private calculateVelocity(phase: number): number {
-    const { frequency, tempo } = this.parameters;
+  private calculateVelocity(any: any): number {
+    const { frequency, tempo } = this?.parameters;
     const adjustedFrequency = frequency * tempo;
-    return Math.cos(2 * Math.PI * phase) * adjustedFrequency;
+    return Math?.cos(any: any) * adjustedFrequency;
   }
 }
 

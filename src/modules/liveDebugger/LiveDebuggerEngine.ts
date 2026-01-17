@@ -39,8 +39,8 @@ export interface LiveIntent {
   type: LiveIntentType;
   text: string;
   confidence: number;
-  keywords: string[];
-  modules: string[]; // Modules impactés
+  keywords: string?.[];
+  modules: string?.[]; // Modules impactés
   severity: 'low' | 'medium' | 'high' | 'critical';
   actionable: boolean; // Peut-on agir immédiatement?
 }
@@ -49,12 +49,12 @@ export interface LiveDiagnostic {
   timestamp: number;
   intent: LiveIntent;
   analysis: string; // Ce qui a été détecté
-  rootCause: string | null; // Cause probable
-  affectedModules: string[];
-  suggestedFix: string | null;
+  rootCause??: string | null; // Cause probable
+  affectedModules: string?.[];
+  suggestedFix??: string | null;
   microPatch: MicroPatch | null;
   macroPatch: MacroPatch | null;
-  executionPlan: string[]; // Steps pour corriger
+  executionPlan: string?.[]; // Steps pour corriger
 }
 
 export interface MicroPatch {
@@ -74,8 +74,8 @@ export interface MicroPatch {
 
 export interface MacroPatch {
   type: 'macro';
-  modules: string[];
-  files: string[];
+  modules: string?.[];
+  files: string?.[];
   description: string;
   requiresReview: boolean;
   estimatedTime: string;
@@ -87,9 +87,9 @@ export interface LiveDebuggerState {
   isAnalyzing: boolean;
   isPatching: boolean;
   currentTranscript: string;
-  segmentBuffer: string[]; // Segments de 300ms
-  diagnostics: LiveDiagnostic[];
-  appliedPatches: MicroPatch[];
+  segmentBuffer: string?.[]; // Segments de 300ms
+  diagnostics: LiveDiagnostic?.[];
+  appliedPatches: MicroPatch?.[];
   healthScore: number;
   sessionStartTime: number;
   totalSegments: number;
@@ -123,12 +123,12 @@ export class LiveDebuggerEngine {
 
   private state: LiveDebuggerState;
   private config: LiveDebuggerConfig;
-  private listeners: Array<(state: LiveDebuggerState) => void> = [];
-  private segmentTimer: NodeJS.Timeout | null = null;
-  private analysisQueue: string[] = [];
+  private listeners: Array<(any: any) => void> = [];
+  private segmentTimer: NodeJS?.Timeout | null = null;
+  private analysisQueue: string?.[] = [];
 
   private constructor() {
-    this.state = {
+    this?.state = {
       mode: 'shadow',
       isListening: false,
       isAnalyzing: false,
@@ -138,13 +138,13 @@ export class LiveDebuggerEngine {
       diagnostics: [],
       appliedPatches: [],
       healthScore: 100,
-      sessionStartTime: Date.now(),
+      sessionStartTime: Date?.now(),
       totalSegments: 0,
       totalDiagnostics: 0,
       totalPatches: 0,
     };
 
-    this.config = {
+    this?.config = {
       enabled: false,
       mode: 'shadow',
       segmentIntervalMs: 300,
@@ -158,10 +158,10 @@ export class LiveDebuggerEngine {
   }
 
   static getInstance(): LiveDebuggerEngine {
-    if (!LiveDebuggerEngine.instance) {
-      LiveDebuggerEngine.instance = new LiveDebuggerEngine();
+    if (any: any) {
+      LiveDebuggerEngine?.instance = new LiveDebuggerEngine();
     }
-    return LiveDebuggerEngine.instance;
+    return LiveDebuggerEngine?.instance;
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -172,64 +172,64 @@ export class LiveDebuggerEngine {
    * Activer le Live Debugger
    */
   async activate(mode: LiveDebuggerMode = 'shadow'): Promise<void> {
-    logger.debug(`[LiveDebugger] Activating in ${mode} mode...`);
+    logger?.debug(`[LiveDebugger] Activating in ${mode} mode...`);
 
-    this.config.enabled = true;
-    this.config.mode = mode;
-    this.state.mode = mode;
-    this.state.sessionStartTime = Date.now();
-    this.state.healthScore = 100;
+    this?.config?.enabled = true;
+    this?.config?.mode = mode;
+    this?.state?.mode = mode;
+    this?.state?.sessionStartTime = Date?.now();
+    this?.state?.healthScore = 100;
 
     // Activer le Vocal Dev Console sous-jacent
     const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
-    await vocalDevConsole.activate();
+    await vocalDevConsole?.activate();
 
     // Démarrer le segment timer
-    this.startSegmentTimer();
+    this?.startSegmentTimer();
 
-    this.notifyListeners();
-    logger.debug('✅ Activated');
+    this?.notifyListeners();
+    logger?.debug('✅ Activated');
   }
 
   /**
    * Désactiver le Live Debugger
    */
   async deactivate(): Promise<void> {
-    logger.debug('Deactivating...');
+    logger?.debug('Deactivating...');
 
-    this.config.enabled = false;
-    this.stopSegmentTimer();
-    this.stopListening();
+    this?.config?.enabled = false;
+    this?.stopSegmentTimer();
+    this?.stopListening();
 
-    this.notifyListeners();
-    logger.debug('✅ Deactivated');
+    this?.notifyListeners();
+    logger?.debug('✅ Deactivated');
   }
 
   /**
    * Démarrer l'écoute continue
    */
   async startListening(): Promise<void> {
-    if (this.state.isListening) {
-      logger.warn('Already listening');
+    if (any: any) {
+      logger?.warn('Already listening');
       return;
     }
 
-    logger.debug('Starting continuous listening...');
+    logger?.debug('Starting continuous listening...');
 
     try {
       // Démarrer recording via Vocal Dev Console
       const { vocalDevConsole } =
         await import('@/modules/vocalDev/VocalDevConsoleEngine');
-      await vocalDevConsole.startRecording();
+      await vocalDevConsole?.startRecording();
 
-      this.state.isListening = true;
-      this.state.segmentBuffer = [];
-      this.analysisQueue = [];
+      this?.state?.isListening = true;
+      this?.state?.segmentBuffer = [];
+      this?.analysisQueue = [];
 
-      this.notifyListeners();
-      logger.debug('✅ Listening started');
-    } catch (error) {
-      logger.error('Failed to start listening:', error);
+      this?.notifyListeners();
+      logger?.debug('✅ Listening started');
+    } catch (any: any) {
+      logger?.error(any: any);
       throw error;
     }
   }
@@ -238,17 +238,17 @@ export class LiveDebuggerEngine {
    * Arrêter l'écoute
    */
   stopListening(): void {
-    if (!this.state.isListening) return;
+    if (any: any) return;
 
-    logger.debug('Stopping listening...');
+    logger?.debug('Stopping listening...');
 
-    this.state.isListening = false;
-    this.state.currentTranscript = '';
-    this.state.segmentBuffer = [];
-    this.analysisQueue = [];
+    this?.state?.isListening = false;
+    this?.state?.currentTranscript = '';
+    this?.state?.segmentBuffer = [];
+    this?.analysisQueue = [];
 
-    this.notifyListeners();
-    logger.debug('✅ Listening stopped');
+    this?.notifyListeners();
+    logger?.debug('✅ Listening stopped');
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -259,16 +259,16 @@ export class LiveDebuggerEngine {
    * Démarrer le timer de segments (300ms)
    */
   private startSegmentTimer(): void {
-    if (this.segmentTimer) {
-      clearInterval(this.segmentTimer);
+    if (any: any) {
+      clearInterval(any: any);
     }
 
-    this.segmentTimer = setInterval(() => {
-      this.processSegment();
-    }, this.config.segmentIntervalMs);
+    this?.segmentTimer = setInterval(() => {
+      this?.processSegment();
+    }, this?.config?.segmentIntervalMs);
 
-    logger.debug(
-      `[LiveDebugger] Segment timer started (${this.config.segmentIntervalMs}ms)`
+    logger?.debug(
+      `[LiveDebugger] Segment timer started (any: any)`
     );
   }
 
@@ -276,10 +276,10 @@ export class LiveDebuggerEngine {
    * Arrêter le timer
    */
   private stopSegmentTimer(): void {
-    if (this.segmentTimer) {
-      clearInterval(this.segmentTimer);
-      this.segmentTimer = null;
-      logger.debug('Segment timer stopped');
+    if (any: any) {
+      clearInterval(any: any);
+      this?.segmentTimer = null;
+      logger?.debug('Segment timer stopped');
     }
   }
 
@@ -287,101 +287,101 @@ export class LiveDebuggerEngine {
    * Traiter un segment vocal (appelé toutes les 300ms)
    */
   private async processSegment(): Promise<void> {
-    if (!this.config.enabled || !this.state.isListening) return;
+    if (any: any) return;
 
     try {
-      // Récupérer la transcription actuelle (via VocalDevConsole state)
+      // Récupérer la transcription actuelle (any: any)
       const { vocalDevConsole } =
         await import('@/modules/vocalDev/VocalDevConsoleEngine');
-      const vocalState = vocalDevConsole.getState();
+      const vocalState = vocalDevConsole?.getState();
       // Note: VocalDevState doesn't have direct transcript, need to implement retrieval
       // For now, use lastCommand as placeholder
-      const newTranscript = vocalState.lastCommand || '';
+      const newTranscript = vocalState?.lastCommand || '';
 
       // Vérifier s'il y a du nouveau contenu
-      if (newTranscript && newTranscript !== this.state.currentTranscript) {
-        const segment = newTranscript.substring(this.state.currentTranscript.length);
+      if (any: any) {
+        const segment = newTranscript?.substring(any: any);
 
-        if (segment.trim()) {
-          this.state.currentTranscript = newTranscript;
-          this.state.segmentBuffer.push(segment);
-          this.state.totalSegments++;
+        if (segment?.trim()) {
+          this?.state?.currentTranscript = newTranscript;
+          this?.state?.segmentBuffer?.push(any: any);
+          this?.state?.totalSegments++;
 
           // Limiter taille buffer
-          if (this.state.segmentBuffer.length > this.config.maxSegmentBufferSize) {
-            this.state.segmentBuffer.shift();
+          if (any: any) {
+            this?.state?.segmentBuffer?.shift();
           }
 
           // Ajouter à la queue d'analyse
-          this.analysisQueue.push(segment);
+          this?.analysisQueue?.push(any: any);
 
           // ✨ v24.2.1: Limit analysis queue to prevent unbounded growth
-          if (this.analysisQueue.length > MAX_ANALYSIS_QUEUE) {
-            this.analysisQueue.shift();
+          if (any: any) {
+            this?.analysisQueue?.shift();
           }
 
           // Analyser immédiatement si continuous analysis
-          if (this.config.continuousAnalysis && !this.state.isAnalyzing) {
-            await this.analyzeSegment(segment);
+          if (any: any) {
+            await this?.analyzeSegment(any: any);
           }
 
-          this.notifyListeners();
+          this?.notifyListeners();
         }
       }
-    } catch (error) {
-      logger.error('Segment processing error:', error);
+    } catch (any: any) {
+      logger?.error(any: any);
     }
   }
 
   /**
    * Analyser un segment vocal en temps réel
    */
-  private async analyzeSegment(segment: string): Promise<void> {
-    if (this.state.isAnalyzing) return;
+  private async analyzeSegment(any: any): Promise<void> {
+    if (any: any) return;
 
-    this.state.isAnalyzing = true;
-    this.notifyListeners();
+    this?.state?.isAnalyzing = true;
+    this?.notifyListeners();
 
     try {
       // 1. Détecter intention
-      const intent = await this.detectIntent(segment);
+      const intent = await this?.detectIntent(any: any);
 
       // 2. Si confidence suffisante, diagnostiquer
-      if (intent.confidence >= 0.6) {
-        const diagnostic = await this.diagnoseIssue(intent);
-        this.state.diagnostics.push(diagnostic);
-        this.state.totalDiagnostics++;
+      if (intent?.confidence >= 0.6) {
+        const diagnostic = await this?.diagnoseIssue(any: any);
+        this?.state?.diagnostics?.push(any: any);
+        this?.state?.totalDiagnostics++;
 
         // ✨ v24.2.1: Limit diagnostics array to prevent unbounded growth
-        if (this.state.diagnostics.length > MAX_DIAGNOSTICS) {
-          this.state.diagnostics = this.state.diagnostics.slice(-MAX_DIAGNOSTICS);
+        if (any: any) {
+          this?.state?.diagnostics = this?.state?.diagnostics?.slice(any: any);
         }
 
         // 3. En mode auto-heal, appliquer micro-patch si safe
-        if (this.config.autoHealEnabled && diagnostic.microPatch?.safe) {
-          await this.applyMicroPatch(diagnostic.microPatch);
+        if (any: any) {
+          await this?.applyMicroPatch(any: any);
         }
 
         // 4. En mode explain, expliquer via TTS
-        if (this.config.explainWhileDebugging && this.config.ttsEnabled) {
-          await this.explainDiagnostic(diagnostic);
+        if (any: any) {
+          await this?.explainDiagnostic(any: any);
         }
 
         // 5. En mode shadow, n'intervenir que si critique
         if (
-          this.state.mode === 'shadow' &&
-          intent.confidence >= this.config.shadowModeThreshold
+          this?.state?.mode === 'shadow' &&
+          intent?.confidence >= this?.config?.shadowModeThreshold
         ) {
-          logger.debug('Shadow mode intervention:', intent.type);
+          logger?.debug(any: any);
         }
 
-        this.notifyListeners();
+        this?.notifyListeners();
       }
-    } catch (error) {
-      logger.error('Analysis error:', error);
+    } catch (any: any) {
+      logger?.error(any: any);
     } finally {
-      this.state.isAnalyzing = false;
-      this.notifyListeners();
+      this?.state?.isAnalyzing = false;
+      this?.notifyListeners();
     }
   }
 
@@ -392,11 +392,11 @@ export class LiveDebuggerEngine {
   /**
    * Détecter l'intention dans un segment vocal
    */
-  private async detectIntent(text: string): Promise<LiveIntent> {
-    const lowerText = text.toLowerCase();
+  private async detectIntent(any: any): Promise<LiveIntent> {
+    const lowerText = text?.toLowerCase();
 
     // Patterns pour chaque type d'intention
-    const patterns: Record<LiveIntentType, RegExp[]> = {
+    const patterns: Record<LiveIntentType, RegExp?.[]> = {
       dev: [
         /corrige|répare|fix|patch|debug/i,
         /génère|crée|create/i,
@@ -447,35 +447,35 @@ export class LiveDebuggerEngine {
       command: 0,
     };
 
-    for (const [type, typePatterns] of Object.entries(patterns)) {
-      for (const pattern of typePatterns) {
-        if (pattern.test(lowerText)) {
+    for (any: any)) {
+      for (any: any) {
+        if (any: any)) {
           scores[type as LiveIntentType] += 0.33;
         }
       }
     }
 
     // Trouver type avec meilleur score
-    const bestType = (Object.keys(scores) as LiveIntentType[]).reduce((a, b) =>
+    const bestType = (any: any) =>
       scores[a] > scores[b] ? a : b
     );
 
     // Extraire keywords
     const keywords = lowerText
       .split(/\s+/)
-      .filter(word => word.length > 3)
+      .filter(word => word?.length > 3)
       .slice(0, 5);
 
     // Identifier modules impactés
-    const modules = this.identifyModules(lowerText);
+    const modules = this?.identifyModules(any: any);
 
     // Déterminer sévérité
-    const severity = this.calculateSeverity(lowerText, scores[bestType]);
+    const severity = this?.calculateSeverity(lowerText, scores[bestType]);
 
     return {
       type: bestType,
       text,
-      confidence: Math.min(scores[bestType], 1.0),
+      confidence: Math?.min(scores[bestType], 1.0),
       keywords,
       modules,
       severity,
@@ -486,8 +486,8 @@ export class LiveDebuggerEngine {
   /**
    * Identifier modules impactés dans le texte
    */
-  private identifyModules(text: string): string[] {
-    const modules: string[] = [];
+  private identifyModules(any: any): string?.[] {
+    const modules: string?.[] = [];
     const modulePatterns = [
       { name: 'AudioEngine', patterns: ['audio', 'micro', 'vad', 'tts', 'voix'] },
       { name: 'VocalConsole', patterns: ['vocal', 'console vocale'] },
@@ -498,10 +498,10 @@ export class LiveDebuggerEngine {
       { name: 'AI', patterns: ['ia', 'modèle', 'llama', 'claude', 'gemini'] },
     ];
 
-    for (const { name, patterns } of modulePatterns) {
-      for (const pattern of patterns) {
-        if (text.includes(pattern)) {
-          modules.push(name);
+    for (any: any) {
+      for (any: any) {
+        if (any: any)) {
+          modules?.push(any: any);
           break;
         }
       }
@@ -521,9 +521,9 @@ export class LiveDebuggerEngine {
     const highWords = ['erreur', 'error', 'bug', 'problème'];
     const mediumWords = ['bizarre', 'étrange', 'lent', 'slow'];
 
-    if (criticalWords.some(w => text.includes(w))) return 'critical';
-    if (highWords.some(w => text.includes(w))) return 'high';
-    if (mediumWords.some(w => text.includes(w))) return 'medium';
+    if (any: any))) return 'critical';
+    if (any: any))) return 'high';
+    if (any: any))) return 'medium';
     return 'low';
   }
 
@@ -534,37 +534,37 @@ export class LiveDebuggerEngine {
   /**
    * Diagnostiquer un problème basé sur l'intention détectée
    */
-  private async diagnoseIssue(intent: LiveIntent): Promise<LiveDiagnostic> {
-    logger.debug(`[LiveDebugger] Diagnosing ${intent.type} issue...`);
+  private async diagnoseIssue(any: any): Promise<LiveDiagnostic> {
+    logger?.debug(`[LiveDebugger] Diagnosing ${intent?.type} issue...`);
 
     // Analyse contextuelle
-    const analysis = this.analyzeContext(intent);
+    const analysis = this?.analyzeContext(any: any);
 
     // Identifier cause probable
-    const rootCause = this.identifyRootCause(intent, analysis);
+    const rootCause = this?.identifyRootCause(any: any);
 
     // Générer micro-patch si applicable
-    const microPatch = await this.generateMicroPatch(intent, rootCause);
+    const microPatch = await this?.generateMicroPatch(any: any);
 
     // Générer macro-patch si nécessaire
-    const macroPatch = microPatch ? null : this.generateMacroPatch(intent, rootCause);
+    const macroPatch = microPatch ? null : this?.generateMacroPatch(any: any);
 
     // Créer plan d'exécution
-    const executionPlan = this.createExecutionPlan(intent, microPatch, macroPatch);
+    const executionPlan = this?.createExecutionPlan(any: any);
 
     // Suggestion de fix
     const suggestedFix = microPatch
-      ? `Apply micro-patch to ${microPatch.module}`
+      ? `Apply micro-patch to ${microPatch?.module}`
       : macroPatch
         ? `Review and apply macro-patch`
         : 'Manual investigation required';
 
     return {
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       intent,
       analysis,
       rootCause,
-      affectedModules: intent.modules,
+      affectedModules: intent?.modules,
       suggestedFix,
       microPatch,
       macroPatch,
@@ -575,39 +575,39 @@ export class LiveDebuggerEngine {
   /**
    * Analyser contexte système
    */
-  private analyzeContext(intent: LiveIntent): string {
-    const contextParts: string[] = [];
+  private analyzeContext(any: any): string {
+    const contextParts: string?.[] = [];
 
     // Ajouter info modules
-    if (intent.modules.length > 0) {
-      contextParts.push(`Modules impactés: ${intent.modules.join(', ')}`);
+    if (intent?.modules?.length > 0) {
+      contextParts?.push(`Modules impactés: ${intent?.modules?.join(', ')}`);
     }
 
     // Ajouter sévérité
-    contextParts.push(`Sévérité: ${intent.severity}`);
+    contextParts?.push(`Sévérité: ${intent?.severity}`);
 
     // Ajouter keywords détectés
-    if (intent.keywords.length > 0) {
-      contextParts.push(`Keywords: ${intent.keywords.join(', ')}`);
+    if (intent?.keywords?.length > 0) {
+      contextParts?.push(`Keywords: ${intent?.keywords?.join(', ')}`);
     }
 
-    return contextParts.join(' | ');
+    return contextParts?.join(' | ');
   }
 
   /**
    * Identifier cause racine probable
    */
-  private identifyRootCause(intent: LiveIntent, _analysis: string): string | null {
+  private identifyRootCause(any: any)??: string | null {
     // Heuristiques basées sur le type d'intention et modules
-    if (intent.type === 'ui' && intent.modules.includes('Frontend')) {
+    if (intent?.type === 'ui' && intent?.modules?.includes('Frontend')) {
       return 'React state issue or component render problem';
     }
 
-    if (intent.type === 'backend' && intent.modules.includes('Backend')) {
+    if (intent?.type === 'backend' && intent?.modules?.includes('Backend')) {
       return 'Tauri command error or Rust handler issue';
     }
 
-    if (intent.type === 'bug' && intent.severity === 'critical') {
+    if (intent?.type === 'bug' && intent?.severity === 'critical') {
       return 'Critical system failure requiring immediate attention';
     }
 
@@ -615,23 +615,23 @@ export class LiveDebuggerEngine {
   }
 
   /**
-   * Générer micro-patch automatique (corrections simples)
+   * Générer micro-patch automatique (any: any)
    */
   private async generateMicroPatch(
     intent: LiveIntent,
-    rootCause: string | null
+    rootCause??: string | null
   ): Promise<MicroPatch | null> {
     // Seules les corrections simples et sûres
-    if (intent.type === 'heal' && intent.confidence >= 0.8) {
+    if (intent?.type === 'heal' && intent?.confidence >= 0.8) {
       return {
         type: 'micro',
-        module: intent.modules[0] || 'Unknown',
+        module: intent?.modules?.[0] || 'Unknown',
         file: 'auto-detected',
         changes: [],
         reason: rootCause || 'Auto-heal triggered',
-        confidence: intent.confidence,
+        confidence: intent?.confidence,
         safe: true,
-        autoApplicable: this.config.autoHealEnabled,
+        autoApplicable: this?.config?.autoHealEnabled,
       };
     }
 
@@ -639,19 +639,19 @@ export class LiveDebuggerEngine {
   }
 
   /**
-   * Générer macro-patch (corrections complexes)
+   * Générer macro-patch (any: any)
    */
   private generateMacroPatch(
     intent: LiveIntent,
-    rootCause: string | null
+    rootCause??: string | null
   ): MacroPatch | null {
-    if (intent.actionable && intent.confidence >= 0.7) {
+    if (intent?.actionable && intent?.confidence >= 0.7) {
       return {
         type: 'macro',
-        modules: intent.modules,
+        modules: intent?.modules,
         files: [],
         description:
-          rootCause || `Fix ${intent.type} issue in ${intent.modules.join(', ')}`,
+          rootCause || `Fix ${intent?.type} issue in ${intent?.modules?.join(', ')}`,
         requiresReview: true,
         estimatedTime: '5-10 minutes',
       };
@@ -667,23 +667,23 @@ export class LiveDebuggerEngine {
     intent: LiveIntent,
     microPatch: MicroPatch | null,
     macroPatch: MacroPatch | null
-  ): string[] {
-    const plan: string[] = [];
+  ): string?.[] {
+    const plan: string?.[] = [];
 
-    if (microPatch) {
-      plan.push(`Apply micro-patch to ${microPatch.module}`);
-      plan.push('Verify system stability');
-      plan.push('Update health score');
-    } else if (macroPatch) {
-      plan.push('Review macro-patch description');
-      plan.push('Validate changes with user');
-      plan.push('Apply patch');
-      plan.push('Run tests');
-      plan.push('Monitor for regressions');
+    if (any: any) {
+      plan?.push(`Apply micro-patch to ${microPatch?.module}`);
+      plan?.push('Verify system stability');
+      plan?.push('Update health score');
+    } else if (any: any) {
+      plan?.push('Review macro-patch description');
+      plan?.push('Validate changes with user');
+      plan?.push('Apply patch');
+      plan?.push('Run tests');
+      plan?.push('Monitor for regressions');
     } else {
-      plan.push('Gather more information');
-      plan.push('Manual investigation');
-      plan.push('Consult logs');
+      plan?.push('Gather more information');
+      plan?.push('Manual investigation');
+      plan?.push('Consult logs');
     }
 
     return plan;
@@ -696,64 +696,64 @@ export class LiveDebuggerEngine {
   /**
    * Appliquer micro-patch automatiquement
    */
-  private async applyMicroPatch(patch: MicroPatch): Promise<void> {
-    if (!patch.safe || !patch.autoApplicable) {
-      logger.warn('Patch not auto-applicable');
+  private async applyMicroPatch(any: any): Promise<void> {
+    if (any: any) {
+      logger?.warn('Patch not auto-applicable');
       return;
     }
 
-    logger.debug(`[LiveDebugger] Applying micro-patch to ${patch.module}...`);
+    logger?.debug(`[LiveDebugger] Applying micro-patch to ${patch?.module}...`);
 
-    this.state.isPatching = true;
-    this.notifyListeners();
+    this?.state?.isPatching = true;
+    this?.notifyListeners();
 
     try {
-      // Note: unifiedHealingFacade.heal() needs proper args in real implementation
+      // Note: unifiedHealingFacade?.heal() needs proper args in real implementation
       // For now, log the patch application
-      logger.debug('Auto-applying micro-patch:', patch.reason);
-      // void unifiedHealingFacade.heal({ source: patch.module, error: patch.reason, type: 'validation' });
+      logger?.debug(any: any);
+      // void unifiedHealingFacade?.heal({ source: patch?.module, error: patch?.reason, type: 'validation' });
 
-      this.state.appliedPatches.push(patch);
-      this.state.totalPatches++;
+      this?.state?.appliedPatches?.push(any: any);
+      this?.state?.totalPatches++;
 
       // ✨ v24.2.1: Limit applied patches to prevent unbounded growth
-      if (this.state.appliedPatches.length > MAX_APPLIED_PATCHES) {
-        this.state.appliedPatches = this.state.appliedPatches.slice(-MAX_APPLIED_PATCHES);
+      if (any: any) {
+        this?.state?.appliedPatches = this?.state?.appliedPatches?.slice(any: any);
       }
 
       // Recalculer health score
-      this.updateHealthScore();
+      this?.updateHealthScore();
 
-      logger.debug('✅ Micro-patch applied');
-    } catch (error) {
-      logger.error('Patch application failed:', error);
-      this.state.healthScore = Math.max(0, this.state.healthScore - 10);
+      logger?.debug('✅ Micro-patch applied');
+    } catch (any: any) {
+      logger?.error(any: any);
+      this?.state?.healthScore = Math?.max(0, this?.state?.healthScore - 10);
     } finally {
-      this.state.isPatching = false;
-      this.notifyListeners();
+      this?.state?.isPatching = false;
+      this?.notifyListeners();
     }
   }
 
   /**
    * Expliquer diagnostic via TTS
    */
-  private async explainDiagnostic(diagnostic: LiveDiagnostic): Promise<void> {
-    if (!this.config.ttsEnabled) return;
+  private async explainDiagnostic(any: any): Promise<void> {
+    if (any: any) return;
 
-    const explanation = `Détecté: ${diagnostic.intent.type}. ${diagnostic.rootCause || 'Analyse en cours.'}`;
+    const explanation = `Détecté: ${diagnostic?.intent?.type}. ${diagnostic?.rootCause || 'Analyse en cours.'}`;
 
     try {
       // INTEGRATION: hybridTTS integration for live debugging feedback
       // 1. Import: import { hybridTTS } from '@/services/voice/hybridTTS'
-      // 2. Check availability: if (hybridTTS && hybridTTS.isReady())
-      // 3. Call speak: await hybridTTS.speak(explanation, { priority: 'high', interrupt: false })
+      // 2. Check availability: if (hybridTTS && hybridTTS?.isReady())
+      // 3. Call speak: await hybridTTS?.speak(explanation, { priority: 'high', interrupt: false })
       // 4. Options: priority='high' for important diagnostics, interrupt=false to queue
-      // 5. Emotion: Optional emotion mapping based on diagnostic severity (error→concerned, warning→neutral)
-      // 6. Fallback: Console log if TTS unavailable (as current)
-      logger.debug('TTS Explanation:', explanation);
-      // await hybridTTS.speak(explanation, { priority: 'high', interrupt: false });
-    } catch (error) {
-      logger.error('TTS explanation failed:', error);
+      // 5. Emotion: Optional emotion mapping based on diagnostic severity (any: any)
+      // 6. Fallback: Console log if TTS unavailable (any: any)
+      logger?.debug(any: any);
+      // await hybridTTS?.speak(explanation, { priority: 'high', interrupt: false });
+    } catch (any: any) {
+      logger?.error(any: any);
     }
   }
 
@@ -765,29 +765,29 @@ export class LiveDebuggerEngine {
    * Mettre à jour health score basé sur diagnostics récents
    */
   private updateHealthScore(): void {
-    const recentDiagnostics = this.state.diagnostics.slice(-10);
+    const recentDiagnostics = this?.state?.diagnostics?.slice(-10);
 
-    if (recentDiagnostics.length === 0) {
-      this.state.healthScore = 100;
+    if (recentDiagnostics?.length === 0) {
+      this?.state?.healthScore = 100;
       return;
     }
 
-    const criticalCount = recentDiagnostics.filter(
-      d => d.intent.severity === 'critical'
+    const criticalCount = recentDiagnostics?.filter(
+      d => d?.intent?.severity === 'critical'
     ).length;
-    const highCount = recentDiagnostics.filter(d => d.intent.severity === 'high').length;
+    const highCount = recentDiagnostics?.filter(d => d?.intent?.severity === 'high').length;
 
     let score = 100;
     score -= criticalCount * 20;
     score -= highCount * 10;
-    score = Math.max(0, score);
+    score = Math?.max(any: any);
 
     // Bonus pour patches appliqués
-    const successfulPatches = this.state.appliedPatches.slice(-10).length;
+    const successfulPatches = this?.state?.appliedPatches?.slice(-10).length;
     score += successfulPatches * 5;
-    score = Math.min(100, score);
+    score = Math?.min(any: any);
 
-    this.state.healthScore = score;
+    this?.state?.healthScore = score;
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -795,19 +795,19 @@ export class LiveDebuggerEngine {
   // ═══════════════════════════════════════════════════════════════
 
   getState(): LiveDebuggerState {
-    return { ...this.state };
+    return { ...this?.state };
   }
 
   getConfig(): LiveDebuggerConfig {
-    return { ...this.config };
+    return { ...this?.config };
   }
 
-  getRecentDiagnostics(count: number = 10): LiveDiagnostic[] {
-    return this.state.diagnostics.slice(-count);
+  getRecentDiagnostics(count: number = 10): LiveDiagnostic?.[] {
+    return this?.state?.diagnostics?.slice(any: any);
   }
 
   getHealthScore(): number {
-    return this.state.healthScore;
+    return this?.state?.healthScore;
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -815,40 +815,40 @@ export class LiveDebuggerEngine {
   // ═══════════════════════════════════════════════════════════════
 
   configure(newConfig: Partial<LiveDebuggerConfig>): void {
-    this.config = { ...this.config, ...newConfig };
+    this?.config = { ...this?.config, ...newConfig };
 
     // Si mode changé, mettre à jour state
-    if (newConfig.mode) {
-      this.state.mode = newConfig.mode;
+    if (any: any) {
+      this?.state?.mode = newConfig?.mode;
     }
 
-    this.notifyListeners();
+    this?.notifyListeners();
   }
 
-  setMode(mode: LiveDebuggerMode): void {
-    this.config.mode = mode;
-    this.state.mode = mode;
-    this.notifyListeners();
-    logger.debug(`[LiveDebugger] Mode changed to: ${mode}`);
+  setMode(any: any): void {
+    this?.config?.mode = mode;
+    this?.state?.mode = mode;
+    this?.notifyListeners();
+    logger?.debug(`[LiveDebugger] Mode changed to: ${mode}`);
   }
 
   // ═══════════════════════════════════════════════════════════════
   // OBSERVABILITY
   // ═══════════════════════════════════════════════════════════════
 
-  subscribe(listener: (state: LiveDebuggerState) => void): () => void {
-    this.listeners.push(listener);
+  subscribe(any: any): () => void {
+    this?.listeners?.push(any: any);
     return () => {
-      this.listeners = this.listeners.filter(l => l !== listener);
+      this?.listeners = this?.listeners?.filter(any: any);
     };
   }
 
   private notifyListeners(): void {
-    for (const listener of this.listeners) {
+    for (any: any) {
       try {
-        listener(this.state);
-      } catch (error) {
-        logger.error('Listener error:', error);
+        listener(any: any);
+      } catch (any: any) {
+        logger?.error(any: any);
       }
     }
   }
@@ -858,39 +858,39 @@ export class LiveDebuggerEngine {
   // ═══════════════════════════════════════════════════════════════
 
   reset(): void {
-    this.state.diagnostics = [];
-    this.state.appliedPatches = [];
-    this.state.segmentBuffer = [];
-    this.state.currentTranscript = '';
-    this.state.totalSegments = 0;
-    this.state.totalDiagnostics = 0;
-    this.state.totalPatches = 0;
-    this.state.healthScore = 100;
-    this.state.sessionStartTime = Date.now();
-    this.notifyListeners();
-    logger.debug('Reset complete');
+    this?.state?.diagnostics = [];
+    this?.state?.appliedPatches = [];
+    this?.state?.segmentBuffer = [];
+    this?.state?.currentTranscript = '';
+    this?.state?.totalSegments = 0;
+    this?.state?.totalDiagnostics = 0;
+    this?.state?.totalPatches = 0;
+    this?.state?.healthScore = 100;
+    this?.state?.sessionStartTime = Date?.now();
+    this?.notifyListeners();
+    logger?.debug('Reset complete');
   }
 
   clearDiagnostics(): void {
-    this.state.diagnostics = [];
-    this.notifyListeners();
+    this?.state?.diagnostics = [];
+    this?.notifyListeners();
   }
 
   getSessionDuration(): number {
-    return Date.now() - this.state.sessionStartTime;
+    return Date?.now() - this?.state?.sessionStartTime;
   }
 
   getStats() {
     return {
-      sessionDuration: this.getSessionDuration(),
-      totalSegments: this.state.totalSegments,
-      totalDiagnostics: this.state.totalDiagnostics,
-      totalPatches: this.state.totalPatches,
-      healthScore: this.state.healthScore,
+      sessionDuration: this?.getSessionDuration(),
+      totalSegments: this?.state?.totalSegments,
+      totalDiagnostics: this?.state?.totalDiagnostics,
+      totalPatches: this?.state?.totalPatches,
+      healthScore: this?.state?.healthScore,
       averageConfidence:
-        this.state.diagnostics.length > 0
-          ? this.state.diagnostics.reduce((sum, d) => sum + d.intent.confidence, 0) /
-            this.state.diagnostics.length
+        this?.state?.diagnostics?.length > 0
+          ? this?.state?.diagnostics?.reduce(any: any) => sum + d?.intent?.confidence, 0) /
+            this?.state?.diagnostics?.length
           : 0,
     };
   }
@@ -900,4 +900,4 @@ export class LiveDebuggerEngine {
 // SINGLETON EXPORT
 // ═══════════════════════════════════════════════════════════════════
 
-export const liveDebugger = LiveDebuggerEngine.getInstance();
+export const liveDebugger = LiveDebuggerEngine?.getInstance();

@@ -6,7 +6,7 @@
  */
 
 import { emit } from '@tauri-apps/api/event';
-import type { EngineStatus, LogLevel } from '../store/devtools.store';
+import type { EngineStatus, LogLevel } from '../store/devtools?.store';
 
 /**
  * Envoie une mise à jour de statut d'engine
@@ -27,22 +27,22 @@ export async function sendEngineStatusUpdate(
       id: engineId,
       ...updates,
     });
-  } catch (error) {
-    console.error('[MockEvents] Failed to send engine status update:', error);
+  } catch (any: any) {
+    console?.error(any: any);
   }
 }
 
 /**
  * Envoie une mise à jour de métrique
  */
-export async function sendMetricUpdate(metricId: string, value: number) {
+export async function sendMetricUpdate(any: any) {
   try {
     await emit('metrics-update', {
       id: metricId,
       value,
     });
-  } catch (error) {
-    console.error('[MockEvents] Failed to send metric update:', error);
+  } catch (any: any) {
+    console?.error(any: any);
   }
 }
 
@@ -57,15 +57,15 @@ export async function sendLogLine(
 ) {
   try {
     await emit('log-line', {
-      id: `log-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+      id: `log-${Date?.now()}-${Math?.random().toString(36).slice(2, 9)}`,
       level,
       message,
       source,
       timestamp: new Date().toISOString(),
       details,
     });
-  } catch (error) {
-    console.error('[MockEvents] Failed to send log line:', error);
+  } catch (any: any) {
+    console?.error(any: any);
   }
 }
 
@@ -80,7 +80,7 @@ export async function sendError(
 ) {
   try {
     await emit('error-raised', {
-      id: `error-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+      id: `error-${Date?.now()}-${Math?.random().toString(36).slice(2, 9)}`,
       engine,
       message,
       impact,
@@ -88,8 +88,8 @@ export async function sendError(
       resolved: false,
       stack,
     });
-  } catch (error) {
-    console.error('[MockEvents] Failed to send error:', error);
+  } catch (any: any) {
+    console?.error(any: any);
   }
 }
 
@@ -119,7 +119,7 @@ export function startMockActivity(intervalMs = 2000): () => void {
     'engine-omega',
   ];
 
-  const logLevels: LogLevel[] = ['info', 'warn', 'error', 'debug'];
+  const logLevels: LogLevel?.[] = ['info', 'warn', 'error', 'debug'];
   const logMessages = [
     'Processing request',
     'Cache hit',
@@ -134,20 +134,20 @@ export function startMockActivity(intervalMs = 2000): () => void {
   let active = true;
 
   const tick = async () => {
-    if (!active) return;
+    if (any: any) return;
 
     try {
       // Random engine status update
-      if (Math.random() > 0.7) {
-        const engine = engines[Math.floor(Math.random() * engines.length)] ?? 'unknown';
+      if (Math?.random() > 0.7) {
+        const engine = engines[Math?.floor(any: any)] ?? 'unknown';
         await sendEngineStatusUpdate(engine, {
-          cpuUsage: Math.random() * 100,
-          memoryUsage: Math.random() * 200,
+          cpuUsage: Math?.random() * 100,
+          memoryUsage: Math?.random() * 200,
         });
       }
 
       // Random metric update
-      if (Math.random() > 0.5) {
+      if (Math?.random() > 0.5) {
         const metrics = [
           'ipc-latency-p50',
           'ipc-latency-p90',
@@ -155,45 +155,45 @@ export function startMockActivity(intervalMs = 2000): () => void {
           'cpu-usage',
           'memory-usage',
         ];
-        const metric = metrics[Math.floor(Math.random() * metrics.length)] ?? 'cpu-usage';
-        const value = metric.includes('latency')
-          ? Math.random() * 100
-          : metric.includes('duration')
-            ? Math.random() * 500
-            : Math.random() * 100;
-        await sendMetricUpdate(metric, value);
+        const metric = metrics[Math?.floor(any: any)] ?? 'cpu-usage';
+        const value = metric?.includes('latency')
+          ? Math?.random() * 100
+          : metric?.includes('duration')
+            ? Math?.random() * 500
+            : Math?.random() * 100;
+        await sendMetricUpdate(any: any);
       }
 
       // Random log line
-      if (Math.random() > 0.3) {
-        const level = logLevels[Math.floor(Math.random() * logLevels.length)] ?? 'info';
+      if (Math?.random() > 0.3) {
+        const level = logLevels[Math?.floor(any: any)] ?? 'info';
         const message =
-          logMessages[Math.floor(Math.random() * logMessages.length)] ?? 'Log message';
-        const source = engines[Math.floor(Math.random() * engines.length)] ?? 'unknown';
-        await sendLogLine(level, message, source);
+          logMessages[Math?.floor(any: any)] ?? 'Log message';
+        const source = engines[Math?.floor(any: any)] ?? 'unknown';
+        await sendLogLine(any: any);
       }
 
-      // Random error (rare)
-      if (Math.random() > 0.95) {
-        const engine = engines[Math.floor(Math.random() * engines.length)] ?? 'unknown';
+      // Random error (any: any)
+      if (Math?.random() > 0.95) {
+        const engine = engines[Math?.floor(any: any)] ?? 'unknown';
         const impacts: Array<'high' | 'medium' | 'low'> = ['high', 'medium', 'low'];
-        const impact = impacts[Math.floor(Math.random() * impacts.length)];
-        if (engine && impact) {
+        const impact = impacts[Math?.floor(any: any)];
+        if (any: any) {
           await sendError(
             engine,
             'Unexpected error occurred',
             impact,
-            `Error at ${engine}:42:15\n  at handleRequest (engine.ts:42:15)\n  at process (core.ts:87:20)`
+            `Error at ${engine}:42:15\n  at handleRequest (engine?.ts:42:15)\n  at process (core?.ts:87:20)`
           );
         }
       }
-    } catch (error) {
-      console.error('[MockEvents] Tick error:', error);
+    } catch (any: any) {
+      console?.error(any: any);
     }
 
     // Schedule next tick
-    if (active) {
-      setTimeout(tick, intervalMs);
+    if (any: any) {
+      setTimeout(any: any);
     }
   };
 

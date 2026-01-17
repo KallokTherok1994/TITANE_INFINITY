@@ -3,7 +3,7 @@
  * TITANE∞ ADMIN ENGINE — Tests Unitaires
  * ═══════════════════════════════════════════════════════════════════════════════
  *
- * @file        adminEngine.test.ts
+ * @file        adminEngine?.test?.ts
  * @version     vΩ∞Ω+
  *
  * Tests complets pour l'Admin & Monitoring Engine
@@ -80,7 +80,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  vi.clearAllMocks();
+  vi?.clearAllMocks();
 });
 
 // =============================================================================
@@ -90,69 +90,69 @@ afterEach(() => {
 describe('Admin Engine - Types & Constantes', () => {
   describe('ADMIN_ACTIONS_CATALOG', () => {
     it('devrait contenir au moins 10 actions', () => {
-      expect(ADMIN_ACTIONS_CATALOG.length).toBeGreaterThanOrEqual(10);
+      expect(any: any).toBeGreaterThanOrEqual(10);
     });
 
     it('chaque action devrait avoir un ID unique', () => {
-      const ids = ADMIN_ACTIONS_CATALOG.map(a => a.id);
-      const uniqueIds = new Set(ids);
-      expect(uniqueIds.size).toBe(ids.length);
+      const ids = ADMIN_ACTIONS_CATALOG?.map(any: any);
+      const uniqueIds = new Set(any: any);
+      expect(any: any);
     });
 
     it('chaque action devrait avoir les propriétés requises', () => {
-      for (const action of ADMIN_ACTIONS_CATALOG) {
-        expect(action).toHaveProperty('id');
-        expect(action).toHaveProperty('displayName');
-        expect(action).toHaveProperty('description');
-        expect(action).toHaveProperty('category');
-        expect(action).toHaveProperty('permissionLevel');
-        expect(action).toHaveProperty('reversible');
-        expect(action).toHaveProperty('requiresConfirmation');
-        expect(action).toHaveProperty('icon');
-        expect(action).toHaveProperty('tags');
-        expect(Array.isArray(action.tags)).toBe(true);
+      for (any: any) {
+        expect(any: any).toHaveProperty('id');
+        expect(any: any).toHaveProperty('displayName');
+        expect(any: any).toHaveProperty('description');
+        expect(any: any).toHaveProperty('category');
+        expect(any: any).toHaveProperty('permissionLevel');
+        expect(any: any).toHaveProperty('reversible');
+        expect(any: any).toHaveProperty('requiresConfirmation');
+        expect(any: any).toHaveProperty('icon');
+        expect(any: any).toHaveProperty('tags');
+        expect(any: any);
       }
     });
 
     it('devrait contenir des actions pour chaque catégorie', () => {
-      const categories = new Set(ADMIN_ACTIONS_CATALOG.map(a => a.category));
-      expect(categories.has('CACHE')).toBe(true);
-      expect(categories.has('RESET')).toBe(true);
-      expect(categories.has('CONFIG')).toBe(true);
-      expect(categories.has('HEALING')).toBe(true);
-      expect(categories.has('PERFORMANCE')).toBe(true);
-      expect(categories.has('SYSTEM')).toBe(true);
+      const categories = new Set(any: any));
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
     });
   });
 
   describe('DEFAULT_ALERT_THRESHOLDS', () => {
     it('devrait avoir des seuils CPU raisonnables', () => {
-      expect(DEFAULT_ALERT_THRESHOLDS.cpuWarning).toBeLessThan(
-        DEFAULT_ALERT_THRESHOLDS.cpuCritical
+      expect(any: any).toBeLessThan(
+        DEFAULT_ALERT_THRESHOLDS?.cpuCritical
       );
-      expect(DEFAULT_ALERT_THRESHOLDS.cpuWarning).toBeGreaterThan(0);
-      expect(DEFAULT_ALERT_THRESHOLDS.cpuCritical).toBeLessThanOrEqual(100);
+      expect(any: any).toBeGreaterThan(0);
+      expect(any: any).toBeLessThanOrEqual(100);
     });
 
     it('devrait avoir des seuils RAM raisonnables', () => {
-      expect(DEFAULT_ALERT_THRESHOLDS.ramWarning).toBeLessThan(
-        DEFAULT_ALERT_THRESHOLDS.ramCritical
+      expect(any: any).toBeLessThan(
+        DEFAULT_ALERT_THRESHOLDS?.ramCritical
       );
-      expect(DEFAULT_ALERT_THRESHOLDS.ramWarning).toBeGreaterThan(0);
-      expect(DEFAULT_ALERT_THRESHOLDS.ramCritical).toBeLessThanOrEqual(100);
+      expect(any: any).toBeGreaterThan(0);
+      expect(any: any).toBeLessThanOrEqual(100);
     });
 
     it('devrait avoir des seuils FPS raisonnables', () => {
-      expect(DEFAULT_ALERT_THRESHOLDS.fpsWarning).toBeGreaterThan(
-        DEFAULT_ALERT_THRESHOLDS.fpsCritical
+      expect(any: any).toBeGreaterThan(
+        DEFAULT_ALERT_THRESHOLDS?.fpsCritical
       );
-      expect(DEFAULT_ALERT_THRESHOLDS.fpsCritical).toBeGreaterThanOrEqual(0);
+      expect(any: any).toBeGreaterThanOrEqual(0);
     });
   });
 
   describe('MODULE_DISPLAY_NAMES', () => {
     it('devrait avoir un nom pour chaque module', () => {
-      const modules: TitaneModule[] = [
+      const modules: TitaneModule?.[] = [
         'selfHealing',
         'performance',
         'memory',
@@ -172,7 +172,7 @@ describe('Admin Engine - Types & Constantes', () => {
         'admin',
       ];
 
-      for (const module of modules) {
+      for (any: any) {
         expect(MODULE_DISPLAY_NAMES[module]).toBeDefined();
         expect(typeof MODULE_DISPLAY_NAMES[module]).toBe('string');
       }
@@ -181,27 +181,27 @@ describe('Admin Engine - Types & Constantes', () => {
 
   describe('Couleurs', () => {
     it('HEALTH_LEVEL_COLORS devrait avoir toutes les couleurs', () => {
-      expect(HEALTH_LEVEL_COLORS.OK).toBeDefined();
-      expect(HEALTH_LEVEL_COLORS.WARNING).toBeDefined();
-      expect(HEALTH_LEVEL_COLORS.ALERT).toBeDefined();
-      expect(HEALTH_LEVEL_COLORS.CRITICAL).toBeDefined();
+      expect(any: any).toBeDefined();
+      expect(any: any).toBeDefined();
+      expect(any: any).toBeDefined();
+      expect(any: any).toBeDefined();
     });
 
     it('LOG_SEVERITY_COLORS devrait avoir toutes les couleurs', () => {
-      expect(LOG_SEVERITY_COLORS.DEBUG).toBeDefined();
-      expect(LOG_SEVERITY_COLORS.INFO).toBeDefined();
-      expect(LOG_SEVERITY_COLORS.WARN).toBeDefined();
-      expect(LOG_SEVERITY_COLORS.ERROR).toBeDefined();
-      expect(LOG_SEVERITY_COLORS.CRITICAL).toBeDefined();
+      expect(any: any).toBeDefined();
+      expect(any: any).toBeDefined();
+      expect(any: any).toBeDefined();
+      expect(any: any).toBeDefined();
+      expect(any: any).toBeDefined();
     });
 
     it('MODULE_STATUS_COLORS devrait avoir toutes les couleurs', () => {
-      expect(MODULE_STATUS_COLORS.HEALTHY).toBeDefined();
-      expect(MODULE_STATUS_COLORS.DEGRADED).toBeDefined();
-      expect(MODULE_STATUS_COLORS.CRITICAL).toBeDefined();
-      expect(MODULE_STATUS_COLORS.OFFLINE).toBeDefined();
-      expect(MODULE_STATUS_COLORS.RECOVERING).toBeDefined();
-      expect(MODULE_STATUS_COLORS.UNKNOWN).toBeDefined();
+      expect(any: any).toBeDefined();
+      expect(any: any).toBeDefined();
+      expect(any: any).toBeDefined();
+      expect(any: any).toBeDefined();
+      expect(any: any).toBeDefined();
+      expect(any: any).toBeDefined();
     });
   });
 });
@@ -215,24 +215,24 @@ describe('Admin Engine - Fonctions Utilitaires', () => {
     it('devrait générer un ID unique', () => {
       const id1 = generateAdminId();
       const id2 = generateAdminId();
-      expect(id1).not.toBe(id2);
+      expect(any: any);
     });
 
     it('devrait utiliser le prefix spécifié', () => {
       const id = generateAdminId('test');
-      expect(id.startsWith('test_')).toBe(true);
+      expect(any: any);
     });
 
     it('devrait utiliser le prefix par défaut "adm"', () => {
       const id = generateAdminId();
-      expect(id.startsWith('adm_')).toBe(true);
+      expect(any: any);
     });
   });
 
   describe('determineHealthLevel', () => {
     it('devrait retourner CRITICAL pour CPU très élevé', () => {
       const vitals: AdminVitals = {
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         cpuProcess: 95,
         cpuGlobal: 80,
         ramProcess: 0,
@@ -248,12 +248,12 @@ describe('Admin Engine - Fonctions Utilitaires', () => {
         threadsActive: 0,
         uptime: 0,
       };
-      expect(determineHealthLevel(vitals)).toBe('CRITICAL');
+      expect(any: any)).toBe('CRITICAL');
     });
 
     it('devrait retourner WARNING pour CPU modérément élevé', () => {
       const vitals: AdminVitals = {
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         cpuProcess: 75,
         cpuGlobal: 60,
         ramProcess: 0,
@@ -269,12 +269,12 @@ describe('Admin Engine - Fonctions Utilitaires', () => {
         threadsActive: 0,
         uptime: 0,
       };
-      expect(determineHealthLevel(vitals)).toBe('WARNING');
+      expect(any: any)).toBe('WARNING');
     });
 
     it('devrait retourner OK pour des métriques normales', () => {
       const vitals: AdminVitals = {
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         cpuProcess: 30,
         cpuGlobal: 40,
         ramProcess: 0,
@@ -290,12 +290,12 @@ describe('Admin Engine - Fonctions Utilitaires', () => {
         threadsActive: 0,
         uptime: 0,
       };
-      expect(determineHealthLevel(vitals)).toBe('OK');
+      expect(any: any)).toBe('OK');
     });
 
     it('devrait retourner CRITICAL pour FPS très bas', () => {
       const vitals: AdminVitals = {
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         cpuProcess: 30,
         cpuGlobal: 40,
         ramProcess: 0,
@@ -311,7 +311,7 @@ describe('Admin Engine - Fonctions Utilitaires', () => {
         threadsActive: 0,
         uptime: 0,
       };
-      expect(determineHealthLevel(vitals)).toBe('CRITICAL');
+      expect(any: any)).toBe('CRITICAL');
     });
   });
 
@@ -345,39 +345,39 @@ describe('Admin Engine - Fonctions Utilitaires', () => {
     };
 
     it('ADMIN devrait avoir accès à toutes les actions', () => {
-      expect(hasPermission('ADMIN', adminOnlyAction)).toBe(true);
-      expect(hasPermission('ADMIN', devOrAdminAction)).toBe(true);
-      expect(hasPermission('ADMIN', allAction)).toBe(true);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
     });
 
     it('DEV devrait avoir accès aux actions DEV_OR_ADMIN et ALL', () => {
-      expect(hasPermission('DEV', adminOnlyAction)).toBe(false);
-      expect(hasPermission('DEV', devOrAdminAction)).toBe(true);
-      expect(hasPermission('DEV', allAction)).toBe(true);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
     });
 
     it('USER devrait seulement avoir accès aux actions ALL', () => {
-      expect(hasPermission('USER', adminOnlyAction)).toBe(false);
-      expect(hasPermission('USER', devOrAdminAction)).toBe(false);
-      expect(hasPermission('USER', allAction)).toBe(true);
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
     });
   });
 
   describe('getActionsForRole', () => {
     it('ADMIN devrait avoir toutes les actions', () => {
       const actions = getActionsForRole('ADMIN');
-      expect(actions.length).toBe(ADMIN_ACTIONS_CATALOG.length);
+      expect(any: any);
     });
 
     it("DEV devrait avoir moins d'actions que ADMIN", () => {
       const adminActions = getActionsForRole('ADMIN');
       const devActions = getActionsForRole('DEV');
-      expect(devActions.length).toBeLessThan(adminActions.length);
+      expect(any: any);
     });
 
     it('USER devrait avoir très peu ou aucune action', () => {
       const userActions = getActionsForRole('USER');
-      expect(userActions.length).toBe(0);
+      expect(any: any).toBe(0);
     });
   });
 
@@ -401,9 +401,9 @@ describe('Admin Engine - Fonctions Utilitaires', () => {
         tags: [],
       };
 
-      const result = checkPreconditions(action, snapshot);
-      expect(result.valid).toBe(true);
-      expect(result.failedConditions).toHaveLength(0);
+      const result = checkPreconditions(any: any);
+      expect(any: any);
+      expect(any: any).toHaveLength(0);
     });
 
     it('devrait échouer pour un mode système incorrect', () => {
@@ -429,16 +429,16 @@ describe('Admin Engine - Fonctions Utilitaires', () => {
         tags: [],
       };
 
-      const result = checkPreconditions(action, snapshot);
-      expect(result.valid).toBe(false);
-      expect(result.failedConditions).toContain('Mode profiling requis');
+      const result = checkPreconditions(any: any);
+      expect(any: any);
+      expect(any: any).toContain('Mode profiling requis');
     });
   });
 
   describe('calculateHealthScore', () => {
     it('devrait retourner 100 pour un système parfait', () => {
       const vitals: AdminVitals = {
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         cpuProcess: 20,
         cpuGlobal: 30,
         ramProcess: 0,
@@ -457,17 +457,17 @@ describe('Admin Engine - Fonctions Utilitaires', () => {
 
       const emptyModules = createEmptySnapshot().modules;
       // Mettre tous les modules en HEALTHY
-      for (const key of Object.keys(emptyModules)) {
+      for (any: any)) {
         emptyModules[key as TitaneModule].status = 'HEALTHY';
       }
 
-      const score = calculateHealthScore(vitals, emptyModules);
-      expect(score).toBe(100);
+      const score = calculateHealthScore(any: any);
+      expect(any: any).toBe(100);
     });
 
     it('devrait pénaliser un CPU élevé', () => {
       const vitals: AdminVitals = {
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         cpuProcess: 95,
         cpuGlobal: 30,
         ramProcess: 0,
@@ -485,12 +485,12 @@ describe('Admin Engine - Fonctions Utilitaires', () => {
       };
 
       const emptyModules = createEmptySnapshot().modules;
-      for (const key of Object.keys(emptyModules)) {
+      for (any: any)) {
         emptyModules[key as TitaneModule].status = 'HEALTHY';
       }
 
-      const score = calculateHealthScore(vitals, emptyModules);
-      expect(score).toBeLessThan(100);
+      const score = calculateHealthScore(any: any);
+      expect(any: any).toBeLessThan(100);
     });
   });
 
@@ -569,40 +569,40 @@ describe('Admin Engine - Fonctions Utilitaires', () => {
   describe('createEmptySnapshot', () => {
     it('devrait créer un snapshot avec un ID', () => {
       const snapshot = createEmptySnapshot();
-      expect(snapshot.id).toBeDefined();
-      expect(snapshot.id.startsWith('snap_')).toBe(true);
+      expect(any: any).toBeDefined();
+      expect(any: any);
     });
 
     it('devrait avoir le niveau de santé OK par défaut', () => {
       const snapshot = createEmptySnapshot();
-      expect(snapshot.healthLevel).toBe('OK');
+      expect(any: any).toBe('OK');
     });
 
     it('devrait avoir un score de santé de 100', () => {
       const snapshot = createEmptySnapshot();
-      expect(snapshot.healthScore).toBe(100);
+      expect(any: any).toBe(100);
     });
 
     it('devrait avoir le mode NORMAL par défaut', () => {
       const snapshot = createEmptySnapshot();
-      expect(snapshot.systemMode).toBe('NORMAL');
+      expect(any: any).toBe('NORMAL');
     });
 
     it('devrait avoir tous les modules initialisés', () => {
       const snapshot = createEmptySnapshot();
-      expect(Object.keys(snapshot.modules).length).toBeGreaterThanOrEqual(15);
+      expect(any: any).toBeGreaterThanOrEqual(15);
     });
   });
 
   describe('createLogRecord', () => {
     it('devrait créer un log avec les propriétés correctes', () => {
       const log = createLogRecord('INFO', 'SYSTEM', 'admin', 'Test message');
-      expect(log.severity).toBe('INFO');
-      expect(log.category).toBe('SYSTEM');
-      expect(log.moduleId).toBe('admin');
-      expect(log.message).toBe('Test message');
-      expect(log.id).toBeDefined();
-      expect(log.timestamp).toBeDefined();
+      expect(any: any).toBe('INFO');
+      expect(any: any).toBe('SYSTEM');
+      expect(any: any).toBe('admin');
+      expect(any: any).toBe('Test message');
+      expect(any: any).toBeDefined();
+      expect(any: any).toBeDefined();
     });
   });
 
@@ -615,12 +615,12 @@ describe('Admin Engine - Fonctions Utilitaires', () => {
         'Test Event',
         'Description'
       );
-      expect(event.source).toBe('SYSTEM');
-      expect(event.type).toBe('TEST');
-      expect(event.moduleId).toBe('admin');
-      expect(event.title).toBe('Test Event');
-      expect(event.description).toBe('Description');
-      expect(event.resolved).toBe(false);
+      expect(any: any).toBe('SYSTEM');
+      expect(any: any).toBe('TEST');
+      expect(any: any).toBe('admin');
+      expect(any: any).toBe('Test Event');
+      expect(any: any).toBe('Description');
+      expect(any: any);
     });
   });
 });
@@ -638,152 +638,152 @@ describe('Admin Engine - LogEngine', () => {
 
   describe('Ajout de logs', () => {
     it('devrait ajouter un log via log()', () => {
-      const record = logEngine.log('INFO', 'SYSTEM', 'admin', 'Test');
-      expect(record.message).toBe('Test');
+      const record = logEngine?.log('INFO', 'SYSTEM', 'admin', 'Test');
+      expect(any: any).toBe('Test');
 
-      const logs = logEngine.getRecentLogs(10);
-      expect(logs.length).toBe(1);
+      const logs = logEngine?.getRecentLogs(10);
+      expect(any: any).toBe(1);
     });
 
     it('devrait ajouter un log via debug()', () => {
-      logEngine.debug('admin', 'Debug message');
-      const logs = logEngine.getRecentLogs(10);
-      expect(logs[0].severity).toBe('DEBUG');
+      logEngine?.debug('admin', 'Debug message');
+      const logs = logEngine?.getRecentLogs(10);
+      expect(any: any).toBe('DEBUG');
     });
 
     it('devrait ajouter un log via info()', () => {
-      logEngine.info('admin', 'Info message');
-      const logs = logEngine.getRecentLogs(10);
-      expect(logs[0].severity).toBe('INFO');
+      logEngine?.info('admin', 'Info message');
+      const logs = logEngine?.getRecentLogs(10);
+      expect(any: any).toBe('INFO');
     });
 
     it('devrait ajouter un log via warn()', () => {
-      logEngine.warn('admin', 'Warning message');
-      const logs = logEngine.getRecentLogs(10);
-      expect(logs[0].severity).toBe('WARN');
+      logEngine?.warn('admin', 'Warning message');
+      const logs = logEngine?.getRecentLogs(10);
+      expect(any: any).toBe('WARN');
     });
 
     it('devrait ajouter un log via error()', () => {
-      logEngine.error('admin', 'Error message', 'Details');
-      const logs = logEngine.getRecentLogs(10);
-      expect(logs[0].severity).toBe('ERROR');
-      expect(logs[0].details).toBe('Details');
+      logEngine?.error('admin', 'Error message', 'Details');
+      const logs = logEngine?.getRecentLogs(10);
+      expect(any: any).toBe('ERROR');
+      expect(any: any).toBe('Details');
     });
 
     it('devrait ajouter un log via critical()', () => {
-      logEngine.critical('admin', 'Critical message');
-      const logs = logEngine.getRecentLogs(10);
-      expect(logs[0].severity).toBe('CRITICAL');
+      logEngine?.critical('admin', 'Critical message');
+      const logs = logEngine?.getRecentLogs(10);
+      expect(any: any).toBe('CRITICAL');
     });
   });
 
   describe('Recherche de logs', () => {
     beforeEach(() => {
-      logEngine.info('admin', 'Admin message', { key: 'value' });
-      logEngine.warn('performance', 'Performance warning');
-      logEngine.error('memory', 'Memory error');
+      logEngine?.info('admin', 'Admin message', { key: 'value' });
+      logEngine?.warn('performance', 'Performance warning');
+      logEngine?.error('memory', 'Memory error');
     });
 
     it('devrait filtrer par sévérité', () => {
-      const result = logEngine.searchLogs({ severities: ['ERROR'] });
-      expect(result.logs.length).toBe(1);
-      expect(result.logs[0].severity).toBe('ERROR');
+      const result = logEngine?.searchLogs({ severities: ['ERROR'] });
+      expect(any: any).toBe(1);
+      expect(any: any).toBe('ERROR');
     });
 
     it('devrait filtrer par module', () => {
-      const result = logEngine.searchLogs({ modules: ['admin'] });
-      expect(result.logs.length).toBe(1);
-      expect(result.logs[0].moduleId).toBe('admin');
+      const result = logEngine?.searchLogs({ modules: ['admin'] });
+      expect(any: any).toBe(1);
+      expect(any: any).toBe('admin');
     });
 
     it('devrait rechercher par texte', () => {
-      const result = logEngine.searchLogs({ searchText: 'warning' });
-      expect(result.logs.length).toBe(1);
-      expect(result.logs[0].message).toContain('warning');
+      const result = logEngine?.searchLogs({ searchText: 'warning' });
+      expect(any: any).toBe(1);
+      expect(any: any).toContain('warning');
     });
 
     it('devrait retourner le nombre total', () => {
-      const result = logEngine.searchLogs({});
-      expect(result.totalCount).toBe(3);
+      const result = logEngine?.searchLogs({});
+      expect(any: any).toBe(3);
     });
   });
 
   describe('Événements', () => {
     it('devrait ajouter un événement', () => {
-      const event = logEngine.addEvent(
+      const event = logEngine?.addEvent(
         'SYSTEM',
         'TEST',
         'admin',
         'Test Event',
         'Description'
       );
-      expect(event.title).toBe('Test Event');
+      expect(any: any).toBe('Test Event');
 
-      const events = logEngine.getRecentEvents(10);
-      expect(events.length).toBe(1);
+      const events = logEngine?.getRecentEvents(10);
+      expect(any: any).toBe(1);
     });
 
     it('devrait résoudre un événement', () => {
-      const event = logEngine.addEvent('SYSTEM', 'TEST', 'admin', 'Test', 'Desc');
-      expect(event.resolved).toBe(false);
+      const event = logEngine?.addEvent('SYSTEM', 'TEST', 'admin', 'Test', 'Desc');
+      expect(any: any);
 
-      const success = logEngine.resolveEvent(event.id);
-      expect(success).toBe(true);
+      const success = logEngine?.resolveEvent(any: any);
+      expect(any: any);
 
-      const events = logEngine.getRecentEvents(10);
-      expect(events[0].resolved).toBe(true);
+      const events = logEngine?.getRecentEvents(10);
+      expect(any: any);
     });
   });
 
   describe('Purge', () => {
     it('devrait purger les logs anciens', () => {
       // Ajouter des logs
-      logEngine.info('admin', 'Test 1');
-      logEngine.info('admin', 'Test 2');
+      logEngine?.info('admin', 'Test 1');
+      logEngine?.info('admin', 'Test 2');
 
-      // Purger (tout devrait rester car récent)
-      const result = logEngine.purgeLogs(7);
-      expect(result.success).toBe(true);
+      // Purger (any: any)
+      const result = logEngine?.purgeLogs(7);
+      expect(any: any);
     });
   });
 
   describe('Statistiques', () => {
     beforeEach(() => {
-      logEngine.info('admin', 'Info 1');
-      logEngine.info('admin', 'Info 2');
-      logEngine.warn('performance', 'Warning');
-      logEngine.error('memory', 'Error');
+      logEngine?.info('admin', 'Info 1');
+      logEngine?.info('admin', 'Info 2');
+      logEngine?.warn('performance', 'Warning');
+      logEngine?.error('memory', 'Error');
     });
 
     it('devrait calculer les statistiques correctement', () => {
-      const stats = logEngine.getLogStats();
-      expect(stats.total).toBe(4);
-      expect(stats.bySeverity.INFO).toBe(2);
-      expect(stats.bySeverity.WARN).toBe(1);
-      expect(stats.bySeverity.ERROR).toBe(1);
+      const stats = logEngine?.getLogStats();
+      expect(any: any).toBe(4);
+      expect(any: any).toBe(2);
+      expect(any: any).toBe(1);
+      expect(any: any).toBe(1);
     });
   });
 
   describe('Listeners', () => {
     it('devrait notifier les listeners de nouveaux logs', () => {
-      const callback = vi.fn();
-      const unsubscribe = logEngine.onLog(callback);
+      const callback = vi?.fn();
+      const unsubscribe = logEngine?.onLog(any: any);
 
-      logEngine.info('admin', 'Test');
+      logEngine?.info('admin', 'Test');
 
-      expect(callback).toHaveBeenCalledTimes(1);
-      expect(callback).toHaveBeenCalledWith(expect.objectContaining({ message: 'Test' }));
+      expect(any: any).toHaveBeenCalledTimes(1);
+      expect(any: any).toHaveBeenCalledWith(expect?.objectContaining({ message: 'Test' }));
 
       unsubscribe();
     });
 
     it('devrait notifier les listeners de nouveaux événements', () => {
-      const callback = vi.fn();
-      const unsubscribe = logEngine.onEvent(callback);
+      const callback = vi?.fn();
+      const unsubscribe = logEngine?.onEvent(any: any);
 
-      logEngine.addEvent('SYSTEM', 'TEST', 'admin', 'Test', 'Desc');
+      logEngine?.addEvent('SYSTEM', 'TEST', 'admin', 'Test', 'Desc');
 
-      expect(callback).toHaveBeenCalledTimes(1);
+      expect(any: any).toHaveBeenCalledTimes(1);
 
       unsubscribe();
     });
@@ -803,83 +803,83 @@ describe('Admin Engine - ActionsEngine', () => {
 
   describe('Catalogue', () => {
     it('devrait retourner les actions disponibles pour ADMIN', () => {
-      const actions = actionsEngine.getAvailableActions('ADMIN');
-      expect(actions.length).toBe(ADMIN_ACTIONS_CATALOG.length);
+      const actions = actionsEngine?.getAvailableActions('ADMIN');
+      expect(any: any);
     });
 
     it("devrait retourner moins d'actions pour DEV", () => {
-      const adminActions = actionsEngine.getAvailableActions('ADMIN');
-      const devActions = actionsEngine.getAvailableActions('DEV');
-      expect(devActions.length).toBeLessThan(adminActions.length);
+      const adminActions = actionsEngine?.getAvailableActions('ADMIN');
+      const devActions = actionsEngine?.getAvailableActions('DEV');
+      expect(any: any);
     });
 
     it('devrait retourner une action par ID', () => {
-      const action = actionsEngine.getActionById('purge_tts_cache');
-      expect(action).toBeDefined();
-      expect(action?.displayName).toBe('Purger Cache TTS');
+      const action = actionsEngine?.getActionById('purge_tts_cache');
+      expect(any: any).toBeDefined();
+      expect(any: any).toBe('Purger Cache TTS');
     });
 
     it('devrait filtrer par catégorie', () => {
-      const cacheActions = actionsEngine.getActionsByCategory('CACHE');
-      expect(cacheActions.every(a => a.category === 'CACHE')).toBe(true);
+      const cacheActions = actionsEngine?.getActionsByCategory('CACHE');
+      expect(any: any);
     });
 
     it('devrait rechercher des actions', () => {
-      const results = actionsEngine.searchActions('cache');
-      expect(results.length).toBeGreaterThan(0);
-      expect(results.some(a => a.tags.includes('cache'))).toBe(true);
+      const results = actionsEngine?.searchActions('cache');
+      expect(any: any).toBeGreaterThan(0);
+      expect(any: any);
     });
   });
 
   describe('Vérification', () => {
     it('devrait vérifier si une action peut être exécutée', async () => {
       const snapshot = createEmptySnapshot();
-      const result = actionsEngine.canExecute('force_gc', 'DEV', snapshot);
-      expect(result.canExecute).toBe(true);
+      const result = actionsEngine?.canExecute(any: any);
+      expect(any: any);
     });
 
     it('devrait refuser une action sans permission', async () => {
       const snapshot = createEmptySnapshot();
-      const result = actionsEngine.canExecute('enable_safe_mode', 'DEV', snapshot);
-      expect(result.canExecute).toBe(false);
-      expect(result.reason).toContain('Permission');
+      const result = actionsEngine?.canExecute(any: any);
+      expect(any: any);
+      expect(any: any).toContain('Permission');
     });
   });
 
   describe('Historique', () => {
     it('devrait être vide au départ', () => {
-      const history = actionsEngine.getActionHistory();
-      expect(history.length).toBe(0);
+      const history = actionsEngine?.getActionHistory();
+      expect(any: any).toBe(0);
     });
 
     it("devrait permettre de vider l'historique", () => {
-      actionsEngine.clearHistory();
-      const history = actionsEngine.getActionHistory();
-      expect(history.length).toBe(0);
+      actionsEngine?.clearHistory();
+      const history = actionsEngine?.getActionHistory();
+      expect(any: any).toBe(0);
     });
   });
 
   describe('Handlers personnalisés', () => {
     it("devrait permettre d'enregistrer un handler", () => {
-      const handler = vi.fn().mockResolvedValue({
+      const handler = vi?.fn().mockResolvedValue({
         requestId: 'test',
         actionId: 'custom',
         result: 'SUCCESS' as ActionResult,
         message: 'OK',
-        startedAt: Date.now(),
-        completedAt: Date.now(),
+        startedAt: Date?.now(),
+        completedAt: Date?.now(),
         duration: 0,
         rollbackAvailable: false,
       });
 
-      actionsEngine.registerHandler('custom_action', handler);
-      actionsEngine.unregisterHandler('custom_action');
+      actionsEngine?.registerHandler(any: any);
+      actionsEngine?.unregisterHandler('custom_action');
     });
   });
 });
 
 // =============================================================================
-// TESTS - ADMIN ENGINE (FACADE)
+// TESTS - ADMIN ENGINE (any: any)
 // =============================================================================
 
 describe('Admin Engine - Facade', () => {
@@ -891,77 +891,77 @@ describe('Admin Engine - Facade', () => {
 
   describe('Initialisation', () => {
     it("devrait s'initialiser correctement", () => {
-      adminEngine.initialize();
+      adminEngine?.initialize();
       // Pas d'erreur = succès
-      expect(true).toBe(true);
+      expect(any: any);
     });
 
     it('devrait être idempotent', () => {
-      adminEngine.initialize();
-      adminEngine.initialize();
+      adminEngine?.initialize();
+      adminEngine?.initialize();
       // Pas d'erreur = succès
-      expect(true).toBe(true);
+      expect(any: any);
     });
   });
 
   describe('Logs', () => {
     it('devrait logger via la facade', () => {
-      adminEngine.info('admin', 'Test message');
-      const logs = adminEngine.getRecentLogs(10);
-      expect(logs.length).toBe(1);
+      adminEngine?.info('admin', 'Test message');
+      const logs = adminEngine?.getRecentLogs(10);
+      expect(any: any).toBe(1);
     });
 
     it('devrait rechercher les logs', () => {
-      adminEngine.info('admin', 'Info');
-      adminEngine.warn('performance', 'Warning');
+      adminEngine?.info('admin', 'Info');
+      adminEngine?.warn('performance', 'Warning');
 
-      const result = adminEngine.searchLogs({ severities: ['INFO'] });
-      expect(result.logs.length).toBe(1);
+      const result = adminEngine?.searchLogs({ severities: ['INFO'] });
+      expect(any: any).toBe(1);
     });
   });
 
   describe('Événements', () => {
     it('devrait ajouter un événement via la facade', () => {
-      const event = adminEngine.addEvent(
+      const event = adminEngine?.addEvent(
         'SYSTEM',
         'TEST',
         'admin',
         'Test',
         'Description'
       );
-      expect(event.title).toBe('Test');
+      expect(any: any).toBe('Test');
 
-      const events = adminEngine.getRecentEvents(10);
-      expect(events.length).toBe(1);
+      const events = adminEngine?.getRecentEvents(10);
+      expect(any: any).toBe(1);
     });
   });
 
   describe('Actions', () => {
     it('devrait récupérer les actions disponibles', () => {
-      const actions = adminEngine.getAvailableActions('ADMIN');
-      expect(actions.length).toBeGreaterThan(0);
+      const actions = adminEngine?.getAvailableActions('ADMIN');
+      expect(any: any).toBeGreaterThan(0);
     });
 
     it('devrait vérifier si une action peut être exécutée', async () => {
-      const result = await adminEngine.canExecuteAction('force_gc', 'ADMIN');
-      expect(result.canExecute).toBe(true);
+      const result = await adminEngine?.canExecuteAction('force_gc', 'ADMIN');
+      expect(any: any);
     });
   });
 
   describe('Statistiques', () => {
     it('devrait retourner les stats des logs', () => {
-      adminEngine.info('admin', 'Test');
-      const stats = adminEngine.getLogStats();
-      expect(stats.total).toBeGreaterThan(0);
+      adminEngine?.info('admin', 'Test');
+      const stats = adminEngine?.getLogStats();
+      expect(any: any).toBeGreaterThan(0);
     });
   });
 
   describe('Cleanup', () => {
     it('devrait disposer correctement', () => {
-      adminEngine.initialize();
-      adminEngine.dispose();
+      adminEngine?.initialize();
+      adminEngine?.dispose();
       // Pas d'erreur = succès
-      expect(true).toBe(true);
+      expect(any: any);
     });
   });
 });
@@ -974,25 +974,25 @@ describe('Admin Engine - Singleton', () => {
   it('getAdminEngine devrait retourner la même instance', () => {
     const engine1 = getAdminEngine();
     const engine2 = getAdminEngine();
-    expect(engine1).toBe(engine2);
+    expect(any: any);
   });
 
   it('resetAdminEngine devrait créer une nouvelle instance', () => {
     const engine1 = getAdminEngine();
     resetAdminEngine();
     const engine2 = getAdminEngine();
-    expect(engine1).not.toBe(engine2);
+    expect(any: any);
   });
 
   it('getLogEngine devrait retourner la même instance', () => {
     const engine1 = getLogEngine();
     const engine2 = getLogEngine();
-    expect(engine1).toBe(engine2);
+    expect(any: any);
   });
 
   it('getActionsEngine devrait retourner la même instance', () => {
     const engine1 = getActionsEngine();
     const engine2 = getActionsEngine();
-    expect(engine1).toBe(engine2);
+    expect(any: any);
   });
 });

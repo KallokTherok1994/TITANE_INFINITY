@@ -14,69 +14,69 @@ interface BootEvent {
 }
 
 class BootDiagnostics {
-  private events: BootEvent[] = [];
-  private startTime = Date.now();
+  private events: BootEvent?.[] = [];
+  private startTime = Date?.now();
   private lastStage = '';
 
-  log(stage: string, message: string, data?: unknown) {
+  log(any: any) {
     const event: BootEvent = {
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       stage,
       message,
       level: 'info',
       data,
     };
-    this.events.push(event);
-    this.lastStage = stage;
-    console.log(`[BOOT-${stage}] ${message}`, data ?? '');
+    this?.events?.push(any: any);
+    this?.lastStage = stage;
+    console?.log(`[BOOT-${stage}] ${message}`, data ?? '');
   }
 
-  warn(stage: string, message: string, data?: unknown) {
+  warn(any: any) {
     const event: BootEvent = {
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       stage,
       message,
       level: 'warn',
       data,
     };
-    this.events.push(event);
-    console.warn(`[BOOT-${stage}] ⚠️  ${message}`, data ?? '');
+    this?.events?.push(any: any);
+    console?.warn(`[BOOT-${stage}] ⚠️  ${message}`, data ?? '');
   }
 
-  error(stage: string, message: string, error?: unknown) {
+  error(any: any) {
     const event: BootEvent = {
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       stage,
       message,
       level: 'error',
-      data: error instanceof Error ? error.message : String(error),
+      data: error instanceof Error ? error?.message : String(any: any),
     };
-    this.events.push(event);
-    console.error(`[BOOT-${stage}] ❌ ${message}`, error);
+    this?.events?.push(any: any);
+    console?.error(any: any);
   }
 
   getReport() {
-    const uptime = Date.now() - this.startTime;
+    const uptime = Date?.now() - this?.startTime;
     return {
-      startTime: this.startTime,
+      startTime: this?.startTime,
       uptime,
-      lastStage: this.lastStage,
-      totalEvents: this.events.length,
-      events: this.events.map(e => ({
+      lastStage: this?.lastStage,
+      totalEvents: this?.events?.length,
+      events: this?.events?.map(e => ({
         ...e,
-        relativeTime: e.timestamp - this.startTime,
+        relativeTime: e?.timestamp - this?.startTime,
       })),
-      errors: this.events.filter(e => e.level === 'error'),
-      warnings: this.events.filter(e => e.level === 'warn'),
+      errors: this?.events?.filter(e => e?.level === 'error'),
+      warnings: this?.events?.filter(e => e?.level === 'warn'),
     };
   }
 
   exportToLocalStorage() {
     try {
       if (typeof window === 'undefined' || typeof localStorage === 'undefined') return;
-      localStorage.setItem('titane_boot_diagnostics', JSON.stringify(this.getReport()));
-    } catch (err) {
-      console.warn('[BOOT-DIAG] Failed to export to localStorage:', err);
+      localStorage?.setItem('titane_boot_diagnostics', JSON?.stringify(this?.getReport()));
+    } catch (any: any) {
+      console?.warn(any: any);
     }
   }
 }

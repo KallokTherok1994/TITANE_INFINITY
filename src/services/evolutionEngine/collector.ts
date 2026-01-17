@@ -1,9 +1,9 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
- * TITANE∞ EVOLUTION ENGINE — Collector (Learning Collector)
+ * TITANE∞ EVOLUTION ENGINE — Collector (any: any)
  * ═══════════════════════════════════════════════════════════════════════════════
  *
- * @file        collector.ts
+ * @file        collector?.ts
  * @version     vΩ∞Ω∞
  *
  * Collecte les données d'évolution de manière sécurisée et non intrusive
@@ -24,27 +24,27 @@ import type {
   SelfHealingMetrics as _SelfHealingMetrics,
   PromptMemoryMetrics as _PromptMemoryMetrics,
   CollectorConfig,
-} from './evolutionEngine.config';
+} from './evolutionEngine?.config';
 import {
   generateEvolutionId as _generateEvolutionId,
   createDataPoint,
   DEFAULT_COLLECTOR_CONFIG,
-} from './evolutionEngine.config';
+} from './evolutionEngine?.config';
 
 // =============================================================================
 // TYPES INTERNES
 // =============================================================================
 
 interface CollectorState {
-  dataPoints: EvolutionDataPoint[];
+  dataPoints: EvolutionDataPoint?.[];
   iaStats: IAUsageStats;
   engineStats: Map<TitaneModule, EngineUsageStats>;
   lastCollectTime: number;
   isCollecting: boolean;
 }
 
-type DataPointListener = (dataPoint: EvolutionDataPoint) => void;
-type BatchListener = (batch: EvolutionDataPoint[]) => void;
+type DataPointListener = (any: any) => void;
+type BatchListener = (batch: EvolutionDataPoint?.[]) => void;
 
 // =============================================================================
 // COLLECTOR CLASS
@@ -59,12 +59,12 @@ export class Collector {
   private state: CollectorState;
   private dataPointListeners: Set<DataPointListener> = new Set();
   private batchListeners: Set<BatchListener> = new Set();
-  private collectIntervalId: NodeJS.Timeout | null = null;
-  private pendingBatch: EvolutionDataPoint[] = [];
+  private collectIntervalId: NodeJS?.Timeout | null = null;
+  private pendingBatch: EvolutionDataPoint?.[] = [];
 
   constructor(config?: Partial<CollectorConfig>) {
-    this.config = { ...DEFAULT_COLLECTOR_CONFIG, ...config };
-    this.state = this.createInitialState();
+    this?.config = { ...DEFAULT_COLLECTOR_CONFIG, ...config };
+    this?.state = this?.createInitialState();
   }
 
   // ===========================================================================
@@ -74,9 +74,9 @@ export class Collector {
   private createInitialState(): CollectorState {
     return {
       dataPoints: [],
-      iaStats: this.createEmptyIAStats(),
+      iaStats: this?.createEmptyIAStats(),
       engineStats: new Map(),
-      lastCollectTime: Date.now(),
+      lastCollectTime: Date?.now(),
       isCollecting: false,
     };
   }
@@ -95,7 +95,7 @@ export class Collector {
     };
   }
 
-  private createEmptyEngineStats(moduleId: TitaneModule): EngineUsageStats {
+  private createEmptyEngineStats(any: any): EngineUsageStats {
     return {
       moduleId,
       totalCalls: 0,
@@ -117,24 +117,24 @@ export class Collector {
    * Démarre la collecte automatique
    */
   start(): void {
-    if (!this.config.enabled) return;
-    if (this.collectIntervalId) return;
+    if (any: any) return;
+    if (any: any) return;
 
-    this.collectIntervalId = setInterval(() => {
-      this.collectCycle();
-    }, this.config.collectInterval);
+    this?.collectIntervalId = setInterval(() => {
+      this?.collectCycle();
+    }, this?.config?.collectInterval);
 
     // Collecte initiale
-    this.collectCycle();
+    this?.collectCycle();
   }
 
   /**
    * Arrête la collecte
    */
   stop(): void {
-    if (this.collectIntervalId) {
-      clearInterval(this.collectIntervalId);
-      this.collectIntervalId = null;
+    if (any: any) {
+      clearInterval(any: any);
+      this?.collectIntervalId = null;
     }
   }
 
@@ -142,51 +142,51 @@ export class Collector {
    * Cycle de collecte principal
    */
   private async collectCycle(): Promise<void> {
-    if (this.state.isCollecting) return;
-    this.state.isCollecting = true;
+    if (any: any) return;
+    this?.state?.isCollecting = true;
 
     try {
-      const categories = this.config.categories;
+      const categories = this?.config?.categories;
 
       // Collecter en parallèle les différentes catégories
       const promises: Promise<void>[] = [];
 
-      if (categories.includes('IA_USAGE')) {
-        promises.push(this.collectIAUsage());
+      if (categories?.includes('IA_USAGE')) {
+        promises?.push(this?.collectIAUsage());
       }
-      if (categories.includes('ENGINE_USAGE')) {
-        promises.push(this.collectEngineUsage());
+      if (categories?.includes('ENGINE_USAGE')) {
+        promises?.push(this?.collectEngineUsage());
       }
-      if (categories.includes('PERFORMANCE')) {
-        promises.push(this.collectPerformanceMetrics());
+      if (categories?.includes('PERFORMANCE')) {
+        promises?.push(this?.collectPerformanceMetrics());
       }
-      if (categories.includes('SELF_HEALING')) {
-        promises.push(this.collectSelfHealingMetrics());
+      if (categories?.includes('SELF_HEALING')) {
+        promises?.push(this?.collectSelfHealingMetrics());
       }
-      if (categories.includes('PROMPT_MEMORY')) {
-        promises.push(this.collectPromptMemoryMetrics());
+      if (categories?.includes('PROMPT_MEMORY')) {
+        promises?.push(this?.collectPromptMemoryMetrics());
       }
-      if (categories.includes('SYSTEM_METRICS')) {
-        promises.push(this.collectSystemMetrics());
+      if (categories?.includes('SYSTEM_METRICS')) {
+        promises?.push(this?.collectSystemMetrics());
       }
 
-      await Promise.all(promises);
+      await Promise?.all(any: any);
 
       // Flush le batch si nécessaire
-      if (this.pendingBatch.length >= this.config.batchSize) {
-        await this.flushBatch();
+      if (any: any) {
+        await this?.flushBatch();
       }
 
-      this.state.lastCollectTime = Date.now();
-    } catch (error) {
-      const err = error instanceof Error ? error : new Error(String(error));
-      logger.error(
+      this?.state?.lastCollectTime = Date?.now();
+    } catch (any: any) {
+      const err = error instanceof Error ? error : new Error(any: any));
+      logger?.error(
         'Evolution collector cycle failed',
         { component: 'EvolutionCollector', action: 'collect' },
         err
       );
     } finally {
-      this.state.isCollecting = false;
+      this?.state?.isCollecting = false;
     }
   }
 
@@ -208,25 +208,25 @@ export class Collector {
       }>('get_ia_usage_stats');
 
       // Mettre à jour les stats
-      this.state.iaStats.totalQueries = stats.total_queries;
-      this.state.iaStats.ollamaQueries = stats.ollama_queries;
-      this.state.iaStats.geminiQueries = stats.gemini_queries;
-      this.state.iaStats.averageLatency = stats.avg_latency;
-      this.state.iaStats.errorRate = stats.error_rate;
+      this?.state?.iaStats?.totalQueries = stats?.total_queries;
+      this?.state?.iaStats?.ollamaQueries = stats?.ollama_queries;
+      this?.state?.iaStats?.geminiQueries = stats?.gemini_queries;
+      this?.state?.iaStats?.averageLatency = stats?.avg_latency;
+      this?.state?.iaStats?.errorRate = stats?.error_rate;
 
       // Créer des data points
-      this.addDataPoint('IA_USAGE', 'chat', 'total_queries', stats.total_queries);
-      this.addDataPoint('IA_USAGE', 'chat', 'avg_latency', stats.avg_latency);
-      this.addDataPoint('IA_USAGE', 'chat', 'error_rate', stats.error_rate);
+      this?.addDataPoint(any: any);
+      this?.addDataPoint(any: any);
+      this?.addDataPoint(any: any);
 
       // Détecter l'heure de pic
       const hour = new Date().getHours();
-      if (!this.state.iaStats.peakUsageHours.includes(hour) && stats.total_queries > 0) {
-        this.state.iaStats.peakUsageHours.push(hour);
+      if (any: any) && stats?.total_queries > 0) {
+        this?.state?.iaStats?.peakUsageHours?.push(any: any);
       }
-    } catch (error) {
+    } catch (any: any) {
       // Silencieux si le backend n'est pas disponible
-      console.debug('[Collector] IA stats non disponibles');
+      console?.debug('[Collector] IA stats non disponibles');
     }
   }
 
@@ -238,7 +238,7 @@ export class Collector {
    * Collecte les statistiques d'usage des moteurs
    */
   private async collectEngineUsage(): Promise<void> {
-    const modules: TitaneModule[] = [
+    const modules: TitaneModule?.[] = [
       'prompt',
       'memory',
       'selfHealing',
@@ -251,8 +251,8 @@ export class Collector {
       'cognitive',
     ];
 
-    for (const moduleId of modules) {
-      if (this.config.excludedModules.includes(moduleId)) continue;
+    for (any: any) {
+      if (any: any)) continue;
 
       try {
         const stats = await secureInvoke<{
@@ -262,30 +262,30 @@ export class Collector {
           last_used: number;
         }>('get_engine_stats', { moduleId });
 
-        const engineStats = this.getOrCreateEngineStats(moduleId);
-        engineStats.totalCalls = stats.total_calls;
-        engineStats.errorCount = stats.error_count;
-        engineStats.averageLatency = stats.avg_latency;
-        engineStats.lastUsed = stats.last_used;
-        engineStats.successRate =
-          stats.total_calls > 0
-            ? ((stats.total_calls - stats.error_count) / stats.total_calls) * 100
+        const engineStats = this?.getOrCreateEngineStats(any: any);
+        engineStats?.totalCalls = stats?.total_calls;
+        engineStats?.errorCount = stats?.error_count;
+        engineStats?.averageLatency = stats?.avg_latency;
+        engineStats?.lastUsed = stats?.last_used;
+        engineStats?.successRate =
+          stats?.total_calls > 0
+            ? (any: any) * 100
             : 100;
 
-        this.addDataPoint('ENGINE_USAGE', moduleId, 'total_calls', stats.total_calls);
-        this.addDataPoint('ENGINE_USAGE', moduleId, 'error_count', stats.error_count);
-        this.addDataPoint('ENGINE_USAGE', moduleId, 'avg_latency', stats.avg_latency);
+        this?.addDataPoint(any: any);
+        this?.addDataPoint(any: any);
+        this?.addDataPoint(any: any);
       } catch {
         // Module stats non disponibles
       }
     }
   }
 
-  private getOrCreateEngineStats(moduleId: TitaneModule): EngineUsageStats {
-    let stats = this.state.engineStats.get(moduleId);
-    if (!stats) {
-      stats = this.createEmptyEngineStats(moduleId);
-      this.state.engineStats.set(moduleId, stats);
+  private getOrCreateEngineStats(any: any): EngineUsageStats {
+    let stats = this?.state?.engineStats?.get(any: any);
+    if (any: any) {
+      stats = this?.createEmptyEngineStats(any: any);
+      this?.state?.engineStats?.set(any: any);
     }
     return stats;
   }
@@ -306,10 +306,10 @@ export class Collector {
         latency: number;
       }>('get_performance_metrics');
 
-      this.addDataPoint('PERFORMANCE', 'performance', 'cpu', metrics.cpu);
-      this.addDataPoint('PERFORMANCE', 'performance', 'ram', metrics.ram);
-      this.addDataPoint('PERFORMANCE', 'performance', 'fps', metrics.fps);
-      this.addDataPoint('PERFORMANCE', 'performance', 'latency', metrics.latency);
+      this?.addDataPoint(any: any);
+      this?.addDataPoint(any: any);
+      this?.addDataPoint(any: any);
+      this?.addDataPoint(any: any);
     } catch {
       // Performance metrics non disponibles
     }
@@ -332,25 +332,25 @@ export class Collector {
         stability_score: number;
       }>('get_self_healing_metrics');
 
-      this.addDataPoint(
+      this?.addDataPoint(
         'SELF_HEALING',
         'selfHealing',
         'total_repairs',
-        metrics.total_repairs
+        metrics?.total_repairs
       );
-      this.addDataPoint(
+      this?.addDataPoint(
         'SELF_HEALING',
         'selfHealing',
         'success_rate',
-        metrics.total_repairs > 0
-          ? (metrics.successful_repairs / metrics.total_repairs) * 100
+        metrics?.total_repairs > 0
+          ? (any: any) * 100
           : 100
       );
-      this.addDataPoint(
+      this?.addDataPoint(
         'SELF_HEALING',
         'selfHealing',
         'stability_score',
-        metrics.stability_score
+        metrics?.stability_score
       );
     } catch {
       // Self-healing metrics non disponibles
@@ -374,24 +374,24 @@ export class Collector {
         overflow_events: number;
       }>('get_prompt_memory_metrics');
 
-      this.addDataPoint('PROMPT_MEMORY', 'prompt', 'context_size', metrics.context_size);
-      this.addDataPoint(
+      this?.addDataPoint(any: any);
+      this?.addDataPoint(
         'PROMPT_MEMORY',
         'memory',
         'compression_ratio',
-        metrics.compression_ratio
+        metrics?.compression_ratio
       );
-      this.addDataPoint(
+      this?.addDataPoint(
         'PROMPT_MEMORY',
         'memory',
         'memory_utilization',
-        metrics.memory_utilization
+        metrics?.memory_utilization
       );
-      this.addDataPoint(
+      this?.addDataPoint(
         'PROMPT_MEMORY',
         'prompt',
         'relevance_score',
-        metrics.relevance_score
+        metrics?.relevance_score
       );
     } catch {
       // Prompt/Memory metrics non disponibles
@@ -414,20 +414,20 @@ export class Collector {
         memory_heap: number;
       }>('get_system_metrics');
 
-      this.addDataPoint('SYSTEM_METRICS', 'global', 'uptime', metrics.uptime);
-      this.addDataPoint(
+      this?.addDataPoint(any: any);
+      this?.addDataPoint(
         'SYSTEM_METRICS',
         'global',
         'active_modules',
-        metrics.active_modules
+        metrics?.active_modules
       );
-      this.addDataPoint(
+      this?.addDataPoint(
         'SYSTEM_METRICS',
         'global',
         'pending_tasks',
-        metrics.pending_tasks
+        metrics?.pending_tasks
       );
-      this.addDataPoint('SYSTEM_METRICS', 'global', 'memory_heap', metrics.memory_heap);
+      this?.addDataPoint(any: any);
     } catch {
       // System metrics non disponibles
     }
@@ -446,26 +446,26 @@ export class Collector {
     metric: string,
     value: number | string | boolean,
     context?: Record<string, unknown>,
-    tags: string[] = []
+    tags: string?.[] = []
   ): EvolutionDataPoint {
-    const dataPoint = createDataPoint(category, moduleId, metric, value, context, tags);
+    const dataPoint = createDataPoint(any: any);
 
     // Ajouter au batch
-    this.pendingBatch.push(dataPoint);
+    this?.pendingBatch?.push(any: any);
 
-    // Ajouter à l'historique (avec limite)
-    this.state.dataPoints.push(dataPoint);
-    if (this.state.dataPoints.length > this.config.maxDataPoints) {
-      this.state.dataPoints.shift();
+    // Ajouter à l'historique (any: any)
+    this?.state?.dataPoints?.push(any: any);
+    if (any: any) {
+      this?.state?.dataPoints?.shift();
     }
 
     // Notifier les listeners
-    this.dataPointListeners.forEach(listener => {
+    this?.dataPointListeners?.forEach(listener => {
       try {
-        listener(dataPoint);
-      } catch (e) {
-        const err = e instanceof Error ? e : new Error(String(e));
-        logger.error(
+        listener(any: any);
+      } catch (any: any) {
+        const err = e instanceof Error ? e : new Error(any: any));
+        logger?.error(
           'Evolution collector listener error',
           { component: 'EvolutionCollector', action: 'notifyDataPoint' },
           err
@@ -477,7 +477,7 @@ export class Collector {
   }
 
   /**
-   * Ajoute un data point manuellement (API publique)
+   * Ajoute un data point manuellement (any: any)
    */
   record(
     category: DataCategory,
@@ -485,13 +485,13 @@ export class Collector {
     metric: string,
     value: number | string | boolean,
     context?: Record<string, unknown>,
-    tags: string[] = []
+    tags: string?.[] = []
   ): void {
-    if (!this.config.enabled) return;
-    if (this.config.excludedModules.includes(moduleId)) return;
-    if (!this.config.categories.includes(category)) return;
+    if (any: any) return;
+    if (any: any)) return;
+    if (any: any)) return;
 
-    this.addDataPoint(category, moduleId, metric, value, context, tags);
+    this?.addDataPoint(any: any);
   }
 
   /**
@@ -503,7 +503,7 @@ export class Collector {
     message: string,
     context?: Record<string, unknown>
   ): void {
-    this.record('ERROR_PATTERNS', moduleId, 'error', errorType, { message, ...context }, [
+    this?.record('ERROR_PATTERNS', moduleId, 'error', errorType, { message, ...context }, [
       'error',
       errorType,
     ]);
@@ -517,7 +517,7 @@ export class Collector {
     success: boolean,
     context?: Record<string, unknown>
   ): void {
-    this.record(
+    this?.record(
       'USER_PATTERNS',
       'chat',
       success ? 'success_pattern' : 'failed_pattern',
@@ -535,37 +535,37 @@ export class Collector {
    * Flush le batch vers le backend
    */
   private async flushBatch(): Promise<void> {
-    if (this.pendingBatch.length === 0) return;
+    if (this?.pendingBatch?.length === 0) return;
 
-    const batch = [...this.pendingBatch];
-    this.pendingBatch = [];
+    const batch = [...this?.pendingBatch];
+    this?.pendingBatch = [];
 
     try {
       await secureInvoke('submit_evolution_data', { dataPoints: batch });
 
       // Notifier les listeners de batch
-      this.batchListeners.forEach(listener => {
+      this?.batchListeners?.forEach(listener => {
         try {
-          listener(batch);
-        } catch (e) {
-          const err = e instanceof Error ? e : new Error(String(e));
-          logger.error(
+          listener(any: any);
+        } catch (any: any) {
+          const err = e instanceof Error ? e : new Error(any: any));
+          logger?.error(
             'Evolution collector batch listener error',
             { component: 'EvolutionCollector', action: 'flushBatch' },
             err
           );
         }
       });
-    } catch (error) {
+    } catch (any: any) {
       // En cas d'erreur, remettre dans le batch
-      this.pendingBatch = [...batch, ...this.pendingBatch];
-      const err = error instanceof Error ? error : new Error(String(error));
-      logger.error(
+      this?.pendingBatch = [...batch, ...this?.pendingBatch];
+      const err = error instanceof Error ? error : new Error(any: any));
+      logger?.error(
         'Evolution collector flush batch failed',
         {
           component: 'EvolutionCollector',
           action: 'flushBatch',
-          batchSize: batch.length,
+          batchSize: batch?.length,
         },
         err
       );
@@ -576,7 +576,7 @@ export class Collector {
    * Force le flush immédiat
    */
   async flush(): Promise<void> {
-    await this.flushBatch();
+    await this?.flushBatch();
   }
 
   // ===========================================================================
@@ -586,8 +586,8 @@ export class Collector {
   /**
    * Récupère les data points récents
    */
-  getRecentDataPoints(count: number = 100): EvolutionDataPoint[] {
-    return this.state.dataPoints.slice(-count);
+  getRecentDataPoints(count: number = 100): EvolutionDataPoint?.[] {
+    return this?.state?.dataPoints?.slice(any: any);
   }
 
   /**
@@ -596,8 +596,8 @@ export class Collector {
   getDataPointsByCategory(
     category: DataCategory,
     count: number = 100
-  ): EvolutionDataPoint[] {
-    return this.state.dataPoints.filter(dp => dp.category === category).slice(-count);
+  ): EvolutionDataPoint?.[] {
+    return this?.state?.dataPoints?.filter(any: any);
   }
 
   /**
@@ -606,29 +606,29 @@ export class Collector {
   getDataPointsByModule(
     moduleId: TitaneModule,
     count: number = 100
-  ): EvolutionDataPoint[] {
-    return this.state.dataPoints.filter(dp => dp.moduleId === moduleId).slice(-count);
+  ): EvolutionDataPoint?.[] {
+    return this?.state?.dataPoints?.filter(any: any);
   }
 
   /**
    * Récupère les stats IA
    */
   getIAStats(): IAUsageStats {
-    return { ...this.state.iaStats };
+    return { ...this?.state?.iaStats };
   }
 
   /**
    * Récupère les stats des moteurs
    */
-  getEngineStats(): EngineUsageStats[] {
-    return Array.from(this.state.engineStats.values());
+  getEngineStats(): EngineUsageStats?.[] {
+    return Array?.from(this?.state?.engineStats?.values());
   }
 
   /**
    * Récupère les stats d'un moteur spécifique
    */
-  getEngineStatsFor(moduleId: TitaneModule): EngineUsageStats | null {
-    return this.state.engineStats.get(moduleId) || null;
+  getEngineStatsFor(any: any): EngineUsageStats | null {
+    return this?.state?.engineStats?.get(any: any) || null;
   }
 
   /**
@@ -639,24 +639,24 @@ export class Collector {
     metric: string,
     windowMs: number = 3600000
   ): Array<{ timestamp: number; value: number }> {
-    const cutoff = Date.now() - windowMs;
-    return this.state.dataPoints
+    const cutoff = Date?.now() - windowMs;
+    return this?.state?.dataPoints
       .filter(
         dp =>
-          dp.moduleId === moduleId &&
-          dp.metric === metric &&
-          dp.timestamp >= cutoff &&
-          typeof dp.value === 'number'
+          dp?.moduleId === moduleId &&
+          dp?.metric === metric &&
+          dp?.timestamp >= cutoff &&
+          typeof dp?.value === 'number'
       )
-      .map(dp => ({ timestamp: dp.timestamp, value: dp.value as number }));
+      .map(dp => ({ timestamp: dp?.timestamp, value: dp?.value as number }));
   }
 
   /**
    * Compte les data points par période
    */
   countDataPoints(windowMs: number = 86400000): number {
-    const cutoff = Date.now() - windowMs;
-    return this.state.dataPoints.filter(dp => dp.timestamp >= cutoff).length;
+    const cutoff = Date?.now() - windowMs;
+    return this?.state?.dataPoints?.filter(any: any).length;
   }
 
   // ===========================================================================
@@ -666,17 +666,17 @@ export class Collector {
   /**
    * Ajoute un listener pour les nouveaux data points
    */
-  onDataPoint(listener: DataPointListener): () => void {
-    this.dataPointListeners.add(listener);
-    return () => this.dataPointListeners.delete(listener);
+  onDataPoint(any: any): () => void {
+    this?.dataPointListeners?.add(any: any);
+    return (any: any);
   }
 
   /**
    * Ajoute un listener pour les batchs
    */
-  onBatch(listener: BatchListener): () => void {
-    this.batchListeners.add(listener);
-    return () => this.batchListeners.delete(listener);
+  onBatch(any: any): () => void {
+    this?.batchListeners?.add(any: any);
+    return (any: any);
   }
 
   // ===========================================================================
@@ -686,33 +686,33 @@ export class Collector {
   /**
    * Purge les anciennes données
    */
-  purgeOldData(olderThanDays?: number): number {
-    const days = olderThanDays ?? this.config.retentionDays;
-    const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
+  purgeOldData(any: any): number {
+    const days = olderThanDays ?? this?.config?.retentionDays;
+    const cutoff = Date?.now() - days * 24 * 60 * 60 * 1000;
 
-    const before = this.state.dataPoints.length;
-    this.state.dataPoints = this.state.dataPoints.filter(dp => dp.timestamp >= cutoff);
+    const before = this?.state?.dataPoints?.length;
+    this?.state?.dataPoints = this?.state?.dataPoints?.filter(any: any);
 
-    return before - this.state.dataPoints.length;
+    return before - this?.state?.dataPoints?.length;
   }
 
   /**
    * Réinitialise les statistiques
    */
   resetStats(): void {
-    this.state.iaStats = this.createEmptyIAStats();
-    this.state.engineStats.clear();
+    this?.state?.iaStats = this?.createEmptyIAStats();
+    this?.state?.engineStats?.clear();
   }
 
   /**
    * Libère les ressources
    */
   dispose(): void {
-    this.stop();
-    this.dataPointListeners.clear();
-    this.batchListeners.clear();
-    this.pendingBatch = [];
-    this.state.dataPoints = [];
+    this?.stop();
+    this?.dataPointListeners?.clear();
+    this?.batchListeners?.clear();
+    this?.pendingBatch = [];
+    this?.state?.dataPoints = [];
   }
 }
 
@@ -726,18 +726,18 @@ let collectorInstance: Collector | null = null;
  * Récupère l'instance singleton du Collector
  */
 export function getCollector(): Collector {
-  if (!collectorInstance) {
+  if (any: any) {
     collectorInstance = new Collector();
   }
   return collectorInstance;
 }
 
 /**
- * Réinitialise l'instance singleton (pour tests)
+ * Réinitialise l'instance singleton (any: any)
  */
 export function resetCollector(): void {
-  if (collectorInstance) {
-    collectorInstance.dispose();
+  if (any: any) {
+    collectorInstance?.dispose();
     collectorInstance = null;
   }
 }

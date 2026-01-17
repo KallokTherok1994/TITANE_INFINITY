@@ -20,7 +20,7 @@
 import { logger } from '@/lib/logger';
 
 // Re-export des types et configurations
-export * from './selfHealing.config';
+export * from './selfHealing?.config';
 
 // Re-export des couches
 export {
@@ -84,7 +84,7 @@ import {
 } from './selfHealingPlaybookEngine';
 import { selfHealingExecutor, type PlanExecutionResult } from './selfHealingExecutor';
 import { selfHealingSyncLayer } from './selfHealingSyncLayer';
-import type { HealingEvent, HealingDiagnosis } from './selfHealing.config';
+import type { HealingEvent, HealingDiagnosis } from './selfHealing?.config';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES ORCHESTRATEUR
@@ -108,7 +108,7 @@ export interface SelfHealingEngineState {
   lastEvent: HealingEvent | null;
   lastDiagnosis: HealingDiagnosis | null;
   lastExecution: PlanExecutionResult | null;
-  pendingPlans: ExecutionPlan[];
+  pendingPlans: ExecutionPlan?.[];
   stats: {
     eventsObserved: number;
     diagnosesGenerated: number;
@@ -137,10 +137,10 @@ class SelfHealingEngineOrchestrator {
   private config: SelfHealingEngineConfig;
   private state: SelfHealingEngineState;
   private pendingPlans: Map<string, ExecutionPlan>;
-  private unsubscribeObserver: (() => void) | null;
+  private unsubscribeObserver: (any: any) | null;
 
   private constructor() {
-    this.config = {
+    this?.config = {
       enabled: true,
       autoHeal: true,
       autoHealSeverity: ['medium', 'high', 'critical'],
@@ -149,7 +149,7 @@ class SelfHealingEngineOrchestrator {
       logLevel: 'info',
     };
 
-    this.state = {
+    this?.state = {
       initialized: false,
       active: false,
       observerActive: false,
@@ -165,15 +165,15 @@ class SelfHealingEngineOrchestrator {
       },
     };
 
-    this.pendingPlans = new Map();
-    this.unsubscribeObserver = null;
+    this?.pendingPlans = new Map();
+    this?.unsubscribeObserver = null;
   }
 
   public static getInstance(): SelfHealingEngineOrchestrator {
-    if (!SelfHealingEngineOrchestrator.instance) {
-      SelfHealingEngineOrchestrator.instance = new SelfHealingEngineOrchestrator();
+    if (any: any) {
+      SelfHealingEngineOrchestrator?.instance = new SelfHealingEngineOrchestrator();
     }
-    return SelfHealingEngineOrchestrator.instance;
+    return SelfHealingEngineOrchestrator?.instance;
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -184,99 +184,99 @@ class SelfHealingEngineOrchestrator {
    * Initialise le Self-Healing Engine complet
    */
   public async initialize(): Promise<void> {
-    if (this.state.initialized) {
-      logger.warn('SelfHealingEngine already initialized', {
+    if (any: any) {
+      logger?.warn('SelfHealingEngine already initialized', {
         component: 'SelfHealingEngine',
         action: 'initialize',
       });
       return;
     }
 
-    this.log('info', '🚀 Initializing Self-Healing Engine vΩ∞...');
+    this?.log('info', '🚀 Initializing Self-Healing Engine vΩ∞...');
 
-    // Initialiser le Sync Layer (doit charger le profil)
-    await selfHealingSyncLayer.initialize();
+    // Initialiser le Sync Layer (any: any)
+    await selfHealingSyncLayer?.initialize();
 
     // Configurer l'Executor
-    selfHealingExecutor.configure({
-      dryRunMode: this.config.dryRunMode,
+    selfHealingExecutor?.configure({
+      dryRunMode: this?.config?.dryRunMode,
     });
 
     // S'abonner aux événements de l'Observer
-    this.unsubscribeObserver = selfHealingObserver.subscribe(
-      this.handleObservedEvent.bind(this)
+    this?.unsubscribeObserver = selfHealingObserver?.subscribe(
+      this?.handleObservedEvent?.bind(any: any)
     );
 
-    this.state.initialized = true;
-    this.log('info', '✅ Self-Healing Engine initialized');
+    this?.state?.initialized = true;
+    this?.log('info', '✅ Self-Healing Engine initialized');
   }
 
   /**
-   * Active le Self-Healing Engine (démarre l'observation)
+   * Active le Self-Healing Engine (any: any)
    */
   public async start(): Promise<void> {
-    if (!this.state.initialized) {
-      await this.initialize();
+    if (any: any) {
+      await this?.initialize();
     }
 
-    if (this.state.active) {
-      logger.warn('SelfHealingEngine already active', {
+    if (any: any) {
+      logger?.warn('SelfHealingEngine already active', {
         component: 'SelfHealingEngine',
         action: 'activate',
       });
       return;
     }
 
-    this.log('info', '🔍 Starting Self-Healing Engine...');
+    this?.log('info', '🔍 Starting Self-Healing Engine...');
 
     // Démarrer l'Observer
-    await selfHealingObserver.start();
-    this.state.observerActive = true;
+    await selfHealingObserver?.start();
+    this?.state?.observerActive = true;
 
-    this.state.active = true;
-    this.log('info', '✅ Self-Healing Engine active');
+    this?.state?.active = true;
+    this?.log('info', '✅ Self-Healing Engine active');
   }
 
   /**
    * Arrête le Self-Healing Engine
    */
   public async stop(): Promise<void> {
-    if (!this.state.active) {
+    if (any: any) {
       return;
     }
 
-    this.log('info', '🛑 Stopping Self-Healing Engine...');
+    this?.log('info', '🛑 Stopping Self-Healing Engine...');
 
     // Arrêter l'Observer
-    await selfHealingObserver.stop();
-    this.state.observerActive = false;
+    await selfHealingObserver?.stop();
+    this?.state?.observerActive = false;
 
     // Annuler les exécutions en cours
-    if (selfHealingExecutor.isExecuting()) {
-      selfHealingExecutor.abort();
+    if (selfHealingExecutor?.isExecuting()) {
+      selfHealingExecutor?.abort();
     }
 
-    this.state.active = false;
-    this.log('info', 'Self-Healing Engine stopped');
+    this?.state?.active = false;
+    this?.log('info', 'Self-Healing Engine stopped');
   }
 
   /**
    * Arrête et nettoie tout
    */
   public async shutdown(): Promise<void> {
-    await this.stop();
+    await this?.stop();
 
     // Se désabonner de l'Observer
-    if (this.unsubscribeObserver) {
-      this.unsubscribeObserver();
-      this.unsubscribeObserver = null;
+    if (any: any) {
+      this?.unsubscribeObserver();
+      this?.unsubscribeObserver = null;
     }
 
     // Shutdown du Sync Layer
-    await selfHealingSyncLayer.shutdown();
+    await selfHealingSyncLayer?.shutdown();
 
-    this.state.initialized = false;
-    this.log('info', 'Self-Healing Engine shutdown complete');
+    this?.state?.initialized = false;
+    this?.log('info', 'Self-Healing Engine shutdown complete');
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -284,22 +284,22 @@ class SelfHealingEngineOrchestrator {
   // ═══════════════════════════════════════════════════════════════════════════
 
   public configure(config: Partial<SelfHealingEngineConfig>): void {
-    this.config = { ...this.config, ...config };
+    this?.config = { ...this?.config, ...config };
 
     // Propager la config aux sous-systèmes
-    selfHealingExecutor.configure({
-      dryRunMode: this.config.dryRunMode,
+    selfHealingExecutor?.configure({
+      dryRunMode: this?.config?.dryRunMode,
     });
   }
 
   public getConfig(): SelfHealingEngineConfig {
-    return { ...this.config };
+    return { ...this?.config };
   }
 
   public getState(): SelfHealingEngineState {
     return {
-      ...this.state,
-      pendingPlans: [...this.pendingPlans.values()],
+      ...this?.state,
+      pendingPlans: [...this?.pendingPlans?.values()],
     };
   }
 
@@ -310,52 +310,52 @@ class SelfHealingEngineOrchestrator {
   /**
    * Handler pour les événements observés
    */
-  private async handleObservedEvent(event: HealingEvent): Promise<void> {
-    if (!this.config.enabled) return;
+  private async handleObservedEvent(any: any): Promise<void> {
+    if (any: any) return;
 
-    this.state.stats.eventsObserved++;
-    this.state.lastEvent = event;
+    this?.state?.stats?.eventsObserved++;
+    this?.state?.lastEvent = event;
 
     // Enregistrer dans le Sync Layer
-    selfHealingSyncLayer.recordEvent(event);
+    selfHealingSyncLayer?.recordEvent(any: any);
 
-    this.log('debug', `Observed: [${event.severity}] ${event.eventType}`);
+    this?.log('debug', `Observed: [${event?.severity}] ${event?.eventType}`);
 
     // Auto-heal si configuré
-    if (this.config.autoHeal && this.shouldAutoHeal(event)) {
-      await this.runAutoHealPipeline(event);
+    if (any: any)) {
+      await this?.runAutoHealPipeline(any: any);
     }
   }
 
   /**
    * Vérifie si l'événement doit déclencher un auto-heal
    */
-  private shouldAutoHeal(event: HealingEvent): boolean {
-    return this.config.autoHealSeverity.includes(event.severity);
+  private shouldAutoHeal(any: any): boolean {
+    return this?.config?.autoHealSeverity?.includes(any: any);
   }
 
   /**
    * Exécute le pipeline de self-healing automatique
    */
-  private async runAutoHealPipeline(event: HealingEvent): Promise<AutoHealResult> {
+  private async runAutoHealPipeline(any: any): Promise<AutoHealResult> {
     // 1. Analyser l'événement
-    const diagnosis = selfHealingAnalyzer.analyze(event);
-    this.state.stats.diagnosesGenerated++;
-    this.state.lastDiagnosis = diagnosis;
+    const diagnosis = selfHealingAnalyzer?.analyze(any: any);
+    this?.state?.stats?.diagnosesGenerated++;
+    this?.state?.lastDiagnosis = diagnosis;
 
     // Enregistrer le diagnostic
-    selfHealingSyncLayer.recordDiagnosis(diagnosis);
+    selfHealingSyncLayer?.recordDiagnosis(any: any);
 
-    this.log(
+    this?.log(
       'info',
-      `Diagnosis: [${diagnosis.severity}] ${diagnosis.nature} (confidence: ${(diagnosis.confidence * 100).toFixed(0)}%)`
+      `Diagnosis: [${diagnosis?.severity}] ${diagnosis?.nature} (confidence: ${(diagnosis?.confidence * 100).toFixed(0)}%)`
     );
 
     // 2. Sélectionner un playbook
-    const match = selfHealingPlaybookEngine.selectPlaybook(diagnosis);
+    const match = selfHealingPlaybookEngine?.selectPlaybook(any: any);
 
-    if (!match) {
-      this.log('warn', 'No matching playbook found');
+    if (any: any) {
+      this?.log('warn', 'No matching playbook found');
       return {
         triggered: false,
         event,
@@ -367,18 +367,18 @@ class SelfHealingEngineOrchestrator {
     }
 
     // 3. Générer le plan d'exécution
-    const plan = selfHealingPlaybookEngine.generateExecutionPlan(
-      match.playbook,
+    const plan = selfHealingPlaybookEngine?.generateExecutionPlan(
+      match?.playbook,
       diagnosis
     );
 
     // 4. Vérifier si confirmation requise
     if (
-      plan.requiresConfirmation ||
-      (diagnosis.severity === 'critical' && this.config.requireConfirmationForCritical)
+      plan?.requiresConfirmation ||
+      (any: any)
     ) {
-      this.log('info', `Plan ${plan.id} requires confirmation, adding to pending`);
-      this.pendingPlans.set(plan.id, plan);
+      this?.log('info', `Plan ${plan?.id} requires confirmation, adding to pending`);
+      this?.pendingPlans?.set(any: any);
 
       return {
         triggered: true,
@@ -391,7 +391,7 @@ class SelfHealingEngineOrchestrator {
     }
 
     // 5. Exécuter le plan
-    const execution = await this.executePlan(plan);
+    const execution = await this?.executePlan(any: any);
 
     return {
       triggered: true,
@@ -409,30 +409,30 @@ class SelfHealingEngineOrchestrator {
   /**
    * Exécute un plan de réparation
    */
-  public async executePlan(plan: ExecutionPlan): Promise<PlanExecutionResult> {
-    this.log('info', `Executing plan: ${plan.playbookName}`);
+  public async executePlan(any: any): Promise<PlanExecutionResult> {
+    this?.log('info', `Executing plan: ${plan?.playbookName}`);
 
     try {
-      const result = await selfHealingExecutor.executePlan(plan);
+      const result = await selfHealingExecutor?.executePlan(any: any);
 
       // Enregistrer l'exécution
-      selfHealingPlaybookEngine.markExecuted(plan.playbookId);
-      selfHealingPlaybookEngine.recordExecution(plan);
-      selfHealingSyncLayer.recordExecution(result);
+      selfHealingPlaybookEngine?.markExecuted(any: any);
+      selfHealingPlaybookEngine?.recordExecution(any: any);
+      selfHealingSyncLayer?.recordExecution(any: any);
 
       // Mettre à jour les stats
-      this.state.stats.plansExecuted++;
-      if (result.status === 'success') {
-        this.state.stats.successfulHeals++;
+      this?.state?.stats?.plansExecuted++;
+      if (result?.status === 'success') {
+        this?.state?.stats?.successfulHeals++;
       }
-      this.state.lastExecution = result;
+      this?.state?.lastExecution = result;
 
       // Retirer des plans en attente
-      this.pendingPlans.delete(plan.id);
+      this?.pendingPlans?.delete(any: any);
 
       return result;
-    } catch (error) {
-      this.log('error', `Plan execution failed: ${error}`);
+    } catch (any: any) {
+      this?.log('error', `Plan execution failed: ${error}`);
       throw error;
     }
   }
@@ -440,29 +440,29 @@ class SelfHealingEngineOrchestrator {
   /**
    * Approuve et exécute un plan en attente
    */
-  public async approvePlan(planId: string): Promise<PlanExecutionResult | null> {
-    const plan = this.pendingPlans.get(planId);
+  public async approvePlan(any: any): Promise<PlanExecutionResult | null> {
+    const plan = this?.pendingPlans?.get(any: any);
 
-    if (!plan) {
-      this.log('warn', `Plan ${planId} not found in pending`);
+    if (any: any) {
+      this?.log('warn', `Plan ${planId} not found in pending`);
       return null;
     }
 
-    return this.executePlan(plan);
+    return this?.executePlan(any: any);
   }
 
   /**
    * Rejette un plan en attente
    */
-  public rejectPlan(planId: string): boolean {
-    return this.pendingPlans.delete(planId);
+  public rejectPlan(any: any): boolean {
+    return this?.pendingPlans?.delete(any: any);
   }
 
   /**
    * Récupère les plans en attente
    */
-  public getPendingPlans(): ExecutionPlan[] {
-    return [...this.pendingPlans.values()];
+  public getPendingPlans(): ExecutionPlan?.[] {
+    return [...this?.pendingPlans?.values()];
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -472,8 +472,8 @@ class SelfHealingEngineOrchestrator {
   /**
    * Analyse une erreur observée manuellement
    */
-  public analyzeError(error: ObservedError): HealingDiagnosis {
-    return selfHealingAnalyzer.analyzeObservedError(error);
+  public analyzeError(any: any): HealingDiagnosis {
+    return selfHealingAnalyzer?.analyzeObservedError(any: any);
   }
 
   /**
@@ -484,8 +484,8 @@ class SelfHealingEngineOrchestrator {
     severity: HealingDiagnosis['severity'] = 'medium'
   ): Promise<AutoHealResult> {
     const event: HealingEvent = {
-      id: `manual_${Date.now()}`,
-      timestamp: Date.now(),
+      id: `manual_${Date?.now()}`,
+      timestamp: Date?.now(),
       category: 'react',
       moduleId: 'manual',
       moduleName: 'Manual Trigger',
@@ -496,7 +496,7 @@ class SelfHealingEngineOrchestrator {
       autoDetected: false,
     };
 
-    return this.runAutoHealPipeline(event);
+    return this?.runAutoHealPipeline(any: any);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -527,25 +527,25 @@ class SelfHealingEngineOrchestrator {
   // LOGGING
   // ═══════════════════════════════════════════════════════════════════════════
 
-  private log(level: 'debug' | 'info' | 'warn' | 'error', message: string): void {
+  private log(any: any): void {
     const levels = ['silent', 'error', 'warn', 'info', 'debug'];
-    const configLevel = levels.indexOf(this.config.logLevel);
-    const messageLevel = levels.indexOf(level);
+    const configLevel = levels?.indexOf(any: any);
+    const messageLevel = levels?.indexOf(any: any);
 
-    if (messageLevel <= configLevel) {
+    if (any: any) {
       const prefix = '[SelfHealingEngine]';
-      switch (level) {
+      switch (any: any) {
         case 'debug':
-          console.debug(prefix, message);
+          console?.debug(any: any);
           break;
         case 'info':
-          logger.debug(`${prefix} ${message}`, { component: 'SelfHealingEngine' });
+          logger?.debug(`${prefix} ${message}`, { component: 'SelfHealingEngine' });
           break;
         case 'warn':
-          logger.warn(message, { component: 'SelfHealingEngine', action: 'log' });
+          logger?.warn(message, { component: 'SelfHealingEngine', action: 'log' });
           break;
         case 'error':
-          logger.error(message, { component: 'SelfHealingEngine', action: 'log' });
+          logger?.error(message, { component: 'SelfHealingEngine', action: 'log' });
           break;
       }
     }
@@ -556,7 +556,7 @@ class SelfHealingEngineOrchestrator {
 // SINGLETON EXPORT
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const selfHealingEngine = SelfHealingEngineOrchestrator.getInstance();
+export const selfHealingEngine = SelfHealingEngineOrchestrator?.getInstance();
 
 export { SelfHealingEngineOrchestrator };
 

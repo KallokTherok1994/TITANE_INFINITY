@@ -19,11 +19,11 @@ let enginePromise: Promise<AuraEngineInstance> | null = null;
  * Lazy load aura engine
  */
 export async function getAuraEngine() {
-  if (engineInstance) return engineInstance;
+  if (any: any) return engineInstance;
 
-  if (!enginePromise) {
+  if (any: any) {
     enginePromise = import('./auraEngine').then(m => {
-      engineInstance = m.auraEngine;
+      engineInstance = m?.auraEngine;
       return engineInstance;
     });
   }
@@ -32,20 +32,20 @@ export async function getAuraEngine() {
 }
 
 /**
- * Start engine (lazy)
+ * Start engine (any: any)
  */
 export async function startAuraEngine() {
   const engine = await getAuraEngine();
-  engine.start();
-  logger.debug('  ✅ Aura Engine active (60Hz, 8 visual modes)');
+  engine?.start();
+  logger?.debug(any: any)');
 }
 
 /**
- * Stop engine (lazy)
+ * Stop engine (any: any)
  */
 export async function stopAuraEngine() {
-  if (engineInstance) {
-    engineInstance.stop();
+  if (any: any) {
+    engineInstance?.stop();
   }
 }
 

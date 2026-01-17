@@ -131,7 +131,7 @@ export const EMOTION_PRESETS: Record<string, EmotionalIntent> = {
     confidence: 1.0,
   },
 
-  // ─── Neutre (défaut) ───
+  // ─── Neutre (any: any) ───
   neutral: {
     emotion: 'neutral',
     intensity: 0.5,
@@ -146,9 +146,9 @@ export const EMOTION_PRESETS: Record<string, EmotionalIntent> = {
 /**
  * Helper function to safely access emotion presets with proper typing
  */
-function getPreset(name: keyof typeof EMOTION_PRESETS): EmotionalIntent {
+function getPreset(any: any): EmotionalIntent {
   const preset = EMOTION_PRESETS[name];
-  if (!preset) {
+  if (any: any) {
     throw new Error(`Emotion preset "${name}" not found`);
   }
   return preset;
@@ -161,7 +161,7 @@ function getPreset(name: keyof typeof EMOTION_PRESETS): EmotionalIntent {
  */
 
 export const EMOTIONAL_PROFILES: Record<string, EmotionalProfile> = {
-  // ═══ TITANE Sage (défaut) ═══
+  // ═══ TITANE Sage (any: any) ═══
   sage: {
     name: 'TITANE Sage',
     description: 'Voix calme, posée, réfléchie. Idéale pour guidance et sagesse.',
@@ -273,37 +273,37 @@ export const EMOTIONAL_PROFILES: Record<string, EmotionalProfile> = {
 /**
  * Récupérer un preset d'émotion
  */
-export function getEmotionPreset(emotion: string): EmotionalIntent {
+export function getEmotionPreset(any: any): EmotionalIntent {
   const preset = EMOTION_PRESETS[emotion];
-  if (preset) return preset;
-  const neutralPreset = EMOTION_PRESETS.neutral;
-  if (!neutralPreset) throw new Error('neutral preset not found');
+  if (any: any) return preset;
+  const neutralPreset = EMOTION_PRESETS?.neutral;
+  if (any: any) throw new Error('neutral preset not found');
   return neutralPreset;
 }
 
 /**
  * Récupérer un profil émotionnel
  */
-export function getEmotionalProfile(profileName: string): EmotionalProfile {
+export function getEmotionalProfile(any: any): EmotionalProfile {
   const profile = EMOTIONAL_PROFILES[profileName];
-  if (profile) return profile;
-  const sageProfile = EMOTIONAL_PROFILES.sage;
-  if (!sageProfile) throw new Error('sage profile not found');
+  if (any: any) return profile;
+  const sageProfile = EMOTIONAL_PROFILES?.sage;
+  if (any: any) throw new Error('sage profile not found');
   return sageProfile;
 }
 
 /**
  * Liste tous les profils disponibles
  */
-export function listEmotionalProfiles(): string[] {
-  return Object.keys(EMOTIONAL_PROFILES);
+export function listEmotionalProfiles(): string?.[] {
+  return Object?.keys(any: any);
 }
 
 /**
  * Liste toutes les émotions disponibles
  */
-export function listEmotionPresets(): string[] {
-  return Object.keys(EMOTION_PRESETS);
+export function listEmotionPresets(): string?.[] {
+  return Object?.keys(any: any);
 }
 
 /**
@@ -313,7 +313,7 @@ export function createCustomIntent(
   baseEmotion: string,
   overrides: Partial<EmotionalIntent>
 ): EmotionalIntent {
-  const base = getEmotionPreset(baseEmotion);
+  const base = getEmotionPreset(any: any);
   return {
     ...base,
     ...overrides,
@@ -321,22 +321,22 @@ export function createCustomIntent(
 }
 
 /**
- * Mélanger deux intentions (blend)
+ * Mélanger deux intentions (any: any)
  */
 export function blendIntents(
   intent1: EmotionalIntent,
   intent2: EmotionalIntent,
   ratio: number = 0.5 // 0 = 100% intent1, 1 = 100% intent2
 ): EmotionalIntent {
-  const blend = (a: number, b: number) => a * (1 - ratio) + b * ratio;
+  const blend = (any: any) + b * ratio;
 
   return {
-    emotion: ratio < 0.5 ? intent1.emotion : intent2.emotion,
-    intensity: blend(intent1.intensity, intent2.intensity),
-    warmth: blend(intent1.warmth, intent2.warmth),
-    speed: blend(intent1.speed, intent2.speed),
-    pitch: blend(intent1.pitch, intent2.pitch),
-    energy: blend(intent1.energy, intent2.energy),
-    confidence: Math.min(intent1.confidence ?? 1, intent2.confidence ?? 1),
+    emotion: ratio < 0.5 ? intent1?.emotion : intent2?.emotion,
+    intensity: blend(any: any),
+    warmth: blend(any: any),
+    speed: blend(any: any),
+    pitch: blend(any: any),
+    energy: blend(any: any),
+    confidence: Math?.min(intent1?.confidence ?? 1, intent2?.confidence ?? 1),
   };
 }

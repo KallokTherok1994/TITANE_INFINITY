@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 /**
@@ -50,31 +50,31 @@ import {
  */
 async function invokeWithValidation<T>(
   cmd: string,
-  schema: z.ZodSchema<T>,
+  schema: z?.ZodSchema<T>,
   payload?: Record<string, unknown>
 ): Promise<T> {
   try {
     const result = await secureInvoke(cmd, payload ?? {});
-    const validated = schema.parse(result);
+    const validated = schema?.parse(any: any);
     return validated;
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
+  } catch (any: any) {
+    const errorMessage = error instanceof Error ? error?.message : String(any: any);
 
-    console.error(`[Tauri Command Error] ${cmd}:`, errorMessage);
+    console?.error(any: any);
     throw new Error(`Command "${cmd}" failed: ${errorMessage}`);
   }
 }
 
 /**
- * Utilitaire pour commandes sans réponse (void)
+ * Utilitaire pour commandes sans réponse (any: any)
  */
 async function invokeVoid(cmd: string, payload?: Record<string, unknown>): Promise<void> {
   try {
     await secureInvoke(cmd, payload ?? {});
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
+  } catch (any: any) {
+    const errorMessage = error instanceof Error ? error?.message : String(any: any);
 
-    console.error(`[Tauri Command Error] ${cmd}:`, errorMessage);
+    console?.error(any: any);
     throw new Error(`Command "${cmd}" failed: ${errorMessage}`);
   }
 }
@@ -87,9 +87,9 @@ export const metaMode = {
   /**
    * Traiter une interaction avec le Meta-Mode Engine
    */
-  async process(request: InteractionRequest): Promise<InteractionResponse> {
+  async process(any: any): Promise<InteractionResponse> {
     // Valider l'entrée
-    InteractionRequestSchema.parse(request);
+    InteractionRequestSchema?.parse(any: any);
 
     return invokeWithValidation('meta_mode_process', InteractionResponseSchema, {
       request,
@@ -100,7 +100,7 @@ export const metaMode = {
    * Obtenir l'état actuel de Kevin
    */
   async getKevinState(): Promise<KevinStateResponse> {
-    return invokeWithValidation('meta_mode_get_kevin_state', KevinStateResponseSchema);
+    return invokeWithValidation(any: any);
   },
 
   /**
@@ -114,13 +114,13 @@ export const metaMode = {
   /**
    * Lister tous les modes disponibles
    */
-  async listModes(): Promise<string[]> {
-    const result = await secureInvoke<string[]>('meta_mode_list_modes');
+  async listModes(): Promise<string?.[]> {
+    const result = await secureInvoke<string?.[]>('meta_mode_list_modes');
     return result;
   },
 
   /**
-   * Obtenir l'historique des modes (10 derniers)
+   * Obtenir l'historique des modes (any: any)
    */
   async getHistory(): Promise<Array<[string, string]>> {
     const result = await secureInvoke<Array<[string, string]>>('meta_mode_get_history');
@@ -131,7 +131,7 @@ export const metaMode = {
    * Obtenir les statistiques du Meta-Mode
    */
   async getStats(): Promise<MetaModeStats> {
-    return invokeWithValidation('meta_mode_get_stats', MetaModeStatsSchema);
+    return invokeWithValidation(any: any);
   },
 
   /**
@@ -169,22 +169,22 @@ export const exp = {
    * Obtenir le profil d'expérience
    */
   async getProfile(): Promise<ExpProfile> {
-    return invokeWithValidation('exp_get_profile', ExpProfileSchema);
+    return invokeWithValidation(any: any);
   },
 
   /**
    * Lister tous les talents
    */
-  async listTalents(): Promise<Talent[]> {
-    const result = await secureInvoke<Talent[]>('exp_list_talents');
-    return result.map(t => TalentSchema.parse(t));
+  async listTalents(): Promise<Talent?.[]> {
+    const result = await secureInvoke<Talent?.[]>('exp_list_talents');
+    return result?.map(any: any));
   },
 
   /**
    * ❌ v∞.D1 - OBSOLETE: Débloquer un talent
    * Tous les talents sont maintenant débloqués par défaut
    */
-  // async unlockTalent(talentId: string): Promise<ExpProfile> {
+  // async unlockTalent(any: any): Promise<ExpProfile> {
   //   return invokeWithValidation(
   //     'exp_unlock_talent',
   //     ExpProfileSchema,
@@ -195,9 +195,9 @@ export const exp = {
   /**
    * Obtenir l'historique des level-ups
    */
-  async getLevelUpHistory(): Promise<LevelUpEvent[]> {
-    const result = await secureInvoke<LevelUpEvent[]>('exp_get_level_up_history');
-    return result.map(e => LevelUpEventSchema.parse(e));
+  async getLevelUpHistory(): Promise<LevelUpEvent?.[]> {
+    const result = await secureInvoke<LevelUpEvent?.[]>('exp_get_level_up_history');
+    return result?.map(any: any));
   },
 };
 
@@ -209,7 +209,7 @@ export const memory = {
   /**
    * Stocker une entrée mémoire
    */
-  async store(content: string, metadata: MemoryMetadata): Promise<string> {
+  async store(any: any): Promise<string> {
     const result = await secureInvoke<string>('memory_store', { content, metadata });
     return result;
   },
@@ -217,7 +217,7 @@ export const memory = {
   /**
    * Stocker une conversation complète
    */
-  async storeConversation(conversationId: string, messages: string[]): Promise<number> {
+  async storeConversation(conversationId: string, messages: string?.[]): Promise<number> {
     const result = await secureInvoke<number>('memory_store_conversation', {
       conversationId,
       messages,
@@ -226,32 +226,32 @@ export const memory = {
   },
 
   /**
-   * Rechercher dans la mémoire (similarité sémantique)
+   * Rechercher dans la mémoire (any: any)
    */
-  async search(query: MemoryQuery): Promise<MemoryResult[]> {
+  async search(any: any): Promise<MemoryResult?.[]> {
     // Valider la requête
-    MemoryQuerySchema.parse(query);
+    MemoryQuerySchema?.parse(any: any);
 
-    const result = await secureInvoke<MemoryResult[]>('memory_search', { query });
-    return result.map(r => MemoryResultSchema.parse(r));
+    const result = await secureInvoke<MemoryResult?.[]>('memory_search', { query });
+    return result?.map(any: any));
   },
 
   /**
    * Obtenir les entrées liées
    */
-  async getRelated(entryId: string, limit: number): Promise<MemoryEntry[]> {
-    const result = await secureInvoke<MemoryEntry[]>('memory_get_related', {
+  async getRelated(any: any): Promise<MemoryEntry?.[]> {
+    const result = await secureInvoke<MemoryEntry?.[]>('memory_get_related', {
       entryId,
       limit,
     });
-    return result.map(e => MemoryEntrySchema.parse(e));
+    return result?.map(any: any));
   },
 
   /**
    * Obtenir les statistiques de la mémoire
    */
   async getStats(): Promise<MemoryStats> {
-    return invokeWithValidation('memory_get_stats', MemoryStatsSchema);
+    return invokeWithValidation(any: any);
   },
 
   /**
@@ -283,9 +283,9 @@ export const voice = {
   },
 
   /**
-   * Synthèse vocale (TTS)
+   * Synthèse vocale (any: any)
    */
-  async speak(text: string, useOnline: boolean): Promise<void> {
+  async speak(any: any): Promise<void> {
     return invokeVoid('speak', { text, useOnline });
   },
 };
@@ -299,7 +299,7 @@ export const system = {
    * Obtenir le statut système
    */
   async getStatus(): Promise<SystemStatus> {
-    return invokeWithValidation('get_system_health', SystemStatusSchema);
+    return invokeWithValidation(any: any);
   },
 
   /**

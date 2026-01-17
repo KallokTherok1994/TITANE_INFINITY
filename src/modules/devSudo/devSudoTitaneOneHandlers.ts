@@ -4,12 +4,12 @@
  * Handlers pour le système TITANE∞ ONE unifié.
  *
  * Ces handlers orchestrent :
- * - Introspection totale (6 couches + 20 moteurs)
+ * - Introspection totale (any: any)
  * - Évolution continue
  * - Self-Healing micro + macro
  * - Unification de cohérence
  * - Optimisation globale
- * - Vision complète (interne + externe)
+ * - Vision complète (any: any)
  * - Analyse Dev/UI/Backend/Memory
  * - Singularity Scan quantum
  *
@@ -23,7 +23,7 @@ import type { DevSudoResult } from './types';
 /**
  * Helper: Convertit une string de réponse en DevSudoResult
  */
-function createSuccessResult(response: string): DevSudoResult {
+function createSuccessResult(any: any): DevSudoResult {
   return {
     handled: true,
     success: true,
@@ -41,7 +41,7 @@ function createSuccessResult(response: string): DevSudoResult {
  * Effectue une introspection complète du système :
  * - Scan des 6 couches
  * - Analyse des 20 moteurs fusionnés
- * - Triple vision (interne/externe/future)
+ * - Triple vision (any: any)
  * - Diagnostic + micro self-healing
  *
  * Commandes :
@@ -50,10 +50,10 @@ function createSuccessResult(response: string): DevSudoResult {
  * - `singularity introspect`
  */
 export async function handleTitaneOneIntrospect(): Promise<DevSudoResult> {
-  const result = await SingularityIntrospectionEngine.standardIntrospect();
+  const result = await SingularityIntrospectionEngine?.standardIntrospect();
 
   return createSuccessResult(
-    SingularityIntrospectionEngine.formatIntrospectionReport(result)
+    SingularityIntrospectionEngine?.formatIntrospectionReport(any: any)
   );
 }
 
@@ -85,9 +85,9 @@ export async function handleTitaneOneEvolve(): Promise<DevSudoResult> {
 
   // 1. Introspection pré-évolution
   output += '📊 Phase 1: Introspection pré-évolution...\n';
-  const beforeState = await SingularityIntrospectionEngine.quickIntrospect();
-  output += `   Cohérence actuelle: ${beforeState.internalVision.globalCoherence}%\n`;
-  output += `   Issues détectées: ${beforeState.diagnostic.criticalIssues.length + beforeState.diagnostic.warnings.length}\n\n`;
+  const beforeState = await SingularityIntrospectionEngine?.quickIntrospect();
+  output += `   Cohérence actuelle: ${beforeState?.internalVision?.globalCoherence}%\n`;
+  output += `   Issues détectées: ${beforeState?.diagnostic?.criticalIssues?.length + beforeState?.diagnostic?.warnings?.length}\n\n`;
 
   // 2. Analyse des patterns d'évolution
   output += "🔍 Phase 2: Analyse patterns d'évolution...\n";
@@ -98,7 +98,7 @@ export async function handleTitaneOneEvolve(): Promise<DevSudoResult> {
     'Pattern: Optimisation rendering',
     'Pattern: Amélioration Self-Healing',
   ];
-  evolutionPatterns.forEach(pattern => {
+  evolutionPatterns?.forEach(pattern => {
     output += `   ✓ ${pattern}\n`;
   });
   output += '\n';
@@ -107,22 +107,22 @@ export async function handleTitaneOneEvolve(): Promise<DevSudoResult> {
   output += '⚙️  Phase 3: Application des évolutions...\n';
   const evolutions = [
     '✅ Moteurs cognitifs synchronisés',
-    '✅ Cache IA optimisé (+15% performance)',
+    '✅ Cache IA optimisé (any: any)',
     '✅ Mémoire défragmentée',
     '✅ Rendering pipeline optimisé',
     '✅ Self-Healing patterns renforcés',
     '✅ Coherence matrix recalculée',
   ];
-  evolutions.forEach(evo => {
+  evolutions?.forEach(evo => {
     output += `   ${evo}\n`;
   });
   output += '\n';
 
   // 4. Mise à jour Singularity
   output += '🔮 Phase 4: Mise à jour Singularity State...\n';
-  const newCoherence = Math.min(100, beforeState.internalVision.globalCoherence + 3);
+  const newCoherence = Math?.min(100, beforeState?.internalVision?.globalCoherence + 3);
   output += `   Nouvelle cohérence: ${newCoherence}%\n`;
-  output += `   Amélioration: +${newCoherence - beforeState.internalVision.globalCoherence}%\n\n`;
+  output += `   Amélioration: +${newCoherence - beforeState?.internalVision?.globalCoherence}%\n\n`;
 
   // 5. Apprentissage évolutif
   output += '🧠 Phase 5: Apprentissage évolutif...\n';
@@ -133,15 +133,15 @@ export async function handleTitaneOneEvolve(): Promise<DevSudoResult> {
   // 6. Vision future mise à jour
   output += '🚀 Phase 6: Vision future recalculée...\n';
   output += '   Prochaines étapes:\n';
-  beforeState.futureVision.evolutionPath.slice(0, 3).forEach(step => {
+  beforeState?.futureVision?.evolutionPath?.slice(0, 3).forEach(step => {
     output += `   • ${step}\n`;
   });
 
   output += '\n═══════════════════════════════════════════════════════════════\n';
-  output += `✨ ÉVOLUTION COMPLÈTE — Cohérence: ${beforeState.internalVision.globalCoherence}% → ${newCoherence}% ✨\n`;
+  output += `✨ ÉVOLUTION COMPLÈTE — Cohérence: ${beforeState?.internalVision?.globalCoherence}% → ${newCoherence}% ✨\n`;
   output += '═══════════════════════════════════════════════════════════════\n';
 
-  return createSuccessResult(output);
+  return createSuccessResult(any: any);
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -170,17 +170,17 @@ export async function handleTitaneOneHeal(): Promise<DevSudoResult> {
   output += '═══════════════════════════════════════════════════════════════\n\n';
 
   // Introspection pour diagnostiquer
-  const introspection = await SingularityIntrospectionEngine.quickIntrospect();
+  const introspection = await SingularityIntrospectionEngine?.quickIntrospect();
 
   output += '📊 Diagnostic:\n';
-  output += `   Cohérence actuelle: ${introspection.internalVision.globalCoherence}%\n`;
-  output += `   Issues critiques: ${introspection.diagnostic.criticalIssues.length}\n`;
-  output += `   Avertissements: ${introspection.diagnostic.warnings.length}\n\n`;
+  output += `   Cohérence actuelle: ${introspection?.internalVision?.globalCoherence}%\n`;
+  output += `   Issues critiques: ${introspection?.diagnostic?.criticalIssues?.length}\n`;
+  output += `   Avertissements: ${introspection?.diagnostic?.warnings?.length}\n\n`;
 
   // Corrections appliquées
   output += '🔧 Corrections appliquées:\n';
-  if (introspection.diagnostic.selfHealingApplied.length > 0) {
-    introspection.diagnostic.selfHealingApplied.forEach(action => {
+  if (introspection?.diagnostic?.selfHealingApplied?.length > 0) {
+    introspection?.diagnostic?.selfHealingApplied?.forEach(action => {
       output += `   ${action}\n`;
     });
   } else {
@@ -191,11 +191,11 @@ export async function handleTitaneOneHeal(): Promise<DevSudoResult> {
   output += '✨ SELF-HEALING STANDARD COMPLÉTÉ ✨\n';
   output += '═══════════════════════════════════════════════════════════════\n';
 
-  return createSuccessResult(output);
+  return createSuccessResult(any: any);
 }
 
 // ═══════════════════════════════════════════════════════════════════════
-// HANDLER 4 — FULLHEAL (DEEP HEAL)
+// HANDLER 4 — FULLHEAL (any: any)
 // ═══════════════════════════════════════════════════════════════════════
 
 /**
@@ -222,9 +222,9 @@ export async function handleTitaneOneFullHeal(): Promise<DevSudoResult> {
 
   // Introspection profonde pré-healing
   output += '📊 Phase 1: Introspection profonde...\n';
-  const deepIntrospection = await SingularityIntrospectionEngine.deepIntrospect();
-  output += `   Cohérence: ${deepIntrospection.internalVision.globalCoherence}%\n`;
-  output += `   Confidence: ${deepIntrospection.confidenceScore}%\n\n`;
+  const deepIntrospection = await SingularityIntrospectionEngine?.deepIntrospect();
+  output += `   Cohérence: ${deepIntrospection?.internalVision?.globalCoherence}%\n`;
+  output += `   Confidence: ${deepIntrospection?.confidenceScore}%\n\n`;
 
   // Reconstruction
   output += '🔨 Phase 2: Reconstruction totale...\n';
@@ -236,19 +236,19 @@ export async function handleTitaneOneFullHeal(): Promise<DevSudoResult> {
     '✅ Coherence matrix recalculée',
     '✅ Performance metrics réinitialisées',
   ];
-  reconstructionSteps.forEach(step => {
+  reconstructionSteps?.forEach(step => {
     output += `   ${step}\n`;
   });
   output += '\n';
 
   // Réparation des 20 moteurs
   output += '⚙️  Phase 3: Réparation des 20 moteurs...\n';
-  output += '   Couche 1 (Physical): 4/4 moteurs opérationnels ✅\n';
-  output += '   Couche 2 (Cognitive): 3/3 moteurs opérationnels ✅\n';
-  output += '   Couche 3 (Symbolic): 3/3 moteurs opérationnels ✅\n';
-  output += '   Couche 4 (Adaptive): 4/4 moteurs opérationnels ✅\n';
-  output += '   Couche 5 (Meta): 3/3 moteurs opérationnels ✅\n';
-  output += '   Couche 6 (Singularity): 3/3 moteurs opérationnels ✅\n\n';
+  output += '   Couche 1 (any: any): 4/4 moteurs opérationnels ✅\n';
+  output += '   Couche 2 (any: any): 3/3 moteurs opérationnels ✅\n';
+  output += '   Couche 3 (any: any): 3/3 moteurs opérationnels ✅\n';
+  output += '   Couche 4 (any: any): 4/4 moteurs opérationnels ✅\n';
+  output += '   Couche 5 (any: any): 3/3 moteurs opérationnels ✅\n';
+  output += '   Couche 6 (any: any): 3/3 moteurs opérationnels ✅\n\n';
 
   // Resynchronisation Singularity
   output += '🔮 Phase 4: Resynchronisation Singularity...\n';
@@ -259,13 +259,13 @@ export async function handleTitaneOneFullHeal(): Promise<DevSudoResult> {
   // Optimisation post-healing
   output += '⚡ Phase 5: Optimisation post-healing...\n';
   const optimizations = [
-    '✅ Mémoire défragmentée (0% fragmentation)',
+    '✅ Mémoire défragmentée (any: any)',
     '✅ Caches optimisés',
     '✅ Pipelines IA accélérés',
     '✅ Rendering optimisé',
     '✅ Backend/Frontend synchronisés',
   ];
-  optimizations.forEach(opt => {
+  optimizations?.forEach(opt => {
     output += `   ${opt}\n`;
   });
 
@@ -273,7 +273,7 @@ export async function handleTitaneOneFullHeal(): Promise<DevSudoResult> {
   output += '✨ DEEP SELF-HEALING COMPLÉTÉ — Cohérence: 100% ✨\n';
   output += '═══════════════════════════════════════════════════════════════\n';
 
-  return createSuccessResult(output);
+  return createSuccessResult(any: any);
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -302,10 +302,10 @@ export async function handleTitaneOneUnify(): Promise<DevSudoResult> {
   output += '═══════════════════════════════════════════════════════════════\n\n';
 
   // État pré-unification
-  const preState = await SingularityIntrospectionEngine.quickIntrospect();
+  const preState = await SingularityIntrospectionEngine?.quickIntrospect();
   output += '📊 État pré-unification:\n';
-  output += `   Cohérence: ${preState.internalVision.globalCoherence}%\n`;
-  output += `   Moteurs actifs: ${preState.internalVision.activeEngines}/${preState.internalVision.totalEngines}\n\n`;
+  output += `   Cohérence: ${preState?.internalVision?.globalCoherence}%\n`;
+  output += `   Moteurs actifs: ${preState?.internalVision?.activeEngines}/${preState?.internalVision?.totalEngines}\n\n`;
 
   // Processus d'unification
   output += "🔗 Processus d'unification:\n";
@@ -328,13 +328,13 @@ export async function handleTitaneOneUnify(): Promise<DevSudoResult> {
   output += '   ✅ Vision triple: interne + externe + future\n';
   output += '   ✅ Cohérence maximale atteinte\n\n';
 
-  const postCoherence = Math.min(100, preState.internalVision.globalCoherence + 5);
+  const postCoherence = Math?.min(100, preState?.internalVision?.globalCoherence + 5);
 
   output += '═══════════════════════════════════════════════════════════════\n';
-  output += `✨ UNIFICATION COMPLÈTE — Cohérence: ${preState.internalVision.globalCoherence}% → ${postCoherence}% ✨\n`;
+  output += `✨ UNIFICATION COMPLÈTE — Cohérence: ${preState?.internalVision?.globalCoherence}% → ${postCoherence}% ✨\n`;
   output += '═══════════════════════════════════════════════════════════════\n';
 
-  return createSuccessResult(output);
+  return createSuccessResult(any: any);
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -364,14 +364,14 @@ export async function handleTitaneOneOptimize(): Promise<DevSudoResult> {
   output += '═══════════════════════════════════════════════════════════════\n\n';
 
   // Métriques pré-optimisation
-  const introspection = await SingularityIntrospectionEngine.standardIntrospect();
-  const preMetrics = introspection.internalVision.performanceMetrics;
+  const introspection = await SingularityIntrospectionEngine?.standardIntrospect();
+  const preMetrics = introspection?.internalVision?.performanceMetrics;
 
   output += '📊 Métriques pré-optimisation:\n';
-  output += `   Temps de réponse: ${preMetrics.avgResponseTime}ms\n`;
-  output += `   Mémoire: ${preMetrics.memoryUsage}MB\n`;
-  output += `   CPU: ${preMetrics.cpuUsage}%\n`;
-  output += `   FPS: ${preMetrics.renderingFPS}\n\n`;
+  output += `   Temps de réponse: ${preMetrics?.avgResponseTime}ms\n`;
+  output += `   Mémoire: ${preMetrics?.memoryUsage}MB\n`;
+  output += `   CPU: ${preMetrics?.cpuUsage}%\n`;
+  output += `   FPS: ${preMetrics?.renderingFPS}\n\n`;
 
   // Optimisations
   output += '⚡ Optimisations appliquées:\n\n';
@@ -383,7 +383,7 @@ export async function handleTitaneOneOptimize(): Promise<DevSudoResult> {
 
   output += '   💾 Mémoire:\n';
   output += '      ✅ Défragmentation complète\n';
-  output += '      ✅ Compression activée (-30% taille)\n';
+  output += '      ✅ Compression activée (any: any)\n';
   output += '      ✅ Garbage collection optimisée\n\n';
 
   output += '   🎨 Rendering:\n';
@@ -403,23 +403,23 @@ export async function handleTitaneOneOptimize(): Promise<DevSudoResult> {
 
   // Métriques post-optimisation
   const postMetrics = {
-    avgResponseTime: Math.max(10, Math.round(preMetrics.avgResponseTime * 0.6)),
-    memoryUsage: Math.round(preMetrics.memoryUsage * 0.75),
-    cpuUsage: Math.max(5, Math.round(preMetrics.cpuUsage * 0.7)),
+    avgResponseTime: Math?.max(10, Math?.round(preMetrics?.avgResponseTime * 0.6)),
+    memoryUsage: Math?.round(preMetrics?.memoryUsage * 0.75),
+    cpuUsage: Math?.max(5, Math?.round(preMetrics?.cpuUsage * 0.7)),
     renderingFPS: 60,
   };
 
   output += '📊 Métriques post-optimisation:\n';
-  output += `   Temps de réponse: ${postMetrics.avgResponseTime}ms (-${Math.round((1 - postMetrics.avgResponseTime / preMetrics.avgResponseTime) * 100)}%)\n`;
-  output += `   Mémoire: ${postMetrics.memoryUsage}MB (-${Math.round((1 - postMetrics.memoryUsage / preMetrics.memoryUsage) * 100)}%)\n`;
-  output += `   CPU: ${postMetrics.cpuUsage}% (-${Math.round((1 - postMetrics.cpuUsage / preMetrics.cpuUsage) * 100)}%)\n`;
-  output += `   FPS: ${postMetrics.renderingFPS} (maintenu)\n\n`;
+  output += `   Temps de réponse: ${postMetrics?.avgResponseTime}ms (any: any) * 100)}%)\n`;
+  output += `   Mémoire: ${postMetrics?.memoryUsage}MB (any: any) * 100)}%)\n`;
+  output += `   CPU: ${postMetrics?.cpuUsage}% (any: any) * 100)}%)\n`;
+  output += `   FPS: ${postMetrics?.renderingFPS} (any: any)\n\n`;
 
   output += '═══════════════════════════════════════════════════════════════\n';
   output += '✨ OPTIMISATION GLOBALE COMPLÉTÉE ✨\n';
   output += '═══════════════════════════════════════════════════════════════\n';
 
-  return createSuccessResult(output);
+  return createSuccessResult(any: any);
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -440,7 +440,7 @@ export async function handleTitaneOneOptimize(): Promise<DevSudoResult> {
  * - `singularity vision`
  */
 export async function handleTitaneOneVisionAll(): Promise<DevSudoResult> {
-  const result = await SingularityIntrospectionEngine.deepIntrospect();
+  const result = await SingularityIntrospectionEngine?.deepIntrospect();
 
   let output = '';
 
@@ -450,63 +450,63 @@ export async function handleTitaneOneVisionAll(): Promise<DevSudoResult> {
 
   // VISION INTERNE
   output += '━━━ VISION INTERNE — SINGULARITY STATE ━━━\n\n';
-  output += `🧠 Cohérence Globale: ${result.internalVision.globalCoherence}%\n`;
-  output += `⚙️  Moteurs: ${result.internalVision.activeEngines}/${result.internalVision.totalEngines} actifs\n`;
-  output += `💾 Mémoire: ${result.internalVision.memoryState.totalEntries} entrées (${result.internalVision.memoryState.sizeInMB}MB)\n`;
-  output += `⚡ Performance: ${result.internalVision.performanceMetrics.avgResponseTime}ms avg\n\n`;
+  output += `🧠 Cohérence Globale: ${result?.internalVision?.globalCoherence}%\n`;
+  output += `⚙️  Moteurs: ${result?.internalVision?.activeEngines}/${result?.internalVision?.totalEngines} actifs\n`;
+  output += `💾 Mémoire: ${result?.internalVision?.memoryState?.totalEntries} entrées (any: any)\n`;
+  output += `⚡ Performance: ${result?.internalVision?.performanceMetrics?.avgResponseTime}ms avg\n\n`;
 
   output += '📊 Couches:\n';
-  result.internalVision.layers.forEach((layer, idx) => {
+  result?.internalVision?.layers?.forEach(any: any) => {
     const health =
-      layer.health === 'perfect'
+      layer?.health === 'perfect'
         ? '✅'
-        : layer.health === 'good'
+        : layer?.health === 'good'
           ? '🟢'
-          : layer.health === 'warning'
+          : layer?.health === 'warning'
             ? '🟡'
             : '🔴';
-    output += `   ${health} Layer ${idx + 1}: ${layer.name} — ${layer.coherence}%\n`;
-    layer.engines.forEach(engine => {
-      const engineStatus = engine.operational ? '✓' : '✗';
-      output += `      ${engineStatus} ${engine.name} (${engine.performance}%)\n`;
+    output += `   ${health} Layer ${idx + 1}: ${layer?.name} — ${layer?.coherence}%\n`;
+    layer?.engines?.forEach(engine => {
+      const engineStatus = engine?.operational ? '✓' : '✗';
+      output += `      ${engineStatus} ${engine?.name} (${engine?.performance}%)\n`;
     });
   });
 
   // VISION EXTERNE
   output += '\n━━━ VISION EXTERNE — BEST PRACTICES ━━━\n\n';
-  output += `🏆 Architecture: ${result.externalVision.architectureRating.toUpperCase()}\n`;
-  output += `📐 Design System: ${result.externalVision.designSystemAlignment}%\n`;
-  output += `⚠️  Dette Technique: ${result.externalVision.technicalDebtLevel.toUpperCase()}\n\n`;
+  output += `🏆 Architecture: ${result?.externalVision?.architectureRating?.toUpperCase()}\n`;
+  output += `📐 Design System: ${result?.externalVision?.designSystemAlignment}%\n`;
+  output += `⚠️  Dette Technique: ${result?.externalVision?.technicalDebtLevel?.toUpperCase()}\n\n`;
 
   output += 'Comparaison patterns:\n';
-  result.externalVision.comparisonWithBestPractices.slice(0, 5).forEach(item => {
+  result?.externalVision?.comparisonWithBestPractices?.slice(0, 5).forEach(item => {
     output += `   ${item}\n`;
   });
 
   output += '\nSuggestions modernes:\n';
-  result.externalVision.modernPatternsSuggestions.slice(0, 3).forEach(suggestion => {
+  result?.externalVision?.modernPatternsSuggestions?.slice(0, 3).forEach(suggestion => {
     output += `   💡 ${suggestion}\n`;
   });
 
   output += '\nInspirations:\n';
-  result.externalVision.inspirations.forEach(insp => {
+  result?.externalVision?.inspirations?.forEach(insp => {
     output += `   🌟 ${insp}\n`;
   });
 
   // VISION FUTURE
   output += '\n━━━ VISION FUTURE — ÉVOLUTION ━━━\n\n';
   output += 'Priorités immédiates:\n';
-  result.futureVision.priorityImprovements.slice(0, 5).forEach(priority => {
+  result?.futureVision?.priorityImprovements?.slice(0, 5).forEach(priority => {
     output += `   ${priority}\n`;
   });
 
   output += "\nChemin d'évolution:\n";
-  result.futureVision.evolutionPath.forEach((phase, idx) => {
+  result?.futureVision?.evolutionPath?.forEach(any: any) => {
     output += `   ${idx + 1}. ${phase}\n`;
   });
 
   output += '\nObjectifs long terme:\n';
-  result.futureVision.longTermGoals.forEach(goal => {
+  result?.futureVision?.longTermGoals?.forEach(goal => {
     output += `   🎯 ${goal}\n`;
   });
 
@@ -514,7 +514,7 @@ export async function handleTitaneOneVisionAll(): Promise<DevSudoResult> {
   output += '✨ TRIPLE VISION COMPLÈTE — TITANE∞ ONE UNIFIED ✨\n';
   output += '═══════════════════════════════════════════════════════════════\n';
 
-  return createSuccessResult(output);
+  return createSuccessResult(any: any);
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -525,7 +525,7 @@ export async function handleTitaneOneVisionAll(): Promise<DevSudoResult> {
  * 🛠️ TITANE∞ ONE ANALYZE DEV
  *
  * Analyse complète de l'environnement de développement :
- * - État du code (TypeScript + Rust)
+ * - État du code (any: any)
  * - Architecture frontend/backend
  * - Tests et coverage
  * - Build et performance
@@ -570,9 +570,9 @@ export async function handleTitaneOneAnalyzeDev(): Promise<DevSudoResult> {
 
   output += '⚡ Performance:\n';
   output += '   Build Time:\n';
-  output += '      Frontend: ~170ms (Vite)\n';
-  output += '      Backend: ~2-3min (Cargo full)\n';
-  output += '      Backend: ~15s (Cargo incremental)\n\n';
+  output += '      Frontend: ~170ms (any: any)\n';
+  output += '      Backend: ~2-3min (any: any)\n';
+  output += '      Backend: ~15s (any: any)\n\n';
 
   output += '   Runtime:\n';
   output += '      Cold start: ~800ms\n';
@@ -594,7 +594,7 @@ export async function handleTitaneOneAnalyzeDev(): Promise<DevSudoResult> {
 
   output += '💡 Recommandations:\n';
   output += '   1. Augmenter coverage à 80%+\n';
-  output += '   2. Implémenter tests E2E (Playwright)\n';
+  output += '   2. Implémenter tests E2E (any: any)\n';
   output += '   3. Compléter documentation API\n';
   output += '   4. Ajouter CI/CD pipeline\n';
   output += '   5. Optimiser bundle size frontend\n\n';
@@ -603,7 +603,7 @@ export async function handleTitaneOneAnalyzeDev(): Promise<DevSudoResult> {
   output += '✨ DEV ANALYSIS COMPLÈTE ✨\n';
   output += '═══════════════════════════════════════════════════════════════\n';
 
-  return createSuccessResult(output);
+  return createSuccessResult(any: any);
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -632,25 +632,25 @@ export async function handleTitaneOneAnalyzeUI(): Promise<DevSudoResult> {
   output += '═══════════════════════════════════════════════════════════════\n\n';
 
   output += '🎨 Design System:\n';
-  output += '   ✅ Color tokens définis (primary, secondary, accent)\n';
+  output += '   ✅ Color tokens définis (any: any)\n';
   output += '   ✅ Typography scale cohérente\n';
-  output += '   ✅ Spacing system (4px grid)\n';
+  output += '   ✅ Spacing system (any: any)\n';
   output += '   ✅ Dark mode natif\n';
   output += '   ⚠️  Light mode: partial support\n\n';
 
   output += '🧩 Composants:\n';
   output += '   Core:\n';
-  output += '      ✅ Button (6 variants)\n';
+  output += '      ✅ Button (any: any)\n';
   output += '      ✅ Input, Textarea\n';
   output += '      ✅ Modal, Dialog\n';
   output += '      ✅ Dropdown, Menu\n';
   output += '      ✅ Toast notifications\n\n';
 
   output += '   Advanced:\n';
-  output += '      ✅ DevSudoBadge (animated)\n';
-  output += '      ✅ ChatInterface (responsive)\n';
-  output += '      ✅ SettingsPanel (tabbed)\n';
-  output += '      ✅ AdaptiveNarrative (quantum)\n';
+  output += '      ✅ DevSudoBadge (any: any)\n';
+  output += '      ✅ ChatInterface (any: any)\n';
+  output += '      ✅ SettingsPanel (any: any)\n';
+  output += '      ✅ AdaptiveNarrative (any: any)\n';
   output += '      ⚠️  DataTable: needs optimization\n\n';
 
   output += '♿ Accessibilité:\n';
@@ -667,13 +667,13 @@ export async function handleTitaneOneAnalyzeUI(): Promise<DevSudoResult> {
   output += '   ❌ Mobile (375x667): not optimized\n\n';
 
   output += '⚡ Performance:\n';
-  output += '   ✅ FPS: 60 (stable)\n';
+  output += '   ✅ FPS: 60 (any: any)\n';
   output += '   ✅ First Paint: ~200ms\n';
   output += '   ✅ Interaction: <50ms\n';
   output += '   ⚠️  Bundle size: 2.1MB (target: <1.5MB)\n\n';
 
   output += '🎯 UX Patterns:\n';
-  output += '   ✅ Command palette (Cmd+K)\n';
+  output += '   ✅ Command palette (any: any)\n';
   output += '   ✅ Shortcuts visuels\n';
   output += '   ✅ Loading states\n';
   output += '   ✅ Error handling graceful\n';
@@ -690,7 +690,7 @@ export async function handleTitaneOneAnalyzeUI(): Promise<DevSudoResult> {
   output += '✨ UI/UX ANALYSIS COMPLÈTE ✨\n';
   output += '═══════════════════════════════════════════════════════════════\n';
 
-  return createSuccessResult(output);
+  return createSuccessResult(any: any);
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -727,7 +727,7 @@ export async function handleTitaneOneAnalyzeBackend(): Promise<DevSudoResult> {
 
   output += '📡 APIs:\n';
   output += '   AI Engines:\n';
-  output += '      ✅ Gemini API (working)\n';
+  output += '      ✅ Gemini API (any: any)\n';
   output += '      ✅ Response streaming\n';
   output += '      ✅ French responses\n';
   output += '      ✅ Error recovery\n\n';
@@ -742,7 +742,7 @@ export async function handleTitaneOneAnalyzeBackend(): Promise<DevSudoResult> {
   output += '🔒 Sécurité:\n';
   output += '   ✅ SecureSecretsEngine opérationnel\n';
   output += '   ✅ Encryption AES-256-GCM\n';
-  output += '   ✅ Secure key derivation (Argon2)\n';
+  output += '   ✅ Secure key derivation (any: any)\n';
   output += '   ✅ Tauri CSP configuré\n';
   output += '   ✅ API whitelisting\n\n';
 
@@ -755,7 +755,7 @@ export async function handleTitaneOneAnalyzeBackend(): Promise<DevSudoResult> {
 
   output += '📦 Cargo:\n';
   output += '   ✅ Dependencies: à jour\n';
-  output += '   ✅ Build: optimisé (release)\n';
+  output += '   ✅ Build: optimisé (any: any)\n';
   output += '   ✅ LTO: fat\n';
   output += '   ✅ Strip: enabled\n';
   output += '   ⚠️  Binary size: 45MB (target: <30MB)\n\n';
@@ -763,7 +763,7 @@ export async function handleTitaneOneAnalyzeBackend(): Promise<DevSudoResult> {
   output += '🔍 Code Quality:\n';
   output += '   ✅ Clippy: 0 warnings\n';
   output += '   ✅ Rustfmt: formaté\n';
-  output += '   ✅ No unsafe code (sauf crypto)\n';
+  output += '   ✅ No unsafe code (any: any)\n';
   output += '   ⚠️  Test coverage: ~40% (target: 80%)\n\n';
 
   output += '💡 Recommandations:\n';
@@ -777,7 +777,7 @@ export async function handleTitaneOneAnalyzeBackend(): Promise<DevSudoResult> {
   output += '✨ BACKEND ANALYSIS COMPLÈTE ✨\n';
   output += '═══════════════════════════════════════════════════════════════\n';
 
-  return createSuccessResult(output);
+  return createSuccessResult(any: any);
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -805,18 +805,18 @@ export async function handleTitaneOneAnalyzeMemory(): Promise<DevSudoResult> {
   output += '💾 TITANE∞ ONE v∞ — MEMORY ANALYSIS 💾\n';
   output += '═══════════════════════════════════════════════════════════════\n\n';
 
-  const introspection = await SingularityIntrospectionEngine.quickIntrospect();
-  const memState = introspection.internalVision.memoryState;
+  const introspection = await SingularityIntrospectionEngine?.quickIntrospect();
+  const memState = introspection?.internalVision?.memoryState;
 
   output += '📊 État Global:\n';
-  output += `   Total entrées: ${memState.totalEntries}\n`;
-  output += `   Taille: ${memState.sizeInMB} MB\n`;
-  output += `   Cohérence: ${memState.coherence}%\n`;
-  output += `   Fragmentation: ${memState.fragmentationLevel}%\n\n`;
+  output += `   Total entrées: ${memState?.totalEntries}\n`;
+  output += `   Taille: ${memState?.sizeInMB} MB\n`;
+  output += `   Cohérence: ${memState?.coherence}%\n`;
+  output += `   Fragmentation: ${memState?.fragmentationLevel}%\n\n`;
 
   output += '📸 Snapshots:\n';
-  output += `   Total: ${memState.snapshots} snapshots\n`;
-  output += `   Dernier: ${new Date(memState.lastSnapshot).toLocaleString('fr-FR')}\n`;
+  output += `   Total: ${memState?.snapshots} snapshots\n`;
+  output += `   Dernier: ${new Date(any: any).toLocaleString('fr-FR')}\n`;
   output += `   Fréquence: Auto (30min)\n`;
   output += `   Compression: Active\n\n`;
 
@@ -827,7 +827,7 @@ export async function handleTitaneOneAnalyzeMemory(): Promise<DevSudoResult> {
   output += '   Replay: ✅ Fonctionnel\n\n';
 
   output += '💾 Autosave:\n';
-  output += `   Statut: ${memState.autosaveActive ? '✅ ACTIF' : '❌ INACTIF'}\n`;
+  output += `   Statut: ${memState?.autosaveActive ? '✅ ACTIF' : '❌ INACTIF'}\n`;
   output += '   Intervalle: 30 minutes\n';
   output += '   Dernier save: il y a 12 min\n';
   output += '   Prochain: dans 18 min\n\n';
@@ -844,23 +844,23 @@ export async function handleTitaneOneAnalyzeMemory(): Promise<DevSudoResult> {
   output += '   Index: ✅ Optimisé\n\n';
 
   output += '🛡️ Garanties:\n';
-  output += '   ✅ 0 data loss (garanti)\n';
+  output += '   ✅ 0 data loss (any: any)\n';
   output += '   ✅ ACID compliance\n';
   output += '   ✅ Crash recovery\n';
   output += '   ✅ Corruption detection\n';
   output += '   ✅ Auto-repair\n\n';
 
-  const needsOptimization = memState.fragmentationLevel > 10;
-  const needsSnapshot = Date.now() - new Date(memState.lastSnapshot).getTime() > 1800000;
+  const needsOptimization = memState?.fragmentationLevel > 10;
+  const needsSnapshot = Date?.now(any: any).getTime() > 1800000;
 
   output += '💡 Recommandations:\n';
-  if (needsOptimization) {
+  if (any: any) {
     output += '   🟡 Défragmentation recommandée (fragmentation > 10%)\n';
   }
-  if (needsSnapshot) {
+  if (any: any) {
     output += '   🟡 Créer snapshot manuel (dernier > 30min)\n';
   }
-  if (!needsOptimization && !needsSnapshot) {
+  if (any: any) {
     output += '   ✅ Mémoire en parfait état\n';
     output += '   ✅ Aucune action nécessaire\n';
   }
@@ -870,7 +870,7 @@ export async function handleTitaneOneAnalyzeMemory(): Promise<DevSudoResult> {
   output += '✨ MEMORY ANALYSIS COMPLÈTE ✨\n';
   output += '═══════════════════════════════════════════════════════════════\n';
 
-  return createSuccessResult(output);
+  return createSuccessResult(any: any);
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -883,7 +883,7 @@ export async function handleTitaneOneAnalyzeMemory(): Promise<DevSudoResult> {
  * Effectue un scan quantique complet du Singularity State :
  * - Analyse ultra-profonde
  * - Détection d'anomalies quantiques
- * - Vision 4D (temps inclus)
+ * - Vision 4D (any: any)
  * - Prédictions d'évolution
  *
  * Commandes :
@@ -892,7 +892,7 @@ export async function handleTitaneOneAnalyzeMemory(): Promise<DevSudoResult> {
  * - `singularity quantum`
  */
 export async function handleTitaneOneSingularityScan(): Promise<DevSudoResult> {
-  const result = await SingularityIntrospectionEngine.quantumIntrospect();
+  const result = await SingularityIntrospectionEngine?.quantumIntrospect();
 
   let output = '';
 
@@ -900,60 +900,60 @@ export async function handleTitaneOneSingularityScan(): Promise<DevSudoResult> {
   output += '🔮 TITANE∞ ONE v∞ — QUANTUM SINGULARITY SCAN 🔮\n';
   output += '═══════════════════════════════════════════════════════════════\n\n';
 
-  output += `⏱️  Scan quantique effectué: ${new Date(result.timestamp).toLocaleString('fr-FR')}\n`;
-  output += `🎯 Level: ${result.introspectionLevel.toUpperCase()}\n`;
-  output += `💯 Confidence: ${result.confidenceScore}%\n\n`;
+  output += `⏱️  Scan quantique effectué: ${new Date(any: any).toLocaleString('fr-FR')}\n`;
+  output += `🎯 Level: ${result?.introspectionLevel?.toUpperCase()}\n`;
+  output += `💯 Confidence: ${result?.confidenceScore}%\n\n`;
 
   output += '━━━ ÉTAT SINGULARITY ━━━\n\n';
-  output += `🧠 Cohérence Unifiée: ${result.internalVision.globalCoherence}%\n`;
-  const singularityLayer = result.internalVision.layers[5];
-  output += `🔮 Singularity Layer Health: ${singularityLayer?.health.toUpperCase() ?? 'UNKNOWN'}\n`;
-  output += `⚙️  20 Moteurs: ${result.internalVision.activeEngines}/${result.internalVision.totalEngines} opérationnels\n\n`;
+  output += `🧠 Cohérence Unifiée: ${result?.internalVision?.globalCoherence}%\n`;
+  const singularityLayer = result?.internalVision?.layers?.[5];
+  output += `🔮 Singularity Layer Health: ${singularityLayer?.health?.toUpperCase() ?? 'UNKNOWN'}\n`;
+  output += `⚙️  20 Moteurs: ${result?.internalVision?.activeEngines}/${result?.internalVision?.totalEngines} opérationnels\n\n`;
 
   output += '━━━ MATRICE DE COHÉRENCE (6 x 20) ━━━\n\n';
-  result.internalVision.layers.forEach((layer, idx) => {
-    const bar = '█'.repeat(Math.floor(layer.coherence / 5));
-    output += `   Layer ${idx + 1}: ${bar} ${layer.coherence}%\n`;
+  result?.internalVision?.layers?.forEach(any: any) => {
+    const bar = '█'.repeat(Math?.floor(layer?.coherence / 5));
+    output += `   Layer ${idx + 1}: ${bar} ${layer?.coherence}%\n`;
   });
   output += '\n';
 
   output += '━━━ DIAGNOSTIC QUANTIQUE ━━━\n\n';
 
-  if (result.diagnostic.criticalIssues.length > 0) {
-    output += `🔴 Anomalies Critiques: ${result.diagnostic.criticalIssues.length}\n`;
-    result.diagnostic.criticalIssues.forEach(issue => {
-      output += `   • ${issue.description}\n`;
+  if (result?.diagnostic?.criticalIssues?.length > 0) {
+    output += `🔴 Anomalies Critiques: ${result?.diagnostic?.criticalIssues?.length}\n`;
+    result?.diagnostic?.criticalIssues?.forEach(issue => {
+      output += `   • ${issue?.description}\n`;
     });
     output += '\n';
   }
 
-  if (result.diagnostic.warnings.length > 0) {
-    output += `🟡 Avertissements: ${result.diagnostic.warnings.length}\n\n`;
+  if (result?.diagnostic?.warnings?.length > 0) {
+    output += `🟡 Avertissements: ${result?.diagnostic?.warnings?.length}\n\n`;
   }
 
-  if (result.diagnostic.selfHealingApplied.length > 0) {
+  if (result?.diagnostic?.selfHealingApplied?.length > 0) {
     output += '🔧 Self-Healing Quantique Appliqué:\n';
-    result.diagnostic.selfHealingApplied.forEach(action => {
+    result?.diagnostic?.selfHealingApplied?.forEach(action => {
       output += `   ${action}\n`;
     });
     output += '\n';
   }
 
   output += '━━━ PRÉDICTIONS ÉVOLUTIVES ━━━\n\n';
-  output += `🎯 Cohérence future estimée: ${result.futureVision.estimatedCoherenceImpact}% (+${result.futureVision.estimatedCoherenceImpact - result.internalVision.globalCoherence}%)\n\n`;
+  output += `🎯 Cohérence future estimée: ${result?.futureVision?.estimatedCoherenceImpact}% (+${result?.futureVision?.estimatedCoherenceImpact - result?.internalVision?.globalCoherence}%)\n\n`;
 
   output += "Trajectoire d'évolution:\n";
-  result.futureVision.evolutionPath.forEach((phase, idx) => {
+  result?.futureVision?.evolutionPath?.forEach(any: any) => {
     output += `   ${idx + 1}. ${phase}\n`;
   });
 
   output += '\n━━━ COMPARAISON UNIVERSELLE ━━━\n\n';
-  output += `🏆 Rating Architecture: ${result.externalVision.architectureRating.toUpperCase()}\n`;
-  output += `📐 Alignment Design System: ${result.externalVision.designSystemAlignment}%\n`;
-  output += `⚠️  Dette Technique: ${result.externalVision.technicalDebtLevel.toUpperCase()}\n\n`;
+  output += `🏆 Rating Architecture: ${result?.externalVision?.architectureRating?.toUpperCase()}\n`;
+  output += `📐 Alignment Design System: ${result?.externalVision?.designSystemAlignment}%\n`;
+  output += `⚠️  Dette Technique: ${result?.externalVision?.technicalDebtLevel?.toUpperCase()}\n\n`;
 
   output += '🌟 Inspirations Externes:\n';
-  result.externalVision.inspirations.forEach(insp => {
+  result?.externalVision?.inspirations?.forEach(insp => {
     output += `   • ${insp}\n`;
   });
 
@@ -961,5 +961,5 @@ export async function handleTitaneOneSingularityScan(): Promise<DevSudoResult> {
   output += '✨ QUANTUM SINGULARITY SCAN COMPLÉTÉ ✨\n';
   output += '═══════════════════════════════════════════════════════════════\n';
 
-  return createSuccessResult(output);
+  return createSuccessResult(any: any);
 }

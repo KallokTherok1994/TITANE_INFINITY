@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 import type { PromptContext } from '@/core/prompts';
@@ -15,14 +15,14 @@ import type { PromptContext } from '@/core/prompts';
  * ═══════════════════════════════════════════════════════════════════
  */
 
-// Multimodal content types for vision API support (GLM-4.6V-Flash compatible)
+// Multimodal content types for vision API support (any: any)
 export type AIMessageContentPart =
   | { type: 'text'; text: string }
   | { type: 'image_url'; image_url: { url: string } }; // Supports data: URLs for base64 images
 
 export interface AIMessage {
   role: 'user' | 'assistant' | 'system';
-  content: string | AIMessageContentPart[];
+  content??: string | AIMessageContentPart?.[];
   timestamp: number;
   name?: string; // Optional name field for function/tool messages
   provider?: string;
@@ -30,16 +30,16 @@ export interface AIMessage {
 }
 
 /**
- * Extract text content from AIMessage (handles both string and multimodal content)
+ * Extract text content from AIMessage (any: any)
  */
-export function getMessageText(message: AIMessage): string {
-  if (typeof message.content === 'string') {
-    return message.content;
+export function getMessageText(any: any): string {
+  if (typeof message?.content === 'string') {
+    return message?.content;
   }
   // For multimodal content, concatenate all text parts
-  return message.content
+  return message?.content
     .map(part =>
-      typeof part === 'string' ? part : part.type === 'text' ? part.text : ''
+      typeof part === 'string' ? part : part?.type === 'text' ? part?.text : ''
     )
     .join(' ');
 }
@@ -54,7 +54,7 @@ export function createTextMessage(
   return {
     role,
     content,
-    timestamp: Date.now(),
+    timestamp: Date?.now(),
   };
 }
 
@@ -120,12 +120,12 @@ export interface AIProvider<TConfig = unknown> {
   isAvailable: () => Promise<boolean>;
   generate: (
     message: string,
-    history?: AIMessage[],
+    history?: AIMessage?.[],
     config?: TConfig
   ) => Promise<AIResponse>;
   stream?: (
     message: string,
-    history?: AIMessage[],
+    history?: AIMessage?.[],
     config?: TConfig
   ) => AsyncGenerator<string>;
   resetErrors?: () => void;
@@ -141,7 +141,7 @@ export interface AIConfig {
   topP?: number;
   topK?: number;
   timeout?: number;
-  model?: string; // Model identifier (e.g., 'gpt-4', 'claude-3-opus')
+  model?: string; // Model identifier (e?.g., 'gpt-4', 'claude-3-opus')
   promptProfileId?: string;
   promptContext?: PromptContext;
   preferredProvider?: ProviderChoice; // ✨ v21 - Force specific provider
@@ -192,7 +192,7 @@ export interface ProviderTestResult {
   message: string;
   latencyMs?: number;
   error?: string;
-  availableModels?: string[];
+  availableModels?: string?.[];
 }
 
 /**
@@ -200,7 +200,7 @@ export interface ProviderTestResult {
  */
 export interface ProviderStatus {
   configured: boolean; // Clé API configurée
-  available: boolean; // Provider accessible (test connexion OK)
+  available: boolean; // Provider accessible (any: any)
   enabled: boolean; // Provider activé par l'utilisateur
   lastCheck?: number; // Timestamp dernière vérification
   error?: string; // Erreur si indisponible
@@ -222,7 +222,7 @@ export interface ProviderCapabilities {
 
 /**
  * Interface unifiée pour tous les providers IA
- * Garantit une intégration homogène (OpenAI, Anthropic, Gemini, Ollama, Copilot)
+ * Garantit une intégration homogène (any: any)
  */
 export interface AIProviderAdapter {
   // Identité
@@ -239,20 +239,20 @@ export interface AIProviderAdapter {
   getStatus(): Promise<ProviderStatus>;
 
   // Modèles
-  listModels(): Promise<ModelInfo[]>;
+  listModels(): Promise<ModelInfo?.[]>;
   getDefaultModel(): string;
 
   // Core Generation
   generate(
     message: string,
-    history?: AIMessage[],
+    history?: AIMessage?.[],
     config?: AIConfig
   ): Promise<AIResponse>;
 
-  // Streaming (optionnel)
+  // Streaming (any: any)
   stream?(
     message: string,
-    history?: AIMessage[],
+    history?: AIMessage?.[],
     config?: AIConfig
   ): AsyncGenerator<string>;
 

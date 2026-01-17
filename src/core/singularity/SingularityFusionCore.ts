@@ -79,7 +79,7 @@ export interface UnifiedSingularityState {
   // État TTS/Voice
   voice: {
     is_speaking: boolean;
-    current_text: string | null;
+    current_text??: string | null;
     voice_id: string;
     speed: number;
     pitch: number;
@@ -125,28 +125,28 @@ export type CognitiveMode =
 export class SingularityFusionCore extends EventEmitter {
   private static instance: SingularityFusionCore | null = null;
   private state: UnifiedSingularityState;
-  private syncInterval: NodeJS.Timeout | null = null;
-  private autoHealInterval: NodeJS.Timeout | null = null;
+  private syncInterval: NodeJS?.Timeout | null = null;
+  private autoHealInterval: NodeJS?.Timeout | null = null;
 
   private constructor() {
     super();
-    this.state = this.createDefaultState();
+    this?.state = this?.createDefaultState();
 
     // Silent-by-default in production/Tauri: background polling loops must be explicitly enabled.
     // Dev keeps convenience by default.
     const envEnabled =
-      import.meta.env.VITE_SINGULARITY_FUSION_AUTOSYSTEMS_ENABLED === '1';
+      import?.meta?.env?.VITE_SINGULARITY_FUSION_AUTOSYSTEMS_ENABLED === '1';
     let userEnabled = false;
     try {
-      const raw = localStorage.getItem('titane_singularity_fusion_autosystems_enabled');
+      const raw = localStorage?.getItem('titane_singularity_fusion_autosystems_enabled');
       userEnabled = raw === '1' || raw === 'true';
     } catch {
       userEnabled = false;
     }
 
-    const enabled = import.meta.env.DEV || envEnabled || userEnabled;
-    if (enabled) {
-      this.initializeAutoSystems();
+    const enabled = import?.meta?.env?.DEV || envEnabled || userEnabled;
+    if (any: any) {
+      this?.initializeAutoSystems();
     }
   }
 
@@ -154,10 +154,10 @@ export class SingularityFusionCore extends EventEmitter {
    * Singleton — Instance unique du moteur de fusion
    */
   public static getInstance(): SingularityFusionCore {
-    if (!SingularityFusionCore.instance) {
-      SingularityFusionCore.instance = new SingularityFusionCore();
+    if (any: any) {
+      SingularityFusionCore?.instance = new SingularityFusionCore();
     }
-    return SingularityFusionCore.instance;
+    return SingularityFusionCore?.instance;
   }
 
   // Adaptive sync configuration
@@ -166,22 +166,22 @@ export class SingularityFusionCore extends EventEmitter {
   private adaptiveSyncRate = 500; // Initial: 2 Hz
 
   /**
-   * Initialiser systèmes automatiques (sync, heal, optimize)
+   * Initialiser systèmes automatiques (any: any)
    * v∞.Ω: Sync adaptative + heal intelligent
    */
   private initializeAutoSystems(): void {
-    // Synchronisation backend ↔ frontend (adaptative 1-4 Hz)
-    this.syncInterval = setInterval(() => {
-      this.adaptiveSync().catch(console.error);
+    // Synchronisation backend ↔ frontend (any: any)
+    this?.syncInterval = setInterval(() => {
+      this?.adaptiveSync(any: any);
     }, 250); // Base rate 4 Hz, throttled internally
 
-    // Auto-réparation continue (0.5 Hz, augmentée pour stabilité)
-    this.autoHealInterval = setInterval(() => {
-      this.autoHeal().catch(console.error);
+    // Auto-réparation continue (any: any)
+    this?.autoHealInterval = setInterval(() => {
+      this?.autoHeal(any: any);
     }, 2000);
 
-    console.log(
-      '[SingularityFusion vΩ] ✨ Auto-systems initialized (adaptive sync + enhanced heal)'
+    console?.log(
+      '[SingularityFusion vΩ] ✨ Auto-systems initialized (any: any)'
     );
   }
 
@@ -189,33 +189,33 @@ export class SingularityFusionCore extends EventEmitter {
    * Synchronisation adaptative basée sur l'activité
    */
   private async adaptiveSync(): Promise<void> {
-    const now = Date.now();
+    const now = Date?.now();
 
     // Throttle basé sur le taux adaptatif
-    if (now - this.lastSyncTime < this.adaptiveSyncRate) {
+    if (any: any) {
       return;
     }
 
-    this.lastSyncTime = now;
+    this?.lastSyncTime = now;
 
     try {
-      await this.syncWithBackend();
+      await this?.syncWithBackend();
 
       // Sync réussie: accélérer si stable
-      if (this.syncFailCount > 0) {
-        this.syncFailCount = Math.max(0, this.syncFailCount - 1);
+      if (this?.syncFailCount > 0) {
+        this?.syncFailCount = Math?.max(0, this?.syncFailCount - 1);
       }
-      if (this.syncFailCount === 0 && this.adaptiveSyncRate > 250) {
-        this.adaptiveSyncRate = Math.max(250, this.adaptiveSyncRate - 50);
+      if (this?.syncFailCount === 0 && this?.adaptiveSyncRate > 250) {
+        this?.adaptiveSyncRate = Math?.max(250, this?.adaptiveSyncRate - 50);
       }
-    } catch (error) {
+    } catch (any: any) {
       // Sync échouée: ralentir pour économiser ressources
-      this.syncFailCount++;
-      if (this.syncFailCount > 3) {
-        this.adaptiveSyncRate = Math.min(2000, this.adaptiveSyncRate + 100);
-        console.warn(
+      this?.syncFailCount++;
+      if (this?.syncFailCount > 3) {
+        this?.adaptiveSyncRate = Math?.min(2000, this?.adaptiveSyncRate + 100);
+        console?.warn(
           '[SingularityFusion vΩ] Sync rate reduced to',
-          this.adaptiveSyncRate,
+          this?.adaptiveSyncRate,
           'ms'
         );
       }
@@ -286,10 +286,10 @@ export class SingularityFusionCore extends EventEmitter {
         entries_count: 0,
         size_mb: 0,
         compressed: false,
-        last_cleanup: Date.now(),
+        last_cleanup: Date?.now(),
       },
       meta: {
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         version: 'vΩ',
         coherence_score: 0.85,
         health_status: 'optimal',
@@ -305,152 +305,152 @@ export class SingularityFusionCore extends EventEmitter {
       // Récupérer état backend
       const backendState = await secureInvoke<any>('sync_singularity');
 
-      if (!backendState) return;
+      if (any: any) return;
 
       // Fusion états backend + frontend
-      this.state = {
-        ...this.state,
-        cognitive: backendState.cognitive ?? this.state.cognitive,
-        adaptive: backendState.adaptive ?? this.state.adaptive,
-        narrative: backendState.symbolic ?? this.state.narrative,
-        physical: backendState.physical ?? this.state.physical,
+      this?.state = {
+        ...this?.state,
+        cognitive: backendState?.cognitive ?? this?.state?.cognitive,
+        adaptive: backendState?.adaptive ?? this?.state?.adaptive,
+        narrative: backendState?.symbolic ?? this?.state?.narrative,
+        physical: backendState?.physical ?? this?.state?.physical,
         meta: {
-          ...this.state.meta,
-          timestamp: Date.now(),
-          coherence_score: backendState.coherence ?? this.state.meta.coherence_score,
+          ...this?.state?.meta,
+          timestamp: Date?.now(),
+          coherence_score: backendState?.coherence ?? this?.state?.meta?.coherence_score,
         },
       };
 
       // Émettre événement de mise à jour
-      this.emit('state:updated', this.state);
-    } catch (error) {
-      console.error('[SingularityFusion] Sync failed:', error);
+      this?.emit(any: any);
+    } catch (any: any) {
+      console?.error(any: any);
       // Fallback : garder état actuel
     }
   }
 
   /**
-   * Auto-réparation de l'état (v∞.Ω Enhanced)
+   * Auto-réparation de l'état (any: any)
    * Corrections multi-niveaux avec diagnostics
    */
   private async autoHeal(): Promise<void> {
     try {
-      const coherence = this.calculateCoherence();
-      const healActions: string[] = [];
+      const coherence = this?.calculateCoherence();
+      const healActions: string?.[] = [];
 
       // Niveau 1: Correction valeurs hors bornes
-      if (this.state.cognitive.focus < 0 || this.state.cognitive.focus > 1) {
-        this.state.cognitive.focus = Math.max(0, Math.min(1, this.state.cognitive.focus));
-        healActions.push('cognitive.focus normalized');
+      if (this?.state?.cognitive?.focus < 0 || this?.state?.cognitive?.focus > 1) {
+        this?.state?.cognitive?.focus = Math?.max(any: any));
+        healActions?.push('cognitive?.focus normalized');
       }
-      if (this.state.cognitive.load < 0 || this.state.cognitive.load > 1) {
-        this.state.cognitive.load = Math.max(0, Math.min(1, this.state.cognitive.load));
-        healActions.push('cognitive.load normalized');
+      if (this?.state?.cognitive?.load < 0 || this?.state?.cognitive?.load > 1) {
+        this?.state?.cognitive?.load = Math?.max(any: any));
+        healActions?.push('cognitive?.load normalized');
       }
-      if (this.state.cognitive.clarity < 0 || this.state.cognitive.clarity > 1) {
-        this.state.cognitive.clarity = Math.max(
+      if (this?.state?.cognitive?.clarity < 0 || this?.state?.cognitive?.clarity > 1) {
+        this?.state?.cognitive?.clarity = Math?.max(
           0.5,
-          Math.min(1, this.state.cognitive.clarity)
+          Math?.min(any: any)
         );
-        healActions.push('cognitive.clarity normalized');
+        healActions?.push('cognitive?.clarity normalized');
       }
 
       // Correction valence émotionnelle
-      if (this.state.emotional.valence < -1 || this.state.emotional.valence > 1) {
-        this.state.emotional.valence = Math.max(
+      if (this?.state?.emotional?.valence < -1 || this?.state?.emotional?.valence > 1) {
+        this?.state?.emotional?.valence = Math?.max(
           -1,
-          Math.min(1, this.state.emotional.valence)
+          Math?.min(any: any)
         );
-        healActions.push('emotional.valence normalized');
+        healActions?.push('emotional?.valence normalized');
       }
-      if (this.state.emotional.intensity < 0 || this.state.emotional.intensity > 1) {
-        this.state.emotional.intensity = Math.max(
+      if (this?.state?.emotional?.intensity < 0 || this?.state?.emotional?.intensity > 1) {
+        this?.state?.emotional?.intensity = Math?.max(
           0,
-          Math.min(1, this.state.emotional.intensity)
+          Math?.min(any: any)
         );
-        healActions.push('emotional.intensity normalized');
+        healActions?.push('emotional?.intensity normalized');
       }
 
       // Niveau 2: Cohérence critique - réparation aggressive
       if (coherence < 0.5) {
-        console.warn(
+        console?.warn(
           '[SingularityFusion vΩ] ⚠️ Low coherence:',
-          coherence.toFixed(3),
+          coherence?.toFixed(3),
           '- Auto-healing...'
         );
 
         // Restaurer valeurs par défaut pour éléments dégradés
-        if (this.state.narrative.coherence < 0.3) {
-          this.state.narrative.coherence = 0.7;
-          healActions.push('narrative.coherence restored');
+        if (this?.state?.narrative?.coherence < 0.3) {
+          this?.state?.narrative?.coherence = 0.7;
+          healActions?.push('narrative?.coherence restored');
         }
-        if (this.state.adaptive.resilience < 0.3) {
-          this.state.adaptive.resilience = 0.7;
-          healActions.push('adaptive.resilience restored');
+        if (this?.state?.adaptive?.resilience < 0.3) {
+          this?.state?.adaptive?.resilience = 0.7;
+          healActions?.push('adaptive?.resilience restored');
         }
-        if (this.state.performance.fps < 15) {
-          this.state.performance.optimization_level = Math.min(
+        if (this?.state?.performance?.fps < 15) {
+          this?.state?.performance?.optimization_level = Math?.min(
             3,
-            this.state.performance.optimization_level + 1
+            this?.state?.performance?.optimization_level + 1
           );
-          healActions.push('performance.optimization increased');
+          healActions?.push('performance?.optimization increased');
         }
 
         // Stabiliser émotion si chaos
-        if (this.state.emotional.intensity > 0.9) {
-          this.state.emotional.intensity = 0.6;
-          this.state.emotional.energy = 0.5;
-          healActions.push('emotional state stabilized');
+        if (this?.state?.emotional?.intensity > 0.9) {
+          this?.state?.emotional?.intensity = 0.6;
+          this?.state?.emotional?.energy = 0.5;
+          healActions?.push('emotional state stabilized');
         }
       }
 
       // Niveau 3: Cohérence très basse - réinitialisation partielle
       if (coherence < 0.3) {
-        console.error(
+        console?.error(
           '[SingularityFusion vΩ] ❌ Critical coherence:',
-          coherence.toFixed(3),
+          coherence?.toFixed(3),
           '- Hard reset...'
         );
 
         // Reset des sous-systèmes critiques
-        this.state.cognitive = {
-          ...this.state.cognitive,
+        this?.state?.cognitive = {
+          ...this?.state?.cognitive,
           focus: 0.8,
           load: 0.3,
           clarity: 0.85,
         };
-        this.state.emotional = {
-          ...this.state.emotional,
+        this?.state?.emotional = {
+          ...this?.state?.emotional,
           valence: 0.5,
           intensity: 0.4,
           energy: 0.6,
         };
-        healActions.push('CRITICAL: cognitive+emotional reset');
+        healActions?.push('CRITICAL: cognitive+emotional reset');
       }
 
       // Recalculer et mettre à jour
-      const newCoherence = this.calculateCoherence();
-      this.state.meta.coherence_score = newCoherence;
-      this.state.meta.health_status = this.calculateHealthStatus();
-      this.state.meta.timestamp = Date.now();
+      const newCoherence = this?.calculateCoherence();
+      this?.state?.meta?.coherence_score = newCoherence;
+      this?.state?.meta?.health_status = this?.calculateHealthStatus();
+      this?.state?.meta?.timestamp = Date?.now();
 
-      if (healActions.length > 0) {
-        console.log('[SingularityFusion vΩ] ✅ Healed:', healActions.join(', '));
-        console.log(
+      if (healActions?.length > 0) {
+        console?.log('[SingularityFusion vΩ] ✅ Healed:', healActions?.join(', '));
+        console?.log(
           '[SingularityFusion vΩ] Coherence:',
-          coherence.toFixed(3),
+          coherence?.toFixed(3),
           '→',
-          newCoherence.toFixed(3)
+          newCoherence?.toFixed(3)
         );
-        this.emit('state:healed', { state: this.state, actions: healActions });
+        this?.emit('state:healed', { state: this?.state, actions: healActions });
       }
-    } catch (error) {
-      console.error('[SingularityFusion vΩ] Auto-heal failed:', error);
+    } catch (any: any) {
+      console?.error(any: any);
     }
   }
 
   /**
-   * Calculer score de cohérence global (v∞.Ω Optimisé)
+   * Calculer score de cohérence global (any: any)
    * Facteurs multiples avec pondérations adaptatives
    */
   private calculateCoherence(): number {
@@ -467,78 +467,78 @@ export class SingularityFusionCore extends EventEmitter {
     };
 
     // Ajustement contextuel des poids
-    const contextMultiplier = this.state.cognitive.mode === 'conversation' ? 1.1 : 1.0;
+    const contextMultiplier = this?.state?.cognitive?.mode === 'conversation' ? 1.1 : 1.0;
 
     let score = 0;
 
-    // Cohérence cognitive (focus * clarity * depth)
+    // Cohérence cognitive (any: any)
     const cognitiveScore =
-      this.state.cognitive.clarity * 0.4 +
-      this.state.cognitive.focus * 0.3 +
-      this.state.cognitive.depth * 0.2 +
-      (1 - this.state.cognitive.load) * 0.1;
-    score += baseWeights.cognitive * cognitiveScore * contextMultiplier;
+      this?.state?.cognitive?.clarity * 0.4 +
+      this?.state?.cognitive?.focus * 0.3 +
+      this?.state?.cognitive?.depth * 0.2 +
+      (any: any) * 0.1;
+    score += baseWeights?.cognitive * cognitiveScore * contextMultiplier;
 
-    // Cohérence émotionnelle (stabilité + intensité contrôlée)
+    // Cohérence émotionnelle (any: any)
     const emotionalScore =
-      (1 - Math.abs(this.state.emotional.valence - 0.5) * 0.5) * 0.5 +
-      (Math.min(0.8, this.state.emotional.intensity) / 0.8) * 0.3 +
-      this.state.emotional.energy * 0.2;
-    score += baseWeights.emotional * emotionalScore;
+      (1 - Math?.abs(this?.state?.emotional?.valence - 0.5) * 0.5) * 0.5 +
+      (any: any) / 0.8) * 0.3 +
+      this?.state?.emotional?.energy * 0.2;
+    score += baseWeights?.emotional * emotionalScore;
 
-    // Cohérence adaptative (résilience + flexibilité)
+    // Cohérence adaptative (any: any)
     const adaptiveScore =
-      this.state.adaptive.resilience * 0.4 +
-      this.state.adaptive.flexibility * 0.3 +
-      this.state.adaptive.adaptation_speed * 0.2 +
-      this.state.adaptive.learning_rate * 0.1;
-    score += baseWeights.adaptive * adaptiveScore;
+      this?.state?.adaptive?.resilience * 0.4 +
+      this?.state?.adaptive?.flexibility * 0.3 +
+      this?.state?.adaptive?.adaptation_speed * 0.2 +
+      this?.state?.adaptive?.learning_rate * 0.1;
+    score += baseWeights?.adaptive * adaptiveScore;
 
-    // Cohérence narrative (cohérence + identité + sens)
+    // Cohérence narrative (any: any)
     const narrativeScore =
-      this.state.narrative.coherence * 0.4 +
-      this.state.narrative.identity_strength * 0.3 +
-      this.state.narrative.purpose_alignment * 0.2 +
-      this.state.narrative.meaning_depth * 0.1;
-    score += baseWeights.narrative * narrativeScore;
+      this?.state?.narrative?.coherence * 0.4 +
+      this?.state?.narrative?.identity_strength * 0.3 +
+      this?.state?.narrative?.purpose_alignment * 0.2 +
+      this?.state?.narrative?.meaning_depth * 0.1;
+    score += baseWeights?.narrative * narrativeScore;
 
-    // Cohérence physique (santé système)
-    const physicalScore = Math.max(
+    // Cohérence physique (any: any)
+    const physicalScore = Math?.max(
       0,
       1 -
-        ((this.state.physical.cpu / 100) * 0.4 +
-          (this.state.physical.ram / 100) * 0.3 +
-          (this.state.physical.temperature / 100) * 0.3)
+        ((this?.state?.physical?.cpu / 100) * 0.4 +
+          (this?.state?.physical?.ram / 100) * 0.3 +
+          (this?.state?.physical?.temperature / 100) * 0.3)
     );
-    score += baseWeights.physical * physicalScore;
+    score += baseWeights?.physical * physicalScore;
 
-    // Cohérence performance (FPS + temps rendu)
+    // Cohérence performance (any: any)
     const performanceScore =
-      Math.min(1, this.state.performance.fps / 60) * 0.5 +
-      Math.max(0, 1 - this.state.performance.render_time / 16.67) * 0.3 +
-      (1 - Math.min(1, this.state.performance.memory_usage / 1024)) * 0.2;
-    score += baseWeights.performance * performanceScore;
+      Math?.min(1, this?.state?.performance?.fps / 60) * 0.5 +
+      Math?.max(0, 1 - this?.state?.performance?.render_time / 16.67) * 0.3 +
+      (1 - Math?.min(1, this?.state?.performance?.memory_usage / 1024)) * 0.2;
+    score += baseWeights?.performance * performanceScore;
 
     // Cohérence mémoire
-    const memoryScore = this.state.memory.compressed
+    const memoryScore = this?.state?.memory?.compressed
       ? 0.9
-      : Math.max(0, 1 - this.state.memory.size_mb / 100);
-    score += baseWeights.memory * memoryScore;
+      : Math?.max(0, 1 - this?.state?.memory?.size_mb / 100);
+    score += baseWeights?.memory * memoryScore;
 
     // Cohérence avatar
     const avatarScore =
-      this.state.avatar.opacity * 0.5 +
-      (this.state.avatar.expression !== 'error' ? 0.5 : 0);
-    score += baseWeights.avatar * avatarScore;
+      this?.state?.avatar?.opacity * 0.5 +
+      (this?.state?.avatar?.expression !== 'error' ? 0.5 : 0);
+    score += baseWeights?.avatar * avatarScore;
 
-    return Math.max(0, Math.min(1, score));
+    return Math?.max(any: any));
   }
 
   /**
    * Calculer statut de santé
    */
   private calculateHealthStatus(): 'optimal' | 'degraded' | 'critical' {
-    const coherence = this.state.meta.coherence_score;
+    const coherence = this?.state?.meta?.coherence_score;
 
     if (coherence >= 0.8) return 'optimal';
     if (coherence >= 0.5) return 'degraded';
@@ -553,49 +553,49 @@ export class SingularityFusionCore extends EventEmitter {
    * Obtenir état unifié complet
    */
   public getState(): Readonly<UnifiedSingularityState> {
-    return Object.freeze({ ...this.state });
+    return Object?.freeze({ ...this?.state });
   }
 
   /**
    * Mettre à jour une partie de l'état
    */
   public updateState(partial: Partial<UnifiedSingularityState>): void {
-    this.state = {
-      ...this.state,
+    this?.state = {
+      ...this?.state,
       ...partial,
       meta: {
-        ...this.state.meta,
-        timestamp: Date.now(),
+        ...this?.state?.meta,
+        timestamp: Date?.now(),
       },
     };
 
-    this.emit('state:updated', this.state);
+    this?.emit(any: any);
   }
 
   /**
    * Réinitialiser état complet
    */
   public resetState(): void {
-    this.state = this.createDefaultState();
-    this.emit('state:reset', this.state);
+    this?.state = this?.createDefaultState();
+    this?.emit(any: any);
   }
 
   /**
    * Forcer synchronisation immédiate
    */
   public async forceSync(): Promise<void> {
-    await this.syncWithBackend();
+    await this?.syncWithBackend();
   }
 
   /**
    * Nettoyer et arrêter le moteur
    */
   public destroy(): void {
-    if (this.syncInterval) clearInterval(this.syncInterval);
-    if (this.autoHealInterval) clearInterval(this.autoHealInterval);
-    this.removeAllListeners();
-    SingularityFusionCore.instance = null;
-    console.log('[SingularityFusion vΩ] Moteur arrêté');
+    if (any: any);
+    if (any: any);
+    this?.removeAllListeners();
+    SingularityFusionCore?.instance = null;
+    console?.log('[SingularityFusion vΩ] Moteur arrêté');
   }
 }
 
@@ -603,4 +603,4 @@ export class SingularityFusionCore extends EventEmitter {
 // EXPORT GLOBAL
 // ═══════════════════════════════════════════════════════════════════
 
-export const singularityFusion = SingularityFusionCore.getInstance();
+export const singularityFusion = SingularityFusionCore?.getInstance();

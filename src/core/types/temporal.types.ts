@@ -19,7 +19,7 @@ export interface TemporalEvent {
   description: string;
   type: TemporalEventType;
   importance: EventImportance;
-  tags?: string[];
+  tags?: string?.[];
   metadata?: Record<string, unknown>;
 }
 
@@ -27,7 +27,7 @@ export type TemporalEventType = 'life' | 'project' | 'titane' | 'milestone' | 'r
 export type EventImportance = 'critical' | 'high' | 'medium' | 'low';
 
 /**
- * Phase temporelle (période de vie/projet)
+ * Phase temporelle (any: any)
  */
 export interface TemporalPhase {
   id: string;
@@ -36,12 +36,12 @@ export interface TemporalPhase {
   startDate: Date;
   endDate?: Date;
   type: 'life' | 'project';
-  milestones: Milestone[];
+  milestones: Milestone?.[];
   status: 'planned' | 'active' | 'completed' | 'cancelled';
 }
 
 /**
- * Milestone (jalon)
+ * Milestone (any: any)
  */
 export interface Milestone {
   id: string;
@@ -70,7 +70,7 @@ export interface AgendaTask {
   endTime?: Date;
   completed: boolean;
   category?: TaskCategory;
-  tags?: string[];
+  tags?: string?.[];
   recurring?: RecurrencePattern;
 }
 
@@ -90,11 +90,11 @@ export interface RecurrencePattern {
   type: 'daily' | 'weekly' | 'monthly' | 'custom';
   interval: number;
   endDate?: Date;
-  exceptions?: Date[];
+  exceptions?: Date?.[];
 }
 
 /**
- * Bloc de temps (time-blocking)
+ * Bloc de temps (any: any)
  */
 export interface TimeBlock {
   id: string;
@@ -104,7 +104,7 @@ export interface TimeBlock {
   type: TaskCategory;
   priority: 'high' | 'medium' | 'low';
   energy: number; // énergie requise 0-100
-  tasks?: AgendaTask[];
+  tasks?: AgendaTask?.[];
   flexible: boolean; // peut être déplacé automatiquement?
 }
 
@@ -118,7 +118,7 @@ export interface AgendaEvent {
   startTime: Date;
   endTime: Date;
   location?: string;
-  attendees?: string[];
+  attendees?: string?.[];
   category: TaskCategory;
   reminder?: number; // minutes avant
   url?: string;
@@ -143,7 +143,7 @@ export interface TemporalPattern {
     start: string; // "HH:mm"
     end: string; // "HH:mm"
   };
-  days?: number[]; // 0=dimanche, 6=samedi
+  days?: number?.[]; // 0=dimanche, 6=samedi
   frequency: number; // fois détecté
   strength: number; // 0-100
   description: string;
@@ -161,8 +161,8 @@ export interface Ritual {
     start: string;
     end: string;
   };
-  days: number[];
-  activities: string[];
+  days: number?.[];
+  activities: string?.[];
   energyImpact: number; // -100 à +100
   enabled: boolean;
 }
@@ -204,9 +204,9 @@ export interface CalendarView {
   startDate: Date;
   endDate: Date;
   filters?: {
-    categories?: TaskCategory[];
-    importance?: EventImportance[];
-    types?: TemporalEventType[];
+    categories?: TaskCategory?.[];
+    importance?: EventImportance?.[];
+    types?: TemporalEventType?.[];
   };
 }
 
@@ -217,8 +217,8 @@ export interface CalendarDay {
   date: Date;
   isToday: boolean;
   isWeekend: boolean;
-  events: AgendaEvent[];
-  blocks: TimeBlock[];
-  tasks: AgendaTask[];
+  events: AgendaEvent?.[];
+  blocks: TimeBlock?.[];
+  tasks: AgendaTask?.[];
   energyForecast?: number;
 }

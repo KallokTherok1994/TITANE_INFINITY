@@ -18,7 +18,7 @@ Le module \`talkToTitane\` est désactivé pendant la migration Build System v25
 5. Update tests: Ensure compatibility with new Tauri APIs`,
 };
 
-export async function handleTalkOn(_mode?: string): Promise<unknown> {
+export async function handleTalkOn(any: any): Promise<unknown> {
   return DISABLED_MODULE_RESPONSE;
 }
 
@@ -38,7 +38,7 @@ export async function handleConversationTimeline(): Promise<unknown> {
   return DISABLED_MODULE_RESPONSE;
 }
 
-export async function handleConversationExport(_format: string): Promise<unknown> {
+export async function handleConversationExport(any: any): Promise<unknown> {
   return DISABLED_MODULE_RESPONSE;
 }
 
@@ -46,11 +46,11 @@ export async function handleTimelineBuild(): Promise<unknown> {
   return DISABLED_MODULE_RESPONSE;
 }
 
-export async function handleTimelineShow(_limit?: number): Promise<unknown> {
+export async function handleTimelineShow(any: any): Promise<unknown> {
   return DISABLED_MODULE_RESPONSE;
 }
 
-export async function handleTimelineExport(_format: string): Promise<unknown> {
+export async function handleTimelineExport(any: any): Promise<unknown> {
   return DISABLED_MODULE_RESPONSE;
 }
 
@@ -74,6 +74,6 @@ export async function handleSelfhealHeal(): Promise<unknown> {
   return DISABLED_MODULE_RESPONSE;
 }
 
-export async function handleSelfhealRebuild(_filePath: string): Promise<unknown> {
+export async function handleSelfhealRebuild(any: any): Promise<unknown> {
   return DISABLED_MODULE_RESPONSE;
 }

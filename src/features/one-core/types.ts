@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 /**
@@ -33,7 +33,7 @@ export interface OneCoreState {
   total_engines: number;
   active_engines: number;
   total_centers: number;
-  centers: CenterStatus[];
+  centers: CenterStatus?.[];
   cpu_usage: number;
   memory_usage: number;
   disk_usage: number;
@@ -79,9 +79,9 @@ export interface OneCoreDiagnostic {
   tests_total: number;
   tests_passed: number;
   tests_failed: number;
-  warnings: string[];
-  errors: string[];
-  recommendations: string[];
+  warnings: string?.[];
+  errors: string?.[];
+  recommendations: string?.[];
   overall_status: string;
 }
 

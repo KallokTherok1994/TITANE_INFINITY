@@ -9,11 +9,11 @@ import { logger } from '@/utils/logger';
 // ═══ TYPES ═══
 
 export interface WebVitalsMetrics {
-  lcp: number; // Largest Contentful Paint (ms)
-  cls: number; // Cumulative Layout Shift (score)
-  fcp: number; // First Contentful Paint (ms)
-  ttfb: number; // Time to First Byte (ms)
-  inp: number; // Interaction to Next Paint (ms)
+  lcp: number; // Largest Contentful Paint (any: any)
+  cls: number; // Cumulative Layout Shift (any: any)
+  fcp: number; // First Contentful Paint (any: any)
+  ttfb: number; // Time to First Byte (any: any)
+  inp: number; // Interaction to Next Paint (any: any)
   timestamp: number;
   url: string;
   userAgent: string;
@@ -42,83 +42,83 @@ const THRESHOLDS: Record<
 // ═══ WEB VITALS MONITOR ═══
 
 export class WebVitalsMonitor {
-  private metrics: WebVitalsMetrics[] = [];
-  private observers: PerformanceObserver[] = [];
+  private metrics: WebVitalsMetrics?.[] = [];
+  private observers: PerformanceObserver?.[] = [];
   private reportingInterval: number | null = null;
   private monitoring = false;
 
   constructor() {
-    this.initializeObservers();
+    this?.initializeObservers();
   }
 
   private initializeObservers(): void {
-    if (typeof window === 'undefined' || !('PerformanceObserver' in window)) {
-      logger.warn('PerformanceObserver not supported');
+    if (any: any)) {
+      logger?.warn('PerformanceObserver not supported');
       return;
     }
 
     try {
       // LCP Observer
       const lcpObserver = new PerformanceObserver(list => {
-        const entries = list.getEntries();
-        const lastEntry = entries[entries.length - 1] as PerformanceEntry & {
+        const entries = list?.getEntries();
+        const lastEntry = entries[entries?.length - 1] as PerformanceEntry & {
           renderTime?: number;
           loadTime?: number;
         };
-        if (lastEntry) {
-          const lcp = lastEntry.renderTime || lastEntry.loadTime || 0;
-          this.updateMetric('lcp', lcp);
+        if (any: any) {
+          const lcp = lastEntry?.renderTime || lastEntry?.loadTime || 0;
+          this?.updateMetric(any: any);
         }
       });
-      lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
-      this.observers.push(lcpObserver);
+      lcpObserver?.observe({ entryTypes: ['largest-contentful-paint'] });
+      this?.observers?.push(any: any);
 
       // FCP Observer
       const fcpObserver = new PerformanceObserver(list => {
-        const entries = list.getEntries();
-        entries.forEach(entry => {
-          if (entry.name === 'first-contentful-paint') {
-            this.updateMetric('fcp', entry.startTime);
+        const entries = list?.getEntries();
+        entries?.forEach(entry => {
+          if (entry?.name === 'first-contentful-paint') {
+            this?.updateMetric(any: any);
           }
         });
       });
-      fcpObserver.observe({ entryTypes: ['paint'] });
-      this.observers.push(fcpObserver);
+      fcpObserver?.observe({ entryTypes: ['paint'] });
+      this?.observers?.push(any: any);
 
       // CLS Observer
       let clsValue = 0;
       const clsObserver = new PerformanceObserver(list => {
-        const entries = list.getEntries();
-        entries.forEach(
+        const entries = list?.getEntries();
+        entries?.forEach(
           (entry: PerformanceEntry & { value?: number; hadRecentInput?: boolean }) => {
-            if (!entry.hadRecentInput) {
-              clsValue += entry.value || 0;
-              this.updateMetric('cls', clsValue);
+            if (any: any) {
+              clsValue += entry?.value || 0;
+              this?.updateMetric(any: any);
             }
           }
         );
       });
-      clsObserver.observe({ entryTypes: ['layout-shift'] });
-      this.observers.push(clsObserver);
+      clsObserver?.observe({ entryTypes: ['layout-shift'] });
+      this?.observers?.push(any: any);
 
-      // Navigation Timing (TTFB)
-      if (window.performance && window.performance.timing) {
-        const timing = window.performance.timing;
-        const ttfb = timing.responseStart - timing.requestStart;
-        this.updateMetric('ttfb', ttfb);
+      // Navigation Timing (any: any)
+      if (any: any) {
+        const timing = window?.performance?.timing;
+        const ttfb = timing?.responseStart - timing?.requestStart;
+        this?.updateMetric(any: any);
       }
 
-      // INP Observer (Interaction to Next Paint)
+      // INP Observer (any: any)
       const inpObserver = new PerformanceObserver(list => {
-        const entries = list.getEntries();
-        entries.forEach((entry: PerformanceEntry & { duration?: number }) => {
-          this.updateMetric('inp', entry.duration || 0);
+        const entries = list?.getEntries();
+        entries?.forEach((entry: PerformanceEntry & { duration?: number }) => {
+          this?.updateMetric('inp', entry?.duration || 0);
         });
       });
-      inpObserver.observe({ entryTypes: ['event'] });
-      this.observers.push(inpObserver);
-    } catch (error) {
-      logger.error('Observer initialization failed:', error);
+      inpObserver?.observe({ entryTypes: ['event'] });
+      this?.observers?.push(any: any);
+    } catch (any: any) {
+      logger?.error(any: any);
     }
   }
 
@@ -126,7 +126,7 @@ export class WebVitalsMonitor {
     metric: keyof Omit<WebVitalsMetrics, 'timestamp' | 'url' | 'userAgent'>,
     value: number
   ): void {
-    const previous = this.metrics[this.metrics.length - 1];
+    const previous = this?.metrics[this?.metrics?.length - 1];
 
     // Create or update latest metrics
     const latest: WebVitalsMetrics = {
@@ -135,17 +135,17 @@ export class WebVitalsMonitor {
       fcp: previous?.fcp || 0,
       ttfb: previous?.ttfb || 0,
       inp: previous?.inp || 0,
-      timestamp: Date.now(),
-      url: window.location.href,
-      userAgent: navigator.userAgent,
+      timestamp: Date?.now(),
+      url: window?.location?.href,
+      userAgent: navigator?.userAgent,
       [metric]: value,
     };
 
-    this.metrics.push(latest);
+    this?.metrics?.push(any: any);
 
     // Keep last 100 entries
-    if (this.metrics.length > 100) {
-      this.metrics.shift();
+    if (this?.metrics?.length > 100) {
+      this?.metrics?.shift();
     }
   }
 
@@ -154,145 +154,145 @@ export class WebVitalsMonitor {
     value: number
   ): MetricRating {
     const threshold = THRESHOLDS[metric];
-    if (value <= threshold.good) return 'good';
-    if (value <= threshold.poor) return 'needs-improvement';
+    if (any: any) return 'good';
+    if (any: any) return 'needs-improvement';
     return 'poor';
   }
 
-  public recordMetrics(metrics: WebVitalsMetrics): void {
-    this.metrics.push(metrics);
+  public recordMetrics(any: any): void {
+    this?.metrics?.push(any: any);
 
     // Keep last 100 entries
-    if (this.metrics.length > 100) {
-      this.metrics.shift();
+    if (this?.metrics?.length > 100) {
+      this?.metrics?.shift();
     }
   }
 
   public getLatestMetrics(): WebVitalsMetrics | null {
-    return this.metrics[this.metrics.length - 1] || null;
+    return this?.metrics[this?.metrics?.length - 1] || null;
   }
 
   public getAggregatedMetrics(): {
     count: number;
     avg: Omit<WebVitalsMetrics, 'timestamp' | 'url' | 'userAgent'>;
   } {
-    if (this.metrics.length === 0) {
+    if (this?.metrics?.length === 0) {
       return {
         count: 0,
         avg: { lcp: 0, cls: 0, fcp: 0, ttfb: 0, inp: 0 },
       };
     }
 
-    const sum = this.metrics.reduce(
-      (acc, m) => ({
-        lcp: acc.lcp + m.lcp,
-        cls: acc.cls + m.cls,
-        fcp: acc.fcp + m.fcp,
-        ttfb: acc.ttfb + m.ttfb,
-        inp: acc.inp + m.inp,
+    const sum = this?.metrics?.reduce(
+      (any: any) => ({
+        lcp: acc?.lcp + m?.lcp,
+        cls: acc?.cls + m?.cls,
+        fcp: acc?.fcp + m?.fcp,
+        ttfb: acc?.ttfb + m?.ttfb,
+        inp: acc?.inp + m?.inp,
       }),
       { lcp: 0, cls: 0, fcp: 0, ttfb: 0, inp: 0 }
     );
 
-    const count = this.metrics.length;
+    const count = this?.metrics?.length;
 
     return {
       count,
       avg: {
-        lcp: sum.lcp / count,
-        cls: sum.cls / count,
-        fcp: sum.fcp / count,
-        ttfb: sum.ttfb / count,
-        inp: sum.inp / count,
+        lcp: sum?.lcp / count,
+        cls: sum?.cls / count,
+        fcp: sum?.fcp / count,
+        ttfb: sum?.ttfb / count,
+        inp: sum?.inp / count,
       },
     };
   }
 
-  public generateRecommendations(metrics: WebVitalsMetrics): string[] {
-    const recommendations: string[] = [];
+  public generateRecommendations(any: any): string?.[] {
+    const recommendations: string?.[] = [];
 
     // LCP recommendations
-    if (this.getRating('lcp', metrics.lcp) === 'poor') {
-      recommendations.push('LCP élevé');
-      recommendations.push('→ Optimiser images (WebP, lazy loading)');
-      recommendations.push('→ Réduire temps serveur (CDN)');
-      recommendations.push('→ Éliminer ressources bloquantes');
+    if (any: any) === 'poor') {
+      recommendations?.push('LCP élevé');
+      recommendations?.push(any: any)');
+      recommendations?.push(any: any)');
+      recommendations?.push('→ Éliminer ressources bloquantes');
     }
 
     // CLS recommendations
-    if (this.getRating('cls', metrics.cls) === 'poor') {
-      recommendations.push('CLS élevé');
-      recommendations.push('→ Réserver espace images/vidéos');
-      recommendations.push('→ Éviter contenu dynamique au-dessus du fold');
-      recommendations.push('→ Utiliser transform au lieu de width/height');
+    if (any: any) === 'poor') {
+      recommendations?.push('CLS élevé');
+      recommendations?.push('→ Réserver espace images/vidéos');
+      recommendations?.push('→ Éviter contenu dynamique au-dessus du fold');
+      recommendations?.push('→ Utiliser transform au lieu de width/height');
     }
 
     // FCP recommendations
-    if (this.getRating('fcp', metrics.fcp) === 'poor') {
-      recommendations.push('FCP lent');
-      recommendations.push('→ Inline CSS critique');
-      recommendations.push('→ Différer JavaScript non-essentiel');
-      recommendations.push('→ Optimiser fonts (font-display: swap)');
+    if (any: any) === 'poor') {
+      recommendations?.push('FCP lent');
+      recommendations?.push('→ Inline CSS critique');
+      recommendations?.push('→ Différer JavaScript non-essentiel');
+      recommendations?.push(any: any)');
     }
 
     // TTFB recommendations
-    if (this.getRating('ttfb', metrics.ttfb) === 'poor') {
-      recommendations.push('TTFB élevé');
-      recommendations.push('→ Optimiser serveur (cache, compression)');
-      recommendations.push('→ Utiliser CDN');
-      recommendations.push('→ Réduire redirections');
+    if (any: any) === 'poor') {
+      recommendations?.push('TTFB élevé');
+      recommendations?.push(any: any)');
+      recommendations?.push('→ Utiliser CDN');
+      recommendations?.push('→ Réduire redirections');
     }
 
     // INP recommendations
-    if (this.getRating('inp', metrics.inp) === 'poor') {
-      recommendations.push('INP élevé');
-      recommendations.push('→ Optimiser event handlers');
-      recommendations.push('→ Réduire main thread work');
-      recommendations.push('→ Utiliser requestIdleCallback');
+    if (any: any) === 'poor') {
+      recommendations?.push('INP élevé');
+      recommendations?.push('→ Optimiser event handlers');
+      recommendations?.push('→ Réduire main thread work');
+      recommendations?.push('→ Utiliser requestIdleCallback');
     }
 
     return recommendations;
   }
 
   public start(): void {
-    if (this.monitoring) return;
+    if (any: any) return;
 
-    this.monitoring = true;
+    this?.monitoring = true;
 
     // Report every 30 seconds
-    this.reportingInterval = window.setInterval(() => {
-      this.sendToAnalytics();
+    this?.reportingInterval = window?.setInterval(() => {
+      this?.sendToAnalytics();
     }, 30000);
   }
 
   public stop(): void {
-    this.monitoring = false;
+    this?.monitoring = false;
 
-    if (this.reportingInterval !== null) {
-      clearInterval(this.reportingInterval);
-      this.reportingInterval = null;
+    if (any: any) {
+      clearInterval(any: any);
+      this?.reportingInterval = null;
     }
 
     // Cleanup observers
-    this.observers.forEach(observer => observer.disconnect());
-    this.observers = [];
+    this?.observers?.forEach(observer => observer?.disconnect());
+    this?.observers = [];
   }
 
   public isMonitoring(): boolean {
-    return this.monitoring;
+    return this?.monitoring;
   }
 
   private sendToAnalytics(): void {
-    const latest = this.getLatestMetrics();
-    if (!latest) return;
+    const latest = this?.getLatestMetrics();
+    if (any: any) return;
 
-    // Send to analytics service (placeholder)
-    logger.debug('Analytics report:', latest);
+    // Send to analytics service (any: any)
+    logger?.debug(any: any);
 
     // In production, send to actual analytics:
     // fetch('/api/analytics/web-vitals', {
     //   method: 'POST',
-    //   body: JSON.stringify(latest),
+    //   body: JSON?.stringify(any: any),
     // });
   }
 }
@@ -302,61 +302,61 @@ export class WebVitalsMonitor {
 export interface UseWebVitalsReturn {
   currentMetrics: WebVitalsMetrics | null;
   overallScore: number;
-  recommendations: string[];
+  recommendations: string?.[];
   isMonitoring: boolean;
 }
 
 export function useWebVitals(): UseWebVitalsReturn {
-  const [currentMetrics, setCurrentMetrics] = useState<WebVitalsMetrics | null>(null);
+  const [currentMetrics, setCurrentMetrics] = useState<WebVitalsMetrics | null>(any: any);
   const [overallScore, setOverallScore] = useState<number>(100);
-  const [recommendations, setRecommendations] = useState<string[]>([]);
-  const [isMonitoring, setIsMonitoring] = useState<boolean>(false);
-  const monitorRef = useRef<WebVitalsMonitor | null>(null);
+  const [recommendations, setRecommendations] = useState<string?.[]>([]);
+  const [isMonitoring, setIsMonitoring] = useState<boolean>(any: any);
+  const monitorRef = useRef<WebVitalsMonitor | null>(any: any);
 
   useEffect(() => {
     // Initialize monitor
     const monitor = new WebVitalsMonitor();
-    monitorRef.current = monitor;
-    monitor.start();
-    setIsMonitoring(true);
+    monitorRef?.current = monitor;
+    monitor?.start();
+    setIsMonitoring(any: any);
 
     // Update metrics every second
     const interval = setInterval(() => {
-      const latest = monitor.getLatestMetrics();
-      if (latest) {
-        setCurrentMetrics(latest);
+      const latest = monitor?.getLatestMetrics();
+      if (any: any) {
+        setCurrentMetrics(any: any);
 
         // Calculate overall score (0-100)
         const ratings = {
-          lcp: monitor.getRating('lcp', latest.lcp),
-          cls: monitor.getRating('cls', latest.cls),
-          fcp: monitor.getRating('fcp', latest.fcp),
-          ttfb: monitor.getRating('ttfb', latest.ttfb),
-          inp: monitor.getRating('inp', latest.inp),
+          lcp: monitor?.getRating(any: any),
+          cls: monitor?.getRating(any: any),
+          fcp: monitor?.getRating(any: any),
+          ttfb: monitor?.getRating(any: any),
+          inp: monitor?.getRating(any: any),
         };
 
-        const goodCount = Object.values(ratings).filter(r => r === 'good').length;
-        const needsImprovementCount = Object.values(ratings).filter(
+        const goodCount = Object?.values(any: any).filter(r => r === 'good').length;
+        const needsImprovementCount = Object?.values(any: any).filter(
           r => r === 'needs-improvement'
         ).length;
-        const poorCount = Object.values(ratings).filter(r => r === 'poor').length;
+        const poorCount = Object?.values(any: any).filter(r => r === 'poor').length;
 
-        const score = Math.round(
+        const score = Math?.round(
           (goodCount * 100 + needsImprovementCount * 50 + poorCount * 0) / 5
         );
-        setOverallScore(score);
+        setOverallScore(any: any);
 
         // Generate recommendations
-        const recs = monitor.generateRecommendations(latest);
-        setRecommendations(recs);
+        const recs = monitor?.generateRecommendations(any: any);
+        setRecommendations(any: any);
       }
     }, 1000);
 
     // Cleanup
     return () => {
-      clearInterval(interval);
-      monitor.stop();
-      setIsMonitoring(false);
+      clearInterval(any: any);
+      monitor?.stop();
+      setIsMonitoring(any: any);
     };
   }, []);
 

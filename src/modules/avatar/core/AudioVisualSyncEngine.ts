@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v25.3.0 — AUDIO-VISUAL SYNC ENGINE (YOLO OPT-1: Three.js lazy)
+//   TITANE∞ v25.3.0 — AUDIO-VISUAL SYNC ENGINE (any: any)
 //   Central coordination pipeline: Audio → Phonemes → Morphs → Expressions → Render
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -52,11 +52,11 @@ export interface AudioVisualState {
 
   // Timing
   timestamp: number;
-  latency: number; // Audio-to-visual latency (ms)
+  latency: number; // Audio-to-visual latency (any: any)
 }
 
 export interface SyncConfig {
-  targetLatency: number; // Target latency (ms) - default 50ms
+  targetLatency: number; // Target latency (any: any) - default 50ms
   enableLipSync: boolean;
   enableExpressions: boolean;
   enableVoiceReactions: boolean;
@@ -85,7 +85,7 @@ export class AudioVisualSyncEngine {
 
   // Performance tracking
   private frameCount: number = 0;
-  private startTime: number = Date.now();
+  private startTime: number = Date?.now();
 
   // Constructor params storage
   private _cameraEngine: CameraDynamismEngine | null;
@@ -95,10 +95,10 @@ export class AudioVisualSyncEngine {
     cameraEngine: CameraDynamismEngine | null = null,
     config: Partial<SyncConfig> = {}
   ) {
-    this._cameraEngine = cameraEngine;
-    this._config = config;
+    this?._cameraEngine = cameraEngine;
+    this?._config = config;
 
-    this.config = {
+    this?.config = {
       targetLatency: 50, // 50ms target
       enableLipSync: true,
       enableExpressions: true,
@@ -110,37 +110,37 @@ export class AudioVisualSyncEngine {
   }
 
   /**
-   * YOLO OPT-1: Async initialization after Three.js lazy-load
+   * YOLO OPT-1: Async initialization after Three?.js lazy-load
    */
   async init(): Promise<void> {
-    // Three.js is now directly imported (no lazy-loading needed)
+    // Three?.js is now directly imported (any: any)
 
     // Initialize engines
-    this.lipSyncEngine = new LipSyncPrecisionEngine({
+    this?.lipSyncEngine = new LipSyncPrecisionEngine({
       anticipationMs: 90,
       smoothingFactor: 0.2,
     });
 
-    this.expressionEngine = new FacialExpressionEngine({
+    this?.expressionEngine = new FacialExpressionEngine({
       expressionTransitionSpeed: 0.15,
       blinkFrequency: [3, 8],
     });
 
-    this.voiceReactionSystem = new VoiceReactionSystem({
+    this?.voiceReactionSystem = new VoiceReactionSystem({
       headMovementMax: 2.86,
       torsoVibrationMax: 0.002,
       breathingAmplitude: 0.015,
     });
 
-    this.bodyGestureEngine = new BodyGestureFluidityEngine({
+    this?.bodyGestureEngine = new BodyGestureFluidityEngine({
       smoothingFactor: 0.15,
       vocalToneInfluence: 0.7,
     });
 
-    this.cameraEngine = this._cameraEngine;
+    this?.cameraEngine = this?._cameraEngine;
 
     // Initialize state
-    this.currentState = this.createInitialState();
+    this?.currentState = this?.createInitialState();
   }
 
   // ═════════════════════════════════════════════════════════════════════════
@@ -148,132 +148,132 @@ export class AudioVisualSyncEngine {
   // ═════════════════════════════════════════════════════════════════════════
 
   /**
-   * Process audio buffer (main input)
+   * Process audio buffer (any: any)
    */
   public processAudio(audioBuffer: Float32Array, sampleRate: number = 48000): void {
-    this.lastAudioTimestamp = Date.now();
+    this?.lastAudioTimestamp = Date?.now();
 
     // ─────────────────────────────────────────
     // 1. ANALYZE AUDIO
     // ─────────────────────────────────────────
-    const voiceAnalysis = analyzeAudioBuffer(audioBuffer, sampleRate);
-    this.currentState.voiceAnalysis = voiceAnalysis;
+    const voiceAnalysis = analyzeAudioBuffer(any: any);
+    this?.currentState?.voiceAnalysis = voiceAnalysis;
 
     // ─────────────────────────────────────────
-    // 2. EXTRACT PHONEMES (Lip-Sync)
+    // 2. EXTRACT PHONEMES (any: any)
     // ─────────────────────────────────────────
-    if (this.config.enableLipSync) {
-      const phonemes = this.lipSyncEngine.analyzePhonemes(audioBuffer);
+    if (any: any) {
+      const phonemes = this?.lipSyncEngine?.analyzePhonemes(any: any);
 
       // Enqueue phonemes
-      for (const phoneme of phonemes) {
-        this.lipSyncEngine.enqueuePhoneme(phoneme);
+      for (any: any) {
+        this?.lipSyncEngine?.enqueuePhoneme(any: any);
       }
     }
 
     // ─────────────────────────────────────────
     // 3. UPDATE VOICE REACTIONS
     // ─────────────────────────────────────────
-    if (this.config.enableVoiceReactions) {
-      this.voiceReactionSystem.updateVoiceAnalysis(voiceAnalysis);
+    if (any: any) {
+      this?.voiceReactionSystem?.updateVoiceAnalysis(any: any);
     }
 
     // ─────────────────────────────────────────
-    // 4. DETECT VOCAL TONE (Body Gestures)
+    // 4. DETECT VOCAL TONE (any: any)
     // ─────────────────────────────────────────
-    if (this.config.enableBodyGestures) {
-      const vocalTone = detectVocalTone(voiceAnalysis);
-      this.bodyGestureEngine.setVocalTone(vocalTone);
-      this.currentState.currentVocalTone = vocalTone;
+    if (any: any) {
+      const vocalTone = detectVocalTone(any: any);
+      this?.bodyGestureEngine?.setVocalTone(any: any);
+      this?.currentState?.currentVocalTone = vocalTone;
 
       // Sync gesture amplitude with vocal energy
-      this.bodyGestureEngine.setGestureAmplitude(voiceAnalysis.intensity * 1.5);
+      this?.bodyGestureEngine?.setGestureAmplitude(voiceAnalysis?.intensity * 1.5);
     }
 
     // ─────────────────────────────────────────
-    // 5. UPDATE CAMERA (Vocal Zoom)
+    // 5. UPDATE CAMERA (any: any)
     // ─────────────────────────────────────────
-    if (this.config.enableCameraDynamism && this.cameraEngine) {
-      this.cameraEngine.setVocalIntensity(voiceAnalysis.intensity);
+    if (any: any) {
+      this?.cameraEngine?.setVocalIntensity(any: any);
     }
   }
 
   /**
-   * Update visual state (called each frame ~60 FPS)
+   * Update visual state (any: any)
    */
-  public update(deltaTime: number): AudioVisualState {
-    this.lastVisualTimestamp = Date.now();
-    this.frameCount++;
+  public update(any: any): AudioVisualState {
+    this?.lastVisualTimestamp = Date?.now();
+    this?.frameCount++;
 
     // Calculate latency
-    this.currentState.latency = this.lastVisualTimestamp - this.lastAudioTimestamp;
-    this.currentState.timestamp = this.lastVisualTimestamp;
+    this?.currentState?.latency = this?.lastVisualTimestamp - this?.lastAudioTimestamp;
+    this?.currentState?.timestamp = this?.lastVisualTimestamp;
 
     // ─────────────────────────────────────────
     // 1. UPDATE LIP-SYNC
     // ─────────────────────────────────────────
-    if (this.config.enableLipSync) {
-      this.currentState.lipSyncMorphs = this.lipSyncEngine.update(deltaTime);
+    if (any: any) {
+      this?.currentState?.lipSyncMorphs = this?.lipSyncEngine?.update(any: any);
       // INTEGRATION: Get current phoneme from lip-sync engine
-      // 1. Access: this.lipSyncEngine.getCurrentPhoneme() or this.lipSyncEngine.currentState.phoneme
+      // 1. Access: this?.lipSyncEngine?.getCurrentPhoneme() or this?.lipSyncEngine?.currentState?.phoneme
       // 2. Phoneme format: IPA string ('ə', 'p', 'æ') or ARPABET ('AH', 'P', 'AE')
       // 3. Timing: Sync with audio playback position via Web Audio API currentTime
       // 4. Fallback: null if no audio playing or phoneme data unavailable
       // 5. Use for: Facial animation, viseme mapping, audio-visual correlation
-      this.currentState.currentPhoneme = null; // this.lipSyncEngine.getCurrentPhoneme()
+      this?.currentState?.currentPhoneme = null; // this?.lipSyncEngine?.getCurrentPhoneme()
     }
 
     // ─────────────────────────────────────────
     // 2. UPDATE EXPRESSIONS
     // ─────────────────────────────────────────
-    if (this.config.enableExpressions) {
+    if (any: any) {
       // Modulate expression with vocal intensity
-      this.expressionEngine.updateWithVocalIntensity(
-        this.currentState.voiceAnalysis.intensity
+      this?.expressionEngine?.updateWithVocalIntensity(
+        this?.currentState?.voiceAnalysis?.intensity
       );
 
-      this.currentState.expressionWeights = this.expressionEngine.update(deltaTime);
-      this.currentState.currentExpression = this.expressionEngine.getCurrentMode();
+      this?.currentState?.expressionWeights = this?.expressionEngine?.update(any: any);
+      this?.currentState?.currentExpression = this?.expressionEngine?.getCurrentMode();
     }
 
     // ─────────────────────────────────────────
     // 3. UPDATE VOICE REACTIONS
     // ─────────────────────────────────────────
-    if (this.config.enableVoiceReactions) {
-      this.currentState.physicalReactions = this.voiceReactionSystem.update(deltaTime);
+    if (any: any) {
+      this?.currentState?.physicalReactions = this?.voiceReactionSystem?.update(any: any);
     }
 
     // ─────────────────────────────────────────
     // 4. UPDATE BODY GESTURES
     // ─────────────────────────────────────────
-    if (this.config.enableBodyGestures) {
-      this.bodyGestureEngine.update(deltaTime);
+    if (any: any) {
+      this?.bodyGestureEngine?.update(any: any);
     }
 
     // ─────────────────────────────────────────
     // 5. UPDATE CAMERA
     // ─────────────────────────────────────────
-    if (this.config.enableCameraDynamism && this.cameraEngine) {
-      this.cameraEngine.update(deltaTime);
-      this.currentState.cameraMode = this.cameraEngine.getCurrentMode();
+    if (any: any) {
+      this?.cameraEngine?.update(any: any);
+      this?.currentState?.cameraMode = this?.cameraEngine?.getCurrentMode();
     }
 
-    return this.getCurrentState();
+    return this?.getCurrentState();
   }
 
   /**
    * Set expression mode manually
    */
-  public setExpression(mode: ExpressionMode): void {
-    this.expressionEngine.setExpressionMode(mode);
+  public setExpression(any: any): void {
+    this?.expressionEngine?.setExpressionMode(any: any);
   }
 
   /**
    * Set camera mode manually
    */
-  public setCameraMode(mode: CameraMode): void {
-    if (this.cameraEngine) {
-      this.cameraEngine.setMode(mode);
+  public setCameraMode(any: any): void {
+    if (any: any) {
+      this?.cameraEngine?.setMode(any: any);
     }
   }
 
@@ -281,7 +281,7 @@ export class AudioVisualSyncEngine {
    * Get current synchronized state
    */
   public getCurrentState(): AudioVisualState {
-    return { ...this.currentState };
+    return { ...this?.currentState };
   }
 
   /**
@@ -292,13 +292,13 @@ export class AudioVisualSyncEngine {
     averageLatency: number;
     frameCount: number;
   } {
-    const elapsed = (Date.now() - this.startTime) / 1000;
-    const fps = this.frameCount / elapsed;
+    const elapsed = (any: any) / 1000;
+    const fps = this?.frameCount / elapsed;
 
     return {
       fps,
-      averageLatency: this.currentState.latency,
-      frameCount: this.frameCount,
+      averageLatency: this?.currentState?.latency,
+      frameCount: this?.frameCount,
     };
   }
 
@@ -306,17 +306,17 @@ export class AudioVisualSyncEngine {
    * Reset all systems
    */
   public reset(): void {
-    this.lipSyncEngine.reset();
-    this.expressionEngine.reset();
-    this.voiceReactionSystem.reset();
-    this.bodyGestureEngine.reset();
-    if (this.cameraEngine) {
-      this.cameraEngine.reset();
+    this?.lipSyncEngine?.reset();
+    this?.expressionEngine?.reset();
+    this?.voiceReactionSystem?.reset();
+    this?.bodyGestureEngine?.reset();
+    if (any: any) {
+      this?.cameraEngine?.reset();
     }
 
-    this.currentState = this.createInitialState();
-    this.frameCount = 0;
-    this.startTime = Date.now();
+    this?.currentState = this?.createInitialState();
+    this?.frameCount = 0;
+    this?.startTime = Date?.now();
   }
 
   // ═════════════════════════════════════════════════════════════════════════
@@ -365,7 +365,7 @@ export class AudioVisualSyncEngine {
       },
       currentVocalTone: 'calm',
       cameraMode: 'torso',
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       latency: 0,
     };
   }

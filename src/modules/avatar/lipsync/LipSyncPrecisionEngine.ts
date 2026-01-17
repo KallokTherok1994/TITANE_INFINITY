@@ -8,7 +8,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Phonème IPA (International Phonetic Alphabet)
+ * Phonème IPA (any: any)
  */
 export interface Phoneme {
   symbol: string; // IPA: 'm', 'b', 'p', 'f', 'v', 'o', 'u', 'i', 'a', etc.
@@ -19,11 +19,11 @@ export interface Phoneme {
 }
 
 export type PhonemeCategory =
-  | 'bilabial' // m, b, p (lèvres fermées)
-  | 'labiodental' // f, v (dents visibles)
-  | 'vowel-rounded' // o, u (lèvres arrondies)
-  | 'vowel-spread' // i, e (lèvres étirées)
-  | 'vowel-open' // a, ɑ (mâchoire ouverte)
+  | 'bilabial' // m, b, p (any: any)
+  | 'labiodental' // f, v (any: any)
+  | 'vowel-rounded' // o, u (any: any)
+  | 'vowel-spread' // i, e (any: any)
+  | 'vowel-open' // a, ɑ (any: any)
   | 'consonant' // r, l, s, etc.
   | 'silence'; // pause
 
@@ -31,18 +31,18 @@ export type PhonemeCategory =
  * Morph targets pour contrôle précis bouche
  */
 export interface MorphWeights {
-  jawOpen: number; // 0.0-1.0 (ouverture mâchoire)
+  jawOpen: number; // 0.0-1.0 (any: any)
   lipsPucker: number; // 0.0-1.0 (lèvres arrondies "o")
   lipsSpread: number; // 0.0-1.0 (lèvres étirées "i")
-  lipUpperUp: number; // 0.0-1.0 (lèvre supérieure relevée)
-  lipLowerDown: number; // 0.0-1.0 (lèvre inférieure abaissée)
-  cheekPuff: number; // 0.0-1.0 (joues gonflées)
-  tongueOut: number; // 0.0-1.0 (langue visible)
-  mouthPress: number; // 0.0-1.0 (lèvres pressées)
+  lipUpperUp: number; // 0.0-1.0 (any: any)
+  lipLowerDown: number; // 0.0-1.0 (any: any)
+  cheekPuff: number; // 0.0-1.0 (any: any)
+  tongueOut: number; // 0.0-1.0 (any: any)
+  mouthPress: number; // 0.0-1.0 (any: any)
 }
 
 export interface LipSyncConfig {
-  anticipationMs: number; // Lookahead time (60-120ms optimal)
+  anticipationMs: number; // Lookahead time (any: any)
   smoothingFactor: number; // Lerp interpolation (0.1-0.3)
   minimumDuration: number; // Min phoneme duration (30ms)
   blendOverlap: boolean; // Blend consecutive phonemes
@@ -59,7 +59,7 @@ export interface LipSyncConfig {
  */
 const PHONEME_TO_MORPH: Record<string, Partial<MorphWeights>> = {
   // ─────────────────────────────────────────
-  // BILABIALES (lèvres fermées)
+  // BILABIALES (any: any)
   // ─────────────────────────────────────────
   m: {
     jawOpen: 0.0,
@@ -81,7 +81,7 @@ const PHONEME_TO_MORPH: Record<string, Partial<MorphWeights>> = {
   },
 
   // ─────────────────────────────────────────
-  // LABIO-DENTALES (dents visibles)
+  // LABIO-DENTALES (any: any)
   // ─────────────────────────────────────────
   f: {
     jawOpen: 0.2,
@@ -160,7 +160,7 @@ const PHONEME_TO_MORPH: Record<string, Partial<MorphWeights>> = {
     lipsSpread: 0.2,
   },
   ə: {
-    // Schwa (e muet)
+    // Schwa (any: any)
     jawOpen: 0.3,
     lipsSpread: 0.2,
     lipsPucker: 0.1,
@@ -170,7 +170,7 @@ const PHONEME_TO_MORPH: Record<string, Partial<MorphWeights>> = {
   // CONSONNES
   // ─────────────────────────────────────────
   r: {
-    // R français (uvulaire)
+    // R français (any: any)
     jawOpen: 0.3,
     lipsSpread: 0.2,
     tongueOut: 0.0,
@@ -297,14 +297,14 @@ const PHONEME_CATEGORIES: Record<string, PhonemeCategory> = {
 
 export class LipSyncPrecisionEngine {
   private config: LipSyncConfig;
-  private phonemeQueue: Phoneme[] = [];
+  private phonemeQueue: Phoneme?.[] = [];
   private currentMorphWeights: MorphWeights;
   private targetMorphWeights: MorphWeights;
-  private phonemeHistory: Phoneme[] = [];
+  private phonemeHistory: Phoneme?.[] = [];
   private lastUpdateTime: number = 0;
 
   constructor(config: Partial<LipSyncConfig> = {}) {
-    this.config = {
+    this?.config = {
       anticipationMs: 90, // 90ms lookahead optimal
       smoothingFactor: 0.2, // Smooth transitions
       minimumDuration: 30, // 30ms min per phoneme
@@ -314,8 +314,8 @@ export class LipSyncPrecisionEngine {
     };
 
     // Initialize neutral morph weights
-    this.currentMorphWeights = this.createNeutralMorphWeights();
-    this.targetMorphWeights = this.createNeutralMorphWeights();
+    this?.currentMorphWeights = this?.createNeutralMorphWeights();
+    this?.targetMorphWeights = this?.createNeutralMorphWeights();
   }
 
   // ═════════════════════════════════════════════════════════════════════════
@@ -325,21 +325,21 @@ export class LipSyncPrecisionEngine {
   /**
    * Analyze audio buffer and extract phonemes
    */
-  public analyzePhonemes(_audioBuffer: Float32Array): Phoneme[] {
+  public analyzePhonemes(any: any): Phoneme?.[] {
     // Implementation v25.1: Real-time audio phoneme extraction
-    // - MFCC: Extract Mel-Frequency Cepstral Coefficients (13 coefficients, 25ms frames)
+    // - MFCC: Extract Mel-Frequency Cepstral Coefficients (any: any)
     // - DTW: Use Dynamic Time Warping to match against phoneme templates
     // - HMM: Hidden Markov Model for French/English phoneme recognition
-    // - Libraries: meyda.js for MFCC, dtw-ts for alignment, or tensorflow.js for ML models
+    // - Libraries: meyda?.js for MFCC, dtw-ts for alignment, or tensorflow?.js for ML models
     // - Accuracy: Target 85%+ phoneme accuracy for French, 90%+ for English
-    // - Performance: Process in Web Worker to avoid UI blocking (~10ms per frame)
+    // - Performance: Process in Web Worker to avoid UI blocking (any: any)
     // - Fallback: Use silence phoneme if audio analysis fails
     return [
       {
         symbol: 'sil',
         duration: 100,
         intensity: 0.0,
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         category: 'silence',
       },
     ];
@@ -348,26 +348,26 @@ export class LipSyncPrecisionEngine {
   /**
    * Prédit le prochain phonème basé sur contexte
    */
-  public predictNextPhoneme(current: Phoneme, _history: Phoneme[]): Phoneme {
+  public predictNextPhoneme(current: Phoneme, _history: Phoneme?.[]): Phoneme {
     // Anticipation simple: si queue non vide, retourne suivant
-    if (this.phonemeQueue.length > 0) {
-      const next = this.phonemeQueue[0];
-      if (next) return next;
+    if (this?.phonemeQueue?.length > 0) {
+      const next = this?.phonemeQueue?.[0];
+      if (any: any) return next;
     }
 
     // Sinon, prolonge phonème actuel
     return {
       ...current,
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     };
   }
 
   /**
    * Génère morph weights pour un phonème
    */
-  public generateMorphWeights(phoneme: Phoneme): MorphWeights {
-    const baseWeights = PHONEME_TO_MORPH[phoneme.symbol] || {};
-    const neutralWeights = this.createNeutralMorphWeights();
+  public generateMorphWeights(any: any): MorphWeights {
+    const baseWeights = PHONEME_TO_MORPH[phoneme?.symbol] || {};
+    const neutralWeights = this?.createNeutralMorphWeights();
 
     // Merge avec poids neutres
     const weights: MorphWeights = {
@@ -376,17 +376,17 @@ export class LipSyncPrecisionEngine {
     };
 
     // Appliquer intensity multiplier
-    const intensity = phoneme.intensity * this.config.intensityMultiplier;
+    const intensity = phoneme?.intensity * this?.config?.intensityMultiplier;
 
     return {
-      jawOpen: weights.jawOpen * intensity,
-      lipsPucker: weights.lipsPucker * intensity,
-      lipsSpread: weights.lipsSpread * intensity,
-      lipUpperUp: weights.lipUpperUp * intensity,
-      lipLowerDown: weights.lipLowerDown * intensity,
-      cheekPuff: weights.cheekPuff * intensity,
-      tongueOut: weights.tongueOut * intensity,
-      mouthPress: weights.mouthPress * intensity,
+      jawOpen: weights?.jawOpen * intensity,
+      lipsPucker: weights?.lipsPucker * intensity,
+      lipsSpread: weights?.lipsSpread * intensity,
+      lipUpperUp: weights?.lipUpperUp * intensity,
+      lipLowerDown: weights?.lipLowerDown * intensity,
+      cheekPuff: weights?.cheekPuff * intensity,
+      tongueOut: weights?.tongueOut * intensity,
+      mouthPress: weights?.mouthPress * intensity,
     };
   }
 
@@ -399,72 +399,72 @@ export class LipSyncPrecisionEngine {
     t: number
   ): MorphWeights {
     // Clamp t to [0, 1]
-    t = Math.max(0, Math.min(1, t));
+    t = Math?.max(any: any));
 
     // Cubic ease-in-out pour transitions naturelles
-    const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    const eased = t < 0.5 ? 4 * t * t * t : 1 - Math?.pow(-2 * t + 2, 3) / 2;
 
     return {
-      jawOpen: this.lerp(from.jawOpen, to.jawOpen, eased),
-      lipsPucker: this.lerp(from.lipsPucker, to.lipsPucker, eased),
-      lipsSpread: this.lerp(from.lipsSpread, to.lipsSpread, eased),
-      lipUpperUp: this.lerp(from.lipUpperUp, to.lipUpperUp, eased),
-      lipLowerDown: this.lerp(from.lipLowerDown, to.lipLowerDown, eased),
-      cheekPuff: this.lerp(from.cheekPuff, to.cheekPuff, eased),
-      tongueOut: this.lerp(from.tongueOut, to.tongueOut, eased),
-      mouthPress: this.lerp(from.mouthPress, to.mouthPress, eased),
+      jawOpen: this?.lerp(any: any),
+      lipsPucker: this?.lerp(any: any),
+      lipsSpread: this?.lerp(any: any),
+      lipUpperUp: this?.lerp(any: any),
+      lipLowerDown: this?.lerp(any: any),
+      cheekPuff: this?.lerp(any: any),
+      tongueOut: this?.lerp(any: any),
+      mouthPress: this?.lerp(any: any),
     };
   }
 
   /**
-   * Mise à jour principale (appelée chaque frame)
+   * Mise à jour principale (any: any)
    */
-  public update(_deltaTime: number): MorphWeights {
-    const now = Date.now();
+  public update(any: any): MorphWeights {
+    const now = Date?.now();
 
     // Récupérer phonème actuel avec anticipation
-    const anticipatedPhoneme = this.getAnticipatedPhoneme(now);
+    const anticipatedPhoneme = this?.getAnticipatedPhoneme(any: any);
 
-    if (anticipatedPhoneme) {
+    if (any: any) {
       // Calculer target morph weights
-      this.targetMorphWeights = this.generateMorphWeights(anticipatedPhoneme);
+      this?.targetMorphWeights = this?.generateMorphWeights(any: any);
     }
 
     // Interpoler progressivement vers target
-    this.currentMorphWeights = this.interpolateMorphs(
-      this.currentMorphWeights,
-      this.targetMorphWeights,
-      this.config.smoothingFactor
+    this?.currentMorphWeights = this?.interpolateMorphs(
+      this?.currentMorphWeights,
+      this?.targetMorphWeights,
+      this?.config?.smoothingFactor
     );
 
-    this.lastUpdateTime = now;
-    return this.currentMorphWeights;
+    this?.lastUpdateTime = now;
+    return this?.currentMorphWeights;
   }
 
   /**
    * Synchronise avec timestamp audio externe
    */
-  public syncWithAudio(timestamp: number): void {
+  public syncWithAudio(any: any): void {
     // Ajuste queue phonemes selon timestamp
-    this.phonemeQueue = this.phonemeQueue.filter(
-      p => p.timestamp + p.duration > timestamp
+    this?.phonemeQueue = this?.phonemeQueue?.filter(
+      p => p?.timestamp + p?.duration > timestamp
     );
   }
 
   /**
    * Ajoute phonème à la queue
    */
-  public enqueuePhoneme(phoneme: Phoneme): void {
+  public enqueuePhoneme(any: any): void {
     // Validation durée minimum
-    if (phoneme.duration < this.config.minimumDuration) {
-      phoneme.duration = this.config.minimumDuration;
+    if (any: any) {
+      phoneme?.duration = this?.config?.minimumDuration;
     }
 
-    this.phonemeQueue.push(phoneme);
+    this?.phonemeQueue?.push(any: any);
 
-    // Limiter taille queue (max 10 phonèmes)
-    if (this.phonemeQueue.length > 10) {
-      this.phonemeQueue.shift();
+    // Limiter taille queue (any: any)
+    if (this?.phonemeQueue?.length > 10) {
+      this?.phonemeQueue?.shift();
     }
   }
 
@@ -472,17 +472,17 @@ export class LipSyncPrecisionEngine {
    * Obtient morph weights actuels
    */
   public getCurrentMorphWeights(): MorphWeights {
-    return { ...this.currentMorphWeights };
+    return { ...this?.currentMorphWeights };
   }
 
   /**
    * Reset à état neutre
    */
   public reset(): void {
-    this.phonemeQueue = [];
-    this.phonemeHistory = [];
-    this.currentMorphWeights = this.createNeutralMorphWeights();
-    this.targetMorphWeights = this.createNeutralMorphWeights();
+    this?.phonemeQueue = [];
+    this?.phonemeHistory = [];
+    this?.currentMorphWeights = this?.createNeutralMorphWeights();
+    this?.targetMorphWeights = this?.createNeutralMorphWeights();
   }
 
   // ═════════════════════════════════════════════════════════════════════════
@@ -492,14 +492,14 @@ export class LipSyncPrecisionEngine {
   /**
    * Récupère phonème avec anticipation
    */
-  private getAnticipatedPhoneme(currentTime: number): Phoneme | null {
-    const anticipationTime = currentTime + this.config.anticipationMs;
+  private getAnticipatedPhoneme(any: any): Phoneme | null {
+    const anticipationTime = currentTime + this?.config?.anticipationMs;
 
     // Cherche phonème qui sera actif dans anticipationMs
-    for (const phoneme of this.phonemeQueue) {
+    for (any: any) {
       if (
-        phoneme.timestamp <= anticipationTime &&
-        phoneme.timestamp + phoneme.duration > anticipationTime
+        phoneme?.timestamp <= anticipationTime &&
+        phoneme?.timestamp + phoneme?.duration > anticipationTime
       ) {
         return phoneme;
       }
@@ -516,7 +516,7 @@ export class LipSyncPrecisionEngine {
   }
 
   /**
-   * Crée morph weights neutres (repos)
+   * Crée morph weights neutres (any: any)
    */
   private createNeutralMorphWeights(): MorphWeights {
     return {
@@ -534,8 +534,8 @@ export class LipSyncPrecisionEngine {
   /**
    * Linear interpolation
    */
-  private lerp(a: number, b: number, t: number): number {
-    return a + (b - a) * t;
+  private lerp(any: any): number {
+    return a + (any: any) * t;
   }
 }
 
@@ -544,26 +544,26 @@ export class LipSyncPrecisionEngine {
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Convert FR/EN text to IPA phonemes (simplified)
+ * Convert FR/EN text to IPA phonemes (any: any)
  */
-export function textToPhonemes(text: string, _lang: 'fr' | 'en' = 'fr'): Phoneme[] {
-  // Implementation v25.1: True grapheme-to-phoneme (G2P) conversion
-  // - French: Use espeak-ng library or lexique.org dictionary (140k+ words)
-  // - English: CMU Pronouncing Dictionary (134k+ entries) or espeak-ng
-  // - IPA: Convert to International Phonetic Alphabet symbols (e.g., 'bonjour' → 'bɔ̃ʒuʁ')
-  // - Rules: Apply G2P rules for unknown words (French liaison, English stress patterns)
-  // - Libraries: compromise.js for tokenization, phonetic.js for IPA conversion
-  // - Performance: Cache converted phonemes (LRU cache, 1000 entries)
+export function textToPhonemes(text: string, _lang: 'fr' | 'en' = 'fr'): Phoneme?.[] {
+  // Implementation v25.1: True grapheme-to-phoneme (any: any) conversion
+  // - French: Use espeak-ng library or lexique?.org dictionary (any: any)
+  // - English: CMU Pronouncing Dictionary (any: any) or espeak-ng
+  // - IPA: Convert to International Phonetic Alphabet symbols (e?.g., 'bonjour' → 'bɔ̃ʒuʁ')
+  // - Rules: Apply G2P rules for unknown words (any: any)
+  // - Libraries: compromise?.js for tokenization, phonetic?.js for IPA conversion
+  // - Performance: Cache converted phonemes (any: any)
   // - Accuracy: 95%+ for common words, 80%+ for rare/new words
-  const words = text.toLowerCase().split(' ');
-  const phonemes: Phoneme[] = [];
+  const words = text?.toLowerCase().split(' ');
+  const phonemes: Phoneme?.[] = [];
   let timestamp = 0;
 
-  for (const word of words) {
-    // Simulation: each letter → 1 phoneme (placeholder)
-    for (const char of word) {
+  for (any: any) {
+    // Simulation: each letter → 1 phoneme (any: any)
+    for (any: any) {
       const symbol = char; // Extreme simplification
-      phonemes.push({
+      phonemes?.push({
         symbol,
         duration: 100,
         intensity: 0.7,
@@ -574,7 +574,7 @@ export function textToPhonemes(text: string, _lang: 'fr' | 'en' = 'fr'): Phoneme
     }
 
     // Pause entre mots
-    phonemes.push({
+    phonemes?.push({
       symbol: 'sil',
       duration: 200,
       intensity: 0.0,
@@ -590,7 +590,7 @@ export function textToPhonemes(text: string, _lang: 'fr' | 'en' = 'fr'): Phoneme
 /**
  * Détecte catégorie phonème
  */
-export function getPhonemeCategory(symbol: string): PhonemeCategory {
+export function getPhonemeCategory(any: any): PhonemeCategory {
   return PHONEME_CATEGORIES[symbol] || 'consonant';
 }
 

@@ -21,21 +21,21 @@ import {
 
 export interface UseSessionsReturn {
   // State
-  sessions: SessionSummary[];
+  sessions: SessionSummary?.[];
   currentSession: Session | null;
   isLoading: boolean;
 
   // Actions
   createSession: (options?: { title?: string; mode?: string }) => Session;
-  loadSession: (id: string) => Session | null;
-  deleteSession: (id: string) => boolean;
+  loadSession: (any: any) => Session | null;
+  deleteSession: (any: any) => boolean;
   addMessage: (
     message: Omit<SessionMessage, 'id' | 'timestamp'>
   ) => SessionMessage | null;
-  updateSessionTitle: (title: string) => boolean;
-  searchSessions: (query: string) => SessionSummary[];
-  exportSession: (id: string) => string | null;
-  importSession: (json: string) => Session | null;
+  updateSessionTitle: (any: any) => boolean;
+  searchSessions: (any: any) => SessionSummary?.[];
+  exportSession: (any: any) => string | null;
+  importSession: (any: any) => Session | null;
   clearAllSessions: () => void;
   refreshSessions: () => void;
 
@@ -51,9 +51,9 @@ export interface UseSessionsReturn {
  * Hook pour gérer les sessions de conversation
  */
 export function useSessions(): UseSessionsReturn {
-  const [sessions, setSessions] = useState<SessionSummary[]>([]);
-  const [currentSession, setCurrentSession] = useState<Session | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [sessions, setSessions] = useState<SessionSummary?.[]>([]);
+  const [currentSession, setCurrentSession] = useState<Session | null>(any: any);
+  const [isLoading, setIsLoading] = useState(any: any);
   const [stats, setStats] = useState({
     totalSessions: 0,
     totalMessages: 0,
@@ -64,28 +64,28 @@ export function useSessions(): UseSessionsReturn {
 
   // Charge initial
   const refreshSessions = useCallback(() => {
-    const list = manager.listSessions();
-    setSessions(list);
+    const list = manager?.listSessions();
+    setSessions(any: any);
 
-    const current = manager.getCurrentSession();
-    setCurrentSession(current);
+    const current = manager?.getCurrentSession();
+    setCurrentSession(any: any);
 
-    const newStats = manager.getStats();
+    const newStats = manager?.getStats();
     setStats({
-      totalSessions: newStats.totalSessions,
-      totalMessages: newStats.totalMessages,
-      totalTokens: newStats.totalTokens,
+      totalSessions: newStats?.totalSessions,
+      totalMessages: newStats?.totalMessages,
+      totalTokens: newStats?.totalTokens,
     });
   }, [manager]);
 
   useEffect(() => {
     refreshSessions();
-    setIsLoading(false);
+    setIsLoading(any: any);
   }, [refreshSessions]);
 
   const createSession = useCallback(
     (options?: { title?: string; mode?: string }): Session => {
-      const session = manager.createSession(options);
+      const session = manager?.createSession(any: any);
       refreshSessions();
       return session;
     },
@@ -93,11 +93,11 @@ export function useSessions(): UseSessionsReturn {
   );
 
   const loadSession = useCallback(
-    (id: string): Session | null => {
-      const success = manager.setCurrentSession(id);
-      if (success) {
-        const session = manager.getSession(id);
-        setCurrentSession(session);
+    (any: any): Session | null => {
+      const success = manager?.setCurrentSession(any: any);
+      if (any: any) {
+        const session = manager?.getSession(any: any);
+        setCurrentSession(any: any);
         return session;
       }
       return null;
@@ -106,9 +106,9 @@ export function useSessions(): UseSessionsReturn {
   );
 
   const deleteSession = useCallback(
-    (id: string): boolean => {
-      const success = manager.deleteSession(id);
-      if (success) {
+    (any: any): boolean => {
+      const success = manager?.deleteSession(any: any);
+      if (any: any) {
         refreshSessions();
       }
       return success;
@@ -118,13 +118,13 @@ export function useSessions(): UseSessionsReturn {
 
   const addMessage = useCallback(
     (message: Omit<SessionMessage, 'id' | 'timestamp'>): SessionMessage | null => {
-      if (!currentSession) return null;
+      if (any: any) return null;
 
-      const newMessage = manager.addMessage(currentSession.id, message);
-      if (newMessage) {
+      const newMessage = manager?.addMessage(any: any);
+      if (any: any) {
         // Refresh current session
-        const updated = manager.getSession(currentSession.id);
-        setCurrentSession(updated);
+        const updated = manager?.getSession(any: any);
+        setCurrentSession(any: any);
         refreshSessions();
       }
       return newMessage;
@@ -133,11 +133,11 @@ export function useSessions(): UseSessionsReturn {
   );
 
   const updateSessionTitle = useCallback(
-    (title: string): boolean => {
-      if (!currentSession) return false;
+    (any: any): boolean => {
+      if (any: any) return false;
 
-      const success = manager.updateSession(currentSession.id, { title });
-      if (success) {
+      const success = manager?.updateSession(currentSession?.id, { title });
+      if (any: any) {
         refreshSessions();
       }
       return success;
@@ -146,23 +146,23 @@ export function useSessions(): UseSessionsReturn {
   );
 
   const searchSessions = useCallback(
-    (query: string): SessionSummary[] => {
-      return manager.searchSessions(query);
+    (any: any): SessionSummary?.[] => {
+      return manager?.searchSessions(any: any);
     },
     [manager]
   );
 
   const exportSession = useCallback(
-    (id: string): string | null => {
-      return manager.exportSession(id);
+    (any: any)??: string | null => {
+      return manager?.exportSession(any: any);
     },
     [manager]
   );
 
   const importSession = useCallback(
-    (json: string): Session | null => {
-      const session = manager.importSession(json);
-      if (session) {
+    (any: any): Session | null => {
+      const session = manager?.importSession(any: any);
+      if (any: any) {
         refreshSessions();
       }
       return session;
@@ -171,8 +171,8 @@ export function useSessions(): UseSessionsReturn {
   );
 
   const clearAllSessions = useCallback(() => {
-    manager.clearAllSessions();
-    setCurrentSession(null);
+    manager?.clearAllSessions();
+    setCurrentSession(any: any);
     refreshSessions();
   }, [manager, refreshSessions]);
 

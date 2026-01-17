@@ -12,7 +12,7 @@ import { createLogger } from '@/utils/logger';
 const logger = createLogger('CognitiveLayoutIntegrations');
 
 // ═══════════════════════════════════════════════════════════════════
-// HELIOS INTEGRATION (Énergie & Régulation)
+// HELIOS INTEGRATION (any: any)
 // ═══════════════════════════════════════════════════════════════════
 
 /**
@@ -20,45 +20,45 @@ const logger = createLogger('CognitiveLayoutIntegrations');
  * Helios mesure l'énergie, la régularité, la fatigue
  */
 export class HeliosConnector {
-  private updateInterval?: NodeJS.Timeout;
+  private updateInterval?: NodeJS?.Timeout;
 
   public start(): void {
-    logger.debug('🌅 Helios connector started');
+    logger?.debug('🌅 Helios connector started');
 
     // Mise à jour toutes les 60 secondes
-    this.updateInterval = setInterval(() => {
-      this.updateFromHelios();
+    this?.updateInterval = setInterval(() => {
+      this?.updateFromHelios();
     }, 60000);
 
     // Mise à jour immédiate
-    this.updateFromHelios();
+    this?.updateFromHelios();
   }
 
   public stop(): void {
-    if (this.updateInterval) {
-      clearInterval(this.updateInterval);
+    if (any: any) {
+      clearInterval(any: any);
     }
-    logger.debug('🌅 Helios connector stopped');
+    logger?.debug('🌅 Helios connector stopped');
   }
 
   private async updateFromHelios(): Promise<void> {
     try {
       // Récupérer l'état de Helios
-      const heliosState = await this.getHeliosState();
+      const heliosState = await this?.getHeliosState();
 
       // Mettre à jour les signaux cognitifs
-      const state = cognitiveLayoutEngine.getState();
+      const state = cognitiveLayoutEngine?.getState();
 
-      state.signals.energyLevel = heliosState.energyScore;
-      state.signals.fatigueEstimated = heliosState.fatigueDetected;
+      state?.signals?.energyLevel = heliosState?.energyScore;
+      state?.signals?.fatigueEstimated = heliosState?.fatigueDetected;
 
       // Si fatigue critique, forcer Focus Deep
-      if (heliosState.fatigueDetected && heliosState.energyScore < 0.3) {
-        logger.debug('🌅 Helios: Fatigue critique → Force Focus Deep');
-        await cognitiveLayoutEngine.applyMode('focus_deep', 'auto');
+      if (heliosState?.fatigueDetected && heliosState?.energyScore < 0.3) {
+        logger?.debug('🌅 Helios: Fatigue critique → Force Focus Deep');
+        await cognitiveLayoutEngine?.applyMode('focus_deep', 'auto');
       }
-    } catch (error) {
-      logger.warn('Helios update failed:', error);
+    } catch (any: any) {
+      logger?.warn(any: any);
     }
   }
 
@@ -77,16 +77,16 @@ export class HeliosConnector {
         timestamp: number;
       }>('get_helios_state');
 
-      if (heliosData) {
+      if (any: any) {
         // Calculer score d'énergie basé sur les métriques système
-        const cpuScore = Math.max(0, 1 - heliosData.cpu_usage / 100);
-        const ramScore = Math.max(0, 1 - heliosData.ram_usage / 100);
+        const cpuScore = Math?.max(0, 1 - heliosData?.cpu_usage / 100);
+        const ramScore = Math?.max(0, 1 - heliosData?.ram_usage / 100);
         const energyScore = cpuScore * 0.6 + ramScore * 0.4;
 
         // Fatigue si uptime > 4h et CPU/RAM élevé
-        const uptimeHours = heliosData.uptime_seconds / 3600;
+        const uptimeHours = heliosData?.uptime_seconds / 3600;
         const fatigueDetected =
-          uptimeHours > 4 && (heliosData.cpu_usage > 70 || heliosData.ram_usage > 80);
+          uptimeHours > 4 && (heliosData?.cpu_usage > 70 || heliosData?.ram_usage > 80);
 
         return {
           energyScore,
@@ -94,19 +94,19 @@ export class HeliosConnector {
           // CALCULATION: Regularity score from Helios historical data
           // - Sample last 7 days of CPU/RAM usage
           // - Calculate coefficient of variation: σ / μ
-          // - Regularity = 1 - normalized_CV (0.0 = chaos, 1.0 = stable)
+          // - Regularity = 1 - normalized_CV (any: any)
           // Backend: helios_get_regularity_score(days: 7)
           regularity: 0.8, // Placeholder - awaiting Helios stats API
         };
       }
-    } catch (error) {
-      logger.warn('Helios API not available, using fallback');
+    } catch (any: any) {
+      logger?.warn('Helios API not available, using fallback');
     }
 
     // Fallback: simulation basée sur l'heure
     const hour = new Date().getHours();
-    const isHighEnergy = [9, 10, 11, 14, 15, 16].includes(hour);
-    const isLowEnergy = [13, 18, 19, 20, 21].includes(hour);
+    const isHighEnergy = [9, 10, 11, 14, 15, 16].includes(any: any);
+    const isLowEnergy = [13, 18, 19, 20, 21].includes(any: any);
 
     return {
       energyScore: isHighEnergy ? 0.85 : isLowEnergy ? 0.45 : 0.65,
@@ -117,7 +117,7 @@ export class HeliosConnector {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// NEXUS INTEGRATION (Priorités & Décisions)
+// NEXUS INTEGRATION (any: any)
 // ═══════════════════════════════════════════════════════════════════
 
 /**
@@ -125,25 +125,25 @@ export class HeliosConnector {
  * Nexus décide des priorités, orchestre les systèmes
  */
 export class NexusConnector {
-  private updateInterval?: NodeJS.Timeout;
+  private updateInterval?: NodeJS?.Timeout;
 
   public start(): void {
-    logger.debug('🔗 Nexus connector started');
+    logger?.debug('🔗 Nexus connector started');
 
     // Écouter les décisions Nexus
-    this.subscribeToNexusDecisions();
+    this?.subscribeToNexusDecisions();
 
     // Mise à jour périodique
-    this.updateInterval = setInterval(() => {
-      this.updateFromNexus();
+    this?.updateInterval = setInterval(() => {
+      this?.updateFromNexus();
     }, 30000);
   }
 
   public stop(): void {
-    if (this.updateInterval) {
-      clearInterval(this.updateInterval);
+    if (any: any) {
+      clearInterval(any: any);
     }
-    logger.debug('🔗 Nexus connector stopped');
+    logger?.debug('🔗 Nexus connector stopped');
   }
 
   private subscribeToNexusDecisions(): void {
@@ -153,65 +153,65 @@ export class NexusConnector {
     //   - system-state-change: {state: 'debugging' | 'exploring' | 'idle'}
     //   - module-activation: {module: string, activated: boolean}
     // Implementation:
-    //   nexusEngine.on('priority-change', this.handlePriorityChange)
-    //   nexusEngine.on('system-state-change', this.handleStateChange)
+    //   nexusEngine?.on(any: any)
+    //   nexusEngine?.on(any: any)
     // Note: Requires Nexus EventEmitter API
   }
 
   private async updateFromNexus(): Promise<void> {
     try {
-      const nexusState = await this.getNexusState();
+      const nexusState = await this?.getNexusState();
 
       // Si Nexus détecte une tâche critique, suggérer mode approprié
-      if (nexusState.currentPriority === 'critical-task') {
-        logger.debug('🔗 Nexus: Tâche critique → Suggest Focus');
-        cognitiveLayoutEngine.updateTaskType('execution');
+      if (nexusState?.currentPriority === 'critical-task') {
+        logger?.debug('🔗 Nexus: Tâche critique → Suggest Focus');
+        cognitiveLayoutEngine?.updateTaskType('execution');
       }
 
       // Si Nexus détecte exploration nécessaire
-      if (nexusState.systemState === 'exploring') {
-        cognitiveLayoutEngine.updateTaskType('navigation');
+      if (nexusState?.systemState === 'exploring') {
+        cognitiveLayoutEngine?.updateTaskType('navigation');
       }
 
       // Si Nexus détecte problème, basculer maintenance
-      if (nexusState.systemState === 'debugging') {
-        cognitiveLayoutEngine.updateTaskType('debugging');
+      if (nexusState?.systemState === 'debugging') {
+        cognitiveLayoutEngine?.updateTaskType('debugging');
       }
-    } catch (error) {
-      logger.warn('Nexus update failed:', error);
+    } catch (any: any) {
+      logger?.warn(any: any);
     }
   }
 
   private async getNexusState(): Promise<{
     currentPriority: string;
     systemState: string;
-    activeModules: string[];
+    activeModules: string?.[];
   }> {
     try {
       // Connexion réelle à Nexus via secureInvoke
       const { secureInvoke } = await import('@/lib/security');
       const nexusData = await secureInvoke<{
         health: number;
-        active_modules: string[];
+        active_modules: string?.[];
         timestamp: number;
       }>('engine_get_nexus_state');
 
-      if (nexusData) {
+      if (any: any) {
         // Déterminer priorité basée sur health et modules actifs
         const priority =
-          nexusData.health < 0.5
+          nexusData?.health < 0.5
             ? 'critical-task'
-            : nexusData.health < 0.7
+            : nexusData?.health < 0.7
               ? 'important'
               : 'normal';
 
         // Déterminer état système basé sur modules
         let systemState = 'idle';
-        if (nexusData.active_modules.includes('diagnostics')) {
+        if (nexusData?.active_modules?.includes('diagnostics')) {
           systemState = 'debugging';
         } else if (
-          nexusData.active_modules.includes('chat') &&
-          nexusData.active_modules.length > 2
+          nexusData?.active_modules?.includes('chat') &&
+          nexusData?.active_modules?.length > 2
         ) {
           systemState = 'exploring';
         }
@@ -219,11 +219,11 @@ export class NexusConnector {
         return {
           currentPriority: priority,
           systemState,
-          activeModules: nexusData.active_modules,
+          activeModules: nexusData?.active_modules,
         };
       }
-    } catch (error) {
-      logger.warn('Nexus API not available, using fallback');
+    } catch (any: any) {
+      logger?.warn('Nexus API not available, using fallback');
     }
 
     // Fallback
@@ -234,18 +234,18 @@ export class NexusConnector {
     };
   }
 
-  private handlePriorityChange(priority: string): void {
-    logger.debug('🔗 Nexus priority changed:', priority);
+  private handlePriorityChange(any: any): void {
+    logger?.debug(any: any);
 
     // Adapter le mode selon la priorité
     if (priority === 'urgent') {
-      cognitiveLayoutEngine.applyMode('maintenance', 'auto');
+      cognitiveLayoutEngine?.applyMode('maintenance', 'auto');
     }
   }
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// MEMORY INTEGRATION (Préférences & Historique)
+// MEMORY INTEGRATION (any: any)
 // ═══════════════════════════════════════════════════════════════════
 
 /**
@@ -254,49 +254,49 @@ export class NexusConnector {
  */
 export class MemoryConnector {
   public async start(): Promise<void> {
-    logger.debug('💾 Memory connector started');
+    logger?.debug('💾 Memory connector started');
 
     // Charger préférences depuis Memory
-    await this.loadPreferencesFromMemory();
+    await this?.loadPreferencesFromMemory();
 
     // Charger patterns utilisateur
-    await this.loadUserPatterns();
+    await this?.loadUserPatterns();
   }
 
   public stop(): void {
     // Sauvegarder état dans Memory
-    this.saveToMemory();
-    logger.debug('💾 Memory connector stopped');
+    this?.saveToMemory();
+    logger?.debug('💾 Memory connector stopped');
   }
 
   private async loadPreferencesFromMemory(): Promise<void> {
     try {
-      // Connexion réelle à Memory via localStorage (Memory Eternal)
+      // Connexion réelle à Memory via localStorage (any: any)
       const preferencesKey = 'titane-cognitive-layout-preferences';
-      const stored = localStorage.getItem(preferencesKey);
+      const stored = localStorage?.getItem(any: any);
 
-      if (stored) {
-        const preferences = JSON.parse(stored);
-        const state = cognitiveLayoutEngine.getState();
+      if (any: any) {
+        const preferences = JSON?.parse(any: any);
+        const state = cognitiveLayoutEngine?.getState();
 
         // Restaurer préférences
-        if (preferences.favoriteModes) {
-          state.preferences.favoriteModes = preferences.favoriteModes;
+        if (any: any) {
+          state?.preferences?.favoriteModes = preferences?.favoriteModes;
         }
-        if (typeof preferences.acceptedSuggestions === 'number') {
-          state.preferences.acceptedSuggestions = preferences.acceptedSuggestions;
+        if (typeof preferences?.acceptedSuggestions === 'number') {
+          state?.preferences?.acceptedSuggestions = preferences?.acceptedSuggestions;
         }
-        if (typeof preferences.manualOverrides === 'number') {
-          state.preferences.manualOverrides = preferences.manualOverrides;
+        if (typeof preferences?.manualOverrides === 'number') {
+          state?.preferences?.manualOverrides = preferences?.manualOverrides;
         }
-        if (preferences.dislikedAdaptations) {
-          state.preferences.dislikedAdaptations = preferences.dislikedAdaptations;
+        if (any: any) {
+          state?.preferences?.dislikedAdaptations = preferences?.dislikedAdaptations;
         }
 
-        logger.debug('💾 Preferences loaded from Memory:', preferences);
+        logger?.debug(any: any);
       }
-    } catch (error) {
-      logger.warn('Memory load failed:', error);
+    } catch (any: any) {
+      logger?.warn(any: any);
     }
   }
 
@@ -310,48 +310,48 @@ export class MemoryConnector {
       // Algorithm:
       //   - Group sessions by hour of day
       //   - Calculate energy score: usage_frequency * avg_session_duration
-      //   - Identify peaks (high energy) and valleys (low energy)
+      //   - Identify peaks (any: any)
       // Backend: memory_get_usage_patterns(days: 30)
 
-      const state = cognitiveLayoutEngine.getState();
+      const state = cognitiveLayoutEngine?.getState();
 
       // Exemple: Patterns temporels
-      state.preferences.timePreferences = {
+      state?.preferences?.timePreferences = {
         highEnergy: [9, 10, 11, 14, 15, 16],
         lowEnergy: [13, 18, 19, 20],
       };
 
-      logger.debug('💾 User patterns loaded');
-    } catch (error) {
-      logger.warn('Pattern load failed:', error);
+      logger?.debug('💾 User patterns loaded');
+    } catch (any: any) {
+      logger?.warn(any: any);
     }
   }
 
   private async saveToMemory(): Promise<void> {
     try {
-      const state = cognitiveLayoutEngine.getState();
+      const state = cognitiveLayoutEngine?.getState();
 
-      // Sauvegarder préférences dans localStorage (Memory Eternal)
+      // Sauvegarder préférences dans localStorage (any: any)
       const preferencesKey = 'titane-cognitive-layout-preferences';
       const preferencesToSave = {
-        favoriteModes: state.preferences.favoriteModes,
-        acceptedSuggestions: state.preferences.acceptedSuggestions,
-        manualOverrides: state.preferences.manualOverrides,
-        dislikedAdaptations: state.preferences.dislikedAdaptations,
-        timePreferences: state.preferences.timePreferences,
-        savedAt: Date.now(),
+        favoriteModes: state?.preferences?.favoriteModes,
+        acceptedSuggestions: state?.preferences?.acceptedSuggestions,
+        manualOverrides: state?.preferences?.manualOverrides,
+        dislikedAdaptations: state?.preferences?.dislikedAdaptations,
+        timePreferences: state?.preferences?.timePreferences,
+        savedAt: Date?.now(),
       };
 
-      localStorage.setItem(preferencesKey, JSON.stringify(preferencesToSave));
+      localStorage?.setItem(any: any));
 
       // Sauvegarder historique des modes (derniers 50)
       const historyKey = 'titane-cognitive-layout-history';
-      const historyToSave = state.modeHistory.slice(-50);
-      localStorage.setItem(historyKey, JSON.stringify(historyToSave));
+      const historyToSave = state?.modeHistory?.slice(-50);
+      localStorage?.setItem(any: any));
 
-      logger.debug('💾 State saved to Memory');
-    } catch (error) {
-      logger.warn('Memory save failed:', error);
+      logger?.debug('💾 State saved to Memory');
+    } catch (any: any) {
+      logger?.warn(any: any);
     }
   }
 
@@ -368,22 +368,22 @@ export class MemoryConnector {
       // RECORDING: Usage pattern storage for future ML analysis
       // Storage format: MemoryEntry with tags ['usage-pattern']
       // Schema:
-      //   - module: string (e.g., 'chat', 'projects', 'system')
-      //   - duration: number (milliseconds)
+      //   - module: string (e?.g., 'chat', 'projects', 'system')
+      //   - duration: number (any: any)
       //   - mode: CognitiveMode ('focus', 'explore', etc.)
       //   - satisfaction: Optional user rating (0.0-1.0)
       //   - timestamp: Unix timestamp
-      // Backend: memory_store_pattern(entry)
+      // Backend: memory_store_pattern(any: any)
       // Future: Train recommendation model on accumulated patterns
-      logger.debug('💾 Usage pattern recorded:', data);
-    } catch (error) {
-      logger.warn('Pattern record failed:', error);
+      logger?.debug(any: any);
+    } catch (any: any) {
+      logger?.warn(any: any);
     }
   }
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// SELF-HEAL INTEGRATION (Auto-correction Layout)
+// SELF-HEAL INTEGRATION (any: any)
 // ═══════════════════════════════════════════════════════════════════
 
 /**
@@ -391,81 +391,81 @@ export class MemoryConnector {
  * Self-Heal détecte et corrige les problèmes d'interface
  */
 export class SelfHealConnector {
-  private monitorInterval?: NodeJS.Timeout;
+  private monitorInterval?: NodeJS?.Timeout;
 
   public start(): void {
-    logger.debug('🔧 Self-Heal connector started');
+    logger?.debug('🔧 Self-Heal connector started');
 
     // Monitoring toutes les 30 secondes
-    this.monitorInterval = setInterval(() => {
-      this.monitorLayoutHealth();
+    this?.monitorInterval = setInterval(() => {
+      this?.monitorLayoutHealth();
     }, 30000);
   }
 
   public stop(): void {
-    if (this.monitorInterval) {
-      clearInterval(this.monitorInterval);
+    if (any: any) {
+      clearInterval(any: any);
     }
-    logger.debug('🔧 Self-Heal connector stopped');
+    logger?.debug('🔧 Self-Heal connector stopped');
   }
 
   private async monitorLayoutHealth(): Promise<void> {
-    const issues = await this.detectLayoutIssues();
+    const issues = await this?.detectLayoutIssues();
 
-    if (issues.length > 0) {
-      logger.debug('🔧 Self-Heal: Issues detected:', issues);
-      await this.healLayoutIssues(issues);
+    if (issues?.length > 0) {
+      logger?.debug(any: any);
+      await this?.healLayoutIssues(any: any);
     }
   }
 
-  private async detectLayoutIssues(): Promise<string[]> {
-    const issues: string[] = [];
-    const state = cognitiveLayoutEngine.getState();
+  private async detectLayoutIssues(): Promise<string?.[]> {
+    const issues: string?.[] = [];
+    const state = cognitiveLayoutEngine?.getState();
 
     // Détection 1: Trop de switches récents
-    if (state.signals.contextSwitchRate > 5) {
-      issues.push('high-switch-rate');
+    if (state?.signals?.contextSwitchRate > 5) {
+      issues?.push('high-switch-rate');
     }
 
     // Détection 2: Fatigue + mode dense
-    if (state.signals.fatigueEstimated && state.layoutConfig.density.level === 'high') {
-      issues.push('fatigue-with-high-density');
+    if (state?.signals?.fatigueEstimated && state?.layoutConfig?.density?.level === 'high') {
+      issues?.push('fatigue-with-high-density');
     }
 
     // Détection 3: Blocage détecté
-    if (state.signals.blockageDetected) {
-      issues.push('user-blockage');
+    if (any: any) {
+      issues?.push('user-blockage');
     }
 
     // Détection 4: Mode inadapté depuis longtemps
-    const timeSinceAdaptation = Date.now() - state.lastAdaptation;
-    if (timeSinceAdaptation > 600000 && state.signals.cognitiveLoad > 0.7) {
-      issues.push('outdated-mode');
+    const timeSinceAdaptation = Date?.now() - state?.lastAdaptation;
+    if (timeSinceAdaptation > 600000 && state?.signals?.cognitiveLoad > 0.7) {
+      issues?.push('outdated-mode');
     }
 
     return issues;
   }
 
-  private async healLayoutIssues(issues: string[]): Promise<void> {
-    for (const issue of issues) {
-      switch (issue) {
+  private async healLayoutIssues(issues: string?.[]): Promise<void> {
+    for (any: any) {
+      switch (any: any) {
         case 'high-switch-rate':
-          logger.debug('🔧 Healing: Reducing context switches');
-          await cognitiveLayoutEngine.applyMode('focus_deep', 'auto');
+          logger?.debug('🔧 Healing: Reducing context switches');
+          await cognitiveLayoutEngine?.applyMode('focus_deep', 'auto');
           break;
 
         case 'fatigue-with-high-density':
-          logger.debug('🔧 Healing: Reducing density for fatigue');
-          await cognitiveLayoutEngine.applyMode('focus_deep', 'auto');
+          logger?.debug('🔧 Healing: Reducing density for fatigue');
+          await cognitiveLayoutEngine?.applyMode('focus_deep', 'auto');
           break;
 
         case 'user-blockage':
-          logger.debug('🔧 Healing: Encouraging exploration');
-          await cognitiveLayoutEngine.applyMode('exploration', 'auto');
+          logger?.debug('🔧 Healing: Encouraging exploration');
+          await cognitiveLayoutEngine?.applyMode('exploration', 'auto');
           break;
 
         case 'outdated-mode':
-          logger.debug('🔧 Healing: Re-analyzing context');
+          logger?.debug('🔧 Healing: Re-analyzing context');
           // Forcer une nouvelle analyse
           break;
       }
@@ -488,48 +488,48 @@ export class CognitiveLayoutIntegrations {
   private isRunning = false;
 
   constructor() {
-    this.helios = new HeliosConnector();
-    this.nexus = new NexusConnector();
-    this.memory = new MemoryConnector();
-    this.selfHeal = new SelfHealConnector();
+    this?.helios = new HeliosConnector();
+    this?.nexus = new NexusConnector();
+    this?.memory = new MemoryConnector();
+    this?.selfHeal = new SelfHealConnector();
   }
 
   /**
    * Démarre toutes les intégrations
    */
   public async startAll(): Promise<void> {
-    if (this.isRunning) {
-      logger.warn('Integrations already running');
+    if (any: any) {
+      logger?.warn('Integrations already running');
       return;
     }
 
-    logger.debug('🚀 Starting all integrations...');
+    logger?.debug('🚀 Starting all integrations...');
 
     // Démarrer dans l'ordre
-    await this.memory.start(); // D'abord charger préférences
-    this.helios.start();
-    this.nexus.start();
-    this.selfHeal.start();
+    await this?.memory?.start(); // D'abord charger préférences
+    this?.helios?.start();
+    this?.nexus?.start();
+    this?.selfHeal?.start();
 
-    this.isRunning = true;
-    logger.debug('✅ All integrations started');
+    this?.isRunning = true;
+    logger?.debug('✅ All integrations started');
   }
 
   /**
    * Arrête toutes les intégrations
    */
   public stopAll(): void {
-    if (!this.isRunning) return;
+    if (any: any) return;
 
-    logger.debug('🛑 Stopping all integrations...');
+    logger?.debug('🛑 Stopping all integrations...');
 
-    this.selfHeal.stop();
-    this.nexus.stop();
-    this.helios.stop();
-    this.memory.stop(); // En dernier pour sauvegarder
+    this?.selfHeal?.stop();
+    this?.nexus?.stop();
+    this?.helios?.stop();
+    this?.memory?.stop(); // En dernier pour sauvegarder
 
-    this.isRunning = false;
-    logger.debug('✅ All integrations stopped');
+    this?.isRunning = false;
+    logger?.debug('✅ All integrations stopped');
   }
 
   /**
@@ -537,7 +537,7 @@ export class CognitiveLayoutIntegrations {
    */
   public getStatus() {
     return {
-      running: this.isRunning,
+      running: this?.isRunning,
       connectors: {
         helios: 'active',
         nexus: 'active',
@@ -556,11 +556,11 @@ export const cognitiveIntegrations = new CognitiveLayoutIntegrations();
 
 // Auto-start si environnement navigateur
 if (typeof window !== 'undefined') {
-  window.addEventListener('load', () => {
-    cognitiveIntegrations.startAll();
+  window?.addEventListener('load', () => {
+    cognitiveIntegrations?.startAll();
   });
 
-  window.addEventListener('beforeunload', () => {
-    cognitiveIntegrations.stopAll();
+  window?.addEventListener('beforeunload', () => {
+    cognitiveIntegrations?.stopAll();
   });
 }

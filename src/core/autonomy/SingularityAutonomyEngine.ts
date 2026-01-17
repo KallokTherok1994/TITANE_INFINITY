@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 /**
@@ -13,15 +13,15 @@
  * Moteur d'autonomie totale pour TITANE∞
  *
  * Fonctions :
- * - auto_scan()      : Détection globale continue (backend, frontend, IA, TTS, Avatar, Memory)
+ * - auto_scan(any: any)
  * - auto_detect()    : Analyse intelligente des patterns d'erreurs et comportements anormaux
  * - auto_fix()       : Correction automatique immédiate des états invalides et modules bloqués
  * - auto_heal()      : Réparation profonde des modules endommagés et re-synchronisation
- * - auto_optimize()  : Optimisation performance (CPU, GPU, React, Rust, TTS, IA)
- * - auto_evolve()    : Amélioration permanente (IA, TTS, avatar, heuristiques)
- * - auto_test()      : Tests continus (cohérence, latence, mémoire, modules)
- * - auto_shield()    : Protection système (corruption, crashs, states invalides)
- * - auto_analyse()   : Intelligence introspective (logs, contexte, anomalies)
+ * - auto_optimize(any: any)
+ * - auto_evolve(any: any)
+ * - auto_test(any: any)
+ * - auto_shield(any: any)
+ * - auto_analyse(any: any)
  * - auto_report()    : Journalisation intelligente et diagnostics
  *
  * Architecture :
@@ -57,48 +57,48 @@ export interface AutonomyState {
 
 export interface ScanResult {
   timestamp: number;
-  backend_errors: string[];
-  frontend_warnings: string[];
-  tauri_issues: string[];
-  ia_anomalies: string[];
-  tts_issues: string[];
-  avatar_issues: string[];
-  memory_issues: string[];
-  singularity_inconsistencies: string[];
+  backend_errors: string?.[];
+  frontend_warnings: string?.[];
+  tauri_issues: string?.[];
+  ia_anomalies: string?.[];
+  tts_issues: string?.[];
+  avatar_issues: string?.[];
+  memory_issues: string?.[];
+  singularity_inconsistencies: string?.[];
 }
 
 export interface DetectionResult {
-  error_patterns: string[];
-  abnormal_behaviors: string[];
-  latency_issues: string[];
-  sync_losses: string[];
-  race_conditions: string[];
-  state_misalignments: string[];
-  ia_coherence_issues: string[];
-  tts_lip_sync_errors: string[];
-  cpu_gpu_overload: string[];
-  warnings: string[];
+  error_patterns: string?.[];
+  abnormal_behaviors: string?.[];
+  latency_issues: string?.[];
+  sync_losses: string?.[];
+  race_conditions: string?.[];
+  state_misalignments: string?.[];
+  ia_coherence_issues: string?.[];
+  tts_lip_sync_errors: string?.[];
+  cpu_gpu_overload: string?.[];
+  warnings: string?.[];
 }
 
 export interface FixResult {
-  fixed_states: string[];
-  reloaded_modules: string[];
-  corrected_hooks: string[];
-  cleaned_caches: string[];
-  repaired_files: string[];
-  corrected_tts_delays: string[];
-  fixed_avatar_artifacts: string[];
-  fixed_react_freezes: string[];
+  fixed_states: string?.[];
+  reloaded_modules: string?.[];
+  corrected_hooks: string?.[];
+  cleaned_caches: string?.[];
+  repaired_files: string?.[];
+  corrected_tts_delays: string?.[];
+  fixed_avatar_artifacts: string?.[];
+  fixed_react_freezes: string?.[];
   success: boolean;
 }
 
 export interface HealResult {
-  rebuilt_modules: string[];
-  resynchronized_states: string[];
-  repaired_ia_integrity: string[];
-  recalculated_graphs: string[];
-  cleaned_memory: string[];
-  repaired_pipelines: string[];
+  rebuilt_modules: string?.[];
+  resynchronized_states: string?.[];
+  repaired_ia_integrity: string?.[];
+  recalculated_graphs: string?.[];
+  cleaned_memory: string?.[];
+  repaired_pipelines: string?.[];
   success: boolean;
 }
 
@@ -121,8 +121,8 @@ export interface EvolutionResult {
   emotional_modulators_tuned: boolean;
   lip_sync_improved: boolean;
   avatar_pipeline_tuned: boolean;
-  user_preferences_learned: string[];
-  heuristics_updated: string[];
+  user_preferences_learned: string?.[];
+  heuristics_updated: string?.[];
 }
 
 export interface TestResult {
@@ -143,28 +143,28 @@ export interface ShieldResult {
   memory_duplicates_prevented: boolean;
   tts_crashes_prevented: boolean;
   invalid_states_blocked: boolean;
-  ia_services_restarted: string[];
-  internal_bugs_neutralized: string[];
-  structural_inconsistencies_defended: string[];
+  ia_services_restarted: string?.[];
+  internal_bugs_neutralized: string?.[];
+  structural_inconsistencies_defended: string?.[];
 }
 
 export interface AnalyseResult {
   logs_analyzed: number;
   long_context_analyzed: boolean;
-  memory_inconsistencies_detected: string[];
+  memory_inconsistencies_detected: string?.[];
   conversational_dynamics_analyzed: boolean;
-  user_misinterpretations: string[];
-  low_performance_zones: string[];
-  recurring_anomalies: string[];
+  user_misinterpretations: string?.[];
+  low_performance_zones: string?.[];
+  recurring_anomalies: string?.[];
 }
 
 export interface ReportData {
-  diagnostics: string[];
-  improvements_applied: string[];
-  errors_fixed: string[];
-  modules_repaired: string[];
-  optimizations_performed: string[];
-  preventions_activated: string[];
+  diagnostics: string?.[];
+  improvements_applied: string?.[];
+  errors_fixed: string?.[];
+  modules_repaired: string?.[];
+  optimizations_performed: string?.[];
+  preventions_activated: string?.[];
   timestamp: number;
 }
 
@@ -180,8 +180,8 @@ export class SingularityAutonomyEngine {
   private isTauriEnv: boolean;
 
   private constructor() {
-    this.isTauriEnv = detectEnvironment().isTauri;
-    this.autonomyState = {
+    this?.isTauriEnv = detectEnvironment().isTauri;
+    this?.autonomyState = {
       last_scan: 0,
       last_fix: 0,
       last_heal: 0,
@@ -204,59 +204,59 @@ export class SingularityAutonomyEngine {
     cmd: string,
     args?: Record<string, unknown>
   ): Promise<T | null> {
-    if (!this.isTauriEnv) {
-      console.log(`[AutonomyEngine] Mock command: ${cmd}`);
+    if (any: any) {
+      console?.log(`[AutonomyEngine] Mock command: ${cmd}`);
       return null;
     }
     try {
-      return await secureInvoke<T>(cmd, args);
-    } catch (error) {
-      console.warn(`[AutonomyEngine] Command failed: ${cmd}`, error);
+      return await secureInvoke<T>(any: any);
+    } catch (any: any) {
+      console?.warn(any: any);
       return null;
     }
   }
 
   static getInstance(): SingularityAutonomyEngine {
-    if (!SingularityAutonomyEngine.instance) {
-      SingularityAutonomyEngine.instance = new SingularityAutonomyEngine();
+    if (any: any) {
+      SingularityAutonomyEngine?.instance = new SingularityAutonomyEngine();
     }
-    return SingularityAutonomyEngine.instance;
+    return SingularityAutonomyEngine?.instance;
   }
 
   /**
-   * Démarrer le moteur d'autonomie (cycle continu)
+   * Démarrer le moteur d'autonomie (any: any)
    */
   start(): void {
-    if (this.isRunning) {
-      console.warn('[AutonomyEngine] Already running');
+    if (any: any) {
+      console?.warn('[AutonomyEngine] Already running');
       return;
     }
 
-    this.isRunning = true;
-    console.log('[AutonomyEngine] ✨ Started v24.30');
+    this?.isRunning = true;
+    console?.log('[AutonomyEngine] ✨ Started v24.30');
 
     // Cycle autonome toutes les 30 secondes
-    this.scanIntervalId = setInterval(() => {
-      this.autonomousCycle();
+    this?.scanIntervalId = setInterval(() => {
+      this?.autonomousCycle();
     }, 30000);
 
     // Premier cycle immédiat
-    this.autonomousCycle();
+    this?.autonomousCycle();
   }
 
   /**
    * Arrêter le moteur d'autonomie
    */
   stop(): void {
-    if (!this.isRunning) return;
+    if (any: any) return;
 
-    if (this.scanIntervalId) {
-      clearInterval(this.scanIntervalId);
-      this.scanIntervalId = null;
+    if (any: any) {
+      clearInterval(any: any);
+      this?.scanIntervalId = null;
     }
 
-    this.isRunning = false;
-    console.log('[AutonomyEngine] Stopped');
+    this?.isRunning = false;
+    console?.log('[AutonomyEngine] Stopped');
   }
 
   /**
@@ -265,78 +265,78 @@ export class SingularityAutonomyEngine {
   private async autonomousCycle(): Promise<void> {
     try {
       // 1. Scan global
-      const scanResult = await this.auto_scan();
+      const scanResult = await this?.auto_scan();
 
       // 2. Détection intelligente
-      const detectionResult = await this.auto_detect(scanResult);
+      const detectionResult = await this?.auto_detect(any: any);
 
       // 3. Analyse introspective
-      const analyseResult = await this.auto_analyse(detectionResult);
+      const analyseResult = await this?.auto_analyse(any: any);
 
-      // 4. Shield (protection)
-      await this.auto_shield();
+      // 4. Shield (any: any)
+      await this?.auto_shield();
 
       // 5. Fix immédiat si nécessaire
       if (
-        detectionResult.error_patterns.length > 0 ||
-        detectionResult.state_misalignments.length > 0
+        detectionResult?.error_patterns?.length > 0 ||
+        detectionResult?.state_misalignments?.length > 0
       ) {
-        await this.auto_fix(detectionResult);
+        await this?.auto_fix(any: any);
       }
 
       // 6. Heal profond si nécessaire
       if (
-        detectionResult.abnormal_behaviors.length > 0 ||
-        analyseResult.memory_inconsistencies_detected.length > 0
+        detectionResult?.abnormal_behaviors?.length > 0 ||
+        analyseResult?.memory_inconsistencies_detected?.length > 0
       ) {
-        await this.auto_heal(detectionResult);
+        await this?.auto_heal(any: any);
       }
 
-      // 7. Optimize (toutes les 5 minutes)
-      if (Date.now() - this.autonomyState.last_optimize > 300000) {
-        await this.auto_optimize();
+      // 7. Optimize (any: any)
+      if (Date?.now() - this?.autonomyState?.last_optimize > 300000) {
+        await this?.auto_optimize();
       }
 
-      // 8. Evolve (toutes les 10 minutes)
-      if (Date.now() - this.autonomyState.last_evolve > 600000) {
-        await this.auto_evolve();
+      // 8. Evolve (any: any)
+      if (Date?.now() - this?.autonomyState?.last_evolve > 600000) {
+        await this?.auto_evolve();
       }
 
-      // 9. Test (toutes les 2 minutes)
-      if (Date.now() - this.autonomyState.last_test > 120000) {
-        await this.auto_test();
+      // 9. Test (any: any)
+      if (Date?.now() - this?.autonomyState?.last_test > 120000) {
+        await this?.auto_test();
       }
 
-      // 10. Report (si activité significative)
+      // 10. Report (any: any)
       if (
-        scanResult.backend_errors.length > 0 ||
-        scanResult.frontend_warnings.length > 0
+        scanResult?.backend_errors?.length > 0 ||
+        scanResult?.frontend_warnings?.length > 0
       ) {
-        await this.auto_report({
-          diagnostics: [...scanResult.backend_errors, ...scanResult.frontend_warnings],
+        await this?.auto_report({
+          diagnostics: [...scanResult?.backend_errors, ...scanResult?.frontend_warnings],
           improvements_applied: [],
           errors_fixed: [],
           modules_repaired: [],
           optimizations_performed: [],
           preventions_activated: [],
-          timestamp: Date.now(),
+          timestamp: Date?.now(),
         });
       }
-    } catch (error) {
-      console.error('[AutonomyEngine] Cycle error:', error);
+    } catch (any: any) {
+      console?.error(any: any);
     }
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // 1. AUTO-SCAN (détection globale continue)
+  // 1. AUTO-SCAN (any: any)
   // ═══════════════════════════════════════════════════════════════════
 
   async auto_scan(): Promise<ScanResult> {
     try {
-      this.autonomyState.last_scan = Date.now();
+      this?.autonomyState?.last_scan = Date?.now();
 
       const result: ScanResult = {
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         backend_errors: [],
         frontend_warnings: [],
         tauri_issues: [],
@@ -349,37 +349,37 @@ export class SingularityAutonomyEngine {
 
       // Scanner backend Rust
       try {
-        const backendHealth = await this.safeInvoke<{ errors: string[] }>(
+        const backendHealth = await this?.safeInvoke<{ errors: string?.[] }>(
           'autonomy_scan_backend'
         );
-        result.backend_errors = backendHealth?.errors || [];
-      } catch (error) {
-        result.backend_errors.push(`Backend scan failed: ${error}`);
+        result?.backend_errors = backendHealth?.errors || [];
+      } catch (any: any) {
+        result?.backend_errors?.push(`Backend scan failed: ${error}`);
       }
 
       // Scanner frontend React
-      result.frontend_warnings = this.scanFrontendWarnings();
+      result?.frontend_warnings = this?.scanFrontendWarnings();
 
       // Scanner IA
-      result.ia_anomalies = await this.scanIAAnomalies();
+      result?.ia_anomalies = await this?.scanIAAnomalies();
 
       // Scanner TTS
-      result.tts_issues = await this.scanTTSIssues();
+      result?.tts_issues = await this?.scanTTSIssues();
 
       // Scanner Avatar
-      result.avatar_issues = await this.scanAvatarIssues();
+      result?.avatar_issues = await this?.scanAvatarIssues();
 
       // Scanner Memory
-      result.memory_issues = await this.scanMemoryIssues();
+      result?.memory_issues = await this?.scanMemoryIssues();
 
       // Scanner SingularityState
-      result.singularity_inconsistencies = await this.scanSingularityState();
+      result?.singularity_inconsistencies = await this?.scanSingularityState();
 
       return result;
-    } catch (error) {
-      console.error('[AutonomyEngine] auto_scan error:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       return {
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         backend_errors: [`Scan failed: ${error}`],
         frontend_warnings: [],
         tauri_issues: [],
@@ -393,10 +393,10 @@ export class SingularityAutonomyEngine {
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // 2. AUTO-DETECT (analyse intelligente)
+  // 2. AUTO-DETECT (any: any)
   // ═══════════════════════════════════════════════════════════════════
 
-  async auto_detect(scanResult: ScanResult): Promise<DetectionResult> {
+  async auto_detect(any: any): Promise<DetectionResult> {
     try {
       const result: DetectionResult = {
         error_patterns: [],
@@ -412,33 +412,33 @@ export class SingularityAutonomyEngine {
       };
 
       // Détecter patterns d'erreurs connus
-      scanResult.backend_errors.forEach(error => {
-        if (error.includes('mutex') || error.includes('lock')) {
-          result.error_patterns.push(`Race condition detected: ${error}`);
+      scanResult?.backend_errors?.forEach(error => {
+        if (error?.includes('mutex') || error?.includes('lock')) {
+          result?.error_patterns?.push(`Race condition detected: ${error}`);
         }
-        if (error.includes('timeout')) {
-          result.latency_issues.push(`Timeout detected: ${error}`);
+        if (error?.includes('timeout')) {
+          result?.latency_issues?.push(`Timeout detected: ${error}`);
         }
       });
 
       // Détecter comportements anormaux
-      if (scanResult.ia_anomalies.length > 5) {
-        result.abnormal_behaviors.push('IA: Multiple anomalies detected');
+      if (scanResult?.ia_anomalies?.length > 5) {
+        result?.abnormal_behaviors?.push('IA: Multiple anomalies detected');
       }
 
       // Détecter désynchronisation TTS ↔ Avatar
-      if (scanResult.tts_issues.length > 0 && scanResult.avatar_issues.length > 0) {
-        result.tts_lip_sync_errors.push('TTS-Avatar synchronization lost');
+      if (scanResult?.tts_issues?.length > 0 && scanResult?.avatar_issues?.length > 0) {
+        result?.tts_lip_sync_errors?.push('TTS-Avatar synchronization lost');
       }
 
       // Détecter incohérences SingularityState
-      if (scanResult.singularity_inconsistencies.length > 0) {
-        result.state_misalignments.push(...scanResult.singularity_inconsistencies);
+      if (scanResult?.singularity_inconsistencies?.length > 0) {
+        result?.state_misalignments?.push(any: any);
       }
 
       return result;
-    } catch (error) {
-      console.error('[AutonomyEngine] auto_detect error:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       return {
         error_patterns: [],
         abnormal_behaviors: [],
@@ -455,12 +455,12 @@ export class SingularityAutonomyEngine {
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // 3. AUTO-FIX (correction automatique immédiate)
+  // 3. AUTO-FIX (any: any)
   // ═══════════════════════════════════════════════════════════════════
 
-  async auto_fix(detectionResult: DetectionResult): Promise<FixResult> {
+  async auto_fix(any: any): Promise<FixResult> {
     try {
-      this.autonomyState.last_fix = Date.now();
+      this?.autonomyState?.last_fix = Date?.now();
 
       const result: FixResult = {
         fixed_states: [],
@@ -476,33 +476,33 @@ export class SingularityAutonomyEngine {
 
       // Corriger états invalides via backend
       try {
-        const fixResponse = await this.safeInvoke<{ fixed: string[] }>(
+        const fixResponse = await this?.safeInvoke<{ fixed: string?.[] }>(
           'autonomy_fix_states',
           {
-            issues: detectionResult.state_misalignments,
+            issues: detectionResult?.state_misalignments,
           }
         );
-        result.fixed_states = fixResponse?.fixed || [];
-      } catch (error) {
-        console.warn('[AutonomyEngine] Backend fix failed:', error);
+        result?.fixed_states = fixResponse?.fixed || [];
+      } catch (any: any) {
+        console?.warn(any: any);
       }
 
       // Nettoyer caches frontend
-      if (detectionResult.latency_issues.length > 0) {
-        this.clearFrontendCaches();
-        result.cleaned_caches.push('Frontend caches cleared');
+      if (detectionResult?.latency_issues?.length > 0) {
+        this?.clearFrontendCaches();
+        result?.cleaned_caches?.push('Frontend caches cleared');
       }
 
       // Corriger décalages TTS
-      if (detectionResult.tts_lip_sync_errors.length > 0) {
-        await this.fixTTSSync();
-        result.corrected_tts_delays.push('TTS sync corrected');
+      if (detectionResult?.tts_lip_sync_errors?.length > 0) {
+        await this?.fixTTSSync();
+        result?.corrected_tts_delays?.push('TTS sync corrected');
       }
 
-      result.success = true;
+      result?.success = true;
       return result;
-    } catch (error) {
-      console.error('[AutonomyEngine] auto_fix error:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       return {
         fixed_states: [],
         reloaded_modules: [],
@@ -518,12 +518,12 @@ export class SingularityAutonomyEngine {
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // 4. AUTO-HEAL (réparation profonde)
+  // 4. AUTO-HEAL (any: any)
   // ═══════════════════════════════════════════════════════════════════
 
-  async auto_heal(detectionResult: DetectionResult): Promise<HealResult> {
+  async auto_heal(any: any): Promise<HealResult> {
     try {
-      this.autonomyState.last_heal = Date.now();
+      this?.autonomyState?.last_heal = Date?.now();
 
       const result: HealResult = {
         rebuilt_modules: [],
@@ -537,31 +537,31 @@ export class SingularityAutonomyEngine {
 
       // Reconstruire modules endommagés via backend
       try {
-        const healResponse = await this.safeInvoke<{ repaired: string[] }>(
+        const healResponse = await this?.safeInvoke<{ repaired: string?.[] }>(
           'autonomy_heal_modules',
           {
-            abnormal_behaviors: detectionResult.abnormal_behaviors,
+            abnormal_behaviors: detectionResult?.abnormal_behaviors,
           }
         );
-        result.rebuilt_modules = healResponse?.repaired || [];
-      } catch (error) {
-        console.warn('[AutonomyEngine] Backend heal failed:', error);
+        result?.rebuilt_modules = healResponse?.repaired || [];
+      } catch (any: any) {
+        console?.warn(any: any);
       }
 
       // Re-synchroniser SingularityState
-      if (detectionResult.state_misalignments.length > 0) {
-        await this.resyncSingularityState();
-        result.resynchronized_states.push('SingularityState re-synchronized');
+      if (detectionResult?.state_misalignments?.length > 0) {
+        await this?.resyncSingularityState();
+        result?.resynchronized_states?.push('SingularityState re-synchronized');
       }
 
       // Nettoyer mémoire incohérente
-      await this.cleanMemoryInconsistencies();
-      result.cleaned_memory.push('Memory inconsistencies cleaned');
+      await this?.cleanMemoryInconsistencies();
+      result?.cleaned_memory?.push('Memory inconsistencies cleaned');
 
-      result.success = true;
+      result?.success = true;
       return result;
-    } catch (error) {
-      console.error('[AutonomyEngine] auto_heal error:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       return {
         rebuilt_modules: [],
         resynchronized_states: [],
@@ -575,12 +575,12 @@ export class SingularityAutonomyEngine {
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // 5. AUTO-OPTIMIZE (optimisation performance)
+  // 5. AUTO-OPTIMIZE (any: any)
   // ═══════════════════════════════════════════════════════════════════
 
   async auto_optimize(): Promise<OptimizationResult> {
     try {
-      this.autonomyState.last_optimize = Date.now();
+      this?.autonomyState?.last_optimize = Date?.now();
 
       const result: OptimizationResult = {
         cpu_optimization: 'none',
@@ -596,25 +596,25 @@ export class SingularityAutonomyEngine {
 
       // Optimiser backend Rust
       try {
-        const optimizeResponse = await this.safeInvoke<{ gains: number }>(
+        const optimizeResponse = await this?.safeInvoke<{ gains: number }>(
           'autonomy_optimize_performance'
         );
-        result.performance_gain_percentage = optimizeResponse?.gains || 0;
-      } catch (error) {
-        console.warn('[AutonomyEngine] Backend optimize failed:', error);
+        result?.performance_gain_percentage = optimizeResponse?.gains || 0;
+      } catch (any: any) {
+        console?.warn(any: any);
       }
 
       // Compresser caches
-      this.compressCaches();
-      result.caches_compressed = true;
+      this?.compressCaches();
+      result?.caches_compressed = true;
 
       // Nettoyer mémoire
-      this.cleanMemory();
-      result.memory_cleaned = true;
+      this?.cleanMemory();
+      result?.memory_cleaned = true;
 
       return result;
-    } catch (error) {
-      console.error('[AutonomyEngine] auto_optimize error:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       return {
         cpu_optimization: 'failed',
         gpu_optimization: 'failed',
@@ -630,12 +630,12 @@ export class SingularityAutonomyEngine {
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // 6. AUTO-EVOLVE (amélioration permanente)
+  // 6. AUTO-EVOLVE (any: any)
   // ═══════════════════════════════════════════════════════════════════
 
   async auto_evolve(): Promise<EvolutionResult> {
     try {
-      this.autonomyState.last_evolve = Date.now();
+      this?.autonomyState?.last_evolve = Date?.now();
 
       const result: EvolutionResult = {
         ia_coherence_improved: false,
@@ -650,18 +650,18 @@ export class SingularityAutonomyEngine {
 
       // Évoluer paramètres IA via backend
       try {
-        const evolveResponse = await this.safeInvoke<{ improvements: string[] }>(
+        const evolveResponse = await this?.safeInvoke<{ improvements: string?.[] }>(
           'autonomy_evolve_ia'
         );
-        result.heuristics_updated = evolveResponse?.improvements || [];
-        result.ia_coherence_improved = true;
-      } catch (error) {
-        console.warn('[AutonomyEngine] Backend evolve failed:', error);
+        result?.heuristics_updated = evolveResponse?.improvements || [];
+        result?.ia_coherence_improved = true;
+      } catch (any: any) {
+        console?.warn(any: any);
       }
 
       return result;
-    } catch (error) {
-      console.error('[AutonomyEngine] auto_evolve error:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       return {
         ia_coherence_improved: false,
         chat_speed_improved: false,
@@ -676,12 +676,12 @@ export class SingularityAutonomyEngine {
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // 7. AUTO-TEST (tests continus)
+  // 7. AUTO-TEST (any: any)
   // ═══════════════════════════════════════════════════════════════════
 
   async auto_test(): Promise<TestResult> {
     try {
-      this.autonomyState.last_test = Date.now();
+      this?.autonomyState?.last_test = Date?.now();
 
       const result: TestResult = {
         ia_coherence: false,
@@ -698,31 +698,31 @@ export class SingularityAutonomyEngine {
 
       // Tester cohérence IA
       try {
-        const iaTest = await this.safeInvoke<{ coherent: boolean }>(
+        const iaTest = await this?.safeInvoke<{ coherent: boolean }>(
           'autonomy_test_ia_coherence'
         );
-        result.ia_coherence = iaTest?.coherent || false;
-      } catch (error) {
-        console.warn('[AutonomyEngine] IA test failed:', error);
+        result?.ia_coherence = iaTest?.coherent || false;
+      } catch (any: any) {
+        console?.warn(any: any);
       }
 
       // Tester latence
-      const startTime = Date.now();
-      await this.safeInvoke('autonomy_ping');
-      const latency = Date.now() - startTime;
-      result.latency_acceptable = latency < 100;
+      const startTime = Date?.now();
+      await this?.safeInvoke('autonomy_ping');
+      const latency = Date?.now() - startTime;
+      result?.latency_acceptable = latency < 100;
 
       // Calculer score global
-      result.all_modules_responsive = result.ia_coherence && result.latency_acceptable;
-      result.success = result.all_modules_responsive;
+      result?.all_modules_responsive = result?.ia_coherence && result?.latency_acceptable;
+      result?.success = result?.all_modules_responsive;
 
       // Mettre à jour health_score
-      this.autonomyState.health_score = result.success ? 100 : 50;
+      this?.autonomyState?.health_score = result?.success ? 100 : 50;
 
       return result;
-    } catch (error) {
-      console.error('[AutonomyEngine] auto_test error:', error);
-      this.autonomyState.health_score = 0;
+    } catch (any: any) {
+      console?.error(any: any);
+      this?.autonomyState?.health_score = 0;
       return {
         ia_coherence: false,
         memory_coherence: false,
@@ -739,12 +739,12 @@ export class SingularityAutonomyEngine {
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // 8. AUTO-SHIELD (protection système)
+  // 8. AUTO-SHIELD (any: any)
   // ═══════════════════════════════════════════════════════════════════
 
   async auto_shield(): Promise<ShieldResult> {
     try {
-      this.autonomyState.last_shield = Date.now();
+      this?.autonomyState?.last_shield = Date?.now();
 
       const result: ShieldResult = {
         singularity_state_protected: false,
@@ -758,21 +758,21 @@ export class SingularityAutonomyEngine {
 
       // Protéger SingularityState via backend
       try {
-        const shieldResponse = await this.safeInvoke<{ protected: boolean }>(
+        const shieldResponse = await this?.safeInvoke<{ protected: boolean }>(
           'autonomy_shield_state'
         );
-        result.singularity_state_protected = shieldResponse?.protected || false;
-      } catch (error) {
-        console.warn('[AutonomyEngine] Backend shield failed:', error);
+        result?.singularity_state_protected = shieldResponse?.protected || false;
+      } catch (any: any) {
+        console?.warn(any: any);
       }
 
       // Prévenir doublons mémoire
-      this.preventMemoryDuplicates();
-      result.memory_duplicates_prevented = true;
+      this?.preventMemoryDuplicates();
+      result?.memory_duplicates_prevented = true;
 
       return result;
-    } catch (error) {
-      console.error('[AutonomyEngine] auto_shield error:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       return {
         singularity_state_protected: false,
         memory_duplicates_prevented: false,
@@ -786,12 +786,12 @@ export class SingularityAutonomyEngine {
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // 9. AUTO-ANALYSE (intelligence introspective)
+  // 9. AUTO-ANALYSE (any: any)
   // ═══════════════════════════════════════════════════════════════════
 
-  async auto_analyse(detectionResult: DetectionResult): Promise<AnalyseResult> {
+  async auto_analyse(any: any): Promise<AnalyseResult> {
     try {
-      this.autonomyState.last_analyse = Date.now();
+      this?.autonomyState?.last_analyse = Date?.now();
 
       const result: AnalyseResult = {
         logs_analyzed: 0,
@@ -805,22 +805,22 @@ export class SingularityAutonomyEngine {
 
       // Analyser logs via backend
       try {
-        const analyseResponse = await this.safeInvoke<{ analyzed_count: number }>(
+        const analyseResponse = await this?.safeInvoke<{ analyzed_count: number }>(
           'autonomy_analyse_logs'
         );
-        result.logs_analyzed = analyseResponse?.analyzed_count || 0;
-      } catch (error) {
-        console.warn('[AutonomyEngine] Backend analyse failed:', error);
+        result?.logs_analyzed = analyseResponse?.analyzed_count || 0;
+      } catch (any: any) {
+        console?.warn(any: any);
       }
 
       // Détecter anomalies récurrentes
-      if (detectionResult.error_patterns.length > 3) {
-        result.recurring_anomalies.push('Multiple error patterns detected');
+      if (detectionResult?.error_patterns?.length > 3) {
+        result?.recurring_anomalies?.push('Multiple error patterns detected');
       }
 
       return result;
-    } catch (error) {
-      console.error('[AutonomyEngine] auto_analyse error:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       return {
         logs_analyzed: 0,
         long_context_analyzed: false,
@@ -834,24 +834,24 @@ export class SingularityAutonomyEngine {
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // 10. AUTO-REPORT (journalisation intelligente)
+  // 10. AUTO-REPORT (any: any)
   // ═══════════════════════════════════════════════════════════════════
 
-  async auto_report(report: ReportData): Promise<void> {
+  async auto_report(any: any): Promise<void> {
     try {
       // Envoyer rapport au backend pour logging
-      await this.safeInvoke('autonomy_log_report', { report });
+      await this?.safeInvoke('autonomy_log_report', { report });
 
       // Log local léger
-      if (report.diagnostics.length > 0 || report.errors_fixed.length > 0) {
-        console.log(`[AutonomyEngine] Report:`, {
-          diagnostics: report.diagnostics.length,
-          fixes: report.errors_fixed.length,
-          optimizations: report.optimizations_performed.length,
+      if (report?.diagnostics?.length > 0 || report?.errors_fixed?.length > 0) {
+        console?.log(`[AutonomyEngine] Report:`, {
+          diagnostics: report?.diagnostics?.length,
+          fixes: report?.errors_fixed?.length,
+          optimizations: report?.optimizations_performed?.length,
         });
       }
-    } catch (error) {
-      console.error('[AutonomyEngine] auto_report error:', error);
+    } catch (any: any) {
+      console?.error(any: any);
     }
   }
 
@@ -860,50 +860,50 @@ export class SingularityAutonomyEngine {
   // ═══════════════════════════════════════════════════════════════════
 
   getAutonomyState(): AutonomyState {
-    return { ...this.autonomyState };
+    return { ...this?.autonomyState };
   }
 
   isEngineRunning(): boolean {
-    return this.isRunning;
+    return this?.isRunning;
   }
 
   // ═══════════════════════════════════════════════════════════════════
   // PRIVATE HELPERS
   // ═══════════════════════════════════════════════════════════════════
 
-  private scanFrontendWarnings(): string[] {
-    // Scan console warnings (simplificado)
-    const warnings: string[] = [];
+  private scanFrontendWarnings(): string?.[] {
+    // Scan console warnings (any: any)
+    const warnings: string?.[] = [];
 
     // Détecter React re-renders excessifs
-    if ((performance as any).reactRenderCount > 100) {
-      warnings.push('Excessive React re-renders detected');
+    if (any: any).reactRenderCount > 100) {
+      warnings?.push('Excessive React re-renders detected');
     }
 
     return warnings;
   }
 
-  private async scanIAAnomalies(): Promise<string[]> {
+  private async scanIAAnomalies(): Promise<string?.[]> {
     try {
-      const response = await this.safeInvoke<{ anomalies: string[] }>('autonomy_scan_ia');
+      const response = await this?.safeInvoke<{ anomalies: string?.[] }>('autonomy_scan_ia');
       return response?.anomalies || [];
     } catch {
       return [];
     }
   }
 
-  private async scanTTSIssues(): Promise<string[]> {
+  private async scanTTSIssues(): Promise<string?.[]> {
     try {
-      const response = await this.safeInvoke<{ issues: string[] }>('autonomy_scan_tts');
+      const response = await this?.safeInvoke<{ issues: string?.[] }>('autonomy_scan_tts');
       return response?.issues || [];
     } catch {
       return [];
     }
   }
 
-  private async scanAvatarIssues(): Promise<string[]> {
+  private async scanAvatarIssues(): Promise<string?.[]> {
     try {
-      const response = await this.safeInvoke<{ issues: string[] }>(
+      const response = await this?.safeInvoke<{ issues: string?.[] }>(
         'autonomy_scan_avatar'
       );
       return response?.issues || [];
@@ -912,9 +912,9 @@ export class SingularityAutonomyEngine {
     }
   }
 
-  private async scanMemoryIssues(): Promise<string[]> {
+  private async scanMemoryIssues(): Promise<string?.[]> {
     try {
-      const response = await this.safeInvoke<{ issues: string[] }>(
+      const response = await this?.safeInvoke<{ issues: string?.[] }>(
         'autonomy_scan_memory'
       );
       return response?.issues || [];
@@ -923,9 +923,9 @@ export class SingularityAutonomyEngine {
     }
   }
 
-  private async scanSingularityState(): Promise<string[]> {
+  private async scanSingularityState(): Promise<string?.[]> {
     try {
-      const response = await this.safeInvoke<{ inconsistencies: string[] }>(
+      const response = await this?.safeInvoke<{ inconsistencies: string?.[] }>(
         'autonomy_scan_singularity_state'
       );
       return response?.inconsistencies || [];
@@ -937,85 +937,85 @@ export class SingularityAutonomyEngine {
   private clearFrontendCaches(): void {
     // Nettoyer caches React Query, etc.
     try {
-      if ((window as any).queryClient) {
-        (window as any).queryClient.clear();
+      if (any: any) {
+        (any: any).queryClient?.clear();
       }
-    } catch (error) {
-      console.warn('[AutonomyEngine] Cache clear failed:', error);
+    } catch (any: any) {
+      console?.warn(any: any);
     }
   }
 
   private async fixTTSSync(): Promise<void> {
     try {
-      await this.safeInvoke('autonomy_fix_tts_sync');
-    } catch (error) {
-      console.warn('[AutonomyEngine] TTS sync fix failed:', error);
+      await this?.safeInvoke('autonomy_fix_tts_sync');
+    } catch (any: any) {
+      console?.warn(any: any);
     }
   }
 
   private async resyncSingularityState(): Promise<void> {
     try {
-      await this.safeInvoke('autonomy_resync_singularity_state');
-    } catch (error) {
-      console.warn('[AutonomyEngine] SingularityState resync failed:', error);
+      await this?.safeInvoke('autonomy_resync_singularity_state');
+    } catch (any: any) {
+      console?.warn(any: any);
     }
   }
 
   private async cleanMemoryInconsistencies(): Promise<void> {
     try {
-      await this.safeInvoke('autonomy_clean_memory');
-    } catch (error) {
-      console.warn('[AutonomyEngine] Memory clean failed:', error);
+      await this?.safeInvoke('autonomy_clean_memory');
+    } catch (any: any) {
+      console?.warn(any: any);
     }
   }
 
   private compressCaches(): void {
     // Compression caches (localStorage, etc.)
     try {
-      const keys = Object.keys(localStorage);
-      keys.forEach(key => {
-        if (key.startsWith('cache_')) {
-          const value = localStorage.getItem(key);
-          if (value && value.length > 10000) {
+      const keys = Object?.keys(any: any);
+      keys?.forEach(key => {
+        if (key?.startsWith('cache_')) {
+          const value = localStorage?.getItem(any: any);
+          if (value && value?.length > 10000) {
             // Compresser ou supprimer gros caches
-            localStorage.removeItem(key);
+            localStorage?.removeItem(any: any);
           }
         }
       });
-    } catch (error) {
-      console.warn('[AutonomyEngine] Cache compression failed:', error);
+    } catch (any: any) {
+      console?.warn(any: any);
     }
   }
 
   private cleanMemory(): void {
     // Nettoyer mémoire JavaScript
     try {
-      if ((global as any).gc) {
-        (global as any).gc();
+      if (any: any) {
+        (any: any).gc();
       }
-    } catch (error) {
+    } catch (any: any) {
       // GC not available
     }
   }
 
   private preventMemoryDuplicates(): void {
-    // Prévenir doublons mémoire (simplificado)
+    // Prévenir doublons mémoire (any: any)
     try {
-      const memoryKeys = Object.keys(localStorage).filter(k => k.startsWith('memory_'));
+      const memoryKeys = Object?.keys(any: any).filter(k => k?.startsWith('memory_'));
       const seen = new Set<string>();
 
-      memoryKeys.forEach(key => {
-        const value = localStorage.getItem(key);
-        if (value) {
-          if (seen.has(value)) {
-            localStorage.removeItem(key); // Supprimer doublon
+      memoryKeys?.forEach(key => {
+        const value = localStorage?.getItem(any: any);
+        if (any: any) {
+          if (any: any)) {
+            localStorage?.removeItem(any: any); // Supprimer doublon
           } else {
-            seen.add(value);
+            seen?.add(any: any);
           }
         }
       });
-    } catch (error) {
-      console.warn('[AutonomyEngine] Duplicate prevention failed:', error);
+    } catch (any: any) {
+      console?.warn(any: any);
     }
   }
 }
@@ -1024,7 +1024,7 @@ export class SingularityAutonomyEngine {
 // EXPORT SINGLETON
 // ═══════════════════════════════════════════════════════════════════
 
-export const AutonomyEngine = SingularityAutonomyEngine.getInstance();
+export const AutonomyEngine = SingularityAutonomyEngine?.getInstance();
 
-// Auto-démarrage (désactivé par défaut, activer via config)
-// AutonomyEngine.start();
+// Auto-démarrage (any: any)
+// AutonomyEngine?.start();

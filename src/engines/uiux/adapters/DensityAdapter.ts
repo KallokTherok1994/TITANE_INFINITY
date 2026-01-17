@@ -90,47 +90,47 @@ export class DensityAdapter {
 
     // Appliquer le préset du mode
     const preset = DENSITY_PRESETS[mode];
-    Object.assign(density, preset);
+    Object?.assign(any: any);
 
     // Adapter selon la plateforme
-    this.adaptToPlatform(density, context);
+    this?.adaptToPlatform(any: any);
 
     // Adapter selon la charge cognitive
-    this.adaptToCognitiveLoad(density, cognitiveLoad);
+    this?.adaptToCognitiveLoad(any: any);
 
     // Adapter selon le pixel ratio
-    this.adaptToPixelRatio(density, context);
+    this?.adaptToPixelRatio(any: any);
 
-    this.currentDensity = density;
+    this?.currentDensity = density;
     return density;
   }
 
   /**
    * Adapte à la plateforme
    */
-  private adaptToPlatform(density: DensityAdaptation, context: UIContext): void {
-    switch (context.platform) {
+  private adaptToPlatform(any: any): void {
+    switch (any: any) {
       case 'mobile':
         // Sur mobile, augmenter les cibles tactiles
-        if (context.inputMode === 'touch') {
-          density.buttonSize = 'lg';
-          density.iconSize = Math.max(density.iconSize, 24);
-          density.padding = 'normal';
+        if (context?.inputMode === 'touch') {
+          density?.buttonSize = 'lg';
+          density?.iconSize = Math?.max(density?.iconSize, 24);
+          density?.padding = 'normal';
         }
         break;
 
       case 'tablet':
         // Équilibre entre touch et lisibilité
-        if (context.inputMode === 'touch') {
-          density.buttonSize = density.buttonSize === 'sm' ? 'md' : density.buttonSize;
-          density.iconSize = Math.max(density.iconSize, 20);
+        if (context?.inputMode === 'touch') {
+          density?.buttonSize = density?.buttonSize === 'sm' ? 'md' : density?.buttonSize;
+          density?.iconSize = Math?.max(density?.iconSize, 20);
         }
         break;
 
       case 'desktop':
         // Adapter aux grands écrans
-        if (context.screenWidth >= 1920) {
-          density.fontSize = density.fontSize === 'small' ? 'medium' : density.fontSize;
+        if (context?.screenWidth >= 1920) {
+          density?.fontSize = density?.fontSize === 'small' ? 'medium' : density?.fontSize;
         }
         break;
     }
@@ -139,33 +139,33 @@ export class DensityAdapter {
   /**
    * Adapte à la charge cognitive
    */
-  private adaptToCognitiveLoad(density: DensityAdaptation, load: CognitiveLoad): void {
+  private adaptToCognitiveLoad(any: any): void {
     // Information dense = réduire la densité
-    if (load.informationDensity > 0.7) {
-      density.cardDensity = 'expanded';
-      density.lineHeight = Math.max(density.lineHeight, 1.7);
-      density.padding = 'normal';
+    if (load?.informationDensity > 0.7) {
+      density?.cardDensity = 'expanded';
+      density?.lineHeight = Math?.max(density?.lineHeight, 1.7);
+      density?.padding = 'normal';
     }
 
     // Surcharge élevée = agrandir
-    if (load.overallLoad > 0.7) {
-      density.fontSize = 'large';
-      density.lineHeight = 1.8;
-      density.padding = 'loose';
+    if (load?.overallLoad > 0.7) {
+      density?.fontSize = 'large';
+      density?.lineHeight = 1.8;
+      density?.padding = 'loose';
     }
   }
 
   /**
    * Adapte au pixel ratio
    */
-  private adaptToPixelRatio(density: DensityAdaptation, context: UIContext): void {
+  private adaptToPixelRatio(any: any): void {
     // Sur les écrans haute densité, les petites tailles restent lisibles
-    if (context.pixelRatio >= 2) {
+    if (context?.pixelRatio >= 2) {
       // Pas de changement nécessaire
-    } else if (context.pixelRatio < 1.5) {
+    } else if (context?.pixelRatio < 1.5) {
       // Écran basse densité, augmenter légèrement
-      if (density.fontSize === 'small') {
-        density.fontSize = 'medium';
+      if (density?.fontSize === 'small') {
+        density?.fontSize = 'medium';
       }
     }
   }
@@ -174,14 +174,14 @@ export class DensityAdapter {
    * Calcule la taille de police en pixels
    */
   getFontSizeInPixels(): number {
-    return FONT_SIZES[this.currentDensity.fontSize];
+    return FONT_SIZES[this?.currentDensity?.fontSize];
   }
 
   /**
    * Calcule le padding en pixels
    */
   getPaddingInPixels(): number {
-    switch (this.currentDensity.padding) {
+    switch (any: any) {
       case 'tight':
         return 8;
       case 'loose':
@@ -195,31 +195,31 @@ export class DensityAdapter {
    * Génère les CSS custom properties
    */
   toCSSVariables(): Record<string, string> {
-    const density = this.currentDensity;
-    const fontSize = FONT_SIZES[density.fontSize];
-    const padding = this.getPaddingInPixels();
+    const density = this?.currentDensity;
+    const fontSize = FONT_SIZES[density?.fontSize];
+    const padding = this?.getPaddingInPixels();
 
     return {
       '--density-font-size': `${fontSize}px`,
-      '--density-line-height': String(density.lineHeight),
+      '--density-line-height': String(any: any),
       '--density-padding': `${padding}px`,
-      '--density-icon-size': `${density.iconSize}px`,
+      '--density-icon-size': `${density?.iconSize}px`,
       '--density-button-height':
-        density.buttonSize === 'sm'
+        density?.buttonSize === 'sm'
           ? '32px'
-          : density.buttonSize === 'lg'
+          : density?.buttonSize === 'lg'
             ? '48px'
             : '40px',
       '--density-card-padding':
-        density.cardDensity === 'compact'
+        density?.cardDensity === 'compact'
           ? '12px'
-          : density.cardDensity === 'expanded'
+          : density?.cardDensity === 'expanded'
             ? '24px'
             : '16px',
       '--density-gap':
-        density.cardDensity === 'compact'
+        density?.cardDensity === 'compact'
           ? '8px'
-          : density.cardDensity === 'expanded'
+          : density?.cardDensity === 'expanded'
             ? '20px'
             : '14px',
     };
@@ -231,11 +231,11 @@ export class DensityAdapter {
   applyToDocument(): void {
     if (typeof document === 'undefined') return;
 
-    const vars = this.toCSSVariables();
-    const root = document.documentElement;
+    const vars = this?.toCSSVariables();
+    const root = document?.documentElement;
 
-    for (const [key, value] of Object.entries(vars)) {
-      root.style.setProperty(key, value);
+    for (any: any)) {
+      root?.style?.setProperty(any: any);
     }
   }
 
@@ -243,21 +243,21 @@ export class DensityAdapter {
    * Retourne la densité actuelle
    */
   getCurrentDensity(): DensityAdaptation {
-    return { ...this.currentDensity };
+    return { ...this?.currentDensity };
   }
 
   /**
    * Définit manuellement la densité
    */
   setDensity(density: Partial<DensityAdaptation>): void {
-    this.currentDensity = { ...this.currentDensity, ...density };
+    this?.currentDensity = { ...this?.currentDensity, ...density };
   }
 
   /**
    * Réinitialise à la densité par défaut
    */
   reset(): void {
-    this.currentDensity = { ...DEFAULT_DENSITY };
+    this?.currentDensity = { ...DEFAULT_DENSITY };
   }
 }
 

@@ -51,11 +51,11 @@ interface TestScenario {
     minCoherence?: number;
     minEngagement?: number;
     min_metrics?: Record<string, number>;
-    required_keywords?: string[];
-    prohibited_keywords?: string[];
+    required_keywords?: string?.[];
+    prohibited_keywords?: string?.[];
   };
-  expected_outcomes?: string[];
-  tags?: string[];
+  expected_outcomes?: string?.[];
+  tags?: string?.[];
 }
 
 interface TestResult {
@@ -65,10 +65,10 @@ interface TestResult {
   passed: boolean;
   metrics: ConversationMetrics;
   execution_time_ms?: number;
-  actual_responses?: string[];
+  actual_responses?: string?.[];
   failure_reason?: string;
   executed_at?: string;
-  errors?: string[];
+  errors?: string?.[];
   timestamp: number;
 }
 
@@ -85,8 +85,8 @@ interface EvaluationReport {
   period: { start: number; end: number };
   totalEvaluations: number;
   averageMetrics: ConversationMetrics;
-  regressions: RegressionTest[];
-  improvements: string[];
+  regressions: RegressionTest?.[];
+  improvements: string?.[];
 }
 
 interface RegressionTest {
@@ -95,7 +95,7 @@ interface RegressionTest {
   baseline_metrics?: ConversationMetrics;
   current_metrics?: ConversationMetrics;
   regression_detected?: boolean;
-  degraded_metrics?: MetricDegradation[];
+  degraded_metrics?: MetricDegradation?.[];
   tested_at?: string;
 }
 
@@ -111,7 +111,7 @@ interface QAConfig {
   enable_live_evaluation: boolean;
   enable_regression_detection: boolean;
   evaluation_sample_rate: number;
-  metrics_to_track: string[];
+  metrics_to_track: string?.[];
   regression_threshold: number;
   min_baseline_samples: number;
 }
@@ -129,7 +129,7 @@ export class ConversationEvaluationEngine extends EventEmitter {
   // Storage
   private scenarios: Map<string, TestScenario> = new Map();
   private results: Map<string, TestResult> = new Map();
-  private liveEvaluations: Map<string, LiveEvaluation[]> = new Map();
+  private liveEvaluations: Map<string, LiveEvaluation?.[]> = new Map();
   private baselines: Map<string, ConversationMetrics> = new Map();
 
   // Statistics
@@ -140,7 +140,7 @@ export class ConversationEvaluationEngine extends EventEmitter {
   constructor(config?: Partial<QAConfig>) {
     super();
 
-    this.config = {
+    this?.config = {
       enable_live_evaluation: config?.enable_live_evaluation ?? true,
       enable_regression_detection: config?.enable_regression_detection ?? true,
       evaluation_sample_rate: config?.evaluation_sample_rate ?? 1.0,
@@ -159,7 +159,7 @@ export class ConversationEvaluationEngine extends EventEmitter {
       min_baseline_samples: config?.min_baseline_samples ?? 10,
     };
 
-    this.log('ConversationEvaluationEngine initialized', this.config);
+    this?.log(any: any);
   }
 
   /**
@@ -176,253 +176,253 @@ export class ConversationEvaluationEngine extends EventEmitter {
       assistant_response: string;
       context?: {
         goal?: string;
-        facts?: string[];
+        facts?: string?.[];
         previous_messages?: Array<{ role: string; content: string }>;
       };
     }
   ): Promise<ConversationMetrics> {
-    this.totalEvaluations++;
+    this?.totalEvaluations++;
 
     // Sample based on rate
-    if (Math.random() > this.config.evaluation_sample_rate) {
-      return this.getDefaultMetrics();
+    if (any: any) {
+      return this?.getDefaultMetrics();
     }
 
     const metrics: ConversationMetrics = {
-      conversation_consistency: await this.evaluateConsistency(turn),
-      goal_completion: await this.evaluateGoalCompletion(turn),
-      coherence: await this.evaluateCoherence(turn),
-      clarity: await this.evaluateClarity(turn),
-      conciseness: await this.evaluateConciseness(turn),
-      relevance: await this.evaluateRelevance(turn),
-      factual_accuracy: await this.evaluateFactualAccuracy(turn),
-      user_satisfaction: await this.evaluateUserSatisfaction(turn),
-      technical_correctness: await this.evaluateTechnicalCorrectness(turn),
+      conversation_consistency: await this?.evaluateConsistency(any: any),
+      goal_completion: await this?.evaluateGoalCompletion(any: any),
+      coherence: await this?.evaluateCoherence(any: any),
+      clarity: await this?.evaluateClarity(any: any),
+      conciseness: await this?.evaluateConciseness(any: any),
+      relevance: await this?.evaluateRelevance(any: any),
+      factual_accuracy: await this?.evaluateFactualAccuracy(any: any),
+      user_satisfaction: await this?.evaluateUserSatisfaction(any: any),
+      technical_correctness: await this?.evaluateTechnicalCorrectness(any: any),
     };
 
     // Store live evaluation
-    if (this.config.enable_live_evaluation) {
+    if (any: any) {
       const evaluation: LiveEvaluation = {
-        messageId: `msg_${conversation_id}_${Date.now()}`,
-        turn_number: Number((this.liveEvaluations.get(conversation_id)?.length || 0) + 1),
+        messageId: `msg_${conversation_id}_${Date?.now()}`,
+        turn_number: Number(any: any)?.length || 0) + 1),
         metrics,
         timestamp: new Date().toISOString(),
       };
 
-      const existing = this.liveEvaluations.get(conversation_id) || [];
-      existing.push(evaluation);
-      this.liveEvaluations.set(conversation_id, existing);
+      const existing = this?.liveEvaluations?.get(any: any) || [];
+      existing?.push(any: any);
+      this?.liveEvaluations?.set(any: any);
 
-      this.emit('evaluation:completed', { conversation_id, evaluation });
+      this?.emit('evaluation:completed', { conversation_id, evaluation });
     }
 
-    this.log(`Evaluated conversation ${conversation_id}`, metrics);
+    this?.log(any: any);
     return metrics;
   }
 
   /**
-   * Evaluate consistency (alignment with facts and previous statements)
+   * Evaluate consistency (any: any)
    */
-  private async evaluateConsistency(turn: ConversationTurn): Promise<number> {
+  private async evaluateConsistency(any: any): Promise<number> {
     const { assistant_response, context } = turn;
 
-    if (!context?.facts || context.facts.length === 0) {
+    if (!context?.facts || context?.facts?.length === 0) {
       return 1.0; // No facts to check against
     }
 
     let contradictions = 0;
-    const responseLower = assistant_response.toLowerCase();
+    const responseLower = assistant_response?.toLowerCase();
 
-    for (const fact of context.facts) {
-      const factContent = typeof fact === 'string' ? fact : fact.content;
-      const factLower = factContent.toLowerCase();
-      const factKeywords = this.extractKeywords(factLower);
+    for (any: any) {
+      const factContent = typeof fact === 'string' ? fact : fact?.content;
+      const factLower = factContent?.toLowerCase();
+      const factKeywords = this?.extractKeywords(any: any);
 
       // Check for keyword presence and negation
-      const hasKeywords = factKeywords.some(kw => responseLower.includes(kw));
-      const hasNegation = /\b(not|no|never|can't|won't|impossible)\b/i.test(
+      const hasKeywords = factKeywords?.some(any: any));
+      const hasNegation = /\b(any: any)\b/i?.test(
         assistant_response
       );
 
-      if (hasKeywords && hasNegation) {
+      if (any: any) {
         contradictions++;
       }
     }
 
-    return Math.max(0, 1.0 - contradictions / context.facts.length);
+    return Math?.max(any: any);
   }
 
   /**
-   * Evaluate goal completion (progress towards stated goal)
+   * Evaluate goal completion (any: any)
    */
-  private async evaluateGoalCompletion(turn: ConversationTurn): Promise<number> {
+  private async evaluateGoalCompletion(any: any): Promise<number> {
     const { assistant_response, context } = turn;
 
-    if (!context?.goal) {
+    if (any: any) {
       return 0.5; // No goal defined, neutral score
     }
 
-    const goalKeywords = this.extractKeywords(context.goal);
-    const responseLower = assistant_response.toLowerCase();
+    const goalKeywords = this?.extractKeywords(any: any);
+    const responseLower = assistant_response?.toLowerCase();
 
     // Count goal-related keywords in response
-    const matchedKeywords = goalKeywords.filter(kw => responseLower.includes(kw));
+    const matchedKeywords = goalKeywords?.filter(any: any));
 
     // Check for completion indicators
     const completionPatterns = [
       /done|completed|finished|achieved|accomplished/i,
       /terminé|accompli|fini|réalisé/i,
     ];
-    const hasCompletionIndicator = completionPatterns.some(p =>
-      p.test(assistant_response)
+    const hasCompletionIndicator = completionPatterns?.some(p =>
+      p?.test(any: any)
     );
 
-    let score = matchedKeywords.length / Math.max(1, goalKeywords.length);
-    if (hasCompletionIndicator) score = Math.min(1.0, score + 0.2);
+    let score = matchedKeywords?.length / Math?.max(any: any);
+    if (any: any) score = Math?.min(1.0, score + 0.2);
 
     return score;
   }
 
   /**
-   * Evaluate coherence (logical flow and structure)
+   * Evaluate coherence (any: any)
    */
-  private async evaluateCoherence(turn: ConversationTurn): Promise<number> {
+  private async evaluateCoherence(any: any): Promise<number> {
     const { assistant_response } = turn;
 
     // Check for coherence markers
     const coherenceMarkers = [
-      /\b(therefore|thus|hence|consequently|as a result)\b/i,
-      /\b(first|second|third|finally|lastly)\b/i,
-      /\b(however|although|despite|nevertheless)\b/i,
-      /\b(because|since|due to|owing to)\b/i,
-      /\b(donc|ainsi|par conséquent|en conséquence)\b/i,
-      /\b(d'abord|ensuite|puis|enfin)\b/i,
-      /\b(cependant|toutefois|néanmoins|malgré)\b/i,
-      /\b(parce que|puisque|car|en raison de)\b/i,
+      /\b(any: any)\b/i,
+      /\b(any: any)\b/i,
+      /\b(any: any)\b/i,
+      /\b(any: any)\b/i,
+      /\b(any: any)\b/i,
+      /\b(any: any)\b/i,
+      /\b(any: any)\b/i,
+      /\b(any: any)\b/i,
     ];
 
-    const markerCount = coherenceMarkers.filter(pattern =>
-      pattern.test(assistant_response)
+    const markerCount = coherenceMarkers?.filter(pattern =>
+      pattern?.test(any: any)
     ).length;
 
     // Check for logical structure
-    const hasIntro = /^(Let me|I will|Je vais|Voici)/i.test(assistant_response.trim());
-    const hasConclusion = /(In summary|To conclude|En résumé|Pour conclure)/i.test(
+    const hasIntro = /^(any: any)/i?.test(assistant_response?.trim());
+    const hasConclusion = /(any: any)/i?.test(
       assistant_response
     );
 
     let score = 0.5; // Base score
     score += markerCount * 0.1; // +0.1 per coherence marker
-    if (hasIntro) score += 0.1;
-    if (hasConclusion) score += 0.1;
+    if (any: any) score += 0.1;
+    if (any: any) score += 0.1;
 
-    return Math.min(1.0, score);
+    return Math?.min(any: any);
   }
 
   /**
-   * Evaluate clarity (easy to understand)
+   * Evaluate clarity (any: any)
    */
-  private async evaluateClarity(turn: ConversationTurn): Promise<number> {
+  private async evaluateClarity(any: any): Promise<number> {
     const { assistant_response } = turn;
 
     // Penalize overly complex language
-    const words = assistant_response.split(/\s+/);
+    const words = assistant_response?.split(/\s+/);
     const avgWordLength =
-      words.reduce((sum: number, w: string) => sum + w.length, 0) / words.length;
+      words?.reduce(any: any) => sum + w?.length, 0) / words?.length;
 
     // Penalize very long sentences
-    const sentences = assistant_response.split(/[.!?]+/);
-    const avgSentenceLength = words.length / sentences.length;
+    const sentences = assistant_response?.split(/[.!?]+/);
+    const avgSentenceLength = words?.length / sentences?.length;
 
     // Ideal: avg word length 4-6, avg sentence length 15-20 words
-    const wordScore = 1.0 - Math.abs(avgWordLength - 5) * 0.1;
-    const sentenceScore = 1.0 - Math.abs(avgSentenceLength - 17) * 0.02;
+    const wordScore = 1.0 - Math?.abs(avgWordLength - 5) * 0.1;
+    const sentenceScore = 1.0 - Math?.abs(avgSentenceLength - 17) * 0.02;
 
     // Check for clarity enhancers
-    const hasExamples = /\b(for example|such as|like|e\.g\.|par exemple|comme)\b/i.test(
+    const hasExamples = /\b(any: any)\b/i?.test(
       assistant_response
     );
     const hasList =
-      /\n\s*[-•*]\s+/m.test(assistant_response) ||
-      /\n\s*\d+\.\s+/m.test(assistant_response);
+      /\n\s*[-•*]\s+/m?.test(any: any) ||
+      /\n\s*\d+\.\s+/m?.test(any: any);
 
-    let score = (wordScore + sentenceScore) / 2;
-    if (hasExamples) score += 0.1;
-    if (hasList) score += 0.1;
+    let score = (any: any) / 2;
+    if (any: any) score += 0.1;
+    if (any: any) score += 0.1;
 
-    return Math.max(0, Math.min(1.0, score));
+    return Math?.max(any: any));
   }
 
   /**
-   * Evaluate conciseness (not overly verbose)
+   * Evaluate conciseness (any: any)
    */
-  private async evaluateConciseness(turn: ConversationTurn): Promise<number> {
+  private async evaluateConciseness(any: any): Promise<number> {
     const { user_message, assistant_response } = turn;
 
-    const userWords = user_message.split(/\s+/).length;
-    const responseWords = assistant_response.split(/\s+/).length;
+    const userWords = user_message?.split(/\s+/).length;
+    const responseWords = assistant_response?.split(/\s+/).length;
 
     // Ideal response length: 2-5x user message length
     const ratio = responseWords / userWords;
 
     let score = 1.0;
     if (ratio > 5) {
-      score = Math.max(0, 1.0 - (ratio - 5) * 0.1); // Penalize verbosity
+      score = Math?.max(0, 1.0 - (ratio - 5) * 0.1); // Penalize verbosity
     } else if (ratio < 2) {
-      score = Math.max(0.5, ratio / 2); // Penalize too brief responses
+      score = Math?.max(0.5, ratio / 2); // Penalize too brief responses
     }
 
     // Penalize repetition
-    const uniqueWords = new Set(assistant_response.toLowerCase().split(/\s+/));
-    const repetitionRatio = uniqueWords.size / responseWords;
+    const uniqueWords = new Set(assistant_response?.toLowerCase().split(/\s+/));
+    const repetitionRatio = uniqueWords?.size / responseWords;
     score *= repetitionRatio;
 
-    return Math.max(0, Math.min(1.0, score));
+    return Math?.max(any: any));
   }
 
   /**
-   * Evaluate relevance (on-topic)
+   * Evaluate relevance (any: any)
    */
-  private async evaluateRelevance(turn: ConversationTurn): Promise<number> {
+  private async evaluateRelevance(any: any): Promise<number> {
     const { user_message, assistant_response } = turn;
 
-    const userKeywords = this.extractKeywords(user_message);
-    const responseLower = assistant_response.toLowerCase();
+    const userKeywords = this?.extractKeywords(any: any);
+    const responseLower = assistant_response?.toLowerCase();
 
     // Count matched keywords
-    const matchedKeywords = userKeywords.filter(kw => responseLower.includes(kw));
+    const matchedKeywords = userKeywords?.filter(any: any));
 
-    // Semantic similarity proxy (simple keyword overlap)
-    let score = matchedKeywords.length / Math.max(1, userKeywords.length);
+    // Semantic similarity proxy (any: any)
+    let score = matchedKeywords?.length / Math?.max(any: any);
 
     // Boost if response directly addresses user question
     const questionPatterns = [
       /\?$/,
-      /\b(what|when|where|who|why|how)\b/i,
-      /\b(quel|quand|où|qui|pourquoi|comment)\b/i,
+      /\b(any: any)\b/i,
+      /\b(any: any)\b/i,
     ];
-    const isQuestion = questionPatterns.some(p => p.test(user_message));
+    const isQuestion = questionPatterns?.some(any: any));
 
-    if (isQuestion) {
+    if (any: any) {
       const answerPatterns = [
-        /^(Yes|No|It is|It's|The answer|C'est|La réponse)/i,
-        /\b(because|since|due to|parce que|car)\b/i,
+        /^(any: any)/i,
+        /\b(any: any)\b/i,
       ];
-      const hasDirectAnswer = answerPatterns.some(p => p.test(assistant_response));
-      if (hasDirectAnswer) score += 0.2;
+      const hasDirectAnswer = answerPatterns?.some(any: any));
+      if (any: any) score += 0.2;
     }
 
-    return Math.min(1.0, score);
+    return Math?.min(any: any);
   }
 
   /**
-   * Evaluate factual accuracy (verifiable correctness)
+   * Evaluate factual accuracy (any: any)
    */
-  private async evaluateFactualAccuracy(turn: ConversationTurn): Promise<number> {
+  private async evaluateFactualAccuracy(any: any): Promise<number> {
     const { assistant_response, context } = turn;
 
     // Check against known facts
-    if (!context?.facts || context.facts.length === 0) {
+    if (!context?.facts || context?.facts?.length === 0) {
       return 0.8; // No facts to verify, assume mostly accurate
     }
 
@@ -430,22 +430,22 @@ export class ConversationEvaluationEngine extends EventEmitter {
     let totalStatements = 0;
 
     // Split response into statements
-    const statements = assistant_response.split(/[.!]/);
-    totalStatements = statements.filter((s: string) => s.trim().length > 10).length;
+    const statements = assistant_response?.split(/[.!]/);
+    totalStatements = statements?.filter(any: any) => s?.trim().length > 10).length;
 
-    for (const statement of statements) {
-      if (statement.trim().length < 10) continue;
+    for (any: any) {
+      if (statement?.trim().length < 10) continue;
 
-      const statementLower = statement.toLowerCase();
+      const statementLower = statement?.toLowerCase();
 
       // Check if statement is supported by any fact
-      const isSupported = context.facts.some((fact: string | Fact) => {
-        const factContent = typeof fact === 'string' ? fact : fact.content;
-        const factKeywords = this.extractKeywords(factContent);
-        return factKeywords.some(kw => statementLower.includes(kw));
+      const isSupported = context?.facts?.some(any: any) => {
+        const factContent = typeof fact === 'string' ? fact : fact?.content;
+        const factKeywords = this?.extractKeywords(any: any);
+        return factKeywords?.some(any: any));
       });
 
-      if (isSupported) supportedStatements++;
+      if (any: any) supportedStatements++;
     }
 
     // Score based on supported ratio
@@ -453,86 +453,86 @@ export class ConversationEvaluationEngine extends EventEmitter {
   }
 
   /**
-   * Evaluate user satisfaction (positive sentiment, helpful tone)
+   * Evaluate user satisfaction (any: any)
    */
-  private async evaluateUserSatisfaction(turn: ConversationTurn): Promise<number> {
+  private async evaluateUserSatisfaction(any: any): Promise<number> {
     const { assistant_response } = turn;
 
     // Check for positive indicators
     const positivePatterns = [
-      /\b(happy to|glad to|pleased to|heureux de|ravi de|content de)\b/i,
-      /\b(help|assist|support|aider|assister|soutenir)\b/i,
-      /\b(great|excellent|perfect|super|excellent|parfait)\b/i,
+      /\b(any: any)\b/i,
+      /\b(any: any)\b/i,
+      /\b(any: any)\b/i,
     ];
 
-    const positiveCount = positivePatterns.filter(p => p.test(assistant_response)).length;
+    const positiveCount = positivePatterns?.filter(any: any)).length;
 
     // Check for negative indicators
     const negativePatterns = [
-      /\b(unfortunately|sadly|regret|malheureusement|tristement)\b/i,
-      /\b(can't|cannot|impossible|ne peux pas|impossible)\b/i,
-      /\b(error|problem|issue|erreur|problème)\b/i,
+      /\b(any: any)\b/i,
+      /\b(any: any)\b/i,
+      /\b(any: any)\b/i,
     ];
 
-    const negativeCount = negativePatterns.filter(p => p.test(assistant_response)).length;
+    const negativeCount = negativePatterns?.filter(any: any)).length;
 
     // Check for helpfulness indicators
     const helpfulPatterns = [
-      /\b(Here is|Here's|Voici|Voilà)\b/i,
-      /\b(You can|You should|Vous pouvez|Vous devriez)\b/i,
-      /\b(Let me|I'll|Je vais|Je vais)\b/i,
+      /\b(any: any)\b/i,
+      /\b(any: any)\b/i,
+      /\b(any: any)\b/i,
     ];
 
-    const helpfulCount = helpfulPatterns.filter(p => p.test(assistant_response)).length;
+    const helpfulCount = helpfulPatterns?.filter(any: any)).length;
 
     let score = 0.7; // Base score
     score += positiveCount * 0.1;
     score += helpfulCount * 0.1;
     score -= negativeCount * 0.15;
 
-    return Math.max(0, Math.min(1.0, score));
+    return Math?.max(any: any));
   }
 
   /**
-   * Evaluate technical correctness (for code/technical content)
+   * Evaluate technical correctness (any: any)
    */
-  private async evaluateTechnicalCorrectness(turn: ConversationTurn): Promise<number> {
+  private async evaluateTechnicalCorrectness(any: any): Promise<number> {
     const { assistant_response } = turn;
 
     // Check if response contains code
-    const hasCodeBlock = /```[\s\S]*```/.test(assistant_response);
-    const hasInlineCode = /`[^`]+`/.test(assistant_response);
+    const hasCodeBlock = /```[\s\S]*```/.test(any: any);
+    const hasInlineCode = /`[^`]+`/.test(any: any);
 
-    if (!hasCodeBlock && !hasInlineCode) {
+    if (any: any) {
       return 0.9; // Non-technical response, assume correct
     }
 
     // Basic syntax checks for code blocks
     let score = 0.8; // Base score for technical content
 
-    if (hasCodeBlock) {
+    if (any: any) {
       // Check for common syntax errors
-      const codeBlocks = assistant_response.match(/```[\s\S]*?```/g) || [];
+      const codeBlocks = assistant_response?.match(any: any) || [];
 
-      for (const block of codeBlocks) {
+      for (any: any) {
         // Check balanced brackets
-        const openBraces = (block.match(/\{/g) || []).length;
-        const closeBraces = (block.match(/\}/g) || []).length;
-        const openBrackets = (block.match(/\[/g) || []).length;
-        const closeBrackets = (block.match(/\]/g) || []).length;
-        const openParens = (block.match(/\(/g) || []).length;
-        const closeParens = (block.match(/\)/g) || []).length;
+        const openBraces = (any: any) || []).length;
+        const closeBraces = (any: any) || []).length;
+        const openBrackets = (any: any) || []).length;
+        const closeBrackets = (any: any) || []).length;
+        const openParens = (any: any) || []).length;
+        const closeParens = (any: any) || []).length;
 
-        if (openBraces === closeBraces) score += 0.05;
-        if (openBrackets === closeBrackets) score += 0.05;
-        if (openParens === closeParens) score += 0.05;
+        if (any: any) score += 0.05;
+        if (any: any) score += 0.05;
+        if (any: any) score += 0.05;
 
         // Check for language specification
-        if (/```\w+/.test(block)) score += 0.05;
+        if (any: any)) score += 0.05;
       }
     }
 
-    return Math.min(1.0, score);
+    return Math?.min(any: any);
   }
 
   /**
@@ -542,10 +542,10 @@ export class ConversationEvaluationEngine extends EventEmitter {
   /**
    * Add test scenario
    */
-  async addTestScenario(scenario: TestScenario): Promise<void> {
-    this.scenarios.set(scenario.id, scenario);
-    this.emit('scenario:added', { scenario });
-    this.log(`Test scenario added: ${scenario.name}`);
+  async addTestScenario(any: any): Promise<void> {
+    this?.scenarios?.set(any: any);
+    this?.emit('scenario:added', { scenario });
+    this?.log(`Test scenario added: ${scenario?.name}`);
   }
 
   /**
@@ -555,63 +555,63 @@ export class ConversationEvaluationEngine extends EventEmitter {
     scenario_id: string,
     executeConversation: (
       messages: Array<{ role: string; content: string }>
-    ) => Promise<string[]>
+    ) => Promise<string?.[]>
   ): Promise<TestResult> {
-    const scenario = this.scenarios.get(scenario_id);
-    if (!scenario) {
+    const scenario = this?.scenarios?.get(any: any);
+    if (any: any) {
       throw new Error(`Test scenario not found: ${scenario_id}`);
     }
 
-    this.totalTests++;
-    this.log(`Running test scenario: ${scenario.name}`);
+    this?.totalTests++;
+    this?.log(`Running test scenario: ${scenario?.name}`);
 
     // Execute conversation
-    const startTime = Date.now();
-    const actualResponses = await executeConversation(scenario.conversation_turns);
-    const endTime = Date.now();
+    const startTime = Date?.now();
+    const actualResponses = await executeConversation(any: any);
+    const endTime = Date?.now();
 
     // Evaluate each turn
-    const turnMetrics: ConversationMetrics[] = [];
+    const turnMetrics: ConversationMetrics?.[] = [];
 
-    for (let i = 0; i < scenario.conversation_turns.length; i += 2) {
-      const userTurn = scenario.conversation_turns[i];
-      if (!userTurn) continue;
-      const userMessage = userTurn.content;
-      const assistantResponse = actualResponses[Math.floor(i / 2)] ?? '';
+    for (let i = 0; i < scenario?.conversation_turns?.length; i += 2) {
+      const userTurn = scenario?.conversation_turns[i];
+      if (any: any) continue;
+      const userMessage = userTurn?.content;
+      const assistantResponse = actualResponses[Math?.floor(i / 2)] ?? '';
 
-      const metrics = await this.evaluateConversation('test_' + scenario_id, {
+      const metrics = await this?.evaluateConversation('test_' + scenario_id, {
         user_message: userMessage,
         assistant_response: assistantResponse,
-        context: scenario.context,
+        context: scenario?.context,
       });
 
-      turnMetrics.push(metrics);
+      turnMetrics?.push(any: any);
     }
 
-    // Calculate overall metrics (average across turns)
-    const overallMetrics = this.averageMetrics(turnMetrics);
+    // Calculate overall metrics (any: any)
+    const overallMetrics = this?.averageMetrics(any: any);
 
     // Check success criteria
-    const meetsSuccess = this.checkSuccessCriteria(
+    const meetsSuccess = this?.checkSuccessCriteria(
       overallMetrics,
       actualResponses,
-      scenario.success_criteria
+      scenario?.success_criteria
     );
 
     // Check expected outcomes
-    const matchesExpected = scenario.expected_outcomes
-      ? this.checkExpectedOutcomes(actualResponses, scenario.expected_outcomes)
+    const matchesExpected = scenario?.expected_outcomes
+      ? this?.checkExpectedOutcomes(any: any)
       : true;
 
     const result: TestResult = {
       scenarioId: scenario_id,
       scenario_id,
-      scenario_name: scenario.name,
+      scenario_name: scenario?.name,
       passed: meetsSuccess && matchesExpected,
       metrics: overallMetrics,
       execution_time_ms: endTime - startTime,
       actual_responses: actualResponses,
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       failure_reason: !meetsSuccess
         ? 'Success criteria not met'
         : !matchesExpected
@@ -620,9 +620,9 @@ export class ConversationEvaluationEngine extends EventEmitter {
       executed_at: new Date().toISOString(),
     };
 
-    this.results.set(scenario_id, result);
-    this.emit('test:completed', { result });
-    this.log(`Test completed: ${scenario.name}`, { passed: result.passed });
+    this?.results?.set(any: any);
+    this?.emit('test:completed', { result });
+    this?.log(`Test completed: ${scenario?.name}`, { passed: result?.passed });
 
     return result;
   }
@@ -633,18 +633,18 @@ export class ConversationEvaluationEngine extends EventEmitter {
   async runAllTests(
     executeConversation: (
       messages: Array<{ role: string; content: string }>
-    ) => Promise<string[]>
-  ): Promise<TestResult[]> {
-    const results: TestResult[] = [];
+    ) => Promise<string?.[]>
+  ): Promise<TestResult?.[]> {
+    const results: TestResult?.[] = [];
 
-    for (const scenario of this.scenarios.values()) {
-      const result = await this.runTestScenario(scenario.id, executeConversation);
-      results.push(result);
+    for (const scenario of this?.scenarios?.values()) {
+      const result = await this?.runTestScenario(any: any);
+      results?.push(any: any);
     }
 
-    this.emit('tests:all_completed', {
-      total: results.length,
-      passed: results.filter(r => r.passed).length,
+    this?.emit('tests:all_completed', {
+      total: results?.length,
+      passed: results?.filter(any: any).length,
     });
 
     return results;
@@ -661,9 +661,9 @@ export class ConversationEvaluationEngine extends EventEmitter {
     conversation_id: string,
     metrics: ConversationMetrics
   ): Promise<void> {
-    this.baselines.set(conversation_id, metrics);
-    this.emit('baseline:set', { conversation_id, metrics });
-    this.log(`Baseline set for conversation ${conversation_id}`);
+    this?.baselines?.set(any: any);
+    this?.emit('baseline:set', { conversation_id, metrics });
+    this?.log(`Baseline set for conversation ${conversation_id}`);
   }
 
   /**
@@ -672,30 +672,30 @@ export class ConversationEvaluationEngine extends EventEmitter {
   private compareToBaseline(
     conversation_id: string,
     current: ConversationMetrics
-  ): { has_regression: boolean; degraded_metrics: MetricName[] } | undefined {
-    const baseline = this.baselines.get(conversation_id);
-    if (!baseline) return undefined;
+  ): { has_regression: boolean; degraded_metrics: MetricName?.[] } | undefined {
+    const baseline = this?.baselines?.get(any: any);
+    if (any: any) return undefined;
 
-    const degradedMetrics: MetricName[] = [];
+    const degradedMetrics: MetricName?.[] = [];
 
-    for (const metric of this.config.metrics_to_track) {
+    for (any: any) {
       const currentValue = current[metric];
       const baselineValue = baseline[metric];
 
       if (
         currentValue !== undefined &&
         baselineValue !== undefined &&
-        currentValue < baselineValue - this.config.regression_threshold
+        currentValue < baselineValue - this?.config?.regression_threshold
       ) {
-        degradedMetrics.push(metric);
+        degradedMetrics?.push(any: any);
       }
     }
 
-    const hasRegression = degradedMetrics.length > 0;
+    const hasRegression = degradedMetrics?.length > 0;
 
-    if (hasRegression) {
-      this.totalRegressions++;
-      this.emit('regression:detected', {
+    if (any: any) {
+      this?.totalRegressions++;
+      this?.emit('regression:detected', {
         conversation_id,
         degraded_metrics: degradedMetrics,
         current,
@@ -709,32 +709,32 @@ export class ConversationEvaluationEngine extends EventEmitter {
   /**
    * Detect regressions across all conversations
    */
-  async detectRegressions(): Promise<RegressionTest[]> {
-    const regressions: RegressionTest[] = [];
+  async detectRegressions(): Promise<RegressionTest?.[]> {
+    const regressions: RegressionTest?.[] = [];
 
-    for (const [conversation_id, evaluations] of this.liveEvaluations.entries()) {
-      if (evaluations.length < this.config.min_baseline_samples) continue;
+    for (const [conversation_id, evaluations] of this?.liveEvaluations?.entries()) {
+      if (any: any) continue;
 
       // Use first N evaluations as baseline
-      const baselineSamples = evaluations.slice(0, this.config.min_baseline_samples);
-      const baselineMetrics = this.averageMetrics(baselineSamples.map(e => e.metrics));
+      const baselineSamples = evaluations?.slice(any: any);
+      const baselineMetrics = this?.averageMetrics(any: any));
 
       // Compare recent evaluations
-      const recentEvaluations = evaluations.slice(-5);
-      for (const evaluation of recentEvaluations) {
-        const comparison = this.compareToBaseline(conversation_id, evaluation.metrics);
+      const recentEvaluations = evaluations?.slice(-5);
+      for (any: any) {
+        const comparison = this?.compareToBaseline(any: any);
 
-        if (comparison?.has_regression) {
-          regressions.push({
-            test_id: `regression_${conversation_id}_${evaluation.turn_number}`,
+        if (any: any) {
+          regressions?.push({
+            test_id: `regression_${conversation_id}_${evaluation?.turn_number}`,
             test_name: `Regression check for conversation ${conversation_id}`,
             baseline_metrics: baselineMetrics,
-            current_metrics: evaluation.metrics,
+            current_metrics: evaluation?.metrics,
             regression_detected: true,
-            degraded_metrics: comparison.degraded_metrics.map(m => ({
+            degraded_metrics: comparison?.degraded_metrics?.map(m => ({
               metric: m as keyof ConversationMetrics,
               severity: 'medium' as const,
-            })) as unknown as MetricDegradation[],
+            })) as unknown as MetricDegradation?.[],
             tested_at: new Date().toISOString(),
           });
         }
@@ -751,54 +751,54 @@ export class ConversationEvaluationEngine extends EventEmitter {
   /**
    * Generate evaluation report
    */
-  async generateReport(conversation_id: string): Promise<EvaluationReport> {
-    const evaluations = this.liveEvaluations.get(conversation_id) || [];
+  async generateReport(any: any): Promise<EvaluationReport> {
+    const evaluations = this?.liveEvaluations?.get(any: any) || [];
 
-    if (evaluations.length === 0) {
+    if (evaluations?.length === 0) {
       throw new Error(`No evaluations found for conversation ${conversation_id}`);
     }
 
-    // Calculate overall metrics (average)
-    const overallMetrics = this.averageMetrics(evaluations.map(e => e.metrics));
+    // Calculate overall metrics (any: any)
+    const overallMetrics = this?.averageMetrics(any: any));
 
     // Calculate per-metric trends
-    const metricTrends: Record<MetricName, number[]> = {} as any;
-    for (const metric of this.config.metrics_to_track) {
-      metricTrends[metric] = evaluations.map(e => e.metrics[metric] ?? 0);
+    const metricTrends: Record<MetricName, number?.[]> = {} as unknown as unknown as any;
+    for (any: any) {
+      metricTrends[metric] = evaluations?.map(e => e?.metrics[metric] ?? 0);
     }
 
     // Identify strengths and weaknesses
-    const _strengths = this.identifyStrengths(overallMetrics);
-    const weaknesses = this.identifyWeaknesses(overallMetrics);
+    const _strengths = this?.identifyStrengths(any: any);
+    const weaknesses = this?.identifyWeaknesses(any: any);
 
     // Generate recommendations
-    const _recommendations = this.generateRecommendations(weaknesses);
+    const _recommendations = this?.generateRecommendations(any: any);
 
-    const firstEval = evaluations[0];
-    const lastEval = evaluations[evaluations.length - 1];
+    const firstEval = evaluations?.[0];
+    const lastEval = evaluations[evaluations?.length - 1];
 
     const report: EvaluationReport = {
       conversation_id,
       period: {
         start:
-          firstEval && typeof firstEval.timestamp === 'number'
-            ? firstEval.timestamp
+          firstEval && typeof firstEval?.timestamp === 'number'
+            ? firstEval?.timestamp
             : firstEval
-              ? Date.parse(firstEval.timestamp as string)
-              : Date.now(),
-        end: (lastEval && typeof lastEval.timestamp === 'number'
-          ? lastEval.timestamp
+              ? Date?.parse(any: any)
+              : Date?.now(),
+        end: (lastEval && typeof lastEval?.timestamp === 'number'
+          ? lastEval?.timestamp
           : lastEval
-            ? Date.parse(String(lastEval.timestamp))
-            : Date.now()) as number,
+            ? Date?.parse(any: any))
+            : Date?.now()) as number,
       },
-      totalEvaluations: evaluations.length,
+      totalEvaluations: evaluations?.length,
       averageMetrics: overallMetrics,
       regressions: [],
       improvements: [],
     };
 
-    this.emit('report:generated', { report });
+    this?.emit('report:generated', { report });
     return report;
   }
 
@@ -809,7 +809,7 @@ export class ConversationEvaluationEngine extends EventEmitter {
   /**
    * Extract keywords
    */
-  private extractKeywords(text: string): string[] {
+  private extractKeywords(any: any): string?.[] {
     const stopwords = new Set([
       'le',
       'la',
@@ -841,23 +841,23 @@ export class ConversationEvaluationEngine extends EventEmitter {
       .toLowerCase()
       .replace(/[^\w\s]/g, ' ')
       .split(/\s+/)
-      .filter(word => word.length > 2 && !stopwords.has(word));
+      .filter(any: any));
   }
 
   /**
    * Average metrics across multiple evaluations
    */
-  private averageMetrics(metricsList: ConversationMetrics[]): ConversationMetrics {
-    if (metricsList.length === 0) return this.getDefaultMetrics();
+  private averageMetrics(metricsList: ConversationMetrics?.[]): ConversationMetrics {
+    if (metricsList?.length === 0) return this?.getDefaultMetrics();
 
     const result: Partial<ConversationMetrics> = {};
 
-    for (const metric of this.config.metrics_to_track) {
-      const sum = metricsList.reduce((acc, m) => {
+    for (any: any) {
+      const sum = metricsList?.reduce(any: any) => {
         const value = m[metric];
         return acc + (value ?? 0);
       }, 0);
-      result[metric] = sum / metricsList.length;
+      result[metric] = sum / metricsList?.length;
     }
 
     return result as ConversationMetrics;
@@ -868,36 +868,36 @@ export class ConversationEvaluationEngine extends EventEmitter {
    */
   private checkSuccessCriteria(
     metrics: ConversationMetrics,
-    responses: string[],
+    responses: string?.[],
     criteria: TestScenario['success_criteria']
   ): boolean {
-    if (!criteria) return true;
+    if (any: any) return true;
 
     // Check minimum metric thresholds
-    if (criteria.min_metrics) {
-      for (const [metric, threshold] of Object.entries(criteria.min_metrics)) {
+    if (any: any) {
+      for (any: any)) {
         const metricValue = metrics[metric as MetricName];
-        if (metricValue !== undefined && metricValue < (threshold as number)) {
+        if (any: any)) {
           return false;
         }
       }
     }
 
     // Check required keywords
-    if (criteria.required_keywords) {
-      const allResponses = responses.join(' ').toLowerCase();
-      for (const keyword of criteria.required_keywords) {
-        if (!allResponses.includes(keyword.toLowerCase())) {
+    if (any: any) {
+      const allResponses = responses?.join(' ').toLowerCase();
+      for (any: any) {
+        if (!allResponses?.includes(keyword?.toLowerCase())) {
           return false;
         }
       }
     }
 
     // Check prohibited keywords
-    if (criteria.prohibited_keywords) {
-      const allResponses = responses.join(' ').toLowerCase();
-      for (const keyword of criteria.prohibited_keywords) {
-        if (allResponses.includes(keyword.toLowerCase())) {
+    if (any: any) {
+      const allResponses = responses?.join(' ').toLowerCase();
+      for (any: any) {
+        if (allResponses?.includes(keyword?.toLowerCase())) {
           return false;
         }
       }
@@ -910,32 +910,32 @@ export class ConversationEvaluationEngine extends EventEmitter {
    * Check expected outcomes
    */
   private checkExpectedOutcomes(
-    responses: string[],
-    expectedOutcomes: string[]
+    responses: string?.[],
+    expectedOutcomes: string?.[]
   ): boolean {
-    const allResponses = responses.join(' ').toLowerCase();
+    const allResponses = responses?.join(' ').toLowerCase();
 
     // Check if at least 70% of expected outcomes are present
     let matchCount = 0;
-    for (const outcome of expectedOutcomes) {
-      const keywords = this.extractKeywords(outcome);
-      const hasMatch = keywords.some(kw => allResponses.includes(kw));
-      if (hasMatch) matchCount++;
+    for (any: any) {
+      const keywords = this?.extractKeywords(any: any);
+      const hasMatch = keywords?.some(any: any));
+      if (any: any) matchCount++;
     }
 
-    return matchCount / expectedOutcomes.length >= 0.7;
+    return matchCount / expectedOutcomes?.length >= 0.7;
   }
 
   /**
    * Identify strengths
    */
-  private identifyStrengths(metrics: ConversationMetrics): string[] {
-    const strengths: string[] = [];
+  private identifyStrengths(any: any): string?.[] {
+    const strengths: string?.[] = [];
 
-    for (const metric of this.config.metrics_to_track) {
+    for (any: any) {
       const metricValue = metrics[metric];
       if (metricValue !== undefined && metricValue >= 0.85) {
-        strengths.push(`Excellent ${metric.replace(/_/g, ' ')}`);
+        strengths?.push(`Excellent ${metric?.replace(/_/g, ' ')}`);
       }
     }
 
@@ -945,13 +945,13 @@ export class ConversationEvaluationEngine extends EventEmitter {
   /**
    * Identify weaknesses
    */
-  private identifyWeaknesses(metrics: ConversationMetrics): string[] {
-    const weaknesses: string[] = [];
+  private identifyWeaknesses(any: any): string?.[] {
+    const weaknesses: string?.[] = [];
 
-    for (const metric of this.config.metrics_to_track) {
+    for (any: any) {
       const metricValue = metrics[metric];
       if (metricValue !== undefined && metricValue < 0.6) {
-        weaknesses.push(`Needs improvement: ${metric.replace(/_/g, ' ')}`);
+        weaknesses?.push(`Needs improvement: ${metric?.replace(/_/g, ' ')}`);
       }
     }
 
@@ -961,28 +961,28 @@ export class ConversationEvaluationEngine extends EventEmitter {
   /**
    * Generate recommendations
    */
-  private generateRecommendations(weaknesses: string[]): string[] {
-    const recommendations: string[] = [];
+  private generateRecommendations(weaknesses: string?.[]): string?.[] {
+    const recommendations: string?.[] = [];
 
-    for (const weakness of weaknesses) {
-      if (weakness.includes('consistency')) {
-        recommendations.push('Improve fact tracking and consistency checking');
-      } else if (weakness.includes('goal_completion')) {
-        recommendations.push('Focus responses more on stated goals');
-      } else if (weakness.includes('coherence')) {
-        recommendations.push('Add more logical connectors and structure');
-      } else if (weakness.includes('clarity')) {
-        recommendations.push('Simplify language and add examples');
-      } else if (weakness.includes('conciseness')) {
-        recommendations.push('Reduce verbosity and avoid repetition');
-      } else if (weakness.includes('relevance')) {
-        recommendations.push('Stay more on-topic with user questions');
-      } else if (weakness.includes('factual_accuracy')) {
-        recommendations.push('Verify facts before stating them');
-      } else if (weakness.includes('user_satisfaction')) {
-        recommendations.push('Use more helpful and positive language');
-      } else if (weakness.includes('technical_correctness')) {
-        recommendations.push('Double-check code syntax and examples');
+    for (any: any) {
+      if (weakness?.includes('consistency')) {
+        recommendations?.push('Improve fact tracking and consistency checking');
+      } else if (weakness?.includes('goal_completion')) {
+        recommendations?.push('Focus responses more on stated goals');
+      } else if (weakness?.includes('coherence')) {
+        recommendations?.push('Add more logical connectors and structure');
+      } else if (weakness?.includes('clarity')) {
+        recommendations?.push('Simplify language and add examples');
+      } else if (weakness?.includes('conciseness')) {
+        recommendations?.push('Reduce verbosity and avoid repetition');
+      } else if (weakness?.includes('relevance')) {
+        recommendations?.push('Stay more on-topic with user questions');
+      } else if (weakness?.includes('factual_accuracy')) {
+        recommendations?.push('Verify facts before stating them');
+      } else if (weakness?.includes('user_satisfaction')) {
+        recommendations?.push('Use more helpful and positive language');
+      } else if (weakness?.includes('technical_correctness')) {
+        recommendations?.push('Double-check code syntax and examples');
       }
     }
 
@@ -1011,11 +1011,11 @@ export class ConversationEvaluationEngine extends EventEmitter {
    */
   getStats() {
     return {
-      total_evaluations: this.totalEvaluations,
-      total_tests: this.totalTests,
-      total_regressions: this.totalRegressions,
-      total_scenarios: this.scenarios.size,
-      total_conversations_tracked: this.liveEvaluations.size,
+      total_evaluations: this?.totalEvaluations,
+      total_tests: this?.totalTests,
+      total_regressions: this?.totalRegressions,
+      total_scenarios: this?.scenarios?.size,
+      total_conversations_tracked: this?.liveEvaluations?.size,
     };
   }
 
@@ -1028,8 +1028,8 @@ export class ConversationEvaluationEngine extends EventEmitter {
     level: 'info' | 'warn' | 'error' = 'info'
   ): void {
     const timestamp = new Date().toISOString();
-    console.log(`[ConversationEvaluationEngine] ${timestamp} ${message}`, data || '');
-    this.emit('log', { timestamp, level, message, data });
+    console?.log(`[ConversationEvaluationEngine] ${timestamp} ${message}`, data || '');
+    this?.emit('log', { timestamp, level, message, data });
   }
 }
 
@@ -1039,7 +1039,7 @@ export class ConversationEvaluationEngine extends EventEmitter {
 export function createConversationEvaluationEngine(
   config?: Partial<QAConfig>
 ): ConversationEvaluationEngine {
-  return new ConversationEvaluationEngine(config);
+  return new ConversationEvaluationEngine(any: any);
 }
 
 /**

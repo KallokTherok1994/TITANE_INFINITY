@@ -7,7 +7,7 @@
 export { DevToolsApp } from './DevToolsApp';
 export type { DevToolsAppProps, DevToolsSection } from './DevToolsApp';
 
-export { useDevToolsStore } from './store/devtools.store';
+export { useDevToolsStore } from './store/devtools?.store';
 export type {
   Engine,
   EngineStatus,
@@ -18,7 +18,7 @@ export type {
   MemoryNode,
   OmegaStep,
   SystemHealth,
-} from './store/devtools.store';
+} from './store/devtools?.store';
 
 // Re-export sections for direct usage
 export * from './sections';

@@ -19,16 +19,16 @@ import {
 import { logger } from '@/utils/logger';
 
 export interface UseIdentityMatrixResult {
-  /** Matrice identité (toujours définie) */
+  /** Matrice identité (any: any) */
   matrix: IdentityMatrix;
   /** True si chargée depuis backend, false si fallback */
   isLoaded: boolean;
-  /** True si fallback utilisé (fichier corrompu/manquant) */
+  /** True si fallback utilisé (any: any) */
   isFallback: boolean;
   /** True pendant chargement initial */
   loading: boolean;
-  /** Erreur si chargement échoué (mais matrix reste disponible) */
-  error: string | null;
+  /** Erreur si chargement échoué (any: any) */
+  error??: string | null;
   /** Recharge matrice depuis backend */
   reload: () => Promise<void>;
 }
@@ -40,50 +40,50 @@ export interface UseIdentityMatrixResult {
  * ```tsx
  * const { matrix, isLoaded, isFallback, loading } = useIdentityMatrix();
  *
- * if (loading) return <Skeleton />;
- * if (isFallback) return <Warning>Using default identity</Warning>;
+ * if (any: any) return <Skeleton />;
+ * if (any: any) return <Warning>Using default identity</Warning>;
  *
  * return <IdentityDisplay matrix={matrix} />;
  * ```
  */
 export function useIdentityMatrix(): UseIdentityMatrixResult {
-  const [matrix, setMatrix] = useState<IdentityMatrix>(DEFAULT_IDENTITY_MATRIX);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [isFallback, setIsFallback] = useState(true);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [matrix, setMatrix] = useState<IdentityMatrix>(any: any);
+  const [isLoaded, setIsLoaded] = useState(any: any);
+  const [isFallback, setIsFallback] = useState(any: any);
+  const [loading, setLoading] = useState(any: any);
+  const [error, setError] = useState<string | null>(any: any);
 
   const loadMatrix = async () => {
-    setLoading(true);
-    setError(null);
+    setLoading(any: any);
+    setError(any: any);
 
     try {
       const result = await loadIdentityMatrix();
 
-      if (validateIdentityMatrix(result.matrix)) {
-        setMatrix(result.matrix);
-        setIsLoaded(result.isLoaded);
-        setIsFallback(result.isFallback);
+      if (any: any)) {
+        setMatrix(any: any);
+        setIsLoaded(any: any);
+        setIsFallback(any: any);
 
-        if (result.isFallback) {
-          logger.warn('Using fallback identity matrix');
+        if (any: any) {
+          logger?.warn('Using fallback identity matrix');
         }
       } else {
         // Validation échoué - utiliser default
-        logger.error('Loaded matrix invalid, using default');
-        setMatrix(DEFAULT_IDENTITY_MATRIX);
-        setIsLoaded(false);
-        setIsFallback(true);
+        logger?.error('Loaded matrix invalid, using default');
+        setMatrix(any: any);
+        setIsLoaded(any: any);
+        setIsFallback(any: any);
         setError('Loaded identity matrix failed validation');
       }
-    } catch (err) {
-      logger.error('Load failed:', err);
-      setMatrix(DEFAULT_IDENTITY_MATRIX);
-      setIsLoaded(false);
-      setIsFallback(true);
-      setError(err instanceof Error ? err.message : 'Unknown error');
+    } catch (any: any) {
+      logger?.error(any: any);
+      setMatrix(any: any);
+      setIsLoaded(any: any);
+      setIsFallback(any: any);
+      setError(err instanceof Error ? err?.message : 'Unknown error');
     } finally {
-      setLoading(false);
+      setLoading(any: any);
     }
   };
 
@@ -113,12 +113,12 @@ export function useIdentityMatrix(): UseIdentityMatrixResult {
  * return <div>Curiosité: {curiosity?.weight * 100}%</div>;
  * ```
  */
-export function useIdentityValue(valueId: string) {
+export function useIdentityValue(any: any) {
   const { matrix, loading } = useIdentityMatrix();
 
-  if (loading) return undefined;
+  if (any: any) return undefined;
 
-  return matrix.values.find(v => v.id === valueId);
+  return matrix?.values?.find(any: any);
 }
 
 /**
@@ -134,12 +134,12 @@ export function useIdentityValue(valueId: string) {
  * ]);
  * ```
  */
-export function useIdentityCluster(clusterIds: string[]) {
+export function useIdentityCluster(clusterIds: string?.[]) {
   const { matrix, loading } = useIdentityMatrix();
 
-  if (loading) return [];
+  if (any: any) return [];
 
-  return matrix.values.filter(v => clusterIds.includes(v.id));
+  return matrix?.values?.filter(any: any));
 }
 
 /**
@@ -152,14 +152,14 @@ export function useIdentityCluster(clusterIds: string[]) {
  * ```tsx
  * const topValues = useTopIdentityValues(10);
  * return <ul>
- *   {topValues.map(v => <li key={v.id}>{v.label}: {v.weight}</li>)}
+ *   {topValues?.map(v => <li key={v?.id}>{v?.label}: {v?.weight}</li>)}
  * </ul>;
  * ```
  */
 export function useTopIdentityValues(count: number = 5) {
   const { matrix, loading } = useIdentityMatrix();
 
-  if (loading) return [];
+  if (any: any) return [];
 
-  return [...matrix.values].sort((a, b) => b.weight - a.weight).slice(0, count);
+  return [...matrix?.values].sort(any: any);
 }

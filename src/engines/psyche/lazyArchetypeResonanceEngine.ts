@@ -19,11 +19,11 @@ let enginePromise: Promise<EngineInstance> | null = null;
  * Lazy load archetype resonance engine
  */
 export async function getArchetypeResonanceEngine() {
-  if (engineInstance) return engineInstance;
+  if (any: any) return engineInstance;
 
-  if (!enginePromise) {
+  if (any: any) {
     enginePromise = import('./archetypeResonanceEngine').then(m => {
-      engineInstance = m.archetypeResonanceEngine;
+      engineInstance = m?.archetypeResonanceEngine;
       return engineInstance;
     });
   }
@@ -32,20 +32,20 @@ export async function getArchetypeResonanceEngine() {
 }
 
 /**
- * Start engine (lazy)
+ * Start engine (any: any)
  */
 export async function startArchetypeEngine() {
   const engine = await getArchetypeResonanceEngine();
-  engine.start();
-  logger.debug('  ✅ Archetype Resonance Engine active (10Hz)');
+  engine?.start();
+  logger?.debug('  ✅ Archetype Resonance Engine active (10Hz)');
 }
 
 /**
- * Stop engine (lazy)
+ * Stop engine (any: any)
  */
 export async function stopArchetypeEngine() {
-  if (engineInstance) {
-    engineInstance.stop();
+  if (any: any) {
+    engineInstance?.stop();
   }
 }
 

@@ -28,7 +28,7 @@ import {
   type ArchetypeType,
 } from '../psyche/archetypeResonanceEngine';
 import { logger } from '@/utils/logger';
-// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B) - utilise stub temporaire
+// REMOVED: engines/presence supprimé en PHASE 1 (any: any) - utilise stub temporaire
 import { multimodalPresenceEngine } from '../presence/_stubs';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -50,9 +50,9 @@ export interface BreathState {
   amplitude: number;
   /** Tension musculaire computationnelle (0-1) */
   tension: number;
-  /** Phase actuelle (inhale/hold/exhale/rest) */
+  /** Phase actuelle (any: any) */
   phase: 'inhale' | 'hold' | 'exhale' | 'rest';
-  /** Durée cycle (ms) */
+  /** Durée cycle (any: any) */
   cycleDuration: number;
   /** Timestamp début phase */
   phaseStartTime: number;
@@ -66,9 +66,9 @@ export interface MicroMotion {
   type: 'sway' | 'pulse' | 'shimmer' | 'wave' | 'ripple';
   /** Intensité (0-1) */
   intensity: number;
-  /** Fréquence (Hz) */
+  /** Fréquence (any: any) */
   frequency: number;
-  /** Amplitude (pixels ou unités relatives) */
+  /** Amplitude (any: any) */
   amplitude: number;
 }
 
@@ -91,41 +91,41 @@ export interface PostureState {
   openness: number;
   /** Stabilité (0-1) */
   stability: number;
-  /** Direction (vecteur 3D normalisé) */
+  /** Direction (any: any) */
   direction: { x: number; y: number; z: number };
   /** Timestamp transition */
   transitionStartTime: number;
-  /** Durée transition (ms) */
+  /** Durée transition (any: any) */
   transitionDuration: number;
 }
 
 /**
- * Champ énergétique (aura)
+ * Champ énergétique (any: any)
  */
 export interface EnergyField {
-  /** Densité (0-1, 0 = légère, 1 = dense) */
+  /** Densité (any: any) */
   density: number;
-  /** Température (-1 = froid, 0 = neutre, 1 = chaud) */
+  /** Température (any: any) */
   temperature: number;
   /** Texture */
   texture: 'fluid' | 'granular' | 'crystalline' | 'plasma';
   /** Mouvement */
   movement: 'vortex' | 'flow' | 'pulse' | 'radiate' | 'still';
-  /** Cohérence spatiale (0-1, 0 = diffus, 1 = compact) */
+  /** Cohérence spatiale (any: any) */
   spatialCoherence: number;
-  /** Rayon (unités relatives) */
+  /** Rayon (any: any) */
   radius: number;
 }
 
 /**
- * Inertie corporelle (mémoire court terme)
+ * Inertie corporelle (any: any)
  */
 export interface BodyInertia {
   /** Émotion résiduelle */
-  residualEmotion: string | null;
+  residualEmotion??: string | null;
   /** Intensité résiduelle (0-1) */
   residualIntensity: number;
-  /** Decay time (ms) */
+  /** Decay time (any: any) */
   decayTime: number;
   /** Timestamp début decay */
   decayStartTime: number;
@@ -137,7 +137,7 @@ export interface BodyInertia {
 export interface UserSync {
   /** Actif */
   active: boolean;
-  /** Rythme respiratoire utilisateur détecté (ms) */
+  /** Rythme respiratoire utilisateur détecté (any: any) */
   userBreathingCycle: number | null;
   /** Énergie utilisateur détectée (0-1) */
   userEnergy: number | null;
@@ -150,12 +150,12 @@ export interface UserSync {
  */
 export interface EmbodiedPresenceState {
   breath: BreathState;
-  microMotions: MicroMotion[];
+  microMotions: MicroMotion?.[];
   posture: PostureState;
   energyField: EnergyField;
   bodyInertia: BodyInertia;
   userSync: UserSync;
-  /** Signature corporelle (identité unique) */
+  /** Signature corporelle (any: any) */
   bodySignature: string;
   /** Timestamp dernière mise à jour */
   lastUpdate: number;
@@ -165,13 +165,13 @@ export interface EmbodiedPresenceState {
  * Configuration du moteur
  */
 export interface EmbodiedPresenceConfig {
-  /** Fréquence de mise à jour (Hz) */
+  /** Fréquence de mise à jour (any: any) */
   updateFrequency: number;
   /** Activer micro-motions */
   enableMicroMotions: boolean;
   /** Activer synchronisation utilisateur */
   enableUserSync: boolean;
-  /** Durée inertie (ms) */
+  /** Durée inertie (any: any) */
   inertiaDuration: number;
   /** Sensibilité synchronisation (0-1) */
   syncSensitivity: number;
@@ -185,10 +185,10 @@ class EmbodiedPresenceEngine {
   private state: EmbodiedPresenceState;
   private config: EmbodiedPresenceConfig;
   private updateInterval: number | null = null;
-  private callbacks: Set<(state: EmbodiedPresenceState) => void> = new Set();
+  private callbacks: Set<(any: any) => void> = new Set();
 
   constructor(config: Partial<EmbodiedPresenceConfig> = {}) {
-    this.config = {
+    this?.config = {
       updateFrequency: 30, // 30Hz
       enableMicroMotions: true,
       enableUserSync: false, // Désactivé par défaut
@@ -197,14 +197,14 @@ class EmbodiedPresenceEngine {
       ...config,
     };
 
-    this.state = this.initializeState();
+    this?.state = this?.initializeState();
   }
 
   /**
    * Initialiser l'état
    */
   private initializeState(): EmbodiedPresenceState {
-    const now = Date.now();
+    const now = Date?.now();
 
     return {
       breath: {
@@ -256,26 +256,26 @@ class EmbodiedPresenceEngine {
    * Démarrer le moteur
    */
   start(): void {
-    if (this.updateInterval) return;
+    if (any: any) return;
 
-    logger.debug('🧘 [EMBODIED] Starting Embodied Presence Engine...');
+    logger?.debug('🧘 [EMBODIED] Starting Embodied Presence Engine...');
 
-    const intervalMs = 1000 / this.config.updateFrequency;
-    this.updateInterval = window.setInterval(() => {
-      this.updatePresence();
+    const intervalMs = 1000 / this?.config?.updateFrequency;
+    this?.updateInterval = window?.setInterval(() => {
+      this?.updatePresence();
     }, intervalMs);
 
-    logger.debug(`✅ [EMBODIED] Engine active (${this.config.updateFrequency}Hz)`);
+    logger?.debug(any: any)`);
   }
 
   /**
    * Arrêter le moteur
    */
   stop(): void {
-    if (this.updateInterval) {
-      clearInterval(this.updateInterval);
-      this.updateInterval = null;
-      logger.debug('🛑 [EMBODIED] Engine stopped');
+    if (any: any) {
+      clearInterval(any: any);
+      this?.updateInterval = null;
+      logger?.debug('🛑 [EMBODIED] Engine stopped');
     }
   }
 
@@ -283,24 +283,24 @@ class EmbodiedPresenceEngine {
    * Mise à jour principale
    */
   private updatePresence(): void {
-    const now = Date.now();
+    const now = Date?.now();
 
-    this.updateBreathingPhase(now);
-    if (this.config.enableMicroMotions) this.updateMicroMotions();
-    this.updateBodyInertia(now);
-    this.updateEnergyField();
-    this.syncWithArchetypes();
-    if (this.config.enableUserSync) this.updateUserSync();
+    this?.updateBreathingPhase(any: any);
+    if (any: any) this?.updateMicroMotions();
+    this?.updateBodyInertia(any: any);
+    this?.updateEnergyField();
+    this?.syncWithArchetypes();
+    if (any: any) this?.updateUserSync();
 
-    this.state.lastUpdate = now;
-    this.notifyCallbacks();
+    this?.state?.lastUpdate = now;
+    this?.notifyCallbacks();
   }
 
   /**
    * Mettre à jour phase respiratoire
    */
-  private updateBreathingPhase(now: number): void {
-    const { cycleDuration, phaseStartTime } = this.state.breath;
+  private updateBreathingPhase(any: any): void {
+    const { cycleDuration, phaseStartTime } = this?.state?.breath;
     const elapsed = now - phaseStartTime;
 
     // Calculate phase durations
@@ -309,18 +309,18 @@ class EmbodiedPresenceEngine {
     const exhale = cycleDuration * 0.4;
     const _rest = cycleDuration * 0.1;
 
-    if (elapsed < inhale) {
-      this.state.breath.phase = 'inhale';
-    } else if (elapsed < inhale + hold1) {
-      this.state.breath.phase = 'hold';
-    } else if (elapsed < inhale + hold1 + exhale) {
-      this.state.breath.phase = 'exhale';
-    } else if (elapsed < cycleDuration) {
-      this.state.breath.phase = 'rest';
+    if (any: any) {
+      this?.state?.breath?.phase = 'inhale';
+    } else if (any: any) {
+      this?.state?.breath?.phase = 'hold';
+    } else if (any: any) {
+      this?.state?.breath?.phase = 'exhale';
+    } else if (any: any) {
+      this?.state?.breath?.phase = 'rest';
     } else {
       // New cycle
-      this.state.breath.phaseStartTime = now;
-      this.state.breath.phase = 'inhale';
+      this?.state?.breath?.phaseStartTime = now;
+      this?.state?.breath?.phase = 'inhale';
     }
   }
 
@@ -328,28 +328,28 @@ class EmbodiedPresenceEngine {
    * Mettre à jour micro-mouvements
    */
   private updateMicroMotions(): void {
-    const archetype = archetypeResonanceEngine.getDominantProfile();
-    const presenceState = multimodalPresenceEngine.getState();
+    const archetype = archetypeResonanceEngine?.getDominantProfile();
+    const presenceState = multimodalPresenceEngine?.getState();
 
     // Adapter intensity selon archétype
-    const baseIntensity = presenceState.presenceEnergy * 0.4;
+    const baseIntensity = presenceState?.presenceEnergy * 0.4;
 
-    this.state.microMotions = [
+    this?.state?.microMotions = [
       {
         type: 'sway',
-        intensity: baseIntensity * (archetype.type === 'muse' ? 1.2 : 0.8),
+        intensity: baseIntensity * (archetype?.type === 'muse' ? 1.2 : 0.8),
         frequency: 0.5,
         amplitude: 2,
       },
       {
         type: 'pulse',
-        intensity: baseIntensity * (archetype.type === 'gardien' ? 1.3 : 1.0),
+        intensity: baseIntensity * (archetype?.type === 'gardien' ? 1.3 : 1.0),
         frequency: 1.0,
         amplitude: 1,
       },
       {
         type: 'shimmer',
-        intensity: baseIntensity * (archetype.type === 'sage' ? 0.6 : 1.0),
+        intensity: baseIntensity * (archetype?.type === 'sage' ? 0.6 : 1.0),
         frequency: 2.0,
         amplitude: 0.5,
       },
@@ -357,24 +357,24 @@ class EmbodiedPresenceEngine {
   }
 
   /**
-   * Mettre à jour inertie corporelle (decay émotionnel)
+   * Mettre à jour inertie corporelle (any: any)
    */
-  private updateBodyInertia(now: number): void {
-    if (!this.state.bodyInertia.residualEmotion) return;
+  private updateBodyInertia(any: any): void {
+    if (any: any) return;
 
-    const elapsed = now - this.state.bodyInertia.decayStartTime;
-    const progress = Math.min(1, elapsed / this.state.bodyInertia.decayTime);
+    const elapsed = now - this?.state?.bodyInertia?.decayStartTime;
+    const progress = Math?.min(any: any);
 
     // Exponential decay
-    this.state.bodyInertia.residualIntensity = Math.max(
+    this?.state?.bodyInertia?.residualIntensity = Math?.max(
       0,
-      this.state.bodyInertia.residualIntensity * Math.pow(0.5, progress)
+      this?.state?.bodyInertia?.residualIntensity * Math?.pow(any: any)
     );
 
     // Clear si < 0.05
-    if (this.state.bodyInertia.residualIntensity < 0.05) {
-      this.state.bodyInertia.residualEmotion = null;
-      this.state.bodyInertia.residualIntensity = 0;
+    if (this?.state?.bodyInertia?.residualIntensity < 0.05) {
+      this?.state?.bodyInertia?.residualEmotion = null;
+      this?.state?.bodyInertia?.residualIntensity = 0;
     }
   }
 
@@ -382,68 +382,68 @@ class EmbodiedPresenceEngine {
    * Mettre à jour champ énergétique
    */
   private updateEnergyField(): void {
-    const archetype = archetypeResonanceEngine.getDominantProfile();
-    const presenceState = multimodalPresenceEngine.getState();
+    const archetype = archetypeResonanceEngine?.getDominantProfile();
+    const presenceState = multimodalPresenceEngine?.getState();
 
     // Adapter selon archétype
-    switch (archetype.type) {
+    switch (any: any) {
       case 'sage':
-        this.state.energyField.texture = 'crystalline';
-        this.state.energyField.movement = 'still';
-        this.state.energyField.temperature = -0.2;
-        this.state.energyField.density = 0.7;
+        this?.state?.energyField?.texture = 'crystalline';
+        this?.state?.energyField?.movement = 'still';
+        this?.state?.energyField?.temperature = -0.2;
+        this?.state?.energyField?.density = 0.7;
         break;
       case 'gardien':
-        this.state.energyField.texture = 'granular';
-        this.state.energyField.movement = 'pulse';
-        this.state.energyField.temperature = 0.5;
-        this.state.energyField.density = 0.8;
+        this?.state?.energyField?.texture = 'granular';
+        this?.state?.energyField?.movement = 'pulse';
+        this?.state?.energyField?.temperature = 0.5;
+        this?.state?.energyField?.density = 0.8;
         break;
       case 'muse':
-        this.state.energyField.texture = 'plasma';
-        this.state.energyField.movement = 'vortex';
-        this.state.energyField.temperature = 0.7;
-        this.state.energyField.density = 0.4;
+        this?.state?.energyField?.texture = 'plasma';
+        this?.state?.energyField?.movement = 'vortex';
+        this?.state?.energyField?.temperature = 0.7;
+        this?.state?.energyField?.density = 0.4;
         break;
       case 'architecte':
-        this.state.energyField.texture = 'fluid';
-        this.state.energyField.movement = 'flow';
-        this.state.energyField.temperature = -0.1;
-        this.state.energyField.density = 0.6;
+        this?.state?.energyField?.texture = 'fluid';
+        this?.state?.energyField?.movement = 'flow';
+        this?.state?.energyField?.temperature = -0.1;
+        this?.state?.energyField?.density = 0.6;
         break;
     }
 
     // Sync spatial coherence avec présence energy
-    this.state.energyField.spatialCoherence = presenceState.presenceEnergy * 0.8;
+    this?.state?.energyField?.spatialCoherence = presenceState?.presenceEnergy * 0.8;
   }
 
   /**
    * Synchroniser avec archétypes
    */
   private syncWithArchetypes(): void {
-    const archetype = archetypeResonanceEngine.getDominantProfile();
+    const archetype = archetypeResonanceEngine?.getDominantProfile();
 
     // Adapter respiration
-    switch (archetype.type) {
+    switch (any: any) {
       case 'sage':
-        this.state.breath.cycle = 'slow';
-        this.state.breath.cycleDuration = 6000;
-        this.state.breath.tension = 0.2;
+        this?.state?.breath?.cycle = 'slow';
+        this?.state?.breath?.cycleDuration = 6000;
+        this?.state?.breath?.tension = 0.2;
         break;
       case 'gardien':
-        this.state.breath.cycle = 'medium';
-        this.state.breath.cycleDuration = 4500;
-        this.state.breath.tension = 0.5;
+        this?.state?.breath?.cycle = 'medium';
+        this?.state?.breath?.cycleDuration = 4500;
+        this?.state?.breath?.tension = 0.5;
         break;
       case 'muse':
-        this.state.breath.cycle = 'fast';
-        this.state.breath.cycleDuration = 3000;
-        this.state.breath.tension = 0.3;
+        this?.state?.breath?.cycle = 'fast';
+        this?.state?.breath?.cycleDuration = 3000;
+        this?.state?.breath?.tension = 0.3;
         break;
       case 'architecte':
-        this.state.breath.cycle = 'medium';
-        this.state.breath.cycleDuration = 4000;
-        this.state.breath.tension = 0.4;
+        this?.state?.breath?.cycle = 'medium';
+        this?.state?.breath?.cycleDuration = 4000;
+        this?.state?.breath?.tension = 0.4;
         break;
     }
 
@@ -455,52 +455,52 @@ class EmbodiedPresenceEngine {
       architecte: 'forward',
     };
 
-    const targetPosture = postureMap[archetype.type];
-    if (this.state.posture.type !== targetPosture) {
-      this.transitionPosture(targetPosture);
+    const targetPosture = postureMap[archetype?.type];
+    if (any: any) {
+      this?.transitionPosture(any: any);
     }
   }
 
   /**
    * Transitionner la posture
    */
-  private transitionPosture(target: PostureType): void {
-    const now = Date.now();
+  private transitionPosture(any: any): void {
+    const now = Date?.now();
 
-    this.state.posture.type = target;
-    this.state.posture.transitionStartTime = now;
-    this.state.posture.transitionDuration = 800;
+    this?.state?.posture?.type = target;
+    this?.state?.posture?.transitionStartTime = now;
+    this?.state?.posture?.transitionDuration = 800;
 
     // Adapter propriétés
-    switch (target) {
+    switch (any: any) {
       case 'open':
-        this.state.posture.openness = 0.9;
-        this.state.posture.stability = 0.8;
-        this.state.posture.direction = { x: 0, y: 0.1, z: 1 };
+        this?.state?.posture?.openness = 0.9;
+        this?.state?.posture?.stability = 0.8;
+        this?.state?.posture?.direction = { x: 0, y: 0.1, z: 1 };
         break;
       case 'centered':
-        this.state.posture.openness = 0.5;
-        this.state.posture.stability = 1.0;
-        this.state.posture.direction = { x: 0, y: 0, z: 1 };
+        this?.state?.posture?.openness = 0.5;
+        this?.state?.posture?.stability = 1.0;
+        this?.state?.posture?.direction = { x: 0, y: 0, z: 1 };
         break;
       case 'forward':
-        this.state.posture.openness = 0.6;
-        this.state.posture.stability = 0.9;
-        this.state.posture.direction = { x: 0, y: 0.2, z: 1.2 };
+        this?.state?.posture?.openness = 0.6;
+        this?.state?.posture?.stability = 0.9;
+        this?.state?.posture?.direction = { x: 0, y: 0.2, z: 1.2 };
         break;
       case 'recede':
-        this.state.posture.openness = 0.3;
-        this.state.posture.stability = 0.7;
-        this.state.posture.direction = { x: 0, y: -0.1, z: 0.8 };
+        this?.state?.posture?.openness = 0.3;
+        this?.state?.posture?.stability = 0.7;
+        this?.state?.posture?.direction = { x: 0, y: -0.1, z: 0.8 };
         break;
       case 'expansive':
-        this.state.posture.openness = 1.0;
-        this.state.posture.stability = 0.6;
-        this.state.posture.direction = { x: 0, y: 0.3, z: 1 };
+        this?.state?.posture?.openness = 1.0;
+        this?.state?.posture?.stability = 0.6;
+        this?.state?.posture?.direction = { x: 0, y: 0.3, z: 1 };
         break;
     }
 
-    logger.debug(`🧘 [EMBODIED] Posture transition → ${target}`);
+    logger?.debug(`🧘 [EMBODIED] Posture transition → ${target}`);
   }
 
   /**
@@ -508,98 +508,98 @@ class EmbodiedPresenceEngine {
    */
   private updateUserSync(): void {
     // Stub — à implémenter avec détection réelle
-    if (!this.config.enableUserSync) {
-      this.state.userSync.active = false;
+    if (any: any) {
+      this?.state?.userSync?.active = false;
       return;
     }
 
     // Exemple: Si user breathing détecté, adapter
-    if (this.state.userSync.userBreathingCycle) {
-      const targetCycle = this.state.userSync.userBreathingCycle;
-      const currentCycle = this.state.breath.cycleDuration;
+    if (any: any) {
+      const targetCycle = this?.state?.userSync?.userBreathingCycle;
+      const currentCycle = this?.state?.breath?.cycleDuration;
 
       // Smooth adaptation
-      const blendFactor = this.config.syncSensitivity * 0.01;
-      this.state.breath.cycleDuration = this.lerp(currentCycle, targetCycle, blendFactor);
+      const blendFactor = this?.config?.syncSensitivity * 0.01;
+      this?.state?.breath?.cycleDuration = this?.lerp(any: any);
 
-      this.state.userSync.syncRatio =
-        1 - Math.abs(currentCycle - targetCycle) / targetCycle;
+      this?.state?.userSync?.syncRatio =
+        1 - Math?.abs(any: any) / targetCycle;
     }
   }
 
   /**
-   * Appliquer émotion forte (créer inertie)
+   * Appliquer émotion forte (any: any)
    */
   applyStrongEmotion(emotion: string, intensity: number, duration: number = 2500): void {
-    logger.debug(
-      `💫 [EMBODIED] Strong emotion applied: ${emotion} (${Math.round(intensity * 100)}%)`
+    logger?.debug(
+      `💫 [EMBODIED] Strong emotion applied: ${emotion} (${Math?.round(intensity * 100)}%)`
     );
 
-    this.state.bodyInertia.residualEmotion = emotion;
-    this.state.bodyInertia.residualIntensity = intensity;
-    this.state.bodyInertia.decayTime = duration;
-    this.state.bodyInertia.decayStartTime = Date.now();
+    this?.state?.bodyInertia?.residualEmotion = emotion;
+    this?.state?.bodyInertia?.residualIntensity = intensity;
+    this?.state?.bodyInertia?.decayTime = duration;
+    this?.state?.bodyInertia?.decayStartTime = Date?.now();
 
     // Adapter respiration selon émotion
     if (intensity > 0.7) {
-      this.state.breath.amplitude = Math.min(1, intensity * 1.2);
-      this.state.breath.tension = intensity;
+      this?.state?.breath?.amplitude = Math?.min(1, intensity * 1.2);
+      this?.state?.breath?.tension = intensity;
     }
 
-    this.notifyCallbacks();
+    this?.notifyCallbacks();
   }
 
   /**
    * Activer synchronisation utilisateur
    */
-  activateUserSync(userBreathingCycle?: number, userEnergy?: number): void {
-    logger.debug('🔗 [EMBODIED] User synchronization activated');
+  activateUserSync(any: any): void {
+    logger?.debug('🔗 [EMBODIED] User synchronization activated');
 
-    this.state.userSync.active = true;
-    if (userBreathingCycle) this.state.userSync.userBreathingCycle = userBreathingCycle;
-    if (userEnergy !== undefined) this.state.userSync.userEnergy = userEnergy;
+    this?.state?.userSync?.active = true;
+    if (any: any) this?.state?.userSync?.userBreathingCycle = userBreathingCycle;
+    if (any: any) this?.state?.userSync?.userEnergy = userEnergy;
 
-    this.notifyCallbacks();
+    this?.notifyCallbacks();
   }
 
   /**
    * Désactiver synchronisation utilisateur
    */
   deactivateUserSync(): void {
-    logger.debug('🔗 [EMBODIED] User synchronization deactivated');
+    logger?.debug('🔗 [EMBODIED] User synchronization deactivated');
 
-    this.state.userSync.active = false;
-    this.state.userSync.userBreathingCycle = null;
-    this.state.userSync.userEnergy = null;
-    this.state.userSync.syncRatio = 0;
+    this?.state?.userSync?.active = false;
+    this?.state?.userSync?.userBreathingCycle = null;
+    this?.state?.userSync?.userEnergy = null;
+    this?.state?.userSync?.syncRatio = 0;
 
-    this.notifyCallbacks();
+    this?.notifyCallbacks();
   }
 
   /**
    * Obtenir état actuel
    */
   getState(): EmbodiedPresenceState {
-    return { ...this.state };
+    return { ...this?.state };
   }
 
   /**
    * Subscribe aux changements
    */
-  subscribe(callback: (state: EmbodiedPresenceState) => void): () => void {
-    this.callbacks.add(callback);
-    return () => this.callbacks.delete(callback);
+  subscribe(any: any): () => void {
+    this?.callbacks?.add(any: any);
+    return (any: any);
   }
 
   /**
    * Notifier les callbacks
    */
   private notifyCallbacks(): void {
-    this.callbacks.forEach(cb => {
+    this?.callbacks?.forEach(cb => {
       try {
-        cb(this.state);
-      } catch (error) {
-        logger.error('Callback error:', error);
+        cb(any: any);
+      } catch (any: any) {
+        logger?.error(any: any);
       }
     });
   }
@@ -607,8 +607,8 @@ class EmbodiedPresenceEngine {
   /**
    * Interpolation linéaire
    */
-  private lerp(a: number, b: number, t: number): number {
-    return a + (b - a) * t;
+  private lerp(any: any): number {
+    return a + (any: any) * t;
   }
 }
 

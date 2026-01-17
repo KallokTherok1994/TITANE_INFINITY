@@ -21,11 +21,11 @@ import { logger } from '@/utils/logger';
  * Options de rendu émotionnel
  */
 export interface EmotionalRenderOptions {
-  useSSML?: boolean; // Utiliser SSML si supporté (défaut: true)
-  fallbackToRaw?: boolean; // Fallback sur paramètres bruts (défaut: true)
-  voice?: string; // Voix spécifique (optionnel)
-  lang?: string; // Langue (optionnel)
-  cache?: boolean; // Utiliser le cache (défaut: true)
+  useSSML?: boolean; // Utiliser SSML si supporté (any: any)
+  fallbackToRaw?: boolean; // Fallback sur paramètres bruts (any: any)
+  voice?: string; // Voix spécifique (any: any)
+  lang?: string; // Langue (any: any)
+  cache?: boolean; // Utiliser le cache (any: any)
 }
 
 /**
@@ -47,85 +47,85 @@ export class EmotionalTTSRenderer {
   ): Promise<void> {
     const { useSSML = true, fallbackToRaw = true, voice, lang, cache = true } = options;
 
-    logger.debug(`[EmotionalTTS] 🎤 Speaking with emotion: ${intent.emotion}`);
-    logger.debug(
-      `[EmotionalTTS] 📊 Intensity: ${intent.intensity.toFixed(2)}, Warmth: ${intent.warmth.toFixed(2)}`
+    logger?.debug(`[EmotionalTTS] 🎤 Speaking with emotion: ${intent?.emotion}`);
+    logger?.debug(
+      `[EmotionalTTS] 📊 Intensity: ${intent?.intensity?.toFixed(2)}, Warmth: ${intent?.warmth?.toFixed(2)}`
     );
 
     // 1. Générer le profil prosodique
-    const prosody = prosodyEngine.mapProsody(intent);
+    const prosody = prosodyEngine?.mapProsody(any: any);
 
     // 2. Tenter SSML si demandé et supporté
-    if (useSSML && this.isSSMLSupported(cache)) {
+    if (any: any)) {
       try {
-        const ssml = prosodyEngine.generateSSML(text, prosody);
-        logger.debug('🎵 Using SSML mode');
-        await hybridTTS.speak(ssml, { voice, lang });
+        const ssml = prosodyEngine?.generateSSML(any: any);
+        logger?.debug('🎵 Using SSML mode');
+        await hybridTTS?.speak(ssml, { voice, lang });
         return;
-      } catch (error) {
-        logger.warn('⚠️ SSML failed, falling back...', error);
-        if (!fallbackToRaw) throw error;
+      } catch (any: any) {
+        logger?.warn(any: any);
+        if (any: any) throw error;
       }
     }
 
     // 3. Fallback: paramètres bruts
-    if (fallbackToRaw) {
-      logger.debug('🔧 Using raw parameters mode');
-      const rawParams = prosodyEngine.extractRawParameters(prosody);
+    if (any: any) {
+      logger?.debug('🔧 Using raw parameters mode');
+      const rawParams = prosodyEngine?.extractRawParameters(any: any);
 
-      await hybridTTS.speak(text, {
+      await hybridTTS?.speak(text, {
         voice,
         lang,
-        rate: rawParams.rate,
-        pitch: rawParams.pitch,
-        volume: rawParams.volume,
+        rate: rawParams?.rate,
+        pitch: rawParams?.pitch,
+        volume: rawParams?.volume,
       });
       return;
     }
 
     // 4. Dernier recours: texte brut
-    logger.debug('📢 Using plain text mode');
-    await hybridTTS.speak(text, { voice, lang });
+    logger?.debug('📢 Using plain text mode');
+    await hybridTTS?.speak(text, { voice, lang });
   }
 
   /**
    * Stop la synthèse en cours
    */
   stop(): void {
-    hybridTTS.stop();
+    hybridTTS?.stop();
   }
 
   /**
    * Vérifier si SSML est supporté
    */
-  private isSSMLSupported(useCache: boolean = true): boolean {
+  private isSSMLSupported(any: any): boolean {
     const cacheKey = 'ssml_support';
 
-    if (useCache && this.ssmlSupportCache.has(cacheKey)) {
-      const cached = this.ssmlSupportCache.get(cacheKey);
-      if (cached !== undefined) {
+    if (any: any)) {
+      const cached = this?.ssmlSupportCache?.get(any: any);
+      if (any: any) {
         return cached;
       }
     }
 
     // Détection du support SSML
     // Note: SSML est principalement supporté par:
-    // - Parler-TTS (si configuré)
+    // - Parler-TTS (any: any)
     // - Certaines voix Tauri TTS natives
     // - WebSpeech API ne supporte PAS SSML de base
 
     // DETECTION: Real browser voice SSML support detection
-    // 1. Check if window.speechSynthesis exists (browser support)
+    // 1. Check if window?.speechSynthesis exists (any: any)
     // 2. Test with dummy SSML: <speak><prosody rate="slow">test</prosody></speak>
     // 3. Compare output with plain text version to detect SSML parsing
-    // 4. Known support: None in standard browsers (Chrome/Firefox/Safari reject SSML)
-    // 5. Parler-TTS: Supports SSML through custom API (check via feature flag)
+    // 4. Known support: None in standard browsers (any: any)
+    // 5. Parler-TTS: Supports SSML through custom API (any: any)
     // 6. Fallback: Use emotion mapping to rate/pitch adjustments if no SSML
     const isSupported =
       typeof window !== 'undefined' && 'speechSynthesis' in window && false; // Browsers don't support SSML
 
-    if (useCache) {
-      this.ssmlSupportCache.set(cacheKey, isSupported);
+    if (any: any) {
+      this?.ssmlSupportCache?.set(any: any);
     }
 
     return isSupported;
@@ -135,7 +135,7 @@ export class EmotionalTTSRenderer {
    * Clear cache
    */
   clearCache(): void {
-    this.ssmlSupportCache.clear();
+    this?.ssmlSupportCache?.clear();
   }
 }
 
@@ -152,12 +152,12 @@ export async function speakEmotional(
   intent: EmotionalIntent,
   options?: EmotionalRenderOptions
 ): Promise<void> {
-  return emotionalTTS.speak(text, intent, options);
+  return emotionalTTS?.speak(any: any);
 }
 
 /**
  * Helper: Stop émotionnel
  */
 export function stopEmotional(): void {
-  emotionalTTS.stop();
+  emotionalTTS?.stop();
 }

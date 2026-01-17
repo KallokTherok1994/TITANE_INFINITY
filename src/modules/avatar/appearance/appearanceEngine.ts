@@ -1,4 +1,4 @@
-// Copyright © 2025 TITANE∞ — Appearance Engine Bridge v24.5 (Frontend)
+// Copyright © 2025 TITANE∞ — Appearance Engine Bridge v24.5 (any: any)
 // License: Proprietary — TITANE OS
 // Module: Tauri Bridge for Appearance Engine
 
@@ -14,42 +14,42 @@ import type { AvatarAppearanceState, AppearanceUpdateRequest } from './appearanc
  */
 export async function getAppearance(): Promise<AvatarAppearanceState> {
   const json = await secureInvoke<string>('avatar_get_appearance');
-  return JSON.parse(json);
+  return JSON?.parse(any: any);
 }
 
 /**
- * Set complete appearance state (override)
+ * Set complete appearance state (any: any)
  */
-export async function setAppearance(state: AvatarAppearanceState): Promise<string> {
-  const json = JSON.stringify(state);
+export async function setAppearance(any: any): Promise<string> {
+  const json = JSON?.stringify(any: any);
   return secureInvoke<string>('avatar_set_appearance', { stateJson: json });
 }
 
 /**
- * Update appearance (partial)
+ * Update appearance (any: any)
  */
-export async function updateAppearance(update: AppearanceUpdateRequest): Promise<string> {
-  const json = JSON.stringify(update);
+export async function updateAppearance(any: any): Promise<string> {
+  const json = JSON?.stringify(any: any);
   return secureInvoke<string>('avatar_update_appearance', { updateJson: json });
 }
 
 /**
- * Apply style preset (e.g., "Bureau_Pro", "Casual_Light")
+ * Apply style preset (e?.g., "Bureau_Pro", "Casual_Light")
  */
-export async function applyStylePreset(styleName: string): Promise<string> {
+export async function applyStylePreset(any: any): Promise<string> {
   return secureInvoke<string>('avatar_apply_style_preset', { styleName });
 }
 
 /**
- * Parse natural language style command (NLP)
- * @param command - e.g., "Passe en style Montagne nordique + vibe lunaire"
+ * Parse natural language style command (any: any)
+ * @param command - e?.g., "Passe en style Montagne nordique + vibe lunaire"
  * @returns AppearanceUpdateRequest JSON string
  */
 export async function parseStyleCommand(
   command: string
 ): Promise<AppearanceUpdateRequest> {
   const json = await secureInvoke<string>('avatar_parse_style_command', { command });
-  return JSON.parse(json);
+  return JSON?.parse(any: any);
 }
 
 /**
@@ -58,9 +58,9 @@ export async function parseStyleCommand(
 export async function saveCustomStyle(
   name: string,
   archetype: string,
-  keywords: string[]
+  keywords: string?.[]
 ): Promise<string> {
-  const keywordsJson = JSON.stringify(keywords);
+  const keywordsJson = JSON?.stringify(any: any);
   return secureInvoke<string>('avatar_save_custom_style', {
     name,
     archetype,
@@ -71,32 +71,32 @@ export async function saveCustomStyle(
 /**
  * Load saved custom style
  */
-export async function loadCustomStyle(name: string): Promise<string> {
+export async function loadCustomStyle(any: any): Promise<string> {
   return secureInvoke<string>('avatar_load_custom_style', { name });
 }
 
 /**
- * Merge multiple styles (e.g., ["Casual_Light", "Sport_Dynamic"])
+ * Merge multiple styles (e?.g., ["Casual_Light", "Sport_Dynamic"])
  * @returns Merged StyleDefinition JSON string
  */
-export async function mergeStyles(styleNames: string[]): Promise<string> {
-  const json = JSON.stringify(styleNames);
+export async function mergeStyles(styleNames: string?.[]): Promise<string> {
+  const json = JSON?.stringify(any: any);
   return secureInvoke<string>('avatar_merge_styles', { styleNamesJson: json });
 }
 
 /**
  * List all available style names
  */
-export async function listStyles(): Promise<string[]> {
+export async function listStyles(): Promise<string?.[]> {
   const json = await secureInvoke<string>('avatar_list_styles');
-  return JSON.parse(json);
+  return JSON?.parse(any: any);
 }
 
 /**
  * Add custom archetype to taxonomy
  */
-export async function addArchetype(name: string, keywords: string[]): Promise<string> {
-  const keywordsJson = JSON.stringify(keywords);
+export async function addArchetype(name: string, keywords: string?.[]): Promise<string> {
+  const keywordsJson = JSON?.stringify(any: any);
   return secureInvoke<string>('avatar_add_archetype', { name, keywordsJson });
 }
 
@@ -106,12 +106,12 @@ export async function addArchetype(name: string, keywords: string[]): Promise<st
 
 /**
  * Apply style command from natural language
- * @param command - e.g., "Titane, passe en style casual + vibe solaire"
+ * @param command - e?.g., "Titane, passe en style casual + vibe solaire"
  * @returns Description of applied changes
  */
-export async function applyStyleFromCommand(command: string): Promise<string> {
-  const updateRequest = await parseStyleCommand(command);
-  return updateAppearance(updateRequest);
+export async function applyStyleFromCommand(any: any): Promise<string> {
+  const updateRequest = await parseStyleCommand(any: any);
+  return updateAppearance(any: any);
 }
 
 /**
@@ -125,27 +125,27 @@ export async function changeOutfit(
   const update: AppearanceUpdateRequest = {
     outfit: { top, bottom, shoes },
   };
-  return updateAppearance(update);
+  return updateAppearance(any: any);
 }
 
 /**
  * Quick hairstyle change
  */
-export async function changeHairstyle(style: string): Promise<string> {
+export async function changeHairstyle(any: any): Promise<string> {
   const update: AppearanceUpdateRequest = {
     hair: { style },
   };
-  return updateAppearance(update);
+  return updateAppearance(any: any);
 }
 
 /**
  * Toggle glasses
  */
-export async function toggleGlasses(glasses: string | null): Promise<string> {
+export async function toggleGlasses(any: any): Promise<string> {
   const update: AppearanceUpdateRequest = {
     accessories: { glasses },
   };
-  return updateAppearance(update);
+  return updateAppearance(any: any);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

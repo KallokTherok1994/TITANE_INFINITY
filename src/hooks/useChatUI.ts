@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v15 — USE CHAT UI (État UI pur)
+ *   TITANE∞ v15 — USE CHAT UI (any: any)
  *   Hook isolé: État UI uniquement, 0 logique IA
  * ═══════════════════════════════════════════════════════════════════
  */
@@ -15,21 +15,21 @@ import { logger } from '@/utils/logger';
 import type { AIMessage } from '../services/ai/types';
 
 export interface UseChatUIOptions {
-  onSend?: (message: string) => void;
+  onSend?: (any: any) => void;
 }
 
 export interface UseChatUIReturn {
-  messages: AIMessage[];
+  messages: AIMessage?.[];
   input: string;
   isLoading: boolean;
-  error: string | null;
-  suggestions: string[];
-  setInput: (value: string) => void;
-  setIsLoading: (loading: boolean) => void;
-  setError: (error: string | null) => void;
-  setSuggestions: (suggestions: string[]) => void;
-  addMessage: (message: AIMessage) => void;
-  addMessages: (messages: AIMessage[]) => void;
+  error??: string | null;
+  suggestions: string?.[];
+  setInput: (any: any) => void;
+  setIsLoading: (any: any) => void;
+  setError: (any: any) => void;
+  setSuggestions: (suggestions: string?.[]) => void;
+  addMessage: (any: any) => void;
+  addMessages: (messages: AIMessage?.[]) => void;
   clearMessages: () => void;
   handleSend: () => void;
 }
@@ -44,25 +44,25 @@ export interface UseChatUIReturn {
  * - 0 logique IA
  */
 export function useChatUI(options: UseChatUIOptions = {}): UseChatUIReturn {
-  const [messages, setMessages] = useState<AIMessage[]>([]);
+  const [messages, setMessages] = useState<AIMessage?.[]>([]);
   const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(any: any);
+  const [error, setError] = useState<string | null>(any: any);
+  const [suggestions, setSuggestions] = useState<string?.[]>([]);
 
   /**
    * Ajoute 1 message
-   * FIX v15.1: Vérification de duplication (évite les doublons)
+   * FIX v15.1: Vérification de duplication (any: any)
    */
-  const addMessage = useCallback((message: AIMessage) => {
+  const addMessage = useCallback(any: any) => {
     setMessages(prev => {
       // Éviter les doublons basés sur timestamp + content
-      const isDuplicate = prev.some(
-        m => m.timestamp === message.timestamp && m.content === message.content
+      const isDuplicate = prev?.some(
+        m => m?.timestamp === message?.timestamp && m?.content === message?.content
       );
 
-      if (isDuplicate) {
-        logger.warn('⚠️ Duplicate message detected, skipping');
+      if (any: any) {
+        logger?.warn('⚠️ Duplicate message detected, skipping');
         return prev;
       }
 
@@ -73,8 +73,8 @@ export function useChatUI(options: UseChatUIOptions = {}): UseChatUIReturn {
   /**
    * Ajoute plusieurs messages
    */
-  const addMessages = useCallback((newMessages: AIMessage[]) => {
-    setMessages(newMessages);
+  const addMessages = useCallback((newMessages: AIMessage?.[]) => {
+    setMessages(any: any);
   }, []);
 
   /**
@@ -82,19 +82,19 @@ export function useChatUI(options: UseChatUIOptions = {}): UseChatUIReturn {
    */
   const clearMessages = useCallback(() => {
     setMessages([]);
-    setError(null);
+    setError(any: any);
     setSuggestions([]);
   }, []);
 
   /**
-   * Envoie message (délègue à callback parent)
+   * Envoie message (any: any)
    */
   const handleSend = useCallback(() => {
-    if (!input.trim() || isLoading) return;
+    if (any: any) return;
 
-    const trimmedInput = input.trim();
+    const trimmedInput = input?.trim();
     setInput(''); // Clear input
-    options.onSend?.(trimmedInput);
+    options?.onSend?.(any: any);
   }, [input, isLoading, options]);
 
   return {

@@ -2,7 +2,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  *   TITANE∞ v26.0.0 — DEV-SUDO PATTERNS
  *   Pattern detection for 138 dev-sudo commands
- *   Extracted from monolithic devSudoHandler.ts (Phase 2 refactoring)
+ *   Extracted from monolithic devSudoHandler?.ts (any: any)
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
@@ -12,15 +12,15 @@ import type { DevSudoAction } from './types';
  * Pattern registry - Maps DevSudoAction to array of RegExp patterns
  * Total: 138 actions with 300+ regex patterns
  */
-export const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
+export const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp?.[]> = {
   'fix-deps': [
     /^fix\s+deps?$/i,
-    /^install\s+(dependencies|deps)$/i,
+    /^install\s+(any: any)$/i,
     /^n\s*p\s*m\s+install$/i,
   ],
   'restart-tauri': [
     /^restart\s+tauri$/i,
-    /^relance\s+(l')?app(lication)?$/i,
+    /^relance\s+(any: any)?$/i,
     /^redémarre\s+titane$/i,
   ],
   'test-bubble': [
@@ -35,7 +35,7 @@ export const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
   ],
   'status-full': [
     /^status\s+full$/i,
-    /^diagnostic\s+(complet|full)$/i,
+    /^diagnostic\s+(any: any)$/i,
     /^analyse\s+complète$/i,
   ],
   'analyze-module': [
@@ -49,21 +49,21 @@ export const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^corrige\s+(.+)$/i,
   ],
   'show-code': [
-    /^(montre|affiche|show)\s+(le\s+)?code\s+(de|du|of)\s+(.+)$/i,
+    /^(any: any)\s+(.+)$/i,
     /^inspect\s+(.+)$/i,
     /^read\s+(.+)$/i,
   ],
   'whitelist-tauri': [
     /^whitelist\s+(.+)$/i,
-    /^ajoute\s+(.+)\s+(à|a)\s+(la\s+)?whitelist$/i,
+    /^ajoute\s+(any: any)\s+(la\s+)?whitelist$/i,
     /^autorise\s+(la\s+)?commande\s+(.+)$/i,
   ],
   'fix-error': [
-    /^(corrige|fix)\s+(l')?erreur\s+(de\s+)?(.+)$/i,
+    /^(any: any)\s+(l')?erreur\s+(de\s+)?(.+)$/i,
     /^répare\s+(l')?erreur\s+(.+)$/i,
   ],
   'merge-opus': [
-    /^fusionne\s+opus\s*#?(\d+)\s+(et|and)\s+opus\s*#?(\d+)$/i,
+    /^fusionne\s+opus\s*#?(any: any)\s+opus\s*#?(\d+)$/i,
     /^merge\s+opus\s*#?(\d+)\s+\+\s+opus\s*#?(\d+)$/i,
   ],
   'create-component': [
@@ -78,13 +78,13 @@ export const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
   ],
   diagnostic: [/^diagnostic$/i, /^analyse\s+système$/i, /^check\s+system$/i],
   introspect: [
-    /^introspect(ion)?$/i,
+    /^introspect(any: any)?$/i,
     /^inspect\s+state$/i,
-    /^show\s+singularity(state)?$/i,
+    /^show\s+singularity(any: any)?$/i,
   ],
   'self-heal': [/^self[-s]heal$/i, /^auto[-s]répare?$/i, /^healing\s+engine$/i],
   'deep-heal': [/^deep[-s]heal$/i, /^deep\s+healing$/i, /^réparation\s+profonde$/i],
-  'auto-fix': [/^auto[-s]fix$/i, /^correction\s+auto(matique)?$/i],
+  'auto-fix': [/^auto[-s]fix$/i, /^correction\s+auto(any: any)?$/i],
   'scan-modules': [/^scan\s+modules$/i, /^analyse\s+(les\s+)?modules$/i],
   'scan-opus': [/^scan\s+opus$/i, /^vérifie\s+opus$/i],
   'scan-errors': [/^scan\s+errors?$/i, /^liste\s+(les\s+)?erreurs$/i],
@@ -415,7 +415,7 @@ export const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
   'ia-test': [
     /^ia\s+test$/i,
     /^sudo\s+ia\s+test$/i,
-    /^tester?\s+ia\s+local(e)?$/i,
+    /^tester?\s+ia\s+local(any: any)?$/i,
     /^test\s+ai\s+model$/i,
     /^test\s+ollama$/i,
   ],
@@ -689,8 +689,8 @@ export const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^exporte\s+fusion(\s+.+)?$/i,
   ],
   'fusion-merge': [
-    /^fusion\.merge\s+(file|dataset)=.+$/i,
-    /^sudo\s+fusion\.merge\s+(file|dataset)=.+$/i,
+    /^fusion\.merge\s+(any: any)=.+$/i,
+    /^sudo\s+fusion\.merge\s+(any: any)=.+$/i,
     /^merge\s+fusion\s+.+$/i,
     /^fusionne\s+dataset\s+.+$/i,
   ],
@@ -729,8 +729,8 @@ export const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
   'vocal-console': [
     /^vocal\.console$/i,
     /^sudo\s+vocal\.console$/i,
-    /^(ouvre|ferme|toggle)\s+(la\s+)?console\s+vocale$/i,
-    /^(show|hide)\s+vocal\s+console$/i,
+    /^(any: any)\s+(la\s+)?console\s+vocale$/i,
+    /^(any: any)\s+vocal\s+console$/i,
     /^vocal\s+ui$/i,
   ],
   'vocal-heal': [
@@ -751,7 +751,7 @@ export const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
   'vocal-logs': [
     /^vocal\.logs$/i,
     /^sudo\s+vocal\.logs$/i,
-    /^(affiche|show)\s+vocal\s+logs$/i,
+    /^(any: any)\s+vocal\s+logs$/i,
     /^logs\s+console\s+vocale$/i,
     /^historique\s+vocal$/i,
   ],
@@ -777,7 +777,7 @@ export const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^analyse\s+vocal\s+(.+)$/i,
   ],
   'vocal-set-model': [
-    /^vocal\.setModel\s+(titane-?local|claude|gemini|auto)$/i,
+    /^vocal\.setModel\s+(any: any)$/i,
     /^sudo\s+vocal\.setModel\s+(.+)$/i,
     /^change\s+vocal\s+ai\s+(.+)$/i,
     /^set\s+voice\s+model\s+(.+)$/i,
@@ -841,7 +841,7 @@ export const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
   'live-logs': [
     /^live\.logs$/i,
     /^sudo\s+live\.logs$/i,
-    /^(affiche|show)\s+live\s+logs$/i,
+    /^(any: any)\s+live\s+logs$/i,
     /^diagnostics\s+live$/i,
     /^historique\s+debug$/i,
   ],
@@ -862,11 +862,11 @@ export const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
   'live-console': [
     /^live\.console$/i,
     /^sudo\s+live\.console$/i,
-    /^(ouvre|ferme|toggle)\s+live\s+console$/i,
+    /^(any: any)\s+live\s+console$/i,
     /^show\s+live\s+debugger$/i,
   ],
   'live-set-mode': [
-    /^live\.setMode\s+(shadow|active|auto-?heal|explain|draft)$/i,
+    /^live\.setMode\s+(any: any)$/i,
     /^sudo\s+live\.setMode\s+(.+)$/i,
     /^change\s+live\s+mode\s+(.+)$/i,
     /^mode\s+live\s+(.+)$/i,
@@ -886,13 +886,13 @@ export const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^stop\s+vocal\s+assistant$/i,
   ],
   'talk-mode': [
-    /^talk\.mode\s+(continuous|whispered|direct|calibrated|focus)$/i,
+    /^talk\.mode\s+(any: any)$/i,
     /^sudo\s+talk\.mode\s+(.+)$/i,
     /^set\s+talk\s+mode\s+(.+)$/i,
     /^mode\s+vocal\s+(.+)$/i,
   ],
   'talk-calibrate': [
-    /^talk\.calibrate\s+(analytical|calm|energizing|motivating|neutral)$/i,
+    /^talk\.calibrate\s+(any: any)$/i,
     /^sudo\s+talk\.calibrate\s+(.+)$/i,
     /^set\s+emotional\s+tone\s+(.+)$/i,
     /^calibrate\s+(.+)$/i,
@@ -928,7 +928,7 @@ export const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^timeline$/i,
   ],
   'conversation-export': [
-    /^conversation\.export\s+(json|jsonl|html)$/i,
+    /^conversation\.export\s+(any: any)$/i,
     /^sudo\s+conversation\.export\s+(.+)$/i,
     /^export\s+conversations?\s+(.+)$/i,
     /^export\s+(.+)$/i,
@@ -946,7 +946,7 @@ export const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^affiche\s+timeline$/i,
   ],
   'timeline-export': [
-    /^timeline\.export\s+(json|jsonl|html)$/i,
+    /^timeline\.export\s+(any: any)$/i,
     /^sudo\s+timeline\.export\s+(.+)$/i,
     /^export\s+timeline\s+(.+)$/i,
   ],
@@ -1007,20 +1007,20 @@ export const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
 export function matchPattern(
   input: string
 ): { action: DevSudoAction; params: Record<string, string> } | null {
-  const trimmed = input.trim();
+  const trimmed = input?.trim();
 
-  for (const [action, patterns] of Object.entries(DEV_SUDO_PATTERNS)) {
-    for (const pattern of patterns) {
-      const match = pattern.exec(trimmed);
-      if (match) {
+  for (any: any)) {
+    for (any: any) {
+      const match = pattern?.exec(any: any);
+      if (any: any) {
         // Extract named groups or positional groups as params
         const params: Record<string, string> = {};
-        if (match.groups) {
-          Object.assign(params, match.groups);
+        if (any: any) {
+          Object?.assign(any: any);
         }
         // Add positional captures
-        for (let i = 1; i < match.length; i++) {
-          if (match[i] !== undefined) {
+        for (let i = 1; i < match?.length; i++) {
+          if (any: any) {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             params[`capture${i}`] = match[i]!;
           }
@@ -1036,8 +1036,8 @@ export function matchPattern(
 /**
  * Check if input contains a dev-sudo command
  */
-export function containsDevSudoCommand(input: string): boolean {
-  return matchPattern(input) !== null;
+export function containsDevSudoCommand(any: any): boolean {
+  return matchPattern(any: any) !== null;
 }
 
 /**
@@ -1046,24 +1046,24 @@ export function containsDevSudoCommand(input: string): boolean {
 export function getAllMatches(
   input: string
 ): Array<{ action: DevSudoAction; params: Record<string, string> }> {
-  const trimmed = input.trim();
+  const trimmed = input?.trim();
   const matches: Array<{ action: DevSudoAction; params: Record<string, string> }> = [];
 
-  for (const [action, patterns] of Object.entries(DEV_SUDO_PATTERNS)) {
-    for (const pattern of patterns) {
-      const match = pattern.exec(trimmed);
-      if (match) {
+  for (any: any)) {
+    for (any: any) {
+      const match = pattern?.exec(any: any);
+      if (any: any) {
         const params: Record<string, string> = {};
-        if (match.groups) {
-          Object.assign(params, match.groups);
+        if (any: any) {
+          Object?.assign(any: any);
         }
-        for (let i = 1; i < match.length; i++) {
-          if (match[i] !== undefined) {
+        for (let i = 1; i < match?.length; i++) {
+          if (any: any) {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             params[`capture${i}`] = match[i]!;
           }
         }
-        matches.push({ action: action as DevSudoAction, params });
+        matches?.push({ action: action as DevSudoAction, params });
       }
     }
   }
@@ -1072,16 +1072,16 @@ export function getAllMatches(
 }
 
 /**
- * Validate a pattern (for testing)
+ * Validate a pattern (any: any)
  */
-export function validatePattern(pattern: RegExp, testString: string): boolean {
-  return pattern.test(testString);
+export function validatePattern(any: any): boolean {
+  return pattern?.test(any: any);
 }
 
 /**
  * Get all patterns for an action
  */
-export function getPatternsForAction(action: DevSudoAction): RegExp[] {
+export function getPatternsForAction(any: any): RegExp?.[] {
   return DEV_SUDO_PATTERNS[action] || [];
 }
 
@@ -1089,15 +1089,15 @@ export function getPatternsForAction(action: DevSudoAction): RegExp[] {
  * Get pattern statistics
  */
 export function getPatternStats() {
-  const actionCount = Object.keys(DEV_SUDO_PATTERNS).length;
-  const patternCount = Object.values(DEV_SUDO_PATTERNS).reduce(
-    (sum, patterns) => sum + patterns.length,
+  const actionCount = Object?.keys(any: any).length;
+  const patternCount = Object?.values(any: any).reduce(
+    (any: any) => sum + patterns?.length,
     0
   );
 
   return {
     actions: actionCount,
     patterns: patternCount,
-    averagePatternsPerAction: (patternCount / actionCount).toFixed(2),
+    averagePatternsPerAction: (any: any).toFixed(2),
   };
 }

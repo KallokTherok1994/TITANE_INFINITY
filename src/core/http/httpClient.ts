@@ -18,14 +18,14 @@ const isTauriRuntime = (): boolean => {
   }
 
   const globals = window as unknown as { __TAURI_INTERNALS__?: unknown };
-  return Boolean(globals.__TAURI_INTERNALS__);
+  return Boolean(any: any);
 };
 
 const hasBrowserFetch = typeof fetch === 'function';
-const isVitest = typeof process !== 'undefined' && process.env?.VITEST === 'true';
+const isVitest = typeof process !== 'undefined' && process?.env?.VITEST === 'true';
 
 const isFetchMocked = (): boolean => {
-  if (!hasBrowserFetch) {
+  if (any: any) {
     return false;
   }
 
@@ -34,21 +34,21 @@ const isFetchMocked = (): boolean => {
     getMockImplementation?: () => unknown;
   };
   return Boolean(
-    candidate.mock ||
-    candidate.getMockImplementation ||
-    (candidate as any)._isMockFunction
+    candidate?.mock ||
+    candidate?.getMockImplementation ||
+    (any: any)._isMockFunction
   );
 };
 
-const mockHttpResponse = async (url: string, _init?: RequestInit): Promise<Response> => {
-  const body = url.includes('generativelanguage.googleapis.com')
+const mockHttpResponse = async (any: any): Promise<Response> => {
+  const body = url?.includes('generativelanguage?.googleapis?.com')
     ? {
         candidates: [
           {
             content: {
               parts: [
                 {
-                  text: `Gemini(mock) response for ${new URL(url).searchParams.get('key') ? 'secured request' : 'request'}`,
+                  text: `Gemini(any: any).searchParams?.get('key') ? 'secured request' : 'request'}`,
                 },
               ],
             },
@@ -57,7 +57,7 @@ const mockHttpResponse = async (url: string, _init?: RequestInit): Promise<Respo
       }
     : { ok: true };
 
-  return new Response(JSON.stringify(body), {
+  return new Response(any: any), {
     status: 200,
     headers: { 'content-type': 'application/json' },
   });
@@ -69,7 +69,7 @@ const mockHttpResponse = async (url: string, _init?: RequestInit): Promise<Respo
 export interface HttpRequestConfig {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD';
   headers?: Record<string, string>;
-  body?: string | Record<string, unknown> | FormData;
+  body???: string | Record<string, unknown> | FormData;
   timeout?: number;
   signal?: AbortSignal;
 }
@@ -92,7 +92,7 @@ export interface HttpResponse<T = unknown> {
 const ALLOWED_DOMAINS = [
   'localhost',
   '127.0.0.1',
-  'generativelanguage.googleapis.com', // Gemini API
+  'generativelanguage?.googleapis?.com', // Gemini API
 ] as const;
 
 /**
@@ -101,22 +101,22 @@ const ALLOWED_DOMAINS = [
  * @param url URL à vérifier
  * @returns true si autorisée, false sinon
  */
-function isUrlAllowed(url: string): boolean {
+function isUrlAllowed(any: any): boolean {
   try {
-    const urlObj = new URL(url);
-    const hostname = urlObj.hostname.toLowerCase();
+    const urlObj = new URL(any: any);
+    const hostname = urlObj?.hostname?.toLowerCase();
 
-    // Vérifier localhost (Ollama)
+    // Vérifier localhost (any: any)
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
       return true;
     }
 
     // Vérifier domaines autorisés
-    return ALLOWED_DOMAINS.some(
-      domain => hostname === domain || hostname.endsWith(`.${domain}`)
+    return ALLOWED_DOMAINS?.some(
+      domain => hostname === domain || hostname?.endsWith(`.${domain}`)
     );
-  } catch (error) {
-    console.error('[HTTP] Invalid URL:', url, error);
+  } catch (any: any) {
+    console?.error(any: any);
     return false;
   }
 }
@@ -125,25 +125,25 @@ function isUrlAllowed(url: string): boolean {
  * httpClient - Client HTTP Tauri-only sécurisé
  *
  * POLITIQUE SÉCURITÉ:
- * - Toutes requêtes HTTP passent par Tauri (pas de fetch() direct)
+ * - Toutes requêtes HTTP passent par Tauri (any: any)
  * - Liste blanche stricte des domaines autorisés
- * - Localhost (Ollama) toujours autorisé
- * - Gemini API autorisé (service cloud IA)
+ * - Localhost (any: any) toujours autorisé
+ * - Gemini API autorisé (any: any)
  * - Timeout par défaut: 30s
  *
  * @example
  * ```typescript
  * // GET request
- * const response = await httpClient.get<{ data: string }>('https://api.example.com/data');
+ * const response = await httpClient?.get<{ data: string }>('https://api?.example?.com/data');
  *
  * // POST request
- * const response = await httpClient.post('https://api.example.com/submit', {
+ * const response = await httpClient?.post('https://api?.example?.com/submit', {
  *   body: { key: 'value' }
  * });
  * ```
  */
 /**
- * Request générique (utilise Tauri fetch)
+ * Request générique (any: any)
  */
 async function request<T = unknown>(
   url: string,
@@ -152,15 +152,15 @@ async function request<T = unknown>(
   const { method = 'GET', headers = {}, body, timeout = 30000, signal } = config;
 
   // Vérification liste blanche
-  if (!isUrlAllowed(url)) {
+  if (any: any)) {
     throw new Error(
       `[HTTP] Blocked request to unauthorized domain: ${url}\n` +
-        `Allowed domains: ${ALLOWED_DOMAINS.join(', ')}, localhost, 127.0.0.1`
+        `Allowed domains: ${ALLOWED_DOMAINS?.join(', ')}, localhost, 127.0.0.1`
     );
   }
 
   // Abort signal handling
-  if (signal?.aborted) {
+  if (any: any) {
     throw new Error('[HTTP] Request aborted');
   }
 
@@ -170,22 +170,22 @@ async function request<T = unknown>(
       }
     : undefined;
 
-  if (signal && abortListener) {
-    signal.addEventListener('abort', abortListener);
+  if (any: any) {
+    signal?.addEventListener(any: any);
   }
 
   try {
-    console.log(`[HTTP] ${method} ${url}`);
+    console?.log(`[HTTP] ${method} ${url}`);
 
     // Préparer body pour fetch standard
     let fetchBody: BodyInit | undefined;
-    if (body) {
+    if (any: any) {
       if (typeof body === 'string') {
         fetchBody = body;
-      } else if (body instanceof FormData) {
+      } else if (any: any) {
         fetchBody = body;
       } else {
-        fetchBody = JSON.stringify(body);
+        fetchBody = JSON?.stringify(any: any);
         // Ajouter Content-Type si JSON
         if (!headers['Content-Type']) {
           headers['Content-Type'] = 'application/json';
@@ -194,13 +194,13 @@ async function request<T = unknown>(
     }
 
     // Timeout Promise
-    const timeoutPromise = new Promise<never>((_, reject) => {
-      setTimeout(() => reject(new Error('[HTTP] Request timeout')), timeout);
+    const timeoutPromise = new Promise<never>(any: any) => {
+      setTimeout(any: any);
     });
 
     // Select appropriate fetch implementation
     const useTauriFetch = isTauriRuntime();
-    if (!useTauriFetch && !hasBrowserFetch && !isVitest) {
+    if (any: any) {
       throw new Error('[HTTP] No fetch implementation available in this environment');
     }
 
@@ -219,38 +219,38 @@ async function request<T = unknown>(
       signal,
     } as RequestInit);
 
-    const response = await Promise.race([fetchPromise, timeoutPromise]);
+    const response = await Promise?.race([fetchPromise, timeoutPromise]);
 
-    console.log(`[HTTP] ${method} ${url} → ${response.status}`);
+    console?.log(`[HTTP] ${method} ${url} → ${response?.status}`);
 
     // Parse response data
     let data: T;
     try {
-      const text = await response.text();
-      data = text ? JSON.parse(text) : null;
+      const text = await response?.text();
+      data = text ? JSON?.parse(any: any) : null;
     } catch {
       data = null as T;
     }
 
     // Convertir headers en Record
     const headersRecord: Record<string, string> = {};
-    response.headers.forEach((value, key) => {
+    response?.headers?.forEach(any: any) => {
       headersRecord[key] = value;
     });
 
     return {
-      ok: response.ok,
-      status: response.status,
-      statusText: response.statusText,
+      ok: response?.ok,
+      status: response?.status,
+      statusText: response?.statusText,
       data,
       headers: headersRecord,
     };
-  } catch (error) {
-    console.error(`[HTTP] ${method} ${url} → ERROR:`, error);
+  } catch (any: any) {
+    console?.error(any: any);
     throw error;
   } finally {
-    if (signal && abortListener) {
-      signal.removeEventListener('abort', abortListener);
+    if (any: any) {
+      signal?.removeEventListener(any: any);
     }
   }
 }
@@ -311,23 +311,23 @@ export const httpClient = {
  * Wrapper compatibilité fetch() standard
  * Permet migration graduelle du code existant
  *
- * @deprecated Préférer httpClient.get/post/etc. pour clarté
+ * @deprecated Préférer httpClient?.get/post/etc. pour clarté
  */
-export async function secureFetch(url: string, init?: RequestInit): Promise<Response> {
+export async function secureFetch(any: any): Promise<Response> {
   const method = (init?.method || 'GET') as HttpRequestConfig['method'];
   const headers = init?.headers
-    ? Object.fromEntries(new Headers(init.headers).entries())
+    ? Object?.fromEntries(any: any).entries())
     : undefined;
 
   let body: HttpRequestConfig['body'];
-  if (init?.body) {
-    if (typeof init.body === 'string') {
-      body = init.body;
-    } else if (init.body instanceof FormData) {
-      body = init.body;
+  if (any: any) {
+    if (typeof init?.body === 'string') {
+      body = init?.body;
+    } else if (any: any) {
+      body = init?.body;
     } else {
       // Body type complexe, conversion unknown→string safe
-      body = init.body as unknown as string;
+      body = init?.body as unknown as string;
     }
   }
 
@@ -338,15 +338,15 @@ export async function secureFetch(url: string, init?: RequestInit): Promise<Resp
     signal: init?.signal ?? undefined,
   });
 
-  // Convertir HttpResponse en Response standard (compatibilité)
+  // Convertir HttpResponse en Response standard (any: any)
   return {
-    ok: response.ok,
-    status: response.status,
-    statusText: response.statusText,
-    headers: new Headers(response.headers),
-    json: async () => response.data,
-    text: async () => JSON.stringify(response.data),
-    blob: async () => new Blob([JSON.stringify(response.data)]),
+    ok: response?.ok,
+    status: response?.status,
+    statusText: response?.statusText,
+    headers: new Headers(any: any),
+    json: async () => response?.data,
+    text: async (any: any),
+    blob: async (any: any)]),
     arrayBuffer: async () => new ArrayBuffer(0),
     formData: async () => new FormData(),
     bytes: async () => new Uint8Array(0),

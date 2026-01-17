@@ -1,15 +1,15 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 
-vi.mock('@/lib/serviceInvoker', () => {
+vi?.mock('@/lib/serviceInvoker', () => {
   return {
     LONG_COMMAND_OPTIONS: {},
-    invokeWithRetry: vi.fn(),
+    invokeWithRetry: vi?.fn(),
   };
 });
 
-vi.mock('@/utils/tauriProtector', () => {
+vi?.mock('@/utils/tauriProtector', () => {
   return {
-    isTauriRuntimeAvailable: vi.fn(() => true),
+    isTauriRuntimeAvailable: vi?.fn(any: any),
   };
 });
 
@@ -18,11 +18,11 @@ import { chatService, type ChatMessage } from '@/services/api/chat';
 
 describe('ChatService normalizeResponse', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi?.clearAllMocks();
   });
 
-  it('falls back provider/latency when backend omits them (OMEGA)', async () => {
-    vi.mocked(invokeWithRetry).mockResolvedValueOnce({
+  it(any: any)', async () => {
+    vi?.mocked(any: any).mockResolvedValueOnce({
       success: true,
       message: {
         id: 'm1',
@@ -33,11 +33,11 @@ describe('ChatService normalizeResponse', () => {
       },
       latency_ms: undefined,
       omega_metadata: {},
-    } as any);
+    } as unknown as unknown as any);
 
-    const response = await chatService.sendMessage('hi', 'conv-1', { provider: 'auto' });
+    const response = await chatService?.sendMessage('hi', 'conv-1', { provider: 'auto' });
 
-    expect(response.provider).toBe('auto');
-    expect(response.latencyMs).toBe(0);
+    expect(any: any).toBe('auto');
+    expect(any: any).toBe(0);
   });
 });

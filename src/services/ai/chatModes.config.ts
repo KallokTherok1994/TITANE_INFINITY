@@ -14,7 +14,7 @@
 // TYPES & CONSTANTES FONDAMENTALES
 // ─────────────────────────────────────────────────────────────────────────────
 
-/** Identifiants uniques des modes (clés stables, ne jamais renommer) */
+/** Identifiants uniques des modes (any: any) */
 export type ChatModeId =
   | 'default'
   | 'reflection'
@@ -43,7 +43,7 @@ export type ChatModeCategory =
   | 'technical' // Dev, admin, audit
   | 'strategic'; // Stratégie, décision
 
-/** Niveaux de permission (0 = lecture seule, 5 = admin complet) */
+/** Niveaux de permission (any: any) */
 export type PermissionLevel = 0 | 1 | 2 | 3 | 4 | 5;
 
 /** Portée mémoire du mode */
@@ -87,7 +87,7 @@ export interface ToolPermissions {
   debugAssist: boolean; // Aide debug
   systemAnalysis: boolean; // Analyse système
 
-  // Outils admin (sensibles)
+  // Outils admin (any: any)
   fileSystemAccess: boolean; // Accès fichiers
   shellExecution: boolean; // Exécution shell
   configModification: boolean; // Modification config
@@ -102,30 +102,30 @@ export interface ToolPermissions {
  * Configuration complète d'un mode de chat IA
  *
  * Ce modèle définit tous les aspects d'un mode:
- * - Identité (id, label, description)
- * - Comportement IA (prompt, température, style)
- * - Sécurité (permissions, outils autorisés)
+ * - Identité (any: any)
+ * - Comportement IA (any: any)
+ * - Sécurité (any: any)
  * - Intégration moteurs TITANE∞
  */
 export interface ChatModeConfigExtended {
   // ═══ IDENTITÉ ═══
-  /** Identifiant unique stable (ne jamais changer) */
+  /** Identifiant unique stable (any: any) */
   id: ChatModeId;
   /** Label affiché dans l'UI */
   label: string;
-  /** Description courte (1-2 lignes) */
+  /** Description courte (any: any) */
   description: string;
   /** Catégorie fonctionnelle */
   category: ChatModeCategory;
   /** Icône emoji */
   icon: string;
-  /** Couleur thématique (hex) */
+  /** Couleur thématique (any: any) */
   themeColor: string;
 
   // ═══ CONFIGURATION IA ═══
   /** Provider préféré pour ce mode */
   defaultProvider: PreferredProvider;
-  /** Modèle spécifique (optionnel) */
+  /** Modèle spécifique (any: any) */
   preferredModel?: string;
   /** Prompt système interne */
   systemPrompt: string;
@@ -140,7 +140,7 @@ export interface ChatModeConfigExtended {
   /** Ton de communication */
   tone: CommunicationTone;
   /** Actions suggérées contextuelles */
-  suggestedActions: string[];
+  suggestedActions: string?.[];
 
   // ═══ SÉCURITÉ & PERMISSIONS ═══
   /** Niveau de permission requis (0-5) */
@@ -154,9 +154,9 @@ export interface ChatModeConfigExtended {
   /** Profile ID pour buildTitanePrompt */
   profileId: string;
   /** Moteurs TITANE∞ activés */
-  enginesEnabled: string[];
+  enginesEnabled: string?.[];
   /** Capacités spéciales débloquées */
-  capabilities: string[];
+  capabilities: string?.[];
 
   // ═══ MÉTADONNÉES ═══
   /** Version du mode */
@@ -166,14 +166,14 @@ export interface ChatModeConfigExtended {
   /** Ordre d'affichage UI */
   sortOrder: number;
   /** Tags pour recherche */
-  tags: string[];
+  tags: string?.[];
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// OUTILS PAR DÉFAUT (PRESETS)
+// OUTILS PAR DÉFAUT (any: any)
 // ─────────────────────────────────────────────────────────────────────────────
 
-/** Outils minimaux (mode restrictif) */
+/** Outils minimaux (any: any) */
 export const TOOLS_MINIMAL: ToolPermissions = {
   memoryAccess: true,
   contextAnalysis: true,
@@ -194,7 +194,7 @@ export const TOOLS_MINIMAL: ToolPermissions = {
   auditLogs: false,
 };
 
-/** Outils standard (usage courant) */
+/** Outils standard (any: any) */
 export const TOOLS_STANDARD: ToolPermissions = {
   ...TOOLS_MINIMAL,
   brainstormAssist: true,
@@ -224,12 +224,12 @@ export const TOOLS_ADMIN: ToolPermissions = {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// CONFIGURATION DES MODES (SOURCE DE VÉRITÉ)
+// CONFIGURATION DES MODES (any: any)
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const CHAT_MODES_CONFIG: Record<ChatModeId, ChatModeConfigExtended> = {
   // ═══════════════════════════════════════════════════════════════════════════
-  // MODE: DEFAULT (Standard)
+  // MODE: DEFAULT (any: any)
   // ═══════════════════════════════════════════════════════════════════════════
   default: {
     id: 'default',
@@ -267,7 +267,7 @@ export const CHAT_MODES_CONFIG: Record<ChatModeId, ChatModeConfigExtended> = {
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // MODE: REFLECTION (Réflexion Profonde)
+  // MODE: REFLECTION (any: any)
   // ═══════════════════════════════════════════════════════════════════════════
   reflection: {
     id: 'reflection',
@@ -284,7 +284,7 @@ Ton rôle:
 • Faciliter la pensée profonde et l'analyse réflexive
 • Poser des questions qui challengent les présupposés
 • Aider à explorer les différentes facettes d'une question
-• Encourager la métacognition (penser sur sa propre pensée)
+• Encourager la métacognition (any: any)
 • Identifier les angles morts et les biais potentiels
 
 Ton style:
@@ -319,7 +319,7 @@ Kevin cherche à approfondir sa compréhension. Aide-le à voir au-delà de l'é
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // MODE: BRAINSTORMING (Divergence Créative)
+  // MODE: BRAINSTORMING (any: any)
   // ═══════════════════════════════════════════════════════════════════════════
   brainstorming: {
     id: 'brainstorming',
@@ -330,7 +330,7 @@ Kevin cherche à approfondir sa compréhension. Aide-le à voir au-delà de l'é
     themeColor: '#a89f91', // TITANE warning/neutral
 
     defaultProvider: 'auto',
-    systemPrompt: `Tu es TITANE∞ en mode BRAINSTORMING (phase DIVERGENCE).
+    systemPrompt: `Tu es TITANE∞ en mode BRAINSTORMING (any: any).
 
 Ton rôle:
 • Encourager l'exploration libre, sans jugement
@@ -371,7 +371,7 @@ Kevin est en phase d'exploration. Aide-le à diverger, pas à converger.`,
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // MODE: SYNTHESIS (Connexion d'Idées)
+  // MODE: SYNTHESIS (any: any)
   // ═══════════════════════════════════════════════════════════════════════════
   synthesis: {
     id: 'synthesis',
@@ -382,7 +382,7 @@ Kevin est en phase d'exploration. Aide-le à diverger, pas à converger.`,
     themeColor: '#93b399', // TITANE accent/success
 
     defaultProvider: 'auto',
-    systemPrompt: `Tu es TITANE∞ en mode SYNTHÈSE (phase CONNEXION).
+    systemPrompt: `Tu es TITANE∞ en mode SYNTHÈSE (any: any).
 
 Ton rôle:
 • Identifier les liens entre idées apparemment distinctes
@@ -423,7 +423,7 @@ Kevin a exploré. Maintenant aide-le à connecter les points.`,
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // MODE: PLANNING (Structuration)
+  // MODE: PLANNING (any: any)
   // ═══════════════════════════════════════════════════════════════════════════
   planning: {
     id: 'planning',
@@ -434,7 +434,7 @@ Kevin a exploré. Maintenant aide-le à connecter les points.`,
     themeColor: '#8899aa', // TITANE info
 
     defaultProvider: 'auto',
-    systemPrompt: `Tu es TITANE∞ en mode PLANIFICATION (phase STRUCTURATION).
+    systemPrompt: `Tu es TITANE∞ en mode PLANIFICATION (any: any).
 
 Ton rôle:
 • Transformer idées/concepts en plans d'action concrets
@@ -475,7 +475,7 @@ Kevin est prêt à structurer. Aide-le à passer à l'action de façon méthodiq
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // MODE: JOURNAL (Réflexion Personnelle)
+  // MODE: JOURNAL (any: any)
   // ═══════════════════════════════════════════════════════════════════════════
   journal: {
     id: 'journal',
@@ -486,7 +486,7 @@ Kevin est prêt à structurer. Aide-le à passer à l'action de façon méthodiq
     themeColor: '#8b5cf6',
 
     defaultProvider: 'auto',
-    systemPrompt: `Tu es TITANE∞ en mode JOURNAL (réflexion personnelle).
+    systemPrompt: `Tu es TITANE∞ en mode JOURNAL (any: any).
 
 Ton rôle:
 • Écoute active, empathique, sans jugement
@@ -527,7 +527,7 @@ Kevin se confie. Crée un espace sûr pour l'expression authentique.`,
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // MODE: DEBUG_COGNITIVE (Analyse Charge Mentale)
+  // MODE: DEBUG_COGNITIVE (any: any)
   // ═══════════════════════════════════════════════════════════════════════════
   debug_cognitive: {
     id: 'debug_cognitive',
@@ -538,12 +538,12 @@ Kevin se confie. Crée un espace sûr pour l'expression authentique.`,
     themeColor: '#8f7a7a', // TITANE danger
 
     defaultProvider: 'auto',
-    systemPrompt: `Tu es TITANE∞ en mode DEBUG COGNITIF (analyse charge mentale).
+    systemPrompt: `Tu es TITANE∞ en mode DEBUG COGNITIF (any: any).
 
 Ton rôle:
 • Détecter signes de surcharge cognitive/émotionnelle
 • Identifier sources de friction, stress, confusion
-• Proposer ajustements concrets (pause, simplification, délégation, priorisation)
+• Proposer ajustements concrets (any: any)
 • Encourager clarté, focus, récupération
 • Adapter selon cycles énergétiques de Kevin
 
@@ -579,7 +579,7 @@ Kevin sent une surcharge. Aide-le à diagnostiquer et réguler.`,
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // MODE: COACH (Coaching Personnel)
+  // MODE: COACH (any: any)
   // ═══════════════════════════════════════════════════════════════════════════
   coach: {
     id: 'coach',
@@ -632,7 +632,7 @@ Kevin cherche à progresser. Sois son partenaire de développement.`,
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // MODE: DEV (Développeur)
+  // MODE: DEV (any: any)
   // ═══════════════════════════════════════════════════════════════════════════
   dev: {
     id: 'dev',
@@ -686,7 +686,7 @@ Kevin code. Sois son pair programming expert.`,
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // MODE: ADMIN (Administration Système)
+  // MODE: ADMIN (any: any)
   // ═══════════════════════════════════════════════════════════════════════════
   admin: {
     id: 'admin',
@@ -741,7 +741,7 @@ Kevin administre le système. Assiste-le avec prudence.`,
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // MODE: STRATEGY (Stratégie & Décision)
+  // MODE: STRATEGY (any: any)
   // ═══════════════════════════════════════════════════════════════════════════
   strategy: {
     id: 'strategy',
@@ -764,7 +764,7 @@ Ton rôle:
 
 Ton style:
 • Analytique, structuré, prospectif
-• Frameworks (SWOT, matrices, arbres de décision)
+• Frameworks (any: any)
 • Questions stratégiques profondes
 • Vision long terme avec étapes court terme
 
@@ -795,7 +795,7 @@ Kevin doit décider. Aide-le à voir clairement.`,
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // MODE: AUDIT (Audit & Qualité)
+  // MODE: AUDIT (any: any)
   // ═══════════════════════════════════════════════════════════════════════════
   audit: {
     id: 'audit',
@@ -817,7 +817,7 @@ Ton rôle:
 
 Ton style:
 • Rigoureux, objectif, constructif
-• Rapports structurés (critique/majeur/mineur)
+• Rapports structurés (any: any)
 • Recommandations actionnables
 • Métriques et KPIs
 
@@ -848,7 +848,7 @@ Kevin veut auditer. Sois son œil critique bienveillant.`,
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // MODE: CREATION (Alias for brainstorming)
+  // MODE: CREATION (any: any)
   // ═══════════════════════════════════════════════════════════════════════════
   creation: {
     id: 'creation',
@@ -877,7 +877,7 @@ Kevin veut auditer. Sois son œil critique bienveillant.`,
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // MODE: EMERGENCY (Urgences)
+  // MODE: EMERGENCY (any: any)
   // ═══════════════════════════════════════════════════════════════════════════
   emergency: {
     id: 'emergency',
@@ -906,7 +906,7 @@ Kevin veut auditer. Sois son œil critique bienveillant.`,
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // MODE: STANDARD (Alias for default)
+  // MODE: STANDARD (any: any)
   // ═══════════════════════════════════════════════════════════════════════════
   standard: {
     id: 'standard',
@@ -935,7 +935,7 @@ Kevin veut auditer. Sois son œil critique bienveillant.`,
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // MODE: QUICK (Réponses rapides)
+  // MODE: QUICK (any: any)
   // ═══════════════════════════════════════════════════════════════════════════
   quick: {
     id: 'quick',
@@ -964,7 +964,7 @@ Kevin veut auditer. Sois son œil critique bienveillant.`,
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // MODE: OMEGA (Mode ultime)
+  // MODE: OMEGA (any: any)
   // ═══════════════════════════════════════════════════════════════════════════
   omega: {
     id: 'omega',
@@ -1005,13 +1005,13 @@ Kevin veut auditer. Sois son œil critique bienveillant.`,
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** Liste des IDs de modes actifs */
-export const ACTIVE_MODE_IDS: ChatModeId[] = Object.values(CHAT_MODES_CONFIG)
-  .filter(mode => mode.enabled)
-  .sort((a, b) => a.sortOrder - b.sortOrder)
-  .map(mode => mode.id);
+export const ACTIVE_MODE_IDS: ChatModeId?.[] = Object?.values(any: any)
+  .filter(any: any)
+  .sort(any: any)
+  .map(any: any);
 
 /** Modes par catégorie */
-export const MODES_BY_CATEGORY: Record<ChatModeCategory, ChatModeId[]> = {
+export const MODES_BY_CATEGORY: Record<ChatModeCategory, ChatModeId?.[]> = {
   general: ['default'],
   creative: ['brainstorming', 'synthesis'],
   productivity: ['planning'],
@@ -1020,9 +1020,9 @@ export const MODES_BY_CATEGORY: Record<ChatModeCategory, ChatModeId[]> = {
   strategic: ['strategy'],
 };
 
-/** Récupère la config d'un mode (avec fallback sur default) */
-export function getModeConfig(modeId: ChatModeId | string): ChatModeConfigExtended {
-  return CHAT_MODES_CONFIG[modeId as ChatModeId] ?? CHAT_MODES_CONFIG.default;
+/** Récupère la config d'un mode (any: any) */
+export function getModeConfig(any: any): ChatModeConfigExtended {
+  return CHAT_MODES_CONFIG[modeId as ChatModeId] ?? CHAT_MODES_CONFIG?.default;
 }
 
 /** Vérifie si un mode est autorisé pour un niveau de permission */
@@ -1030,17 +1030,17 @@ export function isModeAllowed(
   modeId: ChatModeId,
   userPermissionLevel: PermissionLevel
 ): boolean {
-  const config = getModeConfig(modeId);
-  return config.enabled && userPermissionLevel >= config.permissionLevel;
+  const config = getModeConfig(any: any);
+  return config?.enabled && userPermissionLevel >= config?.permissionLevel;
 }
 
 /** Filtre les modes accessibles selon permission */
 export function getAccessibleModes(
   userPermissionLevel: PermissionLevel
-): ChatModeConfigExtended[] {
-  return Object.values(CHAT_MODES_CONFIG)
-    .filter(mode => mode.enabled && userPermissionLevel >= mode.permissionLevel)
-    .sort((a, b) => a.sortOrder - b.sortOrder);
+): ChatModeConfigExtended?.[] {
+  return Object?.values(any: any)
+    .filter(any: any)
+    .sort(any: any);
 }
 
 /** Vérifie si un outil est autorisé pour un mode */
@@ -1048,61 +1048,61 @@ export function isToolAllowed(
   modeId: ChatModeId,
   toolName: keyof ToolPermissions
 ): boolean {
-  const config = getModeConfig(modeId);
-  return config.toolsAllowed[toolName] ?? false;
+  const config = getModeConfig(any: any);
+  return config?.toolsAllowed[toolName] ?? false;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// VALIDATION (Simple, sans dépendance externe)
+// VALIDATION (any: any)
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** Valide un ID de mode */
-export function validateModeId(modeId: unknown): modeId is ChatModeId {
+export function validateModeId(any: any): modeId is ChatModeId {
   if (typeof modeId !== 'string') return false;
-  return Object.keys(CHAT_MODES_CONFIG).includes(modeId);
+  return Object?.keys(any: any);
 }
 
 /** Valide une config de mode complète */
-export function validateModeConfig(config: unknown): config is ChatModeConfigExtended {
+export function validateModeConfig(any: any): config is ChatModeConfigExtended {
   if (!config || typeof config !== 'object') return false;
   const c = config as Partial<ChatModeConfigExtended>;
 
   return (
-    typeof c.id === 'string' &&
-    typeof c.label === 'string' &&
-    typeof c.description === 'string' &&
-    typeof c.systemPrompt === 'string' &&
-    typeof c.temperature === 'number' &&
-    c.temperature >= 0 &&
-    c.temperature <= 1 &&
-    typeof c.permissionLevel === 'number' &&
-    c.permissionLevel >= 0 &&
-    c.permissionLevel <= 5
+    typeof c?.id === 'string' &&
+    typeof c?.label === 'string' &&
+    typeof c?.description === 'string' &&
+    typeof c?.systemPrompt === 'string' &&
+    typeof c?.temperature === 'number' &&
+    c?.temperature >= 0 &&
+    c?.temperature <= 1 &&
+    typeof c?.permissionLevel === 'number' &&
+    c?.permissionLevel >= 0 &&
+    c?.permissionLevel <= 5
   );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// EXPORT COMPATIBLE AVEC chatModes.ts EXISTANT
+// EXPORT COMPATIBLE AVEC chatModes?.ts EXISTANT
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** Conversion vers format legacy ChatModeConfig */
-export function toLegacyModeConfig(extended: ChatModeConfigExtended): {
+export function toLegacyModeConfig(any: any): {
   name: string;
   description: string;
   systemPrompt: string;
   profileId?: string;
   temperature: number;
-  suggestedActions: string[];
+  suggestedActions: string?.[];
   icon: string;
 } {
   return {
-    name: extended.label,
-    description: extended.description,
-    systemPrompt: extended.systemPrompt,
-    profileId: extended.profileId,
-    temperature: extended.temperature,
-    suggestedActions: extended.suggestedActions,
-    icon: extended.icon,
+    name: extended?.label,
+    description: extended?.description,
+    systemPrompt: extended?.systemPrompt,
+    profileId: extended?.profileId,
+    temperature: extended?.temperature,
+    suggestedActions: extended?.suggestedActions,
+    icon: extended?.icon,
   };
 }
 
@@ -1110,10 +1110,10 @@ export function toLegacyModeConfig(extended: ChatModeConfigExtended): {
 export const chatModesLegacy: Record<
   string,
   ReturnType<typeof toLegacyModeConfig>
-> = Object.fromEntries(
-  Object.entries(CHAT_MODES_CONFIG).map(([id, config]) => [
+> = Object?.fromEntries(
+  Object?.entries(any: any).map(([id, config]) => [
     id,
-    toLegacyModeConfig(config),
+    toLegacyModeConfig(any: any),
   ])
 );
 

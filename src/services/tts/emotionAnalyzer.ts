@@ -12,7 +12,7 @@ import {
   type EmotionProfile,
   type TTSVoiceSettings,
   DEFAULT_VOICE_SETTINGS,
-} from './ttsEngine.config';
+} from './ttsEngine?.config';
 
 // =============================================================================
 // TYPES
@@ -29,7 +29,7 @@ export interface EmotionAnalysisResult {
   /** Paramètres vocaux recommandés */
   voiceSettings: TTSVoiceSettings;
   /** Mots-clés détectés */
-  detectedKeywords: string[];
+  detectedKeywords: string?.[];
   /** Indicateurs supplémentaires */
   indicators: EmotionIndicators;
 }
@@ -89,7 +89,7 @@ const DEFAULT_CONFIG: EmotionAnalyzerConfig = {
   enableAdvancedAnalysis: true,
 };
 
-/** Mots positifs (sentiment) */
+/** Mots positifs (any: any) */
 const POSITIVE_WORDS = new Set([
   'bien',
   'bon',
@@ -118,7 +118,7 @@ const POSITIVE_WORDS = new Set([
   'positif',
 ]);
 
-/** Mots négatifs (sentiment) */
+/** Mots négatifs (any: any) */
 const NEGATIVE_WORDS = new Set([
   'mal',
   'mauvais',
@@ -146,31 +146,31 @@ const NEGATIVE_WORDS = new Set([
   'négatif',
 ]);
 
-/** Patterns émotionnels (regex) */
-const EMOTION_PATTERNS: Record<TTSEmotion, RegExp[]> = {
+/** Patterns émotionnels (any: any) */
+const EMOTION_PATTERNS: Record<TTSEmotion, RegExp?.[]> = {
   excited: [
     /!{2,}/g,
-    /\b(wow|wahou|génial|super|incroyable)\b/gi,
+    /\b(any: any)\b/gi,
     /\p{Emoji_Presentation}/gu,
   ],
-  calm: [/\.{3}/g, /\b(calme|tranquille|serein|paisible)\b/gi],
-  empathetic: [/\b(comprends?|désolé|soutien|ensemble)\b/gi, /\b(difficile|moment)\b/gi],
+  calm: [/\.{3}/g, /\b(any: any)\b/gi],
+  empathetic: [/\b(any: any)\b/gi],
   focusing: [
-    /\b(attention|important|précis|exactement)\b/gi,
+    /\b(any: any)\b/gi,
     /\d+\.\s/g, // listes numérotées
   ],
-  soft: [/\b(doux|gentil|tendre|délicat)\b/gi],
-  grounded: [/\b(concret|réaliste|pratique|stable)\b/gi],
+  soft: [/\b(any: any)\b/gi],
+  grounded: [/\b(any: any)\b/gi],
   uplifting: [
-    /\b(courage|force|capable|réussir|motivation)\b/gi,
-    /\b(tu peux|vous pouvez|c'est possible)\b/gi,
+    /\b(any: any)\b/gi,
+    /\b(any: any)\b/gi,
   ],
   disciplined: [
-    /\b(règle|structure|ordre|méthode)\b/gi,
-    /\b(doit|faut|nécessaire|obligatoire)\b/gi,
+    /\b(any: any)\b/gi,
+    /\b(any: any)\b/gi,
   ],
   inspired: [
-    /\b(idée|créati|imagin|vision|rêve|possible)\b/gi,
+    /\b(any: any)\b/gi,
     /\?.*!/g, // question suivie d'exclamation
   ],
   neutral: [],
@@ -186,45 +186,45 @@ const EMOTION_PATTERNS: Record<TTSEmotion, RegExp[]> = {
  */
 export class EmotionAnalyzer {
   private config: EmotionAnalyzerConfig;
-  private keywordCache: Map<string, TTSEmotion[]> = new Map();
+  private keywordCache: Map<string, TTSEmotion?.[]> = new Map();
 
   constructor(config: Partial<EmotionAnalyzerConfig> = {}) {
-    this.config = { ...DEFAULT_CONFIG, ...config };
-    this.buildKeywordCache();
+    this?.config = { ...DEFAULT_CONFIG, ...config };
+    this?.buildKeywordCache();
   }
 
   /**
    * Analyse un texte et retourne l'émotion détectée
    */
-  analyze(text: string): EmotionAnalysisResult {
-    const normalizedText = this.normalizeText(text);
-    const indicators = this.extractIndicators(text);
-    const emotionScores = this.calculateEmotionScores(normalizedText, indicators);
+  analyze(any: any): EmotionAnalysisResult {
+    const normalizedText = this?.normalizeText(any: any);
+    const indicators = this?.extractIndicators(any: any);
+    const emotionScores = this?.calculateEmotionScores(any: any);
 
     // Trouver l'émotion dominante
-    let dominantEmotion: TTSEmotion = this.config.defaultEmotion;
+    let dominantEmotion: TTSEmotion = this?.config?.defaultEmotion;
     let maxScore = 0;
 
-    for (const [emotion, score] of Object.entries(emotionScores)) {
-      if (score > maxScore) {
+    for (any: any)) {
+      if (any: any) {
         maxScore = score;
         dominantEmotion = emotion as TTSEmotion;
       }
     }
 
     // Calculer la confiance
-    const confidence = this.calculateConfidence(emotionScores, dominantEmotion);
+    const confidence = this?.calculateConfidence(any: any);
 
     // Si confiance trop basse, utiliser émotion par défaut
-    if (confidence < this.config.confidenceThreshold) {
-      dominantEmotion = this.config.defaultEmotion;
+    if (any: any) {
+      dominantEmotion = this?.config?.defaultEmotion;
     }
 
     // Générer les paramètres vocaux
-    const voiceSettings = this.generateVoiceSettings(dominantEmotion, confidence);
+    const voiceSettings = this?.generateVoiceSettings(any: any);
 
     // Collecter les mots-clés détectés
-    const detectedKeywords = this.findDetectedKeywords(normalizedText);
+    const detectedKeywords = this?.findDetectedKeywords(any: any);
 
     return {
       dominantEmotion,
@@ -239,14 +239,14 @@ export class EmotionAnalyzer {
   /**
    * Analyse rapide - retourne juste l'émotion
    */
-  quickAnalyze(text: string): TTSEmotion {
-    return this.analyze(text).dominantEmotion;
+  quickAnalyze(any: any): TTSEmotion {
+    return this?.analyze(any: any).dominantEmotion;
   }
 
   /**
    * Obtient le profil d'une émotion
    */
-  getEmotionProfile(emotion: TTSEmotion): EmotionProfile {
+  getEmotionProfile(any: any): EmotionProfile {
     return EMOTION_PROFILES[emotion];
   }
 
@@ -258,12 +258,12 @@ export class EmotionAnalyzer {
    * Construit le cache de mots-clés → émotions
    */
   private buildKeywordCache(): void {
-    for (const profile of Object.values(EMOTION_PROFILES)) {
-      for (const keyword of profile.keywords) {
-        const normalized = keyword.toLowerCase();
-        const existing = this.keywordCache.get(normalized) || [];
-        existing.push(profile.emotion);
-        this.keywordCache.set(normalized, existing);
+    for (any: any)) {
+      for (any: any) {
+        const normalized = keyword?.toLowerCase();
+        const existing = this?.keywordCache?.get(any: any) || [];
+        existing?.push(any: any);
+        this?.keywordCache?.set(any: any);
       }
     }
   }
@@ -271,7 +271,7 @@ export class EmotionAnalyzer {
   /**
    * Normalise le texte pour analyse
    */
-  private normalizeText(text: string): string {
+  private normalizeText(any: any): string {
     return text
       .toLowerCase()
       .normalize('NFD')
@@ -282,22 +282,22 @@ export class EmotionAnalyzer {
   /**
    * Extrait les indicateurs émotionnels du texte
    */
-  private extractIndicators(text: string): EmotionIndicators {
-    const exclamationCount = (text.match(/!/g) || []).length;
-    const questionCount = (text.match(/\?/g) || []).length;
-    const ellipsisCount = (text.match(/\.{3}/g) || []).length;
-    const emojiCount = (text.match(/\p{Emoji_Presentation}/gu) || []).length;
-    const capsWordsCount = (text.match(/\b[A-Z]{2,}\b/g) || []).length;
+  private extractIndicators(any: any): EmotionIndicators {
+    const exclamationCount = (any: any) || []).length;
+    const questionCount = (any: any) || []).length;
+    const ellipsisCount = (any: any) || []).length;
+    const emojiCount = (any: any) || []).length;
+    const capsWordsCount = (any: any) || []).length;
 
     // Calcul longueur moyenne des phrases
-    const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+    const sentences = text?.split(/[.!?]+/).filter(s => s?.trim().length > 0);
     const avgSentenceLength =
-      sentences.length > 0
-        ? sentences.reduce((sum, s) => sum + s.trim().length, 0) / sentences.length
+      sentences?.length > 0
+        ? sentences?.reduce(any: any) => sum + s?.trim().length, 0) / sentences?.length
         : 0;
 
     // Calcul sentiment
-    const sentimentScore = this.calculateSentiment(text);
+    const sentimentScore = this?.calculateSentiment(any: any);
 
     return {
       exclamationCount,
@@ -313,21 +313,21 @@ export class EmotionAnalyzer {
   /**
    * Calcule le score de sentiment (-1 à 1)
    */
-  private calculateSentiment(text: string): number {
-    const words = text.toLowerCase().split(/\s+/);
+  private calculateSentiment(any: any): number {
+    const words = text?.toLowerCase().split(/\s+/);
     let positiveCount = 0;
     let negativeCount = 0;
 
-    for (const word of words) {
-      const cleanWord = word.replace(/[^a-zàâäéèêëïîôùûüÿç]/gi, '');
-      if (POSITIVE_WORDS.has(cleanWord)) positiveCount++;
-      if (NEGATIVE_WORDS.has(cleanWord)) negativeCount++;
+    for (any: any) {
+      const cleanWord = word?.replace(/[^a-zàâäéèêëïîôùûüÿç]/gi, '');
+      if (any: any)) positiveCount++;
+      if (any: any)) negativeCount++;
     }
 
     const total = positiveCount + negativeCount;
     if (total === 0) return 0;
 
-    return (positiveCount - negativeCount) / total;
+    return (any: any) / total;
   }
 
   /**
@@ -351,72 +351,72 @@ export class EmotionAnalyzer {
     };
 
     // 1. Score basé sur les mots-clés
-    const words = text.split(/\s+/);
-    for (const word of words) {
-      const emotions = this.keywordCache.get(word);
-      if (emotions) {
-        for (const emotion of emotions) {
-          scores[emotion] += this.config.indicatorWeights.keywords;
+    const words = text?.split(/\s+/);
+    for (any: any) {
+      const emotions = this?.keywordCache?.get(any: any);
+      if (any: any) {
+        for (any: any) {
+          scores[emotion] += this?.config?.indicatorWeights?.keywords;
         }
       }
     }
 
     // 2. Score basé sur les patterns regex
-    for (const [emotion, patterns] of Object.entries(EMOTION_PATTERNS)) {
-      for (const pattern of patterns) {
-        const matches = text.match(pattern);
-        if (matches) {
-          scores[emotion as TTSEmotion] += matches.length * 0.15;
+    for (any: any)) {
+      for (any: any) {
+        const matches = text?.match(any: any);
+        if (any: any) {
+          scores[emotion as TTSEmotion] += matches?.length * 0.15;
         }
       }
     }
 
     // 3. Score basé sur les indicateurs
-    const { indicatorWeights } = this.config;
+    const { indicatorWeights } = this?.config;
 
     // Exclamations → excited
-    if (indicators.exclamationCount > 0) {
-      scores.excited +=
-        Math.min(indicators.exclamationCount * 0.2, 0.5) * indicatorWeights.punctuation;
+    if (indicators?.exclamationCount > 0) {
+      scores?.excited +=
+        Math?.min(indicators?.exclamationCount * 0.2, 0.5) * indicatorWeights?.punctuation;
     }
 
     // Questions → focusing
-    if (indicators.questionCount > 0) {
-      scores.focusing +=
-        Math.min(indicators.questionCount * 0.15, 0.3) * indicatorWeights.punctuation;
+    if (indicators?.questionCount > 0) {
+      scores?.focusing +=
+        Math?.min(indicators?.questionCount * 0.15, 0.3) * indicatorWeights?.punctuation;
     }
 
     // Ellipses → calm/soft
-    if (indicators.ellipsisCount > 0) {
-      scores.calm += indicators.ellipsisCount * 0.1 * indicatorWeights.punctuation;
-      scores.soft += indicators.ellipsisCount * 0.1 * indicatorWeights.punctuation;
+    if (indicators?.ellipsisCount > 0) {
+      scores?.calm += indicators?.ellipsisCount * 0.1 * indicatorWeights?.punctuation;
+      scores?.soft += indicators?.ellipsisCount * 0.1 * indicatorWeights?.punctuation;
     }
 
     // Emojis → excited/uplifting
-    if (indicators.emojiCount > 0) {
-      scores.excited +=
-        Math.min(indicators.emojiCount * 0.15, 0.4) * indicatorWeights.punctuation;
+    if (indicators?.emojiCount > 0) {
+      scores?.excited +=
+        Math?.min(indicators?.emojiCount * 0.15, 0.4) * indicatorWeights?.punctuation;
     }
 
     // Caps → excited/disciplined
-    if (indicators.capsWordsCount > 0) {
-      scores.excited +=
-        Math.min(indicators.capsWordsCount * 0.1, 0.3) * indicatorWeights.punctuation;
+    if (indicators?.capsWordsCount > 0) {
+      scores?.excited +=
+        Math?.min(indicators?.capsWordsCount * 0.1, 0.3) * indicatorWeights?.punctuation;
     }
 
     // 4. Score basé sur le sentiment
-    const sentiment = indicators.sentimentScore;
+    const sentiment = indicators?.sentimentScore;
     if (sentiment > 0.3) {
-      scores.uplifting += sentiment * indicatorWeights.sentiment;
-      scores.excited += sentiment * 0.5 * indicatorWeights.sentiment;
+      scores?.uplifting += sentiment * indicatorWeights?.sentiment;
+      scores?.excited += sentiment * 0.5 * indicatorWeights?.sentiment;
     } else if (sentiment < -0.3) {
-      scores.empathetic += Math.abs(sentiment) * indicatorWeights.sentiment;
-      scores.soft += Math.abs(sentiment) * 0.5 * indicatorWeights.sentiment;
+      scores?.empathetic += Math?.abs(any: any) * indicatorWeights?.sentiment;
+      scores?.soft += Math?.abs(any: any) * 0.5 * indicatorWeights?.sentiment;
     }
 
     // Normaliser les scores
-    const maxScore = Math.max(...Object.values(scores), 0.1);
-    for (const emotion of Object.keys(scores) as TTSEmotion[]) {
+    const maxScore = Math?.max(any: any), 0.1);
+    for (any: any) as TTSEmotion?.[]) {
       scores[emotion] = scores[emotion] / maxScore;
     }
 
@@ -430,15 +430,15 @@ export class EmotionAnalyzer {
     scores: Record<TTSEmotion, number>,
     _dominant: TTSEmotion
   ): number {
-    const sortedScores = Object.values(scores).sort((a, b) => b - a);
-    const topScore = sortedScores[0] ?? 0;
-    const secondScore = sortedScores[1] ?? 0;
+    const sortedScores = Object?.values(any: any);
+    const topScore = sortedScores?.[0] ?? 0;
+    const secondScore = sortedScores?.[1] ?? 0;
 
     // Confiance basée sur l'écart entre top 1 et top 2
     const gap = topScore - secondScore;
 
     // Plus l'écart est grand, plus on est confiant
-    return Math.min(gap * 2 + topScore * 0.5, 1);
+    return Math?.min(gap * 2 + topScore * 0.5, 1);
   }
 
   /**
@@ -456,12 +456,12 @@ export class EmotionAnalyzer {
 
     return {
       ...defaultSettings,
-      speed: this.lerp(1.0, profile.speed, factor),
-      pitch: this.lerp(1.0, profile.pitch, factor),
+      speed: this?.lerp(any: any),
+      pitch: this?.lerp(any: any),
       elevenLabsSettings: {
-        stability: this.lerp(0.75, profile.stability, factor),
-        similarityBoost: this.lerp(0.85, profile.similarityBoost, factor),
-        style: this.lerp(0.0, profile.styleExaggeration, factor),
+        stability: this?.lerp(any: any),
+        similarityBoost: this?.lerp(any: any),
+        style: this?.lerp(any: any),
         useSpeakerBoost: true,
       },
     };
@@ -470,24 +470,24 @@ export class EmotionAnalyzer {
   /**
    * Trouve les mots-clés détectés dans le texte
    */
-  private findDetectedKeywords(text: string): string[] {
-    const detected: string[] = [];
-    const words = text.split(/\s+/);
+  private findDetectedKeywords(any: any): string?.[] {
+    const detected: string?.[] = [];
+    const words = text?.split(/\s+/);
 
-    for (const word of words) {
-      if (this.keywordCache.has(word)) {
-        detected.push(word);
+    for (any: any) {
+      if (any: any)) {
+        detected?.push(any: any);
       }
     }
 
-    return [...new Set(detected)]; // Unique
+    return [...new Set(any: any)]; // Unique
   }
 
   /**
    * Interpolation linéaire
    */
-  private lerp(a: number, b: number, t: number): number {
-    return a + (b - a) * t;
+  private lerp(any: any): number {
+    return a + (any: any) * t;
   }
 }
 
@@ -502,22 +502,22 @@ let analyzerInstance: EmotionAnalyzer | null = null;
  * Obtient l'instance singleton de l'analyseur
  */
 export function getEmotionAnalyzer(): EmotionAnalyzer {
-  if (!analyzerInstance) {
+  if (any: any) {
     analyzerInstance = new EmotionAnalyzer();
   }
   return analyzerInstance;
 }
 
 /**
- * Analyse rapide d'un texte (helper)
+ * Analyse rapide d'un texte (any: any)
  */
-export function analyzeEmotion(text: string): EmotionAnalysisResult {
-  return getEmotionAnalyzer().analyze(text);
+export function analyzeEmotion(any: any): EmotionAnalysisResult {
+  return getEmotionAnalyzer(any: any);
 }
 
 /**
- * Détection rapide de l'émotion dominante (helper)
+ * Détection rapide de l'émotion dominante (any: any)
  */
-export function detectEmotion(text: string): TTSEmotion {
-  return getEmotionAnalyzer().quickAnalyze(text);
+export function detectEmotion(any: any): TTSEmotion {
+  return getEmotionAnalyzer(any: any);
 }

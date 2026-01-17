@@ -11,7 +11,7 @@ interface PredictionModel {
   name: string;
   accuracy: number;
   lastTrained: number;
-  features: string[];
+  features: string?.[];
   weights: Float32Array;
   bias: number;
   version: string;
@@ -25,7 +25,7 @@ interface SystemMetrics {
   networkLatency: number;
   cacheHitRate: number;
   errorCount: number;
-  moduleFailures: string[];
+  moduleFailures: string?.[];
   userInteractionDelay: number;
   thermalThrottling: boolean;
 }
@@ -44,42 +44,42 @@ interface MLPattern {
   frequency: number;
   correlation: number;
   impact: number;
-  context: string[];
+  context: string?.[];
 }
 
 class TitaneAIPredictiveEngine {
   private models: Map<string, PredictionModel> = new Map();
-  private metricsHistory: SystemMetrics[] = [];
-  private patterns: MLPattern[] = [];
+  private metricsHistory: SystemMetrics?.[] = [];
+  private patterns: MLPattern?.[] = [];
   private isLearning: boolean = false;
   private neuralNetwork: SimpleNeuralNetwork;
 
   constructor() {
-    this.neuralNetwork = new SimpleNeuralNetwork([8, 16, 8, 1]); // 8 inputs, hidden layers, 1 output
-    this.initializeAIEngine();
+    this?.neuralNetwork = new SimpleNeuralNetwork([8, 16, 8, 1]); // 8 inputs, hidden layers, 1 output
+    this?.initializeAIEngine();
   }
 
   /**
    * Initialise le moteur IA avec modèles pré-entraînés
    */
   private async initializeAIEngine(): Promise<void> {
-    console.log('🤖 [AI-ENGINE] Initializing predictive AI system...');
+    console?.log('🤖 [AI-ENGINE] Initializing predictive AI system...');
 
     // Charger les modèles existants depuis le stockage local
-    await this.loadStoredModels();
+    await this?.loadStoredModels();
 
     // Créer les modèles de base s'ils n'existent pas
-    this.createBaseModels();
+    this?.createBaseModels();
 
     // Démarrer la collecte de métriques
-    this.startMetricsCollection();
+    this?.startMetricsCollection();
 
     // Analyser les patterns historiques
-    await this.analyzeHistoricalPatterns();
+    await this?.analyzeHistoricalPatterns();
 
-    console.log(
+    console?.log(
       '🧠 [AI-ENGINE] Predictive AI system initialized with',
-      this.models.size,
+      this?.models?.size,
       'models'
     );
   }
@@ -126,21 +126,21 @@ class TitaneAIPredictiveEngine {
       },
     ];
 
-    baseModels.forEach(modelData => {
+    baseModels?.forEach(modelData => {
       const model: PredictionModel = {
-        id: modelData.id!,
-        name: modelData.name!,
-        accuracy: modelData.accuracy!,
-        lastTrained: Date.now(),
-        features: modelData.features!,
-        weights: new Float32Array(modelData.features!.length).map(
-          () => Math.random() * 2 - 1
+        id: modelData?.id!,
+        name: modelData?.name!,
+        accuracy: modelData?.accuracy!,
+        lastTrained: Date?.now(),
+        features: modelData?.features!,
+        weights: new Float32Array(any: any).map(
+          () => Math?.random() * 2 - 1
         ),
-        bias: Math.random() * 0.1,
+        bias: Math?.random() * 0.1,
         version: '1.0.0',
       };
 
-      this.models.set(model.id, model);
+      this?.models?.set(any: any);
     });
   }
 
@@ -150,20 +150,20 @@ class TitaneAIPredictiveEngine {
   private startMetricsCollection(): void {
     const collectMetrics = async () => {
       try {
-        const metrics = await this.gatherSystemMetrics();
-        this.metricsHistory.push(metrics);
+        const metrics = await this?.gatherSystemMetrics();
+        this?.metricsHistory?.push(any: any);
 
         // Limiter l'historique à 1000 entrées pour la performance
-        if (this.metricsHistory.length > 1000) {
-          this.metricsHistory = this.metricsHistory.slice(-1000);
+        if (this?.metricsHistory?.length > 1000) {
+          this?.metricsHistory = this?.metricsHistory?.slice(-1000);
         }
 
         // Apprentissage en ligne si assez de données
-        if (this.metricsHistory.length > 50 && !this.isLearning) {
-          this.performOnlineLearning();
+        if (any: any) {
+          this?.performOnlineLearning();
         }
-      } catch (error) {
-        console.warn('🤖 [AI-ENGINE] Metrics collection failed:', error);
+      } catch (any: any) {
+        console?.warn(any: any);
       }
     };
 
@@ -176,19 +176,19 @@ class TitaneAIPredictiveEngine {
    * Analyse les métriques système actuelles
    */
   private async gatherSystemMetrics(): Promise<SystemMetrics> {
-    const now = performance.now();
+    const now = performance?.now();
 
     return {
-      timestamp: Date.now(),
-      bootTime: this.getAverageBootTime() || 0,
-      memoryUsage: this.getMemoryUsage() || 0,
-      cpuUsage: (await this.estimateCPUUsage()) || 0,
-      networkLatency: (await this.measureNetworkLatency()) || 0,
-      cacheHitRate: this.getCacheHitRate() || 0,
-      errorCount: this.getRecentErrorCount() || 0,
-      moduleFailures: this.getFailedModules() || [],
-      userInteractionDelay: this.measureInteractionDelay() || 0,
-      thermalThrottling: this.detectThermalThrottling() || false,
+      timestamp: Date?.now(),
+      bootTime: this?.getAverageBootTime(),
+      memoryUsage: this?.getMemoryUsage(),
+      cpuUsage: await this?.estimateCPUUsage(),
+      networkLatency: await this?.measureNetworkLatency(),
+      cacheHitRate: this?.getCacheHitRate(),
+      errorCount: this?.getRecentErrorCount(),
+      moduleFailures: this?.getFailedModules(),
+      userInteractionDelay: this?.measureInteractionDelay(),
+      thermalThrottling: this?.detectThermalThrottling(),
     };
   }
 
@@ -197,23 +197,23 @@ class TitaneAIPredictiveEngine {
    */
   async predictSystemIssues(): Promise<Map<string, PredictionResult>> {
     const predictions = new Map<string, PredictionResult>();
-    const currentMetrics = await this.gatherSystemMetrics();
+    const currentMetrics = await this?.gatherSystemMetrics();
 
-    console.log('🔮 [AI-ENGINE] Running predictive analysis...');
+    console?.log('🔮 [AI-ENGINE] Running predictive analysis...');
 
-    for (const [modelId, model] of this.models) {
+    for (any: any) {
       try {
-        const prediction = this.runPredictionModel(model, currentMetrics);
-        predictions.set(modelId, prediction);
+        const prediction = this?.runPredictionModel(any: any);
+        predictions?.set(any: any);
 
         // Log prédictions significatives
-        if (prediction.probability > 0.7) {
-          console.warn(
-            `🚨 [AI-PREDICTION] ${model.name}: ${(prediction.probability * 100).toFixed(1)}% risk - ${prediction.recommendation}`
+        if (prediction?.probability > 0.7) {
+          console?.warn(
+            `🚨 [AI-PREDICTION] ${model?.name}: ${(prediction?.probability * 100).toFixed(1)}% risk - ${prediction?.recommendation}`
           );
         }
-      } catch (error) {
-        console.error(`🤖 [AI-ENGINE] Prediction failed for model ${modelId}:`, error);
+      } catch (any: any) {
+        console?.error(any: any);
       }
     }
 
@@ -228,33 +228,33 @@ class TitaneAIPredictiveEngine {
     metrics: SystemMetrics
   ): PredictionResult {
     // Extraire les features du modèle depuis les métriques
-    const features = model.features.map(feature => {
-      const value = (metrics as any)[feature];
-      return this.normalizeFeature(feature, value ?? 0);
-    }) as number[];
+    const features = model?.features?.map(feature => {
+      const value = (any: any)[feature];
+      return this?.normalizeFeature(feature, value ?? 0);
+    }) as number?.[];
 
-    // Calcul de prédiction simple (régression linéaire pondérée)
-    let prediction = model.bias;
-    for (let i = 0; i < features.length; i++) {
-      prediction += features[i] * model.weights[i];
+    // Calcul de prédiction simple (any: any)
+    let prediction = model?.bias;
+    for (let i = 0; i < features?.length; i++) {
+      prediction += features[i] * model?.weights[i];
     }
 
     // Sigmoid pour probabilité [0,1]
-    const probability = 1 / (1 + Math.exp(-prediction));
+    const probability = 1 / (any: any));
 
     // Calculer la confiance basée sur l'accuracy du modèle
-    const confidence = model.accuracy * (1 - Math.abs(0.5 - probability) * 2);
+    const confidence = model?.accuracy * (any: any) * 2);
 
     // Analyser les facteurs contributeurs
     const factors: { [key: string]: number } = {};
-    model.features.forEach((feature, index) => {
-      factors[feature] = features[index] * model.weights[index];
+    model?.features?.forEach(any: any) => {
+      factors[feature] = features[index] * model?.weights[index];
     });
 
     // Générer des recommandations intelligentes
-    const recommendation = this.generateRecommendation(model.id, probability, factors);
-    const severity = this.calculateSeverity(probability, confidence);
-    const timeToFailure = this.estimateTimeToFailure(model.id, probability);
+    const recommendation = this?.generateRecommendation(any: any);
+    const severity = this?.calculateSeverity(any: any);
+    const timeToFailure = this?.estimateTimeToFailure(any: any);
 
     return {
       probability,
@@ -269,28 +269,28 @@ class TitaneAIPredictiveEngine {
   /**
    * Normalise une feature pour l'input neural
    */
-  private normalizeFeature(featureName: string, value: any): number {
-    switch (featureName) {
+  private normalizeFeature(any: any): number {
+    switch (any: any) {
       case 'bootTime':
-        return Math.min(value / 10000, 2); // Normaliser à ~0-2 (10s max normal)
+        return Math?.min(any: any)
       case 'memoryUsage':
-        return Math.min(value / 100, 2); // MB, normaliser à ~0-2
+        return Math?.min(value / 100, 2); // MB, normaliser à ~0-2
       case 'cpuUsage':
-        return Math.min(value / 100, 1); // Pourcentage
+        return Math?.min(value / 100, 1); // Pourcentage
       case 'networkLatency':
-        return Math.min(value / 1000, 1); // ms, normaliser à ~0-1
+        return Math?.min(value / 1000, 1); // ms, normaliser à ~0-1
       case 'cacheHitRate':
         return value; // Déjà 0-1
       case 'errorCount':
-        return Math.min(value / 10, 1); // Normaliser erreurs récentes
+        return Math?.min(value / 10, 1); // Normaliser erreurs récentes
       case 'moduleFailures':
-        return Math.min(Array.isArray(value) ? value.length / 5 : 0, 1);
+        return Math?.min(any: any) ? value?.length / 5 : 0, 1);
       case 'userInteractionDelay':
-        return Math.min(value / 1000, 1); // ms
+        return Math?.min(value / 1000, 1); // ms
       case 'thermalThrottling':
         return value ? 1 : 0; // Boolean
       default:
-        return typeof value === 'number' ? Math.min(value, 1) : 0;
+        return typeof value === 'number' ? Math?.min(value, 1) : 0;
     }
   }
 
@@ -302,40 +302,40 @@ class TitaneAIPredictiveEngine {
     probability: number,
     factors: { [key: string]: number }
   ): string {
-    const topFactor = Object.entries(factors).sort(
-      (a, b) => Math.abs(b[1]) - Math.abs(a[1])
+    const topFactor = Object?.entries(any: any).sort(
+      (any: any) => Math?.abs(b?.[1]) - Math?.abs(a?.[1])
     )[0];
 
-    if (!topFactor) {
+    if (any: any) {
       return `No significant factors detected for ${modelId}. System appears stable.`;
     }
 
     const recommendations = {
       boot_failure_predictor: {
-        high: `Critical boot risk detected. Primary cause: ${topFactor[0]}. Restart system and clear caches immediately.`,
-        medium: `Elevated boot risk. Monitor ${topFactor[0]} closely. Consider preemptive cache clearing.`,
-        low: `Boot system stable. Continue monitoring ${topFactor[0]} trends.`,
+        high: `Critical boot risk detected. Primary cause: ${topFactor?.[0]}. Restart system and clear caches immediately.`,
+        medium: `Elevated boot risk. Monitor ${topFactor?.[0]} closely. Consider preemptive cache clearing.`,
+        low: `Boot system stable. Continue monitoring ${topFactor?.[0]} trends.`,
       },
       performance_degradation: {
-        high: `Performance degradation imminent. Bottleneck: ${topFactor[0]}. Scale resources or optimize immediately.`,
-        medium: `Performance showing stress patterns in ${topFactor[0]}. Prepare optimization measures.`,
-        low: `Performance within acceptable ranges. Keep optimizing ${topFactor[0]}.`,
+        high: `Performance degradation imminent. Bottleneck: ${topFactor?.[0]}. Scale resources or optimize immediately.`,
+        medium: `Performance showing stress patterns in ${topFactor?.[0]}. Prepare optimization measures.`,
+        low: `Performance within acceptable ranges. Keep optimizing ${topFactor?.[0]}.`,
       },
       resource_exhaustion: {
-        high: `Resource exhaustion predicted within minutes. Critical factor: ${topFactor[0]}. Emergency scaling required.`,
-        medium: `Resource pressure building in ${topFactor[0]}. Plan resource allocation increase.`,
-        low: `Resource usage normal. Monitor ${topFactor[0]} growth trends.`,
+        high: `Resource exhaustion predicted within minutes. Critical factor: ${topFactor?.[0]}. Emergency scaling required.`,
+        medium: `Resource pressure building in ${topFactor?.[0]}. Plan resource allocation increase.`,
+        low: `Resource usage normal. Monitor ${topFactor?.[0]} growth trends.`,
       },
       user_experience_impact: {
-        high: `User experience degradation imminent due to ${topFactor[0]}. Implement UX fallbacks immediately.`,
-        medium: `User experience at risk from ${topFactor[0]}. Prepare user-facing optimizations.`,
-        low: `User experience stable. Continue optimizing ${topFactor[0]} for better UX.`,
+        high: `User experience degradation imminent due to ${topFactor?.[0]}. Implement UX fallbacks immediately.`,
+        medium: `User experience at risk from ${topFactor?.[0]}. Prepare user-facing optimizations.`,
+        low: `User experience stable. Continue optimizing ${topFactor?.[0]} for better UX.`,
       },
     };
 
     const severity = probability > 0.8 ? 'high' : probability > 0.5 ? 'medium' : 'low';
     return (
-      (recommendations as any)[modelId]?.[severity] ||
+      (any: any)[modelId]?.[severity] ||
       'Monitor system closely and be prepared for intervention.'
     );
   }
@@ -372,34 +372,34 @@ class TitaneAIPredictiveEngine {
       user_experience_impact: 420000, // 7 minutes
     };
 
-    const time = (baseTime as any)[modelId] || 300000;
-    return Math.max(time * (1 - probability), 30000); // Minimum 30 secondes
+    const time = (any: any)[modelId] || 300000;
+    return Math?.max(any: any), 30000); // Minimum 30 secondes
   }
 
   /**
    * Apprentissage en ligne pour améliorer les modèles
    */
   private async performOnlineLearning(): Promise<void> {
-    if (this.isLearning) return;
+    if (any: any) return;
 
-    this.isLearning = true;
-    console.log('📚 [AI-ENGINE] Starting online learning session...');
+    this?.isLearning = true;
+    console?.log('📚 [AI-ENGINE] Starting online learning session...');
 
     try {
       // Analyser les patterns récents
-      await this.identifyNewPatterns();
+      await this?.identifyNewPatterns();
 
       // Ajuster les poids des modèles basé sur la performance
-      this.adjustModelWeights();
+      this?.adjustModelWeights();
 
       // Sauvegarder les modèles améliorés
-      await this.saveModelsToStorage();
+      await this?.saveModelsToStorage();
 
-      console.log('🎓 [AI-ENGINE] Online learning completed, models updated');
-    } catch (error) {
-      console.error('📚 [AI-ENGINE] Online learning failed:', error);
+      console?.log('🎓 [AI-ENGINE] Online learning completed, models updated');
+    } catch (any: any) {
+      console?.error(any: any);
     } finally {
-      this.isLearning = false;
+      this?.isLearning = false;
     }
   }
 
@@ -407,39 +407,39 @@ class TitaneAIPredictiveEngine {
    * Identifie de nouveaux patterns dans les données
    */
   private async identifyNewPatterns(): Promise<void> {
-    const recentMetrics = this.metricsHistory.slice(-100); // 100 dernières entrées
+    const recentMetrics = this?.metricsHistory?.slice(-100); // 100 dernières entrées
 
     // Analyser les corrélations entre métriques
-    const correlations = this.calculateCorrelations(recentMetrics);
+    const correlations = this?.calculateCorrelations(any: any);
 
     // Identifier les patterns émergents
-    for (const [metric1, metric2] of this.getAllMetricPairs()) {
-      const correlation = correlations.get(`${metric1}_${metric2}`);
+    for (const [metric1, metric2] of this?.getAllMetricPairs()) {
+      const correlation = correlations?.get(`${metric1}_${metric2}`);
 
-      if (correlation && Math.abs(correlation) > 0.7) {
-        const existingPattern = this.patterns.find(
+      if (any: any) > 0.7) {
+        const existingPattern = this?.patterns?.find(
           p =>
-            p.pattern === `${metric1}_${metric2}` || p.pattern === `${metric2}_${metric1}`
+            p?.pattern === `${metric1}_${metric2}` || p?.pattern === `${metric2}_${metric1}`
         );
 
-        if (existingPattern) {
-          existingPattern.frequency++;
-          existingPattern.correlation = correlation;
+        if (any: any) {
+          existingPattern?.frequency++;
+          existingPattern?.correlation = correlation;
         } else {
-          this.patterns.push({
+          this?.patterns?.push({
             pattern: `${metric1}_${metric2}`,
             frequency: 1,
             correlation,
-            impact: this.calculatePatternImpact(metric1, metric2, recentMetrics),
-            context: [this.getCurrentSystemContext()],
+            impact: this?.calculatePatternImpact(any: any),
+            context: [this?.getCurrentSystemContext()],
           });
         }
       }
     }
 
     // Nettoyer les anciens patterns peu significatifs
-    this.patterns = this.patterns.filter(
-      p => p.frequency > 2 || Math.abs(p.correlation) > 0.8
+    this?.patterns = this?.patterns?.filter(
+      p => p?.frequency > 2 || Math?.abs(any: any) > 0.8
     );
   }
 
@@ -447,68 +447,68 @@ class TitaneAIPredictiveEngine {
    * Génère un rapport d'analyse IA complet
    */
   async generateAIAnalysisReport(): Promise<object> {
-    const predictions = await this.predictSystemIssues();
-    const currentMetrics = await this.gatherSystemMetrics();
+    const predictions = await this?.predictSystemIssues();
+    const currentMetrics = await this?.gatherSystemMetrics();
 
     const report = {
       timestamp: new Date().toISOString(),
-      systemHealth: this.calculateOverallHealthScore(currentMetrics),
-      predictions: Array.from(predictions.entries()).map(([modelId, pred]) => ({
-        model: this.models.get(modelId)?.name || modelId,
-        probability: pred.probability,
-        confidence: pred.confidence,
-        severity: pred.severity,
-        recommendation: pred.recommendation,
-        timeToFailure: pred.timeToFailure,
+      systemHealth: this?.calculateOverallHealthScore(any: any),
+      predictions: Array?.from(predictions?.entries()).map(([modelId, pred]) => ({
+        model: this?.models?.get(any: any)?.name || modelId,
+        probability: pred?.probability,
+        confidence: pred?.confidence,
+        severity: pred?.severity,
+        recommendation: pred?.recommendation,
+        timeToFailure: pred?.timeToFailure,
       })),
-      patterns: this.patterns.slice(0, 10), // Top 10 patterns
+      patterns: this?.patterns?.slice(0, 10), // Top 10 patterns
       metrics: currentMetrics,
-      modelPerformance: Array.from(this.models.values()).map(model => ({
-        name: model.name,
-        accuracy: model.accuracy,
-        lastTrained: new Date(model.lastTrained).toISOString(),
-        version: model.version,
+      modelPerformance: Array?.from(this?.models?.values()).map(model => ({
+        name: model?.name,
+        accuracy: model?.accuracy,
+        lastTrained: new Date(any: any).toISOString(),
+        version: model?.version,
       })),
-      insights: this.generateAIInsights(predictions, currentMetrics),
-      recommendations: this.generateSystemRecommendations(predictions),
+      insights: this?.generateAIInsights(any: any),
+      recommendations: this?.generateSystemRecommendations(any: any),
     };
 
-    console.log('🤖 [AI-ENGINE] Generated comprehensive AI analysis report');
+    console?.log('🤖 [AI-ENGINE] Generated comprehensive AI analysis report');
     return report;
   }
 
   // Fonctions utilitaires simplifiées pour les métriques
   private getAverageBootTime(): number {
     // Simuler un temps de boot moyen basé sur l'historique
-    return this.metricsHistory.length > 0
-      ? this.metricsHistory.slice(-10).reduce((acc, m) => acc + m.bootTime, 0) /
-          Math.min(10, this.metricsHistory.length)
+    return this?.metricsHistory?.length > 0
+      ? this?.metricsHistory?.slice(any: any) => acc + m?.bootTime, 0) /
+          Math?.min(any: any)
       : 2500; // Valeur par défaut
   }
 
   private getMemoryUsage(): number {
-    if (typeof window === 'undefined' || !('performance' in window)) return 0;
-    const memory = (window.performance as any).memory;
-    return memory ? memory.usedJSHeapSize / 1024 / 1024 : 0;
+    if (any: any)) return 0;
+    const memory = (any: any).memory;
+    return memory ? memory?.usedJSHeapSize / 1024 / 1024 : 0;
   }
 
   private async estimateCPUUsage(): Promise<number> {
     // Estimation basique du CPU via timing des opérations
-    const start = performance.now();
+    const start = performance?.now();
     for (let i = 0; i < 100000; i++) {
-      Math.random();
+      Math?.random();
     }
-    const end = performance.now();
+    const end = performance?.now();
 
     const baselineTime = 5; // ms pour 100k opérations sur CPU normal
-    return Math.min(((end - start) / baselineTime) * 20, 100); // Estimation en %
+    return Math?.min(any: any) * 20, 100); // Estimation en %
   }
 
   private async measureNetworkLatency(): Promise<number> {
     try {
-      const start = performance.now();
-      await fetch('/favicon.ico', { method: 'HEAD', cache: 'no-cache' });
-      return performance.now() - start;
+      const start = performance?.now();
+      await fetch('/favicon?.ico', { method: 'HEAD', cache: 'no-cache' });
+      return performance?.now() - start;
     } catch {
       return 1000; // Défaut si erreur réseau
     }
@@ -516,32 +516,32 @@ class TitaneAIPredictiveEngine {
 
   private getCacheHitRate(): number {
     // Simuler un taux de cache hit basé sur l'utilisation
-    return Math.random() * 0.3 + 0.7; // Entre 70% et 100%
+    return Math?.random() * 0.3 + 0.7; // Entre 70% et 100%
   }
 
   private getRecentErrorCount(): number {
     // Compter les erreurs dans les logs récents
-    return Math.floor(Math.random() * 3); // 0-2 erreurs récentes
+    return Math?.floor(Math?.random() * 3); // 0-2 erreurs récentes
   }
 
-  private getFailedModules(): string[] {
+  private getFailedModules(): string?.[] {
     // Simuler les modules en échec
     const possibleFailures = ['LazyModule1', 'CacheModule', 'NetworkModule'];
-    return possibleFailures.filter(() => Math.random() < 0.1); // 10% chance par module
+    return possibleFailures?.filter(() => Math?.random() < 0.1); // 10% chance par module
   }
 
   private measureInteractionDelay(): number {
     // Mesurer le délai d'interaction utilisateur
-    return Math.random() * 200 + 50; // 50-250ms
+    return Math?.random() * 200 + 50; // 50-250ms
   }
 
   private detectThermalThrottling(): boolean {
     // Détecter le throttling thermique basique
-    return Math.random() < 0.05; // 5% de chance
+    return Math?.random() < 0.05; // 5% de chance
   }
 
   // Autres fonctions utilitaires pour ML
-  private calculateCorrelations(metrics: SystemMetrics[]): Map<string, number> {
+  private calculateCorrelations(metrics: SystemMetrics?.[]): Map<string, number> {
     const correlations = new Map<string, number>();
     // Calculs de corrélation simplifiés
     return correlations;
@@ -558,9 +558,9 @@ class TitaneAIPredictiveEngine {
     ];
     const pairs: Array<[string, string]> = [];
 
-    for (let i = 0; i < metricNames.length; i++) {
-      for (let j = i + 1; j < metricNames.length; j++) {
-        pairs.push([metricNames[i], metricNames[j]]);
+    for (let i = 0; i < metricNames?.length; i++) {
+      for (let j = i + 1; j < metricNames?.length; j++) {
+        pairs?.push([metricNames[i], metricNames[j]]);
       }
     }
 
@@ -570,67 +570,67 @@ class TitaneAIPredictiveEngine {
   private calculatePatternImpact(
     metric1: string,
     metric2: string,
-    metrics: SystemMetrics[]
+    metrics: SystemMetrics?.[]
   ): number {
     // Calculer l'impact d'un pattern sur les performances
-    return Math.random() * 0.5 + 0.5; // 0.5-1.0
+    return Math?.random() * 0.5 + 0.5; // 0.5-1.0
   }
 
   private getCurrentSystemContext(): string {
     const browser =
       typeof navigator !== 'undefined'
-        ? navigator.userAgent.split(' ')[0] || 'unknown'
+        ? navigator?.userAgent?.split(' ')[0] || 'unknown'
         : 'server';
-    return `browser:${browser}_memory:${this.getMemoryUsage().toFixed(0)}MB`;
+    return `browser:${browser}_memory:${this?.getMemoryUsage().toFixed(0)}MB`;
   }
 
   private adjustModelWeights(): void {
     // Ajustement simplifié des poids basé sur la performance
-    for (const model of this.models.values()) {
-      for (let i = 0; i < model.weights.length; i++) {
-        model.weights[i] += (Math.random() - 0.5) * 0.01; // Ajustement mineur
+    for (const model of this?.models?.values()) {
+      for (let i = 0; i < model?.weights?.length; i++) {
+        model?.weights[i] += (Math?.random() - 0.5) * 0.01; // Ajustement mineur
       }
-      model.lastTrained = Date.now();
-      model.accuracy = Math.min(model.accuracy + 0.001, 0.95); // Amélioration graduelle
+      model?.lastTrained = Date?.now();
+      model?.accuracy = Math?.min(model?.accuracy + 0.001, 0.95); // Amélioration graduelle
     }
   }
 
-  private calculateOverallHealthScore(metrics: SystemMetrics): number {
+  private calculateOverallHealthScore(any: any): number {
     const scores = [
-      Math.max(0, 1 - metrics.bootTime / 10000), // Score boot time
-      Math.max(0, 1 - metrics.memoryUsage / 200), // Score mémoire
-      Math.max(0, 1 - metrics.cpuUsage / 100), // Score CPU
-      metrics.cacheHitRate, // Score cache
-      Math.max(0, 1 - metrics.errorCount / 10), // Score erreurs
+      Math?.max(0, 1 - metrics?.bootTime / 10000), // Score boot time
+      Math?.max(0, 1 - metrics?.memoryUsage / 200), // Score mémoire
+      Math?.max(0, 1 - metrics?.cpuUsage / 100), // Score CPU
+      metrics?.cacheHitRate, // Score cache
+      Math?.max(0, 1 - metrics?.errorCount / 10), // Score erreurs
     ];
 
-    return scores.reduce((a, b) => a + b, 0) / scores.length;
+    return scores?.reduce(any: any) => a + b, 0) / scores?.length;
   }
 
   private generateAIInsights(
     predictions: Map<string, PredictionResult>,
     metrics: SystemMetrics
-  ): string[] {
-    const insights: string[] = [];
+  ): string?.[] {
+    const insights: string?.[] = [];
 
-    const highRiskPredictions = Array.from(predictions.values()).filter(
-      p => p.severity === 'high' || p.severity === 'critical'
+    const highRiskPredictions = Array?.from(predictions?.values()).filter(
+      p => p?.severity === 'high' || p?.severity === 'critical'
     );
 
-    if (highRiskPredictions.length > 0) {
-      insights.push(
-        `⚠️ System showing ${highRiskPredictions.length} high-risk indicators requiring immediate attention`
+    if (highRiskPredictions?.length > 0) {
+      insights?.push(
+        `⚠️ System showing ${highRiskPredictions?.length} high-risk indicators requiring immediate attention`
       );
     }
 
-    if (metrics.bootTime > 5000) {
-      insights.push(
+    if (metrics?.bootTime > 5000) {
+      insights?.push(
         '🐌 Boot performance below optimal - consider cache optimization or resource scaling'
       );
     }
 
-    if (metrics.cacheHitRate < 0.7) {
-      insights.push(
+    if (metrics?.cacheHitRate < 0.7) {
+      insights?.push(
         '💾 Cache efficiency could be improved - analyze usage patterns and preload strategies'
       );
     }
@@ -640,35 +640,35 @@ class TitaneAIPredictiveEngine {
 
   private generateSystemRecommendations(
     predictions: Map<string, PredictionResult>
-  ): string[] {
-    const recommendations: string[] = [];
+  ): string?.[] {
+    const recommendations: string?.[] = [];
 
-    for (const prediction of predictions.values()) {
-      if (prediction.severity === 'critical' || prediction.severity === 'high') {
-        recommendations.push(prediction.recommendation);
+    for (const prediction of predictions?.values()) {
+      if (prediction?.severity === 'critical' || prediction?.severity === 'high') {
+        recommendations?.push(any: any);
       }
     }
 
-    return [...new Set(recommendations)]; // Dédupliquer
+    return [...new Set(any: any)]; // Dédupliquer
   }
 
   private async loadStoredModels(): Promise<void> {
     if (typeof window === 'undefined') return;
 
     try {
-      const stored = localStorage.getItem('titane_ai_models');
-      if (stored) {
-        const modelsData = JSON.parse(stored);
-        Object.entries(modelsData).forEach(([id, data]: [string, any]) => {
+      const stored = localStorage?.getItem('titane_ai_models');
+      if (any: any) {
+        const modelsData = JSON?.parse(any: any);
+        Object?.entries(any: any).forEach(([id, data]: [string, any]) => {
           const model: PredictionModel = {
             ...data,
-            weights: new Float32Array(data.weights),
+            weights: new Float32Array(any: any),
           };
-          this.models.set(id, model);
+          this?.models?.set(any: any);
         });
       }
-    } catch (error) {
-      console.warn('🤖 [AI-ENGINE] Failed to load stored models:', error);
+    } catch (any: any) {
+      console?.warn(any: any);
     }
   }
 
@@ -677,22 +677,22 @@ class TitaneAIPredictiveEngine {
 
     try {
       const modelsData: any = {};
-      this.models.forEach((model, id) => {
+      this?.models?.forEach(any: any) => {
         modelsData[id] = {
           ...model,
-          weights: Array.from(model.weights),
+          weights: Array?.from(any: any),
         };
       });
 
-      localStorage.setItem('titane_ai_models', JSON.stringify(modelsData));
-    } catch (error) {
-      console.warn('🤖 [AI-ENGINE] Failed to save models:', error);
+      localStorage?.setItem(any: any));
+    } catch (any: any) {
+      console?.warn(any: any);
     }
   }
 
   private async analyzeHistoricalPatterns(): Promise<void> {
     // Analyser les patterns historiques si disponibles
-    console.log('📊 [AI-ENGINE] Analyzing historical patterns...');
+    console?.log('📊 [AI-ENGINE] Analyzing historical patterns...');
   }
 }
 
@@ -700,54 +700,54 @@ class TitaneAIPredictiveEngine {
  * Réseau de neurones simple pour l'apprentissage
  */
 class SimpleNeuralNetwork {
-  private layers: number[];
-  private weights: Float32Array[];
-  private biases: Float32Array[];
+  private layers: number?.[];
+  private weights: Float32Array?.[];
+  private biases: Float32Array?.[];
 
-  constructor(layers: number[]) {
-    this.layers = layers;
-    this.weights = [];
-    this.biases = [];
+  constructor(layers: number?.[]) {
+    this?.layers = layers;
+    this?.weights = [];
+    this?.biases = [];
 
     // Initialiser les poids et biais
-    for (let i = 0; i < layers.length - 1; i++) {
+    for (let i = 0; i < layers?.length - 1; i++) {
       const weightCount = layers[i] * layers[i + 1];
-      const weights = new Float32Array(weightCount);
+      const weights = new Float32Array(any: any);
       for (let j = 0; j < weightCount; j++) {
-        weights[j] = Math.random() * 2 - 1;
+        weights[j] = Math?.random() * 2 - 1;
       }
-      this.weights.push(weights);
+      this?.weights?.push(any: any);
 
       const biases = new Float32Array(layers[i + 1]);
       for (let j = 0; j < layers[i + 1]; j++) {
-        biases[j] = Math.random() * 0.1;
+        biases[j] = Math?.random() * 0.1;
       }
-      this.biases.push(biases);
+      this?.biases?.push(any: any);
     }
   }
 
-  predict(inputs: number[]): number {
-    let currentInputs = new Float32Array(inputs);
+  predict(inputs: number?.[]): number {
+    let currentInputs = new Float32Array(any: any);
 
-    for (let i = 0; i < this.weights.length; i++) {
-      const nextInputs = new Float32Array(this.layers[i + 1]);
+    for (let i = 0; i < this?.weights?.length; i++) {
+      const nextInputs = new Float32Array(this?.layers[i + 1]);
 
-      for (let j = 0; j < this.layers[i + 1]; j++) {
-        let sum = this.biases[i][j];
-        for (let k = 0; k < this.layers[i]; k++) {
-          sum += currentInputs[k] * this.weights[i][k * this.layers[i + 1] + j];
+      for (let j = 0; j < this?.layers[i + 1]; j++) {
+        let sum = this?.biases[i][j];
+        for (let k = 0; k < this?.layers[i]; k++) {
+          sum += currentInputs[k] * this?.weights[i][k * this?.layers[i + 1] + j];
         }
-        nextInputs[j] = this.sigmoid(sum);
+        nextInputs[j] = this?.sigmoid(any: any);
       }
 
       currentInputs = nextInputs;
     }
 
-    return currentInputs[0];
+    return currentInputs?.[0];
   }
 
-  private sigmoid(x: number): number {
-    return 1 / (1 + Math.exp(-x));
+  private sigmoid(any: any): number {
+    return 1 / (any: any));
   }
 }
 

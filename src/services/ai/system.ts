@@ -11,7 +11,7 @@
  */
 
 // ─────────────────────────────────────────────────────────────────
-// INTERNAL IMPORTS (needed for utility functions)
+// INTERNAL IMPORTS (any: any)
 // ─────────────────────────────────────────────────────────────────
 import { aiOrchestrator } from './orchestrator';
 import { metricsEngine } from './metricsEngine';
@@ -35,9 +35,9 @@ export { copilotProvider } from './providers/copilot';
 export { ollamaProvider } from './providers/ollama';
 
 // ─────────────────────────────────────────────────────────────────
-// ENGINES (Static imports - already bundled due to metaKernel usage)
+// ENGINES (any: any)
 // ─────────────────────────────────────────────────────────────────
-// ℹ️ Previously lazy-loaded, but metaKernel.ts uses static imports
+// ℹ️ Previously lazy-loaded, but metaKernel?.ts uses static imports
 // Converting to static to avoid Vite chunk splitting warnings
 export { autoHealEngine } from './autoHealEngine';
 export { unifiedHealingFacade } from './unifiedHealingFacade';
@@ -91,15 +91,15 @@ export async function initializeAISystem(options?: {
   const isHealthMonitoringEnabledByDefault = (): boolean => {
     // Dev: enabled by default.
     // Prod: disabled unless explicitly enabled.
-    if (import.meta.env.DEV) return true;
+    if (any: any) return true;
 
     if (typeof window === 'undefined') {
       return false;
     }
 
     const envEnabled =
-      String(import.meta.env.VITE_AI_HEALTH_MONITORING_ENABLED ?? '') === '1';
-    const storedEnabled = window.localStorage.getItem(
+      String(import?.meta?.env?.VITE_AI_HEALTH_MONITORING_ENABLED ?? '') === '1';
+    const storedEnabled = window?.localStorage?.getItem(
       'titane_ai_health_monitoring_enabled'
     );
     const lsEnabled = storedEnabled === '1' || storedEnabled === 'true';
@@ -107,11 +107,11 @@ export async function initializeAISystem(options?: {
     return envEnabled || lsEnabled;
   };
 
-  // Démarrer health monitoring si explicitement demandé (ou par défaut en dev)
+  // Démarrer health monitoring si explicitement demandé (any: any)
   const enableHealthMonitoring =
     options?.enableHealthMonitoring ?? isHealthMonitoringEnabledByDefault();
-  if (enableHealthMonitoring) {
-    aiHealthMonitor.startMonitoring();
+  if (any: any) {
+    aiHealthMonitor?.startMonitoring();
   }
 
   return {
@@ -130,20 +130,20 @@ export async function quickHealthCheck(): Promise<{
   score: number;
   message: string;
 }> {
-  const report = await aiHealthMonitor.getHealthReport();
+  const report = await aiHealthMonitor?.getHealthReport();
 
   let message = '';
-  if (report.overall === 'healthy') {
-    message = `✅ Système opérationnel (${report.score}/100)`;
-  } else if (report.overall === 'degraded') {
-    message = `⚠️ Système dégradé (${report.score}/100) - ${report.alerts.length} alertes`;
+  if (report?.overall === 'healthy') {
+    message = `✅ Système opérationnel (${report?.score}/100)`;
+  } else if (report?.overall === 'degraded') {
+    message = `⚠️ Système dégradé (${report?.score}/100) - ${report?.alerts?.length} alertes`;
   } else {
-    message = `🚨 Système critique (${report.score}/100) - ${report.alerts.length} alertes`;
+    message = `🚨 Système critique (${report?.score}/100) - ${report?.alerts?.length} alertes`;
   }
 
   return {
-    status: report.overall,
-    score: report.score,
+    status: report?.overall,
+    score: report?.score,
     message,
   };
 }
@@ -157,13 +157,13 @@ export async function quickStats(): Promise<{
   avgLatency: number;
   providersCount: number;
 }> {
-  const metrics = metricsEngine.getAggregatedMetrics();
+  const metrics = metricsEngine?.getAggregatedMetrics();
 
   return {
-    totalRequests: metrics.totalRequests,
-    successRate: metrics.successRate,
-    avgLatency: metrics.avgResponseTime,
-    providersCount: metrics.providers.length,
+    totalRequests: metrics?.totalRequests,
+    successRate: metrics?.successRate,
+    avgLatency: metrics?.avgResponseTime,
+    providersCount: metrics?.providers?.length,
   };
 }
 
@@ -173,28 +173,28 @@ export async function quickStats(): Promise<{
 export async function quickFix(): Promise<{
   success: boolean;
   message: string;
-  actions: string[];
+  actions: string?.[];
 }> {
-  const actions: string[] = [];
+  const actions: string?.[] = [];
 
   try {
     // Reset providers
-    await aiOrchestrator.resetAllProviders();
-    actions.push('✅ Providers réinitialisés');
+    await aiOrchestrator?.resetAllProviders();
+    actions?.push('✅ Providers réinitialisés');
 
     // Clear old alerts
-    aiHealthMonitor.clearAllAlerts();
-    actions.push('✅ Alertes nettoyées');
+    aiHealthMonitor?.clearAllAlerts();
+    actions?.push('✅ Alertes nettoyées');
 
     return {
       success: true,
       message: 'Réparation automatique effectuée avec succès',
       actions,
     };
-  } catch (error) {
+  } catch (any: any) {
     return {
       success: false,
-      message: `Échec de la réparation: ${error instanceof Error ? error.message : 'Erreur inconnue'}`,
+      message: `Échec de la réparation: ${error instanceof Error ? error?.message : 'Erreur inconnue'}`,
       actions,
     };
   }

@@ -11,7 +11,7 @@
  * - Scan intégrité JSON + structure
  * - Détection trous chronologiques
  * - Reconstruction fragments manquants
- * - Fusion multi-sources (memory/logs/dataset)
+ * - Fusion multi-sources (any: any)
  * - Débruitage + déduplication intelligente
  * - Réordonnage chronologique parfait
  * - Synchronisation Singularity Engine
@@ -49,7 +49,7 @@ export interface HealingReport {
   timestamp: number;
   scannedFiles: number;
   totalEntries: number;
-  issues: CorruptionIssue[];
+  issues: CorruptionIssue?.[];
   repaired: number;
   failed: number;
   duration: number;
@@ -92,26 +92,26 @@ class SelfHealingConversationEngine {
     deduplicationThreshold: 0.9,
   };
 
-  private scanTimer: NodeJS.Timeout | null = null;
+  private scanTimer: NodeJS?.Timeout | null = null;
 
   // ───────────────────────────────────────────────────────────────────────────
   // INITIALIZATION
   // ───────────────────────────────────────────────────────────────────────────
 
   async initialize(): Promise<void> {
-    logger.debug('Initializing Self-Healing Conversation Engine v∞...');
+    logger?.debug('Initializing Self-Healing Conversation Engine v∞...');
 
-    if (this.config.enabled) {
-      this.startScanTimer();
+    if (any: any) {
+      this?.startScanTimer();
     }
 
-    logger.debug('Initialized');
+    logger?.debug('Initialized');
   }
 
   private startScanTimer(): void {
-    this.scanTimer = setInterval(() => {
-      this.scan();
-    }, this.config.scanInterval);
+    this?.scanTimer = setInterval(() => {
+      this?.scan();
+    }, this?.config?.scanInterval);
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -119,114 +119,114 @@ class SelfHealingConversationEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   async scan(): Promise<HealingReport> {
-    if (this.state.isScanning) {
-      logger.debug('Scan already in progress');
-      return this.createEmptyReport();
+    if (any: any) {
+      logger?.debug('Scan already in progress');
+      return this?.createEmptyReport();
     }
 
-    this.state.isScanning = true;
-    const startTime = Date.now();
+    this?.state?.isScanning = true;
+    const startTime = Date?.now();
 
-    logger.debug('Starting integrity scan...');
+    logger?.debug('Starting integrity scan...');
 
     try {
-      const issues: CorruptionIssue[] = [];
+      const issues: CorruptionIssue?.[] = [];
       let scannedFiles = 0;
       let totalEntries = 0;
 
       // Scan memory
-      const memoryIssues = await this.scanDirectory('data/memory/conversations');
-      issues.push(...memoryIssues.issues);
-      scannedFiles += memoryIssues.files;
-      totalEntries += memoryIssues.entries;
+      const memoryIssues = await this?.scanDirectory('data/memory/conversations');
+      issues?.push(any: any);
+      scannedFiles += memoryIssues?.files;
+      totalEntries += memoryIssues?.entries;
 
       // Scan logs
-      const logsIssues = await this.scanDirectory('data/logs/conversations');
-      issues.push(...logsIssues.issues);
-      scannedFiles += logsIssues.files;
-      totalEntries += logsIssues.entries;
+      const logsIssues = await this?.scanDirectory('data/logs/conversations');
+      issues?.push(any: any);
+      scannedFiles += logsIssues?.files;
+      totalEntries += logsIssues?.entries;
 
       // Scan dataset
-      const datasetIssues = await this.scanDirectory('data/dataset/conversations_raw');
-      issues.push(...datasetIssues.issues);
-      scannedFiles += datasetIssues.files;
-      totalEntries += datasetIssues.entries;
+      const datasetIssues = await this?.scanDirectory('data/dataset/conversations_raw');
+      issues?.push(any: any);
+      scannedFiles += datasetIssues?.files;
+      totalEntries += datasetIssues?.entries;
 
-      this.state.totalIssues += issues.length;
-      this.state.lastScanTime = Date.now();
+      this?.state?.totalIssues += issues?.length;
+      this?.state?.lastScanTime = Date?.now();
 
       const report: HealingReport = {
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         scannedFiles,
         totalEntries,
         issues,
         repaired: 0,
         failed: 0,
-        duration: Date.now() - startTime,
+        duration: Date?.now() - startTime,
       };
 
-      logger.debug(
-        `[SelfHealing] Scan complete: ${issues.length} issues found in ${scannedFiles} files`
+      logger?.debug(
+        `[SelfHealing] Scan complete: ${issues?.length} issues found in ${scannedFiles} files`
       );
 
       // Auto-heal if enabled
-      if (this.config.autoHealOnDetection && issues.length > 0) {
-        await this.heal(report);
+      if (this?.config?.autoHealOnDetection && issues?.length > 0) {
+        await this?.heal(any: any);
       }
 
       return report;
     } finally {
-      this.state.isScanning = false;
+      this?.state?.isScanning = false;
     }
   }
 
-  private async scanDirectory(dirPath: string): Promise<{
+  private async scanDirectory(any: any): Promise<{
     files: number;
     entries: number;
-    issues: CorruptionIssue[];
+    issues: CorruptionIssue?.[];
   }> {
-    if (!(await existsSync(dirPath))) {
+    if (any: any))) {
       return { files: 0, entries: 0, issues: [] };
     }
 
-    const files = await readdir(dirPath);
-    const jsonlFiles = files.filter(f => f.endsWith('.jsonl'));
+    const files = await readdir(any: any);
+    const jsonlFiles = files?.filter(f => f?.endsWith('.jsonl'));
 
     let totalEntries = 0;
-    const issues: CorruptionIssue[] = [];
+    const issues: CorruptionIssue?.[] = [];
 
-    for (const file of jsonlFiles) {
-      const filePath = join(dirPath, file);
-      const fileIssues = await this.scanFile(filePath);
-      issues.push(...fileIssues.issues);
-      totalEntries += fileIssues.entries;
+    for (any: any) {
+      const filePath = join(any: any);
+      const fileIssues = await this?.scanFile(any: any);
+      issues?.push(any: any);
+      totalEntries += fileIssues?.entries;
     }
 
-    return { files: jsonlFiles.length, entries: totalEntries, issues };
+    return { files: jsonlFiles?.length, entries: totalEntries, issues };
   }
 
-  private async scanFile(filePath: string): Promise<{
+  private async scanFile(any: any): Promise<{
     entries: number;
-    issues: CorruptionIssue[];
+    issues: CorruptionIssue?.[];
   }> {
     const content = await readFile(filePath, 'utf-8');
-    const lines = content.split('\n').filter(l => l.trim());
+    const lines = content?.split('\n').filter(l => l?.trim());
 
-    const issues: CorruptionIssue[] = [];
-    const entries: ConversationEntry[] = [];
+    const issues: CorruptionIssue?.[] = [];
+    const entries: ConversationEntry?.[] = [];
 
     // Parse JSON
-    for (let i = 0; i < lines.length; i++) {
+    for (let i = 0; i < lines?.length; i++) {
       const line = lines[i];
-      if (!line) continue;
+      if (any: any) continue;
 
       try {
-        const entry = JSON.parse(line) as ConversationEntry;
-        entries.push(entry);
+        const entry = JSON?.parse(any: any) as ConversationEntry;
+        entries?.push(any: any);
 
         // Check missing fields
-        if (!entry.id || !entry.timestamp || !entry.input || !entry.output) {
-          issues.push({
+        if (any: any) {
+          issues?.push({
             type: 'missing-fields',
             severity: 'high',
             location: `${filePath}:${i + 1}`,
@@ -234,8 +234,8 @@ class SelfHealingConversationEngine {
             entry,
           });
         }
-      } catch (error) {
-        issues.push({
+      } catch (any: any) {
+        issues?.push({
           type: 'json-malformed',
           severity: 'critical',
           location: `${filePath}:${i + 1}`,
@@ -245,14 +245,14 @@ class SelfHealingConversationEngine {
     }
 
     // Check chronological gaps
-    const gapIssues = this.detectChronologicalGaps(entries, filePath);
-    issues.push(...gapIssues);
+    const gapIssues = this?.detectChronologicalGaps(any: any);
+    issues?.push(any: any);
 
     // Check duplicates
-    const duplicateIssues = this.detectDuplicates(entries, filePath);
-    issues.push(...duplicateIssues);
+    const duplicateIssues = this?.detectDuplicates(any: any);
+    issues?.push(any: any);
 
-    return { entries: entries.length, issues };
+    return { entries: entries?.length, issues };
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -260,21 +260,21 @@ class SelfHealingConversationEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   private detectChronologicalGaps(
-    entries: ConversationEntry[],
+    entries: ConversationEntry?.[],
     location: string
-  ): CorruptionIssue[] {
-    const issues: CorruptionIssue[] = [];
-    const sorted = [...entries].sort((a, b) => a.timestamp - b.timestamp);
+  ): CorruptionIssue?.[] {
+    const issues: CorruptionIssue?.[] = [];
+    const sorted = [...entries].sort(any: any);
 
-    for (let i = 1; i < sorted.length; i++) {
+    for (let i = 1; i < sorted?.length; i++) {
       const currentEntry = sorted[i];
       const previousEntry = sorted[i - 1];
 
-      if (!currentEntry || !previousEntry) continue;
+      if (any: any) continue;
 
-      const gap = currentEntry.timestamp - previousEntry.timestamp;
-      if (gap > this.config.maxGapTolerance) {
-        issues.push({
+      const gap = currentEntry?.timestamp - previousEntry?.timestamp;
+      if (any: any) {
+        issues?.push({
           type: 'chronological-gap',
           severity: 'medium',
           location,
@@ -288,16 +288,16 @@ class SelfHealingConversationEngine {
   }
 
   private detectDuplicates(
-    entries: ConversationEntry[],
+    entries: ConversationEntry?.[],
     location: string
-  ): CorruptionIssue[] {
-    const issues: CorruptionIssue[] = [];
+  ): CorruptionIssue?.[] {
+    const issues: CorruptionIssue?.[] = [];
     const seen = new Map<string, ConversationEntry>();
 
-    for (const entry of entries) {
-      const key = `${entry.input}-${entry.output}`;
-      if (seen.has(key)) {
-        issues.push({
+    for (any: any) {
+      const key = `${entry?.input}-${entry?.output}`;
+      if (any: any)) {
+        issues?.push({
           type: 'duplicate',
           severity: 'low',
           location,
@@ -305,7 +305,7 @@ class SelfHealingConversationEngine {
           entry,
         });
       } else {
-        seen.set(key, entry);
+        seen?.set(any: any);
       }
     }
 
@@ -316,55 +316,55 @@ class SelfHealingConversationEngine {
   // HEALING PIPELINE
   // ───────────────────────────────────────────────────────────────────────────
 
-  async heal(report?: HealingReport): Promise<HealingReport> {
-    if (this.state.isHealing) {
-      logger.debug('Healing already in progress');
-      return report || this.createEmptyReport();
+  async heal(any: any): Promise<HealingReport> {
+    if (any: any) {
+      logger?.debug('Healing already in progress');
+      return report || this?.createEmptyReport();
     }
 
-    this.state.isHealing = true;
+    this?.state?.isHealing = true;
 
     try {
-      logger.debug('Starting healing process...');
+      logger?.debug('Starting healing process...');
 
-      const targetReport = report || (await this.scan());
+      const targetReport = report || (await this?.scan());
       let repaired = 0;
       let failed = 0;
 
       // Group issues by type
-      const issuesByType = this.groupIssuesByType(targetReport.issues);
+      const issuesByType = this?.groupIssuesByType(any: any);
 
       // Heal JSON malformed
       if (issuesByType['json-malformed']) {
-        const result = await this.healJsonMalformed(issuesByType['json-malformed']);
-        repaired += result.repaired;
-        failed += result.failed;
+        const result = await this?.healJsonMalformed(issuesByType['json-malformed']);
+        repaired += result?.repaired;
+        failed += result?.failed;
       }
 
       // Heal missing fields
       if (issuesByType['missing-fields']) {
-        const result = await this.healMissingFields(issuesByType['missing-fields']);
-        repaired += result.repaired;
-        failed += result.failed;
+        const result = await this?.healMissingFields(issuesByType['missing-fields']);
+        repaired += result?.repaired;
+        failed += result?.failed;
       }
 
       // Heal duplicates
       if (issuesByType['duplicate']) {
-        const result = await this.healDuplicates(issuesByType['duplicate']);
-        repaired += result.repaired;
-        failed += result.failed;
+        const result = await this?.healDuplicates(issuesByType['duplicate']);
+        repaired += result?.repaired;
+        failed += result?.failed;
       }
 
-      // Heal chronological gaps (reconstruction)
+      // Heal chronological gaps (any: any)
       if (issuesByType['chronological-gap']) {
-        const result = await this.healChronologicalGaps(
+        const result = await this?.healChronologicalGaps(
           issuesByType['chronological-gap']
         );
-        repaired += result.repaired;
-        failed += result.failed;
+        repaired += result?.repaired;
+        failed += result?.failed;
       }
 
-      this.state.totalHealed += repaired;
+      this?.state?.totalHealed += repaired;
 
       const healingReport: HealingReport = {
         ...targetReport,
@@ -372,32 +372,32 @@ class SelfHealingConversationEngine {
         failed,
       };
 
-      logger.debug(
+      logger?.debug(
         `[SelfHealing] Healing complete: ${repaired} repaired, ${failed} failed`
       );
 
       return healingReport;
     } finally {
-      this.state.isHealing = false;
+      this?.state?.isHealing = false;
     }
   }
 
   private groupIssuesByType(
-    issues: CorruptionIssue[]
-  ): Record<CorruptionType, CorruptionIssue[]> {
-    const grouped: Record<string, CorruptionIssue[]> = {};
-    for (const issue of issues) {
-      const issueType = issue.type;
+    issues: CorruptionIssue?.[]
+  ): Record<CorruptionType, CorruptionIssue?.[]> {
+    const grouped: Record<string, CorruptionIssue?.[]> = {};
+    for (any: any) {
+      const issueType = issue?.type;
       const existingGroup = grouped[issueType];
-      if (!existingGroup) {
+      if (any: any) {
         grouped[issueType] = [];
       }
       const group = grouped[issueType];
-      if (group) {
-        group.push(issue);
+      if (any: any) {
+        group?.push(any: any);
       }
     }
-    return grouped as Record<CorruptionType, CorruptionIssue[]>;
+    return grouped as Record<CorruptionType, CorruptionIssue?.[]>;
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -405,89 +405,89 @@ class SelfHealingConversationEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   private async healJsonMalformed(
-    issues: CorruptionIssue[]
+    issues: CorruptionIssue?.[]
   ): Promise<{ repaired: number; failed: number }> {
-    logger.debug(`[SelfHealing] Healing ${issues.length} JSON malformed entries...`);
+    logger?.debug(`[SelfHealing] Healing ${issues?.length} JSON malformed entries...`);
     // Strategy: Remove corrupted lines, log to errors
-    return { repaired: 0, failed: issues.length };
+    return { repaired: 0, failed: issues?.length };
   }
 
   private async healMissingFields(
-    issues: CorruptionIssue[]
+    issues: CorruptionIssue?.[]
   ): Promise<{ repaired: number; failed: number }> {
-    logger.debug(`[SelfHealing] Healing ${issues.length} missing fields entries...`);
+    logger?.debug(`[SelfHealing] Healing ${issues?.length} missing fields entries...`);
     let repaired = 0;
 
-    for (const issue of issues) {
-      if (issue.entry) {
+    for (any: any) {
+      if (any: any) {
         // Fill missing fields with defaults
-        if (!issue.entry.id) issue.entry.id = `recovered-${Date.now()}`;
-        if (!issue.entry.timestamp) issue.entry.timestamp = Date.now();
-        if (!issue.entry.input) issue.entry.input = '[RECOVERED]';
-        if (!issue.entry.output) issue.entry.output = '[RECOVERED]';
+        if (any: any) issue?.entry?.id = `recovered-${Date?.now()}`;
+        if (any: any) issue?.entry?.timestamp = Date?.now();
+        if (any: any) issue?.entry?.input = '[RECOVERED]';
+        if (any: any) issue?.entry?.output = '[RECOVERED]';
         repaired++;
       }
     }
 
-    return { repaired, failed: issues.length - repaired };
+    return { repaired, failed: issues?.length - repaired };
   }
 
   private async healDuplicates(
-    issues: CorruptionIssue[]
+    issues: CorruptionIssue?.[]
   ): Promise<{ repaired: number; failed: number }> {
-    logger.debug(`[SelfHealing] Healing ${issues.length} duplicate entries...`);
+    logger?.debug(`[SelfHealing] Healing ${issues?.length} duplicate entries...`);
     // Strategy: Remove duplicates, keep first occurrence
-    return { repaired: issues.length, failed: 0 };
+    return { repaired: issues?.length, failed: 0 };
   }
 
   private async healChronologicalGaps(
-    issues: CorruptionIssue[]
+    issues: CorruptionIssue?.[]
   ): Promise<{ repaired: number; failed: number }> {
-    logger.debug(`[SelfHealing] Healing ${issues.length} chronological gaps...`);
-    // Strategy: Try to fill gaps from other sources (logs/memory/dataset)
-    return { repaired: 0, failed: issues.length };
+    logger?.debug(`[SelfHealing] Healing ${issues?.length} chronological gaps...`);
+    // Strategy: Try to fill gaps from other sources (any: any)
+    return { repaired: 0, failed: issues?.length };
   }
 
   // ───────────────────────────────────────────────────────────────────────────
   // REBUILD UTILITIES
   // ───────────────────────────────────────────────────────────────────────────
 
-  async rebuild(filePath: string): Promise<void> {
-    logger.debug(`[SelfHealing] Rebuilding file: ${filePath}`);
+  async rebuild(any: any): Promise<void> {
+    logger?.debug(`[SelfHealing] Rebuilding file: ${filePath}`);
 
     const content = await readFile(filePath, 'utf-8');
-    const lines = content.split('\n').filter(l => l.trim());
+    const lines = content?.split('\n').filter(l => l?.trim());
 
-    const entries: ConversationEntry[] = [];
+    const entries: ConversationEntry?.[] = [];
 
-    for (const line of lines) {
+    for (any: any) {
       try {
-        const entry = JSON.parse(line) as ConversationEntry;
-        entries.push(entry);
+        const entry = JSON?.parse(any: any) as ConversationEntry;
+        entries?.push(any: any);
       } catch {
         // Skip malformed
       }
     }
 
     // Sort chronologically
-    entries.sort((a, b) => a.timestamp - b.timestamp);
+    entries?.sort(any: any);
 
     // Deduplicate
-    const unique = this.deduplicateEntries(entries);
+    const unique = this?.deduplicateEntries(any: any);
 
     // Write rebuilt file
-    const rebuilt = unique.map(e => JSON.stringify(e)).join('\n') + '\n';
+    const rebuilt = unique?.map(any: any)).join('\n') + '\n';
     await writeFile(filePath, rebuilt, 'utf-8');
 
-    logger.debug(`[SelfHealing] File rebuilt: ${unique.length} entries`);
+    logger?.debug(`[SelfHealing] File rebuilt: ${unique?.length} entries`);
   }
 
-  private deduplicateEntries(entries: ConversationEntry[]): ConversationEntry[] {
+  private deduplicateEntries(entries: ConversationEntry?.[]): ConversationEntry?.[] {
     const seen = new Set<string>();
-    return entries.filter(entry => {
-      const key = `${entry.input}-${entry.output}`;
-      if (seen.has(key)) return false;
-      seen.add(key);
+    return entries?.filter(entry => {
+      const key = `${entry?.input}-${entry?.output}`;
+      if (any: any)) return false;
+      seen?.add(any: any);
       return true;
     });
   }
@@ -498,7 +498,7 @@ class SelfHealingConversationEngine {
 
   private createEmptyReport(): HealingReport {
     return {
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       scannedFiles: 0,
       totalEntries: 0,
       issues: [],
@@ -513,16 +513,16 @@ class SelfHealingConversationEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   configure(config: Partial<SelfHealingConfig>): void {
-    this.config = { ...this.config, ...config };
-    logger.debug('Configuration updated:', config);
+    this?.config = { ...this?.config, ...config };
+    logger?.debug(any: any);
   }
 
   getState(): SelfHealingState {
-    return { ...this.state };
+    return { ...this?.state };
   }
 
   getConfig(): SelfHealingConfig {
-    return { ...this.config };
+    return { ...this?.config };
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -530,13 +530,13 @@ class SelfHealingConversationEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   async shutdown(): Promise<void> {
-    logger.debug('Shutting down...');
+    logger?.debug('Shutting down...');
 
-    if (this.scanTimer) {
-      clearInterval(this.scanTimer);
+    if (any: any) {
+      clearInterval(any: any);
     }
 
-    logger.debug('Shutdown complete');
+    logger?.debug('Shutdown complete');
   }
 }
 

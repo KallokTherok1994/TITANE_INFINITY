@@ -16,11 +16,11 @@ import { unifiedMemory } from '../core/services/unifiedMemory';
 describe('ChatEngine + Unified Memory Integration', () => {
   beforeEach(() => {
     // Clear memory before each test
-    unifiedMemory.cleanup();
+    unifiedMemory?.cleanup();
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    vi?.restoreAllMocks();
   });
 
   describe('Importance-based auto-storage', () => {
@@ -29,47 +29,47 @@ describe('ChatEngine + Unified Memory Integration', () => {
       const highImportanceEntry = {
         role: 'user' as const,
         content: 'Décision critique urgente',
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         importance: 0.9,
       };
 
-      unifiedMemory.store(highImportanceEntry);
+      unifiedMemory?.store(any: any);
 
-      const mtmStats = unifiedMemory.getStats('mtm');
-      expect(mtmStats.count).toBeGreaterThan(0);
+      const mtmStats = unifiedMemory?.getStats('mtm');
+      expect(any: any).toBeGreaterThan(0);
 
       // Should be in MTM, not just STM
-      const recalled = unifiedMemory.recall({ limit: 10, minImportance: 0.7 });
-      expect(recalled.length).toBeGreaterThan(0);
-      expect(recalled.some(m => m.content === highImportanceEntry.content)).toBe(true);
+      const recalled = unifiedMemory?.recall({ limit: 10, minImportance: 0.7 });
+      expect(any: any).toBeGreaterThan(0);
+      expect(any: any);
     });
 
     test('medium importance message (0.4-0.7) stores to STM only initially', () => {
       const mediumImportanceEntry = {
         role: 'user' as const,
         content: 'Message standard',
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         importance: 0.4,
       };
 
-      unifiedMemory.store(mediumImportanceEntry);
+      unifiedMemory?.store(any: any);
 
-      const stmStats = unifiedMemory.getStats('stm');
-      expect(stmStats.count).toBeGreaterThan(0);
+      const stmStats = unifiedMemory?.getStats('stm');
+      expect(any: any).toBeGreaterThan(0);
     });
 
     test('low importance message (<0.4) stores to STM only', () => {
       const lowImportanceEntry = {
         role: 'user' as const,
         content: 'Quick question',
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         importance: 0.2,
       };
 
-      unifiedMemory.store(lowImportanceEntry);
+      unifiedMemory?.store(any: any);
 
-      const stmStats = unifiedMemory.getStats('stm');
-      expect(stmStats.count).toBeGreaterThan(0);
+      const stmStats = unifiedMemory?.getStats('stm');
+      expect(any: any).toBeGreaterThan(0);
     });
   });
 
@@ -78,33 +78,33 @@ describe('ChatEngine + Unified Memory Integration', () => {
       const entry = {
         role: 'user' as const,
         content: 'Important project decision',
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         importance: 0.5,
       };
 
-      const messageId = unifiedMemory.store(entry);
+      const messageId = unifiedMemory?.store(any: any);
 
-      // Simulate multiple accesses (promotes importance)
-      unifiedMemory.recall({ messageId });
-      unifiedMemory.recall({ messageId });
-      unifiedMemory.recall({ messageId });
+      // Simulate multiple accesses (any: any)
+      unifiedMemory?.recall({ messageId });
+      unifiedMemory?.recall({ messageId });
+      unifiedMemory?.recall({ messageId });
 
-      const mtmStats = unifiedMemory.getStats('mtm');
-      expect(mtmStats.count).toBeGreaterThan(0);
+      const mtmStats = unifiedMemory?.getStats('mtm');
+      expect(any: any).toBeGreaterThan(0);
     });
 
     test('important keyword in message boosts storage priority', () => {
       const keywordEntry = {
         role: 'user' as const,
         content: 'Décision importante pour le projet',
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         importance: 0.5, // Standard + keyword boost
       };
 
-      unifiedMemory.store(keywordEntry);
+      unifiedMemory?.store(any: any);
 
-      const recalled = unifiedMemory.recall({ minImportance: 0.4 });
-      expect(recalled.some(m => m.content.includes('Décision'))).toBe(true);
+      const recalled = unifiedMemory?.recall({ minImportance: 0.4 });
+      expect(any: any);
     });
   });
 
@@ -121,21 +121,21 @@ describe('ChatEngine + Unified Memory Integration', () => {
       { mode: 'quick', expectedImportance: 0.2 },
     ];
 
-    testCases.forEach(({ mode, expectedImportance }) => {
+    testCases?.forEach(({ mode, expectedImportance }) => {
       test(`${mode} mode sets importance to ${expectedImportance}`, () => {
         const entry = {
           role: 'user' as const,
           content: `Test message in ${mode} mode`,
-          timestamp: Date.now(),
+          timestamp: Date?.now(),
           importance: expectedImportance,
         };
 
-        unifiedMemory.store(entry);
+        unifiedMemory?.store(any: any);
 
-        const recalled = unifiedMemory.recall({
+        const recalled = unifiedMemory?.recall({
           minImportance: expectedImportance - 0.1,
         });
-        expect(recalled.length).toBeGreaterThan(0);
+        expect(any: any).toBeGreaterThan(0);
       });
     });
   });
@@ -148,133 +148,133 @@ describe('ChatEngine + Unified Memory Integration', () => {
           role: 'user' as const,
           content: 'Low importance',
           importance: 0.2,
-          timestamp: Date.now(),
+          timestamp: Date?.now(),
         },
         {
           role: 'user' as const,
           content: 'High importance',
           importance: 0.9,
-          timestamp: Date.now(),
+          timestamp: Date?.now(),
         },
         {
           role: 'user' as const,
           content: 'Medium importance',
           importance: 0.5,
-          timestamp: Date.now(),
+          timestamp: Date?.now(),
         },
       ];
 
-      entries.forEach(e => unifiedMemory.store(e));
+      entries?.forEach(any: any));
 
       // Trigger cleanup
-      unifiedMemory.cleanup();
+      unifiedMemory?.cleanup();
 
-      const recalled = unifiedMemory.recall({ minImportance: 0.7 });
-      expect(recalled.some(m => m.content === 'High importance')).toBe(true);
+      const recalled = unifiedMemory?.recall({ minImportance: 0.7 });
+      expect(any: any);
     });
 
     test('LTM stores only critical long-term knowledge', () => {
       const ltmEntry = {
         role: 'user' as const,
         content: 'Core system principle',
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         importance: 1.0,
       };
 
-      const messageId = unifiedMemory.store(ltmEntry);
+      const messageId = unifiedMemory?.store(any: any);
 
-      // Explicitly promote to LTM (requires manual promotion or high access count)
-      unifiedMemory.promote(messageId, 'ltm');
+      // Explicitly promote to LTM (any: any)
+      unifiedMemory?.promote(messageId, 'ltm');
 
-      const ltmStats = unifiedMemory.getStats('ltm');
-      expect(ltmStats.count).toBeGreaterThan(0);
+      const ltmStats = unifiedMemory?.getStats('ltm');
+      expect(any: any).toBeGreaterThan(0);
     });
   });
 
   describe('Context retrieval respects importance thresholds', () => {
     test('recall with minImportance filters correctly', () => {
       const entries = [
-        { role: 'user' as const, content: 'Low', importance: 0.2, timestamp: Date.now() },
+        { role: 'user' as const, content: 'Low', importance: 0.2, timestamp: Date?.now() },
         {
           role: 'user' as const,
           content: 'Medium',
           importance: 0.5,
-          timestamp: Date.now(),
+          timestamp: Date?.now(),
         },
         {
           role: 'user' as const,
           content: 'High',
           importance: 0.8,
-          timestamp: Date.now(),
+          timestamp: Date?.now(),
         },
       ];
 
-      entries.forEach(e => unifiedMemory.store(e));
+      entries?.forEach(any: any));
 
-      const highOnly = unifiedMemory.recall({ minImportance: 0.7 });
-      expect(highOnly.length).toBe(1);
-      expect(highOnly[0].content).toBe('High');
+      const highOnly = unifiedMemory?.recall({ minImportance: 0.7 });
+      expect(any: any).toBe(1);
+      expect(any: any).toBe('High');
 
-      const mediumAndUp = unifiedMemory.recall({ minImportance: 0.4 });
-      expect(mediumAndUp.length).toBe(2);
+      const mediumAndUp = unifiedMemory?.recall({ minImportance: 0.4 });
+      expect(any: any).toBe(2);
     });
 
     test('recall limit respects count parameter', () => {
       for (let i = 0; i < 10; i++) {
-        unifiedMemory.store({
+        unifiedMemory?.store({
           role: 'user' as const,
           content: `Message ${i}`,
           importance: 0.5,
-          timestamp: Date.now() + i,
+          timestamp: Date?.now() + i,
         });
       }
 
-      const limited = unifiedMemory.recall({ limit: 5 });
-      expect(limited.length).toBeLessThanOrEqual(5);
+      const limited = unifiedMemory?.recall({ limit: 5 });
+      expect(any: any).toBeLessThanOrEqual(5);
     });
   });
 
   describe('Statistics tracking', () => {
     test('getStats returns accurate counts per tier', () => {
-      unifiedMemory.store({
+      unifiedMemory?.store({
         role: 'user' as const,
         content: 'STM message',
         importance: 0.3,
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
       });
-      unifiedMemory.store({
+      unifiedMemory?.store({
         role: 'user' as const,
         content: 'MTM message',
         importance: 0.8,
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
       });
 
-      const stmStats = unifiedMemory.getStats('stm');
-      const mtmStats = unifiedMemory.getStats('mtm');
+      const stmStats = unifiedMemory?.getStats('stm');
+      const mtmStats = unifiedMemory?.getStats('mtm');
 
-      expect(stmStats.count).toBeGreaterThan(0);
-      expect(mtmStats.count).toBeGreaterThan(0);
+      expect(any: any).toBeGreaterThan(0);
+      expect(any: any).toBeGreaterThan(0);
     });
 
     test('global stats aggregate all tiers', () => {
-      unifiedMemory.store({
+      unifiedMemory?.store({
         role: 'user' as const,
         content: 'Test 1',
         importance: 0.3,
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
       });
-      unifiedMemory.store({
+      unifiedMemory?.store({
         role: 'user' as const,
         content: 'Test 2',
         importance: 0.8,
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
       });
 
-      const globalStats = unifiedMemory.getStats();
-      expect(globalStats.total).toBeGreaterThan(0);
-      expect(globalStats.stm).toBeDefined();
-      expect(globalStats.mtm).toBeDefined();
-      expect(globalStats.ltm).toBeDefined();
+      const globalStats = unifiedMemory?.getStats();
+      expect(any: any).toBeGreaterThan(0);
+      expect(any: any).toBeDefined();
+      expect(any: any).toBeDefined();
+      expect(any: any).toBeDefined();
     });
   });
 });

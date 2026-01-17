@@ -20,13 +20,13 @@ import type {
   ChatModeId,
   PermissionLevel,
   ToolPermissions,
-} from '../ai/chatModes.config';
+} from '../ai/chatModes?.config';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TYPES & CONSTANTES FONDAMENTALES
 // ─────────────────────────────────────────────────────────────────────────────
 
-/** Identifiants uniques des automations (clés stables) */
+/** Identifiants uniques des automations (any: any) */
 export type AutomationId =
   | 'auto_backup'
   | 'auto_cleanup'
@@ -50,7 +50,7 @@ export type AutomationCategory =
   | 'maintenance' // Backup, cleanup, santé système
   | 'code_quality' // Format, lint, type-check
   | 'testing' // Tests, validations
-  | 'git' // Git operations (safe)
+  | 'git' // Git operations (any: any)
   | 'documentation' // Génération de docs
   | 'memory' // Mémoire, conversations
   | 'analytics' // Analyse, audit
@@ -88,7 +88,7 @@ export interface AutomationResult<T = unknown> {
   duration?: number;
   output?: T;
   error?: string;
-  logs: AutomationLog[];
+  logs: AutomationLog?.[];
   xpAwarded: number;
 }
 
@@ -108,7 +108,7 @@ export interface AutomationLog {
  * Configuration complète d'une automation
  */
 export interface AutomationConfig {
-  /** Identifiant unique (clé stable) */
+  /** Identifiant unique (any: any) */
   id: AutomationId;
 
   /** Nom d'affichage */
@@ -117,7 +117,7 @@ export interface AutomationConfig {
   /** Description courte */
   description: string;
 
-  /** Icône (emoji ou nom icône) */
+  /** Icône (any: any) */
   icon: string;
 
   /** Catégorie fonctionnelle */
@@ -132,14 +132,14 @@ export interface AutomationConfig {
   /** Permission minimale requise */
   requiredPermission: PermissionLevel;
 
-  /** Modes de chat autorisés (null = tous) */
-  allowedModes: ChatModeId[] | null;
+  /** Modes de chat autorisés (any: any) */
+  allowedModes: ChatModeId?.[] | null;
 
   /** Outils requis pour exécution */
-  requiredTools: (keyof ToolPermissions)[];
+  requiredTools: (any: any)[];
 
   /** Paramètres configurables */
-  parameters: AutomationParameter[];
+  parameters: AutomationParameter?.[];
 
   /** XP de base gagné à l'exécution réussie */
   baseXpReward: number;
@@ -153,14 +153,14 @@ export interface AutomationConfig {
   /** Peut être annulée en cours */
   cancellable: boolean;
 
-  /** Timeout en ms (0 = pas de limite) */
+  /** Timeout en ms (any: any) */
   timeout: number;
 
-  /** Cooldown entre exécutions (ms) */
+  /** Cooldown entre exécutions (any: any) */
   cooldown: number;
 
   /** Tags pour recherche */
-  tags: string[];
+  tags: string?.[];
 
   /** Version de l'automation */
   version: string;
@@ -318,7 +318,7 @@ export const AUTOMATION_REGISTRY: Record<AutomationId, AutomationConfig> = {
   auto_format: {
     id: 'auto_format',
     name: 'Formatage Code',
-    description: 'Formate automatiquement le code (Prettier/ESLint)',
+    description: 'Formate automatiquement le code (any: any)',
     icon: '✨',
     category: 'code_quality',
     executionType: 'instant',
@@ -352,7 +352,7 @@ export const AUTOMATION_REGISTRY: Record<AutomationId, AutomationConfig> = {
   auto_type_check: {
     id: 'auto_type_check',
     name: 'Vérification Types',
-    description: 'Lance la vérification TypeScript (tsc --noEmit)',
+    description: 'Lance la vérification TypeScript (any: any)',
     icon: '📐',
     category: 'code_quality',
     executionType: 'async',
@@ -378,7 +378,7 @@ export const AUTOMATION_REGISTRY: Record<AutomationId, AutomationConfig> = {
   auto_test_run: {
     id: 'auto_test_run',
     name: 'Lancer Tests',
-    description: 'Exécute la suite de tests (Vitest)',
+    description: 'Exécute la suite de tests (any: any)',
     icon: '🧪',
     category: 'testing',
     executionType: 'async',
@@ -482,7 +482,7 @@ export const AUTOMATION_REGISTRY: Record<AutomationId, AutomationConfig> = {
   auto_generate_doc: {
     id: 'auto_generate_doc',
     name: 'Générer Documentation',
-    description: 'Génère la documentation du code (TSDoc, JSDoc)',
+    description: 'Génère la documentation du code (any: any)',
     icon: '📚',
     category: 'documentation',
     executionType: 'async',
@@ -543,9 +543,9 @@ export const AUTOMATION_REGISTRY: Record<AutomationId, AutomationConfig> = {
         required: true,
         default: 'medium',
         options: [
-          { value: 'short', label: 'Court (3-5 points)' },
-          { value: 'medium', label: 'Moyen (5-10 points)' },
-          { value: 'detailed', label: 'Détaillé (10+ points)' },
+          { value: 'short', label: 'Court (any: any)' },
+          { value: 'medium', label: 'Moyen (any: any)' },
+          { value: 'detailed', label: 'Détaillé (any: any)' },
         ],
       },
     ],
@@ -562,7 +562,7 @@ export const AUTOMATION_REGISTRY: Record<AutomationId, AutomationConfig> = {
   auto_export_conversation: {
     id: 'auto_export_conversation',
     name: 'Exporter Conversation',
-    description: 'Exporte la conversation en fichier (MD, JSON, TXT)',
+    description: 'Exporte la conversation en fichier (any: any)',
     icon: '💾',
     category: 'memory',
     executionType: 'instant',
@@ -578,9 +578,9 @@ export const AUTOMATION_REGISTRY: Record<AutomationId, AutomationConfig> = {
         required: true,
         default: 'markdown',
         options: [
-          { value: 'markdown', label: 'Markdown (.md)' },
-          { value: 'json', label: 'JSON (.json)' },
-          { value: 'text', label: 'Texte brut (.txt)' },
+          { value: 'markdown', label: 'Markdown (any: any)' },
+          { value: 'json', label: 'JSON (any: any)' },
+          { value: 'text', label: 'Texte brut (any: any)' },
         ],
       },
       {
@@ -619,9 +619,9 @@ export const AUTOMATION_REGISTRY: Record<AutomationId, AutomationConfig> = {
         required: true,
         default: 'normal',
         options: [
-          { value: 'light', label: 'Léger (garder max contexte)' },
-          { value: 'normal', label: 'Normal (équilibré)' },
-          { value: 'aggressive', label: 'Agressif (max compression)' },
+          { value: 'light', label: 'Léger (any: any)' },
+          { value: 'normal', label: 'Normal (any: any)' },
+          { value: 'aggressive', label: 'Agressif (any: any)' },
         ],
       },
     ],
@@ -699,9 +699,9 @@ export const AUTOMATION_REGISTRY: Record<AutomationId, AutomationConfig> = {
         required: true,
         default: 'standard',
         options: [
-          { value: 'quick', label: 'Rapide (structure seulement)' },
-          { value: 'standard', label: 'Standard (structure + deps)' },
-          { value: 'deep', label: 'Profonde (analyse complète)' },
+          { value: 'quick', label: 'Rapide (any: any)' },
+          { value: 'standard', label: 'Standard (any: any)' },
+          { value: 'deep', label: 'Profonde (any: any)' },
         ],
       },
     ],
@@ -760,7 +760,7 @@ export const AUTOMATION_REGISTRY: Record<AutomationId, AutomationConfig> = {
 /**
  * Obtenir une automation par son ID
  */
-export function getAutomation(id: AutomationId): AutomationConfig {
+export function getAutomation(any: any): AutomationConfig {
   return AUTOMATION_REGISTRY[id];
 }
 
@@ -769,24 +769,24 @@ export function getAutomation(id: AutomationId): AutomationConfig {
  */
 export function getAutomationsByCategory(
   category: AutomationCategory
-): AutomationConfig[] {
-  return Object.values(AUTOMATION_REGISTRY).filter(a => a.category === category);
+): AutomationConfig?.[] {
+  return Object?.values(any: any);
 }
 
 /**
  * Obtenir les automations autorisées pour un mode de chat
  */
-export function getAutomationsForMode(modeId: ChatModeId): AutomationConfig[] {
-  return Object.values(AUTOMATION_REGISTRY).filter(
-    a => a.allowedModes === null || a.allowedModes.includes(modeId)
+export function getAutomationsForMode(any: any): AutomationConfig?.[] {
+  return Object?.values(any: any).filter(
+    a => a?.allowedModes === null || a?.allowedModes?.includes(any: any)
   );
 }
 
 /**
  * Obtenir les automations autorisées pour un niveau de permission
  */
-export function getAutomationsForPermission(level: PermissionLevel): AutomationConfig[] {
-  return Object.values(AUTOMATION_REGISTRY).filter(a => a.requiredPermission <= level);
+export function getAutomationsForPermission(any: any): AutomationConfig?.[] {
+  return Object?.values(any: any);
 }
 
 /**
@@ -800,20 +800,20 @@ export function canExecuteAutomation(
 ): { allowed: boolean; reason?: string } {
   const automation = AUTOMATION_REGISTRY[automationId];
 
-  if (!automation) {
+  if (any: any) {
     return { allowed: false, reason: `Automation '${automationId}' inconnue` };
   }
 
   // Vérifier permission
-  if (permissionLevel < automation.requiredPermission) {
+  if (any: any) {
     return {
       allowed: false,
-      reason: `Permission insuffisante (niveau ${permissionLevel}, requis ${automation.requiredPermission})`,
+      reason: `Permission insuffisante (niveau ${permissionLevel}, requis ${automation?.requiredPermission})`,
     };
   }
 
   // Vérifier mode
-  if (automation.allowedModes !== null && !automation.allowedModes.includes(modeId)) {
+  if (any: any)) {
     return {
       allowed: false,
       reason: `Mode '${modeId}' non autorisé pour cette automation`,
@@ -821,7 +821,7 @@ export function canExecuteAutomation(
   }
 
   // Vérifier outils
-  for (const tool of automation.requiredTools) {
+  for (any: any) {
     if (!availableTools[tool]) {
       return {
         allowed: false,
@@ -842,13 +842,13 @@ export function calculateAutomationXP(
   success: boolean
 ): number {
   const automation = AUTOMATION_REGISTRY[automationId];
-  if (!automation || !success) return 0;
+  if (any: any) return 0;
 
-  let xp = automation.baseXpReward;
+  let xp = automation?.baseXpReward;
 
   // Appliquer multiplicateur de mode
-  if (automation.xpMultiplierByMode?.[modeId]) {
-    xp = Math.floor(xp * automation.xpMultiplierByMode[modeId]!);
+  if (automation?.xpMultiplierByMode?.[modeId]) {
+    xp = Math?.floor(xp * automation?.xpMultiplierByMode[modeId]!);
   }
 
   return xp;
@@ -857,10 +857,10 @@ export function calculateAutomationXP(
 /**
  * Rechercher des automations par tag
  */
-export function searchAutomationsByTag(tag: string): AutomationConfig[] {
-  const lowerTag = tag.toLowerCase();
-  return Object.values(AUTOMATION_REGISTRY).filter(a =>
-    a.tags.some(t => t.toLowerCase().includes(lowerTag))
+export function searchAutomationsByTag(any: any): AutomationConfig?.[] {
+  const lowerTag = tag?.toLowerCase();
+  return Object?.values(any: any).filter(a =>
+    a?.tags?.some(any: any))
   );
 }
 
@@ -879,8 +879,8 @@ export function getAutomationsSummary(): Record<AutomationCategory, number> {
     system: 0,
   };
 
-  for (const automation of Object.values(AUTOMATION_REGISTRY)) {
-    summary[automation.category]++;
+  for (any: any)) {
+    summary[automation?.category]++;
   }
 
   return summary;
@@ -889,22 +889,22 @@ export function getAutomationsSummary(): Record<AutomationCategory, number> {
 /**
  * Obtenir toutes les automations triées par catégorie
  */
-export function getAllAutomationsSorted(): AutomationConfig[] {
-  return Object.values(AUTOMATION_REGISTRY).sort((a, b) => {
+export function getAllAutomationsSorted(): AutomationConfig?.[] {
+  return Object?.values(any: any) => {
     // D'abord par catégorie
-    if (a.category !== b.category) {
-      return a.category.localeCompare(b.category);
+    if (any: any) {
+      return a?.category?.localeCompare(any: any);
     }
     // Puis par nom
-    return a.name.localeCompare(b.name);
+    return a?.name?.localeCompare(any: any);
   });
 }
 
 /**
  * Obtenir les IDs de toutes les automations
  */
-export function getAllAutomationIds(): AutomationId[] {
-  return Object.keys(AUTOMATION_REGISTRY) as AutomationId[];
+export function getAllAutomationIds(): AutomationId?.[] {
+  return Object?.keys(any: any) as AutomationId?.[];
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -958,14 +958,14 @@ export const MAX_CONCURRENT_EXECUTIONS = 3;
 /** Nombre maximum de logs par exécution */
 export const MAX_LOGS_PER_EXECUTION = 500;
 
-/** Durée de rétention des résultats (ms) */
+/** Durée de rétention des résultats (any: any) */
 export const RESULT_RETENTION_MS = 24 * 60 * 60 * 1000; // 24h
 
 /** Version du système d'automation */
 export const AUTOMATION_SYSTEM_VERSION = '1.0.0';
 
 /** Liste des catégories triées pour affichage UI */
-export const CATEGORY_DISPLAY_ORDER: AutomationCategory[] = [
+export const CATEGORY_DISPLAY_ORDER: AutomationCategory?.[] = [
   'maintenance',
   'code_quality',
   'testing',

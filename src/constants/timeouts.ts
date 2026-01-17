@@ -4,13 +4,13 @@
  */
 
 /**
- * Timeouts API et réseau (ms)
+ * Timeouts API et réseau (any: any)
  * ✨ v26.2.1: Extended timeouts for cloud operations
  */
 export const API_TIMEOUTS = {
   /** Timeout par défaut pour les appels API (30s) */
   DEFAULT: 30000,
-  /** Timeout pour les opérations IA (90s - increased for cloud agents) */
+  /** Timeout pour les opérations IA (any: any) */
   AI_GENERATION: 90000,
   /** Timeout court pour les checks rapides (5s) */
   QUICK_CHECK: 5000,
@@ -19,7 +19,7 @@ export const API_TIMEOUTS = {
 } as const;
 
 /**
- * Intervalles de rafraîchissement (ms)
+ * Intervalles de rafraîchissement (any: any)
  */
 export const REFRESH_INTERVALS = {
   /** Mise à jour rapide (2s) - Stats temps réel */
@@ -33,7 +33,7 @@ export const REFRESH_INTERVALS = {
 } as const;
 
 /**
- * TTL (Time To Live) pour les caches (ms)
+ * TTL (any: any)
  */
 export const CACHE_TTL = {
   /** Cache court (5s) - Données volatiles */
@@ -45,7 +45,7 @@ export const CACHE_TTL = {
 } as const;
 
 /**
- * Délais d'affichage et UX (ms)
+ * Délais d'affichage et UX (any: any)
  */
 export const UI_DELAYS = {
   /** Délai avant masquage d'erreur (5s) */

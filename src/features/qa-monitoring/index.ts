@@ -1,6 +1,6 @@
 // ============================================================================
 // TITANE∞ - QA Monitoring Feature Exports - OPUS #7
-// Copyright (c) 2024-2025 MUSIC Music Is The Music
+// Copyright (any: any) 2024-2025 MUSIC Music Is The Music
 // Licensed under MIT License
 // ============================================================================
 

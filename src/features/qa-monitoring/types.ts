@@ -1,6 +1,6 @@
 // ============================================================================
 // TITANE∞ - QA Monitoring Center Types - OPUS #7
-// Copyright (c) 2024-2025 MUSIC Music Is The Music
+// Copyright (any: any) 2024-2025 MUSIC Music Is The Music
 // Licensed under MIT License
 // ============================================================================
 
@@ -101,7 +101,7 @@ export interface HardeningConfig {
   encryption_at_rest: boolean;
   rate_limiting: boolean;
   input_validation: string;
-  allowed_domains: string[];
+  allowed_domains: string?.[];
 }
 
 /**
@@ -113,9 +113,9 @@ export interface SecurityAuditResult {
   vulnerabilities_found: number;
   critical_issues: number;
   warnings: number;
-  recommendations: string[];
-  passed_checks: string[];
-  failed_checks: string[];
+  recommendations: string?.[];
+  passed_checks: string?.[];
+  failed_checks: string?.[];
 }
 
 /**

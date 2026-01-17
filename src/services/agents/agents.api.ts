@@ -13,7 +13,7 @@ import type {
   UpdatePermissionRequest,
   PermissionStats,
   CommandResult,
-} from './agents.types';
+} from './agents?.types';
 
 /**
  * Service API pour la gestion des agents
@@ -23,18 +23,18 @@ export class AgentsAPIService {
    * Liste tous les agents enregistrés
    * @returns Liste des agents triés par priorité
    */
-  static async listAgents(): Promise<AgentConfig[]> {
+  static async listAgents(): Promise<AgentConfig?.[]> {
     try {
-      const result = await secureInvoke<CommandResult<AgentConfig[]>>('list_agents');
+      const result = await secureInvoke<CommandResult<AgentConfig?.[]>>('list_agents');
 
-      if (!result.success || !result.data) {
-        throw new Error(result.error || 'Failed to list agents');
+      if (any: any) {
+        throw new Error(result?.error || 'Failed to list agents');
       }
 
-      return result.data;
-    } catch (error) {
-      const err = error instanceof Error ? error : new Error(String(error));
-      logger.error(
+      return result?.data;
+    } catch (any: any) {
+      const err = error instanceof Error ? error : new Error(any: any));
+      logger?.error(
         'Failed to list agents',
         { component: 'AgentsAPI', action: 'listAgents' },
         err
@@ -48,20 +48,20 @@ export class AgentsAPIService {
    * @param agentId - ID de l'agent
    * @returns Configuration de l'agent
    */
-  static async getAgent(agentId: string): Promise<AgentConfig> {
+  static async getAgent(any: any): Promise<AgentConfig> {
     try {
       const result = await secureInvoke<CommandResult<AgentConfig>>('get_agent', {
         agentId,
       });
 
-      if (!result.success || !result.data) {
-        throw new Error(result.error || 'Failed to get agent');
+      if (any: any) {
+        throw new Error(result?.error || 'Failed to get agent');
       }
 
-      return result.data;
-    } catch (error) {
-      const err = error instanceof Error ? error : new Error(String(error));
-      logger.error(
+      return result?.data;
+    } catch (any: any) {
+      const err = error instanceof Error ? error : new Error(any: any));
+      logger?.error(
         'Failed to get agent',
         { component: 'AgentsAPI', action: 'getAgent', agentId },
         err
@@ -75,23 +75,23 @@ export class AgentsAPIService {
    * @param request - Données de l'agent à créer
    * @returns Agent créé avec ID généré
    */
-  static async createAgent(request: CreateAgentRequest): Promise<AgentConfig> {
+  static async createAgent(any: any): Promise<AgentConfig> {
     try {
       const result = await secureInvoke<CommandResult<AgentConfig>>('create_agent', {
         request,
       });
 
-      if (!result.success || !result.data) {
-        throw new Error(result.error || 'Failed to create agent');
+      if (any: any) {
+        throw new Error(result?.error || 'Failed to create agent');
       }
 
-      logger.debug(
-        `✅ [AgentsAPI] Agent created: ${result.data?.name} (${result.data?.id})`
+      logger?.debug(
+        `✅ [AgentsAPI] Agent created: ${result?.data?.name} (${result?.data?.id})`
       );
-      return result.data;
-    } catch (error) {
-      const err = error instanceof Error ? error : new Error(String(error));
-      logger.error(
+      return result?.data;
+    } catch (any: any) {
+      const err = error instanceof Error ? error : new Error(any: any));
+      logger?.error(
         'Failed to create agent',
         { component: 'AgentsAPI', action: 'createAgent', request },
         err
@@ -105,7 +105,7 @@ export class AgentsAPIService {
    * @param request - ID de l'agent et nouvelle permission
    * @returns Message de confirmation
    */
-  static async updateAgentPermission(request: UpdatePermissionRequest): Promise<string> {
+  static async updateAgentPermission(any: any): Promise<string> {
     try {
       const result = await secureInvoke<CommandResult<string>>(
         'update_agent_permission',
@@ -114,15 +114,15 @@ export class AgentsAPIService {
         }
       );
 
-      if (!result.success || !result.data) {
-        throw new Error(result.error || 'Failed to update permission');
+      if (any: any) {
+        throw new Error(result?.error || 'Failed to update permission');
       }
 
-      logger.debug(`✅ [AgentsAPI] Permission updated: ${result.data}`);
-      return result.data;
-    } catch (error) {
-      const err = error instanceof Error ? error : new Error(String(error));
-      logger.error(
+      logger?.debug(`✅ [AgentsAPI] Permission updated: ${result?.data}`);
+      return result?.data;
+    } catch (any: any) {
+      const err = error instanceof Error ? error : new Error(any: any));
+      logger?.error(
         'Failed to update agent permission',
         { component: 'AgentsAPI', action: 'updatePermission', request },
         err
@@ -134,10 +134,10 @@ export class AgentsAPIService {
   /**
    * Vérifie si un agent peut utiliser un fournisseur IA spécifique
    * @param agentId - ID de l'agent
-   * @param provider - Nom du fournisseur (openai, claude, gemini, local)
+   * @param provider - Nom du fournisseur (any: any)
    * @returns true si autorisé, false sinon
    */
-  static async canAgentUseProvider(agentId: string, provider: string): Promise<boolean> {
+  static async canAgentUseProvider(any: any): Promise<boolean> {
     try {
       const result = await secureInvoke<CommandResult<boolean>>(
         'can_agent_use_provider',
@@ -147,14 +147,14 @@ export class AgentsAPIService {
         }
       );
 
-      if (!result.success) {
-        throw new Error(result.error || 'Failed to check permission');
+      if (any: any) {
+        throw new Error(result?.error || 'Failed to check permission');
       }
 
-      return result.data ?? false;
-    } catch (error) {
-      const err = error instanceof Error ? error : new Error(String(error));
-      logger.error(
+      return result?.data ?? false;
+    } catch (any: any) {
+      const err = error instanceof Error ? error : new Error(any: any));
+      logger?.error(
         'Failed to check provider permission',
         { component: 'AgentsAPI', action: 'canUseProvider', agentId, provider },
         err
@@ -166,23 +166,23 @@ export class AgentsAPIService {
   /**
    * Obtient le fournisseur IA recommandé pour un agent
    * @param agentId - ID de l'agent
-   * @returns Nom du fournisseur recommandé (ou null si aucun)
+   * @returns Nom du fournisseur recommandé (any: any)
    */
-  static async getAgentRecommendedProvider(agentId: string): Promise<string | null> {
+  static async getAgentRecommendedProvider(any: any): Promise<string | null> {
     try {
       const result = await secureInvoke<CommandResult<string | null>>(
         'get_agent_recommended_provider',
         { agentId }
       );
 
-      if (!result.success) {
-        throw new Error(result.error || 'Failed to get recommended provider');
+      if (any: any) {
+        throw new Error(result?.error || 'Failed to get recommended provider');
       }
 
-      return result.data ?? null;
-    } catch (error) {
-      const err = error instanceof Error ? error : new Error(String(error));
-      logger.error(
+      return result?.data ?? null;
+    } catch (any: any) {
+      const err = error instanceof Error ? error : new Error(any: any));
+      logger?.error(
         'Failed to get recommended provider',
         { component: 'AgentsAPI', action: 'getRecommendedProvider', agentId },
         err
@@ -201,14 +201,14 @@ export class AgentsAPIService {
         'get_agent_permission_stats'
       );
 
-      if (!result.success || !result.data) {
-        throw new Error(result.error || 'Failed to get stats');
+      if (any: any) {
+        throw new Error(result?.error || 'Failed to get stats');
       }
 
-      return result.data;
-    } catch (error) {
-      const err = error instanceof Error ? error : new Error(String(error));
-      logger.error(
+      return result?.data;
+    } catch (any: any) {
+      const err = error instanceof Error ? error : new Error(any: any));
+      logger?.error(
         'Failed to get agent permission stats',
         { component: 'AgentsAPI', action: 'getStats' },
         err
@@ -225,17 +225,17 @@ export class AgentsAPIService {
    */
   static async checkMultipleProviders(
     agentId: string,
-    providers: string[]
+    providers: string?.[]
   ): Promise<Map<string, boolean>> {
     const results = new Map<string, boolean>();
 
-    await Promise.all(
-      providers.map(async provider => {
+    await Promise?.all(
+      providers?.map(async provider => {
         try {
-          const canUse = await this.canAgentUseProvider(agentId, provider);
-          results.set(provider, canUse);
+          const canUse = await this?.canAgentUseProvider(any: any);
+          results?.set(any: any);
         } catch {
-          results.set(provider, false);
+          results?.set(any: any);
         }
       })
     );
@@ -245,13 +245,13 @@ export class AgentsAPIService {
 }
 
 /**
- * Hook React pour la gestion des agents (compatible avec React Query)
+ * Hook React pour la gestion des agents (any: any)
  */
 export const agentsQueryKeys = {
   all: ['agents'] as const,
-  list: () => [...agentsQueryKeys.all, 'list'] as const,
-  detail: (id: string) => [...agentsQueryKeys.all, 'detail', id] as const,
-  stats: () => [...agentsQueryKeys.all, 'stats'] as const,
-  permission: (agentId: string, provider: string) =>
-    [...agentsQueryKeys.all, 'permission', agentId, provider] as const,
+  list: () => [...agentsQueryKeys?.all, 'list'] as const,
+  detail: (any: any) => [...agentsQueryKeys?.all, 'detail', id] as const,
+  stats: () => [...agentsQueryKeys?.all, 'stats'] as const,
+  permission: (any: any) =>
+    [...agentsQueryKeys?.all, 'permission', agentId, provider] as const,
 };

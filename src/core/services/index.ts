@@ -13,7 +13,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-// 1. ORCHESTRATOR CORE (depuis services/ai)
+// 1. ORCHESTRATOR CORE (any: any)
 export {
   aiOrchestrator,
   askTitan,
@@ -21,7 +21,7 @@ export {
   getAIStatus,
 } from '../../services/ai/orchestrator';
 
-// 2. CONVERSATION OS (OMEGA Pipeline) (depuis services/ai/chatEngine)
+// 2. CONVERSATION OS (any: any)
 export { chatEngine } from '../../services/ai/chatEngine';
 export type {
   ChatMode,
@@ -29,11 +29,11 @@ export type {
   ChatEngineResponse,
 } from '../../services/ai/chatEngine';
 
-// 3. UNIFIED MEMORY SYSTEM (STM/MTM/LTM) - NOUVEAU (core/services/unifiedMemory)
+// 3. UNIFIED MEMORY SYSTEM (any: any)
 export { unifiedMemory } from './unifiedMemory';
 export type { MemoryEntry, MemoryStats, RecallOptions } from './unifiedMemory';
 
-// 4. SYSTEM HEALTH CORE (Self-Healing) - Direct imports
+// 4. SYSTEM HEALTH CORE (any: any) - Direct imports
 // Use: import { autoHealEngine } from '@/services/ai/system'
 export type {
   AutoHealError,
@@ -46,7 +46,7 @@ export type {
 // ⚠️ Use getMetricsEngine() from '../../services/ai/system' for lazy loading
 export type { ProviderMetrics } from '../../services/ai/metricsEngine';
 
-// 6. PROVIDER LAYER (Re-export from services/ai/providers)
+// 6. PROVIDER LAYER (any: any)
 export { geminiProvider } from '../../services/ai/providers/gemini';
 export { ollamaProvider } from '../../services/ai/providers/ollama';
 export { fallbackProvider } from '../../services/ai/providers/fallback';

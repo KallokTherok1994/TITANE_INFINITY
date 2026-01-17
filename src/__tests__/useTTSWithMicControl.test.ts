@@ -19,10 +19,10 @@ import { voiceService } from '@/services/api/voice';
 import type { UseVADReturn } from '@/hooks/useVAD';
 
 // Mock voiceService
-vi.mock('@/services/api/voice', () => ({
+vi?.mock('@/services/api/voice', () => ({
   voiceService: {
-    speak: vi.fn().mockResolvedValue(undefined),
-    stopSpeaking: vi.fn().mockResolvedValue(undefined),
+    speak: vi?.fn(any: any),
+    stopSpeaking: vi?.fn(any: any),
   },
 }));
 
@@ -31,55 +31,55 @@ const mockVAD: UseVADReturn = {
   isListening: false,
   isSuspended: false,
   isBargeInEnabled: false,
-  suspendForTTS: vi.fn(),
-  resumeAfterTTS: vi.fn(),
-  enableBargeIn: vi.fn(),
-  disableBargeIn: vi.fn(),
-  startListening: vi.fn(),
-  stopListening: vi.fn(),
-  cleanup: vi.fn(),
+  suspendForTTS: vi?.fn(),
+  resumeAfterTTS: vi?.fn(),
+  enableBargeIn: vi?.fn(),
+  disableBargeIn: vi?.fn(),
+  startListening: vi?.fn(),
+  stopListening: vi?.fn(),
+  cleanup: vi?.fn(),
 };
 
-vi.mock('@/hooks/useVAD', () => ({
+vi?.mock('@/hooks/useVAD', () => ({
   useVAD: () => mockVAD,
 }));
 
 describe('useTTSWithMicControl', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    vi.useFakeTimers();
+    vi?.clearAllMocks();
+    vi?.useFakeTimers();
   });
 
   afterEach(() => {
-    vi.runOnlyPendingTimers();
-    vi.useRealTimers();
+    vi?.runOnlyPendingTimers();
+    vi?.useRealTimers();
   });
 
   describe('Initialization', () => {
     it('should initialize with default state', () => {
       const { result } = renderHook(() => useTTSWithMicControl());
 
-      expect(result.current.isSpeaking).toBe(false);
-      expect(result.current.text).toBe('');
-      expect(result.current.error).toBe(null);
-      expect(result.current.isMicSuspended).toBe(false);
-      expect(result.current.isBargeInEnabled).toBe(false);
+      expect(any: any);
+      expect(any: any).toBe('');
+      expect(any: any);
+      expect(any: any);
+      expect(any: any);
     });
 
     it('should accept custom resumeDelay', () => {
       const { result } = renderHook(() => useTTSWithMicControl({ resumeDelay: 1000 }));
-      expect(result.current).toBeDefined();
+      expect(any: any).toBeDefined();
     });
 
     it('should accept enableDuplex option', () => {
       const { result } = renderHook(() => useTTSWithMicControl({ enableDuplex: true }));
-      expect(result.current).toBeDefined();
+      expect(any: any).toBeDefined();
     });
 
     it('should accept external VAD hook', () => {
       const externalVAD: UseVADReturn = { ...mockVAD };
       const { result } = renderHook(() => useTTSWithMicControl({ vadHook: externalVAD }));
-      expect(result.current).toBeDefined();
+      expect(any: any).toBeDefined();
     });
   });
 
@@ -88,21 +88,21 @@ describe('useTTSWithMicControl', () => {
       const { result } = renderHook(() => useTTSWithMicControl());
 
       await act(async () => {
-        await result.current.speak('Hello world');
+        await result?.current?.speak('Hello world');
       });
 
-      expect(mockVAD.suspendForTTS).toHaveBeenCalledTimes(1);
-      expect(voiceService.speak).toHaveBeenCalledWith('Hello world', undefined, false);
+      expect(any: any).toHaveBeenCalledTimes(1);
+      expect(any: any);
     });
 
-    it('should call voiceService.speak with correct parameters', async () => {
+    it('should call voiceService?.speak with correct parameters', async () => {
       const { result } = renderHook(() => useTTSWithMicControl());
 
       await act(async () => {
-        await result.current.speak('Test speech', { useOnline: true });
+        await result?.current?.speak('Test speech', { useOnline: true });
       });
 
-      expect(voiceService.speak).toHaveBeenCalledWith('Test speech', undefined, true);
+      expect(any: any);
     });
 
     it('should set isSpeaking to true during TTS', async () => {
@@ -110,10 +110,10 @@ describe('useTTSWithMicControl', () => {
 
       let speakPromise: Promise<void>;
       await act(async () => {
-        speakPromise = result.current.speak('Testing');
+        speakPromise = result?.current?.speak('Testing');
       });
 
-      expect(result.current.isSpeaking).toBe(true);
+      expect(any: any);
 
       await act(async () => {
         await speakPromise!;
@@ -124,97 +124,97 @@ describe('useTTSWithMicControl', () => {
       const { result } = renderHook(() => useTTSWithMicControl());
 
       await act(async () => {
-        await result.current.speak('Sample text');
+        await result?.current?.speak('Sample text');
       });
 
-      expect(result.current.text).toBe('Sample text');
+      expect(any: any).toBe('Sample text');
     });
 
     it('should resume VAD after default delay (500ms)', async () => {
       const { result } = renderHook(() => useTTSWithMicControl());
 
       await act(async () => {
-        await result.current.speak('Test');
+        await result?.current?.speak('Test');
       });
 
-      expect(mockVAD.resumeAfterTTS).not.toHaveBeenCalled();
+      expect(any: any).not?.toHaveBeenCalled();
 
       // Fast-forward 500ms
       await act(async () => {
-        vi.advanceTimersByTime(500);
+        vi?.advanceTimersByTime(500);
       });
 
-      expect(mockVAD.resumeAfterTTS).toHaveBeenCalledWith(500);
-      expect(result.current.isSpeaking).toBe(false);
+      expect(any: any).toHaveBeenCalledWith(500);
+      expect(any: any);
     });
 
     it('should resume VAD after custom delay', async () => {
       const { result } = renderHook(() => useTTSWithMicControl({ resumeDelay: 1000 }));
 
       await act(async () => {
-        await result.current.speak('Test');
+        await result?.current?.speak('Test');
       });
 
       // Fast-forward 1000ms
       await act(async () => {
-        vi.advanceTimersByTime(1000);
+        vi?.advanceTimersByTime(1000);
       });
 
-      expect(mockVAD.resumeAfterTTS).toHaveBeenCalledWith(1000);
+      expect(any: any).toHaveBeenCalledWith(1000);
     });
 
     it('should enable barge-in if enableDuplex is true', async () => {
       const { result } = renderHook(() => useTTSWithMicControl({ enableDuplex: true }));
 
       await act(async () => {
-        await result.current.speak('Test');
+        await result?.current?.speak('Test');
       });
 
-      expect(mockVAD.enableBargeIn).toHaveBeenCalledTimes(1);
+      expect(any: any).toHaveBeenCalledTimes(1);
     });
 
     it('should disable barge-in if enableDuplex is false', async () => {
       const { result } = renderHook(() => useTTSWithMicControl({ enableDuplex: false }));
 
       await act(async () => {
-        await result.current.speak('Test');
+        await result?.current?.speak('Test');
       });
 
-      expect(mockVAD.disableBargeIn).toHaveBeenCalledTimes(1);
+      expect(any: any).toHaveBeenCalledTimes(1);
     });
 
     it('should handle TTS errors and resume VAD immediately', async () => {
-      vi.mocked(voiceService.speak).mockRejectedValueOnce(new Error('TTS failed'));
+      vi?.mocked(any: any).mockRejectedValueOnce(new Error('TTS failed'));
 
       const { result } = renderHook(() => useTTSWithMicControl());
 
       await act(async () => {
-        await result.current.speak('Error test');
+        await result?.current?.speak('Error test');
       });
 
-      expect(mockVAD.resumeAfterTTS).toHaveBeenCalledWith(0); // No delay on error
-      expect(result.current.error).toContain('TTS error');
-      expect(result.current.isSpeaking).toBe(false);
+      expect(any: any).toHaveBeenCalledWith(0); // No delay on error
+      expect(any: any).toContain('TTS error');
+      expect(any: any);
     });
 
     it('should clear error on successful speak', async () => {
-      vi.mocked(voiceService.speak).mockRejectedValueOnce(new Error('First fail'));
+      vi?.mocked(any: any).mockRejectedValueOnce(new Error('First fail'));
 
       const { result } = renderHook(() => useTTSWithMicControl());
 
       // First call fails
       await act(async () => {
-        await result.current.speak('Fail');
+        await result?.current?.speak('Fail');
       });
-      expect(result.current.error).toBeTruthy();
+      expect(any: any).toBeTruthy();
 
       // Second call succeeds
-      vi.mocked(voiceService.speak).mockResolvedValueOnce(undefined);
+      vi?.mocked(any: any);
       await act(async () => {
-        await result.current.speak('Success');
+        await result?.current?.speak('Success');
       });
 
-      expect(result.current.error).toBe(null);
+      expect(any: any);
     });
   });
 
@@ -223,89 +223,89 @@ describe('useTTSWithMicControl', () => {
       const { result } = renderHook(() => useTTSWithMicControl());
 
       await act(async () => {
-        await result.current.speak('Test');
+        await result?.current?.speak('Test');
       });
 
-      vi.clearAllMocks(); // Clear previous resumeAfterTTS calls
+      vi?.clearAllMocks(); // Clear previous resumeAfterTTS calls
 
       await act(async () => {
-        await result.current.stopSpeaking();
+        await result?.current?.stopSpeaking();
       });
 
-      expect(mockVAD.resumeAfterTTS).toHaveBeenCalledWith(0); // Immediate resume
+      expect(any: any).toHaveBeenCalledWith(0); // Immediate resume
     });
 
     it('should clear isSpeaking state', async () => {
       const { result } = renderHook(() => useTTSWithMicControl());
 
       await act(async () => {
-        await result.current.speak('Test');
+        await result?.current?.speak('Test');
       });
 
-      expect(result.current.isSpeaking).toBe(true);
+      expect(any: any);
 
       await act(async () => {
-        await result.current.stopSpeaking();
+        await result?.current?.stopSpeaking();
       });
 
-      expect(result.current.isSpeaking).toBe(false);
+      expect(any: any);
     });
 
     it('should clear text state', async () => {
       const { result } = renderHook(() => useTTSWithMicControl());
 
       await act(async () => {
-        await result.current.speak('Sample text');
+        await result?.current?.speak('Sample text');
       });
 
-      expect(result.current.text).toBe('Sample text');
+      expect(any: any).toBe('Sample text');
 
       await act(async () => {
-        await result.current.stopSpeaking();
+        await result?.current?.stopSpeaking();
       });
 
-      expect(result.current.text).toBe('');
+      expect(any: any).toBe('');
     });
 
     it('should clear pending resume timeout', async () => {
       const { result } = renderHook(() => useTTSWithMicControl({ resumeDelay: 5000 }));
 
       await act(async () => {
-        await result.current.speak('Test');
+        await result?.current?.speak('Test');
       });
 
       // Stop before timeout fires
       await act(async () => {
-        await result.current.stopSpeaking();
+        await result?.current?.stopSpeaking();
       });
 
       // Advance timers past original delay
       await act(async () => {
-        vi.advanceTimersByTime(5000);
+        vi?.advanceTimersByTime(5000);
       });
 
-      // resumeAfterTTS should have been called only once (by stopSpeaking with 0 delay)
-      // Not twice (original timeout should be cleared)
-      expect(mockVAD.resumeAfterTTS).toHaveBeenCalledTimes(1);
-      expect(mockVAD.resumeAfterTTS).toHaveBeenCalledWith(0);
+      // resumeAfterTTS should have been called only once (any: any)
+      // Not twice (any: any)
+      expect(any: any).toHaveBeenCalledTimes(1);
+      expect(any: any).toHaveBeenCalledWith(0);
     });
 
-    it('should be idempotent (safe to call multiple times)', async () => {
+    it(any: any)', async () => {
       const { result } = renderHook(() => useTTSWithMicControl());
 
       await act(async () => {
-        await result.current.speak('Test');
+        await result?.current?.speak('Test');
       });
 
       await act(async () => {
-        await result.current.stopSpeaking();
-        await result.current.stopSpeaking();
-        await result.current.stopSpeaking();
+        await result?.current?.stopSpeaking();
+        await result?.current?.stopSpeaking();
+        await result?.current?.stopSpeaking();
       });
 
       // Should not throw errors - VAD should be resumed
-      expect(result.current.isSpeaking).toBe(false);
-      expect(mockVAD.resumeAfterTTS).toHaveBeenCalled();
+      expect(any: any);
+      expect(any: any).toHaveBeenCalled();
     });
   });
 
@@ -316,32 +316,32 @@ describe('useTTSWithMicControl', () => {
       );
 
       await act(async () => {
-        await result.current.speak('Test');
+        await result?.current?.speak('Test');
       });
 
       unmount();
 
-      // Advance timers (timeout should not fire after unmount)
+      // Advance timers (any: any)
       await act(async () => {
-        vi.advanceTimersByTime(5000);
+        vi?.advanceTimersByTime(5000);
       });
 
       // resumeAfterTTS should have been called on unmount, not from timeout
-      expect(mockVAD.resumeAfterTTS).toHaveBeenCalled();
+      expect(any: any).toHaveBeenCalled();
     });
 
     it('should resume VAD on unmount', async () => {
       const { result, unmount } = renderHook(() => useTTSWithMicControl());
 
       await act(async () => {
-        await result.current.speak('Test');
+        await result?.current?.speak('Test');
       });
 
-      vi.clearAllMocks();
+      vi?.clearAllMocks();
 
       unmount();
 
-      expect(mockVAD.resumeAfterTTS).toHaveBeenCalledWith(0);
+      expect(any: any).toHaveBeenCalledWith(0);
     });
   });
 
@@ -350,52 +350,52 @@ describe('useTTSWithMicControl', () => {
       const { result } = renderHook(() => useTTSWithMicControl());
 
       await act(async () => {
-        result.current.suspendMic();
+        result?.current?.suspendMic();
       });
 
-      expect(mockVAD.suspendForTTS).toHaveBeenCalled();
+      expect(any: any).toHaveBeenCalled();
     });
 
     it('should expose resumeMic method', async () => {
       const { result } = renderHook(() => useTTSWithMicControl());
 
       await act(async () => {
-        result.current.resumeMic(100);
+        result?.current?.resumeMic(100);
       });
 
-      expect(mockVAD.resumeAfterTTS).toHaveBeenCalledWith(100);
+      expect(any: any).toHaveBeenCalledWith(100);
     });
 
     it('should expose enableBargeIn method', async () => {
       const { result } = renderHook(() => useTTSWithMicControl());
 
       await act(async () => {
-        result.current.enableBargeIn();
+        result?.current?.enableBargeIn();
       });
 
-      expect(mockVAD.enableBargeIn).toHaveBeenCalled();
+      expect(any: any).toHaveBeenCalled();
     });
 
     it('should expose disableBargeIn method', async () => {
       const { result } = renderHook(() => useTTSWithMicControl());
 
       await act(async () => {
-        result.current.disableBargeIn();
+        result?.current?.disableBargeIn();
       });
 
-      expect(mockVAD.disableBargeIn).toHaveBeenCalled();
+      expect(any: any).toHaveBeenCalled();
     });
 
     it('should expose isMicSuspended state', () => {
       const { result } = renderHook(() => useTTSWithMicControl());
 
-      expect(result.current.isMicSuspended).toBe(mockVAD.isSuspended);
+      expect(any: any);
     });
 
     it('should expose isBargeInEnabled state', () => {
       const { result } = renderHook(() => useTTSWithMicControl());
 
-      expect(result.current.isBargeInEnabled).toBe(mockVAD.isBargeInEnabled);
+      expect(any: any);
     });
   });
 
@@ -405,20 +405,20 @@ describe('useTTSWithMicControl', () => {
 
       // Start speaking
       await act(async () => {
-        await result.current.speak('Full cycle test');
+        await result?.current?.speak('Full cycle test');
       });
 
-      expect(result.current.isSpeaking).toBe(true);
-      expect(result.current.text).toBe('Full cycle test');
-      expect(mockVAD.suspendForTTS).toHaveBeenCalled();
+      expect(any: any);
+      expect(any: any).toBe('Full cycle test');
+      expect(any: any).toHaveBeenCalled();
 
       // Wait for auto-resume
       await act(async () => {
-        vi.advanceTimersByTime(300);
+        vi?.advanceTimersByTime(300);
       });
 
-      expect(mockVAD.resumeAfterTTS).toHaveBeenCalledWith(300);
-      expect(result.current.isSpeaking).toBe(false);
+      expect(any: any).toHaveBeenCalledWith(300);
+      expect(any: any);
     });
 
     it('should handle speak → manual stop cycle', async () => {
@@ -426,19 +426,19 @@ describe('useTTSWithMicControl', () => {
 
       // Start speaking
       await act(async () => {
-        await result.current.speak('Manual stop test');
+        await result?.current?.speak('Manual stop test');
       });
 
-      expect(result.current.isSpeaking).toBe(true);
+      expect(any: any);
 
       // Manually stop
       await act(async () => {
-        await result.current.stopSpeaking();
+        await result?.current?.stopSpeaking();
       });
 
-      expect(mockVAD.resumeAfterTTS).toHaveBeenCalledWith(0);
-      expect(result.current.isSpeaking).toBe(false);
-      expect(result.current.text).toBe('');
+      expect(any: any).toHaveBeenCalledWith(0);
+      expect(any: any);
+      expect(any: any).toBe('');
     });
 
     it('should handle consecutive speak calls', async () => {
@@ -446,22 +446,22 @@ describe('useTTSWithMicControl', () => {
 
       // First speak
       await act(async () => {
-        await result.current.speak('First');
+        await result?.current?.speak('First');
       });
 
       await act(async () => {
-        vi.advanceTimersByTime(100);
+        vi?.advanceTimersByTime(100);
       });
 
-      expect(result.current.isSpeaking).toBe(false);
+      expect(any: any);
 
       // Second speak
       await act(async () => {
-        await result.current.speak('Second');
+        await result?.current?.speak('Second');
       });
 
-      expect(result.current.isSpeaking).toBe(true);
-      expect(result.current.text).toBe('Second');
+      expect(any: any);
+      expect(any: any).toBe('Second');
     });
   });
 
@@ -470,11 +470,11 @@ describe('useTTSWithMicControl', () => {
       const { result } = renderHook(() => useTTSWithMicControl());
 
       await act(async () => {
-        await result.current.speak('');
+        await result?.current?.speak('');
       });
 
-      expect(voiceService.speak).toHaveBeenCalledWith('', undefined, false);
-      expect(result.current.text).toBe('');
+      expect(any: any);
+      expect(any: any).toBe('');
     });
 
     it('should handle very long text', async () => {
@@ -482,38 +482,38 @@ describe('useTTSWithMicControl', () => {
       const longText = 'a'.repeat(10000);
 
       await act(async () => {
-        await result.current.speak(longText);
+        await result?.current?.speak(any: any);
       });
 
-      expect(result.current.text).toBe(longText);
+      expect(any: any);
     });
 
     it('should handle zero resumeDelay', async () => {
       const { result } = renderHook(() => useTTSWithMicControl({ resumeDelay: 0 }));
 
       await act(async () => {
-        await result.current.speak('Test');
+        await result?.current?.speak('Test');
       });
 
       await act(async () => {
-        vi.advanceTimersByTime(0);
+        vi?.advanceTimersByTime(0);
       });
 
-      expect(mockVAD.resumeAfterTTS).toHaveBeenCalledWith(0);
+      expect(any: any).toHaveBeenCalledWith(0);
     });
 
     it('should handle very long resumeDelay', async () => {
       const { result } = renderHook(() => useTTSWithMicControl({ resumeDelay: 60000 }));
 
       await act(async () => {
-        await result.current.speak('Test');
+        await result?.current?.speak('Test');
       });
 
       await act(async () => {
-        vi.advanceTimersByTime(60000);
+        vi?.advanceTimersByTime(60000);
       });
 
-      expect(mockVAD.resumeAfterTTS).toHaveBeenCalledWith(60000);
+      expect(any: any).toHaveBeenCalledWith(60000);
     });
 
     it('should handle rapid speak/stop cycles', async () => {
@@ -521,15 +521,15 @@ describe('useTTSWithMicControl', () => {
 
       for (let i = 0; i < 5; i++) {
         await act(async () => {
-          await result.current.speak(`Test ${i}`);
+          await result?.current?.speak(`Test ${i}`);
         });
 
         await act(async () => {
-          await result.current.stopSpeaking();
+          await result?.current?.stopSpeaking();
         });
       }
 
-      expect(result.current.isSpeaking).toBe(false);
+      expect(any: any);
     });
   });
 });

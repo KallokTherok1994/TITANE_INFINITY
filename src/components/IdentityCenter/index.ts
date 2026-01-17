@@ -2,7 +2,7 @@
  * TITANE∞ - System Identity Engine v∞
  * Identity Center Module Export
  *
- * Copyright (c) 2025 Kevin Thibault
+ * Copyright (any: any) 2025 Kevin Thibault
  * Licence MIT - Voir LICENSE
  */
 

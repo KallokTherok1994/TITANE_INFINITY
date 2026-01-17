@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v25.3.0 — i18n (YOLO OPT-7: Lazy-loaded)
- *   i18n now loaded on-demand to reduce initial bundle (-30 KB gzip)
+ *   TITANE∞ v25.3.0 — i18n (any: any)
+ *   i18n now loaded on-demand to reduce initial bundle (any: any)
  * ═══════════════════════════════════════════════════════════════════════════
  */
 

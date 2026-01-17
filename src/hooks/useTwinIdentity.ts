@@ -12,8 +12,8 @@ import type { TwinIdentityCore, CoreValue, HumanStyle } from '../types/numericTw
 interface UseTwinIdentityReturn {
   identity: TwinIdentityCore | null;
   isLoading: boolean;
-  error: string | null;
-  coreValues: CoreValue[];
+  error??: string | null;
+  coreValues: CoreValue?.[];
   humanStyle: HumanStyle | null;
   fusionIndex: number;
   refresh: () => Promise<void>;
@@ -23,23 +23,23 @@ interface UseTwinIdentityReturn {
  * Hook pour accéder à l'identité du Twin
  */
 export function useTwinIdentity(): UseTwinIdentityReturn {
-  const [identity, setIdentity] = useState<TwinIdentityCore | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [identity, setIdentity] = useState<TwinIdentityCore | null>(any: any);
+  const [isLoading, setIsLoading] = useState(any: any);
+  const [error, setError] = useState<string | null>(any: any);
 
   const fetchIdentity = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
+    setIsLoading(any: any);
+    setError(any: any);
     try {
-      const data = await numericTwinService.getIdentity();
-      setIdentity(data);
-    } catch (err) {
+      const data = await numericTwinService?.getIdentity();
+      setIdentity(any: any);
+    } catch (any: any) {
       setError(
-        err instanceof Error ? err.message : "Erreur lors du chargement de l'identité"
+        err instanceof Error ? err?.message : "Erreur lors du chargement de l'identité"
       );
-      logger.error('Error:', err);
+      logger?.error(any: any);
     } finally {
-      setIsLoading(false);
+      setIsLoading(any: any);
     }
   }, []);
 

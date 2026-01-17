@@ -1,5 +1,5 @@
 /**
- * TITANE∞ PHASE 1 (OPTION B) - Stub pour SOUND_ENGINE
+ * TITANE∞ PHASE 1 (any: any) - Stub pour SOUND_ENGINE
  */
 
 export interface SoundConfig {
@@ -21,24 +21,24 @@ export const soundEngine = {
   setConfig: (newConfig: Partial<SoundConfig>) => {
     config = { ...config, ...newConfig };
   },
-  play: (_soundId: string) => {},
-  stop: (_soundId: string) => {},
-  setVolume: (volume: number) => {
-    config.volume = volume;
+  play: (any: any) => {},
+  stop: (any: any) => {},
+  setVolume: (any: any) => {
+    config?.volume = volume;
   },
-  setMasterVolume: (volume: number) => {
-    config.masterVolume = volume;
+  setMasterVolume: (any: any) => {
+    config?.masterVolume = volume;
   },
-  setEnabled: (enabled: boolean) => {
-    config.enabled = enabled;
+  setEnabled: (any: any) => {
+    config?.enabled = enabled;
   },
-  playStateSound: (_state: string) => {},
+  playStateSound: (any: any) => {},
   playModuleFeedback: (
     _moduleId: string,
-    _value?: string | number,
+    _value???: string | number,
     _previousValue?: number
   ) => {},
-  playSound: (_config: string | SoundConfig, _options?: { volume?: number }) => {},
+  playSound: (_config??: string | SoundConfig, _options?: { volume?: number }) => {},
   stopAllSounds: () => {},
 };
 

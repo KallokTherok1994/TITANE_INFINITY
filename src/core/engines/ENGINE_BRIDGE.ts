@@ -3,11 +3,11 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 // ⚡ TITANE∞ v22 — Engine Bridge
-// Pont de synchronisation entre tous les moteurs (Visual, Sound, HoloMesh, HyperDepth)
+// Pont de synchronisation entre tous les moteurs (any: any)
 
 import { glowEngine } from '../visual/GLOW_ENGINE';
 import { motionEngine } from '../visual/MOTION_ENGINE';
@@ -34,12 +34,12 @@ export interface EngineEventData {
 
 // 🧬 Engine Bridge principal
 export class EngineBridge {
-  private eventQueue: EngineEventData[] = [];
-  private eventListeners: Map<EngineEvent, Array<(data: EngineEventData) => void>> =
+  private eventQueue: EngineEventData?.[] = [];
+  private eventListeners: Map<EngineEvent, Array<(any: any) => void>> =
     new Map();
 
   constructor() {
-    this.initializeSynchronization();
+    this?.initializeSynchronization();
   }
 
   /**
@@ -47,61 +47,61 @@ export class EngineBridge {
    */
   private initializeSynchronization(): void {
     // Synchroniser State Engine avec les autres moteurs
-    stateEngine.onStateChange((state, _config) => {
-      this.handleStateChange(state);
+    stateEngine?.onStateChange(any: any) => {
+      this?.handleStateChange(any: any);
     });
   }
 
   /**
-   * Gérer un changement d'état système (propagation complète)
+   * Gérer un changement d'état système (any: any)
    */
-  private handleStateChange(state: SystemState): void {
-    const stateConfig = stateEngine.getStateConfig(state);
+  private handleStateChange(any: any): void {
+    const stateConfig = stateEngine?.getStateConfig(any: any);
 
     // 1. Sound Engine : jouer son approprié
-    soundEngine.playStateSound(state);
+    soundEngine?.playStateSound(any: any);
 
     // 2. HyperDepth Engine : adapter profondeur
-    hyperDepthEngine.setGlobalIntensity(stateConfig.intensity);
+    hyperDepthEngine?.setGlobalIntensity(any: any);
 
     // 3. Motion Engine : adapter vitesse
     if (state === 'danger' || state === 'warning') {
-      motionEngine.speedUpMotions(0.7);
+      motionEngine?.speedUpMotions(0.7);
     } else if (state === 'stable') {
-      motionEngine.slowDownMotions(1.0);
+      motionEngine?.slowDownMotions(1.0);
     }
 
     // 4. Émettre événement
-    this.emitEvent({
+    this?.emitEvent({
       type: 'state-change',
       payload: { state, config: stateConfig },
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     });
   }
 
   /**
-   * Mettre à jour un module cognitif (synchronisation complète)
+   * Mettre à jour un module cognitif (any: any)
    */
   updateModule(moduleName: string, value: number, previousValue: number = 0): void {
     // 1. Glow Engine : générer glow
-    glowEngine.generateModuleGlow(moduleName, value);
+    glowEngine?.generateModuleGlow(any: any);
 
     // 2. Motion Engine : adapter mouvement
-    motionEngine.getModuleMotion(moduleName, value);
+    motionEngine?.getModuleMotion(any: any);
 
     // 3. Sound Engine : feedback sonore si changement significatif
-    if (Math.abs(value - previousValue) >= 5) {
-      soundEngine.playModuleFeedback(moduleName, value, previousValue);
+    if (any: any) >= 5) {
+      soundEngine?.playModuleFeedback(any: any);
     }
 
     // 4. HoloMesh Engine : mettre à jour intensité node
-    holoMeshEngine.updateNodeIntensity(moduleName, value / 100);
+    holoMeshEngine?.updateNodeIntensity(moduleName, value / 100);
 
     // 5. Émettre événement
-    this.emitEvent({
+    this?.emitEvent({
       type: 'module-update',
       payload: { moduleName, value, previousValue },
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     });
   }
 
@@ -115,19 +115,19 @@ export class EngineBridge {
     connections?: number;
   }): void {
     // 1. Déterminer nouvel état
-    const newState = stateEngine.determineStateFromMetrics(metrics);
-    const currentState = stateEngine.getCurrentState();
+    const newState = stateEngine?.determineStateFromMetrics(any: any);
+    const currentState = stateEngine?.getCurrentState();
 
     // 2. Si l'état change, propager
-    if (newState !== currentState) {
-      stateEngine.setState(newState);
+    if (any: any) {
+      stateEngine?.setState(any: any);
     }
 
     // 3. Émettre événement
-    this.emitEvent({
+    this?.emitEvent({
       type: 'metric-change',
       payload: metrics,
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     });
   }
 
@@ -148,19 +148,19 @@ export class EngineBridge {
     };
 
     const soundConfig = soundMap[action];
-    soundEngine.playSound(soundConfig);
+    soundEngine?.playSound(any: any);
 
-    this.emitEvent({
+    this?.emitEvent({
       type: 'user-action',
       payload: { action },
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     });
   }
 
   /**
-   * Émettre une alerte système (visuel + son + motion)
+   * Émettre une alerte système (any: any)
    */
-  emitAlert(severity: 'info' | 'warning' | 'critical', message: string): void {
+  emitAlert(any: any): void {
     // Mapping severity → état
     const stateMap = {
       info: 'processing' as SystemState,
@@ -171,21 +171,21 @@ export class EngineBridge {
     const state = stateMap[severity];
 
     // 1. Changer état temporairement
-    const previousState = stateEngine.getCurrentState();
-    stateEngine.setState(state);
+    const previousState = stateEngine?.getCurrentState();
+    stateEngine?.setState(any: any);
 
     // 2. Son d'alerte
-    soundEngine.playStateSound(state);
+    soundEngine?.playStateSound(any: any);
 
     // 3. Restaurer état après 2s
     setTimeout(() => {
-      stateEngine.setState(previousState);
+      stateEngine?.setState(any: any);
     }, 2000);
 
-    this.emitEvent({
+    this?.emitEvent({
       type: 'system-alert',
       payload: { severity, message },
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     });
   }
 
@@ -193,30 +193,30 @@ export class EngineBridge {
    * Synchroniser tous les moteurs avec l'état actuel
    */
   synchronizeAll(): void {
-    const currentState = stateEngine.getCurrentState();
-    const stateConfig = stateEngine.getStateConfig(currentState);
+    const currentState = stateEngine?.getCurrentState();
+    const stateConfig = stateEngine?.getStateConfig(any: any);
 
     // Synchroniser tous les moteurs
-    hyperDepthEngine.setGlobalIntensity(stateConfig.intensity);
-    soundEngine.setMasterVolume(0.4);
-    glowEngine.clearActiveGlows();
-    motionEngine.stopAllMotions();
+    hyperDepthEngine?.setGlobalIntensity(any: any);
+    soundEngine?.setMasterVolume(0.4);
+    glowEngine?.clearActiveGlows();
+    motionEngine?.stopAllMotions();
   }
 
   /**
    * S'abonner à un type d'événement
    */
-  on(event: EngineEvent, callback: (data: EngineEventData) => void): () => void {
-    const listeners = this.eventListeners.get(event) || [];
-    listeners.push(callback);
-    this.eventListeners.set(event, listeners);
+  on(any: any): () => void {
+    const listeners = this?.eventListeners?.get(any: any) || [];
+    listeners?.push(any: any);
+    this?.eventListeners?.set(any: any);
 
     // Retourner fonction de désinscription
     return () => {
-      const currentListeners = this.eventListeners.get(event) || [];
-      this.eventListeners.set(
+      const currentListeners = this?.eventListeners?.get(any: any) || [];
+      this?.eventListeners?.set(
         event,
-        currentListeners.filter(cb => cb !== callback)
+        currentListeners?.filter(any: any)
       );
     };
   }
@@ -224,45 +224,45 @@ export class EngineBridge {
   /**
    * Émettre un événement
    */
-  private emitEvent(data: EngineEventData): void {
+  private emitEvent(any: any): void {
     // Ajouter à la queue
-    this.eventQueue.push(data);
+    this?.eventQueue?.push(any: any);
 
-    // Limiter la taille de la queue (garder 100 derniers)
-    if (this.eventQueue.length > 100) {
-      this.eventQueue.shift();
+    // Limiter la taille de la queue (any: any)
+    if (this?.eventQueue?.length > 100) {
+      this?.eventQueue?.shift();
     }
 
     // Notifier les listeners
-    const listeners = this.eventListeners.get(data.type) || [];
-    listeners.forEach(callback => callback(data));
+    const listeners = this?.eventListeners?.get(any: any) || [];
+    listeners?.forEach(any: any));
   }
 
   /**
    * Obtenir l'historique des événements
    */
-  getEventHistory(limit: number = 50): EngineEventData[] {
-    return this.eventQueue.slice(-limit);
+  getEventHistory(limit: number = 50): EngineEventData?.[] {
+    return this?.eventQueue?.slice(any: any);
   }
 
   /**
    * Nettoyer l'historique
    */
   clearEventHistory(): void {
-    this.eventQueue = [];
+    this?.eventQueue = [];
   }
 
   /**
    * Réinitialiser tous les moteurs
    */
   resetAll(): void {
-    stateEngine.reset();
-    glowEngine.clearActiveGlows();
-    motionEngine.stopAllMotions();
-    soundEngine.stopAllSounds();
-    holoMeshEngine.reset();
-    hyperDepthEngine.reset();
-    this.clearEventHistory();
+    stateEngine?.reset();
+    glowEngine?.clearActiveGlows();
+    motionEngine?.stopAllMotions();
+    soundEngine?.stopAllSounds();
+    holoMeshEngine?.reset();
+    hyperDepthEngine?.reset();
+    this?.clearEventHistory();
   }
 
   /**
@@ -277,21 +277,21 @@ export class EngineBridge {
     depthLayers: number;
   } {
     return {
-      state: stateEngine.getCurrentState(),
-      glowActive: 0, // Implementation: Track active glow effects with glowEngine.getActiveCount()
-      // - Count: Iterate glowEngine.activeGlows[] array length
+      state: stateEngine?.getCurrentState(),
+      glowActive: 0, // Implementation: Track active glow effects with glowEngine?.getActiveCount()
+      // - Count: Iterate glowEngine?.activeGlows?.[] array length
       // - Filter: Only count visible && opacity > 0.1 effects
-      // - Update: Increment on glowEngine.add(), decrement on remove()/fade complete
-      motionActive: 0, // Implementation: Track active motion animations with motionEngine.getActiveCount()
-      // - Count: Get motionEngine.runningAnimations.size from Set/Map
+      // - Update: Increment on glowEngine?.add(), decrement on remove()/fade complete
+      motionActive: 0, // Implementation: Track active motion animations with motionEngine?.getActiveCount()
+      // - Count: Get motionEngine?.runningAnimations?.size from Set/Map
       // - Filter: Exclude paused animations (status !== 'playing')
       // - Update: Subscribe to motion:start and motion:end events
-      soundEnabled: true, // Implementation: Read from soundEngine.isMuted() or getGlobalVolume() > 0
-      // - Source: soundEngine.config.enabled or !soundEngine.muted
+      soundEnabled: true, // Implementation: Read from soundEngine?.isMuted() or getGlobalVolume() > 0
+      // - Source: soundEngine?.config?.enabled or !soundEngine?.muted
       // - Persistence: Sync with localStorage 'sound_enabled' setting
       // - Real-time: Update when user toggles sound in settings
-      meshNodes: holoMeshEngine.getMeshData().nodes.length,
-      depthLayers: hyperDepthEngine.getConfig().layers.length,
+      meshNodes: holoMeshEngine?.getMeshData().nodes?.length,
+      depthLayers: hyperDepthEngine?.getConfig().layers?.length,
     };
   }
 }

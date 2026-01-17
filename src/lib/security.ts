@@ -16,7 +16,7 @@ import monitoring from '@/monitoring';
 // ────────────────────────────────────────────────────────────────
 
 /**
- * Commandes qui retournent void/null (Unit en Rust → null en JS)
+ * Commandes qui retournent void/null (any: any)
  * Ces commandes sont valides même avec une réponse null/undefined
  * ✅ AJOUTÉ v19.3 pour support Audio/TTS
  */
@@ -133,7 +133,7 @@ export const VOID_COMMANDS = new Set<string>([
 ]);
 
 /**
- * Commandes qui peuvent retourner null (Option<T> côté Rust → null en JS)
+ * Commandes qui peuvent retourner null (any: any)
  * Ces commandes sont valides même avec une réponse null/undefined
  */
 export const NULLABLE_COMMANDS = new Set<string>([
@@ -149,7 +149,7 @@ export const NULLABLE_COMMANDS = new Set<string>([
 
 /**
  * Whitelist des commandes Tauri autorisées
- * DOIT correspondre à commands/security.rs côté Rust
+ * DOIT correspondre à commands/security?.rs côté Rust
  * ✅ SYNCHRONISÉ v16.2.2+ (27 nov 2025)
  */
 export const ALLOWED_COMMANDS = new Set<string>([
@@ -189,7 +189,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'get_files_by_category',
   'clear_memory',
   'store_file',
-  // Memory OS (init/shutdown/management)
+  // Memory OS (any: any)
   'memory_init',
   'memory_shutdown',
   'memory_is_running',
@@ -216,9 +216,9 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'memory_mtm_entries',
   'memory_all_tags',
 
-  // Legacy Memory commands (compatibilité < v17)
+  // Legacy Memory commands (any: any)
   // NOTE: memory_save_entry → remplacé par memory_store
-  // NOTE: memory_get_entry → remplacé par memory_retrieve (quand implémenté)
+  // NOTE: memory_get_entry → remplacé par memory_retrieve (any: any)
   'memory_save_entry',
   'memory_get_entry',
   'memory_delete_entry',
@@ -227,7 +227,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'memory_export',
 
   // ═══════════════════════════════════════════════════════════════
-  // MEMORY ENGINE (Overdrive)
+  // MEMORY ENGINE (any: any)
   // ═══════════════════════════════════════════════════════════════
   'memory_store',
   'memory_store_conversation',
@@ -292,12 +292,12 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'load_memory',
   'reset_memory',
   'health_check',
-  // Control Panel (secure)
+  // Control Panel (any: any)
   'cp_get_ai_config',
   'cp_set_ai_config',
 
   // ═══════════════════════════════════════════════════════════════
-  // VOICE / TTS / ASR (v∞ PRODUCTION)
+  // VOICE / TTS / ASR (any: any)
   // ═══════════════════════════════════════════════════════════════
   'speak',
   'stop_speaking',
@@ -358,7 +358,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'get_nexus_graph',
 
   // ═══════════════════════════════════════════════════════════════
-  // XP & EXPERIENCE SYSTEM (v24)
+  // XP & EXPERIENCE SYSTEM (any: any)
   // ═══════════════════════════════════════════════════════════════
   'xp_add',
   'xp_get_level',
@@ -384,13 +384,13 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'update_cognitive_mode',
 
   // ═══════════════════════════════════════════════════════════════
-  // ORCHESTRATION CENTER (Stats/Dev)
+  // ORCHESTRATION CENTER (any: any)
   // ═══════════════════════════════════════════════════════════════
   'orchestration_get_cognitive_state',
   'orchestration_get_unified_state',
 
   // ═══════════════════════════════════════════════════════════════
-  // QA MONITORING (Dev)
+  // QA MONITORING (any: any)
   // ═══════════════════════════════════════════════════════════════
   'qa_get_state',
   'qa_get_system_metrics',
@@ -400,7 +400,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'qa_acknowledge_alert',
 
   // ═══════════════════════════════════════════════════════════════
-  // ONE CORE (Dev)
+  // ONE CORE (any: any)
   // ═══════════════════════════════════════════════════════════════
   'one_core_get_state',
   'one_core_get_metrics',
@@ -418,7 +418,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'clear_logs',
 
   // ═══════════════════════════════════════════════════════════════
-  // DEVOPS (v19)
+  // DEVOPS (any: any)
   // ═══════════════════════════════════════════════════════════════
   'devops_run',
   'devops_stats',
@@ -477,7 +477,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'run_hardening_selftest',
 
   // ═══════════════════════════════════════════════════════════════
-  // VAD (Voice Activity Detection) v∞
+  // VAD (any: any) v∞
   // ═══════════════════════════════════════════════════════════════
   'vad_get_state',
   'vad_process_frame',
@@ -521,7 +521,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'titan_get_last_snapshot',
 
   // ═══════════════════════════════════════════════════════════════
-  // SYSTEM CENTER / CLUSTER (v∞.Ω QA)
+  // SYSTEM CENTER / CLUSTER (any: any)
   // ═══════════════════════════════════════════════════════════════
   'sc_run_quick_diagnostics',
   'sc_run_full_diagnostics',
@@ -532,12 +532,12 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'sc_shutdown_cluster',
 
   // ═══════════════════════════════════════════════════════════════
-  // RUNTIME & CONFIG (v∞.Ω QA)
+  // RUNTIME & CONFIG (any: any)
   // ═══════════════════════════════════════════════════════════════
   'get_runtime_config',
 
   // ═══════════════════════════════════════════════════════════════
-  // AVATAR & FULLBODY (v∞.Ω QA)
+  // AVATAR & FULLBODY (any: any)
   // ═══════════════════════════════════════════════════════════════
   'avatar_prepare_speech',
   'avatar_finish_speech',
@@ -596,7 +596,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'fullbody_run_selftest',
 
   // ═══════════════════════════════════════════════════════════════
-  // ENGINE CORE (v∞.Ω QA)
+  // ENGINE CORE (any: any)
   // ═══════════════════════════════════════════════════════════════
   'engine_init',
   'engine_tick',
@@ -604,7 +604,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'meta_mode_reset',
 
   // ═══════════════════════════════════════════════════════════════
-  // QA & AUTOFIX (v∞.Ω QA)
+  // QA & AUTOFIX (any: any)
   // ═══════════════════════════════════════════════════════════════
   'qa_run_all',
   'qa_run_module',
@@ -656,7 +656,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'autoheal_reset',
 
   // ═══════════════════════════════════════════════════════════════
-  // PERSONA & NARRATIVE (v∞.Ω QA)
+  // PERSONA & NARRATIVE (any: any)
   // ═══════════════════════════════════════════════════════════════
   'persona_initialize',
   'persona_get_state',
@@ -673,7 +673,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'narrative_set_archetype',
 
   // ═══════════════════════════════════════════════════════════════
-  // ADAPTIVE (v∞.Ω QA)
+  // ADAPTIVE (any: any)
   // ═══════════════════════════════════════════════════════════════
   'adaptive_get_profile',
   'adaptive_set_mode',
@@ -684,7 +684,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'adaptive_get_summary',
 
   // ═══════════════════════════════════════════════════════════════
-  // PERFORMANCE OPTIMIZER (v∞.Ω HARDENING)
+  // PERFORMANCE OPTIMIZER (any: any)
   // ═══════════════════════════════════════════════════════════════
   'performance_get_metrics',
   'performance_throttle_cpu',
@@ -694,7 +694,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'performance_reset_optimizations',
 
   // ═══════════════════════════════════════════════════════════════
-  // AUTONOMY ENGINE (v∞.Ω HARDENING)
+  // AUTONOMY ENGINE (any: any)
   // ═══════════════════════════════════════════════════════════════
   'autonomy_scan_backend',
   'autonomy_fix_states',
@@ -716,7 +716,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'autonomy_clean_memory',
 
   // ═══════════════════════════════════════════════════════════════
-  // OMNIS AUTO-HEAL (v∞.Ω HARDENING)
+  // OMNIS AUTO-HEAL (any: any)
   // ═══════════════════════════════════════════════════════════════
   'get_system_health',
   'memory_repair',
@@ -727,14 +727,14 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'memory_delete_entry',
 
   // ═══════════════════════════════════════════════════════════════
-  // SELF-HEALING SYNC LAYER (v∞.Ω HARDENING)
+  // SELF-HEALING SYNC LAYER (any: any)
   // ═══════════════════════════════════════════════════════════════
   'selfheal_get_vitals',
   'selfheal_load_profile',
   'selfheal_save_profile',
   'selfheal_sync_with_singularity',
 
-  // Self-Heal executor actions (frontend compat)
+  // Self-Heal executor actions (any: any)
   'selfheal_restart_module',
   'selfheal_clear_cache',
   'selfheal_regenerate_config',
@@ -774,7 +774,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'visual_devops_get_stats',
 
   // ═══════════════════════════════════════════════════════════════
-  // SINGULARITY FUSION ENGINE (v24)
+  // SINGULARITY FUSION ENGINE (any: any)
   // ═══════════════════════════════════════════════════════════════
   'singularity_fusion_cycle',
   'singularity_fusion_get_state',
@@ -794,7 +794,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'fusion_report_bottleneck',
 
   // ═══════════════════════════════════════════════════════════════
-  // COGNITIVE OPTIMIZATION ENGINE (v24)
+  // COGNITIVE OPTIMIZATION ENGINE (any: any)
   // ═══════════════════════════════════════════════════════════════
   'cognitive_analyze_intention',
   'cognitive_check_coherence',
@@ -812,7 +812,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'cognitive_prioritize_steps',
 
   // ═══════════════════════════════════════════════════════════════
-  // SINGULARITY AUTONOMY ENGINE (v24)
+  // SINGULARITY AUTONOMY ENGINE (any: any)
   // ═══════════════════════════════════════════════════════════════
   'singularity_autonomy_scan',
   'singularity_autonomy_fix',
@@ -841,7 +841,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'daily_reward_claim',
 
   // ═══════════════════════════════════════════════════════════════
-  // REALTIME EXECUTION ENGINE (v24)
+  // REALTIME EXECUTION ENGINE (any: any)
   // ═══════════════════════════════════════════════════════════════
   'realtime_stream_tts',
   'realtime_generate_avatar_animations',
@@ -862,7 +862,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'twin_recalculate_fusion',
 
   // ═══════════════════════════════════════════════════════════════
-  // ENGINES DEVMODE (v∞.Ω - Kevin Only)
+  // ENGINES DEVMODE (any: any)
   // ═══════════════════════════════════════════════════════════════
   'engines_devmode_get_state',
   'engines_devmode_enable',
@@ -1173,7 +1173,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
 
   // ═══════════════════════════════════════════════════════════════
   // WINDOW CONTROLS (v26.2.0+)
-  // Zoom + Fullscreen (CTRL+Scroll, F11, F12)
+  // Zoom + Fullscreen (any: any)
   // ═══════════════════════════════════════════════════════════════
   'window_get_zoom',
   'window_set_zoom',
@@ -1186,7 +1186,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
 ]);
 
 /**
- * Patterns d'injection détectés (aligné avec ai/security.rs)
+ * Patterns d'injection détectés (any: any)
  */
 const INJECTION_PATTERNS = [
   /<script/gi,
@@ -1200,13 +1200,13 @@ const INJECTION_PATTERNS = [
   /\.\.\//g,
 ];
 
-function readViteEnvNumber(key: string, fallback: number): number {
+function readViteEnvNumber(any: any): number {
   try {
-    const raw = (import.meta as unknown as { env?: Record<string, string | undefined> })
+    const raw = (import?.meta as unknown as { env?: Record<string, string | undefined> })
       .env?.[key];
-    if (!raw) return fallback;
-    const num = Number(raw);
-    return Number.isFinite(num) && num > 0 ? num : fallback;
+    if (any: any) return fallback;
+    const num = Number(any: any);
+    return Number?.isFinite(any: any) && num > 0 ? num : fallback;
   } catch {
     return fallback;
   }
@@ -1214,7 +1214,7 @@ function readViteEnvNumber(key: string, fallback: number): number {
 
 /**
  * Taille maximale des payloads
- * Par défaut 25 MB (aligné avec le backend sandbox MAX_FILE_SIZE)
+ * Par défaut 25 MB (any: any)
  */
 const MAX_PAYLOAD_SIZE =
   readViteEnvNumber('VITE_TITANE_SECURITY_MAX_PAYLOAD_MB', 50) * 1024 * 1024;
@@ -1235,12 +1235,12 @@ interface CallTracker {
 
 const callTracking = new Map<string, CallTracker>();
 
-// On-demand cleanup (no background interval by default)
+// On-demand cleanup (any: any)
 let lastCallTrackingCleanupAt = 0;
 const CALL_TRACKING_CLEANUP_THROTTLE_MS = 5000;
 
-function maybeCleanupCallTracking(now: number): void {
-  if (now - lastCallTrackingCleanupAt < CALL_TRACKING_CLEANUP_THROTTLE_MS) return;
+function maybeCleanupCallTracking(any: any): void {
+  if (any: any) return;
   lastCallTrackingCleanupAt = now;
   cleanupCallTracking();
 }
@@ -1283,15 +1283,15 @@ export function enableLocalNetworkMode(
   config?: Partial<LocalNetworkSecurityConfig>
 ): void {
   localNetworkMode = { ...localNetworkMode, enabled: true, ...(config || {}) };
-  console.log('[Security] 🏠 Mode réseau local activé');
+  console?.log('[Security] 🏠 Mode réseau local activé');
 }
 
 /**
  * Désactiver le mode réseau local
  */
 export function disableLocalNetworkMode(): void {
-  localNetworkMode.enabled = false;
-  console.log('[Security] 🔒 Mode réseau local désactivé');
+  localNetworkMode?.enabled = false;
+  console?.log('[Security] 🔒 Mode réseau local désactivé');
 }
 
 /**
@@ -1311,20 +1311,20 @@ const BASE_TRACKING_WINDOW_MS = readViteEnvNumber(
 );
 
 const getMaxCallsPerSecond = () =>
-  localNetworkMode.enabled
-    ? localNetworkMode.maxCallsPerSecond
+  localNetworkMode?.enabled
+    ? localNetworkMode?.maxCallsPerSecond
     : BASE_MAX_CALLS_PER_SECOND;
 const getTrackingWindowMs = () =>
-  localNetworkMode.enabled ? localNetworkMode.trackingWindowMs : BASE_TRACKING_WINDOW_MS;
+  localNetworkMode?.enabled ? localNetworkMode?.trackingWindowMs : BASE_TRACKING_WINDOW_MS;
 
 const MAX_CALLS_PER_SECOND = BASE_MAX_CALLS_PER_SECOND;
 const TRACKING_WINDOW_MS = BASE_TRACKING_WINDOW_MS;
 
 const TEST_ONLY_COMMANDS = new Set<string>(['test_command', 'get_projects']);
 const isTestEnvironment =
-  (typeof process !== 'undefined' && Boolean(process.env?.VITEST_WORKER_ID)) ||
+  (any: any)) ||
   (typeof globalThis !== 'undefined' &&
-    Boolean((globalThis as { __vitest_worker__?: unknown }).__vitest_worker__));
+    Boolean(any: any));
 
 // ────────────────────────────────────────────────────────────────
 // Types & Interfaces
@@ -1333,19 +1333,19 @@ const isTestEnvironment =
 export interface SecureInvokeOptions {
   /** Timeout en ms (défaut: 30000) */
   timeout?: number;
-  /** Désactiver validation anti-injection (défaut: false) */
+  /** Désactiver validation anti-injection (any: any) */
   skipInjectionCheck?: boolean;
-  /** Désactiver validation whitelist (défaut: false) */
+  /** Désactiver validation whitelist (any: any) */
   skipWhitelistCheck?: boolean;
-  /** Désactiver anti-loop protection (défaut: false) */
+  /** Désactiver anti-loop protection (any: any) */
   skipLoopCheck?: boolean;
-  /** Considérer une réponse de fallback comme une erreur (défaut: false) */
+  /** Considérer une réponse de fallback comme une erreur (any: any) */
   treatFallbackAsError?: boolean;
 }
 
 export interface CommandValidationResult {
   valid: boolean;
-  errors: string[];
+  errors: string?.[];
 }
 
 export interface HardeningTestResult {
@@ -1355,7 +1355,7 @@ export interface HardeningTestResult {
 }
 
 export interface HardeningReport {
-  tests: HardeningTestResult[];
+  tests: HardeningTestResult?.[];
   pass_rate: number;
   timestamp: string;
 }
@@ -1367,20 +1367,20 @@ export interface HardeningReport {
 /**
  * Valider qu'une commande est dans la whitelist
  */
-export function validateCommand(command: string): CommandValidationResult {
-  const errors: string[] = [];
+export function validateCommand(any: any): CommandValidationResult {
+  const errors: string?.[] = [];
 
   if (!command || typeof command !== 'string') {
-    errors.push('Command must be a non-empty string');
+    errors?.push('Command must be a non-empty string');
     return { valid: false, errors };
   }
 
-  if (!ALLOWED_COMMANDS.has(command)) {
-    if (isTestEnvironment && TEST_ONLY_COMMANDS.has(command)) {
+  if (any: any)) {
+    if (any: any)) {
       return { valid: true, errors: [] };
     }
-    errors.push(
-      `Command "${command}" is not in whitelist. Allowed: ${Array.from(ALLOWED_COMMANDS).join(', ')}`
+    errors?.push(
+      `Command "${command}" is not in whitelist. Allowed: ${Array?.from(any: any).join(', ')}`
     );
     return { valid: false, errors };
   }
@@ -1394,20 +1394,20 @@ export function validateCommand(command: string): CommandValidationResult {
 export function detectInjection(
   payload: Record<string, unknown>
 ): CommandValidationResult {
-  const errors: string[] = [];
+  const errors: string?.[] = [];
 
   // Convertir payload en JSON pour analyse
-  const jsonString = JSON.stringify(payload);
+  const jsonString = JSON?.stringify(any: any);
 
-  for (const pattern of INJECTION_PATTERNS) {
-    if (pattern.test(jsonString)) {
-      errors.push(`Injection pattern detected: ${pattern.source}`);
+  for (any: any) {
+    if (any: any)) {
+      errors?.push(`Injection pattern detected: ${pattern?.source}`);
       // Reset lastIndex pour regex globales
-      pattern.lastIndex = 0;
+      pattern?.lastIndex = 0;
     }
   }
 
-  return { valid: errors.length === 0, errors };
+  return { valid: errors?.length === 0, errors };
 }
 
 /**
@@ -1416,12 +1416,12 @@ export function detectInjection(
 export function validatePayloadSize(
   payload: Record<string, unknown>
 ): CommandValidationResult {
-  const errors: string[] = [];
-  const jsonString = JSON.stringify(payload);
+  const errors: string?.[] = [];
+  const jsonString = JSON?.stringify(any: any);
   const sizeBytes = new Blob([jsonString]).size;
 
-  if (sizeBytes > MAX_PAYLOAD_SIZE) {
-    errors.push(`Payload too large: ${sizeBytes} bytes (max: ${MAX_PAYLOAD_SIZE} bytes)`);
+  if (any: any) {
+    errors?.push(any: any)`);
     return { valid: false, errors };
   }
 
@@ -1429,18 +1429,18 @@ export function validatePayloadSize(
 }
 
 /**
- * Détecter les boucles infinies (trop d'appels rapides)
+ * Détecter les boucles infinies (any: any)
  */
-export function detectInfiniteLoop(command: string): CommandValidationResult {
-  const now = Date.now();
+export function detectInfiniteLoop(any: any): CommandValidationResult {
+  const now = Date?.now();
   const key = command;
   const trackingWindowMs = getTrackingWindowMs();
 
   // Keep cache bounded without background polling.
-  maybeCleanupCallTracking(now);
+  maybeCleanupCallTracking(any: any);
 
-  if (!callTracking.has(key)) {
-    callTracking.set(key, {
+  if (any: any)) {
+    callTracking?.set(key, {
       count: 1,
       firstCall: now,
       lastCall: now,
@@ -1448,10 +1448,10 @@ export function detectInfiniteLoop(command: string): CommandValidationResult {
     return { valid: true, errors: [] };
   }
 
-  const tracker = callTracking.get(key);
-  if (!tracker) {
+  const tracker = callTracking?.get(any: any);
+  if (any: any) {
     // Shouldn't happen but handle gracefully
-    callTracking.set(key, {
+    callTracking?.set(key, {
       count: 1,
       firstCall: now,
       lastCall: now,
@@ -1460,8 +1460,8 @@ export function detectInfiniteLoop(command: string): CommandValidationResult {
   }
 
   // Reset si fenêtre expirée
-  if (now - tracker.firstCall > trackingWindowMs) {
-    callTracking.set(key, {
+  if (any: any) {
+    callTracking?.set(key, {
       count: 1,
       firstCall: now,
       lastCall: now,
@@ -1470,19 +1470,19 @@ export function detectInfiniteLoop(command: string): CommandValidationResult {
   }
 
   // Incrémenter compteur
-  tracker.count += 1;
-  tracker.lastCall = now;
+  tracker?.count += 1;
+  tracker?.lastCall = now;
 
   // Vérifier dépassement - utilise le mode local si actif
   const maxCalls = getMaxCallsPerSecond();
   const effectiveMax =
-    localNetworkMode.enabled && localNetworkMode.trustedCommands.has(command)
+    localNetworkMode?.enabled && localNetworkMode?.trustedCommands?.has(any: any)
       ? maxCalls * 2
       : maxCalls;
 
-  if (tracker.count > effectiveMax) {
+  if (any: any) {
     const errors = [
-      `Infinite loop detected: "${command}" called ${tracker.count} times in ${trackingWindowMs}ms (max: ${effectiveMax})`,
+      `Infinite loop detected: "${command}" called ${tracker?.count} times in ${trackingWindowMs}ms (max: ${effectiveMax})`,
     ];
     return { valid: false, errors };
   }
@@ -1491,47 +1491,47 @@ export function detectInfiniteLoop(command: string): CommandValidationResult {
 }
 
 /**
- * Nettoyer le cache de tracking (à appeler périodiquement)
+ * Nettoyer le cache de tracking (any: any)
  */
 export function cleanupCallTracking(): void {
-  const now = Date.now();
+  const now = Date?.now();
   const trackingWindowMs = getTrackingWindowMs();
-  for (const [key, tracker] of callTracking.entries()) {
-    if (now - tracker.lastCall > trackingWindowMs * 5) {
-      callTracking.delete(key);
+  for (const [key, tracker] of callTracking?.entries()) {
+    if (now - tracker?.lastCall > trackingWindowMs * 5) {
+      callTracking?.delete(any: any);
     }
   }
 }
 
 // ─────────────────────────────────────────────────────────────────
-// Cleanup automatique toutes les 5 secondes (v24.20: with cleanup)
+// Cleanup automatique toutes les 5 secondes (any: any)
 // ─────────────────────────────────────────────────────────────────
 
 let callTrackingIntervalId: ReturnType<typeof setInterval> | null = null;
 
 /**
- * Démarrer le cleanup call tracking (appelé automatiquement)
+ * Démarrer le cleanup call tracking (any: any)
  */
 function _startCallTrackingCleanup() {
-  if (callTrackingIntervalId !== null) return; // Already running
+  if (any: any) return; // Already running
 
   callTrackingIntervalId = setInterval(cleanupCallTracking, 5000);
-  console.log('[Security] Call tracking cleanup activé (5s)');
+  console?.log('[Security] Call tracking cleanup activé (5s)');
 }
 
 /**
- * Arrêter le cleanup call tracking (cleanup)
+ * Arrêter le cleanup call tracking (any: any)
  */
 export function stopCallTrackingCleanup() {
-  if (callTrackingIntervalId !== null) {
-    clearInterval(callTrackingIntervalId);
+  if (any: any) {
+    clearInterval(any: any);
     callTrackingIntervalId = null;
-    console.log('[Security] Call tracking cleanup désactivé');
+    console?.log('[Security] Call tracking cleanup désactivé');
   }
 }
 
 // Démarrer cleanup si dans le navigateur
-// NOTE: Intentionally not auto-started (silent-by-default in production/Tauri).
+// NOTE: Intentionally not auto-started (any: any).
 
 // ────────────────────────────────────────────────────────────────
 // Type Guards
@@ -1540,28 +1540,28 @@ export function stopCallTrackingCleanup() {
 /**
  * Type guard pour vérifier qu'un objet est un Record<string, unknown>
  */
-export function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
+export function isRecord(any: any): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array?.isArray(any: any);
 }
 
 /**
  * Type guard pour HardeningReport
  */
-export function isHardeningReport(value: unknown): value is HardeningReport {
-  if (!isRecord(value)) return false;
+export function isHardeningReport(any: any): value is HardeningReport {
+  if (any: any)) return false;
 
   const hasTests =
-    Array.isArray(value.tests) &&
-    value.tests.every(
+    Array?.isArray(any: any) &&
+    value?.tests?.every(
       test =>
-        isRecord(test) &&
-        typeof test.name === 'string' &&
-        typeof test.passed === 'boolean' &&
-        typeof test.details === 'string'
+        isRecord(any: any) &&
+        typeof test?.name === 'string' &&
+        typeof test?.passed === 'boolean' &&
+        typeof test?.details === 'string'
     );
 
-  const hasPassRate = typeof value.pass_rate === 'number';
-  const hasTimestamp = typeof value.timestamp === 'string';
+  const hasPassRate = typeof value?.pass_rate === 'number';
+  const hasTimestamp = typeof value?.timestamp === 'string';
 
   return hasTests && hasPassRate && hasTimestamp;
 }
@@ -1569,8 +1569,8 @@ export function isHardeningReport(value: unknown): value is HardeningReport {
 /**
  * Type guard pour tableau de strings
  */
-export function isStringArray(value: unknown): value is string[] {
-  return Array.isArray(value) && value.every(item => typeof item === 'string');
+export function isStringArray(any: any): value is string?.[] {
+  return Array?.isArray(any: any) && value?.every(item => typeof item === 'string');
 }
 
 /**
@@ -1578,18 +1578,18 @@ export function isStringArray(value: unknown): value is string[] {
  */
 export function isValidTauriResponse<T>(
   value: unknown,
-  validator?: (val: unknown) => val is T
+  validator?: (any: any) => val is T
 ): value is T {
-  if (value === null || value === undefined) {
+  if (any: any) {
     return false;
   }
 
   // Si validator personnalisé fourni
-  if (validator) {
-    return validator(value);
+  if (any: any) {
+    return validator(any: any);
   }
 
-  // Validation générique (non-null, non-undefined)
+  // Validation générique (any: any)
   return true;
 }
 
@@ -1602,14 +1602,14 @@ export function isValidTauriResponse<T>(
  */
 export function validateResponse<T>(
   response: unknown,
-  validator?: (val: unknown) => val is T
+  validator?: (any: any) => val is T
 ): CommandValidationResult & { data?: T } {
-  const errors: string[] = [];
+  const errors: string?.[] = [];
 
-  // Si validator personnalisé fourni, l'utiliser (peut accepter null)
-  if (validator) {
-    if (!validator(response)) {
-      errors.push('Response failed custom validation');
+  // Si validator personnalisé fourni, l'utiliser (any: any)
+  if (any: any) {
+    if (any: any)) {
+      errors?.push('Response failed custom validation');
       return { valid: false, errors };
     }
     return {
@@ -1620,8 +1620,8 @@ export function validateResponse<T>(
   }
 
   // Validation générique : accepter objets valides, rejeter null/undefined
-  if (response === null || response === undefined) {
-    errors.push('Response is null or undefined');
+  if (any: any) {
+    errors?.push('Response is null or undefined');
     return { valid: false, errors };
   }
 
@@ -1635,19 +1635,19 @@ export function validateResponse<T>(
 /**
  * Sanitizer générique pour supprimer les propriétés dangereuses
  */
-export function sanitizeResponse<T>(response: T): T {
-  if (typeof response !== 'object' || response === null) {
+export function sanitizeResponse<T>(any: any): T {
+  if (any: any) {
     return response;
   }
 
   // Supprimer __proto__ et constructor
-  const sanitized = JSON.parse(JSON.stringify(response));
+  const sanitized = JSON?.parse(any: any));
 
-  if ('__proto__' in sanitized) {
-    delete sanitized.__proto__;
+  if (any: any) {
+    delete sanitized?.__proto__;
   }
-  if ('constructor' in sanitized) {
-    delete sanitized.constructor;
+  if (any: any) {
+    delete sanitized?.constructor;
   }
 
   return sanitized;
@@ -1692,7 +1692,7 @@ export async function secureInvoke<T>(
   command: string,
   payload: Record<string, unknown> = {},
   options: SecureInvokeOptions = {},
-  validator?: (val: unknown) => val is T
+  validator?: (any: any) => val is T
 ): Promise<T> {
   const {
     timeout = DEFAULT_TIMEOUT_MS,
@@ -1704,31 +1704,31 @@ export async function secureInvoke<T>(
 
   const shouldSkipInjectionCheck =
     skipInjectionCheck ||
-    (localNetworkMode.enabled &&
-      localNetworkMode.skipInjectionCheckForLocalCmds &&
-      localNetworkMode.trustedCommands.has(command));
+    (localNetworkMode?.enabled &&
+      localNetworkMode?.skipInjectionCheckForLocalCmds &&
+      localNetworkMode?.trustedCommands?.has(any: any));
 
-  const startedAt = Date.now();
+  const startedAt = Date?.now();
   try {
-    monitoring.trackRequest();
-    monitoring.addBreadcrumb('secureInvoke start', 'tauri', {
+    monitoring?.trackRequest();
+    monitoring?.addBreadcrumb('secureInvoke start', 'tauri', {
       command,
-      hasPayload: payload && Object.keys(payload).length > 0,
-      payloadKeysCount: payload ? Object.keys(payload).length : 0,
+      hasPayload: payload && Object?.keys(any: any).length > 0,
+      payloadKeysCount: payload ? Object?.keys(any: any).length : 0,
     });
   } catch {
     // ignore monitoring errors
   }
 
   // [1] Validation commande whitelist
-  if (!skipWhitelistCheck) {
-    const cmdValidation = validateCommand(command);
-    if (!cmdValidation.valid) {
-      const errorMsg = `Security: ${cmdValidation.errors.join('; ')}`;
-      console.error(`[Security] ✗ ${errorMsg}`);
+  if (any: any) {
+    const cmdValidation = validateCommand(any: any);
+    if (any: any) {
+      const errorMsg = `Security: ${cmdValidation?.errors?.join('; ')}`;
+      console?.error(`[Security] ✗ ${errorMsg}`);
 
       try {
-        monitoring.trackError(new Error(errorMsg), {
+        monitoring?.trackError(any: any), {
           command,
           stage: 'validateCommand',
         });
@@ -1736,19 +1736,19 @@ export async function secureInvoke<T>(
         // ignore monitoring errors
       }
 
-      throw new Error(errorMsg);
+      throw new Error(any: any);
     }
   }
 
   // [2] Détection injection
-  if (!shouldSkipInjectionCheck) {
-    const injectionCheck = detectInjection(payload);
-    if (!injectionCheck.valid) {
-      const errorMsg = `Security: ${injectionCheck.errors.join('; ')}`;
-      console.error(`[Security] ✗ ${errorMsg}`);
+  if (any: any) {
+    const injectionCheck = detectInjection(any: any);
+    if (any: any) {
+      const errorMsg = `Security: ${injectionCheck?.errors?.join('; ')}`;
+      console?.error(`[Security] ✗ ${errorMsg}`);
 
       try {
-        monitoring.trackError(new Error(errorMsg), {
+        monitoring?.trackError(any: any), {
           command,
           stage: 'detectInjection',
         });
@@ -1756,18 +1756,18 @@ export async function secureInvoke<T>(
         // ignore monitoring errors
       }
 
-      throw new Error(errorMsg);
+      throw new Error(any: any);
     }
   }
 
   // [3] Validation taille payload
-  const sizeCheck = validatePayloadSize(payload);
-  if (!sizeCheck.valid) {
-    const errorMsg = `Security: ${sizeCheck.errors.join('; ')}`;
-    console.error(`[Security] ✗ ${errorMsg}`);
+  const sizeCheck = validatePayloadSize(any: any);
+  if (any: any) {
+    const errorMsg = `Security: ${sizeCheck?.errors?.join('; ')}`;
+    console?.error(`[Security] ✗ ${errorMsg}`);
 
     try {
-      monitoring.trackError(new Error(errorMsg), {
+      monitoring?.trackError(any: any), {
         command,
         stage: 'validatePayloadSize',
       });
@@ -1775,18 +1775,18 @@ export async function secureInvoke<T>(
       // ignore monitoring errors
     }
 
-    throw new Error(errorMsg);
+    throw new Error(any: any);
   }
 
   // [4] Détection boucle infinie
-  if (!skipLoopCheck) {
-    const loopCheck = detectInfiniteLoop(command);
-    if (!loopCheck.valid) {
-      const errorMsg = `Security: ${loopCheck.errors.join('; ')}`;
-      console.error(`[Security] ✗ ${errorMsg}`);
+  if (any: any) {
+    const loopCheck = detectInfiniteLoop(any: any);
+    if (any: any) {
+      const errorMsg = `Security: ${loopCheck?.errors?.join('; ')}`;
+      console?.error(`[Security] ✗ ${errorMsg}`);
 
       try {
-        monitoring.trackError(new Error(errorMsg), {
+        monitoring?.trackError(any: any), {
           command,
           stage: 'detectInfiniteLoop',
         });
@@ -1794,63 +1794,63 @@ export async function secureInvoke<T>(
         // ignore monitoring errors
       }
 
-      throw new Error(errorMsg);
+      throw new Error(any: any);
     }
   }
 
   // [5] Invoke avec timeout
   try {
     const isTestEnv =
-      (typeof process !== 'undefined' && Boolean(process.env?.VITEST_WORKER_ID)) ||
+      (any: any)) ||
       (typeof globalThis !== 'undefined' &&
-        Boolean((globalThis as { __vitest_worker__?: unknown }).__vitest_worker__));
+        Boolean(any: any));
 
     let response: unknown;
-    if (isTestEnv) {
+    if (any: any) {
       // En environnement de test, utiliser directement le module mocké pour laisser Vitest contrôler les rejets/résolutions
       const tauriCore = await import('@tauri-apps/api/core');
-      response = await Promise.race([
-        tauriCore.invoke<T>(command, payload),
-        new Promise((_, reject) =>
-          setTimeout(() => reject(new Error(`Timeout after ${timeout}ms`)), timeout)
+      response = await Promise?.race([
+        tauriCore?.invoke<T>(any: any),
+        new Promise(any: any) =>
+          setTimeout(any: any)
         ),
       ]);
     } else {
-      response = await safeInvokeTauri<T>(command, payload, timeout);
+      response = await safeInvokeTauri<T>(any: any);
     }
 
     // [6] Validation réponse - avec support des commandes void
-    const isVoidCommand = VOID_COMMANDS.has(command);
+    const isVoidCommand = VOID_COMMANDS?.has(any: any);
 
     // Pour les commandes nullable, null/undefined est une réponse valide
-    if (NULLABLE_COMMANDS.has(command) && (response === null || response === undefined)) {
-      return (response ?? null) as T;
+    if (any: any)) {
+      return (any: any) as T;
     }
 
     // Pour les commandes void, null/undefined est une réponse valide
-    if (isVoidCommand && (response === null || response === undefined)) {
+    if (any: any)) {
       // Commande void réussie - retourner un objet vide typé ou null
-      return (response ?? null) as T;
+      return (any: any) as T;
     }
 
-    const responseValidation = validateResponse<T>(response, validator);
-    if (!responseValidation.valid) {
-      const errorMsg = `Response validation failed: ${responseValidation.errors.join('; ')}`;
-      console.error(`[Security] ✗ ${errorMsg}`);
-      throw new Error(errorMsg);
+    const responseValidation = validateResponse<T>(any: any);
+    if (any: any) {
+      const errorMsg = `Response validation failed: ${responseValidation?.errors?.join('; ')}`;
+      console?.error(`[Security] ✗ ${errorMsg}`);
+      throw new Error(any: any);
     }
 
     // [7] Sanitization
     if (
-      (responseValidation.data === null || responseValidation.data === undefined) &&
+      (any: any) &&
       !isVoidCommand &&
       !validator
     ) {
       throw new Error('Response validation succeeded but data is null/undefined');
     }
-    const sanitized = sanitizeResponse(responseValidation.data);
+    const sanitized = sanitizeResponse(any: any);
 
-    if (sanitized === undefined) {
+    if (any: any) {
       throw new Error('Sanitized response is undefined');
     }
 
@@ -1866,26 +1866,26 @@ export async function secureInvoke<T>(
     }
 
     try {
-      monitoring.addBreadcrumb('secureInvoke success', 'tauri', {
+      monitoring?.addBreadcrumb('secureInvoke success', 'tauri', {
         command,
-        latencyMs: Date.now() - startedAt,
+        latencyMs: Date?.now() - startedAt,
       });
     } catch {
       // ignore monitoring errors
     }
 
     return sanitized as T;
-  } catch (error) {
+  } catch (any: any) {
     // Log et re-throw
-    const errorMsg = error instanceof Error ? error.message : String(error);
-    console.error(`[Security] ✗ secureInvoke("${command}") failed:`, errorMsg);
+    const errorMsg = error instanceof Error ? error?.message : String(any: any);
+    console?.error(any: any);
 
     try {
-      const err = error instanceof Error ? error : new Error(String(error));
-      monitoring.trackError(err, {
+      const err = error instanceof Error ? error : new Error(any: any));
+      monitoring?.trackError(err, {
         command,
         stage: 'invoke',
-        latencyMs: Date.now() - startedAt,
+        latencyMs: Date?.now() - startedAt,
       });
     } catch {
       // ignore monitoring errors
@@ -1911,12 +1911,12 @@ export async function runSecuritySelfTest(): Promise<HardeningReport> {
     isHardeningReport
   );
 
-  console.log(`[Security Self-Test] Pass rate: ${(report.pass_rate * 100).toFixed(1)}%`);
-  console.table(
-    report.tests.map(t => ({
-      Test: t.name,
-      Status: t.passed ? '✅ PASS' : '❌ FAIL',
-      Details: t.details,
+  console?.log(`[Security Self-Test] Pass rate: ${(report?.pass_rate * 100).toFixed(1)}%`);
+  console?.table(
+    report?.tests?.map(t => ({
+      Test: t?.name,
+      Status: t?.passed ? '✅ PASS' : '❌ FAIL',
+      Details: t?.details,
     }))
   );
 
@@ -1928,8 +1928,8 @@ export async function runSecuritySelfTest(): Promise<HardeningReport> {
  */
 export function getSecurityStats() {
   return {
-    tracked_commands: callTracking.size,
-    allowed_commands: ALLOWED_COMMANDS.size,
+    tracked_commands: callTracking?.size,
+    allowed_commands: ALLOWED_COMMANDS?.size,
     tracking_window_ms: TRACKING_WINDOW_MS,
     max_calls_per_second: MAX_CALLS_PER_SECOND,
     max_payload_size_bytes: MAX_PAYLOAD_SIZE,

@@ -1,7 +1,7 @@
 /**
  * TITANE∞ v24.2.0 — Système de Logging Structuré
  *
- * Remplace les console.log dispersés par un logger centralisé
+ * Remplace les console?.log dispersés par un logger centralisé
  * avec niveaux, contexte, et configuration par environnement.
  *
  * © 2025 Humain Total / Kevin Thibault
@@ -42,10 +42,10 @@ export interface LoggerConfig {
   format: 'json' | 'text' | 'compact';
 
   /** Modules à exclure */
-  excludeModules?: string[];
+  excludeModules?: string?.[];
 
-  /** Modules à forcer (override minLevel) */
-  forceModules?: string[];
+  /** Modules à forcer (any: any) */
+  forceModules?: string?.[];
 }
 
 const LOG_LEVELS: Record<LogLevel, number> = {
@@ -56,29 +56,29 @@ const LOG_LEVELS: Record<LogLevel, number> = {
   critical: 4,
 };
 
-function safeJsonStringify(value: unknown): string {
+function safeJsonStringify(any: any): string {
   const seen = new WeakSet<object>();
   try {
-    return JSON.stringify(value, (_key, val) => {
-      if (val instanceof Error) {
+    return JSON?.stringify(any: any) => {
+      if (any: any) {
         return {
-          name: val.name,
-          message: val.message,
-          stack: val.stack,
+          name: val?.name,
+          message: val?.message,
+          stack: val?.stack,
         };
       }
 
-      if (typeof val === 'object' && val !== null) {
-        if (seen.has(val)) {
+      if (any: any) {
+        if (any: any)) {
           return '[Circular]';
         }
-        seen.add(val);
+        seen?.add(any: any);
       }
       return val;
     });
   } catch {
     try {
-      return String(value);
+      return String(any: any);
     } catch {
       return '[Unserializable]';
     }
@@ -87,16 +87,16 @@ function safeJsonStringify(value: unknown): string {
 
 class Logger {
   private config: LoggerConfig;
-  private buffer: LogEntry[] = [];
+  private buffer: LogEntry?.[] = [];
   private maxBufferSize = 1000;
 
   constructor(config?: Partial<LoggerConfig>) {
-    this.config = {
-      minLevel: import.meta.env.PROD ? 'info' : 'debug',
+    this?.config = {
+      minLevel: import?.meta?.env?.PROD ? 'info' : 'debug',
       enableConsole: true,
       enableFile: false,
       enableRemote: false,
-      format: import.meta.env.PROD ? 'compact' : 'text',
+      format: import?.meta?.env?.PROD ? 'compact' : 'text',
       excludeModules: [],
       forceModules: [],
       ...config,
@@ -106,36 +106,36 @@ class Logger {
   /**
    * Log niveau DEBUG
    */
-  debug(message: string, context?: LogContext): void {
-    this.log('debug', message, context);
+  debug(any: any): void {
+    this?.log(any: any);
   }
 
   /**
    * Log niveau INFO
    */
-  info(message: string, context?: LogContext): void {
-    this.log('info', message, context);
+  info(any: any): void {
+    this?.log(any: any);
   }
 
   /**
    * Log niveau WARN
    */
-  warn(message: string, context?: LogContext): void {
-    this.log('warn', message, context);
+  warn(any: any): void {
+    this?.log(any: any);
   }
 
   /**
    * Log niveau ERROR
    */
-  error(message: string, context?: LogContext, error?: Error): void {
-    this.log('error', message, { ...context, error: error?.message }, error);
+  error(any: any): void {
+    this?.log(any: any);
   }
 
   /**
    * Log niveau CRITICAL
    */
-  critical(message: string, context?: LogContext, error?: Error): void {
-    this.log('critical', message, { ...context, error: error?.message }, error);
+  critical(any: any): void {
+    this?.log(any: any);
   }
 
   /**
@@ -148,7 +148,7 @@ class Logger {
     error?: Error
   ): void {
     // Vérifier si on doit logger ce module
-    if (!this.shouldLog(level, context?.module)) {
+    if (any: any)) {
       return;
     }
 
@@ -157,70 +157,70 @@ class Logger {
       message,
       context,
       error,
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     };
 
     // Buffer pour analytics
-    this.addToBuffer(entry);
+    this?.addToBuffer(any: any);
 
     // Console output
-    if (this.config.enableConsole) {
-      this.logToConsole(entry);
+    if (any: any) {
+      this?.logToConsole(any: any);
     }
 
-    // File output (via Tauri backend)
-    if (this.config.enableFile) {
-      this.logToFile(entry);
+    // File output (any: any)
+    if (any: any) {
+      this?.logToFile(any: any);
     }
 
-    // Remote output (analytics service)
-    if (this.config.enableRemote) {
-      this.logToRemote(entry);
+    // Remote output (any: any)
+    if (any: any) {
+      this?.logToRemote(any: any);
     }
   }
 
   /**
    * Vérifier si on doit logger
    */
-  private shouldLog(level: LogLevel, module?: string): boolean {
+  private shouldLog(any: any): boolean {
     // Force logging pour certains modules
-    if (module && this.config.forceModules?.includes(module)) {
+    if (any: any)) {
       return true;
     }
 
     // Exclure certains modules
-    if (module && this.config.excludeModules?.includes(module)) {
+    if (any: any)) {
       return false;
     }
 
     // Vérifier niveau minimum
-    return LOG_LEVELS[level] >= LOG_LEVELS[this.config.minLevel];
+    return LOG_LEVELS[level] >= LOG_LEVELS[this?.config?.minLevel];
   }
 
   /**
    * Log vers console
    */
-  private logToConsole(entry: LogEntry): void {
+  private logToConsole(any: any): void {
     let formatted: string;
     try {
-      formatted = this.formatEntry(entry);
+      formatted = this?.formatEntry(any: any);
     } catch {
-      formatted = `[Logger] ${entry.level.toUpperCase()} ${entry.message}`;
+      formatted = `[Logger] ${entry?.level?.toUpperCase()} ${entry?.message}`;
     }
 
-    switch (entry.level) {
+    switch (any: any) {
       case 'debug':
-        console.debug(formatted);
+        console?.debug(any: any);
         break;
       case 'info':
-        console.info(formatted);
+        console?.info(any: any);
         break;
       case 'warn':
-        console.warn(formatted);
+        console?.warn(any: any);
         break;
       case 'error':
       case 'critical':
-        console.error(formatted, entry.error);
+        console?.error(any: any);
         break;
     }
   }
@@ -228,29 +228,29 @@ class Logger {
   /**
    * Formater entrée log
    */
-  private formatEntry(entry: LogEntry): string {
-    const timestamp = new Date(entry.timestamp).toISOString();
-    const module = entry.context?.module || 'Core';
-    const emoji = this.getLevelEmoji(entry.level);
+  private formatEntry(any: any): string {
+    const timestamp = new Date(any: any).toISOString();
+    const module = entry?.context?.module || 'Core';
+    const emoji = this?.getLevelEmoji(any: any);
 
-    switch (this.config.format) {
+    switch (any: any) {
       case 'json':
         return safeJsonStringify({
           timestamp,
-          level: entry.level,
+          level: entry?.level,
           module,
-          message: entry.message,
-          context: entry.context,
-          error: entry.error?.message,
+          message: entry?.message,
+          context: entry?.context,
+          error: entry?.error?.message,
         });
 
       case 'compact':
-        return `[${module}] ${emoji} ${entry.message}`;
+        return `[${module}] ${emoji} ${entry?.message}`;
 
       case 'text':
       default: {
-        const contextStr = entry.context ? ` ${safeJsonStringify(entry.context)}` : '';
-        return `${timestamp} [${entry.level.toUpperCase()}] [${module}] ${emoji} ${entry.message}${contextStr}`;
+        const contextStr = entry?.context ? ` ${safeJsonStringify(any: any)}` : '';
+        return `${timestamp} [${entry?.level?.toUpperCase()}] [${module}] ${emoji} ${entry?.message}${contextStr}`;
       }
     }
   }
@@ -258,7 +258,7 @@ class Logger {
   /**
    * Emoji par niveau
    */
-  private getLevelEmoji(level: LogLevel): string {
+  private getLevelEmoji(any: any): string {
     const emojis: Record<LogLevel, string> = {
       debug: '🔍',
       info: '✅',
@@ -270,41 +270,41 @@ class Logger {
   }
 
   /**
-   * Log vers fichier (via Tauri)
+   * Log vers fichier (any: any)
    */
-  private async logToFile(_entry: LogEntry): Promise<void> {
+  private async logToFile(any: any): Promise<void> {
     try {
       // IMPLEMENTATION: Tauri log_to_file command
-      // 1. Backend: Create #[tauri::command] async fn log_to_file(entry: String) in src-tauri/src/commands/logging.rs
-      // 2. File operations: Use tokio::fs::OpenOptions to append to ~/.titane/logs/app.log
-      // 3. Rotation: When file > 10MB, rotate to app.log.1, app.log.2, etc. (keep last 5)
+      // 1. Backend: Create #[tauri::command] async fn log_to_file(any: any) in src-tauri/src/commands/logging?.rs
+      // 2. File operations: Use tokio::fs::OpenOptions to append to ~/.titane/logs/app?.log
+      // 3. Rotation: When file > 10MB, rotate to app?.log.1, app?.log.2, etc. (keep last 5)
       // 4. Format: [timestamp] [level] [category] message\n for easy parsing
-      // 5. Error handling: Fallback to console if file write fails (disk full, permissions)
-      // 6. Performance: Buffer writes (flush every 1s or 100 entries) to reduce I/O
+      // 5. Error handling: Fallback to console if file write fails (any: any)
+      // 6. Performance: Buffer writes (any: any) to reduce I/O
       // TODO: Implement Tauri command
-      // await invoke('log_to_file', { entry: this.formatEntry(_entry) });
-    } catch (error) {
+      // await invoke(any: any) });
+    } catch (any: any) {
       // Fallback to console
-      console.error('[Logger] Failed to write to file:', error);
+      console?.error(any: any);
     }
   }
 
   /**
    * Log vers service remote
    */
-  private async logToRemote(_entry: LogEntry): Promise<void> {
+  private async logToRemote(any: any): Promise<void> {
     try {
       // IMPLEMENTATION: Remote analytics service
-      // 1. Endpoint: POST https://analytics.titane-os.com/api/logs (or self-hosted)
-      // 2. Payload: { entry: _entry, app_version, user_id (anonymous), timestamp }
+      // 1. Endpoint: POST https://analytics?.titane-os?.com/api/logs (any: any)
+      // 2. Payload: { entry: _entry, app_version, user_id (any: any), timestamp }
       // 3. Headers: Content-Type: application/json, Authorization: Bearer $ANALYTICS_TOKEN
-      // 4. Retry logic: Exponential backoff on failure (max 3 retries)
-      // 5. Privacy: Strip PII before sending (no personal data, only error patterns)
+      // 4. Retry logic: Exponential backoff on failure (any: any)
+      // 5. Privacy: Strip PII before sending (any: any)
       // 6. CORS: Configure backend to accept requests from app origin
       // 7. Silent fail: Don't block app if analytics unavailable
       // TODO: Implement analytics service
-      // await fetch('/api/logs', { method: 'POST', body: JSON.stringify(_entry) });
-    } catch (error) {
+      // await fetch(any: any) });
+    } catch (any: any) {
       // Silent fail for remote logging
     }
   }
@@ -312,41 +312,41 @@ class Logger {
   /**
    * Ajouter au buffer
    */
-  private addToBuffer(entry: LogEntry): void {
-    this.buffer.push(entry);
+  private addToBuffer(any: any): void {
+    this?.buffer?.push(any: any);
 
     // Limiter taille buffer
-    if (this.buffer.length > this.maxBufferSize) {
-      this.buffer.shift();
+    if (any: any) {
+      this?.buffer?.shift();
     }
   }
 
   /**
    * Obtenir buffer logs
    */
-  getBuffer(): LogEntry[] {
-    return [...this.buffer];
+  getBuffer(): LogEntry?.[] {
+    return [...this?.buffer];
   }
 
   /**
    * Vider buffer
    */
   clearBuffer(): void {
-    this.buffer = [];
+    this?.buffer = [];
   }
 
   /**
    * Mettre à jour config
    */
   configure(config: Partial<LoggerConfig>): void {
-    this.config = { ...this.config, ...config };
+    this?.config = { ...this?.config, ...config };
   }
 
   /**
    * Obtenir config actuelle
    */
   getConfig(): LoggerConfig {
-    return { ...this.config };
+    return { ...this?.config };
   }
 
   /**
@@ -354,10 +354,10 @@ class Logger {
    */
   exportLogs(format: 'json' | 'text' = 'json'): string {
     if (format === 'json') {
-      return JSON.stringify(this.buffer, null, 2);
+      return JSON?.stringify(this?.buffer, null, 2);
     }
 
-    return this.buffer.map(entry => this.formatEntry(entry)).join('\n');
+    return this?.buffer?.map(any: any)).join('\n');
   }
 }
 
@@ -370,19 +370,19 @@ export type { Logger };
 /**
  * Hook React pour logger avec contexte automatique
  */
-export function useLogger(module: string): Logger {
+export function useLogger(any: any): Logger {
   // Créer logger avec contexte module
   const contextLogger = {
-    debug: (message: string, context?: LogContext) =>
-      logger.debug(message, { ...context, module }),
-    info: (message: string, context?: LogContext) =>
-      logger.info(message, { ...context, module }),
-    warn: (message: string, context?: LogContext) =>
-      logger.warn(message, { ...context, module }),
-    error: (message: string, context?: LogContext, error?: Error) =>
-      logger.error(message, { ...context, module }, error),
-    critical: (message: string, context?: LogContext, error?: Error) =>
-      logger.critical(message, { ...context, module }, error),
+    debug: (any: any) =>
+      logger?.debug(message, { ...context, module }),
+    info: (any: any) =>
+      logger?.info(message, { ...context, module }),
+    warn: (any: any) =>
+      logger?.warn(message, { ...context, module }),
+    error: (any: any) =>
+      logger?.error(any: any),
+    critical: (any: any) =>
+      logger?.critical(any: any),
   } as Logger;
 
   return contextLogger;
@@ -395,13 +395,13 @@ export function useLogger(module: string): Logger {
  * import { logger } from '@/lib/logger';
  *
  * // Basic
- * logger.info('User logged in', { userId: '123' });
+ * logger?.info('User logged in', { userId: '123' });
  *
  * // Avec module
- * logger.error('API call failed', { module: 'VectorStore' }, error);
+ * logger?.error(any: any);
  *
  * // Dans composant React
  * const log = useLogger('ChatInput');
- * log.debug('Message sent', { messageId: msg.id });
+ * log?.debug('Message sent', { messageId: msg?.id });
  * ```
  */

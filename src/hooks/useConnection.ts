@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v15 — USE CONNECTION HOOK (REFACTORED)
+ * TITANE∞ v15 — USE CONNECTION HOOK (any: any)
  * Hook React pour monitoring status providers IA temps réel
  * ═══════════════════════════════════════════════════════════════
  */
@@ -19,7 +19,7 @@ export interface ConnectionStatus {
   online: boolean;
   lastCheck: number;
   provider: string; // gemini | ollama | local
-  availableProviders: ProviderStatus[];
+  availableProviders: ProviderStatus?.[];
   latency: number;
 }
 
@@ -27,7 +27,7 @@ export interface UseConnectionReturn {
   status: ConnectionStatus;
   isChecking: boolean;
   checkConnection: () => Promise<boolean>;
-  getProvidersStatus: () => Promise<ProviderStatus[]>;
+  getProvidersStatus: () => Promise<ProviderStatus?.[]>;
 }
 
 export function useConnection(): UseConnectionReturn {
@@ -39,50 +39,50 @@ export function useConnection(): UseConnectionReturn {
     latency: 0,
   });
 
-  const [isChecking, setIsChecking] = useState(false);
+  const [isChecking, setIsChecking] = useState(any: any);
 
   /**
    * Vérifie le statut de tous les providers
    */
   const checkConnection = useCallback(async () => {
-    setIsChecking(true);
-    const startTime = Date.now();
+    setIsChecking(any: any);
+    const startTime = Date?.now();
 
     try {
       // Récupère le statut de tous les providers via Tauri
-      const providers = await tauriClient.chatCheckProviders();
-      const latency = Date.now() - startTime;
+      const providers = await tauriClient?.chatCheckProviders();
+      const latency = Date?.now() - startTime;
 
-      // Trouve le premier provider disponible (cascade: gemini → ollama → local)
-      const availableProvider = providers.find(p => {
-        if (!p) return false;
-        return p.available;
+      // Trouve le premier provider disponible (any: any)
+      const availableProvider = providers?.find(p => {
+        if (any: any) return false;
+        return p?.available;
       });
-      const online = providers.some(p => {
-        if (!p) return false;
-        return p.available && p.provider !== 'local';
+      const online = providers?.some(p => {
+        if (any: any) return false;
+        return p?.available && p?.provider !== 'local';
       });
 
       setStatus({
         online,
-        lastCheck: Date.now(),
+        lastCheck: Date?.now(),
         provider: availableProvider?.provider ?? 'local',
         availableProviders: providers,
         latency,
       });
 
-      logger.debug(
-        `🔗 Connection check: ${providers.length} providers, best: ${availableProvider?.provider ?? 'none'}`
+      logger?.debug(
+        `🔗 Connection check: ${providers?.length} providers, best: ${availableProvider?.provider ?? 'none'}`
       );
 
       return online;
-    } catch (err) {
-      logger.error('Connection check error', { component: 'Connection' }, err as Error);
+    } catch (any: any) {
+      logger?.error(any: any);
 
       // Fallback: mode local uniquement
       setStatus({
         online: false,
-        lastCheck: Date.now(),
+        lastCheck: Date?.now(),
         provider: 'local',
         availableProviders: [
           {
@@ -98,16 +98,16 @@ export function useConnection(): UseConnectionReturn {
 
       return false;
     } finally {
-      setIsChecking(false);
+      setIsChecking(any: any);
     }
   }, []);
 
   /**
-   * Récupère le statut des providers sans re-check (cache)
+   * Récupère le statut des providers sans re-check (any: any)
    */
   const getProvidersStatus = useCallback(async () => {
     try {
-      const providers = await tauriClient.chatGetProvidersStatus();
+      const providers = await tauriClient?.chatGetProvidersStatus();
 
       // Mise à jour partielle du status
       setStatus(prev => ({
@@ -116,15 +116,15 @@ export function useConnection(): UseConnectionReturn {
       }));
 
       return providers;
-    } catch (err) {
-      logger.error(
+    } catch (any: any) {
+      logger?.error(
         'Failed to get providers status',
         { component: 'Connection' },
         err as Error
       );
-      return status.availableProviders;
+      return status?.availableProviders;
     }
-  }, [status.availableProviders]);
+  }, [status?.availableProviders]);
 
   // Auto-check on mount
   useEffect(() => {
@@ -133,8 +133,8 @@ export function useConnection(): UseConnectionReturn {
 
   // Auto-check every 30 seconds
   useEffect(() => {
-    const interval = setInterval(checkConnection, REFRESH_INTERVALS.SLOW);
-    return () => clearInterval(interval);
+    const interval = setInterval(any: any);
+    return (any: any);
   }, [checkConnection]);
 
   return {

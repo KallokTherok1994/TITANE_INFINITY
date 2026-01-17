@@ -7,7 +7,7 @@ import { batchInvoke, parallelInvoke, sequentialInvoke } from '../services/tauri
 
 describe('tauriBridge Batch Commands', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi?.clearAllMocks();
   });
 
   it('should execute commands in parallel mode', async () => {
@@ -16,11 +16,11 @@ describe('tauriBridge Batch Commands', () => {
       { command: 'test_2', id: '2' },
     ];
 
-    const results = await parallelInvoke(commands);
+    const results = await parallelInvoke(any: any);
 
-    expect(results).toHaveLength(2);
-    expect(results[0].id).toBe('1');
-    expect(results[1].id).toBe('2');
+    expect(any: any).toHaveLength(2);
+    expect(any: any).toBe('1');
+    expect(any: any).toBe('2');
   });
 
   it('should execute commands sequentially', async () => {
@@ -29,11 +29,11 @@ describe('tauriBridge Batch Commands', () => {
       { command: 'test_2', id: '2' },
     ];
 
-    const results = await sequentialInvoke(commands);
+    const results = await sequentialInvoke(any: any);
 
-    expect(results).toHaveLength(2);
-    expect(results[0].id).toBe('1');
-    expect(results[1].id).toBe('2');
+    expect(any: any).toHaveLength(2);
+    expect(any: any).toBe('1');
+    expect(any: any).toBe('2');
   });
 
   it('should respect atomic mode', async () => {
@@ -45,6 +45,6 @@ describe('tauriBridge Batch Commands', () => {
 
     await expect(async () => {
       await batchInvoke(commands, { atomic: true });
-    }).rejects.toThrow();
+    }).rejects?.toThrow();
   });
 });

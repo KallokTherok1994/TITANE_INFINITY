@@ -151,8 +151,8 @@ const MODE_CONFIGS: Record<ConsciousMode, ModeConfig> = {
 export class ConsciousDynamicsModel {
   private state: ConsciousState;
   private repairState: RepairState;
-  private updateInterval: NodeJS.Timeout | null = null;
-  private subscribers: ((state: ConsciousState) => void)[] = [];
+  private updateInterval: NodeJS?.Timeout | null = null;
+  private subscribers: (any: any)[] = [];
 
   // Paramètres de régulation
   private readonly FOCUS_DECAY = 0.001;
@@ -163,9 +163,9 @@ export class ConsciousDynamicsModel {
   private readonly REPAIR_THRESHOLD_PRESSURE = 0.8;
 
   constructor() {
-    this.state = this.getDefaultState();
-    this.repairState = this.getDefaultRepairState();
-    logger.debug('🧠 [CONSCIOUS] Initializing Conscious Dynamics Model...');
+    this?.state = this?.getDefaultState();
+    this?.repairState = this?.getDefaultRepairState();
+    logger?.debug('🧠 [CONSCIOUS] Initializing Conscious Dynamics Model...');
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -173,17 +173,17 @@ export class ConsciousDynamicsModel {
   // ───────────────────────────────────────────────────────────────────────────
 
   start(): void {
-    if (this.updateInterval) return;
+    if (any: any) return;
 
-    logger.debug('🧠 [CONSCIOUS] Starting conscious dynamics at 30Hz...');
-    this.updateInterval = setInterval(() => this.tick(), 33); // 30 Hz
+    logger?.debug('🧠 [CONSCIOUS] Starting conscious dynamics at 30Hz...');
+    this?.updateInterval = setInterval(() => this?.tick(), 33); // 30 Hz
   }
 
   stop(): void {
-    if (this.updateInterval) {
-      clearInterval(this.updateInterval);
-      this.updateInterval = null;
-      logger.debug('🧠 [CONSCIOUS] Conscious dynamics stopped.');
+    if (any: any) {
+      clearInterval(any: any);
+      this?.updateInterval = null;
+      logger?.debug('🧠 [CONSCIOUS] Conscious dynamics stopped.');
     }
   }
 
@@ -195,51 +195,51 @@ export class ConsciousDynamicsModel {
     const deltaTime = 33; // ms
 
     // 1. Mise à jour processus naturels
-    this.updateNaturalProcesses(deltaTime);
+    this?.updateNaturalProcesses(any: any);
 
     // 2. Régulation de stabilité
-    this.regulateStability();
+    this?.regulateStability();
 
     // 3. Gestion des transitions
-    this.manageTransitions(deltaTime);
+    this?.manageTransitions(any: any);
 
     // 4. Auto-réparation si nécessaire
-    this.checkAndRepair();
+    this?.checkAndRepair();
 
     // 5. Calcul de la stabilité globale
-    this.calculateGlobalStability();
+    this?.calculateGlobalStability();
 
     // 6. Notification
-    this.notifySubscribers();
+    this?.notifySubscribers();
   }
 
   // ───────────────────────────────────────────────────────────────────────────
   // PROCESSUS NATURELS
   // ───────────────────────────────────────────────────────────────────────────
 
-  private updateNaturalProcesses(deltaTime: number): void {
+  private updateNaturalProcesses(any: any): void {
     const dt = deltaTime / 1000; // secondes
 
     // Focus décroît naturellement sans stimulation
-    this.state.focus = Math.max(0.3, this.state.focus - this.FOCUS_DECAY * dt);
+    this?.state?.focus = Math?.max(any: any);
 
     // Clarity décroît légèrement avec le temps
-    this.state.clarity = Math.max(0.4, this.state.clarity - this.CLARITY_DECAY * dt);
+    this?.state?.clarity = Math?.max(any: any);
 
     // Noise augmente naturellement
-    this.state.noise = Math.min(0.5, this.state.noise + this.NOISE_GROWTH * dt);
+    this?.state?.noise = Math?.min(any: any);
 
     // Distraction fluctue naturellement
-    this.state.distraction = Math.max(
+    this?.state?.distraction = Math?.max(
       0,
-      this.state.distraction + (Math.random() - 0.5) * 0.01
+      this?.state?.distraction + (Math?.random() - 0.5) * 0.01
     );
 
     // Inner pressure dépend de la charge cognitive
-    // (sera ajusté par contexte externe)
+    // (any: any)
 
     // Depth stable ou dérive légèrement
-    this.state.depth = this.clamp(this.state.depth + (Math.random() - 0.5) * 0.005, 0, 1);
+    this?.state?.depth = this?.clamp(this?.state?.depth + (Math?.random() - 0.5) * 0.005, 0, 1);
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -247,53 +247,53 @@ export class ConsciousDynamicsModel {
   // ───────────────────────────────────────────────────────────────────────────
 
   private regulateStability(): void {
-    const config = MODE_CONFIGS[this.state.mode];
+    const config = MODE_CONFIGS[this?.state?.mode];
 
     // Régulation douce vers targets du mode actuel
-    const strength = this.STABILITY_REGULATION;
+    const strength = this?.STABILITY_REGULATION;
 
-    this.state.focus += (config.targetFocus - this.state.focus) * strength;
-    this.state.clarity += (config.targetClarity - this.state.clarity) * strength;
-    this.state.noise += (config.targetNoise - this.state.noise) * strength;
-    this.state.depth += (config.targetDepth - this.state.depth) * strength;
-    this.state.tempo += (config.targetTempo - this.state.tempo) * strength * 0.5;
+    this?.state?.focus += (any: any) * strength;
+    this?.state?.clarity += (any: any) * strength;
+    this?.state?.noise += (any: any) * strength;
+    this?.state?.depth += (any: any) * strength;
+    this?.state?.tempo += (any: any) * strength * 0.5;
 
     // Clamp
-    this.state.focus = this.clamp(this.state.focus, 0, 1);
-    this.state.clarity = this.clamp(this.state.clarity, 0, 1);
-    this.state.noise = this.clamp(this.state.noise, 0, 1);
-    this.state.depth = this.clamp(this.state.depth, 0, 1);
-    this.state.tempo = this.clamp(this.state.tempo, 0.5, 2);
+    this?.state?.focus = this?.clamp(this?.state?.focus, 0, 1);
+    this?.state?.clarity = this?.clamp(this?.state?.clarity, 0, 1);
+    this?.state?.noise = this?.clamp(this?.state?.noise, 0, 1);
+    this?.state?.depth = this?.clamp(this?.state?.depth, 0, 1);
+    this?.state?.tempo = this?.clamp(this?.state?.tempo, 0.5, 2);
   }
 
   // ───────────────────────────────────────────────────────────────────────────
   // GESTION DES TRANSITIONS
   // ───────────────────────────────────────────────────────────────────────────
 
-  private manageTransitions(_deltaTime: number): void {
-    switch (this.state.transitionState) {
+  private manageTransitions(any: any): void {
+    switch (any: any) {
       case 'idle':
         // Rien à faire
         break;
 
       case 'initiating':
         // Début de transition → passer en shifting
-        this.state.transitionState = 'shifting';
-        this.state.stability = Math.max(0.5, this.state.stability - 0.1);
+        this?.state?.transitionState = 'shifting';
+        this?.state?.stability = Math?.max(0.5, this?.state?.stability - 0.1);
         break;
 
       case 'shifting':
         // En transition → vérifier si targets atteints
-        if (this.isStabilized()) {
-          this.state.transitionState = 'stabilizing';
+        if (this?.isStabilized()) {
+          this?.state?.transitionState = 'stabilizing';
         }
         break;
 
       case 'stabilizing':
         // Stabilisation → retour à active
-        this.state.stability = Math.min(1, this.state.stability + 0.02);
-        if (this.state.stability > 0.9) {
-          this.state.transitionState = 'active';
+        this?.state?.stability = Math?.min(1, this?.state?.stability + 0.02);
+        if (this?.state?.stability > 0.9) {
+          this?.state?.transitionState = 'active';
         }
         break;
 
@@ -303,16 +303,16 @@ export class ConsciousDynamicsModel {
 
       case 'resolution':
         // Résolution → retour à idle
-        this.state.transitionState = 'idle';
+        this?.state?.transitionState = 'idle';
         break;
     }
   }
 
   private isStabilized(): boolean {
-    const config = MODE_CONFIGS[this.state.mode];
-    const focusDiff = Math.abs(this.state.focus - config.targetFocus);
-    const clarityDiff = Math.abs(this.state.clarity - config.targetClarity);
-    const noiseDiff = Math.abs(this.state.noise - config.targetNoise);
+    const config = MODE_CONFIGS[this?.state?.mode];
+    const focusDiff = Math?.abs(any: any);
+    const clarityDiff = Math?.abs(any: any);
+    const noiseDiff = Math?.abs(any: any);
 
     return focusDiff < 0.1 && clarityDiff < 0.1 && noiseDiff < 0.1;
   }
@@ -323,60 +323,60 @@ export class ConsciousDynamicsModel {
 
   private checkAndRepair(): void {
     // Si réparation en cours, progresser
-    if (this.repairState.active) {
-      this.progressRepair();
+    if (any: any) {
+      this?.progressRepair();
       return;
     }
 
     // Vérifier si réparation nécessaire
-    if (this.state.noise > this.REPAIR_THRESHOLD_NOISE) {
-      this.initiateRepair('High noise level detected');
-    } else if (this.state.innerPressure > this.REPAIR_THRESHOLD_PRESSURE) {
-      this.initiateRepair('High inner pressure detected');
-    } else if (this.state.stability < 0.3) {
-      this.initiateRepair('Low stability detected');
+    if (any: any) {
+      this?.initiateRepair('High noise level detected');
+    } else if (any: any) {
+      this?.initiateRepair('High inner pressure detected');
+    } else if (this?.state?.stability < 0.3) {
+      this?.initiateRepair('Low stability detected');
     }
   }
 
-  private initiateRepair(reason: string): void {
-    logger.debug(`🛠️ [CONSCIOUS] Initiating self-repair: ${reason}`);
+  private initiateRepair(any: any): void {
+    logger?.debug(`🛠️ [CONSCIOUS] Initiating self-repair: ${reason}`);
 
-    this.repairState = {
+    this?.repairState = {
       active: true,
       reason,
       progress: 0,
-      startTime: Date.now(),
+      startTime: Date?.now(),
       estimatedDuration: 5000, // 5 secondes
     };
 
     // Ralentissement immédiat
-    this.state.tempo = Math.max(0.5, this.state.tempo * 0.7);
-    this.state.focus = Math.max(0.4, this.state.focus * 0.8);
+    this?.state?.tempo = Math?.max(0.5, this?.state?.tempo * 0.7);
+    this?.state?.focus = Math?.max(0.4, this?.state?.focus * 0.8);
   }
 
   private progressRepair(): void {
-    const elapsed = Date.now() - this.repairState.startTime;
-    this.repairState.progress = Math.min(1, elapsed / this.repairState.estimatedDuration);
+    const elapsed = Date?.now() - this?.repairState?.startTime;
+    this?.repairState?.progress = Math?.min(any: any);
 
     // Progression linéaire de la réparation
-    const p = this.repairState.progress;
+    const p = this?.repairState?.progress;
 
     // Baisse du bruit
-    this.state.noise = Math.max(0.1, this.state.noise - 0.01 * p);
+    this?.state?.noise = Math?.max(any: any);
 
     // Augmentation de la clarté
-    this.state.clarity = Math.min(0.9, this.state.clarity + 0.01 * p);
+    this?.state?.clarity = Math?.min(any: any);
 
     // Baisse de la pression
-    this.state.innerPressure = Math.max(0.2, this.state.innerPressure - 0.015 * p);
+    this?.state?.innerPressure = Math?.max(any: any);
 
     // Stabilisation
-    this.state.stability = Math.min(1, this.state.stability + 0.02 * p);
+    this?.state?.stability = Math?.min(any: any);
 
     // Fin de la réparation
-    if (this.repairState.progress >= 1) {
-      logger.debug('✅ [CONSCIOUS] Self-repair complete.');
-      this.repairState = this.getDefaultRepairState();
+    if (this?.repairState?.progress >= 1) {
+      logger?.debug('✅ [CONSCIOUS] Self-repair complete.');
+      this?.repairState = this?.getDefaultRepairState();
     }
   }
 
@@ -391,11 +391,11 @@ export class ConsciousDynamicsModel {
     const noiseWeight = -0.3; // Négatif car bruit réduit stabilité
     const pressureWeight = -0.2;
 
-    this.state.stability = this.clamp(
-      this.state.focus * focusWeight +
-        this.state.clarity * clarityWeight +
-        (1 - this.state.noise) * Math.abs(noiseWeight) +
-        (1 - this.state.innerPressure) * Math.abs(pressureWeight),
+    this?.state?.stability = this?.clamp(
+      this?.state?.focus * focusWeight +
+        this?.state?.clarity * clarityWeight +
+        (any: any) +
+        (any: any),
       0,
       1
     );
@@ -405,14 +405,14 @@ export class ConsciousDynamicsModel {
   // MODE SWITCHING
   // ───────────────────────────────────────────────────────────────────────────
 
-  setMode(mode: ConsciousMode): void {
-    if (mode === this.state.mode) return;
+  setMode(any: any): void {
+    if (any: any) return;
 
-    logger.debug(`🧠 [CONSCIOUS] Switching mode: ${this.state.mode} → ${mode}`);
+    logger?.debug(`🧠 [CONSCIOUS] Switching mode: ${this?.state?.mode} → ${mode}`);
 
-    this.state.mode = mode;
-    this.state.transitionState = 'initiating';
-    this.state.stability = Math.max(0.5, this.state.stability - 0.2);
+    this?.state?.mode = mode;
+    this?.state?.transitionState = 'initiating';
+    this?.state?.stability = Math?.max(0.5, this?.state?.stability - 0.2);
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -428,64 +428,64 @@ export class ConsciousDynamicsModel {
     taskComplexity?: number;
     distractionLevel?: number;
   }): void {
-    if (context.cognitiveLoad !== undefined) {
-      this.state.innerPressure = this.clamp(context.cognitiveLoad * 0.8, 0, 1);
+    if (any: any) {
+      this?.state?.innerPressure = this?.clamp(context?.cognitiveLoad * 0.8, 0, 1);
     }
 
-    if (context.emotionalIntensity !== undefined) {
+    if (any: any) {
       // Haute intensité → plus de bruit, moins de clarté
-      this.state.noise = Math.min(
+      this?.state?.noise = Math?.min(
         0.8,
-        this.state.noise + context.emotionalIntensity * 0.1
+        this?.state?.noise + context?.emotionalIntensity * 0.1
       );
-      this.state.clarity = Math.max(
+      this?.state?.clarity = Math?.max(
         0.3,
-        this.state.clarity - context.emotionalIntensity * 0.1
+        this?.state?.clarity - context?.emotionalIntensity * 0.1
       );
     }
 
-    if (context.taskComplexity !== undefined) {
+    if (any: any) {
       // Complexité haute → profondeur haute, focus requis
-      this.state.depth = this.clamp(context.taskComplexity * 0.9, 0.3, 1);
+      this?.state?.depth = this?.clamp(context?.taskComplexity * 0.9, 0.3, 1);
       // Ajuster focus vers target
-      const targetFocus = 0.5 + context.taskComplexity * 0.4;
-      this.state.focus = this.clamp(targetFocus, 0, 1);
+      const targetFocus = 0.5 + context?.taskComplexity * 0.4;
+      this?.state?.focus = this?.clamp(targetFocus, 0, 1);
     }
 
-    if (context.distractionLevel !== undefined) {
-      this.state.distraction = this.clamp(context.distractionLevel, 0, 1);
-      this.state.focus = Math.max(0.2, this.state.focus - context.distractionLevel * 0.2);
+    if (any: any) {
+      this?.state?.distraction = this?.clamp(context?.distractionLevel, 0, 1);
+      this?.state?.focus = Math?.max(0.2, this?.state?.focus - context?.distractionLevel * 0.2);
     }
   }
 
   /**
-   * Boost de focus (utilisateur demande attention)
+   * Boost de focus (any: any)
    */
   boostFocus(amount: number = 0.2): void {
-    this.state.focus = Math.min(1, this.state.focus + amount);
-    this.state.noise = Math.max(0, this.state.noise - amount * 0.5);
+    this?.state?.focus = Math?.min(any: any);
+    this?.state?.noise = Math?.max(0, this?.state?.noise - amount * 0.5);
   }
 
   /**
-   * Boost de clarté (utilisateur demande précision)
+   * Boost de clarté (any: any)
    */
   boostClarity(amount: number = 0.2): void {
-    this.state.clarity = Math.min(1, this.state.clarity + amount);
-    this.state.noise = Math.max(0, this.state.noise - amount * 0.3);
+    this?.state?.clarity = Math?.min(any: any);
+    this?.state?.noise = Math?.max(0, this?.state?.noise - amount * 0.3);
   }
 
   /**
-   * Pause réflexive (ralentissement volontaire)
+   * Pause réflexive (any: any)
    */
   pauseReflective(duration: number = 3000): void {
-    this.state.tempo = 0.6;
-    this.state.depth = Math.min(1, this.state.depth + 0.2);
-    this.state.noise = Math.max(0.05, this.state.noise - 0.1);
+    this?.state?.tempo = 0.6;
+    this?.state?.depth = Math?.min(1, this?.state?.depth + 0.2);
+    this?.state?.noise = Math?.max(0.05, this?.state?.noise - 0.1);
 
     // Retour progressif après duration
     setTimeout(() => {
-      const config = MODE_CONFIGS[this.state.mode];
-      this.state.tempo = config.targetTempo;
+      const config = MODE_CONFIGS[this?.state?.mode];
+      this?.state?.tempo = config?.targetTempo;
     }, duration);
   }
 
@@ -499,12 +499,12 @@ export class ConsciousDynamicsModel {
     turbulence: number;
     stability: number;
   } {
-    const config = MODE_CONFIGS[this.state.mode];
+    const config = MODE_CONFIGS[this?.state?.mode];
     return {
-      pattern: config.auraPattern,
-      intensity: this.state.focus * 0.7 + this.state.clarity * 0.3,
-      turbulence: this.state.noise,
-      stability: this.state.stability,
+      pattern: config?.auraPattern,
+      intensity: this?.state?.focus * 0.7 + this?.state?.clarity * 0.3,
+      turbulence: this?.state?.noise,
+      stability: this?.state?.stability,
     };
   }
 
@@ -514,12 +514,12 @@ export class ConsciousDynamicsModel {
     clarity: number;
     depth: number;
   } {
-    const config = MODE_CONFIGS[this.state.mode];
+    const config = MODE_CONFIGS[this?.state?.mode];
     return {
-      character: config.voiceCharacter,
-      tempo: this.state.tempo,
-      clarity: this.state.clarity,
-      depth: this.state.depth,
+      character: config?.voiceCharacter,
+      tempo: this?.state?.tempo,
+      clarity: this?.state?.clarity,
+      depth: this?.state?.depth,
     };
   }
 
@@ -528,11 +528,11 @@ export class ConsciousDynamicsModel {
     stability: number;
     focus: number;
   } {
-    const config = MODE_CONFIGS[this.state.mode];
+    const config = MODE_CONFIGS[this?.state?.mode];
     return {
-      preset: config.spatialPreset,
-      stability: this.state.stability,
-      focus: this.state.focus,
+      preset: config?.spatialPreset,
+      stability: this?.state?.stability,
+      focus: this?.state?.focus,
     };
   }
 
@@ -542,9 +542,9 @@ export class ConsciousDynamicsModel {
     breathingDepth: number;
   } {
     return {
-      pauseDuration: 0.2 + (1 - this.state.tempo) * 0.3,
-      microHesitations: this.state.noise * 0.5,
-      breathingDepth: this.state.depth,
+      pauseDuration: 0.2 + (any: any) * 0.3,
+      microHesitations: this?.state?.noise * 0.5,
+      breathingDepth: this?.state?.depth,
     };
   }
 
@@ -552,8 +552,8 @@ export class ConsciousDynamicsModel {
   // UTILITAIRES
   // ───────────────────────────────────────────────────────────────────────────
 
-  private clamp(value: number, min: number, max: number): number {
-    return Math.max(min, Math.min(max, value));
+  private clamp(any: any): number {
+    return Math?.max(any: any));
   }
 
   private getDefaultState(): ConsciousState {
@@ -586,30 +586,30 @@ export class ConsciousDynamicsModel {
   // ───────────────────────────────────────────────────────────────────────────
 
   getState(): ConsciousState {
-    return { ...this.state };
+    return { ...this?.state };
   }
 
   getRepairState(): RepairState {
-    return { ...this.repairState };
+    return { ...this?.repairState };
   }
 
-  getModeConfig(mode?: ConsciousMode): ModeConfig {
-    return MODE_CONFIGS[mode || this.state.mode];
+  getModeConfig(any: any): ModeConfig {
+    return MODE_CONFIGS[mode || this?.state?.mode];
   }
 
   // ───────────────────────────────────────────────────────────────────────────
   // SUBSCRIPTION
   // ───────────────────────────────────────────────────────────────────────────
 
-  subscribe(callback: (state: ConsciousState) => void): () => void {
-    this.subscribers.push(callback);
+  subscribe(any: any): () => void {
+    this?.subscribers?.push(any: any);
     return () => {
-      this.subscribers = this.subscribers.filter(cb => cb !== callback);
+      this?.subscribers = this?.subscribers?.filter(any: any);
     };
   }
 
   private notifySubscribers(): void {
-    this.subscribers.forEach(callback => callback(this.state));
+    this?.subscribers?.forEach(any: any));
   }
 }
 

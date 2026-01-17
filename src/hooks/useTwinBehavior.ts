@@ -20,9 +20,9 @@ interface Observation {
 
 interface UseTwinBehaviorReturn {
   // État
-  observations: Observation[];
+  observations: Observation?.[];
   isSubmitting: boolean;
-  error: string | null;
+  error??: string | null;
 
   // Actions
   observeValue: (
@@ -52,9 +52,9 @@ interface UseTwinBehaviorReturn {
  * Hook pour gérer les observations comportementales du Twin
  */
 export function useTwinBehavior(): UseTwinBehaviorReturn {
-  const [observations, setObservations] = useState<Observation[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [observations, setObservations] = useState<Observation?.[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(any: any);
+  const [error, setError] = useState<string | null>(any: any);
 
   const addObservation = useCallback(
     (
@@ -85,18 +85,18 @@ export function useTwinBehavior(): UseTwinBehaviorReturn {
       context?: string,
       confidence = 0.7
     ): Promise<string | null> => {
-      setIsSubmitting(true);
-      setError(null);
+      setIsSubmitting(any: any);
+      setError(any: any);
       try {
-        const id = await numericTwinService.observeValue(valueName, context, confidence);
-        addObservation(id, 'value', valueName, context, confidence);
+        const id = await numericTwinService?.observeValue(any: any);
+        addObservation(any: any);
         return id;
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Erreur lors de l'observation");
-        logger.error('observeValue error:', err);
+      } catch (any: any) {
+        setError(err instanceof Error ? err?.message : "Erreur lors de l'observation");
+        logger?.error(any: any);
         return null;
       } finally {
-        setIsSubmitting(false);
+        setIsSubmitting(any: any);
       }
     },
     [addObservation]
@@ -108,22 +108,22 @@ export function useTwinBehavior(): UseTwinBehaviorReturn {
       context?: string,
       confidence = 0.7
     ): Promise<string | null> => {
-      setIsSubmitting(true);
-      setError(null);
+      setIsSubmitting(any: any);
+      setError(any: any);
       try {
-        const id = await numericTwinService.observeCognitivePattern(
+        const id = await numericTwinService?.observeCognitivePattern(
           pattern,
           context,
           confidence
         );
-        addObservation(id, 'cognitive', pattern, context, confidence);
+        addObservation(any: any);
         return id;
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Erreur lors de l'observation");
-        logger.error('observeCognitive error:', err);
+      } catch (any: any) {
+        setError(err instanceof Error ? err?.message : "Erreur lors de l'observation");
+        logger?.error(any: any);
         return null;
       } finally {
-        setIsSubmitting(false);
+        setIsSubmitting(any: any);
       }
     },
     [addObservation]
@@ -135,18 +135,18 @@ export function useTwinBehavior(): UseTwinBehaviorReturn {
       context?: string,
       confidence = 0.7
     ): Promise<string | null> => {
-      setIsSubmitting(true);
-      setError(null);
+      setIsSubmitting(any: any);
+      setError(any: any);
       try {
-        const id = await numericTwinService.observeStyle(element, context, confidence);
-        addObservation(id, 'style', element, context, confidence);
+        const id = await numericTwinService?.observeStyle(any: any);
+        addObservation(any: any);
         return id;
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Erreur lors de l'observation");
-        logger.error('observeStyle error:', err);
+      } catch (any: any) {
+        setError(err instanceof Error ? err?.message : "Erreur lors de l'observation");
+        logger?.error(any: any);
         return null;
       } finally {
-        setIsSubmitting(false);
+        setIsSubmitting(any: any);
       }
     },
     [addObservation]
@@ -154,18 +154,18 @@ export function useTwinBehavior(): UseTwinBehaviorReturn {
 
   const observeEmotional = useCallback(
     async (state: string, context?: string, confidence = 0.7): Promise<string | null> => {
-      setIsSubmitting(true);
-      setError(null);
+      setIsSubmitting(any: any);
+      setError(any: any);
       try {
-        const id = await numericTwinService.observeEmotional(state, context, confidence);
-        addObservation(id, 'emotional', state, context, confidence);
+        const id = await numericTwinService?.observeEmotional(any: any);
+        addObservation(any: any);
         return id;
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Erreur lors de l'observation");
-        logger.error('observeEmotional error:', err);
+      } catch (any: any) {
+        setError(err instanceof Error ? err?.message : "Erreur lors de l'observation");
+        logger?.error(any: any);
         return null;
       } finally {
-        setIsSubmitting(false);
+        setIsSubmitting(any: any);
       }
     },
     [addObservation]

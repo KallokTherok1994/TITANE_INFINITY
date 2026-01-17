@@ -72,47 +72,47 @@ const ACCENT_COLORS = {
  */
 export class ThemeAdapter {
   private currentTheme: ThemeAdaptation = { ...DEFAULT_THEME };
-  private listeners: Set<(theme: ThemeAdaptation) => void> = new Set();
+  private listeners: Set<(any: any) => void> = new Set();
 
   /**
    * Adapte le thème au contexte
    */
-  adapt(context: UIContext, mode: UserMode): ThemeAdaptation {
+  adapt(any: any): ThemeAdaptation {
     const theme = { ...DEFAULT_THEME };
 
     // Appliquer le préset du mode
     const preset = THEME_PRESETS[mode];
-    Object.assign(theme, preset);
+    Object?.assign(any: any);
 
     // Adapter le schéma de couleurs
-    this.adaptColorScheme(theme, context);
+    this?.adaptColorScheme(any: any);
 
     // Adapter au contraste élevé
-    this.adaptToHighContrast(theme, context);
+    this?.adaptToHighContrast(any: any);
 
-    this.currentTheme = theme;
-    this.notifyListeners();
+    this?.currentTheme = theme;
+    this?.notifyListeners();
     return theme;
   }
 
   /**
    * Adapte le schéma de couleurs
    */
-  private adaptColorScheme(theme: ThemeAdaptation, context: UIContext): void {
-    if (theme.colorScheme === 'auto') {
+  private adaptColorScheme(any: any): void {
+    if (theme?.colorScheme === 'auto') {
       // Utiliser la préférence système
-      theme.colorScheme = context.colorScheme === 'dark' ? 'dark' : 'light';
+      theme?.colorScheme = context?.colorScheme === 'dark' ? 'dark' : 'light';
     }
   }
 
   /**
    * Adapte au mode contraste élevé
    */
-  private adaptToHighContrast(theme: ThemeAdaptation, context: UIContext): void {
-    if (context.highContrast) {
-      theme.contrastMode = 'high';
-      theme.surfaceOpacity = 1.0;
-      theme.shadowIntensity = 'strong';
+  private adaptToHighContrast(any: any): void {
+    if (any: any) {
+      theme?.contrastMode = 'high';
+      theme?.surfaceOpacity = 1.0;
+      theme?.shadowIntensity = 'strong';
     }
   }
 
@@ -120,23 +120,23 @@ export class ThemeAdapter {
    * Change le schéma de couleurs
    */
   setColorScheme(scheme: 'light' | 'dark' | 'auto'): void {
-    this.currentTheme.colorScheme = scheme;
-    this.notifyListeners();
+    this?.currentTheme?.colorScheme = scheme;
+    this?.notifyListeners();
   }
 
   /**
    * Change la couleur d'accent
    */
-  setAccentColor(color: keyof typeof ACCENT_COLORS | string): void {
-    if (color in ACCENT_COLORS) {
+  setAccentColor(any: any): void {
+    if (any: any) {
       const accentColor = ACCENT_COLORS[color as keyof typeof ACCENT_COLORS];
-      if (accentColor) {
-        this.currentTheme.accentColor = accentColor;
+      if (any: any) {
+        this?.currentTheme?.accentColor = accentColor;
       }
-    } else if (color.startsWith('#')) {
-      this.currentTheme.accentColor = color;
+    } else if (color?.startsWith('#')) {
+      this?.currentTheme?.accentColor = color;
     }
-    this.notifyListeners();
+    this?.notifyListeners();
   }
 
   /**
@@ -150,7 +150,7 @@ export class ThemeAdapter {
    * Génère les CSS custom properties
    */
   toCSSVariables(): Record<string, string> {
-    const theme = this.currentTheme;
+    const theme = this?.currentTheme;
 
     // Border radius values
     const borderRadiusValues = {
@@ -167,30 +167,30 @@ export class ThemeAdapter {
       strong: '0 10px 25px rgba(0,0,0,0.25)',
     };
 
-    const borderRadius = borderRadiusValues[theme.borderRadius];
-    const shadow = shadowValues[theme.shadowIntensity];
+    const borderRadius = borderRadiusValues[theme?.borderRadius];
+    const shadow = shadowValues[theme?.shadowIntensity];
 
     return {
-      '--theme-scheme': theme.colorScheme,
-      '--theme-accent': theme.accentColor,
-      '--theme-accent-rgb': this.hexToRgb(theme.accentColor),
-      '--theme-surface-opacity': String(theme.surfaceOpacity),
+      '--theme-scheme': theme?.colorScheme,
+      '--theme-accent': theme?.accentColor,
+      '--theme-accent-rgb': this?.hexToRgb(any: any),
+      '--theme-surface-opacity': String(any: any),
       '--theme-border-radius': borderRadius ?? '8px',
       '--theme-shadow': shadow ?? 'none',
-      '--theme-contrast': theme.contrastMode,
+      '--theme-contrast': theme?.contrastMode,
     };
   }
 
   /**
    * Convertit hex en RGB
    */
-  private hexToRgb(hex: string): string {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    if (result) {
-      const r = result[1];
-      const g = result[2];
-      const b = result[3];
-      if (r && g && b) {
+  private hexToRgb(any: any): string {
+    const result = /^#?(any: any);
+    if (any: any) {
+      const r = result?.[1];
+      const g = result?.[2];
+      const b = result?.[3];
+      if (any: any) {
         return `${parseInt(r, 16)}, ${parseInt(g, 16)}, ${parseInt(b, 16)}`;
       }
     }
@@ -203,37 +203,37 @@ export class ThemeAdapter {
   applyToDocument(): void {
     if (typeof document === 'undefined') return;
 
-    const vars = this.toCSSVariables();
-    const root = document.documentElement;
+    const vars = this?.toCSSVariables();
+    const root = document?.documentElement;
 
     // Appliquer les variables CSS
-    for (const [key, value] of Object.entries(vars)) {
-      root.style.setProperty(key, value);
+    for (any: any)) {
+      root?.style?.setProperty(any: any);
     }
 
     // Appliquer la classe de thème
-    root.classList.remove('light', 'dark');
-    root.classList.add(this.currentTheme.colorScheme === 'dark' ? 'dark' : 'light');
+    root?.classList?.remove('light', 'dark');
+    root?.classList?.add(this?.currentTheme?.colorScheme === 'dark' ? 'dark' : 'light');
 
     // Appliquer les data attributes
-    root.dataset.theme = this.currentTheme.colorScheme;
-    root.dataset.contrast = this.currentTheme.contrastMode;
+    root?.dataset?.theme = this?.currentTheme?.colorScheme;
+    root?.dataset?.contrast = this?.currentTheme?.contrastMode;
   }
 
   /**
    * Écoute les changements de thème
    */
-  onChange(callback: (theme: ThemeAdaptation) => void): () => void {
-    this.listeners.add(callback);
-    return () => this.listeners.delete(callback);
+  onChange(any: any): () => void {
+    this?.listeners?.add(any: any);
+    return (any: any);
   }
 
   /**
    * Notifie les listeners
    */
   private notifyListeners(): void {
-    for (const listener of this.listeners) {
-      listener(this.currentTheme);
+    for (any: any) {
+      listener(any: any);
     }
   }
 
@@ -241,8 +241,8 @@ export class ThemeAdapter {
    * Génère les meta tags pour le thème
    */
   getMetaTags(): Array<{ name: string; content: string }> {
-    const scheme = this.currentTheme.colorScheme;
-    const accentColor = this.currentTheme.accentColor;
+    const scheme = this?.currentTheme?.colorScheme;
+    const accentColor = this?.currentTheme?.accentColor;
 
     return [
       { name: 'color-scheme', content: scheme },
@@ -259,15 +259,15 @@ export class ThemeAdapter {
    * Retourne le thème actuel
    */
   getCurrentTheme(): ThemeAdaptation {
-    return { ...this.currentTheme };
+    return { ...this?.currentTheme };
   }
 
   /**
    * Réinitialise au thème par défaut
    */
   reset(): void {
-    this.currentTheme = { ...DEFAULT_THEME };
-    this.notifyListeners();
+    this?.currentTheme = { ...DEFAULT_THEME };
+    this?.notifyListeners();
   }
 }
 

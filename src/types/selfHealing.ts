@@ -79,7 +79,7 @@ export interface DetectedIssue {
 
   // Réparation
   autoFixable: boolean;
-  repairStrategies: RepairStrategy[];
+  repairStrategies: RepairStrategy?.[];
 
   // État
   acknowledged: boolean;
@@ -98,11 +98,11 @@ export interface DiagnosticResult {
 
   // Résultats
   healthy: boolean;
-  issues: DetectedIssue[];
+  issues: DetectedIssue?.[];
   metrics: DiagnosticMetrics;
 
   // Recommandations
-  recommendations: string[];
+  recommendations: string?.[];
 }
 
 /**
@@ -150,7 +150,7 @@ export interface RepairStrategy {
   category: IssueCategory;
 
   // Conditions
-  applicableIssueCodes: string[];
+  applicableIssueCodes: string?.[];
   priority: number; // 1-100
 
   // Exécution
@@ -160,7 +160,7 @@ export interface RepairStrategy {
 
   // Risques
   riskLevel: 'low' | 'medium' | 'high';
-  sideEffects: string[];
+  sideEffects: string?.[];
 
   // Rollback
   rollbackable: boolean;
@@ -265,7 +265,7 @@ export interface WatchdogState {
   lastValue: number;
   status: 'healthy' | 'warning' | 'error' | 'critical';
   consecutiveFailures: number;
-  history: WatchdogHistoryEntry[];
+  history: WatchdogHistoryEntry?.[];
 }
 
 export interface WatchdogHistoryEntry {
@@ -313,10 +313,10 @@ export interface RecoverySession {
   triggeredBy: 'automatic' | 'user' | 'watchdog';
 
   // Issues traitées
-  issues: string[];
+  issues: string?.[];
 
   // Actions
-  actions: RepairAction[];
+  actions: RepairAction?.[];
 
   // État
   status: 'in_progress' | 'completed' | 'failed' | 'cancelled';
@@ -327,7 +327,7 @@ export interface RecoverySession {
   issuesFailed: number;
 
   // Logs
-  logs: RecoveryLog[];
+  logs: RecoveryLog?.[];
 }
 
 export interface RecoveryLog {
@@ -352,7 +352,7 @@ export interface HealthCheckResult {
   categories: Record<IssueCategory, HealthStatus>;
 
   // Composants
-  components: ComponentHealth[];
+  components: ComponentHealth?.[];
 
   // Métriques
   metrics: DiagnosticMetrics;
@@ -386,10 +386,10 @@ export interface SelfHealingConfig {
 
   // Diagnostics
   diagnosticIntervalMs: number;
-  diagnosticCategories: IssueCategory[];
+  diagnosticCategories: IssueCategory?.[];
 
   // Watchdogs
-  watchdogs: WatchdogConfig[];
+  watchdogs: WatchdogConfig?.[];
 
   // Réparations
   maxAutoRepairAttempts: number;
@@ -418,13 +418,13 @@ export interface SelfHealingConfig {
  * Callbacks pour événements self-healing
  */
 export interface SelfHealingCallbacks {
-  onIssueDetected?: (issue: DetectedIssue) => void;
-  onIssueResolved?: (issue: DetectedIssue) => void;
-  onRepairStarted?: (action: RepairAction) => void;
-  onRepairCompleted?: (action: RepairAction) => void;
-  onHealthChange?: (health: HealthCheckResult) => void;
-  onRecoveryStarted?: (session: RecoverySession) => void;
-  onRecoveryCompleted?: (session: RecoverySession) => void;
+  onIssueDetected?: (any: any) => void;
+  onIssueResolved?: (any: any) => void;
+  onRepairStarted?: (any: any) => void;
+  onRepairCompleted?: (any: any) => void;
+  onHealthChange?: (any: any) => void;
+  onRecoveryStarted?: (any: any) => void;
+  onRecoveryCompleted?: (any: any) => void;
 }
 
 /**
@@ -439,19 +439,19 @@ export interface SelfHealingState {
   lastHealthCheck: number;
 
   // Issues
-  activeIssues: DetectedIssue[];
-  resolvedIssues: DetectedIssue[];
+  activeIssues: DetectedIssue?.[];
+  resolvedIssues: DetectedIssue?.[];
 
   // Réparations
-  pendingRepairs: RepairAction[];
-  activeRepairs: RepairAction[];
-  completedRepairs: RepairAction[];
+  pendingRepairs: RepairAction?.[];
+  activeRepairs: RepairAction?.[];
+  completedRepairs: RepairAction?.[];
 
   // Watchdogs
   watchdogStates: Record<string, WatchdogState>;
 
   // Récupération
-  recoveryPoints: RecoveryPoint[];
+  recoveryPoints: RecoveryPoint?.[];
   activeRecoverySession: RecoverySession | null;
 
   // Stats

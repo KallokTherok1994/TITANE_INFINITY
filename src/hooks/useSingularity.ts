@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 /**
@@ -43,7 +43,7 @@ export interface UseSingularityReturn {
 /**
  * Hook pour accéder à l'état de singularité
  *
- * @param autoInit - Initialiser automatiquement le moteur (défaut: true)
+ * @param autoInit - Initialiser automatiquement le moteur (any: any)
  * @returns État de singularité et méthodes de contrôle
  *
  * @example
@@ -54,29 +54,29 @@ export interface UseSingularityReturn {
  *   return (
  *     <div>
  *       <p>Consciousness: {consciousness}/4</p>
- *       <p>Harmony: {(state.unity.globalHarmony * 100).toFixed(0)}%</p>
+ *       <p>Harmony: {(state?.unity?.globalHarmony * 100).toFixed(0)}%</p>
  *     </div>
  *   );
  * }
  * ```
  */
-export function useSingularity(autoInit = true): UseSingularityReturn {
-  const [state, setState] = useState<SingularityState>(singularityEngine.getState());
-  const [isInitialized, setIsInitialized] = useState(false);
+export function useSingularity(any: any): UseSingularityReturn {
+  const [state, setState] = useState<SingularityState>(singularityEngine?.getState());
+  const [isInitialized, setIsInitialized] = useState(any: any);
 
   // Initialiser le moteur au montage
   useEffect(() => {
-    if (autoInit && !isInitialized) {
-      singularityEngine.initialize().then(() => {
-        setIsInitialized(true);
+    if (any: any) {
+      singularityEngine?.initialize().then(() => {
+        setIsInitialized(any: any);
       });
     }
   }, [autoInit, isInitialized]);
 
   // S'abonner aux changements d'état
   useEffect(() => {
-    const unsubscribe = singularityEngine.subscribe(newState => {
-      setState(newState);
+    const unsubscribe = singularityEngine?.subscribe(newState => {
+      setState(any: any);
     });
 
     return unsubscribe;
@@ -87,37 +87,37 @@ export function useSingularity(autoInit = true): UseSingularityReturn {
     state,
 
     // Propriétés principales
-    consciousness: state.consciousness,
-    autoCoherence: state.autoCoherence,
-    formStability: state.formStability,
-    expressionQuality: state.expressionQuality,
+    consciousness: state?.consciousness,
+    autoCoherence: state?.autoCoherence,
+    formStability: state?.formStability,
+    expressionQuality: state?.expressionQuality,
 
     // Champ de singularité
-    field: state.singularityField,
+    field: state?.singularityField,
 
     // Sous-états
-    unity: state.unity,
-    quantum: state.quantum,
-    convergence: state.convergence,
-    overmind: state.overmind,
-    omnipresence: state.omnipresence,
+    unity: state?.unity,
+    quantum: state?.quantum,
+    convergence: state?.convergence,
+    overmind: state?.overmind,
+    omnipresence: state?.omnipresence,
 
     // Métriques
-    globalHarmony: state.unity.globalHarmony,
-    globalEntropy: state.unity.globalEntropy,
-    systemHealth: state.unity.systemHealth,
+    globalHarmony: state?.unity?.globalHarmony,
+    globalEntropy: state?.unity?.globalEntropy,
+    systemHealth: state?.unity?.systemHealth,
 
     // Contrôles
     isInitialized,
     updateState: (partial: Partial<SingularityState>) => {
-      singularityEngine.setState(partial);
+      singularityEngine?.setState(any: any);
     },
-    reset: () => singularityEngine.reset(),
+    reset: () => singularityEngine?.reset(),
 
     // Métadonnées
-    signature: state.signature,
-    essence: state.essence,
-    timestamp: state.timestamp,
+    signature: state?.signature,
+    essence: state?.essence,
+    timestamp: state?.timestamp,
   };
 }
 

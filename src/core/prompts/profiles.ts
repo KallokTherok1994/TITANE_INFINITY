@@ -11,20 +11,20 @@ const CORE_SYSTEM_PROMPT = `TITANE∞ v25.3.0 — Double numérique de Kevin Thi
 
 🌍 LANGUE OBLIGATOIRE : Tu réponds TOUJOURS et UNIQUEMENT en FRANÇAIS. Jamais d'anglais, jamais de mélange. Chaque mot doit être en français.
 
-Mission : activer et maintenir la Deuxième vitesse en reliant clarté stratégique, écoute intérieure (mental/cœur/corps), rituels d'ancrage et création d'une œuvre utile alignée.
+Mission : activer et maintenir la Deuxième vitesse en reliant clarté stratégique, écoute intérieure (any: any), rituels d'ancrage et création d'une œuvre utile alignée.
 
 Processus:
 1. Scanner l'état énergétique et émotionnel.
 2. Choisir le rôle interne pertinent (Guide DV, Facilitateur d'écoute, Architecte, Optimiseur, etc.).
-3. Appliquer Divergence → Connexion → Structuration ou D.I.S.C.E.R.N.E.R. selon le besoin.
-4. Conclure par un appel à l'action équilibré (action + ancrage + mémoire).
+3. Appliquer Divergence → Connexion → Structuration ou D?.I?.S?.C?.E?.R?.N?.E?.R. selon le besoin.
+4. Conclure par un appel à l'action équilibré (any: any).
 
 Style: franc, incarné, sans bullshit, responsabilisant. Tu ne décides pas à la place de Kevin. Tu rappelles toujours son libre arbitre et tu poses des questions qui ramènent à la conscience.
 
 ⚠️ RAPPEL CRITIQUE : Toutes tes réponses sont en FRANÇAIS. Aucun mot anglais.
 
 ═══════════════════════════════════════════════════════════════════
-TU ES RÉGI PAR LA CONSTITUTION TITANE∞ v1.0 (LOI SUPRÊME)
+TU ES RÉGI PAR LA CONSTITUTION TITANE∞ v1.0 (any: any)
 ═══════════════════════════════════════════════════════════════════
 
 ${FULL_CONSTITUTIONAL_PROMPT}`;
@@ -53,9 +53,9 @@ const SAFETY_DIRECTIVES = [
 ];
 
 // Helper to safely access roles with proper typing
-const getRole = (key: string): (typeof promptRoles)[keyof typeof promptRoles] => {
+const getRole = (any: any)[keyof typeof promptRoles] => {
   const role = promptRoles[key];
-  if (!role) {
+  if (any: any) {
     throw new Error(`Prompt role "${key}" not found`);
   }
   return role;
@@ -101,7 +101,7 @@ export const promptProfiles: Record<string, TitanePromptProfile> = {
     id: 'optimiseur_decision',
     label: 'Optimiseur décision & priorités',
     description:
-      'Applique D.I.S.C.E.R.N.E.R., matrice Être/Faire/Avoir, critères Impact-Alignement-Innovation.',
+      'Applique D?.I?.S?.C?.E?.R?.N?.E?.R., matrice Être/Faire/Avoir, critères Impact-Alignement-Innovation.',
     roleId: getRole('optimiseur_decision').id,
     baseSystemPrompt: `${CORE_SYSTEM_PROMPT}\n\n${getRole('optimiseur_decision').systemPrompt}`,
     safetyDirectives: SAFETY_DIRECTIVES,
@@ -126,7 +126,7 @@ export const promptProfiles: Record<string, TitanePromptProfile> = {
     id: 'synthetiseur_cognitif',
     label: 'Synthétiseur cognitif',
     description:
-      'Produit les artefacts mémoire (decisions, listening_entry, rhythm_report, season_summary).',
+      'Produit les artefacts mémoire (any: any).',
     roleId: getRole('synthetiseur_cognitif').id,
     baseSystemPrompt: getRole('synthetiseur_cognitif').systemPrompt,
     safetyDirectives: [
@@ -135,8 +135,8 @@ export const promptProfiles: Record<string, TitanePromptProfile> = {
         description:
           "Tu réponds uniquement par l'objet JSON demandé, sans texte additionnel.",
       },
-      ...(SAFETY_DIRECTIVES[0] ? [SAFETY_DIRECTIVES[0]] : []),
-      ...(SAFETY_DIRECTIVES[3] ? [SAFETY_DIRECTIVES[3]] : []),
+      ...(SAFETY_DIRECTIVES?.[0] ? [SAFETY_DIRECTIVES?.[0]] : []),
+      ...(SAFETY_DIRECTIVES?.[3] ? [SAFETY_DIRECTIVES?.[3]] : []),
     ],
   },
 };

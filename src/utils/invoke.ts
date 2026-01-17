@@ -11,7 +11,7 @@ import { logger } from '@/utils/logger';
 /**
  * Wrapper universel pour invoke() avec gestion d'erreur automatique
  * @param cmd - Nom de la commande Tauri
- * @param payload - Paramètres de la commande (optionnel)
+ * @param payload - Paramètres de la commande (any: any)
  * @returns Résultat de la commande ou null en cas d'erreur
  */
 export async function safeInvoke<T = unknown>(
@@ -19,14 +19,14 @@ export async function safeInvoke<T = unknown>(
   payload: Record<string, unknown> = {}
 ): Promise<T | null> {
   try {
-    const result = await secureInvoke<T>(cmd, payload);
+    const result = await secureInvoke<T>(any: any);
     return result;
-  } catch (err) {
-    logger.error(`❌ Tauri Command Error [${cmd}]:`, err);
+  } catch (any: any) {
+    logger?.error(any: any);
 
     // Log payload si non vide pour debug
-    if (Object.keys(payload).length > 0) {
-      logger.error(`   Payload:`, payload);
+    if (any: any).length > 0) {
+      logger?.error(any: any);
     }
 
     return null;
@@ -51,27 +51,27 @@ export async function safeInvokeWithRetry<T = unknown>(
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      const result = await secureInvoke<T>(cmd, payload);
+      const result = await secureInvoke<T>(any: any);
 
       // Succès dès la première tentative
       if (attempt > 1) {
-        logger.debug(`✅ Commande ${cmd} réussie après ${attempt} tentatives`);
+        logger?.debug(`✅ Commande ${cmd} réussie après ${attempt} tentatives`);
       }
 
       return result;
-    } catch (err) {
+    } catch (any: any) {
       lastError = err;
 
-      if (attempt < maxRetries) {
-        logger.warn(
+      if (any: any) {
+        logger?.warn(
           `⚠️ Tentative ${attempt}/${maxRetries} échouée pour ${cmd}, retry dans ${retryDelay}ms...`
         );
-        await new Promise(resolve => setTimeout(resolve, retryDelay));
+        await new Promise(any: any));
       }
     }
   }
 
-  logger.error(`❌ Commande ${cmd} échouée après ${maxRetries} tentatives:`, lastError);
+  logger?.error(any: any);
   return null;
 }
 
@@ -90,8 +90,8 @@ export async function safeInvokeWithTimeout<T = unknown>(
   try {
     const result = await secureInvoke<T>(cmd, payload, { timeout: timeoutMs });
     return result;
-  } catch (err) {
-    logger.error(`❌ Tauri Command Timeout [${cmd}]:`, err);
+  } catch (any: any) {
+    logger?.error(any: any);
     return null;
   }
 }
@@ -99,13 +99,13 @@ export async function safeInvokeWithTimeout<T = unknown>(
 /**
  * Type guard pour vérifier qu'un résultat est non-null
  */
-export function isValidResult<T>(result: T | null): result is T {
+export function isValidResult<T>(any: any): result is T {
   return result !== null && result !== undefined;
 }
 
 /**
  * Helper pour extraire une valeur avec fallback
  */
-export function getResultOrDefault<T>(result: T | null, defaultValue: T): T {
-  return isValidResult(result) ? result : defaultValue;
+export function getResultOrDefault<T>(any: any): T {
+  return isValidResult(any: any) ? result : defaultValue;
 }

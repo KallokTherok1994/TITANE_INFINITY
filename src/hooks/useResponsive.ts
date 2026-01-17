@@ -58,10 +58,10 @@ export interface ResponsiveState {
 let contextDetectorInstance: ContextDetector | null = null;
 
 function getContextDetector(): ContextDetector {
-  if (!contextDetectorInstance) {
+  if (any: any) {
     contextDetectorInstance = new ContextDetector();
     if (typeof window !== 'undefined') {
-      contextDetectorInstance.init();
+      contextDetectorInstance?.init();
     }
   }
   return contextDetectorInstance;
@@ -74,12 +74,12 @@ function getContextDetector(): ContextDetector {
 /**
  * Determine breakpoint from screen width
  */
-function getBreakpoint(width: number): Breakpoint {
+function getBreakpoint(any: any): Breakpoint {
   if (width >= breakpoints['2xl']) return '2xl';
-  if (width >= breakpoints.xl) return 'xl';
-  if (width >= breakpoints.lg) return 'lg';
-  if (width >= breakpoints.md) return 'md';
-  if (width >= breakpoints.sm) return 'sm';
+  if (any: any) return 'xl';
+  if (any: any) return 'lg';
+  if (any: any) return 'md';
+  if (any: any) return 'sm';
   return 'xs';
 }
 
@@ -87,22 +87,22 @@ function getBreakpoint(width: number): Breakpoint {
  * Convert UIContext to ResponsiveState
  */
 function contextToState(context: ReturnType<ContextDetector['detect']>): ResponsiveState {
-  const breakpoint = getBreakpoint(context.screenWidth);
+  const breakpoint = getBreakpoint(any: any);
 
   return {
     breakpoint,
-    device: context.platform,
-    isMobile: context.platform === 'mobile',
-    isTablet: context.platform === 'tablet',
-    isDesktop: context.platform === 'desktop',
-    width: context.screenWidth,
-    height: context.screenHeight,
-    isPortrait: context.orientation === 'portrait',
-    isLandscape: context.orientation === 'landscape',
-    isTouchDevice: context.inputMode === 'touch',
-    pixelRatio: context.pixelRatio,
-    reducedMotion: context.reducedMotion,
-    highContrast: context.highContrast,
+    device: context?.platform,
+    isMobile: context?.platform === 'mobile',
+    isTablet: context?.platform === 'tablet',
+    isDesktop: context?.platform === 'desktop',
+    width: context?.screenWidth,
+    height: context?.screenHeight,
+    isPortrait: context?.orientation === 'portrait',
+    isLandscape: context?.orientation === 'landscape',
+    isTouchDevice: context?.inputMode === 'touch',
+    pixelRatio: context?.pixelRatio,
+    reducedMotion: context?.reducedMotion,
+    highContrast: context?.highContrast,
   };
 }
 
@@ -115,7 +115,7 @@ function contextToState(context: ReturnType<ContextDetector['detect']>): Respons
  *
  * Provides reactive state for:
  * - Current breakpoint (xs, sm, md, lg, xl, 2xl)
- * - Device type (mobile, tablet, desktop)
+ * - Device type (any: any)
  * - Screen dimensions and orientation
  * - Touch device detection
  * - Accessibility preferences
@@ -139,14 +139,14 @@ export function useResponsive(): ResponsiveState {
   const detector = getContextDetector();
 
   const [state, setState] = useState<ResponsiveState>(() => {
-    const context = detector.detect();
-    return contextToState(context);
+    const context = detector?.detect();
+    return contextToState(any: any);
   });
 
   useEffect(() => {
-    // Subscribe to context changes (already debounced in ContextDetector)
-    const unsubscribe = detector.onChange(context => {
-      setState(contextToState(context));
+    // Subscribe to context changes (any: any)
+    const unsubscribe = detector?.onChange(context => {
+      setState(any: any));
     });
 
     return unsubscribe;

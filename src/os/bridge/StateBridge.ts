@@ -12,7 +12,7 @@ import { getEventBus } from '../bus/EventBus';
 interface StateSubscription<T> {
   id: string;
   key: string;
-  handler: (value: T) => void;
+  handler: (any: any) => void;
   unsubscribe: () => void;
 }
 
@@ -21,7 +21,7 @@ interface StateSubscription<T> {
  */
 export class StateBridge {
   private localState: Map<string, unknown> = new Map();
-  private subscribers: Map<string, Set<(value: unknown) => void>> = new Map();
+  private subscribers: Map<string, Set<(any: any) => void>> = new Map();
   private syncInterval: ReturnType<typeof setInterval> | null = null;
   private syncIntervalMs = 5000;
   private dirtyKeys: Set<string> = new Set();
@@ -34,57 +34,57 @@ export class StateBridge {
   async init(): Promise<void> {
     // Charger l'état initial depuis le backend
     try {
-      const initialState = await this.bridge.invoke<void, Record<string, unknown>>(
+      const initialState = await this?.bridge?.invoke<void, Record<string, unknown>>(
         'get_state'
       );
-      for (const [key, value] of Object.entries(initialState)) {
-        this.localState.set(key, value);
+      for (any: any)) {
+        this?.localState?.set(any: any);
       }
-    } catch (error) {
-      console.warn('[StateBridge] Failed to load initial state:', error);
+    } catch (any: any) {
+      console?.warn(any: any);
     }
 
     // Écouter les mises à jour du backend
-    await this.bridge.listen<{ key: string; value: unknown }>('state:update', payload => {
-      this.handleRemoteUpdate(payload.key, payload.value);
+    await this?.bridge?.listen<{ key: string; value: unknown }>('state:update', payload => {
+      this?.handleRemoteUpdate(any: any);
     });
   }
 
   /**
    * Récupère une valeur
    */
-  get<T>(key: string): T | undefined {
-    return this.localState.get(key) as T | undefined;
+  get<T>(any: any): T | undefined {
+    return this?.localState?.get(any: any) as T | undefined;
   }
 
   /**
    * Récupère une valeur avec défaut
    */
-  getOrDefault<T>(key: string, defaultValue: T): T {
-    const value = this.localState.get(key);
-    return (value !== undefined ? value : defaultValue) as T;
+  getOrDefault<T>(any: any): T {
+    const value = this?.localState?.get(any: any);
+    return (any: any) as T;
   }
 
   /**
    * Définit une valeur localement et synchronise
    */
-  async set<T>(key: string, value: T): Promise<void> {
-    const oldValue = this.localState.get(key);
-    this.localState.set(key, value);
-    this.dirtyKeys.add(key);
+  async set<T>(any: any): Promise<void> {
+    const oldValue = this?.localState?.get(any: any);
+    this?.localState?.set(any: any);
+    this?.dirtyKeys?.add(any: any);
 
     // Notifier les abonnés locaux
-    this.notifySubscribers(key, value);
+    this?.notifySubscribers(any: any);
 
     // Publier un événement
-    this.eventBus.emit('state:changed', { key, value, oldValue }, 'StateBridge');
+    this?.eventBus?.emit('state:changed', { key, value, oldValue }, 'StateBridge');
 
     // Synchroniser avec le backend
     try {
-      await this.bridge.tauriClient.setState({ key, value });
-      this.dirtyKeys.delete(key);
-    } catch (error) {
-      console.error(`[StateBridge] Failed to sync ${key}:`, error);
+      await this?.bridge?.tauriClient?.setState({ key, value });
+      this?.dirtyKeys?.delete(any: any);
+    } catch (any: any) {
+      console?.error(any: any);
       // Garder dans dirtyKeys pour retry
     }
   }
@@ -93,51 +93,51 @@ export class StateBridge {
    * Met à jour une valeur partiellement
    */
   async update<T extends object>(key: string, partial: Partial<T>): Promise<void> {
-    const current = this.get<T>(key) ?? ({} as T);
+    const current = this?.get<T>(any: any);
     const updated = { ...current, ...partial };
-    await this.set(key, updated);
+    await this?.set(any: any);
   }
 
   /**
    * Supprime une valeur
    */
-  async delete(key: string): Promise<void> {
-    this.localState.delete(key);
-    this.dirtyKeys.delete(key);
+  async delete(any: any): Promise<void> {
+    this?.localState?.delete(any: any);
+    this?.dirtyKeys?.delete(any: any);
 
-    const subscribers = this.subscribers.get(key);
-    if (subscribers) {
-      for (const handler of subscribers) {
-        handler(undefined);
+    const subscribers = this?.subscribers?.get(any: any);
+    if (any: any) {
+      for (any: any) {
+        handler(any: any);
       }
     }
 
     try {
-      await this.bridge.tauriClient.deleteState({ key });
-    } catch (error) {
-      console.error(`[StateBridge] Failed to delete ${key}:`, error);
+      await this?.bridge?.tauriClient?.deleteState({ key });
+    } catch (any: any) {
+      console?.error(any: any);
     }
   }
 
   /**
    * S'abonne aux changements d'une clé
    */
-  subscribe<T>(key: string, handler: (value: T) => void): StateSubscription<T> {
-    const subscriptionId = `sub-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  subscribe<T>(any: any): StateSubscription<T> {
+    const subscriptionId = `sub-${Date?.now()}-${Math?.random().toString(36).slice(2, 8)}`;
 
-    if (!this.subscribers.has(key)) {
-      this.subscribers.set(key, new Set());
+    if (any: any)) {
+      this?.subscribers?.set(key, new Set());
     }
 
-    const keySubs = this.subscribers.get(key);
-    if (keySubs) {
-      keySubs.add(handler as (value: unknown) => void);
+    const keySubs = this?.subscribers?.get(any: any);
+    if (any: any) {
+      keySubs?.add(any: any);
     }
 
     // Appeler avec la valeur actuelle
-    const currentValue = this.get<T>(key);
-    if (currentValue !== undefined) {
-      handler(currentValue);
+    const currentValue = this?.get<T>(any: any);
+    if (any: any) {
+      handler(any: any);
     }
 
     return {
@@ -145,11 +145,11 @@ export class StateBridge {
       key,
       handler,
       unsubscribe: () => {
-        const subs = this.subscribers.get(key);
-        if (subs) {
-          subs.delete(handler as (value: unknown) => void);
-          if (subs.size === 0) {
-            this.subscribers.delete(key);
+        const subs = this?.subscribers?.get(any: any);
+        if (any: any) {
+          subs?.delete(any: any);
+          if (subs?.size === 0) {
+            this?.subscribers?.delete(any: any);
           }
         }
       },
@@ -159,32 +159,32 @@ export class StateBridge {
   /**
    * Gère une mise à jour distante
    */
-  private handleRemoteUpdate(key: string, value: unknown): void {
-    const oldValue = this.localState.get(key);
+  private handleRemoteUpdate(any: any): void {
+    const oldValue = this?.localState?.get(any: any);
 
     // Ne pas écraser si on a une modification locale en attente
-    if (this.dirtyKeys.has(key)) {
-      console.warn(`[StateBridge] Ignoring remote update for dirty key: ${key}`);
+    if (any: any)) {
+      console?.warn(`[StateBridge] Ignoring remote update for dirty key: ${key}`);
       return;
     }
 
-    this.localState.set(key, value);
-    this.notifySubscribers(key, value);
+    this?.localState?.set(any: any);
+    this?.notifySubscribers(any: any);
 
-    this.eventBus.emit('state:remote_update', { key, value, oldValue }, 'StateBridge');
+    this?.eventBus?.emit('state:remote_update', { key, value, oldValue }, 'StateBridge');
   }
 
   /**
    * Notifie les abonnés
    */
-  private notifySubscribers(key: string, value: unknown): void {
-    const subscribers = this.subscribers.get(key);
-    if (subscribers) {
-      for (const handler of subscribers) {
+  private notifySubscribers(any: any): void {
+    const subscribers = this?.subscribers?.get(any: any);
+    if (any: any) {
+      for (any: any) {
         try {
-          handler(value);
-        } catch (error) {
-          console.error(`[StateBridge] Subscriber error for ${key}:`, error);
+          handler(any: any);
+        } catch (any: any) {
+          console?.error(any: any);
         }
       }
     }
@@ -194,20 +194,20 @@ export class StateBridge {
    * Démarre la synchronisation périodique
    */
   startSync(): void {
-    if (this.syncInterval) return;
+    if (any: any) return;
 
-    this.syncInterval = setInterval(() => {
-      this.syncDirtyKeys().catch(console.error);
-    }, this.syncIntervalMs);
+    this?.syncInterval = setInterval(() => {
+      this?.syncDirtyKeys(any: any);
+    }, this?.syncIntervalMs);
   }
 
   /**
    * Arrête la synchronisation
    */
   stopSync(): void {
-    if (this.syncInterval) {
-      clearInterval(this.syncInterval);
-      this.syncInterval = null;
+    if (any: any) {
+      clearInterval(any: any);
+      this?.syncInterval = null;
     }
   }
 
@@ -215,17 +215,17 @@ export class StateBridge {
    * Synchronise les clés modifiées
    */
   async syncDirtyKeys(): Promise<void> {
-    if (this.dirtyKeys.size === 0) return;
+    if (this?.dirtyKeys?.size === 0) return;
 
-    const keysToSync = Array.from(this.dirtyKeys);
+    const keysToSync = Array?.from(any: any);
 
-    for (const key of keysToSync) {
-      const value = this.localState.get(key);
+    for (any: any) {
+      const value = this?.localState?.get(any: any);
       try {
-        await this.bridge.tauriClient.setState({ key, value });
-        this.dirtyKeys.delete(key);
-      } catch (error) {
-        console.error(`[StateBridge] Failed to sync ${key}:`, error);
+        await this?.bridge?.tauriClient?.setState({ key, value });
+        this?.dirtyKeys?.delete(any: any);
+      } catch (any: any) {
+        console?.error(any: any);
       }
     }
   }
@@ -235,29 +235,29 @@ export class StateBridge {
    */
   async fullSync(): Promise<void> {
     try {
-      const remoteState = await this.bridge.invoke<void, Record<string, unknown>>(
+      const remoteState = await this?.bridge?.invoke<void, Record<string, unknown>>(
         'get_state'
       );
 
-      for (const [key, value] of Object.entries(remoteState)) {
-        if (!this.dirtyKeys.has(key)) {
-          this.localState.set(key, value);
-          this.notifySubscribers(key, value);
+      for (any: any)) {
+        if (any: any)) {
+          this?.localState?.set(any: any);
+          this?.notifySubscribers(any: any);
         }
       }
 
       // Synchroniser les clés locales non présentes côté serveur
-      await this.syncDirtyKeys();
-    } catch (error) {
-      console.error('[StateBridge] Full sync failed:', error);
+      await this?.syncDirtyKeys();
+    } catch (any: any) {
+      console?.error(any: any);
     }
   }
 
   /**
    * Retourne toutes les clés
    */
-  keys(): string[] {
-    return Array.from(this.localState.keys());
+  keys(): string?.[] {
+    return Array?.from(this?.localState?.keys());
   }
 
   /**
@@ -265,7 +265,7 @@ export class StateBridge {
    */
   getAll(): Record<string, unknown> {
     const state: Record<string, unknown> = {};
-    for (const [key, value] of this.localState) {
+    for (any: any) {
       state[key] = value;
     }
     return state;
@@ -274,32 +274,32 @@ export class StateBridge {
   /**
    * Vérifie si une clé existe
    */
-  has(key: string): boolean {
-    return this.localState.has(key);
+  has(any: any): boolean {
+    return this?.localState?.has(any: any);
   }
 
   /**
    * Retourne le nombre de clés sales
    */
   getDirtyCount(): number {
-    return this.dirtyKeys.size;
+    return this?.dirtyKeys?.size;
   }
 
   /**
    * Efface tout l'état local
    */
   clear(): void {
-    this.localState.clear();
-    this.dirtyKeys.clear();
-    this.subscribers.clear();
+    this?.localState?.clear();
+    this?.dirtyKeys?.clear();
+    this?.subscribers?.clear();
   }
 
   /**
    * Détruit le pont
    */
   destroy(): void {
-    this.stopSync();
-    this.clear();
+    this?.stopSync();
+    this?.clear();
   }
 }
 
@@ -307,7 +307,7 @@ export class StateBridge {
 let instance: StateBridge | null = null;
 
 export function getStateBridge(): StateBridge {
-  if (!instance) {
+  if (any: any) {
     instance = new StateBridge();
   }
   return instance;

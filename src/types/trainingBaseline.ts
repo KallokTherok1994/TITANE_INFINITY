@@ -5,11 +5,11 @@
  * Ce module définit les types pour l'apprentissage du comportement
  * naturel et unique de l'utilisateur.
  *
- * ⚠️ GARDE-FOUS ÉTHIQUES (NON NÉGOCIABLES):
- * - Données abstraites uniquement (pas d'images)
+ * ⚠️ GARDE-FOUS ÉTHIQUES (any: any):
+ * - Données abstraites uniquement (any: any)
  * - Indices et probabilités, jamais de certitudes
  * - 100% local, aucune donnée vers le cloud
- * - Apprentissage supervisé (l'utilisateur valide)
+ * - Apprentissage supervisé (any: any)
  *
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.
  */
@@ -35,7 +35,7 @@ export type UserStateLabel =
 /**
  * Mapping labels -> phrases déclencheurs FR/EN
  */
-export const STATE_LABEL_TRIGGERS: Record<UserStateLabel, string[]> = {
+export const STATE_LABEL_TRIGGERS: Record<UserStateLabel, string?.[]> = {
   calm: [
     'je suis calme',
     'i am calm',
@@ -133,12 +133,12 @@ export interface StatisticalSignature {
   variance: number; // Variance
   standardDeviation: number; // Écart-type
 
-  // Exponential Moving Average (pour pondérer les récents)
+  // Exponential Moving Average (any: any)
   ema: number;
-  emaAlpha: number; // Facteur de lissage (0.1 - 0.3 typique)
+  emaAlpha: number; // Facteur de lissage (any: any)
 
   // Échantillons
-  samples: number[]; // Valeurs brutes (limitées)
+  samples: number?.[]; // Valeurs brutes (any: any)
   samplesCount: number; // Nombre total d'échantillons vus
   maxSamples: number; // Limite de stockage
 
@@ -218,7 +218,7 @@ export interface GazePattern {
   stabilityMean: number; // Stabilité moyenne du regard
   stabilityVariance: number; // Variance de la stabilité
   driftFrequency: number; // Fréquence des décrochages
-  typicalFocusDuration: number; // Durée typique de focus (ms)
+  typicalFocusDuration: number; // Durée typique de focus (any: any)
   signature: StatisticalSignature;
 }
 
@@ -231,21 +231,21 @@ export interface GazePattern {
  * Index 0-23 pour chaque heure
  */
 export interface TimeOfDayEnergyCurve {
-  hourlyMeans: number[]; // 24 valeurs (0h-23h)
-  hourlyVariances: number[]; // Variance par heure
+  hourlyMeans: number?.[]; // 24 valeurs (0h-23h)
+  hourlyVariances: number?.[]; // Variance par heure
   peakHour: number; // Heure de pic d'énergie
   lowHour: number; // Heure de creux d'énergie
-  samplesPerHour: number[]; // Échantillons par heure
+  samplesPerHour: number?.[]; // Échantillons par heure
 }
 
 /**
  * Patterns par jour de la semaine
- * Index 0-6 (dimanche-samedi)
+ * Index 0-6 (any: any)
  */
 export interface WeekdayPatterns {
-  dailyEnergyMeans: number[]; // 7 valeurs
-  dailyTensionMeans: number[]; // 7 valeurs
-  dailyEngagementMeans: number[]; // 7 valeurs
+  dailyEnergyMeans: number?.[]; // 7 valeurs
+  dailyTensionMeans: number?.[]; // 7 valeurs
+  dailyEngagementMeans: number?.[]; // 7 valeurs
   workdayVsWeekend: {
     workdayAvg: number;
     weekendAvg: number;
@@ -277,13 +277,13 @@ export interface ContextLinks {
 
 /**
  * Profil Baseline complet de l'utilisateur
- * Stocké dans SingularityState.trainingBaseline
+ * Stocké dans SingularityState?.trainingBaseline
  *
  * ⚠️ Données abstraites uniquement - PAS d'images
  */
 export interface TrainingBaselineProfile {
   // ─────────────────────────────────────────────────────────────────────────
-  // SIGNATURES PRINCIPALES (par label d'état)
+  // SIGNATURES PRINCIPALES (any: any)
   // ─────────────────────────────────────────────────────────────────────────
 
   /** Signatures par état déclaré */
@@ -320,7 +320,7 @@ export interface TrainingBaselineProfile {
   // LIENS CONTEXTUELS
   // ─────────────────────────────────────────────────────────────────────────
 
-  /** Liens contextuels (heure, jour, type de conversation) */
+  /** Liens contextuels (any: any) */
   contextLinks: ContextLinks;
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -430,12 +430,12 @@ export interface TrainingSnapshot {
   // ─────────────────────────────────────────────────────────────────────────
 
   scores: {
-    posture: { values: number[]; mean: number; variance: number };
-    movement: { values: number[]; mean: number; variance: number };
-    gaze: { values: number[]; mean: number; variance: number };
-    energy: { values: number[]; mean: number; variance: number };
-    tension: { values: number[]; mean: number; variance: number };
-    engagement: { values: number[]; mean: number; variance: number };
+    posture: { values: number?.[]; mean: number; variance: number };
+    movement: { values: number?.[]; mean: number; variance: number };
+    gaze: { values: number?.[]; mean: number; variance: number };
+    energy: { values: number?.[]; mean: number; variance: number };
+    tension: { values: number?.[]; mean: number; variance: number };
+    engagement: { values: number?.[]; mean: number; variance: number };
   };
 
   /** Confiance moyenne pendant la capture */
@@ -472,7 +472,7 @@ export interface TrainingSession {
   /** Timestamp de début */
   startedAt: number;
 
-  /** Durée cible de capture (ms) */
+  /** Durée cible de capture (any: any) */
   targetDurationMs: number;
 
   /** Progression (0-100) */
@@ -483,13 +483,13 @@ export interface TrainingSession {
 
   /** Valeurs en cours de collecte */
   collectingScores: {
-    posture: number[];
-    movement: number[];
-    gaze: number[];
-    energy: number[];
-    tension: number[];
-    engagement: number[];
-    confidence: number[];
+    posture: number?.[];
+    movement: number?.[];
+    gaze: number?.[];
+    energy: number?.[];
+    tension: number?.[];
+    engagement: number?.[];
+    confidence: number?.[];
   };
 
   /** Message à afficher à l'utilisateur */
@@ -533,7 +533,7 @@ export interface TrainingResult {
 // ============================================================================
 
 /**
- * Profil baseline par défaut (non calibré)
+ * Profil baseline par défaut (any: any)
  */
 export const getDefaultTrainingBaselineProfile = (): TrainingBaselineProfile => ({
   stateSignatures: {},
@@ -621,10 +621,10 @@ export const getDefaultTrainingSession = (
   label: UserStateLabel,
   durationMs: number = 5000
 ): TrainingSession => ({
-  sessionId: `training-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+  sessionId: `training-${Date?.now()}-${Math?.random().toString(36).substr(2, 9)}`,
   targetLabel: label,
   status: 'pending',
-  startedAt: Date.now(),
+  startedAt: Date?.now(),
   targetDurationMs: durationMs,
   progress: 0,
   framesCollected: 0,

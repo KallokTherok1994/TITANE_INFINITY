@@ -30,7 +30,7 @@ export type OverallStatus = 'Healthy' | 'Degraded' | 'Critical';
 
 export interface SystemDiagnostics {
   timestamp: number;
-  results: DiagnosticResult[];
+  results: DiagnosticResult?.[];
   overall_status: OverallStatus;
   total_duration_ms: number;
 }
@@ -76,7 +76,7 @@ export interface NodeInfo {
   health: number;
   load: number;
   last_seen: number;
-  capabilities: string[];
+  capabilities: string?.[];
 }
 
 export interface ClusterStats {
@@ -92,7 +92,7 @@ export interface ClusterStats {
 export interface ClusterStatus {
   initialized: boolean;
   node_id?: string;
-  peers: NodeInfo[];
+  peers: NodeInfo?.[];
   stats?: ClusterStats;
 }
 
@@ -132,7 +132,7 @@ export interface IntrospectionReport {
   total_issues: number;
   issues_by_severity: Record<string, number>;
   issues_by_category: Record<string, number>;
-  issues: CodeIssue[];
+  issues: CodeIssue?.[];
   auto_fixes_available: number;
 }
 
@@ -140,8 +140,8 @@ export interface AutoFixResult {
   total_fixes: number;
   successful_fixes: number;
   failed_fixes: number;
-  fixed_issues: string[];
-  errors: string[];
+  fixed_issues: string?.[];
+  errors: string?.[];
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -215,7 +215,7 @@ export interface TabConfig {
   description: string;
 }
 
-export const SYSTEM_CENTER_TABS: TabConfig[] = [
+export const SYSTEM_CENTER_TABS: TabConfig?.[] = [
   {
     id: 'diagnostics',
     label: 'Diagnostics',

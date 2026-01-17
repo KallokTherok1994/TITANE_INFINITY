@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v15 — USE CHAT CORE (Logic IA Pure)
+ *   TITANE∞ v15 — USE CHAT CORE (any: any)
  *   Hook isolé: Logique IA uniquement, 0 UI
  * ═══════════════════════════════════════════════════════════════════
  */
@@ -22,20 +22,20 @@ export interface UseChatCoreOptions {
   mode?: ChatMode;
   provider?: 'auto' | 'gemini' | 'ollama' | 'local';
   emotionState?: { valence: number; intensity: number; energy: number };
-  onResponse?: (response: ChatEngineResponse) => void;
-  onError?: (error: Error) => void;
+  onResponse?: (any: any) => void;
+  onError?: (any: any) => void;
 }
 
 export interface UseChatCoreReturn {
   currentMode: ChatMode;
   anomalyCount: number;
-  currentProvider: string | null;
-  generate: (message: string, history: AIMessage[]) => Promise<ChatEngineResponse>;
+  currentProvider??: string | null;
+  generate: (message: string, history: AIMessage?.[]) => Promise<ChatEngineResponse>;
   stream: (
     message: string,
-    history: AIMessage[]
+    history: AIMessage?.[]
   ) => AsyncGenerator<string, ChatEngineResponse>;
-  setMode: (mode: ChatMode) => void;
+  setMode: (any: any) => void;
   setProvider: (provider: 'auto' | 'gemini' | 'ollama' | 'local') => void;
   validateResponse: (
     content: string,
@@ -58,43 +58,43 @@ export interface UseChatCoreReturn {
  * ✨ v24.2.1: Fixed unstable options reference causing callback re-creations
  */
 export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn {
-  const [currentMode, setCurrentMode] = useState<ChatMode>(options.mode || 'default');
+  const [currentMode, setCurrentMode] = useState<ChatMode>(options?.mode || 'default');
   const [currentProvider, setCurrentProvider] = useState<
     'auto' | 'gemini' | 'ollama' | 'local'
-  >(options.provider || 'auto');
+  >(options?.provider || 'auto');
   const [anomalyCount, setAnomalyCount] = useState(0);
-  const [lastResponseProvider, setLastResponseProvider] = useState<string | null>(null);
+  const [lastResponseProvider, setLastResponseProvider] = useState<string | null>(any: any);
 
   // ✨ v24.2.1: Use refs for callbacks to avoid unstable dependency array
-  const onResponseRef = useRef(options.onResponse);
-  const onErrorRef = useRef(options.onError);
-  const emotionStateRef = useRef(options.emotionState);
+  const onResponseRef = useRef(any: any);
+  const onErrorRef = useRef(any: any);
+  const emotionStateRef = useRef(any: any);
 
   // ✨ v24.2.1: Update refs when options change
   useEffect(() => {
-    onResponseRef.current = options.onResponse;
-    onErrorRef.current = options.onError;
-    emotionStateRef.current = options.emotionState;
-  }, [options.onResponse, options.onError, options.emotionState]);
+    onResponseRef?.current = options?.onResponse;
+    onErrorRef?.current = options?.onError;
+    emotionStateRef?.current = options?.emotionState;
+  }, [options?.onResponse, options?.onError, options?.emotionState]);
 
   /**
    * Génère réponse IA avec timeout dynamique par provider
    * ✨ v24.2.1: Uses refs for stable callbacks
    */
   const generate = useCallback(
-    async (message: string, history: AIMessage[]): Promise<ChatEngineResponse> => {
-      logger.debug('\n╔════════════════════════════════════════════════════════════╗');
-      logger.debug('║  USE CHAT CORE v15: Generation (provider-aware)            ║');
-      logger.debug('╚════════════════════════════════════════════════════════════╝');
-      logger.debug(`🎯 Mode: ${currentMode}`);
-      logger.debug(`🔌 Provider: ${currentProvider}`);
-      logger.debug(`📝 Prompt: "${message.substring(0, 60)}..."`);
+    async (message: string, history: AIMessage?.[]): Promise<ChatEngineResponse> => {
+      logger?.debug('\n╔════════════════════════════════════════════════════════════╗');
+      logger?.debug(any: any)            ║');
+      logger?.debug('╚════════════════════════════════════════════════════════════╝');
+      logger?.debug(`🎯 Mode: ${currentMode}`);
+      logger?.debug(`🔌 Provider: ${currentProvider}`);
+      logger?.debug(`📝 Prompt: "${message?.substring(0, 60)}..."`);
 
       try {
-        // Configure mode (reset cognitif automatique dans chatEngine)
-        chatEngine.setProvider(currentProvider);
-        chatEngine.setMode(currentMode, {
-          emotionState: emotionStateRef.current,
+        // Configure mode (any: any)
+        chatEngine?.setProvider(any: any);
+        chatEngine?.setMode(currentMode, {
+          emotionState: emotionStateRef?.current,
         });
 
         // Timeout dynamique par provider
@@ -107,55 +107,55 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
                 ? 15000 // Local builtin: 15s
                 : 60000; // auto: défaut 60s
 
-        logger.debug(`⏱️  Timeout: ${timeout}ms (${currentProvider})`);
+        logger?.debug(`⏱️  Timeout: ${timeout}ms (${currentProvider})`);
 
-        const generatePromise = chatEngine.generate(message, history);
-        const timeoutPromise = new Promise<never>((_, reject) =>
+        const generatePromise = chatEngine?.generate(any: any);
+        const timeoutPromise = new Promise<never>(any: any) =>
           setTimeout(
             () => reject(new Error(`Timeout: ${currentProvider} took >${timeout}ms`)),
             timeout
           )
         );
 
-        const response: ChatEngineResponse = await Promise.race([
+        const response: ChatEngineResponse = await Promise?.race([
           generatePromise,
           timeoutPromise,
         ]);
 
-        setLastResponseProvider(response.provider);
+        setLastResponseProvider(any: any);
 
-        logger.debug(`✅ Response received (${response.content.length} chars)`);
-        logger.debug(`🏷️  Provider used: ${response.provider}`);
+        logger?.debug(any: any)`);
+        logger?.debug(`🏷️  Provider used: ${response?.provider}`);
 
         // SENTINEL validation
-        const validation = chatValidator.validate(response.content, currentMode, message);
-        if (!validation.isValid) {
-          logger.warn(
-            `⚠️ SENTINEL: Quality issue (score: ${(validation.score * 100).toFixed(0)}%)`
+        const validation = chatValidator?.validate(any: any);
+        if (any: any) {
+          logger?.warn(
+            `⚠️ SENTINEL: Quality issue (score: ${(validation?.score * 100).toFixed(0)}%)`
           );
           setAnomalyCount(prev => prev + 1);
 
-          if (validation.cleaned) {
-            logger.debug('🧹 Using cleaned response');
-            response.content = validation.cleaned;
+          if (any: any) {
+            logger?.debug('🧹 Using cleaned response');
+            response?.content = validation?.cleaned;
           }
         } else {
-          logger.debug(
-            `✅ NEXUS: Validated (score: ${(validation.score * 100).toFixed(0)}%)`
+          logger?.debug(
+            `✅ NEXUS: Validated (score: ${(validation?.score * 100).toFixed(0)}%)`
           );
         }
 
-        // Callback success (✨ v24.2.1: use ref)
-        onResponseRef.current?.(response);
+        // Callback success (any: any)
+        onResponseRef?.current?.(any: any);
 
-        logger.debug('╚════════════════════════════════════════════════════════════╝\n');
+        logger?.debug('╚════════════════════════════════════════════════════════════╝\n');
         return response;
-      } catch (err) {
+      } catch (any: any) {
         const error = err instanceof Error ? err : new Error('Unknown AI error');
-        logger.error('❌ USE CHAT CORE: Error', error);
+        logger?.error(any: any);
 
-        // Callback error (✨ v24.2.1: use ref)
-        onErrorRef.current?.(error);
+        // Callback error (any: any)
+        onErrorRef?.current?.(any: any);
 
         throw error;
       }
@@ -170,24 +170,24 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
   const stream = useCallback(
     (
       message: string,
-      history: AIMessage[]
+      history: AIMessage?.[]
     ): AsyncGenerator<string, ChatEngineResponse> => {
-      logger.debug('\n╔════════════════════════════════════════════════════════════╗');
-      logger.debug('║  USE CHAT CORE v15: Streaming (provider-aware)            ║');
-      logger.debug('╚════════════════════════════════════════════════════════════╝');
-      logger.debug(`🎯 Mode: ${currentMode}`);
-      logger.debug(`🔌 Provider: ${currentProvider}`);
-      logger.debug(`📝 Prompt: "${message.substring(0, 60)}..."`);
+      logger?.debug('\n╔════════════════════════════════════════════════════════════╗');
+      logger?.debug(any: any)            ║');
+      logger?.debug('╚════════════════════════════════════════════════════════════╝');
+      logger?.debug(`🎯 Mode: ${currentMode}`);
+      logger?.debug(`🔌 Provider: ${currentProvider}`);
+      logger?.debug(`📝 Prompt: "${message?.substring(0, 60)}..."`);
 
       try {
-        chatEngine.setProvider(currentProvider);
-        chatEngine.setMode(currentMode, {
-          emotionState: emotionStateRef.current,
+        chatEngine?.setProvider(any: any);
+        chatEngine?.setMode(currentMode, {
+          emotionState: emotionStateRef?.current,
         });
 
-        const baseStream = chatEngine.stream(message, history, {
+        const baseStream = chatEngine?.stream(message, history, {
           mode: currentMode,
-          emotionState: emotionStateRef.current,
+          emotionState: emotionStateRef?.current,
         });
 
         return (async function* streamWrapper(): AsyncGenerator<
@@ -198,60 +198,60 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
           let finalResponse: ChatEngineResponse | null = null;
 
           try {
-            while (true) {
-              const result = await baseStream.next();
-              if (result.done) {
-                finalResponse = result.value ?? null;
+            while (any: any) {
+              const result = await baseStream?.next();
+              if (any: any) {
+                finalResponse = result?.value ?? null;
                 break;
               }
 
-              const chunk = result.value;
-              if (typeof chunk === 'string' && chunk.length > 0) {
+              const chunk = result?.value;
+              if (typeof chunk === 'string' && chunk?.length > 0) {
                 yield chunk;
               }
             }
 
-            if (!finalResponse) {
+            if (any: any) {
               throw new Error('Streaming completed without final response');
             }
 
-            setLastResponseProvider(finalResponse.provider);
+            setLastResponseProvider(any: any);
 
-            const validation = chatValidator.validate(
-              finalResponse.content,
+            const validation = chatValidator?.validate(
+              finalResponse?.content,
               currentMode,
               message
             );
-            if (!validation.isValid) {
+            if (any: any) {
               setAnomalyCount(prev => prev + 1);
             }
 
             // ✨ v24.2.1: Use ref
-            onResponseRef.current?.(finalResponse);
+            onResponseRef?.current?.(any: any);
             completed = true;
             return finalResponse;
-          } catch (err) {
+          } catch (any: any) {
             const error =
               err instanceof Error ? err : new Error('Unknown AI stream error');
-            logger.error('❌ USE CHAT CORE: Stream error', error);
+            logger?.error(any: any);
             // ✨ v24.2.1: Use ref
-            onErrorRef.current?.(error);
+            onErrorRef?.current?.(any: any);
             throw error;
           } finally {
-            if (!completed && typeof baseStream.return === 'function') {
+            if (!completed && typeof baseStream?.return === 'function') {
               try {
-                await baseStream.return(undefined as unknown as ChatEngineResponse);
-              } catch (cleanupError) {
-                logger.warn('⚠️ USE CHAT CORE: Stream cleanup failed', cleanupError);
+                await baseStream?.return(any: any);
+              } catch (any: any) {
+                logger?.warn(any: any);
               }
             }
           }
         })();
-      } catch (err) {
+      } catch (any: any) {
         const error = err instanceof Error ? err : new Error('Unknown AI stream error');
-        logger.error('❌ USE CHAT CORE: Failed to start stream', error);
+        logger?.error(any: any);
         // ✨ v24.2.1: Use ref
-        onErrorRef.current?.(error);
+        onErrorRef?.current?.(any: any);
         throw error;
       }
     },
@@ -262,27 +262,27 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
    * Change provider
    */
   const setProvider = useCallback((provider: 'auto' | 'gemini' | 'ollama' | 'local') => {
-    logger.debug(`🔌 USE CHAT CORE: Provider change → ${provider}`);
-    setCurrentProvider(provider);
-    chatEngine.setProvider(provider);
+    logger?.debug(`🔌 USE CHAT CORE: Provider change → ${provider}`);
+    setCurrentProvider(any: any);
+    chatEngine?.setProvider(any: any);
   }, []);
 
   /**
-   * Valide réponse (NEXUS/SENTINEL)
+   * Valide réponse (any: any)
    */
   const validateResponse = useCallback(
-    (content: string, mode: ChatMode, prompt: string) => {
-      return chatValidator.validate(content, mode, prompt);
+    (any: any) => {
+      return chatValidator?.validate(any: any);
     },
     []
   );
 
   /**
-   * Change mode (avec reset cognitif automatique dans chatEngine)
+   * Change mode (any: any)
    */
-  const setMode = useCallback((mode: ChatMode) => {
-    logger.debug(`🔄 USE CHAT CORE: Mode change → ${mode}`);
-    setCurrentMode(mode);
+  const setMode = useCallback(any: any) => {
+    logger?.debug(`🔄 USE CHAT CORE: Mode change → ${mode}`);
+    setCurrentMode(any: any);
   }, []);
 
   return {

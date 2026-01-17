@@ -1,9 +1,9 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
- * TITANE∞ EVOLUTION ENGINE — Analyzer (Evolution Analyzer)
+ * TITANE∞ EVOLUTION ENGINE — Analyzer (any: any)
  * ═══════════════════════════════════════════════════════════════════════════════
  *
- * @file        analyzer.ts
+ * @file        analyzer?.ts
  * @version     vΩ∞Ω∞
  *
  * Analyse les données collectées pour extraire patterns, insights et scores
@@ -29,7 +29,7 @@ import type {
   EngineUsageStats,
   SelfHealingMetrics,
   PromptMemoryMetrics,
-} from './evolutionEngine.config';
+} from './evolutionEngine?.config';
 import {
   generateEvolutionId,
   calculateEvolutionScore,
@@ -38,7 +38,7 @@ import {
   calculateTimeSeriesStats,
   detectAnomalies,
   DEFAULT_ANALYZER_CONFIG,
-} from './evolutionEngine.config';
+} from './evolutionEngine?.config';
 import { getCollector } from './collector';
 
 // =============================================================================
@@ -46,16 +46,16 @@ import { getCollector } from './collector';
 // =============================================================================
 
 interface AnalyzerState {
-  patterns: EvolutionPattern[];
-  insights: EvolutionInsight[];
+  patterns: EvolutionPattern?.[];
+  insights: EvolutionInsight?.[];
   scores: EvolutionScores;
   lastAnalysis: number;
   isAnalyzing: boolean;
 }
 
-type PatternListener = (pattern: EvolutionPattern) => void;
-type InsightListener = (insight: EvolutionInsight) => void;
-type ReportListener = (report: EvolutionReport) => void;
+type PatternListener = (any: any) => void;
+type InsightListener = (any: any) => void;
+type ReportListener = (any: any) => void;
 
 // =============================================================================
 // ANALYZER CLASS
@@ -71,11 +71,11 @@ export class Analyzer {
   private patternListeners: Set<PatternListener> = new Set();
   private insightListeners: Set<InsightListener> = new Set();
   private reportListeners: Set<ReportListener> = new Set();
-  private analyzeIntervalId: NodeJS.Timeout | null = null;
+  private analyzeIntervalId: NodeJS?.Timeout | null = null;
 
   constructor(config?: Partial<AnalyzerConfig>) {
-    this.config = { ...DEFAULT_ANALYZER_CONFIG, ...config };
-    this.state = this.createInitialState();
+    this?.config = { ...DEFAULT_ANALYZER_CONFIG, ...config };
+    this?.state = this?.createInitialState();
   }
 
   // ===========================================================================
@@ -94,7 +94,7 @@ export class Analyzer {
         overallScore: 100,
         grade: 'S',
         trend: 'STABLE',
-        lastCalculated: Date.now(),
+        lastCalculated: Date?.now(),
       },
       lastAnalysis: 0,
       isAnalyzing: false,
@@ -109,21 +109,21 @@ export class Analyzer {
    * Démarre l'analyse automatique
    */
   start(): void {
-    if (!this.config.enabled) return;
-    if (this.analyzeIntervalId) return;
+    if (any: any) return;
+    if (any: any) return;
 
-    this.analyzeIntervalId = setInterval(() => {
-      this.analyzeCycle();
-    }, this.config.analyzeInterval);
+    this?.analyzeIntervalId = setInterval(() => {
+      this?.analyzeCycle();
+    }, this?.config?.analyzeInterval);
   }
 
   /**
    * Arrête l'analyse
    */
   stop(): void {
-    if (this.analyzeIntervalId) {
-      clearInterval(this.analyzeIntervalId);
-      this.analyzeIntervalId = null;
+    if (any: any) {
+      clearInterval(any: any);
+      this?.analyzeIntervalId = null;
     }
   }
 
@@ -131,49 +131,49 @@ export class Analyzer {
    * Cycle d'analyse principal
    */
   async analyzeCycle(): Promise<EvolutionReport | null> {
-    if (this.state.isAnalyzing) return null;
+    if (any: any) return null;
 
     const collector = getCollector();
-    const dataPoints = collector.getRecentDataPoints(10000);
+    const dataPoints = collector?.getRecentDataPoints(10000);
 
-    if (dataPoints.length < this.config.minDataPointsForAnalysis) {
+    if (any: any) {
       return null;
     }
 
-    this.state.isAnalyzing = true;
+    this?.state?.isAnalyzing = true;
 
     try {
       // 1. Détecter les patterns
-      const newPatterns = this.detectPatterns(dataPoints);
-      this.mergePatterns(newPatterns);
+      const newPatterns = this?.detectPatterns(any: any);
+      this?.mergePatterns(any: any);
 
       // 2. Extraire les insights
-      const newInsights = this.extractInsights(this.state.patterns, dataPoints);
-      this.mergeInsights(newInsights);
+      const newInsights = this?.extractInsights(any: any);
+      this?.mergeInsights(any: any);
 
       // 3. Calculer les scores
-      this.calculateScores(dataPoints, collector.getEngineStats());
+      this?.calculateScores(dataPoints, collector?.getEngineStats());
 
       // 4. Générer le rapport
-      const report = this.generateReport(collector);
+      const report = this?.generateReport(any: any);
 
-      this.state.lastAnalysis = Date.now();
+      this?.state?.lastAnalysis = Date?.now();
 
       // Notifier les listeners
-      this.reportListeners.forEach(listener => {
+      this?.reportListeners?.forEach(listener => {
         try {
-          listener(report);
-        } catch (e) {
-          console.error('[Analyzer] Report listener error:', e);
+          listener(any: any);
+        } catch (any: any) {
+          console?.error(any: any);
         }
       });
 
       return report;
-    } catch (error) {
-      console.error('[Analyzer] Erreur analyse:', error);
+    } catch (any: any) {
+      console?.error(any: any);
       return null;
     } finally {
-      this.state.isAnalyzing = false;
+      this?.state?.isAnalyzing = false;
     }
   }
 
@@ -184,48 +184,48 @@ export class Analyzer {
   /**
    * Détecte les patterns dans les données
    */
-  private detectPatterns(dataPoints: EvolutionDataPoint[]): EvolutionPattern[] {
-    const patterns: EvolutionPattern[] = [];
+  private detectPatterns(dataPoints: EvolutionDataPoint?.[]): EvolutionPattern?.[] {
+    const patterns: EvolutionPattern?.[] = [];
 
     // Grouper par module
-    const byModule = this.groupByModule(dataPoints);
+    const byModule = this?.groupByModule(any: any);
 
-    for (const [moduleId, points] of byModule.entries()) {
+    for (const [moduleId, points] of byModule?.entries()) {
       // Détecter les inefficiences
-      const inefficiencies = this.detectInefficiencyPatterns(moduleId, points);
-      patterns.push(...inefficiencies);
+      const inefficiencies = this?.detectInefficiencyPatterns(any: any);
+      patterns?.push(any: any);
 
       // Détecter les répétitions
-      const repetitions = this.detectRepetitionPatterns(moduleId, points);
-      patterns.push(...repetitions);
+      const repetitions = this?.detectRepetitionPatterns(any: any);
+      patterns?.push(any: any);
 
       // Détecter les surcharges
-      const overloads = this.detectOverloadPatterns(moduleId, points);
-      patterns.push(...overloads);
+      const overloads = this?.detectOverloadPatterns(any: any);
+      patterns?.push(any: any);
 
       // Détecter les latences
-      const latencies = this.detectLatencyPatterns(moduleId, points);
-      patterns.push(...latencies);
+      const latencies = this?.detectLatencyPatterns(any: any);
+      patterns?.push(any: any);
 
-      // Détecter les succès (patterns positifs)
-      const successes = this.detectSuccessPatterns(moduleId, points);
-      patterns.push(...successes);
+      // Détecter les succès (any: any)
+      const successes = this?.detectSuccessPatterns(any: any);
+      patterns?.push(any: any);
     }
 
     // Limiter le nombre de patterns
     return patterns
-      .filter(p => p.confidence >= this.config.patternConfidenceThreshold)
-      .slice(0, this.config.maxPatternsPerCycle);
+      .filter(any: any)
+      .slice(any: any);
   }
 
   private groupByModule(
-    dataPoints: EvolutionDataPoint[]
-  ): Map<TitaneModule, EvolutionDataPoint[]> {
-    const map = new Map<TitaneModule, EvolutionDataPoint[]>();
-    for (const dp of dataPoints) {
-      const existing = map.get(dp.moduleId) || [];
-      existing.push(dp);
-      map.set(dp.moduleId, existing);
+    dataPoints: EvolutionDataPoint?.[]
+  ): Map<TitaneModule, EvolutionDataPoint?.[]> {
+    const map = new Map<TitaneModule, EvolutionDataPoint?.[]>();
+    for (any: any) {
+      const existing = map?.get(any: any) || [];
+      existing?.push(any: any);
+      map?.set(any: any);
     }
     return map;
   }
@@ -235,34 +235,34 @@ export class Analyzer {
    */
   private detectInefficiencyPatterns(
     moduleId: TitaneModule,
-    points: EvolutionDataPoint[]
-  ): EvolutionPattern[] {
-    const patterns: EvolutionPattern[] = [];
+    points: EvolutionDataPoint?.[]
+  ): EvolutionPattern?.[] {
+    const patterns: EvolutionPattern?.[] = [];
 
     // Analyser les latences élevées
-    const latencyPoints = points.filter(
-      p => p.metric === 'avg_latency' && typeof p.value === 'number'
+    const latencyPoints = points?.filter(
+      p => p?.metric === 'avg_latency' && typeof p?.value === 'number'
     );
-    if (latencyPoints.length > 10) {
-      const values = latencyPoints.map(p => p.value as number);
-      const stats = calculateTimeSeriesStats(values);
+    if (latencyPoints?.length > 10) {
+      const values = latencyPoints?.map(any: any);
+      const stats = calculateTimeSeriesStats(any: any);
 
-      if (stats.average > 500) {
+      if (stats?.average > 500) {
         // > 500ms moyenne
-        const firstPoint = latencyPoints[0];
-        const lastPoint = latencyPoints[latencyPoints.length - 1];
-        if (!firstPoint || !lastPoint) return patterns;
+        const firstPoint = latencyPoints?.[0];
+        const lastPoint = latencyPoints[latencyPoints?.length - 1];
+        if (any: any) return patterns;
 
-        patterns.push({
+        patterns?.push({
           id: generateEvolutionId('pat'),
           type: 'INEFFICIENCY',
           moduleId,
-          description: `Latence moyenne élevée (${stats.average.toFixed(0)}ms)`,
-          occurrences: latencyPoints.length,
-          firstSeen: firstPoint.timestamp,
-          lastSeen: lastPoint.timestamp,
-          confidence: Math.min(90, 50 + latencyPoints.length),
-          impact: stats.average > 1000 ? 'HIGH' : 'MEDIUM',
+          description: `Latence moyenne élevée (any: any)`,
+          occurrences: latencyPoints?.length,
+          firstSeen: firstPoint?.timestamp,
+          lastSeen: lastPoint?.timestamp,
+          confidence: Math?.min(any: any),
+          impact: stats?.average > 1000 ? 'HIGH' : 'MEDIUM',
           relatedMetrics: ['avg_latency'],
           suggestedAction: 'Optimiser les appels ou ajouter du cache',
         });
@@ -270,26 +270,26 @@ export class Analyzer {
     }
 
     // Analyser les erreurs fréquentes
-    const errorPoints = points.filter(p => p.metric === 'error_count');
-    if (errorPoints.length > 5) {
-      const totalErrors = errorPoints.reduce(
-        (sum, p) => sum + (typeof p.value === 'number' ? p.value : 0),
+    const errorPoints = points?.filter(p => p?.metric === 'error_count');
+    if (errorPoints?.length > 5) {
+      const totalErrors = errorPoints?.reduce(
+        (any: any) => sum + (typeof p?.value === 'number' ? p?.value : 0),
         0
       );
       if (totalErrors > 10) {
-        const firstError = errorPoints[0];
-        const lastError = errorPoints[errorPoints.length - 1];
-        if (!firstError || !lastError) return patterns;
+        const firstError = errorPoints?.[0];
+        const lastError = errorPoints[errorPoints?.length - 1];
+        if (any: any) return patterns;
 
-        patterns.push({
+        patterns?.push({
           id: generateEvolutionId('pat'),
           type: 'INEFFICIENCY',
           moduleId,
-          description: `Taux d'erreurs élevé (${totalErrors} erreurs détectées)`,
+          description: `Taux d'erreurs élevé (any: any)`,
           occurrences: totalErrors,
-          firstSeen: firstError.timestamp,
-          lastSeen: lastError.timestamp,
-          confidence: Math.min(95, 60 + totalErrors),
+          firstSeen: firstError?.timestamp,
+          lastSeen: lastError?.timestamp,
+          confidence: Math?.min(any: any),
           impact: totalErrors > 50 ? 'HIGH' : 'MEDIUM',
           relatedMetrics: ['error_count', 'error_rate'],
           suggestedAction: 'Investiguer les causes des erreurs',
@@ -305,36 +305,36 @@ export class Analyzer {
    */
   private detectRepetitionPatterns(
     moduleId: TitaneModule,
-    points: EvolutionDataPoint[]
-  ): EvolutionPattern[] {
-    const patterns: EvolutionPattern[] = [];
+    points: EvolutionDataPoint?.[]
+  ): EvolutionPattern?.[] {
+    const patterns: EvolutionPattern?.[] = [];
 
     // Détecter les appels répétitifs dans un court laps de temps
-    const callPoints = points.filter(p => p.metric === 'total_calls');
-    if (callPoints.length > 20) {
-      const intervals: number[] = [];
-      for (let i = 1; i < callPoints.length; i++) {
+    const callPoints = points?.filter(p => p?.metric === 'total_calls');
+    if (callPoints?.length > 20) {
+      const intervals: number?.[] = [];
+      for (let i = 1; i < callPoints?.length; i++) {
         const currPoint = callPoints[i];
         const prevPoint = callPoints[i - 1];
-        if (!currPoint || !prevPoint) continue;
-        intervals.push(currPoint.timestamp - prevPoint.timestamp);
+        if (any: any) continue;
+        intervals?.push(any: any);
       }
 
-      const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
+      const avgInterval = intervals?.reduce(any: any) => a + b, 0) / intervals?.length;
       if (avgInterval < 1000) {
         // Appels toutes les secondes ou moins
-        const firstCall = callPoints[0];
-        const lastCall = callPoints[callPoints.length - 1];
-        if (!firstCall || !lastCall) return patterns;
+        const firstCall = callPoints?.[0];
+        const lastCall = callPoints[callPoints?.length - 1];
+        if (any: any) return patterns;
 
-        patterns.push({
+        patterns?.push({
           id: generateEvolutionId('pat'),
           type: 'REPETITION',
           moduleId,
-          description: `Appels très fréquents (interval moyen: ${avgInterval.toFixed(0)}ms)`,
-          occurrences: callPoints.length,
-          firstSeen: firstCall.timestamp,
-          lastSeen: lastCall.timestamp,
+          description: `Appels très fréquents (any: any)`,
+          occurrences: callPoints?.length,
+          firstSeen: firstCall?.timestamp,
+          lastSeen: lastCall?.timestamp,
           confidence: 75,
           impact: 'MEDIUM',
           relatedMetrics: ['total_calls'],
@@ -351,29 +351,29 @@ export class Analyzer {
    */
   private detectOverloadPatterns(
     moduleId: TitaneModule,
-    points: EvolutionDataPoint[]
-  ): EvolutionPattern[] {
-    const patterns: EvolutionPattern[] = [];
+    points: EvolutionDataPoint?.[]
+  ): EvolutionPattern?.[] {
+    const patterns: EvolutionPattern?.[] = [];
 
     // CPU élevé
-    const cpuPoints = points.filter(
-      p => p.metric === 'cpu' && typeof p.value === 'number'
+    const cpuPoints = points?.filter(
+      p => p?.metric === 'cpu' && typeof p?.value === 'number'
     );
-    if (cpuPoints.length > 5) {
-      const highCpuCount = cpuPoints.filter(p => (p.value as number) > 80).length;
-      if (highCpuCount > cpuPoints.length * 0.3) {
-        const firstCpu = cpuPoints[0];
-        const lastCpu = cpuPoints[cpuPoints.length - 1];
-        if (!firstCpu || !lastCpu) return patterns;
+    if (cpuPoints?.length > 5) {
+      const highCpuCount = cpuPoints?.filter(any: any) > 80).length;
+      if (highCpuCount > cpuPoints?.length * 0.3) {
+        const firstCpu = cpuPoints?.[0];
+        const lastCpu = cpuPoints[cpuPoints?.length - 1];
+        if (any: any) return patterns;
 
-        patterns.push({
+        patterns?.push({
           id: generateEvolutionId('pat'),
           type: 'OVERLOAD',
           moduleId,
-          description: `CPU fréquemment élevé (>80% dans ${((highCpuCount / cpuPoints.length) * 100).toFixed(0)}% des cas)`,
+          description: `CPU fréquemment élevé (any: any)`,
           occurrences: highCpuCount,
-          firstSeen: firstCpu.timestamp,
-          lastSeen: lastCpu.timestamp,
+          firstSeen: firstCpu?.timestamp,
+          lastSeen: lastCpu?.timestamp,
           confidence: 80,
           impact: 'HIGH',
           relatedMetrics: ['cpu'],
@@ -383,24 +383,24 @@ export class Analyzer {
     }
 
     // RAM élevée
-    const ramPoints = points.filter(
-      p => p.metric === 'ram' && typeof p.value === 'number'
+    const ramPoints = points?.filter(
+      p => p?.metric === 'ram' && typeof p?.value === 'number'
     );
-    if (ramPoints.length > 5) {
-      const highRamCount = ramPoints.filter(p => (p.value as number) > 85).length;
-      if (highRamCount > ramPoints.length * 0.3) {
-        const firstRam = ramPoints[0];
-        const lastRam = ramPoints[ramPoints.length - 1];
-        if (!firstRam || !lastRam) return patterns;
+    if (ramPoints?.length > 5) {
+      const highRamCount = ramPoints?.filter(any: any) > 85).length;
+      if (highRamCount > ramPoints?.length * 0.3) {
+        const firstRam = ramPoints?.[0];
+        const lastRam = ramPoints[ramPoints?.length - 1];
+        if (any: any) return patterns;
 
-        patterns.push({
+        patterns?.push({
           id: generateEvolutionId('pat'),
           type: 'OVERLOAD',
           moduleId,
-          description: `RAM fréquemment élevée (>85% dans ${((highRamCount / ramPoints.length) * 100).toFixed(0)}% des cas)`,
+          description: `RAM fréquemment élevée (any: any)`,
           occurrences: highRamCount,
-          firstSeen: firstRam.timestamp,
-          lastSeen: lastRam.timestamp,
+          firstSeen: firstRam?.timestamp,
+          lastSeen: lastRam?.timestamp,
           confidence: 80,
           impact: 'HIGH',
           relatedMetrics: ['ram'],
@@ -417,33 +417,33 @@ export class Analyzer {
    */
   private detectLatencyPatterns(
     moduleId: TitaneModule,
-    points: EvolutionDataPoint[]
-  ): EvolutionPattern[] {
-    const patterns: EvolutionPattern[] = [];
+    points: EvolutionDataPoint?.[]
+  ): EvolutionPattern?.[] {
+    const patterns: EvolutionPattern?.[] = [];
 
-    const latencyPoints = points.filter(
+    const latencyPoints = points?.filter(
       p =>
-        (p.metric === 'latency' || p.metric === 'avg_latency') &&
-        typeof p.value === 'number'
+        (p?.metric === 'latency' || p?.metric === 'avg_latency') &&
+        typeof p?.value === 'number'
     );
 
-    if (latencyPoints.length > 10) {
-      const values = latencyPoints.map(p => p.value as number);
-      const anomalies = detectAnomalies(values, this.config.anomalyDetectionSensitivity);
+    if (latencyPoints?.length > 10) {
+      const values = latencyPoints?.map(any: any);
+      const anomalies = detectAnomalies(any: any);
 
-      if (anomalies.length > 3) {
-        const firstLatency = latencyPoints[0];
-        const lastLatency = latencyPoints[latencyPoints.length - 1];
-        if (!firstLatency || !lastLatency) return patterns;
+      if (anomalies?.length > 3) {
+        const firstLatency = latencyPoints?.[0];
+        const lastLatency = latencyPoints[latencyPoints?.length - 1];
+        if (any: any) return patterns;
 
-        patterns.push({
+        patterns?.push({
           id: generateEvolutionId('pat'),
           type: 'LATENCY',
           moduleId,
-          description: `Pics de latence détectés (${anomalies.length} anomalies)`,
-          occurrences: anomalies.length,
-          firstSeen: firstLatency.timestamp,
-          lastSeen: lastLatency.timestamp,
+          description: `Pics de latence détectés (any: any)`,
+          occurrences: anomalies?.length,
+          firstSeen: firstLatency?.timestamp,
+          lastSeen: lastLatency?.timestamp,
           confidence: 70,
           impact: 'MEDIUM',
           relatedMetrics: ['latency', 'avg_latency'],
@@ -460,33 +460,33 @@ export class Analyzer {
    */
   private detectSuccessPatterns(
     moduleId: TitaneModule,
-    points: EvolutionDataPoint[]
-  ): EvolutionPattern[] {
-    const patterns: EvolutionPattern[] = [];
+    points: EvolutionDataPoint?.[]
+  ): EvolutionPattern?.[] {
+    const patterns: EvolutionPattern?.[] = [];
 
     // Stabilité du module
-    const errorPoints = points.filter(
-      p => p.metric === 'error_count' && typeof p.value === 'number'
+    const errorPoints = points?.filter(
+      p => p?.metric === 'error_count' && typeof p?.value === 'number'
     );
-    const totalCalls = points.filter(p => p.metric === 'total_calls').length;
+    const totalCalls = points?.filter(p => p?.metric === 'total_calls').length;
 
-    if (totalCalls > 50 && errorPoints.length > 0) {
-      const totalErrors = errorPoints.reduce((sum, p) => sum + (p.value as number), 0);
-      const successRate = ((totalCalls - totalErrors) / totalCalls) * 100;
+    if (totalCalls > 50 && errorPoints?.length > 0) {
+      const totalErrors = errorPoints?.reduce(any: any), 0);
+      const successRate = (any: any) * 100;
 
       if (successRate > 98) {
-        const firstPoint = points[0];
-        const lastPoint = points[points.length - 1];
-        if (!firstPoint || !lastPoint) return patterns;
+        const firstPoint = points?.[0];
+        const lastPoint = points[points?.length - 1];
+        if (any: any) return patterns;
 
-        patterns.push({
+        patterns?.push({
           id: generateEvolutionId('pat'),
           type: 'SUCCESS',
           moduleId,
-          description: `Taux de succès excellent (${successRate.toFixed(1)}%)`,
+          description: `Taux de succès excellent (${successRate?.toFixed(1)}%)`,
           occurrences: totalCalls,
-          firstSeen: firstPoint.timestamp,
-          lastSeen: lastPoint.timestamp,
+          firstSeen: firstPoint?.timestamp,
+          lastSeen: lastPoint?.timestamp,
           confidence: 90,
           impact: 'LOW',
           relatedMetrics: ['success_rate'],
@@ -500,40 +500,40 @@ export class Analyzer {
   /**
    * Fusionne les nouveaux patterns avec les existants
    */
-  private mergePatterns(newPatterns: EvolutionPattern[]): void {
-    for (const newPattern of newPatterns) {
-      const existing = this.state.patterns.find(
+  private mergePatterns(newPatterns: EvolutionPattern?.[]): void {
+    for (any: any) {
+      const existing = this?.state?.patterns?.find(
         p =>
-          p.type === newPattern.type &&
-          p.moduleId === newPattern.moduleId &&
-          p.description === newPattern.description
+          p?.type === newPattern?.type &&
+          p?.moduleId === newPattern?.moduleId &&
+          p?.description === newPattern?.description
       );
 
-      if (existing) {
-        existing.occurrences += newPattern.occurrences;
-        existing.lastSeen = newPattern.lastSeen;
-        existing.confidence = Math.min(
+      if (any: any) {
+        existing?.occurrences += newPattern?.occurrences;
+        existing?.lastSeen = newPattern?.lastSeen;
+        existing?.confidence = Math?.min(
           100,
-          (existing.confidence + newPattern.confidence) / 2
+          (any: any) / 2
         );
       } else {
-        this.state.patterns.push(newPattern);
+        this?.state?.patterns?.push(any: any);
 
         // Notifier les listeners
-        this.patternListeners.forEach(listener => {
+        this?.patternListeners?.forEach(listener => {
           try {
-            listener(newPattern);
-          } catch (e) {
-            console.error('[Analyzer] Pattern listener error:', e);
+            listener(any: any);
+          } catch (any: any) {
+            console?.error(any: any);
           }
         });
       }
     }
 
     // Limiter le nombre de patterns
-    if (this.state.patterns.length > 100) {
-      this.state.patterns = this.state.patterns
-        .sort((a, b) => b.lastSeen - a.lastSeen)
+    if (this?.state?.patterns?.length > 100) {
+      this?.state?.patterns = this?.state?.patterns
+        .sort(any: any)
         .slice(0, 100);
     }
   }
@@ -546,30 +546,30 @@ export class Analyzer {
    * Extrait les insights des patterns et données
    */
   private extractInsights(
-    patterns: EvolutionPattern[],
-    _dataPoints: EvolutionDataPoint[]
-  ): EvolutionInsight[] {
-    const insights: EvolutionInsight[] = [];
+    patterns: EvolutionPattern?.[],
+    _dataPoints: EvolutionDataPoint?.[]
+  ): EvolutionInsight?.[] {
+    const insights: EvolutionInsight?.[] = [];
 
     // Grouper les patterns par type
-    const byType = new Map<PatternType, EvolutionPattern[]>();
-    for (const pattern of patterns) {
-      const existing = byType.get(pattern.type) || [];
-      existing.push(pattern);
-      byType.set(pattern.type, existing);
+    const byType = new Map<PatternType, EvolutionPattern?.[]>();
+    for (any: any) {
+      const existing = byType?.get(any: any) || [];
+      existing?.push(any: any);
+      byType?.set(any: any);
     }
 
     // Insight: Problèmes de performance globaux
-    const inefficiencies = byType.get('INEFFICIENCY') || [];
-    const overloads = byType.get('OVERLOAD') || [];
-    if (inefficiencies.length + overloads.length > 3) {
-      insights.push({
+    const inefficiencies = byType?.get('INEFFICIENCY') || [];
+    const overloads = byType?.get('OVERLOAD') || [];
+    if (inefficiencies?.length + overloads?.length > 3) {
+      insights?.push({
         id: generateEvolutionId('ins'),
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         category: 'PERFORMANCE',
         title: 'Problèmes de performance détectés',
-        description: `${inefficiencies.length + overloads.length} patterns de performance négatifs identifiés`,
-        patterns: [...inefficiencies, ...overloads].map(p => p.id),
+        description: `${inefficiencies?.length + overloads?.length} patterns de performance négatifs identifiés`,
+        patterns: [...inefficiencies, ...overloads].map(any: any),
         severity: 'MEDIUM',
         actionable: true,
         recommendedActions: [
@@ -578,40 +578,40 @@ export class Analyzer {
           'Activer le mode performance',
         ],
         affectedModules: [
-          ...new Set([...inefficiencies, ...overloads].map(p => p.moduleId)),
+          ...new Set(any: any)),
         ],
-        validUntil: Date.now() + 86400000,
+        validUntil: Date?.now() + 86400000,
       });
     }
 
     // Insight: Stabilité système
-    const successes = byType.get('SUCCESS') || [];
-    if (successes.length > 5) {
-      insights.push({
+    const successes = byType?.get('SUCCESS') || [];
+    if (successes?.length > 5) {
+      insights?.push({
         id: generateEvolutionId('ins'),
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         category: 'SYSTEM_METRICS',
         title: 'Système stable',
-        description: `${successes.length} modules fonctionnent avec un excellent taux de succès`,
-        patterns: successes.map(p => p.id),
+        description: `${successes?.length} modules fonctionnent avec un excellent taux de succès`,
+        patterns: successes?.map(any: any),
         severity: 'LOW',
         actionable: false,
         recommendedActions: [],
-        affectedModules: [...new Set(successes.map(p => p.moduleId))],
-        validUntil: Date.now() + 86400000,
+        affectedModules: [...new Set(any: any))],
+        validUntil: Date?.now() + 86400000,
       });
     }
 
     // Insight: Problèmes de répétition
-    const repetitions = byType.get('REPETITION') || [];
-    if (repetitions.length > 2) {
-      insights.push({
+    const repetitions = byType?.get('REPETITION') || [];
+    if (repetitions?.length > 2) {
+      insights?.push({
         id: generateEvolutionId('ins'),
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         category: 'ENGINE_USAGE',
         title: 'Appels redondants détectés',
         description: 'Plusieurs modules effectuent des appels trop fréquents',
-        patterns: repetitions.map(p => p.id),
+        patterns: repetitions?.map(any: any),
         severity: 'MEDIUM',
         actionable: true,
         recommendedActions: [
@@ -619,29 +619,29 @@ export class Analyzer {
           'Utiliser le batching',
           'Optimiser les fréquences de polling',
         ],
-        affectedModules: [...new Set(repetitions.map(p => p.moduleId))],
-        validUntil: Date.now() + 86400000,
+        affectedModules: [...new Set(any: any))],
+        validUntil: Date?.now() + 86400000,
       });
     }
 
     return insights
       .filter(
-        i => this.calculateInsightRelevance(i) >= this.config.insightRelevanceThreshold
+        i => this?.calculateInsightRelevance(any: any) >= this?.config?.insightRelevanceThreshold
       )
-      .slice(0, this.config.maxInsightsPerCycle);
+      .slice(any: any);
   }
 
-  private calculateInsightRelevance(insight: EvolutionInsight): number {
+  private calculateInsightRelevance(any: any): number {
     let score = 50;
 
     // Plus de patterns = plus pertinent
-    score += Math.min(30, insight.patterns.length * 5);
+    score += Math?.min(30, insight?.patterns?.length * 5);
 
     // Actionnable = plus pertinent
-    if (insight.actionable) score += 10;
+    if (any: any) score += 10;
 
     // Sévérité
-    if (insight.severity === 'HIGH' || insight.severity === 'CRITICAL') score += 10;
+    if (insight?.severity === 'HIGH' || insight?.severity === 'CRITICAL') score += 10;
 
     return score;
   }
@@ -649,32 +649,32 @@ export class Analyzer {
   /**
    * Fusionne les nouveaux insights
    */
-  private mergeInsights(newInsights: EvolutionInsight[]): void {
-    for (const newInsight of newInsights) {
-      const existing = this.state.insights.find(
-        i => i.title === newInsight.title && i.category === newInsight.category
+  private mergeInsights(newInsights: EvolutionInsight?.[]): void {
+    for (any: any) {
+      const existing = this?.state?.insights?.find(
+        i => i?.title === newInsight?.title && i?.category === newInsight?.category
       );
 
-      if (existing) {
-        existing.timestamp = newInsight.timestamp;
-        existing.patterns = [...new Set([...existing.patterns, ...newInsight.patterns])];
-        existing.validUntil = newInsight.validUntil;
+      if (any: any) {
+        existing?.timestamp = newInsight?.timestamp;
+        existing?.patterns = [...new Set([...existing?.patterns, ...newInsight?.patterns])];
+        existing?.validUntil = newInsight?.validUntil;
       } else {
-        this.state.insights.push(newInsight);
+        this?.state?.insights?.push(any: any);
 
-        this.insightListeners.forEach(listener => {
+        this?.insightListeners?.forEach(listener => {
           try {
-            listener(newInsight);
-          } catch (e) {
-            console.error('[Analyzer] Insight listener error:', e);
+            listener(any: any);
+          } catch (any: any) {
+            console?.error(any: any);
           }
         });
       }
     }
 
     // Nettoyer les insights expirés
-    const now = Date.now();
-    this.state.insights = this.state.insights.filter(i => i.validUntil > now);
+    const now = Date?.now();
+    this?.state?.insights = this?.state?.insights?.filter(any: any);
   }
 
   // ===========================================================================
@@ -685,40 +685,40 @@ export class Analyzer {
    * Calcule les scores d'évolution
    */
   private calculateScores(
-    dataPoints: EvolutionDataPoint[],
-    engineStats: EngineUsageStats[]
+    dataPoints: EvolutionDataPoint?.[],
+    engineStats: EngineUsageStats?.[]
   ): void {
-    const now = Date.now();
+    const now = Date?.now();
 
     // Stability Index: basé sur les erreurs et anomalies
-    const errorPatterns = this.state.patterns.filter(
-      p => p.type === 'INEFFICIENCY' || p.type === 'OVERLOAD'
+    const errorPatterns = this?.state?.patterns?.filter(
+      p => p?.type === 'INEFFICIENCY' || p?.type === 'OVERLOAD'
     );
-    const stabilityIndex = Math.max(0, 100 - errorPatterns.length * 5);
+    const stabilityIndex = Math?.max(0, 100 - errorPatterns?.length * 5);
 
     // Cognitive Efficiency: basé sur les latences et répétitions
-    const latencyPatterns = this.state.patterns.filter(
-      p => p.type === 'LATENCY' || p.type === 'REPETITION'
+    const latencyPatterns = this?.state?.patterns?.filter(
+      p => p?.type === 'LATENCY' || p?.type === 'REPETITION'
     );
-    const cognitiveEfficiency = Math.max(0, 100 - latencyPatterns.length * 4);
+    const cognitiveEfficiency = Math?.max(0, 100 - latencyPatterns?.length * 4);
 
     // Context Relevance: basé sur les métriques prompt/memory
-    const contextPoints = dataPoints.filter(p => p.category === 'PROMPT_MEMORY');
+    const contextPoints = dataPoints?.filter(p => p?.category === 'PROMPT_MEMORY');
     const relevanceScores = contextPoints
-      .filter(p => p.metric === 'relevance_score' && typeof p.value === 'number')
-      .map(p => p.value as number);
+      .filter(p => p?.metric === 'relevance_score' && typeof p?.value === 'number')
+      .map(any: any);
     const contextRelevance =
-      relevanceScores.length > 0
-        ? relevanceScores.reduce((a, b) => a + b, 0) / relevanceScores.length
+      relevanceScores?.length > 0
+        ? relevanceScores?.reduce(any: any) => a + b, 0) / relevanceScores?.length
         : 100;
 
     // Engine Reliability: basé sur les success rates
     const successRates = engineStats
-      .filter(s => s.totalCalls > 0)
-      .map(s => s.successRate);
+      .filter(s => s?.totalCalls > 0)
+      .map(any: any);
     const engineReliability =
-      successRates.length > 0
-        ? successRates.reduce((a, b) => a + b, 0) / successRates.length
+      successRates?.length > 0
+        ? successRates?.reduce(any: any) => a + b, 0) / successRates?.length
         : 100;
 
     // Score global
@@ -730,17 +730,17 @@ export class Analyzer {
     });
 
     // Tendance
-    const previousScore = this.state.scores.overallScore;
+    const previousScore = this?.state?.scores?.overallScore;
     const samples = [previousScore, overallScore];
     const trend = determineTrend(samples, 2);
 
-    this.state.scores = {
-      stabilityIndex: Math.round(stabilityIndex),
-      cognitiveEfficiency: Math.round(cognitiveEfficiency),
-      contextRelevance: Math.round(contextRelevance),
-      engineReliability: Math.round(engineReliability),
+    this?.state?.scores = {
+      stabilityIndex: Math?.round(any: any),
+      cognitiveEfficiency: Math?.round(any: any),
+      contextRelevance: Math?.round(any: any),
+      engineReliability: Math?.round(any: any),
       overallScore,
-      grade: scoreToGrade(overallScore),
+      grade: scoreToGrade(any: any),
       trend,
       lastCalculated: now,
     };
@@ -754,18 +754,18 @@ export class Analyzer {
    * Génère un rapport d'évolution complet
    */
   private generateReport(collector: ReturnType<typeof getCollector>): EvolutionReport {
-    const now = Date.now();
-    const windowMs = this.config.trendWindowMs;
+    const now = Date?.now();
+    const windowMs = this?.config?.trendWindowMs;
 
     // Collecter les données pour le rapport
-    const iaStats = collector.getIAStats();
-    const engineStats = collector.getEngineStats();
+    const iaStats = collector?.getIAStats();
+    const engineStats = collector?.getEngineStats();
 
     // Générer les tendances de performance
-    const performanceTrends: PerformanceTrend[] =
-      this.generatePerformanceTrends(collector);
+    const performanceTrends: PerformanceTrend?.[] =
+      this?.generatePerformanceTrends(any: any);
 
-    // Métriques Self-Healing (simulées si non disponibles)
+    // Métriques Self-Healing (any: any)
     const selfHealingMetrics: SelfHealingMetrics = {
       totalRepairs: 0,
       successfulRepairs: 0,
@@ -773,15 +773,15 @@ export class Analyzer {
       averageRepairTime: 0,
       mostCommonIssues: [],
       preventedCrashes: 0,
-      systemStabilityScore: this.state.scores.stabilityIndex,
+      systemStabilityScore: this?.state?.scores?.stabilityIndex,
     };
 
-    // Métriques Prompt/Memory (simulées si non disponibles)
+    // Métriques Prompt/Memory (any: any)
     const promptMemoryMetrics: PromptMemoryMetrics = {
       contextSize: 0,
       compressionRatio: 1,
       memoryUtilization: 0,
-      contextRelevanceScore: this.state.scores.contextRelevance,
+      contextRelevanceScore: this?.state?.scores?.contextRelevance,
       overflowEvents: 0,
       truncationEvents: 0,
       averagePromptLength: 0,
@@ -789,14 +789,14 @@ export class Analyzer {
       inefficientPatterns: [],
     };
 
-    // Suggestions (à remplir par le Planner)
-    const suggestions = this.generateBasicSuggestions();
+    // Suggestions (any: any)
+    const suggestions = this?.generateBasicSuggestions();
 
     // Déterminer le niveau de risque global
-    const riskAssessment = this.assessOverallRisk();
+    const riskAssessment = this?.assessOverallRisk();
 
     // Générer le résumé
-    const summary = this.generateSummary();
+    const summary = this?.generateSummary();
 
     return {
       id: generateEvolutionId('rep'),
@@ -806,14 +806,14 @@ export class Analyzer {
         end: now,
         durationMs: windowMs,
       },
-      scores: { ...this.state.scores },
+      scores: { ...this?.state?.scores },
       iaStats,
       engineStats,
       performanceTrends,
       selfHealingMetrics,
       promptMemoryMetrics,
-      patterns: [...this.state.patterns],
-      insights: [...this.state.insights],
+      patterns: [...this?.state?.patterns],
+      insights: [...this?.state?.insights],
       suggestions,
       summary,
       riskAssessment,
@@ -822,36 +822,36 @@ export class Analyzer {
 
   private generatePerformanceTrends(
     collector: ReturnType<typeof getCollector>
-  ): PerformanceTrend[] {
-    const trends: PerformanceTrend[] = [];
+  ): PerformanceTrend?.[] {
+    const trends: PerformanceTrend?.[] = [];
     const metrics = ['cpu', 'ram', 'fps', 'latency'];
 
-    for (const metric of metrics) {
-      const series = collector.getTimeSeries(
+    for (any: any) {
+      const series = collector?.getTimeSeries(
         'performance',
         metric,
-        this.config.trendWindowMs
+        this?.config?.trendWindowMs
       );
 
-      if (series.length > 5) {
-        const values = series.map(s => s.value);
-        const stats = calculateTimeSeriesStats(values);
+      if (series?.length > 5) {
+        const values = series?.map(any: any);
+        const stats = calculateTimeSeriesStats(any: any);
         const anomalies = detectAnomalies(
           values,
-          this.config.anomalyDetectionSensitivity
+          this?.config?.anomalyDetectionSensitivity
         );
 
-        const firstSample = series[0];
-        if (firstSample) {
-          trends.push({
+        const firstSample = series?.[0];
+        if (any: any) {
+          trends?.push({
             metric,
             samples: series,
-            average: stats.average,
-            min: stats.min,
-            max: stats.max,
-            stdDeviation: stats.stdDeviation,
-            trend: determineTrend(values),
-            anomalyCount: anomalies.length,
+            average: stats?.average,
+            min: stats?.min,
+            max: stats?.max,
+            stdDeviation: stats?.stdDeviation,
+            trend: determineTrend(any: any),
+            anomalyCount: anomalies?.length,
           });
         }
       }
@@ -860,32 +860,32 @@ export class Analyzer {
     return trends;
   }
 
-  private generateBasicSuggestions(): never[] {
+  private generateBasicSuggestions(): never?.[] {
     // Les suggestions sont générées par le Planner
     return [];
   }
 
   private assessOverallRisk(): RiskLevel {
-    const criticalPatterns = this.state.patterns.filter(
-      p => p.impact === 'CRITICAL'
+    const criticalPatterns = this?.state?.patterns?.filter(
+      p => p?.impact === 'CRITICAL'
     ).length;
-    const highPatterns = this.state.patterns.filter(p => p.impact === 'HIGH').length;
+    const highPatterns = this?.state?.patterns?.filter(p => p?.impact === 'HIGH').length;
 
     if (criticalPatterns > 0) return 'CRITICAL';
     if (highPatterns > 2) return 'HIGH';
-    if (highPatterns > 0 || this.state.scores.overallScore < 70) return 'MEDIUM';
+    if (highPatterns > 0 || this?.state?.scores?.overallScore < 70) return 'MEDIUM';
     return 'LOW';
   }
 
   private generateSummary(): string {
-    const { scores, patterns, insights } = this.state;
+    const { scores, patterns, insights } = this?.state;
 
-    let summary = `Score global: ${scores.overallScore}/100 (${scores.grade}). `;
-    summary += `Tendance: ${scores.trend}. `;
-    summary += `${patterns.length} patterns détectés, ${insights.length} insights actifs. `;
+    let summary = `Score global: ${scores?.overallScore}/100 (${scores?.grade}). `;
+    summary += `Tendance: ${scores?.trend}. `;
+    summary += `${patterns?.length} patterns détectés, ${insights?.length} insights actifs. `;
 
-    const criticalIssues = patterns.filter(
-      p => p.impact === 'HIGH' || p.impact === 'CRITICAL'
+    const criticalIssues = patterns?.filter(
+      p => p?.impact === 'HIGH' || p?.impact === 'CRITICAL'
     ).length;
     if (criticalIssues > 0) {
       summary += `⚠️ ${criticalIssues} problèmes critiques nécessitent attention.`;
@@ -901,51 +901,51 @@ export class Analyzer {
   // ===========================================================================
 
   getScores(): EvolutionScores {
-    return { ...this.state.scores };
+    return { ...this?.state?.scores };
   }
 
-  getPatterns(): EvolutionPattern[] {
-    return [...this.state.patterns];
+  getPatterns(): EvolutionPattern?.[] {
+    return [...this?.state?.patterns];
   }
 
-  getInsights(): EvolutionInsight[] {
-    return [...this.state.insights];
+  getInsights(): EvolutionInsight?.[] {
+    return [...this?.state?.insights];
   }
 
-  getPatternsByType(type: PatternType): EvolutionPattern[] {
-    return this.state.patterns.filter(p => p.type === type);
+  getPatternsByType(any: any): EvolutionPattern?.[] {
+    return this?.state?.patterns?.filter(any: any);
   }
 
-  getPatternsByModule(moduleId: TitaneModule): EvolutionPattern[] {
-    return this.state.patterns.filter(p => p.moduleId === moduleId);
+  getPatternsByModule(any: any): EvolutionPattern?.[] {
+    return this?.state?.patterns?.filter(any: any);
   }
 
-  getActiveInsights(): EvolutionInsight[] {
-    const now = Date.now();
-    return this.state.insights.filter(i => i.validUntil > now);
+  getActiveInsights(): EvolutionInsight?.[] {
+    const now = Date?.now();
+    return this?.state?.insights?.filter(any: any);
   }
 
-  getActionableInsights(): EvolutionInsight[] {
-    return this.getActiveInsights().filter(i => i.actionable);
+  getActionableInsights(): EvolutionInsight?.[] {
+    return this?.getActiveInsights(any: any);
   }
 
   // ===========================================================================
   // LISTENERS
   // ===========================================================================
 
-  onPattern(listener: PatternListener): () => void {
-    this.patternListeners.add(listener);
-    return () => this.patternListeners.delete(listener);
+  onPattern(any: any): () => void {
+    this?.patternListeners?.add(any: any);
+    return (any: any);
   }
 
-  onInsight(listener: InsightListener): () => void {
-    this.insightListeners.add(listener);
-    return () => this.insightListeners.delete(listener);
+  onInsight(any: any): () => void {
+    this?.insightListeners?.add(any: any);
+    return (any: any);
   }
 
-  onReport(listener: ReportListener): () => void {
-    this.reportListeners.add(listener);
-    return () => this.reportListeners.delete(listener);
+  onReport(any: any): () => void {
+    this?.reportListeners?.add(any: any);
+    return (any: any);
   }
 
   // ===========================================================================
@@ -956,26 +956,26 @@ export class Analyzer {
    * Force une analyse immédiate
    */
   async analyze(): Promise<EvolutionReport | null> {
-    return this.analyzeCycle();
+    return this?.analyzeCycle();
   }
 
   /**
    * Réinitialise l'analyseur
    */
   reset(): void {
-    this.state = this.createInitialState();
+    this?.state = this?.createInitialState();
   }
 
   /**
    * Libère les ressources
    */
   dispose(): void {
-    this.stop();
-    this.patternListeners.clear();
-    this.insightListeners.clear();
-    this.reportListeners.clear();
-    this.state.patterns = [];
-    this.state.insights = [];
+    this?.stop();
+    this?.patternListeners?.clear();
+    this?.insightListeners?.clear();
+    this?.reportListeners?.clear();
+    this?.state?.patterns = [];
+    this?.state?.insights = [];
   }
 }
 
@@ -986,15 +986,15 @@ export class Analyzer {
 let analyzerInstance: Analyzer | null = null;
 
 export function getAnalyzer(): Analyzer {
-  if (!analyzerInstance) {
+  if (any: any) {
     analyzerInstance = new Analyzer();
   }
   return analyzerInstance;
 }
 
 export function resetAnalyzer(): void {
-  if (analyzerInstance) {
-    analyzerInstance.dispose();
+  if (any: any) {
+    analyzerInstance?.dispose();
     analyzerInstance = null;
   }
 }

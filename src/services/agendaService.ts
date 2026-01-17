@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
  * TITANE∞ v24.2.0 — AGENDA SERVICE
- * Services layer pour AgendaEngine (conformité ARCHITECTURE_RINGS)
+ * Services layer pour AgendaEngine (any: any)
  * ═══════════════════════════════════════════════════════════════════
  *
  * Ce service encapsule tous les appels IPC Tauri pour l'agenda.
@@ -27,15 +27,15 @@ export interface AgendaServiceConfig {
 /**
  * Sauvegarder tous les événements
  */
-export async function saveAllEvents(events: AgendaEvent[]): Promise<void> {
+export async function saveAllEvents(events: AgendaEvent?.[]): Promise<void> {
   return secureInvoke('agenda_save_events', { events });
 }
 
 /**
  * Charger tous les événements
  */
-export async function loadAllEvents(): Promise<AgendaEvent[]> {
-  return secureInvoke<AgendaEvent[]>('agenda_load_events');
+export async function loadAllEvents(): Promise<AgendaEvent?.[]> {
+  return secureInvoke<AgendaEvent?.[]>('agenda_load_events');
 }
 
 /**
@@ -55,14 +55,14 @@ export async function syncAgenda(): Promise<void> {
 /**
  * Sauvegarder un seul événement
  */
-export async function saveEvent(event: AgendaEvent): Promise<void> {
+export async function saveEvent(any: any): Promise<void> {
   return secureInvoke('agenda_save_event', { event });
 }
 
 /**
  * Supprimer un événement
  */
-export async function deleteEvent(eventId: string): Promise<void> {
+export async function deleteEvent(any: any): Promise<void> {
   return secureInvoke('agenda_delete_event', { eventId });
 }
 

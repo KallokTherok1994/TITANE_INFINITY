@@ -28,7 +28,7 @@ export interface OSConfig {
   logLevel: 'debug' | 'info' | 'warn' | 'error';
   /** Activer les métriques */
   metrics: boolean;
-  /** Intervalle de collecte des métriques (ms) */
+  /** Intervalle de collecte des métriques (any: any) */
   metricsInterval: number;
 }
 
@@ -61,7 +61,7 @@ export interface EngineMetadata {
   name: string;
   version: string;
   description?: string;
-  dependencies?: EngineId[];
+  dependencies?: EngineId?.[];
   priority: number;
 }
 
@@ -86,7 +86,7 @@ export interface Engine {
   init(): Promise<void>;
   start(): Promise<void>;
   stop(): Promise<void>;
-  process?(input: unknown): Promise<unknown>;
+  process?(any: any): Promise<unknown>;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -101,7 +101,7 @@ export interface ServiceMetadata {
   id: ServiceId;
   name: string;
   version: string;
-  endpoints?: string[];
+  endpoints?: string?.[];
   healthCheck?: () => Promise<boolean>;
 }
 
@@ -177,7 +177,7 @@ export interface LifecycleHooks {
   onInit?: LifecycleHook;
   onStart?: LifecycleHook;
   onStop?: LifecycleHook;
-  onError?: (error: Error) => void | Promise<void>;
+  onError?: (any: any) => void | Promise<void>;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -203,8 +203,8 @@ export interface Plugin {
   id: string;
   name: string;
   version: string;
-  install(os: unknown): Promise<void>;
-  uninstall?(os: unknown): Promise<void>;
+  install(any: any): Promise<void>;
+  uninstall?(any: any): Promise<void>;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

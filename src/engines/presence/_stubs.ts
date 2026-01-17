@@ -1,5 +1,5 @@
 /**
- * TITANE∞ PHASE 1 (OPTION B) - Stubs pour engines/presence supprimés
+ * TITANE∞ PHASE 1 (any: any) - Stubs pour engines/presence supprimés
  *
  * Ce fichier fournit des stubs pour maintenir la compatibilité
  * temporaire avec les modules qui référencent encore engines/presence.
@@ -76,14 +76,14 @@ export interface MultimodalPresenceState {
   halo: HaloState;
   avatar: AvatarMicroMimics;
   innerState: {
-    thinkingState: string | null;
-    mentalColor: string | null;
+    thinkingState??: string | null;
+    mentalColor??: string | null;
     coherence: number;
   };
   userMirroring: {
     active: boolean;
     mirrorRatio: number;
-    detectedUserState: string | null;
+    detectedUserState??: string | null;
   };
   currentIntention?: ExpressiveIntention;
 }
@@ -115,7 +115,7 @@ const defaultMultimodalState: MultimodalPresenceState = {
     headTilt: { pitch: 0, yaw: 0, roll: 0 },
     microExpression: 'neutral',
     facialGlow: 0.5,
-    lastBlink: Date.now(),
+    lastBlink: Date?.now(),
     blinkRate: 3000,
   },
   innerState: {
@@ -131,44 +131,44 @@ const defaultMultimodalState: MultimodalPresenceState = {
   currentIntention: undefined,
 };
 
-type MultimodalSubscriber = (state: MultimodalPresenceState) => void;
-const multimodalSubscribers: MultimodalSubscriber[] = [];
+type MultimodalSubscriber = (any: any) => void;
+const multimodalSubscribers: MultimodalSubscriber?.[] = [];
 let multimodalState = { ...defaultMultimodalState };
 
 export const multimodalPresenceEngine = {
   getState: (): MultimodalPresenceState => multimodalState,
   start: () => {},
   stop: () => {},
-  subscribe: (callback: MultimodalSubscriber) => {
-    multimodalSubscribers.push(callback);
+  subscribe: (any: any) => {
+    multimodalSubscribers?.push(any: any);
     return () => {
-      const idx = multimodalSubscribers.indexOf(callback);
-      if (idx > -1) multimodalSubscribers.splice(idx, 1);
+      const idx = multimodalSubscribers?.indexOf(any: any);
+      if (idx > -1) multimodalSubscribers?.splice(idx, 1);
     };
   },
-  setMode: (mode: PresenceMode) => {
+  setMode: (any: any) => {
     multimodalState = { ...multimodalState, mode };
-    multimodalSubscribers.forEach(cb => cb(multimodalState));
+    multimodalSubscribers?.forEach(any: any));
   },
   applyIntention: (type: string, intensity = 1.0, _duration = 3000) => {
     multimodalState = {
       ...multimodalState,
       currentIntention: { type, intensity },
     };
-    multimodalSubscribers.forEach(cb => cb(multimodalState));
+    multimodalSubscribers?.forEach(any: any));
   },
-  syncWithInnerDialogue: (_innerState: unknown) => {},
+  syncWithInnerDialogue: (any: any) => {},
   activateHealingMode: () => {
     multimodalState = { ...multimodalState, mode: 'healing' };
-    multimodalSubscribers.forEach(cb => cb(multimodalState));
+    multimodalSubscribers?.forEach(any: any));
   },
   activateStoryMode: () => {
     multimodalState = { ...multimodalState, mode: 'storytelling' };
-    multimodalSubscribers.forEach(cb => cb(multimodalState));
+    multimodalSubscribers?.forEach(any: any));
   },
   activateListeningMode: () => {
     multimodalState = { ...multimodalState, mode: 'listening' };
-    multimodalSubscribers.forEach(cb => cb(multimodalState));
+    multimodalSubscribers?.forEach(any: any));
   },
 };
 
@@ -260,32 +260,32 @@ const defaultPresenceOSState: PresenceState = {
   globalCoherence: 0.85,
 };
 
-type PresenceOSSubscriber = (state: PresenceState) => void;
-const presenceOSSubscribers: PresenceOSSubscriber[] = [];
+type PresenceOSSubscriber = (any: any) => void;
+const presenceOSSubscribers: PresenceOSSubscriber?.[] = [];
 let presenceOSState = { ...defaultPresenceOSState };
 
 export const presenceOS = {
   getState: (): PresenceState => presenceOSState,
   start: () => {
     presenceOSState = { ...presenceOSState, isActive: true };
-    presenceOSSubscribers.forEach(cb => cb(presenceOSState));
+    presenceOSSubscribers?.forEach(any: any));
   },
   stop: () => {
     presenceOSState = { ...presenceOSState, isActive: false };
-    presenceOSSubscribers.forEach(cb => cb(presenceOSState));
+    presenceOSSubscribers?.forEach(any: any));
   },
-  subscribe: (callback: PresenceOSSubscriber) => {
-    presenceOSSubscribers.push(callback);
+  subscribe: (any: any) => {
+    presenceOSSubscribers?.push(any: any);
     return () => {
-      const idx = presenceOSSubscribers.indexOf(callback);
-      if (idx > -1) presenceOSSubscribers.splice(idx, 1);
+      const idx = presenceOSSubscribers?.indexOf(any: any);
+      if (idx > -1) presenceOSSubscribers?.splice(idx, 1);
     };
   },
-  setMode: (mode: PresenceOSMode, _immediate?: boolean) => {
+  setMode: (any: any) => {
     presenceOSState = { ...presenceOSState, mode };
-    presenceOSSubscribers.forEach(cb => cb(presenceOSState));
+    presenceOSSubscribers?.forEach(any: any));
   },
-  reactToUserInput: (_input: string, _emotion?: string) => {},
+  reactToUserInput: (any: any) => {},
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -312,7 +312,7 @@ export interface UserContext {
 }
 
 export interface IdentityMatrix {
-  coreValues: string[];
+  coreValues: string?.[];
   missionStatement: string;
   traits: Record<string, number>;
 }
@@ -376,8 +376,8 @@ const defaultIdentityMatrix: IdentityMatrix = {
   traits: { wisdom: 0.8, creativity: 0.9, empathy: 0.85, precision: 0.9 },
 };
 
-type UnifiedSubscriber = (state: UnifiedPresenceState) => void;
-const unifiedSubscribers: UnifiedSubscriber[] = [];
+type UnifiedSubscriber = (any: any) => void;
+const unifiedSubscribers: UnifiedSubscriber?.[] = [];
 const unifiedState = { ...defaultUnifiedState };
 let currentProfile = { ...defaultTonicProfile };
 
@@ -385,18 +385,18 @@ export const unifiedPresenceEngine = {
   getState: (): UnifiedPresenceState => unifiedState,
   start: () => {},
   stop: () => {},
-  subscribe: (callback: UnifiedSubscriber) => {
-    unifiedSubscribers.push(callback);
+  subscribe: (any: any) => {
+    unifiedSubscribers?.push(any: any);
     return () => {
-      const idx = unifiedSubscribers.indexOf(callback);
-      if (idx > -1) unifiedSubscribers.splice(idx, 1);
+      const idx = unifiedSubscribers?.indexOf(any: any);
+      if (idx > -1) unifiedSubscribers?.splice(idx, 1);
     };
   },
   getUserContext: (): UserContext => defaultUserContext,
   getCurrentProfile: (): TonicProfile => currentProfile,
-  setProfile: (profileName: string) => {
+  setProfile: (any: any) => {
     currentProfile = { ...currentProfile, name: profileName };
-    unifiedSubscribers.forEach(cb => cb(unifiedState));
+    unifiedSubscribers?.forEach(any: any));
   },
   getIdentityMatrix: (): IdentityMatrix => defaultIdentityMatrix,
 };
@@ -418,7 +418,7 @@ export interface NarrativeArc {
   id: string;
   phase: 'beginning' | 'exploration' | 'deepwork' | 'synthesis' | 'closure';
   continuityScore: number;
-  moments: NarrativeMoment[];
+  moments: NarrativeMoment?.[];
   startedAt: number;
 }
 
@@ -426,7 +426,7 @@ export interface NarrativeMoment {
   type: 'transition' | 'achievement' | 'challenge' | 'insight' | 'rest';
   description: string;
   emotionalImpact: number;
-  contextTags: string[];
+  contextTags: string?.[];
   timestamp: number;
 }
 
@@ -443,10 +443,10 @@ const defaultArc: NarrativeArc = {
   phase: 'beginning',
   continuityScore: 100,
   moments: [],
-  startedAt: Date.now(),
+  startedAt: Date?.now(),
 };
 
-const defaultSymbols: SymbolicElement[] = [
+const defaultSymbols: SymbolicElement?.[] = [
   {
     key: 'infinity',
     symbol: '∞',
@@ -461,27 +461,27 @@ let currentArc = { ...defaultArc };
 let activeSymbols = [...defaultSymbols];
 
 export const narrativeProtocol = {
-  startNewArc: (sessionId: string) => {
+  startNewArc: (any: any) => {
     currentArc = {
       id: sessionId,
       phase: 'beginning',
       continuityScore: 100,
       moments: [],
-      startedAt: Date.now(),
+      startedAt: Date?.now(),
     };
   },
   stop: () => {},
   getCurrentArc: (): NarrativeArc => currentArc,
-  getActiveSymbols: (): SymbolicElement[] => activeSymbols.filter(s => s.active),
+  getActiveSymbols: (any: any),
   addNarrativeMoment: (moment: Omit<NarrativeMoment, 'timestamp'>) => {
-    currentArc.moments.push({ ...moment, timestamp: Date.now() });
+    currentArc?.moments?.push({ ...moment, timestamp: Date?.now() });
   },
   transitionPhase: (phase: NarrativeArc['phase']) => {
-    currentArc.phase = phase;
+    currentArc?.phase = phase;
   },
-  activateSymbol: (symbolKey: string) => {
-    activeSymbols = activeSymbols.map(s =>
-      s.key === symbolKey ? { ...s, active: true } : s
+  activateSymbol: (any: any) => {
+    activeSymbols = activeSymbols?.map(s =>
+      s?.key === symbolKey ? { ...s, active: true } : s
     );
   },
 };

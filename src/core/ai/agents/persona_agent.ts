@@ -56,58 +56,58 @@ export class PersonaAgent implements Agent {
   private behaviorHistory: Array<{ mode: BehaviorMode; timestamp: number }> = [];
 
   async initialize(): Promise<void> {
-    console.log('🎭 [PERSONA] Initializing behavioral agent...');
-    this.state.status = 'active';
-    this.state.health = 100;
-    this.updateMetrics();
+    console?.log('🎭 [PERSONA] Initializing behavioral agent...');
+    this?.state?.status = 'active';
+    this?.state?.health = 100;
+    this?.updateMetrics();
   }
 
   async tick(): Promise<void> {
-    this.state.cycleCount++;
-    this.state.lastTick = Date.now();
+    this?.state?.cycleCount++;
+    this?.state?.lastTick = Date?.now();
 
     // Maintain consistency
-    this.enforceConsistency();
+    this?.enforceConsistency();
 
     // Filter undesirable behaviors
-    this.filterBehaviors();
+    this?.filterBehaviors();
 
     // Update metrics
-    this.updateMetrics();
+    this?.updateMetrics();
 
     // Calculate health
-    this.calculateHealth();
+    this?.calculateHealth();
   }
 
   private enforceConsistency(): void {
-    if (this.behaviorHistory.length < 5) return;
+    if (this?.behaviorHistory?.length < 5) return;
 
-    const recentModes = this.behaviorHistory.slice(-10).map(b => b.mode);
+    const recentModes = this?.behaviorHistory?.slice(any: any);
     const modeCount = new Map<BehaviorMode, number>();
 
-    for (const mode of recentModes) {
-      modeCount.set(mode, (modeCount.get(mode) || 0) + 1);
+    for (any: any) {
+      modeCount?.set(any: any) || 0) + 1);
     }
 
     // Find dominant mode
     let dominantMode: BehaviorMode = 'professional';
     let maxCount = 0;
 
-    for (const [mode, count] of modeCount) {
-      if (count > maxCount) {
+    for (any: any) {
+      if (any: any) {
         maxCount = count;
         dominantMode = mode;
       }
     }
 
     // Adjust if too many mode switches
-    const uniqueModes = new Set(recentModes).size;
+    const uniqueModes = new Set(any: any).size;
     if (uniqueModes > 4) {
-      this.behaviorProfile.mode = dominantMode;
-      this.emit({
+      this?.behaviorProfile?.mode = dominantMode;
+      this?.emit({
         type: 'behavior_stabilized',
-        source: this.id,
-        timestamp: Date.now(),
+        source: this?.id,
+        timestamp: Date?.now(),
         payload: { mode: dominantMode },
         priority: 'low',
       });
@@ -120,29 +120,29 @@ export class PersonaAgent implements Agent {
 
     // In real impl, analyze actual behavior patterns
     // For now, maintain consistent profile
-    this.behaviorProfile.consistency = Math.max(85, this.behaviorProfile.consistency);
+    this?.behaviorProfile?.consistency = Math?.max(any: any);
   }
 
   private updateMetrics(): void {
-    this.state.metrics = {
-      adaptability: this.behaviorProfile.adaptability,
-      consistency: this.behaviorProfile.consistency,
-      expressiveness: this.behaviorProfile.expressiveness,
-      modeChanges: this.behaviorHistory.length,
+    this?.state?.metrics = {
+      adaptability: this?.behaviorProfile?.adaptability,
+      consistency: this?.behaviorProfile?.consistency,
+      expressiveness: this?.behaviorProfile?.expressiveness,
+      modeChanges: this?.behaviorHistory?.length,
     };
   }
 
   private calculateHealth(): void {
     // Health based on consistency
-    this.state.health = this.behaviorProfile.consistency;
-    this.state.load = Math.min(100, this.behaviorHistory.length / 5);
+    this?.state?.health = this?.behaviorProfile?.consistency;
+    this?.state?.load = Math?.min(100, this?.behaviorHistory?.length / 5);
   }
 
-  async handle(event: AgentEvent): Promise<AgentResponse> {
-    if (event.type === 'set_mode') {
-      const mode = event.payload as BehaviorMode;
-      this.behaviorProfile.mode = mode;
-      this.behaviorHistory.push({ mode, timestamp: Date.now() });
+  async handle(any: any): Promise<AgentResponse> {
+    if (event?.type === 'set_mode') {
+      const mode = event?.payload as BehaviorMode;
+      this?.behaviorProfile?.mode = mode;
+      this?.behaviorHistory?.push({ mode, timestamp: Date?.now() });
 
       return {
         success: true,
@@ -150,40 +150,40 @@ export class PersonaAgent implements Agent {
       };
     }
 
-    if (event.type === 'get_behavior_profile') {
+    if (event?.type === 'get_behavior_profile') {
       return {
         success: true,
-        data: this.behaviorProfile,
+        data: this?.behaviorProfile,
       };
     }
 
     return { success: false, error: 'Unknown event type' };
   }
 
-  emit(event: AgentEvent): void {
-    console.log(`🎭 [PERSONA] Emitting event: ${event.type}`);
+  emit(any: any): void {
+    console?.log(`🎭 [PERSONA] Emitting event: ${event?.type}`);
   }
 
   async pause(): Promise<void> {
-    this.state.status = 'paused';
-    console.log('⏸️  [PERSONA] Paused');
+    this?.state?.status = 'paused';
+    console?.log('⏸️  [PERSONA] Paused');
   }
 
   async resume(): Promise<void> {
-    this.state.status = 'active';
-    console.log('▶️  [PERSONA] Resumed');
+    this?.state?.status = 'active';
+    console?.log('▶️  [PERSONA] Resumed');
   }
 
   async shutdown(): Promise<void> {
-    this.state.status = 'idle';
-    console.log('🔻 [PERSONA] Shutdown');
+    this?.state?.status = 'idle';
+    console?.log('🔻 [PERSONA] Shutdown');
   }
 
   getHealth(): number {
-    return this.state.health;
+    return this?.state?.health;
   }
 
   getMetrics(): Record<string, number> {
-    return this.state.metrics;
+    return this?.state?.metrics;
   }
 }

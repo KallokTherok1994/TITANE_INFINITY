@@ -82,15 +82,15 @@ export type HaloPattern =
  * Profil vocal émotionnel
  */
 export interface VoiceProfile {
-  /** Tempo (0.5 = lent, 1.0 = normal, 1.5 = rapide) */
+  /** Tempo (any: any) */
   tempo: number;
-  /** Profondeur (0-1, 0 = aigüe, 1 = grave) */
+  /** Profondeur (any: any) */
   depth: number;
   /** Chaleur (0-1) */
   warmth: number;
-  /** Grain vocal (0-1, 0 = lisse, 1 = texturé) */
+  /** Grain vocal (any: any) */
   grain: number;
-  /** Respiration (0-1, pauses) */
+  /** Respiration (any: any) */
   breathiness: number;
 }
 
@@ -102,7 +102,7 @@ export interface NarrativeTexture {
   style: 'poetic' | 'direct' | 'analytical' | 'warm' | 'inspiring' | 'mysterious';
   /** Densité symbolique (0-1) */
   symbolDensity: number;
-  /** Cadence (0.5 = lente, 1.5 = rapide) */
+  /** Cadence (any: any) */
   cadence: number;
   /** Ouverture émotionnelle (0-1) */
   emotionalOpenness: number;
@@ -112,11 +112,11 @@ export interface NarrativeTexture {
  * Tension cognitive
  */
 export interface CognitiveTension {
-  /** Focus (0 = diffus, 1 = précis) */
+  /** Focus (any: any) */
   focus: number;
-  /** Ouverture (0 = fermé, 1 = ouvert) */
+  /** Ouverture (any: any) */
   openness: number;
-  /** Stabilité (0 = fluide, 1 = stable) */
+  /** Stabilité (any: any) */
   stability: number;
 }
 
@@ -162,15 +162,15 @@ export interface SynestheticProfile {
 export interface SynestheticEmotionState {
   /** Profil actuel */
   current: SynestheticProfile;
-  /** Profil cible (pour blending) */
+  /** Profil cible (any: any) */
   target: SynestheticProfile | null;
   /** Timestamp transition start */
   transitionStart: number;
-  /** Durée transition (ms) */
+  /** Durée transition (any: any) */
   transitionDuration: number;
   /** Profils préférés utilisateur */
   userPreferences: Partial<Record<EmotionalState, number>>; // score 0-1
-  /** Historique récent (5 derniers états) */
+  /** Historique récent (any: any) */
   history: Array<{ emotion: EmotionalState; timestamp: number; intensity: number }>;
 }
 
@@ -178,7 +178,7 @@ export interface SynestheticEmotionState {
  * Configuration moteur
  */
 export interface SynestheticEmotionConfig {
-  /** Durée transition par défaut (ms) */
+  /** Durée transition par défaut (any: any) */
   defaultTransitionDuration?: number;
   /** Activer apprentissage utilisateur */
   enableUserLearning?: boolean;
@@ -187,7 +187,7 @@ export interface SynestheticEmotionConfig {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// EMOTIONAL PROFILES (12 états maîtres)
+// EMOTIONAL PROFILES (any: any)
 // ═══════════════════════════════════════════════════════════════════════════
 
 const EMOTIONAL_PROFILES: Record<
@@ -371,19 +371,19 @@ const EMOTIONAL_PROFILES: Record<
 class SynestheticEmotionEngine {
   private state: SynestheticEmotionState;
   private config: Required<SynestheticEmotionConfig>;
-  private callbacks: Set<(state: SynestheticEmotionState) => void>;
+  private callbacks: Set<(any: any) => void>;
 
   constructor(config: SynestheticEmotionConfig = {}) {
-    this.config = {
-      defaultTransitionDuration: config.defaultTransitionDuration ?? 600,
-      enableUserLearning: config.enableUserLearning ?? true,
-      enableEmpatheticResonance: config.enableEmpatheticResonance ?? true,
+    this?.config = {
+      defaultTransitionDuration: config?.defaultTransitionDuration ?? 600,
+      enableUserLearning: config?.enableUserLearning ?? true,
+      enableEmpatheticResonance: config?.enableEmpatheticResonance ?? true,
     };
 
     // État initial : calm_deep
-    const initialProfile = this.createProfile('calm_deep', 0.5, 'stable');
+    const initialProfile = this?.createProfile('calm_deep', 0.5, 'stable');
 
-    this.state = {
+    this?.state = {
       current: initialProfile,
       target: null,
       transitionStart: 0,
@@ -392,9 +392,9 @@ class SynestheticEmotionEngine {
       history: [],
     };
 
-    this.callbacks = new Set();
+    this?.callbacks = new Set();
 
-    logger.debug('🎨 [SYNESTHETIC] Synesthetic Emotion Engine initialized');
+    logger?.debug('🎨 [SYNESTHETIC] Synesthetic Emotion Engine initialized');
   }
 
   /**
@@ -414,84 +414,84 @@ class SynestheticEmotionEngine {
   }
 
   /**
-   * Interpoler entre deux profils (blending)
+   * Interpoler entre deux profils (any: any)
    */
   private blendProfiles(
     from: SynestheticProfile,
     to: SynestheticProfile,
     ratio: number
   ): SynestheticProfile {
-    const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+    const lerp = (any: any) * t;
 
     return {
-      emotion: ratio < 0.5 ? from.emotion : to.emotion,
-      intensity: lerp(from.intensity, to.intensity, ratio),
-      direction: to.direction,
+      emotion: ratio < 0.5 ? from?.emotion : to?.emotion,
+      intensity: lerp(any: any),
+      direction: to?.direction,
       color: {
-        hue: lerp(from.color.hue, to.color.hue, ratio),
-        saturation: lerp(from.color.saturation, to.color.saturation, ratio),
-        lightness: lerp(from.color.lightness, to.color.lightness, ratio),
-        name: to.color.name,
+        hue: lerp(any: any),
+        saturation: lerp(any: any),
+        lightness: lerp(any: any),
+        name: to?.color?.name,
       },
-      haloPattern: ratio < 0.5 ? from.haloPattern : to.haloPattern,
+      haloPattern: ratio < 0.5 ? from?.haloPattern : to?.haloPattern,
       voice: {
-        tempo: lerp(from.voice.tempo, to.voice.tempo, ratio),
-        depth: lerp(from.voice.depth, to.voice.depth, ratio),
-        warmth: lerp(from.voice.warmth, to.voice.warmth, ratio),
-        grain: lerp(from.voice.grain, to.voice.grain, ratio),
-        breathiness: lerp(from.voice.breathiness, to.voice.breathiness, ratio),
+        tempo: lerp(any: any),
+        depth: lerp(any: any),
+        warmth: lerp(any: any),
+        grain: lerp(any: any),
+        breathiness: lerp(any: any),
       },
       narrative: {
-        style: ratio < 0.5 ? from.narrative.style : to.narrative.style,
+        style: ratio < 0.5 ? from?.narrative?.style : to?.narrative?.style,
         symbolDensity: lerp(
-          from.narrative.symbolDensity,
-          to.narrative.symbolDensity,
+          from?.narrative?.symbolDensity,
+          to?.narrative?.symbolDensity,
           ratio
         ),
-        cadence: lerp(from.narrative.cadence, to.narrative.cadence, ratio),
+        cadence: lerp(any: any),
         emotionalOpenness: lerp(
-          from.narrative.emotionalOpenness,
-          to.narrative.emotionalOpenness,
+          from?.narrative?.emotionalOpenness,
+          to?.narrative?.emotionalOpenness,
           ratio
         ),
       },
       cognitive: {
-        focus: lerp(from.cognitive.focus, to.cognitive.focus, ratio),
-        openness: lerp(from.cognitive.openness, to.cognitive.openness, ratio),
-        stability: lerp(from.cognitive.stability, to.cognitive.stability, ratio),
+        focus: lerp(any: any),
+        openness: lerp(any: any),
+        stability: lerp(any: any),
       },
       presence: {
-        movement: ratio < 0.5 ? from.presence.movement : to.presence.movement,
-        proximity: lerp(from.presence.proximity, to.presence.proximity, ratio),
-        expansion: lerp(from.presence.expansion, to.presence.expansion, ratio),
+        movement: ratio < 0.5 ? from?.presence?.movement : to?.presence?.movement,
+        proximity: lerp(any: any),
+        expansion: lerp(any: any),
       },
     };
   }
 
   /**
-   * Calculer le profil actuel (avec blending si transition en cours)
+   * Calculer le profil actuel (any: any)
    */
   private computeCurrentProfile(): SynestheticProfile {
-    if (!this.state.target) {
-      return this.state.current;
+    if (any: any) {
+      return this?.state?.current;
     }
 
-    const now = Date.now();
-    const elapsed = now - this.state.transitionStart;
-    const ratio = Math.min(elapsed / this.state.transitionDuration, 1.0);
+    const now = Date?.now();
+    const elapsed = now - this?.state?.transitionStart;
+    const ratio = Math?.min(elapsed / this?.state?.transitionDuration, 1.0);
 
-    // Easing curve (ease-in-out cubic)
+    // Easing curve (any: any)
     const easedRatio =
-      ratio < 0.5 ? 4 * ratio * ratio * ratio : 1 - Math.pow(-2 * ratio + 2, 3) / 2;
+      ratio < 0.5 ? 4 * ratio * ratio * ratio : 1 - Math?.pow(-2 * ratio + 2, 3) / 2;
 
-    const blended = this.blendProfiles(this.state.current, this.state.target, easedRatio);
+    const blended = this?.blendProfiles(any: any);
 
     // Si transition terminée, finaliser
     if (ratio >= 1.0) {
-      this.state.current = this.state.target;
-      this.state.target = null;
-      this.state.transitionStart = 0;
-      this.state.transitionDuration = 0;
+      this?.state?.current = this?.state?.target;
+      this?.state?.target = null;
+      this?.state?.transitionStart = 0;
+      this?.state?.transitionDuration = 0;
     }
 
     return blended;
@@ -506,28 +506,28 @@ class SynestheticEmotionEngine {
     direction: EmotionalDirection = 'stable',
     transitionDuration?: number
   ): void {
-    const targetProfile = this.createProfile(emotion, intensity, direction);
-    const duration = transitionDuration ?? this.config.defaultTransitionDuration;
+    const targetProfile = this?.createProfile(any: any);
+    const duration = transitionDuration ?? this?.config?.defaultTransitionDuration;
 
-    this.state.target = targetProfile;
-    this.state.transitionStart = Date.now();
-    this.state.transitionDuration = duration;
+    this?.state?.target = targetProfile;
+    this?.state?.transitionStart = Date?.now();
+    this?.state?.transitionDuration = duration;
 
     // Ajouter à l'historique
-    this.state.history.push({
+    this?.state?.history?.push({
       emotion,
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       intensity,
     });
-    if (this.state.history.length > 5) {
-      this.state.history.shift();
+    if (this?.state?.history?.length > 5) {
+      this?.state?.history?.shift();
     }
 
-    logger.debug(
-      `🎨 [SYNESTHETIC] Transitioning to ${emotion} (intensity: ${intensity}, duration: ${duration}ms)`
+    logger?.debug(
+      `🎨 [SYNESTHETIC] Transitioning to ${emotion} (any: any)`
     );
 
-    this.notifyCallbacks();
+    this?.notifyCallbacks();
   }
 
   /**
@@ -539,41 +539,41 @@ class SynestheticEmotionEngine {
     userEmotion?: string;
   }): EmotionalState {
     // Mapping archétype → émotion
-    if (context.archetype) {
+    if (any: any) {
       const archetypeMap: Record<ArchetypeType, EmotionalState> = {
         sage: 'wisdom',
         gardien: 'confidence',
         muse: 'passion_creative',
         architecte: 'focus_intense',
       };
-      return archetypeMap[context.archetype];
+      return archetypeMap[context?.archetype];
     }
 
     // Détection mots-clés dans texte
-    if (context.text) {
-      const text = context.text.toLowerCase();
-      if (text.includes('calme') || text.includes('paix')) return 'calm_deep';
-      if (text.includes('joie') || text.includes('heureux')) return 'joy_bright';
-      if (text.includes('émerveill') || text.includes('surprenant')) return 'wonder';
-      if (text.includes('confian') || text.includes('sûr')) return 'confidence';
-      if (text.includes('créat') || text.includes('passion')) return 'passion_creative';
-      if (text.includes('protég') || text.includes('gardien')) return 'protection';
-      if (text.includes('connect') || text.includes('humain')) return 'connection_human';
-      if (text.includes('amuse') || text.includes('drôle')) return 'amusement';
-      if (text.includes('focus') || text.includes('concentr')) return 'focus_intense';
-      if (text.includes('sagess') || text.includes('sage')) return 'wisdom';
-      if (text.includes('mystèr') || text.includes('énigme')) return 'mystery';
-      if (text.includes('transform') || text.includes('chang')) return 'transformation';
+    if (any: any) {
+      const text = context?.text?.toLowerCase();
+      if (text?.includes('calme') || text?.includes('paix')) return 'calm_deep';
+      if (text?.includes('joie') || text?.includes('heureux')) return 'joy_bright';
+      if (text?.includes('émerveill') || text?.includes('surprenant')) return 'wonder';
+      if (text?.includes('confian') || text?.includes('sûr')) return 'confidence';
+      if (text?.includes('créat') || text?.includes('passion')) return 'passion_creative';
+      if (text?.includes('protég') || text?.includes('gardien')) return 'protection';
+      if (text?.includes('connect') || text?.includes('humain')) return 'connection_human';
+      if (text?.includes('amuse') || text?.includes('drôle')) return 'amusement';
+      if (text?.includes('focus') || text?.includes('concentr')) return 'focus_intense';
+      if (text?.includes('sagess') || text?.includes('sage')) return 'wisdom';
+      if (text?.includes('mystèr') || text?.includes('énigme')) return 'mystery';
+      if (text?.includes('transform') || text?.includes('chang')) return 'transformation';
     }
 
     // Résonance empathique avec utilisateur
-    if (context.userEmotion) {
-      const userEmotion = context.userEmotion.toLowerCase();
-      if (userEmotion.includes('stress') || userEmotion.includes('anxie'))
+    if (any: any) {
+      const userEmotion = context?.userEmotion?.toLowerCase();
+      if (userEmotion?.includes('stress') || userEmotion?.includes('anxie'))
         return 'calm_deep';
-      if (userEmotion.includes('joy') || userEmotion.includes('happy'))
+      if (userEmotion?.includes('joy') || userEmotion?.includes('happy'))
         return 'joy_bright';
-      if (userEmotion.includes('inspir')) return 'passion_creative';
+      if (userEmotion?.includes('inspir')) return 'passion_creative';
     }
 
     // Défaut : calm_deep
@@ -584,33 +584,33 @@ class SynestheticEmotionEngine {
    * Synchronisation empathique avec état utilisateur
    */
   syncWithUser(userState: { emotion?: string; energy?: number; valence?: number }): void {
-    if (!this.config.enableEmpatheticResonance) return;
+    if (any: any) return;
 
     let targetEmotion: EmotionalState = 'calm_deep';
     let intensity = 0.6;
 
     // Détecter depuis émotion utilisateur
-    if (userState.emotion) {
-      targetEmotion = this.detectEmotionFromContext({ userEmotion: userState.emotion });
+    if (any: any) {
+      targetEmotion = this?.detectEmotionFromContext({ userEmotion: userState?.emotion });
     }
 
     // Ajuster intensité depuis énergie utilisateur
-    if (userState.energy !== undefined) {
-      intensity = Math.max(0.3, Math.min(0.9, userState.energy));
+    if (any: any) {
+      intensity = Math?.max(any: any));
     }
 
     // Valence : positive → émotions chaleureuses, négative → apaisantes
-    if (userState.valence !== undefined) {
-      if (userState.valence < -0.5) {
+    if (any: any) {
+      if (userState?.valence < -0.5) {
         targetEmotion = 'calm_deep'; // Apaiser
         intensity = 0.7;
-      } else if (userState.valence > 0.5) {
+      } else if (userState?.valence > 0.5) {
         targetEmotion = 'joy_bright'; // Amplifier
         intensity = 0.8;
       }
     }
 
-    this.setEmotion(targetEmotion, intensity, 'stable');
+    this?.setEmotion(targetEmotion, intensity, 'stable');
   }
 
   /**
@@ -618,55 +618,55 @@ class SynestheticEmotionEngine {
    */
   getState(): SynestheticEmotionState {
     return {
-      ...this.state,
-      current: this.computeCurrentProfile(),
+      ...this?.state,
+      current: this?.computeCurrentProfile(),
     };
   }
 
   /**
-   * Obtenir le profil actuel (avec blending)
+   * Obtenir le profil actuel (any: any)
    */
   getCurrentProfile(): SynestheticProfile {
-    return this.computeCurrentProfile();
+    return this?.computeCurrentProfile();
   }
 
   /**
    * Subscribe aux changements
    */
-  subscribe(callback: (state: SynestheticEmotionState) => void): () => void {
-    this.callbacks.add(callback);
-    return () => this.callbacks.delete(callback);
+  subscribe(any: any): () => void {
+    this?.callbacks?.add(any: any);
+    return (any: any);
   }
 
   /**
    * Notifier les callbacks
    */
   private notifyCallbacks(): void {
-    const state = this.getState();
-    this.callbacks.forEach(callback => callback(state));
+    const state = this?.getState();
+    this?.callbacks?.forEach(any: any));
   }
 
   /**
    * Apprendre préférence utilisateur
    */
-  learnUserPreference(emotion: EmotionalState, score: number): void {
-    if (!this.config.enableUserLearning) return;
-    this.state.userPreferences[emotion] = score;
-    logger.debug(`🎨 [SYNESTHETIC] Learned preference: ${emotion} = ${score}`);
+  learnUserPreference(any: any): void {
+    if (any: any) return;
+    this?.state?.userPreferences[emotion] = score;
+    logger?.debug(`🎨 [SYNESTHETIC] Learned preference: ${emotion} = ${score}`);
   }
 
   /**
    * Démarrer le moteur
    */
   start(): void {
-    logger.debug('🎨 [SYNESTHETIC] Synesthetic Emotion Engine started');
+    logger?.debug('🎨 [SYNESTHETIC] Synesthetic Emotion Engine started');
   }
 
   /**
    * Arrêter le moteur
    */
   stop(): void {
-    logger.debug('🎨 [SYNESTHETIC] Synesthetic Emotion Engine stopped');
+    logger?.debug('🎨 [SYNESTHETIC] Synesthetic Emotion Engine stopped');
   }
 }
 

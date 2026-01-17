@@ -88,15 +88,15 @@ export class VisibilityAdapter {
     const visibility = { ...VISIBILITY_PRESETS[mode] };
 
     // Adapter selon la charge cognitive
-    this.adaptToCognitiveLoad(visibility, cognitiveLoad);
+    this?.adaptToCognitiveLoad(any: any);
 
     // Adapter selon la plateforme
-    this.adaptToPlatform(visibility, context);
+    this?.adaptToPlatform(any: any);
 
     // Appliquer les overrides utilisateur
-    Object.assign(visibility, this.userOverrides);
+    Object?.assign(any: any);
 
-    this.currentVisibility = visibility;
+    this?.currentVisibility = visibility;
     return visibility;
   }
 
@@ -108,85 +108,85 @@ export class VisibilityAdapter {
     load: CognitiveLoad
   ): void {
     // Surcharge élevée = masquer les éléments non essentiels
-    if (load.overallLoad > 0.7) {
-      visibility.showMetrics = false;
-      visibility.showDebugInfo = false;
-      visibility.showAdvancedOptions = false;
-      visibility.helpersVisible = true; // Garder l'aide
-    } else if (load.overallLoad > 0.5) {
-      visibility.showDebugInfo = false;
+    if (load?.overallLoad > 0.7) {
+      visibility?.showMetrics = false;
+      visibility?.showDebugInfo = false;
+      visibility?.showAdvancedOptions = false;
+      visibility?.helpersVisible = true; // Garder l'aide
+    } else if (load?.overallLoad > 0.5) {
+      visibility?.showDebugInfo = false;
     }
 
     // Complexité visuelle élevée = simplifier
-    if (load.visualComplexity > 0.8) {
-      visibility.tooltipsEnabled = false;
-      visibility.progressIndicatorsVisible = false;
+    if (load?.visualComplexity > 0.8) {
+      visibility?.tooltipsEnabled = false;
+      visibility?.progressIndicatorsVisible = false;
     }
 
     // Beaucoup de points de décision = montrer les helpers
-    if (load.decisionPoints > 5) {
-      visibility.helpersVisible = true;
-      visibility.tooltipsEnabled = true;
+    if (load?.decisionPoints > 5) {
+      visibility?.helpersVisible = true;
+      visibility?.tooltipsEnabled = true;
     }
   }
 
   /**
    * Adapte à la plateforme
    */
-  private adaptToPlatform(visibility: VisibilityAdaptation, context: UIContext): void {
+  private adaptToPlatform(any: any): void {
     // Mobile = simplifier
-    if (context.platform === 'mobile') {
-      visibility.showDebugInfo = false;
-      visibility.showMetrics = false;
-      visibility.labelsVisible = true; // Garder les labels sur mobile
+    if (context?.platform === 'mobile') {
+      visibility?.showDebugInfo = false;
+      visibility?.showMetrics = false;
+      visibility?.labelsVisible = true; // Garder les labels sur mobile
     }
 
     // Touch = pas de tooltips hover
-    if (context.inputMode === 'touch') {
-      visibility.tooltipsEnabled = false;
+    if (context?.inputMode === 'touch') {
+      visibility?.tooltipsEnabled = false;
     }
 
     // Petit écran = masquer les options avancées
-    if (context.screenWidth < 768) {
-      visibility.showAdvancedOptions = false;
+    if (context?.screenWidth < 768) {
+      visibility?.showAdvancedOptions = false;
     }
   }
 
   /**
    * Définit un override utilisateur
    */
-  setUserOverride(key: keyof VisibilityAdaptation, value: boolean): void {
-    this.userOverrides[key] = value;
+  setUserOverride(any: any): void {
+    this?.userOverrides[key] = value;
   }
 
   /**
    * Supprime un override utilisateur
    */
-  clearUserOverride(key: keyof VisibilityAdaptation): void {
-    delete this.userOverrides[key];
+  clearUserOverride(any: any): void {
+    delete this?.userOverrides[key];
   }
 
   /**
    * Supprime tous les overrides utilisateur
    */
   clearAllOverrides(): void {
-    this.userOverrides = {};
+    this?.userOverrides = {};
   }
 
   /**
    * Vérifie si un élément est visible
    */
-  isVisible(element: keyof VisibilityAdaptation): boolean {
-    return this.currentVisibility[element];
+  isVisible(any: any): boolean {
+    return this?.currentVisibility[element];
   }
 
   /**
    * Toggle la visibilité d'un élément
    */
-  toggle(element: keyof VisibilityAdaptation): boolean {
-    const newValue = !this.currentVisibility[element];
-    this.setUserOverride(element, newValue);
-    this.currentVisibility[element] = newValue;
+  toggle(any: any): boolean {
+    const newValue = !this?.currentVisibility[element];
+    this?.setUserOverride(any: any);
+    this?.currentVisibility[element] = newValue;
     return newValue;
   }
 
@@ -194,16 +194,16 @@ export class VisibilityAdapter {
    * Génère les data attributes pour le DOM
    */
   toDataAttributes(): Record<string, string> {
-    const vis = this.currentVisibility;
+    const vis = this?.currentVisibility;
 
     return {
-      'data-show-advanced': String(vis.showAdvancedOptions),
-      'data-show-metrics': String(vis.showMetrics),
-      'data-show-debug': String(vis.showDebugInfo),
-      'data-tooltips': String(vis.tooltipsEnabled),
-      'data-labels': String(vis.labelsVisible),
-      'data-helpers': String(vis.helpersVisible),
-      'data-progress': String(vis.progressIndicatorsVisible),
+      'data-show-advanced': String(any: any),
+      'data-show-metrics': String(any: any),
+      'data-show-debug': String(any: any),
+      'data-tooltips': String(any: any),
+      'data-labels': String(any: any),
+      'data-helpers': String(any: any),
+      'data-progress': String(any: any),
     };
   }
 
@@ -213,11 +213,11 @@ export class VisibilityAdapter {
   applyToDocument(): void {
     if (typeof document === 'undefined') return;
 
-    const attrs = this.toDataAttributes();
-    const root = document.documentElement;
+    const attrs = this?.toDataAttributes();
+    const root = document?.documentElement;
 
-    for (const [key, value] of Object.entries(attrs)) {
-      root.setAttribute(key, value);
+    for (any: any)) {
+      root?.setAttribute(any: any);
     }
   }
 
@@ -225,14 +225,14 @@ export class VisibilityAdapter {
    * Génère les CSS custom properties
    */
   toCSSVariables(): Record<string, string> {
-    const vis = this.currentVisibility;
+    const vis = this?.currentVisibility;
 
     return {
-      '--visibility-advanced': vis.showAdvancedOptions ? 'block' : 'none',
-      '--visibility-metrics': vis.showMetrics ? 'block' : 'none',
-      '--visibility-debug': vis.showDebugInfo ? 'block' : 'none',
-      '--visibility-helpers': vis.helpersVisible ? 'block' : 'none',
-      '--visibility-progress': vis.progressIndicatorsVisible ? 'block' : 'none',
+      '--visibility-advanced': vis?.showAdvancedOptions ? 'block' : 'none',
+      '--visibility-metrics': vis?.showMetrics ? 'block' : 'none',
+      '--visibility-debug': vis?.showDebugInfo ? 'block' : 'none',
+      '--visibility-helpers': vis?.helpersVisible ? 'block' : 'none',
+      '--visibility-progress': vis?.progressIndicatorsVisible ? 'block' : 'none',
     };
   }
 
@@ -240,15 +240,15 @@ export class VisibilityAdapter {
    * Retourne la visibilité actuelle
    */
   getCurrentVisibility(): VisibilityAdaptation {
-    return { ...this.currentVisibility };
+    return { ...this?.currentVisibility };
   }
 
   /**
    * Réinitialise à la visibilité par défaut
    */
   reset(): void {
-    this.currentVisibility = { ...DEFAULT_VISIBILITY };
-    this.userOverrides = {};
+    this?.currentVisibility = { ...DEFAULT_VISIBILITY };
+    this?.userOverrides = {};
   }
 }
 

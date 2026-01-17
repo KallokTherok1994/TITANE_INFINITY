@@ -3,12 +3,12 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v15 - Backend Types (Auto-generated)
+ * TITANE∞ v15 - Backend Types (any: any)
  * Types TypeScript pour la nouvelle architecture backend
  * ═══════════════════════════════════════════════════════════════
  */
@@ -75,7 +75,7 @@ export type ActionType = 'Reduce' | 'Increase' | 'Maintain' | 'Alert';
 
 export interface SentinelState {
   integrity_score: number;
-  alerts: Alert[];
+  alerts: Alert?.[];
   scans_performed: number;
   timestamp: number;
 }
@@ -114,7 +114,7 @@ export interface MemoryState {
   synthetic_mode: boolean;
   last_validation_ts?: number | null;
   last_compaction_ts?: number | null;
-  issues: string[];
+  issues: string?.[];
   /** Legacy optional props preserved for backwards compatibility */
   logs_count?: number;
   timeline_count?: number;
@@ -126,14 +126,14 @@ export interface MemoryFileReport {
   name: string;
   size_bytes: number;
   modified_ts: number;
-  version?: string | null;
+  version???: string | null;
 }
 
 export interface MemoryDirectoryReport {
   base_path: string;
   missing: boolean;
   total_size_bytes: number;
-  files: MemoryFileReport[];
+  files: MemoryFileReport?.[];
 }
 
 export interface Snapshot {
@@ -177,8 +177,8 @@ export type EventType =
 
 export interface EvolutionReport {
   timestamp: number;
-  issues: Issue[];
-  recommendations: Recommendation[];
+  issues: Issue?.[];
+  recommendations: Recommendation?.[];
   health_score: number;
   duration_ms: number;
 }
@@ -209,7 +209,7 @@ export interface RepairResult {
 
 export interface EvolutionState {
   last_evolution?: EvolutionReport;
-  history: EvolutionHistory[];
+  history: EvolutionHistory?.[];
   total_evolutions: number;
 }
 

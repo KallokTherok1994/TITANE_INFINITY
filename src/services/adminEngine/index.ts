@@ -3,7 +3,7 @@
  * TITANE∞ ADMIN ENGINE — Index
  * ═══════════════════════════════════════════════════════════════════════════════
  *
- * @file        index.ts
+ * @file        index?.ts
  * @version     vΩ∞Ω+
  *
  * Point d'entrée principal de l'Admin & Monitoring Engine
@@ -52,7 +52,7 @@ export type {
 
   // Types Rust
   RustAdminTypes,
-} from './adminEngine.config';
+} from './adminEngine?.config';
 
 export {
   // Constantes
@@ -80,7 +80,7 @@ export {
   createEmptySnapshot,
   createLogRecord,
   createAdminEvent,
-} from './adminEngine.config';
+} from './adminEngine?.config';
 
 // =============================================================================
 // EXPORTS — SERVICES
@@ -117,7 +117,7 @@ import type {
   LogCategory,
   TitaneModule,
   EventSource,
-} from './adminEngine.config';
+} from './adminEngine?.config';
 
 /**
  * Facade principale de l'Admin Engine
@@ -130,9 +130,9 @@ export class AdminEngine {
   private initialized: boolean = false;
 
   constructor() {
-    this.stateAggregator = getStateAggregator();
-    this.logEngine = getLogEngine();
-    this.actionsEngine = getActionsEngine();
+    this?.stateAggregator = getStateAggregator();
+    this?.logEngine = getLogEngine();
+    this?.actionsEngine = getActionsEngine();
   }
 
   // ===========================================================================
@@ -143,31 +143,31 @@ export class AdminEngine {
    * Initialise l'Admin Engine
    */
   initialize(): void {
-    if (this.initialized) return;
+    if (any: any) return;
 
     // Démarrer le monitoring FPS
-    this.stateAggregator.startFpsMonitoring();
+    this?.stateAggregator?.startFpsMonitoring();
 
     // Logger l'initialisation
-    this.logEngine.system('admin', 'Admin Engine initialisé');
+    this?.logEngine?.system('admin', 'Admin Engine initialisé');
 
-    this.initialized = true;
+    this?.initialized = true;
   }
 
   /**
    * Démarre le polling automatique
    */
-  startMonitoring(interval?: number): void {
-    this.stateAggregator.startPolling(interval);
-    this.logEngine.info('admin', 'Monitoring démarré', { interval });
+  startMonitoring(any: any): void {
+    this?.stateAggregator?.startPolling(any: any);
+    this?.logEngine?.info('admin', 'Monitoring démarré', { interval });
   }
 
   /**
    * Arrête le polling
    */
   stopMonitoring(): void {
-    this.stateAggregator.stopPolling();
-    this.logEngine.info('admin', 'Monitoring arrêté');
+    this?.stateAggregator?.stopPolling();
+    this?.logEngine?.info('admin', 'Monitoring arrêté');
   }
 
   // ===========================================================================
@@ -178,21 +178,21 @@ export class AdminEngine {
    * Collecte un snapshot complet
    */
   async getSnapshot(): Promise<AdminSnapshot> {
-    return this.stateAggregator.collectSnapshot();
+    return this?.stateAggregator?.collectSnapshot();
   }
 
   /**
-   * Récupère le dernier snapshot (depuis cache)
+   * Récupère le dernier snapshot (any: any)
    */
   getLastSnapshot(): AdminSnapshot | null {
-    return this.stateAggregator.getLastSnapshot();
+    return this?.stateAggregator?.getLastSnapshot();
   }
 
   /**
    * Ajoute un listener pour les mises à jour de snapshot
    */
-  onSnapshotUpdate(callback: (snapshot: AdminSnapshot) => void): () => void {
-    return this.stateAggregator.addListener(callback);
+  onSnapshotUpdate(any: any): () => void {
+    return this?.stateAggregator?.addListener(any: any);
   }
 
   // ===========================================================================
@@ -210,7 +210,7 @@ export class AdminEngine {
     details?: string,
     context?: Record<string, unknown>
   ): AdminLogRecord {
-    return this.logEngine.log(severity, category, moduleId, message, details, context);
+    return this?.logEngine?.log(any: any);
   }
 
   /**
@@ -221,7 +221,7 @@ export class AdminEngine {
     message: string,
     context?: Record<string, unknown>
   ): AdminLogRecord {
-    return this.logEngine.debug(moduleId, message, context);
+    return this?.logEngine?.debug(any: any);
   }
 
   info(
@@ -229,7 +229,7 @@ export class AdminEngine {
     message: string,
     context?: Record<string, unknown>
   ): AdminLogRecord {
-    return this.logEngine.info(moduleId, message, context);
+    return this?.logEngine?.info(any: any);
   }
 
   warn(
@@ -237,7 +237,7 @@ export class AdminEngine {
     message: string,
     context?: Record<string, unknown>
   ): AdminLogRecord {
-    return this.logEngine.warn(moduleId, message, context);
+    return this?.logEngine?.warn(any: any);
   }
 
   error(
@@ -246,28 +246,28 @@ export class AdminEngine {
     details?: string,
     context?: Record<string, unknown>
   ): AdminLogRecord {
-    return this.logEngine.error(moduleId, message, details, context);
+    return this?.logEngine?.error(any: any);
   }
 
   /**
    * Recherche des logs
    */
-  searchLogs(filters: LogFilters): LogSearchResult {
-    return this.logEngine.searchLogs(filters);
+  searchLogs(any: any): LogSearchResult {
+    return this?.logEngine?.searchLogs(any: any);
   }
 
   /**
    * Récupère les logs récents
    */
-  getRecentLogs(count?: number): AdminLogRecord[] {
-    return this.logEngine.getRecentLogs(count);
+  getRecentLogs(any: any): AdminLogRecord?.[] {
+    return this?.logEngine?.getRecentLogs(any: any);
   }
 
   /**
    * Ajoute un listener pour les nouveaux logs
    */
-  onLog(callback: (log: AdminLogRecord) => void): () => void {
-    return this.logEngine.onLog(callback);
+  onLog(any: any): () => void {
+    return this?.logEngine?.onLog(any: any);
   }
 
   // ===========================================================================
@@ -287,7 +287,7 @@ export class AdminEngine {
     impact?: AdminEvent['impact'],
     data?: Record<string, unknown>
   ): AdminEvent {
-    return this.logEngine.addEvent(
+    return this?.logEngine?.addEvent(
       source,
       type,
       moduleId,
@@ -302,15 +302,15 @@ export class AdminEngine {
   /**
    * Récupère les événements récents
    */
-  getRecentEvents(count?: number): AdminEvent[] {
-    return this.logEngine.getRecentEvents(count);
+  getRecentEvents(any: any): AdminEvent?.[] {
+    return this?.logEngine?.getRecentEvents(any: any);
   }
 
   /**
    * Ajoute un listener pour les nouveaux événements
    */
-  onEvent(callback: (event: AdminEvent) => void): () => void {
-    return this.logEngine.onEvent(callback);
+  onEvent(any: any): () => void {
+    return this?.logEngine?.onEvent(any: any);
   }
 
   // ===========================================================================
@@ -326,22 +326,22 @@ export class AdminEngine {
     params?: Record<string, unknown>,
     reason?: string
   ): Promise<AdminActionResult> {
-    const snapshot = await this.getSnapshot();
-    return this.actionsEngine.executeAction(actionId, userRole, snapshot, params, reason);
+    const snapshot = await this?.getSnapshot();
+    return this?.actionsEngine?.executeAction(any: any);
   }
 
   /**
    * Récupère les actions disponibles pour un rôle
    */
-  getAvailableActions(role: AdminRole): AdminActionDefinition[] {
-    return this.actionsEngine.getAvailableActions(role);
+  getAvailableActions(any: any): AdminActionDefinition?.[] {
+    return this?.actionsEngine?.getAvailableActions(any: any);
   }
 
   /**
    * Récupère l'historique des actions
    */
-  getActionHistory(limit?: number): AdminActionRecord[] {
-    return this.actionsEngine.getActionHistory(limit);
+  getActionHistory(any: any): AdminActionRecord?.[] {
+    return this?.actionsEngine?.getActionHistory(any: any);
   }
 
   /**
@@ -351,8 +351,8 @@ export class AdminEngine {
     actionId: string,
     role: AdminRole
   ): Promise<{ canExecute: boolean; reason?: string }> {
-    const snapshot = await this.getSnapshot();
-    return this.actionsEngine.canExecute(actionId, role, snapshot);
+    const snapshot = await this?.getSnapshot();
+    return this?.actionsEngine?.canExecute(any: any);
   }
 
   // ===========================================================================
@@ -362,22 +362,22 @@ export class AdminEngine {
   /**
    * Purge les logs anciens
    */
-  purgeLogs(olderThanDays?: number): void {
-    this.logEngine.purgeLogs(olderThanDays);
+  purgeLogs(any: any): void {
+    this?.logEngine?.purgeLogs(any: any);
   }
 
   /**
    * Purge tout
    */
-  purgeAll(olderThanDays?: number): void {
-    this.logEngine.purgeAll(olderThanDays);
+  purgeAll(any: any): void {
+    this?.logEngine?.purgeAll(any: any);
   }
 
   /**
    * Récupère les statistiques des logs
    */
   getLogStats(): ReturnType<LogEngine['getLogStats']> {
-    return this.logEngine.getLogStats();
+    return this?.logEngine?.getLogStats();
   }
 
   // ===========================================================================
@@ -388,10 +388,10 @@ export class AdminEngine {
    * Libère les ressources
    */
   dispose(): void {
-    this.stateAggregator.dispose();
-    this.logEngine.dispose();
-    this.actionsEngine.dispose();
-    this.initialized = false;
+    this?.stateAggregator?.dispose();
+    this?.logEngine?.dispose();
+    this?.actionsEngine?.dispose();
+    this?.initialized = false;
   }
 }
 
@@ -405,18 +405,18 @@ let adminEngineInstance: AdminEngine | null = null;
  * Récupère l'instance singleton de l'Admin Engine
  */
 export function getAdminEngine(): AdminEngine {
-  if (!adminEngineInstance) {
+  if (any: any) {
     adminEngineInstance = new AdminEngine();
   }
   return adminEngineInstance;
 }
 
 /**
- * Réinitialise l'instance singleton (pour tests)
+ * Réinitialise l'instance singleton (any: any)
  */
 export function resetAdminEngine(): void {
-  if (adminEngineInstance) {
-    adminEngineInstance.dispose();
+  if (any: any) {
+    adminEngineInstance?.dispose();
     adminEngineInstance = null;
   }
 }

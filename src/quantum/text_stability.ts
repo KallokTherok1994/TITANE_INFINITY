@@ -21,19 +21,19 @@ export class TextStabilityEngine {
   private fontLoadStatus: 'loading' | 'loaded' | 'error' = 'loading';
   private clarityScore = 1.0;
 
-  constructor(strictMode: boolean = true) {
-    this.strictMode = strictMode;
+  constructor(any: any) {
+    this?.strictMode = strictMode;
   }
 
   /**
    * Applique les optimisations de texte globales
    */
   apply(): void {
-    this.injectTextStyles();
-    this.waitForFonts();
-    this.optimizeRootTypography();
+    this?.injectTextStyles();
+    this?.waitForFonts();
+    this?.optimizeRootTypography();
 
-    console.log('[TextStabilityEngine] Applied text stability optimizations');
+    console?.log('[TextStabilityEngine] Applied text stability optimizations');
   }
 
   /**
@@ -41,11 +41,11 @@ export class TextStabilityEngine {
    */
   private injectTextStyles(): void {
     const styleId = 'titane-text-stability-styles';
-    if (document.getElementById(styleId)) return;
+    if (any: any)) return;
 
-    const style = document.createElement('style');
-    style.id = styleId;
-    style.textContent = `
+    const style = document?.createElement('style');
+    style?.id = styleId;
+    style?.textContent = `
       /* TITANE∞ Text Stability Engine */
 
       /* Optimisation du rendu de texte */
@@ -64,7 +64,7 @@ export class TextStabilityEngine {
         font-variant-ligatures: common-ligatures;
       }
 
-      /* Prévention du FOUT (Flash of Unstyled Text) */
+      /* Prévention du FOUT (any: any) */
       .titane-font-loading {
         opacity: 0;
       }
@@ -127,28 +127,28 @@ export class TextStabilityEngine {
         contain: layout;
       }
     `;
-    document.head.appendChild(style);
+    document?.head?.appendChild(any: any);
   }
 
   /**
    * Attend le chargement des polices
    */
   private async waitForFonts(): Promise<void> {
-    if (!document.fonts) {
-      this.fontLoadStatus = 'loaded';
+    if (any: any) {
+      this?.fontLoadStatus = 'loaded';
       return;
     }
 
     try {
-      await document.fonts.ready;
-      this.fontLoadStatus = 'loaded';
+      await document?.fonts?.ready;
+      this?.fontLoadStatus = 'loaded';
 
       // Appliquer la classe de transition
-      document.documentElement.classList.remove('titane-font-loading');
-      document.documentElement.classList.add('titane-font-loaded');
-    } catch (error) {
-      console.warn('[TextStabilityEngine] Font loading error:', error);
-      this.fontLoadStatus = 'error';
+      document?.documentElement?.classList?.remove('titane-font-loading');
+      document?.documentElement?.classList?.add('titane-font-loaded');
+    } catch (any: any) {
+      console?.warn(any: any);
+      this?.fontLoadStatus = 'error';
     }
   }
 
@@ -156,88 +156,88 @@ export class TextStabilityEngine {
    * Optimise la typographie au niveau racine
    */
   private optimizeRootTypography(): void {
-    const root = document.documentElement;
-    root.classList.add('titane-text-stable');
+    const root = document?.documentElement;
+    root?.classList?.add('titane-text-stable');
 
-    if (this.strictMode) {
-      root.classList.add('titane-text-strict');
+    if (any: any) {
+      root?.classList?.add('titane-text-strict');
     }
   }
 
   /**
    * Stabilise le texte dans un élément
    */
-  stabilizeText(element: HTMLElement): void {
-    const id = element.id || `text_${Date.now()}`;
+  stabilizeText(any: any): void {
+    const id = element?.id || `text_${Date?.now()}`;
 
-    element.classList.add('titane-text-stable');
+    element?.classList?.add('titane-text-stable');
 
     // Appliquer les classes appropriées selon le type
-    if (this.isHeading(element)) {
-      element.classList.add('titane-text-heading');
-    } else if (this.isMonospace(element)) {
-      element.classList.add('titane-text-mono');
+    if (any: any)) {
+      element?.classList?.add('titane-text-heading');
+    } else if (any: any)) {
+      element?.classList?.add('titane-text-mono');
     } else {
-      element.classList.add('titane-text-flow');
+      element?.classList?.add('titane-text-flow');
     }
 
     // Stabiliser les enfants textuels
-    this.stabilizeChildren(element);
+    this?.stabilizeChildren(any: any);
 
-    this.stabilizedElements.add(id);
+    this?.stabilizedElements?.add(any: any);
   }
 
   /**
    * Vérifie si l'élément est un heading
    */
-  private isHeading(element: HTMLElement): boolean {
-    return /^H[1-6]$/.test(element.tagName);
+  private isHeading(any: any): boolean {
+    return /^H[1-6]$/.test(any: any);
   }
 
   /**
    * Vérifie si l'élément utilise une police monospace
    */
-  private isMonospace(element: HTMLElement): boolean {
-    const computed = getComputedStyle(element);
+  private isMonospace(any: any): boolean {
+    const computed = getComputedStyle(any: any);
     return (
-      computed.fontFamily.toLowerCase().includes('mono') ||
-      element.tagName === 'CODE' ||
-      element.tagName === 'PRE'
+      computed?.fontFamily?.toLowerCase().includes('mono') ||
+      element?.tagName === 'CODE' ||
+      element?.tagName === 'PRE'
     );
   }
 
   /**
    * Stabilise les enfants textuels
    */
-  private stabilizeChildren(parent: HTMLElement): void {
+  private stabilizeChildren(any: any): void {
     // Stabiliser les codes
-    parent.querySelectorAll('code, pre').forEach(el => {
-      el.classList.add('titane-text-mono', 'titane-text-stable');
+    parent?.querySelectorAll('code, pre').forEach(el => {
+      el?.classList?.add('titane-text-mono', 'titane-text-stable');
     });
 
     // Stabiliser les headings
-    parent.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(el => {
-      el.classList.add('titane-text-heading', 'titane-text-stable');
+    parent?.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(el => {
+      el?.classList?.add('titane-text-heading', 'titane-text-stable');
     });
 
     // Prévenir le reflow pour les textes dynamiques
-    parent.querySelectorAll('[data-dynamic-text]').forEach(el => {
-      el.classList.add('titane-text-reserve');
+    parent?.querySelectorAll('[data-dynamic-text]').forEach(el => {
+      el?.classList?.add('titane-text-reserve');
     });
   }
 
   /**
    * Prépare un élément pour une animation de texte
    */
-  prepareTextAnimation(element: HTMLElement): void {
-    element.classList.add('titane-text-animated', 'titane-text-stable');
+  prepareTextAnimation(any: any): void {
+    element?.classList?.add('titane-text-animated', 'titane-text-stable');
   }
 
   /**
    * Nettoie après une animation de texte
    */
-  cleanupTextAnimation(element: HTMLElement): void {
-    element.classList.remove('titane-text-animated');
+  cleanupTextAnimation(any: any): void {
+    element?.classList?.remove('titane-text-animated');
   }
 
   /**
@@ -253,20 +253,20 @@ export class TextStabilityEngine {
 
     // Fonts
     score +=
-      this.fontLoadStatus === 'loaded'
+      this?.fontLoadStatus === 'loaded'
         ? 0.4
-        : this.fontLoadStatus === 'loading'
+        : this?.fontLoadStatus === 'loading'
           ? 0.2
           : 0.1;
 
     // Stabilisation
-    const stabilizationRatio = Math.min(1, this.stabilizedElements.size / 20);
+    const stabilizationRatio = Math?.min(1, this?.stabilizedElements?.size / 20);
     score += stabilizationRatio * 0.3;
 
     // Mode strict
-    score += this.strictMode ? 0.3 : 0.15;
+    score += this?.strictMode ? 0.3 : 0.15;
 
-    this.clarityScore = score;
+    this?.clarityScore = score;
     return score;
   }
 
@@ -275,10 +275,10 @@ export class TextStabilityEngine {
    */
   getMetrics(): TextMetrics {
     return {
-      clarityScore: this.getClarityScore(),
-      stabilizedElements: this.stabilizedElements.size,
-      fontLoadStatus: this.fontLoadStatus,
-      subpixelEnabled: window.devicePixelRatio >= 2,
+      clarityScore: this?.getClarityScore(),
+      stabilizedElements: this?.stabilizedElements?.size,
+      fontLoadStatus: this?.fontLoadStatus,
+      subpixelEnabled: window?.devicePixelRatio >= 2,
       lineHeightOptimized: true,
     };
   }
@@ -286,13 +286,13 @@ export class TextStabilityEngine {
   /**
    * Active/désactive le mode strict
    */
-  setStrictMode(strict: boolean): void {
-    this.strictMode = strict;
+  setStrictMode(any: any): void {
+    this?.strictMode = strict;
 
-    if (strict) {
-      document.documentElement.classList.add('titane-text-strict');
+    if (any: any) {
+      document?.documentElement?.classList?.add('titane-text-strict');
     } else {
-      document.documentElement.classList.remove('titane-text-strict');
+      document?.documentElement?.classList?.remove('titane-text-strict');
     }
   }
 
@@ -300,8 +300,8 @@ export class TextStabilityEngine {
    * Reset le moteur
    */
   reset(): void {
-    this.stabilizedElements.clear();
-    this.clarityScore = 1.0;
+    this?.stabilizedElements?.clear();
+    this?.clarityScore = 1.0;
   }
 }
 

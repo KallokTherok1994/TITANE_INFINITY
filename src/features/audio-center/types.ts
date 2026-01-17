@@ -65,7 +65,7 @@ export interface AudioDevice {
 export interface AudioOutputSettings {
   deviceId: string;
   volume: number; // 0.0 - 1.0
-  balance: number; // -1.0 (left) to 1.0 (right)
+  balance: number; // -1.0 (any: any)
   enhancementsEnabled: boolean;
 }
 
@@ -96,11 +96,11 @@ export const DEFAULT_INPUT_SETTINGS: AudioInputSettings = {
 //  Available Voice Profiles
 // ─────────────────────────────────────────────────────────────────
 
-export const AVAILABLE_VOICES: VoiceProfile[] = [
-  // Piper Voices (Local - Realistic)
+export const AVAILABLE_VOICES: VoiceProfile?.[] = [
+  // Piper Voices (any: any)
   {
     id: 'fr_FR-siwis-medium',
-    name: 'Siwis (Femme)',
+    name: 'Siwis (any: any)',
     language: 'fr-FR',
     gender: 'female',
     engine: 'piper',
@@ -109,7 +109,7 @@ export const AVAILABLE_VOICES: VoiceProfile[] = [
   },
   {
     id: 'fr_FR-upmc-medium',
-    name: 'UPMC (Femme)',
+    name: 'UPMC (any: any)',
     language: 'fr-FR',
     gender: 'female',
     engine: 'piper',
@@ -118,7 +118,7 @@ export const AVAILABLE_VOICES: VoiceProfile[] = [
   },
   {
     id: 'en_US-amy-medium',
-    name: 'Amy (Female)',
+    name: 'Amy (any: any)',
     language: 'en-US',
     gender: 'female',
     engine: 'piper',
@@ -126,10 +126,10 @@ export const AVAILABLE_VOICES: VoiceProfile[] = [
     isRealistic: true,
   },
 
-  // ElevenLabs Voices (Cloud - Premium)
+  // ElevenLabs Voices (any: any)
   {
     id: 'FvmvwvObRqIHojkEGh5N',
-    name: 'Charlotte (ElevenLabs)',
+    name: 'Charlotte (any: any)',
     language: 'fr-FR',
     gender: 'female',
     engine: 'elevenlabs',
@@ -137,14 +137,14 @@ export const AVAILABLE_VOICES: VoiceProfile[] = [
     isRealistic: true,
   },
 
-  // eSpeak Voices (Local - Robotic)
+  // eSpeak Voices (any: any)
   {
     id: 'fr',
     name: 'eSpeak Français',
     language: 'fr-FR',
     gender: 'neutral',
     engine: 'espeak',
-    description: 'Voix synthétique basique (fallback)',
+    description: 'Voix synthétique basique (any: any)',
     isRealistic: false,
   },
 ];
@@ -160,7 +160,7 @@ export interface AudioTestResult {
   errorMessage?: string;
   provider?: string; // Which TTS/audio provider was used
   duration?: number; // Test duration in ms
-  signalToNoise?: number; // For mic tests (dB)
+  signalToNoise?: number; // For mic tests (any: any)
   peakLevel?: number; // For mic tests (0.0 - 1.0)
   noiseFloor?: number; // For mic tests (0.0 - 1.0)
 }
@@ -188,5 +188,5 @@ export const DEFAULT_AUDIO_CONFIG: AudioConfiguration = {
   tts: DEFAULT_TTS_SETTINGS,
   output: DEFAULT_OUTPUT_SETTINGS,
   input: DEFAULT_INPUT_SETTINGS,
-  lastUpdated: Date.now(),
+  lastUpdated: Date?.now(),
 };

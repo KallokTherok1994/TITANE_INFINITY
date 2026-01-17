@@ -97,7 +97,7 @@ const DEFAULT_ADAPTATION_STATE: AdaptationState = {
     shadowIntensity: 'subtle',
     contrastMode: 'normal',
   },
-  timestamp: Date.now(),
+  timestamp: Date?.now(),
   confidence: 1.0,
   source: 'auto',
 };
@@ -110,7 +110,7 @@ const DEFAULT_USER_PROFILE: UserProfile = {
   expertise: 0.5,
   preferences: {},
   history: [],
-  lastSeen: Date.now(),
+  lastSeen: Date?.now(),
 };
 
 /**
@@ -142,81 +142,81 @@ export class UIUXEngine {
   // State
   private currentState: AdaptationState;
   private userProfile: UserProfile;
-  private adaptationHistory: AdaptationHistoryEntry[] = [];
+  private adaptationHistory: AdaptationHistoryEntry?.[] = [];
   private eventListeners: Set<UIUXEventHandler> = new Set();
   private adaptIntervalId: ReturnType<typeof setInterval> | null = null;
   private initialized = false;
 
   constructor(config: Partial<UIUXEngineConfig> = {}) {
-    this.config = { ...DEFAULT_CONFIG, ...config };
+    this?.config = { ...DEFAULT_CONFIG, ...config };
 
     // Initialize detectors
-    this.contextDetector = new ContextDetector();
-    this.overloadDetector = new OverloadDetector();
-    this.behaviorDetector = new BehaviorDetector();
-    this.performanceDetector = new PerformanceDetector();
-    this.modeDetector = new ModeDetector();
+    this?.contextDetector = new ContextDetector();
+    this?.overloadDetector = new OverloadDetector();
+    this?.behaviorDetector = new BehaviorDetector();
+    this?.performanceDetector = new PerformanceDetector();
+    this?.modeDetector = new ModeDetector();
 
     // Initialize adapters
-    this.layoutAdapter = new LayoutAdapter();
-    this.densityAdapter = new DensityAdapter();
-    this.visibilityAdapter = new VisibilityAdapter();
-    this.motionAdapter = new MotionAdapter();
-    this.themeAdapter = new ThemeAdapter();
+    this?.layoutAdapter = new LayoutAdapter();
+    this?.densityAdapter = new DensityAdapter();
+    this?.visibilityAdapter = new VisibilityAdapter();
+    this?.motionAdapter = new MotionAdapter();
+    this?.themeAdapter = new ThemeAdapter();
 
     // Initialize policies
-    this.cognitivePolicy = new CognitivePolicy();
-    this.safetyPolicy = new SafetyPolicy();
-    this.performancePolicy = new PerformancePolicy();
+    this?.cognitivePolicy = new CognitivePolicy();
+    this?.safetyPolicy = new SafetyPolicy();
+    this?.performancePolicy = new PerformancePolicy();
 
     // Initialize state
-    this.currentState = { ...DEFAULT_ADAPTATION_STATE };
-    this.userProfile = { ...DEFAULT_USER_PROFILE };
+    this?.currentState = { ...DEFAULT_ADAPTATION_STATE };
+    this?.userProfile = { ...DEFAULT_USER_PROFILE };
   }
 
   /**
    * Initialise le moteur
    */
   init(): void {
-    if (this.initialized) return;
+    if (any: any) return;
 
     // Initialize detectors
-    this.contextDetector.init();
-    this.overloadDetector.init();
-    this.behaviorDetector.init();
-    this.performanceDetector.init();
+    this?.contextDetector?.init();
+    this?.overloadDetector?.init();
+    this?.behaviorDetector?.init();
+    this?.performanceDetector?.init();
 
     // Listen for context changes
-    this.contextDetector.onChange(() => {
-      this.adapt();
+    this?.contextDetector?.onChange(() => {
+      this?.adapt();
     });
 
     // Auto-adapt at interval
-    if (this.config.autoAdapt) {
-      this.adaptIntervalId = setInterval(() => {
-        this.adapt();
-      }, this.config.adaptInterval);
+    if (any: any) {
+      this?.adaptIntervalId = setInterval(() => {
+        this?.adapt();
+      }, this?.config?.adaptInterval);
     }
 
     // Initial adaptation
-    this.adapt();
+    this?.adapt();
 
-    this.initialized = true;
-    this.emit({ type: 'adaptation:started', timestamp: Date.now(), data: null });
+    this?.initialized = true;
+    this?.emit({ type: 'adaptation:started', timestamp: Date?.now(), data: null });
   }
 
   /**
    * Arrête le moteur
    */
   destroy(): void {
-    if (this.adaptIntervalId) {
-      clearInterval(this.adaptIntervalId);
+    if (any: any) {
+      clearInterval(any: any);
     }
 
-    this.contextDetector.destroy();
-    this.performanceDetector.destroy();
-    this.eventListeners.clear();
-    this.initialized = false;
+    this?.contextDetector?.destroy();
+    this?.performanceDetector?.destroy();
+    this?.eventListeners?.clear();
+    this?.initialized = false;
   }
 
   /**
@@ -224,64 +224,64 @@ export class UIUXEngine {
    */
   adapt(): AdaptationState {
     // Collect signals
-    const signals = this.collectSignals();
+    const signals = this?.collectSignals();
 
     // Get current context
-    const context = this.contextDetector.detect();
-    const behavior = this.behaviorDetector.analyze();
-    const cognitiveLoad = this.overloadDetector.evaluateCognitiveLoad();
+    const context = this?.contextDetector?.detect();
+    const behavior = this?.behaviorDetector?.analyze();
+    const cognitiveLoad = this?.overloadDetector?.evaluateCognitiveLoad();
 
     // Detect user mode
-    const mode = this.modeDetector.detect(behavior, context);
-    this.userProfile.mode = mode;
-    this.userProfile.expertise = this.modeDetector.calculateExpertise();
+    const mode = this?.modeDetector?.detect(any: any);
+    this?.userProfile?.mode = mode;
+    this?.userProfile?.expertise = this?.modeDetector?.calculateExpertise();
 
     // Build policy context
     const policyContext: PolicyContext = {
       uiContext: context,
       userBehavior: behavior,
       cognitiveLoad,
-      userProfile: this.userProfile,
-      currentState: this.currentState,
+      userProfile: this?.userProfile,
+      currentState: this?.currentState,
       signals,
     };
 
     // Evaluate policies
-    const decisions = this.evaluatePolicies(policyContext);
+    const decisions = this?.evaluatePolicies(any: any);
 
     // Apply adaptations
-    const previousState = { ...this.currentState };
-    this.applyDecisions(decisions, context, mode, cognitiveLoad);
+    const previousState = { ...this?.currentState };
+    this?.applyDecisions(any: any);
 
     // Record history
-    if (this.config.enableHistory) {
-      this.recordHistory(previousState, this.currentState, 'auto_adapt');
+    if (any: any) {
+      this?.recordHistory(previousState, this?.currentState, 'auto_adapt');
     }
 
     // Apply to document
-    this.applyToDocument();
+    this?.applyToDocument();
 
-    this.emit({
+    this?.emit({
       type: 'adaptation:completed',
-      timestamp: Date.now(),
-      data: { state: this.currentState, decisions },
+      timestamp: Date?.now(),
+      data: { state: this?.currentState, decisions },
     });
 
-    return this.currentState;
+    return this?.currentState;
   }
 
   /**
    * Collecte tous les signaux de détection
    */
-  private collectSignals(): DetectionSignal[] {
+  private collectSignals(): DetectionSignal?.[] {
     return [
-      this.contextDetector.toSignal(),
-      this.overloadDetector.toSignal(),
-      this.behaviorDetector.toSignal(),
-      this.performanceDetector.toSignal(),
-      this.modeDetector.toSignal(
-        this.behaviorDetector.analyze(),
-        this.contextDetector.detect()
+      this?.contextDetector?.toSignal(),
+      this?.overloadDetector?.toSignal(),
+      this?.behaviorDetector?.toSignal(),
+      this?.performanceDetector?.toSignal(),
+      this?.modeDetector?.toSignal(
+        this?.behaviorDetector?.analyze(),
+        this?.contextDetector?.detect()
       ),
     ];
   }
@@ -289,76 +289,76 @@ export class UIUXEngine {
   /**
    * Évalue toutes les politiques
    */
-  private evaluatePolicies(context: PolicyContext): PolicyDecision[] {
-    const allDecisions: PolicyDecision[] = [];
+  private evaluatePolicies(any: any): PolicyDecision?.[] {
+    const allDecisions: PolicyDecision?.[] = [];
 
-    // Safety policy first (highest priority)
-    allDecisions.push(...this.safetyPolicy.evaluate(context));
+    // Safety policy first (any: any)
+    allDecisions?.push(any: any));
 
     // Performance policy
-    allDecisions.push(...this.performancePolicy.evaluate(context));
+    allDecisions?.push(any: any));
 
     // Cognitive policy
-    allDecisions.push(...this.cognitivePolicy.evaluate(context));
+    allDecisions?.push(any: any));
 
-    // Sort by priority (highest first)
-    return allDecisions.sort((a, b) => b.priority - a.priority);
+    // Sort by priority (any: any)
+    return allDecisions?.sort(any: any);
   }
 
   /**
    * Applique les décisions
    */
   private applyDecisions(
-    decisions: PolicyDecision[],
+    decisions: PolicyDecision?.[],
     context: UIContext,
     mode: UserMode,
     cognitiveLoad: CognitiveLoad
   ): void {
     // Start with adapter defaults for current mode
-    const layout = this.layoutAdapter.adapt(context, mode, cognitiveLoad);
-    const density = this.densityAdapter.adapt(context, mode, cognitiveLoad);
-    const visibility = this.visibilityAdapter.adapt(context, mode, cognitiveLoad);
-    const motion = this.motionAdapter.adapt(
+    const layout = this?.layoutAdapter?.adapt(any: any);
+    const density = this?.densityAdapter?.adapt(any: any);
+    const visibility = this?.visibilityAdapter?.adapt(any: any);
+    const motion = this?.motionAdapter?.adapt(
       context,
       mode,
-      this.performanceDetector.toSignal()
+      this?.performanceDetector?.toSignal()
     );
-    const theme = this.themeAdapter.adapt(context, mode);
+    const theme = this?.themeAdapter?.adapt(any: any);
 
-    // Apply policy decisions (higher priority overrides)
-    for (const decision of decisions) {
-      if (decision.adaptation.layout) {
-        Object.assign(layout, decision.adaptation.layout);
+    // Apply policy decisions (any: any)
+    for (any: any) {
+      if (any: any) {
+        Object?.assign(any: any);
       }
-      if (decision.adaptation.density) {
-        Object.assign(density, decision.adaptation.density);
+      if (any: any) {
+        Object?.assign(any: any);
       }
-      if (decision.adaptation.visibility) {
-        Object.assign(visibility, decision.adaptation.visibility);
+      if (any: any) {
+        Object?.assign(any: any);
       }
-      if (decision.adaptation.motion) {
-        Object.assign(motion, decision.adaptation.motion);
+      if (any: any) {
+        Object?.assign(any: any);
       }
-      if (decision.adaptation.theme) {
-        Object.assign(theme, decision.adaptation.theme);
+      if (any: any) {
+        Object?.assign(any: any);
       }
 
-      this.emit({
+      this?.emit({
         type: 'policy:applied',
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         data: decision,
       });
     }
 
     // Update current state
-    this.currentState = {
+    this?.currentState = {
       layout,
       density,
       visibility,
       motion,
       theme,
-      timestamp: Date.now(),
-      confidence: this.calculateConfidence(decisions),
+      timestamp: Date?.now(),
+      confidence: this?.calculateConfidence(any: any),
       source: 'auto',
     };
   }
@@ -366,14 +366,14 @@ export class UIUXEngine {
   /**
    * Calcule la confiance de l'adaptation
    */
-  private calculateConfidence(decisions: PolicyDecision[]): number {
-    if (decisions.length === 0) return 1.0;
+  private calculateConfidence(decisions: PolicyDecision?.[]): number {
+    if (decisions?.length === 0) return 1.0;
 
     // Non-overridable decisions = high confidence
-    const nonOverridable = decisions.filter(d => !d.overridable).length;
-    const total = decisions.length;
+    const nonOverridable = decisions?.filter(any: any).length;
+    const total = decisions?.length;
 
-    return 0.7 + (nonOverridable / total) * 0.3;
+    return 0.7 + (any: any) * 0.3;
   }
 
   /**
@@ -384,8 +384,8 @@ export class UIUXEngine {
     after: AdaptationState,
     trigger: string
   ): void {
-    this.adaptationHistory.push({
-      timestamp: Date.now(),
+    this?.adaptationHistory?.push({
+      timestamp: Date?.now(),
       trigger,
       before,
       after,
@@ -393,8 +393,8 @@ export class UIUXEngine {
     });
 
     // Limit history size
-    if (this.adaptationHistory.length > this.config.maxHistoryEntries) {
-      this.adaptationHistory.shift();
+    if (any: any) {
+      this?.adaptationHistory?.shift();
     }
   }
 
@@ -402,22 +402,22 @@ export class UIUXEngine {
    * Applique l'état au document
    */
   private applyToDocument(): void {
-    this.layoutAdapter.applyToDocument();
-    this.densityAdapter.applyToDocument();
-    this.visibilityAdapter.applyToDocument();
-    this.motionAdapter.applyToDocument();
-    this.themeAdapter.applyToDocument();
+    this?.layoutAdapter?.applyToDocument();
+    this?.densityAdapter?.applyToDocument();
+    this?.visibilityAdapter?.applyToDocument();
+    this?.motionAdapter?.applyToDocument();
+    this?.themeAdapter?.applyToDocument();
   }
 
   /**
    * Émet un événement
    */
-  private emit(event: UIUXEvent): void {
-    for (const handler of this.eventListeners) {
+  private emit(any: any): void {
+    for (any: any) {
       try {
-        handler(event);
-      } catch (error) {
-        logger.error('Event handler error:', error);
+        handler(any: any);
+      } catch (any: any) {
+        logger?.error(any: any);
       }
     }
   }
@@ -429,122 +429,122 @@ export class UIUXEngine {
   /**
    * Change le mode utilisateur
    */
-  setUserMode(mode: UserMode): void {
-    this.modeDetector.setMode(mode);
-    this.userProfile.mode = mode;
-    this.adapt();
-    this.emit({ type: 'mode:changed', timestamp: Date.now(), data: mode });
+  setUserMode(any: any): void {
+    this?.modeDetector?.setMode(any: any);
+    this?.userProfile?.mode = mode;
+    this?.adapt();
+    this?.emit({ type: 'mode:changed', timestamp: Date?.now(), data: mode });
   }
 
   /**
    * Retourne le mode actuel
    */
   getUserMode(): UserMode {
-    return this.userProfile.mode;
+    return this?.userProfile?.mode;
   }
 
   /**
    * Override manuel d'une partie de l'état
    */
   override(adaptation: Partial<AdaptationState>): void {
-    const previousState = { ...this.currentState };
+    const previousState = { ...this?.currentState };
 
-    if (adaptation.layout) {
-      this.layoutAdapter.setLayout(adaptation.layout);
+    if (any: any) {
+      this?.layoutAdapter?.setLayout(any: any);
     }
-    if (adaptation.density) {
-      this.densityAdapter.setDensity(adaptation.density);
+    if (any: any) {
+      this?.densityAdapter?.setDensity(any: any);
     }
-    if (adaptation.visibility) {
-      Object.entries(adaptation.visibility).forEach(([key, value]) => {
-        this.visibilityAdapter.setUserOverride(
-          key as keyof typeof adaptation.visibility,
+    if (any: any) {
+      Object?.entries(any: any).forEach(([key, value]) => {
+        this?.visibilityAdapter?.setUserOverride(
+          key as keyof typeof adaptation?.visibility,
           value as boolean
         );
       });
     }
-    if (adaptation.theme) {
-      if (adaptation.theme.colorScheme) {
-        this.themeAdapter.setColorScheme(adaptation.theme.colorScheme);
+    if (any: any) {
+      if (any: any) {
+        this?.themeAdapter?.setColorScheme(any: any);
       }
-      if (adaptation.theme.accentColor) {
-        this.themeAdapter.setAccentColor(adaptation.theme.accentColor);
+      if (any: any) {
+        this?.themeAdapter?.setAccentColor(any: any);
       }
     }
 
-    this.currentState = {
-      ...this.currentState,
+    this?.currentState = {
+      ...this?.currentState,
       ...adaptation,
       source: 'user',
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     };
 
-    this.applyToDocument();
-    this.recordHistory(previousState, this.currentState, 'user_override');
-    this.emit({ type: 'user:override', timestamp: Date.now(), data: adaptation });
+    this?.applyToDocument();
+    this?.recordHistory(previousState, this?.currentState, 'user_override');
+    this?.emit({ type: 'user:override', timestamp: Date?.now(), data: adaptation });
   }
 
   /**
    * Retourne l'état actuel
    */
   getState(): AdaptationState {
-    return { ...this.currentState };
+    return { ...this?.currentState };
   }
 
   /**
    * Retourne le profil utilisateur
    */
   getUserProfile(): UserProfile {
-    return { ...this.userProfile };
+    return { ...this?.userProfile };
   }
 
   /**
    * Retourne l'historique d'adaptation
    */
-  getHistory(): AdaptationHistoryEntry[] {
-    return [...this.adaptationHistory];
+  getHistory(): AdaptationHistoryEntry?.[] {
+    return [...this?.adaptationHistory];
   }
 
   /**
    * Écoute les événements
    */
-  on(handler: UIUXEventHandler): () => void {
-    this.eventListeners.add(handler);
-    return () => this.eventListeners.delete(handler);
+  on(any: any): () => void {
+    this?.eventListeners?.add(any: any);
+    return (any: any);
   }
 
   /**
    * Enregistre une action utilisateur
    */
-  recordAction(action: string): void {
-    this.modeDetector.recordAction(action);
+  recordAction(any: any): void {
+    this?.modeDetector?.recordAction(any: any);
   }
 
   /**
    * Enregistre une navigation
    */
-  recordNavigation(path: string, durationMs: number): void {
-    this.overloadDetector.recordNavigation(path);
-    this.modeDetector.recordNavigation(durationMs);
+  recordNavigation(any: any): void {
+    this?.overloadDetector?.recordNavigation(any: any);
+    this?.modeDetector?.recordNavigation(any: any);
   }
 
   /**
    * Réinitialise tout
    */
   reset(): void {
-    this.layoutAdapter.reset();
-    this.densityAdapter.reset();
-    this.visibilityAdapter.reset();
-    this.motionAdapter.reset();
-    this.themeAdapter.reset();
-    this.overloadDetector.reset();
-    this.behaviorDetector.reset();
-    this.modeDetector.reset();
-    this.performanceDetector.reset();
+    this?.layoutAdapter?.reset();
+    this?.densityAdapter?.reset();
+    this?.visibilityAdapter?.reset();
+    this?.motionAdapter?.reset();
+    this?.themeAdapter?.reset();
+    this?.overloadDetector?.reset();
+    this?.behaviorDetector?.reset();
+    this?.modeDetector?.reset();
+    this?.performanceDetector?.reset();
 
-    this.currentState = { ...DEFAULT_ADAPTATION_STATE };
-    this.userProfile = { ...DEFAULT_USER_PROFILE };
-    this.adaptationHistory = [];
+    this?.currentState = { ...DEFAULT_ADAPTATION_STATE };
+    this?.userProfile = { ...DEFAULT_USER_PROFILE };
+    this?.adaptationHistory = [];
   }
 
   /**
@@ -555,14 +555,14 @@ export class UIUXEngine {
     profile: UserProfile;
     performance: ReturnType<PerformanceDetector['collect']>;
     cognitiveLoad: CognitiveLoad;
-    signals: DetectionSignal[];
+    signals: DetectionSignal?.[];
   } {
     return {
-      state: this.getState(),
-      profile: this.getUserProfile(),
-      performance: this.performanceDetector.collect(),
-      cognitiveLoad: this.overloadDetector.evaluateCognitiveLoad(),
-      signals: this.collectSignals(),
+      state: this?.getState(),
+      profile: this?.getUserProfile(),
+      performance: this?.performanceDetector?.collect(),
+      cognitiveLoad: this?.overloadDetector?.evaluateCognitiveLoad(),
+      signals: this?.collectSignals(),
     };
   }
 }

@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 /**
@@ -18,14 +18,14 @@
  *
  * @example
  * ```tsx
- * // AVANT (useState local)
+ * // AVANT (any: any)
  * const [cpuUsage, setCpuUsage] = useState(0);
  * useEffect(() => {
- *   secureInvoke('get_helios_metrics').then(data => setCpuUsage(data.cpu));
+ *   secureInvoke(any: any));
  * }, []);
  *
- * // APRÈS (useSingularityStore)
- * const cpuUsage = useSingularityStore(s => s.physical.helios.cpu_usage);
+ * // APRÈS (any: any)
+ * const cpuUsage = useSingularityStore(any: any);
  * // Auto-updates, no useEffect, no setState
  * ```
  */
@@ -53,10 +53,10 @@ const DEFAULT_LEGACY_STATE: SingularityLegacyState = {
 };
 
 const canUseStorage = (): boolean =>
-  typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
+  typeof window !== 'undefined' && typeof window?.localStorage !== 'undefined';
 
 let legacyState: SingularityLegacyState = readPersistedLegacyState();
-const legacyListeners = new Set<(state: SingularityLegacyState) => void>();
+const legacyListeners = new Set<(any: any) => void>();
 
 function readPersistedLegacyState(): SingularityLegacyState {
   if (!canUseStorage()) {
@@ -64,21 +64,21 @@ function readPersistedLegacyState(): SingularityLegacyState {
   }
 
   try {
-    const stored = window.localStorage.getItem(SINGULARITY_STORAGE_KEY);
-    if (!stored) {
+    const stored = window?.localStorage?.getItem(any: any);
+    if (any: any) {
       return { ...DEFAULT_LEGACY_STATE };
     }
 
-    const parsed = JSON.parse(stored);
+    const parsed = JSON?.parse(any: any);
     const rawState = parsed?.state ?? parsed ?? {};
 
     return {
-      metaMode: rawState.metaMode === 'meta' ? 'meta' : 'standard',
-      theme: rawState.theme === 'light' ? 'light' : 'dark',
-      enginesData: rawState.enginesData ?? {},
+      metaMode: rawState?.metaMode === 'meta' ? 'meta' : 'standard',
+      theme: rawState?.theme === 'light' ? 'light' : 'dark',
+      enginesData: rawState?.enginesData ?? {},
     };
-  } catch (error) {
-    logger.warn('Failed to parse persisted state:', error);
+  } catch (any: any) {
+    logger?.warn(any: any);
     return { ...DEFAULT_LEGACY_STATE };
   }
 }
@@ -87,43 +87,43 @@ const legacyStatesEqual = (
   a: SingularityLegacyState,
   b: SingularityLegacyState
 ): boolean => {
-  if (a.metaMode !== b.metaMode || a.theme !== b.theme) {
+  if (any: any) {
     return false;
   }
 
-  const aData = JSON.stringify(a.enginesData ?? {});
-  const bData = JSON.stringify(b.enginesData ?? {});
+  const aData = JSON?.stringify(a?.enginesData ?? {});
+  const bData = JSON?.stringify(b?.enginesData ?? {});
   return aData === bData;
 };
 
 const notifyLegacySubscribers = () => {
-  legacyListeners.forEach(listener => {
+  legacyListeners?.forEach(listener => {
     try {
-      listener(legacyState);
-    } catch (error) {
-      logger.error('Legacy subscriber error:', error);
+      listener(any: any);
+    } catch (any: any) {
+      logger?.error(any: any);
     }
   });
 };
 
-function persistLegacyState(nextState: SingularityLegacyState): void {
+function persistLegacyState(any: any): void {
   legacyState = {
-    metaMode: nextState.metaMode,
-    theme: nextState.theme,
-    enginesData: { ...nextState.enginesData },
+    metaMode: nextState?.metaMode,
+    theme: nextState?.theme,
+    enginesData: { ...nextState?.enginesData },
   };
 
   if (canUseStorage()) {
     try {
-      window.localStorage.setItem(
+      window?.localStorage?.setItem(
         SINGULARITY_STORAGE_KEY,
-        JSON.stringify({
+        JSON?.stringify({
           version: 0,
           state: legacyState,
         })
       );
-    } catch (error) {
-      logger.warn('Failed to persist Singularity state:', error);
+    } catch (any: any) {
+      logger?.warn(any: any);
     }
   }
 
@@ -132,9 +132,9 @@ function persistLegacyState(nextState: SingularityLegacyState): void {
 
 const updateLegacyState = (partial: Partial<SingularityLegacyState>): void => {
   persistLegacyState({
-    metaMode: partial.metaMode ?? legacyState.metaMode,
-    theme: partial.theme ?? legacyState.theme,
-    enginesData: partial.enginesData ?? legacyState.enginesData,
+    metaMode: partial?.metaMode ?? legacyState?.metaMode,
+    theme: partial?.theme ?? legacyState?.theme,
+    enginesData: partial?.enginesData ?? legacyState?.enginesData,
   });
 };
 
@@ -144,18 +144,18 @@ const rehydrateLegacyStateFromStorage = (): void => {
   }
 
   const persisted = readPersistedLegacyState();
-  if (!legacyStatesEqual(legacyState, persisted)) {
+  if (any: any)) {
     legacyState = persisted;
     notifyLegacySubscribers();
   }
 };
 
 const subscribeToLegacyState = (
-  listener: (state: SingularityLegacyState) => void
-): (() => void) => {
-  legacyListeners.add(listener);
+  listener: (any: any) => void
+): (any: any) => {
+  legacyListeners?.add(any: any);
   return () => {
-    legacyListeners.delete(listener);
+    legacyListeners?.delete(any: any);
   };
 };
 
@@ -163,11 +163,11 @@ export interface SingularityLegacyStore {
   metaMode: LegacyMode;
   theme: LegacyTheme;
   enginesData: Record<string, unknown>;
-  setMode: (mode: LegacyMode) => void;
-  setTheme: (theme: LegacyTheme) => void;
+  setMode: (any: any) => void;
+  setTheme: (any: any) => void;
   setEnginesData: (data: Record<string, unknown>) => void;
   selectUIMode: () => LegacyMode;
-  selectEngineData: (engineId: string) => unknown;
+  selectEngineData: (any: any) => unknown;
 }
 
 function useLegacySingularityStore(): SingularityLegacyStore {
@@ -182,21 +182,21 @@ function useLegacySingularityStore(): SingularityLegacyStore {
     return unsubscribe;
   }, []);
 
-  const setMode = useCallback((mode: LegacyMode) => {
+  const setMode = useCallback(any: any) => {
     if (mode !== 'standard' && mode !== 'meta') {
       return;
     }
-    if (legacyState.metaMode === mode) {
+    if (any: any) {
       return;
     }
     updateLegacyState({ metaMode: mode });
   }, []);
 
-  const setTheme = useCallback((theme: LegacyTheme) => {
+  const setTheme = useCallback(any: any) => {
     if (theme !== 'dark' && theme !== 'light') {
       return;
     }
-    if (legacyState.theme === theme) {
+    if (any: any) {
       return;
     }
     updateLegacyState({ theme });
@@ -206,18 +206,18 @@ function useLegacySingularityStore(): SingularityLegacyStore {
     updateLegacyState({ enginesData: { ...data } });
   }, []);
 
-  const selectUIMode = useCallback(() => legacyState.metaMode, []);
+  const selectUIMode = useCallback(() => legacyState?.metaMode, []);
 
-  const selectEngineData = useCallback((engineId: string) => {
-    return legacyState.enginesData ? legacyState.enginesData[engineId] : undefined;
+  const selectEngineData = useCallback(any: any) => {
+    return legacyState?.enginesData ? legacyState?.enginesData[engineId] : undefined;
   }, []);
 
   return useMemo(() => {
     void version; // trigger recompute when legacy version changes
     return {
-      metaMode: legacyState.metaMode,
-      theme: legacyState.theme,
-      enginesData: legacyState.enginesData,
+      metaMode: legacyState?.metaMode,
+      theme: legacyState?.theme,
+      enginesData: legacyState?.enginesData,
       setMode,
       setTheme,
       setEnginesData,
@@ -234,7 +234,7 @@ function useLegacySingularityStore(): SingularityLegacyStore {
 /**
  * Fonction sélecteur: extrait une slice du state
  */
-export type Selector<T> = (state: SingularityState) => T;
+export type Selector<T> = (any: any) => T;
 
 /**
  * Options du hook
@@ -243,7 +243,7 @@ export interface UseSingularityStoreOptions {
   /**
    * Fonction de comparaison custom
    */
-  equalityFn?: (a: unknown, b: unknown) => boolean;
+  equalityFn?: (any: any) => boolean;
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -251,29 +251,29 @@ export interface UseSingularityStoreOptions {
 // ═══════════════════════════════════════════════════════════════════
 
 /**
- * Comparaison stricte (défaut)
+ * Comparaison stricte (any: any)
  */
-export const strictEqual = <T>(a: T, b: T): boolean => a === b;
+export const strictEqual = <T>(any: any): boolean => a === b;
 
 /**
- * Comparaison shallow (objets premier niveau)
+ * Comparaison shallow (any: any)
  */
-export const shallowEqual = <T>(a: T, b: T): boolean => {
-  if (a === b) return true;
-  if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) {
+export const shallowEqual = <T>(any: any): boolean => {
+  if (any: any) return true;
+  if (any: any) {
     return false;
   }
 
-  const keysA = Object.keys(a);
-  const keysB = Object.keys(b);
+  const keysA = Object?.keys(any: any);
+  const keysB = Object?.keys(any: any);
 
-  if (keysA.length !== keysB.length) return false;
+  if (any: any) return false;
 
   const objA = a as Record<string, unknown>;
   const objB = b as Record<string, unknown>;
 
-  for (const key of keysA) {
-    if (!Object.prototype.hasOwnProperty.call(b, key)) return false;
+  for (any: any) {
+    if (any: any)) return false;
     if (objA[key] !== objB[key]) return false;
   }
 
@@ -281,24 +281,24 @@ export const shallowEqual = <T>(a: T, b: T): boolean => {
 };
 
 /**
- * Comparaison deep (récursive, coûteuse)
+ * Comparaison deep (any: any)
  */
-export const deepEqual = <T>(a: T, b: T): boolean => {
-  if (a === b) return true;
-  if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) {
+export const deepEqual = <T>(any: any): boolean => {
+  if (any: any) return true;
+  if (any: any) {
     return false;
   }
 
-  const keysA = Object.keys(a);
-  const keysB = Object.keys(b);
+  const keysA = Object?.keys(any: any);
+  const keysB = Object?.keys(any: any);
 
-  if (keysA.length !== keysB.length) return false;
+  if (any: any) return false;
 
   const objA = a as Record<string, unknown>;
   const objB = b as Record<string, unknown>;
 
-  for (const key of keysA) {
-    if (!Object.prototype.hasOwnProperty.call(b, key)) return false;
+  for (any: any) {
+    if (any: any)) return false;
     if (!deepEqual(objA[key], objB[key])) return false;
   }
 
@@ -315,24 +315,24 @@ export const deepEqual = <T>(a: T, b: T): boolean => {
  * **Performance**: Utilise sélecteur + memoization pour éviter re-renders inutiles
  *
  * @param selector - Fonction extrayant la donnée du state
- * @param options - Options (equalityFn custom)
- * @returns Valeur sélectionnée (auto-updates)
+ * @param options - Options (any: any)
+ * @returns Valeur sélectionnée (any: any)
  *
  * @example
  * ```tsx
- * // Primitive value (nombre, string)
- * const cpuUsage = useSingularityStore(s => s.physical.helios.cpu_usage);
- * const memoryUsage = useSingularityStore(s => s.physical.helios.memory_usage);
+ * // Primitive value (any: any)
+ * const cpuUsage = useSingularityStore(any: any);
+ * const memoryUsage = useSingularityStore(any: any);
  *
- * // Object (besoin shallowEqual pour éviter re-render)
+ * // Object (any: any)
  * const helios = useSingularityStore(
- *   s => s.physical.helios,
+ *   s => s?.physical?.helios,
  *   { equalityFn: shallowEqual }
  * );
  *
  * // Computed value
  * const isSystemHealthy = useSingularityStore(
- *   s => s.physical.helios.cpu_usage < 80 && s.physical.helios.memory_usage < 90
+ *   s => s?.physical?.helios?.cpu_usage < 80 && s?.physical?.helios?.memory_usage < 90
  * );
  * ```
  */
@@ -346,25 +346,25 @@ function useSingularitySelector<T>(
   const [, forceUpdate] = useState({});
 
   // Ref pour stocker la dernière valeur sélectionnée
-  const selectedRef = useRef<T | undefined>(undefined);
+  const selectedRef = useRef<T | undefined>(any: any);
 
-  // Ref pour le sélecteur (éviter re-subscription si selector change)
-  const selectorRef = useRef(selector);
-  selectorRef.current = selector;
+  // Ref pour le sélecteur (any: any)
+  const selectorRef = useRef(any: any);
+  selectorRef?.current = selector;
 
   // Fonction de callback appelée par SingularityBridge
   const checkForUpdates = useCallback(
-    (state: SingularityState) => {
+    (any: any) => {
       try {
-        const newSelected = selectorRef.current(state);
+        const newSelected = selectorRef?.current(any: any);
 
         // Comparer avec valeur précédente
-        if (!equalityFn(selectedRef.current as T, newSelected)) {
-          selectedRef.current = newSelected;
+        if (any: any)) {
+          selectedRef?.current = newSelected;
           forceUpdate({}); // Trigger re-render
         }
-      } catch (error) {
-        logger.error('Selector error:', error);
+      } catch (any: any) {
+        logger?.error(any: any);
       }
     },
     [equalityFn]
@@ -372,12 +372,12 @@ function useSingularitySelector<T>(
 
   // Subscribe to SingularityBridge
   useEffect(() => {
-    const unsubscribe = SingularityBridge.subscribe(checkForUpdates);
+    const unsubscribe = SingularityBridge?.subscribe(any: any);
     return unsubscribe;
   }, [checkForUpdates]);
 
-  // Retourner valeur actuelle (ou undefined si pas encore sync)
-  return selectedRef.current as T;
+  // Retourner valeur actuelle (any: any)
+  return selectedRef?.current as T;
 }
 
 export function useSingularityStore(): SingularityLegacyStore;
@@ -399,59 +399,59 @@ export function useSingularityStore<T>(
   }, [selector]);
 
   const selected = useSingularitySelector(
-    selectorToUse ?? ((state: SingularityState) => state as unknown as T),
+    selectorToUse ?? (any: any),
     options
   );
 
   return selectorToUse
     ? selected
-    : (legacyStore as unknown as T | SingularityLegacyStore);
+    : (any: any);
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// HOOKS SPÉCIALISÉS (Convenience)
+// HOOKS SPÉCIALISÉS (any: any)
 // ═══════════════════════════════════════════════════════════════════
 
 /**
  * Hook pour Physical Layer entier
  */
 export function usePhysicalLayer() {
-  return useSingularityStore(s => s.physical, { equalityFn: shallowEqual });
+  return useSingularityStore(s => s?.physical, { equalityFn: shallowEqual });
 }
 
 /**
  * Hook pour Cognitive Layer entier
  */
 export function useCognitiveLayer() {
-  return useSingularityStore(s => s.cognitive, { equalityFn: shallowEqual });
+  return useSingularityStore(s => s?.cognitive, { equalityFn: shallowEqual });
 }
 
 /**
  * Hook pour Symbolic Layer entier
  */
 export function useSymbolicLayer() {
-  return useSingularityStore(s => s.symbolic, { equalityFn: shallowEqual });
+  return useSingularityStore(s => s?.symbolic, { equalityFn: shallowEqual });
 }
 
 /**
  * Hook pour Adaptive Layer entier
  */
 export function useAdaptiveLayer() {
-  return useSingularityStore(s => s.adaptive, { equalityFn: shallowEqual });
+  return useSingularityStore(s => s?.adaptive, { equalityFn: shallowEqual });
 }
 
 /**
  * Hook pour Meta Layer entier
  */
 export function useMetaLayer() {
-  return useSingularityStore(s => s.meta, { equalityFn: shallowEqual });
+  return useSingularityStore(s => s?.meta, { equalityFn: shallowEqual });
 }
 
 /**
  * Hook pour metrics Helios (CPU, RAM, etc.)
  */
 export function useHeliosMetrics() {
-  return useSingularityStore(s => s.physical.helios, { equalityFn: shallowEqual });
+  return useSingularityStore(s => s?.physical?.helios, { equalityFn: shallowEqual });
 }
 
 /**
@@ -460,10 +460,10 @@ export function useHeliosMetrics() {
 export function useGlobalCoherence() {
   return useSingularityStore(s => {
     // Calculer santé système globale
-    const physicalHealth = s.physical.system_health.global_health;
-    const cpuHealth = 1 - s.physical.helios.cpu_usage / 100;
+    const physicalHealth = s?.physical?.system_health?.global_health;
+    const cpuHealth = 1 - s?.physical?.helios?.cpu_usage / 100;
 
-    return (physicalHealth + cpuHealth) / 2;
+    return (any: any) / 2;
   });
 }
 
@@ -475,8 +475,8 @@ export function useIsCritical() {
     // Système critique si:
     // - CPU > 90%
     // - Mémoire > 95%
-    const cpuCritical = s.physical.helios.cpu_usage > 90;
-    const memoryCritical = s.physical.helios.memory_usage > 95;
+    const cpuCritical = s?.physical?.helios?.cpu_usage > 90;
+    const memoryCritical = s?.physical?.helios?.memory_usage > 95;
 
     return cpuCritical || memoryCritical;
   });
@@ -487,7 +487,7 @@ export function useIsCritical() {
 // ═══════════════════════════════════════════════════════════════════
 
 /**
- * Hook pour update methods (pas de subscription)
+ * Hook pour update methods (any: any)
  *
  * @example
  * ```tsx
@@ -502,26 +502,26 @@ export function useIsCritical() {
 export function useSingularityActions() {
   return {
     // Update methods
-    updatePhysical: SingularityBridge.updatePhysical,
-    updateCognitive: SingularityBridge.updateCognitive,
-    updateSymbolic: SingularityBridge.updateSymbolic,
-    updateAdaptive: SingularityBridge.updateAdaptive,
-    updateMeta: SingularityBridge.updateMeta,
-    updateFullState: SingularityBridge.updateFullState,
+    updatePhysical: SingularityBridge?.updatePhysical,
+    updateCognitive: SingularityBridge?.updateCognitive,
+    updateSymbolic: SingularityBridge?.updateSymbolic,
+    updateAdaptive: SingularityBridge?.updateAdaptive,
+    updateMeta: SingularityBridge?.updateMeta,
+    updateFullState: SingularityBridge?.updateFullState,
 
     // Persistence
-    save: SingularityBridge.saveState,
-    load: SingularityBridge.loadState,
+    save: SingularityBridge?.saveState,
+    load: SingularityBridge?.loadState,
 
-    // Query methods (one-time)
-    getFullState: SingularityBridge.getFullState,
-    getPhysical: SingularityBridge.getPhysical,
-    getCognitive: SingularityBridge.getCognitive,
-    getSymbolic: SingularityBridge.getSymbolic,
-    getAdaptive: SingularityBridge.getAdaptive,
-    getMeta: SingularityBridge.getMeta,
-    getGlobalCoherence: SingularityBridge.getGlobalCoherence,
-    isCritical: SingularityBridge.isCritical,
+    // Query methods (any: any)
+    getFullState: SingularityBridge?.getFullState,
+    getPhysical: SingularityBridge?.getPhysical,
+    getCognitive: SingularityBridge?.getCognitive,
+    getSymbolic: SingularityBridge?.getSymbolic,
+    getAdaptive: SingularityBridge?.getAdaptive,
+    getMeta: SingularityBridge?.getMeta,
+    getGlobalCoherence: SingularityBridge?.getGlobalCoherence,
+    isCritical: SingularityBridge?.isCritical,
   };
 }
 

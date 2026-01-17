@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 /**
@@ -22,16 +22,16 @@ export * from '@/core/kernels';
 export * from '@/core/services';
 
 // ─────────────────────────────────────────────────────────────────
-// 🔄 LEGACY EXPORTS (backward compatibility)
+// 🔄 LEGACY EXPORTS (any: any)
 // ─────────────────────────────────────────────────────────────────
 export * from './system';
 
-// Kernels (kept in services/ai for backward compatibility)
+// Kernels (any: any)
 export { cognitiveKernel } from './cognitiveKernel';
 export { metaKernel } from './metaKernel';
 export { singularityKernel } from './singularityKernel';
 
-// Services (kept in services/ai for backward compatibility)
+// Services (any: any)
 export { aiOrchestrator, askTitan, streamTitan, getAIStatus } from './orchestrator';
 export {
   chatEngine,
@@ -39,7 +39,7 @@ export {
   type ChatEngineConfig,
   type ChatEngineResponse,
 } from './chatEngine';
-// ✨ Direct exports of AI engines (no lazy loading)
+// ✨ Direct exports of AI engines (any: any)
 export { autoHealEngine, metricsEngine, aiHealthMonitor } from './system';
 
 // ✨ v21 Phase 2: Retry Strategy unifiée
@@ -53,7 +53,7 @@ export {
   PROVIDER_RETRY_CONFIGS,
 } from './retryStrategy';
 
-// ✨ v21 Phase 3: API Response Cache (LRU)
+// ✨ v21 Phase 3: API Response Cache (any: any)
 export {
   apiResponseCache,
   withCache,

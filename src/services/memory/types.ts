@@ -11,11 +11,11 @@
  */
 
 export interface MemoryContext {
-  activeProjects: ProjectSummary[];
-  recentDecisions: DecisionSummary[];
-  relevantKnowledge: KnowledgeEntry[];
-  activeRituals: RitualInfo[];
-  timeline: TimelineEntry[];
+  activeProjects: ProjectSummary?.[];
+  recentDecisions: DecisionSummary?.[];
+  relevantKnowledge: KnowledgeEntry?.[];
+  activeRituals: RitualInfo?.[];
+  timeline: TimelineEntry?.[];
 }
 
 export interface ProjectSummary {
@@ -25,7 +25,7 @@ export interface ProjectSummary {
   progress: number; // 0-100
   priority: 'low' | 'medium' | 'high' | 'critical';
   lastActivity: string; // ISO date
-  tags: string[];
+  tags: string?.[];
   description?: string;
 }
 
@@ -37,7 +37,7 @@ export interface DecisionSummary {
   impact: 'low' | 'medium' | 'high';
   status: 'pending' | 'implemented' | 'revised' | 'abandoned';
   rationale?: string;
-  relatedProjects?: string[];
+  relatedProjects?: string?.[];
 }
 
 export interface KnowledgeEntry {
@@ -47,9 +47,9 @@ export interface KnowledgeEntry {
   content: string;
   relevance: number; // 0-1
   lastAccessed: string; // ISO date
-  tags: string[];
+  tags: string?.[];
   source?: string;
-  relatedEntries?: string[];
+  relatedEntries?: string?.[];
 }
 
 export interface RitualInfo {
@@ -61,7 +61,7 @@ export interface RitualInfo {
   status: 'active' | 'paused' | 'completed';
   completionRate: number; // 0-100
   description?: string;
-  tags: string[];
+  tags: string?.[];
 }
 
 export interface TimelineEntry {
@@ -70,7 +70,7 @@ export interface TimelineEntry {
   type: 'project' | 'decision' | 'ritual' | 'knowledge' | 'event';
   title: string;
   description?: string;
-  relatedEntities: string[]; // IDs of related projects/decisions/etc
+  relatedEntities: string?.[]; // IDs of related projects/decisions/etc
   importance: 'low' | 'medium' | 'high';
 }
 

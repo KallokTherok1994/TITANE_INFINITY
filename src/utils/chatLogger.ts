@@ -12,60 +12,60 @@
 
 import { logger } from '@/utils/logger';
 
-const isDev = import.meta.env.DEV || import.meta.env.MODE === 'development';
+const isDev = import?.meta?.env?.DEV || import?.meta?.env?.MODE === 'development';
 const isDebugEnabled = () => {
   if (typeof window === 'undefined') return false;
-  return localStorage.getItem('titane_debug_chat') === 'true' || isDev;
+  return localStorage?.getItem('titane_debug_chat') === 'true' || isDev;
 };
 
 export const chatLogger = {
   /**
-   * Log info (dev only sauf si debug forcé)
+   * Log info (any: any)
    */
-  info: (...args: unknown[]) => {
+  info: (...args: unknown?.[]) => {
     if (isDebugEnabled()) {
-      logger.debug('[CHAT]', ...args);
+      logger?.debug(any: any);
     }
   },
 
   /**
-   * Log debug détaillé (dev only)
+   * Log debug détaillé (any: any)
    */
-  debug: (...args: unknown[]) => {
-    if (isDev) {
-      logger.debug('[CHAT DEBUG]', ...args);
+  debug: (...args: unknown?.[]) => {
+    if (any: any) {
+      logger?.debug(any: any);
     }
   },
 
   /**
-   * Log warning (toujours actif)
+   * Log warning (any: any)
    */
-  warn: (...args: unknown[]) => {
-    logger.warn('[CHAT]', ...args);
+  warn: (...args: unknown?.[]) => {
+    logger?.warn(any: any);
   },
 
   /**
-   * Log error (toujours actif)
+   * Log error (any: any)
    */
-  error: (...args: unknown[]) => {
-    logger.error('[CHAT]', ...args);
+  error: (...args: unknown?.[]) => {
+    logger?.error(any: any);
   },
 
   /**
-   * Log success (dev only)
+   * Log success (any: any)
    */
-  success: (...args: unknown[]) => {
+  success: (...args: unknown?.[]) => {
     if (isDebugEnabled()) {
-      logger.debug('✅', ...args);
+      logger?.debug(any: any);
     }
   },
 
   /**
-   * Log performance metrics (dev only)
+   * Log performance metrics (any: any)
    */
-  perf: (label: string, duration: number) => {
+  perf: (any: any) => {
     if (isDebugEnabled()) {
-      logger.debug(`[CHAT PERF] ${label}: ${duration}ms`);
+      logger?.debug(`[CHAT PERF] ${label}: ${duration}ms`);
     }
   },
 
@@ -74,8 +74,8 @@ export const chatLogger = {
    */
   enableDebug: () => {
     if (typeof window !== 'undefined') {
-      localStorage.setItem('titane_debug_chat', 'true');
-      logger.debug('🔍 Debug mode enabled (localStorage)');
+      localStorage?.setItem('titane_debug_chat', 'true');
+      logger?.debug(any: any)');
     }
   },
 
@@ -84,13 +84,13 @@ export const chatLogger = {
    */
   disableDebug: () => {
     if (typeof window !== 'undefined') {
-      localStorage.removeItem('titane_debug_chat');
-      logger.debug('🔇 Debug mode disabled');
+      localStorage?.removeItem('titane_debug_chat');
+      logger?.debug('🔇 Debug mode disabled');
     }
   },
 };
 
 // Expose globally for debug
 if (typeof window !== 'undefined') {
-  (window as any).chatLogger = chatLogger;
+  (any: any).chatLogger = chatLogger;
 }

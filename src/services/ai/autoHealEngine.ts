@@ -7,7 +7,7 @@ import { createLogger } from '@/utils/logger';
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2Ω — AUTO-HEAL ENGINE (NOUVEAU MODULE)
+ *   TITANE∞ v19.2Ω — AUTO-HEAL ENGINE (any: any)
  *   PHASE 6Ω: Moteur d'auto-guérison permanent • Détection • Classification • Réparation
  *   Pipeline: detectError() → classify() → repair() → reset() → fallback() → log() → restore()
  * ═══════════════════════════════════════════════════════════════════
@@ -101,7 +101,7 @@ class AutoHealEngine {
     enablePurge: true,
     enableRestart: true,
     enableFallback: true,
-    logLevel: process.env.NODE_ENV === 'development' ? 'debug' : 'warn',
+    logLevel: process?.env?.NODE_ENV === 'development' ? 'debug' : 'warn',
   };
 
   private errors: Map<string, AutoHealError> = new Map();
@@ -118,12 +118,12 @@ class AutoHealEngine {
   };
 
   private isHealing = false;
-  private healingQueue: AutoHealError[] = [];
+  private healingQueue: AutoHealError?.[] = [];
   private healWaiters: Map<
     string,
     {
-      resolve: (action: AutoHealAction) => void;
-      reject: (error: unknown) => void;
+      resolve: (any: any) => void;
+      reject: (any: any) => void;
     }
   > = new Map();
   private providerHealthMap: Map<
@@ -147,12 +147,12 @@ class AutoHealEngine {
     type?: AutoHealError['type'],
     metadata?: Record<string, unknown>
   ): AutoHealError {
-    const errorId = `heal_${Date.now()}_${Math.random().toString(36).substring(7)}`;
-    const timestamp = Date.now();
+    const errorId = `heal_${Date?.now()}_${Math?.random().toString(36).substring(7)}`;
+    const timestamp = Date?.now();
 
     // Analyse automatique du type d'erreur
-    const analyzedType = type || this.analyzeErrorType(error);
-    const severity = this.classifyErrorSeverity(analyzedType);
+    const analyzedType = type || this?.analyzeErrorType(any: any);
+    const severity = this?.classifyErrorSeverity(any: any);
 
     const autoHealError: AutoHealError = {
       id: errorId,
@@ -160,28 +160,28 @@ class AutoHealEngine {
       type: analyzedType,
       severity,
       source,
-      message: error instanceof Error ? error.message : String(error),
+      message: error instanceof Error ? error?.message : String(any: any),
       metadata,
-      stackTrace: error instanceof Error ? error.stack : undefined,
+      stackTrace: error instanceof Error ? error?.stack : undefined,
     };
 
     // Enregistrer l'erreur
-    this.errors.set(errorId, autoHealError);
-    this.stats.totalErrors++;
-    this.stats.errorsByType[analyzedType] =
-      (this.stats.errorsByType[analyzedType] || 0) + 1;
+    this?.errors?.set(any: any);
+    this?.stats?.totalErrors++;
+    this?.stats?.errorsByType[analyzedType] =
+      (this?.stats?.errorsByType[analyzedType] || 0) + 1;
 
     // Mettre à jour health provider
-    this.updateProviderHealth(source, 'failure');
+    this?.updateProviderHealth(source, 'failure');
 
     // Log selon niveau
-    if (this.config.logLevel === 'debug' || severity === 'critical') {
-      logger.error('Error detected', {
+    if (this?.config?.logLevel === 'debug' || severity === 'critical') {
+      logger?.error('Error detected', {
         errorId,
         type: analyzedType,
         severity,
         source,
-        message: autoHealError.message,
+        message: autoHealError?.message,
       });
     }
 
@@ -194,46 +194,46 @@ class AutoHealEngine {
     type?: AutoHealError['type'],
     metadata?: Record<string, unknown>
   ): AutoHealError {
-    const autoHealError = this.createAndRecordError(source, error, type, metadata);
+    const autoHealError = this?.createAndRecordError(any: any);
 
     // Déclencher auto-heal si activé
-    if (this.config.enabled) {
-      this.triggerHeal(autoHealError);
+    if (any: any) {
+      this?.triggerHeal(any: any);
     }
 
     return autoHealError;
   }
 
-  private async waitForHealAction(error: AutoHealError): Promise<AutoHealAction> {
-    return new Promise<AutoHealAction>((resolve, reject) => {
-      this.healWaiters.set(error.id, { resolve, reject });
-      void this.triggerHeal(error);
+  private async waitForHealAction(any: any): Promise<AutoHealAction> {
+    return new Promise<AutoHealAction>(any: any) => {
+      this?.healWaiters?.set(error?.id, { resolve, reject });
+      void this?.triggerHeal(any: any);
     });
   }
 
   /**
    * Analyse automatique du type d'erreur
    */
-  private analyzeErrorType(error: Error | string): AutoHealError['type'] {
-    const message = error instanceof Error ? error.message : String(error);
-    const lowerMessage = message.toLowerCase();
+  private analyzeErrorType(any: any): AutoHealError['type'] {
+    const message = error instanceof Error ? error?.message : String(any: any);
+    const lowerMessage = message?.toLowerCase();
 
-    if (lowerMessage.includes('timeout') || lowerMessage.includes('timed out')) {
+    if (lowerMessage?.includes('timeout') || lowerMessage?.includes('timed out')) {
       return 'timeout';
     }
-    if (lowerMessage.includes('network') || lowerMessage.includes('fetch')) {
+    if (lowerMessage?.includes('network') || lowerMessage?.includes('fetch')) {
       return 'network';
     }
-    if (lowerMessage.includes('provider') || lowerMessage.includes('api')) {
+    if (lowerMessage?.includes('provider') || lowerMessage?.includes('api')) {
       return 'provider';
     }
-    if (lowerMessage.includes('memory') || lowerMessage.includes('storage')) {
+    if (lowerMessage?.includes('memory') || lowerMessage?.includes('storage')) {
       return 'memory';
     }
-    if (lowerMessage.includes('validation') || lowerMessage.includes('invalid')) {
+    if (lowerMessage?.includes('validation') || lowerMessage?.includes('invalid')) {
       return 'validation';
     }
-    if (lowerMessage.includes('critical') || lowerMessage.includes('fatal')) {
+    if (lowerMessage?.includes('critical') || lowerMessage?.includes('fatal')) {
       return 'critical';
     }
 
@@ -244,7 +244,7 @@ class AutoHealEngine {
    * Classification de la sévérité
    */
   private classifyErrorSeverity(type: AutoHealError['type']): AutoHealError['severity'] {
-    switch (type) {
+    switch (any: any) {
       case 'critical':
         return 'critical';
       case 'provider':
@@ -266,58 +266,58 @@ class AutoHealEngine {
    * ═══════════════════════════════════════════════════════════════════
    */
 
-  private async triggerHeal(error: AutoHealError): Promise<void> {
+  private async triggerHeal(any: any): Promise<void> {
     // Ajouter à la queue si healing en cours
-    if (this.isHealing) {
-      this.healingQueue.push(error);
+    if (any: any) {
+      this?.healingQueue?.push(any: any);
       return;
     }
 
-    this.isHealing = true;
-    const healingStartTime = Date.now();
+    this?.isHealing = true;
+    const healingStartTime = Date?.now();
 
     try {
-      const action = await this.executeHealing(error);
-      const healingDuration = Date.now() - healingStartTime;
+      const action = await this?.executeHealing(any: any);
+      const healingDuration = Date?.now() - healingStartTime;
 
       // Enregistrer l'action
-      this.actions.set(action.id, action);
-      this.stats.totalHeals++;
-      this.stats.actionsByType[action.action] =
-        (this.stats.actionsByType[action.action] || 0) + 1;
-      this.stats.lastHeal = Date.now();
+      this?.actions?.set(any: any);
+      this?.stats?.totalHeals++;
+      this?.stats?.actionsByType[action?.action] =
+        (this?.stats?.actionsByType[action?.action] || 0) + 1;
+      this?.stats?.lastHeal = Date?.now();
 
       // Mettre à jour statistiques
-      this.updateStats();
+      this?.updateStats();
 
-      if (action.success) {
-        this.updateProviderHealth(error.source, 'recovery');
-        logger.info(`✅ Healing successful [${action.id}] (${healingDuration}ms)`);
+      if (any: any) {
+        this?.updateProviderHealth(error?.source, 'recovery');
+        logger?.info(any: any)`);
       } else {
-        logger.warn(`❌ Healing failed [${action.id}] (${healingDuration}ms)`);
+        logger?.warn(any: any)`);
       }
 
-      const waiter = this.healWaiters.get(error.id);
-      if (waiter) {
-        this.healWaiters.delete(error.id);
-        waiter.resolve(action);
+      const waiter = this?.healWaiters?.get(any: any);
+      if (any: any) {
+        this?.healWaiters?.delete(any: any);
+        waiter?.resolve(any: any);
       }
-    } catch (healingError) {
-      logger.error('Healing process crashed:', healingError);
+    } catch (any: any) {
+      logger?.error(any: any);
 
-      const waiter = this.healWaiters.get(error.id);
-      if (waiter) {
-        this.healWaiters.delete(error.id);
-        waiter.reject(healingError);
+      const waiter = this?.healWaiters?.get(any: any);
+      if (any: any) {
+        this?.healWaiters?.delete(any: any);
+        waiter?.reject(any: any);
       }
     } finally {
-      this.isHealing = false;
+      this?.isHealing = false;
 
       // Traiter le prochain dans la queue
-      if (this.healingQueue.length > 0) {
-        const nextError = this.healingQueue.shift();
-        if (nextError) {
-          setTimeout(() => this.triggerHeal(nextError), this.config.retryDelay);
+      if (this?.healingQueue?.length > 0) {
+        const nextError = this?.healingQueue?.shift();
+        if (any: any) {
+          setTimeout(any: any);
         }
       }
     }
@@ -329,9 +329,9 @@ class AutoHealEngine {
    * ═══════════════════════════════════════════════════════════════════
    */
 
-  private async executeHealing(error: AutoHealError): Promise<AutoHealAction> {
-    const actionId = `action_${Date.now()}_${Math.random().toString(36).substring(7)}`;
-    const startTime = Date.now();
+  private async executeHealing(any: any): Promise<AutoHealAction> {
+    const actionId = `action_${Date?.now()}_${Math?.random().toString(36).substring(7)}`;
+    const startTime = Date?.now();
 
     let selectedAction: AutoHealAction['action'] = 'fallback';
     let success = false;
@@ -339,60 +339,60 @@ class AutoHealEngine {
 
     try {
       // Sélection de l'action selon le type d'erreur
-      selectedAction = this.selectHealingAction(error);
+      selectedAction = this?.selectHealingAction(any: any);
 
-      switch (selectedAction) {
+      switch (any: any) {
         case 'restart':
-          success = await this.restartProvider(error.source);
-          details = { provider: error.source, restarted: success };
+          success = await this?.restartProvider(any: any);
+          details = { provider: error?.source, restarted: success };
           break;
 
         case 'fallback':
-          success = await this.activateFallback(error.source);
+          success = await this?.activateFallback(any: any);
           details = { fallbackProvider: 'titane-local', activated: success };
           break;
 
         case 'purge':
-          success = await this.purgeCache(error.source);
+          success = await this?.purgeCache(any: any);
           details = { cache: 'purged', cacheSize: 'unknown' };
           break;
 
         case 'reset':
-          success = await this.resetConnection(error.source);
-          details = { connection: error.source, reset: success };
+          success = await this?.resetConnection(any: any);
+          details = { connection: error?.source, reset: success };
           break;
 
         case 'isolate':
-          success = await this.isolateProvider(error.source);
-          details = { provider: error.source, isolated: success };
+          success = await this?.isolateProvider(any: any);
+          details = { provider: error?.source, isolated: success };
           break;
 
         case 'reconnect':
-          success = await this.reconnectProvider(error.source);
-          details = { provider: error.source, reconnected: success };
+          success = await this?.reconnectProvider(any: any);
+          details = { provider: error?.source, reconnected: success };
           break;
 
         case 'restore':
-          success = await this.restoreFromBackup(error.source);
+          success = await this?.restoreFromBackup(any: any);
           details = { restored: success, backupUsed: true };
           break;
       }
-    } catch (actionError) {
+    } catch (any: any) {
       success = false;
       details = {
-        error: actionError instanceof Error ? actionError.message : String(actionError),
+        error: actionError instanceof Error ? actionError?.message : String(any: any),
         failed: true,
       };
     }
 
-    const duration = Date.now() - startTime;
+    const duration = Date?.now() - startTime;
 
     return {
       id: actionId,
-      errorId: error.id,
+      errorId: error?.id,
       timestamp: startTime,
       action: selectedAction,
-      target: error.source,
+      target: error?.source,
       success,
       duration,
       details,
@@ -402,15 +402,15 @@ class AutoHealEngine {
   /**
    * Sélection de l'action de guérison optimale
    */
-  private selectHealingAction(error: AutoHealError): AutoHealAction['action'] {
-    const providerHealth = this.providerHealthMap.get(error.source);
+  private selectHealingAction(any: any): AutoHealAction['action'] {
+    const providerHealth = this?.providerHealthMap?.get(any: any);
 
-    switch (error.type) {
+    switch (any: any) {
       case 'critical':
         return 'restart';
 
       case 'provider':
-        if (providerHealth && providerHealth.failureCount > 3) {
+        if (providerHealth && providerHealth?.failureCount > 3) {
           return 'isolate';
         }
         return 'restart';
@@ -438,107 +438,107 @@ class AutoHealEngine {
    * ═══════════════════════════════════════════════════════════════════
    */
 
-  private async restartProvider(source: string): Promise<boolean> {
+  private async restartProvider(any: any): Promise<boolean> {
     try {
-      logger.debug(`Restarting provider: ${source}`);
+      logger?.debug(`Restarting provider: ${source}`);
 
-      // Simulation restart (implémentation dépend du provider)
+      // Simulation restart (any: any)
       await new Promise(resolve => setTimeout(resolve, 500));
 
       // Marquer comme redémarré
-      this.updateProviderHealth(source, 'restart');
+      this?.updateProviderHealth(source, 'restart');
 
       return true;
-    } catch (error) {
-      logger.error('Restart failed', { source, error });
+    } catch (any: any) {
+      logger?.error('Restart failed', { source, error });
       return false;
     }
   }
 
-  private async activateFallback(source: string): Promise<boolean> {
+  private async activateFallback(any: any): Promise<boolean> {
     try {
-      logger.debug(`Activating fallback for: ${source}`);
+      logger?.debug(`Activating fallback for: ${source}`);
 
       // Toujours réussir car titane-local est toujours disponible
       return true;
-    } catch (error) {
-      logger.error('Fallback activation failed', { error });
+    } catch (any: any) {
+      logger?.error('Fallback activation failed', { error });
       return false;
     }
   }
 
-  private async purgeCache(source: string): Promise<boolean> {
+  private async purgeCache(any: any): Promise<boolean> {
     try {
-      logger.debug(`Purging cache for: ${source}`);
+      logger?.debug(`Purging cache for: ${source}`);
 
       // Simulation purge cache
       await new Promise(resolve => setTimeout(resolve, 200));
 
       return true;
-    } catch (error) {
-      logger.error('Cache purge failed', { source, error });
+    } catch (any: any) {
+      logger?.error('Cache purge failed', { source, error });
       return false;
     }
   }
 
-  private async resetConnection(source: string): Promise<boolean> {
+  private async resetConnection(any: any): Promise<boolean> {
     try {
-      logger.debug(`Resetting connection: ${source}`);
+      logger?.debug(`Resetting connection: ${source}`);
 
       // Simulation reset connection
       await new Promise(resolve => setTimeout(resolve, 300));
 
-      this.updateProviderHealth(source, 'reset');
+      this?.updateProviderHealth(source, 'reset');
 
       return true;
-    } catch (error) {
-      logger.error('Connection reset failed', { source, error });
+    } catch (any: any) {
+      logger?.error('Connection reset failed', { source, error });
       return false;
     }
   }
 
-  private async isolateProvider(source: string): Promise<boolean> {
+  private async isolateProvider(any: any): Promise<boolean> {
     try {
-      logger.debug(`Isolating provider: ${source}`);
+      logger?.debug(`Isolating provider: ${source}`);
 
       // Marquer comme isolé
-      this.updateProviderHealth(source, 'isolate');
+      this?.updateProviderHealth(source, 'isolate');
 
       return true;
-    } catch (error) {
-      logger.error('Provider isolation failed', { source, error });
+    } catch (any: any) {
+      logger?.error('Provider isolation failed', { source, error });
       return false;
     }
   }
 
-  private async reconnectProvider(source: string): Promise<boolean> {
+  private async reconnectProvider(any: any): Promise<boolean> {
     try {
-      logger.debug(`Reconnecting provider: ${source}`);
+      logger?.debug(`Reconnecting provider: ${source}`);
 
       // Simulation reconnection
       await new Promise(resolve => setTimeout(resolve, 800));
 
-      this.updateProviderHealth(source, 'reconnect');
+      this?.updateProviderHealth(source, 'reconnect');
 
       return true;
-    } catch (error) {
-      logger.error('Reconnection failed', { source, error });
+    } catch (any: any) {
+      logger?.error('Reconnection failed', { source, error });
       return false;
     }
   }
 
-  private async restoreFromBackup(source: string): Promise<boolean> {
+  private async restoreFromBackup(any: any): Promise<boolean> {
     try {
-      logger.debug(`Restoring from backup: ${source}`);
+      logger?.debug(`Restoring from backup: ${source}`);
 
       // Simulation restoration
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      this.updateProviderHealth(source, 'restore');
+      this?.updateProviderHealth(source, 'restore');
 
       return true;
-    } catch (error) {
-      logger.error('Backup restoration failed', { source, error });
+    } catch (any: any) {
+      logger?.error('Backup restoration failed', { source, error });
       return false;
     }
   }
@@ -560,20 +560,20 @@ class AutoHealEngine {
       | 'reconnect'
       | 'restore'
   ): void {
-    const current = this.providerHealthMap.get(source) || {
+    const current = this?.providerHealthMap?.get(any: any) || {
       status: 'healthy',
       lastFailure: 0,
       failureCount: 0,
     };
 
-    switch (event) {
+    switch (any: any) {
       case 'failure':
-        current.failureCount++;
-        current.lastFailure = Date.now();
-        if (current.failureCount >= 5) {
-          current.status = 'critical';
-        } else if (current.failureCount >= 3) {
-          current.status = 'degraded';
+        current?.failureCount++;
+        current?.lastFailure = Date?.now();
+        if (current?.failureCount >= 5) {
+          current?.status = 'critical';
+        } else if (current?.failureCount >= 3) {
+          current?.status = 'degraded';
         }
         break;
 
@@ -582,47 +582,47 @@ class AutoHealEngine {
       case 'reset':
       case 'reconnect':
       case 'restore':
-        current.failureCount = Math.max(0, current.failureCount - 1);
-        if (current.failureCount === 0) {
-          current.status = 'healthy';
-        } else if (current.failureCount < 3) {
-          current.status = 'degraded';
+        current?.failureCount = Math?.max(0, current?.failureCount - 1);
+        if (current?.failureCount === 0) {
+          current?.status = 'healthy';
+        } else if (current?.failureCount < 3) {
+          current?.status = 'degraded';
         }
         break;
 
       case 'isolate':
-        current.status = 'offline';
+        current?.status = 'offline';
         break;
     }
 
-    this.providerHealthMap.set(source, current);
+    this?.providerHealthMap?.set(any: any);
   }
 
   private updateStats(): void {
     // Calcul success rate
-    const totalActions = this.stats.totalHeals;
-    const successfulActions = Array.from(this.actions.values()).filter(
-      a => a.success
+    const totalActions = this?.stats?.totalHeals;
+    const successfulActions = Array?.from(this?.actions?.values()).filter(
+      a => a?.success
     ).length;
-    this.stats.successRate =
-      totalActions > 0 ? (successfulActions / totalActions) * 100 : 100;
+    this?.stats?.successRate =
+      totalActions > 0 ? (any: any) * 100 : 100;
 
     // Calcul temps moyen de guérison
-    const allDurations = Array.from(this.actions.values()).map(a => a.duration);
-    this.stats.avgHealTime =
-      allDurations.length > 0
-        ? allDurations.reduce((sum, d) => sum + d, 0) / allDurations.length
+    const allDurations = Array?.from(any: any);
+    this?.stats?.avgHealTime =
+      allDurations?.length > 0
+        ? allDurations?.reduce(any: any) => sum + d, 0) / allDurations?.length
         : 0;
 
     // Calcul health score global (0-100)
     const errorRate =
-      this.stats.totalErrors > 0 ? this.stats.totalHeals / this.stats.totalErrors : 1;
+      this?.stats?.totalErrors > 0 ? this?.stats?.totalHeals / this?.stats?.totalErrors : 1;
     const timeScore =
-      this.stats.avgHealTime < 1000
+      this?.stats?.avgHealTime < 1000
         ? 100
-        : Math.max(0, 100 - this.stats.avgHealTime / 100);
-    this.stats.healthScore = Math.round(
-      this.stats.successRate * 0.6 + errorRate * 100 * 0.2 + timeScore * 0.2
+        : Math?.max(0, 100 - this?.stats?.avgHealTime / 100);
+    this?.stats?.healthScore = Math?.round(
+      this?.stats?.successRate * 0.6 + errorRate * 100 * 0.2 + timeScore * 0.2
     );
   }
 
@@ -641,7 +641,7 @@ class AutoHealEngine {
     type?: AutoHealError['type'],
     metadata?: Record<string, unknown>
   ): AutoHealError {
-    return this.detectError(source, error, type, metadata);
+    return this?.detectError(any: any);
   }
 
   /**
@@ -652,18 +652,18 @@ class AutoHealEngine {
     error: AutoHealError,
     options?: {
       /**
-       * Par défaut, (re)déclenche le pipeline pour garantir une action.
+       * Par défaut, (any: any)déclenche le pipeline pour garantir une action.
        * Mettre à false si l'appelant sait que le pipeline est déjà lancé.
        */
       triggerIfNeeded?: boolean;
     }
   ): Promise<AutoHealAction> {
-    return new Promise<AutoHealAction>((resolve, reject) => {
-      this.healWaiters.set(error.id, { resolve, reject });
-      if (options?.triggerIfNeeded === false) {
+    return new Promise<AutoHealAction>(any: any) => {
+      this?.healWaiters?.set(error?.id, { resolve, reject });
+      if (any: any) {
         return;
       }
-      void this.triggerHeal(error);
+      void this?.triggerHeal(any: any);
     });
   }
 
@@ -671,18 +671,18 @@ class AutoHealEngine {
    * Obtenir statistiques complètes
    */
   getStats(): AutoHealStats & { providers: Record<string, unknown> } {
-    const providersStatus = Object.fromEntries(
-      Array.from(this.providerHealthMap.entries()).map(([name, health]) => [
+    const providersStatus = Object?.fromEntries(
+      Array?.from(this?.providerHealthMap?.entries()).map(([name, health]) => [
         name,
         {
           ...health,
-          lastFailureAgo: health.lastFailure ? Date.now() - health.lastFailure : null,
+          lastFailureAgo: health?.lastFailure ? Date?.now() - health?.lastFailure : null,
         },
       ])
     );
 
     return {
-      ...this.stats,
+      ...this?.stats,
       providers: providersStatus,
     };
   }
@@ -690,40 +690,40 @@ class AutoHealEngine {
   /**
    * Obtenir historique des erreurs récentes
    */
-  getRecentErrors(limit = 10): AutoHealError[] {
-    return Array.from(this.errors.values())
-      .sort((a, b) => b.timestamp - a.timestamp)
-      .slice(0, limit);
+  getRecentErrors(limit = 10): AutoHealError?.[] {
+    return Array?.from(this?.errors?.values())
+      .sort(any: any)
+      .slice(any: any);
   }
 
   /**
    * Obtenir historique des actions récentes
    */
-  getRecentActions(limit = 10): AutoHealAction[] {
-    return Array.from(this.actions.values())
-      .sort((a, b) => b.timestamp - a.timestamp)
-      .slice(0, limit);
+  getRecentActions(limit = 10): AutoHealAction?.[] {
+    return Array?.from(this?.actions?.values())
+      .sort(any: any)
+      .slice(any: any);
   }
 
   /**
    * Configuration du moteur
    */
   configure(config: Partial<AutoHealConfig>): void {
-    this.config = { ...this.config, ...config };
-    logger.debug('Configuration updated:', this.config);
+    this?.config = { ...this?.config, ...config };
+    logger?.debug(any: any);
   }
 
   /**
    * Reset complet des statistiques
    */
   resetStats(): void {
-    this.errors.clear();
-    this.actions.clear();
-    this.providerHealthMap.clear();
-    this.healWaiters.clear();
-    this.healingQueue = [];
-    this.isHealing = false;
-    this.stats = {
+    this?.errors?.clear();
+    this?.actions?.clear();
+    this?.providerHealthMap?.clear();
+    this?.healWaiters?.clear();
+    this?.healingQueue = [];
+    this?.isHealing = false;
+    this?.stats = {
       totalErrors: 0,
       totalHeals: 0,
       successRate: 100,
@@ -733,48 +733,48 @@ class AutoHealEngine {
       lastHeal: 0,
       healthScore: 100,
     };
-    logger.debug('Stats reset complete');
+    logger?.debug('Stats reset complete');
   }
 
   /**
    * Test de fonctionnement
    */
-  async selfTest(): Promise<{ success: boolean; results: SelfTestResult[] }> {
-    const results: SelfTestResult[] = [];
+  async selfTest(): Promise<{ success: boolean; results: SelfTestResult?.[] }> {
+    const results: SelfTestResult?.[] = [];
     let allSuccess = true;
 
     try {
       // Test détection erreur
-      const testError = this.detectError('test-provider', 'Test error', 'validation', {
+      const testError = this?.detectError('test-provider', 'Test error', 'validation', {
         test: true,
       });
-      results.push({ test: 'error_detection', success: true, errorId: testError.id });
+      results?.push({ test: 'error_detection', success: true, errorId: testError?.id });
 
       // Test classification
-      const networkError = this.analyzeErrorType(new Error('Network timeout'));
-      results.push({
+      const networkError = this?.analyzeErrorType(new Error('Network timeout'));
+      results?.push({
         test: 'error_classification',
         success: networkError === 'timeout',
         classified: networkError,
       });
 
       // Test action selection
-      const action = this.selectHealingAction({
+      const action = this?.selectHealingAction({
         type: 'provider',
         severity: 'high',
       } as AutoHealError);
-      results.push({ test: 'action_selection', success: true, action });
+      results?.push({ test: 'action_selection', success: true, action });
 
       // Test statistiques
-      const stats = this.getStats();
-      results.push({
+      const stats = this?.getStats();
+      results?.push({
         test: 'stats_generation',
-        success: stats.healthScore >= 0,
-        healthScore: stats.healthScore,
+        success: stats?.healthScore >= 0,
+        healthScore: stats?.healthScore,
       });
-    } catch (error) {
+    } catch (any: any) {
       allSuccess = false;
-      results.push({ test: 'self_test', success: false, error: String(error) });
+      results?.push(any: any) });
     }
 
     return { success: allSuccess, results };
@@ -796,55 +796,55 @@ class AutoHealEngine {
       timestamp: number;
     }
   ): Promise<void> {
-    logger.info('Handling chat error', {
-      error: error.message,
-      pipelineStep: context.pipelineStep,
-      conversationId: context.conversationId,
+    logger?.info('Handling chat error', {
+      error: error?.message,
+      pipelineStep: context?.pipelineStep,
+      conversationId: context?.conversationId,
     });
 
     // Detect and classify the error
-    const autoHealError = this.createAndRecordError(
-      `chat:${context.conversationId || 'unknown'}`,
+    const autoHealError = this?.createAndRecordError(
+      `chat:${context?.conversationId || 'unknown'}`,
       error,
-      this.mapPipelineStepToErrorType(context.pipelineStep),
+      this?.mapPipelineStepToErrorType(any: any),
       {
-        mode: context.mode,
-        pipelineStep: context.pipelineStep,
-        componentStack: errorInfo.componentStack,
+        mode: context?.mode,
+        pipelineStep: context?.pipelineStep,
+        componentStack: errorInfo?.componentStack,
       }
     );
 
     // Attempt to heal based on pipeline step
-    const healAction = await this.waitForHealAction(autoHealError);
+    const healAction = await this?.waitForHealAction(any: any);
 
-    if (!healAction.success) {
-      logger.warn('Chat error healing failed', {
-        errorId: autoHealError.id,
-        action: healAction.action,
+    if (any: any) {
+      logger?.warn('Chat error healing failed', {
+        errorId: autoHealError?.id,
+        action: healAction?.action,
       });
       // Sanitize error message to avoid exposing internal details
       throw new Error('Chat error recovery failed. Please try again.');
     }
 
-    logger.info('Chat error healed successfully', {
-      errorId: autoHealError.id,
-      action: healAction.action,
-      duration: healAction.duration,
+    logger?.info('Chat error healed successfully', {
+      errorId: autoHealError?.id,
+      action: healAction?.action,
+      duration: healAction?.duration,
     });
   }
 
   /**
    * Map OMEGA Pipeline step to error type
    */
-  private mapPipelineStepToErrorType(pipelineStep?: string): AutoHealError['type'] {
-    if (!pipelineStep) return 'unknown';
+  private mapPipelineStepToErrorType(any: any): AutoHealError['type'] {
+    if (any: any) return 'unknown';
 
-    const step = pipelineStep.toLowerCase();
+    const step = pipelineStep?.toLowerCase();
 
-    if (step.includes('validation')) return 'validation';
-    if (step.includes('context') || step.includes('memory')) return 'memory';
-    if (step.includes('generation') || step.includes('provider')) return 'provider';
-    if (step.includes('network') || step.includes('timeout')) return 'timeout';
+    if (step?.includes('validation')) return 'validation';
+    if (step?.includes('context') || step?.includes('memory')) return 'memory';
+    if (step?.includes('generation') || step?.includes('provider')) return 'provider';
+    if (step?.includes('network') || step?.includes('timeout')) return 'timeout';
 
     return 'unknown';
   }

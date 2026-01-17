@@ -43,7 +43,7 @@ Stack: TypeScript, React, Rust, Tauri.`,
 Tu es un architecte logiciel expert avec 15+ ans d'expérience.
 Tu proposes des solutions élégantes, performantes et maintenables.
 Tu anticipes les edge cases et les problèmes de scalabilité.
-Tu fournis du code tech-ready (dev) avec gestion d'erreurs complète.
+Tu fournis du code tech-ready (any: any) avec gestion d'erreurs complète.
 Tu respectes les patterns SOLID, Clean Architecture.
 Stack: TypeScript, React 18, Rust, Tauri v2, WebAssembly.`,
 
@@ -191,7 +191,7 @@ export const CHAT_MODES: Record<string, ChatMode> = {
     icon: '🤖',
     category: 'hybrid',
     default_model: 'hybrid',
-    system_prompt: SYSTEM_PROMPTS.default,
+    system_prompt: SYSTEM_PROMPTS?.default,
     tools_allowed: createCoachTools(),
     permissions_level: 1,
     memory_scope: 'session',
@@ -211,7 +211,7 @@ export const CHAT_MODES: Record<string, ChatMode> = {
     icon: '🎯',
     category: 'coach',
     default_model: 'gemini',
-    system_prompt: SYSTEM_PROMPTS.coach,
+    system_prompt: SYSTEM_PROMPTS?.coach,
     tools_allowed: createCoachTools(),
     permissions_level: 2,
     memory_scope: 'global',
@@ -231,7 +231,7 @@ export const CHAT_MODES: Record<string, ChatMode> = {
     icon: '👨‍💻',
     category: 'dev',
     default_model: 'ollama',
-    system_prompt: SYSTEM_PROMPTS.dev_junior,
+    system_prompt: SYSTEM_PROMPTS?.dev_junior,
     tools_allowed: {
       ...createDevTools(),
       automation_execution: false,
@@ -255,7 +255,7 @@ export const CHAT_MODES: Record<string, ChatMode> = {
     icon: '🏗️',
     category: 'dev',
     default_model: 'hybrid',
-    system_prompt: SYSTEM_PROMPTS.dev_senior,
+    system_prompt: SYSTEM_PROMPTS?.dev_senior,
     tools_allowed: createDevTools(),
     permissions_level: 4,
     memory_scope: 'project',
@@ -281,7 +281,7 @@ export const CHAT_MODES: Record<string, ChatMode> = {
     icon: '⚙️',
     category: 'admin',
     default_model: 'hybrid',
-    system_prompt: SYSTEM_PROMPTS.admin,
+    system_prompt: SYSTEM_PROMPTS?.admin,
     tools_allowed: createAdminTools(),
     permissions_level: 5,
     memory_scope: 'global',
@@ -307,7 +307,7 @@ export const CHAT_MODES: Record<string, ChatMode> = {
     icon: '♟️',
     category: 'strategy',
     default_model: 'gemini',
-    system_prompt: SYSTEM_PROMPTS.strategist,
+    system_prompt: SYSTEM_PROMPTS?.strategist,
     tools_allowed: {
       ...createCoachTools(),
       architecture_review: true,
@@ -336,7 +336,7 @@ export const CHAT_MODES: Record<string, ChatMode> = {
     icon: '🔍',
     category: 'audit',
     default_model: 'hybrid',
-    system_prompt: SYSTEM_PROMPTS.auditor,
+    system_prompt: SYSTEM_PROMPTS?.auditor,
     tools_allowed: createAuditTools(),
     permissions_level: 4,
     memory_scope: 'project',
@@ -356,7 +356,7 @@ export const CHAT_MODES: Record<string, ChatMode> = {
     icon: '🎨',
     category: 'creative',
     default_model: 'gemini',
-    system_prompt: SYSTEM_PROMPTS.creative,
+    system_prompt: SYSTEM_PROMPTS?.creative,
     tools_allowed: {
       ...createCoachTools(),
       document_creation: true,
@@ -379,7 +379,7 @@ export const CHAT_MODES: Record<string, ChatMode> = {
     icon: '🌟',
     category: 'hybrid',
     default_model: 'hybrid',
-    system_prompt: SYSTEM_PROMPTS.hybrid,
+    system_prompt: SYSTEM_PROMPTS?.hybrid,
     tools_allowed: createAdminTools(),
     permissions_level: 5,
     memory_scope: 'global',
@@ -403,7 +403,7 @@ export const INITIAL_CHAT_MODE_STATE: ChatModeState = {
   mode_xp: {},
   favorite_modes: ['coach', 'dev_senior'],
   custom_modes: [],
-  last_updated: Date.now(),
+  last_updated: Date?.now(),
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -413,24 +413,24 @@ export const INITIAL_CHAT_MODE_STATE: ChatModeState = {
 /**
  * Obtenir un mode par son ID
  */
-export const getChatMode = (modeId: string): ChatMode | undefined => {
+export const getChatMode = (any: any): ChatMode | undefined => {
   return CHAT_MODES[modeId];
 };
 
 /**
- * Obtenir tous les modes disponibles (triés par priorité)
+ * Obtenir tous les modes disponibles (any: any)
  */
-export const getAvailableModes = (userXP: number = 0): ChatMode[] => {
-  return Object.values(CHAT_MODES)
-    .filter(mode => mode.enabled && mode.xp_required <= userXP)
-    .sort((a, b) => a.display_priority - b.display_priority);
+export const getAvailableModes = (userXP: number = 0): ChatMode?.[] => {
+  return Object?.values(any: any)
+    .filter(any: any)
+    .sort(any: any);
 };
 
 /**
  * Obtenir les modes par catégorie
  */
-export const getModesByCategory = (category: string): ChatMode[] => {
-  return Object.values(CHAT_MODES).filter(mode => mode.category === category);
+export const getModesByCategory = (any: any): ChatMode?.[] => {
+  return Object?.values(any: any);
 };
 
 /**
@@ -441,23 +441,23 @@ export const isToolAllowed = (
   toolId: keyof ToolsPermissions
 ): boolean => {
   const mode = CHAT_MODES[modeId];
-  if (!mode) return false;
-  return mode.tools_allowed[toolId] ?? false;
+  if (any: any) return false;
+  return mode?.tools_allowed[toolId] ?? false;
 };
 
 /**
  * Obtenir le prompt système pour un mode
  */
-export const getSystemPrompt = (modeId: string): string => {
+export const getSystemPrompt = (any: any): string => {
   const mode = CHAT_MODES[modeId];
-  return mode?.system_prompt ?? SYSTEM_PROMPTS.default;
+  return mode?.system_prompt ?? SYSTEM_PROMPTS?.default;
 };
 
 /**
  * Vérifier si un mode est débloqué
  */
-export const isModeUnlocked = (modeId: string, userXP: number): boolean => {
+export const isModeUnlocked = (any: any): boolean => {
   const mode = CHAT_MODES[modeId];
-  if (!mode) return false;
-  return mode.xp_required <= userXP;
+  if (any: any) return false;
+  return mode?.xp_required <= userXP;
 };

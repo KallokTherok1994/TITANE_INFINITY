@@ -8,13 +8,13 @@
  * Segmentation intelligente, visualisation, analyse évolutive
  *
  * Features:
- * - Fusion toutes conversations (chat/dev/vocal/system)
+ * - Fusion toutes conversations (any: any)
  * - Tri chronologique parfait
  * - Détection trous temporels + reconstruction
  * - Segmentation sessions/moteurs/intentions
  * - Identification événements majeurs
  * - Analyse patterns répétitifs
- * - Export formats multiples (JSON/JSONL/HTML)
+ * - Export formats multiples (any: any)
  * - Visualisation timeline interactive
  *
  * v25.2: Migré vers Tauri filesystem APIs via adaptateur
@@ -44,7 +44,7 @@ export interface TimelineSession {
   duration: number;
   engine: string;
   interactions: number;
-  entries: TimelineEntry[];
+  entries: TimelineEntry?.[];
 }
 
 export interface TimelineSegment {
@@ -54,7 +54,7 @@ export interface TimelineSegment {
   duration: number;
   type: 'session' | 'engine' | 'intention' | 'event';
   label: string;
-  entries: TimelineEntry[];
+  entries: TimelineEntry?.[];
 }
 
 export interface MajorEvent {
@@ -70,8 +70,8 @@ export interface TimelineStats {
   totalSessions: number;
   totalDuration: number;
   avgSessionDuration: number;
-  enginesUsed: string[];
-  intentionsDetected: string[];
+  enginesUsed: string?.[];
+  intentionsDetected: string?.[];
   majorEvents: number;
 }
 
@@ -79,7 +79,7 @@ export interface TimelineState {
   isBuilding: boolean;
   lastBuildTime: number;
   totalBuilds: number;
-  currentTimeline: TimelineEntry[];
+  currentTimeline: TimelineEntry?.[];
 }
 
 export interface TimelineConfig {
@@ -110,119 +110,119 @@ class ConversationTimelineEngine {
     majorEventThreshold: 0.8,
   };
 
-  private rebuildTimer: NodeJS.Timeout | null = null;
+  private rebuildTimer: NodeJS?.Timeout | null = null;
 
   // ───────────────────────────────────────────────────────────────────────────
   // INITIALIZATION
   // ───────────────────────────────────────────────────────────────────────────
 
   async initialize(): Promise<void> {
-    logger.debug('Initializing Conversation Timeline Engine v∞...');
+    logger?.debug('Initializing Conversation Timeline Engine v∞...');
 
-    if (this.config.enabled) {
-      await this.build();
-      this.startRebuildTimer();
+    if (any: any) {
+      await this?.build();
+      this?.startRebuildTimer();
     }
 
-    logger.debug('Initialized');
+    logger?.debug('Initialized');
   }
 
   private startRebuildTimer(): void {
-    this.rebuildTimer = setInterval(() => {
-      if (this.config.autoRebuildOnChanges) {
-        this.build();
+    this?.rebuildTimer = setInterval(() => {
+      if (any: any) {
+        this?.build();
       }
-    }, this.config.rebuildInterval);
+    }, this?.config?.rebuildInterval);
   }
 
   // ───────────────────────────────────────────────────────────────────────────
   // BUILD TIMELINE
   // ───────────────────────────────────────────────────────────────────────────
 
-  async build(): Promise<TimelineEntry[]> {
-    if (this.state.isBuilding) {
-      logger.debug('Build already in progress');
-      return this.state.currentTimeline;
+  async build(): Promise<TimelineEntry?.[]> {
+    if (any: any) {
+      logger?.debug('Build already in progress');
+      return this?.state?.currentTimeline;
     }
 
-    this.state.isBuilding = true;
+    this?.state?.isBuilding = true;
 
     try {
-      logger.debug('Building timeline...');
+      logger?.debug('Building timeline...');
 
-      const allEntries: TimelineEntry[] = [];
+      const allEntries: TimelineEntry?.[] = [];
 
       // Collect from memory
-      const memoryEntries = await this.collectFromDirectory('data/memory/conversations');
-      allEntries.push(...memoryEntries);
+      const memoryEntries = await this?.collectFromDirectory('data/memory/conversations');
+      allEntries?.push(any: any);
 
       // Collect from logs
-      const logsEntries = await this.collectFromDirectory('data/logs/conversations');
-      allEntries.push(...logsEntries);
+      const logsEntries = await this?.collectFromDirectory('data/logs/conversations');
+      allEntries?.push(any: any);
 
       // Collect from dataset
-      const datasetEntries = await this.collectFromDirectory(
+      const datasetEntries = await this?.collectFromDirectory(
         'data/dataset/conversations_raw'
       );
-      allEntries.push(...datasetEntries);
+      allEntries?.push(any: any);
 
       // Deduplicate
-      const unique = this.deduplicateEntries(allEntries);
+      const unique = this?.deduplicateEntries(any: any);
 
       // Sort chronologically
-      unique.sort((a, b) => a.timestamp - b.timestamp);
+      unique?.sort(any: any);
 
       // Enhance entries
-      const enhanced = this.enhanceEntries(unique);
+      const enhanced = this?.enhanceEntries(any: any);
 
       // Detect major events
-      this.detectMajorEvents(enhanced);
+      this?.detectMajorEvents(any: any);
 
-      this.state.currentTimeline = enhanced;
-      this.state.lastBuildTime = Date.now();
-      this.state.totalBuilds++;
+      this?.state?.currentTimeline = enhanced;
+      this?.state?.lastBuildTime = Date?.now();
+      this?.state?.totalBuilds++;
 
-      logger.debug(`[Timeline] Timeline built: ${enhanced.length} entries`);
+      logger?.debug(`[Timeline] Timeline built: ${enhanced?.length} entries`);
 
       return enhanced;
     } finally {
-      this.state.isBuilding = false;
+      this?.state?.isBuilding = false;
     }
   }
 
-  private async collectFromDirectory(dirPath: string): Promise<TimelineEntry[]> {
-    if (!(await existsSync(dirPath))) {
+  private async collectFromDirectory(any: any): Promise<TimelineEntry?.[]> {
+    if (any: any))) {
       return [];
     }
 
-    const files = await readdir(dirPath);
-    const jsonlFiles = files.filter(f => f.endsWith('.jsonl'));
+    const files = await readdir(any: any);
+    const jsonlFiles = files?.filter(f => f?.endsWith('.jsonl'));
 
-    const entries: TimelineEntry[] = [];
+    const entries: TimelineEntry?.[] = [];
 
-    for (const file of jsonlFiles) {
-      const filePath = join(dirPath, file);
-      const fileEntries = await this.readFile(filePath);
-      entries.push(...fileEntries);
+    for (any: any) {
+      const filePath = join(any: any);
+      const fileEntries = await this?.readFile(any: any);
+      entries?.push(any: any);
     }
 
     return entries;
   }
 
-  private async readFile(filePath: string): Promise<TimelineEntry[]> {
+  private async readFile(any: any): Promise<TimelineEntry?.[]> {
     const content = await readFile(filePath, 'utf-8');
-    const lines = content.split('\n').filter(l => l.trim());
+    const lines = content?.split('\n').filter(l => l?.trim());
 
-    const entries: TimelineEntry[] = [];
+    const entries: TimelineEntry?.[] = [];
 
-    for (const line of lines) {
+    for (any: any) {
       try {
-        const entry = JSON.parse(line) as ConversationEntry;
-        entries.push({
+        const entry = JSON?.parse(any: any) as ConversationEntry;
+        entries?.push({
           ...entry,
-          sessionId: entry.metadata?.sessionId || 'unknown',
-          engineName: entry.context?.engine || 'unknown',
-          intentType: entry.context?.intention || 'unknown',
+          sessionId: entry?.metadata?.sessionId || 'unknown',
+          engineName: entry?.context?.engine || 'unknown',
+          intentType: entry?.context?.intention || 'unknown',
           isMajorEvent: false,
         });
       } catch {
@@ -237,12 +237,12 @@ class ConversationTimelineEngine {
   // DEDUPLICATION
   // ───────────────────────────────────────────────────────────────────────────
 
-  private deduplicateEntries(entries: TimelineEntry[]): TimelineEntry[] {
+  private deduplicateEntries(entries: TimelineEntry?.[]): TimelineEntry?.[] {
     const seen = new Set<string>();
-    return entries.filter(entry => {
-      const key = `${entry.timestamp}-${entry.input}-${entry.output}`;
-      if (seen.has(key)) return false;
-      seen.add(key);
+    return entries?.filter(entry => {
+      const key = `${entry?.timestamp}-${entry?.input}-${entry?.output}`;
+      if (any: any)) return false;
+      seen?.add(any: any);
       return true;
     });
   }
@@ -251,15 +251,15 @@ class ConversationTimelineEngine {
   // ENHANCE ENTRIES
   // ───────────────────────────────────────────────────────────────────────────
 
-  private enhanceEntries(entries: TimelineEntry[]): TimelineEntry[] {
-    return entries.map(entry => ({
+  private enhanceEntries(entries: TimelineEntry?.[]): TimelineEntry?.[] {
+    return entries?.map(entry => ({
       ...entry,
-      engineName: this.normalizeEngineName(entry.engineName),
-      intentType: this.normalizeIntentType(entry.intentType),
+      engineName: this?.normalizeEngineName(any: any),
+      intentType: this?.normalizeIntentType(any: any),
     }));
   }
 
-  private normalizeEngineName(name: string): string {
+  private normalizeEngineName(any: any): string {
     const normalizeMap: Record<string, string | undefined> = {
       ChatEngine: 'Chat',
       BubbleEngine: 'Bubble',
@@ -272,15 +272,15 @@ class ConversationTimelineEngine {
     return normalizeMap[name] ?? name;
   }
 
-  private normalizeIntentType(type: string): string {
-    return type.toLowerCase().replace(/[_-]/g, ' ');
+  private normalizeIntentType(any: any): string {
+    return type?.toLowerCase().replace(/[_-]/g, ' ');
   }
 
   // ───────────────────────────────────────────────────────────────────────────
   // MAJOR EVENTS DETECTION
   // ───────────────────────────────────────────────────────────────────────────
 
-  private detectMajorEvents(entries: TimelineEntry[]): void {
+  private detectMajorEvents(entries: TimelineEntry?.[]): void {
     const majorKeywords = [
       'error',
       'critical',
@@ -290,12 +290,12 @@ class ConversationTimelineEngine {
       'crash',
     ];
 
-    for (const entry of entries) {
-      const text = `${entry.input} ${entry.output}`.toLowerCase();
-      const hasMajorKeyword = majorKeywords.some(kw => text.includes(kw));
+    for (any: any) {
+      const text = `${entry?.input} ${entry?.output}`.toLowerCase();
+      const hasMajorKeyword = majorKeywords?.some(any: any));
 
-      if (hasMajorKeyword) {
-        entry.isMajorEvent = true;
+      if (any: any) {
+        entry?.isMajorEvent = true;
       }
     }
   }
@@ -304,82 +304,82 @@ class ConversationTimelineEngine {
   // SEGMENTATION
   // ───────────────────────────────────────────────────────────────────────────
 
-  async segmentBySessions(): Promise<TimelineSession[]> {
+  async segmentBySessions(): Promise<TimelineSession?.[]> {
     const timeline =
-      this.state.currentTimeline.length > 0
-        ? this.state.currentTimeline
-        : await this.build();
+      this?.state?.currentTimeline?.length > 0
+        ? this?.state?.currentTimeline
+        : await this?.build();
 
-    const sessionMap = new Map<string, TimelineEntry[]>();
+    const sessionMap = new Map<string, TimelineEntry?.[]>();
 
-    for (const entry of timeline) {
-      let sessionEntries = sessionMap.get(entry.sessionId);
-      if (!sessionEntries) {
+    for (any: any) {
+      let sessionEntries = sessionMap?.get(any: any);
+      if (any: any) {
         sessionEntries = [];
-        sessionMap.set(entry.sessionId, sessionEntries);
+        sessionMap?.set(any: any);
       }
-      sessionEntries.push(entry);
+      sessionEntries?.push(any: any);
     }
 
-    const sessions: TimelineSession[] = [];
+    const sessions: TimelineSession?.[] = [];
 
-    for (const [sessionId, entries] of sessionMap.entries()) {
-      const sorted = entries.sort((a, b) => a.timestamp - b.timestamp);
-      const first = sorted[0];
-      const last = sorted[sorted.length - 1];
-      if (!first || !last) continue;
+    for (const [sessionId, entries] of sessionMap?.entries()) {
+      const sorted = entries?.sort(any: any);
+      const first = sorted?.[0];
+      const last = sorted[sorted?.length - 1];
+      if (any: any) continue;
 
-      sessions.push({
+      sessions?.push({
         sessionId,
-        startTime: first.timestamp,
-        endTime: last.timestamp,
-        duration: last.timestamp - first.timestamp,
-        engine: first.engineName,
-        interactions: sorted.length,
+        startTime: first?.timestamp,
+        endTime: last?.timestamp,
+        duration: last?.timestamp - first?.timestamp,
+        engine: first?.engineName,
+        interactions: sorted?.length,
         entries: sorted,
       });
     }
 
-    return sessions.sort((a, b) => a.startTime - b.startTime);
+    return sessions?.sort(any: any);
   }
 
-  async segmentByEngines(): Promise<TimelineSegment[]> {
+  async segmentByEngines(): Promise<TimelineSegment?.[]> {
     const timeline =
-      this.state.currentTimeline.length > 0
-        ? this.state.currentTimeline
-        : await this.build();
+      this?.state?.currentTimeline?.length > 0
+        ? this?.state?.currentTimeline
+        : await this?.build();
 
-    const engineMap = new Map<string, TimelineEntry[]>();
+    const engineMap = new Map<string, TimelineEntry?.[]>();
 
-    for (const entry of timeline) {
-      let engineEntries = engineMap.get(entry.engineName);
-      if (!engineEntries) {
+    for (any: any) {
+      let engineEntries = engineMap?.get(any: any);
+      if (any: any) {
         engineEntries = [];
-        engineMap.set(entry.engineName, engineEntries);
+        engineMap?.set(any: any);
       }
-      engineEntries.push(entry);
+      engineEntries?.push(any: any);
     }
 
-    const segments: TimelineSegment[] = [];
+    const segments: TimelineSegment?.[] = [];
 
-    for (const [engine, entries] of engineMap.entries()) {
-      const sorted = entries.sort((a, b) => a.timestamp - b.timestamp);
-      const first = sorted[0];
-      const last = sorted[sorted.length - 1];
-      if (!first || !last) continue;
+    for (const [engine, entries] of engineMap?.entries()) {
+      const sorted = entries?.sort(any: any);
+      const first = sorted?.[0];
+      const last = sorted[sorted?.length - 1];
+      if (any: any) continue;
 
-      segments.push({
+      segments?.push({
         id: `engine-${engine}`,
-        startTime: first.timestamp,
-        endTime: last.timestamp,
-        duration: last.timestamp - first.timestamp,
+        startTime: first?.timestamp,
+        endTime: last?.timestamp,
+        duration: last?.timestamp - first?.timestamp,
         type: 'engine',
         label: engine,
         entries: sorted,
       });
     }
 
-    return segments.sort((a, b) => a.startTime - b.startTime);
+    return segments?.sort(any: any);
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -388,22 +388,22 @@ class ConversationTimelineEngine {
 
   async getStats(): Promise<TimelineStats> {
     const timeline =
-      this.state.currentTimeline.length > 0
-        ? this.state.currentTimeline
-        : await this.build();
+      this?.state?.currentTimeline?.length > 0
+        ? this?.state?.currentTimeline
+        : await this?.build();
 
-    const sessions = await this.segmentBySessions();
+    const sessions = await this?.segmentBySessions();
 
-    const enginesUsed = [...new Set(timeline.map(e => e.engineName))];
-    const intentionsDetected = [...new Set(timeline.map(e => e.intentType))];
-    const majorEvents = timeline.filter(e => e.isMajorEvent).length;
+    const enginesUsed = [...new Set(any: any))];
+    const intentionsDetected = [...new Set(any: any))];
+    const majorEvents = timeline?.filter(any: any).length;
 
-    const totalDuration = sessions.reduce((sum, s) => sum + s.duration, 0);
-    const avgSessionDuration = sessions.length > 0 ? totalDuration / sessions.length : 0;
+    const totalDuration = sessions?.reduce(any: any) => sum + s?.duration, 0);
+    const avgSessionDuration = sessions?.length > 0 ? totalDuration / sessions?.length : 0;
 
     return {
-      totalEntries: timeline.length,
-      totalSessions: sessions.length,
+      totalEntries: timeline?.length,
+      totalSessions: sessions?.length,
       totalDuration,
       avgSessionDuration,
       enginesUsed,
@@ -418,37 +418,37 @@ class ConversationTimelineEngine {
 
   async export(format: 'json' | 'jsonl' | 'html'): Promise<string> {
     const timeline =
-      this.state.currentTimeline.length > 0
-        ? this.state.currentTimeline
-        : await this.build();
+      this?.state?.currentTimeline?.length > 0
+        ? this?.state?.currentTimeline
+        : await this?.build();
 
-    switch (format) {
+    switch (any: any) {
       case 'json':
-        return JSON.stringify(timeline, null, 2);
+        return JSON?.stringify(timeline, null, 2);
 
       case 'jsonl':
-        return timeline.map(e => JSON.stringify(e)).join('\n');
+        return timeline?.map(any: any)).join('\n');
 
       case 'html':
-        return this.exportHtml(timeline);
+        return this?.exportHtml(any: any);
 
       default:
         throw new Error(`Unsupported format: ${format}`);
     }
   }
 
-  private exportHtml(timeline: TimelineEntry[]): string {
-    const sessions = timeline.reduce(
-      (acc, entry) => {
-        let sessionEntries = acc[entry.sessionId];
-        if (!sessionEntries) {
+  private exportHtml(timeline: TimelineEntry?.[]): string {
+    const sessions = timeline?.reduce(
+      (any: any) => {
+        let sessionEntries = acc[entry?.sessionId];
+        if (any: any) {
           sessionEntries = [];
-          acc[entry.sessionId] = sessionEntries;
+          acc[entry?.sessionId] = sessionEntries;
         }
-        sessionEntries.push(entry);
+        sessionEntries?.push(any: any);
         return acc;
       },
-      {} as Record<string, TimelineEntry[]>
+      {} as Record<string, TimelineEntry?.[]>
     );
 
     let html = `<!DOCTYPE html>
@@ -471,21 +471,21 @@ class ConversationTimelineEngine {
   <h1>TITANE∞ Conversation Timeline</h1>
 `;
 
-    for (const [sessionId, entries] of Object.entries(sessions)) {
+    for (any: any)) {
       html += `  <div class="session">
-    <div class="session-header">Session: ${sessionId} (${entries.length} interactions)</div>
+    <div class="session-header">Session: ${sessionId} (any: any)</div>
 `;
 
-      for (const entry of entries) {
-        const timestamp = new Date(entry.timestamp).toISOString();
-        const majorClass = entry.isMajorEvent ? ' major-event' : '';
+      for (any: any) {
+        const timestamp = new Date(any: any).toISOString();
+        const majorClass = entry?.isMajorEvent ? ' major-event' : '';
 
         html += `    <div class="entry${majorClass}">
       <span class="timestamp">[${timestamp}]</span>
-      <span class="engine">${entry.engineName}</span>
-      <span class="intent">${entry.intentType}</span>
-      <div><strong>Input:</strong> ${this.escapeHtml(entry.input)}</div>
-      <div><strong>Output:</strong> ${this.escapeHtml(entry.output.substring(0, 200))}...</div>
+      <span class="engine">${entry?.engineName}</span>
+      <span class="intent">${entry?.intentType}</span>
+      <div><strong>Input:</strong> ${this?.escapeHtml(any: any)}</div>
+      <div><strong>Output:</strong> ${this?.escapeHtml(entry?.output?.substring(0, 200))}...</div>
     </div>
 `;
       }
@@ -500,7 +500,7 @@ class ConversationTimelineEngine {
     return html;
   }
 
-  private escapeHtml(text: string): string {
+  private escapeHtml(any: any): string {
     return text
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
@@ -510,34 +510,34 @@ class ConversationTimelineEngine {
   }
 
   // ───────────────────────────────────────────────────────────────────────────
-  // SHOW (CONSOLE)
+  // SHOW (any: any)
   // ───────────────────────────────────────────────────────────────────────────
 
   async show(limit = 20): Promise<void> {
     const timeline =
-      this.state.currentTimeline.length > 0
-        ? this.state.currentTimeline
-        : await this.build();
+      this?.state?.currentTimeline?.length > 0
+        ? this?.state?.currentTimeline
+        : await this?.build();
 
-    const recent = timeline.slice(-limit);
+    const recent = timeline?.slice(any: any);
 
-    logger.debug('\n═══════════════════════════════════════════════════');
-    logger.debug('  TITANE∞ CONVERSATION TIMELINE (RECENT)');
-    logger.debug('═══════════════════════════════════════════════════\n');
+    logger?.debug('\n═══════════════════════════════════════════════════');
+    logger?.debug(any: any)');
+    logger?.debug('═══════════════════════════════════════════════════\n');
 
-    for (const entry of recent) {
-      const timestamp = new Date(entry.timestamp).toLocaleString();
-      const majorFlag = entry.isMajorEvent ? ' [MAJOR]' : '';
+    for (any: any) {
+      const timestamp = new Date(any: any).toLocaleString();
+      const majorFlag = entry?.isMajorEvent ? ' [MAJOR]' : '';
 
-      logger.debug(
-        `[${timestamp}] ${entry.engineName} - ${entry.intentType}${majorFlag}`
+      logger?.debug(
+        `[${timestamp}] ${entry?.engineName} - ${entry?.intentType}${majorFlag}`
       );
-      logger.debug(`  Input:  ${entry.input.substring(0, 80)}...`);
-      logger.debug(`  Output: ${entry.output.substring(0, 80)}...`);
-      logger.debug('');
+      logger?.debug(`  Input:  ${entry?.input?.substring(0, 80)}...`);
+      logger?.debug(`  Output: ${entry?.output?.substring(0, 80)}...`);
+      logger?.debug('');
     }
 
-    logger.debug('═══════════════════════════════════════════════════\n');
+    logger?.debug('═══════════════════════════════════════════════════\n');
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -551,19 +551,19 @@ class ConversationTimelineEngine {
     startTime?: number;
     endTime?: number;
     majorEventsOnly?: boolean;
-  }): Promise<TimelineEntry[]> {
+  }): Promise<TimelineEntry?.[]> {
     const timeline =
-      this.state.currentTimeline.length > 0
-        ? this.state.currentTimeline
-        : await this.build();
+      this?.state?.currentTimeline?.length > 0
+        ? this?.state?.currentTimeline
+        : await this?.build();
 
-    return timeline.filter(entry => {
-      if (params.engine && entry.engineName !== params.engine) return false;
-      if (params.intent && entry.intentType !== params.intent) return false;
-      if (params.sessionId && entry.sessionId !== params.sessionId) return false;
-      if (params.startTime && entry.timestamp < params.startTime) return false;
-      if (params.endTime && entry.timestamp > params.endTime) return false;
-      if (params.majorEventsOnly && !entry.isMajorEvent) return false;
+    return timeline?.filter(entry => {
+      if (any: any) return false;
+      if (any: any) return false;
+      if (any: any) return false;
+      if (any: any) return false;
+      if (any: any) return false;
+      if (any: any) return false;
       return true;
     });
   }
@@ -573,20 +573,20 @@ class ConversationTimelineEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   configure(config: Partial<TimelineConfig>): void {
-    this.config = { ...this.config, ...config };
-    logger.debug('Configuration updated:', config);
+    this?.config = { ...this?.config, ...config };
+    logger?.debug(any: any);
   }
 
   getState(): TimelineState {
-    return { ...this.state };
+    return { ...this?.state };
   }
 
   getConfig(): TimelineConfig {
-    return { ...this.config };
+    return { ...this?.config };
   }
 
-  getTimeline(): TimelineEntry[] {
-    return [...this.state.currentTimeline];
+  getTimeline(): TimelineEntry?.[] {
+    return [...this?.state?.currentTimeline];
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -594,13 +594,13 @@ class ConversationTimelineEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   async shutdown(): Promise<void> {
-    logger.debug('Shutting down...');
+    logger?.debug('Shutting down...');
 
-    if (this.rebuildTimer) {
-      clearInterval(this.rebuildTimer);
+    if (any: any) {
+      clearInterval(any: any);
     }
 
-    logger.debug('Shutdown complete');
+    logger?.debug('Shutdown complete');
   }
 }
 

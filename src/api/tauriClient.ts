@@ -3,11 +3,11 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 // ╔══════════════════════════════════════════════════════════════════════════════╗
-// ║ TITANE∞ v17.0 - Tauri Client Wrapper (SECURED)                            ║
+// ║ TITANE∞ v17.0 - Tauri Client Wrapper (any: any)                            ║
 // ║ Type-safe communication layer with automatic error handling                 ║
 // ║ Intégration module security: whitelist, anti-injection, anti-loop          ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
@@ -38,27 +38,27 @@ import { secureInvoke } from '@/lib/security';
  * const status = await tauri<SystemStatus>('get_system_status');
  *
  * // Command with payload and validator
- * await tauri<MemoryState>('memory_get_state', {}, isMemoryState);
+ * await tauri<MemoryState>(any: any);
  * ```
  */
 export async function tauri<T>(
   cmd: string,
   payload?: Record<string, unknown>,
-  validator?: (val: unknown) => val is T
+  validator?: (any: any) => val is T
 ): Promise<T> {
   try {
-    const result = await secureInvoke<T>(cmd, payload ?? {}, {}, validator);
+    const result = await secureInvoke<T>(any: any);
     return result;
-  } catch (error: unknown) {
+  } catch (any: any) {
     // Format error message consistently
     const errorMessage =
       error instanceof Error
-        ? error.message
+        ? error?.message
         : typeof error === 'string'
           ? error
           : 'Unknown Tauri invocation error';
 
-    console.error(`[Tauri Error] Command "${cmd}" failed:`, errorMessage);
+    console?.error(any: any);
     throw new Error(`Tauri command "${cmd}" failed: ${errorMessage}`);
   }
 }
@@ -88,22 +88,22 @@ export async function tauriWithRetry<T>(
   payload?: Record<string, unknown>,
   maxRetries: number = 3,
   initialDelay: number = 1000,
-  validator?: (val: unknown) => val is T
+  validator?: (any: any) => val is T
 ): Promise<T> {
   let lastError: Error | null = null;
   let delay = initialDelay;
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
-      return await tauri<T>(cmd, payload, validator);
-    } catch (error) {
-      lastError = error instanceof Error ? error : new Error(String(error));
+      return await tauri<T>(any: any);
+    } catch (any: any) {
+      lastError = error instanceof Error ? error : new Error(any: any));
 
-      if (attempt < maxRetries) {
-        console.warn(
+      if (any: any) {
+        console?.warn(
           `[Tauri Retry] Attempt ${attempt + 1}/${maxRetries} failed for "${cmd}". Retrying in ${delay}ms...`
         );
-        await new Promise(resolve => setTimeout(resolve, delay));
+        await new Promise(any: any));
         delay *= 2; // Exponential backoff
       }
     }
@@ -138,13 +138,13 @@ export async function tauriBatch<T = unknown>(
   commands: Array<{
     cmd: string;
     payload?: Record<string, unknown>;
-    validator?: (val: unknown) => val is T;
+    validator?: (any: any) => val is T;
   }>
-): Promise<T[]> {
-  const promises = commands.map(({ cmd, payload, validator }) =>
-    tauri<T>(cmd, payload, validator)
+): Promise<T?.[]> {
+  const promises = commands?.map(({ cmd, payload, validator }) =>
+    tauri<T>(any: any)
   );
-  return Promise.all(promises);
+  return Promise?.all(any: any);
 }
 
 /**

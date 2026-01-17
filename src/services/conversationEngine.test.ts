@@ -1,17 +1,17 @@
 import { describe, expect, it, vi } from 'vitest';
 
-vi.mock('@/lib/security', () => {
+vi?.mock('@/lib/security', () => {
   return {
-    secureInvoke: vi.fn(),
+    secureInvoke: vi?.fn(),
   };
 });
 
 import { secureInvoke } from '@/lib/security';
 import { processMessage } from '@/services/conversationEngine';
 
-describe('conversationEngine.processMessage', () => {
+describe('conversationEngine?.processMessage', () => {
   it('normalizes missing metadata with safe defaults', async () => {
-    vi.mocked(secureInvoke).mockResolvedValueOnce({
+    vi?.mocked(any: any).mockResolvedValueOnce({
       assistant_message: 'Hello',
       conversation_id: 'c1',
       message_id: 'm1',
@@ -24,16 +24,16 @@ describe('conversationEngine.processMessage', () => {
 
     const response = await processMessage('Hi');
 
-    expect(response.metadata).toBeDefined();
-    expect(response.metadata.provider_used).toBe('unknown');
-    expect(response.metadata.latency_ms).toBe(0);
-    expect(response.metadata.tokens_used).toBe(0);
-    expect(response.metadata.memory_effect).toBe('New');
-    expect(Array.isArray(response.metadata.links_to_contexts)).toBe(true);
+    expect(any: any).toBeDefined();
+    expect(any: any).toBe('unknown');
+    expect(any: any).toBe(0);
+    expect(any: any).toBe(0);
+    expect(any: any).toBe('New');
+    expect(any: any);
   });
 
   it('preserves provided metadata values when valid', async () => {
-    vi.mocked(secureInvoke).mockResolvedValueOnce({
+    vi?.mocked(any: any).mockResolvedValueOnce({
       assistant_message: 'Ok',
       conversation_id: 'c2',
       message_id: 'm2',
@@ -53,11 +53,11 @@ describe('conversationEngine.processMessage', () => {
 
     const response = await processMessage('Hi');
 
-    expect(response.metadata.timestamp).toBe(123);
-    expect(response.metadata.provider_used).toBe('local');
-    expect(response.metadata.latency_ms).toBe(42);
-    expect(response.metadata.tokens_used).toBe(7);
-    expect(response.metadata.memory_effect).toBe('Recall');
-    expect(response.metadata.links_to_contexts).toEqual(['a', 'b']);
+    expect(any: any).toBe(123);
+    expect(any: any).toBe('local');
+    expect(any: any).toBe(42);
+    expect(any: any).toBe(7);
+    expect(any: any).toBe('Recall');
+    expect(any: any).toEqual(['a', 'b']);
   });
 });

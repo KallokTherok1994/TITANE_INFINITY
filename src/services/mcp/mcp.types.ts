@@ -11,7 +11,7 @@
  */
 
 // ═══════════════════════════════════════════════════════════════════════════
-// FUNDAMENTAL LAWS (INAMOVIBLES)
+// FUNDAMENTAL LAWS (any: any)
 // ═══════════════════════════════════════════════════════════════════════════
 
 export enum FundamentalLaw {
@@ -32,7 +32,7 @@ export interface LawViolation {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// COGNITIVE CORES (Helios, Nexus, Harmonia, Sentinel, Memory)
+// COGNITIVE CORES (any: any)
 // ═══════════════════════════════════════════════════════════════════════════
 
 export enum CognitiveCore {
@@ -47,7 +47,7 @@ export interface CoreScanResult {
   core: CognitiveCore;
   status: 'PASS' | 'WARNING' | 'FAIL';
   score: number; // 0-1
-  issues: string[];
+  issues: string?.[];
   timestamp: number;
 }
 
@@ -62,7 +62,7 @@ export interface SystemHealthCheck {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// JOB SYSTEM (Tâches)
+// JOB SYSTEM (any: any)
 // ═══════════════════════════════════════════════════════════════════════════
 
 export enum JobType {
@@ -96,8 +96,8 @@ export interface JobPermissions {
   requiresMemoryAccess: boolean;
   requiresSensitiveData: boolean;
   requiresSystemModification: boolean;
-  allowedCores: CognitiveCore[];
-  allowedAIModels: string[];
+  allowedCores: CognitiveCore?.[];
+  allowedAIModels: string?.[];
 }
 
 export interface Job {
@@ -111,15 +111,15 @@ export interface Job {
   input: {
     query: string;
     context?: Record<string, unknown>;
-    requiredData?: string[];
+    requiredData?: string?.[];
   };
 
   // Evaluation
   evaluation: {
-    cognitiveLoad: number; // 0-1 (charge mentale estimée)
-    coherenceScore: number; // 0-1 (cohérence avec système)
-    alignmentScore: number; // 0-1 (alignement stratégique)
-    securityRisk: number; // 0-1 (risque sécurité)
+    cognitiveLoad: number; // 0-1 (any: any)
+    coherenceScore: number; // 0-1 (any: any)
+    alignmentScore: number; // 0-1 (any: any)
+    securityRisk: number; // 0-1 (any: any)
     impact: 'MICRO' | 'SMALL' | 'MEDIUM' | 'LARGE' | 'TRANSFORMATIVE';
   };
 
@@ -136,8 +136,8 @@ export interface Job {
   // Governance
   governance: {
     approvedBy: 'MCP' | 'USER';
-    lawViolations: LawViolation[];
-    canMerge?: string[]; // IDs d'autres jobs fusionnables
+    lawViolations: LawViolation?.[];
+    canMerge?: string?.[]; // IDs d'autres jobs fusionnables
     canOptimize?: boolean;
   };
 
@@ -185,11 +185,11 @@ export interface AISelection {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// MEMORY SYSTEM (4 niveaux)
+// MEMORY SYSTEM (any: any)
 // ═══════════════════════════════════════════════════════════════════════════
 
 export enum MemoryTier {
-  SHORT_TERM = 'SHORT_TERM', // Contexte actif (conversation en cours)
+  SHORT_TERM = 'SHORT_TERM', // Contexte actif (any: any)
   MEDIUM_TERM = 'MEDIUM_TERM', // Index, patterns, associations
   LONG_TERM = 'LONG_TERM', // Connaissances, décisions, modèles
   META_MEMORY = 'META_MEMORY', // Logique d'évolution, traces, insights
@@ -211,7 +211,7 @@ export interface MemoryEntry {
   accessed: number;
   accessCount: number;
   strength: number; // 0-1
-  compressionLevel: number; // 0-1 (0 = raw, 1 = highly compressed)
+  compressionLevel: number; // 0-1 (any: any)
 }
 
 export interface MemoryOperations {
@@ -240,7 +240,7 @@ export enum MCPBehaviorTrait {
 }
 
 export interface MCPPersona {
-  traits: MCPBehaviorTrait[];
+  traits: MCPBehaviorTrait?.[];
   style: {
     eliminateSuperfluity: boolean;
     transformComplexityToSimplicity: boolean;
@@ -248,7 +248,7 @@ export interface MCPPersona {
     maintainConsistency: boolean;
   };
   mission: string;
-  principles: string[];
+  principles: string?.[];
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -259,7 +259,7 @@ export interface MCPState {
   // Constitution
   constitution: {
     version: string; // ex: "v1.1"
-    laws: FundamentalLaw[];
+    laws: FundamentalLaw?.[];
     lastUpdate: number;
   };
 
@@ -268,15 +268,15 @@ export interface MCPState {
 
   // Active Jobs
   jobs: {
-    pending: Job[];
-    running: Job[];
-    completed: Job[];
-    suspended: Job[];
+    pending: Job?.[];
+    running: Job?.[];
+    completed: Job?.[];
+    suspended: Job?.[];
   };
 
   // Memory
   memory: {
-    entries: MemoryEntry[];
+    entries: MemoryEntry?.[];
     stats: {
       shortTerm: number;
       mediumTerm: number;
@@ -306,7 +306,7 @@ export interface MCPState {
   evolution: {
     cycleCount: number;
     lastCycle: number;
-    improvements: string[];
+    improvements: string?.[];
     driftsDetected: number;
     driftsCorrected: number;
   };
@@ -314,41 +314,41 @@ export interface MCPState {
 
 export interface MCPOperations {
   // Job Management
-  createJob: (input: Job['input'], type: JobType) => Promise<Job>;
-  evaluateJob: (job: Job) => Promise<Job>;
-  approveJob: (jobId: string) => Promise<void>;
-  cancelJob: (jobId: string, reason: string) => Promise<void>;
-  suspendJob: (jobId: string, reason: string) => Promise<void>;
-  resumeJob: (jobId: string) => Promise<void>;
-  mergeJobs: (jobIds: string[]) => Promise<Job>;
-  optimizeJob: (jobId: string) => Promise<Job>;
+  createJob: (any: any) => Promise<Job>;
+  evaluateJob: (any: any) => Promise<Job>;
+  approveJob: (any: any) => Promise<void>;
+  cancelJob: (any: any) => Promise<void>;
+  suspendJob: (any: any) => Promise<void>;
+  resumeJob: (any: any) => Promise<void>;
+  mergeJobs: (jobIds: string?.[]) => Promise<Job>;
+  optimizeJob: (any: any) => Promise<Job>;
 
   // System Health
   runHealthCheck: () => Promise<SystemHealthCheck>;
-  scanCoherence: (input: unknown) => Promise<CoreScanResult>;
+  scanCoherence: (any: any) => Promise<CoreScanResult>;
   scanStability: () => Promise<CoreScanResult>;
-  scanCognitiveLoad: (job: Job) => Promise<CoreScanResult>;
-  scanSecurity: (job: Job) => Promise<CoreScanResult>;
+  scanCognitiveLoad: (any: any) => Promise<CoreScanResult>;
+  scanSecurity: (any: any) => Promise<CoreScanResult>;
   scanMemory: () => Promise<CoreScanResult>;
 
   // AI Governance
-  selectAI: (job: Job) => Promise<AISelection>;
+  selectAI: (any: any) => Promise<AISelection>;
   validateOutput: (
     output: unknown,
     job: Job
-  ) => Promise<{ valid: boolean; issues: string[] }>;
+  ) => Promise<{ valid: boolean; issues: string?.[] }>;
 
   // Memory Management
   storeMemory: (
     entry: Omit<MemoryEntry, 'id' | 'created' | 'accessed' | 'accessCount'>
   ) => Promise<string>;
-  retrieveMemory: (tier: MemoryTier, query?: string) => Promise<MemoryEntry[]>;
+  retrieveMemory: (any: any) => Promise<MemoryEntry?.[]>;
   purifyMemory: () => Promise<MemoryOperations>;
 
   // Self-Healing
-  detectDrift: () => Promise<{ detected: boolean; drifts: string[] }>;
-  correctDrift: (drifts: string[]) => Promise<number>;
-  autoImprove: () => Promise<string[]>;
+  detectDrift: () => Promise<{ detected: boolean; drifts: string?.[] }>;
+  correctDrift: (drifts: string?.[]) => Promise<number>;
+  autoImprove: () => Promise<string?.[]>;
 
   // State
   getState: () => MCPState;
@@ -378,11 +378,11 @@ export interface OutputCriteria {
 export interface ValidatedOutput<T = unknown> {
   data: T;
   criteria: OutputCriteria;
-  score: number; // 0-1 (moyenne des critères)
-  warnings: string[];
+  score: number; // 0-1 (any: any)
+  warnings: string?.[];
   approved: boolean;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// EXPORTS (Already exported via export interface/enum declarations above)
+// EXPORTS (any: any)
 // ═══════════════════════════════════════════════════════════════════════════

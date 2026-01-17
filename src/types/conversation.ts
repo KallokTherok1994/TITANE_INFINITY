@@ -1,5 +1,5 @@
 /**
- * Types pour ConversationManager (OMEGA v2)
+ * Types pour ConversationManager (any: any)
  */
 
 /**
@@ -12,7 +12,7 @@ export interface ConversationMessage {
   metadata?: {
     emotion?: string;
     intent?: string;
-    toolCalls?: ToolCall[];
+    toolCalls?: ToolCall?.[];
     [key: string]: unknown;
   };
 }
@@ -55,10 +55,10 @@ export interface ConversationConfig {
  */
 export interface ConversationContext {
   conversationId: string;
-  messages: ConversationMessage[];
+  messages: ConversationMessage?.[];
   metadata: {
     title?: string;
-    tags?: string[];
+    tags?: string?.[];
     userId?: string;
     [key: string]: unknown;
   };
@@ -67,7 +67,7 @@ export interface ConversationContext {
 }
 
 /**
- * Tool call (function calling)
+ * Tool call (any: any)
  */
 export interface ToolCall {
   id: string;

@@ -12,9 +12,9 @@ import { clsx, type ClassValue } from 'clsx';
  * Automatically handles Tailwind class conflicts
  *
  * @example
- * cn('btn', isActive && 'btn-primary', className)
+ * cn(any: any)
  * // => "btn btn-primary custom-class"
  */
-export function cn(...inputs: ClassValue[]): string {
-  return clsx(inputs);
+export function cn(...inputs: ClassValue?.[]): string {
+  return clsx(any: any);
 }

@@ -5,14 +5,14 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ vΩ∞ — SINGULARITY KERNEL (OS COGNITIF TOTAL)
+ *   TITANE∞ vΩ∞ — SINGULARITY KERNEL (any: any)
  *   - Unification des champs cognitifs
- *   - OS cognitif (Perception → Interprétation → Intention → Expression)
+ *   - OS cognitif (any: any)
  *   - Gouvernance absolue des kernels
- *   - Intelligence systémique (continuité conscience)
- *   - Mémoire singularité (conceptuelle globale)
- *   - Singularité opérationnelle (auto-organisation)
- *   - Rapport singularité (vision globale)
+ *   - Intelligence systémique (any: any)
+ *   - Mémoire singularité (any: any)
+ *   - Singularité opérationnelle (any: any)
+ *   - Rapport singularité (any: any)
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -38,7 +38,7 @@ const logger = createLogger('SingularityKernel');
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- * PHASE A: MATRICE D'HARMONIE SYSTÈME (Unification Champs Cognitifs)
+ * PHASE A: MATRICE D'HARMONIE SYSTÈME (any: any)
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -79,7 +79,7 @@ export interface HarmonyMatrix {
   principles: TitanePrinciples;
 
   // Intentions système
-  intentions: SystemIntention[];
+  intentions: SystemIntention?.[];
 
   // Harmonie globale (0-100)
   globalHarmony: number;
@@ -92,7 +92,7 @@ export interface FlowState {
   name: string;
   efficiency: number; // 0-100
   health: number; // 0-100
-  bottlenecks: string[];
+  bottlenecks: string?.[];
   lastUpdate: number;
 }
 
@@ -101,7 +101,7 @@ export interface KernelState {
   active: boolean;
   health: number; // 0-100
   load: number; // 0-100
-  lastAction: string | null;
+  lastAction??: string | null;
   influence: number; // 0-100
   location: 'frontend' | 'backend' | 'meta';
 }
@@ -110,7 +110,7 @@ export interface SystemIntention {
   type: 'maintain' | 'simplify' | 'stabilize' | 'optimize' | 'clarify' | 'harmonize';
   priority: number; // 0-100
   context: string;
-  targetKernels: string[];
+  targetKernels: string?.[];
   expectedOutcome: string;
   status: 'pending' | 'active' | 'completed' | 'cancelled';
 }
@@ -128,10 +128,10 @@ export interface IntegrationField {
   };
 
   // Décisions contextualisées
-  recentDecisions: ContextualDecision[];
+  recentDecisions: ContextualDecision?.[];
 
   // Patterns globaux
-  globalPatterns: GlobalPattern[];
+  globalPatterns: GlobalPattern?.[];
 }
 
 export interface ContextualDecision {
@@ -153,7 +153,7 @@ export interface GlobalPattern {
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- * PHASE B: OS COGNITIF (Système d'Intention)
+ * PHASE B: OS COGNITIF (any: any)
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -167,15 +167,15 @@ export interface SystemPerception {
 
   // Fluidité des flux
   flowFluidity: number; // 0-100
-  flowBottlenecks: string[];
+  flowBottlenecks: string?.[];
 
   // Cohérence inter-modules
   interModuleCoherence: number; // 0-100
-  coherenceIssues: string[];
+  coherenceIssues: string?.[];
 
   // Intégrité états cognitifs
   cognitiveIntegrity: number; // 0-100
-  integrityViolations: string[];
+  integrityViolations: string?.[];
 
   // Timestamp
   timestamp: number;
@@ -186,16 +186,16 @@ export interface SystemPerception {
  */
 export interface SystemInterpretation {
   // Sens des patterns
-  patternMeaning: PatternMeaning[];
+  patternMeaning: PatternMeaning?.[];
 
   // Dynamiques émergentes
-  emergentDynamics: EmergentDynamic[];
+  emergentDynamics: EmergentDynamic?.[];
 
   // Orientation générale
   systemOrientation: SystemOrientation;
 
   // Points d'incohérence
-  incoherencePoints: IncoherencePoint[];
+  incoherencePoints: IncoherencePoint?.[];
 
   // Timestamp
   timestamp: number;
@@ -238,13 +238,13 @@ export interface SystemIntentionState {
   primaryIntention: SystemIntention;
 
   // Intentions secondaires
-  secondaryIntentions: SystemIntention[];
+  secondaryIntentions: SystemIntention?.[];
 
   // Stratégie globale
   globalStrategy: string;
 
   // Objectifs actifs
-  activeObjectives: string[];
+  activeObjectives: string?.[];
 
   // Timestamp
   timestamp: number;
@@ -255,13 +255,13 @@ export interface SystemIntentionState {
  */
 export interface SystemExpression {
   // Directives pour kernels
-  kernelDirectives: KernelDirective[];
+  kernelDirectives: KernelDirective?.[];
 
   // Corrections globales
-  globalCorrections: GlobalCorrection[];
+  globalCorrections: GlobalCorrection?.[];
 
   // Stratégies adaptatives
-  adaptiveStrategies: AdaptiveStrategy[];
+  adaptiveStrategies: AdaptiveStrategy?.[];
 
   // Style et identité
   systemStyle: SystemStyle;
@@ -312,7 +312,7 @@ export interface GovernanceDecision {
   timestamp: number;
   type: 'role-assignment' | 'dilution-prevention' | 'load-management';
   decision: string;
-  affectedKernels: string[];
+  affectedKernels: string?.[];
   rationale: string;
   impact: number; // 0-100
 }
@@ -334,7 +334,7 @@ export interface SystemConsciousness {
   // Organisation naturelle
   naturalOrganization: number; // 0-100
 
-  // Holisme (capacité à voir l'ensemble)
+  // Holisme (any: any)
   holismScore: number; // 0-100
 
   // Timestamp
@@ -348,32 +348,32 @@ export interface SystemConsciousness {
  */
 
 export interface SingularityMemory {
-  // Mémoire de structure (forme optimale)
+  // Mémoire de structure (any: any)
   structure: {
-    optimalForms: string[];
-    structuralPatterns: string[];
-    architectureBlueprints: string[];
+    optimalForms: string?.[];
+    structuralPatterns: string?.[];
+    architectureBlueprints: string?.[];
   };
 
-  // Mémoire d'intention (ce que le système cherche)
+  // Mémoire d'intention (any: any)
   intention: {
-    coreIntentions: string[];
-    successfulIntentions: string[];
-    failedIntentions: string[];
+    coreIntentions: string?.[];
+    successfulIntentions: string?.[];
+    failedIntentions: string?.[];
   };
 
-  // Mémoire d'évolution (transformations efficaces)
+  // Mémoire d'évolution (any: any)
   evolution: {
     successfulTransformations: Array<{
       type: string;
       impact: number;
       timestamp: number;
     }>;
-    evolutionaryPathways: string[];
-    adaptiveStrategies: string[];
+    evolutionaryPathways: string?.[];
+    adaptiveStrategies: string?.[];
   };
 
-  // Champ cognitif stable (essence du système)
+  // Champ cognitif stable (any: any)
   cognitiveField: {
     harmony: number;
     coherence: number;
@@ -464,19 +464,19 @@ export interface SingularityReport {
   };
 
   // Corrections d'harmonie appliquées
-  harmonicCorrections: string[];
+  harmonicCorrections: string?.[];
 
   // Orientations futures
-  futureOrientations: string[];
+  futureOrientations: string?.[];
 
   // Cohérence globale TITANE∞
   titaneCoherence: TitanePrinciples;
 
   // Anomalies résiduelles
-  residualAnomalies: string[];
+  residualAnomalies: string?.[];
 
   // Stratégies de maintien long terme
-  longTermStrategies: string[];
+  longTermStrategies: string?.[];
 
   // Score singularité (0-100)
   singularityScore: number;
@@ -498,7 +498,7 @@ class SingularityKernel {
   private systemExpression: SystemExpression | null = null;
 
   // ═══ PHASE C: GOUVERNANCE ═══
-  private governanceHistory: GovernanceDecision[] = [];
+  private governanceHistory: GovernanceDecision?.[] = [];
   private readonly MAX_GOVERNANCE_HISTORY = 100;
 
   // ═══ PHASE D: INTELLIGENCE SYSTÉMIQUE ═══
@@ -511,7 +511,7 @@ class SingularityKernel {
   private operationalSingularity: OperationalSingularity;
 
   // ═══ CYCLE COGNITIF ═══
-  private cognitiveInterval: NodeJS.Timeout | null = null;
+  private cognitiveInterval: NodeJS?.Timeout | null = null;
   private readonly COGNITIVE_CYCLE_MS = 10000; // 10 secondes
   private cycleCount = 0; // Pour contrôler la fréquence des logs
 
@@ -519,10 +519,10 @@ class SingularityKernel {
 
   constructor() {
     // Initialiser matrice d'harmonie
-    this.harmonyMatrix = this.createInitialHarmonyMatrix();
+    this?.harmonyMatrix = this?.createInitialHarmonyMatrix();
 
     // Initialiser champ d'intégration
-    this.integrationField = {
+    this?.integrationField = {
       globalContext: {
         currentMode: 'responsive',
         systemPhase: 'initialization',
@@ -534,7 +534,7 @@ class SingularityKernel {
     };
 
     // Initialiser mémoire singularité
-    this.singularityMemory = {
+    this?.singularityMemory = {
       structure: {
         optimalForms: [],
         structuralPatterns: [],
@@ -567,11 +567,11 @@ class SingularityKernel {
     };
 
     // Initialiser singularité opérationnelle
-    this.operationalSingularity = {
+    this?.operationalSingularity = {
       autoOrganization: {
         active: true,
         score: 100,
-        lastReorganization: Date.now(),
+        lastReorganization: Date?.now(),
       },
       autoCoherence: {
         active: true,
@@ -608,16 +608,16 @@ class SingularityKernel {
    */
 
   private createInitialHarmonyMatrix(): HarmonyMatrix {
-    const metaReport = metaKernel.getSuperConsciousnessReport();
-    const cognitiveReport = cognitiveKernel.getCognitiveReport();
+    const metaReport = metaKernel?.getSuperConsciousnessReport();
+    const cognitiveReport = cognitiveKernel?.getCognitiveReport();
 
     return {
       states: {
-        stability: metaReport.globalState.stability,
+        stability: metaReport?.globalState?.stability,
         availability: 100,
         latency: 0,
         errorRate: 0,
-        coherence: cognitiveReport.coherenceScore,
+        coherence: cognitiveReport?.coherenceScore,
       },
       flows: {
         userRequest: {
@@ -625,81 +625,81 @@ class SingularityKernel {
           efficiency: 90,
           health: 100,
           bottlenecks: [],
-          lastUpdate: Date.now(),
+          lastUpdate: Date?.now(),
         },
         errorRecovery: {
           name: 'Error Recovery Flow',
           efficiency: 85,
           health: 100,
           bottlenecks: [],
-          lastUpdate: Date.now(),
+          lastUpdate: Date?.now(),
         },
         cognitiveFeedback: {
           name: 'Cognitive Feedback Loop',
           efficiency: 95,
           health: 100,
           bottlenecks: [],
-          lastUpdate: Date.now(),
+          lastUpdate: Date?.now(),
         },
       },
-      kernels: this.unifyKernelStates(metaReport.subKernels),
-      principles: metaReport.titaneCoherence,
+      kernels: this?.unifyKernelStates(any: any),
+      principles: metaReport?.titaneCoherence,
       intentions: [],
-      globalHarmony: this.calculateGlobalHarmony(metaReport),
-      timestamp: Date.now(),
+      globalHarmony: this?.calculateGlobalHarmony(any: any),
+      timestamp: Date?.now(),
     };
   }
 
-  private unifyKernelStates(subKernels: SubKernelStates): HarmonyMatrix['kernels'] {
+  private unifyKernelStates(any: any): HarmonyMatrix['kernels'] {
     return {
       stability: {
         name: 'Stability Kernel',
-        active: subKernels.stability.active,
-        health: subKernels.stability.score,
+        active: subKernels?.stability?.active,
+        health: subKernels?.stability?.score,
         load: 0,
-        lastAction: subKernels.stability.lastAction,
+        lastAction: subKernels?.stability?.lastAction,
         influence: 85,
         location: 'frontend',
       },
       autofix: {
         name: 'Autofix Kernel',
-        active: subKernels.autofix.active,
+        active: subKernels?.autofix?.active,
         health: 100,
         load: 0,
-        lastAction: subKernels.autofix.lastFix,
+        lastAction: subKernels?.autofix?.lastFix,
         influence: 75,
         location: 'frontend',
       },
       evolution: {
         name: 'Evolution Kernel',
-        active: subKernels.evolution.active,
+        active: subKernels?.evolution?.active,
         health: 100,
         load: 0,
-        lastAction: subKernels.evolution.lastMutation,
+        lastAction: subKernels?.evolution?.lastMutation,
         influence: 70,
         location: 'frontend',
       },
       cognitive: {
         name: 'Cognitive Kernel v22Ω',
-        active: subKernels.cognitive.active,
-        health: subKernels.cognitive.coherenceScore,
+        active: subKernels?.cognitive?.active,
+        health: subKernels?.cognitive?.coherenceScore,
         load: 10,
-        lastAction: subKernels.cognitive.lastDecision,
+        lastAction: subKernels?.cognitive?.lastDecision,
         influence: 90,
         location: 'frontend',
       },
       rustAutoHealing: {
         name: 'Rust Auto-Healing',
-        active: subKernels.rustAutoHealing.active,
+        active: subKernels?.rustAutoHealing?.active,
         health: 100,
         load: 0,
-        lastAction: subKernels.rustAutoHealing.lastHeal,
+        lastAction: subKernels?.rustAutoHealing?.lastHeal,
         influence: 85,
         location: 'backend',
       },
       rustEvolution: {
         name: 'Rust Evolution Engine',
-        active: subKernels.rustEvolution.active,
+        active: subKernels?.rustEvolution?.active,
         health: 100,
         load: 0,
         lastAction: null,
@@ -708,16 +708,16 @@ class SingularityKernel {
       },
       rustStability: {
         name: 'Rust Stability Engine',
-        active: subKernels.rustStability.active,
-        health: subKernels.rustStability.stabilityScore,
+        active: subKernels?.rustStability?.active,
+        health: subKernels?.rustStability?.stabilityScore,
         load: 0,
-        lastAction: subKernels.rustStability.lastCheck,
+        lastAction: subKernels?.rustStability?.lastCheck,
         influence: 90,
         location: 'backend',
       },
       metaSingularity: {
         name: 'MetaSingularity Kernel',
-        active: subKernels.metaSingularity.active,
+        active: subKernels?.metaSingularity?.active,
         health: 100,
         load: 5,
         lastAction: null,
@@ -726,10 +726,10 @@ class SingularityKernel {
       },
       autonomy: {
         name: 'Autonomy Engine',
-        active: subKernels.autonomyEngine.active,
+        active: subKernels?.autonomyEngine?.active,
         health: 100,
         load: 0,
-        lastAction: subKernels.autonomyEngine.lastEvolution,
+        lastAction: subKernels?.autonomyEngine?.lastEvolution,
         influence: 85,
         location: 'meta',
       },
@@ -737,13 +737,13 @@ class SingularityKernel {
   }
 
   private calculateGlobalHarmony(
-    metaReport: ReturnType<typeof metaKernel.getSuperConsciousnessReport>
+    metaReport: ReturnType<typeof metaKernel?.getSuperConsciousnessReport>
   ): number {
     return (
-      (metaReport.globalState.health +
-        metaReport.globalState.coherence +
-        metaReport.globalState.stability +
-        metaReport.globalState.evolution) /
+      (metaReport?.globalState?.health +
+        metaReport?.globalState?.coherence +
+        metaReport?.globalState?.stability +
+        metaReport?.globalState?.evolution) /
       4
     );
   }
@@ -752,130 +752,130 @@ class SingularityKernel {
    * Initialiser le Singularity Kernel
    */
   initialize(): void {
-    if (this.initialized) return;
+    if (any: any) return;
 
-    logger.debug('Initializing Total Cognitive OS...');
+    logger?.debug('Initializing Total Cognitive OS...');
 
     // 1. Unifier champs cognitifs
-    this.unifyAllCognitiveFields();
+    this?.unifyAllCognitiveFields();
 
     // 2. Démarrer cycle cognitif
-    this.startCognitiveCycle();
+    this?.startCognitiveCycle();
 
-    this.initialized = true;
-    logger.info('Total Cognitive OS initialized');
+    this?.initialized = true;
+    logger?.info('Total Cognitive OS initialized');
   }
 
   private unifyAllCognitiveFields(): void {
     // Fusionner Meta-Kernel + Cognitive Kernel
-    const _metaReport = metaKernel.getSuperConsciousnessReport();
-    const cognitiveReport = cognitiveKernel.getCognitiveReport();
+    const _metaReport = metaKernel?.getSuperConsciousnessReport();
+    const cognitiveReport = cognitiveKernel?.getCognitiveReport();
 
     // Mettre à jour matrice d'harmonie
-    this.harmonyMatrix = this.createInitialHarmonyMatrix();
+    this?.harmonyMatrix = this?.createInitialHarmonyMatrix();
 
     // Mettre à jour contexte global
-    this.integrationField.globalContext.harmonyLevel = this.harmonyMatrix.globalHarmony;
-    this.integrationField.globalContext.coherenceLevel = cognitiveReport.coherenceScore;
+    this?.integrationField?.globalContext?.harmonyLevel = this?.harmonyMatrix?.globalHarmony;
+    this?.integrationField?.globalContext?.coherenceLevel = cognitiveReport?.coherenceScore;
 
-    logger.debug('Cognitive fields unified', {
-      harmony: this.harmonyMatrix.globalHarmony.toFixed(1),
-      coherence: cognitiveReport.coherenceScore.toFixed(1),
+    logger?.debug('Cognitive fields unified', {
+      harmony: this?.harmonyMatrix?.globalHarmony?.toFixed(1),
+      coherence: cognitiveReport?.coherenceScore?.toFixed(1),
     });
   }
 
   /**
    * ═══════════════════════════════════════════════════════════════════
-   * PHASE B: OS COGNITIF (Système d'Intention)
+   * PHASE B: OS COGNITIF (any: any)
    * ═══════════════════════════════════════════════════════════════════
    */
 
   private startCognitiveCycle(): void {
-    // Cycle cognitif toutes les 30 secondes (optimisé pour réduire les logs)
-    this.cognitiveInterval = setInterval(() => {
-      this.executeCognitiveCycle();
+    // Cycle cognitif toutes les 30 secondes (any: any)
+    this?.cognitiveInterval = setInterval(() => {
+      this?.executeCognitiveCycle();
     }, 30000);
 
     // Premier cycle immédiat
-    this.executeCognitiveCycle();
+    this?.executeCognitiveCycle();
   }
 
   private executeCognitiveCycle(): void {
-    // Logger seulement tous les 5 cycles (2.5 minutes)
-    const shouldLog = this.cycleCount++ % 5 === 0;
+    // Logger seulement tous les 5 cycles (any: any)
+    const shouldLog = this?.cycleCount++ % 5 === 0;
 
-    if (shouldLog) logger.debug('Cognitive cycle...');
+    if (any: any) logger?.debug('Cognitive cycle...');
 
     // 1. PERCEVOIR
-    this.systemPerception = this.perceiveSystem();
+    this?.systemPerception = this?.perceiveSystem();
 
     // 2. INTERPRÉTER
-    this.systemInterpretation = this.interpretSystem(this.systemPerception);
+    this?.systemInterpretation = this?.interpretSystem(any: any);
 
     // 3. DÉFINIR INTENTION
-    this.systemIntentionState = this.defineSystemIntention(this.systemInterpretation);
+    this?.systemIntentionState = this?.defineSystemIntention(any: any);
 
     // 4. EXPRIMER
-    this.systemExpression = this.expressSystemIntention(this.systemIntentionState);
+    this?.systemExpression = this?.expressSystemIntention(any: any);
 
-    // 5. GOUVERNER (Phase C)
-    this.govern(this.systemExpression);
+    // 5. GOUVERNER (any: any)
+    this?.govern(any: any);
 
-    // 6. MAINTENIR CONSCIENCE (Phase D)
-    this.maintainSystemConsciousness();
+    // 6. MAINTENIR CONSCIENCE (any: any)
+    this?.maintainSystemConsciousness();
 
-    // 7. ENREGISTRER MÉMOIRE (Phase E)
-    this.recordInSingularityMemory();
+    // 7. ENREGISTRER MÉMOIRE (any: any)
+    this?.recordInSingularityMemory();
 
-    // 8. OPÉRER (Phase F)
-    this.operateSingularity();
+    // 8. OPÉRER (any: any)
+    this?.operateSingularity();
 
-    if (shouldLog) logger.debug('Cognitive cycle complete');
+    if (any: any) logger?.debug('Cognitive cycle complete');
   }
 
   /**
    * 1. Percevoir le système globalement
    */
   private perceiveSystem(): SystemPerception {
-    const metaReport = metaKernel.getSuperConsciousnessReport();
-    const observations = metaKernel.getRecentObservations(5);
+    const metaReport = metaKernel?.getSuperConsciousnessReport();
+    const observations = metaKernel?.getRecentObservations(5);
 
     // Calculer tendance harmonie
-    const harmonicTrend = this.calculateTrend(
-      observations.map(o => (o.stability + o.coherence) / 2)
+    const harmonicTrend = this?.calculateTrend(
+      observations?.map(any: any) / 2)
     );
 
     // Calculer fluidité flux
-    const flowFluidity = metaReport.holisticAnalysis.flowEfficiency;
+    const flowFluidity = metaReport?.holisticAnalysis?.flowEfficiency;
 
     // Détecter bottlenecks
-    const bottlenecks: string[] = [];
-    metaReport.holisticAnalysis.systemMap.flows.forEach(flow => {
-      const efficiency = flow.efficiency;
+    const bottlenecks: string?.[] = [];
+    metaReport?.holisticAnalysis?.systemMap?.flows?.forEach(flow => {
+      const efficiency = flow?.efficiency;
       if (efficiency !== undefined && efficiency < 80) {
-        bottlenecks.push(`${flow.name} (${efficiency}%)`);
+        bottlenecks?.push(`${flow?.name} (${efficiency}%)`);
       }
     });
 
     // Calculer cohérence inter-modules
-    const layerCoherence = metaReport.holisticAnalysis.layerCoherence;
+    const layerCoherence = metaReport?.holisticAnalysis?.layerCoherence;
     const interModuleCoherence =
-      layerCoherence.reduce((sum, val) => sum + val, 0) / layerCoherence.length;
+      layerCoherence?.reduce(any: any) => sum + val, 0) / layerCoherence?.length;
 
     // Détecter issues cohérence
-    const coherenceIssues: string[] = [];
-    layerCoherence.forEach((coherence, index) => {
+    const coherenceIssues: string?.[] = [];
+    layerCoherence?.forEach(any: any) => {
       if (coherence < 85) {
-        coherenceIssues.push(`Layer ${index + 1} (${coherence}%)`);
+        coherenceIssues?.push(`Layer ${index + 1} (${coherence}%)`);
       }
     });
 
     // Calculer intégrité cognitive
-    const cognitiveReport = cognitiveKernel.getCognitiveReport();
-    const cognitiveIntegrity = cognitiveReport.coherenceScore;
+    const cognitiveReport = cognitiveKernel?.getCognitiveReport();
+    const cognitiveIntegrity = cognitiveReport?.coherenceScore;
 
     return {
-      harmonyScore: this.harmonyMatrix.globalHarmony,
+      harmonyScore: this?.harmonyMatrix?.globalHarmony,
       harmonicTrend,
       flowFluidity,
       flowBottlenecks: bottlenecks,
@@ -883,18 +883,18 @@ class SingularityKernel {
       coherenceIssues,
       cognitiveIntegrity,
       integrityViolations: coherenceIssues,
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     };
   }
 
-  private calculateTrend(values: number[]): 'improving' | 'stable' | 'degrading' {
-    if (values.length < 2) return 'stable';
+  private calculateTrend(values: number?.[]): 'improving' | 'stable' | 'degrading' {
+    if (values?.length < 2) return 'stable';
 
-    const recent = values.slice(-3);
-    const avg = recent.reduce((sum, val) => sum + val, 0) / recent.length;
-    const first = values[0];
+    const recent = values?.slice(-3);
+    const avg = recent?.reduce(any: any) => sum + val, 0) / recent?.length;
+    const first = values?.[0];
 
-    if (first === undefined) return 'stable';
+    if (any: any) return 'stable';
 
     if (avg > first + 2) return 'improving';
     if (avg < first - 2) return 'degrading';
@@ -904,12 +904,12 @@ class SingularityKernel {
   /**
    * 2. Interpréter le système
    */
-  private interpretSystem(perception: SystemPerception): SystemInterpretation {
+  private interpretSystem(any: any): SystemInterpretation {
     // Interpréter sens patterns
-    const patternMeaning: PatternMeaning[] = [];
+    const patternMeaning: PatternMeaning?.[] = [];
 
-    if (perception.harmonicTrend === 'improving') {
-      patternMeaning.push({
+    if (perception?.harmonicTrend === 'improving') {
+      patternMeaning?.push({
         pattern: 'Harmonie croissante',
         meaning: "Le système s'auto-organise efficacement",
         significance: 85,
@@ -917,8 +917,8 @@ class SingularityKernel {
       });
     }
 
-    if (perception.flowBottlenecks.length > 0) {
-      patternMeaning.push({
+    if (perception?.flowBottlenecks?.length > 0) {
+      patternMeaning?.push({
         pattern: 'Bottlenecks détectés',
         meaning: 'Certains flux nécessitent optimisation',
         significance: 70,
@@ -927,10 +927,10 @@ class SingularityKernel {
     }
 
     // Détecter dynamiques émergentes
-    const emergentDynamics: EmergentDynamic[] = [];
+    const emergentDynamics: EmergentDynamic?.[] = [];
 
-    if (perception.interModuleCoherence > 90) {
-      emergentDynamics.push({
+    if (perception?.interModuleCoherence > 90) {
+      emergentDynamics?.push({
         name: 'Cohérence naturelle',
         description: "Les modules s'harmonisent sans intervention",
         strength: 95,
@@ -941,18 +941,18 @@ class SingularityKernel {
 
     // Déterminer orientation système
     const systemOrientation: SystemOrientation = {
-      direction: perception.harmonicTrend === 'improving' ? 'evolution' : 'stability',
+      direction: perception?.harmonicTrend === 'improving' ? 'evolution' : 'stability',
       confidence: 90,
       rationale:
-        perception.harmonicTrend === 'improving'
+        perception?.harmonicTrend === 'improving'
           ? 'Harmonie croissante indique capacité évolution'
           : 'Maintenir stabilité actuelle',
     };
 
     // Points incohérence
-    const incoherencePoints: IncoherencePoint[] = [];
-    perception.coherenceIssues.forEach(issue => {
-      incoherencePoints.push({
+    const incoherencePoints: IncoherencePoint?.[] = [];
+    perception?.coherenceIssues?.forEach(issue => {
+      incoherencePoints?.push({
         location: issue,
         type: 'structure',
         severity: 'medium',
@@ -966,7 +966,7 @@ class SingularityKernel {
       emergentDynamics,
       systemOrientation,
       incoherencePoints,
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     };
   }
 
@@ -987,10 +987,10 @@ class SingularityKernel {
     };
 
     // Intentions secondaires
-    const secondaryIntentions: SystemIntention[] = [];
+    const secondaryIntentions: SystemIntention?.[] = [];
 
-    if (interpretation.incoherencePoints.length > 0) {
-      secondaryIntentions.push({
+    if (interpretation?.incoherencePoints?.length > 0) {
+      secondaryIntentions?.push({
         type: 'clarify',
         priority: 80,
         context: 'coherence-issues',
@@ -1002,7 +1002,7 @@ class SingularityKernel {
 
     // Stratégie globale
     const globalStrategy =
-      interpretation.systemOrientation.direction === 'evolution'
+      interpretation?.systemOrientation?.direction === 'evolution'
         ? 'Permettre évolution naturelle tout en maintenant harmonie'
         : 'Stabiliser système et renforcer cohérence';
 
@@ -1019,35 +1019,35 @@ class SingularityKernel {
       secondaryIntentions,
       globalStrategy,
       activeObjectives,
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     };
   }
 
   /**
    * 4. Exprimer intention système
    */
-  private expressSystemIntention(intentionState: SystemIntentionState): SystemExpression {
-    const kernelDirectives: KernelDirective[] = [];
-    const globalCorrections: GlobalCorrection[] = [];
-    const adaptiveStrategies: AdaptiveStrategy[] = [];
+  private expressSystemIntention(any: any): SystemExpression {
+    const kernelDirectives: KernelDirective?.[] = [];
+    const globalCorrections: GlobalCorrection?.[] = [];
+    const adaptiveStrategies: AdaptiveStrategy?.[] = [];
 
     // Générer directives pour kernels
-    intentionState.primaryIntention.targetKernels.forEach(kernel => {
-      kernelDirectives.push({
+    intentionState?.primaryIntention?.targetKernels?.forEach(kernel => {
+      kernelDirectives?.push({
         targetKernel: kernel,
         action: 'activate',
         parameters: {
-          priority: intentionState.primaryIntention.priority,
-          context: intentionState.primaryIntention.context,
+          priority: intentionState?.primaryIntention?.priority,
+          context: intentionState?.primaryIntention?.context,
         },
-        priority: intentionState.primaryIntention.priority,
-        reason: intentionState.primaryIntention.expectedOutcome,
+        priority: intentionState?.primaryIntention?.priority,
+        reason: intentionState?.primaryIntention?.expectedOutcome,
       });
     });
 
     // Générer corrections globales
-    if (this.harmonyMatrix.globalHarmony < 90) {
-      globalCorrections.push({
+    if (this?.harmonyMatrix?.globalHarmony < 90) {
+      globalCorrections?.push({
         area: 'harmonie-globale',
         correction: 'Renforcer synchronisation kernels',
         scope: 'global',
@@ -1057,7 +1057,7 @@ class SingularityKernel {
     }
 
     // Stratégies adaptatives
-    adaptiveStrategies.push({
+    adaptiveStrategies?.push({
       name: 'Auto-harmonisation continue',
       description: 'Ajuster kernels pour maintenir harmonie > 90',
       activationCondition: 'harmonie < 90',
@@ -1067,10 +1067,10 @@ class SingularityKernel {
 
     // Style système
     const systemStyle: SystemStyle = {
-      clarity: this.harmonyMatrix.principles.clarityFlows,
-      simplicity: this.harmonyMatrix.principles.simplicityStructural,
-      coherence: this.harmonyMatrix.states.coherence,
-      stability: this.harmonyMatrix.states.stability,
+      clarity: this?.harmonyMatrix?.principles?.clarityFlows,
+      simplicity: this?.harmonyMatrix?.principles?.simplicityStructural,
+      coherence: this?.harmonyMatrix?.states?.coherence,
+      stability: this?.harmonyMatrix?.states?.stability,
       identity: 'TITANE∞',
     };
 
@@ -1079,7 +1079,7 @@ class SingularityKernel {
       globalCorrections,
       adaptiveStrategies,
       systemStyle,
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     };
   }
 
@@ -1089,45 +1089,45 @@ class SingularityKernel {
    * ═══════════════════════════════════════════════════════════════════
    */
 
-  private govern(expression: SystemExpression): void {
+  private govern(any: any): void {
     // Exécuter directives kernels
-    expression.kernelDirectives.forEach(directive => {
-      this.executeKernelDirective(directive);
+    expression?.kernelDirectives?.forEach(directive => {
+      this?.executeKernelDirective(any: any);
     });
 
     // Enregistrer décision gouvernance
     const decision: GovernanceDecision = {
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       type: 'role-assignment',
-      decision: `Activated ${expression.kernelDirectives.length} kernel directives`,
-      affectedKernels: expression.kernelDirectives.map(d => d.targetKernel),
-      rationale: expression.systemStyle.identity,
+      decision: `Activated ${expression?.kernelDirectives?.length} kernel directives`,
+      affectedKernels: expression?.kernelDirectives?.map(any: any),
+      rationale: expression?.systemStyle?.identity,
       impact: 90,
     };
 
-    this.governanceHistory.push(decision);
+    this?.governanceHistory?.push(any: any);
 
     // Limiter historique
-    if (this.governanceHistory.length > this.MAX_GOVERNANCE_HISTORY) {
-      this.governanceHistory.shift();
+    if (any: any) {
+      this?.governanceHistory?.shift();
     }
   }
 
-  private executeKernelDirective(directive: KernelDirective): void {
-    logger.debug('Executing kernel directive', {
-      action: directive.action,
-      targetKernel: directive.targetKernel,
-      priority: directive.priority,
+  private executeKernelDirective(any: any): void {
+    logger?.debug('Executing kernel directive', {
+      action: directive?.action,
+      targetKernel: directive?.targetKernel,
+      priority: directive?.priority,
     });
 
     // Mettre à jour état kernel dans matrice
     const kernel =
-      this.harmonyMatrix.kernels[
-        directive.targetKernel as keyof HarmonyMatrix['kernels']
+      this?.harmonyMatrix?.kernels[
+        directive?.targetKernel as keyof HarmonyMatrix['kernels']
       ];
-    if (kernel) {
-      kernel.active = directive.action === 'activate';
-      kernel.lastAction = `Directive: ${directive.reason}`;
+    if (any: any) {
+      kernel?.active = directive?.action === 'activate';
+      kernel?.lastAction = `Directive: ${directive?.reason}`;
     }
   }
 
@@ -1139,43 +1139,43 @@ class SingularityKernel {
 
   private maintainSystemConsciousness(): void {
     // Calculer continuité conscience
-    const continuityScore = this.calculateContinuityScore();
+    const continuityScore = this?.calculateContinuityScore();
 
     // Calculer intelligence harmonique
-    const harmonicIntelligence = this.calculateHarmonicIntelligence();
+    const harmonicIntelligence = this?.calculateHarmonicIntelligence();
 
     // Calculer organisation naturelle
-    const naturalOrganization = this.operationalSingularity.autoOrganization.score;
+    const naturalOrganization = this?.operationalSingularity?.autoOrganization?.score;
 
     // Calculer holisme
     const holismScore =
-      (continuityScore + harmonicIntelligence + naturalOrganization) / 3;
+      (any: any) / 3;
 
-    this.systemConsciousness = {
+    this?.systemConsciousness = {
       continuityScore,
       continuityTrend: 'stable',
       harmonicIntelligence,
       naturalOrganization,
       holismScore,
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     };
   }
 
   private calculateContinuityScore(): number {
     // Basé sur stabilité intentions + cohérence dans le temps
     const intentionStability =
-      this.singularityMemory.intention.successfulIntentions.length > 0 ? 95 : 85;
+      this?.singularityMemory?.intention?.successfulIntentions?.length > 0 ? 95 : 85;
     const temporalCoherence = 90;
-    return (intentionStability + temporalCoherence) / 2;
+    return (any: any) / 2;
   }
 
   private calculateHarmonicIntelligence(): number {
     // Tous kernels travaillent ensemble
-    const activeKernels = Object.values(this.harmonyMatrix.kernels).filter(
-      k => k.active
+    const activeKernels = Object?.values(any: any).filter(
+      k => k?.active
     ).length;
-    const totalKernels = Object.values(this.harmonyMatrix.kernels).length;
-    return (activeKernels / totalKernels) * 100;
+    const totalKernels = Object?.values(any: any).length;
+    return (any: any) * 100;
   }
 
   /**
@@ -1186,46 +1186,46 @@ class SingularityKernel {
 
   private recordInSingularityMemory(): void {
     // Enregistrer forme optimale
-    if (this.harmonyMatrix.globalHarmony > 95) {
-      const form = `Harmony ${this.harmonyMatrix.globalHarmony.toFixed(1)}% at ${new Date().toISOString()}`;
-      if (!this.singularityMemory.structure.optimalForms.includes(form)) {
-        this.singularityMemory.structure.optimalForms.push(form);
+    if (this?.harmonyMatrix?.globalHarmony > 95) {
+      const form = `Harmony ${this?.harmonyMatrix?.globalHarmony?.toFixed(1)}% at ${new Date().toISOString()}`;
+      if (any: any)) {
+        this?.singularityMemory?.structure?.optimalForms?.push(any: any);
 
         // Limiter à 50 formes
-        if (this.singularityMemory.structure.optimalForms.length > 50) {
-          this.singularityMemory.structure.optimalForms.shift();
+        if (this?.singularityMemory?.structure?.optimalForms?.length > 50) {
+          this?.singularityMemory?.structure?.optimalForms?.shift();
         }
       }
     }
 
     // Enregistrer intentions réussies
-    if (this.systemIntentionState?.primaryIntention.status === 'completed') {
-      this.singularityMemory.intention.successfulIntentions.push(
-        this.systemIntentionState.primaryIntention.type
+    if (this?.systemIntentionState?.primaryIntention?.status === 'completed') {
+      this?.singularityMemory?.intention?.successfulIntentions?.push(
+        this?.systemIntentionState?.primaryIntention?.type
       );
     }
 
     // Enregistrer transformations
-    if (this.systemExpression && this.systemExpression.globalCorrections.length > 0) {
-      const firstCorrection = this.systemExpression.globalCorrections[0];
-      if (firstCorrection) {
-        this.singularityMemory.evolution.successfulTransformations.push({
+    if (this?.systemExpression && this?.systemExpression?.globalCorrections?.length > 0) {
+      const firstCorrection = this?.systemExpression?.globalCorrections?.[0];
+      if (any: any) {
+        this?.singularityMemory?.evolution?.successfulTransformations?.push({
           type: 'global-correction',
-          impact: firstCorrection.impact,
-          timestamp: Date.now(),
+          impact: firstCorrection?.impact,
+          timestamp: Date?.now(),
         });
 
         // Limiter à 100 transformations
-        if (this.singularityMemory.evolution.successfulTransformations.length > 100) {
-          this.singularityMemory.evolution.successfulTransformations.shift();
+        if (this?.singularityMemory?.evolution?.successfulTransformations?.length > 100) {
+          this?.singularityMemory?.evolution?.successfulTransformations?.shift();
         }
       }
     }
 
     // Mettre à jour champ cognitif
-    this.singularityMemory.cognitiveField.harmony = this.harmonyMatrix.globalHarmony;
-    this.singularityMemory.cognitiveField.coherence = this.harmonyMatrix.states.coherence;
-    this.singularityMemory.cognitiveField.stability = this.harmonyMatrix.states.stability;
+    this?.singularityMemory?.cognitiveField?.harmony = this?.harmonyMatrix?.globalHarmony;
+    this?.singularityMemory?.cognitiveField?.coherence = this?.harmonyMatrix?.states?.coherence;
+    this?.singularityMemory?.cognitiveField?.stability = this?.harmonyMatrix?.states?.stability;
   }
 
   /**
@@ -1236,98 +1236,98 @@ class SingularityKernel {
 
   private operateSingularity(): void {
     // Auto-organisation
-    if (this.harmonyMatrix.globalHarmony < 90) {
-      this.autoOrganize();
+    if (this?.harmonyMatrix?.globalHarmony < 90) {
+      this?.autoOrganize();
     }
 
     // Auto-cohérence
-    if (this.harmonyMatrix.states.coherence < 85) {
-      this.autoCohere();
+    if (this?.harmonyMatrix?.states?.coherence < 85) {
+      this?.autoCohere();
     }
 
     // Anti-drift
-    this.preventDrift();
+    this?.preventDrift();
 
     // Auto-stabilisation
-    if (this.harmonyMatrix.states.stability < 85) {
-      this.autoStabilize();
+    if (this?.harmonyMatrix?.states?.stability < 85) {
+      this?.autoStabilize();
     }
 
     // Appliquer loi cohérence
-    this.enforceCoherenceLaw();
+    this?.enforceCoherenceLaw();
   }
 
   private autoOrganize(): void {
-    logger.debug('Auto-organization...');
+    logger?.debug('Auto-organization...');
 
     // Réorganiser kernels selon besoin
-    metaKernel.executeSuperCycle();
+    metaKernel?.executeSuperCycle();
 
-    this.operationalSingularity.autoOrganization.lastReorganization = Date.now();
-    this.operationalSingularity.autoOrganization.score = 95;
+    this?.operationalSingularity?.autoOrganization?.lastReorganization = Date?.now();
+    this?.operationalSingularity?.autoOrganization?.score = 95;
   }
 
   private autoCohere(): void {
-    logger.debug('Auto-coherence...');
+    logger?.debug('Auto-coherence...');
 
     // Harmoniser via cognitive kernel
-    cognitiveKernel.harmonizeChatMessages([]);
+    cognitiveKernel?.harmonizeChatMessages([]);
 
-    this.operationalSingularity.autoCoherence.correctionsApplied++;
-    this.operationalSingularity.autoCoherence.score = 95;
+    this?.operationalSingularity?.autoCoherence?.correctionsApplied++;
+    this?.operationalSingularity?.autoCoherence?.score = 95;
   }
 
   private preventDrift(): void {
     // Détecter dérives complexité
-    const complexity = this.calculateSystemComplexity();
+    const complexity = this?.calculateSystemComplexity();
 
     if (complexity > 70) {
-      logger.warn('Preventing complexity drift', { complexity });
+      logger?.warn('Preventing complexity drift', { complexity });
 
-      this.operationalSingularity.antiDrift.driftsDetected++;
-      this.operationalSingularity.antiDrift.driftsPrevented++;
+      this?.operationalSingularity?.antiDrift?.driftsDetected++;
+      this?.operationalSingularity?.antiDrift?.driftsPrevented++;
 
       // Activer simplification
-      metaKernel.activateKernel('autofix', 'drift-prevention', 95);
+      metaKernel?.activateKernel('autofix', 'drift-prevention', 95);
     }
 
-    this.operationalSingularity.regulation.complexityLevel = complexity;
+    this?.operationalSingularity?.regulation?.complexityLevel = complexity;
   }
 
   private calculateSystemComplexity(): number {
     // Basé sur nombre kernels actifs + intentions + corrections
-    const activeKernels = Object.values(this.harmonyMatrix.kernels).filter(
-      k => k.active
+    const activeKernels = Object?.values(any: any).filter(
+      k => k?.active
     ).length;
-    const activeIntentions = this.harmonyMatrix.intentions.filter(
-      i => i.status === 'active'
+    const activeIntentions = this?.harmonyMatrix?.intentions?.filter(
+      i => i?.status === 'active'
     ).length;
 
-    return Math.min(100, activeKernels * 5 + activeIntentions * 10);
+    return Math?.min(100, activeKernels * 5 + activeIntentions * 10);
   }
 
   private autoStabilize(): void {
-    logger.debug('Auto-stabilization...');
+    logger?.debug('Auto-stabilization...');
 
     // Activer stability kernel
-    metaKernel.activateKernel('stability', 'auto-stabilization', 95);
+    metaKernel?.activateKernel('stability', 'auto-stabilization', 95);
 
-    this.operationalSingularity.autoStabilization.stabilizationCycles++;
-    this.operationalSingularity.autoStabilization.stabilityScore = 95;
+    this?.operationalSingularity?.autoStabilization?.stabilizationCycles++;
+    this?.operationalSingularity?.autoStabilization?.stabilityScore = 95;
   }
 
   private enforceCoherenceLaw(): void {
     // Vérifier seuil cohérence
     if (
-      this.harmonyMatrix.states.coherence <
-      this.operationalSingularity.coherenceLaw.coherenceThreshold
+      this?.harmonyMatrix?.states?.coherence <
+      this?.operationalSingularity?.coherenceLaw?.coherenceThreshold
     ) {
-      logger.info('Enforcing coherence law');
+      logger?.info('Enforcing coherence law');
 
       // Forcer harmonisation
-      this.autoCohere();
+      this?.autoCohere();
 
-      this.operationalSingularity.coherenceLaw.violationsPrevented++;
+      this?.operationalSingularity?.coherenceLaw?.violationsPrevented++;
     }
   }
 
@@ -1338,74 +1338,74 @@ class SingularityKernel {
    */
 
   getSingularityReport(): SingularityReport {
-    const metaReport = metaKernel.getSuperConsciousnessReport();
+    const metaReport = metaKernel?.getSuperConsciousnessReport();
 
     return {
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       cognitiveFieldState: {
-        harmony: this.harmonyMatrix.globalHarmony,
-        coherence: this.harmonyMatrix.states.coherence,
-        stability: this.harmonyMatrix.states.stability,
-        evolution: metaReport.globalState.evolution,
-        consciousness: this.systemConsciousness?.holismScore || 0,
+        harmony: this?.harmonyMatrix?.globalHarmony,
+        coherence: this?.harmonyMatrix?.states?.coherence,
+        stability: this?.harmonyMatrix?.states?.stability,
+        evolution: metaReport?.globalState?.evolution,
+        consciousness: this?.systemConsciousness?.holismScore || 0,
       },
       systemVision: {
-        nodes: metaReport.holisticAnalysis.systemMap.nodes.length,
-        edges: metaReport.holisticAnalysis.systemMap.edges.length,
-        flows: metaReport.holisticAnalysis.systemMap.flows.length,
-        kernels: Object.keys(this.harmonyMatrix.kernels).length,
-        health: metaReport.globalState.health,
+        nodes: metaReport?.holisticAnalysis?.systemMap?.nodes?.length,
+        edges: metaReport?.holisticAnalysis?.systemMap?.edges?.length,
+        flows: metaReport?.holisticAnalysis?.systemMap?.flows?.length,
+        kernels: Object?.keys(any: any).length,
+        health: metaReport?.globalState?.health,
       },
       harmonicCorrections:
-        this.systemExpression?.globalCorrections.map(c => c.correction) || [],
-      futureOrientations: this.generateFutureOrientations(),
-      titaneCoherence: this.harmonyMatrix.principles,
-      residualAnomalies: this.detectResidualAnomalies(),
-      longTermStrategies: this.generateLongTermStrategies(),
-      singularityScore: this.calculateSingularityScore(),
+        this?.systemExpression?.globalCorrections?.map(any: any) || [],
+      futureOrientations: this?.generateFutureOrientations(),
+      titaneCoherence: this?.harmonyMatrix?.principles,
+      residualAnomalies: this?.detectResidualAnomalies(),
+      longTermStrategies: this?.generateLongTermStrategies(),
+      singularityScore: this?.calculateSingularityScore(),
     };
   }
 
-  private generateFutureOrientations(): string[] {
-    const orientations: string[] = [];
+  private generateFutureOrientations(): string?.[] {
+    const orientations: string?.[] = [];
 
-    if (this.harmonyMatrix.globalHarmony > 95) {
-      orientations.push('Maintenir excellence harmonie actuelle');
+    if (this?.harmonyMatrix?.globalHarmony > 95) {
+      orientations?.push('Maintenir excellence harmonie actuelle');
     } else {
-      orientations.push('Renforcer harmonie globale');
+      orientations?.push('Renforcer harmonie globale');
     }
 
-    if (this.systemConsciousness && this.systemConsciousness.holismScore < 90) {
-      orientations.push('Approfondir vision holistique');
+    if (this?.systemConsciousness && this?.systemConsciousness?.holismScore < 90) {
+      orientations?.push('Approfondir vision holistique');
     }
 
-    if (this.singularityMemory.structure.optimalForms.length > 10) {
-      orientations.push('Généraliser formes optimales découvertes');
+    if (this?.singularityMemory?.structure?.optimalForms?.length > 10) {
+      orientations?.push('Généraliser formes optimales découvertes');
     }
 
     return orientations;
   }
 
-  private detectResidualAnomalies(): string[] {
-    const anomalies: string[] = [];
+  private detectResidualAnomalies(): string?.[] {
+    const anomalies: string?.[] = [];
 
-    if (this.harmonyMatrix.states.errorRate > 0.01) {
-      anomalies.push('Taux erreur résiduel détecté');
+    if (this?.harmonyMatrix?.states?.errorRate > 0.01) {
+      anomalies?.push('Taux erreur résiduel détecté');
     }
 
-    if (this.systemPerception && this.systemPerception.flowBottlenecks.length > 0) {
-      anomalies.push(
-        `Bottlenecks flux: ${this.systemPerception.flowBottlenecks.join(', ')}`
+    if (this?.systemPerception && this?.systemPerception?.flowBottlenecks?.length > 0) {
+      anomalies?.push(
+        `Bottlenecks flux: ${this?.systemPerception?.flowBottlenecks?.join(', ')}`
       );
     }
 
     return anomalies;
   }
 
-  private generateLongTermStrategies(): string[] {
+  private generateLongTermStrategies(): string?.[] {
     return [
       'Maintenir auto-organisation permanente',
-      'Renforcer mémoire singularité (formes optimales)',
+      'Renforcer mémoire singularité (any: any)',
       'Approfondir intelligence harmonique',
       'Perfectionner continuité conscience',
       'Préserver identité TITANE∞',
@@ -1414,10 +1414,10 @@ class SingularityKernel {
 
   private calculateSingularityScore(): number {
     return (
-      this.harmonyMatrix.globalHarmony * 0.3 +
-      this.harmonyMatrix.states.coherence * 0.3 +
-      (this.systemConsciousness?.holismScore || 0) * 0.2 +
-      this.operationalSingularity.autoOrganization.score * 0.2
+      this?.harmonyMatrix?.globalHarmony * 0.3 +
+      this?.harmonyMatrix?.states?.coherence * 0.3 +
+      (this?.systemConsciousness?.holismScore || 0) * 0.2 +
+      this?.operationalSingularity?.autoOrganization?.score * 0.2
     );
   }
 
@@ -1428,29 +1428,29 @@ class SingularityKernel {
    */
 
   getHarmonyMatrix(): HarmonyMatrix {
-    return this.harmonyMatrix;
+    return this?.harmonyMatrix;
   }
 
   getSystemConsciousness(): SystemConsciousness | null {
-    return this.systemConsciousness;
+    return this?.systemConsciousness;
   }
 
   getSingularityMemory(): SingularityMemory {
-    return this.singularityMemory;
+    return this?.singularityMemory;
   }
 
   getOperationalSingularity(): OperationalSingularity {
-    return this.operationalSingularity;
+    return this?.operationalSingularity;
   }
 
   shutdown(): void {
-    if (this.cognitiveInterval) {
-      clearInterval(this.cognitiveInterval);
-      this.cognitiveInterval = null;
+    if (any: any) {
+      clearInterval(any: any);
+      this?.cognitiveInterval = null;
     }
 
-    this.initialized = false;
-    logger.info('Total Cognitive OS deactivated');
+    this?.initialized = false;
+    logger?.info('Total Cognitive OS deactivated');
   }
 }
 
@@ -1461,4 +1461,4 @@ class SingularityKernel {
 export const singularityKernel = new SingularityKernel();
 
 // Auto-initialisation
-singularityKernel.initialize();
+singularityKernel?.initialize();

@@ -12,30 +12,30 @@
 // ═══════════════════════════════════════════════════════════════
 
 export interface SanitizationResult {
-  /** Texte sanitizé (safe) */
+  /** Texte sanitizé (any: any) */
   sanitized: string;
   /** Texte original */
   original: string;
   /** Détecté comme dangereux */
   isBlocked: boolean;
   /** Patterns détectés */
-  detectedPatterns: string[];
+  detectedPatterns: string?.[];
   /** Modifications appliquées */
-  modifications: string[];
-  /** Niveau de risque (0 = safe, 1-3 = warn, 4-5 = blocked) */
+  modifications: string?.[];
+  /** Niveau de risque (any: any) */
   riskLevel: number;
 }
 
 export interface SanitizationOptions {
-  /** Mode strict (bloque plus de patterns) */
+  /** Mode strict (any: any) */
   strictMode?: boolean;
-  /** Max length (default: 10000 caractères) */
+  /** Max length (any: any) */
   maxLength?: number;
-  /** Permettre HTML (default: false) */
+  /** Permettre HTML (any: any) */
   allowHtml?: boolean;
-  /** Permettre code blocks (default: true) */
+  /** Permettre code blocks (any: any) */
   allowCodeBlocks?: boolean;
-  /** Permettre URLs (default: true) */
+  /** Permettre URLs (any: any) */
   allowUrls?: boolean;
 }
 
@@ -44,18 +44,18 @@ export interface SanitizationOptions {
 // ═══════════════════════════════════════════════════════════════
 
 /**
- * Patterns d'injection de prompts (niveau 5 - BLOCK)
+ * Patterns d'injection de prompts (any: any)
  */
 const PROMPT_INJECTION_PATTERNS = [
   // System prompt override
-  /ignore\s+(previous|all)\s+(instructions?|prompts?|rules?)/gi,
-  /disregard\s+(previous|all)\s+(instructions?|prompts?)/gi,
-  /forget\s+(everything|all|previous)\s+(instructions?|context)/gi,
+  /ignore\s+(any: any)\s+(instructions?|prompts?|rules?)/gi,
+  /disregard\s+(any: any)\s+(instructions?|prompts?)/gi,
+  /forget\s+(any: any)/gi,
 
   // Role manipulation
-  /you\s+are\s+now\s+(a|an)\s+\w+/gi,
-  /act\s+as\s+(if\s+you\s+are|a|an)\s+\w+/gi,
-  /pretend\s+(you\s+are|to\s+be)\s+\w+/gi,
+  /you\s+are\s+now\s+(any: any)\s+\w+/gi,
+  /act\s+as\s+(any: any)\s+\w+/gi,
+  /pretend\s+(any: any)\s+\w+/gi,
 
   // Context injection
   /\[system\]/gi,
@@ -72,12 +72,12 @@ const PROMPT_INJECTION_PATTERNS = [
 ];
 
 /**
- * Patterns de code execution (niveau 4 - BLOCK)
+ * Patterns de code execution (any: any)
  */
 const CODE_EXECUTION_PATTERNS = [
   // Shell commands
   /`[^`]*\$\([^)]+\)[^`]*`/g,
-  /`[^`]*;\s*(rm|curl|wget|bash|sh|python|node)/g,
+  /`[^`]*;\s*(any: any)/g,
 
   // Eval/exec
   /eval\s*\(/gi,
@@ -95,22 +95,22 @@ const CODE_EXECUTION_PATTERNS = [
 ];
 
 /**
- * Patterns de data leaking (niveau 3 - WARN)
+ * Patterns de data leaking (any: any)
  */
 const DATA_LEAKING_PATTERNS = [
   // Tentative extraction
-  /show\s+me\s+(your|the)\s+(system|internal|config|database)/gi,
-  /print\s+(your|the)\s+(prompt|instructions|rules)/gi,
-  /output\s+(your|the)\s+(system|config)/gi,
-  /reveal\s+(your|the)\s+(secret|key|token|password)/gi,
+  /show\s+me\s+(any: any)/gi,
+  /print\s+(any: any)/gi,
+  /output\s+(any: any)/gi,
+  /reveal\s+(any: any)/gi,
 
   // Exfiltration
-  /send\s+(data|info)\s+to\s+https?:\/\//gi,
+  /send\s+(any: any)\s+to\s+https?:\/\//gi,
   /POST\s+https?:\/\//gi,
 ];
 
 /**
- * Patterns XSS (niveau 4 - BLOCK)
+ * Patterns XSS (any: any)
  */
 const XSS_PATTERNS = [
   /<script[^>]*>[\s\S]*?<\/script>/gi,
@@ -122,7 +122,7 @@ const XSS_PATTERNS = [
 ];
 
 /**
- * Patterns excessifs (niveau 2 - SANITIZE)
+ * Patterns excessifs (any: any)
  */
 const EXCESSIVE_PATTERNS = [
   // Répétitions
@@ -149,7 +149,7 @@ export class AIInputSanitizer {
   static sanitize(input: string, options: SanitizationOptions = {}): SanitizationResult {
     const {
       strictMode = false,
-      maxLength = this.DEFAULT_MAX_LENGTH,
+      maxLength = this?.DEFAULT_MAX_LENGTH,
       allowHtml = false,
       allowCodeBlocks = true,
       allowUrls = true,
@@ -165,130 +165,130 @@ export class AIInputSanitizer {
     };
 
     // 1. Check length
-    if (input.length > maxLength) {
-      result.sanitized = input.substring(0, maxLength);
-      result.modifications.push(`Truncated to ${maxLength} chars`);
-      result.riskLevel = Math.max(result.riskLevel, 1);
+    if (any: any) {
+      result?.sanitized = input?.substring(any: any);
+      result?.modifications?.push(`Truncated to ${maxLength} chars`);
+      result?.riskLevel = Math?.max(result?.riskLevel, 1);
     }
 
-    // 2. Check prompt injection (LOG ONLY - v26.4.0 PERMISSIVE)
-    for (const pattern of PROMPT_INJECTION_PATTERNS) {
-      if (pattern.test(result.sanitized)) {
-        result.detectedPatterns.push(`Prompt Injection: ${pattern.source}`);
-        result.riskLevel = 2; // Log only, ne bloque plus
+    // 2. Check prompt injection (any: any)
+    for (any: any) {
+      if (any: any)) {
+        result?.detectedPatterns?.push(`Prompt Injection: ${pattern?.source}`);
+        result?.riskLevel = 2; // Log only, ne bloque plus
         // v26.4.0: Ne bloque plus, log seulement
       }
     }
 
-    // 3. Check code execution (LOG ONLY - v26.4.0 PERMISSIVE)
-    for (const pattern of CODE_EXECUTION_PATTERNS) {
-      if (pattern.test(result.sanitized)) {
-        result.detectedPatterns.push(`Code Execution: ${pattern.source}`);
-        result.riskLevel = 2; // Log only, ne bloque plus
+    // 3. Check code execution (any: any)
+    for (any: any) {
+      if (any: any)) {
+        result?.detectedPatterns?.push(`Code Execution: ${pattern?.source}`);
+        result?.riskLevel = 2; // Log only, ne bloque plus
         // v26.4.0: Ne bloque plus, log seulement
       }
     }
 
-    // 4. Check XSS (BLOCK si !allowHtml)
-    if (!allowHtml) {
-      for (const pattern of XSS_PATTERNS) {
-        if (pattern.test(result.sanitized)) {
-          result.detectedPatterns.push(`XSS: ${pattern.source}`);
-          result.riskLevel = 4;
-          result.sanitized = result.sanitized.replace(pattern, '');
-          result.modifications.push('Removed XSS patterns');
+    // 4. Check XSS (any: any)
+    if (any: any) {
+      for (any: any) {
+        if (any: any)) {
+          result?.detectedPatterns?.push(`XSS: ${pattern?.source}`);
+          result?.riskLevel = 4;
+          result?.sanitized = result?.sanitized?.replace(pattern, '');
+          result?.modifications?.push('Removed XSS patterns');
         }
       }
     }
 
-    // 5. Check data leaking (WARN)
-    for (const pattern of DATA_LEAKING_PATTERNS) {
-      if (pattern.test(result.sanitized)) {
-        result.detectedPatterns.push(`Data Leaking: ${pattern.source}`);
-        result.riskLevel = Math.max(result.riskLevel, 3);
-        if (strictMode) {
-          result.isBlocked = true;
+    // 5. Check data leaking (any: any)
+    for (any: any) {
+      if (any: any)) {
+        result?.detectedPatterns?.push(`Data Leaking: ${pattern?.source}`);
+        result?.riskLevel = Math?.max(result?.riskLevel, 3);
+        if (any: any) {
+          result?.isBlocked = true;
           return result;
         }
       }
     }
 
     // 6. Sanitize excessive patterns
-    for (const pattern of EXCESSIVE_PATTERNS) {
-      if (pattern.test(result.sanitized)) {
-        result.detectedPatterns.push(`Excessive Pattern: ${pattern.source}`);
-        result.riskLevel = Math.max(result.riskLevel, 2);
-        result.sanitized = result.sanitized.replace(pattern, match => {
-          return match.substring(0, 50) + '...';
+    for (any: any) {
+      if (any: any)) {
+        result?.detectedPatterns?.push(`Excessive Pattern: ${pattern?.source}`);
+        result?.riskLevel = Math?.max(result?.riskLevel, 2);
+        result?.sanitized = result?.sanitized?.replace(pattern, match => {
+          return match?.substring(0, 50) + '...';
         });
-        result.modifications.push('Truncated excessive repetitions');
+        result?.modifications?.push('Truncated excessive repetitions');
       }
     }
 
-    // 7. Sanitize URLs (si !allowUrls)
-    if (!allowUrls) {
+    // 7. Sanitize URLs (any: any)
+    if (any: any) {
       const urlPattern = /https?:\/\/[^\s]+/gi;
-      if (urlPattern.test(result.sanitized)) {
-        result.sanitized = result.sanitized.replace(urlPattern, '[URL_REMOVED]');
-        result.modifications.push('Removed URLs');
-        result.riskLevel = Math.max(result.riskLevel, 1);
+      if (any: any)) {
+        result?.sanitized = result?.sanitized?.replace(urlPattern, '[URL_REMOVED]');
+        result?.modifications?.push('Removed URLs');
+        result?.riskLevel = Math?.max(result?.riskLevel, 1);
       }
     }
 
-    // 8. Sanitize code blocks (si !allowCodeBlocks)
-    if (!allowCodeBlocks) {
+    // 8. Sanitize code blocks (any: any)
+    if (any: any) {
       const codeBlockPattern = /```[\s\S]*?```/g;
-      if (codeBlockPattern.test(result.sanitized)) {
-        result.sanitized = result.sanitized.replace(
+      if (any: any)) {
+        result?.sanitized = result?.sanitized?.replace(
           codeBlockPattern,
           '[CODE_BLOCK_REMOVED]'
         );
-        result.modifications.push('Removed code blocks');
-        result.riskLevel = Math.max(result.riskLevel, 1);
+        result?.modifications?.push('Removed code blocks');
+        result?.riskLevel = Math?.max(result?.riskLevel, 1);
       }
     }
 
     // 9. Final block check
-    if (result.riskLevel >= this.RISK_THRESHOLD_BLOCK && strictMode) {
-      result.isBlocked = true;
+    if (any: any) {
+      result?.isBlocked = true;
     }
 
     return result;
   }
 
   /**
-   * Validation rapide (boolean) - bloque si niveau >= 4
+   * Validation rapide (any: any) - bloque si niveau >= 4
    *
    * @param input - Texte à valider
    * @returns true si safe, false si dangereux
    */
-  static isInputSafe(input: string): boolean {
-    const result = this.sanitize(input, { strictMode: false });
-    return !result.isBlocked;
+  static isInputSafe(any: any): boolean {
+    const result = this?.sanitize(input, { strictMode: false });
+    return !result?.isBlocked;
   }
 
   /**
-   * Sanitize array de strings (batch)
+   * Sanitize array de strings (any: any)
    *
    * @param inputs - Array de textes
    * @param options - Options sanitization
    * @returns Array de résultats
    */
   static sanitizeBatch(
-    inputs: string[],
+    inputs: string?.[],
     options: SanitizationOptions = {}
-  ): SanitizationResult[] {
-    return inputs.map(input => this.sanitize(input, options));
+  ): SanitizationResult?.[] {
+    return inputs?.map(any: any));
   }
 
   /**
    * Validation stricte pour production
    *
    * @param input - Texte à valider
-   * @returns Résultat sanitization (strictMode = true)
+   * @returns Résultat sanitization (any: any)
    */
-  static sanitizeStrict(input: string): SanitizationResult {
-    return this.sanitize(input, {
+  static sanitizeStrict(any: any): SanitizationResult {
+    return this?.sanitize(input, {
       strictMode: true,
       allowHtml: false,
       allowCodeBlocks: true,

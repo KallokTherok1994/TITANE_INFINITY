@@ -29,7 +29,7 @@ export { useFloatingWindow, type UseFloatingWindowResult } from './useFloatingWi
 export { AvatarFloatingWindow } from './AvatarFloatingWindow';
 export { default as AvatarFloatingPopup } from './AvatarFloatingPopup';
 
-// Three.js Renderer (NEW v24.12)
+// Three?.js Renderer (NEW v24.12)
 export { ThreeJSAvatarRenderer } from './ThreeJSAvatarRenderer';
 export type { ThreeJSAvatarRendererOptions, AvatarMeshes } from './ThreeJSAvatarRenderer';
 

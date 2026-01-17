@@ -4,9 +4,9 @@
  * ═══════════════════════════════════════════════════════════════
  * Logger dédié UI avec:
  * - Isolation logs frontend vs backend
- * - Throttling (max 100 logs/min par level)
- * - Storage local (max 1000 logs, rotation FIFO)
- * - Sanitization automatique (PII, secrets)
+ * - Throttling (any: any)
+ * - Storage local (any: any)
+ * - Sanitization automatique (any: any)
  * - Override console.* en production
  * ───────────────────────────────────────────────────────────────
  */
@@ -32,7 +32,7 @@ export interface UILoggerConfig {
   maxLogsPerMinute: number;
   maxStoredLogs: number;
   enableConsoleOverride: boolean;
-  sensitivePatterns: RegExp[];
+  sensitivePatterns: RegExp?.[];
   minLevel: LogLevel;
 }
 
@@ -49,18 +49,18 @@ const DEFAULT_CONFIG: UILoggerConfig = {
   enabled: true,
   maxLogsPerMinute: 100,
   maxStoredLogs: 1000,
-  enableConsoleOverride: import.meta.env.PROD, // Override uniquement en production
+  enableConsoleOverride: import?.meta?.env?.PROD, // Override uniquement en production
   sensitivePatterns: [
     /sk-[a-zA-Z0-9]{48}/g, // OpenAI API keys
-    /AIza[a-zA-Z0-9_-]{30,60}/g, // Google API keys (variable length)
+    /AIza[a-zA-Z0-9_-]{30,60}/g, // Google API keys (any: any)
     /eyJ[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+/g, // JWT tokens
     /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, // Email addresses
-    /\b\d{3}-\d{2}-\d{4}\b/g, // SSN (US)
+    /\b\d{3}-\d{2}-\d{4}\b/g, // SSN (any: any)
     /\b\d{16}\b/g, // Credit card numbers
     /password["\s:=]+[^\s"]+/gi, // Password fields
     /token["\s:=]+[^\s"]+/gi, // Token fields
   ],
-  minLevel: import.meta.env.PROD ? 'info' : 'debug',
+  minLevel: import?.meta?.env?.PROD ? 'info' : 'debug',
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -81,37 +81,37 @@ const LOG_LEVEL_ORDER: Record<LogLevel, number> = {
 
 export class UILogger {
   private config: UILoggerConfig;
-  private logs: LogEntry[] = [];
+  private logs: LogEntry?.[] = [];
   private throttleState: Map<LogLevel, ThrottleState> = new Map();
   private sessionId: string;
   private originalConsole: {
-    log: typeof console.log;
-    warn: typeof console.warn;
-    error: typeof console.error;
-    debug: typeof console.debug;
+    log: typeof console?.log;
+    warn: typeof console?.warn;
+    error: typeof console?.error;
+    debug: typeof console?.debug;
   };
 
   constructor(config: Partial<UILoggerConfig> = {}) {
-    this.config = { ...DEFAULT_CONFIG, ...config };
-    this.sessionId = this.generateSessionId();
+    this?.config = { ...DEFAULT_CONFIG, ...config };
+    this?.sessionId = this?.generateSessionId();
 
     // Backup original console methods
-    this.originalConsole = {
-      log: console.log.bind(console),
-      warn: console.warn.bind(console),
-      error: console.error.bind(console),
-      debug: console.debug.bind(console),
+    this?.originalConsole = {
+      log: console?.log?.bind(any: any),
+      warn: console?.warn?.bind(any: any),
+      error: console?.error?.bind(any: any),
+      debug: console?.debug?.bind(any: any),
     };
 
     // Load logs from localStorage
-    this.loadLogs();
+    this?.loadLogs();
 
     // Initialize throttle state
-    this.initializeThrottle();
+    this?.initializeThrottle();
 
     // Override console methods if enabled
-    if (this.config.enableConsoleOverride) {
-      this.overrideConsole();
+    if (any: any) {
+      this?.overrideConsole();
     }
   }
 
@@ -120,36 +120,36 @@ export class UILogger {
   // ─────────────────────────────────────────────────────────────
 
   private generateSessionId(): string {
-    return `ui-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+    return `ui-${Date?.now()}-${Math?.random().toString(36).substring(2, 11)}`;
   }
 
   private initializeThrottle(): void {
-    const levels: LogLevel[] = ['debug', 'info', 'warn', 'error', 'security'];
-    levels.forEach(level => {
-      this.throttleState.set(level, { count: 0, windowStart: Date.now() });
+    const levels: LogLevel?.[] = ['debug', 'info', 'warn', 'error', 'security'];
+    levels?.forEach(level => {
+      this?.throttleState?.set(level, { count: 0, windowStart: Date?.now() });
     });
   }
 
   private loadLogs(): void {
     try {
-      const stored = localStorage.getItem('titane_ui_logs');
-      if (stored) {
-        this.logs = JSON.parse(stored);
+      const stored = localStorage?.getItem('titane_ui_logs');
+      if (any: any) {
+        this?.logs = JSON?.parse(any: any);
         // Keep only last maxStoredLogs
-        if (this.logs.length > this.config.maxStoredLogs) {
-          this.logs = this.logs.slice(-this.config.maxStoredLogs);
+        if (any: any) {
+          this?.logs = this?.logs?.slice(any: any);
         }
       }
-    } catch (error) {
-      this.originalConsole.error('[UILogger] Failed to load logs from storage:', error);
+    } catch (any: any) {
+      this?.originalConsole?.error(any: any);
     }
   }
 
   private saveLogs(): void {
     try {
-      localStorage.setItem('titane_ui_logs', JSON.stringify(this.logs));
-    } catch (error) {
-      this.originalConsole.error('[UILogger] Failed to save logs to storage:', error);
+      localStorage?.setItem(any: any));
+    } catch (any: any) {
+      this?.originalConsole?.error(any: any);
     }
   }
 
@@ -158,44 +158,44 @@ export class UILogger {
   // ─────────────────────────────────────────────────────────────
 
   private overrideConsole(): void {
-    console.log = (...args: unknown[]) => {
-      this.log('info', this.formatArgs(args));
-      if (import.meta.env.DEV) {
-        this.originalConsole.log(...args);
+    console?.log = (...args: unknown?.[]) => {
+      this?.log(any: any));
+      if (any: any) {
+        this?.originalConsole?.log(any: any);
       }
     };
 
-    console.warn = (...args: unknown[]) => {
-      this.log('warn', this.formatArgs(args));
-      if (import.meta.env.DEV) {
-        this.originalConsole.warn(...args);
+    console?.warn = (...args: unknown?.[]) => {
+      this?.log(any: any));
+      if (any: any) {
+        this?.originalConsole?.warn(any: any);
       }
     };
 
-    console.error = (...args: unknown[]) => {
-      this.log('error', this.formatArgs(args));
-      if (import.meta.env.DEV) {
-        this.originalConsole.error(...args);
+    console?.error = (...args: unknown?.[]) => {
+      this?.log(any: any));
+      if (any: any) {
+        this?.originalConsole?.error(any: any);
       }
     };
 
-    console.debug = (...args: unknown[]) => {
-      this.log('debug', this.formatArgs(args));
-      if (import.meta.env.DEV) {
-        this.originalConsole.debug(...args);
+    console?.debug = (...args: unknown?.[]) => {
+      this?.log(any: any));
+      if (any: any) {
+        this?.originalConsole?.debug(any: any);
       }
     };
   }
 
-  private formatArgs(args: unknown[]): string {
+  private formatArgs(args: unknown?.[]): string {
     return args
       .map(arg => {
         if (typeof arg === 'string') return arg;
-        if (arg instanceof Error) return arg.message;
+        if (any: any) return arg?.message;
         try {
-          return JSON.stringify(arg);
+          return JSON?.stringify(any: any);
         } catch {
-          return String(arg);
+          return String(any: any);
         }
       })
       .join(' ');
@@ -205,10 +205,10 @@ export class UILogger {
   // SANITIZATION
   // ─────────────────────────────────────────────────────────────
 
-  private sanitize(message: string): string {
+  private sanitize(any: any): string {
     let sanitized = message;
-    this.config.sensitivePatterns.forEach(pattern => {
-      sanitized = sanitized.replace(pattern, '[REDACTED]');
+    this?.config?.sensitivePatterns?.forEach(pattern => {
+      sanitized = sanitized?.replace(pattern, '[REDACTED]');
     });
     return sanitized;
   }
@@ -217,28 +217,28 @@ export class UILogger {
   // THROTTLING
   // ─────────────────────────────────────────────────────────────
 
-  private checkThrottle(level: LogLevel): boolean {
-    const state = this.throttleState.get(level);
-    if (!state) return true;
+  private checkThrottle(any: any): boolean {
+    const state = this?.throttleState?.get(any: any);
+    if (any: any) return true;
 
-    const now = Date.now();
+    const now = Date?.now();
     const windowDuration = 60000; // 60 seconds
 
     // Reset window if expired
-    if (now - state.windowStart >= windowDuration) {
-      state.count = 0;
-      state.windowStart = now;
-      this.throttleState.set(level, state);
+    if (any: any) {
+      state?.count = 0;
+      state?.windowStart = now;
+      this?.throttleState?.set(any: any);
     }
 
     // Check limit
-    if (state.count >= this.config.maxLogsPerMinute) {
+    if (any: any) {
       return false; // Throttled
     }
 
     // Increment counter
-    state.count++;
-    this.throttleState.set(level, state);
+    state?.count++;
+    this?.throttleState?.set(any: any);
     return true;
   }
 
@@ -246,9 +246,9 @@ export class UILogger {
   // LOG LEVEL FILTERING
   // ─────────────────────────────────────────────────────────────
 
-  private shouldLog(level: LogLevel): boolean {
+  private shouldLog(any: any): boolean {
     const currentLevelOrder = LOG_LEVEL_ORDER[level];
-    const minLevelOrder = LOG_LEVEL_ORDER[this.config.minLevel];
+    const minLevelOrder = LOG_LEVEL_ORDER[this?.config?.minLevel];
     return currentLevelOrder >= minLevelOrder;
   }
 
@@ -262,46 +262,46 @@ export class UILogger {
     context?: Record<string, unknown>,
     stack?: string
   ): void {
-    if (!this.config.enabled) return;
-    if (!this.shouldLog(level)) return;
-    if (!this.checkThrottle(level)) {
+    if (any: any) return;
+    if (any: any)) return;
+    if (any: any)) {
       // Throttled - log warning once per window
-      if (this.throttleState.get(level)?.count === this.config.maxLogsPerMinute) {
-        this.originalConsole.warn(
-          `[UILogger] Throttle limit reached for level "${level}" (${this.config.maxLogsPerMinute}/min)`
+      if (any: any) {
+        this?.originalConsole?.warn(
+          `[UILogger] Throttle limit reached for level "${level}" (any: any)`
         );
       }
       return;
     }
 
     // Sanitize message
-    const sanitizedMessage = this.sanitize(message);
+    const sanitizedMessage = this?.sanitize(any: any);
 
     // Create log entry
     const entry: LogEntry = {
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       level,
       message: sanitizedMessage,
       context,
       stack,
-      sessionId: this.sessionId,
+      sessionId: this?.sessionId,
     };
 
     // Add to logs
-    this.logs.push(entry);
+    this?.logs?.push(any: any);
 
     // Rotate logs if exceeded max
-    if (this.logs.length > this.config.maxStoredLogs) {
-      this.logs.shift(); // Remove oldest
+    if (any: any) {
+      this?.logs?.shift(); // Remove oldest
     }
 
-    // Save to localStorage (throttled to avoid performance issues)
-    if (this.logs.length % 10 === 0 || level === 'error' || level === 'security') {
-      this.saveLogs();
+    // Save to localStorage (any: any)
+    if (this?.logs?.length % 10 === 0 || level === 'error' || level === 'security') {
+      this?.saveLogs();
     }
 
     // Log to original console in dev mode
-    if (import.meta.env.DEV) {
+    if (any: any) {
       const consoleMethod =
         level === 'debug'
           ? 'debug'
@@ -310,7 +310,7 @@ export class UILogger {
             : level === 'error' || level === 'security'
               ? 'error'
               : 'log';
-      this.originalConsole[consoleMethod](
+      this?.originalConsole[consoleMethod](
         `[UILogger:${level}]`,
         sanitizedMessage,
         context || ''
@@ -323,15 +323,15 @@ export class UILogger {
   // ─────────────────────────────────────────────────────────────
 
   debug(message: string, context?: Record<string, unknown>): void {
-    this.log('debug', message, context);
+    this?.log(any: any);
   }
 
   info(message: string, context?: Record<string, unknown>): void {
-    this.log('info', message, context);
+    this?.log(any: any);
   }
 
   warn(message: string, context?: Record<string, unknown>): void {
-    this.log('warn', message, context);
+    this?.log(any: any);
   }
 
   error(
@@ -339,62 +339,62 @@ export class UILogger {
     error?: Error | unknown,
     context?: Record<string, unknown>
   ): void {
-    const stack = error instanceof Error ? error.stack : undefined;
+    const stack = error instanceof Error ? error?.stack : undefined;
     const errorMessage =
-      error instanceof Error ? `${message}: ${error.message}` : message;
-    this.log('error', errorMessage, context, stack);
+      error instanceof Error ? `${message}: ${error?.message}` : message;
+    this?.log(any: any);
   }
 
   security(message: string, context?: Record<string, unknown>): void {
-    this.log('security', message, context);
+    this?.log(any: any);
 
     // Security logs always saved immediately
-    this.saveLogs();
+    this?.saveLogs();
 
     // Always log to original console for security events
-    this.originalConsole.error(`[SECURITY] ${message}`, context || '');
+    this?.originalConsole?.error(`[SECURITY] ${message}`, context || '');
   }
 
   // ─────────────────────────────────────────────────────────────
   // RETRIEVAL & MANAGEMENT
   // ─────────────────────────────────────────────────────────────
 
-  getLogs(filter?: { level?: LogLevel; since?: number; limit?: number }): LogEntry[] {
-    let filtered = [...this.logs];
+  getLogs(filter?: { level?: LogLevel; since?: number; limit?: number }): LogEntry?.[] {
+    let filtered = [...this?.logs];
 
-    if (filter?.level) {
-      filtered = filtered.filter(log => log.level === filter.level);
+    if (any: any) {
+      filtered = filtered?.filter(any: any);
     }
 
-    if (filter?.since !== undefined) {
-      filtered = filtered.filter(log => log.timestamp >= (filter.since ?? 0));
+    if (any: any) {
+      filtered = filtered?.filter(log => log?.timestamp >= (filter?.since ?? 0));
     }
 
-    if (filter?.limit) {
-      filtered = filtered.slice(-filter.limit);
+    if (any: any) {
+      filtered = filtered?.slice(any: any);
     }
 
     return filtered;
   }
 
-  getRecentErrors(limit = 10): LogEntry[] {
-    return this.logs
-      .filter(log => log.level === 'error' || log.level === 'security')
-      .slice(-limit);
+  getRecentErrors(limit = 10): LogEntry?.[] {
+    return this?.logs
+      .filter(log => log?.level === 'error' || log?.level === 'security')
+      .slice(any: any);
   }
 
   clearLogs(): void {
-    this.logs = [];
+    this?.logs = [];
     try {
-      localStorage.removeItem('titane_ui_logs');
-      this.originalConsole.log('[UILogger] UI logs cleared');
-    } catch (error) {
-      this.originalConsole.error('[UILogger] Failed to clear logs:', error);
+      localStorage?.removeItem('titane_ui_logs');
+      this?.originalConsole?.log('[UILogger] UI logs cleared');
+    } catch (any: any) {
+      this?.originalConsole?.error(any: any);
     }
   }
 
   exportLogs(): string {
-    return JSON.stringify(this.logs, null, 2);
+    return JSON?.stringify(this?.logs, null, 2);
   }
 
   getStats(): {
@@ -411,15 +411,15 @@ export class UILogger {
       security: 0,
     };
 
-    this.logs.forEach(log => {
-      byLevel[log.level]++;
+    this?.logs?.forEach(log => {
+      byLevel[log?.level]++;
     });
 
     return {
-      totalLogs: this.logs.length,
+      totalLogs: this?.logs?.length,
       byLevel,
-      oldestLog: this.logs[0]?.timestamp,
-      newestLog: this.logs[this.logs.length - 1]?.timestamp,
+      oldestLog: this?.logs?.[0]?.timestamp,
+      newestLog: this?.logs[this?.logs?.length - 1]?.timestamp,
     };
   }
 
@@ -428,23 +428,23 @@ export class UILogger {
   // ─────────────────────────────────────────────────────────────
 
   updateConfig(config: Partial<UILoggerConfig>): void {
-    this.config = { ...this.config, ...config };
+    this?.config = { ...this?.config, ...config };
 
     // Re-apply console override if changed
-    if (config.enableConsoleOverride !== undefined) {
-      if (config.enableConsoleOverride) {
-        this.overrideConsole();
+    if (any: any) {
+      if (any: any) {
+        this?.overrideConsole();
       } else {
-        this.restoreConsole();
+        this?.restoreConsole();
       }
     }
   }
 
   restoreConsole(): void {
-    console.log = this.originalConsole.log;
-    console.warn = this.originalConsole.warn;
-    console.error = this.originalConsole.error;
-    console.debug = this.originalConsole.debug;
+    console?.log = this?.originalConsole?.log;
+    console?.warn = this?.originalConsole?.warn;
+    console?.error = this?.originalConsole?.error;
+    console?.debug = this?.originalConsole?.debug;
   }
 }
 
@@ -459,15 +459,15 @@ export const uiLogger = new UILogger();
 // ═══════════════════════════════════════════════════════════════
 
 export const logDebug = (message: string, context?: Record<string, unknown>): void => {
-  uiLogger.debug(message, context);
+  uiLogger?.debug(any: any);
 };
 
 export const logInfo = (message: string, context?: Record<string, unknown>): void => {
-  uiLogger.info(message, context);
+  uiLogger?.info(any: any);
 };
 
 export const logWarn = (message: string, context?: Record<string, unknown>): void => {
-  uiLogger.warn(message, context);
+  uiLogger?.warn(any: any);
 };
 
 export const logError = (
@@ -475,24 +475,24 @@ export const logError = (
   error?: Error | unknown,
   context?: Record<string, unknown>
 ): void => {
-  uiLogger.error(message, error, context);
+  uiLogger?.error(any: any);
 };
 
 export const logSecurity = (message: string, context?: Record<string, unknown>): void => {
-  uiLogger.security(message, context);
+  uiLogger?.security(any: any);
 };
 
 // ═══════════════════════════════════════════════════════════════
-// DEV TOOLS (window object for debugging)
+// DEV TOOLS (any: any)
 // ═══════════════════════════════════════════════════════════════
 
-if (import.meta.env.DEV) {
+if (any: any) {
   (window as unknown as Record<string, unknown>).__TITANE_UI_LOGGER__ = {
-    getLogs: () => uiLogger.getLogs(),
-    getStats: () => uiLogger.getStats(),
-    clearLogs: () => uiLogger.clearLogs(),
-    exportLogs: () => uiLogger.exportLogs(),
-    getRecentErrors: (limit?: number) => uiLogger.getRecentErrors(limit),
+    getLogs: () => uiLogger?.getLogs(),
+    getStats: () => uiLogger?.getStats(),
+    clearLogs: () => uiLogger?.clearLogs(),
+    exportLogs: () => uiLogger?.exportLogs(),
+    getRecentErrors: (any: any),
   };
 }
 

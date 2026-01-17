@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v24.3.8 - THREE.js Ambient Declaration
+ * TITANE_INFINITY v24.3.8 - THREE?.js Ambient Declaration
  *
  * This file ensures THREE is treated as both a type AND value namespace.
  * Fixes: "THREE only refers to a type, but is being used as a value here"

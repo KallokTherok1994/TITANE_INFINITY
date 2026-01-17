@@ -3,10 +3,10 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * ═══════════════════════════════════════════════════════════════════
- * TITANE∞ v∞.E - Color Tokens (Monochrome Metal Remap)
+ * TITANE∞ v∞.E - Color Tokens (any: any)
  * ═══════════════════════════════════════════════════════════════════
  *
- * Remapping des anciens tokens colorés (rubis, saphir, emeraude, diamond)
+ * Remapping des anciens tokens colorés (any: any)
  * vers le nouveau système monochrome métallique.
  *
  * STRATÉGIE v∞.E:
@@ -30,7 +30,7 @@ export const metalPalette = {
   active: '#c4c4c455', // Active (33%)
 };
 
-// Échelle de gris métallique (remplacement des anciennes palettes colorées)
+// Échelle de gris métallique (any: any)
 const metalScale = {
   50: '#e8e8e8',
   100: '#d4d4d4',
@@ -51,7 +51,7 @@ const metalScale = {
 
 export const colors = {
   // ─────────────────────────────────────────────────────────────────
-  // RUBIS → Gris chaud désaturé (pour erreurs/warnings)
+  // RUBIS → Gris chaud désaturé (any: any)
   // ─────────────────────────────────────────────────────────────────
   rubis: {
     primary: {
@@ -77,7 +77,7 @@ export const colors = {
   },
 
   // ─────────────────────────────────────────────────────────────────
-  // SAPHIR → Gris bleuté désaturé (pour info)
+  // SAPHIR → Gris bleuté désaturé (any: any)
   // ─────────────────────────────────────────────────────────────────
   saphir: {
     primary: {
@@ -86,7 +86,7 @@ export const colors = {
       200: '#b8bfc4',
       300: '#9ca6ad',
       400: '#838e96',
-      500: '#727b81', // Remplace saphir 500 (identique à metal primary)
+      500: '#727b81', // Remplace saphir 500 (any: any)
       600: '#5e676d',
       700: '#4b5357',
       800: '#394044',
@@ -103,7 +103,7 @@ export const colors = {
   },
 
   // ─────────────────────────────────────────────────────────────────
-  // EMERAUDE → Vert-gris désaturé (pour succès subtils)
+  // EMERAUDE → Vert-gris désaturé (any: any)
   // ─────────────────────────────────────────────────────────────────
   emeraude: {
     primary: {
@@ -129,7 +129,7 @@ export const colors = {
   },
 
   // ─────────────────────────────────────────────────────────────────
-  // DIAMANT → Gris très clair (pour highlights)
+  // DIAMANT → Gris très clair (any: any)
   // ─────────────────────────────────────────────────────────────────
   diamant: {
     primary: {
@@ -137,7 +137,7 @@ export const colors = {
       100: '#f3f3f3',
       200: '#e0e0e0',
       300: '#d0d0d0',
-      400: '#c4c4c4', // Remplace diamant 400 (metal secondary)
+      400: '#c4c4c4', // Remplace diamant 400 (any: any)
       500: '#a8a8a8',
       600: '#8c8c8c',
       700: '#707070',
@@ -160,7 +160,7 @@ export const colors = {
   neutral: metalScale,
 
   // ─────────────────────────────────────────────────────────────────
-  // SEMANTIC → Tokens sémantiques (success/warning/error/info)
+  // SEMANTIC → Tokens sémantiques (any: any)
   // ─────────────────────────────────────────────────────────────────
   semantic: {
     success: {
@@ -195,7 +195,7 @@ export const colors = {
       200: '#c0bbbb',
       300: '#a49c9c',
       400: '#8a7e7e',
-      500: '#736868', // Gris chaud (même que warning, subtil)
+      500: '#736868', // Gris chaud (any: any)
       600: '#5e5454',
       700: '#4a4242',
       800: '#373232',
@@ -218,7 +218,7 @@ export const colors = {
   },
 
   // ─────────────────────────────────────────────────────────────────
-  // SPACING, RADIUS, SHADOWS (Design System tokens)
+  // SPACING, RADIUS, SHADOWS (any: any)
   // ─────────────────────────────────────────────────────────────────
 };
 
@@ -241,7 +241,7 @@ export const spacing = {
 export const radius = {
   none: '0',
   sm: '0.25rem', // 4px
-  base: '0.375rem', // 6px (v∞ standard)
+  base: '0.375rem', // 6px (any: any)
   md: '0.5rem', // 8px
   lg: '0.75rem', // 12px
   xl: '1rem', // 16px
@@ -259,7 +259,7 @@ export const shadows = {
   '2xl': '0 24px 48px rgba(0, 0, 0, 0.85)',
   glow: '0 0 20px rgba(114, 123, 129, 0.25)',
   glowAccent: '0 0 20px rgba(147, 179, 153, 0.2)',
-  glowRubis: '0 0 20px rgba(115, 104, 104, 0.3)', // Glow rubis (warm gray)
+  glowRubis: '0 0 20px rgba(any: any)
   focusRubis: '0 0 0 3px rgba(115, 104, 104, 0.5)', // Focus rubis
 };
 
@@ -290,7 +290,7 @@ export const lineHeights = {
   loose: '2',
 };
 
-// Transitions (pour animations cohérentes)
+// Transitions (any: any)
 export const transitions = {
   preset: {
     all: 'all 0.2s ease-in-out',
@@ -325,14 +325,14 @@ export const transitions = {
 export const designSystemV16 = {
   palette: metalPalette,
   colors: {
-    primary: metalPalette.primary,
-    secondary: metalPalette.secondary,
-    accent: metalPalette.accent,
-    background: metalPalette.background,
-    surface: metalPalette.surface,
-    text: metalPalette.text,
-    textMuted: metalPalette.textMuted,
-    border: metalPalette.border,
+    primary: metalPalette?.primary,
+    secondary: metalPalette?.secondary,
+    accent: metalPalette?.accent,
+    background: metalPalette?.background,
+    surface: metalPalette?.surface,
+    text: metalPalette?.text,
+    textMuted: metalPalette?.textMuted,
+    border: metalPalette?.border,
   },
   spacing,
   radius,

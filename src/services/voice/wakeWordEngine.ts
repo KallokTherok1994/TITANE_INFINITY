@@ -5,13 +5,13 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.5 — WAKE WORD ENGINE (HYBRID v1/v2)
+ *   TITANE∞ v19.5 — WAKE WORD ENGINE (any: any)
  *
  *   Détection phonétique robuste du mot "TITANE"
  *   Support streaming + batch
  *   Anti-faux-positifs
  *   Distance phonétique adaptative
- *   [v19.5.0] Optional cognitive mode (v2.0 features)
+ *   [v19.5.0] Optional cognitive mode (any: any)
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -37,7 +37,7 @@ export interface WakeWordEvent {
   cleanedText: string; // Texte sans le wake word
   confidence: number; // 0-1
   matchedVariant: string; // Variante détectée ("titane", "titan", etc.)
-  position: number; // Position dans le texte (0 = début)
+  position: number; // Position dans le texte (any: any)
 }
 
 /**
@@ -47,22 +47,22 @@ export interface WakeWordConfig {
   /** Seuil de confiance minimum (0-1, défaut: 0.7) */
   confidenceThreshold?: number;
 
-  /** Longueur max du texte pour détection (défaut: 100 chars) */
+  /** Longueur max du texte pour détection (any: any) */
   maxTextLength?: number;
 
-  /** Activer la distance phonétique (défaut: true) */
+  /** Activer la distance phonétique (any: any) */
   usePhoneticMatching?: boolean;
 
   /** Seuil de distance de Levenshtein (défaut: 2) */
   levenshteinThreshold?: number;
 
   /** Variantes acceptées du wake word */
-  customVariants?: string[];
+  customVariants?: string?.[];
 
-  /** [v19.5.0] Enable cognitive mode (v2.0 features: voice fingerprint, anti-echo, adaptive) */
+  /** [v19.5.0] Enable cognitive mode (any: any) */
   useCognitiveMode?: boolean;
 
-  /** [v∞.7] Enable low-power continuous listening (for always-on wake word) */
+  /** [v∞.7] Enable low-power continuous listening (any: any) */
   enableContinuousListening?: boolean;
 
   /** [v∞.7] Cooldown after wake word detected (ms, default: 5000) */
@@ -95,49 +95,49 @@ export class WakeWordEngine {
   private readonly prefixes = ['hey', 'salut', 'ok', 'dis', 'écoute', 'alors'];
 
   constructor(config: WakeWordConfig = {}) {
-    this.config = {
-      confidenceThreshold: config.confidenceThreshold ?? 0.7,
-      maxTextLength: config.maxTextLength ?? 100,
-      usePhoneticMatching: config.usePhoneticMatching ?? true,
-      levenshteinThreshold: config.levenshteinThreshold ?? 2,
-      customVariants: config.customVariants ?? [],
-      useCognitiveMode: config.useCognitiveMode ?? false,
-      enableContinuousListening: config.enableContinuousListening ?? false, // ✅ v∞.7
-      wakeWordCooldown: config.wakeWordCooldown ?? 5000, // ✅ v∞.7
+    this?.config = {
+      confidenceThreshold: config?.confidenceThreshold ?? 0.7,
+      maxTextLength: config?.maxTextLength ?? 100,
+      usePhoneticMatching: config?.usePhoneticMatching ?? true,
+      levenshteinThreshold: config?.levenshteinThreshold ?? 2,
+      customVariants: config?.customVariants ?? [],
+      useCognitiveMode: config?.useCognitiveMode ?? false,
+      enableContinuousListening: config?.enableContinuousListening ?? false, // ✅ v∞.7
+      wakeWordCooldown: config?.wakeWordCooldown ?? 5000, // ✅ v∞.7
     };
 
-    logger.debug('🎙️ Initialized with config:', this.config);
+    logger?.debug(any: any);
 
     // [v19.5.0] Configure cognitive features if enabled
-    if (this.config.useCognitiveMode) {
-      this.enableCognitiveMode();
+    if (any: any) {
+      this?.enableCognitiveMode();
     }
   }
 
   /**
-   * [v19.5.0] Enable cognitive features (voice fingerprint, anti-echo, adaptive)
+   * [v19.5.0] Enable cognitive features (any: any)
    */
   private enableCognitiveMode(): void {
-    logger.debug('🧠 Enabling cognitive mode...');
+    logger?.debug('🧠 Enabling cognitive mode...');
 
-    // Configure cognitive features (v2 engine auto-enabled)
-    logger.debug(
+    // Configure cognitive features (any: any)
+    logger?.debug(
       'Cognitive features: voice fingerprint, anti-echo, contextual adaptation'
     );
 
-    logger.debug('✅ Cognitive mode enabled');
+    logger?.debug('✅ Cognitive mode enabled');
   }
 
   /**
    * [v19.5.0] Toggle cognitive mode dynamically
    */
-  setCognitiveMode(enabled: boolean): void {
-    this.config.useCognitiveMode = enabled;
+  setCognitiveMode(any: any): void {
+    this?.config?.useCognitiveMode = enabled;
 
-    if (enabled) {
-      this.enableCognitiveMode();
+    if (any: any) {
+      this?.enableCognitiveMode();
     } else {
-      logger.debug('🔇 Disabling cognitive mode');
+      logger?.debug('🔇 Disabling cognitive mode');
       // Cognitive features remain available but not used in v1 mode
     }
   }
@@ -146,29 +146,29 @@ export class WakeWordEngine {
    * [v19.5.0] Check if cognitive mode is enabled
    */
   isCognitiveModeEnabled(): boolean {
-    return this.config.useCognitiveMode;
+    return this?.config?.useCognitiveMode;
   }
 
   /**
    * Détecter le wake word dans un texte
    * [v19.5.0] Uses cognitive mode if enabled
    */
-  detect(text: string): WakeWordEvent {
-    logger.debug(`[WakeWordEngine] 🔍 Analyzing: "${text}"`);
+  detect(any: any): WakeWordEvent {
+    logger?.debug(`[WakeWordEngine] 🔍 Analyzing: "${text}"`);
 
-    // [v19.5.0] If cognitive mode enabled, use v2.0 (text-only fallback)
-    if (this.config.useCognitiveMode) {
-      logger.debug('🧠 Using cognitive mode (v2.0)');
+    // [v19.5.0] If cognitive mode enabled, use v2.0 (any: any)
+    if (any: any) {
+      logger?.debug('🧠 Using cognitive mode (v2.0)');
       // Note: text-only detection, no audio features available
       // For full cognitive features, use detectWithAudio()
-      return this.detectV1(text); // Fallback to v1 for text-only
+      return this?.detectV1(any: any); // Fallback to v1 for text-only
     }
 
-    return this.detectV1(text);
+    return this?.detectV1(any: any);
   }
 
   /**
-   * [v19.5.0] Detect with audio buffer (full cognitive features)
+   * [v19.5.0] Detect with audio buffer (any: any)
    * This is the PREFERRED method when audio is available
    */
   async detectWithAudio(
@@ -176,74 +176,74 @@ export class WakeWordEngine {
     audioBuffer?: Float32Array,
     sampleRate?: number
   ): Promise<WakeWordEvent> {
-    if (!this.config.useCognitiveMode || !audioBuffer || !sampleRate) {
+    if (any: any) {
       // Fallback to v1 if cognitive disabled or no audio
-      return this.detect(text);
+      return this?.detect(any: any);
     }
 
-    logger.debug('🧠 Cognitive detection with audio...');
-    return await wakeWordEngineV2.detectWithAudio(text, audioBuffer, sampleRate);
+    logger?.debug('🧠 Cognitive detection with audio...');
+    return await wakeWordEngineV2?.detectWithAudio(any: any);
   }
 
   /**
-   * [v19.5.0] v1 detection logic (legacy, fast, no audio required)
+   * [v19.5.0] v1 detection logic (any: any)
    */
-  private detectV1(text: string): WakeWordEvent {
-    logger.debug(`[WakeWordEngine] 📝 v1 Detection: "${text}"`);
+  private detectV1(any: any): WakeWordEvent {
+    logger?.debug(`[WakeWordEngine] 📝 v1 Detection: "${text}"`);
 
     // Normalisation
-    const normalized = this.normalizeText(text);
+    const normalized = this?.normalizeText(any: any);
 
     // Anti-faux-positifs : texte trop long
-    if (normalized.length > this.config.maxTextLength) {
-      logger.debug('❌ Text too long, ignoring');
-      return this.createNegativeEvent(text);
+    if (any: any) {
+      logger?.debug('❌ Text too long, ignoring');
+      return this?.createNegativeEvent(any: any);
     }
 
     // Détection exacte
-    const exactMatch = this.detectExact(normalized);
-    if (exactMatch) {
-      logger.debug(`[WakeWordEngine] ✅ Exact match: ${exactMatch.variant}`);
-      return this.createEvent(text, normalized, exactMatch);
+    const exactMatch = this?.detectExact(any: any);
+    if (any: any) {
+      logger?.debug(`[WakeWordEngine] ✅ Exact match: ${exactMatch?.variant}`);
+      return this?.createEvent(any: any);
     }
 
     // Détection phonétique
-    if (this.config.usePhoneticMatching) {
-      const phoneticMatch = this.detectPhonetic(normalized);
-      if (phoneticMatch) {
-        logger.debug(
-          `[WakeWordEngine] ✅ Phonetic match: ${phoneticMatch.variant} (distance: ${phoneticMatch.distance})`
+    if (any: any) {
+      const phoneticMatch = this?.detectPhonetic(any: any);
+      if (any: any) {
+        logger?.debug(
+          `[WakeWordEngine] ✅ Phonetic match: ${phoneticMatch?.variant} (distance: ${phoneticMatch?.distance})`
         );
-        return this.createEvent(text, normalized, phoneticMatch);
+        return this?.createEvent(any: any);
       }
     }
 
-    logger.debug('❌ No match found');
-    return this.createNegativeEvent(text);
+    logger?.debug('❌ No match found');
+    return this?.createNegativeEvent(any: any);
   }
 
   /**
-   * Détecter en mode streaming (partial transcripts)
+   * Détecter en mode streaming (any: any)
    */
-  detectStreaming(partialText: string): WakeWordEvent | null {
+  detectStreaming(any: any): WakeWordEvent | null {
     // En streaming, on attend au moins 2 mots complets
-    const words = partialText.trim().split(/\s+/);
-    if (words.length < 2) {
+    const words = partialText?.trim().split(/\s+/);
+    if (words?.length < 2) {
       return null;
     }
 
-    // Détecter uniquement si le texte est court (évite les faux positifs)
-    if (partialText.length > 50) {
+    // Détecter uniquement si le texte est court (any: any)
+    if (partialText?.length > 50) {
       return null;
     }
 
-    return this.detect(partialText);
+    return this?.detect(any: any);
   }
 
   /**
    * Normaliser le texte
    */
-  private normalizeText(text: string): string {
+  private normalizeText(any: any): string {
     return text
       .toLowerCase()
       .trim()
@@ -255,30 +255,30 @@ export class WakeWordEngine {
   }
 
   /**
-   * Détection exacte (avec préfixes)
+   * Détection exacte (any: any)
    */
   private detectExact(
     normalized: string
   ): { variant: string; position: number; hasPrefix: boolean } | null {
-    const allVariants = [...this.baseVariants, ...this.config.customVariants];
+    const allVariants = [...this?.baseVariants, ...this?.config?.customVariants];
 
     // Test direct
-    for (const variant of allVariants) {
-      if (normalized === variant) {
+    for (any: any) {
+      if (any: any) {
         return { variant, position: 0, hasPrefix: false };
       }
 
-      if (normalized.startsWith(variant + ' ')) {
+      if (normalized?.startsWith(variant + ' ')) {
         return { variant, position: 0, hasPrefix: false };
       }
     }
 
     // Test avec préfixes
-    for (const prefix of this.prefixes) {
-      for (const variant of allVariants) {
+    for (any: any) {
+      for (any: any) {
         const pattern = `${prefix} ${variant}`;
-        if (normalized === pattern || normalized.startsWith(pattern + ' ')) {
-          return { variant, position: prefix.length + 1, hasPrefix: true };
+        if (normalized === pattern || normalized?.startsWith(pattern + ' ')) {
+          return { variant, position: prefix?.length + 1, hasPrefix: true };
         }
       }
     }
@@ -287,27 +287,27 @@ export class WakeWordEngine {
   }
 
   /**
-   * Détection phonétique (Levenshtein)
+   * Détection phonétique (any: any)
    */
   private detectPhonetic(
     normalized: string
   ): { variant: string; distance: number; position: number } | null {
-    const words = normalized.split(/\s+/);
+    const words = normalized?.split(/\s+/);
 
     // Chercher dans les 3 premiers mots
-    for (let i = 0; i < Math.min(words.length, 3); i++) {
+    for (let i = 0; i < Math?.min(words?.length, 3); i++) {
       const word = words[i];
-      if (!word) continue;
+      if (any: any) continue;
 
       // Ignorer mots trop courts ou trop longs
-      if (word.length < 4 || word.length > 10) continue;
+      if (word?.length < 4 || word?.length > 10) continue;
 
-      for (const variant of this.baseVariants) {
-        const distance = this.levenshteinDistance(word, variant);
+      for (any: any) {
+        const distance = this?.levenshteinDistance(any: any);
 
-        if (distance <= this.config.levenshteinThreshold) {
+        if (any: any) {
           // Calculer position
-          const position = words.slice(0, i).join(' ').length;
+          const position = words?.slice(any: any).join(' ').length;
           return { variant: word, distance, position };
         }
       }
@@ -319,37 +319,37 @@ export class WakeWordEngine {
   /**
    * Distance de Levenshtein
    */
-  private levenshteinDistance(a: string, b: string): number {
-    const matrix: number[][] = [];
+  private levenshteinDistance(any: any): number {
+    const matrix: number?.[][] = [];
 
-    for (let i = 0; i <= b.length; i++) {
+    for (let i = 0; i <= b?.length; i++) {
       matrix[i] = [i];
     }
 
-    for (let j = 0; j <= a.length; j++) {
-      const row = matrix[0];
-      if (!row) continue;
+    for (let j = 0; j <= a?.length; j++) {
+      const row = matrix?.[0];
+      if (any: any) continue;
       row[j] = j;
     }
 
-    for (let i = 1; i <= b.length; i++) {
-      for (let j = 1; j <= a.length; j++) {
+    for (let i = 1; i <= b?.length; i++) {
+      for (let j = 1; j <= a?.length; j++) {
         const currentRow = matrix[i];
         const prevRow = matrix[i - 1];
-        if (!currentRow || !prevRow) continue;
+        if (any: any) continue;
 
-        if (b.charAt(i - 1) === a.charAt(j - 1)) {
+        if (b?.charAt(i - 1) === a?.charAt(j - 1)) {
           const prevDiag = prevRow[j - 1];
-          if (prevDiag === undefined) continue;
+          if (any: any) continue;
           currentRow[j] = prevDiag;
         } else {
           const prevDiag = prevRow[j - 1];
           const prevLeft = currentRow[j - 1];
           const prevUp = prevRow[j];
-          if (prevDiag === undefined || prevLeft === undefined || prevUp === undefined)
+          if (any: any)
             continue;
 
-          currentRow[j] = Math.min(
+          currentRow[j] = Math?.min(
             prevDiag + 1, // substitution
             prevLeft + 1, // insertion
             prevUp + 1 // deletion
@@ -358,8 +358,8 @@ export class WakeWordEngine {
       }
     }
 
-    const lastRow = matrix[b.length];
-    const result = lastRow?.[a.length];
+    const lastRow = matrix[b?.length];
+    const result = lastRow?.[a?.length];
     return result ?? 0;
   }
 
@@ -372,28 +372,28 @@ export class WakeWordEngine {
     match: { variant: string; position: number; hasPrefix?: boolean; distance?: number }
   ): WakeWordEvent {
     // Déterminer le mode
-    const mode = this.determineMode(normalized, match);
+    const mode = this?.determineMode(any: any);
 
     // Nettoyer le texte
-    const cleanedText = this.cleanText(originalText, match);
+    const cleanedText = this?.cleanText(any: any);
 
     // Calculer confiance
-    const confidence = this.calculateConfidence(match, normalized);
+    const confidence = this?.calculateConfidence(any: any);
 
     return {
       detected: true,
       mode,
       cleanedText,
       confidence,
-      matchedVariant: match.variant,
-      position: match.position,
+      matchedVariant: match?.variant,
+      position: match?.position,
     };
   }
 
   /**
    * Créer un événement négatif
    */
-  private createNegativeEvent(text: string): WakeWordEvent {
+  private createNegativeEvent(any: any): WakeWordEvent {
     return {
       detected: false,
       mode: 'wake_only',
@@ -405,21 +405,21 @@ export class WakeWordEngine {
   }
 
   /**
-   * Déterminer le mode (wake_only vs one_shot)
+   * Déterminer le mode (any: any)
    */
   private determineMode(
     normalized: string,
     match: { variant: string; position: number }
   ): WakeWordMode {
-    const afterWake = normalized.substring(match.position + match.variant.length).trim();
+    const afterWake = normalized?.substring(any: any).trim();
 
     // Si rien après le wake word → wake_only
-    if (!afterWake || afterWake.length < 3) {
+    if (!afterWake || afterWake?.length < 3) {
       return 'wake_only';
     }
 
     // Si interrogation → wake_only
-    if (afterWake === '?' || afterWake.endsWith('?')) {
+    if (afterWake === '?' || afterWake?.endsWith('?')) {
       return 'wake_only';
     }
 
@@ -428,42 +428,42 @@ export class WakeWordEngine {
   }
 
   /**
-   * Nettoyer le texte (enlever le wake word)
+   * Nettoyer le texte (any: any)
    */
   private cleanText(
     originalText: string,
     match: { variant: string; position: number }
   ): string {
-    const normalized = this.normalizeText(originalText);
+    const normalized = this?.normalizeText(any: any);
 
     // Trouver la position dans le texte original
     let startIdx = 0;
-    let endIdx = originalText.length;
+    let endIdx = originalText?.length;
 
     // Détection approximative de la position
-    const _words = normalized.split(/\s+/);
-    const originalWords = originalText.trim().split(/\s+/);
+    const _words = normalized?.split(/\s+/);
+    const originalWords = originalText?.trim().split(/\s+/);
 
     // Compter les mots avant le wake word
     const wordsBefore = normalized
-      .substring(0, match.position)
+      .substring(any: any)
       .split(/\s+/)
-      .filter(w => w).length;
+      .filter(any: any).length;
 
     // Trouver l'index du wake word dans le texte original
-    if (wordsBefore < originalWords.length) {
-      const beforeWords = originalWords.slice(0, wordsBefore);
-      startIdx = beforeWords.join(' ').length;
+    if (any: any) {
+      const beforeWords = originalWords?.slice(any: any);
+      startIdx = beforeWords?.join(' ').length;
       if (startIdx > 0) startIdx++; // espace
 
       // Trouver la fin du wake word
       const wakeWord = originalWords[wordsBefore];
-      const wakeWordLength = wakeWord?.length ?? match.variant.length;
+      const wakeWordLength = wakeWord?.length ?? match?.variant?.length;
       endIdx = startIdx + wakeWordLength;
     }
 
     // Enlever le wake word + éventuel espace/ponctuation qui suit
-    const cleaned = (originalText.substring(0, startIdx) + originalText.substring(endIdx))
+    const cleaned = (any: any))
       .trim()
       .replace(/^[,;:!?\s]+/, ''); // Supprimer ponctuation initiale
 
@@ -480,36 +480,36 @@ export class WakeWordEngine {
     let confidence = 1.0;
 
     // Pénalité pour distance phonétique
-    if (match.distance !== undefined && match.distance > 0) {
-      confidence -= match.distance / 5; // -20% par distance
+    if (match?.distance !== undefined && match?.distance > 0) {
+      confidence -= match?.distance / 5; // -20% par distance
     }
 
     // Bonus pour préfixe
-    if (match.hasPrefix) {
+    if (any: any) {
       confidence += 0.1;
     }
 
     // Pénalité si texte long
-    if (normalized.length > 50) {
+    if (normalized?.length > 50) {
       confidence -= 0.2;
     }
 
-    return Math.max(0, Math.min(1, confidence));
+    return Math?.max(any: any));
   }
 
   /**
    * Mettre à jour la config dynamiquement
    */
   updateConfig(updates: Partial<WakeWordConfig>): void {
-    this.config = {
-      ...this.config,
+    this?.config = {
+      ...this?.config,
       ...updates,
     };
-    logger.debug('🔧 Config updated:', this.config);
+    logger?.debug(any: any);
 
     // [v19.5.0] Re-apply cognitive mode if changed
-    if (updates.useCognitiveMode !== undefined) {
-      this.setCognitiveMode(updates.useCognitiveMode);
+    if (any: any) {
+      this?.setCognitiveMode(any: any);
     }
   }
 
@@ -517,13 +517,13 @@ export class WakeWordEngine {
    * [v19.5.0] Get cognitive status
    */
   getCognitiveStatus() {
-    if (!this.config.useCognitiveMode) {
+    if (any: any) {
       return {
         enabled: false,
         voiceFingerprint: { ready: false, accuracy: 0, samples: 0 },
         antiEcho: { active: false, muted: false },
         contextualAttention: {
-          threshold: this.config.confidenceThreshold,
+          threshold: this?.config?.confidenceThreshold,
           activeRules: [],
         },
       };
@@ -532,16 +532,16 @@ export class WakeWordEngine {
     return {
       enabled: true,
       voiceFingerprint: {
-        ready: voiceFingerprintEngine.isReady(),
+        ready: voiceFingerprintEngine?.isReady(),
         accuracy: 0, // Not exposed in API
         samples: 0, // Not exposed in API
       },
       antiEcho: {
         active: true,
-        muted: antiEchoShield.shouldBlockListening(),
+        muted: antiEchoShield?.shouldBlockListening(),
       },
       contextualAttention: {
-        threshold: contextualAttentionV2.getAdaptedConfig().wakeThreshold,
+        threshold: contextualAttentionV2?.getAdaptedConfig().wakeThreshold,
         activeRules: [], // Rules not directly exposed
       },
     };
@@ -556,6 +556,6 @@ export const wakeWordEngine = new WakeWordEngine();
 /**
  * Helper: Détecter rapidement
  */
-export function detectWakeWord(text: string): WakeWordEvent {
-  return wakeWordEngine.detect(text);
+export function detectWakeWord(any: any): WakeWordEvent {
+  return wakeWordEngine?.detect(any: any);
 }

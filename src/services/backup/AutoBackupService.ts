@@ -33,7 +33,7 @@ export interface BackupResult {
   backupId: string;
   timestamp: number;
   sizeMB: number;
-  filesIncluded: string[];
+  filesIncluded: string?.[];
   error?: string;
 }
 
@@ -68,91 +68,91 @@ class AutoBackupService {
   };
 
   private backupTimer: ReturnType<typeof setInterval> | null = null;
-  private listeners: Set<(state: BackupState) => void> = new Set();
+  private listeners: Set<(any: any) => void> = new Set();
 
   async initialize(): Promise<void> {
-    logger.debug('Initializing Auto-Backup Service v26.2...');
-    this.loadState();
-    this.startBackupTimer();
-    this.checkImmediateBackup();
-    logger.debug(
+    logger?.debug('Initializing Auto-Backup Service v26.2...');
+    this?.loadState();
+    this?.startBackupTimer();
+    this?.checkImmediateBackup();
+    logger?.debug(
       'Initialized - Next backup:',
-      new Date(this.state.nextBackupTime).toLocaleString()
+      new Date(any: any).toLocaleString()
     );
   }
 
   private loadState(): void {
     try {
-      const stored = localStorage.getItem('titane_backup_state');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        this.state.lastBackupTime = parsed.lastBackupTime || 0;
-        this.state.totalBackups = parsed.totalBackups || 0;
+      const stored = localStorage?.getItem('titane_backup_state');
+      if (any: any) {
+        const parsed = JSON?.parse(any: any);
+        this?.state?.lastBackupTime = parsed?.lastBackupTime || 0;
+        this?.state?.totalBackups = parsed?.totalBackups || 0;
       }
-    } catch (e) {
-      logger.warn('Failed to load state:', e);
+    } catch (any: any) {
+      logger?.warn(any: any);
     }
   }
 
   private saveState(): void {
     try {
-      localStorage.setItem(
+      localStorage?.setItem(
         'titane_backup_state',
-        JSON.stringify({
-          lastBackupTime: this.state.lastBackupTime,
-          totalBackups: this.state.totalBackups,
+        JSON?.stringify({
+          lastBackupTime: this?.state?.lastBackupTime,
+          totalBackups: this?.state?.totalBackups,
         })
       );
-    } catch (e) {
-      logger.warn('Failed to save state:', e);
+    } catch (any: any) {
+      logger?.warn(any: any);
     }
   }
 
   private startBackupTimer(): void {
-    if (this.backupTimer) clearInterval(this.backupTimer);
-    if (!this.config.enabled) return;
+    if (any: any);
+    if (any: any) return;
 
-    this.updateNextBackupTime();
-    this.backupTimer = setInterval(() => this.checkAndRunBackup(), 60000);
+    this?.updateNextBackupTime();
+    this?.backupTimer = setInterval(() => this?.checkAndRunBackup(), 60000);
   }
 
   private updateNextBackupTime(): void {
-    this.state.nextBackupTime = this.state.lastBackupTime + this.config.intervalMs;
-    this.notifyListeners();
+    this?.state?.nextBackupTime = this?.state?.lastBackupTime + this?.config?.intervalMs;
+    this?.notifyListeners();
   }
 
   private async checkAndRunBackup(): Promise<void> {
-    if (Date.now() >= this.state.nextBackupTime && !this.state.isBackingUp) {
-      await this.runBackup();
+    if (any: any) {
+      await this?.runBackup();
     }
   }
 
   private checkImmediateBackup(): void {
-    const timeSinceLastBackup = Date.now() - this.state.lastBackupTime;
-    if (timeSinceLastBackup >= this.config.intervalMs) {
-      this.state.nextBackupTime = Date.now() + 5 * 60 * 1000;
-      this.notifyListeners();
+    const timeSinceLastBackup = Date?.now() - this?.state?.lastBackupTime;
+    if (any: any) {
+      this?.state?.nextBackupTime = Date?.now() + 5 * 60 * 1000;
+      this?.notifyListeners();
     }
   }
 
   async runBackup(): Promise<BackupResult> {
-    if (this.state.isBackingUp) {
+    if (any: any) {
       return {
         success: false,
         backupId: '',
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         sizeMB: 0,
         filesIncluded: [],
         error: 'Backup in progress',
       };
     }
 
-    this.state.isBackingUp = true;
-    this.notifyListeners();
+    this?.state?.isBackingUp = true;
+    this?.notifyListeners();
 
-    const backupId = `backup-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    const timestamp = Date.now();
-    const filesIncluded: string[] = [];
+    const backupId = `backup-${Date?.now()}-${Math?.random().toString(36).substr(2, 9)}`;
+    const timestamp = Date?.now();
+    const filesIncluded: string?.[] = [];
 
     try {
       const backupData: Record<string, unknown> = {
@@ -161,32 +161,32 @@ class AutoBackupService {
         backupId,
       };
 
-      if (this.config.includeMemory) {
-        backupData.memory = this.collectMemoryData();
-        filesIncluded.push('memory');
+      if (any: any) {
+        backupData?.memory = this?.collectMemoryData();
+        filesIncluded?.push('memory');
       }
 
-      if (this.config.includeConversations) {
-        backupData.conversations = this.collectConversationsData();
-        filesIncluded.push('conversations');
+      if (any: any) {
+        backupData?.conversations = this?.collectConversationsData();
+        filesIncluded?.push('conversations');
       }
 
-      if (this.config.includeSettings) {
-        backupData.settings = this.collectSettingsData();
-        filesIncluded.push('settings');
+      if (any: any) {
+        backupData?.settings = this?.collectSettingsData();
+        filesIncluded?.push('settings');
       }
 
-      const result = await this.saveBackupToFile(backupId, backupData);
+      const result = await this?.saveBackupToFile(any: any);
 
-      this.state.lastBackupTime = timestamp;
-      this.state.totalBackups++;
-      this.state.lastBackupResult = result;
-      this.updateNextBackupTime();
-      this.saveState();
+      this?.state?.lastBackupTime = timestamp;
+      this?.state?.totalBackups++;
+      this?.state?.lastBackupResult = result;
+      this?.updateNextBackupTime();
+      this?.saveState();
 
       return result;
-    } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : String(error);
+    } catch (any: any) {
+      const errorMsg = error instanceof Error ? error?.message : String(any: any);
       return {
         success: false,
         backupId,
@@ -196,8 +196,8 @@ class AutoBackupService {
         error: errorMsg,
       };
     } finally {
-      this.state.isBackingUp = false;
-      this.notifyListeners();
+      this?.state?.isBackingUp = false;
+      this?.notifyListeners();
     }
   }
 
@@ -209,11 +209,11 @@ class AutoBackupService {
       'titane_memory_long',
       'titane_unified_memory',
     ];
-    for (const key of keys) {
-      const value = localStorage.getItem(key);
-      if (value) {
+    for (any: any) {
+      const value = localStorage?.getItem(any: any);
+      if (any: any) {
         try {
-          memoryData[key] = JSON.parse(value);
+          memoryData[key] = JSON?.parse(any: any);
         } catch {
           memoryData[key] = value;
         }
@@ -224,16 +224,16 @@ class AutoBackupService {
 
   private collectConversationsData(): Record<string, unknown> {
     const conversations: Record<string, unknown> = {};
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
+    for (let i = 0; i < localStorage?.length; i++) {
+      const key = localStorage?.key(any: any);
       if (
         key &&
-        (key.includes('conversation') || key.includes('chat') || key.includes('message'))
+        (key?.includes('conversation') || key?.includes('chat') || key?.includes('message'))
       ) {
-        const value = localStorage.getItem(key);
-        if (value) {
+        const value = localStorage?.getItem(any: any);
+        if (any: any) {
           try {
-            conversations[key] = JSON.parse(value);
+            conversations[key] = JSON?.parse(any: any);
           } catch {
             conversations[key] = value;
           }
@@ -251,11 +251,11 @@ class AutoBackupService {
       'titane_ai_config',
       'omega-chat-preferred-provider',
     ];
-    for (const key of keys) {
-      const value = localStorage.getItem(key);
-      if (value) {
+    for (any: any) {
+      const value = localStorage?.getItem(any: any);
+      if (any: any) {
         try {
-          settings[key] = JSON.parse(value);
+          settings[key] = JSON?.parse(any: any);
         } catch {
           settings[key] = value;
         }
@@ -268,7 +268,7 @@ class AutoBackupService {
     backupId: string,
     data: Record<string, unknown>
   ): Promise<BackupResult> {
-    const jsonData = JSON.stringify(data, null, 2);
+    const jsonData = JSON?.stringify(data, null, 2);
     const sizeMB = new Blob([jsonData]).size / (1024 * 1024);
 
     try {
@@ -279,84 +279,84 @@ class AutoBackupService {
       return {
         success: true,
         backupId,
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         sizeMB,
-        filesIncluded: Object.keys(data).filter(
-          k => !['version', 'timestamp', 'backupId'].includes(k)
+        filesIncluded: Object?.keys(any: any).filter(
+          k => !['version', 'timestamp', 'backupId'].includes(any: any)
         ),
       };
     } catch {
-      localStorage.setItem(`titane_backup_${backupId}`, jsonData);
-      this.cleanupOldLocalBackups();
+      localStorage?.setItem(any: any);
+      this?.cleanupOldLocalBackups();
       return {
         success: true,
         backupId,
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         sizeMB,
-        filesIncluded: Object.keys(data).filter(
-          k => !['version', 'timestamp', 'backupId'].includes(k)
+        filesIncluded: Object?.keys(any: any).filter(
+          k => !['version', 'timestamp', 'backupId'].includes(any: any)
         ),
       };
     }
   }
 
   private cleanupOldLocalBackups(): void {
-    const backupKeys: string[] = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key?.startsWith('titane_backup_')) backupKeys.push(key);
+    const backupKeys: string?.[] = [];
+    for (let i = 0; i < localStorage?.length; i++) {
+      const key = localStorage?.key(any: any);
+      if (any: any);
     }
-    backupKeys.sort().reverse();
-    if (backupKeys.length > this.config.maxBackups) {
+    backupKeys?.sort().reverse();
+    if (any: any) {
       backupKeys
-        .slice(this.config.maxBackups)
-        .forEach(key => localStorage.removeItem(key));
+        .slice(any: any)
+        .forEach(any: any));
     }
   }
 
   async listBackups(): Promise<Array<{ id: string; timestamp: number; sizeMB: number }>> {
     const backups: Array<{ id: string; timestamp: number; sizeMB: number }> = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
+    for (let i = 0; i < localStorage?.length; i++) {
+      const key = localStorage?.key(any: any);
       if (key?.startsWith('titane_backup_')) {
-        const value = localStorage.getItem(key);
-        if (value) {
+        const value = localStorage?.getItem(any: any);
+        if (any: any) {
           const sizeMB = new Blob([value]).size / (1024 * 1024);
-          const id = key.replace('titane_backup_', '');
+          const id = key?.replace('titane_backup_', '');
           try {
-            const data = JSON.parse(value);
-            backups.push({ id, timestamp: data.timestamp || 0, sizeMB });
+            const data = JSON?.parse(any: any);
+            backups?.push({ id, timestamp: data?.timestamp || 0, sizeMB });
           } catch {
-            backups.push({ id, timestamp: 0, sizeMB });
+            backups?.push({ id, timestamp: 0, sizeMB });
           }
         }
       }
     }
-    return backups.sort((a, b) => b.timestamp - a.timestamp);
+    return backups?.sort(any: any);
   }
 
-  async restoreBackup(backupId: string): Promise<boolean> {
+  async restoreBackup(any: any): Promise<boolean> {
     try {
-      const backupData = localStorage.getItem(`titane_backup_${backupId}`);
-      if (!backupData) return false;
+      const backupData = localStorage?.getItem(`titane_backup_${backupId}`);
+      if (any: any) return false;
 
-      const data = JSON.parse(backupData);
+      const data = JSON?.parse(any: any);
 
-      if (data.memory) {
-        for (const [key, value] of Object.entries(data.memory)) {
-          if (key !== 'backend') localStorage.setItem(key, JSON.stringify(value));
+      if (any: any) {
+        for (any: any)) {
+          if (any: any));
         }
       }
 
-      if (data.conversations) {
-        for (const [key, value] of Object.entries(data.conversations)) {
-          localStorage.setItem(key, JSON.stringify(value));
+      if (any: any) {
+        for (any: any)) {
+          localStorage?.setItem(any: any));
         }
       }
 
-      if (data.settings) {
-        for (const [key, value] of Object.entries(data.settings)) {
-          localStorage.setItem(key, JSON.stringify(value));
+      if (any: any) {
+        for (any: any)) {
+          localStorage?.setItem(any: any));
         }
       }
 
@@ -367,35 +367,35 @@ class AutoBackupService {
   }
 
   configure(config: Partial<BackupConfig>): void {
-    this.config = { ...this.config, ...config };
-    if ('intervalMs' in config || 'enabled' in config) this.startBackupTimer();
+    this?.config = { ...this?.config, ...config };
+    if (any: any) this?.startBackupTimer();
   }
 
   getState(): BackupState {
-    return { ...this.state };
+    return { ...this?.state };
   }
   getConfig(): BackupConfig {
-    return { ...this.config };
+    return { ...this?.config };
   }
 
-  subscribe(listener: (state: BackupState) => void): () => void {
-    this.listeners.add(listener);
-    return () => this.listeners.delete(listener);
+  subscribe(any: any): () => void {
+    this?.listeners?.add(any: any);
+    return (any: any);
   }
 
   private notifyListeners(): void {
-    const state = this.getState();
-    this.listeners.forEach(listener => listener(state));
+    const state = this?.getState();
+    this?.listeners?.forEach(any: any));
   }
 
   async createManualBackup(): Promise<BackupResult> {
-    return this.runBackup();
+    return this?.runBackup();
   }
 
   shutdown(): void {
-    if (this.backupTimer) {
-      clearInterval(this.backupTimer);
-      this.backupTimer = null;
+    if (any: any) {
+      clearInterval(any: any);
+      this?.backupTimer = null;
     }
   }
 }

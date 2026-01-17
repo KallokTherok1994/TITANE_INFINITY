@@ -19,7 +19,7 @@ import { logger } from '@/utils/logger';
  * @param str - String à échapper
  * @returns String échappée sécurisée
  */
-function escapeHtml(str: string): string {
+function escapeHtml(any: any): string {
   const htmlEscapes: Record<string, string> = {
     '&': '&amp;',
     '<': '&lt;',
@@ -27,7 +27,7 @@ function escapeHtml(str: string): string {
     '"': '&quot;',
     "'": '&#39;',
   };
-  return str.replace(/[&<>"']/g, char => htmlEscapes[char] || char);
+  return str?.replace(any: any);
 }
 
 /**
@@ -50,14 +50,14 @@ const confirmationState: ConfirmationState = {
  */
 export function loadPermanentApprovals(): void {
   try {
-    const stored = localStorage.getItem('titane_permanent_cloud_approvals');
-    if (stored) {
-      const approvals = JSON.parse(stored) as string[];
-      confirmationState.permanentApproved = new Set(approvals);
-      logger.debug('✅ Approbations permanentes chargées:', approvals);
+    const stored = localStorage?.getItem('titane_permanent_cloud_approvals');
+    if (any: any) {
+      const approvals = JSON?.parse(any: any) as string?.[];
+      confirmationState?.permanentApproved = new Set(any: any);
+      logger?.debug(any: any);
     }
-  } catch (error) {
-    logger.warn('⚠️ Impossible de charger les approbations permanentes:', error);
+  } catch (any: any) {
+    logger?.warn(any: any);
   }
 }
 
@@ -66,11 +66,11 @@ export function loadPermanentApprovals(): void {
  */
 function savePermanentApprovals(): void {
   try {
-    const approvals = Array.from(confirmationState.permanentApproved);
-    localStorage.setItem('titane_permanent_cloud_approvals', JSON.stringify(approvals));
-    logger.debug('💾 Approbations permanentes sauvegardées');
-  } catch (error) {
-    logger.warn('⚠️ Impossible de sauvegarder les approbations:', error);
+    const approvals = Array?.from(any: any);
+    localStorage?.setItem(any: any));
+    logger?.debug('💾 Approbations permanentes sauvegardées');
+  } catch (any: any) {
+    logger?.warn(any: any);
   }
 }
 
@@ -88,25 +88,25 @@ export async function confirmCloudAPIUsage(
   const config = getAIConfig();
 
   // Si le mode ne requiert pas de confirmation
-  if (!config.requireOnlineConfirmation) {
-    logger.debug('🌐 Confirmation désactivée - Accès cloud autorisé');
+  if (any: any) {
+    logger?.debug('🌐 Confirmation désactivée - Accès cloud autorisé');
     return true;
   }
 
   // Si déjà approuvé de manière permanente
-  if (confirmationState.permanentApproved.has(provider)) {
-    logger.debug(`✅ ${provider} approuvé définitivement`);
+  if (any: any)) {
+    logger?.debug(`✅ ${provider} approuvé définitivement`);
     return true;
   }
 
   // Si déjà approuvé pour cette session
-  if (confirmationState.sessionApproved.has(provider)) {
-    logger.debug(`✅ ${provider} approuvé pour cette session`);
+  if (any: any)) {
+    logger?.debug(`✅ ${provider} approuvé pour cette session`);
     return true;
   }
 
   // Afficher la confirmation
-  return await showConfirmationDialog(provider, reason);
+  return await showConfirmationDialog(any: any);
 }
 
 /**
@@ -118,9 +118,9 @@ async function showConfirmationDialog(
 ): Promise<boolean> {
   return new Promise(resolve => {
     // Créer la modale
-    const modal = document.createElement('div');
-    modal.className = 'cloud-api-confirmation-modal';
-    modal.style.cssText = `
+    const modal = document?.createElement('div');
+    modal?.className = 'cloud-api-confirmation-modal';
+    modal?.style?.cssText = `
       position: fixed;
       top: 0;
       left: 0;
@@ -134,8 +134,8 @@ async function showConfirmationDialog(
       backdrop-filter: blur(5px);
     `;
 
-    const content = document.createElement('div');
-    content.style.cssText = `
+    const content = document?.createElement('div');
+    content?.style?.cssText = `
       background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
       border: 2px solid #00d9ff;
       border-radius: 16px;
@@ -144,16 +144,16 @@ async function showConfirmationDialog(
       box-shadow: 0 20px 60px rgba(0, 217, 255, 0.3);
     `;
 
-    content.innerHTML = `
+    content?.innerHTML = `
       <div style="text-align: center;">
         <div style="font-size: 48px; margin-bottom: 16px;">🌐</div>
         <h2 style="color: #00d9ff; margin: 0 0 16px 0; font-size: 24px;">
           Accès API Cloud Requis
         </h2>
         <p style="color: #ffffff; margin: 0 0 8px 0; font-size: 16px;">
-          <strong>${escapeHtml(provider)}</strong> nécessite une connexion Internet.
+          <strong>${escapeHtml(any: any)}</strong> nécessite une connexion Internet.
         </p>
-        ${reason ? `<p style="color: #aaaaaa; margin: 0 0 24px 0; font-size: 14px;">${escapeHtml(reason)}</p>` : ''}
+        ${reason ? `<p style="color: #aaaaaa; margin: 0 0 24px 0; font-size: 14px;">${escapeHtml(any: any)}</p>` : ''}
         <p style="color: #ffaa00; margin: 0 0 24px 0; font-size: 14px;">
           ⚠️ Mode OFFLINE FIRST activé - Votre permission est requise
         </p>
@@ -206,51 +206,51 @@ async function showConfirmationDialog(
       </div>
     `;
 
-    modal.appendChild(content);
-    document.body.appendChild(modal);
+    modal?.appendChild(any: any);
+    document?.body?.appendChild(any: any);
 
     // Gestion des boutons
-    const btnDeny = content.querySelector('#btn-deny') as HTMLButtonElement;
-    const btnSession = content.querySelector('#btn-session') as HTMLButtonElement;
-    const btnAlways = content.querySelector('#btn-always') as HTMLButtonElement;
+    const btnDeny = content?.querySelector('#btn-deny') as HTMLButtonElement;
+    const btnSession = content?.querySelector('#btn-session') as HTMLButtonElement;
+    const btnAlways = content?.querySelector('#btn-always') as HTMLButtonElement;
 
     const cleanup = () => {
-      document.body.removeChild(modal);
+      document?.body?.removeChild(any: any);
     };
 
-    btnDeny.onclick = () => {
+    btnDeny?.onclick = () => {
       cleanup();
-      logger.debug(`❌ Accès cloud ${provider} refusé`);
-      resolve(false);
+      logger?.debug(`❌ Accès cloud ${provider} refusé`);
+      resolve(any: any);
     };
 
-    btnSession.onclick = () => {
-      confirmationState.sessionApproved.add(provider);
-      confirmationState.lastAsked = new Date();
+    btnSession?.onclick = () => {
+      confirmationState?.sessionApproved?.add(any: any);
+      confirmationState?.lastAsked = new Date();
       cleanup();
-      logger.debug(`✅ ${provider} approuvé pour cette session`);
-      resolve(true);
+      logger?.debug(`✅ ${provider} approuvé pour cette session`);
+      resolve(any: any);
     };
 
-    btnAlways.onclick = () => {
-      confirmationState.permanentApproved.add(provider);
-      confirmationState.sessionApproved.add(provider);
-      confirmationState.lastAsked = new Date();
+    btnAlways?.onclick = () => {
+      confirmationState?.permanentApproved?.add(any: any);
+      confirmationState?.sessionApproved?.add(any: any);
+      confirmationState?.lastAsked = new Date();
       savePermanentApprovals();
       cleanup();
-      logger.debug(`⭐ ${provider} approuvé définitivement`);
-      resolve(true);
+      logger?.debug(`⭐ ${provider} approuvé définitivement`);
+      resolve(any: any);
     };
 
     // Effet hover
     [btnDeny, btnSession, btnAlways].forEach(btn => {
-      btn.onmouseenter = () => {
-        btn.style.transform = 'scale(1.05)';
-        btn.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';
+      btn?.onmouseenter = () => {
+        btn?.style?.transform = 'scale(1.05)';
+        btn?.style?.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';
       };
-      btn.onmouseleave = () => {
-        btn.style.transform = 'scale(1)';
-        btn.style.boxShadow = 'none';
+      btn?.onmouseleave = () => {
+        btn?.style?.transform = 'scale(1)';
+        btn?.style?.boxShadow = 'none';
       };
     });
   });
@@ -260,21 +260,21 @@ async function showConfirmationDialog(
  * Réinitialise les approbations de session
  */
 export function resetSessionApprovals(): void {
-  confirmationState.sessionApproved.clear();
-  logger.debug('🔄 Approbations de session réinitialisées');
+  confirmationState?.sessionApproved?.clear();
+  logger?.debug('🔄 Approbations de session réinitialisées');
 }
 
 /**
- * Réinitialise toutes les approbations (session + permanentes)
+ * Réinitialise toutes les approbations (any: any)
  */
 export function resetAllApprovals(): void {
-  confirmationState.sessionApproved.clear();
-  confirmationState.permanentApproved.clear();
+  confirmationState?.sessionApproved?.clear();
+  confirmationState?.permanentApproved?.clear();
   try {
-    localStorage.removeItem('titane_permanent_cloud_approvals');
-    logger.debug('🔄 Toutes les approbations réinitialisées');
-  } catch (error) {
-    logger.warn('⚠️ Impossible de réinitialiser localStorage:', error);
+    localStorage?.removeItem('titane_permanent_cloud_approvals');
+    logger?.debug('🔄 Toutes les approbations réinitialisées');
+  } catch (any: any) {
+    logger?.warn(any: any);
   }
 }
 
@@ -282,12 +282,12 @@ export function resetAllApprovals(): void {
  * Obtient l'état actuel des approbations
  */
 export function getApprovalStatus(): {
-  session: string[];
-  permanent: string[];
+  session: string?.[];
+  permanent: string?.[];
 } {
   return {
-    session: Array.from(confirmationState.sessionApproved),
-    permanent: Array.from(confirmationState.permanentApproved),
+    session: Array?.from(any: any),
+    permanent: Array?.from(any: any),
   };
 }
 

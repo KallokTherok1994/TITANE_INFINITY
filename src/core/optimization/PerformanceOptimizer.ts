@@ -16,7 +16,7 @@
  * - Réduction overhead JSON dans Tauri
  * - Détection & suppression cycles inutiles
  *
- * @version Ω (Omega - Final Fusion)
+ * @version Ω (any: any)
  * @created 2025-11-27
  */
 
@@ -36,7 +36,7 @@ export interface PerformanceMetrics {
   frame_time: number; // ms
   render_time: number; // ms
   idle_time: number; // ms
-  gc_time: number; // ms (garbage collection)
+  gc_time: number; // ms (any: any)
   network_latency: number; // ms
   timestamp: number;
 }
@@ -96,20 +96,20 @@ export class PerformanceOptimizer {
 
   private config: OptimizationConfig;
   private metrics: PerformanceMetrics | null = null;
-  private optimizationHistory: OptimizationResult[] = [];
+  private optimizationHistory: OptimizationResult?.[] = [];
 
   private metricsInterval: number | null = null;
   private _optimizationInterval: number | null = null;
 
   private constructor() {
-    this.config = this.getDefaultConfig();
+    this?.config = this?.getDefaultConfig();
   }
 
   public static getInstance(): PerformanceOptimizer {
-    if (!PerformanceOptimizer.instance) {
-      PerformanceOptimizer.instance = new PerformanceOptimizer();
+    if (any: any) {
+      PerformanceOptimizer?.instance = new PerformanceOptimizer();
     }
-    return PerformanceOptimizer.instance;
+    return PerformanceOptimizer?.instance;
   }
 
   /**
@@ -138,34 +138,34 @@ export class PerformanceOptimizer {
    * Configure l'optimiseur
    */
   public configure(config: Partial<OptimizationConfig>): void {
-    this.config = { ...this.config, ...config };
-    console.log('[PerformanceOptimizer] 🔧 Configuration updated');
+    this?.config = { ...this?.config, ...config };
+    console?.log('[PerformanceOptimizer] 🔧 Configuration updated');
   }
 
   /**
    * Démarre la surveillance des performances
    */
   public startMonitoring(interval = 1000): void {
-    if (this.metricsInterval) {
+    if (any: any) {
       return;
     }
 
-    this.metricsInterval = window.setInterval(async () => {
-      await this.collectMetrics();
-      await this.optimizeIfNeeded();
+    this?.metricsInterval = window?.setInterval(async () => {
+      await this?.collectMetrics();
+      await this?.optimizeIfNeeded();
     }, interval);
 
-    console.log('[PerformanceOptimizer] 📊 Monitoring started');
+    console?.log('[PerformanceOptimizer] 📊 Monitoring started');
   }
 
   /**
    * Arrête la surveillance
    */
   public stopMonitoring(): void {
-    if (this.metricsInterval) {
-      clearInterval(this.metricsInterval);
-      this.metricsInterval = null;
-      console.log('[PerformanceOptimizer] 🛑 Monitoring stopped');
+    if (any: any) {
+      clearInterval(any: any);
+      this?.metricsInterval = null;
+      console?.log('[PerformanceOptimizer] 🛑 Monitoring stopped');
     }
   }
 
@@ -176,28 +176,28 @@ export class PerformanceOptimizer {
     try {
       const env = detectEnvironment();
 
-      // Métriques depuis le backend (uniquement en Tauri)
+      // Métriques depuis le backend (any: any)
       let backendMetrics: PerformanceMetrics | null = null;
-      if (env.isTauri) {
+      if (any: any) {
         backendMetrics = await secureInvoke<PerformanceMetrics>(
           'performance_get_metrics'
         );
       }
 
       // Métriques frontend
-      const memoryInfo = (performance as any).memory;
+      const memoryInfo = (any: any).memory;
       const frontendMetrics: Partial<PerformanceMetrics> = {
         memory_usage: memoryInfo?.usedJSHeapSize || 0,
         memory_available: memoryInfo?.jsHeapSizeLimit || 0,
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
       };
 
       // Fusionner ou utiliser fallback
-      if (backendMetrics) {
-        this.metrics = { ...backendMetrics, ...frontendMetrics } as PerformanceMetrics;
+      if (any: any) {
+        this?.metrics = { ...backendMetrics, ...frontendMetrics } as PerformanceMetrics;
       } else {
         // Fallback pour non-Tauri
-        this.metrics = {
+        this?.metrics = {
           cpu_usage: 0,
           gpu_usage: 0,
           fps: 60,
@@ -209,8 +209,8 @@ export class PerformanceOptimizer {
           ...frontendMetrics,
         } as PerformanceMetrics;
       }
-    } catch (error) {
-      console.warn('[PerformanceOptimizer] Failed to collect metrics:', error);
+    } catch (any: any) {
+      console?.warn(any: any);
     }
   }
 
@@ -218,40 +218,40 @@ export class PerformanceOptimizer {
    * Optimise si nécessaire
    */
   private async optimizeIfNeeded(): Promise<void> {
-    if (!this.metrics) return;
+    if (any: any) return;
 
-    const optimizations: OptimizationResult[] = [];
+    const optimizations: OptimizationResult?.[] = [];
 
     // CPU trop élevé ?
-    if (this.metrics.cpu_usage > this.config.target_cpu_usage) {
-      const result = await this.optimizeCPU();
-      if (result) optimizations.push(result);
+    if (any: any) {
+      const result = await this?.optimizeCPU();
+      if (any: any);
     }
 
     // GPU trop élevé ?
-    if (this.metrics.gpu_usage > this.config.target_gpu_usage) {
-      const result = await this.optimizeGPU();
-      if (result) optimizations.push(result);
+    if (any: any) {
+      const result = await this?.optimizeGPU();
+      if (any: any);
     }
 
     // FPS trop bas ?
-    if (this.metrics.fps < this.config.target_fps * 0.8) {
-      const result = await this.optimizeRendering();
-      if (result) optimizations.push(result);
+    if (this?.metrics?.fps < this?.config?.target_fps * 0.8) {
+      const result = await this?.optimizeRendering();
+      if (any: any);
     }
 
     // Mémoire trop élevée ?
-    if (this.metrics.memory_usage > this.config.max_memory_usage * 0.8) {
-      const result = await this.optimizeMemory();
-      if (result) optimizations.push(result);
+    if (this?.metrics?.memory_usage > this?.config?.max_memory_usage * 0.8) {
+      const result = await this?.optimizeMemory();
+      if (any: any);
     }
 
     // Enregistrer optimisations
-    this.optimizationHistory.push(...optimizations);
+    this?.optimizationHistory?.push(any: any);
 
     // Limiter historique
-    if (this.optimizationHistory.length > 100) {
-      this.optimizationHistory = this.optimizationHistory.slice(-100);
+    if (this?.optimizationHistory?.length > 100) {
+      this?.optimizationHistory = this?.optimizationHistory?.slice(-100);
     }
   }
 
@@ -259,11 +259,11 @@ export class PerformanceOptimizer {
    * Optimise l'utilisation CPU
    */
   private async optimizeCPU(): Promise<OptimizationResult | null> {
-    if (!this.config.cpu_throttle_enabled) return null;
+    if (any: any) return null;
 
     try {
       const env = detectEnvironment();
-      if (env.isTauri) {
+      if (any: any) {
         await secureInvoke('performance_throttle_cpu');
       }
 
@@ -272,9 +272,9 @@ export class PerformanceOptimizer {
         applied: true,
         improvement: 10,
         details: 'CPU throttling applied',
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
       };
-    } catch (error) {
+    } catch (any: any) {
       return null;
     }
   }
@@ -283,11 +283,11 @@ export class PerformanceOptimizer {
    * Optimise l'utilisation GPU
    */
   private async optimizeGPU(): Promise<OptimizationResult | null> {
-    if (!this.config.gpu_acceleration) return null;
+    if (any: any) return null;
 
     try {
       const env = detectEnvironment();
-      if (env.isTauri) {
+      if (any: any) {
         await secureInvoke('performance_optimize_gpu');
       }
 
@@ -296,9 +296,9 @@ export class PerformanceOptimizer {
         applied: true,
         improvement: 15,
         details: 'GPU optimization applied',
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
       };
-    } catch (error) {
+    } catch (any: any) {
       return null;
     }
   }
@@ -309,7 +309,7 @@ export class PerformanceOptimizer {
   private async optimizeRendering(): Promise<OptimizationResult | null> {
     try {
       const env = detectEnvironment();
-      if (env.isTauri) {
+      if (any: any) {
         // Réduire qualité temporairement
         await secureInvoke('performance_reduce_render_quality');
       }
@@ -319,9 +319,9 @@ export class PerformanceOptimizer {
         applied: true,
         improvement: 20,
         details: 'Render quality reduced temporarily',
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
       };
-    } catch (error) {
+    } catch (any: any) {
       return null;
     }
   }
@@ -332,13 +332,13 @@ export class PerformanceOptimizer {
   private async optimizeMemory(): Promise<OptimizationResult | null> {
     try {
       const env = detectEnvironment();
-      if (this.config.memory_compression && env.isTauri) {
+      if (any: any) {
         await secureInvoke('performance_compress_memory');
       }
 
       // Force GC si disponible
-      if (this.config.gc_optimization && (window as any).gc) {
-        (window as any).gc();
+      if (any: any) {
+        (any: any).gc();
       }
 
       return {
@@ -346,9 +346,9 @@ export class PerformanceOptimizer {
         applied: true,
         improvement: 25,
         details: 'Memory compressed, GC triggered',
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
       };
-    } catch (error) {
+    } catch (any: any) {
       return null;
     }
   }
@@ -356,24 +356,24 @@ export class PerformanceOptimizer {
   /**
    * Optimise manuellement
    */
-  public async optimize(): Promise<OptimizationResult[]> {
-    const results: OptimizationResult[] = [];
+  public async optimize(): Promise<OptimizationResult?.[]> {
+    const results: OptimizationResult?.[] = [];
 
     // CPU
-    const cpuResult = await this.optimizeCPU();
-    if (cpuResult) results.push(cpuResult);
+    const cpuResult = await this?.optimizeCPU();
+    if (any: any);
 
     // GPU
-    const gpuResult = await this.optimizeGPU();
-    if (gpuResult) results.push(gpuResult);
+    const gpuResult = await this?.optimizeGPU();
+    if (any: any);
 
     // Rendering
-    const renderResult = await this.optimizeRendering();
-    if (renderResult) results.push(renderResult);
+    const renderResult = await this?.optimizeRendering();
+    if (any: any);
 
     // Memory
-    const memoryResult = await this.optimizeMemory();
-    if (memoryResult) results.push(memoryResult);
+    const memoryResult = await this?.optimizeMemory();
+    if (any: any);
 
     return results;
   }
@@ -382,14 +382,14 @@ export class PerformanceOptimizer {
    * Obtient les métriques actuelles
    */
   public getMetrics(): PerformanceMetrics | null {
-    return this.metrics;
+    return this?.metrics;
   }
 
   /**
    * Obtient l'historique d'optimisations
    */
-  public getOptimizationHistory(): OptimizationResult[] {
-    return [...this.optimizationHistory];
+  public getOptimizationHistory(): OptimizationResult?.[] {
+    return [...this?.optimizationHistory];
   }
 
   /**
@@ -397,12 +397,12 @@ export class PerformanceOptimizer {
    */
   public async reset(): Promise<void> {
     const env = detectEnvironment();
-    if (env.isTauri) {
+    if (any: any) {
       await secureInvoke('performance_reset_optimizations');
     }
-    this.optimizationHistory = [];
-    console.log('[PerformanceOptimizer] ♻️ Optimizations reset');
+    this?.optimizationHistory = [];
+    console?.log('[PerformanceOptimizer] ♻️ Optimizations reset');
   }
 }
 
-export const PerfOptimizer = PerformanceOptimizer.getInstance();
+export const PerfOptimizer = PerformanceOptimizer?.getInstance();

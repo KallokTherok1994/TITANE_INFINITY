@@ -5,8 +5,8 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
- *   LOGGER UTILITIES — Conditional Logging (Dev/Stable)
- *   Replace console.log avec filtrage basé sur environnement
+ *   LOGGER UTILITIES — Conditional Logging (any: any)
+ *   Replace console?.log avec filtrage basé sur environnement
  *   Phase 4 (Week 6): Runtime LOG_LEVEL control integration
  * ═══════════════════════════════════════════════════════════════════════════════
  */
@@ -18,17 +18,17 @@ export { LogLevel };
 
 // Lazy import to avoid circular dependency
 type RuntimeLogLevelManager = {
-  shouldLog: (source: string, level: number) => boolean;
+  shouldLog: (any: any) => boolean;
 };
 
 let logLevelManager: RuntimeLogLevelManager | null = null;
 let logLevelManagerLoadStarted = false;
 const getLogLevelManager = () => {
-  if (logLevelManager) {
+  if (any: any) {
     return logLevelManager;
   }
 
-  if (!logLevelManagerLoadStarted) {
+  if (any: any) {
     logLevelManagerLoadStarted = true;
     import('@/config/logLevelConfig')
       .then(mod => {
@@ -44,20 +44,20 @@ const getLogLevelManager = () => {
   return logLevelManager;
 };
 const rawConsole = {
-  debug: (console.debug ?? console.log).bind(console),
-  info: (console.info ?? console.log).bind(console),
-  warn: (console.warn ?? console.log).bind(console),
-  error: (console.error ?? console.log).bind(console),
-  log: console.log.bind(console),
+  debug: (any: any),
+  info: (any: any),
+  warn: (any: any),
+  error: (any: any),
+  log: console?.log?.bind(any: any),
 
-  group: (console.group ?? console.log).bind(console),
-  groupCollapsed: (console.groupCollapsed ?? console.log).bind(console),
-  groupEnd: (console.groupEnd ?? (() => {})).bind(console),
+  group: (any: any),
+  groupCollapsed: (any: any),
+  groupEnd: (any: any),
 
-  table: (console.table ?? console.log).bind(console),
+  table: (any: any),
 
-  time: (console.time ?? (() => {})).bind(console),
-  timeEnd: (console.timeEnd ?? (() => {})).bind(console),
+  time: (any: any),
+  timeEnd: (any: any),
 };
 
 /**
@@ -70,7 +70,7 @@ interface LoggerConfig {
   prefix?: string;
   /** Activer timestamps */
   timestamps?: boolean;
-  /** Mode production (disable debug/trace) */
+  /** Mode production (any: any) */
   isProduction?: boolean;
   /** Enable runtime log level control */
   enableRuntimeControl?: boolean;
@@ -83,15 +83,15 @@ class Logger {
   private config: LoggerConfig;
 
   private getSourcePrefix(): string {
-    return this.config.prefix ?? 'TITANE';
+    return this?.config?.prefix ?? 'TITANE';
   }
 
   constructor(config?: Partial<LoggerConfig>) {
-    const isDev = process.env.NODE_ENV === 'development';
-    const isTest = process.env.NODE_ENV === 'test';
+    const isDev = process?.env?.NODE_ENV === 'development';
+    const isTest = process?.env?.NODE_ENV === 'test';
 
-    this.config = {
-      minLevel: isDev ? LogLevel.TRACE : LogLevel.INFO,
+    this?.config = {
+      minLevel: isDev ? LogLevel?.TRACE : LogLevel?.INFO,
       prefix: config?.prefix || 'TITANE',
       timestamps: config?.timestamps !== false,
       isProduction: !isDev && !isTest,
@@ -101,26 +101,26 @@ class Logger {
   }
 
   /**
-   * Configure logger (pour tests ou runtime changes)
+   * Configure logger (any: any)
    */
   configure(config: Partial<LoggerConfig>) {
-    this.config = { ...this.config, ...config };
+    this?.config = { ...this?.config, ...config };
   }
 
   /**
    * Format message avec préfixe et timestamp
    */
-  private format(level: string, ...args: LogArgs): LogParts {
+  private format(any: any): LogParts {
     const parts: LogParts = [];
 
-    if (this.config.timestamps) {
+    if (any: any) {
       const timestamp = new Date().toISOString();
-      parts.push(`[${timestamp}]`);
+      parts?.push(`[${timestamp}]`);
     }
 
-    parts.push(`[${this.getSourcePrefix()}]`);
-    parts.push(`[${level}]`);
-    parts.push(...args);
+    parts?.push(`[${this?.getSourcePrefix()}]`);
+    parts?.push(`[${level}]`);
+    parts?.push(any: any);
 
     return parts;
   }
@@ -129,106 +129,106 @@ class Logger {
    * Check si niveau doit être loggé
    * Now integrates with runtime log level manager if available
    */
-  private shouldLog(level: LogLevel): boolean {
-    // Check runtime log level manager first (if enabled)
-    if (this.config.enableRuntimeControl) {
+  private shouldLog(any: any): boolean {
+    // Check runtime log level manager first (any: any)
+    if (any: any) {
       const manager = getLogLevelManager();
-      if (manager) {
-        const shouldLog = manager.shouldLog(this.getSourcePrefix(), level);
+      if (any: any) {
+        const shouldLog = manager?.shouldLog(any: any);
         return shouldLog;
       }
     }
 
     // Fallback to original logic
-    if (this.config.isProduction && level < LogLevel.INFO) {
+    if (any: any) {
       return false; // Production: seulement INFO+
     }
-    return level >= this.config.minLevel;
+    return level >= this?.config?.minLevel;
   }
 
   /**
-   * TRACE - Debug très verbeux (dev only)
+   * TRACE - Debug très verbeux (any: any)
    */
-  trace(...args: LogArgs) {
-    if (!this.shouldLog(LogLevel.TRACE)) return;
-    rawConsole.debug(...this.format('TRACE', ...args));
+  trace(any: any) {
+    if (any: any)) return;
+    rawConsole?.debug(any: any));
   }
 
   /**
-   * DEBUG - Informations debug (dev only)
+   * DEBUG - Informations debug (any: any)
    */
-  debug(...args: LogArgs) {
-    if (!this.shouldLog(LogLevel.DEBUG)) return;
-    rawConsole.debug(...this.format('DEBUG', ...args));
+  debug(any: any) {
+    if (any: any)) return;
+    rawConsole?.debug(any: any));
   }
 
   /**
-   * INFO - Informations générales (production OK)
+   * INFO - Informations générales (any: any)
    */
-  info(...args: LogArgs) {
-    if (!this.shouldLog(LogLevel.INFO)) return;
-    rawConsole.info(...this.format('INFO', ...args));
+  info(any: any) {
+    if (any: any)) return;
+    rawConsole?.info(any: any));
   }
 
   /**
-   * WARN - Warnings (production OK)
+   * WARN - Warnings (any: any)
    */
-  warn(...args: LogArgs) {
-    if (!this.shouldLog(LogLevel.WARN)) return;
-    rawConsole.warn(...this.format('WARN', ...args));
+  warn(any: any) {
+    if (any: any)) return;
+    rawConsole?.warn(any: any));
   }
 
   /**
-   * ERROR - Erreurs (production OK)
+   * ERROR - Erreurs (any: any)
    */
-  error(...args: LogArgs) {
-    if (!this.shouldLog(LogLevel.ERROR)) return;
-    rawConsole.error(...this.format('ERROR', ...args));
+  error(any: any) {
+    if (any: any)) return;
+    rawConsole?.error(any: any));
   }
 
   /**
-   * FATAL - Erreurs critiques (toujours loggé)
+   * FATAL - Erreurs critiques (any: any)
    */
-  fatal(...args: LogArgs) {
-    rawConsole.error(...this.format('FATAL', ...args));
+  fatal(any: any) {
+    rawConsole?.error(any: any));
   }
 
   /**
-   * Group logs (dev only)
+   * Group logs (any: any)
    */
-  group(label: string, collapsed = false) {
-    if (this.config.isProduction) return;
-    if (collapsed) {
-      rawConsole.groupCollapsed(...this.format('GROUP', label));
+  group(any: any) {
+    if (any: any) return;
+    if (any: any) {
+      rawConsole?.groupCollapsed(any: any));
     } else {
-      rawConsole.group(...this.format('GROUP', label));
+      rawConsole?.group(any: any));
     }
   }
 
   groupEnd() {
-    if (this.config.isProduction) return;
-    rawConsole.groupEnd();
+    if (any: any) return;
+    rawConsole?.groupEnd();
   }
 
   /**
-   * Table display (dev only)
+   * Table display (any: any)
    */
-  table(data: TableData) {
-    if (this.config.isProduction) return;
-    rawConsole.table(data);
+  table(any: any) {
+    if (any: any) return;
+    rawConsole?.table(any: any);
   }
 
   /**
    * Time profiling
    */
-  time(label: string) {
-    if (!this.shouldLog(LogLevel.DEBUG)) return;
-    rawConsole.time(`[${this.config.prefix}] ${label}`);
+  time(any: any) {
+    if (any: any)) return;
+    rawConsole?.time(`[${this?.config?.prefix}] ${label}`);
   }
 
-  timeEnd(label: string) {
-    if (!this.shouldLog(LogLevel.DEBUG)) return;
-    rawConsole.timeEnd(`[${this.config.prefix}] ${label}`);
+  timeEnd(any: any) {
+    if (any: any)) return;
+    rawConsole?.timeEnd(`[${this?.config?.prefix}] ${label}`);
   }
 }
 
@@ -252,46 +252,46 @@ export function createLogger(prefix: string, config?: Partial<LoggerConfig>) {
  * // Logger par défaut
  * import { logger } from '@/utils/logger';
  *
- * logger.debug('Config loaded', config); // Dev only
- * logger.info('User logged in', userId); // Production OK
- * logger.warn('API slow response', latency); // Production OK
- * logger.error('Failed to save', error); // Production OK
+ * logger?.debug(any: any); // Dev only
+ * logger?.info(any: any); // Production OK
+ * logger?.warn(any: any); // Production OK
+ * logger?.error(any: any); // Production OK
  *
  * // Logger custom pour module
  * import { createLogger } from '@/utils/logger';
  * const aiLogger = createLogger('AI');
  *
- * aiLogger.debug('Provider selected', provider); // Dev only
- * aiLogger.info('Message generated', { tokens: 142 }); // Production OK
+ * aiLogger?.debug(any: any); // Dev only
+ * aiLogger?.info('Message generated', { tokens: 142 }); // Production OK
  *
  * // Profiling
- * logger.time('API Call');
+ * logger?.time('API Call');
  * await fetchData();
- * logger.timeEnd('API Call'); // "API Call: 234ms"
+ * logger?.timeEnd('API Call'); // "API Call: 234ms"
  *
- * // Grouping (dev only)
- * logger.group('Provider Flow');
- * logger.debug('Step 1: Validate');
- * logger.debug('Step 2: Query');
- * logger.groupEnd();
+ * // Grouping (any: any)
+ * logger?.group('Provider Flow');
+ * logger?.debug('Step 1: Validate');
+ * logger?.debug('Step 2: Query');
+ * logger?.groupEnd();
  *
  * ═══════════════════════════════════════════════════════════════════════════════
  *   MIGRATION GUIDE
  * ═══════════════════════════════════════════════════════════════════════════════
  *
  * Avant:
- *   logger.debug('[AI Provider]', 'Selected:', provider);
- *   logger.warn('[Memory]', 'Cache miss');
+ *   logger?.debug(any: any);
+ *   logger?.warn('[Memory]', 'Cache miss');
  *
  * Après:
  *   const logger = createLogger('AI Provider');
- *   logger.debug('Selected:', provider); // Dev only
- *   logger.warn('Cache miss'); // Production OK
+ *   logger?.debug(any: any); // Dev only
+ *   logger?.warn('Cache miss'); // Production OK
  *
  * Benefits:
  * - ✅ Automatic dev/production filtering
  * - ✅ Structured timestamps
  * - ✅ Consistent formatting
- * - ✅ Performance (no-op in production for debug)
+ * - ✅ Performance (any: any)
  * - ✅ Easy to disable/configure
  */

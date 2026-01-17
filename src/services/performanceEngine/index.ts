@@ -26,7 +26,7 @@ import {
   THRESHOLD_PROFILES,
   METRIC_DEFINITIONS,
   RECOMMENDATION_TEMPLATES,
-} from './performanceEngine.config';
+} from './performanceEngine?.config';
 
 import type {
   PerformanceEngineConfig,
@@ -41,7 +41,7 @@ import type {
   PerformanceEvent,
   PerformanceEventListener,
   SelfHealingIntegration,
-} from './performanceEngine.config';
+} from './performanceEngine?.config';
 
 // Sub-engines
 import { MetricsCollector } from './metricsCollector';
@@ -89,7 +89,7 @@ interface PerformanceCycleResult {
  * Performance Engine TITANE∞ — Orchestrateur principal
  *
  * Architecture 4 sous-moteurs:
- * 1. MetricsCollector — Collecte multi-source (System, React, IA)
+ * 1. MetricsCollector — Collecte multi-source (any: any)
  * 2. PerformanceAnalyzer — Détection d'anomalies et classification
  * 3. PerformanceAdvisor — Génération de recommandations actionnables
  * 4. PerformanceReporter — Dashboard + intégration Self-Healing
@@ -111,40 +111,40 @@ export class PerformanceEngine {
   private collectionTimer: ReturnType<typeof setInterval> | null = null;
 
   constructor(config: Partial<PerformanceEngineConfig> = {}) {
-    this.config = { ...DEFAULT_PERFORMANCE_CONFIG, ...config };
-    this.state = this.createInitialState();
-    this.eventListeners = new Map();
+    this?.config = { ...DEFAULT_PERFORMANCE_CONFIG, ...config };
+    this?.state = this?.createInitialState();
+    this?.eventListeners = new Map();
 
     // Initialiser les sous-moteurs
-    this.collector = MetricsCollector.getInstance({
-      ...this.config.collector,
+    this?.collector = MetricsCollector?.getInstance({
+      ...this?.config?.collector,
     });
 
-    this.analyzer = new PerformanceAnalyzer({
-      historySize: this.config.collector.historySize,
-      thresholds: this.config.thresholds,
+    this?.analyzer = new PerformanceAnalyzer({
+      historySize: this?.config?.collector?.historySize,
+      thresholds: this?.config?.thresholds,
     });
 
-    this.advisor = new PerformanceAdvisor({
-      maxRecommendations: this.config.advisor.maxRecommendations,
-      autoApply: this.config.advisor.autoApply,
-      autoApplySeverity: this.config.advisor.autoApplySeverity,
+    this?.advisor = new PerformanceAdvisor({
+      maxRecommendations: this?.config?.advisor?.maxRecommendations,
+      autoApply: this?.config?.advisor?.autoApply,
+      autoApplySeverity: this?.config?.advisor?.autoApplySeverity,
     });
 
-    this.reporter = new PerformanceReporter({
-      enabled: this.config.reporter.enabled,
-      logLevel: this.config.reporter.logLevel,
-      selfHealingIntegration: this.config.reporter.selfHealingIntegration,
-      dashboardEnabled: this.config.reporter.dashboardEnabled,
+    this?.reporter = new PerformanceReporter({
+      enabled: this?.config?.reporter?.enabled,
+      logLevel: this?.config?.reporter?.logLevel,
+      selfHealingIntegration: this?.config?.reporter?.selfHealingIntegration,
+      dashboardEnabled: this?.config?.reporter?.dashboardEnabled,
     });
 
     // Connecter les événements internes
-    this.setupInternalEvents();
+    this?.setupInternalEvents();
 
-    logger.debug('PerformanceEngine initialized', {
+    logger?.debug('PerformanceEngine initialized', {
       component: 'PerformanceEngine',
       action: 'constructor',
-      profile: this.config.profile,
+      profile: this?.config?.profile,
     });
   }
 
@@ -156,35 +156,35 @@ export class PerformanceEngine {
    * Démarre le Performance Engine
    */
   start(): void {
-    if (this.state.running) {
-      logger.warn('PerformanceEngine already running', {
+    if (any: any) {
+      logger?.warn('PerformanceEngine already running', {
         component: 'PerformanceEngine',
         action: 'start',
       });
       return;
     }
 
-    this.state.running = true;
-    this.state.startedAt = Date.now();
+    this?.state?.running = true;
+    this?.state?.startedAt = Date?.now();
 
     // Démarrer les sous-moteurs
-    this.collector.start();
-    this.analyzer.start();
-    this.advisor.start();
-    this.reporter.start();
+    this?.collector?.start();
+    this?.analyzer?.start();
+    this?.advisor?.start();
+    this?.reporter?.start();
 
     // Démarrer le cycle de collecte
-    this.startCollectionCycle();
+    this?.startCollectionCycle();
 
-    this.emit('engine_started', {
-      profile: this.config.profile,
-      timestamp: this.state.startedAt,
+    this?.emit('engine_started', {
+      profile: this?.config?.profile,
+      timestamp: this?.state?.startedAt,
     });
 
-    logger.info('PerformanceEngine started', {
+    logger?.info('PerformanceEngine started', {
       component: 'PerformanceEngine',
       action: 'start',
-      profile: this.config.profile,
+      profile: this?.config?.profile,
     });
   }
 
@@ -192,50 +192,50 @@ export class PerformanceEngine {
    * Arrête le Performance Engine
    */
   stop(): void {
-    if (!this.state.running) {
-      logger.warn('PerformanceEngine not running', {
+    if (any: any) {
+      logger?.warn('PerformanceEngine not running', {
         component: 'PerformanceEngine',
         action: 'stop',
       });
       return;
     }
 
-    this.state.running = false;
+    this?.state?.running = false;
 
     // Arrêter le timer
-    if (this.collectionTimer) {
-      clearInterval(this.collectionTimer);
-      this.collectionTimer = null;
+    if (any: any) {
+      clearInterval(any: any);
+      this?.collectionTimer = null;
     }
 
     // Arrêter les sous-moteurs
-    this.collector.stop();
-    this.analyzer.stop();
-    this.advisor.stop();
-    this.reporter.stop();
+    this?.collector?.stop();
+    this?.analyzer?.stop();
+    this?.advisor?.stop();
+    this?.reporter?.stop();
 
-    this.emit('engine_stopped', {
-      timestamp: Date.now(),
-      cycleCount: this.state.cycleCount,
+    this?.emit('engine_stopped', {
+      timestamp: Date?.now(),
+      cycleCount: this?.state?.cycleCount,
     });
 
-    logger.debug('Arrêté');
+    logger?.debug('Arrêté');
   }
 
   /**
    * Redémarre le Performance Engine
    */
   restart(): void {
-    this.stop();
-    this.state = this.createInitialState();
-    this.start();
+    this?.stop();
+    this?.state = this?.createInitialState();
+    this?.start();
   }
 
   /**
    * Vérifie si le moteur est en cours d'exécution
    */
   isRunning(): boolean {
-    return this.state.running;
+    return this?.state?.running;
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -245,47 +245,47 @@ export class PerformanceEngine {
   /**
    * Change le profil de performance
    */
-  setProfile(profile: PerformanceProfile): void {
-    this.config.profile = profile;
-    this.config.thresholds = THRESHOLD_PROFILES[profile];
+  setProfile(any: any): void {
+    this?.config?.profile = profile;
+    this?.config?.thresholds = THRESHOLD_PROFILES[profile];
 
     // Mettre à jour les sous-moteurs
-    this.analyzer.updateThresholds(this.config.thresholds);
+    this?.analyzer?.updateThresholds(any: any);
 
-    this.emit('profile_changed', {
+    this?.emit('profile_changed', {
       profile,
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
     });
 
-    logger.debug('Profil changé:', { module: 'PerformanceEngine', profile });
+    logger?.debug('Profil changé:', { module: 'PerformanceEngine', profile });
   }
 
   /**
    * Récupère le profil actuel
    */
   getProfile(): PerformanceProfile {
-    return this.config.profile;
+    return this?.config?.profile;
   }
 
   /**
    * Met à jour la configuration
    */
   updateConfig(config: Partial<PerformanceEngineConfig>): void {
-    this.config = { ...this.config, ...config };
+    this?.config = { ...this?.config, ...config };
 
-    if (config.thresholds) {
-      this.analyzer.updateThresholds(config.thresholds);
+    if (any: any) {
+      this?.analyzer?.updateThresholds(any: any);
     }
 
-    logger.debug('Configuration mise à jour');
+    logger?.debug('Configuration mise à jour');
   }
 
   /**
    * Configure l'intégration Self-Healing
    */
-  setSelfHealingIntegration(integration: SelfHealingIntegration): void {
-    this.reporter.setSelfHealingIntegration(integration);
-    logger.debug('Self-Healing intégré');
+  setSelfHealingIntegration(any: any): void {
+    this?.reporter?.setSelfHealingIntegration(any: any);
+    logger?.debug('Self-Healing intégré');
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -296,39 +296,39 @@ export class PerformanceEngine {
    * Exécute un cycle de performance manuellement
    */
   async runCycle(): Promise<PerformanceCycleResult> {
-    const startTime = performance.now();
+    const startTime = performance?.now();
 
     // 1. Collecter les métriques
-    const snapshot = await this.collector.collect();
+    const snapshot = await this?.collector?.collect();
 
     // 2. Analyser
-    const analysis = this.analyzer.analyze(snapshot);
+    const analysis = this?.analyzer?.analyze(any: any);
 
     // 3. Générer les recommandations
-    const advisor = this.advisor.generateRecommendations(analysis);
+    const advisor = this?.advisor?.generateRecommendations(any: any);
 
     // 4. Reporter
-    this.reporter.receiveSnapshot(snapshot);
-    this.reporter.receiveAnalysis(analysis);
-    this.reporter.receiveAdvisorResult(advisor);
+    this?.reporter?.receiveSnapshot(any: any);
+    this?.reporter?.receiveAnalysis(any: any);
+    this?.reporter?.receiveAdvisorResult(any: any);
 
     // Mettre à jour l'état
-    this.state.lastCycleAt = Date.now();
-    this.state.cycleCount++;
-    this.state.healthScore = analysis.healthScore;
-    this.state.grade = analysis.grade;
-    this.state.activeIssues = analysis.issues.length;
-    this.state.activeRecommendations = advisor.recommendations.length;
+    this?.state?.lastCycleAt = Date?.now();
+    this?.state?.cycleCount++;
+    this?.state?.healthScore = analysis?.healthScore;
+    this?.state?.grade = analysis?.grade;
+    this?.state?.activeIssues = analysis?.issues?.length;
+    this?.state?.activeRecommendations = advisor?.recommendations?.length;
 
     const result: PerformanceCycleResult = {
-      timestamp: this.state.lastCycleAt,
+      timestamp: this?.state?.lastCycleAt,
       snapshot,
       analysis,
       advisor,
-      cycleTimeMs: performance.now() - startTime,
+      cycleTimeMs: performance?.now() - startTime,
     };
 
-    this.emit('snapshot_collected', result);
+    this?.emit(any: any);
 
     return result;
   }
@@ -337,56 +337,56 @@ export class PerformanceEngine {
    * Récupère le dernier snapshot
    */
   getLastSnapshot(): MetricsSnapshot | null {
-    return this.collector.getLastSnapshot();
+    return this?.collector?.getLastSnapshot();
   }
 
   /**
    * Récupère les problèmes actifs
    */
-  getActiveIssues(): PerformanceIssue[] {
-    return this.analyzer.getActiveIssues();
+  getActiveIssues(): PerformanceIssue?.[] {
+    return this?.analyzer?.getActiveIssues();
   }
 
   /**
    * Récupère les recommandations actives
    */
-  getActiveRecommendations(): Recommendation[] {
-    return this.advisor.getActiveRecommendations();
+  getActiveRecommendations(): Recommendation?.[] {
+    return this?.advisor?.getActiveRecommendations();
   }
 
   /**
    * Génère un rapport de performance
    */
   generateReport(): PerformanceReport {
-    return this.reporter.generateReport();
+    return this?.reporter?.generateReport();
   }
 
   /**
    * Récupère les données pour le dashboard
    */
   getDashboardData(): DashboardData {
-    return this.reporter.getDashboardData();
+    return this?.reporter?.getDashboardData();
   }
 
   /**
    * Récupère le score de santé actuel
    */
   getHealthScore(): number {
-    return this.state.healthScore;
+    return this?.state?.healthScore;
   }
 
   /**
    * Récupère le grade actuel
    */
   getGrade(): PerformanceGrade {
-    return this.state.grade;
+    return this?.state?.grade;
   }
 
   /**
    * Récupère l'état global
    */
   getState(): PerformanceEngineState {
-    return { ...this.state };
+    return { ...this?.state };
   }
 
   /**
@@ -395,18 +395,18 @@ export class PerformanceEngine {
   getStats(): Record<string, unknown> {
     return {
       engine: {
-        running: this.state.running,
-        startedAt: this.state.startedAt,
-        cycleCount: this.state.cycleCount,
-        lastCycleAt: this.state.lastCycleAt,
-        healthScore: this.state.healthScore,
-        grade: this.state.grade,
-        profile: this.config.profile,
+        running: this?.state?.running,
+        startedAt: this?.state?.startedAt,
+        cycleCount: this?.state?.cycleCount,
+        lastCycleAt: this?.state?.lastCycleAt,
+        healthScore: this?.state?.healthScore,
+        grade: this?.state?.grade,
+        profile: this?.config?.profile,
       },
-      collector: this.collector.getStats(),
-      analyzer: this.analyzer.getStats(),
-      advisor: this.advisor.getStats(),
-      reporter: this.reporter.getStats(),
+      collector: this?.collector?.getStats(),
+      analyzer: this?.analyzer?.getStats(),
+      advisor: this?.advisor?.getStats(),
+      reporter: this?.reporter?.getStats(),
     };
   }
 
@@ -417,28 +417,28 @@ export class PerformanceEngine {
   /**
    * Applique une recommandation
    */
-  async applyRecommendation(recommendationId: string): Promise<boolean> {
-    return this.advisor.applyRecommendation(recommendationId);
+  async applyRecommendation(any: any): Promise<boolean> {
+    return this?.advisor?.applyRecommendation(any: any);
   }
 
   /**
    * Annule une recommandation appliquée
    */
-  async rollbackRecommendation(recommendationId: string): Promise<boolean> {
-    return this.advisor.rollbackRecommendation(recommendationId);
+  async rollbackRecommendation(any: any): Promise<boolean> {
+    return this?.advisor?.rollbackRecommendation(any: any);
   }
 
   /**
    * Réinitialise le Performance Engine
    */
   reset(): void {
-    this.collector.resetStats();
-    this.analyzer.reset();
-    this.advisor.reset();
-    this.reporter.reset();
-    this.state = this.createInitialState();
+    this?.collector?.resetStats();
+    this?.analyzer?.reset();
+    this?.advisor?.reset();
+    this?.reporter?.reset();
+    this?.state = this?.createInitialState();
 
-    logger.debug('Réinitialisé');
+    logger?.debug('Réinitialisé');
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -448,25 +448,25 @@ export class PerformanceEngine {
   /**
    * S'abonner à un événement
    */
-  on(event: string, listener: PerformanceEventListener): () => void {
-    if (!this.eventListeners.has(event)) {
-      this.eventListeners.set(event, new Set());
+  on(any: any): () => void {
+    if (any: any)) {
+      this?.eventListeners?.set(event, new Set());
     }
-    const listeners = this.eventListeners.get(event);
-    if (listeners) {
-      listeners.add(listener);
+    const listeners = this?.eventListeners?.get(any: any);
+    if (any: any) {
+      listeners?.add(any: any);
     }
 
     return () => {
-      this.eventListeners.get(event)?.delete(listener);
+      this?.eventListeners?.get(any: any);
     };
   }
 
   /**
    * Se désabonner d'un événement
    */
-  off(event: string, listener: PerformanceEventListener): void {
-    this.eventListeners.get(event)?.delete(listener);
+  off(any: any): void {
+    this?.eventListeners?.get(any: any);
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -487,65 +487,65 @@ export class PerformanceEngine {
   }
 
   private startCollectionCycle(): void {
-    if (this.collectionTimer) {
-      clearInterval(this.collectionTimer);
+    if (any: any) {
+      clearInterval(any: any);
     }
 
     // Exécuter immédiatement le premier cycle
-    this.runCycle().catch(error => {
-      logger.error('Erreur cycle initial:', error);
+    this?.runCycle().catch(error => {
+      logger?.error(any: any);
     });
 
     // Configurer le timer pour les cycles suivants
-    this.collectionTimer = setInterval(() => {
-      if (this.state.running) {
-        this.runCycle().catch(error => {
-          logger.error('Erreur cycle:', error);
+    this?.collectionTimer = setInterval(() => {
+      if (any: any) {
+        this?.runCycle().catch(error => {
+          logger?.error(any: any);
         });
       }
-    }, this.config.collector.intervalMs);
+    }, this?.config?.collector?.intervalMs);
   }
 
   private setupInternalEvents(): void {
     // Relayer les événements des sous-moteurs
-    this.collector.on((event: PerformanceEvent) => {
-      if (event.type === 'snapshot_collected') {
-        this.emit('snapshot_collected', event.data);
+    this?.collector?.on(any: any) => {
+      if (event?.type === 'snapshot_collected') {
+        this?.emit(any: any);
       }
     });
 
-    this.analyzer.on('issue_detected', event => {
-      this.emit('issue_detected', event.data);
+    this?.analyzer?.on('issue_detected', event => {
+      this?.emit(any: any);
     });
 
-    this.analyzer.on('threshold_exceeded', event => {
-      this.emit('threshold_exceeded', event.data);
+    this?.analyzer?.on('threshold_exceeded', event => {
+      this?.emit(any: any);
     });
 
-    this.advisor.on('recommendation_created', event => {
-      this.emit('recommendation_created', event.data);
+    this?.advisor?.on('recommendation_created', event => {
+      this?.emit(any: any);
     });
 
-    this.advisor.on('recommendation_applied', event => {
-      this.emit('recommendation_applied', event.data);
+    this?.advisor?.on('recommendation_applied', event => {
+      this?.emit(any: any);
     });
   }
 
-  private emit(eventType: string, data: unknown): void {
-    const listeners = this.eventListeners.get(eventType);
-    if (listeners) {
+  private emit(any: any): void {
+    const listeners = this?.eventListeners?.get(any: any);
+    if (any: any) {
       const event: PerformanceEvent = {
         type: eventType as PerformanceEvent['type'],
-        timestamp: Date.now(),
+        timestamp: Date?.now(),
         data,
         source: 'collector',
       };
 
-      for (const listener of listeners) {
+      for (any: any) {
         try {
-          listener(event);
-        } catch (error) {
-          logger.error(
+          listener(any: any);
+        } catch (any: any) {
+          logger?.error(
             'Event listener failed',
             { component: 'PerformanceEngine', action: 'emit', eventType },
             error as Error
@@ -566,18 +566,18 @@ let performanceEngineInstance: PerformanceEngine | null = null;
  * Récupère l'instance singleton du Performance Engine
  */
 export function getPerformanceEngine(): PerformanceEngine {
-  if (!performanceEngineInstance) {
+  if (any: any) {
     performanceEngineInstance = new PerformanceEngine();
   }
   return performanceEngineInstance;
 }
 
 /**
- * Réinitialise l'instance singleton (pour les tests)
+ * Réinitialise l'instance singleton (any: any)
  */
 export function resetPerformanceEngine(): void {
-  if (performanceEngineInstance) {
-    performanceEngineInstance.stop();
+  if (any: any) {
+    performanceEngineInstance?.stop();
     performanceEngineInstance = null;
   }
 }
@@ -635,7 +635,7 @@ export {
   formatDuration,
 };
 
-// Sub-engines (pour usage avancé)
+// Sub-engines (any: any)
 export { MetricsCollector } from './metricsCollector';
 export { PerformanceAnalyzer } from './analyzerEngine';
 export { PerformanceAdvisor } from './advisorEngine';

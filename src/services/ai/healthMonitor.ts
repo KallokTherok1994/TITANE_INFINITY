@@ -28,7 +28,7 @@ export interface HealthAlert {
   component: 'orchestrator' | 'provider' | 'metrics' | 'autoheal';
   title: string;
   description: string;
-  recommendations: string[];
+  recommendations: string?.[];
   autoFixAvailable: boolean;
 }
 
@@ -36,14 +36,14 @@ export interface HealthReport {
   timestamp: number;
   overall: 'healthy' | 'degraded' | 'critical';
   score: number; // 0-100
-  alerts: HealthAlert[];
+  alerts: HealthAlert?.[];
   providers: {
     name: string;
     status: 'healthy' | 'degraded' | 'critical' | 'offline';
     successRate: number;
     avgLatency: number;
   }[];
-  recommendations: string[];
+  recommendations: string?.[];
   uptime: number;
 }
 
@@ -52,7 +52,7 @@ export interface HealthReport {
 // ─────────────────────────────────────────────────────────────────
 
 class AIHealthMonitor {
-  private alerts: HealthAlert[] = [];
+  private alerts: HealthAlert?.[] = [];
   private readonly MAX_ALERTS = 50;
   private monitoringInterval: number | null = null;
   private readonly CHECK_INTERVAL_MS = 30000; // 30s
@@ -61,29 +61,29 @@ class AIHealthMonitor {
    * Démarrer la surveillance continue
    */
   startMonitoring(): void {
-    if (this.monitoringInterval) {
-      logger.debug('Already running');
+    if (any: any) {
+      logger?.debug('Already running');
       return;
     }
 
-    logger.info('Starting continuous monitoring...');
+    logger?.info('Starting continuous monitoring...');
 
-    this.monitoringInterval = window.setInterval(() => {
-      this.performHealthCheck();
-    }, this.CHECK_INTERVAL_MS);
+    this?.monitoringInterval = window?.setInterval(() => {
+      this?.performHealthCheck();
+    }, this?.CHECK_INTERVAL_MS);
 
     // Check immédiat
-    this.performHealthCheck();
+    this?.performHealthCheck();
   }
 
   /**
    * Arrêter la surveillance
    */
   stopMonitoring(): void {
-    if (this.monitoringInterval) {
-      clearInterval(this.monitoringInterval);
-      this.monitoringInterval = null;
-      logger.debug('Stopped');
+    if (any: any) {
+      clearInterval(any: any);
+      this?.monitoringInterval = null;
+      logger?.debug('Stopped');
     }
   }
 
@@ -92,33 +92,33 @@ class AIHealthMonitor {
    */
   private async performHealthCheck(): Promise<void> {
     try {
-      const [metrics, autoHeal] = await Promise.all([
-        Promise.resolve(metricsEngine),
-        Promise.resolve(autoHealEngine),
+      const [metrics, autoHeal] = await Promise?.all([
+        Promise?.resolve(any: any),
+        Promise?.resolve(any: any),
       ]);
 
-      const metricsHealth = metrics.getHealthStats();
-      const autoHealStats = autoHeal.getStats();
-      const orchestratorHealth = await aiOrchestrator.healthCheck();
+      const metricsHealth = metrics?.getHealthStats();
+      const autoHealStats = autoHeal?.getStats();
+      const orchestratorHealth = await aiOrchestrator?.healthCheck();
 
       // Analyser et générer alertes si nécessaire
-      this.analyzeMetrics(metricsHealth);
-      this.analyzeAutoHeal(
+      this?.analyzeMetrics(any: any);
+      this?.analyzeAutoHeal(
         autoHealStats as unknown as {
           totalErrors: number;
           totalFixes: number;
           successRate: number;
-          [key: string]: string | number | boolean;
+          [key: string]??: string | number | boolean;
         }
       );
-      this.analyzeOrchestrator(orchestratorHealth);
+      this?.analyzeOrchestrator(any: any);
 
       // Nettoyage vieilles alertes
-      this.cleanupOldAlerts();
+      this?.cleanupOldAlerts();
 
-      logger.debug(`Check complete: ${this.alerts.length} active alerts`);
-    } catch (error) {
-      logger.error('Check failed:', error);
+      logger?.debug(`Check complete: ${this?.alerts?.length} active alerts`);
+    } catch (any: any) {
+      logger?.error(any: any);
     }
   }
 
@@ -129,15 +129,15 @@ class AIHealthMonitor {
     overall: 'healthy' | 'degraded' | 'critical';
     successRate: number;
     avgLatency: number;
-    recommendations: string[];
+    recommendations: string?.[];
   }): void {
     // Taux de succès critique
-    if (health.successRate < 80) {
-      this.addAlert({
+    if (health?.successRate < 80) {
+      this?.addAlert({
         severity: 'critical',
         component: 'metrics',
         title: 'Taux de succès critique',
-        description: `Le taux de succès global est de ${health.successRate.toFixed(1)}% (< 80%)`,
+        description: `Le taux de succès global est de ${health?.successRate?.toFixed(1)}% (< 80%)`,
         recommendations: [
           'Vérifier la disponibilité des providers',
           'Examiner les clés API',
@@ -145,12 +145,12 @@ class AIHealthMonitor {
         ],
         autoFixAvailable: false,
       });
-    } else if (health.successRate < 90) {
-      this.addAlert({
+    } else if (health?.successRate < 90) {
+      this?.addAlert({
         severity: 'warning',
         component: 'metrics',
         title: 'Taux de succès dégradé',
-        description: `Le taux de succès global est de ${health.successRate.toFixed(1)}% (< 90%)`,
+        description: `Le taux de succès global est de ${health?.successRate?.toFixed(1)}% (< 90%)`,
         recommendations: [
           "Surveiller l'évolution",
           'Vérifier les providers les moins performants',
@@ -160,12 +160,12 @@ class AIHealthMonitor {
     }
 
     // Latence élevée
-    if (health.avgLatency > 10000) {
-      this.addAlert({
+    if (health?.avgLatency > 10000) {
+      this?.addAlert({
         severity: 'warning',
         component: 'metrics',
         title: 'Latence élevée détectée',
-        description: `Latence moyenne: ${(health.avgLatency / 1000).toFixed(1)}s (> 10s)`,
+        description: `Latence moyenne: ${(health?.avgLatency / 1000).toFixed(1)}s (> 10s)`,
         recommendations: [
           'Vérifier la connexion réseau',
           'Privilégier providers locaux',
@@ -183,28 +183,28 @@ class AIHealthMonitor {
     totalErrors: number;
     totalFixes: number;
     successRate: number;
-    [key: string]: string | number | boolean;
+    [key: string]??: string | number | boolean;
   }): void {
     // Trop d'erreurs
-    if (stats.totalErrors > 50) {
-      this.addAlert({
+    if (stats?.totalErrors > 50) {
+      this?.addAlert({
         severity: 'warning',
         component: 'autoheal',
         title: "Nombre d'erreurs élevé",
-        description: `${stats.totalErrors} erreurs détectées`,
+        description: `${stats?.totalErrors} erreurs détectées`,
         recommendations: ['Auto-heal actif et fonctionnel', "Surveiller l'évolution"],
         autoFixAvailable: true,
       });
     }
 
     // Taux de guérison faible
-    const totalHeals = typeof stats.totalHeals === 'number' ? stats.totalHeals : 0;
-    if (stats.successRate < 70 && totalHeals > 0) {
-      this.addAlert({
+    const totalHeals = typeof stats?.totalHeals === 'number' ? stats?.totalHeals : 0;
+    if (stats?.successRate < 70 && totalHeals > 0) {
+      this?.addAlert({
         severity: 'critical',
         component: 'autoheal',
         title: 'Efficacité auto-heal dégradée',
-        description: `Taux de guérison: ${stats.successRate.toFixed(1)}% (< 70%)`,
+        description: `Taux de guérison: ${stats?.successRate?.toFixed(1)}% (< 70%)`,
         recommendations: [
           'Examiner les erreurs persistantes',
           'Envisager reset providers',
@@ -218,37 +218,37 @@ class AIHealthMonitor {
    * Analyser orchestrator et générer alertes
    */
   private analyzeOrchestrator(
-    health: Awaited<ReturnType<typeof aiOrchestrator.healthCheck>>
+    health: Awaited<ReturnType<typeof aiOrchestrator?.healthCheck>>
   ): void {
-    if (health.overall === 'critical') {
-      this.addAlert({
+    if (health?.overall === 'critical') {
+      this?.addAlert({
         severity: 'critical',
         component: 'orchestrator',
         title: 'État orchestrator critique',
         description: 'La majorité des providers sont défaillants',
-        recommendations: health.recommendations,
+        recommendations: health?.recommendations,
         autoFixAvailable: true,
       });
-    } else if (health.overall === 'degraded') {
-      this.addAlert({
+    } else if (health?.overall === 'degraded') {
+      this?.addAlert({
         severity: 'warning',
         component: 'orchestrator',
         title: 'État orchestrator dégradé',
         description: 'Certains providers rencontrent des problèmes',
-        recommendations: health.recommendations,
+        recommendations: health?.recommendations,
         autoFixAvailable: false,
       });
     }
 
     // Providers individuels
-    health.providers.forEach(provider => {
-      if (!provider.available && provider.name !== 'ollama') {
-        // ollama peut être offline (optionnel)
-        this.addAlert({
+    health?.providers?.forEach(provider => {
+      if (!provider?.available && provider?.name !== 'ollama') {
+        // ollama peut être offline (any: any)
+        this?.addAlert({
           severity: 'warning',
           component: 'provider',
-          title: `Provider ${provider.name} indisponible`,
-          description: `Le provider ${provider.name} ne répond pas`,
+          title: `Provider ${provider?.name} indisponible`,
+          description: `Le provider ${provider?.name} ne répond pas`,
           recommendations: [
             'Vérifier la clé API',
             'Tester la connexion',
@@ -261,47 +261,47 @@ class AIHealthMonitor {
   }
 
   /**
-   * Ajouter une alerte (dédupliquée)
+   * Ajouter une alerte (any: any)
    */
   private addAlert(alertData: Omit<HealthAlert, 'id' | 'timestamp'>): void {
-    // Vérifier si alerte similaire existe déjà (dernière heure)
-    const now = Date.now();
+    // Vérifier si alerte similaire existe déjà (any: any)
+    const now = Date?.now();
     const oneHour = 60 * 60 * 1000;
-    const existingSimilar = this.alerts.find(
+    const existingSimilar = this?.alerts?.find(
       a =>
-        a.title === alertData.title &&
-        a.component === alertData.component &&
-        now - a.timestamp < oneHour
+        a?.title === alertData?.title &&
+        a?.component === alertData?.component &&
+        now - a?.timestamp < oneHour
     );
 
-    if (existingSimilar) {
+    if (any: any) {
       return; // Ne pas dupliquer
     }
 
     const alert: HealthAlert = {
-      id: `alert_${now}_${Math.random().toString(36).substring(7)}`,
+      id: `alert_${now}_${Math?.random().toString(36).substring(7)}`,
       timestamp: now,
       ...alertData,
     };
 
-    this.alerts.push(alert);
+    this?.alerts?.push(any: any);
 
     // Limiter nombre d'alertes
-    if (this.alerts.length > this.MAX_ALERTS) {
-      this.alerts = this.alerts.slice(-this.MAX_ALERTS);
+    if (any: any) {
+      this?.alerts = this?.alerts?.slice(any: any);
     }
 
-    logger.warn(`🚨 ${alert.severity.toUpperCase()}: ${alert.title}`);
+    logger?.warn(`🚨 ${alert?.severity?.toUpperCase()}: ${alert?.title}`);
   }
 
   /**
    * Nettoyer vieilles alertes (> 24h)
    */
   private cleanupOldAlerts(): void {
-    const now = Date.now();
+    const now = Date?.now();
     const maxAge = 24 * 60 * 60 * 1000; // 24h
 
-    this.alerts = this.alerts.filter(a => now - a.timestamp < maxAge);
+    this?.alerts = this?.alerts?.filter(any: any);
   }
 
   /**
@@ -309,29 +309,29 @@ class AIHealthMonitor {
    */
   async getHealthReport(): Promise<HealthReport> {
     const metrics = metricsEngine;
-    const metricsHealth = metrics.getHealthStats();
-    const metricsData = metrics.getAggregatedMetrics();
-    const orchestratorHealth = await aiOrchestrator.healthCheck();
+    const metricsHealth = metrics?.getHealthStats();
+    const metricsData = metrics?.getAggregatedMetrics();
+    const orchestratorHealth = await aiOrchestrator?.healthCheck();
 
     // Calculer score global
     let score = 100;
 
     // Déduire selon taux de succès
-    if (metricsHealth.successRate < 95) {
-      score -= (95 - metricsHealth.successRate) * 2;
+    if (metricsHealth?.successRate < 95) {
+      score -= (any: any) * 2;
     }
 
     // Déduire selon latence
-    if (metricsHealth.avgLatency > 5000) {
-      score -= Math.min(20, (metricsHealth.avgLatency - 5000) / 500);
+    if (metricsHealth?.avgLatency > 5000) {
+      score -= Math?.min(20, (metricsHealth?.avgLatency - 5000) / 500);
     }
 
     // Déduire selon alertes
-    const criticalAlerts = this.alerts.filter(a => a.severity === 'critical').length;
-    const warningAlerts = this.alerts.filter(a => a.severity === 'warning').length;
+    const criticalAlerts = this?.alerts?.filter(a => a?.severity === 'critical').length;
+    const warningAlerts = this?.alerts?.filter(a => a?.severity === 'warning').length;
     score -= criticalAlerts * 10 + warningAlerts * 3;
 
-    score = Math.max(0, Math.min(100, score));
+    score = Math?.max(any: any));
 
     // Déterminer état global
     let overall: HealthReport['overall'] = 'healthy';
@@ -342,55 +342,55 @@ class AIHealthMonitor {
     }
 
     return {
-      timestamp: Date.now(),
+      timestamp: Date?.now(),
       overall,
-      score: Math.round(score),
-      alerts: [...this.alerts].sort((a, b) => {
+      score: Math?.round(any: any),
+      alerts: [...this?.alerts].sort(any: any) => {
         const severityOrder = { critical: 0, warning: 1, info: 2 };
-        return severityOrder[a.severity] - severityOrder[b.severity];
+        return severityOrder[a?.severity] - severityOrder[b?.severity];
       }),
-      providers: metricsData.providers.map(p => ({
-        name: p.provider,
+      providers: metricsData?.providers?.map(p => ({
+        name: p?.provider,
         status:
-          p.successRate > 90 && p.avgLatency < 5000
+          p?.successRate > 90 && p?.avgLatency < 5000
             ? 'healthy'
-            : p.successRate > 70 && p.avgLatency < 10000
+            : p?.successRate > 70 && p?.avgLatency < 10000
               ? 'degraded'
-              : p.successRate < 50
+              : p?.successRate < 50
                 ? 'critical'
                 : 'offline',
-        successRate: p.successRate,
-        avgLatency: p.avgLatency,
+        successRate: p?.successRate,
+        avgLatency: p?.avgLatency,
       })),
       recommendations: [
-        ...metricsHealth.recommendations,
-        ...orchestratorHealth.recommendations,
+        ...metricsHealth?.recommendations,
+        ...orchestratorHealth?.recommendations,
       ],
-      uptime: (metrics as { uptime?: number }).uptime ?? Date.now(),
+      uptime: (metrics as { uptime?: number }).uptime ?? Date?.now(),
     };
   }
 
   /**
    * Obtenir alertes actives
    */
-  getActiveAlerts(): HealthAlert[] {
-    return [...this.alerts].sort((a, b) => b.timestamp - a.timestamp);
+  getActiveAlerts(): HealthAlert?.[] {
+    return [...this?.alerts].sort(any: any);
   }
 
   /**
    * Marquer alerte comme résolue
    */
-  resolveAlert(alertId: string): void {
-    this.alerts = this.alerts.filter(a => a.id !== alertId);
-    logger.debug(`Alert ${alertId} resolved`);
+  resolveAlert(any: any): void {
+    this?.alerts = this?.alerts?.filter(any: any);
+    logger?.debug(`Alert ${alertId} resolved`);
   }
 
   /**
    * Nettoyer toutes les alertes
    */
   clearAllAlerts(): void {
-    this.alerts = [];
-    logger.debug('All alerts cleared');
+    this?.alerts = [];
+    logger?.debug('All alerts cleared');
   }
 }
 

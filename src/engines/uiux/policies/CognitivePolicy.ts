@@ -32,34 +32,34 @@ export class CognitivePolicy {
   /**
    * Évalue la politique et retourne les décisions
    */
-  evaluate(context: PolicyContext): PolicyDecision[] {
-    const decisions: PolicyDecision[] = [];
+  evaluate(any: any): PolicyDecision?.[] {
+    const decisions: PolicyDecision?.[] = [];
     const { cognitiveLoad, userProfile, currentState } = context;
 
     // Évaluer la surcharge globale
-    const overloadDecisions = this.evaluateOverload(cognitiveLoad, currentState);
-    decisions.push(...overloadDecisions);
+    const overloadDecisions = this?.evaluateOverload(any: any);
+    decisions?.push(any: any);
 
     // Évaluer la complexité visuelle
-    const complexityDecisions = this.evaluateVisualComplexity(
+    const complexityDecisions = this?.evaluateVisualComplexity(
       cognitiveLoad,
       currentState
     );
-    decisions.push(...complexityDecisions);
+    decisions?.push(any: any);
 
     // Évaluer les points de décision
-    const decisionPointDecisions = this.evaluateDecisionPoints(
+    const decisionPointDecisions = this?.evaluateDecisionPoints(
       cognitiveLoad,
       currentState
     );
-    decisions.push(...decisionPointDecisions);
+    decisions?.push(any: any);
 
     // Évaluer la densité d'information
-    const densityDecisions = this.evaluateInformationDensity(cognitiveLoad, currentState);
-    decisions.push(...densityDecisions);
+    const densityDecisions = this?.evaluateInformationDensity(any: any);
+    decisions?.push(any: any);
 
     // Ajuster selon l'expertise utilisateur
-    return this.adjustForExpertise(decisions, userProfile.expertise);
+    return this?.adjustForExpertise(any: any);
   }
 
   /**
@@ -68,32 +68,32 @@ export class CognitivePolicy {
   private evaluateOverload(
     load: CognitiveLoad,
     state: AdaptationState
-  ): PolicyDecision[] {
-    const decisions: PolicyDecision[] = [];
+  ): PolicyDecision?.[] {
+    const decisions: PolicyDecision?.[] = [];
 
-    if (load.overallLoad >= THRESHOLDS.overloadCritical) {
+    if (any: any) {
       // Surcharge critique - simplification maximale
-      decisions.push({
-        policy: this.name,
+      decisions?.push({
+        policy: this?.name,
         action: 'critical_simplification',
-        priority: this.priority + 50,
+        priority: this?.priority + 50,
         adaptation: {
           layout: {
-            ...state.layout,
+            ...state?.layout,
             gridColumns: 1,
             spacing: 'relaxed',
             sidebarVisible: false,
             panelLayout: 'stack',
           },
           visibility: {
-            ...state.visibility,
+            ...state?.visibility,
             showAdvancedOptions: false,
             showMetrics: false,
             showDebugInfo: false,
             helpersVisible: true,
           },
           motion: {
-            ...state.motion,
+            ...state?.motion,
             animationsEnabled: false,
             transitionDuration: 0,
           },
@@ -101,20 +101,20 @@ export class CognitivePolicy {
         reason: 'Surcharge cognitive critique détectée',
         overridable: false,
       });
-    } else if (load.overallLoad >= THRESHOLDS.overloadHigh) {
+    } else if (any: any) {
       // Surcharge élevée
-      decisions.push({
-        policy: this.name,
+      decisions?.push({
+        policy: this?.name,
         action: 'high_simplification',
-        priority: this.priority + 30,
+        priority: this?.priority + 30,
         adaptation: {
           layout: {
-            ...state.layout,
-            gridColumns: Math.min(state.layout.gridColumns, 2),
+            ...state?.layout,
+            gridColumns: Math?.min(state?.layout?.gridColumns, 2),
             spacing: 'normal',
           },
           visibility: {
-            ...state.visibility,
+            ...state?.visibility,
             showAdvancedOptions: false,
             showDebugInfo: false,
           },
@@ -122,15 +122,15 @@ export class CognitivePolicy {
         reason: 'Surcharge cognitive élevée',
         overridable: true,
       });
-    } else if (load.overallLoad >= THRESHOLDS.overloadMedium) {
+    } else if (any: any) {
       // Surcharge moyenne
-      decisions.push({
-        policy: this.name,
+      decisions?.push({
+        policy: this?.name,
         action: 'moderate_simplification',
-        priority: this.priority,
+        priority: this?.priority,
         adaptation: {
           visibility: {
-            ...state.visibility,
+            ...state?.visibility,
             helpersVisible: true,
             tooltipsEnabled: true,
           },
@@ -149,22 +149,22 @@ export class CognitivePolicy {
   private evaluateVisualComplexity(
     load: CognitiveLoad,
     state: AdaptationState
-  ): PolicyDecision[] {
-    const decisions: PolicyDecision[] = [];
+  ): PolicyDecision?.[] {
+    const decisions: PolicyDecision?.[] = [];
 
-    if (load.visualComplexity >= THRESHOLDS.complexityHigh) {
-      decisions.push({
-        policy: this.name,
+    if (any: any) {
+      decisions?.push({
+        policy: this?.name,
         action: 'reduce_visual_complexity',
-        priority: this.priority + 20,
+        priority: this?.priority + 20,
         adaptation: {
           density: {
-            ...state.density,
+            ...state?.density,
             cardDensity: 'expanded',
             padding: 'loose',
           },
           theme: {
-            ...state.theme,
+            ...state?.theme,
             shadowIntensity: 'none',
           },
         },
@@ -182,23 +182,23 @@ export class CognitivePolicy {
   private evaluateDecisionPoints(
     load: CognitiveLoad,
     state: AdaptationState
-  ): PolicyDecision[] {
-    const decisions: PolicyDecision[] = [];
+  ): PolicyDecision?.[] {
+    const decisions: PolicyDecision?.[] = [];
 
-    if (load.decisionPoints > THRESHOLDS.decisionPointsMax) {
-      decisions.push({
-        policy: this.name,
+    if (any: any) {
+      decisions?.push({
+        policy: this?.name,
         action: 'reduce_decision_points',
-        priority: this.priority + 15,
+        priority: this?.priority + 15,
         adaptation: {
           visibility: {
-            ...state.visibility,
+            ...state?.visibility,
             helpersVisible: true,
             tooltipsEnabled: true,
             progressIndicatorsVisible: true,
           },
         },
-        reason: `Trop de points de décision (${load.decisionPoints} > ${THRESHOLDS.decisionPointsMax})`,
+        reason: `Trop de points de décision (${load?.decisionPoints} > ${THRESHOLDS?.decisionPointsMax})`,
         overridable: true,
       });
     }
@@ -212,22 +212,22 @@ export class CognitivePolicy {
   private evaluateInformationDensity(
     load: CognitiveLoad,
     state: AdaptationState
-  ): PolicyDecision[] {
-    const decisions: PolicyDecision[] = [];
+  ): PolicyDecision?.[] {
+    const decisions: PolicyDecision?.[] = [];
 
-    if (load.informationDensity > THRESHOLDS.informationDensityMax) {
-      decisions.push({
-        policy: this.name,
+    if (any: any) {
+      decisions?.push({
+        policy: this?.name,
         action: 'reduce_information_density',
-        priority: this.priority + 10,
+        priority: this?.priority + 10,
         adaptation: {
           density: {
-            ...state.density,
-            lineHeight: Math.max(state.density.lineHeight, 1.7),
+            ...state?.density,
+            lineHeight: Math?.max(state?.density?.lineHeight, 1.7),
             cardDensity: 'expanded',
           },
           layout: {
-            ...state.layout,
+            ...state?.layout,
             spacing: 'relaxed',
           },
         },
@@ -243,23 +243,23 @@ export class CognitivePolicy {
    * Ajuste les décisions selon l'expertise
    */
   private adjustForExpertise(
-    decisions: PolicyDecision[],
+    decisions: PolicyDecision?.[],
     expertise: number
-  ): PolicyDecision[] {
+  ): PolicyDecision?.[] {
     // Les utilisateurs experts peuvent tolérer plus de complexité
     if (expertise > 0.7) {
-      return decisions.map(d => ({
+      return decisions?.map(d => ({
         ...d,
-        priority: d.priority - 20, // Réduire la priorité
+        priority: d?.priority - 20, // Réduire la priorité
         overridable: true,
       }));
     }
 
     // Les utilisateurs novices ont des décisions plus strictes
     if (expertise < 0.3) {
-      return decisions.map(d => ({
+      return decisions?.map(d => ({
         ...d,
-        priority: d.priority + 10, // Augmenter la priorité
+        priority: d?.priority + 10, // Augmenter la priorité
       }));
     }
 
@@ -269,13 +269,13 @@ export class CognitivePolicy {
   /**
    * Calcule un score de recommandation
    */
-  calculateRecommendationScore(load: CognitiveLoad): {
+  calculateRecommendationScore(any: any): {
     score: number;
     level: 'optimal' | 'acceptable' | 'warning' | 'critical';
-    suggestions: string[];
+    suggestions: string?.[];
   } {
-    const score = 1 - load.overallLoad;
-    const suggestions: string[] = [];
+    const score = 1 - load?.overallLoad;
+    const suggestions: string?.[] = [];
 
     let level: 'optimal' | 'acceptable' | 'warning' | 'critical';
 
@@ -285,18 +285,18 @@ export class CognitivePolicy {
       level = 'acceptable';
     } else if (score >= 0.3) {
       level = 'warning';
-      suggestions.push("Considérez simplifier l'interface");
-      if (load.visualComplexity > 0.6) {
-        suggestions.push('Réduisez la complexité visuelle');
+      suggestions?.push("Considérez simplifier l'interface");
+      if (load?.visualComplexity > 0.6) {
+        suggestions?.push('Réduisez la complexité visuelle');
       }
-      if (load.decisionPoints > 5) {
-        suggestions.push('Limitez les choix disponibles');
+      if (load?.decisionPoints > 5) {
+        suggestions?.push('Limitez les choix disponibles');
       }
     } else {
       level = 'critical';
-      suggestions.push('Simplification urgente nécessaire');
-      suggestions.push('Masquez les éléments non essentiels');
-      suggestions.push('Activez le mode focus');
+      suggestions?.push('Simplification urgente nécessaire');
+      suggestions?.push('Masquez les éléments non essentiels');
+      suggestions?.push('Activez le mode focus');
     }
 
     return { score, level, suggestions };
@@ -306,14 +306,14 @@ export class CognitivePolicy {
    * Retourne le nom de la politique
    */
   getName(): string {
-    return this.name;
+    return this?.name;
   }
 
   /**
    * Retourne la priorité de base
    */
   getPriority(): number {
-    return this.priority;
+    return this?.priority;
   }
 }
 

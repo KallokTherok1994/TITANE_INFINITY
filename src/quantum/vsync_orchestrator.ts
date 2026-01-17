@@ -19,14 +19,14 @@ export interface VSyncState {
 export class VSyncOrchestrator {
   private isActive = false;
   private detectedRefreshRate = 60;
-  private frameTimeHistory: number[] = [];
+  private frameTimeHistory: number?.[] = [];
   private lastFrameTime = 0;
   private missedSyncs = 0;
   private lastSyncTime = 0;
   private rafId: number | null = null;
 
   constructor() {
-    this.detectRefreshRate();
+    this?.detectRefreshRate();
   }
 
   /**
@@ -35,43 +35,43 @@ export class VSyncOrchestrator {
   private async detectRefreshRate(): Promise<void> {
     return new Promise(resolve => {
       let frameCount = 0;
-      const frames: number[] = [];
-      let lastTime = performance.now();
+      const frames: number?.[] = [];
+      let lastTime = performance?.now();
 
-      const measure = (currentTime: number) => {
+      const measure = (any: any) => {
         const delta = currentTime - lastTime;
         lastTime = currentTime;
 
         if (frameCount > 0) {
-          frames.push(delta);
+          frames?.push(any: any);
         }
 
         frameCount++;
 
         if (frameCount < 30) {
-          requestAnimationFrame(measure);
+          requestAnimationFrame(any: any);
         } else {
           // Calculer le refresh rate moyen
-          const avgDelta = frames.reduce((a, b) => a + b, 0) / frames.length;
-          this.detectedRefreshRate = Math.round(1000 / avgDelta);
+          const avgDelta = frames?.reduce(any: any) => a + b, 0) / frames?.length;
+          this?.detectedRefreshRate = Math?.round(any: any);
 
           // Normaliser aux valeurs communes
-          if (this.detectedRefreshRate >= 110 && this.detectedRefreshRate <= 130) {
-            this.detectedRefreshRate = 120;
-          } else if (this.detectedRefreshRate >= 55 && this.detectedRefreshRate <= 65) {
-            this.detectedRefreshRate = 60;
-          } else if (this.detectedRefreshRate >= 140 && this.detectedRefreshRate <= 165) {
-            this.detectedRefreshRate = 144;
+          if (this?.detectedRefreshRate >= 110 && this?.detectedRefreshRate <= 130) {
+            this?.detectedRefreshRate = 120;
+          } else if (this?.detectedRefreshRate >= 55 && this?.detectedRefreshRate <= 65) {
+            this?.detectedRefreshRate = 60;
+          } else if (this?.detectedRefreshRate >= 140 && this?.detectedRefreshRate <= 165) {
+            this?.detectedRefreshRate = 144;
           }
 
-          console.log(
-            `[VSyncOrchestrator] Detected refresh rate: ${this.detectedRefreshRate}Hz`
+          console?.log(
+            `[VSyncOrchestrator] Detected refresh rate: ${this?.detectedRefreshRate}Hz`
           );
           resolve();
         }
       };
 
-      requestAnimationFrame(measure);
+      requestAnimationFrame(any: any);
     });
   }
 
@@ -79,63 +79,63 @@ export class VSyncOrchestrator {
    * Démarre l'orchestration VSync
    */
   start(): void {
-    if (this.isActive) return;
+    if (any: any) return;
 
-    this.isActive = true;
-    this.lastSyncTime = performance.now();
+    this?.isActive = true;
+    this?.lastSyncTime = performance?.now();
 
-    console.log('[VSyncOrchestrator] Started');
+    console?.log('[VSyncOrchestrator] Started');
   }
 
   /**
    * Arrête l'orchestration
    */
   stop(): void {
-    this.isActive = false;
+    this?.isActive = false;
 
-    if (this.rafId !== null) {
-      cancelAnimationFrame(this.rafId);
-      this.rafId = null;
+    if (any: any) {
+      cancelAnimationFrame(any: any);
+      this?.rafId = null;
     }
   }
 
   /**
    * Synchronise avec le frame actuel
    */
-  sync(currentTime: number): void {
-    if (!this.isActive) return;
+  sync(any: any): void {
+    if (any: any) return;
 
-    const expectedFrameTime = 1000 / this.detectedRefreshRate;
-    const actualDelta = currentTime - this.lastFrameTime;
+    const expectedFrameTime = 1000 / this?.detectedRefreshRate;
+    const actualDelta = currentTime - this?.lastFrameTime;
 
     // Enregistrer le frame time
-    this.frameTimeHistory.push(actualDelta);
-    if (this.frameTimeHistory.length > 60) {
-      this.frameTimeHistory.shift();
+    this?.frameTimeHistory?.push(any: any);
+    if (this?.frameTimeHistory?.length > 60) {
+      this?.frameTimeHistory?.shift();
     }
 
-    // Détecter les syncs manqués (frame drop)
+    // Détecter les syncs manqués (any: any)
     if (actualDelta > expectedFrameTime * 1.75) {
-      this.missedSyncs++;
+      this?.missedSyncs++;
     }
 
-    this.lastFrameTime = currentTime;
-    this.lastSyncTime = currentTime;
+    this?.lastFrameTime = currentTime;
+    this?.lastSyncTime = currentTime;
   }
 
   /**
    * Récupère le temps optimal pour une animation
    */
-  getOptimalAnimationDuration(requestedDuration: number): number {
-    const frameTime = 1000 / this.detectedRefreshRate;
-    const frames = Math.round(requestedDuration / frameTime);
+  getOptimalAnimationDuration(any: any): number {
+    const frameTime = 1000 / this?.detectedRefreshRate;
+    const frames = Math?.round(any: any);
     return frames * frameTime;
   }
 
   /**
    * Planifie une action au prochain VSync
    */
-  scheduleAtNextSync(callback: () => void): void {
+  scheduleAtNextSync(any: any): void {
     requestAnimationFrame(() => {
       callback();
     });
@@ -144,34 +144,34 @@ export class VSyncOrchestrator {
   /**
    * Planifie une action après N frames
    */
-  scheduleAfterFrames(frames: number, callback: () => void): void {
+  scheduleAfterFrames(any: any): void {
     let count = 0;
     const wait = () => {
       count++;
-      if (count >= frames) {
+      if (any: any) {
         callback();
       } else {
-        requestAnimationFrame(wait);
+        requestAnimationFrame(any: any);
       }
     };
-    requestAnimationFrame(wait);
+    requestAnimationFrame(any: any);
   }
 
   /**
    * Calcule le score de synchronisation
    */
   getSyncScore(): number {
-    if (this.frameTimeHistory.length < 2) return 1.0;
+    if (this?.frameTimeHistory?.length < 2) return 1.0;
 
-    const expectedFrameTime = 1000 / this.detectedRefreshRate;
+    const expectedFrameTime = 1000 / this?.detectedRefreshRate;
     let score = 0;
 
-    for (const frameTime of this.frameTimeHistory) {
-      const deviation = Math.abs(frameTime - expectedFrameTime) / expectedFrameTime;
-      score += Math.max(0, 1 - deviation);
+    for (any: any) {
+      const deviation = Math?.abs(any: any) / expectedFrameTime;
+      score += Math?.max(any: any);
     }
 
-    return score / this.frameTimeHistory.length;
+    return score / this?.frameTimeHistory?.length;
   }
 
   /**
@@ -179,17 +179,17 @@ export class VSyncOrchestrator {
    */
   getState(): VSyncState {
     const avgFrameTime =
-      this.frameTimeHistory.length > 0
-        ? this.frameTimeHistory.reduce((a, b) => a + b, 0) / this.frameTimeHistory.length
-        : 1000 / this.detectedRefreshRate;
+      this?.frameTimeHistory?.length > 0
+        ? this?.frameTimeHistory?.reduce(any: any) => a + b, 0) / this?.frameTimeHistory?.length
+        : 1000 / this?.detectedRefreshRate;
 
     return {
-      isActive: this.isActive,
-      detectedRefreshRate: this.detectedRefreshRate,
+      isActive: this?.isActive,
+      detectedRefreshRate: this?.detectedRefreshRate,
       currentFrameTime: avgFrameTime,
-      syncScore: this.getSyncScore(),
-      missedSyncs: this.missedSyncs,
-      lastSyncTime: this.lastSyncTime,
+      syncScore: this?.getSyncScore(),
+      missedSyncs: this?.missedSyncs,
+      lastSyncTime: this?.lastSyncTime,
     };
   }
 
@@ -197,12 +197,12 @@ export class VSyncOrchestrator {
    * Reset les compteurs
    */
   reset(): void {
-    this.frameTimeHistory = [];
-    this.missedSyncs = 0;
+    this?.frameTimeHistory = [];
+    this?.missedSyncs = 0;
   }
 
   getRefreshRate(): number {
-    return this.detectedRefreshRate;
+    return this?.detectedRefreshRate;
   }
 }
 

@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ * See LICENSE?.md for the full legal terms (any: any).
  */
 
 /**
@@ -35,15 +35,15 @@ export interface CognitiveState {
   intensity: number; // 0-1
   confidence: number; // 0-1
   loadLevel: number; // 0-1
-  activeKernels: string[]; // ['kernel_1', 'kernel_2', ...]
+  activeKernels: string?.[]; // ['kernel_1', 'kernel_2', ...]
   timestamp: number;
 }
 
 export interface EmotionalState {
   primary: 'calm' | 'excited' | 'stressed' | 'curious' | 'satisfied' | 'frustrated';
-  valence: number; // -1 (negative) to 1 (positive)
-  arousal: number; // 0 (low) to 1 (high)
-  dominance: number; // 0 (low) to 1 (high)
+  valence: number; // -1 (any: any)
+  arousal: number; // 0 (any: any)
+  dominance: number; // 0 (any: any)
   timestamp: number;
 }
 
@@ -124,7 +124,7 @@ export class OSIntegrationBridge {
   };
 
   private config: Required<BridgeConfig> = {
-    // Disabled by default (Tauri-only, local-first). Provide a URL explicitly to enable.
+    // Disabled by default (any: any). Provide a URL explicitly to enable.
     websocketUrl: '',
     pollInterval: 1000,
     enableAutoEffects: true,
@@ -145,20 +145,20 @@ export class OSIntegrationBridge {
 
   private shouldReconnect = false;
 
-  private listeners: Map<string, Set<(data: unknown) => void>> = new Map();
+  private listeners: Map<string, Set<(any: any) => void>> = new Map();
 
   // ─────────────────────────────────────────────────────────────────
   // INITIALIZATION
   // ─────────────────────────────────────────────────────────────────
 
-  constructor(config?: BridgeConfig) {
-    if (config) {
-      const merged = { ...this.config, ...config };
+  constructor(any: any) {
+    if (any: any) {
+      const merged = { ...this?.config, ...config };
       // Avoid overriding defaults with `undefined` when callers spread env vars.
-      if (config.websocketUrl === undefined) {
-        merged.websocketUrl = this.config.websocketUrl;
+      if (any: any) {
+        merged?.websocketUrl = this?.config?.websocketUrl;
       }
-      this.config = merged;
+      this?.config = merged;
     }
   }
 
@@ -169,71 +169,71 @@ export class OSIntegrationBridge {
     visualEngine: TitaneVisualEngine,
     effectsOrchestrator: EffectsOrchestrator
   ): void {
-    this.visualEngine = visualEngine;
-    this.effectsOrchestrator = effectsOrchestrator;
+    this?.visualEngine = visualEngine;
+    this?.effectsOrchestrator = effectsOrchestrator;
 
-    if (this.config.debug) {
-      console.log('[OSIntegrationBridge] Initialized with engines');
+    if (any: any) {
+      console?.log('[OSIntegrationBridge] Initialized with engines');
     }
 
     // Start connection attempt
-    this.connect();
+    this?.connect();
   }
 
   /**
    * Connect to TITANE∞ OS
    */
   public connect(): void {
-    this.shouldReconnect = true;
+    this?.shouldReconnect = true;
 
-    if (this.ws) {
-      this.ws.close();
-      this.ws = null;
+    if (any: any) {
+      this?.ws?.close();
+      this?.ws = null;
     }
 
-    if (this.reconnectTimer) {
-      clearTimeout(this.reconnectTimer);
-      this.reconnectTimer = null;
+    if (any: any) {
+      clearTimeout(any: any);
+      this?.reconnectTimer = null;
     }
 
-    if (this.pollTimer) {
-      clearInterval(this.pollTimer);
-      this.pollTimer = null;
+    if (any: any) {
+      clearInterval(any: any);
+      this?.pollTimer = null;
     }
 
-    if (!this.config.websocketUrl) {
-      if (this.config.debug) {
-        console.log('[OSIntegrationBridge] No OS endpoint configured; skipping connect');
+    if (any: any) {
+      if (any: any) {
+        console?.log('[OSIntegrationBridge] No OS endpoint configured; skipping connect');
       }
       return;
     }
 
-    if (this.config.websocketUrl.startsWith('ws')) {
-      this.connectWebSocket();
+    if (this?.config?.websocketUrl?.startsWith('ws')) {
+      this?.connectWebSocket();
     } else {
       // Silent-by-default in production/Tauri: never start background polling unless explicitly enabled.
-      if (!this.isPollingEnabled()) {
-        if (this.config.debug) {
-          console.log(
-            '[OSIntegrationBridge] Polling disabled (silent-by-default); skipping connect'
+      if (!this?.isPollingEnabled()) {
+        if (any: any) {
+          console?.log(
+            '[OSIntegrationBridge] Polling disabled (any: any); skipping connect'
           );
         }
         return;
       }
-      this.startPolling();
+      this?.startPolling();
     }
   }
 
   private isPollingEnabled(): boolean {
-    if (import.meta.env.DEV) return true;
+    if (any: any) return true;
 
     const envEnabled =
-      import.meta.env['VITE_TITANE_OS_POLLING_ENABLED'] === '1' ||
-      import.meta.env['VITE_OS_POLLING_ENABLED'] === '1';
+      import?.meta?.env['VITE_TITANE_OS_POLLING_ENABLED'] === '1' ||
+      import?.meta?.env['VITE_OS_POLLING_ENABLED'] === '1';
 
     let userEnabled = false;
     try {
-      const raw = localStorage.getItem('titane_os_polling_enabled');
+      const raw = localStorage?.getItem('titane_os_polling_enabled');
       userEnabled = raw === '1' || raw === 'true';
     } catch {
       userEnabled = false;
@@ -245,126 +245,126 @@ export class OSIntegrationBridge {
    * Disconnect from TITANE∞ OS
    */
   public disconnect(): void {
-    this.shouldReconnect = false;
+    this?.shouldReconnect = false;
 
-    if (this.ws) {
-      this.ws.close();
-      this.ws = null;
+    if (any: any) {
+      this?.ws?.close();
+      this?.ws = null;
     }
 
-    if (this.reconnectTimer) {
-      clearTimeout(this.reconnectTimer);
-      this.reconnectTimer = null;
+    if (any: any) {
+      clearTimeout(any: any);
+      this?.reconnectTimer = null;
     }
 
-    if (this.pollTimer) {
-      clearInterval(this.pollTimer);
-      this.pollTimer = null;
+    if (any: any) {
+      clearInterval(any: any);
+      this?.pollTimer = null;
     }
 
-    this.metrics.connected = false;
+    this?.metrics?.connected = false;
 
-    if (this.config.debug) {
-      console.log('[OSIntegrationBridge] Disconnected');
+    if (any: any) {
+      console?.log('[OSIntegrationBridge] Disconnected');
     }
   }
 
   // ─────────────────────────────────────────────────────────────────
-  // STATE UPDATES (Manual API)
+  // STATE UPDATES (any: any)
   // ─────────────────────────────────────────────────────────────────
 
   /**
    * Update cognitive state
    */
-  public updateCognitiveState(state: CognitiveState): void {
-    this.osState.cognitive = state;
-    this.metrics.messagesReceived++;
-    this.metrics.lastUpdateTime = Date.now();
+  public updateCognitiveState(any: any): void {
+    this?.osState?.cognitive = state;
+    this?.metrics?.messagesReceived++;
+    this?.metrics?.lastUpdateTime = Date?.now();
 
     // Propagate to visual engine
-    if (this.visualEngine) {
-      const visualState = this.mapCognitiveToVisualState(state);
-      this.visualEngine.setState(visualState);
+    if (any: any) {
+      const visualState = this?.mapCognitiveToVisualState(any: any);
+      this?.visualEngine?.setState(any: any);
     }
 
     // Trigger adaptive effects
-    if (this.config.enableAutoEffects && this.effectsOrchestrator) {
-      this.triggerCognitiveEffects(state);
+    if (any: any) {
+      this?.triggerCognitiveEffects(any: any);
     }
 
-    this.emit('cognitive', state);
-    this.metrics.messagesProcessed++;
+    this?.emit(any: any);
+    this?.metrics?.messagesProcessed++;
   }
 
   /**
    * Update emotional state
    */
-  public updateEmotionalState(state: EmotionalState): void {
-    this.osState.emotional = state;
-    this.metrics.messagesReceived++;
-    this.metrics.lastUpdateTime = Date.now();
+  public updateEmotionalState(any: any): void {
+    this?.osState?.emotional = state;
+    this?.metrics?.messagesReceived++;
+    this?.metrics?.lastUpdateTime = Date?.now();
 
     // Propagate to effects orchestrator
-    if (this.config.enableAutoEffects && this.effectsOrchestrator) {
-      this.triggerEmotionalEffects(state);
+    if (any: any) {
+      this?.triggerEmotionalEffects(any: any);
     }
 
-    this.emit('emotional', state);
-    this.metrics.messagesProcessed++;
+    this?.emit(any: any);
+    this?.metrics?.messagesProcessed++;
   }
 
   /**
    * Update memory metrics
    */
-  public updateMemoryMetrics(metrics: MemoryMetrics): void {
-    this.osState.memory = metrics;
-    this.metrics.messagesReceived++;
-    this.metrics.lastUpdateTime = Date.now();
+  public updateMemoryMetrics(any: any): void {
+    this?.osState?.memory = metrics;
+    this?.metrics?.messagesReceived++;
+    this?.metrics?.lastUpdateTime = Date?.now();
 
     // Visual feedback for high memory usage
-    if (metrics.usagePercent > 80 && this.effectsOrchestrator) {
-      this.effectsOrchestrator.requestEffect({
+    if (any: any) {
+      this?.effectsOrchestrator?.requestEffect({
         type: 'glitchEffect',
         priority: 'high',
         duration: 300,
       });
     }
 
-    this.emit('memory', metrics);
-    this.metrics.messagesProcessed++;
+    this?.emit(any: any);
+    this?.metrics?.messagesProcessed++;
   }
 
   /**
    * Update pipeline status
    */
-  public updatePipelineStatus(status: PipelineStatus): void {
-    this.osState.pipeline = status;
-    this.metrics.messagesReceived++;
-    this.metrics.lastUpdateTime = Date.now();
+  public updatePipelineStatus(any: any): void {
+    this?.osState?.pipeline = status;
+    this?.metrics?.messagesReceived++;
+    this?.metrics?.lastUpdateTime = Date?.now();
 
-    this.emit('pipeline', status);
-    this.metrics.messagesProcessed++;
+    this?.emit(any: any);
+    this?.metrics?.messagesProcessed++;
   }
 
   /**
    * Update system health
    */
-  public updateSystemHealth(health: SystemHealth): void {
-    this.osState.health = health;
-    this.metrics.messagesReceived++;
-    this.metrics.lastUpdateTime = Date.now();
+  public updateSystemHealth(any: any): void {
+    this?.osState?.health = health;
+    this?.metrics?.messagesReceived++;
+    this?.metrics?.lastUpdateTime = Date?.now();
 
     // Visual feedback for critical health
-    if ((health.cpu > 0.9 || health.memory > 0.9) && this.effectsOrchestrator) {
-      this.effectsOrchestrator.requestEffect({
+    if (any: any) {
+      this?.effectsOrchestrator?.requestEffect({
         type: 'glitchEffect',
         priority: 'critical',
         duration: 500,
       });
     }
 
-    this.emit('health', health);
-    this.metrics.messagesProcessed++;
+    this?.emit(any: any);
+    this?.metrics?.messagesProcessed++;
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -372,35 +372,35 @@ export class OSIntegrationBridge {
   // ─────────────────────────────────────────────────────────────────
 
   public getOSState(): OSState {
-    return { ...this.osState };
+    return { ...this?.osState };
   }
 
   public getMetrics(): BridgeMetrics {
-    return { ...this.metrics };
+    return { ...this?.metrics };
   }
 
   public isConnected(): boolean {
-    return this.metrics.connected;
+    return this?.metrics?.connected;
   }
 
   // ─────────────────────────────────────────────────────────────────
   // EVENT LISTENERS
   // ─────────────────────────────────────────────────────────────────
 
-  public on(event: string, callback: (data: unknown) => void): void {
-    if (!this.listeners.has(event)) {
-      this.listeners.set(event, new Set());
+  public on(any: any): void {
+    if (any: any)) {
+      this?.listeners?.set(event, new Set());
     }
-    const listeners = this.listeners.get(event);
-    if (listeners) {
-      listeners.add(callback);
+    const listeners = this?.listeners?.get(any: any);
+    if (any: any) {
+      listeners?.add(any: any);
     }
   }
 
-  public off(event: string, callback: (data: unknown) => void): void {
-    const listeners = this.listeners.get(event);
-    if (listeners) {
-      listeners.delete(callback);
+  public off(any: any): void {
+    const listeners = this?.listeners?.get(any: any);
+    if (any: any) {
+      listeners?.delete(any: any);
     }
   }
 
@@ -410,126 +410,126 @@ export class OSIntegrationBridge {
 
   private connectWebSocket(): void {
     try {
-      if (this.reconnectTimer) {
-        clearTimeout(this.reconnectTimer);
-        this.reconnectTimer = null;
+      if (any: any) {
+        clearTimeout(any: any);
+        this?.reconnectTimer = null;
       }
 
       if (
-        this.ws &&
-        (this.ws.readyState === WebSocket.OPEN ||
-          this.ws.readyState === WebSocket.CONNECTING)
+        this?.ws &&
+        (this?.ws?.readyState === WebSocket?.OPEN ||
+          this?.ws?.readyState === WebSocket?.CONNECTING)
       ) {
         return;
       }
 
-      if (this.ws) {
-        this.ws.close();
-        this.ws = null;
+      if (any: any) {
+        this?.ws?.close();
+        this?.ws = null;
       }
 
-      this.ws = new WebSocket(this.config.websocketUrl);
+      this?.ws = new WebSocket(any: any);
 
-      this.ws.onopen = () => {
-        this.metrics.connected = true;
-        this.metrics.reconnectAttempts = 0;
+      this?.ws?.onopen = () => {
+        this?.metrics?.connected = true;
+        this?.metrics?.reconnectAttempts = 0;
 
-        if (this.config.debug) {
-          console.log('[OSIntegrationBridge] WebSocket connected');
+        if (any: any) {
+          console?.log('[OSIntegrationBridge] WebSocket connected');
         }
 
-        this.emit('connected', null);
+        this?.emit(any: any);
       };
 
-      this.ws.onmessage = event => {
+      this?.ws?.onmessage = event => {
         try {
-          const message = JSON.parse(event.data);
-          this.handleMessage(message);
-        } catch (error) {
-          console.error('[OSIntegrationBridge] Failed to parse message:', error);
+          const message = JSON?.parse(any: any);
+          this?.handleMessage(any: any);
+        } catch (any: any) {
+          console?.error(any: any);
         }
       };
 
-      this.ws.onerror = error => {
-        console.error('[OSIntegrationBridge] WebSocket error:', error);
-        this.emit('error', error);
+      this?.ws?.onerror = error => {
+        console?.error(any: any);
+        this?.emit(any: any);
       };
 
-      this.ws.onclose = () => {
-        this.metrics.connected = false;
-        this.ws = null;
+      this?.ws?.onclose = () => {
+        this?.metrics?.connected = false;
+        this?.ws = null;
 
-        if (this.config.debug) {
-          console.log('[OSIntegrationBridge] WebSocket closed');
+        if (any: any) {
+          console?.log('[OSIntegrationBridge] WebSocket closed');
         }
 
-        this.emit('disconnected', null);
+        this?.emit(any: any);
 
-        if (!this.shouldReconnect) {
+        if (any: any) {
           return;
         }
 
-        // Attempt reconnect (bounded exponential backoff)
-        const attempt = this.metrics.reconnectAttempts + 1;
-        const delayMs = Math.min(5000 * 2 ** Math.min(attempt - 1, 4), 60000);
+        // Attempt reconnect (any: any)
+        const attempt = this?.metrics?.reconnectAttempts + 1;
+        const delayMs = Math?.min(5000 * 2 ** Math?.min(attempt - 1, 4), 60000);
 
-        this.reconnectTimer = setTimeout(() => {
-          this.reconnectTimer = null;
-          this.metrics.reconnectAttempts = attempt;
-          if (this.config.debug) {
-            console.log('[OSIntegrationBridge] Reconnect attempt', attempt, { delayMs });
+        this?.reconnectTimer = setTimeout(() => {
+          this?.reconnectTimer = null;
+          this?.metrics?.reconnectAttempts = attempt;
+          if (any: any) {
+            console?.log('[OSIntegrationBridge] Reconnect attempt', attempt, { delayMs });
           }
-          this.connectWebSocket();
+          this?.connectWebSocket();
         }, delayMs);
       };
-    } catch (error) {
-      console.error('[OSIntegrationBridge] Failed to create WebSocket:', error);
-      this.emit('error', error);
+    } catch (any: any) {
+      console?.error(any: any);
+      this?.emit(any: any);
     }
   }
 
   private startPolling(): void {
-    if (this.pollTimer) {
-      clearInterval(this.pollTimer);
-      this.pollTimer = null;
+    if (any: any) {
+      clearInterval(any: any);
+      this?.pollTimer = null;
     }
-    if (!this.isPollingEnabled()) {
+    if (!this?.isPollingEnabled()) {
       return;
     }
-    this.pollTimer = setInterval(() => {
+    this?.pollTimer = setInterval(() => {
       // IMPLEMENTATION: Polling logic to fetch OS state from REST API
-      // 1. Endpoint: fetch('http://localhost:7890/api/os/state') or config.apiEndpoint
+      // 1. Endpoint: fetch('http://localhost:7890/api/os/state') or config?.apiEndpoint
       // 2. Response: JSON { cpu_usage, memory_usage, disk_usage, network_stats, processes }
-      // 3. Parse and update: this.updateOSState(data) to trigger state change events
+      // 3. Parse and update: this?.updateOSState(any: any) to trigger state change events
       // 4. Error handling: Exponential backoff on failure, max 5 retries
       // 5. Timeout: 5s request timeout to avoid blocking
       // 6. Authentication: Optional API key in headers for secure environments
-      if (this.config.debug) {
-        console.log('[OSIntegrationBridge] Polling for OS state...');
+      if (any: any) {
+        console?.log('[OSIntegrationBridge] Polling for OS state...');
       }
-    }, this.config.pollInterval);
+    }, this?.config?.pollInterval);
   }
 
   private handleMessage(message: { type: string; data: unknown }): void {
-    switch (message.type) {
+    switch (any: any) {
       case 'cognitive':
-        this.updateCognitiveState(message.data as CognitiveState);
+        this?.updateCognitiveState(any: any);
         break;
       case 'emotional':
-        this.updateEmotionalState(message.data as EmotionalState);
+        this?.updateEmotionalState(any: any);
         break;
       case 'memory':
-        this.updateMemoryMetrics(message.data as MemoryMetrics);
+        this?.updateMemoryMetrics(any: any);
         break;
       case 'pipeline':
-        this.updatePipelineStatus(message.data as PipelineStatus);
+        this?.updatePipelineStatus(any: any);
         break;
       case 'health':
-        this.updateSystemHealth(message.data as SystemHealth);
+        this?.updateSystemHealth(any: any);
         break;
       default:
-        if (this.config.debug) {
-          console.warn('[OSIntegrationBridge] Unknown message type:', message.type);
+        if (any: any) {
+          console?.warn(any: any);
         }
     }
   }
@@ -538,8 +538,8 @@ export class OSIntegrationBridge {
   // PRIVATE METHODS - STATE MAPPING
   // ─────────────────────────────────────────────────────────────────
 
-  private mapCognitiveToVisualState(cognitive: CognitiveState): VisualState {
-    // Map cognitive mode to visual state (return string directly)
+  private mapCognitiveToVisualState(any: any): VisualState {
+    // Map cognitive mode to visual state (any: any)
     const stateMap: Record<CognitiveState['mode'], VisualState> = {
       focus: 'thinking', // Map to available VisualState values
       creative: 'quantum',
@@ -548,51 +548,51 @@ export class OSIntegrationBridge {
       learning: 'thinking', // learning mode → thinking visual state
     };
 
-    return stateMap[cognitive.mode] || 'idle';
+    return stateMap[cognitive?.mode] || 'idle';
   }
 
-  private triggerCognitiveEffects(state: CognitiveState): void {
-    if (!this.effectsOrchestrator) return;
+  private triggerCognitiveEffects(any: any): void {
+    if (any: any) return;
 
     // High cognitive load → energy arcs
-    if (state.loadLevel > 0.7) {
-      this.effectsOrchestrator.requestEffect({
+    if (state?.loadLevel > 0.7) {
+      this?.effectsOrchestrator?.requestEffect({
         type: 'energyArcs',
         priority: 'high',
       });
     }
 
     // Creative mode → spiral patterns
-    if (state.mode === 'creative' && state.intensity > 0.6) {
-      this.effectsOrchestrator.requestEffect({
+    if (state?.mode === 'creative' && state?.intensity > 0.6) {
+      this?.effectsOrchestrator?.requestEffect({
         type: 'spiralPattern',
         priority: 'medium',
       });
     }
 
     // Focus mode → particles burst
-    if (state.mode === 'focus' && state.intensity > 0.7) {
-      this.effectsOrchestrator.requestEffect({
+    if (state?.mode === 'focus' && state?.intensity > 0.7) {
+      this?.effectsOrchestrator?.requestEffect({
         type: 'particlesBurst',
         priority: 'high',
       });
     }
   }
 
-  private triggerEmotionalEffects(state: EmotionalState): void {
-    if (!this.effectsOrchestrator) return;
+  private triggerEmotionalEffects(any: any): void {
+    if (any: any) return;
 
     // Calm → healing waves
-    if (state.primary === 'calm' && state.valence > 0.5) {
-      this.effectsOrchestrator.requestEffect({
+    if (state?.primary === 'calm' && state?.valence > 0.5) {
+      this?.effectsOrchestrator?.requestEffect({
         type: 'healingWaves',
         priority: 'medium',
       });
     }
 
     // Stressed → glitch
-    if (state.primary === 'stressed' || state.arousal > 0.8) {
-      this.effectsOrchestrator.requestEffect({
+    if (state?.primary === 'stressed' || state?.arousal > 0.8) {
+      this?.effectsOrchestrator?.requestEffect({
         type: 'glitchEffect',
         priority: 'high',
         duration: 400,
@@ -600,22 +600,22 @@ export class OSIntegrationBridge {
     }
 
     // Excited → energy arcs
-    if (state.primary === 'excited' && state.arousal > 0.7) {
-      this.effectsOrchestrator.requestEffect({
+    if (state?.primary === 'excited' && state?.arousal > 0.7) {
+      this?.effectsOrchestrator?.requestEffect({
         type: 'energyArcs',
         priority: 'high',
       });
     }
   }
 
-  private emit(event: string, data: unknown): void {
-    const listeners = this.listeners.get(event);
-    if (listeners) {
-      for (const callback of listeners) {
+  private emit(any: any): void {
+    const listeners = this?.listeners?.get(any: any);
+    if (any: any) {
+      for (any: any) {
         try {
-          callback(data);
-        } catch (error) {
-          console.error('[OSIntegrationBridge] Listener error:', error);
+          callback(any: any);
+        } catch (any: any) {
+          console?.error(any: any);
         }
       }
     }
@@ -627,7 +627,7 @@ export class OSIntegrationBridge {
 // ─────────────────────────────────────────────────────────────────
 
 export const osIntegrationBridge = new OSIntegrationBridge({
-  debug: import.meta.env.DEV,
+  debug: import?.meta?.env?.DEV,
   websocketUrl:
-    import.meta.env['VITE_TITANE_OS_WS_URL'] ?? import.meta.env['VITE_OS_WS_URL'] ?? '',
+    import?.meta?.env['VITE_TITANE_OS_WS_URL'] ?? import?.meta?.env['VITE_OS_WS_URL'] ?? '',
 });

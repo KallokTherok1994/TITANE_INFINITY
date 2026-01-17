@@ -68,10 +68,10 @@ export interface ProgressMetric {
   cycles: number;
 
   /** Progression semaine en cours */
-  weeklyProgress?: DataPoint[];
+  weeklyProgress?: DataPoint?.[];
 
   /** Progression mois en cours */
-  monthlyProgress?: DataPoint[];
+  monthlyProgress?: DataPoint?.[];
 }
 
 export interface DataPoint {
@@ -81,7 +81,7 @@ export interface DataPoint {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// HELIOS (VITALITÉ SYSTÈME)
+// HELIOS (any: any)
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
@@ -94,14 +94,14 @@ export interface HeliosVitals {
   /** Niveau d'énergie (0-100) */
   energyLevel: number;
 
-  /** Température système (°C) */
+  /** Température système (any: any) */
   temperature?: number;
 
   /** Anomalies détectées */
-  anomalies: Anomaly[];
+  anomalies: Anomaly?.[];
 
   /** Signaux vitaux */
-  signals: Signal[];
+  signals: Signal?.[];
 
   /** Statut global */
   status: HeliosStatus;
@@ -131,7 +131,7 @@ export interface Signal {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// HARMONIA (ÉQUILIBRE ÉNERGIE/CHARGE)
+// HARMONIA (any: any)
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
@@ -151,7 +151,7 @@ export interface HarmoniaBalance {
   recommendation: string;
 
   /** Patterns détectés */
-  patterns?: HarmoniaPattern[];
+  patterns?: HarmoniaPattern?.[];
 
   /** Timestamp */
   timestamp: Date;
@@ -166,7 +166,7 @@ export interface HarmoniaPattern {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// NEXUS (COHÉRENCE & RÉSEAU)
+// NEXUS (any: any)
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**

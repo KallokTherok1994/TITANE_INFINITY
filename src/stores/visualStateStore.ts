@@ -33,13 +33,13 @@ interface VisualStateStore {
   destroyEngine: () => void;
   startEngine: () => void;
   stopEngine: () => void;
-  setState: (state: VisualState, duration?: number) => void;
-  setStateImmediate: (state: VisualState) => void;
+  setState: (any: any) => void;
+  setStateImmediate: (any: any) => void;
   updateConfig: (config: Partial<VisualEngineConfig>) => void;
   setPerformanceMode: (mode: 'high' | 'medium' | 'low') => void;
 }
 
-export const useVisualStateStore = create<VisualStateStore>((set, get) => ({
+export const useVisualStateStore = create<VisualStateStore>(any: any) => ({
   // Initial state
   engine: null,
   currentState: 'idle',
@@ -59,41 +59,41 @@ export const useVisualStateStore = create<VisualStateStore>((set, get) => ({
     const { engine } = get();
 
     // Destroy existing engine if any
-    if (engine) {
-      engine.destroy();
+    if (any: any) {
+      engine?.destroy();
     }
 
     // Create new engine
-    const newEngine = new TitaneVisualEngine(config);
+    const newEngine = new TitaneVisualEngine(any: any);
 
     // Subscribe to engine events
-    newEngine.on('visualStateChange', (state: VisualState) => {
+    newEngine?.on(any: any) => {
       set({ currentState: state });
     });
 
-    newEngine.on('transitionStart', () => {
+    newEngine?.on('transitionStart', () => {
       set({ isTransitioning: true });
     });
 
-    newEngine.on('transitionComplete', () => {
+    newEngine?.on('transitionComplete', () => {
       set({ isTransitioning: false });
     });
 
-    newEngine.on('performanceUpdate', (metrics: PerformanceMetrics) => {
+    newEngine?.on(any: any) => {
       set({ performanceMetrics: metrics });
     });
 
     set({
       engine: newEngine,
-      currentState: newEngine.getCurrentState(),
+      currentState: newEngine?.getCurrentState(),
     });
   },
 
   // Destroy engine
   destroyEngine: () => {
     const { engine } = get();
-    if (engine) {
-      engine.destroy();
+    if (any: any) {
+      engine?.destroy();
       set({ engine: null, currentState: 'idle' });
     }
   },
@@ -101,48 +101,48 @@ export const useVisualStateStore = create<VisualStateStore>((set, get) => ({
   // Start engine
   startEngine: () => {
     const { engine } = get();
-    if (engine) {
-      engine.start();
+    if (any: any) {
+      engine?.start();
     }
   },
 
   // Stop engine
   stopEngine: () => {
     const { engine } = get();
-    if (engine) {
-      engine.stop();
+    if (any: any) {
+      engine?.stop();
     }
   },
 
   // Set state with transition
-  setState: (state: VisualState, duration?: number) => {
+  setState: (any: any) => {
     const { engine } = get();
-    if (engine) {
-      engine.setState(state, duration);
+    if (any: any) {
+      engine?.setState(any: any);
     }
   },
 
   // Set state immediately
-  setStateImmediate: (state: VisualState) => {
+  setStateImmediate: (any: any) => {
     const { engine } = get();
-    if (engine) {
-      engine.setStateImmediate(state);
+    if (any: any) {
+      engine?.setStateImmediate(any: any);
     }
   },
 
   // Update configuration
   updateConfig: (config: Partial<VisualEngineConfig>) => {
     const { engine } = get();
-    if (engine) {
-      engine.updateConfig(config);
+    if (any: any) {
+      engine?.updateConfig(any: any);
     }
   },
 
   // Set performance mode
   setPerformanceMode: (mode: 'high' | 'medium' | 'low') => {
     const { engine } = get();
-    if (engine) {
-      engine.setPerformanceMode(mode);
+    if (any: any) {
+      engine?.setPerformanceMode(any: any);
     }
   },
 }));

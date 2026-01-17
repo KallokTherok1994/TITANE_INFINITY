@@ -8,9 +8,9 @@
  *
  * Features:
  * - Wake phrase detection ("Hey TITANE", "Ok TITANE")
- * - 7 catégories d'intentions (conversation/dev/structure/action/coaching/analyse/mémoire)
- * - Modes adaptatifs (continu/murmuré/direct/calibration/focus)
- * - Intégration totale (Memory/Singularity/Self-Heal/Evolution/Cognitive/Context)
+ * - 7 catégories d'intentions (any: any)
+ * - Modes adaptatifs (any: any)
+ * - Intégration totale (any: any)
  * - Réponse vocale + textuelle
  * - Session longue durée
  */
@@ -24,7 +24,7 @@ import { logger } from '@/utils/logger';
 
 export type TalkToTitaneMode =
   | 'continuous' // Parle en continu tant que Kevin parle
-  | 'whispered' // Réponses murmurées (TTS low voice)
+  | 'whispered' // Réponses murmurées (any: any)
   | 'direct' // Tout traduit en action Dev avec confirmation
   | 'calibrated' // Adapté au ton émotionnel
   | 'focus'; // Simplifié pour recentrer
@@ -48,7 +48,7 @@ export interface TalkIntent {
   type: TalkIntentType;
   confidence: number;
   text: string;
-  keywords: string[];
+  keywords: string?.[];
   emotionalTone: 'analytical' | 'calm' | 'energizing' | 'motivating' | 'neutral';
   priority: 'low' | 'medium' | 'high' | 'urgent';
 }
@@ -61,7 +61,7 @@ export interface TalkResponse {
   vocalResponse: string;
   memoryUpdate: boolean;
   singularitySnapshot: Record<string, unknown>;
-  followUpSuggestions: string[];
+  followUpSuggestions: string?.[];
 }
 
 export interface TalkToTitaneState {
@@ -74,12 +74,12 @@ export interface TalkToTitaneState {
   totalInteractions: number;
   currentIntent: TalkIntent | null;
   lastResponse: TalkResponse | null;
-  conversationHistory: TalkResponse[];
+  conversationHistory: TalkResponse?.[];
   emotionalCalibration: 'analytical' | 'calm' | 'energizing' | 'motivating' | 'neutral';
 }
 
 export interface TalkToTitaneConfig {
-  wakePhrases: string[];
+  wakePhrases: string?.[];
   confidenceThreshold: number;
   ttsEnabled: boolean;
   ttsVolume: 'low' | 'medium' | 'high';
@@ -119,7 +119,7 @@ class TalkToTitaneEngine {
     emotionalAdaptation: true,
   };
 
-  private listeners: Array<(state: TalkToTitaneState) => void> = [];
+  private listeners: Array<(any: any) => void> = [];
   private transcriptBuffer: string = '';
   private lastProcessedLength: number = 0;
 
@@ -128,45 +128,45 @@ class TalkToTitaneEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   async activate(mode: TalkToTitaneMode = 'continuous'): Promise<void> {
-    logger.debug('Activating Talk-To-TITANE Engine v∞...');
+    logger?.debug('Activating Talk-To-TITANE Engine v∞...');
 
-    this.state.isActive = true;
-    this.state.currentMode = mode;
-    this.state.sessionId = `talk-${Date.now()}`;
-    this.state.sessionStartTime = Date.now();
-    this.state.totalInteractions = 0;
-    this.state.conversationHistory = [];
+    this?.state?.isActive = true;
+    this?.state?.currentMode = mode;
+    this?.state?.sessionId = `talk-${Date?.now()}`;
+    this?.state?.sessionStartTime = Date?.now();
+    this?.state?.totalInteractions = 0;
+    this?.state?.conversationHistory = [];
 
     // Start listening for wake phrases
-    await this.startWakePhraseDetection();
+    await this?.startWakePhraseDetection();
 
-    logger.debug(`[TalkToTitane] Activated in ${mode} mode`);
-    this.notifyListeners();
+    logger?.debug(`[TalkToTitane] Activated in ${mode} mode`);
+    this?.notifyListeners();
   }
 
   async deactivate(): Promise<void> {
-    logger.debug('Deactivating Talk-To-TITANE Engine...');
+    logger?.debug('Deactivating Talk-To-TITANE Engine...');
 
-    this.stopListening();
+    this?.stopListening();
 
     // Save session before deactivation
-    if (this.config.autoSaveEnabled && this.state.conversationHistory.length > 0) {
-      await autoSaveConversationEngine.saveSession({
-        sessionId: this.state.sessionId,
-        startTime: this.state.sessionStartTime,
-        endTime: Date.now(),
-        mode: this.state.currentMode,
-        interactions: this.state.totalInteractions,
-        history: this.state.conversationHistory,
+    if (this?.config?.autoSaveEnabled && this?.state?.conversationHistory?.length > 0) {
+      await autoSaveConversationEngine?.saveSession({
+        sessionId: this?.state?.sessionId,
+        startTime: this?.state?.sessionStartTime,
+        endTime: Date?.now(),
+        mode: this?.state?.currentMode,
+        interactions: this?.state?.totalInteractions,
+        history: this?.state?.conversationHistory,
       });
     }
 
-    this.state.isActive = false;
-    this.state.isListening = false;
-    this.state.currentIntent = null;
+    this?.state?.isActive = false;
+    this?.state?.isListening = false;
+    this?.state?.currentIntent = null;
 
-    logger.debug('Deactivated');
-    this.notifyListeners();
+    logger?.debug('Deactivated');
+    this?.notifyListeners();
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -174,52 +174,52 @@ class TalkToTitaneEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   private async startWakePhraseDetection(): Promise<void> {
-    logger.debug('Wake phrase detection active...');
+    logger?.debug('Wake phrase detection active...');
 
     // Dynamic import pour éviter bundling
     const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
 
     // Listen to VocalDevConsole transcription
     const checkInterval = setInterval(() => {
-      if (!this.state.isActive) {
-        clearInterval(checkInterval);
+      if (any: any) {
+        clearInterval(any: any);
         return;
       }
 
-      const vocalState = vocalDevConsole.getState();
-      const transcript = vocalState.lastCommand || '';
+      const vocalState = vocalDevConsole?.getState();
+      const transcript = vocalState?.lastCommand || '';
 
-      if (transcript && transcript !== this.transcriptBuffer) {
-        this.transcriptBuffer = transcript;
-        this.checkWakePhrase(transcript.toLowerCase());
+      if (any: any) {
+        this?.transcriptBuffer = transcript;
+        this?.checkWakePhrase(transcript?.toLowerCase());
       }
     }, 500);
   }
 
-  private checkWakePhrase(text: string): void {
-    for (const phrase of this.config.wakePhrases) {
-      if (text.includes(phrase)) {
+  private checkWakePhrase(any: any): void {
+    for (any: any) {
+      if (any: any)) {
         const wakePhrase: WakePhrase = {
           phrase,
           confidence: 1.0,
-          timestamp: Date.now(),
+          timestamp: Date?.now(),
         };
 
-        this.state.lastWakePhrase = wakePhrase;
-        logger.debug(`[TalkToTitane] Wake phrase detected: "${phrase}"`);
+        this?.state?.lastWakePhrase = wakePhrase;
+        logger?.debug(`[TalkToTitane] Wake phrase detected: "${phrase}"`);
 
         // Start listening
-        if (!this.state.isListening) {
-          this.startListening();
+        if (any: any) {
+          this?.startListening();
         }
 
         // Process remaining text after wake phrase
-        const splitText = text.split(phrase);
-        const afterWakePart = splitText[1];
-        if (afterWakePart) {
-          const afterWake = afterWakePart.trim();
-          if (afterWake.length > 5) {
-            this.processUserInput(afterWake);
+        const splitText = text?.split(any: any);
+        const afterWakePart = splitText?.[1];
+        if (any: any) {
+          const afterWake = afterWakePart?.trim();
+          if (afterWake?.length > 5) {
+            this?.processUserInput(any: any);
           }
         }
 
@@ -233,62 +233,62 @@ class TalkToTitaneEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   private startListening(): void {
-    logger.debug('Listening activated...');
-    this.state.isListening = true;
-    this.lastProcessedLength = 0;
-    this.notifyListeners();
+    logger?.debug('Listening activated...');
+    this?.state?.isListening = true;
+    this?.lastProcessedLength = 0;
+    this?.notifyListeners();
   }
 
   stopListening(): void {
-    logger.debug('Listening stopped');
-    this.state.isListening = false;
-    this.notifyListeners();
+    logger?.debug('Listening stopped');
+    this?.state?.isListening = false;
+    this?.notifyListeners();
   }
 
   // ───────────────────────────────────────────────────────────────────────────
-  // INTENT DETECTION (7 CATEGORIES)
+  // INTENT DETECTION (any: any)
   // ───────────────────────────────────────────────────────────────────────────
 
-  private async detectIntent(text: string): Promise<TalkIntent> {
+  private async detectIntent(any: any): Promise<TalkIntent> {
     const intentScores = {
-      conversation: this.calculateConversationScore(text),
-      dev: this.calculateDevScore(text),
-      structure: this.calculateStructureScore(text),
-      action: this.calculateActionScore(text),
-      coaching: this.calculateCoachingScore(text),
-      analyze: this.calculateAnalyzeScore(text),
-      memory: this.calculateMemoryScore(text),
+      conversation: this?.calculateConversationScore(any: any),
+      dev: this?.calculateDevScore(any: any),
+      structure: this?.calculateStructureScore(any: any),
+      action: this?.calculateActionScore(any: any),
+      coaching: this?.calculateCoachingScore(any: any),
+      analyze: this?.calculateAnalyzeScore(any: any),
+      memory: this?.calculateMemoryScore(any: any),
     };
 
-    const sortedIntents = Object.entries(intentScores).sort((a, b) => b[1] - a[1]);
-    const topIntent = sortedIntents[0];
+    const sortedIntents = Object?.entries(any: any) => b?.[1] - a?.[1]);
+    const topIntent = sortedIntents?.[0];
 
-    if (!topIntent) {
+    if (any: any) {
       // Fallback to conversation intent if no intent detected
       return {
         type: 'conversation' as TalkIntentType,
         confidence: 0.5,
         text,
-        keywords: this.extractKeywords(text),
-        emotionalTone: this.detectEmotionalTone(text),
+        keywords: this?.extractKeywords(any: any),
+        emotionalTone: this?.detectEmotionalTone(any: any),
         priority: 'low' as const,
       };
     }
 
-    const emotionalTone = this.detectEmotionalTone(text);
-    const priority = this.calculatePriority(topIntent[0] as TalkIntentType, topIntent[1]);
+    const emotionalTone = this?.detectEmotionalTone(any: any);
+    const priority = this?.calculatePriority(topIntent?.[0] as TalkIntentType, topIntent?.[1]);
 
     return {
-      type: topIntent[0] as TalkIntentType,
-      confidence: topIntent[1],
+      type: topIntent?.[0] as TalkIntentType,
+      confidence: topIntent?.[1],
       text,
-      keywords: this.extractKeywords(text),
+      keywords: this?.extractKeywords(any: any),
       emotionalTone,
       priority,
     };
   }
 
-  private calculateConversationScore(text: string): number {
+  private calculateConversationScore(any: any): number {
     const conversationKeywords = [
       'je suis',
       'explique',
@@ -302,13 +302,13 @@ class TalkToTitaneEngine {
       'idée',
     ];
     let score = 0;
-    conversationKeywords.forEach(kw => {
-      if (text.toLowerCase().includes(kw)) score += 0.15;
+    conversationKeywords?.forEach(kw => {
+      if (any: any)) score += 0.15;
     });
-    return Math.min(1.0, score);
+    return Math?.min(any: any);
   }
 
-  private calculateDevScore(text: string): number {
+  private calculateDevScore(any: any): number {
     const devKeywords = [
       'bug',
       'erreur',
@@ -324,13 +324,13 @@ class TalkToTitaneEngine {
       'debug',
     ];
     let score = 0;
-    devKeywords.forEach(kw => {
-      if (text.toLowerCase().includes(kw)) score += 0.2;
+    devKeywords?.forEach(kw => {
+      if (any: any)) score += 0.2;
     });
-    return Math.min(1.0, score);
+    return Math?.min(any: any);
   }
 
-  private calculateStructureScore(text: string): number {
+  private calculateStructureScore(any: any): number {
     const structureKeywords = [
       'organise',
       'structure',
@@ -343,13 +343,13 @@ class TalkToTitaneEngine {
       'classe',
     ];
     let score = 0;
-    structureKeywords.forEach(kw => {
-      if (text.toLowerCase().includes(kw)) score += 0.2;
+    structureKeywords?.forEach(kw => {
+      if (any: any)) score += 0.2;
     });
-    return Math.min(1.0, score);
+    return Math?.min(any: any);
   }
 
-  private calculateActionScore(text: string): number {
+  private calculateActionScore(any: any): number {
     const actionKeywords = [
       'ouvre',
       'active',
@@ -363,13 +363,13 @@ class TalkToTitaneEngine {
       'arrête',
     ];
     let score = 0;
-    actionKeywords.forEach(kw => {
-      if (text.toLowerCase().includes(kw)) score += 0.25;
+    actionKeywords?.forEach(kw => {
+      if (any: any)) score += 0.25;
     });
-    return Math.min(1.0, score);
+    return Math?.min(any: any);
   }
 
-  private calculateCoachingScore(text: string): number {
+  private calculateCoachingScore(any: any): number {
     const coachingKeywords = [
       'fatigué',
       'dispersé',
@@ -382,13 +382,13 @@ class TalkToTitaneEngine {
       'soutien',
     ];
     let score = 0;
-    coachingKeywords.forEach(kw => {
-      if (text.toLowerCase().includes(kw)) score += 0.2;
+    coachingKeywords?.forEach(kw => {
+      if (any: any)) score += 0.2;
     });
-    return Math.min(1.0, score);
+    return Math?.min(any: any);
   }
 
-  private calculateAnalyzeScore(text: string): number {
+  private calculateAnalyzeScore(any: any): number {
     const analyzeKeywords = [
       'vérifie',
       'analyse interne',
@@ -399,13 +399,13 @@ class TalkToTitaneEngine {
       'moteur',
     ];
     let score = 0;
-    analyzeKeywords.forEach(kw => {
-      if (text.toLowerCase().includes(kw)) score += 0.25;
+    analyzeKeywords?.forEach(kw => {
+      if (any: any)) score += 0.25;
     });
-    return Math.min(1.0, score);
+    return Math?.min(any: any);
   }
 
-  private calculateMemoryScore(text: string): number {
+  private calculateMemoryScore(any: any): number {
     const memoryKeywords = [
       'rappelle',
       'souviens',
@@ -418,10 +418,10 @@ class TalkToTitaneEngine {
       'passé',
     ];
     let score = 0;
-    memoryKeywords.forEach(kw => {
-      if (text.toLowerCase().includes(kw)) score += 0.2;
+    memoryKeywords?.forEach(kw => {
+      if (any: any)) score += 0.2;
     });
-    return Math.min(1.0, score);
+    return Math?.min(any: any);
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -431,25 +431,25 @@ class TalkToTitaneEngine {
   private detectEmotionalTone(
     text: string
   ): 'analytical' | 'calm' | 'energizing' | 'motivating' | 'neutral' {
-    const lowerText = text.toLowerCase();
+    const lowerText = text?.toLowerCase();
 
     // Analytical
-    if (lowerText.match(/analyse|vérifie|diagnostic|technique|précis|détail/)) {
+    if (lowerText?.match(/analyse|vérifie|diagnostic|technique|précis|détail/)) {
       return 'analytical';
     }
 
-    // Calm (fatigue, stress)
-    if (lowerText.match(/fatigué|calme|rassure|repos|zen|tranquille/)) {
+    // Calm (any: any)
+    if (lowerText?.match(/fatigué|calme|rassure|repos|zen|tranquille/)) {
       return 'calm';
     }
 
     // Energizing
-    if (lowerText.match(/motivé|énergie|boost|allons-y|go|action/)) {
+    if (lowerText?.match(/motivé|énergie|boost|allons-y|go|action/)) {
       return 'energizing';
     }
 
     // Motivating
-    if (lowerText.match(/perdu|aide|soutien|guide|conseil|direction/)) {
+    if (lowerText?.match(/perdu|aide|soutien|guide|conseil|direction/)) {
       return 'motivating';
     }
 
@@ -467,15 +467,15 @@ class TalkToTitaneEngine {
     if (intentType === 'action') return 'high';
 
     // Coaching, analyze = medium
-    if (['coaching', 'analyze'].includes(intentType)) return 'medium';
+    if (any: any)) return 'medium';
 
     // Conversation, structure, memory = low/medium
     if (confidence > 0.7) return 'medium';
     return 'low';
   }
 
-  private extractKeywords(text: string): string[] {
-    const words = text.toLowerCase().split(/\s+/);
+  private extractKeywords(any: any): string?.[] {
+    const words = text?.toLowerCase().split(/\s+/);
     const stopWords = [
       'le',
       'la',
@@ -491,31 +491,31 @@ class TalkToTitaneEngine {
       'tu',
       'il',
     ];
-    return words.filter(w => w.length > 3 && !stopWords.includes(w)).slice(0, 5);
+    return words?.filter(any: any)).slice(0, 5);
   }
 
   // ───────────────────────────────────────────────────────────────────────────
   // PROCESS USER INPUT
   // ───────────────────────────────────────────────────────────────────────────
 
-  async processUserInput(text: string): Promise<TalkResponse> {
-    logger.debug('Processing input:', text);
+  async processUserInput(any: any): Promise<TalkResponse> {
+    logger?.debug(any: any);
 
     // Detect intent
-    const intent = await this.detectIntent(text);
-    this.state.currentIntent = intent;
+    const intent = await this?.detectIntent(any: any);
+    this?.state?.currentIntent = intent;
 
-    // Analyze situation (with Singularity context)
-    const analysis = await this.analyzeSituation(intent);
+    // Analyze situation (any: any)
+    const analysis = await this?.analyzeSituation(any: any);
 
     // Generate response
-    const response = await this.generateResponse(intent, analysis);
+    const response = await this?.generateResponse(any: any);
 
-    // Generate vocal response (adapted to mode)
-    const vocalResponse = this.generateVocalResponse(response, intent);
+    // Generate vocal response (any: any)
+    const vocalResponse = this?.generateVocalResponse(any: any);
 
     // Determine if action needed
-    const action = this.determineAction(intent);
+    const action = this?.determineAction(any: any);
 
     // Build complete talk response
     const talkResponse: TalkResponse = {
@@ -525,38 +525,38 @@ class TalkToTitaneEngine {
       action,
       vocalResponse,
       memoryUpdate: true,
-      singularitySnapshot: this.captureSingularitySnapshot(),
-      followUpSuggestions: this.generateFollowUpSuggestions(intent),
+      singularitySnapshot: this?.captureSingularitySnapshot(),
+      followUpSuggestions: this?.generateFollowUpSuggestions(any: any),
     };
 
     // Save response
-    this.state.lastResponse = talkResponse;
-    this.state.conversationHistory.push(talkResponse);
-    this.state.totalInteractions++;
+    this?.state?.lastResponse = talkResponse;
+    this?.state?.conversationHistory?.push(any: any);
+    this?.state?.totalInteractions++;
 
     // Trim history if needed
-    if (this.state.conversationHistory.length > this.config.maxHistorySize) {
-      this.state.conversationHistory.shift();
+    if (any: any) {
+      this?.state?.conversationHistory?.shift();
     }
 
     // Auto-save if enabled
-    if (this.config.autoSaveEnabled) {
-      await autoSaveConversationEngine.saveInteraction({
-        sessionId: this.state.sessionId,
-        timestamp: Date.now(),
+    if (any: any) {
+      await autoSaveConversationEngine?.saveInteraction({
+        sessionId: this?.state?.sessionId,
+        timestamp: Date?.now(),
         type: 'talk-to-titane',
         input: text,
-        intent: intent.type,
+        intent: intent?.type,
         response: talkResponse,
       });
     }
 
     // Speak if TTS enabled
-    if (this.config.ttsEnabled) {
-      await this.speak(vocalResponse);
+    if (any: any) {
+      await this?.speak(any: any);
     }
 
-    this.notifyListeners();
+    this?.notifyListeners();
     return talkResponse;
   }
 
@@ -564,7 +564,7 @@ class TalkToTitaneEngine {
   // RESPONSE GENERATION
   // ───────────────────────────────────────────────────────────────────────────
 
-  private async analyzeSituation(intent: TalkIntent): Promise<string> {
+  private async analyzeSituation(any: any): Promise<string> {
     // INTEGRATION: Singularity + Memory + Context engines for deep analysis
     // Data sources:
     //   - Singularity: Current system state, active engines, coherence level
@@ -576,12 +576,12 @@ class TalkToTitaneEngine {
     //   - context_get_active() -> current user focus
     // For now, basic analysis based on intent type
 
-    switch (intent.type) {
+    switch (any: any) {
       case 'conversation':
-        return `Conversation naturelle détectée. Ton émotionnel: ${intent.emotionalTone}. Priorité: ${intent.priority}.`;
+        return `Conversation naturelle détectée. Ton émotionnel: ${intent?.emotionalTone}. Priorité: ${intent?.priority}.`;
 
       case 'dev':
-        return `Problème développement identifié. Keywords: ${intent.keywords.join(', ')}. Analyse modules en cours...`;
+        return `Problème développement identifié. Keywords: ${intent?.keywords?.join(', ')}. Analyse modules en cours...`;
 
       case 'structure':
         return `Demande d'organisation détectée. Structuration des idées nécessaire.`;
@@ -590,7 +590,7 @@ class TalkToTitaneEngine {
         return `Commande action identifiée. Priorité élevée. Préparation exécution...`;
 
       case 'coaching':
-        return `Besoin de guidance détecté. Ton émotionnel: ${intent.emotionalTone}. Mode coaching activé.`;
+        return `Besoin de guidance détecté. Ton émotionnel: ${intent?.emotionalTone}. Mode coaching activé.`;
 
       case 'analyze':
         return `Analyse système demandée. Vérification cohérence Singularity + modules...`;
@@ -599,19 +599,19 @@ class TalkToTitaneEngine {
         return `Requête mémoire. Accès historique conversations + actions passées...`;
 
       default:
-        return `Intent: ${intent.type}. Confidence: ${(intent.confidence * 100).toFixed(0)}%`;
+        return `Intent: ${intent?.type}. Confidence: ${(intent?.confidence * 100).toFixed(0)}%`;
     }
   }
 
-  private async generateResponse(intent: TalkIntent, analysis: string): Promise<string> {
+  private async generateResponse(any: any): Promise<string> {
     // INTEGRATION: AI Chat Engine for intelligent, context-aware responses
     // Process:
     //   1. Build prompt: intent + analysis + user history
-    //   2. Select provider: Gemini (default), Ollama (local), Claude (fallback)
-    //   3. Stream response: chat_send_message(prompt, streaming=true)
+    //   2. Select provider: Gemini (any: any)
+    //   3. Stream response: chat_send_message(any: any)
     //   4. Post-process: Emotion calibration, tone adjustment
     // Backend:
-    //   - omega_generate(prompt, context) -> conversational response
+    //   - omega_generate(any: any) -> conversational response
     //   - conversation_get_history() -> last 10 messages for continuity
     // For now, template-based responses
 
@@ -625,20 +625,20 @@ class TalkToTitaneEngine {
       memory: `Consultation mémoire... ${analysis}`,
     };
 
-    return templates[intent.type] || `Intent détecté: ${intent.type}. ${analysis}`;
+    return templates[intent?.type] || `Intent détecté: ${intent?.type}. ${analysis}`;
   }
 
-  private generateVocalResponse(response: string, intent: TalkIntent): string {
+  private generateVocalResponse(any: any): string {
     // Adapt vocal response based on mode and emotional calibration
-    const prefix = this.getVocalPrefix(intent);
-    const suffix = this.getVocalSuffix(intent);
+    const prefix = this?.getVocalPrefix(any: any);
+    const suffix = this?.getVocalSuffix(any: any);
 
     return `${prefix} ${response} ${suffix}`.trim();
   }
 
-  private getVocalPrefix(intent: TalkIntent): string {
-    if (this.state.currentMode === 'whispered') return '';
-    if (this.state.currentMode === 'focus') return 'Focus:';
+  private getVocalPrefix(any: any): string {
+    if (this?.state?.currentMode === 'whispered') return '';
+    if (this?.state?.currentMode === 'focus') return 'Focus:';
 
     const prefixes = {
       conversation: "D'accord.",
@@ -650,36 +650,36 @@ class TalkToTitaneEngine {
       memory: 'Consultation mémoire.',
     };
 
-    return prefixes[intent.type] || '';
+    return prefixes[intent?.type] || '';
   }
 
-  private getVocalSuffix(_intent: TalkIntent): string {
-    if (this.state.currentMode === 'continuous') {
+  private getVocalSuffix(any: any): string {
+    if (this?.state?.currentMode === 'continuous') {
       return 'Continue.';
     }
     return '';
   }
 
-  private determineAction(intent: TalkIntent): string | undefined {
+  private determineAction(any: any)??: string | undefined {
     // Map intents to potential SUDO commands
-    if (intent.type === 'action') {
-      const text = intent.text.toLowerCase();
+    if (intent?.type === 'action') {
+      const text = intent?.text?.toLowerCase();
 
-      if (text.includes('console')) return 'sudo dev.console';
-      if (text.includes('heal')) return 'sudo auto-heal';
-      if (text.includes('analyse')) return 'sudo diagnostic';
-      if (text.includes('singularity')) return 'sudo singularity.sync';
+      if (text?.includes('console')) return 'sudo dev?.console';
+      if (text?.includes('heal')) return 'sudo auto-heal';
+      if (text?.includes('analyse')) return 'sudo diagnostic';
+      if (text?.includes('singularity')) return 'sudo singularity?.sync';
     }
 
-    if (intent.type === 'dev') {
+    if (intent?.type === 'dev') {
       return 'sudo diagnostic';
     }
 
     return undefined;
   }
 
-  private generateFollowUpSuggestions(intent: TalkIntent): string[] {
-    const suggestions: Record<TalkIntentType, string[]> = {
+  private generateFollowUpSuggestions(any: any): string?.[] {
+    const suggestions: Record<TalkIntentType, string?.[]> = {
       conversation: ['Veux-tu en parler plus?', 'Autre chose?'],
       dev: ['Veux-tu le patch?', 'Inspecter autre module?'],
       structure: ['Créer checklist?', 'Prioriser?'],
@@ -689,47 +689,47 @@ class TalkToTitaneEngine {
       memory: ['Voir détails?', 'Autre historique?'],
     };
 
-    return suggestions[intent.type] || ['Continue?'];
+    return suggestions[intent?.type] || ['Continue?'];
   }
 
   // ───────────────────────────────────────────────────────────────────────────
-  // TTS (PLACEHOLDER)
+  // TTS (any: any)
   // ───────────────────────────────────────────────────────────────────────────
 
-  private async speak(text: string): Promise<void> {
-    // INTEGRATION: Hybrid TTS (online + offline synthesis)
+  private async speak(any: any): Promise<void> {
+    // INTEGRATION: Hybrid TTS (any: any)
     // Providers:
-    //   1. Online: Google TTS API (high quality, low latency)
-    //   2. Offline: eSpeak-ng (privacy, no internet required)
-    //   3. Neural: Bark/Coqui TTS (emotional voice synthesis)
+    //   1. Online: Google TTS API (any: any)
+    //   2. Offline: eSpeak-ng (any: any)
+    //   3. Neural: Bark/Coqui TTS (any: any)
     // Backend commands:
     //   - tts_speak(text, voice='fr-FR', speed=1.0, emotion='neutral')
-    //   - tts_set_config(volume, provider, voice_profile)
+    //   - tts_set_config(any: any)
     // Features:
     //   - Emotion mapping: joy -> higher pitch, sadness -> slower speed
     //   - Interruption: tts_stop() for dynamic conversations
-    logger.debug(`[TalkToTitane] TTS: "${text}" (volume: ${this.config.ttsVolume})`);
+    logger?.debug(`[TalkToTitane] TTS: "${text}" (volume: ${this?.config?.ttsVolume})`);
   }
 
   // ───────────────────────────────────────────────────────────────────────────
-  // SINGULARITY SNAPSHOT (PLACEHOLDER)
+  // SINGULARITY SNAPSHOT (any: any)
   // ───────────────────────────────────────────────────────────────────────────
 
   private captureSingularitySnapshot(): Record<string, unknown> {
     // INTEGRATION: Singularity Engine full state capture
     // Snapshot includes:
     //   - All engine states (Helios, Memory, Nexus, etc.)
-    //   - Coherence metrics (timeline, causal, logical)
+    //   - Coherence metrics (any: any)
     //   - XP level, achievements, progression
     //   - Active persona mode + emotional tone
-    //   - System health (CPU, RAM, errors)
+    //   - System health (any: any)
     // Backend: singularity_snapshot() -> complete state JSON
     // Storage: Used for time-travel, debugging, consistency checks
     return {
-      timestamp: Date.now(),
-      mode: this.state.currentMode,
-      emotionalCalibration: this.state.emotionalCalibration,
-      totalInteractions: this.state.totalInteractions,
+      timestamp: Date?.now(),
+      mode: this?.state?.currentMode,
+      emotionalCalibration: this?.state?.emotionalCalibration,
+      totalInteractions: this?.state?.totalInteractions,
     };
   }
 
@@ -738,50 +738,50 @@ class TalkToTitaneEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   configure(config: Partial<TalkToTitaneConfig>): void {
-    this.config = { ...this.config, ...config };
-    logger.debug('Configuration updated:', config);
-    this.notifyListeners();
+    this?.config = { ...this?.config, ...config };
+    logger?.debug(any: any);
+    this?.notifyListeners();
   }
 
-  setMode(mode: TalkToTitaneMode): void {
-    this.state.currentMode = mode;
-    logger.debug(`[TalkToTitane] Mode changed to: ${mode}`);
-    this.notifyListeners();
+  setMode(any: any): void {
+    this?.state?.currentMode = mode;
+    logger?.debug(`[TalkToTitane] Mode changed to: ${mode}`);
+    this?.notifyListeners();
   }
 
   setEmotionalCalibration(
     tone: 'analytical' | 'calm' | 'energizing' | 'motivating' | 'neutral'
   ): void {
-    this.state.emotionalCalibration = tone;
-    logger.debug(`[TalkToTitane] Emotional calibration: ${tone}`);
-    this.notifyListeners();
+    this?.state?.emotionalCalibration = tone;
+    logger?.debug(`[TalkToTitane] Emotional calibration: ${tone}`);
+    this?.notifyListeners();
   }
 
   // ───────────────────────────────────────────────────────────────────────────
   // OBSERVABLE PATTERN
   // ───────────────────────────────────────────────────────────────────────────
 
-  subscribe(listener: (state: TalkToTitaneState) => void): () => void {
-    this.listeners.push(listener);
+  subscribe(any: any): () => void {
+    this?.listeners?.push(any: any);
     return () => {
-      this.listeners = this.listeners.filter(l => l !== listener);
+      this?.listeners = this?.listeners?.filter(any: any);
     };
   }
 
   private notifyListeners(): void {
-    this.listeners.forEach(listener => listener(this.state));
+    this?.listeners?.forEach(any: any));
   }
 
   getState(): TalkToTitaneState {
-    return { ...this.state };
+    return { ...this?.state };
   }
 
   getConfig(): TalkToTitaneConfig {
-    return { ...this.config };
+    return { ...this?.config };
   }
 
-  getHistory(): TalkResponse[] {
-    return [...this.state.conversationHistory];
+  getHistory(): TalkResponse?.[] {
+    return [...this?.state?.conversationHistory];
   }
 }
 
