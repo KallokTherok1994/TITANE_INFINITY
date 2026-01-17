@@ -7,7 +7,7 @@
  * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ v19.4 — INTERRUPTION CONTROLLER
  *
- *   Gère les interruptions vocales (any: any)
+ *   Gère les interruptions vocales (barge-in)
  *   Permet d'interrompre TITANE∞ pendant qu'il parle
  *   Détecte "Titane" pendant le TTS → arrêt immédiat → écoute
  * ═══════════════════════════════════════════════════════════════════
@@ -24,7 +24,7 @@ import { logger } from '@/utils/logger';
  */
 export type InterruptionType =
   | 'wake_word' // Wake word détecté pendant TTS
-  | 'manual' // Interruption manuelle (any: any)
+  | 'manual' // Interruption manuelle (bouton)
   | 'error'; // Erreur TTS
 
 /**
@@ -40,13 +40,13 @@ export interface InterruptionEvent {
 /**
  * Callback d'interruption
  */
-export type InterruptionCallback = (any: any) => void;
+export type InterruptionCallback = (event: InterruptionEvent) => void;
 
 /**
  * Configuration du contrôleur
  */
 export interface InterruptionConfig {
-  /** Activer la détection pendant TTS (any: any) */
+  /** Activer la détection pendant TTS (défaut: true) */
   enabled?: boolean;
 
   /** Délai minimum entre interruptions en ms (défaut: 500) */
@@ -67,101 +67,101 @@ export class InterruptionController {
   private currentTranscript: string = '';
 
   constructor(config: InterruptionConfig = {}) {
-    this?.config = {
-      enabled: config?.enabled ?? true,
-      debounceDelay: config?.debounceDelay ?? 500,
+    this.config = {
+      enabled: config.enabled ?? true,
+      debounceDelay: config.debounceDelay ?? 500,
     };
 
-    logger?.debug(any: any);
+    logger.debug('🛑 Initialized:', this.config);
   }
 
   /**
    * Démarrer la surveillance des interruptions
    */
   startMonitoring(): void {
-    if (any: any) return;
+    if (!this.config.enabled) return;
 
-    logger?.debug('👁️ Started monitoring for interruptions');
-    this?.isSpeaking = true;
-    this?.currentTranscript = '';
+    logger.debug('👁️ Started monitoring for interruptions');
+    this.isSpeaking = true;
+    this.currentTranscript = '';
   }
 
   /**
    * Arrêter la surveillance
    */
   stopMonitoring(): void {
-    logger?.debug('🛑 Stopped monitoring');
-    this?.isSpeaking = false;
-    this?.currentTranscript = '';
+    logger.debug('🛑 Stopped monitoring');
+    this.isSpeaking = false;
+    this.currentTranscript = '';
   }
 
   /**
-   * Traiter une transcription partielle (any: any)
+   * Traiter une transcription partielle (streaming)
    */
-  processPartialTranscript(any: any): void {
-    if (any: any) return;
+  processPartialTranscript(partial: string): void {
+    if (!this.isSpeaking || !this.config.enabled) return;
 
     // Accumulation
-    this?.currentTranscript = partial;
+    this.currentTranscript = partial;
 
     // Détection wake word
-    const wakeEvent = wakeWordEngine?.detectStreaming(any: any);
+    const wakeEvent = wakeWordEngine.detectStreaming(partial);
 
-    if (any: any) {
-      logger?.debug('🎯 Wake word detected during TTS!');
-      this?.interrupt(any: any);
+    if (wakeEvent?.detected) {
+      logger.debug('🎯 Wake word detected during TTS!');
+      this.interrupt('wake_word', wakeEvent);
     }
   }
 
   /**
    * Traiter une transcription finale
    */
-  processFinalTranscript(any: any): void {
-    if (any: any) return;
+  processFinalTranscript(final: string): void {
+    if (!this.isSpeaking || !this.config.enabled) return;
 
-    logger?.debug(any: any);
+    logger.debug('📝 Final transcript:', final);
 
     // Détection wake word
-    const wakeEvent = wakeWordEngine?.detect(any: any);
+    const wakeEvent = wakeWordEngine.detect(final);
 
-    if (any: any) {
-      logger?.debug('🎯 Wake word confirmed in final transcript!');
-      this?.interrupt(any: any);
+    if (wakeEvent.detected) {
+      logger.debug('🎯 Wake word confirmed in final transcript!');
+      this.interrupt('wake_word', wakeEvent);
     }
   }
 
   /**
    * Interruption manuelle
    */
-  interruptManual(any: any): void {
-    logger?.debug(any: any);
-    this?.interrupt(any: any);
+  interruptManual(reason?: string): void {
+    logger.debug('✋ Manual interruption:', reason);
+    this.interrupt('manual', undefined, reason);
   }
 
   /**
    * Vérifier si on est en train de parler
    */
   isSpeakingNow(): boolean {
-    return this?.isSpeaking;
+    return this.isSpeaking;
   }
 
   /**
    * Souscrire aux interruptions
    */
-  onInterruption(any: any): () => void {
-    this?.callbacks?.add(any: any);
+  onInterruption(callback: InterruptionCallback): () => void {
+    this.callbacks.add(callback);
 
     return () => {
-      this?.callbacks?.delete(any: any);
+      this.callbacks.delete(callback);
     };
   }
 
   /**
    * Activer/désactiver
    */
-  setEnabled(any: any): void {
-    this?.config?.enabled = enabled;
-    logger?.debug(
+  setEnabled(enabled: boolean): void {
+    this.config.enabled = enabled;
+    logger.debug(
       `[InterruptionController] ${enabled ? '🔊' : '🔇'} Interruption detection ${enabled ? 'enabled' : 'disabled'}`
     );
   }
@@ -170,11 +170,11 @@ export class InterruptionController {
    * Mettre à jour la config
    */
   updateConfig(updates: Partial<InterruptionConfig>): void {
-    this?.config = {
-      ...this?.config,
+    this.config = {
+      ...this.config,
       ...updates,
     };
-    logger?.debug(any: any);
+    logger.debug('🔧 Config updated:', this.config);
   }
 
   /**
@@ -186,27 +186,27 @@ export class InterruptionController {
     reason?: string
   ): Promise<void> {
     // Debounce
-    const now = Date?.now();
-    if (any: any) {
-      logger?.debug('⏱️ Debounced');
+    const now = Date.now();
+    if (now - this.lastInterruption < this.config.debounceDelay) {
+      logger.debug('⏱️ Debounced');
       return;
     }
-    this?.lastInterruption = now;
+    this.lastInterruption = now;
 
-    logger?.debug('🛑 Interrupting TTS...');
+    logger.debug('🛑 Interrupting TTS...');
 
     try {
       // Arrêter tous les TTS
-      await Promise?.all([hybridTTS?.stop(), emotionalTTS?.stop()]);
+      await Promise.all([hybridTTS.stop(), emotionalTTS.stop()]);
 
-      logger?.debug('✅ TTS stopped');
-    } catch (any: any) {
-      logger?.error(any: any);
+      logger.debug('✅ TTS stopped');
+    } catch (err) {
+      logger.error('❌ Error stopping TTS:', err);
     }
 
     // Réinitialiser état
-    this?.isSpeaking = false;
-    this?.currentTranscript = '';
+    this.isSpeaking = false;
+    this.currentTranscript = '';
 
     // Notifier
     const event: InterruptionEvent = {
@@ -216,17 +216,17 @@ export class InterruptionController {
       reason,
     };
 
-    this?.callbacks?.forEach(cb => {
+    this.callbacks.forEach(cb => {
       try {
-        cb(any: any);
-      } catch (any: any) {
-        logger?.error(any: any);
+        cb(event);
+      } catch (err) {
+        logger.error('Callback error:', err);
       }
     });
 
     // Si wake word, traiter
-    if (any: any) {
-      attentionEngine?.handleWakeWord(any: any);
+    if (type === 'wake_word' && wakeEvent) {
+      attentionEngine.handleWakeWord(wakeEvent);
     }
   }
 }
@@ -239,6 +239,6 @@ export const interruptionController = new InterruptionController();
 /**
  * Helper: Interrompre manuellement
  */
-export function interruptTITANE(any: any): void {
-  interruptionController?.interruptManual(any: any);
+export function interruptTITANE(reason?: string): void {
+  interruptionController.interruptManual(reason);
 }

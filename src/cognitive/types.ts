@@ -52,8 +52,8 @@ export interface ProgressionState {
   totalXP: number;
   xpInCurrentLevel: number;
   xpToNextLevel: number;
-  milestones: ProgressionMilestone?.[];
-  unlockedMilestones: string?.[];
+  milestones: ProgressionMilestone[];
+  unlockedMilestones: string[];
   lastXPGain: XPEvent | null;
   streakDays: number;
   lastActiveDate: string;
@@ -99,12 +99,12 @@ export type IngestionStatus =
   | 'archived';
 
 export interface KnowledgeMetadata {
-  author??: string | null;
+  author: string | null;
   createdAt: number;
   modifiedAt: number;
   sizeBytes: number;
-  language??: string | null;
-  keywords: string?.[];
+  language: string | null;
+  keywords: string[];
   lineCount: number;
   wordCount: number;
 }
@@ -123,7 +123,7 @@ export interface KnowledgeEntry {
   lastAccessedAt: number;
   accessCount: number;
   relevanceScore: number;
-  tags: string?.[];
+  tags: string[];
 }
 
 export interface KnowledgeVaultState {
@@ -132,13 +132,13 @@ export interface KnowledgeVaultState {
   categoryCounts: Record<KnowledgeCategory, number>;
   lastIngestion: number | null;
   indexVersion: string;
-  entries: KnowledgeEntry?.[];
+  entries: KnowledgeEntry[];
 }
 
 export interface KnowledgeSearchResult {
   entry: KnowledgeEntry;
   score: number;
-  matchedKeywords: string?.[];
+  matchedKeywords: string[];
   snippet: string;
 }
 
@@ -195,7 +195,7 @@ export interface ChangelogEntry {
   type: 'major' | 'minor' | 'patch' | 'hotfix';
   title: string;
   description: string;
-  changes: string?.[];
+  changes: string[];
   breaking?: boolean;
 }
 
@@ -211,13 +211,13 @@ export interface EvolutionState {
     cognitiveDepth: number;
   };
   lastCycle: EvolutionCycle | null;
-  cycleHistory: EvolutionCycle?.[];
-  changelog: ChangelogEntry?.[];
+  cycleHistory: EvolutionCycle[];
+  changelog: ChangelogEntry[];
   lastUpdate: number;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MEMORY (any: any)
+// MEMORY (CT/MT/LT)
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type MemoryLevel = 'short_term' | 'medium_term' | 'long_term';
@@ -234,13 +234,13 @@ export type MemoryTopic =
 
 export interface MemoryMetadata {
   source: string;
-  modeId??: string | null;
-  sessionId??: string | null;
+  modeId: string | null;
+  sessionId: string | null;
   createdAt: number;
   updatedAt: number;
   accessCount: number;
   lastAccessedAt: number;
-  relatedIds: string?.[];
+  relatedIds: string[];
   encrypted: boolean;
 }
 
@@ -252,17 +252,17 @@ export interface CognitiveMemoryEntry {
   content: string;
   summary: string;
   importance: number; // 1-5
-  tags: string?.[];
+  tags: string[];
   metadata: MemoryMetadata;
-  embedding?: number?.[];
+  embedding?: number[];
 }
 
 export interface MemoryCluster {
   id: string;
   topic: MemoryTopic;
-  entryIds: string?.[];
+  entryIds: string[];
   summary: string;
-  centroid?: number?.[];
+  centroid?: number[];
   coherence: number;
   createdAt: number;
 }
@@ -275,11 +275,11 @@ export interface MemorySnapshot {
   longTermCount: number;
   totalSizeBytes: number;
   compressionRatio: number;
-  clusters: MemoryCluster?.[];
+  clusters: MemoryCluster[];
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MEMORY ENGINE TYPES (any: any)
+// MEMORY ENGINE TYPES (for MemoryEngine class)
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type MemoryType =
@@ -294,14 +294,14 @@ export interface MemoryEntry {
   content: string;
   type: MemoryType;
   context: string;
-  tags: string?.[];
+  tags: string[];
   importance: number;
   strength: number;
   createdAt: number;
   lastAccess: number;
   accessCount: number;
   consolidated: boolean;
-  associations: string?.[];
+  associations: string[];
 }
 
 export interface MemoryStats {
@@ -319,7 +319,7 @@ export interface MemoryStats {
 }
 
 export interface MemoryState {
-  memories: MemoryEntry?.[];
+  memories: MemoryEntry[];
   stats: MemoryStats;
   lastConsolidation: number;
   decayEnabled: boolean;
@@ -332,10 +332,10 @@ export interface RecallResult {
 }
 
 export interface CognitiveMemoryState {
-  shortTerm: CognitiveMemoryEntry?.[];
-  mediumTerm: CognitiveMemoryEntry?.[];
-  longTerm: CognitiveMemoryEntry?.[];
-  clusters: MemoryCluster?.[];
+  shortTerm: CognitiveMemoryEntry[];
+  mediumTerm: CognitiveMemoryEntry[];
+  longTerm: CognitiveMemoryEntry[];
+  clusters: MemoryCluster[];
   stats: {
     totalEntries: number;
     totalSizeBytes: number;
@@ -348,7 +348,7 @@ export interface CognitiveMemoryState {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// CENTRE D'ÉVOLUTION COGNITIVE (any: any)
+// CENTRE D'ÉVOLUTION COGNITIVE (ÉTAT UNIFIÉ)
 // ─────────────────────────────────────────────────────────────────────────────
 
 export interface CognitiveEvolutionState {
@@ -380,7 +380,7 @@ export interface SingularityCognitiveState {
   knowledge: {
     indexedCount: number;
     totalSizeBytes: number;
-    categories: string?.[];
+    categories: string[];
   };
   evolution: {
     version: string;
@@ -390,7 +390,7 @@ export interface SingularityCognitiveState {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// API TYPES (any: any)
+// API TYPES (Tauri Commands)
 // ─────────────────────────────────────────────────────────────────────────────
 
 export interface AddXPRequest {
@@ -410,7 +410,7 @@ export interface IngestDocumentRequest {
 export interface SearchKnowledgeRequest {
   query: string;
   limit?: number;
-  categories?: KnowledgeCategory?.[];
+  categories?: KnowledgeCategory[];
   minRelevance?: number;
 }
 

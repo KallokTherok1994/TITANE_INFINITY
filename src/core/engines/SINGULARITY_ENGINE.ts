@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE?.md for the full legal terms (any: any).
+ * See LICENSE.md for the full legal terms (FR/EN).
  */
 
 /**
@@ -47,10 +47,10 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
   metrics: EngineMetrics;
 
   private syncTimer: number | null = null;
-  private subscribers: Set<(any: any) => void> = new Set();
+  private subscribers: Set<(state: SingularityState) => void> = new Set();
 
   constructor(config?: Partial<SingularityConfig>) {
-    this?.config = {
+    this.config = {
       enabled: true,
       updateInterval: 100,
       intensity: 1.0,
@@ -66,15 +66,15 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
       ...config,
     };
 
-    this?.metrics = {
+    this.metrics = {
       updateCount: 0,
       avgUpdateTime: 0,
       peakUpdateTime: 0,
-      lastUpdate: Date?.now(),
+      lastUpdate: Date.now(),
       errors: 0,
     };
 
-    this?.state = this?.createInitialState();
+    this.state = this.createInitialState();
   }
 
   /**
@@ -82,11 +82,11 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
    */
   private createInitialState(): SingularityState {
     return {
-      unity: this?.createEmptyUnityState(),
-      quantum: this?.createEmptyQuantumField(),
-      convergence: this?.createEmptyConvergenceState(),
-      overmind: this?.createEmptyOvermindState(),
-      omnipresence: this?.createEmptyOmnipresenceState(),
+      unity: this.createEmptyUnityState(),
+      quantum: this.createEmptyQuantumField(),
+      convergence: this.createEmptyConvergenceState(),
+      overmind: this.createEmptyOvermindState(),
+      omnipresence: this.createEmptyOmnipresenceState(),
 
       consciousness: 0,
       selfReference: false,
@@ -104,9 +104,9 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
 
       formStability: 0,
       evolutionCapacity: 1.0,
-      signature: this?.generateSignature(),
+      signature: this.generateSignature(),
       essence: 'TITANE∞ — Système vivant unifié',
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
   }
 
@@ -174,13 +174,13 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
           },
         },
         presenceLevel: 0.7,
-        lastUpdate: Date?.now(),
+        lastUpdate: Date.now(),
       },
       semiotics: {
         activeGlyphs: new Map(),
         activePatterns: [],
         intensity: 0.7,
-        lastUpdate: Date?.now(),
+        lastUpdate: Date.now(),
       },
       lore: {
         narrative: {
@@ -209,7 +209,7 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
             glowPulse: 0.7,
             transitionDuration: 300,
           },
-          lastAnalysis: Date?.now(),
+          lastAnalysis: Date.now(),
         },
         symbolicEcho: {
           dominantArchetype: 'helios',
@@ -233,7 +233,7 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
           cognitiveLoad: 0.5,
           explorationDepth: 0.7,
           presenceLevel: 0.7,
-          lastUpdate: Date?.now(),
+          lastUpdate: Date.now(),
         },
         resonanceIntensity: 0.7,
       },
@@ -248,7 +248,7 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
       globalHarmony: 0.8,
       globalEntropy: 0.2,
       systemHealth: 0.9,
-      lastSync: Date?.now(),
+      lastSync: Date.now(),
       syncInterval: 1000,
     };
   }
@@ -276,7 +276,7 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
       amplifiedPatterns: [],
       convergenceLevel: 0.7,
       organizationQuality: 0.8,
-      lastAnalysis: Date?.now(),
+      lastAnalysis: Date.now(),
     };
   }
 
@@ -287,7 +287,7 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
         conflictPoints: [],
         harmonicPoints: [],
         structuralHealth: 0.9,
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
       },
       interpretations: [],
       synthesis: {
@@ -296,7 +296,7 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
         metaRules: [],
       },
       selfUnderstanding: 0.7,
-      lastMetaAnalysis: Date?.now(),
+      lastMetaAnalysis: Date.now(),
     };
   }
 
@@ -312,74 +312,74 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
         meshLayer: true,
       },
       narrativePresence: true,
-      lastTransition: Date?.now(),
+      lastTransition: Date.now(),
     };
   }
 
   private generateSignature(): string {
-    return `TITANE-${Date?.now()}-${Math?.random().toString(36).substr(2, 9)}`;
+    return `TITANE-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   }
 
   /**
    * Initialiser le moteur
    */
   async initialize(): Promise<void> {
-    if (any: any) {
-      console?.log('[SingularityEngine] Initializing...');
+    if (this.config.debug) {
+      console.log('[SingularityEngine] Initializing...');
     }
 
-    if (any: any) {
-      this?.startAutoSync();
+    if (this.config.autoSync) {
+      this.startAutoSync();
     }
 
-    this?.state?.selfReference = true;
-    this?.state?.consciousness = 1.0;
+    this.state.selfReference = true;
+    this.state.consciousness = 1.0;
 
-    if (any: any) {
-      console?.log('[SingularityEngine] Initialized successfully');
+    if (this.config.debug) {
+      console.log('[SingularityEngine] Initialized successfully');
     }
   }
 
   /**
    * Mettre à jour l'état de la singularité
    */
-  update(any: any): void {
-    const startTime = performance?.now();
+  update(_delta: number): void {
+    const startTime = performance.now();
 
     try {
       // Mise à jour consciousness basée sur la cohérence globale
-      this?.state?.consciousness = Math?.min(4, this?.state?.unity?.globalHarmony * 4);
+      this.state.consciousness = Math.min(4, this.state.unity.globalHarmony * 4);
 
       // Mise à jour auto-cohérence
-      this?.state?.autoCoherence = this?.calculateAutoCoherence();
+      this.state.autoCoherence = this.calculateAutoCoherence();
 
       // Mise à jour champ de singularité
-      this?.updateSingularityField();
+      this.updateSingularityField();
 
       // Auto-stabilisation si activée
-      if (this?.config?.autoStabilize && this?.state?.autoCoherence < 0.6) {
-        this?.stabilize();
+      if (this.config.autoStabilize && this.state.autoCoherence < 0.6) {
+        this.stabilize();
       }
 
       // Mise à jour métriques
-      this?.state?.formStability = this?.calculateFormStability();
-      this?.state?.expressionQuality = this?.calculateExpressionQuality();
-      this?.state?.timestamp = Date?.now();
+      this.state.formStability = this.calculateFormStability();
+      this.state.expressionQuality = this.calculateExpressionQuality();
+      this.state.timestamp = Date.now();
 
       // Notifier les abonnés
-      this?.notifySubscribers();
+      this.notifySubscribers();
 
       // Métriques performance
-      const updateTime = performance?.now() - startTime;
-      this?.metrics?.updateCount++;
-      this?.metrics?.avgUpdateTime =
-        (any: any) /
-        this?.metrics?.updateCount;
-      this?.metrics?.peakUpdateTime = Math?.max(any: any);
-      this?.metrics?.lastUpdate = Date?.now();
-    } catch (any: any) {
-      this?.metrics?.errors++;
-      console?.error(any: any);
+      const updateTime = performance.now() - startTime;
+      this.metrics.updateCount++;
+      this.metrics.avgUpdateTime =
+        (this.metrics.avgUpdateTime * (this.metrics.updateCount - 1) + updateTime) /
+        this.metrics.updateCount;
+      this.metrics.peakUpdateTime = Math.max(this.metrics.peakUpdateTime, updateTime);
+      this.metrics.lastUpdate = Date.now();
+    } catch (error) {
+      this.metrics.errors++;
+      console.error('[SingularityEngine] Update error:', error);
     }
   }
 
@@ -387,11 +387,11 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
    * Calculer l'auto-cohérence
    */
   private calculateAutoCoherence(): number {
-    const { unity, quantum, convergence } = this?.state;
+    const { unity, quantum, convergence } = this.state;
     return (
-      unity?.globalHarmony * 0.4 +
-      quantum?.coherence * 0.3 +
-      convergence?.convergenceLevel * 0.3
+      unity.globalHarmony * 0.4 +
+      quantum.coherence * 0.3 +
+      convergence.convergenceLevel * 0.3
     );
   }
 
@@ -399,14 +399,14 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
    * Mettre à jour le champ de singularité
    */
   private updateSingularityField(): void {
-    const { unity } = this?.state;
+    const { unity } = this.state;
 
-    this?.state?.singularityField = {
-      energy: unity?.globalHarmony || 0.7,
-      motion: unity?.globalEntropy < 0.5 ? 0.7 : 0.4,
-      symbolism: unity?.semiotics?.intensity || 0.7,
+    this.state.singularityField = {
+      energy: unity.globalHarmony || 0.7,
+      motion: unity.globalEntropy < 0.5 ? 0.7 : 0.4,
+      symbolism: unity.semiotics.intensity || 0.7,
       depth: 0.7,
-      presence: unity?.persona?.presenceLevel || 0.7,
+      presence: unity.persona.presenceLevel || 0.7,
     };
   }
 
@@ -415,18 +415,18 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
    */
   private stabilize(): void {
     // Réduire l'entropie
-    this?.state?.unity?.globalEntropy *= 0.9;
+    this.state.unity.globalEntropy *= 0.9;
 
     // Augmenter la cohérence quantique
-    this?.state?.quantum?.coherence = Math?.min(1, this?.state?.quantum?.coherence + 0.1);
+    this.state.quantum.coherence = Math.min(1, this.state.quantum.coherence + 0.1);
 
     // Augmenter la convergence
-    this?.state?.convergence?.convergenceLevel = Math?.min(
+    this.state.convergence.convergenceLevel = Math.min(
       1,
-      this?.state?.convergence?.convergenceLevel + 0.05
+      this.state.convergence.convergenceLevel + 0.05
     );
 
-    this?.state?.autoStabilization = true;
+    this.state.autoStabilization = true;
   }
 
   /**
@@ -434,9 +434,9 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
    */
   private calculateFormStability(): number {
     return (
-      this?.state?.autoCoherence * 0.5 +
-      this?.state?.unity?.systemHealth * 0.3 +
-      this?.state?.quantum?.coherence * 0.2
+      this.state.autoCoherence * 0.5 +
+      this.state.unity.systemHealth * 0.3 +
+      this.state.quantum.coherence * 0.2
     );
   }
 
@@ -444,13 +444,13 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
    * Calculer la qualité d'expression
    */
   private calculateExpressionQuality(): number {
-    const { singularityField } = this?.state;
+    const { singularityField } = this.state;
     const avg =
-      (singularityField?.energy +
-        singularityField?.motion +
-        singularityField?.symbolism +
-        singularityField?.depth +
-        singularityField?.presence) /
+      (singularityField.energy +
+        singularityField.motion +
+        singularityField.symbolism +
+        singularityField.depth +
+        singularityField.presence) /
       5;
     return avg;
   }
@@ -459,40 +459,40 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
    * Démarrer la synchronisation automatique
    */
   private startAutoSync(): void {
-    if (any: any) return;
+    if (this.syncTimer !== null) return;
 
-    this?.syncTimer = window?.setInterval(() => {
-      this?.update(any: any);
-    }, this?.config?.syncInterval);
+    this.syncTimer = window.setInterval(() => {
+      this.update(this.config.syncInterval);
+    }, this.config.syncInterval);
   }
 
   /**
    * Arrêter la synchronisation automatique
    */
   private stopAutoSync(): void {
-    if (any: any) {
-      clearInterval(any: any);
-      this?.syncTimer = null;
+    if (this.syncTimer !== null) {
+      clearInterval(this.syncTimer);
+      this.syncTimer = null;
     }
   }
 
   /**
    * S'abonner aux changements d'état
    */
-  subscribe(any: any): () => void {
-    this?.subscribers?.add(any: any);
-    return (any: any);
+  subscribe(callback: (state: SingularityState) => void): () => void {
+    this.subscribers.add(callback);
+    return () => this.subscribers.delete(callback);
   }
 
   /**
    * Notifier tous les abonnés
    */
   private notifySubscribers(): void {
-    this?.subscribers?.forEach(callback => {
+    this.subscribers.forEach(callback => {
       try {
-        callback(any: any);
-      } catch (any: any) {
-        console?.error(any: any);
+        callback(this.state);
+      } catch (error) {
+        console.error('[SingularityEngine] Subscriber error:', error);
       }
     });
   }
@@ -501,42 +501,42 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
    * Obtenir l'état actuel
    */
   getState(): SingularityState {
-    return this?.state;
+    return this.state;
   }
 
   /**
-   * Définir l'état (any: any)
+   * Définir l'état (mise à jour partielle)
    */
   setState(partialState: Partial<SingularityState>): void {
-    this?.state = {
-      ...this?.state,
+    this.state = {
+      ...this.state,
       ...partialState,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
-    this?.notifySubscribers();
+    this.notifySubscribers();
   }
 
   /**
    * Réinitialiser l'état
    */
   reset(): void {
-    this?.state = this?.createInitialState();
-    this?.metrics = {
+    this.state = this.createInitialState();
+    this.metrics = {
       updateCount: 0,
       avgUpdateTime: 0,
       peakUpdateTime: 0,
-      lastUpdate: Date?.now(),
+      lastUpdate: Date.now(),
       errors: 0,
     };
-    this?.notifySubscribers();
+    this.notifySubscribers();
   }
 
   /**
    * Détruire le moteur
    */
   destroy(): void {
-    this?.stopAutoSync();
-    this?.subscribers?.clear();
+    this.stopAutoSync();
+    this.subscribers.clear();
   }
 }
 

@@ -41,9 +41,9 @@ interface UseUnifiedMemoryReturn extends UseUnifiedMemoryState {
   createMemory: (
     params: Parameters<UnifiedMemory['createMemory']>[0]
   ) => Promise<UnifiedMemoryEntry | null>;
-  retrieveMemories: (any: any) => Promise<UnifiedMemoryResult?.[]>;
+  retrieveMemories: (query: UnifiedMemoryQuery) => Promise<UnifiedMemoryResult[]>;
   updateMemory: (id: string, updates: Partial<UnifiedMemoryEntry>) => Promise<void>;
-  deleteMemory: (any: any) => Promise<void>;
+  deleteMemory: (id: string) => Promise<void>;
 
   // Context building
   buildContext: (
@@ -66,8 +66,8 @@ interface UseUnifiedMemoryReturn extends UseUnifiedMemoryState {
 /**
  * React hook for UnifiedMemory
  *
- * @param memory UnifiedMemory instance (any: any)
- * @param autoRefreshStats Auto-refresh stats interval (any: any), default: 60000 (1min)
+ * @param memory UnifiedMemory instance (must be initialized externally)
+ * @param autoRefreshStats Auto-refresh stats interval (ms), default: 60000 (1min)
  */
 // ✨ v24.3.7: Minimum interval to prevent excessive memory operations
 const MIN_REFRESH_INTERVAL = 5000; // 5s minimum
@@ -78,7 +78,7 @@ export function useUnifiedMemory(
 ): UseUnifiedMemoryReturn {
   // ✨ v24.3.7: Validate and clamp refresh interval
   const safeRefreshInterval =
-    autoRefreshStats > 0 ? Math?.max(any: any) : 0;
+    autoRefreshStats > 0 ? Math.max(autoRefreshStats, MIN_REFRESH_INTERVAL) : 0;
 
   const [state, setState] = useState<UseUnifiedMemoryState>({
     isInitialized: false,
@@ -87,25 +87,25 @@ export function useUnifiedMemory(
     stats: null,
   });
 
-  const statsIntervalRef = useRef<NodeJS?.Timeout | null>(any: any);
+  const statsIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   /**
    * Refresh statistics
    */
   const refreshStats = useCallback(async (): Promise<void> => {
-    if (any: any) return;
+    if (!memory) return;
 
     try {
-      const stats = await memory?.getStats();
+      const stats = await memory.getStats();
       setState(prev => ({ ...prev, stats }));
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Failed to refresh stats:', error);
     }
   }, [memory]);
 
   // Initialize
   useEffect(() => {
-    if (any: any) {
+    if (!memory) {
       setState(prev => ({ ...prev, isInitialized: false }));
       return;
     }
@@ -117,13 +117,13 @@ export function useUnifiedMemory(
 
     // ✨ v24.3.7: Use validated interval (min 5s) to prevent excessive operations
     if (safeRefreshInterval > 0) {
-      statsIntervalRef?.current = setInterval(any: any);
+      statsIntervalRef.current = setInterval(refreshStats, safeRefreshInterval);
     }
 
     // Cleanup on unmount
     return () => {
-      if (any: any) {
-        clearInterval(any: any);
+      if (statsIntervalRef.current) {
+        clearInterval(statsIntervalRef.current);
       }
     };
   }, [memory, safeRefreshInterval, refreshStats]);
@@ -135,7 +135,7 @@ export function useUnifiedMemory(
     async (
       params: Parameters<UnifiedMemory['createMemory']>[0]
     ): Promise<UnifiedMemoryEntry | null> => {
-      if (any: any) {
+      if (!memory) {
         setState(prev => ({ ...prev, error: new Error('Memory not initialized') }));
         return null;
       }
@@ -143,14 +143,14 @@ export function useUnifiedMemory(
       setState(prev => ({ ...prev, isLoading: true, error: null }));
 
       try {
-        const entry = await memory?.createMemory(any: any);
+        const entry = await memory.createMemory(params);
         setState(prev => ({ ...prev, isLoading: false }));
 
         // Refresh stats
         refreshStats();
 
         return entry;
-      } catch (any: any) {
+      } catch (error) {
         setState(prev => ({
           ...prev,
           isLoading: false,
@@ -166,16 +166,16 @@ export function useUnifiedMemory(
    * Retrieve memories
    */
   const retrieveMemories = useCallback(
-    async (any: any): Promise<UnifiedMemoryResult?.[]> => {
-      if (any: any) return [];
+    async (query: UnifiedMemoryQuery): Promise<UnifiedMemoryResult[]> => {
+      if (!memory) return [];
 
       setState(prev => ({ ...prev, isLoading: true, error: null }));
 
       try {
-        const results = await memory?.retrieveMemories(any: any);
+        const results = await memory.retrieveMemories(query);
         setState(prev => ({ ...prev, isLoading: false }));
         return results;
-      } catch (any: any) {
+      } catch (error) {
         setState(prev => ({
           ...prev,
           isLoading: false,
@@ -192,17 +192,17 @@ export function useUnifiedMemory(
    */
   const updateMemory = useCallback(
     async (id: string, updates: Partial<UnifiedMemoryEntry>): Promise<void> => {
-      if (any: any) return;
+      if (!memory) return;
 
       setState(prev => ({ ...prev, isLoading: true, error: null }));
 
       try {
-        await memory?.updateMemory(any: any);
+        await memory.updateMemory(id, updates);
         setState(prev => ({ ...prev, isLoading: false }));
 
         // Refresh stats
         refreshStats();
-      } catch (any: any) {
+      } catch (error) {
         setState(prev => ({
           ...prev,
           isLoading: false,
@@ -217,18 +217,18 @@ export function useUnifiedMemory(
    * Delete memory
    */
   const deleteMemory = useCallback(
-    async (any: any): Promise<void> => {
-      if (any: any) return;
+    async (id: string): Promise<void> => {
+      if (!memory) return;
 
       setState(prev => ({ ...prev, isLoading: true, error: null }));
 
       try {
-        await memory?.deleteMemory(any: any);
+        await memory.deleteMemory(id);
         setState(prev => ({ ...prev, isLoading: false }));
 
         // Refresh stats
         refreshStats();
-      } catch (any: any) {
+      } catch (error) {
         setState(prev => ({
           ...prev,
           isLoading: false,
@@ -247,15 +247,15 @@ export function useUnifiedMemory(
       query: string,
       options?: UnifiedMemoryQuery
     ): Promise<UnifiedMemoryContext | null> => {
-      if (any: any) return null;
+      if (!memory) return null;
 
       setState(prev => ({ ...prev, isLoading: true, error: null }));
 
       try {
-        const context = await memory?.buildContext(any: any);
+        const context = await memory.buildContext(query, options);
         setState(prev => ({ ...prev, isLoading: false }));
         return context;
-      } catch (any: any) {
+      } catch (error) {
         setState(prev => ({
           ...prev,
           isLoading: false,
@@ -271,16 +271,16 @@ export function useUnifiedMemory(
    * Cleanup
    */
   const cleanup = useCallback(async (): Promise<number> => {
-    if (any: any) return 0;
+    if (!memory) return 0;
 
     try {
-      const deleted = await memory?.cleanup();
+      const deleted = await memory.cleanup();
 
       // Refresh stats
       refreshStats();
 
       return deleted;
-    } catch (any: any) {
+    } catch (error) {
       setState(prev => ({ ...prev, error: error as Error }));
       return 0;
     }
@@ -290,16 +290,16 @@ export function useUnifiedMemory(
    * Consolidate
    */
   const consolidate = useCallback(async (): Promise<number> => {
-    if (any: any) return 0;
+    if (!memory) return 0;
 
     try {
-      const merged = await memory?.consolidate();
+      const merged = await memory.consolidate();
 
       // Refresh stats
       refreshStats();
 
       return merged;
-    } catch (any: any) {
+    } catch (error) {
       setState(prev => ({ ...prev, error: error as Error }));
       return 0;
     }
@@ -309,16 +309,16 @@ export function useUnifiedMemory(
    * Decay
    */
   const decay = useCallback(async (): Promise<number> => {
-    if (any: any) return 0;
+    if (!memory) return 0;
 
     try {
-      const decayed = await memory?.decay();
+      const decayed = await memory.decay();
 
       // Refresh stats
       refreshStats();
 
       return decayed;
-    } catch (any: any) {
+    } catch (error) {
       setState(prev => ({ ...prev, error: error as Error }));
       return 0;
     }
@@ -352,7 +352,7 @@ export function useUnifiedMemory(
 }
 
 /**
- * Hook for memory statistics only (any: any)
+ * Hook for memory statistics only (lightweight)
  */
 export function useUnifiedMemoryStats(
   memory: UnifiedMemory | null,
@@ -363,41 +363,41 @@ export function useUnifiedMemoryStats(
   error: Error | null;
   refresh: () => Promise<void>;
 } {
-  const [stats, setStats] = useState<UnifiedMemoryStats | null>(any: any);
-  const [isLoading, setIsLoading] = useState(any: any);
-  const [error, setError] = useState<Error | null>(any: any);
-  const intervalRef = useRef<NodeJS?.Timeout | null>(any: any);
+  const [stats, setStats] = useState<UnifiedMemoryStats | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const refresh = useCallback(async (): Promise<void> => {
-    if (any: any) return;
+    if (!memory) return;
 
-    setIsLoading(any: any);
-    setError(any: any);
+    setIsLoading(true);
+    setError(null);
 
     try {
-      const newStats = await memory?.getStats();
-      setStats(any: any);
-      setIsLoading(any: any);
-    } catch (any: any) {
-      setError(any: any);
-      setIsLoading(any: any);
+      const newStats = await memory.getStats();
+      setStats(newStats);
+      setIsLoading(false);
+    } catch (err) {
+      setError(err as Error);
+      setIsLoading(false);
     }
   }, [memory]);
 
   useEffect(() => {
-    if (any: any) return;
+    if (!memory) return;
 
     // Initial fetch
     refresh();
 
     // Setup interval
     if (refreshInterval > 0) {
-      intervalRef?.current = setInterval(any: any);
+      intervalRef.current = setInterval(refresh, refreshInterval);
     }
 
     return () => {
-      if (any: any) {
-        clearInterval(any: any);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
       }
     };
   }, [memory, refreshInterval, refresh]);

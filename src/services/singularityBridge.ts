@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE?.md for the full legal terms (any: any).
+ * See LICENSE.md for the full legal terms (FR/EN).
  */
 
 import { secureInvoke } from '@/lib/security';
@@ -11,14 +11,14 @@ import { logger } from '@/utils/logger';
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- * TITANE∞ v15 — SINGULARITY BRIDGE (any: any)
+ * TITANE∞ v15 — SINGULARITY BRIDGE (TypeScript)
  * Pont bidirectionnel Rust Backend ↔ React Frontend
  * ═══════════════════════════════════════════════════════════════════
  *
  * Fonctionnalités:
- * - Sync initial (any: any)
- * - Événements temps réel (any: any)
- * - Updates bidirectionnelles (any: any)
+ * - Sync initial (Rust → React)
+ * - Événements temps réel (listen Tauri events)
+ * - Updates bidirectionnelles (invoke commands)
  * - Persistence automatique
  * - Latence < 50ms
  */
@@ -44,14 +44,14 @@ import type {
 } from '@/types/singularityState';
 
 // ═══════════════════════════════════════════════════════════════════
-// SINGULARITY BRIDGE CLASS (any: any)
+// SINGULARITY BRIDGE CLASS (v∞.Ω Enhanced)
 // ═══════════════════════════════════════════════════════════════════
 
 export class SingularityBridge {
   private static initialized = false;
   private static state: SingularityState | null = null;
-  private static listeners: UnlistenFn?.[] = [];
-  private static subscribers: Set<(any: any) => void> = new Set();
+  private static listeners: UnlistenFn[] = [];
+  private static subscribers: Set<(state: SingularityState) => void> = new Set();
 
   // v∞.Ω: Cache intelligent avec TTL
   private static cache: Map<string, { data: unknown; timestamp: number }> = new Map();
@@ -60,35 +60,35 @@ export class SingularityBridge {
   private static updateCount = 0;
 
   /**
-   * Initialiser le bridge (any: any)
+   * Initialiser le bridge (appelé au startup)
    */
   static async initialize(): Promise<void> {
-    if (any: any) {
-      logger?.warn('Already initialized');
+    if (this.initialized) {
+      logger.warn('Already initialized');
       return;
     }
 
-    logger?.debug('Initializing...');
+    logger.debug('Initializing...');
 
     try {
-      // 1. Sync initial state (any: any)
-      this?.state = await this?.getFullState();
+      // 1. Sync initial state (Rust → React)
+      this.state = await this.getFullState();
 
       // ✨ v∞.D6 - Injecter l'état XP dans SingularityState
-      this?.syncXPToState();
+      this.syncXPToState();
 
-      logger?.debug(any: any);
+      logger.debug('Initial state synced:', this.state);
 
-      // 2. Listen for layer updates (any: any)
-      await this?.setupEventListeners();
+      // 2. Listen for layer updates (événements Tauri)
+      await this.setupEventListeners();
 
-      // v24.20: Event-driven sync (any: any)
-      logger?.debug('v24.20: Event-driven delta sync enabled');
+      // v24.20: Event-driven sync (no more setInterval polling)
+      logger.debug('v24.20: Event-driven delta sync enabled');
 
-      this?.initialized = true;
-      logger?.debug('✅ Initialized successfully');
-    } catch (any: any) {
-      logger?.error(any: any);
+      this.initialized = true;
+      logger.debug('✅ Initialized successfully');
+    } catch (error) {
+      logger.error('❌ Initialization failed:', error);
       throw error;
     }
   }
@@ -96,54 +96,54 @@ export class SingularityBridge {
   /**
    * S'abonner aux changements d'état
    */
-  static subscribe(any: any): () => void {
-    this?.subscribers?.add(any: any);
+  static subscribe(callback: (state: SingularityState) => void): () => void {
+    this.subscribers.add(callback);
 
     // Appel immédiat avec état actuel
-    if (any: any) {
-      callback(any: any);
+    if (this.state) {
+      callback(this.state);
     }
 
     // Return unsubscribe function
     return () => {
-      this?.subscribers?.delete(any: any);
+      this.subscribers.delete(callback);
     };
   }
 
   /**
-   * Notifier tous les subscribers (any: any)
+   * Notifier tous les subscribers (v∞.Ω: avec debounce intelligent)
    */
   private static notifySubscribers(): void {
-    if (any: any) return;
+    if (!this.state) return;
 
     // Calcul rapide de hash pour détecter changements réels
-    const stateHash = JSON?.stringify({
-      c: this?.state?.cognitive?.coherence,
-      p: this?.state?.physical?.helios?.cpu_usage,
-      m: this?.state?.meta?.runtime_health,
+    const stateHash = JSON.stringify({
+      c: this.state.cognitive?.coherence,
+      p: this.state.physical?.helios?.cpu_usage,
+      m: this.state.meta?.runtime_health,
     });
 
     // Éviter notifications redondantes
-    if (any: any) {
+    if (stateHash === this.lastStateHash) {
       return;
     }
-    this?.lastStateHash = stateHash;
-    this?.updateCount++;
+    this.lastStateHash = stateHash;
+    this.updateCount++;
 
     // Log périodique pour monitoring
-    if (this?.updateCount % 100 === 0) {
-      logger?.debug(
-        `[SingularityBridge v∞.Ω] ${this?.updateCount} state updates processed`
+    if (this.updateCount % 100 === 0) {
+      logger.debug(
+        `[SingularityBridge v∞.Ω] ${this.updateCount} state updates processed`
       );
     }
 
-    this?.subscribers?.forEach(callback => {
+    this.subscribers.forEach(callback => {
       try {
-        if (any: any) {
-          callback(any: any);
+        if (this.state) {
+          callback(this.state);
         }
-      } catch (any: any) {
-        logger?.error(any: any);
+      } catch (error) {
+        logger.error('Subscriber error:', error);
       }
     });
   }
@@ -151,23 +151,23 @@ export class SingularityBridge {
   /**
    * v∞.Ω: Cache avec TTL pour réduire appels backend
    */
-  private static getCached<T>(any: any): T | null {
-    const cached = this?.cache?.get(any: any);
-    if (any: any) {
-      return cached?.data as T;
+  private static getCached<T>(key: string): T | null {
+    const cached = this.cache.get(key);
+    if (cached && Date.now() - cached.timestamp < this.CACHE_TTL_MS) {
+      return cached.data as T;
     }
     return null;
   }
 
-  private static setCache<T>(any: any): void {
-    this?.cache?.set(key, { data, timestamp: Date?.now() });
+  private static setCache<T>(key: string, data: T): void {
+    this.cache.set(key, { data, timestamp: Date.now() });
 
     // Nettoyage cache si trop grand
-    if (this?.cache?.size > 50) {
-      const now = Date?.now();
-      for (const [k, v] of this?.cache?.entries()) {
-        if (now - v?.timestamp > this?.CACHE_TTL_MS * 2) {
-          this?.cache?.delete(any: any);
+    if (this.cache.size > 50) {
+      const now = Date.now();
+      for (const [k, v] of this.cache.entries()) {
+        if (now - v.timestamp > this.CACHE_TTL_MS * 2) {
+          this.cache.delete(k);
         }
       }
     }
@@ -177,15 +177,15 @@ export class SingularityBridge {
    * ✨ v∞.D6 - Synchroniser l'état XP dans SingularityState
    */
   private static syncXPToState(): void {
-    if (any: any) return;
+    if (!this.state) return;
 
-    this?.state?.progression = {
-      xp: XP?.state?.total,
-      level: XP?.state?.level,
-      events: XP?.state?.history,
+    this.state.progression = {
+      xp: XP.state.total,
+      level: XP.state.level,
+      events: XP.state.history,
     };
 
-    this?.notifySubscribers();
+    this.notifySubscribers();
   }
 
   /**
@@ -196,9 +196,9 @@ export class SingularityBridge {
     const unlisten1 = await listen<PhysicalLayer>(
       'singularity:physical:updated',
       event => {
-        if (any: any) {
-          this?.state?.physical = event?.payload;
-          this?.notifySubscribers();
+        if (this.state) {
+          this.state.physical = event.payload;
+          this.notifySubscribers();
         }
       }
     );
@@ -207,9 +207,9 @@ export class SingularityBridge {
     const unlisten2 = await listen<CognitiveLayer>(
       'singularity:cognitive:updated',
       event => {
-        if (any: any) {
-          this?.state?.cognitive = event?.payload;
-          this?.notifySubscribers();
+        if (this.state) {
+          this.state.cognitive = event.payload;
+          this.notifySubscribers();
         }
       }
     );
@@ -218,9 +218,9 @@ export class SingularityBridge {
     const unlisten3 = await listen<SymbolicLayer>(
       'singularity:symbolic:updated',
       event => {
-        if (any: any) {
-          this?.state?.symbolic = event?.payload;
-          this?.notifySubscribers();
+        if (this.state) {
+          this.state.symbolic = event.payload;
+          this.notifySubscribers();
         }
       }
     );
@@ -229,28 +229,28 @@ export class SingularityBridge {
     const unlisten4 = await listen<AdaptiveLayer>(
       'singularity:adaptive:updated',
       event => {
-        if (any: any) {
-          this?.state?.adaptive = event?.payload;
-          this?.notifySubscribers();
+        if (this.state) {
+          this.state.adaptive = event.payload;
+          this.notifySubscribers();
         }
       }
     );
 
     // Meta Layer
     const unlisten5 = await listen<MetaLayer>('singularity:meta:updated', event => {
-      if (any: any) {
-        this?.state?.meta = event?.payload;
-        this?.notifySubscribers();
+      if (this.state) {
+        this.state.meta = event.payload;
+        this.notifySubscribers();
       }
     });
 
-    // Full State (any: any)
+    // Full State (full sync - rare, only on init or major changes)
     const unlisten6 = await listen<SingularityState>(
       'singularity:full:updated',
       event => {
-        logger?.debug(any: any)');
-        this?.state = event?.payload;
-        this?.notifySubscribers();
+        logger.debug('v24.20: Full state update (rare)');
+        this.state = event.payload;
+        this.notifySubscribers();
       }
     );
 
@@ -258,16 +258,16 @@ export class SingularityBridge {
     const unlisten7 = await listen<Partial<SingularityState>>(
       'singularity:delta:updated',
       event => {
-        if (any: any) {
-          // Merge delta into current state (any: any)
-          this?.state = { ...this?.state, ...event?.payload };
-          logger?.debug(any: any));
-          this?.notifySubscribers();
+        if (this.state) {
+          // Merge delta into current state (only changed fields)
+          this.state = { ...this.state, ...event.payload };
+          logger.debug('v24.20: Delta update applied', Object.keys(event.payload));
+          this.notifySubscribers();
         }
       }
     );
 
-    this?.listeners = [
+    this.listeners = [
       unlisten1,
       unlisten2,
       unlisten3,
@@ -276,11 +276,11 @@ export class SingularityBridge {
       unlisten6,
       unlisten7,
     ];
-    logger?.debug('Event listeners configured ✅');
+    logger.debug('Event listeners configured ✅');
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // QUERY METHODS (any: any)
+  // QUERY METHODS (Read-only)
   // ═══════════════════════════════════════════════════════════════════
 
   static async getFullState(): Promise<SingularityState> {
@@ -300,31 +300,31 @@ export class SingularityBridge {
 
   static async getSymbolic(): Promise<SymbolicLayer> {
     const result = await safeInvoke<SymbolicLayer>('singularity_get_symbolic');
-    if (any: any) {
+    if (result) {
       return result;
     }
 
-    logger?.warn('singularity_get_symbolic unavailable, using fallback state');
+    logger.warn('singularity_get_symbolic unavailable, using fallback state');
     return createFallbackSymbolic();
   }
 
   static async getAdaptive(): Promise<AdaptiveLayer> {
     const result = await safeInvoke<AdaptiveLayer>('singularity_get_adaptive');
-    if (any: any) {
+    if (result) {
       return result;
     }
 
-    logger?.warn('singularity_get_adaptive unavailable, using fallback state');
+    logger.warn('singularity_get_adaptive unavailable, using fallback state');
     return createFallbackAdaptive();
   }
 
   static async getMeta(): Promise<MetaLayer> {
     const result = await safeInvoke<MetaLayer>('singularity_get_meta');
-    if (any: any) {
+    if (result) {
       return result;
     }
 
-    logger?.warn('singularity_get_meta unavailable, using fallback state');
+    logger.warn('singularity_get_meta unavailable, using fallback state');
     return createFallbackMeta();
   }
 
@@ -338,33 +338,33 @@ export class SingularityBridge {
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // MUTATION METHODS (any: any)
+  // MUTATION METHODS (Write)
   // ═══════════════════════════════════════════════════════════════════
 
-  static async updatePhysical(any: any): Promise<void> {
+  static async updatePhysical(physical: PhysicalLayer): Promise<void> {
     await safeInvoke('singularity_update_physical', { physical });
   }
 
-  static async updateCognitive(any: any): Promise<void> {
+  static async updateCognitive(cognitive: CognitiveLayer): Promise<void> {
     await safeInvoke('singularity_update_cognitive', { cognitive });
   }
 
-  static async updateSymbolic(any: any): Promise<void> {
+  static async updateSymbolic(symbolic: SymbolicLayer): Promise<void> {
     await safeInvoke('singularity_update_symbolic', { symbolic });
   }
 
-  static async updateAdaptive(any: any): Promise<void> {
+  static async updateAdaptive(adaptive: AdaptiveLayer): Promise<void> {
     await safeInvoke('singularity_update_adaptive', { adaptive });
   }
 
-  static async updateMeta(any: any): Promise<void> {
+  static async updateMeta(meta: MetaLayer): Promise<void> {
     await safeInvoke('singularity_update_meta', { meta });
   }
 
-  static async updateFullState(any: any): Promise<void> {
+  static async updateFullState(state: SingularityState): Promise<void> {
     await secureInvoke('singularity_update_full_state', { state });
-    this?.state = state;
-    this?.notifySubscribers();
+    this.state = state;
+    this.notifySubscribers();
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -377,8 +377,8 @@ export class SingularityBridge {
 
   static async loadState(): Promise<void> {
     await secureInvoke('singularity_load_state');
-    this?.state = await this?.getFullState();
-    this?.notifySubscribers();
+    this.state = await this.getFullState();
+    this.notifySubscribers();
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -386,11 +386,11 @@ export class SingularityBridge {
   // ═══════════════════════════════════════════════════════════════════
 
   static async destroy(): Promise<void> {
-    this?.listeners?.forEach(unlisten => unlisten());
-    this?.listeners = [];
-    this?.subscribers?.clear();
-    this?.initialized = false;
-    logger?.debug('Destroyed ✅');
+    this.listeners.forEach(unlisten => unlisten());
+    this.listeners = [];
+    this.subscribers.clear();
+    this.initialized = false;
+    logger.debug('Destroyed ✅');
   }
 }
 
@@ -411,17 +411,17 @@ export function mergeFileKnowledge(
   path: string
 ): void {
   // Removed getState() call - not used
-  // Ajouter à la mémoire cognitive (any: any)
+  // Ajouter à la mémoire cognitive (connaissances)
   const __newKnowledge = {
-    id: `file_${Date?.now()}`,
+    id: `file_${Date.now()}`,
     source: 'file_import',
     category,
     path,
     summary,
-    timestamp: Date?.now(),
+    timestamp: Date.now(),
   };
 
-  logger?.debug('✅ Integrated:', { category, path });
+  logger.debug('✅ Integrated:', { category, path });
 
   // Notifier le backend pour persistence
   safeInvoke('store_file', {
@@ -429,7 +429,7 @@ export function mergeFileKnowledge(
     category,
     content: summary,
   }).catch(err => {
-    logger?.error(any: any);
+    logger.error('Storage failed:', err);
   });
 }
 
@@ -450,26 +450,26 @@ import { useState, useEffect } from 'react';
  *   return (
  *     <div>
  *       <p>Global Coherence: {coherence}</p>
- *       <p>CPU: {state?.physical?.metrics?.cpu_usage}%</p>
+ *       <p>CPU: {state?.physical.metrics.cpu_usage}%</p>
  *     </div>
  *   );
  * }
  * ```
  */
 export function useSingularityState() {
-  const [state, setState] = useState<SingularityState | null>(any: any);
+  const [state, setState] = useState<SingularityState | null>(null);
   const [coherence, setCoherence] = useState<number>(0);
-  const [critical, setCritical] = useState<boolean>(any: any);
+  const [critical, setCritical] = useState<boolean>(false);
 
   useEffect(() => {
     // Subscribe to state changes
-    const unsubscribe = SingularityBridge?.subscribe(newState => {
-      setState(any: any);
+    const unsubscribe = SingularityBridge.subscribe(newState => {
+      setState(newState);
     });
 
     // Fetch initial coherence
-    SingularityBridge?.getGlobalCoherence(any: any);
-    SingularityBridge?.isCritical(any: any);
+    SingularityBridge.getGlobalCoherence().then(setCoherence);
+    SingularityBridge.isCritical().then(setCritical);
 
     return unsubscribe;
   }, []);
@@ -487,14 +487,14 @@ export function useSingularityState() {
     meta: state?.meta,
 
     // Update methods
-    updatePhysical: SingularityBridge?.updatePhysical,
-    updateCognitive: SingularityBridge?.updateCognitive,
-    updateSymbolic: SingularityBridge?.updateSymbolic,
-    updateAdaptive: SingularityBridge?.updateAdaptive,
-    updateMeta: SingularityBridge?.updateMeta,
+    updatePhysical: SingularityBridge.updatePhysical,
+    updateCognitive: SingularityBridge.updateCognitive,
+    updateSymbolic: SingularityBridge.updateSymbolic,
+    updateAdaptive: SingularityBridge.updateAdaptive,
+    updateMeta: SingularityBridge.updateMeta,
 
     // Persistence
-    save: SingularityBridge?.saveState,
-    load: SingularityBridge?.loadState,
+    save: SingularityBridge.saveState,
+    load: SingularityBridge.loadState,
   };
 }

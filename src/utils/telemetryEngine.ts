@@ -31,8 +31,8 @@ interface AnalyticsPattern {
   confidence: number;
   detected: number;
   impact: 'positive' | 'negative' | 'neutral';
-  recommendations: string?.[];
-  metrics: string?.[];
+  recommendations: string[];
+  metrics: string[];
 }
 
 interface TelemetryReport {
@@ -45,11 +45,11 @@ interface TelemetryReport {
     systemHealth: number;
     performanceScore: number;
   };
-  keyMetrics: TelemetryMetric?.[];
-  detectedPatterns: AnalyticsPattern?.[];
-  alerts: TelemetryAlert?.[];
+  keyMetrics: TelemetryMetric[];
+  detectedPatterns: AnalyticsPattern[];
+  alerts: TelemetryAlert[];
   predictions: { [key: string]: number };
-  recommendations: string?.[];
+  recommendations: string[];
 }
 
 interface TelemetryAlert {
@@ -75,44 +75,44 @@ interface MetricThreshold {
 }
 
 class TitaneTelemetryEngine {
-  private metrics: Map<string, TelemetryMetric?.[]> = new Map();
+  private metrics: Map<string, TelemetryMetric[]> = new Map();
   private patterns: Map<string, AnalyticsPattern> = new Map();
-  private alerts: TelemetryAlert?.[] = [];
+  private alerts: TelemetryAlert[] = [];
   private thresholds: Map<string, MetricThreshold> = new Map();
-  private collectors: Map<string, () => TelemetryMetric?.[]> = new Map();
-  private analyticsQueue: TelemetryMetric?.[] = [];
+  private collectors: Map<string, () => TelemetryMetric[]> = new Map();
+  private analyticsQueue: TelemetryMetric[] = [];
   private isAnalyzing: boolean = false;
   private lastAnalysis: number = 0;
   private retentionPeriod: number = 7 * 24 * 60 * 60 * 1000; // 7 jours
 
   constructor() {
-    this?.initializeTelemetryEngine();
+    this.initializeTelemetryEngine();
   }
 
   /**
    * Initialise le moteur de télémétrie
    */
   private async initializeTelemetryEngine(): Promise<void> {
-    console?.log('📊 [TELEMETRY] Initializing advanced telemetry & analytics engine...');
+    console.log('📊 [TELEMETRY] Initializing advanced telemetry & analytics engine...');
 
     // Enregistrer les collecteurs de métriques
-    this?.registerMetricCollectors();
+    this.registerMetricCollectors();
 
     // Configurer les seuils par défaut
-    this?.configureDefaultThresholds();
+    this.configureDefaultThresholds();
 
     // Démarrer la collecte en continu
-    this?.startContinuousCollection();
+    this.startContinuousCollection();
 
     // Démarrer l'analyse des patterns
-    this?.startPatternAnalysis();
+    this.startPatternAnalysis();
 
     // Charger les données historiques
-    await this?.loadHistoricalData();
+    await this.loadHistoricalData();
 
-    console?.log(
+    console.log(
       '📈 [TELEMETRY] Advanced telemetry engine online with',
-      this?.collectors?.size,
+      this.collectors.size,
       'collectors'
     );
   }
@@ -122,170 +122,170 @@ class TitaneTelemetryEngine {
    */
   private registerMetricCollectors(): void {
     // Collecteur de performance système
-    this?.collectors?.set('system_performance', () => {
-      const perfReport = performanceOptimizer?.generatePerformanceReport();
+    this.collectors.set('system_performance', () => {
+      const perfReport = performanceOptimizer.generatePerformanceReport();
       return [
         {
           id: 'cache_hit_rate',
           name: 'Cache Hit Rate',
-          value: perfReport?.cache?.hitRate || 0,
+          value: perfReport.cache?.hitRate || 0,
           unit: '%',
           category: 'performance',
           priority: 'high',
-          timestamp: Date?.now(),
+          timestamp: Date.now(),
           source: 'performance_optimizer',
-          metadata: { cacheSize: perfReport?.cache?.size || 0 },
+          metadata: { cacheSize: perfReport.cache?.size || 0 },
         },
         {
           id: 'cache_size',
           name: 'Cache Size',
-          value: perfReport?.cache?.size || 0,
+          value: perfReport.cache?.size || 0,
           unit: 'entries',
           category: 'performance',
           priority: 'medium',
-          timestamp: Date?.now(),
+          timestamp: Date.now(),
           source: 'performance_optimizer',
         },
         {
           id: 'preload_success_rate',
           name: 'Preload Success Rate',
-          value: Math?.random() * 100, // Simulation
+          value: Math.random() * 100, // Simulation
           unit: '%',
           category: 'performance',
           priority: 'medium',
-          timestamp: Date?.now(),
+          timestamp: Date.now(),
           source: 'performance_optimizer',
         },
       ];
     });
 
     // Collecteur de santé système
-    this?.collectors?.set('system_health', () => {
-      const healthReport = bootHealthMonitor?.generateReport();
-      const healingState = titaneSelfHealing?.getSystemState();
+    this.collectors.set('system_health', () => {
+      const healthReport = bootHealthMonitor.generateReport();
+      const healingState = titaneSelfHealing.getSystemState();
 
       return [
         {
           id: 'boot_success_rate',
           name: 'Boot Success Rate',
-          value: healthReport?.overview?.bootSuccessRate || 0.95,
+          value: healthReport.overview?.bootSuccessRate || 0.95,
           unit: '%',
           category: 'health',
           priority: 'critical',
-          timestamp: Date?.now(),
+          timestamp: Date.now(),
           source: 'boot_health_monitor',
         },
         {
           id: 'system_health_score',
           name: 'System Health Score',
-          value: healingState?.health,
+          value: healingState.health,
           unit: 'score',
           category: 'health',
           priority: 'critical',
-          timestamp: Date?.now(),
+          timestamp: Date.now(),
           source: 'self_healing_system',
         },
         {
           id: 'active_issues_count',
           name: 'Active Issues Count',
-          value: healingState?.activeIssues?.length,
+          value: healingState.activeIssues.length,
           unit: 'count',
           category: 'health',
           priority: 'high',
-          timestamp: Date?.now(),
+          timestamp: Date.now(),
           source: 'self_healing_system',
         },
       ];
     });
 
     // Collecteur de métriques utilisateur
-    this?.collectors?.set('user_experience', () => {
+    this.collectors.set('user_experience', () => {
       if (typeof window === 'undefined') return [];
 
       return [
         {
           id: 'page_load_time',
           name: 'Page Load Time',
-          value: performance?.now(),
+          value: performance.now(),
           unit: 'ms',
           category: 'user',
           priority: 'high',
-          timestamp: Date?.now(),
+          timestamp: Date.now(),
           source: 'browser_performance',
         },
         {
           id: 'memory_usage',
           name: 'Memory Usage',
-          value: (any: any).memory?.usedJSHeapSize || 0,
+          value: (performance as any).memory?.usedJSHeapSize || 0,
           unit: 'bytes',
           category: 'system',
           priority: 'medium',
-          timestamp: Date?.now(),
+          timestamp: Date.now(),
           source: 'browser_performance',
           metadata: {
-            totalHeapSize: (any: any).memory?.totalJSHeapSize || 0,
-            heapSizeLimit: (any: any).memory?.jsHeapSizeLimit || 0,
+            totalHeapSize: (performance as any).memory?.totalJSHeapSize || 0,
+            heapSizeLimit: (performance as any).memory?.jsHeapSizeLimit || 0,
           },
         },
         {
           id: 'connection_type',
           name: 'Connection Type',
-          value: (any: any)?.connection?.effectiveType || 'unknown',
+          value: (navigator as any)?.connection?.effectiveType || 'unknown',
           category: 'system',
           priority: 'low',
-          timestamp: Date?.now(),
+          timestamp: Date.now(),
           source: 'browser_network',
         },
       ];
     });
 
     // Collecteur d'IA et prédictions
-    this?.collectors?.set('ai_predictions', () => {
+    this.collectors.set('ai_predictions', () => {
       return [
         {
           id: 'ai_model_accuracy',
           name: 'AI Model Accuracy',
-          value: 85 + Math?.random() * 10, // Simulation
+          value: 85 + Math.random() * 10, // Simulation
           unit: '%',
           category: 'system',
           priority: 'medium',
-          timestamp: Date?.now(),
+          timestamp: Date.now(),
           source: 'ai_predictive_engine',
         },
         {
           id: 'prediction_confidence',
           name: 'Prediction Confidence',
-          value: 75 + Math?.random() * 20, // Simulation
+          value: 75 + Math.random() * 20, // Simulation
           unit: '%',
           category: 'system',
           priority: 'medium',
-          timestamp: Date?.now(),
+          timestamp: Date.now(),
           source: 'ai_predictive_engine',
         },
       ];
     });
 
     // Collecteur de sécurité
-    this?.collectors?.set('security_metrics', () => {
+    this.collectors.set('security_metrics', () => {
       return [
         {
           id: 'failed_requests',
           name: 'Failed Requests',
-          value: Math?.floor(Math?.random() * 5), // Simulation
+          value: Math.floor(Math.random() * 5), // Simulation
           unit: 'count',
           category: 'security',
           priority: 'high',
-          timestamp: Date?.now(),
+          timestamp: Date.now(),
           source: 'security_monitor',
         },
         {
           id: 'suspicious_activity',
           name: 'Suspicious Activity Score',
-          value: Math?.random() * 100,
+          value: Math.random() * 100,
           unit: 'score',
           category: 'security',
           priority: 'critical',
-          timestamp: Date?.now(),
+          timestamp: Date.now(),
           source: 'security_monitor',
         },
       ];
@@ -296,7 +296,7 @@ class TitaneTelemetryEngine {
    * Configure les seuils par défaut
    */
   private configureDefaultThresholds(): void {
-    const defaultThresholds: MetricThreshold?.[] = [
+    const defaultThresholds: MetricThreshold[] = [
       {
         metricId: 'cache_hit_rate',
         warning: 70,
@@ -347,8 +347,8 @@ class TitaneTelemetryEngine {
       },
     ];
 
-    defaultThresholds?.forEach(threshold => {
-      this?.thresholds?.set(any: any);
+    defaultThresholds.forEach(threshold => {
+      this.thresholds.set(threshold.metricId, threshold);
     });
   }
 
@@ -358,33 +358,33 @@ class TitaneTelemetryEngine {
   private startContinuousCollection(): void {
     const collect = async () => {
       try {
-        const allMetrics: TelemetryMetric?.[] = [];
+        const allMetrics: TelemetryMetric[] = [];
 
         // Collecter depuis tous les collecteurs
-        for (const [collectorName, collector] of this?.collectors?.entries()) {
+        for (const [collectorName, collector] of this.collectors.entries()) {
           try {
             const metrics = collector();
-            allMetrics?.push(any: any);
-          } catch (any: any) {
-            console?.warn(any: any);
+            allMetrics.push(...metrics);
+          } catch (error) {
+            console.warn(`📊 [TELEMETRY] Collector ${collectorName} failed:`, error);
           }
         }
 
         // Stocker les métriques
-        allMetrics?.forEach(metric => {
-          this?.storeMetric(any: any);
+        allMetrics.forEach(metric => {
+          this.storeMetric(metric);
         });
 
         // Ajouter à la queue d'analyse
-        this?.analyticsQueue?.push(any: any);
+        this.analyticsQueue.push(...allMetrics);
 
         // Vérifier les seuils et générer des alertes
-        this?.checkThresholds(any: any);
+        this.checkThresholds(allMetrics);
 
         // Nettoyer les anciennes données
-        this?.cleanupOldData();
-      } catch (any: any) {
-        console?.error(any: any);
+        this.cleanupOldData();
+      } catch (error) {
+        console.error('📊 [TELEMETRY] Collection cycle failed:', error);
       }
     };
 
@@ -398,41 +398,41 @@ class TitaneTelemetryEngine {
    */
   private startPatternAnalysis(): void {
     const analyze = async () => {
-      if (this?.isAnalyzing || this?.analyticsQueue?.length < 10) return;
+      if (this.isAnalyzing || this.analyticsQueue.length < 10) return;
 
-      this?.isAnalyzing = true;
+      this.isAnalyzing = true;
 
       try {
-        console?.log(
-          `📈 [TELEMETRY] Analyzing ${this?.analyticsQueue?.length} metrics for patterns...`
+        console.log(
+          `📈 [TELEMETRY] Analyzing ${this.analyticsQueue.length} metrics for patterns...`
         );
 
         // Analyser les tendances
-        await this?.analyzeTrends();
+        await this.analyzeTrends();
 
         // Détecter les anomalies
-        await this?.detectAnomalies();
+        await this.detectAnomalies();
 
         // Trouver les corrélations
-        await this?.findCorrelations();
+        await this.findCorrelations();
 
         // Détecter les cycles
-        await this?.detectCyclicalPatterns();
+        await this.detectCyclicalPatterns();
 
         // Générer des recommandations
-        await this?.generateRecommendations();
+        await this.generateRecommendations();
 
         // Nettoyer la queue
-        this?.analyticsQueue = [];
-        this?.lastAnalysis = Date?.now();
+        this.analyticsQueue = [];
+        this.lastAnalysis = Date.now();
 
-        console?.log(
-          `🎯 [TELEMETRY] Pattern analysis completed. Found ${this?.patterns?.size} patterns.`
+        console.log(
+          `🎯 [TELEMETRY] Pattern analysis completed. Found ${this.patterns.size} patterns.`
         );
-      } catch (any: any) {
-        console?.error(any: any);
+      } catch (error) {
+        console.error('📈 [TELEMETRY] Pattern analysis failed:', error);
       } finally {
-        this?.isAnalyzing = false;
+        this.isAnalyzing = false;
       }
     };
 
@@ -443,60 +443,60 @@ class TitaneTelemetryEngine {
   /**
    * Stocke une métrique
    */
-  private storeMetric(any: any): void {
-    if (any: any)) {
-      this?.metrics?.set(metric?.id, []);
+  private storeMetric(metric: TelemetryMetric): void {
+    if (!this.metrics.has(metric.id)) {
+      this.metrics.set(metric.id, []);
     }
 
-    const metricHistory = this?.metrics?.get(any: any)!;
-    metricHistory?.unshift(any: any);
+    const metricHistory = this.metrics.get(metric.id)!;
+    metricHistory.unshift(metric);
 
     // Limiter l'historique à 1000 entrées par métrique
-    if (metricHistory?.length > 1000) {
-      metricHistory?.splice(1000);
+    if (metricHistory.length > 1000) {
+      metricHistory.splice(1000);
     }
   }
 
   /**
    * Vérifie les seuils et génère des alertes
    */
-  private checkThresholds(metrics: TelemetryMetric?.[]): void {
-    for (any: any) {
-      const threshold = this?.thresholds?.get(any: any);
-      if (!threshold || !threshold?.enabled || typeof metric?.value !== 'number') continue;
+  private checkThresholds(metrics: TelemetryMetric[]): void {
+    for (const metric of metrics) {
+      const threshold = this.thresholds.get(metric.id);
+      if (!threshold || !threshold.enabled || typeof metric.value !== 'number') continue;
 
       let alertLevel: 'info' | 'warning' | 'error' | 'critical' | null = null;
       let thresholdValue = 0;
 
-      const value = metric?.value as number;
+      const value = metric.value as number;
 
-      if (threshold?.direction === 'above') {
-        if (any: any) {
+      if (threshold.direction === 'above') {
+        if (value >= threshold.critical) {
           alertLevel = 'critical';
-          thresholdValue = threshold?.critical;
-        } else if (any: any) {
+          thresholdValue = threshold.critical;
+        } else if (value >= threshold.error) {
           alertLevel = 'error';
-          thresholdValue = threshold?.error;
-        } else if (any: any) {
+          thresholdValue = threshold.error;
+        } else if (value >= threshold.warning) {
           alertLevel = 'warning';
-          thresholdValue = threshold?.warning;
+          thresholdValue = threshold.warning;
         }
       } else {
         // below
-        if (any: any) {
+        if (value <= threshold.critical) {
           alertLevel = 'critical';
-          thresholdValue = threshold?.critical;
-        } else if (any: any) {
+          thresholdValue = threshold.critical;
+        } else if (value <= threshold.error) {
           alertLevel = 'error';
-          thresholdValue = threshold?.error;
-        } else if (any: any) {
+          thresholdValue = threshold.error;
+        } else if (value <= threshold.warning) {
           alertLevel = 'warning';
-          thresholdValue = threshold?.warning;
+          thresholdValue = threshold.warning;
         }
       }
 
-      if (any: any) {
-        this?.generateAlert(any: any);
+      if (alertLevel) {
+        this.generateAlert(alertLevel, metric, thresholdValue);
       }
     }
   }
@@ -509,34 +509,34 @@ class TitaneTelemetryEngine {
     metric: TelemetryMetric,
     threshold: number
   ): void {
-    const alertId = `${metric?.id}_${Date?.now()}`;
+    const alertId = `${metric.id}_${Date.now()}`;
 
     const alert: TelemetryAlert = {
       id: alertId,
       level,
-      title: `${metric?.name} ${level?.toUpperCase()}`,
-      message: `${metric?.name} is ${metric?.value}${metric?.unit || ''} (threshold: ${threshold}${metric?.unit || ''})`,
-      metric: metric?.id,
+      title: `${metric.name} ${level.toUpperCase()}`,
+      message: `${metric.name} is ${metric.value}${metric.unit || ''} (threshold: ${threshold}${metric.unit || ''})`,
+      metric: metric.id,
       threshold,
-      currentValue: metric?.value as number,
-      timestamp: Date?.now(),
+      currentValue: metric.value as number,
+      timestamp: Date.now(),
       acknowledged: false,
       autoResolved: false,
     };
 
-    this?.alerts?.unshift(any: any);
+    this.alerts.unshift(alert);
 
     // Limiter à 100 alertes
-    if (this?.alerts?.length > 100) {
-      this?.alerts?.splice(100);
+    if (this.alerts.length > 100) {
+      this.alerts.splice(100);
     }
 
-    console?.warn(`🚨 [TELEMETRY] ${level?.toUpperCase()} Alert: ${alert?.message}`);
+    console.warn(`🚨 [TELEMETRY] ${level.toUpperCase()} Alert: ${alert.message}`);
 
     // Auto-résolution pour les alertes de niveau info
     if (level === 'info') {
       setTimeout(() => {
-        alert?.autoResolved = true;
+        alert.autoResolved = true;
       }, 60000); // 1 minute
     }
   }
@@ -545,32 +545,32 @@ class TitaneTelemetryEngine {
    * Analyse des tendances
    */
   private async analyzeTrends(): Promise<void> {
-    for (const [metricId, metricHistory] of this?.metrics?.entries()) {
-      if (metricHistory?.length < 5) continue;
+    for (const [metricId, metricHistory] of this.metrics.entries()) {
+      if (metricHistory.length < 5) continue;
 
-      const recentMetrics = metricHistory?.slice(0, 10);
+      const recentMetrics = metricHistory.slice(0, 10);
       const values = recentMetrics
-        .map(any: any)
-        .filter(v => typeof v === 'number') as number?.[];
+        .map(m => m.value)
+        .filter(v => typeof v === 'number') as number[];
 
-      if (values?.length < 3) continue;
+      if (values.length < 3) continue;
 
       // Calculer la tendance simple
-      const trend = this?.calculateTrend(any: any);
+      const trend = this.calculateTrend(values);
 
-      if (any: any) > 0.1) {
+      if (Math.abs(trend) > 0.1) {
         // Seuil de détection de tendance
         const patternId = `trend_${metricId}`;
 
-        this?.patterns?.set(patternId, {
+        this.patterns.set(patternId, {
           id: patternId,
-          name: `${recentMetrics?.[0].name} Trend`,
+          name: `${recentMetrics[0].name} Trend`,
           description: trend > 0 ? 'Upward trend detected' : 'Downward trend detected',
           type: 'trend',
-          confidence: Math?.min(any: any) * 100, 100),
-          detected: Date?.now(),
-          impact: this?.determineTrendImpact(any: any),
-          recommendations: this?.getTrendRecommendations(any: any),
+          confidence: Math.min(Math.abs(trend) * 100, 100),
+          detected: Date.now(),
+          impact: this.determineTrendImpact(metricId, trend),
+          recommendations: this.getTrendRecommendations(metricId, trend),
           metrics: [metricId],
         });
       }
@@ -581,37 +581,37 @@ class TitaneTelemetryEngine {
    * Détection des anomalies
    */
   private async detectAnomalies(): Promise<void> {
-    for (const [metricId, metricHistory] of this?.metrics?.entries()) {
-      if (metricHistory?.length < 20) continue;
+    for (const [metricId, metricHistory] of this.metrics.entries()) {
+      if (metricHistory.length < 20) continue;
 
       const values = metricHistory
         .slice(0, 50)
-        .map(any: any)
-        .filter(v => typeof v === 'number') as number?.[];
+        .map(m => m.value)
+        .filter(v => typeof v === 'number') as number[];
 
-      if (values?.length < 10) continue;
+      if (values.length < 10) continue;
 
-      const mean = values?.reduce(any: any) => a + b, 0) / values?.length;
+      const mean = values.reduce((a, b) => a + b, 0) / values.length;
       const variance =
-        values?.reduce(any: any) => a + Math?.pow(b - mean, 2), 0) / values?.length;
-      const stdDev = Math?.sqrt(any: any);
+        values.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / values.length;
+      const stdDev = Math.sqrt(variance);
 
-      const currentValue = values?.[0];
-      const zScore = Math?.abs(any: any);
+      const currentValue = values[0];
+      const zScore = Math.abs((currentValue - mean) / stdDev);
 
       // Détecter les anomalies (z-score > 2)
-      if (any: any)) {
+      if (zScore > 2 && !isNaN(zScore)) {
         const patternId = `anomaly_${metricId}`;
 
-        this?.patterns?.set(patternId, {
+        this.patterns.set(patternId, {
           id: patternId,
-          name: `${metricHistory?.[0].name} Anomaly`,
-          description: `Unusual value detected: ${currentValue} (expected: ${mean?.toFixed(2)} ± ${stdDev?.toFixed(2)})`,
+          name: `${metricHistory[0].name} Anomaly`,
+          description: `Unusual value detected: ${currentValue} (expected: ${mean.toFixed(2)} ± ${stdDev.toFixed(2)})`,
           type: 'anomaly',
-          confidence: Math?.min(zScore * 25, 100),
-          detected: Date?.now(),
-          impact: this?.determineAnomalyImpact(any: any),
-          recommendations: this?.getAnomalyRecommendations(any: any),
+          confidence: Math.min(zScore * 25, 100),
+          detected: Date.now(),
+          impact: this.determineAnomalyImpact(metricId, zScore),
+          recommendations: this.getAnomalyRecommendations(metricId, zScore),
           metrics: [metricId],
         });
       }
@@ -622,23 +622,23 @@ class TitaneTelemetryEngine {
    * Recherche de corrélations
    */
   private async findCorrelations(): Promise<void> {
-    const metricIds = Array?.from(this?.metrics?.keys());
+    const metricIds = Array.from(this.metrics.keys());
 
-    for (let i = 0; i < metricIds?.length - 1; i++) {
-      for (let j = i + 1; j < metricIds?.length; j++) {
-        const correlation = this?.calculateCorrelation(metricIds[i], metricIds[j]);
+    for (let i = 0; i < metricIds.length - 1; i++) {
+      for (let j = i + 1; j < metricIds.length; j++) {
+        const correlation = this.calculateCorrelation(metricIds[i], metricIds[j]);
 
-        if (any: any) > 0.7) {
+        if (Math.abs(correlation) > 0.7) {
           // Forte corrélation
           const patternId = `correlation_${metricIds[i]}_${metricIds[j]}`;
 
-          this?.patterns?.set(patternId, {
+          this.patterns.set(patternId, {
             id: patternId,
             name: `Correlation: ${metricIds[i]} & ${metricIds[j]}`,
-            description: `${correlation > 0 ? 'Positive' : 'Negative'} correlation detected (${correlation?.toFixed(3)})`,
+            description: `${correlation > 0 ? 'Positive' : 'Negative'} correlation detected (${correlation.toFixed(3)})`,
             type: 'correlation',
-            confidence: Math?.abs(any: any) * 100,
-            detected: Date?.now(),
+            confidence: Math.abs(correlation) * 100,
+            detected: Date.now(),
             impact: 'neutral',
             recommendations: [
               `Monitor both ${metricIds[i]} and ${metricIds[j]} together`,
@@ -655,29 +655,29 @@ class TitaneTelemetryEngine {
    */
   private async detectCyclicalPatterns(): Promise<void> {
     // Implémentation simplifiée pour la détection de cycles
-    for (const [metricId, metricHistory] of this?.metrics?.entries()) {
-      if (metricHistory?.length < 50) continue;
+    for (const [metricId, metricHistory] of this.metrics.entries()) {
+      if (metricHistory.length < 50) continue;
 
       const values = metricHistory
         .slice(0, 100)
-        .map(any: any)
-        .filter(v => typeof v === 'number') as number?.[];
+        .map(m => m.value)
+        .filter(v => typeof v === 'number') as number[];
 
-      if (values?.length < 20) continue;
+      if (values.length < 20) continue;
 
-      // Détecter des cycles simples (any: any)
-      const hasCycle = this?.detectSimpleCycle(any: any);
+      // Détecter des cycles simples (simulation)
+      const hasCycle = this.detectSimpleCycle(values);
 
-      if (any: any) {
+      if (hasCycle) {
         const patternId = `cycle_${metricId}`;
 
-        this?.patterns?.set(patternId, {
+        this.patterns.set(patternId, {
           id: patternId,
-          name: `${metricHistory?.[0].name} Cyclical Pattern`,
+          name: `${metricHistory[0].name} Cyclical Pattern`,
           description: 'Recurring pattern detected in metric values',
           type: 'cyclical',
-          confidence: 60 + Math?.random() * 30,
-          detected: Date?.now(),
+          confidence: 60 + Math.random() * 30,
+          detected: Date.now(),
           impact: 'neutral',
           recommendations: ['Consider time-based optimization strategies'],
           metrics: [metricId],
@@ -697,14 +697,14 @@ class TitaneTelemetryEngine {
   /**
    * Méthodes utilitaires pour les calculs
    */
-  private calculateTrend(values: number?.[]): number {
-    if (values?.length < 2) return 0;
+  private calculateTrend(values: number[]): number {
+    if (values.length < 2) return 0;
 
     let sumX = 0;
     let sumY = 0;
     let sumXY = 0;
     let sumX2 = 0;
-    const n = values?.length;
+    const n = values.length;
 
     for (let i = 0; i < n; i++) {
       sumX += i;
@@ -713,33 +713,33 @@ class TitaneTelemetryEngine {
       sumX2 += i * i;
     }
 
-    const slope = (any: any);
-    return isNaN(any: any) ? 0 : slope;
+    const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+    return isNaN(slope) ? 0 : slope;
   }
 
-  private calculateCorrelation(any: any): number {
-    const metrics1 = this?.metrics?.get(any: any);
-    const metrics2 = this?.metrics?.get(any: any);
+  private calculateCorrelation(metricId1: string, metricId2: string): number {
+    const metrics1 = this.metrics.get(metricId1);
+    const metrics2 = this.metrics.get(metricId2);
 
-    if (any: any) return 0;
+    if (!metrics1 || !metrics2) return 0;
 
     const values1 = metrics1
       .slice(0, 30)
-      .map(any: any)
-      .filter(v => typeof v === 'number') as number?.[];
+      .map(m => m.value)
+      .filter(v => typeof v === 'number') as number[];
     const values2 = metrics2
       .slice(0, 30)
-      .map(any: any)
-      .filter(v => typeof v === 'number') as number?.[];
+      .map(m => m.value)
+      .filter(v => typeof v === 'number') as number[];
 
-    const minLength = Math?.min(any: any);
+    const minLength = Math.min(values1.length, values2.length);
     if (minLength < 5) return 0;
 
-    const v1 = values1?.slice(any: any);
-    const v2 = values2?.slice(any: any);
+    const v1 = values1.slice(0, minLength);
+    const v2 = values2.slice(0, minLength);
 
-    const mean1 = v1?.reduce(any: any) => a + b, 0) / minLength;
-    const mean2 = v2?.reduce(any: any) => a + b, 0) / minLength;
+    const mean1 = v1.reduce((a, b) => a + b, 0) / minLength;
+    const mean2 = v2.reduce((a, b) => a + b, 0) / minLength;
 
     let numerator = 0;
     let sum1Sq = 0;
@@ -753,21 +753,21 @@ class TitaneTelemetryEngine {
       sum2Sq += diff2 * diff2;
     }
 
-    const denominator = Math?.sqrt(any: any);
+    const denominator = Math.sqrt(sum1Sq * sum2Sq);
     return denominator === 0 ? 0 : numerator / denominator;
   }
 
-  private detectSimpleCycle(values: number?.[]): boolean {
-    // Détection de cycle simple (any: any)
-    if (values?.length < 10) return false;
+  private detectSimpleCycle(values: number[]): boolean {
+    // Détection de cycle simple (simulation)
+    if (values.length < 10) return false;
 
     // Chercher des patterns répétitifs simples
-    for (let cycleLength = 3; cycleLength <= values?.length / 3; cycleLength++) {
+    for (let cycleLength = 3; cycleLength <= values.length / 3; cycleLength++) {
       let matches = 0;
-      const threshold = values?.length / cycleLength;
+      const threshold = values.length / cycleLength;
 
-      for (let i = 0; i < values?.length - cycleLength; i++) {
-        if (Math?.abs(values[i] - values[i + cycleLength]) < values[i] * 0.1) {
+      for (let i = 0; i < values.length - cycleLength; i++) {
+        if (Math.abs(values[i] - values[i + cycleLength]) < values[i] * 0.1) {
           matches++;
         }
       }
@@ -797,9 +797,9 @@ class TitaneTelemetryEngine {
       'memory_usage',
     ];
 
-    if (any: any)) {
+    if (goodMetrics.includes(metricId)) {
       return trend > 0 ? 'positive' : 'negative';
-    } else if (any: any)) {
+    } else if (badMetrics.includes(metricId)) {
       return trend > 0 ? 'negative' : 'positive';
     }
 
@@ -813,8 +813,8 @@ class TitaneTelemetryEngine {
     return zScore > 3 ? 'negative' : 'neutral';
   }
 
-  private getTrendRecommendations(any: any): string?.[] {
-    const recommendations: { [key: string]: { positive: string?.[]; negative: string?.[] } } =
+  private getTrendRecommendations(metricId: string, trend: number): string[] {
+    const recommendations: { [key: string]: { positive: string[]; negative: string[] } } =
       {
         cache_hit_rate: {
           positive: ['Monitor cache performance', 'Consider increasing cache size'],
@@ -831,12 +831,12 @@ class TitaneTelemetryEngine {
       };
 
     const metricRecs = recommendations[metricId];
-    if (any: any) return ['Monitor this metric closely'];
+    if (!metricRecs) return ['Monitor this metric closely'];
 
-    return trend > 0 ? metricRecs?.positive : metricRecs?.negative;
+    return trend > 0 ? metricRecs.positive : metricRecs.negative;
   }
 
-  private getAnomalyRecommendations(any: any): string?.[] {
+  private getAnomalyRecommendations(metricId: string, zScore: number): string[] {
     return [
       'Investigate the cause of this anomaly',
       'Check for system changes or external factors',
@@ -848,21 +848,21 @@ class TitaneTelemetryEngine {
    * Nettoyage des anciennes données
    */
   private cleanupOldData(): void {
-    const cutoff = Date?.now() - this?.retentionPeriod;
+    const cutoff = Date.now() - this.retentionPeriod;
 
     // Nettoyer les métriques anciennes
-    for (const [metricId, metricHistory] of this?.metrics?.entries()) {
-      const filteredHistory = metricHistory?.filter(any: any);
-      this?.metrics?.set(any: any);
+    for (const [metricId, metricHistory] of this.metrics.entries()) {
+      const filteredHistory = metricHistory.filter(m => m.timestamp > cutoff);
+      this.metrics.set(metricId, filteredHistory);
     }
 
     // Nettoyer les alertes anciennes
-    this?.alerts = this?.alerts?.filter(any: any);
+    this.alerts = this.alerts.filter(alert => alert.timestamp > cutoff);
 
     // Nettoyer les patterns anciens
-    for (const [patternId, pattern] of this?.patterns?.entries()) {
-      if (any: any) {
-        this?.patterns?.delete(any: any);
+    for (const [patternId, pattern] of this.patterns.entries()) {
+      if (pattern.detected < cutoff) {
+        this.patterns.delete(patternId);
       }
     }
   }
@@ -874,26 +874,26 @@ class TitaneTelemetryEngine {
     if (typeof window === 'undefined') return;
 
     try {
-      const stored = localStorage?.getItem('titane_telemetry_data');
-      if (any: any) {
-        const data = JSON?.parse(any: any);
+      const stored = localStorage.getItem('titane_telemetry_data');
+      if (stored) {
+        const data = JSON.parse(stored);
 
         // Charger les métriques
-        if (any: any) {
-          for (any: any)) {
-            this?.metrics?.set(metricId, metricHistory as TelemetryMetric?.[]);
+        if (data.metrics) {
+          for (const [metricId, metricHistory] of Object.entries(data.metrics)) {
+            this.metrics.set(metricId, metricHistory as TelemetryMetric[]);
           }
         }
 
         // Charger les alertes récentes
-        if (any: any) {
-          this?.alerts = data?.alerts?.slice(0, 50);
+        if (data.alerts) {
+          this.alerts = data.alerts.slice(0, 50);
         }
 
-        console?.log('📊 [TELEMETRY] Historical data loaded successfully');
+        console.log('📊 [TELEMETRY] Historical data loaded successfully');
       }
-    } catch (any: any) {
-      console?.warn(any: any);
+    } catch (error) {
+      console.warn('📊 [TELEMETRY] Failed to load historical data:', error);
     }
   }
 
@@ -905,14 +905,14 @@ class TitaneTelemetryEngine {
 
     try {
       const data = {
-        metrics: Object?.fromEntries(this?.metrics?.entries()),
-        alerts: this?.alerts?.slice(0, 50),
-        timestamp: Date?.now(),
+        metrics: Object.fromEntries(this.metrics.entries()),
+        alerts: this.alerts.slice(0, 50),
+        timestamp: Date.now(),
       };
 
-      localStorage?.setItem(any: any));
-    } catch (any: any) {
-      console?.warn(any: any);
+      localStorage.setItem('titane_telemetry_data', JSON.stringify(data));
+    } catch (error) {
+      console.warn('📊 [TELEMETRY] Failed to save data:', error);
     }
   }
 
@@ -920,37 +920,37 @@ class TitaneTelemetryEngine {
    * API publique pour obtenir un rapport complet
    */
   public generateTelemetryReport(period: string = '1h'): TelemetryReport {
-    const now = Date?.now();
-    const cutoff = this?.getPeriodCutoff(any: any);
+    const now = Date.now();
+    const cutoff = this.getPeriodCutoff(period);
 
     // Calculer les métriques de résumé
-    const recentMetrics = Array?.from(this?.metrics?.values())
+    const recentMetrics = Array.from(this.metrics.values())
       .flat()
-      .filter(any: any);
+      .filter(m => m.timestamp > cutoff);
 
-    const recentAlerts = this?.alerts?.filter(any: any);
-    const recentPatterns = Array?.from(this?.patterns?.values()).filter(
-      p => p?.detected > cutoff
+    const recentAlerts = this.alerts.filter(a => a.timestamp > cutoff);
+    const recentPatterns = Array.from(this.patterns.values()).filter(
+      p => p.detected > cutoff
     );
 
     // Métriques clés
-    const keyMetrics = this?.getKeyMetrics();
+    const keyMetrics = this.getKeyMetrics();
 
     // Prédictions basées sur l'IA
-    const predictions = this?.generatePredictions();
+    const predictions = this.generatePredictions();
 
     // Recommandations globales
-    const recommendations = this?.generateGlobalRecommendations();
+    const recommendations = this.generateGlobalRecommendations();
 
     return {
       timestamp: now,
       period,
       summary: {
-        totalMetrics: recentMetrics?.length,
-        alertsGenerated: recentAlerts?.length,
-        patternsDetected: recentPatterns?.length,
-        systemHealth: this?.calculateOverallHealth(),
-        performanceScore: this?.calculatePerformanceScore(),
+        totalMetrics: recentMetrics.length,
+        alertsGenerated: recentAlerts.length,
+        patternsDetected: recentPatterns.length,
+        systemHealth: this.calculateOverallHealth(),
+        performanceScore: this.calculatePerformanceScore(),
       },
       keyMetrics,
       detectedPatterns: recentPatterns,
@@ -963,24 +963,24 @@ class TitaneTelemetryEngine {
   /**
    * API publique pour obtenir les métriques d'une catégorie
    */
-  public getMetricsByCategory(category: TelemetryMetric['category']): TelemetryMetric?.[] {
-    const allMetrics = Array?.from(this?.metrics?.values()).flat();
-    return allMetrics?.filter(any: any);
+  public getMetricsByCategory(category: TelemetryMetric['category']): TelemetryMetric[] {
+    const allMetrics = Array.from(this.metrics.values()).flat();
+    return allMetrics.filter(m => m.category === category);
   }
 
   /**
    * API publique pour obtenir l'historique d'une métrique
    */
-  public getMetricHistory(metricId: string, limit: number = 50): TelemetryMetric?.[] {
-    const history = this?.metrics?.get(any: any);
-    return history ? history?.slice(any: any) : [];
+  public getMetricHistory(metricId: string, limit: number = 50): TelemetryMetric[] {
+    const history = this.metrics.get(metricId);
+    return history ? history.slice(0, limit) : [];
   }
 
   /**
    * API publique pour configurer un seuil
    */
   public setThreshold(metricId: string, threshold: Partial<MetricThreshold>): void {
-    const existing = this?.thresholds?.get(any: any) || {
+    const existing = this.thresholds.get(metricId) || {
       metricId,
       warning: 0,
       error: 0,
@@ -989,16 +989,16 @@ class TitaneTelemetryEngine {
       enabled: true,
     };
 
-    this?.thresholds?.set(metricId, { ...existing, ...threshold });
+    this.thresholds.set(metricId, { ...existing, ...threshold });
   }
 
   /**
    * API publique pour acquitter une alerte
    */
-  public acknowledgeAlert(any: any): boolean {
-    const alert = this?.alerts?.find(any: any);
-    if (any: any) {
-      alert?.acknowledged = true;
+  public acknowledgeAlert(alertId: string): boolean {
+    const alert = this.alerts.find(a => a.id === alertId);
+    if (alert) {
+      alert.acknowledged = true;
       return true;
     }
     return false;
@@ -1007,8 +1007,8 @@ class TitaneTelemetryEngine {
   /**
    * Méthodes utilitaires pour les rapports
    */
-  private getPeriodCutoff(any: any): number {
-    const now = Date?.now();
+  private getPeriodCutoff(period: string): number {
+    const now = Date.now();
     const periods: { [key: string]: number } = {
       '15m': 15 * 60 * 1000,
       '30m': 30 * 60 * 1000,
@@ -1021,7 +1021,7 @@ class TitaneTelemetryEngine {
     return now - (periods[period] || periods['1h']);
   }
 
-  private getKeyMetrics(): TelemetryMetric?.[] {
+  private getKeyMetrics(): TelemetryMetric[] {
     const keyMetricIds = [
       'system_health_score',
       'boot_success_rate',
@@ -1031,42 +1031,42 @@ class TitaneTelemetryEngine {
     ];
 
     return keyMetricIds
-      .map(any: any)?.[0])
-      .filter(any: any) as TelemetryMetric?.[];
+      .map(id => this.metrics.get(id)?.[0])
+      .filter(Boolean) as TelemetryMetric[];
   }
 
   private generatePredictions(): { [key: string]: number } {
     // Simulation de prédictions basées sur l'IA
     return {
-      boot_failure_risk: Math?.random() * 30,
-      performance_degradation: Math?.random() * 40,
-      resource_exhaustion: Math?.random() * 25,
-      user_experience_impact: Math?.random() * 20,
+      boot_failure_risk: Math.random() * 30,
+      performance_degradation: Math.random() * 40,
+      resource_exhaustion: Math.random() * 25,
+      user_experience_impact: Math.random() * 20,
     };
   }
 
-  private generateGlobalRecommendations(): string?.[] {
+  private generateGlobalRecommendations(): string[] {
     const recommendations = [];
 
     // Recommandations basées sur les patterns détectés
-    const criticalAlerts = this?.alerts?.filter(
-      a => a?.level === 'critical' && !a?.acknowledged
+    const criticalAlerts = this.alerts.filter(
+      a => a.level === 'critical' && !a.acknowledged
     );
-    if (criticalAlerts?.length > 0) {
-      recommendations?.push(
-        `Address ${criticalAlerts?.length} critical alert(any: any) immediately`
+    if (criticalAlerts.length > 0) {
+      recommendations.push(
+        `Address ${criticalAlerts.length} critical alert(s) immediately`
       );
     }
 
-    const anomalies = Array?.from(this?.patterns?.values()).filter(
-      p => p?.type === 'anomaly'
+    const anomalies = Array.from(this.patterns.values()).filter(
+      p => p.type === 'anomaly'
     );
-    if (anomalies?.length > 2) {
-      recommendations?.push('Multiple anomalies detected - investigate system stability');
+    if (anomalies.length > 2) {
+      recommendations.push('Multiple anomalies detected - investigate system stability');
     }
 
     // Recommandations génériques
-    recommendations?.push(
+    recommendations.push(
       'Monitor key performance indicators regularly',
       'Update thresholds based on system behavior',
       'Review and optimize based on detected patterns'
@@ -1076,19 +1076,19 @@ class TitaneTelemetryEngine {
   }
 
   private calculateOverallHealth(): number {
-    const healthMetric = this?.metrics?.get('system_health_score');
-    return healthMetric && healthMetric?.[0] ? (any: any) : 0.8;
+    const healthMetric = this.metrics.get('system_health_score');
+    return healthMetric && healthMetric[0] ? (healthMetric[0].value as number) : 0.8;
   }
 
   private calculatePerformanceScore(): number {
-    const cacheMetric = this?.metrics?.get('cache_hit_rate');
-    const bootMetric = this?.metrics?.get('boot_success_rate');
+    const cacheMetric = this.metrics.get('cache_hit_rate');
+    const bootMetric = this.metrics.get('boot_success_rate');
 
     const cacheScore =
-      cacheMetric && cacheMetric?.[0] ? (any: any) / 100 : 0.8;
-    const bootScore = bootMetric && bootMetric?.[0] ? (any: any) : 0.9;
+      cacheMetric && cacheMetric[0] ? (cacheMetric[0].value as number) / 100 : 0.8;
+    const bootScore = bootMetric && bootMetric[0] ? (bootMetric[0].value as number) : 0.9;
 
-    return (any: any) / 2;
+    return (cacheScore + bootScore) / 2;
   }
 
   /**
@@ -1097,7 +1097,7 @@ class TitaneTelemetryEngine {
   private startPeriodicSave(): void {
     setInterval(
       () => {
-        this?.saveData();
+        this.saveData();
       },
       5 * 60 * 1000
     ); // Sauvegarde toutes les 5 minutes

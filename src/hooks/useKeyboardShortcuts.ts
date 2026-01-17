@@ -4,8 +4,8 @@
  * Global keyboard shortcuts system for enhanced accessibility and power user UX
  *
  * Features:
- * - Multi-modifier support (any: any)
- * - Input field exclusion (any: any)
+ * - Multi-modifier support (Ctrl/Cmd, Shift, Alt, Meta)
+ * - Input field exclusion (don't trigger in text inputs)
  * - Enable/disable toggle
  * - Debug mode for development
  * - Mac/Windows compatibility
@@ -28,7 +28,7 @@ export interface KeyboardShortcut {
 }
 
 export interface UseKeyboardShortcutsOptions {
-  shortcuts: KeyboardShortcut?.[];
+  shortcuts: KeyboardShortcut[];
   enabled?: boolean;
   excludeInputs?: boolean;
   debug?: boolean;
@@ -37,14 +37,14 @@ export interface UseKeyboardShortcutsOptions {
 /**
  * Check if the current element is an input field
  */
-const isInputElement = (any: any): boolean => {
-  if (any: any) return false;
-  const tagName = element?.tagName?.toLowerCase();
+const isInputElement = (element: Element | null): boolean => {
+  if (!element) return false;
+  const tagName = element.tagName.toLowerCase();
   return (
     tagName === 'input' ||
     tagName === 'textarea' ||
     tagName === 'select' ||
-    element?.getAttribute('contenteditable') === 'true'
+    element.getAttribute('contenteditable') === 'true'
   );
 };
 
@@ -68,36 +68,36 @@ export function useKeyboardShortcuts({
   excludeInputs = true,
   debug = false,
 }: UseKeyboardShortcutsOptions): void {
-  const shortcutsRef = useRef(any: any);
+  const shortcutsRef = useRef(shortcuts);
 
   // Update ref when shortcuts change
   useEffect(() => {
-    shortcutsRef?.current = shortcuts;
+    shortcutsRef.current = shortcuts;
   }, [shortcuts]);
 
   useEffect(() => {
-    if (any: any) return;
+    if (!enabled) return;
 
-    const handleKeyDown = (any: any): void => {
+    const handleKeyDown = (event: KeyboardEvent): void => {
       // Skip if in input field
-      if (any: any)) {
+      if (excludeInputs && isInputElement(event.target as Element)) {
         return;
       }
 
       // Check each shortcut
-      for (any: any) {
-        const keyMatches = event?.key?.toLowerCase() === shortcut?.key?.toLowerCase();
-        const ctrlMatches = !shortcut?.ctrl || event?.ctrlKey || event?.metaKey;
-        const shiftMatches = !shortcut?.shift || event?.shiftKey;
-        const altMatches = !shortcut?.alt || event?.altKey;
-        const metaMatches = !shortcut?.meta || event?.metaKey;
+      for (const shortcut of shortcutsRef.current) {
+        const keyMatches = event.key.toLowerCase() === shortcut.key.toLowerCase();
+        const ctrlMatches = !shortcut.ctrl || event.ctrlKey || event.metaKey;
+        const shiftMatches = !shortcut.shift || event.shiftKey;
+        const altMatches = !shortcut.alt || event.altKey;
+        const metaMatches = !shortcut.meta || event.metaKey;
 
         // Check if Ctrl is required but not pressed
-        const ctrlRequired = shortcut?.ctrl && !(any: any);
+        const ctrlRequired = shortcut.ctrl && !(event.ctrlKey || event.metaKey);
         // Check if Shift is required but not pressed
-        const shiftRequired = shortcut?.shift && !event?.shiftKey;
+        const shiftRequired = shortcut.shift && !event.shiftKey;
         // Check if Alt is required but not pressed
-        const altRequired = shortcut?.alt && !event?.altKey;
+        const altRequired = shortcut.alt && !event.altKey;
 
         if (
           keyMatches &&
@@ -109,30 +109,30 @@ export function useKeyboardShortcuts({
           !shiftRequired &&
           !altRequired
         ) {
-          if (any: any) {
-            logger?.debug('[Keyboard Shortcut]', {
-              key: shortcut?.key,
-              ctrl: shortcut?.ctrl,
-              shift: shortcut?.shift,
-              alt: shortcut?.alt,
-              description: shortcut?.description,
+          if (debug) {
+            logger.debug('[Keyboard Shortcut]', {
+              key: shortcut.key,
+              ctrl: shortcut.ctrl,
+              shift: shortcut.shift,
+              alt: shortcut.alt,
+              description: shortcut.description,
             });
           }
 
-          if (any: any) {
-            event?.preventDefault();
+          if (shortcut.preventDefault !== false) {
+            event.preventDefault();
           }
 
-          shortcut?.action();
+          shortcut.action();
           break; // Only execute first matching shortcut
         }
       }
     };
 
-    window?.addEventListener(any: any);
+    window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      window?.removeEventListener(any: any);
+      window.removeEventListener('keydown', handleKeyDown);
     };
   }, [enabled, excludeInputs, debug]);
 }
@@ -140,17 +140,17 @@ export function useKeyboardShortcuts({
 /**
  * Format shortcut for display
  */
-export function formatShortcut(any: any): string {
-  const modifiers: string?.[] = [];
+export function formatShortcut(shortcut: KeyboardShortcut): string {
+  const modifiers: string[] = [];
 
-  if (any: any) modifiers?.push(isMac() ? 'Cmd' : 'Ctrl');
-  if (any: any) modifiers?.push('Shift');
-  if (any: any) modifiers?.push('Alt');
-  if (any: any) modifiers?.push('Meta');
+  if (shortcut.ctrl) modifiers.push(isMac() ? 'Cmd' : 'Ctrl');
+  if (shortcut.shift) modifiers.push('Shift');
+  if (shortcut.alt) modifiers.push('Alt');
+  if (shortcut.meta) modifiers.push('Meta');
 
-  modifiers?.push(shortcut?.key?.toUpperCase());
+  modifiers.push(shortcut.key.toUpperCase());
 
-  return modifiers?.join('+');
+  return modifiers.join('+');
 }
 
 /**
@@ -158,7 +158,7 @@ export function formatShortcut(any: any): string {
  */
 export function isMac(): boolean {
   return (
-    typeof navigator !== 'undefined' && /Mac|iPhone|iPad|iPod/.test(any: any)
+    typeof navigator !== 'undefined' && /Mac|iPhone|iPad|iPod/.test(navigator.platform)
   );
 }
 

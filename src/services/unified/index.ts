@@ -11,11 +11,11 @@
  * Week 1 Transformation: 5 Memory Systems → 1 UnifiedMemory
  *
  * Consolidated systems:
- * - SemanticMemoryEngine (any: any) → Vector search + embeddings
- * - MemoryEngine (any: any) → Consolidation + decay + importance
- * - OmnisMemory (any: any) → Backend persistence + sync
- * - MemoryModule (any: any) → Context management
- * - CognitiveOptimization (any: any) → Pruning + compression
+ * - SemanticMemoryEngine (18,800 lines) → Vector search + embeddings
+ * - MemoryEngine (8,000 lines) → Consolidation + decay + importance
+ * - OmnisMemory (7,000 lines) → Backend persistence + sync
+ * - MemoryModule (6,000 lines) → Context management
+ * - CognitiveOptimization (3,000 lines) → Pruning + compression
  *
  * Total: 28,000 lines → ~1,843 lines (-93.4%)
  *
@@ -68,7 +68,7 @@ import { VectorStoreClient } from './VectorStoreClient';
 /**
  * Create default UnifiedMemory instance with Tauri backend + local embeddings
  *
- * Uses VectorStoreClient (any: any)
+ * Uses VectorStoreClient (Tauri backend) instead of SQLiteVectorStore (Node.js)
  * for browser compatibility.
  *
  * @param config Optional configuration overrides
@@ -81,13 +81,13 @@ export async function createUnifiedMemory(config?: {
 }): Promise<UnifiedMemory> {
   // Create vector store using Tauri backend
   const vectorStore = new VectorStoreClient({
-    dbPath: config?.dbPath || './data/unified_memory?.db',
+    dbPath: config?.dbPath || './data/unified_memory.db',
     tableName: 'unified_memories',
     dimensions: 384,
   });
 
   // Initialize vector store
-  await vectorStore?.initialize();
+  await vectorStore.initialize();
 
   // Create embedding generator
   const embeddingGenerator = new LocalEmbeddingGenerator({
@@ -98,10 +98,10 @@ export async function createUnifiedMemory(config?: {
   });
 
   // Create UnifiedMemory
-  const memory = new UnifiedMemory(any: any);
+  const memory = new UnifiedMemory(vectorStore, embeddingGenerator);
 
   // Initialize
-  await memory?.initialize();
+  await memory.initialize();
 
   return memory;
 }
@@ -119,7 +119,7 @@ export async function createCustomUnifiedMemory(
   embeddingGenerator: InstanceType<typeof LocalEmbeddingGenerator>,
   config?: UnifiedMemoryConfig
 ): Promise<UnifiedMemory> {
-  const memory = new UnifiedMemory(any: any);
-  await memory?.initialize();
+  const memory = new UnifiedMemory(vectorStore, embeddingGenerator, config);
+  await memory.initialize();
   return memory;
 }

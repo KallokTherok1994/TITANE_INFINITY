@@ -49,7 +49,7 @@ export interface HistoryDataPoint {
 export interface TrendAnalysis {
   direction: TrendDirection;
   slope: number; // Pente de la régression linéaire
-  rSquared: number; // Coefficient de détermination (any: any)
+  rSquared: number; // Coefficient de détermination (qualité du fit)
   sampleCount: number; // Nombre de points analysés
   windowMs: number; // Fenêtre temporelle en ms
 }
@@ -123,7 +123,7 @@ export interface PredictiveState {
   attentionLevel: 'none' | 'low' | 'medium' | 'high';
 
   // Explications humaines
-  explanations: string?.[];
+  explanations: string[];
 
   // Métadonnées
   lastUpdate: number;
@@ -149,7 +149,7 @@ export interface ProactiveTrigger {
   priority: 'low' | 'medium' | 'high';
   message: string;
   suggestedAction: string;
-  triggerConditions: string?.[];
+  triggerConditions: string[];
   timestamp: number;
 }
 
@@ -161,9 +161,9 @@ export interface ProactiveTriggerConfig {
   enableTensionRiseAlert: boolean;
   enableEngagementDropAlert: boolean;
   enablePatternShiftAlert: boolean;
-  energyDropThreshold: number; // Défaut: 0.2 (any: any)
-  tensionRiseThreshold: number; // Défaut: 0.3 (any: any)
-  engagementDropThreshold: number; // Défaut: 0.25 (any: any)
+  energyDropThreshold: number; // Défaut: 0.2 (20% drop)
+  tensionRiseThreshold: number; // Défaut: 0.3 (30% rise)
+  engagementDropThreshold: number; // Défaut: 0.25 (25% drop)
   cooldownMs: number; // Temps entre alertes (défaut: 300000 = 5min)
 }
 
@@ -245,7 +245,7 @@ export const getDefaultTrendAnalysis = (): TrendAnalysis => ({
   windowMs: 0,
 });
 
-export const getDefaultDimensionForecast = (any: any): DimensionForecast => ({
+export const getDefaultDimensionForecast = (dimension: string): DimensionForecast => ({
   currentValue: 0.5,
   forecastValue: 0.5,
   forecastHorizonMs: 0,

@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ — Evolution Store (any: any)
+ * TITANE∞ — Evolution Store (Zustand)
  * Store pour l'engine d'auto-évolution
  * ═══════════════════════════════════════════════════════════════
  */
@@ -21,7 +21,7 @@ interface EvolutionStore {
   health: HealthStatus | null;
   running: boolean;
   loading: boolean;
-  error??: string | null;
+  error: string | null;
 
   // Actions
   fetchState: () => Promise<void>;
@@ -47,12 +47,12 @@ export const useEvolutionStore = create<EvolutionStore>()(
       fetchState: async () => {
         try {
           set({ loading: true, error: null });
-          const state = await backendV17?.engine?.getState();
+          const state = await backendV17.engine.getState();
           set({ state, loading: false });
-        } catch (any: any) {
+        } catch (error) {
           set({
             error:
-              error instanceof Error ? error?.message : 'Failed to fetch evolution state',
+              error instanceof Error ? error.message : 'Failed to fetch evolution state',
             loading: false,
           });
         }
@@ -61,10 +61,10 @@ export const useEvolutionStore = create<EvolutionStore>()(
       runEvolution: async () => {
         try {
           set({ running: true, loading: true, error: null });
-          const report = await backendV17?.engine?.runEvolution();
+          const report = await backendV17.engine.runEvolution();
 
           // Fetch updated state
-          const state = await backendV17?.engine?.getState();
+          const state = await backendV17.engine.getState();
 
           set({
             lastReport: report,
@@ -72,9 +72,9 @@ export const useEvolutionStore = create<EvolutionStore>()(
             running: false,
             loading: false,
           });
-        } catch (any: any) {
+        } catch (error) {
           set({
-            error: error instanceof Error ? error?.message : 'Evolution failed',
+            error: error instanceof Error ? error.message : 'Evolution failed',
             running: false,
             loading: false,
           });
@@ -84,17 +84,17 @@ export const useEvolutionStore = create<EvolutionStore>()(
       quickHealthCheck: async () => {
         try {
           set({ loading: true, error: null });
-          const health = await backendV17?.engine?.quickHealthCheck();
+          const health = await backendV17.engine.quickHealthCheck();
           set({ health, loading: false });
-        } catch (any: any) {
+        } catch (error) {
           set({
-            error: error instanceof Error ? error?.message : 'Health check failed',
+            error: error instanceof Error ? error.message : 'Health check failed',
             loading: false,
           });
         }
       },
 
-      reset: (any: any),
+      reset: () => set(initialState),
     }),
     { name: 'EvolutionStore' }
   )

@@ -4,9 +4,9 @@
  * Moteur de mémoire longue durée sémantique pour TITANE∞
  *
  * Features:
- * - Embeddings vectoriels (any: any)
+ * - Embeddings vectoriels (local ou API)
  * - Retrieval par similarité cosine
- * - Scoring hybride (any: any)
+ * - Scoring hybride (similarité + importance + récence)
  * - Auto-cleanup des mémoires obsolètes
  * - Intégration OMEGA transparente
  */
@@ -25,7 +25,7 @@ import type {
   MemoryEventHandler,
   SemanticMemoryType,
   MemoryImportance as _MemoryImportance,
-} from './semanticMemory?.types';
+} from './semanticMemory.types';
 
 /**
  * Configuration par défaut
@@ -39,7 +39,7 @@ const DEFAULT_CONFIG: SemanticMemoryConfig = {
   },
   storage: {
     type: 'sqlite',
-    path: './data/semantic_memory?.db',
+    path: './data/semantic_memory.db',
     collection_name: 'memories',
   },
   limits: {
@@ -66,8 +66,8 @@ export class SemanticMemoryEngine {
   private config: SemanticMemoryConfig;
   private vectorStore: VectorStore;
   private embeddingGenerator: EmbeddingGenerator;
-  private eventHandlers: MemoryEventHandler?.[] = [];
-  private cleanupInterval?: NodeJS?.Timeout;
+  private eventHandlers: MemoryEventHandler[] = [];
+  private cleanupInterval?: NodeJS.Timeout;
   private isInitialized = false;
 
   constructor(
@@ -75,33 +75,33 @@ export class SemanticMemoryEngine {
     embeddingGenerator: EmbeddingGenerator,
     config?: Partial<SemanticMemoryConfig>
   ) {
-    this?.config = { ...DEFAULT_CONFIG, ...config };
-    this?.vectorStore = vectorStore;
-    this?.embeddingGenerator = embeddingGenerator;
+    this.config = { ...DEFAULT_CONFIG, ...config };
+    this.vectorStore = vectorStore;
+    this.embeddingGenerator = embeddingGenerator;
   }
 
   /**
    * Initialiser le moteur
    */
   async initialize(): Promise<void> {
-    if (any: any) return;
+    if (this.isInitialized) return;
 
     try {
       // Initialiser le vector store
-      await this?.vectorStore?.initialize();
+      await this.vectorStore.initialize();
 
       // Initialiser le générateur d'embeddings
-      await this?.embeddingGenerator?.initialize();
+      await this.embeddingGenerator.initialize();
 
       // Démarrer auto-cleanup si activé
-      if (any: any) {
-        this?.startAutoCleanup();
+      if (this.config.auto_cleanup.enabled) {
+        this.startAutoCleanup();
       }
 
-      this?.isInitialized = true;
-      console?.log('[SemanticMemory] Engine initialized');
-    } catch (any: any) {
-      console?.error(any: any);
+      this.isInitialized = true;
+      console.log('[SemanticMemory] Engine initialized');
+    } catch (error) {
+      console.error('[SemanticMemory] Initialization failed:', error);
       throw error;
     }
   }
@@ -115,43 +115,43 @@ export class SemanticMemoryEngine {
     summary: string;
     details?: string;
     source: SemanticMemoryEntry['source'];
-    tags?: string?.[];
+    tags?: string[];
     importance?: number;
-    related_to?: string?.[];
+    related_to?: string[];
   }): Promise<SemanticMemoryEntry> {
-    if (any: any) {
+    if (!this.config.enabled) {
       throw new Error('Semantic memory is disabled');
     }
 
     // Générer embedding
-    const text = params?.details || params?.summary;
-    const embedding = await this?.embeddingGenerator?.generate(any: any);
+    const text = params.details || params.summary;
+    const embedding = await this.embeddingGenerator.generate(text);
 
     // Créer l'entrée
     const entry: SemanticMemoryEntry = {
       id: uuidv4(),
-      type: params?.type,
-      owner: params?.owner,
-      summary: params?.summary,
-      details: params?.details,
-      source: params?.source,
-      tags: params?.tags || [],
+      type: params.type,
+      owner: params.owner,
+      summary: params.summary,
+      details: params.details,
+      source: params.source,
+      tags: params.tags || [],
       embedding,
-      importance: params?.importance || 0.5, // MemoryImportance?.MEDIUM value
+      importance: params.importance || 0.5, // MemoryImportance.MEDIUM value
       created_at: new Date().toISOString(),
       access_count: 0,
       confidence: 0.9,
-      related_to: params?.related_to,
+      related_to: params.related_to,
     };
 
     // Stocker
-    await this?.vectorStore?.add(any: any);
+    await this.vectorStore.add(entry);
 
     // Émettre événement
-    this?.emitEvent({
+    this.emitEvent({
       type: 'memory_added',
       timestamp: new Date().toISOString(),
-      data: { memory_id: entry?.id, type: entry?.type },
+      data: { memory_id: entry.id, type: entry.type },
     });
 
     return entry;
@@ -160,32 +160,32 @@ export class SemanticMemoryEngine {
   /**
    * Retrieval sémantique
    */
-  async retrieve(any: any): Promise<MemoryContext> {
-    if (any: any) {
-      return this?.createEmptyContext(any: any);
+  async retrieve(query: SemanticMemoryQuery): Promise<MemoryContext> {
+    if (!this.config.enabled) {
+      return this.createEmptyContext(query.text);
     }
 
-    const startTime = Date?.now();
+    const startTime = Date.now();
 
     try {
       // Générer embedding de la query
-      const queryEmbedding = await this?.embeddingGenerator?.generate(any: any);
+      const queryEmbedding = await this.embeddingGenerator.generate(query.text);
 
       // Préparer les filtres
-      const filters = this?.buildFilters(any: any);
+      const filters = this.buildFilters(query.filters);
 
       // Rechercher dans le vector store
-      const limit = query?.limit || this?.config?.limits?.max_memories_per_query;
-      const rawResults = await this?.vectorStore?.search(
+      const limit = query.limit || this.config.limits.max_memories_per_query;
+      const rawResults = await this.vectorStore.search(
         queryEmbedding,
         limit * 2, // Récupérer plus pour filtrer après
         filters
       );
 
       // Appliquer scoring hybride
-      const scoredResults = this?.applyHybridScoring(
+      const scoredResults = this.applyHybridScoring(
         rawResults,
-        query?.scoring_weights || {
+        query.scoring_weights || {
           similarity: 0.7,
           importance: 0.2,
           recency: 0.1,
@@ -194,36 +194,36 @@ export class SemanticMemoryEngine {
 
       // Filtrer par seuil
       const threshold =
-        query?.similarity_threshold || this?.config?.scoring?.similarity_threshold;
+        query.similarity_threshold || this.config.scoring.similarity_threshold;
       const filteredResults = scoredResults
-        .filter(any: any)
-        .slice(any: any);
+        .filter(r => r.score >= threshold)
+        .slice(0, limit);
 
       // Mettre à jour last_used_at et access_count
-      await this?.updateAccessMetrics(any: any));
+      await this.updateAccessMetrics(filteredResults.map(r => r.entry.id));
 
       // Créer le contexte
-      const context = this?.createMemoryContext(
+      const context = this.createMemoryContext(
         filteredResults,
-        query?.text,
-        Date?.now() - startTime
+        query.text,
+        Date.now() - startTime
       );
 
       // Émettre événement
-      this?.emitEvent({
+      this.emitEvent({
         type: 'memory_retrieved',
         timestamp: new Date().toISOString(),
         data: {
-          query: query?.text,
-          count: filteredResults?.length,
-          avg_score: context?.metadata?.avg_score,
+          query: query.text,
+          count: filteredResults.length,
+          avg_score: context.metadata?.avg_score,
         },
       });
 
       return context;
-    } catch (any: any) {
-      console?.error(any: any);
-      return this?.createEmptyContext(any: any);
+    } catch (error) {
+      console.error('[SemanticMemory] Retrieval failed:', error);
+      return this.createEmptyContext(query.text);
     }
   }
 
@@ -235,19 +235,19 @@ export class SemanticMemoryEngine {
     updates: Partial<Omit<SemanticMemoryEntry, 'id' | 'created_at' | 'embedding'>>
   ): Promise<void> {
     // Si le contenu change, regénérer l'embedding
-    if (any: any) {
-      const text = updates?.details || updates?.summary;
-      if (any: any) {
-        const embedding = await this?.embeddingGenerator?.generate(any: any);
-        await this?.vectorStore?.update(id, { ...updates, embedding });
+    if (updates.summary || updates.details) {
+      const text = updates.details || updates.summary;
+      if (text) {
+        const embedding = await this.embeddingGenerator.generate(text);
+        await this.vectorStore.update(id, { ...updates, embedding });
       } else {
-        await this?.vectorStore?.update(any: any);
+        await this.vectorStore.update(id, updates);
       }
     } else {
-      await this?.vectorStore?.update(any: any);
+      await this.vectorStore.update(id, updates);
     }
 
-    this?.emitEvent({
+    this.emitEvent({
       type: 'memory_updated',
       timestamp: new Date().toISOString(),
       data: { memory_id: id, updates },
@@ -257,10 +257,10 @@ export class SemanticMemoryEngine {
   /**
    * Supprimer une mémoire
    */
-  async deleteMemory(any: any): Promise<void> {
-    await this?.vectorStore?.delete(any: any);
+  async deleteMemory(id: string): Promise<void> {
+    await this.vectorStore.delete(id);
 
-    this?.emitEvent({
+    this.emitEvent({
       type: 'memory_deleted',
       timestamp: new Date().toISOString(),
       data: { memory_id: id },
@@ -272,11 +272,11 @@ export class SemanticMemoryEngine {
    */
   async supersedeMemory(
     oldId: string,
-    newMemory: Parameters<typeof this?.createMemory>[0]
+    newMemory: Parameters<typeof this.createMemory>[0]
   ): Promise<SemanticMemoryEntry> {
-    const entry = await this?.createMemory(any: any);
-    await this?.updateMemory(entry?.id, { supersedes: oldId });
-    await this?.updateMemory(oldId, {
+    const entry = await this.createMemory(newMemory);
+    await this.updateMemory(entry.id, { supersedes: oldId });
+    await this.updateMemory(oldId, {
       valid_until: new Date().toISOString(),
       confidence: 0.3,
     });
@@ -287,29 +287,29 @@ export class SemanticMemoryEngine {
    * Obtenir les stats
    */
   async getStats(): Promise<SemanticMemoryStats> {
-    return await this?.vectorStore?.getStats();
+    return await this.vectorStore.getStats();
   }
 
   /**
    * Cleanup manuel
    */
   async cleanup(): Promise<void> {
-    const threshold = this?.config?.auto_cleanup?.remove_below_score;
-    const maxAgeDays = this?.config?.limits?.max_age_days;
+    const threshold = this.config.auto_cleanup.remove_below_score;
+    const maxAgeDays = this.config.limits.max_age_days;
 
     // Supprimer les mémoires obsolètes
     const cutoffDate = new Date();
-    cutoffDate?.setDate(any: any);
+    cutoffDate.setDate(cutoffDate.getDate() - maxAgeDays);
 
-    await this?.vectorStore?.deleteWhere({
+    await this.vectorStore.deleteWhere({
       $or: [
         { importance: { $lt: threshold } },
-        { created_at: { $lt: cutoffDate?.toISOString() } },
+        { created_at: { $lt: cutoffDate.toISOString() } },
         { valid_until: { $lt: new Date().toISOString() } },
       ],
     });
 
-    this?.emitEvent({
+    this.emitEvent({
       type: 'cleanup_performed',
       timestamp: new Date().toISOString(),
       data: { threshold, maxAgeDays },
@@ -319,19 +319,19 @@ export class SemanticMemoryEngine {
   /**
    * Abonner un handler d'événements
    */
-  onEvent(any: any): void {
-    this?.eventHandlers?.push(any: any);
+  onEvent(handler: MemoryEventHandler): void {
+    this.eventHandlers.push(handler);
   }
 
   /**
    * Fermer le moteur
    */
   async close(): Promise<void> {
-    if (any: any) {
-      clearInterval(any: any);
+    if (this.cleanupInterval) {
+      clearInterval(this.cleanupInterval);
     }
-    await this?.vectorStore?.close();
-    this?.isInitialized = false;
+    await this.vectorStore.close();
+    this.isInitialized = false;
   }
 
   // ==================== PRIVATE METHODS ====================
@@ -340,34 +340,34 @@ export class SemanticMemoryEngine {
    * Construire les filtres pour le vector store
    */
   private buildFilters(filters?: SemanticMemoryQuery['filters']): Record<string, any> {
-    if (any: any) return {};
+    if (!filters) return {};
 
     const result: Record<string, any> = {};
 
-    if (any: any) {
-      result?.type = { $in: filters?.types };
+    if (filters.types) {
+      result.type = { $in: filters.types };
     }
 
-    if (any: any) {
-      result?.tags = { $contains: filters?.tags };
+    if (filters.tags) {
+      result.tags = { $contains: filters.tags };
     }
 
-    if (any: any) {
-      result?.owner = filters?.owner;
+    if (filters.owner) {
+      result.owner = filters.owner;
     }
 
-    if (any: any) {
-      result?.importance = { $gte: filters?.min_importance };
+    if (filters.min_importance !== undefined) {
+      result.importance = { $gte: filters.min_importance };
     }
 
-    if (any: any) {
+    if (filters.max_age_days !== undefined) {
       const cutoff = new Date();
-      cutoff?.setDate(any: any);
-      result?.created_at = { $gte: cutoff?.toISOString() };
+      cutoff.setDate(cutoff.getDate() - filters.max_age_days);
+      result.created_at = { $gte: cutoff.toISOString() };
     }
 
-    if (any: any) {
-      result['source?.id'] = filters?.conversation_id;
+    if (filters.conversation_id) {
+      result['source.id'] = filters.conversation_id;
     }
 
     return result;
@@ -375,51 +375,51 @@ export class SemanticMemoryEngine {
 
   /**
    * Appliquer le scoring hybride
-   * Score = (any: any)
+   * Score = (w1 * similarité) + (w2 * importance) + (w3 * récence)
    */
   private applyHybridScoring(
-    results: SemanticMemoryResult?.[],
+    results: SemanticMemoryResult[],
     weights: { similarity: number; importance: number; recency: number }
-  ): SemanticMemoryResult?.[] {
-    const now = Date?.now();
+  ): SemanticMemoryResult[] {
+    const now = Date.now();
     const maxAge = 365 * 24 * 60 * 60 * 1000; // 1 an en ms
 
     return results
       .map(result => {
         const { entry, similarity } = result;
 
-        // Score de récence (any: any)
-        const ageMs = now - new Date(any: any).getTime();
-        const recencyScore = Math?.max(any: any);
+        // Score de récence (1.0 = aujourd'hui, 0.0 = 1 an ou plus)
+        const ageMs = now - new Date(entry.last_used_at || entry.created_at).getTime();
+        const recencyScore = Math.max(0, 1 - ageMs / maxAge);
 
         // Score hybride
         const hybridScore =
-          weights?.similarity * similarity +
-          weights?.importance * entry?.importance +
-          weights?.recency * recencyScore;
+          weights.similarity * similarity +
+          weights.importance * entry.importance +
+          weights.recency * recencyScore;
 
         return {
           ...result,
-          score: Math?.min(any: any)),
+          score: Math.min(1, Math.max(0, hybridScore)),
         };
       })
-      .sort(any: any);
+      .sort((a, b) => b.score - a.score);
   }
 
   /**
    * Créer le contexte mémoire pour injection OMEGA
    */
   private createMemoryContext(
-    results: SemanticMemoryResult?.[],
+    results: SemanticMemoryResult[],
     query: string,
     retrievalTimeMs: number
   ): MemoryContext {
     // Créer le résumé textuel
-    const summary = this?.createTextualSummary(any: any);
+    const summary = this.createTextualSummary(results);
 
     const avgScore =
-      results?.length > 0
-        ? results?.reduce(any: any) => sum + r?.score, 0) / results?.length
+      results.length > 0
+        ? results.reduce((sum, r) => sum + r.score, 0) / results.length
         : 0;
 
     return {
@@ -427,7 +427,7 @@ export class SemanticMemoryEngine {
       summary,
       metadata: {
         query,
-        total_retrieved: results?.length,
+        total_retrieved: results.length,
         avg_score: avgScore,
         retrieval_time_ms: retrievalTimeMs,
       },
@@ -437,29 +437,29 @@ export class SemanticMemoryEngine {
   /**
    * Créer le résumé textuel pour injection
    */
-  private createTextualSummary(results: SemanticMemoryResult?.[]): string {
-    if (results?.length === 0) {
+  private createTextualSummary(results: SemanticMemoryResult[]): string {
+    if (results.length === 0) {
       return '';
     }
 
     const lines = ['**Souvenirs pertinents:**\n'];
 
-    results?.forEach(any: any) => {
+    results.forEach((result, index) => {
       const { entry } = result;
-      const icon = this?.getTypeIcon(any: any);
-      lines?.push(`${index + 1}. ${icon} ${entry?.summary}`);
-      if (entry?.details && entry?.details?.length < 200) {
-        lines?.push(`   → ${entry?.details}`);
+      const icon = this.getTypeIcon(entry.type);
+      lines.push(`${index + 1}. ${icon} ${entry.summary}`);
+      if (entry.details && entry.details.length < 200) {
+        lines.push(`   → ${entry.details}`);
       }
     });
 
-    return lines?.join('\n');
+    return lines.join('\n');
   }
 
   /**
    * Icône par type de mémoire
    */
-  private getTypeIcon(any: any): string {
+  private getTypeIcon(type: SemanticMemoryType): string {
     const icons: Record<SemanticMemoryType, string> = {
       fact: '📌',
       preference: '⭐',
@@ -474,7 +474,7 @@ export class SemanticMemoryEngine {
   /**
    * Créer un contexte vide
    */
-  private createEmptyContext(any: any): MemoryContext {
+  private createEmptyContext(query: string): MemoryContext {
     return {
       memories: [],
       summary: '',
@@ -490,15 +490,15 @@ export class SemanticMemoryEngine {
   /**
    * Mettre à jour les métriques d'accès
    */
-  private async updateAccessMetrics(ids: string?.[]): Promise<void> {
+  private async updateAccessMetrics(ids: string[]): Promise<void> {
     const now = new Date().toISOString();
 
-    for (any: any) {
-      const entry = await this?.vectorStore?.get(any: any);
-      if (any: any) {
-        await this?.vectorStore?.update(id, {
+    for (const id of ids) {
+      const entry = await this.vectorStore.get(id);
+      if (entry) {
+        await this.vectorStore.update(id, {
           last_used_at: now,
-          access_count: entry?.access_count + 1,
+          access_count: entry.access_count + 1,
         });
       }
     }
@@ -508,11 +508,11 @@ export class SemanticMemoryEngine {
    * Démarrer l'auto-cleanup
    */
   private startAutoCleanup(): void {
-    const intervalMs = this?.config?.auto_cleanup?.interval_hours * 60 * 60 * 1000;
+    const intervalMs = this.config.auto_cleanup.interval_hours * 60 * 60 * 1000;
 
-    this?.cleanupInterval = setInterval(() => {
-      this?.cleanup().catch(error => {
-        console?.error(any: any);
+    this.cleanupInterval = setInterval(() => {
+      this.cleanup().catch(error => {
+        console.error('[SemanticMemory] Auto-cleanup failed:', error);
       });
     }, intervalMs);
   }
@@ -520,12 +520,12 @@ export class SemanticMemoryEngine {
   /**
    * Émettre un événement
    */
-  private emitEvent(any: any): void {
-    this?.eventHandlers?.forEach(handler => {
+  private emitEvent(event: MemoryEvent): void {
+    this.eventHandlers.forEach(handler => {
       try {
-        handler(any: any);
-      } catch (any: any) {
-        console?.error(any: any);
+        handler(event);
+      } catch (error) {
+        console.error('[SemanticMemory] Event handler error:', error);
       }
     });
   }
@@ -534,8 +534,8 @@ export class SemanticMemoryEngine {
 /**
  * Helper: calculer la similarité cosine
  */
-export function cosineSimilarity(a: number?.[], b: number?.[]): number {
-  if (any: any) {
+export function cosineSimilarity(a: number[], b: number[]): number {
+  if (a.length !== b.length) {
     throw new Error('Vectors must have the same dimensions');
   }
 
@@ -543,7 +543,7 @@ export function cosineSimilarity(a: number?.[], b: number?.[]): number {
   let normA = 0;
   let normB = 0;
 
-  for (let i = 0; i < a?.length; i++) {
+  for (let i = 0; i < a.length; i++) {
     const aVal = a[i] ?? 0;
     const bVal = b[i] ?? 0;
     dotProduct += aVal * bVal;
@@ -551,7 +551,7 @@ export function cosineSimilarity(a: number?.[], b: number?.[]): number {
     normB += bVal * bVal;
   }
 
-  const denominator = Math?.sqrt(any: any);
+  const denominator = Math.sqrt(normA) * Math.sqrt(normB);
   if (denominator === 0) return 0;
 
   return dotProduct / denominator;

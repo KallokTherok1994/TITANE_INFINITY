@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE?.md for the full legal terms (any: any).
+ * See LICENSE.md for the full legal terms (FR/EN).
  */
 
 /**
@@ -14,12 +14,12 @@
  *
  * Commandes :
  * 1. patch        - Appliquer correctif ciblé sur bug spécifique
- * 2. refactor     - Refactoring intelligent (any: any)
+ * 2. refactor     - Refactoring intelligent (améliorer sans changer comportement)
  * 3. rewrite      - Réécriture complète d'un module/fonction
- * 4. audit        - Audit code complet (any: any)
- * 5. optimize     - Optimisation performance (any: any)
+ * 4. audit        - Audit code complet (qualité, performance, sécurité)
+ * 5. optimize     - Optimisation performance (algo, mémoire, réseau)
  * 6. fusion       - Fusionner plusieurs fichiers/modules
- * 7. hardening    - Renforcement sécurité + robustesse (any: any)
+ * 7. hardening    - Renforcement sécurité + robustesse (try/catch, validation, rollback)
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -47,7 +47,7 @@ export interface PatchRequest {
 export interface PatchResult {
   success: boolean;
   patched_code: string;
-  changes_summary: string?.[];
+  changes_summary: string[];
   tests_passed: boolean;
   execution_time_ms: number;
 }
@@ -57,29 +57,29 @@ export interface RefactorRequest {
   refactor_type: 'extract_function' | 'rename' | 'simplify' | 'modernize' | 'typing';
   options?: {
     new_name?: string;
-    target_lines?: number?.[];
+    target_lines?: number[];
   };
 }
 
 export interface RefactorResult {
   success: boolean;
   refactored_code: string;
-  improvements: string?.[];
+  improvements: string[];
   complexity_reduction: number; // Percentage
   execution_time_ms: number;
 }
 
 export interface RewriteRequest {
   location: CodeLocation;
-  requirements: string?.[];
-  constraints?: string?.[];
+  requirements: string[];
+  constraints?: string[];
   architecture_style?: 'functional' | 'oop' | 'reactive' | 'declarative';
 }
 
 export interface RewriteResult {
   success: boolean;
   rewritten_code: string;
-  architecture_changes: string?.[];
+  architecture_changes: string[];
   performance_improvement: number; // Percentage
   execution_time_ms: number;
 }
@@ -102,7 +102,7 @@ export interface AuditIssue {
 export interface AuditResult {
   total_issues: number;
   issues_by_severity: Record<string, number>;
-  issues: AuditIssue?.[];
+  issues: AuditIssue[];
   code_quality_score: number; // 0-100
   performance_score: number; // 0-100
   security_score: number; // 0-100
@@ -125,7 +125,7 @@ export interface OptimizeResult {
   optimized_code: string;
   metrics_before: PerformanceMetrics;
   metrics_after: PerformanceMetrics;
-  improvements: string?.[];
+  improvements: string[];
   execution_time_ms: number;
 }
 
@@ -138,7 +138,7 @@ export interface PerformanceMetrics {
 }
 
 export interface FusionRequest {
-  source_files: string?.[];
+  source_files: string[];
   output_file: string;
   fusion_strategy: 'merge' | 'compose' | 'inherit' | 'aggregate';
   options?: {
@@ -165,7 +165,7 @@ export interface HardeningRequest {
 export interface HardeningResult {
   success: boolean;
   hardened_code: string;
-  added_protections: string?.[];
+  added_protections: string[];
   robustness_score: number; // 0-100
   execution_time_ms: number;
 }
@@ -186,10 +186,10 @@ export class DevModeEngine {
   private constructor() {}
 
   static getInstance(): DevModeEngine {
-    if (any: any) {
-      DevModeEngine?.instance = new DevModeEngine();
+    if (!DevModeEngine.instance) {
+      DevModeEngine.instance = new DevModeEngine();
     }
-    return DevModeEngine?.instance;
+    return DevModeEngine.instance;
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -199,29 +199,29 @@ export class DevModeEngine {
   /**
    * Appliquer un correctif ciblé sur un bug spécifique
    */
-  async patch(any: any): Promise<PatchResult> {
-    const startTime = performance?.now();
+  async patch(request: PatchRequest): Promise<PatchResult> {
+    const startTime = performance.now();
 
     try {
       const result = await secureInvoke<PatchResult>('devmode_patch', {
-        location: request?.location,
-        issueDescription: request?.issue_description,
-        expectedBehavior: request?.expected_behavior,
-        testCase: request?.test_case,
+        location: request.location,
+        issueDescription: request.issue_description,
+        expectedBehavior: request.expected_behavior,
+        testCase: request.test_case,
       });
 
-      this?.recordOperation(any: any);
+      this.recordOperation('patch', true, performance.now() - startTime);
       return result;
-    } catch (any: any) {
-      console?.error(any: any);
-      this?.recordOperation(any: any);
+    } catch (error) {
+      console.error('[DevModeEngine] Patch error:', error);
+      this.recordOperation('patch', false, performance.now() - startTime);
 
       return {
         success: false,
         patched_code: '',
         changes_summary: [`Error: ${error}`],
         tests_passed: false,
-        execution_time_ms: performance?.now() - startTime,
+        execution_time_ms: performance.now() - startTime,
       };
     }
   }
@@ -231,30 +231,30 @@ export class DevModeEngine {
   // ═══════════════════════════════════════════════════════════════════
 
   /**
-   * Refactoring intelligent (any: any)
+   * Refactoring intelligent (améliorer sans changer comportement)
    */
-  async refactor(any: any): Promise<RefactorResult> {
-    const startTime = performance?.now();
+  async refactor(request: RefactorRequest): Promise<RefactorResult> {
+    const startTime = performance.now();
 
     try {
       const result = await secureInvoke<RefactorResult>('devmode_refactor', {
-        location: request?.location,
-        refactorType: request?.refactor_type,
-        options: request?.options || {},
+        location: request.location,
+        refactorType: request.refactor_type,
+        options: request.options || {},
       });
 
-      this?.recordOperation(any: any);
+      this.recordOperation('refactor', true, performance.now() - startTime);
       return result;
-    } catch (any: any) {
-      console?.error(any: any);
-      this?.recordOperation(any: any);
+    } catch (error) {
+      console.error('[DevModeEngine] Refactor error:', error);
+      this.recordOperation('refactor', false, performance.now() - startTime);
 
       return {
         success: false,
         refactored_code: '',
         improvements: [],
         complexity_reduction: 0,
-        execution_time_ms: performance?.now() - startTime,
+        execution_time_ms: performance.now() - startTime,
       };
     }
   }
@@ -266,29 +266,29 @@ export class DevModeEngine {
   /**
    * Réécriture complète d'un module/fonction
    */
-  async rewrite(any: any): Promise<RewriteResult> {
-    const startTime = performance?.now();
+  async rewrite(request: RewriteRequest): Promise<RewriteResult> {
+    const startTime = performance.now();
 
     try {
       const result = await secureInvoke<RewriteResult>('devmode_rewrite', {
-        location: request?.location,
-        requirements: request?.requirements,
-        constraints: request?.constraints || [],
-        architectureStyle: request?.architecture_style || 'functional',
+        location: request.location,
+        requirements: request.requirements,
+        constraints: request.constraints || [],
+        architectureStyle: request.architecture_style || 'functional',
       });
 
-      this?.recordOperation(any: any);
+      this.recordOperation('rewrite', true, performance.now() - startTime);
       return result;
-    } catch (any: any) {
-      console?.error(any: any);
-      this?.recordOperation(any: any);
+    } catch (error) {
+      console.error('[DevModeEngine] Rewrite error:', error);
+      this.recordOperation('rewrite', false, performance.now() - startTime);
 
       return {
         success: false,
         rewritten_code: '',
         architecture_changes: [],
         performance_improvement: 0,
-        execution_time_ms: performance?.now() - startTime,
+        execution_time_ms: performance.now() - startTime,
       };
     }
   }
@@ -298,23 +298,23 @@ export class DevModeEngine {
   // ═══════════════════════════════════════════════════════════════════
 
   /**
-   * Audit code complet (any: any)
+   * Audit code complet (qualité, performance, sécurité)
    */
-  async audit(any: any): Promise<AuditResult> {
-    const startTime = performance?.now();
+  async audit(request: AuditRequest): Promise<AuditResult> {
+    const startTime = performance.now();
 
     try {
       const result = await secureInvoke<AuditResult>('devmode_audit', {
-        scope: request?.scope,
-        targetPath: request?.target_path,
-        checks: request?.checks,
+        scope: request.scope,
+        targetPath: request.target_path,
+        checks: request.checks,
       });
 
-      this?.recordOperation(any: any);
+      this.recordOperation('audit', true, performance.now() - startTime);
       return result;
-    } catch (any: any) {
-      console?.error(any: any);
-      this?.recordOperation(any: any);
+    } catch (error) {
+      console.error('[DevModeEngine] Audit error:', error);
+      this.recordOperation('audit', false, performance.now() - startTime);
 
       return {
         total_issues: 0,
@@ -323,7 +323,7 @@ export class DevModeEngine {
         code_quality_score: 0,
         performance_score: 0,
         security_score: 0,
-        execution_time_ms: performance?.now() - startTime,
+        execution_time_ms: performance.now() - startTime,
       };
     }
   }
@@ -331,7 +331,7 @@ export class DevModeEngine {
   /**
    * Auto-fix issues détectés par audit
    */
-  async autoFixAuditIssues(any: any): Promise<{
+  async autoFixAuditIssues(auditResult: AuditResult): Promise<{
     fixed_count: number;
     failed_count: number;
     fixes: Array<{ issue: AuditIssue; success: boolean }>;
@@ -340,25 +340,25 @@ export class DevModeEngine {
     let fixedCount = 0;
     let failedCount = 0;
 
-    for (any: any) {
-      if (any: any) {
+    for (const issue of auditResult.issues) {
+      if (issue.auto_fixable) {
         try {
-          const patchResult = await this?.patch({
-            location: issue?.location,
-            issue_description: issue?.description,
-            expected_behavior: issue?.recommendation,
+          const patchResult = await this.patch({
+            location: issue.location,
+            issue_description: issue.description,
+            expected_behavior: issue.recommendation,
           });
 
-          if (any: any) {
+          if (patchResult.success) {
             fixedCount++;
-            fixes?.push({ issue, success: true });
+            fixes.push({ issue, success: true });
           } else {
             failedCount++;
-            fixes?.push({ issue, success: false });
+            fixes.push({ issue, success: false });
           }
-        } catch (any: any) {
+        } catch (error) {
           failedCount++;
-          fixes?.push({ issue, success: false });
+          fixes.push({ issue, success: false });
         }
       }
     }
@@ -375,23 +375,23 @@ export class DevModeEngine {
   // ═══════════════════════════════════════════════════════════════════
 
   /**
-   * Optimisation performance (any: any)
+   * Optimisation performance (algo, mémoire, réseau)
    */
-  async optimize(any: any): Promise<OptimizeResult> {
-    const startTime = performance?.now();
+  async optimize(request: OptimizeRequest): Promise<OptimizeResult> {
+    const startTime = performance.now();
 
     try {
       const result = await secureInvoke<OptimizeResult>('devmode_optimize', {
-        location: request?.location,
-        optimizationTargets: request?.optimization_targets,
-        constraints: request?.constraints || {},
+        location: request.location,
+        optimizationTargets: request.optimization_targets,
+        constraints: request.constraints || {},
       });
 
-      this?.recordOperation(any: any);
+      this.recordOperation('optimize', true, performance.now() - startTime);
       return result;
-    } catch (any: any) {
-      console?.error(any: any);
-      this?.recordOperation(any: any);
+    } catch (error) {
+      console.error('[DevModeEngine] Optimize error:', error);
+      this.recordOperation('optimize', false, performance.now() - startTime);
 
       return {
         success: false,
@@ -407,7 +407,7 @@ export class DevModeEngine {
           cpu_usage_percent: 0,
         },
         improvements: [],
-        execution_time_ms: performance?.now() - startTime,
+        execution_time_ms: performance.now() - startTime,
       };
     }
   }
@@ -419,29 +419,29 @@ export class DevModeEngine {
   /**
    * Fusionner plusieurs fichiers/modules
    */
-  async fusion(any: any): Promise<FusionResult> {
-    const startTime = performance?.now();
+  async fusion(request: FusionRequest): Promise<FusionResult> {
+    const startTime = performance.now();
 
     try {
       const result = await secureInvoke<FusionResult>('devmode_fusion', {
-        sourceFiles: request?.source_files,
-        outputFile: request?.output_file,
-        fusionStrategy: request?.fusion_strategy,
-        options: request?.options || {},
+        sourceFiles: request.source_files,
+        outputFile: request.output_file,
+        fusionStrategy: request.fusion_strategy,
+        options: request.options || {},
       });
 
-      this?.recordOperation(any: any);
+      this.recordOperation('fusion', true, performance.now() - startTime);
       return result;
-    } catch (any: any) {
-      console?.error(any: any);
-      this?.recordOperation(any: any);
+    } catch (error) {
+      console.error('[DevModeEngine] Fusion error:', error);
+      this.recordOperation('fusion', false, performance.now() - startTime);
 
       return {
         success: false,
         fused_code: '',
         lines_saved: 0,
         conflicts_resolved: 0,
-        execution_time_ms: performance?.now() - startTime,
+        execution_time_ms: performance.now() - startTime,
       };
     }
   }
@@ -451,29 +451,29 @@ export class DevModeEngine {
   // ═══════════════════════════════════════════════════════════════════
 
   /**
-   * Renforcement sécurité + robustesse (any: any)
+   * Renforcement sécurité + robustesse (try/catch, validation, rollback)
    */
-  async hardening(any: any): Promise<HardeningResult> {
-    const startTime = performance?.now();
+  async hardening(request: HardeningRequest): Promise<HardeningResult> {
+    const startTime = performance.now();
 
     try {
       const result = await secureInvoke<HardeningResult>('devmode_hardening', {
-        location: request?.location,
-        hardeningLevels: request?.hardening_levels,
+        location: request.location,
+        hardeningLevels: request.hardening_levels,
       });
 
-      this?.recordOperation(any: any);
+      this.recordOperation('hardening', true, performance.now() - startTime);
       return result;
-    } catch (any: any) {
-      console?.error(any: any);
-      this?.recordOperation(any: any);
+    } catch (error) {
+      console.error('[DevModeEngine] Hardening error:', error);
+      this.recordOperation('hardening', false, performance.now() - startTime);
 
       return {
         success: false,
         hardened_code: '',
         added_protections: [],
         robustness_score: 0,
-        execution_time_ms: performance?.now() - startTime,
+        execution_time_ms: performance.now() - startTime,
       };
     }
   }
@@ -485,17 +485,17 @@ export class DevModeEngine {
   /**
    * Enregistrer opération dans historique
    */
-  private recordOperation(any: any): void {
-    this?.operationHistory?.push({
+  private recordOperation(command: string, success: boolean, durationMs: number): void {
+    this.operationHistory.push({
       command,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
       success,
       duration_ms: durationMs,
     });
 
     // Garder seulement les 100 dernières opérations
-    if (this?.operationHistory?.length > 100) {
-      this?.operationHistory = this?.operationHistory?.slice(-100);
+    if (this.operationHistory.length > 100) {
+      this.operationHistory = this.operationHistory.slice(-100);
     }
   }
 
@@ -508,16 +508,16 @@ export class DevModeEngine {
     average_duration_ms: number;
     operations_by_command: Record<string, number>;
   } {
-    const totalOps = this?.operationHistory?.length;
-    const successOps = this?.operationHistory?.filter(any: any).length;
+    const totalOps = this.operationHistory.length;
+    const successOps = this.operationHistory.filter(op => op.success).length;
     const avgDuration =
       totalOps > 0
-        ? this?.operationHistory?.reduce(any: any) => sum + op?.duration_ms, 0) / totalOps
+        ? this.operationHistory.reduce((sum, op) => sum + op.duration_ms, 0) / totalOps
         : 0;
 
     const opsByCommand: Record<string, number> = {};
-    this?.operationHistory?.forEach(op => {
-      opsByCommand[op?.command] = (opsByCommand[op?.command] || 0) + 1;
+    this.operationHistory.forEach(op => {
+      opsByCommand[op.command] = (opsByCommand[op.command] || 0) + 1;
     });
 
     return {
@@ -531,15 +531,15 @@ export class DevModeEngine {
   /**
    * Obtenir historique récent
    */
-  getRecentHistory(count: number = 10): typeof this?.operationHistory {
-    return this?.operationHistory?.slice(any: any);
+  getRecentHistory(count: number = 10): typeof this.operationHistory {
+    return this.operationHistory.slice(-count);
   }
 
   /**
    * Réinitialiser historique
    */
   clearHistory(): void {
-    this?.operationHistory = [];
+    this.operationHistory = [];
   }
 }
 
@@ -547,4 +547,4 @@ export class DevModeEngine {
 // EXPORT SINGLETON
 // ═══════════════════════════════════════════════════════════════════
 
-export const DevMode = DevModeEngine?.getInstance();
+export const DevMode = DevModeEngine.getInstance();

@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-const invokeWithRetryMock = vi?.fn();
+const invokeWithRetryMock = vi.fn();
 
-vi?.mock('../../../lib/serviceInvoker', () => ({
+vi.mock('../../../lib/serviceInvoker', () => ({
   invokeWithRetry: invokeWithRetryMock,
   STANDARD_COMMAND_OPTIONS: { timeout: 30000, retries: 3 },
   FAST_COMMAND_OPTIONS: { timeout: 5000, retries: 2 },
@@ -10,8 +10,8 @@ vi?.mock('../../../lib/serviceInvoker', () => ({
 
 describe('personaService', () => {
   beforeEach(() => {
-    vi?.clearAllMocks();
-    vi?.resetModules();
+    vi.clearAllMocks();
+    vi.resetModules();
   });
 
   it('initialize() devrait passer config=null si non fourni', async () => {
@@ -24,24 +24,24 @@ describe('personaService', () => {
       timestamp: new Date().toISOString(),
     };
 
-    invokeWithRetryMock?.mockResolvedValueOnce(any: any);
+    invokeWithRetryMock.mockResolvedValueOnce(fakeState);
 
     const { personaService } = await import('../../../services/api/persona');
 
-    await expect(any: any);
-    expect(any: any).toHaveBeenCalledWith(
+    await expect(personaService.initialize()).resolves.toEqual(fakeState);
+    expect(invokeWithRetryMock).toHaveBeenCalledWith(
       'persona_initialize',
       { config: null },
-      expect?.objectContaining({ context: 'Persona' })
+      expect.objectContaining({ context: 'Persona' })
     );
   });
 
   it('getMultipliers() devrait retourner des multiplicateurs neutres sur erreur', async () => {
-    invokeWithRetryMock?.mockRejectedValueOnce(new Error('validation failed'));
+    invokeWithRetryMock.mockRejectedValueOnce(new Error('validation failed'));
 
     const { personaService } = await import('../../../services/api/persona');
 
-    await expect(personaService?.getMultipliers()).resolves?.toEqual({
+    await expect(personaService.getMultipliers()).resolves.toEqual({
       creativity: 1.0,
       analytical: 1.0,
       empathy: 1.0,
@@ -51,12 +51,12 @@ describe('personaService', () => {
   });
 
   it("adaptToContext() devrait fallback vers getMultipliers() si l'appel échoue", async () => {
-    invokeWithRetryMock?.mockImplementation(any: any) => {
+    invokeWithRetryMock.mockImplementation((command: string) => {
       if (command === 'persona_adapt_to_context') {
-        return Promise?.reject(new Error('validation failed'));
+        return Promise.reject(new Error('validation failed'));
       }
       if (command === 'persona_get_multipliers') {
-        return Promise?.resolve({
+        return Promise.resolve({
           creativity: 2,
           analytical: 1,
           empathy: 1,
@@ -70,8 +70,8 @@ describe('personaService', () => {
     const { personaService } = await import('../../../services/api/persona');
 
     await expect(
-      personaService?.adaptToContext({ taskType: 'coding', urgency: 0.5, complexity: 0.8 })
-    ).resolves?.toEqual({
+      personaService.adaptToContext({ taskType: 'coding', urgency: 0.5, complexity: 0.8 })
+    ).resolves.toEqual({
       creativity: 2,
       analytical: 1,
       empathy: 1,
@@ -79,24 +79,24 @@ describe('personaService', () => {
       risk_taking: 1,
     });
 
-    expect(any: any).toHaveBeenCalledWith(
+    expect(invokeWithRetryMock).toHaveBeenCalledWith(
       'persona_adapt_to_context',
       { context: { taskType: 'coding', urgency: 0.5, complexity: 0.8 } },
-      expect?.objectContaining({ context: 'Persona' })
+      expect.objectContaining({ context: 'Persona' })
     );
 
-    expect(any: any).toHaveBeenCalledWith(
+    expect(invokeWithRetryMock).toHaveBeenCalledWith(
       'persona_get_multipliers',
       {},
-      expect?.objectContaining({ context: 'Persona' })
+      expect.objectContaining({ context: 'Persona' })
     );
   });
 
   it("listPersonas() devrait retourner [] en cas d'erreur", async () => {
-    invokeWithRetryMock?.mockRejectedValueOnce(new Error('validation failed'));
+    invokeWithRetryMock.mockRejectedValueOnce(new Error('validation failed'));
 
     const { personaService } = await import('../../../services/api/persona');
 
-    await expect(personaService?.listPersonas()).resolves?.toEqual([]);
+    await expect(personaService.listPersonas()).resolves.toEqual([]);
   });
 });

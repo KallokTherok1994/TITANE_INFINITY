@@ -3,13 +3,13 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE?.md for the full legal terms (any: any).
+ * See LICENSE.md for the full legal terms (FR/EN).
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ v15 — MEMORY INTEGRATION
- *   Pont entre Chat IA et Memory Core (any: any)
+ *   Pont entre Chat IA et Memory Core (court/moyen/long terme)
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -56,7 +56,7 @@ export interface MemoryLoadConfig {
   maxProjects?: number;
   maxDecisions?: number;
   maxKnowledge?: number;
-  timeWindow?: string; // e?.g., "7d", "24h", "30d"
+  timeWindow?: string; // e.g., "7d", "24h", "30d"
 }
 
 /**
@@ -83,14 +83,14 @@ export class MemoryIntegration {
     } = config;
 
     try {
-      const [projects, decisions, knowledge, rituals, timeline] = await Promise?.all([
-        includeProjects ? this?.loadActiveProjects(any: any) : Promise?.resolve([]),
+      const [projects, decisions, knowledge, rituals, timeline] = await Promise.all([
+        includeProjects ? this.loadActiveProjects(maxProjects) : Promise.resolve([]),
         includeDecisions
-          ? this?.loadRecentDecisions(any: any)
-          : Promise?.resolve([]),
-        includeKnowledge ? this?.loadRelevantKnowledge(any: any) : Promise?.resolve([]),
-        includeRituals ? this?.loadActiveRituals() : Promise?.resolve([]),
-        includeTimeline ? this?.loadTimeline(any: any) : Promise?.resolve([]),
+          ? this.loadRecentDecisions(maxDecisions, timeWindow)
+          : Promise.resolve([]),
+        includeKnowledge ? this.loadRelevantKnowledge(maxKnowledge) : Promise.resolve([]),
+        includeRituals ? this.loadActiveRituals() : Promise.resolve([]),
+        includeTimeline ? this.loadTimeline(timeWindow) : Promise.resolve([]),
       ]);
 
       return {
@@ -100,9 +100,9 @@ export class MemoryIntegration {
         activeRituals: rituals,
         timeline,
       };
-    } catch (any: any) {
-      logger?.error(any: any);
-      return this?.getEmptyContext();
+    } catch (error) {
+      logger.error('Failed to load memory context', error);
+      return this.getEmptyContext();
     }
   }
 
@@ -117,46 +117,46 @@ export class MemoryIntegration {
     context?: Partial<MemoryContext>;
   }): Promise<void> {
     try {
-      await memoryService?.saveChatInteraction({
-        userMessage: data?.userMessage,
-        aiResponse: data?.aiResponse,
-        mode: data?.mode,
-        emotionState: data?.emotionState,
+      await memoryService.saveChatInteraction({
+        userMessage: data.userMessage,
+        aiResponse: data.aiResponse,
+        mode: data.mode,
+        emotionState: data.emotionState,
         timestamp: new Date().toISOString(),
       });
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Failed to save interaction', error);
     }
   }
 
   /** Sauvegarde une entrée structurée (decision, listening_entry, etc.) */
-  async saveStructuredEntry(any: any): Promise<void> {
+  async saveStructuredEntry(entry: StructuredMemoryEntry): Promise<void> {
     const normalized: StructuredMemoryEntry = {
       ...entry,
-      id: entry?.id || this?.generateEntryId(),
-      timestamp: entry?.timestamp || new Date().toISOString(),
+      id: entry.id || this.generateEntryId(),
+      timestamp: entry.timestamp || new Date().toISOString(),
     };
 
     try {
-      await memoryService?.saveStructuredEntry(any: any);
-    } catch (any: any) {
-      logger?.error(any: any);
+      await memoryService.saveStructuredEntry(normalized);
+    } catch (error) {
+      logger.error('Failed to save structured entry', error);
     }
   }
 
   /**
    * Charge projets actifs
    */
-  private async loadActiveProjects(any: any): Promise<ProjectSummary?.[]> {
-    const cached = this?.getFromCache('active_projects');
-    if (any: any) return cached as ProjectSummary?.[];
+  private async loadActiveProjects(limit: number): Promise<ProjectSummary[]> {
+    const cached = this.getFromCache('active_projects');
+    if (cached) return cached as ProjectSummary[];
 
     try {
-      const projects = await memoryService?.getActiveProjects(any: any);
-      this?.setCache(any: any);
+      const projects = await memoryService.getActiveProjects(limit);
+      this.setCache('active_projects', projects);
       return projects;
-    } catch (any: any) {
-      logger?.warn(any: any);
+    } catch (error) {
+      logger.warn('Active projects unavailable', error);
       return [];
     }
   }
@@ -167,16 +167,16 @@ export class MemoryIntegration {
   private async loadRecentDecisions(
     limit: number,
     timeWindow: string
-  ): Promise<DecisionSummary?.[]> {
-    const cached = this?.getFromCache('recent_decisions');
-    if (any: any) return cached as DecisionSummary?.[];
+  ): Promise<DecisionSummary[]> {
+    const cached = this.getFromCache('recent_decisions');
+    if (cached) return cached as DecisionSummary[];
 
     try {
-      const decisions = await memoryService?.getRecentDecisions(any: any);
-      this?.setCache(any: any);
+      const decisions = await memoryService.getRecentDecisions(limit, timeWindow);
+      this.setCache('recent_decisions', decisions);
       return decisions;
-    } catch (any: any) {
-      logger?.warn(any: any);
+    } catch (error) {
+      logger.warn('Recent decisions unavailable', error);
       return [];
     }
   }
@@ -184,16 +184,16 @@ export class MemoryIntegration {
   /**
    * Charge connaissances pertinentes
    */
-  private async loadRelevantKnowledge(any: any): Promise<KnowledgeEntry?.[]> {
-    const cached = this?.getFromCache('relevant_knowledge');
-    if (any: any) return cached as KnowledgeEntry?.[];
+  private async loadRelevantKnowledge(limit: number): Promise<KnowledgeEntry[]> {
+    const cached = this.getFromCache('relevant_knowledge');
+    if (cached) return cached as KnowledgeEntry[];
 
     try {
-      const knowledge = await memoryService?.getKnowledge(any: any);
-      this?.setCache(any: any);
+      const knowledge = await memoryService.getKnowledge(limit);
+      this.setCache('relevant_knowledge', knowledge);
       return knowledge;
-    } catch (any: any) {
-      logger?.warn(any: any);
+    } catch (error) {
+      logger.warn('Relevant knowledge unavailable', error);
       return [];
     }
   }
@@ -201,16 +201,16 @@ export class MemoryIntegration {
   /**
    * Charge rituels actifs
    */
-  private async loadActiveRituals(): Promise<RitualInfo?.[]> {
-    const cached = this?.getFromCache('active_rituals');
-    if (any: any) return cached as RitualInfo?.[];
+  private async loadActiveRituals(): Promise<RitualInfo[]> {
+    const cached = this.getFromCache('active_rituals');
+    if (cached) return cached as RitualInfo[];
 
     try {
-      const rituals = await memoryService?.getActiveRituals();
-      this?.setCache(any: any);
+      const rituals = await memoryService.getActiveRituals();
+      this.setCache('active_rituals', rituals);
       return rituals;
-    } catch (any: any) {
-      logger?.warn(any: any);
+    } catch (error) {
+      logger.warn('Active rituals unavailable', error);
       return [];
     }
   }
@@ -218,11 +218,11 @@ export class MemoryIntegration {
   /**
    * Charge timeline récente
    */
-  private async loadTimeline(any: any): Promise<TimelineEntry?.[]> {
+  private async loadTimeline(timeWindow: string): Promise<TimelineEntry[]> {
     try {
-      return await memoryService?.getTimeline(any: any);
-    } catch (any: any) {
-      logger?.warn(any: any);
+      return await memoryService.getTimeline(timeWindow);
+    } catch (error) {
+      logger.warn('Timeline unavailable', error);
       return [];
     }
   }
@@ -230,28 +230,28 @@ export class MemoryIntegration {
   /**
    * Cache get
    */
-  private getFromCache(any: any): unknown | null {
-    const cached = this?.cache?.get(any: any);
-    if (any: any) return null;
+  private getFromCache(key: string): unknown | null {
+    const cached = this.cache.get(key);
+    if (!cached) return null;
 
-    const age = Date?.now() - cached?.timestamp;
-    if (any: any) {
-      this?.cache?.delete(any: any);
+    const age = Date.now() - cached.timestamp;
+    if (age > this.CACHE_TTL) {
+      this.cache.delete(key);
       return null;
     }
 
-    return cached?.data;
+    return cached.data;
   }
 
   /**
    * Cache set
    */
-  private setCache(any: any): void {
-    this?.cache?.set(key, { data, timestamp: Date?.now() });
+  private setCache(key: string, data: unknown): void {
+    this.cache.set(key, { data, timestamp: Date.now() });
   }
 
   /**
-   * Contexte vide (any: any)
+   * Contexte vide (fallback)
    */
   private getEmptyContext(): MemoryContext {
     return {
@@ -267,18 +267,18 @@ export class MemoryIntegration {
    * Invalide le cache
    */
   clearCache(): void {
-    this?.cache?.clear();
+    this.cache.clear();
   }
 
   private generateEntryId(): string {
     const globalCrypto =
       typeof globalThis !== 'undefined'
-        ? (any: any)
+        ? (globalThis.crypto as Crypto | undefined)
         : undefined;
-    if (any: any) {
-      return globalCrypto?.randomUUID();
+    if (globalCrypto?.randomUUID) {
+      return globalCrypto.randomUUID();
     }
-    return `mem_${Date?.now()}_${Math?.random().toString(16).slice(2, 8)}`;
+    return `mem_${Date.now()}_${Math.random().toString(16).slice(2, 8)}`;
   }
 }
 

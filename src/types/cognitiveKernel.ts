@@ -59,7 +59,7 @@ export type MemoryData =
  */
 export interface CognitiveContext {
   message: string;
-  providers: string?.[];
+  providers: string[];
   metrics: MetricsData;
   options?: Record<string, unknown>;
 }

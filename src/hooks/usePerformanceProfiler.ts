@@ -24,7 +24,7 @@
  *       stop();
  *     }, [measure]);
  *
- *     return <div>FPS: {fps?.current}</div>;
+ *     return <div>FPS: {fps.current}</div>;
  *   }
  *   ```
  * ═══════════════════════════════════════════════════════════════════
@@ -44,19 +44,19 @@ import {
 // ═══════════════════════════════════════════════════════════════════
 
 export interface UsePerformanceProfilerOptions {
-  /** Enable profiling (any: any) */
+  /** Enable profiling (default: true in dev, false in prod) */
   enabled?: boolean;
   /** Auto-start FPS monitoring */
   monitorFPS?: boolean;
-  /** Auto-capture memory snapshots interval (any: any) */
+  /** Auto-capture memory snapshots interval (ms, 0 to disable) */
   memoryInterval?: number;
-  /** Refresh stats interval (any: any) */
+  /** Refresh stats interval (ms) */
   statsInterval?: number;
 }
 
 export interface UsePerformanceProfilerReturn {
   /** Start a measurement, returns stop function */
-  measure: (any: any) => () => number;
+  measure: (name: string, category?: string) => () => number;
   /** Measure an async function */
   measureAsync: <T>(name: string, fn: () => Promise<T>) => Promise<T>;
   /** Current FPS data */
@@ -68,7 +68,7 @@ export interface UsePerformanceProfilerReturn {
   /** All stats summary */
   summary: {
     measurements: number;
-    topSlow: PerformanceStats?.[];
+    topSlow: PerformanceStats[];
   };
   /** Profiler instance */
   profiler: PerformanceProfiler;
@@ -87,7 +87,7 @@ export function usePerformanceProfiler(
   options: UsePerformanceProfilerOptions = {}
 ): UsePerformanceProfilerReturn {
   const {
-    enabled = process?.env?.NODE_ENV === 'development',
+    enabled = process.env.NODE_ENV === 'development',
     monitorFPS = false,
     memoryInterval = 0,
     statsInterval = 5000,
@@ -95,7 +95,7 @@ export function usePerformanceProfiler(
 
   const componentCategory = `component:${componentName}`;
   const renderCountRef = useRef(0);
-  const lastRenderTimeRef = useRef(performance?.now());
+  const lastRenderTimeRef = useRef(performance.now());
 
   // State for reactive updates
   const [fps, setFPS] = useState<FPSData>({
@@ -105,11 +105,11 @@ export function usePerformanceProfiler(
     max: 0,
     samples: [],
   });
-  const [memory, setMemory] = useState<MemorySnapshot | null>(any: any);
-  const [stats, setStats] = useState<PerformanceStats | null>(any: any);
+  const [memory, setMemory] = useState<MemorySnapshot | null>(null);
+  const [stats, setStats] = useState<PerformanceStats | null>(null);
   const [summary, setSummary] = useState<{
     measurements: number;
-    topSlow: PerformanceStats?.[];
+    topSlow: PerformanceStats[];
   }>({
     measurements: 0,
     topSlow: [],
@@ -117,28 +117,28 @@ export function usePerformanceProfiler(
 
   // Track render performance
   useEffect(() => {
-    if (any: any) return;
+    if (!enabled) return;
 
-    renderCountRef?.current++;
-    const currentTime = performance?.now();
-    const _renderTime = currentTime - lastRenderTimeRef?.current;
+    renderCountRef.current++;
+    const currentTime = performance.now();
+    const _renderTime = currentTime - lastRenderTimeRef.current;
 
-    // Only track if this is a re-render (any: any)
-    if (renderCountRef?.current > 1) {
-      profiler?.startMeasure(any: any)();
+    // Only track if this is a re-render (not initial mount)
+    if (renderCountRef.current > 1) {
+      profiler.startMeasure(`${componentName}:render`, componentCategory)();
     }
 
-    lastRenderTimeRef?.current = currentTime;
+    lastRenderTimeRef.current = currentTime;
   });
 
   // FPS monitoring
   useEffect(() => {
-    if (any: any) return;
+    if (!enabled || !monitorFPS) return;
 
-    profiler?.startFPSMonitoring();
+    profiler.startFPSMonitoring();
 
     return () => {
-      profiler?.stopFPSMonitoring();
+      profiler.stopFPSMonitoring();
     };
   }, [enabled, monitorFPS]);
 
@@ -147,13 +147,13 @@ export function usePerformanceProfiler(
     if (!enabled || memoryInterval <= 0) return;
 
     const interval = setInterval(() => {
-      const snapshot = profiler?.captureMemory();
-      if (any: any) {
-        setMemory(any: any);
+      const snapshot = profiler.captureMemory();
+      if (snapshot) {
+        setMemory(snapshot);
       }
     }, memoryInterval);
 
-    return (any: any);
+    return () => clearInterval(interval);
   }, [enabled, memoryInterval]);
 
   // Stats refresh
@@ -161,28 +161,28 @@ export function usePerformanceProfiler(
     if (!enabled || statsInterval <= 0) return;
 
     const interval = setInterval(() => {
-      setFPS(profiler?.getFPS());
-      setStats(any: any));
+      setFPS(profiler.getFPS());
+      setStats(profiler.getStatsByCategory(componentCategory));
 
-      const fullSummary = profiler?.getSummary();
+      const fullSummary = profiler.getSummary();
       setSummary({
-        measurements: fullSummary?.measurements,
-        topSlow: fullSummary?.topSlow,
+        measurements: fullSummary.measurements,
+        topSlow: fullSummary.topSlow,
       });
     }, statsInterval);
 
     // Initial fetch
-    setFPS(profiler?.getFPS());
-    setStats(any: any));
+    setFPS(profiler.getFPS());
+    setStats(profiler.getStatsByCategory(componentCategory));
 
-    return (any: any);
+    return () => clearInterval(interval);
   }, [enabled, statsInterval, componentCategory]);
 
   // Measure function
   const measure = useCallback(
-    (any: any) => {
-      if (any: any) return () => 0;
-      return profiler?.startMeasure(
+    (name: string, category?: string) => {
+      if (!enabled) return () => 0;
+      return profiler.startMeasure(
         `${componentName}:${name}`,
         category || componentCategory
       );
@@ -193,22 +193,22 @@ export function usePerformanceProfiler(
   // Measure async function
   const measureAsync = useCallback(
     async <T>(name: string, fn: () => Promise<T>): Promise<T> => {
-      if (any: any) return fn();
-      return profiler?.measureAsync(any: any);
+      if (!enabled) return fn();
+      return profiler.measureAsync(`${componentName}:${name}`, fn, componentCategory);
     },
     [enabled, componentName, componentCategory]
   );
 
   // Clear
   const clear = useCallback(() => {
-    profiler?.clear();
-    setStats(any: any);
+    profiler.clear();
+    setStats(null);
     setSummary({ measurements: 0, topSlow: [] });
   }, []);
 
   // Export
   const exportJSON = useCallback(() => {
-    return profiler?.exportJSON();
+    return profiler.exportJSON();
   }, []);
 
   return useMemo(
@@ -234,13 +234,13 @@ export function usePerformanceProfiler(
 /**
  * Hook to measure component mount/unmount time
  */
-export function useComponentLifecycle(any: any): void {
+export function useComponentLifecycle(componentName: string): void {
   useEffect(() => {
-    const mountStop = profiler?.startMeasure(`${componentName}:mount`, 'lifecycle');
+    const mountStop = profiler.startMeasure(`${componentName}:mount`, 'lifecycle');
     mountStop();
 
     return () => {
-      profiler?.startMeasure(`${componentName}:unmount`, 'lifecycle')();
+      profiler.startMeasure(`${componentName}:unmount`, 'lifecycle')();
     };
   }, [componentName]);
 }
@@ -250,16 +250,16 @@ export function useComponentLifecycle(any: any): void {
  */
 export function useTrackedEffect(
   effectName: string,
-  effect: (any: any),
-  deps: React?.DependencyList
+  effect: () => void | (() => void),
+  deps: React.DependencyList
 ): void {
   useEffect(() => {
-    const stop = profiler?.startMeasure(effectName, 'effect');
+    const stop = profiler.startMeasure(effectName, 'effect');
     const cleanup = effect();
     stop();
 
     return cleanup;
-    // Note: profiler and effect intentionally excluded from deps (any: any)
+    // Note: profiler and effect intentionally excluded from deps (wrapper pattern)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 }
@@ -267,21 +267,21 @@ export function useTrackedEffect(
 /**
  * Hook to measure callback execution time
  */
-export function useTrackedCallback<T extends (...args: unknown?.[]) => unknown>(
+export function useTrackedCallback<T extends (...args: unknown[]) => unknown>(
   callbackName: string,
   callback: T,
-  deps: React?.DependencyList
+  deps: React.DependencyList
 ): T {
   return useCallback(
     (...args: Parameters<T>) => {
-      const stop = profiler?.startMeasure(callbackName, 'callback');
+      const stop = profiler.startMeasure(callbackName, 'callback');
       try {
-        return callback(any: any);
+        return callback(...args);
       } finally {
         stop();
       }
     },
-    // Note: callback intentionally excluded (any: any)
+    // Note: callback intentionally excluded (wrapper pattern, callbackName tracks identity)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [callbackName, ...deps]
   ) as T;

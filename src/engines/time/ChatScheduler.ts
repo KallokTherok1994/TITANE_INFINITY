@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
  * TITANE∞ v∞ — CHAT SCHEDULER
- * Planification d'événements via langage naturel (any: any)
+ * Planification d'événements via langage naturel (Chat IA)
  * ═══════════════════════════════════════════════════════════════════
  *
  * Fonctionnalités:
@@ -23,7 +23,7 @@ import { logger } from '@/utils/logger';
 import { agendaEngine } from './AgendaEngine';
 // ARCHITECTURE RINGS COMPLIANT: Engines (Ring 2) don't import from Services (Ring 3)
 // ChatScheduler uses agendaEngine API which handles I/O via injected callbacks
-// See docs/ARCHITECTURE_RINGS?.md for details
+// See docs/ARCHITECTURE_RINGS.md for details
 
 // ═══════════════════════════════════════════════════════════════════
 // CONSTANTES
@@ -36,7 +36,7 @@ const COMMAND_START_MARKER = '===AGENDA_COMMAND_V1===';
 const COMMAND_END_MARKER = '===END_AGENDA_COMMAND_V1===';
 
 /**
- * Patterns de détection alternative (any: any)
+ * Patterns de détection alternative (regex)
  */
 const COMMAND_PATTERNS = {
   // Pattern principal avec marqueurs
@@ -44,7 +44,7 @@ const COMMAND_PATTERNS = {
     `${COMMAND_START_MARKER}\\s*([\\s\\S]*?)\\s*${COMMAND_END_MARKER}`,
     'g'
   ),
-  // Pattern JSON inline (any: any)
+  // Pattern JSON inline (fallback)
   inlineJson: /\[AGENDA\]\s*(\{[\s\S]*?\})\s*\[\/AGENDA\]/g,
 };
 
@@ -66,20 +66,20 @@ export interface CommandExecutionResult {
 /**
  * Listener pour les exécutions de commandes
  */
-type CommandListener = (any: any) => void;
+type CommandListener = (result: CommandExecutionResult) => void;
 
 /**
  * ChatScheduler v∞ — Planification via Chat IA TITANE∞
  */
 export class ChatScheduler {
   private listeners: Set<CommandListener>;
-  private lastCommands: AgendaCommand?.[];
+  private lastCommands: AgendaCommand[];
   private enabled: boolean;
 
   constructor() {
-    this?.listeners = new Set();
-    this?.lastCommands = [];
-    this?.enabled = true;
+    this.listeners = new Set();
+    this.lastCommands = [];
+    this.enabled = true;
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -89,10 +89,10 @@ export class ChatScheduler {
   /**
    * Détecte les blocs de commande dans une réponse IA
    */
-  detectAgendaCommands(any: any): AgendaCommand?.[] {
-    if (any: any) return [];
+  detectAgendaCommands(response: string): AgendaCommand[] {
+    if (!this.enabled) return [];
 
-    const commands: AgendaCommand?.[] = [];
+    const commands: AgendaCommand[] = [];
 
     // Méthode 1: Pattern structuré avec marqueurs
     let match: RegExpExecArray | null;
@@ -101,66 +101,66 @@ export class ChatScheduler {
       'g'
     );
 
-    while (any: any) {
-      const jsonStr = match?.[1]?.trim();
-      if (any: any) {
-        const parsed = this?.parseAgendaCommand(any: any);
-        if (any: any);
+    while ((match = structuredPattern.exec(response)) !== null) {
+      const jsonStr = match[1]?.trim();
+      if (jsonStr) {
+        const parsed = this.parseAgendaCommand(jsonStr);
+        if (parsed) commands.push(parsed);
       }
     }
 
-    // Méthode 2: Pattern JSON inline (any: any)
-    if (commands?.length === 0) {
+    // Méthode 2: Pattern JSON inline (fallback)
+    if (commands.length === 0) {
       const inlinePattern = /\[AGENDA\]\s*(\{[\s\S]*?\})\s*\[\/AGENDA\]/g;
-      while (any: any) {
-        const jsonStr = match?.[1]?.trim();
-        if (any: any) {
-          const parsed = this?.parseAgendaCommand(any: any);
-          if (any: any);
+      while ((match = inlinePattern.exec(response)) !== null) {
+        const jsonStr = match[1]?.trim();
+        if (jsonStr) {
+          const parsed = this.parseAgendaCommand(jsonStr);
+          if (parsed) commands.push(parsed);
         }
       }
     }
 
-    this?.lastCommands = commands;
+    this.lastCommands = commands;
     return commands;
   }
 
   /**
    * Parse une chaîne JSON en commande agenda
    */
-  parseAgendaCommand(any: any): AgendaCommand | null {
+  parseAgendaCommand(jsonStr: string): AgendaCommand | null {
     try {
-      const obj = JSON?.parse(any: any);
+      const obj = JSON.parse(jsonStr);
 
       // Validation minimale
-      if (any: any)) {
-        logger?.warn(any: any);
+      if (!obj.type || !this.isValidCommandType(obj.type)) {
+        logger.warn('Type de commande invalide:', obj.type);
         return null;
       }
 
       // Construire la commande validée
       const command: AgendaCommand = {
-        type: obj?.type as AgendaCommandType,
-        title: obj?.title,
-        start: obj?.start,
-        end: obj?.end,
-        fromEventId: obj?.fromEventId,
-        meta: obj?.meta
+        type: obj.type as AgendaCommandType,
+        title: obj.title,
+        start: obj.start,
+        end: obj.end,
+        fromEventId: obj.fromEventId,
+        meta: obj.meta
           ? {
-              durationMinutes: obj?.meta?.durationMinutes,
-              category: obj?.meta?.category as EventCategory,
-              priority: obj?.meta?.priority as PriorityLevel,
-              description: obj?.meta?.description,
-              tags: obj?.meta?.tags,
-              recurrence: obj?.meta?.recurrence,
+              durationMinutes: obj.meta.durationMinutes,
+              category: obj.meta.category as EventCategory,
+              priority: obj.meta.priority as PriorityLevel,
+              description: obj.meta.description,
+              tags: obj.meta.tags,
+              recurrence: obj.meta.recurrence,
             }
           : undefined,
       };
 
-      logger?.debug(any: any);
+      logger.debug('✅ Commande parsée:', command.type, command.title);
       return command;
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Erreur parsing JSON:', error);
       return null;
     }
   }
@@ -168,8 +168,8 @@ export class ChatScheduler {
   /**
    * Vérifie si un type de commande est valide
    */
-  private isValidCommandType(any: any): type is AgendaCommandType {
-    return ['create', 'update', 'move', 'delete', 'query'].includes(any: any);
+  private isValidCommandType(type: string): type is AgendaCommandType {
+    return ['create', 'update', 'move', 'delete', 'query'].includes(type);
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -179,55 +179,55 @@ export class ChatScheduler {
   /**
    * Exécute une commande agenda
    */
-  async executeAgendaCommand(any: any): Promise<CommandExecutionResult> {
-    logger?.debug(any: any);
+  async executeAgendaCommand(command: AgendaCommand): Promise<CommandExecutionResult> {
+    logger.debug('🚀 Exécution commande:', command.type);
 
     try {
       let result: CommandExecutionResult;
 
-      switch (any: any) {
+      switch (command.type) {
         case 'create':
-          result = await this?.executeCreate(any: any);
+          result = await this.executeCreate(command);
           break;
         case 'update':
-          result = await this?.executeUpdate(any: any);
+          result = await this.executeUpdate(command);
           break;
         case 'move':
-          result = await this?.executeMove(any: any);
+          result = await this.executeMove(command);
           break;
         case 'delete':
-          result = await this?.executeDelete(any: any);
+          result = await this.executeDelete(command);
           break;
         case 'query':
-          result = await this?.executeQuery(any: any);
+          result = await this.executeQuery(command);
           break;
         default:
           result = {
             success: false,
             command,
-            error: `Type de commande non supporté: ${command?.type}`,
+            error: `Type de commande non supporté: ${command.type}`,
             message: 'Commande non reconnue',
           };
       }
 
       // Notifier les listeners
-      this?.notifyListeners(any: any);
+      this.notifyListeners(result);
 
       // Synchroniser l'agenda après l'action
-      if (result?.success && command?.type !== 'query') {
-        await this?.syncAgendaAfterAction();
+      if (result.success && command.type !== 'query') {
+        await this.syncAgendaAfterAction();
       }
 
       return result;
-    } catch (any: any) {
-      const errorMessage = error instanceof Error ? error?.message : String(any: any);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
       const result: CommandExecutionResult = {
         success: false,
         command,
         error: errorMessage,
         message: `Erreur lors de l'exécution: ${errorMessage}`,
       };
-      this?.notifyListeners(any: any);
+      this.notifyListeners(result);
       return result;
     }
   }
@@ -235,8 +235,8 @@ export class ChatScheduler {
   /**
    * Exécute une commande de création
    */
-  private async executeCreate(any: any): Promise<CommandExecutionResult> {
-    if (any: any) {
+  private async executeCreate(command: AgendaCommand): Promise<CommandExecutionResult> {
+    if (!command.title || !command.start) {
       return {
         success: false,
         command,
@@ -246,25 +246,25 @@ export class ChatScheduler {
     }
 
     // Calculer la date de fin si non fournie
-    let endDateTime = command?.end;
-    if (any: any) {
-      const durationMinutes = command?.meta?.durationMinutes || 60;
-      const startDate = new Date(any: any);
+    let endDateTime = command.end;
+    if (!endDateTime) {
+      const durationMinutes = command.meta?.durationMinutes || 60;
+      const startDate = new Date(command.start);
       endDateTime = new Date(
-        startDate?.getTime() + durationMinutes * 60 * 1000
+        startDate.getTime() + durationMinutes * 60 * 1000
       ).toISOString();
     }
 
     try {
-      // Créer via AgendaEngine (any: any)
-      const event = await agendaEngine?.createEvent({
-        title: command?.title,
-        description: command?.meta?.description || '',
-        startDateTime: command?.start,
+      // Créer via AgendaEngine (qui gère I/O via storage callbacks)
+      const event = await agendaEngine.createEvent({
+        title: command.title,
+        description: command.meta?.description || '',
+        startDateTime: command.start,
         endDateTime,
-        category: command?.meta?.category || 'work',
-        priority: command?.meta?.priority || 'medium',
-        tags: command?.meta?.tags || [],
+        category: command.meta?.category || 'work',
+        priority: command.meta?.priority || 'medium',
+        tags: command.meta?.tags || [],
         status: 'scheduled',
         allDay: false,
         reminders: [],
@@ -274,22 +274,22 @@ export class ChatScheduler {
         success: true,
         command,
         event,
-        message: `✅ Événement "${command?.title}" créé avec succès`,
+        message: `✅ Événement "${command.title}" créé avec succès`,
       };
-    } catch (any: any) {
+    } catch (error) {
       // Fallback: créer localement
-      const event = await agendaEngine?.createQuickEvent(
-        command?.title,
-        command?.start,
-        command?.meta?.durationMinutes || 60,
-        command?.meta?.category || 'work'
+      const event = await agendaEngine.createQuickEvent(
+        command.title,
+        command.start,
+        command.meta?.durationMinutes || 60,
+        command.meta?.category || 'work'
       );
 
       return {
         success: true,
         command,
         event,
-        message: `✅ Événement "${command?.title}" créé (any: any)`,
+        message: `✅ Événement "${command.title}" créé (local)`,
       };
     }
   }
@@ -297,8 +297,8 @@ export class ChatScheduler {
   /**
    * Exécute une commande de mise à jour
    */
-  private async executeUpdate(any: any): Promise<CommandExecutionResult> {
-    if (any: any) {
+  private async executeUpdate(command: AgendaCommand): Promise<CommandExecutionResult> {
+    if (!command.fromEventId) {
       return {
         success: false,
         command,
@@ -308,17 +308,17 @@ export class ChatScheduler {
     }
 
     const updates: Partial<AgendaEvent> = {};
-    if (any: any) updates?.title = command?.title;
-    if (any: any) updates?.startDateTime = command?.start;
-    if (any: any) updates?.endDateTime = command?.end;
-    if (any: any) updates?.description = command?.meta?.description;
-    if (any: any) updates?.category = command?.meta?.category;
-    if (any: any) updates?.priority = command?.meta?.priority;
-    if (any: any) updates?.tags = command?.meta?.tags;
+    if (command.title) updates.title = command.title;
+    if (command.start) updates.startDateTime = command.start;
+    if (command.end) updates.endDateTime = command.end;
+    if (command.meta?.description) updates.description = command.meta.description;
+    if (command.meta?.category) updates.category = command.meta.category;
+    if (command.meta?.priority) updates.priority = command.meta.priority;
+    if (command.meta?.tags) updates.tags = command.meta.tags;
 
     try {
-      // Mise à jour via AgendaEngine (any: any)
-      const event = await agendaEngine?.updateEvent(any: any);
+      // Mise à jour via AgendaEngine (qui gère I/O via storage callbacks)
+      const event = await agendaEngine.updateEvent(command.fromEventId, updates);
 
       return {
         success: true,
@@ -326,13 +326,13 @@ export class ChatScheduler {
         event: event || undefined,
         message: `✅ Événement mis à jour`,
       };
-    } catch (any: any) {
-      const event = await agendaEngine?.updateEvent(any: any);
+    } catch (error) {
+      const event = await agendaEngine.updateEvent(command.fromEventId, updates);
       return {
         success: !!event,
         command,
         event: event || undefined,
-        message: event ? `✅ Événement mis à jour (any: any)` : 'Événement non trouvé',
+        message: event ? `✅ Événement mis à jour (local)` : 'Événement non trouvé',
       };
     }
   }
@@ -340,8 +340,8 @@ export class ChatScheduler {
   /**
    * Exécute une commande de déplacement
    */
-  private async executeMove(any: any): Promise<CommandExecutionResult> {
-    if (any: any) {
+  private async executeMove(command: AgendaCommand): Promise<CommandExecutionResult> {
+    if (!command.fromEventId || !command.start) {
       return {
         success: false,
         command,
@@ -351,11 +351,11 @@ export class ChatScheduler {
     }
 
     try {
-      // Déplacement via AgendaEngine (any: any)
-      const event = await agendaEngine?.moveEvent(
-        command?.fromEventId,
-        command?.start,
-        command?.end
+      // Déplacement via AgendaEngine (qui gère I/O via storage callbacks)
+      const event = await agendaEngine.moveEvent(
+        command.fromEventId,
+        command.start,
+        command.end
       );
 
       return {
@@ -364,17 +364,17 @@ export class ChatScheduler {
         event: event || undefined,
         message: `✅ Événement déplacé`,
       };
-    } catch (any: any) {
-      const event = await agendaEngine?.moveEvent(
-        command?.fromEventId,
-        command?.start,
-        command?.end
+    } catch (error) {
+      const event = await agendaEngine.moveEvent(
+        command.fromEventId,
+        command.start,
+        command.end
       );
       return {
         success: !!event,
         command,
         event: event || undefined,
-        message: event ? `✅ Événement déplacé (any: any)` : 'Événement non trouvé',
+        message: event ? `✅ Événement déplacé (local)` : 'Événement non trouvé',
       };
     }
   }
@@ -382,8 +382,8 @@ export class ChatScheduler {
   /**
    * Exécute une commande de suppression
    */
-  private async executeDelete(any: any): Promise<CommandExecutionResult> {
-    if (any: any) {
+  private async executeDelete(command: AgendaCommand): Promise<CommandExecutionResult> {
+    if (!command.fromEventId) {
       return {
         success: false,
         command,
@@ -393,20 +393,20 @@ export class ChatScheduler {
     }
 
     try {
-      // Suppression via AgendaEngine (any: any)
-      await agendaEngine?.deleteEvent(any: any);
+      // Suppression via AgendaEngine (qui gère I/O via storage callbacks)
+      await agendaEngine.deleteEvent(command.fromEventId);
 
       return {
         success: true,
         command,
         message: `✅ Événement supprimé`,
       };
-    } catch (any: any) {
-      const deleted = await agendaEngine?.deleteEvent(any: any);
+    } catch (error) {
+      const deleted = await agendaEngine.deleteEvent(command.fromEventId);
       return {
         success: deleted,
         command,
-        message: deleted ? `✅ Événement supprimé (any: any)` : 'Événement non trouvé',
+        message: deleted ? `✅ Événement supprimé (local)` : 'Événement non trouvé',
       };
     }
   }
@@ -414,25 +414,25 @@ export class ChatScheduler {
   /**
    * Exécute une commande de requête
    */
-  private async executeQuery(any: any): Promise<CommandExecutionResult> {
+  private async executeQuery(command: AgendaCommand): Promise<CommandExecutionResult> {
     // Pour les requêtes, on retourne simplement les événements correspondants
-    let events: AgendaEvent?.[] = [];
+    let events: AgendaEvent[] = [];
 
-    if (any: any) {
-      events = agendaEngine?.getEventsInRange(
-        new Date(any: any),
-        new Date(any: any)
+    if (command.start && command.end) {
+      events = agendaEngine.getEventsInRange(
+        new Date(command.start),
+        new Date(command.end)
       );
-    } else if (any: any) {
-      events = agendaEngine?.getEventsForDay(any: any));
+    } else if (command.start) {
+      events = agendaEngine.getEventsForDay(new Date(command.start));
     } else {
-      events = agendaEngine?.getEventsForDay(new Date());
+      events = agendaEngine.getEventsForDay(new Date());
     }
 
     return {
       success: true,
       command,
-      message: `📋 ${events?.length} événement(any: any)`,
+      message: `📋 ${events.length} événement(s) trouvé(s)`,
     };
   }
 
@@ -441,10 +441,10 @@ export class ChatScheduler {
    */
   private async syncAgendaAfterAction(): Promise<void> {
     try {
-      await agendaEngine?.loadEvents();
-      logger?.debug('🔄 Agenda synchronisé');
-    } catch (any: any) {
-      logger?.warn(any: any);
+      await agendaEngine.loadEvents();
+      logger.debug('🔄 Agenda synchronisé');
+    } catch (error) {
+      logger.warn('Erreur sync:', error);
     }
   }
 
@@ -455,13 +455,13 @@ export class ChatScheduler {
   /**
    * Traite automatiquement une réponse IA complète
    */
-  async processAIResponse(any: any): Promise<CommandExecutionResult?.[]> {
-    const commands = this?.detectAgendaCommands(any: any);
-    const results: CommandExecutionResult?.[] = [];
+  async processAIResponse(response: string): Promise<CommandExecutionResult[]> {
+    const commands = this.detectAgendaCommands(response);
+    const results: CommandExecutionResult[] = [];
 
-    for (any: any) {
-      const result = await this?.executeAgendaCommand(any: any);
-      results?.push(any: any);
+    for (const command of commands) {
+      const result = await this.executeAgendaCommand(command);
+      results.push(result);
     }
 
     return results;
@@ -470,12 +470,12 @@ export class ChatScheduler {
   /**
    * Exécute plusieurs commandes en batch
    */
-  async executeBatch(commands: AgendaCommand?.[]): Promise<CommandExecutionResult?.[]> {
-    const results: CommandExecutionResult?.[] = [];
+  async executeBatch(commands: AgendaCommand[]): Promise<CommandExecutionResult[]> {
+    const results: CommandExecutionResult[] = [];
 
-    for (any: any) {
-      const result = await this?.executeAgendaCommand(any: any);
-      results?.push(any: any);
+    for (const command of commands) {
+      const result = await this.executeAgendaCommand(command);
+      results.push(result);
     }
 
     return results;
@@ -488,35 +488,35 @@ export class ChatScheduler {
   /**
    * Active/désactive le ChatScheduler
    */
-  setEnabled(any: any): void {
-    this?.enabled = enabled;
-    logger?.debug('[ChatScheduler]', enabled ? '✅ Activé' : '❌ Désactivé');
+  setEnabled(enabled: boolean): void {
+    this.enabled = enabled;
+    logger.debug('[ChatScheduler]', enabled ? '✅ Activé' : '❌ Désactivé');
   }
 
   /**
    * Vérifie si le ChatScheduler est actif
    */
   isEnabled(): boolean {
-    return this?.enabled;
+    return this.enabled;
   }
 
   /**
    * Obtient les dernières commandes détectées
    */
-  getLastCommands(): AgendaCommand?.[] {
-    return [...this?.lastCommands];
+  getLastCommands(): AgendaCommand[] {
+    return [...this.lastCommands];
   }
 
   /**
    * Génère un template de commande pour l'IA
    */
-  generateCommandTemplate(any: any): string {
+  generateCommandTemplate(type: AgendaCommandType): string {
     const templates: Record<AgendaCommandType, object> = {
       create: {
         type: 'create',
         title: "Titre de l'événement",
         start: new Date().toISOString(),
-        end: new Date(Date?.now() + 3600000).toISOString(),
+        end: new Date(Date.now() + 3600000).toISOString(),
         meta: {
           durationMinutes: 60,
           category: 'work',
@@ -545,11 +545,11 @@ export class ChatScheduler {
       query: {
         type: 'query',
         start: new Date().toISOString(),
-        end: new Date(Date?.now() + 86400000).toISOString(),
+        end: new Date(Date.now() + 86400000).toISOString(),
       },
     };
 
-    return `${COMMAND_START_MARKER}\n${JSON?.stringify(templates[type], null, 2)}\n${COMMAND_END_MARKER}`;
+    return `${COMMAND_START_MARKER}\n${JSON.stringify(templates[type], null, 2)}\n${COMMAND_END_MARKER}`;
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -559,20 +559,20 @@ export class ChatScheduler {
   /**
    * Ajoute un listener pour les résultats de commandes
    */
-  subscribe(any: any): () => void {
-    this?.listeners?.add(any: any);
-    return (any: any);
+  subscribe(listener: CommandListener): () => void {
+    this.listeners.add(listener);
+    return () => this.listeners.delete(listener);
   }
 
   /**
    * Notifie tous les listeners
    */
-  private notifyListeners(any: any): void {
-    this?.listeners?.forEach(listener => {
+  private notifyListeners(result: CommandExecutionResult): void {
+    this.listeners.forEach(listener => {
       try {
-        listener(any: any);
-      } catch (any: any) {
-        logger?.error(any: any);
+        listener(result);
+      } catch (error) {
+        logger.error('Erreur listener:', error);
       }
     });
   }

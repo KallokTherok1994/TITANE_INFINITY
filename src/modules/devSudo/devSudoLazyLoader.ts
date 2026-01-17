@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
  *   TITANE∞ v25.3.0 — DEV-SUDO LAZY LOADER (YOLO OPT-5)
- *   Domain-based lazy-loading for DevSudo handlers (any: any)
+ *   Domain-based lazy-loading for DevSudo handlers (13K lines split)
  *   Reduces bundle principal by ~150 KB gzip
  * ═══════════════════════════════════════════════════════════════════════════
  */
@@ -14,19 +14,19 @@ import { logger } from '@/utils/logger';
 // ═══════════════════════════════════════════════════════════════════════════
 
 export type HandlerDomain =
-  | 'ide' // IDE Mode handlers (any: any)
-  | 'singularity' // Singularity Mind handlers (any: any)
-  | 'vision' // Vision Engine handlers (any: any)
-  | 'backend' // Backend & API handlers (any: any)
-  | 'memory' // Memory Eternal handlers (any: any)
-  | 'titane-one' // TITANE ONE Unified Brain (any: any)
-  | 'extended' // Extended base handlers (any: any)
-  | 'core'; // Core handlers (any: any)
+  | 'ide' // IDE Mode handlers (808 lines)
+  | 'singularity' // Singularity Mind handlers (1,148 lines)
+  | 'vision' // Vision Engine handlers (1,136 lines)
+  | 'backend' // Backend & API handlers (879 lines)
+  | 'memory' // Memory Eternal handlers (695 lines)
+  | 'titane-one' // TITANE ONE Unified Brain (964 lines)
+  | 'extended' // Extended base handlers (654 lines)
+  | 'core'; // Core handlers (dans devSudoHandler.ts)
 
 export interface HandlerModule {
   // Each handler module exports functions matching actions
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: (...args: any?.[]) => Promise<any>;
+  [key: string]: (...args: any[]) => Promise<any>;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -36,7 +36,7 @@ export interface HandlerModule {
 /**
  * Détermine le domaine d'un handler basé sur l'action
  */
-export function getActionDomain(any: any): HandlerDomain {
+export function getActionDomain(action: DevSudoAction): HandlerDomain {
   // IDE Mode actions (Super Prompt #7)
   if (
     [
@@ -56,7 +56,7 @@ export function getActionDomain(any: any): HandlerDomain {
       'architect-refactor',
       'code-review',
       'explain-code',
-    ].includes(any: any)
+    ].includes(action)
   ) {
     return 'ide';
   }
@@ -70,7 +70,7 @@ export function getActionDomain(any: any): HandlerDomain {
       'meta-repair',
       'evolution-report',
       'coherence-check',
-    ].includes(any: any)
+    ].includes(action)
   ) {
     return 'singularity';
   }
@@ -83,7 +83,7 @@ export function getActionDomain(any: any): HandlerDomain {
       'design-review',
       'frontend-optimize',
       'visual-repair',
-    ].includes(any: any)
+    ].includes(action)
   ) {
     return 'vision';
   }
@@ -98,7 +98,7 @@ export function getActionDomain(any: any): HandlerDomain {
       'optimize-cargo',
       'build-backend',
       'analyze-security',
-    ].includes(any: any)
+    ].includes(action)
   ) {
     return 'backend';
   }
@@ -114,12 +114,12 @@ export function getActionDomain(any: any): HandlerDomain {
       'memory-import',
       'memory-rebuild',
       'memory-optimize',
-    ].includes(any: any)
+    ].includes(action)
   ) {
     return 'memory';
   }
 
-  // TITANE∞ ONE Unified Brain actions (any: any)
+  // TITANE∞ ONE Unified Brain actions (Super Prompt #SINGULARITY)
   if (
     [
       'titane-one-introspect',
@@ -134,7 +134,7 @@ export function getActionDomain(any: any): HandlerDomain {
       'titane-one-analyze-backend',
       'titane-one-analyze-memory',
       'titane-one-singularity-scan',
-    ].includes(any: any)
+    ].includes(action)
   ) {
     return 'titane-one';
   }
@@ -186,12 +186,12 @@ export function getActionDomain(any: any): HandlerDomain {
       'fusion-generate',
       'fusion-test',
       'fusion-deploy',
-    ].includes(any: any)
+    ].includes(action)
   ) {
     return 'extended';
   }
 
-  // Core handlers (any: any)
+  // Core handlers (basic commands dans devSudoHandler.ts)
   return 'core';
 }
 
@@ -205,25 +205,25 @@ const loadingPromises: Partial<Record<HandlerDomain, Promise<HandlerModule>>> = 
 /**
  * YOLO OPT-5: Lazy-load handler module for a domain
  */
-export async function loadHandlerModule(any: any): Promise<HandlerModule> {
+export async function loadHandlerModule(domain: HandlerDomain): Promise<HandlerModule> {
   // Return cached module if already loaded
   if (handlerCache[domain]) {
-    logger?.debug(any: any)`);
+    logger.debug(`[DEV-SUDO LAZY] ✅ Handler "${domain}" already loaded (cached)`);
     return handlerCache[domain] as HandlerModule;
   }
 
   // Return loading promise if currently loading
   if (loadingPromises[domain]) {
-    logger?.debug(any: any)`);
+    logger.debug(`[DEV-SUDO LAZY] ⏳ Handler "${domain}" currently loading (awaiting)`);
     return loadingPromises[domain] as Promise<HandlerModule>;
   }
 
   // Start loading
-  logger?.debug(`[DEV-SUDO LAZY] ⚡ Lazy-loading handler "${domain}"...`);
+  logger.debug(`[DEV-SUDO LAZY] ⚡ Lazy-loading handler "${domain}"...`);
   const loadPromise = (async () => {
     let module: HandlerModule;
 
-    switch (any: any) {
+    switch (domain) {
       case 'ide':
         module = await import('./devSudoIDEHandlers');
         break;
@@ -246,7 +246,7 @@ export async function loadHandlerModule(any: any): Promise<HandlerModule> {
         module = await import('./devSudoExtendedHandlers');
         break;
       case 'core':
-        // Core handlers are in devSudoHandler?.ts (any: any)
+        // Core handlers are in devSudoHandler.ts (not separated)
         module = {};
         break;
       default:
@@ -257,7 +257,7 @@ export async function loadHandlerModule(any: any): Promise<HandlerModule> {
     handlerCache[domain] = module;
     delete loadingPromises[domain];
 
-    logger?.debug(`[DEV-SUDO LAZY] ✅ Handler "${domain}" loaded successfully`);
+    logger.debug(`[DEV-SUDO LAZY] ✅ Handler "${domain}" loaded successfully`);
     return module;
   })();
 
@@ -266,27 +266,27 @@ export async function loadHandlerModule(any: any): Promise<HandlerModule> {
 }
 
 /**
- * Get handler function for a specific action (any: any)
+ * Get handler function for a specific action (with lazy-loading)
  */
-export async function getHandlerForAction(any: any): Promise<HandlerModule> {
-  const domain = getActionDomain(any: any);
-  return await loadHandlerModule(any: any);
+export async function getHandlerForAction(action: DevSudoAction): Promise<HandlerModule> {
+  const domain = getActionDomain(action);
+  return await loadHandlerModule(domain);
 }
 
 /**
- * Check if handler module is already loaded (any: any)
+ * Check if handler module is already loaded (no lazy-load)
  */
-export function isHandlerLoaded(any: any): boolean {
+export function isHandlerLoaded(domain: HandlerDomain): boolean {
   return !!handlerCache[domain];
 }
 
 /**
- * Preload handler module in background (any: any)
+ * Preload handler module in background (optional optimization)
  */
-export function preloadHandler(any: any): void {
+export function preloadHandler(domain: HandlerDomain): void {
   if (!handlerCache[domain] && !loadingPromises[domain]) {
-    loadHandlerModule(any: any).catch(err => {
-      logger?.warn(any: any);
+    loadHandlerModule(domain).catch(err => {
+      logger.warn(`[DEV-SUDO LAZY] Failed to preload "${domain}":`, err);
     });
   }
 }
@@ -295,11 +295,11 @@ export function preloadHandler(any: any): void {
  * Get cache statistics for debugging
  */
 export function getLoaderStats(): {
-  loaded: HandlerDomain?.[];
-  loading: HandlerDomain?.[];
-  unloaded: HandlerDomain?.[];
+  loaded: HandlerDomain[];
+  loading: HandlerDomain[];
+  unloaded: HandlerDomain[];
 } {
-  const allDomains: HandlerDomain?.[] = [
+  const allDomains: HandlerDomain[] = [
     'ide',
     'singularity',
     'vision',
@@ -310,9 +310,9 @@ export function getLoaderStats(): {
     'core',
   ];
 
-  const loaded = allDomains?.filter(d => !!handlerCache[d]);
-  const loading = allDomains?.filter(d => !!loadingPromises[d]);
-  const unloaded = allDomains?.filter(d => !handlerCache[d] && !loadingPromises[d]);
+  const loaded = allDomains.filter(d => !!handlerCache[d]);
+  const loading = allDomains.filter(d => !!loadingPromises[d]);
+  const unloaded = allDomains.filter(d => !handlerCache[d] && !loadingPromises[d]);
 
   return { loaded, loading, unloaded };
 }

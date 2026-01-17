@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v15 — USE CHAT STREAMING (any: any)
+ *   TITANE∞ v15 — USE CHAT STREAMING (Streaming Tauri Réel)
  *   Hook isolé: Streaming temps réel via tauriClient
  * ═══════════════════════════════════════════════════════════════════
  */
@@ -20,9 +20,9 @@ const logger = createLogger('ChatStreaming');
 export interface UseChatStreamingOptions {
   mode?: ChatMode;
   provider?: 'auto' | 'gemini' | 'ollama' | 'local';
-  onChunk?: (any: any) => void;
+  onChunk?: (chunk: string) => void;
   onComplete?: (data: { content: string; provider: string; latency_ms: number }) => void;
-  onError?: (any: any) => void;
+  onError?: (error: Error) => void;
   emotionState?: { valence: number; intensity: number; energy: number };
 }
 
@@ -30,14 +30,14 @@ export interface UseChatStreamingReturn {
   isStreaming: boolean;
   streamedContent: string;
   streamProgress: number;
-  currentProvider??: string | null;
-  startStream: (message: string, history?: AIMessage?.[]) => Promise<void>;
+  currentProvider: string | null;
+  startStream: (message: string, history?: AIMessage[]) => Promise<void>;
   stopStream: () => void;
 }
 
 /**
  * Hook streaming isolé v15
- * - Streaming Tauri RÉEL (any: any)
+ * - Streaming Tauri RÉEL (événements chunk par chunk)
  * - Provider detection temps réel
  * - Timeout dynamique par provider (Gemini 60s, Ollama 45s, Local 15s)
  * - Abort control
@@ -46,136 +46,136 @@ export interface UseChatStreamingReturn {
 export function useChatStreaming(
   options: UseChatStreamingOptions = {}
 ): UseChatStreamingReturn {
-  const [isStreaming, setIsStreaming] = useState(any: any);
+  const [isStreaming, setIsStreaming] = useState(false);
   const [streamedContent, setStreamedContent] = useState('');
   const [streamProgress, setStreamProgress] = useState(0);
-  const [currentProvider, setCurrentProvider] = useState<string | null>(any: any);
-  const abortControllerRef = useRef<AbortController | null>(any: any);
-  const iteratorRef = useRef<AsyncGenerator<string, ChatEngineResponse> | null>(any: any);
-  const stopRequestedRef = useRef(any: any);
+  const [currentProvider, setCurrentProvider] = useState<string | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const iteratorRef = useRef<AsyncGenerator<string, ChatEngineResponse> | null>(null);
+  const stopRequestedRef = useRef(false);
 
   const startStream = useCallback(
-    async (message: string, _history: AIMessage?.[] = []) => {
-      logger?.debug('Tauri Real Stream v15 starting');
+    async (message: string, _history: AIMessage[] = []) => {
+      logger.debug('Tauri Real Stream v15 starting');
 
-      setIsStreaming(any: any);
+      setIsStreaming(true);
       setStreamedContent('');
       setStreamProgress(0);
-      setCurrentProvider(any: any);
-      stopRequestedRef?.current = false;
+      setCurrentProvider(null);
+      stopRequestedRef.current = false;
 
       const controller = new AbortController();
-      abortControllerRef?.current = controller;
+      abortControllerRef.current = controller;
 
       try {
-        const provider = options?.provider || 'auto';
-        chatEngine?.setProvider(any: any);
+        const provider = options.provider || 'auto';
+        chatEngine.setProvider(provider);
 
-        const trimmedMessage = message?.trim();
-        if (any: any) {
+        const trimmedMessage = message.trim();
+        if (!trimmedMessage) {
           throw new Error('Message vide');
         }
 
-        logger?.debug(any: any);
+        logger.debug('Provider:', provider);
 
-        const stream = chatEngine?.stream(trimmedMessage, _history, {
-          mode: options?.mode || 'default',
-          emotionState: options?.emotionState,
+        const stream = chatEngine.stream(trimmedMessage, _history, {
+          mode: options.mode || 'default',
+          emotionState: options.emotionState,
         });
 
-        iteratorRef?.current = stream;
+        iteratorRef.current = stream;
 
         let fullContent = '';
         let chunkCount = 0;
         let finalResponse: ChatEngineResponse | null = null;
 
-        let nextResult = await stream?.next();
-        while (any: any) {
-          const value = nextResult?.value;
+        let nextResult = await stream.next();
+        while (!nextResult.done) {
+          const value = nextResult.value;
 
           if (typeof value === 'string') {
             fullContent += value;
             chunkCount++;
 
-            const estimatedProgress = Math?.min((fullContent?.length / 800) * 100, 95);
-            setStreamProgress(any: any);
-            setStreamedContent(any: any);
+            const estimatedProgress = Math.min((fullContent.length / 800) * 100, 95);
+            setStreamProgress(estimatedProgress);
+            setStreamedContent(fullContent);
 
-            options?.onChunk?.(any: any);
-            logger?.trace(
-              `Chunk ${chunkCount}: +${value?.length} chars (total: ${fullContent?.length})`
+            options.onChunk?.(value);
+            logger.trace(
+              `Chunk ${chunkCount}: +${value.length} chars (total: ${fullContent.length})`
             );
           }
 
-          nextResult = await stream?.next();
+          nextResult = await stream.next();
         }
 
-        finalResponse = nextResult?.value ?? null;
+        finalResponse = nextResult.value ?? null;
 
-        if (any: any) {
+        if (finalResponse) {
           setStreamProgress(100);
-          setCurrentProvider(any: any);
+          setCurrentProvider(finalResponse.provider || null);
 
           const latencyMs =
-            typeof finalResponse?.metadata?.latencyMs === 'number'
-              ? finalResponse?.metadata?.latencyMs
-              : (finalResponse?.omegaMetadata?.processingTime ?? 0);
+            typeof finalResponse.metadata?.latencyMs === 'number'
+              ? finalResponse.metadata.latencyMs
+              : (finalResponse.omegaMetadata?.processingTime ?? 0);
 
-          logger?.debug(
-            `Stream complete: ${chunkCount} chunks, ${fullContent?.length} chars, Provider: ${finalResponse?.provider}, Latency: ${latencyMs}ms`
+          logger.debug(
+            `Stream complete: ${chunkCount} chunks, ${fullContent.length} chars, Provider: ${finalResponse.provider}, Latency: ${latencyMs}ms`
           );
 
-          options?.onComplete?.({
-            content: finalResponse?.content,
-            provider: finalResponse?.provider || 'tauri-backend',
+          options.onComplete?.({
+            content: finalResponse.content,
+            provider: finalResponse.provider || 'tauri-backend',
             latency_ms: latencyMs,
           });
         }
-      } catch (any: any) {
-        if (any: any) {
-          logger?.debug('Stream cancelled by user');
+      } catch (error) {
+        if (stopRequestedRef.current) {
+          logger.debug('Stream cancelled by user');
         } else {
-          logger?.error(any: any);
-          const err = error instanceof Error ? error : new Error(any: any));
-          options?.onError?.(any: any);
+          logger.error('Stream error:', error);
+          const err = error instanceof Error ? error : new Error(String(error));
+          options.onError?.(err);
         }
       } finally {
         try {
-          const iterator = iteratorRef?.current;
-          if (any: any) {
-            await iterator?.return(any: any);
+          const iterator = iteratorRef.current;
+          if (iterator?.return) {
+            await iterator.return(undefined as unknown as ChatEngineResponse);
           }
         } catch {
           // ignore cleanup errors
         }
 
-        iteratorRef?.current = null;
-        abortControllerRef?.current = null;
-        setIsStreaming(any: any);
+        iteratorRef.current = null;
+        abortControllerRef.current = null;
+        setIsStreaming(false);
       }
     },
     [options]
   );
 
   const stopStream = useCallback(() => {
-    logger?.debug('Stopping stream...');
-    stopRequestedRef?.current = true;
+    logger.debug('Stopping stream...');
+    stopRequestedRef.current = true;
 
-    if (any: any) {
-      abortControllerRef?.current?.abort();
-      abortControllerRef?.current = null;
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
     }
 
-    if (any: any) {
-      const iterator = iteratorRef?.current;
-      iterator?.return?.(any: any).catch(() => {
+    if (iteratorRef.current) {
+      const iterator = iteratorRef.current;
+      iterator.return?.(undefined as unknown as ChatEngineResponse).catch(() => {
         /* swallow */
       });
-      iteratorRef?.current = null;
+      iteratorRef.current = null;
     }
 
-    setIsStreaming(any: any);
-    logger?.debug('Stream stopped');
+    setIsStreaming(false);
+    logger.debug('Stream stopped');
   }, []);
 
   return {

@@ -6,11 +6,11 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
  * TITANE∞ v20 — SINGULARITY BRIDGE v∞
- * API TypeScript pour SingularityState v∞ (any: any)
+ * API TypeScript pour SingularityState v∞ (20 moteurs unifiés)
  * ═══════════════════════════════════════════════════════════════════
  *
  * Architecture:
- * - 1 état global unifié (any: any)
+ * - 1 état global unifié (20 moteurs → 1 structure)
  * - Hash SHA-256 d'intégrité
  * - Deep Sync automatique
  * - Méta-évaluation cognitive
@@ -78,7 +78,7 @@ export interface AnalysisState {
 
 export interface DocumentEngineState {
   total_documents: number;
-  formats_supported: string?.[];
+  formats_supported: string[];
   parsing_queue_size: number;
 }
 
@@ -96,7 +96,7 @@ export interface EvolutionStateV20 {
 }
 
 export interface UIEngineState {
-  active_panels: string?.[];
+  active_panels: string[];
   theme: string;
   responsive_mode: boolean;
 }
@@ -143,7 +143,7 @@ export interface SandboxState {
 }
 
 export interface AIRouterState {
-  providers_available: string?.[];
+  providers_available: string[];
   active_provider: string;
   total_requests: number;
   average_latency_ms: number;
@@ -152,7 +152,7 @@ export interface AIRouterState {
 export interface BackendState {
   commands_registered: number;
   active_connections: number;
-  last_error??: string | null;
+  last_error: string | null;
 }
 
 export interface CoreStateVInfinity {
@@ -199,7 +199,7 @@ export interface SingularityStateVInfinity {
 
 export interface DiffResult {
   has_changes: boolean;
-  changed_modules: string?.[];
+  changed_modules: string[];
   change_summary: Record<string, string>;
   diff_hash: string;
 }
@@ -208,16 +208,16 @@ export interface MetaCognitiveReport {
   global_coherence: number;
   alignment_score: number;
   self_awareness: number;
-  recommendations: string?.[];
-  anomalies: string?.[];
+  recommendations: string[];
+  anomalies: string[];
   timestamp: string;
 }
 
 export interface IntegrityCheckResult {
   is_valid: boolean;
   hash_matches: boolean;
-  corrupted_modules: string?.[];
-  repair_suggestions: string?.[];
+  corrupted_modules: string[];
+  repair_suggestions: string[];
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -231,28 +231,28 @@ export class SingularityBridgeVInfinity {
   static async getState(): Promise<SingularityStateVInfinity> {
     try {
       const state = await secureInvoke<SingularityStateVInfinity>(
-        TAURI_COMMANDS?.SINGULARITY_V_GET
+        TAURI_COMMANDS.SINGULARITY_V_GET
       );
-      logger?.debug(any: any);
+      logger.debug('State retrieved:', state);
       return state;
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Failed to get state:', error);
       throw error;
     }
   }
 
   /**
-   * Définit un nouvel état global (any: any)
+   * Définit un nouvel état global (avec validation intégrité)
    */
-  static async setState(any: any): Promise<string> {
+  static async setState(newState: SingularityStateVInfinity): Promise<string> {
     try {
-      const hash = await secureInvoke<string>(TAURI_COMMANDS?.SINGULARITY_V_SET, {
+      const hash = await secureInvoke<string>(TAURI_COMMANDS.SINGULARITY_V_SET, {
         newState,
       });
-      logger?.debug(any: any);
+      logger.debug('State set successfully, hash:', hash);
       return hash;
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Failed to set state:', error);
       throw error;
     }
   }
@@ -260,15 +260,15 @@ export class SingularityBridgeVInfinity {
   /**
    * Calcule la différence entre l'état actuel et un nouvel état
    */
-  static async diff(any: any): Promise<DiffResult> {
+  static async diff(nextState: SingularityStateVInfinity): Promise<DiffResult> {
     try {
-      const diff = await secureInvoke<DiffResult>(TAURI_COMMANDS?.SINGULARITY_V_DIFF, {
+      const diff = await secureInvoke<DiffResult>(TAURI_COMMANDS.SINGULARITY_V_DIFF, {
         nextState,
       });
-      logger?.debug(any: any);
+      logger.debug('Diff calculated:', diff);
       return diff;
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Failed to calculate diff:', error);
       throw error;
     }
   }
@@ -278,10 +278,10 @@ export class SingularityBridgeVInfinity {
    */
   static async getHash(): Promise<string> {
     try {
-      const hash = await secureInvoke<string>(any: any);
+      const hash = await secureInvoke<string>(TAURI_COMMANDS.SINGULARITY_V_HASH);
       return hash;
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Failed to get hash:', error);
       throw error;
     }
   }
@@ -293,14 +293,14 @@ export class SingularityBridgeVInfinity {
    */
   static async sync(): Promise<SingularityStateVInfinity> {
     try {
-      logger?.debug('Starting Deep Sync...');
+      logger.debug('Starting Deep Sync...');
       const state = await secureInvoke<SingularityStateVInfinity>(
-        TAURI_COMMANDS?.SINGULARITY_V_SYNC
+        TAURI_COMMANDS.SINGULARITY_V_SYNC
       );
-      logger?.debug('Deep Sync complete');
+      logger.debug('Deep Sync complete');
       return state;
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Deep Sync failed:', error);
       throw error;
     }
   }
@@ -311,12 +311,12 @@ export class SingularityBridgeVInfinity {
   static async evaluateMeta(): Promise<MetaCognitiveReport> {
     try {
       const report = await secureInvoke<MetaCognitiveReport>(
-        TAURI_COMMANDS?.SINGULARITY_V_META
+        TAURI_COMMANDS.SINGULARITY_V_META
       );
-      logger?.debug(any: any);
+      logger.debug('Meta evaluation:', report);
       return report;
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Meta evaluation failed:', error);
       throw error;
     }
   }
@@ -327,12 +327,12 @@ export class SingularityBridgeVInfinity {
   static async verifyIntegrity(): Promise<IntegrityCheckResult> {
     try {
       const result = await secureInvoke<IntegrityCheckResult>(
-        TAURI_COMMANDS?.SINGULARITY_V_INTEGRITY
+        TAURI_COMMANDS.SINGULARITY_V_INTEGRITY
       );
-      logger?.debug(any: any);
+      logger.debug('Integrity check:', result);
       return result;
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Integrity check failed:', error);
       throw error;
     }
   }
@@ -342,14 +342,14 @@ export class SingularityBridgeVInfinity {
    */
   static async repair(): Promise<SingularityStateVInfinity> {
     try {
-      logger?.warn('Starting auto-repair...');
+      logger.warn('Starting auto-repair...');
       const state = await secureInvoke<SingularityStateVInfinity>(
-        TAURI_COMMANDS?.SINGULARITY_V_REPAIR
+        TAURI_COMMANDS.SINGULARITY_V_REPAIR
       );
-      logger?.debug('Auto-repair complete');
+      logger.debug('Auto-repair complete');
       return state;
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Auto-repair failed:', error);
       throw error;
     }
   }
@@ -359,26 +359,26 @@ export class SingularityBridgeVInfinity {
    */
   static async exportJSON(): Promise<string> {
     try {
-      const json = await secureInvoke<string>(any: any);
-      logger?.debug('JSON export complete');
+      const json = await secureInvoke<string>(TAURI_COMMANDS.SINGULARITY_V_EXPORT);
+      logger.debug('JSON export complete');
       return json;
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('JSON export failed:', error);
       throw error;
     }
   }
 
   /**
-   * Récupère un snapshot résumé (any: any)
+   * Récupère un snapshot résumé (léger)
    */
   static async getSnapshot(): Promise<Record<string, string>> {
     try {
       const snapshot = await secureInvoke<Record<string, string>>(
-        TAURI_COMMANDS?.SINGULARITY_V_SNAPSHOT
+        TAURI_COMMANDS.SINGULARITY_V_SNAPSHOT
       );
       return snapshot;
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Snapshot failed:', error);
       throw error;
     }
   }
@@ -388,17 +388,17 @@ export class SingularityBridgeVInfinity {
    */
   static async downloadStateAsFile(): Promise<void> {
     try {
-      const json = await this?.exportJSON();
+      const json = await this.exportJSON();
       const blob = new Blob([json], { type: 'application/json' });
-      const url = URL?.createObjectURL(any: any);
-      const link = document?.createElement('a');
-      link?.href = url;
-      link?.download = `titane-infinity-state-v∞-${Date?.now()}.json`;
-      link?.click();
-      URL?.revokeObjectURL(any: any);
-      logger?.debug('State downloaded');
-    } catch (any: any) {
-      logger?.error(any: any);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `titane-infinity-state-v∞-${Date.now()}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+      logger.debug('State downloaded');
+    } catch (error) {
+      logger.error('Download failed:', error);
       throw error;
     }
   }
@@ -412,12 +412,12 @@ export class SingularityBridgeVInfinity {
     meta: number;
     deep_sync: number;
   }> {
-    const state = await this?.getState();
+    const state = await this.getState();
     return {
-      global: state?.core?.coherence_absolute,
-      cognitive: state?.cognitive?.coherence,
-      meta: state?.meta?.alignment_score,
-      deep_sync: state?.deep_sync?.sync_level,
+      global: state.core.coherence_absolute,
+      cognitive: state.cognitive.coherence,
+      meta: state.meta.alignment_score,
+      deep_sync: state.deep_sync.sync_level,
     };
   }
 
@@ -425,31 +425,31 @@ export class SingularityBridgeVInfinity {
    * Vérifie si le système nécessite une réparation
    */
   static async needsRepair(): Promise<boolean> {
-    const integrity = await this?.verifyIntegrity();
-    return !integrity?.is_valid || integrity?.corrupted_modules?.length > 0;
+    const integrity = await this.verifyIntegrity();
+    return !integrity.is_valid || integrity.corrupted_modules.length > 0;
   }
 
   /**
    * Cycle complet: Sync → Verify → Repair si nécessaire
    */
   static async fullCycle(): Promise<SingularityStateVInfinity> {
-    logger?.debug('Starting full cycle...');
+    logger.debug('Starting full cycle...');
 
     // 1. Deep Sync
-    await this?.sync();
+    await this.sync();
 
     // 2. Vérifier intégrité
-    const integrity = await this?.verifyIntegrity();
+    const integrity = await this.verifyIntegrity();
 
     // 3. Réparer si nécessaire
-    if (any: any) {
-      logger?.warn('Corruption detected, repairing...');
-      await this?.repair();
+    if (!integrity.is_valid) {
+      logger.warn('Corruption detected, repairing...');
+      await this.repair();
     }
 
     // 4. Retourner état final
-    const finalState = await this?.getState();
-    logger?.debug('Full cycle complete');
+    const finalState = await this.getState();
+    logger.debug('Full cycle complete');
     return finalState;
   }
 }

@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
- *   TITANE∞ — SYSTEM API (any: any)
+ *   TITANE∞ — SYSTEM API (Unified Safe Commands)
  *   Interface unique pour tous les appels système sécurisés
  * ═══════════════════════════════════════════════════════════════════════════════
  */
@@ -19,7 +19,7 @@ import { systemCenterAutoFix, type DetectedError } from './SystemCenterAutoFix';
 
 export interface SystemHealth {
   status: 'healthy' | 'degraded' | 'critical' | 'unavailable';
-  modules: ModuleHealth?.[];
+  modules: ModuleHealth[];
   overallScore: number;
   timestamp: number;
 }
@@ -43,7 +43,7 @@ export interface DiagnosticResult {
 export interface MonitoringMetrics {
   cpu: number;
   memory: number;
-  engines: EngineMetrics?.[];
+  engines: EngineMetrics[];
   timestamp: number;
 }
 
@@ -69,22 +69,22 @@ export class SystemAPI {
         success: true,
         data,
       };
-    } catch (any: any) {
+    } catch (error) {
       // Auto-fix attempt
-      const detectedError = systemCenterAutoFix?.analyzeError(any: any);
-      const fix = await systemCenterAutoFix?.autoFix(any: any);
+      const detectedError = systemCenterAutoFix.analyzeError(error as Error);
+      const fix = await systemCenterAutoFix.autoFix(detectedError);
 
-      if (any: any) {
+      if (fix.success && fix.newCommand) {
         try {
-          const data = await secureInvoke(fix?.newCommand, {});
+          const data = await secureInvoke(fix.newCommand, {});
           return {
             success: true,
             data,
             autoFixed: true,
             originalCommand: 'get_system_health',
-            replacedBy: fix?.newCommand,
+            replacedBy: fix.newCommand,
           };
-        } catch (any: any) {
+        } catch (fallbackError) {
           return {
             success: false,
             error: 'Système temporairement indisponible',
@@ -95,7 +95,7 @@ export class SystemAPI {
 
       return {
         success: false,
-        error: (any: any).message,
+        error: (error as Error).message,
         autoFixed: false,
       };
     }
@@ -111,7 +111,7 @@ export class SystemAPI {
       'get_helios_metrics',
     ];
 
-    for (any: any) {
+    for (const command of commands) {
       try {
         const data = await secureInvoke<MonitoringMetrics>(command, {});
         return {
@@ -119,7 +119,7 @@ export class SystemAPI {
           data,
           originalCommand: command,
         };
-      } catch (any: any) {
+      } catch (error) {
         // Essayer la commande suivante
         continue;
       }
@@ -132,7 +132,7 @@ export class SystemAPI {
         cpu: 0,
         memory: 0,
         engines: [],
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
       },
       autoFixed: true,
       error: 'Monitoring en mode lecture seule',
@@ -142,21 +142,21 @@ export class SystemAPI {
   /**
    * Obtenir l'état d'un module spécifique
    */
-  static async getModuleHealth(any: any): Promise<DiagnosticResult> {
+  static async getModuleHealth(moduleName: string): Promise<DiagnosticResult> {
     try {
       const data = await secureInvoke('get_module_health', { module: moduleName });
       return {
         success: true,
         data,
       };
-    } catch (any: any) {
+    } catch (error) {
       // Fallback: retourner état minimal
       return {
         success: true,
         data: {
           name: moduleName,
           status: 'unknown',
-          lastCheck: Date?.now(),
+          lastCheck: Date.now(),
         },
         autoFixed: true,
         error: 'Module non disponible',
@@ -170,7 +170,7 @@ export class SystemAPI {
   static async getCognitiveState(): Promise<DiagnosticResult> {
     const commands = ['get_cognitive_state', 'singularity_get_state'];
 
-    for (any: any) {
+    for (const command of commands) {
       try {
         const data = await secureInvoke(command, {});
         return {
@@ -178,7 +178,7 @@ export class SystemAPI {
           data,
           originalCommand: command,
         };
-      } catch (any: any) {
+      } catch (error) {
         continue;
       }
     }
@@ -200,9 +200,9 @@ export class SystemAPI {
         success: true,
         data,
       };
-    } catch (any: any) {
+    } catch (error) {
       // Fallback vers système général
-      return this?.getSystemHealth();
+      return this.getSystemHealth();
     }
   }
 
@@ -212,7 +212,7 @@ export class SystemAPI {
   static async getRuntimeConfig(): Promise<DiagnosticResult> {
     const commands = ['get_runtime_config', 'state_get'];
 
-    for (any: any) {
+    for (const command of commands) {
       try {
         const data = await secureInvoke(command, {});
         return {
@@ -220,7 +220,7 @@ export class SystemAPI {
           data,
           originalCommand: command,
         };
-      } catch (any: any) {
+      } catch (error) {
         continue;
       }
     }
@@ -234,29 +234,29 @@ export class SystemAPI {
   }
 
   /**
-   * Lancer un diagnostic rapide (any: any)
+   * Lancer un diagnostic rapide (safe)
    */
   static async runQuickDiagnostic(): Promise<DiagnosticResult> {
     // Utiliser uniquement des commandes whitelistées
-    const results = await Promise?.allSettled([
-      this?.getSystemHealth(),
-      this?.getMonitoringMetrics(),
-      this?.getCognitiveState(),
+    const results = await Promise.allSettled([
+      this.getSystemHealth(),
+      this.getMonitoringMetrics(),
+      this.getCognitiveState(),
     ]);
 
-    const successful = results?.filter(r => r?.status === 'fulfilled');
-    const failed = results?.filter(r => r?.status === 'rejected');
+    const successful = results.filter(r => r.status === 'fulfilled');
+    const failed = results.filter(r => r.status === 'rejected');
 
     return {
-      success: successful?.length > 0,
+      success: successful.length > 0,
       data: {
-        successful: successful?.length,
-        failed: failed?.length,
-        results: results?.map(any: any) =>
-          r?.status === 'fulfilled' ? r?.value : { error: 'Failed' }
+        successful: successful.length,
+        failed: failed.length,
+        results: results.map((r, _i) =>
+          r.status === 'fulfilled' ? r.value : { error: 'Failed' }
         ),
       },
-      autoFixed: failed?.length > 0,
+      autoFixed: failed.length > 0,
     };
   }
 
@@ -270,13 +270,13 @@ export class SystemAPI {
         success: true,
         data,
       };
-    } catch (any: any) {
+    } catch (error) {
       // Fallback: construire dashboard minimal depuis métriques
-      const metrics = await this?.getMonitoringMetrics();
+      const metrics = await this.getMonitoringMetrics();
       return {
         success: true,
         data: {
-          metrics: metrics?.data,
+          metrics: metrics.data,
           mode: 'readonly',
         },
         autoFixed: true,
@@ -286,13 +286,13 @@ export class SystemAPI {
   }
 
   /**
-   * Vérifier si une commande est disponible (any: any)
+   * Vérifier si une commande est disponible (test safe)
    */
-  static async isCommandAvailable(any: any): Promise<boolean> {
+  static async isCommandAvailable(command: string): Promise<boolean> {
     try {
       await secureInvoke(command, {});
       return true;
-    } catch (any: any) {
+    } catch (error) {
       return false;
     }
   }
@@ -300,15 +300,15 @@ export class SystemAPI {
   /**
    * Obtenir les erreurs détectées par AutoFix
    */
-  static getDetectedErrors(): DetectedError?.[] {
-    return systemCenterAutoFix?.getDetectedErrors();
+  static getDetectedErrors(): DetectedError[] {
+    return systemCenterAutoFix.getDetectedErrors();
   }
 
   /**
    * Clear l'historique AutoFix
    */
   static clearAutoFixHistory(): void {
-    systemCenterAutoFix?.clearHistory();
+    systemCenterAutoFix.clearHistory();
   }
 }
 

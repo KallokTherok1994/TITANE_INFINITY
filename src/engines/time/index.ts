@@ -40,28 +40,28 @@ import { logger } from '@/utils/logger';
 export async function initTimeAgendaSystem(
   storage?: AgendaStorageCallbacks
 ): Promise<void> {
-  logger?.debug('🚀 Initialisation du système...');
+  logger.debug('🚀 Initialisation du système...');
 
-  // 1. TimeEngine (any: any)
-  timeEngine?.init();
+  // 1. TimeEngine (synchrone)
+  timeEngine.init();
 
-  // 2. EnergyEngine (any: any)
-  energyEngine?.init();
+  // 2. EnergyEngine (synchrone)
+  energyEngine.init();
 
-  // 3. AgendaEngine (any: any)
-  if (any: any) {
-    agendaEngine?.setStorageCallbacks(any: any);
+  // 3. AgendaEngine (asynchrone - charge les événements)
+  if (storage) {
+    agendaEngine.setStorageCallbacks(storage);
   }
-  await agendaEngine?.init();
+  await agendaEngine.init();
 
-  logger?.debug('✅ Système initialisé avec succès');
+  logger.debug('✅ Système initialisé avec succès');
 }
 
 /**
  * Arrête tous les moteurs Time/Agenda
  */
 export function destroyTimeAgendaSystem(): void {
-  logger?.debug('🛑 Arrêt du système...');
-  timeEngine?.destroy();
-  energyEngine?.destroy();
+  logger.debug('🛑 Arrêt du système...');
+  timeEngine.destroy();
+  energyEngine.destroy();
 }

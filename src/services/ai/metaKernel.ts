@@ -5,10 +5,10 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v∞Ω — META-KERNEL (any: any)
+ *   TITANE∞ v∞Ω — META-KERNEL (SUPER-CONSCIENCE SYSTÈME)
  *   Super-structure d'orchestration globale
  *   - Vision holistique du système complet
- *   - Orchestration des kernels (any: any)
+ *   - Orchestration des kernels (Stability · Autofix · Evolution · Cognitive)
  *   - Super-cohérence transversale
  *   - Meta-surveillance anticipative
  *   - Meta-optimisation structurelle
@@ -32,10 +32,10 @@ const logger = createLogger('[META-KERNEL]');
  * Carte holistique du système
  */
 export interface SystemMap {
-  nodes: SystemNode?.[];
-  edges: SystemEdge?.[];
-  flows: SystemFlow?.[];
-  layers: SystemLayer?.[];
+  nodes: SystemNode[];
+  edges: SystemEdge[];
+  flows: SystemFlow[];
+  layers: SystemLayer[];
 }
 
 export interface SystemNode {
@@ -45,7 +45,7 @@ export interface SystemNode {
   health: number; // 0-100
   role: string;
   influence: number; // 0-100
-  dependencies: string?.[];
+  dependencies: string[];
   status: 'active' | 'degraded' | 'critical' | 'offline';
 }
 
@@ -59,7 +59,7 @@ export interface SystemEdge {
 
 export interface SystemFlow {
   name: string;
-  path: string?.[];
+  path: string[];
   type: 'vertical' | 'horizontal' | 'circular';
   efficiency: number; // 0-100
 }
@@ -67,7 +67,7 @@ export interface SystemFlow {
 export interface SystemLayer {
   name: string;
   level: number;
-  components: string?.[];
+  components: string[];
   coherence: number; // 0-100
 }
 
@@ -78,32 +78,32 @@ export interface SubKernelStates {
   // Frontend Kernels
   stability: {
     active: boolean;
-    lastAction??: string | null;
+    lastAction: string | null;
     score: number;
     location: 'frontend' | 'backend';
   };
   autofix: {
     active: boolean;
-    lastFix??: string | null;
+    lastFix: string | null;
     fixCount: number;
     location: 'frontend';
   };
   evolution: {
     active: boolean;
-    lastMutation??: string | null;
+    lastMutation: string | null;
     generation: number;
     location: 'frontend' | 'backend';
   };
   cognitive: {
     active: boolean;
     coherenceScore: number;
-    lastDecision??: string | null;
+    lastDecision: string | null;
     location: 'frontend';
   };
   // Backend Rust Kernels
   rustAutoHealing: {
     active: boolean;
-    lastHeal??: string | null;
+    lastHeal: string | null;
     healCount: number;
     location: 'backend';
   };
@@ -116,7 +116,7 @@ export interface SubKernelStates {
   rustStability: {
     active: boolean;
     stabilityScore: number;
-    lastCheck??: string | null;
+    lastCheck: string | null;
     location: 'backend';
   };
   // Meta Kernels
@@ -127,13 +127,13 @@ export interface SubKernelStates {
   };
   autonomyEngine: {
     active: boolean;
-    lastEvolution??: string | null;
+    lastEvolution: string | null;
     location: 'frontend';
   };
 }
 
 /**
- * Principes TITANE∞ (any: any)
+ * Principes TITANE∞ (Loi de Cohérence)
  */
 export interface TitanePrinciples {
   simplicityStructural: number; // 0-100
@@ -165,8 +165,8 @@ export interface FragilityZone {
   type: 'flow' | 'structure' | 'type' | 'behavior';
   severity: 'low' | 'medium' | 'high' | 'critical';
   reason: string;
-  anticipatedIssues: string?.[];
-  preventionStrategies: string?.[];
+  anticipatedIssues: string[];
+  preventionStrategies: string[];
 }
 
 /**
@@ -186,7 +186,7 @@ export interface OrchestrationAction {
   action: string;
   context: string;
   priority: number; // 0-100
-  constraints: string?.[];
+  constraints: string[];
   expectedImpact: string;
   location: 'frontend' | 'backend' | 'meta';
 }
@@ -196,15 +196,15 @@ export interface OrchestrationAction {
  */
 export interface SuperMemory {
   states: {
-    globalStability: number?.[];
-    providerScores: Map<string, number?.[]>;
-    globalCoherence: number?.[];
+    globalStability: number[];
+    providerScores: Map<string, number[]>;
+    globalCoherence: number[];
     recurrentErrors: Map<string, number>;
   };
   forms: {
-    efficientPatterns: string?.[];
-    successfulRefactors: string?.[];
-    optimalStructures: string?.[];
+    efficientPatterns: string[];
+    successfulRefactors: string[];
+    optimalStructures: string[];
   };
   evolutions: {
     recentTransformations: Array<{
@@ -213,8 +213,8 @@ export interface SuperMemory {
       success: boolean;
       impact: number;
     }>;
-    successfulStrategies: string?.[];
-    failedStrategies: string?.[];
+    successfulStrategies: string[];
+    failedStrategies: string[];
   };
 }
 
@@ -232,11 +232,11 @@ export interface SuperConsciousnessReport {
   holisticAnalysis: {
     systemMap: SystemMap;
     flowEfficiency: number;
-    layerCoherence: number?.[];
-    tensionZones: FragilityZone?.[];
+    layerCoherence: number[];
+    tensionZones: FragilityZone[];
   };
-  harmonizations: string?.[];
-  futureOrientations: string?.[];
+  harmonizations: string[];
+  futureOrientations: string[];
   titaneCoherence: TitanePrinciples;
   subKernels: SubKernelStates;
 }
@@ -291,7 +291,7 @@ class MetaKernel {
   };
 
   // ═══ OBSERVATION CONTINUE ═══
-  private observations: SystemObservation?.[] = [];
+  private observations: SystemObservation[] = [];
   private readonly MAX_OBSERVATIONS = 100;
 
   // ═══ SUPER-MÉMOIRE ═══
@@ -315,16 +315,16 @@ class MetaKernel {
   };
 
   // ═══ ZONES DE FRAGILITÉ ═══
-  private fragilityZones: FragilityZone?.[] = [];
+  private fragilityZones: FragilityZone[] = [];
   private fragilityLogCount = 0; // Compteur pour réduire les logs de fragilité
   private titaneLawCycleCount = 0; // Compteur pour hysteresis des warnings
 
   private initialized = false;
-  private observationInterval: NodeJS?.Timeout | null = null;
+  private observationInterval: NodeJS.Timeout | null = null;
 
   /**
    * ═══════════════════════════════════════════════════════════════════
-   * PHASE A: VISION HOLISTIQUE (any: any)
+   * PHASE A: VISION HOLISTIQUE (Perception Globale du Système)
    * ═══════════════════════════════════════════════════════════════════
    */
 
@@ -332,21 +332,21 @@ class MetaKernel {
    * Initialiser le Meta-Kernel
    */
   initialize(): void {
-    if (any: any) return;
+    if (this.initialized) return;
 
-    logger?.info('Initializing super-consciousness system');
+    logger.info('Initializing super-consciousness system');
 
     // 1.1 Construire cartographie globale
-    this?.buildSystemMap();
+    this.buildSystemMap();
 
     // 1.2 Comprendre flux cognitif global
-    this?.analyzeGlobalFlows();
+    this.analyzeGlobalFlows();
 
     // 1.3 Démarrer observation continue
-    this?.startContinuousObservation();
+    this.startContinuousObservation();
 
-    this?.initialized = true;
-    logger?.info('Super-consciousness system established');
+    this.initialized = true;
+    logger.info('Super-consciousness system established');
   }
 
   /**
@@ -354,7 +354,7 @@ class MetaKernel {
    */
   private buildSystemMap(): void {
     // Créer les nœuds
-    this?.systemMap?.nodes = [
+    this.systemMap.nodes = [
       // Providers IA
       {
         id: 'provider-titane-local',
@@ -381,7 +381,7 @@ class MetaKernel {
         type: 'provider',
         name: 'OpenAI GPT',
         health: 90,
-        role: 'Cloud AI (any: any)',
+        role: 'Cloud AI (powerful)',
         influence: 70,
         dependencies: ['metrics', 'governance'],
         status: 'active',
@@ -391,7 +391,7 @@ class MetaKernel {
         type: 'provider',
         name: 'Anthropic Claude',
         health: 90,
-        role: 'Cloud AI (any: any)',
+        role: 'Cloud AI (intelligent)',
         influence: 70,
         dependencies: ['metrics', 'governance'],
         status: 'active',
@@ -401,7 +401,7 @@ class MetaKernel {
         type: 'provider',
         name: 'Google Gemini',
         health: 85,
-        role: 'Cloud AI (any: any)',
+        role: 'Cloud AI (performant)',
         influence: 65,
         dependencies: ['metrics', 'governance'],
         status: 'active',
@@ -411,7 +411,7 @@ class MetaKernel {
         type: 'provider',
         name: 'Ollama',
         health: 80,
-        role: 'Local LLM (any: any)',
+        role: 'Local LLM (private)',
         influence: 60,
         dependencies: [],
         status: 'active',
@@ -433,7 +433,7 @@ class MetaKernel {
       {
         id: 'chat-ui',
         type: 'chat-ui',
-        name: 'Chat UI (any: any)',
+        name: 'Chat UI (useChat)',
         health: 90,
         role: 'User interaction + Message harmonization',
         influence: 80,
@@ -496,8 +496,8 @@ class MetaKernel {
       },
     ];
 
-    // Créer les arêtes (any: any)
-    this?.systemMap?.edges = [
+    // Créer les arêtes (flux)
+    this.systemMap.edges = [
       // Providers → Orchestrator
       {
         from: 'provider-titane-local',
@@ -551,7 +551,7 @@ class MetaKernel {
         health: 95,
       },
 
-      // Chat UI → Orchestrator (any: any)
+      // Chat UI → Orchestrator (feedback loop)
       { from: 'chat-ui', to: 'orchestrator', type: 'feedback', strength: 80, health: 90 },
 
       // IAService ↔ Governance
@@ -628,7 +628,7 @@ class MetaKernel {
     ];
 
     // Définir les flux
-    this?.systemMap?.flows = [
+    this.systemMap.flows = [
       {
         name: 'User Request Flow',
         path: [
@@ -663,7 +663,7 @@ class MetaKernel {
     ];
 
     // Définir les couches
-    this?.systemMap?.layers = [
+    this.systemMap.layers = [
       { name: 'Presentation', level: 1, components: ['chat-ui'], coherence: 90 },
       {
         name: 'Orchestration',
@@ -680,11 +680,11 @@ class MetaKernel {
       },
     ];
 
-    logger?.debug('System map constructed', {
-      nodes: this?.systemMap?.nodes?.length,
-      edges: this?.systemMap?.edges?.length,
-      flows: this?.systemMap?.flows?.length,
-      layers: this?.systemMap?.layers?.length,
+    logger.debug('System map constructed', {
+      nodes: this.systemMap.nodes.length,
+      edges: this.systemMap.edges.length,
+      flows: this.systemMap.flows.length,
+      layers: this.systemMap.layers.length,
     });
   }
 
@@ -694,18 +694,18 @@ class MetaKernel {
   private analyzeGlobalFlows(): void {
     // Analyser flux horizontal: erreurs → adaptation → évolution
     const horizontalFlow = {
-      errors: autoHealEngine?.getStats().totalErrors,
-      adaptations: cognitiveKernel?.getCognitiveReport().memory?.adaptations,
-      coherence: cognitiveKernel?.getCognitiveReport().coherenceScore,
+      errors: autoHealEngine.getStats().totalErrors,
+      adaptations: cognitiveKernel.getCognitiveReport().memory.adaptations,
+      coherence: cognitiveKernel.getCognitiveReport().coherenceScore,
     };
 
     // Analyser flux vertical: stabilité → qualité
     const verticalFlow = {
-      stability: metricsEngine?.getHealthStats().overall,
-      quality: metricsEngine?.getAggregatedMetrics().successRate,
+      stability: metricsEngine.getHealthStats().overall,
+      quality: metricsEngine.getAggregatedMetrics().successRate,
     };
 
-    logger?.debug('Global cognitive flows analyzed', {
+    logger.debug('Global cognitive flows analyzed', {
       horizontal: horizontalFlow,
       vertical: verticalFlow,
     });
@@ -715,87 +715,87 @@ class MetaKernel {
    * 1.3 Démarrer observation continue
    */
   private startContinuousObservation(): void {
-    // Observer toutes les 60 secondes (any: any)
-    this?.observationInterval = setInterval(() => {
-      this?.observe();
+    // Observer toutes les 60 secondes (optimisé pour réduire les logs)
+    this.observationInterval = setInterval(() => {
+      this.observe();
     }, 60000);
 
     // Première observation immédiate
-    this?.observe();
+    this.observe();
   }
 
   /**
    * Observer l'état global du système
    */
   private observe(): void {
-    const metrics = metricsEngine?.getAggregatedMetrics();
-    const cognitiveReport = cognitiveKernel?.getCognitiveReport();
-    const _autoHealStats = autoHealEngine?.getStats();
+    const metrics = metricsEngine.getAggregatedMetrics();
+    const cognitiveReport = cognitiveKernel.getCognitiveReport();
+    const _autoHealStats = autoHealEngine.getStats();
 
     const observation: SystemObservation = {
-      stability: metrics?.successRate,
-      coherence: cognitiveReport?.coherenceScore,
-      cognitiveLoad: this?.calculateCognitiveLoad(),
-      decisionEfficiency: this?.calculateDecisionEfficiency(),
-      uiLogicAlignment: this?.calculateUiLogicAlignment(),
-      titaneAlignment: this?.calculateTitaneAlignment(),
-      timestamp: Date?.now(),
+      stability: metrics.successRate,
+      coherence: cognitiveReport.coherenceScore,
+      cognitiveLoad: this.calculateCognitiveLoad(),
+      decisionEfficiency: this.calculateDecisionEfficiency(),
+      uiLogicAlignment: this.calculateUiLogicAlignment(),
+      titaneAlignment: this.calculateTitaneAlignment(),
+      timestamp: Date.now(),
     };
 
-    this?.observations?.push(any: any);
+    this.observations.push(observation);
 
     // Garder seulement les 100 dernières observations
-    if (any: any) {
-      this?.observations?.shift();
+    if (this.observations.length > this.MAX_OBSERVATIONS) {
+      this.observations.shift();
     }
 
     // Enregistrer dans super-mémoire
-    this?.superMemory?.states?.globalStability?.push(any: any);
-    this?.superMemory?.states?.globalCoherence?.push(any: any);
+    this.superMemory.states.globalStability.push(observation.stability);
+    this.superMemory.states.globalCoherence.push(observation.coherence);
 
     // Limiter taille super-mémoire
-    if (this?.superMemory?.states?.globalStability?.length > 1000) {
-      this?.superMemory?.states?.globalStability?.shift();
-      this?.superMemory?.states?.globalCoherence?.shift();
+    if (this.superMemory.states.globalStability.length > 1000) {
+      this.superMemory.states.globalStability.shift();
+      this.superMemory.states.globalCoherence.shift();
     }
 
     // Détecter zones de fragilité
-    this?.detectFragilityZones(any: any);
+    this.detectFragilityZones(observation);
 
-    // Logger seulement si des changements significatifs (any: any)
-    const shouldLog = this?.shouldLogObservation(any: any);
-    if (any: any) {
-      logger?.debug('System observation complete', {
-        stability: observation?.stability?.toFixed(1),
-        coherence: observation?.coherence?.toFixed(1),
-        cognitiveLoad: observation?.cognitiveLoad?.toFixed(1),
-        titaneAlignment: observation?.titaneAlignment?.toFixed(1),
+    // Logger seulement si des changements significatifs (>10% variation)
+    const shouldLog = this.shouldLogObservation(observation);
+    if (shouldLog) {
+      logger.debug('System observation complete', {
+        stability: observation.stability.toFixed(1),
+        coherence: observation.coherence.toFixed(1),
+        cognitiveLoad: observation.cognitiveLoad.toFixed(1),
+        titaneAlignment: observation.titaneAlignment.toFixed(1),
       });
     }
   }
 
   private calculateCognitiveLoad(): number {
-    const metrics = metricsEngine?.getAggregatedMetrics();
-    const load = (metrics?.totalRequests / Math?.max(1, metrics?.uptime / 60000)) * 10; // Requêtes par minute * 10
-    return Math?.min(any: any);
+    const metrics = metricsEngine.getAggregatedMetrics();
+    const load = (metrics.totalRequests / Math.max(1, metrics.uptime / 60000)) * 10; // Requêtes par minute * 10
+    return Math.min(100, load);
   }
 
   private calculateDecisionEfficiency(): number {
-    const cognitiveReport = cognitiveKernel?.getCognitiveReport();
-    const health = cognitiveReport?.health;
+    const cognitiveReport = cognitiveKernel.getCognitiveReport();
+    const health = cognitiveReport.health;
     return (
-      (health?.thinking ? 33 : 0) + (health?.behaving ? 33 : 0) + (health?.stable ? 34 : 0)
+      (health.thinking ? 33 : 0) + (health.behaving ? 33 : 0) + (health.stable ? 34 : 0)
     );
   }
 
   private calculateUiLogicAlignment(): number {
     // Basé sur la cohérence des messages et la stabilité UI
-    return cognitiveKernel?.getCognitiveReport().coherenceScore * 0.9;
+    return cognitiveKernel.getCognitiveReport().coherenceScore * 0.9;
   }
 
   private calculateTitaneAlignment(): number {
-    const principles = Object?.values(any: any);
-    return principles?.reduce(any: any) => sum + val, 0) / principles?.length;
+    const principles = Object.values(this.titanePrinciples);
+    return principles.reduce((sum, val) => sum + val, 0) / principles.length;
   }
 
   /**
@@ -821,7 +821,7 @@ class MetaKernel {
     context: string,
     priority: number = 50
   ): OrchestrationAction {
-    const location = this?.getKernelLocation(any: any);
+    const location = this.getKernelLocation(kernel);
     const purpose = context; // ✅ FIX: Define purpose from context
 
     const action: OrchestrationAction = {
@@ -829,29 +829,29 @@ class MetaKernel {
       action: 'activate',
       context,
       priority,
-      constraints: this?.getKernelConstraints(any: any),
-      expectedImpact: this?.predictKernelImpact(any: any),
+      constraints: this.getKernelConstraints(kernel),
+      expectedImpact: this.predictKernelImpact(kernel),
       location,
     };
 
     // Mettre à jour l'état du kernel
-    this?.subKernels[kernel].active = true;
+    this.subKernels[kernel].active = true;
 
     // Logger seulement en cas de priorité élevée (>80) ou en mode verbose
-    if (priority > 80 || import?.meta?.env?.VITE_LOG_VERBOSE === 'true') {
-      logger?.debug('Kernel activation', {
+    if (priority > 80 || import.meta.env.VITE_LOG_VERBOSE === 'true') {
+      logger.debug('Kernel activation', {
         kernel,
         location,
         purpose,
-        priority: action?.priority,
+        priority: action.priority,
       });
     }
 
     return action;
   }
 
-  private getKernelLocation(any: any): 'frontend' | 'backend' | 'meta' {
-    if (kernel?.startsWith('rust')) return 'backend';
+  private getKernelLocation(kernel: string): 'frontend' | 'backend' | 'meta' {
+    if (kernel.startsWith('rust')) return 'backend';
     if (kernel === 'metaSingularity' || kernel === 'autonomyEngine') return 'meta';
     return 'frontend';
   }
@@ -859,25 +859,25 @@ class MetaKernel {
   /**
    * Coordonner l'action des kernels
    */
-  coordinateKernels(actions: OrchestrationAction?.[]): void {
+  coordinateKernels(actions: OrchestrationAction[]): void {
     // Trier par priorité
-    actions?.sort(any: any);
+    actions.sort((a, b) => b.priority - a.priority);
 
     // Vérifier conflits
-    const conflicts = this?.detectKernelConflicts(any: any);
+    const conflicts = this.detectKernelConflicts(actions);
 
-    if (conflicts?.length > 0) {
-      logger?.warn('Kernel conflicts detected', { conflicts });
+    if (conflicts.length > 0) {
+      logger.warn('Kernel conflicts detected', { conflicts });
       // Résoudre conflits en gardant action prioritaire
-      actions = this?.resolveConflicts(any: any);
+      actions = this.resolveConflicts(actions, conflicts);
     }
 
     // Exécuter actions sans conflit
-    logger?.debug('Coordinating kernels', { count: actions?.length });
+    logger.debug('Coordinating kernels', { count: actions.length });
   }
 
-  private getKernelConstraints(any: any): string?.[] {
-    const constraints: Record<string, string?.[] | undefined> = {
+  private getKernelConstraints(kernel: string): string[] {
+    const constraints: Record<string, string[] | undefined> = {
       // Frontend Kernels
       stability: [
         'Preserve existing functionality',
@@ -918,7 +918,7 @@ class MetaKernel {
     return constraints[kernel] ?? [];
   }
 
-  private predictKernelImpact(any: any): string {
+  private predictKernelImpact(kernel: string): string {
     const impacts: Record<string, string | undefined> = {
       // Frontend Kernels
       stability: 'Increased system robustness +15%',
@@ -936,20 +936,20 @@ class MetaKernel {
     return impacts[kernel] ?? 'Unknown impact';
   }
 
-  private detectKernelConflicts(actions: OrchestrationAction?.[]): string?.[] {
-    const conflicts: string?.[] = [];
+  private detectKernelConflicts(actions: OrchestrationAction[]): string[] {
+    const conflicts: string[] = [];
 
     // Détecter si plusieurs kernels veulent modifier la même zone
-    for (let i = 0; i < actions?.length; i++) {
+    for (let i = 0; i < actions.length; i++) {
       const actionI = actions[i];
-      if (any: any) continue;
+      if (!actionI) continue;
 
-      for (let j = i + 1; j < actions?.length; j++) {
+      for (let j = i + 1; j < actions.length; j++) {
         const actionJ = actions[j];
-        if (any: any) continue;
+        if (!actionJ) continue;
 
-        if (any: any) {
-          conflicts?.push(`${actionI?.kernel} vs ${actionJ?.kernel} on ${actionI?.context}`);
+        if (actionI.context === actionJ.context) {
+          conflicts.push(`${actionI.kernel} vs ${actionJ.kernel} on ${actionI.context}`);
         }
       }
     }
@@ -958,20 +958,20 @@ class MetaKernel {
   }
 
   private resolveConflicts(
-    actions: OrchestrationAction?.[],
-    _conflicts: string?.[]
-  ): OrchestrationAction?.[] {
+    actions: OrchestrationAction[],
+    _conflicts: string[]
+  ): OrchestrationAction[] {
     // Garder seulement l'action avec la plus haute priorité pour chaque contexte
     const resolved = new Map<string, OrchestrationAction>();
 
-    actions?.forEach(action => {
-      const existing = resolved?.get(any: any);
-      if (any: any) {
-        resolved?.set(any: any);
+    actions.forEach(action => {
+      const existing = resolved.get(action.context);
+      if (!existing || action.priority > existing.priority) {
+        resolved.set(action.context, action);
       }
     });
 
-    return Array?.from(resolved?.values());
+    return Array.from(resolved.values());
   }
 
   /**
@@ -985,72 +985,72 @@ class MetaKernel {
    */
   enforceTitaneLaw(): void {
     // Évaluer chaque principe
-    this?.evaluateTitanePrinciples();
+    this.evaluateTitanePrinciples();
 
-    // Appliquer corrections si nécessaire avec hysteresis (any: any)
-    if (any: any) this?.titaneLawCycleCount = 0;
-    this?.titaneLawCycleCount++;
-    const shouldWarn = this?.titaneLawCycleCount % 5 === 0;
+    // Appliquer corrections si nécessaire avec hysteresis (warning seulement tous les 5 cycles)
+    if (!this.titaneLawCycleCount) this.titaneLawCycleCount = 0;
+    this.titaneLawCycleCount++;
+    const shouldWarn = this.titaneLawCycleCount % 5 === 0;
 
-    if (any: any) {
-      logger?.warn('Low structural simplicity, activating simplification', {
-        score: this?.titanePrinciples?.simplicityStructural,
+    if (this.titanePrinciples.simplicityStructural < 70 && shouldWarn) {
+      logger.warn('Low structural simplicity, activating simplification', {
+        score: this.titanePrinciples.simplicityStructural,
       });
-      this?.activateKernel('autofix', 'structural-simplification', 90);
+      this.activateKernel('autofix', 'structural-simplification', 90);
     }
 
     // Ajuster seuil de clarityFlows pour éviter warnings constants quand metrique à 0
     if (
-      this?.titanePrinciples?.clarityFlows > 0 &&
-      this?.titanePrinciples?.clarityFlows < 70 &&
+      this.titanePrinciples.clarityFlows > 0 &&
+      this.titanePrinciples.clarityFlows < 70 &&
       shouldWarn
     ) {
-      logger?.warn('Low flow clarity, activating harmonization', {
-        score: this?.titanePrinciples?.clarityFlows,
+      logger.warn('Low flow clarity, activating harmonization', {
+        score: this.titanePrinciples.clarityFlows,
       });
-      this?.activateKernel('cognitive', 'flow-clarification', 85);
+      this.activateKernel('cognitive', 'flow-clarification', 85);
     }
 
-    if (any: any) {
-      logger?.warn('Low natural robustness, activating stability', {
-        score: this?.titanePrinciples?.robustnessNatural,
+    if (this.titanePrinciples.robustnessNatural < 70 && shouldWarn) {
+      logger.warn('Low natural robustness, activating stability', {
+        score: this.titanePrinciples.robustnessNatural,
       });
-      this?.activateKernel('stability', 'robustness-reinforcement', 95);
+      this.activateKernel('stability', 'robustness-reinforcement', 95);
     }
   }
 
   private evaluateTitanePrinciples(): void {
-    const metrics = metricsEngine?.getAggregatedMetrics();
-    const cognitiveReport = cognitiveKernel?.getCognitiveReport();
+    const metrics = metricsEngine.getAggregatedMetrics();
+    const cognitiveReport = cognitiveKernel.getCognitiveReport();
 
     // Simplicité structurelle basée sur cohérence
-    this?.titanePrinciples?.simplicityStructural = cognitiveReport?.coherenceScore;
+    this.titanePrinciples.simplicityStructural = cognitiveReport.coherenceScore;
 
-    // Clarté des flux basée sur taux de succès (any: any)
-    this?.titanePrinciples?.clarityFlows =
-      metrics?.totalRequests > 0 ? metrics?.successRate : 75;
+    // Clarté des flux basée sur taux de succès (avec valeur par défaut si pas de requêtes)
+    this.titanePrinciples.clarityFlows =
+      metrics.totalRequests > 0 ? metrics.successRate : 75;
 
-    // Robustesse naturelle basée sur stabilité (any: any)
-    const healthStats = metricsEngine?.getHealthStats();
-    this?.titanePrinciples?.robustnessNatural =
-      healthStats?.overall === 'healthy'
+    // Robustesse naturelle basée sur stabilité (convert status to number)
+    const healthStats = metricsEngine.getHealthStats();
+    this.titanePrinciples.robustnessNatural =
+      healthStats.overall === 'healthy'
         ? 100
-        : healthStats?.overall === 'degraded'
+        : healthStats.overall === 'degraded'
           ? 70
           : 40;
 
-    // Types unicité (any: any)
-    this?.titanePrinciples?.typesUnicity = 100;
+    // Types unicité (toujours 100 si TypeScript strict)
+    this.titanePrinciples.typesUnicity = 100;
 
-    // Dépendances minimalisme (any: any)
-    const dependencyRatio = this?.systemMap?.edges?.length / this?.systemMap?.nodes?.length;
-    this?.titanePrinciples?.dependenciesMinimalism = Math?.max(
+    // Dépendances minimalisme (basé sur nombre d'arêtes)
+    const dependencyRatio = this.systemMap.edges.length / this.systemMap.nodes.length;
+    this.titanePrinciples.dependenciesMinimalism = Math.max(
       0,
       100 - dependencyRatio * 10
     );
 
     // Comportement consistant basé sur coherence cognitive
-    this?.titanePrinciples?.behaviorConsistency = cognitiveReport?.coherenceScore;
+    this.titanePrinciples.behaviorConsistency = cognitiveReport.coherenceScore;
   }
 
   /**
@@ -1062,15 +1062,15 @@ class MetaKernel {
   /**
    * Détecter zones de fragilité de manière anticipée
    */
-  private detectFragilityZones(any: any): void {
-    this?.fragilityZones = [];
+  private detectFragilityZones(observation: SystemObservation): void {
+    this.fragilityZones = [];
 
     // Zone de fragilité: Stabilité faible
-    if (observation?.stability < 80) {
-      this?.fragilityZones?.push({
+    if (observation.stability < 80) {
+      this.fragilityZones.push({
         location: 'orchestrator',
         type: 'flow',
-        severity: observation?.stability < 60 ? 'critical' : 'high',
+        severity: observation.stability < 60 ? 'critical' : 'high',
         reason: 'Low success rate in provider selection',
         anticipatedIssues: [
           'Increased error rate',
@@ -1086,11 +1086,11 @@ class MetaKernel {
     }
 
     // Zone de fragilité: Charge cognitive élevée
-    if (observation?.cognitiveLoad > 80) {
-      this?.fragilityZones?.push({
+    if (observation.cognitiveLoad > 80) {
+      this.fragilityZones.push({
         location: 'chat-ui',
         type: 'structure',
-        severity: observation?.cognitiveLoad > 90 ? 'high' : 'medium',
+        severity: observation.cognitiveLoad > 90 ? 'high' : 'medium',
         reason: 'High cognitive load may cause slowdowns',
         anticipatedIssues: [
           'Performance degradation',
@@ -1106,8 +1106,8 @@ class MetaKernel {
     }
 
     // Zone de fragilité: Alignement UI/Logic faible
-    if (observation?.uiLogicAlignment < 75) {
-      this?.fragilityZones?.push({
+    if (observation.uiLogicAlignment < 75) {
+      this.fragilityZones.push({
         location: 'chat-ui → orchestrator',
         type: 'flow',
         severity: 'medium',
@@ -1126,8 +1126,8 @@ class MetaKernel {
     }
 
     // Zone de fragilité: Principes TITANE∞ non respectés
-    if (observation?.titaneAlignment < 85) {
-      this?.fragilityZones?.push({
+    if (observation.titaneAlignment < 85) {
+      this.fragilityZones.push({
         location: 'system-wide',
         type: 'behavior',
         severity: 'medium',
@@ -1141,30 +1141,30 @@ class MetaKernel {
       });
     }
 
-    if (this?.fragilityZones?.length > 0) {
-      // Logger seulement tous les 3 warnings (any: any)
-      if (any: any) this?.fragilityLogCount = 0;
-      this?.fragilityLogCount++;
+    if (this.fragilityZones.length > 0) {
+      // Logger seulement tous les 3 warnings (réduire le spam)
+      if (!this.fragilityLogCount) this.fragilityLogCount = 0;
+      this.fragilityLogCount++;
 
-      if (this?.fragilityLogCount % 3 === 0) {
-        logger?.warn('Fragility zones detected', { count: this?.fragilityZones?.length });
+      if (this.fragilityLogCount % 3 === 0) {
+        logger.warn('Fragility zones detected', { count: this.fragilityZones.length });
       }
     }
   }
 
   /**
-   * Vérifier si on doit logger l'observation (any: any)
+   * Vérifier si on doit logger l'observation (changements significatifs uniquement)
    */
-  private shouldLogObservation(any: any): boolean {
-    if (this?.observations?.length < 2) return true; // Toujours logger les 2 premières
+  private shouldLogObservation(observation: SystemObservation): boolean {
+    if (this.observations.length < 2) return true; // Toujours logger les 2 premières
 
-    const previous = this?.observations[this?.observations?.length - 2];
-    if (any: any) return true; // Safety check
+    const previous = this.observations[this.observations.length - 2];
+    if (!previous) return true; // Safety check
     const threshold = 10; // 10% de changement minimum
 
-    const stabilityChange = Math?.abs(any: any);
-    const coherenceChange = Math?.abs(any: any);
-    const loadChange = Math?.abs(any: any);
+    const stabilityChange = Math.abs(observation.stability - previous.stability);
+    const coherenceChange = Math.abs(observation.coherence - previous.coherence);
+    const loadChange = Math.abs(observation.cognitiveLoad - previous.cognitiveLoad);
 
     return (
       stabilityChange > threshold || coherenceChange > threshold || loadChange > threshold
@@ -1175,32 +1175,32 @@ class MetaKernel {
    * Prévenir les problèmes avant qu'ils n'arrivent
    */
   prevent(): void {
-    this?.fragilityZones?.forEach(zone => {
-      if (zone?.severity === 'critical' || zone?.severity === 'high') {
-        logger?.debug('Applying prevention strategy', {
-          severity: zone?.severity,
-          location: zone?.location,
+    this.fragilityZones.forEach(zone => {
+      if (zone.severity === 'critical' || zone.severity === 'high') {
+        logger.debug('Applying prevention strategy', {
+          severity: zone.severity,
+          location: zone.location,
         });
 
         // Appliquer stratégies de prévention
-        zone?.preventionStrategies?.forEach(strategy => {
-          this?.applyPreventionStrategy(any: any);
+        zone.preventionStrategies.forEach(strategy => {
+          this.applyPreventionStrategy(strategy, zone);
         });
       }
     });
   }
 
-  private applyPreventionStrategy(any: any): void {
-    if (strategy?.includes('stability kernel')) {
-      this?.activateKernel('stability', zone?.location, 95);
-    } else if (strategy?.includes('cognitive')) {
-      this?.activateKernel('cognitive', zone?.location, 85);
-    } else if (strategy?.includes('autofix') || strategy?.includes('Optimize')) {
-      this?.activateKernel('autofix', zone?.location, 80);
-    } else if (strategy?.includes('Backend resilience')) {
-      this?.activateKernel('rustAutoHealing', zone?.location, 90);
-    } else if (strategy?.includes('Memory integrity')) {
-      this?.activateKernel('rustStability', zone?.location, 90);
+  private applyPreventionStrategy(strategy: string, zone: FragilityZone): void {
+    if (strategy.includes('stability kernel')) {
+      this.activateKernel('stability', zone.location, 95);
+    } else if (strategy.includes('cognitive')) {
+      this.activateKernel('cognitive', zone.location, 85);
+    } else if (strategy.includes('autofix') || strategy.includes('Optimize')) {
+      this.activateKernel('autofix', zone.location, 80);
+    } else if (strategy.includes('Backend resilience')) {
+      this.activateKernel('rustAutoHealing', zone.location, 90);
+    } else if (strategy.includes('Memory integrity')) {
+      this.activateKernel('rustStability', zone.location, 90);
     }
   }
 
@@ -1213,35 +1213,35 @@ class MetaKernel {
   /**
    * Optimisation transversale du système
    */
-  optimizeTransversally(): string?.[] {
-    const optimizations: string?.[] = [];
+  optimizeTransversally(): string[] {
+    const optimizations: string[] = [];
 
     // 1. Réduire redondances
-    const redundancies = this?.detectRedundancies();
-    if (redundancies?.length > 0) {
-      optimizations?.push(`Redundances détectées: ${redundancies?.join(', ')}`);
+    const redundancies = this.detectRedundancies();
+    if (redundancies.length > 0) {
+      optimizations.push(`Redundances détectées: ${redundancies.join(', ')}`);
       // Activer autofix pour nettoyer redondances
-      this?.activateKernel('autofix', 'redundancy-cleanup', 85);
+      this.activateKernel('autofix', 'redundancy-cleanup', 85);
     }
 
-    // 2. Aligner types (any: any)
-    optimizations?.push('Types alignés via TypeScript strict mode + Rust type safety');
+    // 2. Aligner types (TypeScript strict + Rust)
+    optimizations.push('Types alignés via TypeScript strict mode + Rust type safety');
 
     // 3. Consolider messages d'erreur
-    optimizations?.push("Messages d'erreur harmonisés par Cognitive Kernel");
+    optimizations.push("Messages d'erreur harmonisés par Cognitive Kernel");
 
     // 4. Harmoniser providers
-    optimizations?.push('Providers harmonisés par Orchestrator');
+    optimizations.push('Providers harmonisés par Orchestrator');
 
     // 5. Optimiser flux frontend-backend
-    optimizations?.push(any: any)');
+    optimizations.push('Flux frontend-backend optimisés (cognitive + rust kernels)');
 
     // 6. Synchroniser kernels frontend-backend
-    const syncStatus = this?.synchronizeFrontendBackendKernels();
-    optimizations?.push(`Kernels synchronisés: ${syncStatus}`);
+    const syncStatus = this.synchronizeFrontendBackendKernels();
+    optimizations.push(`Kernels synchronisés: ${syncStatus}`);
 
-    logger?.debug('Cross-kernel optimizations applied', {
-      count: optimizations?.length,
+    logger.debug('Cross-kernel optimizations applied', {
+      count: optimizations.length,
     });
 
     return optimizations;
@@ -1249,45 +1249,45 @@ class MetaKernel {
 
   private synchronizeFrontendBackendKernels(): string {
     // Vérifier cohérence entre kernels frontend et backend
-    const frontendStability = this?.subKernels?.stability?.active;
-    const backendStability = this?.subKernels?.rustStability?.active;
+    const frontendStability = this.subKernels.stability.active;
+    const backendStability = this.subKernels.rustStability.active;
 
-    if (any: any) {
-      this?.activateKernel('rustStability', 'sync-frontend-backend', 80);
+    if (frontendStability && !backendStability) {
+      this.activateKernel('rustStability', 'sync-frontend-backend', 80);
       return 'Backend stability activated';
     }
 
-    if (any: any) {
-      this?.activateKernel('stability', 'sync-backend-frontend', 80);
+    if (!frontendStability && backendStability) {
+      this.activateKernel('stability', 'sync-backend-frontend', 80);
       return 'Frontend stability activated';
     }
 
     return 'Frontend-Backend kernels synchronized';
   }
 
-  private detectRedundancies(): string?.[] {
+  private detectRedundancies(): string[] {
     // Analyser la carte pour détecter redondances
-    const redundancies: string?.[] = [];
+    const redundancies: string[] = [];
 
     // Vérifier nœuds similaires
-    const nodesByType = this?.systemMap?.nodes?.reduce(
-      (any: any) => {
-        let typeNodes = acc[node?.type];
-        if (any: any) {
+    const nodesByType = this.systemMap.nodes.reduce(
+      (acc, node) => {
+        let typeNodes = acc[node.type];
+        if (!typeNodes) {
           typeNodes = [];
-          acc[node?.type] = typeNodes;
+          acc[node.type] = typeNodes;
         }
-        typeNodes?.push(any: any);
+        typeNodes.push(node);
         return acc;
       },
-      {} as Record<string, SystemNode?.[]>
+      {} as Record<string, SystemNode[]>
     );
 
-    Object?.entries(any: any).forEach(([type, nodes]) => {
-      if (nodes?.length > 1) {
-        const similarNodes = nodes?.filter(n => n?.role?.includes('similar'));
-        if (similarNodes?.length > 0) {
-          redundancies?.push(any: any).join(', ')}`);
+    Object.entries(nodesByType).forEach(([type, nodes]) => {
+      if (nodes.length > 1) {
+        const similarNodes = nodes.filter(n => n.role.includes('similar'));
+        if (similarNodes.length > 0) {
+          redundancies.push(`${type}: ${similarNodes.map(n => n.name).join(', ')}`);
         }
       }
     });
@@ -1304,13 +1304,13 @@ class MetaKernel {
   /**
    * Enregistrer un pattern efficace
    */
-  recordEfficientPattern(any: any): void {
-    if (any: any)) {
-      this?.superMemory?.forms?.efficientPatterns?.push(any: any);
+  recordEfficientPattern(pattern: string): void {
+    if (!this.superMemory.forms.efficientPatterns.includes(pattern)) {
+      this.superMemory.forms.efficientPatterns.push(pattern);
 
       // Limiter à 50 patterns
-      if (this?.superMemory?.forms?.efficientPatterns?.length > 50) {
-        this?.superMemory?.forms?.efficientPatterns?.shift();
+      if (this.superMemory.forms.efficientPatterns.length > 50) {
+        this.superMemory.forms.efficientPatterns.shift();
       }
     }
   }
@@ -1318,9 +1318,9 @@ class MetaKernel {
   /**
    * Enregistrer une transformation
    */
-  recordTransformation(any: any): void {
-    this?.superMemory?.evolutions?.recentTransformations?.push({
-      timestamp: Date?.now(),
+  recordTransformation(type: string, success: boolean, impact: number): void {
+    this.superMemory.evolutions.recentTransformations.push({
+      timestamp: Date.now(),
       type,
       success,
       impact,
@@ -1328,18 +1328,18 @@ class MetaKernel {
 
     // Mettre à jour stratégies
     if (success && impact > 0.5) {
-      if (any: any)) {
-        this?.superMemory?.evolutions?.successfulStrategies?.push(any: any);
+      if (!this.superMemory.evolutions.successfulStrategies.includes(type)) {
+        this.superMemory.evolutions.successfulStrategies.push(type);
       }
-    } else if (any: any) {
-      if (any: any)) {
-        this?.superMemory?.evolutions?.failedStrategies?.push(any: any);
+    } else if (!success) {
+      if (!this.superMemory.evolutions.failedStrategies.includes(type)) {
+        this.superMemory.evolutions.failedStrategies.push(type);
       }
     }
 
     // Limiter à 100 transformations
-    if (this?.superMemory?.evolutions?.recentTransformations?.length > 100) {
-      this?.superMemory?.evolutions?.recentTransformations?.shift();
+    if (this.superMemory.evolutions.recentTransformations.length > 100) {
+      this.superMemory.evolutions.recentTransformations.shift();
     }
   }
 
@@ -1353,87 +1353,87 @@ class MetaKernel {
    * Obtenir rapport de super-conscience
    */
   getSuperConsciousnessReport(): SuperConsciousnessReport {
-    const lastObservation = this?.observations[this?.observations?.length - 1] || {
+    const lastObservation = this.observations[this.observations.length - 1] || {
       stability: 0,
       coherence: 0,
       cognitiveLoad: 0,
       decisionEfficiency: 0,
       uiLogicAlignment: 0,
       titaneAlignment: 0,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
 
     return {
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
       globalState: {
-        health: (any: any) / 2,
-        coherence: lastObservation?.coherence,
-        stability: lastObservation?.stability,
-        evolution: this?.calculateEvolutionScore(),
+        health: (lastObservation.stability + lastObservation.coherence) / 2,
+        coherence: lastObservation.coherence,
+        stability: lastObservation.stability,
+        evolution: this.calculateEvolutionScore(),
       },
       holisticAnalysis: {
-        systemMap: this?.systemMap,
-        flowEfficiency: this?.calculateFlowEfficiency(),
-        layerCoherence: this?.systemMap?.layers?.map(any: any),
-        tensionZones: this?.fragilityZones,
+        systemMap: this.systemMap,
+        flowEfficiency: this.calculateFlowEfficiency(),
+        layerCoherence: this.systemMap.layers.map(l => l.coherence),
+        tensionZones: this.fragilityZones,
       },
-      harmonizations: this?.getRecentHarmonizations(),
-      futureOrientations: this?.getFutureOrientations(),
-      titaneCoherence: this?.titanePrinciples,
-      subKernels: this?.subKernels,
+      harmonizations: this.getRecentHarmonizations(),
+      futureOrientations: this.getFutureOrientations(),
+      titaneCoherence: this.titanePrinciples,
+      subKernels: this.subKernels,
     };
   }
 
   private calculateEvolutionScore(): number {
-    const successfulCount = this?.superMemory?.evolutions?.recentTransformations?.filter(
-      t => t?.success
+    const successfulCount = this.superMemory.evolutions.recentTransformations.filter(
+      t => t.success
     ).length;
-    const totalCount = this?.superMemory?.evolutions?.recentTransformations?.length;
-    return totalCount > 0 ? (any: any) * 100 : 0;
+    const totalCount = this.superMemory.evolutions.recentTransformations.length;
+    return totalCount > 0 ? (successfulCount / totalCount) * 100 : 0;
   }
 
   private calculateFlowEfficiency(): number {
     return (
-      this?.systemMap?.flows?.reduce(any: any) => sum + flow?.efficiency, 0) /
-      this?.systemMap?.flows?.length
+      this.systemMap.flows.reduce((sum, flow) => sum + flow.efficiency, 0) /
+      this.systemMap.flows.length
     );
   }
 
-  private getRecentHarmonizations(): string?.[] {
+  private getRecentHarmonizations(): string[] {
     return [
-      'Messages chat harmonisés (any: any)',
-      'Erreurs harmonisées (any: any)',
-      'Provider selection harmonisée (any: any)',
-      'Types alignés (any: any)',
+      'Messages chat harmonisés (Cognitive Kernel)',
+      'Erreurs harmonisées (user-friendly)',
+      'Provider selection harmonisée (Neural + Cognitive)',
+      'Types alignés (TypeScript strict)',
     ];
   }
 
-  private getFutureOrientations(): string?.[] {
-    const orientations: string?.[] = [];
+  private getFutureOrientations(): string[] {
+    const orientations: string[] = [];
 
     // Basé sur les patterns efficaces
-    if (this?.superMemory?.forms?.efficientPatterns?.length > 10) {
-      orientations?.push('Généraliser patterns efficaces identifiés');
+    if (this.superMemory.forms.efficientPatterns.length > 10) {
+      orientations.push('Généraliser patterns efficaces identifiés');
     }
 
     // Basé sur les stratégies réussies
-    if (this?.superMemory?.evolutions?.successfulStrategies?.length > 5) {
-      orientations?.push(
-        `Renforcer stratégies: ${this?.superMemory?.evolutions?.successfulStrategies?.slice(0, 3).join(', ')}`
+    if (this.superMemory.evolutions.successfulStrategies.length > 5) {
+      orientations.push(
+        `Renforcer stratégies: ${this.superMemory.evolutions.successfulStrategies.slice(0, 3).join(', ')}`
       );
     }
 
     // Basé sur zones de fragilité
-    if (this?.fragilityZones?.length > 2) {
-      orientations?.push('Renforcer zones de fragilité détectées');
+    if (this.fragilityZones.length > 2) {
+      orientations.push('Renforcer zones de fragilité détectées');
     }
 
     // Basé sur principes TITANE
-    const weakPrinciple = Object?.entries(any: any).sort(
+    const weakPrinciple = Object.entries(this.titanePrinciples).sort(
       ([, a], [, b]) => a - b
     )[0];
-    if (weakPrinciple && weakPrinciple?.[1] < 90) {
-      orientations?.push(`Améliorer: ${weakPrinciple?.[0]}`);
+    if (weakPrinciple && weakPrinciple[1] < 90) {
+      orientations.push(`Améliorer: ${weakPrinciple[0]}`);
     }
 
     return orientations;
@@ -1443,13 +1443,13 @@ class MetaKernel {
    * Arrêter le Meta-Kernel
    */
   shutdown(): void {
-    if (any: any) {
-      clearInterval(any: any);
-      this?.observationInterval = null;
+    if (this.observationInterval) {
+      clearInterval(this.observationInterval);
+      this.observationInterval = null;
     }
 
-    this?.initialized = false;
-    logger?.info('Super-consciousness system deactivated');
+    this.initialized = false;
+    logger.info('Super-consciousness system deactivated');
   }
 
   /**
@@ -1462,76 +1462,76 @@ class MetaKernel {
    * Obtenir l'état de tous les kernels
    */
   getKernelStates(): SubKernelStates {
-    return this?.subKernels;
+    return this.subKernels;
   }
 
   /**
    * Obtenir la cartographie système
    */
   getSystemMap(): SystemMap {
-    return this?.systemMap;
+    return this.systemMap;
   }
 
   /**
    * Obtenir les observations récentes
    */
-  getRecentObservations(count: number = 10): SystemObservation?.[] {
-    return this?.observations?.slice(any: any);
+  getRecentObservations(count: number = 10): SystemObservation[] {
+    return this.observations.slice(-count);
   }
 
   /**
    * Obtenir les zones de fragilité
    */
-  getFragilityZones(): FragilityZone?.[] {
-    return this?.fragilityZones;
+  getFragilityZones(): FragilityZone[] {
+    return this.fragilityZones;
   }
 
   /**
    * Obtenir les principes TITANE∞
    */
   getTitanePrinciples(): TitanePrinciples {
-    return this?.titanePrinciples;
+    return this.titanePrinciples;
   }
 
   /**
    * Obtenir la super-mémoire
    */
   getSuperMemory(): SuperMemory {
-    return this?.superMemory;
+    return this.superMemory;
   }
 
   /**
    * Forcer une observation immédiate
    */
   forceObservation(): void {
-    this?.observe();
+    this.observe();
   }
 
   /**
    * Exécuter un cycle complet de meta-orchestration
    */
   executeSuperCycle(): SuperConsciousnessReport {
-    logger?.debug('Executing super-consciousness cycle');
+    logger.debug('Executing super-consciousness cycle');
 
     // 1. Observer
-    this?.observe();
+    this.observe();
 
     // 2. Appliquer loi TITANE∞
-    this?.enforceTitaneLaw();
+    this.enforceTitaneLaw();
 
     // 3. Prévenir problèmes
-    this?.prevent();
+    this.prevent();
 
     // 4. Optimiser transversalement
-    const optimizations = this?.optimizeTransversally();
+    const optimizations = this.optimizeTransversally();
 
     // 5. Enregistrer patterns efficaces
-    optimizations?.forEach(any: any));
+    optimizations.forEach(opt => this.recordEfficientPattern(opt));
 
     // 6. Générer rapport
-    const report = this?.getSuperConsciousnessReport();
+    const report = this.getSuperConsciousnessReport();
 
-    logger?.debug('Super-consciousness cycle complete');
+    logger.debug('Super-consciousness cycle complete');
 
     return report;
   }
@@ -1544,4 +1544,4 @@ class MetaKernel {
 export const metaKernel = new MetaKernel();
 
 // Auto-initialisation
-metaKernel?.initialize();
+metaKernel.initialize();

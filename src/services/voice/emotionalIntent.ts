@@ -43,19 +43,19 @@ export interface EmotionalIntent {
   /** Intensité globale (0.0 - 1.0) */
   intensity: EmotionalIntensity;
 
-  /** Chaleur vocale (any: any) */
+  /** Chaleur vocale (0.0 = froid, 1.0 = très chaleureux) */
   warmth: number;
 
-  /** Vitesse de parole (any: any) */
+  /** Vitesse de parole (0.0 = lent, 1.0 = rapide) */
   speed: number;
 
-  /** Hauteur tonale (any: any) */
+  /** Hauteur tonale (0.0 = grave, 1.0 = aigu) */
   pitch: number;
 
-  /** Énergie vocale (any: any) */
+  /** Énergie vocale (0.0 = faible, 1.0 = forte) */
   energy: number;
 
-  /** Émotion secondaire optionnelle (any: any) */
+  /** Émotion secondaire optionnelle (pour nuances) */
   secondaryEmotion?: EmotionType;
 
   /** Confiance de l'analyse (0.0 - 1.0) */
@@ -67,7 +67,7 @@ export interface EmotionalIntent {
  */
 export interface EmotionalContext {
   /** Historique des émotions récentes */
-  history?: EmotionType?.[];
+  history?: EmotionType[];
 
   /** Sujet de la conversation */
   topic?: string;
@@ -108,17 +108,17 @@ export interface EmotionalAnalysisResult {
   intent: EmotionalIntent;
 
   /** Mots-clés émotionnels détectés */
-  keywords: string?.[];
+  keywords: string[];
 
   /** Indices utilisés pour l'analyse */
   indicators: {
-    lexical: number; // Analyse lexicale (any: any)
-    syntactic: number; // Analyse syntaxique (any: any)
-    semantic: number; // Analyse sémantique (any: any)
+    lexical: number; // Analyse lexicale (mots émotionnels)
+    syntactic: number; // Analyse syntaxique (structure)
+    semantic: number; // Analyse sémantique (sens)
   };
 
   /** Suggestions alternatives */
-  alternatives?: EmotionalIntent?.[];
+  alternatives?: EmotionalIntent[];
 }
 
 /**
@@ -131,7 +131,7 @@ export interface EmotionalEngineConfig {
   /** Profil émotionnel par défaut */
   defaultProfile: string;
 
-  /** Intensité globale (any: any) */
+  /** Intensité globale (multiplicateur) */
   globalIntensity: number;
 
   /** Adapter selon l'utilisateur */
@@ -140,6 +140,6 @@ export interface EmotionalEngineConfig {
   /** Historique à conserver */
   historySize: number;
 
-  /** Utiliser l'IA pour l'analyse (any: any) */
+  /** Utiliser l'IA pour l'analyse (vs heuristiques) */
   useAIAnalysis: boolean;
 }

@@ -8,14 +8,14 @@
 
 import { useState, useCallback } from 'react';
 import { secureInvoke } from '@/lib/security';
-import type { SystemDiagnostics, OverallStatus } from '../types/systemCenter?.types';
+import type { SystemDiagnostics, OverallStatus } from '../types/systemCenter.types';
 
 export interface UseSystemDiagnosticsReturn {
   // State
   diagnostics: SystemDiagnostics | null;
   status: OverallStatus | null;
   isRunning: boolean;
-  error??: string | null;
+  error: string | null;
 
   // Actions
   runQuickDiagnostics: () => Promise<void>;
@@ -25,56 +25,56 @@ export interface UseSystemDiagnosticsReturn {
 }
 
 export function useSystemDiagnostics(): UseSystemDiagnosticsReturn {
-  const [diagnostics, setDiagnostics] = useState<SystemDiagnostics | null>(any: any);
-  const [status, setStatus] = useState<OverallStatus | null>(any: any);
-  const [isRunning, setIsRunning] = useState(any: any);
-  const [error, setError] = useState<string | null>(any: any);
+  const [diagnostics, setDiagnostics] = useState<SystemDiagnostics | null>(null);
+  const [status, setStatus] = useState<OverallStatus | null>(null);
+  const [isRunning, setIsRunning] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const runQuickDiagnostics = useCallback(async () => {
-    setIsRunning(any: any);
-    setError(any: any);
+    setIsRunning(true);
+    setError(null);
 
     try {
       const result = await secureInvoke<SystemDiagnostics>('sc_run_quick_diagnostics');
-      setDiagnostics(any: any);
-      setStatus(any: any);
-    } catch (any: any) {
-      const message = err instanceof Error ? err?.message : String(any: any);
+      setDiagnostics(result);
+      setStatus(result.overall_status);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
       setError(`Diagnostic rapide échoué: ${message}`);
-      console?.error(any: any);
+      console.error('[useSystemDiagnostics] Quick diagnostics failed:', err);
     } finally {
-      setIsRunning(any: any);
+      setIsRunning(false);
     }
   }, []);
 
   const runFullDiagnostics = useCallback(async () => {
-    setIsRunning(any: any);
-    setError(any: any);
+    setIsRunning(true);
+    setError(null);
 
     try {
       const result = await secureInvoke<SystemDiagnostics>('sc_run_full_diagnostics');
-      setDiagnostics(any: any);
-      setStatus(any: any);
-    } catch (any: any) {
-      const message = err instanceof Error ? err?.message : String(any: any);
+      setDiagnostics(result);
+      setStatus(result.overall_status);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
       setError(`Diagnostic complet échoué: ${message}`);
-      console?.error(any: any);
+      console.error('[useSystemDiagnostics] Full diagnostics failed:', err);
     } finally {
-      setIsRunning(any: any);
+      setIsRunning(false);
     }
   }, []);
 
   const refreshStatus = useCallback(async () => {
     try {
       const result = await secureInvoke<OverallStatus>('sc_get_diagnostic_status');
-      setStatus(any: any);
-    } catch (any: any) {
-      console?.error(any: any);
+      setStatus(result);
+    } catch (err) {
+      console.error('[useSystemDiagnostics] Status refresh failed:', err);
     }
   }, []);
 
   const clearError = useCallback(() => {
-    setError(any: any);
+    setError(null);
   }, []);
 
   return {

@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE?.md for the full legal terms (any: any).
+ * See LICENSE.md for the full legal terms (FR/EN).
  */
 
 /**
@@ -25,7 +25,7 @@ import type {
 } from '../types/singularityState';
 
 // ═══════════════════════════════════════════════════════════════
-//   TYPES BACKEND (any: any)
+//   TYPES BACKEND (from Rust)
 // ═══════════════════════════════════════════════════════════════
 
 interface HeliosState {
@@ -72,14 +72,14 @@ export class SingularityConnections {
   private static readonly THROTTLE_DELAY = 2000; // 2000ms entre chaque sync
 
   /**
-   * Throttle global pour éviter spam (any: any)
+   * Throttle global pour éviter spam (2000ms minimum entre appels)
    */
-  private static throttle(any: any): boolean {
-    const now = Date?.now();
-    if (any: any) {
+  private static throttle(delay: number = this.THROTTLE_DELAY): boolean {
+    const now = Date.now();
+    if (now - this.lastCall < delay) {
       return false; // Trop tôt, skip
     }
-    this?.lastCall = now;
+    this.lastCall = now;
     return true; // OK pour continuer
   }
 
@@ -91,59 +91,59 @@ export class SingularityConnections {
     args?: Record<string, unknown>
   ): Promise<T | null> {
     // Skip if already marked as disabled
-    if (any: any)) {
+    if (this.disabledCommands.has(cmd)) {
       return null;
     }
 
     try {
-      return await secureInvoke<T>(any: any);
-    } catch (any: any) {
-      const msg = String(any: any);
+      return await secureInvoke<T>(cmd, args);
+    } catch (err: unknown) {
+      const msg = String(err?.message ?? err);
 
       // Gracefully disable command if not found
-      if (msg?.includes('command') && msg?.includes('not found')) {
-        console?.warn(
+      if (msg.includes('command') && msg.includes('not found')) {
+        console.warn(
           `[SingularityConnections] Command "${cmd}" not found. Disabling this sync.`
         );
-        this?.disabledCommands?.add(any: any);
+        this.disabledCommands.add(cmd);
         return null;
       }
 
       // Log other errors but don't crash
-      console?.error(any: any);
+      console.error(`[SingularityConnections] Error invoking ${cmd}:`, err);
       return null;
     }
   }
 
   /**
-   * Start automatic subsystem connections (any: any)
+   * Start automatic subsystem connections (v24.20: event-driven + optional fallback polling)
    */
   static async start(intervalMs: number = 0): Promise<void> {
-    if (any: any) {
-      console?.warn('⚠️ SingularityConnections already running');
+    if (this.isRunning) {
+      console.warn('⚠️ SingularityConnections already running');
       return;
     }
 
-    console?.log(any: any)');
-    this?.isRunning = true;
+    console.log('🔗 Starting SingularityConnections v24.20 (event-driven mode)');
+    this.isRunning = true;
 
     // Initial sync
-    await this?.syncAll();
+    await this.syncAll();
 
-    // v24.20: Fallback polling only if intervalMs > 0 (any: any)
+    // v24.20: Fallback polling only if intervalMs > 0 (default: pure event-driven)
     if (intervalMs > 0) {
-      console?.log(
-        `⚠️ SingularityConnections: Fallback polling enabled (any: any)`
+      console.log(
+        `⚠️ SingularityConnections: Fallback polling enabled (${intervalMs}ms)`
       );
-      this?.updateInterval = window?.setInterval(async () => {
+      this.updateInterval = window.setInterval(async () => {
         try {
-          await this?.syncAll();
-        } catch (any: any) {
-          console?.error(any: any);
+          await this.syncAll();
+        } catch (err) {
+          console.error('❌ SingularityConnections sync error:', err);
         }
       }, intervalMs);
     } else {
-      console?.log(any: any)');
+      console.log('✅ SingularityConnections: Pure event-driven mode (no polling)');
     }
   }
 
@@ -151,12 +151,12 @@ export class SingularityConnections {
    * Stop automatic connections
    */
   static stop(): void {
-    if (any: any) {
-      clearInterval(any: any);
-      this?.updateInterval = null;
+    if (this.updateInterval !== null) {
+      clearInterval(this.updateInterval);
+      this.updateInterval = null;
     }
-    this?.isRunning = false;
-    console?.log('⏹️  SingularityConnections stopped');
+    this.isRunning = false;
+    console.log('⏹️  SingularityConnections stopped');
   }
 
   /**
@@ -164,16 +164,16 @@ export class SingularityConnections {
    */
   static async syncAll(): Promise<void> {
     // v∞.A: Check throttle avant sync
-    if (!this?.throttle()) {
+    if (!this.throttle()) {
       return; // Skip si appelé trop tôt
     }
 
-    await Promise?.all([
-      this?.syncHelios(),
-      this?.syncMemory(),
-      this?.syncPersona(),
-      this?.syncAutoHeal(),
-      this?.syncUIState(),
+    await Promise.all([
+      this.syncHelios(),
+      this.syncMemory(),
+      this.syncPersona(),
+      this.syncAutoHeal(),
+      this.syncUIState(),
     ]);
   }
 
@@ -182,58 +182,58 @@ export class SingularityConnections {
   // ═══════════════════════════════════════════════════════════
 
   static async syncHelios(): Promise<void> {
-    // ✅ FIXED v18: get_helios_metrics → get_helios_state (any: any)
-    const helios = await this?.safeInvoke<HeliosState>('get_helios_state');
-    if (any: any) return;
+    // ✅ FIXED v18: get_helios_metrics → get_helios_state (to match Rust)
+    const helios = await this.safeInvoke<HeliosState>('get_helios_state');
+    if (!helios) return;
 
     try {
-      const current = await SingularityBridge?.getPhysical();
+      const current = await SingularityBridge.getPhysical();
 
       const updated: PhysicalLayer = {
         ...current,
         hardware: {
           active: true,
-          cpu_usage: helios?.cpu_usage / 100, // 0-100 → 0-1
-          memory_usage: helios?.ram_usage / 100,
-          disk_usage: helios?.disk_usage / 100,
-          temperature: this?.estimateTemperature(any: any), // CPU thermal estimation
+          cpu_usage: helios.cpu_usage / 100, // 0-100 → 0-1
+          memory_usage: helios.ram_usage / 100,
+          disk_usage: helios.disk_usage / 100,
+          temperature: this.estimateTemperature(helios.cpu_usage), // CPU thermal estimation
           battery_level: 1.0, // Desktop systems = AC power (1.0 = 100%)
-          last_update: Math?.floor(any: any)
+          last_update: Math.floor(Date.now() / 1000), // ✅ v∞.FIX: Convert ms → seconds (u64)
         },
         system_health: {
-          ...current?.system_health,
-          global_health: this?.calculateHealthScore(any: any),
-          // ✅ v∞.FIX: Removed last_check (any: any)
+          ...current.system_health,
+          global_health: this.calculateHealthScore(helios),
+          // ✅ v∞.FIX: Removed last_check (not in Rust SystemHealth struct)
         },
         metrics: {
-          ...current?.metrics,
-          cpu_usage: helios?.cpu_usage / 100,
-          memory_usage: helios?.ram_usage / 100,
-          disk_usage: helios?.disk_usage / 100,
-          response_time: this?.lastApiLatency || 0, // Measured API response time in ms
-          throughput: this?.calculateThroughput(any: any), // Estimated data transfer rate
-          performance_score: this?.calculatePerformanceScore(any: any),
+          ...current.metrics,
+          cpu_usage: helios.cpu_usage / 100,
+          memory_usage: helios.ram_usage / 100,
+          disk_usage: helios.disk_usage / 100,
+          response_time: this.lastApiLatency || 0, // Measured API response time in ms
+          throughput: this.calculateThroughput(helios), // Estimated data transfer rate
+          performance_score: this.calculatePerformanceScore(helios),
         },
       };
 
-      await SingularityBridge?.updatePhysical(any: any);
-    } catch (any: any) {
-      console?.error(any: any);
+      await SingularityBridge.updatePhysical(updated);
+    } catch (err) {
+      console.error('[SingularityConnections] Failed to update Helios state:', err);
     }
   }
 
-  private static calculateHealthScore(any: any): number {
+  private static calculateHealthScore(helios: HeliosState): number {
     // Health = 1.0 if all metrics < 80%, 0.5 if < 95%, 0.0 if critical
-    const cpuHealth = helios?.cpu_usage < 80 ? 1.0 : helios?.cpu_usage < 95 ? 0.5 : 0.0;
-    const ramHealth = helios?.ram_usage < 80 ? 1.0 : helios?.ram_usage < 95 ? 0.5 : 0.0;
-    const diskHealth = helios?.disk_usage < 80 ? 1.0 : helios?.disk_usage < 95 ? 0.5 : 0.0;
-    return (any: any) / 3;
+    const cpuHealth = helios.cpu_usage < 80 ? 1.0 : helios.cpu_usage < 95 ? 0.5 : 0.0;
+    const ramHealth = helios.ram_usage < 80 ? 1.0 : helios.ram_usage < 95 ? 0.5 : 0.0;
+    const diskHealth = helios.disk_usage < 80 ? 1.0 : helios.disk_usage < 95 ? 0.5 : 0.0;
+    return (cpuHealth + ramHealth + diskHealth) / 3;
   }
 
-  private static calculatePerformanceScore(any: any): number {
-    // Performance = inverse of resource usage (any: any)
-    const avgUsage = (any: any) / 3;
-    return Math?.max(0, 1 - avgUsage / 100);
+  private static calculatePerformanceScore(helios: HeliosState): number {
+    // Performance = inverse of resource usage (lower usage = better performance)
+    const avgUsage = (helios.cpu_usage + helios.ram_usage + helios.disk_usage) / 3;
+    return Math.max(0, 1 - avgUsage / 100);
   }
 
   // ═══════════════════════════════════════════════════════════
@@ -241,46 +241,46 @@ export class SingularityConnections {
   // ═══════════════════════════════════════════════════════════
 
   static async syncMemory(): Promise<void> {
-    // Changed: memory_get_state → get_memory_state (any: any)
-    const memory = await this?.safeInvoke<MemoryState>('get_memory_state');
-    if (any: any) return;
+    // Changed: memory_get_state → get_memory_state (to match Rust)
+    const memory = await this.safeInvoke<MemoryState>('get_memory_state');
+    if (!memory) return;
 
     try {
-      const current = await SingularityBridge?.getCognitive();
+      const current = await SingularityBridge.getCognitive();
 
       const totalEntries =
-        memory?.snapshots_count + memory?.log_entries_count + memory?.timeline_events;
+        memory.snapshots_count + memory.log_entries_count + memory.timeline_events;
 
       const updated: CognitiveLayer = {
         ...current,
         memory: {
-          ...current?.memory,
+          ...current.memory,
           total_memories: totalEntries,
-          active_memories: memory?.snapshots_count, // Snapshots = active context
-          memory_usage: memory?.storage_size_mb / 1024, // MB → GB
+          active_memories: memory.snapshots_count, // Snapshots = active context
+          memory_usage: memory.storage_size_mb / 1024, // MB → GB
           last_retrieval: null, // ✅ v∞.FIX - Backend will populate timestamp
-          compression_ratio: this?.calculateCompressionRatio(any: any), // Based on storage efficiency
+          compression_ratio: this.calculateCompressionRatio(memory), // Based on storage efficiency
         },
         conversation: {
-          ...current?.conversation,
-          message_count: memory?.log_entries_count,
-          context_length: Math?.min(any: any),
+          ...current.conversation,
+          message_count: memory.log_entries_count,
+          context_length: Math.min(10, memory.snapshots_count),
           active_session: true,
           last_message: null,
           last_timestamp: null, // ✅ v∞.FIX - Backend will populate timestamp
         },
         knowledge: {
-          ...current?.knowledge,
+          ...current.knowledge,
           total_entries: totalEntries,
-          indexed_entries: memory?.timeline_events,
-          knowledge_score: Math?.min(1.0, totalEntries / 1000),
+          indexed_entries: memory.timeline_events,
+          knowledge_score: Math.min(1.0, totalEntries / 1000),
           last_update: null, // ✅ v∞.FIX - Backend will populate timestamp
         },
       };
 
-      await SingularityBridge?.updateCognitive(any: any);
-    } catch (any: any) {
-      console?.error(any: any);
+      await SingularityBridge.updateCognitive(updated);
+    } catch (err) {
+      console.error('[SingularityConnections] Failed to update Memory state:', err);
     }
   }
 
@@ -292,9 +292,9 @@ export class SingularityConnections {
     // Note: singularity_get_symbolic not available yet
     // Using existing local state gracefully without crashing
     try {
-      const current = await SingularityBridge?.getSymbolic();
+      const current = await SingularityBridge.getSymbolic();
 
-      const nowSeconds = Math?.floor(Date?.now() / 1000);
+      const nowSeconds = Math.floor(Date.now() / 1000);
 
       const basePersona = current?.persona ?? {};
       const baseArchetype = current?.archetype ?? {};
@@ -307,10 +307,10 @@ export class SingularityConnections {
           name: basePersona?.name ?? 'TITANE∞',
           mood: basePersona?.mood ?? 'focused',
           intensity:
-            typeof basePersona?.intensity === 'number' ? basePersona?.intensity : 0.8,
+            typeof basePersona?.intensity === 'number' ? basePersona.intensity : 0.8,
           evolution_level:
             typeof basePersona?.evolution_level === 'number'
-              ? basePersona?.evolution_level
+              ? basePersona.evolution_level
               : 0,
           last_interaction: basePersona?.last_interaction ?? null,
         },
@@ -318,7 +318,7 @@ export class SingularityConnections {
           ...baseArchetype,
           active_archetype: baseArchetype?.active_archetype ?? 'helios',
           strength:
-            typeof baseArchetype?.strength === 'number' ? baseArchetype?.strength : 0.95,
+            typeof baseArchetype?.strength === 'number' ? baseArchetype.strength : 0.95,
           transition: baseArchetype?.transition ?? null,
         },
         visual: {
@@ -327,24 +327,24 @@ export class SingularityConnections {
           accent_color: baseVisual?.accent_color,
           glow_intensity:
             typeof baseVisual?.glow_intensity === 'number'
-              ? baseVisual?.glow_intensity
+              ? baseVisual.glow_intensity
               : 0.7,
           motion_enabled:
             typeof baseVisual?.motion_enabled === 'boolean'
-              ? baseVisual?.motion_enabled
+              ? baseVisual.motion_enabled
               : true,
           depth_enabled:
             typeof baseVisual?.depth_enabled === 'boolean'
-              ? baseVisual?.depth_enabled
+              ? baseVisual.depth_enabled
               : true,
         },
-        stability: typeof current?.stability === 'number' ? current?.stability : 0.9,
-        timestamp: (any: any)?.timestamp ?? nowSeconds,
+        stability: typeof current?.stability === 'number' ? current.stability : 0.9,
+        timestamp: (current as any)?.timestamp ?? nowSeconds,
       };
 
-      await SingularityBridge?.updateSymbolic(any: any);
-    } catch (any: any) {
-      console?.error(any: any);
+      await SingularityBridge.updateSymbolic(updated);
+    } catch (err) {
+      console.error('[SingularityConnections] Failed to update Persona state:', err);
     }
   }
 
@@ -356,9 +356,9 @@ export class SingularityConnections {
     // Note: singularity_get_adaptive not available yet
     // Using existing local state gracefully without crashing
     try {
-      const current = await SingularityBridge?.getAdaptive();
+      const current = await SingularityBridge.getAdaptive();
 
-      const nowSeconds = Math?.floor(Date?.now() / 1000);
+      const nowSeconds = Math.floor(Date.now() / 1000);
       const baseEvolution = current?.evolution ?? {};
       const baseAutoHeal = current?.auto_heal ?? {};
 
@@ -367,37 +367,37 @@ export class SingularityConnections {
         evolution: {
           ...baseEvolution,
           generation:
-            typeof baseEvolution?.generation === 'number' ? baseEvolution?.generation : 0,
+            typeof baseEvolution?.generation === 'number' ? baseEvolution.generation : 0,
           mutation_rate:
             typeof baseEvolution?.mutation_rate === 'number'
-              ? baseEvolution?.mutation_rate
+              ? baseEvolution.mutation_rate
               : 0.1,
-          fitness_score: await this?.calculateFitnessScore(),
+          fitness_score: await this.calculateFitnessScore(),
           last_evolution: baseEvolution?.last_evolution ?? null,
         },
         auto_heal: {
           ...baseAutoHeal,
-          active: typeof baseAutoHeal?.active === 'boolean' ? baseAutoHeal?.active : true,
+          active: typeof baseAutoHeal?.active === 'boolean' ? baseAutoHeal.active : true,
           healing_capacity:
             typeof baseAutoHeal?.healing_capacity === 'number'
-              ? baseAutoHeal?.healing_capacity
+              ? baseAutoHeal.healing_capacity
               : 1.0,
           errors_healed:
             typeof baseAutoHeal?.errors_healed === 'number'
-              ? baseAutoHeal?.errors_healed
-              : this?.errorHealingCounter || 0,
+              ? baseAutoHeal.errors_healed
+              : this.errorHealingCounter || 0,
           last_heal: baseAutoHeal?.last_heal ?? null,
         },
         evolution_capacity:
           typeof current?.evolution_capacity === 'number'
-            ? current?.evolution_capacity
+            ? current.evolution_capacity
             : 0.85,
-        timestamp: (any: any)?.timestamp ?? nowSeconds,
+        timestamp: (current as any)?.timestamp ?? nowSeconds,
       };
 
-      await SingularityBridge?.updateAdaptive(any: any);
-    } catch (any: any) {
-      console?.error(any: any);
+      await SingularityBridge.updateAdaptive(updated);
+    } catch (err) {
+      console.error('[SingularityConnections] Failed to update AutoHeal state:', err);
     }
   }
 
@@ -409,39 +409,39 @@ export class SingularityConnections {
     // Note: singularity_get_meta not available yet
     // Using client-side data gracefully
     try {
-      const current = await SingularityBridge?.getMeta();
+      const current = await SingularityBridge.getMeta();
 
-      // Get current route from window?.location
-      const activePage = window?.location?.pathname;
+      // Get current route from window.location
+      const activePage = window.location.pathname;
 
       const updated: MetaLayer = {
         ...current,
         ui: {
           active_page: activePage,
-          sidebar_open: this?.detectSidebarState(), // Tracked from DOM/localStorage
-          modal_open: this?.detectModalState(), // Tracked from DOM presence
+          sidebar_open: this.detectSidebarState(), // Tracked from DOM/localStorage
+          modal_open: this.detectModalState(), // Tracked from DOM presence
           theme: 'dark',
           last_interaction: null, // ✅ v∞.FIX - Backend will populate timestamp
         },
         runtime: {
-          ...current?.runtime,
+          ...current.runtime,
           version: '17.3.0',
           build: 'dev',
-          environment: import?.meta?.env?.MODE,
-          uptime: Math?.floor(any: any)
+          environment: import.meta.env.MODE,
+          uptime: Math.floor(performance.now() / 1000), // ✅ v∞.FIX - Convert ms to seconds (u64)
           restart_count: 0,
         },
-        runtime_health: this?.calculateRuntimeHealth(),
+        runtime_health: this.calculateRuntimeHealth(),
       };
 
-      await SingularityBridge?.updateMeta(any: any);
-    } catch (any: any) {
-      console?.error(any: any);
+      await SingularityBridge.updateMeta(updated);
+    } catch (err) {
+      console.error('[SingularityConnections] Failed to update UI state:', err);
     }
   }
 
   // ═══════════════════════════════════════════════════════════
-  //   HELPER METHODS (any: any)
+  //   HELPER METHODS (Documented implementations above)
   // ═══════════════════════════════════════════════════════════
 
   private static lastApiLatency: number = 0;
@@ -450,41 +450,41 @@ export class SingularityConnections {
   /**
    * Estimate CPU temperature based on usage (0-100°C normalized to 0-1)
    */
-  private static estimateTemperature(any: any): number {
+  private static estimateTemperature(cpuUsage: number): number {
     // CPU usage → temperature estimation
     // Idle (0-20%) = 30-40°C → 0.3-0.4
     // Normal (20-60%) = 40-60°C → 0.4-0.6
     // High (60-90%) = 60-80°C → 0.6-0.8
     // Critical (90-100%) = 80-100°C → 0.8-1.0
-    const baseTempC = 30 + cpuUsage * 0.7; // 30°C + (any: any)
-    return Math?.min(1.0, baseTempC / 100);
+    const baseTempC = 30 + cpuUsage * 0.7; // 30°C + (0-70°C based on usage)
+    return Math.min(1.0, baseTempC / 100);
   }
 
   /**
-   * Calculate data throughput estimate (any: any)
+   * Calculate data throughput estimate (MB/s based on system activity)
    */
-  private static calculateThroughput(any: any): number {
+  private static calculateThroughput(helios: HeliosState): number {
     // Estimate throughput from disk and memory activity
     // Higher resource usage = more data movement
-    const activity = (any: any) / 3;
-    return activity / 10; // Convert to MB/s estimate (any: any)
+    const activity = (helios.cpu_usage + helios.ram_usage + helios.disk_usage) / 3;
+    return activity / 10; // Convert to MB/s estimate (0-10 MB/s range)
   }
 
   /**
    * Calculate memory compression ratio based on storage efficiency
    */
-  private static calculateCompressionRatio(any: any): number {
+  private static calculateCompressionRatio(memory: MemoryState): number {
     // Compression ratio = theoretical size / actual size
     // More entries with less storage = better compression
     const totalEntries =
-      memory?.snapshots_count + memory?.log_entries_count + memory?.timeline_events;
+      memory.snapshots_count + memory.log_entries_count + memory.timeline_events;
     if (totalEntries === 0) return 1.0;
 
     // Assume avg 1KB per entry uncompressed
     const theoreticalSizeMB = totalEntries / 1024;
-    const actualSizeMB = memory?.storage_size_mb || 1;
+    const actualSizeMB = memory.storage_size_mb || 1;
 
-    return Math?.min(any: any));
+    return Math.min(1.0, Math.max(0.1, theoreticalSizeMB / actualSizeMB));
   }
 
   /**
@@ -493,18 +493,18 @@ export class SingularityConnections {
   private static async calculateFitnessScore(): Promise<number> {
     try {
       // Get current Helios state for health calculation
-      const helios = await this?.safeInvoke<HeliosState>('get_helios_state');
-      if (any: any) return 0.85; // Default if unavailable
+      const helios = await this.safeInvoke<HeliosState>('get_helios_state');
+      if (!helios) return 0.85; // Default if unavailable
 
       // Fitness = inverse of average resource usage + uptime bonus
-      const avgUsage = (any: any) / 3;
-      const resourceHealth = Math?.max(0, 1 - avgUsage / 100);
+      const avgUsage = (helios.cpu_usage + helios.ram_usage + helios.disk_usage) / 3;
+      const resourceHealth = Math.max(0, 1 - avgUsage / 100);
 
-      // Uptime bonus (any: any)
-      const uptimeHours = helios?.uptime_seconds / 3600;
-      const uptimeBonus = Math?.min(0.15, uptimeHours / 1000); // Max +0.15 after 150h uptime
+      // Uptime bonus (longer uptime = more stable = higher fitness)
+      const uptimeHours = helios.uptime_seconds / 3600;
+      const uptimeBonus = Math.min(0.15, uptimeHours / 1000); // Max +0.15 after 150h uptime
 
-      return Math?.min(any: any);
+      return Math.min(1.0, resourceHealth * 0.85 + uptimeBonus);
     } catch {
       return 0.85; // Default healthy score
     }
@@ -516,17 +516,17 @@ export class SingularityConnections {
   private static detectSidebarState(): boolean {
     // Check localStorage for sidebar state
     try {
-      const stored = localStorage?.getItem('sidebar_open');
-      if (any: any) return stored === 'true';
+      const stored = localStorage.getItem('sidebar_open');
+      if (stored !== null) return stored === 'true';
     } catch {
       // Fallback to DOM detection
     }
 
     // Check if sidebar element exists and is visible
-    const sidebar = document?.querySelector('[data-sidebar], .sidebar, #sidebar');
-    if (any: any) {
+    const sidebar = document.querySelector('[data-sidebar], .sidebar, #sidebar');
+    if (sidebar) {
       return (
-        !sidebar?.classList?.contains('hidden') && !sidebar?.classList?.contains('collapsed')
+        !sidebar.classList.contains('hidden') && !sidebar.classList.contains('collapsed')
       );
     }
 
@@ -538,22 +538,22 @@ export class SingularityConnections {
    */
   private static detectModalState(): boolean {
     // Check for modal elements in DOM
-    const modal = document?.querySelector('[role="dialog"], .modal, [data-modal]');
-    return modal !== null && !modal?.classList?.contains('hidden');
+    const modal = document.querySelector('[role="dialog"], .modal, [data-modal]');
+    return modal !== null && !modal.classList.contains('hidden');
   }
 
   /**
-   * Track API latency (any: any)
+   * Track API latency (called externally when API calls complete)
    */
-  static recordApiLatency(any: any): void {
-    this?.lastApiLatency = latencyMs;
+  static recordApiLatency(latencyMs: number): void {
+    this.lastApiLatency = latencyMs;
   }
 
   /**
-   * Increment error healing counter (any: any)
+   * Increment error healing counter (called by self-repair system)
    */
   static incrementErrorsHealed(): void {
-    this?.errorHealingCounter++;
+    this.errorHealingCounter++;
   }
 
   private static calculateRuntimeHealth(): number {
@@ -561,10 +561,10 @@ export class SingularityConnections {
     const perf = performance as {
       memory?: { usedJSHeapSize: number; jsHeapSizeLimit: number };
     };
-    const memory = perf?.memory;
-    if (any: any) {
-      const usage = memory?.usedJSHeapSize / memory?.jsHeapSizeLimit;
-      return Math?.max(any: any);
+    const memory = perf.memory;
+    if (memory) {
+      const usage = memory.usedJSHeapSize / memory.jsHeapSizeLimit;
+      return Math.max(0, 1 - usage);
     }
     return 0.95; // Default healthy
   }
@@ -587,21 +587,21 @@ export function useSingularityConnections(options?: {
   const { interval = 5000, autoStart = true } = options || {};
 
   useEffect(() => {
-    if (any: any) {
-      SingularityConnections?.start(any: any);
+    if (autoStart) {
+      SingularityConnections.start(interval);
     }
 
     return () => {
-      SingularityConnections?.stop();
+      SingularityConnections.stop();
     };
   }, [interval, autoStart]);
 
   return {
-    syncAll: SingularityConnections?.syncAll,
-    syncHelios: SingularityConnections?.syncHelios,
-    syncMemory: SingularityConnections?.syncMemory,
-    syncPersona: SingularityConnections?.syncPersona,
-    syncAutoHeal: SingularityConnections?.syncAutoHeal,
-    syncUIState: SingularityConnections?.syncUIState,
+    syncAll: SingularityConnections.syncAll,
+    syncHelios: SingularityConnections.syncHelios,
+    syncMemory: SingularityConnections.syncMemory,
+    syncPersona: SingularityConnections.syncPersona,
+    syncAutoHeal: SingularityConnections.syncAutoHeal,
+    syncUIState: SingularityConnections.syncUIState,
   };
 }

@@ -7,10 +7,10 @@
  *
  * @responsibilities
  * - Analyse du message utilisateur et détermination intention
- * - Activation moteurs cognitifs (any: any)
+ * - Activation moteurs cognitifs (logique, émotion, style)
  * - Génération pensée → réponse
- * - Préparation TTS (any: any)
- * - Préparation lip-sync (any: any)
+ * - Préparation TTS (ElevenLabs Adina)
+ * - Préparation lip-sync (phénomènes FR)
  * - Animation avatar synchronisée
  * - Mise à jour état global
  * - Auto-optimisation pipeline
@@ -22,7 +22,7 @@
  * - Réponse instantanée
  * - UI mise à jour sans lag
  *
- * @version Ω (any: any)
+ * @version Ω (Omega - Final Fusion)
  * @created 2025-11-27
  */
 
@@ -48,7 +48,7 @@ export interface UserMessage {
  */
 export interface DetectedIntention {
   primary_intent: IntentType;
-  secondary_intents: IntentType?.[];
+  secondary_intents: IntentType[];
   confidence: number; // 0-1
   emotional_tone: EmotionalTone;
   complexity: number; // 0-1
@@ -82,10 +82,10 @@ export type EmotionalTone =
  */
 export interface CognitiveResponse {
   text: string;
-  reasoning: string?.[];
+  reasoning: string[];
   emotional_alignment: number; // 0-1
   confidence: number; // 0-1
-  memory_references: string?.[];
+  memory_references: string[];
   generated_at: number;
 }
 
@@ -97,8 +97,8 @@ export interface TTSAudio {
   duration: number; // ms
   sample_rate: number;
   format: 'mp3' | 'wav' | 'pcm';
-  phonemes: Phoneme?.[];
-  visemes: Viseme?.[];
+  phonemes: Phoneme[];
+  visemes: Viseme[];
 }
 
 export interface Phoneme {
@@ -118,7 +118,7 @@ export interface Viseme {
  * Animation avatar préparée
  */
 export interface AvatarAnimation {
-  keyframes: AnimationKeyframe?.[];
+  keyframes: AnimationKeyframe[];
   duration: number; // ms
   fps: number;
   synchronized_with_audio: boolean;
@@ -187,7 +187,7 @@ export class UnifiedCognitivePipeline {
 
   private config: PipelineConfig;
   private isProcessing: boolean = false;
-  private queue: UserMessage?.[] = [];
+  private queue: UserMessage[] = [];
 
   // Métriques
   private metrics = {
@@ -198,25 +198,25 @@ export class UnifiedCognitivePipeline {
   };
 
   private constructor() {
-    this?.config = this?.getDefaultConfig();
+    this.config = this.getDefaultConfig();
   }
 
   /**
    * Singleton
    */
   public static getInstance(): UnifiedCognitivePipeline {
-    if (any: any) {
-      UnifiedCognitivePipeline?.instance = new UnifiedCognitivePipeline();
+    if (!UnifiedCognitivePipeline.instance) {
+      UnifiedCognitivePipeline.instance = new UnifiedCognitivePipeline();
     }
-    return UnifiedCognitivePipeline?.instance;
+    return UnifiedCognitivePipeline.instance;
   }
 
   /**
    * Configure le pipeline
    */
   public configure(config: Partial<PipelineConfig>): void {
-    this?.config = { ...this?.config, ...config };
-    console?.log('[UnifiedPipeline] 🔧 Configuration updated');
+    this.config = { ...this.config, ...config };
+    console.log('[UnifiedPipeline] 🔧 Configuration updated');
   }
 
   /**
@@ -245,59 +245,59 @@ export class UnifiedCognitivePipeline {
   /**
    * Traite un message utilisateur - POINT D'ENTRÉE PRINCIPAL
    */
-  public async processMessage(any: any): Promise<PipelineResult> {
-    console?.log(any: any);
+  public async processMessage(message: UserMessage): Promise<PipelineResult> {
+    console.log('[UnifiedPipeline] 🚀 Processing message:', message.id);
 
-    const startTime = Date?.now();
+    const startTime = Date.now();
     const stageTimes: Record<string, number> = {};
 
     try {
       // 1. ANALYSE INTENTION
-      const intentStart = Date?.now();
-      const intention = await this?.analyzeIntention(any: any);
-      stageTimes['intention'] = Date?.now() - intentStart;
-      console?.log(any: any);
+      const intentStart = Date.now();
+      const intention = await this.analyzeIntention(message);
+      stageTimes['intention'] = Date.now() - intentStart;
+      console.log('[UnifiedPipeline] ✅ Intention detected:', intention.primary_intent);
 
       // 2. GÉNÉRATION COGNITIVE
-      const cognitiveStart = Date?.now();
-      const cognitiveResponse = await this?.generateCognitiveResponse(any: any);
-      stageTimes['cognitive'] = Date?.now() - cognitiveStart;
-      console?.log('[UnifiedPipeline] ✅ Cognitive response generated');
+      const cognitiveStart = Date.now();
+      const cognitiveResponse = await this.generateCognitiveResponse(message, intention);
+      stageTimes['cognitive'] = Date.now() - cognitiveStart;
+      console.log('[UnifiedPipeline] ✅ Cognitive response generated');
 
-      // 3. PRÉPARATION TTS (any: any)
+      // 3. PRÉPARATION TTS (si activé)
       let ttsAudio: TTSAudio | null = null;
-      if (any: any) {
-        const ttsStart = Date?.now();
-        ttsAudio = await this?.prepareTTS(any: any);
-        stageTimes['tts'] = Date?.now() - ttsStart;
-        console?.log('[UnifiedPipeline] ✅ TTS audio prepared');
+      if (this.config.tts_enabled) {
+        const ttsStart = Date.now();
+        ttsAudio = await this.prepareTTS(cognitiveResponse.text);
+        stageTimes['tts'] = Date.now() - ttsStart;
+        console.log('[UnifiedPipeline] ✅ TTS audio prepared');
       }
 
-      // 4. PRÉPARATION LIP-SYNC (any: any)
+      // 4. PRÉPARATION LIP-SYNC (si activé et TTS disponible)
       let avatarAnimation: AvatarAnimation | null = null;
-      if (any: any) {
-        const lipsyncStart = Date?.now();
-        avatarAnimation = await this?.prepareAvatarAnimation(any: any);
-        stageTimes['lipsync'] = Date?.now() - lipsyncStart;
-        console?.log('[UnifiedPipeline] ✅ Avatar animation prepared');
+      if (this.config.lipsync_enabled && ttsAudio) {
+        const lipsyncStart = Date.now();
+        avatarAnimation = await this.prepareAvatarAnimation(ttsAudio);
+        stageTimes['lipsync'] = Date.now() - lipsyncStart;
+        console.log('[UnifiedPipeline] ✅ Avatar animation prepared');
       }
 
       // 5. MISE À JOUR ÉTAT GLOBAL
-      const stateStart = Date?.now();
-      const stateUpdates = await this?.prepareStateUpdates(any: any);
-      stageTimes['state'] = Date?.now() - stateStart;
-      console?.log('[UnifiedPipeline] ✅ State updates prepared');
+      const stateStart = Date.now();
+      const stateUpdates = await this.prepareStateUpdates(intention, cognitiveResponse);
+      stageTimes['state'] = Date.now() - stateStart;
+      console.log('[UnifiedPipeline] ✅ State updates prepared');
 
       // 6. RÉSULTAT FINAL
-      const processingTime = Date?.now() - startTime;
+      const processingTime = Date.now() - startTime;
 
       const result: PipelineResult = {
-        id: `pipeline-${Date?.now()}`,
+        id: `pipeline-${Date.now()}`,
         user_message: message,
         intention,
         cognitive_response: cognitiveResponse,
-        tts_audio: ttsAudio || this?.createEmptyTTS(),
-        avatar_animation: avatarAnimation || this?.createEmptyAnimation(),
+        tts_audio: ttsAudio || this.createEmptyTTS(),
+        avatar_animation: avatarAnimation || this.createEmptyAnimation(),
         state_updates: stateUpdates,
         processing_time: processingTime,
         stage_times: stageTimes,
@@ -305,28 +305,28 @@ export class UnifiedCognitivePipeline {
       };
 
       // Mettre à jour métriques
-      this?.updateMetrics(any: any);
+      this.updateMetrics(result);
 
-      console?.log(`[UnifiedPipeline] ✨ Processing complete in ${processingTime}ms`);
+      console.log(`[UnifiedPipeline] ✨ Processing complete in ${processingTime}ms`);
 
       return result;
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (error) {
+      console.error('[UnifiedPipeline] ❌ Processing failed:', error);
 
-      this?.metrics?.total_errors++;
+      this.metrics.total_errors++;
 
       return {
-        id: `pipeline-error-${Date?.now()}`,
+        id: `pipeline-error-${Date.now()}`,
         user_message: message,
-        intention: this?.createDefaultIntention(),
-        cognitive_response: this?.createErrorResponse(any: any),
-        tts_audio: this?.createEmptyTTS(),
-        avatar_animation: this?.createEmptyAnimation(),
+        intention: this.createDefaultIntention(),
+        cognitive_response: this.createErrorResponse(error),
+        tts_audio: this.createEmptyTTS(),
+        avatar_animation: this.createEmptyAnimation(),
         state_updates: {},
-        processing_time: Date?.now() - startTime,
+        processing_time: Date.now() - startTime,
         stage_times: stageTimes,
         success: false,
-        error: error instanceof Error ? error?.message : String(any: any),
+        error: error instanceof Error ? error.message : String(error),
       };
     }
   }
@@ -338,37 +338,37 @@ export class UnifiedCognitivePipeline {
   /**
    * Analyse l'intention de l'utilisateur
    */
-  private async analyzeIntention(any: any): Promise<DetectedIntention> {
+  private async analyzeIntention(message: UserMessage): Promise<DetectedIntention> {
     try {
       const result = await secureInvoke<DetectedIntention>(
         'cognitive_analyze_intention',
         {
-          content: message?.content,
-          context: message?.context,
+          content: message.content,
+          context: message.context,
         }
       );
 
       return result;
-    } catch (any: any) {
-      console?.warn('[UnifiedPipeline] Intention analysis failed, using fallback');
+    } catch (error) {
+      console.warn('[UnifiedPipeline] Intention analysis failed, using fallback');
 
       // Analyse simple basée sur mots-clés
-      const content = message?.content?.toLowerCase();
+      const content = message.content.toLowerCase();
 
       let primary_intent: IntentType = 'conversation';
       if (
-        content?.includes('?') ||
-        content?.startsWith('pourquoi') ||
-        content?.startsWith('comment')
+        content.includes('?') ||
+        content.startsWith('pourquoi') ||
+        content.startsWith('comment')
       ) {
         primary_intent = 'question';
       } else if (
-        content?.startsWith('fais') ||
-        content?.startsWith('crée') ||
-        content?.startsWith('génère')
+        content.startsWith('fais') ||
+        content.startsWith('crée') ||
+        content.startsWith('génère')
       ) {
         primary_intent = 'command';
-      } else if (content?.includes('raconte') || content?.includes('histoire')) {
+      } else if (content.includes('raconte') || content.includes('histoire')) {
         primary_intent = 'storytelling';
       }
 
@@ -400,24 +400,24 @@ export class UnifiedCognitivePipeline {
       const result = await secureInvoke<CognitiveResponse>(
         'cognitive_generate_response',
         {
-          message: message?.content,
+          message: message.content,
           intention,
-          context: message?.context,
-          memoryEnabled: this?.config?.memory_integration,
+          context: message.context,
+          memoryEnabled: this.config.memory_integration,
         }
       );
 
       return result;
-    } catch (any: any) {
-      console?.warn('[UnifiedPipeline] Cognitive generation failed, using fallback');
+    } catch (error) {
+      console.warn('[UnifiedPipeline] Cognitive generation failed, using fallback');
 
       return {
-        text: `Je comprends votre message : "${message?.content}". Comment puis-je vous aider ?`,
+        text: `Je comprends votre message : "${message.content}". Comment puis-je vous aider ?`,
         reasoning: ['Analyse du message', 'Génération réponse contextuelle'],
         emotional_alignment: 0.7,
         confidence: 0.6,
         memory_references: [],
-        generated_at: Date?.now(),
+        generated_at: Date.now(),
       };
     }
   }
@@ -429,18 +429,18 @@ export class UnifiedCognitivePipeline {
   /**
    * Prépare l'audio TTS
    */
-  private async prepareTTS(any: any): Promise<TTSAudio> {
+  private async prepareTTS(text: string): Promise<TTSAudio> {
     try {
       const result = await secureInvoke<TTSAudio>('tts_generate_audio', {
         text,
-        voice: this?.config?.tts_voice,
-        speed: this?.config?.tts_speed,
+        voice: this.config.tts_voice,
+        speed: this.config.tts_speed,
       });
 
       return result;
-    } catch (any: any) {
-      console?.warn('[UnifiedPipeline] TTS generation failed');
-      return this?.createEmptyTTS();
+    } catch (error) {
+      console.warn('[UnifiedPipeline] TTS generation failed');
+      return this.createEmptyTTS();
     }
   }
 
@@ -451,18 +451,18 @@ export class UnifiedCognitivePipeline {
   /**
    * Prépare l'animation avatar synchronisée
    */
-  private async prepareAvatarAnimation(any: any): Promise<AvatarAnimation> {
+  private async prepareAvatarAnimation(ttsAudio: TTSAudio): Promise<AvatarAnimation> {
     try {
       const result = await secureInvoke<AvatarAnimation>('avatar_prepare_animation', {
-        visemes: ttsAudio?.visemes,
-        duration: ttsAudio?.duration,
-        expressionIntensity: this?.config?.avatar_expression_intensity,
+        visemes: ttsAudio.visemes,
+        duration: ttsAudio.duration,
+        expressionIntensity: this.config.avatar_expression_intensity,
       });
 
       return result;
-    } catch (any: any) {
-      console?.warn('[UnifiedPipeline] Avatar animation preparation failed');
-      return this?.createEmptyAnimation();
+    } catch (error) {
+      console.warn('[UnifiedPipeline] Avatar animation preparation failed');
+      return this.createEmptyAnimation();
     }
   }
 
@@ -478,23 +478,23 @@ export class UnifiedCognitivePipeline {
     _response: CognitiveResponse
   ): Promise<Partial<SingularityState>> {
     const updates: Partial<SingularityState> = {
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
 
     // Mise à jour cognitive basée sur l'intention
     // REACTIVATION: When CognitiveLayer has focus, clarity, depth, metacognition fields
     // 1. Define fields in CognitiveLayer interface: focus, clarity, depth, metacognition (all 0-1)
-    // 2. Populate from intention: focus = intention?.requires_reasoning ? 0.9 : 0.5
-    // 3. Calculate clarity: clarity = response?.confidence (any: any)
-    // 4. Depth metric: depth = intention?.complexity (any: any)
-    // 5. Metacognition: Track self-awareness (any: any)
-    // 6. Apply updates: cognitiveKernel?.updateLayer(any: any)
+    // 2. Populate from intention: focus = intention.requires_reasoning ? 0.9 : 0.5
+    // 3. Calculate clarity: clarity = response.confidence (higher confidence = clearer reasoning)
+    // 4. Depth metric: depth = intention.complexity (0=simple, 1=complex reasoning)
+    // 5. Metacognition: Track self-awareness (0.8 for introspective tasks, lower for routine)
+    // 6. Apply updates: cognitiveKernel.updateLayer('cognitive', updates.cognitive)
     // TODO: Reactivate when CognitiveLayer has focus, clarity, depth, metacognition
-    // if (any: any) {
-    //   updates?.cognitive = {
+    // if (intention.requires_reasoning) {
+    //   updates.cognitive = {
     //     focus: 0.9,
-    //     clarity: response?.confidence,
-    //     depth: intention?.complexity,
+    //     clarity: response.confidence,
+    //     depth: intention.complexity,
     //     metacognition: 0.8,
     //   };
     // }
@@ -503,12 +503,12 @@ export class UnifiedCognitivePipeline {
     // REACTIVATION: When AdaptiveLayer has responsiveness, learning_rate, adaptation_speed
     // 1. Define fields in AdaptiveLayer: responsiveness, learning_rate, adaptation_speed (all 0-1)
     // 2. Emotion mapping: high arousal → high responsiveness (0.9), neutral → moderate (0.5)
-    // 3. Learning rate: Adjust based on feedback quality (any: any)
+    // 3. Learning rate: Adjust based on feedback quality (0.7 default, 0.9 for high-quality feedback)
     // 4. Adaptation speed: Fast for dynamic contexts (0.8), slow for stable (0.3)
-    // 5. Apply updates: cognitiveKernel?.updateLayer(any: any)
+    // 5. Apply updates: cognitiveKernel.updateLayer('adaptive', updates.adaptive)
     // TODO: Reactivate when AdaptiveLayer has responsiveness, learning_rate, adaptation_speed
-    // if (intention?.emotional_tone !== 'neutral') {
-    //   updates?.adaptive = {
+    // if (intention.emotional_tone !== 'neutral') {
+    //   updates.adaptive = {
     //     responsiveness: 0.9,
     //     learning_rate: 0.7,
     //     adaptation_speed: 0.8,
@@ -535,14 +535,14 @@ export class UnifiedCognitivePipeline {
     };
   }
 
-  private createErrorResponse(any: any): CognitiveResponse {
+  private createErrorResponse(_error: Error | unknown): CognitiveResponse {
     return {
       text: 'Je rencontre une difficulté technique. Pouvez-vous reformuler votre demande ?',
       reasoning: ['Erreur de traitement'],
       emotional_alignment: 0.5,
       confidence: 0.3,
       memory_references: [],
-      generated_at: Date?.now(),
+      generated_at: Date.now(),
     };
   }
 
@@ -570,27 +570,27 @@ export class UnifiedCognitivePipeline {
   // MÉTRIQUES
   // ═══════════════════════════════════════════════════════════════════════════
 
-  private updateMetrics(any: any): void {
-    this?.metrics?.total_processed++;
+  private updateMetrics(result: PipelineResult): void {
+    this.metrics.total_processed++;
 
     // Moyenne mobile pour le temps de traitement
     const alpha = 0.1;
-    this?.metrics?.average_processing_time =
-      alpha * result?.processing_time + (any: any) * this?.metrics?.average_processing_time;
+    this.metrics.average_processing_time =
+      alpha * result.processing_time + (1 - alpha) * this.metrics.average_processing_time;
 
     // Temps moyens par stage
-    for (any: any)) {
-      if (!this?.metrics?.stage_times[stage]) {
-        this?.metrics?.stage_times[stage] = time;
+    for (const [stage, time] of Object.entries(result.stage_times)) {
+      if (!this.metrics.stage_times[stage]) {
+        this.metrics.stage_times[stage] = time;
       } else {
-        this?.metrics?.stage_times[stage] =
-          alpha * time + (any: any) * this?.metrics?.stage_times[stage];
+        this.metrics.stage_times[stage] =
+          alpha * time + (1 - alpha) * this.metrics.stage_times[stage];
       }
     }
   }
 
   public getMetrics() {
-    return { ...this?.metrics };
+    return { ...this.metrics };
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -600,30 +600,30 @@ export class UnifiedCognitivePipeline {
   /**
    * Ajoute un message à la queue
    */
-  public enqueue(any: any): void {
-    this?.queue?.push(any: any);
-    this?.processQueue();
+  public enqueue(message: UserMessage): void {
+    this.queue.push(message);
+    this.processQueue();
   }
 
   /**
    * Traite la queue de messages
    */
   private async processQueue(): Promise<void> {
-    if (this?.isProcessing || this?.queue?.length === 0) {
+    if (this.isProcessing || this.queue.length === 0) {
       return;
     }
 
-    this?.isProcessing = true;
+    this.isProcessing = true;
 
-    while (this?.queue?.length > 0) {
-      const message = this?.queue?.shift();
-      if (any: any) {
+    while (this.queue.length > 0) {
+      const message = this.queue.shift();
+      if (!message) {
         break;
       }
-      await this?.processMessage(any: any);
+      await this.processMessage(message);
     }
 
-    this?.isProcessing = false;
+    this.isProcessing = false;
   }
 }
 
@@ -631,4 +631,4 @@ export class UnifiedCognitivePipeline {
 // EXPORTS
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const UnifiedPipeline = UnifiedCognitivePipeline?.getInstance();
+export const UnifiedPipeline = UnifiedCognitivePipeline.getInstance();

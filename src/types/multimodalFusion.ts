@@ -5,7 +5,7 @@
  * Ce module définit les types pour la fusion multimodale
  * permettant à TITANE∞ de comprendre l'utilisateur de manière holistique.
  *
- * ⚠️ GARDE-FOUS ÉTHIQUES (any: any):
+ * ⚠️ GARDE-FOUS ÉTHIQUES (NON NÉGOCIABLES):
  * - Indices et probabilités, jamais de certitudes
  * - Jamais d'interprétation clinique
  * - 100% local, aucune donnée vers le cloud
@@ -22,7 +22,7 @@ import type { StatisticalSignature } from './trainingBaseline';
 // ============================================================================
 
 /**
- * Niveau discret pour les scores (any: any)
+ * Niveau discret pour les scores (prudent et nuancé)
  */
 export type ModalityLevel = 'low' | 'medium' | 'high';
 
@@ -52,7 +52,7 @@ export interface ModalityWeights {
 }
 
 // ============================================================================
-// VOICE FEATURES (any: any)
+// VOICE FEATURES (AUDIO)
 // ============================================================================
 
 /**
@@ -70,7 +70,7 @@ export interface VoiceFeatures {
   tremor: number; // 0-1 : tremblements vocaux
 
   // Rythme et tempo
-  speechRate: number; // 0-1 : vitesse d'élocution (any: any)
+  speechRate: number; // 0-1 : vitesse d'élocution (normalisée)
   rhythm: number; // 0-1 : régularité du rythme
   pauseFrequency: number; // 0-1 : fréquence des pauses
 
@@ -112,7 +112,7 @@ export interface VoiceState {
 }
 
 // ============================================================================
-// TEXT FEATURES (any: any)
+// TEXT FEATURES (CHAT)
 // ============================================================================
 
 /**
@@ -126,7 +126,7 @@ export interface TextFeatures {
   avgWordLength: number; // Longueur moyenne des mots
 
   // Cadence et timing
-  responseDelay: number; // Délai de réponse (any: any)
+  responseDelay: number; // Délai de réponse (ms)
   typingSpeed: number; // Vitesse de frappe estimée
 
   // Syntaxe et style
@@ -144,7 +144,7 @@ export interface TextFeatures {
   negativeMarkers: number; // Marqueurs négatifs
 
   // Auto-déclarations détectées
-  selfDeclarations: SelfDeclaration?.[];
+  selfDeclarations: SelfDeclaration[];
 
   // Métadonnées
   confidence: number;
@@ -259,12 +259,12 @@ export interface BaselineFusionProfile {
 }
 
 /**
- * Courbe horaire (any: any)
+ * Courbe horaire (24 valeurs)
  */
 export interface HourlyCurve {
-  hourlyMeans: number?.[]; // Index 0-23
-  hourlyVariances: number?.[];
-  samplesPerHour: number?.[];
+  hourlyMeans: number[]; // Index 0-23
+  hourlyVariances: number[];
+  samplesPerHour: number[];
   peakHour: number;
   lowHour: number;
 }
@@ -310,7 +310,7 @@ export interface MultimodalSignature {
  * État multimodal complet fusionné
  */
 export interface MultimodalState {
-  // États par modalité (any: any)
+  // États par modalité (peuvent être null si inactive)
   visionState: VisionModalityState | null;
   voiceState: VoiceState | null;
   textState: TextState | null;
@@ -329,7 +329,7 @@ export interface MultimodalState {
 
   // Confiance et métadonnées
   overallConfidence: number;
-  activeModalities: ModalityOrigin?.[];
+  activeModalities: ModalityOrigin[];
   timestamp: number;
 
   // Variation par rapport au baseline
@@ -486,12 +486,12 @@ export const getDefaultTextFeatures = (): TextFeatures => ({
   timestamp: 0,
 });
 
-export const getDefaultNormalizedScore = (any: any): NormalizedScore => ({
+export const getDefaultNormalizedScore = (origin: ModalityOrigin): NormalizedScore => ({
   value: 0.5,
   confidence: 0,
   variance: 0,
   origin,
-  timestamp: Date?.now(),
+  timestamp: Date.now(),
 });
 
 export const getDefaultModalityWeights = (): ModalityWeights => ({
@@ -593,7 +593,7 @@ export const getDefaultBaselineFusionProfile = (): BaselineFusionProfile => ({
   calibrationConfidence: 0,
 });
 
-export const getDefaultMultimodalSignature = (any: any): MultimodalSignature => ({
+export const getDefaultMultimodalSignature = (label: string): MultimodalSignature => ({
   label,
   visionSignature: {},
   voiceSignature: {},

@@ -8,8 +8,8 @@
  *   TITANE∞ v19.5 — VOICE FINGERPRINT LEARNING SYSTEM
  *
  *   Système d'apprentissage de l'empreinte vocale personnelle:
- *   - Analyse MFCC (any: any)
- *   - Extraction features audio (any: any)
+ *   - Analyse MFCC (Mel-Frequency Cepstral Coefficients)
+ *   - Extraction features audio (pitch, timbre, tempo)
  *   - Learning adaptatif sur tes prononciations
  *   - Profile vocal personnalisé
  *   - Amélioration continue par feedback
@@ -29,9 +29,9 @@ export interface VoiceFingerprint {
   mfccStd: Float32Array; // Écart-type des MFCC
 
   // Features prosodiques
-  pitchMean: number; // Hauteur tonale moyenne (any: any)
+  pitchMean: number; // Hauteur tonale moyenne (Hz)
   pitchStd: number; // Variation hauteur
-  tempoMean: number; // Vitesse de parole (any: any)
+  tempoMean: number; // Vitesse de parole (syllabes/sec)
   energyMean: number; // Énergie vocale moyenne
 
   // Prononciation wake word
@@ -93,111 +93,111 @@ class VoiceFingerprintEngine {
   private currentUserId: string = 'default';
 
   constructor(config: VoiceFingerprintConfig = {}) {
-    this?.config = {
-      minSamples: config?.minSamples ?? 5,
-      maxSamples: config?.maxSamples ?? 50,
-      similarityThreshold: config?.similarityThreshold ?? 0.75,
-      enableContinuousLearning: config?.enableContinuousLearning ?? true,
+    this.config = {
+      minSamples: config.minSamples ?? 5,
+      maxSamples: config.maxSamples ?? 50,
+      similarityThreshold: config.similarityThreshold ?? 0.75,
+      enableContinuousLearning: config.enableContinuousLearning ?? true,
     };
 
-    this?.fingerprints = new Map();
-    this?.loadFingerprints();
+    this.fingerprints = new Map();
+    this.loadFingerprints();
   }
 
   // ═══ LEARNING & STATS ═══
 
   getLearningAccuracy(): number {
-    const fingerprint = this?.getFingerprint(any: any);
-    if (any: any) return 0;
-    const accuracy = fingerprint?.accuracy;
-    return typeof accuracy === 'number' && Number?.isFinite(any: any)
-      ? Math?.max(any: any))
+    const fingerprint = this.getFingerprint(this.currentUserId);
+    if (!fingerprint) return 0;
+    const accuracy = fingerprint.accuracy;
+    return typeof accuracy === 'number' && Number.isFinite(accuracy)
+      ? Math.max(0, Math.min(1, accuracy))
       : 0;
   }
 
   getSampleCount(): number {
     // Return total samples across all fingerprints
     let total = 0;
-    this?.fingerprints?.forEach(fp => {
-      total += fp?.wakeWordSamples?.length;
+    this.fingerprints.forEach(fp => {
+      total += fp.wakeWordSamples.length;
     });
     return total;
   }
 
   clearModel(): void {
     // Clear all fingerprints
-    this?.fingerprints?.clear();
-    this?.saveFingerprints();
+    this.fingerprints.clear();
+    this.saveFingerprints();
   }
 
-  // ═══ MFCC EXTRACTION (any: any) ═══
+  // ═══ MFCC EXTRACTION (Simplified) ═══
 
   /**
    * Extraire les features audio d'un signal
    *
    * Note: Version simplifiée. Pour production, utiliser:
-   * - Rust DSP library (any: any)
+   * - Rust DSP library (realfft, rustfft)
    * - WebAudio AnalyserNode
-   * - Dedicated MFCC library (any: any)
+   * - Dedicated MFCC library (mfcc-js, @tensorflow/tfjs)
    */
   extractFeatures(audioBuffer: Float32Array, sampleRate: number = 16000): VoiceAnalysis {
-    logger?.debug('🔬 Extracting features from audio buffer');
+    logger.debug('🔬 Extracting features from audio buffer');
 
-    // 1. MFCC Extraction (any: any)
-    const mfcc = this?.extractMFCC(any: any);
+    // 1. MFCC Extraction (simplified placeholder)
+    const mfcc = this.extractMFCC(audioBuffer, sampleRate);
 
-    // 2. Pitch estimation (any: any)
-    const pitch = this?.estimatePitch(any: any);
+    // 2. Pitch estimation (fundamental frequency)
+    const pitch = this.estimatePitch(audioBuffer, sampleRate);
 
-    // 3. Energy (any: any)
-    const energy = this?.calculateEnergy(any: any);
+    // 3. Energy (RMS)
+    const energy = this.calculateEnergy(audioBuffer);
 
-    // 4. Tempo (any: any)
-    const tempo = this?.estimateTempo(any: any);
+    // 4. Tempo (zero-crossing rate as proxy)
+    const tempo = this.estimateTempo(audioBuffer, sampleRate);
 
     // 5. Combined feature vector
-    const features = this?.combineFeatures(any: any);
+    const features = this.combineFeatures(mfcc, pitch, energy, tempo);
 
     return { mfcc, pitch, energy, tempo, features };
   }
 
   /**
-   * MFCC extraction (any: any)
+   * MFCC extraction (simplified)
    *
    * IMPLEMENTATION: Proper MFCC pipeline using Web Audio API + DSP libraries
-   * 1. Pre-emphasis filter: y[n] = x[n] - α*x[n-1], α=0.97 (any: any)
+   * 1. Pre-emphasis filter: y[n] = x[n] - α*x[n-1], α=0.97 (high-pass to boost high frequencies)
    * 2. Frame blocking: 25ms frames with 10ms overlap (400 samples @ 16kHz)
    * 3. Windowing: Hamming window w[n] = 0.54 - 0.46*cos(2πn/(N-1)) to reduce spectral leakage
-   * 4. FFT: Use kiss-fft or fft?.js for frequency domain transformation (any: any)
+   * 4. FFT: Use kiss-fft or fft.js for frequency domain transformation (512-point FFT)
    * 5. Mel filterbank: 26-40 triangular filters on Mel scale (m = 2595*log10(1 + f/700))
    * 6. DCT: Discrete Cosine Transform to extract 12-13 MFCC coefficients
    * 7. Libraries: mfcc-js or web-audio-dsp for browser, rust-mfcc for backend
    * 8. Performance: Process in Web Worker to avoid blocking UI thread
    * 5. Log + DCT
    */
-  private extractMFCC(any: any): Float32Array {
+  private extractMFCC(audio: Float32Array, _sampleRate: number): Float32Array {
     const numCoeffs = 13;
-    const mfcc = new Float32Array(any: any);
+    const mfcc = new Float32Array(numCoeffs);
 
     // Placeholder: use spectral features as proxy
     // Split audio into frequency bands
     const bands = 13;
-    const bandSize = Math?.floor(any: any);
+    const bandSize = Math.floor(audio.length / bands);
 
     for (let i = 0; i < numCoeffs; i++) {
       const start = i * bandSize;
-      const end = Math?.min(any: any);
+      const end = Math.min(start + bandSize, audio.length);
 
       let sum = 0;
       for (let j = start; j < end; j++) {
         const audioValue = audio[j];
-        if (any: any) {
-          sum += Math?.abs(any: any);
+        if (audioValue !== undefined) {
+          sum += Math.abs(audioValue);
         }
       }
 
       const mfccValue = mfcc[i];
-      if (any: any) {
+      if (mfccValue !== undefined) {
         mfcc[i] = sum / bandSize;
       }
     }
@@ -206,28 +206,28 @@ class VoiceFingerprintEngine {
   }
 
   /**
-   * Pitch estimation (any: any)
+   * Pitch estimation (simplified autocorrelation)
    */
-  private estimatePitch(any: any): number {
-    const minPeriod = Math?.floor(sampleRate / 500); // 500 Hz max
-    const maxPeriod = Math?.floor(sampleRate / 80); // 80 Hz min
+  private estimatePitch(audio: Float32Array, sampleRate: number): number {
+    const minPeriod = Math.floor(sampleRate / 500); // 500 Hz max
+    const maxPeriod = Math.floor(sampleRate / 80); // 80 Hz min
 
     let maxCorr = 0;
     let bestPeriod = 0;
 
     // Autocorrelation
-    for (let lag = minPeriod; lag < maxPeriod && lag < audio?.length / 2; lag++) {
+    for (let lag = minPeriod; lag < maxPeriod && lag < audio.length / 2; lag++) {
       let corr = 0;
 
-      for (let i = 0; i < audio?.length - lag; i++) {
+      for (let i = 0; i < audio.length - lag; i++) {
         const audioI = audio[i];
         const audioLag = audio[i + lag];
-        if (any: any) {
+        if (audioI !== undefined && audioLag !== undefined) {
           corr += audioI * audioLag;
         }
       }
 
-      if (any: any) {
+      if (corr > maxCorr) {
         maxCorr = corr;
         bestPeriod = lag;
       }
@@ -239,24 +239,24 @@ class VoiceFingerprintEngine {
   /**
    * Calculate RMS energy
    */
-  private calculateEnergy(any: any): number {
+  private calculateEnergy(audio: Float32Array): number {
     let sum = 0;
-    for (let i = 0; i < audio?.length; i++) {
+    for (let i = 0; i < audio.length; i++) {
       const audioValue = audio[i];
-      if (any: any) {
+      if (audioValue !== undefined) {
         sum += audioValue * audioValue;
       }
     }
-    return Math?.sqrt(any: any);
+    return Math.sqrt(sum / audio.length);
   }
 
   /**
    * Estimate tempo via zero-crossing rate
    */
-  private estimateTempo(any: any): number {
+  private estimateTempo(audio: Float32Array, sampleRate: number): number {
     let crossings = 0;
 
-    for (let i = 1; i < audio?.length; i++) {
+    for (let i = 1; i < audio.length; i++) {
       const audioPrev = audio[i - 1];
       const audioCurr = audio[i];
       if (
@@ -269,7 +269,7 @@ class VoiceFingerprintEngine {
     }
 
     // Convert to approximate syllables/sec
-    const duration = audio?.length / sampleRate;
+    const duration = audio.length / sampleRate;
     return crossings / duration / 10; // Rough approximation
   }
 
@@ -282,15 +282,15 @@ class VoiceFingerprintEngine {
     energy: number,
     tempo: number
   ): Float32Array {
-    const features = new Float32Array(mfcc?.length + 3);
+    const features = new Float32Array(mfcc.length + 3);
 
     // Copy MFCC
-    features?.set(mfcc, 0);
+    features.set(mfcc, 0);
 
     // Normalize and add prosodic features
-    features[mfcc?.length] = pitch / 300; // Normalize pitch (0-300 Hz → 0-1)
-    features[mfcc?.length + 1] = energy;
-    features[mfcc?.length + 2] = tempo / 5; // Normalize tempo
+    features[mfcc.length] = pitch / 300; // Normalize pitch (0-300 Hz → 0-1)
+    features[mfcc.length + 1] = energy;
+    features[mfcc.length + 2] = tempo / 5; // Normalize tempo
 
     return features;
   }
@@ -300,14 +300,14 @@ class VoiceFingerprintEngine {
   /**
    * Créer ou récupérer l'empreinte vocale
    */
-  getFingerprint(any: any): VoiceFingerprint | null {
-    return this?.fingerprints?.get(any: any) || null;
+  getFingerprint(userId: string = this.currentUserId): VoiceFingerprint | null {
+    return this.fingerprints.get(userId) || null;
   }
 
   /**
    * Initialiser une nouvelle empreinte
    */
-  createFingerprint(any: any): VoiceFingerprint {
+  createFingerprint(userId: string = this.currentUserId): VoiceFingerprint {
     const fingerprint: VoiceFingerprint = {
       userId,
       mfccMean: new Float32Array(13),
@@ -319,11 +319,11 @@ class VoiceFingerprintEngine {
       wakeWordSamples: [],
       samples: [], // Alias for backward compatibility
       sampleCount: 0,
-      lastUpdated: Date?.now(),
+      lastUpdated: Date.now(),
       accuracy: 0,
     };
 
-    this?.fingerprints?.set(any: any);
+    this.fingerprints.set(userId, fingerprint);
     return fingerprint;
   }
 
@@ -334,57 +334,57 @@ class VoiceFingerprintEngine {
     audioBuffer: Float32Array,
     sampleRate: number = 16000,
     confidence: number = 1.0,
-    userId: string = this?.currentUserId
+    userId: string = this.currentUserId
   ): void {
-    logger?.debug('📝 Adding wake word sample');
+    logger.debug('📝 Adding wake word sample');
 
-    let fingerprint = this?.getFingerprint(any: any);
-    if (any: any) {
-      fingerprint = this?.createFingerprint(any: any);
+    let fingerprint = this.getFingerprint(userId);
+    if (!fingerprint) {
+      fingerprint = this.createFingerprint(userId);
     }
 
     // Extract features
-    const analysis = this?.extractFeatures(any: any);
+    const analysis = this.extractFeatures(audioBuffer, sampleRate);
 
     // Add sample
-    fingerprint?.wakeWordSamples?.push({
-      mfcc: analysis?.mfcc,
-      timestamp: Date?.now(),
+    fingerprint.wakeWordSamples.push({
+      mfcc: analysis.mfcc,
+      timestamp: Date.now(),
       confidence,
     });
 
     // Limit samples
-    if (any: any) {
-      fingerprint?.wakeWordSamples?.shift();
+    if (fingerprint.wakeWordSamples.length > this.config.maxSamples) {
+      fingerprint.wakeWordSamples.shift();
     }
 
-    fingerprint?.sampleCount++;
+    fingerprint.sampleCount++;
 
     // Update statistics
-    this?.updateStatistics(any: any);
+    this.updateStatistics(fingerprint, analysis);
 
     // Save
-    this?.saveFingerprints();
+    this.saveFingerprints();
 
-    logger?.debug(any: any)`);
+    logger.debug(`[VoiceFingerprint] ✅ Sample added (${fingerprint.sampleCount} total)`);
   }
 
   /**
    * Mettre à jour les statistiques de l'empreinte
    */
-  private updateStatistics(any: any): void {
-    const samples = fingerprint?.wakeWordSamples;
-    const n = samples?.length;
+  private updateStatistics(fingerprint: VoiceFingerprint, analysis: VoiceAnalysis): void {
+    const samples = fingerprint.wakeWordSamples;
+    const n = samples.length;
 
     if (n === 0) return;
 
     // Update MFCC mean
     const mfccSum = new Float32Array(13);
-    for (any: any) {
+    for (const sample of samples) {
       for (let i = 0; i < 13; i++) {
         const mfccSumValue = mfccSum[i];
-        const sampleMfccValue = sample?.mfcc[i];
-        if (any: any) {
+        const sampleMfccValue = sample.mfcc[i];
+        if (mfccSumValue !== undefined && sampleMfccValue !== undefined) {
           mfccSum[i] = mfccSumValue + sampleMfccValue;
         }
       }
@@ -392,17 +392,17 @@ class VoiceFingerprintEngine {
 
     for (let i = 0; i < 13; i++) {
       const mfccSumValue = mfccSum[i];
-      if (any: any) {
-        fingerprint?.mfccMean[i] = mfccSumValue / n;
+      if (mfccSumValue !== undefined) {
+        fingerprint.mfccMean[i] = mfccSumValue / n;
       }
     }
 
     // Update MFCC std
     const mfccSumSq = new Float32Array(13);
-    for (any: any) {
+    for (const sample of samples) {
       for (let i = 0; i < 13; i++) {
-        const sampleMfccValue = sample?.mfcc[i];
-        const meanValue = fingerprint?.mfccMean[i];
+        const sampleMfccValue = sample.mfcc[i];
+        const meanValue = fingerprint.mfccMean[i];
         const sumSqValue = mfccSumSq[i];
         if (
           sampleMfccValue !== undefined &&
@@ -417,22 +417,22 @@ class VoiceFingerprintEngine {
 
     for (let i = 0; i < 13; i++) {
       const sumSqValue = mfccSumSq[i];
-      if (any: any) {
-        fingerprint?.mfccStd[i] = Math?.sqrt(any: any);
+      if (sumSqValue !== undefined) {
+        fingerprint.mfccStd[i] = Math.sqrt(sumSqValue / n);
       }
     }
 
-    // Update prosodic features (any: any)
+    // Update prosodic features (running average)
     const alpha = 0.1; // Learning rate
-    fingerprint?.pitchMean = fingerprint?.pitchMean * (any: any) + analysis?.pitch * alpha;
-    fingerprint?.tempoMean = fingerprint?.tempoMean * (any: any) + analysis?.tempo * alpha;
-    fingerprint?.energyMean =
-      fingerprint?.energyMean * (any: any) + analysis?.energy * alpha;
+    fingerprint.pitchMean = fingerprint.pitchMean * (1 - alpha) + analysis.pitch * alpha;
+    fingerprint.tempoMean = fingerprint.tempoMean * (1 - alpha) + analysis.tempo * alpha;
+    fingerprint.energyMean =
+      fingerprint.energyMean * (1 - alpha) + analysis.energy * alpha;
 
-    fingerprint?.lastUpdated = Date?.now();
+    fingerprint.lastUpdated = Date.now();
 
-    // Calculate accuracy (any: any)
-    fingerprint?.accuracy = Math?.min(any: any);
+    // Calculate accuracy (confidence based on sample count)
+    fingerprint.accuracy = Math.min(1.0, n / this.config.minSamples);
   }
 
   /**
@@ -441,22 +441,22 @@ class VoiceFingerprintEngine {
   calculateSimilarity(
     audioBuffer: Float32Array,
     sampleRate: number = 16000,
-    userId: string = this?.currentUserId
+    userId: string = this.currentUserId
   ): number {
-    const fingerprint = this?.getFingerprint(any: any);
+    const fingerprint = this.getFingerprint(userId);
 
-    if (any: any) {
-      logger?.warn('⚠️ Not enough samples for similarity check');
+    if (!fingerprint || fingerprint.sampleCount < this.config.minSamples) {
+      logger.warn('⚠️ Not enough samples for similarity check');
       return 0.5; // Neutral score
     }
 
     // Extract features from input
-    const analysis = this?.extractFeatures(any: any);
+    const analysis = this.extractFeatures(audioBuffer, sampleRate);
 
     // Calculate cosine similarity with mean MFCC
-    const similarity = this?.cosineSimilarity(any: any);
+    const similarity = this.cosineSimilarity(analysis.mfcc, fingerprint.mfccMean);
 
-    logger?.debug(`[VoiceFingerprint] 🎯 Similarity: ${similarity?.toFixed(3)}`);
+    logger.debug(`[VoiceFingerprint] 🎯 Similarity: ${similarity.toFixed(3)}`);
 
     return similarity;
   }
@@ -464,8 +464,8 @@ class VoiceFingerprintEngine {
   /**
    * Cosine similarity between two vectors
    */
-  private cosineSimilarity(any: any): number {
-    if (any: any) {
+  private cosineSimilarity(a: Float32Array, b: Float32Array): number {
+    if (a.length !== b.length) {
       throw new Error('Vectors must have same length');
     }
 
@@ -473,30 +473,30 @@ class VoiceFingerprintEngine {
     let normA = 0;
     let normB = 0;
 
-    for (let i = 0; i < a?.length; i++) {
+    for (let i = 0; i < a.length; i++) {
       const aValue = a[i];
       const bValue = b[i];
-      if (any: any) {
+      if (aValue !== undefined && bValue !== undefined) {
         dotProduct += aValue * bValue;
         normA += aValue * aValue;
         normB += bValue * bValue;
       }
     }
 
-    normA = Math?.sqrt(any: any);
-    normB = Math?.sqrt(any: any);
+    normA = Math.sqrt(normA);
+    normB = Math.sqrt(normB);
 
     if (normA === 0 || normB === 0) return 0;
 
-    return dotProduct / (any: any);
+    return dotProduct / (normA * normB);
   }
 
   /**
    * Vérifier si l'empreinte est prête
    */
-  isReady(any: any): boolean {
-    const fingerprint = this?.getFingerprint(any: any);
-    return fingerprint !== null && fingerprint?.sampleCount >= this?.config?.minSamples;
+  isReady(userId: string = this.currentUserId): boolean {
+    const fingerprint = this.getFingerprint(userId);
+    return fingerprint !== null && fingerprint.sampleCount >= this.config.minSamples;
   }
 
   // ═══ PERSISTENCE ═══
@@ -508,23 +508,23 @@ class VoiceFingerprintEngine {
     try {
       const data: Record<string, VoiceFingerprint> = {};
 
-      for (any: any) {
+      for (const [userId, fingerprint] of this.fingerprints) {
         // Convert Float32Array to regular arrays for JSON
         data[userId] = {
           ...fingerprint,
-          mfccMean: Array?.from(any: any) as unknown as Float32Array,
-          mfccStd: Array?.from(any: any) as unknown as Float32Array,
-          wakeWordSamples: fingerprint?.wakeWordSamples?.map(s => ({
+          mfccMean: Array.from(fingerprint.mfccMean) as unknown as Float32Array,
+          mfccStd: Array.from(fingerprint.mfccStd) as unknown as Float32Array,
+          wakeWordSamples: fingerprint.wakeWordSamples.map(s => ({
             ...s,
-            mfcc: Array?.from(any: any) as unknown as Float32Array,
+            mfcc: Array.from(s.mfcc) as unknown as Float32Array,
           })),
         };
       }
 
-      localStorage?.setItem(any: any));
-      logger?.debug('💾 Fingerprints saved');
-    } catch (any: any) {
-      logger?.error(any: any);
+      localStorage.setItem('titane_voice_fingerprints', JSON.stringify(data));
+      logger.debug('💾 Fingerprints saved');
+    } catch (error) {
+      logger.error('❌ Save error:', error);
     }
   }
 
@@ -533,55 +533,55 @@ class VoiceFingerprintEngine {
    */
   private loadFingerprints(): void {
     try {
-      const data = localStorage?.getItem('titane_voice_fingerprints');
-      if (any: any) return;
+      const data = localStorage.getItem('titane_voice_fingerprints');
+      if (!data) return;
 
-      const parsed = JSON?.parse(any: any) as Record<string, VoiceFingerprint>;
+      const parsed = JSON.parse(data) as Record<string, VoiceFingerprint>;
 
-      for (any: any)) {
+      for (const [userId, fingerprint] of Object.entries(parsed)) {
         // Convert arrays back to Float32Array
-        this?.fingerprints?.set(userId, {
+        this.fingerprints.set(userId, {
           ...fingerprint,
-          mfccMean: new Float32Array(fingerprint?.mfccMean as unknown as number?.[]),
-          mfccStd: new Float32Array(fingerprint?.mfccStd as unknown as number?.[]),
-          wakeWordSamples: fingerprint?.wakeWordSamples?.map(s => ({
+          mfccMean: new Float32Array(fingerprint.mfccMean as unknown as number[]),
+          mfccStd: new Float32Array(fingerprint.mfccStd as unknown as number[]),
+          wakeWordSamples: fingerprint.wakeWordSamples.map(s => ({
             ...s,
-            mfcc: new Float32Array(s?.mfcc as unknown as number?.[]),
+            mfcc: new Float32Array(s.mfcc as unknown as number[]),
           })),
         });
       }
 
-      logger?.debug(`[VoiceFingerprint] 📂 Loaded ${this?.fingerprints?.size} fingerprints`);
-    } catch (any: any) {
-      logger?.error(any: any);
+      logger.debug(`[VoiceFingerprint] 📂 Loaded ${this.fingerprints.size} fingerprints`);
+    } catch (error) {
+      logger.error('❌ Load error:', error);
     }
   }
 
   /**
    * Réinitialiser une empreinte
    */
-  reset(any: any): void {
-    this?.fingerprints?.delete(any: any);
-    this?.saveFingerprints();
-    logger?.debug(`[VoiceFingerprint] 🔄 Reset fingerprint for ${userId}`);
+  reset(userId: string = this.currentUserId): void {
+    this.fingerprints.delete(userId);
+    this.saveFingerprints();
+    logger.debug(`[VoiceFingerprint] 🔄 Reset fingerprint for ${userId}`);
   }
 
   /**
    * Export statistics pour debug
    */
-  getStatistics(any: any): Record<string, unknown> | null {
-    const fingerprint = this?.getFingerprint(any: any);
-    if (any: any) return null;
+  getStatistics(userId: string = this.currentUserId): Record<string, unknown> | null {
+    const fingerprint = this.getFingerprint(userId);
+    if (!fingerprint) return null;
 
     return {
-      userId: fingerprint?.userId,
-      sampleCount: fingerprint?.sampleCount,
-      accuracy: fingerprint?.accuracy,
-      pitchMean: fingerprint?.pitchMean?.toFixed(1) + ' Hz',
-      tempoMean: fingerprint?.tempoMean?.toFixed(2) + ' syl/sec',
-      energyMean: fingerprint?.energyMean?.toFixed(3),
-      lastUpdated: new Date(any: any).toISOString(),
-      isReady: this?.isReady(any: any),
+      userId: fingerprint.userId,
+      sampleCount: fingerprint.sampleCount,
+      accuracy: fingerprint.accuracy,
+      pitchMean: fingerprint.pitchMean.toFixed(1) + ' Hz',
+      tempoMean: fingerprint.tempoMean.toFixed(2) + ' syl/sec',
+      energyMean: fingerprint.energyMean.toFixed(3),
+      lastUpdated: new Date(fingerprint.lastUpdated).toISOString(),
+      isReady: this.isReady(userId),
     };
   }
 }

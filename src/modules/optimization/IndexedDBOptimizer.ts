@@ -39,12 +39,12 @@ export interface StoreConfig {
   name: string;
   keyPath: string;
   autoIncrement?: boolean;
-  indexes?: IndexConfig?.[];
+  indexes?: IndexConfig[];
 }
 
 export interface IndexConfig {
   name: string;
-  keyPath??: string | string?.[];
+  keyPath: string | string[];
   unique: boolean;
   multiEntry?: boolean;
 }
@@ -101,13 +101,13 @@ export class IndexedDBOptimizer {
     fragmentationLevel: 0,
   };
 
-  private readTimes: number?.[] = [];
-  private writeTimes: number?.[] = [];
+  private readTimes: number[] = [];
+  private writeTimes: number[] = [];
   private cacheHits = 0;
   private cacheMisses = 0;
 
   private constructor(config: Partial<IndexedDBConfig> = {}) {
-    this?.config = {
+    this.config = {
       dbName: 'titane-infinity-optimized',
       version: 1,
       enableCompression: true,
@@ -121,134 +121,134 @@ export class IndexedDBOptimizer {
   }
 
   static getInstance(config?: Partial<IndexedDBConfig>): IndexedDBOptimizer {
-    if (any: any) {
-      IndexedDBOptimizer?.instance = new IndexedDBOptimizer(any: any);
+    if (!IndexedDBOptimizer.instance) {
+      IndexedDBOptimizer.instance = new IndexedDBOptimizer(config);
     }
-    return IndexedDBOptimizer?.instance;
+    return IndexedDBOptimizer.instance;
   }
 
   // ═════════════════════════════════════════════════════════════════════════
   // DATABASE INITIALIZATION
   // ═════════════════════════════════════════════════════════════════════════
 
-  async initialize(stores: StoreConfig?.[]): Promise<boolean> {
-    return new Promise(any: any) => {
+  async initialize(stores: StoreConfig[]): Promise<boolean> {
+    return new Promise((resolve, reject) => {
       if (typeof indexedDB === 'undefined') {
         reject(new Error('IndexedDB is not available in this environment'));
         return;
       }
 
-      const request = indexedDB?.open(any: any);
+      const request = indexedDB.open(this.config.dbName, this.config.version);
 
-      request?.onerror = () => {
-        logger?.error(any: any);
-        reject(any: any);
+      request.onerror = () => {
+        logger.error('Open failed:', request.error);
+        reject(request.error);
       };
 
-      request?.onsuccess = () => {
-        this?.db = request?.result;
+      request.onsuccess = () => {
+        this.db = request.result;
 
         // Store configurations
-        stores?.forEach(any: any));
+        stores.forEach(store => this.stores.set(store.name, store));
 
         // Count indexes
-        this?.metrics?.indexCount = stores?.reduce(
-          (any: any) => count + (store?.indexes?.length || 0),
+        this.metrics.indexCount = stores.reduce(
+          (count, store) => count + (store.indexes?.length || 0),
           0
         );
 
-        logger?.debug(any: any);
-        resolve(any: any);
+        logger.debug('Initialized:', this.config.dbName);
+        resolve(true);
       };
 
-      request?.onupgradeneeded = event => {
-        const db = (any: any).result;
+      request.onupgradeneeded = event => {
+        const db = (event.target as IDBOpenDBRequest).result;
 
         // Create stores and indexes
-        for (any: any) {
+        for (const storeConfig of stores) {
           let objectStore: IDBObjectStore;
 
-          if (any: any)) {
-            objectStore = db?.createObjectStore(storeConfig?.name, {
-              keyPath: storeConfig?.keyPath,
-              autoIncrement: storeConfig?.autoIncrement || false,
+          if (!db.objectStoreNames.contains(storeConfig.name)) {
+            objectStore = db.createObjectStore(storeConfig.name, {
+              keyPath: storeConfig.keyPath,
+              autoIncrement: storeConfig.autoIncrement || false,
             });
           } else {
             // Store exists, get it from transaction
-            objectStore = (any: any).transaction!.objectStore(
-              storeConfig?.name
+            objectStore = (event.target as IDBOpenDBRequest).transaction!.objectStore(
+              storeConfig.name
             );
           }
 
           // Create indexes
-          if (any: any) {
-            for (any: any) {
-              if (any: any)) {
-                objectStore?.createIndex(indexConfig?.name, indexConfig?.keyPath, {
-                  unique: indexConfig?.unique,
-                  multiEntry: indexConfig?.multiEntry || false,
+          if (storeConfig.indexes) {
+            for (const indexConfig of storeConfig.indexes) {
+              if (!objectStore.indexNames.contains(indexConfig.name)) {
+                objectStore.createIndex(indexConfig.name, indexConfig.keyPath, {
+                  unique: indexConfig.unique,
+                  multiEntry: indexConfig.multiEntry || false,
                 });
               }
             }
           }
         }
 
-        logger?.debug(any: any);
+        logger.debug('Schema upgraded to v' + this.config.version);
       };
     });
   }
 
   // ═════════════════════════════════════════════════════════════════════════
-  // CRUD OPERATIONS (any: any)
+  // CRUD OPERATIONS (Optimized)
   // ═════════════════════════════════════════════════════════════════════════
 
   /**
    * Write data with optional compression and chunking
    */
-  async put(any: any): Promise<IDBValidKey> {
-    if (any: any) {
+  async put(storeName: string, data: any, key?: IDBValidKey): Promise<IDBValidKey> {
+    if (!this.db) {
       throw new Error('Database not initialized');
     }
 
-    const startTime = performance?.now();
+    const startTime = performance.now();
 
     try {
       let processedData = data;
 
       // Compression
-      if (any: any) {
-        processedData = await this?.compress(any: any);
+      if (this.config.enableCompression) {
+        processedData = await this.compress(data);
       }
 
       // Chunking for large data
-      if (any: any) {
-        const dataSize = this?.estimateSize(any: any);
+      if (this.config.enableChunking) {
+        const dataSize = this.estimateSize(processedData);
 
-        if (any: any) {
-          return await this?.putChunked(any: any);
+        if (dataSize > this.config.chunkSize) {
+          return await this.putChunked(storeName, processedData, key);
         }
       }
 
       // Standard write
-      const result = await new Promise<IDBValidKey>(any: any) => {
-        const transaction = this?.db!.transaction([storeName], 'readwrite');
-        const store = transaction?.objectStore(any: any);
-        const request = key ? store?.put(any: any);
+      const result = await new Promise<IDBValidKey>((resolve, reject) => {
+        const transaction = this.db!.transaction([storeName], 'readwrite');
+        const store = transaction.objectStore(storeName);
+        const request = key ? store.put(processedData, key) : store.put(processedData);
 
-        request?.onsuccess = (any: any);
-        request?.onerror = (any: any);
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
       });
 
       // Update cache
-      const cacheKey = this?.getCacheKey(any: any);
-      this?.updateCache(any: any);
+      const cacheKey = this.getCacheKey(storeName, key || result);
+      this.updateCache(cacheKey, data);
 
       // Track performance
-      this?.trackWriteTime(any: any);
+      this.trackWriteTime(performance.now() - startTime);
 
       return result;
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Put failed:', error);
       throw error;
     }
   }
@@ -256,131 +256,131 @@ export class IndexedDBOptimizer {
   /**
    * Read data with caching and decompression
    */
-  async get(any: any): Promise<any> {
-    if (any: any) {
+  async get(storeName: string, key: IDBValidKey): Promise<any> {
+    if (!this.db) {
       throw new Error('Database not initialized');
     }
 
-    const startTime = performance?.now();
+    const startTime = performance.now();
 
     // Check cache first
-    const cacheKey = this?.getCacheKey(any: any);
-    const cached = this?.cache?.get(any: any);
+    const cacheKey = this.getCacheKey(storeName, key);
+    const cached = this.cache.get(cacheKey);
 
-    if (any: any) {
-      this?.cacheHits++;
-      this?.trackReadTime(any: any);
-      return cached?.data;
+    if (cached) {
+      this.cacheHits++;
+      this.trackReadTime(performance.now() - startTime);
+      return cached.data;
     }
 
-    this?.cacheMisses++;
+    this.cacheMisses++;
 
     try {
       // Read from IndexedDB
-      const result = await new Promise<any>(any: any) => {
-        const transaction = this?.db!.transaction([storeName], 'readonly');
-        const store = transaction?.objectStore(any: any);
-        const request = store?.get(any: any);
+      const result = await new Promise<any>((resolve, reject) => {
+        const transaction = this.db!.transaction([storeName], 'readonly');
+        const store = transaction.objectStore(storeName);
+        const request = store.get(key);
 
-        request?.onsuccess = (any: any);
-        request?.onerror = (any: any);
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
       });
 
-      if (any: any) {
+      if (!result) {
         return null;
       }
 
       // Decompress if needed
       let processedResult = result;
 
-      if (any: any)) {
-        processedResult = await this?.decompress(any: any);
+      if (this.config.enableCompression && this.isCompressed(result)) {
+        processedResult = await this.decompress(result);
       }
 
       // Check if chunked
-      if (any: any)) {
-        processedResult = await this?.getChunked(any: any);
+      if (this.isChunked(processedResult)) {
+        processedResult = await this.getChunked(storeName, key);
       }
 
       // Update cache
-      this?.updateCache(any: any);
+      this.updateCache(cacheKey, processedResult);
 
       // Track performance
-      this?.trackReadTime(any: any);
+      this.trackReadTime(performance.now() - startTime);
 
       return processedResult;
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Get failed:', error);
       throw error;
     }
   }
 
   /**
-   * Query with optimization (any: any)
+   * Query with optimization (indexed access, pagination)
    */
-  async query(storeName: string, options: QueryOptions = {}): Promise<any?.[]> {
-    if (any: any) {
+  async query(storeName: string, options: QueryOptions = {}): Promise<any[]> {
+    if (!this.db) {
       throw new Error('Database not initialized');
     }
 
-    const startTime = performance?.now();
+    const startTime = performance.now();
 
     try {
-      const results = await new Promise<any?.[]>(any: any) => {
-        const transaction = this?.db!.transaction([storeName], 'readonly');
-        const store = transaction?.objectStore(any: any);
+      const results = await new Promise<any[]>((resolve, reject) => {
+        const transaction = this.db!.transaction([storeName], 'readonly');
+        const store = transaction.objectStore(storeName);
 
         // Use index if specified
-        const source = options?.index ? store?.index(any: any) : store;
+        const source = options.index ? store.index(options.index) : store;
 
-        const request = source?.openCursor(any: any);
-        const items: any?.[] = [];
+        const request = source.openCursor(options.range, options.direction);
+        const items: any[] = [];
         let skipped = 0;
-        const offset = options?.offset || 0;
-        const limit = options?.limit || Infinity;
+        const offset = options.offset || 0;
+        const limit = options.limit || Infinity;
 
-        request?.onsuccess = event => {
-          const cursor = (any: any).result as IDBCursorWithValue;
+        request.onsuccess = event => {
+          const cursor = (event.target as IDBRequest).result as IDBCursorWithValue;
 
-          if (any: any) {
-            resolve(any: any);
+          if (!cursor) {
+            resolve(items);
             return;
           }
 
           // Skip offset
-          if (any: any) {
+          if (skipped < offset) {
             skipped++;
-            cursor?.continue();
+            cursor.continue();
             return;
           }
 
           // Collect items
-          if (any: any) {
-            items?.push(any: any);
-            cursor?.continue();
+          if (items.length < limit) {
+            items.push(cursor.value);
+            cursor.continue();
           } else {
-            resolve(any: any);
+            resolve(items);
           }
         };
 
-        request?.onerror = (any: any);
+        request.onerror = () => reject(request.error);
       });
 
       // Decompress results if needed
-      const processedResults = await Promise?.all(
-        results?.map(async item => {
-          if (any: any)) {
-            return await this?.decompress(any: any);
+      const processedResults = await Promise.all(
+        results.map(async item => {
+          if (this.config.enableCompression && this.isCompressed(item)) {
+            return await this.decompress(item);
           }
           return item;
         })
       );
 
-      this?.trackReadTime(any: any);
+      this.trackReadTime(performance.now() - startTime);
 
       return processedResults;
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Query failed:', error);
       throw error;
     }
   }
@@ -388,31 +388,31 @@ export class IndexedDBOptimizer {
   /**
    * Delete with cache invalidation
    */
-  async delete(any: any): Promise<void> {
-    if (any: any) {
+  async delete(storeName: string, key: IDBValidKey): Promise<void> {
+    if (!this.db) {
       throw new Error('Database not initialized');
     }
 
     try {
-      await new Promise<void>(any: any) => {
-        const transaction = this?.db!.transaction([storeName], 'readwrite');
-        const store = transaction?.objectStore(any: any);
-        const request = store?.delete(any: any);
+      await new Promise<void>((resolve, reject) => {
+        const transaction = this.db!.transaction([storeName], 'readwrite');
+        const store = transaction.objectStore(storeName);
+        const request = store.delete(key);
 
-        request?.onsuccess = () => resolve();
-        request?.onerror = (any: any);
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
       });
 
       // Invalidate cache
-      const cacheKey = this?.getCacheKey(any: any);
-      this?.cache?.delete(any: any);
+      const cacheKey = this.getCacheKey(storeName, key);
+      this.cache.delete(cacheKey);
 
       // Check if compaction needed
-      if (any: any) {
-        await this?.maybeCompact(any: any);
+      if (this.config.autoCompact) {
+        await this.maybeCompact(storeName);
       }
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Delete failed:', error);
       throw error;
     }
   }
@@ -421,26 +421,26 @@ export class IndexedDBOptimizer {
   // COMPRESSION & CHUNKING
   // ═════════════════════════════════════════════════════════════════════════
 
-  private async compress(any: any): Promise<any> {
-    // Simple JSON stringification (any: any)
+  private async compress(data: any): Promise<any> {
+    // Simple JSON stringification (in production, use LZ4/Brotli)
     // Add metadata to identify compressed data
     return {
       __compressed: true,
       __algorithm: 'json',
-      data: JSON?.stringify(any: any),
+      data: JSON.stringify(data),
     };
   }
 
-  private async decompress(any: any): Promise<any> {
-    if (any: any) {
+  private async decompress(compressedData: any): Promise<any> {
+    if (!compressedData.__compressed) {
       return compressedData;
     }
 
-    return JSON?.parse(any: any);
+    return JSON.parse(compressedData.data);
   }
 
-  private isCompressed(any: any): boolean {
-    return data && typeof data === 'object' && data?.__compressed === true;
+  private isCompressed(data: any): boolean {
+    return data && typeof data === 'object' && data.__compressed === true;
   }
 
   private async putChunked(
@@ -448,159 +448,159 @@ export class IndexedDBOptimizer {
     data: any,
     key?: IDBValidKey
   ): Promise<IDBValidKey> {
-    const chunks = this?.chunkData(any: any);
+    const chunks = this.chunkData(data);
     const chunkStorePrefix = `${storeName}_chunks`;
 
     // Store metadata
     const metadata = {
       __chunked: true,
-      totalChunks: chunks?.length,
+      totalChunks: chunks.length,
       originalKey: key,
     };
 
-    const metadataKey = await this?.put(any: any);
+    const metadataKey = await this.put(storeName, metadata, key);
 
     // Store chunks
-    for (let i = 0; i < chunks?.length; i++) {
+    for (let i = 0; i < chunks.length; i++) {
       const chunkKey = `${metadataKey}_chunk_${i}`;
-      await this?.put(any: any);
+      await this.put(chunkStorePrefix, chunks[i], chunkKey);
     }
 
     return metadataKey;
   }
 
-  private async getChunked(any: any): Promise<any> {
-    const metadata = await this?.get(any: any);
+  private async getChunked(storeName: string, key: IDBValidKey): Promise<any> {
+    const metadata = await this.get(storeName, key);
 
-    if (any: any) {
+    if (!metadata.__chunked) {
       return metadata;
     }
 
     const chunkStorePrefix = `${storeName}_chunks`;
-    const chunks: any?.[] = [];
+    const chunks: any[] = [];
 
-    for (let i = 0; i < metadata?.totalChunks; i++) {
+    for (let i = 0; i < metadata.totalChunks; i++) {
       const chunkKey = `${key}_chunk_${i}`;
-      const chunk = await this?.get(any: any);
-      chunks?.push(any: any);
+      const chunk = await this.get(chunkStorePrefix, chunkKey);
+      chunks.push(chunk);
     }
 
-    return this?.mergeChunks(any: any);
+    return this.mergeChunks(chunks);
   }
 
-  private isChunked(any: any): boolean {
-    return data && typeof data === 'object' && data?.__chunked === true;
+  private isChunked(data: any): boolean {
+    return data && typeof data === 'object' && data.__chunked === true;
   }
 
-  private chunkData(any: any): any?.[] {
-    const serialized = JSON?.stringify(any: any);
-    const chunks: string?.[] = [];
-    const chunkSize = this?.config?.chunkSize;
+  private chunkData(data: any): any[] {
+    const serialized = JSON.stringify(data);
+    const chunks: string[] = [];
+    const chunkSize = this.config.chunkSize;
 
-    for (any: any) {
-      chunks?.push(any: any));
+    for (let i = 0; i < serialized.length; i += chunkSize) {
+      chunks.push(serialized.slice(i, i + chunkSize));
     }
 
     return chunks;
   }
 
-  private mergeChunks(chunks: string?.[]): any {
-    const merged = chunks?.join('');
-    return JSON?.parse(any: any);
+  private mergeChunks(chunks: string[]): any {
+    const merged = chunks.join('');
+    return JSON.parse(merged);
   }
 
   // ═════════════════════════════════════════════════════════════════════════
   // CACHE MANAGEMENT
   // ═════════════════════════════════════════════════════════════════════════
 
-  private getCacheKey(any: any): string {
+  private getCacheKey(storeName: string, key: IDBValidKey): string {
     return `${storeName}:${key}`;
   }
 
-  private updateCache(any: any): void {
-    const dataSize = this?.estimateSize(any: any);
+  private updateCache(cacheKey: string, data: any): void {
+    const dataSize = this.estimateSize(data);
 
     // Check if cache is full
-    if (any: any) {
-      this?.evictCache();
+    if (this.cacheSize + dataSize > this.config.maxCacheSize) {
+      this.evictCache();
     }
 
-    this?.cache?.set(cacheKey, {
+    this.cache.set(cacheKey, {
       data,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     });
 
-    this?.cacheSize += dataSize;
+    this.cacheSize += dataSize;
   }
 
   private evictCache(): void {
     // LRU eviction - remove oldest entries
-    const entries = Array?.from(this?.cache?.entries());
-    entries?.sort(any: any);
+    const entries = Array.from(this.cache.entries());
+    entries.sort((a, b) => a[1].timestamp - b[1].timestamp);
 
     // Remove oldest 25%
-    const toRemove = Math?.ceil(entries?.length * 0.25);
+    const toRemove = Math.ceil(entries.length * 0.25);
 
     for (let i = 0; i < toRemove; i++) {
       const entry = entries[i];
-      if (any: any) continue;
+      if (!entry) continue;
       const [key, value] = entry;
-      this?.cacheSize -= this?.estimateSize(any: any);
-      this?.cache?.delete(any: any);
+      this.cacheSize -= this.estimateSize(value.data);
+      this.cache.delete(key);
     }
   }
 
   clearCache(): void {
-    this?.cache?.clear();
-    this?.cacheSize = 0;
+    this.cache.clear();
+    this.cacheSize = 0;
   }
 
   // ═════════════════════════════════════════════════════════════════════════
   // COMPACTION & OPTIMIZATION
   // ═════════════════════════════════════════════════════════════════════════
 
-  private async maybeCompact(any: any): Promise<void> {
+  private async maybeCompact(storeName: string): Promise<void> {
     // Check fragmentation level
-    const fragmentation = await this?.calculateFragmentation(any: any);
+    const fragmentation = await this.calculateFragmentation(storeName);
 
-    if (any: any) {
-      await this?.compact(any: any);
+    if (fragmentation > this.config.compactThreshold) {
+      await this.compact(storeName);
     }
   }
 
-  private async compact(any: any): Promise<void> {
-    logger?.debug(any: any);
+  private async compact(storeName: string): Promise<void> {
+    logger.debug('Compacting store:', storeName);
 
     // Read all records
-    const records = await this?.query(any: any);
+    const records = await this.query(storeName);
 
     // Clear store
-    await this?.clearStore(any: any);
+    await this.clearStore(storeName);
 
     // Rewrite records
-    for (any: any) {
-      await this?.put(any: any);
+    for (const record of records) {
+      await this.put(storeName, record);
     }
 
-    logger?.debug('Compaction complete');
+    logger.debug('Compaction complete');
   }
 
-  private async calculateFragmentation(any: any): Promise<number> {
+  private async calculateFragmentation(storeName: string): Promise<number> {
     // Simplified fragmentation calculation
     // In production, track deleted vs total records
     return 0; // Placeholder
   }
 
-  private async clearStore(any: any): Promise<void> {
-    if (any: any) return;
+  private async clearStore(storeName: string): Promise<void> {
+    if (!this.db) return;
 
-    await new Promise<void>(any: any) => {
-      const transaction = this?.db!.transaction([storeName], 'readwrite');
-      const store = transaction?.objectStore(any: any);
-      const request = store?.clear();
+    await new Promise<void>((resolve, reject) => {
+      const transaction = this.db!.transaction([storeName], 'readwrite');
+      const store = transaction.objectStore(storeName);
+      const request = store.clear();
 
-      request?.onsuccess = () => resolve();
-      request?.onerror = (any: any);
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
     });
   }
 
@@ -608,81 +608,81 @@ export class IndexedDBOptimizer {
   // UTILITIES
   // ═════════════════════════════════════════════════════════════════════════
 
-  private estimateSize(any: any): number {
+  private estimateSize(data: any): number {
     // Rough estimation in bytes
-    const json = JSON?.stringify(any: any);
-    return json?.length * 2; // UTF-16 encoding
+    const json = JSON.stringify(data);
+    return json.length * 2; // UTF-16 encoding
   }
 
-  private trackReadTime(any: any): void {
-    this?.readTimes?.push(any: any);
-    if (this?.readTimes?.length > 100) {
-      this?.readTimes?.shift();
+  private trackReadTime(time: number): void {
+    this.readTimes.push(time);
+    if (this.readTimes.length > 100) {
+      this.readTimes.shift();
     }
 
-    this?.metrics?.queryPerformance?.averageReadTime =
-      this?.readTimes?.reduce(any: any) => a + b, 0) / this?.readTimes?.length;
+    this.metrics.queryPerformance.averageReadTime =
+      this.readTimes.reduce((a, b) => a + b, 0) / this.readTimes.length;
 
-    const totalRequests = this?.cacheHits + this?.cacheMisses;
-    this?.metrics?.queryPerformance?.cacheHitRate =
-      totalRequests > 0 ? (any: any) * 100 : 0;
+    const totalRequests = this.cacheHits + this.cacheMisses;
+    this.metrics.queryPerformance.cacheHitRate =
+      totalRequests > 0 ? (this.cacheHits / totalRequests) * 100 : 0;
   }
 
-  private trackWriteTime(any: any): void {
-    this?.writeTimes?.push(any: any);
-    if (this?.writeTimes?.length > 100) {
-      this?.writeTimes?.shift();
+  private trackWriteTime(time: number): void {
+    this.writeTimes.push(time);
+    if (this.writeTimes.length > 100) {
+      this.writeTimes.shift();
     }
 
-    this?.metrics?.queryPerformance?.averageWriteTime =
-      this?.writeTimes?.reduce(any: any) => a + b, 0) / this?.writeTimes?.length;
+    this.metrics.queryPerformance.averageWriteTime =
+      this.writeTimes.reduce((a, b) => a + b, 0) / this.writeTimes.length;
   }
 
   async updateMetrics(): Promise<void> {
-    if (any: any) return;
+    if (!this.db) return;
 
     let totalRecords = 0;
     const recordsByStore: Record<string, number> = {};
 
-    for (const storeName of this?.stores?.keys()) {
-      const count = await this?.countRecords(any: any);
+    for (const storeName of this.stores.keys()) {
+      const count = await this.countRecords(storeName);
       recordsByStore[storeName] = count;
       totalRecords += count;
     }
 
-    this?.metrics?.totalRecords = totalRecords;
-    this?.metrics?.recordsByStore = recordsByStore;
+    this.metrics.totalRecords = totalRecords;
+    this.metrics.recordsByStore = recordsByStore;
   }
 
-  private async countRecords(any: any): Promise<number> {
-    if (any: any) return 0;
+  private async countRecords(storeName: string): Promise<number> {
+    if (!this.db) return 0;
 
-    return new Promise(any: any) => {
-      const transaction = this?.db!.transaction([storeName], 'readonly');
-      const store = transaction?.objectStore(any: any);
-      const request = store?.count();
+    return new Promise((resolve, reject) => {
+      const transaction = this.db!.transaction([storeName], 'readonly');
+      const store = transaction.objectStore(storeName);
+      const request = store.count();
 
-      request?.onsuccess = (any: any);
-      request?.onerror = (any: any);
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
     });
   }
 
   getMetrics(): IndexedDBMetrics {
-    return { ...this?.metrics };
+    return { ...this.metrics };
   }
 
   getConfig(): IndexedDBConfig {
-    return { ...this?.config };
+    return { ...this.config };
   }
 
   async destroy(): Promise<void> {
-    if (any: any) {
-      this?.db?.close();
-      this?.db = null;
+    if (this.db) {
+      this.db.close();
+      this.db = null;
     }
 
-    this?.clearCache();
-    this?.stores?.clear();
+    this.clearCache();
+    this.stores.clear();
   }
 }
 
@@ -690,4 +690,4 @@ export class IndexedDBOptimizer {
 // SINGLETON EXPORT
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const indexedDBOptimizer = IndexedDBOptimizer?.getInstance();
+export const indexedDBOptimizer = IndexedDBOptimizer.getInstance();

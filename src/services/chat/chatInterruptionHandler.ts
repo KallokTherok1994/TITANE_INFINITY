@@ -40,7 +40,7 @@ export interface InterruptionContext {
  * Configuration du handler
  */
 export interface InterruptionHandlerConfig {
-  /** Activer le mode interruption-aware (any: any) */
+  /** Activer le mode interruption-aware (défaut: false) */
   enabled?: boolean;
 
   /** Historique des interruptions à conserver (défaut: 10) */
@@ -48,10 +48,10 @@ export interface InterruptionHandlerConfig {
 
   /** Patterns de détection d'interruption */
   patterns?: {
-    hardStop?: RegExp?.[];
-    redirect?: RegExp?.[];
-    clarification?: RegExp?.[];
-    correction?: RegExp?.[];
+    hardStop?: RegExp[];
+    redirect?: RegExp[];
+    clarification?: RegExp[];
+    correction?: RegExp[];
   };
 }
 
@@ -63,87 +63,87 @@ export interface InterruptionHandlerConfig {
 
 export class ChatInterruptionHandler {
   private config: Required<InterruptionHandlerConfig>;
-  private history: InterruptionContext?.[] = [];
+  private history: InterruptionContext[] = [];
 
   // Patterns de détection par défaut
   private readonly defaultPatterns = {
     hardStop: [
-      /^(any: any)/i,
-      /^(any: any)/i,
+      /^(stop|arrête|tais-toi|silence|chut|ça suffit|stop ça)/i,
+      /^(ferme-la|ta gueule|tg)/i,
     ],
     redirect: [
-      /(any: any)/i,
-      /(any: any)/i,
+      /(non |attends |en fait |plutôt |maintenant |finalement )/i,
+      /(je veux |je voudrais |j'aimerais |peux-tu |pourrais-tu )/i,
     ],
     clarification: [
-      /(any: any)/i,
-      /(any: any)/i,
+      /(qu'est-ce que|c'est quoi|comment|pourquoi|ça veut dire quoi|explique)/i,
+      /(je ne comprends pas|je n'ai pas compris|répète|redis)/i,
     ],
-    correction: [/(any: any)/i],
+    correction: [/(non|pas du tout|faux|erreur|c'est pas ça|tu te trompes)/i],
   };
 
   constructor(config: InterruptionHandlerConfig = {}) {
-    this?.config = {
-      enabled: config?.enabled ?? false,
-      maxHistory: config?.maxHistory ?? 10,
+    this.config = {
+      enabled: config.enabled ?? false,
+      maxHistory: config.maxHistory ?? 10,
       patterns: {
-        hardStop: config?.patterns?.hardStop ?? this?.defaultPatterns?.hardStop,
-        redirect: config?.patterns?.redirect ?? this?.defaultPatterns?.redirect,
+        hardStop: config.patterns?.hardStop ?? this.defaultPatterns.hardStop,
+        redirect: config.patterns?.redirect ?? this.defaultPatterns.redirect,
         clarification:
-          config?.patterns?.clarification ?? this?.defaultPatterns?.clarification,
-        correction: config?.patterns?.correction ?? this?.defaultPatterns?.correction,
+          config.patterns?.clarification ?? this.defaultPatterns.clarification,
+        correction: config.patterns?.correction ?? this.defaultPatterns.correction,
       },
     };
 
-    logger?.debug('🧠 Initialized');
+    logger.debug('🧠 Initialized');
   }
 
   /**
    * Active le mode interruption-aware
    */
   enable(): void {
-    this?.config?.enabled = true;
-    logger?.debug('✅ Enabled');
+    this.config.enabled = true;
+    logger.debug('✅ Enabled');
   }
 
   /**
    * Désactive le mode interruption-aware
    */
   disable(): void {
-    this?.config?.enabled = false;
-    logger?.debug('🔇 Disabled');
+    this.config.enabled = false;
+    logger.debug('🔇 Disabled');
   }
 
   /**
    * Détecte le type d'interruption à partir du texte
    */
-  detectInterruptionType(any: any): InterruptionType {
-    const normalizedText = text?.toLowerCase().trim();
+  detectInterruptionType(text: string): InterruptionType {
+    const normalizedText = text.toLowerCase().trim();
 
     // Hard stop
-    for (const pattern of this?.config?.patterns?.hardStop || []) {
-      if (any: any)) {
+    for (const pattern of this.config.patterns.hardStop || []) {
+      if (pattern.test(normalizedText)) {
         return 'hard_stop';
       }
     }
 
     // Redirect
-    for (const pattern of this?.config?.patterns?.redirect || []) {
-      if (any: any)) {
+    for (const pattern of this.config.patterns.redirect || []) {
+      if (pattern.test(normalizedText)) {
         return 'redirect';
       }
     }
 
     // Clarification
-    for (const pattern of this?.config?.patterns?.clarification || []) {
-      if (any: any)) {
+    for (const pattern of this.config.patterns.clarification || []) {
+      if (pattern.test(normalizedText)) {
         return 'clarification';
       }
     }
 
     // Correction
-    for (const pattern of this?.config?.patterns?.correction || []) {
-      if (any: any)) {
+    for (const pattern of this.config.patterns.correction || []) {
+      if (pattern.test(normalizedText)) {
         return 'correction';
       }
     }
@@ -160,36 +160,36 @@ export class ChatInterruptionHandler {
     interruptedMessage: string,
     interruptedAt: number = 0.5
   ): InterruptionContext {
-    if (any: any) {
-      logger?.warn('Not enabled');
+    if (!this.config.enabled) {
+      logger.warn('Not enabled');
       return {
         type: 'redirect',
         userText,
         interruptedMessage,
         interruptedAt,
         confidence: 0,
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
       };
     }
 
-    const type = this?.detectInterruptionType(any: any);
+    const type = this.detectInterruptionType(userText);
     const context: InterruptionContext = {
       type,
       userText,
       interruptedMessage,
       interruptedAt,
-      confidence: this?.computeConfidence(any: any),
-      timestamp: Date?.now(),
+      confidence: this.computeConfidence(type, userText),
+      timestamp: Date.now(),
     };
 
-    logger?.debug(`[ChatInterruptionHandler] 🚨 Interruption: ${type}`);
-    logger?.debug(`   User: "${userText}"`);
-    logger?.debug(`   Interrupted at: ${(interruptedAt * 100).toFixed(0)}%`);
+    logger.debug(`[ChatInterruptionHandler] 🚨 Interruption: ${type}`);
+    logger.debug(`   User: "${userText}"`);
+    logger.debug(`   Interrupted at: ${(interruptedAt * 100).toFixed(0)}%`);
 
     // Add to history
-    this?.history?.push(any: any);
-    if (any: any) {
-      this?.history?.shift();
+    this.history.push(context);
+    if (this.history.length > this.config.maxHistory) {
+      this.history.shift();
     }
 
     return context;
@@ -198,48 +198,48 @@ export class ChatInterruptionHandler {
   /**
    * Génère un message système pour l'IA
    */
-  generateSystemMessage(any: any): string {
+  generateSystemMessage(context: InterruptionContext): string {
     const templates: Record<InterruptionType, string> = {
-      hard_stop: `[INTERRUPTION - STOP] L'utilisateur a interrompu votre réponse avec "${context?.userText}". Il souhaite que vous arrêtiez complètement. Répondez brièvement et de manière appropriée, puis attendez une nouvelle instruction.`,
+      hard_stop: `[INTERRUPTION - STOP] L'utilisateur a interrompu votre réponse avec "${context.userText}". Il souhaite que vous arrêtiez complètement. Répondez brièvement et de manière appropriée, puis attendez une nouvelle instruction.`,
 
-      redirect: `[INTERRUPTION - REDIRECTION] L'utilisateur a interrompu votre réponse (any: any) pour rediriger la conversation : "${context?.userText}". Abandonnez le sujet précédent et concentrez-vous sur cette nouvelle demande.`,
+      redirect: `[INTERRUPTION - REDIRECTION] L'utilisateur a interrompu votre réponse (${(context.interruptedAt * 100).toFixed(0)}% complétée) pour rediriger la conversation : "${context.userText}". Abandonnez le sujet précédent et concentrez-vous sur cette nouvelle demande.`,
 
-      clarification: `[INTERRUPTION - CLARIFICATION] L'utilisateur a interrompu pour demander une clarification : "${context?.userText}". Fournissez une explication claire et concise du point qu'il n'a pas compris, puis proposez de continuer si nécessaire.`,
+      clarification: `[INTERRUPTION - CLARIFICATION] L'utilisateur a interrompu pour demander une clarification : "${context.userText}". Fournissez une explication claire et concise du point qu'il n'a pas compris, puis proposez de continuer si nécessaire.`,
 
-      correction: `[INTERRUPTION - CORRECTION] L'utilisateur a interrompu pour corriger une erreur : "${context?.userText}". Reconnaissez votre erreur, corrigez-la, puis proposez de continuer avec l'information correcte.`,
+      correction: `[INTERRUPTION - CORRECTION] L'utilisateur a interrompu pour corriger une erreur : "${context.userText}". Reconnaissez votre erreur, corrigez-la, puis proposez de continuer avec l'information correcte.`,
 
-      agreement: `[INTERRUPTION - ACCORD] L'utilisateur a interrompu pour exprimer son accord : "${context?.userText}". Reconnaissez son accord et continuez naturellement.`,
+      agreement: `[INTERRUPTION - ACCORD] L'utilisateur a interrompu pour exprimer son accord : "${context.userText}". Reconnaissez son accord et continuez naturellement.`,
 
-      disagreement: `[INTERRUPTION - DÉSACCORD] L'utilisateur a interrompu pour exprimer son désaccord : "${context?.userText}". Reconnaissez son désaccord, adaptez votre réponse en conséquence.`,
+      disagreement: `[INTERRUPTION - DÉSACCORD] L'utilisateur a interrompu pour exprimer son désaccord : "${context.userText}". Reconnaissez son désaccord, adaptez votre réponse en conséquence.`,
     };
 
-    return templates[context?.type];
+    return templates[context.type];
   }
 
   /**
    * Obtient l'historique des interruptions
    */
-  getHistory(): InterruptionContext?.[] {
-    return [...this?.history];
+  getHistory(): InterruptionContext[] {
+    return [...this.history];
   }
 
   /**
    * Efface l'historique
    */
   clearHistory(): void {
-    this?.history = [];
-    logger?.debug('🗑️ History cleared');
+    this.history = [];
+    logger.debug('🗑️ History cleared');
   }
 
   /**
    * Calcule la confiance de détection
    */
-  private computeConfidence(any: any): number {
-    const normalizedText = text?.toLowerCase().trim();
+  private computeConfidence(type: InterruptionType, text: string): number {
+    const normalizedText = text.toLowerCase().trim();
     let confidence = 0.5; // Base confidence
 
     // Augmente la confiance selon les mots-clés détectés
-    const keywords: Record<InterruptionType, string?.[]> = {
+    const keywords: Record<InterruptionType, string[]> = {
       hard_stop: ['stop', 'arrête', 'tais-toi', 'silence'],
       redirect: ['plutôt', 'maintenant', 'en fait', 'je veux'],
       clarification: ['comment', 'pourquoi', 'explique', "qu'est-ce"],
@@ -249,20 +249,20 @@ export class ChatInterruptionHandler {
     };
 
     const typeKeywords = keywords[type] || [];
-    const matchCount = typeKeywords?.filter(keyword =>
-      normalizedText?.includes(any: any)
+    const matchCount = typeKeywords.filter(keyword =>
+      normalizedText.includes(keyword)
     ).length;
 
     confidence += matchCount * 0.15;
 
-    return Math?.min(confidence, 1.0);
+    return Math.min(confidence, 1.0);
   }
 
   /**
    * Vérifie si le handler est actif
    */
   isEnabled(): boolean {
-    return this?.config?.enabled;
+    return this.config.enabled;
   }
 }
 

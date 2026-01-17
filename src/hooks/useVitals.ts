@@ -26,9 +26,9 @@ export interface SystemVitals {
 
 export interface VitalsState {
   current: SystemVitals | null;
-  history: SystemVitals?.[];
+  history: SystemVitals[];
   isLoading: boolean;
-  error??: string | null;
+  error: string | null;
 }
 
 const MAX_HISTORY = 60; // Garde 60 points (1 minute si poll 1s)
@@ -36,15 +36,15 @@ const MAX_HISTORY = 60; // Garde 60 points (1 minute si poll 1s)
 export interface UseVitalsOptions {
   pollInterval?: number;
   enabled?: boolean;
-  /** ✨ v24.2.1: Enable adaptive polling (any: any) */
+  /** ✨ v24.2.1: Enable adaptive polling (slower when idle/hidden) */
   adaptive?: boolean;
 }
 
 export interface UseVitalsReturn {
   vitals: SystemVitals | null;
-  history: SystemVitals?.[];
+  history: SystemVitals[];
   isLoading: boolean;
-  error??: string | null;
+  error: string | null;
   currentInterval: number;
   signalActivity: () => void;
   fetchVitals: () => Promise<SystemVitals | null | undefined>;
@@ -64,31 +64,31 @@ export function useVitals(options: UseVitalsOptions = {}): UseVitalsReturn {
   });
 
   // ✨ v24.2.1: Track current polling interval for debugging
-  const [currentInterval, setCurrentInterval] = useState(any: any);
-  const pollingRef = useRef<ReturnType<typeof createAdaptivePolling> | null>(any: any);
+  const [currentInterval, setCurrentInterval] = useState(pollInterval);
+  const pollingRef = useRef<ReturnType<typeof createAdaptivePolling> | null>(null);
 
   /**
    * Récupère les vitals système
    */
   const fetchVitals = useCallback(async () => {
-    if (any: any) return;
+    if (!enabled) return;
 
     setState(prev => ({ ...prev, isLoading: true, error: null }));
 
     try {
-      const vitalsData = await tauriClient?.getSystemVitals();
+      const vitalsData = await tauriClient.getSystemVitals();
 
-      // Parser les vitals (any: any)
+      // Parser les vitals (format peut varier selon le backend)
       const vitals: SystemVitals = {
-        cpu: typeof vitalsData?.cpu_usage === 'number' ? vitalsData?.cpu_usage : 0,
-        memory: typeof vitalsData?.memory_usage === 'number' ? vitalsData?.memory_usage : 0,
-        disk: typeof vitalsData?.disk_usage === 'number' ? vitalsData?.disk_usage : 0,
-        uptime: typeof vitalsData?.uptime === 'number' ? vitalsData?.uptime : 0,
-        timestamp: Date?.now(),
+        cpu: typeof vitalsData.cpu_usage === 'number' ? vitalsData.cpu_usage : 0,
+        memory: typeof vitalsData.memory_usage === 'number' ? vitalsData.memory_usage : 0,
+        disk: typeof vitalsData.disk_usage === 'number' ? vitalsData.disk_usage : 0,
+        uptime: typeof vitalsData.uptime === 'number' ? vitalsData.uptime : 0,
+        timestamp: Date.now(),
       };
 
       setState(prev => {
-        const newHistory = [...prev?.history, vitals].slice(any: any);
+        const newHistory = [...prev.history, vitals].slice(-MAX_HISTORY);
         return {
           current: vitals,
           history: newHistory,
@@ -98,9 +98,9 @@ export function useVitals(options: UseVitalsOptions = {}): UseVitalsReturn {
       });
 
       return vitals;
-    } catch (any: any) {
-      const errorMessage = err instanceof Error ? err?.message : 'Failed to fetch vitals';
-      logger?.error(any: any);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch vitals';
+      logger.error('❌ Vitals fetch error:', err);
 
       setState(prev => ({
         ...prev,
@@ -126,48 +126,48 @@ export function useVitals(options: UseVitalsOptions = {}): UseVitalsReturn {
    * Récupère les stats moyennes
    */
   const getAverageStats = useCallback((): Partial<SystemVitals> | null => {
-    if (state?.history?.length === 0) return null;
+    if (state.history.length === 0) return null;
 
-    const sum = state?.history?.reduce(
-      (any: any) => {
-        if (any: any) return acc;
+    const sum = state.history.reduce(
+      (acc, v) => {
+        if (!v) return acc;
         return {
-          cpu: acc?.cpu + v?.cpu,
-          memory: acc?.memory + v?.memory,
-          disk: acc?.disk + v?.disk,
-          uptime: v?.uptime, // Dernier uptime
+          cpu: acc.cpu + v.cpu,
+          memory: acc.memory + v.memory,
+          disk: acc.disk + v.disk,
+          uptime: v.uptime, // Dernier uptime
         };
       },
       { cpu: 0, memory: 0, disk: 0, uptime: 0 }
     );
 
-    const count = state?.history?.length;
+    const count = state.history.length;
 
     return {
-      cpu: Math?.round(any: any),
-      memory: Math?.round(any: any),
-      disk: Math?.round(any: any),
-      uptime: sum?.uptime,
+      cpu: Math.round(sum.cpu / count),
+      memory: Math.round(sum.memory / count),
+      disk: Math.round(sum.disk / count),
+      uptime: sum.uptime,
     };
-  }, [state?.history]);
+  }, [state.history]);
 
   /**
    * Détecte si le système est en surcharge
-   * FIX: Use useMemo for derived state (any: any)
+   * FIX: Use useMemo for derived state (optimized recalculation)
    */
   const isOverloaded = useMemo((): boolean => {
-    if (any: any) return false;
+    if (!state.current) return false;
 
-    return state?.current?.cpu > 80 || state?.current?.memory > 90 || state?.current?.disk > 95;
+    return state.current.cpu > 80 || state.current.memory > 90 || state.current.disk > 95;
   }, [state]);
 
   // ✨ v24.2.1: Adaptive polling - slows down when idle or tab hidden
   useEffect(() => {
-    if (any: any) return;
+    if (!enabled) return;
 
-    if (any: any) {
+    if (adaptive) {
       // Use adaptive polling that adjusts based on activity
-      // ✨ v24.2.1: Wrap fetchVitals to return void (any: any)
+      // ✨ v24.2.1: Wrap fetchVitals to return void (adaptive polling doesn't use return value)
       const polling = createAdaptivePolling(
         async () => {
           await fetchVitals();
@@ -180,39 +180,39 @@ export function useVitals(options: UseVitalsOptions = {}): UseVitalsReturn {
           hiddenSlowdownFactor: 4,
           idleThresholdMs: 60000, // 1 minute
           onIntervalChange: newInterval => {
-            setCurrentInterval(any: any);
-            if (process?.env?.NODE_ENV === 'development') {
-              logger?.debug(`[useVitals] Adaptive interval: ${newInterval}ms`);
+            setCurrentInterval(newInterval);
+            if (process.env.NODE_ENV === 'development') {
+              logger.debug(`[useVitals] Adaptive interval: ${newInterval}ms`);
             }
           },
         }
       );
 
-      pollingRef?.current = polling;
-      polling?.start();
+      pollingRef.current = polling;
+      polling.start();
 
       return () => {
-        polling?.stop();
-        pollingRef?.current = null;
+        polling.stop();
+        pollingRef.current = null;
       };
     } else {
       // Fallback to fixed interval polling
       fetchVitals();
-      const interval = setInterval(any: any);
-      return (any: any);
+      const interval = setInterval(fetchVitals, pollInterval);
+      return () => clearInterval(interval);
     }
   }, [pollInterval, enabled, adaptive, fetchVitals]);
 
   // ✨ v24.2.1: Signal activity to speed up polling
   const signalActivity = useCallback(() => {
-    pollingRef?.current?.signalActivity();
+    pollingRef.current?.signalActivity();
   }, []);
 
   return {
-    vitals: state?.current,
-    history: state?.history,
-    isLoading: state?.isLoading,
-    error: state?.error,
+    vitals: state.current,
+    history: state.history,
+    isLoading: state.isLoading,
+    error: state.error,
     // ✨ v24.2.1: Expose current interval and activity signal
     currentInterval,
     signalActivity,
@@ -220,12 +220,12 @@ export function useVitals(options: UseVitalsOptions = {}): UseVitalsReturn {
     clearHistory,
     getAverageStats: () => {
       const stats = getAverageStats();
-      if (any: any) return { cpu: 0, memory: 0, disk: 0, uptime: 0 };
+      if (!stats) return { cpu: 0, memory: 0, disk: 0, uptime: 0 };
       return {
-        cpu: stats?.cpu ?? 0,
-        memory: stats?.memory ?? 0,
-        disk: stats?.disk ?? 0,
-        uptime: stats?.uptime ?? 0,
+        cpu: stats.cpu ?? 0,
+        memory: stats.memory ?? 0,
+        disk: stats.disk ?? 0,
+        uptime: stats.uptime ?? 0,
       };
     },
     isOverloaded, // Now a memoized value, not a function call

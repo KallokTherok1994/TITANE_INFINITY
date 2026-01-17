@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
  *   TITANE∞ DATASET BUILDER v∞
- *   Construction JSONL optimisé pour TITANE-LOCAL (any: any)
+ *   Construction JSONL optimisé pour TITANE-LOCAL (Llama 3.1 Fine-Tuning)
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * Module spécialisé dans la construction de datasets d'entraînement
@@ -32,7 +32,7 @@ export interface JSONLEntry {
   response: string;
   metadata?: {
     cluster?: TitaneEngineCluster;
-    sources?: string?.[];
+    sources?: string[];
     quality?: number;
     importance?: number;
     tokens?: number;
@@ -61,7 +61,7 @@ export class DatasetBuilder {
   private config: DatasetBuildConfig;
 
   constructor(config?: Partial<DatasetBuildConfig>) {
-    this?.config = {
+    this.config = {
       format: 'jsonl',
       includeMetadata: false,
       maxTokensPerEntry: 2048,
@@ -78,71 +78,71 @@ export class DatasetBuilder {
   // BUILD DATASET
   // ═══════════════════════════════════════════════════════════════════════
 
-  buildDataset(entries: FusionEntry?.[]): string {
-    const processedEntries: JSONLEntry?.[] = [];
+  buildDataset(entries: FusionEntry[]): string {
+    const processedEntries: JSONLEntry[] = [];
 
-    for (any: any) {
+    for (const entry of entries) {
       // Vérifier tokens
-      const tokens = this?.estimateTokens(any: any);
+      const tokens = this.estimateTokens(entry.prompt + entry.response);
 
       if (
-        tokens < this?.config?.minTokensPerEntry ||
-        tokens > this?.config?.maxTokensPerEntry
+        tokens < this.config.minTokensPerEntry ||
+        tokens > this.config.maxTokensPerEntry
       ) {
         continue; // Skip
       }
 
       // Créer entrée JSONL
       const jsonlEntry: JSONLEntry = {
-        prompt: this?.formatPrompt(any: any),
-        response: this?.formatResponse(any: any),
+        prompt: this.formatPrompt(entry.prompt),
+        response: this.formatResponse(entry.response),
       };
 
       // Ajouter metadata si activé
-      if (any: any) {
-        jsonlEntry?.metadata = {
-          cluster: entry?.cluster,
-          sources: entry?.sources,
-          quality: entry?.metadata?.quality,
-          importance: entry?.metadata?.importance,
+      if (this.config.includeMetadata) {
+        jsonlEntry.metadata = {
+          cluster: entry.cluster,
+          sources: entry.sources,
+          quality: entry.metadata?.quality,
+          importance: entry.metadata?.importance,
           tokens,
         };
       }
 
-      processedEntries?.push(any: any);
+      processedEntries.push(jsonlEntry);
 
       // Ajouter variations si activé
-      if (any: any) {
-        const variations = this?.generatePromptVariations(any: any);
-        processedEntries?.push(any: any);
+      if (this.config.enablePromptVariations) {
+        const variations = this.generatePromptVariations(entry);
+        processedEntries.push(...variations);
       }
     }
 
     // Compresser si nécessaire
-    if (this?.config?.compressionLevel !== 'none') {
-      return this?.compressDataset(any: any);
+    if (this.config.compressionLevel !== 'none') {
+      return this.compressDataset(processedEntries);
     }
 
     // Export JSONL
-    return processedEntries?.map(any: any)).join('\n');
+    return processedEntries.map(e => JSON.stringify(e)).join('\n');
   }
 
   // ═══════════════════════════════════════════════════════════════════════
   // FORMATAGE PROMPT/RESPONSE
   // ═══════════════════════════════════════════════════════════════════════
 
-  private formatPrompt(any: any): string {
+  private formatPrompt(prompt: string): string {
     // Nettoyer prompt
-    let formatted = prompt?.trim();
+    let formatted = prompt.trim();
 
     // Retirer préfixes inutiles
-    formatted = formatted?.replace(/^(Question:|Prompt:|User:)\s*/i, '');
+    formatted = formatted.replace(/^(Question:|Prompt:|User:)\s*/i, '');
 
     // Normaliser ponctuation
     if (
-      !formatted?.endsWith('?') &&
-      !formatted?.endsWith('.') &&
-      !formatted?.endsWith(':')
+      !formatted.endsWith('?') &&
+      !formatted.endsWith('.') &&
+      !formatted.endsWith(':')
     ) {
       formatted += '.';
     }
@@ -150,21 +150,21 @@ export class DatasetBuilder {
     return formatted;
   }
 
-  private formatResponse(any: any): string {
+  private formatResponse(response: string): string {
     // Nettoyer response
-    let formatted = response?.trim();
+    let formatted = response.trim();
 
     // Retirer préfixes inutiles
-    formatted = formatted?.replace(/^(Réponse:|Answer:|Assistant:)\s*/i, '');
+    formatted = formatted.replace(/^(Réponse:|Answer:|Assistant:)\s*/i, '');
 
-    // Retirer emojis excessifs (any: any)
-    formatted = formatted?.replace(
+    // Retirer emojis excessifs (garder structure)
+    formatted = formatted.replace(
       /[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}]{3,}/gu,
       ''
     );
 
     // Normaliser espaces
-    formatted = formatted?.replace(/\n{3,}/g, '\n\n');
+    formatted = formatted.replace(/\n{3,}/g, '\n\n');
 
     return formatted;
   }
@@ -173,48 +173,48 @@ export class DatasetBuilder {
   // GÉNÉRATION VARIATIONS
   // ═══════════════════════════════════════════════════════════════════════
 
-  private generatePromptVariations(any: any): JSONLEntry?.[] {
-    const variations: JSONLEntry?.[] = [];
-    const basePrompt = entry?.prompt;
-    const response = entry?.response;
+  private generatePromptVariations(entry: FusionEntry): JSONLEntry[] {
+    const variations: JSONLEntry[] = [];
+    const basePrompt = entry.prompt;
+    const response = entry.response;
 
     // Variation 1: Question directe
-    if (!basePrompt?.includes('?')) {
-      variations?.push({
+    if (!basePrompt.includes('?')) {
+      variations.push({
         prompt: `Explique-moi : ${basePrompt}`,
         response,
       });
     }
 
     // Variation 2: Contexte TITANE∞
-    if (basePrompt?.length < 200) {
-      variations?.push({
-        prompt: `Dans le contexte de TITANE∞, ${basePrompt?.toLowerCase()}`,
+    if (basePrompt.length < 200) {
+      variations.push({
+        prompt: `Dans le contexte de TITANE∞, ${basePrompt.toLowerCase()}`,
         response,
       });
     }
 
     // Variation 3: Style instructionnel
-    variations?.push({
-      prompt: `Détaille comment ${basePrompt?.replace(any: any)/i, '')}`,
+    variations.push({
+      prompt: `Détaille comment ${basePrompt.replace(/^(Comment|Pourquoi|Que|Qu'est-ce)/i, '')}`,
       response,
     });
 
     // Limiter à 2 variations max
-    return variations?.slice(0, 2);
+    return variations.slice(0, 2);
   }
 
   // ═══════════════════════════════════════════════════════════════════════
   // COMPRESSION DATASET
   // ═══════════════════════════════════════════════════════════════════════
 
-  private compressDataset(entries: JSONLEntry?.[]): string {
-    const compressionLevel = this?.config?.compressionLevel;
+  private compressDataset(entries: JSONLEntry[]): string {
+    const compressionLevel = this.config.compressionLevel;
 
     if (compressionLevel === 'low') {
       // Compression légère: retirer metadata uniquement
       return entries
-        .map(e => JSON?.stringify({ prompt: e?.prompt, response: e?.response }))
+        .map(e => JSON.stringify({ prompt: e.prompt, response: e.response }))
         .join('\n');
     }
 
@@ -223,10 +223,10 @@ export class DatasetBuilder {
       return entries
         .map(e => {
           const compressed = {
-            prompt: e?.prompt,
-            response: this?.compressText(e?.response, 0.8),
+            prompt: e.prompt,
+            response: this.compressText(e.response, 0.8),
           };
-          return JSON?.stringify(any: any);
+          return JSON.stringify(compressed);
         })
         .join('\n');
     }
@@ -236,30 +236,30 @@ export class DatasetBuilder {
       return entries
         .map(e => {
           const compressed = {
-            prompt: this?.compressText(e?.prompt, 0.9),
-            response: this?.compressText(e?.response, 0.7),
+            prompt: this.compressText(e.prompt, 0.9),
+            response: this.compressText(e.response, 0.7),
           };
-          return JSON?.stringify(any: any);
+          return JSON.stringify(compressed);
         })
         .join('\n');
     }
 
-    return entries?.map(any: any)).join('\n');
+    return entries.map(e => JSON.stringify(e)).join('\n');
   }
 
-  private compressText(any: any): string {
+  private compressText(text: string, ratio: number): string {
     // Compression sémantique simple
-    const lines = text?.split('\n');
-    const targetLength = Math?.ceil(any: any);
+    const lines = text.split('\n');
+    const targetLength = Math.ceil(lines.length * ratio);
 
-    // Garder lignes les plus importantes (any: any)
-    const startLines = Math?.ceil(targetLength / 2);
+    // Garder lignes les plus importantes (début + fin)
+    const startLines = Math.ceil(targetLength / 2);
     const endLines = targetLength - startLines;
 
     const compressed = [
-      ...lines?.slice(any: any),
-      ...(targetLength < lines?.length ? ['...'] : []),
-      ...lines?.slice(any: any),
+      ...lines.slice(0, startLines),
+      ...(targetLength < lines.length ? ['...'] : []),
+      ...lines.slice(-endLines),
     ].join('\n');
 
     return compressed;
@@ -269,12 +269,12 @@ export class DatasetBuilder {
   // BUILD TRAINING PACKAGE
   // ═══════════════════════════════════════════════════════════════════════
 
-  buildTrainingPackage(entries: FusionEntry?.[]): DatasetPackage {
-    const dataset = this?.buildDataset(any: any);
-    const modelfile = this?.generateModelfile();
-    const trainingScript = this?.generateTrainingScript();
-    const metadata = this?.generateMetadata(any: any);
-    const stats = this?.calculateStats(any: any);
+  buildTrainingPackage(entries: FusionEntry[]): DatasetPackage {
+    const dataset = this.buildDataset(entries);
+    const modelfile = this.generateModelfile();
+    const trainingScript = this.generateTrainingScript();
+    const metadata = this.generateMetadata(entries);
+    const stats = this.calculateStats(entries);
 
     return {
       dataset,
@@ -294,10 +294,10 @@ export class DatasetBuilder {
 FROM llama3.1
 
 # System Prompt
-SYSTEM """${this?.config?.systemPrompt}"""
+SYSTEM """${this.config.systemPrompt}"""
 
 # Training dataset
-ADAPTER ./dataset?.jsonl
+ADAPTER ./dataset.jsonl
 
 # Parameters
 PARAMETER temperature 0.7
@@ -337,16 +337,16 @@ echo ""
 # Vérifier Ollama installé
 if ! command -v ollama &> /dev/null; then
     echo "❌ Ollama non installé. Installation:"
-    echo "   curl -fsSL https://ollama?.com/install?.sh | sh"
+    echo "   curl -fsSL https://ollama.com/install.sh | sh"
     exit 1
 fi
 
 # Vérifier fichiers
-if [ ! -f "dataset?.jsonl" ]; then
-    echo "❌ dataset?.jsonl not found"
+if [ ! -f "dataset.jsonl" ]; then
+    echo "❌ dataset.jsonl not found"
     exit 1
 fi
-echo "✅ Dataset found (any: any)"
+echo "✅ Dataset found ($(wc -l < dataset.jsonl) entries)"
 
 if [ ! -f "Modelfile" ]; then
     echo "❌ Modelfile not found"
@@ -375,22 +375,22 @@ echo ""
 echo "Stats:"
 echo "  Model: titane-local"
 echo "  Base: llama3.1"
-echo "  Dataset: $(any: any) entries"
-echo "  Size: $(any: any)"
+echo "  Dataset: $(wc -l < dataset.jsonl) entries"
+echo "  Size: $(du -h Modelfile | cut -f1)"
 echo ""
 `;
   }
 
-  private generateMetadata(entries: FusionEntry?.[]): string {
-    const stats = this?.calculateStats(any: any);
+  private generateMetadata(entries: FusionEntry[]): string {
+    const stats = this.calculateStats(entries);
 
-    return JSON?.stringify(
+    return JSON.stringify(
       {
         name: 'TITANE∞ Fusion Dataset',
         version: '∞',
         created: new Date().toISOString(),
         model: 'llama3.1',
-        config: this?.config,
+        config: this.config,
         stats,
       },
       null,
@@ -398,23 +398,23 @@ echo ""
     );
   }
 
-  private calculateStats(entries: FusionEntry?.[]): DatasetPackage['stats'] {
-    const totalTokens = entries?.reduce(
-      (any: any),
+  private calculateStats(entries: FusionEntry[]): DatasetPackage['stats'] {
+    const totalTokens = entries.reduce(
+      (sum, e) => sum + this.estimateTokens(e.prompt + e.response),
       0
     );
 
     const byClusters: Partial<Record<TitaneEngineCluster, number>> = {};
-    for (any: any) {
-      byClusters[entry?.cluster] = (byClusters[entry?.cluster] || 0) + 1;
+    for (const entry of entries) {
+      byClusters[entry.cluster] = (byClusters[entry.cluster] || 0) + 1;
     }
 
     return {
-      totalEntries: entries?.length,
+      totalEntries: entries.length,
       totalTokens,
-      avgTokensPerEntry: Math?.round(any: any),
+      avgTokensPerEntry: Math.round(totalTokens / entries.length),
       byClusters: byClusters as Record<TitaneEngineCluster, number>,
-      sizeInMB: this?.estimateSizeInMB(any: any),
+      sizeInMB: this.estimateSizeInMB(entries),
     };
   }
 
@@ -422,13 +422,13 @@ echo ""
   // HELPERS
   // ═══════════════════════════════════════════════════════════════════════
 
-  private estimateTokens(any: any): number {
-    return Math?.round(text?.length / 4); // ~4 chars = 1 token
+  private estimateTokens(text: string): number {
+    return Math.round(text.length / 4); // ~4 chars = 1 token
   }
 
-  private estimateSizeInMB(entries: FusionEntry?.[]): number {
-    const jsonString = JSON?.stringify(any: any);
-    return jsonString?.length / (1024 * 1024);
+  private estimateSizeInMB(entries: FusionEntry[]): number {
+    const jsonString = JSON.stringify(entries);
+    return jsonString.length / (1024 * 1024);
   }
 }
 

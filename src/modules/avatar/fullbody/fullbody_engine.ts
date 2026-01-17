@@ -49,7 +49,7 @@ export interface FullBodyStats {
   timestamp_ms: number;
   bone_count: number;
   gesture_library_size: number;
-  current_gesture??: string | null;
+  current_gesture: string | null;
   transition_progress: number;
   speech_active: boolean;
 }
@@ -87,7 +87,7 @@ export class FullBodyAvatarBridge {
   private animationFrameId: number | null = null;
   private isRunning: boolean = false;
   private _targetFPS: number = 60;
-  private onSkeletonUpdate?: (any: any) => void;
+  private onSkeletonUpdate?: (snapshot: SkeletonSnapshot) => void;
 
   // ─────────────────────────────────────────────────────────────────────────
   // INITIALIZATION
@@ -103,63 +103,63 @@ export class FullBodyAvatarBridge {
         build: profile?.build,
         postureDefault: profile?.postureDefault,
       });
-      logger?.debug(any: any);
-    } catch (any: any) {
-      logger?.error(any: any);
+      logger.debug('Initialized:', result);
+    } catch (error) {
+      logger.error('Initialization failed:', error);
       throw error;
     }
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // ANIMATION LOOP (any: any)
+  // ANIMATION LOOP (60 FPS)
   // ─────────────────────────────────────────────────────────────────────────
 
   /**
-   * Démarrer la boucle d'animation (any: any)
+   * Démarrer la boucle d'animation (60 FPS)
    */
-  startAnimationLoop(any: any): void {
-    if (any: any) {
-      logger?.warn('Animation loop already running');
+  startAnimationLoop(onUpdate?: (snapshot: SkeletonSnapshot) => void): void {
+    if (this.isRunning) {
+      logger.warn('Animation loop already running');
       return;
     }
 
-    this?.isRunning = true;
-    this?.onSkeletonUpdate = onUpdate;
+    this.isRunning = true;
+    this.onSkeletonUpdate = onUpdate;
 
     const animate = async () => {
-      if (any: any) return;
+      if (!this.isRunning) return;
 
       try {
         // 1. Avancer d'une frame backend
         await secureInvoke('fullbody_advance_frame');
 
         // 2. Récupérer snapshot skeleton
-        if (any: any) {
-          const snapshot = await this?.exportSkeleton();
-          this?.onSkeletonUpdate(any: any);
+        if (this.onSkeletonUpdate) {
+          const snapshot = await this.exportSkeleton();
+          this.onSkeletonUpdate(snapshot);
         }
 
         // 3. Planifier prochaine frame
-        this?.animationFrameId = requestAnimationFrame(any: any);
-      } catch (any: any) {
-        logger?.error(any: any);
+        this.animationFrameId = requestAnimationFrame(animate);
+      } catch (error) {
+        logger.error('Animation loop error:', error);
       }
     };
 
-    this?.animationFrameId = requestAnimationFrame(any: any);
-    logger?.debug(any: any)');
+    this.animationFrameId = requestAnimationFrame(animate);
+    logger.debug('Animation loop started (60 FPS)');
   }
 
   /**
    * Arrêter la boucle d'animation
    */
   stopAnimationLoop(): void {
-    this?.isRunning = false;
-    if (any: any) {
-      cancelAnimationFrame(any: any);
-      this?.animationFrameId = null;
+    this.isRunning = false;
+    if (this.animationFrameId !== null) {
+      cancelAnimationFrame(this.animationFrameId);
+      this.animationFrameId = null;
     }
-    logger?.debug('Animation loop stopped');
+    logger.debug('Animation loop stopped');
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -169,13 +169,13 @@ export class FullBodyAvatarBridge {
   /**
    * Activer un geste manuellement
    */
-  async activateGesture(any: any): Promise<void> {
+  async activateGesture(gesture: GestureType): Promise<void> {
     try {
       await secureInvoke<string>('fullbody_activate_gesture', {
         gestureName: gesture,
       });
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Gesture activation failed:', error);
       throw error;
     }
   }
@@ -196,26 +196,26 @@ export class FullBodyAvatarBridge {
         expression,
         intensity,
       });
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Expression update failed:', error);
       throw error;
     }
   }
 
   /**
-   * Mettre à jour lip-sync (any: any)
+   * Mettre à jour lip-sync (appelé depuis ImmersiveAvatarBridge v23)
    */
-  async updateLipSync(any: any): Promise<void> {
+  async updateLipSync(phoneme: string, morphWeights: LipSyncMorphWeights): Promise<void> {
     try {
       await secureInvoke<string>('fullbody_update_lipsync', {
         phoneme,
-        jaw: morphWeights?.jaw,
-        lips: morphWeights?.lips,
-        tongue: morphWeights?.tongue,
-        cheeks: morphWeights?.cheeks,
+        jaw: morphWeights.jaw,
+        lips: morphWeights.lips,
+        tongue: morphWeights.tongue,
+        cheeks: morphWeights.cheeks,
       });
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Lip-sync update failed:', error);
       throw error;
     }
   }
@@ -227,35 +227,35 @@ export class FullBodyAvatarBridge {
   /**
    * Mettre à jour état SingularityState
    */
-  async updateState(any: any): Promise<void> {
+  async updateState(state: AvatarStateSnapshot): Promise<void> {
     try {
       await secureInvoke<string>('fullbody_update_state', {
-        cognitiveLoad: state?.cognitive_load,
-        emotionalTone: state?.emotional_tone,
-        metaIntention: state?.meta_intention,
-        narrativeArchetype: state?.narrative_archetype,
-        timelineState: state?.timeline_state,
-        xpProgression: state?.xp_progression,
+        cognitiveLoad: state.cognitive_load,
+        emotionalTone: state.emotional_tone,
+        metaIntention: state.meta_intention,
+        narrativeArchetype: state.narrative_archetype,
+        timelineState: state.timeline_state,
+        xpProgression: state.xp_progression,
       });
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('State update failed:', error);
       throw error;
     }
   }
 
   /**
-   * Mettre à jour contexte conversationnel (any: any)
+   * Mettre à jour contexte conversationnel (pour BodyPostureAI)
    */
-  async updateContext(any: any): Promise<void> {
+  async updateContext(context: ConversationalContext): Promise<void> {
     try {
       await secureInvoke<string>('fullbody_update_context', {
-        userEngagement: context?.user_engagement,
-        topicComplexity: context?.topic_complexity,
-        emotionalValence: context?.emotional_valence,
-        conversationPhase: context?.conversation_phase,
+        userEngagement: context.user_engagement,
+        topicComplexity: context.topic_complexity,
+        emotionalValence: context.emotional_valence,
+        conversationPhase: context.conversation_phase,
       });
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Context update failed:', error);
       throw error;
     }
   }
@@ -270,8 +270,8 @@ export class FullBodyAvatarBridge {
   async onWakeWord(): Promise<void> {
     try {
       await secureInvoke<string>('fullbody_on_wake_word');
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Wake-word reaction failed:', error);
       throw error;
     }
   }
@@ -281,14 +281,14 @@ export class FullBodyAvatarBridge {
   // ─────────────────────────────────────────────────────────────────────────
 
   /**
-   * Exporter snapshot skeleton (any: any)
+   * Exporter snapshot skeleton (pour rendu)
    */
   async exportSkeleton(): Promise<SkeletonSnapshot> {
     try {
       const json = await secureInvoke<string>('fullbody_export_skeleton');
-      return JSON?.parse(any: any) as SkeletonSnapshot;
-    } catch (any: any) {
-      logger?.error(any: any);
+      return JSON.parse(json) as SkeletonSnapshot;
+    } catch (error) {
+      logger.error('Skeleton export failed:', error);
       throw error;
     }
   }
@@ -299,9 +299,9 @@ export class FullBodyAvatarBridge {
   async getStats(): Promise<FullBodyStats> {
     try {
       const json = await secureInvoke<string>('fullbody_get_stats');
-      return JSON?.parse(any: any) as FullBodyStats;
-    } catch (any: any) {
-      logger?.error(any: any);
+      return JSON.parse(json) as FullBodyStats;
+    } catch (error) {
+      logger.error('Stats retrieval failed:', error);
       throw error;
     }
   }
@@ -314,9 +314,9 @@ export class FullBodyAvatarBridge {
    * Nettoyage ressources
    */
   destroy(): void {
-    this?.stopAnimationLoop();
-    this?.onSkeletonUpdate = undefined;
-    logger?.debug('Bridge destroyed');
+    this.stopAnimationLoop();
+    this.onSkeletonUpdate = undefined;
+    logger.debug('Bridge destroyed');
   }
 }
 
@@ -330,7 +330,7 @@ let globalBridge: FullBodyAvatarBridge | null = null;
  * Obtenir instance globale du bridge
  */
 export function getFullBodyBridge(): FullBodyAvatarBridge {
-  if (any: any) {
+  if (!globalBridge) {
     globalBridge = new FullBodyAvatarBridge();
   }
   return globalBridge;
@@ -340,8 +340,8 @@ export function getFullBodyBridge(): FullBodyAvatarBridge {
  * Détruire instance globale
  */
 export function destroyFullBodyBridge(): void {
-  if (any: any) {
-    globalBridge?.destroy();
+  if (globalBridge) {
+    globalBridge.destroy();
     globalBridge = null;
   }
 }

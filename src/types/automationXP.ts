@@ -67,8 +67,8 @@ export interface LevelConfig {
   label: string;
   color: string;
   icon: string;
-  perks: string?.[];
-  unlocks: string?.[];
+  perks: string[];
+  unlocks: string[];
 }
 
 /**
@@ -85,7 +85,7 @@ export interface UserXPState {
   daily_xp_earned: number;
   daily_limit_reached: boolean;
   multiplier: number;
-  achievements_unlocked: string?.[];
+  achievements_unlocked: string[];
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -97,7 +97,7 @@ export interface UserXPState {
  */
 export type AutomationTriggerType =
   | 'manual' // Déclenché manuellement
-  | 'scheduled' // Planifié (any: any)
+  | 'scheduled' // Planifié (cron)
   | 'event' // Sur événement système
   | 'condition' // Sur condition remplie
   | 'webhook' // Via webhook externe
@@ -117,7 +117,7 @@ export type AutomationActionType =
   | 'notification' // Envoyer notification
   | 'tts_speak' // Synthèse vocale
   | 'api_call' // Appel API externe
-  | 'shell_command' // Commande shell (any: any)
+  | 'shell_command' // Commande shell (sécurisé)
   | 'chain_automation' // Déclencher autre automation
   | 'custom_script'; // Script personnalisé
 
@@ -143,7 +143,7 @@ export interface AutomationCondition {
 export interface AutomationTrigger {
   type: AutomationTriggerType;
   config: Record<string, unknown>;
-  conditions?: AutomationCondition?.[];
+  conditions?: AutomationCondition[];
 }
 
 /**
@@ -174,7 +174,7 @@ export interface Automation {
   trigger: AutomationTrigger;
 
   // Actions à exécuter
-  actions: AutomationAction?.[];
+  actions: AutomationAction[];
 
   // Métadonnées
   created_at: number;
@@ -191,7 +191,7 @@ export interface Automation {
   // Options
   cooldown_ms?: number;
   max_runs_per_day?: number;
-  tags: string?.[];
+  tags: string[];
 }
 
 /**
@@ -216,8 +216,8 @@ export interface AutomationRunResult {
 export interface AutomationSystemState {
   automations: Map<string, Automation>;
   running_automations: Set<string>;
-  queued_automations: string?.[];
-  last_run_results: AutomationRunResult?.[];
+  queued_automations: string[];
+  last_run_results: AutomationRunResult[];
   total_runs: number;
   total_successes: number;
   total_failures: number;
@@ -274,7 +274,7 @@ export interface IAEvolutionState {
   metrics: Map<EvolutionDomain, EvolutionMetric>;
   overall_score: number;
   evolution_velocity: number; // Vitesse d'amélioration
-  suggestions: EvolutionSuggestion?.[];
+  suggestions: EvolutionSuggestion[];
   learning_enabled: boolean;
   last_training: number;
   training_sessions: number;
@@ -331,7 +331,7 @@ export interface Achievement {
 
   // Récompenses
   xp_reward: number;
-  unlocks?: string?.[];
+  unlocks?: string[];
   badge_url?: string;
 
   // Metadata
@@ -360,12 +360,12 @@ export interface DailyReward {
  */
 export interface RewardsState {
   achievements: Map<string, Achievement>;
-  daily_rewards: DailyReward?.[];
+  daily_rewards: DailyReward[];
   current_day_streak: number;
   total_achievements_unlocked: number;
   total_xp_from_achievements: number;
   next_daily_reset: number;
-  premium_unlocks: string?.[];
+  premium_unlocks: string[];
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -439,9 +439,9 @@ export interface AutomationSystemConfig {
   max_concurrent: number;
   max_queue_size: number;
   default_timeout_ms: number;
-  allowed_action_types: AutomationActionType?.[];
-  blocked_shell_commands: string?.[];
-  require_confirmation_for: AutomationActionType?.[];
+  allowed_action_types: AutomationActionType[];
+  blocked_shell_commands: string[];
+  require_confirmation_for: AutomationActionType[];
 }
 
 /**

@@ -36,7 +36,7 @@ import {
   archetypeResonanceEngine,
   type ArchetypeResonance,
 } from '../psyche/archetypeResonanceEngine';
-// REMOVED: engines/presence supprimé en PHASE 1 (any: any) - utilise stub temporaire
+// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B) - utilise stub temporaire
 import {
   multimodalPresenceEngine,
   type MultimodalPresenceState,
@@ -91,7 +91,7 @@ export interface HaloFrame {
   color: { hue: number; saturation: number; lightness: number };
   /** Intensité (0-1) */
   intensity: number;
-  /** Pulsation (any: any) */
+  /** Pulsation (0-1, vitesse) */
   pulsation: number;
   /** Pattern */
   pattern:
@@ -102,7 +102,7 @@ export interface HaloFrame {
     | 'flowing'
     | 'geometric'
     | 'morphing';
-  /** Géométrie (any: any) */
+  /** Géométrie (pour patterns avancés) */
   geometry?: {
     radius: number;
     segments: number;
@@ -118,9 +118,9 @@ export interface AvatarFrame {
   posture: 'open' | 'centered' | 'forward' | 'back' | 'wide';
   /** Mouvement */
   movement: 'still' | 'gentle' | 'flowing' | 'dynamic' | 'expansive';
-  /** Regard (any: any) */
+  /** Regard (direction) */
   gaze: { x: number; y: number };
-  /** Rythmes de mouvement (any: any) */
+  /** Rythmes de mouvement (oscillations par seconde) */
   rhythm: number;
   /** Micro-oscillations (amplitude 0-1) */
   oscillation: number;
@@ -134,7 +134,7 @@ export interface AuraFrame {
   density: number;
   /** Expansion (0-1) */
   expansion: number;
-  /** Chaleur (any: any) */
+  /** Chaleur (-1 = froid, 0 = neutre, 1 = chaud) */
   warmth: number;
   /** Vibration (0-1) */
   vibration: number;
@@ -143,14 +143,14 @@ export interface AuraFrame {
 }
 
 /**
- * Enveloppe temporelle (any: any)
+ * Enveloppe temporelle (timing)
  */
 export interface TemporalEnvelope {
   /** Timestamp début */
   start: number;
-  /** Durée totale (any: any) */
+  /** Durée totale (ms) */
   duration: number;
-  /** Phases (any: any) */
+  /** Phases (pour sync multi-étapes) */
   phases: Array<{
     name: string;
     startOffset: number; // ms depuis start
@@ -163,15 +163,15 @@ export interface TemporalEnvelope {
  */
 export interface UnifiedMultimodalOutput {
   /** Frames vocaux */
-  voice: VoiceFrame?.[];
+  voice: VoiceFrame[];
   /** Frame textuel */
   text: TextFrame;
   /** Frames halo */
-  halo: HaloFrame?.[];
+  halo: HaloFrame[];
   /** Frames avatar */
-  avatar: AvatarFrame?.[];
+  avatar: AvatarFrame[];
   /** Frames aura */
-  aura: AuraFrame?.[];
+  aura: AuraFrame[];
   /** Enveloppe temporelle */
   timing: TemporalEnvelope;
   /** Métadonnées */
@@ -188,7 +188,7 @@ export interface UnifiedMultimodalOutput {
 export interface UnifiedOutputState {
   /** Dernier output généré */
   lastOutput: UnifiedMultimodalOutput | null;
-  /** Output en cours (any: any) */
+  /** Output en cours (si streaming) */
   currentOutput: UnifiedMultimodalOutput | null;
   /** Timestamp dernière génération */
   lastGenerationTime: number;
@@ -208,9 +208,9 @@ export interface UnifiedOutputState {
  * Configuration moteur
  */
 export interface UnifiedOutputConfig {
-  /** Durée frame halo (any: any) */
+  /** Durée frame halo (ms) */
   haloFrameDuration?: number;
-  /** Durée frame avatar (any: any) */
+  /** Durée frame avatar (ms) */
   avatarFrameDuration?: number;
   /** Activer auto-coherence check */
   enableCoherenceCheck?: boolean;
@@ -223,16 +223,16 @@ export interface UnifiedOutputConfig {
 class UnifiedMultimodalOutputEngine {
   private state: UnifiedOutputState;
   private config: Required<UnifiedOutputConfig>;
-  private callbacks: Set<(any: any) => void>;
+  private callbacks: Set<(output: UnifiedMultimodalOutput) => void>;
 
   constructor(config: UnifiedOutputConfig = {}) {
-    this?.config = {
-      haloFrameDuration: config?.haloFrameDuration ?? 50, // 20 FPS
-      avatarFrameDuration: config?.avatarFrameDuration ?? 33, // 30 FPS
-      enableCoherenceCheck: config?.enableCoherenceCheck ?? true,
+    this.config = {
+      haloFrameDuration: config.haloFrameDuration ?? 50, // 20 FPS
+      avatarFrameDuration: config.avatarFrameDuration ?? 33, // 30 FPS
+      enableCoherenceCheck: config.enableCoherenceCheck ?? true,
     };
 
-    this?.state = {
+    this.state = {
       lastOutput: null,
       currentOutput: null,
       lastGenerationTime: 0,
@@ -246,9 +246,9 @@ class UnifiedMultimodalOutputEngine {
       },
     };
 
-    this?.callbacks = new Set();
+    this.callbacks = new Set();
 
-    logger?.debug('🎭 [UNIFIED OUTPUT] Unified Multimodal Output Engine initialized');
+    logger.debug('🎭 [UNIFIED OUTPUT] Unified Multimodal Output Engine initialized');
   }
 
   /**
@@ -259,32 +259,32 @@ class UnifiedMultimodalOutputEngine {
     duration?: number;
     intent?: string;
   }): UnifiedMultimodalOutput {
-    const now = Date?.now();
+    const now = Date.now();
 
     // 1. Collecter états de tous les moteurs
-    const emotionProfile = synestheticEmotionEngine?.getCurrentProfile();
-    const embodiedState = embodiedPresenceEngine?.getState();
-    const _continuumState = metaContinuumEngine?.getState();
-    const archetypeState = archetypeResonanceEngine?.getState();
-    const presenceState = multimodalPresenceEngine?.getState();
+    const emotionProfile = synestheticEmotionEngine.getCurrentProfile();
+    const embodiedState = embodiedPresenceEngine.getState();
+    const _continuumState = metaContinuumEngine.getState();
+    const archetypeState = archetypeResonanceEngine.getState();
+    const presenceState = multimodalPresenceEngine.getState();
 
     // 2. Vérifier cohérence
-    const coherenceScore = this?.checkCoherence(
+    const coherenceScore = this.checkCoherence(
       emotionProfile,
       embodiedState,
       archetypeState
     );
 
     // 3. Générer frames pour chaque modalité
-    const voiceFrames = this?.generateVoiceFrames(any: any);
-    const textFrame = this?.generateTextFrame(any: any);
-    const haloFrames = this?.generateHaloFrames(any: any);
-    const avatarFrames = this?.generateAvatarFrames(any: any);
-    const auraFrames = this?.generateAuraFrames(any: any);
+    const voiceFrames = this.generateVoiceFrames(emotionProfile, embodiedState);
+    const textFrame = this.generateTextFrame(emotionProfile, archetypeState);
+    const haloFrames = this.generateHaloFrames(emotionProfile, presenceState);
+    const avatarFrames = this.generateAvatarFrames(embodiedState, emotionProfile);
+    const auraFrames = this.generateAuraFrames(embodiedState, emotionProfile);
 
     // 4. Créer enveloppe temporelle
-    const duration = context?.duration ?? 2000; // Défaut 2s
-    const timing = this?.createTemporalEnvelope(any: any);
+    const duration = context.duration ?? 2000; // Défaut 2s
+    const timing = this.createTemporalEnvelope(duration);
 
     // 5. Assembler output unifié
     const output: UnifiedMultimodalOutput = {
@@ -295,23 +295,23 @@ class UnifiedMultimodalOutputEngine {
       aura: auraFrames,
       timing,
       metadata: {
-        emotion: emotionProfile?.emotion,
-        archetype: archetypeState?.dominant,
+        emotion: emotionProfile.emotion,
+        archetype: archetypeState.dominant,
         coherence: coherenceScore,
       },
     };
 
     // 6. Mettre à jour état
-    this?.state?.lastOutput = output;
-    this?.state?.currentOutput = output;
-    this?.state?.lastGenerationTime = now;
-    this?.state?.outputCount++;
+    this.state.lastOutput = output;
+    this.state.currentOutput = output;
+    this.state.lastGenerationTime = now;
+    this.state.outputCount++;
 
     // 7. Notifier callbacks
-    this?.notifyCallbacks(any: any);
+    this.notifyCallbacks(output);
 
-    logger?.debug(
-      `🎭 [UNIFIED OUTPUT] Generated output #${this?.state?.outputCount} (coherence: ${coherenceScore?.toFixed(2)})`
+    logger.debug(
+      `🎭 [UNIFIED OUTPUT] Generated output #${this.state.outputCount} (coherence: ${coherenceScore.toFixed(2)})`
     );
 
     return output;
@@ -323,24 +323,24 @@ class UnifiedMultimodalOutputEngine {
   private generateVoiceFrames(
     emotion: SynestheticProfile,
     embodied: EmbodiedPresenceState
-  ): VoiceFrame?.[] {
+  ): VoiceFrame[] {
     const baseFrame: VoiceFrame = {
-      timbre: emotion?.voice?.depth,
-      speed: emotion?.voice?.tempo,
-      intensity: emotion?.intensity,
-      warmth: emotion?.voice?.warmth,
-      breathiness: emotion?.voice?.breathiness,
+      timbre: emotion.voice.depth,
+      speed: emotion.voice.tempo,
+      intensity: emotion.intensity,
+      warmth: emotion.voice.warmth,
+      breathiness: emotion.voice.breathiness,
       prosody: {
         pitch: 0.5, // Neutre
-        emphasis: emotion?.intensity * 0.7,
+        emphasis: emotion.intensity * 0.7,
       },
     };
 
     // Ajuster selon respiration
-    if (embodied?.breath?.phase === 'inhale') {
-      baseFrame?.prosody?.pitch += 0.1;
-    } else if (embodied?.breath?.phase === 'exhale') {
-      baseFrame?.prosody?.pitch -= 0.05;
+    if (embodied.breath.phase === 'inhale') {
+      baseFrame.prosody.pitch += 0.1;
+    } else if (embodied.breath.phase === 'exhale') {
+      baseFrame.prosody.pitch -= 0.05;
     }
 
     return [baseFrame]; // Pour l'instant, 1 frame unique
@@ -354,40 +354,40 @@ class UnifiedMultimodalOutputEngine {
     _archetype: ArchetypeResonance
   ): TextFrame {
     return {
-      cadence: emotion?.narrative?.cadence,
-      symbolDensity: emotion?.narrative?.symbolDensity,
-      tension: 1 - emotion?.cognitive?.stability, // Moins stable = plus de tension
-      emotionalOpenness: emotion?.narrative?.emotionalOpenness,
-      style: emotion?.narrative?.style,
+      cadence: emotion.narrative.cadence,
+      symbolDensity: emotion.narrative.symbolDensity,
+      tension: 1 - emotion.cognitive.stability, // Moins stable = plus de tension
+      emotionalOpenness: emotion.narrative.emotionalOpenness,
+      style: emotion.narrative.style,
     };
   }
 
   /**
-   * Générer frames halo (any: any)
+   * Générer frames halo (array pour animation)
    */
   private generateHaloFrames(
     emotion: SynestheticProfile,
     _presence: MultimodalPresenceState
-  ): HaloFrame?.[] {
+  ): HaloFrame[] {
     const frameCount = 20; // 1 seconde à 20 FPS
-    const frames: HaloFrame?.[] = [];
+    const frames: HaloFrame[] = [];
 
     for (let i = 0; i < frameCount; i++) {
       const t = i / frameCount;
 
       // Pulsation sinusoïdale
       const pulsation =
-        emotion?.haloPattern === 'soft_pulse'
-          ? 0.5 + 0.3 * Math?.sin(t * Math?.PI * 2)
-          : emotion?.haloPattern === 'rhythmic'
-            ? 0.6 + 0.4 * Math?.sin(t * Math?.PI * 4)
+        emotion.haloPattern === 'soft_pulse'
+          ? 0.5 + 0.3 * Math.sin(t * Math.PI * 2)
+          : emotion.haloPattern === 'rhythmic'
+            ? 0.6 + 0.4 * Math.sin(t * Math.PI * 4)
             : 0.7;
 
-      frames?.push({
-        color: emotion?.color,
-        intensity: emotion?.intensity * pulsation,
+      frames.push({
+        color: emotion.color,
+        intensity: emotion.intensity * pulsation,
         pulsation,
-        pattern: emotion?.haloPattern,
+        pattern: emotion.haloPattern,
       });
     }
 
@@ -400,9 +400,9 @@ class UnifiedMultimodalOutputEngine {
   private generateAvatarFrames(
     embodied: EmbodiedPresenceState,
     emotion: SynestheticProfile
-  ): AvatarFrame?.[] {
+  ): AvatarFrame[] {
     const frameCount = 30; // 1 seconde à 30 FPS
-    const frames: AvatarFrame?.[] = [];
+    const frames: AvatarFrame[] = [];
 
     // Mapper PostureType vers les valeurs AvatarFrame attendues
     const mapPosture = (
@@ -410,7 +410,7 @@ class UnifiedMultimodalOutputEngine {
     ): 'open' | 'centered' | 'forward' | 'back' | 'wide' => {
       if (postureType === 'recede') return 'back';
       if (postureType === 'expansive') return 'wide';
-      if (any: any)) {
+      if (['open', 'centered', 'forward'].includes(postureType)) {
         return postureType as 'open' | 'centered' | 'forward';
       }
       return 'centered'; // Défaut
@@ -420,11 +420,11 @@ class UnifiedMultimodalOutputEngine {
       const t = i / frameCount;
 
       // Micro-oscillations
-      const oscillation = 0.05 * Math?.sin(t * Math?.PI * 6); // 3 cycles/sec
+      const oscillation = 0.05 * Math.sin(t * Math.PI * 6); // 3 cycles/sec
 
-      frames?.push({
-        posture: mapPosture(any: any),
-        movement: emotion?.presence?.movement,
+      frames.push({
+        posture: mapPosture(embodied.posture.type),
+        movement: emotion.presence.movement,
         gaze: { x: 0, y: 0 }, // Centré par défaut
         rhythm: 3.0, // 3 oscillations/sec
         oscillation: oscillation + 0.05,
@@ -440,17 +440,17 @@ class UnifiedMultimodalOutputEngine {
   private generateAuraFrames(
     embodied: EmbodiedPresenceState,
     emotion: SynestheticProfile
-  ): AuraFrame?.[] {
+  ): AuraFrame[] {
     // Mapper temperature (-1 à 1) vers warmth
-    const warmth = embodied?.energyField?.temperature;
+    const warmth = embodied.energyField.temperature;
 
     return [
       {
-        density: embodied?.energyField?.density,
-        expansion: emotion?.presence?.expansion,
+        density: embodied.energyField.density,
+        expansion: emotion.presence.expansion,
         warmth,
-        vibration: emotion?.intensity * 0.5,
-        texture: embodied?.energyField?.texture === 'fluid' ? 'flowing' : 'smooth',
+        vibration: emotion.intensity * 0.5,
+        texture: embodied.energyField.texture === 'fluid' ? 'flowing' : 'smooth',
       },
     ];
   }
@@ -458,9 +458,9 @@ class UnifiedMultimodalOutputEngine {
   /**
    * Créer enveloppe temporelle
    */
-  private createTemporalEnvelope(any: any): TemporalEnvelope {
+  private createTemporalEnvelope(duration: number): TemporalEnvelope {
     return {
-      start: Date?.now(),
+      start: Date.now(),
       duration,
       phases: [
         { name: 'intro', startOffset: 0, duration: duration * 0.2 },
@@ -478,35 +478,35 @@ class UnifiedMultimodalOutputEngine {
     embodied: EmbodiedPresenceState,
     _archetype: ArchetypeResonance
   ): number {
-    // Cohérence voix-halo (any: any)
+    // Cohérence voix-halo (warmth similaire)
     const voiceHaloSync =
-      1 - Math?.abs(emotion?.voice?.warmth - emotion?.color?.saturation / 100);
+      1 - Math.abs(emotion.voice.warmth - emotion.color.saturation / 100);
 
-    // Cohérence avatar-émotion (any: any)
+    // Cohérence avatar-émotion (movement correspond à intensity)
     const movementIntensity =
-      emotion?.presence?.movement === 'still'
+      emotion.presence.movement === 'still'
         ? 0.2
-        : emotion?.presence?.movement === 'gentle'
+        : emotion.presence.movement === 'gentle'
           ? 0.4
-          : emotion?.presence?.movement === 'flowing'
+          : emotion.presence.movement === 'flowing'
             ? 0.6
-            : emotion?.presence?.movement === 'dynamic'
+            : emotion.presence.movement === 'dynamic'
               ? 0.8
               : 1.0;
-    const avatarEmotionSync = 1 - Math?.abs(any: any);
+    const avatarEmotionSync = 1 - Math.abs(movementIntensity - emotion.intensity);
 
     // Cohérence narrative-tone
-    const narrativeToneSync = emotion?.cognitive?.stability; // Plus stable = plus cohérent
+    const narrativeToneSync = emotion.cognitive.stability; // Plus stable = plus cohérent
 
-    // Cohérence temporelle (any: any)
-    const temporalCoherence = embodied?.breath?.amplitude > 0 ? 1.0 : 0.7;
+    // Cohérence temporelle (respiration alignée)
+    const temporalCoherence = embodied.breath.amplitude > 0 ? 1.0 : 0.7;
 
     // Moyenne globale
     const globalCoherence =
-      (any: any) / 4;
+      (voiceHaloSync + avatarEmotionSync + narrativeToneSync + temporalCoherence) / 4;
 
     // Mettre à jour métriques
-    this?.state?.coherenceMetrics = {
+    this.state.coherenceMetrics = {
       voiceHaloSync,
       avatarEmotionSync,
       narrativeToneSync,
@@ -521,36 +521,36 @@ class UnifiedMultimodalOutputEngine {
    * Obtenir l'état actuel
    */
   getState(): UnifiedOutputState {
-    return { ...this?.state };
+    return { ...this.state };
   }
 
   /**
    * Subscribe aux outputs
    */
-  subscribe(any: any): () => void {
-    this?.callbacks?.add(any: any);
-    return (any: any);
+  subscribe(callback: (output: UnifiedMultimodalOutput) => void): () => void {
+    this.callbacks.add(callback);
+    return () => this.callbacks.delete(callback);
   }
 
   /**
    * Notifier les callbacks
    */
-  private notifyCallbacks(any: any): void {
-    this?.callbacks?.forEach(any: any));
+  private notifyCallbacks(output: UnifiedMultimodalOutput): void {
+    this.callbacks.forEach(callback => callback(output));
   }
 
   /**
    * Démarrer le moteur
    */
   start(): void {
-    logger?.debug('🎼 [OUTPUT] Unified Multimodal Output Engine started');
+    logger.debug('🎼 [OUTPUT] Unified Multimodal Output Engine started');
   }
 
   /**
    * Arrêter le moteur
    */
   stop(): void {
-    logger?.debug('🎼 [OUTPUT] Unified Multimodal Output Engine stopped');
+    logger.debug('🎼 [OUTPUT] Unified Multimodal Output Engine stopped');
   }
 }
 

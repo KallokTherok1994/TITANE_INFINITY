@@ -5,10 +5,10 @@
  */
 
 export type AdminTab =
-  | 'system' // Centre Système (any: any)
+  | 'system' // Centre Système (Diagnostics, DevTools, Cluster, Introspection, HyperVision)
   | 'config' // Configuration HUB
   | 'audio' // Audio & Voix
-  | 'design' // Design (any: any)
+  | 'design' // Design (Gesign)
   | 'governance'; // Gouvernance & Sécurité
 
 export interface AdminTabDefinition {
@@ -19,7 +19,7 @@ export interface AdminTabDefinition {
   badge?: string;
 }
 
-export const ADMIN_TABS: AdminTabDefinition?.[] = [
+export const ADMIN_TABS: AdminTabDefinition[] = [
   {
     id: 'system',
     label: 'Système',

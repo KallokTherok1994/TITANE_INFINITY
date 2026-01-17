@@ -16,10 +16,10 @@
  * without modifications during the migration period.
  *
  * Migration Path:
- * 1. Phase 1: Compatibility wrapper active (any: any)
+ * 1. Phase 1: Compatibility wrapper active (current)
  * 2. Phase 2: Deprecation warnings added
  * 3. Phase 3: Direct UnifiedOrchestrator usage recommended
- * 4. Phase 4: Wrapper removed (any: any)
+ * 4. Phase 4: Wrapper removed (post-migration)
  */
 
 import { unifiedOrchestrator } from '../UnifiedOrchestrator';
@@ -35,20 +35,20 @@ import {
   type AISelection,
   type ValidatedOutput,
   type MCPState,
-} from '@/services/mcp/mcp?.types';
+} from '@/services/mcp/mcp.types';
 
 /**
- * Compatibility wrapper state (any: any)
+ * Compatibility wrapper state (mirroring original MCPOrchestrator)
  */
 const cachedState: MCPState | null = null;
-let stateSubscribers: Array<(any: any) => void> = [];
+let stateSubscribers: Array<(state: MCPState) => void> = [];
 
 /**
  * Get MCP strategy instance from UnifiedOrchestrator
  */
 async function getMCPStrategy(): Promise<MCPStrategy> {
-  const strategy = await unifiedOrchestrator?.getStrategy<MCPStrategy>('mcp');
-  if (any: any) {
+  const strategy = await unifiedOrchestrator.getStrategy<MCPStrategy>('mcp');
+  if (!strategy) {
     throw new Error('MCPStrategy not available in UnifiedOrchestrator');
   }
   return strategy;
@@ -63,20 +63,20 @@ async function getMCPStrategy(): Promise<MCPStrategy> {
 export const MCPOrchestrator = {
   /**
    * Get current MCP state
-   * (any: any)
+   * (Wrapped for compatibility - delegates to MCPStrategy)
    */
   getState(): MCPState {
     // Return cached state or default
-    if (any: any) {
+    if (cachedState) {
       return cachedState;
     }
 
-    // Default minimal state (any: any)
+    // Default minimal state (will be populated on first strategy access)
     return {
       constitution: {
         version: 'v1.1',
         laws: [],
-        lastUpdate: Date?.now(),
+        lastUpdate: Date.now(),
       },
       jobs: {
         pending: [],
@@ -86,42 +86,42 @@ export const MCPOrchestrator = {
       },
       health: {
         helios: {
-          core: 'HELIOS' as unknown as unknown as any,
+          core: 'HELIOS' as any,
           status: 'PASS',
           score: 1.0,
           issues: [],
-          timestamp: Date?.now(),
+          timestamp: Date.now(),
         },
         nexus: {
-          core: 'NEXUS' as unknown as unknown as any,
+          core: 'NEXUS' as any,
           status: 'PASS',
           score: 1.0,
           issues: [],
-          timestamp: Date?.now(),
+          timestamp: Date.now(),
         },
         harmonia: {
-          core: 'HARMONIA' as unknown as unknown as any,
+          core: 'HARMONIA' as any,
           status: 'PASS',
           score: 1.0,
           issues: [],
-          timestamp: Date?.now(),
+          timestamp: Date.now(),
         },
         sentinel: {
-          core: 'SENTINEL' as unknown as unknown as any,
+          core: 'SENTINEL' as any,
           status: 'PASS',
           score: 1.0,
           issues: [],
-          timestamp: Date?.now(),
+          timestamp: Date.now(),
         },
         memoryCore: {
-          core: 'MEMORY_CORE' as unknown as unknown as any,
+          core: 'MEMORY_CORE' as any,
           status: 'PASS',
           score: 1.0,
           issues: [],
-          timestamp: Date?.now(),
+          timestamp: Date.now(),
         },
         globalStatus: 'HEALTHY',
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
       },
       memory: {
         entries: [],
@@ -137,7 +137,7 @@ export const MCPOrchestrator = {
         totalViolations: 0,
         totalCorrections: 0,
         totalRefusals: 0,
-        lastAudit: Date?.now(),
+        lastAudit: Date.now(),
       },
       aiUsage: {
         totalRequests: 0,
@@ -147,7 +147,7 @@ export const MCPOrchestrator = {
       },
       evolution: {
         cycleCount: 0,
-        lastCycle: Date?.now(),
+        lastCycle: Date.now(),
         improvements: [],
         driftsDetected: 0,
         driftsCorrected: 0,
@@ -157,209 +157,209 @@ export const MCPOrchestrator = {
 
   /**
    * Subscribe to MCP state changes
-   * (any: any)
+   * (Wrapped for compatibility)
    */
-  subscribe(any: any): () => void {
-    stateSubscribers?.push(any: any);
+  subscribe(callback: (state: MCPState) => void): () => void {
+    stateSubscribers.push(callback);
 
     // Return unsubscribe function
     return () => {
-      stateSubscribers = stateSubscribers?.filter(any: any);
+      stateSubscribers = stateSubscribers.filter(cb => cb !== callback);
     };
   },
 
   /**
    * Create a new job
-   * (any: any)
+   * (Delegates to MCPStrategy.createJob)
    */
   async createJob(
     input: { query: string; context?: Record<string, unknown> },
     type: JobType,
-    priority: JobPriority = JobPriority?.NORMAL
+    priority: JobPriority = JobPriority.NORMAL
   ): Promise<Job> {
     const strategy = await getMCPStrategy();
 
     // Map priority string to format
-    const jobId = (await strategy?.execute('createJob', {
+    const jobId = (await strategy.execute('createJob', {
       type: type as string,
       priority,
     })) as unknown as string;
 
-    // Return job structure (any: any)
+    // Return job structure (simplified - real implementation would fetch full job)
     return {
       id: jobId,
       type,
       priority,
-      status: JobStatus?.PENDING,
-      context: input?.context || {},
-      createdAt: Date?.now(),
+      status: JobStatus.PENDING,
+      context: input.context || {},
+      createdAt: Date.now(),
       history: [],
     } as unknown as Job;
   },
 
   /**
    * Evaluate a job
-   * (any: any)
+   * (Delegates to MCPStrategy.evaluateJob)
    */
-  async evaluateJob(any: any): Promise<ValidatedOutput> {
+  async evaluateJob(job: Job): Promise<ValidatedOutput> {
     const strategy = await getMCPStrategy();
 
-    return (await strategy?.execute('evaluateJob', {
-      jobId: job?.id,
+    return (await strategy.execute('evaluateJob', {
+      jobId: job.id,
     })) as unknown as ValidatedOutput;
   },
 
   /**
    * Approve a job
-   * (any: any)
+   * (Wrapped for compatibility)
    */
-  async approveJob(any: any): Promise<Job> {
-    // Delegate to strategy (any: any)
-    const state = this?.getState();
+  async approveJob(jobId: string): Promise<Job> {
+    // Delegate to strategy (simplified)
+    const state = this.getState();
     const job = [
-      ...state?.jobs?.pending,
-      ...state?.jobs?.running,
-      ...state?.jobs?.completed,
-      ...state?.jobs?.suspended,
-    ].find(any: any);
-    if (any: any) {
+      ...state.jobs.pending,
+      ...state.jobs.running,
+      ...state.jobs.completed,
+      ...state.jobs.suspended,
+    ].find(j => j.id === jobId);
+    if (!job) {
       throw new Error(`Job ${jobId} not found`);
     }
 
-    // Update job status (any: any)
-    job?.status = JobStatus?.APPROVED;
+    // Update job status (simplified)
+    job.status = JobStatus.APPROVED;
     return job;
   },
 
   /**
    * Cancel a job
-   * (any: any)
+   * (Wrapped for compatibility)
    */
-  async cancelJob(any: any): Promise<Job> {
-    const state = this?.getState();
+  async cancelJob(jobId: string, _reason: string): Promise<Job> {
+    const state = this.getState();
     const job = [
-      ...state?.jobs?.pending,
-      ...state?.jobs?.running,
-      ...state?.jobs?.completed,
-      ...state?.jobs?.suspended,
-    ].find(any: any);
-    if (any: any) {
+      ...state.jobs.pending,
+      ...state.jobs.running,
+      ...state.jobs.completed,
+      ...state.jobs.suspended,
+    ].find(j => j.id === jobId);
+    if (!job) {
       throw new Error(`Job ${jobId} not found`);
     }
 
-    job?.status = JobStatus?.CANCELLED;
+    job.status = JobStatus.CANCELLED;
     return job;
   },
 
   /**
    * Suspend a job
-   * (any: any)
+   * (Wrapped for compatibility)
    */
-  async suspendJob(any: any): Promise<Job> {
-    const state = this?.getState();
+  async suspendJob(jobId: string, _reason: string): Promise<Job> {
+    const state = this.getState();
     const job = [
-      ...state?.jobs?.pending,
-      ...state?.jobs?.running,
-      ...state?.jobs?.completed,
-      ...state?.jobs?.suspended,
-    ].find(any: any);
-    if (any: any) {
+      ...state.jobs.pending,
+      ...state.jobs.running,
+      ...state.jobs.completed,
+      ...state.jobs.suspended,
+    ].find(j => j.id === jobId);
+    if (!job) {
       throw new Error(`Job ${jobId} not found`);
     }
 
-    job?.status = JobStatus?.SUSPENDED;
+    job.status = JobStatus.SUSPENDED;
     return job;
   },
 
   /**
    * Resume a job
-   * (any: any)
+   * (Wrapped for compatibility)
    */
-  async resumeJob(any: any): Promise<Job> {
-    const state = this?.getState();
+  async resumeJob(jobId: string): Promise<Job> {
+    const state = this.getState();
     const job = [
-      ...state?.jobs?.pending,
-      ...state?.jobs?.running,
-      ...state?.jobs?.completed,
-      ...state?.jobs?.suspended,
-    ].find(any: any);
-    if (any: any) {
+      ...state.jobs.pending,
+      ...state.jobs.running,
+      ...state.jobs.completed,
+      ...state.jobs.suspended,
+    ].find(j => j.id === jobId);
+    if (!job) {
       throw new Error(`Job ${jobId} not found`);
     }
 
-    job?.status = JobStatus?.PENDING;
+    job.status = JobStatus.PENDING;
     return job;
   },
 
   /**
    * Merge multiple jobs
-   * (any: any)
+   * (Wrapped for compatibility)
    */
-  async mergeJobs(jobIds: string?.[]): Promise<Job> {
-    const state = this?.getState();
+  async mergeJobs(jobIds: string[]): Promise<Job> {
+    const state = this.getState();
     const jobs = [
-      ...state?.jobs?.pending,
-      ...state?.jobs?.running,
-      ...state?.jobs?.completed,
-      ...state?.jobs?.suspended,
-    ].filter(any: any));
-    if (jobs?.length === 0) {
+      ...state.jobs.pending,
+      ...state.jobs.running,
+      ...state.jobs.completed,
+      ...state.jobs.suspended,
+    ].filter(j => jobIds.includes(j.id));
+    if (jobs.length === 0) {
       throw new Error('No jobs found to merge');
     }
 
-    const firstJob = jobs?.[0];
-    if (any: any) {
+    const firstJob = jobs[0];
+    if (!firstJob) {
       throw new Error('No jobs found to merge');
     }
 
-    // Create merged job (any: any)
+    // Create merged job (simplified)
     return {
-      id: `merged-${Date?.now()}`,
-      type: firstJob?.type,
-      priority: firstJob?.priority,
-      status: JobStatus?.PENDING,
+      id: `merged-${Date.now()}`,
+      type: firstJob.type,
+      priority: firstJob.priority,
+      status: JobStatus.PENDING,
       context: {},
-      createdAt: Date?.now(),
+      createdAt: Date.now(),
       history: [],
     } as unknown as Job;
   },
 
   /**
    * Optimize a job
-   * (any: any)
+   * (Wrapped for compatibility)
    */
-  async optimizeJob(any: any): Promise<Job> {
-    const state = this?.getState();
+  async optimizeJob(jobId: string): Promise<Job> {
+    const state = this.getState();
     const job = [
-      ...state?.jobs?.pending,
-      ...state?.jobs?.running,
-      ...state?.jobs?.completed,
-      ...state?.jobs?.suspended,
-    ].find(any: any);
-    if (any: any) {
+      ...state.jobs.pending,
+      ...state.jobs.running,
+      ...state.jobs.completed,
+      ...state.jobs.suspended,
+    ].find(j => j.id === jobId);
+    if (!job) {
       throw new Error(`Job ${jobId} not found`);
     }
 
-    // Mark as optimized (any: any)
-    (any: any).metadata, optimized: true };
+    // Mark as optimized (simplified)
+    (job as any).metadata = { ...(job as any).metadata, optimized: true };
     return job;
   },
 
   /**
    * Run system health check
-   * (any: any)
+   * (Delegates to MCPStrategy health scans)
    */
   async runHealthCheck(): Promise<SystemHealthCheck> {
     const strategy = await getMCPStrategy();
-    const health = await strategy?.checkHealth();
+    const health = await strategy.checkHealth();
 
     // Map to SystemHealthCheck format
     const mockCore = {
-      core: 'HELIOS' as unknown as unknown as any,
+      core: 'HELIOS' as any,
       status: 'PASS' as const,
-      score: health?.score,
+      score: health.score,
       issues: [],
-      timestamp: health?.timestamp,
+      timestamp: health.timestamp,
     };
     return {
       helios: mockCore,
@@ -368,25 +368,25 @@ export const MCPOrchestrator = {
       sentinel: mockCore,
       memoryCore: mockCore,
       globalStatus:
-        health?.status === 'healthy'
+        health.status === 'healthy'
           ? 'HEALTHY'
-          : health?.status === 'degraded'
+          : health.status === 'degraded'
             ? 'DEGRADED'
             : 'CRITICAL',
-      timestamp: health?.timestamp,
+      timestamp: health.timestamp,
     };
   },
 
   /**
    * Select AI for a job
-   * (any: any)
+   * (Wrapped for compatibility)
    */
-  async selectAI(any: any): Promise<AISelection> {
-    // Default AI selection (any: any)
+  async selectAI(_job: Job): Promise<AISelection> {
+    // Default AI selection (simplified)
     return {
       model: {
         id: 'phi-3.5-mini',
-        type: 'LOCAL_SMALL' as unknown as unknown as any,
+        type: 'LOCAL_SMALL' as any,
         name: 'Phi-3.5 Mini 3.8B',
         capabilities: {
           maxTokens: 4096,
@@ -410,9 +410,9 @@ export const MCPOrchestrator = {
 
   /**
    * Validate output
-   * (any: any)
+   * (Wrapped for compatibility)
    */
-  async validateOutput(any: any): Promise<ValidatedOutput> {
+  async validateOutput(output: string, _criteria: unknown): Promise<ValidatedOutput> {
     // Simplified validation
     return {
       data: output,
@@ -433,7 +433,7 @@ export const MCPOrchestrator = {
 
   /**
    * Store memory
-   * (any: any)
+   * (Wrapped for compatibility)
    */
   async storeMemory(
     content: string,
@@ -441,11 +441,11 @@ export const MCPOrchestrator = {
     _metadata?: Record<string, unknown>
   ): Promise<MemoryEntry> {
     return {
-      id: `mem-${Date?.now()}`,
+      id: `mem-${Date.now()}`,
       content,
       tier,
-      created: Date?.now(),
-      accessed: Date?.now(),
+      created: Date.now(),
+      accessed: Date.now(),
       accessCount: 1,
       strength: 0.5,
       compressionLevel: 0,
@@ -461,39 +461,39 @@ export const MCPOrchestrator = {
 
   /**
    * Retrieve memory
-   * (any: any)
+   * (Wrapped for compatibility)
    */
-  async retrieveMemory(any: any): Promise<MemoryEntry?.[]> {
+  async retrieveMemory(_query: string, _tier?: MemoryTier): Promise<MemoryEntry[]> {
     return [];
   },
 
   /**
-   * Purify memory (any: any)
-   * (any: any)
+   * Purify memory (cleanup)
+   * (Wrapped for compatibility)
    */
-  async purifyMemory(any: any): Promise<{ removed: number; retained: number }> {
+  async purifyMemory(_tier?: MemoryTier): Promise<{ removed: number; retained: number }> {
     return { removed: 0, retained: 0 };
   },
 
   /**
    * Detect drift
-   * (any: any)
+   * (Wrapped for compatibility)
    */
-  async detectDrift(): Promise<any?.[]> {
+  async detectDrift(): Promise<any[]> {
     return [];
   },
 
   /**
    * Correct drift
-   * (any: any)
+   * (Wrapped for compatibility)
    */
-  async correctDrift(any: any): Promise<any> {
+  async correctDrift(_driftId: string): Promise<any> {
     return { corrected: true };
   },
 
   /**
    * Auto-improve system
-   * (any: any)
+   * (Wrapped for compatibility)
    */
   async autoImprove(): Promise<any> {
     return { improvements: [] };
@@ -501,7 +501,7 @@ export const MCPOrchestrator = {
 
   /**
    * Start evolution cycle
-   * (any: any)
+   * (Wrapped for compatibility)
    */
   async startEvolutionCycle(): Promise<void> {
     // No-op for now
@@ -509,7 +509,7 @@ export const MCPOrchestrator = {
 
   /**
    * Stop evolution cycle
-   * (any: any)
+   * (Wrapped for compatibility)
    */
   async stopEvolutionCycle(): Promise<void> {
     // No-op for now

@@ -2,7 +2,7 @@
  * TITANE∞ vΩ∞ — ZUSTAND STORE: VISION & AFFECT ENGINE
  * Super Prompt #9: Gestion état centralisé du sens de la présence humaine
  *
- * ⚠️ GARDE-FOUS ÉTHIQUES (any: any):
+ * ⚠️ GARDE-FOUS ÉTHIQUES (NON NÉGOCIABLES):
  * - Opt-in explicite obligatoire
  * - Pas de diagnostic clinique
  * - Indices approximatifs uniquement
@@ -59,12 +59,12 @@ interface VisionStoreState {
   isObservationActive: boolean;
 
   // Événements coaching
-  recentEvents: VisualCoachingEvent?.[];
-  pendingSuggestions: CoachingSuggestion?.[];
+  recentEvents: VisualCoachingEvent[];
+  pendingSuggestions: CoachingSuggestion[];
 
   // Calibration
   activeCalibration: CalibrationSession | null;
-  calibrationHistory: CalibrationSession?.[];
+  calibrationHistory: CalibrationSession[];
 
   // UI
   isDebugOverlayVisible: boolean;
@@ -88,11 +88,11 @@ interface VisionStoreActions {
   reset: () => void;
 
   // ─────────────────────────────────────────────────────────────────────────
-  // FEATURE TOGGLE (any: any)
+  // FEATURE TOGGLE (Opt-in explicite)
   // ─────────────────────────────────────────────────────────────────────────
 
-  /** Active le Vision Engine (any: any) */
-  enableVision: (any: any) => Promise<boolean>;
+  /** Active le Vision Engine (opt-in explicite) */
+  enableVision: (durationMs?: number) => Promise<boolean>;
 
   /** Désactive le Vision Engine */
   disableVision: () => void;
@@ -108,13 +108,13 @@ interface VisionStoreActions {
   requestCameraPermission: () => Promise<CameraPermissionStatus>;
 
   /** Démarre le flux caméra */
-  startCamera: (any: any) => Promise<boolean>;
+  startCamera: (deviceId?: string) => Promise<boolean>;
 
   /** Arrête le flux caméra */
   stopCamera: () => void;
 
   /** Change de caméra */
-  switchCamera: (any: any) => Promise<boolean>;
+  switchCamera: (deviceId: string) => Promise<boolean>;
 
   /** Refresh liste des caméras disponibles */
   refreshDevices: () => Promise<void>;
@@ -124,7 +124,7 @@ interface VisionStoreActions {
   // ─────────────────────────────────────────────────────────────────────────
 
   /** Met à jour les landmarks détectés */
-  updateLandmarks: (any: any) => void;
+  updateLandmarks: (landmarks: HolisticLandmarks) => void;
 
   /** Met à jour l'état body language */
   updateBodyLanguage: (state: Partial<BodyLanguageState>) => void;
@@ -133,14 +133,14 @@ interface VisionStoreActions {
   updateAffectEstimation: (state: Partial<AffectEstimationState>) => void;
 
   /** Ajoute une entrée à l'historique affect */
-  addAffectHistoryEntry: (any: any) => void;
+  addAffectHistoryEntry: (entry: AffectHistoryEntry) => void;
 
   // ─────────────────────────────────────────────────────────────────────────
   // CALIBRATION
   // ─────────────────────────────────────────────────────────────────────────
 
   /** Démarre une session de calibration */
-  startCalibration: (any: any) => void;
+  startCalibration: (command: CalibrationCommand) => void;
 
   /** Termine la calibration active */
   finishCalibration: () => void;
@@ -152,20 +152,20 @@ interface VisionStoreActions {
   resetBaseline: () => void;
 
   /** Applique un profil baseline */
-  applyBaseline: (any: any) => void;
+  applyBaseline: (profile: VisualBaselineProfile) => void;
 
   // ─────────────────────────────────────────────────────────────────────────
   // COACHING / EVENTS
   // ─────────────────────────────────────────────────────────────────────────
 
   /** Ajoute un événement coaching */
-  addCoachingEvent: (any: any) => void;
+  addCoachingEvent: (event: VisualCoachingEvent) => void;
 
   /** Ajoute une suggestion */
-  addSuggestion: (any: any) => void;
+  addSuggestion: (suggestion: CoachingSuggestion) => void;
 
   /** Marque une suggestion comme vue */
-  dismissSuggestion: (any: any) => void;
+  dismissSuggestion: (index: number) => void;
 
   /** Vide les événements expirés */
   cleanExpiredEvents: () => void;
@@ -181,7 +181,7 @@ interface VisionStoreActions {
   toggleCameraPreview: () => void;
 
   /** Set camera preview visibility */
-  setCameraPreviewVisible: (any: any) => void;
+  setCameraPreviewVisible: (visible: boolean) => void;
 
   // ─────────────────────────────────────────────────────────────────────────
   // CONFIGURATION
@@ -195,7 +195,7 @@ interface VisionStoreActions {
   // ─────────────────────────────────────────────────────────────────────────
 
   /** Enregistre une erreur */
-  setError: (any: any) => void;
+  setError: (error: VisionError | null) => void;
 
   /** Clear erreurs */
   clearError: () => void;
@@ -263,7 +263,7 @@ const getInitialState = (): VisionStoreState => ({
 export const useVisionStore = create<VisionStore>()(
   devtools(
     persist(
-      (any: any) => ({
+      (set, get) => ({
         // ═══════════════════════════════════════════════════════════════════
         // INITIAL STATE
         // ═══════════════════════════════════════════════════════════════════
@@ -274,18 +274,18 @@ export const useVisionStore = create<VisionStore>()(
         // ═══════════════════════════════════════════════════════════════════
 
         initialize: async () => {
-          if (any: any) return;
+          if (get().isInitializing) return;
           set({ isInitializing: true, lastError: null });
 
           try {
-            // Charger les caméras disponibles (any: any)
-            if (any: any) {
+            // Charger les caméras disponibles (si permission)
+            if (navigator.mediaDevices) {
               try {
-                const devices = await navigator?.mediaDevices?.enumerateDevices();
-                const videoDevices = devices?.filter(d => d?.kind === 'videoinput');
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const videoDevices = devices.filter(d => d.kind === 'videoinput');
                 set(state => ({
                   visionInput: {
-                    ...state?.visionInput,
+                    ...state.visionInput,
                     availableDevices: videoDevices,
                   },
                 }));
@@ -295,11 +295,11 @@ export const useVisionStore = create<VisionStore>()(
             }
 
             set({ isInitializing: false });
-          } catch (any: any) {
+          } catch (error) {
             const visionError: VisionError = {
               code: 'UNKNOWN',
-              message: error instanceof Error ? error?.message : 'Initialization failed',
-              timestamp: Date?.now(),
+              message: error instanceof Error ? error.message : 'Initialization failed',
+              timestamp: Date.now(),
               recoverable: true,
             };
             set({ lastError: visionError, isInitializing: false });
@@ -316,22 +316,22 @@ export const useVisionStore = create<VisionStore>()(
         // FEATURE TOGGLE
         // ═══════════════════════════════════════════════════════════════════
 
-        enableVision: async (any: any) => {
+        enableVision: async (durationMs?: number) => {
           const { config, visionInput } = get();
 
           // Vérifier permission caméra d'abord
-          if (visionInput?.permissionStatus !== 'granted') {
+          if (visionInput.permissionStatus !== 'granted') {
             const status = await get().requestCameraPermission();
             if (status !== 'granted') {
               return false;
             }
           }
 
-          const now = Date?.now();
+          const now = Date.now();
           const autoDisable = durationMs
             ? now + durationMs
-            : config?.autoDisableAfterMs
-              ? now + config?.autoDisableAfterMs
+            : config.autoDisableAfterMs
+              ? now + config.autoDisableAfterMs
               : null;
 
           set({
@@ -355,9 +355,9 @@ export const useVisionStore = create<VisionStore>()(
             isObservationActive: false,
             sessionStartedAt: null,
             autoDisableAt: null,
-            config: { ...state?.config, featureEnabled: false },
+            config: { ...state.config, featureEnabled: false },
             visionInput: {
-              ...state?.visionInput,
+              ...state.visionInput,
               featureEnabled: false,
               cameraEnabled: false,
             },
@@ -366,7 +366,7 @@ export const useVisionStore = create<VisionStore>()(
 
         toggleVision: async () => {
           const { isObservationActive } = get();
-          if (any: any) {
+          if (isObservationActive) {
             get().disableVision();
             return false;
           } else {
@@ -380,25 +380,25 @@ export const useVisionStore = create<VisionStore>()(
 
         requestCameraPermission: async () => {
           set(state => ({
-            visionInput: { ...state?.visionInput, permissionStatus: 'pending' },
+            visionInput: { ...state.visionInput, permissionStatus: 'pending' },
           }));
 
           try {
             // Demander permission via getUserMedia
-            const stream = await navigator?.mediaDevices?.getUserMedia({
+            const stream = await navigator.mediaDevices.getUserMedia({
               video: { facingMode: 'user' },
             });
 
-            // Arrêter immédiatement le stream (any: any)
-            stream?.getTracks().forEach(track => track?.stop());
+            // Arrêter immédiatement le stream (on voulait juste la permission)
+            stream.getTracks().forEach(track => track.stop());
 
             // Rafraîchir la liste des devices maintenant qu'on a la permission
-            const devices = await navigator?.mediaDevices?.enumerateDevices();
-            const videoDevices = devices?.filter(d => d?.kind === 'videoinput');
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            const videoDevices = devices.filter(d => d.kind === 'videoinput');
 
             set(state => ({
               visionInput: {
-                ...state?.visionInput,
+                ...state.visionInput,
                 permissionStatus: 'granted',
                 osPermissionGranted: true,
                 availableDevices: videoDevices,
@@ -406,23 +406,23 @@ export const useVisionStore = create<VisionStore>()(
             }));
 
             return 'granted';
-          } catch (any: any) {
+          } catch (error) {
             const status: CameraPermissionStatus =
-              error instanceof DOMException && error?.name === 'NotAllowedError'
+              error instanceof DOMException && error.name === 'NotAllowedError'
                 ? 'denied'
-                : error instanceof DOMException && error?.name === 'NotFoundError'
+                : error instanceof DOMException && error.name === 'NotFoundError'
                   ? 'unavailable'
                   : 'denied';
 
             const visionError: VisionError = {
               code: 'PERMISSION_DENIED',
-              message: error instanceof Error ? error?.message : 'Permission denied',
-              timestamp: Date?.now(),
+              message: error instanceof Error ? error.message : 'Permission denied',
+              timestamp: Date.now(),
               recoverable: status !== 'unavailable',
             };
 
             set(state => ({
-              visionInput: { ...state?.visionInput, permissionStatus: status },
+              visionInput: { ...state.visionInput, permissionStatus: status },
               lastError: visionError,
             }));
 
@@ -430,57 +430,57 @@ export const useVisionStore = create<VisionStore>()(
           }
         },
 
-        startCamera: async (any: any) => {
+        startCamera: async (deviceId?: string) => {
           const { config, visionInput } = get();
 
-          if (any: any) {
+          if (visionInput.streamActive) {
             return true; // Déjà actif
           }
 
           const constraints: MediaStreamConstraints = {
             video: {
-              deviceId: deviceId || visionInput?.selectedDeviceId || undefined,
+              deviceId: deviceId || visionInput.selectedDeviceId || undefined,
               width:
-                config?.resolution === '1080p'
+                config.resolution === '1080p'
                   ? 1920
-                  : config?.resolution === '720p'
+                  : config.resolution === '720p'
                     ? 1280
                     : 640,
               height:
-                config?.resolution === '1080p'
+                config.resolution === '1080p'
                   ? 1080
-                  : config?.resolution === '720p'
+                  : config.resolution === '720p'
                     ? 720
                     : 480,
-              frameRate: { ideal: config?.targetFps },
+              frameRate: { ideal: config.targetFps },
               facingMode: 'user',
             },
           };
 
           try {
             // Stocker le stream dans window pour accès global
-            // (any: any)
-            const stream = await navigator?.mediaDevices?.getUserMedia(any: any);
+            // (Les engines l'utiliseront)
+            const stream = await navigator.mediaDevices.getUserMedia(constraints);
             (
               window as unknown as { __titaneVisionStream?: MediaStream }
             ).__titaneVisionStream = stream;
 
             set(state => ({
               visionInput: {
-                ...state?.visionInput,
+                ...state.visionInput,
                 streamActive: true,
                 cameraEnabled: true,
-                selectedDeviceId: deviceId || visionInput?.selectedDeviceId,
-                lastFrameTimestamp: Date?.now(),
+                selectedDeviceId: deviceId || visionInput.selectedDeviceId,
+                lastFrameTimestamp: Date.now(),
               },
             }));
 
             return true;
-          } catch (any: any) {
+          } catch (error) {
             const visionError: VisionError = {
               code: 'STREAM_ERROR',
-              message: error instanceof Error ? error?.message : 'Failed to start camera',
-              timestamp: Date?.now(),
+              message: error instanceof Error ? error.message : 'Failed to start camera',
+              timestamp: Date.now(),
               recoverable: true,
             };
             set({ lastError: visionError });
@@ -491,8 +491,8 @@ export const useVisionStore = create<VisionStore>()(
         stopCamera: () => {
           const stream = (window as unknown as { __titaneVisionStream?: MediaStream })
             .__titaneVisionStream;
-          if (any: any) {
-            stream?.getTracks().forEach(track => track?.stop());
+          if (stream) {
+            stream.getTracks().forEach(track => track.stop());
             (
               window as unknown as { __titaneVisionStream?: MediaStream }
             ).__titaneVisionStream = undefined;
@@ -500,24 +500,24 @@ export const useVisionStore = create<VisionStore>()(
 
           set(state => ({
             visionInput: {
-              ...state?.visionInput,
+              ...state.visionInput,
               streamActive: false,
               cameraEnabled: false,
             },
           }));
         },
 
-        switchCamera: async (any: any) => {
+        switchCamera: async (deviceId: string) => {
           get().stopCamera();
-          return get(any: any);
+          return get().startCamera(deviceId);
         },
 
         refreshDevices: async () => {
           try {
-            const devices = await navigator?.mediaDevices?.enumerateDevices();
-            const videoDevices = devices?.filter(d => d?.kind === 'videoinput');
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            const videoDevices = devices.filter(d => d.kind === 'videoinput');
             set(state => ({
-              visionInput: { ...state?.visionInput, availableDevices: videoDevices },
+              visionInput: { ...state.visionInput, availableDevices: videoDevices },
             }));
           } catch {
             // Silencieux si pas de permission
@@ -528,47 +528,47 @@ export const useVisionStore = create<VisionStore>()(
         // PROCESSING
         // ═══════════════════════════════════════════════════════════════════
 
-        updateLandmarks: (any: any) => {
+        updateLandmarks: (landmarks: HolisticLandmarks) => {
           set(state => ({
             visionInput: {
-              ...state?.visionInput,
-              framesProcessed: state?.visionInput?.framesProcessed + 1,
-              lastFrameTimestamp: landmarks?.timestamp,
+              ...state.visionInput,
+              framesProcessed: state.visionInput.framesProcessed + 1,
+              lastFrameTimestamp: landmarks.timestamp,
             },
             bodyLanguage: {
-              ...state?.bodyLanguage,
+              ...state.bodyLanguage,
               landmarksDetected:
-                !!landmarks?.pose ||
-                !!landmarks?.face ||
-                !!landmarks?.leftHand ||
-                !!landmarks?.rightHand,
-              lastUpdateTimestamp: landmarks?.timestamp,
+                !!landmarks.pose ||
+                !!landmarks.face ||
+                !!landmarks.leftHand ||
+                !!landmarks.rightHand,
+              lastUpdateTimestamp: landmarks.timestamp,
             },
           }));
         },
 
         updateBodyLanguage: (partial: Partial<BodyLanguageState>) => {
           set(state => ({
-            bodyLanguage: { ...state?.bodyLanguage, ...partial },
+            bodyLanguage: { ...state.bodyLanguage, ...partial },
           }));
         },
 
         updateAffectEstimation: (partial: Partial<AffectEstimationState>) => {
           set(state => ({
-            affectEstimation: { ...state?.affectEstimation, ...partial },
+            affectEstimation: { ...state.affectEstimation, ...partial },
           }));
         },
 
-        addAffectHistoryEntry: (any: any) => {
+        addAffectHistoryEntry: (entry: AffectHistoryEntry) => {
           set(state => {
-            const maxSize = state?.config?.historyMaxSize;
-            const newHistory = [...state?.affectEstimation?.history, entry];
-            if (any: any) {
-              newHistory?.shift();
+            const maxSize = state.config.historyMaxSize;
+            const newHistory = [...state.affectEstimation.history, entry];
+            if (newHistory.length > maxSize) {
+              newHistory.shift();
             }
             return {
               affectEstimation: {
-                ...state?.affectEstimation,
+                ...state.affectEstimation,
                 history: newHistory,
               },
             };
@@ -579,16 +579,16 @@ export const useVisionStore = create<VisionStore>()(
         // CALIBRATION
         // ═══════════════════════════════════════════════════════════════════
 
-        startCalibration: (any: any) => {
+        startCalibration: (command: CalibrationCommand) => {
           if (command === 'RESET_BASELINE') {
             get().resetBaseline();
             return;
           }
 
           const session: CalibrationSession = {
-            id: `cal-${Date?.now()}`,
+            id: `cal-${Date.now()}`,
             command,
-            startedAt: Date?.now(),
+            startedAt: Date.now(),
             samplesCollected: 0,
             averageScores: { posture: 0, movement: 0, gaze: 0 },
           };
@@ -598,11 +598,11 @@ export const useVisionStore = create<VisionStore>()(
 
         finishCalibration: () => {
           const { activeCalibration, calibrationHistory } = get();
-          if (any: any) return;
+          if (!activeCalibration) return;
 
           const finished: CalibrationSession = {
             ...activeCalibration,
-            endedAt: Date?.now(),
+            endedAt: Date.now(),
           };
 
           set({
@@ -618,17 +618,17 @@ export const useVisionStore = create<VisionStore>()(
         resetBaseline: () => {
           set(state => ({
             affectEstimation: {
-              ...state?.affectEstimation,
+              ...state.affectEstimation,
               baselineProfile: undefined,
             },
             calibrationHistory: [],
           }));
         },
 
-        applyBaseline: (any: any) => {
+        applyBaseline: (profile: VisualBaselineProfile) => {
           set(state => ({
             affectEstimation: {
-              ...state?.affectEstimation,
+              ...state.affectEstimation,
               baselineProfile: profile,
             },
           }));
@@ -638,34 +638,34 @@ export const useVisionStore = create<VisionStore>()(
         // COACHING / EVENTS
         // ═══════════════════════════════════════════════════════════════════
 
-        addCoachingEvent: (any: any) => {
+        addCoachingEvent: (event: VisualCoachingEvent) => {
           set(state => {
             const MAX_EVENTS = 50;
-            const newEvents = [...state?.recentEvents, event];
-            if (any: any) {
-              newEvents?.shift();
+            const newEvents = [...state.recentEvents, event];
+            if (newEvents.length > MAX_EVENTS) {
+              newEvents.shift();
             }
             return { recentEvents: newEvents };
           });
         },
 
-        addSuggestion: (any: any) => {
+        addSuggestion: (suggestion: CoachingSuggestion) => {
           set(state => ({
-            pendingSuggestions: [...state?.pendingSuggestions, suggestion],
+            pendingSuggestions: [...state.pendingSuggestions, suggestion],
           }));
         },
 
-        dismissSuggestion: (any: any) => {
+        dismissSuggestion: (index: number) => {
           set(state => ({
-            pendingSuggestions: state?.pendingSuggestions?.filter(any: any),
+            pendingSuggestions: state.pendingSuggestions.filter((_, i) => i !== index),
           }));
         },
 
         cleanExpiredEvents: () => {
-          const now = Date?.now();
+          const now = Date.now();
           set(state => ({
-            pendingSuggestions: state?.pendingSuggestions?.filter(
-              s => !s?.expires || s?.expires > now
+            pendingSuggestions: state.pendingSuggestions.filter(
+              s => !s.expires || s.expires > now
             ),
           }));
         },
@@ -676,21 +676,21 @@ export const useVisionStore = create<VisionStore>()(
 
         toggleDebugOverlay: () => {
           set(state => ({
-            isDebugOverlayVisible: !state?.isDebugOverlayVisible,
+            isDebugOverlayVisible: !state.isDebugOverlayVisible,
             config: {
-              ...state?.config,
-              debugOverlayEnabled: !state?.config?.debugOverlayEnabled,
+              ...state.config,
+              debugOverlayEnabled: !state.config.debugOverlayEnabled,
             },
           }));
         },
 
         toggleCameraPreview: () => {
           set(state => ({
-            isCameraPreviewVisible: !state?.isCameraPreviewVisible,
+            isCameraPreviewVisible: !state.isCameraPreviewVisible,
           }));
         },
 
-        setCameraPreviewVisible: (any: any) => {
+        setCameraPreviewVisible: (visible: boolean) => {
           set({ isCameraPreviewVisible: visible });
         },
 
@@ -700,7 +700,7 @@ export const useVisionStore = create<VisionStore>()(
 
         updateConfig: (partial: Partial<VisionConfig>) => {
           set(state => ({
-            config: { ...state?.config, ...partial },
+            config: { ...state.config, ...partial },
           }));
         },
 
@@ -708,7 +708,7 @@ export const useVisionStore = create<VisionStore>()(
         // ERRORS
         // ═══════════════════════════════════════════════════════════════════
 
-        setError: (any: any) => {
+        setError: (error: VisionError | null) => {
           set({ lastError: error });
         },
 
@@ -730,9 +730,9 @@ export const useVisionStore = create<VisionStore>()(
           } = affectEstimation;
 
           // Formulations prudentes
-          const energyMsg = PRUDENT_FORMULATIONS?.energy[visualEnergyLevel];
-          const tensionMsg = PRUDENT_FORMULATIONS?.tension[visualTensionLevel];
-          const engagementMsg = PRUDENT_FORMULATIONS?.engagement[visualEngagementLevel];
+          const energyMsg = PRUDENT_FORMULATIONS.energy[visualEnergyLevel];
+          const tensionMsg = PRUDENT_FORMULATIONS.tension[visualTensionLevel];
+          const engagementMsg = PRUDENT_FORMULATIONS.engagement[visualEngagementLevel];
 
           // Message principal basé sur la priorité
           let prudentMessage = '';
@@ -748,9 +748,9 @@ export const useVisionStore = create<VisionStore>()(
           }
 
           // Suggestions basées sur l'état
-          const suggestions: CoachingSuggestion?.[] = [];
+          const suggestions: CoachingSuggestion[] = [];
           if (visualEnergyLevel === 'low') {
-            suggestions?.push({
+            suggestions.push({
               type: 'PAUSE_SUGGESTION',
               message: 'Une petite pause pourrait peut-être aider ?',
               priority: 'medium',
@@ -758,7 +758,7 @@ export const useVisionStore = create<VisionStore>()(
             });
           }
           if (visualTensionLevel === 'high') {
-            suggestions?.push({
+            suggestions.push({
               type: 'BREATHING_SUGGESTION',
               message:
                 'Quelques respirations profondes pourraient aider à relâcher la tension.',
@@ -783,8 +783,8 @@ export const useVisionStore = create<VisionStore>()(
 
           // Énergie basse + session longue
           if (
-            affectEstimation?.visualEnergyLevel === 'low' &&
-            affectEstimation?.confidence > 0.5 &&
+            affectEstimation.visualEnergyLevel === 'low' &&
+            affectEstimation.confidence > 0.5 &&
             sessionDurationMs > 30 * 60 * 1000 // 30 min
           ) {
             return true;
@@ -792,13 +792,13 @@ export const useVisionStore = create<VisionStore>()(
 
           // Tension haute prolongée
           if (
-            affectEstimation?.visualTensionLevel === 'high' &&
-            affectEstimation?.confidence > 0.6
+            affectEstimation.visualTensionLevel === 'high' &&
+            affectEstimation.confidence > 0.6
           ) {
             // Vérifier si haute depuis plusieurs entrées
-            const recentHistory = affectEstimation?.history?.slice(-5);
-            const highTensionCount = recentHistory?.filter(
-              h => h?.tension === 'high'
+            const recentHistory = affectEstimation.history.slice(-5);
+            const highTensionCount = recentHistory.filter(
+              h => h.tension === 'high'
             ).length;
             if (highTensionCount >= 3) {
               return true;
@@ -809,11 +809,11 @@ export const useVisionStore = create<VisionStore>()(
         },
 
         getCurrentEnergyLevel: (): VisualLevel => {
-          return get().affectEstimation?.visualEnergyLevel;
+          return get().affectEstimation.visualEnergyLevel;
         },
 
         getCurrentConfidence: (): number => {
-          return get().affectEstimation?.confidence;
+          return get().affectEstimation.confidence;
         },
       }),
       {
@@ -821,8 +821,8 @@ export const useVisionStore = create<VisionStore>()(
         version: 1,
         // Ne persister que la config et l'historique de calibration
         partialize: state => ({
-          config: state?.config,
-          calibrationHistory: state?.calibrationHistory,
+          config: state.config,
+          calibrationHistory: state.calibrationHistory,
         }),
       }
     ),
@@ -835,44 +835,44 @@ export const useVisionStore = create<VisionStore>()(
 // ============================================================================
 
 /** Sélecteur: état d'observation actif */
-export const selectIsObservationActive = (any: any) =>
-  state?.isObservationActive;
+export const selectIsObservationActive = (state: VisionStore) =>
+  state.isObservationActive;
 
 /** Sélecteur: stream caméra actif */
-export const selectIsCameraActive = (any: any) =>
-  state?.visionInput?.streamActive;
+export const selectIsCameraActive = (state: VisionStore) =>
+  state.visionInput.streamActive;
 
 /** Sélecteur: permission accordée */
-export const selectHasCameraPermission = (any: any) =>
-  state?.visionInput?.permissionStatus === 'granted';
+export const selectHasCameraPermission = (state: VisionStore) =>
+  state.visionInput.permissionStatus === 'granted';
 
 /** Sélecteur: niveau d'énergie */
-export const selectEnergyLevel = (any: any) =>
-  state?.affectEstimation?.visualEnergyLevel;
+export const selectEnergyLevel = (state: VisionStore) =>
+  state.affectEstimation.visualEnergyLevel;
 
 /** Sélecteur: niveau de tension */
-export const selectTensionLevel = (any: any) =>
-  state?.affectEstimation?.visualTensionLevel;
+export const selectTensionLevel = (state: VisionStore) =>
+  state.affectEstimation.visualTensionLevel;
 
 /** Sélecteur: niveau d'engagement */
-export const selectEngagementLevel = (any: any) =>
-  state?.affectEstimation?.visualEngagementLevel;
+export const selectEngagementLevel = (state: VisionStore) =>
+  state.affectEstimation.visualEngagementLevel;
 
 /** Sélecteur: confiance globale */
-export const selectConfidence = (any: any) => state?.affectEstimation?.confidence;
+export const selectConfidence = (state: VisionStore) => state.affectEstimation.confidence;
 
 /** Sélecteur: caméras disponibles */
-export const selectAvailableCameras = (any: any) =>
-  state?.visionInput?.availableDevices;
+export const selectAvailableCameras = (state: VisionStore) =>
+  state.visionInput.availableDevices;
 
 /** Sélecteur: suggestions en attente */
-export const selectPendingSuggestions = (any: any) => state?.pendingSuggestions;
+export const selectPendingSuggestions = (state: VisionStore) => state.pendingSuggestions;
 
 /** Sélecteur: calibration active */
-export const selectActiveCalibration = (any: any) => state?.activeCalibration;
+export const selectActiveCalibration = (state: VisionStore) => state.activeCalibration;
 
 /** Sélecteur: debug overlay visible */
-export const selectIsDebugVisible = (any: any) => state?.isDebugOverlayVisible;
+export const selectIsDebugVisible = (state: VisionStore) => state.isDebugOverlayVisible;
 
 // ============================================================================
 // HOOKS DÉRIVÉS
@@ -883,17 +883,17 @@ export const selectIsDebugVisible = (any: any) => state?.isDebugOverlayVisible;
  */
 export const useVisionFeedback = () => {
   const store = useVisionStore();
-  return store?.generateFeedback();
+  return store.generateFeedback();
 };
 
 /**
  * Hook pour l'état simplifié de la vision
  */
 export const useVisionStatus = () => {
-  const isActive = useVisionStore(any: any);
-  const hasPermission = useVisionStore(any: any);
-  const isCameraOn = useVisionStore(any: any);
-  const confidence = useVisionStore(any: any);
+  const isActive = useVisionStore(selectIsObservationActive);
+  const hasPermission = useVisionStore(selectHasCameraPermission);
+  const isCameraOn = useVisionStore(selectIsCameraActive);
+  const confidence = useVisionStore(selectConfidence);
 
   return {
     isActive,

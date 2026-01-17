@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.3.1 — VOICE ROUTER (any: any)
+ *   TITANE∞ v19.3.1 — VOICE ROUTER (Voice Intelligence Bridge)
  *
  *   Le chaînon manquant entre ASR → Chat IA → TTS → VoiceEngine
  *   NOW WITH EMOTIONAL INTELLIGENCE!
@@ -14,15 +14,15 @@
  *
  *   🎤 Micro → ASR → Transcription
  *        ↓
- *   📝 VoiceRouter?.processVoiceTurn(any: any)
+ *   📝 VoiceRouter.processVoiceTurn(transcript)
  *        ↓
- *   🤖 ChatEngine?.sendMessage() → Réponse IA
+ *   🤖 ChatEngine.sendMessage() → Réponse IA
  *        ↓
  *   🎭 EmotionalAnalyzer → Détection émotion
  *        ↓
- *   🔊 EmotionalTTS?.speak() → Audio expressif
+ *   🔊 EmotionalTTS.speak() → Audio expressif
  *        ↓
- *   ✅ VoiceEngine?.setState('done')
+ *   ✅ VoiceEngine.setState('done')
  *
  *   Ce module orchestre TOUTE la logique conversationnelle vocale.
  *   Il est le cerveau central du Voice Mode TITANE∞.
@@ -48,7 +48,7 @@ const logger = createLogger('VoiceRouter');
  * Configuration du tour vocal
  */
 export interface VoiceTurnConfig {
-  /** Mode TTS (any: any) */
+  /** Mode TTS (offline prioritaire par défaut) */
   useOnlineTTS?: boolean;
 
   /** Timeout IA en ms (défaut: 30s) */
@@ -57,23 +57,23 @@ export interface VoiceTurnConfig {
   /** Timeout TTS en ms (défaut: 60s) */
   ttsTimeout?: number;
 
-  /** Activer l'analyse émotionnelle (any: any) */
+  /** Activer l'analyse émotionnelle (défaut: true) */
   useEmotionalEngine?: boolean;
 
-  /** Contexte émotionnel (any: any) */
+  /** Contexte émotionnel (optionnel) */
   emotionalContext?: EmotionalContext;
 
-  /** Wake word event (any: any) */
+  /** Wake word event (si détecté en amont) */
   wakeEvent?: WakeWordEvent;
 
   /** Callback appelé quand l'état change */
-  onStateChange?: (any: any) => void;
+  onStateChange?: (state: VoiceRouterState) => void;
 
   /** Callback appelé quand la réponse IA arrive */
-  onAIResponse?: (any: any) => void;
+  onAIResponse?: (response: AIMessage) => void;
 
   /** Callback appelé quand une émotion est détectée */
-  onEmotionDetected?: (any: any) => void;
+  onEmotionDetected?: (emotion: EmotionType, intensity: number) => void;
 
   /** Callback appelé quand le TTS commence */
   onTTSStart?: () => void;
@@ -82,7 +82,7 @@ export interface VoiceTurnConfig {
   onTTSEnd?: () => void;
 
   /** Callback appelé en cas d'erreur */
-  onError?: (any: any) => void;
+  onError?: (error: VoiceRouterError) => void;
 }
 
 /**
@@ -128,7 +128,7 @@ class VoiceRouterService {
    * État actuel du router
    */
   getState(): VoiceRouterState {
-    return this?.currentState;
+    return this.currentState;
   }
 
   /**
@@ -138,27 +138,27 @@ class VoiceRouterService {
    *   C'est LA fonction centrale qui orchestre tout le pipeline :
    *   Transcription → IA → TTS → Done
    *
-   *   Utilisée par useVoiceEngine?.completeTurn()
+   *   Utilisée par useVoiceEngine.completeTurn()
    * ═══════════════════════════════════════════════════════════════════
    */
   async processVoiceTurn(
     transcript: string,
-    chatSendMessage: (any: any) => Promise<AIMessage>,
+    chatSendMessage: (content: string) => Promise<AIMessage>,
     config: VoiceTurnConfig = {}
   ): Promise<VoiceTurnResult> {
-    const startTime = Date?.now();
+    const startTime = Date.now();
 
-    logger?.debug('\n🎙️ [VoiceRouter] ═══ Starting voice turn ═══');
-    logger?.debug(
-      `📝 Transcript: "${transcript?.substring(0, 60)}${transcript?.length > 60 ? '...' : ''}"`
+    logger.debug('\n🎙️ [VoiceRouter] ═══ Starting voice turn ═══');
+    logger.debug(
+      `📝 Transcript: "${transcript.substring(0, 60)}${transcript.length > 60 ? '...' : ''}"`
     );
 
     // Synchroniser avec AttentionEngine
-    attentionEngine?.startProcessing();
+    attentionEngine.startProcessing();
 
     // Validation
-    if (!transcript?.trim()) {
-      logger?.warn('⚠️ Empty transcript, aborting turn');
+    if (!transcript.trim()) {
+      logger.warn('⚠️ Empty transcript, aborting turn');
       return {
         success: false,
         transcript,
@@ -166,114 +166,114 @@ class VoiceRouterService {
           stage: 'unknown',
           message: 'Empty transcript',
         },
-        duration: Date?.now() - startTime,
+        duration: Date.now() - startTime,
       };
     }
 
     // Reset abort controller
-    this?.abortController = new AbortController();
+    this.abortController = new AbortController();
 
     try {
       // ═══ PHASE 1 : CHAT IA ═══
-      this?.setState(any: any);
-      audioStateMachine?.transition('STT_COMPLETE');
-      haloEngine?.startPulsing(); // ✅ v∞.7 Halo pulsing during AI
+      this.setState('processing', config.onStateChange);
+      audioStateMachine.transition('STT_COMPLETE');
+      haloEngine.startPulsing(); // ✅ v∞.7 Halo pulsing during AI
 
-      logger?.debug('🤖 Phase 1: Calling AI...');
+      logger.debug('🤖 Phase 1: Calling AI...');
 
-      const aiResponse = await this?.callAIWithTimeout(
+      const aiResponse = await this.callAIWithTimeout(
         chatSendMessage,
         transcript,
-        config?.aiTimeout || 30000
+        config.aiTimeout || 30000
       );
 
-      const responseText = getMessageText(any: any);
-      logger?.debug('✅ AI response received:', responseText?.substring(0, 60));
-      config?.onAIResponse?.(any: any);
+      const responseText = getMessageText(aiResponse);
+      logger.debug('✅ AI response received:', responseText.substring(0, 60));
+      config.onAIResponse?.(aiResponse);
 
       // ═══ PHASE 2 : EMOTIONAL ANALYSIS ═══
-      const useEmotional = config?.useEmotionalEngine !== false; // Activé par défaut
+      const useEmotional = config.useEmotionalEngine !== false; // Activé par défaut
 
-      if (any: any) {
-        logger?.debug('🎭 Phase 2: Analyzing emotion...');
+      if (useEmotional) {
+        logger.debug('🎭 Phase 2: Analyzing emotion...');
 
-        const analysisResult = emotionalAnalyzer?.analyze(
+        const analysisResult = emotionalAnalyzer.analyze(
           responseText,
-          config?.emotionalContext
+          config.emotionalContext
         );
 
-        logger?.debug(
-          `[VoiceRouter] ✅ Emotion detected: ${analysisResult?.intent?.emotion} (intensity: ${analysisResult?.intent?.intensity?.toFixed(2)})`
+        logger.debug(
+          `[VoiceRouter] ✅ Emotion detected: ${analysisResult.intent.emotion} (intensity: ${analysisResult.intent.intensity.toFixed(2)})`
         );
-        config?.onEmotionDetected?.(
-          analysisResult?.intent?.emotion,
-          analysisResult?.intent?.intensity
+        config.onEmotionDetected?.(
+          analysisResult.intent.emotion,
+          analysisResult.intent.intensity
         );
 
         // ═══ PHASE 3 : EMOTIONAL TTS ═══
-        this?.setState(any: any);
-        haloEngine?.startShimmer(); // ✅ v∞.7 Halo shimmer during TTS
-        audioStateMachine?.transition('TTS_START');
+        this.setState('speaking', config.onStateChange);
+        haloEngine.startShimmer(); // ✅ v∞.7 Halo shimmer during TTS
+        audioStateMachine.transition('TTS_START');
 
-        logger?.debug('🔊 Phase 3: Starting Emotional TTS...');
+        logger.debug('🔊 Phase 3: Starting Emotional TTS...');
 
         // Notifier attention + interruption engines
-        attentionEngine?.startResponding();
-        interruptionController?.startMonitoring();
+        attentionEngine.startResponding();
+        interruptionController.startMonitoring();
 
-        config?.onTTSStart?.();
+        config.onTTSStart?.();
 
-        await this?.speakEmotionalWithTimeout(
+        await this.speakEmotionalWithTimeout(
           responseText,
-          analysisResult?.intent,
-          config?.useOnlineTTS || false,
-          config?.ttsTimeout || 60000
+          analysisResult.intent,
+          config.useOnlineTTS || false,
+          config.ttsTimeout || 60000
         );
 
-        logger?.debug('✅ Emotional TTS completed');
+        logger.debug('✅ Emotional TTS completed');
 
         // Arrêter monitoring
-        interruptionController?.stopMonitoring();
+        interruptionController.stopMonitoring();
       } else {
         // Fallback: TTS neutre classique
-        this?.setState(any: any);
-        audioStateMachine?.transition('TTS_START');
+        this.setState('speaking', config.onStateChange);
+        audioStateMachine.transition('TTS_START');
 
-        logger?.debug(any: any)...');
+        logger.debug('🔊 Phase 2: Starting TTS (no emotion)...');
 
-        attentionEngine?.startResponding();
-        interruptionController?.startMonitoring();
+        attentionEngine.startResponding();
+        interruptionController.startMonitoring();
 
-        config?.onTTSStart?.();
+        config.onTTSStart?.();
 
-        await this?.speakWithTimeout(
+        await this.speakWithTimeout(
           responseText,
-          config?.useOnlineTTS || false,
-          config?.ttsTimeout || 60000
+          config.useOnlineTTS || false,
+          config.ttsTimeout || 60000
         );
 
-        logger?.debug('✅ TTS completed');
+        logger.debug('✅ TTS completed');
 
         // Arrêter monitoring
-        interruptionController?.stopMonitoring();
+        interruptionController.stopMonitoring();
       }
 
-      config?.onTTSEnd?.(); // ═══ PHASE 4 : COMPLETION ═══
-      this?.setState(any: any);
-      audioStateMachine?.transition('TTS_END');
-      audioStateMachine?.reset();
-      haloEngine?.reset(); // ✅ v∞.7 Reset halo to idle
+      config.onTTSEnd?.(); // ═══ PHASE 4 : COMPLETION ═══
+      this.setState('done', config.onStateChange);
+      audioStateMachine.transition('TTS_END');
+      audioStateMachine.reset();
+      haloEngine.reset(); // ✅ v∞.7 Reset halo to idle
 
-      const duration = Date?.now() - startTime;
-      logger?.debug(`[VoiceRouter] 🎉 Voice turn completed in ${duration}ms`);
+      const duration = Date.now() - startTime;
+      logger.debug(`[VoiceRouter] 🎉 Voice turn completed in ${duration}ms`);
 
       // Notifier attention engine
-      attentionEngine?.endResponse();
+      attentionEngine.endResponse();
 
       // Auto-reset to idle après un court délai
       setTimeout(() => {
-        if (this?.currentState === 'done') {
-          this?.setState(any: any);
+        if (this.currentState === 'done') {
+          this.setState('idle', config.onStateChange);
         }
       }, 100);
 
@@ -283,29 +283,29 @@ class VoiceRouterService {
         aiResponse,
         duration,
       };
-    } catch (any: any) {
-      logger?.error(any: any);
-      haloEngine?.setError(); // ✅ v∞.7 Show error state in halo
+    } catch (error) {
+      logger.error('❌ Voice turn failed:', error);
+      haloEngine.setError(); // ✅ v∞.7 Show error state in halo
 
       const routerError: VoiceRouterError = {
         stage:
-          this?.currentState === 'processing'
+          this.currentState === 'processing'
             ? 'ai'
-            : this?.currentState === 'speaking'
+            : this.currentState === 'speaking'
               ? 'tts'
               : 'unknown',
-        message: error instanceof Error ? error?.message : String(any: any),
+        message: error instanceof Error ? error.message : String(error),
         originalError: error instanceof Error ? error : undefined,
       };
 
-      this?.setState(any: any);
-      config?.onError?.(any: any);
+      this.setState('error', config.onStateChange);
+      config.onError?.(routerError);
 
       // Reset après erreur
       setTimeout(() => {
-        if (this?.currentState === 'error') {
-          this?.setState(any: any);
-          audioStateMachine?.reset();
+        if (this.currentState === 'error') {
+          this.setState('idle', config.onStateChange);
+          audioStateMachine.reset();
         }
       }, 1000);
 
@@ -313,10 +313,10 @@ class VoiceRouterService {
         success: false,
         transcript,
         error: routerError,
-        duration: Date?.now() - startTime,
+        duration: Date.now() - startTime,
       };
     } finally {
-      this?.abortController = null;
+      this.abortController = null;
     }
   }
 
@@ -324,14 +324,14 @@ class VoiceRouterService {
    * Appeler l'IA avec timeout
    */
   private async callAIWithTimeout(
-    sendMessage: (any: any) => Promise<AIMessage>,
+    sendMessage: (content: string) => Promise<AIMessage>,
     content: string,
     timeout: number
   ): Promise<AIMessage> {
-    return Promise?.race([
-      sendMessage(any: any),
-      new Promise<AIMessage>(any: any) =>
-        setTimeout(any: any)
+    return Promise.race([
+      sendMessage(content),
+      new Promise<AIMessage>((_, reject) =>
+        setTimeout(() => reject(new Error('AI timeout')), timeout)
       ),
     ]);
   }
@@ -344,10 +344,10 @@ class VoiceRouterService {
     useOnline: boolean,
     timeout: number
   ): Promise<void> {
-    return Promise?.race([
-      hybridTTS?.speak(any: any),
-      new Promise<void>(any: any) =>
-        setTimeout(any: any)
+    return Promise.race([
+      hybridTTS.speak(text, {}, useOnline),
+      new Promise<void>((_, reject) =>
+        setTimeout(() => reject(new Error('TTS timeout')), timeout)
       ),
     ]);
   }
@@ -361,10 +361,10 @@ class VoiceRouterService {
     useOnline: boolean,
     timeout: number
   ): Promise<void> {
-    return Promise?.race([
-      emotionalTTS?.speak(text, intent, { useSSML: true, fallbackToRaw: true }),
-      new Promise<void>(any: any) =>
-        setTimeout(any: any)
+    return Promise.race([
+      emotionalTTS.speak(text, intent, { useSSML: true, fallbackToRaw: true }),
+      new Promise<void>((_, reject) =>
+        setTimeout(() => reject(new Error('Emotional TTS timeout')), timeout)
       ),
     ]);
   }
@@ -374,14 +374,14 @@ class VoiceRouterService {
    */
   private setState(
     state: VoiceRouterState,
-    callback?: (any: any) => void
+    callback?: (state: VoiceRouterState) => void
   ): void {
-    const prevState = this?.currentState;
-    this?.currentState = state;
+    const prevState = this.currentState;
+    this.currentState = state;
 
-    if (any: any) {
-      logger?.debug(`[VoiceRouter] 🔄 State: ${prevState} → ${state}`);
-      callback?.(any: any);
+    if (prevState !== state) {
+      logger.debug(`[VoiceRouter] 🔄 State: ${prevState} → ${state}`);
+      callback?.(state);
     }
   }
 
@@ -389,29 +389,29 @@ class VoiceRouterService {
    * Annuler le tour vocal en cours
    */
   async abort(): Promise<void> {
-    logger?.debug('🛑 Aborting current voice turn');
+    logger.debug('🛑 Aborting current voice turn');
 
-    if (any: any) {
-      this?.abortController?.abort();
+    if (this.abortController) {
+      this.abortController.abort();
     }
 
     // Arrêter le TTS si en cours
-    if (this?.currentState === 'speaking') {
-      await hybridTTS?.stop();
-      emotionalTTS?.stop();
+    if (this.currentState === 'speaking') {
+      await hybridTTS.stop();
+      emotionalTTS.stop();
     }
 
-    this?.setState('idle');
-    audioStateMachine?.reset();
+    this.setState('idle');
+    audioStateMachine.reset();
   }
 
   /**
    * Reset complet du router
    */
   reset(): void {
-    logger?.debug('🔄 Resetting router');
-    this?.currentState = 'idle';
-    this?.abortController = null;
+    logger.debug('🔄 Resetting router');
+    this.currentState = 'idle';
+    this.abortController = null;
   }
 }
 

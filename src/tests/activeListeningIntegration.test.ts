@@ -36,18 +36,18 @@ type MockWakeWordEvent = {
   matchedVariant: string;
 };
 
-// NOTE: vi?.mock() factories are hoisted by Vitest.
-// Define mocks using vi?.hoisted() so they exist at mock-evaluation time.
-const hoistedMocks = vi?.hoisted(() => {
+// NOTE: vi.mock() factories are hoisted by Vitest.
+// Define mocks using vi.hoisted() so they exist at mock-evaluation time.
+const hoistedMocks = vi.hoisted(() => {
   const attentionEngineMock = (() => {
     let state: MockAttentionState = 'inactive';
     const listeners = new Set<
       (event: { state: MockAttentionState; wakeEvent?: MockWakeWordEvent }) => void
     >();
 
-    const emit = (any: any) => {
+    const emit = (next: MockAttentionState, wakeEvent?: MockWakeWordEvent) => {
       state = next;
-      for (any: any) listener({ state: next, wakeEvent });
+      for (const listener of listeners) listener({ state: next, wakeEvent });
     };
 
     return {
@@ -55,25 +55,25 @@ const hoistedMocks = vi?.hoisted(() => {
       onStateChange: (
         cb: (event: { state: MockAttentionState; wakeEvent?: MockWakeWordEvent }) => void
       ) => {
-        listeners?.add(any: any);
+        listeners.add(cb);
         return () => {
-          listeners?.delete(any: any);
+          listeners.delete(cb);
         };
       },
       activate: () => emit('armed'),
       deactivate: () => emit('inactive'),
       reset: () => emit('inactive'),
-      handleWakeWord: (any: any) => {
-        if (any: any);
+      handleWakeWord: (wakeEvent: MockWakeWordEvent) => {
+        if (wakeEvent.detected) emit('awaiting_command', wakeEvent);
       },
       startProcessing: () => emit('processing'),
     };
   })();
 
   const wakeWordEngineMock = {
-    detect: (any: any): MockWakeWordEvent | null => {
-      if (!text?.toLowerCase().includes('titane')) return null;
-      const isOneShot = text?.includes(',') || text?.toLowerCase().includes('ouvre');
+    detect: (text: string): MockWakeWordEvent | null => {
+      if (!text.toLowerCase().includes('titane')) return null;
+      const isOneShot = text.includes(',') || text.toLowerCase().includes('ouvre');
       const cleanedText = text
         .replace(/titane\s*,?/i, '')
         .replace(/\?/g, '')
@@ -86,8 +86,8 @@ const hoistedMocks = vi?.hoisted(() => {
         matchedVariant: 'titane',
       };
     },
-    detectStreaming: (any: any): MockWakeWordEvent | null =>
-      wakeWordEngineMock?.detect(any: any),
+    detectStreaming: (text: string): MockWakeWordEvent | null =>
+      wakeWordEngineMock.detect(text),
   };
 
   return {
@@ -103,21 +103,21 @@ const hoistedMocks = vi?.hoisted(() => {
  */
 
 // Mock useAudioStreaming
-vi?.mock('../hooks/useAudioStreaming', () => ({
-  useAudioStreaming: vi?.fn(() => ({
+vi.mock('../hooks/useAudioStreaming', () => ({
+  useAudioStreaming: vi.fn(() => ({
     isStreaming: false,
     state: 'Idle',
     stats: { samplesProcessed: 0, duration: 0 },
     error: null,
     sessionId: null,
-    startStreaming: vi?.fn(),
-    stopStreaming: vi?.fn(),
-    forceStop: vi?.fn(),
+    startStreaming: vi.fn(),
+    stopStreaming: vi.fn(),
+    forceStop: vi.fn(),
   })),
 }));
 
-// Prevent Tauri-only branches in tests (any: any)
-vi?.mock('@/core/tauri/environment', () => ({
+// Prevent Tauri-only branches in tests (avoids secureInvoke('test_microphone') noise)
+vi.mock('@/core/tauri/environment', () => ({
   detectEnvironment: () => ({
     isTauri: false,
     isBrowser: true,
@@ -128,120 +128,120 @@ vi?.mock('@/core/tauri/environment', () => ({
 }));
 
 // IMPORTANT: hooks use alias imports (@/...) for voice stack.
-// We mock the alias versions to prevent heavy engine initialization (any: any).
-vi?.mock('@/services/voice/attentionEngine', () => ({
-  attentionEngine: hoistedMocks?.attentionEngineMock,
+// We mock the alias versions to prevent heavy engine initialization (OOM in CI/dev).
+vi.mock('@/services/voice/attentionEngine', () => ({
+  attentionEngine: hoistedMocks.attentionEngineMock,
 }));
-vi?.mock('../services/voice/attentionEngine', () => ({
-  attentionEngine: hoistedMocks?.attentionEngineMock,
-}));
-
-vi?.mock('@/services/voice/wakeWordEngine', () => ({
-  wakeWordEngine: hoistedMocks?.wakeWordEngineMock,
-}));
-vi?.mock('../services/voice/wakeWordEngine', () => ({
-  wakeWordEngine: hoistedMocks?.wakeWordEngineMock,
+vi.mock('../services/voice/attentionEngine', () => ({
+  attentionEngine: hoistedMocks.attentionEngineMock,
 }));
 
-vi?.mock('@/services/voice/adaptiveThresholdEngine', () => ({
+vi.mock('@/services/voice/wakeWordEngine', () => ({
+  wakeWordEngine: hoistedMocks.wakeWordEngineMock,
+}));
+vi.mock('../services/voice/wakeWordEngine', () => ({
+  wakeWordEngine: hoistedMocks.wakeWordEngineMock,
+}));
+
+vi.mock('@/services/voice/adaptiveThresholdEngine', () => ({
   adaptiveThresholdEngine: {
-    setEnabled: vi?.fn(),
-    setSensitivity: vi?.fn(),
-    recordDetection: vi?.fn(),
+    setEnabled: vi.fn(),
+    setSensitivity: vi.fn(),
+    recordDetection: vi.fn(),
   },
 }));
 
-vi?.mock('@/services/voice/interruptionController', () => ({
+vi.mock('@/services/voice/interruptionController', () => ({
   interruptionController: {
-    processPartialTranscript: vi?.fn(),
+    processPartialTranscript: vi.fn(),
   },
 }));
 
-vi?.mock('@/services/voice/fullDuplexOrchestrator', () => ({
+vi.mock('@/services/voice/fullDuplexOrchestrator', () => ({
   fullDuplexOrchestrator: {
-    enable: vi?.fn(any: any),
-    disable: vi?.fn(any: any),
-    getState: vi?.fn(() => ({ enabled: false })),
-    onEvent: vi?.fn(any: any),
-    isSpeakingNow: vi?.fn(any: any),
-    isListeningNow: vi?.fn(any: any),
-    interrupt: vi?.fn(any: any),
-    injectInterruption: vi?.fn(any: any),
+    enable: vi.fn().mockResolvedValue(undefined),
+    disable: vi.fn().mockResolvedValue(undefined),
+    getState: vi.fn(() => ({ enabled: false })),
+    onEvent: vi.fn(() => () => undefined),
+    isSpeakingNow: vi.fn(() => false),
+    isListeningNow: vi.fn(() => false),
+    interrupt: vi.fn().mockResolvedValue(undefined),
+    injectInterruption: vi.fn().mockResolvedValue(undefined),
   },
 }));
 
-vi?.mock('@/services/voice/haloEngine', () => ({
+vi.mock('@/services/voice/haloEngine', () => ({
   haloEngine: {
-    setEnabled: vi?.fn(),
-    sync: vi?.fn(),
+    setEnabled: vi.fn(),
+    sync: vi.fn(),
   },
 }));
 
 // Mock voiceService
-vi?.mock('../services/api', () => ({
+vi.mock('../services/api', () => ({
   voiceService: {
-    startRecording: vi?.fn().mockResolvedValue({}),
-    stopRecording: vi?.fn().mockResolvedValue({ transcript: 'test transcript' }),
-    cancelRecording: vi?.fn().mockResolvedValue({}),
+    startRecording: vi.fn().mockResolvedValue({}),
+    stopRecording: vi.fn().mockResolvedValue({ transcript: 'test transcript' }),
+    cancelRecording: vi.fn().mockResolvedValue({}),
   },
 }));
 
-vi?.mock('@/services/api', () => ({
+vi.mock('@/services/api', () => ({
   voiceService: {
-    startRecording: vi?.fn().mockResolvedValue({}),
-    stopRecording: vi?.fn().mockResolvedValue({ transcript: 'test transcript' }),
-    cancelRecording: vi?.fn().mockResolvedValue({}),
+    startRecording: vi.fn().mockResolvedValue({}),
+    stopRecording: vi.fn().mockResolvedValue({ transcript: 'test transcript' }),
+    cancelRecording: vi.fn().mockResolvedValue({}),
   },
 }));
 
 // Mock hybridTTS
-vi?.mock('../services/tts/hybridTTS', () => ({
+vi.mock('../services/tts/hybridTTS', () => ({
   hybridTTS: {
-    speak: vi?.fn().mockResolvedValue({}),
-    stop: vi?.fn().mockResolvedValue({}),
-    getStatus: vi?.fn().mockResolvedValue({ available: true }),
+    speak: vi.fn().mockResolvedValue({}),
+    stop: vi.fn().mockResolvedValue({}),
+    getStatus: vi.fn().mockResolvedValue({ available: true }),
   },
 }));
 
-vi?.mock('@/services/tts/hybridTTS', () => ({
+vi.mock('@/services/tts/hybridTTS', () => ({
   hybridTTS: {
-    speak: vi?.fn().mockResolvedValue({}),
-    stop: vi?.fn().mockResolvedValue({}),
-    getStatus: vi?.fn().mockResolvedValue({ available: true }),
+    speak: vi.fn().mockResolvedValue({}),
+    stop: vi.fn().mockResolvedValue({}),
+    getStatus: vi.fn().mockResolvedValue({ available: true }),
   },
 }));
 
 // Mock voiceRouter
-vi?.mock('../services/voice/voiceRouter', () => ({
+vi.mock('../services/voice/voiceRouter', () => ({
   voiceRouter: {
-    processVoiceTurn: vi?.fn().mockResolvedValue({
+    processVoiceTurn: vi.fn().mockResolvedValue({
       success: true,
       duration: 1000,
     }),
-    abort: vi?.fn().mockResolvedValue({}),
+    abort: vi.fn().mockResolvedValue({}),
   },
 }));
 
-vi?.mock('@/services/voice/voiceRouter', () => ({
+vi.mock('@/services/voice/voiceRouter', () => ({
   voiceRouter: {
-    processVoiceTurn: vi?.fn().mockResolvedValue({
+    processVoiceTurn: vi.fn().mockResolvedValue({
       success: true,
       duration: 1000,
     }),
-    abort: vi?.fn().mockResolvedValue({}),
+    abort: vi.fn().mockResolvedValue({}),
   },
 }));
 
 // Mock useChat
-vi?.mock('../hooks/useChat', () => ({
+vi.mock('../hooks/useChat', () => ({
   useChat: () => ({
-    sendMessage: vi?.fn().mockResolvedValue({ content: 'test response' }),
+    sendMessage: vi.fn().mockResolvedValue({ content: 'test response' }),
   }),
 }));
 
-vi?.mock('@/hooks/useChat', () => ({
+vi.mock('@/hooks/useChat', () => ({
   useChat: () => ({
-    sendMessage: vi?.fn().mockResolvedValue({ content: 'test response' }),
+    sendMessage: vi.fn().mockResolvedValue({ content: 'test response' }),
   }),
 }));
 
@@ -252,19 +252,19 @@ vi?.mock('@/hooks/useChat', () => ({
  */
 
 describe('useActiveListening', () => {
-  let consoleLogSpy: ReturnType<typeof vi?.spyOn> | null = null;
+  let consoleLogSpy: ReturnType<typeof vi.spyOn> | null = null;
 
   beforeEach(() => {
-    vi?.clearAllMocks();
-    consoleLogSpy = vi?.spyOn(any: any);
+    vi.clearAllMocks();
+    consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => undefined);
     act(() => {
-      attentionEngine?.reset();
+      attentionEngine.reset();
     });
   });
 
   afterEach(() => {
     act(() => {
-      attentionEngine?.reset();
+      attentionEngine.reset();
     });
     consoleLogSpy?.mockRestore();
     consoleLogSpy = null;
@@ -274,16 +274,16 @@ describe('useActiveListening', () => {
     it('should initialize in inactive state', () => {
       const { result } = renderHook(() => useActiveListening());
 
-      expect(any: any);
-      expect(any: any).toBe('inactive');
-      expect(any: any);
+      expect(result.current.state.isListening).toBe(false);
+      expect(result.current.state.attentionState).toBe('inactive');
+      expect(result.current.isArmed).toBe(false);
     });
 
     it('should auto-arm when autoArm=true', () => {
       const { result } = renderHook(() => useActiveListening({ autoArm: true }));
 
-      expect(any: any).toBe('armed');
-      expect(any: any);
+      expect(result.current.state.attentionState).toBe('armed');
+      expect(result.current.isArmed).toBe(true);
     });
   });
 
@@ -292,12 +292,12 @@ describe('useActiveListening', () => {
       const { result } = renderHook(() => useActiveListening());
 
       act(() => {
-        result?.current?.arm();
+        result.current.arm();
       });
 
       await waitFor(() => {
-        expect(any: any).toBe('armed');
-        expect(any: any);
+        expect(result.current.state.attentionState).toBe('armed');
+        expect(result.current.isArmed).toBe(true);
       });
     });
 
@@ -305,19 +305,19 @@ describe('useActiveListening', () => {
       const { result } = renderHook(() => useActiveListening({ autoArm: true }));
 
       act(() => {
-        result?.current?.disarm();
+        result.current.disarm();
       });
 
       await waitFor(() => {
-        expect(any: any).toBe('inactive');
-        expect(any: any);
+        expect(result.current.state.attentionState).toBe('inactive');
+        expect(result.current.isArmed).toBe(false);
       });
     });
   });
 
   describe('Wake Word Detection', () => {
     it('should detect wake word in wake_only mode', async () => {
-      const onWakeDetected = vi?.fn();
+      const onWakeDetected = vi.fn();
 
       const { result } = renderHook(() =>
         useActiveListening({ autoArm: true }, { onWakeDetected })
@@ -325,19 +325,19 @@ describe('useActiveListening', () => {
 
       // Simuler détection "Titane ?"
       act(() => {
-        const wakeEvent = wakeWordEngine?.detect('Titane ?');
-        if (any: any) {
-          attentionEngine?.handleWakeWord(any: any);
+        const wakeEvent = wakeWordEngine.detect('Titane ?');
+        if (wakeEvent?.detected) {
+          attentionEngine.handleWakeWord(wakeEvent);
         }
       });
 
       await waitFor(() => {
-        expect(any: any).toBe('awaiting_command');
+        expect(result.current.state.attentionState).toBe('awaiting_command');
       });
     });
 
     it('should process one-shot command', async () => {
-      const onCommand = vi?.fn();
+      const onCommand = vi.fn();
 
       const { result } = renderHook(() =>
         useActiveListening({ autoArm: true }, { onCommand })
@@ -345,16 +345,16 @@ describe('useActiveListening', () => {
 
       // Simuler one-shot "Titane, ouvre le terminal"
       act(() => {
-        const wakeEvent = wakeWordEngine?.detect('Titane, ouvre le terminal');
-        if (wakeEvent?.detected && wakeEvent?.mode === 'one_shot') {
-          onCommand(any: any);
+        const wakeEvent = wakeWordEngine.detect('Titane, ouvre le terminal');
+        if (wakeEvent?.detected && wakeEvent.mode === 'one_shot') {
+          onCommand(wakeEvent.cleanedText, wakeEvent);
         }
       });
 
       await waitFor(() => {
-        expect(any: any).toHaveBeenCalledWith(
-          expect?.stringContaining('ouvre'),
-          expect?.any(any: any)
+        expect(onCommand).toHaveBeenCalledWith(
+          expect.stringContaining('ouvre'),
+          expect.any(Object)
         );
       });
     });
@@ -362,7 +362,7 @@ describe('useActiveListening', () => {
 
   describe('Attention State Changes', () => {
     it('should transition through attention states', async () => {
-      const onAttentionChange = vi?.fn();
+      const onAttentionChange = vi.fn();
 
       const { result } = renderHook(() =>
         useActiveListening({ autoArm: false }, { onAttentionChange })
@@ -370,24 +370,24 @@ describe('useActiveListening', () => {
 
       // inactive → armed
       act(() => {
-        result?.current?.arm();
+        result.current.arm();
       });
 
       await waitFor(() => {
-        expect(any: any).toBe('armed');
-        expect(any: any).toHaveBeenCalledWith('armed');
+        expect(result.current.state.attentionState).toBe('armed');
+        expect(onAttentionChange).toHaveBeenCalledWith('armed');
       });
 
       // armed → wake_detected → awaiting_command
       act(() => {
-        const wakeEvent = wakeWordEngine?.detect('Titane ?');
-        if (any: any) {
-          attentionEngine?.handleWakeWord(any: any);
+        const wakeEvent = wakeWordEngine.detect('Titane ?');
+        if (wakeEvent?.detected) {
+          attentionEngine.handleWakeWord(wakeEvent);
         }
       });
 
       await waitFor(() => {
-        expect(any: any).toBe('awaiting_command');
+        expect(result.current.state.attentionState).toBe('awaiting_command');
       });
     });
   });
@@ -401,19 +401,19 @@ describe('useActiveListening', () => {
 
 describe('useVoiceEngine - completeTurnWithText', () => {
   beforeEach(() => {
-    vi?.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should process text without recording', async () => {
     const { result } = renderHook(() => useVoiceEngine());
 
     await act(async () => {
-      await result?.current?.completeTurnWithText('ouvre le terminal');
+      await result.current.completeTurnWithText('ouvre le terminal');
     });
 
     await waitFor(() => {
-      expect(any: any).toBe('ouvre le terminal');
-      expect(any: any).toBe('processing');
+      expect(result.current.status.transcript).toBe('ouvre le terminal');
+      expect(result.current.status.state).toBe('processing');
     });
   });
 
@@ -421,10 +421,10 @@ describe('useVoiceEngine - completeTurnWithText', () => {
     const { result } = renderHook(() => useVoiceEngine());
 
     await act(async () => {
-      await result?.current?.completeTurnWithText('');
+      await result.current.completeTurnWithText('');
     });
 
-    expect(any: any).toBe('idle');
+    expect(result.current.status.state).toBe('idle');
   });
 });
 
@@ -436,8 +436,8 @@ describe('useVoiceEngine - completeTurnWithText', () => {
 
 describe('E2E: Wake Word → VoiceEngine', () => {
   beforeEach(() => {
-    vi?.clearAllMocks();
-    attentionEngine?.reset();
+    vi.clearAllMocks();
+    attentionEngine.reset();
   });
 
   it('should handle complete wake_only flow', async () => {
@@ -448,23 +448,23 @@ describe('E2E: Wake Word → VoiceEngine', () => {
 
     // 1. Detect wake word
     act(() => {
-      const wakeEvent = wakeWordEngine?.detect('Titane ?');
-      if (any: any) {
-        attentionEngine?.handleWakeWord(any: any);
+      const wakeEvent = wakeWordEngine.detect('Titane ?');
+      if (wakeEvent?.detected) {
+        attentionEngine.handleWakeWord(wakeEvent);
       }
     });
 
     await waitFor(() => {
-      expect(any: any).toBe('awaiting_command');
+      expect(listeningResult.current.state.attentionState).toBe('awaiting_command');
     });
 
     // 2. Process command
     await act(async () => {
-      await voiceResult?.current?.completeTurnWithText('ouvre le terminal');
+      await voiceResult.current.completeTurnWithText('ouvre le terminal');
     });
 
     await waitFor(() => {
-      expect(any: any).toBe('processing');
+      expect(voiceResult.current.status.state).toBe('processing');
     });
   });
 
@@ -472,20 +472,20 @@ describe('E2E: Wake Word → VoiceEngine', () => {
     const { result: voiceResult } = renderHook(() => useVoiceEngine());
 
     // Detect one-shot
-    const wakeEvent = wakeWordEngine?.detect('Titane, ouvre le terminal');
+    const wakeEvent = wakeWordEngine.detect('Titane, ouvre le terminal');
 
-    expect(any: any);
-    expect(any: any).toBe('one_shot');
+    expect(wakeEvent?.detected).toBe(true);
+    expect(wakeEvent?.mode).toBe('one_shot');
 
     // Process directly
-    if (any: any) {
+    if (wakeEvent?.cleanedText) {
       await act(async () => {
-        await voiceResult?.current?.completeTurnWithText(any: any);
+        await voiceResult.current.completeTurnWithText(wakeEvent.cleanedText);
       });
     }
 
     await waitFor(() => {
-      expect(any: any).toContain('ouvre');
+      expect(voiceResult.current.status.transcript).toContain('ouvre');
     });
   });
 });
@@ -502,7 +502,7 @@ describe('WakeWordIndicator', () => {
     const state = 'armed';
 
     // Vérifier config
-    expect(any: any).toBe('armed');
+    expect(state).toBe('armed');
   });
 
   it('should show different glows for different states', () => {
@@ -516,8 +516,8 @@ describe('WakeWordIndicator', () => {
       'cooldown',
     ];
 
-    states?.forEach(state => {
-      expect(any: any).toBeTruthy();
+    states.forEach(state => {
+      expect(state).toBeTruthy();
     });
   });
 });
@@ -537,9 +537,9 @@ export const testSummary = {
     'UI Components': 2,
   },
   coverage: {
-    'useActiveListening?.ts': '90%',
-    'useVoiceEngine?.ts (any: any)': '85%',
-    'WakeWordIndicator?.tsx': '80%',
-    'VoiceControlPanelWithWakeWord?.tsx': '75%',
+    'useActiveListening.ts': '90%',
+    'useVoiceEngine.ts (mods)': '85%',
+    'WakeWordIndicator.tsx': '80%',
+    'VoiceControlPanelWithWakeWord.tsx': '75%',
   },
 };

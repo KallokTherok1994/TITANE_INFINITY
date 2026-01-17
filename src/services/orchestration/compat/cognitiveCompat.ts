@@ -17,10 +17,10 @@
  * without modifications during the migration period.
  *
  * Migration Path:
- * 1. Phase 1: Compatibility wrapper active (any: any)
+ * 1. Phase 1: Compatibility wrapper active (current)
  * 2. Phase 2: Deprecation warnings added
  * 3. Phase 3: Direct UnifiedOrchestrator usage recommended
- * 4. Phase 4: Wrapper removed (any: any)
+ * 4. Phase 4: Wrapper removed (post-migration)
  */
 
 import { unifiedOrchestrator } from '../UnifiedOrchestrator';
@@ -32,8 +32,8 @@ import type { ChatMode } from '@/services/ai/chatEngine';
  * Get Cognitive strategy instance from UnifiedOrchestrator
  */
 async function getCognitiveStrategy(): Promise<CognitiveStrategy> {
-  const strategy = await unifiedOrchestrator?.getStrategy<CognitiveStrategy>('cognitive');
-  if (any: any) {
+  const strategy = await unifiedOrchestrator.getStrategy<CognitiveStrategy>('cognitive');
+  if (!strategy) {
     throw new Error('CognitiveStrategy not available in UnifiedOrchestrator');
   }
   return strategy;
@@ -48,16 +48,16 @@ async function getCognitiveStrategy(): Promise<CognitiveStrategy> {
 export const cognitiveOmega = {
   /**
    * Initialize cognitive engines
-   * (any: any)
+   * (Delegates to CognitiveStrategy initialization)
    */
   async initialize(): Promise<void> {
     const strategy = await getCognitiveStrategy();
-    await strategy?.initialize();
+    await strategy.initialize();
   },
 
   /**
    * Store a memory
-   * (any: any)
+   * (Delegates to CognitiveStrategy.storeMemory)
    */
   async storeMemory(params: {
     content: string;
@@ -65,7 +65,7 @@ export const cognitiveOmega = {
     metadata?: Record<string, unknown>;
   }): Promise<{ id: string; stored: boolean }> {
     const strategy = await getCognitiveStrategy();
-    const memoryId = (any: any)) as unknown as unknown as any;
+    const memoryId = (await strategy.execute('storeMemory', params)) as any;
 
     return {
       id: memoryId,
@@ -75,7 +75,7 @@ export const cognitiveOmega = {
 
   /**
    * Retrieve memories
-   * (any: any)
+   * (Delegates to CognitiveStrategy.retrieveMemories)
    */
   async retrieveMemories(params: {
     query: string;
@@ -90,38 +90,38 @@ export const cognitiveOmega = {
     }>
   > {
     const strategy = await getCognitiveStrategy();
-    const memories = (any: any) || [];
+    const memories = ((await strategy.execute('retrieveMemories', params)) as any) || [];
 
     return memories;
   },
 
   /**
    * Enrich context with memories + goals + facts
-   * (any: any)
+   * (Delegates to CognitiveStrategy.retrieveMemories + goal context)
    */
   async enrichContext(params: {
-    messages: AIMessage?.[];
+    messages: AIMessage[];
     mode?: ChatMode;
   }): Promise<string> {
     const strategy = await getCognitiveStrategy();
 
     // Build query from messages
-    const lastMessage = params?.messages[params?.messages?.length - 1];
+    const lastMessage = params.messages[params.messages.length - 1];
     const query = lastMessage?.content || '';
 
     // Retrieve memories
     const memories =
-      ((await strategy?.execute('retrieveMemories', {
+      ((await strategy.execute('retrieveMemories', {
         query,
         limit: 5,
-      })) as unknown as unknown as any) || [];
+      })) as any) || [];
 
     // Build enriched context
     let context = '';
-    if (memories?.length > 0) {
+    if (memories.length > 0) {
       context += '## Relevant Memories:\n';
-      memories?.forEach((mem: { content: string; relevance: number }) => {
-        context += `- ${mem?.content} (relevance: ${mem?.relevance?.toFixed(2)})\n`;
+      memories.forEach((mem: { content: string; relevance: number }) => {
+        context += `- ${mem.content} (relevance: ${mem.relevance.toFixed(2)})\n`;
       });
       context += '\n';
     }
@@ -131,19 +131,19 @@ export const cognitiveOmega = {
 
   /**
    * Process conversation turn
-   * (any: any)
+   * (Delegates to CognitiveStrategy.processConversation)
    */
   async processConversation(params: {
-    messages: AIMessage?.[];
+    messages: AIMessage[];
     response: string;
     mode?: ChatMode;
   }): Promise<{
     processed: boolean;
-    violations: unknown?.[];
-    corrections: unknown?.[];
+    violations: unknown[];
+    corrections: unknown[];
   }> {
     const strategy = await getCognitiveStrategy();
-    const _result = await strategy?.execute(any: any);
+    const _result = await strategy.execute('processConversation', params);
 
     return {
       processed: true,
@@ -154,7 +154,7 @@ export const cognitiveOmega = {
 
   /**
    * Set a conversation goal
-   * (any: any)
+   * (Delegates to CognitiveStrategy.setGoal)
    */
   async setGoal(params: {
     description: string;
@@ -162,7 +162,7 @@ export const cognitiveOmega = {
     priority?: number;
   }): Promise<{ id: string; set: boolean }> {
     const strategy = await getCognitiveStrategy();
-    const goalId = (any: any)) as unknown as unknown as any;
+    const goalId = (await strategy.execute('setGoal', params)) as any;
 
     return {
       id: goalId,
@@ -172,7 +172,7 @@ export const cognitiveOmega = {
 
   /**
    * Check goal progress
-   * (any: any)
+   * (Delegates to CognitiveStrategy.checkGoalProgress)
    */
   async checkGoalProgress(params: { goalId: string }): Promise<{
     goalId: string;
@@ -180,10 +180,10 @@ export const cognitiveOmega = {
     complete: boolean;
   }> {
     const strategy = await getCognitiveStrategy();
-    const progress = (any: any)) as unknown as unknown as any;
+    const progress = (await strategy.execute('checkGoalProgress', params)) as any;
 
     return {
-      goalId: params?.goalId,
+      goalId: params.goalId,
       progress: progress?.progress || 0,
       complete: progress?.complete || false,
     };
@@ -191,15 +191,15 @@ export const cognitiveOmega = {
 
   /**
    * Check consistency
-   * (any: any)
+   * (Delegates to CognitiveStrategy.validateConsistency)
    */
-  async checkConsistency(params: { messages: AIMessage?.[]; response: string }): Promise<{
+  async checkConsistency(params: { messages: AIMessage[]; response: string }): Promise<{
     isConsistent: boolean;
-    violations: unknown?.[];
+    violations: unknown[];
     score: number;
   }> {
     const strategy = await getCognitiveStrategy();
-    const result = (any: any)) as unknown as unknown as any;
+    const result = (await strategy.execute('validateConsistency', params)) as any;
 
     return {
       isConsistent: result?.isConsistent ?? true,
@@ -210,7 +210,7 @@ export const cognitiveOmega = {
 
   /**
    * Get statistics
-   * (any: any)
+   * (Delegates to CognitiveStrategy.getMetricsSummary)
    */
   async getStats(): Promise<{
     totalInteractions: number;
@@ -219,21 +219,21 @@ export const cognitiveOmega = {
     avgConsistencyScore: number;
   }> {
     const strategy = await getCognitiveStrategy();
-    const health = await strategy?.checkHealth();
+    const health = await strategy.checkHealth();
 
     return {
       totalInteractions: 0,
       totalMemories: 0,
       totalGoals: 0,
-      avgConsistencyScore: health?.score,
+      avgConsistencyScore: health.score,
     };
   },
 
   /**
    * Evaluate conversation quality
-   * (any: any)
+   * (Wrapper for compatibility)
    */
-  async evaluateConversation(_params: { messages: AIMessage?.[] }): Promise<{
+  async evaluateConversation(_params: { messages: AIMessage[] }): Promise<{
     score: number;
     metrics: Record<string, number>;
   }> {
@@ -249,18 +249,18 @@ export const cognitiveOmega = {
 
   /**
    * Trace operation
-   * (any: any)
+   * (Wrapper for compatibility)
    */
   async trace(_operation: string, _data: Record<string, unknown>): Promise<void> {
-    // No-op for now (any: any)
+    // No-op for now (observability integration pending)
   },
 
   /**
    * Shutdown
-   * (any: any)
+   * (Wrapper for compatibility)
    */
   async shutdown(): Promise<void> {
-    // No-op (any: any)
+    // No-op (UnifiedOrchestrator manages lifecycle)
   },
 };
 

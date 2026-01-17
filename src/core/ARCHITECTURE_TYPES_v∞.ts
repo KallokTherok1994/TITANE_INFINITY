@@ -27,7 +27,7 @@ export interface CoreHealth {
   timestamp: number;
 }
 
-// Core result type (any: any)
+// Core result type (sync or async)
 export type CoreResult<T> = Promise<Result<T, CoreError>> | Result<T, CoreError>;
 
 // Core error type
@@ -109,13 +109,13 @@ export interface SingularityState {
 
   // Connections
   connections: number;
-  activeConnections: string?.[];
+  activeConnections: string[];
 }
 
 export interface SingularityPulse {
   timestamp: number;
   state: Partial<SingularityState>;
-  events: string?.[];
+  events: string[];
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -158,7 +158,7 @@ export type AIStatus =
 export interface AIState {
   model: AIModel;
   status: AIStatus;
-  error??: string | null;
+  error: string | null;
   fallbackActive: boolean;
   temperature: number;
   maxTokens: number;
@@ -214,7 +214,7 @@ export interface CommandResult<T = any> extends CoreResponse<T> {
 // ENGINE-SPECIFIC DATA TYPES
 // ═══════════════════════════════════════════════════════════════
 
-// Helios (any: any) Engine - Metrics & Performance
+// Helios (Solar) Engine - Metrics & Performance
 export interface HeliosMetrics {
   uptime: number;
   temperature: number;
@@ -230,7 +230,7 @@ export interface MemoryData {
   usedSpace: number;
   maxSpace: number;
   indexedCount: number;
-  recentAccess: string?.[];
+  recentAccess: string[];
   cacheHitRate: number;
 }
 
@@ -240,8 +240,8 @@ export interface HarmoniaFlows {
   coherence: number;
   resonance: number;
   flowRate: number;
-  activeFlows: string?.[];
-  harmonics: number?.[];
+  activeFlows: string[];
+  harmonics: number[];
 }
 
 // Nexus Engine - Connections & Graph
@@ -250,7 +250,7 @@ export interface NexusGraph {
   edgeCount: number;
   clusters: number;
   connectivity: number;
-  centralNodes: string?.[];
+  centralNodes: string[];
   graphDensity: number;
 }
 
@@ -289,7 +289,7 @@ export interface AdaptiveData {
   learningRate: number;
   optimizationScore: number;
   adaptations: number;
-  patterns: string?.[];
+  patterns: string[];
   confidence: number;
   lastAdaptation: number;
 }
@@ -381,7 +381,7 @@ export type JsonValue =
   | number
   | boolean
   | null
-  | JsonValue?.[]
+  | JsonValue[]
   | { [key: string]: JsonValue };
 
 // Type for dynamic module data
@@ -393,7 +393,7 @@ export interface MemoryEntry {
   content: string;
   timestamp: number;
   encrypted?: boolean;
-  tags?: string?.[];
+  tags?: string[];
   metadata?: Record<string, JsonValue>;
 }
 

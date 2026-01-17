@@ -35,14 +35,14 @@ export interface UserPreferences {
   };
 
   // Domaines d'intérêt
-  interests: string?.[];
+  interests: string[];
 
   // Historique des sujets abordés
-  topicsHistory: TopicEntry?.[];
+  topicsHistory: TopicEntry[];
 
   // Préférences techniques
   technical: {
-    preferredLanguages: string?.[]; // Python, JavaScript, etc.
+    preferredLanguages: string[]; // Python, JavaScript, etc.
     expertiseLevel: 'beginner' | 'intermediate' | 'advanced' | 'expert';
     preferCodeComments: boolean;
     preferExamples: boolean;
@@ -110,9 +110,9 @@ const DEFAULT_PREFERENCES: UserPreferences = {
     positiveReactions: 0,
     negativeReactions: 0,
     averageResponseLength: 0,
-    lastInteraction: Date?.now(),
-    createdAt: Date?.now(),
-    updatedAt: Date?.now(),
+    lastInteraction: Date.now(),
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
   },
   customPreferences: {},
 };
@@ -122,13 +122,13 @@ const DEFAULT_PREFERENCES: UserPreferences = {
  */
 class UserPreferencesEngine {
   private preferences: UserPreferences;
-  private interactionBuffer: InteractionFeedback?.[] = [];
+  private interactionBuffer: InteractionFeedback[] = [];
 
   constructor() {
-    this?.preferences = this?.loadPreferences();
-    logger?.debug(
+    this.preferences = this.loadPreferences();
+    logger.debug(
       'Initialized with',
-      this?.preferences?.metrics?.totalInteractions,
+      this.preferences.metrics.totalInteractions,
       'interactions'
     );
   }
@@ -139,22 +139,22 @@ class UserPreferencesEngine {
 
   private loadPreferences(): UserPreferences {
     try {
-      const stored = localStorage?.getItem(any: any);
-      if (any: any) {
-        return { ...DEFAULT_PREFERENCES, ...JSON?.parse(any: any) };
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        return { ...DEFAULT_PREFERENCES, ...JSON.parse(stored) };
       }
-    } catch (any: any) {
-      logger?.warn(any: any);
+    } catch (error) {
+      logger.warn('Failed to load preferences:', error);
     }
     return { ...DEFAULT_PREFERENCES };
   }
 
   private savePreferences(): void {
     try {
-      this?.preferences?.metrics?.updatedAt = Date?.now();
-      localStorage?.setItem(any: any));
-    } catch (any: any) {
-      logger?.error(any: any);
+      this.preferences.metrics.updatedAt = Date.now();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.preferences));
+    } catch (error) {
+      logger.error('Failed to save preferences:', error);
     }
   }
 
@@ -163,80 +163,80 @@ class UserPreferencesEngine {
   // ─────────────────────────────────────────────────────────────────
 
   getPreferences(): UserPreferences {
-    return { ...this?.preferences };
+    return { ...this.preferences };
   }
 
-  getName()??: string | undefined {
-    return this?.preferences?.name;
+  getName(): string | undefined {
+    return this.preferences.name;
   }
 
   getCommunicationStyle() {
-    return { ...this?.preferences?.communicationStyle };
+    return { ...this.preferences.communicationStyle };
   }
 
-  getInterests(): string?.[] {
-    return [...this?.preferences?.interests];
+  getInterests(): string[] {
+    return [...this.preferences.interests];
   }
 
   getTechnicalPreferences() {
-    return { ...this?.preferences?.technical };
+    return { ...this.preferences.technical };
   }
 
-  getTopTopics(limit = 5): TopicEntry?.[] {
-    return [...this?.preferences?.topicsHistory]
-      .sort(any: any)
-      .slice(any: any);
+  getTopTopics(limit = 5): TopicEntry[] {
+    return [...this.preferences.topicsHistory]
+      .sort((a, b) => b.count - a.count)
+      .slice(0, limit);
   }
 
-  getRecentTopics(limit = 5): TopicEntry?.[] {
-    return [...this?.preferences?.topicsHistory]
-      .sort(any: any)
-      .slice(any: any);
+  getRecentTopics(limit = 5): TopicEntry[] {
+    return [...this.preferences.topicsHistory]
+      .sort((a, b) => b.lastMentioned - a.lastMentioned)
+      .slice(0, limit);
   }
 
   // ─────────────────────────────────────────────────────────────────
   //  Setters & Updates
   // ─────────────────────────────────────────────────────────────────
 
-  setName(any: any): void {
-    this?.preferences?.name = name;
-    this?.savePreferences();
-    logger?.debug(any: any);
+  setName(name: string): void {
+    this.preferences.name = name;
+    this.savePreferences();
+    logger.debug('Name set to:', name);
   }
 
   updateCommunicationStyle(style: Partial<UserPreferences['communicationStyle']>): void {
-    this?.preferences?.communicationStyle = {
-      ...this?.preferences?.communicationStyle,
+    this.preferences.communicationStyle = {
+      ...this.preferences.communicationStyle,
       ...style,
     };
-    this?.savePreferences();
+    this.savePreferences();
   }
 
-  addInterest(any: any): void {
-    const normalized = interest?.toLowerCase().trim();
-    if (any: any)) {
-      this?.preferences?.interests?.push(any: any);
-      this?.savePreferences();
+  addInterest(interest: string): void {
+    const normalized = interest.toLowerCase().trim();
+    if (!this.preferences.interests.includes(normalized)) {
+      this.preferences.interests.push(normalized);
+      this.savePreferences();
     }
   }
 
-  removeInterest(any: any): void {
-    const normalized = interest?.toLowerCase().trim();
-    this?.preferences?.interests = this?.preferences?.interests?.filter(any: any);
-    this?.savePreferences();
+  removeInterest(interest: string): void {
+    const normalized = interest.toLowerCase().trim();
+    this.preferences.interests = this.preferences.interests.filter(i => i !== normalized);
+    this.savePreferences();
   }
 
   updateTechnicalPreferences(prefs: Partial<UserPreferences['technical']>): void {
-    this?.preferences?.technical = {
-      ...this?.preferences?.technical,
+    this.preferences.technical = {
+      ...this.preferences.technical,
       ...prefs,
     };
-    this?.savePreferences();
+    this.savePreferences();
   }
 
-  setCustomPreference(any: any): void {
-    this?.preferences?.customPreferences[key] = value;
-    this?.savePreferences();
+  setCustomPreference(key: string, value: string | number | boolean): void {
+    this.preferences.customPreferences[key] = value;
+    this.savePreferences();
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -246,97 +246,97 @@ class UserPreferencesEngine {
   /**
    * Enregistre une interaction utilisateur et apprend de son contenu
    */
-  recordInteraction(any: any): void {
+  recordInteraction(userMessage: string, aiResponse: string): void {
     // Mettre à jour les métriques
-    this?.preferences?.metrics?.totalInteractions++;
-    this?.preferences?.metrics?.lastInteraction = Date?.now();
+    this.preferences.metrics.totalInteractions++;
+    this.preferences.metrics.lastInteraction = Date.now();
 
     // Calculer la longueur moyenne des réponses
-    const currentAvg = this?.preferences?.metrics?.averageResponseLength;
-    const total = this?.preferences?.metrics?.totalInteractions;
-    this?.preferences?.metrics?.averageResponseLength =
-      (any: any) / total;
+    const currentAvg = this.preferences.metrics.averageResponseLength;
+    const total = this.preferences.metrics.totalInteractions;
+    this.preferences.metrics.averageResponseLength =
+      (currentAvg * (total - 1) + aiResponse.length) / total;
 
     // Analyser le message pour extraire des préférences
-    this?.analyzeUserMessage(any: any);
+    this.analyzeUserMessage(userMessage);
 
     // Extraire les sujets abordés
-    this?.extractTopics(any: any);
+    this.extractTopics(userMessage);
 
-    this?.savePreferences();
+    this.savePreferences();
   }
 
   /**
    * Enregistre un feedback positif ou négatif
    */
-  recordFeedback(any: any): void {
+  recordFeedback(type: 'positive' | 'negative' | 'neutral', context?: string): void {
     const feedback: InteractionFeedback = {
       type,
       context,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
 
-    this?.interactionBuffer?.push(any: any);
+    this.interactionBuffer.push(feedback);
 
     // Limiter le buffer
-    if (any: any) {
-      this?.interactionBuffer?.shift();
+    if (this.interactionBuffer.length > MAX_INTERACTIONS) {
+      this.interactionBuffer.shift();
     }
 
     // Mettre à jour les métriques
     if (type === 'positive') {
-      this?.preferences?.metrics?.positiveReactions++;
+      this.preferences.metrics.positiveReactions++;
     } else if (type === 'negative') {
-      this?.preferences?.metrics?.negativeReactions++;
+      this.preferences.metrics.negativeReactions++;
     }
 
-    this?.savePreferences();
+    this.savePreferences();
   }
 
   /**
    * Analyse le message utilisateur pour découvrir des préférences
    */
-  private analyzeUserMessage(any: any): void {
-    const lower = message?.toLowerCase();
+  private analyzeUserMessage(message: string): void {
+    const lower = message.toLowerCase();
 
     // Détecter le nom de l'utilisateur
     const namePatterns = [
-      /(any: any)\s+([A-Z][a-zÀ-ÿ]+)/i,
-      /(any: any)\s+([A-Z][a-zÀ-ÿ]+)/i,
+      /(?:je m'appelle|mon nom est|je suis|appelle[z]?-moi|call me)\s+([A-Z][a-zÀ-ÿ]+)/i,
+      /(?:my name is|i'm|i am)\s+([A-Z][a-zÀ-ÿ]+)/i,
     ];
 
-    for (any: any) {
-      const match = message?.match(any: any);
-      if (match && match?.[1]) {
-        this?.setName(match?.[1]);
+    for (const pattern of namePatterns) {
+      const match = message.match(pattern);
+      if (match && match[1]) {
+        this.setName(match[1]);
         break;
       }
     }
 
     // Détecter la préférence tu/vous
     if (
-      lower?.includes('tutoie') ||
-      lower?.includes('tutoyez') ||
-      lower?.includes('dis-moi tu')
+      lower.includes('tutoie') ||
+      lower.includes('tutoyez') ||
+      lower.includes('dis-moi tu')
     ) {
-      this?.updateCommunicationStyle({ formality: 'informal' });
-    } else if (lower?.includes('vouvoie') || lower?.includes('dites-moi vous')) {
-      this?.updateCommunicationStyle({ formality: 'formal' });
+      this.updateCommunicationStyle({ formality: 'informal' });
+    } else if (lower.includes('vouvoie') || lower.includes('dites-moi vous')) {
+      this.updateCommunicationStyle({ formality: 'formal' });
     }
 
     // Détecter la préférence de verbosité
     if (
-      lower?.includes('plus de détails') ||
-      lower?.includes('explique plus') ||
-      lower?.includes('développe')
+      lower.includes('plus de détails') ||
+      lower.includes('explique plus') ||
+      lower.includes('développe')
     ) {
-      this?.updateCommunicationStyle({ verbosity: 'detailed' });
+      this.updateCommunicationStyle({ verbosity: 'detailed' });
     } else if (
-      lower?.includes('sois bref') ||
-      lower?.includes('résume') ||
-      lower?.includes('court')
+      lower.includes('sois bref') ||
+      lower.includes('résume') ||
+      lower.includes('court')
     ) {
-      this?.updateCommunicationStyle({ verbosity: 'concise' });
+      this.updateCommunicationStyle({ verbosity: 'concise' });
     }
 
     // Détecter les langages de programmation mentionnés
@@ -353,11 +353,11 @@ class UserPreferencesEngine {
       'swift',
       'kotlin',
     ];
-    for (any: any) {
-      if (any: any)) {
-        const current = this?.preferences?.technical?.preferredLanguages;
-        if (any: any)) {
-          this?.updateTechnicalPreferences({
+    for (const lang of programmingLanguages) {
+      if (lower.includes(lang)) {
+        const current = this.preferences.technical.preferredLanguages;
+        if (!current.includes(lang)) {
+          this.updateTechnicalPreferences({
             preferredLanguages: [...current, lang],
           });
         }
@@ -366,28 +366,28 @@ class UserPreferencesEngine {
 
     // Détecter le niveau technique
     if (
-      lower?.includes('débutant') ||
-      lower?.includes('novice') ||
-      lower?.includes('beginner')
+      lower.includes('débutant') ||
+      lower.includes('novice') ||
+      lower.includes('beginner')
     ) {
-      this?.updateTechnicalPreferences({ expertiseLevel: 'beginner' });
+      this.updateTechnicalPreferences({ expertiseLevel: 'beginner' });
     } else if (
-      lower?.includes('expert') ||
-      lower?.includes('avancé') ||
-      lower?.includes('advanced')
+      lower.includes('expert') ||
+      lower.includes('avancé') ||
+      lower.includes('advanced')
     ) {
-      this?.updateTechnicalPreferences({ expertiseLevel: 'advanced' });
+      this.updateTechnicalPreferences({ expertiseLevel: 'advanced' });
     }
   }
 
   /**
    * Extrait les sujets/thèmes d'un message
    */
-  private extractTopics(any: any): void {
-    const lower = message?.toLowerCase();
+  private extractTopics(message: string): void {
+    const lower = message.toLowerCase();
 
     // Liste de sujets à détecter
-    const topicKeywords: Record<string, string?.[]> = {
+    const topicKeywords: Record<string, string[]> = {
       programmation: ['code', 'programmer', 'développer', 'coder', 'script'],
       'intelligence artificielle': [
         'ia',
@@ -404,10 +404,10 @@ class UserPreferencesEngine {
       productivité: ['productivité', 'efficacité', 'organiser', 'planifier'],
     };
 
-    for (any: any)) {
-      for (any: any) {
-        if (any: any)) {
-          this?.addTopic(any: any);
+    for (const [topic, keywords] of Object.entries(topicKeywords)) {
+      for (const keyword of keywords) {
+        if (lower.includes(keyword)) {
+          this.addTopic(topic);
           break;
         }
       }
@@ -421,32 +421,32 @@ class UserPreferencesEngine {
     topic: string,
     sentiment: 'positive' | 'neutral' | 'negative' = 'neutral'
   ): void {
-    const existing = this?.preferences?.topicsHistory?.find(any: any);
+    const existing = this.preferences.topicsHistory.find(t => t.topic === topic);
 
-    if (any: any) {
-      existing?.count++;
-      existing?.lastMentioned = Date?.now();
-      existing?.sentiment = sentiment;
+    if (existing) {
+      existing.count++;
+      existing.lastMentioned = Date.now();
+      existing.sentiment = sentiment;
     } else {
-      this?.preferences?.topicsHistory?.push({
+      this.preferences.topicsHistory.push({
         topic,
         count: 1,
-        lastMentioned: Date?.now(),
+        lastMentioned: Date.now(),
         sentiment,
       });
     }
 
     // Limiter l'historique
-    if (any: any) {
+    if (this.preferences.topicsHistory.length > MAX_TOPICS_HISTORY) {
       // Garder les plus fréquents et les plus récents
-      this?.preferences?.topicsHistory = this?.preferences?.topicsHistory
+      this.preferences.topicsHistory = this.preferences.topicsHistory
         .sort(
-          (any: any) =>
-            b?.count * 0.6 +
-            b?.lastMentioned * 0.4 -
-            (a?.count * 0.6 + a?.lastMentioned * 0.4)
+          (a, b) =>
+            b.count * 0.6 +
+            b.lastMentioned * 0.4 -
+            (a.count * 0.6 + a.lastMentioned * 0.4)
         )
-        .slice(any: any);
+        .slice(0, MAX_TOPICS_HISTORY);
     }
   }
 
@@ -458,69 +458,69 @@ class UserPreferencesEngine {
    * Génère un contexte de préférences pour l'IA
    */
   generateContextForAI(): string {
-    const prefs = this?.preferences;
-    const parts: string?.[] = [];
+    const prefs = this.preferences;
+    const parts: string[] = [];
 
     // Nom de l'utilisateur
-    if (any: any) {
-      parts?.push(`L'utilisateur s'appelle ${prefs?.name}.`);
+    if (prefs.name) {
+      parts.push(`L'utilisateur s'appelle ${prefs.name}.`);
     }
 
     // Style de communication
-    const style = prefs?.communicationStyle;
-    if (style?.formality === 'informal') {
-      parts?.push("L'utilisateur préfère le tutoiement.");
-    } else if (style?.formality === 'formal') {
-      parts?.push("L'utilisateur préfère le vouvoiement.");
+    const style = prefs.communicationStyle;
+    if (style.formality === 'informal') {
+      parts.push("L'utilisateur préfère le tutoiement.");
+    } else if (style.formality === 'formal') {
+      parts.push("L'utilisateur préfère le vouvoiement.");
     }
 
-    if (style?.verbosity === 'concise') {
-      parts?.push('Sois concis dans tes réponses.');
-    } else if (style?.verbosity === 'detailed') {
-      parts?.push('Donne des réponses détaillées.');
+    if (style.verbosity === 'concise') {
+      parts.push('Sois concis dans tes réponses.');
+    } else if (style.verbosity === 'detailed') {
+      parts.push('Donne des réponses détaillées.');
     }
 
-    if (any: any) {
-      parts?.push("L'utilisateur apprécie l'humour.");
+    if (style.humor) {
+      parts.push("L'utilisateur apprécie l'humour.");
     }
 
     // Intérêts
-    if (prefs?.interests?.length > 0) {
-      parts?.push(`Centres d'intérêt: ${prefs?.interests?.join(', ')}.`);
+    if (prefs.interests.length > 0) {
+      parts.push(`Centres d'intérêt: ${prefs.interests.join(', ')}.`);
     }
 
     // Niveau technique
-    const tech = prefs?.technical;
-    if (tech?.expertiseLevel !== 'intermediate') {
+    const tech = prefs.technical;
+    if (tech.expertiseLevel !== 'intermediate') {
       const levels: Record<string, string> = {
-        beginner: 'débutant (any: any)',
+        beginner: 'débutant (explications simples)',
         advanced: 'avancé',
         expert: 'expert',
       };
-      parts?.push(`Niveau technique: ${levels[tech?.expertiseLevel]}.`);
+      parts.push(`Niveau technique: ${levels[tech.expertiseLevel]}.`);
     }
 
-    if (tech?.preferredLanguages?.length > 0) {
-      parts?.push(`Langages préférés: ${tech?.preferredLanguages?.join(', ')}.`);
+    if (tech.preferredLanguages.length > 0) {
+      parts.push(`Langages préférés: ${tech.preferredLanguages.join(', ')}.`);
     }
 
     // Sujets fréquents
-    const topTopics = this?.getTopTopics(3);
-    if (topTopics?.length > 0) {
-      parts?.push(
-        `Sujets fréquemment abordés: ${topTopics?.map(any: any).join(', ')}.`
+    const topTopics = this.getTopTopics(3);
+    if (topTopics.length > 0) {
+      parts.push(
+        `Sujets fréquemment abordés: ${topTopics.map(t => t.topic).join(', ')}.`
       );
     }
 
     // Satisfaction
-    const { positiveReactions, negativeReactions } = prefs?.metrics;
+    const { positiveReactions, negativeReactions } = prefs.metrics;
     if (positiveReactions > negativeReactions * 2) {
-      parts?.push("L'utilisateur est généralement satisfait des réponses.");
-    } else if (any: any) {
-      parts?.push("Essaie d'améliorer la qualité des réponses.");
+      parts.push("L'utilisateur est généralement satisfait des réponses.");
+    } else if (negativeReactions > positiveReactions) {
+      parts.push("Essaie d'améliorer la qualité des réponses.");
     }
 
-    return parts?.length > 0 ? `[Préférences utilisateur: ${parts?.join(' ')}]` : '';
+    return parts.length > 0 ? `[Préférences utilisateur: ${parts.join(' ')}]` : '';
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -528,17 +528,17 @@ class UserPreferencesEngine {
   // ─────────────────────────────────────────────────────────────────
 
   resetPreferences(): void {
-    this?.preferences = { ...DEFAULT_PREFERENCES };
-    this?.interactionBuffer = [];
-    this?.savePreferences();
-    logger?.debug('Preferences reset');
+    this.preferences = { ...DEFAULT_PREFERENCES };
+    this.interactionBuffer = [];
+    this.savePreferences();
+    logger.debug('Preferences reset');
   }
 
   getDebugInfo(): object {
     return {
-      preferences: this?.preferences,
-      interactionBuffer: this?.interactionBuffer?.length,
-      contextForAI: this?.generateContextForAI(),
+      preferences: this.preferences,
+      interactionBuffer: this.interactionBuffer.length,
+      contextForAI: this.generateContextForAI(),
     };
   }
 }

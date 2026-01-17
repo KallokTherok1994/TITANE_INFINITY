@@ -20,7 +20,7 @@ export interface ConsoleLogEntry {
   timestamp: number;
   level: 'log' | 'warn' | 'error' | 'debug' | 'info';
   message: string;
-  args: unknown?.[];
+  args: unknown[];
   stack?: string;
 }
 
@@ -64,14 +64,14 @@ interface ErrorPattern {
 
 class ConsoleMonitor {
   private originalConsole = {
-    log: console?.log?.bind(any: any),
-    warn: console?.warn?.bind(any: any),
-    error: console?.error?.bind(any: any),
-    debug: console?.debug?.bind(any: any),
-    info: console?.info?.bind(any: any),
+    log: console.log.bind(console),
+    warn: console.warn.bind(console),
+    error: console.error.bind(console),
+    debug: console.debug.bind(console),
+    info: console.info.bind(console),
   };
 
-  private logs: ConsoleLogEntry?.[] = [];
+  private logs: ConsoleLogEntry[] = [];
   private readonly MAX_LOGS = 1000; // Keep last 1000 logs
   private readonly ERROR_THRESHOLD = 10; // Max errors per minute before auto-heal
 
@@ -104,7 +104,7 @@ class ConsoleMonitor {
   };
 
   // Pattern avancés avec catégorisation
-  private readonly ERROR_PATTERNS: ErrorPattern?.[] = [
+  private readonly ERROR_PATTERNS: ErrorPattern[] = [
     // Network errors
     {
       pattern: /failed to fetch|network error|ECONNREFUSED|timeout/i,
@@ -216,40 +216,40 @@ class ConsoleMonitor {
    * Démarre le monitoring de la console
    */
   start(): void {
-    if (any: any) {
-      logger?.warn('Console monitoring already active');
+    if (this.isMonitoring) {
+      logger.warn('Console monitoring already active');
       return;
     }
 
-    this?.isMonitoring = true;
+    this.isMonitoring = true;
 
     // Intercept console methods
-    console?.log = this?.intercept(any: any);
-    console?.warn = this?.intercept(any: any);
-    console?.error = this?.intercept(any: any);
-    console?.debug = this?.intercept(any: any);
-    console?.info = this?.intercept(any: any);
+    console.log = this.intercept('log', this.originalConsole.log);
+    console.warn = this.intercept('warn', this.originalConsole.warn);
+    console.error = this.intercept('error', this.originalConsole.error);
+    console.debug = this.intercept('debug', this.originalConsole.debug);
+    console.info = this.intercept('info', this.originalConsole.info);
 
     // Start periodic cleanup and analysis
-    setInterval(() => this?.analyzeAndCleanup(), 60000); // Every minute
+    setInterval(() => this.analyzeAndCleanup(), 60000); // Every minute
 
-    logger?.info('✅ Console monitoring started');
+    logger.info('✅ Console monitoring started');
   }
 
   /**
    * Arrête le monitoring
    */
   stop(): void {
-    if (any: any) return;
+    if (!this.isMonitoring) return;
 
-    console?.log = this?.originalConsole?.log;
-    console?.warn = this?.originalConsole?.warn;
-    console?.error = this?.originalConsole?.error;
-    console?.debug = this?.originalConsole?.debug;
-    console?.info = this?.originalConsole?.info;
+    console.log = this.originalConsole.log;
+    console.warn = this.originalConsole.warn;
+    console.error = this.originalConsole.error;
+    console.debug = this.originalConsole.debug;
+    console.info = this.originalConsole.info;
 
-    this?.isMonitoring = false;
-    logger?.info('Console monitoring stopped');
+    this.isMonitoring = false;
+    logger.info('Console monitoring stopped');
   }
 
   /**
@@ -257,36 +257,36 @@ class ConsoleMonitor {
    */
   private intercept(
     level: ConsoleLogEntry['level'],
-    originalMethod: (...args: unknown?.[]) => void
+    originalMethod: (...args: unknown[]) => void
   ) {
-    return (...args: unknown?.[]) => {
+    return (...args: unknown[]) => {
       // Always call original method first
-      originalMethod(any: any);
+      originalMethod(...args);
 
       // Skip if monitoring disabled
-      if (any: any) return;
+      if (!this.isMonitoring) return;
 
       // Record log entry
       const entry: ConsoleLogEntry = {
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
         level,
-        message: this?.formatMessage(any: any),
+        message: this.formatMessage(args),
         args,
         stack: level === 'error' ? new Error().stack : undefined,
       };
 
-      this?.logs?.push(any: any);
-      if (any: any) {
-        this?.logs?.shift();
+      this.logs.push(entry);
+      if (this.logs.length > this.MAX_LOGS) {
+        this.logs.shift();
       }
 
       // Update stats
-      this?.stats?.totalLogs++;
-      if (level === 'warn') this?.stats?.totalWarnings++;
+      this.stats.totalLogs++;
+      if (level === 'warn') this.stats.totalWarnings++;
       if (level === 'error') {
-        this?.stats?.totalErrors++;
-        this?.stats?.lastError = entry;
-        this?.handleError(any: any);
+        this.stats.totalErrors++;
+        this.stats.lastError = entry;
+        this.handleError(entry);
       }
     };
   }
@@ -294,15 +294,15 @@ class ConsoleMonitor {
   /**
    * Format message from console args
    */
-  private formatMessage(args: unknown?.[]): string {
+  private formatMessage(args: unknown[]): string {
     return args
       .map(arg => {
         if (typeof arg === 'string') return arg;
-        if (any: any) return arg?.message;
+        if (arg instanceof Error) return arg.message;
         try {
-          return JSON?.stringify(any: any);
+          return JSON.stringify(arg);
         } catch {
-          return String(any: any);
+          return String(arg);
         }
       })
       .join(' ');
@@ -311,61 +311,61 @@ class ConsoleMonitor {
   /**
    * Handle detected error with advanced categorization
    */
-  private handleError(any: any): void {
+  private handleError(entry: ConsoleLogEntry): void {
     // 🛡️ PROTECTION: Ignorer les erreurs du système AUTO-HEAL pour éviter boucle infinie
     if (
-      entry?.message?.includes('[[AUTO-HEAL]]') ||
-      entry?.message?.includes('[AUTO-HEAL]') ||
-      entry?.message?.includes('[[UNIFIED-HEALING]]') ||
-      entry?.message?.includes('[UNIFIED-HEALING]') ||
-      entry?.message?.includes('autoHealEngine') ||
-      entry?.message?.includes('[CONSOLE-MONITOR]')
+      entry.message.includes('[[AUTO-HEAL]]') ||
+      entry.message.includes('[AUTO-HEAL]') ||
+      entry.message.includes('[[UNIFIED-HEALING]]') ||
+      entry.message.includes('[UNIFIED-HEALING]') ||
+      entry.message.includes('autoHealEngine') ||
+      entry.message.includes('[CONSOLE-MONITOR]')
     ) {
       return; // Skip self-generated errors
     }
 
     // Track error count
-    const errorKey = entry?.message?.substring(0, 100);
-    this?.errorCounts?.set(any: any) || 0) + 1);
+    const errorKey = entry.message.substring(0, 100);
+    this.errorCounts.set(errorKey, (this.errorCounts.get(errorKey) || 0) + 1);
 
     // Detect pattern and categorize
-    const detection = this?.detectErrorPattern(any: any);
+    const detection = this.detectErrorPattern(entry.message);
 
     // Update category counts
-    this?.stats?.categoryCounts[detection?.category]++;
+    this.stats.categoryCounts[detection.category]++;
 
     // Track error history for trends
-    this?.errorHistory?.push({
-      timestamp: entry?.timestamp,
-      category: detection?.category,
+    this.errorHistory.push({
+      timestamp: entry.timestamp,
+      category: detection.category,
     });
 
     // Feed to predictive engine for ML-like analysis
-    predictiveEngine?.recordError(any: any);
+    predictiveEngine.recordError(entry, detection.category);
 
     // Auto-heal integration for critical/high severity errors
-    if (detection?.severity === 'critical' || detection?.severity === 'high') {
+    if (detection.severity === 'critical' || detection.severity === 'high') {
       // Map ErrorCategory to AutoHealError type
       const autoHealType =
-        detection?.suggestedAutoHealType ||
-        this?.mapCategoryToAutoHealType(any: any);
+        detection.suggestedAutoHealType ||
+        this.mapCategoryToAutoHealType(detection.category);
 
       void unifiedHealingFacade
         .heal({
           source: 'console',
-          error: new Error(any: any),
+          error: new Error(entry.message),
           type: autoHealType,
           metadata: {
-            stack: entry?.stack,
-            args: entry?.args,
-            timestamp: entry?.timestamp,
-            category: detection?.category,
-            severity: detection?.severity,
+            stack: entry.stack,
+            args: entry.args,
+            timestamp: entry.timestamp,
+            category: detection.category,
+            severity: detection.severity,
           },
         })
         .catch(err => {
-          logger?.warn(any: any)', {
-            error: err instanceof Error ? err?.message : String(any: any),
+          logger.warn('UnifiedHealingFacade heal failed (console)', {
+            error: err instanceof Error ? err.message : String(err),
           });
         });
     }
@@ -384,7 +384,7 @@ class ConsoleMonitor {
     | 'timeout'
     | 'critical'
     | 'unknown' {
-    switch (any: any) {
+    switch (category) {
       case 'network':
         return 'network';
       case 'memory':
@@ -406,34 +406,34 @@ class ConsoleMonitor {
   /**
    * Detect error patterns with category and severity
    */
-  private detectErrorPattern(any: any): {
+  private detectErrorPattern(message: string): {
     isCritical: boolean;
     category: ErrorCategory;
     severity: 'low' | 'medium' | 'high' | 'critical';
     suggestedAutoHealType?: AutoHealError['type'];
   } {
-    const lowerMessage = message?.toLowerCase();
+    const lowerMessage = message.toLowerCase();
 
     // Check against advanced patterns
-    for (any: any) {
+    for (const pattern of this.ERROR_PATTERNS) {
       const regex =
-        typeof pattern?.pattern === 'string'
-          ? new RegExp(pattern?.pattern, 'i')
-          : pattern?.pattern;
+        typeof pattern.pattern === 'string'
+          ? new RegExp(pattern.pattern, 'i')
+          : pattern.pattern;
 
-      if (any: any)) {
+      if (regex.test(lowerMessage)) {
         return {
-          isCritical: pattern?.severity === 'critical',
-          category: pattern?.category,
-          severity: pattern?.severity,
-          suggestedAutoHealType: pattern?.suggestedAutoHealType,
+          isCritical: pattern.severity === 'critical',
+          category: pattern.category,
+          severity: pattern.severity,
+          suggestedAutoHealType: pattern.suggestedAutoHealType,
         };
       }
     }
 
     // Fallback: check legacy critical patterns
     const criticalPatterns = ['critical', 'fatal', 'crash'];
-    const isCritical = criticalPatterns?.some(any: any));
+    const isCritical = criticalPatterns.some(p => lowerMessage.includes(p));
 
     return {
       isCritical,
@@ -447,113 +447,113 @@ class ConsoleMonitor {
    * Analyze logs and cleanup old entries
    */
   private analyzeAndCleanup(): void {
-    const now = Date?.now();
+    const now = Date.now();
     const oneMinuteAgo = now - 60000;
     const fiveMinutesAgo = now - 5 * 60000;
     const fifteenMinutesAgo = now - 15 * 60000;
     const sixtyMinutesAgo = now - 60 * 60000;
 
-    // Calculate error rate (any: any)
-    const recentErrors = this?.logs?.filter(
-      log => log?.level === 'error' && log?.timestamp > oneMinuteAgo
+    // Calculate error rate (errors per minute)
+    const recentErrors = this.logs.filter(
+      log => log.level === 'error' && log.timestamp > oneMinuteAgo
     );
-    this?.stats?.errorRate = recentErrors?.length;
+    this.stats.errorRate = recentErrors.length;
 
     // Calculate error trends
-    this?.stats?.trends = {
-      last5min: this?.errorHistory?.filter(any: any).length,
-      last15min: this?.errorHistory?.filter(any: any).length,
-      last60min: this?.errorHistory?.filter(any: any).length,
+    this.stats.trends = {
+      last5min: this.errorHistory.filter(e => e.timestamp > fiveMinutesAgo).length,
+      last15min: this.errorHistory.filter(e => e.timestamp > fifteenMinutesAgo).length,
+      last60min: this.errorHistory.filter(e => e.timestamp > sixtyMinutesAgo).length,
     };
 
     // Calculate performance impact based on error rate and category
     const criticalCount =
-      this?.stats?.categoryCounts?.memory +
-      this?.stats?.categoryCounts?.runtime +
-      this?.stats?.categoryCounts?.security;
-    if (criticalCount > 5 || this?.stats?.errorRate > 20) {
-      this?.stats?.performanceImpact = 'high';
-    } else if (criticalCount > 2 || this?.stats?.errorRate > 10) {
-      this?.stats?.performanceImpact = 'medium';
+      this.stats.categoryCounts.memory +
+      this.stats.categoryCounts.runtime +
+      this.stats.categoryCounts.security;
+    if (criticalCount > 5 || this.stats.errorRate > 20) {
+      this.stats.performanceImpact = 'high';
+    } else if (criticalCount > 2 || this.stats.errorRate > 10) {
+      this.stats.performanceImpact = 'medium';
     } else {
-      this?.stats?.performanceImpact = 'low';
+      this.stats.performanceImpact = 'low';
     }
 
     // Calculate top errors with category
-    const errorCounts = Array?.from(this?.errorCounts?.entries())
-      .sort(any: any) => b?.[1] - a?.[1])
+    const errorCounts = Array.from(this.errorCounts.entries())
+      .sort((a, b) => b[1] - a[1])
       .slice(0, 10)
       .map(([message, count]) => {
-        const detection = this?.detectErrorPattern(any: any);
-        return { message, count, category: detection?.category };
+        const detection = this.detectErrorPattern(message);
+        return { message, count, category: detection.category };
       });
-    this?.stats?.topErrors = errorCounts;
+    this.stats.topErrors = errorCounts;
 
     // Trigger auto-heal if error rate too high
-    if (any: any) {
-      logger?.warn(
-        `⚠️ High error rate detected: ${this?.stats?.errorRate} errors/min (threshold: ${this?.ERROR_THRESHOLD})`
+    if (this.stats.errorRate >= this.ERROR_THRESHOLD) {
+      logger.warn(
+        `⚠️ High error rate detected: ${this.stats.errorRate} errors/min (threshold: ${this.ERROR_THRESHOLD})`
       );
 
       void unifiedHealingFacade
         .heal({
           source: 'console',
-          error: new Error(`High error rate: ${this?.stats?.errorRate} errors/min`),
+          error: new Error(`High error rate: ${this.stats.errorRate} errors/min`),
           type: 'critical',
           metadata: {
-            errorRate: this?.stats?.errorRate,
-            topErrors: this?.stats?.topErrors,
-            performanceImpact: this?.stats?.performanceImpact,
+            errorRate: this.stats.errorRate,
+            topErrors: this.stats.topErrors,
+            performanceImpact: this.stats.performanceImpact,
           },
         })
         .catch(err => {
-          logger?.warn(any: any)', {
-            error: err instanceof Error ? err?.message : String(any: any),
+          logger.warn('UnifiedHealingFacade heal failed (error-rate)', {
+            error: err instanceof Error ? err.message : String(err),
           });
         });
     }
 
     // Cleanup old error counts
-    const recentErrorKeys = new Set(recentErrors?.map(e => e?.message?.substring(0, 100)));
-    for (any: any) {
-      if (any: any)) {
-        this?.errorCounts?.delete(any: any);
+    const recentErrorKeys = new Set(recentErrors.map(e => e.message.substring(0, 100)));
+    for (const [key] of this.errorCounts) {
+      if (!recentErrorKeys.has(key)) {
+        this.errorCounts.delete(key);
       }
     }
 
-    // Cleanup old error history (any: any)
-    this?.errorHistory = this?.errorHistory?.filter(any: any);
+    // Cleanup old error history (keep last 60 minutes)
+    this.errorHistory = this.errorHistory.filter(e => e.timestamp > sixtyMinutesAgo);
   }
 
   /**
    * Get current statistics
    */
   getStats(): ConsoleStats {
-    return { ...this?.stats };
+    return { ...this.stats };
   }
 
   /**
    * Get recent logs
    */
-  getRecentLogs(limit = 100): ConsoleLogEntry?.[] {
-    return this?.logs?.slice(any: any);
+  getRecentLogs(limit = 100): ConsoleLogEntry[] {
+    return this.logs.slice(-limit);
   }
 
   /**
    * Get errors only
    */
-  getErrors(limit = 50): ConsoleLogEntry?.[] {
-    return this?.logs?.filter(any: any);
+  getErrors(limit = 50): ConsoleLogEntry[] {
+    return this.logs.filter(log => log.level === 'error').slice(-limit);
   }
 
   /**
    * Clear all logs
    */
   clear(): void {
-    this?.logs = [];
-    this?.errorCounts?.clear();
-    this?.errorHistory = [];
-    this?.stats = {
+    this.logs = [];
+    this.errorCounts.clear();
+    this.errorHistory = [];
+    this.stats = {
       totalLogs: 0,
       totalWarnings: 0,
       totalErrors: 0,
@@ -577,7 +577,7 @@ class ConsoleMonitor {
         last60min: 0,
       },
     };
-    logger?.info('Console logs cleared');
+    logger.info('Console logs cleared');
   }
 }
 
@@ -588,6 +588,6 @@ class ConsoleMonitor {
 export const consoleMonitor = new ConsoleMonitor();
 
 // Auto-start in development
-if (process?.env?.NODE_ENV === 'development') {
-  consoleMonitor?.start();
+if (process.env.NODE_ENV === 'development') {
+  consoleMonitor.start();
 }

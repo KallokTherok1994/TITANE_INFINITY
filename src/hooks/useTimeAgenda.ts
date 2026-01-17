@@ -32,7 +32,7 @@ import { logger } from '@/utils/logger';
 export interface UseTimeAgendaReturn {
   // État
   timeState: TimeState | null;
-  events: AgendaEvent?.[];
+  events: AgendaEvent[];
   energyState: EnergyState | null;
   agendaMeta: AgendaMeta;
 
@@ -43,16 +43,16 @@ export interface UseTimeAgendaReturn {
   // Navigation
   currentDate: Date;
   currentView: AgendaView;
-  setCurrentDate: (any: any) => void;
-  setCurrentView: (any: any) => void;
+  setCurrentDate: (date: Date) => void;
+  setCurrentView: (view: AgendaView) => void;
   goToToday: () => void;
   goToPrevious: () => void;
   goToNext: () => void;
 
   // Événements filtrés selon la vue
-  viewEvents: AgendaEvent?.[];
-  dayGrid: { hour: number; events: AgendaEvent?.[] }[];
-  weekGrid: { date: Date; events: AgendaEvent?.[] }[];
+  viewEvents: AgendaEvent[];
+  dayGrid: { hour: number; events: AgendaEvent[] }[];
+  weekGrid: { date: Date; events: AgendaEvent[] }[];
 
   // Actions CRUD
   createEvent: (
@@ -62,7 +62,7 @@ export interface UseTimeAgendaReturn {
     category?: EventCategory
   ) => Promise<AgendaEvent>;
   updateEvent: (id: string, updates: Partial<AgendaEvent>) => Promise<AgendaEvent | null>;
-  deleteEvent: (any: any) => Promise<boolean>;
+  deleteEvent: (id: string) => Promise<boolean>;
   moveEvent: (
     id: string,
     newStart: string,
@@ -70,14 +70,14 @@ export interface UseTimeAgendaReturn {
   ) => Promise<AgendaEvent | null>;
 
   // Actions rapides
-  createQuickEvent: (any: any) => Promise<AgendaEvent>;
+  createQuickEvent: (title: string, startOffset?: number) => Promise<AgendaEvent>;
 
   // Configuration
   toggleEnergyOverlay: () => void;
   toggleFocusBlocks: () => void;
 
   // Chat Scheduler
-  processAIResponse: (any: any) => Promise<CommandExecutionResult?.[]>;
+  processAIResponse: (response: string) => Promise<CommandExecutionResult[]>;
 
   // Statistiques
   stats: {
@@ -97,14 +97,14 @@ export interface UseTimeAgendaReturn {
 // HOOK IMPLEMENTATION
 // ═══════════════════════════════════════════════════════════════════
 
-export function useTimeAgenda(any: any): UseTimeAgendaReturn {
+export function useTimeAgenda(autoInit: boolean = true): UseTimeAgendaReturn {
   // États
-  const [timeState, setTimeState] = useState<TimeState | null>(any: any);
-  const [events, setEvents] = useState<AgendaEvent?.[]>([]);
-  const [energyState, setEnergyState] = useState<EnergyState | null>(any: any);
-  const [agendaMeta, setAgendaMeta] = useState<AgendaMeta>(agendaEngine?.getMeta());
-  const [loading, setLoading] = useState(any: any);
-  const [initialized, setInitialized] = useState(any: any);
+  const [timeState, setTimeState] = useState<TimeState | null>(null);
+  const [events, setEvents] = useState<AgendaEvent[]>([]);
+  const [energyState, setEnergyState] = useState<EnergyState | null>(null);
+  const [agendaMeta, setAgendaMeta] = useState<AgendaMeta>(agendaEngine.getMeta());
+  const [loading, setLoading] = useState(true);
+  const [initialized, setInitialized] = useState(false);
 
   // Navigation
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -115,23 +115,23 @@ export function useTimeAgenda(any: any): UseTimeAgendaReturn {
   // ═══════════════════════════════════════════════════════════════
 
   useEffect(() => {
-    if (any: any) return;
+    if (!autoInit) return;
 
     const agendaStorage: AgendaStorageCallbacks = {
-      loadEvents: () => agendaService?.loadAllEvents(),
-      saveEvents: events => agendaService?.saveAllEvents(any: any),
-      exportCalendar: () => agendaService?.exportCalendar(),
+      loadEvents: () => agendaService.loadAllEvents(),
+      saveEvents: events => agendaService.saveAllEvents(events),
+      exportCalendar: () => agendaService.exportCalendar(),
     };
 
     const init = async () => {
       try {
-        setLoading(any: any);
-        await initTimeAgendaSystem(any: any);
-        setInitialized(any: any);
-      } catch (any: any) {
-        logger?.error(any: any);
+        setLoading(true);
+        await initTimeAgendaSystem(agendaStorage);
+        setInitialized(true);
+      } catch (error) {
+        logger.error('Erreur init:', error);
       } finally {
-        setLoading(any: any);
+        setLoading(false);
       }
     };
 
@@ -147,20 +147,20 @@ export function useTimeAgenda(any: any): UseTimeAgendaReturn {
   // ═══════════════════════════════════════════════════════════════
 
   useEffect(() => {
-    if (any: any) return;
+    if (!initialized) return;
 
     // Subscribe to TimeEngine
-    const unsubTime = timeEngine?.subscribe(any: any);
+    const unsubTime = timeEngine.subscribe(setTimeState);
 
     // Subscribe to AgendaEngine
-    const unsubAgenda = agendaEngine?.subscribe(newEvents => {
+    const unsubAgenda = agendaEngine.subscribe(newEvents => {
       // Annoter avec les priorités
-      const annotatedEvents = priorityEngine?.annotateEventsWithPriority(any: any);
-      setEvents(any: any);
+      const annotatedEvents = priorityEngine.annotateEventsWithPriority(newEvents);
+      setEvents(annotatedEvents);
     });
 
     // Subscribe to EnergyEngine
-    const unsubEnergy = energyEngine?.subscribe(any: any);
+    const unsubEnergy = energyEngine.subscribe(setEnergyState);
 
     return () => {
       unsubTime();
@@ -178,35 +178,35 @@ export function useTimeAgenda(any: any): UseTimeAgendaReturn {
   }, []);
 
   const goToPrevious = useCallback(() => {
-    const newDate = new Date(any: any);
-    switch (any: any) {
+    const newDate = new Date(currentDate);
+    switch (currentView) {
       case 'day':
-        newDate?.setDate(newDate?.getDate() - 1);
+        newDate.setDate(newDate.getDate() - 1);
         break;
       case 'week':
-        newDate?.setDate(newDate?.getDate() - 7);
+        newDate.setDate(newDate.getDate() - 7);
         break;
       case 'month':
-        newDate?.setMonth(newDate?.getMonth() - 1);
+        newDate.setMonth(newDate.getMonth() - 1);
         break;
     }
-    setCurrentDate(any: any);
+    setCurrentDate(newDate);
   }, [currentDate, currentView]);
 
   const goToNext = useCallback(() => {
-    const newDate = new Date(any: any);
-    switch (any: any) {
+    const newDate = new Date(currentDate);
+    switch (currentView) {
       case 'day':
-        newDate?.setDate(newDate?.getDate() + 1);
+        newDate.setDate(newDate.getDate() + 1);
         break;
       case 'week':
-        newDate?.setDate(newDate?.getDate() + 7);
+        newDate.setDate(newDate.getDate() + 7);
         break;
       case 'month':
-        newDate?.setMonth(newDate?.getMonth() + 1);
+        newDate.setMonth(newDate.getMonth() + 1);
         break;
     }
-    setCurrentDate(any: any);
+    setCurrentDate(newDate);
   }, [currentDate, currentView]);
 
   // ═══════════════════════════════════════════════════════════════
@@ -214,13 +214,13 @@ export function useTimeAgenda(any: any): UseTimeAgendaReturn {
   // ═══════════════════════════════════════════════════════════════
 
   const viewEvents = useMemo(() => {
-    switch (any: any) {
+    switch (currentView) {
       case 'day':
-        return agendaEngine?.getEventsForDay(any: any);
+        return agendaEngine.getEventsForDay(currentDate);
       case 'week':
-        return agendaEngine?.getEventsForWeek(any: any);
+        return agendaEngine.getEventsForWeek(currentDate);
       case 'month':
-        return agendaEngine?.getEventsForMonth(any: any);
+        return agendaEngine.getEventsForMonth(currentDate);
       default:
         return events;
     }
@@ -228,11 +228,11 @@ export function useTimeAgenda(any: any): UseTimeAgendaReturn {
   }, [currentView, currentDate]);
 
   const dayGrid = useMemo(() => {
-    return agendaEngine?.buildDayGrid(any: any);
+    return agendaEngine.buildDayGrid(currentDate);
   }, [currentDate]);
 
   const weekGrid = useMemo(() => {
-    return agendaEngine?.buildWeekGrid(any: any);
+    return agendaEngine.buildWeekGrid(currentDate);
   }, [currentDate]);
 
   // ═══════════════════════════════════════════════════════════════
@@ -246,20 +246,20 @@ export function useTimeAgenda(any: any): UseTimeAgendaReturn {
       durationMinutes: number = 60,
       category: EventCategory = 'work'
     ): Promise<AgendaEvent> => {
-      return agendaEngine?.createQuickEvent(any: any);
+      return agendaEngine.createQuickEvent(title, start, durationMinutes, category);
     },
     []
   );
 
   const updateEvent = useCallback(
     async (id: string, updates: Partial<AgendaEvent>): Promise<AgendaEvent | null> => {
-      return agendaEngine?.updateEvent(any: any);
+      return agendaEngine.updateEvent(id, updates);
     },
     []
   );
 
-  const deleteEvent = useCallback(any: any): Promise<boolean> => {
-    return agendaEngine?.deleteEvent(any: any);
+  const deleteEvent = useCallback(async (id: string): Promise<boolean> => {
+    return agendaEngine.deleteEvent(id);
   }, []);
 
   const moveEvent = useCallback(
@@ -268,15 +268,15 @@ export function useTimeAgenda(any: any): UseTimeAgendaReturn {
       newStart: string,
       newEnd?: string
     ): Promise<AgendaEvent | null> => {
-      return agendaEngine?.moveEvent(any: any);
+      return agendaEngine.moveEvent(id, newStart, newEnd);
     },
     []
   );
 
   const createQuickEvent = useCallback(
     async (title: string, startOffset: number = 0): Promise<AgendaEvent> => {
-      const start = new Date(Date?.now() + startOffset * 60 * 1000);
-      return agendaEngine?.createQuickEvent(title, start?.toISOString(), 60, 'work');
+      const start = new Date(Date.now() + startOffset * 60 * 1000);
+      return agendaEngine.createQuickEvent(title, start.toISOString(), 60, 'work');
     },
     []
   );
@@ -286,13 +286,13 @@ export function useTimeAgenda(any: any): UseTimeAgendaReturn {
   // ═══════════════════════════════════════════════════════════════
 
   const toggleEnergyOverlay = useCallback(() => {
-    agendaEngine?.toggleEnergyOverlay();
-    setAgendaMeta(agendaEngine?.getMeta());
+    agendaEngine.toggleEnergyOverlay();
+    setAgendaMeta(agendaEngine.getMeta());
   }, []);
 
   const toggleFocusBlocks = useCallback(() => {
-    agendaEngine?.toggleFocusBlocks();
-    setAgendaMeta(agendaEngine?.getMeta());
+    agendaEngine.toggleFocusBlocks();
+    setAgendaMeta(agendaEngine.getMeta());
   }, []);
 
   // ═══════════════════════════════════════════════════════════════
@@ -300,8 +300,8 @@ export function useTimeAgenda(any: any): UseTimeAgendaReturn {
   // ═══════════════════════════════════════════════════════════════
 
   const processAIResponse = useCallback(
-    async (any: any): Promise<CommandExecutionResult?.[]> => {
-      return chatScheduler?.processAIResponse(any: any);
+    async (response: string): Promise<CommandExecutionResult[]> => {
+      return chatScheduler.processAIResponse(response);
     },
     []
   );
@@ -311,11 +311,11 @@ export function useTimeAgenda(any: any): UseTimeAgendaReturn {
   // ═══════════════════════════════════════════════════════════════
 
   const stats = useMemo(() => {
-    const agendaStats = agendaEngine?.getStats();
+    const agendaStats = agendaEngine.getStats();
     return {
-      totalEvents: agendaStats?.totalEvents,
-      eventsToday: agendaStats?.eventsToday,
-      eventsThisWeek: agendaStats?.eventsThisWeek,
+      totalEvents: agendaStats.totalEvents,
+      eventsToday: agendaStats.eventsToday,
+      eventsThisWeek: agendaStats.eventsThisWeek,
       currentEnergy: energyState?.currentEnergyLevel ?? 0.7,
       currentSegment: timeState?.currentSegment?.label ?? 'Inconnu',
       isWorkHours: timeState?.isWorkHours ?? false,
@@ -327,9 +327,9 @@ export function useTimeAgenda(any: any): UseTimeAgendaReturn {
   // ═══════════════════════════════════════════════════════════════
 
   const refresh = useCallback(async () => {
-    await agendaEngine?.loadEvents();
-    timeEngine?.updateCurrentDateTime();
-    energyEngine?.updateCurrentEnergyLevel();
+    await agendaEngine.loadEvents();
+    timeEngine.updateCurrentDateTime();
+    energyEngine.updateCurrentEnergyLevel();
   }, []);
 
   // ═══════════════════════════════════════════════════════════════

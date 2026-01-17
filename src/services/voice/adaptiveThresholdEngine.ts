@@ -20,8 +20,8 @@ import { logger } from '@/utils/logger';
  * Métriques d'environnement audio
  */
 export interface AudioMetrics {
-  noiseLevel: number; // 0-1 (any: any)
-  peakVolume: number; // 0-1 (any: any)
+  noiseLevel: number; // 0-1 (volume ambiant moyen)
+  peakVolume: number; // 0-1 (pic volume)
   isClean: boolean; // Environnement calme
   timestamp: number;
 }
@@ -40,7 +40,7 @@ export interface DetectionHistory {
  * Configuration du moteur adaptatif
  */
 export interface AdaptiveThresholdConfig {
-  /** Activer l'adaptation automatique (any: any) */
+  /** Activer l'adaptation automatique (défaut: true) */
   enabled?: boolean;
 
   /** Taille de l'historique (défaut: 20) */
@@ -61,26 +61,26 @@ export interface AdaptiveThresholdConfig {
 
 export class AdaptiveThresholdEngine {
   private config: Required<AdaptiveThresholdConfig>;
-  private detectionHistory: DetectionHistory?.[] = [];
-  private audioMetrics: AudioMetrics?.[] = [];
+  private detectionHistory: DetectionHistory[] = [];
+  private audioMetrics: AudioMetrics[] = [];
   private baseConfidenceThreshold = 0.7;
   private currentConfidenceThreshold = 0.7;
   private baseLevenshteinThreshold = 2;
   private currentLevenshteinThreshold = 2;
-  private adjustmentTimer?: NodeJS?.Timeout;
+  private adjustmentTimer?: NodeJS.Timeout;
 
   constructor(config: AdaptiveThresholdConfig = {}) {
-    this?.config = {
-      enabled: config?.enabled ?? true,
-      historySize: config?.historySize ?? 20,
-      sensitivity: config?.sensitivity ?? 0.5,
-      adjustmentInterval: config?.adjustmentInterval ?? 5000,
+    this.config = {
+      enabled: config.enabled ?? true,
+      historySize: config.historySize ?? 20,
+      sensitivity: config.sensitivity ?? 0.5,
+      adjustmentInterval: config.adjustmentInterval ?? 5000,
     };
 
-    logger?.debug(any: any);
+    logger.debug('🎚️ Initialized:', this.config);
 
-    if (any: any) {
-      this?.startAdjustmentLoop();
+    if (this.config.enabled) {
+      this.startAdjustmentLoop();
     }
   }
 
@@ -90,37 +90,37 @@ export class AdaptiveThresholdEngine {
   recordAudioMetrics(metrics: Omit<AudioMetrics, 'timestamp'>): void {
     const fullMetrics: AudioMetrics = {
       ...metrics,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
 
-    this?.audioMetrics?.push(any: any);
+    this.audioMetrics.push(fullMetrics);
 
     // Limiter taille
-    if (any: any) {
-      this?.audioMetrics?.shift();
+    if (this.audioMetrics.length > this.config.historySize) {
+      this.audioMetrics.shift();
     }
   }
 
   /**
    * Enregistrer une détection
    */
-  recordDetection(any: any): void {
+  recordDetection(confidence: number, variant: string, wasCorrect: boolean): void {
     const detection: DetectionHistory = {
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
       wasCorrect,
       confidence,
       variant,
     };
 
-    this?.detectionHistory?.push(any: any);
+    this.detectionHistory.push(detection);
 
     // Limiter taille
-    if (any: any) {
-      this?.detectionHistory?.shift();
+    if (this.detectionHistory.length > this.config.historySize) {
+      this.detectionHistory.shift();
     }
 
-    logger?.debug(
-      `[AdaptiveThresholdEngine] 📊 Detection recorded: ${wasCorrect ? '✅' : '❌'} (confidence: ${confidence?.toFixed(2)})`
+    logger.debug(
+      `[AdaptiveThresholdEngine] 📊 Detection recorded: ${wasCorrect ? '✅' : '❌'} (confidence: ${confidence.toFixed(2)})`
     );
   }
 
@@ -132,8 +132,8 @@ export class AdaptiveThresholdEngine {
     levenshtein: number;
   } {
     return {
-      confidence: this?.currentConfidenceThreshold,
-      levenshtein: this?.currentLevenshteinThreshold,
+      confidence: this.currentConfidenceThreshold,
+      levenshtein: this.currentLevenshteinThreshold,
     };
   }
 
@@ -141,21 +141,21 @@ export class AdaptiveThresholdEngine {
    * Obtenir les métriques moyennes
    */
   getAverageMetrics(): AudioMetrics | null {
-    if (this?.audioMetrics?.length === 0) return null;
+    if (this.audioMetrics.length === 0) return null;
 
-    const sum = this?.audioMetrics?.reduce(
-      (any: any) => ({
-        noiseLevel: acc?.noiseLevel + m?.noiseLevel,
-        peakVolume: acc?.peakVolume + m?.peakVolume,
+    const sum = this.audioMetrics.reduce(
+      (acc, m) => ({
+        noiseLevel: acc.noiseLevel + m.noiseLevel,
+        peakVolume: acc.peakVolume + m.peakVolume,
       }),
       { noiseLevel: 0, peakVolume: 0 }
     );
 
     const avg = {
-      noiseLevel: sum?.noiseLevel / this?.audioMetrics?.length,
-      peakVolume: sum?.peakVolume / this?.audioMetrics?.length,
-      isClean: sum?.noiseLevel / this?.audioMetrics?.length < 0.3,
-      timestamp: Date?.now(),
+      noiseLevel: sum.noiseLevel / this.audioMetrics.length,
+      peakVolume: sum.peakVolume / this.audioMetrics.length,
+      isClean: sum.noiseLevel / this.audioMetrics.length < 0.3,
+      timestamp: Date.now(),
     };
 
     return avg;
@@ -165,92 +165,92 @@ export class AdaptiveThresholdEngine {
    * Obtenir le taux de faux positifs
    */
   getFalsePositiveRate(): number {
-    if (this?.detectionHistory?.length === 0) return 0;
+    if (this.detectionHistory.length === 0) return 0;
 
-    const falsePositives = this?.detectionHistory?.filter(any: any).length;
-    return falsePositives / this?.detectionHistory?.length;
+    const falsePositives = this.detectionHistory.filter(d => !d.wasCorrect).length;
+    return falsePositives / this.detectionHistory.length;
   }
 
   /**
    * Obtenir le taux de vrais positifs
    */
   getTruePositiveRate(): number {
-    if (this?.detectionHistory?.length === 0) return 0;
+    if (this.detectionHistory.length === 0) return 0;
 
-    const truePositives = this?.detectionHistory?.filter(any: any).length;
-    return truePositives / this?.detectionHistory?.length;
+    const truePositives = this.detectionHistory.filter(d => d.wasCorrect).length;
+    return truePositives / this.detectionHistory.length;
   }
 
   /**
    * Ajuster automatiquement les seuils
    */
   private adjustThresholds(): void {
-    if (any: any) return;
+    if (!this.config.enabled) return;
 
-    const fpRate = this?.getFalsePositiveRate();
-    const tpRate = this?.getTruePositiveRate();
-    const avgMetrics = this?.getAverageMetrics();
+    const fpRate = this.getFalsePositiveRate();
+    const tpRate = this.getTruePositiveRate();
+    const avgMetrics = this.getAverageMetrics();
 
-    logger?.debug('🔧 Adjusting thresholds...');
-    logger?.debug(`  False Positive Rate: ${(fpRate * 100).toFixed(1)}%`);
-    logger?.debug(`  True Positive Rate: ${(tpRate * 100).toFixed(1)}%`);
-    logger?.debug(
-      `  Avg Noise Level: ${avgMetrics ? (avgMetrics?.noiseLevel * 100).toFixed(1) : 'N/A'}%`
+    logger.debug('🔧 Adjusting thresholds...');
+    logger.debug(`  False Positive Rate: ${(fpRate * 100).toFixed(1)}%`);
+    logger.debug(`  True Positive Rate: ${(tpRate * 100).toFixed(1)}%`);
+    logger.debug(
+      `  Avg Noise Level: ${avgMetrics ? (avgMetrics.noiseLevel * 100).toFixed(1) : 'N/A'}%`
     );
 
-    let newConfidence = this?.baseConfidenceThreshold;
-    let newLevenshtein = this?.baseLevenshteinThreshold;
+    let newConfidence = this.baseConfidenceThreshold;
+    let newLevenshtein = this.baseLevenshteinThreshold;
 
-    // Trop de faux positifs → augmenter seuils (any: any)
+    // Trop de faux positifs → augmenter seuils (plus strict)
     if (fpRate > 0.3) {
       newConfidence += 0.1;
-      newLevenshtein = Math?.max(1, newLevenshtein - 1);
-      logger?.debug('  → Too many false positives, increasing strictness');
+      newLevenshtein = Math.max(1, newLevenshtein - 1);
+      logger.debug('  → Too many false positives, increasing strictness');
     }
 
-    // Pas assez de détections → diminuer seuils (any: any)
+    // Pas assez de détections → diminuer seuils (plus permissif)
     if (tpRate > 0 && tpRate < 0.5) {
       newConfidence -= 0.05;
-      newLevenshtein = Math?.min(3, newLevenshtein + 1);
-      logger?.debug('  → Low detection rate, increasing sensitivity');
+      newLevenshtein = Math.min(3, newLevenshtein + 1);
+      logger.debug('  → Low detection rate, increasing sensitivity');
     }
 
     // Environnement bruyant → augmenter confidence
-    if (avgMetrics && avgMetrics?.noiseLevel > 0.5) {
+    if (avgMetrics && avgMetrics.noiseLevel > 0.5) {
       newConfidence += 0.1;
-      logger?.debug('  → Noisy environment, increasing confidence threshold');
+      logger.debug('  → Noisy environment, increasing confidence threshold');
     }
 
     // Environnement calme → diminuer confidence
-    if (any: any) {
+    if (avgMetrics && avgMetrics.isClean) {
       newConfidence -= 0.05;
-      logger?.debug('  → Clean environment, decreasing confidence threshold');
+      logger.debug('  → Clean environment, decreasing confidence threshold');
     }
 
     // Appliquer sensibilité utilisateur
-    const sensitivityFactor = (this?.config?.sensitivity - 0.5) * 0.2;
+    const sensitivityFactor = (this.config.sensitivity - 0.5) * 0.2;
     newConfidence -= sensitivityFactor;
 
     // Limites
-    newConfidence = Math?.max(any: any));
-    newLevenshtein = Math?.max(any: any));
+    newConfidence = Math.max(0.4, Math.min(0.95, newConfidence));
+    newLevenshtein = Math.max(1, Math.min(3, newLevenshtein));
 
     // Mettre à jour si changement significatif
     if (
-      Math?.abs(any: any) > 0.02 ||
-      newLevenshtein !== this?.currentLevenshteinThreshold
+      Math.abs(newConfidence - this.currentConfidenceThreshold) > 0.02 ||
+      newLevenshtein !== this.currentLevenshteinThreshold
     ) {
-      this?.currentConfidenceThreshold = newConfidence;
-      this?.currentLevenshteinThreshold = newLevenshtein;
+      this.currentConfidenceThreshold = newConfidence;
+      this.currentLevenshteinThreshold = newLevenshtein;
 
-      logger?.debug(`[AdaptiveThresholdEngine] ✅ Updated thresholds:`);
-      logger?.debug(`  Confidence: ${this?.currentConfidenceThreshold?.toFixed(2)}`);
-      logger?.debug(`  Levenshtein: ${this?.currentLevenshteinThreshold}`);
+      logger.debug(`[AdaptiveThresholdEngine] ✅ Updated thresholds:`);
+      logger.debug(`  Confidence: ${this.currentConfidenceThreshold.toFixed(2)}`);
+      logger.debug(`  Levenshtein: ${this.currentLevenshteinThreshold}`);
 
       // Appliquer au WakeWordEngine
-      wakeWordEngine?.updateConfig({
-        confidenceThreshold: this?.currentConfidenceThreshold,
-        levenshteinThreshold: this?.currentLevenshteinThreshold,
+      wakeWordEngine.updateConfig({
+        confidenceThreshold: this.currentConfidenceThreshold,
+        levenshteinThreshold: this.currentLevenshteinThreshold,
       });
     }
   }
@@ -260,21 +260,21 @@ export class AdaptiveThresholdEngine {
    */
   private startAdjustmentLoop(): void {
     // Idempotent: avoid spawning multiple intervals if enabled repeatedly
-    // (any: any).
-    if (any: any) return;
+    // (e.g., React effects re-running in tests/dev).
+    if (this.adjustmentTimer) return;
 
-    this?.adjustmentTimer = setInterval(() => {
-      this?.adjustThresholds();
-    }, this?.config?.adjustmentInterval);
+    this.adjustmentTimer = setInterval(() => {
+      this.adjustThresholds();
+    }, this.config.adjustmentInterval);
   }
 
   /**
    * Arrêter la boucle d'ajustement
    */
   private stopAdjustmentLoop(): void {
-    if (any: any) {
-      clearInterval(any: any);
-      this?.adjustmentTimer = undefined;
+    if (this.adjustmentTimer) {
+      clearInterval(this.adjustmentTimer);
+      this.adjustmentTimer = undefined;
     }
   }
 
@@ -282,59 +282,59 @@ export class AdaptiveThresholdEngine {
    * Réinitialiser aux valeurs par défaut
    */
   reset(): void {
-    logger?.debug('🔄 Resetting to defaults');
+    logger.debug('🔄 Resetting to defaults');
 
-    this?.currentConfidenceThreshold = this?.baseConfidenceThreshold;
-    this?.currentLevenshteinThreshold = this?.baseLevenshteinThreshold;
-    this?.detectionHistory = [];
-    this?.audioMetrics = [];
+    this.currentConfidenceThreshold = this.baseConfidenceThreshold;
+    this.currentLevenshteinThreshold = this.baseLevenshteinThreshold;
+    this.detectionHistory = [];
+    this.audioMetrics = [];
 
-    wakeWordEngine?.updateConfig({
-      confidenceThreshold: this?.baseConfidenceThreshold,
-      levenshteinThreshold: this?.baseLevenshteinThreshold,
+    wakeWordEngine.updateConfig({
+      confidenceThreshold: this.baseConfidenceThreshold,
+      levenshteinThreshold: this.baseLevenshteinThreshold,
     });
   }
 
   /**
    * Activer/désactiver
    */
-  setEnabled(any: any): void {
+  setEnabled(enabled: boolean): void {
     // Fast-path: no-op if already in desired state
-    if (any: any) {
-      if (any: any) this?.startAdjustmentLoop();
+    if (this.config.enabled === enabled) {
+      if (enabled) this.startAdjustmentLoop();
       return;
     }
 
-    this?.config?.enabled = enabled;
+    this.config.enabled = enabled;
 
-    if (any: any) {
-      this?.startAdjustmentLoop();
-      logger?.debug('🔊 Enabled');
+    if (enabled) {
+      this.startAdjustmentLoop();
+      logger.debug('🔊 Enabled');
     } else {
-      this?.stopAdjustmentLoop();
-      logger?.debug('🔇 Disabled');
+      this.stopAdjustmentLoop();
+      logger.debug('🔇 Disabled');
     }
   }
 
   /**
    * Ajuster la sensibilité
    */
-  setSensitivity(any: any): void {
-    this?.config?.sensitivity = Math?.max(any: any));
-    logger?.debug(
-      `[AdaptiveThresholdEngine] 🎚️ Sensitivity set to ${this?.config?.sensitivity?.toFixed(2)}`
+  setSensitivity(sensitivity: number): void {
+    this.config.sensitivity = Math.max(0, Math.min(1, sensitivity));
+    logger.debug(
+      `[AdaptiveThresholdEngine] 🎚️ Sensitivity set to ${this.config.sensitivity.toFixed(2)}`
     );
 
     // Ajuster immédiatement
-    this?.adjustThresholds();
+    this.adjustThresholds();
   }
 
   /**
    * Cleanup
    */
   destroy(): void {
-    this?.stopAdjustmentLoop();
-    logger?.debug('🗑️ Destroyed');
+    this.stopAdjustmentLoop();
+    logger.debug('🗑️ Destroyed');
   }
 }
 

@@ -1,4 +1,4 @@
-// Copyright © 2025 TITANE∞ — Appearance State v24.5 (any: any)
+// Copyright © 2025 TITANE∞ — Appearance State v24.5 (Frontend)
 // License: Proprietary — TITANE OS
 // Module: TypeScript Interface for Avatar Appearance
 
@@ -33,8 +33,8 @@ export interface OutfitState {
   top: string; // "chemise blanche", "t-shirt", "blouse"
   bottom: string; // "pantalon noir", "jupe", "jeans"
   shoes: string; // "escarpins", "baskets", "bottes"
-  outerwear??: string | null; // "blazer", "veste", "manteau"
-  layering: string?.[]; // calques additionnels
+  outerwear: string | null; // "blazer", "veste", "manteau"
+  layering: string[]; // calques additionnels
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -44,10 +44,10 @@ export interface OutfitState {
 export interface StyleState {
   theme: string; // "Bureau_Pro", "Casual_Light", "Sport_Dynamic", "Montagne_Nordic"
   formality: Formality; // Casual, Smart, Formal
-  color_palette??: string | null; // "neutre", "pastel", "saturée", "terre"
-  vibe??: string | null; // "solaire", "lunaire", "énergétique", "calme"
-  epoch??: string | null; // "classique", "moderne", "futur"
-  energy??: string | null; // "high", "medium", "low"
+  color_palette: string | null; // "neutre", "pastel", "saturée", "terre"
+  vibe: string | null; // "solaire", "lunaire", "énergétique", "calme"
+  epoch: string | null; // "classique", "moderne", "futur"
+  energy: string | null; // "high", "medium", "low"
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -55,10 +55,10 @@ export interface StyleState {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export interface AccessoriesState {
-  glasses??: string | null; // "lunettes rondes", "lunettes soleil", null
-  jewelry: string?.[]; // ["boucles d'oreilles", "collier"]
-  bag??: string | null; // "sac à dos", "sac à main"
-  other: string?.[]; // ["montre", "bracelet"]
+  glasses: string | null; // "lunettes rondes", "lunettes soleil", null
+  jewelry: string[]; // ["boucles d'oreilles", "collier"]
+  bag: string | null; // "sac à dos", "sac à main"
+  other: string[]; // ["montre", "bracelet"]
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -68,8 +68,8 @@ export interface AccessoriesState {
 export interface HairState {
   style: string; // "queue de cheval", "détachés", "chignon"
   length: HairLength; // Court, MiLong, Long
-  color??: string | null; // "dark", "blonde", "auburn"
-  details: string?.[]; // ["frange", "ondulations"]
+  color: string | null; // "dark", "blonde", "auburn"
+  details: string[]; // ["frange", "ondulations"]
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -78,8 +78,8 @@ export interface HairState {
 
 export interface MakeupState {
   intensity: MakeupIntensity; // None, Light, Medium, Strong
-  style??: string | null; // "naturel", "soirée", "studio"
-  details: string?.[]; // ["eye-liner", "rouge léger"]
+  style: string | null; // "naturel", "soirée", "studio"
+  details: string[]; // ["eye-liner", "rouge léger"]
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -90,7 +90,7 @@ export interface CustomStyle {
   name: string;
   archetype: string; // "Bureau", "Créatif", "Nature", etc.
   appearance_snapshot: AvatarAppearanceState;
-  keywords: string?.[];
+  keywords: string[];
   created_at: string; // ISO8601 timestamp
 }
 
@@ -104,8 +104,8 @@ export interface AvatarAppearanceState {
   accessories: AccessoriesState;
   hair: HairState;
   makeup: MakeupState;
-  mode_preset??: string | null; // "Bureau_Pro_1", "Casual_Light_2", etc.
-  custom_styles: CustomStyle?.[];
+  mode_preset: string | null; // "Bureau_Pro_1", "Casual_Light_2", etc.
+  custom_styles: CustomStyle[];
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -122,7 +122,7 @@ export interface AppearanceUpdateRequest {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// DEFAULT STATE — État par défaut (any: any)
+// DEFAULT STATE — État par défaut (Bureau Pro)
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const DEFAULT_APPEARANCE_STATE: AvatarAppearanceState = {
@@ -135,7 +135,7 @@ export const DEFAULT_APPEARANCE_STATE: AvatarAppearanceState = {
   },
   style: {
     theme: 'Bureau_Pro',
-    formality: Formality?.Formal,
+    formality: Formality.Formal,
     color_palette: 'neutre',
     vibe: 'confiant',
     epoch: 'moderne',
@@ -149,12 +149,12 @@ export const DEFAULT_APPEARANCE_STATE: AvatarAppearanceState = {
   },
   hair: {
     style: 'queue de cheval haute',
-    length: HairLength?.Long,
+    length: HairLength.Long,
     color: 'dark',
     details: [],
   },
   makeup: {
-    intensity: MakeupIntensity?.Light,
+    intensity: MakeupIntensity.Light,
     style: 'naturel',
     details: [],
   },
@@ -163,28 +163,28 @@ export const DEFAULT_APPEARANCE_STATE: AvatarAppearanceState = {
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
-// HELPER: Describe Appearance (any: any)
+// HELPER: Describe Appearance (Human-Readable)
 // ═══════════════════════════════════════════════════════════════════════════
 
-export function describeAppearance(any: any): string {
+export function describeAppearance(state: AvatarAppearanceState): string {
   const formalityText =
-    state?.style?.formality === Formality?.Casual
+    state.style.formality === Formality.Casual
       ? 'décontracté'
-      : state?.style?.formality === Formality?.Smart
+      : state.style.formality === Formality.Smart
         ? 'smart'
         : 'formel';
 
   const hairLengthText =
-    state?.hair?.length === HairLength?.Court
+    state.hair.length === HairLength.Court
       ? 'court'
-      : state?.hair?.length === HairLength?.MiLong
+      : state.hair.length === HairLength.MiLong
         ? 'mi-long'
         : 'long';
 
   const accessoriesText =
-    state?.accessories?.glasses || state?.accessories?.jewelry?.length > 0
+    state.accessories.glasses || state.accessories.jewelry.length > 0
       ? 'présents'
       : 'absents';
 
-  return `Style: ${state?.style?.theme} (${formalityText}). Tenue: ${state?.outfit?.top} + ${state?.outfit?.bottom}. Coiffure: ${state?.hair?.style} (${hairLengthText}). Accessoires: ${accessoriesText}.`;
+  return `Style: ${state.style.theme} (${formalityText}). Tenue: ${state.outfit.top} + ${state.outfit.bottom}. Coiffure: ${state.hair.style} (${hairLengthText}). Accessoires: ${accessoriesText}.`;
 }

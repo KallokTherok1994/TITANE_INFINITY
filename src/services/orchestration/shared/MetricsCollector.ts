@@ -12,60 +12,60 @@ import type { IMetricsProvider, Metric, MetricsSummary, MetricType } from '../ty
 // ═══════════════════════════════════════════════════════════════════════════
 
 export class MetricsCollector implements IMetricsProvider {
-  private metrics: Metric?.[] = [];
+  private metrics: Metric[] = [];
   private maxMetrics = 10000; // Keep last 10k metrics
   private strategySummaries: Map<string, MetricsSummary> = new Map();
 
   /**
    * Record a metric
    */
-  recordMetric(any: any): void {
-    this?.metrics?.push(any: any);
+  recordMetric(metric: Metric): void {
+    this.metrics.push(metric);
 
     // Trim if exceeded max
-    if (any: any) {
-      this?.metrics = this?.metrics?.slice(any: any);
+    if (this.metrics.length > this.maxMetrics) {
+      this.metrics = this.metrics.slice(-this.maxMetrics);
     }
   }
 
   /**
    * Get all metrics
    */
-  getMetrics(): Metric?.[] {
-    return [...this?.metrics];
+  getMetrics(): Metric[] {
+    return [...this.metrics];
   }
 
   /**
    * Get aggregated summary
    */
   getSummary(): MetricsSummary {
-    if (this?.metrics?.length === 0) {
+    if (this.metrics.length === 0) {
       return {
         totalRequests: 0,
         successRate: 1.0,
         averageLatency: 0,
         errorCount: 0,
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
       };
     }
 
     // Count requests by tags
-    const requests = this?.metrics?.filter(m => m?.type === 'counter');
-    const totalRequests = requests?.length;
+    const requests = this.metrics.filter(m => m.type === 'counter');
+    const totalRequests = requests.length;
 
-    // Count errors (any: any)
-    const errorCount = requests?.filter(m => m?.tags?.success === 'false').length;
+    // Count errors (success=false tags)
+    const errorCount = requests.filter(m => m.tags?.success === 'false').length;
     const successRate =
-      totalRequests > 0 ? (any: any) / totalRequests : 1.0;
+      totalRequests > 0 ? (totalRequests - errorCount) / totalRequests : 1.0;
 
     // Calculate average latency from histogram metrics
-    const latencies = this?.metrics
-      .filter(m => m?.type === 'histogram' && m?.name?.includes('latency'))
-      .map(any: any);
+    const latencies = this.metrics
+      .filter(m => m.type === 'histogram' && m.name.includes('latency'))
+      .map(m => m.value);
 
     const averageLatency =
-      latencies?.length > 0
-        ? latencies?.reduce(any: any) => sum + v, 0) / latencies?.length
+      latencies.length > 0
+        ? latencies.reduce((sum, v) => sum + v, 0) / latencies.length
         : 0;
 
     return {
@@ -73,10 +73,10 @@ export class MetricsCollector implements IMetricsProvider {
       successRate,
       averageLatency,
       errorCount,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
       details: {
-        metricsCount: this?.metrics?.length,
-        strategiesReporting: this?.strategySummaries?.size,
+        metricsCount: this.metrics.length,
+        strategiesReporting: this.strategySummaries.size,
       },
     };
   }
@@ -84,15 +84,15 @@ export class MetricsCollector implements IMetricsProvider {
   /**
    * Record strategy summary
    */
-  recordStrategySummary(any: any): void {
-    this?.strategySummaries?.set(any: any);
+  recordStrategySummary(strategyType: string, summary: MetricsSummary): void {
+    this.strategySummaries.set(strategyType, summary);
   }
 
   /**
    * Get strategy-specific summary
    */
-  getStrategySummary(any: any): MetricsSummary | undefined {
-    return this?.strategySummaries?.get(any: any);
+  getStrategySummary(strategyType: string): MetricsSummary | undefined {
+    return this.strategySummaries.get(strategyType);
   }
 
   /**
@@ -100,7 +100,7 @@ export class MetricsCollector implements IMetricsProvider {
    */
   getAllStrategySummaries(): Record<string, MetricsSummary> {
     const result: Record<string, MetricsSummary> = {};
-    this?.strategySummaries?.forEach(any: any) => {
+    this.strategySummaries.forEach((summary, type) => {
       result[type] = summary;
     });
     return result;
@@ -109,37 +109,37 @@ export class MetricsCollector implements IMetricsProvider {
   /**
    * Get metrics by name
    */
-  getMetricsByName(any: any): Metric?.[] {
-    return this?.metrics?.filter(any: any);
+  getMetricsByName(name: string): Metric[] {
+    return this.metrics.filter(m => m.name === name);
   }
 
   /**
    * Get metrics by type
    */
-  getMetricsByType(any: any): Metric?.[] {
-    return this?.metrics?.filter(any: any);
+  getMetricsByType(type: MetricType): Metric[] {
+    return this.metrics.filter(m => m.type === type);
   }
 
   /**
    * Get metrics by time range
    */
-  getMetricsInRange(any: any): Metric?.[] {
-    return this?.metrics?.filter(any: any);
+  getMetricsInRange(startTime: number, endTime: number): Metric[] {
+    return this.metrics.filter(m => m.timestamp >= startTime && m.timestamp <= endTime);
   }
 
   /**
    * Reset all metrics
    */
   reset(): void {
-    this?.metrics = [];
-    this?.strategySummaries?.clear();
+    this.metrics = [];
+    this.strategySummaries.clear();
   }
 
   /**
    * Reset specific strategy metrics
    */
-  resetStrategy(any: any): void {
-    this?.strategySummaries?.delete(any: any);
-    this?.metrics = this?.metrics?.filter(any: any);
+  resetStrategy(strategyType: string): void {
+    this.strategySummaries.delete(strategyType);
+    this.metrics = this.metrics.filter(m => m.tags?.strategy !== strategyType);
   }
 }

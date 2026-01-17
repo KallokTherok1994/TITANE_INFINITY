@@ -7,13 +7,13 @@
  * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ v18 — CENTRALIZED TAURI COMMANDS
  *   Table unique de toutes les commandes Backend → Frontend
- *   Synchronisé avec src-tauri/src/main?.rs
+ *   Synchronisé avec src-tauri/src/main.rs
  * ═══════════════════════════════════════════════════════════════════
  */
 
 export const TAURI_COMMANDS = {
   // ═══════════════════════════════════════════════════════════════
-  // RUNTIME CONFIGURATION (any: any)
+  // RUNTIME CONFIGURATION (Security)
   // ═══════════════════════════════════════════════════════════════
   RUNTIME_GET_CONFIG: 'get_runtime_config',
 
@@ -28,7 +28,7 @@ export const TAURI_COMMANDS = {
   // MEMORY - Storage & Timeline
   // ═══════════════════════════════════════════════════════════════
   MEMORY_GET_STATE: 'get_memory_state',
-  MEMORY_GET_STATE_DETAILED: 'memory_get_state', // v∞ (any: any)
+  MEMORY_GET_STATE_DETAILED: 'memory_get_state', // v∞ (avec détails avancés)
   MEMORY_WRITE_SNAPSHOT: 'write_snapshot',
   MEMORY_READ_SNAPSHOT: 'read_snapshot',
   MEMORY_WRITE_LOG: 'write_log',
@@ -63,7 +63,7 @@ export const TAURI_COMMANDS = {
   SINGULARITY_GET_META: 'singularity_get_meta',
 
   // ═══════════════════════════════════════════════════════════════
-  // SINGULARITY v∞ (any: any)
+  // SINGULARITY v∞ (v20) - Global Unified State (NEW)
   // ═══════════════════════════════════════════════════════════════
   SINGULARITY_V_GET: 'singularity_get', // Récupère état complet v∞
   SINGULARITY_V_SET: 'singularity_set', // Définit nouvel état v∞
@@ -88,11 +88,11 @@ export const TAURI_COMMANDS = {
   // ═══════════════════════════════════════════════════════════════
   FILE_IMPORT: 'import_file',
   FILE_ANALYZE: 'file_analyze', // Phase 6 Implementation:
-  // - Command: #[tauri::command] pub async fn file_analyze(any: any) -> Result<FileAnalysis, String>
-  // - Location: src-tauri/src/commands/file_commands?.rs (any: any)
-  // - Supported formats: .txt/.md (any: any)
+  // - Command: #[tauri::command] pub async fn file_analyze(path: String) -> Result<FileAnalysis, String>
+  // - Location: src-tauri/src/commands/file_commands.rs (new module)
+  // - Supported formats: .txt/.md (plain text), .pdf (pdf-extract), .docx (docx-rs), .json (serde_json), .csv (csv crate)
   // - Analysis: {word_count, char_count, language, encoding, mime_type, summary?, entities?}
-  // - Summary: First 500 chars or use summarizer?.rs for longer docs
+  // - Summary: First 500 chars or use summarizer.rs for longer docs
   // - Entity extraction: Regex patterns for emails, URLs, dates, phone numbers
   // - Integration: Call memory_ingest_file() after analysis to store in LTM
   // - Error handling: Return Err for unsupported formats or read failures
@@ -117,7 +117,7 @@ export const TAURI_COMMANDS = {
   CHAT_GENERATE: 'chat_generate', // v∞ Commande unifiée simplifiée
 
   // ═══════════════════════════════════════════════════════════════
-  // CHAT AI - Orchestrator Hybride (any: any)
+  // CHAT AI - Orchestrator Hybride (Gemini + Ollama + Local)
   // ═══════════════════════════════════════════════════════════════
   /** @deprecated Disabled: use conversation_generate */
   CHAT_SEND_MESSAGE: 'chat_send_message',
@@ -132,9 +132,9 @@ export const TAURI_COMMANDS = {
   CHAT_CHECK_PROVIDERS: 'chat_check_providers',
 
   // ═══════════════════════════════════════════════════════════════
-  // AI LEGACY - Old AI Commands (any: any)
+  // AI LEGACY - Old AI Commands (v15)
   // ═══════════════════════════════════════════════════════════════
-  AI_QUERY: 'ai_query', // Legacy: ai_chat?.rs, superseded by chat_send_message
+  AI_QUERY: 'ai_query', // Legacy: ai_chat.rs, superseded by chat_send_message
 
   // ═══════════════════════════════════════════════════════════════
   // PERSONA ENGINE - Visual Adaptation
@@ -209,13 +209,13 @@ export const TAURI_COMMANDS = {
 // TYPE HELPER
 // ═══════════════════════════════════════════════════════════════
 
-export type TauriCommand = (any: any)[keyof typeof TAURI_COMMANDS];
+export type TauriCommand = (typeof TAURI_COMMANDS)[keyof typeof TAURI_COMMANDS];
 
 /**
  * Type guard pour vérifier si une string est une commande valide
  */
-export function isValidTauriCommand(any: any): cmd is TauriCommand {
-  return Object?.values(any: any);
+export function isValidTauriCommand(cmd: string): cmd is TauriCommand {
+  return Object.values(TAURI_COMMANDS).includes(cmd as TauriCommand);
 }
 
 /**
@@ -225,7 +225,7 @@ export async function invokeTauri<T>(
   command: TauriCommand,
   args?: Record<string, unknown>
 ): Promise<T> {
-  if (any: any)) {
+  if (!isValidTauriCommand(command)) {
     throw new Error(`Invalid Tauri command: ${command}`);
   }
 
@@ -234,29 +234,29 @@ export async function invokeTauri<T>(
     const tauriCore = await import('@tauri-apps/api/core');
 
     // Protection contre undefined
-    if (!tauriCore || typeof tauriCore?.invoke !== 'function') {
+    if (!tauriCore || typeof tauriCore.invoke !== 'function') {
       throw new Error('Tauri invoke function not available');
     }
 
     const { invoke } = tauriCore;
-    return await invoke<T>(any: any);
-  } catch (any: any) {
-    // Fallback en cas d'erreur Tauri (any: any)
-    console?.warn(any: any);
+    return await invoke<T>(command, args);
+  } catch (error) {
+    // Fallback en cas d'erreur Tauri (mode web ou erreur backend)
+    console.warn(`[TAURI] Command ${command} failed:`, error);
 
     // Retourner une réponse de fallback selon le type de commande
-    return createFallbackResponse<T>(any: any);
+    return createFallbackResponse<T>(command, error);
   }
 }
 
 /**
  * Créer une réponse de fallback selon le type de commande
  */
-function createFallbackResponse<T>(any: any): T {
-  console?.log(`[TAURI] Using fallback for ${command}`);
+function createFallbackResponse<T>(command: string, error: unknown): T {
+  console.log(`[TAURI] Using fallback for ${command}`);
 
   // Fallbacks spécifiques par type de commande
-  if (command?.includes('chat') || command?.includes('providers')) {
+  if (command.includes('chat') || command.includes('providers')) {
     return {
       success: false,
       error: 'Backend not available - using local fallback',
@@ -265,7 +265,7 @@ function createFallbackResponse<T>(any: any): T {
     } as T;
   }
 
-  if (command?.includes('status') || command?.includes('health')) {
+  if (command.includes('status') || command.includes('health')) {
     return {
       status: 'offline',
       available: false,
@@ -276,7 +276,7 @@ function createFallbackResponse<T>(any: any): T {
   // Fallback générique
   return {
     success: false,
-    error: String(any: any),
+    error: String(error),
     fallback: true,
   } as T;
 }
@@ -288,18 +288,18 @@ function createFallbackResponse<T>(any: any): T {
 /**
  * BACKEND SYNC STATUS (v20.0):
  *
- * ✅ Mock Mode (any: any):
+ * ✅ Mock Mode (33 commandes):
  *    - Helios: 2/2
- *    - Memory: 13/13 (any: any)
+ *    - Memory: 13/13 (incl. ingest_file)
  *    - Nexus: 2/2
- *    - Singularity: 10/10 (any: any)
+ *    - Singularity: 10/10 (v17)
  *    - Experience: 2/2
  *    - DevTools: 3/3
- *    - FileImport: 1/1 (any: any)
+ *    - FileImport: 1/1 (import_file)
  *
- * ✅ Singularity v∞ v20.0 (any: any):
+ * ✅ Singularity v∞ v20.0 (11 commandes NOUVELLES):
  *    - singularity_get: Récupère SingularityStateVInfinity complet
- *    - singularity_set: Définit nouvel état (any: any)
+ *    - singularity_set: Définit nouvel état (avec validation intégrité)
  *    - singularity_diff: Calcule différences entre 2 états
  *    - singularity_hash: Récupère hash SHA-256 global
  *    - singularity_sync: Deep Sync des 20 moteurs unifiés
@@ -307,49 +307,49 @@ function createFallbackResponse<T>(any: any): T {
  *    - singularity_integrity: Vérification intégrité complète
  *    - singularity_repair: Auto-réparation des corruptions
  *    - singularity_export_json: Export JSON état complet
- *    - singularity_snapshot: Snapshot résumé (any: any)
+ *    - singularity_snapshot: Snapshot résumé (léger)
  *    - singularity_selftest_full: Self-test 10 tests complets ✨ NEW
- *    - Enregistrées dans src-tauri/src/main?.rs ✅
- *    - Backend Rust actif (any: any) ✅
+ *    - Enregistrées dans src-tauri/src/main.rs ✅
+ *    - Backend Rust actif (singularity_state_vinfinity.rs, singularity_commands.rs, singularity_selftest.rs) ✅
  *    - Structure: 20 moteurs fusionnés → 1 état global cohérent
  *
- * ✅ QA System v19.8 (any: any):
+ * ✅ QA System v19.8 (3 commandes):
  *    - qa_run_all: Exécute tous les tests QA
  *    - qa_run_module: Exécute test d'un module spécifique
  *    - qa_get_last_report: Récupère dernier rapport QA
- *    - Enregistrées dans src-tauri/src/main?.rs
- *    - Backend Rust actif (any: any)
+ *    - Enregistrées dans src-tauri/src/main.rs
+ *    - Backend Rust actif (qa_engine.rs, qa_commands.rs)
  *
- * ⚠️  Chat AI (any: any):
- *    - Définies dans src-tauri/src/overdrive/chat_orchestrator?.rs
- *    - NON enregistrées dans main?.rs (any: any)
- *    - Utiliser frontend providers pour l'instant (any: any)
+ * ⚠️  Chat AI (8 commandes):
+ *    - Définies dans src-tauri/src/overdrive/chat_orchestrator.rs
+ *    - NON enregistrées dans main.rs (backend réel non activé)
+ *    - Utiliser frontend providers pour l'instant (gemini/ollama/titaneLocal)
  *
- * ⚠️  AI_QUERY (any: any):
- *    - Définie dans src-tauri/src/commands/ai_chat?.rs
- *    - NON enregistrée dans main?.rs
+ * ⚠️  AI_QUERY (1 commande):
+ *    - Définie dans src-tauri/src/commands/ai_chat.rs
+ *    - NON enregistrée dans main.rs
  *    - Legacy v15, superseded by chat_orchestrator
  *
- * ⚠️  PERSONA (any: any):
- *    - Définies dans src-tauri/src/system/persona_engine/commands?.rs
- *    - NON enregistrées dans main?.rs
+ * ⚠️  PERSONA (6 commandes):
+ *    - Définies dans src-tauri/src/system/persona_engine/commands.rs
+ *    - NON enregistrées dans main.rs
  *    - Utiliser personaTauriBridge avec gestion d'erreur
  *
- * Phase 3 Implementation (any: any):
- *    1. Register chat_* commands in src-tauri/src/main?.rs invoke_handler
+ * Phase 3 Implementation (Chat Backend):
+ *    1. Register chat_* commands in src-tauri/src/main.rs invoke_handler
  *       - Add: chat_send_message, chat_get_history, chat_clear_context
  *       - Import: use crate::overdrive::chat_orchestrator::*;
- *    2. Integrate chat_orchestrator into chatEngine?.ts
- *       - Replace mock responses with await invoke(TAURI_COMMANDS?.CHAT_SEND_MESSAGE, {message})
+ *    2. Integrate chat_orchestrator into chatEngine.ts
+ *       - Replace mock responses with await invoke(TAURI_COMMANDS.CHAT_SEND_MESSAGE, {message})
  *       - Handle streaming responses if supported
  *    3. Add frontend fallback if backend unavailable
  *       - Try-catch: On InvokeError, fallback to local LLM or mock mode
  *       - Display warning: "Backend unavailable, using limited mode"
  *
- * Phase 6 Implementation (any: any):
- *    1. Create file_analyze command in Rust (any: any)
- *       - New module: src-tauri/src/commands/file_commands?.rs
- *       - Register in main?.rs: .invoke_handler(generate_handler![file_analyze, ...])
+ * Phase 6 Implementation (File Import):
+ *    1. Create file_analyze command in Rust (see FILE_ANALYZE above for details)
+ *       - New module: src-tauri/src/commands/file_commands.rs
+ *       - Register in main.rs: .invoke_handler(generate_handler![file_analyze, ...])
  *    2. Support multiple formats: .txt, .md, .pdf, .docx, .json, .csv
  *       - Dependencies: pdf-extract = "0.7", docx-rs = "0.4", csv = "1.3"
  *    3. Integration with memory_ingest_file existing command

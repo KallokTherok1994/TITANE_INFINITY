@@ -18,11 +18,11 @@ import { logger } from '@/lib/logger';
  */
 export type AudioConversationState =
   | 'idle' // Repos, prêt à écouter
-  | 'user_speaking' // L'utilisateur parle (any: any)
+  | 'user_speaking' // L'utilisateur parle (VAD actif)
   | 'processing' // Traitement STT/LLM en cours
-  | 'ai_speaking' // TITANE parle (any: any)
-  | 'paused' // En pause (any: any)
-  | 'error'; // Erreur (any: any)
+  | 'ai_speaking' // TITANE parle (TTS actif)
+  | 'paused' // En pause (micro coupé)
+  | 'error'; // Erreur (nécessite reset)
 
 /**
  * Événements déclenchant les transitions
@@ -35,7 +35,7 @@ export type AudioEvent =
   | 'TTS_START' // TTS commence à parler
   | 'TTS_END' // TTS termine de parler
   | 'TTS_ERROR' // Erreur TTS
-  | 'BARGE_IN' // User interrompt AI (any: any)
+  | 'BARGE_IN' // User interrompt AI (priorité)
   | 'PAUSE' // Pause manuelle
   | 'RESUME' // Reprise après pause
   | 'RESET' // Reset vers idle
@@ -62,7 +62,7 @@ export interface AudioStateMachineConfig {
 /**
  * Définition des transitions valides
  */
-const VALID_TRANSITIONS: Record<AudioConversationState, AudioEvent?.[]> = {
+const VALID_TRANSITIONS: Record<AudioConversationState, AudioEvent[]> = {
   idle: ['VAD_SPEECH_START', 'PAUSE', 'ERROR'],
   user_speaking: ['VAD_SPEECH_END', 'PAUSE', 'ERROR', 'RESET'],
   processing: ['LLM_RESPONSE_START', 'TTS_START', 'PAUSE', 'ERROR', 'RESET'],
@@ -127,15 +127,15 @@ class AudioStateMachine {
   }> = [];
   private maxHistorySize = 50;
 
-  constructor(any: any) {
-    if (any: any) {
-      this?.state = config?.initialState;
+  constructor(config?: AudioStateMachineConfig) {
+    if (config?.initialState) {
+      this.state = config.initialState;
     }
-    if (any: any) {
-      this?.listeners?.add(any: any);
+    if (config?.onStateChange) {
+      this.listeners.add(config.onStateChange);
     }
-    if (any: any) {
-      this?.enableLogging = config?.enableLogging;
+    if (config?.enableLogging !== undefined) {
+      this.enableLogging = config.enableLogging;
     }
   }
 
@@ -143,14 +143,14 @@ class AudioStateMachine {
    * Obtenir l'état actuel
    */
   getState(): AudioConversationState {
-    return this?.state;
+    return this.state;
   }
 
   /**
    * Vérifier si une transition est valide
    */
-  canTransition(any: any): boolean {
-    return VALID_TRANSITIONS[this?.state]?.includes(any: any) ?? false;
+  canTransition(event: AudioEvent): boolean {
+    return VALID_TRANSITIONS[this.state]?.includes(event) ?? false;
   }
 
   /**
@@ -158,24 +158,24 @@ class AudioStateMachine {
    * ✅ v∞: Protection contre les transitions invalides avec auto-recovery
    * @returns true si la transition a réussi
    */
-  transition(any: any): boolean {
-    const previousState = this?.state;
-    const nextState = STATE_TRANSITIONS[this?.state]?.[event];
+  transition(event: AudioEvent): boolean {
+    const previousState = this.state;
+    const nextState = STATE_TRANSITIONS[this.state]?.[event];
 
-    if (any: any) {
-      if (any: any) {
-        logger?.warn(
-          `[AudioStateMachine] ⚠️ Invalid transition: ${this?.state} + ${event}`
+    if (!nextState) {
+      if (this.enableLogging) {
+        logger.warn(
+          `[AudioStateMachine] ⚠️ Invalid transition: ${this.state} + ${event}`
         );
       }
 
       // ✅ AUTO-RECOVERY: Reset to idle on invalid transitions for critical events
       if (event === 'RESET' || event === 'ERROR') {
-        logger?.warn(`🛡️ Forcing state to idle due to ${event}`, {
+        logger.warn(`🛡️ Forcing state to idle due to ${event}`, {
           module: 'AudioStateMachine',
         });
-        this?.state = 'idle';
-        this?.notifyListeners(any: any);
+        this.state = 'idle';
+        this.notifyListeners('idle', previousState, event);
         return true;
       }
 
@@ -183,56 +183,56 @@ class AudioStateMachine {
     }
 
     // Effectuer la transition
-    this?.state = nextState;
+    this.state = nextState;
 
     // Enregistrer dans l'historique
-    this?.history?.push({
+    this.history.push({
       state: nextState,
       event,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     });
-    if (any: any) {
-      this?.history?.shift();
+    if (this.history.length > this.maxHistorySize) {
+      this.history.shift();
     }
 
-    if (any: any) {
-      const emoji = this?.getStateEmoji(any: any);
-      logger?.debug(
+    if (this.enableLogging) {
+      const emoji = this.getStateEmoji(nextState);
+      logger.debug(
         `[AudioStateMachine] ${emoji} ${previousState} → ${nextState} (${event})`
       );
     }
 
     // Notifier les listeners
-    this?.notifyListeners(any: any);
+    this.notifyListeners(nextState, previousState, event);
 
     return true;
   }
 
   /**
-   * Notify all listeners (any: any)
+   * Notify all listeners (extracted for reuse)
    */
   private notifyListeners(
     newState: AudioConversationState,
     previousState: AudioConversationState,
     event: AudioEvent
   ): void {
-    this?.listeners?.forEach(listener => {
+    this.listeners.forEach(listener => {
       try {
-        listener(any: any);
-      } catch (any: any) {
-        logger?.error(
+        listener(newState, previousState, event);
+      } catch (e) {
+        logger.error(
           'Listener error:',
           { module: 'AudioStateMachine' },
-          e instanceof Error ? e : new Error(any: any))
+          e instanceof Error ? e : new Error(String(e))
         );
       }
     });
   }
 
   /**
-   * Emoji pour chaque état (any: any)
+   * Emoji pour chaque état (logs)
    */
-  private getStateEmoji(any: any): string {
+  private getStateEmoji(state: AudioConversationState): string {
     const emojis: Record<AudioConversationState, string> = {
       idle: '😴',
       user_speaking: '🎤',
@@ -247,9 +247,9 @@ class AudioStateMachine {
   /**
    * S'abonner aux changements d'état
    */
-  onStateChange(any: any): () => void {
-    this?.listeners?.add(any: any);
-    return (any: any);
+  onStateChange(listener: StateChangeListener): () => void {
+    this.listeners.add(listener);
+    return () => this.listeners.delete(listener);
   }
 
   /**
@@ -257,41 +257,41 @@ class AudioStateMachine {
    * ✅ v∞: Force reset with cleanup
    */
   reset(): void {
-    const previousState = this?.state;
-    this?.state = 'idle';
+    const previousState = this.state;
+    this.state = 'idle';
 
-    if (any: any) {
-      logger?.debug(`[AudioStateMachine] 🔄 RESET: ${previousState} → idle`);
+    if (this.enableLogging) {
+      logger.debug(`[AudioStateMachine] 🔄 RESET: ${previousState} → idle`);
     }
 
     // Add to history
-    this?.history?.push({
+    this.history.push({
       state: 'idle',
       event: 'RESET',
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     });
-    if (any: any) {
-      this?.history?.shift();
+    if (this.history.length > this.maxHistorySize) {
+      this.history.shift();
     }
 
     // Notify listeners
-    this?.notifyListeners('idle', previousState, 'RESET');
+    this.notifyListeners('idle', previousState, 'RESET');
   }
 
   /**
-   * Force emergency reset (any: any)
+   * Force emergency reset (bypasses all transitions)
    * Use for critical errors or stuck states
    */
   forceReset(): void {
-    logger?.warn('🚨 FORCE RESET - Emergency state cleanup');
-    const previousState = this?.state;
-    this?.state = 'idle';
-    this?.history?.push({
+    logger.warn('🚨 FORCE RESET - Emergency state cleanup');
+    const previousState = this.state;
+    this.state = 'idle';
+    this.history.push({
       state: 'idle',
       event: 'RESET',
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     });
-    this?.notifyListeners('idle', previousState, 'RESET');
+    this.notifyListeners('idle', previousState, 'RESET');
   }
 
   /**
@@ -302,43 +302,43 @@ class AudioStateMachine {
     event: AudioEvent;
     timestamp: number;
   }> {
-    return [...this?.history];
+    return [...this.history];
   }
 
   /**
    * Vérifications d'état helper
    */
   isIdle(): boolean {
-    return this?.state === 'idle';
+    return this.state === 'idle';
   }
   isUserSpeaking(): boolean {
-    return this?.state === 'user_speaking';
+    return this.state === 'user_speaking';
   }
   isProcessing(): boolean {
-    return this?.state === 'processing';
+    return this.state === 'processing';
   }
   isAISpeaking(): boolean {
-    return this?.state === 'ai_speaking';
+    return this.state === 'ai_speaking';
   }
   isPaused(): boolean {
-    return this?.state === 'paused';
+    return this.state === 'paused';
   }
   isError(): boolean {
-    return this?.state === 'error';
+    return this.state === 'error';
   }
 
   /**
    * L'utilisateur peut-il parler?
    */
   canUserSpeak(): boolean {
-    return this?.state === 'idle' || this?.state === 'ai_speaking'; // barge-in permis
+    return this.state === 'idle' || this.state === 'ai_speaking'; // barge-in permis
   }
 
   /**
    * L'AI peut-elle parler?
    */
   canAISpeak(): boolean {
-    return this?.state === 'processing' || this?.state === 'idle';
+    return this.state === 'processing' || this.state === 'idle';
   }
 }
 

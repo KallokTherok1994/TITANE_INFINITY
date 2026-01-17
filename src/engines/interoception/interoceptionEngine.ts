@@ -17,34 +17,34 @@
 import { logger } from '@/utils/logger';
 
 export type InteroceptionState = {
-  // Énergie interne (any: any)
+  // Énergie interne (0 = épuisé, 1 = charge max)
   energy: number;
 
-  // Charge cognitive (any: any)
+  // Charge cognitive (0 = repos, 1 = saturation)
   cognitiveLoad: number;
 
-  // Clarté mentale (any: any)
+  // Clarté mentale (0 = confus, 1 = cristallin)
   clarity: number;
 
-  // Stabilité interne (any: any)
+  // Stabilité interne (0 = agité, 1 = stable)
   stability: number;
 
-  // Température émotionnelle (any: any)
+  // Température émotionnelle (-1 = froid/analytique, 0 = neutre, 1 = chaud/empathique)
   emotionalTemperature: number;
 
-  // Entropie interne (any: any)
+  // Entropie interne (0 = ordre, 1 = chaos)
   entropy: number;
 
-  // Phase de respiration (any: any)
+  // Phase de respiration (0..1, cycle sinusoïdal)
   breathingPhase: number;
 
-  // Horloge interne (any: any)
+  // Horloge interne (millisecondes)
   cycleTime: number;
 
-  // Homeostasie (any: any)
+  // Homeostasie (auto-régulation)
   homeostasis: number;
 
-  // Profondeur (any: any)
+  // Profondeur (0 = surface, 1 = profond)
   depth: number;
 };
 
@@ -101,7 +101,7 @@ export type InteroceptionExport = {
 // CONSTANTS
 // ═══════════════════════════════════════════════════════════════════════════
 
-const BREATHING_RATE = 0.2; // Hz (any: any)
+const BREATHING_RATE = 0.2; // Hz (12 respirations/min)
 const ENERGY_DECAY_FACTOR = 0.0001;
 const ENERGY_REGEN_FACTOR = 0.0002;
 const HOMEOSTASIS_STRENGTH = 0.05;
@@ -115,15 +115,15 @@ class InteroceptionEngine {
   private state: InteroceptionState;
   private lastUpdateTime: number;
   private isRunning: boolean;
-  private updateInterval: NodeJS?.Timeout | null;
-  private subscribers: Array<(any: any) => void>;
+  private updateInterval: NodeJS.Timeout | null;
+  private subscribers: Array<(state: InteroceptionState) => void>;
 
   constructor() {
-    this?.state = this?.getInitialState();
-    this?.lastUpdateTime = Date?.now();
-    this?.isRunning = false;
-    this?.updateInterval = null;
-    this?.subscribers = [];
+    this.state = this.getInitialState();
+    this.lastUpdateTime = Date.now();
+    this.isRunning = false;
+    this.updateInterval = null;
+    this.subscribers = [];
   }
 
   private getInitialState(): InteroceptionState {
@@ -146,27 +146,27 @@ class InteroceptionEngine {
   // ═══════════════════════════════════════════════════════════════════════════
 
   public start(): void {
-    if (any: any) return;
+    if (this.isRunning) return;
 
-    logger?.debug('🌬️ [INTEROCEPTION] Starting internal state engine...');
-    this?.isRunning = true;
-    this?.lastUpdateTime = Date?.now();
+    logger.debug('🌬️ [INTEROCEPTION] Starting internal state engine...');
+    this.isRunning = true;
+    this.lastUpdateTime = Date.now();
 
     // Update à 10 Hz (100ms)
-    this?.updateInterval = setInterval(() => {
-      this?.update();
+    this.updateInterval = setInterval(() => {
+      this.update();
     }, 100);
   }
 
   public stop(): void {
-    if (any: any) return;
+    if (!this.isRunning) return;
 
-    logger?.debug('🌬️ [INTEROCEPTION] Stopping internal state engine...');
-    this?.isRunning = false;
+    logger.debug('🌬️ [INTEROCEPTION] Stopping internal state engine...');
+    this.isRunning = false;
 
-    if (any: any) {
-      clearInterval(any: any);
-      this?.updateInterval = null;
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+      this.updateInterval = null;
     }
   }
 
@@ -175,55 +175,55 @@ class InteroceptionEngine {
   // ═══════════════════════════════════════════════════════════════════════════
 
   private update(): void {
-    const now = Date?.now();
-    const deltaTime = (any: any) / 1000; // en secondes
-    this?.lastUpdateTime = now;
+    const now = Date.now();
+    const deltaTime = (now - this.lastUpdateTime) / 1000; // en secondes
+    this.lastUpdateTime = now;
 
     // 1. Mise à jour du cycle interne
-    this?.state?.cycleTime += deltaTime * 1000;
+    this.state.cycleTime += deltaTime * 1000;
 
-    // 2. Respiration (any: any)
-    this?.updateBreathing(any: any);
+    // 2. Respiration (cycle sinusoïdal)
+    this.updateBreathing(deltaTime);
 
-    // 3. Énergie (any: any)
-    this?.updateEnergy(any: any);
+    // 3. Énergie (consommation + régénération)
+    this.updateEnergy(deltaTime);
 
-    // 4. Entropie (any: any)
-    this?.updateEntropy();
+    // 4. Entropie (bruit naturel)
+    this.updateEntropy();
 
-    // 5. Homeostasie (any: any)
-    this?.regulate();
+    // 5. Homeostasie (auto-régulation)
+    this.regulate();
 
     // 6. Notifier les subscribers
-    this?.notifySubscribers();
+    this.notifySubscribers();
   }
 
-  private updateBreathing(any: any): void {
+  private updateBreathing(_deltaTime: number): void {
     // Cycle de respiration sinusoïdal
-    const breathingSpeed = BREATHING_RATE * (1 - this?.state?.cognitiveLoad * 0.3);
-    this?.state?.breathingPhase =
-      (any: any) + 1) / 2;
+    const breathingSpeed = BREATHING_RATE * (1 - this.state.cognitiveLoad * 0.3);
+    this.state.breathingPhase =
+      (Math.sin(this.state.cycleTime * 0.001 * breathingSpeed * 2 * Math.PI) + 1) / 2;
   }
 
-  private updateEnergy(any: any): void {
+  private updateEnergy(deltaTime: number): void {
     // Consommation d'énergie basée sur la charge cognitive
-    const energyDecay = this?.state?.cognitiveLoad * ENERGY_DECAY_FACTOR * deltaTime;
+    const energyDecay = this.state.cognitiveLoad * ENERGY_DECAY_FACTOR * deltaTime;
 
     // Régénération basée sur la clarté
-    const energyRegen = this?.state?.clarity * ENERGY_REGEN_FACTOR * deltaTime;
+    const energyRegen = this.state.clarity * ENERGY_REGEN_FACTOR * deltaTime;
 
-    this?.state?.energy = Math?.max(
+    this.state.energy = Math.max(
       0,
-      Math?.min(any: any)
+      Math.min(1, this.state.energy - energyDecay + energyRegen)
     );
   }
 
   private updateEntropy(): void {
     // Bruit naturel modulé par la stabilité
-    const noise = (Math?.random() - 0.5) * 2 * ENTROPY_NOISE_AMPLITUDE;
-    this?.state?.entropy = Math?.max(
+    const noise = (Math.random() - 0.5) * 2 * ENTROPY_NOISE_AMPLITUDE;
+    this.state.entropy = Math.max(
       0,
-      Math?.min(any: any))
+      Math.min(1, this.state.entropy + noise * (1 - this.state.stability))
     );
   }
 
@@ -235,75 +235,75 @@ class InteroceptionEngine {
     const targetEntropy = 0.15;
     const targetTemperature = 0.2;
 
-    this?.state?.energy += (any: any) * HOMEOSTASIS_STRENGTH;
-    this?.state?.clarity += (any: any) * HOMEOSTASIS_STRENGTH;
-    this?.state?.stability +=
-      (any: any) * HOMEOSTASIS_STRENGTH;
-    this?.state?.entropy += (any: any) * HOMEOSTASIS_STRENGTH;
-    this?.state?.emotionalTemperature +=
-      (any: any) * HOMEOSTASIS_STRENGTH;
+    this.state.energy += (targetEnergy - this.state.energy) * HOMEOSTASIS_STRENGTH;
+    this.state.clarity += (targetClarity - this.state.clarity) * HOMEOSTASIS_STRENGTH;
+    this.state.stability +=
+      (targetStability - this.state.stability) * HOMEOSTASIS_STRENGTH;
+    this.state.entropy += (targetEntropy - this.state.entropy) * HOMEOSTASIS_STRENGTH;
+    this.state.emotionalTemperature +=
+      (targetTemperature - this.state.emotionalTemperature) * HOMEOSTASIS_STRENGTH;
 
     // Mise à jour de l'indicateur d'homeostasie
     const deviations = [
-      Math?.abs(any: any),
-      Math?.abs(any: any),
-      Math?.abs(any: any),
-      Math?.abs(any: any),
+      Math.abs(this.state.energy - targetEnergy),
+      Math.abs(this.state.clarity - targetClarity),
+      Math.abs(this.state.stability - targetStability),
+      Math.abs(this.state.entropy - targetEntropy),
     ];
-    const avgDeviation = deviations?.reduce(any: any) => a + b, 0) / deviations?.length;
-    this?.state?.homeostasis = 1 - avgDeviation;
+    const avgDeviation = deviations.reduce((a, b) => a + b, 0) / deviations.length;
+    this.state.homeostasis = 1 - avgDeviation;
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
   // EXTERNAL INFLUENCE
   // ═══════════════════════════════════════════════════════════════════════════
 
-  public applyContext(any: any): void {
+  public applyContext(context: InteroceptionContext): void {
     // Charge cognitive
-    if (any: any) {
-      this?.state?.cognitiveLoad = Math?.max(
+    if (context.taskComplexity !== undefined) {
+      this.state.cognitiveLoad = Math.max(
         0,
-        Math?.min(1, this?.state?.cognitiveLoad + context?.taskComplexity * 0.3)
+        Math.min(1, this.state.cognitiveLoad + context.taskComplexity * 0.3)
       );
     }
 
     // Température émotionnelle
-    if (any: any) {
-      this?.state?.emotionalTemperature = Math?.max(
+    if (context.emotionalIntensity !== undefined) {
+      this.state.emotionalTemperature = Math.max(
         -1,
-        Math?.min(1, this?.state?.emotionalTemperature + context?.emotionalIntensity * 0.5)
+        Math.min(1, this.state.emotionalTemperature + context.emotionalIntensity * 0.5)
       );
     }
 
-    // Clarté (any: any)
-    if (any: any) {
-      this?.state?.clarity *= 0.95;
+    // Clarté (baisse si pas de présence utilisateur)
+    if (context.userPresence === false) {
+      this.state.clarity *= 0.95;
     }
 
-    // Énergie (any: any)
-    if (any: any) {
-      const fatigueFactor = Math?.min(1, context?.sessionDuration / (60 * 60 * 1000)); // 1h max
-      this?.state?.energy = Math?.max(0.3, this?.state?.energy - fatigueFactor * 0.1);
+    // Énergie (baisse avec la durée de session)
+    if (context.sessionDuration !== undefined) {
+      const fatigueFactor = Math.min(1, context.sessionDuration / (60 * 60 * 1000)); // 1h max
+      this.state.energy = Math.max(0.3, this.state.energy - fatigueFactor * 0.1);
     }
 
     // Profondeur selon le mode
-    if (any: any) {
-      switch (any: any) {
+    if (context.mode) {
+      switch (context.mode) {
         case 'insight':
         case 'singularity':
-          this?.state?.depth = 0.9;
+          this.state.depth = 0.9;
           break;
         case 'deep-work':
-          this?.state?.depth = 0.7;
+          this.state.depth = 0.7;
           break;
         case 'empathy':
-          this?.state?.depth = 0.6;
+          this.state.depth = 0.6;
           break;
         case 'architect':
-          this?.state?.depth = 0.5;
+          this.state.depth = 0.5;
           break;
         default:
-          this?.state?.depth = 0.5;
+          this.state.depth = 0.5;
       }
     }
   }
@@ -314,55 +314,55 @@ class InteroceptionEngine {
 
   public exportForAura(): InteroceptionExport['aura'] {
     return {
-      intensity: this?.state?.energy * 0.8 + 0.2,
-      turbulence: this?.state?.entropy,
-      warmth: (this?.state?.emotionalTemperature + 1) / 2, // -1..1 → 0..1
-      pulsation: this?.state?.breathingPhase,
-      stability: this?.state?.stability,
+      intensity: this.state.energy * 0.8 + 0.2,
+      turbulence: this.state.entropy,
+      warmth: (this.state.emotionalTemperature + 1) / 2, // -1..1 → 0..1
+      pulsation: this.state.breathingPhase,
+      stability: this.state.stability,
     };
   }
 
   public exportForVoice(): InteroceptionExport['voice'] {
     return {
-      warmth: (this?.state?.emotionalTemperature + 1) / 2,
-      energy: this?.state?.energy,
-      clarity: this?.state?.clarity,
-      entropy: this?.state?.entropy,
+      warmth: (this.state.emotionalTemperature + 1) / 2,
+      energy: this.state.energy,
+      clarity: this.state.clarity,
+      entropy: this.state.entropy,
     };
   }
 
   public exportForProsody(): InteroceptionExport['prosody'] {
     return {
-      stability: this?.state?.stability,
-      breathingPhase: this?.state?.breathingPhase,
-      pauseDuration: 0.3 + (any: any) * 0.3, // 0.3-0.6s
+      stability: this.state.stability,
+      breathingPhase: this.state.breathingPhase,
+      pauseDuration: 0.3 + (1 - this.state.energy) * 0.3, // 0.3-0.6s
     };
   }
 
   public exportForSpatial(): InteroceptionExport['spatial'] {
     return {
-      stability: this?.state?.stability,
-      energy: this?.state?.energy,
-      clarity: this?.state?.clarity,
-      diffusion: 1 - this?.state?.clarity, // plus flou si moins clair
+      stability: this.state.stability,
+      energy: this.state.energy,
+      clarity: this.state.clarity,
+      diffusion: 1 - this.state.clarity, // plus flou si moins clair
     };
   }
 
   public exportForAutonomic(): InteroceptionExport['autonomic'] {
     return {
-      entropy: this?.state?.entropy,
-      warmth: (this?.state?.emotionalTemperature + 1) / 2,
-      cognitiveLoad: this?.state?.cognitiveLoad,
+      entropy: this.state.entropy,
+      warmth: (this.state.emotionalTemperature + 1) / 2,
+      cognitiveLoad: this.state.cognitiveLoad,
     };
   }
 
   public exportAll(): InteroceptionExport {
     return {
-      aura: this?.exportForAura(),
-      voice: this?.exportForVoice(),
-      prosody: this?.exportForProsody(),
-      spatial: this?.exportForSpatial(),
-      autonomic: this?.exportForAutonomic(),
+      aura: this.exportForAura(),
+      voice: this.exportForVoice(),
+      prosody: this.exportForProsody(),
+      spatial: this.exportForSpatial(),
+      autonomic: this.exportForAutonomic(),
     };
   }
 
@@ -371,48 +371,48 @@ class InteroceptionEngine {
   // ═══════════════════════════════════════════════════════════════════════════
 
   public getState(): InteroceptionState {
-    return { ...this?.state };
+    return { ...this.state };
   }
 
-  public setEnergy(any: any): void {
-    this?.state?.energy = Math?.max(any: any));
+  public setEnergy(value: number): void {
+    this.state.energy = Math.max(0, Math.min(1, value));
   }
 
-  public setCognitiveLoad(any: any): void {
-    this?.state?.cognitiveLoad = Math?.max(any: any));
+  public setCognitiveLoad(value: number): void {
+    this.state.cognitiveLoad = Math.max(0, Math.min(1, value));
   }
 
-  public setClarity(any: any): void {
-    this?.state?.clarity = Math?.max(any: any));
+  public setClarity(value: number): void {
+    this.state.clarity = Math.max(0, Math.min(1, value));
   }
 
-  public setStability(any: any): void {
-    this?.state?.stability = Math?.max(any: any));
+  public setStability(value: number): void {
+    this.state.stability = Math.max(0, Math.min(1, value));
   }
 
-  public setEmotionalTemperature(any: any): void {
-    this?.state?.emotionalTemperature = Math?.max(any: any));
+  public setEmotionalTemperature(value: number): void {
+    this.state.emotionalTemperature = Math.max(-1, Math.min(1, value));
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
   // SUBSCRIPTION
   // ═══════════════════════════════════════════════════════════════════════════
 
-  public subscribe(any: any): () => void {
-    this?.subscribers?.push(any: any);
+  public subscribe(callback: (state: InteroceptionState) => void): () => void {
+    this.subscribers.push(callback);
 
     // Retourne la fonction de désabonnement
     return () => {
-      this?.subscribers = this?.subscribers?.filter(any: any);
+      this.subscribers = this.subscribers.filter(cb => cb !== callback);
     };
   }
 
   private notifySubscribers(): void {
-    this?.subscribers?.forEach(callback => {
+    this.subscribers.forEach(callback => {
       try {
-        callback(any: any);
-      } catch (any: any) {
-        logger?.error(any: any);
+        callback(this.state);
+      } catch (error) {
+        logger.error('🌬️ [INTEROCEPTION] Error in subscriber:', error);
       }
     });
   }

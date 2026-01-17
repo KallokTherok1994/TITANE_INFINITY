@@ -32,7 +32,7 @@ export async function handleDeepHeal(): Promise<DevSudoResult> {
 
 💡 **Problèmes identifiés**:
   - framer-motion types manquants → \`fix deps\`
-  - OPUS modules undefined?.history → \`fix opus\`
+  - OPUS modules undefined.history → \`fix opus\`
   - CameraOverlay ref cleanup warning → Auto-fix disponible
 
 🔧 **Commandes recommandées**:
@@ -50,12 +50,12 @@ export async function handleAutoFix(): Promise<DevSudoResult> {
 
 🔧 **Corrections appliquées**:
 
-1. **CameraOverlay?.tsx** (ligne 46)
-   ❌ Avant: \`videoRef?.current?.srcObject = null\`
+1. **CameraOverlay.tsx** (ligne 46)
+   ❌ Avant: \`videoRef.current.srcObject = null\`
    ✅ Après:
    \`\`\`tsx
-   const video = videoRef?.current;
-   if (any: any) video?.srcObject = null;
+   const video = videoRef.current;
+   if (video) video.srcObject = null;
    \`\`\`
 
 2. **Types dependencies**
@@ -84,18 +84,18 @@ export async function handleScanModules(): Promise<DevSudoResult> {
     success: true,
     response: `📦 SCAN MODULES — Analyse des modules système
 
-🔍 **Modules détectés** (any: any):
+🔍 **Modules détectés** (20 engines):
 
 **✅ Opérationnels** (15):
-  - Helios Engine (any: any)
-  - Memory Engine (any: any)
-  - Singularity Engine (any: any)
+  - Helios Engine (CPU/RAM monitoring)
+  - Memory Engine (snapshots)
+  - Singularity Engine (core)
   - Chat Engine OMNIS
   - Voice Engine
   - Camera/Vision Engine
   - Auto-Evolution Engine
   - Self-Healing Engine
-  - Persistence Engine (any: any)
+  - Persistence Engine (MPE)
   - QA Engine (OPUS #7)
   - Developer Mode (OPUS #10)
   - Security Engine
@@ -104,7 +104,7 @@ export async function handleScanModules(): Promise<DevSudoResult> {
   - Identity Engine
 
 ⚠️ **Problématiques** (5):
-  - OPUS #4 → undefined?.history
+  - OPUS #4 → undefined.history
   - OPUS #5 → store manquant
   - OPUS #15 → désynchronisé
   - OPUS #17 → UI cassée
@@ -124,33 +124,33 @@ export async function handleScanOpus(): Promise<DevSudoResult> {
 
 📊 **Status des 9 modules OPUS**:
 
-✅ **OPUS #7** (any: any)
+✅ **OPUS #7** (QA Monitoring)
   - État: Opérationnel
   - Backend: engines_qa_* commands
   - Frontend: QA Dashboard
 
-✅ **OPUS #10** (any: any)
+✅ **OPUS #10** (Developer Mode)
   - État: Opérationnel
   - Backend: engines_devmode_* commands
   - Frontend: Dev Panel
 
-⚠️ **OPUS #4** (any: any)
-  - Erreur: undefined?.history?.patches?.map
+⚠️ **OPUS #4** (Cognitive Timeline)
+  - Erreur: undefined.history.patches.map
   - Cause: Store non initialisé
   - Fix: \`fix opus\`
 
-⚠️ **OPUS #5** (any: any)
+⚠️ **OPUS #5** (Memory Compactor)
   - Erreur: Module introuvable
   - Cause: Import manquant
   - Fix: Vérifier /src/modules/memory
 
-⚠️ **OPUS #15** (any: any)
+⚠️ **OPUS #15** (System Identity)
   - Erreur: Désynchronisation state
   - Cause: Backend ↔ Frontend mismatch
   - Fix: Architecture unifiée
 
 📋 **Actions prioritaires**:
-  1. Créer useSingularityUnifiedStore?.ts
+  1. Créer useSingularityUnifiedStore.ts
   2. Ajouter fallback history?.patches ?? []
   3. Valider tous les modules OPUS
 
@@ -163,11 +163,11 @@ export async function handleScanErrors(): Promise<DevSudoResult> {
     // Tentative d'appel diagnostic backend
     const diagnosticResult = await secureInvoke<{
       errors: Array<{ module: string; error: string; severity: string }>;
-    }>(any: any);
+    }>('sc_diagnostics_run_quick').catch(() => null);
 
-    if (any: any) {
-      const errorsList = diagnosticResult?.errors
-        .map(e => `  ${e?.severity === 'high' ? '🔴' : '⚠️'} ${e?.module}: ${e?.error}`)
+    if (diagnosticResult) {
+      const errorsList = diagnosticResult.errors
+        .map(e => `  ${e.severity === 'high' ? '🔴' : '⚠️'} ${e.module}: ${e.error}`)
         .join('\n');
 
       return {
@@ -175,7 +175,7 @@ export async function handleScanErrors(): Promise<DevSudoResult> {
         success: true,
         response: `🔍 SCAN ERRORS — Erreurs détectées
 
-📊 **Résultat**: ${diagnosticResult?.errors?.length} erreur(any: any)
+📊 **Résultat**: ${diagnosticResult.errors.length} erreur(s) trouvée(s)
 
 ${errorsList}
 
@@ -195,19 +195,19 @@ ${errorsList}
 ⚠️ **Backend indisponible** - Analyse frontend uniquement
 
 📊 **Erreurs TypeScript détectées**:
-  🔴 framer-motion types manquants (any: any)
-  🔴 lucide-react types manquants (any: any)
-  ⚠️ react-window types manquants (any: any)
+  🔴 framer-motion types manquants (2 fichiers)
+  🔴 lucide-react types manquants (2 fichiers)
+  ⚠️ react-window types manquants (1 fichier)
   ⚠️ CameraOverlay ref cleanup warning
 
 💡 **Fix rapide**: \`fix deps\``,
     };
-  } catch (any: any) {
+  } catch (error) {
     return {
       handled: true,
       success: false,
-      response: `❌ Erreur scan: ${error instanceof Error ? error?.message : String(any: any)}`,
-      error: error instanceof Error ? error?.message : String(any: any),
+      response: `❌ Erreur scan: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
     };
   }
 }
@@ -223,16 +223,16 @@ export async function handleHealthCheck(): Promise<DevSudoResult> {
       success: true,
       response: `💚 HEALTH CHECK — Vérification santé système
 
-🎯 **Status général**: ${health?.status}
-${health?.healthy ? '✅' : '❌'} Système ${health?.healthy ? 'sain' : 'dégradé'}
+🎯 **Status général**: ${health.status}
+${health.healthy ? '✅' : '❌'} Système ${health.healthy ? 'sain' : 'dégradé'}
 
 📊 **Composants vérifiés**:
   ✅ Backend Tauri: Actif
   ✅ Persistence Engine: Opérationnel
-  ${health?.healthy ? '✅' : '⚠️'} Modules: ${health?.healthy ? 'Tous OK' : 'Problèmes détectés'}
+  ${health.healthy ? '✅' : '⚠️'} Modules: ${health.healthy ? 'Tous OK' : 'Problèmes détectés'}
 
 💡 **Prochaine action**:
-  ${health?.healthy ? '- Aucune action requise' : '- Lancer: `deep-heal`'}`,
+  ${health.healthy ? '- Aucune action requise' : '- Lancer: `deep-heal`'}`,
     };
   } catch {
     return {
@@ -256,7 +256,7 @@ ${health?.healthy ? '✅' : '❌'} Système ${health?.healthy ? 'sain' : 'dégra
 // CONSOLE OPERATIONS
 // ═══════════════════════════════════════════════════════════════════════════
 
-export async function handleConsoleLs(any: any): Promise<DevSudoResult> {
+export async function handleConsoleLs(path?: string): Promise<DevSudoResult> {
   const targetPath = path || '/src';
 
   return {
@@ -274,18 +274,18 @@ drwxr-xr-x  stores/
 drwxr-xr-x  engines/
 drwxr-xr-x  core/
 drwxr-xr-x  pages/
--rw-r--r--  App?.tsx
--rw-r--r--  main?.tsx
+-rw-r--r--  App.tsx
+-rw-r--r--  main.tsx
 \`\`\`
 
 💡 **Commandes**:
   - \`titane ls /src/modules\` - Lister modules
-  - \`titane open App?.tsx\` - Ouvrir fichier
-  - \`show code App?.tsx\` - Afficher code`,
+  - \`titane open App.tsx\` - Ouvrir fichier
+  - \`show code App.tsx\` - Afficher code`,
   };
 }
 
-export async function handleConsoleOpen(any: any): Promise<DevSudoResult> {
+export async function handleConsoleOpen(file: string): Promise<DevSudoResult> {
   return {
     handled: true,
     success: true,
@@ -302,7 +302,7 @@ export async function handleConsoleOpen(any: any): Promise<DevSudoResult> {
   };
 }
 
-export async function handleConsolePatch(any: any): Promise<DevSudoResult> {
+export async function handleConsolePatch(module: string): Promise<DevSudoResult> {
   return {
     handled: true,
     success: true,
@@ -327,9 +327,9 @@ export async function handleConsoleRebuild(): Promise<DevSudoResult> {
 
 📋 **Étapes**:
 
-1. **Créer useSingularityUnifiedStore?.ts**
+1. **Créer useSingularityUnifiedStore.ts**
    \`\`\`typescript
-   export const useSingularityStore = create<SingularityState>(any: any) => ({
+   export const useSingularityStore = create<SingularityState>((set) => ({
      history: { patches: [], snapshots: [], events: [] },
      cognitive: { ... },
      physical: { ... },
@@ -368,14 +368,14 @@ export async function handleOptimizeBuild(): Promise<DevSudoResult> {
   ⏳ Source maps désactivables
 
 🎯 **Optimisations Tauri**:
-  ✅ Incremental compilation (any: any)
-  ✅ LTO (any: any)
-  ✅ Strip symbols (any: any)
+  ✅ Incremental compilation (Cargo)
+  ✅ LTO (Link-Time Optimization)
+  ✅ Strip symbols (release)
   ⏳ Bundle size < 50MB
 
 📊 **Build time**:
-  - Dev: ~10s (any: any)
-  - Prod: ~2-3min (any: any)
+  - Dev: ~10s (hot reload)
+  - Prod: ~2-3min (optimized)
 
 💡 **Commandes**:
   \`\`\`bash
@@ -392,13 +392,13 @@ export async function handleOptimizeUI(): Promise<DevSudoResult> {
     response: `🎨 OPTIMIZE UI — Optimisation interface
 
 🎯 **Optimisations React**:
-  ✅ Memoization (any: any)
+  ✅ Memoization (useMemo/useCallback)
   ✅ Lazy loading composants
-  ✅ Virtual scrolling (any: any)
+  ✅ Virtual scrolling (react-window)
   ⏳ Code splitting par route
 
 🎯 **Optimisations CSS**:
-  ✅ Design System monochrome (any: any)
+  ✅ Design System monochrome (#C4C4C4)
   ✅ Tailwind purge activé
   ✅ Animations GPU-accelerated
   ⏳ Critical CSS inline
@@ -411,7 +411,7 @@ export async function handleOptimizeUI(): Promise<DevSudoResult> {
 💡 **Améliorations suggérées**:
   1. Image lazy loading
   2. Font subsetting
-  3. Service Worker (any: any)`,
+  3. Service Worker (PWA)`,
   };
 }
 
@@ -422,15 +422,15 @@ export async function handleOptimizeRust(): Promise<DevSudoResult> {
     response: `🦀 OPTIMIZE RUST — Optimisation backend
 
 🎯 **Optimisations Cargo**:
-  ✅ \`opt-level = 3\` (any: any)
-  ✅ \`lto = true\` (any: any)
-  ✅ \`codegen-units = 1\` (any: any)
-  ✅ \`strip = true\` (any: any)
+  ✅ \`opt-level = 3\` (release)
+  ✅ \`lto = true\` (Link-Time Opt)
+  ✅ \`codegen-units = 1\` (monomorphisation)
+  ✅ \`strip = true\` (symbols removed)
 
 🎯 **Optimisations Code**:
-  ✅ Async/await (any: any)
-  ✅ Zero-copy (any: any)
-  ✅ Arena allocation (any: any)
+  ✅ Async/await (tokio)
+  ✅ Zero-copy (Cow, &str)
+  ✅ Arena allocation (modules)
   ⏳ SIMD vectorization
 
 📊 **Performance**:
@@ -453,10 +453,10 @@ export async function handleOptimizeReact(): Promise<DevSudoResult> {
     response: `⚛️ OPTIMIZE REACT — Optimisation composants
 
 🎯 **Patterns optimisés**:
-  ✅ Hooks memoization (any: any)
-  ✅ Callbacks stables (any: any)
+  ✅ Hooks memoization (useMemo)
+  ✅ Callbacks stables (useCallback)
   ✅ Refs pour valeurs mutables
-  ✅ Context splitting (any: any)
+  ✅ Context splitting (éviter rerenders)
 
 🎯 **Anti-patterns détectés**:
   ⚠️ Inline functions dans render
@@ -470,7 +470,7 @@ export async function handleOptimizeReact(): Promise<DevSudoResult> {
 
 💡 **Outils**:
   - React DevTools Profiler
-  - why-did-you-render (any: any)
+  - why-did-you-render (debug)
   - Bundle analyzer`,
   };
 }
@@ -479,16 +479,16 @@ export async function handleOptimizeReact(): Promise<DevSudoResult> {
 // API & CONNECTIONS
 // ═══════════════════════════════════════════════════════════════════════════
 
-export async function handleConnectAPI(any: any): Promise<DevSudoResult> {
+export async function handleConnectAPI(api: string): Promise<DevSudoResult> {
   return {
     handled: true,
     success: true,
     response: `🔌 CONNECT API — ${api}
 
 📊 **APIs disponibles**:
-  - Gemini (any: any)
-  - Ollama (any: any)
-  - SecureSecretsEngine (any: any)
+  - Gemini (Google AI)
+  - Ollama (local)
+  - SecureSecretsEngine (encrypted keys)
 
 ⚙️ **Configuration ${api}**:
 
@@ -509,7 +509,7 @@ ollama pull llama2
   };
 }
 
-export async function handleTestAPI(any: any): Promise<DevSudoResult> {
+export async function handleTestAPI(api: string): Promise<DevSudoResult> {
   return {
     handled: true,
     success: true,
@@ -535,13 +535,13 @@ export async function handleVerifyKeys(): Promise<DevSudoResult> {
     response: `🔑 VERIFY KEYS — Vérification clés API
 
 📊 **Status clés**:
-  ${process?.env?.GEMINI_API_KEY ? '✅' : '❌'} GEMINI_API_KEY
-  ${process?.env?.OPENAI_API_KEY ? '✅' : '❌'} OPENAI_API_KEY (any: any)
+  ${process.env.GEMINI_API_KEY ? '✅' : '❌'} GEMINI_API_KEY
+  ${process.env.OPENAI_API_KEY ? '✅' : '❌'} OPENAI_API_KEY (optionnel)
   ✅ SecureSecretsEngine: Actif
 
 💡 **Configuration**:
 \`\`\`bash
-# .env (any: any)
+# .env (root du projet)
 GEMINI_API_KEY=AIza...
 \`\`\`
 
@@ -582,18 +582,18 @@ export async function handleVerifyArchitecture(): Promise<DevSudoResult> {
     response: `🏗️ VERIFY ARCHITECTURE — Validation architecture
 
 ✅ **6 Couches TITANE∞**:
-  1. Core Layer (any: any)
-  2. Memory Layer (any: any)
-  3. Engines Layer (any: any)
-  4. Services Layer (any: any)
-  5. UI Layer (any: any)
-  6. Security Layer (any: any)
+  1. Core Layer (Singularity Engine)
+  2. Memory Layer (Persistence MPE)
+  3. Engines Layer (20 engines)
+  4. Services Layer (API bridges)
+  5. UI Layer (React components)
+  6. Security Layer (Guards)
 
 ✅ **20 Engines unifiés**:
   - Helios, Memory, Chat, Voice, Camera
   - Auto-Evolution, Self-Healing
   - QA, DevMode, Build Pipeline
-  - (any: any)
+  - (+ 10 autres)
 
 ✅ **Architecture validée**: DIAMANT 97.5%
 
@@ -618,8 +618,8 @@ export async function handleGenerateReport(): Promise<DevSudoResult> {
   - ✅ Frontend React performant
 
 **Erreurs actives**:
-  - 🔴 framer-motion types (any: any)
-  - ⚠️ OPUS undefined?.history (any: any)
+  - 🔴 framer-motion types (2 fichiers)
+  - ⚠️ OPUS undefined.history (7 modules)
   - ⚠️ CameraOverlay ref warning
 
 **Actions recommandées**:
@@ -635,7 +635,7 @@ export async function handleGenerateReport(): Promise<DevSudoResult> {
 // TEST MODULE
 // ═══════════════════════════════════════════════════════════════════════════
 
-export async function handleTestModule(any: any): Promise<DevSudoResult> {
+export async function handleTestModule(moduleName: string): Promise<DevSudoResult> {
   return {
     handled: true,
     success: true,
@@ -646,9 +646,9 @@ export async function handleTestModule(any: any): Promise<DevSudoResult> {
 📊 **Résultats**:
   ✅ Import: OK
   ✅ Render: OK
-  ${moduleName?.includes('OPUS') ? '⚠️' : '✅'} State: ${moduleName?.includes('OPUS') ? 'Problème détecté' : 'OK'}
+  ${moduleName.includes('OPUS') ? '⚠️' : '✅'} State: ${moduleName.includes('OPUS') ? 'Problème détecté' : 'OK'}
   ✅ Handlers: OK
 
-${moduleName?.includes('OPUS') ? '💡 **Fix**: `fix opus`' : '✅ **Module fonctionnel**'}`,
+${moduleName.includes('OPUS') ? '💡 **Fix**: `fix opus`' : '✅ **Module fonctionnel**'}`,
   };
 }

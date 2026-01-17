@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v∞ — useSingularityState Hook (any: any)
+ * TITANE∞ v∞ — useSingularityState Hook (Safe Wrapper)
  * Super Prompt #4 - Phase 3: Wrapper sécurisé pour zustand store
  *
  * Garantit retours non-null
@@ -18,7 +18,7 @@ import { logger } from '@/utils/logger';
 /**
  * Type-safe selector function
  */
-export type SingularitySelector<T> = (any: any) => T;
+export type SingularitySelector<T> = (state: SingularityFrontendState) => T;
 
 /**
  * Hook useSingularityStateSafe - Wrapper sécurisé pour zustand store
@@ -28,8 +28,8 @@ export type SingularitySelector<T> = (any: any) => T;
  * - Pas de crash si selector retourne undefined
  * - Retry automatique si échec
  *
- * @param selector Fonction selector (any: any)
- * @returns Valeur sélectionnée (any: any)
+ * @param selector Fonction selector (optionnelle, retourne state complet si omis)
+ * @returns Valeur sélectionnée (toujours définie)
  *
  * @example
  * ```tsx
@@ -37,10 +37,10 @@ export type SingularitySelector<T> = (any: any) => T;
  * const state = useSingularityStateSafe();
  *
  * // Sélectionner propriété spécifique
- * const aiStatus = useSingularityStateSafe(any: any);
+ * const aiStatus = useSingularityStateSafe(s => s.ai.status);
  *
  * // Sélectionner fonction
- * const setMode = useSingularityStateSafe(any: any);
+ * const setMode = useSingularityStateSafe(s => s.setMode);
  * ```
  */
 export function useSingularityStateSafe<T = SingularityFrontendState>(
@@ -49,16 +49,16 @@ export function useSingularityStateSafe<T = SingularityFrontendState>(
   // Call hook unconditionally with proper types
   const result = useZustandStore(
     selector
-      ? (any: any) => {
+      ? (((state: SingularityFrontendState) => {
           try {
-            const selected = selector(any: any);
+            const selected = selector(state);
             return selected !== undefined && selected !== null ? selected : state;
-          } catch (any: any) {
-            logger?.error(any: any);
+          } catch (err) {
+            logger.error('Selector error:', err);
             return state;
           }
-        }) as (any: any)
-      : (any: any) => state as unknown as T
+        }) as (state: SingularityFrontendState) => T)
+      : (state: SingularityFrontendState) => state as unknown as T
   );
 
   return result as T extends undefined ? SingularityFrontendState : T;
@@ -77,7 +77,7 @@ export function useSingularityStateSafe<T = SingularityFrontendState>(
  * ```
  */
 export function useEngineState(engineName: keyof SingularityFrontendState['engines']) {
-  return useSingularityStateSafe(state => state?.engines[engineName]);
+  return useSingularityStateSafe(state => state.engines[engineName]);
 }
 
 /**
@@ -89,14 +89,14 @@ export function useEngineState(engineName: keyof SingularityFrontendState['engin
  * @example
  * ```tsx
  * const { data: heliosData, loading } = useEngineData('helios');
- * if (any: any) return <Spinner />;
+ * if (loading) return <Spinner />;
  * return <HeliosMetrics data={heliosData} />;
  * ```
  */
 export function useEngineData<E extends keyof SingularityFrontendState['enginesData']>(
   engineName: E
 ) {
-  return useSingularityStateSafe(state => state?.enginesData[engineName]);
+  return useSingularityStateSafe(state => state.enginesData[engineName]);
 }
 
 /**
@@ -113,8 +113,8 @@ export function useEngineData<E extends keyof SingularityFrontendState['enginesD
  * ```
  */
 export function useUIMode() {
-  const mode = useSingularityStateSafe(any: any);
-  const setMode = useSingularityStateSafe(any: any);
+  const mode = useSingularityStateSafe(state => state.ui.mode);
+  const setMode = useSingularityStateSafe(state => state.setMode);
 
   return [mode, setMode] as const;
 }
@@ -127,15 +127,15 @@ export function useUIMode() {
  * @example
  * ```tsx
  * const [status, error, fallbackActive] = useAIStatus();
- * if (any: any) return <Error>{error}</Error>;
- * if (any: any) return <Warning>Fallback mode</Warning>;
+ * if (error) return <Error>{error}</Error>;
+ * if (fallbackActive) return <Warning>Fallback mode</Warning>;
  * return <div>Status: {status}</div>;
  * ```
  */
 export function useAIStatus() {
-  const status = useSingularityStateSafe(any: any);
-  const error = useSingularityStateSafe(any: any);
-  const fallbackActive = useSingularityStateSafe(any: any);
+  const status = useSingularityStateSafe(state => state.ai.status);
+  const error = useSingularityStateSafe(state => state.ai.error);
+  const fallbackActive = useSingularityStateSafe(state => state.ai.fallbackActive);
 
   return [status, error, fallbackActive] as const;
 }
@@ -148,12 +148,12 @@ export function useAIStatus() {
  * @example
  * ```tsx
  * const metaMode = useMetaMode();
- * if (any: any) return <Transitioning />;
- * return <div>Mode: {metaMode?.currentMode}</div>;
+ * if (metaMode.transitioning) return <Transitioning />;
+ * return <div>Mode: {metaMode.currentMode}</div>;
  * ```
  */
 export function useMetaMode() {
-  return useSingularityStateSafe(any: any);
+  return useSingularityStateSafe(state => state.metaMode);
 }
 
 /**
@@ -164,12 +164,12 @@ export function useMetaMode() {
  * @example
  * ```tsx
  * const avatarDisplay = useAvatarDisplay();
- * if (any: any) return null;
+ * if (!avatarDisplay) return null;
  * return <Avatar state={avatarDisplay} />;
  * ```
  */
 export function useAvatarDisplay() {
-  return useSingularityStateSafe(any: any);
+  return useSingularityStateSafe(state => state.avatarDisplay);
 }
 
 /**
@@ -185,7 +185,7 @@ export function useAvatarDisplay() {
  */
 export function useSingularityHealth(): 'healthy' | 'warning' | 'critical' {
   return useSingularityStateSafe(() => {
-    // Type-safe checks (any: any)
+    // Type-safe checks (context n'a pas errors/warnings/alerts dans type actuel)
     // Retourner healthy par défaut
     return 'healthy';
   });

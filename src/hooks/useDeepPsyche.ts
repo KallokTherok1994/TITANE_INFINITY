@@ -48,32 +48,32 @@ import {
  */
 export function useArchetypeResonance() {
   const [state, setState] = useState<ArchetypeResonance>(
-    archetypeResonanceEngine?.getState()
+    archetypeResonanceEngine.getState()
   );
 
   useEffect(() => {
-    const unsubscribe = archetypeResonanceEngine?.subscribe(any: any);
+    const unsubscribe = archetypeResonanceEngine.subscribe(setState);
     return unsubscribe;
   }, []);
 
-  const activateContext = useCallback(any: any) => {
-    archetypeResonanceEngine?.activateContext(any: any);
+  const activateContext = useCallback((context: UserContext) => {
+    archetypeResonanceEngine.activateContext(context);
   }, []);
 
-  const activateFocusMode = useCallback(any: any) => {
-    archetypeResonanceEngine?.activateFocusMode(any: any);
+  const activateFocusMode = useCallback((type: ArchetypeType, duration?: number) => {
+    archetypeResonanceEngine.activateFocusMode(type, duration);
   }, []);
 
   const activateSafetyGuard = useCallback(() => {
-    archetypeResonanceEngine?.activateSafetyGuard();
+    archetypeResonanceEngine.activateSafetyGuard();
   }, []);
 
   return {
     state,
-    dominant: state?.dominant,
-    scores: state?.scores,
-    intensity: state?.intensity,
-    focusMode: state?.focusMode,
+    dominant: state.dominant,
+    scores: state.scores,
+    intensity: state.intensity,
+    focusMode: state.focusMode,
     activateContext,
     activateFocusMode,
     activateSafetyGuard,
@@ -85,7 +85,7 @@ export function useArchetypeResonance() {
  */
 export function useDominantArchetype(): ArchetypeProfile {
   const { dominant: _dominant } = useArchetypeResonance();
-  return archetypeResonanceEngine?.getDominantProfile();
+  return archetypeResonanceEngine.getDominantProfile();
 }
 
 /**
@@ -95,14 +95,14 @@ export function useArchetypeScores() {
   const { scores } = useArchetypeResonance();
 
   return {
-    sage: scores?.sage,
-    gardien: scores?.gardien,
-    muse: scores?.muse,
-    architecte: scores?.architecte,
-    isSageDominant: scores?.sage > 0.4,
-    isGardienDominant: scores?.gardien > 0.4,
-    isMuseDominant: scores?.muse > 0.4,
-    isArchitecteDominant: scores?.architecte > 0.4,
+    sage: scores.sage,
+    gardien: scores.gardien,
+    muse: scores.muse,
+    architecte: scores.architecte,
+    isSageDominant: scores.sage > 0.4,
+    isGardienDominant: scores.gardien > 0.4,
+    isMuseDominant: scores.muse > 0.4,
+    isArchitecteDominant: scores.architecte > 0.4,
   };
 }
 
@@ -114,15 +114,15 @@ export function useArchetypeScores() {
  * Hook principal — Meta-Continuum Engine
  */
 export function useMetaContinuum() {
-  const [state, setState] = useState<MetaContinuumState>(metaContinuumEngine?.getState());
+  const [state, setState] = useState<MetaContinuumState>(metaContinuumEngine.getState());
 
   useEffect(() => {
-    const unsubscribe = metaContinuumEngine?.subscribe(any: any);
+    const unsubscribe = metaContinuumEngine.subscribe(setState);
     return unsubscribe;
   }, []);
 
   const synchronizeOutput = useCallback(() => {
-    return metaContinuumEngine?.synchronizeOutput();
+    return metaContinuumEngine.synchronizeOutput();
   }, []);
 
   const createAnchor = useCallback(
@@ -131,22 +131,22 @@ export function useMetaContinuum() {
       description: string;
       identityImpact: number;
     }) => {
-      metaContinuumEngine?.createAnchor(any: any);
+      metaContinuumEngine.createAnchor(params);
     },
     []
   );
 
-  const evolve = useCallback((impact: { direction: number?.[]; magnitude: number }) => {
-    metaContinuumEngine?.evolve(any: any);
+  const evolve = useCallback((impact: { direction: number[]; magnitude: number }) => {
+    metaContinuumEngine.evolve(impact);
   }, []);
 
   return {
     state,
-    globalCoherence: state?.globalCoherence,
-    continuumAge: state?.continuumAge,
-    identityVersion: state?.identityVersion,
-    anchors: state?.anchors,
-    futureProjection: state?.futureProjection,
+    globalCoherence: state.globalCoherence,
+    continuumAge: state.continuumAge,
+    identityVersion: state.identityVersion,
+    anchors: state.anchors,
+    futureProjection: state.futureProjection,
     synchronizeOutput,
     createAnchor,
     evolve,
@@ -163,7 +163,7 @@ export function useGlobalCoherence() {
     coherence: globalCoherence,
     isCoherent: globalCoherence > 0.8,
     isUnstable: globalCoherence < 0.5,
-    percentageText: `${Math?.round(globalCoherence * 100)}%`,
+    percentageText: `${Math.round(globalCoherence * 100)}%`,
   };
 }
 
@@ -178,9 +178,9 @@ export function useFutureProjection(): FutureProjection | null {
 /**
  * Hook — Ancrages temporels récents
  */
-export function useTemporalAnchors(limit: number = 10): TemporalAnchor?.[] {
+export function useTemporalAnchors(limit: number = 10): TemporalAnchor[] {
   const { anchors } = useMetaContinuum();
-  return anchors?.slice(any: any);
+  return anchors.slice(0, limit);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -192,40 +192,40 @@ export function useTemporalAnchors(limit: number = 10): TemporalAnchor?.[] {
  */
 export function useEmbodiedPresence() {
   const [state, setState] = useState<EmbodiedPresenceState>(
-    embodiedPresenceEngine?.getState()
+    embodiedPresenceEngine.getState()
   );
 
   useEffect(() => {
-    const unsubscribe = embodiedPresenceEngine?.subscribe(any: any);
+    const unsubscribe = embodiedPresenceEngine.subscribe(setState);
     return unsubscribe;
   }, []);
 
   const applyStrongEmotion = useCallback(
-    (any: any) => {
-      embodiedPresenceEngine?.applyStrongEmotion(any: any);
+    (emotion: string, intensity: number, duration?: number) => {
+      embodiedPresenceEngine.applyStrongEmotion(emotion, intensity, duration);
     },
     []
   );
 
   const activateUserSync = useCallback(
-    (any: any) => {
-      embodiedPresenceEngine?.activateUserSync(any: any);
+    (userBreathingCycle?: number, userEnergy?: number) => {
+      embodiedPresenceEngine.activateUserSync(userBreathingCycle, userEnergy);
     },
     []
   );
 
   const deactivateUserSync = useCallback(() => {
-    embodiedPresenceEngine?.deactivateUserSync();
+    embodiedPresenceEngine.deactivateUserSync();
   }, []);
 
   return {
     state,
-    breath: state?.breath,
-    posture: state?.posture,
-    energyField: state?.energyField,
-    microMotions: state?.microMotions,
-    bodyInertia: state?.bodyInertia,
-    userSync: state?.userSync,
+    breath: state.breath,
+    posture: state.posture,
+    energyField: state.energyField,
+    microMotions: state.microMotions,
+    bodyInertia: state.bodyInertia,
+    userSync: state.userSync,
     applyStrongEmotion,
     activateUserSync,
     deactivateUserSync,
@@ -244,16 +244,16 @@ export function useBreathState(): BreathState & {
 } {
   const { breath } = useEmbodiedPresence();
 
-  const now = Date?.now();
-  const elapsed = now - breath?.phaseStartTime;
-  const cycleProgress = (any: any) / breath?.cycleDuration;
+  const now = Date.now();
+  const elapsed = now - breath.phaseStartTime;
+  const cycleProgress = (elapsed % breath.cycleDuration) / breath.cycleDuration;
 
   return {
     ...breath,
-    isInhaling: breath?.phase === 'inhale',
-    isExhaling: breath?.phase === 'exhale',
-    isHolding: breath?.phase === 'hold',
-    isResting: breath?.phase === 'rest',
+    isInhaling: breath.phase === 'inhale',
+    isExhaling: breath.phase === 'exhale',
+    isHolding: breath.phase === 'hold',
+    isResting: breath.phase === 'rest',
     cycleProgress,
   };
 }
@@ -272,11 +272,11 @@ export function usePostureState(): PostureState & {
 
   return {
     ...posture,
-    isOpen: posture?.type === 'open',
-    isCentered: posture?.type === 'centered',
-    isForward: posture?.type === 'forward',
-    isReceding: posture?.type === 'recede',
-    isExpansive: posture?.type === 'expansive',
+    isOpen: posture.type === 'open',
+    isCentered: posture.type === 'centered',
+    isForward: posture.type === 'forward',
+    isReceding: posture.type === 'recede',
+    isExpansive: posture.type === 'expansive',
   };
 }
 
@@ -292,19 +292,19 @@ export function useEnergyField(): EnergyField & {
   const { energyField } = useEmbodiedPresence();
 
   const tempText =
-    energyField?.temperature < -0.3
+    energyField.temperature < -0.3
       ? 'Froid'
-      : energyField?.temperature < 0.3
+      : energyField.temperature < 0.3
         ? 'Neutre'
-        : energyField?.temperature < 0.7
+        : energyField.temperature < 0.7
           ? 'Chaud'
           : 'Brûlant';
 
   return {
     ...energyField,
-    isCold: energyField?.temperature < -0.3,
-    isWarm: energyField?.temperature >= 0.3 && energyField?.temperature < 0.7,
-    isHot: energyField?.temperature >= 0.7,
+    isCold: energyField.temperature < -0.3,
+    isWarm: energyField.temperature >= 0.3 && energyField.temperature < 0.7,
+    isHot: energyField.temperature >= 0.7,
     temperatureText: tempText,
   };
 }
@@ -318,36 +318,36 @@ export function useEnergyField(): EnergyField & {
  */
 export function useNeuralVoiceBlend() {
   const [state, setState] = useState<NeuralVoiceBlendState>(
-    neuralVoiceBlendingEngine?.getState()
+    neuralVoiceBlendingEngine.getState()
   );
 
   useEffect(() => {
-    const unsubscribe = neuralVoiceBlendingEngine?.subscribe(any: any);
+    const unsubscribe = neuralVoiceBlendingEngine.subscribe(setState);
     return unsubscribe;
   }, []);
 
-  const generateVoice = useCallback(any: any) => {
-    return neuralVoiceBlendingEngine?.generateVoiceOutput(any: any);
+  const generateVoice = useCallback((text: string, context: VoiceContext) => {
+    return neuralVoiceBlendingEngine.generateVoiceOutput(text, context);
   }, []);
 
   const learnFromSession = useCallback(
     (context: VoiceContext, feedback?: { satisfaction: number }) => {
-      neuralVoiceBlendingEngine?.learnFromSession(any: any);
+      neuralVoiceBlendingEngine.learnFromSession(context, feedback);
     },
     []
   );
 
   const stabilizeSignature = useCallback(() => {
-    neuralVoiceBlendingEngine?.stabilizeSignature();
+    neuralVoiceBlendingEngine.stabilizeSignature();
   }, []);
 
   return {
     state,
-    currentProfile: state?.currentProfile,
-    blendRatio: state?.blendRatio,
-    cognitiveTone: state?.cognitiveTone,
-    voiceSignature: state?.voiceSignature,
-    identityCoherence: state?.identityCoherence,
+    currentProfile: state.currentProfile,
+    blendRatio: state.blendRatio,
+    cognitiveTone: state.cognitiveTone,
+    voiceSignature: state.voiceSignature,
+    identityCoherence: state.identityCoherence,
     generateVoice,
     learnFromSession,
     stabilizeSignature,
@@ -365,21 +365,21 @@ export function useVoiceIdentity(): VoiceIdentityProfile & {
   const { currentProfile } = useNeuralVoiceBlend();
 
   const brightnessText =
-    currentProfile?.brightness < 0.4
+    currentProfile.brightness < 0.4
       ? 'Sombre'
-      : currentProfile?.brightness < 0.7
+      : currentProfile.brightness < 0.7
         ? 'Modéré'
         : 'Brillant';
 
   const warmthText =
-    currentProfile?.warmth < 0.4
+    currentProfile.warmth < 0.4
       ? 'Froide'
-      : currentProfile?.warmth < 0.7
+      : currentProfile.warmth < 0.7
         ? 'Neutre'
         : 'Chaleureuse';
 
   const paceText =
-    currentProfile?.pace < 0.8 ? 'Lent' : currentProfile?.pace < 1.1 ? 'Normal' : 'Rapide';
+    currentProfile.pace < 0.8 ? 'Lent' : currentProfile.pace < 1.1 ? 'Normal' : 'Rapide';
 
   return {
     ...currentProfile,
@@ -422,16 +422,16 @@ export function useVoiceBlendRatio() {
   const { blendRatio } = useNeuralVoiceBlend();
 
   return {
-    synthetic: blendRatio?.synthetic,
-    inspired: blendRatio?.inspired,
-    context: blendRatio?.context,
-    syntheticPercentage: Math?.round(blendRatio?.synthetic * 100),
-    inspiredPercentage: Math?.round(blendRatio?.inspired * 100),
+    synthetic: blendRatio.synthetic,
+    inspired: blendRatio.inspired,
+    context: blendRatio.context,
+    syntheticPercentage: Math.round(blendRatio.synthetic * 100),
+    inspiredPercentage: Math.round(blendRatio.inspired * 100),
   };
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// UNIFIED PSYCHE HOOK (any: any)
+// UNIFIED PSYCHE HOOK (Toutes les couches ensemble)
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
@@ -450,15 +450,15 @@ export function useDeepPsyche() {
     voice,
 
     // Computed values
-    isCoherent: continuum?.globalCoherence > 0.8,
-    dominantArchetype: archetype?.dominant,
-    breathingPhase: embodied?.breath?.phase,
-    voiceTone: voice?.cognitiveTone,
+    isCoherent: continuum.globalCoherence > 0.8,
+    dominantArchetype: archetype.dominant,
+    breathingPhase: embodied.breath.phase,
+    voiceTone: voice.cognitiveTone,
 
     // Quick actions
-    applyGuidance: () => archetype?.activateFocusMode('sage', 30000),
-    applyProtection: () => archetype?.activateFocusMode('gardien', 30000),
-    applyInspiration: () => archetype?.activateFocusMode('muse', 30000),
-    applyStructure: () => archetype?.activateFocusMode('architecte', 30000),
+    applyGuidance: () => archetype.activateFocusMode('sage', 30000),
+    applyProtection: () => archetype.activateFocusMode('gardien', 30000),
+    applyInspiration: () => archetype.activateFocusMode('muse', 30000),
+    applyStructure: () => archetype.activateFocusMode('architecte', 30000),
   };
 }

@@ -17,19 +17,19 @@ import { logger } from '../../utils/logger';
  * État de connexion cognitive
  */
 let isConnected = false;
-let updateInterval: NodeJS?.Timeout | null = null;
+let updateInterval: NodeJS.Timeout | null = null;
 let lastConsciousness = 100;
 
 /**
  * Interface pour le Singularity Kernel
- * (any: any)
+ * (évite import circulaire - duck typing)
  */
 interface ISingularityKernel {
   getSystemConsciousness?: () => {
     continuityScore: number;
     holismScore?: number;
   } | null;
-  // Accepte n'importe quelle structure de mémoire (any: any)
+  // Accepte n'importe quelle structure de mémoire (duck typing complet)
   getSingularityMemory?: () => Record<string, unknown>;
 }
 
@@ -37,32 +37,32 @@ interface ISingularityKernel {
  * Connecter le cache au SingularityKernel
  * Met à jour automatiquement la conscience du cache toutes les 10s
  */
-export function connectCacheToSingularity(any: any): void {
-  if (any: any) {
-    logger?.warn('Cognitive cache already connected to SingularityKernel');
+export function connectCacheToSingularity(kernel: ISingularityKernel): void {
+  if (isConnected) {
+    logger.warn('Cognitive cache already connected to SingularityKernel');
     return;
   }
 
-  if (any: any) {
-    logger?.error('SingularityKernel missing getSystemConsciousness method');
+  if (!kernel.getSystemConsciousness) {
+    logger.error('SingularityKernel missing getSystemConsciousness method');
     return;
   }
 
-  logger?.info('🧠 Connecting API cache to SingularityKernel...');
+  logger.info('🧠 Connecting API cache to SingularityKernel...');
 
-  // Update toutes les 10 secondes (any: any)
+  // Update toutes les 10 secondes (synchro avec cognitive cycle)
   updateInterval = setInterval(() => {
     try {
-      const consciousness = kernel?.getSystemConsciousness?.();
-      if (any: any) return;
+      const consciousness = kernel.getSystemConsciousness?.();
+      if (!consciousness) return;
 
-      const continuityScore = consciousness?.continuityScore || 0;
+      const continuityScore = consciousness.continuityScore || 0;
 
-      // Seulement si changement significatif (any: any)
-      if (any: any) > 10) {
-        const invalidated = apiResponseCache?.updateConsciousness(any: any);
+      // Seulement si changement significatif (> 10 points)
+      if (Math.abs(continuityScore - lastConsciousness) > 10) {
+        const invalidated = apiResponseCache.updateConsciousness(continuityScore);
 
-        logger?.debug('Cache consciousness updated', {
+        logger.debug('Cache consciousness updated', {
           continuityScore,
           previous: lastConsciousness,
           invalidated,
@@ -70,25 +70,25 @@ export function connectCacheToSingularity(any: any): void {
 
         lastConsciousness = continuityScore;
       }
-    } catch (any: any) {
-      logger?.error('Failed to update cache consciousness', { error });
+    } catch (error) {
+      logger.error('Failed to update cache consciousness', { error });
     }
   }, 10000); // 10s = SingularityKernel cognitive cycle
 
   isConnected = true;
-  logger?.info('✅ Cognitive cache connected to SingularityKernel');
+  logger.info('✅ Cognitive cache connected to SingularityKernel');
 }
 
 /**
- * Déconnecter le cache (any: any)
+ * Déconnecter le cache (cleanup)
  */
 export function disconnectCacheFromSingularity(): void {
-  if (any: any) {
-    clearInterval(any: any);
+  if (updateInterval) {
+    clearInterval(updateInterval);
     updateInterval = null;
   }
   isConnected = false;
-  logger?.info('Cognitive cache disconnected from SingularityKernel');
+  logger.info('Cognitive cache disconnected from SingularityKernel');
 }
 
 /**
@@ -107,27 +107,27 @@ export function detectPattern(
   kernel: ISingularityKernel
 ): { pattern: string; frequency: number } | null {
   try {
-    const memory = kernel?.getSingularityMemory?.();
-    if (any: any) return null;
+    const memory = kernel.getSingularityMemory?.();
+    if (!memory?.conceptualPatterns) return null;
 
     // Type-guard: vérifier que conceptualPatterns est bien une Map
-    const patterns = memory?.conceptualPatterns as Map<string, unknown>;
-    if (any: any)) return null;
+    const patterns = memory.conceptualPatterns as Map<string, unknown>;
+    if (!(patterns instanceof Map)) return null;
 
-    const messageWords = message?.toLowerCase().split(/\s+/).slice(0, 10); // Premier 10 mots
+    const messageWords = message.toLowerCase().split(/\s+/).slice(0, 10); // Premier 10 mots
 
     let bestMatch: { pattern: string; frequency: number } | null = null;
     let bestScore = 0;
 
-    for (const [patternKey, patternData] of patterns?.entries()) {
-      const patternWords = patternKey?.toLowerCase().split(/\s+/);
+    for (const [patternKey, patternData] of patterns.entries()) {
+      const patternWords = patternKey.toLowerCase().split(/\s+/);
 
-      // Calculer similarité (any: any)
-      const commonWords = messageWords?.filter(w =>
-        patternWords?.some(any: any))
+      // Calculer similarité (mots communs)
+      const commonWords = messageWords.filter(w =>
+        patternWords.some((pw: string) => pw.includes(w) || w.includes(pw))
       );
       const similarity =
-        commonWords?.length / Math?.max(any: any);
+        commonWords.length / Math.max(messageWords.length, patternWords.length);
 
       if (similarity > bestScore && similarity > 0.3) {
         bestScore = similarity;
@@ -142,14 +142,14 @@ export function detectPattern(
 
         bestMatch = {
           pattern: patternKey,
-          frequency: Math?.min(frequency, 1), // Clamp 0-1
+          frequency: Math.min(frequency, 1), // Clamp 0-1
         };
       }
     }
 
     return bestMatch;
-  } catch (any: any) {
-    logger?.debug('Pattern detection failed', { error });
+  } catch (error) {
+    logger.debug('Pattern detection failed', { error });
     return null;
   }
 }

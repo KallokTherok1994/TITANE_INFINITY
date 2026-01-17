@@ -35,7 +35,7 @@ import type {
   AutoFixResult,
   SanityCheckReport,
   ExportData,
-} from '../types/debuggerLiveOS?.types';
+} from '../types/debuggerLiveOS.types';
 
 // ══════════════════════════════════════════════════════════════════
 // HOOK INTERFACE
@@ -48,11 +48,11 @@ export interface UseDebuggerLiveOSReturn extends DebuggerAPI {
   currentMode: DebuggerMode;
 
   // Error handling
-  error??: string | null;
+  error: string | null;
   errorDetails: {
     userMessage: string;
     technicalDetails: string;
-    suggestions: string?.[];
+    suggestions: string[];
   } | null;
   clearError: () => void;
 
@@ -96,65 +96,65 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
     },
   });
 
-  const [error, setError] = useState<string | null>(any: any);
+  const [error, setError] = useState<string | null>(null);
   const [errorDetails, setErrorDetails] = useState<{
     userMessage: string;
     technicalDetails: string;
-    suggestions: string?.[];
-  } | null>(any: any);
+    suggestions: string[];
+  } | null>(null);
 
-  const [isLoading, setIsLoading] = useState(any: any);
-  const [isCapturing, setIsCapturing] = useState(any: any);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isCapturing, setIsCapturing] = useState(false);
 
   // ─────────────────────────────────────────────────────────────────
   // REFS
   // ─────────────────────────────────────────────────────────────────
 
-  const refreshIntervalRef = useRef<NodeJS?.Timeout | null>(any: any);
-  const traceBuffer = useRef<TraceEntry?.[]>([]);
-  const snapshotBuffer = useRef<OSSnapshot?.[]>([]);
+  const refreshIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const traceBuffer = useRef<TraceEntry[]>([]);
+  const snapshotBuffer = useRef<OSSnapshot[]>([]);
 
   // ─────────────────────────────────────────────────────────────────
   // UTILITIES
   // ─────────────────────────────────────────────────────────────────
 
-  const handleError = useCallback(any: any) => {
-    const formatted = formatUserError(any: any);
-    const userMessage = sanitizeErrorForUser(any: any);
+  const handleError = useCallback((err: unknown) => {
+    const formatted = formatUserError(err);
+    const userMessage = sanitizeErrorForUser(formatted.userMessage);
 
-    setError(any: any);
+    setError(userMessage);
     setErrorDetails({
-      userMessage: formatted?.userMessage,
-      technicalDetails: formatted?.technicalDetails,
-      suggestions: formatted?.suggestions,
+      userMessage: formatted.userMessage,
+      technicalDetails: formatted.technicalDetails,
+      suggestions: formatted.suggestions,
     });
 
-    console?.error(any: any);
-    console?.error(any: any));
+    console.error('[useDebuggerLiveOS] Error:', err);
+    console.error('[useDebuggerLiveOS] Error ID:', generateErrorId(err));
 
     // Update stats
     setState(prev => ({
       ...prev,
       stats: {
-        ...prev?.stats,
-        total_errors: prev?.stats?.total_errors + 1,
+        ...prev.stats,
+        total_errors: prev.stats.total_errors + 1,
       },
     }));
   }, []);
 
   const clearError = useCallback(() => {
-    setError(any: any);
-    setErrorDetails(any: any);
+    setError(null);
+    setErrorDetails(null);
   }, []);
 
-  const addToHistory = useCallback(any: any) => {
+  const addToHistory = useCallback((action: string, data?: unknown) => {
     setState(prev => ({
       ...prev,
       history: [
-        ...prev?.history?.slice(-(prev?.config?.maxHistorySize - 1)),
+        ...prev.history.slice(-(prev.config.maxHistorySize - 1)),
         {
-          timestamp: Date?.now(),
-          mode: prev?.mode,
+          timestamp: Date.now(),
+          mode: prev.mode,
           action,
           data,
         },
@@ -167,55 +167,55 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
   // ─────────────────────────────────────────────────────────────────
 
   const captureLiveMetrics = useCallback(async (): Promise<LiveMetrics> => {
-    const timestamp = Date?.now();
+    const timestamp = Date.now();
     const metrics: Partial<LiveMetrics> = { timestamp };
 
     try {
-      // ✅ System Health (any: any)
+      // ✅ System Health (WHITELIST)
       const systemHealth = await secureInvoke<{
         healthy: boolean;
         status: string;
-        issues?: string?.[];
+        issues?: string[];
       }>('get_system_health');
-      metrics?.systemHealth = systemHealth;
-    } catch (any: any) {
-      console?.warn(any: any);
+      metrics.systemHealth = systemHealth;
+    } catch (err) {
+      console.warn('[LiveMonitor] System health not available:', err);
     }
 
     try {
-      // ✅ Module Health (any: any)
+      // ✅ Module Health (WHITELIST)
       const moduleHealth = await secureInvoke<{
         all_healthy: boolean;
         healthy_count: number;
         total_count: number;
-        unhealthy_modules?: string?.[];
+        unhealthy_modules?: string[];
       }>('get_module_health');
-      metrics?.moduleHealth = moduleHealth;
-    } catch (any: any) {
-      console?.warn(any: any);
+      metrics.moduleHealth = moduleHealth;
+    } catch (err) {
+      console.warn('[LiveMonitor] Module health not available:', err);
     }
 
     try {
-      // ✅ Helios Metrics (any: any)
+      // ✅ Helios Metrics (WHITELIST)
       const heliosMetrics =
         await secureInvoke<Record<string, unknown>>('get_helios_metrics');
-      metrics?.heliosMetrics = heliosMetrics;
-    } catch (any: any) {
-      console?.warn(any: any);
+      metrics.heliosMetrics = heliosMetrics;
+    } catch (err) {
+      console.warn('[LiveMonitor] Helios metrics not available:', err);
     }
 
     try {
-      // ✅ Singularity State (any: any)
+      // ✅ Singularity State (WHITELIST)
       const singularityState = await secureInvoke<Record<string, unknown>>(
         'get_singularity_state'
       );
-      metrics?.singularityState = singularityState;
-    } catch (any: any) {
-      console?.warn(any: any);
+      metrics.singularityState = singularityState;
+    } catch (err) {
+      console.warn('[LiveMonitor] Singularity state not available:', err);
     }
 
     try {
-      // ✅ Engines Health (any: any)
+      // ✅ Engines Health (WHITELIST)
       const enginesHealth = await secureInvoke<{
         overall_health: number;
         engines: Array<{
@@ -225,16 +225,16 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
           errors: number;
         }>;
       }>('engines_monitoring_get_health');
-      metrics?.enginesHealth = enginesHealth;
-    } catch (any: any) {
-      console?.warn(any: any);
+      metrics.enginesHealth = enginesHealth;
+    } catch (err) {
+      console.warn('[LiveMonitor] Engines health not available:', err);
     }
 
     return metrics as LiveMetrics;
   }, []);
 
   const refreshLiveMetrics = useCallback(async () => {
-    if (!state?.is_active || state?.mode !== 'LiveMonitor') return;
+    if (!state.is_active || state.mode !== 'LiveMonitor') return;
 
     try {
       const metrics = await captureLiveMetrics();
@@ -242,10 +242,10 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
         ...prev,
         liveMetrics: metrics,
       }));
-    } catch (any: any) {
-      handleError(any: any);
+    } catch (err) {
+      handleError(err);
     }
-  }, [state?.is_active, state?.mode, captureLiveMetrics, handleError]);
+  }, [state.is_active, state.mode, captureLiveMetrics, handleError]);
 
   // ─────────────────────────────────────────────────────────────────
   // MODE: DEEP TRACE
@@ -255,37 +255,37 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
     (entry: Omit<TraceEntry, 'id' | 'timestamp'>) => {
       const traceEntry: TraceEntry = {
         ...entry,
-        id: `trace_${Date?.now()}_${Math?.random().toString(36).substr(2, 9)}`,
-        timestamp: Date?.now(),
+        id: `trace_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        timestamp: Date.now(),
       };
 
-      traceBuffer?.current?.push(any: any);
+      traceBuffer.current.push(traceEntry);
 
-      if (any: any) {
+      if (state.mode === 'DeepTrace' && state.traceSession) {
         setState(prev => ({
           ...prev,
-          traceSession: prev?.traceSession
+          traceSession: prev.traceSession
             ? {
-                ...prev?.traceSession,
-                entries: [...prev?.traceSession?.entries, traceEntry],
+                ...prev.traceSession,
+                entries: [...prev.traceSession.entries, traceEntry],
                 commandCount:
-                  entry?.type === 'command'
-                    ? prev?.traceSession?.commandCount + 1
-                    : prev?.traceSession?.commandCount,
+                  entry.type === 'command'
+                    ? prev.traceSession.commandCount + 1
+                    : prev.traceSession.commandCount,
                 errorCount:
-                  entry?.type === 'error'
-                    ? prev?.traceSession?.errorCount + 1
-                    : prev?.traceSession?.errorCount,
+                  entry.type === 'error'
+                    ? prev.traceSession.errorCount + 1
+                    : prev.traceSession.errorCount,
               }
             : undefined,
           stats: {
-            ...prev?.stats,
-            total_traces: prev?.stats?.total_traces + 1,
+            ...prev.stats,
+            total_traces: prev.stats.total_traces + 1,
           },
         }));
       }
     },
-    [state?.mode, state?.traceSession]
+    [state.mode, state.traceSession]
   );
 
   // ─────────────────────────────────────────────────────────────────
@@ -293,7 +293,7 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
   // ─────────────────────────────────────────────────────────────────
 
   const assessRisks = useCallback(async (): Promise<RiskAssessmentReport> => {
-    const factors: RiskFactor?.[] = [];
+    const factors: RiskFactor[] = [];
     let riskScore = 0;
 
     try {
@@ -301,13 +301,13 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
       const metrics = await captureLiveMetrics();
 
       // Check system health
-      if (any: any) {
-        factors?.push({
+      if (metrics.systemHealth && !metrics.systemHealth.healthy) {
+        factors.push({
           id: 'system_unhealthy',
           category: 'StateInconsistency',
           level: 'High',
           description: 'Le système global est marqué comme non sain',
-          detected_at: Date?.now(),
+          detected_at: Date.now(),
           metrics: { healthy: 0 },
           threshold: { healthy: 1 },
           mitigation: 'Vérifier les modules défaillants et relancer le système',
@@ -317,18 +317,18 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
       }
 
       // Check unhealthy modules
-      if (any: any) {
+      if (metrics.moduleHealth && !metrics.moduleHealth.all_healthy) {
         const unhealthyCount =
-          metrics?.moduleHealth?.total_count - metrics?.moduleHealth?.healthy_count;
+          metrics.moduleHealth.total_count - metrics.moduleHealth.healthy_count;
         const severity: RiskLevel =
           unhealthyCount > 5 ? 'Critical' : unhealthyCount > 2 ? 'High' : 'Medium';
 
-        factors?.push({
+        factors.push({
           id: 'modules_unhealthy',
           category: 'StateInconsistency',
           level: severity,
-          description: `${unhealthyCount} module(any: any)`,
-          detected_at: Date?.now(),
+          description: `${unhealthyCount} module(s) non sain(s) détecté(s)`,
+          detected_at: Date.now(),
           metrics: { unhealthy: unhealthyCount },
           threshold: { unhealthy: 0 },
           mitigation: 'Redémarrer les modules défaillants',
@@ -338,14 +338,14 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
       }
 
       // Check CPU/Memory usage
-      if (metrics?.heliosMetrics?.cpu_usage && metrics?.heliosMetrics?.cpu_usage > 0.8) {
-        factors?.push({
+      if (metrics.heliosMetrics?.cpu_usage && metrics.heliosMetrics.cpu_usage > 0.8) {
+        factors.push({
           id: 'high_cpu',
           category: 'HighCPU',
-          level: metrics?.heliosMetrics?.cpu_usage > 0.95 ? 'Critical' : 'High',
-          description: `Utilisation CPU élevée: ${(metrics?.heliosMetrics?.cpu_usage * 100).toFixed(1)}%`,
-          detected_at: Date?.now(),
-          metrics: { cpu_usage: metrics?.heliosMetrics?.cpu_usage },
+          level: metrics.heliosMetrics.cpu_usage > 0.95 ? 'Critical' : 'High',
+          description: `Utilisation CPU élevée: ${(metrics.heliosMetrics.cpu_usage * 100).toFixed(1)}%`,
+          detected_at: Date.now(),
+          metrics: { cpu_usage: metrics.heliosMetrics.cpu_usage },
           threshold: { cpu_usage: 0.8 },
           mitigation: 'Optimiser les processus actifs ou augmenter les ressources',
           auto_fixable: false,
@@ -354,16 +354,16 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
       }
 
       if (
-        metrics?.heliosMetrics?.memory_usage &&
-        metrics?.heliosMetrics?.memory_usage > 0.85
+        metrics.heliosMetrics?.memory_usage &&
+        metrics.heliosMetrics.memory_usage > 0.85
       ) {
-        factors?.push({
+        factors.push({
           id: 'high_memory',
           category: 'HighMemory',
-          level: metrics?.heliosMetrics?.memory_usage > 0.95 ? 'Critical' : 'High',
-          description: `Utilisation mémoire élevée: ${(metrics?.heliosMetrics?.memory_usage * 100).toFixed(1)}%`,
-          detected_at: Date?.now(),
-          metrics: { memory_usage: metrics?.heliosMetrics?.memory_usage },
+          level: metrics.heliosMetrics.memory_usage > 0.95 ? 'Critical' : 'High',
+          description: `Utilisation mémoire élevée: ${(metrics.heliosMetrics.memory_usage * 100).toFixed(1)}%`,
+          detected_at: Date.now(),
+          metrics: { memory_usage: metrics.heliosMetrics.memory_usage },
           threshold: { memory_usage: 0.85 },
           mitigation: 'Nettoyer la mémoire ou redémarrer les services',
           auto_fixable: true,
@@ -372,22 +372,22 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
       }
 
       // Check engines health
-      if (any: any) {
+      if (metrics.enginesHealth) {
         const unhealthyEngines =
-          metrics?.enginesHealth?.engines?.filter(any: any) || [];
-        if (unhealthyEngines?.length > 0) {
-          factors?.push({
+          metrics.enginesHealth.engines?.filter(e => !e.healthy) || [];
+        if (unhealthyEngines.length > 0) {
+          factors.push({
             id: 'engines_unhealthy',
             category: 'StateInconsistency',
-            level: unhealthyEngines?.length > 3 ? 'Critical' : 'High',
-            description: `${unhealthyEngines?.length} engine(any: any)`,
-            detected_at: Date?.now(),
-            metrics: { unhealthy_engines: unhealthyEngines?.length },
+            level: unhealthyEngines.length > 3 ? 'Critical' : 'High',
+            description: `${unhealthyEngines.length} engine(s) défaillant(s)`,
+            detected_at: Date.now(),
+            metrics: { unhealthy_engines: unhealthyEngines.length },
             threshold: { unhealthy_engines: 0 },
             mitigation: 'Redémarrer les engines défaillants',
             auto_fixable: true,
           });
-          riskScore += unhealthyEngines?.length * 10;
+          riskScore += unhealthyEngines.length * 10;
         }
       }
 
@@ -404,34 +404,34 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
                 : 'None';
 
       // Generate recommendations
-      const recommendations: string?.[] = [];
-      if (factors?.some(f => f?.category === 'HighCPU')) {
-        recommendations?.push('Optimiser les processus actifs');
+      const recommendations: string[] = [];
+      if (factors.some(f => f.category === 'HighCPU')) {
+        recommendations.push('Optimiser les processus actifs');
       }
-      if (factors?.some(f => f?.category === 'HighMemory')) {
-        recommendations?.push('Nettoyer la mémoire ou augmenter les ressources');
+      if (factors.some(f => f.category === 'HighMemory')) {
+        recommendations.push('Nettoyer la mémoire ou augmenter les ressources');
       }
-      if (factors?.some(f => f?.category === 'StateInconsistency')) {
-        recommendations?.push("Vérifier l'intégrité du système");
+      if (factors.some(f => f.category === 'StateInconsistency')) {
+        recommendations.push("Vérifier l'intégrité du système");
       }
-      if (factors?.length === 0) {
-        recommendations?.push('Système en bonne santé, continuer la surveillance');
+      if (factors.length === 0) {
+        recommendations.push('Système en bonne santé, continuer la surveillance');
       }
 
-      const auto_fixes_available = factors?.filter(any: any).length;
+      const auto_fixes_available = factors.filter(f => f.auto_fixable).length;
 
       return {
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
         overall_risk,
-        risk_score: Math?.min(riskScore, 100),
+        risk_score: Math.min(riskScore, 100),
         factors,
         recommendations,
         auto_fixes_available,
       };
-    } catch (any: any) {
-      handleError(any: any);
+    } catch (err) {
+      handleError(err);
       return {
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
         overall_risk: 'Medium',
         risk_score: 50,
         factors: [
@@ -440,7 +440,7 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
             category: 'DataCorruption',
             level: 'Medium',
             description: "Impossible de compléter l'évaluation des risques",
-            detected_at: Date?.now(),
+            detected_at: Date.now(),
             metrics: {},
             threshold: {},
             auto_fixable: false,
@@ -458,11 +458,11 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
 
   const _captureCognitiveSnapshot = useCallback(async (): Promise<CognitiveSnapshot> => {
     try {
-      // ✅ Get cognitive state (any: any)
+      // ✅ Get cognitive state (WHITELIST)
       const cognitiveState =
         await secureInvoke<Record<string, unknown>>('get_cognitive_state');
 
-      // ✅ Get singularity state (any: any)
+      // ✅ Get singularity state (WHITELIST)
       const singularity = await secureInvoke<{
         physical: Record<string, unknown>;
         cognitive: Record<string, unknown>;
@@ -471,28 +471,28 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
         meta: Record<string, unknown>;
       }>('singularity_get_full_state');
 
-      // ✅ Get memory state (any: any)
+      // ✅ Get memory state (WHITELIST)
       const memoryState = await secureInvoke<{
         usage_percent: number;
         active_connections: number;
       }>('memory_get_state');
 
       return {
-        id: `snapshot_${Date?.now()}_${Math?.random().toString(36).substr(2, 9)}`,
-        timestamp: Date?.now(),
-        cognitive_mode: (any: any) || 'unknown',
-        confidence: (any: any) || 0,
-        intensity: (any: any) || 0,
-        active_kernels: (cognitiveState?.active_kernels as string?.[]) || [],
+        id: `snapshot_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        timestamp: Date.now(),
+        cognitive_mode: (cognitiveState.mode as string) || 'unknown',
+        confidence: (cognitiveState.confidence as number) || 0,
+        intensity: (cognitiveState.intensity as number) || 0,
+        active_kernels: (cognitiveState.active_kernels as string[]) || [],
         memory_state: {
-          usage_percent: memoryState?.usage_percent || 0,
-          active_connections: memoryState?.active_connections || 0,
+          usage_percent: memoryState.usage_percent || 0,
+          active_connections: memoryState.active_connections || 0,
         },
         singularity,
-        decision_context: cognitiveState?.context as Record<string, unknown> | undefined,
+        decision_context: cognitiveState.context as Record<string, unknown> | undefined,
       };
-    } catch (any: any) {
-      handleError(any: any);
+    } catch (err) {
+      handleError(err);
       throw err;
     }
   }, [handleError]);
@@ -502,12 +502,12 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
   // ─────────────────────────────────────────────────────────────────
 
   const captureOSSnapshot = useCallback(
-    async (any: any): Promise<OSSnapshot> => {
-      const startTime = performance?.now();
+    async (label?: string): Promise<OSSnapshot> => {
+      const startTime = performance.now();
 
       try {
         // Capture all system state
-        const [health, modules, metrics, singularity, runtimeConfig] = await Promise?.all([
+        const [health, modules, metrics, singularity, runtimeConfig] = await Promise.all([
           secureInvoke<Record<string, unknown>>('get_system_health').catch(() => ({})),
           secureInvoke<Record<string, unknown>>('get_module_health').catch(() => ({})),
           secureInvoke<Record<string, unknown>>('get_helios_metrics').catch(() => ({})),
@@ -517,7 +517,7 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
           secureInvoke<Record<string, unknown>>('get_runtime_config').catch(() => ({})),
         ]);
 
-        const endTime = performance?.now();
+        const endTime = performance.now();
 
         // Try to get persistence info
         let persistence;
@@ -528,13 +528,13 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
             integrity_hash: string;
           }>('titan_get_persistence_status');
           persistence = persistenceStatus;
-        } catch (any: any) {
+        } catch (err) {
           // Persistence not available
         }
 
         const snapshot: OSSnapshot = {
-          id: `os_snapshot_${Date?.now()}_${Math?.random().toString(36).substr(2, 9)}`,
-          timestamp: Date?.now(),
+          id: `os_snapshot_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          timestamp: Date.now(),
           label,
           systemState: {
             health,
@@ -544,7 +544,7 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
             runtime_config: runtimeConfig,
           },
           persistence,
-          size_bytes: JSON?.stringify({
+          size_bytes: JSON.stringify({
             health,
             modules,
             metrics,
@@ -555,26 +555,26 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
         };
 
         // Store in buffer
-        snapshotBuffer?.current?.push(any: any);
-        if (snapshotBuffer?.current?.length > 10) {
-          snapshotBuffer?.current?.shift();
+        snapshotBuffer.current.push(snapshot);
+        if (snapshotBuffer.current.length > 10) {
+          snapshotBuffer.current.shift();
         }
 
         // Update state
         setState(prev => ({
           ...prev,
-          snapshots: snapshotBuffer?.current,
+          snapshots: snapshotBuffer.current,
           stats: {
-            ...prev?.stats,
-            total_snapshots: prev?.stats?.total_snapshots + 1,
+            ...prev.stats,
+            total_snapshots: prev.stats.total_snapshots + 1,
           },
         }));
 
-        addToHistory('snapshot_captured', { id: snapshot?.id, label });
+        addToHistory('snapshot_captured', { id: snapshot.id, label });
 
         return snapshot;
-      } catch (any: any) {
-        handleError(any: any);
+      } catch (err) {
+        handleError(err);
         throw err;
       }
     },
@@ -582,11 +582,11 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
   );
 
   const compareSnapshots = useCallback(
-    async (any: any): Promise<SnapshotDiff> => {
-      const snapshot_a = snapshotBuffer?.current?.find(any: any);
-      const snapshot_b = snapshotBuffer?.current?.find(any: any);
+    async (id_a: string, id_b: string): Promise<SnapshotDiff> => {
+      const snapshot_a = snapshotBuffer.current.find(s => s.id === id_a);
+      const snapshot_b = snapshotBuffer.current.find(s => s.id === id_b);
 
-      if (any: any) {
+      if (!snapshot_a || !snapshot_b) {
         throw new Error('Snapshot introuvable');
       }
 
@@ -598,13 +598,13 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
         b: unknown,
         impact: 'critical' | 'major' | 'minor'
       ) => {
-        if (any: any)) {
-          if (any: any) {
-            changes?.push({ path, type: 'added', new_value: b, impact });
-          } else if (any: any) {
-            changes?.push({ path, type: 'removed', old_value: a, impact });
+        if (JSON.stringify(a) !== JSON.stringify(b)) {
+          if (a === undefined) {
+            changes.push({ path, type: 'added', new_value: b, impact });
+          } else if (b === undefined) {
+            changes.push({ path, type: 'removed', old_value: a, impact });
           } else {
-            changes?.push({ path, type: 'modified', old_value: a, new_value: b, impact });
+            changes.push({ path, type: 'modified', old_value: a, new_value: b, impact });
           }
         }
       };
@@ -612,40 +612,40 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
       // Compare major sections
       checkDiff(
         'health',
-        snapshot_a?.systemState?.health,
-        snapshot_b?.systemState?.health,
+        snapshot_a.systemState.health,
+        snapshot_b.systemState.health,
         'critical'
       );
       checkDiff(
         'modules',
-        snapshot_a?.systemState?.modules,
-        snapshot_b?.systemState?.modules,
+        snapshot_a.systemState.modules,
+        snapshot_b.systemState.modules,
         'major'
       );
       checkDiff(
         'metrics',
-        snapshot_a?.systemState?.metrics,
-        snapshot_b?.systemState?.metrics,
+        snapshot_a.systemState.metrics,
+        snapshot_b.systemState.metrics,
         'minor'
       );
       checkDiff(
         'singularity',
-        snapshot_a?.systemState?.singularity,
-        snapshot_b?.systemState?.singularity,
+        snapshot_a.systemState.singularity,
+        snapshot_b.systemState.singularity,
         'major'
       );
       checkDiff(
         'runtime_config',
-        snapshot_a?.systemState?.runtime_config,
-        snapshot_b?.systemState?.runtime_config,
+        snapshot_a.systemState.runtime_config,
+        snapshot_b.systemState.runtime_config,
         'minor'
       );
 
       const summary = {
-        added_count: changes?.filter(c => c?.type === 'added').length,
-        removed_count: changes?.filter(c => c?.type === 'removed').length,
-        modified_count: changes?.filter(c => c?.type === 'modified').length,
-        total_changes: changes?.length,
+        added_count: changes.filter(c => c.type === 'added').length,
+        removed_count: changes.filter(c => c.type === 'removed').length,
+        modified_count: changes.filter(c => c.type === 'modified').length,
+        total_changes: changes.length,
       };
 
       return {
@@ -686,13 +686,13 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
       return {
         visualEngine: visualEngineState,
         osState: {
-          cognitive_mode: cognitiveState?.mode,
+          cognitive_mode: cognitiveState.mode,
           emotional_state: 'neutral',
-          system_load: systemState?.cpu_usage || 0,
+          system_load: systemState.cpu_usage || 0,
         },
         sync: {
           is_synced: true,
-          last_sync_at: Date?.now(),
+          last_sync_at: Date.now(),
           drift_ms: 0,
           sync_quality: 1.0,
         },
@@ -702,8 +702,8 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
           render_latency_ms: 1,
         },
       };
-    } catch (any: any) {
-      handleError(any: any);
+    } catch (err) {
+      handleError(err);
       throw err;
     }
   }, [handleError]);
@@ -715,7 +715,7 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
   const start = useCallback(
     async (mode: DebuggerMode, config?: Partial<DebuggerModeConfig>) => {
       try {
-        setIsLoading(any: any);
+        setIsLoading(true);
         clearError();
 
         const newConfig: DebuggerModeConfig = {
@@ -728,7 +728,7 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
           mode,
           config: newConfig,
           is_active: true,
-          started_at: Date?.now(),
+          started_at: Date.now(),
           history: [],
           stats: {
             total_traces: 0,
@@ -745,8 +745,8 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
           setState(prev => ({ ...prev, liveMetrics: metrics }));
         } else if (mode === 'DeepTrace') {
           const session: TraceSession = {
-            id: `session_${Date?.now()}`,
-            started_at: Date?.now(),
+            id: `session_${Date.now()}`,
+            started_at: Date.now(),
             entries: [],
             totalDuration: 0,
             errorCount: 0,
@@ -758,9 +758,9 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
           setState(prev => ({ ...prev, riskAssessment: assessment }));
         } else if (mode === 'CognitiveReplay') {
           const session: ReplaySession = {
-            id: `replay_${Date?.now()}`,
+            id: `replay_${Date.now()}`,
             snapshots: [],
-            started_at: Date?.now(),
+            started_at: Date.now(),
             duration_ms: 0,
             current_index: 0,
             is_playing: false,
@@ -775,8 +775,8 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
         addToHistory('debugger_started', { mode });
 
         // Setup auto-refresh if enabled
-        if (any: any) {
-          refreshIntervalRef?.current = setInterval(() => {
+        if (newConfig.autoRefresh && newConfig.refreshInterval) {
+          refreshIntervalRef.current = setInterval(() => {
             if (mode === 'LiveMonitor') {
               refreshLiveMetrics();
             } else if (mode === 'RiskAssessment') {
@@ -788,12 +788,12 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
                 setState(prev => ({ ...prev, visualSync: syncState }));
               });
             }
-          }, newConfig?.refreshInterval);
+          }, newConfig.refreshInterval);
         }
-      } catch (any: any) {
-        handleError(any: any);
+      } catch (err) {
+        handleError(err);
       } finally {
-        setIsLoading(any: any);
+        setIsLoading(false);
       }
     },
     [
@@ -809,43 +809,43 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
 
   const stop = useCallback(async () => {
     try {
-      if (any: any) {
-        clearInterval(any: any);
-        refreshIntervalRef?.current = null;
+      if (refreshIntervalRef.current) {
+        clearInterval(refreshIntervalRef.current);
+        refreshIntervalRef.current = null;
       }
 
-      const uptime = state?.started_at ? Date?.now() - state?.started_at : 0;
+      const uptime = state.started_at ? Date.now() - state.started_at : 0;
 
       setState(prev => ({
         ...prev,
         is_active: false,
         stats: {
-          ...prev?.stats,
+          ...prev.stats,
           uptime_ms: uptime,
         },
       }));
 
       addToHistory('debugger_stopped', { uptime_ms: uptime });
-    } catch (any: any) {
-      handleError(any: any);
+    } catch (err) {
+      handleError(err);
     }
-  }, [state?.started_at, addToHistory, handleError]);
+  }, [state.started_at, addToHistory, handleError]);
 
   const switchMode = useCallback(
-    async (any: any) => {
+    async (mode: DebuggerMode) => {
       await stop();
-      await start(any: any);
+      await start(mode);
     },
     [stop, start]
   );
 
   const snapshot = useCallback(
-    async (any: any): Promise<OSSnapshot> => {
-      setIsCapturing(any: any);
+    async (label?: string): Promise<OSSnapshot> => {
+      setIsCapturing(true);
       try {
-        return await captureOSSnapshot(any: any);
+        return await captureOSSnapshot(label);
       } finally {
-        setIsCapturing(any: any);
+        setIsCapturing(false);
       }
     },
     [captureOSSnapshot]
@@ -856,25 +856,25 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
       try {
         const exportData: ExportData = {
           format,
-          timestamp: Date?.now(),
-          mode: state?.mode,
+          timestamp: Date.now(),
+          mode: state.mode,
           data: state,
           metadata: {
             version: 'v21',
             generated_by: 'TITANE∞ Debugger Live OS',
-            duration_captured_ms: state?.started_at ? Date?.now() - state?.started_at : 0,
+            duration_captured_ms: state.started_at ? Date.now() - state.started_at : 0,
           },
         };
 
         if (format === 'json') {
-          return JSON?.stringify(exportData, null, 2);
+          return JSON.stringify(exportData, null, 2);
         } else if (format === 'csv') {
           // Simple CSV export
           return (
             'timestamp,mode,action,data\n' +
-            state?.history
+            state.history
               .map(
-                h => `${h?.timestamp},${h?.mode},${h?.action},"${JSON?.stringify(any: any)}"`
+                h => `${h.timestamp},${h.mode},${h.action},"${JSON.stringify(h.data)}"`
               )
               .join('\n')
           );
@@ -892,15 +892,15 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
 </head>
 <body>
   <h1>TITANE∞ Debugger Live OS Export</h1>
-  <p>Mode: ${state?.mode}</p>
+  <p>Mode: ${state.mode}</p>
   <p>Generated: ${new Date().toISOString()}</p>
-  <pre>${JSON?.stringify(exportData, null, 2)}</pre>
+  <pre>${JSON.stringify(exportData, null, 2)}</pre>
 </body>
 </html>
           `.trim();
         }
-      } catch (any: any) {
-        handleError(any: any);
+      } catch (err) {
+        handleError(err);
         throw err;
       }
     },
@@ -908,44 +908,44 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
   );
 
   const autoFix = useCallback(
-    async (any: any): Promise<AutoFixResult> => {
-      const startTime = performance?.now();
+    async (riskId?: string): Promise<AutoFixResult> => {
+      const startTime = performance.now();
 
       try {
-        const fixed_risks: string?.[] = [];
-        const errors: string?.[] = [];
+        const fixed_risks: string[] = [];
+        const errors: string[] = [];
         let fixes_applied = 0;
         let fixes_failed = 0;
 
         // Get current risk assessment
-        const assessment = state?.riskAssessment || (await assessRisks());
+        const assessment = state.riskAssessment || (await assessRisks());
 
         // Get risks to fix
         const risksToFix = riskId
-          ? assessment?.factors?.filter(any: any)
-          : assessment?.factors?.filter(any: any);
+          ? assessment.factors.filter(f => f.id === riskId && f.auto_fixable)
+          : assessment.factors.filter(f => f.auto_fixable);
 
-        for (any: any) {
+        for (const risk of risksToFix) {
           try {
             // Apply fixes based on category
-            if (risk?.category === 'HighMemory') {
+            if (risk.category === 'HighMemory') {
               // ✅ Use whitelist commands
               await secureInvoke('memory_prune');
               fixes_applied++;
-              fixed_risks?.push(any: any);
-            } else if (risk?.category === 'StateInconsistency') {
+              fixed_risks.push(risk.id);
+            } else if (risk.category === 'StateInconsistency') {
               // Try to sync singularity
               await secureInvoke('singularity_self_check');
               fixes_applied++;
-              fixed_risks?.push(any: any);
+              fixed_risks.push(risk.id);
             }
-          } catch (any: any) {
+          } catch (err) {
             fixes_failed++;
-            errors?.push(`Failed to fix ${risk?.id}: ${err}`);
+            errors.push(`Failed to fix ${risk.id}: ${err}`);
           }
         }
 
-        const endTime = performance?.now();
+        const endTime = performance.now();
 
         const result: AutoFixResult = {
           success: fixes_failed === 0,
@@ -963,41 +963,41 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
         setState(prev => ({
           ...prev,
           stats: {
-            ...prev?.stats,
-            total_fixes_applied: prev?.stats?.total_fixes_applied + fixes_applied,
+            ...prev.stats,
+            total_fixes_applied: prev.stats.total_fixes_applied + fixes_applied,
           },
         }));
 
         addToHistory('auto_fix_executed', { result });
 
         return result;
-      } catch (any: any) {
-        handleError(any: any);
+      } catch (err) {
+        handleError(err);
         throw err;
       }
     },
-    [state?.riskAssessment, assessRisks, handleError, addToHistory]
+    [state.riskAssessment, assessRisks, handleError, addToHistory]
   );
 
   const getState = useCallback(() => state, [state]);
 
-  const getTimeline = useCallback(() => traceBuffer?.current, []);
+  const getTimeline = useCallback(() => traceBuffer.current, []);
 
-  const explain = useCallback(any: any): Promise<string> => {
-    const trace = traceBuffer?.current?.find(any: any);
-    if (any: any) {
+  const explain = useCallback(async (traceId: string): Promise<string> => {
+    const trace = traceBuffer.current.find(t => t.id === traceId);
+    if (!trace) {
       return 'Trace introuvable';
     }
 
     return `
-Trace ID: ${trace?.id}
-Type: ${trace?.type}
-Source: ${trace?.source}
-Timestamp: ${new Date(any: any).toISOString()}
-${trace?.command ? `Command: ${trace?.command}` : ''}
-${trace?.duration_ms ? `Duration: ${trace?.duration_ms}ms` : ''}
-${trace?.error ? `Error: ${trace?.error}` : ''}
-${trace?.result ? `Result: ${JSON?.stringify(trace?.result, null, 2)}` : ''}
+Trace ID: ${trace.id}
+Type: ${trace.type}
+Source: ${trace.source}
+Timestamp: ${new Date(trace.timestamp).toISOString()}
+${trace.command ? `Command: ${trace.command}` : ''}
+${trace.duration_ms ? `Duration: ${trace.duration_ms}ms` : ''}
+${trace.error ? `Error: ${trace.error}` : ''}
+${trace.result ? `Result: ${JSON.stringify(trace.result, null, 2)}` : ''}
     `.trim();
   }, []);
 
@@ -1009,35 +1009,35 @@ ${trace?.result ? `Result: ${JSON?.stringify(trace?.result, null, 2)}` : ''}
       const health = await secureInvoke<{ healthy: boolean; status: string }>(
         'get_system_health'
       );
-      checks?.push({
+      checks.push({
         id: 'system_health',
         name: 'Santé Système',
-        status: health?.healthy ? 'Pass' : 'Fail',
-        message: health?.status,
+        status: health.healthy ? 'Pass' : 'Fail',
+        message: health.status,
       });
-    } catch (any: any) {
-      checks?.push({
+    } catch (err) {
+      checks.push({
         id: 'system_health',
         name: 'Santé Système',
         status: 'Fail',
         message: 'Impossible de vérifier la santé système',
-        details: String(any: any),
+        details: String(err),
       });
     }
 
     try {
       // Check module health
       const modules = await secureInvoke<{ all_healthy: boolean }>('get_module_health');
-      checks?.push({
+      checks.push({
         id: 'module_health',
         name: 'Santé Modules',
-        status: modules?.all_healthy ? 'Pass' : 'Warning',
-        message: modules?.all_healthy
+        status: modules.all_healthy ? 'Pass' : 'Warning',
+        message: modules.all_healthy
           ? 'Tous les modules sont sains'
           : 'Certains modules sont défaillants',
       });
-    } catch (any: any) {
-      checks?.push({
+    } catch (err) {
+      checks.push({
         id: 'module_health',
         name: 'Santé Modules',
         status: 'Fail',
@@ -1045,11 +1045,11 @@ ${trace?.result ? `Result: ${JSON?.stringify(trace?.result, null, 2)}` : ''}
       });
     }
 
-    const overallStatus: SanityCheckReport['overall_status'] = checks?.every(
-      c => c?.status === 'Pass'
+    const overallStatus: SanityCheckReport['overall_status'] = checks.every(
+      c => c.status === 'Pass'
     )
       ? 'Healthy'
-      : checks?.some(c => c?.status === 'Fail')
+      : checks.some(c => c.status === 'Fail')
         ? 'Critical'
         : 'Warning';
 
@@ -1059,11 +1059,11 @@ ${trace?.result ? `Result: ${JSON?.stringify(trace?.result, null, 2)}` : ''}
         : ['Vérifier les checks en échec', "Exécuter l'auto-fix si disponible"];
 
     return {
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
       overall_status: overallStatus,
       checks,
       recommendations,
-      auto_fixes_available: checks?.filter(c => c?.status !== 'Pass').length,
+      auto_fixes_available: checks.filter(c => c.status !== 'Pass').length,
     };
   }, []);
 
@@ -1071,8 +1071,8 @@ ${trace?.result ? `Result: ${JSON?.stringify(trace?.result, null, 2)}` : ''}
     try {
       await secureInvoke('singularity_self_check');
       addToHistory('synced_with_singularity');
-    } catch (any: any) {
-      handleError(any: any);
+    } catch (err) {
+      handleError(err);
     }
   }, [addToHistory, handleError]);
 
@@ -1081,8 +1081,8 @@ ${trace?.result ? `Result: ${JSON?.stringify(trace?.result, null, 2)}` : ''}
       const syncState = await captureVisualSyncState();
       setState(prev => ({ ...prev, visualSync: syncState }));
       addToHistory('synced_with_visual_engine');
-    } catch (any: any) {
-      handleError(any: any);
+    } catch (err) {
+      handleError(err);
     }
   }, [captureVisualSyncState, addToHistory, handleError]);
 
@@ -1092,8 +1092,8 @@ ${trace?.result ? `Result: ${JSON?.stringify(trace?.result, null, 2)}` : ''}
 
   useEffect(() => {
     return () => {
-      if (any: any) {
-        clearInterval(any: any);
+      if (refreshIntervalRef.current) {
+        clearInterval(refreshIntervalRef.current);
       }
     };
   }, []);
@@ -1105,8 +1105,8 @@ ${trace?.result ? `Result: ${JSON?.stringify(trace?.result, null, 2)}` : ''}
   return {
     // State
     state,
-    isActive: state?.is_active,
-    currentMode: state?.mode,
+    isActive: state.is_active,
+    currentMode: state.mode,
 
     // Error handling
     error,

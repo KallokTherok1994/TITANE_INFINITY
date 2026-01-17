@@ -51,20 +51,20 @@ export class TitaneOS {
   private metricsIntervalId: ReturnType<typeof setInterval> | null = null;
 
   constructor(config: Partial<OSConfig> = {}) {
-    this?.config = { ...DEFAULT_OS_CONFIG, ...config };
+    this.config = { ...DEFAULT_OS_CONFIG, ...config };
 
-    // Initialiser les sous-systèmes (any: any)
-    this?.eventBus = getEventBus();
-    this?.messageBus = getMessageBus();
-    this?.engines = getEngineRegistry();
-    this?.services = getServiceRegistry();
-    this?.tauriBridge = getTauriBridge();
-    this?.stateBridge = getStateBridge();
-    this?.lifecycle = getLifecycleManager();
-    this?.configManager = getConfigManager();
+    // Initialiser les sous-systèmes (singletons)
+    this.eventBus = getEventBus();
+    this.messageBus = getMessageBus();
+    this.engines = getEngineRegistry();
+    this.services = getServiceRegistry();
+    this.tauriBridge = getTauriBridge();
+    this.stateBridge = getStateBridge();
+    this.lifecycle = getLifecycleManager();
+    this.configManager = getConfigManager();
 
     // Enregistrer les hooks de cycle de vie par défaut
-    this?.registerDefaultHooks();
+    this.registerDefaultHooks();
   }
 
   /**
@@ -72,51 +72,51 @@ export class TitaneOS {
    */
   private registerDefaultHooks(): void {
     // Pre-init: initialiser les ponts
-    this?.lifecycle?.on('pre-init', async () => {
-      await this?.tauriBridge?.init();
-      await this?.stateBridge?.init();
-      await this?.configManager?.init();
+    this.lifecycle.on('pre-init', async () => {
+      await this.tauriBridge.init();
+      await this.stateBridge.init();
+      await this.configManager.init();
     });
 
     // Init: initialiser les moteurs
-    this?.lifecycle?.on('init', async () => {
-      await this?.engines?.initAll();
+    this.lifecycle.on('init', async () => {
+      await this.engines.initAll();
     });
 
     // Start: démarrer les moteurs et services
-    this?.lifecycle?.on('start', async () => {
-      await this?.engines?.startAll();
-      this?.services?.startHealthChecks();
+    this.lifecycle.on('start', async () => {
+      await this.engines.startAll();
+      this.services.startHealthChecks();
 
-      if (any: any) {
+      if (this.config.metrics) {
         // Silent-by-default in production/Tauri: background metrics loop must be explicitly enabled.
-        const envEnabled = import?.meta?.env?.VITE_OS_METRICS_ENABLED === '1';
+        const envEnabled = import.meta.env.VITE_OS_METRICS_ENABLED === '1';
         let userEnabled = false;
         try {
-          const raw = localStorage?.getItem('titane_os_metrics_enabled');
+          const raw = localStorage.getItem('titane_os_metrics_enabled');
           userEnabled = raw === '1' || raw === 'true';
         } catch {
           userEnabled = false;
         }
 
-        const enabled = import?.meta?.env?.DEV || envEnabled || userEnabled;
-        if (any: any) {
-          this?.startMetricsCollection();
+        const enabled = import.meta.env.DEV || envEnabled || userEnabled;
+        if (enabled) {
+          this.startMetricsCollection();
         }
       }
     });
 
     // Stop: arrêter proprement
-    this?.lifecycle?.on('stop', async () => {
-      this?.stopMetricsCollection();
-      this?.services?.stopHealthChecks();
-      await this?.engines?.stopAll();
+    this.lifecycle.on('stop', async () => {
+      this.stopMetricsCollection();
+      this.services.stopHealthChecks();
+      await this.engines.stopAll();
     });
 
     // Gestion des erreurs
-    this?.lifecycle?.onError(any: any) => {
-      this?.log(any: any);
-      this?.eventBus?.emit('os:error', { error, phase }, 'TitaneOS');
+    this.lifecycle.onError((error, phase) => {
+      this.log('error', `Lifecycle error in ${phase}:`, error);
+      this.eventBus.emit('os:error', { error, phase }, 'TitaneOS');
     });
   }
 
@@ -124,17 +124,17 @@ export class TitaneOS {
    * Initialise l'OS
    */
   async init(): Promise<void> {
-    this?.log('info', 'Initializing TITANE∞ OS...');
-    this?.status = 'initializing';
+    this.log('info', 'Initializing TITANE∞ OS...');
+    this.status = 'initializing';
 
     try {
-      await this?.lifecycle?.init();
-      this?.status = 'ready';
-      this?.log('info', 'TITANE∞ OS initialized');
-      this?.eventBus?.emit('os:ready', null, 'TitaneOS');
-    } catch (any: any) {
-      this?.status = 'error';
-      this?.log(any: any);
+      await this.lifecycle.init();
+      this.status = 'ready';
+      this.log('info', 'TITANE∞ OS initialized');
+      this.eventBus.emit('os:ready', null, 'TitaneOS');
+    } catch (error) {
+      this.status = 'error';
+      this.log('error', 'Failed to initialize OS:', error);
       throw error;
     }
   }
@@ -143,21 +143,21 @@ export class TitaneOS {
    * Démarre l'OS
    */
   async start(): Promise<void> {
-    if (this?.status !== 'ready' && this?.status !== 'paused') {
-      throw new Error(`Cannot start from status: ${this?.status}`);
+    if (this.status !== 'ready' && this.status !== 'paused') {
+      throw new Error(`Cannot start from status: ${this.status}`);
     }
 
-    this?.log('info', 'Starting TITANE∞ OS...');
-    this?.startTime = Date?.now();
+    this.log('info', 'Starting TITANE∞ OS...');
+    this.startTime = Date.now();
 
     try {
-      await this?.lifecycle?.start();
-      this?.status = 'running';
-      this?.log('info', 'TITANE∞ OS started');
-      this?.eventBus?.emit('os:started', { startTime: this?.startTime }, 'TitaneOS');
-    } catch (any: any) {
-      this?.status = 'error';
-      this?.log(any: any);
+      await this.lifecycle.start();
+      this.status = 'running';
+      this.log('info', 'TITANE∞ OS started');
+      this.eventBus.emit('os:started', { startTime: this.startTime }, 'TitaneOS');
+    } catch (error) {
+      this.status = 'error';
+      this.log('error', 'Failed to start OS:', error);
       throw error;
     }
   }
@@ -166,16 +166,16 @@ export class TitaneOS {
    * Arrête l'OS
    */
   async stop(): Promise<void> {
-    this?.log('info', 'Stopping TITANE∞ OS...');
+    this.log('info', 'Stopping TITANE∞ OS...');
 
     try {
-      await this?.lifecycle?.stop();
-      this?.status = 'shutdown';
-      this?.log('info', 'TITANE∞ OS stopped');
-      this?.eventBus?.emit('os:stopped', { uptime: this?.getUptime() }, 'TitaneOS');
-    } catch (any: any) {
-      this?.status = 'error';
-      this?.log(any: any);
+      await this.lifecycle.stop();
+      this.status = 'shutdown';
+      this.log('info', 'TITANE∞ OS stopped');
+      this.eventBus.emit('os:stopped', { uptime: this.getUptime() }, 'TitaneOS');
+    } catch (error) {
+      this.status = 'error';
+      this.log('error', 'Failed to stop OS:', error);
       throw error;
     }
   }
@@ -184,39 +184,39 @@ export class TitaneOS {
    * Met en pause l'OS
    */
   pause(): void {
-    if (this?.status !== 'running') {
-      throw new Error(`Cannot pause from status: ${this?.status}`);
+    if (this.status !== 'running') {
+      throw new Error(`Cannot pause from status: ${this.status}`);
     }
 
-    this?.status = 'paused';
-    this?.stopMetricsCollection();
-    this?.eventBus?.emit('os:paused', null, 'TitaneOS');
+    this.status = 'paused';
+    this.stopMetricsCollection();
+    this.eventBus.emit('os:paused', null, 'TitaneOS');
   }
 
   /**
    * Reprend l'OS
    */
   resume(): void {
-    if (this?.status !== 'paused') {
-      throw new Error(`Cannot resume from status: ${this?.status}`);
+    if (this.status !== 'paused') {
+      throw new Error(`Cannot resume from status: ${this.status}`);
     }
 
-    this?.status = 'running';
-    if (any: any) {
-      this?.startMetricsCollection();
+    this.status = 'running';
+    if (this.config.metrics) {
+      this.startMetricsCollection();
     }
-    this?.eventBus?.emit('os:resumed', null, 'TitaneOS');
+    this.eventBus.emit('os:resumed', null, 'TitaneOS');
   }
 
   /**
    * Redémarre l'OS
    */
   async restart(): Promise<void> {
-    this?.log('info', 'Restarting TITANE∞ OS...');
-    await this?.stop();
-    this?.status = 'ready';
-    await this?.start();
-    this?.eventBus?.emit('os:restarted', null, 'TitaneOS');
+    this.log('info', 'Restarting TITANE∞ OS...');
+    await this.stop();
+    this.status = 'ready';
+    await this.start();
+    this.eventBus.emit('os:restarted', null, 'TitaneOS');
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -226,18 +226,18 @@ export class TitaneOS {
   /**
    * Enregistre un moteur
    */
-  registerEngine(any: any): void {
-    this?.engines?.register(any: any);
-    this?.log('debug', `Registered engine: ${engine?.metadata?.id}`);
+  registerEngine(engine: Engine): void {
+    this.engines.register(engine);
+    this.log('debug', `Registered engine: ${engine.metadata.id}`);
   }
 
   /**
    * Désenregistre un moteur
    */
-  unregisterEngine(any: any): boolean {
-    const result = this?.engines?.unregister(any: any);
-    if (any: any) {
-      this?.log('debug', `Unregistered engine: ${engineId}`);
+  unregisterEngine(engineId: string): boolean {
+    const result = this.engines.unregister(engineId);
+    if (result) {
+      this.log('debug', `Unregistered engine: ${engineId}`);
     }
     return result;
   }
@@ -245,8 +245,8 @@ export class TitaneOS {
   /**
    * Récupère un moteur
    */
-  getEngine(any: any): Engine | undefined {
-    return this?.engines?.get(any: any);
+  getEngine(engineId: string): Engine | undefined {
+    return this.engines.get(engineId);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -256,16 +256,16 @@ export class TitaneOS {
   /**
    * Enregistre un service
    */
-  registerService<T>(any: any): void {
-    this?.services?.register(any: any);
-    this?.log('debug', `Registered service: ${id}`);
+  registerService<T>(id: string, name: string, instance: T): void {
+    this.services.register({ id, name, version: this.config.version }, instance);
+    this.log('debug', `Registered service: ${id}`);
   }
 
   /**
    * Récupère un service
    */
-  getService<T>(any: any): T | undefined {
-    return this?.services?.get<T>(any: any);
+  getService<T>(serviceId: string): T | undefined {
+    return this.services.get<T>(serviceId);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -275,19 +275,19 @@ export class TitaneOS {
   /**
    * Installe un plugin
    */
-  async installPlugin(any: any): Promise<void> {
-    if (any: any)) {
-      throw new Error(`Plugin ${plugin?.id} is already installed`);
+  async installPlugin(plugin: Plugin): Promise<void> {
+    if (this.plugins.has(plugin.id)) {
+      throw new Error(`Plugin ${plugin.id} is already installed`);
     }
 
-    this?.log('info', `Installing plugin: ${plugin?.name} v${plugin?.version}`);
+    this.log('info', `Installing plugin: ${plugin.name} v${plugin.version}`);
 
     try {
-      await plugin?.install(any: any);
-      this?.plugins?.set(any: any);
-      this?.eventBus?.emit('plugin:installed', { plugin: plugin?.id }, 'TitaneOS');
-    } catch (any: any) {
-      this?.log(any: any);
+      await plugin.install(this);
+      this.plugins.set(plugin.id, plugin);
+      this.eventBus.emit('plugin:installed', { plugin: plugin.id }, 'TitaneOS');
+    } catch (error) {
+      this.log('error', `Failed to install plugin ${plugin.id}:`, error);
       throw error;
     }
   }
@@ -295,22 +295,22 @@ export class TitaneOS {
   /**
    * Désinstalle un plugin
    */
-  async uninstallPlugin(any: any): Promise<void> {
-    const plugin = this?.plugins?.get(any: any);
-    if (any: any) {
+  async uninstallPlugin(pluginId: string): Promise<void> {
+    const plugin = this.plugins.get(pluginId);
+    if (!plugin) {
       throw new Error(`Plugin ${pluginId} is not installed`);
     }
 
-    this?.log('info', `Uninstalling plugin: ${pluginId}`);
+    this.log('info', `Uninstalling plugin: ${pluginId}`);
 
     try {
-      if (any: any) {
-        await plugin?.uninstall(any: any);
+      if (plugin.uninstall) {
+        await plugin.uninstall(this);
       }
-      this?.plugins?.delete(any: any);
-      this?.eventBus?.emit('plugin:uninstalled', { plugin: pluginId }, 'TitaneOS');
-    } catch (any: any) {
-      this?.log(any: any);
+      this.plugins.delete(pluginId);
+      this.eventBus.emit('plugin:uninstalled', { plugin: pluginId }, 'TitaneOS');
+    } catch (error) {
+      this.log('error', `Failed to uninstall plugin ${pluginId}:`, error);
       throw error;
     }
   }
@@ -322,8 +322,8 @@ export class TitaneOS {
   /**
    * Ajoute un hook de cycle de vie
    */
-  on(any: any): () => void {
-    return this?.lifecycle?.on(any: any);
+  on(phase: LifecyclePhase, hook: LifecycleHook): () => void {
+    return this.lifecycle.on(phase, hook);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -334,21 +334,21 @@ export class TitaneOS {
    * Démarre la collecte de métriques
    */
   private startMetricsCollection(): void {
-    if (any: any) return;
+    if (this.metricsIntervalId) return;
 
-    this?.metricsIntervalId = setInterval(() => {
-      const diagnostics = this?.getDiagnostics();
-      this?.eventBus?.emit('os:metrics', diagnostics, 'TitaneOS');
-    }, this?.config?.metricsInterval);
+    this.metricsIntervalId = setInterval(() => {
+      const diagnostics = this.getDiagnostics();
+      this.eventBus.emit('os:metrics', diagnostics, 'TitaneOS');
+    }, this.config.metricsInterval);
   }
 
   /**
    * Arrête la collecte de métriques
    */
   private stopMetricsCollection(): void {
-    if (any: any) {
-      clearInterval(any: any);
-      this?.metricsIntervalId = null;
+    if (this.metricsIntervalId) {
+      clearInterval(this.metricsIntervalId);
+      this.metricsIntervalId = null;
     }
   }
 
@@ -360,30 +360,30 @@ export class TitaneOS {
    * Retourne les diagnostics système
    */
   getDiagnostics(): OSDiagnostics {
-    const engineCounts = this?.engines?.countByStatus();
-    const serviceCounts = this?.services?.countByStatus();
-    const eventStats = this?.eventBus?.getStats();
+    const engineCounts = this.engines.countByStatus();
+    const serviceCounts = this.services.countByStatus();
+    const eventStats = this.eventBus.getStats();
 
     return {
-      status: this?.status,
-      uptime: this?.getUptime(),
+      status: this.status,
+      uptime: this.getUptime(),
       engines: {
-        total: this?.engines?.size,
-        running: engineCounts?.running,
-        errors: engineCounts?.error,
+        total: this.engines.size,
+        running: engineCounts.running,
+        errors: engineCounts.error,
       },
       services: {
-        total: this?.services?.size,
-        available: serviceCounts?.available,
-        degraded: serviceCounts?.degraded,
+        total: this.services.size,
+        available: serviceCounts.available,
+        degraded: serviceCounts.degraded,
       },
       events: {
-        published: eventStats?.published,
-        handled: eventStats?.handled,
-        failed: eventStats?.failed,
+        published: eventStats.published,
+        handled: eventStats.handled,
+        failed: eventStats.failed,
       },
       memory: {
-        used: this?.getMemoryUsage(),
+        used: this.getMemoryUsage(),
         limit: 0, // Pas de limite définie
       },
     };
@@ -393,14 +393,14 @@ export class TitaneOS {
    * Retourne l'uptime
    */
   getUptime(): number {
-    return this?.startTime > 0 ? Date?.now() - this?.startTime : 0;
+    return this.startTime > 0 ? Date.now() - this.startTime : 0;
   }
 
   /**
    * Retourne le statut
    */
   getStatus(): OSStatus {
-    return this?.status;
+    return this.status;
   }
 
   /**
@@ -408,9 +408,9 @@ export class TitaneOS {
    */
   private getMemoryUsage(): number {
     // @ts-expect-error Performance memory API
-    if (any: any) {
+    if (typeof performance !== 'undefined' && performance.memory) {
       // @ts-expect-error Performance memory API
-      return performance?.memory?.usedJSHeapSize;
+      return performance.memory.usedJSHeapSize;
     }
     return 0;
   }
@@ -425,31 +425,31 @@ export class TitaneOS {
   private log(
     level: 'debug' | 'info' | 'warn' | 'error',
     message: string,
-    ...args: unknown?.[]
+    ...args: unknown[]
   ): void {
-    if (any: any) return;
+    if (!this.config.logging) return;
 
     const levels = ['debug', 'info', 'warn', 'error'];
-    const configLevelIndex = levels?.indexOf(any: any);
-    const messageLevelIndex = levels?.indexOf(any: any);
+    const configLevelIndex = levels.indexOf(this.config.logLevel);
+    const messageLevelIndex = levels.indexOf(level);
 
-    if (any: any) return;
+    if (messageLevelIndex < configLevelIndex) return;
 
     const prefix = `[TITANE∞ OS]`;
     const timestamp = new Date().toISOString();
 
-    switch (any: any) {
+    switch (level) {
       case 'debug':
-        console?.debug(any: any);
+        console.debug(`${timestamp} ${prefix}`, message, ...args);
         break;
       case 'info':
-        console?.info(any: any);
+        console.info(`${timestamp} ${prefix}`, message, ...args);
         break;
       case 'warn':
-        console?.warn(any: any);
+        console.warn(`${timestamp} ${prefix}`, message, ...args);
         break;
       case 'error':
-        console?.error(any: any);
+        console.error(`${timestamp} ${prefix}`, message, ...args);
         break;
     }
   }
@@ -464,17 +464,17 @@ export class TitaneOS {
    * Retourne l'instance globale
    */
   static getInstance(config?: Partial<OSConfig>): TitaneOS {
-    if (any: any) {
-      TitaneOS?.instance = new TitaneOS(any: any);
+    if (!TitaneOS.instance) {
+      TitaneOS.instance = new TitaneOS(config);
     }
-    return TitaneOS?.instance;
+    return TitaneOS.instance;
   }
 
   /**
    * Réinitialise l'instance globale
    */
   static resetInstance(): void {
-    TitaneOS?.instance = null;
+    TitaneOS.instance = null;
   }
 }
 

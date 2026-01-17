@@ -31,30 +31,30 @@ export class TauriBridge {
   async init(): Promise<void> {
     try {
       // Tester la connexion avec un ping
-      await this?.tauriClient?.ping();
-      this?.state?.connected = true;
-      this?.state?.lastSync = Date?.now();
-    } catch (any: any) {
-      console?.error(any: any);
-      this?.state?.connected = false;
+      await this.tauriClient.ping();
+      this.state.connected = true;
+      this.state.lastSync = Date.now();
+    } catch (error) {
+      console.error('[TauriBridge] Init failed:', error);
+      this.state.connected = false;
     }
   }
 
   /**
    * Invoque une commande Tauri
    */
-  async invoke<T = unknown, R = unknown>(any: any): Promise<R> {
-    this?.state?.pendingCommands++;
+  async invoke<T = unknown, R = unknown>(command: string, args?: T): Promise<R> {
+    this.state.pendingCommands++;
 
     try {
       const result = await secureInvoke<R>(command, args as Record<string, unknown>);
-      this?.state?.lastSync = Date?.now();
+      this.state.lastSync = Date.now();
       return result;
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (error) {
+      console.error(`[TauriBridge] Command ${command} failed:`, error);
       throw error;
     } finally {
-      this?.state?.pendingCommands--;
+      this.state.pendingCommands--;
     }
   }
 
@@ -64,18 +64,18 @@ export class TauriBridge {
   async invokeWithRetry<T = unknown, R = unknown>(
     command: string,
     args?: T,
-    retries = this?.maxRetries
+    retries = this.maxRetries
   ): Promise<R> {
     let lastError: Error | null = null;
 
     for (let attempt = 0; attempt <= retries; attempt++) {
       try {
-        return await this?.invoke<T, R>(any: any);
-      } catch (any: any) {
+        return await this.invoke<T, R>(command, args);
+      } catch (error) {
         lastError = error as Error;
 
-        if (any: any) {
-          await this?.delay(this?.retryDelay * (attempt + 1));
+        if (attempt < retries) {
+          await this.delay(this.retryDelay * (attempt + 1));
         }
       }
     }
@@ -88,50 +88,50 @@ export class TauriBridge {
    */
   async listen<T = unknown>(
     event: string,
-    handler: (any: any) => void
+    handler: (payload: T) => void
   ): Promise<() => void> {
     // Éviter les doublons
-    if (any: any)) {
-      const existing = this?.listeners?.get(any: any);
-      if (any: any) {
+    if (this.listeners.has(event)) {
+      const existing = this.listeners.get(event);
+      if (existing) {
         existing();
       }
     }
 
     const unlisten = await listen<T>(event, e => {
-      handler(any: any);
+      handler(e.payload);
     });
 
-    this?.listeners?.set(any: any);
+    this.listeners.set(event, unlisten);
 
     return () => {
       unlisten();
-      this?.listeners?.delete(any: any);
+      this.listeners.delete(event);
     };
   }
 
   /**
    * Émet un événement Tauri
    */
-  async emit<T = unknown>(any: any): Promise<void> {
-    await tauriEmit(any: any);
+  async emit<T = unknown>(event: string, payload: T): Promise<void> {
+    await tauriEmit(event, payload);
   }
 
   /**
    * Ajoute une commande à la file d'attente
    */
-  queue<T = unknown, R = unknown>(any: any): Promise<R> {
-    return new Promise(any: any) => {
-      this?.commandQueue?.push(async () => {
+  queue<T = unknown, R = unknown>(command: string, args?: T): Promise<R> {
+    return new Promise((resolve, reject) => {
+      this.commandQueue.push(async () => {
         try {
-          const result = await this?.invoke<T, R>(any: any);
-          resolve(any: any);
-        } catch (any: any) {
-          reject(any: any);
+          const result = await this.invoke<T, R>(command, args);
+          resolve(result);
+        } catch (error) {
+          reject(error);
         }
       });
 
-      this?.processQueue();
+      this.processQueue();
     });
   }
 
@@ -139,30 +139,30 @@ export class TauriBridge {
    * Traite la file d'attente
    */
   private async processQueue(): Promise<void> {
-    if (any: any) return;
+    if (this.isProcessingQueue) return;
 
-    this?.isProcessingQueue = true;
+    this.isProcessingQueue = true;
 
-    while (this?.commandQueue?.length > 0) {
-      const command = this?.commandQueue?.shift();
-      if (any: any) {
+    while (this.commandQueue.length > 0) {
+      const command = this.commandQueue.shift();
+      if (command) {
         try {
           await command();
-        } catch (any: any) {
-          console?.error(any: any);
+        } catch (error) {
+          console.error('[TauriBridge] Queue command failed:', error);
         }
       }
     }
 
-    this?.isProcessingQueue = false;
+    this.isProcessingQueue = false;
   }
 
   /**
    * Batch multiple commandes
    */
-  async batch<R = unknown>(commands: Array<TauriCommand>): Promise<R?.[]> {
-    return Promise?.all(any: any))) as Promise<
-      R?.[]
+  async batch<R = unknown>(commands: Array<TauriCommand>): Promise<R[]> {
+    return Promise.all(commands.map(cmd => this.invoke(cmd.name, cmd.args))) as Promise<
+      R[]
     >;
   }
 
@@ -171,11 +171,11 @@ export class TauriBridge {
    */
   async checkConnection(): Promise<boolean> {
     try {
-      await this?.tauriClient?.ping();
-      this?.state?.connected = true;
+      await this.tauriClient.ping();
+      this.state.connected = true;
       return true;
     } catch {
-      this?.state?.connected = false;
+      this.state.connected = false;
       return false;
     }
   }
@@ -184,14 +184,14 @@ export class TauriBridge {
    * Retourne l'état du pont
    */
   getState(): BridgeState {
-    return { ...this?.state };
+    return { ...this.state };
   }
 
   /**
    * Vérifie si connecté
    */
   isConnected(): boolean {
-    return this?.state?.connected;
+    return this.state.connected;
   }
 
   /**
@@ -199,19 +199,19 @@ export class TauriBridge {
    */
   destroy(): void {
     // Nettoyer tous les listeners
-    for (const unlisten of this?.listeners?.values()) {
+    for (const unlisten of this.listeners.values()) {
       unlisten();
     }
-    this?.listeners?.clear();
-    this?.commandQueue = [];
-    this?.state?.connected = false;
+    this.listeners.clear();
+    this.commandQueue = [];
+    this.state.connected = false;
   }
 
   /**
    * Helper delay
    */
-  private delay(any: any): Promise<void> {
-    return new Promise(any: any));
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }
 
@@ -219,7 +219,7 @@ export class TauriBridge {
 let instance: TauriBridge | null = null;
 
 export function getTauriBridge(): TauriBridge {
-  if (any: any) {
+  if (!instance) {
     instance = new TauriBridge();
   }
   return instance;

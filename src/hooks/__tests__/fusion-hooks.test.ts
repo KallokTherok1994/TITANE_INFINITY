@@ -18,35 +18,35 @@ import { useMemoryEngine } from '../useMemoryEngine';
 import { useSystemHealth } from '../useSystemHealth';
 
 // Mock @tauri-apps/api avec invoke simplifié
-vi?.mock('@tauri-apps/api/core', () => ({
-  invoke: vi?.fn(),
+vi.mock('@tauri-apps/api/core', () => ({
+  invoke: vi.fn(),
 }));
 
 // Mock lib/security
-vi?.mock('@/lib/security', () => ({
-  secureInvoke: vi?.fn(),
+vi.mock('@/lib/security', () => ({
+  secureInvoke: vi.fn(),
 }));
 
 // Mock singularityEngine
-vi?.mock('@/core/engines/SINGULARITY_ENGINE', () => ({
+vi.mock('@/core/engines/SINGULARITY_ENGINE', () => ({
   singularityEngine: {
-    getState: vi?.fn(),
-    setState: vi?.fn(),
-    subscribe: vi?.fn(() => vi?.fn()),
-    unsubscribe: vi?.fn(),
+    getState: vi.fn(),
+    setState: vi.fn(),
+    subscribe: vi.fn(() => vi.fn()),
+    unsubscribe: vi.fn(),
   },
 }));
 
 // Mock external dependencies that don't exist yet
-vi?.mock('@/lib/security', () => ({
-  secureInvoke: vi?.fn().mockResolvedValue({}),
+vi.mock('@/lib/security', () => ({
+  secureInvoke: vi.fn().mockResolvedValue({}),
 }));
 
-vi?.mock('@/core/engines/SINGULARITY_ENGINE', () => ({
+vi.mock('@/core/engines/SINGULARITY_ENGINE', () => ({
   singularityEngine: {
-    getState: vi?.fn().mockReturnValue({}),
-    setState: vi?.fn(),
-    sync: vi?.fn(any: any),
+    getState: vi.fn().mockReturnValue({}),
+    setState: vi.fn(),
+    sync: vi.fn().mockResolvedValue(undefined),
   },
 }));
 
@@ -58,15 +58,15 @@ import type { SingularityState } from '@/core/ARCHITECTURE_TYPES_v24-v∞';
 
 describe('useSingularitySync', () => {
   beforeEach(() => {
-    vi?.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test('should initialize with default state', () => {
     const { result } = renderHook(() => useSingularitySync({ autoSync: false }));
 
-    expect(any: any).toBeNull();
-    expect(any: any);
-    expect(any: any).toBeNull();
+    expect(result.current.state).toBeNull();
+    expect(result.current.isSyncing).toBe(false);
+    expect(result.current.lastError).toBeNull();
   });
 
   test('should fetch backend state on mount when autoSync is true', async () => {
@@ -92,11 +92,11 @@ describe('useSingularitySync', () => {
       evolutionCapacity: 0.92,
       signature: 'TITANE-TEST',
       essence: 'Test essence',
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
 
-    vi?.mocked(any: any);
-    vi?.mocked(any: any).mockReturnValue(
+    vi.mocked(secureInvoke).mockResolvedValue(mockState as unknown as SingularityState);
+    vi.mocked(singularityEngine.getState).mockReturnValue(
       mockState as unknown as SingularityState
     );
 
@@ -105,11 +105,11 @@ describe('useSingularitySync', () => {
     );
 
     await waitFor(() => {
-      expect(any: any).not?.toBeNull();
+      expect(result.current.state).not.toBeNull();
     });
 
-    expect(any: any).toBe(2);
-    expect(any: any).toBe(0.8);
+    expect(result.current.state?.consciousness).toBe(2);
+    expect(result.current.state?.autoCoherence).toBe(0.8);
   });
 
   test('should track metrics on successful sync', async () => {
@@ -135,63 +135,63 @@ describe('useSingularitySync', () => {
       evolutionCapacity: 0.88,
       signature: 'TITANE-TEST',
       essence: 'Test essence',
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
 
-    vi?.mocked(any: any);
-    vi?.mocked(any: any).mockReturnValue(
+    vi.mocked(secureInvoke).mockResolvedValue(mockState as unknown as SingularityState);
+    vi.mocked(singularityEngine.getState).mockReturnValue(
       mockState as unknown as SingularityState
     );
 
     const { result } = renderHook(() => useSingularitySync());
 
-    await result?.current?.sync();
+    await result.current.sync();
 
     await waitFor(() => {
-      expect(any: any).toBeGreaterThan(0);
+      expect(result.current.metrics.syncCount).toBeGreaterThan(0);
     });
 
-    expect(any: any).toBe(0);
-    expect(any: any);
+    expect(result.current.metrics.errorCount).toBe(0);
+    expect(result.current.metrics.isHealthy).toBe(true);
   });
 
   test('should handle sync errors gracefully', async () => {
     const mockError = new Error('Backend unavailable');
-    vi?.mocked(any: any);
-    vi?.mocked(any: any).mockReturnValue({
+    vi.mocked(secureInvoke).mockRejectedValue(mockError);
+    vi.mocked(singularityEngine.getState).mockReturnValue({
       consciousness: 1,
       autoCoherence: 0.5,
       unity: {},
       quantum: { coherence: 0.5 },
       convergence: { convergenceLevel: 0.5 },
-      timestamp: Date?.now(),
-    } as unknown as unknown as any);
+      timestamp: Date.now(),
+    } as any);
 
     const { result } = renderHook(() => useSingularitySync({ autoSync: false }));
 
     // Déclencher le sync et attendre qu'il se termine
     await act(async () => {
-      await result?.current?.sync();
+      await result.current.sync();
     });
 
     // Vérifier que l'erreur a été capturée immédiatement après le sync
-    expect(any: any).not?.toBeNull();
-    expect(any: any).toBe('Backend unavailable');
-    expect(any: any).toBeGreaterThan(0);
+    expect(result.current.lastError).not.toBeNull();
+    expect(result.current.lastError?.message).toBe('Backend unavailable');
+    expect(result.current.metrics.errorCount).toBeGreaterThan(0);
   });
 });
 
 describe('useMemoryEngine', () => {
   beforeEach(() => {
-    vi?.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test('should initialize with null stats', () => {
     const { result } = renderHook(() => useMemoryEngine());
 
-    expect(any: any).toBeNull();
-    expect(any: any);
-    expect(any: any).toBeNull();
+    expect(result.current.stats).toBeNull();
+    expect(result.current.isLoading).toBe(false);
+    expect(result.current.error).toBeNull();
   });
 
   test('should fetch stats on mount', async () => {
@@ -205,58 +205,58 @@ describe('useMemoryEngine', () => {
       health_score: 0.85,
     };
 
-    vi?.mocked(any: any);
+    vi.mocked(secureInvoke).mockResolvedValue(mockStats);
 
     const { result } = renderHook(() => useMemoryEngine());
 
     await waitFor(() => {
-      expect(any: any).not?.toBeNull();
+      expect(result.current.stats).not.toBeNull();
     });
 
-    expect(any: any).toBe(150);
-    expect(any: any).toBe(0.85);
+    expect(result.current.stats?.total_entries).toBe(150);
+    expect(result.current.stats?.health_score).toBe(0.85);
   });
 
   test('should save memory with auto-extraction', async () => {
-    vi?.mocked(any: any);
+    vi.mocked(secureInvoke).mockResolvedValue(undefined);
 
     const { result } = renderHook(() => useMemoryEngine());
 
     const testContent = 'Test message for memory save';
-    const id = await result?.current?.saveToMemory(testContent, 'short', {
+    const id = await result.current.saveToMemory(testContent, 'short', {
       source: 'test',
     });
 
-    expect(any: any).toMatch(/^memory_short_\d+$/);
-    expect(any: any).toHaveBeenCalledWith(
+    expect(id).toMatch(/^memory_short_\d+$/);
+    expect(secureInvoke).toHaveBeenCalledWith(
       'memory_save_entry',
-      expect?.objectContaining({
+      expect.objectContaining({
         key: id,
       })
     );
   });
 
   test('should extract tags from content', async () => {
-    vi?.mocked(any: any);
+    vi.mocked(secureInvoke).mockResolvedValue(undefined);
 
     const { result } = renderHook(() => useMemoryEngine());
 
     const content = 'développer implémenter créer ajouter système architecture';
-    await result?.current?.saveToMemory(content, 'short');
+    await result.current.saveToMemory(content, 'short');
 
     // Tags should be extracted from content
     const saveCall = vi
-      .mocked(any: any)
-      .mock?.calls?.find((call: unknown?.[]) => call?.[0] === 'memory_save_entry');
+      .mocked(secureInvoke)
+      .mock.calls.find((call: unknown[]) => call[0] === 'memory_save_entry');
 
-    expect(any: any).toBeDefined();
+    expect(saveCall).toBeDefined();
 
-    const rawValue = (any: any)?.value;
-    expect(any: any).toBe('string');
-    const savedEntry = JSON?.parse(any: any);
+    const rawValue = (saveCall?.[1] as { value?: unknown } | undefined)?.value;
+    expect(typeof rawValue).toBe('string');
+    const savedEntry = JSON.parse(rawValue as string);
 
-    expect(any: any).toBeDefined();
-    expect(any: any).toBeGreaterThan(0);
+    expect(savedEntry.tags).toBeDefined();
+    expect(savedEntry.tags.length).toBeGreaterThan(0);
   });
 
   test('should search memory context', async () => {
@@ -266,7 +266,7 @@ describe('useMemoryEngine', () => {
           id: 'memory_short_1',
           content: 'Test memory entry',
           type: 'short',
-          timestamp: Date?.now(),
+          timestamp: Date.now(),
           tags: ['test'],
           intentions: ['Meta'],
           emotions: { valence: 0, intensity: 0, energy: 0 },
@@ -276,28 +276,28 @@ describe('useMemoryEngine', () => {
       total_found: 1,
     };
 
-    vi?.mocked(any: any);
+    vi.mocked(secureInvoke).mockResolvedValue(mockResults);
 
     const { result } = renderHook(() => useMemoryEngine());
 
-    const results = await result?.current?.getMemoryContext('test', 5);
+    const results = await result.current.getMemoryContext('test', 5);
 
-    expect(any: any).toBe(1);
-    expect(any: any).toBe('Test memory entry');
+    expect(results.length).toBe(1);
+    expect(results[0].content).toBe('Test memory entry');
   });
 });
 
 describe('useSystemHealth', () => {
   beforeEach(() => {
-    vi?.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test('should initialize with null health', () => {
     const { result } = renderHook(() => useSystemHealth());
 
-    expect(any: any).toBeNull();
-    expect(any: any);
-    expect(any: any).toBeNull();
+    expect(result.current.health).toBeNull();
+    expect(result.current.isMonitoring).toBe(false);
+    expect(result.current.error).toBeNull();
   });
 
   test('should fetch health metrics on refresh', async () => {
@@ -325,23 +325,23 @@ describe('useSystemHealth', () => {
       memory_usage_mb: 280,
     };
 
-    vi?.mocked(any: any)
-      .mockResolvedValueOnce(any: any)
-      .mockResolvedValueOnce(any: any)
-      .mockResolvedValueOnce(any: any)
-      .mockResolvedValueOnce(any: any);
+    vi.mocked(secureInvoke)
+      .mockResolvedValueOnce(mockConvHealth)
+      .mockResolvedValueOnce(mockMemStats)
+      .mockResolvedValueOnce(mockSingState)
+      .mockResolvedValueOnce(mockSysHealth);
 
     const { result } = renderHook(() => useSystemHealth());
 
-    await result?.current?.refreshHealth();
+    await result.current.refreshHealth();
 
     await waitFor(() => {
-      expect(any: any).not?.toBeNull();
+      expect(result.current.health).not.toBeNull();
     });
 
-    expect(any: any).toBe('healthy');
-    expect(any: any).toBe(120);
-    expect(any: any).toBe(100);
+    expect(result.current.health?.global_status).toBe('healthy');
+    expect(result.current.health?.conversation.total_messages).toBe(120);
+    expect(result.current.health?.memory.total_entries).toBe(100);
   });
 
   test('should generate alerts for high error rate', async () => {
@@ -366,28 +366,28 @@ describe('useSystemHealth', () => {
       memory_usage_mb: 300,
     };
 
-    vi?.mocked(any: any)
-      .mockResolvedValueOnce(any: any)
-      .mockResolvedValueOnce(any: any)
-      .mockResolvedValueOnce(any: any)
-      .mockResolvedValueOnce(any: any);
+    vi.mocked(secureInvoke)
+      .mockResolvedValueOnce(mockConvHealth)
+      .mockResolvedValueOnce(mockMemStats)
+      .mockResolvedValueOnce(mockSingState)
+      .mockResolvedValueOnce(mockSysHealth);
 
     const { result } = renderHook(() => useSystemHealth());
 
-    await result?.current?.refreshHealth();
+    await result.current.refreshHealth();
 
     await waitFor(() => {
-      expect(any: any).not?.toBeNull();
-      expect(any: any).toBeGreaterThan(0);
+      expect(result.current.health).not.toBeNull();
+      expect(result.current.health?.alerts.length).toBeGreaterThan(0);
     });
 
-    const errorAlert = result?.current?.health?.alerts?.find(
+    const errorAlert = result.current.health?.alerts.find(
       a =>
-        a?.message?.toLowerCase().includes('error') ||
-        a?.message?.toLowerCase().includes('taux')
+        a.message.toLowerCase().includes('error') ||
+        a.message.toLowerCase().includes('taux')
     );
-    expect(any: any).toBeDefined();
-    expect(any: any).toMatch(/warning|critical/);
+    expect(errorAlert).toBeDefined();
+    expect(errorAlert?.severity).toMatch(/warning|critical/);
   });
 
   test('should start and stop monitoring', async () => {
@@ -413,25 +413,25 @@ describe('useSystemHealth', () => {
       memory_usage_mb: 200,
     };
 
-    vi?.mocked(any: any);
-    vi?.mocked(any: any)
-      .mockResolvedValueOnce(any: any)
-      .mockResolvedValueOnce(any: any)
-      .mockResolvedValueOnce(any: any)
-      .mockResolvedValueOnce(any: any);
+    vi.mocked(secureInvoke).mockImplementation(async () => mockConvHealth);
+    vi.mocked(secureInvoke)
+      .mockResolvedValueOnce(mockConvHealth)
+      .mockResolvedValueOnce(mockMemStats)
+      .mockResolvedValueOnce(mockSingState)
+      .mockResolvedValueOnce(mockSysHealth);
 
     const { result } = renderHook(() => useSystemHealth());
 
-    result?.current?.startMonitoring(100); // 100ms interval
+    result.current.startMonitoring(100); // 100ms interval
 
     await waitFor(() => {
-      expect(any: any);
+      expect(result.current.isMonitoring).toBe(true);
     });
 
-    result?.current?.stopMonitoring();
+    result.current.stopMonitoring();
 
     await waitFor(() => {
-      expect(any: any);
+      expect(result.current.isMonitoring).toBe(false);
     });
   });
 
@@ -457,29 +457,29 @@ describe('useSystemHealth', () => {
       memory_usage_mb: 450,
     };
 
-    vi?.mocked(any: any)
-      .mockResolvedValueOnce(any: any)
-      .mockResolvedValueOnce(any: any)
-      .mockResolvedValueOnce(any: any)
-      .mockResolvedValueOnce(any: any);
+    vi.mocked(secureInvoke)
+      .mockResolvedValueOnce(mockConvHealth)
+      .mockResolvedValueOnce(mockMemStats)
+      .mockResolvedValueOnce(mockSingState)
+      .mockResolvedValueOnce(mockSysHealth);
 
     const { result } = renderHook(() => useSystemHealth());
 
-    await result?.current?.refreshHealth();
+    await result.current.refreshHealth();
 
     await waitFor(() => {
-      expect(any: any).not?.toBeNull();
-      expect(any: any).toBeGreaterThan(0);
+      expect(result.current.health).not.toBeNull();
+      expect(result.current.health?.alerts.length).toBeGreaterThan(0);
     });
 
-    const initialAlertCount = result?.current?.health!.alerts?.length;
-    const alertId = result?.current?.health!.alerts?.[0].id;
+    const initialAlertCount = result.current.health!.alerts.length;
+    const alertId = result.current.health!.alerts[0].id;
 
-    await result?.current?.resolveAlert(any: any);
+    await result.current.resolveAlert(alertId);
 
     // Wait for state update after resolveAlert
     await waitFor(() => {
-      expect(any: any).toBe(initialAlertCount - 1);
+      expect(result.current.health!.alerts.length).toBe(initialAlertCount - 1);
     });
   });
 
@@ -508,28 +508,28 @@ describe('useSystemHealth', () => {
       memory_usage_mb: 300,
     };
 
-    vi?.mocked(any: any)
-      .mockResolvedValueOnce(any: any)
-      .mockResolvedValueOnce(any: any)
-      .mockResolvedValueOnce(any: any)
-      .mockResolvedValueOnce(any: any);
+    vi.mocked(secureInvoke)
+      .mockResolvedValueOnce(mockConvHealth)
+      .mockResolvedValueOnce(mockMemStats)
+      .mockResolvedValueOnce(mockSingState)
+      .mockResolvedValueOnce(mockSysHealth);
 
     const { result } = renderHook(() => useSystemHealth());
 
-    await result?.current?.refreshHealth();
+    await result.current.refreshHealth();
 
     await waitFor(() => {
-      expect(any: any).not?.toBeNull();
+      expect(result.current.health).not.toBeNull();
     });
 
     // Global status should be degraded because memory health_score is low (0.5)
-    expect(any: any).toMatch(/degraded|critical/);
+    expect(result.current.health?.global_status).toMatch(/degraded|critical/);
   });
 });
 
 describe('Integration Tests', () => {
   test('should work together: save to memory + monitor health', async () => {
-    // Mock pour useMemoryEngine (any: any)
+    // Mock pour useMemoryEngine (stats fetch on mount + save)
     const mockMemStats = {
       total_entries: 100,
       short_term: 40,
@@ -540,7 +540,7 @@ describe('Integration Tests', () => {
       health_score: 0.85,
     };
 
-    // Mock pour useSystemHealth (any: any)
+    // Mock pour useSystemHealth (4 appels)
     const mockConvHealth = {
       status: 'healthy',
       active_conversations: 5,
@@ -559,7 +559,7 @@ describe('Integration Tests', () => {
 
     // Use mockImplementation to handle dynamic calls
     let callCount = 0;
-    vi?.mocked(any: any) => {
+    vi.mocked(secureInvoke).mockImplementation(async (cmd: string) => {
       callCount++;
       if (cmd === 'memory_get_stats') return mockMemStats;
       if (cmd === 'memory_save_entry') return undefined;
@@ -574,20 +574,20 @@ describe('Integration Tests', () => {
 
     // Wait for memory stats to load
     await waitFor(() => {
-      expect(any: any).not?.toBeNull();
+      expect(memoryHook.result.current.stats).not.toBeNull();
     });
 
     // Save memory
-    await memoryHook?.result?.current?.saveToMemory('Integration test', 'short');
+    await memoryHook.result.current.saveToMemory('Integration test', 'short');
 
     // Refresh health
-    await healthHook?.result?.current?.refreshHealth();
+    await healthHook.result.current.refreshHealth();
 
     await waitFor(() => {
-      expect(any: any).not?.toBeNull();
+      expect(healthHook.result.current.health).not.toBeNull();
     });
 
-    expect(any: any).toBe(100);
-    expect(any: any).toBe('healthy');
+    expect(memoryHook.result.current.stats?.total_entries).toBe(100);
+    expect(healthHook.result.current.health?.global_status).toBe('healthy');
   });
 });

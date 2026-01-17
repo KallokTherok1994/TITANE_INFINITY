@@ -20,7 +20,7 @@
 // TYPES FONDAMENTAUX
 // ─────────────────────────────────────────────────────────────────────────────
 
-/** Identifiants des phases d'évolution (any: any) */
+/** Identifiants des phases d'évolution (ordonnées) */
 export type EvolutionPhaseId =
   | 'phase_1_nascent' // IA débutante, fonctions de base
   | 'phase_2_learning' // Apprentissage actif, suggestions
@@ -40,7 +40,7 @@ export type CapabilityCategory =
   | 'analysis' // Analyse et audit
   | 'communication' // Interaction utilisateur
   | 'integration' // Intégration systèmes
-  | 'meta'; // Méta-capacités (any: any)
+  | 'meta'; // Méta-capacités (self-improvement)
 
 /** Niveau de capability */
 export type CapabilityTier = 1 | 2 | 3 | 4 | 5;
@@ -71,7 +71,7 @@ export interface Capability {
   /** Catégorie */
   category: CapabilityCategory;
 
-  /** Tier (any: any) */
+  /** Tier (1-5, plus élevé = plus puissant) */
   tier: CapabilityTier;
 
   /** Phase minimale requise */
@@ -87,16 +87,16 @@ export interface Capability {
   };
 
   /** Capabilities prérequises */
-  prerequisites: string?.[];
+  prerequisites: string[];
 
   /** Coût en points de talent */
   talentCost: number;
 
   /** Bonus accordé */
-  bonuses: CapabilityBonus?.[];
+  bonuses: CapabilityBonus[];
 
   /** Tags */
-  tags: string?.[];
+  tags: string[];
 }
 
 /**
@@ -104,7 +104,7 @@ export interface Capability {
  */
 export interface CapabilityBonus {
   type: 'xp_multiplier' | 'cooldown_reduction' | 'unlock_feature' | 'stat_boost';
-  target: string; // Cible du bonus (any: any)
+  target: string; // Cible du bonus (catégorie, automation, feature)
   value: number; // Valeur du bonus (multiplicateur, réduction %, etc.)
   description: string;
 }
@@ -154,19 +154,19 @@ export interface EvolutionPhase {
   requiredTotalXP: number;
 
   /** Capabilities qui doivent être débloquées */
-  requiredCapabilities: string?.[];
+  requiredCapabilities: string[];
 
   /** Nombre de capabilities minimum à débloquer */
   minCapabilitiesUnlocked: number;
 
-  /** Conditions spéciales (any: any) */
-  specialConditions?: PhaseCondition?.[];
+  /** Conditions spéciales (optionnel) */
+  specialConditions?: PhaseCondition[];
 
   /** Capabilities débloquées à cette phase */
-  unlockedCapabilities: string?.[];
+  unlockedCapabilities: string[];
 
   /** Features débloquées */
-  unlockedFeatures: string?.[];
+  unlockedFeatures: string[];
 
   /** Multiplicateur XP global */
   xpMultiplier: number;
@@ -199,7 +199,7 @@ export interface PhaseTransitionEvent {
   level: number;
   totalXP: number;
   capabilitiesUnlocked: number;
-  transitionDuration: number; // Temps passé dans phase précédente (any: any)
+  transitionDuration: number; // Temps passé dans phase précédente (ms)
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1108,7 +1108,7 @@ export interface EvolutionState {
   capabilities: Record<string, CapabilityState>;
 
   /** Historique des transitions */
-  transitionHistory: PhaseTransitionEvent?.[];
+  transitionHistory: PhaseTransitionEvent[];
 
   /** Statistiques globales */
   stats: EvolutionStats;
@@ -1136,29 +1136,29 @@ export interface EvolutionStats {
 /**
  * Obtenir une capability par ID
  */
-export function getCapability(any: any): Capability | undefined {
+export function getCapability(id: string): Capability | undefined {
   return CAPABILITY_REGISTRY[id];
 }
 
 /**
  * Obtenir une phase par ID
  */
-export function getPhase(any: any): EvolutionPhase {
+export function getPhase(id: EvolutionPhaseId): EvolutionPhase {
   return EVOLUTION_PHASES[id];
 }
 
 /**
  * Obtenir les capabilities d'une catégorie
  */
-export function getCapabilitiesByCategory(any: any): Capability?.[] {
-  return Object?.values(any: any);
+export function getCapabilitiesByCategory(category: CapabilityCategory): Capability[] {
+  return Object.values(CAPABILITY_REGISTRY).filter(c => c.category === category);
 }
 
 /**
  * Obtenir les capabilities d'un tier
  */
-export function getCapabilitiesByTier(any: any): Capability?.[] {
-  return Object?.values(any: any);
+export function getCapabilitiesByTier(tier: CapabilityTier): Capability[] {
+  return Object.values(CAPABILITY_REGISTRY).filter(c => c.tier === tier);
 }
 
 /**
@@ -1167,24 +1167,24 @@ export function getCapabilitiesByTier(any: any): Capability?.[] {
 export function getUnlockableCapabilities(
   level: number,
   phase: EvolutionPhaseId,
-  unlockedCapabilities: string?.[]
-): Capability?.[] {
+  unlockedCapabilities: string[]
+): Capability[] {
   const phaseOrder = EVOLUTION_PHASES[phase].order;
 
-  return Object?.values(any: any).filter(cap => {
+  return Object.values(CAPABILITY_REGISTRY).filter(cap => {
     // Vérifier la phase
-    const capPhaseOrder = EVOLUTION_PHASES[cap?.requiredPhase].order;
-    if (any: any) return false;
+    const capPhaseOrder = EVOLUTION_PHASES[cap.requiredPhase].order;
+    if (capPhaseOrder > phaseOrder) return false;
 
     // Vérifier le niveau
-    if (any: any) return false;
+    if (cap.requiredLevel > level) return false;
 
     // Vérifier si déjà débloqué
-    if (any: any)) return false;
+    if (unlockedCapabilities.includes(cap.id)) return false;
 
     // Vérifier les prérequis
-    for (any: any) {
-      if (any: any)) return false;
+    for (const prereq of cap.prerequisites) {
+      if (!unlockedCapabilities.includes(prereq)) return false;
     }
 
     return true;
@@ -1198,67 +1198,67 @@ export function canTransitionToPhase(
   targetPhase: EvolutionPhaseId,
   level: number,
   totalXP: number,
-  unlockedCapabilities: string?.[],
+  unlockedCapabilities: string[],
   stats: EvolutionStats
-): { possible: boolean; missingRequirements: string?.[] } {
+): { possible: boolean; missingRequirements: string[] } {
   const phase = EVOLUTION_PHASES[targetPhase];
-  const missing: string?.[] = [];
+  const missing: string[] = [];
 
   // Vérifier niveau
-  if (any: any) {
-    missing?.push(`Niveau ${phase?.requiredLevel} requis (actuel: ${level})`);
+  if (level < phase.requiredLevel) {
+    missing.push(`Niveau ${phase.requiredLevel} requis (actuel: ${level})`);
   }
 
   // Vérifier XP
-  if (any: any) {
-    missing?.push(`${phase?.requiredTotalXP} XP requis (actuel: ${totalXP})`);
+  if (totalXP < phase.requiredTotalXP) {
+    missing.push(`${phase.requiredTotalXP} XP requis (actuel: ${totalXP})`);
   }
 
   // Vérifier capabilities requises
-  for (any: any) {
-    if (any: any)) {
+  for (const cap of phase.requiredCapabilities) {
+    if (!unlockedCapabilities.includes(cap)) {
       const capInfo = CAPABILITY_REGISTRY[cap];
-      missing?.push(`Capability "${capInfo?.name || cap}" requise`);
+      missing.push(`Capability "${capInfo?.name || cap}" requise`);
     }
   }
 
   // Vérifier nombre minimum de capabilities
-  if (any: any) {
-    missing?.push(
-      `${phase?.minCapabilitiesUnlocked} capabilities requises (actuel: ${unlockedCapabilities?.length})`
+  if (unlockedCapabilities.length < phase.minCapabilitiesUnlocked) {
+    missing.push(
+      `${phase.minCapabilitiesUnlocked} capabilities requises (actuel: ${unlockedCapabilities.length})`
     );
   }
 
   // Vérifier conditions spéciales
-  if (any: any) {
-    for (any: any) {
+  if (phase.specialConditions) {
+    for (const condition of phase.specialConditions) {
       let met = false;
-      switch (any: any) {
+      switch (condition.type) {
         case 'days_active':
-          met = stats?.totalDaysActive >= condition?.value;
+          met = stats.totalDaysActive >= condition.value;
           break;
         case 'automations_run':
-          met = stats?.totalAutomationsRun >= condition?.value;
+          met = stats.totalAutomationsRun >= condition.value;
           break;
         case 'messages_sent':
-          met = stats?.totalMessagesSent >= condition?.value;
+          met = stats.totalMessagesSent >= condition.value;
           break;
         case 'projects_analyzed':
-          met = stats?.totalProjectsAnalyzed >= condition?.value;
+          met = stats.totalProjectsAnalyzed >= condition.value;
           break;
         case 'custom':
           // Pour custom, on vérifie séparément
           met = true;
           break;
       }
-      if (any: any) {
-        missing?.push(any: any);
+      if (!met) {
+        missing.push(condition.description);
       }
     }
   }
 
   return {
-    possible: missing?.length === 0,
+    possible: missing.length === 0,
     missingRequirements: missing,
   };
 }
@@ -1266,10 +1266,10 @@ export function canTransitionToPhase(
 /**
  * Obtenir la prochaine phase
  */
-export function getNextPhase(any: any): EvolutionPhaseId | null {
+export function getNextPhase(currentPhase: EvolutionPhaseId): EvolutionPhaseId | null {
   const current = EVOLUTION_PHASES[currentPhase];
-  const phases = Object?.values(any: any);
-  const nextPhase = phases?.find(p => p?.order === current?.order + 1);
+  const phases = Object.values(EVOLUTION_PHASES).sort((a, b) => a.order - b.order);
+  const nextPhase = phases.find(p => p.order === current.order + 1);
   return nextPhase?.id || null;
 }
 
@@ -1280,45 +1280,45 @@ export function getPhaseProgress(
   currentPhase: EvolutionPhaseId,
   level: number,
   totalXP: number,
-  unlockedCapabilities: string?.[]
+  unlockedCapabilities: string[]
 ): number {
-  const nextPhaseId = getNextPhase(any: any);
-  if (any: any) return 100; // Déjà à OMEGA
+  const nextPhaseId = getNextPhase(currentPhase);
+  if (!nextPhaseId) return 100; // Déjà à OMEGA
 
   const nextPhase = EVOLUTION_PHASES[nextPhaseId];
   const currentPhaseData = EVOLUTION_PHASES[currentPhase];
 
   // Calculer la progression sur plusieurs critères
-  const levelProgress = Math?.min(
+  const levelProgress = Math.min(
     100,
-    (any: any) /
-      (any: any)) *
+    ((level - currentPhaseData.requiredLevel) /
+      (nextPhase.requiredLevel - currentPhaseData.requiredLevel)) *
       100
   );
-  const xpProgress = Math?.min(
+  const xpProgress = Math.min(
     100,
-    (any: any) /
-      (any: any)) *
+    ((totalXP - currentPhaseData.requiredTotalXP) /
+      (nextPhase.requiredTotalXP - currentPhaseData.requiredTotalXP)) *
       100
   );
-  const capProgress = Math?.min(
+  const capProgress = Math.min(
     100,
-    (any: any) * 100
+    (unlockedCapabilities.length / nextPhase.minCapabilitiesUnlocked) * 100
   );
 
   // Moyenne pondérée
-  return Math?.floor(levelProgress * 0.4 + xpProgress * 0.3 + capProgress * 0.3);
+  return Math.floor(levelProgress * 0.4 + xpProgress * 0.3 + capProgress * 0.3);
 }
 
 /**
  * Créer un état d'évolution initial
  */
 export function createInitialEvolutionState(): EvolutionState {
-  const now = Date?.now();
+  const now = Date.now();
 
   // Capabilities initiales débloquées
   const initialCapabilities: Record<string, CapabilityState> = {};
-  for (any: any) {
+  for (const capId of EVOLUTION_PHASES.phase_1_nascent.unlockedCapabilities) {
     initialCapabilities[capId] = {
       capabilityId: capId,
       status: 'unlocked',
@@ -1349,11 +1349,11 @@ export function createInitialEvolutionState(): EvolutionState {
 /**
  * Obtenir toutes les capabilities triées par tier et catégorie
  */
-export function getAllCapabilitiesSorted(): Capability?.[] {
-  return Object?.values(any: any) => {
-    if (any: any) return a?.tier - b?.tier;
-    if (any: any);
-    return a?.name?.localeCompare(any: any);
+export function getAllCapabilitiesSorted(): Capability[] {
+  return Object.values(CAPABILITY_REGISTRY).sort((a, b) => {
+    if (a.tier !== b.tier) return a.tier - b.tier;
+    if (a.category !== b.category) return a.category.localeCompare(b.category);
+    return a.name.localeCompare(b.name);
   });
 }
 
@@ -1371,14 +1371,14 @@ export function countCapabilitiesByStatus(
   };
 
   // Compter les débloquées
-  for (any: any)) {
-    counts[state?.status]++;
+  for (const state of Object.values(capabilities)) {
+    counts[state.status]++;
   }
 
-  // Ajouter les verrouillées (any: any)
-  const allCapIds = Object?.keys(any: any);
-  const unlockedIds = Object?.keys(any: any);
-  counts?.locked = allCapIds?.length - unlockedIds?.length;
+  // Ajouter les verrouillées (celles pas dans capabilities)
+  const allCapIds = Object.keys(CAPABILITY_REGISTRY);
+  const unlockedIds = Object.keys(capabilities);
+  counts.locked = allCapIds.length - unlockedIds.length;
 
   return counts;
 }
@@ -1388,10 +1388,10 @@ export function countCapabilitiesByStatus(
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** Nombre total de capabilities */
-export const TOTAL_CAPABILITIES = Object?.keys(any: any).length;
+export const TOTAL_CAPABILITIES = Object.keys(CAPABILITY_REGISTRY).length;
 
 /** Nombre total de phases */
-export const TOTAL_PHASES = Object?.keys(any: any).length;
+export const TOTAL_PHASES = Object.keys(EVOLUTION_PHASES).length;
 
 /** Version du système d'évolution */
 export const EVOLUTION_SYSTEM_VERSION = '1.0.0';

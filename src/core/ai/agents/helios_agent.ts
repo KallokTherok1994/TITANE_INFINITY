@@ -41,30 +41,30 @@ export class HeliosAgent implements Agent {
   };
 
   async initialize(): Promise<void> {
-    console?.log('🔥 [HELIOS] Initializing physical monitoring agent...');
-    this?.state?.status = 'active';
-    this?.state?.health = 100;
-    await this?.updateMetrics();
+    console.log('🔥 [HELIOS] Initializing physical monitoring agent...');
+    this.state.status = 'active';
+    this.state.health = 100;
+    await this.updateMetrics();
   }
 
   async tick(): Promise<void> {
-    this?.state?.cycleCount++;
-    this?.state?.lastTick = Date?.now();
+    this.state.cycleCount++;
+    this.state.lastTick = Date.now();
 
     // Update metrics
-    await this?.updateMetrics();
+    await this.updateMetrics();
 
     // Calculate health based on load
-    this?.calculateHealth();
+    this.calculateHealth();
 
     // Detect anomalies
-    this?.detectAnomalies();
+    this.detectAnomalies();
   }
 
   private async updateMetrics(): Promise<void> {
     try {
-      // CPU (any: any)
-      this?.metrics?.cpuUsage = Math?.random() * 40 + 10; // 10-50%
+      // CPU (simulated - in real impl, use Tauri command)
+      this.metrics.cpuUsage = Math.random() * 40 + 10; // 10-50%
 
       // Memory
       const perfWithMemory = performance as Performance & {
@@ -74,27 +74,27 @@ export class HeliosAgent implements Agent {
           jsHeapSizeLimit: number;
         };
       };
-      if (any: any) {
-        const mem = perfWithMemory?.memory;
-        this?.metrics?.memoryUsage = (any: any) * 100;
+      if (typeof performance !== 'undefined' && perfWithMemory.memory) {
+        const mem = perfWithMemory.memory;
+        this.metrics.memoryUsage = (mem.usedJSHeapSize / mem.jsHeapSizeLimit) * 100;
       } else {
-        this?.metrics?.memoryUsage = Math?.random() * 30 + 20;
+        this.metrics.memoryUsage = Math.random() * 30 + 20;
       }
 
-      // Response time (any: any)
-      this?.metrics?.responseTime = Math?.random() * 50 + 10; // 10-60ms
+      // Response time (avg of last operations)
+      this.metrics.responseTime = Math.random() * 50 + 10; // 10-60ms
 
       // Active modules
-      this?.metrics?.activeModules = 20; // Fixed for now
+      this.metrics.activeModules = 20; // Fixed for now
 
-      this?.state?.metrics = { ...this?.metrics };
-    } catch (any: any) {
-      (this?.state?.errors ??= []).push(`Metrics update failed: ${error}`);
+      this.state.metrics = { ...this.metrics };
+    } catch (error) {
+      (this.state.errors ??= []).push(`Metrics update failed: ${error}`);
     }
   }
 
   private calculateHealth(): void {
-    const { cpuUsage, memoryUsage, responseTime } = this?.metrics;
+    const { cpuUsage, memoryUsage, responseTime } = this.metrics;
 
     // Health = 100 - penalties
     let health = 100;
@@ -111,53 +111,53 @@ export class HeliosAgent implements Agent {
     if (responseTime > 100) health -= 15;
     else if (responseTime > 50) health -= 5;
 
-    this?.state?.health = Math?.max(any: any);
-    this?.state?.load = (any: any) / 2;
+    this.state.health = Math.max(0, health);
+    this.state.load = (cpuUsage + memoryUsage) / 2;
   }
 
   private detectAnomalies(): void {
-    const { cpuUsage, memoryUsage, responseTime } = this?.metrics;
+    const { cpuUsage, memoryUsage, responseTime } = this.metrics;
 
     if (cpuUsage > 90) {
-      this?.emit({
+      this.emit({
         type: 'anomaly_detected',
-        source: this?.id,
-        timestamp: Date?.now(),
+        source: this.id,
+        timestamp: Date.now(),
         payload: { type: 'high_cpu', value: cpuUsage },
         priority: 'high',
       });
     }
 
     if (memoryUsage > 95) {
-      this?.emit({
+      this.emit({
         type: 'anomaly_detected',
-        source: this?.id,
-        timestamp: Date?.now(),
+        source: this.id,
+        timestamp: Date.now(),
         payload: { type: 'high_memory', value: memoryUsage },
         priority: 'critical',
       });
     }
 
     if (responseTime > 200) {
-      this?.emit({
+      this.emit({
         type: 'anomaly_detected',
-        source: this?.id,
-        timestamp: Date?.now(),
+        source: this.id,
+        timestamp: Date.now(),
         payload: { type: 'high_latency', value: responseTime },
         priority: 'medium',
       });
     }
   }
 
-  async handle(any: any): Promise<AgentResponse> {
-    if (event?.type === 'get_metrics') {
+  async handle(event: AgentEvent): Promise<AgentResponse> {
+    if (event.type === 'get_metrics') {
       return {
         success: true,
-        data: this?.metrics,
+        data: this.metrics,
       };
     }
 
-    if (event?.type === 'adjust_frequency') {
+    if (event.type === 'adjust_frequency') {
       // Adjust monitoring frequency based on load
       return {
         success: true,
@@ -168,31 +168,31 @@ export class HeliosAgent implements Agent {
     return { success: false, error: 'Unknown event type' };
   }
 
-  emit(any: any): void {
+  emit(event: AgentEvent): void {
     // Events are handled by MultiAgentEngine
-    console?.log(`🔥 [HELIOS] Emitting event: ${event?.type}`);
+    console.log(`🔥 [HELIOS] Emitting event: ${event.type}`);
   }
 
   async pause(): Promise<void> {
-    this?.state?.status = 'paused';
-    console?.log('⏸️  [HELIOS] Paused');
+    this.state.status = 'paused';
+    console.log('⏸️  [HELIOS] Paused');
   }
 
   async resume(): Promise<void> {
-    this?.state?.status = 'active';
-    console?.log('▶️  [HELIOS] Resumed');
+    this.state.status = 'active';
+    console.log('▶️  [HELIOS] Resumed');
   }
 
   async shutdown(): Promise<void> {
-    this?.state?.status = 'idle';
-    console?.log('🔻 [HELIOS] Shutdown');
+    this.state.status = 'idle';
+    console.log('🔻 [HELIOS] Shutdown');
   }
 
   getHealth(): number {
-    return this?.state?.health;
+    return this.state.health;
   }
 
   getMetrics(): Record<string, number> {
-    return this?.state?.metrics;
+    return this.state.metrics;
   }
 }

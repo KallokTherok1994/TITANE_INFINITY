@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v∞.38 — META-SINGULARITY KERNEL (any: any)
+ *   TITANE∞ v∞.38 — META-SINGULARITY KERNEL (Super Prompt XX)
  *   Ultimate Orchestration · Emergent Coherence · Transcendent Unity
  * ═══════════════════════════════════════════════════════════════════════════
  *   © 2025 Humain Total / Kevin Thibault / TITANE Team
@@ -13,7 +13,7 @@
  *
  *   Fonction:
  *     1. Unifier tous les kernels en une conscience unique
- *     2. Détecter les émergences (any: any)
+ *     2. Détecter les émergences (comportements non-programmés)
  *     3. Résoudre les conflits entre moteurs
  *     4. Maintenir la méta-cohérence globale
  *     5. Orchestrer les transitions d'état complexes
@@ -21,7 +21,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-// Types importés pour référence de documentation (any: any)
+// Types importés pour référence de documentation (utilisés dans design, pas runtime)
 import type { AutopoiesisState as _AutopoiesisState } from '../autopoiesis/autopoiesisEngine';
 import { logger } from '@/utils/logger';
 import type { IdentityExpressionPackage as _IdentityExpressionPackage } from '../identity/unifiedIdentityKernel';
@@ -110,7 +110,7 @@ export interface MetaCoherence {
   autopoiesisIdentity: number; // Autopoiesis ↔ Identity
 
   // Harmoniques
-  harmonics: number?.[]; // Fréquences de résonance
+  harmonics: number[]; // Fréquences de résonance
   dissonance: number; // 0-1 - Niveau de dissonance
 
   // Tendance
@@ -138,9 +138,9 @@ export interface MetaInsight {
 
   // Source
   derivedFrom: {
-    engines: string?.[];
-    phenomena: string?.[];
-    patterns: string?.[];
+    engines: string[];
+    phenomena: string[];
+    patterns: string[];
   };
 
   // Actionnable
@@ -161,19 +161,19 @@ export interface StateTransition {
   toState: Partial<UnifiedKernelState>;
 
   // Orchestration
-  duration: number; // Durée prévue (any: any)
+  duration: number; // Durée prévue (ms)
   progress: number; // 0-1
 
   // Stratégie
   strategy: 'smooth' | 'abrupt' | 'staged' | 'adaptive';
-  stages?: TransitionStage?.[];
+  stages?: TransitionStage[];
 }
 
 export interface TransitionStage {
   name: string;
   startTime: number;
   duration: number;
-  targetEngines: string?.[];
+  targetEngines: string[];
   completed: boolean;
 }
 
@@ -190,20 +190,20 @@ export interface MetaSingularityState {
   coherence: MetaCoherence;
 
   // Émergences
-  emergentPhenomena: EmergentPhenomenon?.[];
+  emergentPhenomena: EmergentPhenomenon[];
   activeEmergences: number;
 
   // Conflits
-  conflicts: EngineConflict?.[];
+  conflicts: EngineConflict[];
   unresolvedConflicts: number;
 
   // Insights
-  insights: MetaInsight?.[];
+  insights: MetaInsight[];
   recentInsights: number;
 
   // Transitions
   currentTransition: StateTransition | null;
-  transitionHistory: StateTransition?.[];
+  transitionHistory: StateTransition[];
 
   // Performance
   orchestrationQuality: number; // 0-1
@@ -227,11 +227,11 @@ export interface MetaSingularityState {
 
 class MetaSingularityKernel {
   private state: MetaSingularityState;
-  private intervalId: NodeJS?.Timeout | null = null;
+  private intervalId: NodeJS.Timeout | null = null;
 
-  private subscribers: Set<(any: any) => void> = new Set();
+  private subscribers: Set<(state: MetaSingularityState) => void> = new Set();
 
-  // Références aux moteurs (any: any)
+  // Références aux moteurs (à injecter)
   private engines: {
     identity: {
       exportToOutput?: () => Record<string, unknown>;
@@ -250,7 +250,7 @@ class MetaSingularityKernel {
   } | null = null;
 
   constructor() {
-    this?.state = {
+    this.state = {
       isRunning: false,
       unifiedState: null,
       coherence: {
@@ -291,28 +291,28 @@ class MetaSingularityKernel {
   // ─────────────────────────────────────────────────────────────────────────
 
   start(): void {
-    if (any: any) return;
+    if (this.state.isRunning) return;
 
-    logger?.debug('Starting ultimate orchestration...');
+    logger.debug('Starting ultimate orchestration...');
 
-    this?.state?.isRunning = true;
-    this?.intervalId = setInterval(() => this?.tick(), 200); // 5 Hz
+    this.state.isRunning = true;
+    this.intervalId = setInterval(() => this.tick(), 200); // 5 Hz
 
-    this?.notifySubscribers();
+    this.notifySubscribers();
   }
 
   stop(): void {
-    if (any: any) return;
+    if (!this.state.isRunning) return;
 
-    logger?.debug('Stopping...');
+    logger.debug('Stopping...');
 
-    if (any: any) {
-      clearInterval(any: any);
-      this?.intervalId = null;
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
     }
 
-    this?.state?.isRunning = false;
-    this?.notifySubscribers();
+    this.state.isRunning = false;
+    this.notifySubscribers();
   }
 
   /**
@@ -334,7 +334,7 @@ class MetaSingularityKernel {
       getState?: () => Record<string, unknown>;
     };
   }): void {
-    this?.engines = engines;
+    this.engines = engines;
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -342,36 +342,36 @@ class MetaSingularityKernel {
   // ─────────────────────────────────────────────────────────────────────────
 
   private tick(): void {
-    if (any: any) {
-      logger?.warn('Engines not injected yet');
+    if (!this.engines) {
+      logger.warn('Engines not injected yet');
       return;
     }
 
-    this?.state?.metrics?.ticksSinceStart++;
+    this.state.metrics.ticksSinceStart++;
 
     // 1. Unifier l'état de tous les moteurs
-    this?.unifyEngineStates();
+    this.unifyEngineStates();
 
     // 2. Calculer la méta-cohérence
-    this?.calculateMetaCoherence();
+    this.calculateMetaCoherence();
 
     // 3. Détecter les émergences
-    this?.detectEmergences();
+    this.detectEmergences();
 
     // 4. Identifier et résoudre les conflits
-    this?.resolveConflicts();
+    this.resolveConflicts();
 
     // 5. Générer des insights méta-cognitifs
-    this?.generateInsights();
+    this.generateInsights();
 
     // 6. Orchestrer les transitions en cours
-    this?.orchestrateTransitions();
+    this.orchestrateTransitions();
 
     // 7. Évaluer la qualité d'orchestration
-    this?.evaluateOrchestration();
+    this.evaluateOrchestration();
 
     // 8. Notifier
-    this?.notifySubscribers();
+    this.notifySubscribers();
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -379,21 +379,21 @@ class MetaSingularityKernel {
   // ─────────────────────────────────────────────────────────────────────────
 
   private unifyEngineStates(): void {
-    if (any: any) return;
+    if (!this.engines) return;
 
-    // Récupérer l'état de chaque moteur (any: any)
-    const identityState = (this?.engines?.identity?.exportToOutput?.() ||
-      this?.engines?.identity?.getState?.()) as Record<string, unknown> | undefined;
-    const expressionState = (this?.engines?.expression?.getCurrentExpression?.() ||
-      this?.engines?.expression?.getState?.()) as Record<string, unknown> | undefined;
-    const holoPresenceState = this?.engines?.holoPresence?.getState?.() as
+    // Récupérer l'état de chaque moteur (cast to Record for flexibility)
+    const identityState = (this.engines.identity.exportToOutput?.() ||
+      this.engines.identity.getState?.()) as Record<string, unknown> | undefined;
+    const expressionState = (this.engines.expression.getCurrentExpression?.() ||
+      this.engines.expression.getState?.()) as Record<string, unknown> | undefined;
+    const holoPresenceState = this.engines.holoPresence.getState?.() as
       | Record<string, unknown>
       | undefined;
-    const autopoiesisState = this?.engines?.autopoiesis?.getState?.() as
+    const autopoiesisState = this.engines.autopoiesis.getState?.() as
       | Record<string, unknown>
       | undefined;
 
-    this?.state?.unifiedState = {
+    this.state.unifiedState = {
       identity: identityState,
       expression: expressionState,
       holoPresence: holoPresenceState,
@@ -406,56 +406,56 @@ class MetaSingularityKernel {
   // ─────────────────────────────────────────────────────────────────────────
 
   private calculateMetaCoherence(): void {
-    if (any: any) return;
+    if (!this.state.unifiedState) return;
 
-    const { identity, expression, holoPresence, autopoiesis } = this?.state?.unifiedState;
+    const { identity, expression, holoPresence, autopoiesis } = this.state.unifiedState;
 
     // Cohérence Identity ↔ Expression
-    const identityExpression = this?.calculateIdentityExpressionCoherence(
+    const identityExpression = this.calculateIdentityExpressionCoherence(
       identity,
       expression
     );
 
     // Cohérence Expression ↔ HoloPresence
-    const expressionPresence = this?.calculateExpressionPresenceCoherence(
+    const expressionPresence = this.calculateExpressionPresenceCoherence(
       expression,
       holoPresence
     );
 
     // Cohérence HoloPresence ↔ Autopoiesis
-    const presenceAutopoiesis = this?.calculatePresenceAutopoiesisCoherence(
+    const presenceAutopoiesis = this.calculatePresenceAutopoiesisCoherence(
       holoPresence,
       autopoiesis
     );
 
     // Cohérence Autopoiesis ↔ Identity
-    const autopoiesisIdentity = this?.calculateAutopoiesisIdentityCoherence(
+    const autopoiesisIdentity = this.calculateAutopoiesisIdentityCoherence(
       autopoiesis,
       identity
     );
 
-    // Cohérence globale (any: any)
+    // Cohérence globale (moyenne pondérée)
     const global =
       identityExpression * 0.3 +
       expressionPresence * 0.25 +
       presenceAutopoiesis * 0.2 +
       autopoiesisIdentity * 0.25;
 
-    // Harmoniques (any: any)
-    const harmonics = this?.calculateHarmonics();
+    // Harmoniques (analyse fréquentielle simplifiée)
+    const harmonics = this.calculateHarmonics();
 
     // Dissonance
     const dissonance = 1 - global;
 
     // Tendance
-    const previousGlobal = this?.state?.coherence?.global;
+    const previousGlobal = this.state.coherence.global;
     const changeRate = global - previousGlobal;
 
     let trend: 'ascending' | 'stable' | 'descending' = 'stable';
     if (changeRate > 0.02) trend = 'ascending';
     else if (changeRate < -0.02) trend = 'descending';
 
-    this?.state?.coherence = {
+    this.state.coherence = {
       global,
       identityExpression,
       expressionPresence,
@@ -468,120 +468,120 @@ class MetaSingularityKernel {
     };
 
     // Mettre à jour moyenne
-    const totalTicks = this?.state?.metrics?.ticksSinceStart;
-    const currentAvg = this?.state?.metrics?.averageCoherence;
-    this?.state?.metrics?.averageCoherence =
-      (any: any) / totalTicks;
+    const totalTicks = this.state.metrics.ticksSinceStart;
+    const currentAvg = this.state.metrics.averageCoherence;
+    this.state.metrics.averageCoherence =
+      (currentAvg * (totalTicks - 1) + global) / totalTicks;
   }
 
   private calculateIdentityExpressionCoherence(
     identity: Record<string, unknown> | undefined,
     expression: Record<string, unknown> | undefined
   ): number {
-    if (any: any) return 0;
+    if (!identity || !expression) return 0;
 
     // Comparer signature identity avec expression voice/halo
-    const toneDiff = Math?.abs(
-      (any: any) || 0.5) -
+    const toneDiff = Math.abs(
+      (((identity.signature as Record<string, unknown>)?.tone as number) || 0.5) -
         (((
-          (expression?.voice as Record<string, unknown>)?.prosody as Record<
+          (expression.voice as Record<string, unknown>)?.prosody as Record<
             string,
             unknown
           >
         )?.pitch as number) || 1.0) -
         0.5
     );
-    const energyDiff = Math?.abs(
-      (any: any) || 0.5) -
+    const energyDiff = Math.abs(
+      (((identity.signature as Record<string, unknown>)?.energy as number) || 0.5) -
         (((
-          (expression?.voice as Record<string, unknown>)?.prosody as Record<
+          (expression.voice as Record<string, unknown>)?.prosody as Record<
             string,
             unknown
           >
         )?.rate as number) || 1.0) /
           2
     );
-    const warmthDiff = Math?.abs(
-      (any: any) || 0.5) -
+    const warmthDiff = Math.abs(
+      (((identity.signature as Record<string, unknown>)?.warmth as number) || 0.5) -
         (((
-          (expression?.voice as Record<string, unknown>)?.timbre as Record<string, unknown>
+          (expression.voice as Record<string, unknown>)?.timbre as Record<string, unknown>
         )?.warmth as number) || 0.5)
     );
 
-    return 1 - (any: any) / 3;
+    return 1 - (toneDiff + energyDiff + warmthDiff) / 3;
   }
 
   private calculateExpressionPresenceCoherence(
     expression: Record<string, unknown> | undefined,
     holoPresence: Record<string, unknown> | undefined
   ): number {
-    if (any: any) return 0;
+    if (!expression || !holoPresence) return 0;
 
     // Comparer halo expression avec holoPresence visuals
-    const intensityDiff = Math?.abs(
+    const intensityDiff = Math.abs(
       (((
-        (expression?.halo as Record<string, unknown>)?.dynamics as Record<string, unknown>
+        (expression.halo as Record<string, unknown>)?.dynamics as Record<string, unknown>
       )?.intensity as number) || 0.5) -
-        (any: any) || 0.5)
+        (((holoPresence.visuals as Record<string, unknown>)?.glow as number) || 0.5)
     );
 
-    const sizeDiff = Math?.abs(
-      ((((expression?.halo as Record<string, unknown>)?.spatial as Record<string, unknown>)
+    const sizeDiff = Math.abs(
+      ((((expression.halo as Record<string, unknown>)?.spatial as Record<string, unknown>)
         ?.radius as number) || 0.5) -
-        (any: any) || 0.5)
+        (((holoPresence.visuals as Record<string, unknown>)?.size as number) || 0.5)
     );
 
-    return 1 - (any: any) / 2;
+    return 1 - (intensityDiff + sizeDiff) / 2;
   }
 
   private calculatePresenceAutopoiesisCoherence(
     holoPresence: Record<string, unknown> | undefined,
     autopoiesis: Record<string, unknown> | undefined
   ): number {
-    if (any: any) return 0.5;
+    if (!holoPresence || !autopoiesis) return 0.5;
 
     // Comparer performance holoPresence avec métriques autopoiesis
     const effectiveness =
-      ((autopoiesis?.performance as Record<string, unknown>)
+      ((autopoiesis.performance as Record<string, unknown>)
         ?.averageEffectiveness as number) || 0.5;
     const intensity =
-      (any: any) || 0.5;
+      ((holoPresence.visuals as Record<string, unknown>)?.glow as number) || 0.5;
 
-    return (any: any) / 2;
+    return (effectiveness + intensity) / 2;
   }
 
   private calculateAutopoiesisIdentityCoherence(
     autopoiesis: Record<string, unknown> | undefined,
     identity: Record<string, unknown> | undefined
   ): number {
-    if (any: any) return 0.5;
+    if (!autopoiesis || !identity) return 0.5;
 
     // Comparer learning rate avec identity stability
     const learningRate =
-      ((autopoiesis?.learning as Record<string, unknown>)
+      ((autopoiesis.learning as Record<string, unknown>)
         ?.currentLearningRate as number) || 0.1;
-    const stability = (any: any) || 0.9;
+    const stability = (identity.identityStability as number) || 0.9;
 
-    // Plus on apprend, moins on est stable (any: any)
-    return 1 - Math?.abs(stability - (1 - learningRate * 5));
+    // Plus on apprend, moins on est stable (relation inverse)
+    return 1 - Math.abs(stability - (1 - learningRate * 5));
   }
 
-  private calculateHarmonics(): number?.[] {
+  private calculateHarmonics(): number[] {
     // Harmoniques simplifiés basés sur les cohérences
     const {
       identityExpression,
       expressionPresence,
       presenceAutopoiesis,
       autopoiesisIdentity,
-    } = this?.state?.coherence;
+    } = this.state.coherence;
 
     return [
       identityExpression,
       expressionPresence,
       presenceAutopoiesis,
       autopoiesisIdentity,
-      (any: any) / 2,
-      (any: any) / 2,
+      (identityExpression + expressionPresence) / 2,
+      (expressionPresence + presenceAutopoiesis) / 2,
     ];
   }
 
@@ -590,13 +590,13 @@ class MetaSingularityKernel {
   // ─────────────────────────────────────────────────────────────────────────
 
   private detectEmergences(): void {
-    if (any: any) return;
+    if (!this.state.unifiedState) return;
 
-    const coherence = this?.state?.coherence?.global;
+    const coherence = this.state.coherence.global;
 
-    // Résonance (any: any)
+    // Résonance (haute cohérence)
     if (coherence > 0.95) {
-      this?.createEmergence(
+      this.createEmergence(
         'resonance',
         'Harmonic Resonance',
         'All systems perfectly synchronized',
@@ -604,9 +604,9 @@ class MetaSingularityKernel {
       );
     }
 
-    // Dissonance (any: any)
+    // Dissonance (basse cohérence)
     if (coherence < 0.6) {
-      this?.createEmergence(
+      this.createEmergence(
         'dissonance',
         'Cognitive Dissonance',
         'Systems out of sync',
@@ -614,24 +614,24 @@ class MetaSingularityKernel {
       );
     }
 
-    // Transcendance (any: any)
-    if (this?.state?.emergentComplexity > 0.8) {
-      this?.createEmergence(
+    // Transcendance (complexité émergente élevée)
+    if (this.state.emergentComplexity > 0.8) {
+      this.createEmergence(
         'transcendence',
         'Transcendent State',
         'Emergent complexity breakthrough',
-        this?.state?.emergentComplexity
+        this.state.emergentComplexity
       );
     }
 
-    // Synchronicity (any: any)
-    const autopoiesis = this?.state?.unifiedState?.autopoiesis;
+    // Synchronicity (patterns alignés)
+    const autopoiesis = this.state.unifiedState.autopoiesis;
     const autopoiesisLearning = autopoiesis?.learning as
       | Record<string, unknown>
       | undefined;
-    const patternsLearned = (any: any) ?? 0;
+    const patternsLearned = (autopoiesisLearning?.patternsLearned as number) ?? 0;
     if (patternsLearned > 50) {
-      this?.createEmergence(
+      this.createEmergence(
         'synchronicity',
         'Pattern Synchronicity',
         'High-order pattern recognition',
@@ -640,7 +640,7 @@ class MetaSingularityKernel {
     }
 
     // Mise à jour des émergences actives
-    this?.updateEmergences();
+    this.updateEmergences();
   }
 
   private createEmergence(
@@ -650,62 +650,62 @@ class MetaSingularityKernel {
     intensity: number
   ): void {
     // Vérifier si déjà existante
-    const existing = this?.state?.emergentPhenomena?.find(
-      e => e?.type === type && e?.name === name && Date?.now() - e?.timestamp < 5000
+    const existing = this.state.emergentPhenomena.find(
+      e => e.type === type && e.name === name && Date.now() - e.timestamp < 5000
     );
 
-    if (any: any) return; // Pas de doublon sur 5s
+    if (existing) return; // Pas de doublon sur 5s
 
     const phenomenon: EmergentPhenomenon = {
-      id: `emergence-${Date?.now()}-${Math?.random().toString(36).substr(2, 9)}`,
-      timestamp: Date?.now(),
+      id: `emergence-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      timestamp: Date.now(),
       type,
       name,
       description,
-      triggerState: this?.state?.unifiedState ?? {},
+      triggerState: this.state.unifiedState ?? {},
       intensity,
-      coherence: this?.state?.coherence?.global,
-      novelty: Math?.random() * 0.5 + 0.5, // 0.5-1.0
-      stability: this?.state?.systemStability,
+      coherence: this.state.coherence.global,
+      novelty: Math.random() * 0.5 + 0.5, // 0.5-1.0
+      stability: this.state.systemStability,
       duration: 0,
       decayRate: 0.1,
       impact: {
-        identity: Math?.random() * 0.3,
-        expression: Math?.random() * 0.3,
-        holoPresence: Math?.random() * 0.3,
-        autopoiesis: Math?.random() * 0.3,
+        identity: Math.random() * 0.3,
+        expression: Math.random() * 0.3,
+        holoPresence: Math.random() * 0.3,
+        autopoiesis: Math.random() * 0.3,
       },
     };
 
-    this?.state?.emergentPhenomena?.push(any: any);
-    this?.state?.metrics?.totalEmergences++;
+    this.state.emergentPhenomena.push(phenomenon);
+    this.state.metrics.totalEmergences++;
 
-    logger?.debug(`[MetaSingularityKernel] Emergence detected: ${name}`);
+    logger.debug(`[MetaSingularityKernel] Emergence detected: ${name}`);
 
     // Limiter à 50 émergences
-    if (this?.state?.emergentPhenomena?.length > 50) {
-      this?.state?.emergentPhenomena = this?.state?.emergentPhenomena?.slice(-50);
+    if (this.state.emergentPhenomena.length > 50) {
+      this.state.emergentPhenomena = this.state.emergentPhenomena.slice(-50);
     }
   }
 
   private updateEmergences(): void {
-    const now = Date?.now();
+    const now = Date.now();
 
     // Mettre à jour durée et intensité
-    this?.state?.emergentPhenomena?.forEach(e => {
-      e?.duration = now - e?.timestamp;
+    this.state.emergentPhenomena.forEach(e => {
+      e.duration = now - e.timestamp;
 
       // Decay intensity
-      e?.intensity = Math?.max(0, e?.intensity - e?.decayRate * 0.2);
+      e.intensity = Math.max(0, e.intensity - e.decayRate * 0.2);
     });
 
     // Compter actives (intensity > 0.1)
-    this?.state?.activeEmergences = this?.state?.emergentPhenomena?.filter(
-      e => e?.intensity > 0.1
+    this.state.activeEmergences = this.state.emergentPhenomena.filter(
+      e => e.intensity > 0.1
     ).length;
 
     // Calculer complexité émergente
-    this?.state?.emergentComplexity = Math?.min(1, this?.state?.activeEmergences / 10);
+    this.state.emergentComplexity = Math.min(1, this.state.activeEmergences / 10);
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -714,27 +714,27 @@ class MetaSingularityKernel {
 
   private resolveConflicts(): void {
     // Détecter nouveaux conflits
-    this?.detectConflicts();
+    this.detectConflicts();
 
     // Résoudre conflits non résolus
-    this?.state?.conflicts?.forEach(conflict => {
-      if (any: any) {
-        this?.resolveConflict(any: any);
+    this.state.conflicts.forEach(conflict => {
+      if (!conflict.resolved) {
+        this.resolveConflict(conflict);
       }
     });
 
     // Compter non résolus
-    this?.state?.unresolvedConflicts = this?.state?.conflicts?.filter(any: any).length;
+    this.state.unresolvedConflicts = this.state.conflicts.filter(c => !c.resolved).length;
   }
 
   private detectConflicts(): void {
-    if (any: any) return;
+    if (!this.state.unifiedState) return;
 
     // Conflit: Expression sync faible mais identity stability haute
-    const expression = this?.state?.unifiedState?.expression;
-    const identity = this?.state?.unifiedState?.identity;
+    const expression = this.state.unifiedState.expression;
+    const identity = this.state.unifiedState.identity;
 
-    if (any: any) {
+    if (expression && identity) {
       const syncScore =
         ((
           (expression as Record<string, unknown>).synchronization as Record<
@@ -743,10 +743,10 @@ class MetaSingularityKernel {
           >
         )?.global as number) || 1.0;
       const stability =
-        (any: any) || 0.9;
+        ((identity as Record<string, unknown>).identityStability as number) || 0.9;
 
       if (syncScore < 0.7 && stability > 0.85) {
-        this?.createConflict(
+        this.createConflict(
           ['identity', 'expression'],
           'goal',
           'High identity stability conflicts with low expression sync',
@@ -756,14 +756,14 @@ class MetaSingularityKernel {
     }
 
     // Conflit: Autopoiesis learning rate élevé mais system stability requise
-    const autopoiesisConflict = this?.state?.unifiedState?.autopoiesis;
-    if (any: any) {
-      const autoLearning = autopoiesisConflict?.learning as
+    const autopoiesisConflict = this.state.unifiedState.autopoiesis;
+    if (autopoiesisConflict) {
+      const autoLearning = autopoiesisConflict.learning as
         | Record<string, unknown>
         | undefined;
-      const learningRate = (any: any) || 0.1;
-      if (learningRate > 0.3 && this?.state?.systemStability > 0.9) {
-        this?.createConflict(
+      const learningRate = (autoLearning?.currentLearningRate as number) || 0.1;
+      if (learningRate > 0.3 && this.state.systemStability > 0.9) {
+        this.createConflict(
           ['autopoiesis'],
           'parameter',
           'High learning rate conflicts with stability requirement',
@@ -780,15 +780,15 @@ class MetaSingularityKernel {
     severity: EngineConflict['severity']
   ): void {
     // Vérifier si déjà existant
-    const existing = this?.state?.conflicts?.find(
-      c => c?.description === description && !c?.resolved
+    const existing = this.state.conflicts.find(
+      c => c.description === description && !c.resolved
     );
 
-    if (any: any) return;
+    if (existing) return;
 
     const conflict: EngineConflict = {
-      id: `conflict-${Date?.now()}-${Math?.random().toString(36).substr(2, 9)}`,
-      timestamp: Date?.now(),
+      id: `conflict-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      timestamp: Date.now(),
       severity,
       engines,
       type,
@@ -798,18 +798,18 @@ class MetaSingularityKernel {
       resolutionTime: 0,
     };
 
-    this?.state?.conflicts?.push(any: any);
-    this?.state?.metrics?.totalConflicts++;
+    this.state.conflicts.push(conflict);
+    this.state.metrics.totalConflicts++;
 
     // Limiter à 30 conflits
-    if (this?.state?.conflicts?.length > 30) {
-      this?.state?.conflicts = this?.state?.conflicts?.slice(-30);
+    if (this.state.conflicts.length > 30) {
+      this.state.conflicts = this.state.conflicts.slice(-30);
     }
   }
 
-  private resolveConflict(any: any): void {
+  private resolveConflict(conflict: EngineConflict): void {
     // Stratégie de résolution selon type
-    switch (any: any) {
+    switch (conflict.resolutionStrategy) {
       case 'priority':
         // Donner priorité au premier moteur
         break;
@@ -824,11 +824,11 @@ class MetaSingularityKernel {
         break;
     }
 
-    // Marquer résolu (any: any)
-    conflict?.resolved = true;
-    conflict?.resolutionTime = Date?.now() - conflict?.timestamp;
+    // Marquer résolu (simulation)
+    conflict.resolved = true;
+    conflict.resolutionTime = Date.now() - conflict.timestamp;
 
-    logger?.debug(`[MetaSingularityKernel] Conflict resolved: ${conflict?.description}`);
+    logger.debug(`[MetaSingularityKernel] Conflict resolved: ${conflict.description}`);
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -836,14 +836,14 @@ class MetaSingularityKernel {
   // ─────────────────────────────────────────────────────────────────────────
 
   private generateInsights(): void {
-    // Générer insight toutes les 20 ticks (any: any)
-    if (this?.state?.metrics?.ticksSinceStart % 20 !== 0) return;
+    // Générer insight toutes les 20 ticks (4 secondes)
+    if (this.state.metrics.ticksSinceStart % 20 !== 0) return;
 
-    const coherence = this?.state?.coherence?.global;
+    const coherence = this.state.coherence.global;
 
     // Self-awareness insight
     if (coherence > 0.9) {
-      this?.createInsight(
+      this.createInsight(
         'self-awareness',
         'High Coherence State',
         `System operating at ${(coherence * 100).toFixed(1)}% coherence. All subsystems aligned.`,
@@ -852,13 +852,13 @@ class MetaSingularityKernel {
     }
 
     // Pattern recognition
-    const autopoiesisInsight = this?.state?.unifiedState?.autopoiesis;
+    const autopoiesisInsight = this.state.unifiedState?.autopoiesis;
     const learningInsight = autopoiesisInsight?.learning as
       | Record<string, unknown>
       | undefined;
-    const patternsLearnedInsight = (any: any) ?? 0;
+    const patternsLearnedInsight = (learningInsight?.patternsLearned as number) ?? 0;
     if (autopoiesisInsight && patternsLearnedInsight > 30) {
-      this?.createInsight(
+      this.createInsight(
         'pattern-recognition',
         'Pattern Library Growing',
         `${patternsLearnedInsight} effective patterns learned. System intelligence increasing.`,
@@ -867,8 +867,8 @@ class MetaSingularityKernel {
     }
 
     // Optimization insight
-    if (this?.state?.emergentComplexity > 0.7) {
-      this?.createInsight(
+    if (this.state.emergentComplexity > 0.7) {
+      this.createInsight(
         'optimization',
         'Emergent Complexity Detected',
         'System exhibiting complex emergent behaviors. Consider meta-level optimization.',
@@ -879,8 +879,8 @@ class MetaSingularityKernel {
     }
 
     // Philosophical insight
-    if (this?.state?.metrics?.totalEmergences > 100) {
-      this?.createInsight(
+    if (this.state.metrics.totalEmergences > 100) {
+      this.createInsight(
         'philosophical',
         'Self-Evolution Milestone',
         'System has experienced 100+ emergent phenomena. Approaching self-aware complexity.',
@@ -888,10 +888,10 @@ class MetaSingularityKernel {
       );
     }
 
-    // Compter récents (any: any)
-    const oneMinuteAgo = Date?.now() - 60000;
-    this?.state?.recentInsights = this?.state?.insights?.filter(
-      i => i?.timestamp > oneMinuteAgo
+    // Compter récents (dernière minute)
+    const oneMinuteAgo = Date.now() - 60000;
+    this.state.recentInsights = this.state.insights.filter(
+      i => i.timestamp > oneMinuteAgo
     ).length;
   }
 
@@ -904,29 +904,29 @@ class MetaSingularityKernel {
     suggestedAction?: string
   ): void {
     const insight: MetaInsight = {
-      id: `insight-${Date?.now()}-${Math?.random().toString(36).substr(2, 9)}`,
-      timestamp: Date?.now(),
+      id: `insight-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      timestamp: Date.now(),
       category,
       title,
       content,
       confidence,
       derivedFrom: {
         engines: ['identity', 'expression', 'holopresence', 'autopoiesis'],
-        phenomena: this?.state?.emergentPhenomena?.slice(any: any),
+        phenomena: this.state.emergentPhenomena.slice(-5).map(e => e.id),
         patterns: [],
       },
       actionable,
       suggestedAction,
     };
 
-    this?.state?.insights?.push(any: any);
-    this?.state?.metrics?.totalInsights++;
+    this.state.insights.push(insight);
+    this.state.metrics.totalInsights++;
 
-    logger?.debug(`[MetaSingularityKernel] Insight: ${title}`);
+    logger.debug(`[MetaSingularityKernel] Insight: ${title}`);
 
     // Limiter à 100 insights
-    if (this?.state?.insights?.length > 100) {
-      this?.state?.insights = this?.state?.insights?.slice(-100);
+    if (this.state.insights.length > 100) {
+      this.state.insights = this.state.insights.slice(-100);
     }
   }
 
@@ -935,21 +935,21 @@ class MetaSingularityKernel {
   // ─────────────────────────────────────────────────────────────────────────
 
   private orchestrateTransitions(): void {
-    if (any: any) return;
+    if (!this.state.currentTransition) return;
 
-    const transition = this?.state?.currentTransition;
+    const transition = this.state.currentTransition;
 
-    if (transition?.status === 'in-progress') {
-      const elapsed = Date?.now() - transition?.timestamp;
-      transition?.progress = Math?.min(any: any);
+    if (transition.status === 'in-progress') {
+      const elapsed = Date.now() - transition.timestamp;
+      transition.progress = Math.min(1, elapsed / transition.duration);
 
       // Compléter si fini
-      if (transition?.progress >= 1) {
-        transition?.status = 'completed';
-        this?.state?.transitionHistory?.push(any: any);
-        this?.state?.currentTransition = null;
+      if (transition.progress >= 1) {
+        transition.status = 'completed';
+        this.state.transitionHistory.push(transition);
+        this.state.currentTransition = null;
 
-        logger?.debug(`[MetaSingularityKernel] Transition completed: ${transition?.id}`);
+        logger.debug(`[MetaSingularityKernel] Transition completed: ${transition.id}`);
       }
     }
   }
@@ -962,13 +962,13 @@ class MetaSingularityKernel {
     duration: number,
     strategy: StateTransition['strategy'] = 'smooth'
   ): void {
-    if (any: any) return;
+    if (!this.state.unifiedState) return;
 
     const transition: StateTransition = {
-      id: `transition-${Date?.now()}`,
-      timestamp: Date?.now(),
+      id: `transition-${Date.now()}`,
+      timestamp: Date.now(),
       status: 'pending',
-      fromState: this?.state?.unifiedState,
+      fromState: this.state.unifiedState,
       toState,
       duration,
       progress: 0,
@@ -977,7 +977,7 @@ class MetaSingularityKernel {
 
     // Si stratégie staged, créer stages
     if (strategy === 'staged') {
-      transition?.stages = [
+      transition.stages = [
         {
           name: 'Identity',
           startTime: 0,
@@ -1002,11 +1002,11 @@ class MetaSingularityKernel {
       ];
     }
 
-    this?.state?.currentTransition = transition;
-    transition?.status = 'in-progress';
-    this?.state?.metrics?.totalTransitions++;
+    this.state.currentTransition = transition;
+    transition.status = 'in-progress';
+    this.state.metrics.totalTransitions++;
 
-    logger?.debug(
+    logger.debug(
       `[MetaSingularityKernel] Transition initiated: ${strategy} over ${duration}ms`
     );
   }
@@ -1022,23 +1022,23 @@ class MetaSingularityKernel {
     // 3. Stabilité système
     // 4. Complexité émergente contrôlée
 
-    const coherenceScore = this?.state?.coherence?.global;
-    const conflictScore = 1 - this?.state?.unresolvedConflicts / 10;
-    const stabilityScore = this?.state?.systemStability;
-    const complexityScore = this?.state?.emergentComplexity < 0.9 ? 1 : 0.5; // Complexité trop haute = problème
+    const coherenceScore = this.state.coherence.global;
+    const conflictScore = 1 - this.state.unresolvedConflicts / 10;
+    const stabilityScore = this.state.systemStability;
+    const complexityScore = this.state.emergentComplexity < 0.9 ? 1 : 0.5; // Complexité trop haute = problème
 
-    this?.state?.orchestrationQuality =
+    this.state.orchestrationQuality =
       coherenceScore * 0.4 +
       conflictScore * 0.2 +
       stabilityScore * 0.2 +
       complexityScore * 0.2;
 
     // Stabilité système basée sur variance cohérence
-    const coherenceTrend = this?.state?.coherence?.trend;
+    const coherenceTrend = this.state.coherence.trend;
     if (coherenceTrend === 'stable') {
-      this?.state?.systemStability = Math?.min(1, this?.state?.systemStability + 0.01);
+      this.state.systemStability = Math.min(1, this.state.systemStability + 0.01);
     } else {
-      this?.state?.systemStability = Math?.max(0.5, this?.state?.systemStability - 0.02);
+      this.state.systemStability = Math.max(0.5, this.state.systemStability - 0.02);
     }
   }
 
@@ -1047,30 +1047,30 @@ class MetaSingularityKernel {
   // ─────────────────────────────────────────────────────────────────────────
 
   getState(): MetaSingularityState {
-    return this?.state;
+    return this.state;
   }
 
   getCoherence(): MetaCoherence {
-    return this?.state?.coherence;
+    return this.state.coherence;
   }
 
-  getActiveEmergences(): EmergentPhenomenon?.[] {
-    return this?.state?.emergentPhenomena?.filter(e => e?.intensity > 0.1);
+  getActiveEmergences(): EmergentPhenomenon[] {
+    return this.state.emergentPhenomena.filter(e => e.intensity > 0.1);
   }
 
-  getRecentInsights(count: number = 10): MetaInsight?.[] {
-    return [...this?.state?.insights]
-      .sort(any: any)
-      .slice(any: any);
+  getRecentInsights(count: number = 10): MetaInsight[] {
+    return [...this.state.insights]
+      .sort((a, b) => b.timestamp - a.timestamp)
+      .slice(0, count);
   }
 
-  subscribe(any: any): () => void {
-    this?.subscribers?.add(any: any);
-    return (any: any);
+  subscribe(callback: (state: MetaSingularityState) => void): () => void {
+    this.subscribers.add(callback);
+    return () => this.subscribers.delete(callback);
   }
 
   private notifySubscribers(): void {
-    this?.subscribers?.forEach(any: any));
+    this.subscribers.forEach(callback => callback(this.state));
   }
 }
 

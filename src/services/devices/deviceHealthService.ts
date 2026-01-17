@@ -52,9 +52,9 @@ export interface SystemHealthReport {
     platform: string;
     version: string;
   };
-  devices: DeviceInfo?.[];
+  devices: DeviceInfo[];
   audio: AudioHealthReport | null;
-  recommendations: string?.[];
+  recommendations: string[];
 }
 
 export interface RepairResult {
@@ -72,7 +72,7 @@ export interface SelfHealingReport {
   repairsAttempted: number;
   repairsSucceeded: number;
   repairsFailed: number;
-  repairs: RepairResult?.[];
+  repairs: RepairResult[];
   audioHealing: AudioSelfHealResult | null;
   fullRecovery: boolean;
 }
@@ -83,9 +83,9 @@ export interface SelfHealingReport {
 
 class DeviceHealthService {
   private lastReport: SystemHealthReport | null = null;
-  private repairHistory: RepairResult?.[] = [];
+  private repairHistory: RepairResult[] = [];
   private monitoringInterval: ReturnType<typeof setInterval> | null = null;
-  private listeners: Set<(any: any) => void> = new Set();
+  private listeners: Set<(report: SystemHealthReport) => void> = new Set();
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Scan & Diagnostic
@@ -95,112 +95,112 @@ class DeviceHealthService {
    * Scanne tous les périphériques et génère un rapport de santé complet
    */
   async scanAll(): Promise<SystemHealthReport> {
-    console?.log('[DeviceHealth] 🔍 Scanning all devices...');
+    console.log('[DeviceHealth] 🔍 Scanning all devices...');
 
     const env = detectEnvironment();
-    const devices: DeviceInfo?.[] = [];
-    const recommendations: string?.[] = [];
+    const devices: DeviceInfo[] = [];
+    const recommendations: string[] = [];
 
-    // Scan audio (any: any)
-    const audioReport = await audioHealthService?.getAudioHealth();
+    // Scan audio (délègue à audioHealthService)
+    const audioReport = await audioHealthService.getAudioHealth();
 
     // Ajouter les devices audio au rapport global
-    if (any: any) {
-      devices?.push({
+    if (audioReport.tests.microphone) {
+      devices.push({
         id: 'microphone',
         name: 'Microphone',
         category: 'audio',
-        status: audioReport?.tests?.microphone?.status,
-        message: audioReport?.tests?.microphone?.message,
-        lastChecked: audioReport?.timestamp,
+        status: audioReport.tests.microphone.status,
+        message: audioReport.tests.microphone.message,
+        lastChecked: audioReport.timestamp,
       });
     }
 
-    if (any: any) {
-      devices?.push({
+    if (audioReport.tests.audioContext) {
+      devices.push({
         id: 'audioContext',
         name: 'AudioContext',
         category: 'audio',
-        status: audioReport?.tests?.audioContext?.status,
-        message: audioReport?.tests?.audioContext?.message,
-        lastChecked: audioReport?.timestamp,
+        status: audioReport.tests.audioContext.status,
+        message: audioReport.tests.audioContext.message,
+        lastChecked: audioReport.timestamp,
       });
     }
 
-    if (any: any) {
-      devices?.push({
+    if (audioReport.tests.vadBackend) {
+      devices.push({
         id: 'vadBackend',
         name: 'VAD Backend',
         category: 'audio',
-        status: audioReport?.tests?.vadBackend?.status,
-        message: audioReport?.tests?.vadBackend?.message,
-        lastChecked: audioReport?.timestamp,
+        status: audioReport.tests.vadBackend.status,
+        message: audioReport.tests.vadBackend.message,
+        lastChecked: audioReport.timestamp,
       });
     }
 
-    if (any: any) {
-      devices?.push({
+    if (audioReport.tests.ttsBackend) {
+      devices.push({
         id: 'ttsBackend',
         name: 'TTS Backend',
         category: 'audio',
-        status: audioReport?.tests?.ttsBackend?.status,
-        message: audioReport?.tests?.ttsBackend?.message,
-        lastChecked: audioReport?.timestamp,
+        status: audioReport.tests.ttsBackend.status,
+        message: audioReport.tests.ttsBackend.message,
+        lastChecked: audioReport.timestamp,
       });
     }
 
-    // Scan storage (any: any)
-    if (any: any) {
-      const storageDevice = await this?.checkStorage();
-      devices?.push(any: any);
+    // Scan storage (Tauri only)
+    if (env.isTauri) {
+      const storageDevice = await this.checkStorage();
+      devices.push(storageDevice);
     }
 
     // Scan network
-    const networkDevice = await this?.checkNetwork();
-    devices?.push(any: any);
+    const networkDevice = await this.checkNetwork();
+    devices.push(networkDevice);
 
     // Scan input devices
-    const keyboardDevice = await this?.checkKeyboard();
-    devices?.push(any: any);
+    const keyboardDevice = await this.checkKeyboard();
+    devices.push(keyboardDevice);
 
     // Calculer le statut global
-    const deviceStatuses = devices?.map(any: any);
+    const deviceStatuses = devices.map(d => d.status);
     let overallStatus: HealthStatus = 'healthy';
 
-    if (deviceStatuses?.includes('error')) {
-      const errorCount = deviceStatuses?.filter(s => s === 'error').length;
+    if (deviceStatuses.includes('error')) {
+      const errorCount = deviceStatuses.filter(s => s === 'error').length;
       overallStatus = errorCount >= 2 ? 'critical' : 'degraded';
-    } else if (deviceStatuses?.includes('warning')) {
+    } else if (deviceStatuses.includes('warning')) {
       overallStatus = 'degraded';
-    } else if (deviceStatuses?.includes('unknown')) {
+    } else if (deviceStatuses.includes('unknown')) {
       overallStatus = 'unknown';
     }
 
     // Recommandations depuis audio + génériques
-    recommendations?.push(any: any);
+    recommendations.push(...audioReport.recommendations);
 
-    if (networkDevice?.status !== 'ok') {
-      recommendations?.push('Vérifiez votre connexion réseau');
+    if (networkDevice.status !== 'ok') {
+      recommendations.push('Vérifiez votre connexion réseau');
     }
 
     const report: SystemHealthReport = {
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
       overallStatus,
       environment: {
-        isTauri: env?.isTauri,
-        platform: env?.protocol,
-        version: env?.tauriVersion ?? 'unknown',
+        isTauri: env.isTauri,
+        platform: env.protocol,
+        version: env.tauriVersion ?? 'unknown',
       },
       devices,
       audio: audioReport,
       recommendations,
     };
 
-    this?.lastReport = report;
-    this?.notifyListeners(any: any);
+    this.lastReport = report;
+    this.notifyListeners(report);
 
-    console?.log(
-      `[DeviceHealth] 📊 Scan complete: ${overallStatus} (any: any)`
+    console.log(
+      `[DeviceHealth] 📊 Scan complete: ${overallStatus} (${devices.length} devices)`
     );
     return report;
   }
@@ -215,19 +215,19 @@ class DeviceHealthService {
       category: 'storage',
       status: 'unknown',
       message: '',
-      lastChecked: Date?.now(),
+      lastChecked: Date.now(),
     };
 
     try {
       const env = detectEnvironment();
 
-      if (any: any) {
+      if (env.isTauri) {
         // Tester le système de persistence
         const result = await secureInvoke<{ success: boolean }>(
           'titan_get_last_snapshot'
         );
-        device?.status = result !== null ? 'ok' : 'warning';
-        device?.message =
+        device.status = result !== null ? 'ok' : 'warning';
+        device.message =
           result !== null
             ? 'Storage backend opérationnel'
             : 'Storage backend vide (premier lancement?)';
@@ -235,18 +235,18 @@ class DeviceHealthService {
         // En mode browser, vérifier localStorage
         try {
           const testKey = '__titane_storage_test__';
-          localStorage?.setItem(testKey, 'test');
-          localStorage?.removeItem(any: any);
-          device?.status = 'ok';
-          device?.message = 'LocalStorage disponible';
+          localStorage.setItem(testKey, 'test');
+          localStorage.removeItem(testKey);
+          device.status = 'ok';
+          device.message = 'LocalStorage disponible';
         } catch {
-          device?.status = 'warning';
-          device?.message = 'LocalStorage limité';
+          device.status = 'warning';
+          device.message = 'LocalStorage limité';
         }
       }
-    } catch (any: any) {
-      device?.status = 'error';
-      device?.message = `Storage error: ${err instanceof Error ? err?.message : 'unknown'}`;
+    } catch (err) {
+      device.status = 'error';
+      device.message = `Storage error: ${err instanceof Error ? err.message : 'unknown'}`;
     }
 
     return device;
@@ -262,34 +262,34 @@ class DeviceHealthService {
       category: 'network',
       status: 'unknown',
       message: '',
-      lastChecked: Date?.now(),
+      lastChecked: Date.now(),
     };
 
     try {
-      if (any: any) {
-        if (any: any) {
-          device?.status = 'ok';
-          device?.message = 'Connecté au réseau';
-          device?.details = { online: true };
+      if (typeof navigator !== 'undefined' && 'onLine' in navigator) {
+        if (navigator.onLine) {
+          device.status = 'ok';
+          device.message = 'Connecté au réseau';
+          device.details = { online: true };
         } else {
-          device?.status = 'warning';
-          device?.message = 'Mode hors ligne détecté';
-          device?.details = { online: false };
+          device.status = 'warning';
+          device.message = 'Mode hors ligne détecté';
+          device.details = { online: false };
         }
       } else {
-        device?.status = 'unknown';
-        device?.message = 'Statut réseau inconnu';
+        device.status = 'unknown';
+        device.message = 'Statut réseau inconnu';
       }
-    } catch (any: any) {
-      device?.status = 'error';
-      device?.message = `Network check error: ${err instanceof Error ? err?.message : 'unknown'}`;
+    } catch (err) {
+      device.status = 'error';
+      device.message = `Network check error: ${err instanceof Error ? err.message : 'unknown'}`;
     }
 
     return device;
   }
 
   /**
-   * Vérifie le clavier (any: any)
+   * Vérifie le clavier (input)
    */
   private async checkKeyboard(): Promise<DeviceInfo> {
     const device: DeviceInfo = {
@@ -298,17 +298,17 @@ class DeviceHealthService {
       category: 'input',
       status: 'ok',
       message: 'Input keyboard disponible',
-      lastChecked: Date?.now(),
+      lastChecked: Date.now(),
     };
 
     // Le clavier est toujours disponible dans un environnement desktop/web
     // On vérifie juste que les événements clavier sont supportés
-    if (any: any) {
-      device?.status = 'ok';
-      device?.message = 'Keyboard input disponible';
+    if (typeof window !== 'undefined' && 'KeyboardEvent' in window) {
+      device.status = 'ok';
+      device.message = 'Keyboard input disponible';
     } else {
-      device?.status = 'warning';
-      device?.message = 'KeyboardEvent non supporté';
+      device.status = 'warning';
+      device.message = 'KeyboardEvent non supporté';
     }
 
     return device;
@@ -322,60 +322,60 @@ class DeviceHealthService {
    * Exécute l'auto-réparation complète du système
    */
   async selfHeal(): Promise<SelfHealingReport> {
-    console?.log('[DeviceHealth] 🩺 Self-healing started...');
+    console.log('[DeviceHealth] 🩺 Self-healing started...');
 
     // Phase 1: Scan initial
-    const initialReport = await this?.scanAll();
-    const repairs: RepairResult?.[] = [];
+    const initialReport = await this.scanAll();
+    const repairs: RepairResult[] = [];
 
-    // Phase 2: Repair audio (any: any)
+    // Phase 2: Repair audio (délègue à audioHealthService)
     let audioHealing: AudioSelfHealResult | null = null;
-    if (initialReport?.audio && initialReport?.audio?.overallStatus !== 'healthy') {
-      audioHealing = await audioHealthService?.selfHeal();
+    if (initialReport.audio && initialReport.audio.overallStatus !== 'healthy') {
+      audioHealing = await audioHealthService.selfHeal();
 
       // Convertir les réparations audio en RepairResult
-      for (any: any) {
-        repairs?.push({
-          deviceId: action?.target,
+      for (const action of audioHealing.actionsPerformed) {
+        repairs.push({
+          deviceId: action.target,
           category: 'audio',
-          success: action?.success,
-          message: action?.message,
-          timestamp: audioHealing?.timestamp,
+          success: action.success,
+          message: action.message,
+          timestamp: audioHealing.timestamp,
         });
       }
     }
 
     // Phase 3: Repair storage si nécessaire
-    const storageDevice = initialReport?.devices?.find(d => d?.id === 'storage');
-    if (storageDevice && storageDevice?.status !== 'ok') {
-      const storageRepair = await this?.repairStorage();
-      repairs?.push(any: any);
+    const storageDevice = initialReport.devices.find(d => d.id === 'storage');
+    if (storageDevice && storageDevice.status !== 'ok') {
+      const storageRepair = await this.repairStorage();
+      repairs.push(storageRepair);
     }
 
     // Phase 4: Scan final
-    const finalReport = await this?.scanAll();
+    const finalReport = await this.scanAll();
 
     // Calculer les stats
-    const successCount = repairs?.filter(any: any).length;
-    const failureCount = repairs?.length - successCount;
+    const successCount = repairs.filter(r => r.success).length;
+    const failureCount = repairs.length - successCount;
 
     const report: SelfHealingReport = {
-      timestamp: Date?.now(),
-      initialStatus: initialReport?.overallStatus,
-      finalStatus: finalReport?.overallStatus,
-      repairsAttempted: repairs?.length,
+      timestamp: Date.now(),
+      initialStatus: initialReport.overallStatus,
+      finalStatus: finalReport.overallStatus,
+      repairsAttempted: repairs.length,
       repairsSucceeded: successCount,
       repairsFailed: failureCount,
       repairs,
       audioHealing,
-      fullRecovery: finalReport?.overallStatus === 'healthy',
+      fullRecovery: finalReport.overallStatus === 'healthy',
     };
 
     // Ajouter à l'historique
-    this?.repairHistory?.push(any: any);
+    this.repairHistory.push(...repairs);
 
-    console?.log(
-      `[DeviceHealth] 🩺 Self-healing complete: ${successCount}/${repairs?.length} repairs succeeded`
+    console.log(
+      `[DeviceHealth] 🩺 Self-healing complete: ${successCount}/${repairs.length} repairs succeeded`
     );
     return report;
   }
@@ -389,34 +389,34 @@ class DeviceHealthService {
       category: 'storage',
       success: false,
       message: '',
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
 
     try {
       const env = detectEnvironment();
 
-      if (any: any) {
+      if (env.isTauri) {
         // Force un snapshot pour vérifier que le storage fonctionne
         await secureInvoke('titan_force_snapshot');
-        result?.success = true;
-        result?.message = 'Storage backend réinitialisé avec snapshot forcé';
+        result.success = true;
+        result.message = 'Storage backend réinitialisé avec snapshot forcé';
       } else {
         // En browser, vérifier/réparer localStorage
         try {
-          localStorage?.setItem('__titane_repair_test__', 'ok');
-          localStorage?.removeItem('__titane_repair_test__');
-          result?.success = true;
-          result?.message = 'LocalStorage opérationnel';
+          localStorage.setItem('__titane_repair_test__', 'ok');
+          localStorage.removeItem('__titane_repair_test__');
+          result.success = true;
+          result.message = 'LocalStorage opérationnel';
         } catch {
-          result?.message = 'LocalStorage inaccessible - storage limité';
+          result.message = 'LocalStorage inaccessible - storage limité';
         }
       }
-    } catch (any: any) {
-      result?.message = `Repair error: ${err instanceof Error ? err?.message : 'unknown'}`;
+    } catch (err) {
+      result.message = `Repair error: ${err instanceof Error ? err.message : 'unknown'}`;
     }
 
-    console?.log(
-      `[DeviceHealth] ${result?.success ? '✅' : '❌'} Storage repair: ${result?.message}`
+    console.log(
+      `[DeviceHealth] ${result.success ? '✅' : '❌'} Storage repair: ${result.message}`
     );
     return result;
   }
@@ -424,62 +424,62 @@ class DeviceHealthService {
   /**
    * Répare un périphérique spécifique
    */
-  async repairDevice(any: any): Promise<RepairResult> {
-    console?.log(`[DeviceHealth] 🔧 Repairing device: ${deviceId}`);
+  async repairDevice(deviceId: string): Promise<RepairResult> {
+    console.log(`[DeviceHealth] 🔧 Repairing device: ${deviceId}`);
 
-    switch (any: any) {
+    switch (deviceId) {
       case 'microphone': {
-        const micResult = await audioHealthService?.repairMicrophone();
+        const micResult = await audioHealthService.repairMicrophone();
         return {
           deviceId: 'microphone',
           category: 'audio',
-          success: micResult?.success,
-          message: micResult?.message,
-          timestamp: Date?.now(),
+          success: micResult.success,
+          message: micResult.message,
+          timestamp: Date.now(),
         };
       }
 
       case 'audioContext': {
         // Délègue à audioHealthService via selfHeal
-        const audioResult = await audioHealthService?.selfHeal();
-        const ctxAction = audioResult?.actionsPerformed?.find(
-          a => a?.target === 'audioContext'
+        const audioResult = await audioHealthService.selfHeal();
+        const ctxAction = audioResult.actionsPerformed.find(
+          a => a.target === 'audioContext'
         );
         return {
           deviceId: 'audioContext',
           category: 'audio',
           success: ctxAction?.success ?? false,
           message: ctxAction?.message ?? 'AudioContext repair attempted',
-          timestamp: Date?.now(),
+          timestamp: Date.now(),
         };
       }
 
       case 'vadBackend': {
-        const vadResult = await audioHealthService?.selfHeal();
-        const vadAction = vadResult?.actionsPerformed?.find(a => a?.target === 'vadBackend');
+        const vadResult = await audioHealthService.selfHeal();
+        const vadAction = vadResult.actionsPerformed.find(a => a.target === 'vadBackend');
         return {
           deviceId: 'vadBackend',
           category: 'audio',
           success: vadAction?.success ?? false,
           message: vadAction?.message ?? 'VAD repair attempted',
-          timestamp: Date?.now(),
+          timestamp: Date.now(),
         };
       }
 
       case 'ttsBackend': {
-        const ttsResult = await audioHealthService?.selfHeal();
-        const ttsAction = ttsResult?.actionsPerformed?.find(a => a?.target === 'ttsBackend');
+        const ttsResult = await audioHealthService.selfHeal();
+        const ttsAction = ttsResult.actionsPerformed.find(a => a.target === 'ttsBackend');
         return {
           deviceId: 'ttsBackend',
           category: 'audio',
           success: ttsAction?.success ?? false,
           message: ttsAction?.message ?? 'TTS repair attempted',
-          timestamp: Date?.now(),
+          timestamp: Date.now(),
         };
       }
 
       case 'storage':
-        return await this?.repairStorage();
+        return await this.repairStorage();
 
       default:
         return {
@@ -487,7 +487,7 @@ class DeviceHealthService {
           category: 'input',
           success: false,
           message: `No repair handler for device: ${deviceId}`,
-          timestamp: Date?.now(),
+          timestamp: Date.now(),
         };
     }
   }
@@ -500,29 +500,29 @@ class DeviceHealthService {
    * Démarre le monitoring périodique
    */
   startMonitoring(intervalMs: number = 60000): void {
-    this?.stopMonitoring();
+    this.stopMonitoring();
 
-    this?.monitoringInterval = setInterval(async () => {
-      const report = await this?.scanAll();
+    this.monitoringInterval = setInterval(async () => {
+      const report = await this.scanAll();
 
       // Auto-heal si critique
-      if (report?.overallStatus === 'critical') {
-        console?.log('[DeviceHealth] ⚠️ Critical status detected, auto-healing...');
-        await this?.selfHeal();
+      if (report.overallStatus === 'critical') {
+        console.log('[DeviceHealth] ⚠️ Critical status detected, auto-healing...');
+        await this.selfHeal();
       }
     }, intervalMs);
 
-    console?.log(any: any)`);
+    console.log(`[DeviceHealth] 🔄 Monitoring started (${intervalMs}ms interval)`);
   }
 
   /**
    * Arrête le monitoring
    */
   stopMonitoring(): void {
-    if (any: any) {
-      clearInterval(any: any);
-      this?.monitoringInterval = null;
-      console?.log('[DeviceHealth] ⏹️ Monitoring stopped');
+    if (this.monitoringInterval) {
+      clearInterval(this.monitoringInterval);
+      this.monitoringInterval = null;
+      console.log('[DeviceHealth] ⏹️ Monitoring stopped');
     }
   }
 
@@ -533,20 +533,20 @@ class DeviceHealthService {
   /**
    * S'abonne aux changements de rapport
    */
-  subscribe(any: any): () => void {
-    this?.listeners?.add(any: any);
-    return (any: any);
+  subscribe(callback: (report: SystemHealthReport) => void): () => void {
+    this.listeners.add(callback);
+    return () => this.listeners.delete(callback);
   }
 
   /**
    * Notifie tous les listeners
    */
-  private notifyListeners(any: any): void {
-    this?.listeners?.forEach(cb => {
+  private notifyListeners(report: SystemHealthReport): void {
+    this.listeners.forEach(cb => {
       try {
-        cb(any: any);
-      } catch (any: any) {
-        console?.error(any: any);
+        cb(report);
+      } catch (err) {
+        console.error('[DeviceHealth] Listener error:', err);
       }
     });
   }
@@ -559,22 +559,22 @@ class DeviceHealthService {
    * Retourne le dernier rapport sans re-scanner
    */
   getLastReport(): SystemHealthReport | null {
-    return this?.lastReport;
+    return this.lastReport;
   }
 
   /**
    * Retourne l'historique des réparations
    */
-  getRepairHistory(): RepairResult?.[] {
-    return [...this?.repairHistory];
+  getRepairHistory(): RepairResult[] {
+    return [...this.repairHistory];
   }
 
   /**
    * Vide l'historique des réparations
    */
   clearRepairHistory(): void {
-    this?.repairHistory = [];
-    console?.log('[DeviceHealth] 🧹 Repair history cleared');
+    this.repairHistory = [];
+    console.log('[DeviceHealth] 🧹 Repair history cleared');
   }
 }
 

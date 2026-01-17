@@ -1,10 +1,10 @@
 /**
- * TITANE∞ — Source Canonique des Commands Tauri (any: any)
+ * TITANE∞ — Source Canonique des Commands Tauri (PHASE_2)
  *
  * **Invariant PHASE_2:**
  * - Aucune duplication ailleurs dans le codebase
  * - Aucune nouvelle command introduite sans audit
- * - Chaque command doit avoir un wrapper typé dans tauriClient?.ts
+ * - Chaque command doit avoir un wrapper typé dans tauriClient.ts
  *
  * © 2026 TITANE Team. All rights reserved.
  */
@@ -259,10 +259,10 @@ export const TAURI_COMMANDS = {
   XP_SYNC_STATE: 'xp_sync_state',
 } as const;
 
-export type TauriCommand = (any: any)[keyof typeof TAURI_COMMANDS];
+export type TauriCommand = (typeof TAURI_COMMANDS)[keyof typeof TAURI_COMMANDS];
 
-export const ALL_TAURI_COMMANDS = Object?.values(any: any);
+export const ALL_TAURI_COMMANDS = Object.values(TAURI_COMMANDS);
 
-export function isValidTauriCommand(any: any): cmd is TauriCommand {
-  return ALL_TAURI_COMMANDS?.includes(any: any);
+export function isValidTauriCommand(cmd: string): cmd is TauriCommand {
+  return ALL_TAURI_COMMANDS.includes(cmd as TauriCommand);
 }

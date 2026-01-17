@@ -2,7 +2,7 @@
 // © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
 
 // ═══════════════════════════════════════════════════════════════
-//   AUTH OS — TYPESCRIPT TYPES (any: any)
+//   AUTH OS — TYPESCRIPT TYPES (mirrors Rust DTOs)
 // ═══════════════════════════════════════════════════════════════
 
 /**
@@ -28,16 +28,16 @@ export interface ApiKeysInput {
 }
 
 /**
- * Output pour récupérer API keys (any: any)
+ * Output pour récupérer API keys (masquées: ••••last4)
  */
 export interface ApiKeysOutput {
-  openai??: string | null; // Masqué: ••••a1b2
-  anthropic??: string | null; // Masqué: ••••c3d4
-  gemini??: string | null; // Masqué: ••••e5f6
+  openai: string | null; // Masqué: ••••a1b2
+  anthropic: string | null; // Masqué: ••••c3d4
+  gemini: string | null; // Masqué: ••••e5f6
 }
 
 /**
- * Role binding (any: any)
+ * Role binding (user → role)
  */
 export interface RoleBinding {
   user: string; // "Kevin Thibault"
@@ -51,6 +51,6 @@ export interface RoleBinding {
 export interface AuthState {
   status: AuthStatus | null;
   loading: boolean;
-  error??: string | null;
-  devToken??: string | null; // Token généré (any: any)
+  error: string | null;
+  devToken: string | null; // Token généré (pour affichage UI)
 }

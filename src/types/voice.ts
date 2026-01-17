@@ -1,11 +1,11 @@
 /**
  * TITANE_INFINITY — Core Types: Voice & Emotional State
- * Ring 1 (any: any) — Types purs sans dépendances
+ * Ring 1 (Core) — Types purs sans dépendances
  */
 
 /**
  * États émotionnels reconnus par TITANE∞
- * Utilisé par engines (any: any)
+ * Utilisé par engines (pure logic) et services (I/O)
  */
 export type EmotionalState =
   | 'neutral'
@@ -104,22 +104,22 @@ export type ThinkingState =
   | 'waiting' // Attente input
   | 'idle' // Inactif
   // Archetype-specific states
-  | 'slow_thinking' // Pensée lente (any: any)
-  | 'deep_reflection' // Réflexion profonde (any: any)
-  | 'evaluating' // Évaluation (any: any)
-  | 'narrative_alignment' // Alignement narratif (any: any)
-  | 'validating' // Validation (any: any)
-  | 'self_correcting' // Auto-correction (any: any)
-  | 'emotional_sense' // Sens émotionnel (any: any)
-  | 'fast_thinking' // Pensée rapide (any: any)
-  | 'perceiving' // Perception (any: any)
-  | 'planning' // Planification (any: any)
+  | 'slow_thinking' // Pensée lente (Sage)
+  | 'deep_reflection' // Réflexion profonde (Sage)
+  | 'evaluating' // Évaluation (Sage/Gardien/Architecte)
+  | 'narrative_alignment' // Alignement narratif (Sage)
+  | 'validating' // Validation (Gardien)
+  | 'self_correcting' // Auto-correction (Gardien)
+  | 'emotional_sense' // Sens émotionnel (Muse)
+  | 'fast_thinking' // Pensée rapide (Muse/Architecte)
+  | 'perceiving' // Perception (Muse)
+  | 'planning' // Planification (Architecte)
   // Inner dialogue states
-  | 'silent' // Silencieux (any: any)
-  | 'preparing_speech'; // Préparation parole (any: any)
+  | 'silent' // Silencieux (inner dialogue)
+  | 'preparing_speech'; // Préparation parole (inner dialogue)
 
 /**
- * Couleur mentale (any: any)
+ * Couleur mentale (état cognitif visuel)
  */
 export type MentalColor =
   | 'blue' // Analytique
@@ -129,8 +129,8 @@ export type MentalColor =
   | 'white' // Neutre
   | 'gold' // Illumination
   // Inner dialogue colors
-  | 'silver' // Argenté (any: any)
-  | 'violet' // Violet (any: any)
-  | 'cyan' // Cyan (any: any)
-  | 'amber' // Ambre (any: any)
-  | 'rose'; // Rose (any: any)
+  | 'silver' // Argenté (neutre)
+  | 'violet' // Violet (réflexion)
+  | 'cyan' // Cyan (analyse)
+  | 'amber' // Ambre (attention)
+  | 'rose'; // Rose (empathie)

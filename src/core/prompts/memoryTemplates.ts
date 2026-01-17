@@ -16,7 +16,7 @@ export interface MemoryTemplate {
   id: MemoryTemplateId;
   label: string;
   description: string;
-  expectedFields: string?.[];
+  expectedFields: string[];
   prompt: string;
   example: Record<string, unknown>;
 }
@@ -27,14 +27,14 @@ export interface StructuredMemoryEntry {
   target: MemoryWriteTarget;
   timestamp?: string;
   data: Record<string, unknown>;
-  tags?: string?.[];
+  tags?: string[];
   source?: string;
 }
 
 const memoryTemplates: Record<MemoryTemplateId, MemoryTemplate> = {
   decision: {
     id: 'decision',
-    label: 'Décision (D?.I?.S?.C?.E?.R?.N?.E?.R.)',
+    label: 'Décision (D.I.S.C.E.R.N.E.R.)',
     description:
       'Capture les décisions structurées avec critères Impact/Alignement/Innovation et vote mental/cœur/corps.',
     expectedFields: [
@@ -64,12 +64,12 @@ Analyse l'échange fourni et produis UNIQUEMENT un JSON respectant exactement le
     "corps": string
   },
   "next_step": string,
-  "tags": string?.[]
+  "tags": string[]
 }
 
 Rappels:
 - Résume en 1-2 phrases par champ.
-- Utilise le vocabulaire TITANE∞ (any: any) si pertinent.
+- Utilise le vocabulaire TITANE∞ (Deuxième vitesse, D.I.S.C.E.R.N.E.R., Être/Faire/Avoir) si pertinent.
 - PAS de texte hors JSON.`,
     example: {
       type: 'decision',
@@ -135,8 +135,8 @@ Pas d'introduction, pas de conseils additionnels.`,
   "type": "project_snapshot",
   "project": string,
   "phase": "D|C|S",
-  "divergence": string?.[],
-  "connexion": string?.[],
+  "divergence": string[],
+  "connexion": string[],
   "structuration": [
     {
       "step": string,
@@ -170,12 +170,12 @@ Si certaines sections ne sont pas mentionnées, déduis-les honnêtement sans in
   "type": "rhythm_report",
   "week": string,
   "energy_score": number,
-  "signals": string?.[],
+  "signals": string[],
   "rituals": {
-    "completed": string?.[],
-    "missed": string?.[]
+    "completed": string[],
+    "missed": string[]
   },
-  "adjustments": string?.[],
+  "adjustments": string[],
   "focus_next_week": string
 }
 Score 0-10. Liste maximum 5 éléments par tableau. Aucun texte externe.`,
@@ -209,9 +209,9 @@ Score 0-10. Liste maximum 5 éléments par tableau. Aucun texte externe.`,
   "type": "season_summary",
   "season": string,
   "period": string,
-  "themes": string?.[],
-  "lessons": string?.[],
-  "guardrails": string?.[],
+  "themes": string[],
+  "lessons": string[],
+  "guardrails": string[],
   "next_season_intent": string
 }
 Pas de commentaire en dehors du JSON.`,
@@ -230,15 +230,15 @@ Pas de commentaire en dehors du JSON.`,
   },
 };
 
-export function getMemoryTemplate(any: any): MemoryTemplate {
+export function getMemoryTemplate(id: MemoryTemplateId): MemoryTemplate {
   return memoryTemplates[id];
 }
 
-export function listMemoryTemplates(): MemoryTemplate?.[] {
-  return Object?.values(any: any);
+export function listMemoryTemplates(): MemoryTemplate[] {
+  return Object.values(memoryTemplates);
 }
 
-export function buildMemoryPrompt(any: any): string {
+export function buildMemoryPrompt(templateId: MemoryTemplateId): string {
   return (
     memoryTemplates[templateId]?.prompt ||
     'Tu es le Synthétiseur Cognitif TITANE∞. Retourne uniquement un JSON valide.'

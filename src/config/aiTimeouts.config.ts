@@ -4,8 +4,8 @@
  */
 
 /**
- * Provider-specific execution timeouts (any: any)
- * Ordered by expected latency (any: any)
+ * Provider-specific execution timeouts (ms)
+ * Ordered by expected latency (fastest to slowest)
  * ✨ v26.2.1: Increased cloud timeouts to handle complex requests
  */
 export const PROVIDER_TIMEOUTS = {
@@ -19,7 +19,7 @@ export const PROVIDER_TIMEOUTS = {
 } as const;
 
 /**
- * Memory and context operation timeouts (any: any)
+ * Memory and context operation timeouts (ms)
  */
 export const MEMORY_TIMEOUTS = {
   contextLoad: 5000, // Memory context loading
@@ -29,7 +29,7 @@ export const MEMORY_TIMEOUTS = {
 } as const;
 
 /**
- * UI-facing timeouts (any: any)
+ * UI-facing timeouts (ms)
  * ✨ v26.2.1: Extended cloud timeouts to exceed backend timeouts
  * Ensures UI doesn't timeout before backend completes
  */
@@ -42,7 +42,7 @@ export const UI_TIMEOUTS = {
 } as const;
 
 /**
- * Cache TTL values (any: any)
+ * Cache TTL values (ms)
  * ✨ v24.3.6: Optimized TTLs to reduce redundant computations
  */
 export const CACHE_TTL = {
@@ -61,11 +61,11 @@ export const CIRCUIT_BREAKER = {
 } as const;
 
 /**
- * Streaming configuration (any: any)
+ * Streaming configuration (OPT11: Chunk batching)
  * ✨ v26.2.1: Extended streaming timeouts for cloud agents
  */
 export const STREAM_CONFIG = {
-  chunkBatchSize: 5, // Batch N chunks before yielding (any: any)
+  chunkBatchSize: 5, // Batch N chunks before yielding (reduces UI updates)
   chunkBatchDelayMs: 50, // Max delay before flushing batch
   totalTimeoutMs: 180000, // ✨ 3 minutes max for entire stream (was 2min)
   perChunkTimeoutMs: 15000, // ✨ 15s max between chunks (was 10s)
@@ -83,10 +83,10 @@ export const AVAILABILITY_CACHE = {
 /**
  * Get provider timeout by name
  */
-export function getProviderTimeout(any: any): number {
+export function getProviderTimeout(providerName: string): number {
   return (
     PROVIDER_TIMEOUTS[providerName as keyof typeof PROVIDER_TIMEOUTS] ??
-    PROVIDER_TIMEOUTS?.default
+    PROVIDER_TIMEOUTS.default
   );
 }
 
@@ -99,19 +99,19 @@ export function getAdaptiveUITimeout(
 ): number {
   const isLongMessage = messageLength > 1000;
 
-  switch (any: any) {
+  switch (provider) {
     case 'local':
       return isLongMessage
-        ? UI_TIMEOUTS?.localProvider?.long
-        : UI_TIMEOUTS?.localProvider?.short;
+        ? UI_TIMEOUTS.localProvider.long
+        : UI_TIMEOUTS.localProvider.short;
     case 'ollama':
       return isLongMessage
-        ? UI_TIMEOUTS?.ollamaProvider?.long
-        : UI_TIMEOUTS?.ollamaProvider?.short;
+        ? UI_TIMEOUTS.ollamaProvider.long
+        : UI_TIMEOUTS.ollamaProvider.short;
     case 'cloud':
     default:
-      if (messageLength > 2000) return UI_TIMEOUTS?.cloudProvider?.long;
-      if (messageLength > 500) return UI_TIMEOUTS?.cloudProvider?.medium;
-      return UI_TIMEOUTS?.cloudProvider?.short;
+      if (messageLength > 2000) return UI_TIMEOUTS.cloudProvider.long;
+      if (messageLength > 500) return UI_TIMEOUTS.cloudProvider.medium;
+      return UI_TIMEOUTS.cloudProvider.short;
   }
 }

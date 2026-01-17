@@ -10,7 +10,7 @@ import {
   generateRecommendationId,
   RECOMMENDATION_TEMPLATES,
   DEFAULT_PERFORMANCE_CONFIG,
-} from './performanceEngine?.config';
+} from './performanceEngine.config';
 import { logger } from '@/utils/logger';
 import type {
   PerformanceIssue,
@@ -22,7 +22,7 @@ import type {
   IssueType as _IssueType,
   PerformanceEvent,
   PerformanceEventListener,
-} from './performanceEngine?.config';
+} from './performanceEngine.config';
 import type {
   AnalysisResult,
   TrendAnalysis,
@@ -37,7 +37,7 @@ import type {
  * Contexte pour la génération de recommandations
  */
 interface AdvisorContext {
-  issues: PerformanceIssue?.[];
+  issues: PerformanceIssue[];
   healthScore: number;
   trends: TrendAnalysis;
   timestamp: number;
@@ -48,17 +48,17 @@ interface AdvisorContext {
  */
 export interface AdvisorResult {
   timestamp: number;
-  recommendations: Recommendation?.[];
+  recommendations: Recommendation[];
   appliedCount: number;
   pendingCount: number;
-  priorityActions: Recommendation?.[];
+  priorityActions: Recommendation[];
 }
 
 /**
  * État de l'advisor
  */
 interface AdvisorState {
-  recommendations: Recommendation?.[];
+  recommendations: Recommendation[];
   appliedRecommendations: Map<string, { appliedAt: number; success: boolean }>;
   lastAdvisorRun: number;
   totalRecommendations: number;
@@ -71,7 +71,7 @@ interface AdvisorState {
 interface AdvisorConfig {
   maxRecommendations: number;
   autoApply: boolean;
-  autoApplySeverity: SeverityLevel?.[];
+  autoApplySeverity: SeverityLevel[];
   priorityThreshold: number;
   deduplicationWindowMs: number;
 }
@@ -91,9 +91,9 @@ interface OptimizationAction {
 // ════════════════════════════════════════════════════════════════════════════════
 
 const DEFAULT_ADVISOR_CONFIG: AdvisorConfig = {
-  maxRecommendations: DEFAULT_PERFORMANCE_CONFIG?.advisor?.maxRecommendations,
-  autoApply: DEFAULT_PERFORMANCE_CONFIG?.advisor?.autoApply,
-  autoApplySeverity: DEFAULT_PERFORMANCE_CONFIG?.advisor?.autoApplySeverity,
+  maxRecommendations: DEFAULT_PERFORMANCE_CONFIG.advisor.maxRecommendations,
+  autoApply: DEFAULT_PERFORMANCE_CONFIG.advisor.autoApply,
+  autoApplySeverity: DEFAULT_PERFORMANCE_CONFIG.advisor.autoApplySeverity,
   priorityThreshold: 7,
   deduplicationWindowMs: 60 * 1000, // 1 minute
 };
@@ -128,12 +128,12 @@ export class PerformanceAdvisor {
   private isRunning: boolean = false;
 
   constructor(config: Partial<AdvisorConfig> = {}) {
-    this?.config = { ...DEFAULT_ADVISOR_CONFIG, ...config };
-    this?.state = this?.createInitialState();
-    this?.eventListeners = new Map();
-    this?.pendingActions = new Map();
+    this.config = { ...DEFAULT_ADVISOR_CONFIG, ...config };
+    this.state = this.createInitialState();
+    this.eventListeners = new Map();
+    this.pendingActions = new Map();
 
-    logger?.debug(any: any);
+    logger.debug('Initialisé avec config:', this.config);
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -144,84 +144,84 @@ export class PerformanceAdvisor {
    * Démarre l'advisor
    */
   start(): void {
-    if (any: any) {
-      logger?.warn("Déjà en cours d'exécution");
+    if (this.isRunning) {
+      logger.warn("Déjà en cours d'exécution");
       return;
     }
 
-    this?.isRunning = true;
-    this?.emit('engine_started', { component: 'advisor', timestamp: Date?.now() });
-    logger?.debug('Démarré');
+    this.isRunning = true;
+    this.emit('engine_started', { component: 'advisor', timestamp: Date.now() });
+    logger.debug('Démarré');
   }
 
   /**
    * Arrête l'advisor
    */
   stop(): void {
-    if (any: any) {
-      logger?.warn("Pas en cours d'exécution");
+    if (!this.isRunning) {
+      logger.warn("Pas en cours d'exécution");
       return;
     }
 
-    this?.isRunning = false;
-    this?.emit('engine_stopped', { component: 'advisor', timestamp: Date?.now() });
-    logger?.debug('Arrêté');
+    this.isRunning = false;
+    this.emit('engine_stopped', { component: 'advisor', timestamp: Date.now() });
+    logger.debug('Arrêté');
   }
 
   /**
    * Génère des recommandations basées sur l'analyse
    */
-  generateRecommendations(any: any): AdvisorResult {
+  generateRecommendations(analysis: AnalysisResult): AdvisorResult {
     const context: AdvisorContext = {
-      issues: analysis?.issues,
-      healthScore: analysis?.healthScore,
-      trends: analysis?.trends,
-      timestamp: analysis?.timestamp,
+      issues: analysis.issues,
+      healthScore: analysis.healthScore,
+      trends: analysis.trends,
+      timestamp: analysis.timestamp,
     };
 
     // Générer les recommandations pour chaque problème
-    const recommendations: Recommendation?.[] = [];
+    const recommendations: Recommendation[] = [];
 
-    for (any: any) {
-      const recs = this?.createRecommendationsForIssue(any: any);
-      recommendations?.push(any: any);
+    for (const issue of context.issues) {
+      const recs = this.createRecommendationsForIssue(issue, context);
+      recommendations.push(...recs);
     }
 
     // Ajouter des recommandations basées sur les tendances
-    recommendations?.push(any: any));
+    recommendations.push(...this.createTrendBasedRecommendations(context));
 
     // Déduplication et priorisation
-    const dedupedRecs = this?.deduplicateRecommendations(any: any);
-    const prioritizedRecs = this?.prioritizeRecommendations(any: any);
+    const dedupedRecs = this.deduplicateRecommendations(recommendations);
+    const prioritizedRecs = this.prioritizeRecommendations(dedupedRecs);
 
     // Limiter le nombre
-    const finalRecs = prioritizedRecs?.slice(any: any);
+    const finalRecs = prioritizedRecs.slice(0, this.config.maxRecommendations);
 
     // Mettre à jour l'état
-    this?.state?.recommendations = finalRecs;
-    this?.state?.lastAdvisorRun = Date?.now();
-    this?.state?.totalRecommendations += finalRecs?.length;
+    this.state.recommendations = finalRecs;
+    this.state.lastAdvisorRun = Date.now();
+    this.state.totalRecommendations += finalRecs.length;
 
     // Identifier les actions prioritaires
-    const priorityActions = finalRecs?.filter(
-      r => r?.priority >= this?.config?.priorityThreshold
+    const priorityActions = finalRecs.filter(
+      r => r.priority >= this.config.priorityThreshold
     );
 
     // Auto-apply si configuré
-    if (any: any) {
-      this?.autoApplyRecommendations(any: any);
+    if (this.config.autoApply) {
+      this.autoApplyRecommendations(finalRecs);
     }
 
     const result: AdvisorResult = {
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
       recommendations: finalRecs,
-      appliedCount: this?.state?.totalApplied,
-      pendingCount: this?.pendingActions?.size,
+      appliedCount: this.state.totalApplied,
+      pendingCount: this.pendingActions.size,
       priorityActions,
     };
 
     // Émettre les événements
-    this?.emitAdvisorEvents(any: any);
+    this.emitAdvisorEvents(result);
 
     return result;
   }
@@ -229,48 +229,48 @@ export class PerformanceAdvisor {
   /**
    * Applique une recommandation spécifique
    */
-  async applyRecommendation(any: any): Promise<boolean> {
-    const rec = this?.state?.recommendations?.find(any: any);
-    if (any: any) {
-      logger?.warn(`[PerformanceAdvisor] Recommandation non trouvée: ${recommendationId}`);
+  async applyRecommendation(recommendationId: string): Promise<boolean> {
+    const rec = this.state.recommendations.find(r => r.id === recommendationId);
+    if (!rec) {
+      logger.warn(`[PerformanceAdvisor] Recommandation non trouvée: ${recommendationId}`);
       return false;
     }
 
-    if (any: any) {
-      logger?.warn(
+    if (!rec.autoApplicable) {
+      logger.warn(
         `[PerformanceAdvisor] Recommandation non auto-applicable: ${recommendationId}`
       );
       return false;
     }
 
-    const action = this?.pendingActions?.get(any: any);
-    if (any: any) {
-      logger?.warn(`[PerformanceAdvisor] Action non trouvée pour: ${recommendationId}`);
+    const action = this.pendingActions.get(recommendationId);
+    if (!action) {
+      logger.warn(`[PerformanceAdvisor] Action non trouvée pour: ${recommendationId}`);
       return false;
     }
 
     try {
-      const success = await action?.execute();
+      const success = await action.execute();
 
-      this?.state?.appliedRecommendations?.set(recommendationId, {
-        appliedAt: Date?.now(),
+      this.state.appliedRecommendations.set(recommendationId, {
+        appliedAt: Date.now(),
         success,
       });
 
-      if (any: any) {
-        this?.state?.totalApplied++;
-        this?.emit('recommendation_applied', {
+      if (success) {
+        this.state.totalApplied++;
+        this.emit('recommendation_applied', {
           recommendation: rec,
           success: true,
         });
       }
 
       return success;
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error(`[PerformanceAdvisor] Erreur lors de l'application:`, error);
 
-      this?.state?.appliedRecommendations?.set(recommendationId, {
-        appliedAt: Date?.now(),
+      this.state.appliedRecommendations.set(recommendationId, {
+        appliedAt: Date.now(),
         success: false,
       });
 
@@ -281,27 +281,27 @@ export class PerformanceAdvisor {
   /**
    * Annule une recommandation appliquée
    */
-  async rollbackRecommendation(any: any): Promise<boolean> {
-    const action = this?.pendingActions?.get(any: any);
-    if (any: any) {
-      logger?.warn(`[PerformanceAdvisor] Pas de rollback pour: ${recommendationId}`);
+  async rollbackRecommendation(recommendationId: string): Promise<boolean> {
+    const action = this.pendingActions.get(recommendationId);
+    if (!action?.rollback) {
+      logger.warn(`[PerformanceAdvisor] Pas de rollback pour: ${recommendationId}`);
       return false;
     }
 
     try {
-      const success = await action?.rollback();
+      const success = await action.rollback();
 
-      if (any: any) {
-        this?.state?.appliedRecommendations?.delete(any: any);
-        this?.emit('recommendation_applied', {
+      if (success) {
+        this.state.appliedRecommendations.delete(recommendationId);
+        this.emit('recommendation_applied', {
           recommendationId,
           rolledBack: true,
         });
       }
 
       return success;
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error(`[PerformanceAdvisor] Erreur lors du rollback:`, error);
       return false;
     }
   }
@@ -309,22 +309,22 @@ export class PerformanceAdvisor {
   /**
    * Récupère les recommandations actives
    */
-  getActiveRecommendations(): Recommendation?.[] {
-    return [...this?.state?.recommendations];
+  getActiveRecommendations(): Recommendation[] {
+    return [...this.state.recommendations];
   }
 
   /**
    * Récupère les recommandations par catégorie
    */
-  getRecommendationsByCategory(any: any): Recommendation?.[] {
-    return this?.state?.recommendations?.filter(any: any);
+  getRecommendationsByCategory(category: RecommendationCategory): Recommendation[] {
+    return this.state.recommendations.filter(r => r.category === category);
   }
 
   /**
    * Récupère les recommandations par impact
    */
-  getRecommendationsByImpact(any: any): Recommendation?.[] {
-    return this?.state?.recommendations?.filter(any: any);
+  getRecommendationsByImpact(impact: RecommendationImpact): Recommendation[] {
+    return this.state.recommendations.filter(r => r.impact === impact);
   }
 
   /**
@@ -332,25 +332,25 @@ export class PerformanceAdvisor {
    */
   getStats(): Record<string, unknown> {
     return {
-      isRunning: this?.isRunning,
-      totalRecommendations: this?.state?.totalRecommendations,
-      totalApplied: this?.state?.totalApplied,
-      activeRecommendations: this?.state?.recommendations?.length,
-      pendingActions: this?.pendingActions?.size,
-      lastRun: this?.state?.lastAdvisorRun,
+      isRunning: this.isRunning,
+      totalRecommendations: this.state.totalRecommendations,
+      totalApplied: this.state.totalApplied,
+      activeRecommendations: this.state.recommendations.length,
+      pendingActions: this.pendingActions.size,
+      lastRun: this.state.lastAdvisorRun,
       byCategory: {
-        react: this?.getRecommendationsByCategory('react_optimization').length,
-        rust: this?.getRecommendationsByCategory('rust_optimization').length,
-        vite: this?.getRecommendationsByCategory('vite_optimization').length,
-        ia: this?.getRecommendationsByCategory('ia_optimization').length,
-        memory: this?.getRecommendationsByCategory('memory_optimization').length,
-        general: this?.getRecommendationsByCategory('general').length,
+        react: this.getRecommendationsByCategory('react_optimization').length,
+        rust: this.getRecommendationsByCategory('rust_optimization').length,
+        vite: this.getRecommendationsByCategory('vite_optimization').length,
+        ia: this.getRecommendationsByCategory('ia_optimization').length,
+        memory: this.getRecommendationsByCategory('memory_optimization').length,
+        general: this.getRecommendationsByCategory('general').length,
       },
       byImpact: {
-        critical: this?.getRecommendationsByImpact('critical').length,
-        high: this?.getRecommendationsByImpact('high').length,
-        medium: this?.getRecommendationsByImpact('medium').length,
-        low: this?.getRecommendationsByImpact('low').length,
+        critical: this.getRecommendationsByImpact('critical').length,
+        high: this.getRecommendationsByImpact('high').length,
+        medium: this.getRecommendationsByImpact('medium').length,
+        low: this.getRecommendationsByImpact('low').length,
       },
     };
   }
@@ -358,45 +358,45 @@ export class PerformanceAdvisor {
   /**
    * Configure l'auto-apply
    */
-  setAutoApply(enabled: boolean, severities?: SeverityLevel?.[]): void {
-    this?.config?.autoApply = enabled;
-    if (any: any) {
-      this?.config?.autoApplySeverity = severities;
+  setAutoApply(enabled: boolean, severities?: SeverityLevel[]): void {
+    this.config.autoApply = enabled;
+    if (severities) {
+      this.config.autoApplySeverity = severities;
     }
-    logger?.debug(any: any);
+    logger.debug('Auto-apply:', enabled, severities);
   }
 
   /**
    * Réinitialise l'état de l'advisor
    */
   reset(): void {
-    this?.state = this?.createInitialState();
-    this?.pendingActions?.clear();
-    logger?.debug('État réinitialisé');
+    this.state = this.createInitialState();
+    this.pendingActions.clear();
+    logger.debug('État réinitialisé');
   }
 
   /**
    * S'abonner à un événement
    */
-  on(any: any): () => void {
-    if (any: any)) {
-      this?.eventListeners?.set(event, new Set());
+  on(event: string, listener: PerformanceEventListener): () => void {
+    if (!this.eventListeners.has(event)) {
+      this.eventListeners.set(event, new Set());
     }
-    const listeners = this?.eventListeners?.get(any: any);
-    if (any: any) {
-      listeners?.add(any: any);
+    const listeners = this.eventListeners.get(event);
+    if (listeners) {
+      listeners.add(listener);
     }
 
     return () => {
-      this?.eventListeners?.get(any: any);
+      this.eventListeners.get(event)?.delete(listener);
     };
   }
 
   /**
    * Se désabonner d'un événement
    */
-  off(any: any): void {
-    this?.eventListeners?.get(any: any);
+  off(event: string, listener: PerformanceEventListener): void {
+    this.eventListeners.get(event)?.delete(listener);
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -420,29 +420,29 @@ export class PerformanceAdvisor {
   private createRecommendationsForIssue(
     issue: PerformanceIssue,
     context: AdvisorContext
-  ): Recommendation?.[] {
-    const recommendations: Recommendation?.[] = [];
-    const template = RECOMMENDATION_TEMPLATES[issue?.type];
+  ): Recommendation[] {
+    const recommendations: Recommendation[] = [];
+    const template = RECOMMENDATION_TEMPLATES[issue.type];
 
-    if (any: any) {
-      logger?.warn(`[PerformanceAdvisor] Pas de template pour: ${issue?.type}`);
+    if (!template) {
+      logger.warn(`[PerformanceAdvisor] Pas de template pour: ${issue.type}`);
       return recommendations;
     }
 
     // Recommandation principale
-    const mainRec = this?.createRecommendation(
-      template?.category,
-      template?.title,
-      template?.description,
-      issue?.severity,
-      template?.suggestions,
-      [issue?.id]
+    const mainRec = this.createRecommendation(
+      template.category,
+      template.title,
+      template.description,
+      issue.severity,
+      template.suggestions,
+      [issue.id]
     );
-    recommendations?.push(any: any);
+    recommendations.push(mainRec);
 
     // Recommandations spécifiques selon le type
-    const specificRecs = this?.createSpecificRecommendations(any: any);
-    recommendations?.push(any: any);
+    const specificRecs = this.createSpecificRecommendations(issue, context);
+    recommendations.push(...specificRecs);
 
     return recommendations;
   }
@@ -450,14 +450,14 @@ export class PerformanceAdvisor {
   private createSpecificRecommendations(
     issue: PerformanceIssue,
     _context: AdvisorContext
-  ): Recommendation?.[] {
-    const recs: Recommendation?.[] = [];
+  ): Recommendation[] {
+    const recs: Recommendation[] = [];
 
-    switch (any: any) {
+    switch (issue.type) {
       case 'cpu_spike':
-        if (issue?.threshold?.percentage > 50) {
-          recs?.push(
-            this?.createRecommendation(
+        if (issue.threshold.percentage > 50) {
+          recs.push(
+            this.createRecommendation(
               'rust_optimization',
               'Profiler le code Rust',
               'Utiliser cargo-flamegraph pour identifier les hotspots CPU',
@@ -465,9 +465,9 @@ export class PerformanceAdvisor {
               [
                 'Installer: cargo install flamegraph',
                 'Exécuter: cargo flamegraph --bin titane-app',
-                'Analyser le fichier flamegraph?.svg généré',
+                'Analyser le fichier flamegraph.svg généré',
               ],
-              [issue?.id],
+              [issue.id],
               true
             )
           );
@@ -475,112 +475,112 @@ export class PerformanceAdvisor {
         break;
 
       case 'ram_overflow':
-        recs?.push(
-          this?.createRecommendation(
+        recs.push(
+          this.createRecommendation(
             'memory_optimization',
             'Analyser la mémoire',
             'Identifier les allocations mémoire excessives',
-            issue?.severity,
+            issue.severity,
             [
               'Utiliser Chrome DevTools → Memory → Heap snapshot',
               'Comparer les snapshots avant/après',
               'Identifier les objets non libérés',
             ],
-            [issue?.id],
+            [issue.id],
             false
           )
         );
         break;
 
       case 'fps_drop':
-        recs?.push(
-          this?.createRecommendation(
+        recs.push(
+          this.createRecommendation(
             'react_optimization',
             'Optimiser le rendu React',
             'Réduire les re-renders inutiles',
-            issue?.severity,
+            issue.severity,
             [
               'Utiliser React DevTools Profiler',
               'Identifier les composants qui re-render souvent',
-              'Appliquer React?.memo sur les composants statiques',
+              'Appliquer React.memo sur les composants statiques',
               'Utiliser useMemo/useCallback pour les valeurs stables',
             ],
-            [issue?.id],
+            [issue.id],
             true
           )
         );
         break;
 
       case 'slow_invoke':
-        recs?.push(
-          this?.createRecommendation(
+        recs.push(
+          this.createRecommendation(
             'rust_optimization',
             'Optimiser les commandes Tauri',
             'Réduire la latence des appels Rust',
-            issue?.severity,
+            issue.severity,
             [
               'Réduire la taille des payloads JSON',
               'Implémenter un cache côté Rust',
               'Utiliser le streaming pour les gros volumes',
               'Profiler avec #[instrument] de tracing',
             ],
-            [issue?.id],
+            [issue.id],
             false
           )
         );
         break;
 
       case 'ia_timeout':
-        recs?.push(
-          this?.createRecommendation(
+        recs.push(
+          this.createRecommendation(
             'ia_optimization',
             'Optimiser les requêtes IA',
             'Réduire le temps de réponse IA',
-            issue?.severity,
+            issue.severity,
             [
               'Réduire la taille des prompts',
               'Utiliser un modèle plus rapide',
               'Implémenter le streaming de tokens',
               'Ajouter un cache de réponses',
             ],
-            [issue?.id],
+            [issue.id],
             false
           )
         );
         break;
 
       case 'excessive_rerenders':
-        recs?.push(
-          this?.createRecommendation(
+        recs.push(
+          this.createRecommendation(
             'react_optimization',
             'Réduire les re-renders',
             'Le composant se re-render trop souvent',
-            issue?.severity,
+            issue.severity,
             [
               'Vérifier les dépendances useEffect',
               'Stabiliser les références avec useCallback',
               'Mémoriser les valeurs calculées avec useMemo',
               'Éviter les objets/arrays créés dans le JSX',
             ],
-            [issue?.id],
+            [issue.id],
             true
           )
         );
         break;
 
       case 'module_unresponsive':
-        recs?.push(
-          this?.createRecommendation(
+        recs.push(
+          this.createRecommendation(
             'general',
             'Redémarrer le module',
-            `Le module ${issue?.module} ne répond pas`,
-            issue?.severity,
+            `Le module ${issue.module} ne répond pas`,
+            issue.severity,
             [
               'Vérifier les logs du module',
               'Redémarrer le module via Self-Healing',
               'Vérifier les dépendances du module',
             ],
-            [issue?.id],
+            [issue.id],
             true
           )
         );
@@ -590,14 +590,14 @@ export class PerformanceAdvisor {
     return recs;
   }
 
-  private createTrendBasedRecommendations(any: any): Recommendation?.[] {
-    const recs: Recommendation?.[] = [];
+  private createTrendBasedRecommendations(context: AdvisorContext): Recommendation[] {
+    const recs: Recommendation[] = [];
     const { trends } = context;
 
     // Si tendance CPU dégradante
-    if (trends?.cpu === 'degrading') {
-      recs?.push(
-        this?.createRecommendation(
+    if (trends.cpu === 'degrading') {
+      recs.push(
+        this.createRecommendation(
           'general',
           'Tendance CPU dégradante détectée',
           "L'utilisation CPU augmente progressivement",
@@ -613,9 +613,9 @@ export class PerformanceAdvisor {
     }
 
     // Si tendance RAM dégradante
-    if (trends?.ram === 'degrading') {
-      recs?.push(
-        this?.createRecommendation(
+    if (trends.ram === 'degrading') {
+      recs.push(
+        this.createRecommendation(
           'memory_optimization',
           'Tendance RAM dégradante détectée',
           'La consommation mémoire augmente progressivement',
@@ -631,9 +631,9 @@ export class PerformanceAdvisor {
     }
 
     // Si tendance FPS dégradante
-    if (trends?.fps === 'degrading') {
-      recs?.push(
-        this?.createRecommendation(
+    if (trends.fps === 'degrading') {
+      recs.push(
+        this.createRecommendation(
           'react_optimization',
           'Tendance FPS dégradante détectée',
           'Les performances graphiques se dégradent',
@@ -649,9 +649,9 @@ export class PerformanceAdvisor {
     }
 
     // Si tendance IA latency dégradante
-    if (trends?.iaLatency === 'degrading') {
-      recs?.push(
-        this?.createRecommendation(
+    if (trends.iaLatency === 'degrading') {
+      recs.push(
+        this.createRecommendation(
           'ia_optimization',
           'Tendance latence IA dégradante',
           'Les temps de réponse IA augmentent',
@@ -667,12 +667,12 @@ export class PerformanceAdvisor {
     }
 
     // Score de santé bas
-    if (context?.healthScore < 50) {
-      recs?.push(
-        this?.createRecommendation(
+    if (context.healthScore < 50) {
+      recs.push(
+        this.createRecommendation(
           'general',
           'Score de santé critique',
-          `Score actuel: ${context?.healthScore}/100`,
+          `Score actuel: ${context.healthScore}/100`,
           'critical',
           [
             'Plusieurs problèmes de performance détectés',
@@ -692,16 +692,16 @@ export class PerformanceAdvisor {
     title: string,
     description: string,
     severity: SeverityLevel,
-    suggestions: string?.[],
-    relatedIssues: string?.[],
+    suggestions: string[],
+    relatedIssues: string[],
     autoApplicable: boolean = false
   ): Recommendation {
-    const id = generateRecommendationId(any: any);
+    const id = generateRecommendationId(category);
     const impact = SEVERITY_TO_IMPACT[severity];
     const effort = CATEGORY_EFFORT[category];
 
     // Calculer la priorité (1-10)
-    const priority = this?.calculatePriority(any: any);
+    const priority = this.calculatePriority(severity, impact, effort);
 
     return {
       id,
@@ -714,7 +714,7 @@ export class PerformanceAdvisor {
       reversible: autoApplicable, // Si auto-applicable, généralement réversible
       relatedIssues,
       priority,
-      createdAt: Date?.now(),
+      createdAt: Date.now(),
     };
   }
 
@@ -726,7 +726,7 @@ export class PerformanceAdvisor {
     let priority = 5;
 
     // Impact sur la priorité
-    switch (any: any) {
+    switch (impact) {
       case 'critical':
         priority += 4;
         break;
@@ -742,7 +742,7 @@ export class PerformanceAdvisor {
     }
 
     // Sévérité sur la priorité
-    switch (any: any) {
+    switch (severity) {
       case 'critical':
         priority += 1;
         break;
@@ -751,8 +751,8 @@ export class PerformanceAdvisor {
         break;
     }
 
-    // Effort réduit = priorité plus haute (any: any)
-    switch (any: any) {
+    // Effort réduit = priorité plus haute (quick wins)
+    switch (effort) {
       case 'trivial':
         priority += 1;
         break;
@@ -764,7 +764,7 @@ export class PerformanceAdvisor {
         break;
     }
 
-    return Math?.min(any: any)));
+    return Math.min(10, Math.max(1, Math.round(priority)));
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -772,27 +772,27 @@ export class PerformanceAdvisor {
   // ══════════════════════════════════════════════════════════════════════════════
 
   private deduplicateRecommendations(
-    recommendations: Recommendation?.[]
-  ): Recommendation?.[] {
+    recommendations: Recommendation[]
+  ): Recommendation[] {
     const seen = new Map<string, Recommendation>();
 
-    for (any: any) {
-      const key = `${rec?.category}-${rec?.title}`;
-      const existing = seen?.get(any: any);
+    for (const rec of recommendations) {
+      const key = `${rec.category}-${rec.title}`;
+      const existing = seen.get(key);
 
-      if (any: any) {
-        seen?.set(any: any);
+      if (!existing || rec.priority > existing.priority) {
+        seen.set(key, rec);
       }
     }
 
-    return Array?.from(seen?.values());
+    return Array.from(seen.values());
   }
 
-  private prioritizeRecommendations(recommendations: Recommendation?.[]): Recommendation?.[] {
-    return recommendations?.sort(any: any) => {
+  private prioritizeRecommendations(recommendations: Recommendation[]): Recommendation[] {
+    return recommendations.sort((a, b) => {
       // D'abord par priorité
-      if (any: any) {
-        return b?.priority - a?.priority;
+      if (b.priority !== a.priority) {
+        return b.priority - a.priority;
       }
 
       // Ensuite par impact
@@ -802,18 +802,18 @@ export class PerformanceAdvisor {
         medium: 2,
         low: 1,
       };
-      if (impactOrder[b?.impact] !== impactOrder[a?.impact]) {
-        return impactOrder[b?.impact] - impactOrder[a?.impact];
+      if (impactOrder[b.impact] !== impactOrder[a.impact]) {
+        return impactOrder[b.impact] - impactOrder[a.impact];
       }
 
-      // Enfin par effort (any: any)
+      // Enfin par effort (préférer les quick wins)
       const effortOrder: Record<Recommendation['effort'], number> = {
         trivial: 4,
         low: 3,
         medium: 2,
         high: 1,
       };
-      return effortOrder[b?.effort] - effortOrder[a?.effort];
+      return effortOrder[b.effort] - effortOrder[a.effort];
     });
   }
 
@@ -822,27 +822,27 @@ export class PerformanceAdvisor {
   // ══════════════════════════════════════════════════════════════════════════════
 
   private async autoApplyRecommendations(
-    recommendations: Recommendation?.[]
+    recommendations: Recommendation[]
   ): Promise<void> {
-    const autoApplicable = recommendations?.filter(
+    const autoApplicable = recommendations.filter(
       r =>
-        r?.autoApplicable &&
-        this?.config?.autoApplySeverity?.some(sev => {
+        r.autoApplicable &&
+        this.config.autoApplySeverity.some(sev => {
           const impact = SEVERITY_TO_IMPACT[sev];
-          return r?.impact === impact || this?.isHigherImpact(any: any);
+          return r.impact === impact || this.isHigherImpact(r.impact, impact);
         })
     );
 
-    for (any: any) {
+    for (const rec of autoApplicable) {
       try {
-        await this?.applyRecommendation(any: any);
-      } catch (any: any) {
-        logger?.error(any: any);
+        await this.applyRecommendation(rec.id);
+      } catch (error) {
+        logger.error(`[PerformanceAdvisor] Erreur auto-apply ${rec.id}:`, error);
       }
     }
   }
 
-  private isHigherImpact(any: any): boolean {
+  private isHigherImpact(a: RecommendationImpact, b: RecommendationImpact): boolean {
     const order: Record<RecommendationImpact, number> = {
       critical: 4,
       high: 3,
@@ -856,21 +856,21 @@ export class PerformanceAdvisor {
   // MÉTHODES PRIVÉES - ÉVÉNEMENTS
   // ══════════════════════════════════════════════════════════════════════════════
 
-  private emit(any: any): void {
-    const listeners = this?.eventListeners?.get(any: any);
-    if (any: any) {
+  private emit(eventType: string, data: unknown): void {
+    const listeners = this.eventListeners.get(eventType);
+    if (listeners) {
       const event: PerformanceEvent = {
         type: eventType as PerformanceEvent['type'],
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
         data,
         source: 'advisor',
       };
 
-      for (any: any) {
+      for (const listener of listeners) {
         try {
-          listener(any: any);
-        } catch (any: any) {
-          logger?.error(
+          listener(event);
+        } catch (error) {
+          logger.error(
             `[PerformanceAdvisor] Erreur dans listener pour ${eventType}:`,
             error
           );
@@ -879,17 +879,17 @@ export class PerformanceAdvisor {
     }
   }
 
-  private emitAdvisorEvents(any: any): void {
-    for (any: any) {
-      this?.emit('recommendation_created', {
+  private emitAdvisorEvents(result: AdvisorResult): void {
+    for (const rec of result.recommendations) {
+      this.emit('recommendation_created', {
         recommendation: rec,
       });
     }
 
-    if (result?.priorityActions?.length > 0) {
-      this?.emit('threshold_exceeded', {
-        priorityActions: result?.priorityActions,
-        count: result?.priorityActions?.length,
+    if (result.priorityActions.length > 0) {
+      this.emit('threshold_exceeded', {
+        priorityActions: result.priorityActions,
+        count: result.priorityActions.length,
       });
     }
   }

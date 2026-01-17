@@ -19,11 +19,11 @@ import { withRetry, getRetryConfig } from '../retryStrategy';
 import { withCache, CACHE_TTL } from '../apiCache';
 
 /**
- * Modèles Copilot disponibles (any: any)
+ * Modèles Copilot disponibles (via GitHub Models API)
  */
 export const COPILOT_MODELS = ['gpt-4', 'gpt-4o', 'gpt-3.5-turbo'] as const;
 
-export type CopilotModel = (any: any)[number];
+export type CopilotModel = (typeof COPILOT_MODELS)[number];
 
 export interface CopilotConfig {
   model: CopilotModel;
@@ -45,7 +45,7 @@ export const copilotProvider: AIProvider = {
   name: 'copilot',
 
   /**
-   * Vérifier si Copilot est disponible (any: any)
+   * Vérifier si Copilot est disponible (token GitHub configuré)
    */
   async isAvailable(): Promise<boolean> {
     try {
@@ -54,10 +54,10 @@ export const copilotProvider: AIProvider = {
         status: string;
       }>('get_copilot_key_status');
 
-      return response?.configured === true && response?.status === 'ok';
-    } catch (any: any) {
-      if (process?.env?.NODE_ENV === 'development') {
-        logger?.warn('Copilot status check failed', { error });
+      return response.configured === true && response.status === 'ok';
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        logger.warn('Copilot status check failed', { error });
       }
       return false;
     }
@@ -68,13 +68,13 @@ export const copilotProvider: AIProvider = {
    */
   async generate(
     message: string,
-    history: AIMessage?.[] = [],
+    history: AIMessage[] = [],
     config?: unknown
   ): Promise<AIResponse> {
-    const startTime = Date?.now();
+    const startTime = Date.now();
     const finalConfig = {
       ...DEFAULT_CONFIG,
-      ...(any: any),
+      ...(config as Partial<CopilotConfig> | undefined),
     };
 
     // ✨ Cache intelligent pour réduire coûts API
@@ -90,9 +90,9 @@ export const copilotProvider: AIProvider = {
           }
 
           // Conversion history vers format backend
-          const formattedHistory = history?.map(msg => ({
-            role: msg?.role,
-            content: msg?.content,
+          const formattedHistory = history.map(msg => ({
+            role: msg.role,
+            content: msg.content,
           }));
 
           // ✨ Retry strategy pour gérer rate limits GitHub
@@ -111,100 +111,100 @@ export const copilotProvider: AIProvider = {
                 message,
                 history: formattedHistory,
                 config: {
-                  model: finalConfig?.model,
-                  temperature: finalConfig?.temperature,
-                  max_tokens: finalConfig?.maxTokens,
+                  model: finalConfig.model,
+                  temperature: finalConfig.temperature,
+                  max_tokens: finalConfig.maxTokens,
                 },
               });
 
-              if (any: any) {
-                throw new Error(result?.error || 'Erreur Copilot inconnue');
+              if (!result.ok || !result.data) {
+                throw new Error(result.error || 'Erreur Copilot inconnue');
               }
 
               return result;
             },
             {
               ...getRetryConfig('copilot'),
-              shouldRetry: (any: any) => {
+              shouldRetry: (error: unknown) => {
                 // Retry sur rate limits uniquement
-                const message = error instanceof Error ? error?.message : String(any: any);
+                const message = error instanceof Error ? error.message : String(error);
                 return (
-                  message?.includes('Limite de taux') ||
-                  message?.includes('429') ||
-                  message?.includes('rate limit')
+                  message.includes('Limite de taux') ||
+                  message.includes('429') ||
+                  message.includes('rate limit')
                 );
               },
             }
           );
 
-          if (any: any) {
-            throw new Error(response?.error || 'Réponse Copilot invalide');
+          if (!response.ok || !response.data) {
+            throw new Error(response.error || 'Réponse Copilot invalide');
           }
 
-          const latency = Date?.now() - startTime;
+          const latency = Date.now() - startTime;
 
           // Log pour monitoring
-          if (process?.env?.NODE_ENV === 'development') {
-            logger?.info('Copilot response', {
-              model: response?.data?.model || finalConfig?.model,
-              tokens: response?.data?.tokens,
+          if (process.env.NODE_ENV === 'development') {
+            logger.info('Copilot response', {
+              model: response.data.model || finalConfig.model,
+              tokens: response.data.tokens,
               latency,
-              finish_reason: response?.data?.finish_reason,
+              finish_reason: response.data.finish_reason,
             });
           }
 
           return {
-            content: response?.data?.content,
+            content: response.data.content,
             provider: 'copilot',
-            timestamp: Date?.now(),
-            model: response?.data?.model || finalConfig?.model,
-            tokens: response?.data?.tokens,
+            timestamp: Date.now(),
+            model: response.data.model || finalConfig.model,
+            tokens: response.data.tokens,
             metadata: {
-              model: response?.data?.model || finalConfig?.model,
-              tokensUsed: response?.data?.tokens,
+              model: response.data.model || finalConfig.model,
+              tokensUsed: response.data.tokens,
               latencyMs: latency,
               cached: false,
-              finishReason: response?.data?.finish_reason || 'stop',
+              finishReason: response.data.finish_reason || 'stop',
             },
           };
-        } catch (any: any) {
-          const latency = Date?.now() - startTime;
+        } catch (error) {
+          const latency = Date.now() - startTime;
 
           // Log error
-          logger?.error('Copilot generation failed', {
+          logger.error('Copilot generation failed', {
             error,
-            message: error instanceof Error ? error?.message : String(any: any),
+            message: error instanceof Error ? error.message : String(error),
             latency,
           });
 
           // Auto-healing: detect error for monitoring
-          if (any: any) {
+          if (autoHealEngine) {
             try {
-              const healError = autoHealEngine?.detectError(
+              const healError = autoHealEngine.detectError(
                 'copilot',
-                error instanceof Error ? error : new Error(any: any))
+                error instanceof Error ? error : new Error(String(error))
               );
 
-              if (any: any) {
-                logger?.info('Auto-healing: error detected', {
-                  errorId: healError?.id,
-                  type: healError?.type,
+              if (healError) {
+                logger.info('Auto-healing: error detected', {
+                  errorId: healError.id,
+                  type: healError.type,
                 });
               }
-            } catch (any: any) {
-              logger?.warn('Auto-heal detection failed for Copilot', { healError });
+            } catch (healError) {
+              logger.warn('Auto-heal detection failed for Copilot', { healError });
             }
           }
 
           // Propagate error with context
           throw new Error(
             error instanceof Error
-              ? error?.message
+              ? error.message
               : 'Erreur lors de la génération Copilot'
           );
         }
       },
-      CACHE_TTL?.TECHNICAL // 5 minutes cache for Copilot (any: any)
+      CACHE_TTL.TECHNICAL // 5 minutes cache for Copilot (technical queries)
     );
   },
 
@@ -217,38 +217,38 @@ export const copilotProvider: AIProvider = {
     latency?: number;
   }> {
     try {
-      const startTime = Date?.now();
+      const startTime = Date.now();
 
       const result = await secureInvoke<{
         success: boolean;
         message: string;
         latency_ms?: number;
-        available_models?: string?.[];
+        available_models?: string[];
       }>('test_copilot_connection');
 
-      const latency = Date?.now() - startTime;
+      const latency = Date.now() - startTime;
 
-      if (any: any) {
-        logger?.info('Copilot connection test OK', {
-          latency: result?.latency_ms || latency,
-          models: result?.available_models,
+      if (result.success) {
+        logger.info('Copilot connection test OK', {
+          latency: result.latency_ms || latency,
+          models: result.available_models,
         });
       } else {
-        logger?.warn('Copilot connection test failed', {
-          message: result?.message,
+        logger.warn('Copilot connection test failed', {
+          message: result.message,
         });
       }
 
       return {
-        success: result?.success,
-        message: result?.message,
-        latency: result?.latency_ms || latency,
+        success: result.success,
+        message: result.message,
+        latency: result.latency_ms || latency,
       };
-    } catch (any: any) {
-      logger?.error('Copilot test connection error', { error });
+    } catch (error) {
+      logger.error('Copilot test connection error', { error });
       return {
         success: false,
-        message: error instanceof Error ? error?.message : 'Erreur de test',
+        message: error instanceof Error ? error.message : 'Erreur de test',
       };
     }
   },
@@ -256,9 +256,9 @@ export const copilotProvider: AIProvider = {
 
 /**
  * Helper function to configure Copilot API key
- * (any: any)
+ * (Not part of AIProvider interface, separate utility)
  */
-export async function setCopilotApiKey(any: any): Promise<{
+export async function setCopilotApiKey(apiKey: string): Promise<{
   success: boolean;
   message?: string;
 }> {
@@ -269,24 +269,24 @@ export async function setCopilotApiKey(any: any): Promise<{
       message?: string;
     }>('chat_set_copilot_key', { api_key: apiKey });
 
-    if (any: any) {
-      logger?.info('Copilot key configured successfully');
+    if (result.configured) {
+      logger.info('Copilot key configured successfully');
     } else {
-      logger?.warn('Copilot key configuration failed', {
-        status: result?.status,
-        message: result?.message,
+      logger.warn('Copilot key configuration failed', {
+        status: result.status,
+        message: result.message,
       });
     }
 
     return {
-      success: result?.configured,
-      message: result?.message,
+      success: result.configured,
+      message: result.message,
     };
-  } catch (any: any) {
-    logger?.error('Copilot set API key error', { error });
+  } catch (error) {
+    logger.error('Copilot set API key error', { error });
     return {
       success: false,
-      message: error instanceof Error ? error?.message : 'Erreur de configuration',
+      message: error instanceof Error ? error.message : 'Erreur de configuration',
     };
   }
 }
@@ -299,16 +299,16 @@ export default copilotProvider;
 /**
  * Helper: vérifier le format du token GitHub
  */
-export function isValidGitHubToken(any: any): boolean {
-  if (!token || token?.trim().length < 16) {
+export function isValidGitHubToken(token: string): boolean {
+  if (!token || token.trim().length < 16) {
     return false;
   }
 
   // Format attendu: ghp_xxx ou github_pat_xxx ou gho_xxx
   return (
-    token?.startsWith('ghp_') ||
-    token?.startsWith('github_pat_') ||
-    token?.startsWith('gho_')
+    token.startsWith('ghp_') ||
+    token.startsWith('github_pat_') ||
+    token.startsWith('gho_')
   );
 }
 
@@ -328,21 +328,21 @@ export async function getCopilotStatus(): Promise<{
       message?: string;
     }>('get_copilot_key_status');
 
-    const available = await copilotProvider?.isAvailable();
+    const available = await copilotProvider.isAvailable();
 
     return {
-      configured: statusResult?.configured,
+      configured: statusResult.configured,
       available,
-      status: statusResult?.status,
-      message: statusResult?.message,
+      status: statusResult.status,
+      message: statusResult.message,
     };
-  } catch (any: any) {
-    logger?.error('Get Copilot status failed', { error });
+  } catch (error) {
+    logger.error('Get Copilot status failed', { error });
     return {
       configured: false,
       available: false,
       status: 'error',
-      message: error instanceof Error ? error?.message : 'Erreur inconnue',
+      message: error instanceof Error ? error.message : 'Erreur inconnue',
     };
   }
 }

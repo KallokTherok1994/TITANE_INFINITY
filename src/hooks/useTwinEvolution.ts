@@ -21,20 +21,20 @@ interface UseTwinEvolutionReturn {
   evolutionProfile: TwinEvolutionProfile | null;
   fusionIndex: FusionIndex | null;
   isLoading: boolean;
-  error??: string | null;
+  error: string | null;
 
   // Données dérivées
   currentPhase: EvolutionPhase | null;
   syncScore: number;
   growthTrends: GrowthTrends | null;
-  suggestions: AdjustmentSuggestion?.[];
+  suggestions: AdjustmentSuggestion[];
 
   // Actions
   refresh: () => Promise<void>;
   recalculateFusion: () => Promise<number>;
-  transitionPhase: (any: any) => Promise<TwinEvolutionResult | null>;
-  reinforceValue: (any: any) => Promise<TwinEvolutionResult | null>;
-  adjustTrait: (any: any) => Promise<TwinEvolutionResult | null>;
+  transitionPhase: (validated?: boolean) => Promise<TwinEvolutionResult | null>;
+  reinforceValue: (valueName: string) => Promise<TwinEvolutionResult | null>;
+  adjustTrait: (traitName: string, delta: number) => Promise<TwinEvolutionResult | null>;
 }
 
 /**
@@ -44,25 +44,25 @@ export function useTwinEvolution(): UseTwinEvolutionReturn {
   const [evolutionProfile, setEvolutionProfile] = useState<TwinEvolutionProfile | null>(
     null
   );
-  const [fusionIndex, setFusionIndex] = useState<FusionIndex | null>(any: any);
-  const [isLoading, setIsLoading] = useState(any: any);
-  const [error, setError] = useState<string | null>(any: any);
+  const [fusionIndex, setFusionIndex] = useState<FusionIndex | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
-    setIsLoading(any: any);
-    setError(any: any);
+    setIsLoading(true);
+    setError(null);
     try {
-      const [profile, fusion] = await Promise?.all([
-        numericTwinService?.getEvolutionProfile(),
-        numericTwinService?.getFusionIndex(),
+      const [profile, fusion] = await Promise.all([
+        numericTwinService.getEvolutionProfile(),
+        numericTwinService.getFusionIndex(),
       ]);
-      setEvolutionProfile(any: any);
-      setFusionIndex(any: any);
-    } catch (any: any) {
-      setError(err instanceof Error ? err?.message : 'Erreur lors du chargement');
-      logger?.error(any: any);
+      setEvolutionProfile(profile);
+      setFusionIndex(fusion);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erreur lors du chargement');
+      logger.error('Error:', err);
     } finally {
-      setIsLoading(any: any);
+      setIsLoading(false);
     }
   }, []);
 
@@ -72,24 +72,24 @@ export function useTwinEvolution(): UseTwinEvolutionReturn {
 
   const recalculateFusion = useCallback(async (): Promise<number> => {
     try {
-      const score = await numericTwinService?.recalculateFusion();
+      const score = await numericTwinService.recalculateFusion();
       await fetchData(); // Refresh après recalcul
       return score;
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (err) {
+      logger.error('recalculateFusion error:', err);
       throw err;
     }
   }, [fetchData]);
 
   const transitionPhase = useCallback(
-    async (any: any): Promise<TwinEvolutionResult | null> => {
+    async (validated = true): Promise<TwinEvolutionResult | null> => {
       try {
-        const result = await numericTwinService?.transitionPhase(any: any);
+        const result = await numericTwinService.transitionPhase(validated);
         await fetchData();
         return result;
-      } catch (any: any) {
-        logger?.error(any: any);
-        setError(err instanceof Error ? err?.message : 'Erreur lors de la transition');
+      } catch (err) {
+        logger.error('transitionPhase error:', err);
+        setError(err instanceof Error ? err.message : 'Erreur lors de la transition');
         return null;
       }
     },
@@ -97,14 +97,14 @@ export function useTwinEvolution(): UseTwinEvolutionReturn {
   );
 
   const reinforceValue = useCallback(
-    async (any: any): Promise<TwinEvolutionResult | null> => {
+    async (valueName: string): Promise<TwinEvolutionResult | null> => {
       try {
-        const result = await numericTwinService?.reinforceValue(any: any);
+        const result = await numericTwinService.reinforceValue(valueName);
         await fetchData();
         return result;
-      } catch (any: any) {
-        logger?.error(any: any);
-        setError(err instanceof Error ? err?.message : 'Erreur lors du renforcement');
+      } catch (err) {
+        logger.error('reinforceValue error:', err);
+        setError(err instanceof Error ? err.message : 'Erreur lors du renforcement');
         return null;
       }
     },
@@ -112,14 +112,14 @@ export function useTwinEvolution(): UseTwinEvolutionReturn {
   );
 
   const adjustTrait = useCallback(
-    async (any: any): Promise<TwinEvolutionResult | null> => {
+    async (traitName: string, delta: number): Promise<TwinEvolutionResult | null> => {
       try {
-        const result = await numericTwinService?.adjustTrait(any: any);
+        const result = await numericTwinService.adjustTrait(traitName, delta);
         await fetchData();
         return result;
-      } catch (any: any) {
-        logger?.error(any: any);
-        setError(err instanceof Error ? err?.message : "Erreur lors de l'ajustement");
+      } catch (err) {
+        logger.error('adjustTrait error:', err);
+        setError(err instanceof Error ? err.message : "Erreur lors de l'ajustement");
         return null;
       }
     },

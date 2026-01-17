@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ — Memory Store (any: any)
- * Store pour la mémoire système (any: any)
+ * TITANE∞ — Memory Store (Zustand)
+ * Store pour la mémoire système (snapshots, logs, timeline)
  * ═══════════════════════════════════════════════════════════════
  */
 
@@ -19,17 +19,17 @@ import { backendV17 } from '../services/tauri/backend-v17.2.commands';
 interface MemoryStore {
   // State
   state: MemoryState | null;
-  snapshots: Snapshot?.[];
-  logs: LogEntry?.[];
-  timeline: TimelineEvent?.[];
+  snapshots: Snapshot[];
+  logs: LogEntry[];
+  timeline: TimelineEvent[];
   telemetry: MemoryDirectoryReport | null;
   loading: boolean;
-  error??: string | null;
+  error: string | null;
 
   // Actions
   fetchState: () => Promise<void>;
-  fetchLogs: (any: any) => Promise<void>;
-  createSnapshot: (any: any) => Promise<void>;
+  fetchLogs: (count: number) => Promise<void>;
+  createSnapshot: (description: string) => Promise<void>;
   addLog: (entry: Omit<LogEntry, 'id' | 'timestamp'>) => Promise<void>;
   addTimelineEvent: (event: Omit<TimelineEvent, 'id' | 'timestamp'>) => Promise<void>;
   fetchTelemetry: () => Promise<void>;
@@ -54,41 +54,41 @@ export const useMemoryStore = create<MemoryStore>()(
       fetchState: async () => {
         try {
           set({ loading: true, error: null });
-          const state = await backendV17?.memory?.getState();
+          const state = await backendV17.memory.getState();
           set({ state, loading: false });
-        } catch (any: any) {
+        } catch (error) {
           set({
             error:
-              error instanceof Error ? error?.message : 'Failed to fetch memory state',
+              error instanceof Error ? error.message : 'Failed to fetch memory state',
             loading: false,
           });
         }
       },
 
-      fetchLogs: async (any: any) => {
+      fetchLogs: async (count: number) => {
         try {
           set({ loading: true, error: null });
-          const logs = await backendV17?.memory?.readLogs(any: any);
+          const logs = await backendV17.memory.readLogs(count);
           set({ logs, loading: false });
-        } catch (any: any) {
+        } catch (error) {
           set({
-            error: error instanceof Error ? error?.message : 'Failed to fetch logs',
+            error: error instanceof Error ? error.message : 'Failed to fetch logs',
             loading: false,
           });
         }
       },
 
-      createSnapshot: async (any: any) => {
+      createSnapshot: async (description: string) => {
         try {
           set({ loading: true, error: null });
-          const snapshot = await backendV17?.composite?.captureSnapshot(any: any);
+          const snapshot = await backendV17.composite.captureSnapshot(description);
           set(state => ({
-            snapshots: [snapshot, ...state?.snapshots],
+            snapshots: [snapshot, ...state.snapshots],
             loading: false,
           }));
-        } catch (any: any) {
+        } catch (error) {
           set({
-            error: error instanceof Error ? error?.message : 'Failed to create snapshot',
+            error: error instanceof Error ? error.message : 'Failed to create snapshot',
             loading: false,
           });
         }
@@ -98,16 +98,16 @@ export const useMemoryStore = create<MemoryStore>()(
         try {
           const fullEntry: LogEntry = {
             ...entry,
-            id: crypto?.randomUUID(),
-            timestamp: Date?.now(),
+            id: crypto.randomUUID(),
+            timestamp: Date.now(),
           };
-          await backendV17?.memory?.writeLog(any: any);
+          await backendV17.memory.writeLog(fullEntry);
           set(state => ({
-            logs: [fullEntry, ...state?.logs].slice(0, 1000), // Keep last 1000
+            logs: [fullEntry, ...state.logs].slice(0, 1000), // Keep last 1000
           }));
-        } catch (any: any) {
+        } catch (error) {
           set({
-            error: error instanceof Error ? error?.message : 'Failed to add log',
+            error: error instanceof Error ? error.message : 'Failed to add log',
           });
         }
       },
@@ -116,35 +116,35 @@ export const useMemoryStore = create<MemoryStore>()(
         try {
           const fullEvent: TimelineEvent = {
             ...event,
-            id: crypto?.randomUUID(),
-            timestamp: Date?.now(),
+            id: crypto.randomUUID(),
+            timestamp: Date.now(),
           };
-          await backendV17?.memory?.addEvent(any: any);
+          await backendV17.memory.addEvent(fullEvent);
           // ✅ v26.3.1: Add limit to prevent memory accumulation
           set(state => ({
-            timeline: [fullEvent, ...state?.timeline].slice(0, 1000),
+            timeline: [fullEvent, ...state.timeline].slice(0, 1000),
           }));
-        } catch (any: any) {
+        } catch (error) {
           set({
             error:
-              error instanceof Error ? error?.message : 'Failed to add timeline event',
+              error instanceof Error ? error.message : 'Failed to add timeline event',
           });
         }
       },
 
       fetchTelemetry: async () => {
         try {
-          const telemetry = await backendV17?.memory?.debugScan();
+          const telemetry = await backendV17.memory.debugScan();
           set({ telemetry });
-        } catch (any: any) {
+        } catch (error) {
           set({
             error:
-              error instanceof Error ? error?.message : 'Failed to scan memory directory',
+              error instanceof Error ? error.message : 'Failed to scan memory directory',
           });
         }
       },
 
-      reset: (any: any),
+      reset: () => set(initialState),
     }),
     { name: 'MemoryStore' }
   )

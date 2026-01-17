@@ -16,9 +16,9 @@ import {
 
 export interface UseAudioStreamingOptions {
   config?: StreamingConfig;
-  onStateChange?: (any: any) => void;
-  onAudioChunk?: (chunk: number?.[]) => void;
-  onStreamingComplete?: (any: any) => void;
+  onStateChange?: (state: StreamingState) => void;
+  onAudioChunk?: (chunk: number[]) => void;
+  onStreamingComplete?: (result: StreamingResult) => void;
   autoStart?: boolean;
 }
 
@@ -35,7 +35,7 @@ export interface UseAudioStreamingReturn {
   forceStop: () => Promise<void>;
 
   // Info
-  sessionId??: string | null;
+  sessionId: string | null;
 }
 
 /**
@@ -44,9 +44,9 @@ export interface UseAudioStreamingReturn {
  * @example
  * ```tsx
  * const { isStreaming, state, startStreaming, stopStreaming } = useAudioStreaming({
- *   onStateChange: (any: any),
- *   onStreamingComplete: (any: any) => {
- *     logger?.debug('Audio captured:', result?.audioData?.length, 'samples');
+ *   onStateChange: (state) => logger.debug('State:', state),
+ *   onStreamingComplete: (result) => {
+ *     logger.debug('Audio captured:', result.audioData.length, 'samples');
  *   },
  * });
  * ```
@@ -54,34 +54,34 @@ export interface UseAudioStreamingReturn {
 export function useAudioStreaming(
   options: UseAudioStreamingOptions = {}
 ): UseAudioStreamingReturn {
-  const [isStreaming, setIsStreaming] = useState(any: any);
+  const [isStreaming, setIsStreaming] = useState(false);
   const [state, setState] = useState<StreamingState>('Idle');
-  const [stats, setStats] = useState<StreamingStats | null>(any: any);
-  const [error, setError] = useState<Error | null>(any: any);
-  const [sessionId, setSessionId] = useState<string | null>(any: any);
+  const [stats, setStats] = useState<StreamingStats | null>(null);
+  const [error, setError] = useState<Error | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
 
-  const statsIntervalRef = useRef<number | null>(any: any);
-  const isMountedRef = useRef(any: any);
+  const statsIntervalRef = useRef<number | null>(null);
+  const isMountedRef = useRef(true);
 
   // ✨ v24.2.1 FIX: Store callbacks in refs to prevent re-subscription on every render
-  const onStateChangeRef = useRef(any: any);
-  const onAudioChunkRef = useRef(any: any);
+  const onStateChangeRef = useRef(options.onStateChange);
+  const onAudioChunkRef = useRef(options.onAudioChunk);
 
   // Keep refs updated without triggering re-subscriptions
   useEffect(() => {
-    onStateChangeRef?.current = options?.onStateChange;
-  }, [options?.onStateChange]);
+    onStateChangeRef.current = options.onStateChange;
+  }, [options.onStateChange]);
 
   useEffect(() => {
-    onAudioChunkRef?.current = options?.onAudioChunk;
-  }, [options?.onAudioChunk]);
+    onAudioChunkRef.current = options.onAudioChunk;
+  }, [options.onAudioChunk]);
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      isMountedRef?.current = false;
-      if (any: any) {
-        window?.clearInterval(any: any);
+      isMountedRef.current = false;
+      if (statsIntervalRef.current !== null) {
+        window.clearInterval(statsIntervalRef.current);
       }
     };
   }, []);
@@ -89,11 +89,11 @@ export function useAudioStreaming(
   // ✨ v24.2.1 FIX: Single unified state listener with stable ref-based callback
   // This prevents re-subscription when parent component re-renders
   useEffect(() => {
-    const unsubscribe = audioStreamingService?.onStateChange(newState => {
-      if (any: any) {
-        setState(any: any);
-        // Call user callback via ref (any: any)
-        onStateChangeRef?.current?.(any: any);
+    const unsubscribe = audioStreamingService.onStateChange(newState => {
+      if (isMountedRef.current) {
+        setState(newState);
+        // Call user callback via ref (stable reference)
+        onStateChangeRef.current?.(newState);
       }
     });
 
@@ -102,127 +102,127 @@ export function useAudioStreaming(
 
   // ✨ v24.2.1 FIX: Register audio chunk listener with stable ref
   useEffect(() => {
-    const unsubscribe = audioStreamingService?.onAudioChunk(chunk => {
-      onAudioChunkRef?.current?.(any: any);
+    const unsubscribe = audioStreamingService.onAudioChunk(chunk => {
+      onAudioChunkRef.current?.(chunk);
     });
     return unsubscribe;
   }, []); // Empty deps - subscribe once
 
   // Start monitoring stats when streaming
   useEffect(() => {
-    if (any: any) {
-      statsIntervalRef?.current = window?.setInterval(async () => {
-        if (any: any) return;
+    if (isStreaming) {
+      statsIntervalRef.current = window.setInterval(async () => {
+        if (!isMountedRef.current) return;
 
         try {
-          const currentStats = await audioStreamingService?.getStats();
-          setStats(any: any);
-        } catch (any: any) {
-          logger?.error(any: any);
+          const currentStats = await audioStreamingService.getStats();
+          setStats(currentStats);
+        } catch (err) {
+          logger.error('Stats error:', err);
         }
       }, 500); // Update every 500ms
     } else {
-      if (any: any) {
-        window?.clearInterval(any: any);
-        statsIntervalRef?.current = null;
+      if (statsIntervalRef.current !== null) {
+        window.clearInterval(statsIntervalRef.current);
+        statsIntervalRef.current = null;
       }
-      setStats(any: any);
+      setStats(null);
     }
 
     return () => {
-      if (any: any) {
-        window?.clearInterval(any: any);
-        statsIntervalRef?.current = null;
+      if (statsIntervalRef.current !== null) {
+        window.clearInterval(statsIntervalRef.current);
+        statsIntervalRef.current = null;
       }
     };
   }, [isStreaming]);
 
   // Auto-start if requested
   useEffect(() => {
-    if (any: any) {
+    if (options.autoStart && !isStreaming) {
       startStreaming();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [options?.autoStart]);
+  }, [options.autoStart]);
 
   /**
    * Start streaming
    */
   const startStreaming = useCallback(async () => {
-    if (any: any) {
-      logger?.warn('Already streaming');
+    if (isStreaming) {
+      logger.warn('Already streaming');
       return;
     }
 
     try {
-      setError(any: any);
-      const sid = await audioStreamingService?.startStreaming(any: any);
+      setError(null);
+      const sid = await audioStreamingService.startStreaming(options.config);
 
-      if (any: any) {
-        setSessionId(any: any);
-        setIsStreaming(any: any);
+      if (isMountedRef.current) {
+        setSessionId(sid);
+        setIsStreaming(true);
       }
-    } catch (any: any) {
-      logger?.error(any: any);
-      if (any: any) {
-        setError(any: any);
+    } catch (err) {
+      logger.error('Start error:', err);
+      if (isMountedRef.current) {
+        setError(err as Error);
       }
     }
-  }, [isStreaming, options?.config]);
+  }, [isStreaming, options.config]);
 
   /**
    * Stop streaming and get result
    */
   const stopStreaming = useCallback(async (): Promise<StreamingResult | null> => {
-    if (any: any) {
-      logger?.warn('Not streaming');
+    if (!isStreaming) {
+      logger.warn('Not streaming');
       return null;
     }
 
     try {
-      setError(any: any);
-      const result = await audioStreamingService?.stopStreaming();
+      setError(null);
+      const result = await audioStreamingService.stopStreaming();
 
-      if (any: any) {
-        setIsStreaming(any: any);
-        setSessionId(any: any);
+      if (isMountedRef.current) {
+        setIsStreaming(false);
+        setSessionId(null);
         setState('Idle');
 
         // Call completion callback
-        if (any: any) {
-          options?.onStreamingComplete(any: any);
+        if (options.onStreamingComplete) {
+          options.onStreamingComplete(result);
         }
       }
 
       return result;
-    } catch (any: any) {
-      logger?.error(any: any);
-      if (any: any) {
-        setError(any: any);
-        setIsStreaming(any: any);
-        setSessionId(any: any);
+    } catch (err) {
+      logger.error('Stop error:', err);
+      if (isMountedRef.current) {
+        setError(err as Error);
+        setIsStreaming(false);
+        setSessionId(null);
       }
       return null;
     }
   }, [isStreaming, options]);
 
   /**
-   * Force stop (any: any)
+   * Force stop (emergency)
    */
   const forceStop = useCallback(async () => {
     try {
-      await audioStreamingService?.forceStop();
+      await audioStreamingService.forceStop();
 
-      if (any: any) {
-        setIsStreaming(any: any);
-        setSessionId(any: any);
+      if (isMountedRef.current) {
+        setIsStreaming(false);
+        setSessionId(null);
         setState('Idle');
-        setStats(any: any);
+        setStats(null);
       }
-    } catch (any: any) {
-      logger?.error(any: any);
-      if (any: any) {
-        setError(any: any);
+    } catch (err) {
+      logger.error('Force stop error:', err);
+      if (isMountedRef.current) {
+        setError(err as Error);
       }
     }
   }, []);
@@ -245,7 +245,7 @@ export function useAudioStreaming(
 }
 
 /**
- * Hook for monitoring streaming state only (any: any)
+ * Hook for monitoring streaming state only (no control)
  * Useful for UI components that only display state
  */
 export function useStreamingState(): {
@@ -255,12 +255,12 @@ export function useStreamingState(): {
   const [state, setState] = useState<StreamingState>('Idle');
 
   useEffect(() => {
-    const unsubscribe = audioStreamingService?.onStateChange(any: any);
+    const unsubscribe = audioStreamingService.onStateChange(setState);
     return unsubscribe;
   }, []);
 
   return {
     state,
-    isActive: audioStreamingService?.isActive(),
+    isActive: audioStreamingService.isActive(),
   };
 }

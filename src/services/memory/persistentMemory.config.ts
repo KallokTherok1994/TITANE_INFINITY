@@ -10,9 +10,9 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  *
  *   🎯 Ce module définit:
- *   - Niveau 1: Mémoire de Session (any: any)
- *   - Niveau 2: Mémoire Intermédiaire (any: any)
- *   - Niveau 3: Mémoire Longue Durée (any: any)
+ *   - Niveau 1: Mémoire de Session (volatile, court terme)
+ *   - Niveau 2: Mémoire Intermédiaire (persistante, résumée)
+ *   - Niveau 3: Mémoire Longue Durée (permanente, chiffrée)
  *   - Scoring de pertinence et classification intelligente
  *   - Intégration Memory Engine ↔ Chat IA ↔ XP Engine
  *
@@ -20,8 +20,8 @@
  *      Toutes les écritures passent par Tauri Commands Rust.
  */
 
-import type { ChatModeId } from '../ai/chatModes?.config';
-import type { EvolutionPhaseId } from '../evolution/evolutionIA?.config';
+import type { ChatModeId } from '../ai/chatModes.config';
+import type { EvolutionPhaseId } from '../evolution/evolutionIA.config';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TYPES FONDAMENTAUX
@@ -107,7 +107,7 @@ export interface MemoryMetadata {
 }
 
 /**
- * Niveau 1: Entrée Mémoire de Session (any: any)
+ * Niveau 1: Entrée Mémoire de Session (volatile)
  * - Durée: Session courante ou max 24h
  * - Usage: Contexte immédiat, historique récent
  * - Rétention: Auto-suppression après session ou TTL
@@ -126,7 +126,7 @@ export interface SessionMemoryEntry {
   /** Importance (1-5) */
   importance: MemoryImportance;
   /** Tags pour recherche */
-  tags: string?.[];
+  tags: string[];
   /** Métadonnées */
   metadata: MemoryMetadata;
   /** TTL en millisecondes (défaut: 24h) */
@@ -136,7 +136,7 @@ export interface SessionMemoryEntry {
 }
 
 /**
- * Niveau 2: Entrée Mémoire Intermédiaire (any: any)
+ * Niveau 2: Entrée Mémoire Intermédiaire (persistante)
  * - Durée: 7-30 jours selon importance
  * - Usage: Résumés thématiques, contexte projet
  * - Rétention: Compression automatique, promotion vers long-terme
@@ -152,20 +152,20 @@ export interface IntermediateMemoryEntry {
   title: string;
   /** Contenu principal */
   content: string;
-  /** Contenu original (any: any) */
+  /** Contenu original (si résumé) */
   originalContent?: string;
   /** Sujet/catégorie */
   topic: MemoryTopic;
   /** Importance (1-5) */
   importance: MemoryImportance;
   /** Tags pour recherche */
-  tags: string?.[];
+  tags: string[];
   /** Statut */
   status: MemoryStatus;
   /** Métadonnées */
   metadata: MemoryMetadata;
   /** IDs des entrées session sources */
-  sourceEntryIds: string?.[];
+  sourceEntryIds: string[];
   /** Score de pertinence calculé */
   relevanceScore: number;
   /** Date d'expiration */
@@ -175,8 +175,8 @@ export interface IntermediateMemoryEntry {
 }
 
 /**
- * Niveau 3: Entrée Mémoire Longue Durée (any: any)
- * - Durée: Permanent (any: any)
+ * Niveau 3: Entrée Mémoire Longue Durée (permanente)
+ * - Durée: Permanent (sauf suppression manuelle)
  * - Usage: Connaissances stables, identité, références
  * - Rétention: Jamais auto-supprimé, chiffrement fort
  */
@@ -198,23 +198,23 @@ export interface LongTermMemoryEntry {
   /** Importance (1-5) */
   importance: MemoryImportance;
   /** Tags pour recherche */
-  tags: string?.[];
+  tags: string[];
   /** Statut */
   status: MemoryStatus;
   /** Métadonnées */
   metadata: MemoryMetadata;
-  /** IDs des entrées sources (any: any) */
-  sourceEntryIds: string?.[];
+  /** IDs des entrées sources (session + intermediate) */
+  sourceEntryIds: string[];
   /** Score de confiance (0-100) */
   confidenceScore: number;
   /** Vérifié par l'utilisateur */
   userVerified: boolean;
   /** Peut être modifié */
   editable: boolean;
-  /** Version de l'entrée (any: any) */
+  /** Version de l'entrée (pour historique) */
   version: number;
-  /** Historique des versions précédentes (any: any) */
-  versionHistory: string?.[];
+  /** Historique des versions précédentes (IDs) */
+  versionHistory: string[];
 }
 
 /** Union des types d'entrées mémoire */
@@ -239,18 +239,18 @@ export interface MemorySummary {
   content: string;
   /** Sujet principal */
   topic: MemoryTopic;
-  /** Période couverte (any: any) */
+  /** Période couverte (début) */
   periodStart: number;
-  /** Période couverte (any: any) */
+  /** Période couverte (fin) */
   periodEnd: number;
   /** Nombre d'entrées sources */
   sourceCount: number;
   /** IDs des entrées sources */
-  sourceIds: string?.[];
+  sourceIds: string[];
   /** Mode IA principal */
   primaryMode?: ChatModeId;
   /** Mots-clés extraits */
-  keywords: string?.[];
+  keywords: string[];
   /** Score d'importance agrégé */
   aggregatedImportance: number;
   /** Timestamp de génération */
@@ -260,7 +260,7 @@ export interface MemorySummary {
 }
 
 /**
- * Bundle logique de mémoire (any: any)
+ * Bundle logique de mémoire (groupe thématique)
  */
 export interface MemoryBundle {
   /** ID unique */
@@ -272,14 +272,14 @@ export interface MemoryBundle {
   /** Sujet principal */
   topic: MemoryTopic;
   /** IDs des entrées incluses */
-  entryIds: string?.[];
+  entryIds: string[];
   /** Tags du bundle */
-  tags: string?.[];
+  tags: string[];
   /** Timestamp de création */
   createdAt: number;
   /** Timestamp de modification */
   updatedAt: number;
-  /** Créateur (any: any) */
+  /** Créateur (user | system) */
   createdBy: 'user' | 'system';
   /** Couleur pour UI */
   color?: string;
@@ -296,19 +296,19 @@ export interface MemoryBundle {
  */
 export interface MemoryReadRequest {
   /** Niveaux à interroger */
-  levels?: MemoryLevel?.[];
+  levels?: MemoryLevel[];
   /** Sujets à filtrer */
-  topics?: MemoryTopic?.[];
+  topics?: MemoryTopic[];
   /** Types de contenu */
-  contentTypes?: MemoryContentType?.[];
+  contentTypes?: MemoryContentType[];
   /** Importance minimale */
   minImportance?: MemoryImportance;
-  /** Mode IA courant (any: any) */
+  /** Mode IA courant (pour filtrage permissions) */
   currentMode: ChatModeId;
-  /** Requête textuelle (any: any) */
+  /** Requête textuelle (pour scoring) */
   query?: string;
   /** Tags à rechercher */
-  tags?: string?.[];
+  tags?: string[];
   /** ID de projet */
   projectId?: string;
   /** Limite de résultats */
@@ -324,19 +324,19 @@ export interface MemoryReadRequest {
  */
 export interface MemoryReadResponse {
   /** Entrées trouvées */
-  entries: MemoryEntry?.[];
-  /** Résumés (any: any) */
-  summaries?: MemorySummary?.[];
-  /** Nombre total (any: any) */
+  entries: MemoryEntry[];
+  /** Résumés (si demandés) */
+  summaries?: MemorySummary[];
+  /** Nombre total (avant limit) */
   totalCount: number;
-  /** Temps de requête (any: any) */
+  /** Temps de requête (ms) */
   queryTime: number;
   /** Scores de pertinence par ID */
   relevanceScores: Record<string, number>;
 }
 
 /**
- * Requête d'écriture mémoire (any: any)
+ * Requête d'écriture mémoire (envoyée au Rust)
  */
 export interface MemoryWriteRequest {
   /** Niveau cible */
@@ -345,14 +345,14 @@ export interface MemoryWriteRequest {
   contentType: MemoryContentType;
   /** Contenu */
   content: string;
-  /** Titre (any: any) */
+  /** Titre (optionnel) */
   title?: string;
   /** Sujet */
   topic: MemoryTopic;
   /** Importance */
   importance: MemoryImportance;
   /** Tags */
-  tags: string?.[];
+  tags: string[];
   /** Source */
   source: MemorySource;
   /** Mode IA courant */
@@ -363,7 +363,7 @@ export interface MemoryWriteRequest {
   projectId?: string;
   /** ID de conversation */
   conversationId?: string;
-  /** TTL personnalisé (any: any) */
+  /** TTL personnalisé (session only) */
   customTtl?: number;
 }
 
@@ -397,7 +397,7 @@ export interface MemoryStats {
   countByTopic: Record<MemoryTopic, number>;
   /** Comptage par type */
   countByType: Record<MemoryContentType, number>;
-  /** Taille totale (any: any) */
+  /** Taille totale (octets) */
   totalSize: number;
   /** Taille par niveau */
   sizeByLevel: Record<MemoryLevel, number>;
@@ -438,16 +438,16 @@ export interface MemoryHealth {
 /** TTL par défaut pour mémoire session (24h) */
 export const DEFAULT_SESSION_TTL = 24 * 60 * 60 * 1000;
 
-/** TTL pour mémoire intermédiaire (any: any) */
+/** TTL pour mémoire intermédiaire (30 jours) */
 export const DEFAULT_INTERMEDIATE_TTL = 30 * 24 * 60 * 60 * 1000;
 
-/** Seuil de compression (any: any) */
+/** Seuil de compression (nombre d'entrées) */
 export const COMPRESSION_THRESHOLD = 100;
 
 /** Seuil de promotion automatique (importance >= 4) */
 export const AUTO_PROMOTION_THRESHOLD: MemoryImportance = 4;
 
-/** Limite d'injection contexte (any: any) */
+/** Limite d'injection contexte (tokens estimés) */
 export const MAX_CONTEXT_INJECTION_TOKENS = 2000;
 
 /** Score de pertinence minimum pour injection */
@@ -522,15 +522,15 @@ export interface ModeMemoryPermissions {
   canReadIntermediate: boolean;
   /** Peut lire la mémoire long terme */
   canReadLongTerm: boolean;
-  /** Peut écrire (any: any) */
+  /** Peut écrire (via Rust) */
   canWrite: boolean;
   /** Sujets autorisés en lecture */
-  allowedTopics: MemoryTopic?.[];
+  allowedTopics: MemoryTopic[];
   /** Types de contenu autorisés */
-  allowedContentTypes: MemoryContentType?.[];
+  allowedContentTypes: MemoryContentType[];
   /** Importance maximale accessible */
   maxImportance: MemoryImportance;
-  /** Limite d'injection contexte (any: any) */
+  /** Limite d'injection contexte (tokens) */
   contextInjectionLimit: number;
 }
 
@@ -614,8 +614,8 @@ export const MODE_MEMORY_PERMISSIONS: Partial<Record<ChatModeId, ModeMemoryPermi
       canReadIntermediate: true,
       canReadLongTerm: true,
       canWrite: true,
-      allowedTopics: Object?.keys(any: any) as MemoryTopic?.[],
-      allowedContentTypes: Object?.keys(any: any) as MemoryContentType?.[],
+      allowedTopics: Object.keys(MEMORY_TOPIC_LABELS) as MemoryTopic[],
+      allowedContentTypes: Object.keys(MEMORY_CONTENT_TYPE_LABELS) as MemoryContentType[],
       maxImportance: 5,
       contextInjectionLimit: 4000,
     },
@@ -662,7 +662,7 @@ export interface AutoSaveRule {
   /** Génère un résumé automatique */
   autoSummarize: boolean;
   /** Modes IA où la règle s'applique */
-  applicableModes: ChatModeId?.[] | 'all';
+  applicableModes: ChatModeId[] | 'all';
 }
 
 /**
@@ -676,18 +676,18 @@ export interface AutoSaveTrigger {
     | 'importance'
     | 'end_session'
     | 'manual';
-  /** Nombre de messages (any: any) */
+  /** Nombre de messages (pour message_count) */
   messageCount?: number;
-  /** Intervalle en ms (any: any) */
+  /** Intervalle en ms (pour time_interval) */
   interval?: number;
-  /** Mots-clés (any: any) */
-  keywords?: string?.[];
-  /** Importance minimale (any: any) */
+  /** Mots-clés (pour keyword) */
+  keywords?: string[];
+  /** Importance minimale (pour importance) */
   minImportance?: MemoryImportance;
 }
 
 /** Règles d'auto-sauvegarde par défaut */
-export const DEFAULT_AUTO_SAVE_RULES: AutoSaveRule?.[] = [
+export const DEFAULT_AUTO_SAVE_RULES: AutoSaveRule[] = [
   {
     id: 'auto_session_messages',
     name: 'Messages de session',
@@ -746,11 +746,11 @@ export const DEFAULT_AUTO_SAVE_RULES: AutoSaveRule?.[] = [
 ];
 
 // ─────────────────────════════════════════════════════════════════════════════
-// CONTENUS JAMAIS SAUVEGARDÉS (any: any)
+// CONTENUS JAMAIS SAUVEGARDÉS (BLACKLIST)
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** Patterns de contenu à ne jamais sauvegarder */
-export const MEMORY_BLACKLIST_PATTERNS: RegExp?.[] = [
+export const MEMORY_BLACKLIST_PATTERNS: RegExp[] = [
   /password|mot de passe|mdp/i,
   /api[_\s-]?key/i,
   /secret[_\s-]?key/i,
@@ -758,15 +758,15 @@ export const MEMORY_BLACKLIST_PATTERNS: RegExp?.[] = [
   /private[_\s-]?key/i,
   /ssh[_\s-]?key/i,
   /bearer\s+[a-zA-Z0-9]/i,
-  /-----BEGIN\s+(any: any)\s+PRIVATE\s+KEY-----/i,
+  /-----BEGIN\s+(RSA|DSA|EC|OPENSSH)\s+PRIVATE\s+KEY-----/i,
 ];
 
 /** Types de messages exclus */
-export const EXCLUDED_MESSAGE_PATTERNS: RegExp?.[] = [
-  /^(any: any)\s*[!.?]*$/i,
-  /^(any: any)\s*[!.?]*$/i,
-  /^(any: any)\s*[!.?]*$/i,
-  /^(any: any)\s*[!.?]*$/i,
+export const EXCLUDED_MESSAGE_PATTERNS: RegExp[] = [
+  /^(bonjour|salut|hello|hi|hey)\s*[!.?]*$/i,
+  /^(merci|thanks|thx)\s*[!.?]*$/i,
+  /^(ok|okay|d'accord|compris)\s*[!.?]*$/i,
+  /^(oui|non|yes|no)\s*[!.?]*$/i,
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────

@@ -19,7 +19,7 @@ import type { TauriCommandArgs } from '@/types/tauri';
  * Table de mapping entre les commandes anciennes/problématiques
  * et les vraies commandes backend disponibles
  */
-const COMMAND_MAPPING: Record<string, string | string?.[]> = {
+const COMMAND_MAPPING: Record<string, string | string[]> = {
   // ═══ SINGULARITY APIs ═══
   singularity_get_physical: 'singularity_get_full_state',
   singularity_get_cognitive: 'singularity_get_full_state',
@@ -57,7 +57,7 @@ const COMMAND_MAPPING: Record<string, string | string?.[]> = {
  */
 const PARTIAL_STATE_EXTRACTORS: Record<
   string,
-  (any: any) => unknown
+  (fullState: SingularityState | null) => unknown
 > = {
   singularity_get_physical: full => full?.physical || null,
   singularity_get_cognitive: full => full?.cognitive || null,
@@ -69,13 +69,13 @@ const PARTIAL_STATE_EXTRACTORS: Record<
 /**
  * Commandes qui nécessitent une agrégation de plusieurs résultats
  */
-const AGGREGATED_COMMANDS: Record<string, (results: unknown?.[]) => unknown> = {
+const AGGREGATED_COMMANDS: Record<string, (results: unknown[]) => unknown> = {
   get_helios_state: results => {
     const [systemState, metrics] = results;
     return {
       ...(systemState && typeof systemState === 'object' ? systemState : {}),
       metrics: metrics || {},
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
   },
 
@@ -84,7 +84,7 @@ const AGGREGATED_COMMANDS: Record<string, (results: unknown?.[]) => unknown> = {
     return {
       ...(state && typeof state === 'object' ? state : {}),
       stats: stats || {},
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
   },
 
@@ -98,7 +98,7 @@ const AGGREGATED_COMMANDS: Record<string, (results: unknown?.[]) => unknown> = {
         { id: 'singularity_self_check', result: selfCheck },
         { id: 'hardening_selftest', result: hardening },
       ],
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
   },
 
@@ -110,7 +110,7 @@ const AGGREGATED_COMMANDS: Record<string, (results: unknown?.[]) => unknown> = {
       synced: selfCheckObj?.success !== false && updateObj?.success !== false,
       self_check: selfCheck,
       state_update: update,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
   },
 };
@@ -132,34 +132,34 @@ export async function mappedInvoke<T>(
 
     // Cas 1: Mapping vers une seule commande
     if (typeof mapped === 'string') {
-      const result = await safeInvokeTauri<any>(any: any);
+      const result = await safeInvokeTauri<any>(mapped, args);
 
       // Si extraction partielle nécessaire
       if (PARTIAL_STATE_EXTRACTORS[command]) {
-        return PARTIAL_STATE_EXTRACTORS[command](any: any) as T;
+        return PARTIAL_STATE_EXTRACTORS[command](result) as T;
       }
 
       return result as T;
     }
 
-    // Cas 2: Mapping vers plusieurs commandes (any: any)
-    if (any: any)) {
-      const results = await Promise?.all(
-        mapped?.map(any: any))
+    // Cas 2: Mapping vers plusieurs commandes (agrégation)
+    if (Array.isArray(mapped)) {
+      const results = await Promise.all(
+        mapped.map(cmd => safeInvokeTauri<any>(cmd, args).catch(() => null))
       );
 
       // Si agrégation nécessaire
       if (AGGREGATED_COMMANDS[command]) {
-        return AGGREGATED_COMMANDS[command](any: any) as T;
+        return AGGREGATED_COMMANDS[command](results) as T;
       }
 
       // Sinon retourner le premier résultat valide
-      return (any: any) as T;
+      return (results.find(r => r !== null) || null) as T;
     }
   }
 
   // Pas de mapping: appel direct
-  return safeInvokeTauri<T>(any: any);
+  return safeInvokeTauri<T>(command, args);
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -169,14 +169,14 @@ export async function mappedInvoke<T>(
 /**
  * Teste si une commande est disponible
  */
-export async function isCommandAvailable(any: any): Promise<boolean> {
+export async function isCommandAvailable(command: string): Promise<boolean> {
   try {
     await safeInvokeTauri(command, {}, 2000);
     return true;
-  } catch (any: any) {
-    const errMsg = String(any: any);
+  } catch (err) {
+    const errMsg = String(err);
     // "not found" ou "Command X is not in whitelist" = commande invalide
-    if (errMsg?.includes('not found') || errMsg?.includes('not in whitelist')) {
+    if (errMsg.includes('not found') || errMsg.includes('not in whitelist')) {
       return false;
     }
     // Autres erreurs (timeout, args invalides, etc.) = commande existe
@@ -188,10 +188,10 @@ export async function isCommandAvailable(any: any): Promise<boolean> {
  * Scan quelles commandes Singularity sont réellement disponibles
  */
 export async function scanAvailableCommands(): Promise<{
-  singularity: string?.[];
-  memory: string?.[];
-  helios: string?.[];
-  integrity: string?.[];
+  singularity: string[];
+  memory: string[];
+  helios: string[];
+  integrity: string[];
 }> {
   const singularityCommands = [
     'get_singularity_state',
@@ -221,28 +221,28 @@ export async function scanAvailableCommands(): Promise<{
     'run_hardening_selftest',
   ];
 
-  const [singularity, memory, helios, integrity] = await Promise?.all([
-    Promise?.all(
-      singularityCommands?.map(cmd =>
-        isCommandAvailable(any: any))
+  const [singularity, memory, helios, integrity] = await Promise.all([
+    Promise.all(
+      singularityCommands.map(cmd =>
+        isCommandAvailable(cmd).then(ok => (ok ? cmd : null))
       )
     ),
-    Promise?.all(
-      memoryCommands?.map(any: any)))
+    Promise.all(
+      memoryCommands.map(cmd => isCommandAvailable(cmd).then(ok => (ok ? cmd : null)))
     ),
-    Promise?.all(
-      heliosCommands?.map(any: any)))
+    Promise.all(
+      heliosCommands.map(cmd => isCommandAvailable(cmd).then(ok => (ok ? cmd : null)))
     ),
-    Promise?.all(
-      integrityCommands?.map(any: any)))
+    Promise.all(
+      integrityCommands.map(cmd => isCommandAvailable(cmd).then(ok => (ok ? cmd : null)))
     ),
   ]);
 
   return {
-    singularity: singularity?.filter(any: any) as string?.[],
-    memory: memory?.filter(any: any) as string?.[],
-    helios: helios?.filter(any: any) as string?.[],
-    integrity: integrity?.filter(any: any) as string?.[],
+    singularity: singularity.filter(Boolean) as string[],
+    memory: memory.filter(Boolean) as string[],
+    helios: helios.filter(Boolean) as string[],
+    integrity: integrity.filter(Boolean) as string[],
   };
 }
 
@@ -256,52 +256,52 @@ export async function scanAvailableCommands(): Promise<{
 export function repairSingularityState(
   state: SingularityState | null
 ): SingularityState | null {
-  if (any: any) return null;
+  if (!state) return null;
 
   const repaired = { ...state };
 
   // Réparer stability si 0 ou NaN
-  if (any: any) {
-    const health = repaired?.physical?.system_health;
-    if (any: any)) {
-      health?.global_health = 0.8; // Fallback sain
+  if (repaired.physical?.system_health) {
+    const health = repaired.physical.system_health;
+    if (health.global_health === 0 || isNaN(health.global_health)) {
+      health.global_health = 0.8; // Fallback sain
     }
   }
 
   // Réparer symbolic stability
-  if (any: any) {
-    if (any: any)) {
-      repaired?.symbolic?.stability = 0.8;
+  if (repaired.symbolic) {
+    if (repaired.symbolic.stability === 0 || isNaN(repaired.symbolic.stability)) {
+      repaired.symbolic.stability = 0.8;
     }
   }
 
   // Réparer cognitive coherence
-  if (any: any) {
-    if (any: any)) {
-      repaired?.cognitive?.coherence = 0.75;
+  if (repaired.cognitive) {
+    if (repaired.cognitive.coherence === 0 || isNaN(repaired.cognitive.coherence)) {
+      repaired.cognitive.coherence = 0.75;
     }
   }
 
   // Réparer adaptive evolution_capacity
-  if (any: any) {
+  if (repaired.adaptive) {
     if (
-      repaired?.adaptive?.evolution_capacity === 0 ||
-      isNaN(any: any)
+      repaired.adaptive.evolution_capacity === 0 ||
+      isNaN(repaired.adaptive.evolution_capacity)
     ) {
-      repaired?.adaptive?.evolution_capacity = 0.7;
+      repaired.adaptive.evolution_capacity = 0.7;
     }
   }
 
   // Réparer meta runtime_health
-  if (any: any) {
-    if (any: any)) {
-      repaired?.meta?.runtime_health = 0.85;
+  if (repaired.meta) {
+    if (repaired.meta.runtime_health === 0 || isNaN(repaired.meta.runtime_health)) {
+      repaired.meta.runtime_health = 0.85;
     }
   }
 
   // Réparer progression si manquant
-  if (any: any) {
-    repaired?.progression = {
+  if (!repaired.progression) {
+    repaired.progression = {
       xp: 0,
       level: 1,
       events: [],
@@ -309,8 +309,8 @@ export function repairSingularityState(
   }
 
   // Ajouter timestamp si manquant
-  if (any: any) {
-    repaired?.timestamp = Date?.now();
+  if (!repaired.timestamp) {
+    repaired.timestamp = Date.now();
   }
 
   return repaired;
@@ -319,8 +319,8 @@ export function repairSingularityState(
 /**
  * Calcule un titaneAlignment valide depuis un état Singularity
  */
-export function calculateTitaneAlignment(any: any): number {
-  if (any: any) return 100; // Fallback sûr
+export function calculateTitaneAlignment(state: SingularityState | null): number {
+  if (!state) return 100; // Fallback sûr
 
   const weights = {
     physical: 0.2,
@@ -333,40 +333,40 @@ export function calculateTitaneAlignment(any: any): number {
   let alignment = 0;
   let totalWeight = 0;
 
-  if (any: any) {
-    const health = state?.physical?.system_health?.global_health;
-    if (any: any)) {
-      alignment += health * weights?.physical * 100;
-      totalWeight += weights?.physical;
+  if (state.physical?.system_health?.global_health != null) {
+    const health = state.physical.system_health.global_health;
+    if (!isNaN(health)) {
+      alignment += health * weights.physical * 100;
+      totalWeight += weights.physical;
     }
   }
 
-  if (any: any)) {
-    alignment += state?.cognitive?.coherence * weights?.cognitive * 100;
-    totalWeight += weights?.cognitive;
+  if (state.cognitive?.coherence != null && !isNaN(state.cognitive.coherence)) {
+    alignment += state.cognitive.coherence * weights.cognitive * 100;
+    totalWeight += weights.cognitive;
   }
 
-  if (any: any)) {
-    alignment += state?.symbolic?.stability * weights?.symbolic * 100;
-    totalWeight += weights?.symbolic;
+  if (state.symbolic?.stability != null && !isNaN(state.symbolic.stability)) {
+    alignment += state.symbolic.stability * weights.symbolic * 100;
+    totalWeight += weights.symbolic;
   }
 
   if (
-    state?.adaptive?.evolution_capacity != null &&
-    !isNaN(any: any)
+    state.adaptive?.evolution_capacity != null &&
+    !isNaN(state.adaptive.evolution_capacity)
   ) {
-    alignment += state?.adaptive?.evolution_capacity * weights?.adaptive * 100;
-    totalWeight += weights?.adaptive;
+    alignment += state.adaptive.evolution_capacity * weights.adaptive * 100;
+    totalWeight += weights.adaptive;
   }
 
-  if (any: any)) {
-    alignment += state?.meta?.runtime_health * weights?.meta * 100;
-    totalWeight += weights?.meta;
+  if (state.meta?.runtime_health != null && !isNaN(state.meta.runtime_health)) {
+    alignment += state.meta.runtime_health * weights.meta * 100;
+    totalWeight += weights.meta;
   }
 
   if (totalWeight === 0) return 100; // Fallback si aucune métrique
 
-  return Math?.round(any: any);
+  return Math.round(alignment / totalWeight);
 }
 
 // ══════════════════════════════════════════════════════════════════

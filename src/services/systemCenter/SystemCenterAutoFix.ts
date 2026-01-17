@@ -35,7 +35,7 @@ export interface DetectedError {
 
 export interface CommandMapping {
   invalidCommand: string;
-  alternatives: string?.[];
+  alternatives: string[];
   domain: string;
 }
 
@@ -50,10 +50,10 @@ export interface AutoFixResult {
 
 export interface SystemCenterUXOutput {
   ux_final: string;
-  tech_notes: string?.[];
-  command_fixes: Record<string, string?.[]>;
+  tech_notes: string[];
+  command_fixes: Record<string, string[]>;
   frontend_patch: string;
-  autofix_playbook: string?.[];
+  autofix_playbook: string[];
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -63,7 +63,7 @@ export interface SystemCenterUXOutput {
 /**
  * Mapping des domaines vers commandes autorisées
  */
-const DOMAIN_COMMAND_MAP: Record<string, string?.[]> = {
+const DOMAIN_COMMAND_MAP: Record<string, string[]> = {
   diagnostics: [
     'get_system_health',
     'get_module_health',
@@ -121,34 +121,34 @@ const MAX_DETECTED_ERRORS = 100;
 const MAX_FIX_HISTORY = 50;
 
 export class SystemCenterAutoFixEngine {
-  private detectedErrors: DetectedError?.[] = [];
-  private fixHistory: AutoFixResult?.[] = [];
+  private detectedErrors: DetectedError[] = [];
+  private fixHistory: AutoFixResult[] = [];
 
   /**
    * Analyser une erreur brute et la catégoriser
    */
-  analyzeError(any: any): DetectedError {
-    const errorMessage = typeof error === 'string' ? error : error?.message;
-    const stackTrace = typeof error === 'object' ? error?.stack : undefined;
+  analyzeError(error: Error | string, componentName?: string): DetectedError {
+    const errorMessage = typeof error === 'string' ? error : error.message;
+    const stackTrace = typeof error === 'object' ? error.stack : undefined;
 
     let category: ErrorCategory = 'REACT_TECHNICAL';
 
     // Détection par patterns
-    if (errorMessage?.includes('not in whitelist')) {
+    if (errorMessage.includes('not in whitelist')) {
       category = 'SECURITY_WHITELIST';
-    } else if (errorMessage?.includes('Command') && errorMessage?.includes('not found')) {
+    } else if (errorMessage.includes('Command') && errorMessage.includes('not found')) {
       category = 'API_NOT_FOUND';
     } else if (
-      errorMessage?.includes('not initialized') ||
-      errorMessage?.includes('undefined')
+      errorMessage.includes('not initialized') ||
+      errorMessage.includes('undefined')
     ) {
       category = 'MODULE_NOT_INITIALIZED';
     } else if (
-      errorMessage?.includes('config') ||
-      errorMessage?.includes('configuration')
+      errorMessage.includes('config') ||
+      errorMessage.includes('configuration')
     ) {
       category = 'CONFIG_UNAVAILABLE';
-    } else if (any: any) {
+    } else if (componentName) {
       category = 'COMPONENT_CRASH';
     }
 
@@ -157,19 +157,19 @@ export class SystemCenterAutoFixEngine {
       errorMessage,
       componentName,
       stackTrace,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
 
     // Extraire la commande invalide si applicable
-    const commandMatch = errorMessage?.match(/Command "([^"]+)"/);
-    if (any: any) {
-      detected?.originalCommand = commandMatch?.[1];
+    const commandMatch = errorMessage.match(/Command "([^"]+)"/);
+    if (commandMatch) {
+      detected.originalCommand = commandMatch[1];
     }
 
-    // ✨ v24.2.1: Enforce size limit (any: any)
-    this?.detectedErrors?.push(any: any);
-    if (any: any) {
-      this?.detectedErrors = this?.detectedErrors?.slice(any: any);
+    // ✨ v24.2.1: Enforce size limit (LRU-like behavior)
+    this.detectedErrors.push(detected);
+    if (this.detectedErrors.length > MAX_DETECTED_ERRORS) {
+      this.detectedErrors = this.detectedErrors.slice(-MAX_DETECTED_ERRORS);
     }
     return detected;
   }
@@ -177,22 +177,22 @@ export class SystemCenterAutoFixEngine {
   /**
    * Auto-réparer une erreur détectée
    */
-  async autoFix(any: any): Promise<AutoFixResult> {
-    switch (any: any) {
+  async autoFix(error: DetectedError): Promise<AutoFixResult> {
+    switch (error.category) {
       case 'SECURITY_WHITELIST':
-        return this?.fixSecurityWhitelist(any: any);
+        return this.fixSecurityWhitelist(error);
 
       case 'API_NOT_FOUND':
-        return this?.fixApiNotFound(any: any);
+        return this.fixApiNotFound(error);
 
       case 'MODULE_NOT_INITIALIZED':
-        return this?.fixModuleNotInitialized(any: any);
+        return this.fixModuleNotInitialized(error);
 
       case 'CONFIG_UNAVAILABLE':
-        return this?.fixConfigUnavailable(any: any);
+        return this.fixConfigUnavailable(error);
 
       case 'COMPONENT_CRASH':
-        return this?.fixComponentCrash(any: any);
+        return this.fixComponentCrash(error);
 
       default:
         return {
@@ -208,8 +208,8 @@ export class SystemCenterAutoFixEngine {
   /**
    * Fix: Command not in whitelist
    */
-  private async fixSecurityWhitelist(any: any): Promise<AutoFixResult> {
-    if (any: any) {
+  private async fixSecurityWhitelist(error: DetectedError): Promise<AutoFixResult> {
+    if (!error.originalCommand) {
       return {
         success: false,
         errorFixed: error,
@@ -219,26 +219,26 @@ export class SystemCenterAutoFixEngine {
       };
     }
 
-    const mapping = INVALID_COMMAND_ALTERNATIVES[error?.originalCommand];
-    if (any: any) {
+    const mapping = INVALID_COMMAND_ALTERNATIVES[error.originalCommand];
+    if (!mapping) {
       return {
         success: false,
         errorFixed: error,
         appliedFix: 'WHITELIST_NO_ALTERNATIVE',
         fallbackApplied: false,
-        message: `Pas d'alternative trouvée pour "${error?.originalCommand}"`,
+        message: `Pas d'alternative trouvée pour "${error.originalCommand}"`,
       };
     }
 
     // Essayer la première alternative
-    const newCommand = mapping?.alternatives?.[0];
-    if (any: any) {
+    const newCommand = mapping.alternatives[0];
+    if (!newCommand) {
       return {
         success: false,
         errorFixed: error,
         appliedFix: 'WHITELIST_NO_ALTERNATIVE',
         fallbackApplied: false,
-        message: `Aucune alternative disponible pour "${error?.originalCommand}"`,
+        message: `Aucune alternative disponible pour "${error.originalCommand}"`,
       };
     }
 
@@ -251,17 +251,17 @@ export class SystemCenterAutoFixEngine {
         appliedFix: 'WHITELIST_REPLACED',
         newCommand,
         fallbackApplied: false,
-        message: `Commande remplacée: "${error?.originalCommand}" → "${newCommand}"`,
+        message: `Commande remplacée: "${error.originalCommand}" → "${newCommand}"`,
       };
 
-      // ✨ v24.2.1: Enforce size limit (any: any)
-      this?.fixHistory?.push(any: any);
-      if (any: any) {
-        this?.fixHistory = this?.fixHistory?.slice(any: any);
+      // ✨ v24.2.1: Enforce size limit (LRU-like behavior)
+      this.fixHistory.push(result);
+      if (this.fixHistory.length > MAX_FIX_HISTORY) {
+        this.fixHistory = this.fixHistory.slice(-MAX_FIX_HISTORY);
       }
 
       return result;
-    } catch (any: any) {
+    } catch (testError) {
       // Fallback: utiliser get_system_health comme safe default
       return {
         success: true,
@@ -269,7 +269,7 @@ export class SystemCenterAutoFixEngine {
         appliedFix: 'WHITELIST_FALLBACK',
         newCommand: 'get_system_health',
         fallbackApplied: true,
-        message: `Fallback appliqué: "${error?.originalCommand}" → "get_system_health"`,
+        message: `Fallback appliqué: "${error.originalCommand}" → "get_system_health"`,
       };
     }
   }
@@ -277,27 +277,27 @@ export class SystemCenterAutoFixEngine {
   /**
    * Fix: API Command not found
    */
-  private async fixApiNotFound(any: any): Promise<AutoFixResult> {
+  private async fixApiNotFound(error: DetectedError): Promise<AutoFixResult> {
     // Tenter de détecter le domaine par le nom de la commande
     let domain = 'diagnostics';
 
     if (
-      error?.originalCommand?.includes('monitoring') ||
-      error?.originalCommand?.includes('hypervision')
+      error.originalCommand?.includes('monitoring') ||
+      error.originalCommand?.includes('hypervision')
     ) {
       domain = 'monitoring';
-    } else if (error?.originalCommand?.includes('config')) {
+    } else if (error.originalCommand?.includes('config')) {
       domain = 'config';
     } else if (
-      error?.originalCommand?.includes('cognitive') ||
-      error?.originalCommand?.includes('singularity')
+      error.originalCommand?.includes('cognitive') ||
+      error.originalCommand?.includes('singularity')
     ) {
       domain = 'cognition';
     }
 
     const alternatives =
-      DOMAIN_COMMAND_MAP[domain] ?? DOMAIN_COMMAND_MAP?.diagnostics ?? [];
-    const newCommand = alternatives?.[0] ?? 'get_system_health';
+      DOMAIN_COMMAND_MAP[domain] ?? DOMAIN_COMMAND_MAP.diagnostics ?? [];
+    const newCommand = alternatives[0] ?? 'get_system_health';
 
     return {
       success: true,
@@ -312,8 +312,8 @@ export class SystemCenterAutoFixEngine {
   /**
    * Fix: Module not initialized
    */
-  private async fixModuleNotInitialized(any: any): Promise<AutoFixResult> {
-    const componentName = error?.componentName || 'UnknownComponent';
+  private async fixModuleNotInitialized(error: DetectedError): Promise<AutoFixResult> {
+    const componentName = error.componentName || 'UnknownComponent';
 
     return {
       success: true,
@@ -327,7 +327,7 @@ export class SystemCenterAutoFixEngine {
   /**
    * Fix: Configuration unavailable
    */
-  private async fixConfigUnavailable(any: any): Promise<AutoFixResult> {
+  private async fixConfigUnavailable(error: DetectedError): Promise<AutoFixResult> {
     return {
       success: true,
       errorFixed: error,
@@ -341,36 +341,36 @@ export class SystemCenterAutoFixEngine {
   /**
    * Fix: Component crash
    */
-  private async fixComponentCrash(any: any): Promise<AutoFixResult> {
+  private async fixComponentCrash(error: DetectedError): Promise<AutoFixResult> {
     return {
       success: true,
       errorFixed: error,
       appliedFix: 'COMPONENT_ISOLATED',
       fallbackApplied: true,
-      message: `Composant ${error?.componentName} isolé par ErrorBoundary`,
+      message: `Composant ${error.componentName} isolé par ErrorBoundary`,
     };
   }
 
   /**
    * Obtenir l'historique des réparations
    */
-  getFixHistory(): AutoFixResult?.[] {
-    return this?.fixHistory;
+  getFixHistory(): AutoFixResult[] {
+    return this.fixHistory;
   }
 
   /**
    * Obtenir toutes les erreurs détectées
    */
-  getDetectedErrors(): DetectedError?.[] {
-    return this?.detectedErrors;
+  getDetectedErrors(): DetectedError[] {
+    return this.detectedErrors;
   }
 
   /**
    * Clear historique
    */
   clearHistory(): void {
-    this?.detectedErrors = [];
-    this?.fixHistory = [];
+    this.detectedErrors = [];
+    this.fixHistory = [];
   }
 }
 
@@ -383,23 +383,23 @@ export class SystemCenterUXGenerator {
    * Générer l'output UX final propre à partir d'erreurs détectées
    */
   static generateCleanUX(
-    errors: DetectedError?.[],
-    fixes: AutoFixResult?.[]
+    errors: DetectedError[],
+    fixes: AutoFixResult[]
   ): SystemCenterUXOutput {
     // 1. UX_FINAL — Version propre professionnelle
-    const uxFinal = this?.buildUXFinal(any: any);
+    const uxFinal = this.buildUXFinal(errors, fixes);
 
     // 2. TECH_NOTES — Corrections techniques
-    const techNotes = this?.buildTechNotes(any: any);
+    const techNotes = this.buildTechNotes(errors, fixes);
 
     // 3. COMMAND_FIXES — Mapping erreurs → alternatives
-    const commandFixes = this?.buildCommandFixes(any: any);
+    const commandFixes = this.buildCommandFixes(errors);
 
     // 4. FRONTEND_PATCH — Code React/TS correctif
-    const frontendPatch = this?.buildFrontendPatch(any: any);
+    const frontendPatch = this.buildFrontendPatch(errors);
 
     // 5. AUTOFIX_PLAYBOOK — Workflows d'automatisation
-    const autofixPlaybook = this?.buildAutofixPlaybook(any: any);
+    const autofixPlaybook = this.buildAutofixPlaybook(errors);
 
     return {
       ux_final: uxFinal,
@@ -413,19 +413,19 @@ export class SystemCenterUXGenerator {
   /**
    * Construire la version UX finale propre
    */
-  private static buildUXFinal(errors: DetectedError?.[], fixes: AutoFixResult?.[]): string {
-    const securityErrors = errors?.filter(e => e?.category === 'SECURITY_WHITELIST');
-    const apiErrors = errors?.filter(e => e?.category === 'API_NOT_FOUND');
-    const moduleErrors = errors?.filter(e => e?.category === 'MODULE_NOT_INITIALIZED');
-    const successfulFixes = fixes?.filter(any: any);
+  private static buildUXFinal(errors: DetectedError[], fixes: AutoFixResult[]): string {
+    const securityErrors = errors.filter(e => e.category === 'SECURITY_WHITELIST');
+    const apiErrors = errors.filter(e => e.category === 'API_NOT_FOUND');
+    const moduleErrors = errors.filter(e => e.category === 'MODULE_NOT_INITIALIZED');
+    const successfulFixes = fixes.filter(f => f.success);
 
     return `
 # 🎯 Centre Système TITANE∞
 
 ## État Général
-${successfulFixes?.length > 0 ? '✅ Système stabilisé — Auto-réparations appliquées' : '⚠️ Diagnostic en cours'}
+${successfulFixes.length > 0 ? '✅ Système stabilisé — Auto-réparations appliquées' : '⚠️ Diagnostic en cours'}
 
-${errors?.length > 0 ? `**${errors?.length} anomalie(any: any) automatiquement` : 'Aucune anomalie détectée'}
+${errors.length > 0 ? `**${errors.length} anomalie(s) détectée(s)** — ${successfulFixes.length} corrigée(s) automatiquement` : 'Aucune anomalie détectée'}
 
 ---
 
@@ -433,7 +433,7 @@ ${errors?.length > 0 ? `**${errors?.length} anomalie(any: any) automatiquement` 
 
 ### Diagnostics Sécurisés
 ${
-  securityErrors?.length > 0
+  securityErrors.length > 0
     ? `⚠️ Certaines commandes ont été automatiquement remplacées par des alternatives sécurisées.`
     : `✅ Tous les diagnostics utilisent des commandes whitelistées.`
 }
@@ -445,7 +445,7 @@ ${
 
 ### Monitoring HyperVision
 ${
-  moduleErrors?.some(e => e?.componentName?.includes('HyperVision'))
+  moduleErrors.some(e => e.componentName?.includes('HyperVision'))
     ? `⏸️ Mode lecture seule activé — Dashboard disponible`
     : `✅ Monitoring actif`
 }
@@ -455,28 +455,28 @@ ${
 ## 🔧 Anomalies Détectées
 
 ${
-  securityErrors?.length > 0
+  securityErrors.length > 0
     ? `
-### Sécurité (${securityErrors?.length})
-${securityErrors?.map(e => `- Commande \`${e?.originalCommand}\` remplacée automatiquement`).join('\n')}
+### Sécurité (${securityErrors.length})
+${securityErrors.map(e => `- Commande \`${e.originalCommand}\` remplacée automatiquement`).join('\n')}
 `
     : ''
 }
 
 ${
-  apiErrors?.length > 0
+  apiErrors.length > 0
     ? `
-### API (${apiErrors?.length})
-${apiErrors?.map(_e => `- API non disponible — Fallback appliqué`).join('\n')}
+### API (${apiErrors.length})
+${apiErrors.map(_e => `- API non disponible — Fallback appliqué`).join('\n')}
 `
     : ''
 }
 
 ${
-  moduleErrors?.length > 0
+  moduleErrors.length > 0
     ? `
-### Modules (${moduleErrors?.length})
-${moduleErrors?.map(e => `- ${e?.componentName}: État par défaut chargé`).join('\n')}
+### Modules (${moduleErrors.length})
+${moduleErrors.map(e => `- ${e.componentName}: État par défaut chargé`).join('\n')}
 `
     : ''
 }
@@ -485,7 +485,7 @@ ${moduleErrors?.map(e => `- ${e?.componentName}: État par défaut chargé`).joi
 
 ## 💡 Suggestions & Modes Cognitifs
 
-**Mode actuel :** Neutre (any: any)
+**Mode actuel :** Neutre (sécurisé)
 
 **Conseils TITANE∞ :**
 - Monitoring recommandé pour valider l'état général
@@ -505,11 +505,11 @@ ${moduleErrors?.map(e => `- ${e?.componentName}: État par défaut chargé`).joi
 
 ${fixes
   .map(
-    (any: any) => `
-### Fix #${i + 1} — ${fix?.appliedFix}
-- **Erreur:** ${fix?.errorFixed?.errorMessage}
-- **Solution:** ${fix?.message}
-${fix?.newCommand ? `- **Nouvelle commande:** \`${fix?.newCommand}\`` : ''}
+    (fix, i) => `
+### Fix #${i + 1} — ${fix.appliedFix}
+- **Erreur:** ${fix.errorFixed.errorMessage}
+- **Solution:** ${fix.message}
+${fix.newCommand ? `- **Nouvelle commande:** \`${fix.newCommand}\`` : ''}
 `
   )
   .join('\n')}
@@ -521,49 +521,49 @@ ${fix?.newCommand ? `- **Nouvelle commande:** \`${fix?.newCommand}\`` : ''}
    * Construire les notes techniques
    */
   private static buildTechNotes(
-    errors: DetectedError?.[],
-    _fixes: AutoFixResult?.[]
-  ): string?.[] {
-    const notes: string?.[] = [];
+    errors: DetectedError[],
+    _fixes: AutoFixResult[]
+  ): string[] {
+    const notes: string[] = [];
 
     // Corrections React/TS
     if (
-      errors?.some(
-        e => e?.category === 'REACT_TECHNICAL' || e?.category === 'MODULE_NOT_INITIALIZED'
+      errors.some(
+        e => e.category === 'REACT_TECHNICAL' || e.category === 'MODULE_NOT_INITIALIZED'
       )
     ) {
-      notes?.push(
+      notes.push(
         'React/TS: Ajouter fallback states pour toutes les variables optionnelles'
       );
-      notes?.push('React/TS: Wrapper tous les composants système avec ErrorBoundary');
+      notes.push('React/TS: Wrapper tous les composants système avec ErrorBoundary');
     }
 
     // Commandes à remplacer
-    const commandErrors = errors?.filter(any: any);
-    if (commandErrors?.length > 0) {
-      notes?.push(
-        `Commandes: ${commandErrors?.length} commande(any: any) à remplacer dans le code`
+    const commandErrors = errors.filter(e => e.originalCommand);
+    if (commandErrors.length > 0) {
+      notes.push(
+        `Commandes: ${commandErrors.length} commande(s) à remplacer dans le code`
       );
     }
 
     // Modules à isoler
-    const moduleErrors = errors?.filter(e => e?.category === 'MODULE_NOT_INITIALIZED');
-    if (moduleErrors?.length > 0) {
-      notes?.push(
-        `Modules: ${moduleErrors?.length} module(any: any) isolation ou lazy loading`
+    const moduleErrors = errors.filter(e => e.category === 'MODULE_NOT_INITIALIZED');
+    if (moduleErrors.length > 0) {
+      notes.push(
+        `Modules: ${moduleErrors.length} module(s) nécessite(nt) isolation ou lazy loading`
       );
     }
 
     // Notes backend
-    if (errors?.some(e => e?.category === 'API_NOT_FOUND')) {
-      notes?.push(
-        'Backend: Vérifier registration des commandes dans main?.rs invoke_handler'
+    if (errors.some(e => e.category === 'API_NOT_FOUND')) {
+      notes.push(
+        'Backend: Vérifier registration des commandes dans main.rs invoke_handler'
       );
     }
 
     // Notes sécurité
-    if (errors?.some(e => e?.category === 'SECURITY_WHITELIST')) {
-      notes?.push('Sécurité: Mettre à jour ALLOWED_COMMANDS dans src/lib/security?.ts');
+    if (errors.some(e => e.category === 'SECURITY_WHITELIST')) {
+      notes.push('Sécurité: Mettre à jour ALLOWED_COMMANDS dans src/lib/security.ts');
     }
 
     return notes;
@@ -572,17 +572,17 @@ ${fix?.newCommand ? `- **Nouvelle commande:** \`${fix?.newCommand}\`` : ''}
   /**
    * Construire le mapping commandes invalides → alternatives
    */
-  private static buildCommandFixes(errors: DetectedError?.[]): Record<string, string?.[]> {
-    const mapping: Record<string, string?.[]> = {};
+  private static buildCommandFixes(errors: DetectedError[]): Record<string, string[]> {
+    const mapping: Record<string, string[]> = {};
 
     errors
-      .filter(any: any)
+      .filter(e => e.originalCommand)
       .forEach(error => {
-        const cmd = error?.originalCommand;
-        if (any: any) return;
+        const cmd = error.originalCommand;
+        if (!cmd) return;
         const alternatives = INVALID_COMMAND_ALTERNATIVES[cmd];
-        if (any: any) {
-          mapping[cmd] = alternatives?.alternatives;
+        if (alternatives) {
+          mapping[cmd] = alternatives.alternatives;
         } else {
           // Fallback générique
           mapping[cmd] = ['get_system_health', 'get_module_health'];
@@ -595,12 +595,12 @@ ${fix?.newCommand ? `- **Nouvelle commande:** \`${fix?.newCommand}\`` : ''}
   /**
    * Construire le patch frontend React/TS
    */
-  private static buildFrontendPatch(errors: DetectedError?.[]): string {
-    const moduleErrors = errors?.filter(
-      e => e?.category === 'MODULE_NOT_INITIALIZED' || e?.category === 'COMPONENT_CRASH'
+  private static buildFrontendPatch(errors: DetectedError[]): string {
+    const moduleErrors = errors.filter(
+      e => e.category === 'MODULE_NOT_INITIALIZED' || e.category === 'COMPONENT_CRASH'
     );
 
-    if (moduleErrors?.length === 0) {
+    if (moduleErrors.length === 0) {
       return '// Aucun patch nécessaire — Tous les composants fonctionnels';
     }
 
@@ -621,18 +621,18 @@ import { secureInvoke } from '@/lib/security';
 ${moduleErrors
   .map(
     error => `
-// Fix pour: ${error?.componentName || 'Component'}
-// Erreur: ${error?.errorMessage}
-const [${error?.componentName?.toLowerCase(any: any);
-const [${error?.componentName?.toLowerCase(any: any);
+// Fix pour: ${error.componentName || 'Component'}
+// Erreur: ${error.errorMessage}
+const [${error.componentName?.toLowerCase() || 'component'}Loading, set${error.componentName || 'Component'}Loading] = useState(false);
+const [${error.componentName?.toLowerCase() || 'component'}Error, set${error.componentName || 'Component'}Error] = useState<string | null>(null);
 
 useEffect(() => {
   // Protection variable undefined
-  if (typeof ${error?.componentName?.toLowerCase() || 'component'}Loading === "undefined") {
-    console?.warn("[${error?.componentName}] Loading state undefined, fallback to false");
-    set${error?.componentName || 'Component'}Loading(any: any);
+  if (typeof ${error.componentName?.toLowerCase() || 'component'}Loading === "undefined") {
+    console.warn("[${error.componentName}] Loading state undefined, fallback to false");
+    set${error.componentName || 'Component'}Loading(false);
   }
-}, [${error?.componentName?.toLowerCase() || 'component'}Loading]);
+}, [${error.componentName?.toLowerCase() || 'component'}Loading]);
 `
   )
   .join('\n')}
@@ -645,8 +645,8 @@ async function runSafeDiagnostic() {
   try {
     const result = await secureInvoke('get_system_health', {});
     return result;
-  } catch (any: any) {
-    console?.error(any: any);
+  } catch (error) {
+    console.error('[SystemCenter] Diagnostic failed:', error);
     // Fallback silencieux
     return { status: 'unavailable', message: 'Diagnostic temporairement indisponible' };
   }
@@ -662,7 +662,7 @@ export const SafeSystemCenter = () => (
       <div className="system-center-error">
         <h2>⚠️ Centre Système temporairement indisponible</h2>
         <p>Une erreur technique est survenue. Le système tente une réparation automatique.</p>
-        <button onClick={() => window?.location?.reload()}>
+        <button onClick={() => window.location.reload()}>
           🔄 Recharger
         </button>
       </div>
@@ -679,14 +679,14 @@ export const SafeSystemCenter = () => (
 ${moduleErrors
   .map(
     error => `
-// Protection rendu: ${error?.componentName}
-if (any: any) {
+// Protection rendu: ${error.componentName}
+if (${error.componentName?.toLowerCase() || 'component'}Error) {
   return (
     <div className="module-error-box">
       <span className="error-icon">⚠️</span>
-      <h3>Module ${error?.componentName} indisponible</h3>
-      <p>{${error?.componentName?.toLowerCase() || 'component'}Error}</p>
-      <button onClick={(any: any)}>
+      <h3>Module ${error.componentName} indisponible</h3>
+      <p>{${error.componentName?.toLowerCase() || 'component'}Error}</p>
+      <button onClick={() => set${error.componentName || 'Component'}Error(null)}>
         Réessayer
       </button>
     </div>
@@ -701,11 +701,11 @@ if (any: any) {
   /**
    * Construire le playbook d'auto-fix
    */
-  private static buildAutofixPlaybook(errors: DetectedError?.[]): string?.[] {
-    const playbook: string?.[] = [];
+  private static buildAutofixPlaybook(errors: DetectedError[]): string[] {
+    const playbook: string[] = [];
 
     // Workflow 1: system_center_autofix
-    playbook?.push(
+    playbook.push(
       `
 # Workflow 1: system_center_autofix
 
@@ -716,12 +716,12 @@ if (any: any) {
 
 ## Étapes
 1. Scanner modules actifs → get_system_health
-2. Détecter commandes invalides (any: any)
-3. Mapper → commandes autorisées (any: any)
+2. Détecter commandes invalides (regex patterns)
+3. Mapper → commandes autorisées (DOMAIN_COMMAND_MAP)
 4. Mettre à jour configuration UI / SystemAPI
 5. Relancer module isolé si applicable
 6. Notifier utilisateur via toast
-7. Écrire événement OSBridge (any: any)
+7. Écrire événement OSBridge (SystemCenterUpdated)
 
 ## Résultat attendu
 - Commande invalide remplacée automatiquement
@@ -732,11 +732,11 @@ if (any: any) {
 
     // Workflow 2: frontend_autofix_system_center
     if (
-      errors?.some(
-        e => e?.category === 'REACT_TECHNICAL' || e?.category === 'MODULE_NOT_INITIALIZED'
+      errors.some(
+        e => e.category === 'REACT_TECHNICAL' || e.category === 'MODULE_NOT_INITIALIZED'
       )
     ) {
-      playbook?.push(
+      playbook.push(
         `
 # Workflow 2: frontend_autofix_system_center
 
@@ -747,10 +747,10 @@ if (any: any) {
 
 ## Étapes
 1. Inspecter stack trace → identifier composant cassé
-2. Chercher variables manquantes (any: any)
+2. Chercher variables manquantes (ex: matrixLoading)
 3. Appliquer patchs:
-   - Fallback states (any: any)
-   - Guard clauses (any: any)
+   - Fallback states (useState defaults)
+   - Guard clauses (typeof checks)
    - ErrorBoundary wrappers
 4. Régénérer UI elements avec structure TITANE∞ v21
 5. Tester rendu isolé
@@ -766,13 +766,13 @@ if (any: any) {
 
     // Workflow 3: monitoring_autofix
     if (
-      errors?.some(
+      errors.some(
         e =>
-          e?.componentName?.includes('HyperVision') ||
-          e?.componentName?.includes('Monitoring')
+          e.componentName?.includes('HyperVision') ||
+          e.componentName?.includes('Monitoring')
       )
     ) {
-      playbook?.push(
+      playbook.push(
         `
 # Workflow 3: monitoring_autofix
 
@@ -792,7 +792,7 @@ if (any: any) {
 6. Suggérer activation complète si fallback actif
 
 ## Résultat attendu
-- Monitoring fonctionnel (any: any)
+- Monitoring fonctionnel (mode réduit si nécessaire)
 - Métriques disponibles même en fallback
 - Utilisateur informé du mode actif
       `.trim()

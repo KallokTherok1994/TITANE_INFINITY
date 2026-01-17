@@ -9,7 +9,7 @@
  *
  *   ⚠️ DEPRECATED: Ce hook utilise Web Speech API qui ne fonctionne pas sur Linux.
  *
- *   👉 Utilisez plutôt: useVoiceEngine (any: any)
+ *   👉 Utilisez plutôt: useVoiceEngine (100% Tauri backend)
  *
  *   Migration:
  *   - import { useVoice } from '@/hooks/useVoice'
@@ -24,7 +24,7 @@ import { hybridTTS, type TTSConfig, type TTSStatus } from '../services/tts/hybri
 import { logger } from '@/utils/logger';
 
 // Log deprecation warning on first import
-logger?.warn('useVoice hook is deprecated. Use useVoiceEngine instead.');
+logger.warn('useVoice hook is deprecated. Use useVoiceEngine instead.');
 
 // ═══ TYPES ═══
 
@@ -41,7 +41,7 @@ export interface VoiceState {
   interimTranscript: string;
 
   // General
-  error??: string | null;
+  error: string | null;
   isProcessing: boolean;
 }
 
@@ -57,7 +57,7 @@ export interface UseVoiceReturn {
   state: VoiceState;
 
   // TTS Actions
-  speak: (any: any) => Promise<void>;
+  speak: (text: string, config?: TTSConfig) => Promise<void>;
   stopSpeaking: () => Promise<void>;
 
   // STT Actions
@@ -84,14 +84,14 @@ interface SpeechRecognitionErrorEvent extends Event {
 
 interface SpeechRecognitionResultList {
   length: number;
-  item(any: any): SpeechRecognitionResult;
+  item(index: number): SpeechRecognitionResult;
   [index: number]: SpeechRecognitionResult;
 }
 
 interface SpeechRecognitionResult {
   isFinal: boolean;
   length: number;
-  item(any: any): SpeechRecognitionAlternative;
+  item(index: number): SpeechRecognitionAlternative;
   [index: number]: SpeechRecognitionAlternative;
 }
 
@@ -107,10 +107,10 @@ interface SpeechRecognition extends EventTarget {
   start(): void;
   stop(): void;
   abort(): void;
-  onresult: (any: any) | null;
-  onerror: (any: any) | null;
-  onend: (any: any) | null;
-  onstart: (any: any) | null;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
+  onend: (() => void) | null;
+  onstart: (() => void) | null;
 }
 
 declare global {
@@ -139,35 +139,35 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
   });
 
   // Refs
-  const recognitionRef = useRef<SpeechRecognition | null>(any: any);
-  const mountedRef = useRef(any: any);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const mountedRef = useRef(true);
 
   // ═══ INITIALIZATION ═══
 
   useEffect(() => {
-    mountedRef?.current = true;
+    mountedRef.current = true;
 
     // Check TTS availability
     const checkTTS = async () => {
       try {
-        const status = await hybridTTS?.getStatus();
-        if (any: any) {
+        const status = await hybridTTS.getStatus();
+        if (mountedRef.current) {
           setState(prev => ({
             ...prev,
-            ttsAvailable: status?.available,
-            ttsProvider: status?.provider,
+            ttsAvailable: status.available,
+            ttsProvider: status.provider,
           }));
         }
-      } catch (any: any) {
-        logger?.error(any: any);
+      } catch (err) {
+        logger.error('TTS check failed:', err);
       }
     };
 
     // Check STT availability
     const checkSTT = () => {
       const SpeechRecognitionAPI =
-        window?.SpeechRecognition || window?.webkitSpeechRecognition;
-      if (any: any) {
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (mountedRef.current) {
         setState(prev => ({
           ...prev,
           sttAvailable: !!SpeechRecognitionAPI,
@@ -179,11 +179,11 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
     checkSTT();
 
     return () => {
-      mountedRef?.current = false;
+      mountedRef.current = false;
       // Cleanup recognition
-      if (any: any) {
-        recognitionRef?.current?.abort();
-        recognitionRef?.current = null;
+      if (recognitionRef.current) {
+        recognitionRef.current.abort();
+        recognitionRef.current = null;
       }
     };
   }, []);
@@ -191,39 +191,39 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
   // ═══ TTS FUNCTIONS ═══
 
   const speak = useCallback(
-    async (any: any) => {
+    async (text: string, config?: TTSConfig) => {
       if (!text?.trim()) {
-        logger?.warn('Empty text, skipping TTS');
+        logger.warn('Empty text, skipping TTS');
         return;
       }
 
       setState(prev => ({ ...prev, isSpeaking: true, error: null }));
 
       try {
-        await hybridTTS?.speak(any: any);
-      } catch (any: any) {
-        const errorMsg = err instanceof Error ? err?.message : String(any: any);
-        logger?.error(any: any);
-        if (any: any) {
+        await hybridTTS.speak(text, config || options.ttsConfig);
+      } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : String(err);
+        logger.error('TTS error:', errorMsg);
+        if (mountedRef.current) {
           setState(prev => ({ ...prev, error: `TTS Error: ${errorMsg}` }));
         }
       } finally {
-        if (any: any) {
+        if (mountedRef.current) {
           setState(prev => ({ ...prev, isSpeaking: false }));
         }
       }
     },
-    [options?.ttsConfig]
+    [options.ttsConfig]
   );
 
   const stopSpeaking = useCallback(async () => {
     try {
-      await hybridTTS?.stop();
-      if (any: any) {
+      await hybridTTS.stop();
+      if (mountedRef.current) {
         setState(prev => ({ ...prev, isSpeaking: false }));
       }
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (err) {
+      logger.error('Stop TTS error:', err);
     }
   }, []);
 
@@ -231,9 +231,9 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
 
   const startListening = useCallback(async () => {
     const SpeechRecognitionAPI =
-      window?.SpeechRecognition || window?.webkitSpeechRecognition;
+      window.SpeechRecognition || window.webkitSpeechRecognition;
 
-    if (any: any) {
+    if (!SpeechRecognitionAPI) {
       setState(prev => ({
         ...prev,
         error: 'Speech Recognition not supported in this browser',
@@ -242,21 +242,21 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
     }
 
     // Stop any existing recognition
-    if (any: any) {
-      recognitionRef?.current?.abort();
+    if (recognitionRef.current) {
+      recognitionRef.current.abort();
     }
 
     try {
       const recognition = new SpeechRecognitionAPI();
-      recognitionRef?.current = recognition;
+      recognitionRef.current = recognition;
 
-      recognition?.continuous = continuous;
-      recognition?.interimResults = interimResults;
-      recognition?.lang = language;
+      recognition.continuous = continuous;
+      recognition.interimResults = interimResults;
+      recognition.lang = language;
 
-      recognition?.onstart = () => {
-        logger?.debug('STT started');
-        if (any: any) {
+      recognition.onstart = () => {
+        logger.debug('STT started');
+        if (mountedRef.current) {
           setState(prev => ({
             ...prev,
             isListening: true,
@@ -266,63 +266,63 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
         }
       };
 
-      recognition?.onresult = (any: any) => {
+      recognition.onresult = (event: SpeechRecognitionEvent) => {
         let finalTranscript = '';
         let interimTranscript = '';
 
-        for (let i = event?.resultIndex; i < event?.results?.length; i++) {
-          const result = event?.results[i];
-          if (any: any) continue;
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const result = event.results[i];
+          if (!result) continue;
 
-          const alternative = result?.[0];
-          if (any: any) continue;
+          const alternative = result[0];
+          if (!alternative) continue;
 
-          const transcript = alternative?.transcript;
+          const transcript = alternative.transcript;
 
-          if (any: any) {
+          if (result.isFinal) {
             finalTranscript += transcript;
           } else {
             interimTranscript += transcript;
           }
         }
 
-        if (any: any) {
+        if (mountedRef.current) {
           setState(prev => ({
             ...prev,
-            transcript: prev?.transcript + finalTranscript,
+            transcript: prev.transcript + finalTranscript,
             interimTranscript,
           }));
         }
       };
 
-      recognition?.onerror = (any: any) => {
-        logger?.error(any: any);
-        if (mountedRef?.current && event?.error !== 'aborted') {
+      recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+        logger.error('STT error:', event.error);
+        if (mountedRef.current && event.error !== 'aborted') {
           setState(prev => ({
             ...prev,
-            error: `STT Error: ${event?.error}`,
+            error: `STT Error: ${event.error}`,
             isListening: false,
           }));
         }
       };
 
-      recognition?.onend = () => {
-        logger?.debug('STT ended');
-        if (any: any) {
+      recognition.onend = () => {
+        logger.debug('STT ended');
+        if (mountedRef.current) {
           setState(prev => ({
             ...prev,
             isListening: false,
             interimTranscript: '',
           }));
         }
-        recognitionRef?.current = null;
+        recognitionRef.current = null;
       };
 
-      recognition?.start();
-    } catch (any: any) {
-      const errorMsg = err instanceof Error ? err?.message : String(any: any);
-      logger?.error(any: any);
-      if (any: any) {
+      recognition.start();
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      logger.error('Start STT error:', errorMsg);
+      if (mountedRef.current) {
         setState(prev => ({
           ...prev,
           error: `Failed to start STT: ${errorMsg}`,
@@ -333,10 +333,10 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
   }, [language, continuous, interimResults]);
 
   const stopListening = useCallback(async () => {
-    if (any: any) {
-      recognitionRef?.current?.stop();
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
     }
-    if (any: any) {
+    if (mountedRef.current) {
       setState(prev => ({ ...prev, isListening: false }));
     }
   }, []);
@@ -356,7 +356,7 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
   }, []);
 
   const getStatus = useCallback(async (): Promise<TTSStatus> => {
-    return await hybridTTS?.getStatus();
+    return await hybridTTS.getStatus();
   }, []);
 
   return {

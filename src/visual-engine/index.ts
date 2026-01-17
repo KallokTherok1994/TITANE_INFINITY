@@ -1,39 +1,57 @@
 /**
- * TITANE∞ v26.3.0 - Visual Engine (LITE VERSION)
- * Mock implementation for production readiness
- * Advanced visual features disabled for certification
+ * TITANE∞ v21 — Visual Engine Exports
+ * Central export for all visual engine components
  */
 
-// Mock implementation - Visual Engine disabled for production certification
-export const VISUAL_ENGINE_STATUS = 'DISABLED_FOR_PRODUCTION';
+// Core Engine v19 (Legacy - kept for compatibility)
+export { TitaneVisualEngine } from './TitaneVisualEngine';
+export type { VisualEngineConfig, PerformanceMetrics } from './TitaneVisualEngine';
 
-// Mock classes for compatibility
-export class MockIdentityPulse {
-  updateState() { /* no-op */ }
-  update() { return {}; }
-  getCurrentWaveform() { return {}; }
-}
+// Core Engine v21 (New Multi-dimensional)
+export { TitaneVisualEngineV21 } from './TitaneVisualEngineV21';
+export type {
+  VisualEngineV21Config,
+  PerformanceMetrics as PerformanceMetricsV21,
+} from './TitaneVisualEngineV21';
 
-export class MockAudioSignature {
-  initialize() { return Promise.resolve(false); }
-  setEnabled() { /* no-op */ }
-  setVolume() { /* no-op */ }
-  playPulseTone() { /* no-op */ }
-  playTransition() { /* no-op */ }
-  updateAmbient() { /* no-op */ }
-  stopAll() { /* no-op */ }
-  dispose() { /* no-op */ }
-}
+// State Management
+export { StateManager } from './StateManager';
+export type { StateTransition, StateHistoryEntry, VisualState } from './StateManager';
 
-// Export mocks as real implementations
-export const createIdentityPulse = () => new MockIdentityPulse();
-export const createAudioSignature = () => new MockAudioSignature();
+// Effects Orchestration (v21)
+export { EffectsOrchestrator, effectsOrchestrator } from './EffectsOrchestrator';
+export type {
+  EffectType,
+  EffectPriority,
+  EffectConfig,
+  ActiveEffect,
+  EffectRequest,
+  EffectsMetrics,
+} from './EffectsOrchestrator';
 
-// Default exports for compatibility
-export default {
-  VISUAL_ENGINE_STATUS,
-  createIdentityPulse,
-  createAudioSignature,
-  MockIdentityPulse,
-  MockAudioSignature
-};
+// OS Integration (v21)
+export { OSIntegrationBridge, osIntegrationBridge } from './OSIntegrationBridge';
+export type {
+  CognitiveState,
+  EmotionalState,
+  MemoryMetrics,
+  PipelineStatus,
+  SystemHealth,
+  OSState,
+  BridgeConfig,
+  BridgeMetrics,
+} from './OSIntegrationBridge';
+
+// UI Integrity Checker (v21 - Self-Healing)
+export { UIIntegrityChecker, uiIntegrityChecker } from './UIIntegrityChecker';
+export type {
+  AnomalyType,
+  AnomalySeverity,
+  Anomaly,
+  IntegrityReport,
+  CheckerConfig,
+  CheckerMetrics,
+} from './UIIntegrityChecker';
+
+// Visual States
+export * from '@/design-system/visual-states';

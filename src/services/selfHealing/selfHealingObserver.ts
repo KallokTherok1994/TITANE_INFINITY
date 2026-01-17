@@ -6,15 +6,15 @@
  * @description Couche d'observation globale capturant TOUTES les erreurs
  *
  * @responsibilities
- * - Capture erreurs JS globales (any: any)
- * - Capture rejections non gérées (any: any)
- * - Capture erreurs React (any: any)
- * - Capture erreurs Tauri (any: any)
+ * - Capture erreurs JS globales (window.onerror)
+ * - Capture rejections non gérées (unhandledrejection)
+ * - Capture erreurs React (Error Boundaries)
+ * - Capture erreurs Tauri (invoke failures)
  * - Capture erreurs réseau
  * - Agrégation et déduplication des événements
  * - Transmission à l'Analyzer Layer
  *
- * @architecture Layer 1 of 5 (any: any)
+ * @architecture Layer 1 of 5 (Observer → Analyzer → Playbook → Executor → Sync)
  * @version vΩ∞
  * @created 2025-01-07
  */
@@ -24,7 +24,7 @@ import {
   type HealingEvent,
   type HealingSeverity,
   type ModuleCategory,
-} from './selfHealing?.config';
+} from './selfHealing.config';
 import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -62,7 +62,7 @@ export interface ObserverConfig {
   capturePerformanceIssues: boolean;
   deduplicationWindowMs: number;
   maxEventsPerMinute: number;
-  ignorePatterns: RegExp?.[];
+  ignorePatterns: RegExp[];
 }
 
 /** Contexte d'une erreur capturée */
@@ -104,7 +104,7 @@ export interface ObserverState {
 }
 
 /** Callback pour recevoir les événements */
-export type ErrorCallback = (any: any) => void;
+export type ErrorCallback = (event: HealingEvent) => void;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // CONSTANTES
@@ -166,38 +166,38 @@ export class SelfHealingObserver {
   private state: ObserverState;
   private errorBuffer: Map<string, ObservedError>;
   private callbacks: Set<ErrorCallback>;
-  private unlisteners: UnlistenFn?.[];
+  private unlisteners: UnlistenFn[];
   private originalOnerror: OnErrorEventHandler | null;
-  private originalOnunhandledrejection: (any: any) | null;
+  private originalOnunhandledrejection: ((event: PromiseRejectionEvent) => void) | null;
   private cleanupInterval: ReturnType<typeof setInterval> | null;
-  private rateCounter: number?.[];
+  private rateCounter: number[];
 
   private constructor() {
-    this?.config = { ...DEFAULT_CONFIG };
+    this.config = { ...DEFAULT_CONFIG };
 
-    this?.state = {
+    this.state = {
       isActive: false,
       totalCaptured: 0,
       totalDeduplicated: 0,
       lastError: null,
       errorsPerMinute: 0,
-      startTime: Date?.now(),
+      startTime: Date.now(),
     };
 
-    this?.errorBuffer = new Map();
-    this?.callbacks = new Set();
-    this?.unlisteners = [];
-    this?.originalOnerror = null;
-    this?.originalOnunhandledrejection = null;
-    this?.cleanupInterval = null;
-    this?.rateCounter = [];
+    this.errorBuffer = new Map();
+    this.callbacks = new Set();
+    this.unlisteners = [];
+    this.originalOnerror = null;
+    this.originalOnunhandledrejection = null;
+    this.cleanupInterval = null;
+    this.rateCounter = [];
   }
 
   public static getInstance(): SelfHealingObserver {
-    if (any: any) {
-      SelfHealingObserver?.instance = new SelfHealingObserver();
+    if (!SelfHealingObserver.instance) {
+      SelfHealingObserver.instance = new SelfHealingObserver();
     }
-    return SelfHealingObserver?.instance;
+    return SelfHealingObserver.instance;
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -205,17 +205,17 @@ export class SelfHealingObserver {
   // ═══════════════════════════════════════════════════════════════════════════
 
   public configure(config: Partial<ObserverConfig>): void {
-    this?.config = { ...this?.config, ...config };
+    this.config = { ...this.config, ...config };
   }
 
   public getConfig(): ObserverConfig {
-    return { ...this?.config };
+    return { ...this.config };
   }
 
   public getState(): ObserverState {
     return {
-      ...this?.state,
-      errorsPerMinute: this?.calculateErrorRate(),
+      ...this.state,
+      errorsPerMinute: this.calculateErrorRate(),
     };
   }
 
@@ -224,92 +224,92 @@ export class SelfHealingObserver {
   // ═══════════════════════════════════════════════════════════════════════════
 
   public async start(): Promise<void> {
-    if (any: any) {
-      logger?.warn('Already active');
+    if (this.state.isActive) {
+      logger.warn('Already active');
       return;
     }
 
-    logger?.debug('🔍 Starting observation...');
+    logger.debug('🔍 Starting observation...');
 
-    if (any: any) {
-      this?.installGlobalErrorHandler();
+    if (this.config.captureGlobalErrors) {
+      this.installGlobalErrorHandler();
     }
 
-    if (any: any) {
-      this?.installUnhandledRejectionHandler();
+    if (this.config.captureUnhandledRejections) {
+      this.installUnhandledRejectionHandler();
     }
 
-    if (any: any) {
-      await this?.installTauriErrorListener();
+    if (this.config.captureTauriErrors) {
+      await this.installTauriErrorListener();
     }
 
-    if (any: any) {
-      this?.installNetworkErrorHandler();
+    if (this.config.captureNetworkErrors) {
+      this.installNetworkErrorHandler();
     }
 
     // Cleanup interval pour expirer les erreurs dédupliquées
-    this?.cleanupInterval = setInterval(() => {
-      this?.cleanupExpiredErrors();
+    this.cleanupInterval = setInterval(() => {
+      this.cleanupExpiredErrors();
     }, 10000);
 
-    this?.state?.isActive = true;
-    this?.state?.startTime = Date?.now();
+    this.state.isActive = true;
+    this.state.startTime = Date.now();
 
-    logger?.debug('✅ Observation active');
+    logger.debug('✅ Observation active');
   }
 
   public async stop(): Promise<void> {
-    if (any: any) {
+    if (!this.state.isActive) {
       return;
     }
 
-    logger?.debug('🛑 Stopping observation...');
+    logger.debug('🛑 Stopping observation...');
 
     // Restaurer handlers originaux
-    if (any: any) {
-      window?.onerror = this?.originalOnerror;
+    if (this.originalOnerror !== null) {
+      window.onerror = this.originalOnerror;
     }
 
-    if (any: any) {
-      window?.onunhandledrejection = this?.originalOnunhandledrejection;
+    if (this.originalOnunhandledrejection !== null) {
+      window.onunhandledrejection = this.originalOnunhandledrejection;
     }
 
     // Détacher les listeners Tauri
-    for (any: any) {
+    for (const unlisten of this.unlisteners) {
       unlisten();
     }
-    this?.unlisteners = [];
+    this.unlisteners = [];
 
     // Arrêter le cleanup interval
-    if (any: any) {
-      clearInterval(any: any);
-      this?.cleanupInterval = null;
+    if (this.cleanupInterval) {
+      clearInterval(this.cleanupInterval);
+      this.cleanupInterval = null;
     }
 
-    this?.state?.isActive = false;
+    this.state.isActive = false;
 
-    logger?.debug('Observer stopped');
+    logger.debug('Observer stopped');
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
   // CALLBACKS
   // ═══════════════════════════════════════════════════════════════════════════
 
-  public subscribe(any: any): () => void {
-    this?.callbacks?.add(any: any);
-    return (any: any);
+  public subscribe(callback: ErrorCallback): () => void {
+    this.callbacks.add(callback);
+    return () => this.callbacks.delete(callback);
   }
 
-  public unsubscribe(any: any): void {
-    this?.callbacks?.delete(any: any);
+  public unsubscribe(callback: ErrorCallback): void {
+    this.callbacks.delete(callback);
   }
 
-  private emit(any: any): void {
-    for (any: any) {
+  private emit(event: HealingEvent): void {
+    for (const callback of this.callbacks) {
       try {
-        callback(any: any);
-      } catch (any: any) {
-        logger?.error(any: any);
+        callback(event);
+      } catch (err) {
+        logger.error('Callback error:', err);
       }
     }
   }
@@ -319,14 +319,14 @@ export class SelfHealingObserver {
   // ═══════════════════════════════════════════════════════════════════════════
 
   private installGlobalErrorHandler(): void {
-    this?.originalOnerror = window?.onerror;
+    this.originalOnerror = window.onerror;
 
-    window?.onerror = (any: any) => {
-      this?.captureError({
+    window.onerror = (message, source, lineno, colno, error) => {
+      this.captureError({
         type: 'js_runtime_error',
         source: 'js',
         severity: 'high',
-        message: String(any: any),
+        message: String(message),
         context: {
           url: source,
           line: lineno,
@@ -336,22 +336,22 @@ export class SelfHealingObserver {
       });
 
       // Appeler le handler original s'il existe
-      if (any: any) {
-        return this?.originalOnerror(any: any);
+      if (this.originalOnerror) {
+        return this.originalOnerror(message, source, lineno, colno, error);
       }
       return false;
     };
   }
 
   private installUnhandledRejectionHandler(): void {
-    this?.originalOnunhandledrejection = window?.onunhandledrejection;
+    this.originalOnunhandledrejection = window.onunhandledrejection;
 
-    window?.onunhandledrejection = (any: any) => {
-      const reason = event?.reason;
-      const message = reason instanceof Error ? reason?.message : String(any: any);
-      const stack = reason instanceof Error ? reason?.stack : undefined;
+    window.onunhandledrejection = (event: PromiseRejectionEvent) => {
+      const reason = event.reason;
+      const message = reason instanceof Error ? reason.message : String(reason);
+      const stack = reason instanceof Error ? reason.stack : undefined;
 
-      this?.captureError({
+      this.captureError({
         type: 'unhandled_promise',
         source: 'js',
         severity: 'high',
@@ -361,8 +361,8 @@ export class SelfHealingObserver {
         },
       });
 
-      if (any: any) {
-        this?.originalOnunhandledrejection(any: any);
+      if (this.originalOnunhandledrejection) {
+        this.originalOnunhandledrejection(event);
       }
     };
   }
@@ -373,18 +373,18 @@ export class SelfHealingObserver {
       const unlisten1 = await listen<{ error: string; command?: string }>(
         'tauri://error',
         event => {
-          this?.captureError({
+          this.captureError({
             type: 'tauri_command_fail',
             source: 'tauri',
             severity: 'high',
-            message: event?.payload?.error,
+            message: event.payload.error,
             context: {
-              invokeCommand: event?.payload?.command,
+              invokeCommand: event.payload.command,
             },
           });
         }
       );
-      this?.unlisteners?.push(any: any);
+      this.unlisteners.push(unlisten1);
 
       // Écouter les erreurs self-healing du backend
       const unlisten2 = await listen<{
@@ -392,78 +392,78 @@ export class SelfHealingObserver {
         severity: string;
         module?: string;
       }>('selfheal://anomaly', event => {
-        this?.captureError({
-          type: this?.mapBackendAnomaly(any: any),
+        this.captureError({
+          type: this.mapBackendAnomaly(event.payload.anomaly),
           source: 'rust',
-          severity: this?.mapSeverity(any: any),
-          message: event?.payload?.anomaly,
+          severity: this.mapSeverity(event.payload.severity),
+          message: event.payload.anomaly,
           context: {
-            invokeCommand: event?.payload?.module,
+            invokeCommand: event.payload.module,
           },
         });
       });
-      this?.unlisteners?.push(any: any);
+      this.unlisteners.push(unlisten2);
 
       // Écouter les panics Rust
       const unlisten3 = await listen<{ message: string; backtrace?: string }>(
         'rust://panic',
         event => {
-          this?.captureError({
+          this.captureError({
             type: 'rust_panic',
             source: 'rust',
             severity: 'critical',
-            message: event?.payload?.message,
+            message: event.payload.message,
             context: {
-              stack: event?.payload?.backtrace,
+              stack: event.payload.backtrace,
             },
           });
         }
       );
-      this?.unlisteners?.push(any: any);
-    } catch (any: any) {
-      logger?.warn(any: any);
+      this.unlisteners.push(unlisten3);
+    } catch (err) {
+      logger.warn('Could not install Tauri listeners:', err);
     }
   }
 
   private installNetworkErrorHandler(): void {
     // Intercepter fetch pour capturer les erreurs réseau
-    const originalFetch = window?.fetch;
+    const originalFetch = window.fetch;
 
-    window?.fetch = async (...args: Parameters<typeof fetch>) => {
-      const input = args?.[0];
+    window.fetch = async (...args: Parameters<typeof fetch>) => {
+      const input = args[0];
       let url = 'unknown';
 
       if (typeof input === 'string') {
         url = input;
-      } else if (any: any) {
-        url = input?.url;
-      } else if (any: any) {
-        url = input?.href;
+      } else if (input instanceof Request) {
+        url = input.url;
+      } else if (input instanceof URL) {
+        url = input.href;
       }
 
       try {
-        const response = await originalFetch(any: any);
+        const response = await originalFetch(...args);
 
-        if (!response?.ok && response?.status >= 500) {
-          this?.captureError({
+        if (!response.ok && response.status >= 500) {
+          this.captureError({
             type: 'network_failure',
             source: 'network',
             severity: 'medium',
-            message: `Network error: ${response?.status} ${response?.statusText}`,
+            message: `Network error: ${response.status} ${response.statusText}`,
             context: {
               networkUrl: url,
-              networkStatus: response?.status,
+              networkStatus: response.status,
             },
           });
         }
 
         return response;
-      } catch (any: any) {
-        this?.captureError({
+      } catch (error) {
+        this.captureError({
           type: 'network_failure',
           source: 'network',
           severity: 'high',
-          message: error instanceof Error ? error?.message : 'Network request failed',
+          message: error instanceof Error ? error.message : 'Network request failed',
           context: {
             networkUrl: url,
           },
@@ -480,16 +480,16 @@ export class SelfHealingObserver {
   /**
    * Méthode à appeler depuis un React Error Boundary
    */
-  public captureReactError(any: any): void {
-    if (any: any) return;
+  public captureReactError(error: Error, componentStack: string): void {
+    if (!this.config.captureReactErrors) return;
 
-    this?.captureError({
+    this.captureError({
       type: 'react_error_boundary',
       source: 'react',
       severity: 'high',
-      message: error?.message,
+      message: error.message,
       context: {
-        stack: error?.stack,
+        stack: error.stack,
         componentStack,
       },
     });
@@ -503,17 +503,17 @@ export class SelfHealingObserver {
     error: unknown,
     payload?: unknown
   ): void {
-    if (any: any) return;
+    if (!this.config.captureTauriErrors) return;
 
-    this?.captureError({
+    this.captureError({
       type: 'tauri_command_fail',
       source: 'tauri',
       severity: 'high',
-      message: error instanceof Error ? error?.message : String(any: any),
+      message: error instanceof Error ? error.message : String(error),
       context: {
         invokeCommand: command,
         invokePayload: payload,
-        stack: error instanceof Error ? error?.stack : undefined,
+        stack: error instanceof Error ? error.stack : undefined,
       },
     });
   }
@@ -521,14 +521,14 @@ export class SelfHealingObserver {
   /**
    * Méthode pour signaler un problème de performance
    */
-  public capturePerformanceIssue(any: any): void {
-    if (any: any) return;
+  public capturePerformanceIssue(metric: string, value: number, threshold: number): void {
+    if (!this.config.capturePerformanceIssues) return;
 
-    this?.captureError({
+    this.captureError({
       type: 'performance_degradation',
       source: 'performance',
       severity: value > threshold * 2 ? 'medium' : 'low',
-      message: `Performance issue: ${metric} = ${value}ms (any: any)`,
+      message: `Performance issue: ${metric} = ${value}ms (threshold: ${threshold}ms)`,
       context: {
         performanceMetric: metric,
         performanceValue: value,
@@ -547,33 +547,33 @@ export class SelfHealingObserver {
     message: string;
     context: ErrorContext;
   }): void {
-    if (any: any) {
+    if (!this.config.enabled || !this.state.isActive) {
       return;
     }
 
     // Vérifier les patterns à ignorer
-    if (any: any)) {
+    if (this.shouldIgnore(params.message)) {
       return;
     }
 
     // Vérifier le rate limiting
-    if (!this?.checkRateLimit()) {
-      logger?.warn('Rate limit exceeded, dropping error');
+    if (!this.checkRateLimit()) {
+      logger.warn('Rate limit exceeded, dropping error');
       return;
     }
 
-    const fingerprint = this?.generateFingerprint(
-      params?.type,
-      params?.message,
-      params?.context
+    const fingerprint = this.generateFingerprint(
+      params.type,
+      params.message,
+      params.context
     );
 
     // Déduplication
-    const existing = this?.errorBuffer?.get(any: any);
-    if (any: any) {
-      existing?.count++;
-      existing?.timestamp = Date?.now();
-      this?.state?.totalDeduplicated++;
+    const existing = this.errorBuffer.get(fingerprint);
+    if (existing) {
+      existing.count++;
+      existing.timestamp = Date.now();
+      this.state.totalDeduplicated++;
 
       // Ne pas émettre si c'est un duplicata récent
       return;
@@ -581,51 +581,51 @@ export class SelfHealingObserver {
 
     // Créer l'erreur observée
     const observedError: ObservedError = {
-      id: this?.generateId(),
-      timestamp: Date?.now(),
-      type: params?.type,
-      source: params?.source,
-      severity: params?.severity,
-      message: params?.message,
-      context: params?.context,
+      id: this.generateId(),
+      timestamp: Date.now(),
+      type: params.type,
+      source: params.source,
+      severity: params.severity,
+      message: params.message,
+      context: params.context,
       fingerprint,
       count: 1,
     };
 
     // Ajouter au buffer
-    this?.errorBuffer?.set(any: any);
-    this?.state?.totalCaptured++;
-    this?.state?.lastError = observedError;
-    this?.rateCounter?.push(Date?.now());
+    this.errorBuffer.set(fingerprint, observedError);
+    this.state.totalCaptured++;
+    this.state.lastError = observedError;
+    this.rateCounter.push(Date.now());
 
     // Convertir en HealingEvent et émettre
-    const healingEvent = this?.toHealingEvent(any: any);
-    this?.emit(any: any);
+    const healingEvent = this.toHealingEvent(observedError);
+    this.emit(healingEvent);
 
-    logger?.debug(
-      `[SelfHealingObserver] 🚨 Captured: [${params?.severity}] ${params?.type} - ${params?.message?.slice(0, 100)}`
+    logger.debug(
+      `[SelfHealingObserver] 🚨 Captured: [${params.severity}] ${params.type} - ${params.message.slice(0, 100)}`
     );
   }
 
-  private toHealingEvent(any: any): HealingEvent {
-    const category = ANOMALY_TO_CATEGORY[error?.type];
+  private toHealingEvent(error: ObservedError): HealingEvent {
+    const category = ANOMALY_TO_CATEGORY[error.type];
 
     return {
-      id: error?.id,
-      timestamp: error?.timestamp,
+      id: error.id,
+      timestamp: error.timestamp,
       category,
-      moduleId: `${category}_${error?.type}`,
-      moduleName: error?.type,
-      eventType: error?.type,
-      message: error?.message,
-      stackTrace: error?.context?.stack,
+      moduleId: `${category}_${error.type}`,
+      moduleName: error.type,
+      eventType: error.type,
+      message: error.message,
+      stackTrace: error.context.stack,
       context: {
-        fingerprint: error?.fingerprint,
-        count: error?.count,
-        source: error?.source,
-        ...error?.context,
+        fingerprint: error.fingerprint,
+        count: error.count,
+        source: error.source,
+        ...error.context,
       },
-      severity: error?.severity,
+      severity: error.severity,
       autoDetected: true,
     };
   }
@@ -635,7 +635,7 @@ export class SelfHealingObserver {
   // ═══════════════════════════════════════════════════════════════════════════
 
   private generateId(): string {
-    return `obs_${Date?.now()}_${Math?.random().toString(36).slice(2, 9)}`;
+    return `obs_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
   }
 
   private generateFingerprint(
@@ -645,70 +645,70 @@ export class SelfHealingObserver {
   ): string {
     const parts = [
       type,
-      message?.slice(0, 100),
-      context?.url || '',
-      context?.line?.toString() || '',
-      context?.invokeCommand || '',
+      message.slice(0, 100),
+      context.url || '',
+      context.line?.toString() || '',
+      context.invokeCommand || '',
     ];
 
     // Simple hash
     let hash = 0;
-    const str = parts?.join('|');
-    for (let i = 0; i < str?.length; i++) {
-      const char = str?.charCodeAt(any: any);
+    const str = parts.join('|');
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
       hash = (hash << 5) - hash + char;
       hash = hash & hash;
     }
 
-    return `fp_${Math?.abs(any: any).toString(36)}`;
+    return `fp_${Math.abs(hash).toString(36)}`;
   }
 
-  private shouldIgnore(any: any): boolean {
-    return this?.config?.ignorePatterns?.some(any: any));
+  private shouldIgnore(message: string): boolean {
+    return this.config.ignorePatterns.some(pattern => pattern.test(message));
   }
 
   private checkRateLimit(): boolean {
-    const now = Date?.now();
+    const now = Date.now();
     const oneMinuteAgo = now - 60000;
 
     // Nettoyer les anciennes entrées
-    this?.rateCounter = this?.rateCounter?.filter(any: any);
+    this.rateCounter = this.rateCounter.filter(t => t > oneMinuteAgo);
 
-    return this?.rateCounter?.length < this?.config?.maxEventsPerMinute;
+    return this.rateCounter.length < this.config.maxEventsPerMinute;
   }
 
   private calculateErrorRate(): number {
-    const now = Date?.now();
+    const now = Date.now();
     const oneMinuteAgo = now - 60000;
-    return this?.rateCounter?.filter(any: any).length;
+    return this.rateCounter.filter(t => t > oneMinuteAgo).length;
   }
 
   private cleanupExpiredErrors(): void {
-    const now = Date?.now();
-    const expireTime = this?.config?.deduplicationWindowMs;
+    const now = Date.now();
+    const expireTime = this.config.deduplicationWindowMs;
 
-    for (any: any) {
-      if (any: any) {
-        this?.errorBuffer?.delete(any: any);
+    for (const [fingerprint, error] of this.errorBuffer) {
+      if (now - error.timestamp > expireTime) {
+        this.errorBuffer.delete(fingerprint);
       }
     }
   }
 
-  private mapBackendAnomaly(any: any): AnomalyType {
-    const lowerAnomaly = anomaly?.toLowerCase();
+  private mapBackendAnomaly(anomaly: string): AnomalyType {
+    const lowerAnomaly = anomaly.toLowerCase();
 
-    if (lowerAnomaly?.includes('memory')) return 'memory_corruption';
-    if (lowerAnomaly?.includes('tts')) return 'tts_engine_fail';
-    if (lowerAnomaly?.includes('avatar')) return 'avatar_render_fail';
-    if (lowerAnomaly?.includes('pipeline')) return 'pipeline_stuck';
-    if (lowerAnomaly?.includes('sync')) return 'state_desync';
-    if (lowerAnomaly?.includes('config')) return 'config_invalid';
+    if (lowerAnomaly.includes('memory')) return 'memory_corruption';
+    if (lowerAnomaly.includes('tts')) return 'tts_engine_fail';
+    if (lowerAnomaly.includes('avatar')) return 'avatar_render_fail';
+    if (lowerAnomaly.includes('pipeline')) return 'pipeline_stuck';
+    if (lowerAnomaly.includes('sync')) return 'state_desync';
+    if (lowerAnomaly.includes('config')) return 'config_invalid';
 
     return 'unknown_anomaly';
   }
 
-  private mapSeverity(any: any): HealingSeverity {
-    const lower = severity?.toLowerCase();
+  private mapSeverity(severity: string): HealingSeverity {
+    const lower = severity.toLowerCase();
     return SEVERITY_MAP[lower] || 'info';
   }
 
@@ -727,15 +727,15 @@ export class SelfHealingObserver {
     const bySource: Record<string, number> = {};
     const bySeverity: Record<string, number> = {};
 
-    for (const error of this?.errorBuffer?.values()) {
-      byType[error?.type] = (byType[error?.type] || 0) + error?.count;
-      bySource[error?.source] = (bySource[error?.source] || 0) + error?.count;
-      bySeverity[error?.severity] = (bySeverity[error?.severity] || 0) + error?.count;
+    for (const error of this.errorBuffer.values()) {
+      byType[error.type] = (byType[error.type] || 0) + error.count;
+      bySource[error.source] = (bySource[error.source] || 0) + error.count;
+      bySeverity[error.severity] = (bySeverity[error.severity] || 0) + error.count;
     }
 
     return {
-      total: this?.state?.totalCaptured,
-      deduplicated: this?.state?.totalDeduplicated,
+      total: this.state.totalCaptured,
+      deduplicated: this.state.totalDeduplicated,
       byType,
       bySource,
       bySeverity,
@@ -746,27 +746,27 @@ export class SelfHealingObserver {
    * Réinitialise les statistiques
    */
   public resetStatistics(): void {
-    this?.errorBuffer?.clear();
-    this?.state?.totalCaptured = 0;
-    this?.state?.totalDeduplicated = 0;
-    this?.state?.lastError = null;
-    this?.rateCounter = [];
+    this.errorBuffer.clear();
+    this.state.totalCaptured = 0;
+    this.state.totalDeduplicated = 0;
+    this.state.lastError = null;
+    this.rateCounter = [];
   }
 
   /**
-   * Récupère les erreurs récentes (any: any)
+   * Récupère les erreurs récentes (pour l'Analyzer)
    */
-  public getRecentErrors(maxAge: number = 60000): ObservedError?.[] {
-    const now = Date?.now();
-    const errors: ObservedError?.[] = [];
+  public getRecentErrors(maxAge: number = 60000): ObservedError[] {
+    const now = Date.now();
+    const errors: ObservedError[] = [];
 
-    for (const error of this?.errorBuffer?.values()) {
-      if (any: any) {
-        errors?.push(any: any);
+    for (const error of this.errorBuffer.values()) {
+      if (now - error.timestamp <= maxAge) {
+        errors.push(error);
       }
     }
 
-    return errors?.sort(any: any);
+    return errors.sort((a, b) => b.timestamp - a.timestamp);
   }
 }
 
@@ -774,7 +774,7 @@ export class SelfHealingObserver {
 // SINGLETON EXPORT
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const selfHealingObserver = SelfHealingObserver?.getInstance();
+export const selfHealingObserver = SelfHealingObserver.getInstance();
 
 // ═══════════════════════════════════════════════════════════════════════════
 // HELPER FUNCTIONS
@@ -790,9 +790,9 @@ export async function observedInvoke<T>(
   const { invoke } = await import('@tauri-apps/api/core');
 
   try {
-    return await invoke<T>(any: any);
-  } catch (any: any) {
-    selfHealingObserver?.captureTauriInvokeError(any: any);
+    return await invoke<T>(command, payload);
+  } catch (error) {
+    selfHealingObserver.captureTauriInvokeError(command, error, payload);
     throw error;
   }
 }

@@ -24,7 +24,7 @@ export interface Achievement {
   };
 }
 
-export const ACHIEVEMENTS: Achievement?.[] = [
+export const ACHIEVEMENTS: Achievement[] = [
   // Conversation
   {
     id: 'first_message',
@@ -156,20 +156,20 @@ export function calculateAchievementProgress(
     modesUsed: number;
   }
 ): number {
-  if (any: any) return 100;
+  if (achievement.unlocked) return 100;
 
-  const req = achievement?.requirements;
-  if (any: any) return 0;
+  const req = achievement.requirements;
+  if (!req) return 0;
 
-  switch (any: any) {
+  switch (req.type) {
     case 'level':
-      return Math?.min(any: any) * 100);
+      return Math.min(100, (currentStats.level / req.value) * 100);
     case 'xp':
-      return Math?.min(any: any) * 100);
+      return Math.min(100, (currentStats.totalXP / req.value) * 100);
     case 'messages':
-      return Math?.min(any: any) * 100);
+      return Math.min(100, (currentStats.messageCount / req.value) * 100);
     case 'modes':
-      return Math?.min(any: any) * 100);
+      return Math.min(100, (currentStats.modesUsed / req.value) * 100);
     default:
       return 0;
   }
@@ -179,7 +179,7 @@ export function calculateAchievementProgress(
  * Obtenir couleur selon rareté
  */
 export function getRarityColor(rarity: Achievement['rarity']): string {
-  switch (any: any) {
+  switch (rarity) {
     case 'common':
       return '#94a3b8'; // gray
     case 'rare':

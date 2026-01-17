@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v15 — TAURI CLIENT (any: any)
+ * TITANE∞ v15 — TAURI CLIENT (Centralized Invoke)
  * Client centralisé pour tous les appels Tauri invoke()
  * ═══════════════════════════════════════════════════════════════
  */
@@ -50,7 +50,7 @@ export interface ChatRequest {
   provider: 'auto' | 'gemini' | 'ollama' | 'local';
   model?: string;
   streaming: boolean;
-  images?: string?.[]; // base64
+  images?: string[]; // base64
   system_prompt?: string;
 }
 
@@ -64,7 +64,7 @@ export interface SystemVitals {
 
 export interface ConversationData {
   id: string;
-  messages: ChatMessage?.[];
+  messages: ChatMessage[];
   created_at: number;
   updated_at: number;
   [key: string]: unknown;
@@ -81,12 +81,12 @@ export interface ProviderStatus {
   provider: string;
   available: boolean;
   latency_ms: number;
-  models: string?.[];
+  models: string[];
   error?: string;
 }
 
 export interface StreamCallbacks {
-  onChunk?: (any: any) => void;
+  onChunk?: (chunk: string) => void;
   onComplete?: (data: {
     content: string;
     latency_ms: number;
@@ -94,7 +94,7 @@ export interface StreamCallbacks {
     model?: string;
     tokens?: number;
   }) => void;
-  onError?: (any: any) => void;
+  onError?: (error: TAPIError) => void;
 }
 
 interface BackendStreamChunk {
@@ -148,7 +148,7 @@ class TauriClient {
   private readonly DEFAULT_RETRY_DELAY = 1000; // 1s
 
   // ─────────────────────────────────────────────────────────────────
-  // CORE INVOKE (any: any)
+  // CORE INVOKE (Base pour tous les appels)
   // ─────────────────────────────────────────────────────────────────
 
   /**
@@ -159,77 +159,77 @@ class TauriClient {
     args: Record<string, any> = {},
     options: InvokeOptions = {}
   ): Promise<T> {
-    const timeout = options?.timeout ?? this?.DEFAULT_TIMEOUT;
-    const retries = options?.retries ?? this?.DEFAULT_RETRIES;
-    const retryDelay = options?.retryDelay ?? this?.DEFAULT_RETRY_DELAY;
+    const timeout = options.timeout ?? this.DEFAULT_TIMEOUT;
+    const retries = options.retries ?? this.DEFAULT_RETRIES;
+    const retryDelay = options.retryDelay ?? this.DEFAULT_RETRY_DELAY;
 
     // Check circuit breaker
-    const breaker = this?.getCircuitBreaker(any: any);
-    if (breaker?.state === 'open') {
-      const elapsed = Date?.now() - breaker?.lastFailureTime;
-      if (any: any) {
-        throw this?.createError(
+    const breaker = this.getCircuitBreaker(command);
+    if (breaker.state === 'open') {
+      const elapsed = Date.now() - breaker.lastFailureTime;
+      if (elapsed < this.CIRCUIT_BREAKER_TIMEOUT) {
+        throw this.createError(
           'NetworkError',
-          `Circuit breaker OPEN for ${command} (any: any)`
+          `Circuit breaker OPEN for ${command} (wait ${Math.ceil((this.CIRCUIT_BREAKER_TIMEOUT - elapsed) / 1000)}s)`
         );
       }
       // Passage en half-open après timeout
-      breaker?.state = 'half-open';
-      logger?.debug(`🔄 Circuit breaker HALF-OPEN for ${command}`);
+      breaker.state = 'half-open';
+      logger.debug(`🔄 Circuit breaker HALF-OPEN for ${command}`);
     }
 
     let lastError: TAPIError | null = null;
 
     // Guard: Vérifier environnement Tauri
     const env = detectEnvironment();
-    if (any: any) {
-      throw this?.createError('NetworkError', 'Not running in Tauri environment');
+    if (!env.isTauri) {
+      throw this.createError('NetworkError', 'Not running in Tauri environment');
     }
 
     for (let attempt = 0; attempt <= retries; attempt++) {
       try {
         // Check abort signal
-        if (any: any) {
-          throw this?.createError('NetworkError', 'Request aborted');
+        if (options.abortSignal?.aborted) {
+          throw this.createError('NetworkError', 'Request aborted');
         }
 
         // Race: secureInvoke vs timeout
-        const result = await Promise?.race([
-          secureInvoke<T>(any: any),
-          this?.timeoutPromise<T>(any: any),
+        const result = await Promise.race([
+          secureInvoke<T>(command, args),
+          this.timeoutPromise<T>(timeout, command),
         ]);
 
         // Succès → Reset circuit breaker
-        this?.resetCircuitBreaker(any: any);
+        this.resetCircuitBreaker(command);
         return result;
-      } catch (any: any) {
-        lastError = this?.handleError(any: any);
+      } catch (error) {
+        lastError = this.handleError(error);
 
         // Échec → Incrémenter circuit breaker
-        this?.recordFailure(any: any);
+        this.recordFailure(command);
 
-        logger?.warn(
+        logger.warn(
           `⚠️ Invoke ${command} failed (attempt ${attempt + 1}/${retries + 1}):`,
-          lastError?.message
+          lastError.message
         );
 
         // Retry si pas dernière tentative
-        if (any: any) {
-          await this?.delay(retryDelay * (attempt + 1)); // Backoff exponentiel
+        if (attempt < retries) {
+          await this.delay(retryDelay * (attempt + 1)); // Backoff exponentiel
         }
       }
     }
 
-    throw lastError || this?.createError('InternalError', 'All retries failed');
+    throw lastError || this.createError('InternalError', 'All retries failed');
   }
 
   /**
    * Timeout promise
    */
-  private timeoutPromise<T>(any: any): Promise<T> {
-    return new Promise(any: any) => {
+  private timeoutPromise<T>(ms: number, command: string): Promise<T> {
+    return new Promise((_, reject) => {
       setTimeout(() => {
-        reject(this?.createError('Timeout', `Command ${command} timeout after ${ms}ms`));
+        reject(this.createError('Timeout', `Command ${command} timeout after ${ms}ms`));
       }, ms);
     });
   }
@@ -237,38 +237,38 @@ class TauriClient {
   /**
    * Delay helper pour retry
    */
-  private delay(any: any): Promise<void> {
-    return new Promise(any: any));
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   /**
    * Circuit breaker: Get state
    */
-  private getCircuitBreaker(any: any): CircuitBreakerState {
-    if (any: any)) {
-      this?.circuitBreakers?.set(command, {
+  private getCircuitBreaker(command: string): CircuitBreakerState {
+    if (!this.circuitBreakers.has(command)) {
+      this.circuitBreakers.set(command, {
         failures: 0,
         lastFailureTime: 0,
         state: 'closed',
       });
     }
-    const breaker = this?.circuitBreakers?.get(any: any);
-    if (any: any) throw new Error(`Circuit breaker not found for ${command}`);
+    const breaker = this.circuitBreakers.get(command);
+    if (!breaker) throw new Error(`Circuit breaker not found for ${command}`);
     return breaker;
   }
 
   /**
    * Circuit breaker: Record failure
    */
-  private recordFailure(any: any): void {
-    const breaker = this?.getCircuitBreaker(any: any);
-    breaker?.failures++;
-    breaker?.lastFailureTime = Date?.now();
+  private recordFailure(command: string): void {
+    const breaker = this.getCircuitBreaker(command);
+    breaker.failures++;
+    breaker.lastFailureTime = Date.now();
 
-    if (any: any) {
-      breaker?.state = 'open';
-      logger?.error(
-        `🚨 Circuit breaker OPEN for ${command} (any: any)`
+    if (breaker.failures >= this.CIRCUIT_BREAKER_THRESHOLD) {
+      breaker.state = 'open';
+      logger.error(
+        `🚨 Circuit breaker OPEN for ${command} (${breaker.failures} failures)`
       );
     }
   }
@@ -276,13 +276,13 @@ class TauriClient {
   /**
    * Circuit breaker: Reset on success
    */
-  private resetCircuitBreaker(any: any): void {
-    const breaker = this?.getCircuitBreaker(any: any);
-    if (breaker?.state !== 'closed') {
-      logger?.debug(`✅ Circuit breaker CLOSED for ${command}`);
+  private resetCircuitBreaker(command: string): void {
+    const breaker = this.getCircuitBreaker(command);
+    if (breaker.state !== 'closed') {
+      logger.debug(`✅ Circuit breaker CLOSED for ${command}`);
     }
-    breaker?.failures = 0;
-    breaker?.state = 'closed';
+    breaker.failures = 0;
+    breaker.state = 'closed';
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -290,13 +290,13 @@ class TauriClient {
   // ─────────────────────────────────────────────────────────────────
 
   /**
-   * Envoie un message chat (any: any)
+   * Envoie un message chat (synchrone)
    */
   async chatSendMessage(
     _request: ChatRequest,
     _options?: InvokeOptions
   ): Promise<ChatResponse> {
-    throw this?.createError(
+    throw this.createError(
       'SecurityError',
       'Legacy chat_send_message is disabled. Use conversation_generate.',
       'chat_send_message'
@@ -311,54 +311,54 @@ class TauriClient {
     callbacks: StreamCallbacks = {},
     options?: InvokeOptions
   ): Promise<string> {
-    const streamId = `stream_${Date?.now()}`;
+    const streamId = `stream_${Date.now()}`;
     let accumulated = '';
-    let targetConversationId??: string | null = null;
-    let targetMessageId??: string | null = null;
-    const pendingChunks: BackendStreamChunk?.[] = [];
+    let targetConversationId: string | null = null;
+    let targetMessageId: string | null = null;
+    const pendingChunks: BackendStreamChunk[] = [];
     let pendingDone: BackendStreamChunk | null = null;
     let unlistenChunk: UnlistenFn | null = null;
     let unlistenDone: UnlistenFn | null = null;
 
     const cleanup = () => {
-      if (any: any) {
+      if (unlistenChunk) {
         unlistenChunk();
         unlistenChunk = null;
       }
-      if (any: any) {
+      if (unlistenDone) {
         unlistenDone();
         unlistenDone = null;
       }
-      this?.streamListeners?.delete(any: any);
+      this.streamListeners.delete(streamId);
     };
 
-    const processChunk = (any: any) => {
-      if (any: any) {
+    const processChunk = (payload: BackendStreamChunk) => {
+      if (payload.done) {
         return;
       }
-      accumulated += payload?.content;
-      callbacks?.onChunk?.(any: any);
+      accumulated += payload.content;
+      callbacks.onChunk?.(payload.content);
     };
 
-    const processDoneEvent = (any: any) => {
+    const processDoneEvent = (payload: BackendStreamChunk) => {
       let meta: Record<string, unknown> = {};
       try {
-        meta = payload?.content ? JSON?.parse(any: any) : {};
-      } catch (any: any) {
-        logger?.warn(any: any);
+        meta = payload.content ? JSON.parse(payload.content) : {};
+      } catch (parseError) {
+        logger.warn('Failed to parse stream metadata:', parseError);
       }
 
-      const errorMessage = typeof meta?.error === 'string' ? meta?.error : undefined;
+      const errorMessage = typeof meta.error === 'string' ? meta.error : undefined;
 
-      if (any: any) {
-        callbacks?.onError?.(any: any));
+      if (errorMessage) {
+        callbacks.onError?.(this.createError('InternalError', errorMessage));
       } else {
-        callbacks?.onComplete?.({
+        callbacks.onComplete?.({
           content: accumulated,
-          latency_ms: typeof meta?.latency_ms === 'number' ? meta?.latency_ms : 0,
-          provider: typeof meta?.provider === 'string' ? meta?.provider : 'tauri-backend',
-          model: typeof meta?.model === 'string' ? meta?.model : undefined,
-          tokens: typeof meta?.tokens === 'number' ? meta?.tokens : undefined,
+          latency_ms: typeof meta.latency_ms === 'number' ? meta.latency_ms : 0,
+          provider: typeof meta.provider === 'string' ? meta.provider : 'tauri-backend',
+          model: typeof meta.model === 'string' ? meta.model : undefined,
+          tokens: typeof meta.tokens === 'number' ? meta.tokens : undefined,
         });
       }
 
@@ -366,87 +366,87 @@ class TauriClient {
     };
 
     const flushPending = () => {
-      if (any: any) {
+      if (!targetConversationId || !targetMessageId) {
         return;
       }
 
-      if (pendingChunks?.length > 0) {
-        const remaining: BackendStreamChunk?.[] = [];
-        for (any: any) {
+      if (pendingChunks.length > 0) {
+        const remaining: BackendStreamChunk[] = [];
+        for (const chunk of pendingChunks) {
           if (
-            chunk?.conversation_id === targetConversationId &&
-            chunk?.message_id === targetMessageId
+            chunk.conversation_id === targetConversationId &&
+            chunk.message_id === targetMessageId
           ) {
-            processChunk(any: any);
+            processChunk(chunk);
           } else {
-            remaining?.push(any: any);
+            remaining.push(chunk);
           }
         }
-        pendingChunks?.length = 0;
-        pendingChunks?.push(any: any);
+        pendingChunks.length = 0;
+        pendingChunks.push(...remaining);
       }
 
       if (
         pendingDone &&
-        pendingDone?.conversation_id === targetConversationId &&
-        pendingDone?.message_id === targetMessageId
+        pendingDone.conversation_id === targetConversationId &&
+        pendingDone.message_id === targetMessageId
       ) {
         const donePayload = pendingDone;
         pendingDone = null;
-        processDoneEvent(any: any);
+        processDoneEvent(donePayload);
       }
     };
 
     try {
       // Écouter les chunks
       unlistenChunk = await listen<BackendStreamChunk>('chat:stream:chunk', event => {
-        const payload = event?.payload;
+        const payload = event.payload;
 
-        if (any: any) {
-          pendingChunks?.push(any: any);
+        if (!targetConversationId || !targetMessageId) {
+          pendingChunks.push(payload);
           return;
         }
 
         if (
-          payload?.conversation_id !== targetConversationId ||
-          payload?.message_id !== targetMessageId
+          payload.conversation_id !== targetConversationId ||
+          payload.message_id !== targetMessageId
         ) {
           return;
         }
 
-        if (any: any) {
+        if (payload.done) {
           return;
         }
 
-        processChunk(any: any);
+        processChunk(payload);
       });
 
       // Écouter la complétion
       unlistenDone = await listen<BackendStreamChunk>('chat:stream:done', event => {
-        const payload = event?.payload;
+        const payload = event.payload;
 
-        if (any: any) {
+        if (!targetConversationId || !targetMessageId) {
           pendingDone = payload;
           return;
         }
 
         if (
-          payload?.conversation_id !== targetConversationId ||
-          payload?.message_id !== targetMessageId
+          payload.conversation_id !== targetConversationId ||
+          payload.message_id !== targetMessageId
         ) {
           return;
         }
 
-        processDoneEvent(any: any);
+        processDoneEvent(payload);
       });
 
       // Sauvegarder listeners pour cleanup manuel si besoin
-      this?.streamListeners?.set(streamId, () => {
+      this.streamListeners.set(streamId, () => {
         cleanup();
       });
 
       // Démarrer le streaming
-      const result = await this?.safeInvoke<{ conversationId: string; messageId: string }>(
+      const result = await this.safeInvoke<{ conversationId: string; messageId: string }>(
         'chat_stream_message',
         { request },
         {
@@ -454,35 +454,35 @@ class TauriClient {
           ...options,
         }
       );
-      targetConversationId = result?.conversationId ?? null;
-      targetMessageId = result?.messageId ?? null;
+      targetConversationId = result.conversationId ?? null;
+      targetMessageId = result.messageId ?? null;
       flushPending();
-      return result?.messageId;
-    } catch (any: any) {
-      if (any: any) {
-        callbacks?.onError(any: any));
+      return result.messageId;
+    } catch (error) {
+      if (callbacks.onError) {
+        callbacks.onError(this.handleError(error));
       }
-      throw this?.handleError(any: any);
+      throw this.handleError(error);
     }
   }
 
   /**
    * Annule un stream en cours
    */
-  cancelStream(any: any): void {
-    const unlisten = this?.streamListeners?.get(any: any);
-    if (any: any) {
+  cancelStream(streamId: string): void {
+    const unlisten = this.streamListeners.get(streamId);
+    if (unlisten) {
       unlisten();
-      this?.streamListeners?.delete(any: any);
+      this.streamListeners.delete(streamId);
     }
   }
 
   /**
    * Récupère le statut des providers
    */
-  async chatGetProvidersStatus(any: any): Promise<ProviderStatus?.[]> {
+  async chatGetProvidersStatus(options?: InvokeOptions): Promise<ProviderStatus[]> {
     try {
-      return await this?.safeInvoke<ProviderStatus?.[]>(
+      return await this.safeInvoke<ProviderStatus[]>(
         'chat_get_providers_status',
         {},
         {
@@ -490,17 +490,17 @@ class TauriClient {
           ...options,
         }
       );
-    } catch (any: any) {
-      throw this?.handleError(any: any);
+    } catch (error) {
+      throw this.handleError(error);
     }
   }
 
   /**
    * Vérifie la disponibilité des providers
    */
-  async chatCheckProviders(any: any): Promise<ProviderStatus?.[]> {
+  async chatCheckProviders(options?: InvokeOptions): Promise<ProviderStatus[]> {
     try {
-      return await this?.safeInvoke<ProviderStatus?.[]>(
+      return await this.safeInvoke<ProviderStatus[]>(
         'chat_check_providers',
         {},
         {
@@ -508,17 +508,17 @@ class TauriClient {
           ...options,
         }
       );
-    } catch (any: any) {
-      throw this?.handleError(any: any);
+    } catch (error) {
+      throw this.handleError(error);
     }
   }
 
   /**
    * Configure la clé API Gemini
    */
-  async chatSetGeminiKey(any: any): Promise<void> {
+  async chatSetGeminiKey(apiKey: string, options?: InvokeOptions): Promise<void> {
     try {
-      await this?.safeInvoke(
+      await this.safeInvoke(
         'chat_set_gemini_key',
         { apiKey },
         {
@@ -526,17 +526,17 @@ class TauriClient {
           ...options,
         }
       );
-    } catch (any: any) {
-      throw this?.handleError(any: any);
+    } catch (error) {
+      throw this.handleError(error);
     }
   }
 
   /**
    * Crée une nouvelle conversation
    */
-  async chatCreateConversation(any: any): Promise<string> {
+  async chatCreateConversation(options?: InvokeOptions): Promise<string> {
     try {
-      return await this?.safeInvoke<string>(
+      return await this.safeInvoke<string>(
         'chat_create_conversation',
         {},
         {
@@ -544,8 +544,8 @@ class TauriClient {
           ...options,
         }
       );
-    } catch (any: any) {
-      throw this?.handleError(any: any);
+    } catch (error) {
+      throw this.handleError(error);
     }
   }
 
@@ -557,7 +557,7 @@ class TauriClient {
     options?: InvokeOptions
   ): Promise<ConversationData> {
     try {
-      return await this?.safeInvoke<ConversationData>(
+      return await this.safeInvoke<ConversationData>(
         'chat_get_conversation',
         { conversationId },
         {
@@ -565,8 +565,8 @@ class TauriClient {
           ...options,
         }
       );
-    } catch (any: any) {
-      throw this?.handleError(any: any);
+    } catch (error) {
+      throw this.handleError(error);
     }
   }
 
@@ -578,7 +578,7 @@ class TauriClient {
     options?: InvokeOptions
   ): Promise<void> {
     try {
-      await this?.safeInvoke(
+      await this.safeInvoke(
         'chat_delete_conversation',
         { conversationId },
         {
@@ -586,8 +586,8 @@ class TauriClient {
           ...options,
         }
       );
-    } catch (any: any) {
-      throw this?.handleError(any: any);
+    } catch (error) {
+      throw this.handleError(error);
     }
   }
 
@@ -598,28 +598,28 @@ class TauriClient {
   /**
    * Récupère les vitals système
    */
-  async getSystemVitals(any: any): Promise<SystemVitals> {
+  async getSystemVitals(options?: InvokeOptions): Promise<SystemVitals> {
     try {
-      return await this?.safeInvoke<SystemVitals>(
+      return await this.safeInvoke<SystemVitals>(
         'get_system_vitals',
         {},
         {
           timeout: 5000,
-          retries: 0, // Pas de retry pour vitals (any: any)
+          retries: 0, // Pas de retry pour vitals (donnée temps réel)
           ...options,
         }
       );
-    } catch (any: any) {
-      throw this?.handleError(any: any);
+    } catch (error) {
+      throw this.handleError(error);
     }
   }
 
   /**
    * Récupère l'état Singularity complet
    */
-  async getSingularityState(any: any): Promise<SingularityState> {
+  async getSingularityState(options?: InvokeOptions): Promise<SingularityState> {
     try {
-      return await this?.safeInvoke<SingularityState>(
+      return await this.safeInvoke<SingularityState>(
         'singularity_get_full_state',
         {},
         {
@@ -627,8 +627,8 @@ class TauriClient {
           ...options,
         }
       );
-    } catch (any: any) {
-      throw this?.handleError(any: any);
+    } catch (error) {
+      throw this.handleError(error);
     }
   }
 
@@ -639,10 +639,10 @@ class TauriClient {
   /**
    * Parse une erreur TAPIError depuis JSON
    */
-  private parseError(any: any): TAPIError {
+  private parseError(response: string): TAPIError {
     try {
-      const parsed = JSON?.parse(any: any);
-      if (any: any) {
+      const parsed = JSON.parse(response);
+      if (parsed.kind && parsed.message) {
         return parsed as TAPIError;
       }
     } catch {
@@ -653,7 +653,7 @@ class TauriClient {
     return {
       kind: 'InternalError',
       message: response,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
   }
 
@@ -669,30 +669,30 @@ class TauriClient {
       kind,
       message,
       context,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
   }
 
   /**
    * Gère les erreurs et les convertit en TAPIError
    */
-  private handleError(any: any): TAPIError {
+  private handleError(error: unknown): TAPIError {
     if (typeof error === 'string') {
-      return this?.parseError(any: any);
+      return this.parseError(error);
     }
 
-    if (any: any) {
+    if (error instanceof Error) {
       return {
         kind: 'InternalError',
-        message: error?.message,
-        timestamp: Date?.now(),
+        message: error.message,
+        timestamp: Date.now(),
       };
     }
 
     return {
       kind: 'InternalError',
       message: 'Unknown error',
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
   }
 }

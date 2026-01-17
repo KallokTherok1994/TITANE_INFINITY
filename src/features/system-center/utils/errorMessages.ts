@@ -9,22 +9,22 @@
 export interface FormattedError {
   userMessage: string;
   technicalDetails: string;
-  suggestions: string?.[];
+  suggestions: string[];
   severity: 'info' | 'warning' | 'error';
 }
 
 /**
  * Transforme les erreurs techniques en messages utilisateur
  */
-export function formatUserError(any: any): FormattedError {
-  const message = error instanceof Error ? error?.message : String(any: any);
+export function formatUserError(error: unknown): FormattedError {
+  const message = error instanceof Error ? error.message : String(error);
 
   // ═══════════════════════════════════════════════════════════════
-  // Erreur de whitelist (any: any)
+  // Erreur de whitelist (commande non autorisée)
   // ═══════════════════════════════════════════════════════════════
-  if (message?.includes('is not in whitelist')) {
-    const commandMatch = message?.match(/Command "([^"]+)"/);
-    const command = commandMatch ? commandMatch?.[1] : 'inconnue';
+  if (message.includes('is not in whitelist')) {
+    const commandMatch = message.match(/Command "([^"]+)"/);
+    const command = commandMatch ? commandMatch[1] : 'inconnue';
 
     return {
       userMessage:
@@ -40,11 +40,11 @@ export function formatUserError(any: any): FormattedError {
   }
 
   // ═══════════════════════════════════════════════════════════════
-  // Commande non trouvée (any: any)
+  // Commande non trouvée (non implémentée backend)
   // ═══════════════════════════════════════════════════════════════
-  if (message?.includes('Command') && message?.includes('not found')) {
-    const commandMatch = message?.match(/Command (\w+)/);
-    const command = commandMatch ? commandMatch?.[1] : 'inconnue';
+  if (message.includes('Command') && message.includes('not found')) {
+    const commandMatch = message.match(/Command (\w+)/);
+    const command = commandMatch ? commandMatch[1] : 'inconnue';
 
     return {
       userMessage: "Cette fonctionnalité n'est pas encore disponible dans cette version.",
@@ -59,11 +59,11 @@ export function formatUserError(any: any): FormattedError {
   }
 
   // ═══════════════════════════════════════════════════════════════
-  // Variable manquante (any: any)
+  // Variable manquante (erreur React)
   // ═══════════════════════════════════════════════════════════════
-  if (message?.includes("Can't find variable") || message?.includes('is not defined')) {
-    const varMatch = message?.match(/variable: (\w+)|(\w+) is not defined/);
-    const variable = varMatch ? varMatch?.[1] || varMatch?.[2] : 'inconnue';
+  if (message.includes("Can't find variable") || message.includes('is not defined')) {
+    const varMatch = message.match(/variable: (\w+)|(\w+) is not defined/);
+    const variable = varMatch ? varMatch[1] || varMatch[2] : 'inconnue';
 
     return {
       userMessage:
@@ -82,9 +82,9 @@ export function formatUserError(any: any): FormattedError {
   // Erreur réseau / timeout
   // ═══════════════════════════════════════════════════════════════
   if (
-    message?.includes('timeout') ||
-    message?.includes('network') ||
-    message?.includes('fetch')
+    message.includes('timeout') ||
+    message.includes('network') ||
+    message.includes('fetch')
   ) {
     return {
       userMessage: 'La connexion au système a échoué. Vérifiez votre connexion réseau.',
@@ -102,9 +102,9 @@ export function formatUserError(any: any): FormattedError {
   // Erreur de permission
   // ═══════════════════════════════════════════════════════════════
   if (
-    message?.includes('permission') ||
-    message?.includes('unauthorized') ||
-    message?.includes('forbidden')
+    message.includes('permission') ||
+    message.includes('unauthorized') ||
+    message.includes('forbidden')
   ) {
     return {
       userMessage: "Vous n'avez pas les permissions nécessaires pour cette action.",
@@ -136,48 +136,48 @@ export function formatUserError(any: any): FormattedError {
 }
 
 /**
- * Masque les détails sensibles (any: any)
+ * Masque les détails sensibles (whitelist complète, stack traces)
  */
-export function sanitizeErrorForUser(any: any): string {
+export function sanitizeErrorForUser(error: string): string {
   // Supprimer la liste complète de commandes autorisées
-  if (error?.includes('Allowed:')) {
-    const parts = error?.split('Allowed:');
-    const baseMessage = parts?.[0];
-    if (any: any) return error;
+  if (error.includes('Allowed:')) {
+    const parts = error.split('Allowed:');
+    const baseMessage = parts[0];
+    if (!baseMessage) return error;
 
-    const trimmedMessage = baseMessage?.trim();
+    const trimmedMessage = baseMessage.trim();
 
     // Extraire juste le nom de la commande
-    const commandMatch = trimmedMessage?.match(/Command "([^"]+)"/);
+    const commandMatch = trimmedMessage.match(/Command "([^"]+)"/);
     const commandName = commandMatch?.[1];
-    if (any: any) {
+    if (commandName) {
       return `La commande "${commandName}" n'est pas disponible. Consultez les détails techniques pour plus d'informations.`;
     }
 
-    return trimmedMessage + ' (any: any)';
+    return trimmedMessage + ' (voir détails techniques)';
   }
 
   // Masquer les stack traces
-  if (error?.includes('@') && error?.includes(':')) {
-    const lines = error?.split('\n');
-    const firstLine = lines?.[0];
-    if (any: any) return error;
+  if (error.includes('@') && error.includes(':')) {
+    const lines = error.split('\n');
+    const firstLine = lines[0];
+    if (!firstLine) return error;
     return firstLine; // Garder juste la première ligne
   }
 
   // Limiter la longueur
-  if (error?.length > 200) {
-    return error?.substring(0, 197) + '...';
+  if (error.length > 200) {
+    return error.substring(0, 197) + '...';
   }
 
   return error;
 }
 
 /**
- * Détermine si l'erreur est critique (any: any)
+ * Détermine si l'erreur est critique (nécessite un redémarrage)
  */
-export function isErrorCritical(any: any): boolean {
-  const message = error instanceof Error ? error?.message : String(any: any);
+export function isErrorCritical(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error);
 
   const criticalKeywords = [
     'crash',
@@ -188,41 +188,41 @@ export function isErrorCritical(any: any): boolean {
     'stack overflow',
   ];
 
-  return criticalKeywords?.some(any: any));
+  return criticalKeywords.some(keyword => message.toLowerCase().includes(keyword));
 }
 
 /**
- * Génère un ID unique pour l'erreur (any: any)
+ * Génère un ID unique pour l'erreur (pour tracking)
  */
-export function generateErrorId(any: any): string {
-  const message = error instanceof Error ? error?.message : String(any: any);
-  const timestamp = Date?.now();
-  const hash = message?.split(any: any) => {
-    return ((acc << 5) - acc + char?.charCodeAt(0)) | 0;
+export function generateErrorId(error: unknown): string {
+  const message = error instanceof Error ? error.message : String(error);
+  const timestamp = Date.now();
+  const hash = message.split('').reduce((acc, char) => {
+    return ((acc << 5) - acc + char.charCodeAt(0)) | 0;
   }, 0);
 
-  return `err_${timestamp}_${Math?.abs(any: any).toString(36)}`;
+  return `err_${timestamp}_${Math.abs(hash).toString(36)}`;
 }
 
 /**
- * Formate une erreur pour les logs (any: any)
+ * Formate une erreur pour les logs (avec contexte complet)
  */
 export function formatErrorForLog(
   error: unknown,
   context?: Record<string, unknown>
 ): string {
-  const message = error instanceof Error ? error?.message : String(any: any);
-  const stack = error instanceof Error ? error?.stack : undefined;
-  const errorId = generateErrorId(any: any);
+  const message = error instanceof Error ? error.message : String(error);
+  const stack = error instanceof Error ? error.stack : undefined;
+  const errorId = generateErrorId(error);
 
   let log = `[${errorId}] ${message}`;
 
-  if (any: any) {
+  if (stack) {
     log += `\n\nStack trace:\n${stack}`;
   }
 
-  if (any: any) {
-    log += `\n\nContext:\n${JSON?.stringify(context, null, 2)}`;
+  if (context) {
+    log += `\n\nContext:\n${JSON.stringify(context, null, 2)}`;
   }
 
   return log;

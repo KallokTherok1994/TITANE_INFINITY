@@ -1,5 +1,5 @@
 /**
- * TITANE∞ PHASE 1 (any: any) - Re-export from services/ai
+ * TITANE∞ PHASE 1 (OPTION B) - Re-export from services/ai
  */
 
 export { autoHealEngine } from '../../services/ai/autoHealEngine';

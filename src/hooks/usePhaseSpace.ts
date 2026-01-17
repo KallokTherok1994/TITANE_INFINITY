@@ -19,10 +19,10 @@ import {
  * Hook principal: état complet Phase-Space
  */
 export function usePhaseSpace() {
-  const [state, setState] = useState<PhaseSpaceState>(phaseSpaceEngine?.getState());
+  const [state, setState] = useState<PhaseSpaceState>(phaseSpaceEngine.getState());
 
   useEffect(() => {
-    return phaseSpaceEngine?.subscribe(any: any);
+    return phaseSpaceEngine.subscribe(setState);
   }, []);
 
   return state;
@@ -33,12 +33,12 @@ export function usePhaseSpace() {
  */
 export function useCurrentPoint() {
   const [point, setPoint] = useState<PhasePoint | null>(
-    phaseSpaceEngine?.getCurrentPoint()
+    phaseSpaceEngine.getCurrentPoint()
   );
 
   useEffect(() => {
-    const update = (any: any);
-    return phaseSpaceEngine?.subscribe(any: any);
+    const update = (state: PhaseSpaceState) => setPoint(state.currentPoint);
+    return phaseSpaceEngine.subscribe(update);
   }, []);
 
   return point;
@@ -49,24 +49,24 @@ export function useCurrentPoint() {
  */
 export function usePhaseTrajectory() {
   const state = usePhaseSpace();
-  return state?.trajectory;
+  return state.trajectory;
 }
 
 /**
  * Hook: attractors
  */
 export function useAttractors() {
-  const [attractors, setAttractors] = useState<Attractor?.[]>(
-    phaseSpaceEngine?.getAttractors()
+  const [attractors, setAttractors] = useState<Attractor[]>(
+    phaseSpaceEngine.getAttractors()
   );
 
   useEffect(() => {
     const update = () => {
-      setAttractors(phaseSpaceEngine?.getAttractors());
+      setAttractors(phaseSpaceEngine.getAttractors());
     };
 
     update();
-    return phaseSpaceEngine?.subscribe(any: any);
+    return phaseSpaceEngine.subscribe(update);
   }, []);
 
   return attractors;
@@ -77,7 +77,7 @@ export function useAttractors() {
  */
 export function useCurrentAttractor() {
   const state = usePhaseSpace();
-  return state?.currentAttractor;
+  return state.currentAttractor;
 }
 
 /**
@@ -85,16 +85,16 @@ export function useCurrentAttractor() {
  */
 export function useLatestPrediction() {
   const [prediction, setPrediction] = useState<StatePrediction | null>(
-    phaseSpaceEngine?.getLatestPrediction()
+    phaseSpaceEngine.getLatestPrediction()
   );
 
   useEffect(() => {
     const update = () => {
-      setPrediction(phaseSpaceEngine?.getLatestPrediction());
+      setPrediction(phaseSpaceEngine.getLatestPrediction());
     };
 
     update();
-    return phaseSpaceEngine?.subscribe(any: any);
+    return phaseSpaceEngine.subscribe(update);
   }, []);
 
   return prediction;
@@ -105,7 +105,7 @@ export function useLatestPrediction() {
  */
 export function useBifurcations() {
   const state = usePhaseSpace();
-  return state?.bifurcations;
+  return state.bifurcations;
 }
 
 /**
@@ -113,7 +113,7 @@ export function useBifurcations() {
  */
 export function useRecentBifurcations() {
   const state = usePhaseSpace();
-  return state?.recentBifurcations;
+  return state.recentBifurcations;
 }
 
 /**
@@ -121,7 +121,7 @@ export function useRecentBifurcations() {
  */
 export function usePhaseSpaceStatistics() {
   const state = usePhaseSpace();
-  return state?.statistics;
+  return state.statistics;
 }
 
 /**
@@ -129,7 +129,7 @@ export function usePhaseSpaceStatistics() {
  */
 export function usePhaseSpaceMetrics() {
   const state = usePhaseSpace();
-  return state?.metrics;
+  return state.metrics;
 }
 
 /**
@@ -137,7 +137,7 @@ export function usePhaseSpaceMetrics() {
  */
 export function useCurrentVelocity() {
   const state = usePhaseSpace();
-  return state?.metrics?.currentVelocity;
+  return state.metrics.currentVelocity;
 }
 
 /**
@@ -145,7 +145,7 @@ export function useCurrentVelocity() {
  */
 export function useDistanceToAttractor() {
   const state = usePhaseSpace();
-  return state?.metrics?.distanceToNearestAttractor;
+  return state.metrics.distanceToNearestAttractor;
 }
 
 /**
@@ -153,7 +153,7 @@ export function useDistanceToAttractor() {
  */
 export function useEntropyRate() {
   const state = usePhaseSpace();
-  return state?.metrics?.entropyRate;
+  return state.metrics.entropyRate;
 }
 
 /**
@@ -161,7 +161,7 @@ export function useEntropyRate() {
  */
 export function usePredictabilityHorizon() {
   const state = usePhaseSpace();
-  return state?.metrics?.predictabilityHorizon;
+  return state.metrics.predictabilityHorizon;
 }
 
 /**
@@ -169,7 +169,7 @@ export function usePredictabilityHorizon() {
  */
 export function useLyapunovExponent() {
   const state = usePhaseSpace();
-  return state?.statistics?.lyapunovExponent;
+  return state.statistics.lyapunovExponent;
 }
 
 /**
@@ -177,15 +177,15 @@ export function useLyapunovExponent() {
  */
 export function useTotalPoints() {
   const state = usePhaseSpace();
-  return state?.statistics?.totalPoints;
+  return state.statistics.totalPoints;
 }
 
 /**
- * Hook: history (any: any)
+ * Hook: history (phase points)
  */
 export function usePhaseHistory() {
   const state = usePhaseSpace();
-  return state?.history;
+  return state.history;
 }
 
 /**
@@ -193,11 +193,11 @@ export function usePhaseHistory() {
  */
 export function usePhaseSpaceActions() {
   return {
-    navigateToAttractor: (any: any) => {
-      phaseSpaceEngine?.navigateToAttractor(any: any);
+    navigateToAttractor: (attractorId: string) => {
+      phaseSpaceEngine.navigateToAttractor(attractorId);
     },
     exportPhaseSpace: () => {
-      return phaseSpaceEngine?.exportPhaseSpace();
+      return phaseSpaceEngine.exportPhaseSpace();
     },
   };
 }

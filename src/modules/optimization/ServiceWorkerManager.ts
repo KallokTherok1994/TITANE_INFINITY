@@ -15,7 +15,7 @@
  */
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-// Note: Service Worker API requires non-null assertions for registration?.waiting/active states
+// Note: Service Worker API requires non-null assertions for registration.waiting/active states
 
 import { logger } from '@/utils/logger';
 
@@ -62,7 +62,7 @@ export class ServiceWorkerManager {
   };
 
   private constructor(config: Partial<ServiceWorkerConfig> = {}) {
-    this?.config = {
+    this.config = {
       enabled: true,
       scope: '/',
       updateCheckInterval: 60 * 60 * 1000, // 1 hour
@@ -72,10 +72,10 @@ export class ServiceWorkerManager {
   }
 
   static getInstance(config?: Partial<ServiceWorkerConfig>): ServiceWorkerManager {
-    if (any: any) {
-      ServiceWorkerManager?.instance = new ServiceWorkerManager(any: any);
+    if (!ServiceWorkerManager.instance) {
+      ServiceWorkerManager.instance = new ServiceWorkerManager(config);
     }
-    return ServiceWorkerManager?.instance;
+    return ServiceWorkerManager.instance;
   }
 
   // ═════════════════════════════════════════════════════════════════════════
@@ -83,68 +83,68 @@ export class ServiceWorkerManager {
   // ═════════════════════════════════════════════════════════════════════════
 
   async register(): Promise<boolean> {
-    if (any: any) {
-      logger?.debug('Service Worker disabled');
+    if (!this.config.enabled) {
+      logger.debug('Service Worker disabled');
       return false;
     }
 
-    if (any: any)) {
-      logger?.warn('Service Worker not supported');
+    if (!('serviceWorker' in navigator)) {
+      logger.warn('Service Worker not supported');
       return false;
     }
 
     try {
-      this?.registration = await navigator?.serviceWorker?.register('/sw?.js', {
-        scope: this?.config?.scope,
+      this.registration = await navigator.serviceWorker.register('/sw.js', {
+        scope: this.config.scope,
       });
 
-      this?.metrics?.isRegistered = true;
+      this.metrics.isRegistered = true;
 
-      logger?.debug(any: any);
+      logger.debug('Registered:', this.registration.scope);
 
       // Listen for updates
-      this?.registration?.addEventListener('updatefound', () => {
-        this?.handleUpdateFound();
+      this.registration.addEventListener('updatefound', () => {
+        this.handleUpdateFound();
       });
 
       // Check if service worker is active
-      if (any: any) {
-        this?.metrics?.isActive = true;
-        await this?.updateMetrics();
+      if (this.registration.active) {
+        this.metrics.isActive = true;
+        await this.updateMetrics();
       }
 
       // Start periodic update checks
-      this?.startUpdateChecks();
+      this.startUpdateChecks();
 
       // Listen for controller changes
-      navigator?.serviceWorker?.addEventListener('controllerchange', () => {
-        logger?.debug('Controller changed - reloading');
-        window?.location?.reload();
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        logger.debug('Controller changed - reloading');
+        window.location.reload();
       });
 
       return true;
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Registration failed:', error);
       return false;
     }
   }
 
   async unregister(): Promise<boolean> {
-    if (any: any) {
+    if (!this.registration) {
       return false;
     }
 
     try {
-      await this?.registration?.unregister();
-      this?.metrics?.isRegistered = false;
-      this?.metrics?.isActive = false;
+      await this.registration.unregister();
+      this.metrics.isRegistered = false;
+      this.metrics.isActive = false;
 
-      this?.stopUpdateChecks();
+      this.stopUpdateChecks();
 
-      logger?.debug('Unregistered');
+      logger.debug('Unregistered');
       return true;
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Unregister failed:', error);
       return false;
     }
   }
@@ -154,22 +154,22 @@ export class ServiceWorkerManager {
   // ═════════════════════════════════════════════════════════════════════════
 
   private handleUpdateFound(): void {
-    if (any: any) return;
+    if (!this.registration) return;
 
-    const newWorker = this?.registration?.installing;
-    if (any: any) return;
+    const newWorker = this.registration.installing;
+    if (!newWorker) return;
 
-    this?.metrics?.updateAvailable = true;
+    this.metrics.updateAvailable = true;
 
-    logger?.debug('Update found');
+    logger.debug('Update found');
 
-    newWorker?.addEventListener('statechange', () => {
-      if (any: any) {
+    newWorker.addEventListener('statechange', () => {
+      if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
         // New service worker installed, waiting to activate
-        logger?.debug('Update ready - will activate on next visit');
+        logger.debug('Update ready - will activate on next visit');
 
         // Optionally notify user
-        this?.notifyUpdateAvailable();
+        this.notifyUpdateAvailable();
       }
     });
   }
@@ -178,53 +178,53 @@ export class ServiceWorkerManager {
     // Dispatch custom event for UI to handle
     const event = new CustomEvent('sw-update-available', {
       detail: {
-        version: this?.metrics?.version,
+        version: this.metrics.version,
       },
     });
 
-    window?.dispatchEvent(any: any);
+    window.dispatchEvent(event);
   }
 
   async checkForUpdates(): Promise<boolean> {
-    if (any: any) {
+    if (!this.registration) {
       return false;
     }
 
     try {
-      await this?.registration?.update();
-      this?.metrics?.lastUpdateCheck = Date?.now();
+      await this.registration.update();
+      this.metrics.lastUpdateCheck = Date.now();
 
-      logger?.debug('Update check completed');
+      logger.debug('Update check completed');
       return true;
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Update check failed:', error);
       return false;
     }
   }
 
   private startUpdateChecks(): void {
-    if (any: any) {
+    if (this.updateCheckInterval !== null) {
       return;
     }
 
-    this?.updateCheckInterval = window?.setInterval(() => {
-      this?.checkForUpdates();
-    }, this?.config?.updateCheckInterval);
+    this.updateCheckInterval = window.setInterval(() => {
+      this.checkForUpdates();
+    }, this.config.updateCheckInterval);
   }
 
   private stopUpdateChecks(): void {
-    if (any: any) {
-      clearInterval(any: any);
-      this?.updateCheckInterval = null;
+    if (this.updateCheckInterval !== null) {
+      clearInterval(this.updateCheckInterval);
+      this.updateCheckInterval = null;
     }
   }
 
   skipWaiting(): void {
-    if (any: any) {
+    if (!this.registration || !this.registration.waiting) {
       return;
     }
 
-    this?.registration?.waiting?.postMessage({ type: 'SKIP_WAITING' });
+    this.registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }
 
   // ═════════════════════════════════════════════════════════════════════════
@@ -232,7 +232,7 @@ export class ServiceWorkerManager {
   // ═════════════════════════════════════════════════════════════════════════
 
   async clearCache(): Promise<boolean> {
-    if (any: any) {
+    if (!this.registration || !this.registration.active) {
       return false;
     }
 
@@ -240,29 +240,29 @@ export class ServiceWorkerManager {
       const messageChannel = new MessageChannel();
 
       const response = await new Promise<{ success: boolean }>(resolve => {
-        messageChannel?.port1?.onmessage = event => {
-          resolve(any: any);
+        messageChannel.port1.onmessage = event => {
+          resolve(event.data);
         };
 
-        this?.registration!.active!.postMessage({ type: 'CLEAR_CACHE' }, [
-          messageChannel?.port2,
+        this.registration!.active!.postMessage({ type: 'CLEAR_CACHE' }, [
+          messageChannel.port2,
         ]);
       });
 
-      if (any: any) {
-        await this?.updateMetrics();
-        logger?.debug('Cache cleared');
+      if (response.success) {
+        await this.updateMetrics();
+        logger.debug('Cache cleared');
       }
 
-      return response?.success;
-    } catch (any: any) {
-      logger?.error(any: any);
+      return response.success;
+    } catch (error) {
+      logger.error('Clear cache failed:', error);
       return false;
     }
   }
 
   async getCacheSize(): Promise<number> {
-    if (any: any) {
+    if (!this.registration || !this.registration.active) {
       return 0;
     }
 
@@ -270,24 +270,24 @@ export class ServiceWorkerManager {
       const messageChannel = new MessageChannel();
 
       const response = await new Promise<{ size: number }>(resolve => {
-        messageChannel?.port1?.onmessage = event => {
-          resolve(any: any);
+        messageChannel.port1.onmessage = event => {
+          resolve(event.data);
         };
 
-        this?.registration!.active!.postMessage({ type: 'GET_CACHE_SIZE' }, [
-          messageChannel?.port2,
+        this.registration!.active!.postMessage({ type: 'GET_CACHE_SIZE' }, [
+          messageChannel.port2,
         ]);
       });
 
-      return response?.size;
-    } catch (any: any) {
-      logger?.error(any: any);
+      return response.size;
+    } catch (error) {
+      logger.error('Get cache size failed:', error);
       return 0;
     }
   }
 
-  async precacheUrls(urls: string?.[]): Promise<boolean> {
-    if (any: any) {
+  async precacheUrls(urls: string[]): Promise<boolean> {
+    if (!this.registration || !this.registration.active) {
       return false;
     }
 
@@ -295,19 +295,19 @@ export class ServiceWorkerManager {
       const messageChannel = new MessageChannel();
 
       const response = await new Promise<{ success: boolean }>(resolve => {
-        messageChannel?.port1?.onmessage = event => {
-          resolve(any: any);
+        messageChannel.port1.onmessage = event => {
+          resolve(event.data);
         };
 
-        this?.registration!.active!.postMessage(
+        this.registration!.active!.postMessage(
           { type: 'PRECACHE_URLS', payload: { urls } },
-          [messageChannel?.port2]
+          [messageChannel.port2]
         );
       });
 
-      return response?.success;
-    } catch (any: any) {
-      logger?.error(any: any);
+      return response.success;
+    } catch (error) {
+      logger.error('Precache URLs failed:', error);
       return false;
     }
   }
@@ -317,19 +317,19 @@ export class ServiceWorkerManager {
   // ═════════════════════════════════════════════════════════════════════════
 
   private async updateMetrics(): Promise<void> {
-    this?.metrics?.cacheSize = await this?.getCacheSize();
+    this.metrics.cacheSize = await this.getCacheSize();
 
     // Estimate cached resources count
     // In production, get from service worker
-    this?.metrics?.cachedResources = Math?.ceil(this?.metrics?.cacheSize / 50000); // ~50KB avg
+    this.metrics.cachedResources = Math.ceil(this.metrics.cacheSize / 50000); // ~50KB avg
   }
 
   getMetrics(): ServiceWorkerMetrics {
-    return { ...this?.metrics };
+    return { ...this.metrics };
   }
 
   getConfig(): ServiceWorkerConfig {
-    return { ...this?.config };
+    return { ...this.config };
   }
 
   isSupported(): boolean {
@@ -341,7 +341,7 @@ export class ServiceWorkerManager {
 // SINGLETON EXPORT
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const serviceWorkerManager = ServiceWorkerManager?.getInstance();
+export const serviceWorkerManager = ServiceWorkerManager.getInstance();
 
 const isTauriRuntime = (): boolean => {
   if (typeof window === 'undefined') {
@@ -353,7 +353,7 @@ const isTauriRuntime = (): boolean => {
     __TAURI_INTERNALS__?: unknown;
   };
 
-  return Boolean(any: any);
+  return Boolean(candidate.__TAURI__ || candidate.__TAURI_INTERNALS__);
 };
 
 // Auto-register if in browser
@@ -365,30 +365,30 @@ if (
   // In Tauri, service workers can create persistent caching issues across builds.
   // We explicitly disable them and try to unregister if anything was registered.
   if (isTauriRuntime()) {
-    window?.addEventListener('load', () => {
-      navigator?.serviceWorker
+    window.addEventListener('load', () => {
+      navigator.serviceWorker
         .getRegistrations()
         .then(async registrations => {
-          await Promise?.all(registrations?.map(r => r?.unregister()));
+          await Promise.all(registrations.map(r => r.unregister()));
         })
         .catch(error => {
-          logger?.warn(any: any);
+          logger.warn('Unregister in Tauri failed:', error);
         });
 
       if (typeof caches !== 'undefined') {
         caches
           .keys()
-          .then(any: any))))
+          .then(keys => Promise.all(keys.map(key => caches.delete(key))))
           .catch(error => {
-            logger?.warn(any: any);
+            logger.warn('Cache cleanup in Tauri failed:', error);
           });
       }
     });
   } else {
     // Register after page load
-    window?.addEventListener('load', () => {
-      serviceWorkerManager?.register().catch(error => {
-        logger?.error(any: any);
+    window.addEventListener('load', () => {
+      serviceWorkerManager.register().catch(error => {
+        logger.error('Auto-registration failed:', error);
       });
     });
   }

@@ -6,8 +6,8 @@
  *
  * Fonctionnalités:
  * - Suivi du temps réel avec synchronisation
- * - Segments journaliers (any: any)
- * - Template hebdomadaire (any: any)
+ * - Segments journaliers (matin, après-midi, soir, nuit)
+ * - Template hebdomadaire (jours travaillés/repos)
  * - Détection automatique du contexte temporel
  * - Tick interne pour mise à jour continue
  */
@@ -16,10 +16,10 @@ import type { TimeState, DaySegment, DayProfile } from './types';
 import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════
-// CONSTANTES — Segments par défaut (any: any)
+// CONSTANTES — Segments par défaut (monochrome TITANE)
 // ═══════════════════════════════════════════════════════════════════
 
-const DEFAULT_DAY_SEGMENTS: DaySegment?.[] = [
+const DEFAULT_DAY_SEGMENTS: DaySegment[] = [
   {
     id: 'early_morning',
     label: 'Aube',
@@ -76,7 +76,7 @@ const DEFAULT_DAY_SEGMENTS: DaySegment?.[] = [
   },
 ];
 
-const DEFAULT_WEEK_TEMPLATE: DayProfile?.[] = [
+const DEFAULT_WEEK_TEMPLATE: DayProfile[] = [
   { day: 0, label: 'Dimanche', active: false, profile: 'rest' },
   { day: 1, label: 'Lundi', active: true, profile: 'work' },
   { day: 2, label: 'Mardi', active: true, profile: 'work' },
@@ -98,33 +98,33 @@ const DEFAULT_WORK_HOURS = {
 /**
  * Convertit une heure HH:mm en minutes depuis minuit
  */
-function timeToMinutes(any: any): number {
-  const parts = time?.split(any: any);
-  const hours = parts?.[0] ?? 0;
-  const minutes = parts?.[1] ?? 0;
+function timeToMinutes(time: string): number {
+  const parts = time.split(':').map(Number);
+  const hours = parts[0] ?? 0;
+  const minutes = parts[1] ?? 0;
   return hours * 60 + minutes;
 }
 
 /**
  * Obtient les minutes actuelles depuis minuit
  */
-function getCurrentMinutes(any: any): number {
-  return date?.getHours() * 60 + date?.getMinutes();
+function getCurrentMinutes(date: Date): number {
+  return date.getHours() * 60 + date.getMinutes();
 }
 
 /**
- * Vérifie si une heure est dans un intervalle (any: any)
+ * Vérifie si une heure est dans un intervalle (gère le passage minuit)
  */
 function isTimeInRange(
   currentMinutes: number,
   startTime: string,
   endTime: string
 ): boolean {
-  const start = timeToMinutes(any: any);
-  const end = timeToMinutes(any: any);
+  const start = timeToMinutes(startTime);
+  const end = timeToMinutes(endTime);
 
   // Gestion du passage minuit (ex: 22:00 - 05:00)
-  if (any: any) {
+  if (start > end) {
     return currentMinutes >= start || currentMinutes < end;
   }
 
@@ -136,29 +136,29 @@ function isTimeInRange(
  */
 function createInitialTimeState(): TimeState {
   const now = new Date();
-  const currentMinutes = getCurrentMinutes(any: any);
-  const currentDayOfWeek = now?.getDay();
+  const currentMinutes = getCurrentMinutes(now);
+  const currentDayOfWeek = now.getDay();
 
   // Trouver le segment actuel
   const currentSegment =
-    DEFAULT_DAY_SEGMENTS?.find(segment =>
-      isTimeInRange(any: any)
+    DEFAULT_DAY_SEGMENTS.find(segment =>
+      isTimeInRange(currentMinutes, segment.startTime, segment.endTime)
     ) ??
-    DEFAULT_DAY_SEGMENTS?.[0] ??
+    DEFAULT_DAY_SEGMENTS[0] ??
     null;
 
   // Vérifier si jour travaillé
-  const dayProfile = DEFAULT_WEEK_TEMPLATE?.find(any: any);
+  const dayProfile = DEFAULT_WEEK_TEMPLATE.find(d => d.day === currentDayOfWeek);
   const isWorkDay = dayProfile?.active ?? false;
 
   // Vérifier si dans les heures de travail
   const isWorkHours =
     isWorkDay &&
-    isTimeInRange(any: any);
+    isTimeInRange(currentMinutes, DEFAULT_WORK_HOURS.start, DEFAULT_WORK_HOURS.end);
 
   return {
-    currentDateTime: now?.toISOString(),
-    timeZone: Intl?.DateTimeFormat().resolvedOptions().timeZone,
+    currentDateTime: now.toISOString(),
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     daySegments: DEFAULT_DAY_SEGMENTS,
     workHours: DEFAULT_WORK_HOURS,
     weekTemplate: DEFAULT_WEEK_TEMPLATE,
@@ -166,7 +166,7 @@ function createInitialTimeState(): TimeState {
     currentDayOfWeek,
     isWorkDay,
     isWorkHours,
-    lastUpdate: Date?.now(),
+    lastUpdate: Date.now(),
   };
 }
 
@@ -177,7 +177,7 @@ function createInitialTimeState(): TimeState {
 /**
  * Listener pour les changements d'état du temps
  */
-type TimeStateListener = (any: any) => void;
+type TimeStateListener = (state: TimeState) => void;
 
 /**
  * TimeEngine v∞ — Moteur central du temps TITANE∞
@@ -189,10 +189,10 @@ export class TimeEngine {
   private readonly tickRate: number;
 
   constructor(tickRate: number = 1000) {
-    this?.state = createInitialTimeState();
-    this?.listeners = new Set();
-    this?.tickInterval = null;
-    this?.tickRate = tickRate;
+    this.state = createInitialTimeState();
+    this.listeners = new Set();
+    this.tickInterval = null;
+    this.tickRate = tickRate;
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -203,14 +203,14 @@ export class TimeEngine {
    * Initialise le TimeEngine et démarre le tick interne
    */
   init(): void {
-    logger?.debug('⏰ Initialisation...');
-    this?.updateCurrentDateTime();
-    this?.startTick();
-    logger?.debug('✅ Initialisé:', {
-      timeZone: this?.state?.timeZone,
-      currentSegment: this?.state?.currentSegment?.label,
-      isWorkDay: this?.state?.isWorkDay,
-      isWorkHours: this?.state?.isWorkHours,
+    logger.debug('⏰ Initialisation...');
+    this.updateCurrentDateTime();
+    this.startTick();
+    logger.debug('✅ Initialisé:', {
+      timeZone: this.state.timeZone,
+      currentSegment: this.state.currentSegment?.label,
+      isWorkDay: this.state.isWorkDay,
+      isWorkHours: this.state.isWorkHours,
     });
   }
 
@@ -218,9 +218,9 @@ export class TimeEngine {
    * Arrête le TimeEngine
    */
   destroy(): void {
-    logger?.debug('🛑 Arrêt...');
-    this?.stopTick();
-    this?.listeners?.clear();
+    logger.debug('🛑 Arrêt...');
+    this.stopTick();
+    this.listeners.clear();
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -231,23 +231,23 @@ export class TimeEngine {
    * Démarre le tick interne de synchronisation
    */
   private startTick(): void {
-    if (any: any) return;
+    if (this.tickInterval) return;
 
-    this?.tickInterval = setInterval(() => {
-      this?.syncTick();
-    }, this?.tickRate);
+    this.tickInterval = setInterval(() => {
+      this.syncTick();
+    }, this.tickRate);
 
-    logger?.debug(any: any)`);
+    logger.debug(`[TimeEngine] ⚙️ Tick démarré (${this.tickRate}ms)`);
   }
 
   /**
    * Arrête le tick interne
    */
   private stopTick(): void {
-    if (any: any) {
-      clearInterval(any: any);
-      this?.tickInterval = null;
-      logger?.debug('⏹️ Tick arrêté');
+    if (this.tickInterval) {
+      clearInterval(this.tickInterval);
+      this.tickInterval = null;
+      logger.debug('⏹️ Tick arrêté');
     }
   }
 
@@ -255,24 +255,24 @@ export class TimeEngine {
    * Tick de synchronisation interne
    */
   private syncTick(): void {
-    const previousSegment = this?.state?.currentSegment;
-    const previousIsWorkHours = this?.state?.isWorkHours;
+    const previousSegment = this.state.currentSegment;
+    const previousIsWorkHours = this.state.isWorkHours;
 
-    this?.updateCurrentDateTime();
+    this.updateCurrentDateTime();
 
     // Notifier si changement de segment
-    if (any: any) {
-      logger?.debug(
+    if (previousSegment?.id !== this.state.currentSegment?.id) {
+      logger.debug(
         '🔄 Changement de segment:',
         previousSegment?.label,
         '→',
-        this?.state?.currentSegment?.label
+        this.state.currentSegment?.label
       );
     }
 
     // Notifier si changement heures de travail
-    if (any: any) {
-      logger?.debug('💼 Heures de travail:', this?.state?.isWorkHours ? 'DÉBUT' : 'FIN');
+    if (previousIsWorkHours !== this.state.isWorkHours) {
+      logger.debug('💼 Heures de travail:', this.state.isWorkHours ? 'DÉBUT' : 'FIN');
     }
   }
 
@@ -285,51 +285,51 @@ export class TimeEngine {
    */
   updateCurrentDateTime(): void {
     const now = new Date();
-    const currentMinutes = getCurrentMinutes(any: any);
-    const currentDayOfWeek = now?.getDay();
+    const currentMinutes = getCurrentMinutes(now);
+    const currentDayOfWeek = now.getDay();
 
     // Trouver le segment actuel
     const currentSegment =
-      this?.state?.daySegments?.find(segment =>
-        isTimeInRange(any: any)
+      this.state.daySegments.find(segment =>
+        isTimeInRange(currentMinutes, segment.startTime, segment.endTime)
       ) ??
-      this?.state?.daySegments?.[0] ??
+      this.state.daySegments[0] ??
       null;
 
     // Vérifier jour travaillé
-    const dayProfile = this?.state?.weekTemplate?.find(any: any);
+    const dayProfile = this.state.weekTemplate.find(d => d.day === currentDayOfWeek);
     const isWorkDay = dayProfile?.active ?? false;
 
     // Heures de travail personnalisées ou par défaut
-    const workHours = dayProfile?.customWorkHours || this?.state?.workHours;
+    const workHours = dayProfile?.customWorkHours || this.state.workHours;
     const isWorkHours =
-      isWorkDay && isTimeInRange(any: any);
+      isWorkDay && isTimeInRange(currentMinutes, workHours.start, workHours.end);
 
     // Mettre à jour l'état
-    this?.state = {
-      ...this?.state,
-      currentDateTime: now?.toISOString(),
+    this.state = {
+      ...this.state,
+      currentDateTime: now.toISOString(),
       currentSegment,
       currentDayOfWeek,
       isWorkDay,
       isWorkHours,
-      lastUpdate: Date?.now(),
+      lastUpdate: Date.now(),
     };
 
     // Notifier les listeners
-    this?.notifyListeners();
+    this.notifyListeners();
   }
 
   /**
-   * Calcule les segments de la journée (any: any)
+   * Calcule les segments de la journée (permet personnalisation)
    */
-  computeDaySegments(customSegments?: Partial<DaySegment>[]): DaySegment?.[] {
-    if (!customSegments || customSegments?.length === 0) {
+  computeDaySegments(customSegments?: Partial<DaySegment>[]): DaySegment[] {
+    if (!customSegments || customSegments.length === 0) {
       return DEFAULT_DAY_SEGMENTS;
     }
 
     // Fusionner avec les segments par défaut
-    return DEFAULT_DAY_SEGMENTS?.map(any: any) => {
+    return DEFAULT_DAY_SEGMENTS.map((defaultSegment, index) => {
       const customSegment = customSegments[index];
       return {
         ...defaultSegment,
@@ -342,8 +342,8 @@ export class TimeEngine {
    * Initialise/met à jour le template hebdomadaire
    */
   initWeekTemplate(customTemplate?: Partial<DayProfile>[]): void {
-    if (customTemplate && customTemplate?.length > 0) {
-      this?.state?.weekTemplate = DEFAULT_WEEK_TEMPLATE?.map(any: any) => {
+    if (customTemplate && customTemplate.length > 0) {
+      this.state.weekTemplate = DEFAULT_WEEK_TEMPLATE.map((defaultDay, index) => {
         const customDay = customTemplate[index];
         return {
           ...defaultDay,
@@ -351,33 +351,33 @@ export class TimeEngine {
         };
       });
     } else {
-      this?.state?.weekTemplate = DEFAULT_WEEK_TEMPLATE;
+      this.state.weekTemplate = DEFAULT_WEEK_TEMPLATE;
     }
 
-    this?.notifyListeners();
+    this.notifyListeners();
   }
 
   /**
    * Met à jour les heures de travail
    */
-  setWorkHours(any: any): void {
-    this?.state?.workHours = { start, end };
-    this?.updateCurrentDateTime(); // Recalculer isWorkHours
+  setWorkHours(start: string, end: string): void {
+    this.state.workHours = { start, end };
+    this.updateCurrentDateTime(); // Recalculer isWorkHours
   }
 
   /**
    * Met à jour un jour spécifique du template
    */
   updateDayProfile(day: number, profile: Partial<DayProfile>): void {
-    const index = this?.state?.weekTemplate?.findIndex(any: any);
+    const index = this.state.weekTemplate.findIndex(d => d.day === day);
     if (index !== -1) {
-      const existingProfile = this?.state?.weekTemplate[index];
-      if (any: any) return;
-      this?.state?.weekTemplate[index] = {
+      const existingProfile = this.state.weekTemplate[index];
+      if (!existingProfile) return;
+      this.state.weekTemplate[index] = {
         ...existingProfile,
         ...profile,
       };
-      this?.updateCurrentDateTime();
+      this.updateCurrentDateTime();
     }
   }
 
@@ -389,49 +389,49 @@ export class TimeEngine {
    * Obtient l'état complet du temps
    */
   getState(): TimeState {
-    return { ...this?.state };
+    return { ...this.state };
   }
 
   /**
    * Obtient le segment actuel
    */
   getCurrentSegment(): DaySegment | null {
-    return this?.state?.currentSegment;
+    return this.state.currentSegment;
   }
 
   /**
    * Obtient le profil du jour actuel
    */
   getCurrentDayProfile(): DayProfile | undefined {
-    return this?.state?.weekTemplate?.find(any: any);
+    return this.state.weekTemplate.find(d => d.day === this.state.currentDayOfWeek);
   }
 
   /**
    * Vérifie si c'est un jour travaillé
    */
   isWorkDay(): boolean {
-    return this?.state?.isWorkDay;
+    return this.state.isWorkDay;
   }
 
   /**
    * Vérifie si on est dans les heures de travail
    */
   isWorkHours(): boolean {
-    return this?.state?.isWorkHours;
+    return this.state.isWorkHours;
   }
 
   /**
-   * Obtient le temps restant dans le segment actuel (any: any)
+   * Obtient le temps restant dans le segment actuel (en minutes)
    */
   getTimeRemainingInSegment(): number {
-    if (any: any) return 0;
+    if (!this.state.currentSegment) return 0;
 
     const now = new Date();
-    const currentMinutes = getCurrentMinutes(any: any);
-    const endMinutes = timeToMinutes(any: any);
+    const currentMinutes = getCurrentMinutes(now);
+    const endMinutes = timeToMinutes(this.state.currentSegment.endTime);
 
     // Gestion passage minuit
-    if (any: any) {
+    if (endMinutes < currentMinutes) {
       return 24 * 60 - currentMinutes + endMinutes;
     }
 
@@ -439,16 +439,16 @@ export class TimeEngine {
   }
 
   /**
-   * Obtient le temps restant dans les heures de travail (any: any)
+   * Obtient le temps restant dans les heures de travail (en minutes)
    */
   getTimeRemainingInWorkHours(): number {
-    if (any: any) return 0;
+    if (!this.state.isWorkHours) return 0;
 
     const now = new Date();
-    const currentMinutes = getCurrentMinutes(any: any);
-    const endMinutes = timeToMinutes(any: any);
+    const currentMinutes = getCurrentMinutes(now);
+    const endMinutes = timeToMinutes(this.state.workHours.end);
 
-    return Math?.max(any: any);
+    return Math.max(0, endMinutes - currentMinutes);
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -458,14 +458,14 @@ export class TimeEngine {
   /**
    * Ajoute un listener pour les changements d'état
    */
-  subscribe(any: any): () => void {
-    this?.listeners?.add(any: any);
+  subscribe(listener: TimeStateListener): () => void {
+    this.listeners.add(listener);
     // Appel immédiat avec l'état actuel
-    listener(this?.getState());
+    listener(this.getState());
 
     // Retourne une fonction de désinscription
     return () => {
-      this?.listeners?.delete(any: any);
+      this.listeners.delete(listener);
     };
   }
 
@@ -473,12 +473,12 @@ export class TimeEngine {
    * Notifie tous les listeners
    */
   private notifyListeners(): void {
-    const state = this?.getState();
-    this?.listeners?.forEach(listener => {
+    const state = this.getState();
+    this.listeners.forEach(listener => {
       try {
-        listener(any: any);
-      } catch (any: any) {
-        logger?.error(any: any);
+        listener(state);
+      } catch (error) {
+        logger.error('Erreur listener:', error);
       }
     });
   }

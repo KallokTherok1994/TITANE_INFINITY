@@ -8,10 +8,10 @@
 import { tauriClient } from '@/lib/tauriClient';
 
 // ==================== TYPES ====================
-export * from './semanticMemory?.types';
-export * from './goalConsistency?.types';
-export * from './conversationEvaluation?.types';
-export * from './cognitiveObservability?.types';
+export * from './semanticMemory.types';
+export * from './goalConsistency.types';
+export * from './conversationEvaluation.types';
+export * from './cognitiveObservability.types';
 
 // ==================== ENGINES ====================
 export { SemanticMemoryEngine, cosineSimilarity } from './SemanticMemoryEngine';
@@ -42,12 +42,12 @@ export {
 
 import { SemanticMemoryEngine } from './SemanticMemoryEngine';
 import { LocalEmbeddingGenerator } from './LocalEmbeddingGenerator';
-import type { SemanticMemoryConfig, VectorStore } from './semanticMemory?.types';
+import type { SemanticMemoryConfig, VectorStore } from './semanticMemory.types';
 import { logger } from '@/utils/logger';
 
 /**
  * Charger dynamiquement le VectorStore approprié
- * Utilise TauriVectorStore (any: any)
+ * Utilise TauriVectorStore (backend Rust) au lieu de SQLiteVectorStore (Node.js)
  */
 async function loadVectorStore(config: {
   dbPath: string;
@@ -56,9 +56,9 @@ async function loadVectorStore(config: {
 }): Promise<VectorStore> {
   try {
     const { createVectorStore } = await import('./TauriVectorStore');
-    return await createVectorStore(any: any);
-  } catch (any: any) {
-    logger?.warn(any: any);
+    return await createVectorStore(config);
+  } catch (error) {
+    logger.warn('TauriVectorStore not available', error);
     throw new Error(
       'VectorStore not available. This feature requires Tauri backend with SQLite support.'
     );
@@ -75,7 +75,7 @@ export async function createSemanticMemoryEngine(options?: {
   config?: Partial<SemanticMemoryConfig>;
 }): Promise<SemanticMemoryEngine> {
   // Configuration par défaut
-  const dbPath = options?.dbPath || './data/semantic_memory?.db';
+  const dbPath = options?.dbPath || './data/semantic_memory.db';
   const modelName = options?.modelName || 'all-MiniLM-L6-v2';
   const dimensions = modelName === 'all-mpnet-base-v2' ? 768 : 384;
 
@@ -103,7 +103,7 @@ export async function createSemanticMemoryEngine(options?: {
   );
 
   // Initialiser
-  await engine?.initialize();
+  await engine.initialize();
 
   return engine;
 }
@@ -139,7 +139,7 @@ export interface TitaneCognitiveConfig {
 export const DEFAULT_COGNITIVE_CONFIG: TitaneCognitiveConfig = {
   semanticMemory: {
     enabled: true,
-    dbPath: './data/semantic_memory?.db',
+    dbPath: './data/semantic_memory.db',
     modelName: 'all-MiniLM-L6-v2',
   },
   goalConsistency: {
@@ -164,7 +164,7 @@ export const DEFAULT_COGNITIVE_CONFIG: TitaneCognitiveConfig = {
 export const PRODUCTION_COGNITIVE_CONFIG: TitaneCognitiveConfig = {
   semanticMemory: {
     enabled: true,
-    dbPath: './data/semantic_memory?.db',
+    dbPath: './data/semantic_memory.db',
     modelName: 'all-MiniLM-L6-v2',
   },
   goalConsistency: {
@@ -185,7 +185,7 @@ export const PRODUCTION_COGNITIVE_CONFIG: TitaneCognitiveConfig = {
 
 /**
  * Helper: vérifier si les features cognitives sont disponibles
- * Note: SQLite n'est disponible que via le backend Tauri (any: any)
+ * Note: SQLite n'est disponible que via le backend Tauri (Rust)
  */
 export async function checkCognitiveAvailability(): Promise<{
   transformers: boolean;
@@ -198,27 +198,27 @@ export async function checkCognitiveAvailability(): Promise<{
     overall: false,
   };
 
-  // Check Transformers?.js
+  // Check Transformers.js
   try {
     await import('@xenova/transformers');
-    results?.transformers = true;
-  } catch (any: any) {
-    logger?.warn('Transformers?.js not available');
+    results.transformers = true;
+  } catch (error) {
+    logger.warn('Transformers.js not available');
   }
 
-  // Check si on est dans Tauri (any: any)
-  // better-sqlite3 est un module Node?.js natif qui ne fonctionne pas dans le navigateur
+  // Check si on est dans Tauri (SQLite via backend Rust, pas better-sqlite3)
+  // better-sqlite3 est un module Node.js natif qui ne fonctionne pas dans le navigateur
   try {
     // Tester si le backend Tauri SQLite est disponible
-    await tauriClient?.checkSqliteAvailable();
-    results?.sqlite = true;
-  } catch (any: any) {
+    await tauriClient.checkSqliteAvailable();
+    results.sqlite = true;
+  } catch (error) {
     // Mode navigateur pur ou Tauri sans SQLite
-    logger?.warn(any: any)');
-    results?.sqlite = false;
+    logger.warn('SQLite not available (browser mode or Tauri backend not ready)');
+    results.sqlite = false;
   }
 
-  results?.overall = results?.transformers && results?.sqlite;
+  results.overall = results.transformers && results.sqlite;
 
   return results;
 }
@@ -226,28 +226,28 @@ export async function checkCognitiveAvailability(): Promise<{
 /**
  * Log cognitive system status
  */
-export function logCognitiveStatus(any: any): void {
-  logger?.debug('\n═══════════════════════════════════════════════════════════');
-  logger?.debug('   🧠 TITANE∞ COGNITIVE SYSTEM STATUS');
-  logger?.debug('═══════════════════════════════════════════════════════════');
-  logger?.debug(
-    `Semantic Memory:    ${config?.semanticMemory?.enabled ? '✅ ENABLED' : '❌ DISABLED'}`
+export function logCognitiveStatus(config: TitaneCognitiveConfig): void {
+  logger.debug('\n═══════════════════════════════════════════════════════════');
+  logger.debug('   🧠 TITANE∞ COGNITIVE SYSTEM STATUS');
+  logger.debug('═══════════════════════════════════════════════════════════');
+  logger.debug(
+    `Semantic Memory:    ${config.semanticMemory.enabled ? '✅ ENABLED' : '❌ DISABLED'}`
   );
-  logger?.debug(`  Model: ${config?.semanticMemory?.modelName}`);
-  logger?.debug(`  DB: ${config?.semanticMemory?.dbPath}`);
-  logger?.debug(
-    `Goal & Consistency: ${config?.goalConsistency?.enabled ? '✅ ENABLED' : '❌ DISABLED'}`
+  logger.debug(`  Model: ${config.semanticMemory.modelName}`);
+  logger.debug(`  DB: ${config.semanticMemory.dbPath}`);
+  logger.debug(
+    `Goal & Consistency: ${config.goalConsistency.enabled ? '✅ ENABLED' : '❌ DISABLED'}`
   );
-  logger?.debug(`  Auto-check: ${config?.goalConsistency?.autoCheck ? 'ON' : 'OFF'}`);
-  logger?.debug(`  Auto-correct: ${config?.goalConsistency?.autoCorrect ? 'ON' : 'OFF'}`);
-  logger?.debug(
-    `Evaluation:         ${config?.evaluation?.enabled ? '✅ ENABLED' : '❌ DISABLED'}`
+  logger.debug(`  Auto-check: ${config.goalConsistency.autoCheck ? 'ON' : 'OFF'}`);
+  logger.debug(`  Auto-correct: ${config.goalConsistency.autoCorrect ? 'ON' : 'OFF'}`);
+  logger.debug(
+    `Evaluation:         ${config.evaluation.enabled ? '✅ ENABLED' : '❌ DISABLED'}`
   );
-  logger?.debug(`  Live eval: ${config?.evaluation?.liveEvaluation ? 'ON' : 'OFF'}`);
-  logger?.debug(
-    `Observability:      ${config?.observability?.enabled ? '✅ ENABLED' : '❌ DISABLED'}`
+  logger.debug(`  Live eval: ${config.evaluation.liveEvaluation ? 'ON' : 'OFF'}`);
+  logger.debug(
+    `Observability:      ${config.observability.enabled ? '✅ ENABLED' : '❌ DISABLED'}`
   );
-  logger?.debug(`  Mode: ${config?.observability?.mode?.toUpperCase()}`);
-  logger?.debug(`  Tracing: ${config?.observability?.tracing ? 'ON' : 'OFF'}`);
-  logger?.debug('═══════════════════════════════════════════════════════════\n');
+  logger.debug(`  Mode: ${config.observability.mode.toUpperCase()}`);
+  logger.debug(`  Tracing: ${config.observability.tracing ? 'ON' : 'OFF'}`);
+  logger.debug('═══════════════════════════════════════════════════════════\n');
 }

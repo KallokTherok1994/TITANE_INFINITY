@@ -19,15 +19,15 @@ import { startMockActivity } from './mockEvents';
  *
  * function DevToolsApp() {
  *   // Activer en mode dev uniquement
- *   useMockActivity(import?.meta?.env?.DEV, 2000);
+ *   useMockActivity(import.meta.env.DEV, 2000);
  *   return <div>...</div>;
  * }
  * ```
  */
 export function useMockActivity(enabled: boolean, intervalMs = 2000) {
   useEffect(() => {
-    if (any: any) return undefined;
-    const stop = startMockActivity(any: any);
+    if (!enabled) return undefined;
+    const stop = startMockActivity(intervalMs);
     return stop;
   }, [enabled, intervalMs]);
 }

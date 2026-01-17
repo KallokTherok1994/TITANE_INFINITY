@@ -12,7 +12,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 
-// REMOVED: engines/presence supprimé en PHASE 1 (any: any) - utilise stub temporaire
+// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B) - utilise stub temporaire
 import { unifiedPresenceEngine } from '@/engines/presence/_stubs';
 
 // Types importés depuis stubs
@@ -38,7 +38,7 @@ import { narrativeProtocol } from '@/engines/presence/_stubs';
 // Types importés depuis stubs
 import type { NarrativeArc, SymbolicElement } from '@/engines/presence/_stubs';
 
-// Local SymbolInfo type (any: any)
+// Local SymbolInfo type (used by hooks)
 export interface SymbolInfo {
   name: string;
   strength: number;
@@ -65,38 +65,38 @@ import {
  * const { state, userContext, profile } = useUnifiedPresence();
  *
  * return (
- *   <div style={{ opacity: state?.visualIntensity / 100 }}>
- *     Intensité: {state?.visualIntensity}%
+ *   <div style={{ opacity: state.visualIntensity / 100 }}>
+ *     Intensité: {state.visualIntensity}%
  *   </div>
  * );
  * ```
  */
 export function useUnifiedPresence() {
-  const [state, setState] = useState<PresenceState>(unifiedPresenceEngine?.getState());
+  const [state, setState] = useState<PresenceState>(unifiedPresenceEngine.getState());
   const [userContext, setUserContext] = useState<UserContext>(
-    unifiedPresenceEngine?.getUserContext()
+    unifiedPresenceEngine.getUserContext()
   );
   const [profile, setProfile] = useState<TonicProfile>(
-    unifiedPresenceEngine?.getCurrentProfile()
+    unifiedPresenceEngine.getCurrentProfile()
   );
 
   useEffect(() => {
     // S'abonner aux changements d'état
-    const unsubscribe = unifiedPresenceEngine?.subscribe(newState => {
-      setState(any: any);
-      setUserContext(unifiedPresenceEngine?.getUserContext());
-      setProfile(unifiedPresenceEngine?.getCurrentProfile());
+    const unsubscribe = unifiedPresenceEngine.subscribe(newState => {
+      setState(newState);
+      setUserContext(unifiedPresenceEngine.getUserContext());
+      setProfile(unifiedPresenceEngine.getCurrentProfile());
     });
 
     return unsubscribe;
   }, []);
 
   const setTonicProfile = useCallback((profileName: TonicProfile['name']) => {
-    unifiedPresenceEngine?.setProfile(any: any);
+    unifiedPresenceEngine.setProfile(profileName);
   }, []);
 
   const getIdentity = useCallback(() => {
-    return unifiedPresenceEngine?.getIdentityMatrix();
+    return unifiedPresenceEngine.getIdentityMatrix();
   }, []);
 
   return {
@@ -129,19 +129,19 @@ export function useUnifiedPresence() {
  * ```
  */
 export function useNarrativeArc() {
-  const [arc, setArc] = useState<NarrativeArc | null>(narrativeProtocol?.getCurrentArc());
-  const [symbols, setSymbols] = useState<SymbolicElement?.[]>(
-    narrativeProtocol?.getActiveSymbols()
+  const [arc, setArc] = useState<NarrativeArc | null>(narrativeProtocol.getCurrentArc());
+  const [symbols, setSymbols] = useState<SymbolicElement[]>(
+    narrativeProtocol.getActiveSymbols()
   );
 
   // Rafraîchir l'arc périodiquement
   useEffect(() => {
     const interval = setInterval(() => {
-      setArc(narrativeProtocol?.getCurrentArc());
-      setSymbols(narrativeProtocol?.getActiveSymbols());
+      setArc(narrativeProtocol.getCurrentArc());
+      setSymbols(narrativeProtocol.getActiveSymbols());
     }, 5000); // 5 secondes
 
-    return (any: any);
+    return () => clearInterval(interval);
   }, []);
 
   const addMoment = useCallback(
@@ -149,25 +149,25 @@ export function useNarrativeArc() {
       type: 'transition' | 'achievement' | 'challenge' | 'insight' | 'rest';
       description: string;
       emotionalImpact: number;
-      contextTags: string?.[];
+      contextTags: string[];
     }) => {
-      narrativeProtocol?.addNarrativeMoment(any: any);
-      setArc(narrativeProtocol?.getCurrentArc());
+      narrativeProtocol.addNarrativeMoment(moment);
+      setArc(narrativeProtocol.getCurrentArc());
     },
     []
   );
 
   const transitionPhase = useCallback(
     (phase: 'beginning' | 'exploration' | 'deepwork' | 'synthesis' | 'closure') => {
-      narrativeProtocol?.transitionPhase(any: any);
-      setArc(narrativeProtocol?.getCurrentArc());
+      narrativeProtocol.transitionPhase(phase);
+      setArc(narrativeProtocol.getCurrentArc());
     },
     []
   );
 
   const activateSymbol = useCallback((symbolKey: SymbolicElement['key']) => {
-    narrativeProtocol?.activateSymbol(any: any);
-    setSymbols(narrativeProtocol?.getActiveSymbols());
+    narrativeProtocol.activateSymbol(symbolKey);
+    setSymbols(narrativeProtocol.getActiveSymbols());
   }, []);
 
   const continuityScore = arc?.continuityScore || 100;
@@ -196,7 +196,7 @@ export function useNarrativeArc() {
  * return (
  *   <div
  *     style={{
- *       filter: `hue-rotate(any: any)`,
+ *       filter: `hue-rotate(${hue}deg)`,
  *       opacity: intensity / 100
  *     }}
  *   >
@@ -209,23 +209,23 @@ export function useVisualPresence() {
   const { state } = useUnifiedPresence();
 
   return {
-    intensity: state?.visualIntensity,
-    accent: state?.accentStrength,
-    pulse: state?.pulseRate,
-    hue: state?.ambientHue,
+    intensity: state.visualIntensity,
+    accent: state.accentStrength,
+    pulse: state.pulseRate,
+    hue: state.ambientHue,
 
     // Helpers CSS
     getCSSVars: () => ({
-      '--presence-intensity': state?.visualIntensity / 100,
-      '--presence-accent': state?.accentStrength / 100,
-      '--presence-pulse': state?.pulseRate / 100,
-      '--presence-hue': state?.ambientHue,
+      '--presence-intensity': state.visualIntensity / 100,
+      '--presence-accent': state.accentStrength / 100,
+      '--presence-pulse': state.pulseRate / 100,
+      '--presence-hue': state.ambientHue,
     }),
 
     // Style inline complet
     getInlineStyle: () => ({
-      opacity: state?.visualIntensity / 100,
-      filter: `hue-rotate(any: any)`,
+      opacity: state.visualIntensity / 100,
+      filter: `hue-rotate(${state.ambientHue - 250}deg)`,
       transition: 'all 0.3s ease',
     }),
   };
@@ -251,14 +251,14 @@ export function useCognitivePresence() {
   const { state } = useUnifiedPresence();
 
   return {
-    clarity: state?.clarityLevel,
-    complexity: state?.complexityHandled,
-    alignment: state?.intentionAlignment,
+    clarity: state.clarityLevel,
+    complexity: state.complexityHandled,
+    alignment: state.intentionAlignment,
 
     // Helpers
-    isHighClarity: state?.clarityLevel > 70,
-    isHighComplexity: state?.complexityHandled > 70,
-    isAligned: state?.intentionAlignment > 80,
+    isHighClarity: state.clarityLevel > 70,
+    isHighComplexity: state.complexityHandled > 70,
+    isAligned: state.intentionAlignment > 80,
   };
 }
 
@@ -282,23 +282,23 @@ export function useEmotionalPresence() {
   const { state } = useUnifiedPresence();
 
   return {
-    warmth: state?.warmth,
-    proximity: state?.proximity,
-    intensity: state?.intensity,
-    support: state?.supportLevel,
+    warmth: state.warmth,
+    proximity: state.proximity,
+    intensity: state.intensity,
+    support: state.supportLevel,
 
     // Helpers
     getTone: (): 'cold' | 'neutral' | 'warm' | 'very-warm' => {
-      if (state?.warmth < 30) return 'cold';
-      if (state?.warmth < 50) return 'neutral';
-      if (state?.warmth < 70) return 'warm';
+      if (state.warmth < 30) return 'cold';
+      if (state.warmth < 50) return 'neutral';
+      if (state.warmth < 70) return 'warm';
       return 'very-warm';
     },
 
     getProximity: (): 'distant' | 'professional' | 'friendly' | 'intimate' => {
-      if (state?.proximity < 30) return 'distant';
-      if (state?.proximity < 50) return 'professional';
-      if (state?.proximity < 70) return 'friendly';
+      if (state.proximity < 30) return 'distant';
+      if (state.proximity < 50) return 'professional';
+      if (state.proximity < 70) return 'friendly';
       return 'intimate';
     },
   };
@@ -317,15 +317,15 @@ export function useEmotionalPresence() {
  *
  * return (
  *   <div>
- *     {symbols?.map(s => (
- *       <SymbolBadge key={s?.symbol} symbol={s} />
+ *     {symbols.map(s => (
+ *       <SymbolBadge key={s.symbol} symbol={s} />
  *     ))}
  *   </div>
  * );
  * ```
  */
 export function useSymbolicPresence(): {
-  symbols: SymbolicElement?.[];
+  symbols: SymbolicElement[];
   continuity: number;
   stability: number;
   mythDepth: number;
@@ -339,15 +339,15 @@ export function useSymbolicPresence(): {
 
   return {
     symbols,
-    continuity: state?.narrativeContinuity,
-    stability: state?.identityStability,
-    mythDepth: state?.mythologicalDepth,
+    continuity: state.narrativeContinuity,
+    stability: state.identityStability,
+    mythDepth: state.mythologicalDepth,
     continuityScore,
 
     // Helpers
-    isStable: state?.identityStability > 90,
+    isStable: state.identityStability > 90,
     hasContinuity: continuityScore > 80,
-    isDeep: state?.mythologicalDepth > 60,
+    isDeep: state.mythologicalDepth > 60,
   };
 }
 
@@ -371,24 +371,24 @@ export function useUserContextPresence() {
   const { userContext } = useUnifiedPresence();
 
   return {
-    load: userContext?.cognitiveLoad,
-    fatigue: userContext?.fatigue,
-    tempo: userContext?.tempo,
-    complexity: userContext?.taskComplexity,
-    timeOfDay: userContext?.timeOfDay,
-    sessionDuration: userContext?.sessionDuration,
-    pattern: userContext?.interactionPattern,
+    load: userContext.cognitiveLoad,
+    fatigue: userContext.fatigue,
+    tempo: userContext.tempo,
+    complexity: userContext.taskComplexity,
+    timeOfDay: userContext.timeOfDay,
+    sessionDuration: userContext.sessionDuration,
+    pattern: userContext.interactionPattern,
 
     // Helpers
-    isOverloaded: userContext?.cognitiveLoad > 80,
-    isFatigued: userContext?.fatigue > 60,
-    isFastPaced: userContext?.tempo > 70,
-    isComplex: userContext?.taskComplexity > 70,
+    isOverloaded: userContext.cognitiveLoad > 80,
+    isFatigued: userContext.fatigue > 60,
+    isFastPaced: userContext.tempo > 70,
+    isComplex: userContext.taskComplexity > 70,
 
     getRecommendation: (): string => {
-      if (userContext?.fatigue > 70) return 'Pause recommandée';
-      if (userContext?.cognitiveLoad > 80) return 'Réduire la complexité';
-      if (userContext?.tempo > 80) return 'Ralentir le rythme';
+      if (userContext.fatigue > 70) return 'Pause recommandée';
+      if (userContext.cognitiveLoad > 80) return 'Réduire la complexité';
+      if (userContext.tempo > 80) return 'Ralentir le rythme';
       return 'Rythme optimal';
     },
   };
@@ -399,14 +399,14 @@ export function useUserContextPresence() {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 /**
- * Hook pour gérer le profil tonique (any: any)
+ * Hook pour gérer le profil tonique (formality, depth, density, energy)
  *
  * @example
  * ```tsx
  * const { profile, changeProfile } = useTonicProfile();
  *
  * return (
- *   <select onChange={(any: any)}>
+ *   <select onChange={(e) => changeProfile(e.target.value)}>
  *     <option value="deep_focus">Focus Profond</option>
  *     <option value="exploration">Exploration</option>
  *   </select>
@@ -417,8 +417,8 @@ export function useTonicProfile() {
   const { profile, setTonicProfile } = useUnifiedPresence();
 
   const changeProfile = useCallback(
-    (any: any) => {
-      setTonicProfile(any: any);
+    (profileName: string) => {
+      setTonicProfile(profileName);
     },
     [setTonicProfile]
   );
@@ -428,15 +428,15 @@ export function useTonicProfile() {
     changeProfile,
 
     // Helpers
-    formality: profile?.formality,
-    depth: profile?.emotionalDepth,
-    density: profile?.narrativeDensity,
-    energy: profile?.energyLevel,
+    formality: profile.formality,
+    depth: profile.emotionalDepth,
+    density: profile.narrativeDensity,
+    energy: profile.energyLevel,
 
-    isFormal: profile?.formality === 'technical' || profile?.formality === 'professional',
-    isDeep: profile?.emotionalDepth === 'deep' || profile?.emotionalDepth === 'profound',
-    isDense: profile?.narrativeDensity === 'rich' || profile?.narrativeDensity === 'dense',
-    isHighEnergy: profile?.energyLevel === 'high' || profile?.energyLevel === 'peak',
+    isFormal: profile.formality === 'technical' || profile.formality === 'professional',
+    isDeep: profile.emotionalDepth === 'deep' || profile.emotionalDepth === 'profound',
+    isDense: profile.narrativeDensity === 'rich' || profile.narrativeDensity === 'dense',
+    isHighEnergy: profile.energyLevel === 'high' || profile.energyLevel === 'peak',
   };
 }
 
@@ -454,7 +454,7 @@ export function useTonicProfile() {
  * return (
  *   <div>
  *     <h3>Valeurs Fondamentales</h3>
- *     {identity?.coreValues?.map(v => <li key={v}>{v}</li>)}
+ *     {identity.coreValues.map(v => <li key={v}>{v}</li>)}
  *   </div>
  * );
  * ```

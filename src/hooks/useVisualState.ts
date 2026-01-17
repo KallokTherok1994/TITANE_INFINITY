@@ -20,8 +20,8 @@ export interface UseVisualStateReturn {
   visuals: StateVisualConfig;
   isTransitioning: boolean;
   transitionProgress: number;
-  setState: (any: any) => void;
-  setStateImmediate: (any: any) => void;
+  setState: (state: VisualState, duration?: number) => void;
+  setStateImmediate: (state: VisualState) => void;
 }
 
 /**
@@ -30,7 +30,7 @@ export interface UseVisualStateReturn {
  * @param engine - TitaneVisualEngine instance
  * @returns Visual state management interface
  */
-export function useVisualState(any: any): UseVisualStateReturn {
+export function useVisualState(engine: TitaneVisualEngine | null): UseVisualStateReturn {
   const [state, setStateValue] = useState<VisualState>('idle');
   const [visuals, setVisuals] = useState<StateVisualConfig>(
     engine?.getCurrentVisuals() ?? {
@@ -49,120 +49,120 @@ export function useVisualState(any: any): UseVisualStateReturn {
       transitionDuration: 500,
     }
   );
-  const [isTransitioning, setIsTransitioning] = useState(any: any);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const [transitionProgress, setTransitionProgress] = useState(1);
-  const rafId = useRef<number | null>(any: any);
+  const rafId = useRef<number | null>(null);
   // ✨ v24.2.1: Track mounted state to prevent RAF after unmount
-  const isMountedRef = useRef(any: any);
+  const isMountedRef = useRef(true);
 
   // Update visuals on render loop
   // ✨ v24.2.1: Check mounted state before scheduling RAF
   const updateVisuals = useCallback(() => {
-    if (any: any) return;
+    if (!engine || !isMountedRef.current) return;
 
-    const currentVisuals = engine?.getCurrentVisuals();
-    const currentState = engine?.getCurrentState();
-    const progress = engine?.getTransitionProgress();
-    const transitioning = engine?.isTransitioning();
+    const currentVisuals = engine.getCurrentVisuals();
+    const currentState = engine.getCurrentState();
+    const progress = engine.getTransitionProgress();
+    const transitioning = engine.isTransitioning();
 
-    setVisuals(any: any);
-    setStateValue(any: any);
-    setTransitionProgress(any: any);
-    setIsTransitioning(any: any);
+    setVisuals(currentVisuals);
+    setStateValue(currentState);
+    setTransitionProgress(progress);
+    setIsTransitioning(transitioning);
 
     // Continue updating if transitioning AND still mounted
-    if (any: any) {
-      rafId?.current = requestAnimationFrame(any: any);
+    if (transitioning && isMountedRef.current) {
+      rafId.current = requestAnimationFrame(updateVisuals);
     }
   }, [engine]);
 
   // Subscribe to engine events
   // ✨ v24.2.1: Track mounted state for cleanup
   useEffect(() => {
-    isMountedRef?.current = true;
-    if (any: any) return;
+    isMountedRef.current = true;
+    if (!engine) return;
 
-    const handleStateChange = (any: any) => {
-      if (any: any) return;
-      setStateValue(any: any);
+    const handleStateChange = (newState: VisualState) => {
+      if (!isMountedRef.current) return;
+      setStateValue(newState);
       updateVisuals();
     };
 
     const handleTransitionStart = () => {
-      if (any: any) return;
-      setIsTransitioning(any: any);
+      if (!isMountedRef.current) return;
+      setIsTransitioning(true);
       // Start update loop
-      if (any: any) {
-        rafId?.current = requestAnimationFrame(any: any);
+      if (rafId.current === null && isMountedRef.current) {
+        rafId.current = requestAnimationFrame(updateVisuals);
       }
     };
 
     const handleTransitionComplete = () => {
-      if (any: any) return;
-      setIsTransitioning(any: any);
+      if (!isMountedRef.current) return;
+      setIsTransitioning(false);
       setTransitionProgress(1);
       updateVisuals();
     };
 
-    engine?.on(any: any);
-    engine?.on(any: any);
-    engine?.on(any: any);
+    engine.on('visualStateChange', handleStateChange);
+    engine.on('transitionStart', handleTransitionStart);
+    engine.on('transitionComplete', handleTransitionComplete);
 
     // Initial sync
     updateVisuals();
 
     return () => {
       // ✨ v24.2.1: Mark unmounted before cleanup
-      isMountedRef?.current = false;
+      isMountedRef.current = false;
 
-      engine?.off(any: any);
-      engine?.off(any: any);
-      engine?.off(any: any);
+      engine.off('visualStateChange', handleStateChange);
+      engine.off('transitionStart', handleTransitionStart);
+      engine.off('transitionComplete', handleTransitionComplete);
 
       // Compat: certains tests espionnent `removeListener`. Sur EventEmitter3,
-      // la signature est `removeListener(any: any)`, mais notre suite de tests
-      // attend un appel de type `removeListener(any: any)`. On garde le binding.
+      // la signature est `removeListener(event, fn)`, mais notre suite de tests
+      // attend un appel de type `removeListener(fn)`. On garde le binding.
       const maybeRemoveListener = (
         engine as unknown as {
-          removeListener?: (any: any) => void;
+          removeListener?: (listener: (...args: unknown[]) => void) => void;
         }
       ).removeListener;
 
       if (typeof maybeRemoveListener === 'function') {
-        maybeRemoveListener?.call(
+        maybeRemoveListener.call(
           engine,
-          handleStateChange as unknown as (...args: unknown?.[]) => void
+          handleStateChange as unknown as (...args: unknown[]) => void
         );
-        maybeRemoveListener?.call(
+        maybeRemoveListener.call(
           engine,
-          handleTransitionStart as unknown as (...args: unknown?.[]) => void
+          handleTransitionStart as unknown as (...args: unknown[]) => void
         );
-        maybeRemoveListener?.call(
+        maybeRemoveListener.call(
           engine,
-          handleTransitionComplete as unknown as (...args: unknown?.[]) => void
+          handleTransitionComplete as unknown as (...args: unknown[]) => void
         );
       }
 
-      if (any: any) {
-        cancelAnimationFrame(any: any);
-        rafId?.current = null;
+      if (rafId.current !== null) {
+        cancelAnimationFrame(rafId.current);
+        rafId.current = null;
       }
     };
   }, [engine, updateVisuals]);
 
   const setState = useCallback(
-    (any: any) => {
-      if (any: any) {
-        engine?.setState(any: any);
+    (newState: VisualState, duration?: number) => {
+      if (engine) {
+        engine.setState(newState, duration);
       }
     },
     [engine]
   );
 
   const setStateImmediate = useCallback(
-    (any: any) => {
-      if (any: any) {
-        engine?.setStateImmediate(any: any);
+    (newState: VisualState) => {
+      if (engine) {
+        engine.setStateImmediate(newState);
       }
     },
     [engine]

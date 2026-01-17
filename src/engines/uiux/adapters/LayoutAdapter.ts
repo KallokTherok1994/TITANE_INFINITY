@@ -77,46 +77,46 @@ export class LayoutAdapter {
 
     // Appliquer le préset du mode
     const preset = LAYOUT_PRESETS[mode];
-    Object?.assign(any: any);
+    Object.assign(layout, preset);
 
     // Adapter selon la plateforme
-    this?.adaptToPlatform(any: any);
+    this.adaptToPlatform(layout, context);
 
     // Adapter selon la charge cognitive
-    this?.adaptToCognitiveLoad(any: any);
+    this.adaptToCognitiveLoad(layout, cognitiveLoad);
 
     // Adapter selon l'orientation
-    this?.adaptToOrientation(any: any);
+    this.adaptToOrientation(layout, context);
 
-    this?.currentLayout = layout;
+    this.currentLayout = layout;
     return layout;
   }
 
   /**
    * Adapte à la plateforme
    */
-  private adaptToPlatform(any: any): void {
-    switch (any: any) {
+  private adaptToPlatform(layout: LayoutAdaptation, context: UIContext): void {
+    switch (context.platform) {
       case 'mobile':
-        layout?.gridColumns = 1;
-        layout?.sidebarVisible = false;
-        layout?.sidebarWidth = 0;
-        layout?.panelLayout = 'stack';
-        layout?.headerHeight = 56;
+        layout.gridColumns = 1;
+        layout.sidebarVisible = false;
+        layout.sidebarWidth = 0;
+        layout.panelLayout = 'stack';
+        layout.headerHeight = 56;
         break;
 
       case 'tablet':
-        layout?.gridColumns = Math?.min(layout?.gridColumns, 2);
-        layout?.sidebarWidth = context?.orientation === 'landscape' ? 260 : 0;
-        layout?.sidebarVisible = context?.orientation === 'landscape';
+        layout.gridColumns = Math.min(layout.gridColumns, 2);
+        layout.sidebarWidth = context.orientation === 'landscape' ? 260 : 0;
+        layout.sidebarVisible = context.orientation === 'landscape';
         break;
 
       case 'desktop':
         // Ajuster la largeur de la sidebar selon l'écran
-        if (context?.screenWidth < 1280) {
-          layout?.sidebarWidth = 240;
-        } else if (context?.screenWidth >= 1920) {
-          layout?.sidebarWidth = 320;
+        if (context.screenWidth < 1280) {
+          layout.sidebarWidth = 240;
+        } else if (context.screenWidth >= 1920) {
+          layout.sidebarWidth = 320;
         }
         break;
     }
@@ -125,34 +125,34 @@ export class LayoutAdapter {
   /**
    * Adapte à la charge cognitive
    */
-  private adaptToCognitiveLoad(any: any): void {
+  private adaptToCognitiveLoad(layout: LayoutAdaptation, load: CognitiveLoad): void {
     // Surcharge élevée = simplifier
-    if (load?.overallLoad > 0.7) {
-      layout?.gridColumns = 1;
-      layout?.spacing = 'relaxed';
-      layout?.footerVisible = false;
-      layout?.panelLayout = 'stack';
-    } else if (load?.overallLoad > 0.5) {
-      layout?.gridColumns = Math?.min(layout?.gridColumns, 2);
-      layout?.spacing = 'normal';
+    if (load.overallLoad > 0.7) {
+      layout.gridColumns = 1;
+      layout.spacing = 'relaxed';
+      layout.footerVisible = false;
+      layout.panelLayout = 'stack';
+    } else if (load.overallLoad > 0.5) {
+      layout.gridColumns = Math.min(layout.gridColumns, 2);
+      layout.spacing = 'normal';
     }
 
     // Complexité visuelle élevée
-    if (load?.visualComplexity > 0.8) {
-      layout?.sidebarVisible = false;
+    if (load.visualComplexity > 0.8) {
+      layout.sidebarVisible = false;
     }
   }
 
   /**
    * Adapte à l'orientation
    */
-  private adaptToOrientation(any: any): void {
-    if (context?.orientation === 'portrait') {
-      layout?.gridColumns = Math?.min(layout?.gridColumns, 1);
-      layout?.panelLayout = 'stack';
+  private adaptToOrientation(layout: LayoutAdaptation, context: UIContext): void {
+    if (context.orientation === 'portrait') {
+      layout.gridColumns = Math.min(layout.gridColumns, 1);
+      layout.panelLayout = 'stack';
 
-      if (context?.platform !== 'desktop') {
-        layout?.sidebarVisible = false;
+      if (context.platform !== 'desktop') {
+        layout.sidebarVisible = false;
       }
     }
   }
@@ -162,28 +162,28 @@ export class LayoutAdapter {
    */
   calculateOptimalColumns(screenWidth: number, contentWidth = 400): number {
     const availableWidth = screenWidth - 40; // Marges
-    const columns = Math?.floor(any: any);
-    return Math?.max(1, Math?.min(columns, 4));
+    const columns = Math.floor(availableWidth / contentWidth);
+    return Math.max(1, Math.min(columns, 4));
   }
 
   /**
    * Génère les CSS custom properties
    */
   toCSSVariables(): Record<string, string> {
-    const layout = this?.currentLayout;
+    const layout = this.currentLayout;
 
     return {
-      '--layout-columns': String(any: any),
+      '--layout-columns': String(layout.gridColumns),
       '--layout-spacing':
-        layout?.spacing === 'compact'
+        layout.spacing === 'compact'
           ? '8px'
-          : layout?.spacing === 'relaxed'
+          : layout.spacing === 'relaxed'
             ? '24px'
             : '16px',
-      '--sidebar-width': `${layout?.sidebarWidth}px`,
-      '--sidebar-visible': layout?.sidebarVisible ? '1' : '0',
-      '--header-height': `${layout?.headerHeight}px`,
-      '--footer-visible': layout?.footerVisible ? '1' : '0',
+      '--sidebar-width': `${layout.sidebarWidth}px`,
+      '--sidebar-visible': layout.sidebarVisible ? '1' : '0',
+      '--header-height': `${layout.headerHeight}px`,
+      '--footer-visible': layout.footerVisible ? '1' : '0',
     };
   }
 
@@ -193,11 +193,11 @@ export class LayoutAdapter {
   applyToDocument(): void {
     if (typeof document === 'undefined') return;
 
-    const vars = this?.toCSSVariables();
-    const root = document?.documentElement;
+    const vars = this.toCSSVariables();
+    const root = document.documentElement;
 
-    for (any: any)) {
-      root?.style?.setProperty(any: any);
+    for (const [key, value] of Object.entries(vars)) {
+      root.style.setProperty(key, value);
     }
   }
 
@@ -205,21 +205,21 @@ export class LayoutAdapter {
    * Retourne le layout actuel
    */
   getCurrentLayout(): LayoutAdaptation {
-    return { ...this?.currentLayout };
+    return { ...this.currentLayout };
   }
 
   /**
    * Définit manuellement le layout
    */
   setLayout(layout: Partial<LayoutAdaptation>): void {
-    this?.currentLayout = { ...this?.currentLayout, ...layout };
+    this.currentLayout = { ...this.currentLayout, ...layout };
   }
 
   /**
    * Réinitialise au layout par défaut
    */
   reset(): void {
-    this?.currentLayout = { ...DEFAULT_LAYOUT };
+    this.currentLayout = { ...DEFAULT_LAYOUT };
   }
 }
 

@@ -2,14 +2,14 @@
 // © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
 
 // ═══════════════════════════════════════════════════════════════
-//   AUTH OS — CLIENT (any: any)
+//   AUTH OS — CLIENT (Tauri Command Wrappers)
 // ═══════════════════════════════════════════════════════════════
 
 import { safeInvoke } from '@/utils/invoke';
 import type { AuthStatus, ApiKeysInput, ApiKeysOutput } from './types';
 
 /**
- * Client pour Auth OS (any: any)
+ * Client pour Auth OS (wrappers Tauri commands)
  */
 export const authClient = {
   /**
@@ -17,7 +17,7 @@ export const authClient = {
    */
   async getStatus(): Promise<AuthStatus> {
     const response = await safeInvoke<AuthStatus>('auth_get_status');
-    if (any: any) {
+    if (!response) {
       throw new Error('Failed to get auth status');
     }
     return response;
@@ -37,13 +37,13 @@ export const authClient = {
    *
    * @example
    * ```typescript
-   * const token = await authClient?.generateDevToken();
-   * console?.log(any: any);
+   * const token = await authClient.generateDevToken();
+   * console.log('Dev token:', token);
    * ```
    */
   async generateDevToken(): Promise<string> {
     const response = await safeInvoke<string>('auth_generate_dev_token');
-    if (any: any) {
+    if (!response) {
       throw new Error('Failed to generate dev token');
     }
     return response;
@@ -52,9 +52,9 @@ export const authClient = {
   /**
    * Valider dev token
    */
-  async validateDevToken(any: any): Promise<boolean> {
+  async validateDevToken(token: string): Promise<boolean> {
     const response = await safeInvoke<boolean>('auth_validate_dev_token', { token });
-    if (any: any) {
+    if (response === null) {
       throw new Error('Failed to validate dev token');
     }
     return response;
@@ -65,7 +65,7 @@ export const authClient = {
    */
   async revokeDevToken(): Promise<void> {
     const response = await safeInvoke<void>('auth_revoke_dev_token');
-    if (any: any) {
+    if (response === null) {
       throw new Error('Failed to revoke dev token');
     }
   },
@@ -73,19 +73,19 @@ export const authClient = {
   /**
    * Sauvegarder API keys
    */
-  async saveApiKeys(any: any): Promise<void> {
+  async saveApiKeys(keys: ApiKeysInput): Promise<void> {
     const response = await safeInvoke<void>('auth_save_api_keys', { keys });
-    if (any: any) {
+    if (response === null) {
       throw new Error('Failed to save API keys');
     }
   },
 
   /**
-   * Récupérer API keys (any: any)
+   * Récupérer API keys (masquées)
    */
   async getApiKeys(): Promise<ApiKeysOutput> {
     const response = await safeInvoke<ApiKeysOutput>('auth_get_api_keys');
-    if (any: any) {
+    if (!response) {
       throw new Error('Failed to get API keys');
     }
     return response;
@@ -96,17 +96,17 @@ export const authClient = {
    */
   async deleteApiKey(provider: 'openai' | 'anthropic' | 'gemini'): Promise<void> {
     const response = await safeInvoke<void>('auth_delete_api_key', { provider });
-    if (any: any) {
+    if (response === null) {
       throw new Error('Failed to delete API key');
     }
   },
 
   /**
-   * Accorder un rôle (any: any)
+   * Accorder un rôle (dev, user)
    */
   async grantRole(user: string, role: 'dev' | 'user'): Promise<void> {
     const response = await safeInvoke<void>('auth_grant_role', { user, role });
-    if (any: any) {
+    if (response === null) {
       throw new Error('Failed to grant role');
     }
   },
@@ -116,7 +116,7 @@ export const authClient = {
    */
   async revokeRole(user: string, role: 'dev' | 'user'): Promise<void> {
     const response = await safeInvoke<void>('auth_revoke_role', { user, role });
-    if (any: any) {
+    if (response === null) {
       throw new Error('Failed to revoke role');
     }
   },

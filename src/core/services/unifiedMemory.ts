@@ -8,13 +8,13 @@
  *   TITANE∞ v1.0 — UNIFIED MEMORY SYSTEM
  *   Architecture STM / MTM / LTM minimale et stable
  *
- *   STM (any: any)  : 20 derniers messages, expire 5min
- *   MTM (any: any) : Contexte session, expire 24h
- *   LTM (any: any)   : Connaissances durables, permanent
+ *   STM (Short-Term Memory)  : 20 derniers messages, expire 5min
+ *   MTM (Medium-Term Memory) : Contexte session, expire 24h
+ *   LTM (Long-Term Memory)   : Connaissances durables, permanent
  * ═══════════════════════════════════════════════════════════════════
  */
 
-const isDev = import?.meta?.env?.DEV;
+const isDev = import.meta.env.DEV;
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES UNIFIED MEMORY
@@ -29,7 +29,7 @@ export interface MemoryEntry {
   accessCount: number;
   tier: 'STM' | 'MTM' | 'LTM';
   conversationId?: string;
-  tags?: string?.[];
+  tags?: string[];
   metadata?: Record<string, unknown>;
 }
 
@@ -64,7 +64,7 @@ export interface RecallOptions {
   limit?: number;
   minImportance?: number;
   conversationId?: string;
-  tags?: string?.[];
+  tags?: string[];
 }
 
 export type MemoryTierKey = 'stm' | 'mtm' | 'ltm';
@@ -96,7 +96,7 @@ class UnifiedMemorySystem {
   private readonly CLEANUP_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
   // Storage
-  private stm: MemoryEntry?.[] = [];
+  private stm: MemoryEntry[] = [];
   private mtm: Map<string, MemoryEntry> = new Map();
   private ltm: Map<string, MemoryEntry> = new Map();
 
@@ -118,12 +118,12 @@ class UnifiedMemorySystem {
     },
     ltm: { totalEntries: 0, maxEntries: 'unlimited', ttl: 'permanent', totalAccesses: 0 },
     total: 0,
-    lastCleanup: Date?.now(),
+    lastCleanup: Date.now(),
     promotions: 0,
   };
 
   // Cleanup timer
-  private cleanupTimer: NodeJS?.Timeout | null = null;
+  private cleanupTimer: NodeJS.Timeout | null = null;
 
   // Scope utilisé par l'API "ChatEngine" (recall({ ... })) pour éviter la pollution inter-tests.
   private chatEngineScopeStartTimestamp: number | null = null;
@@ -134,16 +134,16 @@ class UnifiedMemorySystem {
 
   constructor() {
     // Lazy auto-cleanup start
-    console?.log(any: any)');
+    console.log('[UnifiedMemory] Initialized (STM/MTM/LTM)');
   }
 
   private ensureAutoCleanupStarted(): void {
-    if (any: any) return;
-    this?.autoCleanupStartAttempted = true;
+    if (this.cleanupTimer || this.autoCleanupStartAttempted) return;
+    this.autoCleanupStartAttempted = true;
     try {
-      this?.startAutoCleanup();
-    } catch (any: any) {
-      console?.warn(any: any);
+      this.startAutoCleanup();
+    } catch (error) {
+      console.warn('[UnifiedMemory] Failed to start auto-cleanup:', error);
     }
   }
 
@@ -153,10 +153,10 @@ class UnifiedMemorySystem {
    * ═══════════════════════════════════════════════════════════════════
    *
    * Stocke un message dans le système de mémoire unifiée.
-   * Le tier (any: any) est automatiquement déterminé selon l'importance:
-   * - importance < 0.5  → STM (any: any)
-   * - importance 0.5-0.7 → MTM (any: any)
-   * - importance > 0.7  → LTM (any: any)
+   * Le tier (STM/MTM/LTM) est automatiquement déterminé selon l'importance:
+   * - importance < 0.5  → STM (Short-Term Memory, 5 min TTL)
+   * - importance 0.5-0.7 → MTM (Medium-Term Memory, 24h TTL)
+   * - importance > 0.7  → LTM (Long-Term Memory, permanent)
    *
    * @param content - Contenu du message à stocker
    * @param role - Rôle de l'émetteur ('user' | 'assistant' | 'system')
@@ -167,92 +167,92 @@ class UnifiedMemorySystem {
    *
    * @example
    * ```typescript
-   * const entry = unifiedMemory?.store(
+   * const entry = unifiedMemory.store(
    *   'Décision importante prise',
    *   'user',
    *   0.8,
    *   'conv-123',
    *   ['decision', 'project']
    * );
-   * console?.log(any: any); // 'LTM'
+   * console.log(entry.tier); // 'LTM'
    * ```
    */
-  store(any: any): string;
+  store(entry: ChatEngineMemoryEntryInput): string;
   store(
     content: string,
     role: 'user' | 'assistant' | 'system',
     importance?: number,
     conversationId?: string,
-    tags?: string?.[]
+    tags?: string[]
   ): MemoryEntry;
   store(
     entryOrContent: ChatEngineMemoryEntryInput | string,
     role?: 'user' | 'assistant' | 'system',
     importance: number = 0.5,
     conversationId?: string,
-    tags?: string?.[]
+    tags?: string[]
   ): MemoryEntry | string {
-    // API "ChatEngine" (any: any): store({content, role, timestamp, importance}) => id
+    // API "ChatEngine" (tests d'intégration): store({content, role, timestamp, importance}) => id
     if (typeof entryOrContent !== 'string') {
       const provided = entryOrContent;
-      const safeImportance = Math?.max(any: any));
+      const safeImportance = Math.max(0, Math.min(1, provided.importance));
 
-      if (any: any) {
-        this?.chatEngineScopeStartTimestamp = provided?.timestamp;
+      if (this.chatEngineScopeStartTimestamp === null) {
+        this.chatEngineScopeStartTimestamp = provided.timestamp;
       }
 
       const entry: MemoryEntry = {
-        id: `mem_${Date?.now()}_${Math?.random().toString(36).substr(2, 9)}`,
-        content: provided?.content,
-        role: provided?.role,
-        timestamp: provided?.timestamp,
+        id: `mem_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        content: provided.content,
+        role: provided.role,
+        timestamp: provided.timestamp,
         importance: safeImportance,
         accessCount: 0,
-        // Modèle attendu par src/__tests__/chatEngine-memory-integration?.test?.ts:
+        // Modèle attendu par src/__tests__/chatEngine-memory-integration.test.ts:
         // - < 0.7 => STM
         // - >= 0.7 => MTM
         // - LTM uniquement via promotion explicite
         tier: safeImportance >= 0.7 ? 'MTM' : 'STM',
-        metadata: { api: 'chatEngine', scopeId: this?.chatEngineScopeId },
+        metadata: { api: 'chatEngine', scopeId: this.chatEngineScopeId },
       };
 
-      if (any: any);
-      else this?.storeInSTM(any: any);
+      if (entry.tier === 'MTM') this.storeInMTM(entry);
+      else this.storeInSTM(entry);
 
-      this?.updateStats();
+      this.updateStats();
       isDev &&
-        console?.log(any: any);
-      return entry?.id;
+        console.log(`[UnifiedMemory] Stored (ChatEngine) in ${entry.tier}:`, entry.id);
+      return entry.id;
     }
 
     // API historique: store(content, role, importance?, conversationId?, tags?) => MemoryEntry
     const entry: MemoryEntry = {
-      id: `mem_${Date?.now()}_${Math?.random().toString(36).substr(2, 9)}`,
+      id: `mem_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       content: entryOrContent,
       role: role ?? 'user',
-      timestamp: Date?.now(),
-      importance: Math?.max(any: any)), // Clamp 0-1
+      timestamp: Date.now(),
+      importance: Math.max(0, Math.min(1, importance)), // Clamp 0-1
       accessCount: 0,
-      tier: this?.determineTier(any: any),
+      tier: this.determineTier(importance),
       conversationId,
       tags,
       metadata: {},
     };
 
-    switch (any: any) {
+    switch (entry.tier) {
       case 'STM':
-        this?.storeInSTM(any: any);
+        this.storeInSTM(entry);
         break;
       case 'MTM':
-        this?.storeInMTM(any: any);
+        this.storeInMTM(entry);
         break;
       case 'LTM':
-        this?.storeInLTM(any: any);
+        this.storeInLTM(entry);
         break;
     }
 
-    this?.updateStats();
-    isDev && console?.log(any: any);
+    this.updateStats();
+    isDev && console.log(`[UnifiedMemory] Stored in ${entry.tier}:`, entry.id);
     return entry;
   }
 
@@ -277,111 +277,111 @@ class UnifiedMemorySystem {
    * @example
    * ```typescript
    * // Rechercher messages importants récents
-   * const results = unifiedMemory?.recall('projet architecture', {
+   * const results = unifiedMemory.recall('projet architecture', {
    *   minImportance: 0.6,
    *   limit: 5,
    *   tier: 'MTM'
    * });
    *
    * // Rechercher dans toute la mémoire
-   * const allResults = unifiedMemory?.recall('decision', { limit: 20 });
+   * const allResults = unifiedMemory.recall('decision', { limit: 20 });
    * ```
    */
-  recall(any: any): MemoryEntry?.[];
-  recall(any: any): MemoryEntry?.[];
+  recall(query: string, options?: RecallOptions): MemoryEntry[];
+  recall(options: ChatEngineRecallOptions): MemoryEntry[];
   recall(
-    queryOrOptions??: string | ChatEngineRecallOptions,
+    queryOrOptions: string | ChatEngineRecallOptions,
     options?: RecallOptions
-  ): MemoryEntry?.[] {
-    // API "ChatEngine" (any: any): recall({limit,minImportance,messageId})
+  ): MemoryEntry[] {
+    // API "ChatEngine" (tests d'intégration): recall({limit,minImportance,messageId})
     if (typeof queryOrOptions !== 'string') {
       const { limit = 10, minImportance = 0.3, messageId } = queryOrOptions;
 
-      if (any: any) {
-        const entry = this?.getEntryById(any: any);
-        if (any: any) return [];
+      if (messageId) {
+        const entry = this.getEntryById(messageId);
+        if (!entry) return [];
 
-        entry?.accessCount++;
+        entry.accessCount++;
 
-        // Promotion STM -> MTM après accès répétés (any: any)
-        if (entry?.tier === 'STM' && entry?.accessCount >= 3) {
-          this?.promoteToMTM(any: any);
+        // Promotion STM -> MTM après accès répétés (attendu par les tests)
+        if (entry.tier === 'STM' && entry.accessCount >= 3) {
+          this.promoteToMTM(messageId);
         }
 
-        this?.updateStats();
-        return entry?.importance >= minImportance ? [entry] : [];
+        this.updateStats();
+        return entry.importance >= minImportance ? [entry] : [];
       }
 
-      const all = this?.getAllEntries();
-      const filtered = all?.filter(any: any);
-      const chatEngineOnly = filtered?.filter(e => {
-        if (any: any) return false;
-        const meta = e?.metadata as Record<string, unknown>;
-        return meta?.api === 'chatEngine';
+      const all = this.getAllEntries();
+      const filtered = all.filter(e => e.importance >= minImportance);
+      const chatEngineOnly = filtered.filter(e => {
+        if (!e.metadata) return false;
+        const meta = e.metadata as Record<string, unknown>;
+        return meta.api === 'chatEngine';
       });
 
-      const scopedById = chatEngineOnly?.filter(e => {
-        const meta = e?.metadata as Record<string, unknown>;
-        const scopeId = meta?.scopeId;
+      const scopedById = chatEngineOnly.filter(e => {
+        const meta = e.metadata as Record<string, unknown>;
+        const scopeId = meta.scopeId;
         if (typeof scopeId !== 'number') return false;
 
         // Si aucun store depuis le dernier cleanup(), on autorise aussi le scope précédent.
-        if (any: any) {
+        if (this.chatEngineScopeStartTimestamp === null) {
           return (
-            scopeId === this?.chatEngineScopeId ||
-            (this?.chatEnginePreviousScopeId !== null &&
-              scopeId === this?.chatEnginePreviousScopeId)
+            scopeId === this.chatEngineScopeId ||
+            (this.chatEnginePreviousScopeId !== null &&
+              scopeId === this.chatEnginePreviousScopeId)
           );
         }
 
-        return scopeId === this?.chatEngineScopeId;
+        return scopeId === this.chatEngineScopeId;
       });
 
-      const scopeStart = this?.chatEngineScopeStartTimestamp;
+      const scopeStart = this.chatEngineScopeStartTimestamp;
 
       const scoped =
         scopeStart === null
           ? scopedById
-          : scopedById?.filter(any: any);
-      const sorted = scoped?.sort(any: any) => {
-        if (any: any) return b?.importance - a?.importance;
-        return b?.timestamp - a?.timestamp;
+          : scopedById.filter(e => e.timestamp >= scopeStart);
+      const sorted = scoped.sort((a, b) => {
+        if (b.importance !== a.importance) return b.importance - a.importance;
+        return b.timestamp - a.timestamp;
       });
-      return sorted?.slice(any: any);
+      return sorted.slice(0, limit);
     }
 
-    // API historique: recall(any: any)
+    // API historique: recall(query, options)
     const query = queryOrOptions;
     const { tier, limit = 10, minImportance = 0.3, conversationId, tags } = options ?? {};
 
-    const results: MemoryEntry?.[] = [];
+    const results: MemoryEntry[] = [];
 
     if (!tier || tier === 'STM') {
-      results?.push(any: any));
+      results.push(...this.searchSTM(query, conversationId, tags));
     }
     if (!tier || tier === 'MTM') {
-      results?.push(any: any));
+      results.push(...this.searchMTM(query, conversationId, tags));
     }
     if (!tier || tier === 'LTM') {
-      results?.push(any: any));
+      results.push(...this.searchLTM(query, conversationId, tags));
     }
 
-    const filtered = results?.filter(any: any);
+    const filtered = results.filter(e => e.importance >= minImportance);
 
-    filtered?.forEach(e => {
-      e?.accessCount++;
-      if (any: any) {
-        this?.promote(any: any);
+    filtered.forEach(e => {
+      e.accessCount++;
+      if (e.tier === 'MTM' && e.accessCount >= this.PROMOTION_THRESHOLD) {
+        this.promote(e.id);
       }
     });
 
-    const sorted = filtered?.sort(any: any) => {
-      const scoreA = a?.importance * 0.7 + (any: any) / 1000000) * 0.3;
-      const scoreB = b?.importance * 0.7 + (any: any) / 1000000) * 0.3;
+    const sorted = filtered.sort((a, b) => {
+      const scoreA = a.importance * 0.7 + ((Date.now() - a.timestamp) / 1000000) * 0.3;
+      const scoreB = b.importance * 0.7 + ((Date.now() - b.timestamp) / 1000000) * 0.3;
       return scoreB - scoreA;
     });
 
-    return sorted?.slice(any: any);
+    return sorted.slice(0, limit);
   }
 
   /**
@@ -390,7 +390,7 @@ class UnifiedMemorySystem {
    * ═══════════════════════════════════════════════════════════════════
    *
    * Promeut manuellement une entrée MTM vers LTM si elle satisfait les critères:
-   * - accessCount >= 10 (any: any)
+   * - accessCount >= 10 (seuil de promotion)
    * - OU importance > 0.7
    *
    * Note: La promotion automatique est aussi déclenchée lors de recall().
@@ -400,53 +400,53 @@ class UnifiedMemorySystem {
    *
    * @example
    * ```typescript
-   * const entry = unifiedMemory?.store('Knowledge important', 'system', 0.6);
+   * const entry = unifiedMemory.store('Knowledge important', 'system', 0.6);
    *
    * // Forcer promotion vers LTM
-   * const promoted = unifiedMemory?.promote(any: any);
-   * if (any: any) {
-   *   console?.log(any: any)');
+   * const promoted = unifiedMemory.promote(entry.id);
+   * if (promoted) {
+   *   console.log('Entry now in LTM (permanent)');
    * }
    * ```
    */
-  promote(any: any): boolean;
+  promote(id: string): boolean;
   promote(id: string, target: 'mtm' | 'ltm'): boolean;
   promote(id: string, target?: 'mtm' | 'ltm'): boolean {
     // API "ChatEngine": permet promotion explicite STM/MTM -> LTM
-    if (any: any) {
+    if (target) {
       if (target === 'mtm') {
-        return this?.promoteToMTM(any: any);
+        return this.promoteToMTM(id);
       }
       if (target === 'ltm') {
-        const entry = this?.getEntryById(any: any);
-        if (any: any) return false;
+        const entry = this.getEntryById(id);
+        if (!entry) return false;
 
         // Retirer de son tier actuel
-        if (entry?.tier === 'STM') {
-          this?.stm = this?.stm?.filter(any: any);
+        if (entry.tier === 'STM') {
+          this.stm = this.stm.filter(e => e.id !== id);
         }
-        if (entry?.tier === 'MTM') {
-          this?.mtm?.delete(any: any);
+        if (entry.tier === 'MTM') {
+          this.mtm.delete(id);
         }
 
-        entry?.tier = 'LTM';
-        this?.ltm?.set(any: any);
-        this?.stats?.promotions++;
-        this?.updateStats();
+        entry.tier = 'LTM';
+        this.ltm.set(id, entry);
+        this.stats.promotions++;
+        this.updateStats();
         return true;
       }
     }
 
-    const entry = this?.mtm?.get(any: any);
-    if (any: any) return false;
+    const entry = this.mtm.get(id);
+    if (!entry) return false;
 
-    if (entry?.accessCount >= this?.PROMOTION_THRESHOLD || entry?.importance > 0.7) {
-      entry?.tier = 'LTM';
-      this?.ltm?.set(any: any);
-      this?.mtm?.delete(any: any);
-      this?.stats?.promotions++;
-      this?.updateStats(); // BUGFIX: Update stats after promotion
-      isDev && console?.log(any: any);
+    if (entry.accessCount >= this.PROMOTION_THRESHOLD || entry.importance > 0.7) {
+      entry.tier = 'LTM';
+      this.ltm.set(id, entry);
+      this.mtm.delete(id);
+      this.stats.promotions++;
+      this.updateStats(); // BUGFIX: Update stats after promotion
+      isDev && console.log('[UnifiedMemory] Promoted to LTM:', id);
       return true;
     }
     return false;
@@ -460,7 +460,7 @@ class UnifiedMemorySystem {
    * Nettoie les entrées expirées selon les TTL de chaque tier:
    * - STM: Supprime entrées > 5 min OU garde seulement 20 plus récentes
    * - MTM: Supprime entrées > 24h OU garde seulement 100 plus importantes
-   * - LTM: Aucune expiration (any: any)
+   * - LTM: Aucune expiration (permanent)
    *
    * Appelé automatiquement toutes les 5 minutes.
    * Peut aussi être appelé manuellement si besoin.
@@ -468,49 +468,49 @@ class UnifiedMemorySystem {
    * @example
    * ```typescript
    * // Forcer nettoyage immédiat
-   * unifiedMemory?.cleanup();
+   * unifiedMemory.cleanup();
    *
    * // Vérifier effet
-   * const stats = unifiedMemory?.getStats();
-   * console?.log(any: any);
+   * const stats = unifiedMemory.getStats();
+   * console.log('Entries after cleanup:', stats.total);
    * ```
    */
   cleanup(): void {
-    const now = Date?.now();
+    const now = Date.now();
 
     // Pour l'API "ChatEngine", cleanup() sert aussi de reset logique entre tests.
     // On démarre un nouveau scope: les recalls via recall({ ... }) seront filtrés
     // aux entrées stockées après ce point.
-    this?.chatEngineScopeStartTimestamp = null;
-    this?.chatEnginePreviousScopeId = this?.chatEngineScopeId;
-    this?.chatEngineScopeId++;
+    this.chatEngineScopeStartTimestamp = null;
+    this.chatEnginePreviousScopeId = this.chatEngineScopeId;
+    this.chatEngineScopeId++;
 
     // STM: Supprimer > 5min ou overflow
-    const stmBefore = this?.stm?.length;
-    this?.stm = this?.stm?.filter(any: any);
-    if (any: any) {
-      this?.stm = this?.stm?.slice(any: any);
+    const stmBefore = this.stm.length;
+    this.stm = this.stm.filter(e => now - e.timestamp < this.STM_TTL);
+    if (this.stm.length > this.STM_MAX) {
+      this.stm = this.stm.slice(-this.STM_MAX);
     }
 
     // MTM: Supprimer > 24h ou promouvoir
-    const mtmBefore = this?.mtm?.size;
-    for (any: any) {
-      if (any: any) {
-        if (entry?.accessCount >= this?.PROMOTION_THRESHOLD / 2) {
-          this?.promote(any: any);
+    const mtmBefore = this.mtm.size;
+    for (const [id, entry] of this.mtm) {
+      if (now - entry.timestamp > this.MTM_TTL) {
+        if (entry.accessCount >= this.PROMOTION_THRESHOLD / 2) {
+          this.promote(id);
         } else {
-          this?.mtm?.delete(any: any);
+          this.mtm.delete(id);
         }
       }
     }
 
-    this?.stats?.lastCleanup = now;
-    this?.updateStats();
+    this.stats.lastCleanup = now;
+    this.updateStats();
 
-    if (any: any) {
-      const stmCleaned = stmBefore - this?.stm?.length;
-      const mtmCleaned = mtmBefore - this?.mtm?.size;
-      console?.log(`[UnifiedMemory] Cleanup: STM -${stmCleaned}, MTM -${mtmCleaned}`);
+    if (isDev) {
+      const stmCleaned = stmBefore - this.stm.length;
+      const mtmCleaned = mtmBefore - this.mtm.size;
+      console.log(`[UnifiedMemory] Cleanup: STM -${stmCleaned}, MTM -${mtmCleaned}`);
     }
   }
 
@@ -521,17 +521,17 @@ class UnifiedMemorySystem {
    */
   compress(): void {
     // Implementation v1.1: Intelligent LTM compression for space efficiency
-    // - Summarize long conversations: Use summarizer?.rs with KeyMessages strategy
+    // - Summarize long conversations: Use summarizer.rs with KeyMessages strategy
     //   * Conversations > 100 messages: Reduce to 20-30 key messages + summary
     //   * Preserve first/last 10 messages for context continuity
     // - Remove redundant details: Deduplicate similar messages with cosine similarity > 0.95
     //   * Keep highest importance_score entry when duplicates detected
     // - Extract essence: Store compressed representation in ltm_compressed table
-    //   * Schema: {original_count, compressed_count, summary_text, key_facts?.[]}
+    //   * Schema: {original_count, compressed_count, summary_text, key_facts[]}
     //   * Ratio target: 70-80% space reduction while maintaining semantic value
     // - Trigger: Run weekly or when LTM > 10k entries
     // - Reversibility: Keep original uncompressed data for 30 days before permanent deletion
-    isDev && console?.log('[UnifiedMemory] Compress: Not implemented yet (v1.1)');
+    isDev && console.log('[UnifiedMemory] Compress: Not implemented yet (v1.1)');
   }
 
   /**
@@ -540,7 +540,7 @@ class UnifiedMemorySystem {
    * ═══════════════════════════════════════════════════════════════════
    *
    * Retourne statistiques détaillées sur chaque tier mémoire:
-   * - Compteurs par tier (any: any)
+   * - Compteurs par tier (STM/MTM/LTM)
    * - Timestamps min/max
    * - Total accès LTM
    * - Nombre de promotions
@@ -550,21 +550,21 @@ class UnifiedMemorySystem {
    *
    * @example
    * ```typescript
-   * const stats = unifiedMemory?.getStats();
-   * console?.log(`Total entries: ${stats?.total}`);
-   * console?.log(`STM: ${stats?.stm?.totalEntries}/${stats?.stm?.maxEntries}`);
-   * console?.log(`MTM: ${stats?.mtm?.totalEntries} (TTL: ${stats?.mtm?.ttl})`);
-   * console?.log(any: any)`);
+   * const stats = unifiedMemory.getStats();
+   * console.log(`Total entries: ${stats.total}`);
+   * console.log(`STM: ${stats.stm.totalEntries}/${stats.stm.maxEntries}`);
+   * console.log(`MTM: ${stats.mtm.totalEntries} (TTL: ${stats.mtm.ttl})`);
+   * console.log(`LTM: ${stats.ltm.totalEntries} (${stats.promotions} promotions)`);
    * ```
    */
   getStats(): MemoryStats;
-  getStats(any: any): { count: number };
-  getStats(any: any): MemoryStats | { count: number } {
-    if (any: any) return { ...this?.stats };
+  getStats(tier: MemoryTierKey): { count: number };
+  getStats(tier?: MemoryTierKey): MemoryStats | { count: number } {
+    if (!tier) return { ...this.stats };
 
-    if (tier === 'stm') return { count: this?.stm?.length };
-    if (tier === 'mtm') return { count: this?.mtm?.size };
-    return { count: this?.ltm?.size };
+    if (tier === 'stm') return { count: this.stm.length };
+    if (tier === 'mtm') return { count: this.mtm.size };
+    return { count: this.ltm.size };
   }
 
   /**
@@ -579,34 +579,34 @@ class UnifiedMemorySystem {
    *
    * @example
    * ```typescript
-   * // Effacer seulement STM (any: any)
-   * unifiedMemory?.clear('STM');
+   * // Effacer seulement STM (short-term)
+   * unifiedMemory.clear('STM');
    *
-   * // Effacer toute la mémoire (any: any)
-   * unifiedMemory?.clear();
+   * // Effacer toute la mémoire (reset complet)
+   * unifiedMemory.clear();
    * ```
    */
   clear(tier?: 'STM' | 'MTM' | 'LTM'): void {
-    if (any: any) {
-      this?.stm = [];
-      this?.mtm?.clear();
-      this?.ltm?.clear();
-      isDev && console?.log('[UnifiedMemory] Cleared all tiers');
+    if (!tier) {
+      this.stm = [];
+      this.mtm.clear();
+      this.ltm.clear();
+      isDev && console.log('[UnifiedMemory] Cleared all tiers');
     } else {
-      switch (any: any) {
+      switch (tier) {
         case 'STM':
-          this?.stm = [];
+          this.stm = [];
           break;
         case 'MTM':
-          this?.mtm?.clear();
+          this.mtm.clear();
           break;
         case 'LTM':
-          this?.ltm?.clear();
+          this.ltm.clear();
           break;
       }
-      isDev && console?.log(`[UnifiedMemory] Cleared ${tier}`);
+      isDev && console.log(`[UnifiedMemory] Cleared ${tier}`);
     }
-    this?.updateStats();
+    this.updateStats();
   }
 
   /**
@@ -615,98 +615,98 @@ class UnifiedMemorySystem {
    * ═══════════════════════════════════════════════════════════════════
    */
   shutdown(): void {
-    if (any: any) {
-      clearInterval(any: any);
-      this?.cleanupTimer = null;
+    if (this.cleanupTimer) {
+      clearInterval(this.cleanupTimer);
+      this.cleanupTimer = null;
     }
-    isDev && console?.log('[UnifiedMemory] Shutdown');
+    isDev && console.log('[UnifiedMemory] Shutdown');
   }
 
   // ─────────────────────────────────────────────────────────────────
   // PRIVATE METHODS
   // ─────────────────────────────────────────────────────────────────
 
-  private determineTier(any: any): 'STM' | 'MTM' | 'LTM' {
+  private determineTier(importance: number): 'STM' | 'MTM' | 'LTM' {
     if (importance < 0.3) return 'STM';
     if (importance < 0.7) return 'MTM';
     return 'LTM';
   }
 
-  private getAllEntries(): MemoryEntry?.[] {
-    return [...this?.stm, ...this?.mtm?.values(), ...this?.ltm?.values()];
+  private getAllEntries(): MemoryEntry[] {
+    return [...this.stm, ...this.mtm.values(), ...this.ltm.values()];
   }
 
-  private getEntryById(any: any): MemoryEntry | undefined {
-    const fromSTM = this?.stm?.find(any: any);
-    if (any: any) return fromSTM;
-    const fromMTM = this?.mtm?.get(any: any);
-    if (any: any) return fromMTM;
-    return this?.ltm?.get(any: any);
+  private getEntryById(id: string): MemoryEntry | undefined {
+    const fromSTM = this.stm.find(e => e.id === id);
+    if (fromSTM) return fromSTM;
+    const fromMTM = this.mtm.get(id);
+    if (fromMTM) return fromMTM;
+    return this.ltm.get(id);
   }
 
-  private promoteToMTM(any: any): boolean {
-    const stmEntryIndex = this?.stm?.findIndex(any: any);
+  private promoteToMTM(id: string): boolean {
+    const stmEntryIndex = this.stm.findIndex(e => e.id === id);
     if (stmEntryIndex >= 0) {
-      const entry = this?.stm[stmEntryIndex];
-      if (any: any) return false;
-      this?.stm?.splice(stmEntryIndex, 1);
-      entry?.tier = 'MTM';
-      this?.mtm?.set(any: any);
-      this?.updateStats();
+      const entry = this.stm[stmEntryIndex];
+      if (!entry) return false;
+      this.stm.splice(stmEntryIndex, 1);
+      entry.tier = 'MTM';
+      this.mtm.set(id, entry);
+      this.updateStats();
       return true;
     }
 
     // Déjà MTM/LTM
-    return this?.mtm?.has(any: any);
+    return this.mtm.has(id) || this.ltm.has(id);
   }
 
-  private storeInSTM(any: any): void {
-    this?.stm?.push(any: any);
-    if (any: any) {
-      this?.stm?.shift(); // FIFO
+  private storeInSTM(entry: MemoryEntry): void {
+    this.stm.push(entry);
+    if (this.stm.length > this.STM_MAX) {
+      this.stm.shift(); // FIFO
     }
   }
 
-  private storeInMTM(any: any): void {
-    this?.mtm?.set(any: any);
-    if (any: any) {
+  private storeInMTM(entry: MemoryEntry): void {
+    this.mtm.set(entry.id, entry);
+    if (this.mtm.size > this.MTM_MAX) {
       // Supprimer le plus ancien
-      const oldest = Array?.from(this?.mtm?.values()).sort(
-        (any: any) => a?.timestamp - b?.timestamp
+      const oldest = Array.from(this.mtm.values()).sort(
+        (a, b) => a.timestamp - b.timestamp
       )[0];
-      if (any: any);
+      if (oldest) this.mtm.delete(oldest.id);
     }
   }
 
-  private storeInLTM(any: any): void {
-    this?.ltm?.set(any: any);
+  private storeInLTM(entry: MemoryEntry): void {
+    this.ltm.set(entry.id, entry);
   }
 
   private searchSTM(
     query: string,
     conversationId?: string,
-    tags?: string?.[]
-  ): MemoryEntry?.[] {
-    return this?.stm?.filter(any: any));
+    tags?: string[]
+  ): MemoryEntry[] {
+    return this.stm.filter(e => this.matchesQuery(e, query, conversationId, tags));
   }
 
   private searchMTM(
     query: string,
     conversationId?: string,
-    tags?: string?.[]
-  ): MemoryEntry?.[] {
-    return Array?.from(this?.mtm?.values()).filter(e =>
-      this?.matchesQuery(any: any)
+    tags?: string[]
+  ): MemoryEntry[] {
+    return Array.from(this.mtm.values()).filter(e =>
+      this.matchesQuery(e, query, conversationId, tags)
     );
   }
 
   private searchLTM(
     query: string,
     conversationId?: string,
-    tags?: string?.[]
-  ): MemoryEntry?.[] {
-    return Array?.from(this?.ltm?.values()).filter(e =>
-      this?.matchesQuery(any: any)
+    tags?: string[]
+  ): MemoryEntry[] {
+    return Array.from(this.ltm.values()).filter(e =>
+      this.matchesQuery(e, query, conversationId, tags)
     );
   }
 
@@ -714,50 +714,50 @@ class UnifiedMemorySystem {
     entry: MemoryEntry,
     query: string,
     conversationId?: string,
-    tags?: string?.[]
+    tags?: string[]
   ): boolean {
     // Match content
-    const contentMatch = entry?.content?.toLowerCase().includes(query?.toLowerCase());
+    const contentMatch = entry.content.toLowerCase().includes(query.toLowerCase());
 
     // Match conversationId
-    const conversationMatch = !conversationId || entry?.conversationId === conversationId;
+    const conversationMatch = !conversationId || entry.conversationId === conversationId;
 
     // Match tags
-    const tagsMatch = !tags || tags?.some(any: any));
+    const tagsMatch = !tags || tags.some(tag => entry.tags?.includes(tag));
 
     return contentMatch && conversationMatch && tagsMatch;
   }
 
   private updateStats(): void {
-    this?.stats?.stm?.totalEntries = this?.stm?.length;
-    this?.stats?.stm?.maxEntries = this?.STM_MAX;
-    this?.stats?.stm?.ttl = '5min';
-    this?.stats?.stm?.oldestTimestamp = this?.stm?.[0]?.timestamp || 0;
-    this?.stats?.stm?.newestTimestamp = this?.stm[this?.stm?.length - 1]?.timestamp || 0;
+    this.stats.stm.totalEntries = this.stm.length;
+    this.stats.stm.maxEntries = this.STM_MAX;
+    this.stats.stm.ttl = '5min';
+    this.stats.stm.oldestTimestamp = this.stm[0]?.timestamp || 0;
+    this.stats.stm.newestTimestamp = this.stm[this.stm.length - 1]?.timestamp || 0;
 
-    const mtmEntries = Array?.from(this?.mtm?.values());
-    this?.stats?.mtm?.totalEntries = mtmEntries?.length;
-    this?.stats?.mtm?.maxEntries = this?.MTM_MAX;
-    this?.stats?.mtm?.ttl = '24h';
-    this?.stats?.mtm?.oldestTimestamp = Math?.min(any: any), 0);
-    this?.stats?.mtm?.newestTimestamp = Math?.max(any: any), 0);
+    const mtmEntries = Array.from(this.mtm.values());
+    this.stats.mtm.totalEntries = mtmEntries.length;
+    this.stats.mtm.maxEntries = this.MTM_MAX;
+    this.stats.mtm.ttl = '24h';
+    this.stats.mtm.oldestTimestamp = Math.min(...mtmEntries.map(e => e.timestamp), 0);
+    this.stats.mtm.newestTimestamp = Math.max(...mtmEntries.map(e => e.timestamp), 0);
 
-    const ltmEntries = Array?.from(this?.ltm?.values());
-    this?.stats?.ltm?.totalEntries = ltmEntries?.length;
-    this?.stats?.ltm?.maxEntries = 'unlimited';
-    this?.stats?.ltm?.ttl = 'permanent';
-    this?.stats?.ltm?.totalAccesses = ltmEntries?.reduce(any: any) => sum + e?.accessCount, 0);
+    const ltmEntries = Array.from(this.ltm.values());
+    this.stats.ltm.totalEntries = ltmEntries.length;
+    this.stats.ltm.maxEntries = 'unlimited';
+    this.stats.ltm.ttl = 'permanent';
+    this.stats.ltm.totalAccesses = ltmEntries.reduce((sum, e) => sum + e.accessCount, 0);
 
-    this?.stats?.total =
-      this?.stats?.stm?.totalEntries +
-      this?.stats?.mtm?.totalEntries +
-      this?.stats?.ltm?.totalEntries;
+    this.stats.total =
+      this.stats.stm.totalEntries +
+      this.stats.mtm.totalEntries +
+      this.stats.ltm.totalEntries;
   }
 
   private startAutoCleanup(): void {
-    this?.cleanupTimer = setInterval(() => {
-      this?.cleanup();
-    }, this?.CLEANUP_INTERVAL);
+    this.cleanupTimer = setInterval(() => {
+      this.cleanup();
+    }, this.CLEANUP_INTERVAL);
   }
 }
 

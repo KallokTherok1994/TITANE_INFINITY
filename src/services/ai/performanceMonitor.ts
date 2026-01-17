@@ -41,7 +41,7 @@ export interface MetricStats {
 export interface MetricConfig {
   /** Maximum data points to retain */
   maxDataPoints: number;
-  /** Time window in milliseconds (any: any) */
+  /** Time window in milliseconds (0 = unlimited) */
   timeWindow: number;
   /** Enable automatic cleanup of old data */
   autoCleanup: boolean;
@@ -64,16 +64,16 @@ const DEFAULT_CONFIG: MetricConfig = {
  */
 class PerformanceMetric {
   private name: string;
-  private dataPoints: MetricDataPoint?.[] = [];
+  private dataPoints: MetricDataPoint[] = [];
   private config: MetricConfig;
-  private cleanupTimer?: NodeJS?.Timeout;
+  private cleanupTimer?: NodeJS.Timeout;
 
   constructor(name: string, config: Partial<MetricConfig> = {}) {
-    this?.name = name;
-    this?.config = { ...DEFAULT_CONFIG, ...config };
+    this.name = name;
+    this.config = { ...DEFAULT_CONFIG, ...config };
 
-    if (any: any) {
-      this?.startAutoCleanup();
+    if (this.config.autoCleanup) {
+      this.startAutoCleanup();
     }
   }
 
@@ -82,21 +82,21 @@ class PerformanceMetric {
    */
   record(value: number, metadata?: Record<string, any>): void {
     const dataPoint: MetricDataPoint = {
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
       value,
       metadata,
     };
 
-    this?.dataPoints?.push(any: any);
+    this.dataPoints.push(dataPoint);
 
     // Enforce max data points
-    if (any: any) {
-      this?.dataPoints?.shift();
+    if (this.dataPoints.length > this.config.maxDataPoints) {
+      this.dataPoints.shift();
     }
 
     // Log significant events
-    if (any: any) {
-      logger?.info(any: any);
+    if (metadata?.significant) {
+      logger.info(`[${this.name}] Significant event: ${value}`, metadata);
     }
   }
 
@@ -104,7 +104,7 @@ class PerformanceMetric {
    * Get statistical summary
    */
   getStats(): MetricStats {
-    if (this?.dataPoints?.length === 0) {
+    if (this.dataPoints.length === 0) {
       return {
         count: 0,
         sum: 0,
@@ -119,25 +119,25 @@ class PerformanceMetric {
       };
     }
 
-    const values = this?.dataPoints?.map(any: any);
-    const count = values?.length;
-    const sum = values?.reduce(any: any) => a + b, 0);
+    const values = this.dataPoints.map(dp => dp.value).sort((a, b) => a - b);
+    const count = values.length;
+    const sum = values.reduce((a, b) => a + b, 0);
     const avg = sum / count;
 
     // Standard deviation
-    const variance = values?.reduce(any: any) => acc + Math?.pow(val - avg, 2), 0) / count;
-    const stdDev = Math?.sqrt(any: any);
+    const variance = values.reduce((acc, val) => acc + Math.pow(val - avg, 2), 0) / count;
+    const stdDev = Math.sqrt(variance);
 
     return {
       count,
       sum,
       avg,
-      min: values?.[0] ?? 0,
+      min: values[0] ?? 0,
       max: values[count - 1] ?? 0,
-      p50: this?.percentile(values, 0.5),
-      p90: this?.percentile(values, 0.9),
-      p95: this?.percentile(values, 0.95),
-      p99: this?.percentile(values, 0.99),
+      p50: this.percentile(values, 0.5),
+      p90: this.percentile(values, 0.9),
+      p95: this.percentile(values, 0.95),
+      p99: this.percentile(values, 0.99),
       stdDev,
     };
   }
@@ -145,47 +145,47 @@ class PerformanceMetric {
   /**
    * Calculate percentile
    */
-  private percentile(any: any): number {
-    if (sortedValues?.length === 0) return 0;
-    const index = Math?.ceil(any: any) - 1;
-    return sortedValues[Math?.max(any: any)] ?? 0;
+  private percentile(sortedValues: number[], percentile: number): number {
+    if (sortedValues.length === 0) return 0;
+    const index = Math.ceil(sortedValues.length * percentile) - 1;
+    return sortedValues[Math.max(0, index)] ?? 0;
   }
 
   /**
    * Get recent data points
    */
-  getRecent(any: any): MetricDataPoint?.[] {
-    return this?.dataPoints?.slice(any: any);
+  getRecent(count: number): MetricDataPoint[] {
+    return this.dataPoints.slice(-count);
   }
 
   /**
    * Get data points within time window
    */
-  getWithinWindow(any: any): MetricDataPoint?.[] {
-    const cutoff = Date?.now() - windowMs;
-    return this?.dataPoints?.filter(any: any);
+  getWithinWindow(windowMs: number): MetricDataPoint[] {
+    const cutoff = Date.now() - windowMs;
+    return this.dataPoints.filter(dp => dp.timestamp >= cutoff);
   }
 
   /**
    * Clear all data points
    */
   clear(): void {
-    this?.dataPoints = [];
+    this.dataPoints = [];
   }
 
   /**
    * Cleanup old data points
    */
   cleanup(): void {
-    if (this?.config?.timeWindow <= 0) return;
+    if (this.config.timeWindow <= 0) return;
 
-    const cutoff = Date?.now() - this?.config?.timeWindow;
-    const before = this?.dataPoints?.length;
-    this?.dataPoints = this?.dataPoints?.filter(any: any);
-    const removed = before - this?.dataPoints?.length;
+    const cutoff = Date.now() - this.config.timeWindow;
+    const before = this.dataPoints.length;
+    this.dataPoints = this.dataPoints.filter(dp => dp.timestamp >= cutoff);
+    const removed = before - this.dataPoints.length;
 
     if (removed > 0) {
-      logger?.debug(`[${this?.name}] Cleaned up ${removed} old data points`);
+      logger.debug(`[${this.name}] Cleaned up ${removed} old data points`);
     }
   }
 
@@ -193,17 +193,17 @@ class PerformanceMetric {
    * Start automatic cleanup
    */
   private startAutoCleanup(): void {
-    this?.cleanupTimer = setInterval(() => {
-      this?.cleanup();
-    }, this?.config?.cleanupInterval);
+    this.cleanupTimer = setInterval(() => {
+      this.cleanup();
+    }, this.config.cleanupInterval);
   }
 
   /**
    * Stop automatic cleanup
    */
   destroy(): void {
-    if (any: any) {
-      clearInterval(any: any);
+    if (this.cleanupTimer) {
+      clearInterval(this.cleanupTimer);
     }
   }
 }
@@ -212,13 +212,13 @@ class PerformanceMetric {
  * Performance monitoring categories
  */
 export enum MetricCategory {
-  AI_GENERATION = 'ai?.generation',
-  AI_PROVIDER = 'ai?.provider',
-  CONTEXT_MANAGEMENT = 'context?.management',
-  MEMORY_OPERATIONS = 'memory?.operations',
-  VOICE_SYNTHESIS = 'voice?.synthesis',
-  AVATAR_RENDERING = 'avatar?.rendering',
-  IPC_CALLS = 'ipc?.calls',
+  AI_GENERATION = 'ai.generation',
+  AI_PROVIDER = 'ai.provider',
+  CONTEXT_MANAGEMENT = 'context.management',
+  MEMORY_OPERATIONS = 'memory.operations',
+  VOICE_SYNTHESIS = 'voice.synthesis',
+  AVATAR_RENDERING = 'avatar.rendering',
+  IPC_CALLS = 'ipc.calls',
   DATABASE = 'database',
   NETWORK = 'network',
   SYSTEM = 'system',
@@ -234,29 +234,29 @@ export class PerformanceMonitor {
   /**
    * Start timing an operation
    */
-  start(any: any): void {
-    this?.timers?.set(operationId, performance?.now());
+  start(operationId: string): void {
+    this.timers.set(operationId, performance.now());
   }
 
   /**
    * End timing and record metric
    */
   end(operationId: string, metricName: string, metadata?: Record<string, any>): number {
-    const startTime = this?.timers?.get(any: any);
-    if (any: any) {
-      logger?.warn(`No start time found for operation: ${operationId}`);
+    const startTime = this.timers.get(operationId);
+    if (!startTime) {
+      logger.warn(`No start time found for operation: ${operationId}`);
       return 0;
     }
 
-    const duration = performance?.now() - startTime;
-    this?.timers?.delete(any: any);
+    const duration = performance.now() - startTime;
+    this.timers.delete(operationId);
 
-    this?.record(any: any);
+    this.record(metricName, duration, metadata);
 
     // Log slow operations
     if (duration > 1000) {
-      logger?.warn(
-        `Slow operation: ${metricName} took ${duration?.toFixed(2)}ms`,
+      logger.warn(
+        `Slow operation: ${metricName} took ${duration.toFixed(2)}ms`,
         metadata
       );
     }
@@ -268,12 +268,12 @@ export class PerformanceMonitor {
    * Measure a synchronous function
    */
   measure<T>(metricName: string, fn: () => T, metadata?: Record<string, any>): T {
-    const start = performance?.now();
+    const start = performance.now();
     try {
       return fn();
     } finally {
-      const duration = performance?.now() - start;
-      this?.record(any: any);
+      const duration = performance.now() - start;
+      this.record(metricName, duration, metadata);
     }
   }
 
@@ -285,12 +285,12 @@ export class PerformanceMonitor {
     fn: () => Promise<T>,
     metadata?: Record<string, any>
   ): Promise<T> {
-    const start = performance?.now();
+    const start = performance.now();
     try {
       return await fn();
     } finally {
-      const duration = performance?.now() - start;
-      this?.record(any: any);
+      const duration = performance.now() - start;
+      this.record(metricName, duration, metadata);
     }
   }
 
@@ -298,33 +298,33 @@ export class PerformanceMonitor {
    * Record a metric value
    */
   record(metricName: string, value: number, metadata?: Record<string, any>): void {
-    if (any: any)) {
-      this?.metrics?.set(any: any));
+    if (!this.metrics.has(metricName)) {
+      this.metrics.set(metricName, new PerformanceMetric(metricName));
     }
 
-    const metric = this?.metrics?.get(any: any);
-    if (any: any) {
-      metric?.record(any: any);
+    const metric = this.metrics.get(metricName);
+    if (metric) {
+      metric.record(value, metadata);
     }
   }
 
   /**
    * Get statistics for a metric
    */
-  getStats(any: any): MetricStats | null {
-    const metric = this?.metrics?.get(any: any);
-    return metric ? metric?.getStats() : null;
+  getStats(metricName: string): MetricStats | null {
+    const metric = this.metrics.get(metricName);
+    return metric ? metric.getStats() : null;
   }
 
   /**
    * Get all metrics matching a pattern
    */
-  getMetricsByPattern(any: any): Map<string, MetricStats> {
+  getMetricsByPattern(pattern: RegExp): Map<string, MetricStats> {
     const results = new Map<string, MetricStats>();
 
-    for (const [name, metric] of this?.metrics?.entries()) {
-      if (any: any)) {
-        results?.set(name, metric?.getStats());
+    for (const [name, metric] of this.metrics.entries()) {
+      if (pattern.test(name)) {
+        results.set(name, metric.getStats());
       }
     }
 
@@ -334,8 +334,8 @@ export class PerformanceMonitor {
   /**
    * Get metrics by category
    */
-  getMetricsByCategory(any: any): Map<string, MetricStats> {
-    return this?.getMetricsByPattern(new RegExp(`^${category}\\.`));
+  getMetricsByCategory(category: MetricCategory): Map<string, MetricStats> {
+    return this.getMetricsByPattern(new RegExp(`^${category}\\.`));
   }
 
   /**
@@ -345,44 +345,44 @@ export class PerformanceMonitor {
     const summary: Record<string, any> = {};
 
     // AI Generation metrics
-    const aiGen = this?.getStats(any: any);
-    if (aiGen && aiGen?.count > 0) {
-      summary?.aiGeneration = {
-        avgLatency: Math?.round(any: any),
-        p95Latency: Math?.round(any: any),
-        totalRequests: aiGen?.count,
-        minLatency: Math?.round(any: any),
-        maxLatency: Math?.round(any: any),
+    const aiGen = this.getStats(MetricCategory.AI_GENERATION);
+    if (aiGen && aiGen.count > 0) {
+      summary.aiGeneration = {
+        avgLatency: Math.round(aiGen.avg),
+        p95Latency: Math.round(aiGen.p95),
+        totalRequests: aiGen.count,
+        minLatency: Math.round(aiGen.min),
+        maxLatency: Math.round(aiGen.max),
       };
     }
 
     // Context management metrics
-    const contextStats = this?.getStats(`${MetricCategory?.CONTEXT_MANAGEMENT}.truncation`);
-    if (contextStats && contextStats?.count > 0) {
-      summary?.contextManagement = {
-        truncationEvents: contextStats?.count,
-        avgTokensRemoved: Math?.round(any: any),
-        totalTokensSaved: Math?.round(any: any),
+    const contextStats = this.getStats(`${MetricCategory.CONTEXT_MANAGEMENT}.truncation`);
+    if (contextStats && contextStats.count > 0) {
+      summary.contextManagement = {
+        truncationEvents: contextStats.count,
+        avgTokensRemoved: Math.round(contextStats.avg),
+        totalTokensSaved: Math.round(contextStats.sum),
       };
     }
 
     // Memory operations
-    const memoryStats = this?.getStats(any: any);
-    if (memoryStats && memoryStats?.count > 0) {
-      summary?.memoryOperations = {
-        avgLatency: Math?.round(any: any),
-        p95Latency: Math?.round(any: any),
-        totalOps: memoryStats?.count,
+    const memoryStats = this.getStats(MetricCategory.MEMORY_OPERATIONS);
+    if (memoryStats && memoryStats.count > 0) {
+      summary.memoryOperations = {
+        avgLatency: Math.round(memoryStats.avg),
+        p95Latency: Math.round(memoryStats.p95),
+        totalOps: memoryStats.count,
       };
     }
 
     // IPC calls
-    const ipcStats = this?.getStats(any: any);
-    if (ipcStats && ipcStats?.count > 0) {
-      summary?.ipcCalls = {
-        avgLatency: Math?.round(any: any),
-        p95Latency: Math?.round(any: any),
-        totalCalls: ipcStats?.count,
+    const ipcStats = this.getStats(MetricCategory.IPC_CALLS);
+    if (ipcStats && ipcStats.count > 0) {
+      summary.ipcCalls = {
+        avgLatency: Math.round(ipcStats.avg),
+        p95Latency: Math.round(ipcStats.p95),
+        totalCalls: ipcStats.count,
       };
     }
 
@@ -395,8 +395,8 @@ export class PerformanceMonitor {
   getDetailedReport(): Record<string, MetricStats> {
     const report: Record<string, MetricStats> = {};
 
-    for (const [name, metric] of this?.metrics?.entries()) {
-      report[name] = metric?.getStats();
+    for (const [name, metric] of this.metrics.entries()) {
+      report[name] = metric.getStats();
     }
 
     return report;
@@ -405,16 +405,16 @@ export class PerformanceMonitor {
   /**
    * Clear a specific metric
    */
-  clearMetric(any: any): void {
-    this?.metrics?.get(any: any)?.clear();
+  clearMetric(metricName: string): void {
+    this.metrics.get(metricName)?.clear();
   }
 
   /**
    * Clear all metrics
    */
   clearAll(): void {
-    for (const metric of this?.metrics?.values()) {
-      metric?.clear();
+    for (const metric of this.metrics.values()) {
+      metric.clear();
     }
   }
 
@@ -422,8 +422,8 @@ export class PerformanceMonitor {
    * Cleanup old data for all metrics
    */
   cleanup(): void {
-    for (const metric of this?.metrics?.values()) {
-      metric?.cleanup();
+    for (const metric of this.metrics.values()) {
+      metric.cleanup();
     }
   }
 
@@ -431,11 +431,11 @@ export class PerformanceMonitor {
    * Destroy monitor and cleanup resources
    */
   destroy(): void {
-    for (const metric of this?.metrics?.values()) {
-      metric?.destroy();
+    for (const metric of this.metrics.values()) {
+      metric.destroy();
     }
-    this?.metrics?.clear();
-    this?.timers?.clear();
+    this.metrics.clear();
+    this.timers.clear();
   }
 
   /**
@@ -443,24 +443,24 @@ export class PerformanceMonitor {
    * Useful for analysis, debugging, and reporting
    */
   exportToJSON(): string {
-    const report = this?.getDetailedReport();
-    const dashboard = this?.getDashboardSummary();
+    const report = this.getDetailedReport();
+    const dashboard = this.getDashboardSummary();
 
     const exportData = {
       timestamp: new Date().toISOString(),
       version: '26.2.0',
       dashboard,
-      metrics: Object?.entries(any: any).map(([name, stats]) => ({
+      metrics: Object.entries(report).map(([name, stats]) => ({
         name,
         ...stats,
       })),
       meta: {
-        totalMetrics: this?.metrics?.size,
-        activeTimers: this?.timers?.size,
+        totalMetrics: this.metrics.size,
+        activeTimers: this.timers.size,
       },
     };
 
-    return JSON?.stringify(exportData, null, 2);
+    return JSON.stringify(exportData, null, 2);
   }
 
   /**
@@ -468,18 +468,18 @@ export class PerformanceMonitor {
    * Useful for spreadsheet analysis
    */
   exportToCSV(): string {
-    const report = this?.getDetailedReport();
-    const lines: string?.[] = ['Metric Name,Count,Average,Min,Max,P50,P90,P95,P99,Std Dev'];
+    const report = this.getDetailedReport();
+    const lines: string[] = ['Metric Name,Count,Average,Min,Max,P50,P90,P95,P99,Std Dev'];
 
-    for (any: any)) {
-      lines?.push(
-        `"${name}",${stats?.count},${stats?.avg?.toFixed(2)},${stats?.min?.toFixed(2)},` +
-          `${stats?.max?.toFixed(2)},${stats?.p50?.toFixed(2)},${stats?.p90?.toFixed(2)},` +
-          `${stats?.p95?.toFixed(2)},${stats?.p99?.toFixed(2)},${stats?.stdDev?.toFixed(2)}`
+    for (const [name, stats] of Object.entries(report)) {
+      lines.push(
+        `"${name}",${stats.count},${stats.avg.toFixed(2)},${stats.min.toFixed(2)},` +
+          `${stats.max.toFixed(2)},${stats.p50.toFixed(2)},${stats.p90.toFixed(2)},` +
+          `${stats.p95.toFixed(2)},${stats.p99.toFixed(2)},${stats.stdDev.toFixed(2)}`
       );
     }
 
-    return lines?.join('\n');
+    return lines.join('\n');
   }
 
   /**
@@ -487,27 +487,27 @@ export class PerformanceMonitor {
    * Browser-safe download function
    */
   downloadMetrics(format: 'json' | 'csv' = 'json'): void {
-    const content = format === 'json' ? this?.exportToJSON() : this?.exportToCSV();
+    const content = format === 'json' ? this.exportToJSON() : this.exportToCSV();
     const blob = new Blob([content], {
       type: format === 'json' ? 'application/json' : 'text/csv',
     });
-    const url = URL?.createObjectURL(any: any);
-    const a = document?.createElement('a');
-    a?.href = url;
-    a?.download = `performance-metrics-${new Date().toISOString().split('T')[0]}.${format}`;
-    document?.body?.appendChild(any: any);
-    a?.click();
-    document?.body?.removeChild(any: any);
-    URL?.revokeObjectURL(any: any);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `performance-metrics-${new Date().toISOString().split('T')[0]}.${format}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   }
 
   /**
    * Get metrics summary for a specific category
    */
-  getCategorySummary(any: any): Record<string, MetricStats> {
+  getCategorySummary(category: MetricCategory): Record<string, MetricStats> {
     const pattern = new RegExp(`^${category}\\.`);
-    const metricsMap = this?.getMetricsByPattern(any: any);
-    return Object?.fromEntries(metricsMap?.entries());
+    const metricsMap = this.getMetricsByPattern(pattern);
+    return Object.fromEntries(metricsMap.entries());
   }
 
   /**
@@ -516,15 +516,15 @@ export class PerformanceMonitor {
   getTopSlowest(
     n: number = 10
   ): Array<{ name: string; avgLatency: number; p95: number }> {
-    const report = this?.getDetailedReport();
-    return Object?.entries(any: any)
+    const report = this.getDetailedReport();
+    return Object.entries(report)
       .map(([name, stats]) => ({
         name,
-        avgLatency: stats?.avg,
-        p95: stats?.p95,
+        avgLatency: stats.avg,
+        p95: stats.p95,
       }))
-      .sort(any: any)
-      .slice(any: any);
+      .sort((a, b) => b.avgLatency - a.avgLatency)
+      .slice(0, n);
   }
 
   /**
@@ -533,34 +533,34 @@ export class PerformanceMonitor {
    */
   getHealthStatus(): {
     status: 'healthy' | 'warning' | 'critical';
-    reasons: string?.[];
+    reasons: string[];
     score: number;
   } {
-    const report = this?.getDetailedReport();
-    const reasons: string?.[] = [];
+    const report = this.getDetailedReport();
+    const reasons: string[] = [];
     let criticalCount = 0;
     let warningCount = 0;
 
-    for (any: any)) {
-      // Check for very slow operations (any: any)
-      if (stats?.p95 > 2000) {
+    for (const [name, stats] of Object.entries(report)) {
+      // Check for very slow operations (>2s p95)
+      if (stats.p95 > 2000) {
         criticalCount++;
-        reasons?.push(`${name}: P95 latency ${stats?.p95?.toFixed(0)}ms is critical (>2s)`);
-      } else if (stats?.p95 > 1000) {
+        reasons.push(`${name}: P95 latency ${stats.p95.toFixed(0)}ms is critical (>2s)`);
+      } else if (stats.p95 > 1000) {
         warningCount++;
-        reasons?.push(`${name}: P95 latency ${stats?.p95?.toFixed(0)}ms is high (>1s)`);
+        reasons.push(`${name}: P95 latency ${stats.p95.toFixed(0)}ms is high (>1s)`);
       }
 
-      // Check for high variance (any: any)
-      if (stats?.stdDev > stats?.avg * 0.5 && stats?.avg > 100) {
+      // Check for high variance (stdDev > 50% of avg)
+      if (stats.stdDev > stats.avg * 0.5 && stats.avg > 100) {
         warningCount++;
-        reasons?.push(any: any)`);
+        reasons.push(`${name}: High variance (stdDev: ${stats.stdDev.toFixed(0)}ms)`);
       }
     }
 
-    const totalMetrics = Object?.keys(any: any).length;
+    const totalMetrics = Object.keys(report).length;
     const healthyCount = totalMetrics - criticalCount - warningCount;
-    const score = totalMetrics > 0 ? (any: any) * 100 : 100;
+    const score = totalMetrics > 0 ? (healthyCount / totalMetrics) * 100 : 100;
 
     let status: 'healthy' | 'warning' | 'critical' = 'healthy';
     if (criticalCount > 0) {
@@ -581,14 +581,14 @@ export const performanceMonitor = new PerformanceMonitor();
 /**
  * Convenience decorator for measuring method performance
  */
-export function Measure(any: any) {
-  return function (any: any) {
-    const originalMethod = descriptor?.value;
+export function Measure(metricName: string) {
+  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    const originalMethod = descriptor.value;
 
-    descriptor?.value = async function (...args: any?.[]) {
-      return performanceMonitor?.measureAsync(
+    descriptor.value = async function (...args: any[]) {
+      return performanceMonitor.measureAsync(
         metricName,
-        (any: any),
+        () => originalMethod.apply(this, args),
         { method: propertyKey }
       );
     };
@@ -600,8 +600,8 @@ export function Measure(any: any) {
 /**
  * Convenience functions
  */
-export function startTimer(any: any): void {
-  performanceMonitor?.start(any: any);
+export function startTimer(operationId: string): void {
+  performanceMonitor.start(operationId);
 }
 
 export function endTimer(
@@ -609,7 +609,7 @@ export function endTimer(
   metricName: string,
   metadata?: Record<string, any>
 ): number {
-  return performanceMonitor?.end(any: any);
+  return performanceMonitor.end(operationId, metricName, metadata);
 }
 
 export function recordMetric(
@@ -617,13 +617,13 @@ export function recordMetric(
   value: number,
   metadata?: Record<string, any>
 ): void {
-  performanceMonitor?.record(any: any);
+  performanceMonitor.record(metricName, value, metadata);
 }
 
-export function getMetricStats(any: any): MetricStats | null {
-  return performanceMonitor?.getStats(any: any);
+export function getMetricStats(metricName: string): MetricStats | null {
+  return performanceMonitor.getStats(metricName);
 }
 
 export function getPerformanceDashboard(): Record<string, any> {
-  return performanceMonitor?.getDashboardSummary();
+  return performanceMonitor.getDashboardSummary();
 }

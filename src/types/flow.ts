@@ -5,7 +5,7 @@
  * Définitions de types pour le moteur de flux :
  * - FlowProfile : profil de flux de l'utilisateur
  * - FlowState : état courant du flux
- * - FlowZone : zone de flux (any: any)
+ * - FlowZone : zone de flux (challenge vs. compétence)
  * - FlowConditions : conditions pour entrer en flux
  *
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.
@@ -25,7 +25,7 @@ export type FlowZone =
   | 'apathy' // Faible challenge ET faibles compétences perçues
   | 'control' // Compétences élevées, challenge modéré
   | 'relaxation' // Compétences élevées, challenge faible
-  | 'arousal' // Challenge élevé, compétences modérées (any: any)
+  | 'arousal' // Challenge élevé, compétences modérées (proche du flow)
   | 'worry'; // Challenge modéré, compétences faibles
 
 /**
@@ -33,7 +33,7 @@ export type FlowZone =
  */
 export type FlowPhase =
   | 'preparation' // Préparation à l'entrée en flow
-  | 'struggle' // Phase de lutte initiale (any: any)
+  | 'struggle' // Phase de lutte initiale (normal)
   | 'release' // Lâcher-prise
   | 'flow' // État de flow actif
   | 'recovery' // Récupération post-flow
@@ -88,7 +88,7 @@ export interface FlowConditions {
   challengeSkillBalance: number; // Équilibre défi/compétence (0-1)
 
   // Conditions environnementales
-  distractionLevel: number; // Niveau de distraction (any: any)
+  distractionLevel: number; // Niveau de distraction (0-1, bas = mieux)
   timeAvailable: number; // Temps disponible perçu (0-1)
   energyLevel: number; // Niveau d'énergie (0-1)
 
@@ -111,9 +111,9 @@ export interface FlowMetrics {
   immersionLevel: number; // Niveau d'immersion (0-1)
 
   // Temporel
-  timeInFlow: number; // Temps dans le flow (any: any)
-  timeSinceLastPeak: number; // Temps depuis le dernier pic (any: any)
-  estimatedTimeRemaining: number; // Temps de flow restant estimé (any: any)
+  timeInFlow: number; // Temps dans le flow (ms)
+  timeSinceLastPeak: number; // Temps depuis le dernier pic (ms)
+  estimatedTimeRemaining: number; // Temps de flow restant estimé (ms)
 
   // Qualité
   qualityScore: number; // Score de qualité (0-1)
@@ -135,11 +135,11 @@ export interface FlowDriftIndicators {
   driftProbability: number; // Probabilité de dérive (0-1)
 
   // Causes détectées
-  detectedDisruptors: FlowDisruptor?.[];
+  detectedDisruptors: FlowDisruptor[];
   primaryDisruptor: FlowDisruptor;
 
   // Recommandations
-  suggestedActions: FlowSuggestion?.[];
+  suggestedActions: FlowSuggestion[];
   urgencyLevel: 'low' | 'medium' | 'high' | 'critical';
 }
 
@@ -163,11 +163,11 @@ export interface FlowSuggestion {
  */
 export interface FlowExitState {
   exitType: 'graceful' | 'interrupted' | 'exhausted' | 'distracted';
-  totalFlowTime: number; // Temps total en flow (any: any)
+  totalFlowTime: number; // Temps total en flow (ms)
   peakIntensity: number; // Intensité maximale atteinte
   accomplishmentSense: number; // Sentiment d'accomplissement (0-1)
   recoveryNeeded: 'minimal' | 'moderate' | 'significant';
-  nextFlowEstimate: number; // Temps avant prochain flow possible (any: any)
+  nextFlowEstimate: number; // Temps avant prochain flow possible (ms)
 }
 
 /**
@@ -189,7 +189,7 @@ export interface FlowHistoryEntry {
  */
 export interface FlowProfile {
   // Caractéristiques personnelles
-  averageFlowDuration: number; // Durée moyenne de flow (any: any)
+  averageFlowDuration: number; // Durée moyenne de flow (ms)
   peakFlowTime: number; // Moment préféré pour le flow
   flowProneness: number; // Propension au flow (0-1)
   recoveryRate: number; // Vitesse de récupération (0-1)
@@ -197,21 +197,21 @@ export interface FlowProfile {
   // Préférences
   preferredChallengeLevel: number; // Niveau de défi préféré (0-1)
   optimalComplexity: number; // Complexité optimale (0-1)
-  breakFrequency: number; // Fréquence de pauses (any: any)
+  breakFrequency: number; // Fréquence de pauses (ms)
 
   // Statistiques
   totalFlowSessions: number;
-  totalFlowTime: number; // Temps total en flow (any: any)
+  totalFlowTime: number; // Temps total en flow (ms)
   averageQuality: number; // Qualité moyenne (0-1)
-  longestFlowStreak: number; // Plus longue session (any: any)
+  longestFlowStreak: number; // Plus longue session (ms)
 
   // Patterns
-  commonDisruptors: FlowDisruptor?.[];
+  commonDisruptors: FlowDisruptor[];
   successfulEntryConditions: Partial<FlowConditions>;
   bestPerformanceWindows: Array<{ start: number; end: number }>; // heures
 
   // Historique
-  history: FlowHistoryEntry?.[];
+  history: FlowHistoryEntry[];
 
   // Métadonnées
   lastFlowSession: number; // Timestamp dernière session
@@ -241,7 +241,7 @@ export interface FlowState {
   lastUpdate: number;
 
   // Erreurs
-  error??: string | null;
+  error: string | null;
 }
 
 // ============================================================================
@@ -258,10 +258,10 @@ export interface FlowEngineConfig {
   driftDetectionSensitivity: number; // Sensibilité détection dérive (0-1)
 
   // Temporel
-  minFlowDuration: number; // Durée min pour compter (any: any)
-  maxFlowDuration: number; // Durée max recommandée (any: any)
-  recoveryPeriod: number; // Période de récupération (any: any)
-  updateIntervalMs: number; // Intervalle mise à jour (any: any)
+  minFlowDuration: number; // Durée min pour compter (ms)
+  maxFlowDuration: number; // Durée max recommandée (ms)
+  recoveryPeriod: number; // Période de récupération (ms)
+  updateIntervalMs: number; // Intervalle mise à jour (ms)
 
   // Limites
   maxHistoryEntries: number;
@@ -284,9 +284,9 @@ export interface FocusReadinessResult {
   readiness: FocusReadiness;
   score: number; // Score global (0-1)
   conditions: FlowConditions;
-  blockers: string?.[]; // Facteurs bloquants
-  recommendations: FlowSuggestion?.[];
-  estimatedTimeToReady: number; // Temps pour être prêt (any: any)
+  blockers: string[]; // Facteurs bloquants
+  recommendations: FlowSuggestion[];
+  estimatedTimeToReady: number; // Temps pour être prêt (ms)
 }
 
 /**
@@ -298,7 +298,7 @@ export interface FlowEntryResult {
   phase: FlowPhase;
   initialIntensity: number;
   reason: string;
-  suggestions?: FlowSuggestion?.[];
+  suggestions?: FlowSuggestion[];
 }
 
 /**
@@ -308,7 +308,7 @@ export interface FlowMaintenanceResult {
   maintained: boolean;
   metrics: FlowMetrics;
   drift: FlowDriftIndicators;
-  adjustments: FlowSuggestion?.[];
+  adjustments: FlowSuggestion[];
 }
 
 /**
@@ -317,7 +317,7 @@ export interface FlowMaintenanceResult {
 export interface FlowExitResult {
   exitState: FlowExitState;
   summary: string;
-  nextSteps: FlowSuggestion?.[];
+  nextSteps: FlowSuggestion[];
 }
 
 // ============================================================================
@@ -325,7 +325,7 @@ export interface FlowExitResult {
 // ============================================================================
 
 export const FLOW_CONSTANTS = {
-  // Zones (any: any)
+  // Zones (challenge, skill thresholds)
   ZONE_THRESHOLDS: {
     flow: { challengeMin: 0.5, challengeMax: 0.8, skillMin: 0.5, skillMax: 0.8 },
     anxiety: { challengeMin: 0.7, skillMax: 0.5 },
@@ -333,7 +333,7 @@ export const FLOW_CONSTANTS = {
     apathy: { challengeMax: 0.3, skillMax: 0.3 },
   },
 
-  // Phases (any: any)
+  // Phases (durées typiques en ms)
   PHASE_DURATIONS: {
     preparation: 5 * 60 * 1000, // 5 minutes
     struggle: 15 * 60 * 1000, // 15 minutes
@@ -352,13 +352,13 @@ export const FLOW_CONSTANTS = {
 
   // Labels
   ZONE_LABELS: {
-    anxiety: 'Anxiété (any: any)',
-    flow: 'Flow (any: any)',
-    boredom: 'Ennui (any: any)',
-    apathy: 'Apathie (any: any)',
-    control: 'Contrôle (any: any)',
+    anxiety: 'Anxiété (défi trop élevé)',
+    flow: 'Flow (équilibre parfait)',
+    boredom: 'Ennui (défi trop faible)',
+    apathy: 'Apathie (faible engagement)',
+    control: 'Contrôle (maîtrise élevée)',
     relaxation: 'Relaxation',
-    arousal: 'Éveil (any: any)',
+    arousal: 'Éveil (proche du flow)',
     worry: 'Inquiétude',
   } as Record<FlowZone, string>,
 
@@ -446,7 +446,7 @@ export function getDefaultFlowProfile(): FlowProfile {
     recoveryRate: 0.5,
     preferredChallengeLevel: 0.6,
     optimalComplexity: 0.5,
-    breakFrequency: 25 * 60 * 1000, // 25 minutes (any: any)
+    breakFrequency: 25 * 60 * 1000, // 25 minutes (Pomodoro)
     totalFlowSessions: 0,
     totalFlowTime: 0,
     averageQuality: 0.5,
@@ -459,7 +459,7 @@ export function getDefaultFlowProfile(): FlowProfile {
     ],
     history: [],
     lastFlowSession: 0,
-    lastUpdate: Date?.now(),
+    lastUpdate: Date.now(),
   };
 }
 
@@ -474,7 +474,7 @@ export function getDefaultFlowState(): FlowState {
     driftIndicators: getDefaultFlowDriftIndicators(),
     profile: getDefaultFlowProfile(),
     flowStartTime: null,
-    lastUpdate: Date?.now(),
+    lastUpdate: Date.now(),
     error: null,
   };
 }

@@ -5,10 +5,10 @@
  * ═══════════════════════════════════════════════════════════════════
  *
  * Fonctionnalités:
- * - CRUD événements (any: any)
+ * - CRUD événements (create, read, update, delete)
  * - Vues jour/semaine/mois
  * - Annotation énergie/priorité
- * - Synchronisation Tauri (any: any)
+ * - Synchronisation Tauri (stockage local)
  * - Grille horaire dynamique
  */
 
@@ -23,12 +23,12 @@ import type {
 import { logger } from '@/utils/logger';
 // ARCHITECTURE RINGS COMPLIANT: Engines (Ring 2) don't import from Services (Ring 3)
 // I/O operations injected via storage callbacks at initialization
-// See docs/ARCHITECTURE_RINGS?.md for details
+// See docs/ARCHITECTURE_RINGS.md for details
 
 // Storage operations will be injected from Services layer
 export type AgendaStorageCallbacks = {
-  loadEvents: () => Promise<AgendaEvent?.[]>;
-  saveEvents: (events: AgendaEvent?.[]) => Promise<void>;
+  loadEvents: () => Promise<AgendaEvent[]>;
+  saveEvents: (events: AgendaEvent[]) => Promise<void>;
   exportCalendar: () => Promise<string>;
 };
 
@@ -57,26 +57,26 @@ const DEFAULT_AGENDA_META: AgendaMeta = {
  * Génère un ID unique pour un événement
  */
 function generateEventId(): string {
-  const timestamp = Date?.now().toString(36);
-  const random = Math?.random().toString(36).substring(2, 8);
+  const timestamp = Date.now().toString(36);
+  const random = Math.random().toString(36).substring(2, 8);
   return `evt_${timestamp}_${random}`;
 }
 
 /**
- * Obtient le début de la journée (any: any)
+ * Obtient le début de la journée (minuit)
  */
-function getStartOfDay(any: any): Date {
-  const d = new Date(any: any);
-  d?.setHours(0, 0, 0, 0);
+function getStartOfDay(date: Date): Date {
+  const d = new Date(date);
+  d.setHours(0, 0, 0, 0);
   return d;
 }
 
 /**
  * Obtient la fin de la journée (23:59:59)
  */
-function getEndOfDay(any: any): Date {
-  const d = new Date(any: any);
-  d?.setHours(23, 59, 59, 999);
+function getEndOfDay(date: Date): Date {
+  const d = new Date(date);
+  d.setHours(23, 59, 59, 999);
   return d;
 }
 
@@ -84,11 +84,11 @@ function getEndOfDay(any: any): Date {
  * Obtient le début de la semaine
  */
 function getStartOfWeek(date: Date, firstDayOfWeek: number = 1): Date {
-  const d = new Date(any: any);
-  const day = d?.getDay();
+  const d = new Date(date);
+  const day = d.getDay();
   const diff = (day - firstDayOfWeek + 7) % 7;
-  d?.setDate(any: any);
-  d?.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() - diff);
+  d.setHours(0, 0, 0, 0);
   return d;
 }
 
@@ -96,40 +96,40 @@ function getStartOfWeek(date: Date, firstDayOfWeek: number = 1): Date {
  * Obtient la fin de la semaine
  */
 function getEndOfWeek(date: Date, firstDayOfWeek: number = 1): Date {
-  const start = getStartOfWeek(any: any);
-  const end = new Date(any: any);
-  end?.setDate(end?.getDate() + 6);
-  end?.setHours(23, 59, 59, 999);
+  const start = getStartOfWeek(date, firstDayOfWeek);
+  const end = new Date(start);
+  end.setDate(end.getDate() + 6);
+  end.setHours(23, 59, 59, 999);
   return end;
 }
 
 /**
  * Obtient le début du mois
  */
-function getStartOfMonth(any: any): Date {
-  const d = new Date(any: any);
-  d?.setDate(1);
-  d?.setHours(0, 0, 0, 0);
+function getStartOfMonth(date: Date): Date {
+  const d = new Date(date);
+  d.setDate(1);
+  d.setHours(0, 0, 0, 0);
   return d;
 }
 
 /**
  * Obtient la fin du mois
  */
-function getEndOfMonth(any: any): Date {
-  const d = new Date(any: any);
-  d?.setMonth(d?.getMonth() + 1);
-  d?.setDate(0);
-  d?.setHours(23, 59, 59, 999);
+function getEndOfMonth(date: Date): Date {
+  const d = new Date(date);
+  d.setMonth(d.getMonth() + 1);
+  d.setDate(0);
+  d.setHours(23, 59, 59, 999);
   return d;
 }
 
 /**
  * Vérifie si un événement est dans une plage de dates
  */
-function isEventInRange(any: any): boolean {
-  const eventStart = new Date(any: any);
-  const eventEnd = new Date(any: any);
+function isEventInRange(event: AgendaEvent, start: Date, end: Date): boolean {
+  const eventStart = new Date(event.startDateTime);
+  const eventEnd = new Date(event.endDateTime);
   return eventStart <= end && eventEnd >= start;
 }
 
@@ -140,7 +140,7 @@ function isEventInRange(any: any): boolean {
 /**
  * Listener pour les changements d'événements
  */
-type AgendaEventListener = (events: AgendaEvent?.[]) => void;
+type AgendaEventListener = (events: AgendaEvent[]) => void;
 
 /**
  * AgendaEngine v∞ — Moteur de gestion de l'agenda TITANE∞
@@ -151,15 +151,15 @@ export class AgendaEngine {
   private listeners: Set<AgendaEventListener>;
   private storage: AgendaStorageCallbacks | null;
 
-  constructor(any: any) {
-    this?.events = new Map();
-    this?.meta = { ...DEFAULT_AGENDA_META };
-    this?.listeners = new Set();
-    this?.storage = storage ?? null; // I/O injected from Services layer
+  constructor(storage?: AgendaStorageCallbacks) {
+    this.events = new Map();
+    this.meta = { ...DEFAULT_AGENDA_META };
+    this.listeners = new Set();
+    this.storage = storage ?? null; // I/O injected from Services layer
   }
 
-  public setStorageCallbacks(any: any): void {
-    this?.storage = storage;
+  public setStorageCallbacks(storage: AgendaStorageCallbacks | null): void {
+    this.storage = storage;
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -170,15 +170,15 @@ export class AgendaEngine {
    * Initialise l'AgendaEngine et charge les événements depuis Tauri
    */
   async init(): Promise<void> {
-    logger?.debug('📅 Initialisation...');
+    logger.debug('📅 Initialisation...');
 
-    if (any: any) {
-      await this?.loadEvents();
+    if (this.storage) {
+      await this.loadEvents();
     }
 
-    logger?.debug('✅ Initialisé:', {
-      eventsCount: this?.events?.size,
-      defaultView: this?.meta?.defaultView,
+    logger.debug('✅ Initialisé:', {
+      eventsCount: this.events.size,
+      defaultView: this.meta.defaultView,
     });
   }
 
@@ -187,19 +187,19 @@ export class AgendaEngine {
   // ═══════════════════════════════════════════════════════════════
 
   /**
-   * Charge les événements depuis Tauri (any: any)
+   * Charge les événements depuis Tauri (stockage local)
    */
   async loadEvents(): Promise<void> {
-    if (any: any) return; // No storage injected
+    if (!this.storage) return; // No storage injected
 
     try {
-      const events = await this?.storage?.loadEvents();
-      this?.events?.clear();
-      events?.forEach(any: any));
-      this?.notifyListeners();
-      logger?.debug(any: any);
-    } catch (any: any) {
-      logger?.error(any: any);
+      const events = await this.storage.loadEvents();
+      this.events.clear();
+      events.forEach((event: AgendaEvent) => this.events.set(event.id, event));
+      this.notifyListeners();
+      logger.debug('📥 Événements chargés:', events.length);
+    } catch (error) {
+      logger.error('Erreur chargement:', error);
       // Fallback: garder les événements en mémoire
     }
   }
@@ -208,14 +208,14 @@ export class AgendaEngine {
    * Sauvegarde les événements vers Tauri
    */
   private async saveEvents(): Promise<void> {
-    if (any: any) return; // No storage injected
+    if (!this.storage) return; // No storage injected
 
     try {
-      const eventsArray = Array?.from(this?.events?.values());
-      await this?.storage?.saveEvents(any: any);
-      logger?.debug(any: any);
-    } catch (any: any) {
-      logger?.error(any: any);
+      const eventsArray = Array.from(this.events.values());
+      await this.storage.saveEvents(eventsArray);
+      logger.debug('💾 Événements sauvegardés:', eventsArray.length);
+    } catch (error) {
+      logger.error('Erreur sauvegarde:', error);
     }
   }
 
@@ -225,7 +225,7 @@ export class AgendaEngine {
   async createEvent(
     eventData: Omit<AgendaEvent, 'id' | 'createdAt' | 'updatedAt'>
   ): Promise<AgendaEvent> {
-    const now = Date?.now();
+    const now = Date.now();
     const event: AgendaEvent = {
       ...eventData,
       id: generateEventId(),
@@ -233,16 +233,16 @@ export class AgendaEngine {
       updatedAt: now,
     };
 
-    this?.events?.set(any: any);
-    await this?.saveEvents();
-    this?.notifyListeners();
+    this.events.set(event.id, event);
+    await this.saveEvents();
+    this.notifyListeners();
 
-    logger?.debug(any: any);
+    logger.debug('➕ Événement créé:', event.title);
     return event;
   }
 
   /**
-   * Crée un événement rapide (any: any)
+   * Crée un événement rapide (minimal)
    */
   async createQuickEvent(
     title: string,
@@ -250,13 +250,13 @@ export class AgendaEngine {
     durationMinutes: number = 60,
     category: EventCategory = 'work'
   ): Promise<AgendaEvent> {
-    const start = new Date(any: any);
-    const end = new Date(start?.getTime() + durationMinutes * 60 * 1000);
+    const start = new Date(startDateTime);
+    const end = new Date(start.getTime() + durationMinutes * 60 * 1000);
 
-    return this?.createEvent({
+    return this.createEvent({
       title,
-      startDateTime: start?.toISOString(),
-      endDateTime: end?.toISOString(),
+      startDateTime: start.toISOString(),
+      endDateTime: end.toISOString(),
       allDay: false,
       category,
       status: 'scheduled',
@@ -273,9 +273,9 @@ export class AgendaEngine {
     eventId: string,
     updates: Partial<AgendaEvent>
   ): Promise<AgendaEvent | null> {
-    const event = this?.events?.get(any: any);
-    if (any: any) {
-      logger?.warn(any: any);
+    const event = this.events.get(eventId);
+    if (!event) {
+      logger.warn('Événement non trouvé:', eventId);
       return null;
     }
 
@@ -283,39 +283,39 @@ export class AgendaEngine {
       ...event,
       ...updates,
       id: eventId, // Préserver l'ID
-      updatedAt: Date?.now(),
+      updatedAt: Date.now(),
     };
 
-    this?.events?.set(any: any);
-    await this?.saveEvents();
-    this?.notifyListeners();
+    this.events.set(eventId, updatedEvent);
+    await this.saveEvents();
+    this.notifyListeners();
 
-    logger?.debug(any: any);
+    logger.debug('✏️ Événement modifié:', updatedEvent.title);
     return updatedEvent;
   }
 
   /**
-   * Déplace un événement (any: any)
+   * Déplace un événement (change les dates)
    */
   async moveEvent(
     eventId: string,
     newStartDateTime: string,
     newEndDateTime?: string
   ): Promise<AgendaEvent | null> {
-    const event = this?.events?.get(any: any);
-    if (any: any) return null;
+    const event = this.events.get(eventId);
+    if (!event) return null;
 
     // Calculer la nouvelle fin si non fournie
     let endDateTime = newEndDateTime;
-    if (any: any) {
+    if (!endDateTime) {
       const originalDuration =
-        new Date(any: any).getTime();
+        new Date(event.endDateTime).getTime() - new Date(event.startDateTime).getTime();
       endDateTime = new Date(
-        new Date(any: any).getTime() + originalDuration
+        new Date(newStartDateTime).getTime() + originalDuration
       ).toISOString();
     }
 
-    return this?.updateEvent(eventId, {
+    return this.updateEvent(eventId, {
       startDateTime: newStartDateTime,
       endDateTime,
     });
@@ -324,15 +324,15 @@ export class AgendaEngine {
   /**
    * Supprime un événement
    */
-  async deleteEvent(any: any): Promise<boolean> {
-    const event = this?.events?.get(any: any);
-    if (any: any) return false;
+  async deleteEvent(eventId: string): Promise<boolean> {
+    const event = this.events.get(eventId);
+    if (!event) return false;
 
-    this?.events?.delete(any: any);
-    await this?.saveEvents();
-    this?.notifyListeners();
+    this.events.delete(eventId);
+    await this.saveEvents();
+    this.notifyListeners();
 
-    logger?.debug(any: any);
+    logger.debug('🗑️ Événement supprimé:', event.title);
     return true;
   }
 
@@ -343,7 +343,7 @@ export class AgendaEngine {
     eventId: string,
     status: EventStatus
   ): Promise<AgendaEvent | null> {
-    return this?.updateEvent(eventId, { status });
+    return this.updateEvent(eventId, { status });
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -353,82 +353,82 @@ export class AgendaEngine {
   /**
    * Obtient tous les événements
    */
-  getAllEvents(): AgendaEvent?.[] {
-    return Array?.from(this?.events?.values());
+  getAllEvents(): AgendaEvent[] {
+    return Array.from(this.events.values());
   }
 
   /**
    * Obtient un événement par ID
    */
-  getEvent(any: any): AgendaEvent | undefined {
-    return this?.events?.get(any: any);
+  getEvent(eventId: string): AgendaEvent | undefined {
+    return this.events.get(eventId);
   }
 
   /**
    * Obtient les événements d'une journée
    */
-  getEventsForDay(any: any): AgendaEvent?.[] {
-    const start = getStartOfDay(any: any);
-    const end = getEndOfDay(any: any);
-    return this?.getEventsInRange(any: any);
+  getEventsForDay(date: Date): AgendaEvent[] {
+    const start = getStartOfDay(date);
+    const end = getEndOfDay(date);
+    return this.getEventsInRange(start, end);
   }
 
   /**
    * Obtient les événements d'une semaine
    */
-  getEventsForWeek(any: any): AgendaEvent?.[] {
-    const start = getStartOfWeek(any: any);
-    const end = getEndOfWeek(any: any);
-    return this?.getEventsInRange(any: any);
+  getEventsForWeek(date: Date): AgendaEvent[] {
+    const start = getStartOfWeek(date, this.meta.firstDayOfWeek);
+    const end = getEndOfWeek(date, this.meta.firstDayOfWeek);
+    return this.getEventsInRange(start, end);
   }
 
   /**
    * Obtient les événements d'un mois
    */
-  getEventsForMonth(any: any): AgendaEvent?.[] {
-    const start = getStartOfMonth(any: any);
-    const end = getEndOfMonth(any: any);
-    return this?.getEventsInRange(any: any);
+  getEventsForMonth(date: Date): AgendaEvent[] {
+    const start = getStartOfMonth(date);
+    const end = getEndOfMonth(date);
+    return this.getEventsInRange(start, end);
   }
 
   /**
    * Obtient les événements dans une plage de dates
    */
-  getEventsInRange(any: any): AgendaEvent?.[] {
-    return this?.getAllEvents(any: any));
+  getEventsInRange(start: Date, end: Date): AgendaEvent[] {
+    return this.getAllEvents().filter(event => isEventInRange(event, start, end));
   }
 
   /**
    * Obtient les événements par catégorie
    */
-  getEventsByCategory(any: any): AgendaEvent?.[] {
-    return this?.getAllEvents(any: any);
+  getEventsByCategory(category: EventCategory): AgendaEvent[] {
+    return this.getAllEvents().filter(event => event.category === category);
   }
 
   /**
    * Obtient les événements par statut
    */
-  getEventsByStatus(any: any): AgendaEvent?.[] {
-    return this?.getAllEvents(any: any);
+  getEventsByStatus(status: EventStatus): AgendaEvent[] {
+    return this.getAllEvents().filter(event => event.status === status);
   }
 
   /**
    * Obtient les événements par priorité
    */
-  getEventsByPriority(any: any): AgendaEvent?.[] {
-    return this?.getAllEvents(any: any);
+  getEventsByPriority(priority: PriorityLevel): AgendaEvent[] {
+    return this.getAllEvents().filter(event => event.priority === priority);
   }
 
   /**
    * Recherche des événements par texte
    */
-  searchEvents(any: any): AgendaEvent?.[] {
-    const lowerQuery = query?.toLowerCase();
-    return this?.getAllEvents().filter(
+  searchEvents(query: string): AgendaEvent[] {
+    const lowerQuery = query.toLowerCase();
+    return this.getAllEvents().filter(
       event =>
-        event?.title?.toLowerCase(any: any) ||
-        event?.description?.toLowerCase(any: any) ||
-        event?.tags?.some(any: any))
+        event.title.toLowerCase().includes(lowerQuery) ||
+        event.description?.toLowerCase().includes(lowerQuery) ||
+        event.tags.some(tag => tag.toLowerCase().includes(lowerQuery))
     );
   }
 
@@ -439,23 +439,23 @@ export class AgendaEngine {
   /**
    * Construit la grille horaire pour une vue jour
    */
-  buildDayGrid(any: any): { hour: number; events: AgendaEvent?.[] }[] {
-    const events = this?.getEventsForDay(any: any);
-    const grid: { hour: number; events: AgendaEvent?.[] }[] = [];
+  buildDayGrid(date: Date): { hour: number; events: AgendaEvent[] }[] {
+    const events = this.getEventsForDay(date);
+    const grid: { hour: number; events: AgendaEvent[] }[] = [];
 
-    for (let hour = this?.meta?.gridStartHour; hour <= this?.meta?.gridEndHour; hour++) {
-      const hourEvents = events?.filter(event => {
-        if (any: any) return false;
-        const eventStart = new Date(any: any);
-        const eventEnd = new Date(any: any);
-        const hourStart = new Date(any: any);
-        hourStart?.setHours(hour, 0, 0, 0);
-        const hourEnd = new Date(any: any);
-        hourEnd?.setHours(hour + 1, 0, 0, 0);
+    for (let hour = this.meta.gridStartHour; hour <= this.meta.gridEndHour; hour++) {
+      const hourEvents = events.filter(event => {
+        if (event.allDay) return false;
+        const eventStart = new Date(event.startDateTime);
+        const eventEnd = new Date(event.endDateTime);
+        const hourStart = new Date(date);
+        hourStart.setHours(hour, 0, 0, 0);
+        const hourEnd = new Date(date);
+        hourEnd.setHours(hour + 1, 0, 0, 0);
         return eventStart < hourEnd && eventEnd > hourStart;
       });
 
-      grid?.push({ hour, events: hourEvents });
+      grid.push({ hour, events: hourEvents });
     }
 
     return grid;
@@ -464,16 +464,16 @@ export class AgendaEngine {
   /**
    * Construit la grille semaine
    */
-  buildWeekGrid(any: any): { date: Date; events: AgendaEvent?.[] }[] {
-    const start = getStartOfWeek(any: any);
-    const grid: { date: Date; events: AgendaEvent?.[] }[] = [];
+  buildWeekGrid(date: Date): { date: Date; events: AgendaEvent[] }[] {
+    const start = getStartOfWeek(date, this.meta.firstDayOfWeek);
+    const grid: { date: Date; events: AgendaEvent[] }[] = [];
 
     for (let i = 0; i < 7; i++) {
-      const d = new Date(any: any);
-      d?.setDate(any: any);
-      grid?.push({
+      const d = new Date(start);
+      d.setDate(d.getDate() + i);
+      grid.push({
         date: d,
-        events: this?.getEventsForDay(any: any),
+        events: this.getEventsForDay(d),
       });
     }
 
@@ -485,23 +485,23 @@ export class AgendaEngine {
    */
   buildMonthGrid(
     date: Date
-  ): { date: Date; events: AgendaEvent?.[]; isCurrentMonth: boolean }[] {
-    const start = getStartOfMonth(any: any);
-    const end = getEndOfMonth(any: any);
-    const monthStart = getStartOfWeek(any: any);
+  ): { date: Date; events: AgendaEvent[]; isCurrentMonth: boolean }[] {
+    const start = getStartOfMonth(date);
+    const end = getEndOfMonth(date);
+    const monthStart = getStartOfWeek(start, this.meta.firstDayOfWeek);
 
-    const grid: { date: Date; events: AgendaEvent?.[]; isCurrentMonth: boolean }[] = [];
-    const current = new Date(any: any);
+    const grid: { date: Date; events: AgendaEvent[]; isCurrentMonth: boolean }[] = [];
+    const current = new Date(monthStart);
 
-    // Générer 6 semaines (any: any) pour couvrir tous les cas
+    // Générer 6 semaines (42 jours) pour couvrir tous les cas
     for (let i = 0; i < 42; i++) {
-      const d = new Date(any: any);
-      grid?.push({
+      const d = new Date(current);
+      grid.push({
         date: d,
-        events: this?.getEventsForDay(any: any),
+        events: this.getEventsForDay(d),
         isCurrentMonth: d >= start && d <= end,
       });
-      current?.setDate(current?.getDate() + 1);
+      current.setDate(current.getDate() + 1);
     }
 
     return grid;
@@ -515,36 +515,36 @@ export class AgendaEngine {
    * Obtient la configuration de l'agenda
    */
   getMeta(): AgendaMeta {
-    return { ...this?.meta };
+    return { ...this.meta };
   }
 
   /**
    * Met à jour la configuration de l'agenda
    */
   setMeta(updates: Partial<AgendaMeta>): void {
-    this?.meta = { ...this?.meta, ...updates };
-    this?.notifyListeners();
+    this.meta = { ...this.meta, ...updates };
+    this.notifyListeners();
   }
 
   /**
    * Change la vue par défaut
    */
-  setDefaultView(any: any): void {
-    this?.meta?.defaultView = view;
+  setDefaultView(view: AgendaView): void {
+    this.meta.defaultView = view;
   }
 
   /**
    * Active/désactive l'overlay énergie
    */
-  toggleEnergyOverlay(any: any): void {
-    this?.meta?.showEnergyOverlay = enabled ?? !this?.meta?.showEnergyOverlay;
+  toggleEnergyOverlay(enabled?: boolean): void {
+    this.meta.showEnergyOverlay = enabled ?? !this.meta.showEnergyOverlay;
   }
 
   /**
    * Active/désactive les blocs de focus
    */
-  toggleFocusBlocks(any: any): void {
-    this?.meta?.showFocusBlocks = enabled ?? !this?.meta?.showFocusBlocks;
+  toggleFocusBlocks(enabled?: boolean): void {
+    this.meta.showFocusBlocks = enabled ?? !this.meta.showFocusBlocks;
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -563,23 +563,23 @@ export class AgendaEngine {
     byStatus: Record<EventStatus, number>;
   } {
     const today = new Date();
-    const todayEvents = this?.getEventsForDay(any: any);
-    const weekEvents = this?.getEventsForWeek(any: any);
-    const allEvents = this?.getAllEvents();
+    const todayEvents = this.getEventsForDay(today);
+    const weekEvents = this.getEventsForWeek(today);
+    const allEvents = this.getAllEvents();
 
     const byCategory = {} as Record<EventCategory, number>;
     const byStatus = {} as Record<EventStatus, number>;
 
-    allEvents?.forEach(event => {
-      byCategory[event?.category] = (byCategory[event?.category] || 0) + 1;
-      byStatus[event?.status] = (byStatus[event?.status] || 0) + 1;
+    allEvents.forEach(event => {
+      byCategory[event.category] = (byCategory[event.category] || 0) + 1;
+      byStatus[event.status] = (byStatus[event.status] || 0) + 1;
     });
 
     return {
-      totalEvents: allEvents?.length,
-      eventsToday: todayEvents?.length,
-      eventsThisWeek: weekEvents?.length,
-      completedToday: todayEvents?.filter(e => e?.status === 'completed').length,
+      totalEvents: allEvents.length,
+      eventsToday: todayEvents.length,
+      eventsThisWeek: weekEvents.length,
+      completedToday: todayEvents.filter(e => e.status === 'completed').length,
       byCategory,
       byStatus,
     };
@@ -592,22 +592,22 @@ export class AgendaEngine {
   /**
    * Ajoute un listener pour les changements d'événements
    */
-  subscribe(any: any): () => void {
-    this?.listeners?.add(any: any);
-    listener(this?.getAllEvents());
-    return (any: any);
+  subscribe(listener: AgendaEventListener): () => void {
+    this.listeners.add(listener);
+    listener(this.getAllEvents());
+    return () => this.listeners.delete(listener);
   }
 
   /**
    * Notifie tous les listeners
    */
   private notifyListeners(): void {
-    const events = this?.getAllEvents();
-    this?.listeners?.forEach(listener => {
+    const events = this.getAllEvents();
+    this.listeners.forEach(listener => {
       try {
-        listener(any: any);
-      } catch (any: any) {
-        logger?.error(any: any);
+        listener(events);
+      } catch (error) {
+        logger.error('Erreur listener:', error);
       }
     });
   }
@@ -618,7 +618,7 @@ export class AgendaEngine {
 // ═══════════════════════════════════════════════════════════════════
 
 /**
- * Instance singleton de l'AgendaEngine (any: any). Les callbacks de stockage
+ * Instance singleton de l'AgendaEngine (sans I/O). Les callbacks de stockage
  * doivent être injectés depuis la couche Services (Ring 3) ou l'UI (Ring 4).
  */
 export const agendaEngine = new AgendaEngine();

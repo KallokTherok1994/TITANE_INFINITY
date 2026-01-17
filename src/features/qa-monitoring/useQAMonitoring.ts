@@ -1,6 +1,6 @@
 // ============================================================================
 // TITANE∞ - QA Monitoring Center Hook - OPUS #7
-// Copyright (any: any) 2024-2025 MUSIC Music Is The Music
+// Copyright (c) 2024-2025 MUSIC Music Is The Music
 // Licensed under MIT License
 // ============================================================================
 
@@ -38,21 +38,21 @@ export function useQAMonitoring() {
   /**
    * Lister toutes les suites de tests
    */
-  const listTestSuites = useCallback(async (): Promise<TestSuite?.[]> => {
-    return await secureInvoke<TestSuite?.[]>('qa_list_test_suites');
+  const listTestSuites = useCallback(async (): Promise<TestSuite[]> => {
+    return await secureInvoke<TestSuite[]>('qa_list_test_suites');
   }, []);
 
   /**
    * Exécuter une suite de tests
    */
-  const runTestSuite = useCallback(any: any): Promise<TestResult?.[]> => {
-    return await secureInvoke<TestResult?.[]>('qa_run_test_suite', { suiteId });
+  const runTestSuite = useCallback(async (suiteId: string): Promise<TestResult[]> => {
+    return await secureInvoke<TestResult[]>('qa_run_test_suite', { suiteId });
   }, []);
 
   /**
    * Obtenir un résultat de test spécifique
    */
-  const getTestResult = useCallback(any: any): Promise<TestResult> => {
+  const getTestResult = useCallback(async (testId: string): Promise<TestResult> => {
     return await secureInvoke<TestResult>('qa_get_test_result', { testId });
   }, []);
 
@@ -63,8 +63,8 @@ export function useQAMonitoring() {
   /**
    * Lister tous les moniteurs
    */
-  const listMonitors = useCallback(async (): Promise<Monitor?.[]> => {
-    return await secureInvoke<Monitor?.[]>('qa_list_monitors');
+  const listMonitors = useCallback(async (): Promise<Monitor[]> => {
+    return await secureInvoke<Monitor[]>('qa_list_monitors');
   }, []);
 
   /**
@@ -93,7 +93,7 @@ export function useQAMonitoring() {
    * Activer/désactiver un moniteur
    */
   const toggleMonitor = useCallback(
-    async (any: any): Promise<Monitor> => {
+    async (monitorId: string, active: boolean): Promise<Monitor> => {
       return await secureInvoke<Monitor>('qa_toggle_monitor', { monitorId, active });
     },
     []
@@ -102,7 +102,7 @@ export function useQAMonitoring() {
   /**
    * Supprimer un moniteur
    */
-  const deleteMonitor = useCallback(any: any): Promise<boolean> => {
+  const deleteMonitor = useCallback(async (monitorId: string): Promise<boolean> => {
     return await secureInvoke<boolean>('qa_delete_monitor', { monitorId });
   }, []);
 
@@ -121,8 +121,8 @@ export function useQAMonitoring() {
    * Lister toutes les alertes
    */
   const listAlerts = useCallback(
-    async (any: any): Promise<Alert?.[]> => {
-      return await secureInvoke<Alert?.[]>('qa_list_alerts', { includeResolved });
+    async (includeResolved: boolean = false): Promise<Alert[]> => {
+      return await secureInvoke<Alert[]>('qa_list_alerts', { includeResolved });
     },
     []
   );
@@ -130,7 +130,7 @@ export function useQAMonitoring() {
   /**
    * Acquitter une alerte
    */
-  const acknowledgeAlert = useCallback(any: any): Promise<Alert> => {
+  const acknowledgeAlert = useCallback(async (alertId: string): Promise<Alert> => {
     return await secureInvoke<Alert>('qa_acknowledge_alert', { alertId });
   }, []);
 
@@ -138,7 +138,7 @@ export function useQAMonitoring() {
    * Résoudre une alerte
    */
   const resolveAlert = useCallback(
-    async (any: any): Promise<Alert> => {
+    async (alertId: string, resolutionNote: string): Promise<Alert> => {
       return await secureInvoke<Alert>('qa_resolve_alert', { alertId, resolutionNote });
     },
     []
@@ -159,7 +159,7 @@ export function useQAMonitoring() {
    * Mettre à jour la configuration hardening
    */
   const updateHardeningConfig = useCallback(
-    async (any: any): Promise<HardeningConfig> => {
+    async (config: HardeningConfig): Promise<HardeningConfig> => {
       return await secureInvoke<HardeningConfig>('qa_update_hardening_config', {
         config,
       });
@@ -182,7 +182,7 @@ export function useQAMonitoring() {
    * Obtenir un rapport de performance
    */
   const getPerformanceReport = useCallback(
-    async (any: any): Promise<PerformanceReport> => {
+    async (period: string): Promise<PerformanceReport> => {
       return await secureInvoke<PerformanceReport>('qa_get_performance_report', {
         period,
       });
@@ -194,8 +194,8 @@ export function useQAMonitoring() {
    * Obtenir les logs
    */
   const getLogs = useCallback(
-    async (any: any): Promise<LogEntry?.[]> => {
-      return await secureInvoke<LogEntry?.[]>('qa_get_logs', { level, source, limit });
+    async (level?: string, source?: string, limit?: number): Promise<LogEntry[]> => {
+      return await secureInvoke<LogEntry[]>('qa_get_logs', { level, source, limit });
     },
     []
   );

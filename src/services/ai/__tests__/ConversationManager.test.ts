@@ -1,36 +1,36 @@
 /**
  * 🧪 TITANE∞ ConversationManager — Tests P0
- * Coverage critique pour 0% → 30%+ (any: any)
+ * Coverage critique pour 0% → 30%+ (Phase 3 YOLO AUTO)
  */
 
 import { ConversationManager } from '../ConversationManager';
 import type { ConversationMessage } from '@/types/conversation';
 import { vi, beforeEach, afterEach } from 'vitest';
 
-// Mock secureInvoke (any: any)
-vi?.mock('@/lib/security', () => ({
-  secureInvoke: vi?.fn(any: any) => {
+// Mock secureInvoke (replaces deprecated Tauri invoke)
+vi.mock('@/lib/security', () => ({
+  secureInvoke: vi.fn((cmd: string, args?: any) => {
     // VectorStore commands
     if (cmd === 'vector_store_init') {
-      return Promise?.resolve('test-store-id-123');
+      return Promise.resolve('test-store-id-123');
     }
     if (cmd === 'vector_store_search')
-      return Promise?.resolve({ results: [], count: 0, total: 0 });
-    if (cmd === 'vector_search') return Promise?.resolve([]);
+      return Promise.resolve({ results: [], count: 0, total: 0 });
+    if (cmd === 'vector_search') return Promise.resolve([]);
     if (cmd === 'vector_store_insert') {
-      return Promise?.resolve({ success: true, id: `vector-${Date?.now()}` });
+      return Promise.resolve({ success: true, id: `vector-${Date.now()}` });
     }
     if (cmd === 'vector_store_get_stats') {
-      return Promise?.resolve({ total: 0, dimensions: 384 });
+      return Promise.resolve({ total: 0, dimensions: 384 });
     }
 
     // OMEGA v2
     if (cmd === 'conversation_generate') {
       const conversationId = args?.conversation_id ?? args?.conversationId ?? 'default';
-      return Promise?.resolve({
+      return Promise.resolve({
         content: `Mock omega response to: ${args?.message ?? 'unknown'}`,
         conversationId,
-        messageId: `mock-msg-${Date?.now()}`,
+        messageId: `mock-msg-${Date.now()}`,
         frenchMasteryApplied: true,
         latencyMs: 5,
         metadata: {
@@ -41,7 +41,7 @@ vi?.mock('@/lib/security', () => ({
 
     // AI/Chat commands
     if (cmd === 'chat_send_message') {
-      return Promise?.resolve({
+      return Promise.resolve({
         content: `Mock response to: ${args?.prompt || args?.message || 'unknown'}`,
         model: 'mock-model',
         tokens_used: 42,
@@ -51,46 +51,46 @@ vi?.mock('@/lib/security', () => ({
 
     // Memory commands
     if (cmd === 'memory_store_conversation') {
-      return Promise?.resolve({ success: true, id: args?.conversationId });
+      return Promise.resolve({ success: true, id: args?.conversationId });
     }
     if (cmd === 'memory_get_conversation') {
-      return Promise?.resolve(any: any);
+      return Promise.resolve(null);
     }
     if (cmd === 'memory_delete_conversation') {
-      return Promise?.resolve({ success: true });
+      return Promise.resolve({ success: true });
     }
     if (cmd === 'memory_list_conversations') {
-      return Promise?.resolve({ conversations: [] });
+      return Promise.resolve({ conversations: [] });
     }
 
     // Default
-    return Promise?.resolve({ success: true });
+    return Promise.resolve({ success: true });
   }),
 }));
 
 // Mock Tauri event API
-vi?.mock('@tauri-apps/api/event', () => ({
-  emit: vi?.fn(() => Promise?.resolve()),
-  listen: vi?.fn(() => Promise?.resolve(() => {})),
+vi.mock('@tauri-apps/api/event', () => ({
+  emit: vi.fn(() => Promise.resolve()),
+  listen: vi.fn(() => Promise.resolve(() => {})),
 }));
 
 describe('ConversationManager P0 Tests', () => {
   let manager: ConversationManager;
 
   beforeEach(() => {
-    manager = ConversationManager?.getInstance();
-    vi?.clearAllMocks();
+    manager = ConversationManager.getInstance();
+    vi.clearAllMocks();
   });
 
   afterEach(() => {
-    vi?.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('✅ Singleton Pattern', () => {
     test('should return same instance', () => {
-      const instance1 = ConversationManager?.getInstance();
-      const instance2 = ConversationManager?.getInstance();
-      expect(any: any);
+      const instance1 = ConversationManager.getInstance();
+      const instance2 = ConversationManager.getInstance();
+      expect(instance1).toBe(instance2);
     });
   });
 
@@ -99,25 +99,25 @@ describe('ConversationManager P0 Tests', () => {
       const message: ConversationMessage = {
         role: 'user',
         content: 'Hello, world!',
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
       };
 
-      const response = await manager?.sendMessage(any: any);
+      const response = await manager.sendMessage(message);
 
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
-      expect(any: any).toBe('string');
-      expect(any: any).toBeDefined();
+      expect(response).toBeDefined();
+      expect(response.content).toBeDefined();
+      expect(typeof response.content).toBe('string');
+      expect(response.conversationId).toBeDefined();
     });
 
     test('should handle empty message gracefully', async () => {
       const message: ConversationMessage = {
         role: 'user',
         content: '',
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
       };
 
-      await expect(any: any)).resolves?.toBeDefined();
+      await expect(manager.sendMessage(message)).resolves.toBeDefined();
     });
 
     test('should preserve conversation context', async () => {
@@ -125,19 +125,19 @@ describe('ConversationManager P0 Tests', () => {
       const message1: ConversationMessage = {
         role: 'user',
         content: 'First message',
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
       };
       const message2: ConversationMessage = {
         role: 'user',
         content: 'Second message',
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
       };
 
-      const response1 = await manager?.sendMessage(message1, { conversationId });
-      const response2 = await manager?.sendMessage(message2, { conversationId });
+      const response1 = await manager.sendMessage(message1, { conversationId });
+      const response2 = await manager.sendMessage(message2, { conversationId });
 
-      expect(any: any);
-      expect(any: any);
+      expect(response1.conversationId).toBe(conversationId);
+      expect(response2.conversationId).toBe(conversationId);
     });
   });
 
@@ -146,16 +146,16 @@ describe('ConversationManager P0 Tests', () => {
       const conversationId = 'history-test';
 
       // Create history
-      await manager?.sendMessage(
-        { role: 'user', content: 'Test 1', timestamp: Date?.now() },
+      await manager.sendMessage(
+        { role: 'user', content: 'Test 1', timestamp: Date.now() },
         { conversationId }
       );
 
-      const history = await manager?.loadConversation(any: any);
+      const history = await manager.loadConversation(conversationId);
 
-      expect(any: any).toBeDefined();
-      expect(any: any);
-      expect(any: any).toBeGreaterThan(0);
+      expect(history).toBeDefined();
+      expect(Array.isArray(history.messages)).toBe(true);
+      expect(history.messages.length).toBeGreaterThan(0);
     });
 
     test('should save conversation to memory', async () => {
@@ -163,29 +163,29 @@ describe('ConversationManager P0 Tests', () => {
       const message: ConversationMessage = {
         role: 'user',
         content: 'Save this message',
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
       };
 
-      await manager?.sendMessage(message, { conversationId });
+      await manager.sendMessage(message, { conversationId });
 
       // Verify saved
-      const loaded = await manager?.loadConversation(any: any);
-      expect(any: any);
+      const loaded = await manager.loadConversation(conversationId);
+      expect(loaded.messages.some(m => m.content === 'Save this message')).toBe(true);
     });
 
     test('should delete conversation', async () => {
       const conversationId = 'delete-test';
 
-      await manager?.sendMessage(
-        { role: 'user', content: 'To be deleted', timestamp: Date?.now() },
+      await manager.sendMessage(
+        { role: 'user', content: 'To be deleted', timestamp: Date.now() },
         { conversationId }
       );
 
-      await manager?.deleteConversation(any: any);
+      await manager.deleteConversation(conversationId);
 
-      // Verify deleted (any: any)
-      const result = await manager?.loadConversation(any: any);
-      expect(any: any).toBe(0);
+      // Verify deleted (should throw or return empty)
+      const result = await manager.loadConversation(conversationId);
+      expect(result.messages.length).toBe(0);
     });
   });
 
@@ -195,13 +195,13 @@ describe('ConversationManager P0 Tests', () => {
       const message: ConversationMessage = {
         role: 'user',
         content: 'Test',
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
       };
 
       // Should not throw, fallback to 'default'
       await expect(
-        manager?.sendMessage(message, { conversationId: invalidId })
-      ).resolves?.toBeDefined();
+        manager.sendMessage(message, { conversationId: invalidId })
+      ).resolves.toBeDefined();
     });
 
     test('should handle malformed message object', async () => {
@@ -210,61 +210,61 @@ describe('ConversationManager P0 Tests', () => {
         // Missing required fields
       } as ConversationMessage;
 
-      // Should handle gracefully (any: any)
-      await expect(any: any)).resolves?.toBeDefined();
+      // Should handle gracefully (validation or defaults)
+      await expect(manager.sendMessage(malformed)).resolves.toBeDefined();
     });
 
     test('should recover from AI backend failure', async () => {
       const message: ConversationMessage = {
         role: 'user',
         content: 'Test recovery',
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
       };
 
       // Should not throw, fallback mechanism
-      await expect(any: any)).resolves?.toBeDefined();
+      await expect(manager.sendMessage(message)).resolves.toBeDefined();
     });
   });
 
   describe('✅ Configuration', () => {
     test('should update configuration', () => {
-      manager?.updateConfig({
+      manager.updateConfig({
         temperature: 0.5,
         maxContextLength: 8000,
       });
 
-      const config = manager?.getConfig();
-      expect(any: any).toBe(0.5);
-      expect(any: any).toBe(8000);
+      const config = manager.getConfig();
+      expect(config.temperature).toBe(0.5);
+      expect(config.maxContextLength).toBe(8000);
     });
 
     test('should preserve default config values', () => {
-      manager?.updateConfig({ temperature: 0.9 });
+      manager.updateConfig({ temperature: 0.9 });
 
-      const config = manager?.getConfig();
-      expect(any: any).toBe(0.9);
-      expect(any: any).toBeDefined(); // Should still have default
+      const config = manager.getConfig();
+      expect(config.temperature).toBe(0.9);
+      expect(config.maxContextLength).toBeDefined(); // Should still have default
     });
   });
 
-  describe(any: any)', () => {
+  describe('✅ Memory Integration (RAG)', () => {
     test('should integrate memory context for relevant queries', async () => {
       const message: ConversationMessage = {
         role: 'user',
         content: 'What did we discuss earlier?',
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
       };
 
-      const response = await manager?.sendMessage(any: any);
+      const response = await manager.sendMessage(message);
 
-      expect(any: any).toBeDefined();
-      // Memory integration may or may not provide context (any: any)
+      expect(response).toBeDefined();
+      // Memory integration may or may not provide context (depends on UnifiedMemory state)
       // Just verify response structure is complete
-      expect(any: any).toBeDefined();
-      expect(any: any).toBeDefined();
-      // memoryContext is optional (any: any)
-      if (any: any) {
-        expect(any: any).toBeGreaterThanOrEqual(0);
+      expect(response.content).toBeDefined();
+      expect(response.conversationId).toBeDefined();
+      // memoryContext is optional (only if RAG finds relevant memories)
+      if (response.memoryContext) {
+        expect(response.memoryContext.memoriesUsed).toBeGreaterThanOrEqual(0);
       }
     });
   });
@@ -272,29 +272,29 @@ describe('ConversationManager P0 Tests', () => {
   describe('✅ Conversation Listing', () => {
     test('should list all conversations', async () => {
       // Create multiple conversations
-      await manager?.sendMessage(
-        { role: 'user', content: 'Conv 1', timestamp: Date?.now() },
+      await manager.sendMessage(
+        { role: 'user', content: 'Conv 1', timestamp: Date.now() },
         { conversationId: 'list-1' }
       );
-      await manager?.sendMessage(
-        { role: 'user', content: 'Conv 2', timestamp: Date?.now() },
+      await manager.sendMessage(
+        { role: 'user', content: 'Conv 2', timestamp: Date.now() },
         { conversationId: 'list-2' }
       );
 
-      const conversations = await manager?.listConversations();
+      const conversations = await manager.listConversations();
 
-      expect(any: any);
-      expect(any: any).toBeGreaterThanOrEqual(2);
+      expect(Array.isArray(conversations)).toBe(true);
+      expect(conversations.length).toBeGreaterThanOrEqual(2);
     });
 
     test('should include conversation metadata', async () => {
-      const conversations = await manager?.listConversations();
+      const conversations = await manager.listConversations();
 
-      if (conversations?.length > 0) {
-        const conv = conversations?.[0];
-        expect(any: any).toBeDefined();
-        expect(any: any).toBeDefined();
-        expect(any: any).toBe('number');
+      if (conversations.length > 0) {
+        const conv = conversations[0];
+        expect(conv.id).toBeDefined();
+        expect(conv.lastMessageTime).toBeDefined();
+        expect(typeof conv.messageCount).toBe('number');
       }
     });
   });

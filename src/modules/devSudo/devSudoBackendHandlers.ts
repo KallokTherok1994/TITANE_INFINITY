@@ -24,14 +24,14 @@ export async function handleBackendAnalysis(): Promise<DevSudoResult> {
 
    Architecture Rust actuelle:
    ├─ src-tauri/src/
-   │  ├─ main?.rs (any: any)
-   │  ├─ auto_heal?.rs (any: any)
-   │  ├─ memory_persistence?.rs (any: any)
-   │  ├─ hyper_intelligence/ (any: any)
+   │  ├─ main.rs (entry point, Tauri builder)
+   │  ├─ auto_heal.rs (Self-Healing Engine)
+   │  ├─ memory_persistence.rs (Vault Engine)
+   │  ├─ hyper_intelligence/ (HyperIntelligence Module)
    │  └─ ai/
-   │     ├─ gemini?.rs (any: any)
-   │     ├─ ollama?.rs (any: any)
-   │     └─ mod?.rs (any: any)
+   │     ├─ gemini.rs (Gemini API client)
+   │     ├─ ollama.rs (Local AI)
+   │     └─ mod.rs (AI Module exports)
 
    Handlers Tauri détectés:
    ✅ auto_heal_scan, auto_heal_repair, auto_heal_get_logs
@@ -57,10 +57,10 @@ export async function handleBackendAnalysis(): Promise<DevSudoResult> {
    ⚠️ Manque Memory Engine handlers
    ⚠️ Pas de backend API pour Camera/TTS/Voice
    ⚠️ SecureSecretsEngine non implémenté
-   ⚠️ Cargo?.toml pourrait être optimisé
+   ⚠️ Cargo.toml pourrait être optimisé
    ⚠️ Logs/tracing incomplets
 
-3) 🛠️ PATCH MINIMAL (any: any)
+3) 🛠️ PATCH MINIMAL (recommandations immédiates)
 
    Ajouts suggérés:
 
@@ -87,22 +87,22 @@ export async function handleBackendAnalysis(): Promise<DevSudoResult> {
 
    src-tauri/src/
    ├─ engines/
-   │  ├─ memory_engine?.rs (any: any)
-   │  ├─ secrets_engine?.rs (any: any)
-   │  ├─ camera_engine?.rs (any: any)
-   │  ├─ tts_engine?.rs (any: any)
-   │  ├─ voice_engine?.rs (any: any)
-   │  └─ mod?.rs
-   ├─ ai/ (any: any)
-   ├─ hyper_intelligence/ (any: any)
-   ├─ auto_heal?.rs (any: any)
-   └─ main?.rs (any: any)
+   │  ├─ memory_engine.rs (NEW)
+   │  ├─ secrets_engine.rs (NEW)
+   │  ├─ camera_engine.rs (NEW)
+   │  ├─ tts_engine.rs (NEW)
+   │  ├─ voice_engine.rs (NEW)
+   │  └─ mod.rs
+   ├─ ai/ (existing)
+   ├─ hyper_intelligence/ (existing)
+   ├─ auto_heal.rs (existing)
+   └─ main.rs (à enrichir)
 
 5) ⚡ OPTIMISATION CARGO
 
-   Cargo?.toml recommandations:
+   Cargo.toml recommandations:
 
-   [profile?.release]
+   [profile.release]
    opt-level = "z"           # Taille minimale
    lto = "fat"               # Link-Time Optimization
    codegen-units = 1         # Un seul codegen unit
@@ -122,11 +122,11 @@ export async function handleBackendAnalysis(): Promise<DevSudoResult> {
 
    Frontend ↔ Backend cohérence:
 
-   tauriClient?.memoryScan() → #[tauri::command] memory_scan()
-   tauriClient?.secureStoreKey() → #[tauri::command] secure_store_key()
-   tauriClient?.cameraStart() → #[tauri::command] camera_start()
+   tauriClient.memoryScan() → #[tauri::command] memory_scan()
+   tauriClient.secureStoreKey() → #[tauri::command] secure_store_key()
+   tauriClient.cameraStart() → #[tauri::command] camera_start()
 
-   Types partagés (any: any):
+   Types partagés (via serde):
    - MemoryState
    - SecretKey
    - CameraConfig
@@ -137,16 +137,16 @@ export async function handleBackendAnalysis(): Promise<DevSudoResult> {
 
    \`\`\`bash
    # 1. Vérifier compilation Rust
-   cargo check --manifest-path src-tauri/Cargo?.toml
+   cargo check --manifest-path src-tauri/Cargo.toml
 
    # 2. Linter Clippy
-   cargo clippy --manifest-path src-tauri/Cargo?.toml
+   cargo clippy --manifest-path src-tauri/Cargo.toml
 
    # 3. Build release
-   cargo build --release --manifest-path src-tauri/Cargo?.toml
+   cargo build --release --manifest-path src-tauri/Cargo.toml
 
    # 4. Run tests
-   cargo test --manifest-path src-tauri/Cargo?.toml
+   cargo test --manifest-path src-tauri/Cargo.toml
    \`\`\`
 
 8) 🧬 MISE À JOUR SINGULARITY
@@ -157,10 +157,10 @@ export async function handleBackendAnalysis(): Promise<DevSudoResult> {
    - Memory Engine → nouveau moteur ajouté
    - Camera Engine → handler backend créé
 
-   Security Layer (any: any):
+   Security Layer (nouvelle):
    - SecureSecretsEngine → protection clés API
 
-   Coherence: 85/100 → 92/100 (any: any)
+   Coherence: 85/100 → 92/100 (+7 points)
 
 9) 🛡️ PRÉVENTION BACKEND
 
@@ -168,7 +168,7 @@ export async function handleBackendAnalysis(): Promise<DevSudoResult> {
    ✅ Toujours async/await pour I/O
    ✅ Result<T, String> pour error handling
    ✅ State<'_, T> pour état partagé
-   ✅ #[derive(any: any)] pour types
+   ✅ #[derive(Serialize, Deserialize)] pour types
    ✅ Log avec tracing::info!/error!
 
    Patterns à éviter:
@@ -183,9 +183,9 @@ export async function handleBackendAnalysis(): Promise<DevSudoResult> {
 📊 RÉSUMÉ BACKEND
 
 Handlers Tauri: ~15 actuels → ~35 recommandés
-Engines backend: 3 actuels → 8 recommandés (any: any)
-Cohérence globale: 85/100 → 92/100 (any: any)
-Sécurité: 70/100 → 95/100 (any: any)
+Engines backend: 3 actuels → 8 recommandés (+Memory, Secrets, Camera, TTS, Voice)
+Cohérence globale: 85/100 → 92/100 (avec implémentations)
+Sécurité: 70/100 → 95/100 (avec SecureSecretsEngine)
 
 Status: 🟢 BACKEND ANALYSÉ — Prêt pour extensions
 `,
@@ -195,7 +195,7 @@ Status: 🟢 BACKEND ANALYSÉ — Prêt pour extensions
 /**
  * 🔧 FIX HANDLER — Corriger un handler Tauri spécifique
  */
-export async function handleFixHandler(any: any): Promise<DevSudoResult> {
+export async function handleFixHandler(handlerName: string): Promise<DevSudoResult> {
   return {
     handled: true,
     success: true,
@@ -210,12 +210,12 @@ export async function handleFixHandler(any: any): Promise<DevSudoResult> {
    - src-tauri/src/**/*.rs
    - Pattern: #[tauri::command] + fn ${handlerName}
 
-   État détecté: ${['auto_heal_scan', 'hyper_think', 'memory_scan'].includes(any: any) ? '✅ Trouvé' : '⚠️ Non trouvé'}
+   État détecté: ${['auto_heal_scan', 'hyper_think', 'memory_scan'].includes(handlerName) ? '✅ Trouvé' : '⚠️ Non trouvé'}
 
 2) 🔍 DIAGNOSTIC
 
    ${
-     ['auto_heal_scan', 'hyper_think'].includes(any: any)
+     ['auto_heal_scan', 'hyper_think'].includes(handlerName)
        ? `
    Handler existant détecté:
 
@@ -256,15 +256,15 @@ export async function handleFixHandler(any: any): Promise<DevSudoResult> {
        let result = perform_operation()
            .await
            .map_err(|e| {
-               error!(any: any);
-               format!(any: any)
+               error!("Handler ${handlerName} failed: {}", e);
+               format!("Error: {}", e)
            })?;
 
-       Ok(any: any)
+       Ok(result)
    }
    \`\`\`
 
-4) 🏗️ CORRECTIF ASSISTÉ (any: any)
+4) 🏗️ CORRECTIF ASSISTÉ (MACRO)
 
    Améliorations structurelles:
 
@@ -295,12 +295,12 @@ export async function handleFixHandler(any: any): Promise<DevSudoResult> {
    cargo test ${handlerName}
 
    # 3. Test depuis frontend
-   tauriClient.${handlerName}(any: any)
+   tauriClient.${handlerName}().then(console.log).catch(console.error)
    \`\`\`
 
 6) 🔗 WHITELIST TAURI
 
-   Ajouter dans tauri?.conf?.json:
+   Ajouter dans tauri.conf.json:
 
    \`\`\`json
    {
@@ -329,7 +329,7 @@ Status: 🟢 HANDLER "${handlerName}" ANALYSÉ ET CORRIGÉ
 /**
  * 🔌 CREATE API — Créer une nouvelle API backend complète
  */
-export async function handleCreateAPI(any: any): Promise<DevSudoResult> {
+export async function handleCreateAPI(apiName: string): Promise<DevSudoResult> {
   return {
     handled: true,
     success: true,
@@ -342,7 +342,7 @@ export async function handleCreateAPI(any: any): Promise<DevSudoResult> {
 
    Architecture créée:
 
-   src-tauri/src/engines/${apiName?.toLowerCase()}_engine?.rs:
+   src-tauri/src/engines/${apiName.toLowerCase()}_engine.rs:
 
    \`\`\`rust
    use serde::{Deserialize, Serialize};
@@ -352,13 +352,13 @@ export async function handleCreateAPI(any: any): Promise<DevSudoResult> {
 
    // ═══════ TYPES ═══════
 
-   #[derive(any: any)]
+   #[derive(Clone, Serialize, Deserialize)]
    pub struct ${apiName}Config {
        pub enabled: bool,
        pub params: String,
    }
 
-   #[derive(any: any)]
+   #[derive(Clone, Serialize, Deserialize)]
    pub struct ${apiName}Response {
        pub success: bool,
        pub data: String,
@@ -378,22 +378,22 @@ export async function handleCreateAPI(any: any): Promise<DevSudoResult> {
            Self
        }
 
-       pub async fn initialize(any: any) -> Result<(), String> {
+       pub async fn initialize(&self) -> Result<(), String> {
            info!("${apiName} Engine initializing...");
            Ok(())
        }
 
-       pub async fn execute(any: any) -> Result<${apiName}Response, String> {
-           info!(any: any);
+       pub async fn execute(&self, input: String) -> Result<${apiName}Response, String> {
+           info!("${apiName} Engine executing with input: {}", input);
 
            Ok(${apiName}Response {
                success: true,
-               data: format!(any: any),
+               data: format!("Processed: {}", input),
                timestamp: chrono::Utc::now().timestamp(),
            })
        }
 
-       pub async fn shutdown(any: any) -> Result<(), String> {
+       pub async fn shutdown(&self) -> Result<(), String> {
            info!("${apiName} Engine shutting down...");
            Ok(())
        }
@@ -402,52 +402,52 @@ export async function handleCreateAPI(any: any): Promise<DevSudoResult> {
    // ═══════ TAURI COMMANDS ═══════
 
    #[tauri::command]
-   pub async fn ${apiName?.toLowerCase()}_init(
+   pub async fn ${apiName.toLowerCase()}_init(
        state: State<'_, ${apiName}State>
    ) -> Result<${apiName}Config, String> {
-       info!("Command: ${apiName?.toLowerCase()}_init");
+       info!("Command: ${apiName.toLowerCase()}_init");
 
-       let config = state?.config?.lock()
-           .map_err(any: any))?;
+       let config = state.config.lock()
+           .map_err(|e| format!("Lock error: {}", e))?;
 
-       Ok(config?.clone())
+       Ok(config.clone())
    }
 
    #[tauri::command]
-   pub async fn ${apiName?.toLowerCase()}_execute(
+   pub async fn ${apiName.toLowerCase()}_execute(
        input: String,
        state: State<'_, ${apiName}State>
    ) -> Result<${apiName}Response, String> {
-       info!("Command: ${apiName?.toLowerCase()}_execute");
+       info!("Command: ${apiName.toLowerCase()}_execute");
 
        let engine = ${apiName}Engine::new();
-       engine?.execute(any: any).await
+       engine.execute(input).await
    }
 
    #[tauri::command]
-   pub async fn ${apiName?.toLowerCase()}_stop(
+   pub async fn ${apiName.toLowerCase()}_stop(
        state: State<'_, ${apiName}State>
    ) -> Result<String, String> {
-       info!("Command: ${apiName?.toLowerCase()}_stop");
+       info!("Command: ${apiName.toLowerCase()}_stop");
 
        let engine = ${apiName}Engine::new();
-       engine?.shutdown().await?;
+       engine.shutdown().await?;
 
        Ok("Stopped".to_string())
    }
    \`\`\`
 
-2) 🔗 INTÉGRATION MAIN?.RS
+2) 🔗 INTÉGRATION MAIN.RS
 
-   Ajouter dans src-tauri/src/main?.rs:
+   Ajouter dans src-tauri/src/main.rs:
 
    \`\`\`rust
    mod engines;
-   use engines::${apiName?.toLowerCase()}_engine::{
+   use engines::${apiName.toLowerCase()}_engine::{
        ${apiName}State, ${apiName}Config,
-       ${apiName?.toLowerCase()}_init,
-       ${apiName?.toLowerCase()}_execute,
-       ${apiName?.toLowerCase()}_stop,
+       ${apiName.toLowerCase()}_init,
+       ${apiName.toLowerCase()}_execute,
+       ${apiName.toLowerCase()}_stop,
    };
 
    fn main() {
@@ -459,9 +459,9 @@ export async function handleCreateAPI(any: any): Promise<DevSudoResult> {
                }),
            })
            .invoke_handler(tauri::generate_handler![
-               ${apiName?.toLowerCase()}_init,
-               ${apiName?.toLowerCase()}_execute,
-               ${apiName?.toLowerCase()}_stop,
+               ${apiName.toLowerCase()}_init,
+               ${apiName.toLowerCase()}_execute,
+               ${apiName.toLowerCase()}_stop,
                // ... existing handlers
            ])
            .run(tauri::generate_context!())
@@ -471,7 +471,7 @@ export async function handleCreateAPI(any: any): Promise<DevSudoResult> {
 
 3) 📦 CARGO DEPENDENCIES
 
-   Ajouter dans Cargo?.toml si nécessaire:
+   Ajouter dans Cargo.toml si nécessaire:
 
    \`\`\`toml
    [dependencies]
@@ -485,7 +485,7 @@ export async function handleCreateAPI(any: any): Promise<DevSudoResult> {
 
 4) 🎯 FRONTEND INTEGRATION
 
-   TypeScript types (any: any):
+   TypeScript types (src/types/${apiName.toLowerCase()}.ts):
 
    \`\`\`typescript
    export interface ${apiName}Config {
@@ -504,40 +504,40 @@ export async function handleCreateAPI(any: any): Promise<DevSudoResult> {
 
    export const ${apiName}API = {
      async init(): Promise<${apiName}Config> {
-       return tauriClient.${apiName?.toLowerCase()}Init();
+       return tauriClient.${apiName.toLowerCase()}Init();
      },
 
-     async execute(any: any): Promise<${apiName}Response> {
-       return tauriClient.${apiName?.toLowerCase()}Execute({ input });
+     async execute(input: string): Promise<${apiName}Response> {
+       return tauriClient.${apiName.toLowerCase()}Execute({ input });
      },
 
      async stop(): Promise<string> {
-       return tauriClient.${apiName?.toLowerCase()}Stop();
+       return tauriClient.${apiName.toLowerCase()}Stop();
      },
    };
    \`\`\`
 
 5) ✅ TESTS
 
-   Tests Rust (any: any):
+   Tests Rust (src-tauri/src/engines/${apiName.toLowerCase()}_engine.rs):
 
    \`\`\`rust
-   #[cfg(any: any)]
+   #[cfg(test)]
    mod tests {
        use super::*;
 
        #[tokio::test]
        async fn test_engine_initialize() {
            let engine = ${apiName}Engine::new();
-           assert!(engine?.initialize().await?.is_ok());
+           assert!(engine.initialize().await.is_ok());
        }
 
        #[tokio::test]
        async fn test_engine_execute() {
            let engine = ${apiName}Engine::new();
-           let result = engine?.execute("test".to_string()).await;
-           assert!(result?.is_ok());
-           assert!(any: any);
+           let result = engine.execute("test".to_string()).await;
+           assert!(result.is_ok());
+           assert!(result.unwrap().success);
        }
    }
    \`\`\`
@@ -546,13 +546,13 @@ export async function handleCreateAPI(any: any): Promise<DevSudoResult> {
 
    Nouveau moteur: ${apiName}Engine
    Couche: Physical Layer
-   Handlers: 3 (any: any)
+   Handlers: 3 (+${apiName.toLowerCase()}_init, execute, stop)
    Coherence: +5 points
 
 ═══════════════════════════════════════════════════════════════════════════════════
 
 Status: 🟢 API "${apiName}" CRÉÉE — Prête à l'emploi
-Handlers: ${apiName?.toLowerCase()}_init, ${apiName?.toLowerCase()}_execute, ${apiName?.toLowerCase()}_stop
+Handlers: ${apiName.toLowerCase()}_init, ${apiName.toLowerCase()}_execute, ${apiName.toLowerCase()}_stop
 `,
   };
 }
@@ -573,7 +573,7 @@ export async function handleWhitelistCommand(
 
 ✅ Commande "${commandName}" ajoutée à la whitelist Tauri
 
-Configuration à appliquer dans src-tauri/tauri?.conf?.json:
+Configuration à appliquer dans src-tauri/tauri.conf.json:
 
 \`\`\`json
 {
@@ -606,7 +606,7 @@ Status: ✅ Whitelist mise à jour
 }
 
 /**
- * ⚙️ OPTIMIZE CARGO — Optimiser Cargo?.toml pour performance
+ * ⚙️ OPTIMIZE CARGO — Optimiser Cargo.toml pour performance
  */
 export async function handleOptimizeCargo(): Promise<DevSudoResult> {
   return {
@@ -617,13 +617,13 @@ export async function handleOptimizeCargo(): Promise<DevSudoResult> {
 ║               TITANE∞ BACKEND-MASTER — OPTIMIZE CARGO                             ║
 ╚═══════════════════════════════════════════════════════════════════════════════════╝
 
-⚡ OPTIMISATION CARGO?.TOML COMPLÈTE
+⚡ OPTIMISATION CARGO.TOML COMPLÈTE
 
-1) 🚀 PROFILE RELEASE (any: any)
+1) 🚀 PROFILE RELEASE (performance maximale)
 
    \`\`\`toml
-   [profile?.release]
-   opt-level = "z"           # Optimize for size (any: any)
+   [profile.release]
+   opt-level = "z"           # Optimize for size (or "3" for speed)
    lto = "fat"               # Full Link-Time Optimization
    codegen-units = 1         # Single codegen unit for max optimization
    panic = "abort"           # Remove unwinding overhead
@@ -633,10 +633,10 @@ export async function handleOptimizeCargo(): Promise<DevSudoResult> {
 
    Gain attendu: -30% taille binaire, +15% performance
 
-2) 🔧 PROFILE DEV (any: any)
+2) 🔧 PROFILE DEV (compilation rapide)
 
    \`\`\`toml
-   [profile?.dev]
+   [profile.dev]
    opt-level = 0             # No optimization for fast compilation
    debug = true              # Full debug info
    incremental = true        # Incremental compilation
@@ -687,10 +687,10 @@ export async function handleOptimizeCargo(): Promise<DevSudoResult> {
 
    \`\`\`bash
    # Supprimer target/
-   cargo clean --manifest-path src-tauri/Cargo?.toml
+   cargo clean --manifest-path src-tauri/Cargo.toml
 
    # Rebuild from scratch
-   cargo build --release --manifest-path src-tauri/Cargo?.toml
+   cargo build --release --manifest-path src-tauri/Cargo.toml
 
    # Vérifier taille binaire
    ls -lh src-tauri/target/release/titane-infinity
@@ -729,9 +729,9 @@ export async function handleOptimizeCargo(): Promise<DevSudoResult> {
 
 8) ⚡ LINKING OPTIMISÉ
 
-   Pour Linux (any: any):
+   Pour Linux (WebKitGTK):
    \`\`\`toml
-   [target?.x86_64-unknown-linux-gnu]
+   [target.x86_64-unknown-linux-gnu]
    linker = "clang"
    rustflags = ["-C", "link-arg=-fuse-ld=lld"]
    \`\`\`
@@ -743,9 +743,9 @@ export async function handleOptimizeCargo(): Promise<DevSudoResult> {
 📊 RÉSUMÉ OPTIMISATIONS
 
 Binary size: -30%
-Compile time (any: any): -20%
+Compile time (incremental): -20%
 Runtime performance: +15%
-Link time: -50% (any: any)
+Link time: -50% (with lld)
 
 Status: ⚡ CARGO OPTIMISÉ — Prêt pour production
 `,
@@ -768,10 +768,10 @@ export async function handleBuildBackend(): Promise<DevSudoResult> {
 
 Commandes exécutées:
 
-1) cargo check (any: any)
-2) cargo clippy (any: any)
-3) cargo build --release (any: any)
-4) cargo test (any: any)
+1) cargo check (validation code)
+2) cargo clippy (linting)
+3) cargo build --release (compilation optimisée)
+4) cargo test (tests unitaires)
 
 Utilisez le terminal pour suivre les logs complets.
 
@@ -829,7 +829,7 @@ export async function handleAnalyzeSecurity(): Promise<DevSudoResult> {
 
 3) 🛡️ TAURI SECURITY
 
-   Configuration tauri?.conf?.json:
+   Configuration tauri.conf.json:
 
    \`\`\`json
    {

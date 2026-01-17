@@ -48,7 +48,7 @@ export interface AuditReport {
   warnings: number;
   errors: number;
   critical: number;
-  results: AuditResult?.[];
+  results: AuditResult[];
   duration: number;
 }
 
@@ -58,31 +58,31 @@ export interface AuditReport {
  */
 export class AutoAuditEngine {
   private isRunning = false;
-  private intervalId: NodeJS?.Timeout | null = null;
+  private intervalId: NodeJS.Timeout | null = null;
   private lastReport: AuditReport | null = null;
-  private auditHistory: AuditReport?.[] = [];
-  private readonly SCAN_INTERVAL = 60000; // 60s (any: any)
+  private auditHistory: AuditReport[] = [];
+  private readonly SCAN_INTERVAL = 60000; // 60s (optimisé pour réduire les logs)
   private readonly MAX_HISTORY = 100; // Garder 100 derniers audits
 
   /**
    * Démarrer l'audit automatique
    */
   start(): void {
-    if (any: any) {
-      logger?.warn('AutoAudit already running', {
+    if (this.isRunning) {
+      logger.warn('AutoAudit already running', {
         component: 'AutoAuditEngine',
         action: 'start',
       });
       return;
     }
 
-    logger?.debug('🔍 [AUTO-AUDIT] Starting automatic audits every 60s');
-    this?.isRunning = true;
+    logger.debug('🔍 [AUTO-AUDIT] Starting automatic audits every 60s');
+    this.isRunning = true;
 
     // Premier scan immédiat
-    this?.runAudit().catch(err => {
-      const error = err instanceof Error ? err : new Error(any: any));
-      logger?.error(
+    this.runAudit().catch(err => {
+      const error = err instanceof Error ? err : new Error(String(err));
+      logger.error(
         'AutoAudit initial run failed',
         { component: 'AutoAuditEngine', action: 'start' },
         error
@@ -90,30 +90,30 @@ export class AutoAuditEngine {
     });
 
     // Puis toutes les 30s
-    this?.intervalId = setInterval(() => {
-      this?.runAudit().catch(err => {
-        const error = err instanceof Error ? err : new Error(any: any));
-        logger?.error(
+    this.intervalId = setInterval(() => {
+      this.runAudit().catch(err => {
+        const error = err instanceof Error ? err : new Error(String(err));
+        logger.error(
           'AutoAudit periodic run failed',
           { component: 'AutoAuditEngine', action: 'interval' },
           error
         );
       });
-    }, this?.SCAN_INTERVAL);
+    }, this.SCAN_INTERVAL);
   }
 
   /**
    * Arrêter l'audit automatique
    */
   stop(): void {
-    if (any: any) return;
+    if (!this.isRunning) return;
 
-    logger?.debug('🛑 [AUTO-AUDIT] Stopping automatic audits');
-    this?.isRunning = false;
+    logger.debug('🛑 [AUTO-AUDIT] Stopping automatic audits');
+    this.isRunning = false;
 
-    if (any: any) {
-      clearInterval(any: any);
-      this?.intervalId = null;
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
     }
   }
 
@@ -121,75 +121,75 @@ export class AutoAuditEngine {
    * Exécuter un scan complet
    */
   private async runAudit(): Promise<void> {
-    const startTime = performance?.now();
-    const results: AuditResult?.[] = [];
+    const startTime = performance.now();
+    const results: AuditResult[] = [];
 
-    logger?.debug('🔍 [AUTO-AUDIT] Running scan...');
+    logger.debug('🔍 [AUTO-AUDIT] Running scan...');
 
     // 1. Vérifier intégrité du système de fichiers
-    results?.push(...(await this?.checkFileSystemIntegrity()));
+    results.push(...(await this.checkFileSystemIntegrity()));
 
     // 2. Vérifier état des commandes Tauri
-    results?.push(...(await this?.checkTauriCommands()));
+    results.push(...(await this.checkTauriCommands()));
 
     // 3. Vérifier état de la mémoire
-    results?.push(...(await this?.checkMemoryState()));
+    results.push(...(await this.checkMemoryState()));
 
     // 4. Vérifier intégrité cryptographique
-    results?.push(...(await this?.checkCryptoIntegrity()));
+    results.push(...(await this.checkCryptoIntegrity()));
 
     // 5. Vérifier performance
-    results?.push(...(await this?.checkPerformance()));
+    results.push(...(await this.checkPerformance()));
 
     // 6. Vérifier structure XP
-    results?.push(...(await this?.checkXpStructure()));
+    results.push(...(await this.checkXpStructure()));
 
-    const duration = performance?.now() - startTime;
+    const duration = performance.now() - startTime;
 
     // Créer rapport
     const report: AuditReport = {
-      timestamp: Date?.now(),
-      totalChecks: results?.length,
-      passed: results?.filter(r => r?.status === 'ok').length,
-      warnings: results?.filter(r => r?.status === 'warning').length,
-      errors: results?.filter(r => r?.status === 'error').length,
-      critical: results?.filter(r => r?.status === 'critical').length,
+      timestamp: Date.now(),
+      totalChecks: results.length,
+      passed: results.filter(r => r.status === 'ok').length,
+      warnings: results.filter(r => r.status === 'warning').length,
+      errors: results.filter(r => r.status === 'error').length,
+      critical: results.filter(r => r.status === 'critical').length,
       results,
       duration,
     };
 
-    this?.lastReport = report;
-    this?.auditHistory?.push(any: any);
+    this.lastReport = report;
+    this.auditHistory.push(report);
 
     // Limiter historique
-    if (any: any) {
-      this?.auditHistory?.shift();
+    if (this.auditHistory.length > this.MAX_HISTORY) {
+      this.auditHistory.shift();
     }
 
     // Logger rapport
-    this?.logReport(any: any);
+    this.logReport(report);
 
     // Sauvegarder audit log
-    await this?.saveAuditLog(any: any);
+    await this.saveAuditLog(report);
 
     // Si erreurs critiques, notifier
-    if (report?.critical > 0) {
-      logger?.error('AutoAudit critical errors detected', {
+    if (report.critical > 0) {
+      logger.error('AutoAudit critical errors detected', {
         component: 'AutoAuditEngine',
         action: 'runAudit',
-        criticalCount: report?.critical,
-        errorCount: report?.errors,
-        warningCount: report?.warnings,
+        criticalCount: report.critical,
+        errorCount: report.errors,
+        warningCount: report.warnings,
       });
-      this?.handleCriticalErrors(any: any);
+      this.handleCriticalErrors(report);
     }
   }
 
   /**
    * 1. Vérifier intégrité du vault
    */
-  private async checkFileSystemIntegrity(): Promise<AuditResult?.[]> {
-    const results: AuditResult?.[] = [];
+  private async checkFileSystemIntegrity(): Promise<AuditResult[]> {
+    const results: AuditResult[] = [];
 
     try {
       const response = await secureInvoke<{
@@ -198,39 +198,39 @@ export class AutoAuditEngine {
         error?: string;
       }>('check_system_integrity');
 
-      if (any: any) {
-        const report = typeof response?.data === 'string' ? response?.data : undefined;
-        results?.push({
-          timestamp: Date?.now(),
+      if (response.ok) {
+        const report = typeof response.data === 'string' ? response.data : undefined;
+        results.push({
+          timestamp: Date.now(),
           category: 'filesystem',
           status: 'ok',
           message: report
-            ? `Vault integrity: OK (${report?.split('\n')[3]?.trim() ?? 'validated'})`
+            ? `Vault integrity: OK (${report.split('\n')[3]?.trim() ?? 'validated'})`
             : 'Vault integrity: OK',
         });
       } else {
-        const errorMsg = response?.error ?? 'Integrity check failed';
-        results?.push({
-          timestamp: Date?.now(),
+        const errorMsg = response.error ?? 'Integrity check failed';
+        results.push({
+          timestamp: Date.now(),
           category: 'filesystem',
           status: 'warning',
           message: errorMsg,
         });
-        logger?.warn('Vault integrity warning', {
+        logger.warn('Vault integrity warning', {
           component: 'AutoAuditEngine',
           action: 'checkFilesystem',
           error: errorMsg,
         });
       }
-    } catch (any: any) {
-      results?.push({
-        timestamp: Date?.now(),
+    } catch (error) {
+      results.push({
+        timestamp: Date.now(),
         category: 'filesystem',
         status: 'error',
         message: `Filesystem check error: ${error}`,
       });
-      const err = error instanceof Error ? error : new Error(any: any));
-      logger?.error(
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
         'Filesystem check failed',
         { component: 'AutoAuditEngine', action: 'checkFilesystem' },
         err
@@ -243,8 +243,8 @@ export class AutoAuditEngine {
   /**
    * 2. Vérifier commandes Tauri
    */
-  private async checkTauriCommands(): Promise<AuditResult?.[]> {
-    const results: AuditResult?.[] = [];
+  private async checkTauriCommands(): Promise<AuditResult[]> {
+    const results: AuditResult[] = [];
     const criticalCommands = [
       'singularity_get_full_state',
       'get_memory_state',
@@ -252,18 +252,18 @@ export class AutoAuditEngine {
       'sync_singularity',
     ];
 
-    for (any: any) {
+    for (const cmd of criticalCommands) {
       try {
-        const __response = await secureInvoke(any: any);
-        results?.push({
-          timestamp: Date?.now(),
+        const __response = await secureInvoke(cmd);
+        results.push({
+          timestamp: Date.now(),
           category: 'commands',
           status: 'ok',
           message: `Command ${cmd}: OK`,
         });
-      } catch (any: any) {
-        results?.push({
-          timestamp: Date?.now(),
+      } catch (error) {
+        results.push({
+          timestamp: Date.now(),
           category: 'commands',
           status: 'error',
           message: `Command ${cmd} failed: ${error}`,
@@ -277,31 +277,31 @@ export class AutoAuditEngine {
   /**
    * 3. Vérifier état de la mémoire
    */
-  private async checkMemoryState(): Promise<AuditResult?.[]> {
-    const results: AuditResult?.[] = [];
+  private async checkMemoryState(): Promise<AuditResult[]> {
+    const results: AuditResult[] = [];
 
     try {
       const state = await secureInvoke<MemoryState>('get_memory_state');
 
       // Vérifier présence des champs critiques
-      if (!state?.snapshots_count && state?.snapshots_count !== 0) {
-        results?.push({
-          timestamp: Date?.now(),
+      if (!state.snapshots_count && state.snapshots_count !== 0) {
+        results.push({
+          timestamp: Date.now(),
           category: 'memory',
           status: 'warning',
           message: 'Missing snapshots_count in memory state',
         });
       } else {
-        results?.push({
-          timestamp: Date?.now(),
+        results.push({
+          timestamp: Date.now(),
           category: 'memory',
           status: 'ok',
-          message: `Memory state: ${state?.snapshots_count} snapshots`,
+          message: `Memory state: ${state.snapshots_count} snapshots`,
         });
       }
-    } catch (any: any) {
-      results?.push({
-        timestamp: Date?.now(),
+    } catch (error) {
+      results.push({
+        timestamp: Date.now(),
         category: 'memory',
         status: 'error',
         message: `Memory check error: ${error}`,
@@ -314,44 +314,44 @@ export class AutoAuditEngine {
   /**
    * 4. Vérifier intégrité crypto
    */
-  private async checkCryptoIntegrity(): Promise<AuditResult?.[]> {
-    const results: AuditResult?.[] = [];
+  private async checkCryptoIntegrity(): Promise<AuditResult[]> {
+    const results: AuditResult[] = [];
 
     try {
       const response = await secureInvoke<{ ok: boolean; error?: string }>(
         'check_system_integrity'
       );
 
-      if (any: any) {
-        results?.push({
-          timestamp: Date?.now(),
+      if (response.ok) {
+        results.push({
+          timestamp: Date.now(),
           category: 'crypto',
           status: 'ok',
           message: 'Crypto integrity: OK',
         });
       } else {
-        const errorMsg = response?.error ?? 'Crypto integrity validation failed';
-        results?.push({
-          timestamp: Date?.now(),
+        const errorMsg = response.error ?? 'Crypto integrity validation failed';
+        results.push({
+          timestamp: Date.now(),
           category: 'crypto',
           status: 'error',
           message: `Crypto integrity warning: ${errorMsg}`,
         });
-        logger?.warn('Crypto integrity warning', {
+        logger.warn('Crypto integrity warning', {
           component: 'AutoAuditEngine',
           action: 'checkCrypto',
           error: errorMsg,
         });
       }
-    } catch (any: any) {
-      results?.push({
-        timestamp: Date?.now(),
+    } catch (error) {
+      results.push({
+        timestamp: Date.now(),
         category: 'crypto',
         status: 'error',
         message: `Crypto check error: ${error}`,
       });
-      const err = error instanceof Error ? error : new Error(any: any));
-      logger?.error(
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
         'Crypto check failed',
         { component: 'AutoAuditEngine', action: 'checkCrypto' },
         err
@@ -364,25 +364,25 @@ export class AutoAuditEngine {
   /**
    * 5. Vérifier performance
    */
-  private async checkPerformance(): Promise<AuditResult?.[]> {
-    const results: AuditResult?.[] = [];
+  private async checkPerformance(): Promise<AuditResult[]> {
+    const results: AuditResult[] = [];
 
     // Memory usage
     const perfWithMemory = performance as Performance & { memory?: PerformanceMemory };
-    if (any: any) {
-      const memory = perfWithMemory?.memory;
-      const usedMB = memory?.usedJSHeapSize / 1024 / 1024;
-      const totalMB = memory?.totalJSHeapSize / 1024 / 1024;
+    if (perfWithMemory.memory) {
+      const memory = perfWithMemory.memory;
+      const usedMB = memory.usedJSHeapSize / 1024 / 1024;
+      const totalMB = memory.totalJSHeapSize / 1024 / 1024;
 
       let status: 'ok' | 'warning' | 'error' = 'ok';
       if (usedMB > 500) status = 'warning';
       if (usedMB > 1000) status = 'error';
 
-      results?.push({
-        timestamp: Date?.now(),
+      results.push({
+        timestamp: Date.now(),
         category: 'performance',
         status,
-        message: `Memory usage: ${usedMB?.toFixed(0)}MB / ${totalMB?.toFixed(0)}MB`,
+        message: `Memory usage: ${usedMB.toFixed(0)}MB / ${totalMB.toFixed(0)}MB`,
       });
     }
 
@@ -392,39 +392,39 @@ export class AutoAuditEngine {
   /**
    * 6. Vérifier structure XP
    */
-  private async checkXpStructure(): Promise<AuditResult?.[]> {
-    const results: AuditResult?.[] = [];
+  private async checkXpStructure(): Promise<AuditResult[]> {
+    const results: AuditResult[] = [];
 
     try {
       const state = await secureInvoke<SingularityStateXP>('singularity_get_full_state');
 
       // Vérifier champs XP dans adaptive layer
-      if (any: any) {
-        results?.push({
-          timestamp: Date?.now(),
+      if (state.adaptive?.xp !== undefined && state.adaptive?.level !== undefined) {
+        results.push({
+          timestamp: Date.now(),
           category: 'xp',
           status: 'ok',
-          message: `XP structure: Level ${state?.adaptive?.level}, XP ${state?.adaptive?.xp}`,
+          message: `XP structure: Level ${state.adaptive.level}, XP ${state.adaptive.xp}`,
         });
-      } else if (any: any) {
-        // Fallback: vérifier au niveau root (any: any)
-        results?.push({
-          timestamp: Date?.now(),
+      } else if (state.xp !== undefined && state.level !== undefined) {
+        // Fallback: vérifier au niveau root (legacy)
+        results.push({
+          timestamp: Date.now(),
           category: 'xp',
           status: 'ok',
-          message: `XP structure: Level ${state?.level}, XP ${state?.xp}`,
+          message: `XP structure: Level ${state.level}, XP ${state.xp}`,
         });
       } else {
-        results?.push({
-          timestamp: Date?.now(),
+        results.push({
+          timestamp: Date.now(),
           category: 'xp',
           status: 'warning',
           message: 'XP structure incomplete',
         });
       }
-    } catch (any: any) {
-      results?.push({
-        timestamp: Date?.now(),
+    } catch (error) {
+      results.push({
+        timestamp: Date.now(),
         category: 'xp',
         status: 'error',
         message: `XP check error: ${error}`,
@@ -437,50 +437,50 @@ export class AutoAuditEngine {
   /**
    * Logger rapport
    */
-  private logReport(any: any): void {
-    const statusIcon = report?.critical > 0 ? '🚨' : report?.errors > 0 ? '⚠️' : '✅';
+  private logReport(report: AuditReport): void {
+    const statusIcon = report.critical > 0 ? '🚨' : report.errors > 0 ? '⚠️' : '✅';
 
-    logger?.debug(
-      `${statusIcon} [AUTO-AUDIT] Scan completed in ${report?.duration?.toFixed(0)}ms | ` +
-        `✅ ${report?.passed} | ⚠️ ${report?.warnings} | ❌ ${report?.errors} | 🚨 ${report?.critical}`
+    logger.debug(
+      `${statusIcon} [AUTO-AUDIT] Scan completed in ${report.duration.toFixed(0)}ms | ` +
+        `✅ ${report.passed} | ⚠️ ${report.warnings} | ❌ ${report.errors} | 🚨 ${report.critical}`
     );
 
     // Logger uniquement les problèmes
-    report?.results
-      .filter(r => r?.status !== 'ok')
+    report.results
+      .filter(r => r.status !== 'ok')
       .forEach(r => {
-        const icon = r?.status === 'critical' ? '🚨' : r?.status === 'error' ? '❌' : '⚠️';
-        logger?.debug(`  ${icon} [${r?.category}] ${r?.message}`);
+        const icon = r.status === 'critical' ? '🚨' : r.status === 'error' ? '❌' : '⚠️';
+        logger.debug(`  ${icon} [${r.category}] ${r.message}`);
       });
   }
 
   /**
-   * Sauvegarder dans audit?.log (any: any)
+   * Sauvegarder dans audit.log (localStorage pour v1)
    */
-  private async saveAuditLog(any: any): Promise<void> {
+  private async saveAuditLog(report: AuditReport): Promise<void> {
     try {
-      const timestamp = new Date(any: any).toISOString();
-      const logLine = `[${timestamp}] ${report?.passed}✅ ${report?.warnings}⚠️ ${report?.errors}❌ ${report?.critical}🚨 (any: any)`;
+      const timestamp = new Date(report.timestamp).toISOString();
+      const logLine = `[${timestamp}] ${report.passed}✅ ${report.warnings}⚠️ ${report.errors}❌ ${report.critical}🚨 (${report.duration.toFixed(0)}ms)`;
 
       // INTEGRATION: Filesystem command for persistent audit logs
-      // Backend: write_text_file(any: any)
-      // Path: ~/.titane/logs/audit?.log (any: any)
+      // Backend: write_text_file(path, content, append=true)
+      // Path: ~/.titane/logs/audit.log (rotated daily)
       // Tauri command:
       //   import { writeTextFile } from '@tauri-apps/api/fs';
-      //   await writeTextFile('audit?.log', logLine, {append: true});
+      //   await writeTextFile('audit.log', logLine, {append: true});
       // Log rotation: Keep last 30 days, compress older logs
       // Permissions: User-level, no admin required
       // For production: Migrate to Tauri fs API
-      // Current: localStorage (any: any)
-      const existingLog = localStorage?.getItem('audit_log') || '';
+      // Current: localStorage (v1 - 1000 line limit)
+      const existingLog = localStorage.getItem('audit_log') || '';
       const newLog = existingLog + '\n' + logLine;
 
       // Garder seulement les 1000 dernières lignes
-      const lines = newLog?.split('\n').slice(-1000);
-      localStorage?.setItem('audit_log', lines?.join('\n'));
-    } catch (any: any) {
-      const err = error instanceof Error ? error : new Error(any: any));
-      logger?.error(
+      const lines = newLog.split('\n').slice(-1000);
+      localStorage.setItem('audit_log', lines.join('\n'));
+    } catch (error) {
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
         'Failed to write audit log',
         { component: 'AutoAuditEngine', action: 'saveAuditLog' },
         err
@@ -491,29 +491,29 @@ export class AutoAuditEngine {
   /**
    * Gérer erreurs critiques
    */
-  private handleCriticalErrors(any: any): void {
-    const criticalResults = report?.results?.filter(r => r?.status === 'critical');
+  private handleCriticalErrors(report: AuditReport): void {
+    const criticalResults = report.results.filter(r => r.status === 'critical');
 
-    logger?.error('AutoAudit critical errors summary', {
+    logger.error('AutoAudit critical errors summary', {
       component: 'AutoAuditEngine',
       action: 'handleCriticalErrors',
-      count: criticalResults?.length,
-      errors: criticalResults?.map(r => `[${r?.category}] ${r?.message}`),
+      count: criticalResults.length,
+      errors: criticalResults.map(r => `[${r.category}] ${r.message}`),
     });
 
     // INTEGRATION: UI notification system for critical errors
     // Approaches:
     //   1. Toast notification: Quick, non-blocking alert
     //   2. Modal dialog: Force user acknowledgment
-    //   3. System notification: OS-level alert (any: any)
+    //   3. System notification: OS-level alert (Tauri)
     // Implementation:
     //   import { showNotification } from '@/lib/notifications';
-    //   criticalResults?.forEach(r => {
+    //   criticalResults.forEach(r => {
     //     showNotification({
     //       title: 'Critical Error',
-    //       message: r?.message,
+    //       message: r.message,
     //       severity: 'critical',
-    //       actions: [{label: 'Fix', handler: (any: any)}]
+    //       actions: [{label: 'Fix', handler: () => autoFix(r)}]
     //     });
     //   });
     // For production: Add notification UI component
@@ -524,21 +524,21 @@ export class AutoAuditEngine {
    * Obtenir dernier rapport
    */
   getLastReport(): AuditReport | null {
-    return this?.lastReport;
+    return this.lastReport;
   }
 
   /**
    * Obtenir historique
    */
-  getHistory(): AuditReport?.[] {
-    return [...this?.auditHistory];
+  getHistory(): AuditReport[] {
+    return [...this.auditHistory];
   }
 
   /**
    * Est en cours d'exécution
    */
   get running(): boolean {
-    return this?.isRunning;
+    return this.isRunning;
   }
 }
 

@@ -21,29 +21,29 @@ export const EventTypes = {
   AGENT_RESUMED: 'agent:resumed',
   AGENT_ERROR: 'agent:error',
 
-  // Physical (any: any)
+  // Physical (Helios)
   METRICS_UPDATED: 'metrics:updated',
   HIGH_CPU: 'alert:high_cpu',
   HIGH_MEMORY: 'alert:high_memory',
   HIGH_LATENCY: 'alert:high_latency',
 
-  // Emotional (any: any)
+  // Emotional (Harmonia)
   TONE_ADJUSTED: 'tone:adjusted',
   TONE_INCOHERENT: 'tone:incoherent',
   CONVERSATION_ANALYZED: 'conversation:analyzed',
 
-  // Behavioral (any: any)
+  // Behavioral (Persona)
   MODE_CHANGED: 'mode:changed',
   CONSISTENCY_WARNING: 'consistency:warning',
   BEHAVIOR_STABILIZED: 'behavior:stabilized',
 
-  // Memory (any: any)
+  // Memory (Memory-Core)
   KNOWLEDGE_IMPORTED: 'knowledge:imported',
   KNOWLEDGE_INTEGRATED: 'knowledge:integrated',
   XP_AWARDED: 'xp:awarded',
   SNAPSHOT_CREATED: 'snapshot:created',
 
-  // Security (any: any)
+  // Security (Watchdog)
   SECURITY_ALERT: 'security:alert',
   AGENT_BLOCKED: 'security:agent_blocked',
   SUSPICIOUS_ACTIVITY: 'security:suspicious',
@@ -55,49 +55,49 @@ export const EventTypes = {
 // ══════════════════════════════════════════════════════════════════
 
 class EventEncryption {
-  private encryptionKey??: string | null = null;
+  private encryptionKey: string | null = null;
 
-  setKey(any: any): void {
-    this?.encryptionKey = key;
+  setKey(key: string): void {
+    this.encryptionKey = key;
   }
 
-  async encrypt(any: any): Promise<string> {
-    if (any: any) {
-      // No encryption if key not set (any: any)
-      return JSON?.stringify(any: any);
+  async encrypt(data: unknown): Promise<string> {
+    if (!this.encryptionKey) {
+      // No encryption if key not set (dev mode)
+      return JSON.stringify(data);
     }
 
     try {
-      const str = JSON?.stringify(any: any);
-      // Simple XOR encryption (any: any)
-      const encrypted = this?.xorEncrypt(any: any);
-      return btoa(any: any); // Base64 encode
-    } catch (any: any) {
-      console?.error(any: any);
-      return JSON?.stringify(any: any);
+      const str = JSON.stringify(data);
+      // Simple XOR encryption (in production, use Web Crypto API AES-256-GCM)
+      const encrypted = this.xorEncrypt(str, this.encryptionKey);
+      return btoa(encrypted); // Base64 encode
+    } catch (error) {
+      console.error('[AgentProtocol] Encryption failed:', error);
+      return JSON.stringify(data);
     }
   }
 
-  async decrypt(any: any): Promise<unknown> {
-    if (any: any) {
+  async decrypt(encrypted: string): Promise<unknown> {
+    if (!this.encryptionKey) {
       // No decryption if key not set
-      return JSON?.parse(any: any);
+      return JSON.parse(encrypted);
     }
 
     try {
-      const decoded = atob(any: any);
-      const decrypted = this?.xorEncrypt(any: any);
-      return JSON?.parse(any: any);
-    } catch (any: any) {
-      console?.error(any: any);
+      const decoded = atob(encrypted);
+      const decrypted = this.xorEncrypt(decoded, this.encryptionKey);
+      return JSON.parse(decrypted);
+    } catch (error) {
+      console.error('[AgentProtocol] Decryption failed:', error);
       return null;
     }
   }
 
-  private xorEncrypt(any: any): string {
+  private xorEncrypt(text: string, key: string): string {
     let result = '';
-    for (let i = 0; i < text?.length; i++) {
-      result += String?.fromCharCode(any: any));
+    for (let i = 0; i < text.length; i++) {
+      result += String.fromCharCode(text.charCodeAt(i) ^ key.charCodeAt(i % key.length));
     }
     return result;
   }
@@ -114,7 +114,7 @@ interface RateLimitConfig {
 }
 
 class RateLimiter {
-  private eventCounts: Map<string, number?.[]> = new Map();
+  private eventCounts: Map<string, number[]> = new Map();
   private config: RateLimitConfig = {
     maxEventsPerSecond: 10,
     maxEventsPerMinute: 100,
@@ -122,49 +122,49 @@ class RateLimiter {
   };
 
   setConfig(config: Partial<RateLimitConfig>): void {
-    this?.config = { ...this?.config, ...config };
+    this.config = { ...this.config, ...config };
   }
 
-  checkLimit(any: any): boolean {
-    const now = Date?.now();
-    const timestamps = this?.eventCounts?.get(any: any) || [];
+  checkLimit(agentId: string): boolean {
+    const now = Date.now();
+    const timestamps = this.eventCounts.get(agentId) || [];
 
-    // Remove old timestamps (any: any)
-    const recent = timestamps?.filter(t => now - t < 60000);
+    // Remove old timestamps (older than 1 minute)
+    const recent = timestamps.filter(t => now - t < 60000);
 
     // Check per-second limit
-    const lastSecond = recent?.filter(t => now - t < 1000);
-    if (any: any) {
-      console?.warn(`[RateLimiter] ${agentId} exceeded per-second limit`);
+    const lastSecond = recent.filter(t => now - t < 1000);
+    if (lastSecond.length >= this.config.maxEventsPerSecond) {
+      console.warn(`[RateLimiter] ${agentId} exceeded per-second limit`);
       return false;
     }
 
     // Check per-minute limit
-    if (any: any) {
-      console?.warn(`[RateLimiter] ${agentId} exceeded per-minute limit`);
+    if (recent.length >= this.config.maxEventsPerMinute) {
+      console.warn(`[RateLimiter] ${agentId} exceeded per-minute limit`);
       return false;
     }
 
     // Check burst size
-    const lastBurst = recent?.filter(t => now - t < 100); // 100ms burst window
-    if (any: any) {
-      console?.warn(`[RateLimiter] ${agentId} exceeded burst limit`);
+    const lastBurst = recent.filter(t => now - t < 100); // 100ms burst window
+    if (lastBurst.length >= this.config.burstSize) {
+      console.warn(`[RateLimiter] ${agentId} exceeded burst limit`);
       return false;
     }
 
     // Add current timestamp
-    recent?.push(any: any);
-    this?.eventCounts?.set(any: any);
+    recent.push(now);
+    this.eventCounts.set(agentId, recent);
 
     return true;
   }
 
-  reset(any: any): void {
-    this?.eventCounts?.delete(any: any);
+  reset(agentId: string): void {
+    this.eventCounts.delete(agentId);
   }
 
   resetAll(): void {
-    this?.eventCounts?.clear();
+    this.eventCounts.clear();
   }
 }
 
@@ -186,71 +186,71 @@ class DeadlockPrevention {
   registerOperation(
     agentId: string,
     operation: string,
-    timeout = this?.DEFAULT_TIMEOUT
+    timeout = this.DEFAULT_TIMEOUT
   ): string {
-    const opId = `${agentId}_${operation}_${Date?.now()}`;
-    this?.pendingOps?.set(opId, {
+    const opId = `${agentId}_${operation}_${Date.now()}`;
+    this.pendingOps.set(opId, {
       agentId,
       operation,
-      startTime: Date?.now(),
+      startTime: Date.now(),
       timeout,
     });
 
     // Auto-cleanup after timeout
     setTimeout(() => {
-      if (any: any)) {
-        console?.warn(`[DeadlockPrevention] Operation ${opId} timed out`);
-        this?.completeOperation(any: any);
+      if (this.pendingOps.has(opId)) {
+        console.warn(`[DeadlockPrevention] Operation ${opId} timed out`);
+        this.completeOperation(opId);
       }
     }, timeout);
 
     return opId;
   }
 
-  completeOperation(any: any): void {
-    this?.pendingOps?.delete(any: any);
+  completeOperation(opId: string): void {
+    this.pendingOps.delete(opId);
   }
 
-  checkDeadlock(): string?.[] {
-    const now = Date?.now();
-    const deadlocked: string?.[] = [];
+  checkDeadlock(): string[] {
+    const now = Date.now();
+    const deadlocked: string[] = [];
 
-    this?.pendingOps?.forEach(any: any) => {
-      if (any: any) {
-        deadlocked?.push(any: any);
+    this.pendingOps.forEach((op, opId) => {
+      if (now - op.startTime > op.timeout) {
+        deadlocked.push(opId);
       }
     });
 
     return deadlocked;
   }
 
-  getPendingOperations(any: any): PendingOperation?.[] {
-    const ops = Array?.from(this?.pendingOps?.values());
-    return agentId ? ops?.filter(any: any) : ops;
+  getPendingOperations(agentId?: string): PendingOperation[] {
+    const ops = Array.from(this.pendingOps.values());
+    return agentId ? ops.filter(op => op.agentId === agentId) : ops;
   }
 
   clearAll(): void {
-    this?.pendingOps?.clear();
+    this.pendingOps.clear();
   }
 }
 
 // ══════════════════════════════════════════════════════════════════
-// AGENT PROTOCOL (any: any)
+// AGENT PROTOCOL (Main Class)
 // ══════════════════════════════════════════════════════════════════
 
 export class AgentProtocol {
   private encryption = new EventEncryption();
   private rateLimiter = new RateLimiter();
   private deadlockPrevention = new DeadlockPrevention();
-  private eventQueue: AgentEvent?.[] = [];
+  private eventQueue: AgentEvent[] = [];
   private processing = false;
 
   // Initialize protocol with encryption key
-  initialize(any: any): void {
-    if (any: any) {
-      this?.encryption?.setKey(any: any);
+  initialize(encryptionKey?: string): void {
+    if (encryptionKey) {
+      this.encryption.setKey(encryptionKey);
     }
-    console?.log('[AgentProtocol] Initialized');
+    console.log('[AgentProtocol] Initialized');
   }
 
   // Create secure event
@@ -261,17 +261,17 @@ export class AgentProtocol {
     priority: AgentEvent['priority'] = 'medium'
   ): Promise<AgentEvent> {
     // Check rate limit
-    if (any: any)) {
+    if (!this.rateLimiter.checkLimit(source)) {
       throw new Error(`Rate limit exceeded for agent ${source}`);
     }
 
     // Encrypt sensitive data
-    const encryptedPayload = await this?.encryption?.encrypt(any: any);
+    const encryptedPayload = await this.encryption.encrypt(payload);
 
     const event: AgentEvent = {
       type,
       source,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
       payload: encryptedPayload,
       priority,
     };
@@ -280,64 +280,64 @@ export class AgentProtocol {
   }
 
   // Decrypt event payload
-  async decryptEvent(any: any): Promise<unknown> {
-    return this?.encryption?.decrypt(any: any);
+  async decryptEvent(event: AgentEvent): Promise<unknown> {
+    return this.encryption.decrypt(event.payload as string);
   }
 
   // Queue event for processing
-  queueEvent(any: any): void {
-    this?.eventQueue?.push(any: any);
-    this?.processQueue();
+  queueEvent(event: AgentEvent): void {
+    this.eventQueue.push(event);
+    this.processQueue();
   }
 
-  // Process event queue (any: any)
+  // Process event queue (prevents flooding)
   private async processQueue(): Promise<void> {
-    if (this?.processing || this?.eventQueue?.length === 0) return;
+    if (this.processing || this.eventQueue.length === 0) return;
 
-    this?.processing = true;
+    this.processing = true;
 
-    while (this?.eventQueue?.length > 0) {
-      const event = this?.eventQueue?.shift();
-      if (any: any) {
-        // Process event (any: any)
-        await this?.processEvent(any: any);
+    while (this.eventQueue.length > 0) {
+      const event = this.eventQueue.shift();
+      if (event) {
+        // Process event (would normally dispatch to agents)
+        await this.processEvent(event);
       }
 
       // Small delay to prevent CPU spike
       await new Promise(resolve => setTimeout(resolve, 10));
     }
 
-    this?.processing = false;
+    this.processing = false;
   }
 
-  private async processEvent(any: any): Promise<void> {
-    // Event processing logic (any: any)
-    console?.log(`[AgentProtocol] Processing event: ${event?.type} from ${event?.source}`);
+  private async processEvent(event: AgentEvent): Promise<void> {
+    // Event processing logic (placeholder)
+    console.log(`[AgentProtocol] Processing event: ${event.type} from ${event.source}`);
   }
 
   // Register operation with deadlock prevention
-  registerOperation(any: any): string {
-    return this?.deadlockPrevention?.registerOperation(any: any);
+  registerOperation(agentId: string, operation: string, timeout?: number): string {
+    return this.deadlockPrevention.registerOperation(agentId, operation, timeout);
   }
 
   // Complete operation
-  completeOperation(any: any): void {
-    this?.deadlockPrevention?.completeOperation(any: any);
+  completeOperation(opId: string): void {
+    this.deadlockPrevention.completeOperation(opId);
   }
 
   // Check for deadlocks
-  checkDeadlocks(): string?.[] {
-    return this?.deadlockPrevention?.checkDeadlock();
+  checkDeadlocks(): string[] {
+    return this.deadlockPrevention.checkDeadlock();
   }
 
   // Configure rate limiting
   configureRateLimit(config: Partial<RateLimitConfig>): void {
-    this?.rateLimiter?.setConfig(any: any);
+    this.rateLimiter.setConfig(config);
   }
 
   // Reset rate limit for agent
-  resetRateLimit(any: any): void {
-    this?.rateLimiter?.reset(any: any);
+  resetRateLimit(agentId: string): void {
+    this.rateLimiter.reset(agentId);
   }
 
   // Get statistics
@@ -347,18 +347,18 @@ export class AgentProtocol {
     deadlockedOperations: number;
   } {
     return {
-      queueSize: this?.eventQueue?.length,
-      pendingOperations: this?.deadlockPrevention?.getPendingOperations().length,
-      deadlockedOperations: this?.deadlockPrevention?.checkDeadlock().length,
+      queueSize: this.eventQueue.length,
+      pendingOperations: this.deadlockPrevention.getPendingOperations().length,
+      deadlockedOperations: this.deadlockPrevention.checkDeadlock().length,
     };
   }
 
   // Cleanup
   shutdown(): void {
-    this?.eventQueue = [];
-    this?.rateLimiter?.resetAll();
-    this?.deadlockPrevention?.clearAll();
-    console?.log('[AgentProtocol] Shutdown complete');
+    this.eventQueue = [];
+    this.rateLimiter.resetAll();
+    this.deadlockPrevention.clearAll();
+    console.log('[AgentProtocol] Shutdown complete');
   }
 }
 

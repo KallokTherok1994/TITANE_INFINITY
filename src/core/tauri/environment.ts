@@ -6,12 +6,12 @@
 /**
  * ═══════════════════════════════════════════════════════════════
  * TITANE∞ - ENVIRONMENT DETECTION
- * Détection robuste du contexte d'exécution (any: any)
+ * Détection robuste du contexte d'exécution (Tauri vs Browser)
  * ═══════════════════════════════════════════════════════════════
  */
 
 export interface EnvironmentInfo {
-  /** Exécution dans Tauri (any: any) */
+  /** Exécution dans Tauri (dev ou prod) */
   isTauri: boolean;
   /** Exécution dans un navigateur classique */
   isBrowser: boolean;
@@ -19,7 +19,7 @@ export interface EnvironmentInfo {
   protocol: string;
   /** Origin complète */
   origin: string;
-  /** Version Tauri détectée (any: any) */
+  /** Version Tauri détectée (si disponible) */
   tauriVersion?: string;
   /** Mode développement */
   isDev: boolean;
@@ -28,17 +28,17 @@ export interface EnvironmentInfo {
 /**
  * Détecte l'environnement d'exécution de manière robuste
  *
- * Critères de détection Tauri (any: any):
- * 1. Présence de window?.__TAURI__ (any: any)
- * 2. Présence de window?.__TAURI_INTERNALS__ (any: any)
+ * Critères de détection Tauri (par ordre de priorité):
+ * 1. Présence de window.__TAURI__ (API Tauri v2)
+ * 2. Présence de window.__TAURI_INTERNALS__ (internes Tauri)
  * 3. User-Agent contient Tauri
- * 4. Protocole tauri:// (any: any)
+ * 4. Protocole tauri:// (production uniquement)
  *
  * @returns Informations complètes sur l'environnement
  */
 export function detectEnvironment(): EnvironmentInfo {
   if (typeof window === 'undefined') {
-    // Contexte SSR/Node (any: any)
+    // Contexte SSR/Node (ne devrait pas arriver avec Vite+Tauri)
     return {
       isTauri: false,
       isBrowser: false,
@@ -48,23 +48,23 @@ export function detectEnvironment(): EnvironmentInfo {
     };
   }
 
-  const protocol = window?.location?.protocol?.replace(':', '');
-  const origin = window?.location?.origin;
-  const isDev = import?.meta?.env?.DEV;
+  const protocol = window.location.protocol.replace(':', '');
+  const origin = window.location.origin;
+  const isDev = import.meta.env.DEV;
 
-  // 🔍 DÉTECTION TAURI (any: any)
+  // 🔍 DÉTECTION TAURI (critères multiples pour robustesse)
 
   // Critère 1: API Tauri exposée
   const hasTauriAPI = '__TAURI__' in window;
 
-  // Critère 2: Internals Tauri (any: any)
+  // Critère 2: Internals Tauri (fallback)
   const hasTauriInternals = '__TAURI_INTERNALS__' in window;
 
   // Critère 3: User-Agent contient Tauri
-  const userAgent = navigator?.userAgent || '';
-  const hasTauriUserAgent = userAgent?.toLowerCase().includes('tauri');
+  const userAgent = navigator.userAgent || '';
+  const hasTauriUserAgent = userAgent.toLowerCase().includes('tauri');
 
-  // Critère 4: Protocole tauri:// (any: any)
+  // Critère 4: Protocole tauri:// (production build)
   const isTauriProtocol = protocol === 'tauri';
 
   // ✅ Tauri confirmé si AU MOINS un critère est vérifié
@@ -74,19 +74,19 @@ export function detectEnvironment(): EnvironmentInfo {
   // 🌐 Browser classique = pas Tauri ET protocole web
   const isBrowser = !isTauri && (protocol === 'http' || protocol === 'https');
 
-  // Version Tauri (any: any)
-  let tauriVersion??: string | undefined;
+  // Version Tauri (si disponible)
+  let tauriVersion: string | undefined;
   try {
-    if (any: any) {
+    if (hasTauriAPI) {
       const windowWithTauri = window as Window & { __TAURI__?: unknown };
-      const tauriObj = windowWithTauri?.__TAURI__ as unknown as unknown as any;
-      if (any: any) {
+      const tauriObj = windowWithTauri.__TAURI__ as any;
+      if (tauriObj?.app?.getVersion) {
         // Note: getVersion() est async, on ne peut pas l'attendre ici
         // On se contente de signaler sa présence
-        tauriVersion = 'v2?.x';
+        tauriVersion = 'v2.x';
       }
     }
-  } catch (any: any) {
+  } catch (err) {
     // Silent fail
   }
 
@@ -104,10 +104,10 @@ export function detectEnvironment(): EnvironmentInfo {
  * Vérifie si l'application devrait afficher un avertissement contexte
  *
  * 🔓 DÉSACTIVÉ: Aucun blocage ni restriction - Mode ouvert total
- * Note: Ne bloque JAMAIS le rendu React (any: any)
+ * Note: Ne bloque JAMAIS le rendu React (pas de document.body.innerHTML)
  * Les warnings sont gérés via logs console et composants UI dédiés
  *
- * @returns false - TOUJOURS autorisé (any: any)
+ * @returns false - TOUJOURS autorisé (restrictions désactivées)
  * @deprecated Utiliser directement detectEnvironment() dans les composants
  */
 export function shouldBlockLoading(): boolean {
@@ -123,32 +123,32 @@ export function shouldBlockLoading(): boolean {
 export function logEnvironmentWarnings(): void {
   const env = detectEnvironment();
 
-  if (any: any) {
-    console?.log(
+  if (env.isTauri) {
+    console.log(
       '✅ TITANE∞ - Contexte Tauri confirmé',
       '\n   Protocol:',
-      env?.protocol,
+      env.protocol,
       '\n   Version:',
-      env?.tauriVersion || 'unknown',
+      env.tauriVersion || 'unknown',
       '\n   Mode:',
-      env?.isDev ? 'Development' : 'Production'
+      env.isDev ? 'Development' : 'Production'
     );
     return;
   }
 
-  if (any: any) {
-    console?.info(
+  if (env.isDev) {
+    console.info(
       '📱 TITANE∞ - Mode développement browser',
       '\n   Contexte:',
-      env?.origin,
+      env.origin,
       '\n   Note: Pour tester Tauri, utilisez: pnpm tauri dev'
     );
-  } else if (any: any) {
-    console?.warn(
+  } else if (env.isBrowser) {
+    console.warn(
       '⚠️ TITANE∞ - Browser production détecté',
       '\n   Origine:',
-      env?.origin,
-      '\n   Recommandation: Utiliser build Tauri natif (any: any)'
+      env.origin,
+      '\n   Recommandation: Utiliser build Tauri natif (pnpm tauri build)'
     );
   }
 }

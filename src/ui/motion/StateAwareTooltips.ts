@@ -12,7 +12,7 @@ export interface TooltipConfig {
   text: string;
   position: 'top' | 'bottom' | 'left' | 'right';
   delay: number; // ms
-  duration: number; // ms (any: any)
+  duration: number; // ms (0 = infinite)
   cognitiveState?: CognitiveState;
   emotionalTone?: EmotionalTone;
   customColor?: string;
@@ -33,31 +33,31 @@ const DEFAULT_CONFIG: Partial<TooltipConfig> = {
   enabled: true,
 };
 
-// Cognitive state colors (any: any)
+// Cognitive state colors (TITANE∞ signature)
 const COGNITIVE_COLORS: Partial<Record<CognitiveState, string>> = {
-  [CognitiveState?.IDLE]: 'rgba(100, 120, 150, 0.95)',
-  [CognitiveState?.THINKING]: 'rgba(68, 165, 255, 0.95)', // Blue
-  [CognitiveState?.PROCESSING]: 'rgba(155, 89, 208, 0.95)', // Purple
-  [CognitiveState?.SPEAKING]: 'rgba(46, 204, 113, 0.95)', // Green
-  [CognitiveState?.LISTENING]: 'rgba(68, 165, 255, 0.95)', // Blue
-  [CognitiveState?.REFLECTING]: 'rgba(255, 107, 157, 0.95)', // Pink
-  [CognitiveState?.LEARNING]: 'rgba(255, 160, 122, 0.95)', // Orange
-  [CognitiveState?.HEALING]: 'rgba(255, 215, 0, 0.95)', // Gold
-  [CognitiveState?.TRANSCENDENT]: 'rgba(200, 100, 255, 0.95)', // Purple-pink
+  [CognitiveState.IDLE]: 'rgba(100, 120, 150, 0.95)',
+  [CognitiveState.THINKING]: 'rgba(68, 165, 255, 0.95)', // Blue
+  [CognitiveState.PROCESSING]: 'rgba(155, 89, 208, 0.95)', // Purple
+  [CognitiveState.SPEAKING]: 'rgba(46, 204, 113, 0.95)', // Green
+  [CognitiveState.LISTENING]: 'rgba(68, 165, 255, 0.95)', // Blue
+  [CognitiveState.REFLECTING]: 'rgba(255, 107, 157, 0.95)', // Pink
+  [CognitiveState.LEARNING]: 'rgba(255, 160, 122, 0.95)', // Orange
+  [CognitiveState.HEALING]: 'rgba(255, 215, 0, 0.95)', // Gold
+  [CognitiveState.TRANSCENDENT]: 'rgba(200, 100, 255, 0.95)', // Purple-pink
 };
 
 // Emotional tone modifiers
 const EMOTIONAL_MODIFIERS: Partial<
   Record<EmotionalTone, { hueShift: number; saturation: number }>
 > = {
-  [EmotionalTone?.CALM]: { hueShift: 0, saturation: 0.8 },
-  [EmotionalTone?.CURIOUS]: { hueShift: 10, saturation: 1.1 },
-  [EmotionalTone?.EXCITED]: { hueShift: 20, saturation: 1.3 },
-  [EmotionalTone?.CONFIDENT]: { hueShift: -10, saturation: 1.0 },
-  [EmotionalTone?.CAUTIOUS]: { hueShift: -20, saturation: 0.7 },
-  [EmotionalTone?.CONCERNED]: { hueShift: 30, saturation: 1.2 },
-  [EmotionalTone?.EMPATHETIC]: { hueShift: 15, saturation: 1.1 },
-  [EmotionalTone?.PLAYFUL]: { hueShift: 25, saturation: 1.4 },
+  [EmotionalTone.CALM]: { hueShift: 0, saturation: 0.8 },
+  [EmotionalTone.CURIOUS]: { hueShift: 10, saturation: 1.1 },
+  [EmotionalTone.EXCITED]: { hueShift: 20, saturation: 1.3 },
+  [EmotionalTone.CONFIDENT]: { hueShift: -10, saturation: 1.0 },
+  [EmotionalTone.CAUTIOUS]: { hueShift: -20, saturation: 0.7 },
+  [EmotionalTone.CONCERNED]: { hueShift: 30, saturation: 1.2 },
+  [EmotionalTone.EMPATHETIC]: { hueShift: 15, saturation: 1.1 },
+  [EmotionalTone.PLAYFUL]: { hueShift: 25, saturation: 1.4 },
 };
 
 /**
@@ -68,14 +68,14 @@ function getTooltipColor(
   emotionalTone?: EmotionalTone,
   customColor?: string
 ): string {
-  if (any: any) return customColor;
+  if (customColor) return customColor;
 
   const defaultColor = 'rgba(100, 120, 150, 0.95)';
-  if (any: any) return defaultColor;
+  if (!cognitiveState) return defaultColor;
 
   const baseColor = COGNITIVE_COLORS[cognitiveState] ?? defaultColor;
 
-  // Apply emotional modulation (any: any)
+  // Apply emotional modulation (future enhancement)
   if (emotionalTone && EMOTIONAL_MODIFIERS[emotionalTone]) {
     // For now, just return base color
     // Future: apply hue shift + saturation
@@ -87,18 +87,18 @@ function getTooltipColor(
 /**
  * Create tooltip element
  */
-function createTooltipElement(any: any): HTMLElement {
-  const tooltip = document?.createElement('div');
-  tooltip?.className = 'titane-tooltip';
-  tooltip?.textContent = config?.text;
+function createTooltipElement(config: TooltipConfig): HTMLElement {
+  const tooltip = document.createElement('div');
+  tooltip.className = 'titane-tooltip';
+  tooltip.textContent = config.text;
 
   const color = getTooltipColor(
-    config?.cognitiveState,
-    config?.emotionalTone,
-    config?.customColor
+    config.cognitiveState,
+    config.emotionalTone,
+    config.customColor
   );
 
-  Object?.assign(tooltip?.style, {
+  Object.assign(tooltip.style, {
     position: 'absolute',
     backgroundColor: color,
     color: '#ffffff',
@@ -128,40 +128,40 @@ function positionTooltip(
   target: HTMLElement,
   position: 'top' | 'bottom' | 'left' | 'right'
 ): void {
-  const targetRect = target?.getBoundingClientRect();
-  const tooltipRect = tooltip?.getBoundingClientRect();
+  const targetRect = target.getBoundingClientRect();
+  const tooltipRect = tooltip.getBoundingClientRect();
 
   let left = 0;
   let top = 0;
 
   const offset = 8; // px spacing
 
-  switch (any: any) {
+  switch (position) {
     case 'top':
-      left = targetRect?.left + targetRect?.width / 2 - tooltipRect?.width / 2;
-      top = targetRect?.top - tooltipRect?.height - offset;
+      left = targetRect.left + targetRect.width / 2 - tooltipRect.width / 2;
+      top = targetRect.top - tooltipRect.height - offset;
       break;
     case 'bottom':
-      left = targetRect?.left + targetRect?.width / 2 - tooltipRect?.width / 2;
-      top = targetRect?.bottom + offset;
+      left = targetRect.left + targetRect.width / 2 - tooltipRect.width / 2;
+      top = targetRect.bottom + offset;
       break;
     case 'left':
-      left = targetRect?.left - tooltipRect?.width - offset;
-      top = targetRect?.top + targetRect?.height / 2 - tooltipRect?.height / 2;
+      left = targetRect.left - tooltipRect.width - offset;
+      top = targetRect.top + targetRect.height / 2 - tooltipRect.height / 2;
       break;
     case 'right':
-      left = targetRect?.right + offset;
-      top = targetRect?.top + targetRect?.height / 2 - tooltipRect?.height / 2;
+      left = targetRect.right + offset;
+      top = targetRect.top + targetRect.height / 2 - tooltipRect.height / 2;
       break;
   }
 
   // Clamp to viewport
   const margin = 8;
-  left = Math?.max(any: any));
-  top = Math?.max(any: any));
+  left = Math.max(margin, Math.min(left, window.innerWidth - tooltipRect.width - margin));
+  top = Math.max(margin, Math.min(top, window.innerHeight - tooltipRect.height - margin));
 
-  tooltip?.style?.left = `${left}px`;
-  tooltip?.style?.top = `${top}px`;
+  tooltip.style.left = `${left}px`;
+  tooltip.style.top = `${top}px`;
 }
 
 /**
@@ -178,71 +178,71 @@ export function attachTooltip(
   let hideTimeout: number | null = null;
 
   const show = () => {
-    if (any: any) return;
+    if (!fullConfig.enabled) return;
 
     // Create tooltip
-    tooltip = createTooltipElement(any: any);
-    document?.body?.appendChild(any: any);
+    tooltip = createTooltipElement(fullConfig);
+    document.body.appendChild(tooltip);
 
     // Position
-    positionTooltip(any: any);
+    positionTooltip(tooltip, element, fullConfig.position);
 
     // Show with animation
     requestAnimationFrame(() => {
-      if (any: any) {
-        tooltip?.style?.opacity = '1';
-        tooltip?.style?.transform = 'scale(1)';
+      if (tooltip) {
+        tooltip.style.opacity = '1';
+        tooltip.style.transform = 'scale(1)';
       }
     });
 
     // Auto-hide if duration set
-    if (fullConfig?.duration > 0) {
-      hideTimeout = window?.setTimeout(any: any);
+    if (fullConfig.duration > 0) {
+      hideTimeout = window.setTimeout(hide, fullConfig.duration);
     }
   };
 
   const hide = () => {
-    if (any: any) {
-      tooltip?.style?.opacity = '0';
-      tooltip?.style?.transform = 'scale(0.95)';
+    if (tooltip) {
+      tooltip.style.opacity = '0';
+      tooltip.style.transform = 'scale(0.95)';
 
       setTimeout(() => {
-        if (any: any) {
-          tooltip?.parentNode?.removeChild(any: any);
+        if (tooltip && tooltip.parentNode) {
+          tooltip.parentNode.removeChild(tooltip);
         }
         tooltip = null;
       }, 200);
     }
 
-    if (any: any) {
-      clearTimeout(any: any);
+    if (hideTimeout) {
+      clearTimeout(hideTimeout);
       hideTimeout = null;
     }
   };
 
   const handleMouseEnter = () => {
-    if (any: any);
-    showTimeout = window?.setTimeout(any: any);
+    if (showTimeout) clearTimeout(showTimeout);
+    showTimeout = window.setTimeout(show, fullConfig.delay);
   };
 
   const handleMouseLeave = () => {
-    if (any: any) {
-      clearTimeout(any: any);
+    if (showTimeout) {
+      clearTimeout(showTimeout);
       showTimeout = null;
     }
     hide();
   };
 
   // Attach listeners
-  element?.addEventListener(any: any);
-  element?.addEventListener(any: any);
+  element.addEventListener('mouseenter', handleMouseEnter);
+  element.addEventListener('mouseleave', handleMouseLeave);
 
   const cleanup = () => {
-    element?.removeEventListener(any: any);
-    element?.removeEventListener(any: any);
+    element.removeEventListener('mouseenter', handleMouseEnter);
+    element.removeEventListener('mouseleave', handleMouseLeave);
 
-    if (any: any);
-    if (any: any);
+    if (showTimeout) clearTimeout(showTimeout);
+    if (hideTimeout) clearTimeout(hideTimeout);
 
     hide();
   };
@@ -258,10 +258,10 @@ export function attachTooltip(
 /**
  * Update tooltip text
  */
-export function updateTooltipText(any: any): void {
-  instance?.config?.text = text;
-  if (any: any) {
-    instance?.tooltip?.textContent = text;
+export function updateTooltipText(instance: TooltipInstance, text: string): void {
+  instance.config.text = text;
+  if (instance.tooltip) {
+    instance.tooltip.textContent = text;
   }
 }
 
@@ -273,12 +273,12 @@ export function updateTooltipState(
   cognitiveState?: CognitiveState,
   emotionalTone?: EmotionalTone
 ): void {
-  instance?.config?.cognitiveState = cognitiveState;
-  instance?.config?.emotionalTone = emotionalTone;
+  instance.config.cognitiveState = cognitiveState;
+  instance.config.emotionalTone = emotionalTone;
 
-  if (any: any) {
-    const color = getTooltipColor(any: any);
-    instance?.tooltip?.style?.backgroundColor = color;
+  if (instance.tooltip) {
+    const color = getTooltipColor(cognitiveState, emotionalTone);
+    instance.tooltip.style.backgroundColor = color;
   }
 }
 
@@ -290,15 +290,15 @@ export function attachTooltipBatch(
     element: HTMLElement;
     config: Partial<TooltipConfig> & { text: string };
   }>
-): TooltipInstance?.[] {
-  return elements?.map(any: any));
+): TooltipInstance[] {
+  return elements.map(({ element, config }) => attachTooltip(element, config));
 }
 
 /**
  * Cleanup batch
  */
-export function cleanupTooltipBatch(instances: TooltipInstance?.[]): void {
-  instances?.forEach(instance => instance?.cleanup());
+export function cleanupTooltipBatch(instances: TooltipInstance[]): void {
+  instances.forEach(instance => instance.cleanup());
 }
 
 export default {

@@ -11,9 +11,9 @@ import { devSudoHandler } from './devSudoHandler';
 /**
  * Gère les commandes DEV-SUDO dans le contexte du chat
  */
-export async function handleDevSudoInChat(any: any): Promise<DevSudoResult> {
+export async function handleDevSudoInChat(message: string): Promise<DevSudoResult> {
   // Vérification rapide
-  if (any: any)) {
+  if (!devSudoHandler.containsCommand(message)) {
     return {
       handled: false,
       response: '',
@@ -22,8 +22,8 @@ export async function handleDevSudoInChat(any: any): Promise<DevSudoResult> {
   }
 
   // Parse la commande
-  const command = devSudoHandler?.parseCommand(any: any);
-  if (any: any) {
+  const command = devSudoHandler.parseCommand(message);
+  if (!command) {
     return {
       handled: false,
       response: '',
@@ -32,7 +32,7 @@ export async function handleDevSudoInChat(any: any): Promise<DevSudoResult> {
   }
 
   // Exécution de la commande
-  const result = await devSudoHandler?.executeCommand(any: any);
+  const result = await devSudoHandler.executeCommand(command);
 
   return result;
 }

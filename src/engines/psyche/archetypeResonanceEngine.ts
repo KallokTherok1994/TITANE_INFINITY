@@ -22,7 +22,7 @@
  * 8. NARRATIVE INTEGRATION — Intégration avec Inner Dialogue
  */
 
-// REMOVED: engines/presence supprimé en PHASE 1 (any: any) - utilise stub temporaire
+// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B) - utilise stub temporaire
 import {
   multimodalPresenceEngine,
   type PresenceMode as _PresenceMode,
@@ -52,15 +52,15 @@ export type ArchetypeType = 'sage' | 'gardien' | 'muse' | 'architecte';
  * Signature vocale d'un archétype
  */
 export interface VocalSignature {
-  /** Tempo (any: any) */
+  /** Tempo (0.5 = lent, 1.0 = normal, 1.5 = rapide) */
   tempo: number;
-  /** Profondeur voix (any: any) */
+  /** Profondeur voix (0-1, 0 = aigüe, 1 = grave) */
   depth: number;
-  /** Chaleur (any: any) */
+  /** Chaleur (0-1, 0 = froide/analytique, 1 = chaleureuse) */
   warmth: number;
-  /** Grain vocal (any: any) */
+  /** Grain vocal (0-1, 0 = lisse, 1 = texturé) */
   grain: number;
-  /** Assurance (any: any) */
+  /** Assurance (0-1, 0 = douce, 1 = affirmée) */
   confidence: number;
 }
 
@@ -74,7 +74,7 @@ export interface HaloSignature {
   saturation: number;
   /** Luminosité (0-100%) */
   lightness: number;
-  /** Texture (any: any) */
+  /** Texture (calm, pulsing, shimmer, flowing) */
   texture: 'calm' | 'pulsing' | 'shimmer' | 'flowing';
   /** Intensité (0-1) */
   intensity: number;
@@ -86,11 +86,11 @@ export interface HaloSignature {
 export interface CognitivePosture {
   /** Style de pensée */
   thinkingStyle: 'contemplative' | 'protective' | 'imaginative' | 'methodical';
-  /** Focus (any: any) */
+  /** Focus (0-1, 0 = diffus, 1 = précis) */
   focus: number;
-  /** Ouverture (any: any) */
+  /** Ouverture (0-1, 0 = fermé, 1 = ouvert) */
   openness: number;
-  /** Stabilité (any: any) */
+  /** Stabilité (0-1, 0 = fluide, 1 = stable) */
   stability: number;
 }
 
@@ -105,11 +105,11 @@ export interface ArchetypeProfile {
   haloSignature: HaloSignature;
   cognitivePosture: CognitivePosture;
   /** Mots-clés d'activation contextuelle */
-  activationKeywords: string?.[];
+  activationKeywords: string[];
   /** États mentaux associés */
-  associatedThinkingStates: ThinkingState?.[];
+  associatedThinkingStates: ThinkingState[];
   /** Intentions typiques */
-  typicalIntentions: string?.[];
+  typicalIntentions: string[];
 }
 
 /**
@@ -148,7 +148,7 @@ export interface UserContext {
   emotionalState?: string;
   /** Intention (question, demande, exploration, etc.) */
   intent?: string;
-  /** Besoin implicite (any: any) */
+  /** Besoin implicite (guidance, comfort, structure, inspiration) */
   implicitNeed?: 'guidance' | 'comfort' | 'structure' | 'inspiration';
   /** Niveau de stress (0-1) */
   stressLevel?: number;
@@ -160,11 +160,11 @@ export interface UserContext {
  * Configuration du moteur
  */
 export interface ArchetypeEngineConfig {
-  /** Fréquence de mise à jour (any: any) */
+  /** Fréquence de mise à jour (Hz) */
   updateFrequency: number;
   /** Seuil de dominance (0-1) */
   dominanceThreshold: number;
-  /** Durée transition (any: any) */
+  /** Durée transition (ms) */
   transitionDuration: number;
   /** Learning rate pour mémoire (0-1) */
   learningRate: number;
@@ -173,7 +173,7 @@ export interface ArchetypeEngineConfig {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// ARCHETYPE PROFILES (any: any)
+// ARCHETYPE PROFILES (Configurations prédéfinies)
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const ARCHETYPE_PROFILES: Record<ArchetypeType, ArchetypeProfile> = {
@@ -343,11 +343,11 @@ class ArchetypeResonanceEngine {
   private state: ArchetypeResonance;
   private config: ArchetypeEngineConfig;
   private updateInterval: number | null = null;
-  private callbacks: Set<(any: any) => void> = new Set();
+  private callbacks: Set<(state: ArchetypeResonance) => void> = new Set();
   private userPreferences: Map<ArchetypeType, number> = new Map(); // Learned preferences
 
   constructor(config: Partial<ArchetypeEngineConfig> = {}) {
-    this?.config = {
+    this.config = {
       updateFrequency: 10, // 10Hz
       dominanceThreshold: 0.4,
       transitionDuration: 800, // 800ms
@@ -356,7 +356,7 @@ class ArchetypeResonanceEngine {
       ...config,
     };
 
-    this?.state = {
+    this.state = {
       dominant: 'sage', // Défaut
       scores: {
         sage: 0.4,
@@ -366,47 +366,47 @@ class ArchetypeResonanceEngine {
       },
       intensity: 0.5,
       focusMode: null,
-      lastUpdate: Date?.now(),
+      lastUpdate: Date.now(),
     };
 
-    // Initialize user preferences (any: any)
-    this?.userPreferences?.set('sage', 0.25);
-    this?.userPreferences?.set('gardien', 0.25);
-    this?.userPreferences?.set('muse', 0.25);
-    this?.userPreferences?.set('architecte', 0.25);
+    // Initialize user preferences (neutral)
+    this.userPreferences.set('sage', 0.25);
+    this.userPreferences.set('gardien', 0.25);
+    this.userPreferences.set('muse', 0.25);
+    this.userPreferences.set('architecte', 0.25);
   }
 
   /**
    * Démarrer le moteur
    */
   start(): void {
-    if (any: any) return;
+    if (this.updateInterval) return;
 
-    logger?.debug('🧠 [ARCHETYPE] Starting Archetype Resonance Engine...');
+    logger.debug('🧠 [ARCHETYPE] Starting Archetype Resonance Engine...');
 
-    const intervalMs = 1000 / this?.config?.updateFrequency;
-    this?.updateInterval = window?.setInterval(() => {
-      this?.updateResonance();
+    const intervalMs = 1000 / this.config.updateFrequency;
+    this.updateInterval = window.setInterval(() => {
+      this.updateResonance();
     }, intervalMs);
 
-    logger?.debug(any: any)`);
+    logger.debug(`✅ [ARCHETYPE] Engine active (${this.config.updateFrequency}Hz)`);
   }
 
   /**
    * Arrêter le moteur
    */
   stop(): void {
-    if (any: any) {
-      clearInterval(any: any);
-      this?.updateInterval = null;
-      logger?.debug('🛑 [ARCHETYPE] Engine stopped');
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+      this.updateInterval = null;
+      logger.debug('🛑 [ARCHETYPE] Engine stopped');
     }
   }
 
   /**
    * Calculer les scores archétypaux basés sur le contexte utilisateur
    */
-  calculateScores(any: any): ArchetypeScore {
+  calculateScores(context: UserContext): ArchetypeScore {
     const scores: ArchetypeScore = {
       sage: 0,
       gardien: 0,
@@ -414,76 +414,76 @@ class ArchetypeResonanceEngine {
       architecte: 0,
     };
 
-    const message = context?.userMessage?.toLowerCase();
+    const message = context.userMessage.toLowerCase();
 
-    // 1. KEYWORD MATCHING (any: any)
-    for (any: any)) {
+    // 1. KEYWORD MATCHING (40% poids)
+    for (const [type, profile] of Object.entries(ARCHETYPE_PROFILES)) {
       const keywordScore =
-        profile?.activationKeywords?.reduce(any: any) => {
-          return acc + (any: any) ? 1 : 0);
-        }, 0) / profile?.activationKeywords?.length;
+        profile.activationKeywords.reduce((acc, keyword) => {
+          return acc + (message.includes(keyword) ? 1 : 0);
+        }, 0) / profile.activationKeywords.length;
 
       scores[type as ArchetypeType] += keywordScore * 0.4;
     }
 
-    // 2. IMPLICIT NEED (any: any)
-    if (any: any) {
-      switch (any: any) {
+    // 2. IMPLICIT NEED (30% poids)
+    if (context.implicitNeed) {
+      switch (context.implicitNeed) {
         case 'guidance':
-          scores?.sage += 0.3;
-          scores?.gardien += 0.15;
+          scores.sage += 0.3;
+          scores.gardien += 0.15;
           break;
         case 'comfort':
-          scores?.gardien += 0.3;
-          scores?.muse += 0.1;
+          scores.gardien += 0.3;
+          scores.muse += 0.1;
           break;
         case 'structure':
-          scores?.architecte += 0.3;
-          scores?.gardien += 0.1;
+          scores.architecte += 0.3;
+          scores.gardien += 0.1;
           break;
         case 'inspiration':
-          scores?.muse += 0.3;
-          scores?.sage += 0.1;
+          scores.muse += 0.3;
+          scores.sage += 0.1;
           break;
       }
     }
 
-    // 3. EMOTIONAL STATE (any: any)
-    if (any: any) {
-      switch (any: any) {
+    // 3. EMOTIONAL STATE (20% poids)
+    if (context.emotionalState) {
+      switch (context.emotionalState) {
         case 'stressed':
-          scores?.gardien += 0.2;
+          scores.gardien += 0.2;
           break;
         case 'calm':
-          scores?.sage += 0.15;
+          scores.sage += 0.15;
           break;
         case 'joyful':
         case 'excited':
-          scores?.muse += 0.2;
+          scores.muse += 0.2;
           break;
         case 'focused':
-          scores?.architecte += 0.15;
+          scores.architecte += 0.15;
           break;
       }
     }
 
-    // 4. STRESS LEVEL (any: any) - Safety Guard
-    if (any: any) {
-      if (context?.stressLevel > 0.6) {
-        scores?.gardien += 0.1 * context?.stressLevel;
+    // 4. STRESS LEVEL (10% poids) - Safety Guard
+    if (this.config.enableSafetyGuard && context.stressLevel !== undefined) {
+      if (context.stressLevel > 0.6) {
+        scores.gardien += 0.1 * context.stressLevel;
       }
     }
 
-    // 5. USER PREFERENCES (any: any)
-    for (any: any) as ArchetypeType?.[]) {
-      const preference = this?.userPreferences?.get(any: any) || 0.25;
+    // 5. USER PREFERENCES (Learned, 10% poids)
+    for (const type of Object.keys(scores) as ArchetypeType[]) {
+      const preference = this.userPreferences.get(type) || 0.25;
       scores[type] += (preference - 0.25) * 0.1; // Ajustement basé sur déviation de la moyenne
     }
 
     // Normaliser (somme = 1)
-    const total = Object?.values(any: any) => a + b, 0);
+    const total = Object.values(scores).reduce((a, b) => a + b, 0);
     if (total > 0) {
-      for (any: any) as ArchetypeType?.[]) {
+      for (const key of Object.keys(scores) as ArchetypeType[]) {
         scores[key] /= total;
       }
     }
@@ -496,24 +496,24 @@ class ArchetypeResonanceEngine {
    */
   private updateResonance(): void {
     // Si focus mode actif, force dominance
-    if (any: any) {
+    if (this.state.focusMode) {
       const focusScores: ArchetypeScore = {
         sage: 0.1,
         gardien: 0.1,
         muse: 0.1,
         architecte: 0.1,
       };
-      focusScores[this?.state?.focusMode] = 0.7;
+      focusScores[this.state.focusMode] = 0.7;
 
-      this?.state?.scores = focusScores;
-      this?.state?.dominant = this?.state?.focusMode;
-      this?.state?.intensity = 0.9;
-      this?.state?.lastUpdate = Date?.now();
-      this?.notifyCallbacks();
+      this.state.scores = focusScores;
+      this.state.dominant = this.state.focusMode;
+      this.state.intensity = 0.9;
+      this.state.lastUpdate = Date.now();
+      this.notifyCallbacks();
       return;
     }
 
-    // Smooth transition (any: any)
+    // Smooth transition (lerp vers neutralité si pas de nouveau contexte)
     const neutralScores: ArchetypeScore = {
       sage: 0.4,
       gardien: 0.3,
@@ -522,9 +522,9 @@ class ArchetypeResonanceEngine {
     };
 
     const lerpFactor = 0.02; // Slow drift back to neutral
-    for (any: any) as ArchetypeType?.[]) {
-      this?.state?.scores[key] = this?.lerp(
-        this?.state?.scores[key],
+    for (const key of Object.keys(this.state.scores) as ArchetypeType[]) {
+      this.state.scores[key] = this.lerp(
+        this.state.scores[key],
         neutralScores[key],
         lerpFactor
       );
@@ -532,27 +532,27 @@ class ArchetypeResonanceEngine {
 
     // Déterminer dominant
     const dominant = (
-      Object?.entries(any: any) as [ArchetypeType, number][]
-    ).reduce(any: any))[0];
+      Object.entries(this.state.scores) as [ArchetypeType, number][]
+    ).reduce((max, [type, score]) => (score > max[1] ? [type, score] : max))[0];
 
-    this?.state?.dominant = dominant;
-    this?.state?.intensity = this?.state?.scores[dominant];
-    this?.state?.lastUpdate = Date?.now();
+    this.state.dominant = dominant;
+    this.state.intensity = this.state.scores[dominant];
+    this.state.lastUpdate = Date.now();
 
-    this?.notifyCallbacks();
+    this.notifyCallbacks();
   }
 
   /**
-   * Activer un contexte utilisateur (any: any)
+   * Activer un contexte utilisateur (appelé après analyse message)
    */
-  activateContext(any: any): void {
-    const scores = this?.calculateScores(any: any);
+  activateContext(context: UserContext): void {
+    const scores = this.calculateScores(context);
 
     // Smooth blend avec scores précédents
     const blendFactor = 0.3; // 30% nouveau, 70% ancien
-    for (any: any) as ArchetypeType?.[]) {
-      this?.state?.scores[key] = this?.lerp(
-        this?.state?.scores[key],
+    for (const key of Object.keys(scores) as ArchetypeType[]) {
+      this.state.scores[key] = this.lerp(
+        this.state.scores[key],
         scores[key],
         blendFactor
       );
@@ -560,111 +560,111 @@ class ArchetypeResonanceEngine {
 
     // Update dominant
     const dominant = (
-      Object?.entries(any: any) as [ArchetypeType, number][]
-    ).reduce(any: any))[0];
+      Object.entries(this.state.scores) as [ArchetypeType, number][]
+    ).reduce((max, [type, score]) => (score > max[1] ? [type, score] : max))[0];
 
-    this?.state?.dominant = dominant;
-    this?.state?.intensity = this?.state?.scores[dominant];
-    this?.state?.lastUpdate = Date?.now();
+    this.state.dominant = dominant;
+    this.state.intensity = this.state.scores[dominant];
+    this.state.lastUpdate = Date.now();
 
-    // Learn preference (any: any)
-    const currentPref = this?.userPreferences?.get(any: any) || 0.25;
-    this?.userPreferences?.set(
+    // Learn preference (slow)
+    const currentPref = this.userPreferences.get(dominant) || 0.25;
+    this.userPreferences.set(
       dominant,
-      currentPref + this?.config?.learningRate * (any: any)
+      currentPref + this.config.learningRate * (0.3 - currentPref)
     );
 
-    logger?.debug(
-      `🧠 [ARCHETYPE] Activated: ${dominant} (${Math?.round(this?.state?.intensity * 100)}%)`,
-      this?.state?.scores
+    logger.debug(
+      `🧠 [ARCHETYPE] Activated: ${dominant} (${Math.round(this.state.intensity * 100)}%)`,
+      this.state.scores
     );
 
     // Sync avec Multimodal Presence
-    this?.syncWithMultimodalPresence();
+    this.syncWithMultimodalPresence();
 
-    this?.notifyCallbacks();
+    this.notifyCallbacks();
   }
 
   /**
    * Activer mode focus explicite
    */
   activateFocusMode(type: ArchetypeType, duration: number = 30000): void {
-    logger?.debug(any: any)`);
+    logger.debug(`🎯 [ARCHETYPE] Focus Mode: ${type} (${duration}ms)`);
 
-    this?.state?.focusMode = type;
-    this?.notifyCallbacks();
+    this.state.focusMode = type;
+    this.notifyCallbacks();
 
     // Auto-désactiver après durée
     setTimeout(() => {
-      if (any: any) {
-        this?.state?.focusMode = null;
-        logger?.debug(`🎯 [ARCHETYPE] Focus Mode ended`);
-        this?.notifyCallbacks();
+      if (this.state.focusMode === type) {
+        this.state.focusMode = null;
+        logger.debug(`🎯 [ARCHETYPE] Focus Mode ended`);
+        this.notifyCallbacks();
       }
     }, duration);
   }
 
   /**
-   * Activer Safety Guard (any: any)
+   * Activer Safety Guard (urgence → Gardien)
    */
   activateSafetyGuard(): void {
-    if (any: any) return;
+    if (!this.config.enableSafetyGuard) return;
 
-    logger?.debug('🛡️ [ARCHETYPE] Safety Guard activated → Gardien dominant');
+    logger.debug('🛡️ [ARCHETYPE] Safety Guard activated → Gardien dominant');
 
-    this?.state?.scores = {
+    this.state.scores = {
       sage: 0.1,
       gardien: 0.7,
       muse: 0.05,
       architecte: 0.15,
     };
-    this?.state?.dominant = 'gardien';
-    this?.state?.intensity = 0.9;
-    this?.state?.lastUpdate = Date?.now();
+    this.state.dominant = 'gardien';
+    this.state.intensity = 0.9;
+    this.state.lastUpdate = Date.now();
 
-    this?.syncWithMultimodalPresence();
-    this?.notifyCallbacks();
+    this.syncWithMultimodalPresence();
+    this.notifyCallbacks();
   }
 
   /**
    * Synchroniser avec Multimodal Presence Engine
    */
   private syncWithMultimodalPresence(): void {
-    const profile = ARCHETYPE_PROFILES[this?.state?.dominant];
-    const halo = profile?.haloSignature;
+    const profile = ARCHETYPE_PROFILES[this.state.dominant];
+    const halo = profile.haloSignature;
 
     // Créer intention custom basée sur archétype
     const intention = {
-      type: profile?.type,
+      type: profile.type,
       duration: 5000,
-      intensity: this?.state?.intensity,
+      intensity: this.state.intensity,
       modalities: {
         voice: {
-          tempo: profile?.vocalSignature?.tempo,
-          warmth: profile?.vocalSignature?.warmth,
+          tempo: profile.vocalSignature.tempo,
+          warmth: profile.vocalSignature.warmth,
         },
         halo: {
           color: {
-            hue: halo?.hue,
-            saturation: halo?.saturation,
-            lightness: halo?.lightness,
+            hue: halo.hue,
+            saturation: halo.saturation,
+            lightness: halo.lightness,
           },
-          intensity: halo?.intensity,
+          intensity: halo.intensity,
         },
         breathing: {
-          amplitude: this?.state?.intensity * 0.7,
+          amplitude: this.state.intensity * 0.7,
           cycleDuration: 4000, // Adaptable selon archétype
         },
         avatar: {
           expression:
-            profile?.cognitivePosture?.thinkingStyle === 'contemplative'
+            profile.cognitivePosture.thinkingStyle === 'contemplative'
               ? 'neutral'
-              : profile?.cognitivePosture?.thinkingStyle === 'protective'
+              : profile.cognitivePosture.thinkingStyle === 'protective'
                 ? 'focus'
-                : profile?.cognitivePosture?.thinkingStyle === 'imaginative'
+                : profile.cognitivePosture.thinkingStyle === 'imaginative'
                   ? 'smile'
                   : 'focus',
-          facialGlow: halo?.intensity * 0.7,
+          facialGlow: halo.intensity * 0.7,
         },
       },
     };
@@ -677,11 +677,11 @@ class ArchetypeResonanceEngine {
       muse: 'inspiration',
       architecte: 'analysis',
     };
-    const mappedIntention = intentionMap[intention?.type] || 'guidance';
-    multimodalPresenceEngine?.applyIntention(
+    const mappedIntention = intentionMap[intention.type] || 'guidance';
+    multimodalPresenceEngine.applyIntention(
       mappedIntention,
-      intention?.intensity,
-      intention?.duration
+      intention.intensity,
+      intention.duration
     );
   }
 
@@ -689,33 +689,33 @@ class ArchetypeResonanceEngine {
    * Obtenir profil de l'archétype dominant
    */
   getDominantProfile(): ArchetypeProfile {
-    return ARCHETYPE_PROFILES[this?.state?.dominant];
+    return ARCHETYPE_PROFILES[this.state.dominant];
   }
 
   /**
    * Obtenir état actuel
    */
   getState(): ArchetypeResonance {
-    return { ...this?.state };
+    return { ...this.state };
   }
 
   /**
    * Subscribe aux changements
    */
-  subscribe(any: any): () => void {
-    this?.callbacks?.add(any: any);
-    return (any: any);
+  subscribe(callback: (state: ArchetypeResonance) => void): () => void {
+    this.callbacks.add(callback);
+    return () => this.callbacks.delete(callback);
   }
 
   /**
    * Notifier les callbacks
    */
   private notifyCallbacks(): void {
-    this?.callbacks?.forEach(cb => {
+    this.callbacks.forEach(cb => {
       try {
-        cb(any: any);
-      } catch (any: any) {
-        logger?.error(any: any);
+        cb(this.state);
+      } catch (error) {
+        logger.error('Callback error:', error);
       }
     });
   }
@@ -723,8 +723,8 @@ class ArchetypeResonanceEngine {
   /**
    * Interpolation linéaire
    */
-  private lerp(any: any): number {
-    return a + (any: any) * t;
+  private lerp(a: number, b: number, t: number): number {
+    return a + (b - a) * t;
   }
 }
 

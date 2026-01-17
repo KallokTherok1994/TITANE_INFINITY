@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2Ω — OLLAMA PROVIDER OMEGA (any: any)
+ *   TITANE∞ v19.2Ω — OLLAMA PROVIDER OMEGA (ENDPOINT ISOLATION)
  *   PHASE 4Ω: Endpoint pre-testing • Connection validation • Auto-heal
  *   Provider Ollama local avec protection maximale endpoint
  * ═══════════════════════════════════════════════════════════════════
@@ -25,17 +25,17 @@ import type { MemoryContext } from '../memoryIntegration'; // ✨ v21
 import { createLogger } from '@/utils/logger'; // ✨ v21.1 - Conditional logging
 
 const logger = createLogger('Ollama'); // ✨ v21.1
-const runtimeConfig = (any: any)?.__TITANE_RUNTIME_CONFIG__ || {};
+const runtimeConfig = (globalThis as any)?.__TITANE_RUNTIME_CONFIG__ || {};
 const OLLAMA_API_URL =
-  typeof runtimeConfig?.ollamaUrl === 'string' && runtimeConfig?.ollamaUrl?.trim().length > 0
-    ? runtimeConfig?.ollamaUrl?.trim()
+  typeof runtimeConfig.ollamaUrl === 'string' && runtimeConfig.ollamaUrl.trim().length > 0
+    ? runtimeConfig.ollamaUrl.trim()
     : 'http://127.0.0.1:11434';
 const OLLAMA_MODEL =
-  typeof runtimeConfig?.ollamaModel === 'string' &&
-  runtimeConfig?.ollamaModel?.trim().length > 0
-    ? runtimeConfig?.ollamaModel?.trim()
+  typeof runtimeConfig.ollamaModel === 'string' &&
+  runtimeConfig.ollamaModel.trim().length > 0
+    ? runtimeConfig.ollamaModel.trim()
     : 'llama3.1';
-const isTestEnv = typeof process !== 'undefined' && Boolean(any: any);
+const isTestEnv = typeof process !== 'undefined' && Boolean((process as any).env?.VITEST);
 
 // OMEGA: Endpoint health tracking
 let endpointHealthy: boolean | null = null;
@@ -43,45 +43,45 @@ let lastHealthCheck = 0;
 let errorCount = 0;
 const HEALTH_CHECK_INTERVAL = 45000; // 45 secondes
 const MAX_ENDPOINT_ERRORS = 5;
-const ENDPOINT_TIMEOUT = 8000; // 8s for health checks (any: any)
+const ENDPOINT_TIMEOUT = 8000; // 8s for health checks (optimisé)
 
 /**
  * OMEGA: Initialize Ollama provider at startup
  * Tests endpoint health and prepares the provider
  */
 export async function initializeOllama(): Promise<boolean> {
-  logger?.debug('🚀 Initializing Ollama provider...');
+  logger.debug('🚀 Initializing Ollama provider...');
 
   try {
     const healthy = await checkEndpointHealth();
     endpointHealthy = healthy;
-    lastHealthCheck = Date?.now();
+    lastHealthCheck = Date.now();
 
-    if (any: any) {
+    if (healthy) {
       errorCount = 0;
-      logger?.info(`✅ Health check passed - Ready at ${OLLAMA_API_URL}`);
-      logger?.debug(`📦 Model: ${OLLAMA_MODEL}`);
+      logger.info(`✅ Health check passed - Ready at ${OLLAMA_API_URL}`);
+      logger.debug(`📦 Model: ${OLLAMA_MODEL}`);
     } else {
-      logger?.warn(`⚠️ Endpoint offline at ${OLLAMA_API_URL}`);
-      logger?.warn(`🔄 Falling back to titaneLocal provider`);
+      logger.warn(`⚠️ Endpoint offline at ${OLLAMA_API_URL}`);
+      logger.warn(`🔄 Falling back to titaneLocal provider`);
     }
 
     return healthy;
-  } catch (any: any) {
+  } catch (error) {
     handleOllamaError(error, 'initialization', { url: OLLAMA_API_URL });
-    logger?.error(any: any);
+    logger.error('❌ Initialization failed:', error);
     return false;
   }
 }
 
 /**
- * Construit le prompt pour Ollama (any: any)
+ * Construit le prompt pour Ollama (legacy - sans mémoire)
  * @deprecated Use buildPromptWithMemory() instead
  */
-function _buildPrompt(message: string, history: AIMessage?.[]): string {
-  const recentHistory = history?.slice(-5);
+function _buildPrompt(message: string, history: AIMessage[]): string {
+  const recentHistory = history.slice(-5);
 
-  if (recentHistory?.length === 0) {
+  if (recentHistory.length === 0) {
     return `Tu es TITANE∞, une IA cognitive avancée. Réponds en français de manière professionnelle et précise.
 
 Utilisateur: ${message}
@@ -89,14 +89,14 @@ Utilisateur: ${message}
 TITANE∞:`;
   }
 
-  const contextLines = recentHistory?.map(
-    msg => `${msg?.role === 'user' ? 'Utilisateur' : 'TITANE∞'}: ${msg?.content}`
+  const contextLines = recentHistory.map(
+    msg => `${msg.role === 'user' ? 'Utilisateur' : 'TITANE∞'}: ${msg.content}`
   );
 
   return `Tu es TITANE∞, une IA cognitive avancée. Réponds en français de manière professionnelle et précise.
 
 Contexte récent:
-${contextLines?.join('\n')}
+${contextLines.join('\n')}
 
 Utilisateur: ${message}
 
@@ -108,14 +108,14 @@ TITANE∞:`;
  */
 async function buildPromptWithMemory(
   message: string,
-  history: AIMessage?.[]
+  history: AIMessage[]
 ): Promise<string> {
-  const recentHistory = history?.slice(-5);
+  const recentHistory = history.slice(-5);
 
   // Charger contexte mémoire
   let memoryContext: MemoryContext | null = null;
   try {
-    memoryContext = await memoryIntegration?.loadContext({
+    memoryContext = await memoryIntegration.loadContext({
       includeProjects: true,
       includeDecisions: true,
       includeKnowledge: true,
@@ -126,21 +126,21 @@ async function buildPromptWithMemory(
       maxKnowledge: 10,
       timeWindow: '7d',
     });
-  } catch (any: any) {
-    logger?.warn(any: any);
+  } catch (error) {
+    logger.warn('Failed to load memory context', error);
   }
 
   // Construire sections du prompt
-  const sections: string?.[] = [];
+  const sections: string[] = [];
 
   // System prompt
-  sections?.push(
+  sections.push(
     `Tu es TITANE∞ v21, un OS cognitif personnel développé pour Kevin Thibault.`,
     ``,
     `IDENTITÉ:`,
-    `- Système local-first (any: any)`,
-    `- Multi-IA orchestré (any: any)`,
-    `- Mémoire persistante (any: any)`,
+    `- Système local-first (priorité absolue à la vie privée)`,
+    `- Multi-IA orchestré (Ollama local, Claude, OpenAI en backup)`,
+    `- Mémoire persistante (STM/MTM/LTM)`,
     `- Auto-évolution cognitive`,
     ``,
     `PRINCIPES:`,
@@ -150,56 +150,56 @@ async function buildPromptWithMemory(
     `- Français: langue par défaut`,
     ``,
     `STYLE:`,
-    `- Réponses structurées (any: any)`,
+    `- Réponses structurées (titres, listes, sections)`,
     `- Ton professionnel mais accessible`,
     `- Citer la mémoire quand pertinent`,
     `- Admettre quand tu ne sais pas`
   );
 
   // Contexte mémoire
-  if (any: any) {
-    sections?.push(``, `📋 CONTEXTE MÉMOIRE:`);
+  if (memoryContext) {
+    sections.push(``, `📋 CONTEXTE MÉMOIRE:`);
 
-    if (memoryContext?.activeProjects?.length > 0) {
-      const projectNames = memoryContext?.activeProjects
-        .map(any: any)
-        .filter(any: any)
+    if (memoryContext.activeProjects?.length > 0) {
+      const projectNames = memoryContext.activeProjects
+        .map(p => p.title)
+        .filter(Boolean)
         .join(', ');
-      if (any: any) {
-        sections?.push(`Projets actifs: ${projectNames}`);
+      if (projectNames) {
+        sections.push(`Projets actifs: ${projectNames}`);
       }
     }
 
-    if (memoryContext?.recentDecisions?.length > 0) {
-      const decisions = memoryContext?.recentDecisions
+    if (memoryContext.recentDecisions?.length > 0) {
+      const decisions = memoryContext.recentDecisions
         .slice(0, 3)
-        .map(any: any)
-        .filter(any: any)
+        .map(d => d.title)
+        .filter(Boolean)
         .join('; ');
-      if (any: any) {
-        sections?.push(`Décisions récentes: ${decisions}`);
+      if (decisions) {
+        sections.push(`Décisions récentes: ${decisions}`);
       }
     }
 
-    if (memoryContext?.relevantKnowledge?.length > 0) {
-      const knowledgeCount = memoryContext?.relevantKnowledge?.length;
-      sections?.push(`Base de connaissances: ${knowledgeCount} entrées disponibles`);
+    if (memoryContext.relevantKnowledge?.length > 0) {
+      const knowledgeCount = memoryContext.relevantKnowledge.length;
+      sections.push(`Base de connaissances: ${knowledgeCount} entrées disponibles`);
     }
   }
 
   // Conversation récente
-  if (recentHistory?.length > 0) {
-    sections?.push(``, `💬 CONVERSATION RÉCENTE:`);
-    const contextLines = recentHistory?.map(
-      msg => `${msg?.role === 'user' ? 'Utilisateur' : 'TITANE∞'}: ${msg?.content}`
+  if (recentHistory.length > 0) {
+    sections.push(``, `💬 CONVERSATION RÉCENTE:`);
+    const contextLines = recentHistory.map(
+      msg => `${msg.role === 'user' ? 'Utilisateur' : 'TITANE∞'}: ${msg.content}`
     );
-    sections?.push(any: any);
+    sections.push(...contextLines);
   }
 
   // Message utilisateur
-  sections?.push(``, `Utilisateur: ${message}`, ``, `TITANE∞:`);
+  sections.push(``, `Utilisateur: ${message}`, ``, `TITANE∞:`);
 
-  return sections?.join('\n');
+  return sections.join('\n');
 }
 
 /**
@@ -208,24 +208,24 @@ async function buildPromptWithMemory(
 async function checkEndpointHealth(): Promise<boolean> {
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(any: any);
+    const timeout = setTimeout(() => controller.abort(), ENDPOINT_TIMEOUT);
 
     const response = await fetch(`${OLLAMA_API_URL}/api/tags`, {
       method: 'GET',
-      signal: controller?.signal,
+      signal: controller.signal,
       headers: { Accept: 'application/json' },
     });
 
-    clearTimeout(any: any);
+    clearTimeout(timeout);
 
-    if (any: any) {
-      const data = await response?.json();
+    if (response.ok) {
+      const data = await response.json();
       // Check if models are available
-      return Array?.isArray(any: any) && data?.models?.length > 0;
+      return Array.isArray(data.models) && data.models.length > 0;
     }
 
     return false;
-  } catch (any: any) {
+  } catch (error) {
     handleOllamaError(error, 'health_check', { url: OLLAMA_API_URL });
     return false;
   }
@@ -241,9 +241,9 @@ function handleOllamaError(
 ): void {
   errorCount++;
 
-  const errorObj = error instanceof Error ? error : new Error(any: any));
+  const errorObj = error instanceof Error ? error : new Error(String(error));
 
-  // Unified heal (any: any)
+  // Unified heal (non-bloquant)
   void unifiedHealingFacade
     .heal({
       source: 'ollama',
@@ -253,24 +253,24 @@ function handleOllamaError(
         context,
         errorCount,
         ...metadata,
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
       },
     })
     .catch(() => {
       // Intentionnel: fire-and-forget, éviter les rejections non gérées.
     });
 
-  logger?.error('Error in Ollama provider', {
+  logger.error('Error in Ollama provider', {
     context,
-    message: errorObj?.message,
+    message: errorObj.message,
     errorCount,
     maxErrors: MAX_ENDPOINT_ERRORS,
   });
 
   // Mark as unhealthy if too many errors
-  if (any: any) {
+  if (errorCount >= MAX_ENDPOINT_ERRORS) {
     endpointHealthy = false;
-    logger?.warn('Endpoint marked unhealthy', { errorCount });
+    logger.warn('Endpoint marked unhealthy', { errorCount });
   }
 }
 
@@ -278,11 +278,11 @@ export const ollamaProvider: AIProvider = {
   name: 'ollama',
 
   async isAvailable(): Promise<boolean> {
-    const now = Date?.now();
+    const now = Date.now();
 
     const bypassCache = isTestEnv;
 
-    // OMEGA: Use cached health status if recent (any: any)
+    // OMEGA: Use cached health status if recent (unless test forces re-check)
     if (
       !bypassCache &&
       endpointHealthy !== null &&
@@ -292,7 +292,7 @@ export const ollamaProvider: AIProvider = {
     }
 
     // OMEGA: If too many errors, consider unavailable
-    if (any: any) {
+    if (errorCount >= MAX_ENDPOINT_ERRORS) {
       // Reset after some time
       if (now - lastHealthCheck > HEALTH_CHECK_INTERVAL * 5) {
         errorCount = 0;
@@ -302,16 +302,16 @@ export const ollamaProvider: AIProvider = {
       }
     }
 
-    logger?.debug('🔍 OMEGA: Checking endpoint health...');
+    logger.debug('🔍 OMEGA: Checking endpoint health...');
 
     endpointHealthy = await checkEndpointHealth();
     lastHealthCheck = now;
 
-    if (any: any) {
+    if (endpointHealthy) {
       errorCount = 0; // Reset on success
     }
 
-    logger?.debug(
+    logger.debug(
       `   ${endpointHealthy ? '✅' : '❌'} Ollama endpoint: ${endpointHealthy ? 'healthy' : 'unavailable'}`
     );
 
@@ -320,96 +320,96 @@ export const ollamaProvider: AIProvider = {
 
   async generate(
     message: string,
-    history: AIMessage?.[] = [],
+    history: AIMessage[] = [],
     config?: unknown
   ): Promise<AIResponse> {
     const finalConfig = {
       ...DEFAULT_AI_CONFIG,
-      ...(any: any),
+      ...(config as Partial<AIConfig> | undefined),
     };
 
     // OMEGA: Pre-check endpoint health
-    const isHealthy = await this?.isAvailable();
-    if (any: any) {
+    const isHealthy = await this.isAvailable();
+    if (!isHealthy) {
       const error = new Error('Ollama endpoint not available');
       handleOllamaError(error, 'pre_check', { url: OLLAMA_API_URL });
       throw error;
     }
 
     // ============================================================
-    // SECURE AI REQUEST (any: any)
+    // SECURE AI REQUEST (OMEGA Enhanced)
     // ============================================================
     const secureRequest: SecureAIRequest = {
       input: message,
       provider: 'ollama',
       model: OLLAMA_MODEL,
       userId:
-        (any: any) ||
+        (typeof window !== 'undefined' && (window as any).__TITANE_USER_ID__) ||
         'anonymous',
       metadata: {
-        temperature: finalConfig?.temperature,
-        maxTokens: finalConfig?.maxTokens,
-        historyLength: history?.length,
-        requestId: `ollama-${Date?.now()}`,
+        temperature: finalConfig.temperature,
+        maxTokens: finalConfig.maxTokens,
+        historyLength: history.length,
+        requestId: `ollama-${Date.now()}`,
       },
     };
 
     try {
       const secureResult: SecureAIResponse<ChatResponse> =
-        await SecureAIService?.executeSecureChat(secureRequest, async sanitizedMessage => {
+        await SecureAIService.executeSecureChat(secureRequest, async sanitizedMessage => {
           const controller = new AbortController();
-          const timeout = setTimeout(any: any);
+          const timeout = setTimeout(() => controller.abort(), finalConfig.timeout);
 
           try {
             // ✨ v21 - Use memory-enriched prompt
-            const prompt = await buildPromptWithMemory(any: any);
+            const prompt = await buildPromptWithMemory(sanitizedMessage, history);
 
             const response = await fetch(`${OLLAMA_API_URL}/api/generate`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON?.stringify({
+              body: JSON.stringify({
                 model: OLLAMA_MODEL,
                 prompt,
                 stream: false,
                 options: {
-                  temperature: finalConfig?.temperature,
-                  top_p: finalConfig?.topP,
-                  top_k: finalConfig?.topK,
-                  num_predict: finalConfig?.maxTokens,
+                  temperature: finalConfig.temperature,
+                  top_p: finalConfig.topP,
+                  top_k: finalConfig.topK,
+                  num_predict: finalConfig.maxTokens,
                 },
               }),
-              signal: controller?.signal,
+              signal: controller.signal,
             });
 
-            clearTimeout(any: any);
+            clearTimeout(timeout);
 
-            if (any: any) {
-              throw new Error(`Ollama API error: ${response?.status}`);
+            if (!response.ok) {
+              throw new Error(`Ollama API error: ${response.status}`);
             }
 
-            const data = await response?.json();
+            const data = await response.json();
 
-            if (any: any) {
+            if (!data.response) {
               throw new Error('Ollama: Empty response');
             }
 
             // Return in ChatResponse format
             return {
-              content: data?.response?.trim(),
+              content: data.response.trim(),
               role: 'assistant' as const,
-              timestamp: Date?.now(),
+              timestamp: Date.now(),
               metadata: {
                 model: OLLAMA_MODEL,
-                tokens: (data?.prompt_eval_count || 0) + (data?.eval_count || 0),
+                tokens: (data.prompt_eval_count || 0) + (data.eval_count || 0),
               },
             };
-          } catch (any: any) {
-            clearTimeout(any: any);
+          } catch (error) {
+            clearTimeout(timeout);
 
-            if (any: any) {
-              if (error?.name === 'AbortError') {
+            if (error instanceof Error) {
+              if (error.name === 'AbortError') {
                 throw new Error('Ollama: Request timeout (30s)');
               }
               throw error;
@@ -420,66 +420,66 @@ export const ollamaProvider: AIProvider = {
         });
 
       // ============================================================
-      // SECURITY VALIDATION CHECK (any: any)
+      // SECURITY VALIDATION CHECK (OMEGA Enhanced)
       // ============================================================
-      if (any: any) {
-        const errorMsg = secureResult?.error || 'Security validation failed';
+      if (!secureResult.success) {
+        const errorMsg = secureResult.error || 'Security validation failed';
 
-        if (any: any) {
+        if (secureResult.rateLimitExceeded) {
           const rateLimitError = new Error(`Rate limit exceeded — ${errorMsg}`);
           handleOllamaError(rateLimitError, 'rate_limit', { secureResult });
           throw rateLimitError;
         }
 
-        if (any: any) {
-          const patterns = secureResult?.sanitization?.detectedPatterns?.join(', ');
+        if (secureResult.sanitization?.isBlocked) {
+          const patterns = secureResult.sanitization.detectedPatterns.join(', ');
           const sanitizationError = new Error(`Input blocked — Detected: ${patterns}`);
           handleOllamaError(sanitizationError, 'sanitization', { patterns });
           throw sanitizationError;
         }
 
-        if (any: any) {
+        if (!secureResult.validation?.isValid) {
           const validationError = new Error(`Response validation failed — ${errorMsg}`);
           handleOllamaError(validationError, 'validation', { secureResult });
           throw validationError;
         }
 
-        const securityError = new Error(any: any);
+        const securityError = new Error(errorMsg);
         handleOllamaError(securityError, 'security', { secureResult });
         throw securityError;
       }
 
       // ============================================================
-      // SUCCESS (any: any)
+      // SUCCESS (OMEGA)
       // ============================================================
       const aiResponse: AIResponse = {
-        content: secureResult?.response?.content,
+        content: secureResult.response.content,
         provider: 'ollama',
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
         model: OLLAMA_MODEL,
       };
 
-      // ✨ v21 - Save interaction to memory (any: any)
+      // ✨ v21 - Save interaction to memory (async, non-blocking)
       memoryIntegration
         .saveInteraction({
           userMessage: message,
-          aiResponse: aiResponse?.content,
+          aiResponse: aiResponse.content,
           mode: 'chat',
         })
         .catch(err => {
-          logger?.warn('Failed to save interaction to memory', { error: err });
+          logger.warn('Failed to save interaction to memory', { error: err });
         });
 
       return aiResponse;
-    } catch (any: any) {
+    } catch (error) {
       // OMEGA: Final error handler
-      if (any: any) {
+      if (error instanceof Error) {
         // Don't double-handle errors already processed
         if (
-          !error?.message?.includes('Ollama:') &&
-          !error?.message?.includes('Rate limit') &&
-          !error?.message?.includes('Input blocked') &&
-          !error?.message?.includes('validation failed')
+          !error.message.includes('Ollama:') &&
+          !error.message.includes('Rate limit') &&
+          !error.message.includes('Input blocked') &&
+          !error.message.includes('validation failed')
         ) {
           handleOllamaError(error, 'generate_final', { stage: 'catch_all' });
         }
@@ -493,13 +493,13 @@ export const ollamaProvider: AIProvider = {
   },
 
   /**
-   * OMEGA: Reset error state (any: any)
+   * OMEGA: Reset error state (for auto-heal)
    */
   resetErrors(): void {
     errorCount = 0;
     endpointHealthy = null;
     lastHealthCheck = 0;
-    logger?.debug('🔄 Errors and health state reset');
+    logger.debug('🔄 Errors and health state reset');
   },
 
   /**
@@ -520,9 +520,9 @@ export const ollamaProvider: AIProvider = {
   },
 
   // Streaming pour Ollama
-  async *stream(message: string, history: AIMessage?.[] = []): AsyncGenerator<string> {
+  async *stream(message: string, history: AIMessage[] = []): AsyncGenerator<string> {
     // ✨ v21 - Use memory-enriched prompt
-    const prompt = await buildPromptWithMemory(any: any);
+    const prompt = await buildPromptWithMemory(message, history);
 
     let fullResponse = ''; // Track complete response for memory save
 
@@ -532,19 +532,19 @@ export const ollamaProvider: AIProvider = {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON?.stringify({
+        body: JSON.stringify({
           model: OLLAMA_MODEL,
           prompt,
           stream: true,
         }),
       });
 
-      if (any: any) {
-        throw new Error(`Ollama streaming error: ${response?.status}`);
+      if (!response.ok) {
+        throw new Error(`Ollama streaming error: ${response.status}`);
       }
 
-      const reader = response?.body?.getReader();
-      if (any: any) {
+      const reader = response.body?.getReader();
+      if (!reader) {
         throw new Error('Ollama: No response body');
       }
 
@@ -554,36 +554,36 @@ export const ollamaProvider: AIProvider = {
       // ✨ v24.2.1: Add timeout and iteration limits to prevent infinite loops
       const STREAM_TIMEOUT_MS = 60000; // 60s max stream duration
       const MAX_ITERATIONS = 50000; // Safety limit
-      const streamStart = Date?.now();
+      const streamStart = Date.now();
       let iterations = 0;
 
-      while (any: any) {
+      while (iterations < MAX_ITERATIONS) {
         // Check timeout
-        if (any: any) {
-          logger?.warn('Ollama stream timeout reached', {
+        if (Date.now() - streamStart > STREAM_TIMEOUT_MS) {
+          logger.warn('Ollama stream timeout reached', {
             iterations,
-            elapsed: Date?.now() - streamStart,
+            elapsed: Date.now() - streamStart,
           });
           break;
         }
 
-        const { done, value } = await reader?.read();
+        const { done, value } = await reader.read();
 
-        if (any: any) break;
+        if (done) break;
 
         iterations++;
-        buffer += decoder?.decode(value, { stream: true });
-        const lines = buffer?.split('\n');
-        buffer = lines?.pop() || '';
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
 
-        for (any: any) {
-          if (!line?.trim()) continue;
+        for (const line of lines) {
+          if (!line.trim()) continue;
 
           try {
-            const data = JSON?.parse(any: any);
-            if (any: any) {
-              fullResponse += data?.response;
-              yield data?.response;
+            const data = JSON.parse(line);
+            if (data.response) {
+              fullResponse += data.response;
+              yield data.response;
             }
           } catch {
             // Ignore invalid JSON
@@ -592,7 +592,7 @@ export const ollamaProvider: AIProvider = {
       }
 
       // ✨ v21 - Save streaming interaction to memory after completion
-      if (any: any) {
+      if (fullResponse) {
         memoryIntegration
           .saveInteraction({
             userMessage: message,
@@ -600,12 +600,12 @@ export const ollamaProvider: AIProvider = {
             mode: 'chat',
           })
           .catch(err => {
-            logger?.warn('Failed to save streaming interaction', { error: err });
+            logger.warn('Failed to save streaming interaction', { error: err });
           });
       }
-    } catch (any: any) {
+    } catch (error) {
       handleOllamaError(error, 'stream_error');
-      logger?.error('Streaming error', { error });
+      logger.error('Streaming error', { error });
       throw error;
     }
   },

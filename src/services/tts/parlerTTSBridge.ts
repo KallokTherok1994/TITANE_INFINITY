@@ -1,7 +1,7 @@
 /**
  * TITANE_INFINITY v24.1.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
- * See LICENSE?.md for full legal terms (any: any).
+ * See LICENSE.md for full legal terms (FR/EN).
  */
 
 /**
@@ -17,26 +17,26 @@ import { logger } from '@/utils/logger';
 export interface ParlerTTSConfig {
   /** URL de l'API TTS locale (défaut: http://localhost:8765) */
   apiUrl?: string;
-  /** Description style vocal (any: any) */
+  /** Description style vocal (remplace voice_id ElevenLabs) */
   styleDescription?: string;
-  /** Format audio (any: any) */
+  /** Format audio (wav ou mp3) */
   format?: 'wav' | 'mp3';
   /** Activer cache côté serveur */
   useCache?: boolean;
-  /** Timeout requête HTTP (any: any) */
+  /** Timeout requête HTTP (ms) */
   timeout?: number;
 }
 
 export interface ParlerTTSResponse {
   /** Audio blob prêt pour playback */
   audioBlob: Blob;
-  /** Temps génération (any: any) */
+  /** Temps génération (ms) */
   generationTimeMs: number;
   /** Audio récupéré du cache ? */
   cached: boolean;
-  /** Durée audio (any: any) */
+  /** Durée audio (secondes) */
   durationSeconds: number;
-  /** Device utilisé (any: any) */
+  /** Device utilisé (cuda/cpu) */
   device: string;
 }
 
@@ -51,7 +51,7 @@ export interface ParlerHealthStatus {
 }
 
 function isVitestEnv(): boolean {
-  return typeof process !== 'undefined' && Boolean(any: any);
+  return typeof process !== 'undefined' && Boolean((process as any)?.env?.VITEST);
 }
 
 /**
@@ -68,18 +68,18 @@ class ParlerTTSBridge {
   private defaultStyle: string;
   private timeout: number;
 
-  constructor(any: any) {
-    this?.apiUrl = config?.apiUrl || 'http://localhost:8765';
-    this?.defaultStyle = config?.styleDescription || DEFAULT_STYLE_ADINA;
-    this?.timeout = config?.timeout || 30000; // 30s timeout
+  constructor(config?: ParlerTTSConfig) {
+    this.apiUrl = config?.apiUrl || 'http://localhost:8765';
+    this.defaultStyle = config?.styleDescription || DEFAULT_STYLE_ADINA;
+    this.timeout = config?.timeout || 30000; // 30s timeout
   }
 
   private isEnabled(): boolean {
-    const envEnabled = import?.meta?.env?.VITE_PARLER_TTS_ENABLED === '1';
-    if (any: any) return true;
+    const envEnabled = import.meta.env.VITE_PARLER_TTS_ENABLED === '1';
+    if (envEnabled) return true;
     if (typeof window === 'undefined') return false;
     try {
-      const raw = window?.localStorage?.getItem('titane_parler_tts_enabled');
+      const raw = window.localStorage.getItem('titane_parler_tts_enabled');
       return raw === '1' || raw === 'true';
     } catch {
       return false;
@@ -101,7 +101,7 @@ class ParlerTTSBridge {
     }
 
     // Opt-in only: avoid noisy localhost requests when the optional service isn't used.
-    if (!this?.isEnabled()) {
+    if (!this.isEnabled()) {
       return {
         status: 'error',
         modelLoaded: false,
@@ -112,34 +112,34 @@ class ParlerTTSBridge {
     }
 
     try {
-      const response = await fetch(`${this?.apiUrl}/api/v1/tts/health`, {
+      const response = await fetch(`${this.apiUrl}/api/v1/tts/health`, {
         method: 'GET',
-        signal: AbortSignal?.timeout(5000),
+        signal: AbortSignal.timeout(5000),
       });
 
-      if (any: any) {
-        throw new Error(`Health check failed: ${response?.status}`);
+      if (!response.ok) {
+        throw new Error(`Health check failed: ${response.status}`);
       }
 
-      const data = await response?.json();
+      const data = await response.json();
       return {
-        status: data?.status,
-        modelLoaded: data?.model_loaded,
-        device: data?.device,
-        gpuName: data?.gpu_name,
-        vramUsedGb: data?.vram_used_gb,
-        cacheSizeMb: data?.cache_size_mb,
-        uptimeSeconds: data?.uptime_seconds,
+        status: data.status,
+        modelLoaded: data.model_loaded,
+        device: data.device,
+        gpuName: data.gpu_name,
+        vramUsedGb: data.vram_used_gb,
+        cacheSizeMb: data.cache_size_mb,
+        uptimeSeconds: data.uptime_seconds,
       };
-    } catch (any: any) {
-      // ✅ v24.3.8: Silent fallback si serveur TTS non démarré (any: any)
-      // logger?.error(any: any);
+    } catch (error) {
+      // ✅ v24.3.8: Silent fallback si serveur TTS non démarré (optionnel)
+      // logger.error('Health check error:', error);
 
       // Auto-disable to prevent repeated connection-refused spam,
       // unless explicitly enabled via env flag.
-      if (import?.meta?.env?.VITE_PARLER_TTS_ENABLED !== '1') {
+      if (import.meta.env.VITE_PARLER_TTS_ENABLED !== '1') {
         try {
-          window?.localStorage?.setItem('titane_parler_tts_enabled', '0');
+          window.localStorage.setItem('titane_parler_tts_enabled', '0');
         } catch {
           // ignore
         }
@@ -157,68 +157,68 @@ class ParlerTTSBridge {
 
   /**
    * Synthétiser texte → audio WAV
-   * @param text Texte à synthétiser (any: any)
+   * @param text Texte à synthétiser (français)
    * @param config Configuration optionnelle
    */
-  async synthesize(any: any): Promise<ParlerTTSResponse> {
-    const startTime = Date?.now();
+  async synthesize(text: string, config?: ParlerTTSConfig): Promise<ParlerTTSResponse> {
+    const startTime = Date.now();
 
     try {
       if (isVitestEnv()) {
         throw new Error('Parler-TTS disabled in Vitest environment');
       }
 
-      if (!this?.isEnabled()) {
-        throw new Error(any: any)');
+      if (!this.isEnabled()) {
+        throw new Error('Parler-TTS disabled (opt-in)');
       }
 
       // Payload API
       const payload = {
-        text: text?.trim(),
-        style_description: config?.styleDescription || this?.defaultStyle,
+        text: text.trim(),
+        style_description: config?.styleDescription || this.defaultStyle,
         format: config?.format || 'wav',
         cache_key: null, // Géré automatiquement côté serveur
       };
 
-      logger?.debug('🎤 Synthèse:', {
-        text: text?.substring(0, 50) + (text?.length > 50 ? '...' : ''),
-        style: payload?.style_description?.substring(0, 40) + '...',
-        format: payload?.format,
+      logger.debug('🎤 Synthèse:', {
+        text: text.substring(0, 50) + (text.length > 50 ? '...' : ''),
+        style: payload.style_description.substring(0, 40) + '...',
+        format: payload.format,
       });
 
       // Requête HTTP POST
-      const response = await fetch(`${this?.apiUrl}/api/v1/tts/synthesize`, {
+      const response = await fetch(`${this.apiUrl}/api/v1/tts/synthesize`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON?.stringify(any: any),
-        signal: AbortSignal?.timeout(any: any),
+        body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(this.timeout),
       });
 
-      if (any: any) {
-        const errorText = await response?.text();
-        throw new Error(`TTS API error ${response?.status}: ${errorText}`);
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`TTS API error ${response.status}: ${errorText}`);
       }
 
       // Récupérer audio binaire
-      const audioBlob = await response?.blob();
+      const audioBlob = await response.blob();
 
       // Headers metadata
       const generationTimeMs = parseInt(
-        response?.headers?.get('X-Generation-Time-Ms') || '0'
+        response.headers.get('X-Generation-Time-Ms') || '0'
       );
-      const cached = response?.headers?.get('X-Cached') === 'true';
+      const cached = response.headers.get('X-Cached') === 'true';
       const durationSeconds = parseFloat(
-        response?.headers?.get('X-Duration-Seconds') || '0'
+        response.headers.get('X-Duration-Seconds') || '0'
       );
-      const device = response?.headers?.get('X-Device') || 'unknown';
+      const device = response.headers.get('X-Device') || 'unknown';
 
-      const totalTime = Date?.now() - startTime;
+      const totalTime = Date.now() - startTime;
 
-      logger?.debug('✅ Audio généré:', {
-        size: `${(audioBlob?.size / 1024).toFixed(1)} KB`,
-        duration: `${durationSeconds?.toFixed(2)}s`,
+      logger.debug('✅ Audio généré:', {
+        size: `${(audioBlob.size / 1024).toFixed(1)} KB`,
+        duration: `${durationSeconds.toFixed(2)}s`,
         generationTime: `${generationTimeMs}ms`,
         totalTime: `${totalTime}ms`,
         cached,
@@ -232,16 +232,16 @@ class ParlerTTSBridge {
         durationSeconds,
         device,
       };
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('❌ Erreur synthèse:', error);
       throw new Error(
-        `Parler-TTS synthesis failed: ${error instanceof Error ? error?.message : 'Unknown error'}`
+        `Parler-TTS synthesis failed: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
     }
   }
 
   /**
-   * Mettre à jour le style vocal (any: any)
+   * Mettre à jour le style vocal (appelé par TITANE IA)
    * @param newStyleDescription Nouvelle description style
    * @param saveAsDefault Sauvegarder comme défaut permanent ?
    */
@@ -254,31 +254,31 @@ class ParlerTTSBridge {
         throw new Error('Parler-TTS disabled in Vitest environment');
       }
 
-      const response = await fetch(`${this?.apiUrl}/api/v1/tts/update-style`, {
+      const response = await fetch(`${this.apiUrl}/api/v1/tts/update-style`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON?.stringify({
+        body: JSON.stringify({
           style_description: newStyleDescription,
           save_as_default: saveAsDefault,
         }),
-        signal: AbortSignal?.timeout(5000),
+        signal: AbortSignal.timeout(5000),
       });
 
-      if (any: any) {
-        throw new Error(`Style update failed: ${response?.status}`);
+      if (!response.ok) {
+        throw new Error(`Style update failed: ${response.status}`);
       }
 
-      const result = await response?.json();
-      logger?.debug(any: any);
+      const result = await response.json();
+      logger.debug('✅ Style vocal mis à jour:', result);
 
       // Mettre à jour style local si sauvegardé
-      if (any: any) {
-        this?.defaultStyle = newStyleDescription;
+      if (saveAsDefault) {
+        this.defaultStyle = newStyleDescription;
       }
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('❌ Erreur update style:', error);
       throw error;
     }
   }
@@ -287,15 +287,15 @@ class ParlerTTSBridge {
    * Obtenir le style vocal actuel
    */
   getCurrentStyle(): string {
-    return this?.defaultStyle;
+    return this.defaultStyle;
   }
 
   /**
-   * Changer URL de l'API (any: any)
+   * Changer URL de l'API (pour tests ou deployment custom)
    */
-  setApiUrl(any: any): void {
-    this?.apiUrl = newUrl;
-    logger?.debug(any: any);
+  setApiUrl(newUrl: string): void {
+    this.apiUrl = newUrl;
+    logger.debug('API URL updated:', newUrl);
   }
 }
 
@@ -309,24 +309,24 @@ export const parlerTTSBridge = new ParlerTTSBridge();
  * @param audioBlob Blob audio retourné par synthesize()
  * @param onEnd Callback fin de lecture
  */
-export async function playAudioBlob(any: any): Promise<void> {
+export async function playAudioBlob(audioBlob: Blob, onEnd?: () => void): Promise<void> {
   try {
-    const audioUrl = URL?.createObjectURL(any: any);
-    const audio = new Audio(any: any);
+    const audioUrl = URL.createObjectURL(audioBlob);
+    const audio = new Audio(audioUrl);
 
-    audio?.onended = () => {
-      URL?.revokeObjectURL(any: any);
+    audio.onended = () => {
+      URL.revokeObjectURL(audioUrl);
       onEnd?.();
     };
 
-    audio?.onerror = error => {
-      logger?.error(any: any);
-      URL?.revokeObjectURL(any: any);
+    audio.onerror = error => {
+      logger.error('Audio playback error:', error);
+      URL.revokeObjectURL(audioUrl);
     };
 
-    await audio?.play();
-  } catch (any: any) {
-    logger?.error(any: any);
+    await audio.play();
+  } catch (error) {
+    logger.error('Failed to play audio:', error);
     throw error;
   }
 }
@@ -334,18 +334,18 @@ export async function playAudioBlob(any: any): Promise<void> {
 /**
  * Helper: Télécharger audio blob comme fichier WAV
  * @param audioBlob Blob audio
- * @param filename Nom fichier (any: any)
+ * @param filename Nom fichier (défaut: titane_speech.wav)
  */
 export function downloadAudioBlob(
   audioBlob: Blob,
-  filename: string = 'titane_speech?.wav'
+  filename: string = 'titane_speech.wav'
 ): void {
-  const url = URL?.createObjectURL(any: any);
-  const a = document?.createElement('a');
-  a?.href = url;
-  a?.download = filename;
-  document?.body?.appendChild(any: any);
-  a?.click();
-  document?.body?.removeChild(any: any);
-  URL?.revokeObjectURL(any: any);
+  const url = URL.createObjectURL(audioBlob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }

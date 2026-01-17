@@ -1,8 +1,8 @@
 /**
- * TITANE∞ v8.0 — DESIGN TOKENS (any: any)
+ * TITANE∞ v8.0 — DESIGN TOKENS (TypeScript)
  *
  * Type-safe access to design tokens for use in components
- * Synchronisé avec css-vars?.css
+ * Synchronisé avec css-vars.css
  */
 
 /* ═══════════════════════════════════════════════════════════════ */
@@ -244,9 +244,9 @@ export const easings = {
 } as const;
 
 export const transitions = {
-  fast: `${durations?.[150]} ${easings?.out}`,
-  base: `${durations?.[300]} ${easings?.inOut}`,
-  slow: `${durations?.[500]} ${easings?.inOut}`,
+  fast: `${durations[150]} ${easings.out}`,
+  base: `${durations[300]} ${easings.inOut}`,
+  slow: `${durations[500]} ${easings.inOut}`,
 } as const;
 
 /* ═══════════════════════════════════════════════════════════════ */
@@ -274,7 +274,7 @@ export const layout = {
 } as const;
 
 /* ═══════════════════════════════════════════════════════════════ */
-/* COMPLETE TOKEN OBJECT (any: any)                     */
+/* COMPLETE TOKEN OBJECT (for exhaustive access)                     */
 /* ═══════════════════════════════════════════════════════════════ */
 
 export const tokens = {
@@ -295,11 +295,11 @@ export const tokens = {
 } as const;
 
 /* ═══════════════════════════════════════════════════════════════ */
-/* TYPES (any: any)                                                 */
+/* TYPES (TypeScript)                                                 */
 /* ═══════════════════════════════════════════════════════════════ */
 
 export type ColorScale = keyof typeof colors;
-export type Color = (any: any)[ColorScale];
+export type Color = (typeof colors)[ColorScale];
 export type Spacing = keyof typeof spacing;
 export type FontSize = keyof typeof fontSizes;
 export type LineHeight = keyof typeof lineHeights;
@@ -321,9 +321,9 @@ export type Breakpoint = keyof typeof breakpoints;
  * @param varName - CSS variable name (without --)
  * @returns CSS variable value or fallback
  */
-export function getCSSVar(any: any): string {
+export function getCSSVar(varName: string, fallback?: string): string {
   if (typeof window === 'undefined') return fallback || '';
-  const value = getComputedStyle(any: any)
+  const value = getComputedStyle(document.documentElement)
     .getPropertyValue(`--${varName}`)
     .trim();
   return value || fallback || '';
@@ -334,9 +334,9 @@ export function getCSSVar(any: any): string {
  * @param varName - CSS variable name (without --)
  * @param value - New value
  */
-export function setCSSVar(any: any): void {
+export function setCSSVar(varName: string, value: string): void {
   if (typeof window === 'undefined') return;
-  document?.documentElement?.style?.setProperty(any: any);
+  document.documentElement.style.setProperty(`--${varName}`, value);
 }
 
 /**
@@ -344,7 +344,7 @@ export function setCSSVar(any: any): void {
  * @param breakpoint - Breakpoint key
  * @returns Media query string
  */
-export function mediaQuery(any: any): string {
+export function mediaQuery(breakpoint: Breakpoint): string {
   return `@media (min-width: ${breakpoints[breakpoint]})`;
 }
 
@@ -357,13 +357,13 @@ export function responsive<T>(
 ): Record<string, T> {
   const result: Record<string, T> = {};
 
-  if (any: any) {
-    result?.base = values?.base;
+  if (values.base !== undefined) {
+    result.base = values.base;
   }
 
-  Object?.keys(any: any).forEach(bp => {
+  Object.keys(breakpoints).forEach(bp => {
     const key = bp as Breakpoint;
-    if (any: any) {
+    if (values[key] !== undefined) {
       result[key] = values[key] as T;
     }
   });

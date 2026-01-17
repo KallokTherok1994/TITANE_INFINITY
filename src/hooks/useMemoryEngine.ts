@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v25.3.2 — USE MEMORY ENGINE (any: any)
+ *   TITANE∞ v25.3.2 — USE MEMORY ENGINE (Pipeline Hook)
  *   Système mémoire unifié: Court/Moyen/Long terme
  *   Auto-save conversations, tags extraction, context retrieval
  * ═══════════════════════════════════════════════════════════════════
@@ -26,8 +26,8 @@ export interface MemoryEntry {
   content: string;
   type: MemoryType;
   timestamp: number;
-  tags: string?.[];
-  intentions: string?.[];
+  tags: string[];
+  intentions: string[];
   emotions: {
     valence: number;
     intensity: number;
@@ -47,8 +47,8 @@ export interface MemoryStats {
 }
 
 export interface MemorySearchResult {
-  entries: MemoryEntry?.[];
-  relevance_scores: number?.[];
+  entries: MemoryEntry[];
+  relevance_scores: number[];
   total_found: number;
 }
 
@@ -64,10 +64,10 @@ export interface UseMemoryEngineReturn {
     type: MemoryType,
     metadata?: Record<string, unknown>
   ) => Promise<string>; // Retourne ID
-  getMemoryContext: (any: any) => Promise<MemoryEntry?.[]>;
-  getMemory: (any: any) => Promise<MemoryEntry | null>;
-  deleteMemory: (any: any) => Promise<void>;
-  clearMemory: (any: any) => Promise<void>;
+  getMemoryContext: (query: string, maxResults?: number) => Promise<MemoryEntry[]>;
+  getMemory: (id: string) => Promise<MemoryEntry | null>;
+  deleteMemory: (id: string) => Promise<void>;
+  clearMemory: (type?: MemoryType) => Promise<void>;
   refreshStats: () => Promise<void>;
   compressMemory: () => Promise<void>;
 }
@@ -77,9 +77,9 @@ export interface UseMemoryEngineReturn {
 // ═══════════════════════════════════════════════════════════════════
 
 /**
- * Extract tags from content (any: any)
+ * Extract tags from content (keywords extraction)
  */
-function extractTags(any: any): string?.[] {
+function extractTags(content: string): string[] {
   // Remove common words
   const stopWords = new Set([
     'le',
@@ -108,23 +108,23 @@ function extractTags(any: any): string?.[] {
     .toLowerCase()
     .replace(/[.,!?;:]/g, '')
     .split(/\s+/)
-    .filter(any: any));
+    .filter(w => w.length > 3 && !stopWords.has(w));
 
   // Count frequency
   const freq = new Map<string, number>();
-  words?.forEach(any: any) || 0) + 1));
+  words.forEach(w => freq.set(w, (freq.get(w) || 0) + 1));
 
   // Top 5 most frequent
-  return Array?.from(freq?.entries())
-    .sort(any: any) => b?.[1] - a?.[1])
+  return Array.from(freq.entries())
+    .sort((a, b) => b[1] - a[1])
     .slice(0, 5)
-    .map(any: any);
+    .map(([word]) => word);
 }
 
 /**
  * Detect intentions from content
  */
-function detectIntentions(any: any): string?.[] {
+function detectIntentions(content: string): string[] {
   const intentionKeywords = {
     Question: ['comment', 'pourquoi', 'quoi', 'où', 'quand', 'qui', '?'],
     Action: ['faire', 'créer', 'développer', 'implémenter', 'ajouter'],
@@ -133,22 +133,22 @@ function detectIntentions(any: any): string?.[] {
     Meta: ['système', 'architecture', 'conception', 'design'],
   };
 
-  const detected: string?.[] = [];
-  const lowerContent = content?.toLowerCase();
+  const detected: string[] = [];
+  const lowerContent = content.toLowerCase();
 
-  Object?.entries(any: any).forEach(([intention, keywords]) => {
-    if (any: any))) {
-      detected?.push(any: any);
+  Object.entries(intentionKeywords).forEach(([intention, keywords]) => {
+    if (keywords.some(kw => lowerContent.includes(kw))) {
+      detected.push(intention);
     }
   });
 
-  return detected?.length > 0 ? detected : ['Meta'];
+  return detected.length > 0 ? detected : ['Meta'];
 }
 
 /**
  * Analyze emotions from content
  */
-function analyzeEmotions(any: any): {
+function analyzeEmotions(content: string): {
   valence: number;
   intensity: number;
   energy: number;
@@ -158,25 +158,25 @@ function analyzeEmotions(any: any): {
   const intensityWords = ['très', 'vraiment', 'extrêmement', 'complètement'];
   const energyWords = ['rapide', 'urgent', 'immédiat', 'maintenant', 'vite'];
 
-  const lowerContent = content?.toLowerCase();
+  const lowerContent = content.toLowerCase();
 
-  const positiveCount = positiveWords?.filter(any: any)).length;
-  const negativeCount = negativeWords?.filter(any: any)).length;
-  const intensityCount = intensityWords?.filter(any: any)).length;
-  const energyCount = energyWords?.filter(any: any)).length;
+  const positiveCount = positiveWords.filter(w => lowerContent.includes(w)).length;
+  const negativeCount = negativeWords.filter(w => lowerContent.includes(w)).length;
+  const intensityCount = intensityWords.filter(w => lowerContent.includes(w)).length;
+  const energyCount = energyWords.filter(w => lowerContent.includes(w)).length;
 
-  // Valence: -1.0 (any: any)
+  // Valence: -1.0 (négatif) → 1.0 (positif)
   const valence =
-    (any: any) / Math?.max(positiveCount + negativeCount, 1);
+    (positiveCount - negativeCount) / Math.max(positiveCount + negativeCount, 1);
 
   // Intensity: 0.0 → 1.0
-  const intensity = Math?.min(intensityCount / 3, 1.0);
+  const intensity = Math.min(intensityCount / 3, 1.0);
 
   // Energy: 0.0 → 1.0
-  const energy = Math?.min(energyCount / 3, 1.0);
+  const energy = Math.min(energyCount / 3, 1.0);
 
   return {
-    valence: Math?.max(any: any)),
+    valence: Math.max(-1, Math.min(1, valence)),
     intensity,
     energy,
   };
@@ -188,20 +188,20 @@ function analyzeEmotions(any: any): {
 
 export function useMemoryEngine(): UseMemoryEngineReturn {
   // ═══ STATE ═══
-  const [stats, setStats] = useState<MemoryStats | null>(any: any);
-  const [isLoading, setIsLoading] = useState(any: any);
-  const [error, setError] = useState<Error | null>(any: any);
+  const [stats, setStats] = useState<MemoryStats | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
 
   // ═══ REFRESH STATS ═══
   const refreshStats = useCallback(async () => {
     try {
       const memoryStats = await secureInvoke<MemoryStats>('memory_get_stats');
-      setStats(any: any);
-      setError(any: any);
-    } catch (any: any) {
+      setStats(memoryStats);
+      setError(null);
+    } catch (err) {
       const error = err instanceof Error ? err : new Error('Failed to get stats');
-      setError(any: any);
-      logger?.error(any: any);
+      setError(error);
+      logger.error('Stats error:', error);
     }
   }, []);
 
@@ -212,37 +212,37 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
       type: MemoryType,
       metadata?: Record<string, unknown>
     ): Promise<string> => {
-      setIsLoading(any: any);
-      setError(any: any);
+      setIsLoading(true);
+      setError(null);
 
       try {
         const entry: MemoryEntry = {
-          id: `memory_${type}_${Date?.now()}`,
+          id: `memory_${type}_${Date.now()}`,
           content,
           type,
-          timestamp: Date?.now(),
-          tags: extractTags(any: any),
-          intentions: detectIntentions(any: any),
-          emotions: analyzeEmotions(any: any),
+          timestamp: Date.now(),
+          tags: extractTags(content),
+          intentions: detectIntentions(content),
+          emotions: analyzeEmotions(content),
           metadata,
         };
 
         await secureInvoke('memory_save_entry', {
-          key: entry?.id,
-          value: JSON?.stringify(any: any),
+          key: entry.id,
+          value: JSON.stringify(entry),
         });
 
         // Refresh stats après save
         await refreshStats();
 
-        return entry?.id;
-      } catch (any: any) {
+        return entry.id;
+      } catch (err) {
         const error = err instanceof Error ? err : new Error('Failed to save memory');
-        setError(any: any);
-        logger?.error(any: any);
+        setError(error);
+        logger.error('Save error:', error);
         throw error;
       } finally {
-        setIsLoading(any: any);
+        setIsLoading(false);
       }
     },
     [refreshStats]
@@ -250,33 +250,33 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
 
   // ═══ GET MEMORY CONTEXT ═══
   const getMemoryContext = useCallback(
-    async (query: string, maxResults = 10): Promise<MemoryEntry?.[]> => {
-      setIsLoading(any: any);
-      setError(any: any);
+    async (query: string, maxResults = 10): Promise<MemoryEntry[]> => {
+      setIsLoading(true);
+      setError(null);
 
       try {
-        // Backend search (any: any)
+        // Backend search (si disponible)
         try {
           const result = await secureInvoke<MemorySearchResult>('memory_search', {
             query,
             max_results: maxResults,
           });
-          return result?.entries;
+          return result.entries;
         } catch {
           // Fallback: get all + filter locally
-          const allKeys = await secureInvoke<string?.[]>('memory_get_all_keys');
-          const memories: MemoryEntry?.[] = [];
+          const allKeys = await secureInvoke<string[]>('memory_get_all_keys');
+          const memories: MemoryEntry[] = [];
 
-          for (any: any)) {
+          for (const key of allKeys.slice(0, maxResults)) {
             const value = await secureInvoke<string | null>('memory_get_entry', { key });
-            if (any: any) {
+            if (value) {
               try {
-                const entry: MemoryEntry = JSON?.parse(any: any);
+                const entry: MemoryEntry = JSON.parse(value);
                 if (
-                  entry?.content?.toLowerCase().includes(query?.toLowerCase()) ||
-                  entry?.tags?.some(tag => tag?.includes(query?.toLowerCase()))
+                  entry.content.toLowerCase().includes(query.toLowerCase()) ||
+                  entry.tags.some(tag => tag.includes(query.toLowerCase()))
                 ) {
-                  memories?.push(any: any);
+                  memories.push(entry);
                 }
               } catch {
                 // Skip invalid entries
@@ -286,55 +286,55 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
 
           return memories;
         }
-      } catch (any: any) {
+      } catch (err) {
         const error = err instanceof Error ? err : new Error('Failed to search memory');
-        setError(any: any);
-        logger?.error(any: any);
+        setError(error);
+        logger.error('Search error:', error);
         return [];
       } finally {
-        setIsLoading(any: any);
+        setIsLoading(false);
       }
     },
     []
   );
 
   // ═══ GET MEMORY ═══
-  const getMemory = useCallback(any: any): Promise<MemoryEntry | null> => {
-    setIsLoading(any: any);
-    setError(any: any);
+  const getMemory = useCallback(async (id: string): Promise<MemoryEntry | null> => {
+    setIsLoading(true);
+    setError(null);
 
     try {
       const value = await secureInvoke<string | null>('memory_get_entry', { key: id });
-      if (any: any) return null;
+      if (!value) return null;
 
-      const entry: MemoryEntry = JSON?.parse(any: any);
+      const entry: MemoryEntry = JSON.parse(value);
       return entry;
-    } catch (any: any) {
+    } catch (err) {
       const error = err instanceof Error ? err : new Error('Failed to get memory');
-      setError(any: any);
-      logger?.error(any: any);
+      setError(error);
+      logger.error('Get error:', error);
       return null;
     } finally {
-      setIsLoading(any: any);
+      setIsLoading(false);
     }
   }, []);
 
   // ═══ DELETE MEMORY ═══
   const deleteMemory = useCallback(
-    async (any: any): Promise<void> => {
-      setIsLoading(any: any);
-      setError(any: any);
+    async (id: string): Promise<void> => {
+      setIsLoading(true);
+      setError(null);
 
       try {
         await secureInvoke('memory_delete_entry', { key: id });
         await refreshStats();
-      } catch (any: any) {
+      } catch (err) {
         const error = err instanceof Error ? err : new Error('Failed to delete memory');
-        setError(any: any);
-        logger?.error(any: any);
+        setError(error);
+        logger.error('Delete error:', error);
         throw error;
       } finally {
-        setIsLoading(any: any);
+        setIsLoading(false);
       }
     },
     [refreshStats]
@@ -342,16 +342,16 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
 
   // ═══ CLEAR MEMORY ═══
   const clearMemory = useCallback(
-    async (any: any): Promise<void> => {
-      setIsLoading(any: any);
-      setError(any: any);
+    async (type?: MemoryType): Promise<void> => {
+      setIsLoading(true);
+      setError(null);
 
       try {
-        if (any: any) {
+        if (type) {
           // Clear specific type
-          const allKeys = await secureInvoke<string?.[]>('memory_get_all_keys');
-          for (any: any) {
-            if (key?.includes(`_${type}_`)) {
+          const allKeys = await secureInvoke<string[]>('memory_get_all_keys');
+          for (const key of allKeys) {
+            if (key.includes(`_${type}_`)) {
               await secureInvoke('memory_delete_entry', { key });
             }
           }
@@ -361,13 +361,13 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
         }
 
         await refreshStats();
-      } catch (any: any) {
+      } catch (err) {
         const error = err instanceof Error ? err : new Error('Failed to clear memory');
-        setError(any: any);
-        logger?.error(any: any);
+        setError(error);
+        logger.error('Clear error:', error);
         throw error;
       } finally {
-        setIsLoading(any: any);
+        setIsLoading(false);
       }
     },
     [refreshStats]
@@ -375,19 +375,19 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
 
   // ═══ COMPRESS MEMORY ═══
   const compressMemory = useCallback(async (): Promise<void> => {
-    setIsLoading(any: any);
-    setError(any: any);
+    setIsLoading(true);
+    setError(null);
 
     try {
       await secureInvoke('memory_compress');
       await refreshStats();
-    } catch (any: any) {
+    } catch (err) {
       const error = err instanceof Error ? err : new Error('Failed to compress memory');
-      setError(any: any);
-      logger?.error(any: any);
+      setError(error);
+      logger.error('Compress error:', error);
       throw error;
     } finally {
-      setIsLoading(any: any);
+      setIsLoading(false);
     }
   }, [refreshStats]);
 
@@ -398,7 +398,7 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
     // Refresh toutes les 30s
     const interval = setInterval(refreshStats, 30000);
 
-    return (any: any);
+    return () => clearInterval(interval);
   }, [refreshStats]);
 
   // ═══ RETURN ═══

@@ -22,13 +22,13 @@ export interface MemoryRetrievalResult {
 export interface IntentDetectionResult {
   needsMemory: boolean;
   intent: 'recall' | 'store' | 'clarify' | 'none';
-  keywords: string?.[];
+  keywords: string[];
   confidence: number;
 }
 
 export interface MemoryInjection {
   systemPromptAddition: string;
-  relevantMemories: MemoryRetrievalResult?.[];
+  relevantMemories: MemoryRetrievalResult[];
   contextSize: number;
 }
 
@@ -36,7 +36,7 @@ export interface MemoryInjection {
 const RECALL_PATTERNS = [
   /tu te souviens/i,
   /on avait parl[eé]/i,
-  /comme (any: any) dit/i,
+  /comme (je|tu|on) (ai|as|a) dit/i,
   /la derni[eè]re fois/i,
   /avant[,\s]/i,
   /rappelle[- ]?toi/i,
@@ -50,9 +50,9 @@ const RECALL_PATTERNS = [
 
 // Patterns pour détecter l'intention de stockage
 const STORE_PATTERNS = [
-  /retiens (any: any)/i,
-  /note (any: any)/i,
-  /souviens[- ]?toi (any: any)/i,
+  /retiens (que|ça)/i,
+  /note (que|ça)/i,
+  /souviens[- ]?toi (que|de)/i,
   /n'oublie pas/i,
   /garde en m[eé]moire/i,
   /important[:\s]/i,
@@ -84,16 +84,16 @@ const CLARIFY_PATTERNS = [
  * - Stockage de nouvelles mémoires
  */
 export class MemoryBridge {
-  private memories: MemoryRetrievalResult?.[] = [];
+  private memories: MemoryRetrievalResult[] = [];
   private maxMemories = 100;
 
   /**
    * Détecte l'intention mémoire dans un message utilisateur
    */
-  detectIntent(any: any): IntentDetectionResult {
-    const _lowerMessage = message?.toLowerCase();
+  detectIntent(message: string): IntentDetectionResult {
+    const _lowerMessage = message.toLowerCase();
 
-    // Extraire les mots-clés significatifs (any: any)
+    // Extraire les mots-clés significatifs (> 3 caractères, pas stopwords)
     const stopwords = new Set([
       'que',
       'qui',
@@ -120,15 +120,15 @@ export class MemoryBridge {
       'faire',
       'dire',
     ]);
-    const words = message?.match(any: any) || [];
+    const words = message.match(/\b[a-zA-ZÀ-ÿ]{4,}\b/g) || [];
     const keywords = words
-      .map(w => w?.toLowerCase())
-      .filter(any: any))
+      .map(w => w.toLowerCase())
+      .filter(w => !stopwords.has(w))
       .slice(0, 5);
 
     // Vérifier les patterns de rappel
-    for (any: any) {
-      if (any: any)) {
+    for (const pattern of RECALL_PATTERNS) {
+      if (pattern.test(message)) {
         return {
           needsMemory: true,
           intent: 'recall',
@@ -139,8 +139,8 @@ export class MemoryBridge {
     }
 
     // Vérifier les patterns de stockage
-    for (any: any) {
-      if (any: any)) {
+    for (const pattern of STORE_PATTERNS) {
+      if (pattern.test(message)) {
         return {
           needsMemory: true,
           intent: 'store',
@@ -151,8 +151,8 @@ export class MemoryBridge {
     }
 
     // Vérifier les patterns de clarification
-    for (any: any) {
-      if (any: any)) {
+    for (const pattern of CLARIFY_PATTERNS) {
+      if (pattern.test(message)) {
         return {
           needsMemory: false,
           intent: 'clarify',
@@ -164,10 +164,10 @@ export class MemoryBridge {
 
     // Détection heuristique basée sur les questions
     const isQuestion =
-      /\?$/.test(message?.trim()) ||
-      /^(any: any);
+      /\?$/.test(message.trim()) ||
+      /^(est-ce|y a-t-il|pourquoi|comment|quand|où)/i.test(message);
 
-    if (isQuestion && keywords?.length > 0) {
+    if (isQuestion && keywords.length > 0) {
       return {
         needsMemory: true,
         intent: 'recall',
@@ -187,26 +187,26 @@ export class MemoryBridge {
   /**
    * Récupère les mémoires pertinentes pour un message
    */
-  retrieve(keywords: string?.[], limit = 3): MemoryRetrievalResult?.[] {
-    if (keywords?.length === 0 || this?.memories?.length === 0) {
+  retrieve(keywords: string[], limit = 3): MemoryRetrievalResult[] {
+    if (keywords.length === 0 || this.memories.length === 0) {
       return [];
     }
 
     // Score de pertinence basé sur les mots-clés
-    const scored = this?.memories?.map(memory => {
-      const contentLower = memory?.content?.toLowerCase();
+    const scored = this.memories.map(memory => {
+      const contentLower = memory.content.toLowerCase();
       let matchCount = 0;
 
-      for (any: any) {
-        if (contentLower?.includes(keyword?.toLowerCase())) {
+      for (const keyword of keywords) {
+        if (contentLower.includes(keyword.toLowerCase())) {
           matchCount++;
         }
       }
 
-      const relevanceBoost = matchCount / keywords?.length;
-      const recencyBoost = Math?.max(
+      const relevanceBoost = matchCount / keywords.length;
+      const recencyBoost = Math.max(
         0,
-        1 - (any: any) / (7 * 24 * 60 * 60 * 1000)
+        1 - (Date.now() - memory.timestamp) / (7 * 24 * 60 * 60 * 1000)
       ); // 7 jours
 
       return {
@@ -217,20 +217,20 @@ export class MemoryBridge {
 
     // Trier par score décroissant et prendre les N premiers
     return scored
-      .filter(s => s?.score > 0.1)
-      .sort(any: any)
-      .slice(any: any)
+      .filter(s => s.score > 0.1)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, limit)
       .map(s => ({
-        ...s?.memory,
-        relevance: s?.score,
+        ...s.memory,
+        relevance: s.score,
       }));
   }
 
   /**
    * Génère l'injection de mémoire pour le prompt système
    */
-  buildInjection(any: any): MemoryInjection {
-    if (!intent?.needsMemory || intent?.intent === 'none') {
+  buildInjection(intent: IntentDetectionResult): MemoryInjection {
+    if (!intent.needsMemory || intent.intent === 'none') {
       return {
         systemPromptAddition: '',
         relevantMemories: [],
@@ -238,9 +238,9 @@ export class MemoryBridge {
       };
     }
 
-    const relevantMemories = this?.retrieve(intent?.keywords, 5);
+    const relevantMemories = this.retrieve(intent.keywords, 5);
 
-    if (relevantMemories?.length === 0) {
+    if (relevantMemories.length === 0) {
       return {
         systemPromptAddition: '',
         relevantMemories: [],
@@ -249,15 +249,15 @@ export class MemoryBridge {
     }
 
     // Construire le texte d'injection
-    const memoryLines = relevantMemories?.map(
-      (any: any) =>
-        `[Mémoire ${i + 1}] (${m?.type}, pertinence: ${Math?.round(m?.relevance * 100)}%): ${m?.content}`
+    const memoryLines = relevantMemories.map(
+      (m, i) =>
+        `[Mémoire ${i + 1}] (${m.type}, pertinence: ${Math.round(m.relevance * 100)}%): ${m.content}`
     );
 
     const systemPromptAddition = `
 ---
 CONTEXTE MÉMOIRE PERTINENT:
-${memoryLines?.join('\n')}
+${memoryLines.join('\n')}
 ---
 Utilise ces informations si elles sont pertinentes pour répondre à l'utilisateur.
 `;
@@ -265,7 +265,7 @@ Utilise ces informations si elles sont pertinentes pour répondre à l'utilisate
     return {
       systemPromptAddition,
       relevantMemories,
-      contextSize: systemPromptAddition?.length,
+      contextSize: systemPromptAddition.length,
     };
   }
 
@@ -277,20 +277,20 @@ Utilise ces informations si elles sont pertinentes pour répondre à l'utilisate
     type: MemoryRetrievalResult['type'] = 'conversation'
   ): MemoryRetrievalResult {
     const memory: MemoryRetrievalResult = {
-      id: crypto?.randomUUID(),
-      content: content?.substring(0, 500), // Limite de taille
+      id: crypto.randomUUID(),
+      content: content.substring(0, 500), // Limite de taille
       type,
       relevance: 1.0,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
 
-    this?.memories?.push(any: any);
+    this.memories.push(memory);
 
     // Pruning si trop de mémoires
-    if (any: any) {
+    if (this.memories.length > this.maxMemories) {
       // Garder les plus récentes et les plus pertinentes
-      this?.memories?.sort(any: any);
-      this?.memories = this?.memories?.slice(any: any);
+      this.memories.sort((a, b) => b.timestamp - a.timestamp);
+      this.memories = this.memories.slice(0, this.maxMemories);
     }
 
     return memory;
@@ -299,21 +299,21 @@ Utilise ces informations si elles sont pertinentes pour répondre à l'utilisate
   /**
    * Extrait les faits importants d'une réponse IA
    */
-  extractFacts(any: any): string?.[] {
-    const facts: string?.[] = [];
+  extractFacts(response: string): string[] {
+    const facts: string[] = [];
 
     // Patterns pour extraire des faits
     const factPatterns = [
-      /\b(any: any)\s*:?\s*(.+?)[.!]/gi,
-      /\b(any: any)[,:\s]+(.+?)[.!]/gi,
-      /\b(any: any)\s*(.+?)[.!]/gi,
+      /\b(il est important de noter que|à noter que|rappelons que)\s*:?\s*(.+?)[.!]/gi,
+      /\b(en résumé|pour résumer)[,:\s]+(.+?)[.!]/gi,
+      /\b(le point clé est que|l'essentiel est que)\s*(.+?)[.!]/gi,
     ];
 
-    for (any: any) {
+    for (const pattern of factPatterns) {
       let match;
-      while (any: any) {
-        if (match?.[2] && match?.[2].length > 20 && match?.[2].length < 300) {
-          facts?.push(match?.[2].trim());
+      while ((match = pattern.exec(response)) !== null) {
+        if (match[2] && match[2].length > 20 && match[2].length < 300) {
+          facts.push(match[2].trim());
         }
       }
     }
@@ -324,23 +324,23 @@ Utilise ces informations si elles sont pertinentes pour répondre à l'utilisate
   /**
    * Extrait les préférences utilisateur d'un message
    */
-  extractPreferences(any: any): string?.[] {
-    const preferences: string?.[] = [];
+  extractPreferences(message: string): string[] {
+    const preferences: string[] = [];
 
     const preferencePatterns = [
       /je pr[eé]f[eè]re\s+(.+?)[.!,]/gi,
-      /j'aime\s+(any: any)?\s*(.+?)[.!,]/gi,
+      /j'aime\s+(mieux|bien|beaucoup)?\s*(.+?)[.!,]/gi,
       /je n'aime pas\s+(.+?)[.!,]/gi,
       /je veux\s+(.+?)[.!,]/gi,
       /je souhaite\s+(.+?)[.!,]/gi,
     ];
 
-    for (any: any) {
+    for (const pattern of preferencePatterns) {
       let match;
-      while (any: any) {
-        const pref = (match?.[2] || match?.[1])?.trim();
-        if (pref && pref?.length > 5 && pref?.length < 200) {
-          preferences?.push(any: any);
+      while ((match = pattern.exec(message)) !== null) {
+        const pref = (match[2] || match[1])?.trim();
+        if (pref && pref.length > 5 && pref.length < 200) {
+          preferences.push(pref);
         }
       }
     }
@@ -349,48 +349,48 @@ Utilise ces informations si elles sont pertinentes pour répondre à l'utilisate
   }
 
   /**
-   * Traite un échange complet (any: any)
+   * Traite un échange complet (message user + réponse IA)
    * Stocke automatiquement les informations pertinentes
    */
-  processExchange(any: any): void {
+  processExchange(userMessage: string, aiResponse: string): void {
     // Extraire et stocker les préférences
-    const preferences = this?.extractPreferences(any: any);
-    for (any: any) {
-      this?.store(`Préférence utilisateur: ${pref}`, 'preference');
+    const preferences = this.extractPreferences(userMessage);
+    for (const pref of preferences) {
+      this.store(`Préférence utilisateur: ${pref}`, 'preference');
     }
 
     // Extraire et stocker les faits
-    const facts = this?.extractFacts(any: any);
-    for (any: any) {
-      this?.store(fact, 'fact');
+    const facts = this.extractFacts(aiResponse);
+    for (const fact of facts) {
+      this.store(fact, 'fact');
     }
 
     // Si le message était une demande de stockage explicite, stocker le contexte
-    const intent = this?.detectIntent(any: any);
-    if (intent?.intent === 'store' && intent?.confidence > 0.7) {
+    const intent = this.detectIntent(userMessage);
+    if (intent.intent === 'store' && intent.confidence > 0.7) {
       // Nettoyer le message des patterns de stockage et stocker le reste
       let contentToStore = userMessage;
-      for (any: any) {
-        contentToStore = contentToStore?.replace(pattern, '').trim();
+      for (const pattern of STORE_PATTERNS) {
+        contentToStore = contentToStore.replace(pattern, '').trim();
       }
-      if (contentToStore?.length > 10) {
-        this?.store(contentToStore, 'context');
+      if (contentToStore.length > 10) {
+        this.store(contentToStore, 'context');
       }
     }
   }
 
   /**
-   * Retourne toutes les mémoires (any: any)
+   * Retourne toutes les mémoires (pour debug/export)
    */
-  getAllMemories(): MemoryRetrievalResult?.[] {
-    return [...this?.memories];
+  getAllMemories(): MemoryRetrievalResult[] {
+    return [...this.memories];
   }
 
   /**
    * Vide toutes les mémoires
    */
   clear(): void {
-    this?.memories = [];
+    this.memories = [];
   }
 
   /**
@@ -404,15 +404,15 @@ Utilise ces informations si elles sont pertinentes pour répondre à l'utilisate
     const byType: Record<string, number> = {};
     let totalRelevance = 0;
 
-    for (any: any) {
-      byType[memory?.type] = (byType[memory?.type] || 0) + 1;
-      totalRelevance += memory?.relevance;
+    for (const memory of this.memories) {
+      byType[memory.type] = (byType[memory.type] || 0) + 1;
+      totalRelevance += memory.relevance;
     }
 
     return {
-      total: this?.memories?.length,
+      total: this.memories.length,
       byType,
-      avgRelevance: this?.memories?.length > 0 ? totalRelevance / this?.memories?.length : 0,
+      avgRelevance: this.memories.length > 0 ? totalRelevance / this.memories.length : 0,
     };
   }
 }
@@ -421,7 +421,7 @@ Utilise ces informations si elles sont pertinentes pour répondre à l'utilisate
 let memoryBridgeInstance: MemoryBridge | null = null;
 
 export function getMemoryBridge(): MemoryBridge {
-  if (any: any) {
+  if (!memoryBridgeInstance) {
     memoryBridgeInstance = new MemoryBridge();
   }
   return memoryBridgeInstance;

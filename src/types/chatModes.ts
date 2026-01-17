@@ -92,7 +92,7 @@ export interface ChatMode {
   /** Label affiché dans l'UI */
   label: string;
 
-  /** Description courte (any: any) */
+  /** Description courte (1-2 lignes) */
   description: string;
 
   /** Icône emoji ou composant */
@@ -110,7 +110,7 @@ export interface ChatMode {
   /** Outils autorisés */
   tools_allowed: ToolsPermissions;
 
-  /** Niveau de permissions (any: any) */
+  /** Niveau de permissions (0=minimal, 5=admin) */
   permissions_level: PermissionLevel;
 
   /** Portée mémoire */
@@ -122,19 +122,19 @@ export interface ChatMode {
   /** Ton de communication */
   tone: CommunicationTone;
 
-  /** Couleur thème (any: any) */
+  /** Couleur thème (pour badge UI) */
   theme_color: string;
 
-  /** Priorité d'affichage (any: any) */
+  /** Priorité d'affichage (ordre dans le sélecteur) */
   display_priority: number;
 
   /** Actif/Inactif */
   enabled: boolean;
 
   /** Capacités spéciales débloquées */
-  capabilities: string?.[];
+  capabilities: string[];
 
-  /** XP requis pour débloquer (any: any) */
+  /** XP requis pour débloquer (0 = toujours disponible) */
   xp_required: number;
 
   /** Métadonnées extensibles */
@@ -151,16 +151,16 @@ export interface ChatModeState {
   current_mode_id: string;
 
   /** Historique des modes utilisés (derniers 10) */
-  mode_history: string?.[];
+  mode_history: string[];
 
   /** XP accumulé par mode */
   mode_xp: Record<string, number>;
 
   /** Modes favoris de l'utilisateur */
-  favorite_modes: string?.[];
+  favorite_modes: string[];
 
   /** Modes personnalisés créés */
-  custom_modes: ChatMode?.[];
+  custom_modes: ChatMode[];
 
   /** Dernière mise à jour */
   last_updated: number;
@@ -212,7 +212,7 @@ export interface ChatModeChangedEvent {
 // UTILITAIRES
 // ═══════════════════════════════════════════════════════════════════════════
 
-/** Créer des permissions d'outils par défaut (any: any) */
+/** Créer des permissions d'outils par défaut (tout désactivé) */
 export const createDefaultToolsPermissions = (): ToolsPermissions => ({
   code_analysis: false,
   code_generation: false,
@@ -235,7 +235,7 @@ export const createDefaultToolsPermissions = (): ToolsPermissions => ({
   automation_execution: false,
 });
 
-/** Créer des permissions complètes (any: any) */
+/** Créer des permissions complètes (tout activé) */
 export const createFullToolsPermissions = (): ToolsPermissions => ({
   code_analysis: true,
   code_generation: true,

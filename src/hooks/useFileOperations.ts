@@ -26,11 +26,11 @@ import {
 } from '../services/tauriBridge';
 
 interface FileOperationsState {
-  files: FileInfo?.[] | null;
+  files: FileInfo[] | null;
   currentFile: FileInfo | null;
   loading: boolean;
   progress: number | null;
-  error??: string | null;
+  error: string | null;
 }
 
 interface UploadProgress {
@@ -51,17 +51,17 @@ export function useFileOperations() {
   /**
    * List files in directory
    */
-  const list = useCallback(any: any) => {
+  const list = useCallback(async (path: string, options?: ListFilesOptions) => {
     setState(prev => ({ ...prev, loading: true, error: null }));
 
     try {
-      const response = await listFiles(any: any);
-      const files = response?.data || [];
+      const response = await listFiles(path, options);
+      const files = response.data || [];
       setState({ files, currentFile: null, loading: false, progress: null, error: null });
       return files;
-    } catch (any: any) {
+    } catch (error) {
       const errorMessage =
-        error instanceof Error ? error?.message : 'Failed to list files';
+        error instanceof Error ? error.message : 'Failed to list files';
       setState(prev => ({ ...prev, loading: false, error: errorMessage }));
       throw error;
     }
@@ -70,12 +70,12 @@ export function useFileOperations() {
   /**
    * Get file info
    */
-  const info = useCallback(any: any) => {
+  const info = useCallback(async (path: string) => {
     setState(prev => ({ ...prev, loading: true, error: null }));
 
     try {
-      const response = await getFileInfo(any: any);
-      const fileInfo = response?.data;
+      const response = await getFileInfo(path);
+      const fileInfo = response.data;
       setState(prev => ({
         ...prev,
         currentFile: fileInfo || null,
@@ -83,9 +83,9 @@ export function useFileOperations() {
         error: null,
       }));
       return fileInfo;
-    } catch (any: any) {
+    } catch (error) {
       const errorMessage =
-        error instanceof Error ? error?.message : 'Failed to get file info';
+        error instanceof Error ? error.message : 'Failed to get file info';
       setState(prev => ({ ...prev, loading: false, error: errorMessage }));
       throw error;
     }
@@ -94,10 +94,10 @@ export function useFileOperations() {
   /**
    * Check if file exists
    */
-  const exists = useCallback(any: any) => {
+  const exists = useCallback(async (path: string) => {
     try {
-      return await fileExists(any: any);
-    } catch (any: any) {
+      return await fileExists(path);
+    } catch (error) {
       return false;
     }
   }, []);
@@ -105,15 +105,15 @@ export function useFileOperations() {
   /**
    * Delete file or directory
    */
-  const remove = useCallback(any: any) => {
+  const remove = useCallback(async (path: string, recursive: boolean = false) => {
     setState(prev => ({ ...prev, loading: true, error: null }));
 
     try {
-      await deleteFile(any: any);
+      await deleteFile(path, recursive);
       setState(prev => ({ ...prev, loading: false, error: null }));
-    } catch (any: any) {
+    } catch (error) {
       const errorMessage =
-        error instanceof Error ? error?.message : 'Failed to delete file';
+        error instanceof Error ? error.message : 'Failed to delete file';
       setState(prev => ({ ...prev, loading: false, error: errorMessage }));
       throw error;
     }
@@ -123,15 +123,15 @@ export function useFileOperations() {
    * Copy file or directory
    */
   const copy = useCallback(
-    async (any: any) => {
+    async (source: string, dest: string, overwrite: boolean = false) => {
       setState(prev => ({ ...prev, loading: true, error: null }));
 
       try {
-        await copyFile(any: any);
+        await copyFile(source, dest, overwrite);
         setState(prev => ({ ...prev, loading: false, error: null }));
-      } catch (any: any) {
+      } catch (error) {
         const errorMessage =
-          error instanceof Error ? error?.message : 'Failed to copy file';
+          error instanceof Error ? error.message : 'Failed to copy file';
         setState(prev => ({ ...prev, loading: false, error: errorMessage }));
         throw error;
       }
@@ -143,15 +143,15 @@ export function useFileOperations() {
    * Move/rename file or directory
    */
   const move = useCallback(
-    async (any: any) => {
+    async (source: string, dest: string, overwrite: boolean = false) => {
       setState(prev => ({ ...prev, loading: true, error: null }));
 
       try {
-        await moveFile(any: any);
+        await moveFile(source, dest, overwrite);
         setState(prev => ({ ...prev, loading: false, error: null }));
-      } catch (any: any) {
+      } catch (error) {
         const errorMessage =
-          error instanceof Error ? error?.message : 'Failed to move file';
+          error instanceof Error ? error.message : 'Failed to move file';
         setState(prev => ({ ...prev, loading: false, error: errorMessage }));
         throw error;
       }
@@ -162,58 +162,58 @@ export function useFileOperations() {
   /**
    * Create directory
    */
-  const createDir = useCallback(any: any) => {
+  const createDir = useCallback(async (path: string, recursive: boolean = true) => {
     setState(prev => ({ ...prev, loading: true, error: null }));
 
     try {
-      await createDirectory(any: any);
+      await createDirectory(path, recursive);
       setState(prev => ({ ...prev, loading: false, error: null }));
-    } catch (any: any) {
+    } catch (error) {
       const errorMessage =
-        error instanceof Error ? error?.message : 'Failed to create directory';
+        error instanceof Error ? error.message : 'Failed to create directory';
       setState(prev => ({ ...prev, loading: false, error: errorMessage }));
       throw error;
     }
   }, []);
 
   /**
-   * Upload file (any: any)
+   * Upload file (write with progress)
    */
   const upload = useCallback(
     async (
       path: string,
       content: string,
-      onProgress?: (any: any) => void
+      onProgress?: (progress: UploadProgress) => void
     ) => {
       setState(prev => ({ ...prev, loading: true, progress: 0, error: null }));
 
       try {
         const chunkSize = 64 * 1024; // 64KB chunks
-        const totalSize = content?.length;
+        const totalSize = content.length;
         let uploaded = 0;
 
         // Simulate chunked upload with progress
-        while (any: any) {
-          const chunk = content?.slice(any: any);
-          uploaded += chunk?.length;
+        while (uploaded < totalSize) {
+          const chunk = content.slice(uploaded, uploaded + chunkSize);
+          uploaded += chunk.length;
 
-          const percentage = Math?.round(any: any) * 100);
+          const percentage = Math.round((uploaded / totalSize) * 100);
           setState(prev => ({ ...prev, progress: percentage }));
 
-          if (any: any) {
+          if (onProgress) {
             onProgress({ loaded: uploaded, total: totalSize, percentage });
           }
 
-          // Small delay to show progress (any: any)
+          // Small delay to show progress (remove in production if backend supports chunking)
           await new Promise(resolve => setTimeout(resolve, 10));
         }
 
         // Write complete file
-        await writeFile(any: any);
+        await writeFile(path, content);
         setState(prev => ({ ...prev, loading: false, progress: 100, error: null }));
-      } catch (any: any) {
+      } catch (error) {
         const errorMessage =
-          error instanceof Error ? error?.message : 'Failed to upload file';
+          error instanceof Error ? error.message : 'Failed to upload file';
         setState(prev => ({
           ...prev,
           loading: false,
@@ -227,39 +227,39 @@ export function useFileOperations() {
   );
 
   /**
-   * Download file (any: any)
+   * Download file (read with progress)
    */
   const download = useCallback(
-    async (any: any) => {
+    async (path: string, onProgress?: (progress: UploadProgress) => void) => {
       setState(prev => ({ ...prev, loading: true, progress: 0, error: null }));
 
       try {
         // Get file size first
-        const fileInfoResponse = await getFileInfo(any: any);
-        const fileInfo = fileInfoResponse?.data;
+        const fileInfoResponse = await getFileInfo(path);
+        const fileInfo = fileInfoResponse.data;
 
-        if (any: any) {
+        if (!fileInfo) {
           throw new Error('File info not available');
         }
 
-        const totalSize = fileInfo?.size;
+        const totalSize = fileInfo.size;
 
         // Read file
-        const contentResponse = await readFile(any: any);
-        const content = contentResponse?.data;
+        const contentResponse = await readFile(path);
+        const content = contentResponse.data;
 
         // Simulate progress
         setState(prev => ({ ...prev, progress: 100 }));
 
-        if (any: any) {
+        if (onProgress) {
           onProgress({ loaded: totalSize, total: totalSize, percentage: 100 });
         }
 
         setState(prev => ({ ...prev, loading: false, progress: null, error: null }));
         return content;
-      } catch (any: any) {
+      } catch (error) {
         const errorMessage =
-          error instanceof Error ? error?.message : 'Failed to download file';
+          error instanceof Error ? error.message : 'Failed to download file';
         setState(prev => ({
           ...prev,
           loading: false,

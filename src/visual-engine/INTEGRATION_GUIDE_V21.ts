@@ -2,16 +2,16 @@
  * TITANE∞ v21.0.0 — Visual Engine Integration Example
  *
  * This file demonstrates how to integrate the Visual Engine v21
- * into App?.tsx or any root component.
+ * into App.tsx or any root component.
  *
  * INTEGRATION STEPS:
  *
  * 1. Import the store hook and types
- * 2. Initialize the engine in useEffect (any: any)
+ * 2. Initialize the engine in useEffect (on mount)
  * 3. Start the engine
  * 4. Clean up on unmount
  *
- * USAGE IN App?.tsx:
+ * USAGE IN App.tsx:
  *
  * ```tsx
  * import { useEffect } from 'react';
@@ -25,15 +25,15 @@
  *     // Initialize engine on mount
  *     initEngine(
  *       {
- *         cognitive: CognitiveState?.IDLE,
- *         emotional: EmotionalTone?.CALM,
+ *         cognitive: CognitiveState.IDLE,
+ *         emotional: EmotionalTone.CALM,
  *         systemLoad: 0,
- *         conversationContext: ConversationContext?.WAITING,
+ *         conversationContext: ConversationContext.WAITING,
  *       },
  *       {
  *         enableParticles: true,
  *         enableEffects: true,
- *         performanceMode: import?.meta?.env?.DEV ? 'high' : 'medium',
+ *         performanceMode: import.meta.env.DEV ? 'high' : 'medium',
  *         targetFPS: 60,
  *       }
  *     );
@@ -63,18 +63,18 @@
  *   const { setCognitiveState, setEmotionalTone } = useVisualStateStoreV21();
  *
  *   const handleUserTyping = () => {
- *     setCognitiveState(CognitiveState?.LISTENING, 300);
+ *     setCognitiveState(CognitiveState.LISTENING, 300);
  *   };
  *
  *   const handleMessageSent = () => {
- *     setCognitiveState(CognitiveState?.THINKING, 500);
- *     setEmotionalTone(EmotionalTone?.CURIOUS, 500);
+ *     setCognitiveState(CognitiveState.THINKING, 500);
+ *     setEmotionalTone(EmotionalTone.CURIOUS, 500);
  *   };
  *
  *   return (
  *     <input
  *       onInput={handleUserTyping}
- *       onKeyDown={(any: any) => e?.key === 'Enter' && handleMessageSent()}
+ *       onKeyDown={(e) => e.key === 'Enter' && handleMessageSent()}
  *     />
  *   );
  * }
@@ -92,16 +92,16 @@
  *   return (
  *     <div>
  *       <h3>Current State</h3>
- *       <p>Cognitive: {state?.cognitive}</p>
- *       <p>Emotional: {state?.emotional}</p>
- *       <p>Load: {state?.systemLoad}%</p>
+ *       <p>Cognitive: {state.cognitive}</p>
+ *       <p>Emotional: {state.emotional}</p>
+ *       <p>Load: {state.systemLoad}%</p>
  *
  *       {config && (
  *         <>
  *           <h3>Visual Config</h3>
- *           <p>Color: {config?.baseColor}</p>
- *           <p>Particles: {config?.particleDensity}</p>
- *           <p>Speed: {config?.particleSpeed?.toFixed(2)}</p>
+ *           <p>Color: {config.baseColor}</p>
+ *           <p>Particles: {config.particleDensity}</p>
+ *           <p>Speed: {config.particleSpeed.toFixed(2)}</p>
  *         </>
  *       )}
  *     </div>
@@ -119,11 +119,11 @@
  *
  *   return (
  *     <div>
- *       <p>FPS: {metrics?.fps}</p>
- *       <p>Frame Time: {metrics?.frameTime?.toFixed(2)}ms</p>
- *       <p>Particles: {metrics?.particleCount}</p>
- *       <p>Effects: {metrics?.effectsActive}</p>
- *       <p>Transitions: {metrics?.stateTransitions}</p>
+ *       <p>FPS: {metrics.fps}</p>
+ *       <p>Frame Time: {metrics.frameTime.toFixed(2)}ms</p>
+ *       <p>Particles: {metrics.particleCount}</p>
+ *       <p>Effects: {metrics.effectsActive}</p>
+ *       <p>Transitions: {metrics.stateTransitions}</p>
  *     </div>
  *   );
  * }
@@ -145,7 +145,7 @@
  *       setSystemLoad(cpuUsage, 1000); // 1s transition
  *     }, 2000);
  *
- *     return (any: any);
+ *     return () => clearInterval(interval);
  *   }, [setSystemLoad]);
  *
  *   return null;
@@ -160,25 +160,25 @@
  * function ConversationManager() {
  *   const { setCognitiveState, setConversationContext } = useVisualStateStoreV21();
  *
- *   const handleUserMessage = async (any: any) => {
+ *   const handleUserMessage = async (message: string) => {
  *     // User sends message
- *     setCognitiveState(any: any);
- *     setConversationContext(any: any);
+ *     setCognitiveState(CognitiveState.LISTENING);
+ *     setConversationContext(ConversationContext.CONVERSING);
  *
  *     // Send to backend
- *     setCognitiveState(any: any);
- *     const response = await sendMessage(any: any);
+ *     setCognitiveState(CognitiveState.THINKING);
+ *     const response = await sendMessage(message);
  *
  *     // Processing response
- *     setCognitiveState(any: any);
+ *     setCognitiveState(CognitiveState.PROCESSING);
  *
  *     // Speaking response
- *     setCognitiveState(any: any);
- *     await speakResponse(any: any);
+ *     setCognitiveState(CognitiveState.SPEAKING);
+ *     await speakResponse(response);
  *
  *     // Back to idle
- *     setCognitiveState(any: any);
- *     setConversationContext(any: any);
+ *     setCognitiveState(CognitiveState.IDLE);
+ *     setConversationContext(ConversationContext.WAITING);
  *   };
  *
  *   return <ChatInterface onMessage={handleUserMessage} />;

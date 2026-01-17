@@ -65,9 +65,9 @@ export interface InterventionProtocol {
   name: string;
   description: string;
   durationSeconds: number;
-  steps: InterventionStep?.[];
-  suitableFor: StressLevel?.[];
-  requiredContext?: string?.[];
+  steps: InterventionStep[];
+  suitableFor: StressLevel[];
+  requiredContext?: string[];
 }
 
 /**
@@ -128,7 +128,7 @@ export interface StressRegulationState {
   lastInterventionResult: InterventionResult | null;
 
   // Historique
-  interventionHistory: InterventionHistoryEntry?.[];
+  interventionHistory: InterventionHistoryEntry[];
 
   // Configuration utilisateur
   autoRegulationEnabled: boolean;
@@ -190,7 +190,7 @@ export interface InterventionSelectionContext {
   stressTrend: StressTrend;
   hourOfDay: number;
   agendaLoad: number; // 0-1
-  recentRejections: InterventionType?.[];
+  recentRejections: InterventionType[];
   weights: InterventionWeights;
 }
 
@@ -202,7 +202,7 @@ export interface InterventionRecommendation {
   protocol: InterventionProtocol;
   confidence: number;
   reason: string;
-  alternatives: InterventionType?.[];
+  alternatives: InterventionType[];
 }
 
 // ============================================================================
@@ -223,14 +223,14 @@ export interface StressRegulationConfig {
 
   // Apprentissage
   learningRate: number; // Vitesse d'apprentissage des poids
-  minWeightValue: number; // Poids minimum (any: any)
+  minWeightValue: number; // Poids minimum (éviter abandon total)
   maxWeightValue: number; // Poids maximum
 
   // Feedback
   feedbackTimeoutMs: number; // Temps pour donner un feedback
 
   // Protocoles activés
-  enabledInterventions: InterventionType?.[];
+  enabledInterventions: InterventionType[];
 }
 
 // ============================================================================

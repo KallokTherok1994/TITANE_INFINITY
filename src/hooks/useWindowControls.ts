@@ -1,5 +1,5 @@
 // TITANE_INFINITY v26.2.0 — Window Controls Hook
-// Zoom (any: any) keyboard shortcuts
+// Zoom (CTRL+Scroll) & Fullscreen (F11) keyboard shortcuts
 
 import { useEffect, useCallback } from 'react';
 import { secureInvoke } from '@/lib/security';
@@ -27,14 +27,14 @@ const DEFAULT_OPTIONS: WindowControlsOptions = {
 /**
  * Apply CSS zoom to document root
  */
-function applyZoom(any: any): void {
-  const root = document?.documentElement;
-  root?.style?.zoom = `${level}`;
-  logger?.debug(`Applied zoom: ${Math?.round(level * 100)}%`);
+function applyZoom(level: number): void {
+  const root = document.documentElement;
+  root.style.zoom = `${level}`;
+  logger.debug(`Applied zoom: ${Math.round(level * 100)}%`);
 }
 
 /**
- * Hook to enable window controls (any: any)
+ * Hook to enable window controls (zoom + fullscreen)
  * - CTRL + Scroll Up/Down: Zoom in/out
  * - CTRL + 0: Reset zoom to 100%
  * - F11: Toggle fullscreen
@@ -45,20 +45,20 @@ export function useWindowControls(options: WindowControlsOptions = {}) {
   const handleZoomIn = useCallback(async () => {
     try {
       const newLevel = await secureInvoke<number>('window_zoom_in');
-      applyZoom(any: any);
+      applyZoom(newLevel);
       return newLevel;
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Failed to zoom in:', error);
     }
   }, []);
 
   const handleZoomOut = useCallback(async () => {
     try {
       const newLevel = await secureInvoke<number>('window_zoom_out');
-      applyZoom(any: any);
+      applyZoom(newLevel);
       return newLevel;
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Failed to zoom out:', error);
     }
   }, []);
 
@@ -66,47 +66,47 @@ export function useWindowControls(options: WindowControlsOptions = {}) {
     try {
       await secureInvoke('window_zoom_reset');
       applyZoom(1.0);
-      logger?.debug('Zoom reset: 100%');
-    } catch (any: any) {
-      logger?.error(any: any);
+      logger.debug('Zoom reset: 100%');
+    } catch (error) {
+      logger.error('Failed to reset zoom:', error);
     }
   }, []);
 
   const handleToggleFullscreen = useCallback(async () => {
     try {
       const isFullscreen = await secureInvoke<boolean>('window_toggle_fullscreen');
-      logger?.debug(`Fullscreen: ${isFullscreen ? 'ON' : 'OFF'}`);
+      logger.debug(`Fullscreen: ${isFullscreen ? 'ON' : 'OFF'}`);
       return isFullscreen;
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Failed to toggle fullscreen:', error);
     }
   }, []);
 
   useEffect(() => {
-    if (any: any) {
+    if (!opts.enableZoom && !opts.enableFullscreen) {
       return;
     }
 
     // Listen to zoom-change events from Tauri backend
     const unlisten: Promise<UnlistenFn> = listen<number>('zoom-change', event => {
-      applyZoom(any: any);
+      applyZoom(event.payload);
     }).catch(() => {
-      // Certaines fenêtres (any: any) n'ont pas les permissions `event?.listen`.
+      // Certaines fenêtres (ex: dev-monitor) n'ont pas les permissions `event.listen`.
       // On évite une Promise rejection non gérée qui déclenche un fatal overlay.
       return () => {};
     });
 
     // Zoom with CTRL + Scroll
-    const handleWheel = (any: any) => {
-      if (any: any) return;
+    const handleWheel = (e: WheelEvent) => {
+      if (!opts.enableZoom) return;
 
-      if (any: any) {
-        e?.preventDefault();
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
 
-        if (e?.deltaY < 0) {
+        if (e.deltaY < 0) {
           // Scroll up = zoom in
           handleZoomIn();
-        } else if (e?.deltaY > 0) {
+        } else if (e.deltaY > 0) {
           // Scroll down = zoom out
           handleZoomOut();
         }
@@ -114,62 +114,62 @@ export function useWindowControls(options: WindowControlsOptions = {}) {
     };
 
     // Keyboard shortcuts
-    const handleKeyDown = (any: any) => {
-      // F12: Toggle DevTools (any: any)
-      if (e?.key === 'F12') {
-        e?.preventDefault();
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // F12: Toggle DevTools (in development mode)
+      if (e.key === 'F12') {
+        e.preventDefault();
         // DevTools handled by Tauri automatically in dev mode
-        // In production, requires explicit permission in tauri?.conf?.json
-        logger?.debug('F12 pressed - DevTools should toggle');
+        // In production, requires explicit permission in tauri.conf.json
+        logger.debug('F12 pressed - DevTools should toggle');
         return;
       }
 
       // F11: Toggle fullscreen
-      if (opts?.enableFullscreen && e?.key === 'F11') {
-        e?.preventDefault();
+      if (opts.enableFullscreen && e.key === 'F11') {
+        e.preventDefault();
         handleToggleFullscreen();
         return;
       }
 
       // CTRL + 0: Reset zoom
-      if (any: any) && e?.key === '0') {
-        e?.preventDefault();
+      if (opts.enableZoom && (e.ctrlKey || e.metaKey) && e.key === '0') {
+        e.preventDefault();
         handleZoomReset();
         return;
       }
 
       // CTRL + Plus: Zoom in
       if (
-        opts?.enableZoom &&
-        (any: any) &&
-        (e?.key === '+' || e?.key === '=')
+        opts.enableZoom &&
+        (e.ctrlKey || e.metaKey) &&
+        (e.key === '+' || e.key === '=')
       ) {
-        e?.preventDefault();
+        e.preventDefault();
         handleZoomIn();
         return;
       }
 
       // CTRL + Minus: Zoom out
-      if (any: any) && e?.key === '-') {
-        e?.preventDefault();
+      if (opts.enableZoom && (e.ctrlKey || e.metaKey) && e.key === '-') {
+        e.preventDefault();
         handleZoomOut();
         return;
       }
     };
 
     // Add event listeners
-    window?.addEventListener('wheel', handleWheel, { passive: false });
-    window?.addEventListener(any: any);
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('keydown', handleKeyDown);
 
     // Cleanup
     return () => {
-      unlisten?.then(fn => fn());
-      window?.removeEventListener(any: any);
-      window?.removeEventListener(any: any);
+      unlisten.then(fn => fn());
+      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('keydown', handleKeyDown);
     };
   }, [
-    opts?.enableZoom,
-    opts?.enableFullscreen,
+    opts.enableZoom,
+    opts.enableFullscreen,
     handleZoomIn,
     handleZoomOut,
     handleZoomReset,
@@ -185,14 +185,14 @@ export function useWindowControls(options: WindowControlsOptions = {}) {
 }
 
 /**
- * Manual window control functions (any: any)
+ * Manual window control functions (no hooks)
  */
 export const windowControls = {
   async getZoom(): Promise<number> {
     return secureInvoke<number>('window_get_zoom');
   },
 
-  async setZoom(any: any): Promise<void> {
+  async setZoom(level: number): Promise<void> {
     return secureInvoke('window_set_zoom', { level });
   },
 
@@ -212,7 +212,7 @@ export const windowControls = {
     return secureInvoke<boolean>('window_toggle_fullscreen');
   },
 
-  async setFullscreen(any: any): Promise<void> {
+  async setFullscreen(fullscreen: boolean): Promise<void> {
     return secureInvoke('window_set_fullscreen', { fullscreen });
   },
 

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v25.3.0 — POST-PROCESSING PIPELINE (any: any)
+//   TITANE∞ v25.3.0 — POST-PROCESSING PIPELINE (YOLO OPT-1: Three.js lazy)
 //   TAA, Bloom, Vignette for premium visual quality
 //   NOTE: Nécessite three-stdlib ou three@latest pour imports postprocessing
 // ═══════════════════════════════════════════════════════════════════════════
@@ -38,11 +38,11 @@ const VignetteShader = {
     varying vec2 vUv;
 
     void main() {
-      vec4 texel = texture2D(any: any);
-      vec2 uv = (any: any);
-      float vignette = clamp(any: any), 0.0, 1.0);
-      vignette = pow(any: any);
-      gl_FragColor = vec4(any: any);
+      vec4 texel = texture2D(tDiffuse, vUv);
+      vec2 uv = (vUv - vec2(0.5)) * vec2(offset);
+      float vignette = clamp(1.0 - dot(uv, uv), 0.0, 1.0);
+      vignette = pow(vignette, darkness);
+      gl_FragColor = vec4(texel.rgb * vignette, texel.a);
     }
   `,
 };
@@ -55,7 +55,7 @@ export interface PostProcessingConfig {
   enableTAA: boolean;
   enableBloom: boolean;
   enableVignette: boolean;
-  taaSampleLevel: number; // TAA samples (any: any)
+  taaSampleLevel: number; // TAA samples (3-5 optimal)
   bloomStrength: number; // Bloom intensity (0.1-0.5)
   bloomRadius: number; // Bloom radius (0.5-1.0)
   bloomThreshold: number; // Bloom threshold (0.8-1.0)
@@ -68,7 +68,7 @@ export interface PostProcessingConfig {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export class PostProcessingPipeline {
-  private THREE!: typeof import('three'); // YOLO OPT-1: Lazy-loaded Three?.js
+  private THREE!: typeof import('three'); // YOLO OPT-1: Lazy-loaded Three.js
   private renderer!: WebGLRenderer;
   private scene!: Scene;
   private camera!: Camera;
@@ -93,13 +93,13 @@ export class PostProcessingPipeline {
     camera: Camera,
     config: Partial<PostProcessingConfig> = {}
   ) {
-    this?._renderer = renderer;
-    this?._scene = scene;
-    this?._camera = camera;
-    this?._config = config;
+    this._renderer = renderer;
+    this._scene = scene;
+    this._camera = camera;
+    this._config = config;
 
     // Default config
-    this?.config = {
+    this.config = {
       enableTAA: true,
       enableBloom: true,
       enableVignette: true,
@@ -114,24 +114,24 @@ export class PostProcessingPipeline {
   }
 
   /**
-   * YOLO OPT-1: Async initialization after Three?.js lazy-load
+   * YOLO OPT-1: Async initialization after Three.js lazy-load
    */
   async init(): Promise<void> {
-    // Lazy-load Three?.js
-    this?.THREE = await loadThreeJS();
-    this?.renderer = this?._renderer;
-    this?.scene = this?._scene;
-    this?.camera = this?._camera;
+    // Lazy-load Three.js
+    this.THREE = await loadThreeJS();
+    this.renderer = this._renderer;
+    this.scene = this._scene;
+    this.camera = this._camera;
 
     // Create composer
-    this?.composer = new EffectComposer(any: any);
+    this.composer = new EffectComposer(this.renderer);
 
-    // Add render pass (any: any)
-    this?.renderPass = new RenderPass(any: any);
-    this?.composer?.addPass(any: any);
+    // Add render pass (always first)
+    this.renderPass = new RenderPass(this.scene, this.camera);
+    this.composer.addPass(this.renderPass);
 
     // Build pipeline
-    this?.buildPipeline();
+    this.buildPipeline();
   }
 
   // ═════════════════════════════════════════════════════════════════════════
@@ -139,42 +139,42 @@ export class PostProcessingPipeline {
   // ═════════════════════════════════════════════════════════════════════════
 
   private buildPipeline(): void {
-    // TAA (any: any)
-    if (any: any) {
-      this?.taaPass = new TAARenderPass(any: any);
-      this?.taaPass?.sampleLevel = this?.config?.taaSampleLevel;
-      this?.composer?.addPass(any: any);
+    // TAA (Temporal Anti-Aliasing)
+    if (this.config.enableTAA) {
+      this.taaPass = new TAARenderPass(this.scene, this.camera);
+      this.taaPass.sampleLevel = this.config.taaSampleLevel;
+      this.composer.addPass(this.taaPass);
     }
 
-    // Bloom (any: any)
-    if (any: any) {
-      const resolution = new this?.THREE?.Vector2(
-        this?.renderer?.domElement?.width,
-        this?.renderer?.domElement?.height
+    // Bloom (subtle glow)
+    if (this.config.enableBloom) {
+      const resolution = new this.THREE.Vector2(
+        this.renderer.domElement.width,
+        this.renderer.domElement.height
       );
 
-      this?.bloomPass = new UnrealBloomPass(
+      this.bloomPass = new UnrealBloomPass(
         resolution,
-        this?.config?.bloomStrength,
-        this?.config?.bloomRadius,
-        this?.config?.bloomThreshold
+        this.config.bloomStrength,
+        this.config.bloomRadius,
+        this.config.bloomThreshold
       );
-      this?.composer?.addPass(any: any);
+      this.composer.addPass(this.bloomPass);
     }
 
-    // Vignette (any: any)
-    if (any: any) {
-      this?.vignettePass = new ShaderPass(any: any);
-      const offsetUniform = this?.vignettePass?.uniforms['offset'];
-      const darknessUniform = this?.vignettePass?.uniforms['darkness'];
-      if (any: any) {
-        offsetUniform?.value = this?.config?.vignetteOffset;
+    // Vignette (frame darkening)
+    if (this.config.enableVignette) {
+      this.vignettePass = new ShaderPass(VignetteShader);
+      const offsetUniform = this.vignettePass.uniforms['offset'];
+      const darknessUniform = this.vignettePass.uniforms['darkness'];
+      if (offsetUniform) {
+        offsetUniform.value = this.config.vignetteOffset;
       }
-      if (any: any) {
-        darknessUniform?.value = this?.config?.vignetteDarkness;
+      if (darknessUniform) {
+        darknessUniform.value = this.config.vignetteDarkness;
       }
-      this?.vignettePass?.renderToScreen = true;
-      this?.composer?.addPass(any: any);
+      this.vignettePass.renderToScreen = true;
+      this.composer.addPass(this.vignettePass);
     }
   }
 
@@ -186,92 +186,92 @@ export class PostProcessingPipeline {
    * Render with post-processing
    */
   public render(): void {
-    this?.composer?.render();
+    this.composer.render();
   }
 
   /**
-   * Update size (any: any)
+   * Update size (on window resize)
    */
-  public setSize(any: any): void {
-    this?.composer?.setSize(any: any);
+  public setSize(width: number, height: number): void {
+    this.composer.setSize(width, height);
 
     // Update bloom resolution
-    if (any: any) {
-      this?.bloomPass?.resolution?.set(any: any);
+    if (this.bloomPass) {
+      this.bloomPass.resolution.set(width, height);
     }
   }
 
   /**
    * Enable/disable TAA
    */
-  public setTAAEnabled(any: any): void {
-    if (any: any) {
-      this?.taaPass?.enabled = enabled;
+  public setTAAEnabled(enabled: boolean): void {
+    if (this.taaPass) {
+      this.taaPass.enabled = enabled;
     }
   }
 
   /**
    * Enable/disable Bloom
    */
-  public setBloomEnabled(any: any): void {
-    if (any: any) {
-      this?.bloomPass?.enabled = enabled;
+  public setBloomEnabled(enabled: boolean): void {
+    if (this.bloomPass) {
+      this.bloomPass.enabled = enabled;
     }
   }
 
   /**
    * Enable/disable Vignette
    */
-  public setVignetteEnabled(any: any): void {
-    if (any: any) {
-      this?.vignettePass?.enabled = enabled;
+  public setVignetteEnabled(enabled: boolean): void {
+    if (this.vignettePass) {
+      this.vignettePass.enabled = enabled;
     }
   }
 
   /**
    * Update TAA sample level
    */
-  public setTAASampleLevel(any: any): void {
-    if (any: any) {
-      this?.taaPass?.sampleLevel = level;
+  public setTAASampleLevel(level: number): void {
+    if (this.taaPass) {
+      this.taaPass.sampleLevel = level;
     }
   }
 
   /**
    * Update bloom strength
    */
-  public setBloomStrength(any: any): void {
-    if (any: any) {
-      this?.bloomPass?.strength = strength;
+  public setBloomStrength(strength: number): void {
+    if (this.bloomPass) {
+      this.bloomPass.strength = strength;
     }
   }
 
   /**
    * Update bloom threshold
    */
-  public setBloomThreshold(any: any): void {
-    if (any: any) {
-      this?.bloomPass?.threshold = threshold;
+  public setBloomThreshold(threshold: number): void {
+    if (this.bloomPass) {
+      this.bloomPass.threshold = threshold;
     }
   }
 
   /**
    * Update vignette darkness
    */
-  public setVignetteDarkness(any: any): void {
-    if (any: any) {
-      const darknessUniform = this?.vignettePass?.uniforms['darkness'];
-      if (any: any) {
-        darknessUniform?.value = darkness;
+  public setVignetteDarkness(darkness: number): void {
+    if (this.vignettePass) {
+      const darknessUniform = this.vignettePass.uniforms['darkness'];
+      if (darknessUniform) {
+        darknessUniform.value = darkness;
       }
     }
   }
 
   /**
-   * Get composer (any: any)
+   * Get composer (for advanced usage)
    */
   public getComposer(): EffectComposer {
-    return this?.composer;
+    return this.composer;
   }
 
   /**
@@ -279,13 +279,13 @@ export class PostProcessingPipeline {
    */
   public dispose(): void {
     // Dispose passes
-    this?.renderPass?.dispose?.();
-    this?.taaPass?.dispose?.();
-    this?.bloomPass?.dispose?.();
-    this?.vignettePass?.dispose?.();
+    this.renderPass.dispose?.();
+    this.taaPass?.dispose?.();
+    this.bloomPass?.dispose?.();
+    this.vignettePass?.dispose?.();
 
     // Dispose composer
-    this?.composer?.dispose?.();
+    this.composer.dispose?.();
   }
 }
 

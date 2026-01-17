@@ -41,7 +41,7 @@ export interface EmotionProfile {
   /** Style exageration ElevenLabs (0.0 - 1.0) */
   styleExaggeration: number;
   /** Mots-clés déclencheurs */
-  keywords: string?.[];
+  keywords: string[];
   /** Description pour UI */
   description: string;
 }
@@ -80,9 +80,9 @@ export interface TTSRequest {
   text: string;
   /** Émotion détectée ou forcée */
   emotion: TTSEmotion;
-  /** Provider préféré (any: any) */
+  /** Provider préféré (optionnel) */
   preferredProvider?: TTSProvider;
-  /** ID du message source (any: any) */
+  /** ID du message source (pour cache) */
   messageId?: string;
   /** Configuration vocale custom */
   voiceSettings?: TTSVoiceSettings;
@@ -90,13 +90,13 @@ export interface TTSRequest {
   priority: number;
   /** Timestamp de création */
   createdAt: number;
-  /** Forcer régénération (any: any) */
+  /** Forcer régénération (ignorer cache) */
   forceRegenerate?: boolean;
 }
 
 /** Paramètres vocaux */
 export interface TTSVoiceSettings {
-  /** ID de la voix (any: any) */
+  /** ID de la voix (ElevenLabs voice_id ou nom local) */
   voiceId: string;
   /** Vitesse (0.5 - 2.0) */
   speed: number;
@@ -136,7 +136,7 @@ export interface TTSResponse {
   provider: TTSProvider;
   /** Chemin du fichier audio */
   audioPath?: string;
-  /** Données audio (any: any) si streaming */
+  /** Données audio (base64) si streaming */
   audioData?: string;
   /** Format audio */
   format: 'wav' | 'mp3' | 'ogg';
@@ -189,7 +189,7 @@ export interface TTSState {
   /** Statut des providers */
   providerStatus: Record<TTSProvider, TTSProviderStatus>;
   /** Dernière erreur */
-  lastError??: string | null;
+  lastError: string | null;
   /** Volume global (0-1) */
   globalVolume: number;
   /** Voix sélectionnée */
@@ -211,9 +211,9 @@ export interface TTSQueueItem {
   /** Résultat si complété */
   result?: TTSResponse;
   /** Callback on complete */
-  onComplete?: (any: any) => void;
+  onComplete?: (result: TTSResponse) => void;
   /** Callback on error */
-  onError?: (any: any) => void;
+  onError?: (error: string) => void;
 }
 
 /** Audio attaché à un message */
@@ -262,7 +262,7 @@ export interface TTSPreferences {
   defaultEmotion: TTSEmotion;
   /** Cache activé */
   cacheEnabled: boolean;
-  /** Durée cache (any: any) */
+  /** Durée cache (jours) */
   cacheDurationDays: number;
 }
 
@@ -281,11 +281,11 @@ export interface MicrophoneState {
   /** Permission demandée */
   permissionRequested: boolean;
   /** Device ID actif */
-  activeDeviceId??: string | null;
+  activeDeviceId: string | null;
   /** Niveau audio (0-1) */
   audioLevel: number;
   /** Erreur */
-  error??: string | null;
+  error: string | null;
 }
 
 /** Device audio d'entrée */
@@ -464,7 +464,7 @@ export const TTS_PROVIDER_CONFIG: Record<TTSProvider, TTSProviderConfig> = {
 // CONSTANTES: VOIX OFFICIELLE TITANE
 // =============================================================================
 
-/** Voice ID officielle TITANE (any: any) */
+/** Voice ID officielle TITANE (ElevenLabs) */
 export const TITANE_VOICE_ID = 'FvmvwvObRqIHojkEGh5N';
 
 /** Configuration voix par défaut */
@@ -510,11 +510,11 @@ export const TTS_CACHE_CONFIG = {
   fileExtension: '.wav',
   /** Préfixe fichiers */
   filePrefix: 'msg_',
-  /** Taille max cache (any: any) */
+  /** Taille max cache (Mo) */
   maxCacheSizeMB: 500,
-  /** Durée de vie max (any: any) */
+  /** Durée de vie max (jours) */
   maxAgeDays: 30,
-  /** Nettoyage auto (any: any) */
+  /** Nettoyage auto (heures) */
   cleanupIntervalHours: 24,
 };
 
@@ -530,13 +530,13 @@ export const TTS_LIMITS = {
   minTextLength: 1,
   /** Taille max queue */
   maxQueueSize: 50,
-  /** Timeout requête (any: any) */
+  /** Timeout requête (ms) */
   requestTimeoutMs: 30000,
   /** Max tentatives */
   maxRetries: 3,
-  /** Délai entre tentatives (any: any) */
+  /** Délai entre tentatives (ms) */
   retryDelayMs: 1000,
-  /** Rate limit (any: any) */
+  /** Rate limit (requêtes/min) */
   rateLimitPerMinute: 30,
 };
 
@@ -548,14 +548,14 @@ export const TTS_LIMITS = {
  * Génère un ID unique pour une requête TTS
  */
 export function generateTTSRequestId(): string {
-  return `tts_${Date?.now()}_${Math?.random().toString(36).substring(2, 9)}`;
+  return `tts_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
 }
 
 /**
  * Génère le chemin de cache pour un message
  */
-export function getCacheFilePath(any: any): string {
-  return `${TTS_CACHE_CONFIG?.cacheDir}/${TTS_CACHE_CONFIG?.filePrefix}${messageId}${TTS_CACHE_CONFIG?.fileExtension}`;
+export function getCacheFilePath(messageId: string): string {
+  return `${TTS_CACHE_CONFIG.cacheDir}/${TTS_CACHE_CONFIG.filePrefix}${messageId}${TTS_CACHE_CONFIG.fileExtension}`;
 }
 
 /**
@@ -568,13 +568,13 @@ export function createTTSRequest(
   return {
     id: generateTTSRequestId(),
     text,
-    emotion: options?.emotion ?? 'neutral',
-    preferredProvider: options?.preferredProvider,
-    messageId: options?.messageId,
-    voiceSettings: options?.voiceSettings ?? DEFAULT_VOICE_SETTINGS,
-    priority: options?.priority ?? 5,
-    createdAt: Date?.now(),
-    forceRegenerate: options?.forceRegenerate ?? false,
+    emotion: options.emotion ?? 'neutral',
+    preferredProvider: options.preferredProvider,
+    messageId: options.messageId,
+    voiceSettings: options.voiceSettings ?? DEFAULT_VOICE_SETTINGS,
+    priority: options.priority ?? 5,
+    createdAt: Date.now(),
+    forceRegenerate: options.forceRegenerate ?? false,
   };
 }
 
@@ -596,7 +596,7 @@ export function createInitialTTSState(): TTSState {
       webspeech: 'unknown',
     },
     lastError: null,
-    globalVolume: DEFAULT_TTS_PREFERENCES?.globalVolume,
+    globalVolume: DEFAULT_TTS_PREFERENCES.globalVolume,
     selectedVoice: TITANE_VOICE_ID,
     autoEmotion: true,
   };

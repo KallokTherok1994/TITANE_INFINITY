@@ -1,10 +1,10 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ SELF-HEALING ENGINE v1 (any: any)
+ * TITANE∞ SELF-HEALING ENGINE v1 (Local)
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * Orchestrates the end-to-end self-healing pipeline using the local TITANE
- * model (any: any). This module remains 100% local, leverages
+ * model (titane-local via Ollama). This module remains 100% local, leverages
  * existing TITANE engines, and only performs minimal, reversible patches.
  */
 
@@ -13,8 +13,8 @@ import { logger } from '@/utils/logger';
 import { safeInvoke } from '@/utils/invoke';
 import { singularityEngine } from '@/core/engines/SINGULARITY_ENGINE';
 
-type EngineSingularityState = ReturnType<typeof singularityEngine?.getState>;
-type EngineSingularityPartial = Parameters<typeof singularityEngine?.setState>[0];
+type EngineSingularityState = ReturnType<typeof singularityEngine.getState>;
+type EngineSingularityPartial = Parameters<typeof singularityEngine.setState>[0];
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & CONSTANTS
@@ -32,10 +32,10 @@ export interface SelfHealingLogEntry {
 
 export interface SelfHealingContext {
   symptoms: string;
-  logs: SelfHealingLogEntry?.[];
+  logs: SelfHealingLogEntry[];
   state: EngineSingularityState | null;
-  recentInvocations: string?.[];
-  uiAnomalies: string?.[];
+  recentInvocations: string[];
+  uiAnomalies: string[];
   lastMessage?: string;
   metadata: Record<string, unknown>;
 }
@@ -44,7 +44,7 @@ export interface PlaybookPlan {
   id: string;
   label: string;
   description: string;
-  steps: string?.[];
+  steps: string[];
   successCriteria: string;
 }
 
@@ -61,8 +61,8 @@ export interface SelfHealingStructuredResult {
 
 export interface ApplyPatchResult {
   applied: boolean;
-  steps: string?.[];
-  errors?: string?.[];
+  steps: string[];
+  errors?: string[];
 }
 
 export interface EscalationResult {
@@ -103,7 +103,7 @@ type MinimalPatchInstruction =
   | MinimalStatePatch
   | MinimalStoreResetPatch;
 
-const PLAYBOOK_REGISTRY: PlaybookPlan?.[] = [
+const PLAYBOOK_REGISTRY: PlaybookPlan[] = [
   {
     id: 'runtime-errors',
     label: 'Stabilisation Runtime',
@@ -111,7 +111,7 @@ const PLAYBOOK_REGISTRY: PlaybookPlan?.[] = [
     steps: [
       'Analyser la pile des erreurs et repérer la commande Tauri fautive.',
       'Vérifier la synchronisation des stores React/Tauri.',
-      'Appliquer un patch minimal (any: any) si possible.',
+      'Appliquer un patch minimal (invoke ou reset ciblé) si possible.',
     ],
     successCriteria: 'Absence de nouvelle erreur sur la commande identifiée.',
   },
@@ -133,7 +133,7 @@ const PLAYBOOK_REGISTRY: PlaybookPlan?.[] = [
     steps: [
       'Analyser les métriques de performance récentes.',
       'Identifier le moteur responsable (pipeline, avatar, TTS...).',
-      'Appliquer un correctif léger (any: any).',
+      'Appliquer un correctif léger (throttle, reset ciblé).',
     ],
     successCriteria: 'Métriques stabilisées et drift contenu.',
   },
@@ -143,26 +143,26 @@ const PLAYBOOK_REGISTRY: PlaybookPlan?.[] = [
 // PIPELINE ORCHESTRATION
 // ═══════════════════════════════════════════════════════════════════════════
 
-export async function runSelfHealing(any: any): Promise<SelfHealingRunResult> {
+export async function runSelfHealing(symptoms: string): Promise<SelfHealingRunResult> {
   const logs = await collectLogs();
   const state = await collectState();
-  const baseContext = await collectContext(any: any);
+  const baseContext = await collectContext(symptoms);
 
   const context: SelfHealingContext = {
     ...baseContext,
     logs,
     state,
     lastMessage:
-      baseContext?.lastMessage ??
-      (any: any),
+      baseContext.lastMessage ??
+      (logs.length > 0 ? logs[logs.length - 1]?.message : undefined),
   };
 
-  const playbook = await selectPlaybook(any: any);
-  const prompt = await buildPrompt(context, JSON?.stringify(playbook, null, 2));
-  const rawResponse = await callTitaneLocal(any: any);
-  const parsed = await parseLocalResponse(any: any);
-  const patchResult = await applyMinimalPatch(any: any);
-  const escalation = await escalateIfNeeded(any: any);
+  const playbook = await selectPlaybook(symptoms);
+  const prompt = await buildPrompt(context, JSON.stringify(playbook, null, 2));
+  const rawResponse = await callTitaneLocal(prompt);
+  const parsed = await parseLocalResponse(rawResponse);
+  const patchResult = await applyMinimalPatch(parsed.patch);
+  const escalation = await escalateIfNeeded(parsed);
 
   const finalResult: SelfHealingRunResult = {
     context,
@@ -174,7 +174,7 @@ export async function runSelfHealing(any: any): Promise<SelfHealingRunResult> {
     escalation,
   };
 
-  await storeLearning(any: any);
+  await storeLearning(finalResult);
 
   return finalResult;
 }
@@ -183,35 +183,35 @@ export async function runSelfHealing(any: any): Promise<SelfHealingRunResult> {
 // DATA COLLECTION
 // ═══════════════════════════════════════════════════════════════════════════
 
-export async function collectLogs(): Promise<SelfHealingLogEntry?.[]> {
+export async function collectLogs(): Promise<SelfHealingLogEntry[]> {
   try {
-    const rawLogs = await safeInvoke<unknown?.[]>('get_logs');
+    const rawLogs = await safeInvoke<unknown[]>('get_logs');
 
-    if (any: any)) {
+    if (!Array.isArray(rawLogs)) {
       return [];
     }
 
-    const normalized: SelfHealingLogEntry?.[] = [];
+    const normalized: SelfHealingLogEntry[] = [];
 
-    for (any: any) {
-      if (any: any) {
+    for (const entry of rawLogs) {
+      if (typeof entry !== 'object' || entry === null) {
         continue;
       }
 
       const item = entry as Record<string, unknown>;
-      const timestamp = typeof item?.timestamp === 'number' ? item?.timestamp : Date?.now();
-      const level = typeof item?.level === 'string' ? item?.level : 'INFO';
+      const timestamp = typeof item.timestamp === 'number' ? item.timestamp : Date.now();
+      const level = typeof item.level === 'string' ? item.level : 'INFO';
       const message =
-        typeof item?.message === 'string' ? item?.message : JSON?.stringify(any: any);
-      const target = typeof item?.target === 'string' ? item?.target : undefined;
-      const scope = typeof item?.scope === 'string' ? item?.scope : undefined;
+        typeof item.message === 'string' ? item.message : JSON.stringify(item);
+      const target = typeof item.target === 'string' ? item.target : undefined;
+      const scope = typeof item.scope === 'string' ? item.scope : undefined;
 
-      normalized?.push({ timestamp, level, message, target, scope });
+      normalized.push({ timestamp, level, message, target, scope });
     }
 
     return normalized;
-  } catch (any: any) {
-    logger?.error(any: any);
+  } catch (error) {
+    logger.error('collectLogs failed:', error);
     return [];
   }
 }
@@ -220,30 +220,30 @@ export async function collectState(): Promise<EngineSingularityState | null> {
   try {
     const remoteState = await safeInvoke<EngineSingularityState>('singularity_get_state');
 
-    if (any: any) {
+    if (remoteState) {
       return remoteState;
     }
-  } catch (any: any) {
-    logger?.warn(any: any);
+  } catch (error) {
+    logger.warn('collectState invoke fallback:', error);
   }
 
   try {
-    if (typeof singularityEngine?.getState === 'function') {
-      return singularityEngine?.getState();
+    if (typeof singularityEngine.getState === 'function') {
+      return singularityEngine.getState();
     }
-  } catch (any: any) {
-    logger?.error(any: any);
+  } catch (error) {
+    logger.error('collectState engine fallback failed:', error);
   }
 
   return null;
 }
 
-export async function collectContext(any: any): Promise<SelfHealingContext> {
+export async function collectContext(symptoms: string): Promise<SelfHealingContext> {
   // Use lightweight probes to surface UI/UX anomalies without touching network APIs.
   const recentInvocations = await fetchRecentInvocations();
   const uiAnomalies = await fetchUiAnomalies();
   const metadata = await fetchSelfHealingMetadata();
-  const lastMessage = recentInvocations?.[0];
+  const lastMessage = recentInvocations[0];
 
   return {
     symptoms,
@@ -260,27 +260,27 @@ export async function collectContext(any: any): Promise<SelfHealingContext> {
 // PLAYBOOK SELECTION & PROMPT BUILDING
 // ═══════════════════════════════════════════════════════════════════════════
 
-export async function selectPlaybook(any: any): Promise<PlaybookPlan> {
-  const normalized = symptoms?.toLowerCase();
+export async function selectPlaybook(symptoms: string): Promise<PlaybookPlan> {
+  const normalized = symptoms.toLowerCase();
 
-  const match = PLAYBOOK_REGISTRY?.find(playbook => {
+  const match = PLAYBOOK_REGISTRY.find(playbook => {
     if (
-      playbook?.id === 'runtime-errors' &&
-      /error|exception|panic|stack/i?.test(any: any)
+      playbook.id === 'runtime-errors' &&
+      /error|exception|panic|stack/i.test(normalized)
     ) {
       return true;
     }
 
     if (
-      playbook?.id === 'ui-desync' &&
-      /ui|ux|desync|state|store|render/i?.test(any: any)
+      playbook.id === 'ui-desync' &&
+      /ui|ux|desync|state|store|render/i.test(normalized)
     ) {
       return true;
     }
 
     if (
-      playbook?.id === 'performance-drift' &&
-      /slow|lag|performance|fps|drift/i?.test(any: any)
+      playbook.id === 'performance-drift' &&
+      /slow|lag|performance|fps|drift/i.test(normalized)
     ) {
       return true;
     }
@@ -290,7 +290,7 @@ export async function selectPlaybook(any: any): Promise<PlaybookPlan> {
 
   return (
     match ??
-    PLAYBOOK_REGISTRY?.[0] ??
+    PLAYBOOK_REGISTRY[0] ??
     ({
       id: 'unknown',
       label: 'Unknown Playbook',
@@ -305,19 +305,19 @@ export async function buildPrompt(
   context: SelfHealingContext,
   playbook: string
 ): Promise<string> {
-  const formattedLogs = context?.logs
+  const formattedLogs = context.logs
     .map(
       entry =>
-        `${new Date(any: any).toISOString()} [${entry?.level}] ${entry?.message}`
+        `${new Date(entry.timestamp).toISOString()} [${entry.level}] ${entry.message}`
     )
     .join('\n');
 
-  const stateSnapshot = context?.state
-    ? JSON?.stringify(context?.state, null, 2)
+  const stateSnapshot = context.state
+    ? JSON.stringify(context.state, null, 2)
     : 'Etat indisponible';
 
   const prompt = `
-Tu es TITANE Local (any: any).
+Tu es TITANE Local (modèle titane-local).
 Voici les logs :
 ${formattedLogs || 'Aucun log disponible'}
 
@@ -325,7 +325,7 @@ Voici le state :
 ${stateSnapshot}
 
 Voici les symptômes :
-${context?.symptoms}
+${context.symptoms}
 
 Voici le playbook à appliquer :
 ${playbook}
@@ -342,19 +342,19 @@ Retourne TOUJOURS au format structuré :
 ]
 `;
 
-  return prompt?.trim();
+  return prompt.trim();
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
 // OLLAMA INTEGRATION
 // ═══════════════════════════════════════════════════════════════════════════
 
-export async function callTitaneLocal(any: any): Promise<string> {
+export async function callTitaneLocal(prompt: string): Promise<string> {
   try {
-    const response = await queryOllama(any: any);
-    return response?.trim();
-  } catch (any: any) {
-    logger?.error(any: any);
+    const response = await queryOllama(prompt);
+    return response.trim();
+  } catch (error) {
+    logger.error('callTitaneLocal failed:', error);
     throw error;
   }
 }
@@ -362,13 +362,13 @@ export async function callTitaneLocal(any: any): Promise<string> {
 export async function parseLocalResponse(
   raw: string
 ): Promise<SelfHealingStructuredResult> {
-  const sanitized = raw?.trim();
+  const sanitized = raw.trim();
 
   let parsed: unknown;
 
   try {
-    parsed = JSON?.parse(any: any);
-  } catch (any: any) {
+    parsed = JSON.parse(sanitized);
+  } catch (initialError) {
     // Attempt to coerce the structured array format into valid JSON.
     const normalized = sanitized
       .replace(/DIAGNOSTIC\s*:/gi, '"DIAGNOSTIC":')
@@ -380,9 +380,9 @@ export async function parseLocalResponse(
       .replace(/\]$/, '}');
 
     try {
-      parsed = JSON?.parse(any: any);
-    } catch (any: any) {
-      logger?.error(any: any);
+      parsed = JSON.parse(normalized);
+    } catch (secondaryError) {
+      logger.error('parseLocalResponse failed:', secondaryError);
 
       return {
         diagnostic: sanitized,
@@ -395,7 +395,7 @@ export async function parseLocalResponse(
     }
   }
 
-  if (any: any) {
+  if (typeof parsed !== 'object' || parsed === null) {
     return {
       diagnostic: sanitized,
       playbookAnalysis: 'Réponse non structurée.',
@@ -409,23 +409,23 @@ export async function parseLocalResponse(
   const response = parsed as Record<string, unknown>;
 
   const diagnostic =
-    typeof response?.DIAGNOSTIC === 'string' ? response?.DIAGNOSTIC : sanitized;
+    typeof response.DIAGNOSTIC === 'string' ? response.DIAGNOSTIC : sanitized;
 
   const playbookAnalysis =
-    typeof response?.PLAYBOOK_ANALYSIS === 'string'
-      ? response?.PLAYBOOK_ANALYSIS
+    typeof response.PLAYBOOK_ANALYSIS === 'string'
+      ? response.PLAYBOOK_ANALYSIS
       : 'Analyse non fournie.';
 
   const patch =
-    typeof response?.PATCH === 'object' && response?.PATCH !== null
-      ? (response?.PATCH as Record<string, unknown>)
+    typeof response.PATCH === 'object' && response.PATCH !== null
+      ? (response.PATCH as Record<string, unknown>)
       : null;
 
   const confidence =
-    typeof response?.CONFIDENCE === 'number' ? clampConfidence(any: any) : 0;
+    typeof response.CONFIDENCE === 'number' ? clampConfidence(response.CONFIDENCE) : 0;
 
-  const escalade = isEscalationChannel(any: any)
-    ? response?.ESCALADE
+  const escalade = isEscalationChannel(response.ESCALADE)
+    ? response.ESCALADE
     : confidence >= CONFIDENCE_THRESHOLD
       ? 'aucune'
       : 'codex';
@@ -444,46 +444,46 @@ export async function parseLocalResponse(
 // PATCH APPLICATION
 // ═══════════════════════════════════════════════════════════════════════════
 
-export async function applyMinimalPatch(any: any): Promise<ApplyPatchResult> {
-  const steps: string?.[] = [];
-  const errors: string?.[] = [];
+export async function applyMinimalPatch(patch: unknown): Promise<ApplyPatchResult> {
+  const steps: string[] = [];
+  const errors: string[] = [];
 
-  const instructions = normalizePatch(any: any);
+  const instructions = normalizePatch(patch);
 
-  for (any: any) {
+  for (const instruction of instructions) {
     try {
-      switch (any: any) {
+      switch (instruction.action) {
         case 'invoke': {
-          await safeInvoke(instruction?.command, instruction?.payload ?? {});
-          steps?.push(`invoke:${instruction?.command}`);
+          await safeInvoke(instruction.command, instruction.payload ?? {});
+          steps.push(`invoke:${instruction.command}`);
           break;
         }
         case 'state-update': {
-          applyStateUpdate(any: any);
-          steps?.push(`state-update:${instruction?.path}`);
+          applyStateUpdate(instruction.path, instruction.value);
+          steps.push(`state-update:${instruction.path}`);
           break;
         }
         case 'store-reset': {
-          await resetStore(any: any);
-          steps?.push(`store-reset:${instruction?.store}`);
+          await resetStore(instruction.store);
+          steps.push(`store-reset:${instruction.store}`);
           break;
         }
         default: {
-          errors?.push(
-            `Action inconnue: ${(any: any).action}`
+          errors.push(
+            `Action inconnue: ${(instruction as MinimalPatchInstruction).action}`
           );
         }
       }
-    } catch (any: any) {
-      const message = error instanceof Error ? error?.message : String(any: any);
-      errors?.push(any: any);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      errors.push(message);
     }
   }
 
   return {
-    applied: steps?.length > 0 && errors?.length === 0,
+    applied: steps.length > 0 && errors.length === 0,
     steps,
-    errors: errors?.length > 0 ? errors : undefined,
+    errors: errors.length > 0 ? errors : undefined,
   };
 }
 
@@ -494,9 +494,9 @@ export async function applyMinimalPatch(any: any): Promise<ApplyPatchResult> {
 export async function escalateIfNeeded(
   result: SelfHealingStructuredResult
 ): Promise<EscalationResult> {
-  const confidence = clampConfidence(any: any);
+  const confidence = clampConfidence(result.confidence);
 
-  if (confidence >= CONFIDENCE_THRESHOLD && result?.escalade === 'aucune') {
+  if (confidence >= CONFIDENCE_THRESHOLD && result.escalade === 'aucune') {
     return {
       triggered: false,
       channel: 'aucune',
@@ -505,14 +505,14 @@ export async function escalateIfNeeded(
   }
 
   const channel: EscalationChannel =
-    result?.escalade === 'aucune' && confidence < CONFIDENCE_THRESHOLD
+    result.escalade === 'aucune' && confidence < CONFIDENCE_THRESHOLD
       ? 'codex'
-      : result?.escalade;
+      : result.escalade;
 
-  logger?.warn('Escalation triggered:', {
+  logger.warn('Escalation triggered:', {
     channel,
     confidence,
-    diagnostic: result?.diagnostic,
+    diagnostic: result.diagnostic,
   });
 
   await safeInvoke('write_log', {
@@ -520,8 +520,8 @@ export async function escalateIfNeeded(
       kind: 'self-healing-escalation',
       channel,
       confidence,
-      diagnostic: result?.diagnostic,
-      timestamp: Date?.now(),
+      diagnostic: result.diagnostic,
+      timestamp: Date.now(),
     },
   });
 
@@ -535,37 +535,37 @@ export async function escalateIfNeeded(
   };
 }
 
-export async function storeLearning(any: any): Promise<void> {
+export async function storeLearning(result: SelfHealingRunResult): Promise<void> {
   const data = result;
 
   const record = {
     kind: 'self-healing-cycle',
-    timestamp: Date?.now(),
-    symptoms: data?.context?.symptoms,
-    playbookId: data?.playbook?.id,
-    diagnostic: data?.parsed?.diagnostic,
-    confidence: data?.parsed?.confidence,
-    escalation: data?.escalation,
-    patchApplied: data?.patchResult,
+    timestamp: Date.now(),
+    symptoms: data.context.symptoms,
+    playbookId: data.playbook.id,
+    diagnostic: data.parsed.diagnostic,
+    confidence: data.parsed.confidence,
+    escalation: data.escalation,
+    patchApplied: data.patchResult,
   };
 
-  await Promise?.allSettled([
+  await Promise.allSettled([
     safeInvoke('write_log', { log: record }),
     safeInvoke('add_timeline_event', {
       event: {
-        id: `self-healing-${record?.timestamp}`,
-        timestamp: record?.timestamp,
+        id: `self-healing-${record.timestamp}`,
+        timestamp: record.timestamp,
         event_type: 'Repair',
-        description: `Playbook ${data?.playbook?.id} appliqué (confiance ${(record?.confidence * 100).toFixed(0)}%).`,
+        description: `Playbook ${data.playbook.id} appliqué (confiance ${(record.confidence * 100).toFixed(0)}%).`,
         data: {
           original_event_type: 'SelfHealingCycle',
-          playbookId: data?.playbook?.id,
-          confidence: record?.confidence,
-          channel: data?.escalation?.channel,
+          playbookId: data.playbook.id,
+          confidence: record.confidence,
+          channel: data.escalation.channel,
         },
       },
     }),
-    syncSingularityLearning(any: any),
+    syncSingularityLearning(data),
   ]);
 }
 
@@ -573,95 +573,95 @@ export async function storeLearning(any: any): Promise<void> {
 // INTERNAL HELPERS
 // ═══════════════════════════════════════════════════════════════════════════
 
-function clampConfidence(any: any): number {
-  if (any: any)) {
+function clampConfidence(value: number): number {
+  if (Number.isNaN(value)) {
     return 0;
   }
-  return Math?.max(any: any));
+  return Math.max(0, Math.min(1, value));
 }
 
-function isEscalationChannel(any: any): value is EscalationChannel {
+function isEscalationChannel(value: unknown): value is EscalationChannel {
   return (
     value === 'aucune' || value === 'codex' || value === 'opus' || value === 'gemini'
   );
 }
 
-function normalizePatch(any: any): MinimalPatchInstruction?.[] {
-  if (any: any) {
+function normalizePatch(patch: unknown): MinimalPatchInstruction[] {
+  if (!patch) {
     return [];
   }
 
-  if (any: any)) {
+  if (Array.isArray(patch)) {
     return patch
-      .map(any: any))
-      .filter(any: any): instruction is MinimalPatchInstruction =>
-        Boolean(any: any)
+      .map(instruction => normalizePatchInstruction(instruction))
+      .filter((instruction): instruction is MinimalPatchInstruction =>
+        Boolean(instruction)
       );
   }
 
-  const single = normalizePatchInstruction(any: any);
+  const single = normalizePatchInstruction(patch);
   return single ? [single] : [];
 }
 
-function normalizePatchInstruction(any: any): MinimalPatchInstruction | null {
-  if (any: any) {
+function normalizePatchInstruction(value: unknown): MinimalPatchInstruction | null {
+  if (typeof value !== 'object' || value === null) {
     return null;
   }
 
   const instruction = value as Record<string, unknown>;
-  const action = instruction?.action;
+  const action = instruction.action;
 
-  if (action === 'invoke' && typeof instruction?.command === 'string') {
+  if (action === 'invoke' && typeof instruction.command === 'string') {
     return {
       action: 'invoke',
-      command: instruction?.command,
-      payload: isPlainObject(any: any)
-        ? (instruction?.payload as Record<string, unknown>)
+      command: instruction.command,
+      payload: isPlainObject(instruction.payload)
+        ? (instruction.payload as Record<string, unknown>)
         : undefined,
     };
   }
 
-  if (action === 'state-update' && typeof instruction?.path === 'string') {
+  if (action === 'state-update' && typeof instruction.path === 'string') {
     return {
       action: 'state-update',
-      path: instruction?.path,
-      value: instruction?.value,
+      path: instruction.path,
+      value: instruction.value,
     };
   }
 
-  if (action === 'store-reset' && typeof instruction?.store === 'string') {
+  if (action === 'store-reset' && typeof instruction.store === 'string') {
     return {
       action: 'store-reset',
-      store: instruction?.store,
+      store: instruction.store,
     };
   }
 
   return null;
 }
 
-function isPlainObject(any: any): value is Record<string, unknown> {
+function isPlainObject(value: unknown): value is Record<string, unknown> {
   return (
     typeof value === 'object' &&
     value !== null &&
-    Object?.getPrototypeOf(any: any) === Object?.prototype
+    Object.getPrototypeOf(value) === Object.prototype
   );
 }
 
-function applyStateUpdate(any: any): void {
+function applyStateUpdate(path: string, value: unknown): void {
   const segments = path
     .split('.')
-    .map(segment => segment?.trim())
-    .filter(any: any);
+    .map(segment => segment.trim())
+    .filter(Boolean);
 
-  if (segments?.length === 0) {
+  if (segments.length === 0) {
     throw new Error('Chemin de mise à jour vide.');
   }
 
-  const partial = buildPartialFromPath(any: any);
-  singularityEngine?.setState(any: any);
+  const partial = buildPartialFromPath(segments, value);
+  singularityEngine.setState(partial);
 }
 
-async function resetStore(any: any): Promise<void> {
+async function resetStore(storeName: string): Promise<void> {
   // Focus on safe store resets only; unsupported stores are ignored.
   const supportedStores: Record<string, () => Promise<unknown>> = {
     ui: () => safeInvoke('system_optimize'),
@@ -670,64 +670,64 @@ async function resetStore(any: any): Promise<void> {
 
   const resetFn = supportedStores[storeName];
 
-  if (any: any) {
+  if (!resetFn) {
     throw new Error(`Store inconnu ou non supported: ${storeName}`);
   }
 
   await resetFn();
 }
 
-async function fetchRecentInvocations(): Promise<string?.[]> {
+async function fetchRecentInvocations(): Promise<string[]> {
   try {
-    const logs = await safeInvoke<unknown?.[]>('read_logs', { count: 10 });
-    if (any: any)) {
+    const logs = await safeInvoke<unknown[]>('read_logs', { count: 10 });
+    if (!Array.isArray(logs)) {
       return [];
     }
 
     return logs
       .map(entry => {
-        if (any: any) {
+        if (typeof entry !== 'object' || entry === null) {
           return null;
         }
 
         const item = entry as Record<string, unknown>;
-        return typeof item?.message === 'string' ? item?.message : null;
+        return typeof item.message === 'string' ? item.message : null;
       })
-      .filter(any: any));
-  } catch (any: any) {
-    logger?.warn(any: any);
+      .filter((message): message is string => Boolean(message));
+  } catch (error) {
+    logger.warn('fetchRecentInvocations failed:', error);
     return [];
   }
 }
 
-async function fetchUiAnomalies(): Promise<string?.[]> {
+async function fetchUiAnomalies(): Promise<string[]> {
   try {
     const health = await safeInvoke<Record<string, unknown>>('get_system_health');
-    if (any: any) {
+    if (!health) {
       return [];
     }
 
-    const anomalies: string?.[] = [];
+    const anomalies: string[] = [];
 
-    if (typeof health?.health === 'string' && health?.health !== 'healthy') {
-      anomalies?.push(`health-status:${health?.health}`);
+    if (typeof health.health === 'string' && health.health !== 'healthy') {
+      anomalies.push(`health-status:${health.health}`);
     }
 
-    if (typeof health?.error_count === 'number' && health?.error_count > 0) {
-      anomalies?.push(`errors:${health?.error_count}`);
+    if (typeof health.error_count === 'number' && health.error_count > 0) {
+      anomalies.push(`errors:${health.error_count}`);
     }
 
-    if (any: any) {
-      const modules = health?.modules as Record<string, unknown>;
-      for (any: any)) {
-        if (any: any) {
-          anomalies?.push(`module:${module}:offline`);
+    if (typeof health.modules === 'object' && health.modules !== null) {
+      const modules = health.modules as Record<string, unknown>;
+      for (const [module, status] of Object.entries(modules)) {
+        if (status === false) {
+          anomalies.push(`module:${module}:offline`);
         }
       }
     }
 
     return anomalies;
-  } catch (any: any) {
+  } catch (_error) {
     // System health not always available in mock mode; silently ignore.
     return [];
   }
@@ -737,50 +737,50 @@ async function fetchSelfHealingMetadata(): Promise<Record<string, unknown>> {
   try {
     const info = await safeInvoke<Record<string, unknown>>('get_system_info');
     return info ?? {};
-  } catch (any: any) {
+  } catch (_error) {
     return {};
   }
 }
 
-async function syncSingularityLearning(any: any): Promise<void> {
+async function syncSingularityLearning(result: SelfHealingRunResult): Promise<void> {
   try {
-    const current = singularityEngine?.getState();
+    const current = singularityEngine.getState();
     const interpretations = [
       {
         type: 'self-healing-trace',
-        confidence: result?.parsed?.confidence,
-        description: result?.parsed?.diagnostic,
-        timestamp: Date?.now(),
+        confidence: result.parsed.confidence,
+        description: result.parsed.diagnostic,
+        timestamp: Date.now(),
       },
-      ...current?.overmind?.interpretations,
+      ...current.overmind.interpretations,
     ].slice(0, 16);
 
-    singularityEngine?.setState({
+    singularityEngine.setState({
       overmind: {
-        ...current?.overmind,
+        ...current.overmind,
         interpretations,
       },
     } as EngineSingularityPartial);
-  } catch (any: any) {
-    logger?.warn(any: any);
+  } catch (error) {
+    logger.warn('syncSingularityLearning failed:', error);
   }
 }
 
 function buildPartialFromPath(
-  segments: string?.[],
+  segments: string[],
   value: unknown
 ): EngineSingularityPartial {
   const root: Record<string, unknown> = {};
   let cursor = root;
 
-  segments?.forEach(any: any) => {
-    if (index === segments?.length - 1) {
+  segments.forEach((segment, index) => {
+    if (index === segments.length - 1) {
       cursor[segment] = value;
       return;
     }
 
     const existing = cursor[segment];
-    if (any: any) {
+    if (typeof existing === 'object' && existing !== null) {
       cursor = existing as Record<string, unknown>;
     } else {
       const nested: Record<string, unknown> = {};

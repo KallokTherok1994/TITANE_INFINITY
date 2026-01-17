@@ -23,7 +23,7 @@ export type {
   HyperInsight,
   CognitivePattern,
   CognitivePrediction,
-} from './cognitive?.types';
+} from './cognitive.types';
 
 // Orchestration Types
 export type {
@@ -44,7 +44,7 @@ export type {
   SystemError,
   QAMetrics,
   AutoHealResult,
-} from './orchestration?.types';
+} from './orchestration.types';
 
 // Temporal Types
 export type {
@@ -64,7 +64,7 @@ export type {
   TemporalMetrics,
   CalendarView,
   CalendarDay,
-} from './temporal?.types';
+} from './temporal.types';
 
 // Identity & Memory Types
 export type {
@@ -83,7 +83,7 @@ export type {
   EvolutionMilestone,
   IdentityTransformation,
   EvolutionInsight,
-} from './identity?.types';
+} from './identity.types';
 
 // System Types
 export type {
@@ -111,4 +111,4 @@ export type {
   SensitiveLog,
   LogEntry,
   LogLevel,
-} from './system?.types';
+} from './system.types';

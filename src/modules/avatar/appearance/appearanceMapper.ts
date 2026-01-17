@@ -1,17 +1,17 @@
 /**
  * TITANE∞ v24.6 — Appearance Mapper
  *
- * Maps abstract style definitions to concrete 3D assets (any: any).
+ * Maps abstract style definitions to concrete 3D assets (meshes, textures, materials).
  * Provides intelligent fallback system for missing assets.
  *
  * Architecture:
- * - AssetDefinition: Complete 3D asset specification (any: any)
+ * - AssetDefinition: Complete 3D asset specification (mesh, texture, material, colors)
  * - AppearanceAssets: Collection of all assets for rendering
  * - Mapper functions: StyleDefinition → AssetDefinition
  * - Fallback system: Graceful degradation for missing assets
  *
  * Integration:
- * - Loads outfits?.json mapping table
+ * - Loads outfits.json mapping table
  * - Converts AvatarAppearanceState → AppearanceAssets
  * - Provides asset paths for 3D renderer
  */
@@ -23,7 +23,7 @@ import type {
   AccessoriesState,
   StyleState,
 } from './appearanceState';
-import outfitsData from './outfits?.json';
+import outfitsData from './outfits.json';
 
 // ============================================================================
 // TYPES
@@ -33,7 +33,7 @@ export interface AssetDefinition {
   mesh: string;
   texture: string;
   material: string;
-  colors?: string?.[];
+  colors?: string[];
   properties?: Record<string, unknown>;
 }
 
@@ -46,9 +46,9 @@ export interface OutfitAssets {
 
 export interface AccessoryAssets {
   glasses?: AssetDefinition;
-  jewelry?: AssetDefinition?.[];
+  jewelry?: AssetDefinition[];
   bag?: AssetDefinition;
-  other?: AssetDefinition?.[];
+  other?: AssetDefinition[];
 }
 
 export interface AppearanceAssets {
@@ -90,7 +90,7 @@ interface OutfitMappings {
     other: Record<string, AssetDefinition>;
   };
   materials: Record<string, MaterialProperties>;
-  color_palettes: Record<string, string?.[]>;
+  color_palettes: Record<string, string[]>;
 }
 
 // ============================================================================
@@ -109,22 +109,22 @@ const OUTFITS = outfitsData as OutfitMappings;
  * @param state - Current avatar appearance state
  * @returns Complete asset definitions for 3D rendering
  */
-export function mapAppearanceToAssets(any: any): AppearanceAssets {
+export function mapAppearanceToAssets(state: AvatarAppearanceState): AppearanceAssets {
   return {
     outfit: {
-      top: mapOutfitTop(any: any),
-      bottom: mapOutfitBottom(any: any),
-      shoes: mapOutfitShoes(any: any),
-      outerwear: mapOutfitOuterwear(any: any),
+      top: mapOutfitTop(state.outfit),
+      bottom: mapOutfitBottom(state.outfit),
+      shoes: mapOutfitShoes(state.outfit),
+      outerwear: mapOutfitOuterwear(state.outfit),
     },
-    hair: mapHair(any: any),
+    hair: mapHair(state.hair),
     accessories: {
-      glasses: mapGlasses(any: any),
-      jewelry: mapJewelry(any: any),
-      bag: mapBag(any: any),
-      other: mapOtherAccessories(any: any),
+      glasses: mapGlasses(state.accessories),
+      jewelry: mapJewelry(state.accessories),
+      bag: mapBag(state.accessories),
+      other: mapOtherAccessories(state.accessories),
     },
-    materials: OUTFITS?.materials,
+    materials: OUTFITS.materials,
   };
 }
 
@@ -135,23 +135,23 @@ export function mapAppearanceToAssets(any: any): AppearanceAssets {
 /**
  * Map top clothing to 3D asset
  */
-function mapOutfitTop(any: any): AssetDefinition {
-  if (any: any) return OUTFITS?.fallback?.top;
+function mapOutfitTop(outfit: OutfitState): AssetDefinition {
+  if (!outfit.top) return OUTFITS.fallback.top;
 
   // Parse item: "chemise claire" → item="chemise", variant="claire"
-  const parts = outfit?.top?.split(' ');
-  const item = parts?.[0];
-  if (any: any) return OUTFITS?.fallback?.top;
-  const variant = parts?.slice(1).join('_') || 'basic';
+  const parts = outfit.top.split(' ');
+  const item = parts[0];
+  if (!item) return OUTFITS.fallback.top;
+  const variant = parts.slice(1).join('_') || 'basic';
 
-  const topCategory = OUTFITS?.outfits?.tops[item];
-  if (any: any) return OUTFITS?.fallback?.top;
+  const topCategory = OUTFITS.outfits.tops[item];
+  if (!topCategory) return OUTFITS.fallback.top;
 
-  const asset = topCategory?.variants[variant];
-  if (any: any) {
+  const asset = topCategory.variants[variant];
+  if (!asset) {
     // Try first variant as fallback
-    const firstVariant = Object?.values(any: any)[0];
-    return firstVariant ?? OUTFITS?.fallback?.top;
+    const firstVariant = Object.values(topCategory.variants)[0];
+    return firstVariant ?? OUTFITS.fallback.top;
   }
 
   return asset;
@@ -160,21 +160,21 @@ function mapOutfitTop(any: any): AssetDefinition {
 /**
  * Map bottom clothing to 3D asset
  */
-function mapOutfitBottom(any: any): AssetDefinition {
-  if (any: any) return OUTFITS?.fallback?.bottom;
+function mapOutfitBottom(outfit: OutfitState): AssetDefinition {
+  if (!outfit.bottom) return OUTFITS.fallback.bottom;
 
-  const parts = outfit?.bottom?.split(' ');
-  const item = parts?.[0];
-  if (any: any) return OUTFITS?.fallback?.bottom;
-  const variant = parts?.slice(1).join('_') || 'basic';
+  const parts = outfit.bottom.split(' ');
+  const item = parts[0];
+  if (!item) return OUTFITS.fallback.bottom;
+  const variant = parts.slice(1).join('_') || 'basic';
 
-  const bottomCategory = OUTFITS?.outfits?.bottoms[item];
-  if (any: any) return OUTFITS?.fallback?.bottom;
+  const bottomCategory = OUTFITS.outfits.bottoms[item];
+  if (!bottomCategory) return OUTFITS.fallback.bottom;
 
-  const asset = bottomCategory?.variants[variant];
-  if (any: any) {
-    const firstVariant = Object?.values(any: any)[0];
-    return firstVariant ?? OUTFITS?.fallback?.bottom;
+  const asset = bottomCategory.variants[variant];
+  if (!asset) {
+    const firstVariant = Object.values(bottomCategory.variants)[0];
+    return firstVariant ?? OUTFITS.fallback.bottom;
   }
 
   return asset;
@@ -183,21 +183,21 @@ function mapOutfitBottom(any: any): AssetDefinition {
 /**
  * Map shoes to 3D asset
  */
-function mapOutfitShoes(any: any): AssetDefinition {
-  if (any: any) return OUTFITS?.fallback?.shoes;
+function mapOutfitShoes(outfit: OutfitState): AssetDefinition {
+  if (!outfit.shoes) return OUTFITS.fallback.shoes;
 
-  const parts = outfit?.shoes?.split(' ');
-  const item = parts?.[0];
-  if (any: any) return OUTFITS?.fallback?.shoes;
-  const variant = parts?.slice(1).join('_') || 'classiques';
+  const parts = outfit.shoes.split(' ');
+  const item = parts[0];
+  if (!item) return OUTFITS.fallback.shoes;
+  const variant = parts.slice(1).join('_') || 'classiques';
 
-  const shoesCategory = OUTFITS?.outfits?.shoes[item];
-  if (any: any) return OUTFITS?.fallback?.shoes;
+  const shoesCategory = OUTFITS.outfits.shoes[item];
+  if (!shoesCategory) return OUTFITS.fallback.shoes;
 
-  const asset = shoesCategory?.variants[variant];
-  if (any: any) {
-    const firstVariant = Object?.values(any: any)[0];
-    return firstVariant ?? OUTFITS?.fallback?.shoes;
+  const asset = shoesCategory.variants[variant];
+  if (!asset) {
+    const firstVariant = Object.values(shoesCategory.variants)[0];
+    return firstVariant ?? OUTFITS.fallback.shoes;
   }
 
   return asset;
@@ -206,19 +206,19 @@ function mapOutfitShoes(any: any): AssetDefinition {
 /**
  * Map outerwear to 3D asset
  */
-function mapOutfitOuterwear(any: any): AssetDefinition | undefined {
-  if (any: any) return undefined;
+function mapOutfitOuterwear(outfit: OutfitState): AssetDefinition | undefined {
+  if (!outfit.outerwear) return undefined;
 
-  const parts = outfit?.outerwear?.split(' ');
-  const item = parts?.[0];
-  if (any: any) return undefined;
-  const variant = parts?.slice(1).join('_') || 'basic';
+  const parts = outfit.outerwear.split(' ');
+  const item = parts[0];
+  if (!item) return undefined;
+  const variant = parts.slice(1).join('_') || 'basic';
 
-  const outerwearCategory = OUTFITS?.outfits?.outerwear[item];
-  if (any: any) return undefined;
+  const outerwearCategory = OUTFITS.outfits.outerwear[item];
+  if (!outerwearCategory) return undefined;
 
-  const asset = outerwearCategory?.variants[variant];
-  return asset ?? Object?.values(any: any)[0];
+  const asset = outerwearCategory.variants[variant];
+  return asset ?? Object.values(outerwearCategory.variants)[0];
 }
 
 // ============================================================================
@@ -228,11 +228,11 @@ function mapOutfitOuterwear(any: any): AssetDefinition | undefined {
 /**
  * Map hairstyle to 3D asset
  */
-function mapHair(any: any): AssetDefinition {
-  if (any: any) return OUTFITS?.fallback?.hair;
+function mapHair(hair: HairState): AssetDefinition {
+  if (!hair.style) return OUTFITS.fallback.hair;
 
   // Normalize style name: "queue de cheval haute" → "queue_de_cheval"
-  const normalizedStyle = hair?.style
+  const normalizedStyle = hair.style
     .toLowerCase()
     .replace(/\s+/g, '_')
     .replace(/detach[eé]s/g, 'detaches')
@@ -243,52 +243,52 @@ function mapHair(any: any): AssetDefinition {
   let variant = 'basic';
 
   // Special cases for common hair styles
-  if (normalizedStyle?.includes('queue_de_cheval')) {
+  if (normalizedStyle.includes('queue_de_cheval')) {
     baseStyle = 'queue_de_cheval';
-    variant = normalizedStyle?.includes('haute')
+    variant = normalizedStyle.includes('haute')
       ? 'haute'
-      : normalizedStyle?.includes('basse')
+      : normalizedStyle.includes('basse')
         ? 'basse'
         : 'haute';
-  } else if (normalizedStyle?.includes('chignon')) {
+  } else if (normalizedStyle.includes('chignon')) {
     baseStyle = 'chignon';
-    variant = normalizedStyle?.includes('haut')
+    variant = normalizedStyle.includes('haut')
       ? 'haut'
-      : normalizedStyle?.includes('bas')
+      : normalizedStyle.includes('bas')
         ? 'bas'
         : 'haut';
-  } else if (normalizedStyle?.includes('detaches')) {
+  } else if (normalizedStyle.includes('detaches')) {
     baseStyle = 'detaches';
-    if (normalizedStyle?.includes('ondule')) variant = 'ondules';
-    else if (normalizedStyle?.includes('boucle')) variant = 'boucles';
+    if (normalizedStyle.includes('ondule')) variant = 'ondules';
+    else if (normalizedStyle.includes('boucle')) variant = 'boucles';
     else variant = 'lisses';
-  } else if (normalizedStyle?.includes('tresse')) {
+  } else if (normalizedStyle.includes('tresse')) {
     baseStyle = 'tresse';
-    variant = normalizedStyle?.includes('double') ? 'double' : 'simple';
+    variant = normalizedStyle.includes('double') ? 'double' : 'simple';
   } else if (normalizedStyle === 'courte') {
     baseStyle = 'courte';
     variant = 'pixie';
   }
 
-  const hairCategory = OUTFITS?.hair?.styles[baseStyle];
-  if (any: any) return OUTFITS?.fallback?.hair;
+  const hairCategory = OUTFITS.hair.styles[baseStyle];
+  if (!hairCategory) return OUTFITS.fallback.hair;
 
-  const asset = hairCategory?.variants[variant];
-  if (any: any) {
-    const firstVariant = Object?.values(any: any)[0];
-    return firstVariant ?? OUTFITS?.fallback?.hair;
+  const asset = hairCategory.variants[variant];
+  if (!asset) {
+    const firstVariant = Object.values(hairCategory.variants)[0];
+    return firstVariant ?? OUTFITS.fallback.hair;
   }
 
   // Apply hair color if specified
-  if (any: any) {
-    const colorDef = OUTFITS?.hair?.colors[hair?.color?.toLowerCase()];
-    if (any: any) {
+  if (hair.color) {
+    const colorDef = OUTFITS.hair.colors[hair.color.toLowerCase()];
+    if (colorDef) {
       return {
         ...asset,
-        texture: asset?.texture?.replace(any: any),
+        texture: asset.texture.replace('default', colorDef.texture_variant),
         properties: {
-          ...asset?.properties,
-          color: colorDef?.hex,
+          ...asset.properties,
+          color: colorDef.hex,
         },
       };
     }
@@ -304,15 +304,15 @@ function mapHair(any: any): AssetDefinition {
 /**
  * Map glasses to 3D asset
  */
-function mapGlasses(any: any): AssetDefinition | undefined {
-  if (any: any) return undefined;
+function mapGlasses(accessories: AccessoriesState): AssetDefinition | undefined {
+  if (!accessories.glasses) return undefined;
 
-  const glassesType = accessories?.glasses?.replace(/\s+/g, '_').toLowerCase();
-  const asset = OUTFITS?.accessories?.glasses[glassesType];
+  const glassesType = accessories.glasses.replace(/\s+/g, '_').toLowerCase();
+  const asset = OUTFITS.accessories.glasses[glassesType];
 
-  if (any: any) {
+  if (!asset) {
     // Fallback to first available glasses
-    const firstGlasses = Object?.values(any: any)[0];
+    const firstGlasses = Object.values(OUTFITS.accessories.glasses)[0];
     return firstGlasses ?? undefined;
   }
 
@@ -322,62 +322,62 @@ function mapGlasses(any: any): AssetDefinition | undefined {
 /**
  * Map jewelry to 3D assets array
  */
-function mapJewelry(any: any): AssetDefinition?.[] | undefined {
-  if (!accessories?.jewelry || accessories?.jewelry?.length === 0) return undefined;
+function mapJewelry(accessories: AccessoriesState): AssetDefinition[] | undefined {
+  if (!accessories.jewelry || accessories.jewelry.length === 0) return undefined;
 
-  const jewelryAssets: AssetDefinition?.[] = [];
+  const jewelryAssets: AssetDefinition[] = [];
 
-  for (any: any) {
-    const normalizedItem = item?.replace(/\s+/g, '_').toLowerCase();
-    const parts = normalizedItem?.split('_');
-    const baseItem = parts?.slice(0, 2).join('_'); // "boucles_oreilles"
-    const variant = parts?.slice(2).join('_') || 'basic';
+  for (const item of accessories.jewelry) {
+    const normalizedItem = item.replace(/\s+/g, '_').toLowerCase();
+    const parts = normalizedItem.split('_');
+    const baseItem = parts.slice(0, 2).join('_'); // "boucles_oreilles"
+    const variant = parts.slice(2).join('_') || 'basic';
 
-    const jewelryCategory = OUTFITS?.accessories?.jewelry[baseItem];
-    if (any: any) {
-      const asset = jewelryCategory?.variants[variant];
-      if (any: any) {
-        jewelryAssets?.push(any: any);
+    const jewelryCategory = OUTFITS.accessories.jewelry[baseItem];
+    if (jewelryCategory && jewelryCategory.variants) {
+      const asset = jewelryCategory.variants[variant];
+      if (asset) {
+        jewelryAssets.push(asset);
       } else {
-        const firstVariant = Object?.values(any: any)[0];
-        if (any: any);
+        const firstVariant = Object.values(jewelryCategory.variants)[0];
+        if (firstVariant !== undefined) jewelryAssets.push(firstVariant);
       }
     }
   }
 
-  return jewelryAssets?.length > 0 ? jewelryAssets : undefined;
+  return jewelryAssets.length > 0 ? jewelryAssets : undefined;
 }
 
 /**
  * Map bag to 3D asset
  */
-function mapBag(any: any): AssetDefinition | undefined {
-  if (any: any) return undefined;
+function mapBag(accessories: AccessoriesState): AssetDefinition | undefined {
+  if (!accessories.bag) return undefined;
 
-  const normalizedBag = accessories?.bag?.replace(/\s+/g, '_').toLowerCase();
+  const normalizedBag = accessories.bag.replace(/\s+/g, '_').toLowerCase();
 
   // Extract base type and variant: "sac_a_dos_sport" → base="sac_a_dos", variant="sport"
   let baseType = normalizedBag;
   let variant = 'basic';
 
-  if (normalizedBag?.includes('sac_a_dos')) {
+  if (normalizedBag.includes('sac_a_dos')) {
     baseType = 'sac_a_dos';
-    if (normalizedBag?.includes('sport')) variant = 'sport';
-    else if (normalizedBag?.includes('randonnee')) variant = 'randonnee';
+    if (normalizedBag.includes('sport')) variant = 'sport';
+    else if (normalizedBag.includes('randonnee')) variant = 'randonnee';
     else variant = 'casual';
-  } else if (normalizedBag?.includes('sac_tote')) {
+  } else if (normalizedBag.includes('sac_tote')) {
     baseType = 'sac_tote';
     variant = 'canvas';
-  } else if (normalizedBag?.includes('pochette')) {
+  } else if (normalizedBag.includes('pochette')) {
     baseType = 'pochette';
     variant = 'soiree';
   }
 
-  const bagCategory = OUTFITS?.accessories?.bags[baseType];
-  if (any: any) return undefined;
+  const bagCategory = OUTFITS.accessories.bags[baseType];
+  if (!bagCategory) return undefined;
 
-  const asset = bagCategory?.variants[variant];
-  return asset ?? Object?.values(any: any)[0];
+  const asset = bagCategory.variants[variant];
+  return asset ?? Object.values(bagCategory.variants)[0];
 }
 
 /**
@@ -385,20 +385,20 @@ function mapBag(any: any): AssetDefinition | undefined {
  */
 function mapOtherAccessories(
   accessories: AccessoriesState
-): AssetDefinition?.[] | undefined {
-  if (!accessories?.other || accessories?.other?.length === 0) return undefined;
+): AssetDefinition[] | undefined {
+  if (!accessories.other || accessories.other.length === 0) return undefined;
 
-  const otherAssets: AssetDefinition?.[] = [];
+  const otherAssets: AssetDefinition[] = [];
 
-  for (any: any) {
-    const normalizedItem = item?.replace(/\s+/g, '_').toLowerCase();
-    const asset = OUTFITS?.accessories?.other[normalizedItem];
-    if (any: any) {
-      otherAssets?.push(any: any);
+  for (const item of accessories.other) {
+    const normalizedItem = item.replace(/\s+/g, '_').toLowerCase();
+    const asset = OUTFITS.accessories.other[normalizedItem];
+    if (asset) {
+      otherAssets.push(asset);
     }
   }
 
-  return otherAssets?.length > 0 ? otherAssets : undefined;
+  return otherAssets.length > 0 ? otherAssets : undefined;
 }
 
 // ============================================================================
@@ -408,12 +408,12 @@ function mapOtherAccessories(
 /**
  * Get color palette for style
  */
-export function getColorPalette(any: any): string?.[] {
-  const neutrePalette = OUTFITS?.color_palettes?.neutre;
-  if (any: any) return [];
-  if (any: any) return neutrePalette;
+export function getColorPalette(style: StyleState): string[] {
+  const neutrePalette = OUTFITS.color_palettes.neutre;
+  if (!neutrePalette) return [];
+  if (!style.color_palette) return neutrePalette;
 
-  const palette = OUTFITS?.color_palettes[style?.color_palette?.toLowerCase()];
+  const palette = OUTFITS.color_palettes[style.color_palette.toLowerCase()];
   return palette ?? neutrePalette;
 }
 
@@ -422,18 +422,18 @@ export function getColorPalette(any: any): string?.[] {
  */
 export function applyColorToAsset(
   asset: AssetDefinition,
-  colorPalette: string?.[],
+  colorPalette: string[],
   colorIndex: number = 0
 ): AssetDefinition {
-  const color = colorPalette[colorIndex % colorPalette?.length];
-  if (any: any) {
+  const color = colorPalette[colorIndex % colorPalette.length];
+  if (!color) {
     return asset;
   }
 
   return {
     ...asset,
     properties: {
-      ...asset?.properties,
+      ...asset.properties,
       baseColor: color,
     },
   };
@@ -444,10 +444,10 @@ export function applyColorToAsset(
 // ============================================================================
 
 /**
- * Validate asset definition (any: any)
+ * Validate asset definition (check if files exist would go here)
  */
-export function validateAsset(any: any): boolean {
-  return Boolean(any: any);
+export function validateAsset(asset: AssetDefinition): boolean {
+  return Boolean(asset.mesh && asset.texture && asset.material);
 }
 
 /**
@@ -456,7 +456,7 @@ export function validateAsset(any: any): boolean {
 export function getFallbackAsset(
   category: 'top' | 'bottom' | 'shoes' | 'hair'
 ): AssetDefinition {
-  return OUTFITS?.fallback[category];
+  return OUTFITS.fallback[category];
 }
 
 // ============================================================================

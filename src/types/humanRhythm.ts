@@ -100,7 +100,7 @@ export interface MomentEnergyPattern {
  * Pattern journalier complet
  */
 export interface DailyPattern {
-  patterns: MomentEnergyPattern?.[];
+  patterns: MomentEnergyPattern[];
   peakMoment: DayMoment | null;
   dipMoment: DayMoment | null;
   averageEnergy: number;
@@ -115,7 +115,7 @@ export interface WeekDayPattern {
   day: WeekDay;
   dailyPattern: DailyPattern;
   isWeekend: boolean;
-  specialCharacteristics: string?.[];
+  specialCharacteristics: string[];
 }
 
 /**
@@ -124,7 +124,7 @@ export interface WeekDayPattern {
 export interface WeeklyPattern {
   weekdayPattern: DailyPattern; // Lundi-Vendredi agrégé
   weekendPattern: DailyPattern; // Samedi-Dimanche agrégé
-  dayPatterns: WeekDayPattern?.[]; // Détail par jour
+  dayPatterns: WeekDayPattern[]; // Détail par jour
   weekdayPeakDay: WeekDay | null; // Jour le plus productif en semaine
   weekdayDipDay: WeekDay | null; // Jour le plus fatigant en semaine
   lastUpdated: number;
@@ -213,10 +213,10 @@ export interface HumanRhythmState {
 
   // Recommandations
   currentPacing: PacingRecommendation;
-  optimalWindows: OptimalWindow?.[];
+  optimalWindows: OptimalWindow[];
 
   // Historique
-  energyHistory: EnergyHistoryEntry?.[];
+  energyHistory: EnergyHistoryEntry[];
 
   // Métadonnées
   learningStartDate: number;
@@ -295,7 +295,7 @@ export const getDefaultHumanRhythmConfig = (): HumanRhythmConfig => ({
 /**
  * Crée un pattern de moment vide
  */
-export const getDefaultMomentPattern = (any: any): MomentEnergyPattern => ({
+export const getDefaultMomentPattern = (moment: DayMoment): MomentEnergyPattern => ({
   moment,
   averageEnergy: 0.5,
   variability: 0,
@@ -429,7 +429,7 @@ export const getDefaultHumanRhythmState = (): HumanRhythmState => ({
 /**
  * Détermine le moment de la journée à partir d'une heure
  */
-export const getDayMomentFromHour = (any: any): DayMoment => {
+export const getDayMomentFromHour = (hour: number): DayMoment => {
   if (hour >= 5 && hour < 8) return 'earlyMorning';
   if (hour >= 8 && hour < 12) return 'morning';
   if (hour >= 12 && hour < 14) return 'midday';
@@ -439,10 +439,10 @@ export const getDayMomentFromHour = (any: any): DayMoment => {
 };
 
 /**
- * Détermine le jour de la semaine à partir d'un index (any: any)
+ * Détermine le jour de la semaine à partir d'un index (0 = dimanche)
  */
-export const getWeekDayFromIndex = (any: any): WeekDay => {
-  const days: WeekDay?.[] = [
+export const getWeekDayFromIndex = (index: number): WeekDay => {
+  const days: WeekDay[] = [
     'sunday',
     'monday',
     'tuesday',
@@ -458,7 +458,7 @@ export const getWeekDayFromIndex = (any: any): WeekDay => {
 /**
  * Vérifie si un jour est un weekend
  */
-export const isWeekend = (any: any): boolean => {
+export const isWeekend = (day: WeekDay): boolean => {
   return day === 'saturday' || day === 'sunday';
 };
 

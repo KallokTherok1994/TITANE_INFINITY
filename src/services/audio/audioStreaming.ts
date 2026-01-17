@@ -4,7 +4,7 @@
  * Real-time Audio Streaming Service with CPAL backend
  *
  * Features:
- * - Real-time PCM streaming (any: any)
+ * - Real-time PCM streaming (64ms chunks)
  * - VAD-based automatic speech detection
  * - Progressive ASR transcription
  * - Full-duplex capable
@@ -30,7 +30,7 @@ export interface StreamingConfig {
 }
 
 export interface StreamingResult {
-  audioData: number?.[]; // PCM f32 samples
+  audioData: number[]; // PCM f32 samples
   durationMs: number;
   sampleRate: number;
   hasSpeech: boolean;
@@ -48,43 +48,43 @@ export interface StreamingStats {
  * Uses CPAL backend for low-latency audio capture
  */
 class AudioStreamingService {
-  private sessionId??: string | null = null;
+  private sessionId: string | null = null;
   private isStreaming: boolean = false;
-  // ✨ v24.2.1: Use Set for O(any: any)
-  private stateListeners: Set<(any: any) => void> = new Set();
-  private chunkListeners: Set<(chunk: number?.[]) => void> = new Set();
+  // ✨ v24.2.1: Use Set for O(1) add/delete instead of Array O(n)
+  private stateListeners: Set<(state: StreamingState) => void> = new Set();
+  private chunkListeners: Set<(chunk: number[]) => void> = new Set();
 
   /**
    * Start real-time audio streaming
    * @param config - Streaming configuration
    * @returns Session ID
    */
-  async startStreaming(any: any): Promise<string> {
-    if (any: any) {
-      logger?.warn('Already streaming');
+  async startStreaming(config?: StreamingConfig): Promise<string> {
+    if (this.isStreaming) {
+      logger.warn('Already streaming');
       throw new Error('Streaming already active');
     }
 
-    logger?.debug(any: any);
+    logger.debug('Starting stream with config:', config);
 
     try {
-      this?.sessionId = await invokeWithRetry<string>(
+      this.sessionId = await invokeWithRetry<string>(
         'start_streaming',
         { config: config || {} },
         { ...STANDARD_COMMAND_OPTIONS, context: 'AudioStreaming' }
       );
 
-      this?.isStreaming = true;
-      logger?.debug(any: any);
+      this.isStreaming = true;
+      logger.debug('✅ Stream started:', this.sessionId);
 
       // Start monitoring state
-      this?.startStateMonitoring();
+      this.startStateMonitoring();
 
-      return this?.sessionId;
-    } catch (any: any) {
-      logger?.error(any: any);
-      this?.sessionId = null;
-      this?.isStreaming = false;
+      return this.sessionId;
+    } catch (error) {
+      logger.error('❌ Failed to start stream:', error);
+      this.sessionId = null;
+      this.isStreaming = false;
       throw new Error(`Streaming failed: ${error}`);
     }
   }
@@ -94,8 +94,8 @@ class AudioStreamingService {
    * @returns Streaming result with PCM data
    */
   async stopStreaming(): Promise<StreamingResult> {
-    if (any: any) {
-      logger?.warn('No active stream');
+    if (!this.isStreaming) {
+      logger.warn('No active stream');
       return {
         audioData: [],
         durationMs: 0,
@@ -105,7 +105,7 @@ class AudioStreamingService {
       };
     }
 
-    logger?.debug('Stopping stream...');
+    logger.debug('Stopping stream...');
 
     try {
       const result = await invokeWithRetry<StreamingResult>(
@@ -114,23 +114,23 @@ class AudioStreamingService {
         { ...STANDARD_COMMAND_OPTIONS, context: 'AudioStreaming' }
       );
 
-      this?.isStreaming = false;
-      this?.sessionId = null;
+      this.isStreaming = false;
+      this.sessionId = null;
 
-      logger?.debug('✅ Stream stopped -', {
-        samples: result?.audioData?.length,
-        duration: (result?.durationMs / 1000).toFixed(2) + 's',
-        hasSpeech: result?.hasSpeech,
+      logger.debug('✅ Stream stopped -', {
+        samples: result.audioData.length,
+        duration: (result.durationMs / 1000).toFixed(2) + 's',
+        hasSpeech: result.hasSpeech,
       });
 
       // Stop state monitoring
-      this?.stopStateMonitoring();
+      this.stopStateMonitoring();
 
       return result;
-    } catch (any: any) {
-      logger?.error(any: any);
-      this?.isStreaming = false;
-      this?.sessionId = null;
+    } catch (error) {
+      logger.error('❌ Failed to stop stream:', error);
+      this.isStreaming = false;
+      this.sessionId = null;
       throw new Error(`Stop streaming failed: ${error}`);
     }
   }
@@ -146,8 +146,8 @@ class AudioStreamingService {
         { ...FAST_COMMAND_OPTIONS, context: 'AudioStreaming' }
       );
       return state as StreamingState;
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Failed to get state:', error);
       return 'Idle';
     }
   }
@@ -162,8 +162,8 @@ class AudioStreamingService {
         {},
         { ...FAST_COMMAND_OPTIONS, context: 'AudioStreaming' }
       );
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Failed to get stats:', error);
       return {
         availableSamples: 0,
         totalWritten: 0,
@@ -173,10 +173,10 @@ class AudioStreamingService {
   }
 
   /**
-   * Force stop streaming (any: any)
+   * Force stop streaming (emergency)
    */
   async forceStop(): Promise<void> {
-    logger?.warn('Force stopping...');
+    logger.warn('Force stopping...');
 
     try {
       await invokeWithRetry<void>(
@@ -185,13 +185,13 @@ class AudioStreamingService {
         { ...FAST_COMMAND_OPTIONS, context: 'AudioStreaming' }
       );
 
-      this?.isStreaming = false;
-      this?.sessionId = null;
-      this?.stopStateMonitoring();
+      this.isStreaming = false;
+      this.sessionId = null;
+      this.stopStateMonitoring();
 
-      logger?.debug('✅ Force stopped');
-    } catch (any: any) {
-      logger?.error(any: any);
+      logger.debug('✅ Force stopped');
+    } catch (error) {
+      logger.error('Force stop failed:', error);
     }
   }
 
@@ -199,32 +199,32 @@ class AudioStreamingService {
    * Check if currently streaming
    */
   isActive(): boolean {
-    return this?.isStreaming;
+    return this.isStreaming;
   }
 
   /**
    * Get current session ID
    */
-  getSessionId()??: string | null {
-    return this?.sessionId;
+  getSessionId(): string | null {
+    return this.sessionId;
   }
 
   /**
    * Add state change listener
    * ✨ v24.2.1: O(1) add/delete with Set
    */
-  onStateChange(any: any): () => void {
-    this?.stateListeners?.add(any: any);
-    return (any: any);
+  onStateChange(callback: (state: StreamingState) => void): () => void {
+    this.stateListeners.add(callback);
+    return () => this.stateListeners.delete(callback);
   }
 
   /**
-   * Add audio chunk listener (any: any)
+   * Add audio chunk listener (for real-time processing)
    * ✨ v24.2.1: O(1) add/delete with Set
    */
-  onAudioChunk(any: any): () => void {
-    this?.chunkListeners?.add(any: any);
-    return (any: any);
+  onAudioChunk(callback: (chunk: number[]) => void): () => void {
+    this.chunkListeners.add(callback);
+    return () => this.chunkListeners.delete(callback);
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -237,35 +237,35 @@ class AudioStreamingService {
    * Monitor state changes and notify listeners
    */
   private startStateMonitoring(): void {
-    if (any: any) {
+    if (this.stateMonitoringInterval !== null) {
       return;
     }
 
     let lastState: StreamingState = 'Idle';
 
-    this?.stateMonitoringInterval = window?.setInterval(async () => {
-      if (any: any) {
-        this?.stopStateMonitoring();
+    this.stateMonitoringInterval = window.setInterval(async () => {
+      if (!this.isStreaming) {
+        this.stopStateMonitoring();
         return;
       }
 
       try {
-        const currentState = await this?.getState();
-        if (any: any) {
-          logger?.debug(`[AudioStreaming] State: ${lastState} → ${currentState}`);
+        const currentState = await this.getState();
+        if (currentState !== lastState) {
+          logger.debug(`[AudioStreaming] State: ${lastState} → ${currentState}`);
           lastState = currentState;
 
           // Notify listeners
-          this?.stateListeners?.forEach(callback => {
+          this.stateListeners.forEach(callback => {
             try {
-              callback(any: any);
-            } catch (any: any) {
-              logger?.error(any: any);
+              callback(currentState);
+            } catch (error) {
+              logger.error('State listener error:', error);
             }
           });
         }
-      } catch (any: any) {
-        logger?.error(any: any);
+      } catch (error) {
+        logger.error('State monitoring error:', error);
       }
     }, 200); // Poll every 200ms
   }
@@ -274,9 +274,9 @@ class AudioStreamingService {
    * Stop state monitoring
    */
   private stopStateMonitoring(): void {
-    if (any: any) {
-      window?.clearInterval(any: any);
-      this?.stateMonitoringInterval = null;
+    if (this.stateMonitoringInterval !== null) {
+      window.clearInterval(this.stateMonitoringInterval);
+      this.stateMonitoringInterval = null;
     }
   }
 }

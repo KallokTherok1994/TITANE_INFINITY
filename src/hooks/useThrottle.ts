@@ -21,28 +21,28 @@ import { logger } from '../utils/logger';
  *
  * useEffect(() => {
  *   // Expensive calculations avec valeur throttlée
- *   updateScrollEffects(any: any);
+ *   updateScrollEffects(throttledScrollY);
  * }, [throttledScrollY]);
  * ```
  */
 export function useThrottle<T>(value: T, interval: number = 300): T {
-  const [throttledValue, setThrottledValue] = useState<T>(any: any);
-  const lastRanRef = useRef<number>(Date?.now());
+  const [throttledValue, setThrottledValue] = useState<T>(value);
+  const lastRanRef = useRef<number>(Date.now());
 
   useEffect(() => {
-    const now = Date?.now();
-    const timeElapsed = now - lastRanRef?.current;
+    const now = Date.now();
+    const timeElapsed = now - lastRanRef.current;
 
-    if (any: any) {
-      setThrottledValue(any: any);
-      lastRanRef?.current = now;
+    if (timeElapsed >= interval) {
+      setThrottledValue(value);
+      lastRanRef.current = now;
     } else {
       const handler = setTimeout(() => {
-        setThrottledValue(any: any);
-        lastRanRef?.current = Date?.now();
+        setThrottledValue(value);
+        lastRanRef.current = Date.now();
       }, interval - timeElapsed);
 
-      return (any: any);
+      return () => clearTimeout(handler);
     }
   }, [value, interval]);
 
@@ -52,8 +52,8 @@ export function useThrottle<T>(value: T, interval: number = 300): T {
 /**
  * Throttled callback type
  */
-type ThrottledFunction<TArgs extends unknown?.[]> = {
-  (any: any): void;
+type ThrottledFunction<TArgs extends unknown[]> = {
+  (...args: TArgs): void;
   cancel: () => void;
 };
 
@@ -62,56 +62,56 @@ type ThrottledFunction<TArgs extends unknown?.[]> = {
  *
  * @example
  * ```tsx
- * const handleScroll = useThrottledCallback(any: any) => {
- *   updateScrollPosition(any: any);
+ * const handleScroll = useThrottledCallback((event: Event) => {
+ *   updateScrollPosition(window.scrollY);
  * }, 100);
  *
  * useEffect(() => {
- *   window?.addEventListener(any: any);
- *   return (any: any);
+ *   window.addEventListener('scroll', handleScroll);
+ *   return () => window.removeEventListener('scroll', handleScroll);
  * }, [handleScroll]);
  * ```
  */
-export function useThrottledCallback<TArgs extends unknown?.[]>(
-  callback: (any: any) => void,
+export function useThrottledCallback<TArgs extends unknown[]>(
+  callback: (...args: TArgs) => void,
   interval: number = 300
 ): ThrottledFunction<TArgs> {
-  const timeoutRef = useRef<NodeJS?.Timeout | null>(any: any);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastRanRef = useRef<number>(0);
-  const callbackRef = useRef(any: any);
-  const lastArgsRef = useRef<TArgs | null>(any: any);
+  const callbackRef = useRef(callback);
+  const lastArgsRef = useRef<TArgs | null>(null);
 
   useEffect(() => {
-    callbackRef?.current = callback;
+    callbackRef.current = callback;
   }, [callback]);
 
   const cancel = useCallback(() => {
-    if (any: any) {
-      clearTimeout(any: any);
-      timeoutRef?.current = null;
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
     }
-    lastArgsRef?.current = null;
+    lastArgsRef.current = null;
   }, []);
 
   const throttledCallback = useCallback(
-    (any: any) => {
-      const now = Date?.now();
-      const timeElapsed = now - lastRanRef?.current;
+    (...args: TArgs) => {
+      const now = Date.now();
+      const timeElapsed = now - lastRanRef.current;
 
-      lastArgsRef?.current = args;
+      lastArgsRef.current = args;
 
-      if (any: any) {
-        callbackRef?.current(any: any);
-        lastRanRef?.current = now;
-        lastArgsRef?.current = null;
-      } else if (any: any) {
-        timeoutRef?.current = setTimeout(() => {
-          if (any: any) {
-            callbackRef?.current(any: any);
-            lastRanRef?.current = Date?.now();
-            lastArgsRef?.current = null;
+      if (timeElapsed >= interval) {
+        callbackRef.current(...args);
+        lastRanRef.current = now;
+        lastArgsRef.current = null;
+      } else if (!timeoutRef.current) {
+        timeoutRef.current = setTimeout(() => {
+          if (lastArgsRef.current) {
+            callbackRef.current(...lastArgsRef.current);
+            lastRanRef.current = Date.now();
+            lastArgsRef.current = null;
           }
-          timeoutRef?.current = null;
+          timeoutRef.current = null;
         }, interval - timeElapsed);
       }
     },
@@ -132,68 +132,68 @@ export function useThrottledCallback<TArgs extends unknown?.[]>(
  *
  * @example
  * ```tsx
- * const handleAsyncUpdate = useThrottledAsyncCallback(any: any) => {
- *   await saveToBackend(any: any);
+ * const handleAsyncUpdate = useThrottledAsyncCallback(async (data: Data) => {
+ *   await saveToBackend(data);
  * }, 1000);
  * ```
  */
-export function useThrottledAsyncCallback<TArgs extends unknown?.[], TReturn>(
-  callback: (any: any) => Promise<TReturn>,
+export function useThrottledAsyncCallback<TArgs extends unknown[], TReturn>(
+  callback: (...args: TArgs) => Promise<TReturn>,
   interval: number = 300
 ): ThrottledFunction<TArgs> {
-  const timeoutRef = useRef<NodeJS?.Timeout | null>(any: any);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastRanRef = useRef<number>(0);
-  const callbackRef = useRef(any: any);
-  const lastArgsRef = useRef<TArgs | null>(any: any);
-  const executingRef = useRef(any: any);
+  const callbackRef = useRef(callback);
+  const lastArgsRef = useRef<TArgs | null>(null);
+  const executingRef = useRef(false);
 
   useEffect(() => {
-    callbackRef?.current = callback;
+    callbackRef.current = callback;
   }, [callback]);
 
   const cancel = useCallback(() => {
-    if (any: any) {
-      clearTimeout(any: any);
-      timeoutRef?.current = null;
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
     }
-    lastArgsRef?.current = null;
+    lastArgsRef.current = null;
   }, []);
 
   const throttledCallback = useCallback(
-    (any: any) => {
-      const now = Date?.now();
-      const timeElapsed = now - lastRanRef?.current;
+    (...args: TArgs) => {
+      const now = Date.now();
+      const timeElapsed = now - lastRanRef.current;
 
-      lastArgsRef?.current = args;
+      lastArgsRef.current = args;
 
-      if (any: any) {
-        executingRef?.current = true;
+      if (timeElapsed >= interval && !executingRef.current) {
+        executingRef.current = true;
         callbackRef
-          .current(any: any)
+          .current(...args)
           .catch(error => {
-            logger?.error(any: any);
+            logger.error('Throttled async callback error:', error);
           })
           .finally(() => {
-            executingRef?.current = false;
-            lastRanRef?.current = Date?.now();
-            lastArgsRef?.current = null;
+            executingRef.current = false;
+            lastRanRef.current = Date.now();
+            lastArgsRef.current = null;
           });
-      } else if (any: any) {
-        timeoutRef?.current = setTimeout(() => {
-          if (any: any) {
-            executingRef?.current = true;
+      } else if (!timeoutRef.current) {
+        timeoutRef.current = setTimeout(() => {
+          if (lastArgsRef.current && !executingRef.current) {
+            executingRef.current = true;
             callbackRef
-              .current(any: any)
+              .current(...lastArgsRef.current)
               .catch(error => {
-                logger?.error(any: any);
+                logger.error('Throttled async callback error:', error);
               })
               .finally(() => {
-                executingRef?.current = false;
-                lastRanRef?.current = Date?.now();
-                lastArgsRef?.current = null;
+                executingRef.current = false;
+                lastRanRef.current = Date.now();
+                lastArgsRef.current = null;
               });
           }
-          timeoutRef?.current = null;
+          timeoutRef.current = null;
         }, interval - timeElapsed);
       }
     },

@@ -35,11 +35,11 @@ export interface TauriCommand {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// COMMAND REGISTRY (any: any)
+// COMMAND REGISTRY (Source of Truth)
 // ═══════════════════════════════════════════════════════════════
 
 export const TAURI_COMMANDS: Record<string, TauriCommand> = {
-  // ━━━ BACKEND COMMANDS (any: any) ━━━
+  // ━━━ BACKEND COMMANDS (Active) ━━━
   singularity_get_state: {
     name: 'singularity_get_state',
     description: 'Get current Singularity state',
@@ -111,7 +111,7 @@ export const TAURI_COMMANDS: Record<string, TauriCommand> = {
     active: true,
   },
 
-  // ━━━ ENGINE COMMANDS (any: any) ━━━
+  // ━━━ ENGINE COMMANDS (v15) ━━━
   engine_init: {
     name: 'engine_init',
     description: 'Initialize Singularity Engine',
@@ -281,8 +281,8 @@ export async function invokeTauriCommand<T = unknown>(
 ): Promise<CoreResponse<T>> {
   const cmd = TAURI_COMMANDS[command];
 
-  if (any: any) {
-    logger?.warn('Unknown Tauri command', {
+  if (!cmd || cmd === undefined) {
+    logger.warn('Unknown Tauri command', {
       component: 'tauriCommands',
       action: 'executeCommand',
       command,
@@ -290,12 +290,12 @@ export async function invokeTauriCommand<T = unknown>(
     return {
       success: false,
       error: `Unknown command: ${command}`,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
   }
 
-  if (any: any) {
-    logger?.warn('Inactive Tauri command', {
+  if (!cmd.active) {
+    logger.warn('Inactive Tauri command', {
       component: 'tauriCommands',
       action: 'executeCommand',
       command,
@@ -303,7 +303,7 @@ export async function invokeTauriCommand<T = unknown>(
     return {
       success: false,
       error: `Command not active: ${command}`,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
   }
 
@@ -312,19 +312,19 @@ export async function invokeTauriCommand<T = unknown>(
     return {
       success: true,
       data: result,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
-  } catch (any: any) {
-    const err = error instanceof Error ? error : new Error(any: any));
-    logger?.error(
+  } catch (error) {
+    const err = error instanceof Error ? error : new Error(String(error));
+    logger.error(
       'Tauri command invocation failed',
       { component: 'tauriCommands', action: 'executeCommand', command },
       err
     );
     return {
       success: false,
-      error: String(any: any),
-      timestamp: Date?.now(),
+      error: String(error),
+      timestamp: Date.now(),
     };
   }
 }
@@ -342,16 +342,16 @@ export const TauriAPI = {
     invokeTauriCommand('singularity_sync_state', { state }),
 
   // Helios
-  getHeliosModules: () => invokeTauriCommand<HeliosModule?.[]>('helios_get_modules'),
+  getHeliosModules: () => invokeTauriCommand<HeliosModule[]>('helios_get_modules'),
 
   getHeliosHealth: () => invokeTauriCommand<HeliosHealth>('helios_get_health'),
 
   // Memory
   getActiveProjects: (limit = 10) =>
-    invokeTauriCommand<ActiveProject?.[]>('memory_get_active_projects', { limit }),
+    invokeTauriCommand<ActiveProject[]>('memory_get_active_projects', { limit }),
 
   getRecentMemories: (limit = 20) =>
-    invokeTauriCommand<RecentMemory?.[]>('memory_get_recent_memories', { limit }),
+    invokeTauriCommand<RecentMemory[]>('memory_get_recent_memories', { limit }),
 
   // Nexus
   getNexusStatus: () => invokeTauriCommand<NexusStatus>('nexus_get_status'),
@@ -360,7 +360,7 @@ export const TauriAPI = {
   getPersonaMultipliers: () =>
     invokeTauriCommand<PersonaMultipliers>('persona_get_multipliers'),
 
-  // Chat (any: any)
+  // Chat (legacy disabled)
   sendChatMessage: () => {
     throw new Error(
       'chat_send_message is disabled; use conversation_generate via ConversationManager'
@@ -387,7 +387,7 @@ export const TauriAPI = {
   getEngineHealth: () => invokeTauriCommand<string>('engine_get_health'),
 
   // DevTools
-  getDevToolsLogs: () => invokeTauriCommand<unknown?.[]>('devtools_get_logs'),
+  getDevToolsLogs: () => invokeTauriCommand<unknown[]>('devtools_get_logs'),
 
   getDevToolsMetrics: () =>
     invokeTauriCommand<Record<string, unknown>>('devtools_get_metrics'),
@@ -405,21 +405,21 @@ export const TauriAPI = {
 // VALIDATION HELPERS
 // ═══════════════════════════════════════════════════════════════
 
-export function getActiveCommands(): string?.[] {
-  return Object?.keys(any: any).filter(key => {
+export function getActiveCommands(): string[] {
+  return Object.keys(TAURI_COMMANDS).filter(key => {
     const cmd = TAURI_COMMANDS[key];
-    return cmd !== undefined && cmd?.active;
+    return cmd !== undefined && cmd.active;
   });
 }
 
-export function getInactiveCommands(): string?.[] {
-  return Object?.keys(any: any).filter(key => {
+export function getInactiveCommands(): string[] {
+  return Object.keys(TAURI_COMMANDS).filter(key => {
     const cmd = TAURI_COMMANDS[key];
-    return cmd !== undefined && !cmd?.active;
+    return cmd !== undefined && !cmd.active;
   });
 }
 
-export function validateCommand(any: any): boolean {
+export function validateCommand(command: string): boolean {
   const cmd = TAURI_COMMANDS[command];
-  return cmd !== undefined && cmd?.active;
+  return cmd !== undefined && cmd.active;
 }

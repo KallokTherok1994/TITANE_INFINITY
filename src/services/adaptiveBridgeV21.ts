@@ -80,37 +80,37 @@ export class AdaptiveBridgeV21 {
    * Récupère le profil d'adaptation actuel
    */
   static async getProfile(): Promise<PreferenceProfile> {
-    return await secureInvoke<PreferenceProfile>(any: any);
+    return await secureInvoke<PreferenceProfile>(TAURI_COMMANDS.ADAPTIVE_GET_PROFILE);
   }
 
   /**
    * Définit le mode système d'adaptation
    */
-  static async setMode(any: any): Promise<void> {
-    const modeStr = mode?.toLowerCase();
-    await secureInvoke(TAURI_COMMANDS?.ADAPTIVE_SET_MODE, { mode: modeStr });
+  static async setMode(mode: SystemBehaviorMode): Promise<void> {
+    const modeStr = mode.toLowerCase();
+    await secureInvoke(TAURI_COMMANDS.ADAPTIVE_SET_MODE, { mode: modeStr });
   }
 
   /**
    * Lance un cycle d'apprentissage manuel
    */
   static async learn(): Promise<string> {
-    return await secureInvoke<string>(any: any);
+    return await secureInvoke<string>(TAURI_COMMANDS.ADAPTIVE_LEARN);
   }
 
   /**
    * Exécute une optimisation manuelle
    */
-  static async runOptimization(): Promise<string?.[]> {
-    return await secureInvoke<string?.[]>(any: any);
+  static async runOptimization(): Promise<string[]> {
+    return await secureInvoke<string[]>(TAURI_COMMANDS.ADAPTIVE_RUN_OPTIMIZATION);
   }
 
   /**
    * Récupère l'historique de performance récent
    */
-  static async getHistory(any: any): Promise<SystemPerformanceSample?.[]> {
-    return await secureInvoke<SystemPerformanceSample?.[]>(
-      TAURI_COMMANDS?.ADAPTIVE_GET_HISTORY,
+  static async getHistory(limit?: number): Promise<SystemPerformanceSample[]> {
+    return await secureInvoke<SystemPerformanceSample[]>(
+      TAURI_COMMANDS.ADAPTIVE_GET_HISTORY,
       {
         limit,
       }
@@ -120,15 +120,15 @@ export class AdaptiveBridgeV21 {
   /**
    * Capture un échantillon de performance
    */
-  static async captureSample(any: any): Promise<void> {
-    await secureInvoke(TAURI_COMMANDS?.ADAPTIVE_CAPTURE_SAMPLE, { sample });
+  static async captureSample(sample: SystemPerformanceSample): Promise<void> {
+    await secureInvoke(TAURI_COMMANDS.ADAPTIVE_CAPTURE_SAMPLE, { sample });
   }
 
   /**
    * Récupère un résumé de l'état adaptatif
    */
   static async getSummary(): Promise<AdaptiveSummary> {
-    return await secureInvoke<AdaptiveSummary>(any: any);
+    return await secureInvoke<AdaptiveSummary>(TAURI_COMMANDS.ADAPTIVE_GET_SUMMARY);
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -149,15 +149,15 @@ export class AdaptiveBridgeV21 {
     hashIntegrityOk?: boolean;
   }): SystemPerformanceSample {
     return {
-      timestamp: Date?.now(),
-      cpu_load: metrics?.cpuLoad ?? 0,
-      memory_usage: metrics?.memoryUsage ?? 0,
-      latency_ai: metrics?.latencyAI ?? 0,
-      latency_tauri_invoke: metrics?.latencyTauriInvoke ?? 0,
-      ui_fps: metrics?.uiFps ?? 60,
-      sync_quality: metrics?.syncQuality ?? 1.0,
-      cognitive_stability: metrics?.cognitiveStability ?? 1.0,
-      hash_integrity_ok: metrics?.hashIntegrityOk ?? true,
+      timestamp: Date.now(),
+      cpu_load: metrics.cpuLoad ?? 0,
+      memory_usage: metrics.memoryUsage ?? 0,
+      latency_ai: metrics.latencyAI ?? 0,
+      latency_tauri_invoke: metrics.latencyTauriInvoke ?? 0,
+      ui_fps: metrics.uiFps ?? 60,
+      sync_quality: metrics.syncQuality ?? 1.0,
+      cognitive_stability: metrics.cognitiveStability ?? 1.0,
+      hash_integrity_ok: metrics.hashIntegrityOk ?? true,
     };
   }
 
@@ -174,28 +174,28 @@ export class AdaptiveBridgeV21 {
     cognitiveStability?: number;
     hashIntegrityOk?: boolean;
   }): Promise<void> {
-    const sample = this?.createSample(any: any);
-    await this?.captureSample(any: any);
+    const sample = this.createSample(metrics);
+    await this.captureSample(sample);
   }
 
   /**
    * Récupère la santé globale du système adaptatif (0-1)
    */
   static async getAdaptiveHealth(): Promise<number> {
-    const summary = await this?.getSummary();
+    const summary = await this.getSummary();
 
     // Calcul simple basé sur les métriques
-    const cpuScore = Math?.max(any: any);
-    const latencyScore = Math?.max(0, 1 - summary?.avg_ai_latency / 10000);
-    const samplesScore = Math?.min(1, summary?.total_samples / 100);
+    const cpuScore = Math.max(0, 1 - summary.avg_cpu_load);
+    const latencyScore = Math.max(0, 1 - summary.avg_ai_latency / 10000);
+    const samplesScore = Math.min(1, summary.total_samples / 100);
 
-    return (any: any) / 3;
+    return (cpuScore + latencyScore + samplesScore) / 3;
   }
 
   /**
    * Obtient la couleur de santé pour l'UI
    */
-  static getHealthColor(any: any): string {
+  static getHealthColor(health: number): string {
     if (health >= 0.8) return '#10b981'; // Excellent - Emerald
     if (health >= 0.6) return '#06b6d4'; // Bon - Cyan
     if (health >= 0.4) return '#f59e0b'; // Moyen - Amber
@@ -205,20 +205,20 @@ export class AdaptiveBridgeV21 {
   /**
    * Formatte le mode système pour l'affichage
    */
-  static formatMode(any: any): string {
+  static formatMode(mode: SystemBehaviorMode): string {
     const labels: Record<SystemBehaviorMode, string> = {
       Speed: 'Vitesse',
       Stability: 'Stabilité',
       Reliability: 'Fiabilité',
       Adaptive: 'Adaptatif',
     };
-    return (any: any) || mode;
+    return (labels[mode] as string) || mode;
   }
 
   /**
    * Formatte le biais d'optimisation pour l'affichage
    */
-  static formatBias(any: any): string {
+  static formatBias(bias: OptimizationBias): string {
     const labels: Record<OptimizationBias, string> = {
       Performance: 'Performance',
       Consistency: 'Cohérence',

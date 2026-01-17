@@ -31,16 +31,16 @@ export interface MetricScore {
   /** Type de métrique */
   type: MetricType;
 
-  /** Valeur (any: any) */
+  /** Valeur (0.0 - 1.0 pour les scores qualitatifs) */
   value: number;
 
-  /** Unité (any: any) */
+  /** Unité (si applicable) */
   unit?: string; // 'seconds', 'MB', 'score', etc.
 
   /** Détails/raison */
   details?: string;
 
-  /** Sous-scores (any: any) */
+  /** Sous-scores (optionnel) */
   subscores?: Record<string, number>;
 }
 
@@ -66,7 +66,7 @@ export interface SuccessCriterion {
   /** Poids dans l'évaluation globale */
   weight?: number; // default: 1.0
 
-  /** Critique (any: any) */
+  /** Critique (échec = test failed) */
   is_critical?: boolean;
 }
 
@@ -74,22 +74,22 @@ export interface SuccessCriterion {
  * Message de test
  */
 export interface TestMessage {
-  /** Role (any: any) */
+  /** Role (user ou assistant) */
   role: 'user' | 'assistant';
 
   /** Contenu */
   content: string;
 
-  /** Réponse attendue (any: any) */
+  /** Réponse attendue (si role = user) */
   expected_response?: {
-    /** Contenu exact (any: any) */
+    /** Contenu exact (optionnel) */
     exact_match?: string;
 
-    /** Patterns requis (any: any) */
-    must_contain?: string?.[];
+    /** Patterns requis (regex) */
+    must_contain?: string[];
 
-    /** Patterns interdits (any: any) */
-    must_not_contain?: string?.[];
+    /** Patterns interdits (regex) */
+    must_not_contain?: string[];
 
     /** Contraintes structurelles */
     constraints?: {
@@ -126,16 +126,16 @@ export interface ConversationTestScenario {
   };
 
   /** Séquence de messages */
-  messages: TestMessage?.[];
+  messages: TestMessage[];
 
   /** Objectifs du test */
-  goals: string?.[];
+  goals: string[];
 
   /** Critères de succès */
-  success_criteria: SuccessCriterion?.[];
+  success_criteria: SuccessCriterion[];
 
   /** Métadonnées */
-  tags?: string?.[];
+  tags?: string[];
   priority?: 'low' | 'medium' | 'high' | 'critical';
   estimated_duration_ms?: number;
   created_at: string;
@@ -153,7 +153,7 @@ export interface MessageEvaluationResult {
   content: string;
 
   /** Scores des métriques */
-  scores: MetricScore?.[];
+  scores: MetricScore[];
 
   /** Score global (0.0 - 1.0) */
   overall_score: number;
@@ -179,7 +179,7 @@ export interface TestScenarioResult {
   /** Timestamp d'exécution */
   timestamp: string;
 
-  /** Durée totale (any: any) */
+  /** Durée totale (ms) */
   duration_ms: number;
 
   /** Messages générés */
@@ -200,7 +200,7 @@ export interface TestScenarioResult {
   }>;
 
   /** Scores globaux */
-  global_scores: MetricScore?.[];
+  global_scores: MetricScore[];
 
   /** Résultat final */
   passed: boolean;
@@ -213,8 +213,8 @@ export interface TestScenarioResult {
     stack?: string;
   }>;
 
-  /** Logs (any: any) */
-  logs?: string?.[];
+  /** Logs (si debug activé) */
+  logs?: string[];
 }
 
 /**
@@ -231,7 +231,7 @@ export interface TestSuiteResult {
   duration_ms: number;
 
   /** Résultats par scénario */
-  scenarios: TestScenarioResult?.[];
+  scenarios: TestScenarioResult[];
 
   /** Statistiques */
   stats: {
@@ -274,7 +274,7 @@ export interface LiveEvaluationConfig {
   evaluate_every_n_messages: number; // default: 5
 
   /** Métriques à évaluer */
-  metrics_to_track: MetricType?.[];
+  metrics_to_track: MetricType[];
 
   /** Seuil d'alerte */
   alert_threshold: {
@@ -306,9 +306,9 @@ export interface LiveEvaluationResult {
   messages_evaluated: number;
 
   /** Scores actuels */
-  current_scores: MetricScore?.[];
+  current_scores: MetricScore[];
 
-  /** Tendances (any: any) */
+  /** Tendances (sur derniers N messages) */
   trends: Record<
     MetricType,
     {
@@ -335,7 +335,7 @@ export interface EvaluationEngineConfig {
   test_scenarios: {
     directory: string;
     auto_load: boolean;
-    categories_enabled: string?.[];
+    categories_enabled: string[];
   };
 
   /** Live evaluation */
@@ -409,4 +409,4 @@ export interface EvaluationEvent {
   data: EvaluationEventData;
 }
 
-export type EvaluationEventHandler = (any: any) => void;
+export type EvaluationEventHandler = (event: EvaluationEvent) => void;

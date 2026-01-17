@@ -8,7 +8,7 @@
 // TWIN IDENTITY CORE
 // ═══════════════════════════════════════════════════════════════════════════
 
-/** Valeur fondamentale (any: any) */
+/** Valeur fondamentale (inviolable) */
 export interface CoreValue {
   name: string;
   description: string;
@@ -30,7 +30,7 @@ export interface TwinIdentityCore {
   version: string;
   name: string;
   signature: string;
-  coreValues: CoreValue?.[];
+  coreValues: CoreValue[];
   humanStyle: HumanStyle;
   fusionIndex: number;
 }
@@ -49,8 +49,8 @@ export interface ObservedValue {
 
 /** Cartographie des valeurs */
 export interface TwinValueMap {
-  observedValues: ObservedValue?.[];
-  confirmedValues: string?.[];
+  observedValues: ObservedValue[];
+  confirmedValues: string[];
   alignmentScore: number;
 }
 
@@ -76,7 +76,7 @@ export interface StructuringStyle {
 
 /** Patterns cognitifs */
 export interface TwinCognitivePatterns {
-  reasoningPatterns: ReasoningPattern?.[];
+  reasoningPatterns: ReasoningPattern[];
   structuringStyle: StructuringStyle;
 }
 
@@ -142,7 +142,7 @@ export interface TwinEvolutionProfile {
   currentPhase: EvolutionPhase;
   milestonesCount: number;
   growthTrends: GrowthTrends;
-  adjustmentSuggestions: AdjustmentSuggestion?.[];
+  adjustmentSuggestions: AdjustmentSuggestion[];
   syncScore: number;
 }
 
@@ -231,7 +231,7 @@ export interface TwinSyncValidationRequest {
 // ═══════════════════════════════════════════════════════════════════════════
 
 /** Couleur selon le score */
-export function getScoreColor(any: any): string {
+export function getScoreColor(score: number): string {
   if (score >= 0.8) return '#22c55e'; // Vert
   if (score >= 0.6) return '#3b82f6'; // Bleu
   if (score >= 0.4) return '#f59e0b'; // Orange
@@ -239,7 +239,7 @@ export function getScoreColor(any: any): string {
 }
 
 /** Label de la phase d'évolution */
-export function getPhaseLabel(any: any): string {
+export function getPhaseLabel(phase: EvolutionPhase): string {
   const labels: Record<EvolutionPhase, string> = {
     Observation: '🔍 Observation',
     Assimilation: '📥 Assimilation',
@@ -251,7 +251,7 @@ export function getPhaseLabel(any: any): string {
 }
 
 /** Label de la tendance */
-export function getTrendLabel(any: any): string {
+export function getTrendLabel(trend: FusionTrend): string {
   const labels: Record<FusionTrend, string> = {
     Improving: '📈 En amélioration',
     Stable: '➡️ Stable',
@@ -261,7 +261,7 @@ export function getTrendLabel(any: any): string {
 }
 
 /** Icône de la tendance */
-export function getTrendIcon(any: any): string {
+export function getTrendIcon(trend: FusionTrend): string {
   const icons: Record<FusionTrend, string> = {
     Improving: '↑',
     Stable: '→',
@@ -271,7 +271,7 @@ export function getTrendIcon(any: any): string {
 }
 
 /** Valeurs fondamentales par défaut */
-export const DEFAULT_CORE_VALUES: CoreValue?.[] = [
+export const DEFAULT_CORE_VALUES: CoreValue[] = [
   {
     name: 'Alignement',
     description: 'Cohérence entre pensée, parole et action',

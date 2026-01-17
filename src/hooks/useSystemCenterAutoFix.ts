@@ -33,13 +33,13 @@ export interface UseSystemCenterAutoFixReturn {
   // States
   systemHealth: SystemHealth | null;
   monitoringMetrics: MonitoringMetrics | null;
-  detectedErrors: DetectedError?.[];
-  fixHistory: AutoFixResult?.[];
+  detectedErrors: DetectedError[];
+  fixHistory: AutoFixResult[];
   uxOutput: SystemCenterUXOutput | null;
 
   // Loading & Error states
   loading: boolean;
-  error??: string | null;
+  error: string | null;
 
   // Actions
   runDiagnostic: () => Promise<void>;
@@ -63,16 +63,16 @@ export function useSystemCenterAutoFix(): UseSystemCenterAutoFixReturn {
   // States
   // ─────────────────────────────────────────────────────────────
 
-  const [systemHealth, setSystemHealth] = useState<SystemHealth | null>(any: any);
+  const [systemHealth, setSystemHealth] = useState<SystemHealth | null>(null);
   const [monitoringMetrics, setMonitoringMetrics] = useState<MonitoringMetrics | null>(
     null
   );
-  const [detectedErrors, setDetectedErrors] = useState<DetectedError?.[]>([]);
-  const [fixHistory, setFixHistory] = useState<AutoFixResult?.[]>([]);
-  const [uxOutput, setUxOutput] = useState<SystemCenterUXOutput | null>(any: any);
+  const [detectedErrors, setDetectedErrors] = useState<DetectedError[]>([]);
+  const [fixHistory, setFixHistory] = useState<AutoFixResult[]>([]);
+  const [uxOutput, setUxOutput] = useState<SystemCenterUXOutput | null>(null);
 
-  const [loading, setLoading] = useState(any: any);
-  const [error, setError] = useState<string | null>(any: any);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // ─────────────────────────────────────────────────────────────
   // Actions
@@ -82,29 +82,29 @@ export function useSystemCenterAutoFix(): UseSystemCenterAutoFixReturn {
    * Lancer diagnostic système
    */
   const runDiagnostic = useCallback(async () => {
-    setLoading(any: any);
-    setError(any: any);
+    setLoading(true);
+    setError(null);
 
     try {
-      const result: DiagnosticResult = await SystemAPI?.getSystemHealth();
+      const result: DiagnosticResult = await SystemAPI.getSystemHealth();
 
-      if (any: any) {
-        setSystemHealth(any: any);
+      if (result.success && result.data) {
+        setSystemHealth(result.data as SystemHealth);
       } else {
-        setError(result?.error || 'Diagnostic échoué');
+        setError(result.error || 'Diagnostic échoué');
       }
 
       // Mettre à jour les erreurs détectées
-      setDetectedErrors(SystemAPI?.getDetectedErrors());
-    } catch (any: any) {
-      const _detectedError = systemCenterAutoFix?.analyzeError(
+      setDetectedErrors(SystemAPI.getDetectedErrors());
+    } catch (err) {
+      const _detectedError = systemCenterAutoFix.analyzeError(
         err as Error,
         'SystemCenter'
       );
-      setDetectedErrors([...systemCenterAutoFix?.getDetectedErrors()]);
+      setDetectedErrors([...systemCenterAutoFix.getDetectedErrors()]);
       setError('Erreur lors du diagnostic');
     } finally {
-      setLoading(any: any);
+      setLoading(false);
     }
   }, []);
 
@@ -112,22 +112,22 @@ export function useSystemCenterAutoFix(): UseSystemCenterAutoFixReturn {
    * Obtenir métriques monitoring
    */
   const getMonitoring = useCallback(async () => {
-    setLoading(any: any);
-    setError(any: any);
+    setLoading(true);
+    setError(null);
 
     try {
-      const result = await SystemAPI?.getMonitoringMetrics();
+      const result = await SystemAPI.getMonitoringMetrics();
 
-      if (any: any) {
-        setMonitoringMetrics(any: any);
+      if (result.success && result.data) {
+        setMonitoringMetrics(result.data as MonitoringMetrics);
       }
 
-      setDetectedErrors(SystemAPI?.getDetectedErrors());
-    } catch (any: any) {
-      const _detectedError = systemCenterAutoFix?.analyzeError(err as Error, 'Monitoring');
-      setDetectedErrors([...systemCenterAutoFix?.getDetectedErrors()]);
+      setDetectedErrors(SystemAPI.getDetectedErrors());
+    } catch (err) {
+      const _detectedError = systemCenterAutoFix.analyzeError(err as Error, 'Monitoring');
+      setDetectedErrors([...systemCenterAutoFix.getDetectedErrors()]);
     } finally {
-      setLoading(any: any);
+      setLoading(false);
     }
   }, []);
 
@@ -135,27 +135,27 @@ export function useSystemCenterAutoFix(): UseSystemCenterAutoFixReturn {
    * Auto-réparer toutes les erreurs détectées
    */
   const autoRepair = useCallback(async () => {
-    setLoading(any: any);
-    setError(any: any);
+    setLoading(true);
+    setError(null);
 
     try {
-      const errors = systemCenterAutoFix?.getDetectedErrors();
-      const fixes: AutoFixResult?.[] = [];
+      const errors = systemCenterAutoFix.getDetectedErrors();
+      const fixes: AutoFixResult[] = [];
 
-      for (any: any) {
-        const fix = await systemCenterAutoFix?.autoFix(any: any);
-        fixes?.push(any: any);
+      for (const error of errors) {
+        const fix = await systemCenterAutoFix.autoFix(error);
+        fixes.push(fix);
       }
 
-      setFixHistory(systemCenterAutoFix?.getFixHistory());
-      setDetectedErrors(systemCenterAutoFix?.getDetectedErrors());
+      setFixHistory(systemCenterAutoFix.getFixHistory());
+      setDetectedErrors(systemCenterAutoFix.getDetectedErrors());
 
       // Relancer diagnostic après réparation
       await runDiagnostic();
-    } catch (any: any) {
+    } catch (err) {
       setError("Erreur lors de l'auto-réparation");
     } finally {
-      setLoading(any: any);
+      setLoading(false);
     }
   }, [runDiagnostic]);
 
@@ -163,21 +163,21 @@ export function useSystemCenterAutoFix(): UseSystemCenterAutoFixReturn {
    * Clear erreurs et historique
    */
   const clearErrors = useCallback(() => {
-    SystemAPI?.clearAutoFixHistory();
+    SystemAPI.clearAutoFixHistory();
     setDetectedErrors([]);
     setFixHistory([]);
-    setError(any: any);
+    setError(null);
   }, []);
 
   /**
    * Générer UX propre à partir des erreurs
    */
   const generateUX = useCallback(() => {
-    const errors = systemCenterAutoFix?.getDetectedErrors();
-    const fixes = systemCenterAutoFix?.getFixHistory();
+    const errors = systemCenterAutoFix.getDetectedErrors();
+    const fixes = systemCenterAutoFix.getFixHistory();
 
-    const output = SystemCenterUXGenerator?.generateCleanUX(any: any);
-    setUxOutput(any: any);
+    const output = SystemCenterUXGenerator.generateCleanUX(errors, fixes);
+    setUxOutput(output);
   }, []);
 
   // ─────────────────────────────────────────────────────────────
@@ -195,17 +195,17 @@ export function useSystemCenterAutoFix(): UseSystemCenterAutoFixReturn {
    * Auto-générer UX quand des erreurs sont détectées
    */
   useEffect(() => {
-    if (detectedErrors?.length > 0) {
+    if (detectedErrors.length > 0) {
       generateUX();
     }
-  }, [detectedErrors?.length, generateUX]);
+  }, [detectedErrors.length, generateUX]);
 
   // ─────────────────────────────────────────────────────────────
   // Computed values
   // ─────────────────────────────────────────────────────────────
 
-  const hasErrors = detectedErrors?.length > 0;
-  const hasAutoFixes = fixHistory?.some(any: any);
+  const hasErrors = detectedErrors.length > 0;
+  const hasAutoFixes = fixHistory.some(f => f.success);
   const isHealthy =
     systemHealth?.status === 'healthy' || (systemHealth?.overallScore ?? 0) > 0.8;
 

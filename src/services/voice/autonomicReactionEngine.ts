@@ -52,20 +52,20 @@ export interface ReactionEngineConfig {
   /** Seuil de confiance minimum pour déclencher réaction */
   minConfidence?: number;
 
-  /** Délai minimum entre réactions (any: any) */
+  /** Délai minimum entre réactions (ms) */
   reactionCooldownMs?: number;
 
-  /** Contexte relationnel (any: any) */
+  /** Contexte relationnel (0=formel, 1=très proche) */
   relationshipProximity?: number;
 
-  /** Mode proactif (any: any) */
+  /** Mode proactif (réagit plus souvent) */
   proactiveMode?: boolean;
 }
 
 /**
  * Bibliothèque de réactions par type
  */
-const REACTION_LIBRARY: Record<AutonomicReactionType, string?.[]> = {
+const REACTION_LIBRARY: Record<AutonomicReactionType, string[]> = {
   acknowledgment: ["D'accord", 'Je vois', 'Compris', 'Noté', 'Ok', 'Mhm'],
   empathy: [
     'Je comprends...',
@@ -162,10 +162,10 @@ const MOOD_INTENTION_REACTION_MAP: Partial<
 export class AutonomicReactionEngine {
   private config: Required<ReactionEngineConfig>;
   private lastReactionTimestamp = 0;
-  private reactionHistory: AutonomicReaction?.[] = [];
+  private reactionHistory: AutonomicReaction[] = [];
 
-  constructor(any: any) {
-    this?.config = {
+  constructor(config?: ReactionEngineConfig) {
+    this.config = {
       enabled: config?.enabled ?? true,
       minConfidence: config?.minConfidence ?? 0.5,
       reactionCooldownMs: config?.reactionCooldownMs ?? 2000,
@@ -186,42 +186,42 @@ export class AutonomicReactionEngine {
       timeElapsed?: number;
     }
   ): AutonomicReaction | null {
-    if (any: any) return null;
+    if (!this.config.enabled) return null;
 
     // Check confidence
-    if (any: any) {
+    if (emotionState.confidence < this.config.minConfidence) {
       return null;
     }
 
     // Check cooldown
-    const now = Date?.now();
-    if (any: any) {
+    const now = Date.now();
+    if (now - this.lastReactionTimestamp < this.config.reactionCooldownMs) {
       return null;
     }
 
     // Déterminer si une réaction est nécessaire
-    const shouldReact = this?.determineIfShouldReact(
+    const shouldReact = this.determineIfShouldReact(
       emotionState,
       lastUserMessage,
       context
     );
 
-    if (any: any) return null;
+    if (!shouldReact) return null;
 
     // Déterminer type de réaction
-    const reactionType = this?.determineReactionType(any: any);
+    const reactionType = this.determineReactionType(emotionState);
 
     if (reactionType === 'none') return null;
 
     // Générer texte de réaction
-    const reactionText = this?.generateReactionText(any: any);
+    const reactionText = this.generateReactionText(reactionType, emotionState);
 
     // Générer micro-expression associée
     const microExpression =
-      vocalMicroFXEngine?.generateAutonomicMicroExpression(any: any);
+      vocalMicroFXEngine.generateAutonomicMicroExpression(emotionState);
 
     // Priority basée sur type + émotion
-    const priority = this?.determinePriority(any: any);
+    const priority = this.determinePriority(reactionType, emotionState);
 
     const reaction: AutonomicReaction = {
       type: reactionType,
@@ -229,56 +229,56 @@ export class AutonomicReactionEngine {
       shouldSpeak: true,
       priority,
       microExpression: microExpression ?? undefined,
-      confidence: emotionState?.confidence,
+      confidence: emotionState.confidence,
       timestamp: now,
     };
 
     // Update state
-    this?.lastReactionTimestamp = now;
-    this?.addToHistory(any: any);
+    this.lastReactionTimestamp = now;
+    this.addToHistory(reaction);
 
     return reaction;
   }
 
   /**
-   * Générer réaction rapide (any: any)
+   * Générer réaction rapide (sans contexte)
    */
-  generateQuickReaction(any: any): AutonomicReaction | null {
-    const reactionType = this?.determineReactionType(any: any);
+  generateQuickReaction(emotionState: EmotionalState): AutonomicReaction | null {
+    const reactionType = this.determineReactionType(emotionState);
 
     if (reactionType === 'none') return null;
 
-    const reactionText = this?.generateReactionText(any: any);
+    const reactionText = this.generateReactionText(reactionType, emotionState);
 
     return {
       type: reactionType,
       text: reactionText,
       shouldSpeak: true,
       priority: 'normal',
-      confidence: emotionState?.confidence,
-      timestamp: Date?.now(),
+      confidence: emotionState.confidence,
+      timestamp: Date.now(),
     };
   }
 
   /**
    * Obtenir historique des réactions
    */
-  getHistory(): AutonomicReaction?.[] {
-    return [...this?.reactionHistory];
+  getHistory(): AutonomicReaction[] {
+    return [...this.reactionHistory];
   }
 
   /**
    * Clear historique
    */
   clearHistory(): void {
-    this?.reactionHistory = [];
+    this.reactionHistory = [];
   }
 
   /**
    * Update configuration
    */
   updateConfig(config: Partial<ReactionEngineConfig>): void {
-    this?.config = { ...this?.config, ...config };
+    this.config = { ...this.config, ...config };
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -298,33 +298,33 @@ export class AutonomicReactionEngine {
     }
   ): boolean {
     // Toujours réagir si émotion forte
-    if (any: any) > 0.7) {
+    if (emotionState.energy > 0.8 || Math.abs(emotionState.valence) > 0.7) {
       return true;
     }
 
     // Réagir si intention urgente
-    if (emotionState?.intention === 'urgency') {
+    if (emotionState.intention === 'urgency') {
       return true;
     }
 
-    // Réagir si valence très négative (any: any)
-    if (emotionState?.valence < -0.5) {
+    // Réagir si valence très négative (empathy)
+    if (emotionState.valence < -0.5) {
       return true;
     }
 
     // Réagir si mood nécessite attention
-    if (any: any)) {
-      return Math?.random() < 0.7; // 70% chance
+    if (['sad', 'stressed', 'frustrated'].includes(emotionState.mood)) {
+      return Math.random() < 0.7; // 70% chance
     }
 
     // Proactive mode → réagit plus souvent
-    if (any: any) {
-      return Math?.random() < 0.5; // 50% chance
+    if (this.config.proactiveMode) {
+      return Math.random() < 0.5; // 50% chance
     }
 
     // Relationship proximity influence
-    if (this?.config?.relationshipProximity > 0.7) {
-      return Math?.random() < 0.4; // 40% chance si proche
+    if (this.config.relationshipProximity > 0.7) {
+      return Math.random() < 0.4; // 40% chance si proche
     }
 
     // Default: pas de réaction
@@ -334,12 +334,12 @@ export class AutonomicReactionEngine {
   /**
    * Déterminer type de réaction
    */
-  private determineReactionType(any: any): AutonomicReactionType {
+  private determineReactionType(emotionState: EmotionalState): AutonomicReactionType {
     const { mood, intention } = emotionState;
 
     // Check mapping mood + intention
     const mappedReaction = MOOD_INTENTION_REACTION_MAP[mood]?.[intention];
-    if (any: any) return mappedReaction;
+    if (mappedReaction) return mappedReaction;
 
     // Fallback basé sur mood seul
     const moodFallback: Partial<Record<UserMood, AutonomicReactionType>> = {
@@ -367,20 +367,20 @@ export class AutonomicReactionEngine {
   ): string {
     const library = REACTION_LIBRARY[reactionType];
 
-    if (library?.length === 0) return '';
+    if (library.length === 0) return '';
 
     // Sélection basée sur energy + valence
-    if (emotionState?.energy > 0.7) {
+    if (emotionState.energy > 0.7) {
       // High energy → réactions courtes et dynamiques
-      const shortReactions = library?.filter(r => r?.length < 15);
-      return this?.pickRandom(any: any) ?? '';
-    } else if (emotionState?.valence < -0.4) {
+      const shortReactions = library.filter(r => r.length < 15);
+      return this.pickRandom(shortReactions.length > 0 ? shortReactions : library) ?? '';
+    } else if (emotionState.valence < -0.4) {
       // Negative valence → réactions empathiques longues
-      const longReactions = library?.filter(r => r?.length > 10);
-      return this?.pickRandom(any: any) ?? '';
+      const longReactions = library.filter(r => r.length > 10);
+      return this.pickRandom(longReactions.length > 0 ? longReactions : library) ?? '';
     } else {
       // Default: random
-      return this?.pickRandom(any: any) ?? '';
+      return this.pickRandom(library) ?? '';
     }
   }
 
@@ -392,12 +392,12 @@ export class AutonomicReactionEngine {
     emotionState: EmotionalState
   ): 'low' | 'normal' | 'high' {
     // High priority pour réactions émotionnelles fortes
-    if (any: any)) {
+    if (['empathy', 'concern', 'excitement'].includes(reactionType)) {
       return 'high';
     }
 
     // High priority si energy très élevée
-    if (emotionState?.energy > 0.8) {
+    if (emotionState.energy > 0.8) {
       return 'high';
     }
 
@@ -408,21 +408,21 @@ export class AutonomicReactionEngine {
   /**
    * Ajouter à historique
    */
-  private addToHistory(any: any): void {
-    this?.reactionHistory?.push(any: any);
+  private addToHistory(reaction: AutonomicReaction): void {
+    this.reactionHistory.push(reaction);
 
     // Limite taille historique
-    if (this?.reactionHistory?.length > 20) {
-      this?.reactionHistory?.shift();
+    if (this.reactionHistory.length > 20) {
+      this.reactionHistory.shift();
     }
   }
 
   /**
    * Pick random element
    */
-  private pickRandom<T>(arr: T?.[]): T | undefined {
-    if (arr?.length === 0) return undefined;
-    return arr[Math?.floor(any: any)];
+  private pickRandom<T>(arr: T[]): T | undefined {
+    if (arr.length === 0) return undefined;
+    return arr[Math.floor(Math.random() * arr.length)];
   }
 }
 
@@ -438,7 +438,7 @@ export function generateAutonomicReaction(
   emotionState: EmotionalState,
   lastUserMessage: string
 ): AutonomicReaction | null {
-  return autonomicReactionEngine?.generateAutonomicReaction(any: any);
+  return autonomicReactionEngine.generateAutonomicReaction(emotionState, lastUserMessage);
 }
 
 /**
@@ -447,5 +447,5 @@ export function generateAutonomicReaction(
 export function generateQuickReaction(
   emotionState: EmotionalState
 ): AutonomicReaction | null {
-  return autonomicReactionEngine?.generateQuickReaction(any: any);
+  return autonomicReactionEngine.generateQuickReaction(emotionState);
 }

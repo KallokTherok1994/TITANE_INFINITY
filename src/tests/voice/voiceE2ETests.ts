@@ -16,8 +16,8 @@ import { audioStateMachine } from '@/services/audio/audioStateMachine';
 import { haloEngine } from '@/services/voice/haloEngine';
 
 // Mock secureInvoke
-vi?.mock('@/lib/security', () => ({
-  secureInvoke: vi?.fn(),
+vi.mock('@/lib/security', () => ({
+  secureInvoke: vi.fn(),
 }));
 
 /**
@@ -41,7 +41,7 @@ class MockVoiceBackend {
   private config: MockVoiceConfig;
 
   constructor(config: MockVoiceConfig = {}) {
-    this?.config = {
+    this.config = {
       sttDelay: 100,
       sttResult: 'Hello TITANE',
       sttError: false,
@@ -53,60 +53,60 @@ class MockVoiceBackend {
   }
 
   async startRecording(): Promise<void> {
-    if (any: any) {
+    if (this.recording) {
       throw new Error('Recording already in progress');
     }
-    this?.recording = true;
+    this.recording = true;
     await new Promise(resolve => setTimeout(resolve, 10));
   }
 
   async stopRecording(): Promise<string> {
-    if (any: any) {
+    if (!this.recording) {
       throw new Error('Not recording');
     }
 
-    await new Promise(any: any));
+    await new Promise(resolve => setTimeout(resolve, this.config.sttDelay));
 
-    if (any: any) {
-      this?.recording = false;
+    if (this.config.sttError) {
+      this.recording = false;
       throw new Error('STT transcription failed');
     }
 
-    this?.recording = false;
-    return this?.config?.sttResult || 'Mock transcript';
+    this.recording = false;
+    return this.config.sttResult || 'Mock transcript';
   }
 
-  async speak(any: any): Promise<void> {
-    if (any: any) {
+  async speak(_text: string): Promise<void> {
+    if (this.speaking) {
       throw new Error('Already speaking');
     }
 
-    this?.speaking = true;
-    await new Promise(any: any));
+    this.speaking = true;
+    await new Promise(resolve => setTimeout(resolve, this.config.ttsDelay));
 
-    if (any: any) {
-      this?.speaking = false;
+    if (this.config.ttsError) {
+      this.speaking = false;
       throw new Error('TTS playback failed');
     }
 
-    this?.speaking = false;
+    this.speaking = false;
   }
 
   async stopSpeaking(): Promise<void> {
-    this?.speaking = false;
+    this.speaking = false;
   }
 
   async getVADState(): Promise<{ state: string; isSpeaking: boolean }> {
     return {
-      state: this?.config?.vadState || 'silence',
-      isSpeaking: this?.config?.vadState === 'speech',
+      state: this.config.vadState || 'silence',
+      isSpeaking: this.config.vadState === 'speech',
     };
   }
 
   async processVADFrame(
     _audioData: Float32Array
   ): Promise<{ state: string; isSpeaking: boolean }> {
-    return this?.getVADState();
+    return this.getVADState();
   }
 
   async configureVAD(_config: { threshold?: number }): Promise<string> {
@@ -114,20 +114,20 @@ class MockVoiceBackend {
   }
 
   async resetVAD(): Promise<string> {
-    this?.config?.vadState = 'silence';
+    this.config.vadState = 'silence';
     return 'VAD reset';
   }
 
   isRecording(): boolean {
-    return this?.recording;
+    return this.recording;
   }
 
   isSpeaking(): boolean {
-    return this?.speaking;
+    return this.speaking;
   }
 
   setConfig(config: Partial<MockVoiceConfig>): void {
-    this?.config = { ...this?.config, ...config };
+    this.config = { ...this.config, ...config };
   }
 }
 
@@ -141,33 +141,33 @@ describe('Voice E2E Tests — Phase 8', () => {
   let mockBackend: MockVoiceBackend;
 
   beforeEach(() => {
-    vi?.clearAllMocks();
+    vi.clearAllMocks();
     mockBackend = new MockVoiceBackend();
 
     // Mock secureInvoke to route to mockBackend
-    (secureInvoke as ReturnType<typeof vi?.fn>).mockImplementation(
-      async (any: any) => {
-        switch (any: any) {
+    (secureInvoke as ReturnType<typeof vi.fn>).mockImplementation(
+      async (command: string, args?: unknown) => {
+        switch (command) {
           case 'start_recording':
-            return mockBackend?.startRecording();
+            return mockBackend.startRecording();
           case 'stop_recording':
-            return mockBackend?.stopRecording();
+            return mockBackend.stopRecording();
           case 'tts_speak':
-            return mockBackend?.speak(any: any);
+            return mockBackend.speak((args as { text: string }).text);
           case 'tts_stop':
-            return mockBackend?.stopSpeaking();
+            return mockBackend.stopSpeaking();
           case 'vad_get_state':
-            return mockBackend?.getVADState();
+            return mockBackend.getVADState();
           case 'vad_process_frame':
-            return mockBackend?.processVADFrame(
+            return mockBackend.processVADFrame(
               (args as { audioData: Float32Array }).audioData
             );
           case 'vad_configure':
-            return mockBackend?.configureVAD(
+            return mockBackend.configureVAD(
               (args as { config: { threshold?: number } }).config
             );
           case 'vad_reset':
-            return mockBackend?.resetVAD();
+            return mockBackend.resetVAD();
           default:
             throw new Error(`Unknown command: ${command}`);
         }
@@ -175,12 +175,12 @@ describe('Voice E2E Tests — Phase 8', () => {
     );
 
     // Reset engines
-    audioStateMachine?.reset();
-    haloEngine?.reset();
+    audioStateMachine.reset();
+    haloEngine.reset();
   });
 
   afterEach(() => {
-    vi?.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   /**
@@ -190,11 +190,11 @@ describe('Voice E2E Tests — Phase 8', () => {
    */
   it('should start and stop STT recording successfully', async () => {
     await secureInvoke('start_recording');
-    expect(any: any);
+    expect(mockBackend.isRecording()).toBe(true);
 
     const transcript = await secureInvoke('stop_recording');
-    expect(any: any).toBe('Hello TITANE');
-    expect(any: any);
+    expect(transcript).toBe('Hello TITANE');
+    expect(mockBackend.isRecording()).toBe(false);
   });
 
   /**
@@ -204,9 +204,9 @@ describe('Voice E2E Tests — Phase 8', () => {
    */
   it('should prevent double start recording', async () => {
     await secureInvoke('start_recording');
-    expect(any: any);
+    expect(mockBackend.isRecording()).toBe(true);
 
-    await expect(secureInvoke('start_recording')).rejects?.toThrow(
+    await expect(secureInvoke('start_recording')).rejects.toThrow(
       'Recording already in progress'
     );
   });
@@ -217,13 +217,13 @@ describe('Voice E2E Tests — Phase 8', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should handle STT transcription errors', async () => {
-    mockBackend?.setConfig({ sttError: true });
+    mockBackend.setConfig({ sttError: true });
 
     await secureInvoke('start_recording');
-    await expect(secureInvoke('stop_recording')).rejects?.toThrow(
+    await expect(secureInvoke('stop_recording')).rejects.toThrow(
       'STT transcription failed'
     );
-    expect(any: any);
+    expect(mockBackend.isRecording()).toBe(false);
   });
 
   /**
@@ -233,7 +233,7 @@ describe('Voice E2E Tests — Phase 8', () => {
    */
   it('should speak text via TTS', async () => {
     await secureInvoke('tts_speak', { text: 'Hello World' });
-    expect(any: any); // After completion
+    expect(mockBackend.isSpeaking()).toBe(false); // After completion
   });
 
   /**
@@ -247,10 +247,10 @@ describe('Voice E2E Tests — Phase 8', () => {
     // Stop before completion
     await new Promise(resolve => setTimeout(resolve, 10));
     await secureInvoke('tts_stop');
-    expect(any: any);
+    expect(mockBackend.isSpeaking()).toBe(false);
 
-    // Wait for promise to resolve (any: any)
-    await speakPromise?.catch(() => {});
+    // Wait for promise to resolve (might throw)
+    await speakPromise.catch(() => {});
   });
 
   /**
@@ -259,8 +259,8 @@ describe('Voice E2E Tests — Phase 8', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should handle TTS playback errors', async () => {
-    mockBackend?.setConfig({ ttsError: true });
-    await expect(secureInvoke('tts_speak', { text: 'Error test' })).rejects?.toThrow(
+    mockBackend.setConfig({ ttsError: true });
+    await expect(secureInvoke('tts_speak', { text: 'Error test' })).rejects.toThrow(
       'TTS playback failed'
     );
   });
@@ -272,7 +272,7 @@ describe('Voice E2E Tests — Phase 8', () => {
    */
   it('should get VAD state', async () => {
     const state = await secureInvoke('vad_get_state');
-    expect(any: any).toEqual({ state: 'silence', isSpeaking: false });
+    expect(state).toEqual({ state: 'silence', isSpeaking: false });
   });
 
   /**
@@ -283,7 +283,7 @@ describe('Voice E2E Tests — Phase 8', () => {
   it('should process VAD frame', async () => {
     const audioData = new Float32Array(1600); // 100ms @ 16kHz
     const result = await secureInvoke('vad_process_frame', { audioData });
-    expect(any: any).toEqual({ state: 'silence', isSpeaking: false });
+    expect(result).toEqual({ state: 'silence', isSpeaking: false });
   });
 
   /**
@@ -295,7 +295,7 @@ describe('Voice E2E Tests — Phase 8', () => {
     const result = await secureInvoke('vad_configure', {
       config: { threshold: 0.03 },
     });
-    expect(any: any).toBe('VAD configured');
+    expect(result).toBe('VAD configured');
   });
 
   /**
@@ -304,35 +304,35 @@ describe('Voice E2E Tests — Phase 8', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should reset VAD state', async () => {
-    mockBackend?.setConfig({ vadState: 'speech' });
+    mockBackend.setConfig({ vadState: 'speech' });
     const result = await secureInvoke('vad_reset');
-    expect(any: any).toBe('VAD reset');
+    expect(result).toBe('VAD reset');
 
     const state = await secureInvoke('vad_get_state');
-    expect(any: any).toBe('silence');
+    expect(state.state).toBe('silence');
   });
 
   /**
    * ─────────────────────────────────────────────────────────────────
-   * TEST 11: Full Voice Loop (any: any)
+   * TEST 11: Full Voice Loop (STT → AI → TTS)
    * ─────────────────────────────────────────────────────────────────
    */
   it('should execute full voice loop', async () => {
     // 1. Start recording
     await secureInvoke('start_recording');
-    expect(any: any);
+    expect(mockBackend.isRecording()).toBe(true);
 
     // 2. Stop recording → get transcript
     const transcript = await secureInvoke('stop_recording');
-    expect(any: any).toBe('Hello TITANE');
-    expect(any: any);
+    expect(transcript).toBe('Hello TITANE');
+    expect(mockBackend.isRecording()).toBe(false);
 
-    // 3. Simulate AI response (any: any)
+    // 3. Simulate AI response (mock external)
     const aiResponse = `You said: ${transcript}`;
 
     // 4. Speak AI response
     await secureInvoke('tts_speak', { text: aiResponse });
-    expect(any: any); // After completion
+    expect(mockBackend.isSpeaking()).toBe(false); // After completion
   });
 
   /**
@@ -342,26 +342,26 @@ describe('Voice E2E Tests — Phase 8', () => {
    */
   it('should sync with Audio State Machine', async () => {
     // Start recording → LISTENING
-    audioStateMachine?.transition('START_RECORDING');
-    expect(audioStateMachine?.getCurrentState()).toBe('LISTENING');
+    audioStateMachine.transition('START_RECORDING');
+    expect(audioStateMachine.getCurrentState()).toBe('LISTENING');
 
     await secureInvoke('start_recording');
 
     // Stop recording → PROCESSING
-    audioStateMachine?.transition('STOP_RECORDING');
-    expect(audioStateMachine?.getCurrentState()).toBe('PROCESSING');
+    audioStateMachine.transition('STOP_RECORDING');
+    expect(audioStateMachine.getCurrentState()).toBe('PROCESSING');
 
     await secureInvoke('stop_recording');
 
     // Start TTS → SPEAKING
-    audioStateMachine?.transition('START_TTS');
-    expect(audioStateMachine?.getCurrentState()).toBe('SPEAKING');
+    audioStateMachine.transition('START_TTS');
+    expect(audioStateMachine.getCurrentState()).toBe('SPEAKING');
 
     await secureInvoke('tts_speak', { text: 'Response' });
 
     // End TTS → IDLE
-    audioStateMachine?.transition('END_TTS');
-    expect(audioStateMachine?.getCurrentState()).toBe('IDLE');
+    audioStateMachine.transition('END_TTS');
+    expect(audioStateMachine.getCurrentState()).toBe('IDLE');
   });
 
   /**
@@ -371,17 +371,17 @@ describe('Voice E2E Tests — Phase 8', () => {
    */
   it('should sync with Halo Engine breathing', async () => {
     // Start breathing on recording
-    haloEngine?.startBreathing();
-    expect(haloEngine?.getCurrentState()).toBe('breathing');
+    haloEngine.startBreathing();
+    expect(haloEngine.getCurrentState()).toBe('breathing');
 
     await secureInvoke('start_recording');
 
     // Stop breathing on complete
     const transcript = await secureInvoke('stop_recording');
-    haloEngine?.stopBreathing();
-    expect(haloEngine?.getCurrentState()).toBe('idle');
+    haloEngine.stopBreathing();
+    expect(haloEngine.getCurrentState()).toBe('idle');
 
-    expect(any: any).toBe('Hello TITANE');
+    expect(transcript).toBe('Hello TITANE');
   });
 
   /**
@@ -393,7 +393,7 @@ describe('Voice E2E Tests — Phase 8', () => {
     await secureInvoke('start_recording');
 
     // Try to start another session
-    await expect(secureInvoke('start_recording')).rejects?.toThrow(
+    await expect(secureInvoke('start_recording')).rejects.toThrow(
       'Recording already in progress'
     );
 
@@ -411,19 +411,19 @@ describe('Voice E2E Tests — Phase 8', () => {
     await secureInvoke('start_recording');
 
     // Simulate STT error
-    mockBackend?.setConfig({ sttError: true });
-    await expect(secureInvoke('stop_recording')).rejects?.toThrow(
+    mockBackend.setConfig({ sttError: true });
+    await expect(secureInvoke('stop_recording')).rejects.toThrow(
       'STT transcription failed'
     );
-    expect(any: any);
+    expect(mockBackend.isRecording()).toBe(false);
 
     // Reset error
-    mockBackend?.setConfig({ sttError: false });
+    mockBackend.setConfig({ sttError: false });
 
     // Retry should work
     await secureInvoke('start_recording');
     const transcript = await secureInvoke('stop_recording');
-    expect(any: any).toBe('Hello TITANE');
+    expect(transcript).toBe('Hello TITANE');
   });
 
   /**
@@ -434,19 +434,19 @@ describe('Voice E2E Tests — Phase 8', () => {
   it('should detect speech via VAD', async () => {
     // Initially silence
     let state = await secureInvoke('vad_get_state');
-    expect(any: any).toBe('silence');
-    expect(any: any);
+    expect(state.state).toBe('silence');
+    expect(state.isSpeaking).toBe(false);
 
     // Change to speech
-    mockBackend?.setConfig({ vadState: 'speech' });
+    mockBackend.setConfig({ vadState: 'speech' });
     state = await secureInvoke('vad_get_state');
-    expect(any: any).toBe('speech');
-    expect(any: any);
+    expect(state.state).toBe('speech');
+    expect(state.isSpeaking).toBe(true);
 
     // Process frame with speech
     const audioData = new Float32Array(1600);
     const frameResult = await secureInvoke('vad_process_frame', { audioData });
-    expect(any: any);
+    expect(frameResult.isSpeaking).toBe(true);
   });
 
   /**
@@ -458,15 +458,15 @@ describe('Voice E2E Tests — Phase 8', () => {
     for (let i = 0; i < 3; i++) {
       // Start recording
       await secureInvoke('start_recording');
-      expect(any: any);
+      expect(mockBackend.isRecording()).toBe(true);
 
       // Stop recording
       const transcript = await secureInvoke('stop_recording');
-      expect(any: any).toBe('Hello TITANE');
+      expect(transcript).toBe('Hello TITANE');
 
       // Speak response
       await secureInvoke('tts_speak', { text: `Loop ${i + 1}` });
-      expect(any: any);
+      expect(mockBackend.isSpeaking()).toBe(false);
     }
   });
 
@@ -477,22 +477,22 @@ describe('Voice E2E Tests — Phase 8', () => {
    */
   it('should handle variable STT/TTS delays', async () => {
     // Slow STT
-    mockBackend?.setConfig({ sttDelay: 200, ttsDelay: 200 });
+    mockBackend.setConfig({ sttDelay: 200, ttsDelay: 200 });
 
     await secureInvoke('start_recording');
-    const startTime = Date?.now();
+    const startTime = Date.now();
     const transcript = await secureInvoke('stop_recording');
-    const sttDuration = Date?.now() - startTime;
+    const sttDuration = Date.now() - startTime;
 
-    expect(any: any).toBe('Hello TITANE');
-    expect(any: any).toBeGreaterThanOrEqual(200);
+    expect(transcript).toBe('Hello TITANE');
+    expect(sttDuration).toBeGreaterThanOrEqual(200);
 
     // Slow TTS
-    const ttsStartTime = Date?.now();
+    const ttsStartTime = Date.now();
     await secureInvoke('tts_speak', { text: 'Slow response' });
-    const ttsDuration = Date?.now() - ttsStartTime;
+    const ttsDuration = Date.now() - ttsStartTime;
 
-    expect(any: any).toBeGreaterThanOrEqual(200);
+    expect(ttsDuration).toBeGreaterThanOrEqual(200);
   });
 
   /**
@@ -501,7 +501,7 @@ describe('Voice E2E Tests — Phase 8', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should handle stop recording without start', async () => {
-    await expect(secureInvoke('stop_recording')).rejects?.toThrow('Not recording');
+    await expect(secureInvoke('stop_recording')).rejects.toThrow('Not recording');
   });
 
   /**
@@ -511,34 +511,34 @@ describe('Voice E2E Tests — Phase 8', () => {
    */
   it('should execute full voice loop with all state transitions', async () => {
     // IDLE → LISTENING
-    audioStateMachine?.transition('START_RECORDING');
-    haloEngine?.startBreathing();
+    audioStateMachine.transition('START_RECORDING');
+    haloEngine.startBreathing();
     await secureInvoke('start_recording');
 
-    expect(audioStateMachine?.getCurrentState()).toBe('LISTENING');
-    expect(haloEngine?.getCurrentState()).toBe('breathing');
-    expect(any: any);
+    expect(audioStateMachine.getCurrentState()).toBe('LISTENING');
+    expect(haloEngine.getCurrentState()).toBe('breathing');
+    expect(mockBackend.isRecording()).toBe(true);
 
     // LISTENING → PROCESSING
-    audioStateMachine?.transition('STOP_RECORDING');
+    audioStateMachine.transition('STOP_RECORDING');
     const transcript = await secureInvoke('stop_recording');
 
-    expect(audioStateMachine?.getCurrentState()).toBe('PROCESSING');
-    expect(any: any).toBe('Hello TITANE');
-    expect(any: any);
+    expect(audioStateMachine.getCurrentState()).toBe('PROCESSING');
+    expect(transcript).toBe('Hello TITANE');
+    expect(mockBackend.isRecording()).toBe(false);
 
     // PROCESSING → SPEAKING
-    audioStateMachine?.transition('START_TTS');
+    audioStateMachine.transition('START_TTS');
     await secureInvoke('tts_speak', { text: `You said: ${transcript}` });
 
-    expect(audioStateMachine?.getCurrentState()).toBe('SPEAKING');
+    expect(audioStateMachine.getCurrentState()).toBe('SPEAKING');
 
     // SPEAKING → IDLE
-    audioStateMachine?.transition('END_TTS');
-    haloEngine?.stopBreathing();
+    audioStateMachine.transition('END_TTS');
+    haloEngine.stopBreathing();
 
-    expect(audioStateMachine?.getCurrentState()).toBe('IDLE');
-    expect(haloEngine?.getCurrentState()).toBe('idle');
+    expect(audioStateMachine.getCurrentState()).toBe('IDLE');
+    expect(haloEngine.getCurrentState()).toBe('idle');
   });
 });
 
@@ -562,19 +562,19 @@ describe('Voice Backend Commands Validation — Phase 8', () => {
     ];
 
     // This test validates command names are consistent
-    // Actual implementation is in src-tauri/src/audio/commands?.rs
-    expect(any: any).toHaveLength(8);
+    // Actual implementation is in src-tauri/src/audio/commands.rs
+    expect(requiredCommands).toHaveLength(8);
   });
 
   it('should have correct command signatures', () => {
-    // tts_speak: (any: any) -> Result<()>
-    expect(any: any).toBe('function');
+    // tts_speak: (text: String, settings: TTSSettings) -> Result<()>
+    expect(typeof secureInvoke).toBe('function');
 
     // vad_process_frame: (audio_data: Vec<f32>) -> Result<VADStatus>
-    expect(any: any).toBe('function');
+    expect(typeof secureInvoke).toBe('function');
 
     // All commands return Promises
-    expect(any: any);
+    expect(secureInvoke('vad_get_state')).toBeInstanceOf(Promise);
   });
 });
 

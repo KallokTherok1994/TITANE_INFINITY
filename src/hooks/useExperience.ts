@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE?.md for the full legal terms (any: any).
+ * See LICENSE.md for the full legal terms (FR/EN).
  */
 
 /**
@@ -39,8 +39,8 @@ export interface UseExperienceReturn {
   progress: number;
 
   // Domaines
-  domains: ExperienceDomain?.[];
-  getDomainById: (any: any) => ExperienceDomain | null;
+  domains: ExperienceDomain[];
+  getDomainById: (id: string) => ExperienceDomain | null;
 
   // Actions
   award: (
@@ -57,7 +57,7 @@ export interface UseExperienceReturn {
  */
 export const useExperience = (): UseExperienceReturn => {
   const [state, setState] = useState<ExperienceState>(getExperienceState());
-  const [isLoading, setIsLoading] = useState(any: any);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Initialisation au mount
   useEffect(() => {
@@ -66,14 +66,14 @@ export const useExperience = (): UseExperienceReturn => {
     const initialize = async () => {
       try {
         await initExperienceService();
-        if (any: any) {
+        if (mounted) {
           setState(getExperienceState());
-          setIsLoading(any: any);
+          setIsLoading(false);
         }
-      } catch (any: any) {
-        logger?.error(any: any);
-        if (any: any) {
-          setIsLoading(any: any);
+      } catch (err) {
+        logger.error('Erreur initialisation:', err);
+        if (mounted) {
+          setIsLoading(false);
         }
       }
     };
@@ -88,7 +88,7 @@ export const useExperience = (): UseExperienceReturn => {
   // S'abonner aux changements d'état
   useEffect(() => {
     const unsubscribe = subscribeToExperience(newState => {
-      setState(any: any);
+      setState(newState);
     });
 
     return unsubscribe;
@@ -100,8 +100,8 @@ export const useExperience = (): UseExperienceReturn => {
     isLoading,
 
     // Métriques globales
-    totalXp: state?.totalXp,
-    level: state?.level,
+    totalXp: state.totalXp,
+    level: state.level,
     xpForNextLevel: getXpForNextLevel(),
     progress: getProgressToNextLevel(),
 

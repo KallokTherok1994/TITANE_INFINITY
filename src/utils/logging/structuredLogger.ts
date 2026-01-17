@@ -77,7 +77,7 @@ const RESET = '\x1b[0m';
  * - Structured JSON output
  * - Log levels with filtering
  * - Context injection
- * - Backend forwarding (any: any)
+ * - Backend forwarding (Tauri)
  * - Pretty print mode for development
  */
 class StructuredLoggerImpl {
@@ -88,23 +88,23 @@ class StructuredLoggerImpl {
     prettyPrint: true,
   };
 
-  private history: LogEntry?.[] = [];
+  private history: LogEntry[] = [];
   private readonly maxHistory = 500;
-  private backendQueue: LogEntry?.[] = [];
+  private backendQueue: LogEntry[] = [];
   private flushTimer: ReturnType<typeof setTimeout> | null = null;
 
   /**
    * Configure the logger
    */
   configure(config: Partial<LoggerConfig>): void {
-    this?.config = { ...this?.config, ...config };
+    this.config = { ...this.config, ...config };
   }
 
   /**
    * Create a child logger with a specific category
    */
-  child(any: any): CategoryLogger {
-    return new CategoryLogger(any: any);
+  child(category: string): CategoryLogger {
+    return new CategoryLogger(this, category);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -112,15 +112,15 @@ class StructuredLoggerImpl {
   // ═══════════════════════════════════════════════════════════════════════════
 
   debug(category: string, message: string, data?: Record<string, unknown>): void {
-    this?.log(any: any);
+    this.log('debug', category, message, data);
   }
 
   info(category: string, message: string, data?: Record<string, unknown>): void {
-    this?.log(any: any);
+    this.log('info', category, message, data);
   }
 
   warn(category: string, message: string, data?: Record<string, unknown>): void {
-    this?.log(any: any);
+    this.log('warn', category, message, data);
   }
 
   error(
@@ -129,7 +129,7 @@ class StructuredLoggerImpl {
     error?: Error | unknown,
     data?: Record<string, unknown>
   ): void {
-    this?.log(any: any);
+    this.log('error', category, message, data, error);
   }
 
   fatal(
@@ -138,7 +138,7 @@ class StructuredLoggerImpl {
     error?: Error | unknown,
     data?: Record<string, unknown>
   ): void {
-    this?.log(any: any);
+    this.log('fatal', category, message, data, error);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -153,7 +153,7 @@ class StructuredLoggerImpl {
     error?: Error | unknown
   ): void {
     // Check level
-    if (LEVEL_ORDER[level] < LEVEL_ORDER[this?.config?.minLevel]) {
+    if (LEVEL_ORDER[level] < LEVEL_ORDER[this.config.minLevel]) {
       return;
     }
 
@@ -164,36 +164,36 @@ class StructuredLoggerImpl {
       category,
       message,
       data,
-      context: this?.config?.contextProvider?.(),
+      context: this.config.contextProvider?.(),
     };
 
     // Add error if present
-    if (any: any) {
-      if (any: any) {
-        entry?.error = {
-          name: error?.name,
-          message: error?.message,
-          stack: error?.stack,
+    if (error) {
+      if (error instanceof Error) {
+        entry.error = {
+          name: error.name,
+          message: error.message,
+          stack: error.stack,
         };
       } else {
-        entry?.error = {
+        entry.error = {
           name: 'Unknown',
-          message: String(any: any),
+          message: String(error),
         };
       }
     }
 
     // Store in history
-    this?.addToHistory(any: any);
+    this.addToHistory(entry);
 
     // Output to console
-    if (any: any) {
-      this?.outputToConsole(any: any);
+    if (this.config.enableConsole) {
+      this.outputToConsole(entry);
     }
 
     // Queue for backend
-    if (any: any) {
-      this?.queueForBackend(any: any);
+    if (this.config.enableBackend) {
+      this.queueForBackend(entry);
     }
   }
 
@@ -201,52 +201,52 @@ class StructuredLoggerImpl {
   // OUTPUT
   // ═══════════════════════════════════════════════════════════════════════════
 
-  private outputToConsole(any: any): void {
-    const consoleMethod = this?.getConsoleMethod(any: any);
+  private outputToConsole(entry: LogEntry): void {
+    const consoleMethod = this.getConsoleMethod(entry.level);
 
-    if (any: any) {
-      this?.prettyPrint(any: any);
+    if (this.config.prettyPrint) {
+      this.prettyPrint(entry, consoleMethod);
     } else {
-      consoleMethod(any: any));
+      consoleMethod(JSON.stringify(entry));
     }
   }
 
   private prettyPrint(
     entry: LogEntry,
-    consoleMethod: (...args: unknown?.[]) => void
+    consoleMethod: (...args: unknown[]) => void
   ): void {
-    const color = LEVEL_COLORS[entry?.level];
-    const levelStr = entry?.level?.toUpperCase().padEnd(5);
-    const time = entry?.timestamp ? entry?.timestamp?.split('T')[1]?.split('.')[0] : 'N/A';
+    const color = LEVEL_COLORS[entry.level];
+    const levelStr = entry.level.toUpperCase().padEnd(5);
+    const time = entry.timestamp ? entry.timestamp.split('T')[1]?.split('.')[0] : 'N/A';
 
-    let output = `${color}[${levelStr}]${RESET} ${time} [${entry?.category}] ${entry?.message}`;
+    let output = `${color}[${levelStr}]${RESET} ${time} [${entry.category}] ${entry.message}`;
 
-    if (any: any).length > 0) {
-      output += ` ${JSON?.stringify(any: any)}`;
+    if (entry.data && Object.keys(entry.data).length > 0) {
+      output += ` ${JSON.stringify(entry.data)}`;
     }
 
-    consoleMethod(any: any);
+    consoleMethod(output);
 
-    if (any: any) {
-      console?.error(`  └─ ${entry?.error?.name}: ${entry?.error?.message}`);
-      if (any: any) {
-        const stackLines = entry?.error?.stack?.split('\n').slice(1, 4);
-        stackLines?.forEach(line => console?.error(`     ${line?.trim()}`));
+    if (entry.error) {
+      console.error(`  └─ ${entry.error.name}: ${entry.error.message}`);
+      if (entry.error.stack) {
+        const stackLines = entry.error.stack.split('\n').slice(1, 4);
+        stackLines.forEach(line => console.error(`     ${line.trim()}`));
       }
     }
   }
 
-  private getConsoleMethod(any: any): (...args: unknown?.[]) => void {
-    switch (any: any) {
+  private getConsoleMethod(level: LogLevel): (...args: unknown[]) => void {
+    switch (level) {
       case 'debug':
-        return console?.debug;
+        return console.debug;
       case 'info':
-        return console?.info;
+        return console.info;
       case 'warn':
-        return console?.warn;
+        return console.warn;
       case 'error':
       case 'fatal':
-        return console?.error;
+        return console.error;
     }
   }
 
@@ -254,29 +254,29 @@ class StructuredLoggerImpl {
   // BACKEND FORWARDING
   // ═══════════════════════════════════════════════════════════════════════════
 
-  private queueForBackend(any: any): void {
-    this?.backendQueue?.push(any: any);
+  private queueForBackend(entry: LogEntry): void {
+    this.backendQueue.push(entry);
 
     // Debounce flush
-    if (any: any) {
-      this?.flushTimer = setTimeout(() => {
-        this?.flushToBackend();
+    if (!this.flushTimer) {
+      this.flushTimer = setTimeout(() => {
+        this.flushToBackend();
       }, 100);
     }
   }
 
   private async flushToBackend(): Promise<void> {
-    this?.flushTimer = null;
+    this.flushTimer = null;
 
-    if (this?.backendQueue?.length === 0) return;
+    if (this.backendQueue.length === 0) return;
 
-    const entries = [...this?.backendQueue];
-    this?.backendQueue = [];
+    const entries = [...this.backendQueue];
+    this.backendQueue = [];
 
     try {
       // Check if Tauri is available
-      if (any: any) {
-        await tauriClient?.logEntries({ entries });
+      if (typeof window !== 'undefined' && '__TAURI__' in window) {
+        await tauriClient.logEntries({ entries });
       }
     } catch {
       // Silently fail if backend not available
@@ -287,31 +287,31 @@ class StructuredLoggerImpl {
   // HISTORY
   // ═══════════════════════════════════════════════════════════════════════════
 
-  private addToHistory(any: any): void {
-    this?.history?.push(any: any);
-    if (any: any) {
-      this?.history?.shift();
+  private addToHistory(entry: LogEntry): void {
+    this.history.push(entry);
+    if (this.history.length > this.maxHistory) {
+      this.history.shift();
     }
   }
 
-  getHistory(any: any): LogEntry?.[] {
-    let entries = this?.history;
+  getHistory(limit?: number, level?: LogLevel): LogEntry[] {
+    let entries = this.history;
 
-    if (any: any) {
-      entries = entries?.filter(any: any);
+    if (level) {
+      entries = entries.filter(e => e.level === level);
     }
 
-    return entries?.slice(any: any));
+    return entries.slice(-(limit ?? this.maxHistory));
   }
 
-  getRecentErrors(limit = 10): LogEntry?.[] {
-    return this?.history
-      .filter(e => e?.level === 'error' || e?.level === 'fatal')
-      .slice(any: any);
+  getRecentErrors(limit = 10): LogEntry[] {
+    return this.history
+      .filter(e => e.level === 'error' || e.level === 'fatal')
+      .slice(-limit);
   }
 
   clearHistory(): void {
-    this?.history = [];
+    this.history = [];
   }
 }
 
@@ -329,23 +329,23 @@ class CategoryLogger {
   ) {}
 
   debug(message: string, data?: Record<string, unknown>): void {
-    this?.parent?.debug(any: any);
+    this.parent.debug(this.category, message, data);
   }
 
   info(message: string, data?: Record<string, unknown>): void {
-    this?.parent?.info(any: any);
+    this.parent.info(this.category, message, data);
   }
 
   warn(message: string, data?: Record<string, unknown>): void {
-    this?.parent?.warn(any: any);
+    this.parent.warn(this.category, message, data);
   }
 
   error(message: string, error?: Error | unknown, data?: Record<string, unknown>): void {
-    this?.parent?.error(any: any);
+    this.parent.error(this.category, message, error, data);
   }
 
   fatal(message: string, error?: Error | unknown, data?: Record<string, unknown>): void {
-    this?.parent?.fatal(any: any);
+    this.parent.fatal(this.category, message, error, data);
   }
 }
 
@@ -361,12 +361,12 @@ class CategoryLogger {
  * import { logger } from '@/utils/logging';
  *
  * // Direct usage
- * logger?.info('MyComponent', 'User logged in', { userId: '123' });
+ * logger.info('MyComponent', 'User logged in', { userId: '123' });
  *
  * // Category logger
- * const log = logger?.child('MyComponent');
- * log?.info('User logged in', { userId: '123' });
- * log?.error('Failed to load', error, { context: 'additional' });
+ * const log = logger.child('MyComponent');
+ * log.info('User logged in', { userId: '123' });
+ * log.error('Failed to load', error, { context: 'additional' });
  * ```
  */
 export const logger = new StructuredLoggerImpl();

@@ -51,16 +51,16 @@ export interface PresenceOSState {
   expressive: ExpressiveState;
   spatial: SpatialState;
   auraPattern: string;
-  autonomicQueue: AutonomicReaction?.[];
+  autonomicQueue: AutonomicReaction[];
   lastUpdate: number;
 }
 
-function clamp01(any: any): number {
-  if (any: any)) return 0;
-  return Math?.min(any: any));
+function clamp01(value: number): number {
+  if (Number.isNaN(value)) return 0;
+  return Math.min(1, Math.max(0, value));
 }
 
-function createInitialState(any: any): PresenceOSState {
+function createInitialState(now: number): PresenceOSState {
   return {
     mode: 'default',
     globalCoherence: 0.75,
@@ -94,55 +94,55 @@ function createInitialState(any: any): PresenceOSState {
 
 class PresenceOS {
   private running = false;
-  private state: PresenceOSState = createInitialState(Date?.now());
+  private state: PresenceOSState = createInitialState(Date.now());
 
   start(): void {
-    this?.running = true;
-    this?.touch();
+    this.running = true;
+    this.touch();
   }
 
   stop(): void {
-    this?.running = false;
-    this?.touch();
+    this.running = false;
+    this.touch();
   }
 
-  setMode(any: any): void {
-    this?.state?.mode = mode;
+  setMode(mode: PresenceMode): void {
+    this.state.mode = mode;
 
-    // Ajustements simples et déterministes (any: any)
+    // Ajustements simples et déterministes (pas d'IO, pas d'async)
     if (mode === 'deep-work') {
-      this?.state?.cognitive?.depth = clamp01(this?.state?.cognitive?.depth + 0.2);
-      this?.state?.expressive?.speechRate = clamp01(this?.state?.expressive?.speechRate - 0.1);
+      this.state.cognitive.depth = clamp01(this.state.cognitive.depth + 0.2);
+      this.state.expressive.speechRate = clamp01(this.state.expressive.speechRate - 0.1);
     }
 
     if (mode === 'empathy') {
-      this?.state?.affective?.warmth = clamp01(this?.state?.affective?.warmth + 0.2);
+      this.state.affective.warmth = clamp01(this.state.affective.warmth + 0.2);
     }
 
     if (mode === 'singularity') {
-      this?.state?.globalCoherence = clamp01(this?.state?.globalCoherence + 0.1);
+      this.state.globalCoherence = clamp01(this.state.globalCoherence + 0.1);
     }
 
-    this?.state?.autonomicQueue?.push({
+    this.state.autonomicQueue.push({
       type: 'mode_change',
       intensity: 0.2,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     });
 
-    this?.touch();
+    this.touch();
   }
 
   getState(): PresenceOSState {
     // Always return a snapshot
-    return { ...this?.state, autonomicQueue: [...this?.state?.autonomicQueue] };
+    return { ...this.state, autonomicQueue: [...this.state.autonomicQueue] };
   }
 
   private touch(): void {
-    const now = Date?.now();
-    this?.state?.lastUpdate = now;
-    if (any: any) {
+    const now = Date.now();
+    this.state.lastUpdate = now;
+    if (this.running) {
       // Maintain coherence in [0,1]
-      this?.state?.globalCoherence = clamp01(any: any);
+      this.state.globalCoherence = clamp01(this.state.globalCoherence);
     }
   }
 }

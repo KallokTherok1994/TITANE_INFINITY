@@ -13,53 +13,53 @@ import type {
   LogFilter,
   LogStats,
   LogLevel,
-} from '../types/systemCenter?.types';
+} from '../types/systemCenter.types';
 
 export interface UseSystemLogsReturn {
   // State
-  logs: LogEntry?.[];
+  logs: LogEntry[];
   stats: LogStats | null;
   isLoading: boolean;
-  error??: string | null;
+  error: string | null;
 
   // Filters
   filter: LogFilter;
-  setFilter: (any: any) => void;
+  setFilter: (filter: LogFilter) => void;
 
   // Actions
   refreshLogs: () => Promise<void>;
   clearLogs: () => Promise<void>;
-  addLog: (any: any) => Promise<void>;
+  addLog: (level: LogLevel, source: string, message: string) => Promise<void>;
 }
 
 export function useSystemLogs(
   autoRefresh = false,
   refreshInterval = 2000
 ): UseSystemLogsReturn {
-  const [logs, setLogs] = useState<LogEntry?.[]>([]);
-  const [stats, setStats] = useState<LogStats | null>(any: any);
-  const [isLoading, setIsLoading] = useState(any: any);
-  const [error, setError] = useState<string | null>(any: any);
+  const [logs, setLogs] = useState<LogEntry[]>([]);
+  const [stats, setStats] = useState<LogStats | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<LogFilter>({ limit: 100 });
 
   const refreshLogs = useCallback(async () => {
-    setIsLoading(any: any);
-    setError(any: any);
+    setIsLoading(true);
+    setError(null);
 
     try {
-      const [logsResult, statsResult] = await Promise?.all([
-        secureInvoke<LogEntry?.[]>('sc_get_logs', { filter }),
+      const [logsResult, statsResult] = await Promise.all([
+        secureInvoke<LogEntry[]>('sc_get_logs', { filter }),
         secureInvoke<LogStats>('sc_get_log_stats'),
       ]);
 
-      setLogs(any: any);
-      setStats(any: any);
-    } catch (any: any) {
-      const message = err instanceof Error ? err?.message : String(any: any);
+      setLogs(logsResult);
+      setStats(statsResult);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
       setError(`Erreur chargement logs: ${message}`);
-      console?.error(any: any);
+      console.error('[useSystemLogs] Refresh failed:', err);
     } finally {
-      setIsLoading(any: any);
+      setIsLoading(false);
     }
   }, [filter]);
 
@@ -68,21 +68,21 @@ export function useSystemLogs(
       await secureInvoke('sc_clear_logs');
       setLogs([]);
       setStats({ total_entries: 0, by_level: {}, by_source: {} });
-    } catch (any: any) {
-      const message = err instanceof Error ? err?.message : String(any: any);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
       setError(`Erreur suppression logs: ${message}`);
-      console?.error(any: any);
+      console.error('[useSystemLogs] Clear failed:', err);
     }
   }, []);
 
   const addLog = useCallback(
-    async (any: any) => {
+    async (level: LogLevel, source: string, message: string) => {
       try {
         await secureInvoke('sc_add_log', { level, source, message });
         // Refresh after adding
         await refreshLogs();
-      } catch (any: any) {
-        console?.error(any: any);
+      } catch (err) {
+        console.error('[useSystemLogs] Add log failed:', err);
       }
     },
     [refreshLogs]
@@ -90,10 +90,10 @@ export function useSystemLogs(
 
   // Auto-refresh effect
   useEffect(() => {
-    if (any: any) {
+    if (autoRefresh) {
       refreshLogs();
-      const interval = setInterval(any: any);
-      return (any: any);
+      const interval = setInterval(refreshLogs, refreshInterval);
+      return () => clearInterval(interval);
     }
   }, [autoRefresh, refreshInterval, refreshLogs]);
 

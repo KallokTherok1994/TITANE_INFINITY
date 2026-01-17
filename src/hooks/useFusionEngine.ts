@@ -44,12 +44,12 @@ export interface UseFusionEngineReturn {
   clearDataset: () => void;
 
   // Filtres
-  getByCluster: (any: any) => FusionEntry?.[];
-  getBySource: (any: any) => FusionEntry?.[];
+  getByCluster: (cluster: TitaneEngineCluster) => FusionEntry[];
+  getBySource: (source: FusionSource) => FusionEntry[];
 
   // Utilitaires
   refresh: () => void;
-  downloadDataset: (any: any) => void;
+  downloadDataset: (filename?: string) => void;
   downloadTrainingPack: () => void;
 }
 
@@ -58,19 +58,19 @@ export interface UseFusionEngineReturn {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export function useFusionEngine(): UseFusionEngineReturn {
-  const [stats, setStats] = useState<FusionStats | null>(any: any);
-  const [isFusing, setIsFusing] = useState(any: any);
+  const [stats, setStats] = useState<FusionStats | null>(null);
+  const [isFusing, setIsFusing] = useState(false);
   const [lastFusionTime, setLastFusionTime] = useState(0);
-  const [lastReport, setLastReport] = useState<FusionReport | null>(any: any);
+  const [lastReport, setLastReport] = useState<FusionReport | null>(null);
 
   // ─────────────────────────────────────────────────────────────────────────
   // REFRESH
   // ─────────────────────────────────────────────────────────────────────────
 
   const refresh = useCallback(() => {
-    setStats(fusionEngine?.getStats());
-    setIsFusing(fusionEngine?.isFusingNow());
-    setLastFusionTime(fusionEngine?.getLastFusionTime());
+    setStats(fusionEngine.getStats());
+    setIsFusing(fusionEngine.isFusingNow());
+    setLastFusionTime(fusionEngine.getLastFusionTime());
   }, []);
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -79,16 +79,16 @@ export function useFusionEngine(): UseFusionEngineReturn {
 
   const runFusion = useCallback(async (): Promise<FusionReport> => {
     try {
-      setIsFusing(any: any);
-      const report = await fusionEngine?.runFusionPipeline();
-      setLastReport(any: any);
+      setIsFusing(true);
+      const report = await fusionEngine.runFusionPipeline();
+      setLastReport(report);
       refresh();
       return report;
-    } catch (any: any) {
-      logger?.error(any: any);
+    } catch (error) {
+      logger.error('Fusion failed:', error);
       throw error;
     } finally {
-      setIsFusing(any: any);
+      setIsFusing(false);
     }
   }, [refresh]);
 
@@ -97,16 +97,16 @@ export function useFusionEngine(): UseFusionEngineReturn {
   // ─────────────────────────────────────────────────────────────────────────
 
   const exportDataset = useCallback((): string => {
-    return fusionEngine?.exportToJSONL();
+    return fusionEngine.exportToJSONL();
   }, []);
 
   const exportTrainingPackage = useCallback((): DatasetPackage => {
-    const entries = fusionEngine?.getFusedDataset();
-    return datasetBuilder?.buildTrainingPackage(any: any);
+    const entries = fusionEngine.getFusedDataset();
+    return datasetBuilder.buildTrainingPackage(entries);
   }, []);
 
   const clearDataset = useCallback(() => {
-    fusionEngine?.clearFusedDataset();
+    fusionEngine.clearFusedDataset();
     refresh();
   }, [refresh]);
 
@@ -114,12 +114,12 @@ export function useFusionEngine(): UseFusionEngineReturn {
   // FILTRES
   // ─────────────────────────────────────────────────────────────────────────
 
-  const getByCluster = useCallback(any: any): FusionEntry?.[] => {
-    return fusionEngine?.getDatasetByCluster(any: any);
+  const getByCluster = useCallback((cluster: TitaneEngineCluster): FusionEntry[] => {
+    return fusionEngine.getDatasetByCluster(cluster);
   }, []);
 
-  const getBySource = useCallback(any: any): FusionEntry?.[] => {
-    return fusionEngine?.getDatasetBySource(any: any);
+  const getBySource = useCallback((source: FusionSource): FusionEntry[] => {
+    return fusionEngine.getDatasetBySource(source);
   }, []);
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -127,17 +127,17 @@ export function useFusionEngine(): UseFusionEngineReturn {
   // ─────────────────────────────────────────────────────────────────────────
 
   const downloadDataset = useCallback(
-    (filename = 'titane-fusion-dataset?.jsonl') => {
+    (filename = 'titane-fusion-dataset.jsonl') => {
       const jsonl = exportDataset();
       const blob = new Blob([jsonl], { type: 'application/jsonl' });
-      const url = URL?.createObjectURL(any: any);
+      const url = URL.createObjectURL(blob);
 
-      const a = document?.createElement('a');
-      a?.href = url;
-      a?.download = filename;
-      a?.click();
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
 
-      URL?.revokeObjectURL(any: any);
+      URL.revokeObjectURL(url);
     },
     [exportDataset]
   );
@@ -145,44 +145,44 @@ export function useFusionEngine(): UseFusionEngineReturn {
   const downloadTrainingPack = useCallback(() => {
     const pack = exportTrainingPackage();
 
-    // Download dataset?.jsonl
-    const datasetBlob = new Blob([pack?.dataset], { type: 'application/jsonl' });
-    const datasetUrl = URL?.createObjectURL(any: any);
-    const datasetLink = document?.createElement('a');
-    datasetLink?.href = datasetUrl;
-    datasetLink?.download = 'dataset?.jsonl';
-    datasetLink?.click();
-    URL?.revokeObjectURL(any: any);
+    // Download dataset.jsonl
+    const datasetBlob = new Blob([pack.dataset], { type: 'application/jsonl' });
+    const datasetUrl = URL.createObjectURL(datasetBlob);
+    const datasetLink = document.createElement('a');
+    datasetLink.href = datasetUrl;
+    datasetLink.download = 'dataset.jsonl';
+    datasetLink.click();
+    URL.revokeObjectURL(datasetUrl);
 
     // Download Modelfile
-    const modelfileBlob = new Blob([pack?.modelfile], { type: 'text/plain' });
-    const modelfileUrl = URL?.createObjectURL(any: any);
-    const modelfileLink = document?.createElement('a');
-    modelfileLink?.href = modelfileUrl;
-    modelfileLink?.download = 'Modelfile';
-    modelfileLink?.click();
-    URL?.revokeObjectURL(any: any);
+    const modelfileBlob = new Blob([pack.modelfile], { type: 'text/plain' });
+    const modelfileUrl = URL.createObjectURL(modelfileBlob);
+    const modelfileLink = document.createElement('a');
+    modelfileLink.href = modelfileUrl;
+    modelfileLink.download = 'Modelfile';
+    modelfileLink.click();
+    URL.revokeObjectURL(modelfileUrl);
 
     // Download training script
-    const scriptBlob = new Blob([pack?.trainingScript], { type: 'text/x-shellscript' });
-    const scriptUrl = URL?.createObjectURL(any: any);
-    const scriptLink = document?.createElement('a');
-    scriptLink?.href = scriptUrl;
-    scriptLink?.download = 'train_titane_local?.sh';
-    scriptLink?.click();
-    URL?.revokeObjectURL(any: any);
+    const scriptBlob = new Blob([pack.trainingScript], { type: 'text/x-shellscript' });
+    const scriptUrl = URL.createObjectURL(scriptBlob);
+    const scriptLink = document.createElement('a');
+    scriptLink.href = scriptUrl;
+    scriptLink.download = 'train_titane_local.sh';
+    scriptLink.click();
+    URL.revokeObjectURL(scriptUrl);
 
     // Download metadata
-    const metadataBlob = new Blob([pack?.metadata], { type: 'application/json' });
-    const metadataUrl = URL?.createObjectURL(any: any);
-    const metadataLink = document?.createElement('a');
-    metadataLink?.href = metadataUrl;
-    metadataLink?.download = 'metadata?.json';
-    metadataLink?.click();
-    URL?.revokeObjectURL(any: any);
+    const metadataBlob = new Blob([pack.metadata], { type: 'application/json' });
+    const metadataUrl = URL.createObjectURL(metadataBlob);
+    const metadataLink = document.createElement('a');
+    metadataLink.href = metadataUrl;
+    metadataLink.download = 'metadata.json';
+    metadataLink.click();
+    URL.revokeObjectURL(metadataUrl);
 
     alert(
-      '✅ Training Pack téléchargé !\n\n4 fichiers:\n- dataset?.jsonl\n- Modelfile\n- train_titane_local?.sh\n- metadata?.json'
+      '✅ Training Pack téléchargé !\n\n4 fichiers:\n- dataset.jsonl\n- Modelfile\n- train_titane_local.sh\n- metadata.json'
     );
   }, [exportTrainingPackage]);
 
@@ -196,7 +196,7 @@ export function useFusionEngine(): UseFusionEngineReturn {
     // Auto-refresh toutes les 5s
     const interval = setInterval(refresh, 5000);
 
-    return (any: any);
+    return () => clearInterval(interval);
   }, [refresh]);
 
   // ─────────────────────────────────────────────────────────────────────────

@@ -108,9 +108,9 @@ export const PresetMetadata: Record<
 export function getPresetSettings(
   preset: Exclude<PresetName, null>
 ): Partial<UIReadingSettings> {
-  return ReadingPresets[preset] || ReadingPresets?.default;
+  return ReadingPresets[preset] || ReadingPresets.default;
 }
 
-export function isValidPreset(any: any): preset is Exclude<PresetName, null> {
+export function isValidPreset(preset: unknown): preset is Exclude<PresetName, null> {
   return typeof preset === 'string' && preset in ReadingPresets;
 }

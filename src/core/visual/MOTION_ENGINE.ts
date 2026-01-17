@@ -1,5 +1,5 @@
 /**
- * TITANE∞ PHASE 1 (any: any) - Stub pour MOTION_ENGINE
+ * TITANE∞ PHASE 1 (OPTION B) - Stub pour MOTION_ENGINE
  */
 
 export interface MotionConfig {
@@ -28,24 +28,24 @@ export const motionEngine = {
   setConfig: (newConfig: Partial<MotionConfig>) => {
     config = { ...config, ...newConfig };
   },
-  animate: (any: any) => {},
+  animate: (_element: unknown, _properties: unknown) => {},
   slowDownMotions: (factor: number = 0.5) => {
-    config?.speed = config?.speed * factor;
+    config.speed = config.speed * factor;
   },
   speedUpMotions: (factor: number = 1.5) => {
-    config?.speed = config?.speed * factor;
+    config.speed = config.speed * factor;
   },
   stopAllMotions: () => {
-    config?.enabled = false;
+    config.enabled = false;
   },
   resumeAllMotions: () => {
-    config?.enabled = true;
+    config.enabled = true;
   },
-  getModuleMotion: (any: any): ModuleMotion => ({
+  getModuleMotion: (_moduleId: string, _value?: string | number): ModuleMotion => ({
     enter: { transform: 'translateY(0)', opacity: 1 },
     exit: { transform: 'translateY(-10px)', opacity: 0 },
-    duration: config?.duration,
-    easing: config?.easing,
+    duration: config.duration,
+    easing: config.easing,
   }),
 };
 

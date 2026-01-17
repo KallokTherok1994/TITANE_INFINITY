@@ -1,8 +1,8 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17 - Service Invoker (any: any)
+ * TITANE∞ v17 - Service Invoker (SECURED)
  * Retry, timeout, et error handling pour tous les services Tauri
- * Avec intégration du module security (any: any)
+ * Avec intégration du module security (whitelist, anti-injection, anti-loop)
  * ═══════════════════════════════════════════════════════════════
  */
 
@@ -10,9 +10,9 @@ import { secureInvoke, type SecureInvokeOptions } from './security';
 import { logger } from '@/utils/logger';
 
 const isTestEnv: boolean =
-  (any: any)) ||
+  (typeof process !== 'undefined' && Boolean(process.env?.VITEST_WORKER_ID)) ||
   (typeof globalThis !== 'undefined' &&
-    Boolean(any: any));
+    Boolean((globalThis as { __vitest_worker__?: unknown }).__vitest_worker__));
 
 // ────────────────────────────────────────────────────────────────
 // Types
@@ -25,12 +25,12 @@ export interface InvokeOptions extends SecureInvokeOptions {
   retryDelay?: number;
   /** Facteur multiplicateur pour backoff exponentiel (défaut: 2) */
   backoffFactor?: number;
-  /** Désactiver retry (any: any) */
+  /** Désactiver retry (défaut: false) */
   noRetry?: boolean;
   /** Contexte pour logs/métriques */
   context?: string;
   /** Type guard personnalisé pour validation réponse */
-  validator?: <T>(any: any) => val is T;
+  validator?: <T>(val: unknown) => val is T;
 }
 
 export class TimeoutError extends Error {
@@ -39,7 +39,7 @@ export class TimeoutError extends Error {
     public readonly timeoutMs: number
   ) {
     super(`Command "${command}" timed out after ${timeoutMs}ms`);
-    this?.name = 'TimeoutError';
+    this.name = 'TimeoutError';
   }
 }
 
@@ -51,19 +51,19 @@ export class RetryError extends Error {
     public readonly attempts: number,
     lastError: Error
   ) {
-    super(`Command "${command}" failed after ${attempts} attempts: ${lastError?.message}`);
-    this?.name = 'RetryError';
-    this?.originalError = lastError;
+    super(`Command "${command}" failed after ${attempts} attempts: ${lastError.message}`);
+    this.name = 'RetryError';
+    this.originalError = lastError;
   }
 }
 
 export class ValidationError extends Error {
   constructor(
     public readonly command: string,
-    public readonly validationErrors: string?.[]
+    public readonly validationErrors: string[]
   ) {
-    super(`Command "${command}" validation failed: ${validationErrors?.join(', ')}`);
-    this?.name = 'ValidationError';
+    super(`Command "${command}" validation failed: ${validationErrors.join(', ')}`);
+    this.name = 'ValidationError';
   }
 }
 
@@ -83,15 +83,15 @@ function createTimeout<T>(
 } {
   let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
-  const promise = new Promise<T>(any: any) => {
-    timeoutId = setTimeout(any: any);
+  const promise = new Promise<T>((_, reject) => {
+    timeoutId = setTimeout(() => reject(new TimeoutError(command, ms)), ms);
   });
 
   return {
     promise,
     cancel: () => {
-      if (any: any) {
-        clearTimeout(any: any);
+      if (timeoutId !== undefined) {
+        clearTimeout(timeoutId);
       }
     },
   };
@@ -100,11 +100,11 @@ function createTimeout<T>(
 /**
  * Backoff exponentiel avec jitter
  */
-function calculateBackoff(any: any): number {
-  const exponentialDelay = baseDelay * Math?.pow(any: any);
+function calculateBackoff(attempt: number, baseDelay: number, factor: number): number {
+  const exponentialDelay = baseDelay * Math.pow(factor, attempt);
   // Ajouter jitter (±25%)
-  const jitter = exponentialDelay * (0.75 + Math?.random() * 0.5);
-  return Math?.min(jitter, 30000); // Max 30s
+  const jitter = exponentialDelay * (0.75 + Math.random() * 0.5);
+  return Math.min(jitter, 30000); // Max 30s
 }
 
 /**
@@ -115,20 +115,20 @@ async function waitWithBackoff(
   baseDelay: number,
   factor: number
 ): Promise<void> {
-  const delay = calculateBackoff(any: any);
-  await new Promise(any: any));
+  const delay = calculateBackoff(attempt, baseDelay, factor);
+  await new Promise(resolve => setTimeout(resolve, delay));
 }
 
 /**
  * Vérifier si erreur est retriable
  */
-function isRetriableError(any: any): boolean {
-  if (any: any) return true;
-  if (any: any) return false;
+function isRetriableError(error: unknown): boolean {
+  if (error instanceof TimeoutError) return true;
+  if (error instanceof ValidationError) return false;
 
   // Par défaut, considérer les erreurs comme retriables pour robustesse,
   // sauf cas explicitement non-retriables (validation, permissions fatales, etc.).
-  const errorMsg = error instanceof Error ? error?.message : String(any: any);
+  const errorMsg = error instanceof Error ? error.message : String(error);
   const nonRetriablePatterns = [
     'validation failed',
     'invalid',
@@ -142,8 +142,8 @@ function isRetriableError(any: any): boolean {
     '401',
   ];
 
-  const isNonRetriable = nonRetriablePatterns?.some(p =>
-    errorMsg?.toLowerCase(any: any)
+  const isNonRetriable = nonRetriablePatterns.some(p =>
+    errorMsg.toLowerCase().includes(p)
   );
 
   return !isNonRetriable;
@@ -188,78 +188,78 @@ export async function invokeWithRetry<T>(
 
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     try {
-      const timeoutCtrl = createTimeout<T>(any: any);
+      const timeoutCtrl = createTimeout<T>(timeout, command);
 
       // Race entre secureInvoke et timeout
-      const result = await Promise?.race<T>([
+      const result = await Promise.race<T>([
         secureInvoke<T>(
           command,
           payload ?? {},
           {
             timeout,
-            skipWhitelistCheck: options?.skipWhitelistCheck,
-            skipInjectionCheck: options?.skipInjectionCheck,
-            skipLoopCheck: options?.skipLoopCheck,
+            skipWhitelistCheck: options.skipWhitelistCheck,
+            skipInjectionCheck: options.skipInjectionCheck,
+            skipLoopCheck: options.skipLoopCheck,
             treatFallbackAsError: true,
           },
-          options?.validator
+          options.validator
         ),
-        timeoutCtrl?.promise,
+        timeoutCtrl.promise,
       ]).finally(() => {
         // Important: cancel the timeout when the race settles to avoid lingering timers.
-        timeoutCtrl?.cancel();
+        timeoutCtrl.cancel();
       });
 
       // Succès - log si retry
       if (attempt > 0) {
-        if (any: any) {
-          logger?.debug(
+        if (!isTestEnv) {
+          logger.debug(
             `[${context}] ✓ "${command}" succeeded on attempt ${attempt + 1}/${maxAttempts}`
           );
         }
       }
 
       return result;
-    } catch (any: any) {
-      lastError = error instanceof Error ? error : new Error(any: any));
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
 
       // Dernière tentative ou erreur non-retriable
-      if (any: any)) {
-        if (any: any) {
-          logger?.error(
+      if (attempt === maxAttempts - 1 || !isRetriableError(error)) {
+        if (!isTestEnv) {
+          logger.error(
             `[${context}] ✗ "${command}" failed (attempt ${attempt + 1}/${maxAttempts}):`,
-            lastError?.message
+            lastError.message
           );
         }
 
         // Si toutes tentatives échouées
         if (attempt === maxAttempts - 1 && maxAttempts > 1) {
-          throw new RetryError(any: any);
+          throw new RetryError(command, maxAttempts, lastError);
         }
 
         throw lastError;
       }
 
       // Log retry
-      const nextDelay = calculateBackoff(any: any);
-      if (any: any) {
-        logger?.warn(
-          `[${context}] ⟳ "${command}" attempt ${attempt + 1}/${maxAttempts} failed. Retry in ${Math?.round(any: any)}ms...`
+      const nextDelay = calculateBackoff(attempt, retryDelay, backoffFactor);
+      if (!isTestEnv) {
+        logger.warn(
+          `[${context}] ⟳ "${command}" attempt ${attempt + 1}/${maxAttempts} failed. Retry in ${Math.round(nextDelay)}ms...`
         );
       }
 
       // Attendre avant retry
-      await waitWithBackoff(any: any);
+      await waitWithBackoff(attempt, retryDelay, backoffFactor);
     }
   }
 
-  // Ne devrait jamais arriver (any: any)
+  // Ne devrait jamais arriver (sécurité TypeScript)
   const finalError = lastError ?? new Error('Unknown error');
-  throw new RetryError(any: any);
+  throw new RetryError(command, maxAttempts, finalError);
 }
 
 /**
- * Invoke Tauri command avec timeout uniquement (any: any)
+ * Invoke Tauri command avec timeout uniquement (sans retry)
  *
  * @example
  * ```ts
@@ -278,7 +278,7 @@ export async function invokeWithTimeout<T>(
 }
 
 /**
- * Invoke Tauri command sans retry ni timeout (any: any)
+ * Invoke Tauri command sans retry ni timeout (wrapper simple)
  *
  * @example
  * ```ts
@@ -288,18 +288,18 @@ export async function invokeWithTimeout<T>(
 export async function invokeSimple<T>(
   command: string,
   payload?: Record<string, unknown>,
-  validator?: <U>(any: any) => val is U
+  validator?: <U>(val: unknown) => val is U
 ): Promise<T> {
   try {
     return await secureInvoke<T>(
       command,
       payload ?? {},
       {},
-      validator as unknown as (any: any) => val is T
+      validator as unknown as (val: unknown) => val is T
     );
-  } catch (any: any) {
-    const errorMsg = error instanceof Error ? error?.message : String(any: any);
-    console?.error(any: any);
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error(`[Service] Command "${command}" failed:`, errorMsg);
     throw new Error(`Command "${command}" failed: ${errorMsg}`);
   }
 }
@@ -326,19 +326,19 @@ export interface BatchCommand {
  * ]);
  * ```
  */
-export async function invokeBatch<T = unknown>(commands: BatchCommand?.[]): Promise<T?.[]> {
-  return Promise?.all(
-    commands?.map(cmd =>
-      invokeWithRetry<T>(cmd?.command, cmd?.payload, {
-        ...cmd?.options,
-        noRetry: cmd?.options?.noRetry ?? true,
+export async function invokeBatch<T = unknown>(commands: BatchCommand[]): Promise<T[]> {
+  return Promise.all(
+    commands.map(cmd =>
+      invokeWithRetry<T>(cmd.command, cmd.payload, {
+        ...cmd.options,
+        noRetry: cmd.options?.noRetry ?? true,
       })
     )
   );
 }
 
 /**
- * Exécuter plusieurs commandes en séquence (any: any)
+ * Exécuter plusieurs commandes en séquence (avec circuit breaker)
  *
  * @example
  * ```ts
@@ -350,19 +350,19 @@ export async function invokeBatch<T = unknown>(commands: BatchCommand?.[]): Prom
  * ```
  */
 export async function invokeSequence<T = unknown>(
-  commands: BatchCommand?.[]
-): Promise<T?.[]> {
-  const results: T?.[] = [];
+  commands: BatchCommand[]
+): Promise<T[]> {
+  const results: T[] = [];
 
-  for (any: any) {
+  for (const cmd of commands) {
     try {
-      const result = await invokeWithRetry<T>(cmd?.command, cmd?.payload, {
-        ...cmd?.options,
-        noRetry: cmd?.options?.noRetry ?? true,
+      const result = await invokeWithRetry<T>(cmd.command, cmd.payload, {
+        ...cmd.options,
+        noRetry: cmd.options?.noRetry ?? true,
       });
-      results?.push(any: any);
-    } catch (any: any) {
-      console?.error(`[Sequence] Failed at command "${cmd?.command}". Stopping sequence.`);
+      results.push(result);
+    } catch (error) {
+      console.error(`[Sequence] Failed at command "${cmd.command}". Stopping sequence.`);
       throw error;
     }
   }
@@ -375,7 +375,7 @@ export async function invokeSequence<T = unknown>(
 // ────────────────────────────────────────────────────────────────
 
 /**
- * Options pour commandes rapides (any: any)
+ * Options pour commandes rapides (get state, health check)
  */
 export const FAST_COMMAND_OPTIONS: InvokeOptions = {
   timeout: 5000,
@@ -385,7 +385,7 @@ export const FAST_COMMAND_OPTIONS: InvokeOptions = {
 };
 
 /**
- * Options pour commandes standards (any: any)
+ * Options pour commandes standards (get data, save)
  */
 export const STANDARD_COMMAND_OPTIONS: InvokeOptions = {
   timeout: 15000,
@@ -395,7 +395,7 @@ export const STANDARD_COMMAND_OPTIONS: InvokeOptions = {
 };
 
 /**
- * Options pour commandes longues (any: any)
+ * Options pour commandes longues (evolution, analysis)
  */
 export const LONG_COMMAND_OPTIONS: InvokeOptions = {
   timeout: 60000,
@@ -406,7 +406,7 @@ export const LONG_COMMAND_OPTIONS: InvokeOptions = {
 };
 
 /**
- * Options pour commandes critiques (any: any)
+ * Options pour commandes critiques (no retry, short timeout)
  */
 export const CRITICAL_COMMAND_OPTIONS: InvokeOptions = {
   timeout: 10000,

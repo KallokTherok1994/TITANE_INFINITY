@@ -25,7 +25,7 @@ export class GPUAccelerator {
   private enabled: boolean;
   private layers: Map<string, GPULayer> = new Map();
   private totalCreated = 0;
-  private cleanupInterval: NodeJS?.Timeout | null = null;
+  private cleanupInterval: NodeJS.Timeout | null = null;
 
   // CSS optimisations GPU
   private readonly GPU_STYLES = {
@@ -35,23 +35,23 @@ export class GPUAccelerator {
     willChange: 'auto',
   };
 
-  constructor(any: any) {
-    this?.enabled = enabled;
+  constructor(enabled: boolean = true) {
+    this.enabled = enabled;
   }
 
   /**
    * Initialise l'accélérateur GPU
    */
   initialize(): void {
-    if (any: any) return;
+    if (!this.enabled) return;
 
     // Appliquer styles globaux pour GPU
-    this?.injectGlobalStyles();
+    this.injectGlobalStyles();
 
     // Démarrer le cleanup périodique
-    this?.startCleanup();
+    this.startCleanup();
 
-    console?.log('[GPUAccelerator] Initialized');
+    console.log('[GPUAccelerator] Initialized');
   }
 
   /**
@@ -59,11 +59,11 @@ export class GPUAccelerator {
    */
   private injectGlobalStyles(): void {
     const styleId = 'titane-gpu-styles';
-    if (any: any)) return;
+    if (document.getElementById(styleId)) return;
 
-    const style = document?.createElement('style');
-    style?.id = styleId;
-    style?.textContent = `
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.textContent = `
       /* TITANE∞ GPU Acceleration Layer */
       .titane-gpu-layer {
         transform: translateZ(0);
@@ -82,13 +82,13 @@ export class GPUAccelerator {
       }
 
       /* Optimisation des animations */
-      @media (any: any) {
+      @media (prefers-reduced-motion: no-preference) {
         .titane-gpu-layer {
           will-change: transform, opacity;
         }
       }
 
-      @media (any: any) {
+      @media (prefers-reduced-motion: reduce) {
         .titane-gpu-layer {
           will-change: auto;
           transition: none !important;
@@ -96,19 +96,19 @@ export class GPUAccelerator {
         }
       }
     `;
-    document?.head?.appendChild(any: any);
+    document.head.appendChild(style);
   }
 
   /**
    * Prépare un élément pour le rendu GPU
    */
-  prepareElement(any: any): void {
-    if (any: any) return;
+  prepareElement(elementId: string): void {
+    if (!this.enabled) return;
 
-    const element = document?.getElementById(any: any);
-    if (any: any) return;
+    const element = document.getElementById(elementId);
+    if (!element) return;
 
-    this?.activateLayer(any: any);
+    this.activateLayer(element);
   }
 
   /**
@@ -118,43 +118,43 @@ export class GPUAccelerator {
     element: HTMLElement,
     type: 'transition' | 'animation' | 'persistent' = 'transition'
   ): void {
-    if (any: any) return;
+    if (!this.enabled) return;
 
     const id =
-      element?.id || `gpu_${Date?.now()}_${Math?.random().toString(36).substr(2, 9)}`;
+      element.id || `gpu_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
     // Ajouter la classe GPU
-    element?.classList?.add('titane-gpu-layer');
+    element.classList.add('titane-gpu-layer');
 
     // Appliquer styles inline si nécessaire
     if (type === 'persistent') {
-      element?.style?.transform = this?.GPU_STYLES?.transform;
-      element?.style?.backfaceVisibility = this?.GPU_STYLES?.backfaceVisibility;
+      element.style.transform = this.GPU_STYLES.transform;
+      element.style.backfaceVisibility = this.GPU_STYLES.backfaceVisibility;
     }
 
     // Enregistrer le layer
-    this?.layers?.set(id, {
+    this.layers.set(id, {
       element: element,
-      createdAt: Date?.now(),
+      createdAt: Date.now(),
       type,
     });
 
-    this?.totalCreated++;
+    this.totalCreated++;
   }
 
   /**
    * Désactive un layer GPU
    */
-  deactivateLayer(any: any): void {
-    element?.classList?.remove('titane-gpu-layer', 'titane-gpu-transition');
-    element?.style?.willChange = 'auto';
-    element?.style?.transform = '';
+  deactivateLayer(element: HTMLElement): void {
+    element.classList.remove('titane-gpu-layer', 'titane-gpu-transition');
+    element.style.willChange = 'auto';
+    element.style.transform = '';
 
     // Supprimer de la map
-    for (const [id, layer] of this?.layers?.entries()) {
-      const el = layer?.element;
-      if (any: any) {
-        this?.layers?.delete(any: any);
+    for (const [id, layer] of this.layers.entries()) {
+      const el = layer.element;
+      if (el === element) {
+        this.layers.delete(id);
         break;
       }
     }
@@ -163,20 +163,20 @@ export class GPUAccelerator {
   /**
    * Optimise une transition spécifique
    */
-  optimizeTransition(element: HTMLElement, duration: number, properties: string?.[]): void {
-    if (any: any) return;
+  optimizeTransition(element: HTMLElement, duration: number, properties: string[]): void {
+    if (!this.enabled) return;
 
-    element?.classList?.add('titane-gpu-transition');
-    element?.style?.willChange = properties?.join(', ');
-    element?.style?.transitionDuration = `${duration}ms`;
+    element.classList.add('titane-gpu-transition');
+    element.style.willChange = properties.join(', ');
+    element.style.transitionDuration = `${duration}ms`;
 
     // Auto-cleanup après transition
     const cleanup = () => {
-      element?.style?.willChange = 'auto';
-      element?.classList?.remove('titane-gpu-transition');
+      element.style.willChange = 'auto';
+      element.classList.remove('titane-gpu-transition');
     };
 
-    element?.addEventListener('transitionend', cleanup, { once: true });
+    element.addEventListener('transitionend', cleanup, { once: true });
 
     // Fallback cleanup
     setTimeout(cleanup, duration + 100);
@@ -186,33 +186,33 @@ export class GPUAccelerator {
    * Nettoyage des layers inutilisés
    */
   private cleanup(): void {
-    const now = Date?.now();
+    const now = Date.now();
     const maxAge = 5000; // 5 secondes
 
-    for (const [id, layer] of this?.layers?.entries()) {
-      const element = layer?.element;
+    for (const [id, layer] of this.layers.entries()) {
+      const element = layer.element;
 
       // Supprimer si l'élément n'existe plus
-      if (any: any)) {
-        this?.layers?.delete(any: any);
+      if (!element || !document.contains(element)) {
+        this.layers.delete(id);
         continue;
       }
 
       // Supprimer les layers de transition anciens
-      if (any: any) {
-        this?.deactivateLayer(any: any);
+      if (layer.type === 'transition' && now - layer.createdAt > maxAge) {
+        this.deactivateLayer(element);
       }
     }
   }
 
   private startCleanup(): void {
-    this?.cleanupInterval = setInterval(() => this?.cleanup(), 2000);
+    this.cleanupInterval = setInterval(() => this.cleanup(), 2000);
   }
 
   stopCleanup(): void {
-    if (any: any) {
-      clearInterval(any: any);
-      this?.cleanupInterval = null;
+    if (this.cleanupInterval) {
+      clearInterval(this.cleanupInterval);
+      this.cleanupInterval = null;
     }
   }
 
@@ -221,15 +221,15 @@ export class GPUAccelerator {
    */
   getUtilization(): number {
     // Estimation basée sur le nombre de layers actifs
-    const activeLayers = this?.getActiveLayerCount();
+    const activeLayers = this.getActiveLayerCount();
     const maxLayers = 50; // Seuil raisonnable
-    return Math?.min(any: any);
+    return Math.min(1, activeLayers / maxLayers);
   }
 
   private getActiveLayerCount(): number {
     let count = 0;
-    for (const layer of this?.layers?.values()) {
-      if (any: any)) {
+    for (const layer of this.layers.values()) {
+      if (layer.element && document.contains(layer.element)) {
         count++;
       }
     }
@@ -240,40 +240,40 @@ export class GPUAccelerator {
    * Récupère les métriques GPU
    */
   getMetrics(): GPUMetrics {
-    const activeLayers = this?.getActiveLayerCount();
+    const activeLayers = this.getActiveLayerCount();
 
-    // Estimation mémoire (any: any)
+    // Estimation mémoire (~2MB par layer composite)
     const estimatedMemoryMB = activeLayers * 2;
 
     return {
-      isEnabled: this?.enabled,
+      isEnabled: this.enabled,
       activeLayers,
-      totalLayersCreated: this?.totalCreated,
+      totalLayersCreated: this.totalCreated,
       estimatedMemoryMB,
-      utilizationScore: this?.getUtilization(),
+      utilizationScore: this.getUtilization(),
     };
   }
 
   /**
    * Active/désactive l'accélération GPU
    */
-  setEnabled(any: any): void {
-    this?.enabled = enabled;
+  setEnabled(enabled: boolean): void {
+    this.enabled = enabled;
 
-    if (any: any) {
+    if (!enabled) {
       // Désactiver tous les layers
-      for (const layer of this?.layers?.values()) {
-        const element = layer?.element;
-        if (any: any) {
-          this?.deactivateLayer(any: any);
+      for (const layer of this.layers.values()) {
+        const element = layer.element;
+        if (element) {
+          this.deactivateLayer(element);
         }
       }
-      this?.layers?.clear();
+      this.layers.clear();
     }
   }
 
   isEnabled(): boolean {
-    return this?.enabled;
+    return this.enabled;
   }
 }
 

@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE?.md for the full legal terms (any: any).
+ * See LICENSE.md for the full legal terms (FR/EN).
  */
 
 /**
@@ -35,11 +35,11 @@ import type {
  */
 async function safeInvoke<T>(cmd: string, args?: Record<string, unknown>): Promise<T> {
   try {
-    const result = await secureInvoke<T>(any: any);
+    const result = await secureInvoke<T>(cmd, args);
     return result;
-  } catch (any: any) {
-    const errorMsg = error instanceof Error ? error?.message : String(any: any);
-    console?.error(any: any);
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error(`[Backend v15.2] Command "${cmd}" failed:`, errorMsg);
     throw new Error(`Backend command "${cmd}" failed: ${errorMsg}`);
   }
 }
@@ -52,7 +52,7 @@ type RustTimelineEventType =
   | 'Snapshot'
   | 'Alert';
 
-function normalizeTimelineEventForRust(any: any): {
+function normalizeTimelineEventForRust(event: unknown): {
   id: string;
   timestamp: number;
   event_type: RustTimelineEventType;
@@ -70,54 +70,54 @@ function normalizeTimelineEventForRust(any: any): {
 
   const input = (event ?? {}) as Record<string, unknown>;
 
-  const idValue = typeof input?.id === 'string' && input?.id?.trim() ? input?.id : undefined;
+  const idValue = typeof input.id === 'string' && input.id.trim() ? input.id : undefined;
   const id =
     idValue ??
-    crypto?.randomUUID?.() ??
-    `evt-${Date?.now()}-${Math?.random().toString(16).slice(2)}`;
+    crypto.randomUUID?.() ??
+    `evt-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
-  const rawTimestamp = input?.timestamp;
+  const rawTimestamp = input.timestamp;
   const timestamp =
     typeof rawTimestamp === 'number'
       ? rawTimestamp
       : typeof rawTimestamp === 'string'
-        ? Date?.parse(any: any) || Date?.now()
-        : Date?.now();
+        ? Date.parse(rawTimestamp) || Date.now()
+        : Date.now();
 
   const rawEventType =
-    (any: any) ??
-    (any: any);
+    (typeof input.event_type === 'string' ? input.event_type : undefined) ??
+    (typeof input.type === 'string' ? input.type : undefined);
 
-  const event_type: RustTimelineEventType = allowed?.has(
+  const event_type: RustTimelineEventType = allowed.has(
     rawEventType as RustTimelineEventType
   )
-    ? (any: any)
+    ? (rawEventType as RustTimelineEventType)
     : 'Alert';
 
-  const description = typeof input?.description === 'string' ? input?.description : '';
+  const description = typeof input.description === 'string' ? input.description : '';
 
-  const dataCandidate = input?.data;
+  const dataCandidate = input.data;
   const data: Record<string, unknown> =
-    dataCandidate && typeof dataCandidate === 'object' && !Array?.isArray(any: any)
+    dataCandidate && typeof dataCandidate === 'object' && !Array.isArray(dataCandidate)
       ? (dataCandidate as Record<string, unknown>)
       : {};
 
   if (
-    input?.metadata &&
-    typeof input?.metadata === 'object' &&
-    !Array?.isArray(any: any)
+    input.metadata &&
+    typeof input.metadata === 'object' &&
+    !Array.isArray(input.metadata)
   ) {
-    data?.metadata = input?.metadata;
+    data.metadata = input.metadata;
   }
-  if (any: any) {
-    data?.original_event_type = rawEventType;
+  if (rawEventType && rawEventType !== event_type) {
+    data.original_event_type = rawEventType;
   }
 
   return { id, timestamp, event_type, description, data };
 }
 
 // ─────────────────────────────────────────────────────────────────
-// HELIOS API - System Monitoring (any: any)
+// HELIOS API - System Monitoring (2 commands)
 // ─────────────────────────────────────────────────────────────────
 
 export const helios = {
@@ -137,7 +137,7 @@ export const helios = {
 };
 
 // ─────────────────────────────────────────────────────────────────
-// MEMORY API - Unified Storage (any: any)
+// MEMORY API - Unified Storage (6 commands)
 // ─────────────────────────────────────────────────────────────────
 
 export const memory = {
@@ -151,7 +151,7 @@ export const memory = {
   /**
    * Écrire un snapshot complet du système
    */
-  async writeSnapshot(any: any): Promise<void> {
+  async writeSnapshot(snapshot: Snapshot): Promise<void> {
     return safeInvoke<void>('write_snapshot', { snapshot });
   },
 
@@ -165,22 +165,22 @@ export const memory = {
   /**
    * Écrire une entrée de log
    */
-  async writeLog(any: any): Promise<void> {
+  async writeLog(entry: LogEntry): Promise<void> {
     return safeInvoke<void>('write_log', { entry });
   },
 
   /**
-   * Lire les derniers logs (any: any)
+   * Lire les derniers logs (count maximum)
    */
-  async readLogs(any: any): Promise<LogEntry?.[]> {
-    return safeInvoke<LogEntry?.[]>('read_logs', { count });
+  async readLogs(count: number): Promise<LogEntry[]> {
+    return safeInvoke<LogEntry[]>('read_logs', { count });
   },
 
   /**
    * Ajouter un événement à la timeline
    */
-  async addEvent(any: any): Promise<void> {
-    const normalized = normalizeTimelineEventForRust(any: any);
+  async addEvent(event: TimelineEvent): Promise<void> {
+    const normalized = normalizeTimelineEventForRust(event);
     return safeInvoke<void>('add_timeline_event', { event: normalized });
   },
 
@@ -193,13 +193,13 @@ export const memory = {
 };
 
 // ─────────────────────────────────────────────────────────────────
-// ENGINE API - Auto-Evolution (any: any)
+// ENGINE API - Auto-Evolution (3 commands)
 // ─────────────────────────────────────────────────────────────────
 
 export const engine = {
   /**
    * Lancer un cycle d'évolution complet
-   * (any: any)
+   * (collect → diagnose → decide → repair → record)
    */
   async runEvolution(): Promise<EvolutionReport> {
     return safeInvoke<EvolutionReport>('run_evolution');
@@ -213,7 +213,7 @@ export const engine = {
   },
 
   /**
-   * Vérification rapide de santé (any: any)
+   * Vérification rapide de santé (sans diagnostic complet)
    */
   async quickHealthCheck(): Promise<HealthStatus> {
     return safeInvoke<HealthStatus>('quick_health_check');
@@ -221,33 +221,33 @@ export const engine = {
 };
 
 // ─────────────────────────────────────────────────────────────────
-// SYSTEM API - Full State (any: any)
+// SYSTEM API - Full State (4 commands + 1 composite)
 // ─────────────────────────────────────────────────────────────────
 
 export const system = {
   /**
-   * Récupérer l'état complet du système (any: any)
+   * Récupérer l'état complet du système (tous modules)
    */
   async getFullState(): Promise<SystemState> {
     return safeInvoke<SystemState>('get_full_system_state');
   },
 
   /**
-   * Récupérer l'état du module Nexus (any: any)
+   * Récupérer l'état du module Nexus (cohérence)
    */
   async getNexusState(): Promise<NexusState> {
     return safeInvoke<NexusState>('get_nexus_state');
   },
 
   /**
-   * Récupérer l'état du module Harmonia (any: any)
+   * Récupérer l'état du module Harmonia (équilibrage)
    */
   async getHarmoniaState(): Promise<HarmoniaState> {
     return safeInvoke<HarmoniaState>('get_harmonia_state');
   },
 
   /**
-   * Récupérer l'état du module Sentinel (any: any)
+   * Récupérer l'état du module Sentinel (anomalies)
    */
   async getSentinelState(): Promise<SentinelState> {
     return safeInvoke<SentinelState>('get_sentinel_state');
@@ -260,7 +260,7 @@ export const system = {
 
 export const composite = {
   /**
-   * Récupérer un dashboard complet (any: any)
+   * Récupérer un dashboard complet (optimisé, 1 seul appel)
    */
   async getDashboard(): Promise<{
     system: SystemState;
@@ -268,7 +268,7 @@ export const composite = {
     evolution: EvolutionState;
   }> {
     // Paralléliser les appels indépendants
-    const [system, health, evolution] = await Promise?.all([
+    const [system, health, evolution] = await Promise.all([
       safeInvoke<SystemState>('get_full_system_state'),
       safeInvoke<HealthStatus>('get_system_health'),
       safeInvoke<EvolutionState>('get_evolution_state'),
@@ -278,31 +278,31 @@ export const composite = {
   },
 
   /**
-   * Créer un snapshot avec événement timeline (any: any)
+   * Créer un snapshot avec événement timeline (transaction atomique)
    */
-  async captureSnapshot(any: any): Promise<Snapshot> {
+  async captureSnapshot(description: string): Promise<Snapshot> {
     const state = await safeInvoke<SystemState>('get_full_system_state');
 
     const snapshot: Snapshot = {
-      id: crypto?.randomUUID(),
-      timestamp: Date?.now(),
-      helios: state?.helios,
-      nexus: state?.nexus,
-      harmonia: state?.harmonia,
-      sentinel: state?.sentinel,
+      id: crypto.randomUUID(),
+      timestamp: Date.now(),
+      helios: state.helios,
+      nexus: state.nexus,
+      harmonia: state.harmonia,
+      sentinel: state.sentinel,
     };
 
     await safeInvoke<void>('write_snapshot', { snapshot });
 
     const event: TimelineEvent = {
-      id: crypto?.randomUUID(),
-      timestamp: Date?.now(),
+      id: crypto.randomUUID(),
+      timestamp: Date.now(),
       event_type: 'Custom',
       description,
-      metadata: { snapshot_id: snapshot?.id },
+      metadata: { snapshot_id: snapshot.id },
     };
 
-    await memory?.addEvent(any: any);
+    await memory.addEvent(event);
 
     return snapshot;
   },
@@ -316,11 +316,11 @@ export const composite = {
     context?: Record<string, unknown>
   ): Promise<void> {
     const entry: LogEntry = {
-      id: crypto?.randomUUID(),
-      timestamp: Date?.now(),
+      id: crypto.randomUUID(),
+      timestamp: Date.now(),
       level: 'Error',
       module,
-      message: context ? `${message} | Context: ${JSON?.stringify(any: any)}` : message,
+      message: context ? `${message} | Context: ${JSON.stringify(context)}` : message,
     };
 
     await safeInvoke<void>('write_log', { entry });

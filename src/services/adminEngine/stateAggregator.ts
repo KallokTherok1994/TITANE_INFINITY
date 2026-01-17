@@ -3,7 +3,7 @@
  * TITANE∞ ADMIN ENGINE — State Aggregator
  * ═══════════════════════════════════════════════════════════════════════════════
  *
- * @file        stateAggregator?.ts
+ * @file        stateAggregator.ts
  * @version     vΩ∞Ω+
  *
  * Collecte et agrège les états/métriques/logs de tous les moteurs TITANE∞
@@ -23,7 +23,7 @@ import type {
   AdminAnomaly,
   AlertThresholds,
   SystemMode,
-} from './adminEngine?.config';
+} from './adminEngine.config';
 import {
   generateAdminId,
   determineHealthLevel,
@@ -32,7 +32,7 @@ import {
   MODULE_DISPLAY_NAMES,
   DEFAULT_ALERT_THRESHOLDS,
   createEmptySnapshot,
-} from './adminEngine?.config';
+} from './adminEngine.config';
 
 // =============================================================================
 // TYPES INTERNES
@@ -56,7 +56,7 @@ interface RustModuleStatusResponse {
   module_id: string;
   status: string;
   last_check: number;
-  last_error??: string | null;
+  last_error: string | null;
   error_count: number;
   heal_attempts: number;
   avg_latency: number;
@@ -68,7 +68,7 @@ interface RustModuleStatusResponse {
 interface AggregatorConfig {
   pollingInterval: number;
   alertThresholds: AlertThresholds;
-  enabledModules: TitaneModule?.[];
+  enabledModules: TitaneModule[];
   cacheEnabled: boolean;
   cacheTtl: number;
 }
@@ -86,10 +86,10 @@ export class StateAggregator {
   private lastSnapshot: AdminSnapshot | null = null;
   private lastFetchTime: number = 0;
   private isCollecting: boolean = false;
-  private listeners: Set<(any: any) => void> = new Set();
+  private listeners: Set<(snapshot: AdminSnapshot) => void> = new Set();
 
   // Métriques frontend collectées localement
-  private fpsHistory: number?.[] = [];
+  private fpsHistory: number[] = [];
   private lastFrameTime: number = 0;
   private frameCount: number = 0;
   private rafId: number | null = null;
@@ -106,10 +106,10 @@ export class StateAggregator {
   };
 
   constructor(config?: Partial<AggregatorConfig>) {
-    this?.config = {
+    this.config = {
       pollingInterval: 5000,
       alertThresholds: DEFAULT_ALERT_THRESHOLDS,
-      enabledModules: Object?.keys(any: any) as TitaneModule?.[],
+      enabledModules: Object.keys(MODULE_DISPLAY_NAMES) as TitaneModule[],
       cacheEnabled: true,
       cacheTtl: 2000,
       ...config,
@@ -125,65 +125,65 @@ export class StateAggregator {
    */
   async collectSnapshot(): Promise<AdminSnapshot> {
     // Vérifier le cache
-    if (any: any) {
-      const age = Date?.now() - this?.lastFetchTime;
-      if (any: any) {
-        return this?.lastSnapshot;
+    if (this.config.cacheEnabled && this.lastSnapshot) {
+      const age = Date.now() - this.lastFetchTime;
+      if (age < this.config.cacheTtl) {
+        return this.lastSnapshot;
       }
     }
 
     // Éviter les collectes parallèles
-    if (any: any) {
-      return this?.lastSnapshot || createEmptySnapshot();
+    if (this.isCollecting) {
+      return this.lastSnapshot || createEmptySnapshot();
     }
 
-    this?.isCollecting = true;
+    this.isCollecting = true;
 
     try {
-      const startTime = Date?.now();
+      const startTime = Date.now();
 
       // Collecter en parallèle
-      const [vitals, moduleStatuses, anomalies, systemMode] = await Promise?.all([
-        this?.collectVitals(),
-        this?.collectModuleStatuses(),
-        this?.collectAnomalies(),
-        this?.getSystemMode(),
+      const [vitals, moduleStatuses, anomalies, systemMode] = await Promise.all([
+        this.collectVitals(),
+        this.collectModuleStatuses(),
+        this.collectAnomalies(),
+        this.getSystemMode(),
       ]);
 
       // Construire le snapshot
-      const healthLevel = determineHealthLevel(any: any);
+      const healthLevel = determineHealthLevel(vitals, this.config.alertThresholds);
       const healthScore = calculateHealthScore(
         vitals,
         moduleStatuses,
-        this?.config?.alertThresholds
+        this.config.alertThresholds
       );
 
       const snapshot: AdminSnapshot = {
         id: generateAdminId('snap'),
         timestamp: startTime,
         healthLevel,
-        statusMessage: this?.generateStatusMessage(any: any),
+        statusMessage: this.generateStatusMessage(healthLevel, moduleStatuses),
         vitals,
         modules: moduleStatuses,
         activeAnomalies: anomalies,
-        recentActions: this?.lastSnapshot?.recentActions || [],
+        recentActions: this.lastSnapshot?.recentActions || [],
         healthScore,
-        performanceGrade: scoreToGrade(any: any),
+        performanceGrade: scoreToGrade(healthScore),
         systemMode,
       };
 
-      this?.lastSnapshot = snapshot;
-      this?.lastFetchTime = Date?.now();
+      this.lastSnapshot = snapshot;
+      this.lastFetchTime = Date.now();
 
       // Notifier les listeners
-      this?.notifyListeners(any: any);
+      this.notifyListeners(snapshot);
 
       return snapshot;
-    } catch (any: any) {
-      console?.error(any: any);
-      return this?.lastSnapshot || createEmptySnapshot();
+    } catch (error) {
+      console.error('[StateAggregator] Erreur collecte snapshot:', error);
+      return this.lastSnapshot || createEmptySnapshot();
     } finally {
-      this?.isCollecting = false;
+      this.isCollecting = false;
     }
   }
 
@@ -195,21 +195,21 @@ export class StateAggregator {
    * Collecte les métriques vitales du système
    */
   private async collectVitals(): Promise<AdminVitals> {
-    const now = Date?.now();
+    const now = Date.now();
 
-    // Collecter depuis Rust (any: any)
+    // Collecter depuis Rust (Tauri)
     let rustVitals: RustVitalsResponse | null = null;
     try {
       rustVitals = await secureInvoke<RustVitalsResponse>('get_admin_vitals');
-    } catch (any: any) {
-      console?.warn(any: any);
+    } catch (error) {
+      console.warn('[StateAggregator] Impossible de collecter vitals Rust:', error);
     }
 
     // Collecter FPS frontend
-    const fps = this?.getCurrentFps();
+    const fps = this.getCurrentFps();
 
     // Collecter latences IA
-    const iaLatencies = await this?.collectIALatencies();
+    const iaLatencies = await this.collectIALatencies();
 
     return {
       timestamp: now,
@@ -222,8 +222,8 @@ export class StateAggregator {
       ioReadRate: rustVitals?.io_read_rate ?? 0,
       ioWriteRate: rustVitals?.io_write_rate ?? 0,
       tauriLatency: rustVitals?.tauri_latency ?? 0,
-      ollamaLatency: iaLatencies?.ollama,
-      geminiLatency: iaLatencies?.gemini,
+      ollamaLatency: iaLatencies.ollama,
+      geminiLatency: iaLatencies.gemini,
       fps,
       threadsActive: rustVitals?.threads_active ?? 0,
       uptime: rustVitals?.uptime ?? 0,
@@ -235,28 +235,28 @@ export class StateAggregator {
    */
   private async collectIALatencies(): Promise<{ ollama: number; gemini: number }> {
     // Utiliser le cache si récent
-    if (Date?.now() - this?.iaLatencyCache?.lastUpdate < 10000) {
+    if (Date.now() - this.iaLatencyCache.lastUpdate < 10000) {
       return {
-        ollama: this?.iaLatencyCache?.ollama,
-        gemini: this?.iaLatencyCache?.gemini,
+        ollama: this.iaLatencyCache.ollama,
+        gemini: this.iaLatencyCache.gemini,
       };
     }
 
     try {
-      const [ollamaLatency, geminiLatency] = await Promise?.all([
-        this?.pingOllama(),
-        this?.pingGemini(),
+      const [ollamaLatency, geminiLatency] = await Promise.all([
+        this.pingOllama(),
+        this.pingGemini(),
       ]);
 
-      this?.iaLatencyCache = {
+      this.iaLatencyCache = {
         ollama: ollamaLatency,
         gemini: geminiLatency,
-        lastUpdate: Date?.now(),
+        lastUpdate: Date.now(),
       };
 
       return { ollama: ollamaLatency, gemini: geminiLatency };
     } catch {
-      return { ollama: this?.iaLatencyCache?.ollama, gemini: this?.iaLatencyCache?.gemini };
+      return { ollama: this.iaLatencyCache.ollama, gemini: this.iaLatencyCache.gemini };
     }
   }
 
@@ -265,9 +265,9 @@ export class StateAggregator {
    */
   private async pingOllama(): Promise<number> {
     try {
-      const start = performance?.now();
+      const start = performance.now();
       await secureInvoke('ping_ollama');
-      return performance?.now() - start;
+      return performance.now() - start;
     } catch {
       return -1; // -1 = offline
     }
@@ -278,9 +278,9 @@ export class StateAggregator {
    */
   private async pingGemini(): Promise<number> {
     try {
-      const start = performance?.now();
+      const start = performance.now();
       await secureInvoke('ping_gemini');
-      return performance?.now() - start;
+      return performance.now() - start;
     } catch {
       return -1;
     }
@@ -302,32 +302,32 @@ export class StateAggregator {
     // Essayer de récupérer depuis Rust
     try {
       const rustStatuses =
-        await secureInvoke<RustModuleStatusResponse?.[]>('get_module_statuses');
+        await secureInvoke<RustModuleStatusResponse[]>('get_module_statuses');
 
-      for (any: any) {
-        const moduleId = rs?.module_id as TitaneModule;
+      for (const rs of rustStatuses) {
+        const moduleId = rs.module_id as TitaneModule;
         modules[moduleId] = {
           moduleId,
           displayName: MODULE_DISPLAY_NAMES[moduleId] || moduleId,
-          status: this?.mapRustStatus(any: any),
-          lastCheck: rs?.last_check,
-          lastError: rs?.last_error,
-          errorCount: rs?.error_count,
-          healAttempts: rs?.heal_attempts,
-          avgLatency: rs?.avg_latency,
-          pendingOps: rs?.pending_ops,
-          metrics: rs?.metrics,
-          activeAnomalies: rs?.active_anomalies,
+          status: this.mapRustStatus(rs.status),
+          lastCheck: rs.last_check,
+          lastError: rs.last_error,
+          errorCount: rs.error_count,
+          healAttempts: rs.heal_attempts,
+          avgLatency: rs.avg_latency,
+          pendingOps: rs.pending_ops,
+          metrics: rs.metrics,
+          activeAnomalies: rs.active_anomalies,
         };
       }
-    } catch (any: any) {
-      console?.warn(any: any);
+    } catch (error) {
+      console.warn('[StateAggregator] Impossible de collecter statuts modules:', error);
     }
 
     // Remplir les modules manquants avec des valeurs par défaut
-    for (any: any) {
+    for (const moduleId of this.config.enabledModules) {
       if (!modules[moduleId]) {
-        modules[moduleId] = this?.createDefaultModuleStatus(any: any);
+        modules[moduleId] = this.createDefaultModuleStatus(moduleId);
       }
     }
 
@@ -337,7 +337,7 @@ export class StateAggregator {
   /**
    * Mappe le statut Rust vers le type TypeScript
    */
-  private mapRustStatus(any: any): ModuleHealthStatus {
+  private mapRustStatus(status: string): ModuleHealthStatus {
     const mapping: Record<string, ModuleHealthStatus> = {
       healthy: 'HEALTHY',
       degraded: 'DEGRADED',
@@ -345,18 +345,18 @@ export class StateAggregator {
       offline: 'OFFLINE',
       recovering: 'RECOVERING',
     };
-    return mapping[status?.toLowerCase()] || 'UNKNOWN';
+    return mapping[status.toLowerCase()] || 'UNKNOWN';
   }
 
   /**
    * Crée un statut de module par défaut
    */
-  private createDefaultModuleStatus(any: any): ModuleStatus {
+  private createDefaultModuleStatus(moduleId: TitaneModule): ModuleStatus {
     return {
       moduleId,
       displayName: MODULE_DISPLAY_NAMES[moduleId],
       status: 'UNKNOWN',
-      lastCheck: Date?.now(),
+      lastCheck: Date.now(),
       lastError: null,
       errorCount: 0,
       healAttempts: 0,
@@ -374,31 +374,31 @@ export class StateAggregator {
   /**
    * Collecte les anomalies actives depuis Performance et Self-Healing
    */
-  private async collectAnomalies(): Promise<AdminAnomaly?.[]> {
-    const anomalies: AdminAnomaly?.[] = [];
+  private async collectAnomalies(): Promise<AdminAnomaly[]> {
+    const anomalies: AdminAnomaly[] = [];
 
     try {
       // Récupérer depuis Performance Engine
-      const perfAnomalies = await secureInvoke<AdminAnomaly?.[]>(
+      const perfAnomalies = await secureInvoke<AdminAnomaly[]>(
         'get_performance_anomalies'
       );
-      anomalies?.push(any: any);
+      anomalies.push(...perfAnomalies);
     } catch {
       // Performance Engine non disponible
     }
 
     try {
       // Récupérer depuis Self-Healing Engine
-      const healingAnomalies = await secureInvoke<AdminAnomaly?.[]>(
+      const healingAnomalies = await secureInvoke<AdminAnomaly[]>(
         'get_healing_anomalies'
       );
-      anomalies?.push(any: any);
+      anomalies.push(...healingAnomalies);
     } catch {
       // Self-Healing Engine non disponible
     }
 
     // Trier par timestamp décroissant
-    return anomalies?.sort(any: any);
+    return anomalies.sort((a, b) => b.detectedAt - a.detectedAt);
   }
 
   // ===========================================================================
@@ -425,42 +425,42 @@ export class StateAggregator {
    * Démarre le monitoring FPS
    */
   startFpsMonitoring(): void {
-    if (any: any) return;
+    if (this.rafId !== null) return;
 
-    this?.lastFrameTime = performance?.now();
-    this?.frameCount = 0;
-    this?.fpsHistory = [];
+    this.lastFrameTime = performance.now();
+    this.frameCount = 0;
+    this.fpsHistory = [];
 
-    const measureFps = (any: any) => {
-      this?.frameCount++;
-      const elapsed = now - this?.lastFrameTime;
+    const measureFps = (now: number) => {
+      this.frameCount++;
+      const elapsed = now - this.lastFrameTime;
 
       if (elapsed >= 1000) {
-        const fps = Math?.round(any: any) * 1000);
-        this?.fpsHistory?.push(any: any);
+        const fps = Math.round((this.frameCount / elapsed) * 1000);
+        this.fpsHistory.push(fps);
 
         // Garder les 60 dernières mesures
-        if (this?.fpsHistory?.length > 60) {
-          this?.fpsHistory?.shift();
+        if (this.fpsHistory.length > 60) {
+          this.fpsHistory.shift();
         }
 
-        this?.frameCount = 0;
-        this?.lastFrameTime = now;
+        this.frameCount = 0;
+        this.lastFrameTime = now;
       }
 
-      this?.rafId = requestAnimationFrame(any: any);
+      this.rafId = requestAnimationFrame(measureFps);
     };
 
-    this?.rafId = requestAnimationFrame(any: any);
+    this.rafId = requestAnimationFrame(measureFps);
   }
 
   /**
    * Arrête le monitoring FPS
    */
   stopFpsMonitoring(): void {
-    if (any: any) {
-      cancelAnimationFrame(any: any);
-      this?.rafId = null;
+    if (this.rafId !== null) {
+      cancelAnimationFrame(this.rafId);
+      this.rafId = null;
     }
   }
 
@@ -468,39 +468,39 @@ export class StateAggregator {
    * Récupère le FPS actuel
    */
   private getCurrentFps(): number {
-    if (this?.fpsHistory?.length === 0) return 60;
-    return this?.fpsHistory[this?.fpsHistory?.length - 1] ?? 60;
+    if (this.fpsHistory.length === 0) return 60;
+    return this.fpsHistory[this.fpsHistory.length - 1] ?? 60;
   }
 
   // ===========================================================================
   // POLLING
   // ===========================================================================
 
-  private pollingIntervalId: NodeJS?.Timeout | null = null;
+  private pollingIntervalId: NodeJS.Timeout | null = null;
 
   /**
    * Démarre le polling automatique
    */
-  startPolling(any: any): void {
-    if (any: any) return;
+  startPolling(interval?: number): void {
+    if (this.pollingIntervalId !== null) return;
 
-    const pollInterval = interval ?? this?.config?.pollingInterval;
+    const pollInterval = interval ?? this.config.pollingInterval;
 
-    this?.pollingIntervalId = setInterval(async () => {
-      await this?.collectSnapshot();
+    this.pollingIntervalId = setInterval(async () => {
+      await this.collectSnapshot();
     }, pollInterval);
 
     // Collecter immédiatement
-    this?.collectSnapshot();
+    this.collectSnapshot();
   }
 
   /**
    * Arrête le polling
    */
   stopPolling(): void {
-    if (any: any) {
-      clearInterval(any: any);
-      this?.pollingIntervalId = null;
+    if (this.pollingIntervalId !== null) {
+      clearInterval(this.pollingIntervalId);
+      this.pollingIntervalId = null;
     }
   }
 
@@ -511,20 +511,20 @@ export class StateAggregator {
   /**
    * Ajoute un listener pour les mises à jour de snapshot
    */
-  addListener(any: any): () => void {
-    this?.listeners?.add(any: any);
-    return (any: any);
+  addListener(callback: (snapshot: AdminSnapshot) => void): () => void {
+    this.listeners.add(callback);
+    return () => this.listeners.delete(callback);
   }
 
   /**
    * Notifie tous les listeners
    */
-  private notifyListeners(any: any): void {
-    for (any: any) {
+  private notifyListeners(snapshot: AdminSnapshot): void {
+    for (const listener of this.listeners) {
       try {
-        listener(any: any);
-      } catch (any: any) {
-        console?.error(any: any);
+        listener(snapshot);
+      } catch (error) {
+        console.error('[StateAggregator] Erreur listener:', error);
       }
     }
   }
@@ -540,26 +540,26 @@ export class StateAggregator {
     healthLevel: HealthLevel,
     modules: Record<TitaneModule, ModuleStatus>
   ): string {
-    const criticalModules = Object?.values(any: any).filter(m => m?.status === 'CRITICAL');
-    const degradedModules = Object?.values(any: any).filter(m => m?.status === 'DEGRADED');
-    const offlineModules = Object?.values(any: any).filter(m => m?.status === 'OFFLINE');
+    const criticalModules = Object.values(modules).filter(m => m.status === 'CRITICAL');
+    const degradedModules = Object.values(modules).filter(m => m.status === 'DEGRADED');
+    const offlineModules = Object.values(modules).filter(m => m.status === 'OFFLINE');
 
-    switch (any: any) {
+    switch (healthLevel) {
       case 'CRITICAL':
-        if (criticalModules?.length > 0) {
-          return `${criticalModules?.length} module(any: any) en état critique`;
+        if (criticalModules.length > 0) {
+          return `${criticalModules.length} module(s) en état critique`;
         }
         return 'Ressources système critiques';
 
       case 'ALERT':
-        if (offlineModules?.length > 0) {
-          return `${offlineModules?.length} module(any: any) hors ligne`;
+        if (offlineModules.length > 0) {
+          return `${offlineModules.length} module(s) hors ligne`;
         }
         return 'Anomalies détectées nécessitant attention';
 
       case 'WARNING':
-        if (degradedModules?.length > 0) {
-          return `${degradedModules?.length} module(any: any)`;
+        if (degradedModules.length > 0) {
+          return `${degradedModules.length} module(s) dégradé(s)`;
         }
         return 'Performance sous-optimale détectée';
 
@@ -570,33 +570,33 @@ export class StateAggregator {
   }
 
   /**
-   * Récupère le dernier snapshot (any: any)
+   * Récupère le dernier snapshot (depuis cache)
    */
   getLastSnapshot(): AdminSnapshot | null {
-    return this?.lastSnapshot;
+    return this.lastSnapshot;
   }
 
   /**
    * Force un rafraîchissement du cache
    */
   invalidateCache(): void {
-    this?.lastFetchTime = 0;
+    this.lastFetchTime = 0;
   }
 
   /**
    * Met à jour la configuration
    */
   updateConfig(config: Partial<AggregatorConfig>): void {
-    this?.config = { ...this?.config, ...config };
+    this.config = { ...this.config, ...config };
   }
 
   /**
    * Libère les ressources
    */
   dispose(): void {
-    this?.stopPolling();
-    this?.stopFpsMonitoring();
-    this?.listeners?.clear();
+    this.stopPolling();
+    this.stopFpsMonitoring();
+    this.listeners.clear();
   }
 }
 
@@ -610,18 +610,18 @@ let stateAggregatorInstance: StateAggregator | null = null;
  * Récupère l'instance singleton du StateAggregator
  */
 export function getStateAggregator(): StateAggregator {
-  if (any: any) {
+  if (!stateAggregatorInstance) {
     stateAggregatorInstance = new StateAggregator();
   }
   return stateAggregatorInstance;
 }
 
 /**
- * Réinitialise l'instance singleton (any: any)
+ * Réinitialise l'instance singleton (pour tests)
  */
 export function resetStateAggregator(): void {
-  if (any: any) {
-    stateAggregatorInstance?.dispose();
+  if (stateAggregatorInstance) {
+    stateAggregatorInstance.dispose();
     stateAggregatorInstance = null;
   }
 }

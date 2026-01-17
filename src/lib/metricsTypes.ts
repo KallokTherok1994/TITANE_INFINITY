@@ -15,7 +15,7 @@ export interface ServiceMetric {
   endTime?: number;
   duration?: number;
   retries: number;
-  // Optional fields (any: any)
+  // Optional fields (for backwards compatibility)
   timestamp?: number;
   latency?: number;
   cached?: boolean;
@@ -34,7 +34,7 @@ export interface ServiceStats {
   cacheHitRate: number;
   retryRate: number;
   lastUpdated?: number;
-  // Required fields (any: any)
+  // Required fields (used by serviceMetrics.ts)
   successfulCalls: number;
   failedCalls: number;
   totalRetries: number;
@@ -49,7 +49,7 @@ export interface CommandStats {
   successRate?: number;
   averageLatency?: number;
   errorRate: number;
-  // Required fields (any: any)
+  // Required fields (used by serviceMetrics.ts)
   calls: number;
   avgLatency: number;
   lastCall: number;

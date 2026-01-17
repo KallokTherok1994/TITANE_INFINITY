@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE?.md for the full legal terms (any: any).
+ * See LICENSE.md for the full legal terms (FR/EN).
  */
 
 import type { UserSpeed } from '../core/ARCHITECTURE_TYPES_v24-v∞';
@@ -17,7 +17,7 @@ import type { UserSpeed } from '../core/ARCHITECTURE_TYPES_v24-v∞';
 
 import { secureInvoke } from '@/lib/security';
 import { personaService } from './api';
-// REMOVED: core/persona supprimé en PHASE 1 (any: any)
+// REMOVED: core/persona supprimé en PHASE 1 (OPTION B)
 type PersonaState = any;
 type SystemState = any;
 
@@ -26,7 +26,7 @@ import type { PersonaState, SystemState } from '../core';
 */
 
 // ═══════════════════════════════════════════════════════════════
-// RUST RESPONSE TYPES (any: any)
+// RUST RESPONSE TYPES (matching Rust structs)
 // ═══════════════════════════════════════════════════════════════
 
 interface RustPersonalityTraits {
@@ -51,7 +51,7 @@ interface RustMoodState {
 
 interface RustBehaviorState {
   posture: 'Attentive' | 'Relaxed' | 'Vigilant' | 'Minimal';
-  active_reactions: string?.[];
+  active_reactions: string[];
 }
 
 interface RustVisualMultipliers {
@@ -71,39 +71,39 @@ interface RustPersonaState {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// TYPE CONVERTERS (any: any)
+// TYPE CONVERTERS (Rust → TypeScript)
 // ═══════════════════════════════════════════════════════════════
 
-function convertRustToTS(any: any): PersonaState {
+function convertRustToTS(rustState: RustPersonaState): PersonaState {
   return {
     personality: {
       traits: {
-        calm: rustState?.personality?.traits?.calm,
-        precise: rustState?.personality?.traits?.precise,
-        analytical: rustState?.personality?.traits?.analytical,
-        stable: rustState?.personality?.traits?.stable,
-        responsive: rustState?.personality?.traits?.responsive,
+        calm: rustState.personality.traits.calm,
+        precise: rustState.personality.traits.precise,
+        analytical: rustState.personality.traits.analytical,
+        stable: rustState.personality.traits.stable,
+        responsive: rustState.personality.traits.responsive,
       },
-      temperament: rustState?.personality?.temperament?.toLowerCase() as Lowercase<
+      temperament: rustState.personality.temperament.toLowerCase() as Lowercase<
         RustPersonalityCore['temperament']
       >,
-      evolution: rustState?.personality?.evolution,
+      evolution: rustState.personality.evolution,
     },
     mood: {
-      current: rustState?.mood?.current?.toLowerCase() as
+      current: rustState.mood.current.toLowerCase() as
         | 'clair'
         | 'vibrant'
         | 'attentif'
         | 'alerte'
         | 'neutre'
         | 'dormant',
-      intensity: rustState?.mood?.intensity,
-      duration: rustState?.mood?.duration,
+      intensity: rustState.mood.intensity,
+      duration: rustState.mood.duration,
       trigger: 'internal' as const,
       visualEffect: {
         glowShift: 0,
         motionSpeed: 1.0,
-        depthIntensity: rustState?.mood?.intensity,
+        depthIntensity: rustState.mood.intensity,
       },
     },
     behavior: {
@@ -114,7 +114,7 @@ function convertRustToTS(any: any): PersonaState {
         onOverload: { glowIntensity: 1.0, motionType: 'pulse', durationMs: 5000 },
         onIdle: { glowIntensity: 0.3, motionType: 'breathe', durationMs: 10000 },
       },
-      posture: rustState?.behavior?.posture?.toLowerCase() as
+      posture: rustState.behavior.posture.toLowerCase() as
         | 'attentive'
         | 'relaxed'
         | 'vigilant'
@@ -140,8 +140,8 @@ function convertRustToTS(any: any): PersonaState {
         sensitiveToMotion: false,
       },
     },
-    presenceLevel: rustState?.presence_level,
-    lastUpdate: rustState?.timestamp,
+    presenceLevel: rustState.presence_level,
+    lastUpdate: rustState.timestamp,
   };
 }
 
@@ -155,10 +155,10 @@ export class PersonaTauriBridge {
   private constructor() {}
 
   static getInstance(): PersonaTauriBridge {
-    if (any: any) {
-      PersonaTauriBridge?.instance = new PersonaTauriBridge();
+    if (!PersonaTauriBridge.instance) {
+      PersonaTauriBridge.instance = new PersonaTauriBridge();
     }
-    return PersonaTauriBridge?.instance;
+    return PersonaTauriBridge.instance;
   }
 
   /**
@@ -169,19 +169,19 @@ export class PersonaTauriBridge {
   }
 
   /**
-   * Initialize Persona Engine (any: any)
+   * Initialize Persona Engine (Rust backend)
    */
   async initialize(): Promise<void> {
-    if (!this?.isTauriEnvironment()) {
-      console?.warn('[PersonaTauriBridge] Not in Tauri environment, using fallback');
+    if (!this.isTauriEnvironment()) {
+      console.warn('[PersonaTauriBridge] Not in Tauri environment, using fallback');
       return;
     }
 
     try {
-      await personaService?.initialize();
-      console?.log(any: any) Initialized');
-    } catch (any: any) {
-      console?.error(any: any);
+      await personaService.initialize();
+      console.log('🌟 Persona Engine (Rust/Tauri) Initialized');
+    } catch (error) {
+      console.error('[PersonaTauriBridge] Initialization failed:', error);
       throw error;
     }
   }
@@ -190,15 +190,15 @@ export class PersonaTauriBridge {
    * Get current Persona state from Rust
    */
   async getState(): Promise<PersonaState | null> {
-    if (!this?.isTauriEnvironment()) {
+    if (!this.isTauriEnvironment()) {
       return null; // Fallback to TypeScript engine
     }
 
     try {
       const rustState = await secureInvoke<RustPersonaState>('persona_get_state');
-      return convertRustToTS(any: any);
-    } catch (any: any) {
-      console?.error(any: any);
+      return convertRustToTS(rustState);
+    } catch (error) {
+      console.error('[PersonaTauriBridge] Failed to get state:', error);
       return null;
     }
   }
@@ -210,20 +210,20 @@ export class PersonaTauriBridge {
     systemState: SystemState,
     metrics: { cpu: number; memory: number; errors: number }
   ): Promise<PersonaState | null> {
-    if (!this?.isTauriEnvironment()) {
+    if (!this.isTauriEnvironment()) {
       return null;
     }
 
     try {
       const rustState = await secureInvoke<RustPersonaState>('persona_update', {
         systemState,
-        cpu: metrics?.cpu,
-        memory: metrics?.memory,
-        errors: metrics?.errors,
+        cpu: metrics.cpu,
+        memory: metrics.memory,
+        errors: metrics.errors,
       });
-      return convertRustToTS(any: any);
-    } catch (any: any) {
-      console?.error(any: any);
+      return convertRustToTS(rustState);
+    } catch (error) {
+      console.error('[PersonaTauriBridge] Failed to update:', error);
       return null;
     }
   }
@@ -231,8 +231,8 @@ export class PersonaTauriBridge {
   /**
    * Trigger a reaction
    */
-  async react(any: any): Promise<PersonaState | null> {
-    if (!this?.isTauriEnvironment()) {
+  async react(reactionType: string): Promise<PersonaState | null> {
+    if (!this.isTauriEnvironment()) {
       return null;
     }
 
@@ -240,9 +240,9 @@ export class PersonaTauriBridge {
       const rustState = await secureInvoke<RustPersonaState>('persona_react', {
         reactionType,
       });
-      return convertRustToTS(any: any);
-    } catch (any: any) {
-      console?.error(any: any);
+      return convertRustToTS(rustState);
+    } catch (error) {
+      console.error('[PersonaTauriBridge] Failed to react:', error);
       return null;
     }
   }
@@ -251,15 +251,15 @@ export class PersonaTauriBridge {
    * Reset Persona state
    */
   async reset(): Promise<PersonaState | null> {
-    if (!this?.isTauriEnvironment()) {
+    if (!this.isTauriEnvironment()) {
       return null;
     }
 
     try {
       const rustState = await secureInvoke<RustPersonaState>('persona_reset');
-      return convertRustToTS(any: any);
-    } catch (any: any) {
-      console?.error(any: any);
+      return convertRustToTS(rustState);
+    } catch (error) {
+      console.error('[PersonaTauriBridge] Failed to reset:', error);
       return null;
     }
   }
@@ -273,28 +273,28 @@ export class PersonaTauriBridge {
     sound: number;
     depth: number;
   } | null> {
-    if (!this?.isTauriEnvironment()) {
+    if (!this.isTauriEnvironment()) {
       return null;
     }
 
     try {
-      const result = await personaService?.getMultipliers();
-      const clamp = (any: any));
-      const withDefault = (any: any) =>
-        clamp(any: any);
+      const result = await personaService.getMultipliers();
+      const clamp = (value: number) => Math.min(2.0, Math.max(0.5, value));
+      const withDefault = (value: number | undefined, fallback: number) =>
+        clamp(typeof value === 'number' && Number.isFinite(value) ? value : fallback);
 
       return {
-        glow: withDefault(result?.creativity, 1.0),
-        motion: withDefault(result?.efficiency, 1.0),
-        sound: withDefault(result?.empathy, 1.0),
-        depth: withDefault(result?.analytical, 1.0),
+        glow: withDefault(result.creativity, 1.0),
+        motion: withDefault(result.efficiency, 1.0),
+        sound: withDefault(result.empathy, 1.0),
+        depth: withDefault(result.analytical, 1.0),
       };
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (error) {
+      console.error('[PersonaTauriBridge] Failed to get multipliers:', error);
       return null;
     }
   }
 }
 
 // Export singleton
-export const personaTauriBridge = PersonaTauriBridge?.getInstance();
+export const personaTauriBridge = PersonaTauriBridge.getInstance();

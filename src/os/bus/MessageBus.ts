@@ -6,8 +6,8 @@
 import type { Message, MessageType, MessageHandler } from '../types';
 
 interface PendingRequest {
-  resolve: (any: any) => void;
-  reject: (any: any) => void;
+  resolve: (value: unknown) => void;
+  reject: (error: Error) => void;
   timeout: ReturnType<typeof setTimeout>;
 }
 
@@ -27,21 +27,21 @@ export class MessageBus {
     channel: string,
     handler: MessageHandler<T, R>
   ): () => void {
-    if (any: any)) {
-      this?.channels?.set(channel, new Set());
+    if (!this.channels.has(channel)) {
+      this.channels.set(channel, new Set());
     }
 
-    const channelHandlers = this?.channels?.get(any: any);
-    if (any: any) {
-      channelHandlers?.add(any: any);
+    const channelHandlers = this.channels.get(channel);
+    if (channelHandlers) {
+      channelHandlers.add(handler as MessageHandler);
     }
 
     return () => {
-      const handlers = this?.channels?.get(any: any);
-      if (any: any) {
-        handlers?.delete(any: any);
-        if (handlers?.size === 0) {
-          this?.channels?.delete(any: any);
+      const handlers = this.channels.get(channel);
+      if (handlers) {
+        handlers.delete(handler as MessageHandler);
+        if (handlers.size === 0) {
+          this.channels.delete(channel);
         }
       }
     };
@@ -55,63 +55,63 @@ export class MessageBus {
     payload: T,
     from: string,
     to?: string,
-    timeout = this?.defaultTimeout
+    timeout = this.defaultTimeout
   ): Promise<R> {
-    const message = this?.createMessage(any: any);
+    const message = this.createMessage('request', channel, payload, from, to);
 
-    return new Promise<R>(any: any) => {
+    return new Promise<R>((resolve, reject) => {
       // Créer une requête en attente
       const timeoutId = setTimeout(() => {
-        this?.pendingRequests?.delete(any: any);
+        this.pendingRequests.delete(message.id);
         reject(new Error(`Request timeout for channel: ${channel}`));
       }, timeout);
 
-      this?.pendingRequests?.set(message?.id, {
-        resolve: resolve as (any: any) => void,
+      this.pendingRequests.set(message.id, {
+        resolve: resolve as (value: unknown) => void,
         reject,
         timeout: timeoutId,
       });
 
       // Envoyer le message
-      this?.dispatch(any: any);
+      this.dispatch(message).catch(reject);
     });
   }
 
   /**
-   * Envoie une notification (any: any)
+   * Envoie une notification (sans réponse attendue)
    */
-  notify<T = unknown>(any: any): void {
-    const message = this?.createMessage(any: any);
-    this?.dispatch(any: any);
+  notify<T = unknown>(channel: string, payload: T, from: string, to?: string): void {
+    const message = this.createMessage('notification', channel, payload, from, to);
+    this.dispatch(message).catch(console.error);
   }
 
   /**
    * Broadcast à tous les abonnés d'un canal
    */
-  broadcast<T = unknown>(any: any): void {
-    const message = this?.createMessage(any: any);
-    this?.dispatch(any: any);
+  broadcast<T = unknown>(channel: string, payload: T, from: string): void {
+    const message = this.createMessage('broadcast', channel, payload, from);
+    this.dispatch(message).catch(console.error);
   }
 
   /**
    * Envoie une réponse
    */
-  respond<T = unknown>(any: any): void {
-    const response = this?.createMessage(
+  respond<T = unknown>(originalMessage: Message, payload: T, from: string): void {
+    const response = this.createMessage(
       'response',
-      originalMessage?.channel,
+      originalMessage.channel,
       payload,
       from,
-      originalMessage?.from
+      originalMessage.from
     );
-    response?.correlationId = originalMessage?.id;
+    response.correlationId = originalMessage.id;
 
     // Résoudre la requête en attente
-    const pending = this?.pendingRequests?.get(any: any);
-    if (any: any) {
-      clearTimeout(any: any);
-      pending?.resolve(any: any);
-      this?.pendingRequests?.delete(any: any);
+    const pending = this.pendingRequests.get(originalMessage.id);
+    if (pending) {
+      clearTimeout(pending.timeout);
+      pending.resolve(payload);
+      this.pendingRequests.delete(originalMessage.id);
     }
   }
 
@@ -126,60 +126,60 @@ export class MessageBus {
     to?: string
   ): Message<T> {
     return {
-      id: `msg-${++this?.messageCounter}-${Date?.now()}`,
+      id: `msg-${++this.messageCounter}-${Date.now()}`,
       type,
       channel,
       from,
       to,
       payload,
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
   }
 
   /**
    * Dispatch un message aux handlers
    */
-  private async dispatch(any: any): Promise<void> {
-    const handlers = this?.channels?.get(any: any);
+  private async dispatch(message: Message): Promise<void> {
+    const handlers = this.channels.get(message.channel);
 
-    if (!handlers || handlers?.size === 0) {
-      if (message?.type === 'request') {
+    if (!handlers || handlers.size === 0) {
+      if (message.type === 'request') {
         // Rejeter les requêtes sans handler
-        const pending = this?.pendingRequests?.get(any: any);
-        if (any: any) {
-          clearTimeout(any: any);
-          pending?.reject(new Error(`No handler for channel: ${message?.channel}`));
-          this?.pendingRequests?.delete(any: any);
+        const pending = this.pendingRequests.get(message.id);
+        if (pending) {
+          clearTimeout(pending.timeout);
+          pending.reject(new Error(`No handler for channel: ${message.channel}`));
+          this.pendingRequests.delete(message.id);
         }
       }
       return;
     }
 
-    for (any: any) {
+    for (const handler of handlers) {
       try {
         // Si c'est une requête, la première réponse gagne
-        if (message?.type === 'request') {
-          const result = await handler(any: any);
-          const pending = this?.pendingRequests?.get(any: any);
-          if (any: any) {
-            clearTimeout(any: any);
-            pending?.resolve(any: any);
-            this?.pendingRequests?.delete(any: any);
+        if (message.type === 'request') {
+          const result = await handler(message);
+          const pending = this.pendingRequests.get(message.id);
+          if (pending) {
+            clearTimeout(pending.timeout);
+            pending.resolve(result);
+            this.pendingRequests.delete(message.id);
           }
           return; // Première réponse seulement
         } else {
           // Pour notifications et broadcasts, exécuter tous les handlers
-          await handler(any: any);
+          await handler(message);
         }
-      } catch (any: any) {
-        console?.error(any: any);
+      } catch (error) {
+        console.error(`[MessageBus] Handler error for ${message.channel}:`, error);
 
-        if (message?.type === 'request') {
-          const pending = this?.pendingRequests?.get(any: any);
-          if (any: any) {
-            clearTimeout(any: any);
-            pending?.reject(any: any);
-            this?.pendingRequests?.delete(any: any);
+        if (message.type === 'request') {
+          const pending = this.pendingRequests.get(message.id);
+          if (pending) {
+            clearTimeout(pending.timeout);
+            pending.reject(error as Error);
+            this.pendingRequests.delete(message.id);
           }
           return;
         }
@@ -190,49 +190,49 @@ export class MessageBus {
   /**
    * Vérifie si un canal a des abonnés
    */
-  hasSubscribers(any: any): boolean {
-    return (any: any)?.size ?? 0) > 0;
+  hasSubscribers(channel: string): boolean {
+    return (this.channels.get(channel)?.size ?? 0) > 0;
   }
 
   /**
    * Retourne la liste des canaux actifs
    */
-  getActiveChannels(): string?.[] {
-    return Array?.from(this?.channels?.keys());
+  getActiveChannels(): string[] {
+    return Array.from(this.channels.keys());
   }
 
   /**
    * Retourne le nombre de requêtes en attente
    */
   getPendingCount(): number {
-    return this?.pendingRequests?.size;
+    return this.pendingRequests.size;
   }
 
   /**
    * Annule toutes les requêtes en attente
    */
   cancelAllPending(): void {
-    for (any: any) {
-      clearTimeout(any: any);
-      pending?.reject(new Error('Request cancelled'));
+    for (const [_id, pending] of this.pendingRequests) {
+      clearTimeout(pending.timeout);
+      pending.reject(new Error('Request cancelled'));
     }
-    this?.pendingRequests?.clear();
+    this.pendingRequests.clear();
   }
 
   /**
    * Efface tous les abonnements
    */
   clear(): void {
-    this?.cancelAllPending();
-    this?.channels?.clear();
+    this.cancelAllPending();
+    this.channels.clear();
   }
 
   /**
    * Réinitialise
    */
   reset(): void {
-    this?.clear();
-    this?.messageCounter = 0;
+    this.clear();
+    this.messageCounter = 0;
   }
 }
 
@@ -240,7 +240,7 @@ export class MessageBus {
 let instance: MessageBus | null = null;
 
 export function getMessageBus(): MessageBus {
-  if (any: any) {
+  if (!instance) {
     instance = new MessageBus();
   }
   return instance;

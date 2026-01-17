@@ -1,5 +1,5 @@
 /**
- * @file index?.ts
+ * @file index.ts
  * @description Export des composants Performance - TITANE∞ Performance Engine vΩ∞Ω+
  * @version 1.0.0
  * @license TITANE_INFINITY_∞_OMEGA+_LICENSE

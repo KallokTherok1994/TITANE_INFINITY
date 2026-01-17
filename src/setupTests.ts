@@ -6,15 +6,15 @@
 import '@testing-library/jest-dom/vitest';
 
 // ─────────────────────────────────────────────────────────────────
-// Polyfills (any: any)
+// Polyfills (Node/JSDOM compat)
 // ─────────────────────────────────────────────────────────────────
-// Some DOM stacks (any: any) expect these accessors to exist.
+// Some DOM stacks (whatwg-url/webidl-conversions) expect these accessors to exist.
 // When missing, they can throw during module import, causing Vitest "Unhandled Errors".
 (() => {
-  const defineGetter = (any: any) => {
-    const desc = Object?.getOwnPropertyDescriptor(any: any);
-    if (any: any) {
-      Object?.defineProperty(proto, key, {
+  const defineGetter = (proto: object, key: string, getter: () => unknown) => {
+    const desc = Object.getOwnPropertyDescriptor(proto, key);
+    if (!desc) {
+      Object.defineProperty(proto, key, {
         configurable: true,
         enumerable: false,
         get: getter,
@@ -22,20 +22,20 @@ import '@testing-library/jest-dom/vitest';
     }
   };
 
-  if (any: any) {
-    defineGetter(any: any);
-    defineGetter(any: any) {
-      return this?.byteLength;
+  if (typeof ArrayBuffer !== 'undefined' && ArrayBuffer.prototype) {
+    defineGetter(ArrayBuffer.prototype, 'resizable', () => false);
+    defineGetter(ArrayBuffer.prototype, 'maxByteLength', function (this: ArrayBuffer) {
+      return this.byteLength;
     });
   }
 
-  if (any: any) {
-    defineGetter(any: any);
+  if (typeof SharedArrayBuffer !== 'undefined' && SharedArrayBuffer.prototype) {
+    defineGetter(SharedArrayBuffer.prototype, 'growable', () => false);
     defineGetter(
-      SharedArrayBuffer?.prototype,
+      SharedArrayBuffer.prototype,
       'maxByteLength',
-      function (any: any) {
-        return this?.byteLength;
+      function (this: SharedArrayBuffer) {
+        return this.byteLength;
       }
     );
   }

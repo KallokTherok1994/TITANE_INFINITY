@@ -1,6 +1,6 @@
 /**
  * TITANE∞ v26.2.1 — Tests pour Fixes Critiques Chat IA
- * Tests H1 (any: any)
+ * Tests H1 (race condition provider checks) et H2 (memory leak pending saves)
  */
 
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
@@ -19,45 +19,45 @@ describe('H2: ChatMemoryCompactor - Memory Leak Protection', () => {
 
   beforeEach(() => {
     // Use fake timers to control async operations
-    vi?.useFakeTimers();
+    vi.useFakeTimers();
 
     // Mock localStorage
     localStorageMock = new Map();
-    global?.localStorage = {
-      getItem: vi?.fn(any: any),
-      setItem: vi?.fn(any: any) => {
-        localStorageMock?.set(any: any);
+    global.localStorage = {
+      getItem: vi.fn((key: string) => localStorageMock.get(key) || null),
+      setItem: vi.fn((key: string, value: string) => {
+        localStorageMock.set(key, value);
       }),
-      removeItem: vi?.fn(any: any) => {
-        localStorageMock?.delete(any: any);
+      removeItem: vi.fn((key: string) => {
+        localStorageMock.delete(key);
       }),
-      clear: vi?.fn(() => {
-        localStorageMock?.clear();
+      clear: vi.fn(() => {
+        localStorageMock.clear();
       }),
       length: 0,
-      key: vi?.fn(any: any),
+      key: vi.fn(() => null),
     } as Storage;
 
     // Mock requestIdleCallback - execute callback synchronously for testing
-    global?.requestIdleCallback = vi?.fn(any: any) => {
+    global.requestIdleCallback = vi.fn((callback: IdleRequestCallback) => {
       // Schedule for next tick using fake timers
       setTimeout(() => callback({ didTimeout: false, timeRemaining: () => 50 }), 0);
       return 0;
     });
 
-    // Also mock on window for browser code that checks window?.requestIdleCallback
+    // Also mock on window for browser code that checks window.requestIdleCallback
     if (typeof window !== 'undefined') {
       (
-        window as unknown as { requestIdleCallback: typeof global?.requestIdleCallback }
-      ).requestIdleCallback = global?.requestIdleCallback;
+        window as unknown as { requestIdleCallback: typeof global.requestIdleCallback }
+      ).requestIdleCallback = global.requestIdleCallback;
     }
 
     compactor = new ChatMemoryCompactor();
   });
 
   afterEach(() => {
-    vi?.useRealTimers();
-    vi?.clearAllMocks();
+    vi.useRealTimers();
+    vi.clearAllMocks();
   });
 
   it('should force flush when MAX_PENDING_SAVES reached', async () => {
@@ -65,51 +65,51 @@ describe('H2: ChatMemoryCompactor - Memory Leak Protection', () => {
     const message: AIMessage = {
       role: 'user',
       content: 'Test message',
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
 
     // Spy sur flushPendingSaves via setItem
-    const setItemSpy = vi?.spyOn(global?.localStorage, 'setItem');
+    const setItemSpy = vi.spyOn(global.localStorage, 'setItem');
 
     // Sauvegarder 101 fois (MAX = 100)
     for (let i = 0; i < 101; i++) {
       const modeWithIndex = `${mode}_${i}` as ChatMode;
-      compactor?.saveForMode(modeWithIndex, [{ ...message, content: `Message ${i}` }]);
+      compactor.saveForMode(modeWithIndex, [{ ...message, content: `Message ${i}` }]);
     }
 
     // Advance timers to trigger setTimeout callbacks
-    await vi?.advanceTimersByTimeAsync(100);
+    await vi.advanceTimersByTimeAsync(100);
 
     // Vérifier que la limite a déclenché un flush
-    expect(any: any).toHaveBeenCalled();
-    expect(any: any).toBeGreaterThan(0);
+    expect(setItemSpy).toHaveBeenCalled();
+    expect(setItemSpy.mock.calls.length).toBeGreaterThan(0);
   });
 
   it('should not accumulate pending saves indefinitely', async () => {
     const mode: ChatMode = 'default';
-    const messages: AIMessage?.[] = [
-      { role: 'user', content: 'Test 1', timestamp: Date?.now() },
-      { role: 'assistant', content: 'Response 1', timestamp: Date?.now() },
+    const messages: AIMessage[] = [
+      { role: 'user', content: 'Test 1', timestamp: Date.now() },
+      { role: 'assistant', content: 'Response 1', timestamp: Date.now() },
     ];
 
     // Track setItem calls
-    const setItemSpy = vi?.spyOn(global?.localStorage, 'setItem');
+    const setItemSpy = vi.spyOn(global.localStorage, 'setItem');
 
     // Trigger force flush by hitting MAX_PENDING_SAVES
     // This will bypass the idle callback and flush immediately
     for (let i = 0; i < 101; i++) {
-      const modeKey = i < 100 ? (any: any) : mode;
-      compactor?.saveForMode(modeKey, [...messages]);
+      const modeKey = i < 100 ? (`mode_${i}` as ChatMode) : mode;
+      compactor.saveForMode(modeKey, [...messages]);
     }
 
     // Advance timers to trigger setTimeout callbacks from requestIdleCallback mock
-    await vi?.advanceTimersByTimeAsync(100);
+    await vi.advanceTimersByTimeAsync(100);
 
-    // Verify saves were triggered (any: any)
-    expect(any: any).toHaveBeenCalled();
+    // Verify saves were triggered (no infinite accumulation - flush happened)
+    expect(setItemSpy).toHaveBeenCalled();
 
-    // The number of calls should be bounded (any: any)
-    expect(any: any).toBeLessThan(200);
+    // The number of calls should be bounded (force flush clears pendingSaves)
+    expect(setItemSpy.mock.calls.length).toBeLessThan(200);
   });
 
   it('should handle force flush gracefully on error', async () => {
@@ -117,12 +117,12 @@ describe('H2: ChatMemoryCompactor - Memory Leak Protection', () => {
     const message: AIMessage = {
       role: 'user',
       content: 'Test message',
-      timestamp: Date?.now(),
+      timestamp: Date.now(),
     };
 
-    // Mock localStorage?.setItem pour throw error
+    // Mock localStorage.setItem pour throw error
     let callCount = 0;
-    vi?.spyOn(global?.localStorage, 'setItem').mockImplementation(() => {
+    vi.spyOn(global.localStorage, 'setItem').mockImplementation(() => {
       callCount++;
       if (callCount === 1) {
         throw new Error('Storage quota exceeded');
@@ -131,14 +131,14 @@ describe('H2: ChatMemoryCompactor - Memory Leak Protection', () => {
 
     // Devrait ne pas crash même avec erreur
     expect(() => {
-      compactor?.saveForMode(mode, [message]);
-    }).not?.toThrow();
+      compactor.saveForMode(mode, [message]);
+    }).not.toThrow();
 
     // Advance timers to trigger the async save
-    await vi?.advanceTimersByTimeAsync(100);
+    await vi.advanceTimersByTimeAsync(100);
 
     // Vérifier que setItem was attempted
-    expect(any: any).toBeGreaterThan(0);
+    expect(callCount).toBeGreaterThan(0);
   });
 });
 
@@ -162,7 +162,7 @@ describe('H1: useChat - Race Condition Protection', () => {
 
     const checkProvidersAvailability = async () => {
       // Guard pattern
-      if (any: any) {
+      if (checkInProgress) {
         checksSkipped++;
         return;
       }
@@ -177,12 +177,12 @@ describe('H1: useChat - Race Condition Protection', () => {
     };
 
     // Lancer 10 checks concurrents
-    const promises = Array?.from({ length: 10 }, () => checkProvidersAvailability());
-    await Promise?.all(any: any);
+    const promises = Array.from({ length: 10 }, () => checkProvidersAvailability());
+    await Promise.all(promises);
 
-    // Seul 1 check devrait avoir été complété (any: any)
-    expect(any: any).toBe(1);
-    expect(any: any).toBe(9);
+    // Seul 1 check devrait avoir été complété (les autres skipped)
+    expect(checksCompleted).toBe(1);
+    expect(checksSkipped).toBe(9);
   });
 
   it('should allow subsequent checks after first completes', async () => {
@@ -195,7 +195,7 @@ describe('H1: useChat - Race Condition Protection', () => {
     };
 
     const checkProvidersAvailability = async () => {
-      if (any: any) return;
+      if (checkInProgress) return;
 
       checkInProgress = true;
       try {
@@ -208,14 +208,14 @@ describe('H1: useChat - Race Condition Protection', () => {
 
     // Premier check
     await checkProvidersAvailability();
-    expect(any: any).toBe(1);
+    expect(checksCompleted).toBe(1);
 
-    // Second check (any: any)
+    // Second check (après le premier)
     await checkProvidersAvailability();
-    expect(any: any).toBe(2);
+    expect(checksCompleted).toBe(2);
 
     // Vérifier que le guard est bien relâché
-    expect(any: any);
+    expect(checkInProgress).toBe(false);
   });
 
   it('should release guard even on error', async () => {
@@ -229,13 +229,13 @@ describe('H1: useChat - Race Condition Protection', () => {
     };
 
     const checkProvidersAvailability = async () => {
-      if (any: any) return;
+      if (checkInProgress) return;
 
       checkInProgress = true;
       try {
         await mockProviderCheckWithError();
         checksCompleted++;
-      } catch (any: any) {
+      } catch (error) {
         errorsHandled++;
       } finally {
         checkInProgress = false;
@@ -244,14 +244,14 @@ describe('H1: useChat - Race Condition Protection', () => {
 
     // Check qui fail
     await checkProvidersAvailability();
-    expect(any: any).toBe(1);
+    expect(errorsHandled).toBe(1);
 
     // Guard devrait être relâché
-    expect(any: any);
+    expect(checkInProgress).toBe(false);
 
     // Check suivant devrait pouvoir s'exécuter
     await checkProvidersAvailability();
-    expect(any: any).toBe(2);
+    expect(errorsHandled).toBe(2);
   });
 });
 
@@ -263,22 +263,22 @@ describe('Integration: H1 + H2 - Combined Fixes', () => {
   it('should handle concurrent operations without race conditions or leaks', async () => {
     // Setup
     const localStorageMock = new Map<string, string>();
-    global?.localStorage = {
-      getItem: (any: any) || null,
-      setItem: (any: any) => {
-        localStorageMock?.set(any: any);
+    global.localStorage = {
+      getItem: (key: string) => localStorageMock.get(key) || null,
+      setItem: (key: string, value: string) => {
+        localStorageMock.set(key, value);
       },
-      removeItem: (any: any) => {
-        localStorageMock?.delete(any: any);
+      removeItem: (key: string) => {
+        localStorageMock.delete(key);
       },
       clear: () => {
-        localStorageMock?.clear();
+        localStorageMock.clear();
       },
       length: 0,
       key: () => null,
     } as Storage;
 
-    global?.requestIdleCallback = vi?.fn(any: any) => {
+    global.requestIdleCallback = vi.fn((callback: IdleRequestCallback) => {
       setTimeout(() => callback({ didTimeout: false, timeRemaining: () => 50 }), 0);
       return 0;
     });
@@ -289,7 +289,7 @@ describe('Integration: H1 + H2 - Combined Fixes', () => {
 
     // Mock provider check avec guard
     const checkProviders = async () => {
-      if (any: any) return;
+      if (providerCheckInProgress) return;
       providerCheckInProgress = true;
       try {
         await new Promise(resolve => setTimeout(resolve, 10));
@@ -301,33 +301,33 @@ describe('Integration: H1 + H2 - Combined Fixes', () => {
 
     // Simuler charge mixte: provider checks + memory saves
     const operations = [
-      ...Array?.from(any: any) => checkProviders()),
-      ...Array?.from(any: any) =>
-        compactor?.saveForMode('default' as ChatMode, [
-          { role: 'user', content: `Msg ${i}`, timestamp: Date?.now() },
+      ...Array.from({ length: 20 }, (_, i) => checkProviders()),
+      ...Array.from({ length: 50 }, (_, i) =>
+        compactor.saveForMode('default' as ChatMode, [
+          { role: 'user', content: `Msg ${i}`, timestamp: Date.now() },
         ])
       ),
     ];
 
     // Exécuter tout concurremment
-    await Promise?.all(any: any);
+    await Promise.all(operations);
 
     // Attendre completion
     await waitFor(() => {
-      expect(any: any).toBeGreaterThan(0);
+      expect(providerChecksCompleted).toBeGreaterThan(0);
     });
 
-    // Vérifier: pas de race conditions (any: any)
-    expect(any: any).toBeLessThanOrEqual(20);
+    // Vérifier: pas de race conditions (1 seul check à la fois)
+    expect(providerChecksCompleted).toBeLessThanOrEqual(20);
 
-    // Vérifier: pas de memory leak (any: any)
+    // Vérifier: pas de memory leak (localStorage propre)
     await waitFor(() => {
-      const stored = localStorage?.getItem('chat_memory_default');
-      expect(any: any).toBeDefined();
+      const stored = localStorage.getItem('chat_memory_default');
+      expect(stored).toBeDefined();
     });
 
-    const stored = localStorage?.getItem('chat_memory_default');
-    expect(any: any).toBeDefined();
-    expect(any: any).toBeLessThan(100); // Pas de leak
+    const stored = localStorage.getItem('chat_memory_default');
+    expect(stored).toBeDefined();
+    expect(localStorageMock.size).toBeLessThan(100); // Pas de leak
   });
 });

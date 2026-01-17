@@ -22,4 +22,4 @@ export { DesignSystemTab } from './tabs/DesignSystemTab';
 export { AppearanceTab } from './tabs/AppearanceTab';
 
 // Types
-export * from './types/designCenter?.types';
+export * from './types/designCenter.types';

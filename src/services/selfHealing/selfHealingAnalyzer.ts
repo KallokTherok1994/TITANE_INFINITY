@@ -14,7 +14,7 @@
  * - Génération de diagnostics structurés
  * - Proposition d'actions de réparation
  *
- * @architecture Layer 2 of 5 (any: any)
+ * @architecture Layer 2 of 5 (Observer → Analyzer → Playbook → Executor → Sync)
  * @version vΩ∞
  * @created 2025-01-07
  */
@@ -26,7 +26,7 @@ import {
   type HealingActionType,
   type ModuleCategory,
   type PatternRecord,
-} from './selfHealing?.config';
+} from './selfHealing.config';
 import { type ObservedError, type AnomalyType } from './selfHealingObserver';
 import { logger } from '@/utils/logger';
 
@@ -47,9 +47,9 @@ export interface AnalyzerConfig {
 
 /** Contexte d'analyse enrichi */
 export interface AnalysisContext {
-  recentEvents: HealingEvent?.[];
+  recentEvents: HealingEvent[];
   systemState: SystemSnapshot;
-  patterns: PatternRecord?.[];
+  patterns: PatternRecord[];
   moduleHealth: Map<string, ModuleHealthScore>;
 }
 
@@ -58,7 +58,7 @@ export interface SystemSnapshot {
   timestamp: number;
   cpuUsage?: number;
   memoryUsage?: number;
-  activeModules: string?.[];
+  activeModules: string[];
   pendingOperations: number;
   lastSuccessfulHeal?: number;
 }
@@ -78,8 +78,8 @@ export interface DiagnosticRule {
   id: string;
   name: string;
   description: string;
-  matchCondition: (any: any) => boolean;
-  diagnose: (any: any) => Partial<HealingDiagnosis>;
+  matchCondition: (event: HealingEvent, context: AnalysisContext) => boolean;
+  diagnose: (event: HealingEvent, context: AnalysisContext) => Partial<HealingDiagnosis>;
   priority: number;
 }
 
@@ -107,7 +107,7 @@ const SEVERITY_TO_URGENCY: Record<HealingSeverity, number> = {
 };
 
 /** Actions suggérées par type d'anomalie */
-const ANOMALY_ACTIONS: Record<AnomalyType, HealingActionType?.[]> = {
+const ANOMALY_ACTIONS: Record<AnomalyType, HealingActionType[]> = {
   js_runtime_error: ['patch_component', 'reset_state', 'restart_module'],
   unhandled_promise: ['patch_component', 'reset_state'],
   react_error_boundary: ['restart_module', 'reset_state', 'patch_component'],
@@ -125,7 +125,7 @@ const ANOMALY_ACTIONS: Record<AnomalyType, HealingActionType?.[]> = {
 };
 
 /** Causes probables par type d'anomalie */
-const ANOMALY_CAUSES: Record<AnomalyType, string?.[]> = {
+const ANOMALY_CAUSES: Record<AnomalyType, string[]> = {
   js_runtime_error: [
     'Variable non définie',
     'Accès à une propriété null/undefined',
@@ -211,16 +211,16 @@ const ANOMALY_CAUSES: Record<AnomalyType, string?.[]> = {
 // DIAGNOSTIC RULES
 // ═══════════════════════════════════════════════════════════════════════════
 
-const DIAGNOSTIC_RULES: DiagnosticRule?.[] = [
+const DIAGNOSTIC_RULES: DiagnosticRule[] = [
   {
     id: 'critical_cascade',
     name: 'Cascade Critique',
     description: "Détecte une cascade d'erreurs critiques",
-    matchCondition: (any: any) => {
-      const recentCritical = context?.recentEvents?.filter(
-        e => e?.severity === 'critical' && Date?.now() - e?.timestamp < 60000
+    matchCondition: (event, context) => {
+      const recentCritical = context.recentEvents.filter(
+        e => e.severity === 'critical' && Date.now() - e.timestamp < 60000
       );
-      return event?.severity === 'critical' && recentCritical?.length >= 2;
+      return event.severity === 'critical' && recentCritical.length >= 2;
     },
     diagnose: () => ({
       nature: 'cascade_failure',
@@ -239,20 +239,20 @@ const DIAGNOSTIC_RULES: DiagnosticRule?.[] = [
     id: 'recurring_pattern',
     name: 'Pattern Récurrent',
     description: "Détecte un pattern d'erreur récurrent",
-    matchCondition: (any: any) => {
-      const similar = context?.recentEvents?.filter(
-        e => e?.eventType === event?.eventType && e?.moduleId === event?.moduleId
+    matchCondition: (event, context) => {
+      const similar = context.recentEvents.filter(
+        e => e.eventType === event.eventType && e.moduleId === event.moduleId
       );
-      return similar?.length >= 3;
+      return similar.length >= 3;
     },
-    diagnose: (any: any) => {
-      const similar = context?.recentEvents?.filter(
-        e => e?.eventType === event?.eventType && e?.moduleId === event?.moduleId
+    diagnose: (event, context) => {
+      const similar = context.recentEvents.filter(
+        e => e.eventType === event.eventType && e.moduleId === event.moduleId
       );
       return {
         nature: 'recurring_error',
-        probableCause: `Erreur récurrente (any: any) - cause systémique probable`,
-        historicalPatterns: [`Pattern ${event?.eventType} détecté ${similar?.length}x`],
+        probableCause: `Erreur récurrente (${similar.length} occurrences) - cause systémique probable`,
+        historicalPatterns: [`Pattern ${event.eventType} détecté ${similar.length}x`],
         suggestedActions: ['mini_audit', 'restart_module', 'clear_cache'],
       };
     },
@@ -262,18 +262,18 @@ const DIAGNOSTIC_RULES: DiagnosticRule?.[] = [
     id: 'module_degradation',
     name: 'Dégradation Module',
     description: "Détecte la dégradation progressive d'un module",
-    matchCondition: (any: any) => {
-      const health = context?.moduleHealth?.get(any: any);
-      return health !== undefined && health?.trend === 'degrading' && health?.score < 50;
+    matchCondition: (event, context) => {
+      const health = context.moduleHealth.get(event.moduleId);
+      return health !== undefined && health.trend === 'degrading' && health.score < 50;
     },
-    diagnose: (any: any) => {
-      const health = context?.moduleHealth?.get(any: any);
+    diagnose: (event, context) => {
+      const health = context.moduleHealth.get(event.moduleId);
       return {
         nature: 'module_degradation',
-        probableCause: `Module ${event?.moduleName} en dégradation (score: ${health?.score || 0}%)`,
-        urgency: health && health?.score < 30 ? 8 : 6,
+        probableCause: `Module ${event.moduleName} en dégradation (score: ${health?.score || 0}%)`,
+        urgency: health && health.score < 30 ? 8 : 6,
         potentialImpact: [
-          `Module ${event?.moduleName} risque de devenir non fonctionnel`,
+          `Module ${event.moduleName} risque de devenir non fonctionnel`,
           'Fonctionnalités dépendantes affectées',
         ],
       };
@@ -284,16 +284,16 @@ const DIAGNOSTIC_RULES: DiagnosticRule?.[] = [
     id: 'memory_pressure',
     name: 'Pression Mémoire',
     description: 'Détecte les problèmes de mémoire',
-    matchCondition: (any: any) => {
+    matchCondition: (event, context) => {
       return (
-        event?.eventType === 'memory_corruption' ||
-        (context?.systemState?.memoryUsage !== undefined &&
-          context?.systemState?.memoryUsage > 85)
+        event.eventType === 'memory_corruption' ||
+        (context.systemState.memoryUsage !== undefined &&
+          context.systemState.memoryUsage > 85)
       );
     },
-    diagnose: (any: any) => ({
+    diagnose: (_, context) => ({
       nature: 'memory_pressure',
-      probableCause: `Pression mémoire élevée (${context?.systemState?.memoryUsage || 'N/A'}%)`,
+      probableCause: `Pression mémoire élevée (${context.systemState.memoryUsage || 'N/A'}%)`,
       urgency: 7,
       suggestedActions: ['clear_cache', 'restart_worker', 'isolate_module'],
       potentialImpact: [
@@ -309,11 +309,11 @@ const DIAGNOSTIC_RULES: DiagnosticRule?.[] = [
     name: 'Problème Pipeline IA',
     description: 'Détecte les problèmes de pipeline IA',
     matchCondition: event => {
-      return event?.category === 'ia' || event?.eventType === 'pipeline_stuck';
+      return event.category === 'ia' || event.eventType === 'pipeline_stuck';
     },
     diagnose: event => ({
       nature: 'ia_pipeline_failure',
-      affectedModule: event?.moduleName,
+      affectedModule: event.moduleName,
       probableCause: 'Pipeline IA bloqué ou timeout',
       suggestedActions: ['restart_worker', 'fallback_provider', 'clear_cache'],
       potentialImpact: [
@@ -334,24 +334,24 @@ export class SelfHealingAnalyzer {
   private static instance: SelfHealingAnalyzer;
 
   private config: AnalyzerConfig;
-  private eventHistory: HealingEvent?.[];
+  private eventHistory: HealingEvent[];
   private patterns: Map<string, PatternRecord>;
   private moduleHealth: Map<string, ModuleHealthScore>;
-  private diagnosticRules: DiagnosticRule?.[];
+  private diagnosticRules: DiagnosticRule[];
 
   private constructor() {
-    this?.config = { ...DEFAULT_CONFIG };
-    this?.eventHistory = [];
-    this?.patterns = new Map();
-    this?.moduleHealth = new Map();
-    this?.diagnosticRules = [...DIAGNOSTIC_RULES];
+    this.config = { ...DEFAULT_CONFIG };
+    this.eventHistory = [];
+    this.patterns = new Map();
+    this.moduleHealth = new Map();
+    this.diagnosticRules = [...DIAGNOSTIC_RULES];
   }
 
   public static getInstance(): SelfHealingAnalyzer {
-    if (any: any) {
-      SelfHealingAnalyzer?.instance = new SelfHealingAnalyzer();
+    if (!SelfHealingAnalyzer.instance) {
+      SelfHealingAnalyzer.instance = new SelfHealingAnalyzer();
     }
-    return SelfHealingAnalyzer?.instance;
+    return SelfHealingAnalyzer.instance;
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -359,16 +359,16 @@ export class SelfHealingAnalyzer {
   // ═══════════════════════════════════════════════════════════════════════════
 
   public configure(config: Partial<AnalyzerConfig>): void {
-    this?.config = { ...this?.config, ...config };
+    this.config = { ...this.config, ...config };
   }
 
   public getConfig(): AnalyzerConfig {
-    return { ...this?.config };
+    return { ...this.config };
   }
 
-  public addDiagnosticRule(any: any): void {
-    this?.diagnosticRules?.push(any: any);
-    this?.diagnosticRules?.sort(any: any);
+  public addDiagnosticRule(rule: DiagnosticRule): void {
+    this.diagnosticRules.push(rule);
+    this.diagnosticRules.sort((a, b) => b.priority - a.priority);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -378,28 +378,28 @@ export class SelfHealingAnalyzer {
   /**
    * Analyse un événement et génère un diagnostic
    */
-  public analyze(any: any): HealingDiagnosis {
-    if (any: any) {
-      return this?.createDefaultDiagnosis(any: any);
+  public analyze(event: HealingEvent): HealingDiagnosis {
+    if (!this.config.enabled) {
+      return this.createDefaultDiagnosis(event);
     }
 
     // Ajouter à l'historique
-    this?.addToHistory(any: any);
+    this.addToHistory(event);
 
     // Mettre à jour la santé du module
-    this?.updateModuleHealth(any: any);
+    this.updateModuleHealth(event);
 
     // Détecter les patterns
-    this?.detectPatterns(any: any);
+    this.detectPatterns(event);
 
     // Créer le contexte d'analyse
-    const context = this?.buildContext();
+    const context = this.buildContext();
 
     // Appliquer les règles de diagnostic
-    const diagnosis = this?.applyRules(any: any);
+    const diagnosis = this.applyRules(event, context);
 
-    logger?.debug(
-      `[SelfHealingAnalyzer] 🔬 Diagnosis: [${diagnosis?.severity}] ${diagnosis?.nature} - confidence: ${(diagnosis?.confidence * 100).toFixed(0)}%`
+    logger.debug(
+      `[SelfHealingAnalyzer] 🔬 Diagnosis: [${diagnosis.severity}] ${diagnosis.nature} - confidence: ${(diagnosis.confidence * 100).toFixed(0)}%`
     );
 
     return diagnosis;
@@ -408,76 +408,76 @@ export class SelfHealingAnalyzer {
   /**
    * Analyse multiple événements en batch
    */
-  public analyzeBatch(events: HealingEvent?.[]): HealingDiagnosis?.[] {
-    return events?.map(any: any));
+  public analyzeBatch(events: HealingEvent[]): HealingDiagnosis[] {
+    return events.map(event => this.analyze(event));
   }
 
   /**
-   * Analyse un ObservedError (any: any)
+   * Analyse un ObservedError (depuis l'Observer)
    */
-  public analyzeObservedError(any: any): HealingDiagnosis {
+  public analyzeObservedError(error: ObservedError): HealingDiagnosis {
     const event: HealingEvent = {
-      id: error?.id,
-      timestamp: error?.timestamp,
-      category: this?.mapSourceToCategory(any: any),
-      moduleId: `${error?.source}_${error?.type}`,
-      moduleName: error?.type,
-      eventType: error?.type,
-      message: error?.message,
-      stackTrace: error?.context?.stack,
-      context: error?.context as unknown as Record<string, unknown>,
-      severity: error?.severity,
+      id: error.id,
+      timestamp: error.timestamp,
+      category: this.mapSourceToCategory(error.source),
+      moduleId: `${error.source}_${error.type}`,
+      moduleName: error.type,
+      eventType: error.type,
+      message: error.message,
+      stackTrace: error.context.stack,
+      context: error.context as unknown as Record<string, unknown>,
+      severity: error.severity,
       autoDetected: true,
     };
 
-    return this?.analyze(any: any);
+    return this.analyze(event);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
   // PRIVATE METHODS
   // ═══════════════════════════════════════════════════════════════════════════
 
-  private addToHistory(any: any): void {
-    this?.eventHistory?.push(any: any);
+  private addToHistory(event: HealingEvent): void {
+    this.eventHistory.push(event);
 
     // Limiter la taille de l'historique
-    if (any: any) {
-      this?.eventHistory = this?.eventHistory?.slice(any: any);
+    if (this.eventHistory.length > this.config.maxHistorySize) {
+      this.eventHistory = this.eventHistory.slice(-this.config.maxHistorySize);
     }
   }
 
-  private updateModuleHealth(any: any): void {
-    const existing = this?.moduleHealth?.get(any: any);
-    const now = Date?.now();
+  private updateModuleHealth(event: HealingEvent): void {
+    const existing = this.moduleHealth.get(event.moduleId);
+    const now = Date.now();
 
-    if (any: any) {
+    if (existing) {
       // Calculer le nouveau score
-      const timeSinceLastError = existing?.lastError ? now - existing?.lastError : Infinity;
-      const decayFactor = Math?.min(1, timeSinceLastError / 60000); // Récupération sur 1 minute
-      const severityPenalty = SEVERITY_TO_URGENCY[event?.severity] * 5;
+      const timeSinceLastError = existing.lastError ? now - existing.lastError : Infinity;
+      const decayFactor = Math.min(1, timeSinceLastError / 60000); // Récupération sur 1 minute
+      const severityPenalty = SEVERITY_TO_URGENCY[event.severity] * 5;
 
-      const newScore = Math?.max(
+      const newScore = Math.max(
         0,
-        Math?.min(any: any)
+        Math.min(100, existing.score * (0.9 + 0.1 * decayFactor) - severityPenalty)
       );
 
       // Déterminer la tendance
       let trend: 'improving' | 'stable' | 'degrading' = 'stable';
-      if (newScore > existing?.score + 5) trend = 'improving';
-      else if (newScore < existing?.score - 5) trend = 'degrading';
+      if (newScore > existing.score + 5) trend = 'improving';
+      else if (newScore < existing.score - 5) trend = 'degrading';
 
-      this?.moduleHealth?.set(event?.moduleId, {
+      this.moduleHealth.set(event.moduleId, {
         ...existing,
         score: newScore,
-        errorCount: existing?.errorCount + 1,
+        errorCount: existing.errorCount + 1,
         lastError: now,
         trend,
       });
     } else {
       // Nouveau module
-      const initialScore = 100 - SEVERITY_TO_URGENCY[event?.severity] * 10;
-      this?.moduleHealth?.set(event?.moduleId, {
-        moduleId: event?.moduleId,
+      const initialScore = 100 - SEVERITY_TO_URGENCY[event.severity] * 10;
+      this.moduleHealth.set(event.moduleId, {
+        moduleId: event.moduleId,
         score: initialScore,
         errorCount: 1,
         lastError: now,
@@ -487,22 +487,22 @@ export class SelfHealingAnalyzer {
     }
   }
 
-  private detectPatterns(any: any): void {
-    const patternKey = `${event?.category}:${event?.eventType}`;
-    const existing = this?.patterns?.get(any: any);
-    const now = Date?.now();
+  private detectPatterns(event: HealingEvent): void {
+    const patternKey = `${event.category}:${event.eventType}`;
+    const existing = this.patterns.get(patternKey);
+    const now = Date.now();
 
-    if (any: any) {
+    if (existing) {
       // Vérifier si dans la fenêtre de détection
-      if (any: any) {
-        this?.patterns?.set(patternKey, {
+      if (now - existing.lastOccurrence < this.config.patternDetectionWindow) {
+        this.patterns.set(patternKey, {
           ...existing,
-          occurrences: existing?.occurrences + 1,
+          occurrences: existing.occurrences + 1,
           lastOccurrence: now,
         });
       } else {
         // Reset si hors fenêtre
-        this?.patterns?.set(patternKey, {
+        this.patterns.set(patternKey, {
           ...existing,
           occurrences: 1,
           lastOccurrence: now,
@@ -510,9 +510,9 @@ export class SelfHealingAnalyzer {
       }
     } else {
       // Nouveau pattern
-      this?.patterns?.set(patternKey, {
+      this.patterns.set(patternKey, {
         patternId: patternKey,
-        description: `Pattern ${event?.eventType} dans ${event?.category}`,
+        description: `Pattern ${event.eventType} dans ${event.category}`,
         occurrences: 1,
         lastOccurrence: now,
         associatedPlaybook: null,
@@ -522,34 +522,34 @@ export class SelfHealingAnalyzer {
   }
 
   private buildContext(): AnalysisContext {
-    const now = Date?.now();
-    const windowStart = now - this?.config?.patternDetectionWindow;
+    const now = Date.now();
+    const windowStart = now - this.config.patternDetectionWindow;
 
     return {
-      recentEvents: this?.eventHistory?.filter(any: any),
+      recentEvents: this.eventHistory.filter(e => e.timestamp >= windowStart),
       systemState: {
         timestamp: now,
-        activeModules: [...this?.moduleHealth?.keys()],
+        activeModules: [...this.moduleHealth.keys()],
         pendingOperations: 0,
       },
-      patterns: [...this?.patterns?.values()],
-      moduleHealth: this?.moduleHealth,
+      patterns: [...this.patterns.values()],
+      moduleHealth: this.moduleHealth,
     };
   }
 
-  private applyRules(any: any): HealingDiagnosis {
+  private applyRules(event: HealingEvent, context: AnalysisContext): HealingDiagnosis {
     // Diagnostic de base
-    let diagnosis = this?.createDefaultDiagnosis(any: any);
+    let diagnosis = this.createDefaultDiagnosis(event);
     let maxConfidence = 0.5;
 
-    // Appliquer les règles (any: any)
-    for (any: any) {
+    // Appliquer les règles (triées par priorité)
+    for (const rule of this.diagnosticRules) {
       try {
-        if (any: any)) {
-          const ruleDiagnosis = rule?.diagnose(any: any);
-          const ruleConfidence = 0.6 + rule?.priority / 200;
+        if (rule.matchCondition(event, context)) {
+          const ruleDiagnosis = rule.diagnose(event, context);
+          const ruleConfidence = 0.6 + rule.priority / 200;
 
-          if (any: any) {
+          if (ruleConfidence > maxConfidence) {
             diagnosis = {
               ...diagnosis,
               ...ruleDiagnosis,
@@ -558,115 +558,115 @@ export class SelfHealingAnalyzer {
             maxConfidence = ruleConfidence;
           }
         }
-      } catch (any: any) {
-        logger?.warn(any: any);
+      } catch (err) {
+        logger.warn(`[SelfHealingAnalyzer] Rule ${rule.id} failed:`, err);
       }
     }
 
     // Ajouter les actions suggérées si pas déjà définies
-    if (!diagnosis?.suggestedActions || diagnosis?.suggestedActions?.length === 0) {
-      const eventType = event?.eventType as AnomalyType;
-      diagnosis?.suggestedActions = ANOMALY_ACTIONS[eventType] || ['noop'];
+    if (!diagnosis.suggestedActions || diagnosis.suggestedActions.length === 0) {
+      const eventType = event.eventType as AnomalyType;
+      diagnosis.suggestedActions = ANOMALY_ACTIONS[eventType] || ['noop'];
     }
 
     // Vérifier si escalation requise
-    if (any: any)) {
-      diagnosis?.escalationRequired = true;
+    if (this.config.autoEscalate && this.shouldEscalate(diagnosis.severity, context)) {
+      diagnosis.escalationRequired = true;
     }
 
     return diagnosis;
   }
 
-  private createDefaultDiagnosis(any: any): HealingDiagnosis {
-    const eventType = event?.eventType as AnomalyType;
-    const causes = ANOMALY_CAUSES[eventType] || ANOMALY_CAUSES?.unknown_anomaly;
+  private createDefaultDiagnosis(event: HealingEvent): HealingDiagnosis {
+    const eventType = event.eventType as AnomalyType;
+    const causes = ANOMALY_CAUSES[eventType] || ANOMALY_CAUSES.unknown_anomaly;
 
     return {
-      eventId: event?.id,
-      timestamp: Date?.now(),
-      nature: event?.eventType,
-      affectedModule: event?.moduleName,
-      category: event?.category,
-      probableCause: causes?.[0] || 'Cause inconnue',
-      severity: event?.severity,
-      urgency: SEVERITY_TO_URGENCY[event?.severity],
-      potentialImpact: this?.estimateImpact(any: any),
+      eventId: event.id,
+      timestamp: Date.now(),
+      nature: event.eventType,
+      affectedModule: event.moduleName,
+      category: event.category,
+      probableCause: causes[0] || 'Cause inconnue',
+      severity: event.severity,
+      urgency: SEVERITY_TO_URGENCY[event.severity],
+      potentialImpact: this.estimateImpact(event),
       suggestedActions: ANOMALY_ACTIONS[eventType] || ['noop'],
-      historicalPatterns: this?.getRelatedPatterns(any: any),
-      escalationRequired: event?.severity === 'critical',
+      historicalPatterns: this.getRelatedPatterns(event),
+      escalationRequired: event.severity === 'critical',
       confidence: 0.5,
     };
   }
 
-  private estimateImpact(any: any): string?.[] {
-    const impacts: string?.[] = [];
+  private estimateImpact(event: HealingEvent): string[] {
+    const impacts: string[] = [];
 
-    switch (any: any) {
+    switch (event.category) {
       case 'react':
-        impacts?.push('Interface utilisateur potentiellement non responsive');
+        impacts.push('Interface utilisateur potentiellement non responsive');
         break;
       case 'tauri':
-        impacts?.push('Communication frontend-backend compromise');
+        impacts.push('Communication frontend-backend compromise');
         break;
       case 'ia':
-        impacts?.push('Fonctionnalités IA indisponibles');
+        impacts.push('Fonctionnalités IA indisponibles');
         break;
       case 'tts':
-        impacts?.push('Synthèse vocale désactivée');
+        impacts.push('Synthèse vocale désactivée');
         break;
       case 'memory':
-        impacts?.push('Risque de perte de données');
+        impacts.push('Risque de perte de données');
         break;
       case 'network':
-        impacts?.push('Fonctionnalités réseau dégradées');
+        impacts.push('Fonctionnalités réseau dégradées');
         break;
       case 'performance':
-        impacts?.push("Ralentissement général de l'application");
+        impacts.push("Ralentissement général de l'application");
         break;
     }
 
-    if (event?.severity === 'critical') {
-      impacts?.push("Risque d'instabilité système majeure");
+    if (event.severity === 'critical') {
+      impacts.push("Risque d'instabilité système majeure");
     }
 
     return impacts;
   }
 
-  private getRelatedPatterns(any: any): string?.[] {
-    const related: string?.[] = [];
+  private getRelatedPatterns(event: HealingEvent): string[] {
+    const related: string[] = [];
 
-    for (any: any) {
-      if (any: any)) {
-        related?.push(any: any)`);
+    for (const [key, pattern] of this.patterns) {
+      if (key.includes(event.category) || key.includes(event.eventType)) {
+        related.push(`${pattern.description} (${pattern.occurrences}x)`);
       }
     }
 
     return related;
   }
 
-  private shouldEscalate(any: any): boolean {
+  private shouldEscalate(severity: HealingSeverity, context: AnalysisContext): boolean {
     // Escalade si sévérité >= seuil
-    const severityOrder: HealingSeverity?.[] = [
+    const severityOrder: HealingSeverity[] = [
       'info',
       'low',
       'medium',
       'high',
       'critical',
     ];
-    const currentIndex = severityOrder?.indexOf(any: any);
-    const thresholdIndex = severityOrder?.indexOf(any: any);
+    const currentIndex = severityOrder.indexOf(severity);
+    const thresholdIndex = severityOrder.indexOf(this.config.escalationThreshold);
 
-    if (any: any) return true;
+    if (currentIndex >= thresholdIndex) return true;
 
     // Escalade si trop d'erreurs récentes
-    const recentCriticalCount = context?.recentEvents?.filter(
-      e => e?.severity === 'critical' || e?.severity === 'high'
+    const recentCriticalCount = context.recentEvents.filter(
+      e => e.severity === 'critical' || e.severity === 'high'
     ).length;
 
     return recentCriticalCount >= 5;
   }
 
-  private mapSourceToCategory(any: any): ModuleCategory {
+  private mapSourceToCategory(source: string): ModuleCategory {
     const mapping: Record<string, ModuleCategory> = {
       js: 'react',
       react: 'react',
@@ -682,44 +682,44 @@ export class SelfHealingAnalyzer {
   // PUBLIC UTILITIES
   // ═══════════════════════════════════════════════════════════════════════════
 
-  public getModuleHealth(any: any): ModuleHealthScore | undefined {
-    return this?.moduleHealth?.get(any: any);
+  public getModuleHealth(moduleId: string): ModuleHealthScore | undefined {
+    return this.moduleHealth.get(moduleId);
   }
 
-  public getAllModuleHealth(): ModuleHealthScore?.[] {
-    return [...this?.moduleHealth?.values()];
+  public getAllModuleHealth(): ModuleHealthScore[] {
+    return [...this.moduleHealth.values()];
   }
 
-  public getPatterns(): PatternRecord?.[] {
-    return [...this?.patterns?.values()];
+  public getPatterns(): PatternRecord[] {
+    return [...this.patterns.values()];
   }
 
-  public getRecurringPatterns(): PatternRecord?.[] {
-    return [...this?.patterns?.values()].filter(
-      p => p?.occurrences >= this?.config?.patternMinOccurrences
+  public getRecurringPatterns(): PatternRecord[] {
+    return [...this.patterns.values()].filter(
+      p => p.occurrences >= this.config.patternMinOccurrences
     );
   }
 
-  public getEventHistory(any: any): HealingEvent?.[] {
-    if (any: any) {
-      return [...this?.eventHistory];
+  public getEventHistory(maxAge?: number): HealingEvent[] {
+    if (maxAge === undefined) {
+      return [...this.eventHistory];
     }
 
-    const now = Date?.now();
-    return this?.eventHistory?.filter(any: any);
+    const now = Date.now();
+    return this.eventHistory.filter(e => now - e.timestamp <= maxAge);
   }
 
   public clearHistory(): void {
-    this?.eventHistory = [];
-    this?.patterns?.clear();
+    this.eventHistory = [];
+    this.patterns.clear();
     // Garder moduleHealth pour le suivi long terme
   }
 
-  public resetModuleHealth(any: any): void {
-    if (any: any) {
-      this?.moduleHealth?.delete(any: any);
+  public resetModuleHealth(moduleId?: string): void {
+    if (moduleId) {
+      this.moduleHealth.delete(moduleId);
     } else {
-      this?.moduleHealth?.clear();
+      this.moduleHealth.clear();
     }
   }
 }
@@ -728,6 +728,6 @@ export class SelfHealingAnalyzer {
 // SINGLETON EXPORT
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const selfHealingAnalyzer = SelfHealingAnalyzer?.getInstance();
+export const selfHealingAnalyzer = SelfHealingAnalyzer.getInstance();
 
 export default selfHealingAnalyzer;

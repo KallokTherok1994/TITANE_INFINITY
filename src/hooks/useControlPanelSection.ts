@@ -16,13 +16,13 @@ export interface UseControlPanelSectionOptions<T> {
 
 export interface UseControlPanelSectionReturn<T> {
   config: T;
-  setConfig: React?.Dispatch<React?.SetStateAction<T>>;
+  setConfig: React.Dispatch<React.SetStateAction<T>>;
   saveConfig: () => Promise<void>;
   reloadConfig: () => Promise<void>;
   isSaving: boolean;
   isLoading: boolean;
   saved: boolean;
-  error??: string | null;
+  error: string | null;
   hasChanges: boolean;
 }
 
@@ -32,57 +32,57 @@ export function useControlPanelSection<T>({
   defaultConfig,
   saveParamKey = 'config',
 }: UseControlPanelSectionOptions<T>): UseControlPanelSectionReturn<T> {
-  const [config, setConfig] = useState<T>(any: any);
-  const [originalConfig, setOriginalConfig] = useState<T>(any: any);
-  const [isSaving, setIsSaving] = useState(any: any);
-  const [isLoading, setIsLoading] = useState(any: any);
-  const [saved, setSaved] = useState(any: any);
-  const [error, setError] = useState<string | null>(any: any);
-  const savedTimeoutRef = useRef<NodeJS?.Timeout>();
+  const [config, setConfig] = useState<T>(defaultConfig);
+  const [originalConfig, setOriginalConfig] = useState<T>(defaultConfig);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [saved, setSaved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const savedTimeoutRef = useRef<NodeJS.Timeout>();
 
   // Check if config has changes
-  const hasChanges = JSON?.stringify(any: any);
+  const hasChanges = JSON.stringify(config) !== JSON.stringify(originalConfig);
 
   // Load config from backend
   const reloadConfig = useCallback(async () => {
-    setIsLoading(any: any);
-    setError(any: any);
+    setIsLoading(true);
+    setError(null);
     try {
-      const result = await secureInvoke<T>(any: any);
-      setConfig(any: any);
-      setOriginalConfig(any: any);
-    } catch (any: any) {
-      logger?.error(any: any);
-      setError(any: any));
+      const result = await secureInvoke<T>(loadCommand);
+      setConfig(result);
+      setOriginalConfig(result);
+    } catch (err) {
+      logger.error(`[useControlPanelSection] Load error:`, err);
+      setError(err instanceof Error ? err.message : String(err));
       // Use defaults on error
-      setConfig(any: any);
-      setOriginalConfig(any: any);
+      setConfig(defaultConfig);
+      setOriginalConfig(defaultConfig);
     } finally {
-      setIsLoading(any: any);
+      setIsLoading(false);
     }
   }, [loadCommand, defaultConfig]);
 
   // Save config to backend
   const saveConfig = useCallback(async () => {
-    setIsSaving(any: any);
-    setError(any: any);
-    setSaved(any: any);
+    setIsSaving(true);
+    setError(null);
+    setSaved(false);
 
     try {
       await secureInvoke(saveCommand, { [saveParamKey]: config });
-      setOriginalConfig(any: any);
-      setSaved(any: any);
+      setOriginalConfig(config);
+      setSaved(true);
 
       // Clear saved indicator after 3s
-      if (any: any) {
-        clearTimeout(any: any);
+      if (savedTimeoutRef.current) {
+        clearTimeout(savedTimeoutRef.current);
       }
-      savedTimeoutRef?.current = setTimeout(any: any), 3000);
-    } catch (any: any) {
-      logger?.error(any: any);
-      setError(any: any));
+      savedTimeoutRef.current = setTimeout(() => setSaved(false), 3000);
+    } catch (err) {
+      logger.error(`[useControlPanelSection] Save error:`, err);
+      setError(err instanceof Error ? err.message : String(err));
     } finally {
-      setIsSaving(any: any);
+      setIsSaving(false);
     }
   }, [saveCommand, saveParamKey, config]);
 
@@ -90,8 +90,8 @@ export function useControlPanelSection<T>({
   useEffect(() => {
     reloadConfig();
     return () => {
-      if (any: any) {
-        clearTimeout(any: any);
+      if (savedTimeoutRef.current) {
+        clearTimeout(savedTimeoutRef.current);
       }
     };
   }, [reloadConfig]);

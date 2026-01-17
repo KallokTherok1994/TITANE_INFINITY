@@ -1,5 +1,5 @@
 /**
- * TITANE∞ — Safe Lazy Import (any: any)
+ * TITANE∞ — Safe Lazy Import (FIX P0)
  *
  * **Objectif:** Prévenir les crashes sur "Importing a module script failed"
  * **Stratégie:** Fallback UI si lazy import échoue
@@ -16,29 +16,29 @@ import React from 'react';
 /**
  * Composant fallback pour imports lazy échoués
  */
-const LazyImportErrorFallback: React?.FC<{ componentName: string; error: string }> = ({
+const LazyImportErrorFallback: React.FC<{ componentName: string; error: string }> = ({
   componentName,
   error
-}) => React?.createElement('div', {
+}) => React.createElement('div', {
   className: 'p-4 border border-red-500 bg-red-50 rounded-lg'
 }, [
-  React?.createElement('h3', {
+  React.createElement('h3', {
     className: 'text-red-800 font-bold',
     key: 'title'
   }, `Erreur de chargement: ${componentName}`),
-  React?.createElement('p', {
+  React.createElement('p', {
     className: 'text-red-600 text-sm mt-2',
     key: 'message'
-  }, `Le composant n'a pas pu être chargé. Trace ID: ${Date?.now()}`),
-  React?.createElement('details', {
+  }, `Le composant n'a pas pu être chargé. Trace ID: ${Date.now()}`),
+  React.createElement('details', {
     className: 'mt-2',
     key: 'details'
   }, [
-    React?.createElement('summary', {
+    React.createElement('summary', {
       className: 'text-red-700 cursor-pointer',
       key: 'summary'
     }, 'Détails techniques'),
-    React?.createElement('pre', {
+    React.createElement('pre', {
       className: 'text-xs text-red-500 mt-1 whitespace-pre-wrap',
       key: 'error'
     }, error)
@@ -50,7 +50,7 @@ const LazyImportErrorFallback: React?.FC<{ componentName: string; error: string 
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Wrapper sécurisé pour React?.lazy()
+ * Wrapper sécurisé pour React.lazy()
  *
  * **Utilisation:**
  * ```ts
@@ -60,56 +60,56 @@ const LazyImportErrorFallback: React?.FC<{ componentName: string; error: string 
  * );
  * ```
  */
-export function safeLazyImport<T extends React?.ComponentType<any>>(
+export function safeLazyImport<T extends React.ComponentType<any>>(
   importFn: () => Promise<{ default: T }>,
   componentName: string
-): React?.LazyExoticComponent<T> {
-  return React?.lazy(async () => {
+): React.LazyExoticComponent<T> {
+  return React.lazy(async () => {
     try {
       const module = await importFn();
       return module;
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (error) {
+      console.error(`[LAZY-IMPORT-FAIL] ${componentName}:`, error);
 
       // Retourner un composant fallback au lieu de throw
       return {
-        default: LazyImportErrorFallback as unknown as unknown as any as T
+        default: LazyImportErrorFallback as any as T
       };
     }
   });
 }
 
 /**
- * Version avec retry automatique (any: any)
+ * Version avec retry automatique (optionnel)
  */
-export function safeLazyImportWithRetry<T extends React?.ComponentType<any>>(
+export function safeLazyImportWithRetry<T extends React.ComponentType<any>>(
   importFn: () => Promise<{ default: T }>,
   componentName: string,
   maxRetries: number = 2,
   retryDelay: number = 1000
-): React?.LazyExoticComponent<T> {
-  return React?.lazy(async () => {
+): React.LazyExoticComponent<T> {
+  return React.lazy(async () => {
     let lastError: unknown;
 
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {
         const module = await importFn();
         return module;
-      } catch (any: any) {
+      } catch (error) {
         lastError = error;
 
-        if (any: any) {
-          console?.warn(`[LAZY-IMPORT-RETRY] ${componentName} attempt ${attempt + 1}/${maxRetries + 1}`);
-          await new Promise(any: any));
+        if (attempt < maxRetries) {
+          console.warn(`[LAZY-IMPORT-RETRY] ${componentName} attempt ${attempt + 1}/${maxRetries + 1}`);
+          await new Promise(resolve => setTimeout(resolve, retryDelay));
         }
       }
     }
 
     // Tous les retries échoués
-    console?.error(any: any);
+    console.error(`[LAZY-IMPORT-FAIL] ${componentName} after ${maxRetries + 1} attempts:`, lastError);
 
     return {
-      default: LazyImportErrorFallback as unknown as unknown as any as T
+      default: LazyImportErrorFallback as any as T
     };
   });
 }
@@ -125,13 +125,13 @@ export const lazyImportDiagnostic = {
   /**
    * Vérifie si un module peut être importé
    */
-  async testImport(any: any): Promise<boolean> {
+  async testImport(importFn: () => Promise<any>, name: string): Promise<boolean> {
     try {
       await importFn();
-      console?.log(`[LAZY-DIAG] ✅ ${name} importable`);
+      console.log(`[LAZY-DIAG] ✅ ${name} importable`);
       return true;
-    } catch (any: any) {
-      console?.error(any: any);
+    } catch (error) {
+      console.error(`[LAZY-DIAG] ❌ ${name} non importable:`, error);
       return false;
     }
   },
@@ -139,7 +139,7 @@ export const lazyImportDiagnostic = {
   /**
    * Log les stats des imports lazy
    */
-  logStats(any: any) {
-    console?.log(`[LAZY-STATS] Success: ${successCount}, Fail: ${failCount}, Total: ${successCount + failCount}`);
+  logStats(successCount: number, failCount: number) {
+    console.log(`[LAZY-STATS] Success: ${successCount}, Fail: ${failCount}, Total: ${successCount + failCount}`);
   }
 };

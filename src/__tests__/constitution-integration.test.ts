@@ -30,47 +30,47 @@ describe('🏛️ Constitution TITANE∞ v1.0 — Intégration Chat IA', () => {
         'Implémente un système de caching distribué avec invalidation intelligente',
       ];
 
-      complexMessages?.forEach(msg => {
-        const result = requiresClarityAudit(any: any);
-        expect(any: any);
+      complexMessages.forEach(msg => {
+        const result = requiresClarityAudit(msg);
+        expect(result).toBe(true);
       });
     });
 
     it('ne déclenche pas audit pour messages simples', () => {
       const simpleMessages = ['Bonjour', 'Comment vas-tu?', 'Merci!', "Peux-tu m'aider?"];
 
-      simpleMessages?.forEach(msg => {
-        const result = requiresClarityAudit(any: any);
-        expect(any: any);
+      simpleMessages.forEach(msg => {
+        const result = requiresClarityAudit(msg);
+        expect(result).toBe(false);
       });
     });
 
-    it(any: any)', () => {
+    it('détecte messages longs (>200 caractères)', () => {
       const longMessage = 'A'.repeat(250);
-      expect(any: any);
+      expect(requiresClarityAudit(longMessage)).toBe(true);
     });
 
     it('détecte questions multiples', () => {
       const multiQuestions =
         'Comment faire ceci? Et cela? Quelle est la meilleure approche?';
-      expect(any: any);
+      expect(requiresClarityAudit(multiQuestions)).toBe(true);
     });
 
     it('génère template Clarity Audit correct', () => {
       const message = 'Refactorise le système';
-      const template = createClarityAuditTemplate(any: any);
+      const template = createClarityAuditTemplate(message);
 
-      expect(any: any).toContain('CLARITY AUDIT');
-      expect(any: any).toContain('Constitution TITANE∞');
-      expect(any: any) **Clarté intention**');
-      expect(any: any) **Simplicité**');
-      expect(any: any) **Alignement mission**');
-      expect(any: any) **Rythme soutenable**');
-      expect(any: any) **Autonomie**');
-      expect(any: any) **Vérité**');
-      expect(any: any) **Intégration**');
-      expect(any: any).toContain('**DÉCISION**: [ GO / STOP / SIMPLIFIER / CLARIFIER ]');
-      expect(any: any)');
+      expect(template).toContain('CLARITY AUDIT');
+      expect(template).toContain('Constitution TITANE∞');
+      expect(template).toContain('A) **Clarté intention**');
+      expect(template).toContain('B) **Simplicité**');
+      expect(template).toContain('C) **Alignement mission**');
+      expect(template).toContain('D) **Rythme soutenable**');
+      expect(template).toContain('E) **Autonomie**');
+      expect(template).toContain('F) **Vérité**');
+      expect(template).toContain('G) **Intégration**');
+      expect(template).toContain('**DÉCISION**: [ GO / STOP / SIMPLIFIER / CLARIFIER ]');
+      expect(template).toContain('**ACTIONS MINIMALES** (1-3 max)');
     });
   });
 
@@ -83,9 +83,9 @@ describe('🏛️ Constitution TITANE∞ v1.0 — Intégration Chat IA', () => {
         'Je suis débordé',
       ];
 
-      fatigueMessages?.forEach(msg => {
-        const result = detectSaturation(any: any);
-        expect(any: any);
+      fatigueMessages.forEach(msg => {
+        const result = detectSaturation(msg);
+        expect(result).toBe(true);
       });
     });
 
@@ -98,9 +98,9 @@ describe('🏛️ Constitution TITANE∞ v1.0 — Intégration Chat IA', () => {
         'Juste fais-le',
       ];
 
-      urgencyMessages?.forEach(msg => {
-        const result = detectSaturation(any: any);
-        expect(any: any);
+      urgencyMessages.forEach(msg => {
+        const result = detectSaturation(msg);
+        expect(result).toBe(true);
       });
     });
 
@@ -112,9 +112,9 @@ describe('🏛️ Constitution TITANE∞ v1.0 — Intégration Chat IA', () => {
         'Je suis confus',
       ];
 
-      overloadMessages?.forEach(msg => {
-        const result = detectSaturation(any: any);
-        expect(any: any);
+      overloadMessages.forEach(msg => {
+        const result = detectSaturation(msg);
+        expect(result).toBe(true);
       });
     });
 
@@ -125,26 +125,26 @@ describe('🏛️ Constitution TITANE∞ v1.0 — Intégration Chat IA', () => {
         'Quelle est la meilleure approche?',
       ];
 
-      normalMessages?.forEach(msg => {
-        const result = detectSaturation(any: any);
-        expect(any: any);
+      normalMessages.forEach(msg => {
+        const result = detectSaturation(msg);
+        expect(result).toBe(false);
       });
     });
 
     it('génère réponse Protection Mode appropriée', () => {
       const signs = ['fatigue', 'urgence', 'surcharge'];
-      const response = generateProtectionModeResponse(any: any);
+      const response = generateProtectionModeResponse(signs);
 
-      expect(any: any).toContain('MODE PROTECTION ACTIVÉ');
-      expect(any: any).toContain('Constitution TITANE∞');
-      expect(any: any).toContain('Loi #8');
-      expect(any: any).toContain('saturation');
-      expect(any: any).toContain('Suspension des décisions complexes');
-      expect(any: any).toContain('Suspension des optimisations');
-      expect(any: any).toContain("récupération d'abord");
-      expect(any: any).toContain('Prendre une pause');
-      expect(any: any).toContain('Simplifier');
-      expect(any: any).toContain('Reporter');
+      expect(response).toContain('MODE PROTECTION ACTIVÉ');
+      expect(response).toContain('Constitution TITANE∞');
+      expect(response).toContain('Loi #8');
+      expect(response).toContain('saturation');
+      expect(response).toContain('Suspension des décisions complexes');
+      expect(response).toContain('Suspension des optimisations');
+      expect(response).toContain("récupération d'abord");
+      expect(response).toContain('Prendre une pause');
+      expect(response).toContain('Simplifier');
+      expect(response).toContain('Reporter');
     });
   });
 
@@ -152,28 +152,28 @@ describe('🏛️ Constitution TITANE∞ v1.0 — Intégration Chat IA', () => {
     it('détecte incertitude faible dans réponses', () => {
       const uncertainResponse =
         'Il me semble que peut-être la solution serait probablement de faire X';
-      const result = checkTruthConfidence(any: any);
+      const result = checkTruthConfidence(uncertainResponse);
 
-      expect(any: any).toBeLessThan(80);
-      expect(any: any);
+      expect(result.certainty).toBeLessThan(80);
+      expect(result.requiresDisclaimer).toBe(true);
     });
 
     it('détecte certitude élevée dans réponses assertives', () => {
       const certainResponse =
         'La solution est de faire X. Voici les étapes exactes à suivre.';
-      const result = checkTruthConfidence(any: any);
+      const result = checkTruthConfidence(certainResponse);
 
-      expect(any: any).toBeGreaterThanOrEqual(80);
-      expect(any: any);
+      expect(result.certainty).toBeGreaterThanOrEqual(80);
+      expect(result.requiresDisclaimer).toBe(false);
     });
 
     it('calcule certitude intermédiaire correctement', () => {
       const moderateResponse =
         'La solution serait probablement de faire X. Voici les étapes.';
-      const result = checkTruthConfidence(any: any);
+      const result = checkTruthConfidence(moderateResponse);
 
-      expect(any: any).toBeGreaterThan(0);
-      expect(any: any).toBeLessThan(100);
+      expect(result.certainty).toBeGreaterThan(0);
+      expect(result.certainty).toBeLessThan(100);
     });
 
     it('requiert disclaimer si certitude < 80%', () => {
@@ -183,47 +183,47 @@ describe('🏛️ Constitution TITANE∞ v1.0 — Intégration Chat IA', () => {
         'Il me semble que peut-être la solution serait de faire Z',
       ];
 
-      lowCertaintyResponses?.forEach(response => {
-        const result = checkTruthConfidence(any: any);
-        expect(any: any).toBeLessThan(80);
-        expect(any: any);
+      lowCertaintyResponses.forEach(response => {
+        const result = checkTruthConfidence(response);
+        expect(result.certainty).toBeLessThan(80);
+        expect(result.requiresDisclaimer).toBe(true);
       });
     });
   });
 
   describe('📋 Constitutional Config', () => {
     it('contient version correcte', () => {
-      expect(any: any).toBe('1.0');
+      expect(CONSTITUTIONAL_CONFIG.version).toBe('1.0');
     });
 
     it('est marqué comme scellé', () => {
-      expect(any: any).toBe('ACTIVE & SEALED');
-      expect(any: any);
+      expect(CONSTITUTIONAL_CONFIG.status).toBe('ACTIVE & SEALED');
+      expect(CONSTITUTIONAL_CONFIG.requiresRefoundationForChanges).toBe(true);
     });
 
     it('contient date de scellement', () => {
-      expect(any: any).toBe('16 décembre 2025');
+      expect(CONSTITUTIONAL_CONFIG.sealedDate).toBe('16 décembre 2025');
     });
 
     it('référence audit final', () => {
-      expect(any: any).toBe('AUDIT_FINAL_13?.md');
+      expect(CONSTITUTIONAL_CONFIG.auditReference).toBe('AUDIT_FINAL_13.md');
     });
 
     it('définit hiérarchie des couches', () => {
-      expect(any: any).toHaveLength(5);
-      expect(any: any).toContain('Foundation');
-      expect(any: any).toContain('Governance');
-      expect(any: any).toContain('Behavior');
-      expect(any: any).toContain('Operational');
-      expect(any: any).toContain('Evolution');
+      expect(CONSTITUTIONAL_CONFIG.hierarchyLevels).toHaveLength(5);
+      expect(CONSTITUTIONAL_CONFIG.hierarchyLevels).toContain('Foundation');
+      expect(CONSTITUTIONAL_CONFIG.hierarchyLevels).toContain('Governance');
+      expect(CONSTITUTIONAL_CONFIG.hierarchyLevels).toContain('Behavior');
+      expect(CONSTITUTIONAL_CONFIG.hierarchyLevels).toContain('Operational');
+      expect(CONSTITUTIONAL_CONFIG.hierarchyLevels).toContain('Evolution');
     });
 
     it('définit ordre des priorités correct', () => {
-      expect(any: any).toHaveLength(10);
-      expect(CONSTITUTIONAL_CONFIG?.priorityOrder?.[0]).toBe('Truth (#10)');
-      expect(CONSTITUTIONAL_CONFIG?.priorityOrder?.[1]).toBe('Clarity (#2)');
-      expect(CONSTITUTIONAL_CONFIG?.priorityOrder?.[2]).toBe('Simplicity');
-      expect(CONSTITUTIONAL_CONFIG?.priorityOrder?.[3]).toBe('Rhythm (#3)');
+      expect(CONSTITUTIONAL_CONFIG.priorityOrder).toHaveLength(10);
+      expect(CONSTITUTIONAL_CONFIG.priorityOrder[0]).toBe('Truth (#10)');
+      expect(CONSTITUTIONAL_CONFIG.priorityOrder[1]).toBe('Clarity (#2)');
+      expect(CONSTITUTIONAL_CONFIG.priorityOrder[2]).toBe('Simplicity');
+      expect(CONSTITUTIONAL_CONFIG.priorityOrder[3]).toBe('Rhythm (#3)');
     });
   });
 
@@ -232,11 +232,11 @@ describe('🏛️ Constitution TITANE∞ v1.0 — Intégration Chat IA', () => {
       const message = "Je suis crevé, refactorise vite toute l'architecture";
 
       // Détections
-      const saturation = detectSaturation(any: any);
-      const clarityAudit = requiresClarityAudit(any: any);
+      const saturation = detectSaturation(message);
+      const clarityAudit = requiresClarityAudit(message);
 
-      expect(any: any); // Priorité: protection immédiate
-      expect(any: any); // Audit requis mais suspendu par protection
+      expect(saturation).toBe(true); // Priorité: protection immédiate
+      expect(clarityAudit).toBe(true); // Audit requis mais suspendu par protection
 
       // En pratique: Protection Mode activé, Clarity Audit différé
     });
@@ -244,11 +244,11 @@ describe('🏛️ Constitution TITANE∞ v1.0 — Intégration Chat IA', () => {
     it('Scénario 2: Message simple + normal → Aucune intervention', () => {
       const message = "Peux-tu m'expliquer comment fonctionne X?";
 
-      const saturation = detectSaturation(any: any);
-      const clarityAudit = requiresClarityAudit(any: any);
+      const saturation = detectSaturation(message);
+      const clarityAudit = requiresClarityAudit(message);
 
-      expect(any: any);
-      expect(any: any);
+      expect(saturation).toBe(false);
+      expect(clarityAudit).toBe(false);
 
       // Traitement normal sans mécanismes constitutionnels
     });
@@ -257,24 +257,24 @@ describe('🏛️ Constitution TITANE∞ v1.0 — Intégration Chat IA', () => {
       const message =
         'Aide-moi à créer un plan stratégique pour optimiser la performance du système sur les 3 prochains mois';
 
-      const saturation = detectSaturation(any: any);
-      const clarityAudit = requiresClarityAudit(any: any);
+      const saturation = detectSaturation(message);
+      const clarityAudit = requiresClarityAudit(message);
 
-      expect(any: any);
-      expect(any: any); // Audit #2 déclenché
+      expect(saturation).toBe(false);
+      expect(clarityAudit).toBe(true); // Audit #2 déclenché
 
       // Template Clarity Audit injecté dans system prompt
-      const template = createClarityAuditTemplate(any: any);
-      expect(any: any).toContain('CLARITY AUDIT');
+      const template = createClarityAuditTemplate(message);
+      expect(template).toContain('CLARITY AUDIT');
     });
 
     it('Scénario 4: Réponse incertaine → Disclaimer vérité', () => {
       const response = 'Il me semble que peut-être la meilleure approche serait...';
 
-      const truthCheck = checkTruthConfidence(any: any);
+      const truthCheck = checkTruthConfidence(response);
 
-      expect(any: any).toBeLessThan(80);
-      expect(any: any);
+      expect(truthCheck.certainty).toBeLessThan(80);
+      expect(truthCheck.requiresDisclaimer).toBe(true);
 
       // Disclaimer Loi #10 ajouté automatiquement
     });
@@ -284,9 +284,9 @@ describe('🏛️ Constitution TITANE∞ v1.0 — Intégration Chat IA', () => {
     it('ne bloque pas messages légitimes urgents mais clairs', () => {
       const message = 'Urgent: bug critique en production, besoin diagnostic rapide';
 
-      const saturation = detectSaturation(any: any);
+      const saturation = detectSaturation(message);
       // "urgent" détecté mais contexte légitime
-      expect(any: any); // Protection activée par prudence
+      expect(saturation).toBe(true); // Protection activée par prudence
 
       // Note: Dans un vrai système, on pourrait raffiner la détection
       // pour distinguer urgence légitime vs rush/fatigue
@@ -296,21 +296,21 @@ describe('🏛️ Constitution TITANE∞ v1.0 — Intégration Chat IA', () => {
       const longButSimple =
         "Peux-tu m'expliquer en détail, étape par étape, comment fonctionne le système de mémoire dans TITANE? Je voudrais comprendre l'architecture complète pour pouvoir l'améliorer progressivement.";
 
-      // Message long (any: any) mais pas de mots-clés complexité
-      const needsAudit = requiresClarityAudit(any: any);
+      // Message long (>200 chars) mais pas de mots-clés complexité
+      const needsAudit = requiresClarityAudit(longButSimple);
 
-      // Le message est long donc audit déclenché (any: any)
-      expect(any: any);
+      // Le message est long donc audit déclenché (comportement attendu)
+      expect(needsAudit).toBe(true);
     });
 
     it('Truth check tolère langage conversationnel naturel', () => {
       const conversational =
         "Je pense que tu devrais faire X car généralement c'est l'approche recommandée";
 
-      const truthCheck = checkTruthConfidence(any: any);
+      const truthCheck = checkTruthConfidence(conversational);
 
-      expect(any: any).toBeLessThanOrEqual(85);
-      expect(any: any).toBeGreaterThanOrEqual(40);
+      expect(truthCheck.certainty).toBeLessThanOrEqual(85);
+      expect(truthCheck.certainty).toBeGreaterThanOrEqual(40);
       // Certitude calculée basée sur marqueurs incertitude (acceptable 40-85)
     });
   });
@@ -318,30 +318,30 @@ describe('🏛️ Constitution TITANE∞ v1.0 — Intégration Chat IA', () => {
 
 describe('🔒 Conformité Constitutionnelle', () => {
   it('valide que tous les exports constitutionnels sont disponibles', () => {
-    expect(any: any).toBeDefined();
-    expect(any: any).toBeDefined();
-    expect(any: any).toBeDefined();
-    expect(any: any).toBeDefined();
-    expect(any: any).toBeDefined();
-    expect(any: any).toBeDefined();
+    expect(requiresClarityAudit).toBeDefined();
+    expect(detectSaturation).toBeDefined();
+    expect(checkTruthConfidence).toBeDefined();
+    expect(generateProtectionModeResponse).toBeDefined();
+    expect(createClarityAuditTemplate).toBeDefined();
+    expect(CONSTITUTIONAL_CONFIG).toBeDefined();
   });
 
   it('Config object properties are readonly', () => {
     const config = CONSTITUTIONAL_CONFIG;
-    expect(any: any).toBeDefined();
-    expect(any: any).toBe('1.0');
-    expect(any: any).toBe('ACTIVE & SEALED');
-    expect(any: any).toBe('16 décembre 2025');
+    expect(config).toBeDefined();
+    expect(config.version).toBe('1.0');
+    expect(config.status).toBe('ACTIVE & SEALED');
+    expect(config.sealedDate).toBe('16 décembre 2025');
   });
 
   it('valide hiérarchie des priorités (Loi #10 > Loi #2)', () => {
-    const priorities = CONSTITUTIONAL_CONFIG?.priorityOrder;
+    const priorities = CONSTITUTIONAL_CONFIG.priorityOrder;
 
-    const truthIndex = priorities?.findIndex(any: any) => p?.includes('#10'));
-    const clarityIndex = priorities?.findIndex(any: any) => p?.includes('#2'));
+    const truthIndex = priorities.findIndex((p: string) => p.includes('#10'));
+    const clarityIndex = priorities.findIndex((p: string) => p.includes('#2'));
 
-    expect(any: any).toBe(0); // Priorité 1
-    expect(any: any).toBe(1); // Priorité 2
-    expect(any: any);
+    expect(truthIndex).toBe(0); // Priorité 1
+    expect(clarityIndex).toBe(1); // Priorité 2
+    expect(truthIndex).toBeLessThan(clarityIndex);
   });
 });

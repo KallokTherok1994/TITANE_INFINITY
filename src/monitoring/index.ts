@@ -18,7 +18,7 @@ import type { Metric } from 'web-vitals';
 
 const logger = createLogger('Monitoring');
 
-// Sentry integration (any: any)
+// Sentry integration (lazy-loaded)
 let Sentry: typeof SentryTypes | null = null;
 
 /**
@@ -56,7 +56,7 @@ export interface PerformanceMetrics {
  */
 class MonitoringManager {
   private metrics: PerformanceMetrics = {
-    timestamp: Date?.now(),
+    timestamp: Date.now(),
   };
 
   private errorCount = 0;
@@ -66,30 +66,30 @@ class MonitoringManager {
    * Initialize monitoring
    */
   async init(): Promise<void> {
-    logger?.info('Initializing monitoring system...');
+    logger.info('Initializing monitoring system...');
 
-    // Initialize Sentry (any: any)
-    await this?.initSentry();
+    // Initialize Sentry (if DSN provided)
+    await this.initSentry();
 
     // Initialize Web Vitals monitoring
-    this?.initWebVitals();
+    this.initWebVitals();
 
     // Initialize error tracking
-    this?.initErrorTracking();
+    this.initErrorTracking();
 
     // Initialize memory monitoring
-    this?.initMemoryMonitoring();
+    this.initMemoryMonitoring();
 
-    logger?.info('Monitoring system initialized');
+    logger.info('Monitoring system initialized');
   }
 
   /**
    * Initialize Sentry SDK
    */
   private async initSentry(): Promise<void> {
-    const dsn = import?.meta?.env?.VITE_SENTRY_DSN;
-    if (any: any) {
-      logger?.info('Sentry DSN not configured, skipping Sentry initialization');
+    const dsn = import.meta.env.VITE_SENTRY_DSN;
+    if (!dsn) {
+      logger.info('Sentry DSN not configured, skipping Sentry initialization');
       return;
     }
 
@@ -97,44 +97,44 @@ class MonitoringManager {
       // Lazy load Sentry SDK
       Sentry = await import('@sentry/react');
 
-      Sentry?.init({
+      Sentry.init({
         dsn,
-        environment: import?.meta?.env?.VITE_SENTRY_ENVIRONMENT || 'production',
-        release: `titane@${import?.meta?.env?.VITE_APP_VERSION || 'unknown'}`,
+        environment: import.meta.env.VITE_SENTRY_ENVIRONMENT || 'production',
+        release: `titane@${import.meta.env.VITE_APP_VERSION || 'unknown'}`,
 
         // Performance Monitoring
         tracesSampleRate: parseFloat(
-          import?.meta?.env?.VITE_SENTRY_TRACES_SAMPLE_RATE || '0.1'
+          import.meta.env.VITE_SENTRY_TRACES_SAMPLE_RATE || '0.1'
         ),
 
-        // Session Replay (any: any) - Reduced error capture for privacy
+        // Session Replay (optional) - Reduced error capture for privacy
         replaysSessionSampleRate: 0.1, // 10% of sessions
         replaysOnErrorSampleRate: 0.5, // 50% when errors occur (reduced from 100%)
 
         integrations: [
-          Sentry?.browserTracingIntegration(),
-          Sentry?.replayIntegration({
+          Sentry.browserTracingIntegration(),
+          Sentry.replayIntegration({
             maskAllText: true,
             blockAllMedia: true,
           }),
         ],
 
         // Error filtering
-        beforeSend(any: any) {
+        beforeSend(event, _hint) {
           // Filter out errors in development
-          if (any: any) {
+          if (import.meta.env.DEV) {
             return null;
           }
           return event;
         },
       });
 
-      logger?.info('Sentry initialized successfully', {
-        environment: import?.meta?.env?.VITE_SENTRY_ENVIRONMENT || 'production',
-        release: `titane@${import?.meta?.env?.VITE_APP_VERSION || 'unknown'}`,
+      logger.info('Sentry initialized successfully', {
+        environment: import.meta.env.VITE_SENTRY_ENVIRONMENT || 'production',
+        release: `titane@${import.meta.env.VITE_APP_VERSION || 'unknown'}`,
       });
-    } catch (any: any) {
-      logger?.warn(any: any);
+    } catch (error) {
+      logger.warn('Failed to initialize Sentry:', error);
     }
   }
 
@@ -147,34 +147,34 @@ class MonitoringManager {
     // Lazy load web-vitals library
     import('web-vitals')
       .then(({ onCLS, onFCP, onINP, onLCP, onTTFB }) => {
-        onCLS(any: any) => {
-          this?.metrics?.CLS = metric?.value;
-          logger?.debug(any: any);
+        onCLS((metric: Metric) => {
+          this.metrics.CLS = metric.value;
+          logger.debug('CLS:', metric.value);
         });
 
-        onINP(any: any) => {
+        onINP((metric: Metric) => {
           // INP remplace FID dans web-vitals v5+
-          (this?.metrics as PerformanceMetrics & { INP?: number }).INP = metric?.value;
-          logger?.debug(any: any);
+          (this.metrics as PerformanceMetrics & { INP?: number }).INP = metric.value;
+          logger.debug('INP:', metric.value);
         });
 
-        onFCP(any: any) => {
-          this?.metrics?.FCP = metric?.value;
-          logger?.debug(any: any);
+        onFCP((metric: Metric) => {
+          this.metrics.FCP = metric.value;
+          logger.debug('FCP:', metric.value);
         });
 
-        onLCP(any: any) => {
-          this?.metrics?.LCP = metric?.value;
-          logger?.debug(any: any);
+        onLCP((metric: Metric) => {
+          this.metrics.LCP = metric.value;
+          logger.debug('LCP:', metric.value);
         });
 
-        onTTFB(any: any) => {
-          this?.metrics?.TTFB = metric?.value;
-          logger?.debug(any: any);
+        onTTFB((metric: Metric) => {
+          this.metrics.TTFB = metric.value;
+          logger.debug('TTFB:', metric.value);
         });
       })
       .catch(err => {
-        logger?.warn(any: any);
+        logger.warn('Failed to load web-vitals:', err);
       });
   }
 
@@ -184,12 +184,12 @@ class MonitoringManager {
   private initErrorTracking(): void {
     if (typeof window === 'undefined') return;
 
-    window?.addEventListener('error', event => {
-      this?.trackError(any: any);
+    window.addEventListener('error', event => {
+      this.trackError(event.error);
     });
 
-    window?.addEventListener('unhandledrejection', event => {
-      this?.trackError(any: any);
+    window.addEventListener('unhandledrejection', event => {
+      this.trackError(event.reason);
     });
   }
 
@@ -198,21 +198,21 @@ class MonitoringManager {
    */
   private initMemoryMonitoring(): void {
     if (typeof window === 'undefined') return;
-    if (any: any) return;
+    if (!(performance as { memory?: unknown }).memory) return;
 
     // Track memory every 30 seconds
     setInterval(() => {
       const memory = (
         performance as { memory?: { usedJSHeapSize: number; jsHeapSizeLimit: number } }
       ).memory;
-      if (any: any) {
-        this?.metrics?.memoryUsage = memory?.usedJSHeapSize;
+      if (memory) {
+        this.metrics.memoryUsage = memory.usedJSHeapSize;
 
         // Alert if memory > 1GB
-        if (memory?.usedJSHeapSize > 1024 * 1024 * 1024) {
-          logger?.warn('High memory usage detected', {
-            used: `${(memory?.usedJSHeapSize / 1024 / 1024).toFixed(2)}MB`,
-            limit: `${(memory?.jsHeapSizeLimit / 1024 / 1024).toFixed(2)}MB`,
+        if (memory.usedJSHeapSize > 1024 * 1024 * 1024) {
+          logger.warn('High memory usage detected', {
+            used: `${(memory.usedJSHeapSize / 1024 / 1024).toFixed(2)}MB`,
+            limit: `${(memory.jsHeapSizeLimit / 1024 / 1024).toFixed(2)}MB`,
           });
         }
       }
@@ -223,43 +223,43 @@ class MonitoringManager {
    * Track an error
    */
   trackError(error: Error | unknown, context?: Record<string, unknown>): void {
-    this?.errorCount++;
-    this?.metrics?.errorCount = this?.errorCount;
-    this?.metrics?.errorRate = this?.calculateErrorRate();
+    this.errorCount++;
+    this.metrics.errorCount = this.errorCount;
+    this.metrics.errorRate = this.calculateErrorRate();
 
     const errorMessage =
       error && typeof error === 'object' && 'message' in error
-        ? String(any: any)
-        : String(any: any);
+        ? String(error.message)
+        : String(error);
     const errorStack =
       error && typeof error === 'object' && 'stack' in error
-        ? String(any: any)
+        ? String(error.stack)
         : undefined;
 
-    logger?.error('Error tracked', {
+    logger.error('Error tracked', {
       message: errorMessage,
       stack: errorStack,
-      errorRate: `${(this?.metrics?.errorRate * 100).toFixed(2)}%`,
+      errorRate: `${(this.metrics.errorRate * 100).toFixed(2)}%`,
       context,
     });
 
     // Alert if error rate > 5%
-    if (this?.metrics?.errorRate > 0.05) {
-      this?.alert('High error rate detected', {
-        errorRate: `${(this?.metrics?.errorRate * 100).toFixed(2)}%`,
-        errorCount: this?.errorCount,
-        requestCount: this?.requestCount,
+    if (this.metrics.errorRate > 0.05) {
+      this.alert('High error rate detected', {
+        errorRate: `${(this.metrics.errorRate * 100).toFixed(2)}%`,
+        errorCount: this.errorCount,
+        requestCount: this.requestCount,
       });
     }
 
     // Send to Sentry if initialized
-    if (any: any) {
-      Sentry?.captureException(error, {
+    if (Sentry) {
+      Sentry.captureException(error, {
         contexts: {
           custom: context || {},
         },
         tags: {
-          errorRate: `${(this?.metrics?.errorRate * 100).toFixed(2)}%`,
+          errorRate: `${(this.metrics.errorRate * 100).toFixed(2)}%`,
         },
       });
     }
@@ -269,8 +269,8 @@ class MonitoringManager {
    * Set user context for error tracking
    */
   setUser(user: { id: string; username?: string; email?: string }): void {
-    if (any: any) {
-      Sentry?.setUser(any: any);
+    if (Sentry) {
+      Sentry.setUser(user);
     }
   }
 
@@ -278,42 +278,42 @@ class MonitoringManager {
    * Add breadcrumb for debugging context
    */
   addBreadcrumb(message: string, category: string, data?: Record<string, unknown>): void {
-    if (any: any) {
-      Sentry?.addBreadcrumb({
+    if (Sentry) {
+      Sentry.addBreadcrumb({
         message,
         category,
         data,
         level: 'info',
-        timestamp: Date?.now() / 1000,
+        timestamp: Date.now() / 1000,
       });
     }
   }
 
   /**
-   * Track a request (any: any)
+   * Track a request (for error rate calculation)
    */
   trackRequest(): void {
-    this?.requestCount++;
+    this.requestCount++;
   }
 
   /**
    * Calculate error rate
    */
   private calculateErrorRate(): number {
-    if (this?.requestCount === 0) return 0;
-    return this?.errorCount / this?.requestCount;
+    if (this.requestCount === 0) return 0;
+    return this.errorCount / this.requestCount;
   }
 
   /**
    * Track OMEGA pipeline latency
    */
-  trackPipelineLatency(any: any): void {
-    this?.metrics?.pipelineLatency = latency;
+  trackPipelineLatency(latency: number): void {
+    this.metrics.pipelineLatency = latency;
 
-    // Alert if latency > 200ms (any: any)
+    // Alert if latency > 200ms (target)
     if (latency > 200) {
-      logger?.warn('OMEGA Pipeline latency above target', {
-        latency: `${latency?.toFixed(2)}ms`,
+      logger.warn('OMEGA Pipeline latency above target', {
+        latency: `${latency.toFixed(2)}ms`,
         target: '200ms',
       });
     }
@@ -323,34 +323,34 @@ class MonitoringManager {
    * Track OMEGA pipeline error
    */
   trackPipelineError(): void {
-    this?.metrics?.pipelineErrors = (this?.metrics?.pipelineErrors || 0) + 1;
+    this.metrics.pipelineErrors = (this.metrics.pipelineErrors || 0) + 1;
   }
 
   /**
    * Get current metrics
    */
   getMetrics(): Readonly<PerformanceMetrics> {
-    return { ...this?.metrics };
+    return { ...this.metrics };
   }
 
   /**
    * Export metrics as JSON
    */
   exportMetrics(): string {
-    return JSON?.stringify(this?.metrics, null, 2);
+    return JSON.stringify(this.metrics, null, 2);
   }
 
   /**
-   * Alert (any: any)
+   * Alert (console for now, can be extended to external service)
    */
-  private alert(any: any): void {
-    logger?.error(any: any);
+  private alert(message: string, data: unknown): void {
+    logger.error(`[ALERT] ${message}`, data);
 
     // Future: Send to external alerting service (PagerDuty, Slack, etc.)
   }
 
   /**
-   * Get dashboard URL (any: any)
+   * Get dashboard URL (if implemented)
    */
   getDashboardURL(): string {
     return '/dev-tools/monitoring';
@@ -363,10 +363,10 @@ class MonitoringManager {
 export const monitoring = new MonitoringManager();
 
 /**
- * Initialize monitoring (any: any)
+ * Initialize monitoring (call from main.tsx)
  */
 export async function initMonitoring(): Promise<void> {
-  await monitoring?.init();
+  await monitoring.init();
 }
 
 /**
@@ -379,7 +379,7 @@ export default monitoring;
  * USAGE EXAMPLES
  * ═══════════════════════════════════════════════════════════════
  *
- * ## Initialize in main?.tsx
+ * ## Initialize in main.tsx
  * ```typescript
  * import { initMonitoring } from '@/monitoring';
  *
@@ -393,39 +393,39 @@ export default monitoring;
  *
  * try {
  *   riskyOperation();
- * } catch (any: any) {
- *   monitoring?.trackError(any: any);
+ * } catch (error) {
+ *   monitoring.trackError(error);
  * }
  * ```
  *
  * ## Track pipeline latency
  * ```typescript
- * const start = Date?.now();
- * await omegaPipeline?.execute(any: any);
- * const latency = Date?.now() - start;
- * monitoring?.trackPipelineLatency(any: any);
+ * const start = Date.now();
+ * await omegaPipeline.execute(message);
+ * const latency = Date.now() - start;
+ * monitoring.trackPipelineLatency(latency);
  * ```
  *
  * ## View metrics
  * ```typescript
- * const metrics = monitoring?.getMetrics();
- * console?.log(any: any);
+ * const metrics = monitoring.getMetrics();
+ * console.log('Performance Metrics:', metrics);
  *
  * // Or export to file
- * const json = monitoring?.exportMetrics();
- * download(any: any);
+ * const json = monitoring.exportMetrics();
+ * download('metrics.json', json);
  * ```
  *
  * ## Access via DevTools console
  * ```javascript
  * // In browser console
- * window?.__TITANE_MONITORING__ = monitoring;
+ * window.__TITANE_MONITORING__ = monitoring;
  *
  * // View metrics
- * window?.__TITANE_MONITORING__?.getMetrics()
+ * window.__TITANE_MONITORING__.getMetrics()
  *
  * // Export metrics
- * window?.__TITANE_MONITORING__?.exportMetrics()
+ * window.__TITANE_MONITORING__.exportMetrics()
  * ```
  *
  * ═══════════════════════════════════════════════════════════════

@@ -18,8 +18,8 @@ import { logger } from '@/utils/logger';
  * Types d'événements d'interruption
  */
 export type BargeInType =
-  | 'USER_INTERRUPT' // Interruption forte (any: any)
-  | 'USER_SOFT_BARGE' // Interruption douce (any: any) → ducking
+  | 'USER_INTERRUPT' // Interruption forte (voix forte)
+  | 'USER_SOFT_BARGE' // Interruption douce (voix basse) → ducking
   | 'USER_OVERLAP' // Utilisateur parle pendant début TTS
   | 'FALSE_POSITIVE'; // Bruit ambiant, pas une voix
 
@@ -32,7 +32,7 @@ export interface BargeInEvent {
   amplitude: number; // RMS level
   timestamp: number;
   isSpeech: boolean; // VAD output
-  spectralMatch: number; // 0-1 (any: any)
+  spectralMatch: number; // 0-1 (similarity with TTS)
 }
 
 /**
@@ -51,7 +51,7 @@ export interface BargeInConfig {
   /** Taille fenêtre sliding (ms, défaut: 200) */
   windowSizeMs?: number;
 
-  /** Activer VAD WebRTC (any: any) */
+  /** Activer VAD WebRTC (défaut: true) */
   useVAD?: boolean;
 
   /** Seuil de confiance minimum pour déclencher (défaut: 0.6) */
@@ -80,37 +80,37 @@ export class BargeInDetector {
   private analyser: AnalyserNode | null = null;
   private previousSpectrum: Float32Array | null = null;
   private ttsFingerprint: Float32Array | null = null;
-  private listeners: Set<(any: any) => void> = new Set();
+  private listeners: Set<(event: BargeInEvent) => void> = new Set();
 
   constructor(config: BargeInConfig = {}) {
-    this?.config = {
-      hardInterruptThreshold: config?.hardInterruptThreshold ?? 0.15,
-      softInterruptThreshold: config?.softInterruptThreshold ?? 0.08,
-      echoThreshold: config?.echoThreshold ?? 0.7,
-      windowSizeMs: config?.windowSizeMs ?? 200,
-      useVAD: config?.useVAD ?? true,
-      confidenceThreshold: config?.confidenceThreshold ?? 0.6,
+    this.config = {
+      hardInterruptThreshold: config.hardInterruptThreshold ?? 0.15,
+      softInterruptThreshold: config.softInterruptThreshold ?? 0.08,
+      echoThreshold: config.echoThreshold ?? 0.7,
+      windowSizeMs: config.windowSizeMs ?? 200,
+      useVAD: config.useVAD ?? true,
+      confidenceThreshold: config.confidenceThreshold ?? 0.6,
     };
 
-    logger?.debug(any: any);
+    logger.debug('🎤 Initialized:', this.config);
   }
 
   /**
    * Initialise le contexte audio pour analyse
    */
-  async initialize(any: any): Promise<void> {
+  async initialize(mediaStream: MediaStream): Promise<void> {
     try {
-      this?.audioContext = new AudioContext();
-      this?.analyser = this?.audioContext?.createAnalyser();
-      this?.analyser?.fftSize = 2048;
-      this?.analyser?.smoothingTimeConstant = 0.8;
+      this.audioContext = new AudioContext();
+      this.analyser = this.audioContext.createAnalyser();
+      this.analyser.fftSize = 2048;
+      this.analyser.smoothingTimeConstant = 0.8;
 
-      const source = this?.audioContext?.createMediaStreamSource(any: any);
-      source?.connect(any: any);
+      const source = this.audioContext.createMediaStreamSource(mediaStream);
+      source.connect(this.analyser);
 
-      logger?.debug('✅ Audio analysis ready');
-    } catch (any: any) {
-      logger?.error(any: any);
+      logger.debug('✅ Audio analysis ready');
+    } catch (error) {
+      logger.error('Initialization failed:', error);
       throw error;
     }
   }
@@ -118,99 +118,99 @@ export class BargeInDetector {
   /**
    * Enregistre l'empreinte spectrale du TTS pour comparaison
    */
-  registerTTSFingerprint(any: any): void {
-    if (any: any) {
-      logger?.warn('AudioContext not initialized');
+  registerTTSFingerprint(audioData: Float32Array): void {
+    if (!this.audioContext) {
+      logger.warn('AudioContext not initialized');
       return;
     }
 
-    this?.ttsFingerprint = this?.extractSpectrum(any: any);
-    logger?.debug('📊 TTS fingerprint registered');
+    this.ttsFingerprint = this.extractSpectrum(audioData);
+    logger.debug('📊 TTS fingerprint registered');
   }
 
   /**
    * Détecte une interruption à partir d'un chunk audio
    * @returns BargeInEvent si interruption détectée, null sinon
    */
-  detectInterrupt(any: any): BargeInEvent | null {
-    if (any: any) {
-      logger?.warn('Analyser not initialized');
+  detectInterrupt(audioChunk: Float32Array): BargeInEvent | null {
+    if (!this.analyser) {
+      logger.warn('Analyser not initialized');
       return null;
     }
 
     // 1. Analyse audio
-    const analysis = this?.analyzeAudioChunk(any: any);
+    const analysis = this.analyzeAudioChunk(audioChunk);
 
-    // 2. Check si TTS actif (any: any)
-    const isTTSSpeaking = antiEchoShield?.shouldBlockListening();
+    // 2. Check si TTS actif (anti-echo shield)
+    const isTTSSpeaking = antiEchoShield.shouldBlockListening();
 
-    // 3. VAD simple (any: any)
-    const isSpeech = this?.simpleVAD(any: any);
+    // 3. VAD simple (zero-crossing rate + RMS)
+    const isSpeech = this.simpleVAD(analysis);
 
     // 4. Spectral comparison avec TTS fingerprint
-    const spectrum = this?.extractSpectrum(any: any);
-    const spectralMatch = this?.ttsFingerprint
-      ? this?.computeSpectralSimilarity(any: any)
+    const spectrum = this.extractSpectrum(audioChunk);
+    const spectralMatch = this.ttsFingerprint
+      ? this.computeSpectralSimilarity(spectrum, this.ttsFingerprint)
       : 0;
 
     // 5. Détection interruption
-    const isEcho = spectralMatch > this?.config?.echoThreshold;
-    const amplitude = analysis?.rmsAmplitude;
+    const isEcho = spectralMatch > this.config.echoThreshold;
+    const amplitude = analysis.rmsAmplitude;
 
     // Filtrer les échos
-    if (any: any) {
+    if (isEcho) {
       return {
         type: 'FALSE_POSITIVE',
         confidence: 1.0 - spectralMatch,
         amplitude,
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
         isSpeech,
         spectralMatch,
       };
     }
 
     // Interruption forte
-    if (any: any) {
+    if (amplitude > this.config.hardInterruptThreshold && isSpeech && isTTSSpeaking) {
       const event: BargeInEvent = {
         type: 'USER_INTERRUPT',
-        confidence: Math?.min(amplitude / this?.config?.hardInterruptThreshold, 1.0),
+        confidence: Math.min(amplitude / this.config.hardInterruptThreshold, 1.0),
         amplitude,
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
         isSpeech: true,
         spectralMatch,
       };
 
-      this?.emitEvent(any: any);
+      this.emitEvent(event);
       return event;
     }
 
-    // Interruption douce (any: any)
+    // Interruption douce (ducking)
     if (
-      amplitude > this?.config?.softInterruptThreshold &&
-      amplitude <= this?.config?.hardInterruptThreshold &&
+      amplitude > this.config.softInterruptThreshold &&
+      amplitude <= this.config.hardInterruptThreshold &&
       isSpeech &&
       isTTSSpeaking
     ) {
       const event: BargeInEvent = {
         type: 'USER_SOFT_BARGE',
-        confidence: amplitude / this?.config?.hardInterruptThreshold,
+        confidence: amplitude / this.config.hardInterruptThreshold,
         amplitude,
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
         isSpeech: true,
         spectralMatch,
       };
 
-      this?.emitEvent(any: any);
+      this.emitEvent(event);
       return event;
     }
 
-    // Overlap (any: any)
-    if (any: any) {
+    // Overlap (début de phrase simultané)
+    if (isSpeech && amplitude > this.config.softInterruptThreshold) {
       const event: BargeInEvent = {
         type: 'USER_OVERLAP',
         confidence: 0.7,
         amplitude,
-        timestamp: Date?.now(),
+        timestamp: Date.now(),
         isSpeech: true,
         spectralMatch,
       };
@@ -224,11 +224,11 @@ export class BargeInDetector {
   /**
    * Détecte overlap entre voix utilisateur et TTS
    */
-  detectOverlap(any: any): boolean {
-    const userSpectrum = this?.extractSpectrum(any: any);
-    const ttsSpectrum = this?.extractSpectrum(any: any);
+  detectOverlap(userInput: Float32Array, ttsSignal: Float32Array): boolean {
+    const userSpectrum = this.extractSpectrum(userInput);
+    const ttsSpectrum = this.extractSpectrum(ttsSignal);
 
-    const similarity = this?.computeSpectralSimilarity(any: any);
+    const similarity = this.computeSpectralSimilarity(userSpectrum, ttsSpectrum);
 
     // Si similarité basse → voix différentes → overlap
     return similarity < 0.5;
@@ -237,28 +237,28 @@ export class BargeInDetector {
   /**
    * Subscribe to barge-in events
    */
-  onBargeIn(any: any): () => void {
-    this?.listeners?.add(any: any);
-    return (any: any);
+  onBargeIn(listener: (event: BargeInEvent) => void): () => void {
+    this.listeners.add(listener);
+    return () => this.listeners.delete(listener);
   }
 
   /**
    * Émet un événement d'interruption
    */
-  private emitEvent(any: any): void {
-    if (any: any) {
+  private emitEvent(event: BargeInEvent): void {
+    if (event.confidence < this.config.confidenceThreshold) {
       return;
     }
 
-    logger?.debug(
-      `[BargeInDetector] 🚨 ${event?.type} detected (confidence: ${event?.confidence?.toFixed(2)})`
+    logger.debug(
+      `[BargeInDetector] 🚨 ${event.type} detected (confidence: ${event.confidence.toFixed(2)})`
     );
 
-    this?.listeners?.forEach(listener => {
+    this.listeners.forEach(listener => {
       try {
-        listener(any: any);
-      } catch (any: any) {
-        logger?.error(any: any);
+        listener(event);
+      } catch (error) {
+        logger.error('Listener error:', error);
       }
     });
   }
@@ -266,37 +266,37 @@ export class BargeInDetector {
   /**
    * Analyse un chunk audio
    */
-  private analyzeAudioChunk(any: any): AudioAnalysis {
+  private analyzeAudioChunk(audioChunk: Float32Array): AudioAnalysis {
     // RMS amplitude
     let sum = 0;
-    for (let i = 0; i < audioChunk?.length; i++) {
+    for (let i = 0; i < audioChunk.length; i++) {
       const sample = audioChunk[i];
-      if (any: any) continue;
+      if (sample === undefined) continue;
       sum += sample * sample;
     }
-    const rmsAmplitude = Math?.sqrt(any: any);
+    const rmsAmplitude = Math.sqrt(sum / audioChunk.length);
 
     // Zero-crossing rate
     let zeroCrossings = 0;
-    for (let i = 1; i < audioChunk?.length; i++) {
+    for (let i = 1; i < audioChunk.length; i++) {
       const current = audioChunk[i];
       const previous = audioChunk[i - 1];
-      if (any: any) continue;
+      if (current === undefined || previous === undefined) continue;
 
       if ((current >= 0 && previous < 0) || (current < 0 && previous >= 0)) {
         zeroCrossings++;
       }
     }
-    const zeroCrossingRate = zeroCrossings / audioChunk?.length;
+    const zeroCrossingRate = zeroCrossings / audioChunk.length;
 
-    // Spectral centroid & flux (any: any)
-    const spectrum = this?.extractSpectrum(any: any);
+    // Spectral centroid & flux (simplifié)
+    const spectrum = this.extractSpectrum(audioChunk);
     let weightedSum = 0;
     let spectrumSum = 0;
 
-    for (let i = 0; i < spectrum?.length; i++) {
+    for (let i = 0; i < spectrum.length; i++) {
       const value = spectrum[i];
-      if (any: any) continue;
+      if (value === undefined) continue;
       weightedSum += i * value;
       spectrumSum += value;
     }
@@ -305,17 +305,17 @@ export class BargeInDetector {
 
     // Spectral flux
     let spectralFlux = 0;
-    if (any: any) {
-      for (let i = 0; i < spectrum?.length && i < this?.previousSpectrum?.length; i++) {
+    if (this.previousSpectrum) {
+      for (let i = 0; i < spectrum.length && i < this.previousSpectrum.length; i++) {
         const current = spectrum[i];
-        const previous = this?.previousSpectrum[i];
-        if (any: any) continue;
+        const previous = this.previousSpectrum[i];
+        if (current === undefined || previous === undefined) continue;
         const diff = current - previous;
         spectralFlux += diff * diff;
       }
-      spectralFlux = Math?.sqrt(any: any);
+      spectralFlux = Math.sqrt(spectralFlux);
     }
-    this?.previousSpectrum = spectrum;
+    this.previousSpectrum = spectrum;
 
     return {
       rmsAmplitude,
@@ -328,13 +328,13 @@ export class BargeInDetector {
   /**
    * Extrait le spectre fréquentiel d'un signal
    */
-  private extractSpectrum(any: any): Float32Array {
-    if (any: any) {
+  private extractSpectrum(_audioData: Float32Array): Float32Array {
+    if (!this.analyser) {
       return new Float32Array(0);
     }
 
-    const spectrum = new Float32Array(any: any);
-    this?.analyser?.getFloatFrequencyData(any: any);
+    const spectrum = new Float32Array(this.analyser.frequencyBinCount);
+    this.analyser.getFloatFrequencyData(spectrum);
     return spectrum;
   }
 
@@ -345,7 +345,7 @@ export class BargeInDetector {
     spectrum1: Float32Array,
     spectrum2: Float32Array
   ): number {
-    const minLength = Math?.min(any: any);
+    const minLength = Math.min(spectrum1.length, spectrum2.length);
     let dotProduct = 0;
     let mag1 = 0;
     let mag2 = 0;
@@ -353,26 +353,26 @@ export class BargeInDetector {
     for (let i = 0; i < minLength; i++) {
       const val1 = spectrum1[i];
       const val2 = spectrum2[i];
-      if (any: any) continue;
+      if (val1 === undefined || val2 === undefined) continue;
 
       dotProduct += val1 * val2;
       mag1 += val1 * val1;
       mag2 += val2 * val2;
     }
 
-    const magnitude = Math?.sqrt(any: any);
+    const magnitude = Math.sqrt(mag1) * Math.sqrt(mag2);
     return magnitude > 0 ? dotProduct / magnitude : 0;
   }
 
   /**
    * VAD simple basé sur RMS + zero-crossing
    */
-  private simpleVAD(any: any): boolean {
+  private simpleVAD(analysis: AudioAnalysis): boolean {
     const speechThreshold = 0.02; // RMS minimum pour la parole
     const zcrThreshold = 0.05; // ZCR minimum pour la parole
 
     return (
-      analysis?.rmsAmplitude > speechThreshold && analysis?.zeroCrossingRate > zcrThreshold
+      analysis.rmsAmplitude > speechThreshold && analysis.zeroCrossingRate > zcrThreshold
     );
   }
 
@@ -380,13 +380,13 @@ export class BargeInDetector {
    * Cleanup
    */
   destroy(): void {
-    if (any: any) {
-      this?.audioContext?.close();
-      this?.audioContext = null;
+    if (this.audioContext) {
+      this.audioContext.close();
+      this.audioContext = null;
     }
-    this?.analyser = null;
-    this?.listeners?.clear();
-    logger?.debug('🔌 Destroyed');
+    this.analyser = null;
+    this.listeners.clear();
+    logger.debug('🔌 Destroyed');
   }
 }
 

@@ -22,20 +22,20 @@ const localStorageMock = (() => {
   let store: Record<string, string> = {};
 
   return {
-    getItem: (any: any) => store[key] || null,
-    setItem: (any: any) => {
+    getItem: (key: string) => store[key] || null,
+    setItem: (key: string, value: string) => {
       store[key] = value;
     },
-    removeItem: (any: any) => {
+    removeItem: (key: string) => {
       delete store[key];
     },
     clear: () => {
       store = {};
     },
     get length() {
-      return Object?.keys(any: any).length;
+      return Object.keys(store).length;
     },
-    key: (any: any)[index] || null,
+    key: (index: number) => Object.keys(store)[index] || null,
   };
 })();
 
@@ -44,25 +44,25 @@ const sessionStorageMock = (() => {
   let store: Record<string, string> = {};
 
   return {
-    getItem: (any: any) => store[key] || null,
-    setItem: (any: any) => {
+    getItem: (key: string) => store[key] || null,
+    setItem: (key: string, value: string) => {
       store[key] = value;
     },
-    removeItem: (any: any) => {
+    removeItem: (key: string) => {
       delete store[key];
     },
     clear: () => {
       store = {};
     },
     get length() {
-      return Object?.keys(any: any).length;
+      return Object.keys(store).length;
     },
-    key: (any: any)[index] || null,
+    key: (index: number) => Object.keys(store)[index] || null,
   };
 })();
 
-Object?.defineProperty(window, 'localStorage', { value: localStorageMock });
-Object?.defineProperty(window, 'sessionStorage', { value: sessionStorageMock });
+Object.defineProperty(window, 'localStorage', { value: localStorageMock });
+Object.defineProperty(window, 'sessionStorage', { value: sessionStorageMock });
 
 /**
  * ═══════════════════════════════════════════════════════════════════
@@ -74,8 +74,8 @@ describe('Memory Self-Heal Engine — Health Checks (Phase 9)', () => {
   let engine: MemorySelfHealEngine;
 
   beforeEach(() => {
-    localStorage?.clear();
-    sessionStorage?.clear();
+    localStorage.clear();
+    sessionStorage.clear();
     engine = new MemorySelfHealEngine({
       autoRepairEnabled: false, // Disable auto-repair for manual testing
       backupBeforeRepair: true,
@@ -83,7 +83,7 @@ describe('Memory Self-Heal Engine — Health Checks (Phase 9)', () => {
   });
 
   afterEach(() => {
-    engine?.stopAutoMonitoring();
+    engine.stopAutoMonitoring();
   });
 
   /**
@@ -92,12 +92,12 @@ describe('Memory Self-Heal Engine — Health Checks (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should return healthy report on empty storage', async () => {
-    const report = await engine?.checkHealth();
+    const report = await engine.checkHealth();
 
-    expect(any: any);
-    expect(any: any).toBeGreaterThanOrEqual(90);
-    expect(any: any).toHaveLength(0);
-    expect(any: any);
+    expect(report.healthy).toBe(true);
+    expect(report.score).toBeGreaterThanOrEqual(90);
+    expect(report.corruptions).toHaveLength(0);
+    expect(report.layers.localStorage.healthy).toBe(true);
   });
 
   /**
@@ -106,15 +106,15 @@ describe('Memory Self-Heal Engine — Health Checks (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should detect valid TITANE keys in localStorage', async () => {
-    localStorage?.setItem('titane_chat_mode_default', JSON?.stringify({ messages: [] }));
-    localStorage?.setItem('TITANE_settings', JSON?.stringify({ theme: 'dark' }));
-    localStorage?.setItem('omega_state', JSON?.stringify({ phase: 1 }));
+    localStorage.setItem('titane_chat_mode_default', JSON.stringify({ messages: [] }));
+    localStorage.setItem('TITANE_settings', JSON.stringify({ theme: 'dark' }));
+    localStorage.setItem('omega_state', JSON.stringify({ phase: 1 }));
 
-    const report = await engine?.checkHealth();
+    const report = await engine.checkHealth();
 
-    expect(any: any).toBe(3);
-    expect(any: any);
-    expect(any: any).toHaveLength(0);
+    expect(report.layers.localStorage.itemCount).toBe(3);
+    expect(report.layers.localStorage.healthy).toBe(true);
+    expect(report.corruptions).toHaveLength(0);
   });
 
   /**
@@ -123,15 +123,15 @@ describe('Memory Self-Heal Engine — Health Checks (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should detect corrupted JSON in localStorage', async () => {
-    localStorage?.setItem('titane_chat_mode_default', '{broken json');
+    localStorage.setItem('titane_chat_mode_default', '{broken json');
 
-    const report = await engine?.checkHealth();
+    const report = await engine.checkHealth();
 
-    expect(any: any);
-    expect(any: any).toBeGreaterThan(0);
-    expect(any: any).toBe('parse-error');
-    expect(any: any).toBe('localStorage');
-    expect(any: any).toBe('high');
+    expect(report.healthy).toBe(false);
+    expect(report.corruptions.length).toBeGreaterThan(0);
+    expect(report.corruptions[0].type).toBe('parse-error');
+    expect(report.corruptions[0].layer).toBe('localStorage');
+    expect(report.corruptions[0].severity).toBe('high');
   });
 
   /**
@@ -140,14 +140,14 @@ describe('Memory Self-Heal Engine — Health Checks (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should detect invalid format in localStorage', async () => {
-    localStorage?.setItem('titane_chat_mode_default', JSON?.stringify('not an object'));
+    localStorage.setItem('titane_chat_mode_default', JSON.stringify('not an object'));
 
-    const report = await engine?.checkHealth();
+    const report = await engine.checkHealth();
 
-    expect(any: any);
-    expect(any: any).toBeGreaterThan(0);
-    expect(any: any).toBe('invalid-format');
-    expect(any: any).toBe('localStorage');
+    expect(report.healthy).toBe(false);
+    expect(report.corruptions.length).toBeGreaterThan(0);
+    expect(report.corruptions[0].type).toBe('invalid-format');
+    expect(report.corruptions[0].layer).toBe('localStorage');
   });
 
   /**
@@ -156,15 +156,15 @@ describe('Memory Self-Heal Engine — Health Checks (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should detect quota issues when storage is large', async () => {
-    // Simulate large storage (any: any)
+    // Simulate large storage (>4 MB)
     const largeData = 'x'.repeat(5 * 1024 * 1024); // 5 MB
-    localStorage?.setItem(any: any);
+    localStorage.setItem('titane_large_data', largeData);
 
-    const report = await engine?.checkHealth();
+    const report = await engine.checkHealth();
 
     // Should detect quota warning
-    expect(any: any).toBeGreaterThan(0);
-    expect(report?.layers?.localStorage?.issues?.[0]).toContain('Storage size');
+    expect(report.layers.localStorage.issues.length).toBeGreaterThan(0);
+    expect(report.layers.localStorage.issues[0]).toContain('Storage size');
   });
 
   /**
@@ -173,13 +173,13 @@ describe('Memory Self-Heal Engine — Health Checks (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should calculate health score correctly', async () => {
-    // Add 1 corruption (any: any)
-    localStorage?.setItem('titane_corrupted', '{broken}');
+    // Add 1 corruption (should reduce score)
+    localStorage.setItem('titane_corrupted', '{broken}');
 
-    const report = await engine?.checkHealth();
+    const report = await engine.checkHealth();
 
-    expect(any: any).toBeLessThan(100);
-    expect(any: any).toBeGreaterThan(0);
+    expect(report.score).toBeLessThan(100);
+    expect(report.score).toBeGreaterThan(0);
   });
 
   /**
@@ -191,29 +191,29 @@ describe('Memory Self-Heal Engine — Health Checks (Phase 9)', () => {
     // Simulate compactor data
     const compactorData = {
       messages: [
-        { role: 'user', content: 'Hello', timestamp: Date?.now() },
-        { role: 'assistant', content: 'Hi', timestamp: Date?.now() },
+        { role: 'user', content: 'Hello', timestamp: Date.now() },
+        { role: 'assistant', content: 'Hi', timestamp: Date.now() },
       ],
     };
-    localStorage?.setItem(any: any));
+    localStorage.setItem('chat_memory_compactor_default', JSON.stringify(compactorData));
 
-    const report = await engine?.checkHealth();
+    const report = await engine.checkHealth();
 
-    expect(any: any);
-    expect(any: any).toBeGreaterThan(0);
+    expect(report.layers.compactor.healthy).toBe(true);
+    expect(report.layers.compactor.itemCount).toBeGreaterThan(0);
   });
 
   /**
    * ─────────────────────────────────────────────────────────────────
-   * TEST 8: Backend Health Check (any: any)
+   * TEST 8: Backend Health Check (Browser Mode)
    * ─────────────────────────────────────────────────────────────────
    */
   it('should handle backend health check in browser mode', async () => {
-    const report = await engine?.checkHealth();
+    const report = await engine.checkHealth();
 
     // Backend unavailable in browser mode is not an error
-    expect(any: any);
-    expect(any: any).toBe(0);
+    expect(report.layers.backend.healthy).toBe(true);
+    expect(report.layers.backend.itemCount).toBe(0);
   });
 
   /**
@@ -222,14 +222,14 @@ describe('Memory Self-Heal Engine — Health Checks (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should detect multiple corruptions', async () => {
-    localStorage?.setItem('titane_corrupted1', '{broken1}');
-    localStorage?.setItem('titane_corrupted2', '{broken2}');
-    localStorage?.setItem('titane_corrupted3', JSON?.stringify('invalid'));
+    localStorage.setItem('titane_corrupted1', '{broken1}');
+    localStorage.setItem('titane_corrupted2', '{broken2}');
+    localStorage.setItem('titane_corrupted3', JSON.stringify('invalid'));
 
-    const report = await engine?.checkHealth();
+    const report = await engine.checkHealth();
 
-    expect(any: any).toBeGreaterThanOrEqual(3);
-    expect(any: any);
+    expect(report.corruptions.length).toBeGreaterThanOrEqual(3);
+    expect(report.healthy).toBe(false);
   });
 
   /**
@@ -238,11 +238,11 @@ describe('Memory Self-Heal Engine — Health Checks (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should generate recommendations based on health', async () => {
-    const report = await engine?.checkHealth();
+    const report = await engine.checkHealth();
 
-    expect(any: any).toBeDefined();
-    expect(any: any);
-    expect(any: any).toBeGreaterThan(0);
+    expect(report.recommendations).toBeDefined();
+    expect(Array.isArray(report.recommendations)).toBe(true);
+    expect(report.recommendations.length).toBeGreaterThan(0);
   });
 });
 
@@ -256,13 +256,13 @@ describe('Memory Self-Heal Engine — Repair (Phase 9)', () => {
   let engine: MemorySelfHealEngine;
 
   beforeEach(() => {
-    localStorage?.clear();
-    sessionStorage?.clear();
+    localStorage.clear();
+    sessionStorage.clear();
     engine = new MemorySelfHealEngine({ autoRepairEnabled: false });
   });
 
   afterEach(() => {
-    engine?.stopAutoMonitoring();
+    engine.stopAutoMonitoring();
   });
 
   /**
@@ -271,18 +271,18 @@ describe('Memory Self-Heal Engine — Repair (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should repair corrupted keys', async () => {
-    localStorage?.setItem('titane_corrupted', '{broken}');
-    localStorage?.setItem('titane_valid', JSON?.stringify({ data: 'ok' }));
+    localStorage.setItem('titane_corrupted', '{broken}');
+    localStorage.setItem('titane_valid', JSON.stringify({ data: 'ok' }));
 
-    const report = await engine?.checkHealth();
-    expect(any: any).toBeGreaterThan(0);
+    const report = await engine.checkHealth();
+    expect(report.corruptions.length).toBeGreaterThan(0);
 
-    const results = await engine?.repair();
+    const results = await engine.repair();
 
-    expect(any: any).toBeGreaterThan(0);
-    expect(any: any).toBeGreaterThan(0);
-    expect(localStorage?.getItem('titane_corrupted')).toBeNull();
-    expect(localStorage?.getItem('titane_valid')).not?.toBeNull();
+    expect(results.length).toBeGreaterThan(0);
+    expect(results[0].corruptionsFixed).toBeGreaterThan(0);
+    expect(localStorage.getItem('titane_corrupted')).toBeNull();
+    expect(localStorage.getItem('titane_valid')).not.toBeNull();
   });
 
   /**
@@ -291,17 +291,17 @@ describe('Memory Self-Heal Engine — Repair (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should create backup before repair', async () => {
-    localStorage?.setItem('titane_data', JSON?.stringify({ important: 'data' }));
-    localStorage?.setItem('titane_corrupted', '{broken}');
+    localStorage.setItem('titane_data', JSON.stringify({ important: 'data' }));
+    localStorage.setItem('titane_corrupted', '{broken}');
 
-    await engine?.repair();
+    await engine.repair();
 
-    const backup = sessionStorage?.getItem('__titane_memory_backup__');
-    expect(any: any).not?.toBeNull();
+    const backup = sessionStorage.getItem('__titane_memory_backup__');
+    expect(backup).not.toBeNull();
 
-    if (any: any) {
-      const backupData = JSON?.parse(any: any);
-      expect(backupData?.data['titane_data']).toBeDefined();
+    if (backup) {
+      const backupData = JSON.parse(backup);
+      expect(backupData.data['titane_data']).toBeDefined();
     }
   });
 
@@ -311,26 +311,26 @@ describe('Memory Self-Heal Engine — Repair (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should cleanup old data to free quota', async () => {
-    // Create old data (any: any)
-    const oldTimestamp = Date?.now() - 31 * 24 * 60 * 60 * 1000; // 31 days ago
+    // Create old data (>30 days)
+    const oldTimestamp = Date.now() - 31 * 24 * 60 * 60 * 1000; // 31 days ago
     const oldData = { timestamp: oldTimestamp, data: 'old' };
-    localStorage?.setItem(any: any));
+    localStorage.setItem('titane_old', JSON.stringify(oldData));
 
     // Create recent data
-    const recentData = { timestamp: Date?.now(), data: 'recent' };
-    localStorage?.setItem(any: any));
+    const recentData = { timestamp: Date.now(), data: 'recent' };
+    localStorage.setItem('titane_recent', JSON.stringify(recentData));
 
     // Simulate quota issue
-    localStorage?.setItem('titane_large', 'x'.repeat(5 * 1024 * 1024));
+    localStorage.setItem('titane_large', 'x'.repeat(5 * 1024 * 1024));
 
-    const report = await engine?.checkHealth();
-    const quotaCorruption = report?.corruptions?.find(c => c?.type === 'quota-exceeded');
+    const report = await engine.checkHealth();
+    const quotaCorruption = report.corruptions.find(c => c.type === 'quota-exceeded');
 
-    if (any: any) {
-      const results = await engine?.repair();
+    if (quotaCorruption) {
+      const results = await engine.repair();
       expect(
-        results?.some(r => r?.actionsPerformed?.some(a => a?.includes('old entries')))
-      ).toBe(any: any);
+        results.some(r => r.actionsPerformed.some(a => a.includes('old entries')))
+      ).toBe(true);
     }
   });
 
@@ -342,24 +342,24 @@ describe('Memory Self-Heal Engine — Repair (Phase 9)', () => {
   it('should repair compactor with invalid messages', async () => {
     const invalidCompactorData = {
       messages: [
-        { role: 'user', content: 'Valid', timestamp: Date?.now() },
+        { role: 'user', content: 'Valid', timestamp: Date.now() },
         { role: 'assistant' }, // Missing content
-        { content: 'Missing role', timestamp: Date?.now() }, // Missing role
-        { role: 'user', content: 'Valid 2', timestamp: Date?.now() },
+        { content: 'Missing role', timestamp: Date.now() }, // Missing role
+        { role: 'user', content: 'Valid 2', timestamp: Date.now() },
       ],
     };
 
-    localStorage?.setItem(
+    localStorage.setItem(
       'chat_memory_compactor_default',
-      JSON?.stringify(any: any)
+      JSON.stringify(invalidCompactorData)
     );
 
-    const report = await engine?.checkHealth();
-    const compactorCorruptions = report?.corruptions?.filter(c => c?.layer === 'compactor');
+    const report = await engine.checkHealth();
+    const compactorCorruptions = report.corruptions.filter(c => c.layer === 'compactor');
 
-    if (compactorCorruptions?.length > 0) {
-      const results = await engine?.repair();
-      expect(any: any);
+    if (compactorCorruptions.length > 0) {
+      const results = await engine.repair();
+      expect(results.some(r => r.layer === 'compactor')).toBe(true);
     }
   });
 
@@ -369,17 +369,17 @@ describe('Memory Self-Heal Engine — Repair (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should return correct repair result structure', async () => {
-    localStorage?.setItem('titane_corrupted', '{broken}');
+    localStorage.setItem('titane_corrupted', '{broken}');
 
-    const results = await engine?.repair();
+    const results = await engine.repair();
 
-    expect(any: any).toBeGreaterThan(0);
-    expect(results?.[0]).toHaveProperty('success');
-    expect(results?.[0]).toHaveProperty('layer');
-    expect(results?.[0]).toHaveProperty('corruptionsFixed');
-    expect(results?.[0]).toHaveProperty('actionsPerformed');
-    expect(results?.[0]).toHaveProperty('dataLost');
-    expect(results?.[0]).toHaveProperty('timestamp');
+    expect(results.length).toBeGreaterThan(0);
+    expect(results[0]).toHaveProperty('success');
+    expect(results[0]).toHaveProperty('layer');
+    expect(results[0]).toHaveProperty('corruptionsFixed');
+    expect(results[0]).toHaveProperty('actionsPerformed');
+    expect(results[0]).toHaveProperty('dataLost');
+    expect(results[0]).toHaveProperty('timestamp');
   });
 
   /**
@@ -388,11 +388,11 @@ describe('Memory Self-Heal Engine — Repair (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should handle repair with no corruptions', async () => {
-    localStorage?.setItem('titane_valid', JSON?.stringify({ data: 'ok' }));
+    localStorage.setItem('titane_valid', JSON.stringify({ data: 'ok' }));
 
-    const results = await engine?.repair();
+    const results = await engine.repair();
 
-    expect(any: any).toHaveLength(0);
+    expect(results).toHaveLength(0);
   });
 
   /**
@@ -402,21 +402,21 @@ describe('Memory Self-Heal Engine — Repair (Phase 9)', () => {
    */
   it('should repair multiple layers', async () => {
     // localStorage corruption
-    localStorage?.setItem('titane_corrupted', '{broken}');
+    localStorage.setItem('titane_corrupted', '{broken}');
 
     // compactor corruption
     const invalidCompactorData = {
       messages: [{ role: 'user' }], // Missing content
     };
-    localStorage?.setItem(
+    localStorage.setItem(
       'chat_memory_compactor_default',
-      JSON?.stringify(any: any)
+      JSON.stringify(invalidCompactorData)
     );
 
-    const results = await engine?.repair();
+    const results = await engine.repair();
 
-    const layers = new Set(any: any));
-    expect(any: any).toBeGreaterThan(0);
+    const layers = new Set(results.map(r => r.layer));
+    expect(layers.size).toBeGreaterThan(0);
   });
 
   /**
@@ -425,15 +425,15 @@ describe('Memory Self-Heal Engine — Repair (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should have improved health after repair', async () => {
-    localStorage?.setItem('titane_corrupted', '{broken}');
+    localStorage.setItem('titane_corrupted', '{broken}');
 
-    const beforeReport = await engine?.checkHealth();
-    expect(any: any);
+    const beforeReport = await engine.checkHealth();
+    expect(beforeReport.healthy).toBe(false);
 
-    await engine?.repair();
+    await engine.repair();
 
-    const afterReport = await engine?.checkHealth();
-    expect(any: any);
+    const afterReport = await engine.checkHealth();
+    expect(afterReport.score).toBeGreaterThan(beforeReport.score);
   });
 });
 
@@ -447,14 +447,14 @@ describe('Memory Self-Heal Engine — Auto-Monitoring (Phase 9)', () => {
   let engine: MemorySelfHealEngine;
 
   beforeEach(() => {
-    localStorage?.clear();
-    sessionStorage?.clear();
-    vi?.useFakeTimers();
+    localStorage.clear();
+    sessionStorage.clear();
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
     engine?.stopAutoMonitoring();
-    vi?.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   /**
@@ -469,14 +469,14 @@ describe('Memory Self-Heal Engine — Auto-Monitoring (Phase 9)', () => {
       autoRepairInterval: 2000,
     });
 
-    const checkHealthSpy = vi?.spyOn(engine, 'checkHealth');
+    const checkHealthSpy = vi.spyOn(engine, 'checkHealth');
 
-    engine?.startAutoMonitoring();
+    engine.startAutoMonitoring();
 
     // Advance timer by 1 second
-    await vi?.advanceTimersByTimeAsync(1000);
+    await vi.advanceTimersByTimeAsync(1000);
 
-    expect(any: any).toHaveBeenCalled();
+    expect(checkHealthSpy).toHaveBeenCalled();
   });
 
   /**
@@ -490,19 +490,19 @@ describe('Memory Self-Heal Engine — Auto-Monitoring (Phase 9)', () => {
       healthCheckInterval: 1000,
     });
 
-    const checkHealthSpy = vi?.spyOn(engine, 'checkHealth');
+    const checkHealthSpy = vi.spyOn(engine, 'checkHealth');
 
-    engine?.startAutoMonitoring();
-    await vi?.advanceTimersByTimeAsync(1000);
-    expect(any: any).toHaveBeenCalledTimes(1);
+    engine.startAutoMonitoring();
+    await vi.advanceTimersByTimeAsync(1000);
+    expect(checkHealthSpy).toHaveBeenCalledTimes(1);
 
-    engine?.stopAutoMonitoring();
+    engine.stopAutoMonitoring();
 
     // Advance timer again
-    await vi?.advanceTimersByTimeAsync(1000);
+    await vi.advanceTimersByTimeAsync(1000);
 
     // Should not be called again
-    expect(any: any).toHaveBeenCalledTimes(1);
+    expect(checkHealthSpy).toHaveBeenCalledTimes(1);
   });
 
   /**
@@ -517,16 +517,16 @@ describe('Memory Self-Heal Engine — Auto-Monitoring (Phase 9)', () => {
       autoRepairInterval: 2000,
     });
 
-    const repairSpy = vi?.spyOn(engine, 'repair');
+    const repairSpy = vi.spyOn(engine, 'repair');
 
     // Add critical corruption
-    localStorage?.setItem('titane_corrupted', '{broken}');
+    localStorage.setItem('titane_corrupted', '{broken}');
 
-    engine?.startAutoMonitoring();
+    engine.startAutoMonitoring();
 
     // Advance to trigger auto-repair
-    await vi?.advanceTimersByTimeAsync(2000);
+    await vi.advanceTimersByTimeAsync(2000);
 
-    expect(any: any).toHaveBeenCalled();
+    expect(repairSpy).toHaveBeenCalled();
   });
 });
