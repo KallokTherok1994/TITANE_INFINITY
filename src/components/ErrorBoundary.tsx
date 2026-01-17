@@ -10,6 +10,7 @@
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { logger } from '@/lib/logger';
+import { BootErrorFallback } from './BootErrorFallback';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -106,6 +107,16 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     const { children, fallback, context = 'Component' } = this.props;
 
     if (hasError) {
+      // Gestion spécifique des erreurs de module script (boot errors)
+      if (error?.message?.includes('Importing a module script failed')) {
+        return (
+          <BootErrorFallback 
+            error={error}
+            onRetry={this.handleReset}
+          />
+        );
+      }
+      
       // Fallback personnalisé
       if (fallback) {
         return fallback;
