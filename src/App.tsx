@@ -149,7 +149,7 @@ const CognitiveLayoutControl = lazyWithDiagnostic(
 import './components/psyche/DeepPsychePanel.css';
 import { presenceOS } from './engines/presence/_stubs';
 
-type LazyModule<T> = { default: T };
+type _LazyModule<T> = { default: T };
 
 // ✨ v24.3.0 - Lazy loaded pages
 const PerformanceTest = lazyWithDiagnostic(

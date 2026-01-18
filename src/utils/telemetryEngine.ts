@@ -7,7 +7,7 @@
  * Collecte, analyse et visualise les métriques système en temps réel
  */
 
-import { titaneAI } from './aiPredictiveEngine';
+import { _titaneAI } from './aiPredictiveEngine';
 import { titaneSelfHealing } from './selfHealingSystem';
 import { bootHealthMonitor } from './advancedBootMonitor';
 import { performanceOptimizer } from './performanceOptimizer';

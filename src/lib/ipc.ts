@@ -45,7 +45,7 @@ export interface IpcOptions {
 export async function ipcInvoke<T = unknown>(
   cmd: string,
   args?: Record<string, unknown>,
-  options?: IpcOptions
+  _options?: IpcOptions
 ): Promise<IpcResult<T>> {
   const timestamp = Date.now();
 
@@ -77,8 +77,8 @@ export async function ipcInvoke<T = unknown>(
  * Version synchrone pour compatibilité (si nécessaire)
  */
 export function ipcInvokeSync<T = unknown>(
-  cmd: string,
-  args?: Record<string, unknown>
+  _cmd: string,
+  _args?: Record<string, unknown>
 ): IpcResult<T> {
   throw new Error('ipcInvokeSync non implémenté — utilise ipcInvoke async');
 }
