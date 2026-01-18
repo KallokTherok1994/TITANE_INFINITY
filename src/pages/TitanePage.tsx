@@ -217,12 +217,22 @@ const detectBrowserE2EFlag = (): boolean => {
   const nav = window.navigator as { webdriver?: boolean };
   const ua = (typeof window.navigator !== 'undefined' && window.navigator.userAgent) || '';
   const isHeadless = ua.toLowerCase().includes('headless') || ua.includes('Playwright');
+  const isChrome = ua.includes('Chrome') && !ua.includes('Edge');
+  const isWebdriver = nav?.webdriver === true;
+  
   try {
     const flag = localStorage.getItem('titane_browser_mode');
-    return flag === '1' || flag === 'true' || nav?.webdriver === true || isHeadless;
+    if (flag === '1' || flag === 'true') return true;
   } catch {
-    return nav?.webdriver === true || isHeadless;
+    // localStorage not available
   }
+  
+  // Log for debugging (will be visible in dev tools)
+  if (typeof window !== 'undefined' && (window as any).__TITANE_DEBUG) {
+    console.log('[E2E-FLAG]', { isWebdriver, isHeadless, isChrome, ua });
+  }
+
+  return isWebdriver || isHeadless;
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -253,6 +263,26 @@ const defaultConversationModes: Array<{ id: ConversationMode; name: string; icon
 const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E }) => {
   const resolvedIsBrowserE2E = isBrowserE2E ?? detectBrowserE2EFlag();
 
+  // In E2E mode, use mock conversation engine to avoid backend blocking
+  const conversationEngine = resolvedIsBrowserE2E
+    ? {
+        messages: [] as ConversationMessage[],
+        isLoading: false,
+        error: null,
+        currentMode: 'default' as ConversationMode,
+        setMode: () => {},
+        sendMessage: async () => Promise.resolve(),
+        clearMessages: () => {},
+        deleteMessage: () => {},
+        healthReport: null,
+        refreshHealth: async () => {},
+      }
+    : useConversationEngine({
+        mode: 'default',
+        autoHealthCheck: false,
+        maxMessages: 500,
+      });
+
   const {
     messages,
     isLoading,
@@ -264,11 +294,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E 
     deleteMessage,
     healthReport,
     refreshHealth,
-  } = useConversationEngine({
-    mode: 'default',
-    autoHealthCheck: false,
-    maxMessages: 500,
-  });
+  } = conversationEngine;
 
   // ═══ LOCAL STATE ═══
   const [selectedProvider, setSelectedProvider] = useState('gemini');
@@ -1597,6 +1623,12 @@ export const TitanePage: React.FC = () => {
 
   // Chargement progression
   useEffect(() => {
+    // Skip loading progression in E2E mode to avoid blocking the page
+    if (isBrowserE2E) {
+      setProgression({ level: 1, xp: 0, nextLevelXp: 500 });
+      return;
+    }
+
     const loadProgression = async () => {
       try {
         const state = await xpEngine.getState();
@@ -1606,7 +1638,7 @@ export const TitanePage: React.FC = () => {
       }
     };
     loadProgression();
-  }, []);
+  }, [isBrowserE2E]);
 
   // Stats calculées
   const stats: TitaneStats = useMemo(

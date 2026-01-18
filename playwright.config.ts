@@ -5,7 +5,10 @@
  * Governance gate: 3 scenarios Playwright only (critical path)
  */
 
-import { defineConfig } from '@playwright/test';
+import { chromium, defineConfig } from '@playwright/test';
+
+const chromiumExecutable =
+  process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE || chromium.executablePath();
 
 export default defineConfig({
   // Global setup for Tauri mocking
@@ -44,9 +47,9 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     actionTimeout: 10000,
-    // Use system Chromium to avoid Playwright browser dependency issues on some Linux hosts.
     launchOptions: {
-      executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE || '/snap/bin/chromium',
+      // Prefer bundled Playwright Chromium to avoid snap confinement issues; allow override via env.
+      executablePath: chromiumExecutable,
       args: ['--disable-dev-shm-usage'],
     },
     // Mock Tauri APIs for E2E testing
@@ -55,13 +58,13 @@ export default defineConfig({
     },
   },
 
-  // Single-browser project (system Chromium)
+  // Single-browser project (bundled Chromium)
   projects: [{ name: 'chromium' }],
 
   // Dev server configuration
   webServer: {
     command:
-      'pnpm exec vite dev --config vite.config.ts --port 1420 --strictPort --host 127.0.0.1',
+      'node node_modules/vite/bin/vite.js dev --config vite.config.ts --port 1420 --strictPort --host 127.0.0.1',
     url: 'http://127.0.0.1:1420',
     reuseExistingServer: !process.env.CI,
     timeout: 120000, // 2min to start

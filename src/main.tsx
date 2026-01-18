@@ -72,6 +72,7 @@ declare global {
       captureException: (error: unknown, options?: Record<string, unknown>) => void;
     };
     __TITANE_MONITORING__?: unknown;
+    __TITANE_REACT_ROOT?: Root;
   }
 }
 
@@ -90,7 +91,7 @@ import './config/logLevelConfig';
 
 // TITANE∞ v26.2.0 - Main Entry Point - v22Ω AI Performance Optimizations
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import ReactDOM, { type Root } from 'react-dom/client';
 import { logger } from './lib/logger';
 import App from './App'; // ✅ App principal réactivé (AppMinimal validé)
 // import AppMinimal from './AppMinimal'; // 🔍 DEBUG: Minimal test app
@@ -997,8 +998,14 @@ try {
   //   ReactDOM.createRoot(rootElement).render(<AppMinimal />);
   // });
 
-  const root = ReactDOM.createRoot(rootElement);
-  bootDiagnostics.log('REACT', 'Root created successfully');
+  const existingRoot = window.__TITANE_REACT_ROOT;
+  const root: Root = existingRoot ?? ReactDOM.createRoot(rootElement);
+  if (!existingRoot) {
+    window.__TITANE_REACT_ROOT = root;
+    bootDiagnostics.log('REACT', 'Root created successfully');
+  } else {
+    bootDiagnostics.log('REACT', 'Reusing existing React root');
+  }
 
   // 🎼 INITIALISATION ORCHESTRATEUR QUANTIQUE
   console.log('🎼 [BOOT] Initializing Quantum Orchestrator...');
@@ -1011,48 +1018,40 @@ try {
   }
 
   root.render(
-    <React.StrictMode>
-      <SystemIntegrationHub
-        onSystemEvent={event => {
-          // Logger les événements système critiques
-          if (event.severity === 'critical' || event.severity === 'error') {
-            logger.error(
-              `System Event: ${event.type}`,
-              event.data as Record<string, unknown> | undefined
-            );
-          } else {
-            logger.info(
-              `System Event: ${event.type}`,
-              event.data as Record<string, unknown> | undefined
-            );
+    <SystemIntegrationHub
+      onSystemEvent={event => {
+        // Logger les événements système critiques
+        if (event.severity === 'critical' || event.severity === 'error') {
+          logger.error(`System Event: ${event.type}`, event.data as Record<string, unknown> | undefined);
+        } else {
+          logger.info(`System Event: ${event.type}`, event.data as Record<string, unknown> | undefined);
+        }
+      }}
+    >
+      <ErrorBoundary
+        context="App"
+        onError={(error, errorInfo) => {
+          bootDiagnostics.error('REACT', 'ErrorBoundary caught error', error);
+          logger.error(
+            'Production Error Boundary caught',
+            {
+              component: 'ErrorBoundary',
+              componentStack: errorInfo.componentStack,
+            },
+            error
+          );
+
+          // Hook for Sentry/LogRocket integration
+          if (window.Sentry) {
+            window.Sentry.captureException(error, {
+              contexts: { react: { componentStack: errorInfo.componentStack } },
+            });
           }
         }}
       >
-        <ErrorBoundary
-          context="App"
-          onError={(error, errorInfo) => {
-            bootDiagnostics.error('REACT', 'ErrorBoundary caught error', error);
-            logger.error(
-              'Production Error Boundary caught',
-              {
-                component: 'ErrorBoundary',
-                componentStack: errorInfo.componentStack,
-              },
-              error
-            );
-
-            // Hook for Sentry/LogRocket integration
-            if (window.Sentry) {
-              window.Sentry.captureException(error, {
-                contexts: { react: { componentStack: errorInfo.componentStack } },
-              });
-            }
-          }}
-        >
-          <App />
-        </ErrorBoundary>
-      </SystemIntegrationHub>
-    </React.StrictMode>
+        <App />
+      </ErrorBoundary>
+    </SystemIntegrationHub>
   );
 
   bootDiagnostics.log('REACT', 'React render complete');
