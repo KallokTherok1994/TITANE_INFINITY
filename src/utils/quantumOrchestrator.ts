@@ -5,6 +5,8 @@
  *
  * 🎼 ORCHESTRATEUR SYSTÈME QUANTIQUE
  * Gestion automatisée et intelligente de tous les sous-systèmes TITANE∞
+ * 
+ * 🔒 PHASE 4: Safe mode orchestrator (protection functions undefined)
  */
 
 import { titaneQuantumIntelligence } from './quantumIntelligence';
@@ -12,6 +14,7 @@ import { titaneSelfHealing } from './selfHealingSystem';
 import { titaneTelemetry } from './telemetryEngine';
 import { titaneBootRecovery } from './bootRecoverySystem';
 import { titanePerformanceOptimizer } from './performanceOptimizer';
+import { bootSafetyLock } from './bootSafetyLock';
 
 interface OrchestrationEvent {
   type:
@@ -572,6 +575,12 @@ class TitaneQuantumOrchestrator {
   ): Promise<void> {
     const now = Date.now();
 
+    // 🔒 PHASE 4: Vérifier état fatal global
+    if (bootSafetyLock.isFatalState()) {
+      console.error(`❌ [ORCHESTRATOR] Strategy ${strategy.name} blocked: fatal state`);
+      return;
+    }
+
     // Vérifier le cooldown
     if (now - strategy.last_executed < strategy.cooldown) {
       return;
@@ -580,22 +589,70 @@ class TitaneQuantumOrchestrator {
     try {
       console.log(`🎼 [ORCHESTRATOR] Executing strategy: ${strategy.name}`);
 
+      // 🔒 PHASE 4: Vérifier que strategy.actions existe et est un array
+      if (!Array.isArray(strategy.actions) || strategy.actions.length === 0) {
+        console.warn(`⚠️ [ORCHESTRATOR] Strategy ${strategy.name} has no actions`);
+        return;
+      }
+
+      // 🔒 PHASE 4: Vérifier que chaque action est une fonction
+      const validActions = strategy.actions.filter(action => {
+        if (typeof action !== 'function') {
+          console.error(
+            `❌ [ORCHESTRATOR] Invalid action in strategy ${strategy.name}: not a function`
+          );
+          return false;
+        }
+        return true;
+      });
+
+      if (validActions.length === 0) {
+        console.error(`❌ [ORCHESTRATOR] Strategy ${strategy.name} has no valid actions`);
+        return;
+      }
+
       // Exécuter toutes les actions de la stratégie
       const results = await Promise.allSettled(
-        strategy.actions.map(action => action(metrics))
+        validActions.map(action => {
+          try {
+            return action(metrics);
+          } catch (err) {
+            console.error(
+              `💥 [ORCHESTRATOR] Action execution error in ${strategy.name}:`,
+              err
+            );
+            return Promise.reject(err);
+          }
+        })
       );
+
+      // 🔒 PHASE 4: Compter les erreurs
+      let errorCount = 0;
 
       // Traiter les résultats
       for (const result of results) {
         if (result.status === 'fulfilled') {
-          this.events.unshift(result.value);
-          console.log(
-            `✅ [ORCHESTRATOR] Strategy action completed:`,
-            result.value.actionTaken
-          );
+          // 🔒 PHASE 4: Vérifier que le résultat a bien une structure attendue
+          if (result.value && typeof result.value === 'object') {
+            this.events.unshift(result.value);
+            console.log(
+              `✅ [ORCHESTRATOR] Strategy action completed:`,
+              result.value.actionTaken || 'unknown'
+            );
+          }
         } else {
+          errorCount++;
           console.error(`❌ [ORCHESTRATOR] Strategy action failed:`, result.reason);
         }
+      }
+
+      // 🔒 PHASE 4: Si trop d'erreurs, désactiver la stratégie
+      if (errorCount >= validActions.length) {
+        console.error(
+          `💀 [ORCHESTRATOR] Strategy ${strategy.name} failed completely - DISABLED`
+        );
+        strategy.last_executed = now + strategy.cooldown * 10; // Désactiver longtemps
+        return;
       }
 
       strategy.last_executed = now;
@@ -604,6 +661,8 @@ class TitaneQuantumOrchestrator {
         `🎼 [ORCHESTRATOR] Strategy execution failed for ${strategy.name}:`,
         error
       );
+      // 🔒 PHASE 4: En cas d'erreur critique, désactiver temporairement
+      strategy.last_executed = now + strategy.cooldown * 2;
     }
   }
 
