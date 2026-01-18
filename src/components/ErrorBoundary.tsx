@@ -4,7 +4,7 @@
  * Capture et gestion des erreurs React non catchées.
  * Empêche la propagation des erreurs et affiche UI de secours.
  * v22Ω AI Performance Optimizations Compatible
- * 
+ *
  * 🔒 PHASE 5: Error boundary final (pas de recovery loop)
  *
  * © 2025 TITANE Team. All rights reserved.
@@ -51,7 +51,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
     // 🔒 PHASE 5: Marquer erreur fatale pour stopper toute recovery
     bootSafetyLock.markFatalError();
-    
+
     return {
       hasError: true,
       error,

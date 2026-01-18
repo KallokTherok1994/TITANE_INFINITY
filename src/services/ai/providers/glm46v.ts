@@ -91,17 +91,19 @@ Lorsque tu vois une image, décris-la précisément et utilise cette information
       });
     } else if (Array.isArray(msg.content)) {
       // Handle multimodal content
-      const content = msg.content.map(part => {
-        if (part.type === 'text') {
-          return { type: 'text', text: part.text };
-        } else if (part.type === 'image_url') {
-          return {
-            type: 'image_url',
-            image_url: { url: part.image_url.url },
-          };
-        }
-        return null;
-      }).filter(Boolean);
+      const content = msg.content
+        .map(part => {
+          if (part.type === 'text') {
+            return { type: 'text', text: part.text };
+          } else if (part.type === 'image_url') {
+            return {
+              type: 'image_url',
+              image_url: { url: part.image_url.url },
+            };
+          }
+          return null;
+        })
+        .filter(Boolean);
 
       messages.push({
         role: msg.role === 'assistant' ? 'assistant' : 'user',
@@ -146,8 +148,10 @@ async function checkEndpointHealth(): Promise<boolean> {
     if (response.ok) {
       const data = await response.json();
       // Check if GLM-4.6V model is available
-      return Array.isArray(data.data) &&
-             data.data.some((model: any) => model.id === GLM46V_CONFIG.model);
+      return (
+        Array.isArray(data.data) &&
+        data.data.some((model: any) => model.id === GLM46V_CONFIG.model)
+      );
     }
 
     return false;

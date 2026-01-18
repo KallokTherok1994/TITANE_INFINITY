@@ -18,32 +18,57 @@ import React from 'react';
  */
 const LazyImportErrorFallback: React.FC<{ componentName: string; error: string }> = ({
   componentName,
-  error
-}) => React.createElement('div', {
-  className: 'p-4 border border-red-500 bg-red-50 rounded-lg'
-}, [
-  React.createElement('h3', {
-    className: 'text-red-800 font-bold',
-    key: 'title'
-  }, `Erreur de chargement: ${componentName}`),
-  React.createElement('p', {
-    className: 'text-red-600 text-sm mt-2',
-    key: 'message'
-  }, `Le composant n'a pas pu être chargé. Trace ID: ${Date.now()}`),
-  React.createElement('details', {
-    className: 'mt-2',
-    key: 'details'
-  }, [
-    React.createElement('summary', {
-      className: 'text-red-700 cursor-pointer',
-      key: 'summary'
-    }, 'Détails techniques'),
-    React.createElement('pre', {
-      className: 'text-xs text-red-500 mt-1 whitespace-pre-wrap',
-      key: 'error'
-    }, error)
-  ])
-]);
+  error,
+}) =>
+  React.createElement(
+    'div',
+    {
+      className: 'p-4 border border-red-500 bg-red-50 rounded-lg',
+    },
+    [
+      React.createElement(
+        'h3',
+        {
+          className: 'text-red-800 font-bold',
+          key: 'title',
+        },
+        `Erreur de chargement: ${componentName}`
+      ),
+      React.createElement(
+        'p',
+        {
+          className: 'text-red-600 text-sm mt-2',
+          key: 'message',
+        },
+        `Le composant n'a pas pu être chargé. Trace ID: ${Date.now()}`
+      ),
+      React.createElement(
+        'details',
+        {
+          className: 'mt-2',
+          key: 'details',
+        },
+        [
+          React.createElement(
+            'summary',
+            {
+              className: 'text-red-700 cursor-pointer',
+              key: 'summary',
+            },
+            'Détails techniques'
+          ),
+          React.createElement(
+            'pre',
+            {
+              className: 'text-xs text-red-500 mt-1 whitespace-pre-wrap',
+              key: 'error',
+            },
+            error
+          ),
+        ]
+      ),
+    ]
+  );
 
 // ═══════════════════════════════════════════════════════════════════════════
 // SAFE LAZY IMPORT HELPER
@@ -73,7 +98,7 @@ export function safeLazyImport<T extends React.ComponentType<any>>(
 
       // Retourner un composant fallback au lieu de throw
       return {
-        default: LazyImportErrorFallback as any as T
+        default: LazyImportErrorFallback as any as T,
       };
     }
   });
@@ -99,17 +124,22 @@ export function safeLazyImportWithRetry<T extends React.ComponentType<any>>(
         lastError = error;
 
         if (attempt < maxRetries) {
-          console.warn(`[LAZY-IMPORT-RETRY] ${componentName} attempt ${attempt + 1}/${maxRetries + 1}`);
+          console.warn(
+            `[LAZY-IMPORT-RETRY] ${componentName} attempt ${attempt + 1}/${maxRetries + 1}`
+          );
           await new Promise(resolve => setTimeout(resolve, retryDelay));
         }
       }
     }
 
     // Tous les retries échoués
-    console.error(`[LAZY-IMPORT-FAIL] ${componentName} after ${maxRetries + 1} attempts:`, lastError);
+    console.error(
+      `[LAZY-IMPORT-FAIL] ${componentName} after ${maxRetries + 1} attempts:`,
+      lastError
+    );
 
     return {
-      default: LazyImportErrorFallback as any as T
+      default: LazyImportErrorFallback as any as T,
     };
   });
 }
@@ -140,6 +170,8 @@ export const lazyImportDiagnostic = {
    * Log les stats des imports lazy
    */
   logStats(successCount: number, failCount: number) {
-    console.log(`[LAZY-STATS] Success: ${successCount}, Fail: ${failCount}, Total: ${successCount + failCount}`);
-  }
+    console.log(
+      `[LAZY-STATS] Success: ${successCount}, Fail: ${failCount}, Total: ${successCount + failCount}`
+    );
+  },
 };

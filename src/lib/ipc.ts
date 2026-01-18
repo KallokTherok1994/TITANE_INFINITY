@@ -98,7 +98,7 @@ export const IPC_COMMANDS = {
 /**
  * Type des commandes IPC
  */
-export type IpcCommand = typeof IPC_COMMANDS[keyof typeof IPC_COMMANDS];
+export type IpcCommand = (typeof IPC_COMMANDS)[keyof typeof IPC_COMMANDS];
 
 // ═══════════════════════════════════════════════════════════════════════════
 // HELPERS UTILITAIRES
@@ -107,7 +107,9 @@ export type IpcCommand = typeof IPC_COMMANDS[keyof typeof IPC_COMMANDS];
 /**
  * Vérifie si un résultat IPC est réussi
  */
-export function isIpcSuccess<T>(result: IpcResult<T>): result is IpcResult<T> & { status: 'ok'; data: T } {
+export function isIpcSuccess<T>(
+  result: IpcResult<T>
+): result is IpcResult<T> & { status: 'ok'; data: T } {
   return result.status === 'ok';
 }
 

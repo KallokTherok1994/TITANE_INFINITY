@@ -1016,9 +1016,15 @@ try {
         onSystemEvent={event => {
           // Logger les événements système critiques
           if (event.severity === 'critical' || event.severity === 'error') {
-            logger.error(`System Event: ${event.type}`, event.data as Record<string, unknown> | undefined);
+            logger.error(
+              `System Event: ${event.type}`,
+              event.data as Record<string, unknown> | undefined
+            );
           } else {
-            logger.info(`System Event: ${event.type}`, event.data as Record<string, unknown> | undefined);
+            logger.info(
+              `System Event: ${event.type}`,
+              event.data as Record<string, unknown> | undefined
+            );
           }
         }}
       >

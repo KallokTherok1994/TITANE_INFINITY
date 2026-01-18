@@ -8,7 +8,10 @@
 
 import React from 'react';
 import { integrateWithLazyDiagnostic } from './advancedBootMonitor';
-import { performanceOptimizer as _performanceOptimizer, optimizedImport as _optimizedImport } from './performanceOptimizer';
+import {
+  performanceOptimizer as _performanceOptimizer,
+  optimizedImport as _optimizedImport,
+} from './performanceOptimizer';
 
 // Intégration avec le système de monitoring avancé
 const _monitoringIntegration = integrateWithLazyDiagnostic();

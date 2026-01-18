@@ -128,7 +128,8 @@ class TitaneAIPredictiveEngine {
     ];
 
     baseModels.forEach(modelData => {
-      if (!modelData.id || !modelData.name || !modelData.accuracy || !modelData.features) return;
+      if (!modelData.id || !modelData.name || !modelData.accuracy || !modelData.features)
+        return;
       const model: PredictionModel = {
         id: modelData.id,
         name: modelData.name,

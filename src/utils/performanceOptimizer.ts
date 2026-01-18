@@ -543,7 +543,9 @@ class AdvancedPerformanceOptimizer {
         // Précharger le module
         // Préciser à Vite d'ignorer cette importation dynamique
         // eslint-disable-next-line no-template-curly-in-string
-        const module = await import(/* @vite-ignore */ `../${modulePath.replace('src/', '')}`);
+        const module = await import(
+          /* @vite-ignore */ `../${modulePath.replace('src/', '')}`
+        );
 
         // Mettre en cache
         this.cacheResource(`preload:${modulePath}`, module, 'high');

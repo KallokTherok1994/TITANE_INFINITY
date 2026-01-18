@@ -421,7 +421,9 @@ const ConsciousnessDashboard: React.FC<ConsciousnessDashboardProps> = ({
 
                       <div style={dashboardStyles.patternName}>{pattern.name}</div>
                       <div style={dashboardStyles.patternDescription}>
-                        Intelligence pattern of type {pattern.pattern_type} with complexity score {pattern.complexity_score.toFixed(2)} and confidence {pattern.recognition_confidence.toFixed(1)}%
+                        Intelligence pattern of type {pattern.pattern_type} with
+                        complexity score {pattern.complexity_score.toFixed(2)} and
+                        confidence {pattern.recognition_confidence.toFixed(1)}%
                       </div>
 
                       <div style={dashboardStyles.patternMetrics}>
