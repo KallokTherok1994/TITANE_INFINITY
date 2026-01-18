@@ -13,7 +13,7 @@ import { performanceOptimizer, optimizedImport } from './performanceOptimizer';
 // Intégration avec le système de monitoring avancé
 const monitoringIntegration = integrateWithLazyDiagnostic();
 
-interface LazyImportOptions {
+interface _LazyImportOptions {
   timeout?: number;
   retries?: number;
   fallback?: React.ComponentType;
@@ -21,7 +21,7 @@ interface LazyImportOptions {
   cacheKey?: string;
 }
 
-interface DiagnosticInfo {
+interface _DiagnosticInfo {
   moduleName: string;
   loadTime: number;
   timestamp: number;

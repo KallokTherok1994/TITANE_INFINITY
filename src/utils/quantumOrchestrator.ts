@@ -267,7 +267,7 @@ class TitaneQuantumOrchestrator {
       triggers: [
         metrics => this.detectLearningOpportunities(metrics),
         metrics => metrics.quantum_intelligence.consciousness_level > 0.6,
-        metrics => Date.now() - this.lastMetrics?.telemetry.data_collection_rate > 300000, // 5 minutes
+        _metrics => Date.now() - this.lastMetrics?.telemetry.data_collection_rate > 300000, // 5 minutes
       ],
       actions: [
         async metrics => {

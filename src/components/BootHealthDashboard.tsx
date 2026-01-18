@@ -32,7 +32,7 @@ const BootHealthDashboard: React.FC = () => {
   const [metrics, setMetrics] = useState<HealthMetrics | null>(null);
   const [alerts, setAlerts] = useState<SystemAlert[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [refreshInterval, setRefreshInterval] = useState<NodeJS.Timeout | null>(null);
+  const [_refreshInterval, setRefreshInterval] = useState<NodeJS.Timeout | null>(null);
 
   // Récupérer les métriques depuis les moniteurs
   const fetchMetrics = useCallback(async () => {

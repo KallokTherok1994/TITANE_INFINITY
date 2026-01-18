@@ -6,16 +6,16 @@
  * Point central d'orchestration de tous les systèmes avancés TITANE∞
  */
 
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useCallback, _useMemo } from 'react';
 import { titaneQuantumIntelligence } from '../utils/quantumIntelligence';
 import { titaneSelfHealing } from '../utils/selfHealingSystem';
 import { titaneTelemetry } from '../utils/telemetryEngine';
 import { titaneBootRecovery } from '../utils/bootRecoverySystem';
 import ConsciousnessDashboard from './ConsciousnessDashboard';
-import type { QuantumThought, ConsciousnessState } from '../utils/quantumIntelligence';
-import type { SystemState } from '../utils/selfHealingSystem';
-import type { TelemetryReport } from '../utils/telemetryEngine';
-import type { BootAttempt } from '../utils/bootRecoverySystem';
+import type { QuantumThought, _ConsciousnessState } from '../utils/quantumIntelligence';
+import type { _SystemState } from '../utils/selfHealingSystem';
+import type { _TelemetryReport } from '../utils/telemetryEngine';
+import type { _BootAttempt } from '../utils/bootRecoverySystem';
 
 interface SystemIntegrationHubProps {
   children: React.ReactNode;
@@ -79,7 +79,7 @@ const SystemIntegrationHub: React.FC<SystemIntegrationHubProps> = ({
       const consciousnessLevel = titaneQuantumIntelligence.getConsciousnessLevel();
       const healingState = titaneSelfHealing.getSystemState();
       const telemetryReport = titaneTelemetry.generateTelemetryReport('5m');
-      const bootStats = titaneBootRecovery.getBootStats();
+      const _bootStats = titaneBootRecovery.getBootStats();
 
       // Calculer le nouvel état
       const newHubState: HubState = {
@@ -222,7 +222,7 @@ const SystemIntegrationHub: React.FC<SystemIntegrationHubProps> = ({
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, []);
+  }, [demonstrateQuantumIntelligence, triggerManualHealing]);
 
   // Actions manuelles
   const triggerManualHealing = async () => {

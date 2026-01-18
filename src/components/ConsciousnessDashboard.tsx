@@ -118,7 +118,7 @@ const ConsciousnessDashboard: React.FC<ConsciousnessDashboardProps> = ({
     ];
   }, [consciousnessState, consciousnessLevel]);
 
-  const thoughtsByType = useMemo(() => {
+  const _thoughtsByType = useMemo(() => {
     const types: { [key: string]: number } = {};
     recentThoughts.forEach(thought => {
       const confidence = thought.confidence;

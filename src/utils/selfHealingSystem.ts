@@ -266,7 +266,7 @@ class TitaneSelfHealingSystem {
       // Stratégie critique générale
       {
         trigger: 'critical_system_failure',
-        condition: (data: any) => {
+        condition: (_data: any) => {
           return (
             this.systemState.health < 0.3 || this.systemState.activeIssues.length > 5
           );
@@ -280,7 +280,7 @@ class TitaneSelfHealingSystem {
       // Stratégie préventive
       {
         trigger: 'preventive_maintenance',
-        condition: (data: any) => {
+        condition: (_data: any) => {
           const timeSinceLastHealing = Date.now() - this.systemState.lastHealing;
           return timeSinceLastHealing > 1800000 && this.systemState.health < 0.8; // 30 minutes
         },
@@ -675,7 +675,7 @@ class TitaneSelfHealingSystem {
     return lastExecution ? lastExecution.timestamp : null;
   }
 
-  private recordStrategyExecution(trigger: string): void {
+  private recordStrategyExecution(_trigger: string): void {
     // Enregistrer l'exécution pour le cooldown
   }
 

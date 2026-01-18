@@ -7,7 +7,7 @@
  * Système d'intelligence artificielle quantique avec apprentissage adaptatif
  */
 
-import { titaneAI } from './aiPredictiveEngine';
+import { _titaneAI } from './aiPredictiveEngine';
 import { titaneSelfHealing } from './selfHealingSystem';
 import { titaneTelemetry } from './telemetryEngine';
 
