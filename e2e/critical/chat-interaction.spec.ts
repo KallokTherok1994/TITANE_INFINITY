@@ -183,12 +183,19 @@ test.describe('Critical Path: Chat Interaction', () => {
       await page.keyboard.press('Enter');
 
       // Wait for message to appear in DOM
-      try {
-        await page.waitForSelector('.conversation-message:has-text("Test message")', { timeout: 2000 });
-      } catch {
-        // Fallback: wait and check by text content
-        await page.waitForTimeout(500);
-      }
+      // First wait for the message to be rendered
+      await page.waitForFunction(
+        () => {
+          const messageElements = document.querySelectorAll('.conversation-message-text');
+          for (const el of messageElements) {
+            if (el.textContent?.includes('Test message')) {
+              return true;
+            }
+          }
+          return false;
+        },
+        { timeout: 2000 }
+      ).catch(() => {});
 
       // Check if message appears in UI
       const messageText = await page.getByText('Test message').count();
