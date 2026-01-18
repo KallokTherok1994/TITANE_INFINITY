@@ -182,20 +182,8 @@ test.describe('Critical Path: Chat Interaction', () => {
       // Prefer keyboard send to avoid boot overlays intercepting pointer events.
       await page.keyboard.press('Enter');
 
-      // Wait for message to appear in DOM
-      // First wait for the message to be rendered
-      await page.waitForFunction(
-        () => {
-          const messageElements = document.querySelectorAll('.conversation-message-text');
-          for (const el of messageElements) {
-            if (el.textContent?.includes('Test message')) {
-              return true;
-            }
-          }
-          return false;
-        },
-        { timeout: 2000 }
-      ).catch(() => {});
+      // Wait for message to appear in DOM - use simpler approach
+      await page.waitForTimeout(1500);
 
       // Check if message appears in UI
       const messageText = await page.getByText('Test message').count();
