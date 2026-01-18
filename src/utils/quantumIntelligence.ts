@@ -562,15 +562,17 @@ class TitaneQuantumIntelligence {
       case 'relu':
         return Math.max(0, input);
 
-      case 'quantum_sigmoid':
+      case 'quantum_sigmoid': {
         // Sigmoid quantique avec superposition
         const classicalPart = 1 / (1 + Math.exp(-input));
         const quantumPart = Math.sin(input * Math.PI) * 0.1;
         return classicalPart + quantumPart;
+      }
 
-      case 'quantum_bell':
+      case 'quantum_bell': {
         // Fonction Bell quantique avec intrication
         return Math.cos(input) * Math.exp((-input * input) / 2) * Math.sqrt(2);
+      }
 
       default:
         return Math.tanh(input);
