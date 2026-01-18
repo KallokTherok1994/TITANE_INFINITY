@@ -10,15 +10,15 @@
 import { titaneBootRecovery } from './utils/bootRecoverySystem';
 
 // 🧠 QUANTUM INTELLIGENCE INTEGRATION
-import { _titaneQuantumIntelligence } from './utils/quantumIntelligence';
-import { _titaneSelfHealing } from './utils/selfHealingSystem';
-import { _titaneTelemetry } from './utils/telemetryEngine';
+import { titaneQuantumIntelligence } from './utils/quantumIntelligence';
+import { titaneSelfHealing } from './utils/selfHealingSystem';
+import { titaneTelemetry } from './utils/telemetryEngine';
 
 // � QUANTUM ORCHESTRATOR
 import { titaneQuantumOrchestrator } from './utils/quantumOrchestrator';
 
 // 🌌 CONSCIOUSNESS DASHBOARD & SYSTEM HUB
-import _ConsciousnessDashboard from './components/_ConsciousnessDashboard';
+import ConsciousnessDashboard from './components/ConsciousnessDashboard';
 import SystemIntegrationHub from './components/SystemIntegrationHub';
 
 // 🛡️ ULTRA-EARLY GLOBAL ERROR HANDLERS (PREVENT SILENT CRASHES)

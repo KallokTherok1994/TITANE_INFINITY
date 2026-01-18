@@ -17,7 +17,7 @@ interface BootErrorFallbackProps {
 export function BootErrorFallback({
   error,
   onRetry,
-  _onClearCache,
+  onClearCache,
 }: BootErrorFallbackProps) {
   const isModuleScriptError = error?.message?.includes(
     'Importing a module script failed'

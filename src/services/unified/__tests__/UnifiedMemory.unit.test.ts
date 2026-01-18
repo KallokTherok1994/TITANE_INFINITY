@@ -266,7 +266,7 @@ describe('UnifiedMemory', () => {
       expect(entry.summary).toBe('Test fact');
       expect(entry.importance).toBe(0.8);
       expect(entry.embedding).toBeDefined();
-      expect(entry.embedding!.length).toBe(384);
+      expect(entry.embedding?.length).toBe(384);
       expect(vectorStore.size()).toBe(1);
     });
 
@@ -423,7 +423,7 @@ describe('UnifiedMemory', () => {
       });
 
       const updated = await vectorStore.get(entry.id);
-      expect(updated!.accessCount).toBeGreaterThan(initialAccessCount);
+      expect(updated?.accessCount).toBeGreaterThan(initialAccessCount);
     });
   });
 
@@ -442,7 +442,7 @@ describe('UnifiedMemory', () => {
       });
 
       const updated = await vectorStore.get(entry.id);
-      expect(updated!.summary).toBe('Updated');
+      expect(updated?.summary).toBe('Updated');
       expect(updated!.importance).toBe(0.9);
     });
   });
@@ -483,8 +483,8 @@ describe('UnifiedMemory', () => {
       expect(newEntry.relatedTo).toContain(oldEntry.id);
 
       const updated = await vectorStore.get(oldEntry.id);
-      expect(updated!.supersedes).toBe(newEntry.id);
-      expect(updated!.strength).toBe(0.1);
+      expect(updated?.supersedes).toBe(newEntry.id);
+      expect(updated?.strength).toBe(0.1);
     });
   });
 
@@ -524,7 +524,7 @@ describe('UnifiedMemory', () => {
       await memory.promoteMemory(entry.id);
 
       const updated = await vectorStore.get(entry.id);
-      expect(updated!.tier).toBe(MemoryTier.MEDIUM_TERM);
+      expect(updated?.tier).toBe(MemoryTier.MEDIUM_TERM);
     });
 
     it('should promote MEDIUM_TERM to LONG_TERM after 50 accesses', async () => {
@@ -540,7 +540,7 @@ describe('UnifiedMemory', () => {
       await memory.promoteMemory(entry.id);
 
       const updated = await vectorStore.get(entry.id);
-      expect(updated!.tier).toBe(MemoryTier.LONG_TERM);
+      expect(updated?.tier).toBe(MemoryTier.LONG_TERM);
     });
 
     it('should promote LONG_TERM to META_MEMORY with high importance', async () => {
@@ -557,7 +557,7 @@ describe('UnifiedMemory', () => {
       await memory.promoteMemory(entry.id);
 
       const updated = await vectorStore.get(entry.id);
-      expect(updated!.tier).toBe(MemoryTier.META_MEMORY);
+      expect(updated?.tier).toBe(MemoryTier.META_MEMORY);
     });
   });
 
@@ -658,7 +658,7 @@ describe('UnifiedMemory', () => {
       await memory.decay();
 
       const updated = await vectorStore.get(entry.id);
-      expect(updated!.strength).toBe(initialStrength);
+      expect(updated?.strength).toBe(initialStrength);
     });
   });
 

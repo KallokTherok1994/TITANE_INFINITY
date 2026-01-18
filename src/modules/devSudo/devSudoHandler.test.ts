@@ -153,7 +153,7 @@ describe('devSudoHandler', () => {
 
         expect(result).not.toBeNull();
         expect(result?.params).toBeDefined();
-        expect(Object.keys(result!.params).length).toBeGreaterThanOrEqual(0);
+        expect(Object.keys(result?.params).length).toBeGreaterThanOrEqual(0);
       });
     });
 

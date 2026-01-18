@@ -244,7 +244,7 @@ export class ServiceWorkerManager {
           resolve(event.data);
         };
 
-        this.registration!.active!.postMessage({ type: 'CLEAR_CACHE' }, [
+        this.registration?.active!.postMessage({ type: 'CLEAR_CACHE' }, [
           messageChannel.port2,
         ]);
       });
@@ -274,7 +274,7 @@ export class ServiceWorkerManager {
           resolve(event.data);
         };
 
-        this.registration!.active!.postMessage({ type: 'GET_CACHE_SIZE' }, [
+        this.registration?.active!.postMessage({ type: 'GET_CACHE_SIZE' }, [
           messageChannel.port2,
         ]);
       });
@@ -299,7 +299,7 @@ export class ServiceWorkerManager {
           resolve(event.data);
         };
 
-        this.registration!.active!.postMessage(
+        this.registration?.active!.postMessage(
           { type: 'PRECACHE_URLS', payload: { urls } },
           [messageChannel.port2]
         );

@@ -7,11 +7,11 @@
  */
 
 import React from 'react';
-import { ___bootHealthMonitor, integrateWithLazyDiagnostic } from './advancedBootMonitor';
-import { ___performanceOptimizer, ___optimizedImport } from './__performanceOptimizer';
+import { bootHealthMonitor, integrateWithLazyDiagnostic } from './advancedBootMonitor';
+import { performanceOptimizer, optimizedImport } from './performanceOptimizer';
 
 // Intégration avec le système de monitoring avancé
-const __monitoringIntegration = integrateWithLazyDiagnostic();
+const monitoringIntegration = integrateWithLazyDiagnostic();
 
 interface EnhancedLazyOptions {
   timeout?: number;
