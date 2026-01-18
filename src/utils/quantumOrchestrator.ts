@@ -336,19 +336,19 @@ class TitaneQuantumOrchestrator {
         },
         telemetry: {
           performance_score:
-            telemetryReport.status === 'fulfilled'
+            telemetryReport.status === 'fulfilled' && telemetryReport.value?.metrics
               ? telemetryReport.value.metrics.performance_score?.value || 0.5
               : 0.5,
           active_alerts:
-            telemetryReport.status === 'fulfilled'
+            telemetryReport.status === 'fulfilled' && telemetryReport.value?.alerts
               ? telemetryReport.value.alerts.filter(a => !a.acknowledged).length
               : 0,
           data_collection_rate:
-            telemetryReport.status === 'fulfilled'
+            telemetryReport.status === 'fulfilled' && telemetryReport.value?.metrics
               ? telemetryReport.value.metrics.data_collection_rate?.value || 0
               : 0,
           pattern_detection_accuracy:
-            telemetryReport.status === 'fulfilled'
+            telemetryReport.status === 'fulfilled' && telemetryReport.value?.patterns
               ? telemetryReport.value.patterns.filter(p => p.confidence > 0.8).length /
                 Math.max(1, telemetryReport.value.patterns.length)
               : 0,
