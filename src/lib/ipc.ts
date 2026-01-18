@@ -53,7 +53,7 @@ export async function ipcCall<T = unknown>(
       throw new Error(`SECURITY_VIOLATION: ipc:// interdit dans cmd: ${cmd}`);
     }
 
-    const result = await secureInvoke<T>(cmd as any, args, {
+    const result = await secureInvoke<T>(cmd as string, args, {
       timeout: options?.timeout,
       // On laisse le whitelist check côté secureInvoke/tauriClient
     });
