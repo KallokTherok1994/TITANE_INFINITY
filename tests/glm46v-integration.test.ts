@@ -421,7 +421,6 @@ describe('GLM-4.6V Integration Structure Validation', () => {
       expect(expectedCommands.length).toBe(4);
     });
   });
-});
 
 // Integration tests with actual vLLM server (requires running server)
 describe.skip('GLM-4.6V Live Integration Tests', () => {
@@ -516,4 +515,4 @@ describe('GLM-4.6V Performance Tests', () => {
     });
   });
 });
-// ESLint cache bypass
+
