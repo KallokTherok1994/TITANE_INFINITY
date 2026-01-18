@@ -1,0 +1,23 @@
+# Logs de développement et déploiement
+*.log
+logs/
+tauri-build*.log
+rust-build.log
+complete_dev.log
+
+# Fichiers temporaires
+*.tmp
+*.temp
+
+# Builds
+dist/
+build/
+.vite/
+
+# IDE
+.vscode/settings.json
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
