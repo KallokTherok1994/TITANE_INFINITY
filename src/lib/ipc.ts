@@ -1,15 +1,13 @@
 /**
  * TITANE∞ — Wrapper IPC sécurisé (FIX P0)
  *
- * **Règle absolue:** Interdit fetch("ipc://...") — utilise invoke() exclusivement
+ * **Règle absolue:** Interdit fetch("ipc://...") — passer par l'IPC wrapper uniquement
  * **Objectif:** Éliminer erreurs CSP "Fetch API cannot load ipc://"
  *
  * © 2026 TITANE Team. All rights reserved.
  */
 
-/* eslint-disable no-restricted-imports */
-import { invoke } from '@tauri-apps/api/core';
-/* eslint-enable no-restricted-imports */
+import { secureInvoke } from '@/lib/security';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES IPC
@@ -40,12 +38,12 @@ export interface IpcOptions {
  * Wrapper IPC centralisé — remplace tout fetch("ipc://...")
  *
  * **RÈGLE CRITIQUE:** Aucun fetch("ipc://localhost/...") autorisé
- * Utilise exclusivement invoke() de @tauri-apps/api/core
+ * Utilise exclusivement le wrapper sécurisé (secureInvoke via tauriClient)
  */
-export async function ipcInvoke<T = unknown>(
+export async function ipcCall<T = unknown>(
   cmd: string,
   args?: Record<string, unknown>,
-  _options?: IpcOptions
+  options?: IpcOptions
 ): Promise<IpcResult<T>> {
   const timestamp = Date.now();
 
@@ -55,7 +53,10 @@ export async function ipcInvoke<T = unknown>(
       throw new Error(`SECURITY_VIOLATION: ipc:// interdit dans cmd: ${cmd}`);
     }
 
-    const result = await invoke<T>(cmd, args);
+    const result = await secureInvoke<T>(cmd as any, args, {
+      timeout: options?.timeout,
+      // On laisse le whitelist check côté secureInvoke/tauriClient
+    });
 
     return {
       status: 'ok',
@@ -76,11 +77,11 @@ export async function ipcInvoke<T = unknown>(
 /**
  * Version synchrone pour compatibilité (si nécessaire)
  */
-export function ipcInvokeSync<T = unknown>(
+export function ipcCallSync<T = unknown>(
   _cmd: string,
   _args?: Record<string, unknown>
 ): IpcResult<T> {
-  throw new Error('ipcInvokeSync non implémenté — utilise ipcInvoke async');
+  throw new Error('ipcCallSync non implémenté — utilise ipcCall async');
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

@@ -38,6 +38,7 @@ class AdvancedPerformanceOptimizer {
   private isOptimizationActive: boolean = true;
   private cacheCleanupInterval?: NodeJS.Timeout;
   private preloadWorker?: Worker;
+  private initialized = false;
 
   constructor() {
     this.initializeOptimizer();
@@ -47,6 +48,20 @@ class AdvancedPerformanceOptimizer {
    * Initialise l'optimiseur de performance
    */
   private initializeOptimizer(): void {
+    const isTauriRuntime =
+      typeof window !== 'undefined' && Boolean((window as typeof window & { __TAURI__?: unknown }).__TAURI__);
+    const isPlaywright =
+      typeof navigator !== 'undefined' && /HeadlessChrome|Playwright/i.test(navigator.userAgent || '');
+    const enableInWebMode =
+      typeof import.meta !== 'undefined' && import.meta.env?.VITE_ENABLE_PERF_OPTIMIZER === '1';
+
+    if ((!isTauriRuntime && !enableInWebMode) || isPlaywright) {
+      console.log('🛑 [PERF-OPTIMIZER] Skipped in browser/test mode (Tauri unavailable)');
+      this.isOptimizationActive = false;
+      this.initialized = false;
+      return;
+    }
+
     // Configuration du cache intelligent
     this.setupIntelligentCache();
 
@@ -59,6 +74,7 @@ class AdvancedPerformanceOptimizer {
     // Optimisation des ressources critiques
     this.optimizeCriticalResources();
 
+    this.initialized = true;
     console.log('🚀 [PERF-OPTIMIZER] Advanced performance optimization initialized');
   }
 
@@ -658,6 +674,7 @@ class AdvancedPerformanceOptimizer {
    */
   private optimizeCriticalResources(): void {
     if (typeof window === 'undefined') return;
+    if (!this.isOptimizationActive) return;
 
     // Précharger les fonts critiques
     this.preloadCriticalFonts();
@@ -673,6 +690,14 @@ class AdvancedPerformanceOptimizer {
    * Précharge les fonts critiques
    */
   private preloadCriticalFonts(): void {
+    const enableFontPreload =
+      typeof import.meta !== 'undefined' && import.meta.env?.VITE_ENABLE_FONT_PRELOAD === '1';
+
+    if (!enableFontPreload) {
+      console.log('🎨 [PERF-OPTIMIZER] Font preload disabled (VITE_ENABLE_FONT_PRELOAD != "1")');
+      return;
+    }
+
     const criticalFonts = [
       '/assets/fonts/inter-400.woff2',
       '/assets/fonts/inter-600.woff2',
@@ -725,6 +750,8 @@ class AdvancedPerformanceOptimizer {
    * Réchauffe les APIs critiques
    */
   private async warmupCriticalAPIs(): Promise<void> {
+    if (!this.isOptimizationActive) return;
+
     const criticalEndpoints = ['/api/health', '/api/user/profile', '/api/system/status'];
 
     console.log('🔥 [PERF-OPTIMIZER] Warming up critical APIs');

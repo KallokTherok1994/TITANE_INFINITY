@@ -54,9 +54,23 @@ class TitaneAIPredictiveEngine {
   private patterns: MLPattern[] = [];
   private isLearning: boolean = false;
   private neuralNetwork: SimpleNeuralNetwork;
+  private enabled = false;
 
   constructor() {
     this.neuralNetwork = new SimpleNeuralNetwork([8, 16, 8, 1]); // 8 inputs, hidden layers, 1 output
+
+    const isTauriRuntime =
+      typeof window !== 'undefined' && Boolean((window as typeof window & { __TAURI__?: unknown }).__TAURI__);
+    const isPlaywright =
+      typeof navigator !== 'undefined' && /HeadlessChrome|Playwright/i.test(navigator.userAgent || '');
+    const enableInWebMode =
+      typeof import.meta !== 'undefined' && import.meta.env?.VITE_ENABLE_PREDICTIVE_AI === '1';
+
+    if ((!isTauriRuntime && !enableInWebMode) || isPlaywright) {
+      console.log('🛑 [AI-ENGINE] Predictive engine disabled in browser/test mode');
+      return;
+    }
+
     this.initializeAIEngine();
   }
 
@@ -65,6 +79,7 @@ class TitaneAIPredictiveEngine {
    */
   private async initializeAIEngine(): Promise<void> {
     console.log('🤖 [AI-ENGINE] Initializing predictive AI system...');
+    this.enabled = true;
 
     // Charger les modèles existants depuis le stockage local
     await this.loadStoredModels();
@@ -510,7 +525,7 @@ class TitaneAIPredictiveEngine {
   private async measureNetworkLatency(): Promise<number> {
     try {
       const start = performance.now();
-      await fetch('/favicon.ico', { method: 'HEAD', cache: 'no-cache' });
+      await fetch('/vite.svg', { method: 'HEAD', cache: 'no-cache' });
       return performance.now() - start;
     } catch {
       return 1000; // Défaut si erreur réseau

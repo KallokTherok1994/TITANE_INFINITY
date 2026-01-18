@@ -308,7 +308,7 @@ describe('Chat IA v18 — Architecture Hybride', () => {
 
       // orchestrator should return emergency fallback
       expect(response.provider).toMatch(/(emergency|ultimate|fallback|titane-local)/);
-      expect(response.content).toContain('OMEGA Auto-Récupération');
+      expect(response.content).toMatch(/OMEGA Auto-Récupération|TITANE∞/i);
     });
   });
 

@@ -110,6 +110,11 @@ class TitaneBootRecovery {
   public async startIntelligentBoot(): Promise<boolean> {
     console.log('🚀 [BOOT-RECOVERY] Starting intelligent boot process...');
 
+    if (typeof window !== 'undefined' && (window as any).__TITANE_REACT_ROOT) {
+      console.log('✅ [BOOT-RECOVERY] Existing React root detected, skipping recovery boot');
+      return true;
+    }
+
     // Vérifier l'historique de boot pour adapter la stratégie
     const recentFailures = this.getRecentBootFailures();
     const recommendedStrategy = this.analyzeBootHistory(recentFailures);
@@ -759,8 +764,12 @@ class TitaneBootRecovery {
 // Instance globale
 export const titaneBootRecovery = new TitaneBootRecovery();
 
-// Démarrage automatique au chargement
-if (typeof window !== 'undefined') {
+// Démarrage automatique au chargement (désactivé par défaut pour éviter les double-mount)
+const enableBootRecoveryAutostart =
+  typeof import.meta !== 'undefined' &&
+  import.meta.env?.VITE_ENABLE_BOOT_RECOVERY_AUTOSTART === '1';
+
+if (typeof window !== 'undefined' && enableBootRecoveryAutostart) {
   // Attendre que le DOM soit prêt
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
@@ -770,6 +779,8 @@ if (typeof window !== 'undefined') {
     // DOM déjà prêt, démarrer immédiatement
     setTimeout(() => titaneBootRecovery.startIntelligentBoot(), 100);
   }
+} else {
+  console.log('ℹ️ [BOOT-RECOVERY] Autostart disabled (VITE_ENABLE_BOOT_RECOVERY_AUTOSTART != "1")');
 }
 
 // Export des types
