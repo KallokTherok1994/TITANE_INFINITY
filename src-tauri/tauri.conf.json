@@ -1,7 +1,5 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0",
-  "$comment": "TITANE∞ Stable Whitelist - PRODUCTION ONLY (no debug/qa/devtools)",
-
   "productName": "TITANE-Infinity",
   "version": "26.3.0",
   "identifier": "com.titane.infinity",
@@ -67,13 +65,20 @@
       "dangerousDisableAssetCspModification": true,
       "assetProtocol": {
         "enable": true,
-        "scope": ["$APPDATA/**", "$RESOURCE/**", "$APPCONFIG/**", "$APPLOCALDATA/**"]
+        "scope": [
+          "$APPDATA/**",
+          "$RESOURCE/**",
+          "$APPCONFIG/**",
+          "$APPLOCALDATA/**"
+        ]
       },
       "capabilities": [
         {
           "identifier": "stable-capability",
           "description": "Capability for stable production runtime - STRICT",
-          "windows": ["main"],
+          "windows": [
+            "main"
+          ],
           "permissions": [
             "core:default",
             "core:event:default",
@@ -113,88 +118,238 @@
             "dialog:allow-confirm"
           ],
           "allow": [
-            { "command": "get_runtime_config" },
-            { "command": "is_onboarding_complete" },
-            { "command": "complete_onboarding" },
-            { "command": "get_onboarding_preferences" },
-            { "command": "get_helios_state" },
-            { "command": "get_system_health" },
-            { "command": "get_memory_state" },
-            { "command": "memory_get_state" },
-            { "command": "write_snapshot" },
-            { "command": "read_snapshot" },
-            { "command": "add_timeline_event" },
-            { "command": "get_timeline" },
-            { "command": "get_active_projects" },
-            { "command": "get_recent_decisions" },
-            { "command": "get_knowledge" },
-            { "command": "get_active_rituals" },
-            { "command": "save_chat_interaction" },
-            { "command": "memory_ingest_file" },
-            { "command": "orchestration_get_cognitive_state" },
-            { "command": "orchestration_get_unified_state" },
-            { "command": "singularity_get_full_state" },
-            { "command": "singularity_get_physical" },
-            { "command": "singularity_get_cognitive" },
-            { "command": "singularity_get_global_coherence" },
-            { "command": "singularity_is_critical" },
-            { "command": "get_singularity_state" },
-            { "command": "sync_singularity" },
-            { "command": "singularity_get_symbolic" },
-            { "command": "singularity_get_adaptive" },
-            { "command": "singularity_get_meta" },
-            { "command": "singularity_get" },
-            { "command": "singularity_set" },
-            { "command": "singularity_sync" },
-            { "command": "singularity_export_json" },
-            { "command": "experience_get_state" },
-            { "command": "experience_update_state" },
-            { "command": "import_file" },
-            { "command": "file_analyze" },
-            { "command": "upload_and_process_file" },
-            { "command": "get_system_info" },
-            { "command": "cp_get_ai_config" },
-            { "command": "cp_set_ai_config" },
-            { "command": "chat_generate" },
-            { "command": "chat_stream_message" },
-            { "command": "chat_generate_glm46v" },
-            { "command": "check_glm46v_health" },
-            { "command": "start_glm46v_server" },
-            { "command": "stop_glm46v_server" },
-            { "command": "fullbody_init" },
-            { "command": "fullbody_update_pose" },
-            { "command": "fullbody_update_expression" },
-            { "command": "fullbody_get_state" },
-            { "command": "avatar_get_expression" },
-            { "command": "tts_speak_parler" },
-            { "command": "tts_stop" },
-            { "command": "tts_is_speaking" },
-            { "command": "tts_get_status" }
+            {
+              "command": "get_runtime_config"
+            },
+            {
+              "command": "is_onboarding_complete"
+            },
+            {
+              "command": "complete_onboarding"
+            },
+            {
+              "command": "get_onboarding_preferences"
+            },
+            {
+              "command": "get_helios_state"
+            },
+            {
+              "command": "get_system_health"
+            },
+            {
+              "command": "get_memory_state"
+            },
+            {
+              "command": "memory_get_state"
+            },
+            {
+              "command": "write_snapshot"
+            },
+            {
+              "command": "read_snapshot"
+            },
+            {
+              "command": "add_timeline_event"
+            },
+            {
+              "command": "get_timeline"
+            },
+            {
+              "command": "get_active_projects"
+            },
+            {
+              "command": "get_recent_decisions"
+            },
+            {
+              "command": "get_knowledge"
+            },
+            {
+              "command": "get_active_rituals"
+            },
+            {
+              "command": "save_chat_interaction"
+            },
+            {
+              "command": "memory_ingest_file"
+            },
+            {
+              "command": "orchestration_get_cognitive_state"
+            },
+            {
+              "command": "orchestration_get_unified_state"
+            },
+            {
+              "command": "singularity_get_full_state"
+            },
+            {
+              "command": "singularity_get_physical"
+            },
+            {
+              "command": "singularity_get_cognitive"
+            },
+            {
+              "command": "singularity_get_global_coherence"
+            },
+            {
+              "command": "singularity_is_critical"
+            },
+            {
+              "command": "get_singularity_state"
+            },
+            {
+              "command": "sync_singularity"
+            },
+            {
+              "command": "singularity_get_symbolic"
+            },
+            {
+              "command": "singularity_get_adaptive"
+            },
+            {
+              "command": "singularity_get_meta"
+            },
+            {
+              "command": "singularity_get"
+            },
+            {
+              "command": "singularity_set"
+            },
+            {
+              "command": "singularity_sync"
+            },
+            {
+              "command": "singularity_export_json"
+            },
+            {
+              "command": "experience_get_state"
+            },
+            {
+              "command": "experience_update_state"
+            },
+            {
+              "command": "import_file"
+            },
+            {
+              "command": "file_analyze"
+            },
+            {
+              "command": "upload_and_process_file"
+            },
+            {
+              "command": "get_system_info"
+            },
+            {
+              "command": "cp_get_ai_config"
+            },
+            {
+              "command": "cp_set_ai_config"
+            },
+            {
+              "command": "chat_generate"
+            },
+            {
+              "command": "chat_stream_message"
+            },
+            {
+              "command": "chat_generate_glm46v"
+            },
+            {
+              "command": "check_glm46v_health"
+            },
+            {
+              "command": "start_glm46v_server"
+            },
+            {
+              "command": "stop_glm46v_server"
+            },
+            {
+              "command": "fullbody_init"
+            },
+            {
+              "command": "fullbody_update_pose"
+            },
+            {
+              "command": "fullbody_update_expression"
+            },
+            {
+              "command": "fullbody_get_state"
+            },
+            {
+              "command": "avatar_get_expression"
+            },
+            {
+              "command": "tts_speak_parler"
+            },
+            {
+              "command": "tts_stop"
+            },
+            {
+              "command": "tts_is_speaking"
+            },
+            {
+              "command": "tts_get_status"
+            }
           ],
           "deny": [
-            { "command": "core:webview:allow-internal-toggle-devtools" },
-            { "command": "qa_*" },
-            { "command": "one_core_*" },
-            { "command": "get_logs" },
-            { "command": "clear_logs" },
-            { "command": "validate_nexus" },
-            { "command": "get_nexus_graph" },
-            { "command": "write_log" },
-            { "command": "read_logs" },
-            { "command": "singularity_selftest_full" },
-            { "command": "singularity_diff" },
-            { "command": "singularity_hash" },
-            { "command": "singularity_meta" },
-            { "command": "singularity_integrity" },
-            { "command": "singularity_repair" },
-            { "command": "singularity_snapshot" },
-            { "command": "get_helios_metrics" }
+            {
+              "command": "core:webview:allow-internal-toggle-devtools"
+            },
+            {
+              "command": "qa_*"
+            },
+            {
+              "command": "one_core_*"
+            },
+            {
+              "command": "get_logs"
+            },
+            {
+              "command": "clear_logs"
+            },
+            {
+              "command": "validate_nexus"
+            },
+            {
+              "command": "get_nexus_graph"
+            },
+            {
+              "command": "write_log"
+            },
+            {
+              "command": "read_logs"
+            },
+            {
+              "command": "singularity_selftest_full"
+            },
+            {
+              "command": "singularity_diff"
+            },
+            {
+              "command": "singularity_hash"
+            },
+            {
+              "command": "singularity_meta"
+            },
+            {
+              "command": "singularity_integrity"
+            },
+            {
+              "command": "singularity_repair"
+            },
+            {
+              "command": "singularity_snapshot"
+            },
+            {
+              "command": "get_helios_metrics"
+            }
           ]
         },
         {
           "identifier": "avatar-floating-capability",
           "description": "Capability for the floating avatar window",
-          "windows": ["avatar-floating"],
+          "windows": [
+            "avatar-floating"
+          ],
           "permissions": [
             "core:default",
             "core:event:default",
