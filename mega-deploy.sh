@@ -434,7 +434,7 @@ phase_tauri_build() {
   log_section "Compiling native application..."
   cd "$REPO_ROOT"
   
-  if run_cmd "pnpm run tauri:build" "Tauri build"; then
+  if run_cmd "pnpm run titane:build" "Tauri build"; then
     log_success "Tauri build completed ✅"
   else
     log_error "Tauri build failed"

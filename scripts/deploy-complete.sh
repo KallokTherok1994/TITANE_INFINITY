@@ -232,7 +232,7 @@ build_production() {
   log "Building Tauri application for production..."
   local start_time=$(date +%s)
   
-  if pnpm run tauri:build 2>&1 | tee -a "$BUILD_LOG"; then
+  if pnpm run titane:build 2>&1 | tee -a "$BUILD_LOG"; then
     local end_time=$(date +%s)
     local duration=$((end_time - start_time))
     log_success "Production build completed in ${duration}s"
