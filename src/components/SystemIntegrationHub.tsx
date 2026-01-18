@@ -4,18 +4,21 @@
  *
  * 🌌 HUB D'INTÉGRATION SYSTÈME ULTIME
  * Point central d'orchestration de tous les systèmes avancés TITANE∞
+ * 
+ * 🔒 PHASE 3: Protection contre boucles React infinies
  */
 
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { bootSafetyLock } from '../utils/bootSafetyLock';
 import { titaneQuantumIntelligence } from '../utils/quantumIntelligence';
 import { titaneSelfHealing } from '../utils/selfHealingSystem';
 import { titaneTelemetry } from '../utils/telemetryEngine';
 import { titaneBootRecovery } from '../utils/bootRecoverySystem';
 import ConsciousnessDashboard from './ConsciousnessDashboard';
-import type { QuantumThought, _ConsciousnessState } from '../utils/quantumIntelligence';
-import type { _SystemState } from '../utils/selfHealingSystem';
-import type { _TelemetryReport } from '../utils/telemetryEngine';
-import type { _BootAttempt } from '../utils/bootRecoverySystem';
+import type { QuantumThought } from '../utils/quantumIntelligence';
+// import type { SystemState } from '../utils/selfHealingSystem';
+// import type { TelemetryReport } from '../utils/telemetryEngine';
+// import type { BootAttempt } from '../utils/bootRecoverySystem';
 
 interface SystemIntegrationHubProps {
   children: React.ReactNode;
@@ -29,7 +32,7 @@ interface SystemEvent {
     | 'boot_recovery'
     | 'critical_alert';
   timestamp: number;
-  data: any;
+  data: unknown;
   severity: 'info' | 'warning' | 'error' | 'critical';
 }
 
@@ -65,12 +68,43 @@ const SystemIntegrationHub: React.FC<SystemIntegrationHubProps> = ({
   // Guard anti-réentrance
   const inFlight = useRef(false);
 
+  // 🔒 PHASE 3: Protection contre boucles React
+  const renderCountRef = useRef(0);
+  const lastUpdateTimeRef = useRef(0);
+  const stateHashRef = useRef('');
+
   // Ref pour éviter les comparaisons d'état dans le callback (anti-boucle infinie)
   const hubStateRef = useRef<HubState>(hubState);
 
+  // 🔒 PHASE 3: Calculer hash d'état pour détecter changements réels
+  const computeStateHash = useCallback((state: HubState): string => {
+    return JSON.stringify({
+      c: Math.round(state.consciousnessLevel * 1000),
+      h: Math.round(state.systemHealth * 1000),
+      a: state.activeHealingActions,
+      t: state.telemetryAlerts,
+      q: Math.round(state.quantumCoherence * 1000),
+      e: state.emergencyMode ? 1 : 0,
+    });
+  }, []);
+
   // Callback stable pour la boucle d'intégration (sans dépendances problématiques)
   const integrationLoop = useCallback(() => {
+    // 🔒 PHASE 3: Vérifier état fatal
+    if (bootSafetyLock.isFatalState()) {
+      console.error('❌ [SYSTEM-HUB] Integration loop blocked: fatal state');
+      return;
+    }
+
     if (inFlight.current) return; // Anti-réentrance
+
+    // 🔒 PHASE 3: Throttle - max 1 update/sec
+    const now = Date.now();
+    if (now - lastUpdateTimeRef.current < 1000) {
+      return;
+    }
+    lastUpdateTimeRef.current = now;
+
     inFlight.current = true;
 
     try {
@@ -79,7 +113,7 @@ const SystemIntegrationHub: React.FC<SystemIntegrationHubProps> = ({
       const consciousnessLevel = titaneQuantumIntelligence.getConsciousnessLevel();
       const healingState = titaneSelfHealing.getSystemState();
       const telemetryReport = titaneTelemetry.generateTelemetryReport('5m');
-      const bootStats = titaneBootRecovery.getBootStats();
+      const _bootStatsLocal = titaneBootRecovery.getBootStats();
 
       // Calculer le nouvel état
       const newHubState: HubState = {
@@ -96,19 +130,35 @@ const SystemIntegrationHub: React.FC<SystemIntegrationHubProps> = ({
       // qui causent des re-renders infinis
       const prevHubState = hubStateRef.current;
 
+      // 🔒 PHASE 3: Calculer hash du nouvel état
+      const newStateHash = computeStateHash(newHubState);
+
+      // 🔒 PHASE 3: Ne mettre à jour que si hash diffère
+      if (newStateHash === stateHashRef.current) {
+        // Aucun changement détecté
+        return;
+      }
+
+      stateHashRef.current = newStateHash;
+
       // Vérifier si l'état a changé avant de setState
       setHubState(currentState => {
-        if (
-          currentState.consciousnessLevel === newHubState.consciousnessLevel &&
-          currentState.systemHealth === newHubState.systemHealth &&
-          currentState.activeHealingActions === newHubState.activeHealingActions &&
-          currentState.telemetryAlerts === newHubState.telemetryAlerts &&
-          currentState.quantumCoherence === newHubState.quantumCoherence &&
-          currentState.emergencyMode === newHubState.emergencyMode
-        ) {
+        // Double-check: si déjà identique, ne pas re-render
+        const currentHash = computeStateHash(currentState);
+        if (currentHash === newStateHash) {
           return currentState; // Pas de changement, éviter la boucle
         }
+
         hubStateRef.current = newHubState; // Mettre à jour la ref
+
+        // 🔒 PHASE 3: Incrémenter compteur de render
+        renderCountRef.current++;
+        if (renderCountRef.current > 100) {
+          console.error('💥 [SYSTEM-HUB] Render loop detected - STOP');
+          bootSafetyLock.markFatalError();
+          return currentState;
+        }
+
         return newHubState;
       });
 
@@ -192,7 +242,41 @@ const SystemIntegrationHub: React.FC<SystemIntegrationHubProps> = ({
     return () => clearInterval(interval);
   }, [integrationLoop]);
 
-  // Gestion des raccourcis clavier
+  // Actions manuelles (définies AVANT useEffect qui les utilise)
+  const triggerManualHealing = useCallback(async () => {
+    try {
+      console.log('🔧 [SYSTEM-HUB] Triggering manual healing...');
+      const results = await titaneSelfHealing.triggerManualHealing([
+        'clear_cache',
+        'optimize_memory',
+        'recalibrate_ai_models',
+      ]);
+
+      const successCount = results.filter(r => r.success).length;
+      console.log(
+        `✅ [SYSTEM-HUB] Manual healing completed: ${successCount}/${results.length} actions successful`
+      );
+
+      // Notification visuelle
+      showNotification('🔧 Healing completed', 'success');
+    } catch (error) {
+      console.error('❌ [SYSTEM-HUB] Manual healing failed:', error);
+      showNotification('❌ Healing failed', 'error');
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const demonstrateQuantumIntelligence = useCallback(async () => {
+    try {
+      const demonstration =
+        await titaneQuantumIntelligence.demonstrateQuantumIntelligence();
+      console.log(demonstration);
+      showNotification('🧠 Quantum Intelligence Demonstrated', 'info');
+    } catch (error) {
+      console.error('❌ [SYSTEM-HUB] Quantum intelligence demo failed:', error);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Gestion des raccourcis clavier (APRÈS définition des fonctions)
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       // Ctrl+Alt+C pour le dashboard de conscience
@@ -222,41 +306,7 @@ const SystemIntegrationHub: React.FC<SystemIntegrationHubProps> = ({
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, []);
-
-  // Actions manuelles
-  const triggerManualHealing = async () => {
-    try {
-      console.log('🔧 [SYSTEM-HUB] Triggering manual healing...');
-      const results = await titaneSelfHealing.triggerManualHealing([
-        'clear_cache',
-        'optimize_memory',
-        'recalibrate_ai_models',
-      ]);
-
-      const successCount = results.filter(r => r.success).length;
-      console.log(
-        `✅ [SYSTEM-HUB] Manual healing completed: ${successCount}/${results.length} actions successful`
-      );
-
-      // Notification visuelle
-      showNotification('🔧 Healing completed', 'success');
-    } catch (error) {
-      console.error('❌ [SYSTEM-HUB] Manual healing failed:', error);
-      showNotification('❌ Healing failed', 'error');
-    }
-  };
-
-  const demonstrateQuantumIntelligence = async () => {
-    try {
-      const demonstration =
-        await titaneQuantumIntelligence.demonstrateQuantumIntelligence();
-      console.log(demonstration);
-      showNotification('🧠 Quantum Intelligence Demonstrated', 'info');
-    } catch (error) {
-      console.error('❌ [SYSTEM-HUB] Quantum intelligence demo failed:', error);
-    }
-  };
+  }, [demonstrateQuantumIntelligence, triggerManualHealing]);
 
   const showNotification = (
     message: string,

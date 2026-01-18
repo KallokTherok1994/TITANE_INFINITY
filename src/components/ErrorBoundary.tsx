@@ -4,6 +4,8 @@
  * Capture et gestion des erreurs React non catchées.
  * Empêche la propagation des erreurs et affiche UI de secours.
  * v22Ω AI Performance Optimizations Compatible
+ * 
+ * 🔒 PHASE 5: Error boundary final (pas de recovery loop)
  *
  * © 2025 TITANE Team. All rights reserved.
  */
@@ -11,6 +13,7 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { logger } from '@/lib/logger';
 import { BootErrorFallback } from './BootErrorFallback';
+import { bootSafetyLock } from '@/utils/bootSafetyLock';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -46,6 +49,9 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
+    // 🔒 PHASE 5: Marquer erreur fatale pour stopper toute recovery
+    bootSafetyLock.markFatalError();
+    
     return {
       hasError: true,
       error,
@@ -55,7 +61,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     const { context = 'Unknown', onError } = this.props;
 
-    // Log structuré avec contexte
+    // 🔒 PHASE 5: Log une seule fois
     logger.error(
       'Error caught in component tree',
       {
@@ -65,6 +71,9 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       },
       error
     );
+
+    // 🔒 PHASE 5: NE PAS déclencher recovery automatique
+    console.error('💀 [ERROR-BOUNDARY] Fatal error captured - NO RECOVERY');
 
     // Callback personnalisé
     if (onError) {
@@ -95,6 +104,13 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   private handleReset = (): void => {
+    // 🔒 PHASE 5: Empêcher reset si état fatal
+    if (bootSafetyLock.isFatalState()) {
+      console.error('❌ [ERROR-BOUNDARY] Reset denied: fatal state');
+      alert('Application en état critique - Veuillez recharger la page manuellement');
+      return;
+    }
+
     this.setState({
       hasError: false,
       error: null,

@@ -6,6 +6,8 @@
  * Système intelligent de récupération automatique des erreurs de boot
  */
 
+import { bootSafetyLock } from './bootSafetyLock';
+
 interface BootAttempt {
   id: string;
   timestamp: number;
@@ -208,6 +210,18 @@ class TitaneBootRecovery {
    * Stratégies de boot spécifiques
    */
   private async executeNormalBoot(): Promise<boolean> {
+    // 🔒 PHASE 2: Vérification verrou boot
+    if (bootSafetyLock.isFatalState()) {
+      console.error('❌ [BOOT-RECOVERY] Normal boot denied: fatal state');
+      return false;
+    }
+
+    if (!bootSafetyLock.canRenderReact()) {
+      console.error('❌ [BOOT-RECOVERY] Normal boot denied: render loop detected');
+      bootSafetyLock.markFatalError();
+      return false;
+    }
+
     try {
       // Import dynamique pour éviter les erreurs de module
       const { createRoot } = await import('react-dom/client');
@@ -230,35 +244,46 @@ class TitaneBootRecovery {
         throw new Error('Root container not found');
       }
 
-      const root = createRoot(container);
+      // 🔒 PHASE 2: Protection DOM mutation
+      if (!bootSafetyLock.beginDOMMutation()) {
+        console.error('❌ [BOOT-RECOVERY] DOM mutation denied');
+        return false;
+      }
 
-      // Créer l'app avec gestion d'erreur
-      const AppWithErrorBoundary = React.createElement(
-        React.Suspense,
-        {
-          fallback: React.createElement(
-            'div',
-            { className: 'loading' },
-            'Loading TITANE∞...'
-          ),
-        },
-        React.createElement(App)
-      );
+      try {
+        const root = createRoot(container);
 
-      root.render(AppWithErrorBoundary);
+        // Créer l'app avec gestion d'erreur
+        const AppWithErrorBoundary = React.createElement(
+          React.Suspense,
+          {
+            fallback: React.createElement(
+              'div',
+              { className: 'loading' },
+              'Loading TITANE∞...'
+            ),
+          },
+          React.createElement(App)
+        );
 
-      // Attendre que l'app se charge
-      await new Promise(resolve => setTimeout(resolve, 1000));
+        root.render(AppWithErrorBoundary);
 
-      // Vérifier que l'app est effectivement rendue
-      const appElement =
-        container.querySelector('[data-app-loaded="true"]') ||
-        container.querySelector('.app-container') ||
-        container.children.length > 0;
+        // Attendre que l'app se charge
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
-      return !!appElement;
+        // Vérifier que l'app est effectivement rendue
+        const appElement =
+          container.querySelector('[data-app-loaded="true"]') ||
+          container.querySelector('.app-container') ||
+          container.children.length > 0;
+
+        return !!appElement;
+      } finally {
+        bootSafetyLock.endDOMMutation();
+      }
     } catch (error) {
       console.error('🚨 [BOOT-RECOVERY] Normal boot failed:', error);
+      bootSafetyLock.markBootFailed();
       return false;
     }
   }
@@ -319,11 +344,33 @@ class TitaneBootRecovery {
   }
 
   private async executeMinimalBoot(): Promise<boolean> {
+    // 🔒 PHASE 2: Vérification état fatal
+    if (bootSafetyLock.isFatalState()) {
+      console.error('❌ [BOOT-RECOVERY] Minimal boot denied: fatal state');
+      return false;
+    }
+
+    // 🔒 PHASE 2: Protection DOM mutation
+    if (!bootSafetyLock.beginDOMMutation()) {
+      console.error('❌ [BOOT-RECOVERY] Minimal boot DOM mutation denied');
+      return false;
+    }
+
     try {
       const container = document.getElementById('root');
-      if (!container) return false;
+      if (!container) {
+        bootSafetyLock.endDOMMutation();
+        return false;
+      }
 
-      // Boot minimal sans React
+      // Vérifier que le parent existe et que le container est dans le DOM
+      if (!container.parentNode) {
+        console.error('❌ [BOOT-RECOVERY] Container has no parent');
+        bootSafetyLock.endDOMMutation();
+        return false;
+      }
+
+      // Boot minimal sans React - injection HTML sûre
       container.innerHTML = `
         <div style="
           padding: 20px; 
@@ -373,7 +420,10 @@ class TitaneBootRecovery {
       return true;
     } catch (error) {
       console.error('🚨 [BOOT-RECOVERY] Minimal boot failed:', error);
+      bootSafetyLock.markBootFailed();
       return false;
+    } finally {
+      bootSafetyLock.endDOMMutation();
     }
   }
 
