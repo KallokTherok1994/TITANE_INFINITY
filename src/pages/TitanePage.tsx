@@ -263,7 +263,14 @@ const defaultConversationModes: Array<{ id: ConversationMode; name: string; icon
 const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E }) => {
   const resolvedIsBrowserE2E = isBrowserE2E ?? detectBrowserE2EFlag();
 
-  // In E2E mode, use mock conversation engine to avoid backend blocking
+  // Always call the hook (required by React rules)
+  const engineResult = useConversationEngine({
+    mode: 'default',
+    autoHealthCheck: false,
+    maxMessages: 500,
+  });
+
+  // In E2E mode, use mock data instead of real engine results
   const conversationEngine = resolvedIsBrowserE2E
     ? {
         messages: [] as ConversationMessage[],
@@ -277,11 +284,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E 
         healthReport: null,
         refreshHealth: async () => {},
       }
-    : useConversationEngine({
-        mode: 'default',
-        autoHealthCheck: false,
-        maxMessages: 500,
-      });
+    : engineResult;
 
   const {
     messages,
