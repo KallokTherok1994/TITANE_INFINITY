@@ -6,7 +6,7 @@
   "build": {
     "devUrl": "http://127.0.0.1:5173",
     "beforeDevCommand": "bash scripts/tauri/before-dev.sh",
-    "beforeBuildCommand": "bash -lc 'set -euo pipefail; ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd); cd \"$ROOT\"; export PATH=\"$ROOT/.tools/node/current/bin:$PATH\"; exec pnpm exec vite build'",
+    "beforeBuildCommand": "test -d dist || echo 'Frontend build required'",
     "frontendDist": "../dist"
   },
   "bundle": {
