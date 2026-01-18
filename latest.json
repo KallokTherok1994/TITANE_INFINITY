@@ -1,12 +1,12 @@
 {
   "$schema": "https://json.schemastore.org/tauri-updater.json",
-  "version": "26.3.2",
-  "notes": "TITANE Infinity v26.3.0 (Stable) — AppImage + DEB publiés via Git LFS + GitHub Release.",
-  "pub_date": "2026-01-15T21:43:56Z",
+  "version": "26.3.0",
+  "notes": "TITANE Infinity v26.3.0 (Stable) — AppImage + DEB publiés via GitHub Release.",
+  "pub_date": "2026-01-18T10:59:00Z",
   "platforms": {
     "linux-x86_64": {
       "signature": "",
-      "url": "https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v26.3.0/Titan-Stable_26.3.0_amd64.AppImage",
+      "url": "https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v26.3.0/TITANE-Infinity_26.3.0_amd64.AppImage",
       "with_elevated_task": false
     }
   }
