@@ -30,6 +30,12 @@ test.describe('Critical Path: Chat Interaction', () => {
       // Set browser mode for E2E tests
       localStorage.setItem('titane_browser_mode', '1');
       localStorage.setItem('titane_onboarding_complete', '1');
+      // Force E2E mode detection via webdriver mock
+      (window as any).navigator = Object.create(navigator);
+      Object.defineProperty((window as any).navigator, 'webdriver', {
+        value: true,
+        configurable: true,
+      });
 
       // Mock Node.js modules that don't work in browser
       (window as any).process = { env: {} };
@@ -118,7 +124,24 @@ test.describe('Critical Path: Chat Interaction', () => {
     console.log('Page body text:', bodyText?.substring(0, 500));
 
     // Wait for React to load and routing to complete
-    await page.waitForTimeout(3000); // Give React time to mount
+    await page.waitForTimeout(1000);
+
+    // Wait for conversation interface to be ready (E2E mode)
+    // This is critical: wait for either the textarea or the interface to stabilize
+    const conversationInput = page.locator('textarea.conversation-input');
+    const conversationSection = page.locator('section').filter({ has: page.locator('textarea') });
+    
+    try {
+      // Try to wait for the conversation input to be visible and stable
+      await conversationInput.first().waitFor({ state: 'visible', timeout: 5000 });
+    } catch (e) {
+      // If that fails, wait for any textarea to appear
+      const anyTextarea = page.locator('textarea').first();
+      await anyTextarea.waitFor({ state: 'visible', timeout: 5000 }).catch(() => {});
+    }
+
+    // Extra safety: wait for page to stabilize
+    await page.waitForLoadState('domcontentloaded');
 
     // Wait for the main TITANE header to be visible
     await expect(
@@ -135,16 +158,17 @@ test.describe('Critical Path: Chat Interaction', () => {
 
   test('can type message in chat input', async ({ page }) => {
     // Find chat input
-    const chatInput = await page.locator('textarea, [contenteditable="true"]').first();
+    const chatInput = page.locator('textarea.conversation-input, textarea').first();
 
-    if ((await chatInput.count()) > 0) {
-      await chatInput.click();
-      await chatInput.fill('Hello TITANE');
+    // Ensure input is visible and ready
+    await chatInput.waitFor({ state: 'visible', timeout: 5000 });
+    
+    // Type without clicking first (reducing interaction complexity)
+    await chatInput.fill('Hello TITANE');
 
-      const value = await chatInput.inputValue().catch(() => chatInput.textContent());
+    const value = await chatInput.inputValue().catch(() => chatInput.textContent());
 
-      expect(value).toContain('Hello');
-    }
+    expect(value).toContain('Hello');
   });
 
   test('send button is present and enabled', async ({ page }) => {
@@ -167,27 +191,28 @@ test.describe('Critical Path: Chat Interaction', () => {
   });
 
   test('message appears in chat history after sending', async ({ page }) => {
-    // Find input and button
-    const chatInput = await page.locator('textarea, [contenteditable="true"]').first();
-    const sendButton = await page
-      .locator('button')
-      .filter({
-        hasText: /send|envoyer|submit/i,
-      })
-      .first();
+    // Find input and ensure it's visible
+    const chatInput = page.locator('textarea.conversation-input, textarea').first();
+    await chatInput.waitFor({ state: 'visible', timeout: 5000 });
 
-    if ((await chatInput.count()) > 0 && (await sendButton.count()) > 0) {
-      // Type and send message
-      await chatInput.fill('Test message');
-      // Prefer keyboard send to avoid boot overlays intercepting pointer events.
-      await page.keyboard.press('Enter');
+    // Send message
+    await chatInput.fill('Test message');
+    await page.keyboard.press('Enter');
 
-      // Wait for message to appear in DOM - use simpler approach
-      await page.waitForTimeout(1500);
-
-      // Check if message appears in UI
-      const messageText = await page.getByText('Test message').count();
-      expect(messageText).toBeGreaterThan(0);
+    // Wait for message to appear - use locator waitFor instead of timeout
+    const messageLocator = page.locator('.conversation-message:has-text("Test message"), [role="article"]:has-text("Test message")');
+    
+    try {
+      // Wait for the message element to appear in DOM
+      await messageLocator.first().waitFor({ state: 'visible', timeout: 3000 });
+      
+      const messageCount = await page.getByText('Test message').count();
+      expect(messageCount).toBeGreaterThan(0);
+    } catch (e) {
+      // Fallback: check by text search with longer timeout
+      await page.waitForTimeout(2000);
+      const count = await page.getByText('Test message').count();
+      expect(count).toBeGreaterThan(0);
     }
   });
 
