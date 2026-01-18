@@ -11,10 +11,10 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { useChat } from './useChat';
 import { useSingularityState } from '../core/state/SingularityState';
-import type { AIMessage } from '../services/ai/types';
+import { getMessageText, type AIMessage } from '../services/ai/types';
 import type { AIStatus } from '@/core/ARCHITECTURE_TYPES_v∞';
 import { createLogger } from '@/utils/logger';
 
@@ -202,13 +202,34 @@ export function useGlobalAIChat(): UseGlobalAIChatReturn {
     // Could trigger devSudo mode or specific dev features
   }, []);
 
+  // ═══ FILTER MESSAGES ═══
+  // Memoize filtered messages to show only valid messages with content
+  const filteredMessages = useMemo(() => {
+    if (!Array.isArray(chatMessages)) {
+      return [];
+    }
+
+    return chatMessages.filter(message => {
+      // Validate message structure
+      if (!message || !message.role || !['user', 'assistant', 'system'].includes(message.role)) {
+        return false;
+      }
+
+      // Extract message text (handles both string and multimodal content)
+      const messageText = getMessageText(message);
+
+      // Only include messages with non-empty content
+      return messageText && messageText.trim().length > 0;
+    });
+  }, [chatMessages]);
+
   // ═══ RETURN ═══
   return {
     // State
     isOpen,
     isMinimized,
     position,
-    messages: chatMessages,
+    messages: filteredMessages,
     isLoading: chatIsLoading,
     currentModel,
     currentProvider,

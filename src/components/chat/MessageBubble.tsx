@@ -152,7 +152,9 @@ export const MessageBubble = memo(function MessageBubble({
       }
       return <TypingIndicator />;
     }
-    return content;
+    // User messages: ensure content is trimmed and non-empty
+    const userContent = content?.trim() || '';
+    return userContent || '(message vide)';
   }, [role, content]);
 
   return (

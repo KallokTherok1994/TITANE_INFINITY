@@ -363,14 +363,23 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
             </div>
           )}
 
-          {messages.map((message, index) => (
-            <MessageBubble
-              key={message.timestamp ? `${message.timestamp}-${index}` : `msg-${index}`}
-              role={message.role}
-              content={getMessageText(message)}
-              timestamp={message.timestamp}
-            />
-          ))}
+          {messages
+            .filter(message => {
+              // Filtrer uniquement les messages valides avec du contenu
+              if (!message || !message.role || !['user', 'assistant'].includes(message.role)) {
+                return false;
+              }
+              const messageText = getMessageText(message);
+              return messageText && messageText.trim().length > 0;
+            })
+            .map((message, index) => (
+              <MessageBubble
+                key={message.timestamp ? `${message.timestamp}-${index}` : `msg-${index}`}
+                role={message.role}
+                content={getMessageText(message)}
+                timestamp={message.timestamp}
+              />
+            ))}
 
           {isLoading && (
             <div
