@@ -174,7 +174,7 @@ class TitaneDeployment:
         # Tauri build
         logger.info("▶️  Building native application with Tauri...")
         tauri_start = datetime.now()
-        if not self.run_command(['pnpm', 'run', 'tauri:build'], 'Tauri build'):
+        if not self.run_command(['pnpm', 'run', 'titane:build'], 'Tauri build'):
             return False
         tauri_time = (datetime.now() - tauri_start).total_seconds()
         logger.info(f"✅ Tauri build completed in {tauri_time:.1f}s")

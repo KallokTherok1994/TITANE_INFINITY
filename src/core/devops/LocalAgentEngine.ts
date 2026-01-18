@@ -331,7 +331,7 @@ class LocalAgentEngine {
     try {
       if (projectType === 'tauri_app') {
         config.build_tool = 'tauri';
-        config.build_command = 'corepack pnpm run tauri:build';
+        config.build_command = 'corepack pnpm run titane:build';
         config.output_directory = 'src-tauri/target/release';
       } else if (projectType === 'rust_project') {
         config.build_tool = 'cargo';

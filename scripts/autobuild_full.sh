@@ -283,9 +283,9 @@ build_tauri() {
 
     cd "$PROJECT_DIR"
 
-    log INFO "pnpm run tauri:build..."
+    log INFO "pnpm run titane:build..."
     local start_time=$(date +%s)
-    "${PNPM[@]}" run tauri:build 2>&1 | tee -a "$LOG_FILE"
+    "${PNPM[@]}" run titane:build 2>&1 | tee -a "$LOG_FILE"
     local end_time=$(date +%s)
     local duration=$((end_time - start_time))
 

@@ -320,7 +320,7 @@ build_tauri_complete() {
     (
         echo "30"
         echo "# Packaging Tauri..."
-        pnpm run tauri:build 2>&1 | tee -a "$INSTALL_LOG"
+        pnpm run titane:build 2>&1 | tee -a "$INSTALL_LOG"
 
         echo "100"
         echo "# Tauri build terminé"
