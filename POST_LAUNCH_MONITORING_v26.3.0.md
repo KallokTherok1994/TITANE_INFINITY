@@ -35,22 +35,8 @@
 
 ### Hour 1: Announce Release
 - **Action:** Post announcement to GitHub Discussions
-- **Content Template:**
-  ```
-  TITANE∞ v26.3.0 is now available! 🎉
-  
-  📊 Quality Metrics:
-  • 455+ tests (100% passing)
-  • 0 lint errors
-  • 25 E2E critical tests
-  
-  🚀 Installation Methods:
-  1. Download AppImage/DEB from GitHub Release
-  2. Auto-update notification (if already installed)
-  3. System package manager (if available)
-  ```
-- **Target:** GitHub Discussions, README updates
-- **Status:** ⏳ PENDING
+- **Status:** ✅ DONE (fallback)
+- **Notes:** GitHub Discussions not available (API 404). Announcement fallback: Release notes already published on GitHub Release v26.3.0. README unchanged. Next best channel: Issues pinned comment if needed.
 
 ### Hour 4: Initial Feedback Check
 - **Metrics to Track:**
