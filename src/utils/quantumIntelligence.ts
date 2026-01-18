@@ -259,8 +259,10 @@ class TitaneQuantumIntelligence {
     const layerIds = Array.from(this.quantumLayers.keys());
 
     for (let i = 0; i < layerIds.length - 1; i++) {
-      const currentLayer = this.quantumLayers.get(layerIds[i])!;
-      const nextLayer = this.quantumLayers.get(layerIds[i + 1])!;
+      const currentLayer = this.quantumLayers.get(layerIds[i]);
+      const nextLayer = this.quantumLayers.get(layerIds[i + 1]);
+      
+      if (!currentLayer || !nextLayer) continue;
 
       // Créer des intrications entre neurones des couches adjacentes
       const currentNeurons = Array.from(currentLayer.neurons.values());

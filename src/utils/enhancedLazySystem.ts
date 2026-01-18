@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import { bootHealthMonitor, integrateWithLazyDiagnostic } from './advancedBootMonitor';
+import { integrateWithLazyDiagnostic } from './advancedBootMonitor';
 import { performanceOptimizer, optimizedImport } from './performanceOptimizer';
 
 // Intégration avec le système de monitoring avancé

@@ -290,10 +290,21 @@ const AppRouter: React.FC = () => {
 
   // ✨ v19.5.2 - User Onboarding State
   const [onboardingComplete, setOnboardingComplete] = useState<boolean>(true); // Assume complete until proven otherwise
-  const [checkingOnboarding, setCheckingOnboarding] = useState<boolean>(true);
+  const [checkingOnboarding, setCheckingOnboarding] = useState<boolean>(
+    import.meta.env.DEV ? false : true
+  ); // Skip check in dev mode
 
   // ✨ v19.5.2 - Check if onboarding is complete (first-run detection)
   useEffect(() => {
+    // ✨ FIX: Skip onboarding check in dev mode to prevent infinite loading
+    if (import.meta.env.DEV) {
+      setOnboardingComplete(true);
+      setCheckingOnboarding(false);
+      return;
+    }
+
+    let cancelled = false;
+
     const checkOnboarding = async () => {
       try {
         // En mode navigateur, vérifier d'abord le localStorage
@@ -306,8 +317,10 @@ const AppRouter: React.FC = () => {
               component: 'Onboarding',
               status: localComplete ? 'Complete' : 'Not started',
             });
-            setOnboardingComplete(localComplete || true); // Par défaut complété en mode navigateur
-            setCheckingOnboarding(false);
+            if (!cancelled) {
+              setOnboardingComplete(localComplete || true);
+              setCheckingOnboarding(false);
+            }
             return;
           }
         }
@@ -318,35 +331,44 @@ const AppRouter: React.FC = () => {
           component: 'Onboarding',
           status: isComplete ? 'Complete' : 'Not started',
         });
-        setOnboardingComplete(isComplete);
+        if (!cancelled) {
+          setOnboardingComplete(isComplete);
+        }
       } catch (error) {
         logger.warn('Failed to check onboarding status, assuming complete', {
           component: 'Onboarding',
           error,
         });
-        setOnboardingComplete(true); // Fallback to main app
+        if (!cancelled) {
+          setOnboardingComplete(true);
+        }
       } finally {
-        setCheckingOnboarding(false);
+        if (!cancelled) {
+          setCheckingOnboarding(false);
+        }
       }
     };
 
-    // Add timeout to prevent infinite loading (3 seconds in browser mode, 5 in Tauri)
+    // ✨ FIX: Reduced timeout from 5s to 300ms to prevent infinite loading
     const timeoutDuration =
       typeof window !== 'undefined' && localStorage.getItem('titane_browser_mode') === '1'
-        ? 1000
-        : 5000;
+        ? 200
+        : 300;
 
     const timeoutId = setTimeout(() => {
-      logger.warn('Onboarding check timeout, assuming complete', {
-        component: 'Onboarding',
-      });
-      setOnboardingComplete(true);
-      setCheckingOnboarding(false);
+      if (!cancelled) {
+        logger.warn('Onboarding check timeout, assuming complete', {
+          component: 'Onboarding',
+        });
+        setOnboardingComplete(true);
+        setCheckingOnboarding(false);
+      }
     }, timeoutDuration);
 
     checkOnboarding();
 
     return () => {
+      cancelled = true;
       clearTimeout(timeoutId);
     };
   }, []);

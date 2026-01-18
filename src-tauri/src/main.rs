@@ -10,6 +10,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 #![allow(dead_code)]
 #![allow(deprecated)] // Migration to conversation_engine::conversation_generate in progress
+#![allow(clippy::expect_used)] // expect() used in bootstrap code paths
 
 #[tauri::command]
 async fn get_readiness_status(

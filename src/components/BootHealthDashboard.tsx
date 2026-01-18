@@ -40,23 +40,42 @@ const BootHealthDashboard: React.FC = () => {
       const healthReport = bootHealthMonitor.generateReport();
       const perfReport = performanceOptimizer.generatePerformanceReport();
 
+      const hrAsRecord = healthReport as Record<string, unknown>;
+      const prAsRecord = perfReport as Record<string, unknown>;
+      
       const combinedMetrics: HealthMetrics = {
-        bootSuccessRate: (healthReport as any).overview?.bootSuccessRate || 0,
-        averageBootTime: (healthReport as any).overview?.averageBootTime || '0ms',
-        lastBootTime: (healthReport as any).overview?.lastBootTime || '0ms',
-        totalBoots: (healthReport as any).overview?.totalBootAttempts || 0,
-        failedModules: (healthReport as any).performance?.failedModules || [],
-        memoryUsage: (healthReport as any).performance?.memoryUsage || '0MB',
-        cacheHitRate: (perfReport as any).cache?.hitRate
-          ? `${(((perfReport as any).cache.hitRate as number) * 100).toFixed(1)}%`
+        bootSuccessRate: hrAsRecord?.overview && typeof hrAsRecord.overview === 'object' 
+          ? ((hrAsRecord.overview as Record<string, unknown>).bootSuccessRate as number) || 0 
+          : 0,
+        averageBootTime: hrAsRecord?.overview && typeof hrAsRecord.overview === 'object' 
+          ? ((hrAsRecord.overview as Record<string, unknown>).averageBootTime as string) || '0ms' 
+          : '0ms',
+        lastBootTime: hrAsRecord?.overview && typeof hrAsRecord.overview === 'object' 
+          ? ((hrAsRecord.overview as Record<string, unknown>).lastBootTime as string) || '0ms' 
+          : '0ms',
+        totalBoots: hrAsRecord?.overview && typeof hrAsRecord.overview === 'object' 
+          ? ((hrAsRecord.overview as Record<string, unknown>).totalBootAttempts as number) || 0 
+          : 0,
+        failedModules: hrAsRecord?.performance && typeof hrAsRecord.performance === 'object' 
+          ? ((hrAsRecord.performance as Record<string, unknown>).failedModules as string[]) || [] 
+          : [],
+        memoryUsage: hrAsRecord?.performance && typeof hrAsRecord.performance === 'object' 
+          ? ((hrAsRecord.performance as Record<string, unknown>).memoryUsage as string) || '0MB' 
+          : '0MB',
+        cacheHitRate: prAsRecord?.cache && typeof prAsRecord.cache === 'object' && typeof ((prAsRecord.cache as Record<string, unknown>).hitRate) === 'number'
+          ? `${(((prAsRecord.cache as Record<string, unknown>).hitRate as number) * 100).toFixed(1)}%`
           : '0%',
-        alertsCount: (healthReport as any).alerts?.total || 0,
+        alertsCount: hrAsRecord?.alerts && typeof hrAsRecord.alerts === 'object' 
+          ? ((hrAsRecord.alerts as Record<string, unknown>).total as number) || 0 
+          : 0,
       };
 
       setMetrics(combinedMetrics);
 
       // Récupérer les alertes critiques
-      const criticalAlerts = (healthReport as any).alerts?.criticalAlerts || [];
+      const criticalAlerts = hrAsRecord?.alerts && typeof hrAsRecord.alerts === 'object' 
+        ? ((hrAsRecord.alerts as Record<string, unknown>).criticalAlerts as SystemAlert[]) || [] 
+        : [];
       setAlerts(criticalAlerts);
     } catch (error) {
       console.warn('[HEALTH-DASHBOARD] Failed to fetch metrics:', error);

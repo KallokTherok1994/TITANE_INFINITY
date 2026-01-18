@@ -148,7 +148,7 @@ pub async fn get_ia_policies() -> Result<SecureResponse<Vec<IAPolicy>>, String> 
         .map_err(|e| format!("Failed to lock IA_POLICIES: {}", e))?
         .clone();
 
-    if policies.len() > 0 {
+    if !policies.is_empty() {
         log::debug!("[GOVERNANCE] Returned {} IA policies", policies.len());
     }
     Ok(SecureResponse::success(policies))
@@ -328,7 +328,7 @@ pub async fn get_security_log(
         }
     }
 
-    if log_entries.len() > 0 {
+    if !log_entries.is_empty() {
         log::debug!(
             "[GOVERNANCE] Returned {} security log entries",
             log_entries.len()

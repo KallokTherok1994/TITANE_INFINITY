@@ -221,7 +221,7 @@ const ConsciousnessDashboard: React.FC<ConsciousnessDashboardProps> = ({
         <div style={dashboardStyles.compactView}>
           <div style={dashboardStyles.metricsRow}>
             {consciousnessMetrics.slice(0, 3).map((metric, _index) => (
-              <div key={index} style={dashboardStyles.compactMetric}>
+              <div key={_index} style={dashboardStyles.compactMetric}>
                 <span style={dashboardStyles.metricIcon}>{metric.icon}</span>
                 <div style={dashboardStyles.metricBar}>
                   <div
@@ -265,10 +265,10 @@ const ConsciousnessDashboard: React.FC<ConsciousnessDashboardProps> = ({
         <div style={dashboardStyles.expandedView}>
           {/* Tabs */}
           <div style={dashboardStyles.tabContainer}>
-            {['consciousness', 'thoughts', 'patterns', 'quantum'].map(tab => (
+            {(['consciousness', 'thoughts', 'patterns', 'quantum'] as const).map(tab => (
               <button
                 key={tab}
-                onClick={() => setSelectedTab(tab as any)}
+                onClick={() => setSelectedTab(tab)}
                 style={{
                   ...dashboardStyles.tab,
                   backgroundColor: selectedTab === tab ? '#333' : 'transparent',
@@ -287,7 +287,7 @@ const ConsciousnessDashboard: React.FC<ConsciousnessDashboardProps> = ({
               <div style={dashboardStyles.consciousnessTab}>
                 <div style={dashboardStyles.metricsGrid}>
                   {consciousnessMetrics.map((metric, _index) => (
-                    <div key={index} style={dashboardStyles.metricCard}>
+                    <div key={_index} style={dashboardStyles.metricCard}>
                       <div style={dashboardStyles.metricHeader}>
                         <span style={dashboardStyles.metricIcon}>{metric.icon}</span>
                         <span style={dashboardStyles.metricName}>{metric.name}</span>
@@ -314,7 +314,7 @@ const ConsciousnessDashboard: React.FC<ConsciousnessDashboardProps> = ({
                   <h3 style={dashboardStyles.sectionTitle}>Quantum State</h3>
                   <div style={dashboardStyles.quantumMetrics}>
                     {quantumMetrics.map((metric, _index) => (
-                      <div key={index} style={dashboardStyles.quantumMetric}>
+                      <div key={_index} style={dashboardStyles.quantumMetric}>
                         <span style={dashboardStyles.quantumLabel}>{metric.name}:</span>
                         <span style={dashboardStyles.quantumValue}>
                           {(metric.value * 100).toFixed(2)}
@@ -457,7 +457,7 @@ const ConsciousnessDashboard: React.FC<ConsciousnessDashboardProps> = ({
                     <div style={dashboardStyles.fieldGrid}>
                       {Array.from({ length: 100 }).map((_, _index) => (
                         <div
-                          key={index}
+                          key={_index}
                           style={{
                             ...dashboardStyles.fieldPoint,
                             opacity: Math.random() * 0.8 + 0.2,

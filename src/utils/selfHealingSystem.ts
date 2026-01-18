@@ -403,7 +403,8 @@ class TitaneSelfHealingSystem {
 
     try {
       while (this.healingQueue.length > 0) {
-        const actionId = this.healingQueue.shift()!;
+        const actionId = this.healingQueue.shift();
+        if (!actionId) break;
         const action = this.healingActions.get(actionId);
 
         if (!action) {

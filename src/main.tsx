@@ -10,15 +10,15 @@
 import { titaneBootRecovery } from './utils/bootRecoverySystem';
 
 // 🧠 QUANTUM INTELLIGENCE INTEGRATION
-import { titaneQuantumIntelligence } from './utils/quantumIntelligence';
-import { titaneSelfHealing } from './utils/selfHealingSystem';
-import { titaneTelemetry } from './utils/telemetryEngine';
+import { titaneQuantumIntelligence as _titaneQuantumIntelligence } from './utils/quantumIntelligence';
+import { titaneSelfHealing as _titaneSelfHealing } from './utils/selfHealingSystem';
+import { titaneTelemetry as _titaneTelemetry } from './utils/telemetryEngine';
 
 // � QUANTUM ORCHESTRATOR
 import { titaneQuantumOrchestrator } from './utils/quantumOrchestrator';
 
 // 🌌 CONSCIOUSNESS DASHBOARD & SYSTEM HUB
-import ConsciousnessDashboard from './components/ConsciousnessDashboard';
+import { default as _ConsciousnessDashboard } from './components/ConsciousnessDashboard';
 import SystemIntegrationHub from './components/SystemIntegrationHub';
 
 // 🛡️ ULTRA-EARLY GLOBAL ERROR HANDLERS (PREVENT SILENT CRASHES)
@@ -1016,9 +1016,9 @@ try {
         onSystemEvent={event => {
           // Logger les événements système critiques
           if (event.severity === 'critical' || event.severity === 'error') {
-            logger.error(`System Event: ${event.type}`, event.data);
+            logger.error(`System Event: ${event.type}`, event.data as Record<string, unknown> | undefined);
           } else {
-            logger.info(`System Event: ${event.type}`, event.data);
+            logger.info(`System Event: ${event.type}`, event.data as Record<string, unknown> | undefined);
           }
         }}
       >

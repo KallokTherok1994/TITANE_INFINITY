@@ -144,3 +144,11 @@ path = "tests/security/permission_enforcement_test.rs"
 [[bench]]
 name = "ipc_benchmarks"
 harness = false
+
+# ═══════════════════════════════════════════════════════════════
+#   LINTS - Code Quality Configuration
+# ═══════════════════════════════════════════════════════════════
+
+[lints.clippy]
+# Allow expect() in bootstrap/initialization paths (documented usage)
+expect_used = "allow"

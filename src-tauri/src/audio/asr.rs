@@ -87,7 +87,7 @@ impl ASREngine {
         let result = self
             .shell_guard
             .execute_asr_whisper(&temp_path)
-            .map_err(|e| AudioError::ProcessingError(e))?;
+            .map_err(AudioError::ProcessingError)?;
 
         // Read transcription from output
         let txt_path = temp_path.with_extension("txt");
@@ -113,7 +113,7 @@ impl ASREngine {
                 "vosk-transcriber",
                 &["-i", path_str, "-m", "/usr/share/vosk/models/vosk-model-fr"],
             )
-            .map_err(|e| AudioError::ProcessingError(e))?;
+            .map_err(AudioError::ProcessingError)?;
 
         Ok(output.trim().to_string())
     }
