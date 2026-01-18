@@ -1657,13 +1657,8 @@ export const TitanePage: React.FC = () => {
     [progression]
   );
 
-  const [isBrowserE2E, setIsBrowserE2E] = useState(() => detectBrowserE2EFlag());
+  const [isBrowserE2E] = useState(() => detectBrowserE2EFlag());
 
-  useEffect(() => {
-    setIsBrowserE2E(detectBrowserE2EFlag());
-  }, []);
-
-  // Render section active
   const renderActiveSection = useCallback(() => {
     switch (activeTab) {
       case 'conversation':
