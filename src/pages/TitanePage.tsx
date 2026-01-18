@@ -1627,7 +1627,8 @@ export const TitanePage: React.FC = () => {
   // Chargement progression
   useEffect(() => {
     // Skip loading progression in E2E mode to avoid blocking the page
-    if (isBrowserE2E) {
+    const isE2E = detectBrowserE2EFlag();
+    if (isE2E) {
       setProgression({ level: 1, xp: 0, nextLevelXp: 500 });
       return;
     }
@@ -1641,7 +1642,7 @@ export const TitanePage: React.FC = () => {
       }
     };
     loadProgression();
-  }, [isBrowserE2E]);
+  }, []);
 
   // Stats calculées
   const stats: TitaneStats = useMemo(
