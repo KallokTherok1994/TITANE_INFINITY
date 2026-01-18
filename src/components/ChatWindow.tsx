@@ -70,14 +70,18 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(
     // ✨ v24.2.1 FIX: Memoize filtered messages to prevent filter recalculation on every render
     const filteredMessages = useMemo(() => {
       if (!Array.isArray(messages)) return [];
-      return messages.filter(
-        message =>
-          message &&
-          message.role &&
-          ['user', 'assistant'].includes(message.role) &&
-          message.content &&
-          getMessageText(message).trim().length > 0
-      );
+      return messages.filter(message => {
+        // Vérifier que le message existe et a un rôle valide
+        if (!message || !message.role || !['user', 'assistant'].includes(message.role)) {
+          return false;
+        }
+        
+        // Extraire le texte du message (support pour string content et objets complexes)
+        const messageText = getMessageText(message);
+        
+        // Vérifier que le contenu existe et n'est pas vide
+        return messageText && messageText.trim().length > 0;
+      });
     }, [messages]);
 
     const handleRestoreHistory = useCallback(() => {
