@@ -220,7 +220,7 @@ const ConsciousnessDashboard: React.FC<ConsciousnessDashboardProps> = ({
       {!isExpanded && (
         <div style={dashboardStyles.compactView}>
           <div style={dashboardStyles.metricsRow}>
-            {consciousnessMetrics.slice(0, 3).map((metric, index) => (
+            {consciousnessMetrics.slice(0, 3).map((metric, _index) => (
               <div key={index} style={dashboardStyles.compactMetric}>
                 <span style={dashboardStyles.metricIcon}>{metric.icon}</span>
                 <div style={dashboardStyles.metricBar}>
@@ -286,7 +286,7 @@ const ConsciousnessDashboard: React.FC<ConsciousnessDashboardProps> = ({
             {selectedTab === 'consciousness' && (
               <div style={dashboardStyles.consciousnessTab}>
                 <div style={dashboardStyles.metricsGrid}>
-                  {consciousnessMetrics.map((metric, index) => (
+                  {consciousnessMetrics.map((metric, _index) => (
                     <div key={index} style={dashboardStyles.metricCard}>
                       <div style={dashboardStyles.metricHeader}>
                         <span style={dashboardStyles.metricIcon}>{metric.icon}</span>
@@ -313,7 +313,7 @@ const ConsciousnessDashboard: React.FC<ConsciousnessDashboardProps> = ({
                 <div style={dashboardStyles.quantumSection}>
                   <h3 style={dashboardStyles.sectionTitle}>Quantum State</h3>
                   <div style={dashboardStyles.quantumMetrics}>
-                    {quantumMetrics.map((metric, index) => (
+                    {quantumMetrics.map((metric, _index) => (
                       <div key={index} style={dashboardStyles.quantumMetric}>
                         <span style={dashboardStyles.quantumLabel}>{metric.name}:</span>
                         <span style={dashboardStyles.quantumValue}>
@@ -349,14 +349,14 @@ const ConsciousnessDashboard: React.FC<ConsciousnessDashboardProps> = ({
                 </div>
 
                 <div style={dashboardStyles.thoughtsList}>
-                  {recentThoughts.map((thought, index) => (
+                  {recentThoughts.map((thought, _index) => (
                     <div
                       key={thought.id}
                       style={dashboardStyles.thoughtItem}
                       onClick={() => onThoughtClick?.(thought)}
                     >
                       <div style={dashboardStyles.thoughtItemHeader}>
-                        <span style={dashboardStyles.thoughtIndex}>#{index + 1}</span>
+                        <span style={dashboardStyles.thoughtIndex}>#{_index + 1}</span>
                         <span style={dashboardStyles.thoughtTime}>
                           {formatThoughtTime(thought.timestamp)}
                         </span>
@@ -408,7 +408,7 @@ const ConsciousnessDashboard: React.FC<ConsciousnessDashboardProps> = ({
                 </div>
 
                 <div style={dashboardStyles.patternsList}>
-                  {intelligencePatterns.map((pattern, index) => (
+                  {intelligencePatterns.map((pattern, _index) => (
                     <div key={pattern.id} style={dashboardStyles.patternItem}>
                       <div style={dashboardStyles.patternHeader}>
                         <span style={dashboardStyles.patternType}>
@@ -455,7 +455,7 @@ const ConsciousnessDashboard: React.FC<ConsciousnessDashboardProps> = ({
                   <div style={dashboardStyles.quantumField}>
                     {/* Visualization simplifiée du champ quantique */}
                     <div style={dashboardStyles.fieldGrid}>
-                      {Array.from({ length: 100 }).map((_, index) => (
+                      {Array.from({ length: 100 }).map((_, _index) => (
                         <div
                           key={index}
                           style={{
