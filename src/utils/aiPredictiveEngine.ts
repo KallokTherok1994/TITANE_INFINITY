@@ -134,7 +134,7 @@ class TitaneAIPredictiveEngine {
         accuracy: modelData.accuracy!,
         lastTrained: Date.now(),
         features: modelData.features!,
-        weights: new Float32Array(modelData.features!.length).map(
+        weights: new Float32Array(modelData.features?.length).map(
           () => Math.random() * 2 - 1
         ),
         bias: Math.random() * 0.1,

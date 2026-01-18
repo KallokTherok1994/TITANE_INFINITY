@@ -2,6 +2,349 @@
   "snapshots": [],
   "logs": [
     {
+      "id": "ui-1768735107240-2sjlygar",
+      "timestamp": 1768735107240,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768735068378-0ag8e35y",
+      "timestamp": 1768735068378,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768735068052-67uza4bo",
+      "timestamp": 1768735068052,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768735057412-sq4eczzb",
+      "timestamp": 1768735057412,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768735057324-089sp6e3",
+      "timestamp": 1768735057324,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768735056331-a4omolna",
+      "timestamp": 1768735056331,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Importing a module script failed. (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XO35FAC6.js?v=5da75dcd:903:34)"
+    },
+    {
+      "id": "ui-1768735056245-xplqoopv",
+      "timestamp": 1768735056245,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): The object can not be found here. (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-EM6PUTC5.js?v=5da75dcd:16718:27)"
+    },
+    {
+      "id": "ui-1768735056107-z8tcgp08",
+      "timestamp": 1768735056107,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768735055969-2yfzb5ll",
+      "timestamp": 1768735055969,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768734956575-sf5yexre",
+      "timestamp": 1768734956575,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Cannot access uninitialized variable. (http://127.0.0.1:5173/src/components/SystemIntegrationHub.tsx?t=1768734902413:153:37)"
+    },
+    {
+      "id": "ui-1768734956423-krb0nxsc",
+      "timestamp": 1768734956423,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768734956437-l64a0a81",
+      "timestamp": 1768734956437,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Cannot access uninitialized variable. (http://127.0.0.1:5173/src/components/SystemIntegrationHub.tsx?t=1768734902413:153:37)"
+    },
+    {
+      "id": "ui-1768734956364-5cr7e0vt",
+      "timestamp": 1768734956364,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768734955390-kfe0vyfq",
+      "timestamp": 1768734955390,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Cannot access uninitialized variable. (http://127.0.0.1:5173/src/components/SystemIntegrationHub.tsx?t=1768734902413:153:37)"
+    },
+    {
+      "id": "ui-1768734955155-7xzwsbcm",
+      "timestamp": 1768734955155,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768734955117-4zfa9by1",
+      "timestamp": 1768734955117,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Cannot access uninitialized variable. (http://127.0.0.1:5173/src/components/SystemIntegrationHub.tsx?t=1768734902413:153:37)"
+    },
+    {
+      "id": "ui-1768734955029-6510s9of",
+      "timestamp": 1768734955029,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768734903837-yanuynd6",
+      "timestamp": 1768734903837,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Cannot access uninitialized variable. (http://127.0.0.1:5173/src/components/SystemIntegrationHub.tsx?t=1768734902413:153:37)"
+    },
+    {
+      "id": "ui-1768734903675-yrjrf7fv",
+      "timestamp": 1768734903675,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768734903647-rvjozesy",
+      "timestamp": 1768734903647,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Cannot access uninitialized variable. (http://127.0.0.1:5173/src/components/SystemIntegrationHub.tsx?t=1768734902413:153:37)"
+    },
+    {
+      "id": "ui-1768734903544-84zka8yk",
+      "timestamp": 1768734903544,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768734892354-jlmlxlgc",
+      "timestamp": 1768734892354,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Cannot access uninitialized variable. (http://127.0.0.1:5173/src/components/SystemIntegrationHub.tsx?t=1768734889273:153:37)"
+    },
+    {
+      "id": "ui-1768734892196-rt6dl5ye",
+      "timestamp": 1768734892196,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768734892163-5xw7jyh6",
+      "timestamp": 1768734892163,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Cannot access uninitialized variable. (http://127.0.0.1:5173/src/components/SystemIntegrationHub.tsx?t=1768734889273:153:37)"
+    },
+    {
+      "id": "ui-1768734892091-zegjcvu3",
+      "timestamp": 1768734892091,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768734891207-7ejfinhg",
+      "timestamp": 1768734891207,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Cannot access uninitialized variable. (http://127.0.0.1:5173/src/components/SystemIntegrationHub.tsx?t=1768734889273:153:37)"
+    },
+    {
+      "id": "ui-1768734891020-kboz2n1w",
+      "timestamp": 1768734891020,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768734890958-qfbvx337",
+      "timestamp": 1768734890958,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Cannot access uninitialized variable. (http://127.0.0.1:5173/src/components/SystemIntegrationHub.tsx?t=1768734889273:153:37)"
+    },
+    {
+      "id": "ui-1768734890853-2zmkwnk1",
+      "timestamp": 1768734890853,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768734849815-okmckomt",
+      "timestamp": 1768734849815,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Cannot access uninitialized variable. (http://127.0.0.1:5173/src/components/SystemIntegrationHub.tsx?t=1768734750267:153:37)"
+    },
+    {
+      "id": "ui-1768734849667-8kh50mip",
+      "timestamp": 1768734849667,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768734849609-hnd7cynn",
+      "timestamp": 1768734849609,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Cannot access uninitialized variable. (http://127.0.0.1:5173/src/components/SystemIntegrationHub.tsx?t=1768734750267:153:37)"
+    },
+    {
+      "id": "ui-1768734849539-hh28qdig",
+      "timestamp": 1768734849539,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768734848631-a5346jpa",
+      "timestamp": 1768734848631,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Cannot access uninitialized variable. (http://127.0.0.1:5173/src/components/SystemIntegrationHub.tsx?t=1768734750267:153:37)"
+    },
+    {
+      "id": "ui-1768734848471-iu115onf",
+      "timestamp": 1768734848471,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768734848445-kjm3hjnq",
+      "timestamp": 1768734848445,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Cannot access uninitialized variable. (http://127.0.0.1:5173/src/components/SystemIntegrationHub.tsx?t=1768734750267:153:37)"
+    },
+    {
+      "id": "ui-1768734848357-2s0b85vd",
+      "timestamp": 1768734848357,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768734751592-bcg14qjv",
+      "timestamp": 1768734751592,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Cannot access uninitialized variable. (http://127.0.0.1:5173/src/components/SystemIntegrationHub.tsx?t=1768734750267:153:37)"
+    },
+    {
+      "id": "ui-1768734751406-0urr1z86",
+      "timestamp": 1768734751406,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768734751402-xmu4q1ya",
+      "timestamp": 1768734751402,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Cannot access uninitialized variable. (http://127.0.0.1:5173/src/components/SystemIntegrationHub.tsx?t=1768734750267:153:37)"
+    },
+    {
+      "id": "ui-1768734751330-d9g83m85",
+      "timestamp": 1768734751330,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768734747123-7p49h98r",
+      "timestamp": 1768734747123,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Cannot access uninitialized variable. (http://127.0.0.1:5173/src/components/SystemIntegrationHub.tsx?t=1768734734474:153:37)"
+    },
+    {
+      "id": "ui-1768734746954-s5zo6vrt",
+      "timestamp": 1768734746954,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768734746912-esf8zfaw",
+      "timestamp": 1768734746912,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Cannot access uninitialized variable. (http://127.0.0.1:5173/src/components/SystemIntegrationHub.tsx?t=1768734734474:153:37)"
+    },
+    {
+      "id": "ui-1768734746835-b8997vgc",
+      "timestamp": 1768734746835,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768734746038-yw077lt3",
+      "timestamp": 1768734746038,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Cannot access uninitialized variable. (http://127.0.0.1:5173/src/components/SystemIntegrationHub.tsx?t=1768734734474:153:37)"
+    },
+    {
+      "id": "ui-1768734745390-605nszs3",
+      "timestamp": 1768734745390,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1768734745787-96zexouj",
+      "timestamp": 1768734745787,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Cannot access uninitialized variable. (http://127.0.0.1:5173/src/components/SystemIntegrationHub.tsx?t=1768734734474:153:37)"
+    },
+    {
+      "id": "ui-1768734745311-9n4kesd0",
+      "timestamp": 1768734745311,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
       "id": "ui-1768732236668-0ae99l3v",
       "timestamp": 1768732236668,
       "level": "Info",
@@ -3867,7 +4210,7 @@
   "knowledge": [],
   "rituals": [],
   "metadata": {
-    "last_validation_ts": 1768732236739,
+    "last_validation_ts": 1768735107325,
     "last_compaction_ts": null
   }
 }
