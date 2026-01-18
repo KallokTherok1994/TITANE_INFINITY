@@ -1,0 +1,101 @@
+name: Release Build
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Trigger on version tags (e.g., v26.4.0)
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-release:
+    name: Build Release Artifacts
+    runs-on: ubuntu-22.04
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+          
+      - name: Setup Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+          
+      - name: Install Dependencies (System)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libappindicator3-dev \
+            librsvg2-dev \
+            patchelf \
+            libssl-dev \
+            file
+            
+      - name: Install Dependencies (Node)
+        run: pnpm install
+        
+      - name: Run Tests
+        run: |
+          pnpm test
+          pnpm test:rust
+          
+      - name: Build Release
+        run: pnpm run build
+        
+      - name: Generate Checksums
+        run: |
+          cd src-tauri/target/release/bundle
+          sha256sum **/*.{AppImage,deb,rpm} 2>/dev/null > CHECKSUMS.sha256 || true
+          
+      - name: Extract Version
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+        
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            src-tauri/target/release/bundle/appimage/*.AppImage
+            src-tauri/target/release/bundle/deb/*.deb
+            src-tauri/target/release/bundle/rpm/*.rpm
+            src-tauri/target/release/bundle/CHECKSUMS.sha256
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Update latest.json
+        run: |
+          cat > latest.json << EOF
+          {
+            "version": "v${{ steps.version.outputs.VERSION }}",
+            "pub_date": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "platforms": {
+              "linux-x86_64": {
+                "url": "https://github.com/${{ github.repository }}/releases/download/v${{ steps.version.outputs.VERSION }}/TITANE-Infinity_${{ steps.version.outputs.VERSION }}_amd64.AppImage",
+                "signature": ""
+              }
+            }
+          }
+          EOF
+          
+      - name: Commit latest.json
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add latest.json
+          git commit -m "chore: update latest.json to v${{ steps.version.outputs.VERSION }}" || true
+          git push origin HEAD:MAIN || true
