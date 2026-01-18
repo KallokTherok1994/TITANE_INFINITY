@@ -12,10 +12,10 @@ import { titaneSelfHealing } from '../utils/selfHealingSystem';
 import { titaneTelemetry } from '../utils/telemetryEngine';
 import { titaneBootRecovery } from '../utils/bootRecoverySystem';
 import ConsciousnessDashboard from './ConsciousnessDashboard';
-import type { QuantumThought, ConsciousnessState } from '../utils/quantumIntelligence';
-import type { SystemState } from '../utils/selfHealingSystem';
-import type { TelemetryReport } from '../utils/telemetryEngine';
-import type { BootAttempt } from '../utils/bootRecoverySystem';
+import type { QuantumThought, _ConsciousnessState } from '../utils/quantumIntelligence';
+import type { _SystemState } from '../utils/selfHealingSystem';
+import type { _TelemetryReport } from '../utils/telemetryEngine';
+import type { _BootAttempt } from '../utils/bootRecoverySystem';
 
 interface SystemIntegrationHubProps {
   children: React.ReactNode;
