@@ -232,7 +232,7 @@ class TitaneAIPredictiveEngine {
   ): PredictionResult {
     // Extraire les features du modèle depuis les métriques
     const features = model.features.map(feature => {
-      const value = (metrics as any)[feature];
+      const value = (_metrics as any)[feature];
       return this.normalizeFeature(feature, value ?? 0);
     }) as number[];
 
@@ -626,13 +626,13 @@ class TitaneAIPredictiveEngine {
       );
     }
 
-    if (metrics.bootTime > 5000) {
+    if (_metrics.bootTime > 5000) {
       insights.push(
         '🐌 Boot performance below optimal - consider cache optimization or resource scaling'
       );
     }
 
-    if (metrics.cacheHitRate < 0.7) {
+    if (_metrics.cacheHitRate < 0.7) {
       insights.push(
         '💾 Cache efficiency could be improved - analyze usage patterns and preload strategies'
       );
