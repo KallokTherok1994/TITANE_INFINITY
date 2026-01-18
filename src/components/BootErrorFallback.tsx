@@ -17,7 +17,7 @@ interface BootErrorFallbackProps {
 export function BootErrorFallback({
   error,
   onRetry,
-  _onClearCache,
+  onClearCache: _onClearCache,
 }: BootErrorFallbackProps) {
   const isModuleScriptError = error?.message?.includes(
     'Importing a module script failed'
@@ -192,7 +192,7 @@ export function BootErrorFallback({
               userAgent: navigator.userAgent,
               url: window.location.href,
               timestamp: new Date().toISOString(),
-              diagnostics: (window as any).__TITANE_BOOT_DIAGNOSTICS__,
+              diagnostics: (window as unknown as { __TITANE_BOOT_DIAGNOSTICS__?: unknown }).__TITANE_BOOT_DIAGNOSTICS__,
             });
             window.open(
               'https://github.com/KallokTherok1994/TITANE_INFINITY/issues',

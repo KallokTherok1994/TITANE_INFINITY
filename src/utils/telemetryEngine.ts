@@ -449,7 +449,8 @@ class TitaneTelemetryEngine {
       this.metrics.set(metric.id, []);
     }
 
-    const metricHistory = this.metrics.get(metric.id)!;
+    const metricHistory = this.metrics.get(metric.id);
+    if (!metricHistory) return;
     metricHistory.unshift(metric);
 
     // Limiter l'historique à 1000 entrées par métrique

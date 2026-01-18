@@ -7,6 +7,9 @@
 // SECURITY & CODE QUALITY LINTS (v26.2.0+)
 // ═══════════════════════════════════════════════════════════════
 
+// Allow expect() in specific contexts (bootstrapping, initialization)
+#![allow(clippy::expect_used)]
+
 // Enforce safe error handling - no unwrap() in production code
 // Tests are exempt via #[cfg(test)] or #[allow(clippy::unwrap_used)]
 #![warn(clippy::unwrap_used)]

@@ -128,13 +128,14 @@ class TitaneAIPredictiveEngine {
     ];
 
     baseModels.forEach(modelData => {
+      if (!modelData.id || !modelData.name || !modelData.accuracy || !modelData.features) return;
       const model: PredictionModel = {
-        id: modelData.id!,
-        name: modelData.name!,
-        accuracy: modelData.accuracy!,
+        id: modelData.id,
+        name: modelData.name,
+        accuracy: modelData.accuracy,
         lastTrained: Date.now(),
-        features: modelData.features!,
-        weights: new Float32Array(modelData.features?.length).map(
+        features: modelData.features,
+        weights: new Float32Array(modelData.features.length).map(
           () => Math.random() * 2 - 1
         ),
         bias: Math.random() * 0.1,
@@ -177,7 +178,7 @@ class TitaneAIPredictiveEngine {
    * Analyse les métriques système actuelles
    */
   private async gatherSystemMetrics(): Promise<SystemMetrics> {
-    const now = performance.now();
+    const _now = performance.now();
 
     return {
       timestamp: Date.now(),
@@ -226,7 +227,7 @@ class TitaneAIPredictiveEngine {
    */
   private runPredictionModel(
     model: PredictionModel,
-    metrics: SystemMetrics
+    _metrics: SystemMetrics
   ): PredictionResult {
     // Extraire les features du modèle depuis les métriques
     const features = model.features.map(feature => {
@@ -463,7 +464,7 @@ class TitaneAIPredictiveEngine {
         timeToFailure: pred.timeToFailure,
       })),
       patterns: this.patterns.slice(0, 10), // Top 10 patterns
-      metrics: currentMetrics,
+      _metrics: currentMetrics,
       modelPerformance: Array.from(this.models.values()).map(model => ({
         name: model.name,
         accuracy: model.accuracy,
@@ -542,7 +543,7 @@ class TitaneAIPredictiveEngine {
   }
 
   // Autres fonctions utilitaires pour ML
-  private calculateCorrelations(metrics: SystemMetrics[]): Map<string, number> {
+  private calculateCorrelations(_metrics: SystemMetrics[]): Map<string, number> {
     const correlations = new Map<string, number>();
     // Calculs de corrélation simplifiés
     return correlations;
@@ -569,9 +570,9 @@ class TitaneAIPredictiveEngine {
   }
 
   private calculatePatternImpact(
-    metric1: string,
-    metric2: string,
-    metrics: SystemMetrics[]
+    _metric1: string,
+    _metric2: string,
+    _metrics: SystemMetrics[]
   ): number {
     // Calculer l'impact d'un pattern sur les performances
     return Math.random() * 0.5 + 0.5; // 0.5-1.0
@@ -610,7 +611,7 @@ class TitaneAIPredictiveEngine {
 
   private generateAIInsights(
     predictions: Map<string, PredictionResult>,
-    metrics: SystemMetrics
+    _metrics: SystemMetrics
   ): string[] {
     const insights: string[] = [];
 

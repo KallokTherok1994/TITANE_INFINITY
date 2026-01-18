@@ -9,5 +9,7 @@ module.exports = {
     '@tailwindcss/postcss': {},
     autoprefixer: {},
   },
-  from: undefined, // Ajout explicite pour éviter les avertissements
+  // Supprimer l'avertissement PostCSS `from` option
+  map: false, // Désactiver les source maps en production
+  from: undefined,
 };

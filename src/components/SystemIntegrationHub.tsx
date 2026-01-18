@@ -231,7 +231,7 @@ const SystemIntegrationHub: React.FC<SystemIntegrationHubProps> = ({
     } finally {
       inFlight.current = false;
     }
-  }, [onSystemEvent, autoMode, showConsciousnessDashboard]); // Supprimé hubState des dépendances
+  }, [onSystemEvent, autoMode, showConsciousnessDashboard, computeStateHash]); // Supprimé hubState des dépendances
 
   // Système de monitoring intégré
   useEffect(() => {

@@ -17,7 +17,7 @@ let reactRenderCount = 0;
 let lastRenderTime = 0;
 
 const MAX_RENDERS_PER_SECOND = 60;
-const MAX_RECOVERY_ATTEMPTS = 1;
+const _MAX_RECOVERY_ATTEMPTS = 1; // Reserved for future use
 
 /**
  * Boot Safety Lock API
