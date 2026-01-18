@@ -178,5 +178,7 @@ export const bootSafetyLock = {
  * Hook window global pour debug
  */
 if (typeof window !== 'undefined') {
-  (window as unknown as { __TITANE_BOOT_LOCK__: typeof bootSafetyLock }).__TITANE_BOOT_LOCK__ = bootSafetyLock;
+  (
+    window as unknown as { __TITANE_BOOT_LOCK__: typeof bootSafetyLock }
+  ).__TITANE_BOOT_LOCK__ = bootSafetyLock;
 }

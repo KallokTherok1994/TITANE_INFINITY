@@ -5,7 +5,7 @@
  *
  * 🎼 ORCHESTRATEUR SYSTÈME QUANTIQUE
  * Gestion automatisée et intelligente de tous les sous-systèmes TITANE∞
- * 
+ *
  * 🔒 PHASE 4: Safe mode orchestrator (protection functions undefined)
  */
 
@@ -143,7 +143,9 @@ class TitaneQuantumOrchestrator {
 
           // Capability check for executeHealingPlan
           if (typeof titaneSelfHealing.executeHealingPlan !== 'function') {
-            console.warn('⚠️ [ORCHESTRATOR] executeHealingPlan not available, using triggerManualHealing');
+            console.warn(
+              '⚠️ [ORCHESTRATOR] executeHealingPlan not available, using triggerManualHealing'
+            );
             const results = await titaneSelfHealing.triggerManualHealing(healingPlan);
 
             return {
@@ -270,7 +272,8 @@ class TitaneQuantumOrchestrator {
       triggers: [
         metrics => this.detectLearningOpportunities(metrics),
         metrics => metrics.quantum_intelligence.consciousness_level > 0.6,
-        _metrics => Date.now() - this.lastMetrics?.telemetry.data_collection_rate > 300000, // 5 minutes
+        _metrics =>
+          Date.now() - this.lastMetrics?.telemetry.data_collection_rate > 300000, // 5 minutes
       ],
       actions: [
         async metrics => {
@@ -318,7 +321,7 @@ class TitaneQuantumOrchestrator {
               : 0,
           active_thoughts:
             quantumState.status === 'fulfilled'
-              ? quantumState.value.active_thought_processes?.length ?? 0
+              ? (quantumState.value.active_thought_processes?.length ?? 0)
               : 0,
           learning_rate:
             quantumState.status === 'fulfilled' ? quantumState.value.learning_rate : 0,
