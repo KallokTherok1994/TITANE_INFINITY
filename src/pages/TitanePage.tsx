@@ -55,12 +55,11 @@ import {
   downloadMarkdown,
   copyToClipboard,
 } from '@/features/conversation/exportImport';
-import { hybridTTS } from '@/services/tts/hybridTTS';
 import { AchievementCard } from '@/features/progression/AchievementCard';
 import { ACHIEVEMENTS } from '@/features/progression/achievements';
 import { RealTimeCharts, QuickStatCard } from '@/features/dashboard/RealTimeCharts';
 import { Download, FileText, Copy, Trash2, Search } from 'lucide-react';
-import { ModeBuilder, type CustomMode } from '@/components/conversation/ModeBuilder';
+import { ModeBuilder } from '@/components/conversation/ModeBuilder';
 import { detectEnvironment } from '@/core/tauri/environment';
 import { Camera } from 'lucide-react';
 import type { ProgressionState } from '@/cognitive/types';
@@ -305,7 +304,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E 
   const [showModeBuilder, setShowModeBuilder] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
-  const [customModes, setCustomModes] = useState<CustomMode[]>([]);
+  // Note: customModes removed - not currently used in this component
   const [_attachedImages, setAttachedImages] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterRole, setFilterRole] = useState<'all' | 'user' | 'assistant'>('all');

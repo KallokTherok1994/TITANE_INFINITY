@@ -49,7 +49,7 @@ describe('GATE_RELEASE: TITANE∞ PRODUCTION CERTIFICATION', () => {
 
     it('should execute full certification test suite successfully', () => {
       const envPath = `${process.env.PATH}:${ROOT}/.tools/node/current/bin`;
-      const command = `PATH=\"${envPath}\"; ./pnpm-local.sh test -- --run tests/phase*/gate-*.test.ts`;
+      const command = `PATH="${envPath}"; ./pnpm-local.sh test -- --run tests/phase*/gate-*.test.ts`;
       try {
         const result = execSync(command, {
           cwd: ROOT,
