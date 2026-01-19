@@ -37,7 +37,7 @@ rand                           = "0.9"
 chrono                         = { version = "0.4", features = ["serde"] }
 uuid                           = { version = "1.6", features = ["v4", "serde"] }
 tokio                          = { version = "1.35", features = ["full"] }
-thiserror                      = "1.0"
+thiserror                      = "2.0"
 sysinfo                        = "0.37"
 
 # Core dependencies (actively used)
