@@ -66,6 +66,13 @@ pub mod utils; // ✅ Utilities (AppResult, AppError)
 pub mod watchdog; // ✅ Watchdog Engine v17 (NEW) // ✅ Phase 1 Stabilisation v20.0: Unified AppError (NEW) // ✅ SingularityFusion vΩ (NEW)
 
 // ═══════════════════════════════════════════════════════════════
+// PERFORMANCE PROFILING v26.4.0 (Phase 4 Sprint 3)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod perf_bench; // ✅ v26.4.0 - Performance benchmarking framework (NEW)
+pub mod perf_metrics_capture; // ✅ v26.4.0 - Baseline metrics capture (NEW)
+
+// ═══════════════════════════════════════════════════════════════
 // KERNEL v20Ω.0 (Super Prompt #11)
 // ═══════════════════════════════════════════════════════════════
 
