@@ -309,6 +309,12 @@ struct LocalError {
 mod tests {
     use super::*;
 
+    macro_rules! test_ok {
+        ($expr:expr) => {
+            $expr.expect(&format!("TEST FAILED at {}:{}", file!(), line!()))
+        };
+    }
+
     #[test]
     fn test_local_provider_creation() {
         let config = LocalConfig::default();
@@ -340,22 +346,22 @@ mod tests {
     fn test_select_model_modes() {
         let mut config = LocalConfig::default();
         config.default_mode = LocalMode::Fast;
-        let provider = LocalProvider::new(config).unwrap();
+        let provider = test_ok!(LocalProvider::new(config));
         assert_eq!(provider.select_model(), "llama3");
     }
 
     #[test]
     fn test_parse_valid_response() {
-        let provider = LocalProvider::new(LocalConfig::default()).unwrap();
+        let provider = test_ok!(LocalProvider::new(LocalConfig::default()));
         let response_json = r#"{"response":"ok","done":true}"#;
         let result = provider.parse_response(response_json);
         assert!(result.is_ok());
-        assert_eq!(result.unwrap(), "ok");
+        assert_eq!(test_ok!(result), "ok");
     }
 
     #[test]
     fn test_parse_error_response() {
-        let provider = LocalProvider::new(LocalConfig::default()).unwrap();
+        let provider = test_ok!(LocalProvider::new(LocalConfig::default()));
         let error_json = r#"{"error":"model not loaded"}"#;
         let result = provider.parse_response(error_json);
         assert!(result.is_err());
@@ -363,14 +369,14 @@ mod tests {
 
     #[tokio::test]
     async fn test_empty_message_rejected() {
-        let mut provider = LocalProvider::new(LocalConfig::default()).unwrap();
+        let mut provider = test_ok!(LocalProvider::new(LocalConfig::default()));
         let result = provider.send_message("").await;
         assert!(result.is_err());
     }
 
     #[test]
     fn test_capabilities_contains_local() {
-        let provider = LocalProvider::new(LocalConfig::default()).unwrap();
+        let provider = test_ok!(LocalProvider::new(LocalConfig::default()));
         let caps = provider.capabilities();
         assert!(caps.contains(&"local_inference".to_string()));
     }
