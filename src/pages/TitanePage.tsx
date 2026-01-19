@@ -256,7 +256,7 @@ interface ConversationSectionProps {
 
 const defaultConversationModes: Array<{ id: ConversationMode; name: string; icon: string }> = [
   { id: 'default', name: 'Mode Neutre', icon: '⚖️' },
-  { id: 'focus', name: 'Focus', icon: '🎯' },
+  { id: 'brainstorming', name: 'Brainstorming', icon: '🎯' },
 ];
 
 const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E }) => {
@@ -313,7 +313,11 @@ const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E 
   const voiceEngine = useVoiceEngine();
   const thinking = useThinkingSteps();
 
-  const availableProviders = useMemo(() => ['gemini', 'openai', 'claude'], []);
+  const availableProviders = useMemo(() => [
+    { id: 'gemini', name: 'Gemini', icon: '🤖', available: true },
+    { id: 'openai', name: 'OpenAI', icon: '🎯', available: true },
+    { id: 'claude', name: 'Claude', icon: '🧠', available: true },
+  ], []);
   const conversationModes = useMemo(() => defaultConversationModes, []);
 
   const effectiveMessages = useMemo(
@@ -355,6 +359,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E 
         id: `user-${Date.now()}`,
         role: 'user',
         content,
+        timestamp: Date.now(),
       });
       setInputValue('');
 
@@ -363,6 +368,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E 
           id: `assistant-${Date.now()}`,
           role: 'assistant',
           content: 'Réponse simulée: ' + content,
+          timestamp: Date.now(),
         });
       }, 50);
       return;
@@ -381,11 +387,12 @@ const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E 
       if (!content) return;
 
       if (resolvedIsBrowserE2E) {
-        appendBrowserMessage({ id: `user-${Date.now()}`, role: 'user', content });
+        appendBrowserMessage({ id: `user-${Date.now()}`, role: 'user', content, timestamp: Date.now() });
         appendBrowserMessage({
           id: `assistant-${Date.now() + 1}`,
           role: 'assistant',
           content: 'Réponse simulée: ' + content,
+          timestamp: Date.now(),
         });
         return;
       }
@@ -409,7 +416,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E 
   );
 
   const handleCopyMessage = useCallback(async (content: string) => {
-    await copyToClipboard('Message', [{ id: 'copy', role: 'assistant', content }]);
+    await copyToClipboard('Message', [{ id: 'copy', role: 'assistant', content, timestamp: Date.now() }]);
   }, []);
 
   const handleKeyDown = useCallback(
@@ -430,6 +437,12 @@ const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E 
 
     clearMessages();
   }, [clearMessages, resolvedIsBrowserE2E]);
+
+  const handleSaveCustomMode = useCallback((modeData: any) => {
+    pageLogger.debug('Custom mode saved', modeData);
+    // TODO: Implement custom mode saving logic
+    setShowModeBuilder(false);
+  }, []);
 
   const handleVoiceInput = useCallback(async () => {
     if (!voiceEngine.status.isMicAvailable) {
@@ -567,10 +580,10 @@ const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E 
             <button
               className="conversation-icon-btn"
               onClick={async () => {
-                const success = await copyToClipboard(
-                  'Conversation TITANE',
-                  displayedMessages
-                );
+      const success = await copyToClipboard(
+        'Conversation TITANE',
+        displayedMessages.map(msg => ({ id: msg.id, role: msg.role, content: msg.content, timestamp: msg.timestamp }))
+      );
                 if (success) alert('✅ Conversation copiée!');
               }}
               title="Copier dans le presse-papier"
@@ -806,7 +819,11 @@ const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E 
             sendMessage(`📝 Transcription:\n\n"${text}"\n\nAnalyse ce contenu.`);
           }}
           onToggleAudioConversation={active => setAudioEnabled(active)}
-          onToggleCameraLive={() => setCameraActive(prev => !prev)}
+          onToggleCameraLive={() => {
+            const setCameraPreviewVisible = useVisionStore.getState().setCameraPreviewVisible;
+            const isVisible = useVisionStore.getState().isCameraPreviewVisible;
+            setCameraPreviewVisible(!isVisible);
+          }}
           onToggleTTS={active => setAudioEnabled(active)}
           disabled={effectiveIsLoading}
           compact={false}
@@ -1628,7 +1645,19 @@ export const TitanePage: React.FC = () => {
     // Skip loading progression in E2E mode to avoid blocking the page
     const isE2E = detectBrowserE2EFlag();
     if (isE2E) {
-      setProgression({ level: 1, xp: 0, nextLevelXp: 500 });
+      setProgression({
+        level: 1,
+        totalXP: 0,
+        xpInCurrentLevel: 0,
+        xpToNextLevel: 500,
+        milestones: [],
+        unlockedMilestones: [],
+        lastXPGain: null,
+        streakDays: 0,
+        lastActiveDate: new Date().toISOString().split('T')[0] || new Date().toISOString(),
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      });
       return;
     }
 
