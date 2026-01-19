@@ -426,6 +426,12 @@ impl AgentContract {
 mod tests {
     use super::*;
 
+    macro_rules! test_ok {
+        ($expr:expr) => {
+            $expr.expect(&format!("TEST FAILED at {}:{}", file!(), line!()))
+        };
+    }
+
     // ─────────────────────────────────────────────────────────────────────
     // Tests ContractViolation
     // ─────────────────────────────────────────────────────────────────────
@@ -585,7 +591,7 @@ mod tests {
     #[test]
     fn test_contract_violation_serialize() {
         let v = ContractViolation::ForbiddenAction("test".to_string());
-        let json = serde_json::to_string(&v).expect("contract violation should serialize");
+        let json = test_ok!(serde_json::to_string(&v));
         assert!(json.contains("ForbiddenAction"));
     }
 
@@ -593,7 +599,7 @@ mod tests {
     fn test_contract_violation_deserialize() {
         let json = r#"{"InvariantViolation":"broken"}"#;
         let v: ContractViolation =
-            serde_json::from_str(json).expect("contract violation should deserialize");
+            test_ok!(serde_json::from_str(json));
         assert!(matches!(v, ContractViolation::InvariantViolation(_)));
     }
 
@@ -763,7 +769,7 @@ mod tests {
     #[test]
     fn test_contract_serialize() {
         let contract = AgentContract::default_for_role(&AgentRole::Security);
-        let json = serde_json::to_string(&contract).expect("agent contract should serialize");
+        let json = test_ok!(serde_json::to_string(&contract));
         assert!(json.contains("Security"));
         assert!(json.contains("max_execution_time_seconds"));
     }
@@ -771,9 +777,9 @@ mod tests {
     #[test]
     fn test_contract_deserialize() {
         let contract = AgentContract::default_for_role(&AgentRole::API);
-        let json = serde_json::to_string(&contract).expect("agent contract should serialize");
+        let json = test_ok!(serde_json::to_string(&contract));
         let restored: AgentContract =
-            serde_json::from_str(&json).expect("agent contract should deserialize");
+            test_ok!(serde_json::from_str(&json));
         assert_eq!(restored.role, AgentRole::API);
     }
 }
