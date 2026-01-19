@@ -3,8 +3,6 @@
  * Action pour patcher un composant React côté frontend.
  */
 
-import { logger } from '@/utils/logger';
-
 /**
  * Patch un composant React
  * @param targetModule - Nom du module/composant à patcher
@@ -14,7 +12,7 @@ export async function patchReactComponent(
   targetModule: string,
   parameters: Record<string, unknown>
 ): Promise<{ patched: boolean; module: string }> {
-  logger.debug(`[patchComponent] Patching component: ${targetModule}`, parameters);
+  console.log(`[patchComponent] Patching component: ${targetModule}`, parameters);
 
   // Dans une implémentation réelle, cela pourrait:
   // - Forcer un re-render du composant

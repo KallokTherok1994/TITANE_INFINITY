@@ -270,135 +270,109 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = memo(
     // Traitement de plusieurs fichiers
     const handleFiles = useCallback(
       async (fileList: FileList | File[]) => {
-        try {
-          setError(null);
-          setIsProcessing(true);
+        setError(null);
+        setIsProcessing(true);
 
-          const files = Array.from(fileList).slice(0, maxFiles);
+        const files = Array.from(fileList).slice(0, maxFiles);
 
-          if (files.length === 0) {
-            setError('Aucun fichier sélectionné');
-            setIsProcessing(false);
-            return;
-          }
+        if (files.length === 0) {
+          setError('Aucun fichier sélectionné');
+          setIsProcessing(false);
+          return;
+        }
 
-          isDev && console.log('[FileUpload] Processing', files.length, 'files');
+        isDev && console.log('[FileUpload] Processing', files.length, 'files');
 
-          const results: AnalyzedFile[] = [];
+        const results: AnalyzedFile[] = [];
 
-          for (const file of files) {
+        for (const file of files) {
+          const result = await processFile(file);
+          results.push(result);
+          onFileAnalyzed?.(result);
+
+          // ═══ SAUVEGARDE MÉMOIRE PERMANENTE + XP ═══
+          // Enregistrer le fichier dans la mémoire IA permanente (backend Tauri)
+          if (result.status === 'done' && result.content) {
             try {
-              const result = await processFile(file);
-              results.push(result);
-              onFileAnalyzed?.(result);
+              // Ingestion dans la mémoire IA permanente
+              const memoryResult = await secureInvoke('memory_ingest_file', {
+                path: result.name,
+                content: result.content,
+                category: result.category,
+                metadata: {
+                  name: result.name,
+                  size: result.size,
+                  type: result.type,
+                  analysis: result.analysis,
+                  timestamp: Date.now(),
+                },
+              });
 
-              // ═══ SAUVEGARDE MÉMOIRE PERMANENTE + XP ═══
-              // Enregistrer le fichier dans la mémoire IA permanente (backend Tauri)
-              if (result.status === 'done' && result.content) {
-                try {
-                  // Ingestion dans la mémoire IA permanente
-                  const memoryResult = await secureInvoke('memory_ingest_file', {
-                    path: result.name,
-                    content: result.content,
-                    category: result.category,
-                    metadata: {
-                      name: result.name,
-                      size: result.size,
-                      type: result.type,
-                      analysis: result.analysis,
-                      timestamp: Date.now(),
-                    },
-                  });
+              isDev &&
+                console.log(
+                  '[FileUpload] ✅ File ingested to memory:',
+                  result.name,
+                  memoryResult
+                );
 
-                  isDev &&
-                    console.log(
-                      '[FileUpload] ✅ File ingested to memory:',
-                      result.name,
-                      memoryResult
-                    );
-
-                  // +20 XP global + domaine memory pour chaque fichier importé avec succès
-                  XP.gain(
-                    XP_REWARDS.FILE_IMPORT,
-                    'file_import',
-                    `Fichier importé: ${result.name}`
-                  );
-                  await awardExperience(
-                    'memory',
-                    XP_REWARDS.FILE_IMPORT,
-                    XPSource.FileImport,
-                    {
-                      filename: result.name,
-                      category: result.category,
-                      size: result.size,
-                      lineCount: result.analysis?.lineCount || 0,
-                    }
-                  );
-                  isDev &&
-                    console.log(
-                      '[FileUpload] ✨ +20 XP awarded for file import:',
-                      result.name
-                    );
-                } catch (memoryError) {
-                  // Non-bloquant : l'analyse locale reste disponible même si la mémoire échoue
-                  console.warn(
-                    '[FileUpload] Memory ingestion warning (non-blocking):',
-                    memoryError
-                  );
-
-                  // On donne quand même +10 XP pour l'analyse locale
-                  try {
-                    XP.gain(
-                      10,
-                      'file_analysis',
-                      `Fichier analysé localement: ${result.name}`
-                    );
-                    await awardExperience('cognitive', 10, XPSource.CognitiveAnalysis, {
-                      filename: result.name,
-                      category: result.category,
-                      localOnly: true,
-                    });
-                    isDev &&
-                      console.log(
-                        '[FileUpload] ✨ +10 XP awarded for local analysis:',
-                        result.name
-                      );
-                  } catch (xpError) {
-                    console.warn('[FileUpload] XP award warning:', xpError);
-                  }
+              // +20 XP global + domaine memory pour chaque fichier importé avec succès
+              XP.gain(
+                XP_REWARDS.FILE_IMPORT,
+                'file_import',
+                `Fichier importé: ${result.name}`
+              );
+              await awardExperience(
+                'memory',
+                XP_REWARDS.FILE_IMPORT,
+                XPSource.FileImport,
+                {
+                  filename: result.name,
+                  category: result.category,
+                  size: result.size,
+                  lineCount: result.analysis?.lineCount || 0,
                 }
+              );
+              isDev &&
+                console.log(
+                  '[FileUpload] ✨ +20 XP awarded for file import:',
+                  result.name
+                );
+            } catch (memoryError) {
+              // Non-bloquant : l'analyse locale reste disponible même si la mémoire échoue
+              console.warn(
+                '[FileUpload] Memory ingestion warning (non-blocking):',
+                memoryError
+              );
+
+              // On donne quand même +10 XP pour l'analyse locale
+              try {
+                XP.gain(
+                  10,
+                  'file_analysis',
+                  `Fichier analysé localement: ${result.name}`
+                );
+                await awardExperience('cognitive', 10, XPSource.CognitiveAnalysis, {
+                  filename: result.name,
+                  category: result.category,
+                  localOnly: true,
+                });
+                isDev &&
+                  console.log(
+                    '[FileUpload] ✨ +10 XP awarded for local analysis:',
+                    result.name
+                  );
+              } catch (xpError) {
+                console.warn('[FileUpload] XP award warning:', xpError);
               }
-            } catch (fileError) {
-              // Erreur lors du traitement d'un fichier individuel - ne pas bloquer les autres
-              console.error('[FileUpload] Error processing file:', file.name, fileError);
-              const errorFile: AnalyzedFile = {
-                id: generateFileId(),
-                name: file.name,
-                size: file.size,
-                type: file.type,
-                category: 'unknown',
-                content: null,
-                preview: '',
-                status: 'error',
-                error: `Erreur lors du traitement: ${fileError instanceof Error ? fileError.message : 'Erreur inconnue'}`,
-              };
-              results.push(errorFile);
             }
           }
-
-          setSelectedFiles(results);
-          onFilesSelected(results);
-          setIsProcessing(false);
-
-          isDev && console.log('[FileUpload] Processed files:', results);
-        } catch (handleFilesError) {
-          // Erreur critique dans handleFiles
-          console.error('[FileUpload] Critical error in handleFiles:', handleFilesError);
-          setError(
-            `Erreur critique: ${handleFilesError instanceof Error ? handleFilesError.message : 'Erreur inconnue'}`
-          );
-          setIsProcessing(false);
         }
+
+        setSelectedFiles(results);
+        onFilesSelected(results);
+        setIsProcessing(false);
+
+        isDev && console.log('[FileUpload] Processed files:', results);
       },
       [maxFiles, processFile, onFilesSelected, onFileAnalyzed]
     );

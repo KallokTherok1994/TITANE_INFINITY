@@ -26,7 +26,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 import { secureInvoke } from '@/lib/security';
-import { logger } from '@/utils/logger';
 
 /**
  * Transcription event from backend
@@ -126,7 +125,7 @@ export function useWhisperStream(
    */
   const start = useCallback(async () => {
     try {
-      logger.debug('🎙️ Starting...');
+      console.log('[useWhisperStream] 🎙️ Starting...');
 
       // Start backend streaming
       await secureInvoke('start_whisper_streaming', {
@@ -140,7 +139,7 @@ export function useWhisperStream(
         event => {
           const { text, confidence } = event.payload;
 
-          logger.debug('📝 Partial:', text);
+          console.log('[useWhisperStream] 📝 Partial:', text);
 
           if (mountedRef.current) {
             setState(prev => ({
@@ -160,7 +159,7 @@ export function useWhisperStream(
       const unlistenFinal = await listen<TranscriptionEvent>('whisper:final', event => {
         const { text, confidence } = event.payload;
 
-        logger.debug('✅ Final:', text);
+        console.log('[useWhisperStream] ✅ Final:', text);
 
         if (mountedRef.current) {
           setState(prev => {
@@ -190,9 +189,9 @@ export function useWhisperStream(
         }));
       }
 
-      logger.debug('✅ Started');
+      console.log('[useWhisperStream] ✅ Started');
     } catch (error) {
-      logger.error('❌ Start error:', error);
+      console.error('[useWhisperStream] ❌ Start error:', error);
 
       const errorMsg = error instanceof Error ? error.message : String(error);
 
@@ -213,7 +212,7 @@ export function useWhisperStream(
    */
   const stop = useCallback(async () => {
     try {
-      logger.debug('🛑 Stopping...');
+      console.log('[useWhisperStream] 🛑 Stopping...');
 
       // Stop backend streaming
       await secureInvoke('stop_whisper_streaming');
@@ -238,9 +237,9 @@ export function useWhisperStream(
         }));
       }
 
-      logger.debug('✅ Stopped');
+      console.log('[useWhisperStream] ✅ Stopped');
     } catch (error) {
-      logger.error('❌ Stop error:', error);
+      console.error('[useWhisperStream] ❌ Stop error:', error);
 
       const errorMsg = error instanceof Error ? error.message : String(error);
 
@@ -286,7 +285,7 @@ export function useWhisperStream(
           vadConfidence,
         });
       } catch (error) {
-        logger.error('❌ Send chunk error:', error);
+        console.error('[useWhisperStream] ❌ Send chunk error:', error);
       }
     },
     []

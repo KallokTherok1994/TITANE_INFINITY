@@ -13,7 +13,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { tauriClient } from '../services/tauriClient';
 import type { ProviderStatus } from '../services/tauriClient';
-import { logger } from '../utils/logger';
 
 export interface UseProviderStatusOptions {
   autoRefresh?: boolean;
@@ -72,11 +71,11 @@ export function useProviderStatus(
         setActiveProvider(null);
       }
 
-      logger.debug(`✅ Provider status refreshed (${statuses.length} providers)`);
+      console.log(`✅ Provider status refreshed (${statuses.length} providers)`);
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Provider status error';
       setError(errorMsg);
-      logger.error('❌ Provider status refresh failed:', err);
+      console.error('❌ Provider status refresh failed:', err);
     } finally {
       setIsLoading(false);
     }
@@ -107,13 +106,13 @@ export function useProviderStatus(
         setActiveProvider(null);
       }
 
-      logger.debug(
+      console.log(
         `✅ Provider check complete (${available.length}/${statuses.length} available)`
       );
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Provider check error';
       setError(errorMsg);
-      logger.error('❌ Provider check failed:', err);
+      console.error('❌ Provider check failed:', err);
     } finally {
       setIsLoading(false);
     }
@@ -122,7 +121,7 @@ export function useProviderStatus(
   // Auto-refresh optionnel
   useEffect(() => {
     if (autoRefresh) {
-      logger.debug(`🔄 Auto-refresh providers enabled (${refreshInterval}ms)`);
+      console.log(`🔄 Auto-refresh providers enabled (${refreshInterval}ms)`);
 
       // Initial check
       refresh();
@@ -132,7 +131,7 @@ export function useProviderStatus(
 
       return () => {
         clearInterval(interval);
-        logger.debug('🛑 Auto-refresh providers stopped');
+        console.log('🛑 Auto-refresh providers stopped');
       };
     }
   }, [autoRefresh, refreshInterval, refresh]);

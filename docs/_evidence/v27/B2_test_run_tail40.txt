@@ -1,0 +1,40 @@
+  context: [32m'assistant-stream-complete'[39m
+}
+[2026-01-13T13:03:16.744Z] [TITANE] [DEBUG] [CHAT DEBUG] 🔄 updateAssistant: Message updated {
+  uiId: [32m'chat-ui-1768309396674-16'[39m,
+  newContentLength: [33m20[39m,
+  newContentPreview: [32m'Réponse mock TITANE∞'[39m
+}
+[2026-01-13T13:03:16.744Z] [TITANE] [DEBUG] [CHAT DEBUG] 📤 updateAssistant: Applying messages { count: [33m16[39m, context: [32m'assistant-stream-complete'[39m }
+[2026-01-13T13:03:16.744Z] [TITANE] [DEBUG] [CHAT] ✅ updateAssistant: Complete {
+  found: [33mtrue[39m,
+  placeholderContent: [32m'<empty>'[39m,
+  finalCount: [33m16[39m,
+  context: [32m'assistant-stream-complete'[39m
+}
+[2026-01-13T13:03:16.744Z] [TITANE] [DEBUG] [CHAT DEBUG] updateAssistant terminé { messagesCount: [33m16[39m }
+[2026-01-13T13:03:16.745Z] [ChatMemory] [DEBUG] Message saved (mode: default, total: 8)
+
+[90mstdout[2m | src/__tests__/e2e-automated-validation.test.tsx[2m > [22m[2m🟣 OMEGA Phase 7Ω - E2E: Full System Integration[2m > [22m[2mshould demonstrate OMEGA infallibility under stress
+[22m[39m[2026-01-13T13:03:16.745Z] [ChatMemory] [DEBUG] Message saved (mode: default, total: 8)
+
+[90mstdout[2m | src/__tests__/e2e-automated-validation.test.tsx[2m > [22m[2m🟣 OMEGA Phase 7Ω - E2E: Full System Integration[2m > [22m[2mshould demonstrate OMEGA infallibility under stress
+[22m[39m[2026-01-13T13:03:16.765Z] [TITANE] [DEBUG] [Experience] +5 XP → Chat IA (410 XP, Niveau 2)
+
+[90mstdout[2m | src/__tests__/e2e-automated-validation.test.tsx[2m > [22m[2m🟣 OMEGA Phase 7Ω - E2E: Full System Integration[2m > [22m[2mshould demonstrate OMEGA infallibility under stress
+[22m[39m[2026-01-13T13:03:16.765Z] [TITANE] [DEBUG] ✅ ✨ XP awarded: +5 chat, +2 cognitive (si applicable)
+[2026-01-13T13:03:16.765Z] [TITANE] [DEBUG] [CHAT DEBUG] 🔓 Operation lock RELEASED (finally)
+
+ [32m✓[39m [30m[45m core [49m[39m src/__tests__/e2e-automated-validation.test.tsx [2m([22m[2m65 tests[22m[2m)[22m[33m 27000[2mms[22m[39m
+     [33m[2m✓[22m[39m should clean up memory properly after long sessions [33m 5395[2mms[22m[39m
+     [33m[2m✓[22m[39m should handle rapid consecutive messages [33m 592[2mms[22m[39m
+     [33m[2m✓[22m[39m should pass comprehensive OMEGA validation test [33m 664[2mms[22m[39m
+     [33m[2m✓[22m[39m should demonstrate OMEGA infallibility under stress [33m 1611[2mms[22m[39m
+       [33m[2m✓[22m[39m should process 50 IA interactions successfully [33m 3521[2mms[22m[39m
+       [33m[2m✓[22m[39m should complete 25 auto-repair cycles [33m 3920[2mms[22m[39m
+       [33m[2m✓[22m[39m should handle 20 avatar state changes [33m 1371[2mms[22m[39m
+       [33m[2m✓[22m[39m should validate 10 appearance switches [33m 541[2mms[22m[39m
+       [33m[2m✓[22m[39m should maintain >30 FPS under load [33m 3430[2mms[22m[39m
+       [33m[2m✓[22m[39m should recover from simulated failures [33m 2072[2mms[22m[39m
+       [33m[2m✓[22m[39m should have stable performance metrics [33m 335[2mms[22m[39m
+ ELIFECYCLE  Test failed. See above for more details.

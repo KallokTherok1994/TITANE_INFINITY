@@ -19,7 +19,6 @@ import type {
   EventCategory,
   PriorityLevel,
 } from './types';
-import { logger } from '@/utils/logger';
 import { agendaEngine } from './AgendaEngine';
 // ARCHITECTURE RINGS COMPLIANT: Engines (Ring 2) don't import from Services (Ring 3)
 // ChatScheduler uses agendaEngine API which handles I/O via injected callbacks
@@ -134,7 +133,7 @@ export class ChatScheduler {
 
       // Validation minimale
       if (!obj.type || !this.isValidCommandType(obj.type)) {
-        logger.warn('Type de commande invalide:', obj.type);
+        console.warn('[ChatScheduler] Type de commande invalide:', obj.type);
         return null;
       }
 
@@ -157,10 +156,10 @@ export class ChatScheduler {
           : undefined,
       };
 
-      logger.debug('✅ Commande parsée:', command.type, command.title);
+      console.log('[ChatScheduler] ✅ Commande parsée:', command.type, command.title);
       return command;
     } catch (error) {
-      logger.error('Erreur parsing JSON:', error);
+      console.error('[ChatScheduler] Erreur parsing JSON:', error);
       return null;
     }
   }
@@ -180,7 +179,7 @@ export class ChatScheduler {
    * Exécute une commande agenda
    */
   async executeAgendaCommand(command: AgendaCommand): Promise<CommandExecutionResult> {
-    logger.debug('🚀 Exécution commande:', command.type);
+    console.log('[ChatScheduler] 🚀 Exécution commande:', command.type);
 
     try {
       let result: CommandExecutionResult;
@@ -442,9 +441,9 @@ export class ChatScheduler {
   private async syncAgendaAfterAction(): Promise<void> {
     try {
       await agendaEngine.loadEvents();
-      logger.debug('🔄 Agenda synchronisé');
+      console.log('[ChatScheduler] 🔄 Agenda synchronisé');
     } catch (error) {
-      logger.warn('Erreur sync:', error);
+      console.warn('[ChatScheduler] Erreur sync:', error);
     }
   }
 
@@ -490,7 +489,7 @@ export class ChatScheduler {
    */
   setEnabled(enabled: boolean): void {
     this.enabled = enabled;
-    logger.debug('[ChatScheduler]', enabled ? '✅ Activé' : '❌ Désactivé');
+    console.log('[ChatScheduler]', enabled ? '✅ Activé' : '❌ Désactivé');
   }
 
   /**
@@ -572,7 +571,7 @@ export class ChatScheduler {
       try {
         listener(result);
       } catch (error) {
-        logger.error('Erreur listener:', error);
+        console.error('[ChatScheduler] Erreur listener:', error);
       }
     });
   }

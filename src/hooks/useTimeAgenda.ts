@@ -23,7 +23,6 @@ import {
   type CommandExecutionResult,
 } from '@/engines/time';
 import { agendaService } from '@/services/agendaService';
-import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════
 // HOOK RETURN TYPE
@@ -129,7 +128,7 @@ export function useTimeAgenda(autoInit: boolean = true): UseTimeAgendaReturn {
         await initTimeAgendaSystem(agendaStorage);
         setInitialized(true);
       } catch (error) {
-        logger.error('Erreur init:', error);
+        console.error('[useTimeAgenda] Erreur init:', error);
       } finally {
         setLoading(false);
       }

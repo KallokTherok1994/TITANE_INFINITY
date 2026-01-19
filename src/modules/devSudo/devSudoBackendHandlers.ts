@@ -122,9 +122,9 @@ export async function handleBackendAnalysis(): Promise<DevSudoResult> {
 
    Frontend ↔ Backend cohérence:
 
-   tauriClient.memoryScan() → #[tauri::command] memory_scan()
-   tauriClient.secureStoreKey() → #[tauri::command] secure_store_key()
-   tauriClient.cameraStart() → #[tauri::command] camera_start()
+   invoke('memory_scan') → #[tauri::command] memory_scan()
+   invoke('secure_store_key') → #[tauri::command] secure_store_key()
+   invoke('camera_start') → #[tauri::command] camera_start()
 
    Types partagés (via serde):
    - MemoryState
@@ -295,7 +295,7 @@ export async function handleFixHandler(handlerName: string): Promise<DevSudoResu
    cargo test ${handlerName}
 
    # 3. Test depuis frontend
-   tauriClient.${handlerName}().then(console.log).catch(console.error)
+   invoke('${handlerName}').then(console.log).catch(console.error)
    \`\`\`
 
 6) 🔗 WHITELIST TAURI
@@ -504,15 +504,15 @@ export async function handleCreateAPI(apiName: string): Promise<DevSudoResult> {
 
    export const ${apiName}API = {
      async init(): Promise<${apiName}Config> {
-       return tauriClient.${apiName.toLowerCase()}Init();
+       return invoke('${apiName.toLowerCase()}_init');
      },
 
      async execute(input: string): Promise<${apiName}Response> {
-       return tauriClient.${apiName.toLowerCase()}Execute({ input });
+       return invoke('${apiName.toLowerCase()}_execute', { input });
      },
 
      async stop(): Promise<string> {
-       return tauriClient.${apiName.toLowerCase()}Stop();
+       return invoke('${apiName.toLowerCase()}_stop');
      },
    };
    \`\`\`

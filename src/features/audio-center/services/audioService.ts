@@ -12,7 +12,6 @@
 
 import { detectEnvironment } from '@/core/tauri/environment';
 import { secureInvoke } from '@/lib/security';
-import { logger } from '@/utils/logger';
 import {
   type TTSSettings,
   type VoiceProfile,
@@ -46,7 +45,7 @@ class AudioService {
     // Détection synchrone (detectEnvironment est sync malgré son nom)
     const env = detectEnvironment();
     this.isTauri = env.isTauri;
-    logger.debug('Initialized. Tauri mode:', this.isTauri);
+    console.log('[AudioService] Initialized. Tauri mode:', this.isTauri);
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -72,7 +71,7 @@ class AudioService {
         return JSON.parse(stored);
       }
     } catch (error) {
-      logger.warn('Failed to load audio config:', error);
+      console.warn('Failed to load audio config:', error);
     }
     return DEFAULT_AUDIO_CONFIG;
   }
@@ -82,7 +81,7 @@ class AudioService {
       this.config.lastUpdated = Date.now();
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.config));
     } catch (error) {
-      logger.error('Failed to save audio config:', error);
+      console.error('Failed to save audio config:', error);
     }
   }
 
@@ -171,7 +170,7 @@ class AudioService {
       try {
         devices = await secureInvoke<AudioDevice[]>('get_audio_output_devices');
       } catch (error) {
-        logger.warn('Failed to get output devices from Tauri:', error);
+        console.warn('Failed to get output devices from Tauri:', error);
       }
     }
 
@@ -195,7 +194,7 @@ class AudioService {
           }));
         devices = webDevices;
       } catch (error) {
-        logger.warn('Failed to enumerate devices:', error);
+        console.warn('Failed to enumerate devices:', error);
       }
     }
 
@@ -241,7 +240,7 @@ class AudioService {
       try {
         devices = await secureInvoke<AudioDevice[]>('get_audio_input_devices');
       } catch (error) {
-        logger.warn('Failed to get input devices from Tauri:', error);
+        console.warn('Failed to get input devices from Tauri:', error);
       }
     }
 
@@ -266,7 +265,7 @@ class AudioService {
             driver: 'webaudio',
           }));
       } catch (error) {
-        logger.warn('Failed to enumerate input devices:', error);
+        console.warn('Failed to enumerate input devices:', error);
       }
     }
 
@@ -310,7 +309,7 @@ class AudioService {
         // Tauri 2.0 attend camelCase pour les paramètres
         await secureInvoke('set_audio_output_device', { deviceId });
       } catch (error) {
-        logger.warn('Failed to set output device:', error);
+        console.warn('Failed to set output device:', error);
       }
     }
   }
@@ -324,7 +323,7 @@ class AudioService {
         // Tauri 2.0 attend camelCase pour les paramètres
         await secureInvoke('set_audio_input_device', { deviceId });
       } catch (error) {
-        logger.warn('Failed to set input device:', error);
+        console.warn('Failed to set input device:', error);
       }
     }
   }
@@ -391,8 +390,8 @@ class AudioService {
   }
 
   async testMicrophone(durationMs: number = 3000): Promise<MicrophoneTestResult> {
-    logger.debug(
-      'testMicrophone called, duration:',
+    console.log(
+      '[AudioService] testMicrophone called, duration:',
       durationMs,
       'isTauri:',
       this.isTauri
@@ -400,7 +399,7 @@ class AudioService {
 
     try {
       if (this.isTauri) {
-        logger.debug('Calling Tauri test_microphone...');
+        console.log('[AudioService] Calling Tauri test_microphone...');
         // Timeout = durée enregistrement + 5s de marge pour traitement
         const timeoutMs = durationMs + 5000;
         // Tauri 2.0 attend camelCase pour les paramètres de commande
@@ -409,12 +408,12 @@ class AudioService {
           { durationMs },
           { timeout: timeoutMs }
         );
-        logger.debug('test_microphone result:', result);
+        console.log('[AudioService] test_microphone result:', result);
         return result;
       }
 
       // Web Audio fallback
-      logger.debug('Using Web Audio API fallback...');
+      console.log('[AudioService] Using Web Audio API fallback...');
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           deviceId:
@@ -481,7 +480,7 @@ class AudioService {
         }, durationMs);
       });
     } catch (error) {
-      logger.error('testMicrophone error:', error);
+      console.error('[AudioService] testMicrophone error:', error);
       return {
         success: false,
         peakLevel: 0,
@@ -498,20 +497,20 @@ class AudioService {
 
   async speak(text: string): Promise<void> {
     if (!text || text.trim().length === 0) {
-      logger.warn('speak() called with empty text');
+      console.warn('[AudioService] speak() called with empty text');
       return;
     }
 
     // Prevent overlapping speech
     if (this.isSpeaking) {
-      logger.debug('Already speaking, stopping previous speech');
+      console.log('[AudioService] Already speaking, stopping previous speech');
       this.stop();
       await new Promise(resolve => setTimeout(resolve, 100));
     }
 
     this.isSpeaking = true;
-    logger.debug(
-      'speak() called. Tauri mode:',
+    console.log(
+      '[AudioService] speak() called. Tauri mode:',
       this.isTauri,
       'Text:',
       text.substring(0, 50) + '...'
@@ -520,20 +519,22 @@ class AudioService {
     try {
       if (this.isTauri) {
         try {
-          logger.debug('Invoking tts_speak via Tauri...');
+          console.log('[AudioService] Invoking tts_speak via Tauri...');
           await secureInvoke('tts_speak', {
             text,
             settings: this.config.tts,
           });
-          logger.debug('tts_speak completed successfully');
+          console.log('[AudioService] tts_speak completed successfully');
         } catch (error) {
-          logger.error('tts_speak error:', error);
+          console.error('[AudioService] tts_speak error:', error);
           // Only fallback to Web Speech if it's available
           if (this.isWebSpeechAvailable()) {
-            logger.debug('Falling back to Web Speech API...');
+            console.log('[AudioService] Falling back to Web Speech API...');
             await this.speakWithWebSpeech(text);
           } else {
-            logger.warn('No TTS available (Tauri failed, Web Speech not supported)');
+            console.warn(
+              '[AudioService] No TTS available (Tauri failed, Web Speech not supported)'
+            );
             throw error;
           }
         }
@@ -541,7 +542,7 @@ class AudioService {
         if (this.isWebSpeechAvailable()) {
           await this.speakWithWebSpeech(text);
         } else {
-          logger.warn('Web Speech API not available');
+          console.warn('[AudioService] Web Speech API not available');
         }
       }
     } finally {
@@ -565,7 +566,7 @@ class AudioService {
       return Promise.reject(new Error('Web Speech API not available'));
     }
 
-    logger.debug('Using Web Speech API');
+    console.log('[AudioService] Using Web Speech API');
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = this.config.tts.language;
     utterance.rate = this.config.tts.rate;
@@ -574,11 +575,11 @@ class AudioService {
 
     return new Promise((resolve, reject) => {
       utterance.onend = () => {
-        logger.debug('Web Speech finished');
+        console.log('[AudioService] Web Speech finished');
         resolve();
       };
       utterance.onerror = e => {
-        logger.error('Web Speech error:', e);
+        console.error('[AudioService] Web Speech error:', e);
         reject(e);
       };
       window.speechSynthesis.speak(utterance);
@@ -586,7 +587,7 @@ class AudioService {
   }
 
   stop(): void {
-    logger.debug('stop() called');
+    console.log('[AudioService] stop() called');
     this.isSpeaking = false;
 
     // Stop Web Speech
@@ -597,7 +598,7 @@ class AudioService {
     // Stop Tauri TTS
     if (this.isTauri) {
       secureInvoke('tts_stop').catch(err => {
-        logger.error('tts_stop error:', err);
+        console.error('[AudioService] tts_stop error:', err);
       });
     }
   }
@@ -623,7 +624,7 @@ class AudioService {
       );
       return result;
     } catch (error) {
-      logger.error('VAD get state error:', error);
+      console.error('[AudioService] VAD get state error:', error);
       return { state: 'silence', isSpeaking: false };
     }
   }
@@ -648,7 +649,7 @@ class AudioService {
       );
       return result;
     } catch (error) {
-      logger.error('VAD process frame error:', error);
+      console.error('[AudioService] VAD process frame error:', error);
       return { state: 'silence', isSpeaking: false };
     }
   }
@@ -672,10 +673,10 @@ class AudioService {
           minSilenceFrames: config.minSilenceFrames ?? 20,
         },
       });
-      logger.debug('VAD configured:', result);
+      console.log('[AudioService] VAD configured:', result);
       return result;
     } catch (error) {
-      logger.error('VAD configure error:', error);
+      console.error('[AudioService] VAD configure error:', error);
       throw error;
     }
   }
@@ -689,10 +690,10 @@ class AudioService {
     }
     try {
       const result = await secureInvoke<string>('vad_reset');
-      logger.debug('VAD reset:', result);
+      console.log('[AudioService] VAD reset:', result);
       return result;
     } catch (error) {
-      logger.error('VAD reset error:', error);
+      console.error('[AudioService] VAD reset error:', error);
       throw error;
     }
   }
@@ -734,7 +735,7 @@ class AudioService {
         message: string;
       }>('vad_test');
 
-      logger.debug('VAD test result:', result);
+      console.log('[AudioService] VAD test result:', result);
 
       return {
         success: result.success,
@@ -747,7 +748,7 @@ class AudioService {
         message: result.message,
       };
     } catch (error) {
-      logger.error('VAD test error:', error);
+      console.error('[AudioService] VAD test error:', error);
       return {
         success: false,
         tests: {

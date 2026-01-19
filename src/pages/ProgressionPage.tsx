@@ -18,7 +18,6 @@ import { XPProgressBar } from '@features/progression';
 import { KnowledgeDomains } from '../components/progression/KnowledgeDomains';
 import { useExperience } from '../hooks/useExperience';
 import { colors, spacing, fontSizes, fontWeights } from '@themes/tokens';
-import { logger } from '@/utils/logger';
 
 export const ProgressionPage = (): JSX.Element => {
   const { totalXp, level, xpForNextLevel, domains, isLoading } = useExperience();
@@ -168,7 +167,7 @@ export const ProgressionPage = (): JSX.Element => {
         <KnowledgeDomains
           domains={domains}
           onDomainClick={domain => {
-            logger.debug('Domain clicked:', domain);
+            console.log('Domain clicked:', domain);
             // IMPLEMENTATION: Open domain details modal
             // 1. Component: <DomainDetailsModal domain={domain} open={modalOpen} onClose={() => setModalOpen(false)} />
             // 2. Display: Knowledge items in domain, mastery level (0-100%), last updated

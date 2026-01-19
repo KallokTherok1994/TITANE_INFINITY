@@ -97,10 +97,10 @@ const NodeClusterDashboard = memo(function NodeClusterDashboard() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-900 via-purple-900 to-gray-900 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 p-6">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-pink-600">
+        <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
           Node-Cluster Dashboard
         </h1>
         <p className="text-gray-400 mt-2">Phase 5 : Réseau maillé distribué</p>
@@ -136,7 +136,7 @@ const NodeClusterDashboard = memo(function NodeClusterDashboard() {
           </div>
           <button
             onClick={initialize}
-            className="w-full bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold py-3 rounded-lg transition-all"
+            className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold py-3 rounded-lg transition-all"
           >
             Démarrer le réseau Mesh
           </button>
@@ -151,21 +151,21 @@ const NodeClusterDashboard = memo(function NodeClusterDashboard() {
       {/* Stats Overview */}
       {isInitialized && stats && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-linear-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
+          <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
             <div className="text-gray-400 text-sm mb-2">ID du nœud</div>
             <div className="text-white text-xl font-bold truncate">{stats.node_id}</div>
           </div>
-          <div className="bg-linear-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
+          <div className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
             <div className="text-gray-400 text-sm mb-2">Rôle</div>
             <div className={`text-xl font-bold ${getRoleColor(stats.role)}`}>
               {stats.role}
             </div>
           </div>
-          <div className="bg-linear-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
+          <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
             <div className="text-gray-400 text-sm mb-2">Pairs</div>
             <div className="text-white text-xl font-bold">{stats.peer_count}</div>
           </div>
-          <div className="bg-linear-to-br from-yellow-500/20 to-orange-500/20 backdrop-blur-xl rounded-2xl p-6 border border-yellow-500/30">
+          <div className="bg-gradient-to-br from-yellow-500/20 to-orange-500/20 backdrop-blur-xl rounded-2xl p-6 border border-yellow-500/30">
             <div className="text-gray-400 text-sm mb-2">Charge moy.</div>
             <div className="text-white text-xl font-bold">
               {stats.avg_load.toFixed(1)}%

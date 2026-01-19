@@ -191,7 +191,7 @@ echo ""
 
 if [ "$FAIL" -eq 0 ]; then
     echo "╔════════════════════════════════════════════╗"
-    echo "║  ✅ SYSTÈME VALIDÉ — ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)     ║"
+    echo "║  ✅ SYSTÈME VALIDÉ — PRODUCTION READY     ║"
     echo "║                                            ║"
     echo "║  Infrastructure:        ✓                 ║"
     echo "║  Ollama dynamique:      ✓                 ║"

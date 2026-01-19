@@ -426,7 +426,7 @@ DEPLOYMENT RECOMMENDATION:
 EOF
     
     if [[ $BLOCKER_COUNT -eq 0 ]] && [[ $pass_rate -ge $MIN_HEALTH_SCORE ]]; then
-        echo "  ✅ PRODUCTION ⛔ EN ATTENTE (autorisation requise)" >> "$summary_file"
+        echo "  ✅ APPROVED FOR PRODUCTION DEPLOYMENT" >> "$summary_file"
         echo "" >> "$summary_file"
         echo "  All quality gates passed. The application is ready for" >> "$summary_file"
         echo "  production deployment." >> "$summary_file"

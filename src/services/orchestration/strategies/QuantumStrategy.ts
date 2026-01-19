@@ -17,7 +17,6 @@ import type {
   QuantumOperation,
   QuantumSignal,
 } from '../types';
-import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // QUANTUM STRATEGY
@@ -280,10 +279,10 @@ export class QuantumStrategy implements IOrchestrationStrategy, QuantumOperation
   }
 
   private log(message: string, ...args: unknown[]): void {
-    logger.debug(`[QuantumStrategy] ${message}`, ...args);
+    console.log(`[QuantumStrategy] ${message}`, ...args);
   }
 
   private logError(message: string, error?: unknown): void {
-    logger.error(`[QuantumStrategy ERROR] ${message}`, error);
+    console.error(`[QuantumStrategy ERROR] ${message}`, error);
   }
 }

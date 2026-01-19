@@ -7,7 +7,6 @@
 
 import { useEffect, useRef } from 'react';
 import { useAura } from './useAuraOrchestrator';
-import { logger } from '@/utils/logger';
 
 /**
  * Hook qui monitore les performances et met à jour l'orchestrateur Aura
@@ -52,7 +51,7 @@ export const useAuraPerformanceMonitor = (
         if (autoAdjust && currentFPS < targetFPS - 10) {
           const recommended = aura.getRecommendedQuality();
           if (recommended !== aura.config.quality) {
-            logger.warn(
+            console.warn(
               `🎨 Aura: Performance issue detected (${currentFPS} FPS). Auto-adjusting to ${recommended}.`
             );
             aura.setQuality(recommended);

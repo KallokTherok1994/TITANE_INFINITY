@@ -14,7 +14,6 @@
  */
 
 import { useEffect, useRef } from 'react';
-import { logger } from '@/utils/logger';
 
 export interface KeyboardShortcut {
   key: string;
@@ -110,7 +109,7 @@ export function useKeyboardShortcuts({
           !altRequired
         ) {
           if (debug) {
-            logger.debug('[Keyboard Shortcut]', {
+            console.log('[Keyboard Shortcut]', {
               key: shortcut.key,
               ctrl: shortcut.ctrl,
               shift: shortcut.shift,

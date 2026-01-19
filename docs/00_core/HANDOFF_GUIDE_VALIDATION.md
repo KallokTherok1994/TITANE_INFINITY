@@ -156,7 +156,7 @@ Validate documentation effectiveness with **real users** before Phase 8+ (i18n, 
 1. **New to project?** → [GETTING_STARTED.md](../GETTING_STARTED.md) (role-based quick-start)
 2. **Want to contribute?** → [CONTRIBUTING.md](../../CONTRIBUTING.md)
 3. **Need to troubleshoot?** → [TROUBLESHOOTING.md](../04_guides/advanced/TROUBLESHOOTING.md)
-4. **déploiement production (autorisation requise)?** → [DEPLOYMENT.md](../04_guides/advanced/DEPLOYMENT.md)
+4. **Deploy to production?** → [DEPLOYMENT.md](../04_guides/advanced/DEPLOYMENT.md)
 5. **Optimize performance?** → [PERFORMANCE_OPTIMIZATION.md](../04_guides/advanced/PERFORMANCE_OPTIMIZATION.md)
 6. **API reference?** → [docs/06_api/INDEX.md](../06_api/INDEX.md)
 7. **Architecture deep-dive?** → [docs/01_architecture/](../01_architecture/)
@@ -288,10 +288,10 @@ git push origin chore/docs-evolution-phase0
 
 **A world-class documentation system:**
 - ✅ **Comprehensive** (200% coverage: API + Operational)
-- ✅ **Validated approach** (examples tested, tech-ready (dev))
+- ✅ **Validated approach** (examples tested, production-ready)
 - ✅ **Accessible** (role-based navigation, <5 min to find docs)
 - ✅ **Contributor-ready** (<2h onboarding)
-- ✅ **Tech-Ready (Dev)** (deployment, troubleshooting, performance guides)
+- ✅ **Production-ready** (deployment, troubleshooting, performance guides)
 - ✅ **Future-ready** (strategic roadmap Phase 8-11)
 - ✅ **Sustainable** (metrics dashboard, freshness tracking)
 

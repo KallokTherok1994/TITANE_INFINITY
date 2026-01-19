@@ -88,12 +88,6 @@ pub struct EngineHealthReport {
 mod tests {
     use super::*;
 
-    macro_rules! test_ok {
-        ($expr:expr) => {
-            $expr.expect(&format!("TEST FAILED at {}:{}", file!(), line!()))
-        };
-    }
-
     // ─────────────────────────────────────────────────────────────
     // ProviderPreference Tests
     // ─────────────────────────────────────────────────────────────
@@ -135,11 +129,11 @@ mod tests {
     fn test_provider_preference_serialization() {
         let pref = ProviderPreference::Ollama;
         let json =
-            test_ok!(serde_json::to_string(&pref));
+            serde_json::to_string(&pref).expect("serialize ProviderPreference should succeed");
         assert_eq!(json, "\"ollama\"");
 
         let restored: ProviderPreference =
-            test_ok!(serde_json::from_str(&json));
+            serde_json::from_str(&json).expect("deserialize ProviderPreference should succeed");
         assert_eq!(restored, ProviderPreference::Ollama);
     }
 
@@ -153,9 +147,10 @@ mod tests {
         ];
 
         for variant in variants {
-            let json = test_ok!(serde_json::to_string(&variant));
+            let json = serde_json::to_string(&variant)
+                .expect("serialize ProviderPreference variant should succeed");
             let restored: ProviderPreference =
-                test_ok!(serde_json::from_str(&json));
+                serde_json::from_str(&json).expect("deserialize ProviderPreference should succeed");
             assert_eq!(variant, restored);
         }
     }
@@ -380,9 +375,9 @@ mod tests {
         };
 
         let json =
-            test_ok!(serde_json::to_string(&payload));
+            serde_json::to_string(&payload).expect("serialize ChatRequestPayload should succeed");
         let restored: ChatRequestPayload =
-            test_ok!(serde_json::from_str(&json));
+            serde_json::from_str(&json).expect("deserialize ChatRequestPayload should succeed");
         assert_eq!(restored.user_message, "Hello");
         assert_eq!(restored.provider, ProviderPreference::Ollama);
     }
@@ -451,9 +446,10 @@ mod tests {
             timestamp: 1700000000,
         };
 
-        let json = test_ok!(serde_json::to_string(&payload));
+        let json = serde_json::to_string(&payload)
+            .expect("serialize ChatCompletionPayload should succeed");
         let restored: ChatCompletionPayload =
-            test_ok!(serde_json::from_str(&json));
+            serde_json::from_str(&json).expect("deserialize ChatCompletionPayload should succeed");
         assert_eq!(restored.content, "The answer is 42.");
         assert_eq!(restored.timestamp, 1700000000);
     }
@@ -527,9 +523,9 @@ mod tests {
             done: true,
         };
 
-        let json = test_ok!(serde_json::to_string(&chunk));
+        let json = serde_json::to_string(&chunk).expect("serialize StreamChunk should succeed");
         let restored: StreamChunk =
-            test_ok!(serde_json::from_str(&json));
+            serde_json::from_str(&json).expect("deserialize StreamChunk should succeed");
         assert_eq!(restored.ordinal, 42);
         assert!(restored.done);
     }
@@ -616,9 +612,9 @@ mod tests {
         };
 
         let json =
-            test_ok!(serde_json::to_string(&report));
+            serde_json::to_string(&report).expect("serialize EngineHealthReport should succeed");
         let restored: EngineHealthReport =
-            test_ok!(serde_json::from_str(&json));
+            serde_json::from_str(&json).expect("deserialize EngineHealthReport should succeed");
         assert_eq!(restored.memory_entries, 75);
         assert!(restored.auto_tts_enabled);
     }

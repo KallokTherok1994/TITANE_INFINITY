@@ -1,0 +1,12 @@
+## A3) Tooling
+$ node -v && npm -v || true
+v24.0.0
+11.3.0
+
+$ pnpm -v || true
+10.28.0
+
+$ yarn -v || true
+
+$ ls -1 pnpm-lock.yaml yarn.lock package-lock.json 2>/dev/null || true
+pnpm-lock.yaml

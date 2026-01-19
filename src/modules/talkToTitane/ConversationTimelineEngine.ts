@@ -24,7 +24,6 @@ import { readFile, readdir } from '../../utils/tauriFsAdapter';
 import { existsSync } from '../../utils/tauriFsAdapter';
 import { join } from '../../utils/tauriFsAdapter';
 import type { ConversationEntry } from './AutoSaveConversationEngine';
-import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -117,14 +116,14 @@ class ConversationTimelineEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   async initialize(): Promise<void> {
-    logger.debug('Initializing Conversation Timeline Engine v∞...');
+    console.log('[Timeline] Initializing Conversation Timeline Engine v∞...');
 
     if (this.config.enabled) {
       await this.build();
       this.startRebuildTimer();
     }
 
-    logger.debug('Initialized');
+    console.log('[Timeline] Initialized');
   }
 
   private startRebuildTimer(): void {
@@ -141,14 +140,14 @@ class ConversationTimelineEngine {
 
   async build(): Promise<TimelineEntry[]> {
     if (this.state.isBuilding) {
-      logger.debug('Build already in progress');
+      console.log('[Timeline] Build already in progress');
       return this.state.currentTimeline;
     }
 
     this.state.isBuilding = true;
 
     try {
-      logger.debug('Building timeline...');
+      console.log('[Timeline] Building timeline...');
 
       const allEntries: TimelineEntry[] = [];
 
@@ -182,7 +181,7 @@ class ConversationTimelineEngine {
       this.state.lastBuildTime = Date.now();
       this.state.totalBuilds++;
 
-      logger.debug(`[Timeline] Timeline built: ${enhanced.length} entries`);
+      console.log(`[Timeline] Timeline built: ${enhanced.length} entries`);
 
       return enhanced;
     } finally {
@@ -521,23 +520,21 @@ class ConversationTimelineEngine {
 
     const recent = timeline.slice(-limit);
 
-    logger.debug('\n═══════════════════════════════════════════════════');
-    logger.debug('  TITANE∞ CONVERSATION TIMELINE (RECENT)');
-    logger.debug('═══════════════════════════════════════════════════\n');
+    console.log('\n═══════════════════════════════════════════════════');
+    console.log('  TITANE∞ CONVERSATION TIMELINE (RECENT)');
+    console.log('═══════════════════════════════════════════════════\n');
 
     for (const entry of recent) {
       const timestamp = new Date(entry.timestamp).toLocaleString();
       const majorFlag = entry.isMajorEvent ? ' [MAJOR]' : '';
 
-      logger.debug(
-        `[${timestamp}] ${entry.engineName} - ${entry.intentType}${majorFlag}`
-      );
-      logger.debug(`  Input:  ${entry.input.substring(0, 80)}...`);
-      logger.debug(`  Output: ${entry.output.substring(0, 80)}...`);
-      logger.debug('');
+      console.log(`[${timestamp}] ${entry.engineName} - ${entry.intentType}${majorFlag}`);
+      console.log(`  Input:  ${entry.input.substring(0, 80)}...`);
+      console.log(`  Output: ${entry.output.substring(0, 80)}...`);
+      console.log('');
     }
 
-    logger.debug('═══════════════════════════════════════════════════\n');
+    console.log('═══════════════════════════════════════════════════\n');
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -574,7 +571,7 @@ class ConversationTimelineEngine {
 
   configure(config: Partial<TimelineConfig>): void {
     this.config = { ...this.config, ...config };
-    logger.debug('Configuration updated:', config);
+    console.log('[Timeline] Configuration updated:', config);
   }
 
   getState(): TimelineState {
@@ -594,13 +591,13 @@ class ConversationTimelineEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   async shutdown(): Promise<void> {
-    logger.debug('Shutting down...');
+    console.log('[Timeline] Shutting down...');
 
     if (this.rebuildTimer) {
       clearInterval(this.rebuildTimer);
     }
 
-    logger.debug('Shutdown complete');
+    console.log('[Timeline] Shutdown complete');
   }
 }
 

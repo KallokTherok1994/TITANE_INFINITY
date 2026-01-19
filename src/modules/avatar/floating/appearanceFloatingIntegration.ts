@@ -3,12 +3,11 @@
 //   Connect AppearanceEngine v24.9 with Three.js Materials
 // ═══════════════════════════════════════════════════════════════════════════
 
-import type { Color, Mesh, MeshStandardMaterial } from 'three';
+import * as THREE from 'three';
 import type { AvatarAppearanceState } from '../appearance/appearanceState';
 import { DEFAULT_APPEARANCE_STATE } from '../appearance/appearanceState';
 import type { ThreeJSAvatarRenderer } from './ThreeJSAvatarRenderer';
 import { secureInvoke } from '@/lib/security';
-import { logger } from '@/utils/logger';
 import { loadThreeJS } from '../core/ThreeJSLazyLoader';
 
 // Debug flag (disable in production)
@@ -19,11 +18,11 @@ const DEBUG = import.meta.env.DEV;
 // ═══════════════════════════════════════════════════════════════════════════
 
 export interface AppearanceMaterialMap {
-  body: MeshStandardMaterial;
-  head: MeshStandardMaterial;
-  outfit: MeshStandardMaterial[];
-  hair: MeshStandardMaterial;
-  accessories: MeshStandardMaterial[];
+  body: THREE.MeshStandardMaterial;
+  head: THREE.MeshStandardMaterial;
+  outfit: THREE.MeshStandardMaterial[];
+  hair: THREE.MeshStandardMaterial;
+  accessories: THREE.MeshStandardMaterial[];
 }
 
 export interface ColorPalette {
@@ -75,7 +74,7 @@ const COLOR_PALETTES: Record<string, ColorPalette> = {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export class AppearanceFloatingIntegration {
-  private THREE!: typeof import('three'); // YOLO OPT-1: Lazy-loaded Three.js
+  private THREE!: typeof THREE; // YOLO OPT-1: Lazy-loaded Three.js
   private renderer: ThreeJSAvatarRenderer;
   private materials: AppearanceMaterialMap | null = null;
   private currentAppearance: AvatarAppearanceState | null = null;
@@ -87,7 +86,7 @@ export class AppearanceFloatingIntegration {
   /**
    * YOLO OPT-1: Initialize materials for avatar meshes (async)
    */
-  public async initializeMaterials(meshes: Mesh[]): Promise<AppearanceMaterialMap> {
+  public async initializeMaterials(meshes: THREE.Mesh[]): Promise<AppearanceMaterialMap> {
     // Lazy-load Three.js
     this.THREE = await loadThreeJS();
 
@@ -148,7 +147,7 @@ export class AppearanceFloatingIntegration {
       this.currentAppearance = JSON.parse(appearance) as AvatarAppearanceState;
       return this.currentAppearance;
     } catch (error) {
-      logger.error('Fetch failed:', error);
+      console.error('[AppearanceFloatingIntegration] Fetch failed:', error);
       throw error;
     }
   }
@@ -158,7 +157,7 @@ export class AppearanceFloatingIntegration {
    */
   public applyAppearance(appearance: AvatarAppearanceState): void {
     if (!this.materials) {
-      logger.warn('Materials not initialized');
+      console.warn('[AppearanceFloatingIntegration] Materials not initialized');
       return;
     }
 
@@ -189,7 +188,11 @@ export class AppearanceFloatingIntegration {
     // Apply outfit colors
     this.applyOutfitState(resolvedOutfit);
 
-    if (DEBUG) logger.debug('Appearance applied:', appearance.mode_preset);
+    if (DEBUG)
+      console.log(
+        '[AppearanceFloatingIntegration] Appearance applied:',
+        appearance.mode_preset
+      );
   }
 
   /**
@@ -265,7 +268,12 @@ export class AppearanceFloatingIntegration {
     // 6. Fallback: Keep default palette colors if parsing fails
     // For now, keep default palette colors
 
-    if (DEBUG) logger.debug('Outfit applied:', outfit.top, outfit.bottom);
+    if (DEBUG)
+      console.log(
+        '[AppearanceFloatingIntegration] Outfit applied:',
+        outfit.top,
+        outfit.bottom
+      );
   }
 
   /**
@@ -280,7 +288,7 @@ export class AppearanceFloatingIntegration {
           const appearance = await this.fetchAppearance();
           this.applyAppearance(appearance);
         } catch (error) {
-          logger.error('Sync error:', error);
+          console.error('[AppearanceFloatingIntegration] Sync error:', error);
         }
 
         await new Promise(resolve => setTimeout(resolve, intervalMs));
@@ -302,7 +310,7 @@ export class AppearanceFloatingIntegration {
   public updateMaterialProperty(
     target: 'body' | 'head' | 'outfit' | 'hair',
     property: 'color' | 'metalness' | 'roughness',
-    value: Color | number
+    value: THREE.Color | number
   ): void {
     if (!this.materials || !this.THREE) return;
 
@@ -356,12 +364,12 @@ export class AppearanceFloatingIntegration {
 // ═══════════════════════════════════════════════════════════════════════════
 
 // Module-level THREE cache for helper functions
-let cachedTHREE: typeof import('three') | null = null;
+let cachedTHREE: typeof THREE | null = null;
 
 /**
  * Parse CSS hex color to THREE.Color (async - requires THREE to be loaded)
  */
-export async function parseColor(hexString: string): Promise<Color> {
+export async function parseColor(hexString: string): Promise<THREE.Color> {
   if (!cachedTHREE) {
     cachedTHREE = await loadThreeJS();
   }
@@ -374,8 +382,8 @@ export async function parseColor(hexString: string): Promise<Color> {
  */
 export function parseColorSync(
   hexString: string,
-  threeModule: typeof import('three')
-): Color {
+  threeModule: typeof THREE
+): THREE.Color {
   return new threeModule.Color(hexString);
 }
 

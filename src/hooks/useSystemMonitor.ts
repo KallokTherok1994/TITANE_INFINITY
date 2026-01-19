@@ -14,7 +14,6 @@ import { useVitals } from './useVitals';
 import { useEngineVitals } from './useEngineVitals';
 import type { SystemVitals } from './useVitals';
 import type { EngineVitals } from './useEngineVitals';
-import { logger } from '../utils/logger';
 
 export interface UseSystemMonitorOptions {
   vitalsInterval?: number;
@@ -71,8 +70,8 @@ export function useSystemMonitor(
 
   const refreshAll = async () => {
     await Promise.all([
-      fetchVitals().catch(e => logger.error('System refresh error:', e)),
-      refreshEnginesBase().catch(e => logger.error('Engine refresh error:', e)),
+      fetchVitals().catch(e => console.error('System refresh error:', e)),
+      refreshEnginesBase().catch(e => console.error('Engine refresh error:', e)),
     ]);
   };
 

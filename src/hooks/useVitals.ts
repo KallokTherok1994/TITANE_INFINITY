@@ -14,7 +14,6 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { tauriClient } from '../services/tauriClient';
 import { createAdaptivePolling } from '@/utils/adaptivePolling';
-import { logger } from '@/utils/logger';
 
 export interface SystemVitals {
   cpu: number; // 0-100
@@ -100,7 +99,7 @@ export function useVitals(options: UseVitalsOptions = {}): UseVitalsReturn {
       return vitals;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch vitals';
-      logger.error('❌ Vitals fetch error:', err);
+      console.error('❌ Vitals fetch error:', err);
 
       setState(prev => ({
         ...prev,
@@ -182,7 +181,7 @@ export function useVitals(options: UseVitalsOptions = {}): UseVitalsReturn {
           onIntervalChange: newInterval => {
             setCurrentInterval(newInterval);
             if (process.env.NODE_ENV === 'development') {
-              logger.debug(`[useVitals] Adaptive interval: ${newInterval}ms`);
+              console.log(`[useVitals] Adaptive interval: ${newInterval}ms`);
             }
           },
         }

@@ -6,7 +6,6 @@
 import { secureInvoke } from '@/lib/security';
 import { listen, emit as tauriEmit, type UnlistenFn } from '@tauri-apps/api/event';
 import type { BridgeState, TauriCommand } from '../types';
-import { tauriClient } from '@/lib/tauriClient';
 
 /**
  * Pont Tauri
@@ -23,7 +22,6 @@ export class TauriBridge {
   private isProcessingQueue = false;
   private maxRetries = 3;
   private retryDelay = 1000;
-  public tauriClient = tauriClient;
 
   /**
    * Initialise le pont
@@ -31,7 +29,7 @@ export class TauriBridge {
   async init(): Promise<void> {
     try {
       // Tester la connexion avec un ping
-      await this.tauriClient.ping();
+      await this.invoke('ping');
       this.state.connected = true;
       this.state.lastSync = Date.now();
     } catch (error) {
@@ -171,7 +169,7 @@ export class TauriBridge {
    */
   async checkConnection(): Promise<boolean> {
     try {
-      await this.tauriClient.ping();
+      await this.invoke('ping');
       this.state.connected = true;
       return true;
     } catch {

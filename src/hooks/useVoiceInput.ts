@@ -5,9 +5,6 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { voiceService } from '@/services/api/voice';
-import { createLogger } from '@/utils/logger';
-
-const logger = createLogger('VoiceInput');
 
 interface AudioConstraints {
   echoCancellation?: boolean;
@@ -46,7 +43,7 @@ export function useVoiceInput(config?: AudioConstraints): UseVoiceInputReturn {
       },
     };
 
-    logger.debug('Audio constraints:', constraints.audio);
+    console.log('[useVoiceInput] Audio constraints:', constraints.audio);
     return constraints;
   }, [config]);
 
@@ -64,11 +61,20 @@ export function useVoiceInput(config?: AudioConstraints): UseVoiceInputReturn {
       if (!audioTrack) throw new Error('No audio track found');
       const settings = audioTrack.getSettings();
 
-      logger.debug('Audio track settings:', settings);
+      console.log('[useVoiceInput] Audio track settings:', {
+        echoCancellation: settings.echoCancellation,
+        noiseSuppression: settings.noiseSuppression,
+        autoGainControl: settings.autoGainControl,
+        sampleRate: settings.sampleRate,
+        channelCount: settings.channelCount,
+      });
 
       // Warn if echo cancellation not available
       if (!settings.echoCancellation) {
-        logger.warn('Echo cancellation not supported - feedback loop risk increased');
+        console.warn(
+          '[useVoiceInput] ⚠️ Echo cancellation not supported on this device/browser. ' +
+            'Feedback loop risk increased!'
+        );
         setError('Echo cancellation not available - audio feedback may occur');
       }
 
@@ -85,7 +91,7 @@ export function useVoiceInput(config?: AudioConstraints): UseVoiceInputReturn {
       setIsListening(true);
     } catch (err: unknown) {
       const error = err as { name?: string; message?: string };
-      logger.error('Failed to start listening:', error);
+      console.error('[useVoiceInput] Failed to start listening:', error);
 
       if (error.name === 'NotAllowedError') {
         setError('Microphone permission denied');
@@ -117,7 +123,7 @@ export function useVoiceInput(config?: AudioConstraints): UseVoiceInputReturn {
       return result;
     } catch (err: unknown) {
       const error = err as Error;
-      logger.error('Failed to stop listening:', error);
+      console.error('[useVoiceInput] Failed to stop listening:', error);
       setError(`Failed to stop listening: ${error.message}`);
       setIsListening(false);
     }
@@ -137,7 +143,7 @@ export function useVoiceInput(config?: AudioConstraints): UseVoiceInputReturn {
       recordingIdRef.current = null;
     } catch (err: unknown) {
       const error = err as Error;
-      logger.error('Failed to cancel listening:', error);
+      console.error('[useVoiceInput] Failed to cancel listening:', error);
       setError(`Failed to cancel: ${error.message}`);
     }
   };
@@ -146,7 +152,7 @@ export function useVoiceInput(config?: AudioConstraints): UseVoiceInputReturn {
   useEffect(() => {
     return () => {
       if (recordingIdRef.current) {
-        voiceService.cancelRecording().catch(err => logger.error('Cleanup error:', err));
+        voiceService.cancelRecording().catch(console.error);
       }
       if (audioStream) {
         audioStream.getTracks().forEach(track => track.stop());

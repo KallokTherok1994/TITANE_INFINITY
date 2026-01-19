@@ -7,6 +7,7 @@
 ## 🚀 DÉMARRAGE RAPIDE
 
 ### Prérequis Système
+
 ```bash
 # Vérifier Node.js
 node --version  # >= 18.19.1
@@ -17,6 +18,7 @@ pnpm --version  # 10.28.0
 ```
 
 ### Installation & Build
+
 ```bash
 # Installer dépendances
 pnpm install
@@ -34,6 +36,7 @@ pnpm run build:production
 ## 📊 MONITORING & HEALTH CHECKS
 
 ### Health Checks Automatiques
+
 ```bash
 # Health check complet
 ./scripts/health/health_check.sh
@@ -46,12 +49,14 @@ pnpm run build:production
 ```
 
 ### Métriques Clés
+
 - **Boot Time:** < 3 secondes
 - **Memory Usage:** < 500MB
 - **Chat Response:** < 2 secondes
 - **Error Rate:** < 1%
 
 ### Monitoring OMEGA
+
 ```bash
 # Status système temps réel
 # Interface: Status bar + Debug panel
@@ -61,6 +66,7 @@ pnpm run build:production
 ## 🔧 MAINTENANCE ROUTINE
 
 ### Quotidienne
+
 ```bash
 # Nettoyer caches build
 rm -rf node_modules/.vite dist
@@ -73,6 +79,7 @@ rm -rf node_modules/.vite dist
 ```
 
 ### Hebdomadaire
+
 ```bash
 # Tests complets
 pnpm run test:all
@@ -85,6 +92,7 @@ pnpm run test:all
 ```
 
 ### Mensuelle
+
 ```bash
 # Full audit
 ./scripts/audit/00-master-audit.sh
@@ -101,16 +109,19 @@ cp src-tauri/tauri.conf.json runtime/backup/
 ### Incident Classification
 
 #### 🔴 Critique (Arrêt Complet)
+
 - **Trigger:** Application ne démarre pas
 - **SLA:** Résolution < 5 minutes
 - **Action:** Rollback immédiat
 
 #### 🟠 Majeur (Fonctionnalité Cassée)
+
 - **Trigger:** Chat IA silencieux, erreurs runtime
 - **SLA:** Résolution < 30 minutes
 - **Action:** Restart + diagnostic
 
 #### 🟡 Mineur (Performance)
+
 - **Trigger:** Lenteurs, mémoire haute
 - **SLA:** Résolution < 2 heures
 - **Action:** Optimisations + monitoring
@@ -118,6 +129,7 @@ cp src-tauri/tauri.conf.json runtime/backup/
 ### Procédures d'Urgence
 
 #### 1. Restart d'Urgence
+
 ```bash
 # Stop all processes
 pkill -f "titane-infinity"
@@ -130,6 +142,7 @@ pkill -f "titane-infinity"
 ```
 
 #### 2. Rollback d'Urgence
+
 ```bash
 # Emergency rollback
 ./scripts/deployment/rollback-emergency.sh
@@ -141,6 +154,7 @@ pnpm run build:production
 ```
 
 #### 3. Mode Safe
+
 ```bash
 # Force local provider only
 export VITE_FORCE_LOCAL_PROVIDER=1
@@ -156,6 +170,7 @@ export VITE_DISABLE_DEBUG_PANEL=1
 ## 🔍 DIAGNOSTIC AVANCÉ
 
 ### Outils de Diagnostic
+
 ```bash
 # Diagnostic ultime
 ./scripts/ultra-diagnostic.sh
@@ -169,6 +184,7 @@ tail -f .clinerules/logs/operations.log
 ```
 
 ### Debug Panels
+
 - **Interface:** Ctrl+Shift+D pour debug panel
 - **Métriques:** Provider status, error counts, response times
 - **Console:** Logs détaillés avec niveaux
@@ -176,6 +192,7 @@ tail -f .clinerules/logs/operations.log
 ## 📈 OPTIMISATIONS PERFORMANCE
 
 ### Memory Management
+
 ```bash
 # Monitor memory usage
 ./scripts/performance/memory_monitor.sh
@@ -185,6 +202,7 @@ export VITE_ENABLE_GC=1
 ```
 
 ### Provider Optimization
+
 ```bash
 # Test provider performance
 ./scripts/diagnostic/provider_benchmark.sh
@@ -194,6 +212,7 @@ export VITE_ADAPTIVE_TIMEOUT_ENABLED=1
 ```
 
 ### UI Performance
+
 ```bash
 # Virtual scrolling threshold
 export VITE_VIRTUAL_SCROLL_THRESHOLD=25
@@ -205,6 +224,7 @@ export VITE_STREAMING_DEBOUNCE_MS=50
 ## 🔐 SÉCURITÉ & COMPLIANCE
 
 ### Vérifications Sécurité
+
 ```bash
 # Security audit
 ./scripts/audit/01-security-audit.sh
@@ -217,6 +237,7 @@ export VITE_STREAMING_DEBOUNCE_MS=50
 ```
 
 ### Secrets Management
+
 ```bash
 # Rotate API keys
 # Via interface: Settings → AI Providers → Update Keys
@@ -228,16 +249,19 @@ export VITE_STREAMING_DEBOUNCE_MS=50
 ## 📚 RÉFÉRENCES TECHNIQUES
 
 ### Architecture
+
 - **4-Ring:** Types → Engines → Services → UI
 - **OMEGA Pattern:** Auto-healing + consciousness
 - **Local-First:** Zero cloud dependency
 
 ### Providers IA
+
 - **titaneLocal:** Always available fallback
 - **9 providers:** Auto-failover chain
 - **Timeout:** Adaptive per provider
 
 ### UI/UX
+
 - **Emergency Modes:** Auto-recovery UI
 - **Debug Tools:** Integrated monitoring
 - **Responsive:** Desktop-first design
@@ -245,21 +269,25 @@ export VITE_STREAMING_DEBOUNCE_MS=50
 ## 👥 SUPPORT & ESCALATION
 
 ### Niveau 1: Automatique
+
 - Auto-healing system
 - Emergency UI modes
 - Local provider fallback
 
 ### Niveau 2: Manuel
+
 - Restart procedures
 - Safe mode activation
 - Diagnostic tools
 
 ### Niveau 3: Expert
+
 - Code rollback
 - Configuration reset
 - System rebuild
 
 ### Contacts
+
 - **Technique:** Kevin Thibault
 - **Documentation:** `docs/REPAIR_PLAYBOOK.md`
 - **Issues:** GitHub repository
@@ -267,6 +295,7 @@ export VITE_STREAMING_DEBOUNCE_MS=50
 ## 🎯 CHECKLIST PRÉ-RELEASE
 
 ### Pré-Release
+
 - [ ] `pnpm install` success
 - [ ] `pnpm run verify` clean
 - [ ] `pnpm run build:production` success
@@ -274,12 +303,14 @@ export VITE_STREAMING_DEBOUNCE_MS=50
 - [ ] `./scripts/smoke/smoke_stable_appimage.sh` pass
 
 ### Post-Release (24h)
+
 - [ ] Monitoring alerts review
 - [ ] User feedback analysis
 - [ ] Performance metrics validation
 - [ ] Error rates < 1%
 
 ### Maintenance (7j)
+
 - [ ] Full test suite pass
 - [ ] Security audit clean
 - [ ] Dependencies updated
@@ -289,4 +320,4 @@ export VITE_STREAMING_DEBOUNCE_MS=50
 
 **Runbook validé pour TITANE∞ v26.3.0 - Production conditionnelle**
 
-*Priorité absolue: Installer pnpm pour activation complète*
+_Priorité absolue: Installer pnpm pour activation complète_

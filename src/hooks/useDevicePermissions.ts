@@ -12,7 +12,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { detectEnvironment, type EnvironmentInfo } from '@/core/tauri/environment';
 import { secureInvoke } from '@/lib/security';
-import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -264,7 +263,7 @@ async function checkCamera(env: EnvironmentInfo): Promise<DevicePermission> {
 async function checkScreen(env: EnvironmentInfo): Promise<DevicePermission> {
   // Implementation: Screen capture via Tauri plugin
   // - Plugin: Add tauri-plugin-screenshots to Cargo.toml dependencies
-  // - API: await tauriClient.plugin:screenshots|capture({monitor: 0})
+  // - API: await invoke('plugin:screenshots|capture', {monitor: 0})
   // - Permissions: Add "screenshots" to tauri.conf.json allowlist
   // - Monitor selection: Get available displays with getDisplays() first
   // - Format: Save as PNG/JPEG, return base64 or file path
@@ -474,7 +473,7 @@ export function useDevicePermissions(): DevicePermissionsResult {
    * Utilisé par le Self-Healing Engine pour récupérer d'un état incohérent
    */
   const resetAndRecheck = useCallback(async () => {
-    logger.debug('🔄 Reset cache et re-vérification...');
+    console.log('[DevicePermissions] 🔄 Reset cache et re-vérification...');
 
     // 1. Reset état local
     setPermissions(initialState);
@@ -492,7 +491,7 @@ export function useDevicePermissions(): DevicePermissionsResult {
     // 4. Re-vérifier toutes les permissions
     await checkAll();
 
-    logger.debug('✅ Reset et re-vérification terminés');
+    console.log('[DevicePermissions] ✅ Reset et re-vérification terminés');
   }, [checkAll]);
 
   /**
@@ -510,7 +509,7 @@ export function useDevicePermissions(): DevicePermissionsResult {
         details,
       };
 
-      logger.warn(`[DeviceIssue][${device.toUpperCase()}] ${code}`, entry);
+      console.warn(`[DeviceIssue][${device.toUpperCase()}] ${code}`, entry);
 
       // Stocker dans localStorage pour debugging (max 50 entrées)
       try {

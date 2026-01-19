@@ -81,7 +81,7 @@ export class StateBridge {
 
     // Synchroniser avec le backend
     try {
-      await this.bridge.tauriClient.setState({ key, value });
+      await this.bridge.invoke('set_state', { key, value });
       this.dirtyKeys.delete(key);
     } catch (error) {
       console.error(`[StateBridge] Failed to sync ${key}:`, error);
@@ -113,7 +113,7 @@ export class StateBridge {
     }
 
     try {
-      await this.bridge.tauriClient.deleteState({ key });
+      await this.bridge.invoke('delete_state', { key });
     } catch (error) {
       console.error(`[StateBridge] Failed to delete ${key}:`, error);
     }
@@ -222,7 +222,7 @@ export class StateBridge {
     for (const key of keysToSync) {
       const value = this.localState.get(key);
       try {
-        await this.bridge.tauriClient.setState({ key, value });
+        await this.bridge.invoke('set_state', { key, value });
         this.dirtyKeys.delete(key);
       } catch (error) {
         console.error(`[StateBridge] Failed to sync ${key}:`, error);

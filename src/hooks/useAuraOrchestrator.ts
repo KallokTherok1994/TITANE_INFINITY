@@ -7,7 +7,6 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { logger } from '@/utils/logger';
 
 /* ═══════════════════════════════════════════════════════════════
    TYPES
@@ -295,7 +294,7 @@ export const useAuraOrchestrator = create<AuraOrchestratorState>()(
           if (currentIndex > 0) {
             const newQuality = qualities[currentIndex - 1] ?? 'low';
             get().setQuality(newQuality);
-            logger.warn(
+            console.warn(
               `🎨 Aura: Auto-downgrade quality to ${newQuality} (low FPS detected)`
             );
           }

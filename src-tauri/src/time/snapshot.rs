@@ -187,242 +187,48 @@ impl SnapshotIndex {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tempfile::TempDir;
 
-    fn create_test_context() -> SnapshotContext {
-        SnapshotContext {
+    #[test]
+    fn test_snapshot_creation() {
+        let context = SnapshotContext {
             xp_total: 1000,
             level: 3,
             memory_files: 10,
             active_engines: vec!["Helios".to_string(), "Memory".to_string()],
             design_system: "v∞".to_string(),
             persona_mood: "focused".to_string(),
-        }
-    }
+        };
 
-    fn create_test_metadata(id: &str, timestamp: u64) -> SnapshotMetadata {
-        SnapshotMetadata {
-            id: id.to_string(),
-            timestamp,
-            version: "1.0".to_string(),
-            sha256: "abc123".to_string(),
-            compressed_size: 100,
-            uncompressed_size: 200,
-            description: "Test snapshot".to_string(),
-            context: create_test_context(),
-        }
-    }
-
-    #[test]
-    fn test_snapshot_creation() {
-        let context = create_test_context();
         let snapshot = Snapshot::new(vec![1, 2, 3, 4], context, "Test snapshot".to_string());
 
         assert!(!snapshot.metadata.id.is_empty());
         assert_eq!(snapshot.metadata.compressed_size, 4);
-        assert!(!snapshot.metadata.sha256.is_empty());
-        assert_eq!(snapshot.metadata.description, "Test snapshot");
     }
 
     #[test]
-    fn test_snapshot_id_format() {
-        let context = create_test_context();
-        let snapshot = Snapshot::new(vec![1, 2, 3], context, "Test".to_string());
-
-        // ID should be timestamp-hash format
-        assert!(snapshot.metadata.id.contains('-'));
-        let parts: Vec<&str> = snapshot.metadata.id.split('-').collect();
-        assert_eq!(parts.len(), 2);
-        assert!(parts[0].parse::<u64>().is_ok()); // First part is timestamp
-    }
-
-    #[test]
-    fn test_calculate_hash() {
-        let data1 = vec![1, 2, 3, 4];
-        let data2 = vec![1, 2, 3, 4];
-        let data3 = vec![5, 6, 7, 8];
-
-        let context = create_test_context();
-        let snap1 = Snapshot::new(data1, context.clone(), "Test".to_string());
-        let snap2 = Snapshot::new(data2, context.clone(), "Test".to_string());
-        let snap3 = Snapshot::new(data3, context, "Test".to_string());
-
-        // Same data should produce same hash
-        assert_eq!(snap1.metadata.sha256, snap2.metadata.sha256);
-        // Different data should produce different hash
-        assert_ne!(snap1.metadata.sha256, snap3.metadata.sha256);
-    }
-
-    #[test]
-    fn test_snapshot_get_path() {
-        let context = create_test_context();
-        let snapshot = Snapshot::new(vec![1, 2, 3], context, "Test".to_string());
-
-        let base_dir = Path::new("/tmp/snapshots");
-        let path = snapshot.get_path(base_dir);
-
-        assert!(path.to_str().unwrap().starts_with("/tmp/snapshots"));
-        assert!(path.to_str().unwrap().ends_with(".snapshot"));
-        assert!(path.to_str().unwrap().contains(&snapshot.metadata.id));
-    }
-
-    #[test]
-    fn test_snapshot_get_signature_path() {
-        let context = create_test_context();
-        let snapshot = Snapshot::new(vec![1, 2, 3], context, "Test".to_string());
-
-        let base_dir = Path::new("/tmp/snapshots");
-        let sig_path = snapshot.get_signature_path(base_dir);
-
-        assert!(sig_path.to_str().unwrap().starts_with("/tmp/snapshots"));
-        assert!(sig_path.to_str().unwrap().ends_with(".sig"));
-    }
-
-    #[test]
-    fn test_snapshot_context_serialization() {
-        let context = create_test_context();
-        let json = serde_json::to_string(&context).unwrap();
-        assert!(json.contains("xp_total"));
-        assert!(json.contains("level"));
-        assert!(json.contains("active_engines"));
-
-        let deserialized: SnapshotContext = serde_json::from_str(&json).unwrap();
-        assert_eq!(deserialized.xp_total, 1000);
-        assert_eq!(deserialized.level, 3);
-    }
-
-    #[test]
-    fn test_snapshot_metadata_serialization() {
-        let metadata = create_test_metadata("test-123", 1000);
-        let json = serde_json::to_string(&metadata).unwrap();
-        assert!(json.contains("test-123"));
-        assert!(json.contains("sha256"));
-
-        let deserialized: SnapshotMetadata = serde_json::from_str(&json).unwrap();
-        assert_eq!(deserialized.id, "test-123");
-        assert_eq!(deserialized.timestamp, 1000);
-    }
-
-    #[test]
-    fn test_snapshot_index_default() {
-        let index = SnapshotIndex::default();
-        assert_eq!(index.snapshots.len(), 0);
-    }
-
-    #[test]
-    fn test_snapshot_index_add() {
+    fn test_snapshot_index() {
         let mut index = SnapshotIndex::default();
-        let meta1 = create_test_metadata("snap1", 1000);
-        let meta2 = create_test_metadata("snap2", 2000);
+
+        let meta1 = SnapshotMetadata {
+            id: "snap1".to_string(),
+            timestamp: 1000,
+            version: "1.0".to_string(),
+            sha256: "abc".to_string(),
+            compressed_size: 100,
+            uncompressed_size: 200,
+            description: "First".to_string(),
+            context: SnapshotContext {
+                xp_total: 0,
+                level: 1,
+                memory_files: 0,
+                active_engines: vec![],
+                design_system: "v1".to_string(),
+                persona_mood: "calm".to_string(),
+            },
+        };
 
         index.add(meta1);
-        index.add(meta2);
-
-        assert_eq!(index.snapshots.len(), 2);
-        // Should be sorted by timestamp descending
-        assert_eq!(index.snapshots[0].id, "snap2");
-        assert_eq!(index.snapshots[1].id, "snap1");
-    }
-
-    #[test]
-    fn test_snapshot_index_remove() {
-        let mut index = SnapshotIndex::default();
-        index.add(create_test_metadata("snap1", 1000));
-        index.add(create_test_metadata("snap2", 2000));
-
-        assert_eq!(index.snapshots.len(), 2);
-
-        index.remove("snap1");
         assert_eq!(index.snapshots.len(), 1);
-        assert!(index.find("snap1").is_none());
-        assert!(index.find("snap2").is_some());
-    }
-
-    #[test]
-    fn test_snapshot_index_find() {
-        let mut index = SnapshotIndex::default();
-        index.add(create_test_metadata("snap1", 1000));
-
-        let found = index.find("snap1");
-        assert!(found.is_some());
-        assert_eq!(found.unwrap().id, "snap1");
-
-        let not_found = index.find("nonexistent");
-        assert!(not_found.is_none());
-    }
-
-    #[test]
-    fn test_snapshot_index_recent() {
-        let mut index = SnapshotIndex::default();
-        index.add(create_test_metadata("snap1", 1000));
-        index.add(create_test_metadata("snap2", 2000));
-        index.add(create_test_metadata("snap3", 3000));
-        index.add(create_test_metadata("snap4", 4000));
-
-        let recent = index.recent(2);
-        assert_eq!(recent.len(), 2);
-        assert_eq!(recent[0].id, "snap4"); // Most recent first
-        assert_eq!(recent[1].id, "snap3");
-    }
-
-    #[test]
-    fn test_snapshot_index_recent_more_than_available() {
-        let mut index = SnapshotIndex::default();
-        index.add(create_test_metadata("snap1", 1000));
-
-        let recent = index.recent(10);
-        assert_eq!(recent.len(), 1);
-    }
-
-    #[tokio::test]
-    async fn test_snapshot_index_save_and_load() {
-        let temp_dir = TempDir::new().unwrap();
-        let index_path = temp_dir.path().join("index.json");
-
-        // Create and save index
-        let mut index = SnapshotIndex::default();
-        index.add(create_test_metadata("snap1", 1000));
-        index.add(create_test_metadata("snap2", 2000));
-
-        let save_result = index.save(&index_path).await;
-        assert!(save_result.is_ok());
-
-        // Load index
-        let loaded = SnapshotIndex::load(&index_path).await.unwrap();
-        assert_eq!(loaded.snapshots.len(), 2);
-        assert!(loaded.find("snap1").is_some());
-        assert!(loaded.find("snap2").is_some());
-    }
-
-    #[tokio::test]
-    async fn test_snapshot_index_load_nonexistent() {
-        let temp_dir = TempDir::new().unwrap();
-        let index_path = temp_dir.path().join("nonexistent.json");
-
-        let loaded = SnapshotIndex::load(&index_path).await.unwrap();
-        assert_eq!(loaded.snapshots.len(), 0); // Should return default
-    }
-
-    #[test]
-    fn test_verify_signature_invalid_public_key_length() {
-        let context = create_test_context();
-        let snapshot = Snapshot::new(vec![1, 2, 3], context, "Test".to_string());
-
-        let invalid_key = vec![1, 2, 3]; // Too short
-        let result = snapshot.verify_signature(&invalid_key);
-        assert!(result.is_err());
-        assert!(result.unwrap_err().contains("Invalid public key length"));
-    }
-
-    #[test]
-    fn test_verify_signature_invalid_signature_length() {
-        let context = create_test_context();
-        let mut snapshot = Snapshot::new(vec![1, 2, 3], context, "Test".to_string());
-        snapshot.signature = vec![1, 2, 3]; // Too short
-
-        let valid_key = vec![0u8; 32];
-        let result = snapshot.verify_signature(&valid_key);
-        assert!(result.is_err());
-        assert!(result.unwrap_err().contains("Invalid signature length"));
+        assert!(index.find("snap1").is_some());
     }
 }

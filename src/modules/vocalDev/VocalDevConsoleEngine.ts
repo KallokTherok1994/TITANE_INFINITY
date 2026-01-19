@@ -32,7 +32,7 @@
 import { secureInvoke } from '@/lib/security';
 import { voiceService as _voiceService } from '@/services/api';
 import { hybridTTS } from '@/services/tts/hybridTTS';
-import { unifiedHealingFacade } from '@/services/ai/system';
+import { autoHealEngine } from '@/services/ai/system';
 import type { AutoHealError as _AutoHealError } from '@/services/ai/autoHealEngine';
 import { logger } from '@/lib/logger';
 
@@ -698,17 +698,13 @@ export class VocalDevConsoleEngine {
       }
 
       // Trigger self-healing (direct instance)
-      const healResult = await unifiedHealingFacade.heal({
-        source: 'vocal-dev',
-        error: new Error(`Issues: ${diagnostics.issues.join(', ')}`),
-        type: 'validation',
-        metadata: { target, issues: diagnostics.issues, timestamp: Date.now() },
-      });
-
-      const healingId = healResult.actionId ?? healResult.errorId ?? 'unknown';
+      const healResult = await autoHealEngine.heal(
+        'vocal-dev',
+        new Error(`Issues: ${diagnostics.issues.join(', ')}`)
+      );
 
       return {
-        output: `🩹 Auto-healing triggered:\n${diagnostics.issues.map(i => `- ${i}`).join('\n')}\n\nHealing ID: ${healingId}`,
+        output: `🩹 Auto-healing triggered:\n${diagnostics.issues.map(i => `- ${i}`).join('\n')}\n\nHealing ID: ${healResult.id}`,
       };
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);

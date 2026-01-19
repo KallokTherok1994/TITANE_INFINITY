@@ -246,7 +246,7 @@ src-tauri/src/
 | ------------------------ | ------------------------------------- | --------- | --------------------------- |
 | **package.json**         | Dépendances NPM, scripts build        | 🔴 P0     | Audit vulnérabilités requis |
 | **Cargo.toml**           | Dépendances Rust, optimisation build  | 🔴 P0     | Audit cargo audit requis    |
-| **src-tauri/tauri.conf.json** | Config Tauri (base; overlay via runtime/*) | 🔴 P0     | CSP à auditer               |
+| **tauri.conf.json**      | Config Tauri (CSP, allowlist, bundle) | 🔴 P0     | CSP à auditer               |
 | **vite.config.ts**       | Build frontend (Vite 6)               | �� P1     | OK                          |
 | **tsconfig.json**        | TypeScript strict mode                | 🟡 P1     | OK                          |
 | **playwright.config.ts** | E2E tests configuration               | 🟢 P2     | OK                          |

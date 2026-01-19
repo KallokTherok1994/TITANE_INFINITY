@@ -1,11 +1,10 @@
 /**
- * TITANE∞ v26.3.0 - useControlPanelSection Hook
+ * TITANE∞ v24.3.0 - useControlPanelSection Hook
  * Generic hook for control panel sections with Tauri IPC
  */
 
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { secureInvoke } from '@/lib/security';
-import { logger } from '@/utils/logger';
 
 export interface UseControlPanelSectionOptions<T> {
   loadCommand: string;
@@ -52,7 +51,7 @@ export function useControlPanelSection<T>({
       setConfig(result);
       setOriginalConfig(result);
     } catch (err) {
-      logger.error(`[useControlPanelSection] Load error:`, err);
+      console.error(`[useControlPanelSection] Load error:`, err);
       setError(err instanceof Error ? err.message : String(err));
       // Use defaults on error
       setConfig(defaultConfig);
@@ -79,7 +78,7 @@ export function useControlPanelSection<T>({
       }
       savedTimeoutRef.current = setTimeout(() => setSaved(false), 3000);
     } catch (err) {
-      logger.error(`[useControlPanelSection] Save error:`, err);
+      console.error(`[useControlPanelSection] Save error:`, err);
       setError(err instanceof Error ? err.message : String(err));
     } finally {
       setIsSaving(false);

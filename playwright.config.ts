@@ -1,27 +1,16 @@
 /**
- * Playwright Configuration for TITANE∞
+ * Playwright Configuration for TITANE∞ v22.0.0
  *
- * Focus: Critical-path, web-compatible E2E against the local Vite dev server.
- * Governance gate: 3 scenarios Playwright only (critical path)
+ * E2E testing for Vite dev server (http://localhost:5173)
+ * Critical Path Tests: App Launch, Chat, Visual Engine, Navigation, Resilience
  */
 
-import { chromium, defineConfig } from '@playwright/test';
-
-const chromiumExecutable =
-  process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE || chromium.executablePath();
+import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  // Global setup for Tauri mocking
-  globalSetup: './playwright.global-setup.ts',
-
   // Test directories
-  // Governance gate: 3 scenarios Playwright only (critical path)
-  testDir: './e2e/critical',
-  testMatch: [
-    'app-launch.spec.ts',
-    'chat-interaction.spec.ts',
-    'engine-navigation.spec.ts',
-  ],
+  testDir: './e2e',
+  testMatch: '**/*.spec.ts',
 
   // Parallel execution
   fullyParallel: true,
@@ -36,36 +25,46 @@ export default defineConfig({
   },
 
   // Reporting
-  reporter: process.env.CI
-    ? [['github'], ['html', { open: 'never' }]]
-    : [['list'], ['html', { open: 'never' }]],
+  reporter: process.env.CI ? [['html'], ['github']] : [['html'], ['list']],
 
   // Browser options
   use: {
-    baseURL: 'http://127.0.0.1:1420',
+    baseURL: 'http://localhost:5173',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     actionTimeout: 10000,
-    launchOptions: {
-      // Prefer bundled Playwright Chromium to avoid snap confinement issues; allow override via env.
-      executablePath: chromiumExecutable,
-      args: ['--disable-dev-shm-usage'],
-    },
-    // Mock Tauri APIs for E2E testing
-    contextOptions: {
-      permissions: ['clipboard-read', 'clipboard-write'],
-    },
   },
 
-  // Single-browser project (bundled Chromium)
-  projects: [{ name: 'chromium' }],
+  // Test projects (browsers)
+  projects: [
+    {
+      name: 'chromium',
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1280, height: 720 },
+      },
+    },
+    {
+      name: 'firefox',
+      use: {
+        ...devices['Desktop Firefox'],
+        viewport: { width: 1280, height: 720 },
+      },
+    },
+    {
+      name: 'webkit',
+      use: {
+        ...devices['Desktop Safari'],
+        viewport: { width: 1280, height: 720 },
+      },
+    },
+  ],
 
   // Dev server configuration
   webServer: {
-    command:
-      'node node_modules/vite/bin/vite.js dev --config vite.config.ts --port 1420 --strictPort --host 127.0.0.1',
-    url: 'http://127.0.0.1:1420',
+    command: 'corepack pnpm run dev',
+    url: 'http://localhost:5173',
     reuseExistingServer: !process.env.CI,
     timeout: 120000, // 2min to start
     stdout: 'pipe',

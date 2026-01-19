@@ -1,4 +1,5 @@
 # CERTIFICATION PRODUCTION Ω — TITANE∞
+
 # État: ❌ BLOQUÉ
 
 **Date de certification:** 17/01/2026 11:34:07 AM (America/Toronto, UTC-5:00)
@@ -15,17 +16,20 @@ Mode STRICT / PREUVES D'ABORD / PNPM-ONLY / ZÉRO DÉRIVE.
 ## Résultats des gates
 
 ### Ω0: Invariants système ✅ PARTIEL
+
 - PNPM-only: ✅ (installé localement v10.28.0)
 - Pas de changement code métier: ✅ (aucun changement effectué)
 - Repo traçable: ✅ (preuves logs créées)
 
 ### Ω1: Baseline officiel ❌ BLOQUÉ
+
 - **État:** ÉCHEC
 - **Cause:** Repository non clean (centaines de fichiers modifiés)
 - **Impact:** Violation des exigences baseline pour certification production
 - **Évidence:** REPORT_BASELINE.md
 
 ### Ω2-Ω9: Non testés
+
 Arrêt prématuré suite à échec Ω1.
 
 ## Verdict final

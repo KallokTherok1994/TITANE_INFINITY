@@ -10,14 +10,14 @@
 
 import React, { useState, FormEvent } from 'react';
 import { Card, Button, Input } from '@/ui';
-import type { GeminiKeyStatus, CopilotKeyStatus, SecretStatus } from '../types';
+import type { GeminiKeyStatus, SecretStatus } from '../types';
 import { KNOWN_SECRETS as knownSecrets } from '../types';
 
 interface SecretsTabProps {
   geminiStatus: GeminiKeyStatus | null;
   openaiStatus?: GeminiKeyStatus | null;
   anthropicStatus?: GeminiKeyStatus | null;
-  copilotStatus?: CopilotKeyStatus | null;
+  copilotStatus?: GeminiKeyStatus | null;
   secretsStatus: SecretStatus[];
   loading: boolean;
   onSetGeminiKey: (apiKey: string) => Promise<unknown>;
@@ -537,10 +537,17 @@ export const SecretsTab: React.FC<SecretsTabProps> = ({
                   ? 'GitHub Copilot opérationnel'
                   : 'GitHub Copilot non configuré'}
               </strong>
-              {copilotStatus?.message && (
-                <div style={{ fontSize: '0.85rem', opacity: 0.75, marginTop: '4px' }}>
-                  {copilotStatus.message}
-                </div>
+              {copilotStatus?.masked_key && (
+                <code
+                  style={{
+                    display: 'block',
+                    fontSize: '0.75rem',
+                    opacity: 0.6,
+                    marginTop: '4px',
+                  }}
+                >
+                  {copilotStatus.masked_key}
+                </code>
               )}
             </div>
           </div>

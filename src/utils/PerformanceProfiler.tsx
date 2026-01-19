@@ -6,7 +6,6 @@
  */
 
 import React, { Profiler, ProfilerOnRenderCallback, useEffect, useState } from 'react';
-import { logger } from '@/utils/logger';
 
 /**
  * Performance metrics collected by the profiler
@@ -143,30 +142,30 @@ export function logPerformanceSummary() {
   const stats = getAllStats();
 
   if (stats.length === 0) {
-    logger.debug('📊 No performance data collected yet.');
+    console.log('📊 No performance data collected yet.');
     return;
   }
 
-  logger.debug('📊 Performance Summary');
-  logger.debug('═══════════════════════════════════════════════════════');
+  console.log('📊 Performance Summary');
+  console.log('═══════════════════════════════════════════════════════');
 
   // Sort by avg render time (slowest first)
   const sortedStats = [...stats].sort((a, b) => b.avgRenderTime - a.avgRenderTime);
 
   sortedStats.forEach(stat => {
-    logger.debug(`\n🔍 ${stat.componentId}`);
-    logger.debug(`  • Renders: ${stat.renderCount}`);
-    logger.debug(`  • Avg: ${stat.avgRenderTime.toFixed(2)}ms`);
-    logger.debug(`  • Min: ${stat.minRenderTime.toFixed(2)}ms`);
-    logger.debug(`  • Max: ${stat.maxRenderTime.toFixed(2)}ms`);
-    logger.debug(`  • Mount: ${stat.mountTime.toFixed(2)}ms`);
+    console.log(`\n🔍 ${stat.componentId}`);
+    console.log(`  • Renders: ${stat.renderCount}`);
+    console.log(`  • Avg: ${stat.avgRenderTime.toFixed(2)}ms`);
+    console.log(`  • Min: ${stat.minRenderTime.toFixed(2)}ms`);
+    console.log(`  • Max: ${stat.maxRenderTime.toFixed(2)}ms`);
+    console.log(`  • Mount: ${stat.mountTime.toFixed(2)}ms`);
 
     if (stat.avgRenderTime > 16) {
-      logger.warn(`  ⚠️  Slow component (>16ms)`);
+      console.warn(`  ⚠️  Slow component (>16ms)`);
     }
   });
 
-  logger.debug('\n═══════════════════════════════════════════════════════');
+  console.log('\n═══════════════════════════════════════════════════════');
 }
 
 /**
@@ -189,7 +188,7 @@ export const PerformanceProfiler: React.FC<PerformanceProfilerProps> = ({
 
   useEffect(() => {
     if (logRenders) {
-      logger.debug(`🔄 ${id} mounted`);
+      console.log(`🔄 ${id} mounted`);
     }
   }, [id, logRenders]);
 
@@ -217,14 +216,14 @@ export const PerformanceProfiler: React.FC<PerformanceProfilerProps> = ({
     setRenderCount(prev => prev + 1);
 
     if (logRenders) {
-      logger.debug(
+      console.log(
         `🔄 ${profilerId} (${phase}) - ${actualDuration.toFixed(2)}ms [render #${renderCount + 1}]`
       );
     }
 
     // Warn if render is slow
     if (actualDuration > 16) {
-      logger.warn(
+      console.warn(
         `⚠️  Slow render: ${profilerId} took ${actualDuration.toFixed(2)}ms (target: <16ms)`
       );
     }

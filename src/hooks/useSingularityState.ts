@@ -5,7 +5,6 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { secureInvoke } from '@/lib/security';
-import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════
 //   TYPES — Mirror Rust backend types
@@ -150,7 +149,7 @@ export function useSingularityState(
       setCognitionState(cognition);
       setEvolutionState(evolution);
     } catch (err) {
-      logger.error('Refresh failed:', err);
+      console.error('[useSingularityState] Refresh failed:', err);
       setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
@@ -166,12 +165,12 @@ export function useSingularityState(
       setError(null);
 
       const result = await secureInvoke<string>('engine_init_singularity');
-      logger.debug('Init:', result);
+      console.log('[useSingularityState] Init:', result);
 
       // Refresh state after init
       await refreshState();
     } catch (err) {
-      logger.error('Init failed:', err);
+      console.error('[useSingularityState] Init failed:', err);
       setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
@@ -184,12 +183,12 @@ export function useSingularityState(
   const tickEngine = useCallback(async () => {
     try {
       const result = await secureInvoke<string>('engine_tick');
-      logger.debug('Tick:', result);
+      console.log('[useSingularityState] Tick:', result);
 
       // Refresh state after tick
       await refreshState();
     } catch (err) {
-      logger.error('Tick failed:', err);
+      console.error('[useSingularityState] Tick failed:', err);
       setError(err instanceof Error ? err.message : String(err));
     }
   }, [refreshState]);

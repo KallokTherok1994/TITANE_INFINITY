@@ -71,51 +71,6 @@ pub struct SecretOperationResult {
     pub env_purged: bool,
 }
 
-#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
-pub enum SecretCategory {
-    ApiKey,
-    Token,
-    Credential,
-    Certificate,
-    Other,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct SecretStatus {
-    pub key: String,
-    pub configured: bool,
-    pub masked_value: Option<String>,
-    pub last_updated: Option<u64>,
-    pub category: SecretCategory,
-}
-
-const KNOWN_SECRETS: &[(&str, SecretCategory)] = &[
-    ("gemini_api_key", SecretCategory::ApiKey),
-    ("openai_api_key", SecretCategory::ApiKey),
-    ("anthropic_api_key", SecretCategory::ApiKey),
-    ("copilot_api_key", SecretCategory::ApiKey),
-    ("ollama_url", SecretCategory::ApiKey),
-    ("github_token", SecretCategory::Token),
-    ("backup_encryption_key", SecretCategory::Credential),
-];
-
-fn validate_secret_key(normalized_key: &str) -> Result<(), String> {
-    if let Err(err) = PayloadValidator::validate_string(normalized_key, "key", true) {
-        return Err(format!("Invalid secret key: {}", err));
-    }
-
-    if !normalized_key
-        .chars()
-        .all(|c| c.is_ascii_alphanumeric() || matches!(c, '_' | '-'))
-    {
-        return Err("Secret key must be alphanumeric with optional '_' or '-'".to_string());
-    }
-
-    Ok(())
-}
-
 fn mask_secret_for_display(secret: &str) -> String {
     if secret.is_empty() {
         return String::new();
@@ -529,80 +484,6 @@ pub async fn secure_store_secret(
     Ok(SecureResponse::success(result))
 }
 
-/// Obtenir le statut des secrets connus (sans exposer leur valeur)
-#[tauri::command]
-pub async fn get_secrets_status(
-    secrets: State<'_, SecureSecretsEngine>,
-) -> Result<SecureResponse<Vec<SecretStatus>>, String> {
-    PERMISSION_GUARD
-        .require("secret_status", Role::System, "get_secrets_status")
-        .await
-        .map_err(|e| format!("Permission denied: {}", e))?;
-
-    let mut statuses = Vec::with_capacity(KNOWN_SECRETS.len());
-    for (key, category) in KNOWN_SECRETS {
-        let value = secrets.get_secret(key).ok().flatten();
-        let configured = value.as_ref().is_some_and(|v| !v.trim().is_empty());
-        let masked_value = value.map(|raw| {
-            let zero = zeroize_string(raw);
-            mask_secret_for_display(zero.as_str())
-        });
-
-        statuses.push(SecretStatus {
-            key: (*key).to_string(),
-            configured,
-            masked_value,
-            last_updated: None,
-            category: *category,
-        });
-    }
-
-    Ok(SecureResponse::success(statuses))
-}
-
-/// Vérifier si un secret existe (par clé)
-#[tauri::command]
-pub async fn has_secret(
-    key: String,
-    secrets: State<'_, SecureSecretsEngine>,
-) -> Result<SecureResponse<bool>, String> {
-    PERMISSION_GUARD
-        .require("secret_status", Role::System, "has_secret")
-        .await
-        .map_err(|e| format!("Permission denied: {}", e))?;
-
-    let normalized_key = key.trim();
-    if let Err(err) = validate_secret_key(normalized_key) {
-        return Ok(SecureResponse::error(err));
-    }
-
-    let exists = secrets.has_secret(normalized_key).unwrap_or(false);
-    Ok(SecureResponse::success(exists))
-}
-
-/// Supprimer un secret (par clé)
-#[tauri::command]
-pub async fn delete_secret(
-    key: String,
-    secrets: State<'_, SecureSecretsEngine>,
-) -> Result<SecureResponse<()>, String> {
-    PERMISSION_GUARD
-        .require("secret_write", Role::Root, "delete_secret")
-        .await
-        .map_err(|e| format!("Permission denied: {}", e))?;
-
-    let normalized_key = key.trim();
-    if let Err(err) = validate_secret_key(normalized_key) {
-        return Ok(SecureResponse::error(err));
-    }
-
-    secrets
-        .clear_secret(normalized_key)
-        .map_err(|e| format!("Failed to delete secret: {}", e))?;
-
-    Ok(SecureResponse::success(()))
-}
-
 /// Import fichier sécurisé
 #[tauri::command]
 pub async fn secure_import_file(
@@ -740,7 +621,7 @@ pub async fn check_system_integrity() -> Result<SecureResponse<String>, String> 
     #[cfg(feature = "mock")]
     {
         // En mode mock, renvoyer succès immédiat pour éviter faux positifs pendant le dev frontend
-        log::debug!("[Security] check_system_integrity (mock) → OK");
+        log::info!("[Security] check_system_integrity (mock) → OK");
         Ok(SecureResponse::success(
             "Mock integrity: OK — validation bypassed in mock mode".to_string(),
         ))

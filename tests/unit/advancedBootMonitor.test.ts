@@ -36,7 +36,8 @@ describe('advancedBootMonitor', () => {
   });
 
   it('should export integrateWithLazyDiagnostic function', async () => {
-    const { integrateWithLazyDiagnostic } = await import('../../src/utils/advancedBootMonitor');
+    const { integrateWithLazyDiagnostic } =
+      await import('../../src/utils/advancedBootMonitor');
     expect(typeof integrateWithLazyDiagnostic).toBe('function');
   });
 });

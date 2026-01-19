@@ -26,7 +26,6 @@ import {
   synestheticEmotionEngine,
   type SynestheticProfile,
 } from '../emotion/synestheticEmotionEngine';
-import { logger } from '@/utils/logger';
 import {
   embodiedPresenceEngine,
   type EmbodiedPresenceState,
@@ -248,7 +247,7 @@ class UnifiedMultimodalOutputEngine {
 
     this.callbacks = new Set();
 
-    logger.debug('🎭 [UNIFIED OUTPUT] Unified Multimodal Output Engine initialized');
+    console.log('🎭 [UNIFIED OUTPUT] Unified Multimodal Output Engine initialized');
   }
 
   /**
@@ -310,7 +309,7 @@ class UnifiedMultimodalOutputEngine {
     // 7. Notifier callbacks
     this.notifyCallbacks(output);
 
-    logger.debug(
+    console.log(
       `🎭 [UNIFIED OUTPUT] Generated output #${this.state.outputCount} (coherence: ${coherenceScore.toFixed(2)})`
     );
 
@@ -543,14 +542,14 @@ class UnifiedMultimodalOutputEngine {
    * Démarrer le moteur
    */
   start(): void {
-    logger.debug('🎼 [OUTPUT] Unified Multimodal Output Engine started');
+    console.log('🎼 [OUTPUT] Unified Multimodal Output Engine started');
   }
 
   /**
    * Arrêter le moteur
    */
   stop(): void {
-    logger.debug('🎼 [OUTPUT] Unified Multimodal Output Engine stopped');
+    console.log('🎼 [OUTPUT] Unified Multimodal Output Engine stopped');
   }
 }
 

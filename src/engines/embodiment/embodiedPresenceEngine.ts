@@ -27,7 +27,6 @@ import {
   archetypeResonanceEngine,
   type ArchetypeType,
 } from '../psyche/archetypeResonanceEngine';
-import { logger } from '@/utils/logger';
 // REMOVED: engines/presence supprimé en PHASE 1 (OPTION B) - utilise stub temporaire
 import { multimodalPresenceEngine } from '../presence/_stubs';
 
@@ -258,14 +257,14 @@ class EmbodiedPresenceEngine {
   start(): void {
     if (this.updateInterval) return;
 
-    logger.debug('🧘 [EMBODIED] Starting Embodied Presence Engine...');
+    console.log('🧘 [EMBODIED] Starting Embodied Presence Engine...');
 
     const intervalMs = 1000 / this.config.updateFrequency;
     this.updateInterval = window.setInterval(() => {
       this.updatePresence();
     }, intervalMs);
 
-    logger.debug(`✅ [EMBODIED] Engine active (${this.config.updateFrequency}Hz)`);
+    console.log(`✅ [EMBODIED] Engine active (${this.config.updateFrequency}Hz)`);
   }
 
   /**
@@ -275,7 +274,7 @@ class EmbodiedPresenceEngine {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
       this.updateInterval = null;
-      logger.debug('🛑 [EMBODIED] Engine stopped');
+      console.log('🛑 [EMBODIED] Engine stopped');
     }
   }
 
@@ -500,7 +499,7 @@ class EmbodiedPresenceEngine {
         break;
     }
 
-    logger.debug(`🧘 [EMBODIED] Posture transition → ${target}`);
+    console.log(`🧘 [EMBODIED] Posture transition → ${target}`);
   }
 
   /**
@@ -531,7 +530,7 @@ class EmbodiedPresenceEngine {
    * Appliquer émotion forte (créer inertie)
    */
   applyStrongEmotion(emotion: string, intensity: number, duration: number = 2500): void {
-    logger.debug(
+    console.log(
       `💫 [EMBODIED] Strong emotion applied: ${emotion} (${Math.round(intensity * 100)}%)`
     );
 
@@ -553,7 +552,7 @@ class EmbodiedPresenceEngine {
    * Activer synchronisation utilisateur
    */
   activateUserSync(userBreathingCycle?: number, userEnergy?: number): void {
-    logger.debug('🔗 [EMBODIED] User synchronization activated');
+    console.log('🔗 [EMBODIED] User synchronization activated');
 
     this.state.userSync.active = true;
     if (userBreathingCycle) this.state.userSync.userBreathingCycle = userBreathingCycle;
@@ -566,7 +565,7 @@ class EmbodiedPresenceEngine {
    * Désactiver synchronisation utilisateur
    */
   deactivateUserSync(): void {
-    logger.debug('🔗 [EMBODIED] User synchronization deactivated');
+    console.log('🔗 [EMBODIED] User synchronization deactivated');
 
     this.state.userSync.active = false;
     this.state.userSync.userBreathingCycle = null;
@@ -599,7 +598,7 @@ class EmbodiedPresenceEngine {
       try {
         cb(this.state);
       } catch (error) {
-        logger.error('Callback error:', error);
+        console.error('[EMBODIED] Callback error:', error);
       }
     });
   }

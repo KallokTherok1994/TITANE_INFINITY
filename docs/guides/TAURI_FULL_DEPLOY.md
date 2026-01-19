@@ -2,10 +2,7 @@
 
 **Script:** `scripts/deployment/tauri-full-deploy.sh`  
 **Version:** 26.2.0  
-**Type:** Pipeline de déploiement (document historique; exécution soumise à gouvernance)
-
-> NOTE (gouvernance): ce guide décrit une chaîne de build/package. Les builds/bundles production sont interdits
-> sans autorisation explicite. Runtime actuel: v26.3.0. Production: EN ATTENTE (autorisation requise).
+**Type:** Full deployment pipeline automatisé
 
 ---
 
@@ -390,9 +387,9 @@ RUST_BACKTRACE=0
 ```
 
 ### Configs Tauri
-- **Dev:** `runtime/dev/tauri.dev.conf.json`
-- **Stable:** `runtime/stable/tauri.stable.conf.json`
-- **Production:** `runtime/stable/tauri.stable.conf.json` (avec devtools=false)
+- **Dev:** `runtime/dev/tauri.conf.json`
+- **Stable:** `runtime/stable/tauri.conf.json`
+- **Production:** `runtime/stable/tauri.conf.json` (avec devtools=false)
 
 ---
 

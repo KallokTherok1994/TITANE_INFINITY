@@ -3,7 +3,9 @@
  * Configures testing environment for React components
  */
 
-import '@testing-library/jest-dom/vitest';
+import '@testing-library/jest-dom';
+import { expect } from 'vitest';
+import * as matchers from '@testing-library/jest-dom/matchers';
 
 // ─────────────────────────────────────────────────────────────────
 // Polyfills (Node/JSDOM compat)
@@ -40,6 +42,9 @@ import '@testing-library/jest-dom/vitest';
     );
   }
 })();
+
+// Extend Vitest matchers with jest-dom
+expect.extend(matchers);
 
 // Setup global test environment
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

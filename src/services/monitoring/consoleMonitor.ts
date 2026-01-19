@@ -5,7 +5,7 @@
  * et intègre automatiquement avec le système Auto-Heal
  */
 
-import { unifiedHealingFacade } from '@/services/ai/unifiedHealingFacade';
+import { autoHealEngine } from '@/services/ai/autoHealEngine';
 import type { AutoHealError } from '@/services/ai/autoHealEngine';
 import { createLogger } from '@/utils/logger';
 import { predictiveEngine } from './predictiveEngine';
@@ -316,8 +316,6 @@ class ConsoleMonitor {
     if (
       entry.message.includes('[[AUTO-HEAL]]') ||
       entry.message.includes('[AUTO-HEAL]') ||
-      entry.message.includes('[[UNIFIED-HEALING]]') ||
-      entry.message.includes('[UNIFIED-HEALING]') ||
       entry.message.includes('autoHealEngine') ||
       entry.message.includes('[CONSOLE-MONITOR]')
     ) {
@@ -350,24 +348,13 @@ class ConsoleMonitor {
         detection.suggestedAutoHealType ||
         this.mapCategoryToAutoHealType(detection.category);
 
-      void unifiedHealingFacade
-        .heal({
-          source: 'console',
-          error: new Error(entry.message),
-          type: autoHealType,
-          metadata: {
-            stack: entry.stack,
-            args: entry.args,
-            timestamp: entry.timestamp,
-            category: detection.category,
-            severity: detection.severity,
-          },
-        })
-        .catch(err => {
-          logger.warn('UnifiedHealingFacade heal failed (console)', {
-            error: err instanceof Error ? err.message : String(err),
-          });
-        });
+      autoHealEngine.heal('console', new Error(entry.message), autoHealType, {
+        stack: entry.stack,
+        args: entry.args,
+        timestamp: entry.timestamp,
+        category: detection.category,
+        severity: detection.severity,
+      });
     }
   }
 
@@ -495,22 +482,16 @@ class ConsoleMonitor {
         `⚠️ High error rate detected: ${this.stats.errorRate} errors/min (threshold: ${this.ERROR_THRESHOLD})`
       );
 
-      void unifiedHealingFacade
-        .heal({
-          source: 'console',
-          error: new Error(`High error rate: ${this.stats.errorRate} errors/min`),
-          type: 'critical',
-          metadata: {
-            errorRate: this.stats.errorRate,
-            topErrors: this.stats.topErrors,
-            performanceImpact: this.stats.performanceImpact,
-          },
-        })
-        .catch(err => {
-          logger.warn('UnifiedHealingFacade heal failed (error-rate)', {
-            error: err instanceof Error ? err.message : String(err),
-          });
-        });
+      autoHealEngine.heal(
+        'console',
+        new Error(`High error rate: ${this.stats.errorRate} errors/min`),
+        'critical',
+        {
+          errorRate: this.stats.errorRate,
+          topErrors: this.stats.topErrors,
+          performanceImpact: this.stats.performanceImpact,
+        }
+      );
     }
 
     // Cleanup old error counts

@@ -226,9 +226,9 @@ impl<K: Hash + Eq + Clone, V> BoundedHashMap<K, V> {
 
     /// Get value by key (updates access time)
     pub fn get(&mut self, key: &K) -> Option<&V> {
-        if let Some(value) = self.inner.get(key) {
+        if self.inner.contains_key(key) {
             self.access_times.insert(key.clone(), Instant::now());
-            Some(value)
+            self.inner.get(key)
         } else {
             None
         }

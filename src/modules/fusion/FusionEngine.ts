@@ -31,7 +31,6 @@ import type { MemoryEntry, MemoryType as _MemoryType } from '@/cognitive/types';
 import { getLogEngine } from '@/services/adminEngine/logEngine';
 import { SingularityIntrospectionEngine } from '@/modules/singularity/SingularityIntrospectionEngine';
 import type { LogEntry as _LogEntry } from '@/lib/UILogger';
-import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES — FUSION STRUCTURE
@@ -478,9 +477,9 @@ export class FusionEngine {
         });
       }
 
-      logger.debug(`[FusionEngine] Collected ${entries.length} logs from LogEngine`);
+      console.log(`[FusionEngine] Collected ${entries.length} logs from LogEngine`);
     } catch (error) {
-      logger.warn('Log collection failed:', error);
+      console.warn('[FusionEngine] Log collection failed:', error);
     }
 
     return entries;
@@ -551,12 +550,12 @@ ${introspection.futureVision.priorityImprovements
           });
         }
 
-        logger.debug(
+        console.log(
           `[FusionEngine] Collected Singularity data: 1 introspection + ${introspection.diagnostic.criticalIssues.length} issues`
         );
       }
     } catch (error) {
-      logger.warn('Singularity collection failed:', error);
+      console.warn('[FusionEngine] Singularity collection failed:', error);
     }
 
     return entries;
@@ -1071,7 +1070,7 @@ ${introspection.futureVision.priorityImprovements
       };
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
     } catch (error) {
-      logger.warn('Save failed:', error);
+      console.warn('[FusionEngine] Save failed:', error);
     }
   }
 
@@ -1085,7 +1084,7 @@ ${introspection.futureVision.priorityImprovements
         this.lastFusionTime = data.lastFusion || 0;
       }
     } catch (error) {
-      logger.warn('Load failed:', error);
+      console.warn('[FusionEngine] Load failed:', error);
     }
   }
 

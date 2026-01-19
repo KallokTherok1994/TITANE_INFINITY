@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v26.3.0 — Proprietary License
+ * TITANE∞ v24.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v26.3.0 — CHAT ENGINE OMEGA (FlowEngine Reconstruction)
+ *   TITANE∞ v24.3.0 — CHAT ENGINE OMEGA (FlowEngine Reconstruction)
  *   Pipeline infaillible • Validation multi-niveaux • Auto-guérison
  *   Architecture: UI → useChat → chatEngine → orchestrator → providers → normalize → UI
  *   v22Ω AI Performance Optimizations: Parallel loading, -40% latency
@@ -930,8 +930,7 @@ Que souhaites-tu explorer ?`;
     try {
       pipelineSteps.push('backend-dispatch');
 
-      const { chatEngineCommands } =
-        await import('@/services/tauri/chatEngine.commands.dynamic');
+      const { chatEngineCommands } = await import('@/services/tauri/chatEngine.commands');
 
       const payload: ChatEngineRequestArgs = {
         conversationId: this.getConversationId(finalConfig.mode),
@@ -1133,8 +1132,7 @@ Que souhaites-tu explorer ?`;
     };
 
     try {
-      const { chatEngineCommands } =
-        await import('@/services/tauri/chatEngine.commands.dynamic');
+      const { chatEngineCommands } = await import('@/services/tauri/chatEngine.commands');
 
       chunkUnlisten = await chatEngineCommands.onStreamChunk(chunk => {
         if (!conversationId || !messageId) {

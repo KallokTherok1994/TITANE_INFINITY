@@ -6,65 +6,6 @@
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// 🛡️ ADVANCED BOOT RECOVERY SYSTEM
-import { titaneBootRecovery } from './utils/bootRecoverySystem';
-
-// 🧠 QUANTUM INTELLIGENCE INTEGRATION
-import { titaneQuantumIntelligence as _titaneQuantumIntelligence } from './utils/quantumIntelligence';
-import { titaneSelfHealing as _titaneSelfHealing } from './utils/selfHealingSystem';
-import { titaneTelemetry as _titaneTelemetry } from './utils/telemetryEngine';
-
-// � QUANTUM ORCHESTRATOR
-import { titaneQuantumOrchestrator } from './utils/quantumOrchestrator';
-
-// 🌌 CONSCIOUSNESS DASHBOARD & SYSTEM HUB
-import { default as _ConsciousnessDashboard } from './components/ConsciousnessDashboard';
-import SystemIntegrationHub from './components/SystemIntegrationHub';
-
-// 🛡️ ULTRA-EARLY GLOBAL ERROR HANDLERS (PREVENT SILENT CRASHES)
-if (typeof window !== 'undefined') {
-  // Advanced boot recovery integration
-  window.addEventListener(
-    'error',
-    event => {
-      if (event.error instanceof Error) {
-        const isBootError =
-          event.error.message.includes('Importing a module script failed') ||
-          event.error.message.includes('Loading chunk') ||
-          event.error.message.includes('dynamically imported module');
-
-        console.error('🚨 [BOOT-ERROR] Synchronous error:', {
-          message: event.error.message,
-          stack: event.error.stack,
-          filename: event.filename,
-          lineno: event.lineno,
-          colno: event.colno,
-          isBootCritical: isBootError,
-        });
-
-        // Trigger intelligent boot recovery for critical errors
-        if (isBootError) {
-          console.log('🚀 [BOOT-RECOVERY] Triggering intelligent recovery...');
-          titaneBootRecovery.forceRecovery('safe_mode');
-        }
-      }
-    },
-    true
-  ); // Use capture phase to catch errors early
-
-  // Capture async rejections with recovery
-  window.addEventListener(
-    'unhandledrejection',
-    event => {
-      console.error('🚨 [BOOT-ERROR] Unhandled Promise rejection:', {
-        reason: event.reason,
-        stack: event.reason?.stack ?? 'N/A',
-      });
-    },
-    true
-  );
-}
-
 // 🛡️ Type augmentation for Sentry and Monitoring on window
 declare global {
   interface Window {
@@ -72,16 +13,11 @@ declare global {
       captureException: (error: unknown, options?: Record<string, unknown>) => void;
     };
     __TITANE_MONITORING__?: unknown;
-    __TITANE_REACT_ROOT?: Root;
   }
 }
 
 // 🛡️ TAURI INVOKE PROTECTION - Applied first
 import './tauri-protection-patch';
-
-// 🔍 BOOT DIAGNOSTICS - Track startup progression
-import { bootDiagnostics } from './boot-diagnostics';
-bootDiagnostics.log('MAIN', 'Starting TITANE∞ boot sequence');
 
 // 🌐 BROWSER MODE ADAPTER - Configure pour mode navigateur si nécessaire
 import './utils/browserModeAdapter';
@@ -91,7 +27,7 @@ import './config/logLevelConfig';
 
 // TITANE∞ v26.2.0 - Main Entry Point - v22Ω AI Performance Optimizations
 import React from 'react';
-import ReactDOM, { type Root } from 'react-dom/client';
+import ReactDOM from 'react-dom/client';
 import { logger } from './lib/logger';
 import App from './App'; // ✅ App principal réactivé (AppMinimal validé)
 // import AppMinimal from './AppMinimal'; // 🔍 DEBUG: Minimal test app
@@ -490,7 +426,7 @@ if (typeof window !== 'undefined') {
 import { ErrorBoundary } from './components/ErrorBoundary'; // ✨ v24.3.0 - Unified Error Boundary
 // import { PerformanceMonitor } from './lib/performanceBudget'; // DÉSACTIVÉ pour diagnostic progressif
 import { injectSROnlyStyles } from './lib/accessibility';
-import { isTauriRuntimeAvailable, safeInvokeTauri } from './utils/tauriProtector';
+import { safeInvokeTauri } from './utils/tauriProtector';
 import { TAURI_COMMANDS } from './core/commands/TAURI_COMMANDS';
 
 // Phase 3 (v19): UI Logger - Isolate frontend logs from backend
@@ -550,7 +486,11 @@ async function initializeRuntimeConfig(): Promise<void> {
     return;
   }
 
-  const isTauri = isTauriRuntimeAvailable();
+  const tauriCandidate = window as Window & {
+    __TAURI__?: Record<string, unknown>;
+    __TAURI_INTERNALS__?: Record<string, unknown>;
+  };
+  const isTauri = Boolean(tauriCandidate.__TAURI__ || tauriCandidate.__TAURI_INTERNALS__);
   if (!isTauri) {
     // Mode navigateur - utiliser la config par défaut (normal, pas une erreur)
     console.log(
@@ -606,18 +546,19 @@ const getTauriWindowAPI = () => {
 };
 
 const isTauriRuntime = (): boolean => {
-  // Ne pas se baser sur la simple présence de __TAURI__/__TAURI_INTERNALS__.
-  // Certains contextes peuvent exposer des stubs (tests/fallbacks).
-  return isTauriRuntimeAvailable();
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  const candidate = window as Window & {
+    __TAURI__?: unknown;
+    __TAURI_INTERNALS__?: unknown;
+  };
+
+  return Boolean(candidate.__TAURI__ || candidate.__TAURI_INTERNALS__);
 };
 
 const openDevtoolsSafe = async (): Promise<void> => {
-  // Hors Tauri, @tauri-apps/api peut être importable mais inutilisable (ipc://...).
-  // L'ouverture DevTools doit être best-effort et ne jamais throw.
-  if (!isTauriRuntime()) {
-    return;
-  }
-
   // Preferred path for Tauri v2
   try {
     const { getCurrentWebviewWindow } = await import('@tauri-apps/api/webviewWindow');
@@ -631,7 +572,7 @@ const openDevtoolsSafe = async (): Promise<void> => {
 
   const legacyWindowAPI = getTauriWindowAPI();
   if (!legacyWindowAPI) {
-    return;
+    throw new Error('Tauri window API unavailable');
   }
   await legacyWindowAPI.getCurrent().openDevtools();
 };
@@ -986,11 +927,9 @@ if (!rootElement) {
 
 console.log('✅ Root element found:', rootElement);
 console.log('🎨 Starting React 18 render...');
-bootDiagnostics.log('REACT', 'Root element ready, starting React render');
 
 try {
   console.log('🚀 [v16.2.3] Rendering App complet (après validation AppMinimal)');
-  bootDiagnostics.log('REACT', 'Creating React root...');
 
   // 🔬 DIAGNOSTIC: Test minimal pour isoler problème écran noir
   // Décommenter la ligne ci-dessous pour tester React minimal
@@ -998,40 +937,11 @@ try {
   //   ReactDOM.createRoot(rootElement).render(<AppMinimal />);
   // });
 
-  const existingRoot = window.__TITANE_REACT_ROOT;
-  const root: Root = existingRoot ?? ReactDOM.createRoot(rootElement);
-  if (!existingRoot) {
-    window.__TITANE_REACT_ROOT = root;
-    bootDiagnostics.log('REACT', 'Root created successfully');
-  } else {
-    bootDiagnostics.log('REACT', 'Reusing existing React root');
-  }
-
-  // 🎼 INITIALISATION ORCHESTRATEUR QUANTIQUE
-  console.log('🎼 [BOOT] Initializing Quantum Orchestrator...');
-  const orchestratorStatus = titaneQuantumOrchestrator.getOrchestrationStatus();
-  if (!orchestratorStatus.is_running) {
-    titaneQuantumOrchestrator.startOrchestration();
-    console.log('✅ [BOOT] Quantum Orchestrator initialized');
-  } else {
-    console.log('ℹ️ [BOOT] Quantum Orchestrator already running');
-  }
-
-  root.render(
-    <SystemIntegrationHub
-      onSystemEvent={event => {
-        // Logger les événements système critiques
-        if (event.severity === 'critical' || event.severity === 'error') {
-          logger.error(`System Event: ${event.type}`, event.data as Record<string, unknown> | undefined);
-        } else {
-          logger.info(`System Event: ${event.type}`, event.data as Record<string, unknown> | undefined);
-        }
-      }}
-    >
+  ReactDOM.createRoot(rootElement).render(
+    <React.StrictMode>
       <ErrorBoundary
         context="App"
         onError={(error, errorInfo) => {
-          bootDiagnostics.error('REACT', 'ErrorBoundary caught error', error);
           logger.error(
             'Production Error Boundary caught',
             {
@@ -1051,10 +961,9 @@ try {
       >
         <App />
       </ErrorBoundary>
-    </SystemIntegrationHub>
+    </React.StrictMode>
   );
 
-  bootDiagnostics.log('REACT', 'React render complete');
   console.log('\n╔════════════════════════════════════════════════════════════════╗');
   console.log('║  ✅ TITANE∞ REACT ROOT MOUNTED (App Complet Actif)           ║');
   console.log('╚════════════════════════════════════════════════════════════════╝\n');

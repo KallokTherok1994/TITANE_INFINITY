@@ -1,0 +1,200 @@
+]633;E;echo '$ rg -n "v26|v27|26\\\\.|27\\\\." .';c77f3cb8-095c-43a6-a6ef-1efe06ebcdb8]633;C$ rg -n "v26|v27|26\\.|27\\." .
+./TUNNEL_ACCESS.md:59:- **Ollama API**: Local only (127.0.0.1:11434) - NOT exposed
+./vitest.unit.config.ts:5: * TITANE∞ v26.2.0 - Configuration des tests unitaires
+./INDEX_DOCUMENTATION_v26.3.0.md:1:# 📑 INDEX DOCUMENTATION — TITANE∞ v26.3.0
+./INDEX_DOCUMENTATION_v26.3.0.md:4:**Version:** v26.3.0  
+./INDEX_DOCUMENTATION_v26.3.0.md:13:📄 **SYNTHESE_AUDIT_PHASES_v26.3.0.md**  
+./INDEX_DOCUMENTATION_v26.3.0.md:21:📄 **AUDIT_COMPLET_ET_PLAN_FINALISATION_v26.3.0.md**  
+./INDEX_DOCUMENTATION_v26.3.0.md:29:📄 **INDEX_DOCUMENTATION_v26.3.0.md** (ce document)  
+./INDEX_DOCUMENTATION_v26.3.0.md:53:#### 📄 DEMANDE_AUTORISATION_DEPLOIEMENT_v26.3.0.md
+./INDEX_DOCUMENTATION_v26.3.0.md:58:#### 📄 AUTORISATION_GO_DEPLOIEMENT_v26.3.0.md ⭐
+./INDEX_DOCUMENTATION_v26.3.0.md:66:#### 📄 PHASE1_COMPLETION_FINALE_v26.3.0.md
+./INDEX_DOCUMENTATION_v26.3.0.md:88:- PHASE1_COMPLETION_FINALE_v26.3.0.md ⭐
+./INDEX_DOCUMENTATION_v26.3.0.md:107:- PHASE_3_COMPLETE_IDENTITY_EVOLUTION_TRANSFORMATION_v26.0.md
+./INDEX_DOCUMENTATION_v26.3.0.md:129:- PHASE_5_ACTION_PLAN_v26.1.md
+./INDEX_DOCUMENTATION_v26.3.0.md:130:- PHASE_5_RESPONSIVE_OPTIMIZATION_COMPLETE_v26.md
+./INDEX_DOCUMENTATION_v26.3.0.md:134:- PHASE_6_IMAGE_OPTIMIZATION_COMPLETE_v26.1.md
+./INDEX_DOCUMENTATION_v26.3.0.md:137:- PHASE_6_IMAGE_OPTIMIZATION_PLAN_v26.1.md
+./INDEX_DOCUMENTATION_v26.3.0.md:150:### v26.3.0 (Actuel) ✅
+./INDEX_DOCUMENTATION_v26.3.0.md:154:- **AUDIT_COMPLET_ET_PLAN_FINALISATION_v26.3.0.md** ⭐ (plan détaillé)
+./INDEX_DOCUMENTATION_v26.3.0.md:157:### v26.2.0 (À Archiver) ⚠️
+./INDEX_DOCUMENTATION_v26.3.0.md:159:📁 `docs/current/audits/` (À déplacer vers `docs/archive/v26.2/` durant Phase 2)
+./INDEX_DOCUMENTATION_v26.3.0.md:160:- AUDIT_FINAL_v26.2_COMPLETE.md (26KB)
+./INDEX_DOCUMENTATION_v26.3.0.md:161:- AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md (28KB)
+./INDEX_DOCUMENTATION_v26.3.0.md:162:- AUDIT_HOOKS_v26.2_COMPLETE.md (34KB)
+./INDEX_DOCUMENTATION_v26.3.0.md:163:- AUDIT_HOOKS_v26.2_FIXES_COMPLETE.md (12KB)
+./INDEX_DOCUMENTATION_v26.3.0.md:164:- AUDIT_HOOKS_v26.2_VALIDATION_FINALE.md (7.6KB)
+./INDEX_DOCUMENTATION_v26.3.0.md:165:- AUDIT_DEPENDENCIES_PRODUCTION_v26.2.md (26KB)
+./INDEX_DOCUMENTATION_v26.3.0.md:166:- AUDIT_WEBSOCKETS_POLLING_v26.2.md (2.4KB)
+./INDEX_DOCUMENTATION_v26.3.0.md:167:- AUDIT_RELEASE_GATE_v26.2.md (1.7KB)
+./INDEX_DOCUMENTATION_v26.3.0.md:205:- TYPESCRIPT_STRICT_MIGRATION_v26.3.0.md
+./INDEX_DOCUMENTATION_v26.3.0.md:206:- COVERAGE_THRESHOLDS_v26.3.0.md (optionnel)
+./INDEX_DOCUMENTATION_v26.3.0.md:211:- ENGINES_MAPPING_v26.3.0.md
+./INDEX_DOCUMENTATION_v26.3.0.md:232:- MANUAL_TESTS_REPORT_v26.3.0.md
+./INDEX_DOCUMENTATION_v26.3.0.md:233:- PERFORMANCE_METRICS_v26.3.0.md
+./INDEX_DOCUMENTATION_v26.3.0.md:238:- INSTALLATION_v26.3.0.md
+./INDEX_DOCUMENTATION_v26.3.0.md:239:- TROUBLESHOOTING_v26.3.0.md
+./INDEX_DOCUMENTATION_v26.3.0.md:240:- ROLLBACK_v26.3.0.md
+./INDEX_DOCUMENTATION_v26.3.0.md:241:- MONITORING_CHECKLIST_v26.3.0.md
+./INDEX_DOCUMENTATION_v26.3.0.md:242:- RELEASE_ANNOUNCEMENT_v26.3.0.md
+./INDEX_DOCUMENTATION_v26.3.0.md:258:- ANALYSE_DOCUMENTATION_v26.2_SUMMARY.txt
+./INDEX_DOCUMENTATION_v26.3.0.md:280:- package.json (version 26.3.0, **pnpm**)
+./INDEX_DOCUMENTATION_v26.3.0.md:293:- Cargo.toml (version 26.3.0)
+./INDEX_DOCUMENTATION_v26.3.0.md:317:1. 📄 **SYNTHESE_AUDIT_PHASES_v26.3.0.md** (15-20 min)
+./INDEX_DOCUMENTATION_v26.3.0.md:322:1. 📄 **AUTORISATION_GO_DEPLOIEMENT_v26.3.0.md** ⭐ (5 min)
+./INDEX_DOCUMENTATION_v26.3.0.md:325:1. 📄 **AUDIT_COMPLET_ET_PLAN_FINALISATION_v26.3.0.md** (45-60 min)
+./INDEX_DOCUMENTATION_v26.3.0.md:328:1. 📄 **PHASE1_COMPLETION_FINALE_v26.3.0.md** (10 min)
+./INDEX_DOCUMENTATION_v26.3.0.md:341:2. 📄 SYNTHESE_AUDIT_PHASES_v26.3.0.md (section Métriques)
+./INDEX_DOCUMENTATION_v26.3.0.md:355:| **Phases** | 68+ | PHASE1_COMPLETION_FINALE_v26.3.0.md |
+./INDEX_DOCUMENTATION_v26.3.0.md:367:| **v26.3.0** | 5+ (1,645+ lignes) | ✅ Actuel |
+./INDEX_DOCUMENTATION_v26.3.0.md:368:| **v26.2.0** | 8+ (141KB) | ⚠️ À archiver |
+./INDEX_DOCUMENTATION_v26.3.0.md:369:| **v26.0-v26.1** | 50+ | 📦 Archivé |
+./INDEX_DOCUMENTATION_v26.3.0.md:373:### Documentation Phase 1 v26.3.0
+./INDEX_DOCUMENTATION_v26.3.0.md:378:| DEMANDE_AUTORISATION_DEPLOIEMENT_v26.3.0.md | 421 | ✅ |
+./INDEX_DOCUMENTATION_v26.3.0.md:379:| AUTORISATION_GO_DEPLOIEMENT_v26.3.0.md | 277 | ✅ |
+./INDEX_DOCUMENTATION_v26.3.0.md:381:| PHASE1_COMPLETION_FINALE_v26.3.0.md | 320 | ✅ |
+./INDEX_DOCUMENTATION_v26.3.0.md:384:### Documentation Master v26.3.0
+./INDEX_DOCUMENTATION_v26.3.0.md:388:| AUDIT_COMPLET_ET_PLAN_FINALISATION_v26.3.0.md | 33,054 | Plan détaillé |
+./INDEX_DOCUMENTATION_v26.3.0.md:389:| SYNTHESE_AUDIT_PHASES_v26.3.0.md | 16,729 | Synthèse |
+./INDEX_DOCUMENTATION_v26.3.0.md:390:| INDEX_DOCUMENTATION_v26.3.0.md | ~10,000 | Index (ce doc) |
+./INDEX_DOCUMENTATION_v26.3.0.md:398:- [ ] SYNTHESE_AUDIT_PHASES_v26.3.0.md ⭐
+./INDEX_DOCUMENTATION_v26.3.0.md:399:- [ ] AUTORISATION_GO_DEPLOIEMENT_v26.3.0.md ⭐
+./INDEX_DOCUMENTATION_v26.3.0.md:400:- [ ] AUDIT_COMPLET_ET_PLAN_FINALISATION_v26.3.0.md ⭐
+./INDEX_DOCUMENTATION_v26.3.0.md:404:- [ ] DEMANDE_AUTORISATION_DEPLOIEMENT_v26.3.0.md
+./INDEX_DOCUMENTATION_v26.3.0.md:406:- [ ] PHASE1_COMPLETION_FINALE_v26.3.0.md
+./INDEX_DOCUMENTATION_v26.3.0.md:422:**Status:** ✅ À jour pour v26.3.0
+./INDEX_DOCUMENTATION_v26.3.0.md:427:- ENGINES_MAPPING_v26.3.0.md
+./INDEX_DOCUMENTATION_v26.3.0.md:428:- TYPESCRIPT_STRICT_MIGRATION_v26.3.0.md
+./INDEX_DOCUMENTATION_v26.3.0.md:429:- COVERAGE_THRESHOLDS_v26.3.0.md (optionnel)
+./INDEX_DOCUMENTATION_v26.3.0.md:430:- AUDIT_MASTER_v26.3.0.md
+./INDEX_DOCUMENTATION_v26.3.0.md:433:- MANUAL_TESTS_REPORT_v26.3.0.md
+./INDEX_DOCUMENTATION_v26.3.0.md:434:- PERFORMANCE_METRICS_v26.3.0.md
+./INDEX_DOCUMENTATION_v26.3.0.md:437:- INSTALLATION_v26.3.0.md
+./INDEX_DOCUMENTATION_v26.3.0.md:438:- TROUBLESHOOTING_v26.3.0.md
+./INDEX_DOCUMENTATION_v26.3.0.md:439:- ROLLBACK_v26.3.0.md
+./INDEX_DOCUMENTATION_v26.3.0.md:440:- MONITORING_CHECKLIST_v26.3.0.md
+./INDEX_DOCUMENTATION_v26.3.0.md:441:- RELEASE_ANNOUNCEMENT_v26.3.0.md
+./INDEX_DOCUMENTATION_v26.3.0.md:449:- Consulter INDEX_DOCUMENTATION_v26.3.0.md (ce document)
+./INDEX_DOCUMENTATION_v26.3.0.md:450:- Consulter SYNTHESE_AUDIT_PHASES_v26.3.0.md (vue d'ensemble)
+./vite.config.ts:226:    // ✨ v26.1 CONSOLE MONITOR: Drop console calls in production
+./README_DOCUMENTATION_MASTER_v26.3.0.md:1:# 📚 README — Documentation Master v26.3.0
+./README_DOCUMENTATION_MASTER_v26.3.0.md:4:**Version:** TITANE∞ v26.3.0  
+./README_DOCUMENTATION_MASTER_v26.3.0.md:28:#### PRESENTATION_FINALE_KEVIN_v26.3.0.md ⭐⭐⭐
+./README_DOCUMENTATION_MASTER_v26.3.0.md:51:#### 1. SYNTHESE_AUDIT_PHASES_v26.3.0.md ⭐⭐
+./README_DOCUMENTATION_MASTER_v26.3.0.md:73:#### 2. AUDIT_COMPLET_ET_PLAN_FINALISATION_v26.3.0.md ⭐
+./README_DOCUMENTATION_MASTER_v26.3.0.md:95:#### 3. INDEX_DOCUMENTATION_v26.3.0.md
+./README_DOCUMENTATION_MASTER_v26.3.0.md:105:- Organisation par version (v26.3.0, v26.2.0, historique)
+./README_DOCUMENTATION_MASTER_v26.3.0.md:116:#### 4. GUIDE_UTILISATION_DOCUMENTATION_v26.3.0.md
+./README_DOCUMENTATION_MASTER_v26.3.0.md:143:1. **PRESENTATION_FINALE_KEVIN_v26.3.0.md** (20 min) ⭐⭐⭐
+./README_DOCUMENTATION_MASTER_v26.3.0.md:144:2. **AUTORISATION_GO_DEPLOIEMENT_v26.3.0.md** (5 min)
+./README_DOCUMENTATION_MASTER_v26.3.0.md:154:1. **SYNTHESE_AUDIT_PHASES_v26.3.0.md** (20 min) ⭐⭐
+./README_DOCUMENTATION_MASTER_v26.3.0.md:155:2. **INDEX_DOCUMENTATION_v26.3.0.md** - Parcourir (10 min)
+./README_DOCUMENTATION_MASTER_v26.3.0.md:167:1. **INDEX_DOCUMENTATION_v26.3.0.md**
+./README_DOCUMENTATION_MASTER_v26.3.0.md:184:→ **PRESENTATION_FINALE_KEVIN_v26.3.0.md** (20 min)
+./README_DOCUMENTATION_MASTER_v26.3.0.md:187:→ **SYNTHESE_AUDIT_PHASES_v26.3.0.md** (20 min)
+./README_DOCUMENTATION_MASTER_v26.3.0.md:190:→ **INDEX_DOCUMENTATION_v26.3.0.md** (recherche)
+./README_DOCUMENTATION_MASTER_v26.3.0.md:202:**Détails:** Voir **SYNTHESE_AUDIT_PHASES_v26.3.0.md** - Section Résumé Exécutif
+./README_DOCUMENTATION_MASTER_v26.3.0.md:214:**Détails:** Voir **AUDIT_COMPLET_ET_PLAN_FINALISATION_v26.3.0.md** - Sections Phases 2-4
+./README_DOCUMENTATION_MASTER_v26.3.0.md:225:**Détails:** Voir **SYNTHESE_AUDIT_PHASES_v26.3.0.md** - Section État des Phases
+./README_DOCUMENTATION_MASTER_v26.3.0.md:256:**Référence:** **AUTORISATION_GO_DEPLOIEMENT_v26.3.0.md**
+./README_DOCUMENTATION_MASTER_v26.3.0.md:268:**Détails:** Voir **INDEX_DOCUMENTATION_v26.3.0.md** - Section Statistiques
+./README_DOCUMENTATION_MASTER_v26.3.0.md:278:├── 📄 PRESENTATION_FINALE_KEVIN_v26.3.0.md ⭐⭐⭐ [KEVIN: LIRE EN PREMIER]
+./README_DOCUMENTATION_MASTER_v26.3.0.md:279:├── 📄 SYNTHESE_AUDIT_PHASES_v26.3.0.md ⭐⭐ [VUE D'ENSEMBLE]
+./README_DOCUMENTATION_MASTER_v26.3.0.md:280:├── 📄 AUDIT_COMPLET_ET_PLAN_FINALISATION_v26.3.0.md ⭐ [PLAN DÉTAILLÉ]
+./README_DOCUMENTATION_MASTER_v26.3.0.md:281:├── 📄 INDEX_DOCUMENTATION_v26.3.0.md [TABLE DES MATIÈRES]
+./README_DOCUMENTATION_MASTER_v26.3.0.md:282:├── 📄 GUIDE_UTILISATION_DOCUMENTATION_v26.3.0.md [MODE D'EMPLOI]
+./README_DOCUMENTATION_MASTER_v26.3.0.md:283:└── 📄 README_DOCUMENTATION_MASTER_v26.3.0.md [CE FICHIER]
+./README_DOCUMENTATION_MASTER_v26.3.0.md:291:├── 📄 AUTORISATION_GO_DEPLOIEMENT_v26.3.0.md ✅ (277 lignes)
+./README_DOCUMENTATION_MASTER_v26.3.0.md:292:├── 📄 DEMANDE_AUTORISATION_DEPLOIEMENT_v26.3.0.md (421 lignes)
+./README_DOCUMENTATION_MASTER_v26.3.0.md:294:└── 📄 PHASE1_COMPLETION_FINALE_v26.3.0.md (320 lignes)
+./README_DOCUMENTATION_MASTER_v26.3.0.md:303:### Documents Master v26.3.0
+./README_DOCUMENTATION_MASTER_v26.3.0.md:307:| PRESENTATION_FINALE_KEVIN_v26.3.0.md | 13KB | ~440 | Présentation |
+./README_DOCUMENTATION_MASTER_v26.3.0.md:308:| SYNTHESE_AUDIT_PHASES_v26.3.0.md | 17KB | ~590 | Synthèse |
+./README_DOCUMENTATION_MASTER_v26.3.0.md:309:| AUDIT_COMPLET_ET_PLAN_FINALISATION_v26.3.0.md | 33KB | ~1,150 | Plan |
+./README_DOCUMENTATION_MASTER_v26.3.0.md:310:| INDEX_DOCUMENTATION_v26.3.0.md | 12KB | ~420 | Index |
+./README_DOCUMENTATION_MASTER_v26.3.0.md:311:| GUIDE_UTILISATION_DOCUMENTATION_v26.3.0.md | 13KB | ~450 | Guide |
+./README_DOCUMENTATION_MASTER_v26.3.0.md:334:- [ ] Lire PRESENTATION_FINALE_KEVIN_v26.3.0.md (20 min)
+./README_DOCUMENTATION_MASTER_v26.3.0.md:335:- [ ] Vérifier AUTORISATION_GO_DEPLOIEMENT_v26.3.0.md (confirmation)
+./README_DOCUMENTATION_MASTER_v26.3.0.md:336:- [ ] Parcourir INDEX_DOCUMENTATION_v26.3.0.md (table des matières)
+./README_DOCUMENTATION_MASTER_v26.3.0.md:355:1. ✅ Lire **PRESENTATION_FINALE_KEVIN_v26.3.0.md**
+./README_DOCUMENTATION_MASTER_v26.3.0.md:373:→ Consulter **INDEX_DOCUMENTATION_v26.3.0.md**
+./README_DOCUMENTATION_MASTER_v26.3.0.md:376:→ Relire **SYNTHESE_AUDIT_PHASES_v26.3.0.md**
+./README_DOCUMENTATION_MASTER_v26.3.0.md:379:→ Consulter **AUDIT_COMPLET_ET_PLAN_FINALISATION_v26.3.0.md**
+./README_DOCUMENTATION_MASTER_v26.3.0.md:402:### Documentation v26.3.0: COMPLÈTE ✅
+./README_DOCUMENTATION_MASTER_v26.3.0.md:405:1. ✅ PRESENTATION_FINALE_KEVIN_v26.3.0.md (pour Kevin)
+./README_DOCUMENTATION_MASTER_v26.3.0.md:406:2. ✅ SYNTHESE_AUDIT_PHASES_v26.3.0.md (vue d'ensemble)
+./README_DOCUMENTATION_MASTER_v26.3.0.md:407:3. ✅ AUDIT_COMPLET_ET_PLAN_FINALISATION_v26.3.0.md (plan détaillé)
+./README_DOCUMENTATION_MASTER_v26.3.0.md:408:4. ✅ INDEX_DOCUMENTATION_v26.3.0.md (table des matières)
+./README_DOCUMENTATION_MASTER_v26.3.0.md:409:5. ✅ GUIDE_UTILISATION_DOCUMENTATION_v26.3.0.md (mode d'emploi)
+./README_DOCUMENTATION_MASTER_v26.3.0.md:420:**🚀 TITANE∞ v26.3.0 — Documentation Complète et Prête**
+./pnpm-lock.yaml:128:        version: 10.1.11(@types/react@18.3.27)(esbuild@0.27.2)(rollup@2.79.2)(storybook@10.1.11(@testing-library/dom@10.4.1)(prettier@3.7.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(vite@6.4.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2))
+./pnpm-lock.yaml:137:        version: 10.1.11(esbuild@0.27.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@2.79.2)(storybook@10.1.11(@testing-library/dom@10.4.1)(prettier@3.7.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(typescript@5.9.3)(vite@6.4.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2))
+./pnpm-lock.yaml:235:        specifier: ^27.4.0
+./pnpm-lock.yaml:236:        version: 27.4.0
+./pnpm-lock.yaml:287:        version: 4.0.16(@types/node@25.0.6)(@vitest/browser-playwright@4.0.16)(@vitest/ui@4.0.16)(happy-dom@20.1.0)(jiti@2.6.1)(jsdom@27.4.0)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2)
+./pnpm-lock.yaml:325:  '@babel/code-frame@7.27.1':
+./pnpm-lock.yaml:341:  '@babel/helper-annotate-as-pure@7.27.3':
+./pnpm-lock.yaml:345:  '@babel/helper-compilation-targets@7.27.2':
+./pnpm-lock.yaml:374:  '@babel/helper-module-imports@7.27.1':
+./pnpm-lock.yaml:384:  '@babel/helper-optimise-call-expression@7.27.1':
+./pnpm-lock.yaml:388:  '@babel/helper-plugin-utils@7.27.1':
+./pnpm-lock.yaml:392:  '@babel/helper-remap-async-to-generator@7.27.1':
+./pnpm-lock.yaml:398:  '@babel/helper-replace-supers@7.27.1':
+./pnpm-lock.yaml:404:  '@babel/helper-skip-transparent-expression-wrappers@7.27.1':
+./pnpm-lock.yaml:408:  '@babel/helper-string-parser@7.27.1':
+./pnpm-lock.yaml:416:  '@babel/helper-validator-option@7.27.1':
+./pnpm-lock.yaml:439:  '@babel/plugin-bugfix-safari-class-field-initializer-scope@7.27.1':
+./pnpm-lock.yaml:445:  '@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression@7.27.1':
+./pnpm-lock.yaml:451:  '@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining@7.27.1':
+./pnpm-lock.yaml:469:  '@babel/plugin-syntax-import-assertions@7.27.1':
+./pnpm-lock.yaml:475:  '@babel/plugin-syntax-import-attributes@7.27.1':
+./pnpm-lock.yaml:487:  '@babel/plugin-transform-arrow-functions@7.27.1':
+./pnpm-lock.yaml:499:  '@babel/plugin-transform-async-to-generator@7.27.1':
+./pnpm-lock.yaml:505:  '@babel/plugin-transform-block-scoped-functions@7.27.1':
+./pnpm-lock.yaml:512:    resolution: {integrity: sha512-45DmULpySVvmq9Pj3X9B+62Xe+DJGov27QravQJU1LLcapR6/10i+gYVAucGGJpHBp5mYxIMK4nDAT/QDLr47g==}
+./pnpm-lock.yaml:517:  '@babel/plugin-transform-class-properties@7.27.1':
+./pnpm-lock.yaml:535:  '@babel/plugin-transform-computed-properties@7.27.1':
+./pnpm-lock.yaml:547:  '@babel/plugin-transform-dotall-regex@7.27.1':
+./pnpm-lock.yaml:553:  '@babel/plugin-transform-duplicate-keys@7.27.1':
+./pnpm-lock.yaml:559:  '@babel/plugin-transform-duplicate-named-capturing-groups-regex@7.27.1':
+./pnpm-lock.yaml:565:  '@babel/plugin-transform-dynamic-import@7.27.1':
+./pnpm-lock.yaml:583:  '@babel/plugin-transform-export-namespace-from@7.27.1':
+./pnpm-lock.yaml:589:  '@babel/plugin-transform-for-of@7.27.1':
+./pnpm-lock.yaml:595:  '@babel/plugin-transform-function-name@7.27.1':
+./pnpm-lock.yaml:601:  '@babel/plugin-transform-json-strings@7.27.1':
+./pnpm-lock.yaml:607:  '@babel/plugin-transform-literals@7.27.1':
+./pnpm-lock.yaml:619:  '@babel/plugin-transform-member-expression-literals@7.27.1':
+./pnpm-lock.yaml:625:  '@babel/plugin-transform-modules-amd@7.27.1':
+./pnpm-lock.yaml:631:  '@babel/plugin-transform-modules-commonjs@7.27.1':
+./pnpm-lock.yaml:643:  '@babel/plugin-transform-modules-umd@7.27.1':
+./pnpm-lock.yaml:649:  '@babel/plugin-transform-named-capturing-groups-regex@7.27.1':
+./pnpm-lock.yaml:655:  '@babel/plugin-transform-new-target@7.27.1':
+./pnpm-lock.yaml:661:  '@babel/plugin-transform-nullish-coalescing-operator@7.27.1':
+./pnpm-lock.yaml:667:  '@babel/plugin-transform-numeric-separator@7.27.1':
+./pnpm-lock.yaml:679:  '@babel/plugin-transform-object-super@7.27.1':
+./pnpm-lock.yaml:685:  '@babel/plugin-transform-optional-catch-binding@7.27.1':
+./pnpm-lock.yaml:697:  '@babel/plugin-transform-parameters@7.27.7':
+./pnpm-lock.yaml:703:  '@babel/plugin-transform-private-methods@7.27.1':
+./pnpm-lock.yaml:709:  '@babel/plugin-transform-private-property-in-object@7.27.1':
+./pnpm-lock.yaml:715:  '@babel/plugin-transform-property-literals@7.27.1':
+./pnpm-lock.yaml:721:  '@babel/plugin-transform-react-jsx-self@7.27.1':
+./pnpm-lock.yaml:727:  '@babel/plugin-transform-react-jsx-source@7.27.1':
+./pnpm-lock.yaml:739:  '@babel/plugin-transform-regexp-modifiers@7.27.1':
+./pnpm-lock.yaml:745:  '@babel/plugin-transform-reserved-words@7.27.1':
+./pnpm-lock.yaml:751:  '@babel/plugin-transform-shorthand-properties@7.27.1':
+./pnpm-lock.yaml:757:  '@babel/plugin-transform-spread@7.27.1':
+./pnpm-lock.yaml:763:  '@babel/plugin-transform-sticky-regex@7.27.1':
+./pnpm-lock.yaml:769:  '@babel/plugin-transform-template-literals@7.27.1':
+./pnpm-lock.yaml:775:  '@babel/plugin-transform-typeof-symbol@7.27.1':
+./pnpm-lock.yaml:781:  '@babel/plugin-transform-unicode-escapes@7.27.1':
+./pnpm-lock.yaml:782:    resolution: {integrity: sha512-Ysg4v6AmF26k9vpfFuTZg8HRfVWzsh1kVfowA23y9j/Gu6dOuahdUVhkLqpObp3JIv27MLSii6noRnuKN8H0Mg==}
+./pnpm-lock.yaml:787:  '@babel/plugin-transform-unicode-property-regex@7.27.1':
+./pnpm-lock.yaml:793:  '@babel/plugin-transform-unicode-regex@7.27.1':
+./pnpm-lock.yaml:799:  '@babel/plugin-transform-unicode-sets-regex@7.27.1':
+./pnpm-lock.yaml:820:  '@babel/template@7.27.2':
+./pnpm-lock.yaml:892:  '@esbuild/aix-ppc64@0.27.2':
+./pnpm-lock.yaml:904:  '@esbuild/android-arm64@0.27.2':
+./pnpm-lock.yaml:916:  '@esbuild/android-arm@0.27.2':
+./pnpm-lock.yaml:928:  '@esbuild/android-x64@0.27.2':
+./pnpm-lock.yaml:940:  '@esbuild/darwin-arm64@0.27.2':
+./pnpm-lock.yaml:952:  '@esbuild/darwin-x64@0.27.2':

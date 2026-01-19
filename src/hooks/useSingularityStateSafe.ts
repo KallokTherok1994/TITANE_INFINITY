@@ -13,7 +13,6 @@ import {
   useSingularityState as useZustandStore,
   type SingularityFrontendState,
 } from '@/core/state/SingularityState';
-import { logger } from '@/utils/logger';
 
 /**
  * Type-safe selector function
@@ -54,7 +53,7 @@ export function useSingularityStateSafe<T = SingularityFrontendState>(
             const selected = selector(state);
             return selected !== undefined && selected !== null ? selected : state;
           } catch (err) {
-            logger.error('Selector error:', err);
+            console.error('[useSingularityStateSafe] Selector error:', err);
             return state;
           }
         }) as (state: SingularityFrontendState) => T)

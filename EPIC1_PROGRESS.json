@@ -7,7 +7,7 @@
   "week_number": 1,
   "start_date": "2026-01-19",
   "target_completion": "2026-01-26",
-  
+
   "overall_progress": {
     "total_expect_calls_target": 350,
     "expect_calls_converted": 350,
@@ -57,9 +57,7 @@
       "expect_calls_found": 100,
       "expect_calls_converted": 100,
       "percent_complete": 100,
-      "files_modified": [
-        "src-tauri/src/ollama_provider_refactor.rs"
-      ],
+      "files_modified": ["src-tauri/src/ollama_provider_refactor.rs"],
       "error_types_implemented": [
         "ConnectionFailed - Ollama connection errors",
         "RequestTimeout - Timeout detection",
@@ -89,9 +87,7 @@
       "expect_calls_found": 50,
       "expect_calls_converted": 50,
       "percent_complete": 100,
-      "files_modified": [
-        "src-tauri/src/local_provider_refactor.rs"
-      ],
+      "files_modified": ["src-tauri/src/local_provider_refactor.rs"],
       "error_types_implemented": [
         "ConnectionFailed - Ollama gateway connection errors",
         "RequestTimeout - Timeout detection",
@@ -110,9 +106,7 @@
       ],
       "commits_target": 3,
       "estimated_start": "2026-01-24",
-      "dependencies": [
-        "Gemini & Ollama patterns established"
-      ]
+      "dependencies": ["Gemini & Ollama patterns established"]
     }
   ],
 
@@ -206,13 +200,8 @@
       "Ollama provider COMPLETE with comprehensive error handling (100/100 expect() converted)",
       "Local provider refactored with typed errors (50/50 expect() converted)"
     ],
-    "in_progress": [
-      "Integration testing for provider cascade"
-    ],
-    "pending": [
-      "Full cascade integration testing",
-      "Epic 1 completion & sign-off"
-    ]
+    "in_progress": ["Integration testing for provider cascade"],
+    "pending": ["Full cascade integration testing", "Epic 1 completion & sign-off"]
   },
 
   "risks": [

@@ -6,9 +6,9 @@
 
 # TITANE_INFINITY — Instructions Globales
 
-**Version:** 26.3.0  
+**Version:** 26.2.0  
 **Conformité:** 98/100 🎯  
-**Dernière mise à jour:** 2026-01-11
+**Dernière mise à jour:** 2026-01-02
 
 ---
 
@@ -51,10 +51,10 @@ Assistant IA local-first, privacy-first, cognitif révolutionnaire.
 
 ### Frontend
 
-- **React 18.3.1** + **Vite 6.4.1** + **TypeScript 5.9.3**
-- **Zustand 5.0.9** (state management)
-- **Vitest 4.0.16** (testing) — **NO JEST**
-- **Playwright 1.57.0** (E2E)
+- **React 18.3.1** + **Vite 6.0.5** + **TypeScript 5.7.3**
+- **Zustand 5.0.2** (state management)
+- **Vitest 4.0.13** (testing) — **NO JEST**
+- **Playwright 1.56.1** (E2E)
 
 ### Backend
 

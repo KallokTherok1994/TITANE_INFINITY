@@ -6,7 +6,7 @@
  * Consolidates orchestrator.ts (998 lines) + orchestrator_OMNIS_v1.ts (510 lines)
  */
 
-import { logger } from '@/lib/logger';
+import { logger as _logger } from '@/lib/logger';
 import type {
   IOrchestrationStrategy,
   OrchestrationStrategyType,
@@ -445,14 +445,10 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
   }
 
   private log(message: string, ...args: unknown[]): void {
-    logger.debug(`[AIStrategy] ${message}`, { module: 'AIStrategy', args });
+    console.log(`[AIStrategy] ${message}`, ...args);
   }
 
   private logError(message: string, error?: unknown): void {
-    logger.error(
-      `[AIStrategy ERROR] ${message}`,
-      { module: 'AIStrategy' },
-      error instanceof Error ? error : new Error(String(error))
-    );
+    console.error(`[AIStrategy ERROR] ${message}`, error);
   }
 }

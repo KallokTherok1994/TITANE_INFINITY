@@ -945,7 +945,7 @@ useEffect(() => {
 
 // 4. Add error boundaries
 try {
-  await tauriClient.command();
+  await invoke('command');
 } catch (error) {
   handleError(error); // ✅ Error handling
 }

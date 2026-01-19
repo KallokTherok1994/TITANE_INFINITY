@@ -1,20 +1,17 @@
 /**
- * TITANE_INFINITY v26.3.0 — Proprietary License
+ * TITANE_INFINITY v26.2.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
- *   LOGGER UTILITIES — Conditional Logging (Dev/Stable)
+ *   LOGGER UTILITIES — Production-Ready Conditional Logging
  *   Replace console.log avec filtrage basé sur environnement
  *   Phase 4 (Week 6): Runtime LOG_LEVEL control integration
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
 import type { LogArgs, LogParts, TableData } from '@/types/logger';
-import { LogLevel } from '@/types/logLevel';
-
-export { LogLevel };
 
 // Lazy import to avoid circular dependency
 type RuntimeLogLevelManager = {
@@ -43,22 +40,18 @@ const getLogLevelManager = () => {
 
   return logLevelManager;
 };
-const rawConsole = {
-  debug: (console.debug ?? console.log).bind(console),
-  info: (console.info ?? console.log).bind(console),
-  warn: (console.warn ?? console.log).bind(console),
-  error: (console.error ?? console.log).bind(console),
-  log: console.log.bind(console),
 
-  group: (console.group ?? console.log).bind(console),
-  groupCollapsed: (console.groupCollapsed ?? console.log).bind(console),
-  groupEnd: (console.groupEnd ?? (() => {})).bind(console),
-
-  table: (console.table ?? console.log).bind(console),
-
-  time: (console.time ?? (() => {})).bind(console),
-  timeEnd: (console.timeEnd ?? (() => {})).bind(console),
-};
+/**
+ * Log levels (par ordre de priorité)
+ */
+export enum LogLevel {
+  TRACE = 0,
+  DEBUG = 1,
+  INFO = 2,
+  WARN = 3,
+  ERROR = 4,
+  FATAL = 5,
+}
 
 /**
  * Configuration logger
@@ -151,7 +144,7 @@ class Logger {
    */
   trace(...args: LogArgs) {
     if (!this.shouldLog(LogLevel.TRACE)) return;
-    rawConsole.debug(...this.format('TRACE', ...args));
+    console.log(...this.format('TRACE', ...args));
   }
 
   /**
@@ -159,7 +152,7 @@ class Logger {
    */
   debug(...args: LogArgs) {
     if (!this.shouldLog(LogLevel.DEBUG)) return;
-    rawConsole.debug(...this.format('DEBUG', ...args));
+    console.log(...this.format('DEBUG', ...args));
   }
 
   /**
@@ -167,7 +160,7 @@ class Logger {
    */
   info(...args: LogArgs) {
     if (!this.shouldLog(LogLevel.INFO)) return;
-    rawConsole.info(...this.format('INFO', ...args));
+    console.info(...this.format('INFO', ...args));
   }
 
   /**
@@ -175,7 +168,7 @@ class Logger {
    */
   warn(...args: LogArgs) {
     if (!this.shouldLog(LogLevel.WARN)) return;
-    rawConsole.warn(...this.format('WARN', ...args));
+    console.warn(...this.format('WARN', ...args));
   }
 
   /**
@@ -183,14 +176,14 @@ class Logger {
    */
   error(...args: LogArgs) {
     if (!this.shouldLog(LogLevel.ERROR)) return;
-    rawConsole.error(...this.format('ERROR', ...args));
+    console.error(...this.format('ERROR', ...args));
   }
 
   /**
    * FATAL - Erreurs critiques (toujours loggé)
    */
   fatal(...args: LogArgs) {
-    rawConsole.error(...this.format('FATAL', ...args));
+    console.error(...this.format('FATAL', ...args));
   }
 
   /**
@@ -199,15 +192,15 @@ class Logger {
   group(label: string, collapsed = false) {
     if (this.config.isProduction) return;
     if (collapsed) {
-      rawConsole.groupCollapsed(...this.format('GROUP', label));
+      console.groupCollapsed(...this.format('GROUP', label));
     } else {
-      rawConsole.group(...this.format('GROUP', label));
+      console.group(...this.format('GROUP', label));
     }
   }
 
   groupEnd() {
     if (this.config.isProduction) return;
-    rawConsole.groupEnd();
+    console.groupEnd();
   }
 
   /**
@@ -215,7 +208,7 @@ class Logger {
    */
   table(data: TableData) {
     if (this.config.isProduction) return;
-    rawConsole.table(data);
+    console.table(data);
   }
 
   /**
@@ -223,12 +216,12 @@ class Logger {
    */
   time(label: string) {
     if (!this.shouldLog(LogLevel.DEBUG)) return;
-    rawConsole.time(`[${this.config.prefix}] ${label}`);
+    console.time(`[${this.config.prefix}] ${label}`);
   }
 
   timeEnd(label: string) {
     if (!this.shouldLog(LogLevel.DEBUG)) return;
-    rawConsole.timeEnd(`[${this.config.prefix}] ${label}`);
+    console.timeEnd(`[${this.config.prefix}] ${label}`);
   }
 }
 
@@ -267,7 +260,7 @@ export function createLogger(prefix: string, config?: Partial<LoggerConfig>) {
  * // Profiling
  * logger.time('API Call');
  * await fetchData();
- * logger.timeEnd('API Call'); // "API Call: 234ms"
+ * logger.timeEnd('API Call'); // "[TITANE] API Call: 234ms"
  *
  * // Grouping (dev only)
  * logger.group('Provider Flow');
@@ -280,8 +273,8 @@ export function createLogger(prefix: string, config?: Partial<LoggerConfig>) {
  * ═══════════════════════════════════════════════════════════════════════════════
  *
  * Avant:
- *   logger.debug('[AI Provider]', 'Selected:', provider);
- *   logger.warn('[Memory]', 'Cache miss');
+ *   console.log('[AI Provider]', 'Selected:', provider);
+ *   console.warn('[Memory]', 'Cache miss');
  *
  * Après:
  *   const logger = createLogger('AI Provider');

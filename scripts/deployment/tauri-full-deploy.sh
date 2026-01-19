@@ -433,7 +433,7 @@ step5_tests() {
     cd "$PROJECT_ROOT"
     
     print_section "5.1: Frontend tests (Vitest)"
-    run_cmd "$PM_CMD run test -- --run" "Frontend tests" || warning "Some tests failed"
+    run_cmd "$PM_CMD run test -- --run --reporter=basic" "Frontend tests" || warning "Some tests failed"
     
     print_section "5.2: Architecture tests"
     run_cmd "$PM_CMD run test:architecture" "Architecture tests" || warning "Architecture tests failed"
@@ -508,10 +508,10 @@ step8_build_tauri() {
     
     # ─── Determine config file ───
     if [ "$BUILD_MODE" = "production" ] || [ "$BUILD_MODE" = "stable" ]; then
-        TAURI_CONFIG="runtime/stable/tauri.stable.conf.json"
+        TAURI_CONFIG="runtime/stable/tauri.conf.json"
         OUTPUT_DIR="runtime/stable"
     else
-        TAURI_CONFIG="runtime/dev/tauri.dev.conf.json"
+        TAURI_CONFIG="runtime/dev/tauri.conf.json"
         OUTPUT_DIR="runtime/dev"
     fi
     

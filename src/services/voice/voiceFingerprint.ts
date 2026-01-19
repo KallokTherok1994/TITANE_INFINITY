@@ -16,8 +16,6 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { logger } from '@/utils/logger';
-
 /**
  * Empreinte vocale d'un utilisateur
  */
@@ -141,7 +139,7 @@ class VoiceFingerprintEngine {
    * - Dedicated MFCC library (mfcc-js, @tensorflow/tfjs)
    */
   extractFeatures(audioBuffer: Float32Array, sampleRate: number = 16000): VoiceAnalysis {
-    logger.debug('🔬 Extracting features from audio buffer');
+    console.log('[VoiceFingerprint] 🔬 Extracting features from audio buffer');
 
     // 1. MFCC Extraction (simplified placeholder)
     const mfcc = this.extractMFCC(audioBuffer, sampleRate);
@@ -336,7 +334,7 @@ class VoiceFingerprintEngine {
     confidence: number = 1.0,
     userId: string = this.currentUserId
   ): void {
-    logger.debug('📝 Adding wake word sample');
+    console.log('[VoiceFingerprint] 📝 Adding wake word sample');
 
     let fingerprint = this.getFingerprint(userId);
     if (!fingerprint) {
@@ -366,7 +364,7 @@ class VoiceFingerprintEngine {
     // Save
     this.saveFingerprints();
 
-    logger.debug(`[VoiceFingerprint] ✅ Sample added (${fingerprint.sampleCount} total)`);
+    console.log(`[VoiceFingerprint] ✅ Sample added (${fingerprint.sampleCount} total)`);
   }
 
   /**
@@ -446,7 +444,7 @@ class VoiceFingerprintEngine {
     const fingerprint = this.getFingerprint(userId);
 
     if (!fingerprint || fingerprint.sampleCount < this.config.minSamples) {
-      logger.warn('⚠️ Not enough samples for similarity check');
+      console.warn('[VoiceFingerprint] ⚠️ Not enough samples for similarity check');
       return 0.5; // Neutral score
     }
 
@@ -456,7 +454,7 @@ class VoiceFingerprintEngine {
     // Calculate cosine similarity with mean MFCC
     const similarity = this.cosineSimilarity(analysis.mfcc, fingerprint.mfccMean);
 
-    logger.debug(`[VoiceFingerprint] 🎯 Similarity: ${similarity.toFixed(3)}`);
+    console.log(`[VoiceFingerprint] 🎯 Similarity: ${similarity.toFixed(3)}`);
 
     return similarity;
   }
@@ -522,9 +520,9 @@ class VoiceFingerprintEngine {
       }
 
       localStorage.setItem('titane_voice_fingerprints', JSON.stringify(data));
-      logger.debug('💾 Fingerprints saved');
+      console.log('[VoiceFingerprint] 💾 Fingerprints saved');
     } catch (error) {
-      logger.error('❌ Save error:', error);
+      console.error('[VoiceFingerprint] ❌ Save error:', error);
     }
   }
 
@@ -551,9 +549,9 @@ class VoiceFingerprintEngine {
         });
       }
 
-      logger.debug(`[VoiceFingerprint] 📂 Loaded ${this.fingerprints.size} fingerprints`);
+      console.log(`[VoiceFingerprint] 📂 Loaded ${this.fingerprints.size} fingerprints`);
     } catch (error) {
-      logger.error('❌ Load error:', error);
+      console.error('[VoiceFingerprint] ❌ Load error:', error);
     }
   }
 
@@ -563,7 +561,7 @@ class VoiceFingerprintEngine {
   reset(userId: string = this.currentUserId): void {
     this.fingerprints.delete(userId);
     this.saveFingerprints();
-    logger.debug(`[VoiceFingerprint] 🔄 Reset fingerprint for ${userId}`);
+    console.log(`[VoiceFingerprint] 🔄 Reset fingerprint for ${userId}`);
   }
 
   /**

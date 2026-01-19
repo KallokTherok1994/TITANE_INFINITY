@@ -100,7 +100,7 @@ export {
  * AVANT (invoke dispersé):
  * ```ts
  * import { invoke } from '@tauri-apps/api/core';
- * const projects = await tauriClient.memoryGetActiveProjects({ limit: 5 });
+ * const projects = await invoke('memory_get_active_projects', { limit: 5 });
  * ```
  *
  * APRÈS (service unifié):
@@ -133,23 +133,23 @@ export {
  * Remplacements typiques:
  *
  * 1. Memory:
- *    `tauriClient.memoryGetActiveProjects()`
+ *    `invoke('memory_get_active_projects')`
  *    → `memoryService.getActiveProjects()`
  *
  * 2. Chat:
- *    `tauriClient.chatSendMessage({ messages, config })`
+ *    `invoke('chat_send_message', { messages, config })`
  *    → `chatService.sendMessage(messages, config)`
  *
  * 3. Voice:
- *    `tauriClient.speak({ text })`
+ *    `invoke('speak', { text })`
  *    → `voiceService.speak(text)`
  *
  * 4. Persona:
- *    `tauriClient.personaGetMultipliers()`
+ *    `invoke('persona_get_multipliers')`
  *    → `personaService.getMultipliers()`
  *
  * 5. System:
- *    `tauriClient.systemGetStatus()`
+ *    `invoke('system_get_status')`
  *    → `systemService.getStatus()`
  *
  * Fichiers prioritaires:

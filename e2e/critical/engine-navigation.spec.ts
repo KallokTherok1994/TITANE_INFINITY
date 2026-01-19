@@ -21,35 +21,50 @@ const NINE_ENGINES = [
 
 test.describe('Critical Path: Engine Navigation', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
+    await page.goto('http://localhost:5173');
     await page.waitForTimeout(2000);
   });
 
   test('all 9 engines are represented in UI', async ({ page }) => {
-    // This is an informational check: engine labels may be hidden behind navigation.
-    // We only assert the app renders and does not crash.
-    await expect(page.locator('#root')).toBeVisible();
-
+    // Check if engine names appear anywhere in the DOM
     let foundEngines = 0;
+
     for (const engine of NINE_ENGINES) {
       const count = await page.getByText(engine, { exact: false }).count();
-      if (count > 0) foundEngines++;
+      if (count > 0) {
+        foundEngines++;
+      }
     }
 
-    expect(foundEngines).toBeGreaterThanOrEqual(0);
+    // Should find at least 6 engines mentioned (some may be in menus)
+    expect(foundEngines).toBeGreaterThan(5);
   });
 
   test('can navigate between different sections', async ({ page }) => {
-    // Navigation can be covered by boot overlays; avoid brittle clicking.
-    const linkCount = await page.locator('a[href], button[aria-label]').count();
-    expect(linkCount).toBeGreaterThanOrEqual(0);
-    await expect(page.locator('body')).toBeVisible();
+    // Find navigation links
+    const links = await page.locator('a[href], button[aria-label]');
+    const linkCount = await links.count();
+
+    expect(linkCount).toBeGreaterThan(0);
+
+    // Try clicking first few links
+    if (linkCount > 0) {
+      const firstLink = links.first();
+      await firstLink.click();
+      await page.waitForTimeout(500);
+
+      // Should not crash
+      const bodyVisible = await page.locator('body').isVisible();
+      expect(bodyVisible).toBe(true);
+    }
   });
 
   test('system health indicator is accessible', async ({ page }) => {
-    // Not all builds expose a "health" label in the landing view.
+    // Look for health/status indicators
     const healthIndicators = await page.getByText(/health|status|score|état/i).count();
-    expect(healthIndicators).toBeGreaterThanOrEqual(0);
+
+    // Should have at least one health indicator
+    expect(healthIndicators).toBeGreaterThan(0);
   });
 
   test('orchestrator controls are present', async ({ page }) => {
@@ -81,22 +96,26 @@ test.describe('Critical Path: Engine Navigation', () => {
   });
 
   test('navigation preserves state', async ({ page }) => {
-    // Lightweight check: SPA navigation/history APIs are available.
-    // Ensure page is stable before evaluation
-    await page.waitForLoadState('networkidle', { timeout: 2000 }).catch(() => {});
-    
-    try {
-      const canHistory = await page.evaluate(() => typeof history.pushState === 'function');
-      expect(canHistory).toBe(true);
-    } catch (err) {
-      // If evaluation fails due to navigation, page is still interactive
-      // which means navigation works. Check if page is still responsive.
-      try {
-        const isActive = await page.evaluate(() => document.readyState);
-        expect(isActive).toBeTruthy();  // "loading", "interactive", or "complete"
-      } catch (_) {
-        // Page context destroyed means navigation happened successfully
-        expect(true).toBe(true);
+    // Type in chat
+    const chatInput = await page.locator('textarea').first();
+
+    if ((await chatInput.count()) > 0) {
+      await chatInput.fill('State test');
+
+      // Navigate to another section
+      const link = await page.locator('a[href]').first();
+      if ((await link.count()) > 0) {
+        await link.click();
+        await page.waitForTimeout(500);
+
+        // Navigate back
+        await page.goBack();
+        await page.waitForTimeout(500);
+
+        // State may or may not persist (depends on architecture)
+        // But app should not crash
+        const bodyVisible = await page.locator('body').isVisible();
+        expect(bodyVisible).toBe(true);
       }
     }
   });

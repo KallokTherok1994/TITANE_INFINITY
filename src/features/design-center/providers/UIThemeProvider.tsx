@@ -160,7 +160,9 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
 
       // Si le backend retourne null, utiliser les valeurs par défaut
       if (!tokens) {
-        logger.warn('Aucun thème chargé, utilisation des valeurs par défaut');
+        console.warn(
+          '[UIThemeProvider] Aucun thème chargé, utilisation des valeurs par défaut'
+        );
         dispatch({ type: 'SET_TOKENS', tokens: DEFAULT_UI_THEME_TOKENS });
       } else {
         dispatch({ type: 'SET_TOKENS', tokens });
@@ -168,11 +170,7 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
 
       dispatch({ type: 'SET_DIRTY', isDirty: false });
     } catch (err) {
-      logger.error(
-        'Erreur chargement tokens:',
-        { module: 'UIThemeProvider' },
-        err instanceof Error ? err : new Error(String(err))
-      );
+      console.error('[UIThemeProvider] Erreur chargement tokens:', err);
       dispatch({ type: 'SET_ERROR', error: String(err) });
       // Utiliser les valeurs par défaut
       dispatch({ type: 'SET_TOKENS', tokens: DEFAULT_UI_THEME_TOKENS });
@@ -191,7 +189,7 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
 
     // Guard: vérifier que tokens est défini et valide
     if (!tokens || !tokens.colors || !tokens.typography || !tokens.spacing) {
-      logger.warn('Tokens invalides ou non chargés');
+      console.warn('[UIThemeProvider] Tokens invalides ou non chargés');
       return;
     }
 
@@ -286,7 +284,7 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
     ) => {
       // Guard: vérifier que tokens est valide
       if (!state.tokens) {
-        logger.warn('Impossible de mettre à jour: tokens non définis');
+        console.warn('[UIThemeProvider] Impossible de mettre à jour: tokens non définis');
         return;
       }
       // Sauvegarder l'état précédent pour undo
@@ -302,7 +300,7 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
     <K extends keyof UIThemeTokens>(category: K, values: Partial<UIThemeTokens[K]>) => {
       // Guard: vérifier que tokens est valide
       if (!state.tokens) {
-        logger.warn('Impossible de mettre à jour: tokens non définis');
+        console.warn('[UIThemeProvider] Impossible de mettre à jour: tokens non définis');
         return;
       }
       if (!state.isDirty) {
@@ -350,7 +348,9 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
 
       // Si le backend retourne null, utiliser les valeurs par défaut
       if (!tokens) {
-        logger.warn('Reset retourné null, utilisation des valeurs par défaut');
+        console.warn(
+          '[UIThemeProvider] Reset retourné null, utilisation des valeurs par défaut'
+        );
         dispatch({ type: 'SET_TOKENS', tokens: DEFAULT_UI_THEME_TOKENS });
       } else {
         dispatch({ type: 'SET_TOKENS', tokens });
@@ -358,13 +358,9 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
 
       dispatch({ type: 'SET_DIRTY', isDirty: false });
       dispatch({ type: 'SET_PREVIOUS', previousTokens: null });
-      logger.debug('Tokens réinitialisés');
+      console.log('[UIThemeProvider] Tokens réinitialisés');
     } catch (err) {
-      logger.error(
-        'Erreur reset:',
-        { module: 'UIThemeProvider' },
-        err instanceof Error ? err : new Error(String(err))
-      );
+      console.error('[UIThemeProvider] Erreur reset:', err);
       dispatch({ type: 'SET_ERROR', error: String(err) });
       // En cas d'erreur, utiliser les valeurs par défaut
       dispatch({ type: 'SET_TOKENS', tokens: DEFAULT_UI_THEME_TOKENS });

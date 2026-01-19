@@ -1,0 +1,283 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║  🔴 PROBLÈME CRITIQUE : INCOMPATIBILITÉ GLIBC                ║
+║                                                               ║
+║  Build Tauri v2 impossible sur Pop!_OS 22.04 via VSCode Flatpak
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+┌───────────────────────────────────────────────────────────────┐
+│  🔍 DIAGNOSTIC TECHNIQUE                                      │
+└───────────────────────────────────────────────────────────────┘
+
+  Environnement actuel :
+    Pop!_OS 22.04 LTS (système hôte)
+      → GLIBC 2.35
+      → WebKitGTK 4.1 (2.48.7) installé via apt
+    
+    VSCode Flatpak (environnement isolé)
+      → GLIBC 2.42
+      → Cargo/Rust s'exécutent ici
+      → WebKitGTK NON accessible
+  
+  Problème :
+    ❌ Cargo (GLIBC 2.42) essaie de linker avec
+       WebKitGTK compilé pour GLIBC 2.35
+    
+    ❌ Les bibliothèques .so du système hôte ne sont
+       pas compatibles avec l'environnement Flatpak
+    
+    ❌ Impossible d'installer WebKitGTK dans Flatpak
+       (limitation sandbox)
+
+  Erreurs rencontrées :
+    - javascriptcoregtk-4.1.pc not found
+    - webkit2gtk-4.1 symbols incompatibles
+    - GLIBC version mismatch lors du linking
+
+┌───────────────────────────────────────────────────────────────┐
+│  ✅ SOLUTION 1 : BUILD HORS FLATPAK (RECOMMANDÉ)             │
+└───────────────────────────────────────────────────────────────┘
+
+  Utiliser un terminal système natif :
+  
+  1. Ouvrir GNOME Terminal (hors VSCode)
+  
+  2. Installer dépendances manquantes :
+     
+     sudo apt install libjavascriptcoregtk-4.1-dev
+  
+  3. Builder directement :
+     
+     cd ~/Documents/TITANE_NEWGEN/TITANE_INFINITY
+     cargo build --release --manifest-path=src-tauri/Cargo.toml
+  
+  4. Si succès, tester :
+     
+     ./src-tauri/target/release/titane-infinity
+  
+  ✅ Avantages :
+     - Utilise GLIBC 2.35 native
+     - WebKitGTK directement accessible
+     - Pas de problème de linking
+     - Build rapide (2-5 min)
+  
+  ⚠️  Limitation :
+     - Le binaire ne fonctionnera QUE sur GLIBC >= 2.35
+     - Distribution limitée à Ubuntu 22.04/Debian 12
+
+┌───────────────────────────────────────────────────────────────┐
+│  ✅ SOLUTION 2 : MIGRATION POP!_OS 24.04 (LONG TERME)        │
+└───────────────────────────────────────────────────────────────┘
+
+  Migrer vers système plus récent avec GLIBC 2.39+ :
+  
+  Options :
+    → Pop!_OS 24.04 LTS (GLIBC 2.39)
+    → Ubuntu 24.04 LTS (GLIBC 2.39)
+    → Fedora 41+ (GLIBC 2.40)
+  
+  Procédure (Pop!_OS 24.04) :
+  
+    1. Sauvegarde complète :
+       rsync -av ~/Documents/ /backup/
+    
+    2. Télécharger ISO Pop!_OS 24.04 :
+       https://pop.system76.com/
+    
+    3. Créer clé USB bootable :
+       sudo dd if=pop-os_24.04.iso of=/dev/sdX bs=4M
+    
+    4. Installer (garder /home séparé)
+    
+    5. Restaurer projet :
+       git clone ... ou copie depuis backup
+    
+    6. Installer dépendances :
+       sudo apt install libwebkit2gtk-4.1-dev \
+         libjavascriptcoregtk-4.1-dev \
+         libgtk-3-dev build-essential
+    
+    7. Build Tauri :
+       npm run tauri:build
+  
+  ✅ Avantages :
+     - GLIBC 2.39 native
+     - Support complet Tauri v2
+     - WebKitGTK 4.1 moderne
+     - Binaires universels (GLIBC 2.39+)
+  
+  ⏱️  Temps : 2-4 heures (installation + config)
+
+┌───────────────────────────────────────────────────────────────┐
+│  ✅ SOLUTION 3 : BUILD VIA DOCKER (MULTIPLATEFORME)          │
+└───────────────────────────────────────────────────────────────┘
+
+  Compiler dans container Ubuntu 24.04 :
+  
+  1. Créer Dockerfile :
+     
+     FROM ubuntu:24.04
+     RUN apt update && apt install -y \
+       curl build-essential libwebkit2gtk-4.1-dev \
+       libjavascriptcoregtk-4.1-dev libgtk-3-dev \
+       libayatana-appindicator3-dev librsvg2-dev \
+       patchelf nodejs npm
+     RUN curl --proto '=https' --tlsv1.2 -sSf \
+       https://sh.rustup.rs | sh -s -- -y
+     ENV PATH="/root/.cargo/bin:$PATH"
+     WORKDIR /app
+  
+  2. Builder :
+     
+     docker build -t tauri-builder .
+     docker run -v $(pwd):/app tauri-builder \
+       bash -c "npm install && npm run tauri:build"
+  
+  3. Récupérer binaire :
+     
+     cp src-tauri/target/release/titane-infinity ./
+  
+  ✅ Avantages :
+     - GLIBC 2.39 garanti
+     - Reproductible
+     - Multi-OS (Linux, macOS, Windows via Docker)
+     - Pas besoin de migration système
+  
+  ⏱️  Temps : 30 min setup + 5-10 min build
+
+┌───────────────────────────────────────────────────────────────┐
+│  ✅ SOLUTION 4 : UTILISER TAURI V1 (DOWNGRADE)               │
+└───────────────────────────────────────────────────────────────┘
+
+  Revenir à Tauri v1.x compatible GLIBC 2.31+ :
+  
+  ⚠️  NON RECOMMANDÉ - Tauri v1 est deprecated
+  
+  Si absolument nécessaire :
+  
+    1. package.json :
+       "@tauri-apps/api": "^1.5.6",
+       "@tauri-apps/cli": "^1.5.14"
+    
+    2. Réinstaller :
+       npm install
+    
+    3. Adapter code API Tauri v1 :
+       - invoke() → tauri.invoke()
+       - window → appWindow
+       - etc.
+  
+  ❌ Inconvénients :
+     - Pas de nouvelles features Tauri v2
+     - Support limité (EOL 2025)
+     - WebKitGTK 4.0 (ancien)
+
+┌───────────────────────────────────────────────────────────────┐
+│  🎯 RECOMMANDATION FINALE                                     │
+└───────────────────────────────────────────────────────────────┘
+
+  COURT TERME (aujourd'hui) :
+    ✅ Utiliser SOLUTION 1 - Build hors Flatpak
+       → Terminal système natif
+       → cargo build directement sur Pop!_OS 22.04
+       → Fonctionnera pour Ubuntu 22.04/Debian 12
+  
+  LONG TERME (prochaines semaines) :
+    ✅ Utiliser SOLUTION 2 - Migration Pop!_OS 24.04
+       → Support complet Tauri v2
+       → GLIBC 2.39 moderne
+       → Distribution universelle
+  
+  ALTERNATIVE :
+    ✅ SOLUTION 3 - Docker
+       → Builds multiplateforme
+       → CI/CD compatible
+       → Pas besoin de migration
+
+┌───────────────────────────────────────────────────────────────┐
+│  🚀 PLAN D'ACTION IMMÉDIAT                                    │
+└───────────────────────────────────────────────────────────────┘
+
+  ÉTAPE 1 : Test build natif (5 min)
+  
+    Terminal système (Ctrl+Alt+T) :
+      cd ~/Documents/TITANE_NEWGEN/TITANE_INFINITY
+      sudo apt install libjavascriptcoregtk-4.1-dev
+      cargo build --release --manifest-path=src-tauri/Cargo.toml
+  
+  ÉTAPE 2 : Si succès (2-5 min build)
+  
+    Tester :
+      ./src-tauri/target/release/titane-infinity
+    
+    Si l'app s'ouvre :
+      ✅ Build natif fonctionne !
+      ✅ Continuer dev hors Flatpak
+  
+  ÉTAPE 3 : Si échec (GLIBC error persiste)
+  
+    Options :
+      → Migration Pop!_OS 24.04 (2-4h)
+      → Build Docker (30 min setup)
+      → Downgrade Tauri v1 (non recommandé)
+
+┌───────────────────────────────────────────────────────────────┐
+│  📚 DOCUMENTATION TECHNIQUE                                   │
+└───────────────────────────────────────────────────────────────┘
+
+  Versions GLIBC par distribution :
+  
+    Ubuntu 20.04 LTS  → GLIBC 2.31
+    Ubuntu 22.04 LTS  → GLIBC 2.35  ← Actuel
+    Ubuntu 24.04 LTS  → GLIBC 2.39  ← Requis pour Tauri v2
+    
+    Pop!_OS 22.04     → GLIBC 2.35  ← Actuel
+    Pop!_OS 24.04     → GLIBC 2.39  ← Recommandé
+    
+    Debian 11         → GLIBC 2.31
+    Debian 12         → GLIBC 2.36
+    Debian 13         → GLIBC 2.39
+    
+    Fedora 39         → GLIBC 2.38
+    Fedora 40+        → GLIBC 2.39+
+  
+  WebKitGTK versions :
+  
+    WebKitGTK 4.0   → Legacy (Tauri v1)
+    WebKitGTK 4.1   → Modern (Tauri v2) ← Nécessaire
+  
+  Tauri requirements :
+  
+    Tauri v1.x :
+      - GLIBC >= 2.31
+      - WebKitGTK 4.0
+      - GTK 3.0
+    
+    Tauri v2.x :
+      - GLIBC >= 2.37 (recommandé 2.39)
+      - WebKitGTK 4.1
+      - GTK 3.0
+
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║  💡 RÉSUMÉ EXÉCUTIF                                           ║
+║                                                               ║
+║  PROBLÈME :                                                   ║
+║  VSCode Flatpak (GLIBC 2.42) ne peut pas linker avec         ║
+║  WebKitGTK du système hôte (compilé GLIBC 2.35)              ║
+║                                                               ║
+║  SOLUTION IMMÉDIATE :                                         ║
+║  Build via terminal système natif (hors Flatpak)             ║
+║  → cargo build directement sur Pop!_OS 22.04                 ║
+║                                                               ║
+║  SOLUTION PERMANENTE :                                        ║
+║  Migration Pop!_OS 24.04 LTS (GLIBC 2.39)                    ║
+║  OU build via Docker Ubuntu 24.04                            ║
+║                                                               ║
+║  TEMPS ESTIMÉ :                                               ║
+║  - Test natif : 5-10 min                                     ║
+║  - Docker : 30-45 min                                        ║
+║  - Migration : 2-4 heures                                    ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝

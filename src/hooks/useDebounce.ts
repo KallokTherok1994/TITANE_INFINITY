@@ -9,7 +9,6 @@
  */
 
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { logger } from '@/utils/logger';
 
 /**
  * Debounce a value - updates only after delay without changes
@@ -153,7 +152,7 @@ export function useDebouncedAsyncCallback<TArgs extends unknown[], TReturn>(
         callbackRef.current(...args).catch(error => {
           // Ignore abort errors
           if (error.name !== 'AbortError') {
-            logger.error('Debounced async callback error:', error);
+            console.error('Debounced async callback error:', error);
           }
         });
       }, delay);

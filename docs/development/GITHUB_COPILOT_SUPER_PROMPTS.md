@@ -70,7 +70,7 @@
 
 **CONTEXT:**
 Currently 303 unwrap() and 44 expect() calls can cause crashes.
-Need tech-ready (dev) error type covering all failure modes.
+Need production-ready error type covering all failure modes.
 
 **REQUIREMENTS:**
 
@@ -1543,5 +1543,5 @@ pnpm run lint && pnpm run type-check && pnpm test  # TypeScript
 **Collection générée le 9 décembre 2025**  
 **Version** : 1.0  
 **Prompts** : 30 (Phases 1-3 complètes)  
-**Statut** : ✅ Tech-Ready (Dev); production en attente d’autorisation  
+**Statut** : ✅ Production Ready  
 **Maintenance** : Mettre à jour si breaking changes Copilot/APIs

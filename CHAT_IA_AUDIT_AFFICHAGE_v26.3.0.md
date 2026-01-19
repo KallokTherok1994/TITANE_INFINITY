@@ -9,12 +9,14 @@
 ## Problèmes Identifiés
 
 ### 1. ⚠️ ChatWindow.tsx — Filtre Messages Défectueux
+
 **Fichier:** `src/components/ChatWindow.tsx:71-81`  
 **Problème:** Le filtre vérifie `message.content` directement, mais les messages peuvent avoir une structure complexe  
 **Impact:** Les messages valides peuvent être filtrés incorrectement  
 **Sévérité:** 🟠 Haute
 
 **Code Défectueux:**
+
 ```tsx
 const filteredMessages = useMemo(() => {
   if (!Array.isArray(messages)) return [];
@@ -23,13 +25,14 @@ const filteredMessages = useMemo(() => {
       message &&
       message.role &&
       ['user', 'assistant'].includes(message.role) &&
-      message.content &&  // ❌ Problème: vérifie seulement existence de content
+      message.content && // ❌ Problème: vérifie seulement existence de content
       getMessageText(message).trim().length > 0
   );
 }, [messages]);
 ```
 
 **Correction Appliquée:**
+
 - ✅ Amélioration de la logique de vérification
 - ✅ Meilleure gestion des structures de messages complexes
 - ✅ Utilisation cohérente de `getMessageText()`
@@ -37,24 +40,29 @@ const filteredMessages = useMemo(() => {
 ---
 
 ### 2. ⚠️ AIChatBubble.tsx — Pas de Filtre Messages
+
 **Fichier:** `src/components/AIChatBubble.tsx:357-363`  
 **Problème:** Affiche TOUS les messages sans filtre, y compris vides ou invalides  
 **Impact:** 🔴 Messages vides/placeholder affichés à l'utilisateur  
 **Sévérité:** 🔴 CRITIQUE
 
 **Code Actuel:**
+
 ```tsx
-{messages.map((message, index) => (
-  <MessageBubble
-    key={message.timestamp ? `${message.timestamp}-${index}` : `msg-${index}`}
-    role={message.role}
-    content={getMessageText(message)}
-    timestamp={message.timestamp}
-  />
-))}
+{
+  messages.map((message, index) => (
+    <MessageBubble
+      key={message.timestamp ? `${message.timestamp}-${index}` : `msg-${index}`}
+      role={message.role}
+      content={getMessageText(message)}
+      timestamp={message.timestamp}
+    />
+  ));
+}
 ```
 
 **Solution Requise:**
+
 - Ajouter filtre pour exclure les messages vides
 - Valider structure avant rendu
 - Afficher seuls les messages avec contenu valide
@@ -62,12 +70,14 @@ const filteredMessages = useMemo(() => {
 ---
 
 ### 3. ⚠️ useGlobalAIChat.ts — Pas de Filtre
+
 **Fichier:** `src/hooks/useGlobalAIChat.ts:189`  
 **Problème:** Retourne `messages: chatMessages` sans filtrer  
 **Impact:** Les réponses vides remontent au composant AIChatBubble  
 **Sévérité:** 🟠 Haute
 
 **Solution:**
+
 - Ajouter useMemo pour filtrer les messages
 - Valider contenu avant retour
 - S'aligner avec ChatWindow
@@ -75,12 +85,14 @@ const filteredMessages = useMemo(() => {
 ---
 
 ### 4. ⚠️ MessageBubble.tsx — Contenu Manquant Non Géré
+
 **Fichier:** `src/components/chat/MessageBubble.tsx:137-155`  
 **Problème:** Affiche message vide si content est undefined  
 **Impact:** Bulles vides visibles dans le chat  
 **Sévérité:** 🟡 Moyenne
 
 **Code Actuel:**
+
 ```tsx
 const messageContent = useMemo(() => {
   if (role === 'assistant') {
@@ -88,21 +100,20 @@ const messageContent = useMemo(() => {
     if (safeContent.length > 0) {
       return (
         <Suspense fallback={<div>Chargement...</div>}>
-          <LazyReactMarkdown>
-            {safeContent}
-          </LazyReactMarkdown>
+          <LazyReactMarkdown>{safeContent}</LazyReactMarkdown>
         </Suspense>
       );
     }
     return <TypingIndicator />;
   }
-  return content;  // ❌ User messages sans trim check
+  return content; // ❌ User messages sans trim check
 }, [role, content]);
 ```
 
 ---
 
 ### 5. ⚠️ getMessageText() — Robustesse
+
 **Fichier:** `src/services/ai/types.ts:35-43`  
 **Status:** ✅ OK (Gère strings et multimodal)  
 **Remarque:** Fonction correcte, le problème est dans les filtres appelant cette fonction
@@ -140,6 +151,7 @@ const messageContent = useMemo(() => {
 ## Validation Post-Corrections
 
 ### Tests à Effectuer:
+
 1. ✅ Envoyer message → Vérifier qu'il apparaît
 2. ✅ Recevoir réponse IA → Vérifier qu'elle s'affiche
 3. ✅ Messages vides → Ne pas affichés
@@ -166,5 +178,5 @@ const messageContent = useMemo(() => {
 
 ---
 
-*Audit généré le 2026-01-18T11:45:00Z*  
-*TITANE∞ v26.3.0 — Chat IA Reliability Audit*
+_Audit généré le 2026-01-18T11:45:00Z_  
+_TITANE∞ v26.3.0 — Chat IA Reliability Audit_

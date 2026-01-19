@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v26.3.0 — FLOATING WINDOW PERFORMANCE TESTS
+//   TITANE∞ v24.3.0 — FLOATING WINDOW PERFORMANCE TESTS
 //   Benchmark 60 FPS stability, CPU/GPU usage, memory leaks
 //
 //   NOTE: These tests require WebGL support and are skipped in CI/Node.js
@@ -19,6 +19,7 @@ import {
   afterAll,
   vi,
 } from 'vitest';
+import * as THREE from 'three';
 
 // Check if we can run WebGL tests (requires proper Three.js mock)
 const canRunWebGLTests =

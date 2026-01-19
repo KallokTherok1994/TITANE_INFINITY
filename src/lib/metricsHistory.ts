@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v26.3.0 - Metrics History
+ * TITANE∞ v24.3.0 - Metrics History
  * Historical metrics storage for trend analysis
  * ═══════════════════════════════════════════════════════════════
  */

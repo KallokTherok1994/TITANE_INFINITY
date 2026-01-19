@@ -9,8 +9,6 @@
 // TITANE∞ v15 - useMemory Hook
 // React hook for conversational memory management
 
-import { tauriClient } from '@/lib/tauriClient';
-
 import { useState, useCallback, useEffect } from 'react';
 import { secureInvoke } from '@/lib/security';
 import { logger } from '@/lib/logger';
@@ -112,11 +110,7 @@ export function useMemory() {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       setError(errorMessage);
-      logger.error(
-        'Load conversation error:',
-        { module: 'useMemory' },
-        err instanceof Error ? err : new Error(String(err))
-      );
+      console.error('Load conversation error:', err);
       return null;
     } finally {
       setIsLoading(false);
@@ -130,7 +124,8 @@ export function useMemory() {
 
       try {
         // Note: delete_conversation est legacy, pas de service équivalent - garder invoke direct
-        await tauriClient.deleteConversation({ conversationId });
+        const { invoke } = await import('@tauri-apps/api/core');
+        await invoke('delete_conversation', { conversationId });
 
         if (currentConversation?.id === conversationId) {
           setCurrentConversation(null);
@@ -140,11 +135,7 @@ export function useMemory() {
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : String(err);
         setError(errorMessage);
-        logger.error(
-          'Delete conversation error:',
-          { module: 'useMemory' },
-          err instanceof Error ? err : new Error(String(err))
-        );
+        console.error('Delete conversation error:', err);
       } finally {
         setIsLoading(false);
       }
@@ -158,17 +149,14 @@ export function useMemory() {
 
     try {
       // Note: clear_all_memory est legacy, pas de service équivalent - garder invoke direct
-      await tauriClient.clearAllMemory();
+      const { invoke } = await import('@tauri-apps/api/core');
+      await invoke('clear_all_memory');
       setCurrentConversation(null);
       setConversations([]);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       setError(errorMessage);
-      logger.error(
-        'Clear memory error:',
-        { module: 'useMemory' },
-        err instanceof Error ? err : new Error(String(err))
-      );
+      console.error('Clear memory error:', err);
     } finally {
       setIsLoading(false);
     }

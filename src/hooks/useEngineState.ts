@@ -11,7 +11,6 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
-import { logger } from '@/utils/logger';
 import { tauriClient } from '../services/tauriClient';
 import type { SingularityState } from '../types/singularityState';
 
@@ -52,7 +51,7 @@ export function useEngineState(
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : 'Failed to fetch engine state';
-      logger.error('❌ [useEngineState] Fetch error:', err);
+      console.error('❌ [useEngineState] Fetch error:', err);
 
       setError(errorMessage);
       setIsLoading(false);

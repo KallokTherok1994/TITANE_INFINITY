@@ -68,7 +68,7 @@ export function DevToolsApp({
     >
       {/* Header */}
       <div
-        className="shrink-0 border-b"
+        className="flex-shrink-0 border-b"
         style={{
           background: 'var(--bg-elevated, #0b0d0f)',
           borderColor: 'var(--border, rgba(196,196,196,0.12))',

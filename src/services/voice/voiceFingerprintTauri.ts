@@ -13,7 +13,6 @@
  */
 
 import { secureInvoke } from '@/lib/security';
-import { logger } from '@/utils/logger';
 
 /**
  * Voice fingerprinting result from Rust backend
@@ -52,7 +51,7 @@ class VoiceFingerprintTauriService {
    */
   async calibrateTitaneVoice(samplesList: Float32Array[]): Promise<void> {
     if (this.calibrationInProgress) {
-      logger.warn('⚠️ Calibration already in progress');
+      console.warn('[VoiceFingerprintTauri] ⚠️ Calibration already in progress');
       return;
     }
 
@@ -60,7 +59,7 @@ class VoiceFingerprintTauriService {
       throw new Error('At least 3 samples required for calibration');
     }
 
-    logger.debug(
+    console.log(
       `[VoiceFingerprintTauri] 🎯 Calibrating TITANE voice with ${samplesList.length} samples`
     );
 
@@ -76,9 +75,9 @@ class VoiceFingerprintTauriService {
 
       this.isCalibrated = true;
 
-      logger.debug('✅ TITANE voice profile calibrated');
+      console.log('[VoiceFingerprintTauri] ✅ TITANE voice profile calibrated');
     } catch (error) {
-      logger.error('❌ Calibration failed:', error);
+      console.error('[VoiceFingerprintTauri] ❌ Calibration failed:', error);
       throw error;
     } finally {
       this.calibrationInProgress = false;
@@ -97,7 +96,9 @@ class VoiceFingerprintTauriService {
    */
   async checkIsTitaneSpeaking(samples: Float32Array): Promise<VoiceFingerprintResult> {
     if (!this.isCalibrated) {
-      logger.warn('⚠️ TITANE profile not calibrated, returning false');
+      console.warn(
+        '[VoiceFingerprintTauri] ⚠️ TITANE profile not calibrated, returning false'
+      );
       return { isTitane: false, similarity: 0.0 };
     }
 
@@ -113,14 +114,14 @@ class VoiceFingerprintTauriService {
       );
 
       if (result.isTitane) {
-        logger.debug(
+        console.log(
           `[VoiceFingerprintTauri] 🎯 TITANE detected (similarity: ${result.similarity.toFixed(2)})`
         );
       }
 
       return result;
     } catch (error) {
-      logger.error('❌ Detection failed:', error);
+      console.error('[VoiceFingerprintTauri] ❌ Detection failed:', error);
       return { isTitane: false, similarity: 0.0 };
     }
   }
@@ -134,7 +135,7 @@ class VoiceFingerprintTauriService {
       this.isCalibrated = status.calibrated;
       return status;
     } catch (error) {
-      logger.error('❌ Failed to get status:', error);
+      console.error('[VoiceFingerprintTauri] ❌ Failed to get status:', error);
       return { calibrated: false, sampleCount: 0, threshold: 0.75 };
     }
   }
@@ -151,7 +152,7 @@ class VoiceFingerprintTauriService {
    */
   resetCalibration(): void {
     this.isCalibrated = false;
-    logger.debug('🔄 Calibration reset');
+    console.log('[VoiceFingerprintTauri] 🔄 Calibration reset');
   }
 }
 
@@ -181,7 +182,7 @@ export const voiceFingerprintTauri = new VoiceFingerprintTauriService();
  *   const result = await voiceFingerprintTauri.checkIsTitaneSpeaking(audioData);
  *
  *   if (result.isTitane) {
- *     logger.debug('🎯 TITANE detected, skipping ASR (anti-feedback Layer 3)');
+ *     console.log('🎯 TITANE detected, skipping ASR (anti-feedback Layer 3)');
  *     return; // Skip ASR processing
  *   }
  *

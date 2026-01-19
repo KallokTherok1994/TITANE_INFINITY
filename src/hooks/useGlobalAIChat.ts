@@ -11,14 +11,11 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useChat } from './useChat';
 import { useSingularityState } from '../core/state/SingularityState';
-import { getMessageText, type AIMessage } from '../services/ai/types';
+import type { AIMessage } from '../services/ai/types';
 import type { AIStatus } from '@/core/ARCHITECTURE_TYPES_v∞';
-import { createLogger } from '@/utils/logger';
-
-const logger = createLogger('GlobalAIChat');
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -114,7 +111,7 @@ export function useGlobalAIChat(): UseGlobalAIChatReturn {
         if (state.currentProvider) setCurrentProvider(state.currentProvider);
       }
     } catch (error) {
-      logger.warn('Failed to load state from localStorage', { error });
+      console.warn('[GlobalAIChat] Failed to load state from localStorage', error);
     }
 
     mountedRef.current = true;
@@ -134,7 +131,7 @@ export function useGlobalAIChat(): UseGlobalAIChatReturn {
       };
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch (error) {
-      logger.warn('Failed to save state to localStorage', { error });
+      console.warn('[GlobalAIChat] Failed to save state to localStorage', error);
     }
   }, [isOpen, isMinimized, position, currentModel, currentProvider]);
 
@@ -171,7 +168,7 @@ export function useGlobalAIChat(): UseGlobalAIChatReturn {
         await chatSendMessage(content);
       } catch (error) {
         setAIError(error instanceof Error ? error.message : 'Unknown error');
-        logger.error('sendMessage error', { error });
+        console.error('[GlobalAIChat] sendMessage error:', error);
       }
     },
     [chatSendMessage, setAIError]
@@ -180,17 +177,17 @@ export function useGlobalAIChat(): UseGlobalAIChatReturn {
   const clear = useCallback(() => {
     // Clear handled by chat hook internally
     // Could add explicit clear method to useChat if needed
-    logger.info('Clear requested');
+    console.info('[GlobalAIChat] Clear requested');
   }, []);
 
   const setModel = useCallback((model: string) => {
     setCurrentModel(model);
-    logger.info('Model changed', { model });
+    console.info('[GlobalAIChat] Model changed:', model);
   }, []);
 
   const setProvider = useCallback((provider: string) => {
     setCurrentProvider(provider);
-    logger.info('Provider changed', { provider });
+    console.info('[GlobalAIChat] Provider changed:', provider);
   }, []);
 
   const toggleFullscreen = useCallback(() => {
@@ -198,30 +195,9 @@ export function useGlobalAIChat(): UseGlobalAIChatReturn {
   }, []);
 
   const enableDevMode = useCallback(() => {
-    logger.info('Dev mode enabled');
+    console.info('[GlobalAIChat] Dev mode enabled');
     // Could trigger devSudo mode or specific dev features
   }, []);
-
-  // ═══ FILTER MESSAGES ═══
-  // Memoize filtered messages to show only valid messages with content
-  const filteredMessages = useMemo(() => {
-    if (!Array.isArray(chatMessages)) {
-      return [];
-    }
-
-    return chatMessages.filter(message => {
-      // Validate message structure
-      if (!message || !message.role || !['user', 'assistant', 'system'].includes(message.role)) {
-        return false;
-      }
-
-      // Extract message text (handles both string and multimodal content)
-      const messageText = getMessageText(message);
-
-      // Only include messages with non-empty content
-      return messageText && messageText.trim().length > 0;
-    });
-  }, [chatMessages]);
 
   // ═══ RETURN ═══
   return {
@@ -229,7 +205,7 @@ export function useGlobalAIChat(): UseGlobalAIChatReturn {
     isOpen,
     isMinimized,
     position,
-    messages: filteredMessages,
+    messages: chatMessages,
     isLoading: chatIsLoading,
     currentModel,
     currentProvider,

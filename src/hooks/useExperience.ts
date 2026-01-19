@@ -14,7 +14,6 @@
  */
 
 import { useState, useEffect } from 'react';
-import { logger } from '@/utils/logger';
 import type { ExperienceState, ExperienceDomain, XPSource } from '../types/experience';
 import {
   initExperienceService,
@@ -71,7 +70,7 @@ export const useExperience = (): UseExperienceReturn => {
           setIsLoading(false);
         }
       } catch (err) {
-        logger.error('Erreur initialisation:', err);
+        console.error('[useExperience] Erreur initialisation:', err);
         if (mounted) {
           setIsLoading(false);
         }

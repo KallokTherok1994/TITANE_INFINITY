@@ -422,11 +422,11 @@ phase3_build_backend() {
         mkdir -p src-tauri/target/release/.fingerprint
         
         if command -v corepack >/dev/null 2>&1; then
-            corepack pnpm exec tauri build --config runtime/dev/tauri.dev.conf.json >> "$LOG_FILE" 2>&1 || {
+            corepack pnpm exec tauri build --config runtime/dev/tauri.conf.json >> "$LOG_FILE" 2>&1 || {
                 error "Tauri build failed. Check logs: $LOG_FILE"
             }
         elif command -v pnpm &> /dev/null; then
-            pnpm exec tauri build --config runtime/dev/tauri.dev.conf.json >> "$LOG_FILE" 2>&1 || {
+            pnpm exec tauri build --config runtime/dev/tauri.conf.json >> "$LOG_FILE" 2>&1 || {
                 error "Tauri build failed. Check logs: $LOG_FILE"
             }
         else
@@ -527,14 +527,14 @@ phase5_securisation() {
     # ─── 5.1: Vérifier config stable ───
     print_section "5.1: Configuration stable runtime"
     
-    if [ -f "runtime/stable/tauri.stable.conf.json" ]; then
-        if grep -q '"devtools": true' runtime/stable/tauri.stable.conf.json; then
+    if [ -f "runtime/stable/tauri.conf.json" ]; then
+        if grep -q '"devtools": true' runtime/stable/tauri.conf.json; then
             warning "devtools=true in stable config (should be false for production)"
         else
             success "devtools disabled in stable config"
         fi
     else
-        warning "runtime/stable/tauri.stable.conf.json not found"
+        warning "runtime/stable/tauri.conf.json not found"
     fi
     
     # ─── 5.2: Variables production ───

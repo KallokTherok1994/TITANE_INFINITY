@@ -619,9 +619,9 @@ let key = secrets.get_or_generate("encryption_key")?;
 let nonce = secrets.generate_nonce()?;
 ```
 
-### Permissions Tauri (tauri.base.json)
+### Permissions Tauri (tauri.conf.json)
 
-**Audit requis:** Vérifier principe du moindre privilège (source: `tauri.base.json` → `app.security.capabilities`)
+**Audit requis:** Vérifier principe du moindre privilège
 
 ```json
 {
@@ -1004,7 +1004,7 @@ typescript@5.x             → Type checking
 
 ### État Actuel
 
-**TITANE_INFINITY v19.5.2** est un projet **ambitieux** avec une architecture cognitive **sophistiquée**, mais qui nécessite un **travail significatif** avant d'être tech-ready (dev).
+**TITANE_INFINITY v19.5.2** est un projet **ambitieux** avec une architecture cognitive **sophistiquée**, mais qui nécessite un **travail significatif** avant d'être production-ready.
 
 **Points forts:**
 
@@ -1024,9 +1024,9 @@ typescript@5.x             → Type checking
 
 **Interprétation:**
 
-- 0-30: 🔴 Non tech-ready (dev)
+- 0-30: 🔴 Non production-ready
 - 31-60: 🟡 **Travail majeur requis** ← TITANE actuel
-- 61-80: 🟢 Tech-Ready (Dev) avec monitoring
+- 61-80: 🟢 Production-ready avec monitoring
 - 81-100: ✅ Excellence opérationnelle
 
 ### Timeline Réaliste

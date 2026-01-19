@@ -5,6 +5,7 @@
 
 use super::{AudioError, AudioResult};
 use crate::security::shell_guard::ShellGuard;
+use std::path::Path;
 use std::time::Duration;
 
 #[derive(Debug, Clone, Copy)]
@@ -55,12 +56,12 @@ impl ASREngine {
         }
     }
 
-    async fn transcribe_google(&self, _audio_data: &[u8]) -> AudioResult<String> {
+    async fn transcribe_google(&self, audio_data: &[u8]) -> AudioResult<String> {
         // Google Speech-to-Text API
         // This is a simplified implementation
         // In production, use proper Google Cloud Speech API
 
-        let _client = reqwest::Client::builder()
+        let client = reqwest::Client::builder()
             .timeout(Duration::from_secs(10))
             .build()
             .map_err(|e| AudioError::ProcessingError(e.to_string()))?;
@@ -87,7 +88,7 @@ impl ASREngine {
         let result = self
             .shell_guard
             .execute_asr_whisper(&temp_path)
-            .map_err(AudioError::ProcessingError)?;
+            .map_err(|e| AudioError::ProcessingError(e))?;
 
         // Read transcription from output
         let txt_path = temp_path.with_extension("txt");
@@ -113,7 +114,7 @@ impl ASREngine {
                 "vosk-transcriber",
                 &["-i", path_str, "-m", "/usr/share/vosk/models/vosk-model-fr"],
             )
-            .map_err(AudioError::ProcessingError)?;
+            .map_err(|e| AudioError::ProcessingError(e))?;
 
         Ok(output.trim().to_string())
     }

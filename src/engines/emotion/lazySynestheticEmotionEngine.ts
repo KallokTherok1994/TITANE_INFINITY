@@ -6,8 +6,6 @@
  * Permet lazy loading du moteur émotionnel pour réduire bundle initial
  */
 
-import { logger } from '@/utils/logger';
-
 // Type for the engine instance
 type EngineModule = typeof import('./synestheticEmotionEngine');
 type EngineInstance = EngineModule['synestheticEmotionEngine'];
@@ -37,7 +35,7 @@ export async function getSynestheticEmotionEngine() {
 export async function startSynestheticEngine() {
   const engine = await getSynestheticEmotionEngine();
   engine.start();
-  logger.debug('  ✅ Synesthetic Emotion Engine active (30Hz, 12 emotional states)');
+  console.log('  ✅ Synesthetic Emotion Engine active (30Hz, 12 emotional states)');
 }
 
 /**

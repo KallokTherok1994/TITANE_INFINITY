@@ -524,26 +524,15 @@ impl Priority {
 mod tests {
     use super::*;
 
-    macro_rules! test_ok {
-        ($expr:expr) => {
-            $expr.expect(&format!("TEST FAILED at {}:{}", file!(), line!()))
-        };
-    }
-
-    macro_rules! test_some {
-        ($expr:expr) => {
-            $expr.expect(&format!("TEST FAILED at {}:{}", file!(), line!()))
-        };
-    }
-
     #[tokio::test]
     async fn test_scheduler_basic() {
         let scheduler = JobScheduler::default();
 
         let input = PipelineInput::new("Test request");
-        let job_id = test_ok!(scheduler
+        let job_id = scheduler
             .schedule(input)
-            .await);
+            .await
+            .expect("schedule should succeed");
 
         assert!(!job_id.is_empty());
 
@@ -557,20 +546,23 @@ mod tests {
 
         // Schedule low priority first
         let low = PipelineInput::new("Low").with_priority(Priority::LOW);
-        test_ok!(scheduler
+        scheduler
             .schedule(low)
-            .await);
+            .await
+            .expect("scheduling low priority job should succeed");
 
         // Schedule high priority second
         let high = PipelineInput::new("High").with_priority(Priority::HIGH);
-        test_ok!(scheduler
+        scheduler
             .schedule(high)
-            .await);
+            .await
+            .expect("scheduling high priority job should succeed");
 
         // High priority should come out first
-        let next = test_some!(scheduler
+        let next = scheduler
             .next_job()
-            .await);
+            .await
+            .expect("expected a job to be available");
         assert_eq!(next.priority, Priority::HIGH);
     }
 
@@ -582,9 +574,10 @@ mod tests {
         let input = PipelineInput::new("Test");
         let job = ScheduledJob::new(input).with_deadline(Duration::from_nanos(1));
 
-        test_ok!(scheduler
+        scheduler
             .schedule_job(job)
-            .await);
+            .await
+            .expect("schedule_job should succeed");
 
         // Wait a bit for expiry
         tokio::time::sleep(Duration::from_millis(1)).await;
@@ -612,9 +605,10 @@ mod tests {
         let scheduler = JobScheduler::default();
 
         let input = PipelineInput::new("Test");
-        test_ok!(scheduler
+        scheduler
             .schedule(input)
-            .await);
+            .await
+            .expect("schedule should succeed");
 
         let stats = scheduler.get_stats().await;
         assert_eq!(stats.total_scheduled, 1);
@@ -626,14 +620,16 @@ mod tests {
         let scheduler = JobScheduler::default();
 
         let input = PipelineInput::new("Test");
-        let job_id = test_ok!(scheduler
+        let job_id = scheduler
             .schedule(input)
-            .await);
+            .await
+            .expect("schedule should succeed");
 
         // Get job
-        let _job = test_some!(scheduler
+        let _job = scheduler
             .next_job()
-            .await);
+            .await
+            .expect("expected a job to be available");
 
         // Complete it
         scheduler.complete_job(&job_id, true, None).await;
@@ -893,9 +889,10 @@ mod tests {
 
         for i in 0..5 {
             let input = PipelineInput::new(format!("Test {}", i));
-            test_ok!(scheduler
+            scheduler
                 .schedule(input)
-                .await);
+                .await
+                .expect("schedule should succeed");
         }
 
         let wait = scheduler.estimated_wait_ms().await;
@@ -907,12 +904,14 @@ mod tests {
         let scheduler = JobScheduler::default();
 
         let input = PipelineInput::new("Test");
-        let job_id = test_ok!(scheduler
+        let job_id = scheduler
             .schedule(input)
-            .await);
-        let _job = test_some!(scheduler
+            .await
+            .expect("schedule should succeed");
+        let _job = scheduler
             .next_job()
-            .await);
+            .await
+            .expect("expected a job to be available");
         scheduler.complete_job(&job_id, true, None).await;
 
         scheduler.cleanup().await;
@@ -936,12 +935,14 @@ mod tests {
         let scheduler = JobScheduler::default();
 
         let input = PipelineInput::new("Test");
-        let job_id = test_ok!(scheduler
+        let job_id = scheduler
             .schedule(input)
-            .await);
-        let _job = test_some!(scheduler
+            .await
+            .expect("schedule should succeed");
+        let _job = scheduler
             .next_job()
-            .await);
+            .await
+            .expect("expected a job to be available");
 
         scheduler.complete_job(&job_id, false, None).await;
 
@@ -954,12 +955,14 @@ mod tests {
         let scheduler = JobScheduler::default();
 
         let input = PipelineInput::new("Test");
-        let job_id = test_ok!(scheduler
+        let job_id = scheduler
             .schedule(input)
-            .await);
-        let _job = test_some!(scheduler
+            .await
+            .expect("schedule should succeed");
+        let _job = scheduler
             .next_job()
-            .await);
+            .await
+            .expect("expected a job to be available");
 
         // Cannot cancel running job
         let cancelled = scheduler.cancel_job(&job_id).await;

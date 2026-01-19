@@ -2,9 +2,7 @@
 
 **Version**: v19.3.0  
 **Date**: 8 décembre 2025  
-**Status**: ✅ Tech-Ready (Dev) (historique) • Déploiement utilisateur en cours de validation (autorisation requise)
-
-> ⚠️ Note gouvernance : document historique. Aucun déploiement/bundle de production n’est autorisé sans validation explicite.
+**Status**: Production Ready ✅
 
 ---
 
@@ -426,7 +424,7 @@ pnpm run tauri dev
 1. Cliquer "Autoriser" dans popup navigateur
 2. Vérifier paramètres site : `chrome://settings/content/microphone`
 3. Réinitialiser permissions : Supprimer site dans historique
-4. Tauri : Vérifier `tauri.base.json` (ou `runtime/stable/tauri.stable.conf.json`) → `app.security.capabilities[].permissions`
+4. Tauri : Vérifier `tauri.conf.json` → `permissions`
 
 ---
 

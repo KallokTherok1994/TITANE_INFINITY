@@ -5,7 +5,6 @@
 // ═══════════════════════════════════════════════════════════════
 
 use once_cell::sync::Lazy;
-use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
@@ -13,15 +12,6 @@ use super::{
     merger::MergeResult, OmegaError, OmegaResult, PipelineStage, StageInput, StageOutput,
     StageProcessor,
 };
-
-// ═══════════════════════════════════════════════════════════════
-//   STATIC REGEX PATTERNS (Cached - compiled once on first use)
-// ═══════════════════════════════════════════════════════════════
-
-static EMAIL_PATTERN: Lazy<Regex> = Lazy::new(|| {
-    Regex::new(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}")
-        .expect("hard-coded email regex must compile")
-});
 
 // ═══════════════════════════════════════════════════════════════
 //   GUARDRAIL TYPES
@@ -211,10 +201,13 @@ impl SafetyChecker {
             }
         }
 
-        // Check for email pattern (using cached static regex)
-        if EMAIL_PATTERN.is_match(text) {
-            found_pii = true;
-            details.push("Email address detected".to_string());
+        // Check for email pattern
+        let email_pattern = regex::Regex::new(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}");
+        if let Ok(re) = email_pattern {
+            if re.is_match(text) {
+                found_pii = true;
+                details.push("Email address detected".to_string());
+            }
         }
 
         let score = if found_pii { 0.4 } else { 0.95 };
@@ -656,12 +649,6 @@ impl StageProcessor for Guardrails {
 mod tests {
     use super::*;
 
-    macro_rules! test_ok {
-        ($expr:expr) => {
-            $expr.expect(&format!("TEST FAILED at {}:{}", file!(), line!()))
-        };
-    }
-
     fn mock_merge_result() -> MergeResult {
         MergeResult {
             request_id: "test-123".to_string(),
@@ -716,8 +703,9 @@ mod tests {
         let engine = GuardrailsEngine::new();
         let merge_result = mock_merge_result();
 
-        let result = test_ok!(engine
-            .check(&merge_result));
+        let result = engine
+            .check(&merge_result)
+            .expect("Guardrails check should succeed");
 
         assert!(!result.was_blocked);
         assert!(result.safety_score > 0.7);
@@ -734,8 +722,9 @@ mod tests {
         let mut merge_result = mock_merge_result();
         merge_result.response = "This contains forbidden_word".to_string();
 
-        let result = test_ok!(engine
-            .check(&merge_result));
+        let result = engine
+            .check(&merge_result)
+            .expect("Guardrails check should succeed");
 
         // Should have a failing check for the forbidden pattern
         assert!(result
@@ -989,8 +978,9 @@ mod tests {
         let mut merge_result = mock_merge_result();
         merge_result.response = "how to hack into systems and create a bomb".to_string();
 
-        let result = test_ok!(engine
-            .check(&merge_result));
+        let result = engine
+            .check(&merge_result)
+            .expect("Guardrails check should succeed");
         assert!(result.was_blocked);
         assert!(result.block_reason.is_some());
     }
@@ -1004,8 +994,9 @@ mod tests {
         let mut merge_result = mock_merge_result();
         merge_result.response = "Contact me at test@example.com".to_string();
 
-        let result = test_ok!(engine
-            .check(&merge_result));
+        let result = engine
+            .check(&merge_result)
+            .expect("Guardrails check should succeed");
         assert!(result.was_blocked);
     }
 

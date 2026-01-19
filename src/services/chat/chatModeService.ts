@@ -26,7 +26,6 @@ import {
 } from '@/config/chatModes.config';
 
 import { secureInvoke } from '@/lib/security';
-import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES INTERNES
@@ -84,9 +83,12 @@ class ChatModeService {
       await this.syncWithBackend();
 
       this.initialized = true;
-      logger.debug('✅ Initialized with mode:', this.state.current_mode_id);
+      console.log(
+        '[ChatModeService] ✅ Initialized with mode:',
+        this.state.current_mode_id
+      );
     } catch (error) {
-      logger.error('❌ Initialization failed:', error);
+      console.error('[ChatModeService] ❌ Initialization failed:', error);
       // Fallback: utiliser l'état par défaut
       this.state = { ...INITIAL_CHAT_MODE_STATE };
     }
@@ -108,7 +110,7 @@ class ChatModeService {
         this.userXP = parseInt(storedXP, 10) || 0;
       }
     } catch (error) {
-      logger.warn('Failed to load state from storage:', error);
+      console.warn('[ChatModeService] Failed to load state from storage:', error);
     }
   }
 
@@ -121,7 +123,7 @@ class ChatModeService {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
       localStorage.setItem(STORAGE_KEY_XP, this.userXP.toString());
     } catch (error) {
-      logger.warn('Failed to save state:', error);
+      console.warn('[ChatModeService] Failed to save state:', error);
     }
   }
 
@@ -136,7 +138,7 @@ class ChatModeService {
       });
     } catch (error) {
       // Backend non disponible - continuer en mode local
-      console.debug('Backend sync skipped:', error);
+      console.debug('[ChatModeService] Backend sync skipped:', error);
     }
   }
 
@@ -280,7 +282,7 @@ class ChatModeService {
       };
       this.notifyListeners(event);
 
-      logger.debug(
+      console.log(
         `[ChatModeService] ✅ Mode changed: ${previousModeId} → ${new_mode_id}`
       );
 
@@ -292,7 +294,7 @@ class ChatModeService {
         tools_updated: true,
       };
     } catch (error) {
-      logger.error('❌ Mode change failed:', error);
+      console.error('[ChatModeService] ❌ Mode change failed:', error);
       return {
         success: false,
         previous_mode_id: previousModeId,
@@ -353,7 +355,7 @@ class ChatModeService {
     this.state.mode_xp[modeId] = (this.state.mode_xp[modeId] ?? 0) + amount;
 
     this.saveState();
-    logger.debug(
+    console.log(
       `[ChatModeService] +${amount} XP (mode: ${modeId}, total: ${this.userXP})`
     );
   }
@@ -417,7 +419,7 @@ class ChatModeService {
       try {
         callback(event);
       } catch (error) {
-        logger.error('Listener error:', error);
+        console.error('[ChatModeService] Listener error:', error);
       }
     });
   }
@@ -433,7 +435,7 @@ class ChatModeService {
     this.state = { ...INITIAL_CHAT_MODE_STATE };
     this.userXP = 0;
     this.saveState();
-    logger.debug('State reset');
+    console.log('[ChatModeService] State reset');
   }
 }
 

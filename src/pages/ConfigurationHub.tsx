@@ -12,7 +12,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { secureInvoke } from '@/lib/security';
-import { logger } from '@/utils/logger';
 import { ConfigSection, ConfigFieldEditable } from '../components/config';
 import './ModulePages.css';
 
@@ -65,9 +64,9 @@ export const ConfigurationHub: React.FC = () => {
     setError(null);
 
     try {
-      logger.debug('🎯 [ConfigHub] Loading configuration snapshot...');
+      console.log('🎯 [ConfigHub] Loading configuration snapshot...');
       const snapshot = await secureInvoke<ConfigSnapshot>('get_all_configs');
-      logger.debug('✅ [ConfigHub] Configuration loaded:', snapshot);
+      console.log('✅ [ConfigHub] Configuration loaded:', snapshot);
       setConfig(snapshot);
       setLastRefresh(new Date());
       // Reset edit state when reloading
@@ -75,7 +74,7 @@ export const ConfigurationHub: React.FC = () => {
       setEditedChatEngine({});
       setValidationErrors({});
     } catch (err) {
-      logger.error('❌ [ConfigHub] Failed to load configuration:', err);
+      console.error('❌ [ConfigHub] Failed to load configuration:', err);
       setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
@@ -135,35 +134,35 @@ export const ConfigurationHub: React.FC = () => {
     setValidationErrors({});
 
     try {
-      logger.debug('💾 [ConfigHub] Saving configuration...');
+      console.log('💾 [ConfigHub] Saving configuration...');
 
       // Save runtime config if changed
       if (Object.keys(editedRuntime).length > 0) {
-        logger.debug('📤 [ConfigHub] Updating runtime config:', editedRuntime);
+        console.log('📤 [ConfigHub] Updating runtime config:', editedRuntime);
         await secureInvoke('update_runtime_config', {
           update: {
             ollama_url: editedRuntime.ollama_url,
             ollama_model: editedRuntime.ollama_model,
           },
         });
-        logger.debug('✅ [ConfigHub] Runtime config updated');
+        console.log('✅ [ConfigHub] Runtime config updated');
       }
 
       // Save chat engine config if changed
       if (Object.keys(editedChatEngine).length > 0) {
-        logger.debug('📤 [ConfigHub] Updating chat engine config:', editedChatEngine);
+        console.log('📤 [ConfigHub] Updating chat engine config:', editedChatEngine);
         await secureInvoke('update_chat_engine_config', {
           update: editedChatEngine,
         });
-        logger.debug('✅ [ConfigHub] Chat engine config updated');
+        console.log('✅ [ConfigHub] Chat engine config updated');
       }
 
       // Reload config after successful save
       await loadConfig();
       setEditMode(false);
-      logger.debug('✅ [ConfigHub] Configuration saved successfully');
+      console.log('✅ [ConfigHub] Configuration saved successfully');
     } catch (err) {
-      logger.error('❌ [ConfigHub] Failed to save configuration:', err);
+      console.error('❌ [ConfigHub] Failed to save configuration:', err);
       const errorMsg = err instanceof Error ? err.message : String(err);
 
       // Try to parse validation errors from backend
@@ -191,14 +190,14 @@ export const ConfigurationHub: React.FC = () => {
   const handleExport = async () => {
     try {
       const filename = `config-${new Date().toISOString().replace(/[:.]/g, '-')}`;
-      logger.debug('📤 [ConfigHub] Exporting configuration to:', filename);
+      console.log('📤 [ConfigHub] Exporting configuration to:', filename);
 
       const filePath = await secureInvoke<string>('export_config', { filename });
-      logger.debug('✅ [ConfigHub] Configuration exported to:', filePath);
+      console.log('✅ [ConfigHub] Configuration exported to:', filePath);
 
       alert(`✅ Configuration exportée vers:\n${filePath}`);
     } catch (err) {
-      logger.error('❌ [ConfigHub] Failed to export configuration:', err);
+      console.error('❌ [ConfigHub] Failed to export configuration:', err);
       alert(`❌ Échec de l'export: ${err}`);
     }
   };
@@ -213,19 +212,19 @@ export const ConfigurationHub: React.FC = () => {
     }
 
     try {
-      logger.debug('📥 [ConfigHub] Importing configuration from:', filePath);
+      console.log('📥 [ConfigHub] Importing configuration from:', filePath);
 
       const importedConfig = await secureInvoke<ConfigSnapshot>('import_config', {
         filePath,
       });
-      logger.debug('✅ [ConfigHub] Configuration imported:', importedConfig);
+      console.log('✅ [ConfigHub] Configuration imported:', importedConfig);
 
       // Reload config to show imported values
       await loadConfig();
 
       alert('✅ Configuration importée avec succès!');
     } catch (err) {
-      logger.error('❌ [ConfigHub] Failed to import configuration:', err);
+      console.error('❌ [ConfigHub] Failed to import configuration:', err);
       alert(`❌ Échec de l'import: ${err}`);
     }
   };
@@ -243,7 +242,7 @@ export const ConfigurationHub: React.FC = () => {
         );
       setPresets(presetsList);
     } catch (err) {
-      logger.error('❌ [ConfigHub] Failed to load presets:', err);
+      console.error('❌ [ConfigHub] Failed to load presets:', err);
     }
   };
 
@@ -258,7 +257,7 @@ export const ConfigurationHub: React.FC = () => {
       alert(`✅ Preset "${name}" sauvegardé!`);
       await loadPresets();
     } catch (err) {
-      logger.error('❌ [ConfigHub] Failed to save preset:', err);
+      console.error('❌ [ConfigHub] Failed to save preset:', err);
       alert(`❌ Échec de sauvegarde: ${err}`);
     }
   };
@@ -275,7 +274,7 @@ export const ConfigurationHub: React.FC = () => {
       await loadConfig();
       alert(`✅ Preset "${name}" chargé!`);
     } catch (err) {
-      logger.error('❌ [ConfigHub] Failed to load preset:', err);
+      console.error('❌ [ConfigHub] Failed to load preset:', err);
       alert(`❌ Échec de chargement: ${err}`);
     }
   };
@@ -290,7 +289,7 @@ export const ConfigurationHub: React.FC = () => {
       alert(`✅ Preset "${name}" supprimé!`);
       await loadPresets();
     } catch (err) {
-      logger.error('❌ [ConfigHub] Failed to delete preset:', err);
+      console.error('❌ [ConfigHub] Failed to delete preset:', err);
       alert(`❌ Échec de suppression: ${err}`);
     }
   };

@@ -15,7 +15,6 @@
  */
 
 import { expressionEngine, type UnifiedExpression } from '../expression/expressionEngine';
-import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES
@@ -141,7 +140,7 @@ export class HoloPresenceEngine {
 
   constructor() {
     this.state = this.getDefaultState();
-    logger.debug('🌀 [HOLOPRESENCE] Initializing HoloPresence Engine...');
+    console.log('🌀 [HOLOPRESENCE] Initializing HoloPresence Engine...');
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -151,7 +150,7 @@ export class HoloPresenceEngine {
   start(): void {
     if (this.updateInterval) return;
 
-    logger.debug('🌀 [HOLOPRESENCE] Starting holopresence at 30Hz...');
+    console.log('🌀 [HOLOPRESENCE] Starting holopresence at 30Hz...');
 
     // Subscribe to Expression Engine
     this.subscribeToExpressionEngine();
@@ -167,7 +166,7 @@ export class HoloPresenceEngine {
       clearInterval(this.updateInterval);
       this.updateInterval = null;
       this.state.isVisible = false;
-      logger.debug('🌀 [HOLOPRESENCE] HoloPresence stopped.');
+      console.log('🌀 [HOLOPRESENCE] HoloPresence stopped.');
     }
   }
 
@@ -393,7 +392,7 @@ export class HoloPresenceEngine {
    */
   triggerEvent(event: HoloEvent): void {
     this.eventQueue.push(event);
-    logger.debug(`🌀 [HOLOPRESENCE] Event triggered: ${event.type} (${event.intensity})`);
+    console.log(`🌀 [HOLOPRESENCE] Event triggered: ${event.type} (${event.intensity})`);
   }
 
   // ───────────────────────────────────────────────────────────────────────────

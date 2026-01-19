@@ -134,7 +134,7 @@ export class FullDuplexOrchestrator {
     await this.stopSpeaking();
     await this.stopListening();
 
-    logger.debug('🔇 Full duplex mode disabled');
+    console.log('[FullDuplexOrchestrator] 🔇 Full duplex mode disabled');
     this.transitionTo('idle');
   }
 
@@ -148,7 +148,7 @@ export class FullDuplexOrchestrator {
       return;
     }
 
-    logger.debug('🎤 Starting TTS (full duplex)');
+    console.log('[FullDuplexOrchestrator] 🎤 Starting TTS (full duplex)');
 
     this.isSpeaking = true;
 
@@ -166,11 +166,7 @@ export class FullDuplexOrchestrator {
     try {
       await hybridTTS.speak(text);
     } catch (error) {
-      logger.error(
-        'TTS error:',
-        { module: 'FullDuplexOrchestrator' },
-        error instanceof Error ? error : new Error(String(error))
-      );
+      console.error('[FullDuplexOrchestrator] TTS error:', error);
       this.emitEvent({
         type: 'error',
         state: this.state,
@@ -197,7 +193,7 @@ export class FullDuplexOrchestrator {
       return;
     }
 
-    logger.debug('⏹️ Stopping TTS');
+    console.log('[FullDuplexOrchestrator] ⏹️ Stopping TTS');
 
     await hybridTTS.stop();
     await ttsDuckingEngine.stopImmediately();
@@ -255,13 +251,9 @@ export class FullDuplexOrchestrator {
       // Démarrer audio streaming service
       await audioStreamingService.startStreaming();
 
-      logger.debug('✅ Listening active');
+      console.log('[FullDuplexOrchestrator] ✅ Listening active');
     } catch (error) {
-      logger.error(
-        'Listening error:',
-        { module: 'FullDuplexOrchestrator' },
-        error instanceof Error ? error : new Error(String(error))
-      );
+      console.error('[FullDuplexOrchestrator] Listening error:', error);
       this.isListening = false;
       this.emitEvent({
         type: 'error',
@@ -280,7 +272,7 @@ export class FullDuplexOrchestrator {
       return;
     }
 
-    logger.debug('🔇 Stopping listening');
+    console.log('[FullDuplexOrchestrator] 🔇 Stopping listening');
 
     await audioStreamingService.stopStreaming();
 
@@ -307,7 +299,7 @@ export class FullDuplexOrchestrator {
       return;
     }
 
-    logger.debug('🚨 User interruption');
+    console.log('[FullDuplexOrchestrator] 🚨 User interruption');
 
     this.transitionTo('interruption');
 
@@ -328,7 +320,7 @@ export class FullDuplexOrchestrator {
    * Injecte une interruption avec texte
    */
   async injectInterruption(text: string): Promise<void> {
-    logger.debug('💬 Inject interruption:', { module: 'FullDuplexOrchestrator', text });
+    console.log('[FullDuplexOrchestrator] 💬 Inject interruption:', text);
 
     // Stop TTS
     await this.interrupt();
@@ -345,7 +337,7 @@ export class FullDuplexOrchestrator {
       return;
     }
 
-    logger.debug(
+    console.log(
       `[FullDuplexOrchestrator] Barge-in: ${event.type} (${event.confidence.toFixed(2)})`
     );
 
@@ -393,7 +385,7 @@ export class FullDuplexOrchestrator {
       return;
     }
 
-    logger.debug(`[FullDuplexOrchestrator] State: ${previousState} → ${newState}`);
+    console.log(`[FullDuplexOrchestrator] State: ${previousState} → ${newState}`);
 
     this.state = newState;
 
@@ -469,7 +461,7 @@ export class FullDuplexOrchestrator {
 
     this.callbacks.clear();
 
-    logger.debug('🔌 Destroyed');
+    console.log('[FullDuplexOrchestrator] 🔌 Destroyed');
   }
 }
 

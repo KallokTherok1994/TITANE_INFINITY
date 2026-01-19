@@ -248,14 +248,13 @@ export class AIRateLimiter {
 // ═══════════════════════════════════════════════════════════════
 
 /**
- * Instance globale rate limiter - MODE PERMISSIF v26.4.0
- * Limites très élevées pour éviter les blocages
+ * Instance globale rate limiter (50 req/min, 100k tokens/min, 1$/min)
  */
 export const globalAIRateLimiter = new AIRateLimiter({
-  maxRequests: 1000, // 1000 req/min (était 50)
+  maxRequests: 50,
   windowMs: 60000,
-  maxTokens: 10000000, // 10M tokens/min (était 100k)
-  maxCost: 1000.0, // $1000/min (était $1)
+  maxTokens: 100000,
+  maxCost: 1.0,
 });
 
 // ═══════════════════════════════════════════════════════════════

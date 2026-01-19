@@ -25,11 +25,6 @@ interface PerformanceMemory {
 interface SingularityStateXP {
   xp?: number;
   level?: number;
-  adaptive?: {
-    xp?: number;
-    level?: number;
-    [key: string]: unknown;
-  };
   [key: string]: unknown;
 }
 
@@ -61,7 +56,7 @@ export class AutoAuditEngine {
   private intervalId: NodeJS.Timeout | null = null;
   private lastReport: AuditReport | null = null;
   private auditHistory: AuditReport[] = [];
-  private readonly SCAN_INTERVAL = 60000; // 60s (optimisé pour réduire les logs)
+  private readonly SCAN_INTERVAL = 30000; // 30s
   private readonly MAX_HISTORY = 100; // Garder 100 derniers audits
 
   /**
@@ -76,7 +71,7 @@ export class AutoAuditEngine {
       return;
     }
 
-    logger.debug('🔍 [AUTO-AUDIT] Starting automatic audits every 60s');
+    console.log('🔍 [AUTO-AUDIT] Starting automatic audits every 30s');
     this.isRunning = true;
 
     // Premier scan immédiat
@@ -108,7 +103,7 @@ export class AutoAuditEngine {
   stop(): void {
     if (!this.isRunning) return;
 
-    logger.debug('🛑 [AUTO-AUDIT] Stopping automatic audits');
+    console.log('🛑 [AUTO-AUDIT] Stopping automatic audits');
     this.isRunning = false;
 
     if (this.intervalId) {
@@ -124,7 +119,7 @@ export class AutoAuditEngine {
     const startTime = performance.now();
     const results: AuditResult[] = [];
 
-    logger.debug('🔍 [AUTO-AUDIT] Running scan...');
+    console.log('🔍 [AUTO-AUDIT] Running scan...');
 
     // 1. Vérifier intégrité du système de fichiers
     results.push(...(await this.checkFileSystemIntegrity()));
@@ -398,16 +393,8 @@ export class AutoAuditEngine {
     try {
       const state = await secureInvoke<SingularityStateXP>('singularity_get_full_state');
 
-      // Vérifier champs XP dans adaptive layer
-      if (state.adaptive?.xp !== undefined && state.adaptive?.level !== undefined) {
-        results.push({
-          timestamp: Date.now(),
-          category: 'xp',
-          status: 'ok',
-          message: `XP structure: Level ${state.adaptive.level}, XP ${state.adaptive.xp}`,
-        });
-      } else if (state.xp !== undefined && state.level !== undefined) {
-        // Fallback: vérifier au niveau root (legacy)
+      // Vérifier champs XP
+      if (state.xp !== undefined && state.level !== undefined) {
         results.push({
           timestamp: Date.now(),
           category: 'xp',
@@ -440,7 +427,7 @@ export class AutoAuditEngine {
   private logReport(report: AuditReport): void {
     const statusIcon = report.critical > 0 ? '🚨' : report.errors > 0 ? '⚠️' : '✅';
 
-    logger.debug(
+    console.log(
       `${statusIcon} [AUTO-AUDIT] Scan completed in ${report.duration.toFixed(0)}ms | ` +
         `✅ ${report.passed} | ⚠️ ${report.warnings} | ❌ ${report.errors} | 🚨 ${report.critical}`
     );
@@ -450,7 +437,7 @@ export class AutoAuditEngine {
       .filter(r => r.status !== 'ok')
       .forEach(r => {
         const icon = r.status === 'critical' ? '🚨' : r.status === 'error' ? '❌' : '⚠️';
-        logger.debug(`  ${icon} [${r.category}] ${r.message}`);
+        console.log(`  ${icon} [${r.category}] ${r.message}`);
       });
   }
 

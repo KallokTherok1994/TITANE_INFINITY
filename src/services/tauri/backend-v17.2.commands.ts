@@ -44,78 +44,6 @@ async function safeInvoke<T>(cmd: string, args?: Record<string, unknown>): Promi
   }
 }
 
-type RustTimelineEventType =
-  | 'SystemStart'
-  | 'ModuleInit'
-  | 'HealthChange'
-  | 'Repair'
-  | 'Snapshot'
-  | 'Alert';
-
-function normalizeTimelineEventForRust(event: unknown): {
-  id: string;
-  timestamp: number;
-  event_type: RustTimelineEventType;
-  description: string;
-  data: Record<string, unknown>;
-} {
-  const allowed: ReadonlySet<RustTimelineEventType> = new Set([
-    'SystemStart',
-    'ModuleInit',
-    'HealthChange',
-    'Repair',
-    'Snapshot',
-    'Alert',
-  ]);
-
-  const input = (event ?? {}) as Record<string, unknown>;
-
-  const idValue = typeof input.id === 'string' && input.id.trim() ? input.id : undefined;
-  const id =
-    idValue ??
-    crypto.randomUUID?.() ??
-    `evt-${Date.now()}-${Math.random().toString(16).slice(2)}`;
-
-  const rawTimestamp = input.timestamp;
-  const timestamp =
-    typeof rawTimestamp === 'number'
-      ? rawTimestamp
-      : typeof rawTimestamp === 'string'
-        ? Date.parse(rawTimestamp) || Date.now()
-        : Date.now();
-
-  const rawEventType =
-    (typeof input.event_type === 'string' ? input.event_type : undefined) ??
-    (typeof input.type === 'string' ? input.type : undefined);
-
-  const event_type: RustTimelineEventType = allowed.has(
-    rawEventType as RustTimelineEventType
-  )
-    ? (rawEventType as RustTimelineEventType)
-    : 'Alert';
-
-  const description = typeof input.description === 'string' ? input.description : '';
-
-  const dataCandidate = input.data;
-  const data: Record<string, unknown> =
-    dataCandidate && typeof dataCandidate === 'object' && !Array.isArray(dataCandidate)
-      ? (dataCandidate as Record<string, unknown>)
-      : {};
-
-  if (
-    input.metadata &&
-    typeof input.metadata === 'object' &&
-    !Array.isArray(input.metadata)
-  ) {
-    data.metadata = input.metadata;
-  }
-  if (rawEventType && rawEventType !== event_type) {
-    data.original_event_type = rawEventType;
-  }
-
-  return { id, timestamp, event_type, description, data };
-}
-
 // ─────────────────────────────────────────────────────────────────
 // HELIOS API - System Monitoring (2 commands)
 // ─────────────────────────────────────────────────────────────────
@@ -180,8 +108,7 @@ export const memory = {
    * Ajouter un événement à la timeline
    */
   async addEvent(event: TimelineEvent): Promise<void> {
-    const normalized = normalizeTimelineEventForRust(event);
-    return safeInvoke<void>('add_timeline_event', { event: normalized });
+    return safeInvoke<void>('add_timeline_event', { event });
   },
 
   /**
@@ -302,7 +229,7 @@ export const composite = {
       metadata: { snapshot_id: snapshot.id },
     };
 
-    await memory.addEvent(event);
+    await safeInvoke<void>('add_timeline_event', { event });
 
     return snapshot;
   },

@@ -1,0 +1,11 @@
+﻿{
+  "agentId": 21,
+  "agentName": "TITANE-OS",
+  "poolId": 1,
+  "poolName": "Default",
+  "serverUrl": "https://pipelinesghubeus3.actions.githubusercontent.com/0BOZxK4itnX6jr8CiB32ohTwMnX4iP0Y7Gd5sGZrCoc3XUBMJS/",
+  "gitHubUrl": "https://github.com/KallokTherok1994/TITANE_INFINITY",
+  "workFolder": "TITANE",
+  "useV2Flow": true,
+  "serverUrlV2": "https://broker.actions.githubusercontent.com/"
+}

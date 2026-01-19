@@ -11,6 +11,7 @@
 ### 🖥️ Choose Your Platform
 
 #### **Linux (AppImage) — Universal**
+
 ```bash
 # Download: TITANE-Infinity_26.3.0_amd64.AppImage
 # Make executable
@@ -21,6 +22,7 @@ chmod +x TITANE-Infinity_26.3.0_amd64.AppImage
 ```
 
 **Advantages:**
+
 - Works on any Linux distribution
 - No installation required
 - Portable (copy anywhere)
@@ -32,6 +34,7 @@ chmod +x TITANE-Infinity_26.3.0_amd64.AppImage
 ---
 
 #### **Debian/Ubuntu — Package Installation**
+
 ```bash
 # Download: TITANE-Infinity_26.3.0_amd64.deb
 
@@ -46,6 +49,7 @@ titane-infinity
 ```
 
 **Advantages:**
+
 - System integration
 - Automatic updates support
 - Desktop entry in applications menu
@@ -63,6 +67,7 @@ titane-infinity
 We've resolved the crash issues reported in previous versions:
 
 **Problems Fixed:**
+
 - ❌ "Maximum update depth exceeded" errors → ✅ FIXED
 - ❌ "removeChildFromContainer" DOM errors → ✅ FIXED
 - ❌ Infinite boot loops → ✅ FIXED
@@ -70,6 +75,7 @@ We've resolved the crash issues reported in previous versions:
 - ❌ Connection reset issues → ✅ FIXED
 
 **How We Fixed It:**
+
 1. **Global Boot Safety Manager** — Prevents state mutations during React's double-render mode
 2. **DOM Mutation Guards** — Ensures all DOM operations are idempotent
 3. **Render Throttling** — Limits React re-renders to maximum 1 per second
@@ -83,15 +89,16 @@ We've resolved the crash issues reported in previous versions:
 
 ### 📊 Build Quality Metrics
 
-| Metric | Result | Status |
-|--------|--------|--------|
-| **TypeScript Errors** | 0 | ✅ Perfect |
-| **ESLint Warnings** | 0 | ✅ Perfect |
-| **Critical Boot Issues** | 0 | ✅ Fixed |
-| **Performance** | Optimized | ✅ Excellent |
-| **Security** | Audited | ✅ Secure |
+| Metric                   | Result    | Status       |
+| ------------------------ | --------- | ------------ |
+| **TypeScript Errors**    | 0         | ✅ Perfect   |
+| **ESLint Warnings**      | 0         | ✅ Perfect   |
+| **Critical Boot Issues** | 0         | ✅ Fixed     |
+| **Performance**          | Optimized | ✅ Excellent |
+| **Security**             | Audited   | ✅ Secure    |
 
 **Build Details:**
+
 - Compilation Time: 9.50 seconds (Vite) + Rust optimization
 - Bundle Size: Optimized with opt-level 3
 - Testing: 45-second stability test PASSED
@@ -102,12 +109,14 @@ We've resolved the crash issues reported in previous versions:
 ## 🔄 Compatibility
 
 ### Prerequisites
+
 - **OS:** Linux (Ubuntu 20.04+, Debian 11+, Fedora 38+, or compatible)
 - **Architecture:** x86_64 (64-bit)
 - **RAM:** Minimum 2 GB recommended
 - **Disk:** 500 MB free space
 
 ### Environment Setup
+
 On first run, you may see a message about `TITANE_SECRETS_PASSPHRASE`. This is normal — it's part of the bootstrap sequence and does not indicate an error.
 
 ```bash
@@ -132,6 +141,7 @@ titane-infinity
 If you encounter any issues:
 
 1. **Check the logs:**
+
    ```bash
    # Logs are typically stored in:
    ~/.local/share/titane-infinity/logs/
@@ -152,6 +162,7 @@ If you encounter any issues:
 Thank you for using TITANE∞ v26.3.0. This release represents months of development, testing, and optimization.
 
 **Key Contributors:**
+
 - Kevin Thibault (Creator, Architecture Lead)
 - TITANE Team (Development, QA, Documentation)
 - GitHub Copilot (Code Generation & Optimization)

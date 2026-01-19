@@ -372,12 +372,6 @@ impl std::error::Error for ConfigError {}
 mod tests {
     use super::*;
 
-    macro_rules! test_ok {
-        ($expr:expr) => {
-            $expr.expect(&format!("TEST FAILED at {}:{}", file!(), line!()))
-        };
-    }
-
     #[test]
     fn test_default_config() {
         let config = MetaEnergyConfig::default();
@@ -392,11 +386,12 @@ mod tests {
 
     #[test]
     fn test_builder() {
-        let config = test_ok!(MetaEnergyConfig::builder()
+        let config = MetaEnergyConfig::builder()
             .name("test")
             .initial_energy(0.9)
             .auto_regulation(false)
-            .build());
+            .build()
+            .expect("meta energy builder should create valid config");
 
         assert_eq!(config.name, "test");
         assert!(!config.auto_regulation);

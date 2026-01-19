@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v26.3.0 — Proprietary License
+ * TITANE∞ v24.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v26.3.0 — AppShell Layout (Tailwind CSS)
+ * TITANE∞ v24.3.0 — AppShell Layout (Tailwind CSS)
  * Layout principal avec sidebar, header, et contenu
  * v22Ω AI Performance Optimizations Compatible
  * ═══════════════════════════════════════════════════════════════

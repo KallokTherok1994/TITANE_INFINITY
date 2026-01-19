@@ -9,7 +9,6 @@
  */
 
 import { queryOllama } from '@/utils/ollama';
-import { logger } from '@/utils/logger';
 import { safeInvoke } from '@/utils/invoke';
 import { singularityEngine } from '@/core/engines/SINGULARITY_ENGINE';
 
@@ -152,9 +151,7 @@ export async function runSelfHealing(symptoms: string): Promise<SelfHealingRunRe
     ...baseContext,
     logs,
     state,
-    lastMessage:
-      baseContext.lastMessage ??
-      (logs.length > 0 ? logs[logs.length - 1]?.message : undefined),
+    lastMessage: baseContext.lastMessage ?? logs[logs.length - 1]?.message,
   };
 
   const playbook = await selectPlaybook(symptoms);
@@ -211,7 +208,7 @@ export async function collectLogs(): Promise<SelfHealingLogEntry[]> {
 
     return normalized;
   } catch (error) {
-    logger.error('collectLogs failed:', error);
+    console.error('[SelfHealing] collectLogs failed:', error);
     return [];
   }
 }
@@ -224,7 +221,7 @@ export async function collectState(): Promise<EngineSingularityState | null> {
       return remoteState;
     }
   } catch (error) {
-    logger.warn('collectState invoke fallback:', error);
+    console.warn('[SelfHealing] collectState invoke fallback:', error);
   }
 
   try {
@@ -232,7 +229,7 @@ export async function collectState(): Promise<EngineSingularityState | null> {
       return singularityEngine.getState();
     }
   } catch (error) {
-    logger.error('collectState engine fallback failed:', error);
+    console.error('[SelfHealing] collectState engine fallback failed:', error);
   }
 
   return null;
@@ -354,7 +351,7 @@ export async function callTitaneLocal(prompt: string): Promise<string> {
     const response = await queryOllama(prompt);
     return response.trim();
   } catch (error) {
-    logger.error('callTitaneLocal failed:', error);
+    console.error('[SelfHealing] callTitaneLocal failed:', error);
     throw error;
   }
 }
@@ -382,7 +379,7 @@ export async function parseLocalResponse(
     try {
       parsed = JSON.parse(normalized);
     } catch (secondaryError) {
-      logger.error('parseLocalResponse failed:', secondaryError);
+      console.error('[SelfHealing] parseLocalResponse failed:', secondaryError);
 
       return {
         diagnostic: sanitized,
@@ -509,7 +506,7 @@ export async function escalateIfNeeded(
       ? 'codex'
       : result.escalade;
 
-  logger.warn('Escalation triggered:', {
+  console.warn('[SelfHealing] Escalation triggered:', {
     channel,
     confidence,
     diagnostic: result.diagnostic,
@@ -555,14 +552,8 @@ export async function storeLearning(result: SelfHealingRunResult): Promise<void>
       event: {
         id: `self-healing-${record.timestamp}`,
         timestamp: record.timestamp,
-        event_type: 'Repair',
+        event_type: 'SelfHealingCycle',
         description: `Playbook ${data.playbook.id} appliqué (confiance ${(record.confidence * 100).toFixed(0)}%).`,
-        data: {
-          original_event_type: 'SelfHealingCycle',
-          playbookId: data.playbook.id,
-          confidence: record.confidence,
-          channel: data.escalation.channel,
-        },
       },
     }),
     syncSingularityLearning(data),
@@ -695,7 +686,7 @@ async function fetchRecentInvocations(): Promise<string[]> {
       })
       .filter((message): message is string => Boolean(message));
   } catch (error) {
-    logger.warn('fetchRecentInvocations failed:', error);
+    console.warn('[SelfHealing] fetchRecentInvocations failed:', error);
     return [];
   }
 }
@@ -762,7 +753,7 @@ async function syncSingularityLearning(result: SelfHealingRunResult): Promise<vo
       },
     } as EngineSingularityPartial);
   } catch (error) {
-    logger.warn('syncSingularityLearning failed:', error);
+    console.warn('[SelfHealing] syncSingularityLearning failed:', error);
   }
 }
 

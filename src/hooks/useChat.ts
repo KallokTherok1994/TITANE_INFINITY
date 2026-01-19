@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v26.3.0 — Proprietary License
+ * TITANE∞ v24.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ══════════════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v26.3.0 — USE CHAT OMNIS (KERNEL OMNIS)
+ *   TITANE∞ v24.3.0 — USE CHAT OMNIS (KERNEL OMNIS)
  *   sendMessage() mathématiquement impossible à briser
  *   Architecture: Input→Validation→Engine→Normalize→UI→Memory→Voice
  *   v22Ω AI Performance Optimizations: -40% latency, stream batching
@@ -17,7 +17,6 @@ import { useChatCore, type UseChatCoreReturn } from '@hooks/useChatCore';
 import { useChatMemory } from '@hooks/useChatMemory';
 import { type ChatMode, type ChatEngineResponse } from '../services/ai';
 import type { AIMessage, AIProviderName } from '../services/ai/types';
-import { getMessageText } from '../services/ai/types';
 import type { HarmonizedMessage } from '@/types/cognitiveKernel';
 import { hybridTTS } from '@/services/tts/hybridTTS';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
@@ -57,7 +56,6 @@ type MaybeAIMessage = Partial<AIMessage> | null | undefined;
 
 // ✨ v24.3.0 - Cloud Providers Integration (OpenAI/Gemini/Anthropic)
 // ✨ v26.3.0 - Added GitHub Copilot provider
-// ✨ GLM-4.6V-Flash provider
 export type ProviderPreference =
   | 'auto'
   | 'local'
@@ -65,8 +63,7 @@ export type ProviderPreference =
   | 'openai'
   | 'gemini'
   | 'anthropic'
-  | 'copilot'
-  | 'glm46v';
+  | 'copilot';
 
 export interface ChatDebugAttempt {
   provider: string;
@@ -92,8 +89,7 @@ export interface ChatDebugEntry {
   latencyMs?: number;
 }
 
-// ✅ v26.3.1: Reduced from 20 to 5 to prevent memory accumulation in tests
-const DEBUG_MAX_ENTRIES = 5;
+const DEBUG_MAX_ENTRIES = 20;
 
 const PREFERRED_PROVIDER_STORAGE_KEY = 'omega-chat-preferred-provider';
 
@@ -104,8 +100,7 @@ const isProviderPreference = (value: unknown): value is ProviderPreference =>
   value === 'openai' ||
   value === 'gemini' ||
   value === 'anthropic' ||
-  value === 'copilot' ||
-  value === 'glm46v';
+  value === 'copilot';
 
 const readStoredPreferredProvider = (): ProviderPreference => {
   if (typeof window === 'undefined') {
@@ -389,17 +384,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
   // ✨ v24.3.7 - Optimized provider availability with Promise.allSettled + individual timeouts
   // 🔒 v26.2.1 - CRITICAL FIX H1: Race condition protection with guard
-  // ✅ v26.3.1 - MEMORY FIX: Skip provider checks in test environment
   useEffect(() => {
-    // ✅ v26.3.1: Skip entirely in test environment to prevent memory leaks
-    const isTestEnv =
-      import.meta.env.MODE === 'test' ||
-      (typeof process !== 'undefined' && process.env?.NODE_ENV === 'test') ||
-      typeof (globalThis as Record<string, unknown>).__TEST_WRAPPER__ !== 'undefined';
-    if (isTestEnv) {
-      return;
-    }
-
     // ✨ v24.3.7: Helper to add timeout to any promise
     const withTimeout = <T>(
       promise: Promise<T>,
@@ -415,15 +400,11 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
     // 🔒 v26.2.1: Race condition guard - prevent concurrent checks
     let checkInProgress = false;
-    // ✅ v26.3.1: Track if effect is still mounted
-    let isMounted = true;
 
     const checkProvidersAvailability = async () => {
-      // 🔒 v26.2.1: Skip if already checking or unmounted
-      if (checkInProgress || !isMounted) {
-        chatLogger.debug(
-          'Provider readiness check skipped - already in progress or unmounted'
-        );
+      // 🔒 v26.2.1: Skip if already checking
+      if (checkInProgress) {
+        chatLogger.debug('Provider readiness check skipped - already in progress');
         return;
       }
 
@@ -435,9 +416,6 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           withTimeout(geminiProvider.isAvailable(), PROVIDER_CHECK_TIMEOUT, false),
           withTimeout(claudeProvider.isAvailable(), PROVIDER_CHECK_TIMEOUT, false),
         ]);
-
-        // ✅ v26.3.1: Check if still mounted before setState
-        if (!isMounted) return;
 
         const result0 = results[0];
         const result1 = results[1];
@@ -483,17 +461,12 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
     const enabled = import.meta.env.DEV || envEnabled || userEnabled;
     if (!enabled) {
-      return () => {
-        isMounted = false;
-      };
+      return;
     }
 
     // Re-check every 30s (in case API keys are added dynamically)
     const interval = setInterval(checkProvidersAvailability, REFRESH_INTERVALS.SLOW);
-    return () => {
-      isMounted = false;
-      clearInterval(interval);
-    };
+    return () => clearInterval(interval);
   }, [preferredProviderState]);
   const [uiIntegrity, setUiIntegrity] = useState({
     version: 1,
@@ -935,7 +908,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
       const assistantPlaceholder: AIMessage = {
         role: 'assistant',
-        content: 'Génération en cours...', // CONTENT NON VIDE POUR ÉVITER TYPING INFINI
+        content: '',
         timestamp: Date.now(),
         provider: 'tauri-backend',
         metadata: assistantMetadata,
@@ -992,7 +965,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           }
 
           found = true;
-          placeholderContent = getMessageText(msg).substring(0, 50) || '<empty>';
+          placeholderContent = msg.content?.substring(0, 50) || '<empty>';
 
           chatLogger.debug('✅ updateAssistant: Target found', {
             uiId: targetUiId,
@@ -1017,8 +990,8 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
           chatLogger.debug('🔄 updateAssistant: Message updated', {
             uiId: targetUiId,
-            newContentLength: getMessageText(updated).length || 0,
-            newContentPreview: getMessageText(updated).substring(0, 50) || '<empty>',
+            newContentLength: updated.content?.length || 0,
+            newContentPreview: updated.content?.substring(0, 50) || '<empty>',
           });
 
           return {
@@ -1261,7 +1234,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
         const backendHistory: BackendChatMessage[] = historyBuffer.map(message => ({
           role: message.role,
-          content: getMessageText(message),
+          content: message.content,
           timestamp: new Date(message.timestamp).toISOString(),
         }));
 
@@ -1433,7 +1406,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
               finalResponse = await executeStreaming();
             } catch (error) {
               streamingError = error instanceof Error ? error : new Error(String(error));
-              chatLogger.warn('Streaming fallback triggered', { error: streamingError });
+              console.warn('[Chat] Streaming fallback triggered:', streamingError);
             }
           }
         }
@@ -1542,27 +1515,20 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
           typeof finalResponse.content === 'string' ? finalResponse.content : '';
         const finalContent =
           responseContent.trim().length > 0 ? responseContent : aggregatedContent;
-
-        // ✅ CRITICAL FIX: Jamais de content vide pour message terminé
-        const safeFinalContent =
-          finalContent.trim().length > 0
-            ? finalContent
-            : "Erreur : Aucune réponse générée par l'IA. Veuillez réessayer.";
-
-        if (safeFinalContent.trim().length === 0) {
+        if (finalContent.trim().length === 0) {
           throw new Error('Réponse vide du backend (final content)');
         }
         chatLogger.debug(
           '🎯 finalContent:',
-          safeFinalContent?.substring(0, 100),
+          finalContent?.substring(0, 100),
           'length:',
-          safeFinalContent?.length
+          finalContent?.length
         );
 
         updateAssistant(
           message => ({
             ...message,
-            content: safeFinalContent, // CONTENT TOUJOURS NON VIDE
+            content: finalContent,
             provider,
             timestamp: Date.now(),
           }),
@@ -1570,13 +1536,14 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
           metadataPatch
         );
 
-        chatLogger.debug('updateAssistant terminé', {
-          messagesCount: messagesRef.current.length,
-        });
+        console.log(
+          '[useChat OMNIS DEBUG] ✅ updateAssistant terminé, messages actuels:',
+          messagesRef.current.length
+        );
 
         const assistantFromState = getAssistantFromState();
         const assistantMessage: AIMessage =
-          assistantFromState && getMessageText(assistantFromState).trim().length > 0
+          assistantFromState && assistantFromState.content.trim().length > 0
             ? assistantFromState
             : (() => {
                 // ✅ Repair: si le placeholder existe mais reste vide (bug de sync / dédup),
@@ -1645,15 +1612,15 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
             chatLogger.warn('XP award warning', { error: xpError });
           }
         } catch (memoryError) {
-          chatLogger.warn('Memory integration warning', { error: memoryError });
+          console.warn('[Chat] Memory integration warning:', memoryError);
         }
 
         // ✨ v24.2.1: Use ref for stable dependency
         if (voiceEnabledRef.current && assistantMessage.content) {
           try {
-            hybridTTS.speak(getMessageText(assistantMessage));
+            hybridTTS.speak(assistantMessage.content);
           } catch (voiceError) {
-            chatLogger.warn('Voice warning', { error: voiceError });
+            console.warn('[Chat] Voice warning:', voiceError);
           }
         }
 
@@ -1664,7 +1631,7 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
 
         return assistantMessage;
       } catch (error) {
-        chatLogger.error('Engine pipeline error:', error);
+        console.error('[Chat] Engine pipeline error:', error);
 
         // 🧠 NOUVEAU v22Ω: Harmoniser l'erreur avec Cognitive Kernel
         const harmonizedError = cognitiveKernel.harmonizeError(error);
@@ -1743,7 +1710,7 @@ Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation 
     try {
       clearMode();
     } catch (error) {
-      chatLogger.warn('Clear mode warning', { error });
+      console.warn('[OMNIS] Clear mode warning:', error);
     }
   }, [applyMessagesSafely, clearMode]);
 
@@ -1753,7 +1720,7 @@ Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation 
       try {
         setCoreMode(mode);
       } catch (error) {
-        chatLogger.warn('Set mode warning', { error });
+        console.warn('[OMNIS] Set mode warning:', error);
       }
     },
     [setCoreMode]

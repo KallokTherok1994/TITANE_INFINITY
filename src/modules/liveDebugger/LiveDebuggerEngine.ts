@@ -12,7 +12,6 @@
  */
 
 import type { VocalDevState as _VocalDevState } from '@/modules/vocalDev/VocalDevConsoleEngine';
-import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES
@@ -172,7 +171,7 @@ export class LiveDebuggerEngine {
    * Activer le Live Debugger
    */
   async activate(mode: LiveDebuggerMode = 'shadow'): Promise<void> {
-    logger.debug(`[LiveDebugger] Activating in ${mode} mode...`);
+    console.log(`[LiveDebugger] Activating in ${mode} mode...`);
 
     this.config.enabled = true;
     this.config.mode = mode;
@@ -188,21 +187,21 @@ export class LiveDebuggerEngine {
     this.startSegmentTimer();
 
     this.notifyListeners();
-    logger.debug('✅ Activated');
+    console.log('[LiveDebugger] ✅ Activated');
   }
 
   /**
    * Désactiver le Live Debugger
    */
   async deactivate(): Promise<void> {
-    logger.debug('Deactivating...');
+    console.log('[LiveDebugger] Deactivating...');
 
     this.config.enabled = false;
     this.stopSegmentTimer();
     this.stopListening();
 
     this.notifyListeners();
-    logger.debug('✅ Deactivated');
+    console.log('[LiveDebugger] ✅ Deactivated');
   }
 
   /**
@@ -210,11 +209,11 @@ export class LiveDebuggerEngine {
    */
   async startListening(): Promise<void> {
     if (this.state.isListening) {
-      logger.warn('Already listening');
+      console.warn('[LiveDebugger] Already listening');
       return;
     }
 
-    logger.debug('Starting continuous listening...');
+    console.log('[LiveDebugger] Starting continuous listening...');
 
     try {
       // Démarrer recording via Vocal Dev Console
@@ -227,9 +226,9 @@ export class LiveDebuggerEngine {
       this.analysisQueue = [];
 
       this.notifyListeners();
-      logger.debug('✅ Listening started');
+      console.log('[LiveDebugger] ✅ Listening started');
     } catch (error) {
-      logger.error('Failed to start listening:', error);
+      console.error('[LiveDebugger] Failed to start listening:', error);
       throw error;
     }
   }
@@ -240,7 +239,7 @@ export class LiveDebuggerEngine {
   stopListening(): void {
     if (!this.state.isListening) return;
 
-    logger.debug('Stopping listening...');
+    console.log('[LiveDebugger] Stopping listening...');
 
     this.state.isListening = false;
     this.state.currentTranscript = '';
@@ -248,7 +247,7 @@ export class LiveDebuggerEngine {
     this.analysisQueue = [];
 
     this.notifyListeners();
-    logger.debug('✅ Listening stopped');
+    console.log('[LiveDebugger] ✅ Listening stopped');
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -267,7 +266,7 @@ export class LiveDebuggerEngine {
       this.processSegment();
     }, this.config.segmentIntervalMs);
 
-    logger.debug(
+    console.log(
       `[LiveDebugger] Segment timer started (${this.config.segmentIntervalMs}ms)`
     );
   }
@@ -279,7 +278,7 @@ export class LiveDebuggerEngine {
     if (this.segmentTimer) {
       clearInterval(this.segmentTimer);
       this.segmentTimer = null;
-      logger.debug('Segment timer stopped');
+      console.log('[LiveDebugger] Segment timer stopped');
     }
   }
 
@@ -329,7 +328,7 @@ export class LiveDebuggerEngine {
         }
       }
     } catch (error) {
-      logger.error('Segment processing error:', error);
+      console.error('[LiveDebugger] Segment processing error:', error);
     }
   }
 
@@ -372,13 +371,13 @@ export class LiveDebuggerEngine {
           this.state.mode === 'shadow' &&
           intent.confidence >= this.config.shadowModeThreshold
         ) {
-          logger.debug('Shadow mode intervention:', intent.type);
+          console.log('[LiveDebugger] Shadow mode intervention:', intent.type);
         }
 
         this.notifyListeners();
       }
     } catch (error) {
-      logger.error('Analysis error:', error);
+      console.error('[LiveDebugger] Analysis error:', error);
     } finally {
       this.state.isAnalyzing = false;
       this.notifyListeners();
@@ -535,7 +534,7 @@ export class LiveDebuggerEngine {
    * Diagnostiquer un problème basé sur l'intention détectée
    */
   private async diagnoseIssue(intent: LiveIntent): Promise<LiveDiagnostic> {
-    logger.debug(`[LiveDebugger] Diagnosing ${intent.type} issue...`);
+    console.log(`[LiveDebugger] Diagnosing ${intent.type} issue...`);
 
     // Analyse contextuelle
     const analysis = this.analyzeContext(intent);
@@ -698,20 +697,20 @@ export class LiveDebuggerEngine {
    */
   private async applyMicroPatch(patch: MicroPatch): Promise<void> {
     if (!patch.safe || !patch.autoApplicable) {
-      logger.warn('Patch not auto-applicable');
+      console.warn('[LiveDebugger] Patch not auto-applicable');
       return;
     }
 
-    logger.debug(`[LiveDebugger] Applying micro-patch to ${patch.module}...`);
+    console.log(`[LiveDebugger] Applying micro-patch to ${patch.module}...`);
 
     this.state.isPatching = true;
     this.notifyListeners();
 
     try {
-      // Note: unifiedHealingFacade.heal() needs proper args in real implementation
+      // Note: autoHealEngine.heal() needs proper args in real implementation
       // For now, log the patch application
-      logger.debug('Auto-applying micro-patch:', patch.reason);
-      // void unifiedHealingFacade.heal({ source: patch.module, error: patch.reason, type: 'validation' });
+      console.log('[LiveDebugger] Auto-applying micro-patch:', patch.reason);
+      // await autoHealEngine.heal(patch.file, patch.changes, patch.reason, patch.confidence);
 
       this.state.appliedPatches.push(patch);
       this.state.totalPatches++;
@@ -724,9 +723,9 @@ export class LiveDebuggerEngine {
       // Recalculer health score
       this.updateHealthScore();
 
-      logger.debug('✅ Micro-patch applied');
+      console.log('[LiveDebugger] ✅ Micro-patch applied');
     } catch (error) {
-      logger.error('Patch application failed:', error);
+      console.error('[LiveDebugger] Patch application failed:', error);
       this.state.healthScore = Math.max(0, this.state.healthScore - 10);
     } finally {
       this.state.isPatching = false;
@@ -750,10 +749,10 @@ export class LiveDebuggerEngine {
       // 4. Options: priority='high' for important diagnostics, interrupt=false to queue
       // 5. Emotion: Optional emotion mapping based on diagnostic severity (error→concerned, warning→neutral)
       // 6. Fallback: Console log if TTS unavailable (as current)
-      logger.debug('TTS Explanation:', explanation);
+      console.log('[LiveDebugger] TTS Explanation:', explanation);
       // await hybridTTS.speak(explanation, { priority: 'high', interrupt: false });
     } catch (error) {
-      logger.error('TTS explanation failed:', error);
+      console.error('[LiveDebugger] TTS explanation failed:', error);
     }
   }
 
@@ -829,7 +828,7 @@ export class LiveDebuggerEngine {
     this.config.mode = mode;
     this.state.mode = mode;
     this.notifyListeners();
-    logger.debug(`[LiveDebugger] Mode changed to: ${mode}`);
+    console.log(`[LiveDebugger] Mode changed to: ${mode}`);
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -848,7 +847,7 @@ export class LiveDebuggerEngine {
       try {
         listener(this.state);
       } catch (error) {
-        logger.error('Listener error:', error);
+        console.error('[LiveDebugger] Listener error:', error);
       }
     }
   }
@@ -868,7 +867,7 @@ export class LiveDebuggerEngine {
     this.state.healthScore = 100;
     this.state.sessionStartTime = Date.now();
     this.notifyListeners();
-    logger.debug('Reset complete');
+    console.log('[LiveDebugger] Reset complete');
   }
 
   clearDiagnostics(): void {

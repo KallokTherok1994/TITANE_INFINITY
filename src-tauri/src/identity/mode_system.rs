@@ -420,24 +420,6 @@ impl ModeSystemEngine {
 mod tests {
     use super::*;
 
-    macro_rules! test_ok {
-        ($expr:expr, $msg:expr $(,)?) => {
-            match $expr {
-                Ok(val) => val,
-                Err(err) => panic!("{}: {err}", $msg),
-            }
-        };
-    }
-
-    macro_rules! test_some {
-        ($expr:expr, $msg:expr $(,)?) => {
-            match $expr {
-                Some(val) => val,
-                None => panic!("{}: got None", $msg),
-            }
-        };
-    }
-
     // ========== ModeFeatures Tests ==========
 
     #[test]
@@ -469,10 +451,7 @@ mod tests {
     #[test]
     fn test_mode_features_serialize() {
         let features = ModeFeatures::default();
-        let json = test_ok!(
-            serde_json::to_string(&features),
-            "ModeFeatures should serialize to JSON"
-        );
+        let json = serde_json::to_string(&features).expect("ModeFeatures should serialize to JSON");
         assert!(json.contains("suggestions_enabled"));
     }
 
@@ -521,10 +500,8 @@ mod tests {
     #[test]
     fn test_mode_constraints_serialize() {
         let constraints = ModeConstraints::default();
-        let json = test_ok!(
-            serde_json::to_string(&constraints),
-            "ModeConstraints should serialize to JSON"
-        );
+        let json =
+            serde_json::to_string(&constraints).expect("ModeConstraints should serialize to JSON");
         assert!(json.contains("require_citations"));
     }
 
@@ -594,10 +571,8 @@ mod tests {
             reason: "Alert".to_string(),
             automatic: true,
         };
-        let json = test_ok!(
-            serde_json::to_string(&transition),
-            "ModeTransition should serialize to JSON"
-        );
+        let json =
+            serde_json::to_string(&transition).expect("ModeTransition should serialize to JSON");
         assert!(json.contains("Emergency"));
     }
 
@@ -687,11 +662,9 @@ mod tests {
         let config = engine.current_config();
         assert!(config.is_some());
         assert_eq!(
-            test_some!(
-                config,
-                "current_config should exist for default engine"
-            )
-            .name,
+            config
+                .expect("current_config should exist for default engine")
+                .name,
             "Standard"
         );
     }
@@ -714,70 +687,63 @@ mod tests {
     #[test]
     fn test_mode_system_engine_set_mode_creative() {
         let mut engine = ModeSystemEngine::default();
-        test_ok!(
-            engine.set_mode(OperationalMode::Creative, "Testing"),
-            "set_mode(Creative) should succeed in tests"
-        );
+        engine
+            .set_mode(OperationalMode::Creative, "Testing")
+            .expect("set_mode(Creative) should succeed in tests");
         assert_eq!(engine.current(), OperationalMode::Creative);
     }
 
     #[test]
     fn test_mode_system_engine_set_mode_learning() {
         let mut engine = ModeSystemEngine::default();
-        test_ok!(
-            engine.set_mode(OperationalMode::Learning, "Testing"),
-            "set_mode(Learning) should succeed in tests"
-        );
+        engine
+            .set_mode(OperationalMode::Learning, "Testing")
+            .expect("set_mode(Learning) should succeed in tests");
         assert_eq!(engine.current(), OperationalMode::Learning);
     }
 
     #[test]
     fn test_mode_system_engine_set_mode_debug() {
         let mut engine = ModeSystemEngine::default();
-        test_ok!(
-            engine.set_mode(OperationalMode::Debug, "Testing"),
-            "set_mode(Debug) should succeed in tests"
-        );
+        engine
+            .set_mode(OperationalMode::Debug, "Testing")
+            .expect("set_mode(Debug) should succeed in tests");
         assert_eq!(engine.current(), OperationalMode::Debug);
     }
 
     #[test]
     fn test_mode_system_engine_set_mode_casual() {
         let mut engine = ModeSystemEngine::default();
-        test_ok!(
-            engine.set_mode(OperationalMode::Casual, "Testing"),
-            "set_mode(Casual) should succeed in tests"
-        );
+        engine
+            .set_mode(OperationalMode::Casual, "Testing")
+            .expect("set_mode(Casual) should succeed in tests");
         assert_eq!(engine.current(), OperationalMode::Casual);
     }
 
     #[test]
     fn test_mode_system_engine_set_mode_emergency() {
         let mut engine = ModeSystemEngine::default();
-        test_ok!(
-            engine.set_mode(OperationalMode::Emergency, "Testing"),
-            "set_mode(Emergency) should succeed in tests"
-        );
+        engine
+            .set_mode(OperationalMode::Emergency, "Testing")
+            .expect("set_mode(Emergency) should succeed in tests");
         assert_eq!(engine.current(), OperationalMode::Emergency);
     }
 
     #[test]
     fn test_mode_system_engine_set_mode_silent() {
         let mut engine = ModeSystemEngine::default();
-        test_ok!(
-            engine.set_mode(OperationalMode::Silent, "Testing"),
-            "set_mode(Silent) should succeed in tests"
-        );
+        engine
+            .set_mode(OperationalMode::Silent, "Testing")
+            .expect("set_mode(Silent) should succeed in tests");
         assert_eq!(engine.current(), OperationalMode::Silent);
     }
 
     #[test]
     fn test_mode_system_engine_history() {
         let mut engine = ModeSystemEngine::default();
-        test_ok!(
-            engine.set_mode(OperationalMode::Focus, "Testing"),
-            "set_mode(Focus) should succeed in tests"
-        );
+        engine
+            .set_mode(OperationalMode::Focus, "Testing")
+            .expect("set_mode(Focus) should succeed in tests");
         let history = engine.get_history();
         assert_eq!(history.len(), 1);
     }
@@ -785,18 +751,15 @@ mod tests {
     #[test]
     fn test_mode_system_engine_history_multiple() {
         let mut engine = ModeSystemEngine::default();
-        test_ok!(
-            engine.set_mode(OperationalMode::Focus, "Test1"),
-            "set_mode(Focus) should succeed in tests"
-        );
-        test_ok!(
-            engine.set_mode(OperationalMode::Creative, "Test2"),
-            "set_mode(Creative) should succeed in tests"
-        );
-        test_ok!(
-            engine.set_mode(OperationalMode::Debug, "Test3"),
-            "set_mode(Debug) should succeed in tests"
-        );
+        engine
+            .set_mode(OperationalMode::Focus, "Test1")
+            .expect("set_mode(Focus) should succeed in tests");
+        engine
+            .set_mode(OperationalMode::Creative, "Test2")
+            .expect("set_mode(Creative) should succeed in tests");
+        engine
+            .set_mode(OperationalMode::Debug, "Test3")
+            .expect("set_mode(Debug) should succeed in tests");
         let history = engine.get_history();
         assert_eq!(history.len(), 3);
     }
@@ -980,10 +943,10 @@ mod tests {
     #[test]
     fn test_focus_mode_config() {
         let engine = ModeSystemEngine::default();
-        let config = test_some!(
-            engine.mode_configs.get(&OperationalMode::Focus),
-            "Focus mode config should exist"
-        );
+        let config = engine
+            .mode_configs
+            .get(&OperationalMode::Focus)
+            .expect("Focus mode config should exist");
         assert_eq!(config.verbosity, 0.3);
         assert_eq!(config.rigor, 0.8);
         assert!(!config.features.emojis_enabled);
@@ -992,10 +955,10 @@ mod tests {
     #[test]
     fn test_creative_mode_config() {
         let engine = ModeSystemEngine::default();
-        let config = test_some!(
-            engine.mode_configs.get(&OperationalMode::Creative),
-            "Creative mode config should exist"
-        );
+        let config = engine
+            .mode_configs
+            .get(&OperationalMode::Creative)
+            .expect("Creative mode config should exist");
         assert_eq!(config.creativity, 1.0);
         assert_eq!(config.rigor, 0.2);
     }
@@ -1003,10 +966,10 @@ mod tests {
     #[test]
     fn test_learning_mode_config() {
         let engine = ModeSystemEngine::default();
-        let config = test_some!(
-            engine.mode_configs.get(&OperationalMode::Learning),
-            "Learning mode config should exist"
-        );
+        let config = engine
+            .mode_configs
+            .get(&OperationalMode::Learning)
+            .expect("Learning mode config should exist");
         assert!(config.constraints.require_step_by_step);
         assert_eq!(config.verbosity, 0.9);
     }
@@ -1014,10 +977,10 @@ mod tests {
     #[test]
     fn test_debug_mode_config() {
         let engine = ModeSystemEngine::default();
-        let config = test_some!(
-            engine.mode_configs.get(&OperationalMode::Debug),
-            "Debug mode config should exist"
-        );
+        let config = engine
+            .mode_configs
+            .get(&OperationalMode::Debug)
+            .expect("Debug mode config should exist");
         assert!(config.constraints.require_citations);
         assert_eq!(config.rigor, 0.95);
     }
@@ -1025,10 +988,10 @@ mod tests {
     #[test]
     fn test_emergency_mode_config() {
         let engine = ModeSystemEngine::default();
-        let config = test_some!(
-            engine.mode_configs.get(&OperationalMode::Emergency),
-            "Emergency mode config should exist"
-        );
+        let config = engine
+            .mode_configs
+            .get(&OperationalMode::Emergency)
+            .expect("Emergency mode config should exist");
         assert_eq!(config.constraints.max_response_length, Some(200));
         assert_eq!(config.constraints.max_thinking_time_ms, Some(1000));
         assert_eq!(config.rigor, 1.0);
@@ -1037,10 +1000,10 @@ mod tests {
     #[test]
     fn test_silent_mode_config() {
         let engine = ModeSystemEngine::default();
-        let config = test_some!(
-            engine.mode_configs.get(&OperationalMode::Silent),
-            "Silent mode config should exist"
-        );
+        let config = engine
+            .mode_configs
+            .get(&OperationalMode::Silent)
+            .expect("Silent mode config should exist");
         assert!(!config.features.suggestions_enabled);
         assert!(!config.features.voice_enabled);
         assert_eq!(config.verbosity, 0.1);
@@ -1049,10 +1012,10 @@ mod tests {
     #[test]
     fn test_casual_mode_config() {
         let engine = ModeSystemEngine::default();
-        let config = test_some!(
-            engine.mode_configs.get(&OperationalMode::Casual),
-            "Casual mode config should exist"
-        );
+        let config = engine
+            .mode_configs
+            .get(&OperationalMode::Casual)
+            .expect("Casual mode config should exist");
         assert_eq!(config.creativity, 0.7);
         assert_eq!(config.default_tone, Tone::Playful);
     }
@@ -1060,10 +1023,10 @@ mod tests {
     #[test]
     fn test_standard_mode_config() {
         let engine = ModeSystemEngine::default();
-        let config = test_some!(
-            engine.mode_configs.get(&OperationalMode::Standard),
-            "Standard mode config should exist"
-        );
+        let config = engine
+            .mode_configs
+            .get(&OperationalMode::Standard)
+            .expect("Standard mode config should exist");
         assert_eq!(config.verbosity, 0.5);
         assert_eq!(config.proactivity, 0.5);
         assert_eq!(config.creativity, 0.5);

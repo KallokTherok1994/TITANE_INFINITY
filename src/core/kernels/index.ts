@@ -46,10 +46,9 @@ export type {
 } from '../../services/ai/metaKernel';
 
 // ─────────────────────────────────────────────────────────────────
-// 🜂 vΩ∞: Singularity Kernel (OS Cognitif Total)
+// 🜂 vΩ∞: Singularity Kernel (OS Cognitif Total) (depuis services/ai)
 // ─────────────────────────────────────────────────────────────────
-// singularityKernel is now dynamically imported in App.tsx
-// Types still available for TypeScript support
+export { singularityKernel } from '../../services/ai/singularityKernel';
 export type {
   HarmonyMatrix,
   FlowState,

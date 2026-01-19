@@ -22,9 +22,11 @@
 ## 🔍 CATÉGORIES D'ÉCHECS
 
 ### 1. Tests de Contrat Tauri IPC (11 échecs)
+
 **Impact:** ⚠️ Moyen — Tests stricts de gouvernance
 
 Problèmes détectés:
+
 - `src/lib/ipc.ts` utilise `invoke()` direct (sécurité intentionnelle)
 - Commandes sans wrappers TypeScript (245 détectées)
 - Commandes orphelines Rust (275 détectées)
@@ -33,9 +35,11 @@ Problèmes détectés:
 **Cause:** Tests de contrat très stricts, mais `ipc.ts` est le module de sécurité qui DOIT utiliser invoke() pour encapsuler les appels.
 
 ### 2. Tests Chat IA (6 échecs)
+
 **Impact:** ⚠️ Moyen — Fonctionnalités principales
 
 Tests échoués:
+
 - Historique de messages non utilisé correctement
 - Race conditions dans messages successifs
 - Streaming mock vs réel
@@ -44,12 +48,15 @@ Tests échoués:
 **Cause:** Refactoring récent du système de chat, mocks non synchronisés.
 
 ### 3. Tests Audio State Machine (1 échec)
+
 **Impact:** 🟢 Faible
 
 ### 4. Tests useEngineSubscription (1 échec)
+
 **Impact:** 🟢 Faible — Gestion d'erreurs
 
 ### 5. Heap Overflow (1 erreur worker)
+
 **Impact:** ⚠️ Moyen — Test suite complexe
 
 Une erreur non gérée dans un worker fork Vitest.
@@ -59,6 +66,7 @@ Une erreur non gérée dans un worker fork Vitest.
 ## ✅ COMPOSANTS VALIDÉS
 
 ### Core Engines (100% succès)
+
 - ✅ Evolution Engine (55 tests)
 - ✅ Persistent Memory (95 tests)
 - ✅ Opus Engines (11 tests)
@@ -66,6 +74,7 @@ Une erreur non gérée dans un worker fork Vitest.
 - ✅ Visual DevOps Engine
 
 ### Services (100% succès)
+
 - ✅ Audio Service
 - ✅ Backup Service
 - ✅ Memory Engine
@@ -73,6 +82,7 @@ Une erreur non gérée dans un worker fork Vitest.
 - ✅ Data Collector
 
 ### UI Components (100% succès)
+
 - ✅ Chat Bubble
 - ✅ XP Bar
 - ✅ Aura Control Panel
@@ -82,26 +92,29 @@ Une erreur non gérée dans un worker fork Vitest.
 
 ## 🎯 ÉVALUATION QUALITÉ
 
-| Critère | Note | Commentaire |
-|---------|------|-------------|
-| **Couverture** | ⭐⭐⭐⭐ | 2526 tests, excellente |
-| **Stabilité Core** | ⭐⭐⭐⭐⭐ | Engines 100% passés |
-| **Intégration** | ⭐⭐⭐ | Chat IA à corriger |
-| **Contrats** | ⭐⭐⭐ | Governance stricte ok |
+| Critère            | Note       | Commentaire            |
+| ------------------ | ---------- | ---------------------- |
+| **Couverture**     | ⭐⭐⭐⭐   | 2526 tests, excellente |
+| **Stabilité Core** | ⭐⭐⭐⭐⭐ | Engines 100% passés    |
+| **Intégration**    | ⭐⭐⭐     | Chat IA à corriger     |
+| **Contrats**       | ⭐⭐⭐     | Governance stricte ok  |
 
 ---
 
 ## 🔧 ACTIONS RECOMMANDÉES
 
 ### Priorité P1 (Bloquant Production)
+
 Aucune — les échecs sont principalement des tests stricts de gouvernance
 
 ### Priorité P2 (Important)
+
 1. **Chat IA:** Synchroniser mocks avec nouvelle architecture
 2. **IPC Contract:** Whitelister `src/lib/ipc.ts` (module sécurité légitime)
 3. **Heap Overflow:** Augmenter limite mémoire worker Vitest
 
 ### Priorité P3 (Amélioration)
+
 1. Compléter wrappers TypeScript pour 245 commandes Rust
 2. Nettoyer 275 commandes orphelines Rust
 3. Standardiser naming conventions TS ↔ Rust
@@ -113,6 +126,7 @@ Aucune — les échecs sont principalement des tests stricts de gouvernance
 **Status:** ✅ **PASSED (conditionnel)**
 
 **Justification:**
+
 - 96.5% de tests passés (seuil: 95%)
 - Tous les engines core fonctionnels
 - Échecs limités à tests stricts et intégration chat

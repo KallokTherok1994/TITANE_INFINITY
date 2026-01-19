@@ -20,23 +20,23 @@ else
     BASE_CONFIG="tauri.base.json"
 fi
 
-# 2. Vérifier que runtime/dev/tauri.dev.conf.json existe
-if [ ! -f "runtime/dev/tauri.dev.conf.json" ]; then
-     echo "❌ runtime/dev/tauri.dev.conf.json manquant"
+# 2. Vérifier que runtime/dev/tauri.conf.json existe
+if [ ! -f "runtime/dev/tauri.conf.json" ]; then
+    echo "❌ runtime/dev/tauri.conf.json manquant"
     ((ERRORS++))
 fi
 
-# 3. Vérifier que runtime/stable/tauri.stable.conf.json existe
-if [ ! -f "runtime/stable/tauri.stable.conf.json" ]; then
-     echo "❌ runtime/stable/tauri.stable.conf.json manquant"
+# 3. Vérifier que runtime/stable/tauri.conf.json existe
+if [ ! -f "runtime/stable/tauri.conf.json" ]; then
+    echo "❌ runtime/stable/tauri.conf.json manquant"
     ((ERRORS++))
 fi
 
 # 4. Vérifier cohérence version (dev doit avoir -dev suffix)
 # Fallback kept to avoid a hard failure if BASE_CONFIG is missing the field.
 BASE_VERSION=$(jq -r '.version // "26.2.0"' "$BASE_CONFIG" 2>/dev/null || echo "unknown")
-DEV_VERSION=$(jq -r '.version // "unknown"' runtime/dev/tauri.dev.conf.json 2>/dev/null || echo "unknown")
-STABLE_VERSION=$(jq -r '.version // "unknown"' runtime/stable/tauri.stable.conf.json 2>/dev/null || echo "unknown")
+DEV_VERSION=$(jq -r '.version' runtime/dev/tauri.conf.json 2>/dev/null || echo "unknown")
+STABLE_VERSION=$(jq -r '.version' runtime/stable/tauri.conf.json 2>/dev/null || echo "unknown")
 
 echo "📦 Versions détectées:"
 echo "   Base: $BASE_VERSION"

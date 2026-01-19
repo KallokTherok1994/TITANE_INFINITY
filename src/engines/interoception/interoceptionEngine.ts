@@ -14,8 +14,6 @@
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { logger } from '@/utils/logger';
-
 export type InteroceptionState = {
   // Énergie interne (0 = épuisé, 1 = charge max)
   energy: number;
@@ -148,7 +146,7 @@ class InteroceptionEngine {
   public start(): void {
     if (this.isRunning) return;
 
-    logger.debug('🌬️ [INTEROCEPTION] Starting internal state engine...');
+    console.log('🌬️ [INTEROCEPTION] Starting internal state engine...');
     this.isRunning = true;
     this.lastUpdateTime = Date.now();
 
@@ -161,7 +159,7 @@ class InteroceptionEngine {
   public stop(): void {
     if (!this.isRunning) return;
 
-    logger.debug('🌬️ [INTEROCEPTION] Stopping internal state engine...');
+    console.log('🌬️ [INTEROCEPTION] Stopping internal state engine...');
     this.isRunning = false;
 
     if (this.updateInterval) {
@@ -412,7 +410,7 @@ class InteroceptionEngine {
       try {
         callback(this.state);
       } catch (error) {
-        logger.error('🌬️ [INTEROCEPTION] Error in subscriber:', error);
+        console.error('🌬️ [INTEROCEPTION] Error in subscriber:', error);
       }
     });
   }

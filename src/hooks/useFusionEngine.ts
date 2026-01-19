@@ -14,7 +14,6 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { logger } from '@/utils/logger';
 import { fusionEngine } from '@/modules/fusion/FusionEngine';
 import { datasetBuilder } from '@/modules/fusion/DatasetBuilder';
 import type {
@@ -85,7 +84,7 @@ export function useFusionEngine(): UseFusionEngineReturn {
       refresh();
       return report;
     } catch (error) {
-      logger.error('Fusion failed:', error);
+      console.error('[useFusionEngine] Fusion failed:', error);
       throw error;
     } finally {
       setIsFusing(false);

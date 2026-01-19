@@ -18,19 +18,21 @@ Ce guide est fait pour toi, élève de secondaire 5. On explique tout simplement
 GLM-4.6V-Flash est un **modèle de langage** créé par des chercheurs chinois (THUDM). Un modèle de langage est comme un programme qui apprend à parler et comprendre le texte, mais celui-ci peut aussi regarder des images pour mieux répondre. "Flash" signifie qu'il est rapide et efficace.
 
 Il peut :
+
 - Répondre à des questions en texte.
 - Analyser une photo que tu lui donnes (ex. : "Qu'est-ce qu'il y a sur cette image ?").
 - Faire des calculs ou appeler des outils (on verra ça plus tard).
 
 C'est open-source (gratuit et modifiable), et on l'utilise via des APIs (interfaces) comme celles d'OpenAI, mais en local.
 
-> 📘 *API : Interface pour parler à l'IA, comme une porte d'entrée.*
+> 📘 _API : Interface pour parler à l'IA, comme une porte d'entrée._
 
 ## 2. Matériel et Prérequis
 
 Avant de commencer, vérifie ton ordinateur. GLM-4.6V-Flash a besoin de puissance pour tourner vite.
 
 ### Ordinateur Requis
+
 - **CPU (processeur) :** Au moins 4 cœurs modernes (comme Intel i5 ou AMD Ryzen 5). Plus c'est mieux.
 - **RAM (mémoire) :** Minimum 16 Go. Idéal 32 Go ou plus.
 - **Carte graphique (GPU) :** Optionnelle mais recommandée pour la vitesse. Une NVIDIA avec au moins 8 Go VRAM (mémoire vidéo). Si pas de GPU, ça marche au ralenti sur CPU.
@@ -42,6 +44,7 @@ Avant de commencer, vérifie ton ordinateur. GLM-4.6V-Flash a besoin de puissanc
 Si ton ordinateur est vieux, ça sera lent, mais ça fonctionne toujours.
 
 ### Logiciels de Base
+
 - **Python 3.10+** : Langage de programmation pour l'IA. (On l'installe si pas déjà là.)
 - **Git** : Outil pour télécharger du code depuis internet.
 - **Virtual Environment (venv)** : Un "environnement virtuel" pour isoler les programmes Python, comme une boîte séparée pour éviter les conflits.
@@ -51,9 +54,11 @@ Si ton ordinateur est vieux, ça sera lent, mais ça fonctionne toujours.
 On installe les bases. Fais une étape à la fois.
 
 ### Étape 1 : Installer Python
+
 Python est déjà installé sur la plupart des ordinateurs modernes. Vérifie :
 
 **Comment ouvrir un terminal ?**
+
 - **Windows :** Recherche "PowerShell" ou "Invite de commandes" dans le menu Démarrer.
 - **Linux :** Recherche "Terminal" dans les applications.
 - **macOS :** Recherche "Terminal" dans Spotlight (cmd + espace).
@@ -66,11 +71,13 @@ Dans le terminal ouvert, tape les commandes ci-dessous.
 ✅ Si tu vois "Python 3.10" ou plus, c'est bon.
 
 ❌ Si pas installé :
+
 - **Windows :** Va sur python.org, télécharge la version 3.11, installe avec "Add to PATH".
 - **Linux :** `sudo apt update && sudo apt install python3 python3-venv` (Ubuntu).
 - **macOS :** Installe via Homebrew (`brew install python`) ou télécharge sur python.org.
 
 ### Étape 2 : Installer Git
+
 Git télécharge le code.
 
 - **Windows :** Télécharge sur git-scm.com, installe.
@@ -82,6 +89,7 @@ Vérifie : `git --version`
 ✅ OK si version affichée.
 
 ### Étape 3 : Créer un Dossier Projet
+
 Crée un dossier pour tout ranger.
 
 - **Windows :** Clic droit dans Explorateur > Nouveau dossier > "GLM-Projet"
@@ -90,12 +98,14 @@ Crée un dossier pour tout ranger.
 Tous les fichiers iront là.
 
 ### Étape 4 : Créer un Environnement Virtuel (venv)
+
 Pour isoler Python.
 
 - **Windows :** `python -m venv glm-env`
 - **Linux/macOS :** `python3 -m venv glm-env`
 
 Active-le :
+
 - **Windows :** `glm-env\Scripts\activate` (PowerShell) ou `glm-env\Scripts\activate.bat` (cmd)
 - **Linux/macOS :** `source glm-env/bin/activate`
 
@@ -108,14 +118,16 @@ Active-le :
 Maintenant, on installe les outils pour l'IA.
 
 ### Étape 1 : Mettre à Jour pip
+
 Pip est l'installateur Python.
 
 Dans ton venv activé : `python -m pip install --upgrade pip`
 
 ### Étape 2 : Installer PyTorch (avec CUDA si GPU)
+
 PyTorch est la base pour l'IA. CUDA est pour accélérer sur GPU NVIDIA.
 
-> 📘 *CUDA : Logiciel spécial pour faire tourner l'IA plus vite sur les cartes graphiques NVIDIA.*
+> 📘 _CUDA : Logiciel spécial pour faire tourner l'IA plus vite sur les cartes graphiques NVIDIA._
 
 - **Si tu as une NVIDIA GPU :** `pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121` (pour CUDA 12.1)
 - **Si pas de GPU ou autre carte :** `pip install torch torchvision torchaudio`
@@ -125,6 +137,7 @@ Vérifie : `python -c "import torch; print('CUDA disponible :', torch.cuda.is_av
 ✅ Si GPU : "CUDA disponible : True". Sinon False, mais OK.
 
 ### Étape 3 : Installer vLLM et Autres
+
 vLLM sert le modèle via une API rapide.
 
 `pip install vllm openai transformers datasets peft accelerate bitsandbytes`
@@ -141,17 +154,21 @@ vLLM sert le modèle via une API rapide.
 Le modèle est sur Hugging Face (site de partage d'IA).
 
 ### Étape 1 : Créer un Compte Hugging Face
+
 Va sur huggingface.co, inscris-toi gratuitement. Ça permet de télécharger des gros fichiers.
 
 ### Étape 2 : Générer un Token
+
 Dans ton profil HF > Settings > Access Tokens > Nouveau token (read, pas write). Copie-le.
 
 ### Étape 3 : Se Connecter
+
 Dans ton venv : `huggingface-cli login`
 
 Colle ton token quand demandé.
 
 ### Étape 4 : Télécharger le Modèle
+
 Le modèle s'appelle "THUDM/glm-4v-9b" (version vision).
 
 Il se met en cache automatiquement. Pour forcer : `python -c "from transformers import AutoModel; AutoModel.from_pretrained('THUDM/glm-4v-9b')"`
@@ -165,11 +182,13 @@ Il se met en cache automatiquement. Pour forcer : `python -c "from transformers 
 Le serveur rend l'IA accessible via API.
 
 ### Option GPU (Recommandée)
+
 `python -m vllm.entrypoints.openai.api_server --model THUDM/glm-4v-9b --host 0.0.0.0 --port 8000 --trust-remote-code`
 
 - **trust-remote-code** : Permet d'exécuter du code du modèle (sécurisé).
 
 ### Option CPU (Plus Lente)
+
 `python -m vllm.entrypoints.openai.api_server --model THUDM/glm-4v-9b --host 0.0.0.0 --port 8000 --trust-remote-code --dtype float32`
 
 Lance dans une nouvelle fenêtre Terminal (venv activé).
@@ -204,6 +223,7 @@ Lance : `python test_text.py`
 ✅ Réponse comme "Salut ! Ça va bien, merci."
 
 #### Si ça ne marche pas du premier coup
+
 ❌ Erreur : "Connection refused" ou "localhost:8000"
 🛠️ Solution : Vérifie que le serveur tourne dans une autre fenêtre. Si pas, relance la commande du serveur.
 🧠 Explication : Le script parle au serveur IA ; si le serveur n'est pas démarré, ça échoue.
@@ -251,6 +271,7 @@ Lance : `python test_vision.py`
 ❌ Si erreur format : Image doit être JPEG/PNG, <5MB.
 
 #### Si ça ne marche pas du premier coup
+
 ❌ Erreur : "FileNotFoundError: No such file or directory: 'photo.jpg'"
 🛠️ Solution : Mets une image appelée `photo.jpg` dans le même dossier que le script.
 🧠 Explication : Le script cherche une image ; ajoute une photo réelle.
@@ -303,13 +324,13 @@ Fine-tuning : Entraîner l'IA sur tes données pour la spécialiser.
 
 On utilise LoRA (Low-Rank Adaptation) : Modifie peu le modèle pour économiser mémoire.
 
-> 📘 *LoRA : Méthode pour ajuster l'IA sans tout changer, comme coller un patch sur un programme.*
+> 📘 _LoRA : Méthode pour ajuster l'IA sans tout changer, comme coller un patch sur un programme._
 
 ### 10.1 Préparer Dataset JSONL
 
 Dataset : Fichier texte avec exemples.
 
-> 📘 *JSON : Format simple pour stocker des données, comme une liste de questions-réponses.*
+> 📘 _JSON : Format simple pour stocker des données, comme une liste de questions-réponses._
 
 Crée `dataset.jsonl` :
 
@@ -368,6 +389,7 @@ model.save_pretrained("./lora-model-v1")  # Sauvegarde versionnée
 Lance : `python finetune_lora.py` (prend du temps, heures sur GPU).
 
 #### Si ça ne marche pas du premier coup
+
 ❌ Erreur : "CUDA out of memory" ou "OOM"
 🛠️ Solution : Réduis batch_size à 1 ou utilise CPU (--no_cuda).
 🧠 Explication : Fine-tuning demande beaucoup de mémoire ; GPU avec 8+ Go VRAM requis.
@@ -381,6 +403,7 @@ Lance : `python finetune_lora.py` (prend du temps, heures sur GPU).
 🧠 Explication : GLM a des noms de modules différents ; adapte pour le modèle.
 
 ### 10.3 Vérifier LoRA
+
 Après entraînement, les poids LoRA sont ajoutés aux modules spécifiés.
 
 🧠 **Ce que le modèle n’apprend pas** : Il n’apprend pas de nouvelles langues ou faits généraux ; seulement tes exemples.
@@ -388,6 +411,7 @@ Après entraînement, les poids LoRA sont ajoutés aux modules spécifiés.
 ⚠️ **Pourquoi on n’entraîne pas en continu** : Fine-tuning change le modèle ; sauvegarde versions pour revenir en arrière.
 
 ### 10.4 Tester Avant/Après
+
 Crée `test_finetuned.py` :
 
 ```python
@@ -406,6 +430,7 @@ print(tokenizer.decode(outputs[0]))
 Compare avec modèle original.
 
 #### Si ça ne marche pas du premier coup
+
 ❌ Erreur : "No module named 'peft'"
 🛠️ Solution : Installe PEFT avec `pip install peft`.
 🧠 Explication : PEFT est requis pour charger LoRA ; vérifie installation.
@@ -415,6 +440,7 @@ Compare avec modèle original.
 🧠 Explication : Le script charge un modèle LoRA sauvegardé ; entraîne-le avant.
 
 ### 10.5 Sauvegarde Versionnée
+
 Sauvegarde comme v1, v2... pour tester différentes versions.
 
 ## 11. Re-Servir le Modèle Fine-Tuné
@@ -441,42 +467,52 @@ Pas de cloud ici ; c'est local.
 ## 13. Dépannage
 
 ### torch/cuda mismatch
+
 ❌ Erreur : "CUDA version mismatch"
 🛠️ Solution : Réinstalle PyTorch avec la bonne version CUDA (vérifie `nvidia-smi`).
 
 ### Manque de VRAM / OOM
+
 ❌ Erreur : "Out of memory"
 🛠️ Solution : Utilise `--load-in-4bit` ou réduis batch size.
 
 ### bitsandbytes fail
+
 ❌ Erreur : "bitsandbytes not compatible"
 🛠️ Solution : Installe séparément : `pip install bitsandbytes --index-url https://jllllll.github.io/bitsandbytes-windows-webui` (Windows).
 
 ### HF token / 401
+
 ❌ Erreur : "401 Unauthorized"
 🛠️ Solution : `huggingface-cli login` avec bon token.
 
 ### vLLM ne démarre pas
+
 ❌ Erreur : Port occupé
 🛠️ Solution : Change port `--port 8001`.
 
 ### Requête OpenAI incompatible
+
 ❌ Erreur : Format mauvais
 🛠️ Solution : Vérifie messages[] format exact.
 
 ### Image trop grosse / format non supporté
+
 ❌ Erreur : Image error
 🛠️ Solution : Redimensionne image <1MB, format JPEG/PNG.
 
 ### Lenteur CPU
+
 ❌ Trop lent
 🛠️ Solution : Ajoute GPU ou patiente.
 
 ### trust_remote_code nécessaire
+
 ❌ Erreur sécurité
 🛠️ Solution : Ajoute `--trust-remote-code` (risque faible pour modèles connus).
 
 ### Windows path / PowerShell
+
 ❌ Chemins avec \
 🛠️ Solution : Utilise / ou "chemin" pour espaces.
 

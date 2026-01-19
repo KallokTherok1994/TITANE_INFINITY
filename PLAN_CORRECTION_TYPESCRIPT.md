@@ -9,11 +9,13 @@
 ## 🎯 STRATÉGIE DE CORRECTION
 
 ### Option 1: Correction Complète (2-3 semaines)
+
 - Corriger toutes les 724 erreurs une par une
 - Refaire fonctionner tous les tests
 - Certification complète selon Super Prompt
 
 ### Option 2: Version Lite Fonctionnelle (2-3 jours) ⭐ RECOMMANDÉE
+
 - Identifier composants critiques pour certification de base
 - Corriger seulement les erreurs dans ces fichiers
 - Désactiver/mock les features avancées avec erreurs
@@ -22,6 +24,7 @@
 ## 📦 COMPOSANTS CRITIQUES POUR CERTIFICATION
 
 ### ✅ DOIVENT FONCTIONNER
+
 1. **Chat IA Core** - `src/ui/pages/Chat.tsx`, `src/hooks/useChat.ts`
 2. **IPC Client** - `src/lib/tauriClient.ts`, `src/lib/tauriCommands.ts`
 3. **Boot System** - `src/App.tsx`, composants essentiels
@@ -29,6 +32,7 @@
 5. **Tauri Config** - `src-tauri/tauri.conf.json`
 
 ### ⚠️ PEUVENT ÊTRE DÉSACTIVÉS TEMPORAIREMENT
+
 1. **Visual Engine** - `src/visual-engine/` (features avancées)
 2. **DevTools** - `src/apps/devtools/` (debug only)
 3. **Accessibility** - `src/a11y/` (nice-to-have)
@@ -37,25 +41,30 @@
 ## 🔧 PLAN D'ACTION - VERSION LITE
 
 ### Phase 1: Audit des Dépendances (1h)
+
 - Identifier tous les imports cassés
 - Créer liste des fichiers critiques vs optionnels
 
 ### Phase 2: Correction Core (4h)
+
 - Corriger erreurs dans fichiers critiques uniquement
 - Remplacer `any: any` par code TypeScript valide
 - Fix syntaxe de base (virgules, parenthèses)
 
 ### Phase 3: Mock Features Avancées (2h)
+
 - Créer mocks pour composants avec erreurs
 - Feature flags pour désactiver visual-engine
 - Fallback UI pour composants cassés
 
 ### Phase 4: Validation (2h)
+
 - `pnpm run lint` passe
 - `pnpm exec tsc --noEmit` passe sur fichiers critiques
 - Tests unitaires passent pour logique core
 
 ### Phase 5: Certification Lite (1h)
+
 - Re-certifier avec scope réduit
 - Documenter limitations
 - Créer roadmap pour version complète
@@ -68,6 +77,7 @@
 ## 🎯 RÉSULTAT ATTENDU
 
 **TITANE∞ Lite v26.3.0-Lite**
+
 - ✅ Chat IA fonctionnel
 - ✅ IPC sécurisé
 - ✅ Boot stable

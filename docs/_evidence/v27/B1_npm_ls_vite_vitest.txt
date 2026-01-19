@@ -1,0 +1,8 @@
+## B1) npm ls (depth=0)
+$ npm ls vite vitest @vitest/* jsdom typescript --depth=0 || true
+titane-infinity@26.3.0 /home/titane-os/Documents/GitHub/TITANE_INFINITY
+├── jsdom@27.4.0 -> ./node_modules/.pnpm/jsdom@27.4.0/node_modules/jsdom
+├── typescript@5.9.3 -> ./node_modules/.pnpm/typescript@5.9.3/node_modules/typescript
+├── vite@6.4.1 -> ./node_modules/.pnpm/vite@6.4.1_@types+node@25.0.6_jiti@2.6.1_lightningcss@1.30.2_terser@5.44.1_yaml@2.8.2/node_modules/vite
+└── vitest@4.0.17 -> ./node_modules/.pnpm/vitest@4.0.17_@types+node@25.0.6_@vitest+browser-playwright@4.0.17_@vitest+ui@4.0.17_ha_ef382dcec14e99121cf6a6dde5d2848a/node_modules/vitest
+

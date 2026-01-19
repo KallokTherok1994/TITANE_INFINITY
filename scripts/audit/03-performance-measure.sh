@@ -1,63 +1,35 @@
 #!/bin/bash
 
 # ⚡ TITANE∞ Performance Measurement - Baseline Metrics
-# Duration: 5-10 minutes (no production build by policy)
+# Duration: 10-15 minutes (includes build)
 # Output: reports/performance-YYYYMMDD-HHMMSS/
 
 set -e
-
-# Parse command line arguments
-QUIET_MODE=false
-while [[ $# -gt 0 ]]; do
-  case $1 in
-    --quiet)
-      QUIET_MODE=true
-      shift
-      ;;
-    *)
-      echo "Unknown option: $1"
-      exit 1
-      ;;
-  esac
-done
-
-# Initialize numeric metrics to safe defaults
-BUILD_TIME=0
-DIST_SIZE=0
-NODE_MODULES_SIZE=0
-IPC_COMMANDS=0
-IPC_CALLS=0
-DYNAMIC_IMPORTS=0
-LAZY_COMPONENTS=0
-IMAGE_COUNT=0
-WILDCARD_IMPORTS=0
-DEEP_IMPORTS=0
-
-# Repo policy: production build is forbidden (dev-only). Do not penalize missing build/dist.
-BUILD_FORBIDDEN_BY_POLICY=1
 
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 REPORT_DIR="reports/performance-$TIMESTAMP"
 mkdir -p "$REPORT_DIR"
 
-if [ "$QUIET_MODE" = false ]; then
-  echo "⚡ TITANE∞ Performance Measurement - $TIMESTAMP"
-  echo "================================================"
-fi
+echo "⚡ TITANE∞ Performance Measurement - $TIMESTAMP"
+echo "================================================"
 
 # 1. Build Time Measurement
-if [ "$QUIET_MODE" = false ]; then echo ""; echo "🏗️ [1/8] Measuring build time..."; fi
-if [ "$QUIET_MODE" = false ]; then echo "   └─ Production build is forbidden by repo policy (dev-mode only)."; fi
-{
-    echo "Build step not executed."
-    echo "Reason: Repo policy forbids production builds (pnpm run build / tauri build)."
-} > "$REPORT_DIR/build-output.txt"
-BUILD_TIME=0
+echo ""
+echo "🏗️ [1/8] Measuring build time..."
+echo "   └─ Running production build..."
 
-if [ "$QUIET_MODE" = false ]; then echo "   ✅ Step completed (no build)"; fi
+BUILD_START=$(date +%s)
+pnpm run build > "$REPORT_DIR/build-output.txt" 2>&1 || {
+    echo "   ⚠️ Build failed - check build-output.txt"
+}
+BUILD_END=$(date +%s)
+BUILD_TIME=$((BUILD_END - BUILD_START))
+
+echo "   ✅ Build completed in ${BUILD_TIME}s"
 
 # 2. Bundle Size Analysis
-if [ "$QUIET_MODE" = false ]; then echo ""; echo "📦 [2/8] Analyzing bundle size..."; fi
+echo ""
+echo "📦 [2/8] Analyzing bundle size..."
 if [ -d "dist" ]; then
     {
         echo "=== Main Bundle ==="
@@ -74,15 +46,15 @@ if [ -d "dist" ]; then
     } > "$REPORT_DIR/bundle-size.txt"
     
     DIST_SIZE=$(du -sm dist/ | cut -f1)
-    if [ "$QUIET_MODE" = false ]; then echo "   └─ Total bundle size: ${DIST_SIZE}MB"; fi
+    echo "   └─ Total bundle size: ${DIST_SIZE}MB"
 else
-    if [ "$QUIET_MODE" = false ]; then echo "   ⚠️ dist/ not found - build may have failed"; fi
+    echo "   ⚠️ dist/ not found - build may have failed"
     echo "dist/ not found" > "$REPORT_DIR/bundle-size.txt"
-    DIST_SIZE=0
 fi
 
 # 3. Dependency Size
-if [ "$QUIET_MODE" = false ]; then echo ""; echo "📚 [3/8] Analyzing dependency sizes..."; fi
+echo ""
+echo "📚 [3/8] Analyzing dependency sizes..."
 if command -v pnpm &> /dev/null; then
     pnpm list --depth=0 --json > "$REPORT_DIR/dependencies.json" 2>/dev/null || true
     
@@ -95,13 +67,14 @@ if command -v pnpm &> /dev/null; then
     } > "$REPORT_DIR/dependency-sizes.txt"
     
     NODE_MODULES_SIZE=$(du -sm node_modules/ 2>/dev/null | cut -f1 || echo "0")
-    if [ "$QUIET_MODE" = false ]; then echo "   └─ node_modules size: ${NODE_MODULES_SIZE}MB"; fi
+    echo "   └─ node_modules size: ${NODE_MODULES_SIZE}MB"
 else
-    if [ "$QUIET_MODE" = false ]; then echo "   ⚠️ pnpm not found"; fi
+    echo "   ⚠️ pnpm not found"
 fi
 
 # 4. Memory Usage Estimate
-if [ "$QUIET_MODE" = false ]; then echo ""; echo "💾 [4/8] Estimating runtime memory..."; fi
+echo ""
+echo "💾 [4/8] Estimating runtime memory..."
 {
     echo "=== Runtime Memory Estimate ==="
     echo "Based on bundle size and typical Tauri overhead"
@@ -123,10 +96,11 @@ if [ "$QUIET_MODE" = false ]; then echo ""; echo "💾 [4/8] Estimating runtime 
     echo "- Optimal: 8GB+ RAM"
 } > "$REPORT_DIR/memory-estimate.txt"
 
-if [ "$QUIET_MODE" = false ]; then echo "   └─ Memory estimate generated"; fi
+echo "   └─ Memory estimate generated"
 
 # 5. IPC Performance
-if [ "$QUIET_MODE" = false ]; then echo ""; echo "🔌 [5/8] Checking IPC patterns..."; fi
+echo ""
+echo "🔌 [5/8] Checking IPC patterns..."
 {
     echo "=== Tauri Commands (IPC Endpoints) ==="
     grep -r "#\[tauri::command\]" src-tauri/src/ -A 2 | grep "^pub fn" | wc -l || echo "0"
@@ -145,10 +119,12 @@ if [ "$QUIET_MODE" = false ]; then echo ""; echo "🔌 [5/8] Checking IPC patter
 
 IPC_COMMANDS=$(grep -r "#\[tauri::command\]" src-tauri/src/ -A 2 | grep "^pub fn" | wc -l || echo "0")
 IPC_CALLS=$(grep -r "invoke(" src/ --include="*.ts" --include="*.tsx" | wc -l || echo "0")
-if [ "$QUIET_MODE" = false ]; then echo "   ├─ Tauri commands: $IPC_COMMANDS"; echo "   └─ Frontend calls: $IPC_CALLS"; fi
+echo "   ├─ Tauri commands: $IPC_COMMANDS"
+echo "   └─ Frontend calls: $IPC_CALLS"
 
 # 6. Code Splitting Analysis
-if [ "$QUIET_MODE" = false ]; then echo ""; echo "✂️ [6/8] Analyzing code splitting..."; fi
+echo ""
+echo "✂️ [6/8] Analyzing code splitting..."
 {
     echo "=== Dynamic Imports ==="
     grep -r "import(" src/ --include="*.ts" --include="*.tsx" || echo "None found"
@@ -162,10 +138,12 @@ if [ "$QUIET_MODE" = false ]; then echo ""; echo "✂️ [6/8] Analyzing code sp
 
 DYNAMIC_IMPORTS=$(grep -r "import(" src/ --include="*.ts" --include="*.tsx" | wc -l || echo "0")
 LAZY_COMPONENTS=$(grep -r "React.lazy" src/ --include="*.tsx" | wc -l || echo "0")
-if [ "$QUIET_MODE" = false ]; then echo "   ├─ Dynamic imports: $DYNAMIC_IMPORTS"; echo "   └─ Lazy components: $LAZY_COMPONENTS"; fi
+echo "   ├─ Dynamic imports: $DYNAMIC_IMPORTS"
+echo "   └─ Lazy components: $LAZY_COMPONENTS"
 
 # 7. Asset Optimization
-if [ "$QUIET_MODE" = false ]; then echo ""; echo "🖼️ [7/8] Checking asset optimization..."; fi
+echo ""
+echo "🖼️ [7/8] Checking asset optimization..."
 {
     echo "=== Image Assets ==="
     find src public -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.svg" \) 2>/dev/null | while read img; do
@@ -185,14 +163,11 @@ if [ "$QUIET_MODE" = false ]; then echo ""; echo "🖼️ [7/8] Checking asset o
 } > "$REPORT_DIR/asset-optimization.txt"
 
 IMAGE_COUNT=$(find src public -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.svg" \) 2>/dev/null | wc -l || echo "0")
-if [ "$QUIET_MODE" = false ]; then echo "   └─ Image assets: $IMAGE_COUNT"; fi
+echo "   └─ Image assets: $IMAGE_COUNT"
 
 # 8. Import Optimization Opportunities
-if [ "$QUIET_MODE" = false ]; then echo ""; echo "📦 [8/8] Analyzing import optimization..."; fi
-
-# Some folders/files are excluded from TS compilation (see tsconfig.json exclude).
-# Do not penalize import hygiene in code that is not part of the runtime surface.
-WILDCARD_EXCLUDE_PATHS_RE='(src/modules/avatar/(camera|rendering|gesture|voice)/|src/modules/avatar/core/AudioVisualSyncEngine\.ts|src/modules/avatar/floating/(ThreeJSAvatarRenderer|appearanceFloatingIntegration)\.ts)'
+echo ""
+echo "📦 [8/8] Analyzing import optimization..."
 {
     echo "=== Barrel Imports (potential tree-shaking issues) ==="
     grep -r "from.*index" src/ --include="*.ts" --include="*.tsx" | head -20 || echo "None"
@@ -201,11 +176,7 @@ WILDCARD_EXCLUDE_PATHS_RE='(src/modules/avatar/(camera|rendering|gesture|voice)/
     grep -r "from.*\.\./\.\./\.\." src/ --include="*.ts" --include="*.tsx" | head -20 || echo "None"
     echo ""
     echo "=== Wildcard Imports ==="
-    grep -RInE '^[[:space:]]*import[[:space:]]+\*[[:space:]]+as[[:space:]]+' src/ \
-        --exclude-dir="__tests__" --exclude-dir="test" --exclude-dir="tests" \
-        --exclude="*.test.*" --exclude="*.spec.*" --exclude="*.perf.test.*" \
-        --include="*.ts" --include="*.tsx" \
-        2>/dev/null | grep -vE "$WILDCARD_EXCLUDE_PATHS_RE" | head -20 || echo "None"
+    grep -r "import \* as" src/ --include="*.ts" --include="*.tsx" | head -20 || echo "None"
     echo ""
     echo "=== Optimization Opportunities ==="
     echo "1. Replace wildcard imports with named imports"
@@ -213,27 +184,18 @@ WILDCARD_EXCLUDE_PATHS_RE='(src/modules/avatar/(camera|rendering|gesture|voice)/
     echo "3. Reduce import depth (max 3 levels)"
 } > "$REPORT_DIR/import-optimization.txt"
 
-# Exclude tests from import hygiene metrics (they should not affect runtime perf score).
-WILDCARD_IMPORTS=$(grep -RInE '^[[:space:]]*import[[:space:]]+\*[[:space:]]+as[[:space:]]+' src/ \
-    --exclude-dir="__tests__" --exclude-dir="test" --exclude-dir="tests" \
-    --exclude="*.test.*" --exclude="*.spec.*" --exclude="*.perf.test.*" \
-    --exclude="*.d.ts" \
-    --include="*.ts" --include="*.tsx" \
-    2>/dev/null | grep -vE "$WILDCARD_EXCLUDE_PATHS_RE" | wc -l | xargs || echo "0")
-DEEP_IMPORTS=$(grep -R "from.*\.\./\.\./\.\.\." src/ \
-    --exclude-dir="__tests__" --exclude-dir="test" --exclude-dir="tests" \
-    --exclude="*.test.*" --exclude="*.spec.*" --exclude="*.perf.test.*" \
-    --exclude="*.d.ts" \
-    --include="*.ts" --include="*.tsx" \
-    2>/dev/null | wc -l | xargs || echo "0")
-if [ "$QUIET_MODE" = false ]; then echo "   ├─ Wildcard imports: $WILDCARD_IMPORTS"; echo "   └─ Deep imports: $DEEP_IMPORTS"; fi
+WILDCARD_IMPORTS=$(grep -r "import \* as" src/ --include="*.ts" --include="*.tsx" | wc -l || echo "0")
+DEEP_IMPORTS=$(grep -r "from.*\.\./\.\./\.\." src/ --include="*.ts" --include="*.tsx" | wc -l || echo "0")
+echo "   ├─ Wildcard imports: $WILDCARD_IMPORTS"
+echo "   └─ Deep imports: $DEEP_IMPORTS"
 
 # Generate Summary
-if [ "$QUIET_MODE" = false ]; then echo ""; echo "📊 Generating performance summary..."; fi
+echo ""
+echo "📊 Generating performance summary..."
 cat > "$REPORT_DIR/PERFORMANCE_SUMMARY.md" << EOF
 # ⚡ TITANE∞ Performance Report
 **Date**: $(date)
-**Build Time**: Not measured (production build forbidden by policy)
+**Build Time**: ${BUILD_TIME}s
 
 ---
 
@@ -241,8 +203,8 @@ cat > "$REPORT_DIR/PERFORMANCE_SUMMARY.md" << EOF
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| Build Time | N/A | <60s | ℹ️ |
-| Bundle Size | ${DIST_SIZE}MB | <10MB | $([ "$DIST_SIZE" -gt 0 ] && [ "$DIST_SIZE" -lt 10 ] && echo "✅" || echo "⚠️") |
+| Build Time | ${BUILD_TIME}s | <60s | $([ "$BUILD_TIME" -lt 60 ] && echo "✅" || echo "❌") |
+| Bundle Size | ${DIST_SIZE}MB | <10MB | $([ "$DIST_SIZE" -lt 10 ] && echo "✅" || echo "⚠️") |
 | node_modules | ${NODE_MODULES_SIZE}MB | <500MB | $([ "$NODE_MODULES_SIZE" -lt 500 ] && echo "✅" || echo "⚠️") |
 | IPC Commands | $IPC_COMMANDS | - | ℹ️ |
 | IPC Calls | $IPC_CALLS | - | ℹ️ |
@@ -257,7 +219,7 @@ cat > "$REPORT_DIR/PERFORMANCE_SUMMARY.md" << EOF
 ## 🎯 Priority Optimizations
 
 ### P0 (Critical - Do First)
-$([ "$DIST_SIZE" -eq 0 ] && echo "- ⚠️ **No bundle size baseline** - dist/ not present (build forbidden by policy)" || echo "- ✅ Bundle size baseline present")
+$([ "$BUILD_TIME" -gt 60 ] && echo "- ❌ **Reduce build time** - Currently ${BUILD_TIME}s, target <60s" || echo "- ✅ Build time OK")
 $([ "$WILDCARD_IMPORTS" -gt 0 ] && echo "- ❌ **Replace wildcard imports** - $WILDCARD_IMPORTS found" || echo "- ✅ No wildcard imports")
 $([ "$DYNAMIC_IMPORTS" -lt 10 ] && echo "- ⚠️ **Add code splitting** - Only $DYNAMIC_IMPORTS dynamic imports" || echo "- ✅ Code splitting present")
 
@@ -290,10 +252,11 @@ $([ "$DEEP_IMPORTS" -gt 10 ] && echo "- ⚠️ **Fix deep imports** - $DEEP_IMPO
 
 ## 🚀 Next Steps
 
-1. Implement code splitting for routes
-2. Replace wildcard imports
-3. Add performance tests
-4. Setup monitoring dashboard
+1. Run \`pnpm run build -- --analyze\` for visual bundle analysis
+2. Implement code splitting for routes
+3. Replace wildcard imports
+4. Add performance tests
+5. Setup monitoring dashboard
 
 ---
 
@@ -310,66 +273,17 @@ Monitor these metrics weekly:
 **Target**: All metrics in green zone ✅
 EOF
 
-if [ "$QUIET_MODE" = false ]; then
-  echo ""
-  echo "================================================"
-  echo "✅ Performance Measurement Complete!"
-  echo ""
-  echo "📊 Summary:"
-  echo "   ├─ Build Time: Not measured (policy)"
-  echo "   ├─ Bundle Size: ${DIST_SIZE}MB $([ "$DIST_SIZE" -lt 10 ] && echo "(✅)" || echo "(⚠️ >10MB)")"
-  echo "   ├─ Dependencies: ${NODE_MODULES_SIZE}MB"
-  echo "   ├─ IPC: $IPC_COMMANDS commands, $IPC_CALLS calls"
-  echo "   ├─ Code Splitting: $DYNAMIC_IMPORTS dynamic, $LAZY_COMPONENTS lazy"
-  echo "   └─ Imports: $WILDCARD_IMPORTS wildcard, $DEEP_IMPORTS deep"
-  echo ""
-  echo "📁 Full report: $REPORT_DIR/PERFORMANCE_SUMMARY.md"
-  echo ""
-fi
-
-# Deterministic score (0-100)
-PERF_SCORE=100
-
-# Build metrics are unavailable by policy; do NOT penalize.
-if [ "${BUILD_FORBIDDEN_BY_POLICY:-0}" -ne 1 ]; then
-    PERF_SCORE=$((PERF_SCORE - 10))
-fi
-
-# Bundle size penalty
-if [ "$DIST_SIZE" -gt 10 ]; then
-    bs_penalty=$(((DIST_SIZE - 10) * 3))
-    if [ "$bs_penalty" -gt 30 ]; then bs_penalty=30; fi
-    PERF_SCORE=$((PERF_SCORE - bs_penalty))
-fi
-
-# If dist/ missing, we cannot assess bundle size; do NOT penalize when build is forbidden.
-if [ "$DIST_SIZE" -eq 0 ] && [ "${BUILD_FORBIDDEN_BY_POLICY:-0}" -ne 1 ]; then
-    PERF_SCORE=$((PERF_SCORE - 10))
-fi
-
-# Import hygiene penalties
-if [ "${WILDCARD_IMPORTS:-0}" -gt 0 ]; then
-    wi_penalty=$((WILDCARD_IMPORTS * 5))
-    if [ "$wi_penalty" -gt 25 ]; then wi_penalty=25; fi
-    PERF_SCORE=$((PERF_SCORE - wi_penalty))
-fi
-
-di_penalty=$(( (${DEEP_IMPORTS:-0}) * 1 ))
-if [ "$di_penalty" -gt 15 ]; then di_penalty=15; fi
-PERF_SCORE=$((PERF_SCORE - di_penalty))
-
-# Code splitting: informative only (do not penalize; apps may intentionally avoid dynamic imports).
-
-if [ "$PERF_SCORE" -lt 0 ]; then PERF_SCORE=0; fi
-if [ "$PERF_SCORE" -gt 100 ]; then PERF_SCORE=100; fi
-
-if [ "$QUIET_MODE" = true ]; then
-  # Quiet mode: exit 0 if score >= 90, else 1
-  if [ "$PERF_SCORE" -ge 90 ]; then
-    exit 0
-  else
-    exit 1
-  fi
-else
-  echo "Score: $PERF_SCORE"
-fi
+echo ""
+echo "================================================"
+echo "✅ Performance Measurement Complete!"
+echo ""
+echo "📊 Summary:"
+echo "   ├─ Build Time: ${BUILD_TIME}s $([ "$BUILD_TIME" -lt 60 ] && echo "(✅)" || echo "(❌ >60s)")"
+echo "   ├─ Bundle Size: ${DIST_SIZE}MB $([ "$DIST_SIZE" -lt 10 ] && echo "(✅)" || echo "(⚠️ >10MB)")"
+echo "   ├─ Dependencies: ${NODE_MODULES_SIZE}MB"
+echo "   ├─ IPC: $IPC_COMMANDS commands, $IPC_CALLS calls"
+echo "   ├─ Code Splitting: $DYNAMIC_IMPORTS dynamic, $LAZY_COMPONENTS lazy"
+echo "   └─ Imports: $WILDCARD_IMPORTS wildcard, $DEEP_IMPORTS deep"
+echo ""
+echo "📁 Full report: $REPORT_DIR/PERFORMANCE_SUMMARY.md"
+echo ""

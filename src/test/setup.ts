@@ -18,57 +18,6 @@ import '@testing-library/jest-dom';
 import { cleanup } from '@testing-library/react';
 import { afterEach, vi } from 'vitest';
 
-import fs from 'node:fs';
-import path from 'node:path';
-
-// Interdit `process.exit()` dans les tests : ça termine Vitest prématurément et empêche
-// la génération des rapports (notamment couverture). On préfère un crash explicite avec stack.
-if (typeof process !== 'undefined' && typeof process.exit === 'function') {
-  const originalExit = process.exit.bind(process);
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (globalThis as any).__TITANE_ORIGINAL_PROCESS_EXIT__ ??= originalExit;
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (process as any).exit = (code?: number) => {
-    throw new Error(
-      `process.exit(${code ?? 'undefined'}) was called during Vitest execution (forbidden)`
-    );
-  };
-}
-
-// Empêche la suppression du dossier coverage pendant l'exécution des tests.
-// Sinon, le provider v8 peut échouer en écrivant les fragments `.tmp/coverage-*.json`.
-(() => {
-  const coverageRoot = path.join(process.cwd(), 'coverage');
-
-  const ensureNotCoveragePath = (target: unknown, op: string) => {
-    const value = typeof target === 'string' ? target : String(target ?? '');
-    if (value.includes(coverageRoot)) {
-      throw new Error(
-        `Forbidden filesystem operation (${op}) on coverage path: ${value}`
-      );
-    }
-  };
-
-  const wrapSync = <T extends (...args: any[]) => any>(op: string, fn: T): T => {
-    return ((...args: any[]) => {
-      ensureNotCoveragePath(args[0], op);
-      return fn(...args);
-    }) as T;
-  };
-
-  if (typeof (fs as any).rmSync === 'function') {
-    (fs as any).rmSync = wrapSync('fs.rmSync', (fs as any).rmSync);
-  }
-  if (typeof (fs as any).rmdirSync === 'function') {
-    (fs as any).rmdirSync = wrapSync('fs.rmdirSync', (fs as any).rmdirSync);
-  }
-  if (typeof (fs as any).unlinkSync === 'function') {
-    (fs as any).unlinkSync = wrapSync('fs.unlinkSync', (fs as any).unlinkSync);
-  }
-})();
-
 type MockResponseInit = {
   status?: number;
   headers?: Record<string, string>;
@@ -331,20 +280,12 @@ const handleTauriInvoke = async (
       return `mock_${Date.now()}`;
     case 'add_timeline_event': {
       const eventId = `timeline-${timelineEvents.length}`;
-      const raw = payload?.event;
-      const rawEventType =
-        typeof raw?.event_type === 'string'
-          ? raw.event_type
-          : typeof raw?.type === 'string'
-            ? raw.type
-            : 'generic';
       const event = {
         id: eventId,
-        type: rawEventType,
+        type: payload?.event?.type ?? 'generic',
         description: payload?.event?.description ?? 'timeline_event',
         metadata: payload?.event?.metadata,
-        data: payload?.event?.data,
-        timestamp: payload?.event?.timestamp ?? new Date().toISOString(),
+        timestamp: new Date().toISOString(),
       };
       timelineEvents.push(event);
       return { id: eventId, ...event };
@@ -352,35 +293,16 @@ const handleTauriInvoke = async (
     case 'secure_list_files':
       return clone(storedFiles);
     case 'store_file': {
-      // Support legacy payload shape: { file: { name, category, content, metadata } }
-      const legacyFile = payload?.file;
-
-      // Support current payload shape: { path, category, content }
-      const path = typeof payload?.path === 'string' ? payload.path : undefined;
-      const category =
-        typeof payload?.category === 'string' ? payload.category : undefined;
-      const content = typeof payload?.content === 'string' ? payload.content : undefined;
-
-      const normalized = legacyFile?.name
-        ? {
-            name: legacyFile.name,
-            category: legacyFile.category ?? 'general',
-            content: legacyFile.content ?? '',
-            metadata: legacyFile.metadata,
-          }
-        : path
-          ? {
-              name: path,
-              category: category ?? 'general',
-              content: content ?? '',
-              metadata: undefined,
-            }
-          : null;
-
-      if (normalized?.name) {
+      const file = payload?.file;
+      if (file?.name) {
         storedFiles = [
-          ...storedFiles.filter(f => f.name !== normalized.name),
-          normalized,
+          ...storedFiles.filter(f => f.name !== file.name),
+          {
+            name: file.name,
+            category: file.category ?? 'general',
+            content: file.content ?? '',
+            metadata: file.metadata,
+          },
         ];
       }
       memoryStatsState.totalEntries += 1;
@@ -392,76 +314,16 @@ const handleTauriInvoke = async (
     }
     case 'memory_get_active_projects':
       return clone(memoryProjects);
-    case 'detect_file_format': {
-      const filePath = String(payload?.file_path ?? payload?.filePath ?? '');
-      const lower = filePath.toLowerCase();
-      if (lower.endsWith('.json')) return 'JSON';
-      if (lower.endsWith('.md') || lower.endsWith('.markdown')) return 'Markdown';
-      if (lower.endsWith('.txt')) return 'PlainText';
-      if (lower.endsWith('.pdf')) return 'PDF';
-      if (lower.endsWith('.docx')) return 'DOCX';
-      return 'Unknown';
-    }
     case 'parse_document': {
-      // Real Tauri API uses { file_path }, but older tests used { content, format }.
-      let content = '';
-
-      const filePath = payload?.file_path ?? payload?.filePath;
-      if (typeof filePath === 'string' && filePath.length > 0) {
-        try {
-          const fs = await import('node:fs/promises');
-          content = await fs.readFile(filePath, 'utf8');
-        } catch {
-          content = '';
-        }
-      } else {
-        content = String(payload?.content ?? '');
-      }
-
-      const firstLine = content.split(/\r?\n/).find(Boolean) ?? 'Untitled';
-      const lower = content.toLowerCase();
-      const categories: string[] = [];
-      if (
-        lower.includes('function') ||
-        lower.includes('class') ||
-        lower.includes('impl')
-      ) {
-        categories.push('code');
-      }
-      if (lower.includes('config') || lower.includes('settings')) {
-        categories.push('configuration');
-      }
-      if (lower.includes('bug') || lower.includes('fix')) {
-        categories.push('development');
-      }
-      if (lower.includes('doc') || lower.includes('guide') || lower.includes('readme')) {
-        categories.push('documentation');
-      }
-      if (categories.length === 0) categories.push('general');
-
-      const format = await handleTauriInvoke('detect_file_format', {
-        file_path: payload?.file_path ?? payload?.filePath ?? '',
-      });
-
+      const content = String(payload?.content ?? '');
+      const sections = content
+        .split(/\n+/)
+        .map((line: string) => line.trim())
+        .filter(Boolean);
       return {
-        id: `doc_${Date.now()}`,
-        title:
-          String(firstLine)
-            .replace(/^#+\s*/, '')
-            .trim() || 'Untitled',
-        content,
-        format,
-        metadata: {
-          author: null,
-          created: null,
-          modified: null,
-          size_bytes: content.length,
-          language: 'en',
-          keywords: [],
-        },
-        categories,
-        confidence: 0.9,
-        timestamp: Date.now(),
+        format: payload?.format ?? 'text',
+        sections,
+        tokens: content.length,
       };
     }
     case 'memory_get_state':
@@ -652,32 +514,19 @@ const handleTauriInvoke = async (
         provider: 'mock',
         suggestions: ['Continuer'],
       };
-    case 'create_new_conversation':
-      return `mock-conv-${Date.now()}`;
     case 'conversation_generate': {
-      const envelope = (payload ?? {}) as {
-        request?: { conversation_id?: string; config?: { provider?: string } };
-        conversation_id?: string;
-        provider?: string;
-      };
-      const conversationId =
-        envelope.request?.conversation_id ??
-        envelope.conversation_id ??
-        'mock-conversation';
-      const provider = envelope.request?.config?.provider ?? envelope.provider ?? 'mock';
+      const payload = (args ?? {}) as { conversation_id?: string; provider?: string };
       return {
         content: 'Réponse mock TITANE∞',
-        conversationId,
+        conversationId: payload.conversation_id ?? 'mock-conversation',
         messageId: 'mock-message',
         frenchMasteryApplied: true,
         latencyMs: 5,
         metadata: {
-          provider,
+          provider: payload.provider ?? 'mock',
         },
       };
     }
-    case 'experience_update_state':
-      return { updated: true };
     case 'get_gemini_key_status':
     case 'get_openai_key_status':
     case 'get_anthropic_key_status':
@@ -685,35 +534,6 @@ const handleTauriInvoke = async (
         ok: true,
         data: { configured: false },
       };
-    case 'get_copilot_key_status':
-      return {
-        configured: false,
-        status: 'missing',
-        message: null,
-      };
-    case 'selfheal_get_vitals':
-      return {
-        timestamp: Date.now(),
-        cpu_usage: 5,
-        memory_usage: 20,
-        fps: 60,
-        webview_responsive: true,
-        tauri_backend_alive: true,
-        ollama_available: false,
-        gemini_available: false,
-        tts_available: false,
-        memory_integrity: 100,
-        active_errors: 0,
-        queue_size: 0,
-      };
-    case 'selfheal_load_profile':
-      return {};
-    case 'selfheal_save_profile':
-      return null;
-    case 'selfheal_clear_cache':
-      return { ok: true };
-    case 'selfheal_reset_state':
-      return { ok: true };
     case 'chat_get_providers_status':
       return {
         gemini: { healthy: true, latency_ms: 320 },
@@ -733,24 +553,7 @@ const handleTauriInvoke = async (
   }
 };
 
-// NOTE: `vi.mock()` factories are hoisted by Vitest.
-// Any variables they reference must be created via `vi.hoisted()`.
-// Use `var` to avoid TDZ issues when Vitest hoists `vi.mock()` above declarations.
-// The `vi.hoisted()` callback runs before mock factories, so these assignments are safe.
-// eslint-disable-next-line no-var
-var invokeMock: ReturnType<typeof vi.fn>;
-// eslint-disable-next-line no-var
-var tauriEventListenMock: ReturnType<typeof vi.fn>;
-// eslint-disable-next-line no-var
-var tauriEventEmitMock: ReturnType<typeof vi.fn>;
-
-vi.hoisted(() => {
-  invokeMock = vi.fn();
-  tauriEventListenMock = vi.fn();
-  tauriEventEmitMock = vi.fn();
-});
-
-invokeMock.mockImplementation(handleTauriInvoke);
+const invokeMock = vi.fn(handleTauriInvoke);
 
 // Mock Tauri API (évite erreurs "window.__TAURI__ undefined")
 interface MockWindow extends Window {
@@ -767,8 +570,8 @@ global.window = global.window || ({} as MockWindow);
 (global.window as MockWindow).__TAURI__ = {
   invoke: invokeMock,
   event: {
-    listen: tauriEventListenMock,
-    emit: tauriEventEmitMock,
+    listen: vi.fn(),
+    emit: vi.fn(),
   },
   tauri: {
     invoke: invokeMock,
@@ -781,8 +584,6 @@ afterEach(() => {
   resetMockTauriState();
   invokeMock.mockClear();
   invokeMock.mockImplementation(handleTauriInvoke);
-  tauriEventListenMock.mockClear();
-  tauriEventEmitMock.mockClear();
 });
 
 // Mock @tauri-apps/api
@@ -791,6 +592,6 @@ vi.mock('@tauri-apps/api/core', () => ({
 }));
 
 vi.mock('@tauri-apps/api/event', () => ({
-  listen: tauriEventListenMock,
-  emit: tauriEventEmitMock,
+  listen: vi.fn(),
+  emit: vi.fn(),
 }));

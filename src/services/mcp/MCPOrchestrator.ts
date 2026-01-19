@@ -46,7 +46,6 @@ import {
   JobPriority,
   MemoryTier,
 } from './mcp.types';
-import { logger } from '@/utils/logger';
 
 type CompletedJob = Job & { execution: Job['execution'] & { completedAt: number } };
 
@@ -177,15 +176,15 @@ class MCPOrchestratorClass implements MCPOperations {
   // ─────────────────────────────────────────────────────────────────────────
 
   private log(message: string, ...args: unknown[]) {
-    logger.debug(`[MCP OS v1.1] ${message}`, ...args);
+    console.log(`[MCP OS v1.1] ${message}`, ...args);
   }
 
   private warn(message: string, ...args: unknown[]) {
-    logger.warn(`[MCP OS v1.1] ⚠️ ${message}`, ...args);
+    console.warn(`[MCP OS v1.1] ⚠️ ${message}`, ...args);
   }
 
   private error(message: string, ...args: unknown[]) {
-    logger.error(`[MCP OS v1.1] 💥 ${message}`, ...args);
+    console.error(`[MCP OS v1.1] 💥 ${message}`, ...args);
   }
 
   // ─────────────────────────────────────────────────────────────────────────

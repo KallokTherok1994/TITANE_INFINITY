@@ -33,7 +33,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { SingularityBridge } from '@/services/singularityBridge';
 import type { SingularityState } from '@/types/singularityState';
-import { logger } from '@/utils/logger';
 
 const SINGULARITY_STORAGE_KEY = 'singularity-storage';
 
@@ -78,7 +77,7 @@ function readPersistedLegacyState(): SingularityLegacyState {
       enginesData: rawState.enginesData ?? {},
     };
   } catch (error) {
-    logger.warn('Failed to parse persisted state:', error);
+    console.warn('[useSingularityStore] Failed to parse persisted state:', error);
     return { ...DEFAULT_LEGACY_STATE };
   }
 }
@@ -101,7 +100,7 @@ const notifyLegacySubscribers = () => {
     try {
       listener(legacyState);
     } catch (error) {
-      logger.error('Legacy subscriber error:', error);
+      console.error('[useSingularityStore] Legacy subscriber error:', error);
     }
   });
 };
@@ -123,7 +122,7 @@ function persistLegacyState(nextState: SingularityLegacyState): void {
         })
       );
     } catch (error) {
-      logger.warn('Failed to persist Singularity state:', error);
+      console.warn('[useSingularityStore] Failed to persist Singularity state:', error);
     }
   }
 
@@ -364,7 +363,7 @@ function useSingularitySelector<T>(
           forceUpdate({}); // Trigger re-render
         }
       } catch (error) {
-        logger.error('Selector error:', error);
+        console.error('[useSingularityStore] Selector error:', error);
       }
     },
     [equalityFn]

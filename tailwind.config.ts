@@ -13,7 +13,6 @@ import type { Config } from 'tailwindcss';
 const config: Config = {
   content: [
     './index.html',
-    './src/index.css',
     './src/**/*.{js,ts,jsx,tsx}',
     './src/pages/**/*.{js,ts,jsx,tsx}',
     './src/features/**/*.{js,ts,jsx,tsx}',

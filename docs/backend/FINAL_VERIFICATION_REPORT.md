@@ -5,9 +5,6 @@
 **Audit Phase:** Complete  
 **Verification Status:** ⚠️ **Issues Detected**
 
-> NOTE (gouvernance): document historique (v26.2.0). Runtime actuel: v26.3.0.
-> Production: EN ATTENTE (autorisation explicite requise).
-
 ---
 
 ## Executive Summary
@@ -369,7 +366,7 @@ export class VisualConductor extends EventEmitter {
 
 ### Overall Assessment
 
-**Documentation Phase:** ✅ **EXCELLENT** - All deliverables complete and tech-ready (dev)
+**Documentation Phase:** ✅ **EXCELLENT** - All deliverables complete and production-ready
 
 **Environment Phase:** ⚠️ **NEEDS ATTENTION** - Dependencies installed, but TypeScript errors must be resolved before proceeding
 

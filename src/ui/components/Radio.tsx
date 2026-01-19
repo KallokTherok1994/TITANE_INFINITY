@@ -1,14 +1,13 @@
 /**
- * TITANE∞ v26.4.0 — Proprietary License
+ * TITANE∞ v15 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v26.4.0 - Radio Component with Performance Optimizations
-import React, { useState, useCallback, useMemo, useId, memo } from 'react';
-import { clsx } from 'clsx';
+// TITANE∞ v15 - Radio Component - Design System
+import React, { useState } from 'react';
 import './Radio.css';
 
 interface RadioProps {
@@ -23,11 +22,7 @@ interface RadioProps {
   className?: string;
 }
 
-/**
- * Radio component for single selection.
- * Memoized for optimal re-render performance.
- */
-export const Radio = memo(function Radio({
+export const Radio = ({
   value,
   checked: controlledChecked,
   defaultChecked = false,
@@ -36,40 +31,38 @@ export const Radio = memo(function Radio({
   size = 'md',
   label,
   name,
-  className,
-}: RadioProps) {
+  className = '',
+}: RadioProps) => {
   const [internalChecked, setInternalChecked] = useState(defaultChecked);
-  const radioId = useId();
 
   const isControlled = controlledChecked !== undefined;
   const checked = isControlled ? controlledChecked : internalChecked;
 
-  const handleChange = useCallback(() => {
-    if (disabled) return;
+  const handleChange = () => {
+    if (disabled) {
+      return;
+    }
 
     if (!isControlled) {
       setInternalChecked(true);
     }
 
     onChange?.(value);
-  }, [disabled, isControlled, onChange, value]);
+  };
 
-  const classes = useMemo(
-    () =>
-      clsx(
-        'radio',
-        `radio--${size}`,
-        checked && 'radio--checked',
-        disabled && 'radio--disabled',
-        className
-      ),
-    [size, checked, disabled, className]
-  );
+  const classes = [
+    'radio',
+    `radio--${size}`,
+    checked && 'radio--checked',
+    disabled && 'radio--disabled',
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
-    <label className={classes} htmlFor={radioId}>
+    <label className={classes}>
       <input
-        id={radioId}
         type="radio"
         className="radio__input"
         value={value}
@@ -84,7 +77,7 @@ export const Radio = memo(function Radio({
       {label && <span className="radio__label">{label}</span>}
     </label>
   );
-});
+};
 
 // RadioGroup pour gérer plusieurs radios
 interface RadioGroupProps {
@@ -98,11 +91,7 @@ interface RadioGroupProps {
   className?: string;
 }
 
-/**
- * RadioGroup component for managing multiple radio buttons.
- * Memoized for optimal re-render performance.
- */
-export const RadioGroup = memo(function RadioGroup({
+export const RadioGroup = ({
   value: controlledValue,
   defaultValue = '',
   onChange,
@@ -110,27 +99,22 @@ export const RadioGroup = memo(function RadioGroup({
   disabled = false,
   size = 'md',
   children,
-  className,
-}: RadioGroupProps) {
+  className = '',
+}: RadioGroupProps) => {
   const [internalValue, setInternalValue] = useState(defaultValue);
 
   const isControlled = controlledValue !== undefined;
   const currentValue = isControlled ? controlledValue : internalValue;
 
-  const handleChange = useCallback(
-    (newValue: string) => {
-      if (!isControlled) {
-        setInternalValue(newValue);
-      }
-      onChange?.(newValue);
-    },
-    [isControlled, onChange]
-  );
-
-  const classes = useMemo(() => clsx('radio-group', className), [className]);
+  const handleChange = (newValue: string) => {
+    if (!isControlled) {
+      setInternalValue(newValue);
+    }
+    onChange?.(newValue);
+  };
 
   return (
-    <div className={classes} role="radiogroup">
+    <div className={`radio-group ${className}`} role="radiogroup">
       {React.Children.map(children, child => {
         if (React.isValidElement<RadioProps>(child) && child.type === Radio) {
           return React.cloneElement(child, {
@@ -145,4 +129,4 @@ export const RadioGroup = memo(function RadioGroup({
       })}
     </div>
   );
-});
+};

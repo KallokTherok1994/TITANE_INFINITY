@@ -45,8 +45,9 @@ pub fn process_message(text: &str) -> String {
 ```
 
 **Searchable patterns in codebase to optimize:**
+
 ```
-- Text processing in `commands/` 
+- Text processing in `commands/`
 - Message serialization in `chat_engine`
 - Response building in `conversation_engine`
 ```
@@ -71,7 +72,7 @@ use lazy_static::lazy_static;
 use regex::Regex;
 
 lazy_static! {
-    static ref EMAIL_RE: Regex = 
+    static ref EMAIL_RE: Regex =
         Regex::new(r"^[^@]+@[^@]+\.[^@]+$").unwrap();
 }
 
@@ -92,6 +93,7 @@ pub fn validate_email(email: &str) -> bool {
 ```
 
 **Searchable patterns:**
+
 ```
 - grep -r "Regex::new" src-tauri/src/
   Expected: 5-10 instances to optimize
@@ -188,6 +190,7 @@ struct Response {
 ## 📋 IMPLEMENTATION ROADMAP
 
 ### Step 1: String Allocation (30 min - HIGHEST PRIORITY)
+
 ```bash
 # Task: Replace String allocations with &str where possible
 cd src-tauri/src
@@ -200,11 +203,13 @@ grep -n ".clone()" chat_engine/*.rs | head -20
 ```
 
 **Checklist:**
+
 - [ ] Identify 5-10 string clone hotspots
 - [ ] Replace with &str references
 - [ ] Measure benchmark: should see -30-50ms
 
 ### Step 2: Regex Caching (20 min - HIGH PRIORITY)
+
 ```bash
 # Find all regex compilations
 grep -rn "Regex::new" src-tauri/src/
@@ -217,11 +222,13 @@ grep -rn "Regex::new" src-tauri/src/
 ```
 
 **Checklist:**
+
 - [ ] Find all `Regex::new()` calls
 - [ ] Cache top 3-5 regexes
 - [ ] Measure benchmark: should see -20-40ms
 
 ### Step 3: Connection Pooling (if applicable) (30 min - MEDIUM)
+
 ```bash
 # Check if using SQLite with new connections per request
 grep -rn "create_db_connection\|SqliteConn::new" src-tauri/src/
@@ -233,11 +240,13 @@ grep -rn "create_db_connection\|SqliteConn::new" src-tauri/src/
 ```
 
 **Checklist:**
+
 - [ ] Audit database connection patterns
 - [ ] Implement connection pooling if applicable
 - [ ] Measure benchmark
 
 ### Step 4: Async Optimization (20 min - MEDIUM)
+
 ```bash
 # Find blocking operations
 grep -rn "expensive_computation\|heavy_operation" src-tauri/src/
@@ -246,11 +255,13 @@ grep -rn "expensive_computation\|heavy_operation" src-tauri/src/
 ```
 
 **Checklist:**
+
 - [ ] Find blocking operations
 - [ ] Wrap with `task::spawn_blocking`
 - [ ] Measure benchmark
 
 ### Step 5: Deserialization Optimization (15 min - LOW)
+
 ```bash
 # Check serde features in Cargo.toml
 grep "serde_json" src-tauri/Cargo.toml
@@ -259,6 +270,7 @@ grep "serde_json" src-tauri/Cargo.toml
 ```
 
 **Checklist:**
+
 - [ ] Add `raw_value` feature to serde_json
 - [ ] Use RawValue for large payloads
 - [ ] Measure benchmark
@@ -283,6 +295,7 @@ cargo build --release
 ```
 
 **Expected cumulative gains:**
+
 ```
 Baseline:          2.001s
 After string opt:  1.950s (-0.05s, -2.5%)
@@ -346,4 +359,3 @@ pub fn format_response(msg: &str) -> String {
 ---
 
 **Awaiting confirmation to begin Rust optimization sprint**
-

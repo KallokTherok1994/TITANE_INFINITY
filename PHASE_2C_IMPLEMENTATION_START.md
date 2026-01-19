@@ -11,12 +11,12 @@
 
 **Hotspots Identified:**
 
-| File | Line | Pattern | Impact | Priority |
-|------|------|---------|--------|----------|
-| chat_engine/streaming.rs | 18-35 | `String::from_utf8_lossy().to_string()` | High | 🔴 P1 |
-| tts/mod.rs | 52-80 | `trimmed.to_string()` in loop | Medium | 🟠 P2 |
-| commands/chat.rs | 31-45 | String literals allocated | Medium | 🟠 P2 |
-| mock_commands.rs | 1100+ | Redundant `.to_string()` | Low | 🟡 P3 |
+| File                     | Line  | Pattern                                 | Impact | Priority |
+| ------------------------ | ----- | --------------------------------------- | ------ | -------- |
+| chat_engine/streaming.rs | 18-35 | `String::from_utf8_lossy().to_string()` | High   | 🔴 P1    |
+| tts/mod.rs               | 52-80 | `trimmed.to_string()` in loop           | Medium | 🟠 P2    |
+| commands/chat.rs         | 31-45 | String literals allocated               | Medium | 🟠 P2    |
+| mock_commands.rs         | 1100+ | Redundant `.to_string()`                | Low    | 🟡 P3    |
 
 **Status:** 🟡 READY TO IMPLEMENT
 
@@ -25,8 +25,9 @@
 ### Opportunity 2: Regex Caching (MEDIUM IMPACT: -40ms)
 
 **Files to check:**
+
 - commands/ai_chat.rs
-- conversation_engine/*
+- conversation_engine/\*
 - validation modules
 
 **Status:** ⏳ SCANNING
@@ -36,6 +37,7 @@
 ### Opportunity 3: Connection Pooling (MEDIUM IMPACT: -50ms)
 
 **Files to check:**
+
 - memory/pool.rs (already optimized ✅)
 - Database connection patterns
 
@@ -46,6 +48,7 @@
 ### Opportunity 4: Async Optimization (MEDIUM IMPACT: -30ms)
 
 **Files to check:**
+
 - commands/ai_chat.rs
 - overdrive/chat_orchestrator.rs
 
@@ -56,6 +59,7 @@
 ### Opportunity 5: Serde Optimization (LOW-MEDIUM IMPACT: -20ms)
 
 **Files to check:**
+
 - types/memory_chat.rs
 - chat_engine/types.rs
 
@@ -70,6 +74,7 @@
 **Target File 1:** [chat_engine/streaming.rs](src-tauri/src/chat_engine/streaming.rs#L18-L35)
 
 **Current Code (Line 18-35):**
+
 ```rust
 pub fn chunk_text(
     text: &str,
@@ -91,6 +96,7 @@ pub fn chunk_text(
 ```
 
 **Optimization Strategy:**
+
 - Use `.to_owned()` instead of `.to_string()` for &str
 - Pre-allocate String capacity
 - Use Cow<str> for optional allocations
@@ -102,6 +108,7 @@ pub fn chunk_text(
 **Target File 2:** [tts/mod.rs](src-tauri/src/tts/mod.rs#L74-L90)
 
 **Current Code (Loop allocation):**
+
 ```rust
 pub fn split_into_chunks(text: &str, max_chars: usize) -> Vec<String> {
     // ...
@@ -119,6 +126,7 @@ pub fn split_into_chunks(text: &str, max_chars: usize) -> Vec<String> {
 ```
 
 **Optimization Strategy:**
+
 - Pre-allocate chunks capacity
 - Use Cow<str> for chunk management
 - Reduce allocations in loop
@@ -135,7 +143,6 @@ pub fn split_into_chunks(text: &str, max_chars: usize) -> Vec<String> {
   - [ ] Replace `.to_string()` with `.to_owned()` on &str
   - [ ] Pre-allocate StreamChunk vectors
   - [ ] Test chunk_text() function
-  
 - [ ] Optimize tts/mod.rs
   - [ ] Pre-allocate chunks vector
   - [ ] Use Cow<str> for optimization
@@ -156,6 +163,7 @@ pub fn split_into_chunks(text: &str, max_chars: usize) -> Vec<String> {
 ## 🚀 EXECUTION STEPS (In Order)
 
 ### STEP 1A: Fix chat_engine/streaming.rs
+
 ```bash
 cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
 
@@ -171,6 +179,7 @@ time ./target/release/titane_api --benchmark
 ```
 
 ### STEP 1B: Fix tts/mod.rs
+
 ```bash
 # 1. Read current implementation
 cat src-tauri/src/tts/mod.rs | grep -A 30 "pub fn split_into_chunks"
@@ -184,6 +193,7 @@ cargo test tts::
 ```
 
 ### STEP 1C: Commit Phase 2C-1
+
 ```bash
 git add -A
 git commit -m "perf(rust): optimize string allocations (-15ms estimated)"
@@ -198,6 +208,7 @@ git push origin MAIN
 ## 📊 SUCCESS METRICS
 
 **Phase 2C-1 Complete when:**
+
 - [ ] String allocations optimized
 - [ ] Build succeeds without warnings
 - [ ] Benchmarks show < 1.99s (vs 2.001s baseline)
@@ -219,4 +230,3 @@ git push origin MAIN
 **Status: 🟡 READY FOR STRING ALLOCATION OPTIMIZATION**
 
 Next: Execute Step 1A (fix chat_engine/streaming.rs)
-

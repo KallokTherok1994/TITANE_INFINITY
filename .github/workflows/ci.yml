@@ -2,9 +2,9 @@ name: CI Tests
 
 on:
   pull_request:
-    branches: [ MAIN ]
+    branches: [MAIN]
   push:
-    branches: [ MAIN ]
+    branches: [MAIN]
 
 env:
   CARGO_TERM_COLOR: always
@@ -13,26 +13,26 @@ jobs:
   test:
     name: Run Tests
     runs-on: ubuntu-22.04
-    
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
           version: 8
-          
+
       - name: Setup Rust
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           toolchain: stable
-          
+
       - name: Install Dependencies (System)
         run: |
           sudo apt-get update
@@ -42,34 +42,34 @@ jobs:
             librsvg2-dev \
             patchelf \
             libssl-dev
-            
+
       - name: Install Dependencies (Node)
         run: pnpm install
-        
+
       - name: Lint Check
         run: |
           pnpm run lint || true
           pnpm run check || true
-          
+
       - name: TypeScript Check
         run: pnpm run type-check || true
-        
+
       - name: Unit Tests
         run: pnpm test
-        
+
       - name: Rust Tests
         run: pnpm test:rust
-        
+
       - name: E2E Tests (if available)
         run: pnpm test:e2e || true
         continue-on-error: true
-        
+
       - name: Test Summary
         if: always()
         run: |
           echo "## Test Results" >> $GITHUB_STEP_SUMMARY
           echo "✅ Tests completed" >> $GITHUB_STEP_SUMMARY
-          
+
       - name: Performance Baseline Check (PR only)
         if: github.event_name == 'pull_request'
         run: |

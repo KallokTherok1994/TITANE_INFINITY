@@ -13,7 +13,6 @@
  */
 
 import type { TimeState, DaySegment, DayProfile } from './types';
-import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════
 // CONSTANTES — Segments par défaut (monochrome TITANE)
@@ -203,10 +202,10 @@ export class TimeEngine {
    * Initialise le TimeEngine et démarre le tick interne
    */
   init(): void {
-    logger.debug('⏰ Initialisation...');
+    console.log('[TimeEngine] ⏰ Initialisation...');
     this.updateCurrentDateTime();
     this.startTick();
-    logger.debug('✅ Initialisé:', {
+    console.log('[TimeEngine] ✅ Initialisé:', {
       timeZone: this.state.timeZone,
       currentSegment: this.state.currentSegment?.label,
       isWorkDay: this.state.isWorkDay,
@@ -218,7 +217,7 @@ export class TimeEngine {
    * Arrête le TimeEngine
    */
   destroy(): void {
-    logger.debug('🛑 Arrêt...');
+    console.log('[TimeEngine] 🛑 Arrêt...');
     this.stopTick();
     this.listeners.clear();
   }
@@ -237,7 +236,7 @@ export class TimeEngine {
       this.syncTick();
     }, this.tickRate);
 
-    logger.debug(`[TimeEngine] ⚙️ Tick démarré (${this.tickRate}ms)`);
+    console.log(`[TimeEngine] ⚙️ Tick démarré (${this.tickRate}ms)`);
   }
 
   /**
@@ -247,7 +246,7 @@ export class TimeEngine {
     if (this.tickInterval) {
       clearInterval(this.tickInterval);
       this.tickInterval = null;
-      logger.debug('⏹️ Tick arrêté');
+      console.log('[TimeEngine] ⏹️ Tick arrêté');
     }
   }
 
@@ -262,8 +261,8 @@ export class TimeEngine {
 
     // Notifier si changement de segment
     if (previousSegment?.id !== this.state.currentSegment?.id) {
-      logger.debug(
-        '🔄 Changement de segment:',
+      console.log(
+        '[TimeEngine] 🔄 Changement de segment:',
         previousSegment?.label,
         '→',
         this.state.currentSegment?.label
@@ -272,7 +271,10 @@ export class TimeEngine {
 
     // Notifier si changement heures de travail
     if (previousIsWorkHours !== this.state.isWorkHours) {
-      logger.debug('💼 Heures de travail:', this.state.isWorkHours ? 'DÉBUT' : 'FIN');
+      console.log(
+        '[TimeEngine] 💼 Heures de travail:',
+        this.state.isWorkHours ? 'DÉBUT' : 'FIN'
+      );
     }
   }
 
@@ -478,7 +480,7 @@ export class TimeEngine {
       try {
         listener(state);
       } catch (error) {
-        logger.error('Erreur listener:', error);
+        console.error('[TimeEngine] Erreur listener:', error);
       }
     });
   }

@@ -11,56 +11,12 @@ import { safeInvokeTauri } from './utils/tauriProtector';
 
 declare global {
   interface Window {
-    safeInvokeTauri?: typeof safeInvokeTauri;
-    __TITANE_BOOT_DIAGNOSTICS__?: {
-      lastScriptError?: {
-        url?: string;
-        message?: string;
-        timestamp?: number;
-      };
-    };
+    safeInvokeTauri: typeof safeInvokeTauri;
   }
 }
 
 // Protection globale - remplace window.__TAURI__ si défaillant
 if (typeof window !== 'undefined') {
-  // DIAGNOSTIC: Capturer les erreurs de script pour identifier le module qui échoue
-  window.addEventListener(
-    'error',
-    event => {
-      // Capturer spécifiquement les erreurs de script
-      if (event.target && event.target instanceof HTMLScriptElement) {
-        const scriptError = {
-          url: event.target.src || 'unknown',
-          message: event.message || 'Script error',
-          timestamp: Date.now(),
-          filename: event.filename,
-          lineno: event.lineno,
-          colno: event.colno,
-        };
-
-        console.error('🚨 [SCRIPT-ERROR] Script failed to load:', scriptError);
-
-        // Store pour diagnostic
-        window.__TITANE_BOOT_DIAGNOSTICS__ = window.__TITANE_BOOT_DIAGNOSTICS__ || {};
-        window.__TITANE_BOOT_DIAGNOSTICS__.lastScriptError = scriptError;
-      }
-
-      // Log pour erreurs "Importing a module script failed"
-      if (event.message?.includes('Importing a module script failed')) {
-        console.error('🚨 [MODULE-SCRIPT-ERROR] Détails:', {
-          message: event.message,
-          filename: event.filename,
-          lineno: event.lineno,
-          colno: event.colno,
-          source: event.filename || 'unknown',
-          timestamp: new Date().toISOString(),
-        });
-      }
-    },
-    true
-  );
-
   // Ne pas masquer les erreurs en production: on veut de la visibilité pour diagnostiquer.
   // En DEV uniquement, on peut filtrer certains bruits liés à l'invoke.
   if (import.meta.env.DEV) {
@@ -68,13 +24,6 @@ if (typeof window !== 'undefined') {
 
     console.error = (...args) => {
       const message = args.join(' ');
-
-      // Log spécifique pour diagnostic
-      if (message.includes('Importing a module script failed')) {
-        originalConsoleError('🚨 [TAURI-PATCH] Module script error detected:', ...args);
-        return;
-      }
-
       if (message.includes('Cannot read properties') && message.includes('invoke')) {
         console.warn('🛡️ [TauriProtector] Caught invoke error - using fallback');
         return;

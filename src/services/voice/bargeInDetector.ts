@@ -12,7 +12,6 @@
  */
 
 import { antiEchoShield } from './antiEchoShield';
-import { logger } from '@/utils/logger';
 
 /**
  * Types d'événements d'interruption
@@ -92,7 +91,7 @@ export class BargeInDetector {
       confidenceThreshold: config.confidenceThreshold ?? 0.6,
     };
 
-    logger.debug('🎤 Initialized:', this.config);
+    console.log('[BargeInDetector] 🎤 Initialized:', this.config);
   }
 
   /**
@@ -108,9 +107,9 @@ export class BargeInDetector {
       const source = this.audioContext.createMediaStreamSource(mediaStream);
       source.connect(this.analyser);
 
-      logger.debug('✅ Audio analysis ready');
+      console.log('[BargeInDetector] ✅ Audio analysis ready');
     } catch (error) {
-      logger.error('Initialization failed:', error);
+      console.error('[BargeInDetector] Initialization failed:', error);
       throw error;
     }
   }
@@ -120,12 +119,12 @@ export class BargeInDetector {
    */
   registerTTSFingerprint(audioData: Float32Array): void {
     if (!this.audioContext) {
-      logger.warn('AudioContext not initialized');
+      console.warn('[BargeInDetector] AudioContext not initialized');
       return;
     }
 
     this.ttsFingerprint = this.extractSpectrum(audioData);
-    logger.debug('📊 TTS fingerprint registered');
+    console.log('[BargeInDetector] 📊 TTS fingerprint registered');
   }
 
   /**
@@ -134,7 +133,7 @@ export class BargeInDetector {
    */
   detectInterrupt(audioChunk: Float32Array): BargeInEvent | null {
     if (!this.analyser) {
-      logger.warn('Analyser not initialized');
+      console.warn('[BargeInDetector] Analyser not initialized');
       return null;
     }
 
@@ -250,7 +249,7 @@ export class BargeInDetector {
       return;
     }
 
-    logger.debug(
+    console.log(
       `[BargeInDetector] 🚨 ${event.type} detected (confidence: ${event.confidence.toFixed(2)})`
     );
 
@@ -258,7 +257,7 @@ export class BargeInDetector {
       try {
         listener(event);
       } catch (error) {
-        logger.error('Listener error:', error);
+        console.error('[BargeInDetector] Listener error:', error);
       }
     });
   }
@@ -386,7 +385,7 @@ export class BargeInDetector {
     }
     this.analyser = null;
     this.listeners.clear();
-    logger.debug('🔌 Destroyed');
+    console.log('[BargeInDetector] 🔌 Destroyed');
   }
 }
 

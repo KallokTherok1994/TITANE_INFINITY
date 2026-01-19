@@ -227,7 +227,7 @@ This report documents the branch merge verification process.
 ## Branches Status
 
 ### MAIN
-- Status: ✅ tech-ready (dev); production en attente d’autorisation
+- Status: ✅ Production ready
 - Latest commit: Latest stable runtime
 - Action: None required (base branch)
 

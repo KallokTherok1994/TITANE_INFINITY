@@ -17,7 +17,6 @@ import { hybridTTS } from '@/services/tts/hybridTTS';
 import { emotionalTTS } from './emotionalTTS';
 import { attentionEngine } from './attentionEngine';
 import { wakeWordEngine, type WakeWordEvent } from './wakeWordEngine';
-import { logger } from '@/utils/logger';
 
 /**
  * Type d'interruption
@@ -72,7 +71,7 @@ export class InterruptionController {
       debounceDelay: config.debounceDelay ?? 500,
     };
 
-    logger.debug('🛑 Initialized:', this.config);
+    console.log('[InterruptionController] 🛑 Initialized:', this.config);
   }
 
   /**
@@ -81,7 +80,7 @@ export class InterruptionController {
   startMonitoring(): void {
     if (!this.config.enabled) return;
 
-    logger.debug('👁️ Started monitoring for interruptions');
+    console.log('[InterruptionController] 👁️ Started monitoring for interruptions');
     this.isSpeaking = true;
     this.currentTranscript = '';
   }
@@ -90,7 +89,7 @@ export class InterruptionController {
    * Arrêter la surveillance
    */
   stopMonitoring(): void {
-    logger.debug('🛑 Stopped monitoring');
+    console.log('[InterruptionController] 🛑 Stopped monitoring');
     this.isSpeaking = false;
     this.currentTranscript = '';
   }
@@ -108,7 +107,7 @@ export class InterruptionController {
     const wakeEvent = wakeWordEngine.detectStreaming(partial);
 
     if (wakeEvent?.detected) {
-      logger.debug('🎯 Wake word detected during TTS!');
+      console.log('[InterruptionController] 🎯 Wake word detected during TTS!');
       this.interrupt('wake_word', wakeEvent);
     }
   }
@@ -119,13 +118,13 @@ export class InterruptionController {
   processFinalTranscript(final: string): void {
     if (!this.isSpeaking || !this.config.enabled) return;
 
-    logger.debug('📝 Final transcript:', final);
+    console.log('[InterruptionController] 📝 Final transcript:', final);
 
     // Détection wake word
     const wakeEvent = wakeWordEngine.detect(final);
 
     if (wakeEvent.detected) {
-      logger.debug('🎯 Wake word confirmed in final transcript!');
+      console.log('[InterruptionController] 🎯 Wake word confirmed in final transcript!');
       this.interrupt('wake_word', wakeEvent);
     }
   }
@@ -134,7 +133,7 @@ export class InterruptionController {
    * Interruption manuelle
    */
   interruptManual(reason?: string): void {
-    logger.debug('✋ Manual interruption:', reason);
+    console.log('[InterruptionController] ✋ Manual interruption:', reason);
     this.interrupt('manual', undefined, reason);
   }
 
@@ -161,7 +160,7 @@ export class InterruptionController {
    */
   setEnabled(enabled: boolean): void {
     this.config.enabled = enabled;
-    logger.debug(
+    console.log(
       `[InterruptionController] ${enabled ? '🔊' : '🔇'} Interruption detection ${enabled ? 'enabled' : 'disabled'}`
     );
   }
@@ -174,7 +173,7 @@ export class InterruptionController {
       ...this.config,
       ...updates,
     };
-    logger.debug('🔧 Config updated:', this.config);
+    console.log('[InterruptionController] 🔧 Config updated:', this.config);
   }
 
   /**
@@ -188,20 +187,20 @@ export class InterruptionController {
     // Debounce
     const now = Date.now();
     if (now - this.lastInterruption < this.config.debounceDelay) {
-      logger.debug('⏱️ Debounced');
+      console.log('[InterruptionController] ⏱️ Debounced');
       return;
     }
     this.lastInterruption = now;
 
-    logger.debug('🛑 Interrupting TTS...');
+    console.log('[InterruptionController] 🛑 Interrupting TTS...');
 
     try {
       // Arrêter tous les TTS
       await Promise.all([hybridTTS.stop(), emotionalTTS.stop()]);
 
-      logger.debug('✅ TTS stopped');
+      console.log('[InterruptionController] ✅ TTS stopped');
     } catch (err) {
-      logger.error('❌ Error stopping TTS:', err);
+      console.error('[InterruptionController] ❌ Error stopping TTS:', err);
     }
 
     // Réinitialiser état
@@ -220,7 +219,7 @@ export class InterruptionController {
       try {
         cb(event);
       } catch (err) {
-        logger.error('Callback error:', err);
+        console.error('[InterruptionController] Callback error:', err);
       }
     });
 

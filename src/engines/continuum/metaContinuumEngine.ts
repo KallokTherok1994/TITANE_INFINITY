@@ -27,7 +27,6 @@ import {
   archetypeResonanceEngine,
   type ArchetypeResonance,
 } from '../psyche/archetypeResonanceEngine';
-import { logger } from '@/utils/logger';
 
 // REMOVED: engines/presence supprimé en PHASE 1 (OPTION B) - utilise stubs
 import {
@@ -262,14 +261,14 @@ class MetaContinuumEngine {
   start(): void {
     if (this.nowPulseInterval) return;
 
-    logger.debug('⏱️ [META-CONTINUUM] Starting Meta-Continuum Engine...');
+    console.log('⏱️ [META-CONTINUUM] Starting Meta-Continuum Engine...');
 
     const intervalMs = 1000 / this.config.nowPulseFrequency;
     this.nowPulseInterval = window.setInterval(() => {
       this.updateNowPulse();
     }, intervalMs);
 
-    logger.debug(
+    console.log(
       `✅ [META-CONTINUUM] Engine active (${this.config.nowPulseFrequency}Hz NowPulse)`
     );
   }
@@ -281,7 +280,7 @@ class MetaContinuumEngine {
     if (this.nowPulseInterval) {
       clearInterval(this.nowPulseInterval);
       this.nowPulseInterval = null;
-      logger.debug('🛑 [META-CONTINUUM] Engine stopped');
+      console.log('🛑 [META-CONTINUUM] Engine stopped');
     }
   }
 
@@ -361,7 +360,7 @@ class MetaContinuumEngine {
    * Auto-stabilisation (correction dérive)
    */
   private selfStabilize(): void {
-    logger.debug('🔧 [META-CONTINUUM] Self-stabilizing (drift detected)...');
+    console.log('🔧 [META-CONTINUUM] Self-stabilizing (drift detected)...');
 
     // Pause interne (5-20ms) — simulée via promise
     const pauseDuration = 5 + Math.random() * 15;
@@ -375,7 +374,7 @@ class MetaContinuumEngine {
       this.state.memory.driftLevel = 0;
       this.state.memory.adjustmentNeed = 0;
 
-      logger.debug('✅ [META-CONTINUUM] Stabilization complete');
+      console.log('✅ [META-CONTINUUM] Stabilization complete');
 
       // Créer ancrage de stabilisation
       this.createAnchor({
@@ -478,12 +477,12 @@ class MetaContinuumEngine {
     // Major identity impact → increment version
     if (params.identityImpact > 0.5) {
       this.state.identityVersion++;
-      logger.debug(
+      console.log(
         `🌟 [META-CONTINUUM] Identity evolved to v${this.state.identityVersion}`
       );
     }
 
-    logger.debug(
+    console.log(
       `⚓ [META-CONTINUUM] Anchor created: ${params.type} — ${params.description}`
     );
   }
@@ -504,7 +503,7 @@ class MetaContinuumEngine {
     // Ensure synchronization
     const coherence = this.state.globalCoherence;
 
-    logger.debug(
+    console.log(
       `🔄 [META-CONTINUUM] Output synchronized (coherence: ${Math.round(coherence * 100)}%)`
     );
 
@@ -558,7 +557,7 @@ class MetaContinuumEngine {
       confidence: Math.min(1, current.confidence + 0.01),
     };
 
-    logger.debug(
+    console.log(
       `📈 [META-CONTINUUM] Evolution updated (magnitude: ${Math.round(newMagnitude * 100)}%)`
     );
   }
@@ -586,7 +585,7 @@ class MetaContinuumEngine {
       try {
         cb(this.state);
       } catch (error) {
-        logger.error('Callback error:', error);
+        console.error('[META-CONTINUUM] Callback error:', error);
       }
     });
   }

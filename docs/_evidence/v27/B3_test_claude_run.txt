@@ -1,0 +1,128 @@
+# 2026-01-13T08:13:24-05:00 :: pnpm test -- --run src/services/ai/providers/__tests__/claude.test.ts
+
+> titane-infinity@26.3.0 test /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> bash scripts/test-wrapper.sh -- --run src/services/ai/providers/__tests__/claude.test.ts
+
+[1;33m🧪 TITANE∞ Test Suite v26.4.0[0m
+Running tests with heap overflow protection...
+
+npm warn Unknown env config "npm-globalconfig". This will stop working in the next major version of npm.
+npm warn Unknown env config "verify-deps-before-run". This will stop working in the next major version of npm.
+npm warn Unknown env config "_jsr-registry". This will stop working in the next major version of npm.
+
+[1m[46m RUN [49m[22m [36mv4.0.17 [39m[90m/home/titane-os/Documents/GitHub/TITANE_INFINITY[39m
+
+[90mstdout[2m | src/services/ai/providers/__tests__/claude.test.ts
+[22m[39m[UnifiedMemory] Initialized (STM/MTM/LTM)
+
+[90mstdout[2m | src/services/ai/providers/__tests__/claude.test.ts
+[22m[39m[CognitiveOmegaOrchestrator] 2026-01-13T13:13:26.606Z CognitiveOmegaOrchestrator created (lazy init) 
+
+[90mstdout[2m | src/services/ai/providers/__tests__/claude.test.ts
+[22m[39m2026-01-13T13:13:26.633Z [DEBUG] [Core] 🔍 Auto-cleanup started {"component":"ResponseCache","action":"startAutoCleanup","intervalMs":300000}
+
+[90mstdout[2m | src/services/ai/providers/__tests__/claude.test.ts
+[22m[39m2026-01-13T13:13:26.633Z [DEBUG] [Core] 🔍 Cache loaded from persistence {"component":"ResponseCache","action":"loadFromPersistence","entries":0}
+
+[90mstdout[2m | src/services/ai/providers/__tests__/claude.test.ts
+[22m[39m[2026-01-13T13:13:26.685Z] [CircuitBreaker] [INFO] Circuit Breaker initialized
+
+[90mstdout[2m | src/services/ai/providers/__tests__/claude.test.ts
+[22m[39m[2026-01-13T13:13:26.685Z] [[UNIFIED-HEALING]] [INFO] UnifiedHealingFacade initialized v27
+
+[90mstdout[2m | src/services/ai/providers/__tests__/claude.test.ts
+[22m[39m[LogLevelManager] Global API exposed: window.__TITANE_LOG__ 
+Current level: DEBUG 
+Usage: 
+  window.__TITANE_LOG__.level = 'DEBUG' 
+  window.__TITANE_LOG__.setModule('ChatEngine', 'TRACE') 
+  window.__TITANE_LOG__.config
+
+[90mstdout[2m | src/services/ai/providers/__tests__/claude.test.ts
+[22m[39m[2026-01-13T13:13:26.710Z] [CognitiveKernel] [DEBUG] Initializing cognitive field...
+[2026-01-13T13:13:26.710Z] [CognitiveKernel] [DEBUG] Cognitive map established {
+  providers: [
+    [32m'titane-local'[39m,
+    [32m'tauri-chat'[39m,
+    [32m'openai'[39m,
+    [32m'claude'[39m,
+    [32m'gemini'[39m,
+    [32m'ollama'[39m
+  ],
+  orchestrator: [32m'neural-selection'[39m,
+  chatUI: [32m'message-display'[39m,
+  iaService: [32m'api-validation'[39m,
+  governance: [32m'secrets-management'[39m,
+  relationships: {
+    [32m'providers -> orchestrator'[39m: [32m'selection'[39m,
+    [32m'orchestrator -> chatUI'[39m: [32m'response-delivery'[39m,
+    [32m'iaService -> governance'[39m: [32m'config-sync'[39m,
+    [32m'governance -> providers'[39m: [32m'credentials'[39m
+  }
+}
+[2026-01-13T13:13:26.712Z] [CognitiveKernel] [INFO] Cognitive field initialized
+
+[90mstdout[2m | src/services/ai/providers/__tests__/claude.test.ts
+[22m[39m[2026-01-13T13:13:26.723Z] [RateLimiter] [INFO] Rate Limiter initialized
+
+[90mstdout[2m | src/services/ai/providers/__tests__/claude.test.ts
+[22m[39m[2026-01-13T13:13:26.743Z] [Orchestrator] [INFO] Starting provider warmup (v24.3.6 optimized)...
+[2026-01-13T13:13:26.744Z] [TauriChat] [DEBUG] Checking backend availability...
+[2026-01-13T13:13:26.744Z] [Ollama] [DEBUG] 🔍 OMEGA: Checking endpoint health...
+
+[90mstdout[2m | src/services/ai/providers/__tests__/claude.test.ts
+[22m[39m[2026-01-13T13:13:26.746Z] [Ollama] [DEBUG]    ❌ Ollama endpoint: unavailable
+
+[90mstdout[2m | src/services/ai/providers/__tests__/claude.test.ts
+[22m[39m[2026-01-13T13:13:26.749Z] [TauriChat] [DEBUG] Backend available: false { available: [33mfalse[39m }
+
+[90mstdout[2m | src/services/ai/providers/__tests__/claude.test.ts
+[22m[39m[2026-01-13T13:13:26.749Z] [Orchestrator] [INFO] Warmup complete (6 providers): [
+  { provider: [32m'openai'[39m, available: [33mfalse[39m },
+  { provider: [32m'copilot'[39m, available: [33mfalse[39m },
+  { provider: [32m'gemini'[39m, available: [33mfalse[39m },
+  { provider: [32m'tauri-backend'[39m, available: [33mfalse[39m },
+  { provider: [32m'ollama'[39m, available: [33mfalse[39m },
+  { provider: [32m'titane-local'[39m, available: [33mtrue[39m }
+]
+
+[90mstdout[2m | src/services/ai/providers/__tests__/claude.test.ts[2m > [22m[2mClaude Provider[2m > [22m[2mgenerate()[2m > [22m[2mdevrait générer une réponse avec succès
+[22m[39m[2026-01-13T13:13:26.763Z] [TITANE] [DEBUG] Cache set { key: [32m'claude:question test:[]'[39m, ttl: [33m600000[39m }
+
+[90mstdout[2m | src/services/ai/providers/__tests__/claude.test.ts[2m > [22m[2mClaude Provider[2m > [22m[2mgenerate()[2m > [22m[2mdevrait rejeter un message vide
+[22m[39m[2026-01-13T13:13:26.768Z] [[AUTO-HEAL]] [DEBUG] Restarting provider: claude-provider
+
+[90mstdout[2m | src/services/ai/providers/__tests__/claude.test.ts[2m > [22m[2mClaude Provider[2m > [22m[2mgenerate()[2m > [22m[2mdevrait convertir l'historique correctement
+[22m[39m[2026-01-13T13:13:26.772Z] [TITANE] [DEBUG] Cache set {
+  key: [32m'claude:question:[{"role":"user","content":"Bonjour","timestamp":1000},{"role":"assistant","content":"Salut","timestamp":2000}]'[39m,
+  ttl: [33m600000[39m
+}
+
+[90mstdout[2m | src/services/ai/providers/__tests__/claude.test.ts[2m > [22m[2mClaude Provider[2m > [22m[2mgenerate()[2m > [22m[2mdevrait accepter une config personnalisée
+[22m[39m[2026-01-13T13:13:26.773Z] [TITANE] [DEBUG] Cache set { key: [32m'claude:test:[]'[39m, ttl: [33m600000[39m }
+
+ [32m✓[39m [30m[45m core [49m[39m src/services/ai/providers/__tests__/claude.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m17 passed[39m[22m[90m (17)[39m
+[2m   Start at [22m 08:13:25
+[2m   Duration [22m 1.09s[2m (transform 497ms, setup 181ms, import 525ms, tests 18ms, environment 164ms)[22m
+
+
+[0;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;36m📊 Test Results Analysis[0m
+[0;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+Passing test markers (✓): 1
+Passed summary: files=1 tests=17
+Failed summary: files=0 tests=0
+Total failures detected: 0
+Heap overflow: 0
+Vitest exit code: 0
+
+[0;32m✅ All tests passed! (1 individual tests)[0m
+ Test Files  1 passed (1)
+      Tests  17 passed (17)
+   Duration  1.09s (transform 497ms, setup 181ms, import 525ms, tests 18ms, environment 164ms)
+
+[0;32m✅ TITANE∞ Test Suite: SUCCESS[0m
+EXIT:0

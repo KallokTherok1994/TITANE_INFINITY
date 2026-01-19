@@ -15,7 +15,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { LogLevel } from '@/types/logLevel';
+import { LogLevel } from '@/utils/logger';
 
 export type RuntimeLogLevel =
   | 'TRACE'

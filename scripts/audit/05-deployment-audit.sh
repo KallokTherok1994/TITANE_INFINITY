@@ -61,17 +61,17 @@ log_section() {
 
 log_success() {
     echo -e "${GREEN}✓ $1${NC}"
-    ((PASSED+=1))
+    ((PASSED++))
 }
 
 log_error() {
     echo -e "${RED}✗ $1${NC}"
-    ((ERRORS+=1))
+    ((ERRORS++))
 }
 
 log_warning() {
     echo -e "${YELLOW}⚠ $1${NC}"
-    ((WARNINGS+=1))
+    ((WARNINGS++))
 }
 
 log_info() {
@@ -276,14 +276,14 @@ audit_runtime_configs() {
     # Dev runtime
     log_section "Development runtime (runtime/dev)"
     if check_dir_exists "runtime/dev" "Dev runtime directory"; then
-        if check_file_exists "runtime/dev/tauri.dev.conf.json" "Dev Tauri config"; then
-            local dev_version=$(jq -r '.version' runtime/dev/tauri.dev.conf.json)
-            local dev_product=$(jq -r '.productName' runtime/dev/tauri.dev.conf.json)
+        if check_file_exists "runtime/dev/tauri.conf.json" "Dev Tauri config"; then
+            local dev_version=$(jq -r '.version' runtime/dev/tauri.conf.json)
+            local dev_product=$(jq -r '.productName' runtime/dev/tauri.conf.json)
             log_info "Dev product: $dev_product"
             log_info "Dev version: $dev_version"
             
             # Check dev-specific settings
-            if jq -e '.app.windows[0].devtools' runtime/dev/tauri.dev.conf.json | grep -q 'true'; then
+            if jq -e '.app.windows[0].devtools' runtime/dev/tauri.conf.json | grep -q 'true'; then
                 log_success "DevTools enabled in dev runtime"
             fi
             
@@ -302,9 +302,9 @@ audit_runtime_configs() {
     # Stable runtime
     log_section "Stable runtime (runtime/stable)"
     if check_dir_exists "runtime/stable" "Stable runtime directory"; then
-        if check_file_exists "runtime/stable/tauri.stable.conf.json" "Stable Tauri config"; then
-            local stable_version=$(jq -r '.version' runtime/stable/tauri.stable.conf.json)
-            local stable_product=$(jq -r '.productName' runtime/stable/tauri.stable.conf.json)
+        if check_file_exists "runtime/stable/tauri.conf.json" "Stable Tauri config"; then
+            local stable_version=$(jq -r '.version' runtime/stable/tauri.conf.json)
+            local stable_product=$(jq -r '.productName' runtime/stable/tauri.conf.json)
             log_info "Stable product: $stable_product"
             log_info "Stable version: $stable_version"
             
@@ -372,8 +372,8 @@ audit_appimage() {
     fi
     
     # Check stable runtime targets
-    if [ -f "runtime/stable/tauri.stable.conf.json" ]; then
-        local stable_targets=$(jq -r '.bundle.targets' runtime/stable/tauri.stable.conf.json 2>/dev/null || echo "[]")
+    if [ -f "runtime/stable/tauri.conf.json" ]; then
+        local stable_targets=$(jq -r '.bundle.targets' runtime/stable/tauri.conf.json 2>/dev/null || echo "[]")
         if echo "$stable_targets" | grep -q "appimage"; then
             log_success "AppImage in stable runtime targets"
         fi
@@ -448,9 +448,9 @@ audit_cicd() {
         
         # Check specific workflows
         local required_workflows=(
-            ".github/workflows/ci-unified.yml:CI workflow"
-            ".github/workflows/release-unified.yml:Release workflow"
-            ".github/workflows/ci-unified.yml:CI/CD workflow"
+            ".github/workflows/ci.yml:CI workflow"
+            ".github/workflows/release.yml:Release workflow"
+            ".github/workflows/ci-cd.yml:CI/CD workflow"
         )
         
         for workflow_entry in "${required_workflows[@]}"; do

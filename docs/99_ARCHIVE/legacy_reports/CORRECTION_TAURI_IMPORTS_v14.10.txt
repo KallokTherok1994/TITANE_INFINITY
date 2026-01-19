@@ -1,0 +1,35 @@
+═══════════════════════════════════════════════════════════════════
+✅ TITANE∞ v14.10 — CORRECTION TAURI API IMPORTS
+═══════════════════════════════════════════════════════════════════
+
+🔧 PROBLÈME RÉSOLU:
+   TypeError: Module name '@tauri-apps/api/event' does not resolve to a valid URL
+
+📋 ANALYSE:
+   - @tauri-apps/api v2.9.0 utilise des exports conditionnels (.js/.cjs)
+   - Vite ne résolvait pas correctement les sous-chemins en mode dev/build
+   - Les imports '@tauri-apps/api/event' et '@tauri-apps/api/core' échouaient
+
+🛠️  CORRECTIONS APPLIQUÉES:
+
+1️⃣  vite.config.ts (resolve.alias):
+   ✅ Ajout alias '@tauri-apps/api/core' → './node_modules/@tauri-apps/api/core.js'
+   ✅ Ajout alias '@tauri-apps/api/event' → './node_modules/@tauri-apps/api/event.js'
+   ✅ Suppression 'external' rollupOptions (Tauri API maintenant bundlé)
+
+2️⃣  Résultats:
+   ✅ Build frontend: 4.20s (dist: 2.4 MB)
+   ✅ TypeScript: 0 errors
+   ✅ ESLint: 0 warnings (max-warnings 0)
+   ✅ Cargo check: 2.18s (0 warnings)
+   ✅ vendor-tauri chunk: 3.98 kB (event.js inclus)
+
+📊 VALIDATION FINALE:
+   ✅ Tous les imports Tauri résolus correctement
+   ✅ 24 fichiers utilisent '@tauri-apps/api/core' (invoke)
+   ✅ 2 fichiers utilisent '@tauri-apps/api/event' (listen)
+   ✅ Build production fonctionnel
+   ✅ 0 erreurs de résolution de modules
+
+🎯 STATUT: READY FOR DEPLOYMENT
+═══════════════════════════════════════════════════════════════════

@@ -1,30 +1,15 @@
-// TITANE_INFINITY v26.3.0 — Proprietary License
+// TITANE_INFINITY v24.3.0 — Proprietary License
 // © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
 
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v26.3.0 — MAIN ENTRY POINT (Singularity Architecture)
+//   TITANE∞ v24.3.0 — MAIN ENTRY POINT (Singularity Architecture)
 //   20 Engines Unified + OMEGA Pipeline + Phase 2 Fusion Commands
-//   Stable runtime validé (Linux) • Déploiement utilisateur en cours de validation
+//   Onboarding System + Production Ready
 // ═══════════════════════════════════════════════════════════════
 
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 #![allow(dead_code)]
 #![allow(deprecated)] // Migration to conversation_engine::conversation_generate in progress
-#![allow(clippy::expect_used)] // expect() used in bootstrap code paths
-
-#[tauri::command]
-async fn get_readiness_status(
-    chat_state: State<'_, overdrive::chat_orchestrator::ChatOrchestratorState>,
-) -> Result<serde_json::Value, String> {
-    // Check if providers are initialized
-    let providers = overdrive::chat_orchestrator::chat_get_providers_status(chat_state).await?;
-    let ready = !providers.is_empty();
-    Ok(serde_json::json!({
-        "ready": ready,
-        "providers": providers,
-        "timestamp": crate::core::utils::now_ms()
-    }))
-}
 
 // ═══════════════════════════════════════════════════════════════
 // TITANE∞ HARDENING: Import Hygiene v19.5.2
@@ -34,7 +19,6 @@ async fn get_readiness_status(
 // Tauri core (Manager trait required for .path() and .get_webview_window())
 // Required for both app_data_dir access and DevTools auto-open
 use tauri::Manager;
-use tauri::State;
 
 // TITANE∞ command modules
 use std::sync::Arc;
@@ -115,18 +99,20 @@ mod system_health_commands {
     include!("commands/system_health_commands.rs");
 }
 
-// Memory Commands v15 + PHASE 6 Extensions
-mod memory_commands {
-    include!("commands/memory_commands.rs");
-}
-
 // DevOps commands (module local)
 mod devops_commands {
     include!("commands/devops.rs");
 }
 
 // Audio commands v19.2
-mod audio;
+mod audio {
+    pub mod recording_engine {
+        include!("audio/recording_engine.rs");
+    }
+    pub mod commands {
+        include!("audio/commands.rs");
+    }
+}
 
 // Secure Commands v∞ (Super-Prompts H, I, J, K) - API Key Management
 mod secure_commands {
@@ -544,22 +530,6 @@ fn main() {
     // EXP FUSION ENGINE (XP/EXP UI)
     let builder = builder.manage(ExpFusionState::new());
 
-    // ─────────────────────────────────────────────────────────────
-    // UPDATER (opt-in)
-    // - Endpoints définis dans src-tauri/tauri.conf.json (plugins.updater.endpoints)
-    // - Pubkey fournie via env (pas de secret committé)
-    // ─────────────────────────────────────────────────────────────
-    let builder = match std::env::var("TITANE_UPDATER_PUBKEY") {
-        Ok(pubkey) if !pubkey.trim().is_empty() => {
-            log::info!("✅ Updater enabled (TITANE_UPDATER_PUBKEY provided)");
-            builder.plugin(tauri_plugin_updater::Builder::new().pubkey(pubkey).build())
-        }
-        _ => {
-            log::warn!("⚠️ Updater disabled (set TITANE_UPDATER_PUBKEY to enable)");
-            builder
-        }
-    };
-
     builder
         .manage(std::sync::Mutex::new(onboarding::OnboardingState::default()))
         .setup(move |app| {
@@ -575,32 +545,10 @@ fn main() {
             app.manage(singularity_engine.clone());
 
             // 🎯 Initialize OMEGA Conversation Engine (v19.5.2)
-            // IMPORTANT: ne pas crasher le runtime stable si la passphrase n'est pas définie.
-            // On démarre en mode "bootstrap" (stockage séparé) pour laisser l'UI s'ouvrir et
-            // permettre la configuration sécurisée, sans corrompre un stockage chiffré attendu.
-            let app_data_dir = app
-                .path()
-                .app_data_dir()
+            let storage_dir = app.path().app_data_dir()
                 .unwrap_or_else(|_| std::path::PathBuf::from("/tmp/titane"));
-
-            let (storage_dir, password) = match std::env::var("TITANE_SECRETS_PASSPHRASE") {
-                Ok(value) => (app_data_dir, value),
-                Err(_) if cfg!(debug_assertions) => (
-                    app_data_dir,
-                    "default-dev-passphrase-change-in-production".to_string(),
-                ),
-                Err(_) => {
-                    log::error!(
-                        "⚠️ TITANE∞: TITANE_SECRETS_PASSPHRASE manquante en build release → mode bootstrap (stockage séparé)"
-                    );
-                    log::error!(
-                        "   → Définis TITANE_SECRETS_PASSPHRASE (>=12+ chars) et redémarre pour activer le stockage chiffré principal"
-                    );
-
-                    let bootstrap_dir = app_data_dir.join("bootstrap_no_passphrase");
-                    (bootstrap_dir, String::new())
-                }
-            };
+            let password = std::env::var("TITANE_SECRETS_PASSPHRASE")
+                .unwrap_or_else(|_| "default-dev-passphrase-change-in-production".to_string());
 
             // AIRouter initialization (for OMEGA pipeline)
             let ai_router = Arc::new(tokio::sync::RwLock::new(
@@ -626,20 +574,8 @@ fn main() {
                 })
             );
 
-            app.manage(conversation_engine.clone());
+            app.manage(conversation_engine);
             log::info!("✅ OMEGA Conversation Engine v19.5.2 initialized");
-
-            // Initialize OMEGA pipeline
-            {
-                let conv_engine = conversation_engine.clone();
-                tauri::async_runtime::spawn(async move {
-                    if let Err(e) = conv_engine.initialize().await {
-                        log::error!("❌ Failed to initialize OMEGA pipeline: {:?}", e);
-                    } else {
-                        log::info!("✅ OMEGA pipeline initialized successfully");
-                    }
-                });
-            }
 
             // Initialize providers asynchronously within Tauri's async runtime
             let chat_orch_clone = chat_orchestrator.clone();
@@ -751,8 +687,6 @@ fn main() {
             );
         })
         .invoke_handler(tauri::generate_handler![
-            // Readiness check
-            get_readiness_status,
             // Frontend OS bridge compatibility
             state_bridge_commands::ping,
             state_bridge_commands::get_system_state,
@@ -772,8 +706,7 @@ fn main() {
             conversation_engine::commands::conversation_health_check,
             conversation_engine::commands::conversation_memory_stats,
             // Chat Orchestrator Commands (CHAT PIPELINE v21 + R04 Memory Integration)
-            // NOTE: chat_send_message is DEPRECATED since v24.2.0 - use conversation_generate instead
-            // (exposed via chat_commands.rs with blocking error)
+            overdrive::chat_orchestrator::chat_send_message,
             overdrive::chat_orchestrator::chat_stream_message,
             overdrive::chat_orchestrator::chat_get_providers_status,
             overdrive::chat_orchestrator::chat_check_providers,
@@ -997,10 +930,6 @@ fn main() {
             secure_commands::get_anthropic_key_status,
             secure_commands::get_permission_audit, // ✅ v26.2.3: Permission audit log
             secure_commands::check_system_integrity, // ✅ v21.5: System integrity check
-            // ✅ v27 (B25): Secrets status + delete (Governance Center)
-            secure_commands::get_secrets_status,
-            secure_commands::has_secret,
-            secure_commands::delete_secret,
             // Runtime Configuration Bridge v∞ (Frontend config without secrets)
             runtime_config::get_runtime_config,
             // ✅ v21 Phase 1: Provider-specific AI generation
@@ -1107,13 +1036,6 @@ fn main() {
             unified_memory_commands::memory_get_stats,
             unified_memory_commands::memory_initialize,
             unified_memory_commands::memory_tick,
-            // Memory Commands v15 + PHASE 6 Extensions (4 commands)
-            memory_commands::memory_get,
-            memory_commands::memory_set,
-            memory_commands::memory_compact,
-            // PHASE 6 EXPERIMENTAL: Memory Vault Encryption (2 commands)
-            memory_commands::unlock_memory_vault,
-            memory_commands::lock_memory_vault,
             // System Health Commands (9 commands)
             system_health_commands::health_get_state,
             system_health_commands::health_get_report,

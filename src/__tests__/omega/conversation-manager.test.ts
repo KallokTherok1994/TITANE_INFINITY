@@ -110,9 +110,9 @@ describe('🧠 ConversationManager (OMEGA v2)', () => {
     const conversation = await conversationManager.getConversation(conversationId);
 
     expect(conversation).toBeDefined();
-    expect(conversation?.messages.length).toBeGreaterThanOrEqual(4); // 2 user + 2 assistant
-    expect(conversation?.messages[0].content).toBe('First message');
-    expect(conversation?.messages[2].content).toBe('Second message');
+    expect(conversation!.messages.length).toBeGreaterThanOrEqual(4); // 2 user + 2 assistant
+    expect(conversation!.messages[0].content).toBe('First message');
+    expect(conversation!.messages[2].content).toBe('Second message');
   });
 
   /**
@@ -126,10 +126,10 @@ describe('🧠 ConversationManager (OMEGA v2)', () => {
     const convA = await conversationManager.getConversation('conversation-a');
     const convB = await conversationManager.getConversation('conversation-b');
 
-    expect(convA?.messages.length).toBe(4); // 2 user + 2 assistant
-    expect(convB?.messages.length).toBe(2); // 1 user + 1 assistant
-    expect(convA?.messages[0].content).toBe('Message A1');
-    expect(convB?.messages[0].content).toBe('Message B1');
+    expect(convA!.messages.length).toBe(4); // 2 user + 2 assistant
+    expect(convB!.messages.length).toBe(2); // 1 user + 1 assistant
+    expect(convA!.messages[0].content).toBe('Message A1');
+    expect(convB!.messages[0].content).toBe('Message B1');
   });
 
   /**
@@ -156,9 +156,9 @@ describe('🧠 ConversationManager (OMEGA v2)', () => {
 
     const conversation = await conversationManager.getConversation('metadata-test');
 
-    expect(conversation?.metadata.title).toBe('Test Conversation');
-    expect(conversation?.metadata.tags).toEqual(['test', 'omega-v2']);
-    expect(conversation?.messages[0].metadata?.emotion).toBe('curious');
+    expect(conversation!.metadata.title).toBe('Test Conversation');
+    expect(conversation!.metadata.tags).toEqual(['test', 'omega-v2']);
+    expect(conversation!.messages[0].metadata?.emotion).toBe('curious');
   });
 
   /**
@@ -217,7 +217,7 @@ describe('🧠 ConversationManager (OMEGA v2)', () => {
 
     const defaultConv = await conversationManager.getConversation('default');
     expect(defaultConv).not.toBeNull();
-    expect(defaultConv?.messages[0].content).toBe('Default conversation test');
+    expect(defaultConv!.messages[0].content).toBe('Default conversation test');
   });
 
   /**
@@ -230,8 +230,8 @@ describe('🧠 ConversationManager (OMEGA v2)', () => {
 
     const conversation = await conversationManager.getConversation('timestamp-test');
 
-    expect(conversation?.createdAt).toBeGreaterThanOrEqual(before);
-    expect(conversation?.createdAt).toBeLessThanOrEqual(after);
-    expect(conversation?.updatedAt).toBeGreaterThanOrEqual(conversation?.createdAt);
+    expect(conversation!.createdAt).toBeGreaterThanOrEqual(before);
+    expect(conversation!.createdAt).toBeLessThanOrEqual(after);
+    expect(conversation!.updatedAt).toBeGreaterThanOrEqual(conversation!.createdAt);
   });
 });

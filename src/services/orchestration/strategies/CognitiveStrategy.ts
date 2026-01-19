@@ -17,7 +17,6 @@ import type {
   CognitiveMemoryOperation,
   CognitiveGoalOperation,
 } from '../types';
-import { logger } from '@/utils/logger';
 
 // Import existing Cognitive Omega Orchestrator
 import { cognitiveOmega } from '@/services/cognitive/cognitiveOmegaIntegration';
@@ -403,10 +402,10 @@ export class CognitiveStrategy
   }
 
   private log(message: string, ...args: unknown[]): void {
-    logger.debug(`[CognitiveStrategy] ${message}`, ...args);
+    console.log(`[CognitiveStrategy] ${message}`, ...args);
   }
 
   private logError(message: string, error?: unknown): void {
-    logger.error(`[CognitiveStrategy ERROR] ${message}`, error);
+    console.error(`[CognitiveStrategy ERROR] ${message}`, error);
   }
 }

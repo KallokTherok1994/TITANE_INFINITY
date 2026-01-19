@@ -27,7 +27,6 @@ import {
   type ModuleCategory,
   type PlaybookCondition,
 } from './selfHealing.config';
-import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -577,13 +576,13 @@ export class SelfHealingPlaybookEngine {
     matches.sort((a, b) => b.score - a.score);
 
     if (matches.length === 0) {
-      logger.debug('No matching playbook found for diagnosis');
+      console.log('[PlaybookEngine] No matching playbook found for diagnosis');
       return null;
     }
 
     const best = matches[0];
     if (!best) return null;
-    logger.debug(
+    console.log(
       `[PlaybookEngine] 📋 Selected playbook: ${best.playbook.name} (score: ${best.score})`
     );
 
@@ -640,7 +639,7 @@ export class SelfHealingPlaybookEngine {
       },
     };
 
-    logger.debug(
+    console.log(
       `[PlaybookEngine] 📝 Generated plan: ${plan.id} (${plannedActions.length} actions, ~${Math.round(estimatedDuration / 1000)}s)`
     );
 

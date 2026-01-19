@@ -314,12 +314,6 @@ pub struct AdaptiveLayer {
 
     /// Capacité d'évolution
     pub evolution_capacity: f32, // 0-1
-    
-    /// XP total (pour AUTO-AUDIT) - optionnel pour rétro-compatibilité
-    pub xp: Option<u64>,
-    
-    /// Niveau actuel (pour AUTO-AUDIT) - optionnel pour rétro-compatibilité
-    pub level: Option<u32>,
 }
 
 impl Default for AdaptiveLayer {
@@ -328,8 +322,6 @@ impl Default for AdaptiveLayer {
             evolution: EvolutionState::default(),
             auto_heal: AutoHealState::default(),
             evolution_capacity: 1.0,
-            xp: Some(0),
-            level: Some(1),
         }
     }
 }

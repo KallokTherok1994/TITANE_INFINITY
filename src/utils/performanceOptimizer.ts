@@ -49,11 +49,14 @@ class AdvancedPerformanceOptimizer {
    */
   private initializeOptimizer(): void {
     const isTauriRuntime =
-      typeof window !== 'undefined' && Boolean((window as typeof window & { __TAURI__?: unknown }).__TAURI__);
+      typeof window !== 'undefined' &&
+      Boolean((window as typeof window & { __TAURI__?: unknown }).__TAURI__);
     const isPlaywright =
-      typeof navigator !== 'undefined' && /HeadlessChrome|Playwright/i.test(navigator.userAgent || '');
+      typeof navigator !== 'undefined' &&
+      /HeadlessChrome|Playwright/i.test(navigator.userAgent || '');
     const enableInWebMode =
-      typeof import.meta !== 'undefined' && import.meta.env?.VITE_ENABLE_PERF_OPTIMIZER === '1';
+      typeof import.meta !== 'undefined' &&
+      import.meta.env?.VITE_ENABLE_PERF_OPTIMIZER === '1';
 
     if ((!isTauriRuntime && !enableInWebMode) || isPlaywright) {
       console.log('🛑 [PERF-OPTIMIZER] Skipped in browser/test mode (Tauri unavailable)');
@@ -691,10 +694,13 @@ class AdvancedPerformanceOptimizer {
    */
   private preloadCriticalFonts(): void {
     const enableFontPreload =
-      typeof import.meta !== 'undefined' && import.meta.env?.VITE_ENABLE_FONT_PRELOAD === '1';
+      typeof import.meta !== 'undefined' &&
+      import.meta.env?.VITE_ENABLE_FONT_PRELOAD === '1';
 
     if (!enableFontPreload) {
-      console.log('🎨 [PERF-OPTIMIZER] Font preload disabled (VITE_ENABLE_FONT_PRELOAD != "1")');
+      console.log(
+        '🎨 [PERF-OPTIMIZER] Font preload disabled (VITE_ENABLE_FONT_PRELOAD != "1")'
+      );
       return;
     }
 

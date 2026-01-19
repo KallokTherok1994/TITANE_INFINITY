@@ -265,7 +265,7 @@ echo ""
 if [ $TESTS_FAILED -eq 0 ]; then
     echo -e "${GREEN}🎉 ALL TESTS PASSED 🎉${NC}"
     echo ""
-    echo "TITANE∞ v∞.7 ULTIMATE is ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)!"
+    echo "TITANE∞ v∞.7 ULTIMATE is ready for production!"
     exit 0
 else
     echo -e "${RED}❌ SOME TESTS FAILED ❌${NC}"

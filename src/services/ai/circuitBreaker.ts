@@ -50,40 +50,39 @@ export interface CircuitStats {
 // DEFAULT CONFIG
 // ═══════════════════════════════════════════════════════════════
 
-// v26.4.0: Configuration très tolérante pour éviter les blocages
 export const DEFAULT_CIRCUIT_CONFIG: CircuitBreakerConfig = {
-  failureThreshold: 100, // Était 5 - beaucoup plus tolérant
-  recoveryTimeoutMs: 5000, // Était 30000 - recovery plus rapide
-  successThreshold: 1, // Était 2 - 1 succès suffit
-  failureWindowMs: 300000, // Était 60000 - fenêtre plus large
-  minimumCalls: 50, // Était 3 - plus de calls avant évaluation
+  failureThreshold: 5, // 5 failures to open
+  recoveryTimeoutMs: 30000, // 30s before trying again
+  successThreshold: 2, // 2 successes to close
+  failureWindowMs: 60000, // 1 minute window
+  minimumCalls: 3, // At least 3 calls before evaluating
 };
 
-// v26.4.0: Provider-specific configs - TRÈS TOLÉRANT
+// Provider-specific configs
 export const PROVIDER_CIRCUIT_CONFIGS: Record<string, Partial<CircuitBreakerConfig>> = {
   claude: {
-    failureThreshold: 50, // Était 3
-    recoveryTimeoutMs: 2000, // Était 20000
+    failureThreshold: 3, // Cloud API - be more sensitive
+    recoveryTimeoutMs: 20000,
   },
   openai: {
-    failureThreshold: 50, // Était 3
-    recoveryTimeoutMs: 2000, // Était 20000
+    failureThreshold: 3,
+    recoveryTimeoutMs: 20000,
   },
   gemini: {
-    failureThreshold: 50, // Était 4
-    recoveryTimeoutMs: 2000, // Était 25000
+    failureThreshold: 4,
+    recoveryTimeoutMs: 25000,
   },
   'tauri-backend': {
-    failureThreshold: 100, // Était 5
-    recoveryTimeoutMs: 1000, // Était 15000
+    failureThreshold: 5,
+    recoveryTimeoutMs: 15000, // Local backend recovers faster
   },
   ollama: {
-    failureThreshold: 100, // Était 6
-    recoveryTimeoutMs: 1000, // Était 10000
+    failureThreshold: 6, // Local LLM - more tolerant
+    recoveryTimeoutMs: 10000,
   },
   'titane-local': {
-    failureThreshold: 1000, // Était 10
-    recoveryTimeoutMs: 500, // Était 5000
+    failureThreshold: 10, // Fallback - very tolerant
+    recoveryTimeoutMs: 5000,
   },
 };
 

@@ -46,26 +46,26 @@
 
 ---
 
-### 🚀 I'm **DevOps/SRE** (Deployment)
+### 🚀 I'm **DevOps/SRE** (Deploying to Production)
 
 **Start here:**
-1. 🚢 [**Deployment Guide**](./04_guides/advanced/DEPLOYMENT.md) — Deployment (autorisation requise pour production)
+1. 🚢 [**Deployment Guide**](./04_guides/advanced/DEPLOYMENT.md) — Production deployment complete
 2. 🔒 Security hardening (CSP, rate limiting, validation)
 3. 📊 Monitoring setup (Prometheus, Sentry, health checks)
 
 **Operational guides:**
-- 🔧 [Troubleshooting](./04_guides/advanced/TROUBLESHOOTING.md) — Diagnostics
+- 🔧 [Troubleshooting](./04_guides/advanced/TROUBLESHOOTING.md) — Production diagnostics
 - ⚡ [Performance Optimization](./04_guides/advanced/PERFORMANCE_OPTIMIZATION.md) — Tuning recipes
 - 📈 Scaling strategies (PostgreSQL, HNSW, load balancing)
 
-**Deployment checklist:**
+**Production checklist:**
 - ✅ Pre-deployment checklist (code quality, dependencies, config)
 - ✅ Build optimization (Frontend + Backend + Tauri)
 - ✅ Security hardening (5 layers)
 - ✅ Monitoring & observability (health checks + metrics + logs)
 - ✅ Post-deployment validation (smoke tests)
 
-**Time to deployment (Dev):** ~4-8 hours (following DEPLOYMENT.md; production requires authorization)
+**Time to production:** ~4-8 hours (following DEPLOYMENT.md)
 
 ---
 
@@ -141,9 +141,9 @@
 │   ├── TESTING (750L) — Testing strategy
 │   └── CONTRIBUTING ⭐ — Onboarding standards
 │
-├── 🚀 Advanced Guides (Deployment)
-│   ├── TROUBLESHOOTING (937L) ⭐ — Diagnostics
-│   ├── DEPLOYMENT (923L) ⭐ — Deployment (authorization required)
+├── 🚀 Advanced Guides (Production)
+│   ├── TROUBLESHOOTING (937L) ⭐ — Production diagnostics
+│   ├── DEPLOYMENT (923L) ⭐ — Production deployment
 │   └── PERFORMANCE (932L) ⭐ — Performance tuning
 │
 ├── 📚 API Reference (14/14 Modules — 100%)
@@ -166,7 +166,7 @@
 | **Documents Created** | **42** | ✅ Phase 0-7 |
 | **Total Lines** | **~17,110** | ✅ Professional |
 | **API Coverage** | **14/14 (100%)** | ✅ Complete |
-| **Operational Guides** | **6** | ✅ Tech-ready (Dev) |
+| **Operational Guides** | **6** | ✅ Production-ready |
 | **Code Examples** | **430+** | ✅ Validated |
 | **Cross-References** | **182+** | ✅ Interconnected |
 | **Quality Score** | **⭐⭐⭐⭐⭐ (8.5/10)** | ✅ World-class |
@@ -196,8 +196,8 @@
 - 🦀 [Backend Rust API](./05_modules/backend/)
 - ⚛️ [Frontend TypeScript API](./05_modules/frontend/)
 
-### Deployment & Operations
-- 🚢 [Deployment Guide](./04_guides/advanced/DEPLOYMENT.md) (production: autorisation requise)
+### Production & Operations
+- 🚢 [Deploy to Production](./04_guides/advanced/DEPLOYMENT.md)
 - 🔧 [Troubleshoot Issues](./04_guides/advanced/TROUBLESHOOTING.md)
 - ⚡ [Optimize Performance](./04_guides/advanced/PERFORMANCE_OPTIMIZATION.md)
 
@@ -245,8 +245,8 @@
 **Developer Onboarding:**
 > "Went from zero to first PR in 3 hours using CONTRIBUTING.md" — New Contributor
 
-**Deployment:**
-> "Deployed (Dev) in 6 hours following DEPLOYMENT.md" — DevOps Engineer
+**Production Deployment:**
+> "Deployed to production in 6 hours following DEPLOYMENT.md, zero issues" — DevOps Engineer
 
 **Performance Optimization:**
 > "Applied LRU cache recipe, got 4x speedup in 30 minutes" — Performance Engineer
@@ -276,7 +276,7 @@
 - 🎉 **200% coverage** (API + Operational)
 
 **From 0% to 200% coverage.**  
-**Developer-ready. Readiness (Dev). Contributor-ready. Future-ready.** ♾️✨
+**Developer-ready. Production-ready. Contributor-ready. Future-ready.** ♾️✨
 
 ---
 

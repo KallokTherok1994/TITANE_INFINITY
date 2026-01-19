@@ -18,9 +18,6 @@ describe('H2: ChatMemoryCompactor - Memory Leak Protection', () => {
   let localStorageMock: Map<string, string>;
 
   beforeEach(() => {
-    // Use fake timers to control async operations
-    vi.useFakeTimers();
-
     // Mock localStorage
     localStorageMock = new Map();
     global.localStorage = {
@@ -38,25 +35,16 @@ describe('H2: ChatMemoryCompactor - Memory Leak Protection', () => {
       key: vi.fn(() => null),
     } as Storage;
 
-    // Mock requestIdleCallback - execute callback synchronously for testing
+    // Mock requestIdleCallback
     global.requestIdleCallback = vi.fn((callback: IdleRequestCallback) => {
-      // Schedule for next tick using fake timers
       setTimeout(() => callback({ didTimeout: false, timeRemaining: () => 50 }), 0);
       return 0;
     });
-
-    // Also mock on window for browser code that checks window.requestIdleCallback
-    if (typeof window !== 'undefined') {
-      (
-        window as unknown as { requestIdleCallback: typeof global.requestIdleCallback }
-      ).requestIdleCallback = global.requestIdleCallback;
-    }
 
     compactor = new ChatMemoryCompactor();
   });
 
   afterEach(() => {
-    vi.useRealTimers();
     vi.clearAllMocks();
   });
 
@@ -77,11 +65,16 @@ describe('H2: ChatMemoryCompactor - Memory Leak Protection', () => {
       compactor.saveForMode(modeWithIndex, [{ ...message, content: `Message ${i}` }]);
     }
 
-    // Advance timers to trigger setTimeout callbacks
-    await vi.advanceTimersByTimeAsync(100);
+    // Attendre que les writes asynchrones se terminent
+    await waitFor(
+      () => {
+        // Au moins 100 writes devraient avoir été faits (force flush)
+        expect(setItemSpy).toHaveBeenCalled();
+      },
+      { timeout: 2000 }
+    );
 
     // Vérifier que la limite a déclenché un flush
-    expect(setItemSpy).toHaveBeenCalled();
     expect(setItemSpy.mock.calls.length).toBeGreaterThan(0);
   });
 
@@ -92,9 +85,6 @@ describe('H2: ChatMemoryCompactor - Memory Leak Protection', () => {
       { role: 'assistant', content: 'Response 1', timestamp: Date.now() },
     ];
 
-    // Track setItem calls
-    const setItemSpy = vi.spyOn(global.localStorage, 'setItem');
-
     // Trigger force flush by hitting MAX_PENDING_SAVES
     // This will bypass the idle callback and flush immediately
     for (let i = 0; i < 101; i++) {
@@ -102,14 +92,13 @@ describe('H2: ChatMemoryCompactor - Memory Leak Protection', () => {
       compactor.saveForMode(modeKey, [...messages]);
     }
 
-    // Advance timers to trigger setTimeout callbacks from requestIdleCallback mock
-    await vi.advanceTimersByTimeAsync(100);
+    // Give time for the force flush to complete
+    await new Promise(resolve => setTimeout(resolve, 200));
 
-    // Verify saves were triggered (no infinite accumulation - flush happened)
-    expect(setItemSpy).toHaveBeenCalled();
-
-    // The number of calls should be bounded (force flush clears pendingSaves)
-    expect(setItemSpy.mock.calls.length).toBeLessThan(200);
+    // Verify at least one save succeeded (no infinite accumulation)
+    const keys = Array.from(localStorageMock.keys());
+    expect(keys.length).toBeGreaterThan(0);
+    expect(keys.length).toBeLessThan(150); // Should not leak indefinitely
   });
 
   it('should handle force flush gracefully on error', async () => {
@@ -121,12 +110,14 @@ describe('H2: ChatMemoryCompactor - Memory Leak Protection', () => {
     };
 
     // Mock localStorage.setItem pour throw error
+    const originalSetItem = localStorage.setItem;
     let callCount = 0;
-    vi.spyOn(global.localStorage, 'setItem').mockImplementation(() => {
+    vi.spyOn(global.localStorage, 'setItem').mockImplementation((key, value) => {
       callCount++;
       if (callCount === 1) {
         throw new Error('Storage quota exceeded');
       }
+      return originalSetItem.call(localStorage, key, value);
     });
 
     // Devrait ne pas crash même avec erreur
@@ -134,10 +125,10 @@ describe('H2: ChatMemoryCompactor - Memory Leak Protection', () => {
       compactor.saveForMode(mode, [message]);
     }).not.toThrow();
 
-    // Advance timers to trigger the async save
-    await vi.advanceTimersByTimeAsync(100);
+    // Attendre
+    await new Promise(resolve => setTimeout(resolve, 100));
 
-    // Vérifier que setItem was attempted
+    // Vérifier que l'erreur a été loggée mais pas thrown
     expect(callCount).toBeGreaterThan(0);
   });
 });

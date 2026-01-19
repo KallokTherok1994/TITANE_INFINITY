@@ -11,12 +11,14 @@
 Trois problèmes majeurs d'affichage des réponses IA ont été identifiés et corrigés dans le système de chat.
 
 ### ✅ Correction #1 — ChatWindow.tsx (Filtre Messages)
+
 **Fichier:** `src/components/ChatWindow.tsx:71-84`  
 **Problème:** Filtre messages défectueux — vérifiait `message.content` directement  
 **Solution:** Amélioration logique du filtre avec structure complexe  
 **Impact:** ✅ Messages filtrés correctement
 
 **Avant:**
+
 ```tsx
 const filteredMessages = useMemo(() => {
   if (!Array.isArray(messages)) return [];
@@ -25,13 +27,14 @@ const filteredMessages = useMemo(() => {
       message &&
       message.role &&
       ['user', 'assistant'].includes(message.role) &&
-      message.content &&  // ❌ Vérification basique
+      message.content && // ❌ Vérification basique
       getMessageText(message).trim().length > 0
   );
 }, [messages]);
 ```
 
 **Après:**
+
 ```tsx
 const filteredMessages = useMemo(() => {
   if (!Array.isArray(messages)) return [];
@@ -48,12 +51,14 @@ const filteredMessages = useMemo(() => {
 ---
 
 ### ✅ Correction #2 — AIChatBubble.tsx (Affichage Réponses)
+
 **Fichier:** `src/components/AIChatBubble.tsx:357-390`  
 **Problème:** ❌ Affichait TOUS les messages sans filtre → réponses vides visibles  
 **Solution:** Ajout filtre inline avec validation structure  
 **Impact:** ✅ Seules les réponses valides affichées
 
 **Avant:**
+
 ```tsx
 {messages.map((message, index) => (
   <MessageBubble
@@ -66,6 +71,7 @@ const filteredMessages = useMemo(() => {
 ```
 
 **Après:**
+
 ```tsx
 {messages
   .filter(message => {
@@ -88,23 +94,26 @@ const filteredMessages = useMemo(() => {
 ---
 
 ### ✅ Correction #3 — useGlobalAIChat.ts (Filtre Hook)
+
 **Fichier:** `src/hooks/useGlobalAIChat.ts:13-50, 205-224`  
 **Problème:** Retournait `messages: chatMessages` sans filtrer → remontait messages vides au composant  
 **Solution:** Ajout useMemo pour filtrer messages avant return  
 **Impact:** ✅ Messages filtrés au niveau du hook
 
 **Avant:**
+
 ```tsx
 export function useGlobalAIChat(): UseGlobalAIChatReturn {
   // ...
   return {
-    messages: chatMessages,  // ❌ Pas de filtre
+    messages: chatMessages, // ❌ Pas de filtre
     // ...
   };
 }
 ```
 
 **Après:**
+
 ```tsx
 // Ajouter useMemo à l'import
 import { useMemo } from 'react';
@@ -112,14 +121,18 @@ import { getMessageText, type AIMessage } from '../services/ai/types';
 
 export function useGlobalAIChat(): UseGlobalAIChatReturn {
   // ...
-  
+
   // Memoize filtered messages to show only valid messages with content
   const filteredMessages = useMemo(() => {
     if (!Array.isArray(chatMessages)) {
       return [];
     }
     return chatMessages.filter(message => {
-      if (!message || !message.role || !['user', 'assistant', 'system'].includes(message.role)) {
+      if (
+        !message ||
+        !message.role ||
+        !['user', 'assistant', 'system'].includes(message.role)
+      ) {
         return false;
       }
       const messageText = getMessageText(message);
@@ -128,7 +141,7 @@ export function useGlobalAIChat(): UseGlobalAIChatReturn {
   }, [chatMessages]);
 
   return {
-    messages: filteredMessages,  // ✅ Messages filtrés
+    messages: filteredMessages, // ✅ Messages filtrés
     // ...
   };
 }
@@ -137,22 +150,25 @@ export function useGlobalAIChat(): UseGlobalAIChatReturn {
 ---
 
 ### ✅ Correction #4 — MessageBubble.tsx (Trim User Messages)
+
 **Fichier:** `src/components/chat/MessageBubble.tsx:137-157`  
 **Problème:** Messages utilisateur pas trimés, contenu peut être vide ou espaces  
 **Solution:** Ajouter trim() et fallback pour messages utilisateur  
 **Impact:** ✅ Messages utilisateur propres
 
 **Avant:**
+
 ```tsx
 const messageContent = useMemo(() => {
   if (role === 'assistant') {
     // ...
   }
-  return content;  // ❌ Pas de trim()
+  return content; // ❌ Pas de trim()
 }, [role, content]);
 ```
 
 **Après:**
+
 ```tsx
 const messageContent = useMemo(() => {
   if (role === 'assistant') {
@@ -169,21 +185,26 @@ const messageContent = useMemo(() => {
 ## Validation Post-Correction
 
 ### ✅ Compilation TypeScript
+
 ```bash
 npx tsc --noEmit
 ```
+
 **Résultat:** ✅ **0 erreurs**
 
 ### ✅ ESLint Check
+
 ```bash
 npx eslint src/components/ChatWindow.tsx \
            src/components/AIChatBubble.tsx \
            src/hooks/useGlobalAIChat.ts \
            src/components/chat/MessageBubble.tsx --max-warnings 0
 ```
+
 **Résultat:** ✅ **0 violations**
 
 ### ✅ Imports Validés
+
 - ✅ `getMessageText` importé correctement
 - ✅ `AIMessage` type importé
 - ✅ `useMemo` react hook importé
@@ -217,14 +238,17 @@ npx eslint src/components/ChatWindow.tsx \
 ## Changements Détaillés
 
 ### ChatWindow.tsx
+
 - **Lignes 71-84:** Amélioration du filtre avec logique plus claire
 - **Impact:** ChatWindow affiche uniquement messages avec contenu valide
 
-### AIChatBubble.tsx  
+### AIChatBubble.tsx
+
 - **Lignes 357-387:** Ajout filtre dans la boucle `.map()`
 - **Impact:** ✅ Réponses IA affichées correctement dans bulle flottante
 
 ### useGlobalAIChat.ts
+
 - **Ligne 13:** Ajout `useMemo` à l'import React
 - **Ligne 16:** Ajout import `type AIMessage` et `getMessageText`
 - **Lignes 205-224:** Création useMemo filteredMessages
@@ -232,6 +256,7 @@ npx eslint src/components/ChatWindow.tsx \
 - **Impact:** Messages filtrés au niveau du hook avant transmission au composant
 
 ### MessageBubble.tsx
+
 - **Lignes 155-157:** Ajout trim() et fallback pour messages utilisateur
 - **Impact:** Aucun message utilisateur vide affiché
 
@@ -240,11 +265,13 @@ npx eslint src/components/ChatWindow.tsx \
 ## Résultats Attendus
 
 ### Avant Correction
+
 - ❌ Réponses IA n'apparaissent pas dans AIChatBubble
 - ❌ Messages vides/placeholder visibles
 - ❌ Contenu utilisateur peut être vide/espaces
 
 ### Après Correction
+
 - ✅ Toutes les réponses IA affichées correctement
 - ✅ Messages vides filtrés à 3 niveaux (ChatWindow, AIChatBubble, hook)
 - ✅ Contenu utilisateur toujours trimé et valide
@@ -313,6 +340,7 @@ UI (rendu final)
 ## Sign-Off
 
 **Corrections appliquées et validées:**
+
 - ✅ Compilation TypeScript: 0 erreurs
 - ✅ Linting ESLint: 0 violations
 - ✅ Imports valides et cohérents
@@ -323,5 +351,5 @@ UI (rendu final)
 
 ---
 
-*Rapport généré le 2026-01-18T11:50:00Z*  
-*TITANE∞ v26.3.0 — Chat IA Display Reliability Fixes*
+_Rapport généré le 2026-01-18T11:50:00Z_  
+_TITANE∞ v26.3.0 — Chat IA Display Reliability Fixes_

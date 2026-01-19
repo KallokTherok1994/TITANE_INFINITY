@@ -53,10 +53,6 @@ export const geminiProvider: AIProvider = {
    * Vérifier si Gemini est disponible (clé configurée)
    */
   async isAvailable(): Promise<boolean> {
-    // Dev override to ease local testing without secrets
-    if (import.meta.env.DEV && import.meta.env.VITE_FORCE_PROVIDERS_READY === '1') {
-      return true;
-    }
     try {
       const response = await secureInvoke<{
         ok: boolean;

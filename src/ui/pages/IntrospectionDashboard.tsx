@@ -108,10 +108,10 @@ const IntrospectionDashboard = memo(function IntrospectionDashboard() {
   );
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-900 via-red-900 to-gray-900 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-red-900 to-gray-900 p-6">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-linear-to-r from-red-400 to-orange-600">
+        <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-600">
           Introspection Dashboard
         </h1>
         <p className="text-gray-400 mt-2">
@@ -137,7 +137,7 @@ const IntrospectionDashboard = memo(function IntrospectionDashboard() {
             <button
               onClick={handleScan}
               disabled={isScanning}
-              className="flex-1 bg-linear-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold py-2 rounded-lg transition-all"
+              className="flex-1 bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold py-2 rounded-lg transition-all"
             >
               {isScanning ? '⏳ Analyse...' : '🔍 Analyser'}
             </button>
@@ -145,7 +145,7 @@ const IntrospectionDashboard = memo(function IntrospectionDashboard() {
             <button
               onClick={handleAutoFix}
               disabled={!report || isFixing}
-              className="flex-1 bg-linear-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold py-2 rounded-lg transition-all"
+              className="flex-1 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold py-2 rounded-lg transition-all"
             >
               {isFixing ? '⏳ Correction...' : '🔧 Auto-corriger'}
             </button>
@@ -157,26 +157,26 @@ const IntrospectionDashboard = memo(function IntrospectionDashboard() {
         <>
           {/* Statistics Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-linear-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
+            <div className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
               <div className="text-gray-400 text-sm mb-2">Fichiers analysés</div>
               <div className="text-3xl font-bold text-white">
                 {report.total_files_scanned}
               </div>
             </div>
 
-            <div className="bg-linear-to-br from-red-500/20 to-orange-500/20 backdrop-blur-xl rounded-2xl p-6 border border-red-500/30">
+            <div className="bg-gradient-to-br from-red-500/20 to-orange-500/20 backdrop-blur-xl rounded-2xl p-6 border border-red-500/30">
               <div className="text-gray-400 text-sm mb-2">Problèmes totaux</div>
               <div className="text-3xl font-bold text-white">{report.total_issues}</div>
             </div>
 
-            <div className="bg-linear-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
+            <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
               <div className="text-gray-400 text-sm mb-2">Auto-corrigés</div>
               <div className="text-3xl font-bold text-white">
                 {report.auto_fixes_applied}
               </div>
             </div>
 
-            <div className="bg-linear-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
+            <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
               <div className="text-gray-400 text-sm mb-2">Score de santé</div>
               <div className="text-3xl font-bold text-white">
                 {(
@@ -228,7 +228,7 @@ const IntrospectionDashboard = memo(function IntrospectionDashboard() {
               Problèmes ({filteredIssues.length})
             </h2>
 
-            <div className="space-y-3 max-h-150 overflow-y-auto">
+            <div className="space-y-3 max-h-[600px] overflow-y-auto">
               {filteredIssues.map(issue => (
                 <div
                   key={issue.id}

@@ -6,8 +6,6 @@
  * Part of SUPER PROMPT #3: Observability
  */
 
-import { tauriClient } from '@/lib/tauriClient';
-
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
@@ -276,7 +274,8 @@ class StructuredLoggerImpl {
     try {
       // Check if Tauri is available
       if (typeof window !== 'undefined' && '__TAURI__' in window) {
-        await tauriClient.logEntries({ entries });
+        const { invoke } = await import('@tauri-apps/api/core');
+        await invoke('log_entries', { entries });
       }
     } catch {
       // Silently fail if backend not available

@@ -17,7 +17,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useGlobalAIChat } from '../hooks/useGlobalAIChat';
 import { MessageBubble } from './chat/MessageBubble';
 import type { Message as _Message } from '../core/ARCHITECTURE_TYPES_v∞';
-import { getMessageText } from '@/services/ai/types';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -363,23 +362,14 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
             </div>
           )}
 
-          {messages
-            .filter(message => {
-              // Filtrer uniquement les messages valides avec du contenu
-              if (!message || !message.role || !['user', 'assistant'].includes(message.role)) {
-                return false;
-              }
-              const messageText = getMessageText(message);
-              return messageText && messageText.trim().length > 0;
-            })
-            .map((message, index) => (
-              <MessageBubble
-                key={message.timestamp ? `${message.timestamp}-${index}` : `msg-${index}`}
-                role={message.role}
-                content={getMessageText(message)}
-                timestamp={message.timestamp}
-              />
-            ))}
+          {messages.map((message, index) => (
+            <MessageBubble
+              key={message.timestamp ? `${message.timestamp}-${index}` : `msg-${index}`}
+              role={message.role}
+              content={message.content}
+              timestamp={message.timestamp}
+            />
+          ))}
 
           {isLoading && (
             <div

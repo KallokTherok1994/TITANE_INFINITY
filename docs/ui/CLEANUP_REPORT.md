@@ -4,9 +4,6 @@
 **Date:** 2026-01-03  
 **Phase:** 3 Complete (Component Migration)
 
-> NOTE (gouvernance): document historique UI/UX (v26.2.0). Runtime actuel: v26.3.0.
-> Production: EN ATTENTE (autorisation explicite requise).
-
 ---
 
 ## Executive Summary

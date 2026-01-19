@@ -25,9 +25,6 @@ import {
 import { audioStateMachine } from '@/services/audio/audioStateMachine';
 import { parlerTTSBridge, playAudioBlob, type ParlerTTSConfig } from './parlerTTSBridge';
 import { antiEchoShield } from '@/services/voice/antiEchoShield';
-import { createLogger } from '@/utils/logger';
-
-const logger = createLogger('HybridTTS');
 
 export interface TTSConfig {
   rate?: number; // 0.5 - 2.0
@@ -117,12 +114,12 @@ class HybridTTSService {
    * [P0.4 ANTI-ECHO] Émettre un événement TTS
    */
   private emitEvent(event: TTSEventType): void {
-    logger.debug(`[HybridTTS] 📢 Event: ${event}`);
+    console.log(`[HybridTTS] 📢 Event: ${event}`);
     this.eventListeners.forEach(listener => {
       try {
         listener(event);
       } catch (e) {
-        logger.error('Listener error:', e);
+        console.error('[HybridTTS] Listener error:', e);
       }
     });
   }
@@ -159,13 +156,13 @@ class HybridTTSService {
       this.parlerTTSCache = { value: available, timestamp: Date.now() };
 
       if (available) {
-        logger.debug('✅ TTS: Parler-TTS local available');
-        logger.debug(
+        console.log('✅ TTS: Parler-TTS local available');
+        console.log(
           `   Device: ${health.device}${health.gpuName ? ` (${health.gpuName})` : ''}`
         );
-        logger.debug(`   Cache: ${health.cacheSizeMb.toFixed(1)} MB`);
+        console.log(`   Cache: ${health.cacheSizeMb.toFixed(1)} MB`);
       } else {
-        logger.warn('⚠️ TTS: Parler-TTS local unavailable or initializing');
+        console.warn('⚠️ TTS: Parler-TTS local unavailable or initializing');
       }
 
       return available;
@@ -176,7 +173,7 @@ class HybridTTSService {
         value: false,
         timestamp: Date.now() - AVAILABILITY_CACHE_TTL_MS + 10000,
       };
-      // Silent: logger.warn('⚠️ TTS: Parler-TTS connection failed, falling back to other providers', error);
+      // Silent: console.warn('⚠️ TTS: Parler-TTS connection failed, falling back to other providers', error);
       return false;
     }
   }
@@ -206,7 +203,7 @@ class HybridTTSService {
     try {
       await chatEngineHealthCheck();
       this.tauriCache = { value: true, timestamp: Date.now() };
-      logger.debug('✅ TTS: Tauri backend available');
+      console.log('✅ TTS: Tauri backend available');
       return true;
     } catch (error) {
       // ✨ v24.2.1: Cache failure with shorter TTL (10s) to retry sooner
@@ -214,7 +211,7 @@ class HybridTTSService {
         value: false,
         timestamp: Date.now() - AVAILABILITY_CACHE_TTL_MS + 10000,
       };
-      logger.warn(
+      console.warn(
         '⚠️ TTS: Tauri backend unavailable, using Web Speech API fallback',
         error
       );
@@ -234,9 +231,9 @@ class HybridTTSService {
    */
   private async speakParlerTTS(text: string, config: TTSConfig = {}): Promise<void> {
     try {
-      logger.debug('🎤 TTS (Parler-TTS): Synthesizing...');
-      logger.debug(`📡 Mode: Local API (http://localhost:8765)`);
-      logger.debug(`⚙️  Style: ${config.voice || 'Adina default'}`);
+      console.log('🎤 TTS (Parler-TTS): Synthesizing...');
+      console.log(`📡 Mode: Local API (http://localhost:8765)`);
+      console.log(`⚙️  Style: ${config.voice || 'Adina default'}`);
       this.speaking = true;
 
       // Configuration Parler-TTS
@@ -249,12 +246,12 @@ class HybridTTSService {
       // Synthétiser
       const result = await parlerTTSBridge.synthesize(text, parlerConfig);
 
-      logger.debug(
+      console.log(
         `✅ TTS (Parler-TTS): Generated ${result.durationSeconds.toFixed(2)}s audio`
       );
-      logger.debug(`   Generation time: ${result.generationTimeMs}ms`);
-      logger.debug(`   Cached: ${result.cached}`);
-      logger.debug(`   Device: ${result.device}`);
+      console.log(`   Generation time: ${result.generationTimeMs}ms`);
+      console.log(`   Cached: ${result.cached}`);
+      console.log(`   Device: ${result.device}`);
 
       // [v19.5.0 ANTI-ECHO] Register TTS fingerprint AVANT playback
       // Extract audio as Float32Array for fingerprinting
@@ -272,9 +269,9 @@ class HybridTTSService {
       // [v19.5.0 ANTI-ECHO] End TTS tracking
       antiEchoShield.endTTS(ttsId);
 
-      logger.debug('✅ TTS (Parler-TTS): Playback complete');
+      console.log('✅ TTS (Parler-TTS): Playback complete');
     } catch (error) {
-      logger.error('❌ TTS (Parler-TTS): Error:', error);
+      console.error('❌ TTS (Parler-TTS): Error:', error);
       // [v19.5.0 ANTI-ECHO] Manual unmute on error
       antiEchoShield.endTTS('error');
       throw error;
@@ -292,11 +289,11 @@ class HybridTTSService {
     useOnline: boolean = false
   ): Promise<void> {
     try {
-      logger.debug('🎤 TTS (Tauri): Synthesizing...');
-      logger.debug(
+      console.log('🎤 TTS (Tauri): Synthesizing...');
+      console.log(
         `📡 Mode: ${useOnline ? 'Online (Google TTS)' : 'Local (espeak/piper)'}`
       );
-      logger.debug(
+      console.log(
         `⚙️  Config: rate=${config.rate || 1.0}, pitch=${config.pitch || 1.0}, voice=${config.voice || 'default'}`
       );
       this.speaking = true;
@@ -321,9 +318,9 @@ class HybridTTSService {
       // [v19.5.0 ANTI-ECHO] End TTS tracking
       antiEchoShield.endTTS(ttsId);
 
-      logger.debug('✅ TTS (Tauri): Success');
+      console.log('✅ TTS (Tauri): Success');
     } catch (error) {
-      logger.error('❌ TTS (Tauri): Error:', error);
+      console.error('❌ TTS (Tauri): Error:', error);
       // [v19.5.0 ANTI-ECHO] Manual unmute on error
       antiEchoShield.endTTS('error');
       throw error;
@@ -342,7 +339,7 @@ class HybridTTSService {
         return;
       }
 
-      logger.debug('🌐 TTS (Web Speech API): Synthesizing...');
+      console.log('🌐 TTS (Web Speech API): Synthesizing...');
       this.speaking = true;
 
       const utterance = new SpeechSynthesisUtterance(text);
@@ -371,7 +368,7 @@ class HybridTTSService {
 
       // Callbacks
       utterance.onend = () => {
-        logger.debug('✅ TTS (Web Speech API): Success');
+        console.log('✅ TTS (Web Speech API): Success');
         this.speaking = false;
         this.currentUtterance = null;
         // [v19.5.0 ANTI-ECHO] End TTS tracking
@@ -380,7 +377,7 @@ class HybridTTSService {
       };
 
       utterance.onerror = event => {
-        logger.error('❌ TTS (Web Speech API): Error:', event.error);
+        console.error('❌ TTS (Web Speech API): Error:', event.error);
         this.speaking = false;
         this.currentUtterance = null;
         // [v19.5.0 ANTI-ECHO] Manual unmute on error
@@ -404,13 +401,13 @@ class HybridTTSService {
     useOnline: boolean = false
   ): Promise<void> {
     if (!text.trim()) {
-      logger.warn('⚠️ TTS: Empty text, skipping');
+      console.warn('⚠️ TTS: Empty text, skipping');
       return;
     }
 
-    logger.debug('\n🔊 TTS: Starting synthesis...');
-    logger.debug(`📝 Text: "${text.substring(0, 60)}${text.length > 60 ? '...' : ''}"`);
-    logger.debug(`🌐 Mode: ${useOnline ? 'Online' : 'Offline First'}`);
+    console.log('\n🔊 TTS: Starting synthesis...');
+    console.log(`📝 Text: "${text.substring(0, 60)}${text.length > 60 ? '...' : ''}"`);
+    console.log(`🌐 Mode: ${useOnline ? 'Online' : 'Offline First'}`);
 
     // [P0.4 ANTI-ECHO] Notifier début TTS
     this.emitEvent('start');
@@ -429,7 +426,7 @@ class HybridTTSService {
           audioStateMachine.transition('TTS_END');
           return;
         } catch (error) {
-          logger.warn('⚠️ TTS: Parler-TTS failed, falling back to Tauri backend');
+          console.warn('⚠️ TTS: Parler-TTS failed, falling back to Tauri backend');
         }
       }
 
@@ -444,7 +441,7 @@ class HybridTTSService {
           audioStateMachine.transition('TTS_END');
           return;
         } catch (error) {
-          logger.warn('⚠️ TTS: Tauri failed, falling back to Web Speech API');
+          console.warn('⚠️ TTS: Tauri failed, falling back to Web Speech API');
         }
       }
 
@@ -458,12 +455,12 @@ class HybridTTSService {
           audioStateMachine.transition('TTS_END');
           return;
         } catch (error) {
-          logger.warn('⚠️ TTS: Web Speech API failed');
+          console.warn('⚠️ TTS: Web Speech API failed');
         }
       }
 
       // Stratégie 4: Silent mode (dernier recours)
-      logger.debug('🔇 TTS: No provider available, silent mode');
+      console.log('🔇 TTS: No provider available, silent mode');
       // [P0.4 ANTI-ECHO] Notifier fin même en mode silence
       this.emitEvent('end');
       // [P1.1 STATE MACHINE] Transition vers idle
@@ -482,16 +479,16 @@ class HybridTTSService {
    * [P0.4 ANTI-ECHO] Émet event 'end' pour reprendre VAD
    */
   async stop(): Promise<void> {
-    logger.debug('⏹️ TTS: Stopping...');
+    console.log('⏹️ TTS: Stopping...');
 
     // v19.3.0: Arrêt Tauri via commande tts_stop (audio::commands)
     // ✨ v24.2.1: Check cached value instead of property
     if (this.tauriCache?.value) {
       try {
         await secureInvoke('tts_stop');
-        logger.debug('✅ TTS: Tauri backend stopped');
+        console.log('✅ TTS: Tauri backend stopped');
       } catch (error) {
-        logger.warn('⚠️ TTS: Tauri stop failed:', error);
+        console.warn('⚠️ TTS: Tauri stop failed:', error);
       }
     }
 
@@ -502,7 +499,7 @@ class HybridTTSService {
     }
 
     this.speaking = false;
-    logger.debug('✅ TTS: Stopped');
+    console.log('✅ TTS: Stopped');
 
     // [P0.4 ANTI-ECHO] Notifier fin TTS (pour reprendre VAD)
     this.emitEvent('end');
@@ -543,14 +540,12 @@ class HybridTTSService {
         // Insérer après l'élément en cours (s'il y en a un)
         const insertIndex = this.currentItemId ? 1 : 0;
         this.queue.splice(insertIndex, 0, item);
-        logger.debug(
-          `[HybridTTS] ⚡ HIGH priority item added at position ${insertIndex}`
-        );
+        console.log(`[HybridTTS] ⚡ HIGH priority item added at position ${insertIndex}`);
       } else {
         this.queue.push(item);
       }
 
-      logger.debug(
+      console.log(
         `[HybridTTS] 📥 Queued: "${text.substring(0, 30)}..." (queue size: ${this.queue.length})`
       );
 
@@ -577,11 +572,11 @@ class HybridTTSService {
       this.currentItemId = item.id;
 
       try {
-        logger.debug(`[HybridTTS] 🔄 Processing: "${item.text.substring(0, 30)}..."`);
+        console.log(`[HybridTTS] 🔄 Processing: "${item.text.substring(0, 30)}..."`);
         await this.speak(item.text, item.config, item.useOnline);
         item.resolve();
       } catch (error) {
-        logger.error(`[HybridTTS] ❌ Queue item failed:`, error);
+        console.error(`[HybridTTS] ❌ Queue item failed:`, error);
         item.reject(error instanceof Error ? error : new Error(String(error)));
       }
 
@@ -589,7 +584,7 @@ class HybridTTSService {
     }
 
     this.isProcessingQueue = false;
-    logger.debug('✅ Queue empty');
+    console.log('[HybridTTS] ✅ Queue empty');
   }
 
   /**
@@ -603,7 +598,7 @@ class HybridTTSService {
     this.queue = [];
     this.currentItemId = null;
     if (count > 0) {
-      logger.debug(`[HybridTTS] 🗑️ Queue cleared (${count} items removed)`);
+      console.log(`[HybridTTS] 🗑️ Queue cleared (${count} items removed)`);
     }
   }
 
@@ -687,18 +682,18 @@ class HybridTTSService {
     newStyleDescription: string,
     saveAsDefault: boolean = true
   ): Promise<void> {
-    logger.debug('🎨 Updating voice style...');
-    logger.debug(`   New style: ${newStyleDescription.substring(0, 60)}...`);
-    logger.debug(`   Save as default: ${saveAsDefault}`);
+    console.log('[HybridTTS] 🎨 Updating voice style...');
+    console.log(`   New style: ${newStyleDescription.substring(0, 60)}...`);
+    console.log(`   Save as default: ${saveAsDefault}`);
 
     try {
       await parlerTTSBridge.updateVoiceStyle(newStyleDescription, saveAsDefault);
-      logger.debug('✅ Voice style updated successfully');
+      console.log('[HybridTTS] ✅ Voice style updated successfully');
 
       // Reset cache pour forcer re-check
       this.parlerTTSCache = null;
     } catch (error) {
-      logger.error('❌ Failed to update voice style:', error);
+      console.error('[HybridTTS] ❌ Failed to update voice style:', error);
       throw error;
     }
   }

@@ -12,7 +12,6 @@
 
 import { useState, useCallback } from 'react';
 import { audioService } from '@/features/audio-center/services/audioService';
-import { logger } from '@/utils/logger';
 
 interface UseTTSReturn {
   speak: (text: string) => Promise<void>;
@@ -30,7 +29,7 @@ export function useTTS(): UseTTSReturn {
     try {
       await audioService.speak(text);
     } catch (error) {
-      logger.error('TTS error:', error);
+      console.error('TTS error:', error);
     } finally {
       setIsSpeaking(false);
     }

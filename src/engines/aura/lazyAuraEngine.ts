@@ -6,8 +6,6 @@
  * Permet lazy loading du moteur aura pour réduire bundle initial
  */
 
-import { logger } from '@/utils/logger';
-
 // Type for the aura engine instance
 type AuraEngineModule = typeof import('./auraEngine');
 type AuraEngineInstance = AuraEngineModule['auraEngine'];
@@ -37,7 +35,7 @@ export async function getAuraEngine() {
 export async function startAuraEngine() {
   const engine = await getAuraEngine();
   engine.start();
-  logger.debug('  ✅ Aura Engine active (60Hz, 8 visual modes)');
+  console.log('  ✅ Aura Engine active (60Hz, 8 visual modes)');
 }
 
 /**

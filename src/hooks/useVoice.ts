@@ -21,10 +21,9 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { hybridTTS, type TTSConfig, type TTSStatus } from '../services/tts/hybridTTS';
-import { logger } from '@/utils/logger';
 
 // Log deprecation warning on first import
-logger.warn('useVoice hook is deprecated. Use useVoiceEngine instead.');
+console.warn('[DEPRECATED] useVoice hook is deprecated. Use useVoiceEngine instead.');
 
 // ═══ TYPES ═══
 
@@ -159,7 +158,7 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
           }));
         }
       } catch (err) {
-        logger.error('TTS check failed:', err);
+        console.error('[useVoice] TTS check failed:', err);
       }
     };
 
@@ -193,7 +192,7 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
   const speak = useCallback(
     async (text: string, config?: TTSConfig) => {
       if (!text?.trim()) {
-        logger.warn('Empty text, skipping TTS');
+        console.warn('[useVoice] Empty text, skipping TTS');
         return;
       }
 
@@ -203,7 +202,7 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
         await hybridTTS.speak(text, config || options.ttsConfig);
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : String(err);
-        logger.error('TTS error:', errorMsg);
+        console.error('[useVoice] TTS error:', errorMsg);
         if (mountedRef.current) {
           setState(prev => ({ ...prev, error: `TTS Error: ${errorMsg}` }));
         }
@@ -223,7 +222,7 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
         setState(prev => ({ ...prev, isSpeaking: false }));
       }
     } catch (err) {
-      logger.error('Stop TTS error:', err);
+      console.error('[useVoice] Stop TTS error:', err);
     }
   }, []);
 
@@ -255,7 +254,7 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
       recognition.lang = language;
 
       recognition.onstart = () => {
-        logger.debug('STT started');
+        console.log('[useVoice] STT started');
         if (mountedRef.current) {
           setState(prev => ({
             ...prev,
@@ -296,7 +295,7 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
       };
 
       recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
-        logger.error('STT error:', event.error);
+        console.error('[useVoice] STT error:', event.error);
         if (mountedRef.current && event.error !== 'aborted') {
           setState(prev => ({
             ...prev,
@@ -307,7 +306,7 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
       };
 
       recognition.onend = () => {
-        logger.debug('STT ended');
+        console.log('[useVoice] STT ended');
         if (mountedRef.current) {
           setState(prev => ({
             ...prev,
@@ -321,7 +320,7 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
       recognition.start();
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : String(err);
-      logger.error('Start STT error:', errorMsg);
+      console.error('[useVoice] Start STT error:', errorMsg);
       if (mountedRef.current) {
         setState(prev => ({
           ...prev,

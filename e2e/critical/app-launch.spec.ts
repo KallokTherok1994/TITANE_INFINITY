@@ -9,8 +9,8 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Critical Path: Application Launch', () => {
   test.beforeEach(async ({ page }) => {
-    // Navigate to Vite dev server (web-compatible mode)
-    await page.goto('/');
+    // Navigate to Vite dev server (Tauri webview context)
+    await page.goto('http://localhost:5173');
   });
 
   test('app loads without console errors', async ({ page }) => {
@@ -63,55 +63,43 @@ test.describe('Critical Path: Application Launch', () => {
     expect(theme).toBeTruthy();
   });
 
-  test('app shell renders and title is set', async ({ page }) => {
-    await page.waitForTimeout(500);
+  test('system health indicator is present', async ({ page }) => {
+    // Wait for system health initialization
+    await page.waitForTimeout(1000);
 
-    await expect(page.locator('#root')).toBeVisible();
-    const title = await page.title();
-    expect(title.toLowerCase()).toContain('titane');
+    // Look for health indicator (may be in header or corner)
+    const healthIndicator = await page.getByText(/health|status|score/i).first();
+
+    // Should exist somewhere on page
+    const count = await page.getByText(/health|status|score/i).count();
+    expect(count).toBeGreaterThan(0);
   });
 
   test('no memory leaks after 10 seconds', async ({ page }) => {
-    // Get initial memory with error handling
-    let initialMemory = 0;
-    try {
-      initialMemory = await page.evaluate(() => {
-        const perf = performance as any;
-        if (perf.memory) {
-          return perf.memory.usedJSHeapSize;
-        }
-        return 0;
-      });
-    } catch (e) {
-      // Context may be destroyed, skip this test
-      console.log('Could not measure initial memory, skipping test');
-      return;
-    }
+    // Get initial memory
+    const initialMemory = await page.evaluate(() => {
+      const perf = performance as any;
+      if (perf.memory) {
+        return perf.memory.usedJSHeapSize;
+      }
+      return 0;
+    });
 
     // Wait and interact
     await page.waitForTimeout(10000);
 
-    // Get final memory with error handling
-    let finalMemory = 0;
-    try {
-      finalMemory = await page.evaluate(() => {
-        const perf = performance as any;
-        if (perf.memory) {
-          return perf.memory.usedJSHeapSize;
-        }
-        return 0;
-      });
-    } catch (e) {
-      // Context may be destroyed after navigation, skip assertion
-      console.log('Could not measure final memory, skipping assertion');
-      return;
-    }
+    // Get final memory
+    const finalMemory = await page.evaluate(() => {
+      const perf = performance as any;
+      if (perf.memory) {
+        return perf.memory.usedJSHeapSize;
+      }
+      return 0;
+    });
 
-    // Memory growth should be reasonable (< 70MB for E2E tests with overhead)
+    // Memory growth should be reasonable (< 50MB for idle app)
     const memoryGrowth = finalMemory - initialMemory;
-    if (memoryGrowth > 0) {
-      expect(memoryGrowth).toBeLessThan(70 * 1024 * 1024);
-    }
+    expect(memoryGrowth).toBeLessThan(50 * 1024 * 1024);
   });
   test('performance metrics are acceptable', async ({ page }) => {
     // Wait for full initialization
@@ -134,12 +122,21 @@ test.describe('Critical Path: Application Launch', () => {
     expect(metrics.totalTime).toBeLessThan(10000); // 10s
   });
 
-  test('reactivity sanity: page stays responsive', async ({ page }) => {
-    // Some overlays may intercept pointer events during boot;
-    // we keep this test non-interactive and only verify the app stays alive.
-    await page.waitForTimeout(500);
-    await expect(page.locator('body')).toBeVisible();
-    const readyState = await page.evaluate(() => document.readyState);
-    expect(['interactive', 'complete']).toContain(readyState);
+  test('reactivity test: state updates propagate', async ({ page }) => {
+    // Find any interactive element (button, input, toggle)
+    const interactiveElement = await page
+      .locator('button, input, [role="button"]')
+      .first();
+
+    if ((await interactiveElement.count()) > 0) {
+      await interactiveElement.click();
+
+      // Wait for potential state update
+      await page.waitForTimeout(500);
+
+      // Verify page still functional (no crash)
+      const bodyVisible = await page.locator('body').isVisible();
+      expect(bodyVisible).toBe(true);
+    }
   });
 });

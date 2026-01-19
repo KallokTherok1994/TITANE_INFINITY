@@ -11,8 +11,6 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { logger } from '@/utils/logger';
-
 export type HaloState =
   | 'idle' // Halo statique
   | 'breathing' // Breathing lent (VAD speech detection)
@@ -86,7 +84,7 @@ class HaloEngine {
       return; // Already in this state
     }
 
-    logger.debug(`[HaloEngine] Transition: ${this.state} → ${newState}`);
+    console.log(`[HaloEngine] Transition: ${this.state} → ${newState}`);
 
     this.state = newState;
     this.startTime = newState !== 'idle' ? Date.now() : null;
@@ -111,7 +109,7 @@ class HaloEngine {
       try {
         callback(status);
       } catch (error) {
-        logger.error('Callback error:', error);
+        console.error('[HaloEngine] Callback error:', error);
       }
     });
   }

@@ -2,7 +2,7 @@
 
 **Release Candidate:** v26.4.1-alpha  
 **Build:** Commit 4b6eb9c4 (MAIN)  
-**Status:** ✅ All 4668 tests passing | ⏳ Smoke test in progress (30min)  
+**Status:** ✅ All 4668 tests passing | ⏳ Smoke test in progress (30min)
 
 ---
 
@@ -11,6 +11,7 @@
 ### New Features
 
 #### 1. **Action Prefetcher** 💭
+
 - **Purpose:** Predict next user actions via Markov chain model
 - **Scope:** Behavioral learning from action sequences
 - **Benefit:** 20-30% latency improvement on action transitions
@@ -25,6 +26,7 @@ let predictions = prefetcher.predict_next_actions("nav:home", 5);
 ```
 
 #### 2. **IPC Batcher** ⚡
+
 - **Purpose:** Coalesce IPC messages for efficient transport
 - **Scope:** Message batching and transport optimization
 - **Benefit:** 40% reduction in IPC latency variance
@@ -45,27 +47,28 @@ if let Some(batch) = batcher.try_batch() {
 
 ### Measured Improvements (Phase 4 Total)
 
-| Metric | v26.3.0 | v26.4.0-beta | v26.4.1-alpha | Delta |
-|--------|---------|--------------|---------------|-------|
-| Memory (RSS) | 335 MB | 285 MB (-15%) | ~200 MB (-40%) | **-101 MB** 🎯 |
-| Latency P99 | 850ms | 340ms (-60%) | ~160ms (-81%) | **-690ms** 📉 |
-| CPU @ idle | 12% | 11% (-8%) | ~10% (-17%) | **-2%** ⚡ |
-| Semantic Search | N/A | N/A | **+50x** | 🔍 NEW |
+| Metric          | v26.3.0 | v26.4.0-beta  | v26.4.1-alpha  | Delta          |
+| --------------- | ------- | ------------- | -------------- | -------------- |
+| Memory (RSS)    | 335 MB  | 285 MB (-15%) | ~200 MB (-40%) | **-101 MB** 🎯 |
+| Latency P99     | 850ms   | 340ms (-60%)  | ~160ms (-81%)  | **-690ms** 📉  |
+| CPU @ idle      | 12%     | 11% (-8%)     | ~10% (-17%)    | **-2%** ⚡     |
+| Semantic Search | N/A     | N/A           | **+50x**       | 🔍 NEW         |
 
 ### Sprint-by-Sprint Breakdown
 
-| Sprint | Feature | Latency | Memory | CPU |
-|--------|---------|---------|--------|-----|
-| 1 | LZ4 + Batch | -2.5x | -15% | -8% |
-| 2 | Streaming + Bloom | -1.5x | -10% | -5% |
-| 3 | Prefetch + Batch IPC | -1.2x | -5% | -3% |
-| **Total** | **All Combined** | **-5.2x** | **-30%** | **-16%** |
+| Sprint    | Feature              | Latency   | Memory   | CPU      |
+| --------- | -------------------- | --------- | -------- | -------- |
+| 1         | LZ4 + Batch          | -2.5x     | -15%     | -8%      |
+| 2         | Streaming + Bloom    | -1.5x     | -10%     | -5%      |
+| 3         | Prefetch + Batch IPC | -1.2x     | -5%      | -3%      |
+| **Total** | **All Combined**     | **-5.2x** | **-30%** | **-16%** |
 
 ---
 
 ## 🧪 Testing & Validation
 
 ### Unit Tests
+
 ```
 ✅ 4668 / 4668 tests passing
    ├─ Sprint 1 tests: 1250 (LZ4 + emotion batch)
@@ -75,6 +78,7 @@ if let Some(batch) = batcher.try_batch() {
 ```
 
 ### Sprint 3 Test Coverage
+
 - ✅ `test_action_recording_and_prediction` — Pattern learning
 - ✅ `test_prediction_accuracy` — Top-K accuracy scoring
 - ✅ `test_no_prediction_for_unknown_sequence` — Edge case handling
@@ -89,6 +93,7 @@ if let Some(batch) = batcher.try_batch() {
 - ✅ `test_clear_functionality` — Reset logic
 
 ### Smoke Test
+
 - **Duration:** 30 minutes (running)
 - **Metrics:** CPU%, MEM%, Latency P99
 - **Interval:** 2-minute snapshots
@@ -139,6 +144,7 @@ Enhanced Flow (Phase 4):
 ## 🔒 Security & Safety
 
 ### Code Quality
+
 - ✅ No `unwrap()` in production paths
 - ✅ No hardcoded secrets
 - ✅ Thread-safe (parking_lot RwLock)
@@ -146,6 +152,7 @@ Enhanced Flow (Phase 4):
 - ✅ Zero-copy where possible (Arc, Rc)
 
 ### Compilation Status
+
 ```
 Warnings: 3 (all non-critical)
   ├─ unused import: `Duration` (ipc_batcher, ignored)
@@ -177,6 +184,7 @@ Clippy: ✅ Clean
 ## 🚀 Installation & Testing
 
 ### For Testers
+
 ```bash
 # Check out release candidate
 git checkout 4b6eb9c4
@@ -192,6 +200,7 @@ pnpm run dev:tauri
 ```
 
 ### Expected Behavior
+
 1. **Action transitions:** Should feel 20-30% faster
 2. **Memory usage:** Watch Activity Monitor → expect ~200MB RSS
 3. **CPU idle:** Should drop to ~10% (from 12%)
@@ -202,20 +211,24 @@ pnpm run dev:tauri
 ## 📝 Changelog
 
 ### Added
+
 - `behavior_engine`: Action prediction engine (Markov model)
 - `ipc_batcher`: IPC message batching system
 - 12 new unit tests for Sprint 3
 - Performance targets documentation
 
 ### Changed
+
 - `lib.rs`: Registered behavior_engine and ipc_batcher modules
 - Enhanced integration hooks for prefetch predictions
 
 ### Fixed
+
 - ✅ All existing 4656 tests remain passing
 - ✅ No breaking changes to public API
 
 ### Performance
+
 - Memory: **-30%** (baseline v26.3.0)
 - Latency: **-5.2x** (P99 improvements)
 - CPU: **-16%** at idle
@@ -256,6 +269,7 @@ pnpm run dev:tauri
 ## 📞 Support
 
 **Questions?** See:
+
 - Architecture: `ARCHITECTURE.md`
 - Phase 4 Planning: `PHASE_4_PLANNING.md`
 - Sprint 1+2 Delivery: `PHASE_4_SPRINT_1_2_DELIVERY.md`

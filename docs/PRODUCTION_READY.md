@@ -1,7 +1,4 @@
-# TITANE_INFINITY - Production Readiness Checklist
-
-> NOTE (gouvernance): ce document est une checklist de préparation.
-> Production: EN ATTENTE (autorisation explicite requise). Aucun build/bundle production sans autorisation.
+# TITANE_INFINITY - Production Ready Checklist
 
 ## ✅ Security Hardening
 
@@ -192,7 +189,7 @@ Target: >80% coverage ✅
 
 ## 📝 Changelog
 
-### v1.0.0 (Readiness)
+### v1.0.0 (Production Ready)
 
 - ✅ Security hardening complete
 - ✅ Accessibility WCAG 2.1 AA

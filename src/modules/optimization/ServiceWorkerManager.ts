@@ -17,8 +17,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 // Note: Service Worker API requires non-null assertions for registration.waiting/active states
 
-import { logger } from '@/utils/logger';
-
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
@@ -84,12 +82,12 @@ export class ServiceWorkerManager {
 
   async register(): Promise<boolean> {
     if (!this.config.enabled) {
-      logger.debug('Service Worker disabled');
+      console.log('[ServiceWorkerManager] Service Worker disabled');
       return false;
     }
 
     if (!('serviceWorker' in navigator)) {
-      logger.warn('Service Worker not supported');
+      console.warn('[ServiceWorkerManager] Service Worker not supported');
       return false;
     }
 
@@ -100,7 +98,7 @@ export class ServiceWorkerManager {
 
       this.metrics.isRegistered = true;
 
-      logger.debug('Registered:', this.registration.scope);
+      console.log('[ServiceWorkerManager] Registered:', this.registration.scope);
 
       // Listen for updates
       this.registration.addEventListener('updatefound', () => {
@@ -118,13 +116,13 @@ export class ServiceWorkerManager {
 
       // Listen for controller changes
       navigator.serviceWorker.addEventListener('controllerchange', () => {
-        logger.debug('Controller changed - reloading');
+        console.log('[ServiceWorkerManager] Controller changed - reloading');
         window.location.reload();
       });
 
       return true;
     } catch (error) {
-      logger.error('Registration failed:', error);
+      console.error('[ServiceWorkerManager] Registration failed:', error);
       return false;
     }
   }
@@ -141,10 +139,10 @@ export class ServiceWorkerManager {
 
       this.stopUpdateChecks();
 
-      logger.debug('Unregistered');
+      console.log('[ServiceWorkerManager] Unregistered');
       return true;
     } catch (error) {
-      logger.error('Unregister failed:', error);
+      console.error('[ServiceWorkerManager] Unregister failed:', error);
       return false;
     }
   }
@@ -161,12 +159,12 @@ export class ServiceWorkerManager {
 
     this.metrics.updateAvailable = true;
 
-    logger.debug('Update found');
+    console.log('[ServiceWorkerManager] Update found');
 
     newWorker.addEventListener('statechange', () => {
       if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
         // New service worker installed, waiting to activate
-        logger.debug('Update ready - will activate on next visit');
+        console.log('[ServiceWorkerManager] Update ready - will activate on next visit');
 
         // Optionally notify user
         this.notifyUpdateAvailable();
@@ -194,10 +192,10 @@ export class ServiceWorkerManager {
       await this.registration.update();
       this.metrics.lastUpdateCheck = Date.now();
 
-      logger.debug('Update check completed');
+      console.log('[ServiceWorkerManager] Update check completed');
       return true;
     } catch (error) {
-      logger.error('Update check failed:', error);
+      console.error('[ServiceWorkerManager] Update check failed:', error);
       return false;
     }
   }
@@ -244,19 +242,19 @@ export class ServiceWorkerManager {
           resolve(event.data);
         };
 
-        this.registration?.active!.postMessage({ type: 'CLEAR_CACHE' }, [
+        this.registration!.active!.postMessage({ type: 'CLEAR_CACHE' }, [
           messageChannel.port2,
         ]);
       });
 
       if (response.success) {
         await this.updateMetrics();
-        logger.debug('Cache cleared');
+        console.log('[ServiceWorkerManager] Cache cleared');
       }
 
       return response.success;
     } catch (error) {
-      logger.error('Clear cache failed:', error);
+      console.error('[ServiceWorkerManager] Clear cache failed:', error);
       return false;
     }
   }
@@ -274,14 +272,14 @@ export class ServiceWorkerManager {
           resolve(event.data);
         };
 
-        this.registration?.active!.postMessage({ type: 'GET_CACHE_SIZE' }, [
+        this.registration!.active!.postMessage({ type: 'GET_CACHE_SIZE' }, [
           messageChannel.port2,
         ]);
       });
 
       return response.size;
     } catch (error) {
-      logger.error('Get cache size failed:', error);
+      console.error('[ServiceWorkerManager] Get cache size failed:', error);
       return 0;
     }
   }
@@ -299,7 +297,7 @@ export class ServiceWorkerManager {
           resolve(event.data);
         };
 
-        this.registration?.active!.postMessage(
+        this.registration!.active!.postMessage(
           { type: 'PRECACHE_URLS', payload: { urls } },
           [messageChannel.port2]
         );
@@ -307,7 +305,7 @@ export class ServiceWorkerManager {
 
       return response.success;
     } catch (error) {
-      logger.error('Precache URLs failed:', error);
+      console.error('[ServiceWorkerManager] Precache URLs failed:', error);
       return false;
     }
   }
@@ -372,7 +370,7 @@ if (
           await Promise.all(registrations.map(r => r.unregister()));
         })
         .catch(error => {
-          logger.warn('Unregister in Tauri failed:', error);
+          console.warn('[ServiceWorkerManager] Unregister in Tauri failed:', error);
         });
 
       if (typeof caches !== 'undefined') {
@@ -380,7 +378,7 @@ if (
           .keys()
           .then(keys => Promise.all(keys.map(key => caches.delete(key))))
           .catch(error => {
-            logger.warn('Cache cleanup in Tauri failed:', error);
+            console.warn('[ServiceWorkerManager] Cache cleanup in Tauri failed:', error);
           });
       }
     });
@@ -388,7 +386,7 @@ if (
     // Register after page load
     window.addEventListener('load', () => {
       serviceWorkerManager.register().catch(error => {
-        logger.error('Auto-registration failed:', error);
+        console.error('[ServiceWorkerManager] Auto-registration failed:', error);
       });
     });
   }

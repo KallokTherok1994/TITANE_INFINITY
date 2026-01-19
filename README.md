@@ -1,7 +1,7 @@
 # TITANE∞ — Cognitive Operating System
 
 **Version:** v26.3.0  
-**Status:** Build Titan-Stable validé (AppImage + DEB); déploiement utilisateur en cours de validation ✅  
+**Status:** Production Ready ✅  
 **License:** Proprietary — © 2025 Humain Total / Kevin Thibault
 
 **Qualité (v26.3.0) :** Score 10/10 (cf. [CHANGELOG v26.3.0](CHANGELOG.md#v26-3-0)) — zéro dette technique — ADR + validation finale 🏆
@@ -239,7 +239,7 @@ Pour plus d'informations : [COPILOT-XS README](.github/copilot-xs/README.md)
 ## 📚 Documentation
 
 > **🎯 NEW: World-Class Documentation (200% Coverage - Dec 2025)**  
-> **Quick Navigation:** [Getting Started](docs/GETTING_STARTED.md) • [Contributing](CONTRIBUTING.md) • [Docs (current)](docs/current/INDEX.md) • [Master Index](docs/INDEX.md) • [Archive (root)](docs/archive/root/INDEX.md)
+> **Quick Navigation:** [Getting Started](docs/GETTING_STARTED.md) • [Contributing](CONTRIBUTING.md) • [Master Index](docs/INDEX.md)
 
 ### 🚀 Start Here (New to TITANE∞?)
 
@@ -295,8 +295,10 @@ Ready-to-execute validation campaign (PAUSE before Phase 8+):
 
 ### 🗂️ Legacy Documentation (Archived)
 
-- Les anciens fichiers `.md` historiquement stockés à la racine sont archivés ici : [docs/archive/root/INDEX.md](docs/archive/root/INDEX.md)
-- La documentation active est centralisée dans : [docs/current/INDEX.md](docs/current/INDEX.md)
+- **ARCHITECTURE.md** : Architecture détaillée (frontend/backend/pipeline)
+- **DEVELOPER_GUIDE.md** : Guide développeur (conventions, setup, troubleshooting)
+- **AUDIT_COMPLET_v21_ENGINE_2025-12-10.md** : Audit complet système
+- **CHANGELOG_v24.md** : Historique des changements v24
 
 ### 📁 Technical Documentation (Legacy)
 
@@ -330,9 +332,6 @@ pnpm run test:all
 - **Sandbox Tauri** : Isolation filesystem + permissions
 - **CSP** : Content Security Policy configurée
 - **Local-First** : Données 100% locales par défaut
-- **GitGuardian** : Secret scanning en pre-commit et CI/CD ([Documentation](docs/security/GITGUARDIAN.md))
-- **CodeQL** : Analyse de sécurité automatisée
-- **Dependency Auditing** : pnpm audit + cargo-audit
 
 ---
 

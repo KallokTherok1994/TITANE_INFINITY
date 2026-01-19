@@ -1,14 +1,11 @@
 //! ═══════════════════════════════════════════════════════════════
-//!   TITANE∞ v26.3.0 — LIB CONFIGURATION
+//!   TITANE∞ v24.3.0 — LIB CONFIGURATION
 //!   Unified backend architecture - Singularity + OMEGA Pipeline
 //! ═══════════════════════════════════════════════════════════════
 
 // ═══════════════════════════════════════════════════════════════
 // SECURITY & CODE QUALITY LINTS (v26.2.0+)
 // ═══════════════════════════════════════════════════════════════
-
-// Allow expect() in specific contexts (bootstrapping, initialization)
-#![allow(clippy::expect_used)]
 
 // Enforce safe error handling - no unwrap() in production code
 // Tests are exempt via #[cfg(test)] or #[allow(clippy::unwrap_used)]
@@ -78,17 +75,10 @@ pub mod kernel; // ✅ Cognitive OS Kernel v20Ω.0 (NEW)
 pub mod omega; // ✅ Omega Pipeline v20Ω (NEW)
 
 // ═══════════════════════════════════════════════════════════════
-// PROFILING & MONITORING v27.0 (Phase 1 Consolidation)
+// PROFILING & MONITORING v19.5 (NEW)
 // ═══════════════════════════════════════════════════════════════
 
-pub mod monitoring; // ✅ v27.0: Unified Monitoring Engine (metrics, performance, health, telemetry)
-
-// Phase 1 v27.0: Deprecated - functionality moved to monitoring/metrics
-#[deprecated(
-    since = "27.0.0",
-    note = "Use crate::monitoring::metrics instead. Part of monitoring consolidation (7→1 modules)."
-)]
-pub mod profiling; // ⚠️ Phase 1 v27.0: → monitoring/metrics/ipc_profiler
+pub mod profiling; // ✅ IPC Performance Profiler v19.5.0 (NEW)
 
 // ═══════════════════════════════════════════════════════════════
 pub mod ipc; // ✅ IPC Cache Layer v19.5.2 P2-1 Phase 4 (NEW)
@@ -109,16 +99,6 @@ pub mod chat_engine; // ✅ High-performance Chat Engine v∞
 pub mod conversation_engine; // ✅ Conversation Engine v∞ (Unified Pipeline, Memory Map, Self-Healing)
 pub mod ia; // ✅ v∞.19.3Ω: Unified IA Engine (OpenAI + Claude + Gemini + Local)
 pub mod multi_agents; // ✅ v∞.19.3Ω: Multi-Agents avec permissions IA (NEW)
-
-// ═══════════════════════════════════════════════════════════════
-// PROVIDER REFACTOR v27.0 (Epic 1)
-// ═══════════════════════════════════════════════════════════════
-
-pub mod epic1_provider_refactor; // ✅ Result-based provider interface
-pub mod gemini_provider_refactor; // ✅ Gemini provider (Epic 1)
-pub mod gemini_provider_extensions; // ✅ Gemini streaming + retry
-pub mod ollama_provider_refactor; // ✅ Ollama provider (Epic 1)
-pub mod local_provider_refactor; // ✅ Local provider (Epic 1)
 
 // ═════════════════════════════════════════════════════════
 // MEMORY SYSTEM v24.2 (Phase 2 Simplification)
@@ -161,14 +141,7 @@ pub mod secure_commands; // ✅ Secure commands
 pub mod secure_engine; // ✅ Secure engine helpers
 pub mod security; // ✅ Security layer
 pub mod system_state; // ✅ System state
-
-// Phase 1 v26.3: Deprecated - functionality moved to temporal_engine (aligns with frontend TIME fusion v25.1)
-#[deprecated(
-    since = "26.3.0",
-    note = "Use temporal_engine instead. Frontend consolidated time/ in v25.1, backend alignment."
-)]
-pub mod time; // ⚠️ Phase 1 v26.3: → temporal_engine (0 imports, safe deprecation)
-
+pub mod time; // ✅ Time-travel engine
 pub mod time_commands; // ✅ Time commands
 pub mod updates; // ✅ Update engine
 
@@ -412,13 +385,6 @@ pub mod agent_system; // ✅ Agent System vΩ (Multi-Agents, Roles, Capabilities
 
 // TEMPORARILY COMMENTED: API incomplete (Phase 1 Stabilisation)
 // pub mod meta_energy; // ✅ Meta-Energy Engine vΩ (Homéostasie, Énergie, Fatigue, Récupération, Load Balancing, Prédiction)
-
-// ═══════════════════════════════════════════════════════════════
-// PHASE 4 SPRINT 3: ACTION PREFETCH & IPC BATCHING
-// ═══════════════════════════════════════════════════════════════
-
-pub mod behavior_engine; // ✅ Behavior Prediction Engine v1 (Action Prefetcher)
-pub mod ipc_batcher; // ✅ IPC Message Batching v1 (Message Coalescing)
 
 // ═══════════════════════════════════════════════════════════════
 // RE-EXPORTS v15

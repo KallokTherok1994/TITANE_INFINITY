@@ -16,6 +16,7 @@
 ## 🔄 Actions Immédiates
 
 ### 1. Push des Corrections
+
 ```bash
 # Option A: Push automatique (recommandé)
 ./push_corrections.sh
@@ -26,6 +27,7 @@ git push origin --tags
 ```
 
 **Commits à pusher:**
+
 1. b2839027 - Fix compilation errors
 2. 3e09da50 - Fix telemetryReport undefined
 3. 7e93104f - Remove invalid tsconfig option
@@ -36,6 +38,7 @@ git push origin --tags
 ### 2. Nettoyage Optionnel
 
 #### Logs de développement (72 fichiers)
+
 ```bash
 # Vérifier les logs
 find . -name "*.log" | grep -v node_modules | head -20
@@ -48,6 +51,7 @@ find logs/ -name "*.log" -mtime +7 -delete
 ```
 
 #### Améliorer .gitignore
+
 ```bash
 # Ajouter les patterns du fichier .gitignore.additions
 cat .gitignore.additions >> .gitignore
@@ -58,21 +62,25 @@ git commit -m "🔧 chore: Améliorer .gitignore pour logs et temps"
 ## 📋 Recommandations Court Terme
 
 ### Performance
+
 - [ ] Analyser bundle size: `pnpm exec vite-bundle-visualizer`
 - [ ] Vérifier memory leaks potentiels
 - [ ] Optimiser imports (tree-shaking)
 
 ### Tests
+
 - [ ] Exécuter suite complète: `pnpm test`
 - [ ] Vérifier coverage: `pnpm run test:coverage`
 - [ ] Tester en mode production: `pnpm run build && cd dist && python -m http.server`
 
 ### ESLint (27-31 warnings restants)
+
 - [ ] Créer issues GitHub pour warnings complexes
 - [ ] Planifier refonte types (no-explicit-any)
 - [ ] Documenter pattern pour no-unused-vars
 
 ### Documentation
+
 - [ ] Mettre à jour README.md avec v26.3.0-corrections
 - [ ] Ajouter section "Known Issues" pour warnings ESLint
 - [ ] Documenter conventions de code (underscore prefix)
@@ -80,17 +88,20 @@ git commit -m "🔧 chore: Améliorer .gitignore pour logs et temps"
 ## 🎯 Recommandations Long Terme
 
 ### Architecture
+
 - [ ] Refactoriser types `any` restants (~15 occurrences)
 - [ ] Audit complet des no-unused-vars contextuels
 - [ ] Migration TypeScript 7.0 (baseUrl deprecation)
 - [ ] Moderniser patterns React (hooks avancés)
 
 ### CI/CD
+
 - [ ] Ajouter GitHub Action pour ESLint warnings report
 - [ ] Configurer Dependabot
 - [ ] Automatiser semantic versioning
 
 ### Monitoring
+
 - [ ] Intégrer Sentry pour error tracking
 - [ ] Ajouter performance monitoring (Web Vitals)
 - [ ] Dashboard de métriques TypeScript/ESLint
@@ -98,6 +109,7 @@ git commit -m "🔧 chore: Améliorer .gitignore pour logs et temps"
 ## 📊 Métriques Cibles
 
 ### Objectif Q1 2026
+
 - TypeScript: 0 erreurs ✅ (déjà atteint)
 - ESLint: < 10 warnings (actuellement: 27-31)
 - Test coverage: > 80% (à mesurer)
@@ -105,6 +117,7 @@ git commit -m "🔧 chore: Améliorer .gitignore pour logs et temps"
 - Bundle size: < 500KB gzip (à mesurer)
 
 ### Objectif Q2 2026
+
 - ESLint: 0 warnings
 - TypeScript strict mode: 100%
 - E2E tests: Suite complète
@@ -120,13 +133,16 @@ git commit -m "🔧 chore: Améliorer .gitignore pour logs et temps"
 ## 📝 Notes
 
 ### Warnings ESLint Acceptables (Production)
+
 Les 27-31 warnings restants sont **non-bloquants** car:
+
 - Pas d'impact runtime
 - Patterns legacy nécessitant refonte
 - Trade-off stabilité vs perfectionnisme
 - Documentés dans CORRECTIONS_SUMMARY.md
 
 ### Décisions Techniques Documentées
+
 - ❌ `any → unknown`: Trop risqué sans type guards complets
 - ✅ `!. → ?.`: Patterns simples uniquement
 - ✅ Git restore: Préféré aux corrections agressives

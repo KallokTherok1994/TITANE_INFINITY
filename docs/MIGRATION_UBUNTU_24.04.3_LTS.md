@@ -180,7 +180,7 @@ TITANE_INFINITY/
 │   │   ├── multimodal/         # Multimodal (#15)
 │   │   ├── performance/        # Performance (#21)
 │   │   └── temporal_engine/    # Temporal (#18)
-│   └── tauri.conf.json         # Config Tauri (src-tauri/tauri.conf.json; base; overlay via runtime/*)
+│   └── tauri.conf.json         # Config Tauri
 ├── src/                        # Frontend (TypeScript/React)
 ├── package.json                # Config Node
 ├── pnpm-lock.yaml              # Lock dependencies

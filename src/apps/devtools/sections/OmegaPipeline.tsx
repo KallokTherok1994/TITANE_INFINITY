@@ -138,7 +138,7 @@ export function OmegaPipeline() {
                     <div className="flex items-start gap-4">
                       {/* Icon */}
                       <div
-                        className={`shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-2xl ${isActive ? 'animate-pulse' : ''}`}
+                        className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-2xl ${isActive ? 'animate-pulse' : ''}`}
                         style={{
                           background: 'var(--bg-surface, #181c21)',
                           border: `2px solid ${colors.border}`,

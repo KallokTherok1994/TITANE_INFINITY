@@ -1,12 +1,27 @@
 {
   "$schema": "https://json.schemastore.org/tauri-updater.json",
-  "version": "26.3.0",
-  "notes": "TITANE Infinity v26.3.0 (Stable) — AppImage + DEB publiés via GitHub Release.",
-  "pub_date": "2026-01-18T10:59:00Z",
+  "version": "17.3.0",
+  "notes": "Phase 8 Production Hardening Complete - ErrorBoundary, Performance Monitoring, Accessibility WCAG 2.1 AA, Validation stricte, Build optimisé",
+  "pub_date": "2025-11-23T00:00:00Z",
   "platforms": {
     "linux-x86_64": {
       "signature": "",
-      "url": "https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v26.3.0/TITANE-Infinity_26.3.0_amd64.AppImage",
+      "url": "https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v17.3.0/titane-infinity_17.3.0_amd64.AppImage",
+      "with_elevated_task": false
+    },
+    "windows-x86_64": {
+      "signature": "",
+      "url": "https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v17.3.0/titane-infinity_17.3.0_x64_en-US.msi",
+      "with_elevated_task": true
+    },
+    "darwin-x86_64": {
+      "signature": "",
+      "url": "https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v17.3.0/titane-infinity_17.3.0_x64.dmg",
+      "with_elevated_task": false
+    },
+    "darwin-aarch64": {
+      "signature": "",
+      "url": "https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v17.3.0/titane-infinity_17.3.0_aarch64.dmg",
       "with_elevated_task": false
     }
   }

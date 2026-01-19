@@ -8,7 +8,6 @@
 import { secureInvoke } from '@/lib/security';
 import { detectEnvironment } from '@/core/tauri/environment';
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
-import { logger } from '@/utils/logger';
 import type { SingularityState } from '../types/singularityState';
 
 // ─────────────────────────────────────────────────────────────────
@@ -175,7 +174,7 @@ class TauriClient {
       }
       // Passage en half-open après timeout
       breaker.state = 'half-open';
-      logger.debug(`🔄 Circuit breaker HALF-OPEN for ${command}`);
+      console.log(`🔄 Circuit breaker HALF-OPEN for ${command}`);
     }
 
     let lastError: TAPIError | null = null;
@@ -208,7 +207,7 @@ class TauriClient {
         // Échec → Incrémenter circuit breaker
         this.recordFailure(command);
 
-        logger.warn(
+        console.warn(
           `⚠️ Invoke ${command} failed (attempt ${attempt + 1}/${retries + 1}):`,
           lastError.message
         );
@@ -267,7 +266,7 @@ class TauriClient {
 
     if (breaker.failures >= this.CIRCUIT_BREAKER_THRESHOLD) {
       breaker.state = 'open';
-      logger.error(
+      console.error(
         `🚨 Circuit breaker OPEN for ${command} (${breaker.failures} failures)`
       );
     }
@@ -279,7 +278,7 @@ class TauriClient {
   private resetCircuitBreaker(command: string): void {
     const breaker = this.getCircuitBreaker(command);
     if (breaker.state !== 'closed') {
-      logger.debug(`✅ Circuit breaker CLOSED for ${command}`);
+      console.log(`✅ Circuit breaker CLOSED for ${command}`);
     }
     breaker.failures = 0;
     breaker.state = 'closed';
@@ -345,7 +344,7 @@ class TauriClient {
       try {
         meta = payload.content ? JSON.parse(payload.content) : {};
       } catch (parseError) {
-        logger.warn('Failed to parse stream metadata:', parseError);
+        console.warn('[TauriClient] Failed to parse stream metadata:', parseError);
       }
 
       const errorMessage = typeof meta.error === 'string' ? meta.error : undefined;

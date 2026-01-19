@@ -21,7 +21,6 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
-import { logger } from '../utils/logger';
 
 const storageKeyForPanel = (panelId: string) => `titane-panel-${panelId}`;
 
@@ -117,7 +116,7 @@ export function usePanelState(options: UsePanelStateOptions): UsePanelStateRetur
           }
         }
       } catch (error) {
-        logger.warn(`[usePanelState] Failed to load state for ${panelId}:`, error);
+        console.warn(`[usePanelState] Failed to load state for ${panelId}:`, error);
       }
     }
 
@@ -137,7 +136,7 @@ export function usePanelState(options: UsePanelStateOptions): UsePanelStateRetur
       try {
         localStorage.setItem(storageKeyForPanel(panelId), JSON.stringify(state));
       } catch (error) {
-        logger.warn(`[usePanelState] Failed to save state for ${panelId}:`, error);
+        console.warn(`[usePanelState] Failed to save state for ${panelId}:`, error);
       }
     }
   }, [state, panelId, persistState]);

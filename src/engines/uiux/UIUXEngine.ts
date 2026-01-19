@@ -16,7 +16,6 @@ import type {
   UIUXEventHandler,
   AdaptationHistoryEntry,
 } from './types';
-import { logger } from '@/utils/logger';
 
 import { ContextDetector } from './detectors/ContextDetector';
 import { OverloadDetector } from './detectors/OverloadDetector';
@@ -417,7 +416,7 @@ export class UIUXEngine {
       try {
         handler(event);
       } catch (error) {
-        logger.error('Event handler error:', error);
+        console.error('[UIUXEngine] Event handler error:', error);
       }
     }
   }

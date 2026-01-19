@@ -20,7 +20,6 @@
 
 import { secureInvoke } from '@/lib/security';
 import { TAURI_COMMANDS } from '@/core/commands/TAURI_COMMANDS';
-import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES TYPESCRIPT — SYNCHRONISÉS AVEC RUST
@@ -233,10 +232,10 @@ export class SingularityBridgeVInfinity {
       const state = await secureInvoke<SingularityStateVInfinity>(
         TAURI_COMMANDS.SINGULARITY_V_GET
       );
-      logger.debug('State retrieved:', state);
+      console.log('[SingularityBridge v∞] State retrieved:', state);
       return state;
     } catch (error) {
-      logger.error('Failed to get state:', error);
+      console.error('[SingularityBridge v∞] Failed to get state:', error);
       throw error;
     }
   }
@@ -249,10 +248,10 @@ export class SingularityBridgeVInfinity {
       const hash = await secureInvoke<string>(TAURI_COMMANDS.SINGULARITY_V_SET, {
         newState,
       });
-      logger.debug('State set successfully, hash:', hash);
+      console.log('[SingularityBridge v∞] State set successfully, hash:', hash);
       return hash;
     } catch (error) {
-      logger.error('Failed to set state:', error);
+      console.error('[SingularityBridge v∞] Failed to set state:', error);
       throw error;
     }
   }
@@ -265,10 +264,10 @@ export class SingularityBridgeVInfinity {
       const diff = await secureInvoke<DiffResult>(TAURI_COMMANDS.SINGULARITY_V_DIFF, {
         nextState,
       });
-      logger.debug('Diff calculated:', diff);
+      console.log('[SingularityBridge v∞] Diff calculated:', diff);
       return diff;
     } catch (error) {
-      logger.error('Failed to calculate diff:', error);
+      console.error('[SingularityBridge v∞] Failed to calculate diff:', error);
       throw error;
     }
   }
@@ -281,7 +280,7 @@ export class SingularityBridgeVInfinity {
       const hash = await secureInvoke<string>(TAURI_COMMANDS.SINGULARITY_V_HASH);
       return hash;
     } catch (error) {
-      logger.error('Failed to get hash:', error);
+      console.error('[SingularityBridge v∞] Failed to get hash:', error);
       throw error;
     }
   }
@@ -293,14 +292,14 @@ export class SingularityBridgeVInfinity {
    */
   static async sync(): Promise<SingularityStateVInfinity> {
     try {
-      logger.debug('Starting Deep Sync...');
+      console.log('[SingularityBridge v∞] Starting Deep Sync...');
       const state = await secureInvoke<SingularityStateVInfinity>(
         TAURI_COMMANDS.SINGULARITY_V_SYNC
       );
-      logger.debug('Deep Sync complete');
+      console.log('[SingularityBridge v∞] Deep Sync complete');
       return state;
     } catch (error) {
-      logger.error('Deep Sync failed:', error);
+      console.error('[SingularityBridge v∞] Deep Sync failed:', error);
       throw error;
     }
   }
@@ -313,10 +312,10 @@ export class SingularityBridgeVInfinity {
       const report = await secureInvoke<MetaCognitiveReport>(
         TAURI_COMMANDS.SINGULARITY_V_META
       );
-      logger.debug('Meta evaluation:', report);
+      console.log('[SingularityBridge v∞] Meta evaluation:', report);
       return report;
     } catch (error) {
-      logger.error('Meta evaluation failed:', error);
+      console.error('[SingularityBridge v∞] Meta evaluation failed:', error);
       throw error;
     }
   }
@@ -329,10 +328,10 @@ export class SingularityBridgeVInfinity {
       const result = await secureInvoke<IntegrityCheckResult>(
         TAURI_COMMANDS.SINGULARITY_V_INTEGRITY
       );
-      logger.debug('Integrity check:', result);
+      console.log('[SingularityBridge v∞] Integrity check:', result);
       return result;
     } catch (error) {
-      logger.error('Integrity check failed:', error);
+      console.error('[SingularityBridge v∞] Integrity check failed:', error);
       throw error;
     }
   }
@@ -342,14 +341,14 @@ export class SingularityBridgeVInfinity {
    */
   static async repair(): Promise<SingularityStateVInfinity> {
     try {
-      logger.warn('Starting auto-repair...');
+      console.warn('[SingularityBridge v∞] Starting auto-repair...');
       const state = await secureInvoke<SingularityStateVInfinity>(
         TAURI_COMMANDS.SINGULARITY_V_REPAIR
       );
-      logger.debug('Auto-repair complete');
+      console.log('[SingularityBridge v∞] Auto-repair complete');
       return state;
     } catch (error) {
-      logger.error('Auto-repair failed:', error);
+      console.error('[SingularityBridge v∞] Auto-repair failed:', error);
       throw error;
     }
   }
@@ -360,10 +359,10 @@ export class SingularityBridgeVInfinity {
   static async exportJSON(): Promise<string> {
     try {
       const json = await secureInvoke<string>(TAURI_COMMANDS.SINGULARITY_V_EXPORT);
-      logger.debug('JSON export complete');
+      console.log('[SingularityBridge v∞] JSON export complete');
       return json;
     } catch (error) {
-      logger.error('JSON export failed:', error);
+      console.error('[SingularityBridge v∞] JSON export failed:', error);
       throw error;
     }
   }
@@ -378,7 +377,7 @@ export class SingularityBridgeVInfinity {
       );
       return snapshot;
     } catch (error) {
-      logger.error('Snapshot failed:', error);
+      console.error('[SingularityBridge v∞] Snapshot failed:', error);
       throw error;
     }
   }
@@ -396,9 +395,9 @@ export class SingularityBridgeVInfinity {
       link.download = `titane-infinity-state-v∞-${Date.now()}.json`;
       link.click();
       URL.revokeObjectURL(url);
-      logger.debug('State downloaded');
+      console.log('[SingularityBridge v∞] State downloaded');
     } catch (error) {
-      logger.error('Download failed:', error);
+      console.error('[SingularityBridge v∞] Download failed:', error);
       throw error;
     }
   }
@@ -433,7 +432,7 @@ export class SingularityBridgeVInfinity {
    * Cycle complet: Sync → Verify → Repair si nécessaire
    */
   static async fullCycle(): Promise<SingularityStateVInfinity> {
-    logger.debug('Starting full cycle...');
+    console.log('[SingularityBridge v∞] Starting full cycle...');
 
     // 1. Deep Sync
     await this.sync();
@@ -443,13 +442,13 @@ export class SingularityBridgeVInfinity {
 
     // 3. Réparer si nécessaire
     if (!integrity.is_valid) {
-      logger.warn('Corruption detected, repairing...');
+      console.warn('[SingularityBridge v∞] Corruption detected, repairing...');
       await this.repair();
     }
 
     // 4. Retourner état final
     const finalState = await this.getState();
-    logger.debug('Full cycle complete');
+    console.log('[SingularityBridge v∞] Full cycle complete');
     return finalState;
   }
 }

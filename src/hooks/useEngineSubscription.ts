@@ -6,7 +6,6 @@
  */
 
 import { useEffect } from 'react';
-import { logger } from '@/utils/logger';
 import {
   useSingularityState,
   type EngineName,
@@ -71,7 +70,7 @@ export function useEngineSubscription(engine: EngineType): UseEngineSubscription
 
     const config = commandMap[engine as keyof typeof commandMap];
     if (!config) {
-      logger.error(`[useEngineSubscription] Unknown engine: ${engine}`);
+      console.error(`[useEngineSubscription] Unknown engine: ${engine}`);
       return;
     }
 
@@ -87,7 +86,7 @@ export function useEngineSubscription(engine: EngineType): UseEngineSubscription
           setEngineData(engine as EngineName, data as EngineDataMap[typeof engine]);
         }
       } catch (error) {
-        logger.error(`[useEngineSubscription] Error fetching ${engine}:`, error);
+        console.error(`[useEngineSubscription] Error fetching ${engine}:`, error);
       } finally {
         if (mounted) {
           setEngineLoading(engine, false);

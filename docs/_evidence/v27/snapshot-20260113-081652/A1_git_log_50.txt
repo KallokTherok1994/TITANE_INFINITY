@@ -1,0 +1,51 @@
+[A1] git log -50 --date=iso --oneline
+16a0fd73 chore: ignore local actions-runner artifacts
+96ca0ebe merge: resolve conflicts and finalize integration
+ddda2467 Merge pull request #110 from KallokTherok1994/copilot/verify-audits-and-docs
+22df2e88 docs(auto-systems): Complete deep analysis with 31 systems audit and 4-phase optimization plan
+a1b24b95 docs(final): Add comprehensive mission completion report - all phases documented and ready
+60f1129a docs(phase4): Complete Phase 4 deployment plan - all phases 1-4 now documented
+d20129ae docs(phase3): Document Phase 3 build & validation plan - manual execution required due to CI timeout
+6afd4c23 docs(phase2): Complete Phase 2 - CI/CD optimizations with engines mapping, TypeScript plan, and docs consolidation
+6e1067f6 docs(phase2): Complete Task 2.1 - Architecture documentation with 99 engines mapping
+520bf5d3 docs: Add comprehensive README for master documentation v26.3.0 - Mission complete
+d5bad3a5 docs: Add final presentation for Kevin - Complete audit and finalization plan v26.3.0
+c05c39c3 docs: Complete audit and phase finalization plan v26.3.0 with comprehensive documentation
+68bad9e2 feat: complete Ollama integration, boot diagnostics system, and Cloudflare tunnel setup
+744bf4f9 Initial plan
+c3dbdccd merge: resolve conflicts on MAIN
+93f563f2 12jan-0000
+4b08fa20 Merge pull request #104 from KallokTherok1994/copilot/audit-repo-complete-analysis
+1c0a459d docs: GO authorization received from Kevin Thibault - Production deploy approved
+7553eb37 docs: Phase 1 completion - Authorization request and final summary (100%)
+17132809 docs: Add deep reflection analysis for Phase 1 deployment (362 lines)
+2a2ba151 fix: Unify version to v26.3.0 and make E2E tests blocking (Phase 1 P0 fixes)
+e344ac5e docs: Complete comprehensive audit report and deployment plan v26.3.0
+1fe4b1ff Initial plan
+a8a97917 ci: fix type/format checks
+d32976be test: stabiliser tests et config vitest
+bcfdf2f8 refactor(imports): supprimer les imports namespace (runtime)
+a368fcb5 refactor(audit): fiabiliser scripts et gates (dev-only)
+e4c9f75a fix(deps): aligner plugin-dialog avec tauri-plugin-dialog
+df4825bf 10janv-21-35
+fa89c731 fix(scripts): Improve score extraction and ANSI handling in master audit
+8e65abb4 fix(scripts): Add scoring and safety improvements to audit suite
+d3d6f09d docs: Add comprehensive final session status
+eadada05 fix(scripts): Enhance audit script detection and scoring
+d0721bf0 fix(rust): rand 0.9 rngcore compatibility
+a9b06aa2 chore(deps)(deps): update rand requirement from 0.8 to 0.9 in /src-tauri
+37af019e chore(deps)(deps): update cpal requirement in /src-tauri
+b5d9faa3 chore(deps)(deps-dev): bump react-window and @types/react-window
+d0f4e0be chore(deps)(deps): bump zod from 4.2.1 to 4.3.5
+e236efda chore(deps)(deps): bump actions/upload-pages-artifact from 3 to 4
+f2909f96 Merge remote-tracking branch 'origin/dependabot/npm_and_yarn/i18next-25.7.4' into MAIN
+9d896357 Merge remote-tracking branch 'origin/dependabot/npm_and_yarn/vite-tsconfig-paths-6.0.4' into MAIN
+b5ceecdc Merge remote-tracking branch 'origin/dependabot/github_actions/actions/setup-node-6.1.0' into MAIN
+3583ce8e Merge remote-tracking branch 'origin/dependabot/github_actions/actions/checkout-6' into MAIN
+060f78e9 fix(omega): align IPC contracts, mocks, cache + security scan gate
+8a270633 chore(deps)(deps): bump i18next from 23.16.8 to 25.7.4
+08e3e75a chore(deps)(deps-dev): bump vite-tsconfig-paths from 5.1.4 to 6.0.4
+ea93ba13 chore(deps)(deps): bump actions/checkout from 4 to 6
+0b3d0a6f chore(deps)(deps): bump actions/setup-node from 4.1.0 to 6.1.0
+cd71a0e8 cc
+971f4856 10-janc-claude

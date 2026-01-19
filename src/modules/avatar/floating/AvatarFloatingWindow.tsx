@@ -11,7 +11,6 @@ import ThreeJSAvatarRenderer from './ThreeJSAvatarRenderer';
 import { useFullBodyAvatar } from '../fullbody/useFullBodyAvatar';
 import type { SkeletonSnapshot } from '../fullbody/fullbody_engine';
 import { AppearanceFloatingIntegration } from './appearanceFloatingIntegration';
-import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -82,7 +81,7 @@ export const AvatarFloatingWindow: React.FC<AvatarFloatingWindowProps> = ({
   useEffect(() => {
     if (!canvasRef.current) return;
 
-    logger.debug('Initializing Three.js renderer');
+    console.log('[AvatarFloatingWindow] Initializing Three.js renderer');
 
     // Create renderer
     const renderer = new ThreeJSAvatarRenderer(canvasRef.current, {
@@ -106,10 +105,10 @@ export const AvatarFloatingWindow: React.FC<AvatarFloatingWindowProps> = ({
       .fetchAppearance()
       .then(state => {
         appearance.applyAppearance(state);
-        logger.debug('Initial appearance applied');
+        console.log('[AvatarFloatingWindow] Initial appearance applied');
       })
       .catch(error => {
-        logger.error('Failed to load appearance:', error);
+        console.error('[AvatarFloatingWindow] Failed to load appearance:', error);
       });
 
     // Start appearance sync (every 2 seconds)
@@ -120,10 +119,10 @@ export const AvatarFloatingWindow: React.FC<AvatarFloatingWindowProps> = ({
       };
     });
 
-    logger.debug('Three.js renderer initialized');
+    console.log('[AvatarFloatingWindow] Three.js renderer initialized');
 
     return () => {
-      logger.debug('Disposing Three.js renderer');
+      console.log('[AvatarFloatingWindow] Disposing Three.js renderer');
       if (appearanceRef.current) {
         appearanceRef.current.dispose();
         appearanceRef.current = null;

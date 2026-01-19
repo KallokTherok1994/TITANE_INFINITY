@@ -66,7 +66,7 @@ export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
 export const MessageSkeleton: React.FC<{ lines?: number }> = ({ lines = 3 }) => {
   return (
     <div className="flex gap-3 p-4" role="status" aria-label="Message loading">
-      <div className="shrink-0">
+      <div className="flex-shrink-0">
         <SkeletonLoader variant="circular" width={40} height={40} />
       </div>
       <div className="flex-1 space-y-2">

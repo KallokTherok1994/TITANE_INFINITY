@@ -15,7 +15,6 @@ import {
   DEFAULT_PERFORMANCE_CONFIG,
   RECOMMENDATION_TEMPLATES,
 } from './performanceEngine.config';
-import { logger } from '@/utils/logger';
 import type {
   MetricsSnapshot,
   PerformanceIssue,
@@ -140,7 +139,7 @@ export class PerformanceAnalyzer {
     this.state = this.createInitialState();
     this.eventListeners = new Map();
 
-    logger.debug('Initialisé avec config:', this.config);
+    console.log('[PerformanceAnalyzer] Initialisé avec config:', this.config);
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -152,13 +151,13 @@ export class PerformanceAnalyzer {
    */
   start(): void {
     if (this.isRunning) {
-      logger.warn("Déjà en cours d'exécution");
+      console.warn("[PerformanceAnalyzer] Déjà en cours d'exécution");
       return;
     }
 
     this.isRunning = true;
     this.emit('engine_started', { component: 'analyzer', timestamp: Date.now() });
-    logger.debug('Démarré');
+    console.log('[PerformanceAnalyzer] Démarré');
   }
 
   /**
@@ -166,13 +165,13 @@ export class PerformanceAnalyzer {
    */
   stop(): void {
     if (!this.isRunning) {
-      logger.warn("Pas en cours d'exécution");
+      console.warn("[PerformanceAnalyzer] Pas en cours d'exécution");
       return;
     }
 
     this.isRunning = false;
     this.emit('engine_stopped', { component: 'analyzer', timestamp: Date.now() });
-    logger.debug('Arrêté');
+    console.log('[PerformanceAnalyzer] Arrêté');
   }
 
   /**
@@ -264,7 +263,7 @@ export class PerformanceAnalyzer {
    */
   updateThresholds(thresholds: Partial<ThresholdConfig>): void {
     this.config.thresholds = { ...this.config.thresholds, ...thresholds };
-    logger.debug('Thresholds mis à jour:', thresholds);
+    console.log('[PerformanceAnalyzer] Thresholds mis à jour:', thresholds);
   }
 
   /**
@@ -272,7 +271,7 @@ export class PerformanceAnalyzer {
    */
   reset(): void {
     this.state = this.createInitialState();
-    logger.debug('État réinitialisé');
+    console.log('[PerformanceAnalyzer] État réinitialisé');
   }
 
   /**
@@ -886,7 +885,7 @@ export class PerformanceAnalyzer {
         try {
           listener(event);
         } catch (error) {
-          logger.error(
+          console.error(
             `[PerformanceAnalyzer] Erreur dans listener pour ${eventType}:`,
             error
           );

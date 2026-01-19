@@ -123,7 +123,7 @@ By following this path, you will:
 - [ ] Practice: Write 5 unit tests
 - [ ] Exercise: Fix failing test
 
-**Day 26-28: Readiness (pré-prod)**
+**Day 26-28: Production Ready**
 - [ ] Review: All documentation
 - [ ] Study: Deployment scripts
 - [ ] Practice: Full build cycle
@@ -302,7 +302,7 @@ Progress: [░░░░░░░░░░] 0%
 Completed:
   □ Performance
   □ Testing
-  □ Readiness (pré-prod)
+  □ Production ready
   □ Final project
 ```
 

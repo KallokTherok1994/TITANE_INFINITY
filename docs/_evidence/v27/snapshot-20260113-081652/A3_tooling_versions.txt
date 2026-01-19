@@ -1,0 +1,19 @@
+[A3] tooling versions
+pwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY
+date=2026-01-13T08:16:53-05:00
+
+node -v && npm -v
+v24.0.0
+11.3.0
+
+./.tools/node/current/bin/node -v && ./.tools/node/current/bin/npm -v
+v24.0.0
+11.3.0
+
+pnpm -v
+10.28.0
+
+./.tools/node/current/bin/pnpm -v
+10.28.0
+
+yarn -v

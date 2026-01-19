@@ -10,48 +10,12 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import {
-  addBreadcrumb as sentryAddBreadcrumb,
-  browserTracingIntegration as sentryBrowserTracingIntegration,
-  breadcrumbsIntegration as sentryBreadcrumbsIntegration,
-  captureException as sentryCaptureException,
-  captureMessage as sentryCaptureMessage,
-  init as sentryInit,
-  replayIntegration as sentryReplayIntegration,
-  setContext as sentrySetContext,
-  setMeasurement as sentrySetMeasurement,
-  setTag as sentrySetTag,
-  setUser as sentrySetUser,
-  startInactiveSpan as sentryStartInactiveSpan,
-} from '@sentry/react';
+import * as Sentry from '@sentry/react';
 import type {
   ErrorContext as _ErrorContext,
   ClassifiedError,
   ErrorSeverity,
 } from '@/lib/errorHandler';
-import { logger } from '@/utils/logger';
-
-export type SeverityLevel = 'fatal' | 'error' | 'warning' | 'log' | 'info' | 'debug';
-type Span = ReturnType<typeof sentryStartInactiveSpan>;
-
-let sentryInitialized = false;
-
-// Minimal Sentry surface (évite l'import en namespace tout en gardant l'API existante)
-export const Sentry = {
-  init: sentryInit,
-  browserTracingIntegration: sentryBrowserTracingIntegration,
-  replayIntegration: sentryReplayIntegration,
-  breadcrumbsIntegration: sentryBreadcrumbsIntegration,
-  isEnabled: () => sentryInitialized,
-  setTag: sentrySetTag,
-  captureException: sentryCaptureException,
-  captureMessage: sentryCaptureMessage,
-  addBreadcrumb: sentryAddBreadcrumb,
-  setUser: sentrySetUser,
-  setContext: sentrySetContext,
-  startInactiveSpan: sentryStartInactiveSpan,
-  setMeasurement: sentrySetMeasurement,
-} as const;
 
 /**
  * Configuration Sentry par environnement
@@ -101,11 +65,11 @@ export function initSentry(): void {
   const config = getSentryConfig();
 
   if (!config.enabled) {
-    logger.debug('🔍 [SENTRY] Monitoring désactivé (pas de DSN ou mode dev)');
+    console.log('🔍 [SENTRY] Monitoring désactivé (pas de DSN ou mode dev)');
     return;
   }
 
-  logger.debug(
+  console.log(
     `🔍 [SENTRY] Initialisation - Environment: ${config.environment}, Release: ${config.release}`
   );
 
@@ -147,7 +111,7 @@ export function initSentry(): void {
     beforeSend(event, hint) {
       // Filtrer les erreurs de développement
       if (config.environment === 'development') {
-        logger.debug('🔍 [SENTRY] Event filtré (dev mode):', event);
+        console.log('🔍 [SENTRY] Event filtré (dev mode):', event);
         return null;
       }
 
@@ -207,15 +171,13 @@ export function initSentry(): void {
   Sentry.setTag('app', 'titane-infinity');
   Sentry.setTag('version', config.release);
 
-  sentryInitialized = true;
-
-  logger.debug('✅ [SENTRY] Monitoring initialisé avec succès');
+  console.log('✅ [SENTRY] Monitoring initialisé avec succès');
 }
 
 /**
  * Convertit ErrorSeverity vers Sentry Severity
  */
-function toSentrySeverity(severity: ErrorSeverity): SeverityLevel {
+function toSentrySeverity(severity: ErrorSeverity): Sentry.SeverityLevel {
   switch (severity) {
     case 'info':
       return 'info';
@@ -242,10 +204,6 @@ export function captureClassifiedError(
   }
 
   const errorToCapture = originalError || new Error(classifiedError.message);
-
-  // Marque le module comme initialisé dès qu'on tente d'émettre un évènement.
-  // `initSentry()` est idempotent et positionne aussi ce flag en fin d'init.
-  sentryInitialized = true;
 
   return Sentry.captureException(errorToCapture, {
     level: toSentrySeverity(classifiedError.severity),
@@ -277,7 +235,7 @@ export function captureClassifiedError(
  */
 export function captureMessage(
   message: string,
-  level: SeverityLevel = 'info',
+  level: Sentry.SeverityLevel = 'info',
   context?: Record<string, unknown>
 ): string {
   if (!getSentryConfig().enabled) {
@@ -297,7 +255,7 @@ export function addBreadcrumb(
   message: string,
   category: string,
   data?: Record<string, unknown>,
-  level: SeverityLevel = 'info'
+  level: Sentry.SeverityLevel = 'info'
 ): void {
   if (!getSentryConfig().enabled) {
     return;
@@ -363,7 +321,7 @@ export function setContext(name: string, context: Record<string, unknown>): void
 /**
  * Démarre une transaction de performance
  */
-export function startTransaction(name: string, op: string): Span | undefined {
+export function startTransaction(name: string, op: string): Sentry.Span | undefined {
   if (!getSentryConfig().enabled) {
     return undefined;
   }
@@ -474,7 +432,7 @@ export function captureWebVitals(): void {
  * Test de l'envoi d'erreur à Sentry (pour debug)
  */
 export function testSentry(): void {
-  logger.debug("🧪 [SENTRY] Test d'envoi d'erreur...");
+  console.log("🧪 [SENTRY] Test d'envoi d'erreur...");
 
   try {
     throw new Error(
@@ -497,10 +455,15 @@ export function testSentry(): void {
       error as Error
     );
 
-    logger.debug('✅ [SENTRY] Erreur de test envoyée avec succès');
-    logger.debug('   Vérifiez votre dashboard Sentry dans quelques secondes');
+    console.log('✅ [SENTRY] Erreur de test envoyée avec succès');
+    console.log('   Vérifiez votre dashboard Sentry dans quelques secondes');
   }
 }
+
+/**
+ * Export du module Sentry complet pour usage avancé
+ */
+export { Sentry };
 
 /**
  * Export de React.useEffect, useLocation, etc. pour l'instrumentation React Router

@@ -75,7 +75,7 @@ export type SecretCategory = 'api_key' | 'token' | 'credential' | 'certificate' 
 export interface SecretOperationResult {
   key: string;
   stored: boolean;
-  env_purged: boolean;
+  envPurged: boolean;
 }
 
 /**
@@ -88,16 +88,6 @@ export interface GeminiKeyStatus {
   env_present: boolean;
   env_purged: boolean;
   was_updated: boolean;
-}
-
-/**
- * Status de la clé GitHub Copilot
- * (Retour direct du backend Rust, sans enveloppe SecureResponse)
- */
-export interface CopilotKeyStatus {
-  configured: boolean;
-  status: string;
-  message: string | null;
 }
 
 /**
@@ -331,7 +321,7 @@ export interface GovernanceState {
   geminiStatus: GeminiKeyStatus | null;
   openaiStatus: GeminiKeyStatus | null;
   anthropicStatus: GeminiKeyStatus | null;
-  copilotStatus: CopilotKeyStatus | null; // ✨ v26.3 - GitHub Copilot
+  copilotStatus: GeminiKeyStatus | null; // ✨ v26.3 - GitHub Copilot
   ollamaStatus: OllamaStatus | null;
 
   // Politiques

@@ -12,7 +12,6 @@ import {
   FAST_COMMAND_OPTIONS,
   LONG_COMMAND_OPTIONS,
 } from '../../lib/serviceInvoker';
-import { logger } from '@/utils/logger';
 
 /**
  * Configuration synthèse vocale
@@ -83,7 +82,7 @@ class VoiceService {
         { ...LONG_COMMAND_OPTIONS, context: 'Voice' }
       );
     } catch (error) {
-      logger.error('Erreur TTS:', error);
+      console.error('[VoiceService] Erreur TTS:', error);
       throw new Error(`Synthèse échouée: ${error}`);
     }
   }
@@ -100,7 +99,7 @@ class VoiceService {
         { ...FAST_COMMAND_OPTIONS, context: 'Voice' }
       );
     } catch (error) {
-      logger.error('Erreur arrêt TTS:', error);
+      console.error('[VoiceService] Erreur arrêt TTS:', error);
     }
   }
 
@@ -112,11 +111,11 @@ class VoiceService {
     try {
       // Check if already recording (prevent double-call)
       if (this.recordingId) {
-        logger.warn('Recording already in progress:', this.recordingId);
+        console.warn('[VoiceService] Recording already in progress:', this.recordingId);
         throw new Error('Recording already in progress');
       }
 
-      logger.debug('Starting recording with config:', config);
+      console.log('[VoiceService] Starting recording with config:', config);
 
       // Tauri 2.0: commande = start_recording (pas voice_start_recording)
       this.recordingId = await invokeWithRetry<string>(
@@ -125,10 +124,10 @@ class VoiceService {
         { ...STANDARD_COMMAND_OPTIONS, context: 'Voice' }
       );
 
-      logger.debug('✅ Recording started:', this.recordingId);
+      console.log('[VoiceService] ✅ Recording started:', this.recordingId);
       return this.recordingId;
     } catch (error) {
-      logger.error('❌ Erreur démarrage ASR:', error);
+      console.error('[VoiceService] ❌ Erreur démarrage ASR:', error);
       this.recordingId = null; // Reset state on error
       throw new Error(`Enregistrement échoué: ${error}`);
     }
@@ -141,7 +140,7 @@ class VoiceService {
   async stopRecording(): Promise<ASRResult> {
     try {
       if (!this.recordingId) {
-        logger.warn('No active recording to stop');
+        console.warn('[VoiceService] No active recording to stop');
         // Return empty result instead of throwing
         return {
           transcript: '',
@@ -151,7 +150,7 @@ class VoiceService {
       }
 
       const recordingId = this.recordingId;
-      logger.debug('Stopping recording:', recordingId);
+      console.log('[VoiceService] Stopping recording:', recordingId);
 
       // Tauri 2.0: commande = stop_recording (pas voice_stop_recording)
       const result = await invokeWithRetry<ASRResult>(
@@ -163,10 +162,10 @@ class VoiceService {
       // Reset state AFTER successful stop
       this.recordingId = null;
 
-      logger.debug('✅ Recording stopped, transcript:', result.transcript);
+      console.log('[VoiceService] ✅ Recording stopped, transcript:', result.transcript);
       return result;
     } catch (error) {
-      logger.error('❌ Erreur arrêt ASR:', error);
+      console.error('[VoiceService] ❌ Erreur arrêt ASR:', error);
       // Force reset state even on error
       this.recordingId = null;
       throw new Error(`Transcription échouée: ${error}`);
@@ -180,7 +179,7 @@ class VoiceService {
   async cancelRecording(): Promise<void> {
     try {
       const hadRecording = !!this.recordingId;
-      logger.debug('Cancelling recording:', this.recordingId);
+      console.log('[VoiceService] Cancelling recording:', this.recordingId);
 
       // Reset local state first
       this.recordingId = null;
@@ -192,12 +191,12 @@ class VoiceService {
           {},
           { ...FAST_COMMAND_OPTIONS, context: 'Voice', retries: 1 }
         );
-        logger.debug('✅ Recording cancelled');
+        console.log('[VoiceService] ✅ Recording cancelled');
       }
     } catch (error) {
       // Always reset state, even on error
       this.recordingId = null;
-      logger.warn('Cancel recording completed with warning:', error);
+      console.warn('[VoiceService] Cancel recording completed with warning:', error);
     }
   }
 
@@ -207,7 +206,7 @@ class VoiceService {
    */
   async forceResetVoice(): Promise<void> {
     try {
-      logger.warn('🔥 FORCE RESET VOICE ENGINE');
+      console.warn('[VoiceService] 🔥 FORCE RESET VOICE ENGINE');
 
       // Reset local state
       this.recordingId = null;
@@ -219,9 +218,9 @@ class VoiceService {
         { ...FAST_COMMAND_OPTIONS, context: 'Voice', retries: 1 }
       );
 
-      logger.debug('✅ Voice engine force reset complete');
+      console.log('[VoiceService] ✅ Voice engine force reset complete');
     } catch (error) {
-      logger.error('❌ Force reset failed:', error);
+      console.error('[VoiceService] ❌ Force reset failed:', error);
       // Force local state reset anyway
       this.recordingId = null;
       throw new Error(`Force reset failed: ${error}`);
@@ -256,7 +255,7 @@ class VoiceService {
       };
     } catch (error) {
       // Return safe defaults if command not available
-      logger.warn('État audio fallback:', error);
+      console.warn('[VoiceService] État audio fallback:', error);
       return {
         isRecording: !!this.recordingId,
         isSpeaking: false,
@@ -291,7 +290,7 @@ class VoiceService {
         language: model.includes('fr') ? 'fr-FR' : 'en-US',
       }));
     } catch (error) {
-      logger.warn('Liste voix fallback:', error);
+      console.warn('[VoiceService] Liste voix fallback:', error);
       return [
         { id: 'fr_FR-siwis-medium', name: 'Piper FR (Siwis)', language: 'fr-FR' },
         { id: 'espeak-fr', name: 'eSpeak FR', language: 'fr-FR' },
@@ -322,7 +321,7 @@ class VoiceService {
         { ...STANDARD_COMMAND_OPTIONS, context: 'Voice' }
       );
     } catch (error) {
-      logger.error('Erreur config voix:', error);
+      console.error('[VoiceService] Erreur config voix:', error);
       // Non-critical, don't throw
     }
   }
@@ -356,7 +355,7 @@ class VoiceService {
         latency: 50, // Estimation par défaut
       };
     } catch (error) {
-      logger.error('Erreur test audio:', error);
+      console.error('[VoiceService] Erreur test audio:', error);
       return {
         microphoneWorking: false,
         speakersWorking: false,

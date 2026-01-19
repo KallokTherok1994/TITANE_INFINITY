@@ -5,7 +5,6 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { logger } from '@/utils/logger';
 import { numericTwinService } from '../services/api/numericTwin';
 import type { TwinIdentityCore, CoreValue, HumanStyle } from '../types/numericTwin';
 
@@ -37,7 +36,7 @@ export function useTwinIdentity(): UseTwinIdentityReturn {
       setError(
         err instanceof Error ? err.message : "Erreur lors du chargement de l'identité"
       );
-      logger.error('Error:', err);
+      console.error('[useTwinIdentity] Error:', err);
     } finally {
       setIsLoading(false);
     }

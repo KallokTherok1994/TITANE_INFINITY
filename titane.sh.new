@@ -403,8 +403,8 @@ health_check() {
         TAURI_VERSION=$(cargo tauri --version 2>/dev/null | head -1)
         success "Tauri CLI: $TAURI_VERSION"
     else
-        if /home/titane-os/.local/share/pnpm/pnpm exec tauri --version &> /dev/null; then
-            TAURI_VERSION=$(/home/titane-os/.local/share/pnpm/pnpm exec tauri --version 2>/dev/null | head -1)
+        if npx tauri --version &> /dev/null; then
+            TAURI_VERSION=$(npx tauri --version 2>/dev/null | head -1)
             success "Tauri CLI (npx): $TAURI_VERSION"
         else
             warning "Tauri CLI not found"

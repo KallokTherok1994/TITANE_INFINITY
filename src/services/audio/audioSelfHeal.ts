@@ -196,13 +196,13 @@ class AudioSelfHeal {
    * Perform automatic healing
    */
   private async performAutoHeal(): Promise<void> {
-    logger.debug('🔧 Performing auto-heal...');
+    console.log('[AudioSelfHeal] 🔧 Performing auto-heal...');
     this.healthStatus.healAttempts++;
 
     try {
       // 1. Cancel any stuck recording
       if (this.healthStatus.recordingStuck) {
-        logger.debug('Cancelling stuck recording');
+        console.log('[AudioSelfHeal] Cancelling stuck recording');
         try {
           await voiceService.cancelRecording();
         } catch (error) {
@@ -217,13 +217,13 @@ class AudioSelfHeal {
 
       // 2. Reset state machine if stuck
       if (this.healthStatus.stateMachineStuck) {
-        logger.debug('Resetting stuck state machine');
+        console.log('[AudioSelfHeal] Resetting stuck state machine');
         audioStateMachine.forceReset();
       }
 
       // 3. If backend unresponsive, try to reconnect/reset
       if (this.healthStatus.backendUnresponsive) {
-        logger.debug('Backend unresponsive - attempting recovery');
+        console.log('[AudioSelfHeal] Backend unresponsive - attempting recovery');
         // Force kill any orphaned audio processes
         try {
           await secureInvoke('cancel_recording', {});
@@ -232,9 +232,10 @@ class AudioSelfHeal {
         }
       }
 
-      logger.debug(`✅ Auto-heal completed, attempt ${this.healthStatus.healAttempts}`, {
-        module: 'AudioSelfHeal',
-      });
+      console.log(
+        '[AudioSelfHeal] ✅ Auto-heal completed, attempt',
+        this.healthStatus.healAttempts
+      );
 
       // Reset heal attempts after successful recovery
       setTimeout(() => {
@@ -302,7 +303,7 @@ class AudioSelfHeal {
         backendUnresponsive: false,
       };
 
-      logger.debug('✅ Force reset completed');
+      console.log('[AudioSelfHeal] ✅ Force reset completed');
     } catch (error) {
       const err = error instanceof Error ? error : new Error(String(error));
       logger.error(

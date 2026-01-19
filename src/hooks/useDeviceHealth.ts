@@ -23,9 +23,6 @@ import {
   type SelfHealingReport,
   type RepairResult,
 } from '@/services/devices/deviceHealthService';
-import { createLogger } from '@/utils/logger';
-
-const logger = createLogger('DeviceHealth');
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Types
@@ -138,7 +135,7 @@ export function useDeviceHealth(
           !autoHealingRef.current
         ) {
           autoHealingRef.current = true;
-          logger.info('Critical status, auto-healing...');
+          console.log('[useDeviceHealth] 🚨 Critical status, auto-healing...');
           await selfHeal();
           autoHealingRef.current = false;
         }

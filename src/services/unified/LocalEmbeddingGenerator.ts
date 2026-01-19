@@ -11,7 +11,6 @@
  */
 
 import type { IEmbeddingGenerator } from './UnifiedMemory';
-import { logger } from '@/utils/logger';
 
 /**
  * Configuration
@@ -95,24 +94,8 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
   async initialize(): Promise<void> {
     if (this.isInitialized) return;
 
-    const isTestEnvironment =
-      (typeof process !== 'undefined' &&
-        (process.env?.VITEST === 'true' || process.env?.NODE_ENV === 'test')) ||
-      (typeof import.meta !== 'undefined' &&
-        typeof (import.meta as unknown as { env?: { MODE?: string } }).env !==
-          'undefined' &&
-        (import.meta as unknown as { env?: { MODE?: string } }).env?.MODE === 'test');
-
-    if (isTestEnvironment) {
-      logger.debug(
-        'LocalEmbeddingGenerator: test environment detected, skipping Transformers.js init'
-      );
-      this.useFallbackGenerator();
-      return;
-    }
-
     try {
-      logger.debug('Loading model:', this.config.modelName);
+      console.log('[LocalEmbedding] Loading model:', this.config.modelName);
 
       // Dynamic import of Transformers.js
       const { pipeline } = await import('@xenova/transformers');
@@ -135,9 +118,9 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
       )) as unknown as Pipeline;
 
       this.isInitialized = true;
-      logger.debug('Model loaded successfully');
+      console.log('[LocalEmbedding] Model loaded successfully');
     } catch (error) {
-      logger.error('Initialization failed:', error);
+      console.error('[LocalEmbedding] Initialization failed:', error);
       // Fallback to deterministic generator
       this.useFallbackGenerator();
     }
@@ -189,7 +172,7 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
 
       return embedding;
     } catch (error) {
-      logger.error('Generation failed:', error);
+      console.error('[LocalEmbedding] Generation failed:', error);
       // Fallback to deterministic embedding
       return this.generateFallbackEmbedding(text);
     }
@@ -228,7 +211,7 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
         return Promise.all(texts.map(t => this.generate(t)));
       }
     } catch (error) {
-      logger.error('Batch generation failed:', error);
+      console.error('[LocalEmbedding] Batch generation failed:', error);
       // Fallback to individual generation
       return Promise.all(texts.map(t => this.generate(t)));
     }
@@ -284,7 +267,7 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
    * Use fallback generator (deterministic)
    */
   private useFallbackGenerator(): void {
-    logger.warn('Using fallback deterministic generator');
+    console.warn('[LocalEmbedding] Using fallback deterministic generator');
     this.isInitialized = true;
     this.pipeline = undefined;
   }

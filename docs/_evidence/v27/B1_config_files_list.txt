@@ -1,0 +1,6 @@
+$ ls -1 vite.config.* vitest.config.* tsconfig*.json 2>/dev/null || true
+tsconfig.json
+tsconfig.node.json
+tsconfig.test.json
+vite.config.ts
+vitest.config.ts

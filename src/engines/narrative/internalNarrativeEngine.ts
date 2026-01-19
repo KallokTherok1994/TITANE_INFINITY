@@ -22,8 +22,6 @@
 // TYPES & INTERFACES
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { logger } from '@/utils/logger';
-
 /**
  * Direction intentionnelle du monologue
  */
@@ -111,7 +109,7 @@ export class InternalNarrativeEngine {
 
   constructor() {
     this.state = this.getDefaultState();
-    logger.debug('💭 [NARRATIVE] Initializing Internal Narrative Engine...');
+    console.log('💭 [NARRATIVE] Initializing Internal Narrative Engine...');
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -121,7 +119,7 @@ export class InternalNarrativeEngine {
   start(): void {
     if (this.updateInterval) return;
 
-    logger.debug('💭 [NARRATIVE] Starting internal narrative at 10Hz...');
+    console.log('💭 [NARRATIVE] Starting internal narrative at 10Hz...');
     this.updateInterval = setInterval(() => this.tick(), 100); // 10 Hz
   }
 
@@ -129,7 +127,7 @@ export class InternalNarrativeEngine {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
       this.updateInterval = null;
-      logger.debug('💭 [NARRATIVE] Internal narrative stopped.');
+      console.log('💭 [NARRATIVE] Internal narrative stopped.');
     }
   }
 
@@ -352,7 +350,7 @@ export class InternalNarrativeEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   setNarrativeAnchor(anchor: string): void {
-    logger.debug(`💭 [NARRATIVE] Setting narrative anchor: "${anchor}"`);
+    console.log(`💭 [NARRATIVE] Setting narrative anchor: "${anchor}"`);
     this.state.narrativeAnchor = anchor;
 
     // Générer pensée narrative

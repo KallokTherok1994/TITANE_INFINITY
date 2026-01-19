@@ -59,10 +59,10 @@ const CreationStudio = memo(function CreationStudio() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-900 via-purple-900 to-gray-900 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 p-6">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-pink-600">
+        <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
           Creation Studio
         </h1>
         <p className="text-gray-400 mt-2">Phase 8 : Génération de code par IA</p>
@@ -111,7 +111,7 @@ const CreationStudio = memo(function CreationStudio() {
               <button
                 onClick={handleGenerate}
                 disabled={isGenerating || !intent.trim()}
-                className="w-full bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold py-3 rounded-lg transition-all"
+                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold py-3 rounded-lg transition-all"
               >
                 {isGenerating ? '⏳ Génération...' : '✨ Générer le code'}
               </button>
