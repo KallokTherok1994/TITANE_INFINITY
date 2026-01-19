@@ -503,6 +503,12 @@ impl OmegaPipelineBuilder {
 mod tests {
     use super::*;
 
+    macro_rules! test_ok {
+        ($expr:expr) => {
+            $expr.expect(&format!("TEST FAILED at {}:{}", file!(), line!()))
+        };
+    }
+
     #[tokio::test]
     async fn test_pipeline_creation() {
         let pipeline = OmegaPipeline::default();
@@ -535,7 +541,7 @@ mod tests {
             output.err()
         );
 
-        let output = output.expect("expected pipeline output after successful process");
+        let output = test_ok!(output);
         assert!(!output.request_id.is_empty());
         assert!(output.total_latency_ms > 0);
     }
@@ -570,17 +576,15 @@ mod tests {
     #[tokio::test]
     async fn test_pipeline_stats() {
         let pipeline = OmegaPipeline::default();
-        pipeline
+        test_ok!(pipeline
             .initialize()
-            .await
-            .expect("pipeline initialization should succeed");
+            .await);
 
         // Process a request
         let input = PipelineInput::new("Test");
-        let _ = pipeline
+        let _ = test_ok!(pipeline
             .process(input)
-            .await
-            .expect("pipeline should process request for stats collection");
+            .await);
 
         let stats = pipeline.get_stats().await;
         assert!(stats.total_requests >= 1);
@@ -600,16 +604,14 @@ mod tests {
     #[tokio::test]
     async fn test_pipeline_timings() {
         let pipeline = OmegaPipeline::default();
-        pipeline
+        test_ok!(pipeline
             .initialize()
-            .await
-            .expect("pipeline initialization should succeed");
+            .await);
 
         let input = PipelineInput::new("Hello");
-        let output = pipeline
+        let output = test_ok!(pipeline
             .process(input)
-            .await
-            .expect("pipeline should return output with timings");
+            .await);
 
         // Should have timings for each stage
         assert!(output.timings.contains_key("router"));

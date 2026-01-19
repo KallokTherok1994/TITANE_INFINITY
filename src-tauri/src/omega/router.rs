@@ -674,14 +674,19 @@ impl StageProcessor for Router {
 mod tests {
     use super::*;
 
+    macro_rules! test_ok {
+        ($expr:expr) => {
+            $expr.expect(&format!("TEST FAILED at {}:{}", file!(), line!()))
+        };
+    }
+
     #[tokio::test]
     async fn test_classifier_query() {
         let classifier = IntentClassifier::new();
         let input = PipelineInput::new("Qu'est-ce que Rust?");
-        let result = classifier
+        let result = test_ok!(classifier
             .classify(&input)
-            .await
-            .expect("IntentClassifier::classify should succeed for valid input");
+            .await);
 
         assert_eq!(result.intent, Intent::Query);
         assert!(result.confidence > 0.5);
@@ -691,10 +696,9 @@ mod tests {
     async fn test_classifier_task() {
         let classifier = IntentClassifier::new();
         let input = PipelineInput::new("Crée une fonction pour calculer la somme");
-        let result = classifier
+        let result = test_ok!(classifier
             .classify(&input)
-            .await
-            .expect("IntentClassifier::classify should succeed for valid input");
+            .await);
 
         assert_eq!(result.intent, Intent::Task);
     }
@@ -703,10 +707,9 @@ mod tests {
     async fn test_classifier_help() {
         let classifier = IntentClassifier::new();
         let input = PipelineInput::new("Peux-tu m'aider avec ce problème?");
-        let result = classifier
+        let result = test_ok!(classifier
             .classify(&input)
-            .await
-            .expect("IntentClassifier::classify should succeed for valid input");
+            .await);
 
         assert_eq!(result.intent, Intent::Help);
     }
@@ -716,16 +719,14 @@ mod tests {
         let classifier = IntentClassifier::new();
         let input = PipelineInput::new("Hello, comment ça va?");
 
-        let result1 = classifier
+        let result1 = test_ok!(classifier
             .classify(&input)
-            .await
-            .expect("IntentClassifier::classify should succeed for valid input");
+            .await);
         assert!(!result1.cache_hit);
 
-        let result2 = classifier
+        let result2 = test_ok!(classifier
             .classify(&input)
-            .await
-            .expect("IntentClassifier::classify should succeed for valid input");
+            .await);
         assert!(result2.cache_hit);
     }
 

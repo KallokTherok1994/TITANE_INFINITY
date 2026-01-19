@@ -300,6 +300,24 @@ impl VoicePresets {
 mod tests {
     use super::*;
 
+    macro_rules! test_ok {
+        ($expr:expr, $msg:expr $(,)?) => {
+            match $expr {
+                Ok(val) => val,
+                Err(err) => panic!("{}: {err}", $msg),
+            }
+        };
+    }
+
+    macro_rules! test_some {
+        ($expr:expr, $msg:expr $(,)?) => {
+            match $expr {
+                Some(val) => val,
+                None => panic!("{}: got None", $msg),
+            }
+        };
+    }
+
     // ========== VoiceCharacteristics Tests ==========
 
     #[test]
@@ -333,7 +351,10 @@ mod tests {
     #[test]
     fn test_voice_characteristics_serialize() {
         let chars = VoiceCharacteristics::default();
-        let json = serde_json::to_string(&chars).expect("VoiceCharacteristics should serialize");
+        let json = test_ok!(
+            serde_json::to_string(&chars),
+            "VoiceCharacteristics should serialize"
+        );
         assert!(json.contains("pitch"));
         assert!(json.contains("volume"));
     }
@@ -403,7 +424,10 @@ mod tests {
             emphasis_delta: 0.2,
             warmth_delta: 0.2,
         };
-        let json = serde_json::to_string(&adj).expect("VoiceAdjustment should serialize");
+        let json = test_ok!(
+            serde_json::to_string(&adj),
+            "VoiceAdjustment should serialize"
+        );
         assert!(json.contains("pitch_delta"));
     }
 
@@ -454,7 +478,10 @@ mod tests {
     #[test]
     fn test_voice_profile_serialize() {
         let profile = VoiceProfile::default();
-        let json = serde_json::to_string(&profile).expect("VoiceProfile should serialize");
+        let json = test_ok!(
+            serde_json::to_string(&profile),
+            "VoiceProfile should serialize"
+        );
         assert!(json.contains("TITANE Default"));
         assert!(json.contains("piper"));
     }
@@ -582,9 +609,11 @@ mod tests {
         let active = manager.get_active();
         assert!(active.is_some());
         assert_eq!(
-            active
-                .expect("VoiceProfileManager should have an active profile")
-                .name,
+            test_some!(
+                active,
+                "VoiceProfileManager should have an active profile"
+            )
+            .name,
             "TITANE Default"
         );
     }
@@ -626,7 +655,7 @@ mod tests {
         let active_id = manager
             .active_profile_id
             .clone()
-            .expect("VoiceProfileManager should have an active_profile_id");
+            .unwrap_or_else(|| panic!("VoiceProfileManager should have an active_profile_id"));
 
         let removed = manager.remove_profile(&active_id);
         assert!(!removed);
@@ -646,7 +675,7 @@ mod tests {
             manager
                 .active_profile_id
                 .as_ref()
-                .expect("active_profile_id should be set after set_active"),
+                .unwrap_or_else(|| panic!("active_profile_id should be set after set_active")),
             &new_id
         );
     }
@@ -664,7 +693,7 @@ mod tests {
         let active_id = manager
             .active_profile_id
             .clone()
-            .expect("VoiceProfileManager should have an active_profile_id");
+            .unwrap_or_else(|| panic!("VoiceProfileManager should have an active_profile_id"));
         let profile = manager.get_profile(&active_id);
         assert!(profile.is_some());
     }

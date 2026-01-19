@@ -498,6 +498,12 @@ impl StageProcessor for Merger {
 mod tests {
     use super::*;
 
+    macro_rules! test_ok {
+        ($expr:expr) => {
+            $expr.expect(&format!("TEST FAILED at {}:{}", file!(), line!()))
+        };
+    }
+
     fn mock_results() -> Vec<TaskResult> {
         vec![
             TaskResult {
@@ -569,9 +575,8 @@ mod tests {
             mode: ExecutionMode::Balanced,
         };
 
-        let result = merger
-            .merge(&execution)
-            .expect("merger should produce output for execution result");
+        let result = test_ok!(merger
+            .merge(&execution));
         assert!(!result.response.is_empty());
         assert!(result.quality_score > 0.5);
     }
