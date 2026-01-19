@@ -239,6 +239,14 @@ export class PerformanceMonitor {
   }
 
   /**
+   * Destroy all metric trackers (cleanup timers) to avoid background intervals
+   */
+  destroy(): void {
+    this.metrics.forEach(metric => metric.destroy());
+    this.metrics.clear();
+  }
+
+  /**
    * End timing and record metric
    */
   end(operationId: string, metricName: string, metadata?: Record<string, any>): number {
@@ -577,6 +585,13 @@ export class PerformanceMonitor {
  * Global performance monitor instance
  */
 export const performanceMonitor = new PerformanceMonitor();
+
+// Ensure cleanup on browser unload to prevent stray cleanup intervals
+if (typeof window !== 'undefined') {
+  window.addEventListener('beforeunload', () => {
+    performanceMonitor.destroy();
+  });
+}
 
 /**
  * Convenience decorator for measuring method performance
