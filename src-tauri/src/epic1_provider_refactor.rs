@@ -3,6 +3,7 @@
 // Created: 2026-01-19 Sprint Launch
 // Status: Week 1 - Provider interface redesign
 
+use async_trait::async_trait;
 use std::fmt;
 
 /// Custom error type for provider operations
@@ -35,12 +36,13 @@ impl std::error::Error for ProviderError {}
 pub type ProviderResult<T> = Result<T, ProviderError>;
 
 /// Base provider trait with Result-based error handling
+#[async_trait]
 pub trait Provider: Send + Sync {
     /// Send a message to provider and get response
-    fn send_message(&self, message: &str) -> ProviderResult<String>;
+    async fn send_message(&mut self, message: &str) -> ProviderResult<String>;
 
     /// Health check - verify provider is available
-    fn health_check(&self) -> ProviderResult<()>;
+    async fn health_check(&mut self) -> ProviderResult<()>;
 
     /// Get provider name
     fn name(&self) -> &'static str;
@@ -51,7 +53,7 @@ pub trait Provider: Send + Sync {
 
 /// Provider cascade orchestrator
 pub struct ProviderCascade {
-    providers: Vec<Box<dyn Provider>>,
+    providers: Vec<Box<dyn Provider + Send + Sync>>,
 }
 
 impl ProviderCascade {
@@ -62,18 +64,18 @@ impl ProviderCascade {
     }
 
     /// Add provider to cascade
-    pub fn add_provider(&mut self, provider: Box<dyn Provider>) {
+    pub fn add_provider(&mut self, provider: Box<dyn Provider + Send + Sync>) {
         self.providers.push(provider);
     }
 
     /// Try providers in sequence until one succeeds
-    pub fn cascade_send(&self, message: &str) -> ProviderResult<String> {
+    pub async fn cascade_send(&mut self, message: &str) -> ProviderResult<String> {
         let mut last_error = ProviderError::InternalError(
             "No providers configured".to_string()
         );
 
-        for provider in &self.providers {
-            match provider.send_message(message) {
+        for provider in self.providers.iter_mut() {
+            match provider.send_message(message).await {
                 Ok(response) => {
                     return Ok(response);
                 }
@@ -92,9 +94,9 @@ impl ProviderCascade {
     }
 
     /// Verify all providers are healthy
-    pub fn health_check_all(&self) -> ProviderResult<()> {
-        for provider in &self.providers {
-            provider.health_check()?;
+    pub async fn health_check_all(&mut self) -> ProviderResult<()> {
+        for provider in self.providers.iter_mut() {
+            provider.health_check().await?;
         }
         Ok(())
     }
@@ -121,8 +123,9 @@ mod tests {
 
     struct MockProvider;
 
+    #[async_trait]
     impl Provider for MockProvider {
-        fn send_message(&self, message: &str) -> ProviderResult<String> {
+        async fn send_message(&mut self, message: &str) -> ProviderResult<String> {
             if message.is_empty() {
                 Err(ProviderError::InvalidResponse(
                     "Empty message".to_string(),
@@ -132,7 +135,7 @@ mod tests {
             }
         }
 
-        fn health_check(&self) -> ProviderResult<()> {
+        async fn health_check(&mut self) -> ProviderResult<()> {
             Ok(())
         }
 
@@ -145,19 +148,19 @@ mod tests {
         }
     }
 
-    #[test]
-    fn test_provider_result_handling() {
-        let provider = MockProvider;
-        assert!(provider.send_message("hello").is_ok());
-        assert!(provider.send_message("").is_err());
+    #[tokio::test]
+    async fn test_provider_result_handling() {
+        let mut provider = MockProvider;
+        assert!(provider.send_message("hello").await.is_ok());
+        assert!(provider.send_message("").await.is_err());
     }
 
-    #[test]
-    fn test_cascade_single_provider() {
+    #[tokio::test]
+    async fn test_cascade_single_provider() {
         let mut cascade = ProviderCascade::new();
         cascade.add_provider(Box::new(MockProvider));
 
-        let result = cascade.cascade_send("test message");
+        let result = cascade.cascade_send("test message").await;
         assert!(result.is_ok());
     }
 }

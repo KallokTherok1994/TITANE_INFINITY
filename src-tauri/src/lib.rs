@@ -110,6 +110,16 @@ pub mod conversation_engine; // ✅ Conversation Engine v∞ (Unified Pipeline, 
 pub mod ia; // ✅ v∞.19.3Ω: Unified IA Engine (OpenAI + Claude + Gemini + Local)
 pub mod multi_agents; // ✅ v∞.19.3Ω: Multi-Agents avec permissions IA (NEW)
 
+// ═══════════════════════════════════════════════════════════════
+// PROVIDER REFACTOR v27.0 (Epic 1)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod epic1_provider_refactor; // ✅ Result-based provider interface
+pub mod gemini_provider_refactor; // ✅ Gemini provider (Epic 1)
+pub mod gemini_provider_extensions; // ✅ Gemini streaming + retry
+pub mod ollama_provider_refactor; // ✅ Ollama provider (Epic 1)
+pub mod local_provider_refactor; // ✅ Local provider (Epic 1)
+
 // ═════════════════════════════════════════════════════════
 // MEMORY SYSTEM v24.2 (Phase 2 Simplification)
 // ═════════════════════════════════════════════════════════

@@ -244,7 +244,7 @@ impl Provider for GeminiProvider {
         }
     }
 
-    fn name(&self) -> &str {
+    fn name(&self) -> &'static str {
         "Gemini"
     }
 
@@ -372,19 +372,19 @@ mod tests {
     }
 }
 
-/// MIGRATION NOTES:
-/// 
-/// This module implements ~200 expect() call conversions across:
-/// - API configuration validation (20 expect() → 5 Result checks)
-/// - HTTP request/response handling (80 expect() → 40 Result chains)
-/// - Response parsing (50 expect() → 25 Result matches)
-/// - Error classification (30 expect() → 15 Result mappings)
-/// - Health checking (20 expect() → 10 Result validations)
-///
-/// Total expect() eliminated: ~200
-/// Error handling patterns introduced:
-/// - Connection/timeout detection
-/// - Rate limiting detection
-/// - Response validation
-/// - Configuration validation
-/// - Graceful error propagation
+// MIGRATION NOTES:
+//
+// This module implements ~200 expect() call conversions across:
+// - API configuration validation (20 expect() → 5 Result checks)
+// - HTTP request/response handling (80 expect() → 40 Result chains)
+// - Response parsing (50 expect() → 25 Result matches)
+// - Error classification (30 expect() → 15 Result mappings)
+// - Health checking (20 expect() → 10 Result validations)
+//
+// Total expect() eliminated: ~200
+// Error handling patterns introduced:
+// - Connection/timeout detection
+// - Rate limiting detection
+// - Response validation
+// - Configuration validation
+// - Graceful error propagation

@@ -1,8 +1,8 @@
 /// Gemini Provider Extensions for v27.0 Epic 1 Day 3
 /// Adds streaming support and retry logic with exponential backoff
 
-use crate::epic1_provider_refactor::{ProviderError, ProviderResult};
-use crate::gemini_provider_refactor::{GeminiProvider, GeminiRequest, GeminiResponse};
+use crate::epic1_provider_refactor::{Provider, ProviderError, ProviderResult};
+use crate::gemini_provider_refactor::GeminiProvider;
 use std::time::Duration;
 use tokio::time::sleep;
 
@@ -158,7 +158,6 @@ fn chunk_response(response: &str) -> Vec<StreamChunk> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::gemini_provider_refactor::GeminiConfig;
 
     #[test]
     fn test_retry_config_default() {
@@ -223,40 +222,40 @@ mod tests {
     }
 }
 
-/// EPIC 1 MIGRATION NOTES — DAY 3 GEMINI COMPLETION:
-/// 
-/// This module adds critical production-ready features:
-/// 
-/// 1. **Retry Logic with Exponential Backoff**
-///    - Configurable max retries (default: 3)
-///    - Exponential backoff: 500ms → 1s → 2s → 4s → 8s → 10s cap
-///    - Smart retry: only on transient errors (timeout, 5xx)
-///    - No retry on client errors (4xx, invalid response)
-///
-/// 2. **Streaming Support**
-///    - Simulated streaming via chunked responses
-///    - StreamChunk type for progressive updates
-///    - Ready for real SSE implementation
-///    - is_final flag for completion detection
-///
-/// 3. **Combined Streaming + Retry**
-///    - send_message_streaming_with_retry() for resilient streaming
-///    - Maintains streaming UX with retry safety
-///
-/// 4. **Error Classification**
-///    - should_retry() function categorizes errors
-///    - Transient: timeout, connection, rate limit, 5xx
-///    - Permanent: invalid response, 4xx, internal errors
-///
-/// Total expect() eliminated (Gemini): ~200
-/// - 80 request/response handling
-/// - 50 response parsing
-/// - 30 error classification
-/// - 20 health checks
-/// - 20 configuration validation
-///
-/// Production readiness improvements:
-/// - Resilient to transient network failures
-/// - Better UX with streaming responses
-/// - Configurable retry behavior per use case
-/// - Comprehensive test coverage (5 tests)
+// EPIC 1 MIGRATION NOTES — DAY 3 GEMINI COMPLETION:
+// 
+// This module adds critical production-ready features:
+// 
+// 1. Retry Logic with Exponential Backoff
+//    - Configurable max retries (default: 3)
+//    - Exponential backoff: 500ms → 1s → 2s → 4s → 8s → 10s cap
+//    - Smart retry: only on transient errors (timeout, 5xx)
+//    - No retry on client errors (4xx, invalid response)
+//
+// 2. Streaming Support
+//    - Simulated streaming via chunked responses
+//    - StreamChunk type for progressive updates
+//    - Ready for real SSE implementation
+//    - is_final flag for completion detection
+//
+// 3. Combined Streaming + Retry
+//    - send_message_streaming_with_retry() for resilient streaming
+//    - Maintains streaming UX with retry safety
+//
+// 4. Error Classification
+//    - should_retry() function categorizes errors
+//    - Transient: timeout, connection, rate limit, 5xx
+//    - Permanent: invalid response, 4xx, internal errors
+//
+// Total expect() eliminated (Gemini): ~200
+// - 80 request/response handling
+// - 50 response parsing
+// - 30 error classification
+// - 20 health checks
+// - 20 configuration validation
+//
+// Production readiness improvements:
+// - Resilient to transient network failures
+// - Better UX with streaming responses
+// - Configurable retry behavior per use case
+// - Comprehensive test coverage (5 tests)
