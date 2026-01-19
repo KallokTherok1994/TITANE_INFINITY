@@ -7,7 +7,7 @@
 
 use std::collections::VecDeque;
 use std::sync::Arc;
-use std::time::{Duration, Instant};
+use std::time::Instant;
 use parking_lot::Mutex;
 
 /// IPC message batch for efficient transport
@@ -26,10 +26,10 @@ pub struct IPCBatcher {
 }
 
 #[derive(Clone, Debug)]
-struct BatchConfig {
-    max_batch_size: usize,
-    max_wait_ms: u64,
-    compression_threshold: usize,
+pub struct BatchConfig {
+    pub max_batch_size: usize,
+    pub max_wait_ms: u64,
+    pub compression_threshold: usize,
 }
 
 #[derive(Debug, Default, Clone)]
@@ -241,6 +241,8 @@ mod tests {
 
     #[test]
     fn test_time_based_batching() {
+        use std::time::Duration;
+        
         let batcher = IPCBatcher::with_config(BatchConfig {
             max_batch_size: 1000,
             max_wait_ms: 100,

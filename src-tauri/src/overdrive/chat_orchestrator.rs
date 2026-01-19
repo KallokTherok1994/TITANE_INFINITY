@@ -457,15 +457,15 @@ fn calculate_message_importance(request: &ChatRequest, response: &ChatMessage) -
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// **DEPRECATED**: Use `conversation_generate` from ConversationEngine (OMEGA Pipeline v2)
-/// This legacy orchestrator will be removed in v25.0.0
+/// This legacy orchestrator is now INTERNAL ONLY - not exposed via IPC
+/// This internal version will be removed in v25.0.0
 ///
 /// Migration: Use conversation_engine::commands::conversation_generate instead
-#[tauri::command]
 #[deprecated(
     since = "24.2.0",
     note = "Use conversation_generate from OMEGA Pipeline v2 (conversation_engine)"
 )]
-pub async fn chat_send_message(
+pub(crate) async fn chat_send_message(
     mut request: ChatRequest,
     state: State<'_, ChatOrchestratorState>,
 ) -> Result<ChatResponse, String> {
@@ -2162,6 +2162,9 @@ mod smoke_tests {
     use super::*;
 
     #[tokio::test]
+    // NOTE: This test requires Ollama running on localhost:11434 with llama3.1 model
+    // To run: ollama serve && ollama pull llama3.1, then run with --ignored flag
+    // Skipped in CI - test locally only for now (v27.0: add CI mock)
     #[ignore]
     async fn ollama_smoke_generate_ok() {
         let state = init();
