@@ -168,22 +168,28 @@ export class PredictivePreloader {
     // Préchargement uniquement côté UI (évite les exécutions Node/SSR)
     if (typeof window === 'undefined') return;
 
+    // ⚠️ Important: éviter une dépendance statique vers chatEngine (cycle).
+    // On warm le cache via import dynamique + génération avec predictive désactivé.
+    const { chatEngine } = await import('@/services/ai/chatEngine');
+
     const mode =
       typeof item.key.mode === 'string' && item.key.mode.trim()
         ? item.key.mode
         : 'default';
-
-    // ⚠️ Important: éviter une dépendance statique vers chatEngine (cycle).
-    // On warm le cache via import dynamique, mais via un wrapper dédié pour éviter
-    // le warning Vite/Rollup "dynamically imported but also statically imported".
-    const { warmChatEngineCache } = await import('@/services/ai/chatEngine.preload');
 
     logger.debug('Predictive preload: warming cache', {
       mode,
       preview: item.key.message.slice(0, 80),
     });
 
-    await warmChatEngineCache({ message: item.key.message, mode });
+    await chatEngine.generate(item.key.message, [], {
+      mode: mode as any,
+      performanceConfig: {
+        enableCache: true,
+        enablePredictive: false,
+        cacheHitBonus: false,
+      },
+    });
   }
 
   /**

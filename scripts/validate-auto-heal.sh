@@ -34,24 +34,24 @@ test_script() {
     
     if [[ ! -f "$script" ]]; then
         echo -e "${RED}✗ FAIL${NC} - Script not found: $script"
-          ((TESTS_FAILED+=1))
+        ((TESTS_FAILED++))
         return 1
     fi
     
     if [[ ! -x "$script" ]]; then
         echo -e "${RED}✗ FAIL${NC} - Script not executable: $script"
-          ((TESTS_FAILED+=1))
+        ((TESTS_FAILED++))
         return 1
     fi
     
     # Just check if it's a valid bash script
     if head -1 "$script" | grep -q "^#!/.*bash"; then
         echo -e "${GREEN}✓ PASS${NC} - Script is valid and executable"
-          ((TESTS_PASSED+=1))
+        ((TESTS_PASSED++))
         return 0
     else
         echo -e "${YELLOW}⚠ WARN${NC} - Script may not be a bash script"
-          ((TESTS_PASSED+=1))
+        ((TESTS_PASSED++))
         return 0
     fi
 }
@@ -69,17 +69,17 @@ test_script "scripts/verify/pre-deployment-check.sh" "Pre-Deployment Check"
 echo ""
 echo -e "${CYAN}Testing Documentation...${NC}"
 if [[ -f "docs/AUTO_HEAL_SYSTEMS.md" ]]; then
-      doc_size=$(wc -c < docs/AUTO_HEAL_SYSTEMS.md)
+    local doc_size=$(wc -c < docs/AUTO_HEAL_SYSTEMS.md)
     if [[ $doc_size -gt 10000 ]]; then
         echo -e "${GREEN}✓ PASS${NC} - Documentation exists and is comprehensive (${doc_size} bytes)"
-          ((TESTS_PASSED+=1))
+        ((TESTS_PASSED++))
     else
         echo -e "${YELLOW}⚠ WARN${NC} - Documentation exists but may be incomplete"
-          ((TESTS_PASSED+=1))
+        ((TESTS_PASSED++))
     fi
 else
     echo -e "${RED}✗ FAIL${NC} - Documentation not found: docs/AUTO_HEAL_SYSTEMS.md"
-      ((TESTS_FAILED+=1))
+    ((TESTS_FAILED++))
 fi
 
 # Test directory structure
@@ -97,7 +97,7 @@ for dir in "${required_dirs[@]}"; do
         echo -e "${GREEN}✓${NC} $dir exists"
     else
         echo -e "${RED}✗${NC} $dir missing"
-          ((TESTS_FAILED+=1))
+        ((TESTS_FAILED++))
     fi
 done
 

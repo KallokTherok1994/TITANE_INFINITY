@@ -18,8 +18,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // Note: WebAssembly API requires 'any' types for module exports and dynamic memory operations
 
-import { logger } from '@/utils/logger';
-
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
@@ -127,7 +125,7 @@ export class WebAssemblyCompute {
 
   async initialize(): Promise<boolean> {
     if (!this.config.enableWASM || !this.capabilities.hasWASM) {
-      logger.warn('WASM not available, using JS fallback');
+      console.warn('[WebAssemblyCompute] WASM not available, using JS fallback');
       return false;
     }
 
@@ -149,20 +147,20 @@ export class WebAssemblyCompute {
       this.wasmInstance = await WebAssembly.instantiate(this.wasmModule, {
         env: {
           memory: this.wasmMemory,
-          abort: () => logger.error('Abort called'),
+          abort: () => console.error('[WASM] Abort called'),
         },
         js: {
-          log: (value: number) => logger.debug('[WASM]', value),
+          log: (value: number) => console.log('[WASM]', value),
         },
       });
 
       this.metrics.isWASMActive = true;
       this.metrics.memoryUsage = this.wasmMemory.buffer.byteLength;
 
-      logger.debug('Initialized successfully');
+      console.log('[WebAssemblyCompute] Initialized successfully');
       return true;
     } catch (error) {
-      logger.error('Initialization failed:', error);
+      console.error('[WebAssemblyCompute] Initialization failed:', error);
       this.metrics.isWASMActive = false;
       return false;
     }
@@ -301,7 +299,10 @@ export class WebAssemblyCompute {
         result = await this.executeWASM(task);
         this.metrics.tasksExecutedWASM++;
       } catch (error) {
-        logger.warn('WASM execution failed, falling back to JS:', error);
+        console.warn(
+          '[WebAssemblyCompute] WASM execution failed, falling back to JS:',
+          error
+        );
         result = this.executeJS(task);
         this.metrics.tasksExecutedJS++;
       }

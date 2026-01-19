@@ -136,8 +136,7 @@ export const MessageBubble = memo(function MessageBubble({
   // Contenu du message avec lazy markdown
   const messageContent = useMemo(() => {
     if (role === 'assistant') {
-      const safeContent = content?.trim() || 'Erreur : Contenu manquant';
-      if (safeContent.length > 0) {
+      if (content.length > 0) {
         // YOLO OPT: Lazy-load markdown pour assistant uniquement
         return (
           <Suspense fallback={<div className="markdown-loading">Chargement...</div>}>
@@ -145,16 +144,14 @@ export const MessageBubble = memo(function MessageBubble({
               remarkPlugins={[remarkGfm]}
               components={markdownComponents}
             >
-              {safeContent}
+              {content}
             </LazyReactMarkdown>
           </Suspense>
         );
       }
       return <TypingIndicator />;
     }
-    // User messages: ensure content is trimmed and non-empty
-    const userContent = content?.trim() || '';
-    return userContent || '(message vide)';
+    return content;
   }, [role, content]);
 
   return (

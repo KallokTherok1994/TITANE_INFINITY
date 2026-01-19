@@ -16,6 +16,7 @@
 import { aiOrchestrator } from './orchestrator';
 import { metricsEngine } from './metricsEngine';
 import { autoHealEngine } from './autoHealEngine';
+import { aiHealthMonitor } from './healthMonitor';
 
 // ─────────────────────────────────────────────────────────────────
 // CORE ORCHESTRATOR
@@ -39,9 +40,8 @@ export { ollamaProvider } from './providers/ollama';
 // ℹ️ Previously lazy-loaded, but metaKernel.ts uses static imports
 // Converting to static to avoid Vite chunk splitting warnings
 export { autoHealEngine } from './autoHealEngine';
-export { unifiedHealingFacade } from './unifiedHealingFacade';
 export { metricsEngine } from './metricsEngine';
-// aiHealthMonitor is now dynamically imported to avoid circular dependencies
+export { aiHealthMonitor } from './healthMonitor';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -60,12 +60,6 @@ export type {
   AutoHealStats,
   AutoHealConfig,
 } from './autoHealEngine';
-
-export type {
-  UnifiedStats,
-  UnifiedHealResult,
-  UnifiedHealRequest,
-} from './unifiedHealingFacade';
 
 export type { MetricEvent, ProviderMetrics, AggregatedMetrics } from './metricsEngine';
 
@@ -109,10 +103,6 @@ export async function initializeAISystem(options?: {
   // Démarrer health monitoring si explicitement demandé (ou par défaut en dev)
   const enableHealthMonitoring =
     options?.enableHealthMonitoring ?? isHealthMonitoringEnabledByDefault();
-
-  // Import health monitor dynamically to avoid circular dependency
-  const { aiHealthMonitor } = await import('./healthMonitor');
-
   if (enableHealthMonitoring) {
     aiHealthMonitor.startMonitoring();
   }
@@ -133,7 +123,6 @@ export async function quickHealthCheck(): Promise<{
   score: number;
   message: string;
 }> {
-  const { aiHealthMonitor } = await import('./healthMonitor');
   const report = await aiHealthMonitor.getHealthReport();
 
   let message = '';
@@ -187,7 +176,6 @@ export async function quickFix(): Promise<{
     actions.push('✅ Providers réinitialisés');
 
     // Clear old alerts
-    const { aiHealthMonitor } = await import('./healthMonitor');
     aiHealthMonitor.clearAllAlerts();
     actions.push('✅ Alertes nettoyées');
 

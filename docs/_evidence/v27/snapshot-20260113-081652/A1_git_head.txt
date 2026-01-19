@@ -1,0 +1,4 @@
+[A1] git rev-parse --abbrev-ref HEAD
+MAIN
+[A1] git rev-parse HEAD
+16a0fd73ec9ac6b362386d91be6de36ff63dcb2d

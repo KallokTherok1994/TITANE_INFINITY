@@ -4,9 +4,7 @@
 
 > **Version**: v∞.MPE-Ω (Meta-Integrator)
 > **Date**: 2025-12-01
-> **Statut**: Living Documentation (dev) / Production EN ATTENTE (autorisation)
-
-> NOTE (gouvernance): ce document décrit une architecture; il ne constitue pas une autorisation de déploiement.
+> **Statut**: Production Ready + Living Documentation
 
 ---
 

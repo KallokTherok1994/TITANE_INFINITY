@@ -60,11 +60,14 @@ class TitaneAIPredictiveEngine {
     this.neuralNetwork = new SimpleNeuralNetwork([8, 16, 8, 1]); // 8 inputs, hidden layers, 1 output
 
     const isTauriRuntime =
-      typeof window !== 'undefined' && Boolean((window as typeof window & { __TAURI__?: unknown }).__TAURI__);
+      typeof window !== 'undefined' &&
+      Boolean((window as typeof window & { __TAURI__?: unknown }).__TAURI__);
     const isPlaywright =
-      typeof navigator !== 'undefined' && /HeadlessChrome|Playwright/i.test(navigator.userAgent || '');
+      typeof navigator !== 'undefined' &&
+      /HeadlessChrome|Playwright/i.test(navigator.userAgent || '');
     const enableInWebMode =
-      typeof import.meta !== 'undefined' && import.meta.env?.VITE_ENABLE_PREDICTIVE_AI === '1';
+      typeof import.meta !== 'undefined' &&
+      import.meta.env?.VITE_ENABLE_PREDICTIVE_AI === '1';
 
     if ((!isTauriRuntime && !enableInWebMode) || isPlaywright) {
       console.log('🛑 [AI-ENGINE] Predictive engine disabled in browser/test mode');

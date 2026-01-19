@@ -10,7 +10,6 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { logger } from '@/utils/logger';
 import {
   advancedPerformanceMonitor,
   type PerformanceSnapshot,
@@ -98,7 +97,7 @@ export function useAdvancedPerformance(
     advancedPerformanceMonitor.startMonitoring(interval);
     setIsMonitoring(true);
 
-    logger.debug('Monitoring started');
+    console.log('[useAdvancedPerformance] Monitoring started');
   }, [isMonitoring, interval]);
 
   /**
@@ -110,7 +109,7 @@ export function useAdvancedPerformance(
     advancedPerformanceMonitor.stopMonitoring();
     setIsMonitoring(false);
 
-    logger.debug('Monitoring stopped');
+    console.log('[useAdvancedPerformance] Monitoring stopped');
   }, [isMonitoring]);
 
   /**
@@ -166,11 +165,11 @@ export function useAdvancedPerformance(
       const suggestion = allSuggestions.find(s => s.id === suggestionId);
 
       if (!suggestion) {
-        logger.warn(`[useAdvancedPerformance] Suggestion not found: ${suggestionId}`);
+        console.warn(`[useAdvancedPerformance] Suggestion not found: ${suggestionId}`);
         return;
       }
 
-      logger.debug(`[useAdvancedPerformance] Applying optimization: ${suggestion.title}`);
+      console.log(`[useAdvancedPerformance] Applying optimization: ${suggestion.title}`);
 
       // Optimization logic placeholder - implementation pending
       // For now, just log
@@ -266,7 +265,10 @@ export function useAdvancedPerformance(
   useEffect(() => {
     if (autoOptimization) {
       // Auto-optimization monitor config update pending
-      logger.debug('Auto-optimization configured:', autoOptimization);
+      console.log(
+        '[useAdvancedPerformance] Auto-optimization configured:',
+        autoOptimization
+      );
     }
   }, [autoOptimization]);
 

@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v26.3.0 — Proprietary License
+ * TITANE∞ v24.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v26.3.0 — AUDIO CENTER PAGE
+ *   TITANE∞ v24.3.0 — AUDIO CENTER PAGE
  *   Interface de configuration audio complète
  *   v22Ω AI Performance Optimizations Compatible
  * ═══════════════════════════════════════════════════════════════════
@@ -398,7 +398,7 @@ export const AudioCenterPage: React.FC = () => {
                     testSpeaker();
                   }}
                   disabled={isTesting}
-                  className="px-6 py-3 bg-linear-to-r from-cyan-600 to-purple-600 hover:from-cyan-500
+                  className="px-6 py-3 bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-500
                            hover:to-purple-500 rounded-lg font-medium transition-all disabled:opacity-50"
                 >
                   {isTesting && testType === 'speaker'

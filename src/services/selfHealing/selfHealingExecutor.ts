@@ -294,7 +294,7 @@ export class SelfHealingExecutor {
 
     this.abortController = new AbortController();
 
-    logger.debug(`[SelfHealingExecutor] 🚀 Starting plan: ${plan.playbookName}`);
+    console.log(`[SelfHealingExecutor] 🚀 Starting plan: ${plan.playbookName}`);
 
     // Notifier le début
     if (this.config.notifyOnStart) {
@@ -338,7 +338,7 @@ export class SelfHealingExecutor {
         // Gérer l'échec selon la politique
         if (result.status === 'failed' || result.status === 'timeout') {
           if (plannedAction.action.onFailure === 'abort') {
-            logger.debug(`[SelfHealingExecutor] ❌ Aborting plan due to failed action`);
+            console.log(`[SelfHealingExecutor] ❌ Aborting plan due to failed action`);
             needsRollback = this.config.autoRollback && plan.rollbackActions.length > 0;
             break;
           } else if (plannedAction.action.onFailure === 'rollback') {
@@ -351,7 +351,7 @@ export class SelfHealingExecutor {
 
       // Rollback si nécessaire
       if (needsRollback && plan.rollbackActions.length > 0) {
-        logger.debug(`[SelfHealingExecutor] 🔄 Performing rollback...`);
+        console.log(`[SelfHealingExecutor] 🔄 Performing rollback...`);
         rollbackResults = await this.executeRollback(plan.rollbackActions);
         rollbackPerformed = true;
       }
@@ -441,7 +441,7 @@ export class SelfHealingExecutor {
       });
     }
 
-    logger.debug(
+    console.log(
       `[SelfHealingExecutor] ✅ Plan completed: ${status} (${succeeded}/${results.length} succeeded)`
     );
 
@@ -455,7 +455,7 @@ export class SelfHealingExecutor {
     const { action } = plannedAction;
     const startTime = Date.now();
 
-    logger.debug(
+    console.log(
       `[SelfHealingExecutor] 🔧 Executing: ${action.type} on ${action.targetModule}`
     );
 
@@ -547,7 +547,7 @@ export class SelfHealingExecutor {
 
       // On continue même si le rollback échoue
       if (result.status !== 'success') {
-        logger.warn(
+        console.warn(
           `[SelfHealingExecutor] ⚠️ Rollback action failed: ${action.action.type}`
         );
       }
@@ -689,7 +689,7 @@ export class SelfHealingExecutor {
   public abort(): void {
     if (this.abortController) {
       this.abortController.abort();
-      logger.debug('Execution aborted');
+      console.log('[SelfHealingExecutor] Execution aborted');
     }
   }
 
@@ -715,7 +715,7 @@ export class SelfHealingExecutor {
    */
   public setDryRunMode(enabled: boolean): void {
     this.config.dryRunMode = enabled;
-    logger.debug(`[SelfHealingExecutor] Dry run mode: ${enabled}`);
+    console.log(`[SelfHealingExecutor] Dry run mode: ${enabled}`);
   }
 }
 

@@ -10,8 +10,6 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { logger } from '@/utils/logger';
-
 const isDev = import.meta.env.DEV || import.meta.env.MODE === 'development';
 const isDebugEnabled = () => {
   if (typeof window === 'undefined') return false;
@@ -24,7 +22,7 @@ export const chatLogger = {
    */
   info: (...args: unknown[]) => {
     if (isDebugEnabled()) {
-      logger.debug('[CHAT]', ...args);
+      console.log('[CHAT]', ...args);
     }
   },
 
@@ -33,7 +31,7 @@ export const chatLogger = {
    */
   debug: (...args: unknown[]) => {
     if (isDev) {
-      logger.debug('[CHAT DEBUG]', ...args);
+      console.log('[CHAT DEBUG]', ...args);
     }
   },
 
@@ -41,14 +39,14 @@ export const chatLogger = {
    * Log warning (toujours actif)
    */
   warn: (...args: unknown[]) => {
-    logger.warn('[CHAT]', ...args);
+    console.warn('[CHAT]', ...args);
   },
 
   /**
    * Log error (toujours actif)
    */
   error: (...args: unknown[]) => {
-    logger.error('[CHAT]', ...args);
+    console.error('[CHAT]', ...args);
   },
 
   /**
@@ -56,7 +54,7 @@ export const chatLogger = {
    */
   success: (...args: unknown[]) => {
     if (isDebugEnabled()) {
-      logger.debug('✅', ...args);
+      console.log('[CHAT] ✅', ...args);
     }
   },
 
@@ -65,7 +63,7 @@ export const chatLogger = {
    */
   perf: (label: string, duration: number) => {
     if (isDebugEnabled()) {
-      logger.debug(`[CHAT PERF] ${label}: ${duration}ms`);
+      console.log(`[CHAT PERF] ${label}: ${duration}ms`);
     }
   },
 
@@ -75,7 +73,7 @@ export const chatLogger = {
   enableDebug: () => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('titane_debug_chat', 'true');
-      logger.debug('🔍 Debug mode enabled (localStorage)');
+      console.log('[CHAT] 🔍 Debug mode enabled (localStorage)');
     }
   },
 
@@ -85,7 +83,7 @@ export const chatLogger = {
   disableDebug: () => {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('titane_debug_chat');
-      logger.debug('🔇 Debug mode disabled');
+      console.log('[CHAT] 🔇 Debug mode disabled');
     }
   },
 };

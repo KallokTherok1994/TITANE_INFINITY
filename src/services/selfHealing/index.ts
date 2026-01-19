@@ -539,7 +539,7 @@ class SelfHealingEngineOrchestrator {
           console.debug(prefix, message);
           break;
         case 'info':
-          logger.debug(`${prefix} ${message}`, { component: 'SelfHealingEngine' });
+          console.log(prefix, message);
           break;
         case 'warn':
           logger.warn(message, { component: 'SelfHealingEngine', action: 'log' });

@@ -11,7 +11,6 @@
 import React, { useState, useCallback } from 'react';
 import { useTimeAgenda } from '@/hooks/useTimeAgenda';
 import type { AgendaEvent, EventCategory, AgendaView } from '@/engines/time';
-import { logger } from '@/utils/logger';
 import './AgendaPage.css';
 
 // ═══════════════════════════════════════════════════════════════════
@@ -618,7 +617,7 @@ export const AgendaPage: React.FC = () => {
 
   const handleEventClick = useCallback((event: AgendaEvent) => {
     setSelectedEvent(event);
-    logger.debug('Événement sélectionné:', event.title);
+    console.log('[AgendaPage] Événement sélectionné:', event.title);
   }, []);
 
   const handleDayClick = useCallback(

@@ -49,9 +49,9 @@ export const configureBrowserMode = (): void => {
   }
 
   // Informer l'utilisateur - Mode ouvert
-  logger.debug('🌐 TITANE∞ - Mode Navigateur (Restrictions désactivées)');
-  logger.debug('✅ Toutes fonctionnalités activées (fallback graceful)');
-  logger.debug('🔓 Mode ouvert - Aucune restriction de sécurité');
+  console.log('🌐 TITANE∞ - Mode Navigateur (Restrictions désactivées)');
+  console.log('✅ Toutes fonctionnalités activées (fallback graceful)');
+  console.log('🔓 Mode ouvert - Aucune restriction de sécurité');
 };
 
 // Auto-configure au chargement du module

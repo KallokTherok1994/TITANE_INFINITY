@@ -11,8 +11,6 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { logger } from '@/utils/logger';
-
 /**
  * Type d'interruption conversationnelle
  */
@@ -95,7 +93,7 @@ export class ChatInterruptionHandler {
       },
     };
 
-    logger.debug('🧠 Initialized');
+    console.log('[ChatInterruptionHandler] 🧠 Initialized');
   }
 
   /**
@@ -103,7 +101,7 @@ export class ChatInterruptionHandler {
    */
   enable(): void {
     this.config.enabled = true;
-    logger.debug('✅ Enabled');
+    console.log('[ChatInterruptionHandler] ✅ Enabled');
   }
 
   /**
@@ -111,7 +109,7 @@ export class ChatInterruptionHandler {
    */
   disable(): void {
     this.config.enabled = false;
-    logger.debug('🔇 Disabled');
+    console.log('[ChatInterruptionHandler] 🔇 Disabled');
   }
 
   /**
@@ -161,7 +159,7 @@ export class ChatInterruptionHandler {
     interruptedAt: number = 0.5
   ): InterruptionContext {
     if (!this.config.enabled) {
-      logger.warn('Not enabled');
+      console.warn('[ChatInterruptionHandler] Not enabled');
       return {
         type: 'redirect',
         userText,
@@ -182,9 +180,9 @@ export class ChatInterruptionHandler {
       timestamp: Date.now(),
     };
 
-    logger.debug(`[ChatInterruptionHandler] 🚨 Interruption: ${type}`);
-    logger.debug(`   User: "${userText}"`);
-    logger.debug(`   Interrupted at: ${(interruptedAt * 100).toFixed(0)}%`);
+    console.log(`[ChatInterruptionHandler] 🚨 Interruption: ${type}`);
+    console.log(`   User: "${userText}"`);
+    console.log(`   Interrupted at: ${(interruptedAt * 100).toFixed(0)}%`);
 
     // Add to history
     this.history.push(context);
@@ -228,7 +226,7 @@ export class ChatInterruptionHandler {
    */
   clearHistory(): void {
     this.history = [];
-    logger.debug('🗑️ History cleared');
+    console.log('[ChatInterruptionHandler] 🗑️ History cleared');
   }
 
   /**

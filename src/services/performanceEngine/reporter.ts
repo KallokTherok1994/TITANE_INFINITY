@@ -12,7 +12,6 @@ import {
   calculateGrade,
   DEFAULT_PERFORMANCE_CONFIG,
 } from './performanceEngine.config';
-import { logger } from '@/utils/logger';
 import type {
   MetricsSnapshot,
   PerformanceIssue,
@@ -229,7 +228,7 @@ export class PerformanceReporter {
     this.state = this.createInitialState();
     this.eventListeners = new Map();
 
-    this.log('info', 'Initialisé');
+    this.log('info', '[PerformanceReporter] Initialisé');
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -241,7 +240,7 @@ export class PerformanceReporter {
    */
   start(): void {
     if (this.isRunning) {
-      this.log('warn', "Déjà en cours d'exécution");
+      this.log('warn', "[PerformanceReporter] Déjà en cours d'exécution");
       return;
     }
 
@@ -255,7 +254,7 @@ export class PerformanceReporter {
     }
 
     this.emit('engine_started', { component: 'reporter', timestamp: Date.now() });
-    this.log('info', 'Démarré');
+    this.log('info', '[PerformanceReporter] Démarré');
   }
 
   /**
@@ -263,7 +262,7 @@ export class PerformanceReporter {
    */
   stop(): void {
     if (!this.isRunning) {
-      this.log('warn', "Pas en cours d'exécution");
+      this.log('warn', "[PerformanceReporter] Pas en cours d'exécution");
       return;
     }
 
@@ -275,7 +274,7 @@ export class PerformanceReporter {
     }
 
     this.emit('engine_stopped', { component: 'reporter', timestamp: Date.now() });
-    this.log('info', 'Arrêté');
+    this.log('info', '[PerformanceReporter] Arrêté');
   }
 
   /**
@@ -283,7 +282,7 @@ export class PerformanceReporter {
    */
   setSelfHealingIntegration(integration: SelfHealingIntegration): void {
     this.selfHealing = integration;
-    this.log('info', 'Self-Healing intégré');
+    this.log('info', '[PerformanceReporter] Self-Healing intégré');
   }
 
   /**
@@ -515,7 +514,7 @@ export class PerformanceReporter {
   reset(): void {
     this.state = this.createInitialState();
     this.logs = [];
-    this.log('info', 'État réinitialisé');
+    this.log('info', '[PerformanceReporter] État réinitialisé');
   }
 
   /**
@@ -973,13 +972,13 @@ export class PerformanceReporter {
       // Output console
       switch (level) {
         case 'error':
-          logger.error(message, context ?? '');
+          console.error(message, context ?? '');
           break;
         case 'warn':
-          logger.warn(message, context ?? '');
+          console.warn(message, context ?? '');
           break;
         case 'info':
-          logger.debug(message, context ?? '');
+          console.log(message, context ?? '');
           break;
         case 'debug':
           console.debug(message, context ?? '');

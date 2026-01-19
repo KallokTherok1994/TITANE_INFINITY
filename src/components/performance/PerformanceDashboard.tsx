@@ -201,7 +201,7 @@ const IssuesList: React.FC<{
   }
 
   return (
-    <div className="space-y-2 max-h-75 overflow-y-auto pr-2">
+    <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
       <AnimatePresence mode="popLayout">
         {issues.map(issue => (
           <motion.div
@@ -217,7 +217,7 @@ const IssuesList: React.FC<{
           >
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4 shrink-0" />
+                <AlertTriangle className="w-4 h-4 flex-shrink-0" />
                 <div>
                   <div className="font-medium text-sm">{issue.title}</div>
                   <div className="text-xs opacity-75">{issue.description}</div>
@@ -251,7 +251,7 @@ const RecommendationsPanel: React.FC<{
   }
 
   return (
-    <div className="space-y-2 max-h-75 overflow-y-auto pr-2">
+    <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
       {recommendations.slice(0, 5).map(rec => (
         <motion.div
           key={rec.id}

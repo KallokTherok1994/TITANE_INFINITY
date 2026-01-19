@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v26.3.0 — Proprietary License
+ * TITANE_INFINITY v24.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * v22Ω AI Performance Optimizations Compatible
@@ -124,8 +124,8 @@ describe.skipIf(!hasSQLiteBindings)('SQLiteVectorStore', () => {
 
       const retrieved = await store.get(entry.id);
       expect(retrieved).toBeDefined();
-      expect(retrieved?.id).toBe(entry.id);
-      expect(retrieved?.summary).toBe(entry.summary);
+      expect(retrieved!.id).toBe(entry.id);
+      expect(retrieved!.summary).toBe(entry.summary);
     });
 
     it('should add batch entries', async () => {
@@ -148,11 +148,11 @@ describe.skipIf(!hasSQLiteBindings)('SQLiteVectorStore', () => {
       await store.add(entry);
 
       const retrieved = await store.get(entry.id);
-      expect(retrieved?.embedding).toBeDefined();
-      expect(retrieved?.embedding!.length).toBe(384);
+      expect(retrieved!.embedding).toBeDefined();
+      expect(retrieved!.embedding!.length).toBe(384);
 
       // Check embedding values are preserved (within floating point tolerance)
-      retrieved?.embedding!.forEach((val, i) => {
+      retrieved!.embedding!.forEach((val, i) => {
         expect(val).toBeCloseTo(embedding[i], 5);
       });
     });
@@ -165,7 +165,7 @@ describe.skipIf(!hasSQLiteBindings)('SQLiteVectorStore', () => {
 
       const retrieved = await store.get(entry.id);
       expect(retrieved).toBeDefined();
-      expect(retrieved?.id).toBe(entry.id);
+      expect(retrieved!.id).toBe(entry.id);
     });
 
     it('should return null for non-existent id', async () => {
@@ -187,8 +187,8 @@ describe.skipIf(!hasSQLiteBindings)('SQLiteVectorStore', () => {
 
       const updated = await store.get(entry.id);
       expect(updated!.importance).toBe(0.9);
-      expect(updated?.summary).toBe('Updated summary');
-      expect(updated?.accessCount).toBe(10);
+      expect(updated!.summary).toBe('Updated summary');
+      expect(updated!.accessCount).toBe(10);
     });
 
     it('should update embedding vector', async () => {
@@ -199,8 +199,8 @@ describe.skipIf(!hasSQLiteBindings)('SQLiteVectorStore', () => {
       await store.update(entry.id, { embedding: newEmbedding });
 
       const updated = await store.get(entry.id);
-      expect(updated?.embedding).toBeDefined();
-      expect(updated?.embedding!.length).toBe(384);
+      expect(updated!.embedding).toBeDefined();
+      expect(updated!.embedding!.length).toBe(384);
     });
   });
 
@@ -411,7 +411,7 @@ describe.skipIf(!hasSQLiteBindings)('SQLiteVectorStore', () => {
 
       // Should store and retrieve even with wrong dimensions
       expect(retrieved).toBeDefined();
-      expect(retrieved?.embedding!.length).toBe(3);
+      expect(retrieved!.embedding!.length).toBe(3);
     });
 
     it('should handle null embedding', async () => {
@@ -421,7 +421,7 @@ describe.skipIf(!hasSQLiteBindings)('SQLiteVectorStore', () => {
       const retrieved = await store.get(entry.id);
 
       expect(retrieved).toBeDefined();
-      expect(retrieved?.embedding).toBeUndefined();
+      expect(retrieved!.embedding).toBeUndefined();
     });
   });
 });

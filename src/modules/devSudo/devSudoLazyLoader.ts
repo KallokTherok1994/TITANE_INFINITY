@@ -7,7 +7,6 @@
  */
 
 import type { DevSudoAction } from './types';
-import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -208,18 +207,18 @@ const loadingPromises: Partial<Record<HandlerDomain, Promise<HandlerModule>>> = 
 export async function loadHandlerModule(domain: HandlerDomain): Promise<HandlerModule> {
   // Return cached module if already loaded
   if (handlerCache[domain]) {
-    logger.debug(`[DEV-SUDO LAZY] ✅ Handler "${domain}" already loaded (cached)`);
+    console.log(`[DEV-SUDO LAZY] ✅ Handler "${domain}" already loaded (cached)`);
     return handlerCache[domain] as HandlerModule;
   }
 
   // Return loading promise if currently loading
   if (loadingPromises[domain]) {
-    logger.debug(`[DEV-SUDO LAZY] ⏳ Handler "${domain}" currently loading (awaiting)`);
+    console.log(`[DEV-SUDO LAZY] ⏳ Handler "${domain}" currently loading (awaiting)`);
     return loadingPromises[domain] as Promise<HandlerModule>;
   }
 
   // Start loading
-  logger.debug(`[DEV-SUDO LAZY] ⚡ Lazy-loading handler "${domain}"...`);
+  console.log(`[DEV-SUDO LAZY] ⚡ Lazy-loading handler "${domain}"...`);
   const loadPromise = (async () => {
     let module: HandlerModule;
 
@@ -257,7 +256,7 @@ export async function loadHandlerModule(domain: HandlerDomain): Promise<HandlerM
     handlerCache[domain] = module;
     delete loadingPromises[domain];
 
-    logger.debug(`[DEV-SUDO LAZY] ✅ Handler "${domain}" loaded successfully`);
+    console.log(`[DEV-SUDO LAZY] ✅ Handler "${domain}" loaded successfully`);
     return module;
   })();
 
@@ -286,7 +285,7 @@ export function isHandlerLoaded(domain: HandlerDomain): boolean {
 export function preloadHandler(domain: HandlerDomain): void {
   if (!handlerCache[domain] && !loadingPromises[domain]) {
     loadHandlerModule(domain).catch(err => {
-      logger.warn(`[DEV-SUDO LAZY] Failed to preload "${domain}":`, err);
+      console.warn(`[DEV-SUDO LAZY] Failed to preload "${domain}":`, err);
     });
   }
 }

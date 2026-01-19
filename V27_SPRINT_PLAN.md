@@ -2,18 +2,18 @@
 
 **Status:** 📋 READY FOR APPROVAL  
 **Timeline:** 3-4 weeks (Q1 2026)  
-**Objective:** Achieve 0 Clippy warnings + decompose large modules  
+**Objective:** Achieve 0 Clippy warnings + decompose large modules
 
 ---
 
 ## 🎯 Sprint Objectives
 
-| Objective | Weight | Status | Owner |
-|-----------|--------|--------|-------|
-| Remove 1300+ expect() calls | 40% | 📋 PLANNED | Auto-Improvement |
-| Decompose 3 large files | 35% | 📋 PLANNED | Code Quality |
-| Maintain 4668/4668 tests | 15% | ✅ CURRENT | Testing |
-| Zero Clippy warnings | 10% | 📋 PLANNED | QA |
+| Objective                   | Weight | Status     | Owner            |
+| --------------------------- | ------ | ---------- | ---------------- |
+| Remove 1300+ expect() calls | 40%    | 📋 PLANNED | Auto-Improvement |
+| Decompose 3 large files     | 35%    | 📋 PLANNED | Code Quality     |
+| Maintain 4668/4668 tests    | 15%    | ✅ CURRENT | Testing          |
+| Zero Clippy warnings        | 10%    | 📋 PLANNED | QA               |
 
 ---
 
@@ -180,12 +180,14 @@
 ### Week 1: Baseline & Setup
 
 **Mon-Tue:** Planning & Analysis
+
 - [ ] Approve sprint plan
 - [ ] Create GitHub issues for all stories
 - [ ] Setup testing infrastructure
 - [ ] Create error handling framework
 
 **Wed-Fri:** Epic 1.1 & 1.2 (Providers)
+
 - [ ] Gemini provider refactor (2 days)
 - [ ] Ollama provider refactor (2 days)
 - [ ] Tests passing + CI green
@@ -197,16 +199,19 @@
 ### Week 2: Core Modules & Cascade
 
 **Mon-Wed:** Epic 1.3 & 1.4 (Remaining Providers)
+
 - [ ] OpenAI + Anthropic + GLM46V refactor
 - [ ] Cascade integration tests
 - [ ] All 4 providers tested with failures
 
 **Thu-Fri:** Epic 1.5 (Orchestrator)
+
 - [ ] Orchestrator error handling
 - [ ] Retry logic implementation
 - [ ] Fallback strategy testing
 
 **Parallel (Mon-Fri):** Epic 4.1 (ChatEngine Decomposition)
+
 - [ ] Module extraction
 - [ ] Tests updated
 - [ ] Performance verified
@@ -218,20 +223,24 @@
 ### Week 3: API & Memory Modules
 
 **Mon-Tue:** Epic 2.1 & 2.2 (Streaming + Memory)
+
 - [ ] Streaming system refactor
 - [ ] Unified memory refactor
 - [ ] Stress tests pass
 
 **Wed-Thu:** Epic 2.3 & 2.4 (IPC + State)
+
 - [ ] IPC batcher refactor
 - [ ] State management hardening
 - [ ] Atomic tests pass
 
 **Fri:** Epic 2.5 (Bloom Filter)
+
 - [ ] Bloom filter error handling
 - [ ] Overflow tests
 
 **Parallel (Mon-Fri):** Epic 4.2 (ChatOrchestrator Decomposition)
+
 - [ ] Module extraction
 - [ ] Compilation optimized
 - [ ] Tests expanded
@@ -243,21 +252,25 @@
 ### Week 4: Finalization
 
 **Mon-Tue:** Epic 3 (API Layer)
+
 - [ ] Chat API refactor
 - [ ] Memory API refactor
 - [ ] Configuration validation
 
 **Wed-Thu:** Epic 3 (continued) + Validation Framework
+
 - [ ] Endpoint error handling complete
 - [ ] Centralized validation done
 - [ ] All tests passing
 
 **Fri:** Final Review & Release Prep
+
 - [ ] Zero warnings verification
 - [ ] Performance benchmarking
 - [ ] Release notes preparation
 
 **Parallel (Mon-Wed):** Epic 4.3 (UseChat Decomposition)
+
 - [ ] Module extraction
 - [ ] Component tests updated
 - [ ] Complexity reduction verified
@@ -297,17 +310,20 @@ Clippy: WARN          ──→    Clippy: PASS ✅
 ## 🚀 Rollout Strategy
 
 ### v27.0-beta (Week 3)
+
 - [ ] Deploy to dev environment
 - [ ] Run 72-hour stability test
 - [ ] Chaos testing (provider failures)
 - [ ] Collect metrics
 
 ### v27.0-rc.1 (Week 4 Start)
+
 - [ ] Release candidate build
 - [ ] Documentation finalized
 - [ ] Community testing (open beta)
 
 ### v27.0 Final (Week 4 End)
+
 - [ ] Merge to main
 - [ ] Tag v27.0
 - [ ] GitHub release published
@@ -320,6 +336,7 @@ Clippy: WARN          ──→    Clippy: PASS ✅
 ### Error Handling Philosophy
 
 **Core Principles:**
+
 1. Never use `expect()` in production code
 2. Always provide context when returning errors
 3. Log errors at appropriate level (warn/error)
@@ -337,13 +354,13 @@ Clippy: WARN          ──→    Clippy: PASS ✅
 
 ### Risk Mitigation
 
-| Risk | Mitigation | Owner |
-|------|-----------|-------|
-| Regressions | Weekly staging tests | QA |
-| Performance | Benchmarking before release | Perf Team |
-| Provider API breaks | Chaos tests | Backend |
-| Memory corruption | Stress tests | Infrastructure |
-| User-facing crashes | E2E tests + monitoring | DevOps |
+| Risk                | Mitigation                  | Owner          |
+| ------------------- | --------------------------- | -------------- |
+| Regressions         | Weekly staging tests        | QA             |
+| Performance         | Benchmarking before release | Perf Team      |
+| Provider API breaks | Chaos tests                 | Backend        |
+| Memory corruption   | Stress tests                | Infrastructure |
+| User-facing crashes | E2E tests + monitoring      | DevOps         |
 
 ---
 

@@ -1,0 +1,341 @@
+/**
+ * TITANE∞ v26.0 — ThinkingPanel Styles (v2 - Compact Mode)
+ */
+
+/* Mode compact: Indicateur discret style ChatGPT/Claude */
+.thinking-panel-compact {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.625rem;
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  margin: 0.5rem 0;
+  font-size: 0.8125rem;
+  color: rgba(148, 163, 184, 0.9);
+}
+
+.thinking-panel-compact:hover {
+  background: rgba(59, 130, 246, 0.12);
+  border-color: rgba(59, 130, 246, 0.35);
+  color: rgba(203, 213, 225, 1);
+}
+
+.thinking-panel-compact:focus {
+  outline: 2px solid rgba(59, 130, 246, 0.4);
+  outline-offset: 2px;
+}
+
+/* Inline dans un message */
+.thinking-panel-inline {
+  margin: 0.25rem 0 0.5rem 0;
+}
+
+.thinking-compact-content {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.thinking-compact-icon {
+  color: #3b82f6;
+  flex-shrink: 0;
+}
+
+.thinking-compact-text {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: inherit;
+  white-space: nowrap;
+}
+
+.thinking-compact-chevron {
+  color: rgba(100, 116, 139, 0.7);
+  transition: transform 0.2s;
+}
+
+.thinking-panel-compact:hover .thinking-compact-chevron {
+  transform: translateY(2px);
+}
+
+/* Provider badge (v2.1) */
+.thinking-provider-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.375rem;
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(148, 163, 184, 1);
+  margin-left: 0.375rem;
+  white-space: nowrap;
+}
+
+/* Animation des points "Thinking..." */
+.thinking-dots::after {
+  content: '';
+  animation: thinking-dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes thinking-dots {
+  0%,
+  20% {
+    content: '';
+  }
+  40% {
+    content: '.';
+  }
+  60% {
+    content: '..';
+  }
+  80%,
+  100% {
+    content: '...';
+  }
+}
+
+/* Mode étendu */
+.thinking-panel {
+  background: linear-gradient(
+    135deg,
+    rgba(30, 41, 59, 0.95) 0%,
+    rgba(15, 23, 42, 0.98) 100%
+  );
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin: 1rem 0;
+  box-shadow:
+    0 4px 20px rgba(59, 130, 246, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Header */
+.thinking-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(100, 116, 139, 0.2);
+}
+
+.thinking-header-content {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.thinking-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.thinking-header-icon {
+  color: #3b82f6;
+  flex-shrink: 0;
+}
+
+.thinking-title {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.thinking-status {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #94a3b8;
+}
+
+.thinking-collapse,
+.thinking-close {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 1.5rem;
+  line-height: 1;
+  padding: 0.25rem;
+  cursor: pointer;
+  transition: color 0.2s;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thinking-collapse {
+  font-size: 1rem;
+}
+
+.thinking-collapse:hover,
+.thinking-close:hover {
+  color: #e2e8f0;
+}
+
+/* Steps */
+.thinking-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.thinking-step {
+  background: rgba(30, 41, 59, 0.4);
+  border: 1px solid rgba(100, 116, 139, 0.2);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.thinking-step:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+  background: rgba(30, 41, 59, 0.6);
+}
+
+.thinking-step.active {
+  border-color: rgba(59, 130, 246, 0.5);
+  background: rgba(59, 130, 246, 0.05);
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.1);
+}
+
+.thinking-step.complete {
+  border-color: rgba(16, 185, 129, 0.3);
+  opacity: 0.8;
+}
+
+.thinking-step-header {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.thinking-step-icon {
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+
+.thinking-step-icon.active {
+  color: #3b82f6;
+}
+
+.thinking-step-icon.complete {
+  color: #10b981;
+}
+
+.thinking-step-label {
+  flex: 1;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #cbd5e1;
+}
+
+.thinking-step-chevron {
+  font-size: 0.75rem;
+  color: #64748b;
+  transition: transform 0.2s;
+}
+
+.thinking-step-content {
+  margin-top: 0.625rem;
+  padding-top: 0.625rem;
+  border-top: 1px solid rgba(100, 116, 139, 0.15);
+  overflow: hidden;
+}
+
+.thinking-step-content p {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: rgba(203, 213, 225, 0.8);
+}
+
+/* Placeholder */
+.thinking-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2rem 1rem;
+  color: #94a3b8;
+}
+
+.thinking-placeholder p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+/* Footer */
+.thinking-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(100, 116, 139, 0.2);
+}
+
+.thinking-stat {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+/* Animations */
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .thinking-panel {
+    padding: 0.875rem;
+  }
+
+  .thinking-step {
+    padding: 0.625rem;
+  }
+
+  .thinking-title {
+    font-size: 0.875rem;
+  }
+
+  .thinking-step-label {
+    font-size: 0.8125rem;
+  }
+
+  .thinking-panel-compact {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.5rem;
+  }
+
+  .thinking-compact-text {
+    font-size: 0.75rem;
+  }
+}

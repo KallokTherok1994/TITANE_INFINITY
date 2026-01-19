@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// TITANE∞ v26.3.0 — OVERDRIVE MODULE
+// TITANE∞ v24.3.0 — OVERDRIVE MODULE
 // ═══════════════════════════════════════════════════════════════════════════
 // Module principal exportant les sous-modules Overdrive actifs
 // Note: memory_compactor consolidated into crate::memory_compactor (root level)

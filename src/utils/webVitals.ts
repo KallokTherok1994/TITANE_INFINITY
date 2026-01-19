@@ -4,7 +4,6 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
-import { logger } from '@/utils/logger';
 
 // ═══ TYPES ═══
 
@@ -53,7 +52,7 @@ export class WebVitalsMonitor {
 
   private initializeObservers(): void {
     if (typeof window === 'undefined' || !('PerformanceObserver' in window)) {
-      logger.warn('PerformanceObserver not supported');
+      console.warn('[WebVitals] PerformanceObserver not supported');
       return;
     }
 
@@ -118,7 +117,7 @@ export class WebVitalsMonitor {
       inpObserver.observe({ entryTypes: ['event'] });
       this.observers.push(inpObserver);
     } catch (error) {
-      logger.error('Observer initialization failed:', error);
+      console.error('[WebVitals] Observer initialization failed:', error);
     }
   }
 
@@ -287,7 +286,7 @@ export class WebVitalsMonitor {
     if (!latest) return;
 
     // Send to analytics service (placeholder)
-    logger.debug('Analytics report:', latest);
+    console.log('[WebVitals] Analytics report:', latest);
 
     // In production, send to actual analytics:
     // fetch('/api/analytics/web-vitals', {

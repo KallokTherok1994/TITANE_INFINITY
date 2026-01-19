@@ -13,7 +13,6 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { secureInvoke } from '@/lib/security';
-import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
@@ -201,7 +200,7 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
     } catch (err) {
       const error = err instanceof Error ? err : new Error('Failed to get stats');
       setError(error);
-      logger.error('Stats error:', error);
+      console.error('[useMemoryEngine] Stats error:', error);
     }
   }, []);
 
@@ -239,7 +238,7 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
       } catch (err) {
         const error = err instanceof Error ? err : new Error('Failed to save memory');
         setError(error);
-        logger.error('Save error:', error);
+        console.error('[useMemoryEngine] Save error:', error);
         throw error;
       } finally {
         setIsLoading(false);
@@ -289,7 +288,7 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
       } catch (err) {
         const error = err instanceof Error ? err : new Error('Failed to search memory');
         setError(error);
-        logger.error('Search error:', error);
+        console.error('[useMemoryEngine] Search error:', error);
         return [];
       } finally {
         setIsLoading(false);
@@ -312,7 +311,7 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
     } catch (err) {
       const error = err instanceof Error ? err : new Error('Failed to get memory');
       setError(error);
-      logger.error('Get error:', error);
+      console.error('[useMemoryEngine] Get error:', error);
       return null;
     } finally {
       setIsLoading(false);
@@ -331,7 +330,7 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
       } catch (err) {
         const error = err instanceof Error ? err : new Error('Failed to delete memory');
         setError(error);
-        logger.error('Delete error:', error);
+        console.error('[useMemoryEngine] Delete error:', error);
         throw error;
       } finally {
         setIsLoading(false);
@@ -364,7 +363,7 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
       } catch (err) {
         const error = err instanceof Error ? err : new Error('Failed to clear memory');
         setError(error);
-        logger.error('Clear error:', error);
+        console.error('[useMemoryEngine] Clear error:', error);
         throw error;
       } finally {
         setIsLoading(false);
@@ -384,7 +383,7 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
     } catch (err) {
       const error = err instanceof Error ? err : new Error('Failed to compress memory');
       setError(error);
-      logger.error('Compress error:', error);
+      console.error('[useMemoryEngine] Compress error:', error);
       throw error;
     } finally {
       setIsLoading(false);

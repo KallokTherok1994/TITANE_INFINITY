@@ -1,6 +1,6 @@
 // TITANE∞ v15 - Memory Storage
 // Persistent conversation storage with encryption and compaction
-// Architecture v15: Clean, documented, tech-ready (dev)
+// Architecture v15: Clean, documented, production-ready
 // Encrypted persistent storage for conversations
 // Phase 5: Memory Hardening with MemoryCompactor integration
 

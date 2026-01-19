@@ -78,7 +78,7 @@ export const Toast: React.FC<ToastProps> = ({
       aria-live="polite"
       aria-atomic="true"
     >
-      <span className="text-lg shrink-0" aria-hidden="true">
+      <span className="text-lg flex-shrink-0" aria-hidden="true">
         {ICONS[type]}
       </span>
       <p className="text-sm font-medium flex-1">{message}</p>
@@ -87,7 +87,7 @@ export const Toast: React.FC<ToastProps> = ({
         aria-label="Close notification"
         type="button"
         className="
-          shrink-0 text-lg leading-none
+          flex-shrink-0 text-lg leading-none
           hover:opacity-70 transition-opacity
           focus-visible:outline-none focus-visible:shadow-focus rounded
           p-1

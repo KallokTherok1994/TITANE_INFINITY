@@ -25,7 +25,6 @@ import type {
   Metric,
   OrchestrationResult,
 } from './types';
-import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // DEFAULT CONFIGURATION
@@ -425,11 +424,11 @@ export class UnifiedOrchestrator {
   }
 
   private log(message: string, ...args: unknown[]): void {
-    logger.debug(`[UnifiedOrchestrator] ${message}`, ...args);
+    console.log(`[UnifiedOrchestrator] ${message}`, ...args);
   }
 
   private logError(message: string, error?: unknown): void {
-    logger.error(`[UnifiedOrchestrator ERROR] ${message}`, error);
+    console.error(`[UnifiedOrchestrator ERROR] ${message}`, error);
   }
 }
 

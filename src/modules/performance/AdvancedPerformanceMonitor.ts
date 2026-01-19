@@ -19,7 +19,6 @@
 // Note: Performance API requires 'any' types for PerformanceObserver entries and memory metrics
 
 import { secureInvoke } from '@/lib/security';
-import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -197,7 +196,7 @@ export class AdvancedPerformanceMonitor {
       this.updateHeatmap();
     }, intervalMs);
 
-    logger.debug('Monitoring started');
+    console.log('[AdvancedPerformanceMonitor] Monitoring started');
   }
 
   /**
@@ -212,7 +211,7 @@ export class AdvancedPerformanceMonitor {
       this.interval = null;
     }
 
-    logger.debug('Monitoring stopped');
+    console.log('[AdvancedPerformanceMonitor] Monitoring stopped');
   }
 
   /**
@@ -612,7 +611,7 @@ export class AdvancedPerformanceMonitor {
    * Applique une suggestion d'optimisation
    */
   private async applySuggestion(suggestion: OptimizationSuggestion): Promise<void> {
-    logger.debug(`[Auto-Optimization] Applying: ${suggestion.title}`);
+    console.log(`[Auto-Optimization] Applying: ${suggestion.title}`);
 
     switch (suggestion.id) {
       case 'cpu-throttle':
@@ -633,7 +632,7 @@ export class AdvancedPerformanceMonitor {
         // Animation quality reduction pending
         break;
       default:
-        logger.warn(`[Auto-Optimization] Unknown suggestion: ${suggestion.id}`);
+        console.warn(`[Auto-Optimization] Unknown suggestion: ${suggestion.id}`);
     }
   }
 

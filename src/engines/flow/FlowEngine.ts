@@ -33,7 +33,6 @@ import type {
   FlowMaintenanceResult,
   FlowExitResult,
 } from '@/types/flow';
-import { logger } from '@/utils/logger';
 
 import {
   getDefaultFlowState,
@@ -117,11 +116,11 @@ class FlowEngine {
 
   public start(): void {
     if (this.isRunning) {
-      logger.warn("Déjà en cours d'exécution");
+      console.warn("[FlowEngine] Déjà en cours d'exécution");
       return;
     }
 
-    logger.debug('Démarrage...');
+    console.log('[FlowEngine] Démarrage...');
     this.isRunning = true;
     this.state.isActive = true;
   }
@@ -134,7 +133,7 @@ class FlowEngine {
       this.exitFlow('interrupted');
     }
 
-    logger.debug('Arrêt...');
+    console.log('[FlowEngine] Arrêt...');
     this.isRunning = false;
     this.state.isActive = false;
   }
@@ -143,7 +142,7 @@ class FlowEngine {
     this.state = getDefaultFlowState();
     this.peakIntensityReached = 0;
     this.consecutiveGoodConditions = 0;
-    logger.debug('État réinitialisé');
+    console.log('[FlowEngine] État réinitialisé');
   }
 
   // ═══════════════════════════════════════════════════════════════════════
@@ -1212,7 +1211,7 @@ class FlowEngine {
     if (this.flowEventCallback) {
       this.flowEventCallback(event, data);
     }
-    logger.debug(`[FlowEngine] Événement: ${event}`, data);
+    console.log(`[FlowEngine] Événement: ${event}`, data);
   }
 }
 

@@ -338,7 +338,7 @@ Before `merge-dev-to-stable.sh`:
 ```
 runtime/dev/
 ├── run-dev.sh               # Launch script
-├── tauri.dev.conf.json     # Tauri dev config
+├── tauri.conf.json         # Tauri dev config
 ├── .env.development        # Environment variables
 ├── README.md               # This file
 └── logs/                   # Generated logs

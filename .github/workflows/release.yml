@@ -3,7 +3,7 @@ name: Release Build
 on:
   push:
     tags:
-      - 'v*.*.*'  # Trigger on version tags (e.g., v26.4.0)
+      - 'v*.*.*' # Trigger on version tags (e.g., v26.4.0)
 
 env:
   CARGO_TERM_COLOR: always
@@ -12,26 +12,26 @@ jobs:
   build-release:
     name: Build Release Artifacts
     runs-on: ubuntu-22.04
-    
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
           version: 8
-          
+
       - name: Setup Rust
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           toolchain: stable
-          
+
       - name: Install Dependencies (System)
         run: |
           sudo apt-get update
@@ -42,20 +42,20 @@ jobs:
             patchelf \
             libssl-dev \
             file
-            
+
       - name: Install Dependencies (Node)
         run: pnpm install
-        
+
       - name: Run Tests
         run: |
           pnpm test
           pnpm test:rust
-          
+
       - name: Run Performance Benchmark
         run: |
           chmod +x scripts/test/benchmark-performance.sh
           ./scripts/test/benchmark-performance.sh
-          
+
       - name: Performance Regression Check
         run: |
           # Extract latest benchmark results
@@ -88,19 +88,19 @@ jobs:
           else
             echo "⚠️  No benchmark results found, skipping performance check"
           fi
-          
+
       - name: Build Release
         run: pnpm run build
-        
+
       - name: Generate Checksums
         run: |
           cd src-tauri/target/release/bundle
           sha256sum **/*.{AppImage,deb,rpm} 2>/dev/null > CHECKSUMS.sha256 || true
-          
+
       - name: Extract Version
         id: version
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
-        
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
@@ -114,7 +114,7 @@ jobs:
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - name: Update latest.json
         run: |
           cat > latest.json << EOF
@@ -129,7 +129,7 @@ jobs:
             }
           }
           EOF
-          
+
       - name: Commit latest.json
         run: |
           git config user.name "GitHub Actions"

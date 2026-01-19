@@ -1,6 +1,8 @@
 // TITANE∞ v12 - Voice Activity Detection (VAD)
 // Detects when user is speaking vs silence
 
+use super::{AudioError, AudioResult};
+
 const VAD_THRESHOLD: f32 = 0.02; // Energy threshold for speech detection
 const VAD_MIN_SPEECH_FRAMES: usize = 10; // Minimum frames to consider as speech
 const VAD_MIN_SILENCE_FRAMES: usize = 20; // Minimum silence frames to end speech

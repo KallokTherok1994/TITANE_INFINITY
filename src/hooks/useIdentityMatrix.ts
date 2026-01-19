@@ -16,7 +16,6 @@ import {
   loadIdentityMatrix,
   validateIdentityMatrix,
 } from '@/core/identity/defaultIdentityMatrix';
-import { logger } from '@/utils/logger';
 
 export interface UseIdentityMatrixResult {
   /** Matrice identité (toujours définie) */
@@ -66,18 +65,18 @@ export function useIdentityMatrix(): UseIdentityMatrixResult {
         setIsFallback(result.isFallback);
 
         if (result.isFallback) {
-          logger.warn('Using fallback identity matrix');
+          console.warn('[useIdentityMatrix] Using fallback identity matrix');
         }
       } else {
         // Validation échoué - utiliser default
-        logger.error('Loaded matrix invalid, using default');
+        console.error('[useIdentityMatrix] Loaded matrix invalid, using default');
         setMatrix(DEFAULT_IDENTITY_MATRIX);
         setIsLoaded(false);
         setIsFallback(true);
         setError('Loaded identity matrix failed validation');
       }
     } catch (err) {
-      logger.error('Load failed:', err);
+      console.error('[useIdentityMatrix] Load failed:', err);
       setMatrix(DEFAULT_IDENTITY_MATRIX);
       setIsLoaded(false);
       setIsFallback(true);

@@ -14,10 +14,6 @@
  * - Garde-fous et contrôle humain
  */
 
-import { createLogger } from '@/utils/logger';
-
-const logger = createLogger('CognitiveLayoutEngine');
-
 // ═══════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES
 // ═══════════════════════════════════════════════════════════════════
@@ -326,7 +322,7 @@ class CognitiveLayoutEngine {
 
   constructor() {
     this.state = this.getInitialState();
-    logger.debug('🧠 Engine initialized');
+    console.log('[CognitiveLayout] 🧠 Engine initialized');
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -379,7 +375,7 @@ class CognitiveLayoutEngine {
   }
 
   public async initialize(): Promise<void> {
-    logger.debug('Initializing engine...');
+    console.log('[CognitiveLayout] Initializing engine...');
 
     // Charger préférences depuis Memory
     await this.loadPreferences();
@@ -392,7 +388,7 @@ class CognitiveLayoutEngine {
     // Effectuer analyse initiale
     await this.analyzeAndAdapt();
 
-    logger.debug('✅ Engine ready');
+    console.log('[CognitiveLayout] ✅ Engine ready');
   }
 
   public shutdown(): void {
@@ -401,7 +397,7 @@ class CognitiveLayoutEngine {
       this.observationInterval = undefined;
     }
     this.savePreferences();
-    logger.debug('Engine shutdown');
+    console.log('[CognitiveLayout] Engine shutdown');
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -426,12 +422,12 @@ class CognitiveLayoutEngine {
       return;
     }
 
-    // Boucle d'observation toutes les 60 secondes (optimisé pour réduire les logs)
+    // Boucle d'observation toutes les 30 secondes
     this.observationInterval = setInterval(() => {
       this.observe();
-    }, 60000);
+    }, 30000);
 
-    logger.debug('👁️ Observation loop started (60s)');
+    console.log('[CognitiveLayout] 👁️ Observation loop started (30s)');
   }
 
   private observe(): void {
@@ -494,7 +490,7 @@ class CognitiveLayoutEngine {
   private async analyzeAndAdapt(): Promise<void> {
     const decision = this.interpretContext();
 
-    logger.debug('🧠 Analysis:', {
+    console.log('[CognitiveLayout] 🧠 Analysis:', {
       current: this.state.currentMode,
       suggested: decision.suggestedMode,
       confidence: decision.confidence,
@@ -509,7 +505,7 @@ class CognitiveLayoutEngine {
       if (decision.autoApply) {
         // Appliquer automatiquement
         await this.applyMode(decision.suggestedMode, 'auto');
-        logger.debug(`[CognitiveLayout] ✅ Auto-applied: ${decision.suggestedMode}`);
+        console.log(`[CognitiveLayout] ✅ Auto-applied: ${decision.suggestedMode}`);
       } else {
         // Proposer à l'utilisateur
         this.notifyAdaptationSuggestion(decision);
@@ -604,7 +600,7 @@ class CognitiveLayoutEngine {
     mode: UIMode,
     source: 'manual' | 'auto' = 'manual'
   ): Promise<void> {
-    logger.debug(`[CognitiveLayout] 🎨 Applying mode: ${mode} (${source})`);
+    console.log(`[CognitiveLayout] 🎨 Applying mode: ${mode} (${source})`);
 
     // Sauvegarder mode précédent
     this.state.previousMode = this.state.currentMode;
@@ -636,7 +632,7 @@ class CognitiveLayoutEngine {
     // Appliquer changements DOM (via CSS variables)
     this.applyLayoutChanges();
 
-    logger.debug(`[CognitiveLayout] ✅ Mode ${mode} applied`);
+    console.log(`[CognitiveLayout] ✅ Mode ${mode} applied`);
   }
 
   private getModeConfig(mode: UIMode): LayoutConfig {
@@ -690,7 +686,7 @@ class CognitiveLayoutEngine {
 
   public updateRole(role: UserRole): void {
     this.state.context.role = role;
-    logger.debug(`[CognitiveLayout] 👤 Role updated: ${role}`);
+    console.log(`[CognitiveLayout] 👤 Role updated: ${role}`);
 
     // Suggestion immédiate selon rôle
     this.analyzeAndAdapt();
@@ -698,7 +694,7 @@ class CognitiveLayoutEngine {
 
   public updateTaskType(taskType: TaskType): void {
     this.state.context.taskType = taskType;
-    logger.debug(`[CognitiveLayout] 📋 Task type updated: ${taskType}`);
+    console.log(`[CognitiveLayout] 📋 Task type updated: ${taskType}`);
     this.analyzeAndAdapt();
   }
 
@@ -708,24 +704,24 @@ class CognitiveLayoutEngine {
 
   public setAdaptationEnabled(enabled: boolean): void {
     this.state.adaptationEnabled = enabled;
-    logger.debug(`[CognitiveLayout] Adaptation ${enabled ? 'enabled' : 'disabled'}`);
+    console.log(`[CognitiveLayout] Adaptation ${enabled ? 'enabled' : 'disabled'}`);
   }
 
   public revertToPreviousMode(): void {
     if (this.state.previousMode !== this.state.currentMode) {
       this.applyMode(this.state.previousMode, 'manual');
-      logger.debug(`[CognitiveLayout] ⏮️ Reverted to: ${this.state.previousMode}`);
+      console.log(`[CognitiveLayout] ⏮️ Reverted to: ${this.state.previousMode}`);
     }
   }
 
   public resetToNeutral(): void {
     this.applyMode('neutral', 'manual');
-    logger.debug('⚖️ Reset to neutral mode');
+    console.log('[CognitiveLayout] ⚖️ Reset to neutral mode');
   }
 
   public refuseSuggestion(): void {
     this.state.preferences.manualOverrides++;
-    logger.debug('❌ Suggestion refused');
+    console.log('[CognitiveLayout] ❌ Suggestion refused');
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -738,10 +734,10 @@ class CognitiveLayoutEngine {
       if (stored) {
         const prefs = JSON.parse(stored);
         this.state.preferences = { ...this.state.preferences, ...prefs };
-        logger.debug('📖 Preferences loaded');
+        console.log('[CognitiveLayout] 📖 Preferences loaded');
       }
     } catch (error) {
-      logger.warn('Failed to load preferences:', error);
+      console.warn('[CognitiveLayout] Failed to load preferences:', error);
     }
   }
 
@@ -751,9 +747,9 @@ class CognitiveLayoutEngine {
         'titane_cognitive_preferences',
         JSON.stringify(this.state.preferences)
       );
-      logger.debug('💾 Preferences saved');
+      console.log('[CognitiveLayout] 💾 Preferences saved');
     } catch (error) {
-      logger.warn('Failed to save preferences:', error);
+      console.warn('[CognitiveLayout] Failed to save preferences:', error);
     }
   }
 
@@ -791,7 +787,7 @@ class CognitiveLayoutEngine {
       })
     );
 
-    logger.debug('💡 Suggestion emitted:', decision.suggestedMode);
+    console.log('[CognitiveLayout] 💡 Suggestion emitted:', decision.suggestedMode);
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -822,11 +818,11 @@ class CognitiveLayoutEngine {
 
   public debugInfo(): void {
     console.group('🧠 [CognitiveLayout] Debug Info');
-    logger.debug('Current Mode:', this.state.currentMode);
-    logger.debug('Context:', this.state.context);
-    logger.debug('Signals:', this.state.signals);
-    logger.debug('Preferences:', this.state.preferences);
-    logger.debug('Analytics:', this.getAnalytics());
+    console.log('Current Mode:', this.state.currentMode);
+    console.log('Context:', this.state.context);
+    console.log('Signals:', this.state.signals);
+    console.log('Preferences:', this.state.preferences);
+    console.log('Analytics:', this.getAnalytics());
     console.groupEnd();
   }
 
@@ -839,11 +835,11 @@ class CognitiveLayoutEngine {
    */
   public start(): void {
     if (this.observationInterval) {
-      logger.warn('Already running');
+      console.warn('[CognitiveLayout] Already running');
       return;
     }
     this.initialize();
-    logger.debug('✅ Engine started');
+    console.log('[CognitiveLayout] ✅ Engine started');
   }
 
   /**
@@ -855,7 +851,7 @@ class CognitiveLayoutEngine {
       this.observationInterval = undefined;
     }
     this.savePreferences();
-    logger.debug('🛑 Engine stopped');
+    console.log('[CognitiveLayout] 🛑 Engine stopped');
   }
 }
 

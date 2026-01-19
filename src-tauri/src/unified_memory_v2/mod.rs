@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v26.3.0 — UNIFIED MEMORY API v2
+//   TITANE∞ v24.3.0 — UNIFIED MEMORY API v2
 //   Phase 2 Simplification: Consolidation de 5 modules → 2 modules
 //   Architecture: Unified API + Neural Implementation
 //   v22Ω AI Performance Optimizations Compatible
@@ -38,7 +38,6 @@
 //! ```
 
 pub mod api;
-pub mod bloom_filter; // Phase 4: Bloom filter for semantic search
 pub mod bridge;
 pub mod compat; // Phase 2.3: Compatibility layer
 pub mod config;
@@ -59,7 +58,7 @@ pub use types::{
 };
 
 // Version info
-pub const VERSION: &str = "v26.3.0";
+pub const VERSION: &str = "v24.3.0";
 pub const MODULE_NAME: &str = "Unified Memory v2";
 
 /// Performance targets (in milliseconds)

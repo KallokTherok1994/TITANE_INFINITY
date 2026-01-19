@@ -215,7 +215,7 @@
 - [SETUP.md](./04_guides/development/SETUP.md) — Dev environment setup
 - [TESTING.md](./04_guides/development/TESTING.md) — Testing strategy (Frontend + Backend + E2E)
 - **[TROUBLESHOOTING.md](./04_guides/advanced/TROUBLESHOOTING.md)** — Diagnostic production issues ⭐ NEW
-- **[DEPLOYMENT.md](./04_guides/advanced/DEPLOYMENT.md)** — Guide de déploiement (autorisation requise) ⭐ NEW
+- **[DEPLOYMENT.md](./04_guides/advanced/DEPLOYMENT.md)** — Production deployment guide ⭐ NEW
 - **[PERFORMANCE_OPTIMIZATION.md](./04_guides/advanced/PERFORMANCE_OPTIMIZATION.md)** — Performance tuning ⭐ NEW
 
 **Architecture:**
@@ -253,7 +253,7 @@
 - [Architecture Reality](./02_ARCHITECTURE/) — Architecture factuelle v24.2.0
 
 **Operational Excellence:**
-- **[DEPLOYMENT.md](./04_guides/advanced/DEPLOYMENT.md)** — Déploiement (security + monitoring, autorisation requise) ⭐ NEW
+- **[DEPLOYMENT.md](./04_guides/advanced/DEPLOYMENT.md)** — Production deployment (security + monitoring) ⭐ NEW
 - **[PERFORMANCE_OPTIMIZATION.md](./04_guides/advanced/PERFORMANCE_OPTIMIZATION.md)** — Performance budgets + optimization recipes ⭐ NEW
 - **[CONTRIBUTING.md](../CONTRIBUTING.md)** — Team onboarding + architecture guidelines ⭐ NEW
 
@@ -304,8 +304,8 @@
 **Phase 7** — Advanced Guides ✅ **100% OPERATIONAL COVERAGE** 🎉
 - **4 guides créés** (3,923 lignes):
   - CONTRIBUTING.md (666L) — Contributor onboarding
-  - TROUBLESHOOTING.md (937L) — Diagnostics
-  - DEPLOYMENT.md (923L) — Déploiement (autorisation requise)
+  - TROUBLESHOOTING.md (937L) — Production diagnostics
+  - DEPLOYMENT.md (923L) — Production deployment
   - PERFORMANCE_OPTIMIZATION.md (932L) — Performance tuning
 - **PHASE_7_COMPLETE_REPORT.md** (465L) — Impact analysis
 - **220+ code examples** operational recipes
@@ -403,8 +403,7 @@
 - **[TROUBLESHOOTING.md](./04_guides/advanced/TROUBLESHOOTING.md)** — Diagnostic production issues ⭐ NEW
 
 **Déployer en production?**
-- ⛔ Autorisation requise (voir règles gouvernance du repo)
-- **[DEPLOYMENT.md](./04_guides/advanced/DEPLOYMENT.md)** — Guide de déploiement (autorisation requise) ⭐ NEW
+- **[DEPLOYMENT.md](./04_guides/advanced/DEPLOYMENT.md)** — Production deployment guide ⭐ NEW
 
 **Optimiser performances?**
 - **[PERFORMANCE_OPTIMIZATION.md](./04_guides/advanced/PERFORMANCE_OPTIMIZATION.md)** — Performance tuning ⭐ NEW
@@ -422,7 +421,7 @@
 > - **430+ code examples** validés (Rust + TypeScript + operational recipes)
 > - **⭐⭐⭐⭐⭐** qualité maintenue (8.5/10)
 >
-> **Developer-ready. Readiness (Dev). Contributor-ready. Future-ready.**
+> **Developer-ready. Production-ready. Contributor-ready. Future-ready.**
 >
 > 🎯 **200% Coverage Achieved** (API + Operational). 🧠⚡✨
 

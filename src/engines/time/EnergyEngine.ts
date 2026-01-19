@@ -13,7 +13,6 @@
  */
 
 import type { EnergyState, EnergyPoint, EnergyHistoryEntry, Chronotype } from './types';
-import { logger } from '@/utils/logger';
 import { TimeEngineUtils } from './TimeEngine';
 
 // ═══════════════════════════════════════════════════════════════════
@@ -173,11 +172,11 @@ export class EnergyEngine {
    * Initialise l'EnergyEngine
    */
   init(): void {
-    logger.debug('🔋 Initialisation...');
+    console.log('[EnergyEngine] 🔋 Initialisation...');
     this.updateCurrentEnergyLevel();
     this.generateForecast();
     this.startTick();
-    logger.debug('✅ Initialisé:', {
+    console.log('[EnergyEngine] ✅ Initialisé:', {
       chronotype: this.state.chronotype,
       currentLevel: this.state.currentEnergyLevel.toFixed(2),
     });
@@ -187,7 +186,7 @@ export class EnergyEngine {
    * Arrête l'EnergyEngine
    */
   destroy(): void {
-    logger.debug('🛑 Arrêt...');
+    console.log('[EnergyEngine] 🛑 Arrêt...');
     this.stopTick();
     this.listeners.clear();
   }
@@ -202,7 +201,7 @@ export class EnergyEngine {
       this.updateCurrentEnergyLevel();
     }, 60000); // Toutes les minutes
 
-    logger.debug('⚙️ Tick démarré (60s)');
+    console.log('[EnergyEngine] ⚙️ Tick démarré (60s)');
   }
 
   /**
@@ -234,7 +233,7 @@ export class EnergyEngine {
     this.updateCurrentEnergyLevel();
     this.generateForecast();
     this.notifyListeners();
-    logger.debug('👤 Profil initialisé:', chronotype);
+    console.log('[EnergyEngine] 👤 Profil initialisé:', chronotype);
   }
 
   /**
@@ -388,7 +387,7 @@ export class EnergyEngine {
     this.state.currentEnergyLevel = level;
     this.notifyListeners();
 
-    logger.debug('📝 Énergie manuelle enregistrée:', level);
+    console.log('[EnergyEngine] 📝 Énergie manuelle enregistrée:', level);
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -492,7 +491,7 @@ export class EnergyEngine {
       try {
         listener(state);
       } catch (error) {
-        logger.error('Erreur listener:', error);
+        console.error('[EnergyEngine] Erreur listener:', error);
       }
     });
   }

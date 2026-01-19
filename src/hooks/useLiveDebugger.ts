@@ -93,7 +93,7 @@ export interface UseLiveDebuggerReturn {
  * await startListening();
  *
  * // Diagnostics apparaissent automatiquement
- * logger.debug(diagnostics);
+ * console.log(diagnostics);
  * ```
  */
 export function useLiveDebugger(): UseLiveDebuggerReturn {

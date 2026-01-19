@@ -8,18 +8,19 @@
 
 ## 🎯 TARGETS
 
-| Metric | v26.3.0 | v26.4.0 Target | % Gain | Status |
-|--------|---------|---|--------|--------|
-| **Launch Time** | 2.001s | < 1.5s | 25% ↓ | 🎯 Aggressive |
-| **Binary Size** | 81 MB | < 75 MB | 7% ↓ | 🎯 Achievable |
-| **Memory (Idle)** | 53 MB | < 50 MB | 6% ↓ | 🎯 Achievable |
-| **CPU (Idle)** | 2.5% | < 2.0% | 20% ↓ | 🎯 Stretch |
+| Metric            | v26.3.0 | v26.4.0 Target | % Gain | Status        |
+| ----------------- | ------- | -------------- | ------ | ------------- |
+| **Launch Time**   | 2.001s  | < 1.5s         | 25% ↓  | 🎯 Aggressive |
+| **Binary Size**   | 81 MB   | < 75 MB        | 7% ↓   | 🎯 Achievable |
+| **Memory (Idle)** | 53 MB   | < 50 MB        | 6% ↓   | 🎯 Achievable |
+| **CPU (Idle)**    | 2.5%    | < 2.0%         | 20% ↓  | 🎯 Stretch    |
 
 ---
 
 ## 🔍 PART 1: BUNDLE ANALYSIS (Task 2A)
 
 ### Goal
+
 Identify and eliminate unused dependencies, duplicate modules, and bloated packages.
 
 **Expected Savings:** 5-10 MB
@@ -27,6 +28,7 @@ Identify and eliminate unused dependencies, duplicate modules, and bloated packa
 ### Steps
 
 **Step 1: Generate Bundle Map**
+
 ```bash
 cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
 
@@ -42,12 +44,14 @@ echo "📊 Bundle analysis ready: bundle-analysis.html"
 ```
 
 **Step 2: Identify Large Modules**
+
 ```bash
 # Export detailed size data
 du -sh dist/assets/* | sort -rh | head -20
 ```
 
 **Step 3: Detect Unused Dependencies**
+
 ```bash
 # Install depcheck
 npm install -D depcheck
@@ -60,6 +64,7 @@ cat unused-deps.json | jq '.dependencies'
 ```
 
 **Step 4: Implement Removals**
+
 ```json
 // Example: If "old-ui-library" found unused
 {
@@ -78,6 +83,7 @@ cat unused-deps.json | jq '.dependencies'
 ```
 
 ### Expected Result
+
 ```
 ✅ Remove 2-3 unused dependencies
 ✅ Eliminate 5-10 MB from bundle
@@ -89,6 +95,7 @@ cat unused-deps.json | jq '.dependencies'
 ## 🔀 PART 2: CODE SPLITTING (Task 2B)
 
 ### Goal
+
 Lazy-load non-critical components to reduce initial bundle and improve time-to-interactive.
 
 **Expected Savings:** 0.2-0.3s launch time
@@ -96,17 +103,19 @@ Lazy-load non-critical components to reduce initial bundle and improve time-to-i
 ### Strategy
 
 **2B-1: Identify Heavy Components**
+
 ```typescript
 // Current imports (loaded upfront)
-import ChatUI from './components/ChatUI'        // ~500KB
-import SettingsPanel from './components/Settings'  // ~200KB
-import AnalyticsPanel from './components/Analytics' // ~300KB
-import ProfileMenu from './components/Profile'  // ~150KB
+import ChatUI from './components/ChatUI'; // ~500KB
+import SettingsPanel from './components/Settings'; // ~200KB
+import AnalyticsPanel from './components/Analytics'; // ~300KB
+import ProfileMenu from './components/Profile'; // ~150KB
 
 // Problem: All loaded even if not needed immediately
 ```
 
 **2B-2: Implement Lazy Loading**
+
 ```typescript
 // After refactor (lazy-loaded)
 import React, { lazy, Suspense } from 'react'
@@ -141,6 +150,7 @@ export function App() {
 ```
 
 **2B-3: Measure Impact**
+
 ```bash
 # Before lazy loading
 npm run build
@@ -153,6 +163,7 @@ npm run build
 ```
 
 ### Expected Result
+
 ```
 ✅ Reduce initial bundle by 50%
 ✅ First paint time: 2.0s → 1.8-1.9s
@@ -164,6 +175,7 @@ npm run build
 ## ⚙️ PART 3: RUST BACKEND OPTIMIZATION (Task 2C)
 
 ### Goal
+
 Profile and optimize hot paths in Rust backend for faster API responses.
 
 **Expected Savings:** 100-200ms API latency
@@ -171,6 +183,7 @@ Profile and optimize hot paths in Rust backend for faster API responses.
 ### Strategy
 
 **3A: Profile with Flamegraph**
+
 ```bash
 cd /home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri
 
@@ -193,17 +206,18 @@ firefox flamegraph.svg  # or open in browser
 
 Common Rust bottlenecks (ranked by impact):
 
-| Issue | Impact | Fix |
-|-------|--------|-----|
-| **Unnecessary String Cloning** | High | Use `&str` instead of `String` |
-| **Repeated Allocations** | High | Use object pool or cache |
-| **Inefficient Loops** | Medium | SIMD, parallelization (rayon) |
-| **Lock Contention** | Medium | Fine-grained locking, async |
-| **Regex Compilation** | Medium | Use `lazy_static` or `once_cell` |
+| Issue                          | Impact | Fix                              |
+| ------------------------------ | ------ | -------------------------------- |
+| **Unnecessary String Cloning** | High   | Use `&str` instead of `String`   |
+| **Repeated Allocations**       | High   | Use object pool or cache         |
+| **Inefficient Loops**          | Medium | SIMD, parallelization (rayon)    |
+| **Lock Contention**            | Medium | Fine-grained locking, async      |
+| **Regex Compilation**          | Medium | Use `lazy_static` or `once_cell` |
 
 **3C: Implement Optimizations**
 
 Example: Reduce String allocations
+
 ```rust
 // Before (inefficient)
 pub fn process_message(text: String) -> String {
@@ -227,6 +241,7 @@ pub fn process_message(text: &str) -> String {
 ```
 
 ### Expected Result
+
 ```
 ✅ API response time: -100-200ms
 ✅ Memory allocations reduced by 30-40%
@@ -238,6 +253,7 @@ pub fn process_message(text: &str) -> String {
 ## 💾 PART 4: MEMORY PROFILING (Task 2D)
 
 ### Goal
+
 Detect and fix memory leaks, reduce idle memory footprint.
 
 **Expected Savings:** 3-5 MB memory
@@ -245,6 +261,7 @@ Detect and fix memory leaks, reduce idle memory footprint.
 ### Strategy
 
 **4A: Profile with Valgrind**
+
 ```bash
 cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
 
@@ -263,6 +280,7 @@ ms_print massif.out | tail -100
 ```
 
 **4B: Profile JavaScript Heap**
+
 ```javascript
 // In browser DevTools → Memory tab
 
@@ -279,33 +297,35 @@ ms_print massif.out | tail -100
 
 Common memory issues:
 
-| Issue | Fix |
-|-------|-----|
-| **Detached DOM Nodes** | Remove event listeners before removing DOM |
-| **Large Object Retention** | Clear caches on navigation |
-| **Circular References** | Use WeakMap for object relationships |
-| **Timers Not Cleared** | Store timer IDs, clear on unmount |
-| **Event Listener Leaks** | Use cleanup function in useEffect |
+| Issue                      | Fix                                        |
+| -------------------------- | ------------------------------------------ |
+| **Detached DOM Nodes**     | Remove event listeners before removing DOM |
+| **Large Object Retention** | Clear caches on navigation                 |
+| **Circular References**    | Use WeakMap for object relationships       |
+| **Timers Not Cleared**     | Store timer IDs, clear on unmount          |
+| **Event Listener Leaks**   | Use cleanup function in useEffect          |
 
 Example fix:
+
 ```typescript
 // Before (leak)
 useEffect(() => {
-  window.addEventListener('resize', handleResize)
+  window.addEventListener('resize', handleResize);
   // Missing cleanup! Listener stays registered
-}, [])
+}, []);
 
 // After (fixed)
 useEffect(() => {
-  window.addEventListener('resize', handleResize)
-  
+  window.addEventListener('resize', handleResize);
+
   return () => {
-    window.removeEventListener('resize', handleResize)
-  }
-}, [])
+    window.removeEventListener('resize', handleResize);
+  };
+}, []);
 ```
 
 ### Expected Result
+
 ```
 ✅ Idle memory: 53 MB → 50 MB
 ✅ No memory leaks detected
@@ -317,12 +337,14 @@ useEffect(() => {
 ## 📋 EXECUTION CHECKLIST
 
 ### Bundle Analysis (30 min)
+
 - [ ] Run `source-map-explorer` on build output
 - [ ] Identify 2-3 largest modules
 - [ ] Check for unused dependencies with depcheck
 - [ ] Document findings in analysis.md
 
 ### Code Splitting (1 hour)
+
 - [ ] Identify heavy components
 - [ ] Implement React lazy loading
 - [ ] Verify chunks generated correctly
@@ -330,6 +352,7 @@ useEffect(() => {
 - [ ] Test lazy chunk loading works
 
 ### Rust Optimization (1-1.5 hours)
+
 - [ ] Generate flamegraph of backend
 - [ ] Identify 2-3 optimization opportunities
 - [ ] Implement string allocation fixes
@@ -337,6 +360,7 @@ useEffect(() => {
 - [ ] Recompile and verify improvements
 
 ### Memory Profiling (1 hour)
+
 - [ ] Profile with Valgrind (or browser tools)
 - [ ] Identify memory leaks or anomalies
 - [ ] Fix event listener leaks in React
@@ -409,18 +433,19 @@ FINAL (v26.4.0):
 
 ## 🚨 RISK MITIGATION
 
-| Risk | Mitigation |
-|------|-----------|
-| **Break functionality** | Full test suite after each change |
-| **Regression in other metric** | Run all benchmarks, not just launch time |
-| **Difficult to debug** | Keep commits small, one optimization per commit |
-| **Time overrun** | Prioritize by impact (biggest gains first) |
+| Risk                           | Mitigation                                      |
+| ------------------------------ | ----------------------------------------------- |
+| **Break functionality**        | Full test suite after each change               |
+| **Regression in other metric** | Run all benchmarks, not just launch time        |
+| **Difficult to debug**         | Keep commits small, one optimization per commit |
+| **Time overrun**               | Prioritize by impact (biggest gains first)      |
 
 ---
 
 ## ✅ SUCCESS CRITERIA
 
 **Phase 2 COMPLETE when:**
+
 - ✅ Launch time < 1.8s (within reach of 1.5s target)
 - ✅ Binary size < 77 MB (below 75 MB target)
 - ✅ Memory < 51 MB (at/below 50 MB target)
@@ -435,4 +460,3 @@ FINAL (v26.4.0):
 **Expected Completion:** 2026-01-18 22:30-00:30 UTC
 
 **Ready to begin? Run:** `./scripts/test/benchmark-performance.sh` for baseline
-

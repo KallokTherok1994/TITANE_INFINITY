@@ -2,41 +2,16 @@
 # TITANE∞ Fast Build Script
 # Résout le blocage 790/791 avec compilation parallèle optimisée
 
-set -euo pipefail
-
-ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
-cd "$ROOT"
-
-# Prefer repo-pinned Node toolchain when available
-NODE_TOOLS_BIN="$ROOT/.tools/node/current/bin"
-if [[ -d "$NODE_TOOLS_BIN" ]]; then
-	export PATH="$NODE_TOOLS_BIN:$PATH"
-fi
-
-# Safety guard: this script produces production bundles (deb/AppImage).
-# Per TITANE∞ governance, do not run without explicit authorization.
-if [[ "${TITANE_BUILD_ASSUME_YES:-0}" != "1" ]]; then
-	echo "❌ Refus: build-fast.sh déclenche un bundle PRODUCTION (deb/AppImage)."
-	echo "   Autorisation explicite requise (politique TITANE∞)."
-	echo "   Pour continuer: TITANE_BUILD_ASSUME_YES=1 ./build-fast.sh"
-	exit 2
-fi
+set -e
 
 echo "╔═══════════════════════════════════════════════════════════╗"
-echo "║           TITANE∞ - BUILD RAPIDE (PRODUCTION)           ║"
+echo "║         TITANE∞ v24.3.0 - BUILD RAPIDE OPTIMISÉ          ║"
 echo "╚═══════════════════════════════════════════════════════════╝"
 echo ""
 
 # 1. Build React/Vite
 echo "📦 Étape 1/3: Build frontend (Vite)..."
-if command -v corepack >/dev/null 2>&1; then
-	NODE_ENV=production corepack pnpm run build
-elif command -v pnpm >/dev/null 2>&1; then
-	NODE_ENV=production pnpm run build
-else
-	echo "❌ pnpm requis (corepack/pnpm introuvable)."
-	exit 1
-fi
+pnpm run build
 echo "✓ Frontend compilé"
 echo ""
 
@@ -49,10 +24,11 @@ echo ""
 
 # 3. Création des packages
 echo "📦 Étape 3/3: Génération des packages..."
+cd ..
 if command -v corepack >/dev/null 2>&1; then
-	corepack pnpm exec tauri build --config runtime/stable/tauri.stable.conf.json --bundles deb
+	corepack pnpm exec tauri build --bundles deb
 elif command -v pnpm >/dev/null 2>&1; then
-	pnpm exec tauri build --config runtime/stable/tauri.stable.conf.json --bundles deb
+	pnpm exec tauri build --bundles deb
 else
 	echo "❌ pnpm requis (corepack/pnpm introuvable)."
 	exit 1

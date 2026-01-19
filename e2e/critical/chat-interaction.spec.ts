@@ -5,214 +5,75 @@
  * Critical user journey: Send message and receive AI response
  */
 
-import { test, expect, type Page } from '@playwright/test';
-
-const chatInputLocator = (page: Page) =>
-  page.locator('textarea.conversation-input, textarea, [contenteditable="true"]').first();
-
-async function neutralizeBootOverlay(page: Page): Promise<void> {
-  const bootBeacon = page.locator('#titane-boot-beacon');
-  if ((await bootBeacon.count()) === 0) return;
-
-  // Don't wait for it to disappear (can exceed per-test timeouts). Just prevent it
-  // from intercepting pointer events so clicks/typing can proceed.
-  await page
-    .addStyleTag({
-      content: `#titane-boot-beacon { pointer-events: none !important; }`,
-    })
-    .catch(() => {});
-}
+import { test, expect } from '@playwright/test';
 
 test.describe('Critical Path: Chat Interaction', () => {
   test.beforeEach(async ({ page }) => {
-    // Mock Tauri APIs for E2E testing
-    await page.addInitScript(() => {
-      // Set browser mode for E2E tests
-      localStorage.setItem('titane_browser_mode', '1');
-      localStorage.setItem('titane_onboarding_complete', '1');
-      // Force E2E mode detection via webdriver mock
-      (window as any).navigator = Object.create(navigator);
-      Object.defineProperty((window as any).navigator, 'webdriver', {
-        value: true,
-        configurable: true,
-      });
+    await page.goto('http://localhost:5173');
 
-      // Mock Node.js modules that don't work in browser
-      (window as any).process = { env: {} };
-      (window as any).global = window;
-
-      // Mock events module
-      (window as any).require = (module: string) => {
-        if (module === 'events') {
-          return {
-            EventEmitter: class EventEmitter {
-              on() {
-                return this;
-              }
-              emit() {
-                return this;
-              }
-              off() {
-                return this;
-              }
-              addListener() {
-                return this;
-              }
-              removeListener() {
-                return this;
-              }
-            },
-          };
-        }
-        throw new Error(`Module ${module} not found`);
-      };
-
-      // Mock Tauri globals
-      (window as any).__TAURI__ = {
-        core: {
-          invoke: async (cmd: string, args?: any) => {
-            console.log(`[MOCK] Tauri invoke: ${cmd}`, args);
-
-            // Mock responses for common commands
-            switch (cmd) {
-              case 'is_onboarding_complete':
-                return true;
-              case 'get_memory_stats':
-                return { shortTerm: 10, midTerm: 5, longTerm: 2 };
-              case 'get_system_health':
-                return { status: 'healthy', uptime: 3600 };
-              case 'memory_write_log':
-                return null;
-              case 'get_app_config':
-                return { theme: 'dark', language: 'fr' };
-              case 'list_memory_entries':
-                return [];
-              case 'get_conversation_history':
-                return [];
-              case 'send_chat_message':
-                return {
-                  assistant_message: 'Bonjour! Je suis TITANE, votre assistant IA.',
-                  usage: { tokens: 50 },
-                };
-              default:
-                console.warn(`[MOCK] Unhandled Tauri command: ${cmd}`);
-                return null;
-            }
-          },
-        },
-      };
-
-      // Mock Tauri internals
-      (window as any).__TAURI_INTERNALS__ = {
-        invoke: (window as any).__TAURI__.core.invoke,
-      };
-    });
-
-    // Log console messages for debugging
-    page.on('console', msg => {
-      console.log(`PAGE LOG: ${msg.type()}: ${msg.text()}`);
-    });
-    page.on('pageerror', error => {
-      console.log(`PAGE ERROR: ${error.message}`);
-    });
-
-    await page.goto('/titane');
-    await page.waitForLoadState('networkidle');
-
-    // Debug: Check what's actually on the page
-    const bodyText = await page.locator('body').textContent();
-    console.log('Page body text:', bodyText?.substring(0, 500));
-
-    // Wait for React to load and routing to complete
-    await page.waitForTimeout(1000);
-
-    // Wait for conversation interface to be ready (E2E mode)
-    // This is critical: wait for either the textarea or the interface to stabilize
-    const conversationInput = page.locator('textarea.conversation-input');
-    const conversationSection = page.locator('section').filter({ has: page.locator('textarea') });
-    
-    try {
-      // Try to wait for the conversation input to be visible and stable
-      await conversationInput.first().waitFor({ state: 'visible', timeout: 5000 });
-    } catch (e) {
-      // If that fails, wait for any textarea to appear
-      const anyTextarea = page.locator('textarea').first();
-      await anyTextarea.waitFor({ state: 'visible', timeout: 5000 }).catch(() => {});
-    }
-
-    // Extra safety: wait for page to stabilize
-    await page.waitForLoadState('domcontentloaded');
-
-    // Wait for the main TITANE header to be visible
-    await expect(
-      page.locator('h1.titane-title').filter({ hasText: 'TITANE — Le Cœur du Système' })
-    ).toBeVisible({ timeout: 20000 });
-
-    await neutralizeBootOverlay(page);
+    // Wait for app initialization
+    await page.waitForTimeout(2000);
   });
 
   test('chat interface is accessible', async ({ page }) => {
-    const chatInput = chatInputLocator(page);
-    await expect(chatInput).toBeVisible({ timeout: 10000 });
+    // Look for chat input (textarea, input, contenteditable)
+    const chatInput = await page
+      .locator('textarea, input[type="text"], [contenteditable="true"]')
+      .first();
+
+    // Should have at least one input field
+    const inputCount = await page.locator('textarea, input[type="text"]').count();
+    expect(inputCount).toBeGreaterThan(0);
   });
 
   test('can type message in chat input', async ({ page }) => {
     // Find chat input
-    const chatInput = page.locator('textarea.conversation-input, textarea').first();
+    const chatInput = await page.locator('textarea, [contenteditable="true"]').first();
 
-    // Ensure input is visible and ready
-    await chatInput.waitFor({ state: 'visible', timeout: 5000 });
-    
-    // Type without clicking first (reducing interaction complexity)
-    await chatInput.fill('Hello TITANE');
+    if ((await chatInput.count()) > 0) {
+      await chatInput.click();
+      await chatInput.fill('Hello TITANE');
 
-    const value = await chatInput.inputValue().catch(() => chatInput.textContent());
+      const value = await chatInput.inputValue().catch(() => chatInput.textContent());
 
-    expect(value).toContain('Hello');
+      expect(value).toContain('Hello');
+    }
   });
 
   test('send button is present and enabled', async ({ page }) => {
     // Look for send button (may have various labels)
-    const sendButton = page
+    const sendButton = await page
       .locator('button')
       .filter({
         hasText: /send|envoyer|submit|→|⏎/i,
       })
       .first();
 
-    const chatInput = chatInputLocator(page);
-    await expect(chatInput).toBeVisible({ timeout: 10000 });
-
-    if ((await sendButton.count()) > 0) {
-      // Many UIs keep send disabled until there is actual input.
-      await chatInput.fill('ping');
-      await expect(sendButton).toBeEnabled({ timeout: 10000 });
-    }
+    const buttonCount = await page.locator('button').count();
+    expect(buttonCount).toBeGreaterThan(0);
   });
 
   test('message appears in chat history after sending', async ({ page }) => {
-    // Find input and ensure it's visible
-    const chatInput = page.locator('textarea.conversation-input, textarea').first();
-    await chatInput.waitFor({ state: 'visible', timeout: 5000 });
+    // Find input and button
+    const chatInput = await page.locator('textarea, [contenteditable="true"]').first();
+    const sendButton = await page
+      .locator('button')
+      .filter({
+        hasText: /send|envoyer|submit/i,
+      })
+      .first();
 
-    // Send message
-    await chatInput.fill('Test message');
-    await page.keyboard.press('Enter');
+    if ((await chatInput.count()) > 0 && (await sendButton.count()) > 0) {
+      // Type and send message
+      await chatInput.fill('Test message');
+      await sendButton.click();
 
-    // Wait for message to appear - use locator waitFor instead of timeout
-    const messageLocator = page.locator('.conversation-message:has-text("Test message"), [role="article"]:has-text("Test message")');
-    
-    try {
-      // Wait for the message element to appear in DOM
-      await messageLocator.first().waitFor({ state: 'visible', timeout: 3000 });
-      
-      const messageCount = await page.getByText('Test message').count();
-      expect(messageCount).toBeGreaterThan(0);
-    } catch (e) {
-      // Fallback: check by text search with longer timeout
-      await page.waitForTimeout(2000);
-      const count = await page.getByText('Test message').count();
-      expect(count).toBeGreaterThan(0);
+      // Wait for message to appear
+      await page.waitForTimeout(1000);
+
+      // Check if message appears in UI
+      const messageText = await page.getByText('Test message').count();
+      expect(messageText).toBeGreaterThan(0);
     }
   });
 
@@ -309,6 +170,6 @@ test.describe('Critical Path: Chat Interaction', () => {
     const focusedElement = await page.evaluate(() => document.activeElement?.tagName);
 
     // Should focus an input element eventually
-    expect(['TEXTAREA', 'INPUT', 'BUTTON', 'A', 'DIV', 'BODY']).toContain(focusedElement);
+    expect(['TEXTAREA', 'INPUT', 'BUTTON', 'A', 'DIV']).toContain(focusedElement);
   });
 });

@@ -13,7 +13,6 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { tauri } from '../api/tauriClient';
-import { logger } from '../utils/logger';
 import type {
   SystemStatus,
   ModuleHealth,
@@ -104,14 +103,14 @@ export function useTitaneCore(autoRefresh: boolean = true) {
     // ⚠️ FIX CRASH: Attendre que Tauri soit prêt avant d'appeler les commandes
     const initTimeout = setTimeout(() => {
       getSystemStatus().catch(err => {
-        logger.warn('Failed to fetch initial system status:', err);
+        console.warn('[TITANE] Failed to fetch initial system status:', err);
         setError('Connexion au backend en cours...');
       });
     }, 100); // Délai de 100ms pour laisser Tauri s'initialiser
 
     const interval = setInterval(() => {
       getSystemStatus().catch(err => {
-        logger.warn('Failed to refresh system status:', err);
+        console.warn('[TITANE] Failed to refresh system status:', err);
       });
     }, 5000);
 

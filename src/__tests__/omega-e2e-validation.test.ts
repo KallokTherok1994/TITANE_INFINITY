@@ -14,7 +14,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { aiOrchestrator } from '../services/ai/orchestrator';
 import { autoHealEngine } from '../services/ai/autoHealEngine';
-import { unifiedHealingFacade } from '../services/ai/unifiedHealingFacade';
 import { geminiProvider } from '../services/ai/providers/gemini';
 import type { AIMessage } from '../services/ai/types';
 
@@ -142,7 +141,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E Validation', () => {
   });
 
   it('should trigger auto-healing on provider errors', async () => {
-    const healSpy = vi.spyOn(unifiedHealingFacade, 'heal');
+    const healSpy = vi.spyOn(autoHealEngine, 'heal');
 
     // Force error from Gemini
     const originalGenerate = geminiProvider.generate;

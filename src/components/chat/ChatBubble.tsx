@@ -32,11 +32,10 @@ import {
 import { useChat } from '@/hooks/useChat';
 import { useVisionStore } from '@/stores/useVisionStore';
 import { DevSudoBadge } from '@/components/dev/DevSudoBadge';
-import { ChatProviderSelector } from '@/features/conversation/ChatProviderSelector';
+import { ChatProviderSelector } from '@/features/chat/ChatProviderSelector';
 import { useGovernance } from '@/features/governance-center/hooks/useGovernance';
 import { useAudioChat } from '@/hooks/useAudioChat';
 import { ListeningIndicator } from '@/components/audio/ListeningIndicator';
-import { getMessageText } from '@/services/ai/types';
 import './ChatBubble-ArcReactor.css';
 
 // ═══ TYPES ═══
@@ -184,7 +183,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
         setUnreadCount(prev => prev + 1);
         // ✨ TITANE parle sa réponse si autoSpeak activé
         if (lastMessage.content && autoSpeak) {
-          speak(getMessageText(lastMessage));
+          speak(lastMessage.content);
         }
       }
     }
@@ -690,7 +689,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
                     transition={{ delay: idx * 0.05 }}
                   >
                     {msg.role === 'assistant' &&
-                    getMessageText(msg).trim().length === 0 &&
+                    (msg.content ?? '').trim().length === 0 &&
                     msg.metadata?.status === 'streaming' ? (
                       <div
                         className="message-content typing"
@@ -701,7 +700,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
                         <span />
                       </div>
                     ) : (
-                      <div className="message-content">{getMessageText(msg)}</div>
+                      <div className="message-content">{msg.content}</div>
                     )}
                   </motion.div>
                 ))

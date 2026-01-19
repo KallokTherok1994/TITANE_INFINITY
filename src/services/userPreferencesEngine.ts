@@ -13,8 +13,6 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { logger } from '@/utils/logger';
-
 const STORAGE_KEY = 'titane_user_preferences';
 const MAX_TOPICS_HISTORY = 50;
 const MAX_INTERACTIONS = 100;
@@ -126,8 +124,8 @@ class UserPreferencesEngine {
 
   constructor() {
     this.preferences = this.loadPreferences();
-    logger.debug(
-      'Initialized with',
+    console.log(
+      '[UserPreferencesEngine] Initialized with',
       this.preferences.metrics.totalInteractions,
       'interactions'
     );
@@ -144,7 +142,7 @@ class UserPreferencesEngine {
         return { ...DEFAULT_PREFERENCES, ...JSON.parse(stored) };
       }
     } catch (error) {
-      logger.warn('Failed to load preferences:', error);
+      console.warn('[UserPreferencesEngine] Failed to load preferences:', error);
     }
     return { ...DEFAULT_PREFERENCES };
   }
@@ -154,7 +152,7 @@ class UserPreferencesEngine {
       this.preferences.metrics.updatedAt = Date.now();
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.preferences));
     } catch (error) {
-      logger.error('Failed to save preferences:', error);
+      console.error('[UserPreferencesEngine] Failed to save preferences:', error);
     }
   }
 
@@ -201,7 +199,7 @@ class UserPreferencesEngine {
   setName(name: string): void {
     this.preferences.name = name;
     this.savePreferences();
-    logger.debug('Name set to:', name);
+    console.log('[UserPreferencesEngine] Name set to:', name);
   }
 
   updateCommunicationStyle(style: Partial<UserPreferences['communicationStyle']>): void {
@@ -531,7 +529,7 @@ class UserPreferencesEngine {
     this.preferences = { ...DEFAULT_PREFERENCES };
     this.interactionBuffer = [];
     this.savePreferences();
-    logger.debug('Preferences reset');
+    console.log('[UserPreferencesEngine] Preferences reset');
   }
 
   getDebugInfo(): object {

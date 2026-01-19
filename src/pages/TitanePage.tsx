@@ -40,26 +40,27 @@ import {
   selectEngagementLevel,
   selectConfidence,
 } from '@/stores/useVisionStore';
-import { useConversationEngine, type ConversationMessage } from '@hooks/useConversationEngine';
+import { useConversationEngine } from '@hooks/useConversationEngine';
 import type { ConversationMode } from '@/services/conversationEngine';
 import { TitaneLogo } from '@components/branding/TitaneLogo';
 import { TBadge, TMetric, TSectionHeader } from '../design-system';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import { xpEngine } from '@/cognitive/progression/xpEngine';
 import { CameraPreview } from '@/components/vision/CameraPreview';
-import { ChatProviderSelector } from '@/features/conversation/ChatProviderSelector';
+import { ChatProviderSelector } from '@/features/chat/ChatProviderSelector';
 import { ChatToolbar } from '@/components/chat/ChatToolbar';
-import { ThinkingPanel, useThinkingSteps } from '@/features/conversation/ThinkingPanel';
+import { ThinkingPanel, useThinkingSteps } from '@/features/chat/ThinkingPanel';
 import {
   downloadConversation,
   downloadMarkdown,
   copyToClipboard,
-} from '@/features/conversation/exportImport';
+} from '@/features/chat/exportImport';
+import { hybridTTS } from '@/services/tts/hybridTTS';
 import { AchievementCard } from '@/features/progression/AchievementCard';
 import { ACHIEVEMENTS } from '@/features/progression/achievements';
 import { RealTimeCharts, QuickStatCard } from '@/features/dashboard/RealTimeCharts';
 import { Download, FileText, Copy, Trash2, Search } from 'lucide-react';
-import { ModeBuilder } from '@/components/conversation/ModeBuilder';
+import { ModeBuilder, type CustomMode } from '@/components/conversation/ModeBuilder';
 import { detectEnvironment } from '@/core/tauri/environment';
 import { Camera } from 'lucide-react';
 import type { ProgressionState } from '@/cognitive/types';
@@ -210,30 +211,6 @@ const _levelToLabel = (level: VisualLevel): string => {
   }
 };
 
-const detectBrowserE2EFlag = (): boolean => {
-  if (typeof window === 'undefined') return false;
-
-  const nav = window.navigator as { webdriver?: boolean };
-  const ua = (typeof window.navigator !== 'undefined' && window.navigator.userAgent) || '';
-  const isHeadless = ua.toLowerCase().includes('headless') || ua.includes('Playwright');
-  const isChrome = ua.includes('Chrome') && !ua.includes('Edge');
-  const isWebdriver = nav?.webdriver === true;
-  
-  try {
-    const flag = localStorage.getItem('titane_browser_mode');
-    if (flag === '1' || flag === 'true') return true;
-  } catch {
-    // localStorage not available
-  }
-  
-  // Log for debugging (will be visible in dev tools)
-  if (typeof window !== 'undefined' && (window as any).__TITANE_DEBUG) {
-    console.log('[E2E-FLAG]', { isWebdriver, isHeadless, isChrome, ua });
-  }
-
-  return isWebdriver || isHeadless;
-};
-
 // ═══════════════════════════════════════════════════════════════════════════
 // SUB-COMPONENTS
 // ═══════════════════════════════════════════════════════════════════════════
@@ -250,41 +227,10 @@ StatusIndicator.displayName = 'StatusIndicator';
 // SECTION 1: CONVERSATION
 // ═══════════════════════════════════════════════════════════════════════════
 
-interface ConversationSectionProps {
-  isBrowserE2E?: boolean;
-}
+interface ConversationSectionProps {}
 
-const defaultConversationModes: Array<{ id: ConversationMode; name: string; icon: string }> = [
-  { id: 'default', name: 'Mode Neutre', icon: '⚖️' },
-  { id: 'brainstorming', name: 'Brainstorming', icon: '🎯' },
-];
-
-const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E }) => {
-  const resolvedIsBrowserE2E = isBrowserE2E ?? detectBrowserE2EFlag();
-
-  // Always call the hook (required by React rules)
-  const engineResult = useConversationEngine({
-    mode: 'default',
-    autoHealthCheck: false,
-    maxMessages: 500,
-  });
-
-  // In E2E mode, use mock data instead of real engine results
-  const conversationEngine = resolvedIsBrowserE2E
-    ? {
-        messages: [] as ConversationMessage[],
-        isLoading: false,
-        error: null,
-        currentMode: 'default' as ConversationMode,
-        setMode: () => {},
-        sendMessage: async () => Promise.resolve(),
-        clearMessages: () => {},
-        deleteMessage: () => {},
-        healthReport: null,
-        refreshHealth: async () => {},
-      }
-    : engineResult;
-
+const ConversationSection: React.FC<ConversationSectionProps> = () => {
+  // ═══ IMPORTS & HOOKS ═══
   const {
     messages,
     isLoading,
@@ -296,7 +242,11 @@ const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E 
     deleteMessage,
     healthReport,
     refreshHealth,
-  } = conversationEngine;
+  } = useConversationEngine({
+    mode: 'default',
+    autoHealthCheck: false,
+    maxMessages: 500, // Limite historique pour optimiser mémoire
+  });
 
   // ═══ LOCAL STATE ═══
   const [selectedProvider, setSelectedProvider] = useState('gemini');
@@ -304,122 +254,189 @@ const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E 
   const [showModeBuilder, setShowModeBuilder] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
-  // Note: customModes removed - not currently used in this component
+  const [customModes, setCustomModes] = useState<CustomMode[]>([]);
   const [_attachedImages, setAttachedImages] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterRole, setFilterRole] = useState<'all' | 'user' | 'assistant'>('all');
-  const [browserMessages, setBrowserMessages] = useState<ConversationMessage[]>([]);
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
-  const voiceEngine = useVoiceEngine();
+  const [_cameraActive, setCameraActive] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const sendingRef = useRef(false); // v26.2 - Protection contre double-envoi
+
+  // ═══ THINKING STEPS (v25.6.0) ═══
   const thinking = useThinkingSteps();
 
-  const availableProviders = useMemo(() => [
-    { id: 'gemini', name: 'Gemini', icon: '🤖', available: true },
-    { id: 'openai', name: 'OpenAI', icon: '🎯', available: true },
+  // ═══ VOICE ENGINE INTEGRATION (v25.4.2) ═══
+  const voiceEngine = useVoiceEngine({
+    language: 'fr-FR',
+    onTranscript: text => {
+      // Auto-insert transcript into input
+      setInputValue(prev => (prev ? `${prev} ${text}` : text));
+    },
+    onError: error => {
+      pageLogger.error('Voice recognition error', error);
+    },
+  });
+
+  // Available providers
+  const availableProviders = [
+    { id: 'gemini', name: 'Gemini', icon: '✨', available: true },
+    { id: 'ollama', name: 'Ollama', icon: '🦙', available: true },
+    { id: 'openai', name: 'OpenAI', icon: '🤖', available: true },
     { id: 'claude', name: 'Claude', icon: '🧠', available: true },
-  ], []);
-  const conversationModes = useMemo(() => defaultConversationModes, []);
+  ];
 
-  const effectiveMessages = useMemo(
-    () => (resolvedIsBrowserE2E ? browserMessages : messages),
-    [browserMessages, messages, resolvedIsBrowserE2E]
-  );
+  // Conversation modes disponibles (merge built-in + custom)
+  const conversationModes = useMemo(() => {
+    const builtInModes = [
+      { id: 'default', name: 'Normal', icon: '💬', description: 'Conversation standard' },
+      {
+        id: 'brainstorming',
+        name: 'Brainstorming',
+        icon: '💡',
+        description: 'Idéation créative',
+      },
+      { id: 'synthesis', name: 'Synthèse', icon: '📝', description: 'Résumé et analyse' },
+      {
+        id: 'planning',
+        name: 'Planification',
+        icon: '📋',
+        description: 'Stratégie et organisation',
+      },
+      {
+        id: 'journal',
+        name: 'Journal',
+        icon: '📔',
+        description: 'Réflexion personnelle',
+      },
+      {
+        id: 'debug_cognitive',
+        name: 'Debug Cognitif',
+        icon: '🔧',
+        description: 'Analyse système',
+      },
+    ];
 
-  const displayedMessages = useMemo(() => {
-    const filteredByRole =
-      filterRole === 'all'
-        ? effectiveMessages
-        : effectiveMessages.filter(msg => msg.role === filterRole);
+    const customModesFormatted = customModes.map(m => ({
+      id: m.id,
+      name: m.name,
+      icon: m.icon,
+      description: m.description,
+    }));
 
-    if (!searchQuery.trim()) return filteredByRole;
+    return [...builtInModes, ...customModesFormatted];
+  }, [customModes]);
 
-    const query = searchQuery.toLowerCase();
-    return filteredByRole.filter(msg => msg.content.toLowerCase().includes(query));
-  }, [effectiveMessages, filterRole, searchQuery]);
-
-  const effectiveIsLoading = resolvedIsBrowserE2E ? false : isLoading;
-  const showLoading = effectiveIsLoading && !resolvedIsBrowserE2E;
-
-  const filteredMessages = displayedMessages;
-
+  // ═══ CHARGER MODES CUSTOM AU DÉMARRAGE ═══
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [displayedMessages]);
-
-  const appendBrowserMessage = useCallback((msg: ConversationMessage) => {
-    setBrowserMessages(prev => [...prev, msg]);
+    try {
+      const stored = localStorage.getItem('titane_custom_modes');
+      if (stored) {
+        setCustomModes(JSON.parse(stored));
+      }
+    } catch (error) {
+      pageLogger.error('Erreur chargement modes custom', error);
+    }
   }, []);
 
+  // ═══ HANDLERS ═══
+  const handleSaveCustomMode = useCallback((mode: CustomMode) => {
+    setCustomModes(prev => [...prev, mode]);
+    pageLogger.debug('Mode personnalisé sauvegardé', mode);
+  }, []);
+
+  const filteredMessages = useMemo(() => {
+    let result = messages;
+
+    if (searchQuery.trim()) {
+      const needle = searchQuery.toLowerCase();
+      result = result.filter(m => m.content.toLowerCase().includes(needle));
+    }
+
+    if (filterRole !== 'all') {
+      result = result.filter(m => m.role === filterRole);
+    }
+
+    return result;
+  }, [messages, searchQuery, filterRole]);
+
+  // ═══ AUTO-SCROLL ═══
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  // ═══ HANDLERS ═══
   const handleSend = useCallback(async () => {
-    const content = sanitizeInput(inputValue);
-    if (!content) return;
+    // v26.2 - Protection double-envoi
+    if (!inputValue.trim() || isLoading || sendingRef.current) return;
+    sendingRef.current = true;
 
-    if (resolvedIsBrowserE2E) {
-      appendBrowserMessage({
-        id: `user-${Date.now()}`,
-        role: 'user',
-        content,
-        timestamp: Date.now(),
-      });
-      setInputValue('');
-
-      setTimeout(() => {
-        appendBrowserMessage({
-          id: `assistant-${Date.now()}`,
-          role: 'assistant',
-          content: 'Réponse simulée: ' + content,
-          timestamp: Date.now(),
-        });
-      }, 50);
+    // Sanitize input pour sécurité
+    const sanitized = sanitizeInput(inputValue);
+    if (!sanitized || sanitized.length === 0) {
+      pageLogger.debug('Input vide apres sanitization');
+      sendingRef.current = false;
       return;
     }
 
-    setInputValue('');
+    const messageText = sanitized;
+    setInputValue(''); // Clear immédiatement (Optimistic UI)
+
+    // Start thinking visualization
+    thinking.startThinking();
+    thinking.addStep('analysis', 'Analyse de votre message...');
+
     try {
-      await sendMessage(content);
+      thinking.addStep('reasoning', 'Traitement par le pipeline OMEGA...');
+      const response = await sendMessage(messageText);
+
+      // Stop thinking
+      thinking.addStep('synthesis', 'Génération de la réponse...');
+      thinking.stopThinking();
+
+      // TTS si actif et reponse valide
+      if (audioEnabled && response?.assistant_message) {
+        try {
+          await hybridTTS.speak(response.assistant_message, {
+            rate: 1.0,
+            pitch: 1.0,
+            lang: 'fr-FR',
+          });
+        } catch (ttsError) {
+          pageLogger.warn('TTS error (non-critical)', ttsError);
+          setAudioEnabled(false);
+        }
+      }
     } catch (err) {
-      pageLogger.error('Conversation send error', err);
+      pageLogger.error('Send message error', err);
+      thinking.stopThinking();
+    } finally {
+      sendingRef.current = false;
     }
-  }, [appendBrowserMessage, inputValue, resolvedIsBrowserE2E, sendMessage]);
-
-  const handleRetryMessage = useCallback(
-    (content: string) => {
-      if (!content) return;
-
-      if (resolvedIsBrowserE2E) {
-        appendBrowserMessage({ id: `user-${Date.now()}`, role: 'user', content, timestamp: Date.now() });
-        appendBrowserMessage({
-          id: `assistant-${Date.now() + 1}`,
-          role: 'assistant',
-          content: 'Réponse simulée: ' + content,
-          timestamp: Date.now(),
-        });
-        return;
-      }
-
-      sendMessage(content).catch(err => pageLogger.error('Retry message failed', err));
-    },
-    [appendBrowserMessage, resolvedIsBrowserE2E, sendMessage]
-  );
-
-  const handleDeleteMessage = useCallback(
-    (id?: string) => {
-      if (!id) return;
-      if (resolvedIsBrowserE2E) {
-        setBrowserMessages(prev => prev.filter(msg => msg.id !== id));
-        return;
-      }
-
-      deleteMessage(id);
-    },
-    [deleteMessage, resolvedIsBrowserE2E]
-  );
+  }, [inputValue, isLoading, sendMessage, audioEnabled, thinking]);
 
   const handleCopyMessage = useCallback(async (content: string) => {
-    await copyToClipboard('Message', [{ id: 'copy', role: 'assistant', content, timestamp: Date.now() }]);
+    try {
+      await navigator.clipboard.writeText(content);
+    } catch (err) {
+      pageLogger.warn('Copy message failed', err);
+      alert('❌ Impossible de copier le message');
+    }
   }, []);
 
-  const handleKeyDown = useCallback(
+  const handleRetryMessage = useCallback(
+    async (content: string) => {
+      if (!content.trim() || isLoading) return;
+      thinking.startThinking();
+      try {
+        await sendMessage(content);
+      } finally {
+        thinking.stopThinking();
+      }
+    },
+    [isLoading, sendMessage, thinking]
+  );
+
+  const handleKeyPress = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
@@ -430,21 +447,13 @@ const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E 
   );
 
   const handleClearChat = useCallback(() => {
-    if (resolvedIsBrowserE2E) {
-      setBrowserMessages([]);
-      return;
+    if (confirm("Voulez-vous vraiment effacer tout l'historique ?")) {
+      clearMessages();
     }
-
-    clearMessages();
-  }, [clearMessages, resolvedIsBrowserE2E]);
-
-  const handleSaveCustomMode = useCallback((modeData: any) => {
-    pageLogger.debug('Custom mode saved', modeData);
-    // TODO: Implement custom mode saving logic
-    setShowModeBuilder(false);
-  }, []);
+  }, [clearMessages]);
 
   const handleVoiceInput = useCallback(async () => {
+    // ✅ v25.4.2: Speech Recognition implementation avec useVoiceEngine
     if (!voiceEngine.status.isMicAvailable) {
       alert('🎤 Microphone non disponible. Vérifiez les permissions.');
       return;
@@ -452,10 +461,12 @@ const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E 
 
     try {
       if (voiceEngine.status.isRecording) {
+        // Stop dictation et récupérer le transcript
         const finalTranscript = await voiceEngine.stopDictation();
         setIsRecording(false);
         pageLogger.debug('Voice dictation stopped', finalTranscript);
       } else {
+        // Start dictation
         await voiceEngine.startDictation();
         setIsRecording(true);
         pageLogger.debug('Voice dictation started');
@@ -463,64 +474,9 @@ const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E 
     } catch (error) {
       pageLogger.error('Voice input error', error);
       setIsRecording(false);
+      alert('❌ Erreur reconnaissance vocale. Consultez la console.');
     }
   }, [voiceEngine]);
-
-  if (resolvedIsBrowserE2E) {
-    return (
-      <div className="titane-section titane-section-conversation">
-        <TSectionHeader
-          title="💬 Communication & Intelligence"
-          subtitle="Interface conversationnelle optimisée E2E"
-        />
-
-        <div className="conversation-container">
-          <div className="conversation-messages">
-            {displayedMessages.length === 0 && (
-              <div className="conversation-empty">
-                <h3>TITANE∞ est prêt à converser</h3>
-              </div>
-            )}
-
-            {displayedMessages.map(msg => (
-              <div key={msg.id} className={`conversation-message ${msg.role}`}>
-                <div className="conversation-message-avatar">
-                  {msg.role === 'user' ? '👤' : '🧠'}
-                </div>
-                <div className="conversation-message-content">
-                  <div className="conversation-message-header">
-                    <span className="conversation-message-role">
-                      {msg.role === 'user' ? 'Vous' : 'TITANE'}
-                    </span>
-                  </div>
-                  <div className="conversation-message-text">{msg.content}</div>
-                </div>
-              </div>
-            ))}
-            <div ref={messagesEndRef} />
-          </div>
-
-          <div className="conversation-input-container">
-            <textarea
-              className="conversation-input"
-              placeholder="Tapez votre message... (Entrée pour envoyer, Shift+Entrée pour nouvelle ligne)"
-              value={inputValue}
-              onChange={e => setInputValue(e.target.value)}
-              onKeyDown={handleKeyDown}
-              rows={3}
-            />
-            <button
-              className="conversation-send-btn"
-              onClick={handleSend}
-              disabled={!inputValue.trim()}
-            >
-              📤 Envoyer
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="titane-section titane-section-conversation">
@@ -558,10 +514,10 @@ const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E 
             <button
               className="conversation-icon-btn"
               onClick={() =>
-                downloadConversation('current', 'Conversation TITANE', displayedMessages)
+                downloadConversation('current', 'Conversation TITANE', messages)
               }
               title="Exporter en JSON"
-              disabled={displayedMessages.length === 0}
+              disabled={messages.length === 0}
             >
               <Download size={16} />
             </button>
@@ -569,9 +525,9 @@ const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E 
             {/* Export Markdown */}
             <button
               className="conversation-icon-btn"
-              onClick={() => downloadMarkdown('Conversation TITANE', displayedMessages)}
+              onClick={() => downloadMarkdown('Conversation TITANE', messages)}
               title="Exporter en Markdown"
-              disabled={displayedMessages.length === 0}
+              disabled={messages.length === 0}
             >
               <FileText size={16} />
             </button>
@@ -580,14 +536,11 @@ const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E 
             <button
               className="conversation-icon-btn"
               onClick={async () => {
-      const success = await copyToClipboard(
-        'Conversation TITANE',
-        displayedMessages.map(msg => ({ id: msg.id, role: msg.role, content: msg.content, timestamp: msg.timestamp }))
-      );
+                const success = await copyToClipboard('Conversation TITANE', messages);
                 if (success) alert('✅ Conversation copiée!');
               }}
               title="Copier dans le presse-papier"
-              disabled={displayedMessages.length === 0}
+              disabled={messages.length === 0}
             >
               <Copy size={16} />
             </button>
@@ -664,7 +617,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E 
           </select>
 
           <div className="conversation-filters-count">
-            {filteredMessages.length}/{displayedMessages.length}
+            {filteredMessages.length}/{messages.length}
           </div>
         </div>
 
@@ -678,7 +631,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E 
 
         {/* ═══ MESSAGES AREA ═══ */}
         <div className="conversation-messages">
-          {displayedMessages.length === 0 && !thinking.isThinking && (
+          {messages.length === 0 && !thinking.isThinking && (
             <div className="conversation-empty">
               <div className="conversation-empty-icon">🧠⚡∞</div>
               <h3>TITANE∞ est prêt à converser</h3>
@@ -750,7 +703,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E 
                       className="conversation-message-action"
                       onClick={() => handleRetryMessage(msg.content)}
                       title="Renvoyer ce message"
-                      disabled={effectiveIsLoading}
+                      disabled={isLoading}
                     >
                       🔄 Retry
                     </button>
@@ -759,7 +712,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E 
                   <button
                     type="button"
                     className="conversation-message-action danger"
-                    onClick={() => handleDeleteMessage(msg.id)}
+                    onClick={() => deleteMessage(msg.id)}
                     title="Supprimer ce message"
                   >
                     🗑️
@@ -769,7 +722,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E 
             </div>
           ))}
 
-          {showLoading && (
+          {isLoading && (
             <div className="conversation-message assistant loading">
               <div className="conversation-message-avatar">🧠</div>
               <div className="conversation-message-content">
@@ -819,13 +772,9 @@ const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E 
             sendMessage(`📝 Transcription:\n\n"${text}"\n\nAnalyse ce contenu.`);
           }}
           onToggleAudioConversation={active => setAudioEnabled(active)}
-          onToggleCameraLive={() => {
-            const setCameraPreviewVisible = useVisionStore.getState().setCameraPreviewVisible;
-            const isVisible = useVisionStore.getState().isCameraPreviewVisible;
-            setCameraPreviewVisible(!isVisible);
-          }}
+          onToggleCameraLive={() => setCameraActive(prev => !prev)}
           onToggleTTS={active => setAudioEnabled(active)}
-          disabled={effectiveIsLoading}
+          disabled={isLoading}
           compact={false}
         />
 
@@ -836,16 +785,16 @@ const ConversationSection: React.FC<ConversationSectionProps> = ({ isBrowserE2E 
             placeholder="Tapez votre message... (Entrée pour envoyer, Shift+Entrée pour nouvelle ligne)"
             value={inputValue}
             onChange={e => setInputValue(e.target.value)}
-            onKeyDown={handleKeyDown}
-            disabled={effectiveIsLoading}
+            onKeyPress={handleKeyPress}
+            disabled={isLoading}
             rows={3}
           />
           <button
             className="conversation-send-btn"
             onClick={handleSend}
-            disabled={!inputValue.trim() || effectiveIsLoading}
+            disabled={!inputValue.trim() || isLoading}
           >
-            {effectiveIsLoading ? '⏳' : '📤'} Envoyer
+            {isLoading ? '⏳' : '📤'} Envoyer
           </button>
         </div>
 
@@ -1642,25 +1591,6 @@ export const TitanePage: React.FC = () => {
 
   // Chargement progression
   useEffect(() => {
-    // Skip loading progression in E2E mode to avoid blocking the page
-    const isE2E = detectBrowserE2EFlag();
-    if (isE2E) {
-      setProgression({
-        level: 1,
-        totalXP: 0,
-        xpInCurrentLevel: 0,
-        xpToNextLevel: 500,
-        milestones: [],
-        unlockedMilestones: [],
-        lastXPGain: null,
-        streakDays: 0,
-        lastActiveDate: new Date().toISOString().split('T')[0] || new Date().toISOString(),
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      });
-      return;
-    }
-
     const loadProgression = async () => {
       try {
         const state = await xpEngine.getState();
@@ -1685,12 +1615,11 @@ export const TitanePage: React.FC = () => {
     [progression]
   );
 
-  const [isBrowserE2E] = useState(() => detectBrowserE2EFlag());
-
+  // Render section active
   const renderActiveSection = useCallback(() => {
     switch (activeTab) {
       case 'conversation':
-        return <ConversationSection isBrowserE2E={isBrowserE2E} />;
+        return <ConversationSection />;
       case 'vision':
         return <VisionSection />;
       case 'overview':
@@ -1706,46 +1635,9 @@ export const TitanePage: React.FC = () => {
       case 'transformation':
         return <TransformationSection />;
       default:
-        return <ConversationSection isBrowserE2E={isBrowserE2E} />;
+        return <ConversationSection />;
     }
-  }, [activeTab, progression, stats, isBrowserE2E]);
-
-  if (isBrowserE2E) {
-    return (
-      <ErrorBoundary context="TitanePage">
-        <Container size="xl" className="titane-page">
-          <Stack direction="vertical" gap={4}>
-            <div className="titane-header">
-              <div className="titane-header-content">
-                <div className="titane-header-left">
-                  <TitaneLogo size={64} />
-                  <div className="titane-header-text">
-                    <h1 className="titane-title">⚡ TITANE — Le Cœur du Système</h1>
-                    <p className="titane-subtitle">
-                      Mode navigateur optimisé pour les tests critiques
-                    </p>
-                  </div>
-                </div>
-                <TBadge variant="info" size="lg">
-                  INFINITY
-                </TBadge>
-              </div>
-            </div>
-
-            <div
-              className="titane-content"
-              role="tabpanel"
-              id="titane-panel-conversation"
-              aria-labelledby="titane-tab-conversation"
-              tabIndex={0}
-            >
-              <ConversationSection isBrowserE2E={isBrowserE2E} />
-            </div>
-          </Stack>
-        </Container>
-      </ErrorBoundary>
-    );
-  }
+  }, [activeTab, progression, stats]);
 
   return (
     <ErrorBoundary context="TitanePage">

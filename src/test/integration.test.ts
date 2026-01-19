@@ -17,11 +17,11 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { invokeWithRetry } from '../lib/serviceInvoker';
 import { ServiceMetrics } from '../lib/serviceMetrics';
 import { MetricsCache } from '../lib/metricsCache';
-import { invoke } from '@tauri-apps/api/core';
+import * as tauriCore from '@tauri-apps/api/core';
 
 // Mock Tauri invoke
-vi.mock('@tauri-apps/api/core', () => ({ invoke: vi.fn() }));
-const mockInvoke = vi.mocked(invoke);
+vi.mock('@tauri-apps/api/core');
+const mockInvoke = vi.mocked(tauriCore.invoke);
 
 describe('Phase 3 Integration - Robustness Layer', () => {
   beforeEach(() => {

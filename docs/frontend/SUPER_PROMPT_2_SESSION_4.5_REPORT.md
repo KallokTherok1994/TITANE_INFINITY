@@ -371,7 +371,7 @@ partialize: (state) => ({
 - **ChatPanel.tsx**: ~60 lignes modifiées
 - **stores/index.ts**: ~50 lignes ajoutées
 - **StateManager.ts**: 3 lignes ajoutées
-- **Total**: **~1713 lignes tech-ready (dev)**
+- **Total**: **~1713 lignes production-ready**
 
 ### Test Coverage
 - ✅ Build validation (pnpm run build)

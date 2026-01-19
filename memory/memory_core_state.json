@@ -1,14 +1,6 @@
 {
   "snapshots": [],
-  "logs": [
-    {
-      "id": "ui-1768750557226-bl6yole6",
-      "timestamp": 1768750557226,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "main.tsx: boot handlers registered"
-    }
-  ],
+  "logs": [],
   "events": [],
   "timeline_entries": [],
   "chat_history": [],
@@ -17,7 +9,7 @@
   "knowledge": [],
   "rituals": [],
   "metadata": {
-    "last_validation_ts": 1768750557295,
+    "last_validation_ts": 1765811584690,
     "last_compaction_ts": null
   }
 }

@@ -2,7 +2,7 @@
 
 ## Announcement Post
 
-```
+````
 🚀 **TITANE∞ v26.3.0 — Production Release is LIVE!** 🚀
 
 Dear TITANE∞ Community,
@@ -41,14 +41,17 @@ DEB Package:       ✅ 9.1 MB (tested & verified)
 ```bash
 chmod +x TITANE-Infinity_26.3.0_amd64.AppImage
 ./TITANE-Infinity_26.3.0_amd64.AppImage
-```
+````
+
 Size: 82 MB | Works on any Linux distro
 
 **Ubuntu/Debian** — System integration
+
 ```bash
 sudo dpkg -i TITANE-Infinity_26.3.0_amd64.deb
 titane-infinity
 ```
+
 Size: 9.1 MB | Desktop entry included
 
 Get it from: https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v26.3.0
@@ -58,27 +61,31 @@ Get it from: https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v2
 🎯 **KEY IMPROVEMENTS**
 
 ✨ WebKit Stability Architecture
-   - Global boot safety manager prevents crashes
-   - DOM mutation guards ensure reliability
-   - React render throttling (1 update/sec max)
-   - Error boundary improvements for robustness
+
+- Global boot safety manager prevents crashes
+- DOM mutation guards ensure reliability
+- React render throttling (1 update/sec max)
+- Error boundary improvements for robustness
 
 ⚡ Performance Optimizations
-   - 9.50s Vite build (optimized)
-   - Rust opt-level 3 (native performance)
-   - Zero performance overhead added
+
+- 9.50s Vite build (optimized)
+- Rust opt-level 3 (native performance)
+- Zero performance overhead added
 
 🔒 Security & Quality
-   - 100% code review completed
-   - Zero TypeScript errors
-   - Zero ESLint warnings
-   - Comprehensive testing suite
+
+- 100% code review completed
+- Zero TypeScript errors
+- Zero ESLint warnings
+- Comprehensive testing suite
 
 📚 Documentation
-   - Production deployment report
-   - Technical corrections detail
-   - Architecture decision records
-   - Installation guides
+
+- Production deployment report
+- Technical corrections detail
+- Architecture decision records
+- Installation guides
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -99,6 +106,7 @@ Get it from: https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v2
 
 Thank you for your patience and support!
 — The TITANE∞ Team 🚀
+
 ```
 
 ---
@@ -106,11 +114,13 @@ Thank you for your patience and support!
 ## Follow-up Post (24 hours later)
 
 ```
+
 📊 **v26.3.0 Installation Stats**
 
-Thanks everyone downloading v26.3.0! 
+Thanks everyone downloading v26.3.0!
 
 If you're upgrading from an older version:
+
 1. Backup your vault (if using encrypted storage)
 2. Download v26.3.0 from releases
 3. Run the new version
@@ -118,6 +128,7 @@ If you're upgrading from an older version:
 **No data migration needed** — all settings preserved!
 
 Need help? Reply here or check #support 👇
+
 ```
 
 ---
@@ -125,6 +136,7 @@ Need help? Reply here or check #support 👇
 ## Engagement Post (1 week later)
 
 ```
+
 🎉 **One Week with v26.3.0 — Stability Report**
 
 Fantastic news! We've received zero crash reports on v26.3.0.
@@ -136,9 +148,13 @@ Fantastic news! We've received zero crash reports on v26.3.0.
 
 **What's Next?**
 We're already working on v26.4 with:
+
 - Enhanced vault encryption
 - Improved UI responsiveness
 - Additional language support
 
 Stay tuned! 🚀
+
+```
+
 ```

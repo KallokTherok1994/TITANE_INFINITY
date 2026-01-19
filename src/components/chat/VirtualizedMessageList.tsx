@@ -23,7 +23,6 @@ import React, { useRef, useEffect, useMemo } from 'react';
 import { FixedSizeList as List } from 'react-window';
 import { MessageBubble } from './MessageBubble';
 import type { AIMessage } from '../../services/ai/types';
-import { getMessageText } from '../../services/ai/types';
 import './MessageList.css';
 
 interface VirtualizedMessageListProps {
@@ -65,31 +64,21 @@ export const VirtualizedMessageList = React.memo(function VirtualizedMessageList
   }, [messages.length]);
 
   // Filter valid messages
-  const validMessages = useMemo(() => {
-    return messages.filter(msg => {
-      if (!msg || typeof msg !== 'object') return false;
-      if (typeof msg.role !== 'string') return false;
-      if (typeof msg.timestamp !== 'number') return false;
-
-      const isStringContent = typeof msg.content === 'string';
-      const isArrayContent = Array.isArray(msg.content);
-
-      // Autoriser les contenus texte ou multimodaux (array)
-      if (!isStringContent && !isArrayContent) return false;
-
-      const contentLength = isStringContent
-        ? msg.content.length
-        : (msg.content as unknown[]).length;
-
-      // Autoriser les placeholders assistants même vides
-      if (contentLength === 0 && msg.role !== 'assistant') return false;
-
-      // Protection contre les messages trop volumineux (strings uniquement)
-      if (isStringContent && msg.content.length >= 100000) return false;
-
-      return true;
-    });
-  }, [messages]);
+  const validMessages = useMemo(
+    () =>
+      messages.filter(
+        msg =>
+          msg &&
+          typeof msg === 'object' &&
+          typeof msg.role === 'string' &&
+          typeof msg.content === 'string' &&
+          typeof msg.timestamp === 'number' &&
+          // Allow empty content for assistant streaming placeholders (OMEGA)
+          (msg.content.length > 0 || msg.role === 'assistant') &&
+          msg.content.length < 100000
+      ),
+    [messages]
+  );
 
   // Fallback: Use simple list for small message counts
   if (!shouldVirtualize) {
@@ -113,7 +102,7 @@ export const VirtualizedMessageList = React.memo(function VirtualizedMessageList
         <MessageBubble
           key={`${msg.timestamp}-${index}`}
           role={msg.role}
-          content={getMessageText(msg)}
+          content={msg.content}
           timestamp={msg.timestamp}
           isLatest={isLatest}
         />

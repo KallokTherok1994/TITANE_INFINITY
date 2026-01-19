@@ -28,7 +28,6 @@ import {
   type PatternRecord,
 } from './selfHealing.config';
 import { type ObservedError, type AnomalyType } from './selfHealingObserver';
-import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -398,7 +397,7 @@ export class SelfHealingAnalyzer {
     // Appliquer les règles de diagnostic
     const diagnosis = this.applyRules(event, context);
 
-    logger.debug(
+    console.log(
       `[SelfHealingAnalyzer] 🔬 Diagnosis: [${diagnosis.severity}] ${diagnosis.nature} - confidence: ${(diagnosis.confidence * 100).toFixed(0)}%`
     );
 
@@ -559,7 +558,7 @@ export class SelfHealingAnalyzer {
           }
         }
       } catch (err) {
-        logger.warn(`[SelfHealingAnalyzer] Rule ${rule.id} failed:`, err);
+        console.warn(`[SelfHealingAnalyzer] Rule ${rule.id} failed:`, err);
       }
     }
 

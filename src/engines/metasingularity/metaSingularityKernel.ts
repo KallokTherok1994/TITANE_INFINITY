@@ -23,7 +23,6 @@
 
 // Types importés pour référence de documentation (utilisés dans design, pas runtime)
 import type { AutopoiesisState as _AutopoiesisState } from '../autopoiesis/autopoiesisEngine';
-import { logger } from '@/utils/logger';
 import type { IdentityExpressionPackage as _IdentityExpressionPackage } from '../identity/unifiedIdentityKernel';
 import type { UnifiedExpression as _UnifiedExpression } from '../expression/expressionEngine';
 import type { HoloPresenceState as _HoloPresenceState } from '../holopresence/holoPresenceEngine';
@@ -293,7 +292,7 @@ class MetaSingularityKernel {
   start(): void {
     if (this.state.isRunning) return;
 
-    logger.debug('Starting ultimate orchestration...');
+    console.log('[MetaSingularityKernel] Starting ultimate orchestration...');
 
     this.state.isRunning = true;
     this.intervalId = setInterval(() => this.tick(), 200); // 5 Hz
@@ -304,7 +303,7 @@ class MetaSingularityKernel {
   stop(): void {
     if (!this.state.isRunning) return;
 
-    logger.debug('Stopping...');
+    console.log('[MetaSingularityKernel] Stopping...');
 
     if (this.intervalId) {
       clearInterval(this.intervalId);
@@ -343,7 +342,7 @@ class MetaSingularityKernel {
 
   private tick(): void {
     if (!this.engines) {
-      logger.warn('Engines not injected yet');
+      console.warn('[MetaSingularityKernel] Engines not injected yet');
       return;
     }
 
@@ -680,7 +679,7 @@ class MetaSingularityKernel {
     this.state.emergentPhenomena.push(phenomenon);
     this.state.metrics.totalEmergences++;
 
-    logger.debug(`[MetaSingularityKernel] Emergence detected: ${name}`);
+    console.log(`[MetaSingularityKernel] Emergence detected: ${name}`);
 
     // Limiter à 50 émergences
     if (this.state.emergentPhenomena.length > 50) {
@@ -828,7 +827,7 @@ class MetaSingularityKernel {
     conflict.resolved = true;
     conflict.resolutionTime = Date.now() - conflict.timestamp;
 
-    logger.debug(`[MetaSingularityKernel] Conflict resolved: ${conflict.description}`);
+    console.log(`[MetaSingularityKernel] Conflict resolved: ${conflict.description}`);
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -922,7 +921,7 @@ class MetaSingularityKernel {
     this.state.insights.push(insight);
     this.state.metrics.totalInsights++;
 
-    logger.debug(`[MetaSingularityKernel] Insight: ${title}`);
+    console.log(`[MetaSingularityKernel] Insight: ${title}`);
 
     // Limiter à 100 insights
     if (this.state.insights.length > 100) {
@@ -949,7 +948,7 @@ class MetaSingularityKernel {
         this.state.transitionHistory.push(transition);
         this.state.currentTransition = null;
 
-        logger.debug(`[MetaSingularityKernel] Transition completed: ${transition.id}`);
+        console.log(`[MetaSingularityKernel] Transition completed: ${transition.id}`);
       }
     }
   }
@@ -1006,7 +1005,7 @@ class MetaSingularityKernel {
     transition.status = 'in-progress';
     this.state.metrics.totalTransitions++;
 
-    logger.debug(
+    console.log(
       `[MetaSingularityKernel] Transition initiated: ${strategy} over ${duration}ms`
     );
   }

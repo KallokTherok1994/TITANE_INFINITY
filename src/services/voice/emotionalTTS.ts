@@ -15,7 +15,6 @@
 import type { EmotionalIntent } from './emotionalIntent';
 import { prosodyEngine, type ProsodyProfile as _ProsodyProfile } from './prosodyEngine';
 import { hybridTTS } from '../tts/hybridTTS';
-import { logger } from '@/utils/logger';
 
 /**
  * Options de rendu émotionnel
@@ -47,8 +46,8 @@ export class EmotionalTTSRenderer {
   ): Promise<void> {
     const { useSSML = true, fallbackToRaw = true, voice, lang, cache = true } = options;
 
-    logger.debug(`[EmotionalTTS] 🎤 Speaking with emotion: ${intent.emotion}`);
-    logger.debug(
+    console.log(`[EmotionalTTS] 🎤 Speaking with emotion: ${intent.emotion}`);
+    console.log(
       `[EmotionalTTS] 📊 Intensity: ${intent.intensity.toFixed(2)}, Warmth: ${intent.warmth.toFixed(2)}`
     );
 
@@ -59,18 +58,18 @@ export class EmotionalTTSRenderer {
     if (useSSML && this.isSSMLSupported(cache)) {
       try {
         const ssml = prosodyEngine.generateSSML(text, prosody);
-        logger.debug('🎵 Using SSML mode');
+        console.log('[EmotionalTTS] 🎵 Using SSML mode');
         await hybridTTS.speak(ssml, { voice, lang });
         return;
       } catch (error) {
-        logger.warn('⚠️ SSML failed, falling back...', error);
+        console.warn('[EmotionalTTS] ⚠️ SSML failed, falling back...', error);
         if (!fallbackToRaw) throw error;
       }
     }
 
     // 3. Fallback: paramètres bruts
     if (fallbackToRaw) {
-      logger.debug('🔧 Using raw parameters mode');
+      console.log('[EmotionalTTS] 🔧 Using raw parameters mode');
       const rawParams = prosodyEngine.extractRawParameters(prosody);
 
       await hybridTTS.speak(text, {
@@ -84,7 +83,7 @@ export class EmotionalTTSRenderer {
     }
 
     // 4. Dernier recours: texte brut
-    logger.debug('📢 Using plain text mode');
+    console.log('[EmotionalTTS] 📢 Using plain text mode');
     await hybridTTS.speak(text, { voice, lang });
   }
 

@@ -39,13 +39,13 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    'bg-linear-to-br from-violet-500 to-violet-600 text-white shadow-md hover:shadow-glow-violet hover:-translate-y-0.5',
+    'bg-gradient-to-br from-violet-500 to-violet-600 text-white shadow-md hover:shadow-glow-violet hover:-translate-y-0.5',
   secondary:
     'bg-bg-tertiary/50 text-violet-400 border border-violet-700 backdrop-blur-md hover:bg-bg-tertiary hover:border-violet-500',
   ghost:
     'bg-transparent text-text-secondary border border-transparent hover:bg-bg-tertiary hover:border-border-default',
   danger:
-    'bg-linear-to-br from-error-500 to-error-600 text-white shadow-md hover:shadow-error hover:-translate-y-0.5',
+    'bg-gradient-to-br from-error-500 to-error-600 text-white shadow-md hover:shadow-error hover:-translate-y-0.5',
   outline:
     'bg-transparent text-text-primary border border-border-default hover:bg-bg-tertiary hover:border-border-strong',
 };

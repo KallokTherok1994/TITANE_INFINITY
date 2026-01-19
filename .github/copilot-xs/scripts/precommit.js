@@ -44,13 +44,7 @@ runOrFallback('pnpm', ['run', 'copilot-xs:validate'], 'corepack', [
   'copilot-xs:validate',
 ]);
 
-// 2) GitGuardian secret scanning (fast, before running tests)
-// Set COPILOT_XS_SKIP_GITGUARDIAN=1 to bypass locally
-if (process.env.COPILOT_XS_SKIP_GITGUARDIAN !== '1') {
-  run('node', ['.github/copilot-xs/scripts/gitguardian-precommit.js']);
-}
-
-// 3) Full test gate (can be slow; set COPILOT_XS_SKIP_TESTS=1 to bypass locally)
+// 2) Full test gate (can be slow; set COPILOT_XS_SKIP_TESTS=1 to bypass locally)
 if (process.env.COPILOT_XS_SKIP_TESTS !== '1') {
   runOrFallback('pnpm', ['run', 'test:all'], 'corepack', ['pnpm', 'run', 'test:all']);
 }

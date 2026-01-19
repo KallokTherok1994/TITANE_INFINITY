@@ -3,8 +3,6 @@
  * Force suppression du cache localStorage du menu
  */
 
-import { logger } from '@/utils/logger';
-
 export function clearMenuCache(): void {
   try {
     // Supprimer config menu
@@ -17,9 +15,9 @@ export function clearMenuCache(): void {
       localStorage.removeItem(key);
     });
 
-    logger.debug('✅ Cache menu nettoyé - Rechargez la page');
+    console.log('✅ Cache menu nettoyé - Rechargez la page');
   } catch (error) {
-    logger.error('❌ Erreur nettoyage cache menu:', error);
+    console.error('❌ Erreur nettoyage cache menu:', error);
   }
 }
 

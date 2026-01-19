@@ -15,47 +15,12 @@ import type { PromptContext } from '@/core/prompts';
  * ═══════════════════════════════════════════════════════════════════
  */
 
-// Multimodal content types for vision API support (GLM-4.6V-Flash compatible)
-export type AIMessageContentPart =
-  | { type: 'text'; text: string }
-  | { type: 'image_url'; image_url: { url: string } }; // Supports data: URLs for base64 images
-
 export interface AIMessage {
   role: 'user' | 'assistant' | 'system';
-  content: string | AIMessageContentPart[];
+  content: string;
   timestamp: number;
-  name?: string; // Optional name field for function/tool messages
   provider?: string;
   metadata?: Record<string, unknown>;
-}
-
-/**
- * Extract text content from AIMessage (handles both string and multimodal content)
- */
-export function getMessageText(message: AIMessage): string {
-  if (typeof message.content === 'string') {
-    return message.content;
-  }
-  // For multimodal content, concatenate all text parts
-  return message.content
-    .map(part =>
-      typeof part === 'string' ? part : part.type === 'text' ? part.text : ''
-    )
-    .join(' ');
-}
-
-/**
- * Create a simple text-only AIMessage
- */
-export function createTextMessage(
-  role: 'user' | 'assistant' | 'system',
-  content: string
-): AIMessage {
-  return {
-    role,
-    content,
-    timestamp: Date.now(),
-  };
 }
 
 export type AIProviderName =
@@ -70,7 +35,6 @@ export type AIProviderName =
   | 'openai'
   | 'claude'
   | 'copilot' // ✨ v26.3 - GitHub Copilot provider
-  | 'glm46v' // ✨ GLM-4.6V-Flash provider
   | 'fallback'
   | 'emergency-fallback'
   | 'ultimate-fallback'
@@ -80,7 +44,6 @@ export type AIProviderName =
 
 // ✨ v21 - Provider choice for UI selection
 // ✨ v26.3 - Added GitHub Copilot provider
-// ✨ GLM-4.6V-Flash provider
 export type ProviderChoice =
   | 'auto'
   | 'openai'
@@ -88,7 +51,6 @@ export type ProviderChoice =
   | 'gemini'
   | 'ollama'
   | 'copilot'
-  | 'glm46v'
   | 'local';
 
 /** Response metadata interface with known fields */
@@ -141,7 +103,6 @@ export interface AIConfig {
   topP?: number;
   topK?: number;
   timeout?: number;
-  model?: string; // Model identifier (e.g., 'gpt-4', 'claude-3-opus')
   promptProfileId?: string;
   promptContext?: PromptContext;
   preferredProvider?: ProviderChoice; // ✨ v21 - Force specific provider
@@ -166,7 +127,6 @@ export type AIProviderId =
   | 'gemini'
   | 'ollama'
   | 'copilot'
-  | 'glm46v'
   | 'local';
 
 /**

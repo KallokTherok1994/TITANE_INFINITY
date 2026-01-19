@@ -274,4 +274,4 @@ cargo bench ipc
 
 ---
 
-*TITANE_INFINITY v19.6.0 — 9 Unified Engines | Performance Optimized | Tech-Ready (Dev); production en attente d’autorisation*
+*TITANE_INFINITY v19.6.0 — 9 Unified Engines | Performance Optimized | Production Ready*

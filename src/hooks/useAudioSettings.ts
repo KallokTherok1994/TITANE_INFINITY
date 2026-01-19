@@ -14,9 +14,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { audioService } from '@/features/audio-center/services/audioService';
 import { detectEnvironment } from '@/core/tauri/environment';
-import { createLogger } from '@/utils/logger';
-
-const logger = createLogger('useAudioSettings');
 import type {
   AudioDevice,
   MicrophoneTestResult,
@@ -200,7 +197,7 @@ export function useAudioSettings(): UseAudioSettingsReturn {
           }
         }
       } catch (error) {
-        logger.error('Init error:', error);
+        console.error('[useAudioSettings] Init error:', error);
         setLastError("Échec de l'initialisation audio");
       } finally {
         if (mountedRef.current) {
@@ -241,7 +238,7 @@ export function useAudioSettings(): UseAudioSettingsReturn {
         }
       } catch (error) {
         // Erreur Tauri (ACL ou autre)
-        logger.error('Tauri test_microphone error:', error);
+        console.error('[useAudioSettings] Tauri test_microphone error:', error);
         if (mountedRef.current) {
           const errorMsg = error instanceof Error ? error.message : String(error);
 
@@ -304,7 +301,7 @@ export function useAudioSettings(): UseAudioSettingsReturn {
           return false;
         }
       } catch (error) {
-        logger.error('Tauri permission request failed:', error);
+        console.error('[useAudioSettings] Tauri permission request failed:', error);
         if (mountedRef.current) {
           setPermissions({ microphone: 'unavailable', speaker: 'granted' });
           setLastError(
@@ -335,7 +332,7 @@ export function useAudioSettings(): UseAudioSettingsReturn {
       await refreshDevices();
       return true;
     } catch (error) {
-      logger.error('Browser permission request failed:', error);
+      console.error('[useAudioSettings] Browser permission request failed:', error);
 
       if (mountedRef.current) {
         const err = error as DOMException;
@@ -399,7 +396,7 @@ export function useAudioSettings(): UseAudioSettingsReturn {
         }
       }
     } catch (error) {
-      logger.error('Failed to refresh devices:', error);
+      console.error('[useAudioSettings] Failed to refresh devices:', error);
       setLastError('Échec de la détection des périphériques audio');
     }
   }, [selectedInputDevice, selectedOutputDevice]);
@@ -410,7 +407,7 @@ export function useAudioSettings(): UseAudioSettingsReturn {
       setSelectedInputDevice(deviceId);
       localStorage.setItem(STORAGE_KEYS.selectedInput, deviceId);
     } catch (error) {
-      logger.error('Failed to select input device:', error);
+      console.error('[useAudioSettings] Failed to select input device:', error);
       setLastError('Échec de la sélection du microphone');
     }
   }, []);
@@ -424,7 +421,7 @@ export function useAudioSettings(): UseAudioSettingsReturn {
       setSelectedOutputDevice(deviceId);
       localStorage.setItem(STORAGE_KEYS.selectedOutput, deviceId);
     } catch (error) {
-      logger.error('Failed to select output device:', error);
+      console.error('[useAudioSettings] Failed to select output device:', error);
       setLastError('Échec de la sélection du haut-parleur');
     }
   }, []);
@@ -657,7 +654,7 @@ export function useAudioSettings(): UseAudioSettingsReturn {
       setHealthSummary(newHealth);
       localStorage.setItem(STORAGE_KEYS.healthSummary, JSON.stringify(newHealth));
     } catch (error) {
-      logger.error('Diagnostic error:', error);
+      console.error('[useAudioSettings] Diagnostic error:', error);
       setLastError('Erreur lors du diagnostic');
     } finally {
       if (mountedRef.current) {
@@ -731,9 +728,9 @@ export function useAudioSettings(): UseAudioSettingsReturn {
         await refreshDevicesRef.current();
       }
 
-      logger.debug('Audio system reset');
+      console.log('[useAudioSettings] Audio system reset');
     } catch (error) {
-      logger.error('Reset error:', error);
+      console.error('[useAudioSettings] Reset error:', error);
       setLastError('Échec de la réinitialisation audio');
     }
   }, []); // Safe: uses stable refs

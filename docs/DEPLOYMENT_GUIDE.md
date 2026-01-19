@@ -1,10 +1,8 @@
 # TITANE∞ Deployment Guide — Complete Reference
 
-**Version:** 26.3.0  
-**Last Updated:** 2026-01-11  
+**Version:** 26.2.0  
+**Last Updated:** 2024-12-22  
 **Compliance Score:** 100/100 (A+)
-
-> ⛔ **Mode Dev (règle critique repo)** : ne pas exécuter de build/deploy production (AppImage/DEB/packaging) sans autorisation explicite.
 
 ---
 
@@ -169,7 +167,7 @@ pnpm run build
 pnpm exec tauri build
 
 # Or with specific config
-pnpm exec tauri build --config runtime/stable/tauri.stable.conf.json
+pnpm exec tauri build --config runtime/stable/tauri.conf.json
 ```
 
 ---
@@ -251,7 +249,7 @@ file ./titane-infinity_*.AppImage
 - Debug symbols included
 
 ```json
-// runtime/dev/tauri.dev.conf.json
+// runtime/dev/tauri.conf.json
 {
   "productName": "Titan-Dev",
   "version": "26.2.0-dev",
@@ -271,7 +269,7 @@ file ./titane-infinity_*.AppImage
 - Code signing ready
 
 ```json
-// runtime/stable/tauri.stable.conf.json
+// runtime/stable/tauri.conf.json
 {
   "productName": "Titan-Stable",
   "version": "26.2.0",
@@ -332,7 +330,7 @@ jobs:
 
 ```bash
 # 1. Update version in all configs
-# package.json, Cargo.toml, src-tauri/tauri.conf.json
+# package.json, Cargo.toml, tauri.conf.json
 
 # 2. Commit changes
 git add .
@@ -592,7 +590,7 @@ pnpm vitest run tests/integration/deployment.test.ts
 |------|---------|
 | `titane.sh` | Unified deployment command |
 | `runtime/stable/build.sh` | Stable build script |
-| `runtime/stable/tauri.stable.conf.json` | Production config |
+| `runtime/stable/tauri.conf.json` | Production config |
 | `installer/install.sh` | System installer |
 | `.github/workflows/release.yml` | Release workflow |
 
@@ -602,7 +600,7 @@ All version numbers must match in:
 - `package.json`
 - `src-tauri/Cargo.toml`
 - `src-tauri/tauri.conf.json`
-- `runtime/stable/tauri.stable.conf.json`
+- `runtime/stable/tauri.conf.json`
 
 ### Commands Summary
 

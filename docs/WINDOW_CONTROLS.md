@@ -100,7 +100,5 @@ Console navigateur:
 
 ## Version
 - **Créé:** v26.2.1 (2026-01-02)
-- **Status:** ✅ Tech-Ready (Dev) / Production EN ATTENTE (autorisation)
+- **Status:** ✅ Production Ready
 - **Tests:** Automatiques via React hook
-
-> NOTE (gouvernance): la production reste bloquée sans autorisation explicite.

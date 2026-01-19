@@ -28,7 +28,6 @@ import {
   archetypeResonanceEngine,
   type ArchetypeType,
 } from '../psyche/archetypeResonanceEngine';
-import { logger } from '@/utils/logger';
 import type { EmotionalState } from '@/types/voice';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -518,7 +517,7 @@ class NeuralVoiceBlendingEngine {
     // Update identity coherence (slow increase)
     this.state.identityCoherence = Math.min(1, this.state.identityCoherence + 0.001);
 
-    logger.debug(
+    console.log(
       `🎤 [VOICE-BLEND] Learning session ${this.state.learningSessionCount} — ${key} → ${Math.round(newPref * 100)}%`
     );
   }
@@ -528,7 +527,7 @@ class NeuralVoiceBlendingEngine {
    */
   stabilizeSignature(): void {
     if (this.state.identityCoherence < this.config.minStability) {
-      logger.debug('⚠️ [VOICE-BLEND] Signature instable, stabilisation...');
+      console.log('⚠️ [VOICE-BLEND] Signature instable, stabilisation...');
 
       // Force convergence vers profil dominant
       const dominant = archetypeResonanceEngine.getDominantProfile();
@@ -540,7 +539,7 @@ class NeuralVoiceBlendingEngine {
     const version = `v${Math.floor(this.state.learningSessionCount / 10)}.${this.state.learningSessionCount % 10}`;
     this.state.voiceSignature = `TITANE∞-Voice-${version}`;
 
-    logger.debug(
+    console.log(
       `🎙️ [VOICE-BLEND] Voice signature stabilized: ${this.state.voiceSignature}`
     );
   }
@@ -562,7 +561,7 @@ class NeuralVoiceBlendingEngine {
     const tone = this.determineCognitiveTone(context);
     const microExpressions = this.injectMicroExpressions(text, context);
 
-    logger.debug(
+    console.log(
       `🎤 [VOICE-BLEND] Voice generated: ${tone} ${context.archetype} (blend: ${Math.round(this.state.blendRatio.inspired * 100)}% inspired)`
     );
 
@@ -599,7 +598,7 @@ class NeuralVoiceBlendingEngine {
       try {
         cb(this.state);
       } catch (error) {
-        logger.error('Callback error:', error);
+        console.error('[VOICE-BLEND] Callback error:', error);
       }
     });
   }

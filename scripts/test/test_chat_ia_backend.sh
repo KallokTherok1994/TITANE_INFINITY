@@ -105,7 +105,7 @@ echo -e "   ${CYAN}Success Rate: $PERCENT%${NC}"
 echo ""
 
 if [ $FAIL_COUNT -eq 0 ]; then
-  echo -e "🎉 ${GREEN}ALL TESTS PASSED!${NC} Chat IA Backend ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)"
+  echo -e "🎉 ${GREEN}ALL TESTS PASSED!${NC} Chat IA Backend Ready for Production"
   exit 0
 else
   echo -e "⚠️  ${YELLOW}Some tests failed${NC}. Check errors above."

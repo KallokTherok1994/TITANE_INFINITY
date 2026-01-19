@@ -1,0 +1,61 @@
+]633;E;echo '$ rg -n "EXIT_CODE=" docs/_evidence/v27/B2_test_run.txt || true';c77f3cb8-095c-43a6-a6ef-1efe06ebcdb8]633;C$ rg -n "EXIT_CODE=" docs/_evidence/v27/B2_test_run.txt || true
+
+$ rg -n "FAIL|FAILED|Test Files|passed|PASS" docs/_evidence/v27/B2_test_run.txt | tail -n 80 || true
+1734:  message: [32m'All tests passed'[39m
+1746:  message: [32m'All tests passed'[39m
+8638:[22m[39m✅ Criterion 1: Always respond - PASSED
+8818:[22m[39m✅ Criterion 2: Never freeze - PASSED
+8847:[22m[39m✅ Criterion 3: Always fallback - PASSED
+8848:✅ Criterion 4: Self-healing - PASSED
+8876:[22m[39m✅ Criterion 5: Long context support - PASSED
+8904:[22m[39m✅ Criterion 6: TITANE consistency - PASSED
+9101:[22m[39m[2026-01-13T13:03:04.581Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+9277:[22m[39m[2026-01-13T13:03:04.638Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+9378:[22m[39m[2026-01-13T13:03:04.658Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+9421:[22m[39m[2026-01-13T13:03:04.668Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+9464:[22m[39m[2026-01-13T13:03:04.694Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+9515:[22m[39m[2026-01-13T13:03:04.710Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+9760:[22m[39m[2026-01-13T13:03:04.926Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+9845:[22m[39m[2026-01-13T13:03:04.971Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+10020:[22m[39m[2026-01-13T13:03:05.009Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+10096:[22m[39m[2026-01-13T13:03:05.018Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+10186:[22m[39m[2026-01-13T13:03:05.032Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+10263:[22m[39m[2026-01-13T13:03:05.041Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+10339:[22m[39m[2026-01-13T13:03:05.050Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+10342:[22m[39m[2026-01-13T13:03:05.055Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+15570:[22m[39m[2026-01-13T13:03:06.842Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+15571:[2026-01-13T13:03:06.845Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+15760:[22m[39m[2026-01-13T13:03:07.007Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+15761:[2026-01-13T13:03:07.007Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+16339:[2026-01-13T13:03:07.374Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+16340:[2026-01-13T13:03:07.375Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+16341:[2026-01-13T13:03:07.377Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+16344:[2026-01-13T13:03:07.386Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+16345:[2026-01-13T13:03:07.386Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+16346:[2026-01-13T13:03:07.386Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+16515:[22m[39m[2026-01-13T13:03:07.523Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+16516:[2026-01-13T13:03:07.524Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+16590:[22m[39m[2026-01-13T13:03:07.659Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+16593:[22m[39m[2026-01-13T13:03:07.666Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+16615:[22m[39m[2026-01-13T13:03:07.675Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+16701:[22m[39m[2026-01-13T13:03:07.725Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+16948:[22m[39m[2026-01-13T13:03:07.757Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+17070:[22m[39m[2026-01-13T13:03:07.773Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+17303:[22m[39m[2026-01-13T13:03:07.796Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+17304:[2026-01-13T13:03:07.796Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+17392:[22m[39m[2026-01-13T13:03:07.938Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+17393:[2026-01-13T13:03:07.939Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+17809:[22m[39m[2026-01-13T13:03:08.135Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+17810:[2026-01-13T13:03:08.138Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+18274:[22m[39m[2026-01-13T13:03:08.261Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+18275:[2026-01-13T13:03:08.262Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+18482:[22m[39m[2026-01-13T13:03:08.507Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+18483:[2026-01-13T13:03:08.508Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+18931:[22m[39m[2026-01-13T13:03:08.696Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+18932:[2026-01-13T13:03:08.704Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+24367:[22m[39m[2026-01-13T13:03:13.902Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+24368:[2026-01-13T13:03:13.902Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+24729:[22m[39m[2026-01-13T13:03:14.494Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+24730:[2026-01-13T13:03:14.494Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+25163:[22m[39m[2026-01-13T13:03:15.158Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset
+25164:[2026-01-13T13:03:15.158Z] [TITANE] [DEBUG] [CHAT] 📭 All sources empty and cooldown passed, safe to reset

@@ -22,7 +22,11 @@ function getRustCommands(): Set<string> {
 
       if (stat.isDirectory() && file !== 'tests') {
         scanFiles(filePath);
-      } else if (file.endsWith('.rs') && file !== 'mod.rs' && file !== 'tests_ai_chat.rs') {
+      } else if (
+        file.endsWith('.rs') &&
+        file !== 'mod.rs' &&
+        file !== 'tests_ai_chat.rs'
+      ) {
         const content = fs.readFileSync(filePath, 'utf-8');
 
         // Extraire les noms de commandes depuis #[tauri::command]
@@ -114,7 +118,7 @@ describe('TITANE∞ - IPC Contract Tests', () => {
         'get_system_health',
         'get_helios_metrics',
         'get_memory_state',
-        'memory_get_state'
+        'memory_get_state',
       ]);
 
       if (
@@ -147,7 +151,11 @@ describe('TITANE∞ - IPC Contract Tests', () => {
     for (const wrapper of clientWrappers) {
       // Convertir camelCase en snake_case pour vérifier
       const snakeCase = wrapper.replace(/([A-Z])/g, '_$1').toLowerCase();
-      if (!rustCommands.has(snakeCase) && !rustCommands.has(wrapper) && !rustNormalized.has(normalize(wrapper))) {
+      if (
+        !rustCommands.has(snakeCase) &&
+        !rustCommands.has(wrapper) &&
+        !rustNormalized.has(normalize(wrapper))
+      ) {
         inconsistentNames.push(`${wrapper} -> ${snakeCase}`);
       }
     }
@@ -163,14 +171,16 @@ describe('TITANE∞ - IPC Contract Tests', () => {
       'run_hardening_selftest',
       'cognitive_run_selftest',
       'watchdog_run_selftest',
-      'backend_run_global_selftest'
+      'backend_run_global_selftest',
     ]);
 
     for (const command of rustCommands) {
-      if (!allowedCommands.has(command) &&
-          !clientWrappers.has(command) &&
-          !wrappersNormalized.has(normalize(command)) &&
-          !internalCommands.has(command)) {
+      if (
+        !allowedCommands.has(command) &&
+        !clientWrappers.has(command) &&
+        !wrappersNormalized.has(normalize(command)) &&
+        !internalCommands.has(command)
+      ) {
         orphanedCommands.push(command);
       }
     }
@@ -186,11 +196,14 @@ describe('TITANE∞ - IPC Contract Tests', () => {
       'exec_shell',
       'run_system_command',
       'delete_filesystem',
-      'access_network'
+      'access_network',
     ];
 
     for (const cmd of dangerousCommands) {
-      expect(allowedCommands.has(cmd), `Dangerous command ${cmd} should not be allowed`).toBe(false);
+      expect(
+        allowedCommands.has(cmd),
+        `Dangerous command ${cmd} should not be allowed`
+      ).toBe(false);
     }
   });
 

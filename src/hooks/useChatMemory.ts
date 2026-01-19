@@ -16,9 +16,6 @@ import type { ChatMode } from '../services/ai';
 import type { AIMessage } from '../services/ai/types';
 import { awardExperience } from '../services/experienceService';
 import { XPSource } from '../types/experience';
-import { createLogger } from '@/utils/logger';
-
-const logger = createLogger('ChatMemory');
 
 export interface UseChatMemoryOptions {
   mode: ChatMode;
@@ -75,16 +72,15 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
       compressed: stats.compressed,
     });
 
-    const verboseMemory = import.meta.env.VITE_CHAT_MEMORY_VERBOSE === '1';
-    if (verboseMemory || history.length > 0) {
-      logger.debug(`Loaded ${history.length} messages for mode ${options.mode}`);
-    }
+    console.log(
+      `🧠 USE CHAT MEMORY: Loaded ${history.length} messages for mode ${options.mode}`
+    );
 
     // Auto-cleanup si enabled
     if (options.autoCleanup) {
       const cleanup = chatMemoryCompactor.autoCleanupIfNeeded();
       if (cleanup.cleaned) {
-        logger.info(`Memory cleaned (was ${cleanup.sizeMB.toFixed(2)}MB)`);
+        console.log(`✅ SELFHEAL++: Memory cleaned (was ${cleanup.sizeMB.toFixed(2)}MB)`);
       }
     }
   }, [options.mode, options.autoCleanup]);
@@ -119,8 +115,8 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
         compressed: stats.compressed,
       });
 
-      logger.debug(
-        `Message saved (mode: ${options.mode}, total: ${updatedMessages.length})`
+      console.log(
+        `💾 USE CHAT MEMORY: Message saved (mode: ${options.mode}, total: ${updatedMessages.length})`
       );
     },
     [options.mode]
@@ -134,7 +130,7 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
     setMessagesForMode([]);
     setMemoryStats({ count: 0, sizeMB: 0, compressed: false });
 
-    logger.debug(`Mode ${options.mode} cleared`);
+    console.log(`🧹 USE CHAT MEMORY: Mode ${options.mode} cleared`);
   }, [options.mode]);
 
   /**
@@ -154,9 +150,9 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
           messageLength,
           provider,
         });
-        logger.debug(`+${amount} XP awarded to ${domain}`);
+        console.log(`✨ USE CHAT MEMORY: +${amount} XP awarded to ${domain}`);
       } catch (err) {
-        logger.warn('XP award failed (non-blocking):', err);
+        console.warn('⚠️ XP award failed (non-blocking):', err);
       }
     },
     []

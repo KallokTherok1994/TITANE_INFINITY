@@ -15,7 +15,6 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { secureInvoke } from '@/lib/security';
 import { singularityEngine } from '@/core/engines/SINGULARITY_ENGINE';
 import type { SingularityState } from '@/core/ARCHITECTURE_TYPES_v24-v∞';
-import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
@@ -186,7 +185,7 @@ export function useSingularitySync(
       }));
 
       onSyncError?.(err);
-      logger.error('Sync error:', err);
+      console.error('[useSingularitySync] Sync error:', err);
     } finally {
       setIsSyncing(false);
     }

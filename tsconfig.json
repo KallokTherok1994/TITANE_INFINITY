@@ -7,10 +7,9 @@
     "skipLibCheck": true,
     "typeRoots": ["./node_modules/@types"],
     "types": [],
-    "downlevelIteration": true,
 
     /* Bundler mode */
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -19,7 +18,6 @@
 
     /* Path aliases */
     "baseUrl": ".",
-    
     "paths": {
       "@/*": ["src/*"],
       "@components/*": ["src/components/*"],

@@ -13,7 +13,6 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { logger } from '@/utils/logger';
 import type {
   UnifiedMemory,
   UnifiedMemoryEntry,
@@ -99,7 +98,7 @@ export function useUnifiedMemory(
       const stats = await memory.getStats();
       setState(prev => ({ ...prev, stats }));
     } catch (error) {
-      logger.error('Failed to refresh stats:', error);
+      console.error('[useUnifiedMemory] Failed to refresh stats:', error);
     }
   }, [memory]);
 

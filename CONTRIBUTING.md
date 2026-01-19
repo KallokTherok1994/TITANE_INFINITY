@@ -204,9 +204,6 @@ pub fn insecure_command(data: String) -> String {
 2. **Content Security Policy**: Pas de `eval()`, inline scripts, ou `unsafe-inline`
 3. **Secrets**: Jamais de hardcoded API keys (utiliser env variables)
 4. **Input validation**: Toujours valider inputs côté Rust (backend)
-5. **GitGuardian**: Secret scanning automatique en pre-commit (voir [docs/security/GITGUARDIAN.md](docs/security/GITGUARDIAN.md))
-   - Skip temporaire: `COPILOT_XS_SKIP_GITGUARDIAN=1 git commit` (NON RECOMMANDÉ)
-   - Installation locale: `pip install ggshield`
 
 ---
 

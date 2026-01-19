@@ -1,7 +1,7 @@
 # ✅ CHECKLIST KEVIN — Actions Immédiates
 
 **Date:** 2026-01-18  
-**Status:** En attente décision  
+**Status:** En attente décision
 
 ---
 
@@ -16,16 +16,19 @@
 ### Étape 2: Décision (5 min)
 
 **Option A - Sprint complet (RECOMMANDÉE):**
+
 - [ ] ✅ J'approuve le sprint v27.0 (4-5 semaines)
 - [ ] ✅ Budget alloué: 2-3 personnes × 5 semaines
 - [ ] ✅ Date de démarrage: Semaine du 2026-01-20
 
 **Option B - Décomposition seule:**
+
 - [ ] ⚠️ Sprint v27.0 limité (3-4 semaines)
 - [ ] ⚠️ Error handling reporté à v27.1
 - [ ] ⚠️ Maintient le risque crash production
 
 **Option C - Quick-fix d'abord:**
+
 - [ ] 🔄 v26.4.2 release (1-2 jours)
 - [ ] 🔄 Auto-fix 30-50 warnings
 - [ ] 🔄 Puis sprint v27.0 après
@@ -56,16 +59,19 @@
 L'équipe exécutera immédiatement:
 
 **Jour 1:**
+
 - [ ] Sprint planning meeting (2h)
 - [ ] Création branche v27.0-dev
 - [ ] Setup CI gates (0 warnings policy)
 
 **Jour 2:**
+
 - [ ] Attribution stories aux développeurs
 - [ ] Epic 1 & 4 démarrent (parallèle)
 - [ ] Premier daily standup
 
 **Semaine 1:**
+
 - [ ] 100+ expect() removed
 - [ ] Progress tracking actif
 - [ ] Report hebdomadaire
@@ -77,11 +83,13 @@ L'équipe exécutera immédiatement:
 **Décision souhaitée:** Aujourd'hui/demain (2026-01-19)
 
 **Raison urgence:**
+
 - 1354 expect() = production crash risk actif
 - Sprint planning nécessite 1-2 jours prep
 - Démarrage optimal: Semaine du 2026-01-20
 
 **Impact délai:**
+
 - Chaque semaine délai = risque production maintenu
 - Sprint planning après 2026-01-20 = décalage release
 
@@ -90,11 +98,13 @@ L'équipe exécutera immédiatement:
 ## 📞 CONTACT
 
 **Pour questions:**
+
 - Auto-Improvement Team (via GitHub)
 - Documentation complète: Voir tous les .md créés
 - Commit GitHub: de5c385b (MAIN branch)
 
 **Pour approbation:**
+
 - Répondre avec Option A/B/C
 - Ou valider dans commit message
 - Ou notification Slack/email
@@ -107,7 +117,7 @@ L'équipe exécutera immédiatement:
 
 **Recommandation:** ✅ OUI (Option A)  
 **Probabilité succès:** 95%  
-**Impact:** Production reliability +99%, audit +3 points  
+**Impact:** Production reliability +99%, audit +3 points
 
 ---
 

@@ -4,9 +4,6 @@
 **Last Updated:** 2026-01-03  
 **Standard:** WCAG 2.2 Level AA
 
-> NOTE (gouvernance): document historique UI/UX (v26.2.0). Runtime actuel: v26.3.0.
-> Production: EN ATTENTE (autorisation explicite requise).
-
 ---
 
 ## Summary

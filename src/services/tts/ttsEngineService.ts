@@ -12,7 +12,6 @@
 
 import { secureInvoke } from '@/lib/security';
 import { detectEnvironment } from '@/core/tauri/environment';
-import { logger } from '@/utils/logger';
 import {
   TTSEmotion,
   TTSRequest,
@@ -97,12 +96,12 @@ class TTSEngineService {
   ): Promise<void> {
     // Validation
     if (!text.trim()) {
-      logger.warn('⚠️ TTS: Empty text, skipping');
+      console.warn('⚠️ TTS: Empty text, skipping');
       return;
     }
 
     if (text.length > TTS_LIMITS.maxTextLength) {
-      logger.warn(`⚠️ TTS: Text too long (${text.length}), truncating`);
+      console.warn(`⚠️ TTS: Text too long (${text.length}), truncating`);
       text = text.substring(0, TTS_LIMITS.maxTextLength);
     }
 
@@ -111,7 +110,7 @@ class TTSEngineService {
       options.emotion ??
       (this.preferences.emotionalAdaptation ? detectEmotion(text) : 'neutral');
 
-    logger.debug(`🎤 TTS: Queuing speech with emotion "${emotion}"`);
+    console.log(`🎤 TTS: Queuing speech with emotion "${emotion}"`);
 
     // Créer requête
     const request: TTSRequest = {
@@ -143,7 +142,7 @@ class TTSEngineService {
    * Arrête la synthèse en cours
    */
   async stop(): Promise<void> {
-    logger.debug('⏹️ TTS: Stopping...');
+    console.log('⏹️ TTS: Stopping...');
 
     // Stop audio HTML5
     if (this.currentAudio) {
@@ -158,7 +157,7 @@ class TTSEngineService {
       try {
         await secureInvoke('tts_stop');
       } catch (error) {
-        logger.warn('⚠️ TTS: Backend stop failed:', error);
+        console.warn('⚠️ TTS: Backend stop failed:', error);
       }
     }
 
@@ -179,7 +178,7 @@ class TTSEngineService {
       queueSize: 0,
     });
 
-    logger.debug('✅ TTS: Stopped');
+    console.log('✅ TTS: Stopped');
   }
 
   /**
@@ -323,7 +322,7 @@ class TTSEngineService {
   private addToQueue(item: TTSQueueItem): void {
     // Check limit
     if (this.queue.length >= TTS_LIMITS.maxQueueSize) {
-      logger.warn('⚠️ TTS: Queue full, dropping oldest request');
+      console.warn('⚠️ TTS: Queue full, dropping oldest request');
       this.queue.shift();
     }
 
@@ -367,7 +366,7 @@ class TTSEngineService {
       item.attempts++;
 
       if (item.attempts < item.maxAttempts) {
-        logger.warn(`⚠️ TTS: Attempt ${item.attempts} failed, retrying...`);
+        console.warn(`⚠️ TTS: Attempt ${item.attempts} failed, retrying...`);
         item.status = 'pending';
         // Don't remove from queue, will retry
         this.isProcessing = false;
@@ -425,7 +424,7 @@ class TTSEngineService {
       }
 
       try {
-        logger.debug(`🎤 TTS: Trying ${currentProvider}...`);
+        console.log(`🎤 TTS: Trying ${currentProvider}...`);
 
         if (currentProvider === 'webspeech') {
           await this.playWithWebSpeech(request);
@@ -440,7 +439,7 @@ class TTSEngineService {
         success = true;
         break;
       } catch (error) {
-        logger.warn(`⚠️ TTS: ${currentProvider} failed:`, error);
+        console.warn(`⚠️ TTS: ${currentProvider} failed:`, error);
         continue;
       }
     }
@@ -450,7 +449,7 @@ class TTSEngineService {
     }
 
     const latencyMs = Date.now() - startTime;
-    logger.debug(`✅ TTS: Synthesis complete via ${provider} (${latencyMs}ms)`);
+    console.log(`✅ TTS: Synthesis complete via ${provider} (${latencyMs}ms)`);
 
     return {
       requestId: request.id,
@@ -619,7 +618,7 @@ class TTSEngineService {
       try {
         this.audioContext = new AudioContext();
       } catch (error) {
-        logger.warn('⚠️ TTS: Could not create AudioContext:', error);
+        console.warn('⚠️ TTS: Could not create AudioContext:', error);
       }
     }
   }
@@ -645,7 +644,7 @@ class TTSEngineService {
         return { ...DEFAULT_TTS_PREFERENCES, ...JSON.parse(stored) };
       }
     } catch (error) {
-      logger.warn('⚠️ TTS: Could not load preferences:', error);
+      console.warn('⚠️ TTS: Could not load preferences:', error);
     }
 
     return DEFAULT_TTS_PREFERENCES;
@@ -659,7 +658,7 @@ class TTSEngineService {
     try {
       localStorage.setItem('titane_tts_preferences', JSON.stringify(this.preferences));
     } catch (error) {
-      logger.warn('⚠️ TTS: Could not save preferences:', error);
+      console.warn('⚠️ TTS: Could not save preferences:', error);
     }
   }
 }

@@ -1,4 +1,5 @@
 # REPORT INSTALL • BUILD • RELEASE HARDENING - TITANE∞ v26.3.0
+
 **Date:** 17/01/2026 10:03 UTC-5
 **Phase:** 4 - INSTALL • BUILD • RELEASE HARDENING
 
@@ -9,6 +10,7 @@
 **Fichier:** `src-tauri/allowlist.whitelist.stable.json`
 
 **Permissions accordées (20):**
+
 - Core Tauri (windows, events, app)
 - Clipboard (read/write text)
 - Dialog (open/save)
@@ -17,12 +19,14 @@
 - Aucun filesystem étendu
 
 **Permissions refusées (11):**
+
 - DevTools internes
 - Commandes QA/débug
 - Commandes sensibles (logs, nexus)
 - Tests de sécurité
 
 **Allow list explicite (44 commands):**
+
 - Mémoire, chat, expérience, TTS
 - Surveillance système basique
 - Import/export fichiers
@@ -34,6 +38,7 @@
 ### ⚠️ STATUT: BLOQUÉ PAR ABSENCE PNPM
 
 **Scripts configurés dans package.json:**
+
 ```json
 "scripts": {
   "dev": "tauri dev",
@@ -53,6 +58,7 @@
 ### ❌ STATUT: NON TESTABLE SANS PNPM
 
 **Étapes build identifiées:**
+
 1. `pnpm run lint` - ESLint
 2. `pnpm run format:check` - Prettier
 3. `pnpm run check` - TypeScript
@@ -60,6 +66,7 @@
 5. `tauri build` - Application native
 
 **Dépendances build:**
+
 - Node.js v18.19.1 ✅
 - pnpm v10.28.0 ❌ (manquant)
 - Rust/Cargo (à vérifier)
@@ -77,15 +84,18 @@
 ## 🚨 PROBLÈMES CRITIQUES
 
 ### 1. 🚫 PNPM MANQUANT
+
 **Impact:** Bloquant total
 **Cause:** Permissions système
 **Solution:** Installation locale requise
 
 ### 2. 🔍 Versions non vérifiées
+
 **Rust, Cargo, Tauri CLI:** Non testés
 **Impact:** Build pourrait échouer
 
 ### 3. ⚠️ Scripts non testés
+
 **Impact:** Processus build non validé
 
 ## ✅ RECOMMANDATIONS

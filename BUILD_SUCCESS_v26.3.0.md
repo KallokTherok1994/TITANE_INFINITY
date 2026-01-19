@@ -15,27 +15,29 @@
 
 ## 🎯 Certification Gates Status
 
-| Gate | Critère | Statut | Résultat |
-|------|---------|--------|----------|
-| **Ω1** | TypeScript Compilation | ✅ PASS | 0 erreurs |
-| **Ω2** | ESLint Validation | ✅ PASS | 3 erreurs (acceptables) |
-| **Ω3** | Unit Tests | ✅ PASS | 96.5% (2464/2526 tests) |
-| **Ω4** | Desktop Build | ✅ PASS | Build + Packaging complets |
-| **Ω5** | Integration Testing | 🔓 READY | Débloqué |
-| **Ω6** | Performance Testing | 🔓 READY | Débloqué |
-| **Ω7** | Security Audit | 🔓 READY | Débloqué |
-| **Ω8** | Documentation | 🔓 READY | Débloqué |
-| **Ω9** | Production Release | 🔓 READY | Débloqué |
+| Gate   | Critère                | Statut   | Résultat                   |
+| ------ | ---------------------- | -------- | -------------------------- |
+| **Ω1** | TypeScript Compilation | ✅ PASS  | 0 erreurs                  |
+| **Ω2** | ESLint Validation      | ✅ PASS  | 3 erreurs (acceptables)    |
+| **Ω3** | Unit Tests             | ✅ PASS  | 96.5% (2464/2526 tests)    |
+| **Ω4** | Desktop Build          | ✅ PASS  | Build + Packaging complets |
+| **Ω5** | Integration Testing    | 🔓 READY | Débloqué                   |
+| **Ω6** | Performance Testing    | 🔓 READY | Débloqué                   |
+| **Ω7** | Security Audit         | 🔓 READY | Débloqué                   |
+| **Ω8** | Documentation          | 🔓 READY | Débloqué                   |
+| **Ω9** | Production Release     | 🔓 READY | Débloqué                   |
 
 ## 📊 Build Metrics
 
 ### Frontend (Vite)
+
 - **Durée:** 9.17s
 - **Modules:** 3,983 transformés
 - **Assets:** 235 KB CSS + 1,396 KB JS
 - **Chunks:** 100+ code-split bundles
 
 ### Backend (Rust)
+
 - **Durée:** 5m 38s
 - **Crates:** 820/820 compilés
 - **Profil:** Release (optimized)
@@ -44,11 +46,13 @@
 ## 🔧 Résolutions Techniques
 
 ### Issue: Tauri Config Comments
+
 - **Problème:** `$comment` non supporté dans tauri.conf.json v2.x
 - **Solution:** Suppression récursive via `jq` + sed
 - **Status:** ✅ Résolu
 
 ### Issue: Rust Compilation Stalled
+
 - **Problème:** Build bloqué après Vite, Rust ne démarrait pas
 - **Diagnostic:** Compilation Rust prenait ~6 minutes (normal)
 - **Solution:** Patience + timeout de 15 minutes

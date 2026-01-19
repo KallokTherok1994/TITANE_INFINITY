@@ -12,8 +12,6 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { logger } from '@/utils/logger';
-
 export interface ParlerTTSConfig {
   /** URL de l'API TTS locale (défaut: http://localhost:8765) */
   apiUrl?: string;
@@ -133,7 +131,7 @@ class ParlerTTSBridge {
       };
     } catch (error) {
       // ✅ v24.3.8: Silent fallback si serveur TTS non démarré (optionnel)
-      // logger.error('Health check error:', error);
+      // console.error('[ParlerTTS] Health check error:', error);
 
       // Auto-disable to prevent repeated connection-refused spam,
       // unless explicitly enabled via env flag.
@@ -180,7 +178,7 @@ class ParlerTTSBridge {
         cache_key: null, // Géré automatiquement côté serveur
       };
 
-      logger.debug('🎤 Synthèse:', {
+      console.log('[ParlerTTS] 🎤 Synthèse:', {
         text: text.substring(0, 50) + (text.length > 50 ? '...' : ''),
         style: payload.style_description.substring(0, 40) + '...',
         format: payload.format,
@@ -216,7 +214,7 @@ class ParlerTTSBridge {
 
       const totalTime = Date.now() - startTime;
 
-      logger.debug('✅ Audio généré:', {
+      console.log('[ParlerTTS] ✅ Audio généré:', {
         size: `${(audioBlob.size / 1024).toFixed(1)} KB`,
         duration: `${durationSeconds.toFixed(2)}s`,
         generationTime: `${generationTimeMs}ms`,
@@ -233,7 +231,7 @@ class ParlerTTSBridge {
         device,
       };
     } catch (error) {
-      logger.error('❌ Erreur synthèse:', error);
+      console.error('[ParlerTTS] ❌ Erreur synthèse:', error);
       throw new Error(
         `Parler-TTS synthesis failed: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
@@ -271,14 +269,14 @@ class ParlerTTSBridge {
       }
 
       const result = await response.json();
-      logger.debug('✅ Style vocal mis à jour:', result);
+      console.log('[ParlerTTS] ✅ Style vocal mis à jour:', result);
 
       // Mettre à jour style local si sauvegardé
       if (saveAsDefault) {
         this.defaultStyle = newStyleDescription;
       }
     } catch (error) {
-      logger.error('❌ Erreur update style:', error);
+      console.error('[ParlerTTS] ❌ Erreur update style:', error);
       throw error;
     }
   }
@@ -295,7 +293,7 @@ class ParlerTTSBridge {
    */
   setApiUrl(newUrl: string): void {
     this.apiUrl = newUrl;
-    logger.debug('API URL updated:', newUrl);
+    console.log('[ParlerTTS] API URL updated:', newUrl);
   }
 }
 
@@ -320,13 +318,13 @@ export async function playAudioBlob(audioBlob: Blob, onEnd?: () => void): Promis
     };
 
     audio.onerror = error => {
-      logger.error('Audio playback error:', error);
+      console.error('[ParlerTTS] Audio playback error:', error);
       URL.revokeObjectURL(audioUrl);
     };
 
     await audio.play();
   } catch (error) {
-    logger.error('Failed to play audio:', error);
+    console.error('[ParlerTTS] Failed to play audio:', error);
     throw error;
   }
 }

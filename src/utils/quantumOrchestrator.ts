@@ -237,7 +237,10 @@ class TitaneQuantumOrchestrator {
           this.emergencyMode = true;
 
           const emergencyActions = await Promise.allSettled([
-            titaneSelfHealing.triggerManualHealing(['emergency_resource_scaling', 'force_system_reset']),
+            titaneSelfHealing.triggerManualHealing([
+              'emergency_resource_scaling',
+              'force_system_reset',
+            ]),
             titaneQuantumIntelligence.emergencyStabilization(),
             titaneTelemetry.priorityAlert({
               type: 'system_emergency',

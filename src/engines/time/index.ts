@@ -32,7 +32,6 @@ export type { CommandExecutionResult } from './ChatScheduler';
 import { timeEngine } from './TimeEngine';
 import { agendaEngine, type AgendaStorageCallbacks } from './AgendaEngine';
 import { energyEngine } from './EnergyEngine';
-import { logger } from '@/utils/logger';
 
 /**
  * Initialise tous les moteurs Time/Agenda en une seule fois
@@ -40,7 +39,7 @@ import { logger } from '@/utils/logger';
 export async function initTimeAgendaSystem(
   storage?: AgendaStorageCallbacks
 ): Promise<void> {
-  logger.debug('🚀 Initialisation du système...');
+  console.log('[TimeAgendaSystem] 🚀 Initialisation du système...');
 
   // 1. TimeEngine (synchrone)
   timeEngine.init();
@@ -54,14 +53,14 @@ export async function initTimeAgendaSystem(
   }
   await agendaEngine.init();
 
-  logger.debug('✅ Système initialisé avec succès');
+  console.log('[TimeAgendaSystem] ✅ Système initialisé avec succès');
 }
 
 /**
  * Arrête tous les moteurs Time/Agenda
  */
 export function destroyTimeAgendaSystem(): void {
-  logger.debug('🛑 Arrêt du système...');
+  console.log('[TimeAgendaSystem] 🛑 Arrêt du système...');
   timeEngine.destroy();
   energyEngine.destroy();
 }

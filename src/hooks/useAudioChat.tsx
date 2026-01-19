@@ -8,7 +8,6 @@
 
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { safeInvoke } from '@/utils/invoke';
-import { logger } from '@/utils/logger';
 import type {
   SpeechRecognition,
   SpeechRecognitionEvent,
@@ -72,7 +71,7 @@ export function useAudioChat(config: AudioChatConfig = { enabled: true }) {
 
     recognition.onstart = () => {
       setState(prev => ({ ...prev, isListening: true, error: null }));
-      logger.debug('🎤 Écoute activée');
+      console.log('🎤 Écoute activée');
     };
 
     recognition.onresult = (event: SpeechRecognitionEvent) => {
@@ -106,7 +105,7 @@ export function useAudioChat(config: AudioChatConfig = { enabled: true }) {
     };
 
     recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
-      logger.error('❌ Erreur reconnaissance vocale:', event.error);
+      console.error('❌ Erreur reconnaissance vocale:', event.error);
       setState(prev => ({
         ...prev,
         isListening: false,
@@ -116,7 +115,7 @@ export function useAudioChat(config: AudioChatConfig = { enabled: true }) {
 
     recognition.onend = () => {
       setState(prev => ({ ...prev, isListening: false }));
-      logger.debug('🎤 Écoute terminée');
+      console.log('🎤 Écoute terminée');
     };
 
     recognitionRef.current = recognition;
@@ -170,7 +169,7 @@ export function useAudioChat(config: AudioChatConfig = { enabled: true }) {
     try {
       recognitionRef.current.start();
     } catch (error) {
-      logger.error('❌ Erreur démarrage écoute:', error);
+      console.error('❌ Erreur démarrage écoute:', error);
       setState(prev => ({
         ...prev,
         error: "Impossible de démarrer l'écoute",
@@ -205,12 +204,12 @@ export function useAudioChat(config: AudioChatConfig = { enabled: true }) {
         });
 
         if (result?.success) {
-          logger.debug('✅ TTS Tauri réussi');
+          console.log('✅ TTS Tauri réussi');
           setState(prev => ({ ...prev, isSpeaking: false }));
           return;
         }
       } catch (error) {
-        logger.warn('⚠️ TTS Tauri échoué, fallback Web Speech API');
+        console.warn('⚠️ TTS Tauri échoué, fallback Web Speech API');
       }
 
       // Fallback to Web Speech API
@@ -225,7 +224,7 @@ export function useAudioChat(config: AudioChatConfig = { enabled: true }) {
         };
 
         utterance.onerror = event => {
-          logger.error('❌ Erreur TTS:', event);
+          console.error('❌ Erreur TTS:', event);
           setState(prev => ({
             ...prev,
             isSpeaking: false,

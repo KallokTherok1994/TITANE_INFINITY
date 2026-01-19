@@ -1,14 +1,13 @@
 /**
- * TITANE∞ v26.4.0 — Proprietary License
+ * TITANE∞ v15 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v26.4.0 - Toggle Component with Performance Optimizations
-import { useState, useCallback, useMemo, memo } from 'react';
-import { clsx } from 'clsx';
+// TITANE∞ v15 - Toggle Component - Design System
+import { useState } from 'react';
 import './Toggle.css';
 
 export interface ToggleOption {
@@ -30,11 +29,7 @@ interface ToggleProps {
   className?: string;
 }
 
-/**
- * Toggle component for option switching.
- * Memoized for optimal re-render performance.
- */
-export const Toggle = memo(function Toggle({
+export const Toggle = ({
   value: controlledValue,
   defaultValue = '',
   onChange,
@@ -43,38 +38,35 @@ export const Toggle = memo(function Toggle({
   size = 'md',
   variant = 'default',
   fullWidth = false,
-  className,
-}: ToggleProps) {
+  className = '',
+}: ToggleProps) => {
   const [internalValue, setInternalValue] = useState(defaultValue);
 
   const isControlled = controlledValue !== undefined;
   const value = isControlled ? controlledValue : internalValue;
 
-  const handleSelect = useCallback(
-    (optionValue: string, optionDisabled?: boolean) => {
-      if (disabled || optionDisabled) return;
+  const handleSelect = (optionValue: string, optionDisabled?: boolean) => {
+    if (disabled || optionDisabled) {
+      return;
+    }
 
-      if (!isControlled) {
-        setInternalValue(optionValue);
-      }
+    if (!isControlled) {
+      setInternalValue(optionValue);
+    }
 
-      onChange?.(optionValue);
-    },
-    [disabled, isControlled, onChange]
-  );
+    onChange?.(optionValue);
+  };
 
-  const classes = useMemo(
-    () =>
-      clsx(
-        'toggle',
-        `toggle--${size}`,
-        `toggle--${variant}`,
-        fullWidth && 'toggle--full-width',
-        disabled && 'toggle--disabled',
-        className
-      ),
-    [size, variant, fullWidth, disabled, className]
-  );
+  const classes = [
+    'toggle',
+    `toggle--${size}`,
+    `toggle--${variant}`,
+    fullWidth && 'toggle--full-width',
+    disabled && 'toggle--disabled',
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <div className={classes} role="tablist">
@@ -82,30 +74,30 @@ export const Toggle = memo(function Toggle({
         const isSelected = option.value === value;
         const isDisabled = disabled || option.disabled;
 
+        const buttonClasses = [
+          'toggle__option',
+          isSelected && 'toggle__option--selected',
+          isDisabled && 'toggle__option--disabled',
+        ]
+          .filter(Boolean)
+          .join(' ');
+
         return (
           <button
             key={option.value}
             type="button"
-            className={clsx(
-              'toggle__option',
-              isSelected && 'toggle__option--selected',
-              isDisabled && 'toggle__option--disabled'
-            )}
+            className={buttonClasses}
             onClick={() => handleSelect(option.value, option.disabled)}
             disabled={isDisabled}
             role="tab"
             aria-selected={isSelected}
             aria-disabled={isDisabled}
           >
-            {option.icon && (
-              <span className="toggle__icon" aria-hidden="true">
-                {option.icon}
-              </span>
-            )}
+            {option.icon && <span className="toggle__icon">{option.icon}</span>}
             <span className="toggle__label">{option.label}</span>
           </button>
         );
       })}
     </div>
   );
-});
+};

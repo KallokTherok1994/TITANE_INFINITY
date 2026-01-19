@@ -15,8 +15,6 @@
  * @phase 12 - Ultimate Optimization
  */
 
-import { logger } from '@/utils/logger';
-
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
@@ -130,7 +128,7 @@ export class GPUAcceleratorV2 {
       const success = await this.initializeWebGPU();
       if (success) {
         this.metrics.isWebGPUActive = true;
-        logger.debug('WebGPU initialized successfully');
+        console.log('[GPUAcceleratorV2] WebGPU initialized successfully');
         return true;
       }
     }
@@ -140,12 +138,12 @@ export class GPUAcceleratorV2 {
       const success = this.initializeWebGL();
       if (success) {
         this.metrics.fallbackMode = true;
-        logger.debug('WebGL fallback initialized');
+        console.log('[GPUAcceleratorV2] WebGL fallback initialized');
         return true;
       }
     }
 
-    logger.warn('No GPU acceleration available');
+    console.warn('[GPUAcceleratorV2] No GPU acceleration available');
     return false;
   }
 
@@ -170,12 +168,12 @@ export class GPUAcceleratorV2 {
 
       // Setup error handling
       this.device.addEventListener('uncapturederror', event => {
-        logger.error('WebGPU error:', event.error);
+        console.error('[GPUAcceleratorV2] WebGPU error:', event.error);
       });
 
       return true;
     } catch (error) {
-      logger.error('WebGPU initialization failed:', error);
+      console.error('[GPUAcceleratorV2] WebGPU initialization failed:', error);
       return false;
     }
   }
@@ -206,7 +204,7 @@ export class GPUAcceleratorV2 {
 
       return this.gl !== null;
     } catch (error) {
-      logger.error('WebGL initialization failed:', error);
+      console.error('[GPUAcceleratorV2] WebGL initialization failed:', error);
       return false;
     }
   }

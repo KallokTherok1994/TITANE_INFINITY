@@ -2,10 +2,7 @@
 
 **Version:** 26.2.0  
 **Date:** 2025-12-23  
-**Statut:** Document historique (v26.2.0) — Référez-vous à la CI actuelle
-
-> NOTE (gouvernance): ce document peut contenir des choix CI obsolètes.
-> Runtime actuel: v26.3.0. Production: EN ATTENTE (autorisation explicite requise).
+**Statut:** Production-Ready avec Tests Sélectifs
 
 ---
 

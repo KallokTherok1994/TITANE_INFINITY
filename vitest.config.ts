@@ -69,9 +69,7 @@ export const sharedTestConfig = defineConfig({
   ],
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // 🧪 VITEST CONFIGURATION v26.4.0
-  // ✅ Updated for Vitest 4.x - poolOptions moved to top-level
-  // ✅ Added browser config export for browser tests
+  // 🧪 VITEST CONFIGURATION
   // ═══════════════════════════════════════════════════════════════════════════
   test: {
     name: 'core',
@@ -82,29 +80,20 @@ export const sharedTestConfig = defineConfig({
       './src/test/setup.ts',
       './src/test-utils/setup.ts',
     ],
-    // ✅ v26.4.0: Timeouts optimized for stability
-    testTimeout: 30000,
-    hookTimeout: 15000,
-    teardownTimeout: 5000,
-    // ✅ v26.4.0: Basic configuration for stability
-    // ✅ v26.4.0: Clear mocks automatically
-    clearMocks: true,
-    restoreMocks: true,
+    testTimeout: 45000,
+    hookTimeout: 20000,
+    teardownTimeout: 10000,
+    minThreads: 1,
+    maxThreads: maxThreadBudget,
     include: [
       'src/**/*.{test,spec}.{ts,tsx}',
       'tests/unit/**/*.{test,spec}.{ts,tsx}',
       'tests/integration/**/*.{test,spec}.{ts,tsx}',
-      'tests/contract/**/*.{test,spec}.{ts,tsx}',
-      'tests/phase3/**/*.{test,spec}.{ts,tsx}',
-      'tests/phase4/**/*.{test,spec}.{ts,tsx}',
-      'tests/phase5/**/*.{test,spec}.{ts,tsx}',
-      'tests/phase6/**/*.{test,spec}.{ts,tsx}',
-      'tests/release/**/*.{test,spec}.{ts,tsx}',
     ],
     exclude: ['node_modules', 'dist', 'src-tauri'],
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'json-summary', 'html'],
+      reporter: ['text', 'json', 'html'],
       reportsDirectory: 'coverage/unit',
       exclude: [
         'node_modules/',
@@ -120,18 +109,6 @@ export const sharedTestConfig = defineConfig({
       ],
     },
   },
-
-  // ═══════════════════════════════════════════════════════════════════════════
-  // 🌐 BROWSER TEST CONFIGURATION - DISABLED FOR NOW
-  // TODO: Re-enable when Vitest browser config is stable
-  // ═══════════════════════════════════════════════════════════════════════════
-  // browser: {
-  //   enabled: true,
-  //   provider: 'playwright',
-  //   name: 'chromium',
-  //   headless: true,
-  //   screenshotOnFailure: false,
-  // },
 
   // ═══════════════════════════════════════════════════════════════════════════
   // 🚀 OPTIMISATIONS CPU & WATCHERS

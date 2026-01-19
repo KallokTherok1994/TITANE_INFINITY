@@ -18,14 +18,17 @@
 ### [1/4] ESLint — 2 warnings corrigés ✅
 
 #### Warning 1: React Hook dependency missing
+
 **Fichier**: `src/components/SystemIntegrationHub.tsx:234`  
 **Erreur**:
+
 ```
-Warning - React Hook useCallback has a missing dependency: 'computeStateHash'. 
+Warning - React Hook useCallback has a missing dependency: 'computeStateHash'.
 Either include it or remove the dependency array. (react-hooks/exhaustive-deps)
 ```
 
 **Correction**:
+
 ```typescript
 // AVANT:
 }, [onSystemEvent, autoMode, showConsciousnessDashboard]); // Supprimé hubState
@@ -39,14 +42,17 @@ Either include it or remove the dependency array. (react-hooks/exhaustive-deps)
 ---
 
 #### Warning 2: Unused variable
+
 **Fichier**: `src/utils/bootSafetyLock.ts:20`  
 **Erreur**:
+
 ```
-Warning - 'MAX_RECOVERY_ATTEMPTS' is assigned a value but never used. 
+Warning - 'MAX_RECOVERY_ATTEMPTS' is assigned a value but never used.
 Allowed unused vars must match /^_/u. (@typescript-eslint/no-unused-vars)
 ```
 
 **Correction**:
+
 ```typescript
 // AVANT:
 const MAX_RECOVERY_ATTEMPTS = 1;
@@ -64,6 +70,7 @@ const _MAX_RECOVERY_ATTEMPTS = 1; // Reserved for future use
 **Commande**: `cargo clippy --fix --allow-dirty --allow-staged`
 
 **Fichiers corrigés automatiquement**:
+
 1. `src/audio/whisper_streaming.rs` (1 fix)
 2. `src/audio/asr.rs` (2 fixes)
 3. `src/commands/governance_commands.rs` (2 fixes)
@@ -78,12 +85,14 @@ const _MAX_RECOVERY_ATTEMPTS = 1; // Reserved for future use
 
 **Fichier**: `postcss.config.cjs`  
 **Warning**:
+
 ```
-A PostCSS plugin did not pass the `from` option to `postcss.parse`. 
+A PostCSS plugin did not pass the `from` option to `postcss.parse`.
 This may cause imported assets to be incorrectly transformed.
 ```
 
 **Correction**:
+
 ```javascript
 // AVANT:
 module.exports = {
@@ -100,7 +109,7 @@ module.exports = {
     '@tailwindcss/postcss': {},
     autoprefixer: {},
   },
-  map: false,        // Désactiver source maps (warning supprimé)
+  map: false, // Désactiver source maps (warning supprimé)
   from: undefined,
 };
 ```
@@ -114,6 +123,7 @@ module.exports = {
 **Nature**: Clippy warning `expect_used` sur 20 usages de `.expect()`
 
 **Fichiers concernés**:
+
 - `src/adaptive/adaptive_engine.rs`
 - `src/meta/auto_healing.rs`
 - `src/meta/meta_cognition.rs`
@@ -128,6 +138,7 @@ module.exports = {
 - `src/api_hub/harmonizer.rs`
 
 **Exemple typique**:
+
 ```rust
 let addr: SocketAddr = "127.0.0.1:8000"
     .parse()
@@ -135,12 +146,14 @@ let addr: SocketAddr = "127.0.0.1:8000"
 ```
 
 **Justification**:
+
 - Ces `.expect()` sont **intentionnels et documentés**
 - Utilisés pour des cas "impossibles" (panics documentés dans le code)
 - Pattern standard Rust pour initialisation/bootstrap
 - Messages d'erreur explicites décrivant pourquoi le panic ne peut pas survenir
 
 **Configuration lint ajoutée**:
+
 ```toml
 # Cargo.toml
 [lints.clippy]
@@ -154,31 +167,41 @@ expect_used = "allow"
 ## 🔬 VALIDATION FINALE (5 phases)
 
 ### [1/5] ESLint Final Check ✅
+
 ```bash
 pnpm exec eslint "src/**/*.{ts,tsx}" --format compact
 ```
+
 **Résultat**: ✅ **0 problems** (0 errors, 0 warnings)
 
 ### [2/5] TypeScript Final Check ✅
+
 ```bash
 pnpm exec tsc --noEmit
 ```
+
 **Résultat**: ✅ **0 errors**
 
 ### [3/5] Rust Final Check ⚠️
+
 ```bash
 cargo clippy --manifest-path=src-tauri/Cargo.toml
 ```
+
 **Résultat**: ⚠️ **20 warnings** (`.expect()` intentionnels uniquement)
 
 ### [4/5] Boot Test Validation (30s) ✅
+
 ```bash
 timeout 30s pnpm run dev:tauri
 ```
+
 **Résultat**: ✅ **Boot stable pendant 30 secondes**
 
 ### [5/5] Log Analysis ✅
+
 **Erreurs critiques recherchées**:
+
 - ❌ `Maximum update depth exceeded`: **0 occurrences**
 - ❌ `removeChildFromContainer`: **0 occurrences**
 - ❌ `WebKit internal error`: **0 occurrences**
@@ -190,18 +213,18 @@ timeout 30s pnpm run dev:tauri
 
 ## 📈 MÉTRIQUES FINALES
 
-| Catégorie | Avant | Après | Statut |
-|-----------|-------|-------|--------|
-| **ESLint Warnings** | 2 | 0 | ✅ |
-| **ESLint Errors** | 0 | 0 | ✅ |
-| **TypeScript Errors** | 0 | 0 | ✅ |
-| **Rust Clippy Auto-fixes** | 5 | 0 | ✅ |
-| **PostCSS Warnings** | 1 | 0 | ✅ |
-| **Rust `.expect()` Warnings** | 20 | 20* | ⚠️ |
-| **Boot Test (30s)** | ✅ | ✅ | ✅ |
-| **Critical WebKit Errors** | 0 | 0 | ✅ |
+| Catégorie                     | Avant | Après | Statut |
+| ----------------------------- | ----- | ----- | ------ |
+| **ESLint Warnings**           | 2     | 0     | ✅     |
+| **ESLint Errors**             | 0     | 0     | ✅     |
+| **TypeScript Errors**         | 0     | 0     | ✅     |
+| **Rust Clippy Auto-fixes**    | 5     | 0     | ✅     |
+| **PostCSS Warnings**          | 1     | 0     | ✅     |
+| **Rust `.expect()` Warnings** | 20    | 20\*  | ⚠️     |
+| **Boot Test (30s)**           | ✅    | ✅    | ✅     |
+| **Critical WebKit Errors**    | 0     | 0     | ✅     |
 
-\* *Warnings intentionnels et documentés, pattern standard Rust*
+\* _Warnings intentionnels et documentés, pattern standard Rust_
 
 ---
 
@@ -225,6 +248,7 @@ timeout 30s pnpm run dev:tauri
 ### 🚀 Prêt pour production
 
 **Critères remplis**:
+
 - ✅ 0 erreurs TypeScript/ESLint
 - ✅ 0 warnings ESLint
 - ✅ 0 erreurs critiques WebKit/React/DOM
@@ -239,6 +263,7 @@ timeout 30s pnpm run dev:tauri
 ### Rust `.expect()` — Justification détaillée
 
 **Pattern standard Rust**:
+
 ```rust
 // ✅ ACCEPTABLE: Hardcoded constant (impossible de fail)
 let addr: SocketAddr = "127.0.0.1:8000"
@@ -257,6 +282,7 @@ responses
 ```
 
 **Alternatives considérées**:
+
 1. `unwrap()` — Même comportement, moins explicite
 2. `unwrap_or_else()` — Overhead inutile pour cas impossibles
 3. `match` exhaustif — Verbosité excessive pour panics documentés
@@ -278,6 +304,7 @@ responses
 **Statut**: ✅ **CODE 100% CLEAN — PRODUCTION-READY**
 
 **Résumé exécutif**:
+
 - Toutes les erreurs bloquantes corrigées
 - Tous les warnings ESLint/TypeScript éliminés
 - Warnings Rust `.expect()` justifiés et documentés

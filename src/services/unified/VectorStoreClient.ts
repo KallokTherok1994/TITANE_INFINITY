@@ -15,7 +15,6 @@
  */
 
 import { secureInvoke } from '@/lib/security';
-import { logger } from '@/utils/logger';
 import type {
   UnifiedMemoryEntry,
   UnifiedMemoryResult,
@@ -76,9 +75,9 @@ export class VectorStoreClient implements IVectorStore {
       });
 
       this.isInitialized = true;
-      logger.debug('Initialized:', this.storeId);
+      console.log('[VectorStoreClient] Initialized:', this.storeId);
     } catch (error) {
-      logger.error('Initialization failed:', error);
+      console.error('[VectorStoreClient] Initialization failed:', error);
       throw error;
     }
   }
@@ -97,7 +96,7 @@ export class VectorStoreClient implements IVectorStore {
 
       return entry.id;
     } catch (error) {
-      logger.error('Insert failed:', error);
+      console.error('[VectorStoreClient] Insert failed:', error);
       throw error;
     }
   }
@@ -209,7 +208,7 @@ export class VectorStoreClient implements IVectorStore {
         distance: r.distance,
       }));
     } catch (error) {
-      logger.error('Search failed:', error);
+      console.error('[VectorStoreClient] Search failed:', error);
       throw error;
     }
   }
@@ -228,7 +227,7 @@ export class VectorStoreClient implements IVectorStore {
 
       return entry ? this.fromBackendEntry(entry) : null;
     } catch (error) {
-      logger.error('Get failed:', error);
+      console.error('[VectorStoreClient] Get failed:', error);
       return null;
     }
   }
@@ -246,7 +245,7 @@ export class VectorStoreClient implements IVectorStore {
         updates,
       });
     } catch (error) {
-      logger.error('Update failed:', error);
+      console.error('[VectorStoreClient] Update failed:', error);
       throw error;
     }
   }
@@ -263,7 +262,7 @@ export class VectorStoreClient implements IVectorStore {
         id,
       });
     } catch (error) {
-      logger.error('Delete failed:', error);
+      console.error('[VectorStoreClient] Delete failed:', error);
       throw error;
     }
   }
@@ -302,7 +301,7 @@ export class VectorStoreClient implements IVectorStore {
         newestMemory: Date.now(),
       };
     } catch (error) {
-      logger.error('GetStats failed:', error);
+      console.error('[VectorStoreClient] GetStats failed:', error);
       throw error;
     }
   }
@@ -470,7 +469,7 @@ export class VectorStoreClient implements IVectorStore {
     const targets = [id, ...ids].filter((v): v is string => typeof v === 'string');
     if (targets.length === 0) {
       if (Object.keys(filters).length > 0) {
-        logger.warn(
+        console.warn(
           'VectorStoreClient.deleteWhere: unsupported filters (supported: id, ids). No entries deleted.'
         );
       }

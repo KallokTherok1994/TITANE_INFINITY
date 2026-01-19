@@ -277,7 +277,7 @@ Version complète de TITANE∞ avec **60+ modules intelligents** organisés en 1
 - Cargo.toml optimisé pour release
 - package.json avec dépendances minimales
 - vite.config.ts avec optimisations
-- src-tauri/tauri.conf.json sécurisé
+- tauri.conf.json sécurisé
 
 #### Scripts
 - `install_deps.sh` : Installation automatique

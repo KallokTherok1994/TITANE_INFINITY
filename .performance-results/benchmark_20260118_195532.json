@@ -3,9 +3,9 @@
   "version": "v26.3.0",
   "metrics": {
     "launch_time_avg_s": 2.001,
-    "launch_time_runs": [2.002329654, 2.001852401, 2.001719760, 2.001712054, 2.001766484],
+    "launch_time_runs": [2.002329654, 2.001852401, 2.00171976, 2.001712054, 2.001766484],
     "memory_usage_mb": null,
-    "binary_size_mb": 81.00,
+    "binary_size_mb": 81.0,
     "cpu_usage_percent": null
   },
   "thresholds": {

@@ -4,7 +4,6 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { logger } from '@/utils/logger';
 
 // REMOVED: engines/presence supprimé en PHASE 1 (OPTION B) - utilise stub temporaire
 import {
@@ -283,24 +282,24 @@ export function useUserMirroring(): {
 
   const activate = useCallback(() => {
     // IMPLEMENTATION: Activate user mirroring in MultimodalPresenceEngine
-    // 1. Engine call: multimodalPresenceEngine.activateMirroring() or tauriClient.presence:activateMirroring()
+    // 1. Engine call: multimodalPresenceEngine.activateMirroring() or invoke('presence:activate_mirroring')
     // 2. Media streams: Request camera/microphone access via getUserMedia()
     // 3. Emotion tracking: Start real-time emotion detection from video frames
     // 4. State update: Set isActive = true, emit 'mirroring:activated' event
     // 5. UI feedback: Show mirroring indicator, update presence status
     // 6. Error handling: Prompt user if camera denied, fallback to audio-only mode
-    logger.debug('Activation requested (not yet implemented)');
+    console.log('[useUserMirroring] Activation requested (not yet implemented)');
   }, []);
 
   const deactivate = useCallback(() => {
     // IMPLEMENTATION: Deactivate user mirroring in MultimodalPresenceEngine
-    // 1. Engine call: multimodalPresenceEngine.deactivateMirroring() or tauriClient.presence:deactivateMirroring()
+    // 1. Engine call: multimodalPresenceEngine.deactivateMirroring() or invoke('presence:deactivate_mirroring')
     // 2. Stop streams: mediaStream.getTracks().forEach(track => track.stop())
     // 3. Stop tracking: Disable emotion detection, clear active frame buffer
     // 4. State update: Set isActive = false, emit 'mirroring:deactivated' event
     // 5. UI feedback: Hide mirroring indicator, restore normal presence status
     // 6. Cleanup: Release camera/microphone resources, garbage collect buffers
-    logger.debug('Deactivation requested (not yet implemented)');
+    console.log('[useUserMirroring] Deactivation requested (not yet implemented)');
   }, []);
 
   return {

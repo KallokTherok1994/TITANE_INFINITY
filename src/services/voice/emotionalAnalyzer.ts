@@ -19,7 +19,6 @@ import type {
   EmotionalAnalysisResult,
 } from './emotionalIntent';
 import { EMOTION_PRESETS, getEmotionPreset } from './emotionalProfiles';
-import { logger } from '@/utils/logger';
 
 /**
  * Mots-clés émotionnels par catégorie
@@ -132,7 +131,7 @@ export class EmotionalIntentAnalyzer {
    * Analyser l'intention émotionnelle d'un texte
    */
   analyze(text: string, context?: EmotionalContext): EmotionalAnalysisResult {
-    logger.debug('🎭 Analyzing:', text.substring(0, 60));
+    console.log('[EmotionalAnalyzer] 🎭 Analyzing:', text.substring(0, 60));
 
     // Analyse multi-facettes
     const lexicalScore = this.analyzeLexical(text);
@@ -154,7 +153,7 @@ export class EmotionalIntentAnalyzer {
     // Historique
     this.updateHistory(dominantEmotion);
 
-    logger.debug(
+    console.log(
       `[EmotionalAnalyzer] ✅ Detected: ${dominantEmotion} (intensity: ${intent.intensity.toFixed(2)})`
     );
 

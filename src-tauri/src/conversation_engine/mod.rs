@@ -149,11 +149,6 @@ impl ConversationEngineState {
         })
     }
 
-    /// Initialize the conversation engine and OMEGA pipeline
-    pub async fn initialize(&self) -> Result<(), ConversationEngineError> {
-        self.omega_bridge.initialize().await
-    }
-
     /// Traiter un message utilisateur (point d'entrée principal)
     /// R05 P1: Now routes through OMEGA pipeline first, fallback to legacy
     pub async fn process_message(

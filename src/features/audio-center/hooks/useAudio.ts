@@ -4,7 +4,6 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { logger } from '@/utils/logger';
 import {
   type TTSSettings,
   type AudioDevice,
@@ -76,7 +75,7 @@ export function useAudio(): UseAudioReturn {
         const voices = await audioService.getAvailableVoices();
         setAvailableVoices(voices);
       } catch (error) {
-        logger.error('Failed to load audio devices:', error);
+        console.error('Failed to load audio devices:', error);
       } finally {
         setIsLoading(false);
       }
@@ -135,16 +134,16 @@ export function useAudio(): UseAudioReturn {
   }, []);
 
   const testMicrophone = useCallback(async (): Promise<MicrophoneTestResult> => {
-    logger.debug('testMicrophone starting...');
+    console.log('[useAudio] testMicrophone starting...');
     setIsTesting(true);
     setTestResult(null);
     try {
       const result = await audioService.testMicrophone();
-      logger.debug('testMicrophone result:', result);
+      console.log('[useAudio] testMicrophone result:', result);
       setTestResult(result);
       return result;
     } catch (error) {
-      logger.error('testMicrophone error:', error);
+      console.error('[useAudio] testMicrophone error:', error);
       const errorResult: MicrophoneTestResult = {
         success: false,
         peakLevel: 0,

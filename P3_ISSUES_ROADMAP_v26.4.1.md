@@ -3,7 +3,7 @@
 **Document:** Roadmap for medium-priority refactoring and code quality improvements  
 **Version:** v26.4.1  
 **Status:** Reference document for v27.0 sprint planning  
-**Last Updated:** 2026-01-17  
+**Last Updated:** 2026-01-17
 
 ---
 
@@ -22,9 +22,10 @@ Following the comprehensive **AUDIT_CHAT_IA_COMPLET_v26.4.1.md** audit, the foll
 ## P3-1: Large Frontend Module (chatEngine.ts)
 
 ### Current State
+
 - **File:** `src/lib/ai/chatEngine.ts`
 - **Size:** 2,013 lines
-- **Impact:** 
+- **Impact:**
   - Code maintainability ⚠️
   - Harder to locate functions
   - Longer TypeScript compilation cycles
@@ -45,12 +46,14 @@ src/lib/ai/
 ```
 
 ### Benefits
+
 - ✅ **Maintainability:** Each module handles one concern
 - ✅ **Testing:** Isolated unit tests per module
 - ✅ **Performance:** Faster TS compilation (modular)
 - ✅ **Readability:** ~300-600 lines per file (industry standard)
 
 ### Migration Path
+
 ```typescript
 // Before (current)
 import { sendMessage, validateInput } from './lib/ai/chatEngine';
@@ -68,6 +71,7 @@ import { sendMessage, validateInput } from './lib/ai/chatEngine';
 ## P3-2: Large Backend Module (chat_orchestrator.rs)
 
 ### Current State
+
 - **File:** `src-tauri/src/overdrive/chat_orchestrator.rs`
 - **Size:** 2,194 lines
 - **Impact:**
@@ -99,6 +103,7 @@ src-tauri/src/overdrive/
 ```
 
 ### Benefits
+
 - ✅ **Compilation Time:** -30% (modular Rust compilation)
 - ✅ **Provider Maintenance:** Each provider in own file
 - ✅ **Testing:** Integration tests per provider
@@ -119,9 +124,9 @@ pub struct ProviderRegistry {
 
 impl ProviderRegistry {
     pub fn new() -> Self { ... }
-    pub async fn send_to(&self, provider: &str, request: &ChatRequest) 
+    pub async fn send_to(&self, provider: &str, request: &ChatRequest)
         -> Result<ChatMessage, TAPIError> { ... }
-    pub async fn cascade(&self, request: &ChatRequest, order: Vec<&str>) 
+    pub async fn cascade(&self, request: &ChatRequest, order: Vec<&str>)
         -> Result<ChatMessage, TAPIError> { ... }
 }
 ```
@@ -131,6 +136,7 @@ impl ProviderRegistry {
 ## P3-3: Complex React Hook (useChat.ts)
 
 ### Current State
+
 - **File:** `src/hooks/useChat.ts`
 - **Size:** 2,000+ lines
 - **Impact:**
@@ -157,6 +163,7 @@ src/hooks/
 ### Core Modules
 
 #### useChat.core.ts
+
 ```typescript
 export interface UseChatState {
   conversations: ConversationMemory[];
@@ -178,6 +185,7 @@ export function useChat(): [UseChatState, UseChatActions] { ... }
 ```
 
 #### useChat.streaming.ts
+
 ```typescript
 export function useStreamingListener(
   conversationId: string,
@@ -186,6 +194,7 @@ export function useStreamingListener(
 ```
 
 #### useChat.memory.ts
+
 ```typescript
 export function useChatMemory(
   conversationId: string
@@ -198,6 +207,7 @@ export function saveChatMemory(
 ```
 
 ### Benefits
+
 - ✅ **Reusability:** Export individual sub-hooks
 - ✅ **Testing:** Mock each concern independently
 - ✅ **Performance:** Lazy-load streaming module only when needed
@@ -208,6 +218,7 @@ export function saveChatMemory(
 ## P3-4: Provider Cascade Abstraction
 
 ### Current Implementation (now internal)
+
 ```rust
 // chat_orchestrator.rs - linear cascade
 let providers_to_try: Vec<String> = if requested_provider == "auto" {
@@ -227,6 +238,7 @@ for provider in providers_to_try {
 ```
 
 ### Proposed (v27.0 refactor)
+
 ```rust
 // providers/cascade.rs
 #[derive(Clone)]
@@ -247,7 +259,7 @@ impl ProviderCascade {
 
     pub fn custom(order: Vec<String>) -> Self { ... }
 
-    pub async fn send(&self, request: &ChatRequest) 
+    pub async fn send(&self, request: &ChatRequest)
         -> Result<ChatMessage, TAPIError> {
         for provider_name in &self.order {
             if let Ok(msg) = self.registry.send_to(provider_name, request).await {
@@ -261,6 +273,7 @@ impl ProviderCascade {
 ```
 
 ### Benefits
+
 - ✅ **Extensibility:** Easy to add/remove providers
 - ✅ **Testability:** Mock entire cascade
 - ✅ **Configuration:** Cascade order from env/config
@@ -271,6 +284,7 @@ impl ProviderCascade {
 ## P3-5: Test File Organization
 
 ### Current State
+
 - Tests inline in source files (mixed concerns)
 - Example: `chat_orchestrator.rs` has 40+ lines of `#[cfg(test)]`
 
@@ -297,6 +311,7 @@ src-tauri/
 ```
 
 ### Benefits
+
 - ✅ **Separation of Concerns:** Tests not mixed with source code
 - ✅ **CI/CD:** Run integration tests separately (slower but comprehensive)
 - ✅ **Reproducibility:** Mock servers for consistent testing
@@ -307,11 +322,13 @@ src-tauri/
 ## Priority Timeline
 
 ### ✅ COMPLETED (v26.4.1)
+
 - [x] P1/P2 audit fixes (warnings, deprecated APIs, test docs)
 - [x] All Rust compiler warnings eliminated (0 warnings)
 - [x] All unit tests passing (4668 passed, 8 ignored)
 
 ### 📋 v27.0 Sprint (Q1 2026) - REFACTOR SPRINT
+
 - [ ] Task 1: Decompose chatEngine.ts → 6 modules
   - Duration: 1-2 weeks
   - PR: Break into core/providers/streaming/validation/utils
@@ -338,11 +355,13 @@ src-tauri/
   - Impact: Test coverage +15%, faster iteration
 
 ### 📋 v27.1 Sprint (Q2 2026)
+
 - [ ] Full ProviderCascade integration in commands
 - [ ] Integration test suite expansion
 - [ ] Performance benchmarking (before/after decomposition)
 
 ### 📋 v28.0 Release (Late 2026)
+
 - [ ] Remove deprecated `chat_send_message` entirely
 - [ ] Full OMEGA v3 pipeline integration
 - [ ] Legacy API cleanup
@@ -351,40 +370,45 @@ src-tauri/
 
 ## Success Metrics
 
-| Metric | Current | Target v27.0 | Target v28.0 |
-|--------|---------|-------------|-------------|
-| **Max File Size** | 2194 lines | 500 lines | 300 lines |
-| **Avg File Size** | 1200 lines | 350 lines | 250 lines |
-| **Build Time** | 14.3s | 10s | 8s |
-| **Test Coverage** | 98% | 99% | 99.5% |
-| **Cyclomatic Complexity** | High | Medium | Low |
-| **Maintainability Index** | 65/100 | 80/100 | 90/100 |
+| Metric                    | Current    | Target v27.0 | Target v28.0 |
+| ------------------------- | ---------- | ------------ | ------------ |
+| **Max File Size**         | 2194 lines | 500 lines    | 300 lines    |
+| **Avg File Size**         | 1200 lines | 350 lines    | 250 lines    |
+| **Build Time**            | 14.3s      | 10s          | 8s           |
+| **Test Coverage**         | 98%        | 99%          | 99.5%        |
+| **Cyclomatic Complexity** | High       | Medium       | Low          |
+| **Maintainability Index** | 65/100     | 80/100       | 90/100       |
 
 ---
 
 ## Implementation Guidelines
 
 ### 1. Backwards Compatibility
+
 - Always provide re-export from old path during migration
 - Use deprecation warnings for v27.0 → v28.0 transition
 - Document migration path clearly
 
 ### 2. Incremental Rollout
+
 - Feature flags for new modules (allow gradual testing)
 - Canary testing with early adopters
 - Gradual migration from old to new in application code
 
 ### 3. Testing Strategy
+
 - Unit tests for isolated modules (keep in `src/`)
 - Integration tests for module interactions (`tests/`)
 - E2E tests for complete workflows
 
 ### 4. Performance Monitoring
+
 - Benchmark compilation time per sprint
 - Monitor runtime performance before/after decomposition
 - Track memory usage with profiler
 
 ### 5. Documentation
+
 - Add module-level comments explaining dependencies
 - Create architecture diagrams for new structure
 - Update contributor guidelines
@@ -393,13 +417,13 @@ src-tauri/
 
 ## Risks & Mitigation
 
-| Risk | Impact | Mitigation |
-|------|--------|-----------|
-| **Decomposition breaks backward compat** | High | Maintain re-export layer, extensive testing |
-| **Circular imports introduced** | Medium | Enforce module dependency graph review |
-| **Performance regression** | Medium | Benchmark before/after, profile hot paths |
-| **Learning curve for team** | Low | Documentation + pair programming sessions |
-| **Timeline slippage** | Medium | Break into smaller PRs, sprint planning buffer |
+| Risk                                     | Impact | Mitigation                                     |
+| ---------------------------------------- | ------ | ---------------------------------------------- |
+| **Decomposition breaks backward compat** | High   | Maintain re-export layer, extensive testing    |
+| **Circular imports introduced**          | Medium | Enforce module dependency graph review         |
+| **Performance regression**               | Medium | Benchmark before/after, profile hot paths      |
+| **Learning curve for team**              | Low    | Documentation + pair programming sessions      |
+| **Timeline slippage**                    | Medium | Break into smaller PRs, sprint planning buffer |
 
 ---
 
@@ -415,6 +439,7 @@ src-tauri/
 ## Questions & Discussion
 
 For questions about this roadmap:
+
 1. Review [GitHub Discussions](https://github.com/KallokTherok1994/TITANE_INFINITY/discussions)
 2. Open a GitHub Issue with label `refactor/p3`
 3. Request code review in PR template
@@ -423,4 +448,4 @@ For questions about this roadmap:
 
 **Document Status:** ✅ Reference → Ready for RFC (Request for Comments)  
 **Next Action:** Schedule refactoring sprint planning session  
-**Owner:** TITANE∞ Refactoring Team  
+**Owner:** TITANE∞ Refactoring Team

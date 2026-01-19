@@ -20,7 +20,6 @@
 import { secureInvoke } from '@/lib/security';
 import { detectEnvironment } from '@/core/tauri/environment';
 import { emit, listen, type UnlistenFn } from '@tauri-apps/api/event';
-import { logger } from '@/utils/logger';
 import {
   type HealingEvent,
   type HealingDiagnosis,
@@ -164,7 +163,7 @@ export class SelfHealingSyncLayer {
   // ═══════════════════════════════════════════════════════════════════════════
 
   public async initialize(): Promise<void> {
-    logger.debug('🔄 Initializing...');
+    console.log('[SelfHealingSyncLayer] 🔄 Initializing...');
 
     // Charger le profil depuis le backend
     await this.loadProfile();
@@ -180,11 +179,11 @@ export class SelfHealingSyncLayer {
       this.startAutoSync();
     }
 
-    logger.debug('✅ Initialized');
+    console.log('[SelfHealingSyncLayer] ✅ Initialized');
   }
 
   public async shutdown(): Promise<void> {
-    logger.debug('🛑 Shutting down...');
+    console.log('[SelfHealingSyncLayer] 🛑 Shutting down...');
 
     // Arrêter la synchronisation
     this.stopAutoSync();
@@ -198,7 +197,7 @@ export class SelfHealingSyncLayer {
     // Sauvegarder le profil
     await this.saveProfile();
 
-    logger.debug('Shutdown complete');
+    console.log('[SelfHealingSyncLayer] Shutdown complete');
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -343,7 +342,7 @@ export class SelfHealingSyncLayer {
 
     if (this.profile.evolutionLevel > oldLevel) {
       this.profile.lastEvolutionTime = Date.now();
-      logger.debug(
+      console.log(
         `[SelfHealingSyncLayer] 🎉 Level up! ${oldLevel} → ${this.profile.evolutionLevel}`
       );
 
@@ -398,7 +397,7 @@ export class SelfHealingSyncLayer {
         this.vitals.timestamp = Date.now();
       }
     } catch (error) {
-      logger.warn('Could not fetch vitals:', error);
+      console.warn('[SelfHealingSyncLayer] Could not fetch vitals:', error);
       this.vitals.timestamp = Date.now();
     }
 
@@ -427,7 +426,7 @@ export class SelfHealingSyncLayer {
         this.profile = { ...DEFAULT_PROFILE };
       }
     } catch (error) {
-      logger.warn('Could not load profile:', error);
+      console.warn('[SelfHealingSyncLayer] Could not load profile:', error);
       this.profile = { ...DEFAULT_PROFILE };
     }
   }
@@ -439,7 +438,7 @@ export class SelfHealingSyncLayer {
         await secureInvoke('selfheal_save_profile', { profile: this.profile });
       }
     } catch (error) {
-      logger.warn('Could not save profile:', error);
+      console.warn('[SelfHealingSyncLayer] Could not save profile:', error);
     }
   }
 
@@ -454,7 +453,7 @@ export class SelfHealingSyncLayer {
       await this.performSync();
     }, this.config.syncIntervalMs);
 
-    logger.debug(
+    console.log(
       `[SelfHealingSyncLayer] Auto-sync started (${this.config.syncIntervalMs}ms)`
     );
   }
@@ -463,7 +462,7 @@ export class SelfHealingSyncLayer {
     if (this.syncInterval) {
       clearInterval(this.syncInterval);
       this.syncInterval = null;
-      logger.debug('Auto-sync stopped');
+      console.log('[SelfHealingSyncLayer] Auto-sync stopped');
     }
   }
 
@@ -479,7 +478,7 @@ export class SelfHealingSyncLayer {
 
       this.lastSyncTime = Date.now();
     } catch (error) {
-      logger.warn('Sync failed:', error);
+      console.warn('[SelfHealingSyncLayer] Sync failed:', error);
     }
   }
 
@@ -508,7 +507,7 @@ export class SelfHealingSyncLayer {
       });
       this.unlisteners.push(unlisten2);
     } catch (error) {
-      logger.warn('Could not setup listeners:', error);
+      console.warn('[SelfHealingSyncLayer] Could not setup listeners:', error);
     }
   }
 
@@ -525,7 +524,7 @@ export class SelfHealingSyncLayer {
         data,
       });
     } catch (error) {
-      logger.warn('Could not emit to Singularity:', error);
+      console.warn('[SelfHealingSyncLayer] Could not emit to Singularity:', error);
     }
   }
 
@@ -542,7 +541,7 @@ export class SelfHealingSyncLayer {
         });
       }
     } catch (error) {
-      logger.warn('Singularity sync failed:', error);
+      console.warn('[SelfHealingSyncLayer] Singularity sync failed:', error);
     }
   }
 

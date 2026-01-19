@@ -111,7 +111,9 @@ class TitaneBootRecovery {
     console.log('🚀 [BOOT-RECOVERY] Starting intelligent boot process...');
 
     if (typeof window !== 'undefined' && (window as any).__TITANE_REACT_ROOT) {
-      console.log('✅ [BOOT-RECOVERY] Existing React root detected, skipping recovery boot');
+      console.log(
+        '✅ [BOOT-RECOVERY] Existing React root detected, skipping recovery boot'
+      );
       return true;
     }
 
@@ -780,7 +782,9 @@ if (typeof window !== 'undefined' && enableBootRecoveryAutostart) {
     setTimeout(() => titaneBootRecovery.startIntelligentBoot(), 100);
   }
 } else {
-  console.log('ℹ️ [BOOT-RECOVERY] Autostart disabled (VITE_ENABLE_BOOT_RECOVERY_AUTOSTART != "1")');
+  console.log(
+    'ℹ️ [BOOT-RECOVERY] Autostart disabled (VITE_ENABLE_BOOT_RECOVERY_AUTOSTART != "1")'
+  );
 }
 
 // Export des types

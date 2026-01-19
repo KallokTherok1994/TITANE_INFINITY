@@ -23,7 +23,6 @@ import type {
   AttentionCallback,
 } from './attentionTypes';
 import { contextualAttentionV2 } from './contextualAttentionV2';
-import { logger } from '@/utils/logger';
 
 // Re-export types for external consumers
 export type {
@@ -60,7 +59,7 @@ export class AttentionEngine {
 
     this.mode = this.config.mode;
 
-    logger.debug('🧠 Initialized:', this.config);
+    console.log('[AttentionEngine] 🧠 Initialized:', this.config);
 
     // [v19.5.0] Configure contextual adaptation if enabled
     if (this.config.useContextualAdaptation) {
@@ -72,9 +71,9 @@ export class AttentionEngine {
    * [v19.5.0] Enable contextual adaptation
    */
   private enableContextualAdaptation(): void {
-    logger.debug('🧠 Enabling contextual adaptation...');
+    console.log('[AttentionEngine] 🧠 Enabling contextual adaptation...');
     // Contextual attention is already initialized, just log
-    logger.debug('✅ Contextual adaptation ready');
+    console.log('[AttentionEngine] ✅ Contextual adaptation ready');
   }
 
   /**
@@ -82,7 +81,7 @@ export class AttentionEngine {
    */
   setContextualAdaptation(enabled: boolean): void {
     this.config.useContextualAdaptation = enabled;
-    logger.debug(
+    console.log(
       `[AttentionEngine] ${enabled ? '✅' : '🔇'} Contextual adaptation ${enabled ? 'enabled' : 'disabled'}`
     );
   }
@@ -114,7 +113,7 @@ export class AttentionEngine {
       multipleVoices: context.multipleVoices || false,
       lastMeasured: Date.now(),
     });
-    logger.debug('🌍 Environment context updated:', context);
+    console.log('[AttentionEngine] 🌍 Environment context updated:', context);
   }
 
   /**
@@ -130,7 +129,7 @@ export class AttentionEngine {
     }
 
     contextualAttentionV2.updateApplication(context);
-    logger.debug('📱 Application context updated:', context);
+    console.log('[AttentionEngine] 📱 Application context updated:', context);
   }
 
   /**
@@ -176,7 +175,7 @@ export class AttentionEngine {
    * Activer l'écoute active (wake word)
    */
   activate(): void {
-    logger.debug('🔊 Activating wake word listening');
+    console.log('[AttentionEngine] 🔊 Activating wake word listening');
     this.mode = 'wake_word';
     this.transitionTo('armed', 'User activated wake word mode');
   }
@@ -185,7 +184,7 @@ export class AttentionEngine {
    * Désactiver l'écoute active
    */
   deactivate(): void {
-    logger.debug('🔇 Deactivating wake word listening');
+    console.log('[AttentionEngine] 🔇 Deactivating wake word listening');
     this.mode = 'off';
     this.clearTimeouts();
     this.transitionTo('inactive', 'User deactivated wake word mode');
@@ -195,7 +194,7 @@ export class AttentionEngine {
    * Basculer en mode push-to-talk
    */
   setPushToTalk(): void {
-    logger.debug('🎤 Switching to push-to-talk mode');
+    console.log('[AttentionEngine] 🎤 Switching to push-to-talk mode');
     this.mode = 'push_to_talk';
     this.clearTimeouts();
     this.transitionTo('inactive', 'Switched to push-to-talk');
@@ -206,11 +205,14 @@ export class AttentionEngine {
    */
   handleWakeWord(wakeEvent: WakeWordEvent): void {
     if (this.state !== 'armed') {
-      logger.warn('⚠️ Wake word detected but not in armed state:', this.state);
+      console.warn(
+        '[AttentionEngine] ⚠️ Wake word detected but not in armed state:',
+        this.state
+      );
       return;
     }
 
-    logger.debug('🎯 Wake word detected:', wakeEvent);
+    console.log('[AttentionEngine] 🎯 Wake word detected:', wakeEvent);
     this.lastWakeEvent = wakeEvent;
 
     // Transition vers wake_detected
@@ -240,7 +242,7 @@ export class AttentionEngine {
    * Démarrer le traitement IA
    */
   startProcessing(): void {
-    logger.debug('🤖 Starting AI processing');
+    console.log('[AttentionEngine] 🤖 Starting AI processing');
     this.clearCommandTimeout();
     this.transitionTo('processing', 'AI processing started');
   }
@@ -249,7 +251,7 @@ export class AttentionEngine {
    * Démarrer la réponse TTS
    */
   startResponding(): void {
-    logger.debug('🔊 Starting TTS response');
+    console.log('[AttentionEngine] 🔊 Starting TTS response');
     this.transitionTo('responding', 'TTS started');
   }
 
@@ -257,7 +259,7 @@ export class AttentionEngine {
    * Fin de la réponse (retour en armed ou cooldown)
    */
   endResponse(): void {
-    logger.debug('✅ Response complete');
+    console.log('[AttentionEngine] ✅ Response complete');
 
     if (this.config.autoRearm && this.mode === 'wake_word') {
       // Cooldown puis armed
@@ -275,7 +277,7 @@ export class AttentionEngine {
    * Annuler/Reset
    */
   cancel(): void {
-    logger.debug('🛑 Cancelling current attention flow');
+    console.log('[AttentionEngine] 🛑 Cancelling current attention flow');
     this.clearTimeouts();
 
     if (this.mode === 'wake_word') {
@@ -289,7 +291,7 @@ export class AttentionEngine {
    * Réinitialiser complètement
    */
   reset(): void {
-    logger.debug('🔄 Resetting attention engine');
+    console.log('[AttentionEngine] 🔄 Resetting attention engine');
     this.clearTimeouts();
     this.lastWakeEvent = undefined;
 
@@ -327,7 +329,7 @@ export class AttentionEngine {
       ...this.config,
       ...updates,
     };
-    logger.debug('🔧 Config updated:', this.config);
+    console.log('[AttentionEngine] 🔧 Config updated:', this.config);
   }
 
   /**
@@ -351,7 +353,7 @@ export class AttentionEngine {
       reason,
     };
 
-    logger.debug(
+    console.log(
       `[AttentionEngine] 🔄 ${previousState} → ${newState}${reason ? ` (${reason})` : ''}`
     );
 
@@ -360,7 +362,7 @@ export class AttentionEngine {
       try {
         cb(event);
       } catch (err) {
-        logger.error('Callback error:', err);
+        console.error('[AttentionEngine] Callback error:', err);
       }
     });
   }
@@ -372,7 +374,7 @@ export class AttentionEngine {
     this.clearCommandTimeout();
 
     this.commandTimeoutHandle = setTimeout(() => {
-      logger.warn('⏱️ Command timeout, returning to armed');
+      console.warn('[AttentionEngine] ⏱️ Command timeout, returning to armed');
       this.transitionTo('armed', 'Command timeout');
     }, this.config.commandTimeout);
   }

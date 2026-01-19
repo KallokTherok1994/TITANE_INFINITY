@@ -550,7 +550,7 @@ Toutes liées à `Provider::Copilot` non couvert:
 
 ### Horizon 3: 6 SEMAINES (Perfection)
 
-**Objectif:** Tech-Ready (Dev) 100%
+**Objectif:** Production-ready 100%
 
 - [ ] Toutes corrections P2
 - [ ] Monitoring en place

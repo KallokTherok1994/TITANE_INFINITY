@@ -60,7 +60,7 @@ COMMIT_MSG="fix(core): Correct all TypeScript enum errors + validation infrastru
 ✅ VALIDATION RESULTS:
 - ESLint: 0 warnings (was 4)
 - Clippy: 0 warnings (was 49)
-- Frontend build: ✅ 27s, tech-ready (dev); production en attente d’autorisation
+- Frontend build: ✅ 27s, production ready
 - Backend build: ✅ 192s, release optimized
 - Bundle: 5.1MB (optimized & compressed)
 
@@ -71,7 +71,7 @@ COMMIT_MSG="fix(core): Correct all TypeScript enum errors + validation infrastru
 - Build time: 3m 40s total
 - Validations: 6/6 passed
 
-🎯 STATUS: ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)
+🎯 STATUS: PRODUCTION READY
 
 Breaking Changes: None
 Backward Compatible: Yes

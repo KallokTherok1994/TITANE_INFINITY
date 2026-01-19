@@ -1,0 +1,40 @@
+TITANE∞ HTTP SERVER - Configuration Actuelle
+============================================
+Date: 2 janvier 2026, 18:05
+
+SERVEUR HTTP
+-----------
+Status: ✅ ACTIF
+Host: 0.0.0.0
+Port: 5173
+PID: $(pgrep -f "vite.*5173" | head -1)
+
+HEADERS HTTP
+------------
+✅ Content-Type: text/html; charset=utf-8
+✅ X-Content-Type-Options: nosniff
+✅ X-Frame-Options: SAMEORIGIN
+
+HTML DOCUMENT
+-------------
+✅ DOCTYPE: <!DOCTYPE html> (Standards Mode)
+✅ Charset: UTF-8 (meta tag + http-equiv)
+✅ Lang: fr
+
+CORRECTIONS APPLIQUÉES
+----------------------
+1. DOCTYPE en majuscules pour compatibilité maximale
+2. Meta http-equiv Content-Type ajouté
+3. Headers HTTP configurés dans vite.config.ts
+4. Mode Standards activé (pas de Quirks Mode)
+
+URLS D'ACCÈS
+------------
+Local: http://localhost:5173
+LAN: http://192.168.2.16:5173
+
+COMMANDES
+---------
+Arrêter: bash ./stop-http-server.sh
+Redémarrer: bash ./deploy-http-server-pure.sh
+Logs: tail -f logs/network/*.log

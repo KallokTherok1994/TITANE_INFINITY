@@ -4,9 +4,6 @@
 **Version:** 26.2.0  
 **Architecture:** 4-Ring Model + 9 Cognitive Engines + OMEGA Pipeline v2
 
-> NOTE (gouvernance): document historique (v26.2.0). Runtime actuel: v26.3.0.
-> Production: EN ATTENTE (autorisation explicite requise).
-
 ---
 
 ## Table of Contents
@@ -545,7 +542,7 @@ Located in:
 All 350 commands are explicitly registered in `tauri::generate_handler![]` (main.rs:678-1116)
 
 ### 2. Content Security Policy (CSP)
-Defined in `tauri.base.json`:
+Defined in `tauri.conf.json`:
 ```json
 {
   "security": {

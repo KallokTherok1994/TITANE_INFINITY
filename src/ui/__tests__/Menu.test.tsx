@@ -323,7 +323,7 @@ describe('Menu Accessibility', () => {
 
       menuItems.forEach(item => {
         // Each item should have text content or aria-label
-        const hasText = item.textContent?.trim().length > 0;
+        const hasText = item.textContent!.trim().length > 0;
         const hasAriaLabel = item.hasAttribute('aria-label');
 
         expect(hasText || hasAriaLabel).toBe(true);

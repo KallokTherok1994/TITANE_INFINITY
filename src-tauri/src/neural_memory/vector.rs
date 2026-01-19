@@ -5,14 +5,13 @@
 // ═══════════════════════════════════════════════════════════════
 
 use crate::unified_memory_v2::types::{MemoryEntry, MemoryError, MemoryResult};
-use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 /// Default embedding dimension (sentence-transformers)
 pub const EMBEDDING_DIM: usize = 384;
 
 /// Vector search result with similarity score
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct VectorSearchResult {
     pub id: String,
     pub similarity: f32,

@@ -12,7 +12,6 @@
  */
 
 import { secureInvoke } from '@/lib/security';
-import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
@@ -71,12 +70,12 @@ class AutoBackupService {
   private listeners: Set<(state: BackupState) => void> = new Set();
 
   async initialize(): Promise<void> {
-    logger.debug('Initializing Auto-Backup Service v26.2...');
+    console.log('[AutoBackup] Initializing Auto-Backup Service v26.2...');
     this.loadState();
     this.startBackupTimer();
     this.checkImmediateBackup();
-    logger.debug(
-      'Initialized - Next backup:',
+    console.log(
+      '[AutoBackup] Initialized - Next backup:',
       new Date(this.state.nextBackupTime).toLocaleString()
     );
   }
@@ -90,7 +89,7 @@ class AutoBackupService {
         this.state.totalBackups = parsed.totalBackups || 0;
       }
     } catch (e) {
-      logger.warn('Failed to load state:', e);
+      console.warn('[AutoBackup] Failed to load state:', e);
     }
   }
 
@@ -104,7 +103,7 @@ class AutoBackupService {
         })
       );
     } catch (e) {
-      logger.warn('Failed to save state:', e);
+      console.warn('[AutoBackup] Failed to save state:', e);
     }
   }
 

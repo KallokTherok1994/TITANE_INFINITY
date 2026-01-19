@@ -98,35 +98,18 @@ fi
 # 6. Import Patterns
 echo ""
 echo "📦 [6/9] Analyzing import patterns..."
-
-# Some folders/files are excluded from TS compilation (see tsconfig.json exclude).
-# Do not penalize import hygiene in code that is not part of the runtime surface.
-WILDCARD_EXCLUDE_PATHS_RE='(src/modules/avatar/(camera|rendering|gesture|voice)/|src/modules/avatar/core/AudioVisualSyncEngine\.ts|src/modules/avatar/floating/(ThreeJSAvatarRenderer|appearanceFloatingIntegration)\.ts)'
 {
     echo "=== Global Imports (to optimize) ==="
-    grep -RInE '^[[:space:]]*import[[:space:]]+\*[[:space:]]+as[[:space:]]+' src/ \
-        --exclude-dir="__tests__" --exclude-dir="test" --exclude-dir="tests" \
-        --exclude="*.test.*" --exclude="*.spec.*" --exclude="*.perf.test.*" \
-        --include="*.ts" --include="*.tsx" \
-        2>/dev/null | grep -vE "$WILDCARD_EXCLUDE_PATHS_RE" | head -20 || echo "None"
+    grep -r "import \* as" src/ --include="*.ts" --include="*.tsx" | head -20 || echo "None"
     echo ""
     echo "=== Deep Imports (potential coupling) ==="
-    grep -R "from.*\.\./\.\./\.\.\." src/ \
-        --exclude-dir="__tests__" --exclude-dir="test" --exclude-dir="tests" \
-        --exclude="*.test.*" --exclude="*.spec.*" --exclude="*.perf.test.*" \
-        --include="*.ts" --include="*.tsx" \
-        2>/dev/null | head -20 || echo "None"
+    grep -r "from.*\.\./\.\./\.\." src/ --include="*.ts" --include="*.tsx" | head -20 || echo "None"
     echo ""
     echo "=== Absolute Imports ==="
     grep -r "from '@/" src/ --include="*.ts" --include="*.tsx" | wc -l
 } > "$REPORT_DIR/import-patterns.txt"
 
-GLOBAL_IMPORTS=$(grep -RInE '^[[:space:]]*import[[:space:]]+\*[[:space:]]+as[[:space:]]+' src/ \
-    --exclude-dir="__tests__" --exclude-dir="test" --exclude-dir="tests" \
-    --exclude="*.test.*" --exclude="*.spec.*" --exclude="*.perf.test.*" \
-    --exclude="*.d.ts" \
-    --include="*.ts" --include="*.tsx" \
-    2>/dev/null | grep -vE "$WILDCARD_EXCLUDE_PATHS_RE" | wc -l | xargs || echo "0")
+GLOBAL_IMPORTS=$(grep -r "import \* as" src/ --include="*.ts" --include="*.tsx" | wc -l || echo "0")
 echo "   └─ Global imports: $GLOBAL_IMPORTS"
 
 # 7. Code Complexity
@@ -150,9 +133,6 @@ fi
 # 8. Dead Code Detection
 echo ""
 echo "💀 [8/9] Detecting potentially dead code..."
-
-# Only count real TODO/FIXME markers in comments (avoid false positives in strings/regex).
-TODO_COMMENT_RE='^[[:space:]]*(//|/\*|\*)[[:space:]]*(TODO|FIXME|XXX|HACK)\b'
 {
     echo "=== Unused Exports ==="
     if command -v ts-prune &> /dev/null; then
@@ -162,18 +142,10 @@ TODO_COMMENT_RE='^[[:space:]]*(//|/\*|\*)[[:space:]]*(TODO|FIXME|XXX|HACK)\b'
     fi
     echo ""
     echo "=== TODO/FIXME Comments ==="
-    grep -RInE "$TODO_COMMENT_RE" src/ \
-        --exclude-dir="__tests__" --exclude-dir="test" --exclude-dir="tests" \
-        --exclude="*.test.*" --exclude="*.spec.*" --exclude="*.perf.test.*" \
-        --include="*.ts" --include="*.tsx" \
-        2>/dev/null | wc -l
+    grep -r "TODO\|FIXME\|XXX\|HACK" src/ --include="*.ts" --include="*.tsx" | wc -l
 } > "$REPORT_DIR/dead-code.txt"
 
-TODO_COUNT=$(grep -RInE "$TODO_COMMENT_RE" src/ \
-    --exclude-dir="__tests__" --exclude-dir="test" --exclude-dir="tests" \
-    --exclude="*.test.*" --exclude="*.spec.*" --exclude="*.perf.test.*" \
-    --include="*.ts" --include="*.tsx" \
-    2>/dev/null | wc -l | xargs || echo "0")
+TODO_COUNT=$(grep -r "TODO\|FIXME\|XXX\|HACK" src/ --include="*.ts" --include="*.tsx" | wc -l || echo "0")
 echo "   └─ TODO/FIXME comments: $TODO_COUNT"
 
 # 9. Generate Consolidation Plan
@@ -398,33 +370,3 @@ echo ""
 echo "📁 Full report: $REPORT_DIR/ARCHITECTURE_SUMMARY.md"
 echo "📋 Consolidation plan: $REPORT_DIR/CONSOLIDATION_PLAN.md"
 echo ""
-
-# Deterministic score (0-100)
-ARCH_SCORE=100
-
-# Duplication penalties
-dup_penalty=0
-if [ "${DEVTOOLS_COUNT:-0}" -gt 1 ]; then dup_penalty=$((dup_penalty + 20)); fi
-if [ "${CHAT_COUNT:-0}" -gt 2 ]; then dup_penalty=$((dup_penalty + 15)); fi
-
-# Circular deps penalty (only when detected)
-circular_penalty=0
-if [ -n "${CIRCULAR_COUNT:-}" ]; then
-    circular_penalty=$((CIRCULAR_COUNT * 10))
-    if [ "$circular_penalty" -gt 30 ]; then circular_penalty=30; fi
-fi
-
-# Import / hygiene penalties
-global_penalty=$(( (${GLOBAL_IMPORTS:-0}) * 2 ))
-if [ "$global_penalty" -gt 20 ]; then global_penalty=20; fi
-
-todo_penalty=$(( (${TODO_COUNT:-0}) / 10 ))
-if [ "$todo_penalty" -gt 20 ]; then todo_penalty=20; fi
-
-total_penalty=$((dup_penalty + circular_penalty + global_penalty + todo_penalty))
-if [ "$total_penalty" -gt 100 ]; then total_penalty=100; fi
-
-ARCH_SCORE=$((ARCH_SCORE - total_penalty))
-if [ "$ARCH_SCORE" -lt 0 ]; then ARCH_SCORE=0; fi
-
-echo "Score: $ARCH_SCORE"

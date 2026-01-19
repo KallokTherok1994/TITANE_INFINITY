@@ -30,7 +30,7 @@ Examples:
 **Phase 2A (Bundle Analysis):** Partially done - needs verification  
 **Phase 2B (Code Splitting):** ✅ ALREADY COMPLETE  
 **Phase 2C (Rust Optimization):** ⏳ AVAILABLE  
-**Phase 2D (Memory Profiling):** ⏳ AVAILABLE  
+**Phase 2D (Memory Profiling):** ⏳ AVAILABLE
 
 ---
 
@@ -39,6 +39,7 @@ Examples:
 Since code splitting is already optimized, focus on:
 
 ### Priority 1: Bundle Analysis (Task 2A)
+
 **Goal:** Identify unused dependencies that could be removed
 
 ```bash
@@ -50,6 +51,7 @@ Since code splitting is already optimized, focus on:
 ```
 
 ### Priority 2: Rust Backend (Task 2C) - HIGH IMPACT
+
 **Goal:** -100ms API latency
 
 ```bash
@@ -61,6 +63,7 @@ Since code splitting is already optimized, focus on:
 ```
 
 ### Priority 3: Memory Optimization (Task 2D)
+
 **Goal:** -3MB idle memory
 
 ```bash
@@ -103,6 +106,7 @@ du -sh dist/ | awk '{print $1}'
 **Where the real gains are:**
 
 1. **Generate Flamegraph**
+
    ```bash
    cd src-tauri
    cargo flamegraph --bin titane_api -- --bench
@@ -150,6 +154,7 @@ du -sh dist/ | awk '{print $1}'
 **The codebase is ALREADY well-structured for performance!**
 
 This means:
+
 - ✅ Code splitting is comprehensive (no gains here)
 - ✅ Lazy loading is everywhere (no additional work needed)
 - ✅ Real optimization opportunities are in Backend (Rust) + Memory profiling
@@ -180,4 +185,3 @@ This means:
 ---
 
 **Recommendation:** Begin with Rust optimization immediately for maximum impact
-

@@ -71,4 +71,4 @@
 - [x] Auditer configurations dev/stable
 - [x] Documenter différences intentionnelles
 - [x] Valider absence de divergence accidentelle
-- [ ] Ajouter commentaire dans runtime/stable/tauri.stable.conf.json expliquant `beforeDevCommand: ""`
+- [ ] Ajouter commentaire dans runtime/stable/tauri.conf.json expliquant `beforeDevCommand: ""`

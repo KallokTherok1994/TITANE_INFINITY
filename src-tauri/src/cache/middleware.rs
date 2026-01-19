@@ -1,11 +1,9 @@
 // ═══════════════════════════════════════════════════════════════
 //   TITANE∞ v19.5.2 — Cache Middleware for Tauri Commands
 //   P2-2: Intelligent caching integration with IPC
-//   Phase 4: LZ4 compression for cached entries
 // ═══════════════════════════════════════════════════════════════
 
 use super::{CacheConfig, CacheKey, IntelligentCache};
-use super::compression::CompressionCodec;
 use once_cell::sync::Lazy;
 use serde::de::DeserializeOwned;
 use serde::Serialize;
@@ -13,7 +11,7 @@ use std::sync::Arc;
 use std::time::Duration;
 
 // ────────────────────────────────────────────────────────────────
-// Global Cache Instance + Compression Codec
+// Global Cache Instance
 // ────────────────────────────────────────────────────────────────
 
 /// Global cache instance (singleton pattern)
@@ -25,9 +23,6 @@ pub static GLOBAL_CACHE: Lazy<Arc<IntelligentCache>> = Lazy::new(|| {
         persistence_path: None,
     }))
 });
-
-/// Global compression codec for cache entries
-pub static COMPRESSION_CODEC: Lazy<CompressionCodec> = Lazy::new(CompressionCodec::new);
 
 // ────────────────────────────────────────────────────────────────
 // Cache Strategy

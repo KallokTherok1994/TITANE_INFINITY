@@ -1,0 +1,8 @@
+]633;E;echo '$ pgrep -af vitest|scripts/test-wrapper';c77f3cb8-095c-43a6-a6ef-1efe06ebcdb8]633;C$ pgrep -af vitest|scripts/test-wrapper
+3834309 /home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin/node /home/titane-os/.vscode/extensions/vitest.explorer-1.36.0/dist/worker.js
+3834477 /home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin/node /home/titane-os/.vscode/extensions/vitest.explorer-1.36.0/dist/worker.js
+3834922 /home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin/node /home/titane-os/.vscode/extensions/vitest.explorer-1.36.0/dist/worker.js
+3855608 /home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin/node /home/titane-os/.vscode/extensions/vitest.explorer-1.36.0/dist/worker.js
+3855832 /home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin/node /home/titane-os/.vscode/extensions/vitest.explorer-1.36.0/dist/worker.js
+3855958 /home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin/node /home/titane-os/.vscode/extensions/vitest.explorer-1.36.0/dist/worker.js
+3856499 /home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin/node /home/titane-os/.vscode/extensions/vitest.explorer-1.36.0/dist/worker.js

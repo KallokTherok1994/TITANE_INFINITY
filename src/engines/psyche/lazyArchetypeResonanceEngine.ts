@@ -6,8 +6,6 @@
  * Permet lazy loading du moteur archétypal pour réduire bundle initial
  */
 
-import { logger } from '@/utils/logger';
-
 // Type for the engine instance
 type EngineModule = typeof import('./archetypeResonanceEngine');
 type EngineInstance = EngineModule['archetypeResonanceEngine'];
@@ -37,7 +35,7 @@ export async function getArchetypeResonanceEngine() {
 export async function startArchetypeEngine() {
   const engine = await getArchetypeResonanceEngine();
   engine.start();
-  logger.debug('  ✅ Archetype Resonance Engine active (10Hz)');
+  console.log('  ✅ Archetype Resonance Engine active (10Hz)');
 }
 
 /**

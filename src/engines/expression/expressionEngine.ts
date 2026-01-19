@@ -22,7 +22,6 @@ import {
   unifiedIdentityKernel,
   type IdentityExpressionPackage,
 } from '../identity/unifiedIdentityKernel';
-import { logger } from '@/utils/logger';
 // ✨ PHASE 4.2 - Lazy load auraEngine to reduce bundle size
 import { getAuraEngine, type AuraAnimationPattern } from '../aura/lazyAuraEngine';
 import { internalNarrativeEngine } from '../narrative/internalNarrativeEngine';
@@ -155,7 +154,7 @@ export class ExpressionEngine {
 
   constructor() {
     this.state = this.getDefaultState();
-    logger.debug('🎭 [EXPRESSION ENGINE] Initializing Expression Engine...');
+    console.log('🎭 [EXPRESSION ENGINE] Initializing Expression Engine...');
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -165,7 +164,7 @@ export class ExpressionEngine {
   start(): void {
     if (this.updateInterval) return;
 
-    logger.debug('🎭 [EXPRESSION ENGINE] Starting expression engine at 15Hz...');
+    console.log('🎭 [EXPRESSION ENGINE] Starting expression engine at 15Hz...');
 
     // Subscribe to Identity Kernel
     this.subscribeToIdentityKernel();
@@ -178,7 +177,7 @@ export class ExpressionEngine {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
       this.updateInterval = null;
-      logger.debug('🎭 [EXPRESSION ENGINE] Expression engine stopped.');
+      console.log('🎭 [EXPRESSION ENGINE] Expression engine stopped.');
     }
   }
 
@@ -549,7 +548,7 @@ export class ExpressionEngine {
 
   private verifyCoherence(): void {
     if (this.state.globalSync < this.SYNC_THRESHOLD) {
-      logger.warn(
+      console.warn(
         `⚠️ [EXPRESSION ENGINE] Low synchronization: ${(this.state.globalSync * 100).toFixed(1)}%`
       );
       this.boostSynchronization();

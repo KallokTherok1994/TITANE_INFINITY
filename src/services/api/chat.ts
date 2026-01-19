@@ -11,26 +11,18 @@ import { invokeWithRetry, LONG_COMMAND_OPTIONS } from '@/lib/serviceInvoker';
 import { monitoring } from '@/monitoring';
 import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
 import { chatEngine } from '@/services/ai/chatEngine';
-import { logger } from '@/utils/logger';
 
 /**
  * Type pour l'ID de conversation OMEGA
  */
 export type ConversationId = string;
 
-const extractConversationId = (value: unknown): ConversationId => {
-  if (typeof value === 'string' && value.length > 0) return value;
-
-  if (typeof value === 'object' && value !== null) {
-    const record = value as Record<string, unknown>;
-    const conversationId = record['conversation_id'];
-    if (typeof conversationId === 'string' && conversationId.length > 0) {
-      return conversationId;
-    }
-  }
-
-  throw new Error('Réponse invalide: conversation_id manquant');
-};
+/**
+ * Réponse de création de conversation
+ */
+interface StartConversationResponse {
+  conversation_id: string;
+}
 
 /**
  * Message de conversation
@@ -190,18 +182,23 @@ class ChatService {
    * @returns L'ID de la nouvelle conversation.
    */
   async startNewConversation(): Promise<ConversationId> {
-    logger.debug('🚀 Démarrage d’une nouvelle conversation...');
+    console.log('[ChatService-OMEGA] 🚀 Démarrage d’une nouvelle conversation...');
     try {
-      const response = await invokeWithRetry<unknown>(
+      const response = await invokeWithRetry<StartConversationResponse>(
         'create_new_conversation',
         {},
         { ...LONG_COMMAND_OPTIONS, context: 'StartConversation' }
       );
-      const conversationId = extractConversationId(response);
-      logger.debug('✅ Conversation créée avec ID:', conversationId);
-      return conversationId;
+      console.log(
+        '[ChatService-OMEGA] ✅ Conversation créée avec ID:',
+        response.conversation_id
+      );
+      return response.conversation_id;
     } catch (error) {
-      logger.error('❌ Erreur lors de la création de la conversation:', error);
+      console.error(
+        '[ChatService-OMEGA] ❌ Erreur lors de la création de la conversation:',
+        error
+      );
       throw new Error('Impossible de démarrer une nouvelle conversation.');
     }
   }
@@ -223,7 +220,9 @@ class ChatService {
     // 🛡️ BROWSER MODE PROTECTION - Backend web (chatEngine) si Tauri indisponible
     if (!isTauriRuntimeAvailable()) {
       const startedAt = Date.now();
-      logger.warn('Tauri unavailable - using chatEngine (web backend)');
+      console.warn(
+        '[ChatService-OMEGA] Tauri unavailable - using chatEngine (web backend)'
+      );
 
       try {
         const engineResponse = await chatEngine.generate(message, [], {
@@ -252,7 +251,10 @@ class ChatService {
               : undefined,
         };
       } catch (error) {
-        logger.error('Browser chatEngine failure - fallback response', error);
+        console.error(
+          '[ChatService-OMEGA] Browser chatEngine failure - fallback response',
+          error
+        );
         return {
           content: `Mode navigateur: backend web indisponible (erreur interne).\n\nVotre message: "${message.substring(0, 100)}${message.length > 100 ? '..."' : '"'}`,
           finishReason: 'browser_fallback',
@@ -287,7 +289,7 @@ class ChatService {
       messageLength: message.length,
     });
 
-    logger.debug('📤 Envoi message via OMEGA:', {
+    console.log('[ChatService-OMEGA] 📤 Envoi message via OMEGA:', {
       conversationId,
       message: message.substring(0, 50) + '...',
     });
@@ -303,11 +305,14 @@ class ChatService {
       // ✅ FIX AUDIT: Validation format AVANT détection
       if (!backendResponse || typeof backendResponse !== 'object') {
         monitoring.trackPipelineError();
-        logger.error('❌ Réponse null ou invalide:', backendResponse);
+        console.error(
+          '[ChatService-OMEGA] ❌ Réponse null ou invalide:',
+          backendResponse
+        );
         throw new Error('Backend response is null or not an object');
       }
 
-      logger.debug('📥 Réponse brute reçue:', {
+      console.log('[ChatService-OMEGA] 📥 Réponse brute reçue:', {
         hasContent: !!backendResponse.content,
         hasSuccess: !!backendResponse.success,
         hasMessage: !!backendResponse.message,
@@ -315,40 +320,31 @@ class ChatService {
         keys: Object.keys(backendResponse),
       });
 
-      console.log('RAW_CHAT_RESPONSE', JSON.stringify(backendResponse, null, 2)); // LOG OBLIGATOIRE
-
       // ✅ FIX AUDIT: Gérer cas error explicite AVANT détection format
       if (backendResponse.error && !backendResponse.content && !backendResponse.success) {
         monitoring.trackPipelineError();
-        logger.error('❌ Backend retourné erreur:', backendResponse.error);
+        console.error(
+          '[ChatService-OMEGA] ❌ Backend retourné erreur:',
+          backendResponse.error
+        );
         throw new Error(`Backend error: ${backendResponse.error}`);
       }
 
       // ✅ FIX P0-1: Détection du format de réponse (OMEGA direct vs Legacy)
-      const assistantText =
-        backendResponse?.content ??
-        backendResponse?.reply ??
-        backendResponse?.response ??
-        backendResponse?.data?.content ??
-        backendResponse?.data?.text ??
-        '';
-
-      if (
-        !assistantText ||
-        typeof assistantText !== 'string' ||
-        assistantText.trim().length === 0
-      ) {
-        console.error('Empty assistant response', backendResponse);
-        throw new Error('Backend returned empty or invalid assistant content');
-      }
-
       if (backendResponse.content !== undefined) {
+        // ✅ FIX AUDIT: Valider content non-null ET non-vide
+        if (!backendResponse.content || backendResponse.content.trim() === '') {
+          monitoring.trackPipelineError();
+          console.error('[ChatService-OMEGA] ❌ Backend retourné content vide');
+          throw new Error('Backend returned empty content');
+        }
+
         // Format OMEGA direct: { content, conversationId, messageId, latencyMs, metadata }
         const latencyMs = backendResponse.latencyMs || Date.now() - startedAt;
         monitoring.trackPipelineLatency(latencyMs);
 
-        logger.debug('✅ Format OMEGA direct détecté:', {
-          contentLength: assistantText.length,
+        console.log('[ChatService-OMEGA] ✅ Format OMEGA direct détecté:', {
+          contentLength: backendResponse.content?.length ?? 0,
           conversationId: backendResponse.conversationId,
           messageId: backendResponse.messageId,
           latencyMs,
@@ -356,7 +352,7 @@ class ChatService {
         });
 
         return {
-          content: String(assistantText), // FORCE STRING
+          content: backendResponse.content,
           finishReason: 'stop',
           model: config?.model || 'omega-pipeline',
           provider: backendResponse.metadata?.provider || 'tauri-backend',
@@ -379,7 +375,7 @@ class ChatService {
 
         monitoring.trackPipelineLatency(effectiveLatency);
 
-        logger.debug('ℹ️ Format Legacy détecté:', {
+        console.log('[ChatService-OMEGA] ℹ️ Format Legacy détecté:', {
           success: backendResponse.success,
           provider: this.resolveProvider(
             backendResponse.message?.provider,
@@ -393,14 +389,17 @@ class ChatService {
       } else {
         // Format invalide
         monitoring.trackPipelineError();
-        logger.error('❌ Format de réponse invalide:', backendResponse);
+        console.error(
+          '[ChatService-OMEGA] ❌ Format de réponse invalide:',
+          backendResponse
+        );
         throw new Error(
           backendResponse.error ||
             'Réponse invalide du backend OMEGA (format non reconnu)'
         );
       }
     } catch (error) {
-      logger.error('❌ Erreur sendMessage:', error);
+      console.error('[ChatService-OMEGA] ❌ Erreur sendMessage:', error);
 
       monitoring.trackError(error, {
         endpoint: 'OMEGA',
@@ -444,7 +443,10 @@ class ChatService {
         const convResponse = await this.startNewConversation();
         conversationId = convResponse;
       } catch (err) {
-        logger.warn('Failed to create conversation, using fallback ID:', err);
+        console.warn(
+          '[ChatService] Failed to create conversation, using fallback ID:',
+          err
+        );
         conversationId = `legacy-${Date.now()}-${Math.random().toString(36).substring(7)}`;
       }
     }
@@ -465,7 +467,7 @@ class ChatService {
   ): Promise<void> {
     // 🛡️ BROWSER MODE PROTECTION - Fallback immédiat si Tauri indisponible
     if (!isTauriRuntimeAvailable()) {
-      logger.warn('Tauri unavailable - using browser fallback');
+      console.warn('[ChatService] Tauri unavailable - using browser fallback');
       const fallbackResponse: ChatResponse = {
         content:
           "Je suis désolé, le backend Tauri n'est pas disponible en mode navigateur. Pour utiliser le chat complet, veuillez lancer l'application TITANE∞ native.\n\nEn mode web, certaines fonctionnalités sont limitées. Vous pouvez toujours explorer l'interface et tester les autres modules.",
@@ -660,7 +662,7 @@ class ChatService {
         try {
           onChunk(chunkText);
         } catch (callbackError) {
-          logger.warn('onChunk callback error:', callbackError);
+          console.warn('[ChatService] onChunk callback error:', callbackError);
         }
       }
     };
@@ -691,7 +693,7 @@ class ChatService {
           try {
             onError(err);
           } catch (callbackError) {
-            logger.warn('onError callback error:', callbackError);
+            console.warn('[ChatService] onError callback error:', callbackError);
           }
           return;
         }
@@ -715,7 +717,7 @@ class ChatService {
           try {
             onError(err);
           } catch (callbackError) {
-            logger.warn('onError callback error:', callbackError);
+            console.warn('[ChatService] onError callback error:', callbackError);
           }
           return;
         }
@@ -734,7 +736,7 @@ class ChatService {
         try {
           onComplete(response);
         } catch (callbackError) {
-          logger.warn('onComplete callback error:', callbackError);
+          console.warn('[ChatService] onComplete callback error:', callbackError);
         }
 
         cleanup();
@@ -857,7 +859,10 @@ class ChatService {
         try {
           onComplete(response);
         } catch (callbackError) {
-          logger.warn('onComplete callback error (fallback):', callbackError);
+          console.warn(
+            '[ChatService] onComplete callback error (fallback):',
+            callbackError
+          );
         }
 
         cleanup();
@@ -869,7 +874,7 @@ class ChatService {
       try {
         onError(err);
       } catch (callbackError) {
-        logger.warn('onError callback error (outer):', callbackError);
+        console.warn('[ChatService] onError callback error (outer):', callbackError);
       }
     } finally {
       cleanupRef();
@@ -891,7 +896,7 @@ class ChatService {
         { ...LONG_COMMAND_OPTIONS, context: 'Chat' }
       );
     } catch (error) {
-      logger.error('Erreur suggestions:', error);
+      console.error('[ChatService] Erreur suggestions:', error);
       return [];
     }
   }
@@ -912,7 +917,7 @@ class ChatService {
         { ...LONG_COMMAND_OPTIONS, context: 'Chat' }
       );
     } catch (error) {
-      logger.error('Erreur analyse émotion:', error);
+      console.error('[ChatService] Erreur analyse émotion:', error);
       return {
         valence: 0,
         intensity: 0.5,
@@ -933,7 +938,7 @@ class ChatService {
         { ...LONG_COMMAND_OPTIONS, context: 'Chat' }
       );
     } catch (error) {
-      logger.error('Erreur historique:', error);
+      console.error('[ChatService] Erreur historique:', error);
       return [];
     }
   }
@@ -949,7 +954,7 @@ class ChatService {
         { ...LONG_COMMAND_OPTIONS, context: 'Chat' }
       );
     } catch (error) {
-      logger.error('Erreur effacement:', error);
+      console.error('[ChatService] Erreur effacement:', error);
       throw new Error(
         `Effacement échoué: ${error instanceof Error ? error.message : String(error)}`
       );
@@ -967,7 +972,7 @@ class ChatService {
         { ...LONG_COMMAND_OPTIONS, context: 'Chat' }
       );
     } catch (error) {
-      logger.error('Erreur recherche:', error);
+      console.error('[ChatService] Erreur recherche:', error);
       return [];
     }
   }
@@ -983,7 +988,7 @@ class ChatService {
         { ...LONG_COMMAND_OPTIONS, context: 'Chat' }
       );
     } catch (error) {
-      logger.error('Erreur export:', error);
+      console.error('[ChatService] Erreur export:', error);
       throw new Error(
         `Export échoué: ${error instanceof Error ? error.message : String(error)}`
       );
@@ -1210,7 +1215,7 @@ class ChatService {
         const parsed = JSON.parse(raw);
         return this.normalizeCompleteEvent(parsed);
       } catch (error) {
-        logger.warn('Unable to parse completion payload:', error);
+        console.warn('[ChatService] Unable to parse completion payload:', error);
         return null;
       }
     }

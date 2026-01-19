@@ -11,7 +11,6 @@
  */
 
 import { useState, useCallback } from 'react';
-import { logger } from '@/utils/logger';
 import type { AIMessage } from '../services/ai/types';
 
 export interface UseChatUIOptions {
@@ -62,7 +61,7 @@ export function useChatUI(options: UseChatUIOptions = {}): UseChatUIReturn {
       );
 
       if (isDuplicate) {
-        logger.warn('⚠️ Duplicate message detected, skipping');
+        console.warn('⚠️ Duplicate message detected, skipping');
         return prev;
       }
 

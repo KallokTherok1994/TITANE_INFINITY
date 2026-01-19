@@ -355,7 +355,7 @@ export class ChatErrorBoundary extends Component<
       });
 
       // Send error report via Tauri (implementation in future)
-      // await tauriClient.reportChatError({
+      // await invoke('report_chat_error', {
       //   error: {
       //     message: error.message,
       //     stack: error.stack,
@@ -424,7 +424,7 @@ export class ChatErrorBoundary extends Component<
         <div className="max-w-2xl w-full bg-gray-800 rounded-lg border-2 border-red-500/50 p-6 shadow-xl">
           {/* Header */}
           <div className="flex items-start mb-4">
-            <div className="shrink-0 text-4xl mr-4">⚠️</div>
+            <div className="flex-shrink-0 text-4xl mr-4">⚠️</div>
             <div className="flex-1">
               <h2 className="text-2xl font-bold text-red-400 mb-2">
                 Erreur dans le Chat IA

@@ -13,7 +13,6 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { secureInvoke } from '@/lib/security';
-import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
@@ -372,7 +371,7 @@ export function useSystemHealth(): UseSystemHealthReturn {
     } catch (err) {
       const error = err instanceof Error ? err : new Error('Failed to refresh health');
       setError(error);
-      logger.error('Refresh error:', error);
+      console.error('[useSystemHealth] Refresh error:', error);
     }
   }, []);
 
@@ -440,7 +439,7 @@ export function useSystemHealth(): UseSystemHealthReturn {
         const error =
           err instanceof Error ? err : new Error('Failed to trigger recovery');
         setError(error);
-        logger.error('Recovery error:', error);
+        console.error('[useSystemHealth] Recovery error:', error);
         throw error;
       }
     },

@@ -23,8 +23,6 @@
 // TYPES & INTERFACES
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { logger } from '@/utils/logger';
-
 /**
  * Modes de conscience procédurale
  */
@@ -165,7 +163,7 @@ export class ConsciousDynamicsModel {
   constructor() {
     this.state = this.getDefaultState();
     this.repairState = this.getDefaultRepairState();
-    logger.debug('🧠 [CONSCIOUS] Initializing Conscious Dynamics Model...');
+    console.log('🧠 [CONSCIOUS] Initializing Conscious Dynamics Model...');
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -175,7 +173,7 @@ export class ConsciousDynamicsModel {
   start(): void {
     if (this.updateInterval) return;
 
-    logger.debug('🧠 [CONSCIOUS] Starting conscious dynamics at 30Hz...');
+    console.log('🧠 [CONSCIOUS] Starting conscious dynamics at 30Hz...');
     this.updateInterval = setInterval(() => this.tick(), 33); // 30 Hz
   }
 
@@ -183,7 +181,7 @@ export class ConsciousDynamicsModel {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
       this.updateInterval = null;
-      logger.debug('🧠 [CONSCIOUS] Conscious dynamics stopped.');
+      console.log('🧠 [CONSCIOUS] Conscious dynamics stopped.');
     }
   }
 
@@ -339,7 +337,7 @@ export class ConsciousDynamicsModel {
   }
 
   private initiateRepair(reason: string): void {
-    logger.debug(`🛠️ [CONSCIOUS] Initiating self-repair: ${reason}`);
+    console.log(`🛠️ [CONSCIOUS] Initiating self-repair: ${reason}`);
 
     this.repairState = {
       active: true,
@@ -375,7 +373,7 @@ export class ConsciousDynamicsModel {
 
     // Fin de la réparation
     if (this.repairState.progress >= 1) {
-      logger.debug('✅ [CONSCIOUS] Self-repair complete.');
+      console.log('✅ [CONSCIOUS] Self-repair complete.');
       this.repairState = this.getDefaultRepairState();
     }
   }
@@ -408,7 +406,7 @@ export class ConsciousDynamicsModel {
   setMode(mode: ConsciousMode): void {
     if (mode === this.state.mode) return;
 
-    logger.debug(`🧠 [CONSCIOUS] Switching mode: ${this.state.mode} → ${mode}`);
+    console.log(`🧠 [CONSCIOUS] Switching mode: ${this.state.mode} → ${mode}`);
 
     this.state.mode = mode;
     this.state.transitionState = 'initiating';

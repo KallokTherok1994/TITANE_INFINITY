@@ -11,7 +11,6 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
-import { logger } from '@/utils/logger';
 import { tauriClient } from '../services/tauriClient';
 
 export interface EngineVitals {
@@ -141,7 +140,7 @@ export function useEngineVitals(
 
       setVitals(engineVitals);
 
-      logger.debug('✅ Engine vitals refreshed:', {
+      console.log('✅ Engine vitals refreshed:', {
         harmonia: `${engineVitals.harmonia.load}%`,
         helios: `${engineVitals.helios.health}%`,
         nexus: `${engineVitals.nexus.coherence}%`,
@@ -150,7 +149,7 @@ export function useEngineVitals(
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Engine vitals error';
       setError(errorMsg);
-      logger.error('❌ Engine vitals refresh failed:', err);
+      console.error('❌ Engine vitals refresh failed:', err);
 
       // Fallback: vitals par défaut
       setVitals(DEFAULT_VITALS);
@@ -237,7 +236,7 @@ export function useEngineVitals(
 
     return () => {
       clearInterval(interval);
-      logger.debug('🛑 Engine vitals polling stopped');
+      console.log('🛑 Engine vitals polling stopped');
     };
   }, [refresh, pollInterval, enabled]);
 

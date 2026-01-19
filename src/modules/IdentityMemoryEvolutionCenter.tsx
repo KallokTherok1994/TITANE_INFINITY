@@ -26,7 +26,7 @@ const IdentityMemoryEvolutionCenter: React.FC = () => {
     <div className="identity-memory-evolution-center p-6 space-y-6">
       {/* Header */}
       <div className="header mb-8">
-        <h1 className="text-4xl font-bold mb-2 bg-linear-to-r from-blue-400 to-cyan-600 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-cyan-600 bg-clip-text text-transparent">
           🧠 Identity & Memory Evolution Center
         </h1>
         <p className="text-gray-400">
@@ -564,7 +564,7 @@ const CognitiveEvolutionSection: React.FC = () => {
               </div>
               <div className="w-full bg-gray-700 rounded-full h-3">
                 <div
-                  className="h-3 rounded-full bg-linear-to-r from-red-500 via-yellow-500 to-green-500"
+                  className="h-3 rounded-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500"
                   style={{ width: `${line.progress}%` }}
                 />
               </div>

@@ -25,7 +25,6 @@ import {
   type HealingSeverity,
   type ModuleCategory,
 } from './selfHealing.config';
-import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES LOCAUX OBSERVER
@@ -225,11 +224,11 @@ export class SelfHealingObserver {
 
   public async start(): Promise<void> {
     if (this.state.isActive) {
-      logger.warn('Already active');
+      console.warn('[SelfHealingObserver] Already active');
       return;
     }
 
-    logger.debug('🔍 Starting observation...');
+    console.log('[SelfHealingObserver] 🔍 Starting observation...');
 
     if (this.config.captureGlobalErrors) {
       this.installGlobalErrorHandler();
@@ -255,7 +254,7 @@ export class SelfHealingObserver {
     this.state.isActive = true;
     this.state.startTime = Date.now();
 
-    logger.debug('✅ Observation active');
+    console.log('[SelfHealingObserver] ✅ Observation active');
   }
 
   public async stop(): Promise<void> {
@@ -263,7 +262,7 @@ export class SelfHealingObserver {
       return;
     }
 
-    logger.debug('🛑 Stopping observation...');
+    console.log('[SelfHealingObserver] 🛑 Stopping observation...');
 
     // Restaurer handlers originaux
     if (this.originalOnerror !== null) {
@@ -288,7 +287,7 @@ export class SelfHealingObserver {
 
     this.state.isActive = false;
 
-    logger.debug('Observer stopped');
+    console.log('[SelfHealingObserver] Observer stopped');
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -309,7 +308,7 @@ export class SelfHealingObserver {
       try {
         callback(event);
       } catch (err) {
-        logger.error('Callback error:', err);
+        console.error('[SelfHealingObserver] Callback error:', err);
       }
     }
   }
@@ -421,7 +420,7 @@ export class SelfHealingObserver {
       );
       this.unlisteners.push(unlisten3);
     } catch (err) {
-      logger.warn('Could not install Tauri listeners:', err);
+      console.warn('[SelfHealingObserver] Could not install Tauri listeners:', err);
     }
   }
 
@@ -558,7 +557,7 @@ export class SelfHealingObserver {
 
     // Vérifier le rate limiting
     if (!this.checkRateLimit()) {
-      logger.warn('Rate limit exceeded, dropping error');
+      console.warn('[SelfHealingObserver] Rate limit exceeded, dropping error');
       return;
     }
 
@@ -602,7 +601,7 @@ export class SelfHealingObserver {
     const healingEvent = this.toHealingEvent(observedError);
     this.emit(healingEvent);
 
-    logger.debug(
+    console.log(
       `[SelfHealingObserver] 🚨 Captured: [${params.severity}] ${params.type} - ${params.message.slice(0, 100)}`
     );
   }

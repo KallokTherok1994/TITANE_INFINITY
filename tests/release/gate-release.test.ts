@@ -63,7 +63,9 @@ describe('GATE_RELEASE: TITANE∞ PRODUCTION CERTIFICATION', () => {
         expect(result).not.toContain('FAIL');
         console.log('✅ Full certification suite: ALL TESTS PASS');
       } catch (error) {
-        console.warn('⚠️ pnpm unavailable in this environment, skipping release gate run');
+        console.warn(
+          '⚠️ pnpm unavailable in this environment, skipping release gate run'
+        );
         expect(true).toBe(true);
       }
     });

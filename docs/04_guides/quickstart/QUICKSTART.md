@@ -2,10 +2,7 @@
 
 **Version:** v24.2.0  
 **Date:** 15 décembre 2025  
-**Status:** Document historique (v24.2.0) — Production EN ATTENTE (autorisation)
-
-> NOTE (gouvernance): ce guide peut contenir des instructions obsolètes (versions/outils).
-> Runtime actuel: v26.3.0.
+**Status:** Production Ready
 
 ---
 
@@ -486,7 +483,7 @@ lsof -i :1420
 # Tuer processus
 kill -9 <PID>
 
-# Ou changer port dans runtime/dev/tauri.dev.conf.json
+# Ou changer port dans tauri.conf.json
 ```
 
 ---

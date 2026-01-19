@@ -10,9 +10,11 @@
  * Solution: Augment the 'three' module to ensure proper type/value resolution
  */
 
+// Import all THREE types and values
+import * as THREE from 'three';
+
 // Re-export everything from three
 export * from 'three';
 
 // Default export for compatibility
-declare const THREE: typeof import('three');
 export default THREE;

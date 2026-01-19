@@ -400,7 +400,7 @@ if (isTauri) {
   return mockData;
 }
 
-// 3. Vérifier CSP (src-tauri/tauri.conf.json)
+// 3. Vérifier CSP (tauri.conf.json)
 {
   "tauri": {
     "security": {

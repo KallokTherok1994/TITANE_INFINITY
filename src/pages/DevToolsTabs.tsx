@@ -17,23 +17,20 @@ import type { SystemStatus } from '../components/monitoring/SystemStatusCard';
 // Lazy load tabs (only loaded when active)
 // Magic comments force Vite to create separate chunks
 const SystemTab = lazy(
-  () =>
-    import(/* webpackChunkName: "devtools-system" */ './tabs/DeveloperTools/SystemTab')
+  () => import(/* webpackChunkName: "devtools-system" */ './tabs/DevTools/SystemTab')
 );
 const LogsTab = lazy(
-  () => import(/* webpackChunkName: "devtools-logs" */ './tabs/DeveloperTools/LogsTab')
+  () => import(/* webpackChunkName: "devtools-logs" */ './tabs/DevTools/LogsTab')
 );
 const PerformanceTab = lazy(
   () =>
     import(
-      /* webpackChunkName: "devtools-performance" */ './tabs/DeveloperTools/PerformanceTab'
+      /* webpackChunkName: "devtools-performance" */ './tabs/DevTools/PerformanceTab'
     )
 );
 const DiagnosticTab = lazy(
   () =>
-    import(
-      /* webpackChunkName: "devtools-diagnostic" */ './tabs/DeveloperTools/DiagnosticTab'
-    )
+    import(/* webpackChunkName: "devtools-diagnostic" */ './tabs/DevTools/DiagnosticTab')
 );
 
 export type DevToolsTab = 'system' | 'logs' | 'performance' | 'diagnostic';

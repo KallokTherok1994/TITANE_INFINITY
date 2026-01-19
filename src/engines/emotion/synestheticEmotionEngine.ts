@@ -24,7 +24,6 @@
  */
 
 import type { ArchetypeType } from '../psyche/archetypeResonanceEngine';
-import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES
@@ -394,7 +393,7 @@ class SynestheticEmotionEngine {
 
     this.callbacks = new Set();
 
-    logger.debug('🎨 [SYNESTHETIC] Synesthetic Emotion Engine initialized');
+    console.log('🎨 [SYNESTHETIC] Synesthetic Emotion Engine initialized');
   }
 
   /**
@@ -523,7 +522,7 @@ class SynestheticEmotionEngine {
       this.state.history.shift();
     }
 
-    logger.debug(
+    console.log(
       `🎨 [SYNESTHETIC] Transitioning to ${emotion} (intensity: ${intensity}, duration: ${duration}ms)`
     );
 
@@ -652,21 +651,21 @@ class SynestheticEmotionEngine {
   learnUserPreference(emotion: EmotionalState, score: number): void {
     if (!this.config.enableUserLearning) return;
     this.state.userPreferences[emotion] = score;
-    logger.debug(`🎨 [SYNESTHETIC] Learned preference: ${emotion} = ${score}`);
+    console.log(`🎨 [SYNESTHETIC] Learned preference: ${emotion} = ${score}`);
   }
 
   /**
    * Démarrer le moteur
    */
   start(): void {
-    logger.debug('🎨 [SYNESTHETIC] Synesthetic Emotion Engine started');
+    console.log('🎨 [SYNESTHETIC] Synesthetic Emotion Engine started');
   }
 
   /**
    * Arrêter le moteur
    */
   stop(): void {
-    logger.debug('🎨 [SYNESTHETIC] Synesthetic Emotion Engine stopped');
+    console.log('🎨 [SYNESTHETIC] Synesthetic Emotion Engine stopped');
   }
 }
 

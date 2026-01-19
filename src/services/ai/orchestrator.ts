@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v26.3.0 — Proprietary License
+ * TITANE∞ v24.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v26.3.0 — AI ORCHESTRATOR OMEGA (NEURAL ORDER)
+ *   TITANE∞ v24.3.0 — AI ORCHESTRATOR OMEGA (NEURAL ORDER)
  *   Orchestrator neural • Isolation absolue • Auto-heal intégré
  *   Architecture: Local-first → Sandbox providers → Fallback garanti → Never throw
  *   v22Ω AI Performance Optimizations: Circuit breaker, stream batching, availability cache
@@ -19,7 +19,6 @@ import type {
   ProviderChoice,
   AIProvider,
 } from './types';
-import { getMessageText } from './types';
 import type { AutoHealStats } from './autoHealEngine';
 import type { AggregatedMetrics } from './metricsEngine';
 import type { MetricsData } from '@/types/cognitiveKernel';
@@ -33,7 +32,6 @@ import { claudeProvider } from './providers/claude'; // ← NOUVEAU: Anthropic C
 import { copilotProvider } from './providers/copilot'; // ← NOUVEAU: GitHub Copilot
 import { ollamaProvider } from './providers/ollama';
 import { autoHealEngine } from './autoHealEngine';
-import { unifiedHealingFacade } from './unifiedHealingFacade';
 import { metricsEngine } from './metricsEngine';
 import { cognitiveKernel } from './cognitiveKernel'; // ← NOUVEAU v22Ω: Cognitive Kernel
 import { circuitBreaker } from './circuitBreaker'; // ← v24.5: Circuit Breaker Pattern
@@ -46,8 +44,6 @@ import {
   STREAM_CONFIG,
   AVAILABILITY_CACHE,
 } from '@/config/aiTimeouts.config'; // ← v22Ω: Centralized timeouts
-import { contextWindowManager } from './contextManager'; // ← v26.2.0 P0: Context management
-import { performanceMonitor, MetricCategory } from './performanceMonitor'; // ← v26.2.0 P1: Performance monitoring
 
 const logger = createLogger('Orchestrator');
 
@@ -728,7 +724,7 @@ class AIOrchestrator {
     const requestStartTime = Date.now();
 
     // Ensure engines are loaded
-    await ensureEngines();
+    const { autoHeal, metrics: _metrics } = await ensureEngines();
 
     // Increment metrics
     this.orchestratorMetrics.totalRequests++;
@@ -740,12 +736,7 @@ class AIOrchestrator {
 
       if (!valid) {
         const error = `Invalid message: ${issues.join(', ')}`;
-        void unifiedHealingFacade.heal({
-          source: 'orchestrator',
-          error,
-          type: 'validation',
-          metadata: { issues, requestId },
-        });
+        autoHeal.heal('orchestrator', error, 'validation', { issues, requestId });
         throw new Error(error);
       }
 
@@ -756,39 +747,6 @@ class AIOrchestrator {
         { historyLength: history.length }
       );
       logger.groupEnd();
-
-      // ═══ PHASE 3.4.1.5: CONTEXT WINDOW MANAGEMENT v26.2.0 P0 ===
-      // Determine target model for context calculation
-      const targetModel = config?.model || 'gpt-4o';
-
-      // Check if truncation needed
-      const contextStats = contextWindowManager.getStats(history, targetModel);
-      let managedHistory = history;
-
-      if (contextStats.needsTruncation) {
-        logger.warn(
-          `Context overflow detected: ${contextStats.currentTokens}/${contextStats.targetLimit} tokens`,
-          { model: targetModel, messages: history.length }
-        );
-
-        // Truncate history to prevent API failures
-        managedHistory = contextWindowManager.truncate(history, targetModel);
-
-        logger.info(
-          `Context truncated: ${history.length} → ${managedHistory.length} messages`,
-          {
-            originalTokens: contextStats.currentTokens,
-            newTokens: contextWindowManager.getStats(managedHistory, targetModel)
-              .currentTokens,
-            strategy: 'RECENT',
-          }
-        );
-      } else {
-        logger.debug(
-          `Context within limits: ${contextStats.currentTokens}/${contextStats.targetLimit} tokens`,
-          { utilizationPercent: contextStats.utilizationPercent.toFixed(1) + '%' }
-        );
-      }
 
       // ═══ PHASE 3.4.2: NEURAL PROVIDER SELECTION + COGNITIVE KERNEL v22Ω ═══
 
@@ -801,7 +759,7 @@ class AIOrchestrator {
             const response = await this.executeProviderIsolated(
               localProvider,
               sanitized,
-              managedHistory,
+              history,
               5000,
               requestId
             );
@@ -945,10 +903,7 @@ class AIOrchestrator {
         }
 
         // ═══ v24.5: RATE LIMITER CHECK ═══
-        const estimatedTokens = rateLimiter.estimateTokens(
-          sanitized,
-          history.map(msg => ({ content: getMessageText(msg) }))
-        );
+        const estimatedTokens = rateLimiter.estimateTokens(sanitized, history);
         const rateLimitStatus = rateLimiter.checkLimit(providerName, estimatedTokens);
         if (!rateLimitStatus.allowed && providerName !== 'titane-local') {
           logger.debug(
@@ -966,7 +921,7 @@ class AIOrchestrator {
           // v22Ω: Using centralized timeout config
           const executionTimeout = getProviderTimeout(providerName);
           const historyForProvider = this.buildHistoryForProvider(
-            managedHistory, // v26.2.0 P0: Use truncated history to prevent context overflow
+            history,
             providerName,
             config?.promptProfileId,
             config?.promptContext
@@ -996,25 +951,6 @@ class AIOrchestrator {
 
           // ═══ v24.5: Record success in Circuit Breaker + Rate Limiter ═══
           circuitBreaker.recordSuccess(providerName);
-
-          // ═══ v26.2.0 P1: Record performance metrics ═══
-          performanceMonitor.record(MetricCategory.AI_GENERATION, totalResponseTime, {
-            provider: providerName,
-            model: config?.model || 'default',
-            success: true,
-            historyLength: history.length,
-            managedHistoryLength: managedHistory.length,
-            requestId,
-          });
-
-          performanceMonitor.record(
-            `${MetricCategory.AI_PROVIDER}.${providerName}`,
-            providerLatency,
-            {
-              success: true,
-              model: config?.model || 'default',
-            }
-          );
           rateLimiter.recordRequest(providerName, response.tokens || estimatedTokens);
 
           // 📊 METRICS: Enregistrer succès
@@ -1098,15 +1034,11 @@ class AIOrchestrator {
 
           // Trigger auto-heal sauf pour titane-local (déjà auto-réparé)
           if (providerName !== 'titane-local') {
-            void unifiedHealingFacade.heal({
-              source: providerName,
-              error: lastError,
-              type: 'provider',
-              metadata: {
-                requestId,
-                attempt: attempts,
-                providerLatency: providerFailureLatency, // EVOLUTION v21Ω: Accurate latency
-              },
+            const { autoHeal: _autoHealLoaded } = await ensureEngines();
+            _autoHealLoaded.heal(providerName, lastError, 'provider', {
+              requestId,
+              attempt: attempts,
+              providerLatency: providerFailureLatency, // EVOLUTION v21Ω: Accurate latency
             });
             this.orchestratorMetrics.autoHealTriggers++;
           }
@@ -1193,20 +1125,18 @@ Le système s'auto-répare en continu. Que puis-je t'aider à explorer ?`,
         );
       }
 
-      void unifiedHealingFacade.heal({
-        source: 'orchestrator',
-        error:
-          criticalError instanceof Error
-            ? criticalError
-            : new Error(String(criticalError)),
-        type: 'critical',
-        metadata: {
+      const { autoHeal: _autoHealLoaded } = await ensureEngines();
+      _autoHealLoaded.heal(
+        'orchestrator',
+        criticalError instanceof Error ? criticalError : new Error(String(criticalError)),
+        'critical',
+        {
           requestId,
           responseTime,
           degradedMode: this.isDegradedMode,
           criticalErrorCount: this.criticalErrorHistory.length,
-        },
-      });
+        }
+      );
 
       logger.error(`Critical error [${requestId}]`, {
         criticalError,
@@ -1469,11 +1399,12 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
     };
 
     if (!valid) {
-      void unifiedHealingFacade.heal({
-        source: 'orchestrator',
-        error: `Stream validation failed: ${issues.join(', ')}`,
-        type: 'validation',
-      });
+      const { autoHeal: _autoHealLoaded } = await ensureEngines();
+      _autoHealLoaded.heal(
+        'orchestrator',
+        `Stream validation failed: ${issues.join(', ')}`,
+        'validation'
+      );
       yield '⚠️ Message invalide détecté pour streaming...';
       return;
     }
@@ -1607,11 +1538,12 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
         logger.warn('Stream provider failed', { provider: providerName, error });
 
         // Auto-heal pour streaming failures
-        void unifiedHealingFacade.heal({
-          source: providerName,
-          error: error instanceof Error ? error : new Error(String(error)),
-          type: 'network',
-        });
+        const { autoHeal: _autoHealLoaded } = await ensureEngines();
+        _autoHealLoaded.heal(
+          providerName,
+          error instanceof Error ? error : new Error(String(error)),
+          'network'
+        );
 
         continue; // Try next provider
       }

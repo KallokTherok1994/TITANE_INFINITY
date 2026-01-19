@@ -6,7 +6,6 @@
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import path from 'node:path';
-import { PlaywrightBrowserProvider as playwrightBrowser } from '@vitest/browser-playwright';
 
 export default defineConfig({
   plugins: [react()],
@@ -22,7 +21,8 @@ export default defineConfig({
     // Browser mode configuration for WebGL/Three.js tests
     browser: {
       enabled: true,
-      provider: playwrightBrowser,
+      // @ts-expect-error - Vitest typing issues with provider/name
+      provider: 'playwright',
       name: 'chromium',
       headless: true,
       screenshotOnFailure: false,
@@ -33,9 +33,6 @@ export default defineConfig({
       'src/tests/browser/**/*.test.ts',
       'src/modules/avatar/floating/floating.perf.test.ts',
     ],
-
-    // Ajout d'exclusions pour éviter le scan des entrées HTML inutiles
-    exclude: ['**/dashboard/**', '**/dist_stub/**', '**/playwright-report/**', '**/src-tauri/target/**'],
 
     // Performance test timeouts
     testTimeout: 60000, // 1 minute for WebGL tests

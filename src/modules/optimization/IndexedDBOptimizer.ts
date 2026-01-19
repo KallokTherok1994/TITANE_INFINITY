@@ -18,8 +18,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-unused-vars */
 // Note: IndexedDB API requires 'any' types for dynamic data storage and non-null assertions for cursor operations
 
-import { logger } from '@/utils/logger';
-
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
@@ -141,7 +139,7 @@ export class IndexedDBOptimizer {
       const request = indexedDB.open(this.config.dbName, this.config.version);
 
       request.onerror = () => {
-        logger.error('Open failed:', request.error);
+        console.error('[IndexedDBOptimizer] Open failed:', request.error);
         reject(request.error);
       };
 
@@ -157,7 +155,7 @@ export class IndexedDBOptimizer {
           0
         );
 
-        logger.debug('Initialized:', this.config.dbName);
+        console.log('[IndexedDBOptimizer] Initialized:', this.config.dbName);
         resolve(true);
       };
 
@@ -193,7 +191,7 @@ export class IndexedDBOptimizer {
           }
         }
 
-        logger.debug('Schema upgraded to v' + this.config.version);
+        console.log('[IndexedDBOptimizer] Schema upgraded to v' + this.config.version);
       };
     });
   }
@@ -248,7 +246,7 @@ export class IndexedDBOptimizer {
 
       return result;
     } catch (error) {
-      logger.error('Put failed:', error);
+      console.error('[IndexedDBOptimizer] Put failed:', error);
       throw error;
     }
   }
@@ -310,7 +308,7 @@ export class IndexedDBOptimizer {
 
       return processedResult;
     } catch (error) {
-      logger.error('Get failed:', error);
+      console.error('[IndexedDBOptimizer] Get failed:', error);
       throw error;
     }
   }
@@ -380,7 +378,7 @@ export class IndexedDBOptimizer {
 
       return processedResults;
     } catch (error) {
-      logger.error('Query failed:', error);
+      console.error('[IndexedDBOptimizer] Query failed:', error);
       throw error;
     }
   }
@@ -412,7 +410,7 @@ export class IndexedDBOptimizer {
         await this.maybeCompact(storeName);
       }
     } catch (error) {
-      logger.error('Delete failed:', error);
+      console.error('[IndexedDBOptimizer] Delete failed:', error);
       throw error;
     }
   }
@@ -569,7 +567,7 @@ export class IndexedDBOptimizer {
   }
 
   private async compact(storeName: string): Promise<void> {
-    logger.debug('Compacting store:', storeName);
+    console.log('[IndexedDBOptimizer] Compacting store:', storeName);
 
     // Read all records
     const records = await this.query(storeName);
@@ -582,7 +580,7 @@ export class IndexedDBOptimizer {
       await this.put(storeName, record);
     }
 
-    logger.debug('Compaction complete');
+    console.log('[IndexedDBOptimizer] Compaction complete');
   }
 
   private async calculateFragmentation(storeName: string): Promise<number> {

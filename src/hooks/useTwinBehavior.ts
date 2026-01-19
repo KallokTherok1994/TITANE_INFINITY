@@ -5,7 +5,6 @@
  */
 
 import { useState, useCallback } from 'react';
-import { logger } from '@/utils/logger';
 import { numericTwinService } from '../services/api/numericTwin';
 import type { ObservationType } from '../types/numericTwin';
 
@@ -93,7 +92,7 @@ export function useTwinBehavior(): UseTwinBehaviorReturn {
         return id;
       } catch (err) {
         setError(err instanceof Error ? err.message : "Erreur lors de l'observation");
-        logger.error('observeValue error:', err);
+        console.error('[useTwinBehavior] observeValue error:', err);
         return null;
       } finally {
         setIsSubmitting(false);
@@ -120,7 +119,7 @@ export function useTwinBehavior(): UseTwinBehaviorReturn {
         return id;
       } catch (err) {
         setError(err instanceof Error ? err.message : "Erreur lors de l'observation");
-        logger.error('observeCognitive error:', err);
+        console.error('[useTwinBehavior] observeCognitive error:', err);
         return null;
       } finally {
         setIsSubmitting(false);
@@ -143,7 +142,7 @@ export function useTwinBehavior(): UseTwinBehaviorReturn {
         return id;
       } catch (err) {
         setError(err instanceof Error ? err.message : "Erreur lors de l'observation");
-        logger.error('observeStyle error:', err);
+        console.error('[useTwinBehavior] observeStyle error:', err);
         return null;
       } finally {
         setIsSubmitting(false);
@@ -162,7 +161,7 @@ export function useTwinBehavior(): UseTwinBehaviorReturn {
         return id;
       } catch (err) {
         setError(err instanceof Error ? err.message : "Erreur lors de l'observation");
-        logger.error('observeEmotional error:', err);
+        console.error('[useTwinBehavior] observeEmotional error:', err);
         return null;
       } finally {
         setIsSubmitting(false);

@@ -1,14 +1,13 @@
 /**
- * TITANE∞ v26.4.0 — Proprietary License
+ * TITANE∞ v15 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v26.4.0 - Select Component with Performance Optimizations
-import { useState, useRef, useEffect, useCallback, useMemo, useId, memo } from 'react';
-import { clsx } from 'clsx';
+// TITANE∞ v15 - Select Component - Design System
+import { useState, useRef, useEffect } from 'react';
 import './Select.css';
 
 export interface SelectOption {
@@ -32,11 +31,7 @@ interface SelectProps {
   className?: string;
 }
 
-/**
- * Select component for dropdown selection.
- * Memoized for optimal re-render performance.
- */
-export const Select = memo(function Select({
+export const Select = ({
   value: controlledValue,
   defaultValue = '',
   onChange,
@@ -48,94 +43,83 @@ export const Select = memo(function Select({
   helperText,
   size = 'md',
   searchable = false,
-  className,
-}: SelectProps) {
+  className = '',
+}: SelectProps) => {
   const [internalValue, setInternalValue] = useState(defaultValue);
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const selectRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const selectId = useId();
-  const errorId = useId();
-  const helperId = useId();
 
   const isControlled = controlledValue !== undefined;
   const value = isControlled ? controlledValue : internalValue;
 
-  const selectedOption = useMemo(
-    () => options.find(opt => opt.value === value),
-    [options, value]
-  );
+  const selectedOption = options.find(opt => opt.value === value);
 
-  const filteredOptions = useMemo(
-    () =>
-      searchable && searchQuery
-        ? options.filter(opt =>
-            opt.label.toLowerCase().includes(searchQuery.toLowerCase())
-          )
-        : options,
-    [searchable, searchQuery, options]
-  );
+  const filteredOptions =
+    searchable && searchQuery
+      ? options.filter(opt => opt.label.toLowerCase().includes(searchQuery.toLowerCase()))
+      : options;
 
-  const handleSelect = useCallback(
-    (optionValue: string) => {
-      if (disabled) return;
+  const handleSelect = (optionValue: string) => {
+    if (disabled) {
+      return;
+    }
 
-      if (!isControlled) {
-        setInternalValue(optionValue);
-      }
+    if (!isControlled) {
+      setInternalValue(optionValue);
+    }
 
-      onChange?.(optionValue);
-      setIsOpen(false);
-      setSearchQuery('');
-      setFocusedIndex(-1);
-    },
-    [disabled, isControlled, onChange]
-  );
+    onChange?.(optionValue);
+    setIsOpen(false);
+    setSearchQuery('');
+    setFocusedIndex(-1);
+  };
 
-  const handleToggle = useCallback(() => {
-    if (disabled) return;
-    setIsOpen(prev => !prev);
+  const handleToggle = () => {
+    if (disabled) {
+      return;
+    }
+    setIsOpen(!isOpen);
     if (!isOpen && searchable) {
       setTimeout(() => searchInputRef.current?.focus(), 0);
     }
-  }, [disabled, isOpen, searchable]);
+  };
 
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (disabled) return;
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (disabled) {
+      return;
+    }
 
-      switch (e.key) {
-        case 'ArrowDown':
-          e.preventDefault();
-          if (!isOpen) {
-            setIsOpen(true);
-          } else {
-            setFocusedIndex(prev => Math.min(prev + 1, filteredOptions.length - 1));
-          }
-          break;
-        case 'ArrowUp':
-          e.preventDefault();
-          setFocusedIndex(prev => Math.max(prev - 1, 0));
-          break;
-        case 'Enter':
-          e.preventDefault();
-          if (isOpen && focusedIndex >= 0 && filteredOptions[focusedIndex]) {
-            handleSelect(filteredOptions[focusedIndex].value);
-          } else {
-            setIsOpen(true);
-          }
-          break;
-        case 'Escape':
-          e.preventDefault();
-          setIsOpen(false);
-          setSearchQuery('');
-          break;
-      }
-    },
-    [disabled, isOpen, focusedIndex, filteredOptions, handleSelect]
-  );
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        if (!isOpen) {
+          setIsOpen(true);
+        } else {
+          setFocusedIndex(prev => Math.min(prev + 1, filteredOptions.length - 1));
+        }
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setFocusedIndex(prev => Math.max(prev - 1, 0));
+        break;
+      case 'Enter':
+        e.preventDefault();
+        if (isOpen && focusedIndex >= 0 && filteredOptions[focusedIndex]) {
+          handleSelect(filteredOptions[focusedIndex].value);
+        } else {
+          setIsOpen(true);
+        }
+        break;
+      case 'Escape':
+        e.preventDefault();
+        setIsOpen(false);
+        setSearchQuery('');
+        break;
+    }
+  };
 
   // Close on outside click
   useEffect(() => {
@@ -156,50 +140,38 @@ export const Select = memo(function Select({
   // Scroll focused option into view
   useEffect(() => {
     if (focusedIndex >= 0) {
-      const optionElement = document.getElementById(`${selectId}-option-${focusedIndex}`);
+      const optionElement = document.getElementById(`select-option-${focusedIndex}`);
       optionElement?.scrollIntoView({ block: 'nearest' });
     }
-  }, [focusedIndex, selectId]);
+  }, [focusedIndex]);
 
-  const classes = useMemo(
-    () =>
-      clsx(
-        'select',
-        `select--${size}`,
-        disabled && 'select--disabled',
-        error && 'select--error',
-        isOpen && 'select--open',
-        className
-      ),
-    [size, disabled, error, isOpen, className]
-  );
+  const classes = [
+    'select',
+    `select--${size}`,
+    disabled && 'select--disabled',
+    error && 'select--error',
+    isOpen && 'select--open',
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <div className={classes} ref={selectRef}>
-      {label && (
-        <label className="select__label" htmlFor={selectId}>
-          {label}
-        </label>
-      )}
+      {label && <label className="select__label">{label}</label>}
 
       <div
-        id={selectId}
         className="select__trigger"
         onClick={handleToggle}
         onKeyDown={handleKeyDown}
         tabIndex={disabled ? -1 : 0}
-        role="combobox"
+        role="button"
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         aria-disabled={disabled}
-        aria-invalid={!!error}
-        aria-describedby={error ? errorId : helperText ? helperId : undefined}
       >
         <span
-          className={clsx(
-            'select__value',
-            !selectedOption && 'select__value--placeholder'
-          )}
+          className={`select__value ${!selectedOption ? 'select__value--placeholder' : ''}`}
         >
           {selectedOption?.label || placeholder}
         </span>
@@ -209,7 +181,6 @@ export const Select = memo(function Select({
           height="8"
           viewBox="0 0 12 8"
           fill="none"
-          aria-hidden="true"
         >
           <path
             d="M1 1L6 6L11 1"
@@ -233,25 +204,19 @@ export const Select = memo(function Select({
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 onClick={e => e.stopPropagation()}
-                aria-label="Rechercher dans la liste"
               />
             </div>
           )}
 
-          <div className="select__options" role="listbox" aria-labelledby={selectId}>
+          <div className="select__options" role="listbox">
             {filteredOptions.length === 0 ? (
               <div className="select__empty">Aucun résultat</div>
             ) : (
               filteredOptions.map((option, index) => (
                 <div
                   key={option.value}
-                  id={`${selectId}-option-${index}`}
-                  className={clsx(
-                    'select__option',
-                    option.value === value && 'select__option--selected',
-                    index === focusedIndex && 'select__option--focused',
-                    option.disabled && 'select__option--disabled'
-                  )}
+                  id={`select-option-${index}`}
+                  className={`select__option ${option.value === value ? 'select__option--selected' : ''} ${index === focusedIndex ? 'select__option--focused' : ''} ${option.disabled ? 'select__option--disabled' : ''}`}
                   onClick={() => !option.disabled && handleSelect(option.value)}
                   role="option"
                   aria-selected={option.value === value}
@@ -265,7 +230,6 @@ export const Select = memo(function Select({
                       height="16"
                       viewBox="0 0 16 16"
                       fill="none"
-                      aria-hidden="true"
                     >
                       <path
                         d="M13 4L6 11L3 8"
@@ -283,16 +247,8 @@ export const Select = memo(function Select({
         </div>
       )}
 
-      {error && (
-        <span className="select__error" id={errorId} role="alert">
-          {error}
-        </span>
-      )}
-      {!error && helperText && (
-        <span className="select__helper" id={helperId}>
-          {helperText}
-        </span>
-      )}
+      {error && <span className="select__error">{error}</span>}
+      {!error && helperText && <span className="select__helper">{helperText}</span>}
     </div>
   );
-});
+};

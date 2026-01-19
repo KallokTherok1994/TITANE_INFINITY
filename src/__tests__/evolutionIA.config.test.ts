@@ -169,7 +169,7 @@ describe('evolutionIA.config.ts', () => {
     it('retourne la capability correcte par ID', () => {
       const cap = getCapability('basic_reasoning');
       expect(cap).toBeDefined();
-      expect(cap?.id).toBe('basic_reasoning');
+      expect(cap!.id).toBe('basic_reasoning');
     });
 
     it('retourne undefined pour ID inexistant', () => {

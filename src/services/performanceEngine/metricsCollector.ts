@@ -18,7 +18,6 @@
  */
 
 import { secureInvoke } from '@/lib/security';
-import { logger } from '@/utils/logger';
 import {
   generateSnapshotId,
   createEmptySnapshot,
@@ -515,7 +514,7 @@ export class MetricsCollector {
     };
 
     this.initializeModuleMetrics();
-    logger.debug('📊 Initialized');
+    console.log('[MetricsCollector] 📊 Initialized');
   }
 
   /**
@@ -547,7 +546,7 @@ export class MetricsCollector {
    */
   start(): void {
     if (this.state.running) {
-      logger.debug('⚠️ Already running');
+      console.log('[MetricsCollector] ⚠️ Already running');
       return;
     }
 
@@ -559,7 +558,7 @@ export class MetricsCollector {
         await this.collect();
       } catch (error) {
         this.state.errorCount++;
-        logger.error('❌ Collection error:', error);
+        console.error('[MetricsCollector] ❌ Collection error:', error);
       }
     }, this.config.intervalMs);
 
@@ -570,7 +569,7 @@ export class MetricsCollector {
       source: 'collector',
     });
 
-    logger.debug(`[MetricsCollector] ▶️ Started (interval: ${this.config.intervalMs}ms)`);
+    console.log(`[MetricsCollector] ▶️ Started (interval: ${this.config.intervalMs}ms)`);
   }
 
   /**
@@ -594,7 +593,7 @@ export class MetricsCollector {
       source: 'collector',
     });
 
-    logger.debug('⏹️ Stopped');
+    console.log('[MetricsCollector] ⏹️ Stopped');
   }
 
   /**
@@ -744,7 +743,7 @@ export class MetricsCollector {
         uptime: rustMetrics.uptime,
       };
     } catch (error) {
-      logger.warn('System metrics fallback:', error);
+      console.warn('[MetricsCollector] System metrics fallback:', error);
       return this.getFallbackSystemMetrics();
     }
   }
@@ -1142,7 +1141,7 @@ export class MetricsCollector {
       try {
         listener(event);
       } catch (error) {
-        logger.error('Listener error:', error);
+        console.error('[MetricsCollector] Listener error:', error);
       }
     });
   }

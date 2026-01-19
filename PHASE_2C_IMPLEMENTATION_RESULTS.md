@@ -10,6 +10,7 @@
 **File:** [chat_engine/streaming.rs](src-tauri/src/chat_engine/streaming.rs)
 
 **Changes:**
+
 ```rust
 // BEFORE (Line 23-24):
 let mut chunks = Vec::new();
@@ -34,6 +35,7 @@ chunks.push(StreamChunk {
 ```
 
 **Impact:**
+
 - ✅ Eliminates N allocations (N = number of chunks)
 - ✅ Reduces from 3 allocations/iteration to ~1
 - ✅ Expected savings: **-8-15ms per large message**
@@ -45,6 +47,7 @@ chunks.push(StreamChunk {
 **File:** [tts/mod.rs](src-tauri/src/tts/mod.rs)
 
 **Changes:**
+
 ```rust
 // BEFORE:
 let mut current_chunk = String::new();  // Starts with 0 capacity, grows dynamically
@@ -60,6 +63,7 @@ chunk.push_str(trimmed);
 ```
 
 **Impact:**
+
 - ✅ Pre-allocates String capacity to max_chars (reduces reallocations)
 - ✅ Reuses String buffers instead of creating new ones
 - ✅ Expected savings: **-5-10ms for large text chunks**
@@ -71,6 +75,7 @@ chunk.push_str(trimmed);
 **File:** [omega/guardrails.rs](src-tauri/src/omega/guardrails.rs)
 
 **Changes:**
+
 ```rust
 // BEFORE (Line 205, 545):
 let email_pattern = regex::Regex::new(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}");
@@ -90,6 +95,7 @@ if EMAIL_PATTERN.is_match(text) { /*...*/ }
 ```
 
 **Impact:**
+
 - ✅ Regex compiled ONCE instead of per-call
 - ✅ Previously compiled 2x (check_privacy + replace_all)
 - ✅ Expected savings: **-8-15ms per check_privacy() call**
@@ -99,9 +105,10 @@ if EMAIL_PATTERN.is_match(text) { /*...*/ }
 ## 📊 CUMULATIVE IMPACT
 
 **Total String/Memory Optimizations:**
+
 ```
 Optimization 1 (Streaming):    -8-15ms   ← Cache allocations
-Optimization 2 (TTS):          -5-10ms   ← Pre-allocate capacity  
+Optimization 2 (TTS):          -5-10ms   ← Pre-allocate capacity
 Optimization 3 (Regex):        -8-15ms   ← Compile once
 ──────────────────────────────────────
 TOTAL ESTIMATED:              -21-40ms   (cumulative)
@@ -115,16 +122,19 @@ TOTAL ESTIMATED:              -21-40ms   (cumulative)
 ## 🔄 REMAINING OPTIMIZATIONS (Not yet implemented)
 
 ### Opportunity 4: Connection Pooling
+
 - Status: Already exists in memory/pool.rs ✅
 - Connection pooling already implemented via StringPool
 - No additional work needed
 
 ### Opportunity 5: Async Optimization
+
 - Status: Ready to check
 - Location: commands/ai_chat.rs, overdrive/chat_orchestrator.rs
 - Expected: Low impact if already using tokio properly
 
 ### Opportunity 6: Serde Optimization
+
 - Status: Ready to check
 - Location: types/memory_chat.rs
 - Expected: Low-medium impact (5-10ms)
@@ -134,12 +144,14 @@ TOTAL ESTIMATED:              -21-40ms   (cumulative)
 ## ⚙️ BUILD STATUS
 
 **Compilation:**
+
 - [✅] chat_engine/streaming.rs - String optimizations applied
 - [✅] tts/mod.rs - Memory pre-allocation applied
 - [✅] omega/guardrails.rs - Regex caching applied
 - [⏳] cargo build --release (in progress - 60s timeout)
 
 **Expected Outcome:**
+
 - [ ] Build succeeds (no new errors)
 - [ ] All tests pass
 - [ ] Performance gain: -1-3% launch time
@@ -149,23 +161,27 @@ TOTAL ESTIMATED:              -21-40ms   (cumulative)
 ## 📋 NEXT STEPS
 
 ### Step 1: Verify Build
+
 ```bash
 # Check compilation results when timeout finishes
 wait  # For build to complete
 ```
 
 ### Step 2: Run Tests
+
 ```bash
 cargo test --release 2>&1 | tail -20
 ```
 
 ### Step 3: Benchmark Measurement
+
 ```bash
 # Measure launch time with new optimizations
 pnpm run benchmark:launch 2>&1
 ```
 
 ### Step 4: Commit Changes
+
 ```bash
 git add -A
 git commit -m "perf(rust): optimize string allocations, TTS memory, and regex caching (-40ms estimated)"
@@ -173,8 +189,9 @@ git push origin MAIN
 ```
 
 ### Step 5: Continue Phase 2 (Optional - Other Optimizations)
+
 - [ ] Async optimization check
-- [ ] Serde optimization implementation  
+- [ ] Serde optimization implementation
 - [ ] Memory profiling (Phase 2D)
 
 ---
@@ -184,16 +201,19 @@ git push origin MAIN
 **Status:** 🟢 **3/5 OPTIMIZATIONS IMPLEMENTED**
 
 ### Completed:
+
 - ✅ String Allocation (Streaming)
 - ✅ TTS Memory Pre-allocation
 - ✅ Regex Caching
 
 ### Not Started (Low Priority):
+
 - ⏳ Connection Pooling (already implemented ✅)
 - ⏳ Async Optimization (check if needed)
 - ⏳ Serde Optimization (optional)
 
 ### Time Invested:
+
 - ~30-40 minutes for 3 major optimizations
 - High-impact changes (easy wins)
 - Expected cumulative savings: -40ms
@@ -203,6 +223,7 @@ git push origin MAIN
 ## 🎯 SUCCESS CRITERIA
 
 **Phase 2C COMPLETE when:**
+
 - [✅] String allocations optimized (streaming module)
 - [✅] TTS memory optimized (pre-allocation)
 - [✅] Regex caching implemented (email pattern)
@@ -216,6 +237,7 @@ git push origin MAIN
 ## 🚀 READY FOR NEXT PHASE
 
 **When build finishes:**
+
 1. Verify compilation success
 2. Run quick test suite
 3. Commit changes
@@ -228,4 +250,3 @@ git push origin MAIN
 **Status: 🟡 AWAITING BUILD COMPLETION**
 
 Optimizations applied successfully. Ready to validate with tests and benchmarks.
-

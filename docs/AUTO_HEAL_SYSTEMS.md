@@ -2,10 +2,7 @@
 
 **Version:** 26.2.0  
 **Date:** 2025-12-22  
-**Status:** Document historique (v26.2.0) — Production EN ATTENTE (autorisation)
-
-> NOTE (gouvernance): ce document ne constitue pas une autorisation de déploiement.
-> Runtime actuel: v26.3.0.
+**Status:** Production Ready
 
 ---
 
@@ -84,7 +81,7 @@ TITANE∞ includes comprehensive automated systems for detecting and resolving i
    - Rust toolchain presence
 
 2. **Build Configuration**
-   - Version consistency (package.json, Cargo.toml, src-tauri/tauri.conf.json)
+   - Version consistency (package.json, Cargo.toml, tauri.conf.json)
    - Tauri-only mode enforcement
    - dist directory presence
    - TypeScript strict mode

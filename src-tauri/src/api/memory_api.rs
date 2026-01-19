@@ -18,15 +18,13 @@ use serde::Serialize;
 #[tauri::command]
 pub async fn get_memory_state(memory: tauri::State<'_, MemoryCore>) -> AppResult<MemoryState> {
     let state = memory.get_state().await?;
-    if !state.synthetic_mode {
-        log::debug!(
-            target: "memory",
-            "get_memory_state disk_mode={:?} synthetic={} issues={}",
-            state.disk_mode,
-            state.synthetic_mode,
-            state.issues.len()
-        );
-    }
+    log::info!(
+        target: "memory",
+        "get_memory_state disk_mode={:?} synthetic={} issues={}",
+        state.disk_mode,
+        state.synthetic_mode,
+        state.issues.len()
+    );
     Ok(state)
 }
 

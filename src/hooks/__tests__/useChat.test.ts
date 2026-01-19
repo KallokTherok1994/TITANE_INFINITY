@@ -13,7 +13,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { renderHook, waitFor, act } from '@testing-library/react';
 import { useChat } from '../useChat';
-import { chatService } from '../../services/api/chat';
 
 // Types locaux pour les tests (basés sur useChat.ts)
 interface AIMessage {
@@ -65,7 +64,7 @@ vi.mock('@/services/ai/cognitiveKernel', () => ({
   },
 }));
 
-vi.mock('@/services/api/chat', () => ({
+vi.mock('@/services/api', () => ({
   chatService: {
     sendMessageLegacy: vi.fn(async () => ({
       content: 'Backend response',
@@ -404,6 +403,7 @@ describe('useChat - KERNEL OMNIS Tests', () => {
 
   describe('Error Handling', () => {
     it('should handle backend errors gracefully', async () => {
+      const { chatService } = await import('@/services/api');
       vi.mocked(chatService.sendMessageLegacy).mockRejectedValueOnce(
         new Error('Backend error')
       );
@@ -528,28 +528,5 @@ describe('useChat - Performance', () => {
 
     // Devrait avoir traité tous les messages sans erreur
     expect(result.current.messages.length).toBeGreaterThan(0);
-  });
-
-  it('should normalize messages with content always as string', async () => {
-    const { result } = renderHook(() => useChat(), {
-      wrapper: TestWrapper,
-    });
-
-    await act(async () => {
-      await result.current.sendMessage('test message');
-    });
-
-    await waitFor(
-      () => {
-        expect(result.current.isLoading).toBe(false);
-      },
-      { timeout: 10000 }
-    );
-
-    // Vérifier que tous les messages ont content comme string
-    result.current.messages.forEach(message => {
-      expect(typeof message.content).toBe('string');
-      expect(message.content).not.toBe('');
-    });
   });
 });

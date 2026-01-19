@@ -472,14 +472,14 @@ describe('useSystemHealth', () => {
       expect(result.current.health?.alerts.length).toBeGreaterThan(0);
     });
 
-    const initialAlertCount = result.current.health?.alerts.length;
-    const alertId = result.current.health?.alerts[0].id;
+    const initialAlertCount = result.current.health!.alerts.length;
+    const alertId = result.current.health!.alerts[0].id;
 
     await result.current.resolveAlert(alertId);
 
     // Wait for state update after resolveAlert
     await waitFor(() => {
-      expect(result.current.health?.alerts.length).toBe(initialAlertCount - 1);
+      expect(result.current.health!.alerts.length).toBe(initialAlertCount - 1);
     });
   });
 

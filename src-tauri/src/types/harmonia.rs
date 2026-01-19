@@ -56,15 +56,6 @@ pub enum ActionType {
 mod tests {
     use super::*;
 
-    macro_rules! test_ok {
-        ($expr:expr, $msg:expr $(,)?) => {
-            match $expr {
-                Ok(val) => val,
-                Err(err) => panic!("{}: {err}", $msg),
-            }
-        };
-    }
-
     // ─────────────────────────────────────────────────────────────
     // StabilizationLevel Tests
     // ─────────────────────────────────────────────────────────────
@@ -109,14 +100,10 @@ mod tests {
     #[test]
     fn test_stabilization_level_serialization() {
         let level = StabilizationLevel::Rebalancing;
-        let json = test_ok!(
-            serde_json::to_string(&level),
-            "StabilizationLevel should serialize to JSON"
-        );
-        let restored: StabilizationLevel = test_ok!(
-            serde_json::from_str(&json),
-            "StabilizationLevel should deserialize from JSON"
-        );
+        let json =
+            serde_json::to_string(&level).expect("StabilizationLevel should serialize to JSON");
+        let restored: StabilizationLevel =
+            serde_json::from_str(&json).expect("StabilizationLevel should deserialize from JSON");
         assert_eq!(restored, StabilizationLevel::Rebalancing);
     }
 
@@ -152,14 +139,9 @@ mod tests {
     #[test]
     fn test_action_type_serialization() {
         let action = ActionType::Redistribute;
-        let json = test_ok!(
-            serde_json::to_string(&action),
-            "ActionType should serialize to JSON"
-        );
-        let restored: ActionType = test_ok!(
-            serde_json::from_str(&json),
-            "ActionType should deserialize from JSON"
-        );
+        let json = serde_json::to_string(&action).expect("ActionType should serialize to JSON");
+        let restored: ActionType =
+            serde_json::from_str(&json).expect("ActionType should deserialize from JSON");
         assert!(matches!(restored, ActionType::Redistribute));
     }
 
@@ -208,14 +190,9 @@ mod tests {
             action_type: ActionType::Redistribute,
             priority: 7,
         };
-        let json = test_ok!(
-            serde_json::to_string(&action),
-            "BalanceAction should serialize to JSON"
-        );
-        let restored: BalanceAction = test_ok!(
-            serde_json::from_str(&json),
-            "BalanceAction should deserialize from JSON"
-        );
+        let json = serde_json::to_string(&action).expect("BalanceAction should serialize to JSON");
+        let restored: BalanceAction =
+            serde_json::from_str(&json).expect("BalanceAction should deserialize from JSON");
         assert_eq!(restored.target, "disk");
         assert_eq!(restored.priority, 7);
     }
@@ -271,14 +248,9 @@ mod tests {
             active_flows: 5,
             ..Default::default()
         };
-        let json = test_ok!(
-            serde_json::to_string(&state),
-            "HarmoniaState should serialize to JSON"
-        );
-        let restored: HarmoniaState = test_ok!(
-            serde_json::from_str(&json),
-            "HarmoniaState should deserialize from JSON"
-        );
+        let json = serde_json::to_string(&state).expect("HarmoniaState should serialize to JSON");
+        let restored: HarmoniaState =
+            serde_json::from_str(&json).expect("HarmoniaState should deserialize from JSON");
         assert_eq!(restored.balance_score, 90.0);
         assert_eq!(restored.active_flows, 5);
     }
@@ -294,14 +266,10 @@ mod tests {
                 stabilization_level: *level,
                 ..Default::default()
             };
-            let json = test_ok!(
-                serde_json::to_string(&state),
-                "HarmoniaState should serialize to JSON"
-            );
-            let restored: HarmoniaState = test_ok!(
-                serde_json::from_str(&json),
-                "HarmoniaState should deserialize from JSON"
-            );
+            let json =
+                serde_json::to_string(&state).expect("HarmoniaState should serialize to JSON");
+            let restored: HarmoniaState =
+                serde_json::from_str(&json).expect("HarmoniaState should deserialize from JSON");
             assert_eq!(restored.stabilization_level, *level);
         }
     }

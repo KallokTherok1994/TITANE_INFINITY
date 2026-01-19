@@ -14,8 +14,6 @@
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { logger } from '@/utils/logger';
-
 export type TitanSpatialState = {
   // Position 3D
   x: number; // -1 (gauche) → 1 (droite)
@@ -223,7 +221,7 @@ class HolophonicEngine {
     if (this.isInitialized) return;
 
     try {
-      logger.debug('🎧 [HOLOPHONIC] Initializing spatial audio engine...');
+      console.log('🎧 [HOLOPHONIC] Initializing spatial audio engine...');
 
       // Créer le contexte audio
       const AudioContextClass =
@@ -261,9 +259,9 @@ class HolophonicEngine {
       this.updatePannerPosition();
 
       this.isInitialized = true;
-      logger.debug('✅ [HOLOPHONIC] Spatial audio engine initialized');
+      console.log('✅ [HOLOPHONIC] Spatial audio engine initialized');
     } catch (error) {
-      logger.error('❌ [HOLOPHONIC] Failed to initialize:', error);
+      console.error('❌ [HOLOPHONIC] Failed to initialize:', error);
     }
   }
 
@@ -278,7 +276,7 @@ class HolophonicEngine {
   }
 
   public setPreset(preset: SpatialPreset): void {
-    logger.debug(`🎧 [HOLOPHONIC] Setting preset: ${preset}`);
+    console.log(`🎧 [HOLOPHONIC] Setting preset: ${preset}`);
     this.spatialState = { ...SPATIAL_PRESETS[preset] };
     this.updatePannerPosition();
     this.notifySubscribers();
@@ -329,7 +327,7 @@ class HolophonicEngine {
     options: SpatialOptions = {}
   ): Promise<void> {
     if (!this.audioContext || !this.panner) {
-      logger.warn('🎧 [HOLOPHONIC] Audio context not initialized');
+      console.warn('🎧 [HOLOPHONIC] Audio context not initialized');
       return;
     }
 
@@ -398,7 +396,7 @@ class HolophonicEngine {
     oscillator.start(now);
     oscillator.stop(now + config.duration);
 
-    logger.debug(`🎵 [HOLOPHONIC] Playing cue: ${cue} (${config.description})`);
+    console.log(`🎵 [HOLOPHONIC] Playing cue: ${cue} (${config.description})`);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -406,14 +404,14 @@ class HolophonicEngine {
   // ═══════════════════════════════════════════════════════════════════════════
 
   public setSoundIntensity(intensity: 'off' | 'minimal' | 'normal' | 'rich'): void {
-    logger.debug(`🎧 [HOLOPHONIC] Sound intensity: ${intensity}`);
+    console.log(`🎧 [HOLOPHONIC] Sound intensity: ${intensity}`);
     this.soundIntensity = intensity;
   }
 
   public setOutputDevice(deviceId?: string): void {
     // Web Audio API ne supporte pas directement la sélection de device
     // Nécessiterait MediaDevices.getUserMedia ou Web Audio API extensions
-    logger.debug(
+    console.log(
       `🎧 [HOLOPHONIC] Output device change requested: ${deviceId || 'default'}`
     );
   }
@@ -434,7 +432,7 @@ class HolophonicEngine {
       try {
         callback(this.spatialState);
       } catch (error) {
-        logger.error('🎧 [HOLOPHONIC] Error in subscriber:', error);
+        console.error('🎧 [HOLOPHONIC] Error in subscriber:', error);
       }
     });
   }
@@ -446,7 +444,7 @@ class HolophonicEngine {
   public async resume(): Promise<void> {
     if (this.audioContext && this.audioContext.state === 'suspended') {
       await this.audioContext.resume();
-      logger.debug('▶️ [HOLOPHONIC] Audio context resumed');
+      console.log('▶️ [HOLOPHONIC] Audio context resumed');
     }
   }
 

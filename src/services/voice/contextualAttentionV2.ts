@@ -17,7 +17,6 @@
  */
 
 import { type AttentionState as _AttentionState } from './attentionTypes';
-import { logger } from '@/utils/logger';
 
 /**
  * Contexte environnemental
@@ -190,7 +189,7 @@ class ContextualAttentionEngineV2 {
     // Re-calculer configuration adaptée
     this.recalculateAdaptedConfig();
 
-    logger.debug('🌍 Environment updated');
+    console.log('[ContextualAttention] 🌍 Environment updated');
   }
 
   /**
@@ -212,7 +211,7 @@ class ContextualAttentionEngineV2 {
     // Re-calculer configuration adaptée
     this.recalculateAdaptedConfig();
 
-    logger.debug('📱 Application context updated');
+    console.log('[ContextualAttention] 📱 Application context updated');
   }
 
   /**
@@ -411,7 +410,7 @@ class ContextualAttentionEngineV2 {
       },
     ];
 
-    logger.debug(`[ContextualAttention] 📋 Loaded ${this.rules.length} rules`);
+    console.log(`[ContextualAttention] 📋 Loaded ${this.rules.length} rules`);
   }
 
   /**
@@ -426,7 +425,7 @@ class ContextualAttentionEngineV2 {
       .filter(rule => rule.condition(this.currentContext))
       .sort((a, b) => b.priority - a.priority);
 
-    logger.debug(`[ContextualAttention] 🎯 Applying ${applicableRules.length} rules`);
+    console.log(`[ContextualAttention] 🎯 Applying ${applicableRules.length} rules`);
 
     for (const rule of applicableRules) {
       config = {
@@ -434,12 +433,12 @@ class ContextualAttentionEngineV2 {
         ...rule.config,
       };
 
-      logger.debug(`  → ${rule.id} (priority ${rule.priority})`);
+      console.log(`  → ${rule.id} (priority ${rule.priority})`);
     }
 
     this.adaptedConfig = config;
 
-    logger.debug(
+    console.log(
       `[ContextualAttention] ✅ Config: threshold=${config.wakeThreshold.toFixed(2)}, reason="${config.reason}"`
     );
   }
@@ -497,7 +496,7 @@ class ContextualAttentionEngineV2 {
 
     this.recalculateAdaptedConfig();
 
-    logger.debug(`[ContextualAttention] ➕ Added rule: ${rule.id}`);
+    console.log(`[ContextualAttention] ➕ Added rule: ${rule.id}`);
   }
 
   /**
@@ -508,7 +507,7 @@ class ContextualAttentionEngineV2 {
     if (index !== -1) {
       this.rules.splice(index, 1);
       this.recalculateAdaptedConfig();
-      logger.debug(`[ContextualAttention] ➖ Removed rule: ${id}`);
+      console.log(`[ContextualAttention] ➖ Removed rule: ${id}`);
     }
   }
 
@@ -523,7 +522,7 @@ class ContextualAttentionEngineV2 {
 
     this.recalculateAdaptedConfig();
 
-    logger.debug('🔧 Base config updated');
+    console.log('[ContextualAttention] 🔧 Base config updated');
   }
 
   /**
@@ -566,7 +565,7 @@ class ContextualAttentionEngineV2 {
   reset(): void {
     this.currentContext = this.createDefaultContext();
     this.adaptedConfig = { ...this.baseConfig };
-    logger.debug('🔄 Reset complete');
+    console.log('[ContextualAttention] 🔄 Reset complete');
   }
 }
 

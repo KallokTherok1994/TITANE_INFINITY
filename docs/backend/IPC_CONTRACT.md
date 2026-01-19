@@ -1,7 +1,7 @@
-# TITANE∞ IPC Contract v26.3.0
+# TITANE∞ IPC Contract v26.2.0
 
 **Date:** 2026-01-03  
-**Version:** 26.3.0  
+**Version:** 26.2.0  
 **Protocol:** Tauri IPC (JSON-RPC over WebSocket)
 
 ---
@@ -273,58 +273,30 @@ export class TitaneError extends Error {
 
 | Command | Frontend Files | Payload | Response | Errors |
 |---------|----------------|---------|----------|--------|
-| `conversation_generate` | `src/services/tauri/chatEngine.commands.ts`<br>`src/services/ai/providers/tauriChat.ts`<br>`src/tests/e2e/titane_e2e.test.ts` | `{conversationId: string, message: string, provider?: string}` | `{id: string, role: string, content: string, timestamp: string}` | `UNAUTHORIZED` (no API key)<br>`RATE_LIMITED`<br>`EXTERNAL_API_ERROR`<br>`TIMEOUT` |
-| `chat_get_providers_status` | `src/components/ChatDiagnostic.tsx`<br>`src/tests/regression/titane_regression.test.ts`<br>`src/tests/tauri-invoke-fix-validator.ts` | `{}` | `{openai: boolean, claude: boolean, gemini: boolean, copilot: boolean, ollama: boolean}` | `INTERNAL_ERROR` |
-| `avatar_advance_lip_sync` | `NO_CALLERS_FOUND` | `{}` | `void` | `INTERNAL_ERROR` |
-| `voice_start_listening` | `NO_CALLERS_FOUND` | `{}` | `string` | `VALIDATION_ERROR` (already listening)<br>`INTERNAL_ERROR` |
-| `singularity_get_full_state` | `src/services/autoAuditEngine.ts`<br>`src/services/singularityBridge.ts`<br>`src/components/ChatDiagnostic.tsx` | `{}` | `{physical: {...}, cognitive: {...}, symbolic: {...}, adaptive: {...}, meta: {...}}` | `INTERNAL_ERROR` |
-| `get_memory_state` | `src/services/tauri/backend-v17.2.commands.ts`<br>`src/services/singularityConnections.ts`<br>`src/services/autoAuditEngine.ts` | `{}` | `{stm: [...], mtm: [...], ltm: [...], stats: {...}}` | `DATABASE_ERROR` |
-| `add_timeline_event` | `src/engines/selfHealing/selfHealingEngine.ts`<br>`src/services/tauri/backend-v17.2.commands.ts`<br>`src/tests/e2e/titane_e2e.test.ts` | `{event: TimelineEvent}` | `void` | `INVALID_INPUT`<br>`DATABASE_ERROR` |
+| `conversation_generate` | `src/hooks/useConversation.ts`<br>`src/services/conversationService.ts` | `{conversationId: string, message: string, provider?: string}` | `{id: string, role: string, content: string, timestamp: string}` | `UNAUTHORIZED` (no API key)<br>`RATE_LIMITED`<br>`EXTERNAL_API_ERROR`<br>`TIMEOUT` |
+| `chat_get_providers_status` | `src/components/SettingsPanel.tsx`<br>`src/services/aiService.ts` | `{}` | `{openai: boolean, claude: boolean, gemini: boolean, copilot: boolean, ollama: boolean}` | `INTERNAL_ERROR` |
+| `avatar_advance_lip_sync` | `src/components/Avatar3D.tsx`<br>`src/hooks/useAvatar.ts` | `{phoneme: string, timestamp: number}` | `void` | `NOT_FOUND` (avatar not initialized) |
+| `voice_start_listening` | `src/components/VoiceInput.tsx`<br>`src/hooks/useVoice.ts` | `{continuous?: boolean}` | `{sessionId: string}` | `PERMISSION_DENIED` (mic access)<br>`DEVICE_NOT_FOUND` |
+| `singularity_get_full_state` | `src/services/singularityService.ts` | `{}` | `{physical: {...}, cognitive: {...}, symbolic: {...}, adaptive: {...}, meta: {...}}` | `INTERNAL_ERROR` |
+| `get_memory_state` | `src/services/memoryService.ts` | `{}` | `{stm: [...], mtm: [...], ltm: [...], stats: {...}}` | `DATABASE_ERROR` |
+| `add_timeline_event` | `src/services/timelineService.ts` | `{type: string, content: string, metadata?: object}` | `{id: string}` | `INVALID_INPUT`<br>`DATABASE_ERROR` |
 
 ### Medium-Traffic Commands (10-100 calls/session)
 
 | Command | Frontend Files | Payload | Response | Errors |
 |---------|----------------|---------|----------|--------|
-| `chat_set_gemini_key` | `src/features/governance-center/services/governanceService.ts`<br>`src/utils/secureSecrets.ts`<br>`src/services/ai/providers/tauriChat.ts` | `{api_key: string}` | `SecureResponse<GeminiKeyStatus>` | `Err(String)` |
-| `get_gemini_key_status` | `src/features/governance-center/services/governanceService.ts`<br>`src/utils/secureSecrets.ts`<br>`src/services/ai/providers/gemini.ts` | `{}` | `SecureResponse<GeminiKeyStatus>` | `Err(String)` |
-| `chat_set_openai_key` | `src/features/governance-center/services/governanceService.ts`<br>`src/utils/secureSecrets.ts` | `{api_key: string}` | `SecureResponse<GeminiKeyStatus>` | `Err(String)` |
-| `get_openai_key_status` | `src/features/governance-center/services/governanceService.ts`<br>`src/utils/secureSecrets.ts`<br>`src/services/ai/providers/openai.ts` | `{}` | `SecureResponse<GeminiKeyStatus>` | `Err(String)` |
-| `chat_set_anthropic_key` | `src/features/governance-center/services/governanceService.ts`<br>`src/utils/secureSecrets.ts` | `{api_key: string}` | `SecureResponse<GeminiKeyStatus>` | `Err(String)` |
-| `get_anthropic_key_status` | `src/features/governance-center/services/governanceService.ts`<br>`src/utils/secureSecrets.ts`<br>`src/services/ai/providers/claude.ts` | `{}` | `SecureResponse<GeminiKeyStatus>` | `Err(String)` |
-| `get_copilot_key_status` | `src/features/governance-center/services/governanceService.ts`<br>`src/services/ai/providers/copilot.ts` | `{}` | `CopilotKeyStatus` | `Err(String)` |
-| `chat_set_copilot_key` | `src/features/governance-center/services/governanceService.ts`<br>`src/services/ai/providers/copilot.ts` | `{api_key: string}` | `CopilotKeyStatus` | `Err(String)` |
-| `avatar_set_appearance` | `src/modules/avatar/appearance/appearanceEngine.ts` | `{style: object}` | `void` | `SERIALIZATION_ERROR` |
-| `autoheal_detect_broken_modules` | `src/__tests__/singularity-fusion-integration.test.ts`<br>`src/__tests__/e2e-automated-validation.test.tsx`<br>`src/__tests__/singularity-fusion-mocked.test.ts` | `{}` | `BrokenModule[]` | `INTERNAL_ERROR` |
-| `performance_get_metrics` | `src/services/systemCenter/SystemAPI.ts`<br>`src/__tests__/e2e-automated-validation.test.tsx`<br>`src/__tests__/singularity-fusion-integration.test.ts` | `{}` | `{cpu_usage: number, gpu_usage: number, memory_usage: number, memory_available: number, fps: number, frame_time: number, render_time: number, idle_time: number, gc_time: number, network_latency: number, timestamp: number}` | `INTERNAL_ERROR` |
+| `chat_set_openai_key` | `src/components/APIKeyDialog.tsx` | `{key: string}` | `void` | `INVALID_INPUT` (bad key format) |
+| `avatar_set_appearance` | `src/components/AvatarCustomizer.tsx` | `{style: object}` | `void` | `SERIALIZATION_ERROR` |
+| `autoheal_detect_broken_modules` | `src/services/healthService.ts` | `{}` | `{broken: string[]}` | `INTERNAL_ERROR` |
+| `performance_get_metrics` | `src/components/Dashboard.tsx` | `{}` | `{cpu: number, memory: number, fps: number}` | - |
 
 ### Low-Traffic Commands (<10 calls/session)
 
 | Command | Frontend Files | Payload | Response | Errors |
 |---------|----------------|---------|----------|--------|
-| `is_onboarding_complete` | `src/App.tsx`<br>`src/components/Onboarding/INTEGRATION_GUIDE.md` | `{}` | `boolean` | - |
-| `get_secrets_status` | `src/features/governance-center/services/governanceService.ts` | `{}` | `SecureResponse<SecretStatus[]>` | `Err(String)` |
-| `has_secret` | `src/features/governance-center/services/governanceService.ts` | `{key: string}` | `SecureResponse<boolean>` | `Err(String)` |
-| `delete_secret` | `src/features/governance-center/services/governanceService.ts` | `{key: string}` | `SecureResponse<void>` | `Err(String)` |
-| `get_ia_policies` | `src/features/governance-center/services/governanceService.ts` | `{}` | `SecureResponse<IAPolicy[]>` | `Err(String)` |
-| `save_ia_policies` | `src/features/governance-center/services/governanceService.ts` | `{policies: IAPolicy[]}` | `SecureResponse<void>` | `Err(String)` |
-| `toggle_ia_policy` | `src/features/governance-center/services/governanceService.ts` | `{policyId: string, enabled: boolean}` | `SecureResponse<IAPolicy>` | `Err(String)` |
-| `create_ia_policy` | `src/features/governance-center/services/governanceService.ts` | `{policy: Omit<IAPolicy, "id" \| "createdAt" \| "updatedAt">}` | `SecureResponse<IAPolicy>` | `Err(String)` |
-| `delete_ia_policy` | `src/features/governance-center/services/governanceService.ts` | `{policyId: string}` | `SecureResponse<void>` | `Err(String)` |
-| `get_permission_matrix` | `src/features/governance-center/services/governanceService.ts` | `{}` | `SecureResponse<PermissionMatrix>` | `Err(String)` |
-| `get_security_log` | `src/features/governance-center/services/governanceService.ts` | `{filters?: SecurityLogFilters}` | `SecureResponse<SecurityLogEntry[]>` | `Err(String)` |
-| `append_security_log` | `src/features/governance-center/services/governanceService.ts` | `{entry: Omit<SecurityLogEntry, "id" \| "timestamp">}` | `SecureResponse<SecurityLogEntry>` | `Err(String)` |
-| `export_security_log` | `src/features/governance-center/services/governanceService.ts` | `{format: "json" \| "csv"}` | `SecureResponse<string>` | `Err(String)` |
-| `clear_security_log` | `src/features/governance-center/services/governanceService.ts` | `{}` | `SecureResponse<void>` | `Err(String)` |
-| `clear_permission_audit` | `src/features/governance-center/services/governanceService.ts` | `{}` | `SecureResponse<void>` | `Err(String)` |
-| `sc_run_full_diagnostics` | `src/features/system-center/hooks/useSystemDiagnostics.ts` | `{}` | `{results: [...]}` | `TIMEOUT` |
-| `secure_store_secret` | `src/features/governance-center/services/governanceService.ts`<br>`src/utils/secureSecrets.ts` | `{key: string, value: string, purge_env?: boolean, env_variable?: string}` | `SecureResponse<SecretOperationResult>` | `Err(String)` |
-| `secure_import_file` | `NO_CALLERS_FOUND` (allowlisted: `src/lib/security.ts`) | `{filename: string, data: number[]}` | `SecureResponse<string>` | `Err(String)` |
-| `secure_read_file` | `NO_CALLERS_FOUND` (allowlisted: `src/lib/security.ts`) | `{safe_name: string}` | `SecureResponse<number[]>` | `Err(String)` |
-| `secure_list_files` | `src/tests/e2e/titane_e2e.test.ts`<br>`src/test/setup.ts` (mock) | `{}` | `SecureResponse<string[]>` | `Err(String)` |
-| `secure_delete_file` | `NO_CALLERS_FOUND` (allowlisted: `src/lib/security.ts`) | `{safe_name: string}` | `SecureResponse<void>` | `Err(String)` |
-| `get_permission_audit` | `src/features/governance-center/services/governanceService.ts` | `{}` | `SecureResponse<string>` | `Err(String)` |
-| `validate_chat_message` | `NO_CALLERS_FOUND` (allowlisted: `src/lib/security.ts`) | `{message: string}` | `SecureResponse<string>` | `Err(String)` |
-| `check_system_integrity` | `src/features/governance-center/services/governanceService.ts`<br>`src/services/autoAuditEngine.ts`<br>`src/components/ChatDiagnostic.tsx` | `{}` | `SecureResponse<string>` | `Err(String)` |
+| `onboarding_complete` | `src/pages/Onboarding.tsx` | `{}` | `void` | - |
+| `export_security_log` | `src/pages/Governance.tsx` | `{format: "json" \| "csv"}` | `{path: string}` | `IO_ERROR` |
+| `sc_run_full_diagnostics` | `src/pages/SystemCenter.tsx` | `{}` | `{results: [...]}` | `TIMEOUT` |
 
 ### Orphaned Commands (No Frontend Callers - TO VERIFY)
 - `memory_compactor_*` commands (deprecated)
@@ -402,7 +374,11 @@ interface ProvidersStatusResponse {
 
 **Request:**
 ```typescript
-{} // No parameters
+interface LipSyncRequest {
+  phoneme: string;      // Phoneme code (e.g., "AH", "EE", "OO")
+  timestamp: number;    // Milliseconds since speech start
+  intensity?: number;   // 0.0-1.0, default 1.0
+}
 ```
 
 **Response:**
@@ -411,7 +387,8 @@ void // No return value
 ```
 
 **Errors:**
-- `INTERNAL_ERROR`: Backend returned `Err(String)`
+- `NOT_FOUND`: Avatar not initialized (call `avatar_prepare_speech` first)
+- `INVALID_INPUT`: Invalid phoneme code
 
 ### 4. singularity_get_full_state
 
@@ -457,23 +434,29 @@ interface SingularityState {
 
 **Request:**
 ```typescript
-interface TimelineEvent {
-  id: string;
-  timestamp: number;              // i64 côté Rust
-  event_type: "SystemStart" | "ModuleInit" | "HealthChange" | "Repair" | "Snapshot" | "Alert";
-  description: string;
-  data: Record<string, unknown>;  // HashMap<String, serde_json::Value> côté Rust
+interface TimelineEventRequest {
+  type: "chat" | "decision" | "project" | "ritual" | "emotion";
+  content: string;                // Event description (1-10,000 chars)
+  metadata?: {
+    tags?: string[];
+    importance?: number;          // 0-10
+    linkedEvents?: string[];      // Event IDs
+    [key: string]: unknown;       // Additional metadata
+  };
 }
 ```
 
 **Response:**
 ```typescript
-void // No return value
+interface TimelineEventResponse {
+  id: string;                     // UUID
+  timestamp: string;              // ISO 8601 (server-assigned)
+}
 ```
 
 **Errors:**
-- `INVALID_INPUT`: Champ manquant / invalide dans `event`
-- `INTERNAL_ERROR`: Erreur backend (MemoryCore / AppResult)
+- `INVALID_INPUT`: Invalid `type` or empty `content`
+- `DATABASE_ERROR`: Failed to insert into SQLite
 
 ### 6. autoheal_detect_broken_modules
 
@@ -484,598 +467,58 @@ void // No return value
 
 **Response:**
 ```typescript
-interface BrokenModule {
-  module_type: string;
-  severity: string;
-  error: string;
-  detected_at: number; // u64 côté Rust
-}
-
-type AutoHealDetectBrokenModulesResponse = BrokenModule[]
-```
-
-### 7a. chat_set_gemini_key
-
-**Request:**
-```typescript
-interface SetApiKeyRequest {
-  api_key: string;                // Gemini API key
+interface BrokenModulesResponse {
+  broken: Array<{
+    module: string;               // Module name (e.g., "cognitive", "avatar", "tts")
+    reason: string;               // Why it's broken
+    severity: "low" | "medium" | "high" | "critical";
+    healable: boolean;            // Can AutoHeal fix it?
+  }>;
+  timestamp: string;
 }
 ```
-
-**Response:**
-```typescript
-type ChatSetGeminiKeyResponse = SecureResponse<GeminiKeyStatus>
-```
-
-**Errors:**
-- Peut retourner `ok=false` avec `error` (validation côté backend)
-- Peut échouer en `Err(String)` (permission / stockage)
 
 ### 7. chat_set_openai_key
 
 **Request:**
 ```typescript
 interface SetApiKeyRequest {
-  api_key: string;                // OpenAI API key
+  key: string;                    // OpenAI API key (sk-...)
 }
 ```
 
 **Response:**
 ```typescript
-interface SecureResponse<T> {
-  ok: boolean;
-  data: T | null;
-  error: string | null;
-}
-
-interface GeminiKeyStatus {
-  configured: boolean;
-  provider_enabled: boolean;
-  masked_key: string | null;
-  env_present: boolean;
-  env_purged: boolean;
-  was_updated: boolean;
-}
-
-type ChatSetOpenAIKeyResponse = SecureResponse<GeminiKeyStatus>
+void // No return value (success = no error thrown)
 ```
 
 **Errors:**
-- Peut retourner `ok=false` avec `error` (validation côté backend)
-- Peut échouer en `Err(String)` (permission / stockage)
-
-### 7d. get_gemini_key_status
-
-**Request:**
-```typescript
-{} // No parameters
-```
-
-**Response:**
-```typescript
-type GetGeminiKeyStatusResponse = SecureResponse<GeminiKeyStatus>
-```
-
-**Errors:**
-- Peut échouer en `Err(String)` (permission / lecture)
-
-### 7e. get_openai_key_status
-
-**Request:**
-```typescript
-{} // No parameters
-```
-
-**Response:**
-```typescript
-type GetOpenAIKeyStatusResponse = SecureResponse<GeminiKeyStatus>
-```
-
-**Errors:**
-- Peut échouer en `Err(String)` (permission / lecture)
-
-### 7f. chat_set_anthropic_key
-
-**Request:**
-```typescript
-interface SetAnthropicKeyRequest {
-  api_key: string;                // Anthropic API key
-}
-```
-
-**Response:**
-```typescript
-type ChatSetAnthropicKeyResponse = SecureResponse<GeminiKeyStatus>
-```
-
-**Errors:**
-- Peut retourner `ok=false` avec `error` (validation côté backend)
-- Peut échouer en `Err(String)` (permission / stockage)
-
-### 7g. get_anthropic_key_status
-
-**Request:**
-```typescript
-{} // No parameters
-```
-
-**Response:**
-```typescript
-type GetAnthropicKeyStatusResponse = SecureResponse<GeminiKeyStatus>
-```
-
-**Errors:**
-- Peut échouer en `Err(String)` (permission / lecture)
-
-### 7b. get_copilot_key_status
-
-**Request:**
-```typescript
-{} // No parameters
-```
-
-**Response:**
-```typescript
-interface CopilotKeyStatus {
-  configured: boolean;
-  status: string;
-  message: string | null;
-}
-
-// NOTE: retour direct du backend Rust (pas d'enveloppe SecureResponse)
-type GetCopilotKeyStatusResponse = CopilotKeyStatus
-```
-
-**Errors:**
-- Peut échouer en `Err(String)` (permission / lecture)
-
-### 7c. chat_set_copilot_key
-
-**Request:**
-```typescript
-interface SetCopilotKeyRequest {
-  api_key: string;                // GitHub token
-}
-```
-
-**Response:**
-```typescript
-type ChatSetCopilotKeyResponse = CopilotKeyStatus
-```
-
-**Errors:**
-- Peut échouer en `Err(String)` (permission / stockage)
-
-### 7h. secure_store_secret
-
-**Request:**
-```typescript
-interface SecureSecretRequest {
-  key: string;
-  value: string;
-  purge_env?: boolean;
-  env_variable?: string;
-}
-```
-
-**Response:**
-```typescript
-interface SecretOperationResult {
-  key: string;
-  stored: boolean;
-  env_purged: boolean;
-}
-
-type SecureStoreSecretResponse = SecureResponse<SecretOperationResult>
-```
-
-**Errors:**
-- Peut retourner `ok=false` avec `error` (validation côté backend)
-- Peut échouer en `Err(String)` (permission / stockage)
-
-### 7i. secure_import_file
-
-**Request:**
-```typescript
-interface SecureImportFileRequest {
-  filename: string;
-  data: number[]; // bytes (Vec<u8> côté Rust)
-}
-```
-
-**Response:**
-```typescript
-// Retourne le "safe_name" dans la sandbox
-type SecureImportFileResponse = SecureResponse<string>
-```
-
-**Errors:**
-- Peut retourner `ok=false` avec `error` (validation / import)
-- Peut échouer en `Err(String)` (permission)
-
-### 7j. secure_read_file
-
-**Request:**
-```typescript
-interface SecureReadFileRequest {
-  safe_name: string;
-}
-```
-
-**Response:**
-```typescript
-type SecureReadFileResponse = SecureResponse<number[]> // bytes (Vec<u8> côté Rust)
-```
-
-**Errors:**
-- Peut retourner `ok=false` avec `error` (validation / read)
-- Peut échouer en `Err(String)` (permission)
-
-### 7k. secure_list_files
-
-**Request:**
-```typescript
-{} // No parameters
-```
-
-**Response:**
-```typescript
-type SecureListFilesResponse = SecureResponse<string[]>
-```
-
-**Errors:**
-- Peut retourner `ok=false` avec `error` (list)
-- Peut échouer en `Err(String)` (permission)
-
-### 7l. secure_delete_file
-
-**Request:**
-```typescript
-interface SecureDeleteFileRequest {
-  safe_name: string;
-}
-```
-
-**Response:**
-```typescript
-type SecureDeleteFileResponse = SecureResponse<void>
-```
-
-**Errors:**
-- Peut retourner `ok=false` avec `error` (validation / delete)
-- Peut échouer en `Err(String)` (permission)
-
-### 7m. get_permission_audit
-
-**Request:**
-```typescript
-{} // No parameters
-```
-
-**Response:**
-```typescript
-// Le backend retourne un JSON sérialisé dans un string
-type GetPermissionAuditResponse = SecureResponse<string>
-```
-
-**Errors:**
-- Peut retourner `ok=false` avec `error` (export)
-- Peut échouer en `Err(String)` (permission)
-
-### 7n. validate_chat_message
-
-**Request:**
-```typescript
-interface ValidateChatMessageRequest {
-  message: string;
-}
-```
-
-**Response:**
-```typescript
-// Retourne le message sanitizé (anti-XSS)
-type ValidateChatMessageResponse = SecureResponse<string>
-```
-
-**Errors:**
-- Peut retourner `ok=false` avec `error` (validation)
-- Peut échouer en `Err(String)` (permission)
-
-### 7o. check_system_integrity
-
-**Request:**
-```typescript
-{} // No parameters
-```
-
-**Response:**
-```typescript
-// Rapport multi-lignes (string)
-type CheckSystemIntegrityResponse = SecureResponse<string>
-```
-
-**Errors:**
-- Peut retourner `ok=false` avec `error` (integrity check)
-- Peut échouer en `Err(String)` (permission)
-
-### 7p. get_secrets_status
-
-**Request:**
-```typescript
-{} // No parameters
-```
-
-**Response:**
-```typescript
-interface SecretStatus {
-  key: string;
-  configured: boolean;
-  maskedValue: string | null;
-  lastUpdated: number | null;
-  category: 'api_key' | 'token' | 'credential' | 'certificate' | 'other';
-}
-
-type GetSecretsStatusResponse = SecureResponse<SecretStatus[]>
-```
-
-**Errors:**
-- Peut échouer en `Err(String)` (permission / accès secrets)
-
-### 7q. has_secret
-
-**Request:**
-```typescript
-interface HasSecretRequest {
-  key: string;
-}
-```
-
-**Response:**
-```typescript
-type HasSecretResponse = SecureResponse<boolean>
-```
-
-**Errors:**
-- Peut retourner `ok=false` avec `error` (validation `key`)
-- Peut échouer en `Err(String)` (permission)
-
-### 7r. delete_secret
-
-**Request:**
-```typescript
-interface DeleteSecretRequest {
-  key: string;
-}
-```
-
-**Response:**
-```typescript
-type DeleteSecretResponse = SecureResponse<void>
-```
-
-**Errors:**
-- Peut retourner `ok=false` avec `error` (validation `key`)
-- Peut échouer en `Err(String)` (permission / suppression)
-
-### 7s. get_security_log
-
-**Request:**
-```typescript
-interface SecurityLogFilters {
-  level?: 'debug' | 'info' | 'warn' | 'error' | 'critical';
-  category?: 'authentication' | 'authorization' | 'secrets' | 'policy' | 'system' | 'audit';
-  startDate?: number;
-  endDate?: number;
-  search?: string;
-  limit?: number;
-}
-
-interface GetSecurityLogRequest {
-  filters?: SecurityLogFilters;
-}
-```
-
-**Response:**
-```typescript
-interface SecurityLogEntry {
-  id: string;
-  timestamp: number;
-  level: 'debug' | 'info' | 'warn' | 'error' | 'critical';
-  category: 'authentication' | 'authorization' | 'secrets' | 'policy' | 'system' | 'audit';
-  event: string;
-  details: string;
-  source: string;
-  userId?: string;
-  metadata?: Record<string, unknown>;
-}
-
-type GetSecurityLogResponse = SecureResponse<SecurityLogEntry[]>
-```
-
-**Errors:**
-- Peut échouer en `Err(String)` (lecture)
-
-### 7t. append_security_log
-
-**Request:**
-```typescript
-type AppendSecurityLogRequest = {
-  entry: Omit<SecurityLogEntry, 'id' | 'timestamp'>;
-}
-```
-
-**Response:**
-```typescript
-type AppendSecurityLogResponse = SecureResponse<SecurityLogEntry>
-```
-
-**Errors:**
-- Peut échouer en `Err(String)` (append)
-
-### 7u. export_security_log
-
-**Request:**
-```typescript
-interface ExportSecurityLogRequest {
-  format: 'json' | 'csv';
-}
-```
-
-**Response:**
-```typescript
-// Retourne le contenu (JSON/CSV) sous forme de string (pas un chemin fichier)
-type ExportSecurityLogResponse = SecureResponse<string>
-```
-
-**Errors:**
-- Peut échouer en `Err(String)` (format invalide / sérialisation)
-
-### 7v. clear_security_log
-
-**Request:**
-```typescript
-{} // No parameters
-```
-
-**Response:**
-```typescript
-type ClearSecurityLogResponse = SecureResponse<void>
-```
-
-**Errors:**
-- Peut échouer en `Err(String)` (permission / clear)
-
-### 7w. clear_permission_audit
-
-**Request:**
-```typescript
-{} // No parameters
-```
-
-**Response:**
-```typescript
-type ClearPermissionAuditResponse = SecureResponse<void>
-```
-
-**Errors:**
-- Peut échouer en `Err(String)` (permission / clear)
-
-### 7x. get_ia_policies
-
-**Request:**
-```typescript
-{} // No parameters
-```
-
-**Response:**
-```typescript
-type GetIAPoliciesResponse = SecureResponse<IAPolicy[]>
-```
-
-**Errors:**
-- Peut échouer en `Err(String)`
-
-### 7y. save_ia_policies
-
-**Request:**
-```typescript
-interface SaveIAPoliciesRequest {
-  policies: IAPolicy[];
-}
-```
-
-**Response:**
-```typescript
-type SaveIAPoliciesResponse = SecureResponse<void>
-```
-
-**Errors:**
-- Peut échouer en `Err(String)`
-
-### 7z. toggle_ia_policy
-
-**Request:**
-```typescript
-interface ToggleIAPolicyRequest {
-  policyId: string;
-  enabled: boolean;
-}
-```
-
-**Response:**
-```typescript
-type ToggleIAPolicyResponse = SecureResponse<IAPolicy>
-```
-
-**Errors:**
-- Peut échouer en `Err(String)` (policy introuvable / lock)
-
-### 7aa. create_ia_policy
-
-**Request:**
-```typescript
-interface CreateIAPolicyRequest {
-  policy: Omit<IAPolicy, 'id' | 'createdAt' | 'updatedAt'>;
-}
-```
-
-**Response:**
-```typescript
-type CreateIAPolicyResponse = SecureResponse<IAPolicy>
-```
-
-**Errors:**
-- Peut échouer en `Err(String)` (validation / lock)
-
-### 7ab. delete_ia_policy
-
-**Request:**
-```typescript
-interface DeleteIAPolicyRequest {
-  policyId: string;
-}
-```
-
-**Response:**
-```typescript
-type DeleteIAPolicyResponse = SecureResponse<void>
-```
-
-**Errors:**
-- Peut échouer en `Err(String)` (lock)
-
-### 7ac. get_permission_matrix
-
-**Request:**
-```typescript
-{} // No parameters
-```
-
-**Response:**
-```typescript
-// PermissionMatrix = Record<string, Role[]> (action -> roles autorisés)
-type GetPermissionMatrixResponse = SecureResponse<PermissionMatrix>
-```
-
-**Errors:**
-- Peut échouer en `Err(String)` (lock)
+- `INVALID_INPUT`: Key format invalid (not starting with `sk-`, wrong length)
+- `EXTERNAL_API_ERROR`: Key validation failed (test call to OpenAI API)
 
 ### 8. voice_start_listening
 
 **Request:**
 ```typescript
-{} // No parameters
+interface VoiceListenRequest {
+  continuous?: boolean;           // true = keep listening, false = stop after silence
+  language?: string;              // "en-US", "fr-FR", etc.
+  silenceThreshold?: number;      // Milliseconds of silence before stopping (default 2000)
+}
 ```
 
 **Response:**
 ```typescript
-string // ex: "Écoute activée"
+interface VoiceListenResponse {
+  sessionId: string;              // UUID for this recording session
+  status: "listening";
+}
 ```
 
 **Errors:**
-- `VALIDATION_ERROR`: Déjà en écoute
-- `INTERNAL_ERROR`: Erreur backend (TAPIError)
+- `PERMISSION_DENIED`: Microphone permission not granted
+- `DEVICE_NOT_FOUND`: No microphone detected
+- `INTERNAL_ERROR`: Failed to initialize recording engine
 
 ### 9. performance_get_metrics
 
@@ -1087,17 +530,26 @@ string // ex: "Écoute activée"
 **Response:**
 ```typescript
 interface PerformanceMetrics {
-  cpu_usage: number;
-  gpu_usage: number;
-  memory_usage: number;
-  memory_available: number;
-  fps: number;
-  frame_time: number;
-  render_time: number;
-  idle_time: number;
-  gc_time: number;
-  network_latency: number;
-  timestamp: number;
+  cpu: {
+    usage: number;                // 0-100 (percentage)
+    cores: number;
+    threads: number;
+  };
+  memory: {
+    used: number;                 // Bytes
+    total: number;                // Bytes
+    percentage: number;           // 0-100
+  };
+  gpu: {
+    usage: number;                // 0-100 (if available, else 0)
+    memory: number;               // Bytes (if available)
+  };
+  fps: number;                    // Current FPS (if avatar active)
+  latency: {
+    ipc: number;                  // Milliseconds (average IPC round-trip)
+    ai: number;                   // Milliseconds (last AI call)
+  };
+  timestamp: string;
 }
 ```
 
@@ -1253,5 +705,5 @@ const sendMessage = async (message: string) => {
 ---
 
 **Document Status:** ✅ Complete (Phase 0)  
-**Last Updated:** 2026-01-14  
+**Last Updated:** 2026-01-03  
 **Next Review:** Phase 1 Audit (Validate all payload structures)

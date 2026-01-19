@@ -11,7 +11,6 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { secureInvoke } from '@/lib/security';
-import { logger } from '@/utils/logger';
 import type {
   OneCoreState,
   EngineStatus,
@@ -74,7 +73,7 @@ export function useOneCore(): UseOneCoreReturn {
       setCommands(commandsResult || []);
       setEventHistory(historyResult || []);
     } catch (err) {
-      logger.error('Refresh error:', err);
+      console.error('[ONE_CORE] Refresh error:', err);
       setError(err instanceof Error ? err.message : 'Erreur inconnue');
 
       // Fallback mock data (offline / backend unavailable)
@@ -192,7 +191,7 @@ export function useOneCore(): UseOneCoreReturn {
         await refresh();
         return result;
       } catch (err) {
-        logger.error('Execute command error:', err);
+        console.error('[ONE_CORE] Execute command error:', err);
         return {
           success: false,
           action: commandId,
@@ -210,7 +209,7 @@ export function useOneCore(): UseOneCoreReturn {
       const result = await secureInvoke<OneCoreDiagnostic>('one_core_run_diagnostic');
       setDiagnostic(result);
     } catch (err) {
-      logger.error('Diagnostic error:', err);
+      console.error('[ONE_CORE] Diagnostic error:', err);
       setDiagnostic({
         timestamp: Date.now(),
         duration_ms: 150,

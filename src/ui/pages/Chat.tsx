@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v26.3.0 — Proprietary License
+ * TITANE∞ v24.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v26.3.0 — CHAT PAGE OMEGA (UI ANTI-CRASH)
+ *   TITANE∞ v24.3.0 — CHAT PAGE OMEGA (UI ANTI-CRASH)
  *   v22Ω AI Performance Optimizations: -40% latency, stream batching
  *   Protection render • État stable • Récupération auto
  *   Keyboard shortcuts, Focus trap, Code splitting
@@ -38,7 +38,7 @@ import { ChatModeSelector } from '../../components/chat/ChatModeSelector';
 import { ModeBadge } from '../../components/chat/ModeBadge';
 import { VoiceConversation } from '../../components/VoiceConversation';
 import type { ChatModeId } from '../../services/ai/chatModes.config';
-import { unifiedHealingFacade } from '../../services/ai/system';
+import { autoHealEngine } from '../../services/ai/system';
 // Phase 1.9: Audio Feedback - VAD + TTS integration
 import useVAD, { useVADWithTTS, useBargeInHandler } from '../../hooks/useVAD';
 // Phase 2 v24.7.4: Keyboard shortcuts & Focus trap
@@ -47,10 +47,7 @@ import { useFocusTrap } from '../../hooks/useFocusTrap';
 // ✨ v25.7.4: Responsive Chat Layout wrapper
 import { ResponsiveChatLayout } from '../../layouts/ResponsiveChatLayout';
 // ✨ v26.2: OMEGA Reflection Panel v2 - Compact mode
-import {
-  ThinkingPanel,
-  useThinkingSteps,
-} from '../../features/conversation/ThinkingPanel';
+import { ThinkingPanel, useThinkingSteps } from '../../features/chat/ThinkingPanel';
 import './styles/Chat.css';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -63,7 +60,6 @@ const PROVIDER_PREFERENCE_LABELS: Record<ProviderPreference, string> = {
   gemini: 'Google Gemini 2.0',
   anthropic: 'Anthropic Claude',
   copilot: 'GitHub Copilot',
-  glm46v: 'GLM-4.6V-Flash (local multimodal)',
 };
 
 const PROVIDER_DISPLAY_NAMES: Record<string, string> = {
@@ -464,21 +460,12 @@ function useOmegaRenderProtection() {
   const handleRenderError = useCallback((error: Error, context: string) => {
     renderAttempts.current++;
 
-    // Auto-heal trigger (unified, non-bloquant)
-    void unifiedHealingFacade
-      .heal({
-        source: 'chat-page',
-        error,
-        type: 'validation',
-        metadata: {
-          context,
-          renderAttempts: renderAttempts.current,
-          timestamp: Date.now(),
-        },
-      })
-      .catch(err => {
-        isDev && console.warn('[OMEGA CHAT PAGE] Unified healing failed:', err);
-      });
+    // Auto-heal trigger (direct instance)
+    autoHealEngine.heal('chat-page', error, 'validation', {
+      context,
+      renderAttempts: renderAttempts.current,
+      timestamp: Date.now(),
+    });
 
     setPageState(prev => ({
       ...prev,

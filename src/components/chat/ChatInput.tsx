@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v26.3.0 — Proprietary License
+ * TITANE∞ v24.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v26.3.0 — CHAT INPUT OMEGA (UI ANTI-CRASH)
+ *   TITANE∞ v24.3.0 — CHAT INPUT OMEGA (UI ANTI-CRASH)
  *   Validation input • Anti-spam • Sanitisation sécurisée
  *   Zone de saisie avec protection + Import fichiers pour analyse IA
  *   v22Ω AI Performance Optimizations Compatible
@@ -14,7 +14,7 @@
 
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { logger } from '@/lib/logger';
-import { unifiedHealingFacade } from '../../services/ai/system';
+import { autoHealEngine } from '../../services/ai/system';
 import { FileUploadButton, type AnalyzedFile } from './FileUploadButton';
 import { DictationButton } from './DictationButton';
 import { UI_DELAYS } from '@/constants/timeouts';
@@ -78,21 +78,12 @@ function useOmegaInputProtection() {
 
   const handleInputError = useCallback(
     (error: Error, context: string, inputValue?: string) => {
-      // Unified heal (non-bloquant)
-      void unifiedHealingFacade
-        .heal({
-          source: 'chat-input',
-          error,
-          type: 'validation',
-          metadata: {
-            context,
-            inputLength: inputValue?.length || 0,
-            timestamp: Date.now(),
-          },
-        })
-        .catch(() => {
-          // Intentionnel: fire-and-forget, éviter les rejections non gérées.
-        });
+      // Auto-heal trigger (direct instance)
+      autoHealEngine.heal('chat-input', error, 'validation', {
+        context,
+        inputLength: inputValue?.length || 0,
+        timestamp: Date.now(),
+      });
 
       setInputState(prev => ({
         ...prev,
@@ -480,43 +471,33 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
 
     const handleFilesSelected = useCallback(
       (files: AnalyzedFile[]) => {
-        try {
-          isDev && console.log('[ChatInput] Files selected:', files.length);
-          setUploadedFiles(files);
+        isDev && console.log('[ChatInput] Files selected:', files.length);
+        setUploadedFiles(files);
 
-          // Notifier le parent
-          if (onFilesAnalyzed) {
-            onFilesAnalyzed(files);
+        // Notifier le parent
+        if (onFilesAnalyzed) {
+          onFilesAnalyzed(files);
+        }
+
+        // Créer un message formaté avec les fichiers
+        if (files.length > 0) {
+          const filesSummary = files
+            .filter(f => f.status === 'done' && f.analysis)
+            .map(
+              f => `📄 **${f.name}**\n${f.analysis?.summary || 'Analyse non disponible'}`
+            )
+            .join('\n\n');
+
+          if (filesSummary) {
+            const currentValue = value.trim();
+            const newValue = currentValue
+              ? `${currentValue}\n\n---\n📎 Fichiers importés:\n${filesSummary}`
+              : `📎 Fichiers importés pour analyse:\n${filesSummary}\n\nAnalyse ces fichiers et donne-moi un résumé.`;
+            setValue(newValue);
           }
-
-          // Créer un message formaté avec les fichiers
-          if (files.length > 0) {
-            const filesSummary = files
-              .filter(f => f.status === 'done' && f.analysis)
-              .map(
-                f =>
-                  `📄 **${f.name}**\n${f.analysis?.summary || 'Analyse non disponible'}`
-              )
-              .join('\n\n');
-
-            if (filesSummary) {
-              const currentValue = value.trim();
-              const newValue = currentValue
-                ? `${currentValue}\n\n---\n📎 Fichiers importés:\n${filesSummary}`
-                : `📎 Fichiers importés pour analyse:\n${filesSummary}\n\nAnalyse ces fichiers et donne-moi un résumé.`;
-              setValue(newValue);
-            }
-          }
-        } catch (filesSelectedError) {
-          handleInputError(
-            filesSelectedError instanceof Error
-              ? filesSelectedError
-              : new Error(String(filesSelectedError)),
-            'files-selected-handler'
-          );
         }
       },
-      [onFilesAnalyzed, value, handleInputError]
+      [onFilesAnalyzed, value]
     );
 
     // ═══ PHASE 5.7.2: DICTATION HANDLER ═══

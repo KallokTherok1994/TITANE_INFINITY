@@ -23,7 +23,6 @@
  */
 
 import type { MetaSingularityState as _MetaSingularityState } from '../metasingularity/metaSingularityKernel';
-import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 //   TYPES
@@ -260,7 +259,7 @@ class PhaseSpaceEngine {
   start(): void {
     if (this.state.isRunning) return;
 
-    logger.debug('Starting phase-space navigation...');
+    console.log('[PhaseSpaceEngine] Starting phase-space navigation...');
 
     this.state.isRunning = true;
     this.intervalId = setInterval(() => this.tick(), 500); // 2 Hz
@@ -271,7 +270,7 @@ class PhaseSpaceEngine {
   stop(): void {
     if (!this.state.isRunning) return;
 
-    logger.debug('Stopping...');
+    console.log('[PhaseSpaceEngine] Stopping...');
 
     if (this.intervalId) {
       clearInterval(this.intervalId);
@@ -295,7 +294,7 @@ class PhaseSpaceEngine {
 
   private tick(): void {
     if (!this.metaKernel) {
-      logger.warn('Meta-Singularity Kernel not injected');
+      console.warn('[PhaseSpaceEngine] Meta-Singularity Kernel not injected');
       return;
     }
 
@@ -535,7 +534,7 @@ class PhaseSpaceEngine {
 
         this.state.attractors.push(attractor);
 
-        logger.debug(`[PhaseSpaceEngine] New attractor detected: ${attractor.name}`);
+        console.log(`[PhaseSpaceEngine] New attractor detected: ${attractor.name}`);
       }
     });
 
@@ -744,7 +743,7 @@ class PhaseSpaceEngine {
 
       this.state.bifurcations.push(bifurcation);
 
-      logger.debug(
+      console.log(
         `[PhaseSpaceEngine] Bifurcation detected at coherence=${bifurcation.criticalValue.toFixed(2)}`
       );
 
@@ -973,11 +972,11 @@ class PhaseSpaceEngine {
   navigateToAttractor(attractorId: string): void {
     const attractor = this.state.attractors.find(a => a.id === attractorId);
     if (!attractor) {
-      logger.warn(`[PhaseSpaceEngine] Attractor ${attractorId} not found`);
+      console.warn(`[PhaseSpaceEngine] Attractor ${attractorId} not found`);
       return;
     }
 
-    logger.debug(`[PhaseSpaceEngine] Navigating to attractor: ${attractor.name}`);
+    console.log(`[PhaseSpaceEngine] Navigating to attractor: ${attractor.name}`);
 
     // IMPLEMENTATION: Navigate to attractor by adjusting engine parameters
     // 1. Get target parameters: const target = attractor.parameters (e.g., creativity: 0.8)

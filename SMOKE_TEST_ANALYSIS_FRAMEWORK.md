@@ -2,7 +2,7 @@
 
 **Purpose:** Compare profiling metrics (v26.4.1 vs v26.4.0-beta) to validate Phase 4 performance targets  
 **Input:** `/tmp/smoke_test_profile.log` (30min continuous monitoring)  
-**Analysis Format:** Checkpoint-based (15 snapshots × 2min intervals)  
+**Analysis Format:** Checkpoint-based (15 snapshots × 2min intervals)
 
 ---
 
@@ -11,6 +11,7 @@
 Each checkpoint line: `[TIMESTAMP] CPU% MEM_MB LATENCY_MS`
 
 Example:
+
 ```
 21:24:00 0.0 285 18
 21:26:00 0.1 287 20
@@ -22,6 +23,7 @@ Example:
 ## Expected Metrics
 
 ### Baseline (v26.4.0-beta)
+
 ```
 Memory (RSS):        ~285 MB
 CPU (idle):          ~0.1-0.3%
@@ -29,6 +31,7 @@ Latency (P99):       ~18-25ms
 ```
 
 ### Target (v26.4.1-alpha)
+
 ```
 Memory (RSS):        ~200 MB (-30%)
 CPU (idle):          ~0.07-0.2%
@@ -40,6 +43,7 @@ Latency (P99):       ~14-18ms (-25%)
 ## Analysis Steps
 
 ### Step 1: Extract Data
+
 ```bash
 # Parse log into CSV
 awk '{
@@ -48,6 +52,7 @@ awk '{
 ```
 
 ### Step 2: Compute Statistics
+
 ```python
 import pandas as pd
 import numpy as np
@@ -72,6 +77,7 @@ stats = {
 ```
 
 ### Step 3: Validate Targets
+
 ```
 Memory Improvement:
   - v26.4.0-beta:    ~285 MB
@@ -91,39 +97,42 @@ CPU Improvement:
 
 ### Memory Profile Analysis
 
-| Pattern | Interpretation | Action |
-|---------|---|---|
-| Flat/stable | ✅ Good — Memory managed efficiently | Proceed to release |
-| Slight growth | ⚠️ Gradual growth — May indicate warmup | Check if stabilizes |
-| Sharp increase | ❌ Memory leak — Investigate cause | Block release |
-| Sawtooth pattern | ✅ Expected — GC cycles | Normal behavior |
+| Pattern          | Interpretation                          | Action              |
+| ---------------- | --------------------------------------- | ------------------- |
+| Flat/stable      | ✅ Good — Memory managed efficiently    | Proceed to release  |
+| Slight growth    | ⚠️ Gradual growth — May indicate warmup | Check if stabilizes |
+| Sharp increase   | ❌ Memory leak — Investigate cause      | Block release       |
+| Sawtooth pattern | ✅ Expected — GC cycles                 | Normal behavior     |
 
 ### CPU Profile Analysis
 
-| Pattern | Interpretation | Action |
-|---------|---|---|
-| Idle (<0.2%) | ✅ Excellent — System responsive | Proceed to release |
-| Low (0.2-0.5%) | ✅ Good — Within expectations | Proceed to release |
-| Variable (0-2%) | ⚠️ Normal — Intermittent workload | Proceed with notes |
-| High (>2%) | ❌ Unexpected — Investigate spikes | Block release |
+| Pattern         | Interpretation                     | Action             |
+| --------------- | ---------------------------------- | ------------------ |
+| Idle (<0.2%)    | ✅ Excellent — System responsive   | Proceed to release |
+| Low (0.2-0.5%)  | ✅ Good — Within expectations      | Proceed to release |
+| Variable (0-2%) | ⚠️ Normal — Intermittent workload  | Proceed with notes |
+| High (>2%)      | ❌ Unexpected — Investigate spikes | Block release      |
 
 ---
 
 ## Success Criteria
 
 ### Tier 1: Hard Requirements (MUST PASS)
+
 - [ ] Memory < 250 MB (90% of 30min)
 - [ ] CPU < 2% (95% of 30min)
 - [ ] No crashes or timeouts
 - [ ] All 4668 tests passing
 
 ### Tier 2: Performance Targets (SHOULD PASS)
+
 - [ ] Memory ≤ 200 MB (mean)
 - [ ] CPU ≤ 0.2% (mean idle)
 - [ ] Latency P99 ≤ 18ms
 - [ ] 30% improvement vs v26.4.0-beta
 
 ### Tier 3: Stretch Goals (NICE TO HAVE)
+
 - [ ] Memory ≤ 180 MB
 - [ ] CPU ≤ 0.1% (mean)
 - [ ] Latency P99 ≤ 15ms
@@ -143,35 +152,35 @@ CPU Improvement:
 
 ## Memory Analysis
 
-| Metric | v26.4.0-beta | v26.4.1-alpha | Improvement |
-|--------|--------------|---------------|-------------|
-| Min | 283 MB | [MIN] MB | [%] |
-| Max | 291 MB | [MAX] MB | [%] |
-| Mean | 285 MB | [MEAN] MB | **[%]** |
-| Std Dev | 2.1 MB | [STD] MB | - |
-| Final | 287 MB | [FINAL] MB | [%] |
+| Metric  | v26.4.0-beta | v26.4.1-alpha | Improvement |
+| ------- | ------------ | ------------- | ----------- |
+| Min     | 283 MB       | [MIN] MB      | [%]         |
+| Max     | 291 MB       | [MAX] MB      | [%]         |
+| Mean    | 285 MB       | [MEAN] MB     | **[%]**     |
+| Std Dev | 2.1 MB       | [STD] MB      | -           |
+| Final   | 287 MB       | [FINAL] MB    | [%]         |
 
 **Status:** ✅ / ⚠️ / ❌
 
 ## CPU Analysis
 
-| Metric | v26.4.0-beta | v26.4.1-alpha | Improvement |
-|--------|--------------|---------------|-------------|
-| Min | 0.0% | [MIN]% | [%] |
-| Max | 0.6% | [MAX]% | [%] |
-| Mean | 0.2% | [MEAN]% | **[%]** |
-| Std Dev | 0.1% | [STD]% | - |
+| Metric  | v26.4.0-beta | v26.4.1-alpha | Improvement |
+| ------- | ------------ | ------------- | ----------- |
+| Min     | 0.0%         | [MIN]%        | [%]         |
+| Max     | 0.6%         | [MAX]%        | [%]         |
+| Mean    | 0.2%         | [MEAN]%       | **[%]**     |
+| Std Dev | 0.1%         | [STD]%        | -           |
 
 **Status:** ✅ / ⚠️ / ❌
 
 ## Pass/Fail Summary
 
-| Criteria | Target | Actual | Status |
-|----------|--------|--------|--------|
-| Memory | <200 MB | [ACTUAL] MB | ✅ / ⚠️ / ❌ |
-| CPU | <0.15% | [ACTUAL]% | ✅ / ⚠️ / ❌ |
-| Latency | <18ms | [ACTUAL]ms | ✅ / ⚠️ / ❌ |
-| Tests | 4668/4668 | 4668/4668 | ✅ |
+| Criteria | Target    | Actual      | Status       |
+| -------- | --------- | ----------- | ------------ |
+| Memory   | <200 MB   | [ACTUAL] MB | ✅ / ⚠️ / ❌ |
+| CPU      | <0.15%    | [ACTUAL]%   | ✅ / ⚠️ / ❌ |
+| Latency  | <18ms     | [ACTUAL]ms  | ✅ / ⚠️ / ❌ |
+| Tests    | 4668/4668 | 4668/4668   | ✅           |
 
 ## Conclusion
 
@@ -187,6 +196,7 @@ Release recommendation: [PROCEED / INVESTIGATE / HOLD]
 ## Debugging Tips
 
 ### If Memory Grows Linearly
+
 ```bash
 # Check for memory leak
 valgrind --leak-check=full \
@@ -195,6 +205,7 @@ valgrind --leak-check=full \
 ```
 
 ### If CPU Spikes
+
 ```bash
 # Check process utilization
 top -b -n 1 | grep tauri
@@ -204,6 +215,7 @@ strace -p [PID] -o /tmp/trace.log
 ```
 
 ### If Latency Increases
+
 ```bash
 # Profile with perf
 perf record -p [PID] -g

@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v26.3.0 — Proprietary License
+ * TITANE∞ v24.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v26.3.0 — MESSAGE LIST OMEGA (UI ANTI-CRASH + OPTIMIZED)
+ *   TITANE∞ v24.3.0 — MESSAGE LIST OMEGA (UI ANTI-CRASH + OPTIMIZED)
  *   Protection render • Isolation erreurs • Auto-récupération
  *   useMemo optimisé pour performance 100+ messages
  *   v22Ω AI Performance Optimizations Compatible
@@ -16,7 +16,7 @@ import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { logger } from '@/lib/logger';
 import { MessageBubble } from './MessageBubble';
 import type { AIMessage } from '../../services/ai/types';
-import { unifiedHealingFacade } from '../../services/ai/system';
+import { autoHealEngine } from '../../services/ai/autoHealEngine';
 import './MessageList.css';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -64,21 +64,12 @@ function useOmegaErrorBoundary() {
     (error: Error, context: string, messages?: AIMessage[]) => {
       const now = Date.now();
 
-      // Unified heal (non-bloquant)
-      void unifiedHealingFacade
-        .heal({
-          source: 'message-list',
-          error,
-          type: 'validation',
-          metadata: {
-            context,
-            messageCount: messages?.length || 0,
-            timestamp: now,
-          },
-        })
-        .catch(() => {
-          // Intentionnel: fire-and-forget, éviter les rejections non gérées.
-        });
+      // Auto-heal trigger
+      autoHealEngine.heal('message-list', error, 'validation', {
+        context,
+        messageCount: messages?.length || 0,
+        timestamp: now,
+      });
 
       setState(prev => {
         const newRecoveryCount = prev.recoveryCount + 1;

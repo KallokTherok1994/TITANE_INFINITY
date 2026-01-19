@@ -24,8 +24,6 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { logger } from '@/utils/logger';
-
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════
@@ -137,7 +135,7 @@ export class PerformanceProfiler {
 
       // Auto-log slow operations
       if (duration > this.config.autoLogThreshold) {
-        logger.warn(`⚠️ [Perf] Slow operation: ${name} took ${duration.toFixed(2)}ms`);
+        console.warn(`⚠️ [Perf] Slow operation: ${name} took ${duration.toFixed(2)}ms`);
       }
 
       return duration;
@@ -501,7 +499,7 @@ export function time(label: string): () => void {
   const start = performance.now();
   return () => {
     const duration = performance.now() - start;
-    logger.debug(`⏱️ ${label}: ${duration.toFixed(2)}ms`);
+    console.log(`⏱️ ${label}: ${duration.toFixed(2)}ms`);
   };
 }
 

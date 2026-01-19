@@ -120,9 +120,8 @@ export const useMemoryStore = create<MemoryStore>()(
             timestamp: Date.now(),
           };
           await backendV17.memory.addEvent(fullEvent);
-          // ✅ v26.3.1: Add limit to prevent memory accumulation
           set(state => ({
-            timeline: [fullEvent, ...state.timeline].slice(0, 1000),
+            timeline: [fullEvent, ...state.timeline],
           }));
         } catch (error) {
           set({

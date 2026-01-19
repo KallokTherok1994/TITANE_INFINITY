@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v26.3.0 — APPEARANCE INTEGRATION TESTS
+//   TITANE∞ v24.3.0 — APPEARANCE INTEGRATION TESTS
 //   Test appearance sync with Three.js materials
 //   NOTE: These tests require WebGL/Three.js. Skipped when unavailable.
 // ═══════════════════════════════════════════════════════════════════════════
@@ -103,7 +103,7 @@ describe.skipIf(!hasThreeJS)('AppearanceFloatingIntegration', () => {
       const materials = integration.getMaterials();
       expect(materials).not.toBeNull();
       // Body should use secondary color (gray)
-      expect(materials?.body.color.getHex()).toBe(0x6b7280);
+      expect(materials!.body.color.getHex()).toBe(0x6b7280);
     });
 
     it('should apply pastel palette correctly', () => {
@@ -123,7 +123,7 @@ describe.skipIf(!hasThreeJS)('AppearanceFloatingIntegration', () => {
       const materials = integration.getMaterials();
       expect(materials).not.toBeNull();
       // Head should use primary color (pink-100)
-      expect(materials?.head.color.getHex()).toBe(0xfce7f3);
+      expect(materials!.head.color.getHex()).toBe(0xfce7f3);
     });
   });
 
@@ -147,8 +147,8 @@ describe.skipIf(!hasThreeJS)('AppearanceFloatingIntegration', () => {
       integration.applyAppearance(mockAppearance as any);
 
       const materials = integration.getMaterials();
-      expect(materials?.body.metalness).toBe(0.3);
-      expect(materials?.head.metalness).toBe(0.15); // metalness * 0.5
+      expect(materials!.body.metalness).toBe(0.3);
+      expect(materials!.head.metalness).toBe(0.15); // metalness * 0.5
     });
 
     it('should adjust metalness based on formality (Casual)', () => {
@@ -166,7 +166,7 @@ describe.skipIf(!hasThreeJS)('AppearanceFloatingIntegration', () => {
       integration.applyAppearance(mockAppearance as any);
 
       const materials = integration.getMaterials();
-      expect(materials?.body.metalness).toBe(0.1);
+      expect(materials!.body.metalness).toBe(0.1);
     });
 
     it('should adjust roughness based on energy (calme)', () => {
@@ -184,7 +184,7 @@ describe.skipIf(!hasThreeJS)('AppearanceFloatingIntegration', () => {
       integration.applyAppearance(mockAppearance as any);
 
       const materials = integration.getMaterials();
-      expect(materials?.body.roughness).toBe(0.8);
+      expect(materials!.body.roughness).toBe(0.8);
     });
 
     it('should adjust roughness based on energy (dynamique)', () => {
@@ -202,7 +202,7 @@ describe.skipIf(!hasThreeJS)('AppearanceFloatingIntegration', () => {
       integration.applyAppearance(mockAppearance as any);
 
       const materials = integration.getMaterials();
-      expect(materials?.body.roughness).toBe(0.5);
+      expect(materials!.body.roughness).toBe(0.5);
     });
   });
 
@@ -216,28 +216,28 @@ describe.skipIf(!hasThreeJS)('AppearanceFloatingIntegration', () => {
       integration.updateMaterialProperty('body', 'color', newColor);
 
       const materials = integration.getMaterials();
-      expect(materials?.body.color.getHex()).toBe(0xff0000);
+      expect(materials!.body.color.getHex()).toBe(0xff0000);
     });
 
     it('should update head metalness', () => {
       integration.updateMaterialProperty('head', 'metalness', 0.8);
 
       const materials = integration.getMaterials();
-      expect(materials?.head.metalness).toBe(0.8);
+      expect(materials!.head.metalness).toBe(0.8);
     });
 
     it('should clamp metalness to [0, 1]', () => {
       integration.updateMaterialProperty('body', 'metalness', 1.5);
 
       const materials = integration.getMaterials();
-      expect(materials?.body.metalness).toBe(1.0); // clamped
+      expect(materials!.body.metalness).toBe(1.0); // clamped
     });
 
     it('should clamp roughness to [0, 1]', () => {
       integration.updateMaterialProperty('body', 'roughness', -0.2);
 
       const materials = integration.getMaterials();
-      expect(materials?.body.roughness).toBe(0.0); // clamped
+      expect(materials!.body.roughness).toBe(0.0); // clamped
     });
   });
 
@@ -272,8 +272,8 @@ describe.skipIf(!hasThreeJS)('AppearanceFloatingIntegration', () => {
       await integration.initializeMaterials([]);
       const materials = integration.getMaterials();
 
-      const bodySpy = vi.spyOn(materials?.body, 'dispose');
-      const headSpy = vi.spyOn(materials?.head, 'dispose');
+      const bodySpy = vi.spyOn(materials!.body, 'dispose');
+      const headSpy = vi.spyOn(materials!.head, 'dispose');
 
       integration.dispose();
 

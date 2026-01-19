@@ -4,9 +4,6 @@
 **Version:** 26.2.0  
 **Purpose:** Document exact test commands, current status, and coverage gaps
 
-> NOTE (gouvernance): document historique (v26.2.0). Runtime actuel: v26.3.0.
-> Builds/bundles production interdits sans autorisation explicite.
-
 ---
 
 ## Table of Contents
@@ -195,7 +192,7 @@ pnpm run verify
 ```bash
 pnpm run verify:tauri-only  # Ensures no HTTP servers in code
 pnpm run verify:local-first # Ensures local-first architecture
-pnpm run verify:tauri-configs # Validates tauri.base.json + runtime/* Tauri configs
+pnpm run verify:tauri-configs # Validates tauri.conf.json
 ```
 
 #### Quick Health Check

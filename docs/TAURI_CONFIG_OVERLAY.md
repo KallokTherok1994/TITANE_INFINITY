@@ -11,11 +11,11 @@ TITANE_INFINITY/
 ├── tauri.base.json              # Configuration BASE (partagée)
 ├── runtime/
 │   ├── dev/
-│   │   └── tauri.dev.conf.json  # DEV runtime config
+│   │   └── tauri.conf.json      # Overrides DEV (extend base)
 │   └── stable/
-│       └── tauri.stable.conf.json # STABLE runtime config
+│       └── tauri.conf.json      # Overrides STABLE (extend base)
 └── src-tauri/
-  └── tauri.conf.json          # src-tauri/tauri.conf.json (référence base)
+    └── tauri.conf.json          # Config principale (référence base)
 ```
 
 ---
@@ -36,22 +36,22 @@ Contient TOUTES les configurations partagées:
 - ❌ `build` (commandes spécifiques dev/stable)
 - ❌ `app.windows` (taille/devtools varient)
 
-### 2. **runtime/dev/tauri.dev.conf.json** (Dev overrides)
+### 2. **runtime/dev/tauri.conf.json** (Dev overrides)
 
 Extend `tauri.base.json` avec:
 - `productName`: "Titan-Dev"
 - `identifier`: "com.titane.infinity.dev"
-- `version`: "26.3.0-dev" (suffix `-dev` obligatoire)
+- `version`: "26.2.0-dev" (suffix `-dev` obligatoire)
 - `bundle.active`: `false` (pas de packaging en dev)
 - `app.windows[0].devtools`: `true` (debug actif)
 - `app.windows[1]`: Dev Monitor window (optionnel)
 
-### 3. **runtime/stable/tauri.stable.conf.json** (Stable overrides)
+### 3. **runtime/stable/tauri.conf.json** (Stable overrides)
 
 Extend `tauri.base.json` avec:
 - `productName`: "Titan-Stable"
 - `identifier`: "com.titane.infinity.stable"
-- `version`: "26.3.0" (SANS suffix `-dev`)
+- `version`: "26.2.0" (SANS suffix `-dev`)
 - `bundle.active`: `true` (packaging production)
 - `bundle.targets`: `["appimage", "deb"]` (formats Linux)
 - `app.windows[0].devtools`: `false` (pas de debug en prod)
@@ -125,7 +125,7 @@ pnpm run verify:tauri-configs
 
 ### Modifier une config spécifique Dev/Stable
 
-1. **Éditer `runtime/dev/tauri.dev.conf.json` OU `runtime/stable/tauri.stable.conf.json`**
+1. **Éditer `runtime/dev/tauri.conf.json` OU `runtime/stable/tauri.conf.json`**
 2. Ajouter override (ne PAS dupliquer ce qui est dans base)
 3. Valider:
    ```bash
@@ -138,7 +138,7 @@ Si partagée Dev+Stable:
 - Ajouter dans `tauri.base.json` → `app.windows[]`
 
 Si spécifique:
-- Ajouter dans `runtime/{dev|stable}/tauri.{dev|stable}.conf.json` → `app.windows[]`
+- Ajouter dans `runtime/{dev|stable}/tauri.conf.json` → `app.windows[]`
 
 ---
 
@@ -147,15 +147,15 @@ Si spécifique:
 ### ❌ AVANT (redondance)
 
 - `src-tauri/tauri.conf.json`: 1027 lignes
-- `runtime/dev/tauri.dev.conf.json`: 68 lignes (duplication CSP, permissions)
-- `runtime/stable/tauri.stable.conf.json`: 53 lignes (duplication CSP, permissions)
+- `runtime/dev/tauri.conf.json`: 68 lignes (duplication CSP, permissions)
+- `runtime/stable/tauri.conf.json`: 53 lignes (duplication CSP, permissions)
 - **Total redondance**: ~500 lignes dupliquées
 
 ### ✅ APRÈS (overlay system)
 
 - `tauri.base.json`: 120 lignes (config partagée)
-- `runtime/dev/tauri.dev.conf.json`: 30 lignes (overrides only)
-- `runtime/stable/tauri.stable.conf.json`: 25 lignes (overrides only)
+- `runtime/dev/tauri.conf.json`: 30 lignes (overrides only)
+- `runtime/stable/tauri.conf.json`: 25 lignes (overrides only)
 - **Total**: 175 lignes (-80% redondance)
 
 ---
@@ -166,14 +166,14 @@ Si spécifique:
 
 ```bash
 pnpm run dev
-# Utilise runtime/dev/tauri.dev.conf.json + tauri.base.json
+# Utilise runtime/dev/tauri.conf.json + tauri.base.json
 ```
 
 ### Build Stable
 
 ```bash
 pnpm run build:production
-# Utilise runtime/stable/tauri.stable.conf.json + tauri.base.json
+# Utilise runtime/stable/tauri.conf.json + tauri.base.json
 ```
 
 ---

@@ -103,7 +103,7 @@ Documentation guides organisée pour:
 
 ### [DEPLOYMENT.md](advanced/DEPLOYMENT.md) (1,100+ lignes) ⭐⭐⭐
 **Description:** Guide complet déploiement production TITANE∞  
-**Consolidation:** Deployment knowledge → tech-ready (dev) guide
+**Consolidation:** Deployment knowledge → production-ready guide
 
 **Contenu:**
 - ✅ **Pre-Deployment Checklist** - Code quality, dependencies, config, documentation

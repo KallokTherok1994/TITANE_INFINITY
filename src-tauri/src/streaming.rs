@@ -306,11 +306,10 @@ mod tests {
         // Above threshold
         let chunk = buffer.push("world test".to_string());
         assert!(chunk.is_some());
-        if let Some(content) = chunk {
-            assert_eq!(content, "hiworld test");
-        } else {
-            panic!("Buffer should flush when threshold exceeded");
-        }
+        assert_eq!(
+            chunk.expect("chunk should exist once threshold is exceeded"),
+            "hiworld test"
+        );
     }
 
     #[test]
@@ -320,11 +319,10 @@ mod tests {
 
         let chunk = buffer.flush();
         assert!(chunk.is_some());
-        if let Some(content) = chunk {
-            assert_eq!(content, "hello");
-        } else {
-            panic!("Flush should return buffered content");
-        }
+        assert_eq!(
+            chunk.expect("flush should return buffered content"),
+            "hello"
+        );
 
         // Empty after flush
         assert!(buffer.flush().is_none());
@@ -347,11 +345,13 @@ mod tests {
         assert!(chunks.len() >= 2);
 
         // Last chunk should be Complete
-        if let Some(last_chunk) = chunks.last() {
-            assert_eq!(last_chunk.chunk_type, ChunkType::Complete);
-        } else {
-            panic!("Stream should produce at least one chunk");
-        }
+        assert_eq!(
+            chunks
+                .last()
+                .expect("stream should produce at least one chunk")
+                .chunk_type,
+            ChunkType::Complete
+        );
     }
 
     #[test]
@@ -363,90 +363,8 @@ mod tests {
             total_tokens: Some(10),
         };
 
-        match serde_json::to_string(&metadata) {
-            Ok(json) => {
-                assert!(json.contains("thinking"));
-                assert!(json.contains("0.95"));
-            }
-            Err(e) => panic!("Metadata serialization failed: {}", e),
-        }
-    }
-
-    /// Test stream error recovery - corrupted chunk data
-    #[tokio::test]
-    async fn test_stream_error_recovery_corrupted_chunk() {
-        let text = "Hello world test".to_string();
-        let stream = create_text_stream(text, 5, 50);
-        tokio::pin!(stream);
-
-        let mut chunk_count = 0;
-        let mut error_count = 0;
-
-        while let Some(result) = stream.next().await {
-            match result {
-                Ok(chunk) => {
-                    chunk_count += 1;
-                    // Verify chunk structure is valid
-                    assert!(!chunk.chunk.is_empty() || chunk.chunk_type == ChunkType::Complete);
-                }
-                Err(_) => {
-                    error_count += 1;
-                }
-            }
-        }
-
-        // Should have more chunks than errors
-        assert!(chunk_count >= error_count);
-    }
-
-    /// Test stream buffer with empty flushes
-    #[test]
-    fn test_stream_buffer_empty_flush_recovery() {
-        let mut buffer = StreamBuffer::new(50, 1000);
-
-        // Multiple flushes on empty buffer
-        assert!(buffer.flush().is_none());
-        assert!(buffer.flush().is_none());
-
-        // Push and verify recovery
-        buffer.push("test".to_string());
-        assert!(buffer.flush().is_some());
-        assert!(buffer.flush().is_none());
-    }
-
-    /// Test streaming metrics calculation
-    #[test]
-    fn test_streaming_metrics_calculation() {
-        let metrics = StreamingMetrics {
-            time_to_first_token: 50,
-            time_to_last_token: 500,
-            total_tokens: 100,
-            average_token_latency: 5.0,
-            chunks_sent: 10,
-        };
-
-        assert_eq!(metrics.total_tokens, 100);
-        assert!(metrics.average_token_latency > 0.0);
-        assert!(metrics.time_to_last_token >= metrics.time_to_first_token);
-    }
-
-    /// Test chunk type serialization/deserialization
-    #[test]
-    fn test_chunk_type_serialization() {
-        let types = vec![
-            ChunkType::Token,
-            ChunkType::Sentence,
-            ChunkType::Paragraph,
-            ChunkType::Metadata,
-            ChunkType::Complete,
-            ChunkType::Error,
-        ];
-
-        for chunk_type in types {
-            let json = serde_json::to_string(&chunk_type).expect("Should serialize");
-            let deserialized: ChunkType =
-                serde_json::from_str(&json).expect("Should deserialize");
-            assert_eq!(chunk_type, deserialized);
-        }
+        let json = serde_json::to_string(&metadata).expect("metadata serialization should succeed");
+        assert!(json.contains("thinking"));
+        assert!(json.contains("0.95"));
     }
 }

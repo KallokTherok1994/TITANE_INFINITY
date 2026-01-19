@@ -11,25 +11,22 @@ import type { LogLevel } from '../UILogger';
 
 describe('UILogger', () => {
   let logger: UILogger;
-  // Use an object wrapper to maintain reference consistency across clear() calls
-  const mockStorage = { data: {} as { [key: string]: string } };
+  let mockLocalStorage: { [key: string]: string };
 
   // Mock localStorage
   beforeEach(() => {
-    // Clear storage data while maintaining object reference
-    Object.keys(mockStorage.data).forEach(key => delete mockStorage.data[key]);
+    mockLocalStorage = {};
 
     global.localStorage = {
-      getItem: vi.fn((key: string) => mockStorage.data[key] || null),
+      getItem: vi.fn((key: string) => mockLocalStorage[key] || null),
       setItem: vi.fn((key: string, value: string) => {
-        mockStorage.data[key] = value;
+        mockLocalStorage[key] = value;
       }),
       removeItem: vi.fn((key: string) => {
-        delete mockStorage.data[key];
+        delete mockLocalStorage[key];
       }),
       clear: vi.fn(() => {
-        // Clear in place to maintain reference
-        Object.keys(mockStorage.data).forEach(key => delete mockStorage.data[key]);
+        mockLocalStorage = {};
       }),
       length: 0,
       key: vi.fn(() => null),
@@ -50,9 +47,6 @@ describe('UILogger', () => {
     vi.clearAllMocks();
     vi.restoreAllMocks();
   });
-
-  // Helper to access mock storage data
-  const getMockStorage = () => mockStorage.data;
 
   // ─────────────────────────────────────────────────────────────
   // BASIC LOGGING
@@ -113,12 +107,13 @@ describe('UILogger', () => {
 
   describe('Sanitization', () => {
     it('should redact OpenAI API keys', () => {
-      const openAiKey = `sk-${'a'.repeat(48)}`;
-      logger.info(`API call with key ${openAiKey}`);
+      logger.info(
+        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'
+      );
       const logs = logger.getLogs();
 
       expect(logs[0].message).toContain('[REDACTED]');
-      expect(logs[0].message).not.toContain(openAiKey);
+      expect(logs[0].message).not.toContain('sk-abc123');
     });
 
     it('should redact Google API keys', () => {
@@ -130,16 +125,13 @@ describe('UILogger', () => {
     });
 
     it('should redact JWT tokens', () => {
-      const jwtHeader = ['ey', 'J', 'hbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'].join('');
-      const jwtPayload = 'eyJzdWIiOiIxMjM0NTY3ODkwIn0';
-      const jwtSignature = 'dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U';
-      const jwtToken = `${jwtHeader}.${jwtPayload}.${jwtSignature}`;
-
-      logger.info(`Token: ${jwtToken}`);
+      logger.info(
+        'Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U'
+      );
       const logs = logger.getLogs();
 
       expect(logs[0].message).toContain('[REDACTED]');
-      expect(logs[0].message).not.toContain(jwtHeader);
+      expect(logs[0].message).not.toContain('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9');
     });
 
     it('should redact email addresses', () => {
@@ -183,16 +175,16 @@ describe('UILogger', () => {
     });
 
     it('should handle multiple sensitive patterns in one message', () => {
-      const openAiKey = `sk-${'a'.repeat(48)}`;
-      const jwtHeader = ['ey', 'J', 'hbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'].join('');
-      logger.info(`User user@example.com with key ${openAiKey} and token ${jwtHeader}`);
+      logger.info(
+        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+      );
       const logs = logger.getLogs();
 
       const message = logs[0].message;
       expect(message).toContain('[REDACTED]');
       expect(message).not.toContain('user@example.com');
-      expect(message).not.toContain(openAiKey);
-      expect(message).not.toContain(jwtHeader);
+      expect(message).not.toContain('sk-abc123');
+      expect(message).not.toContain('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9');
     });
   });
 
@@ -275,20 +267,51 @@ describe('UILogger', () => {
       expect(logs[0].message).toContain('Log 10'); // Oldest 10 removed
     });
 
-    // Note: localStorage interaction tests are skipped in happy-dom environment
-    // due to complex mock interactions with global setup. The localStorage functionality
-    // is tested manually and in E2E tests.
+    it('should persist logs to localStorage', () => {
+      logger.info('Persisted log');
 
-    it('should clear logs from memory', () => {
+      // Manually trigger save (normally batched)
+      logger['saveLogs']();
+
+      expect(localStorage.setItem).toHaveBeenCalledWith(
+        'titane_ui_logs',
+        expect.any(String)
+      );
+
+      const saved = JSON.parse(mockLocalStorage['titane_ui_logs']);
+      expect(saved).toHaveLength(1);
+      expect(saved[0].message).toBe('Persisted log');
+    });
+
+    it('should load logs from localStorage on init', () => {
+      // Manually set logs in localStorage
+      const existingLogs = [
+        {
+          timestamp: Date.now(),
+          level: 'info' as LogLevel,
+          message: 'Existing log',
+          sessionId: 'old-session',
+        },
+      ];
+      mockLocalStorage['titane_ui_logs'] = JSON.stringify(existingLogs);
+
+      // Create new logger instance
+      const newLogger = new UILogger({ enableConsoleOverride: false });
+      const logs = newLogger.getLogs();
+
+      expect(logs).toHaveLength(1);
+      expect(logs[0].message).toBe('Existing log');
+    });
+
+    it('should clear logs from memory and storage', () => {
       logger.info('Log 1');
       logger.info('Log 2');
-
-      // Verify we have logs before clearing
-      expect(logger.getLogs().length).toBeGreaterThan(0);
+      logger['saveLogs']();
 
       logger.clearLogs();
 
       expect(logger.getLogs()).toHaveLength(0);
+      expect(localStorage.removeItem).toHaveBeenCalledWith('titane_ui_logs');
     });
   });
 

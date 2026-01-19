@@ -4,8 +4,6 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team
  */
 
-import { logger } from '@/utils/logger';
-
 type PendingWrite = {
   key: string;
   value: string;
@@ -178,7 +176,7 @@ export function getDebouncedStorage(): ReturnType<typeof createDebouncedStorage>
       maxPendingWrites: 100,
       onFlush: count => {
         if (process.env.NODE_ENV === 'development') {
-          logger.debug(`[DebouncedStorage] Flushed ${count} writes`);
+          console.log(`[DebouncedStorage] Flushed ${count} writes`);
         }
       },
     });

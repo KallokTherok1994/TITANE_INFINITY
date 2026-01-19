@@ -2,7 +2,6 @@
 // Client TypeScript pour interagir avec le système Auto-Heal
 
 import { secureInvoke } from '@/lib/security';
-import { logger } from '@/utils/logger';
 
 // ============================================================================
 // TYPES
@@ -41,10 +40,10 @@ export interface HealReport {
 export async function scanSystem(): Promise<HealReport> {
   try {
     const report = await secureInvoke<HealReport>('auto_heal_scan');
-    logger.debug('Scan terminé:', report);
+    console.log('[AutoHeal] Scan terminé:', report);
     return report;
   } catch (error) {
-    logger.error('Erreur scan:', error);
+    console.error('[AutoHeal] Erreur scan:', error);
     throw error;
   }
 }
@@ -56,10 +55,10 @@ export async function scanSystem(): Promise<HealReport> {
 export async function repairSystem(module?: string): Promise<string[]> {
   try {
     const results = await secureInvoke<string[]>('auto_heal_repair', { module });
-    logger.debug('Réparation terminée:', results);
+    console.log('[AutoHeal] Réparation terminée:', results);
     return results;
   } catch (error) {
-    logger.error('Erreur réparation:', error);
+    console.error('[AutoHeal] Erreur réparation:', error);
     throw error;
   }
 }
@@ -72,7 +71,7 @@ export async function getLogs(): Promise<HealReport> {
     const logs = await secureInvoke<HealReport>('auto_heal_get_logs');
     return logs;
   } catch (error) {
-    logger.error('Erreur récupération logs:', error);
+    console.error('[AutoHeal] Erreur récupération logs:', error);
     throw error;
   }
 }
@@ -108,10 +107,10 @@ export class AutoHealErrorHandler {
    * Gère une erreur React et tente de la réparer
    */
   async handleError(error: Error, errorInfo: React.ErrorInfo): Promise<void> {
-    logger.error('Erreur React détectée:', error, errorInfo);
+    console.error('[AutoHeal] Erreur React détectée:', error, errorInfo);
 
     if (this.healingInProgress) {
-      logger.warn('Réparation déjà en cours, ignoré');
+      console.warn('[AutoHeal] Réparation déjà en cours, ignoré');
       return;
     }
 
@@ -123,7 +122,7 @@ export class AutoHealErrorHandler {
 
       // Scanner le système
       const report = await scanSystem();
-      logger.debug('Rapport scan:', report);
+      console.log('[AutoHeal] Rapport scan:', report);
 
       // Réparer le module identifié
       if (module) {
@@ -138,7 +137,7 @@ export class AutoHealErrorHandler {
       // Recharger l'application
       window.location.reload();
     } catch (error) {
-      logger.error('Échec auto-réparation:', error);
+      console.error('[AutoHeal] Échec auto-réparation:', error);
     } finally {
       this.healingInProgress = false;
     }
@@ -171,11 +170,11 @@ export class AutoHealMonitor {
 
   start(): void {
     if (this.intervalId) {
-      logger.warn('Monitor déjà démarré');
+      console.warn('[AutoHeal] Monitor déjà démarré');
       return;
     }
 
-    logger.debug('Démarrage monitoring...');
+    console.log('[AutoHeal] Démarrage monitoring...');
 
     this.intervalId = window.setInterval(async () => {
       try {
@@ -187,12 +186,12 @@ export class AutoHealMonitor {
         );
 
         if (criticalErrors.length > 0) {
-          logger.warn('Erreurs critiques détectées:', criticalErrors);
+          console.warn('[AutoHeal] Erreurs critiques détectées:', criticalErrors);
           // Auto-réparation
           await repairSystem();
         }
       } catch (error) {
-        logger.error('Erreur monitoring:', error);
+        console.error('[AutoHeal] Erreur monitoring:', error);
       }
     }, this.checkInterval);
   }
@@ -201,7 +200,7 @@ export class AutoHealMonitor {
     if (this.intervalId) {
       clearInterval(this.intervalId);
       this.intervalId = null;
-      logger.debug('Monitoring arrêté');
+      console.log('[AutoHeal] Monitoring arrêté');
     }
   }
 

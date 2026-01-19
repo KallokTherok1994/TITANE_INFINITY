@@ -4,8 +4,7 @@
 //   Physically-Based Rendering materials for avatar (skin, cloth, hair)
 // ═════════════════════════════════════════════════════════════════════════════
 
-import { Color, FrontSide, MeshStandardMaterial, TextureLoader, Vector2 } from 'three';
-import type { ColorRepresentation } from 'three';
+import * as THREE from 'three';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -13,11 +12,11 @@ import type { ColorRepresentation } from 'three';
 
 export interface PBRMaterialConfig {
   type: 'skin' | 'cloth' | 'hair' | 'metal' | 'plastic';
-  baseColor?: ColorRepresentation;
+  baseColor?: THREE.ColorRepresentation;
   roughness?: number;
   metalness?: number;
   normalScale?: number;
-  emissive?: ColorRepresentation;
+  emissive?: THREE.ColorRepresentation;
   emissiveIntensity?: number;
   opacity?: number;
 }
@@ -78,11 +77,11 @@ const MATERIAL_PRESETS: Record<string, Partial<PBRMaterialConfig>> = {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export class PBRMaterialSystem {
-  private materials: Map<string, MeshStandardMaterial> = new Map();
-  private textureLoader: TextureLoader;
+  private materials: Map<string, THREE.MeshStandardMaterial> = new Map();
+  private textureLoader: THREE.TextureLoader;
 
   constructor() {
-    this.textureLoader = new TextureLoader();
+    this.textureLoader = new THREE.TextureLoader();
   }
 
   // ═════════════════════════════════════════════════════════════════════════
@@ -92,7 +91,10 @@ export class PBRMaterialSystem {
   /**
    * Create PBR material from config
    */
-  public createMaterial(name: string, config: PBRMaterialConfig): MeshStandardMaterial {
+  public createMaterial(
+    name: string,
+    config: PBRMaterialConfig
+  ): THREE.MeshStandardMaterial {
     // Check if already exists
     const existing = this.materials.get(name);
     if (existing) {
@@ -109,7 +111,7 @@ export class PBRMaterialSystem {
     };
 
     // Create material
-    const material = new MeshStandardMaterial({
+    const material = new THREE.MeshStandardMaterial({
       color: finalConfig.baseColor || 0xffffff,
       roughness: finalConfig.roughness ?? 0.5,
       metalness: finalConfig.metalness ?? 0.0,
@@ -117,13 +119,13 @@ export class PBRMaterialSystem {
       emissiveIntensity: finalConfig.emissiveIntensity ?? 0.0,
       opacity: finalConfig.opacity ?? 1.0,
       transparent: (finalConfig.opacity ?? 1.0) < 1.0,
-      side: FrontSide,
+      side: THREE.FrontSide,
       flatShading: false,
     });
 
     // Enable normal map if scale > 0
     if (finalConfig.normalScale && finalConfig.normalScale > 0) {
-      material.normalScale = new Vector2(
+      material.normalScale = new THREE.Vector2(
         finalConfig.normalScale,
         finalConfig.normalScale
       );
@@ -138,7 +140,7 @@ export class PBRMaterialSystem {
   /**
    * Get existing material by name
    */
-  public getMaterial(name: string): MeshStandardMaterial | null {
+  public getMaterial(name: string): THREE.MeshStandardMaterial | null {
     return this.materials.get(name) || null;
   }
 
@@ -147,8 +149,8 @@ export class PBRMaterialSystem {
    */
   public createSkinMaterial(
     name: string,
-    baseColor: ColorRepresentation = 0xffdbac
-  ): MeshStandardMaterial {
+    baseColor: THREE.ColorRepresentation = 0xffdbac
+  ): THREE.MeshStandardMaterial {
     const material = this.createMaterial(name, {
       type: 'skin',
       baseColor,
@@ -158,7 +160,7 @@ export class PBRMaterialSystem {
     });
 
     // SSS approximation: add subtle emissive (simulates light scatter)
-    material.emissive = new Color(baseColor).multiplyScalar(0.05);
+    material.emissive = new THREE.Color(baseColor).multiplyScalar(0.05);
     material.emissiveIntensity = 0.1;
 
     return material;
@@ -169,8 +171,8 @@ export class PBRMaterialSystem {
    */
   public createClothMaterial(
     name: string,
-    baseColor: ColorRepresentation = 0x6366f1
-  ): MeshStandardMaterial {
+    baseColor: THREE.ColorRepresentation = 0x6366f1
+  ): THREE.MeshStandardMaterial {
     return this.createMaterial(name, {
       type: 'cloth',
       baseColor,
@@ -185,8 +187,8 @@ export class PBRMaterialSystem {
    */
   public createHairMaterial(
     name: string,
-    baseColor: ColorRepresentation = 0x3d2817
-  ): MeshStandardMaterial {
+    baseColor: THREE.ColorRepresentation = 0x3d2817
+  ): THREE.MeshStandardMaterial {
     return this.createMaterial(name, {
       type: 'hair',
       baseColor,

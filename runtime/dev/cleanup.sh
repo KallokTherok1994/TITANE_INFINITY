@@ -22,32 +22,13 @@ count_processes() {
 }
 
 # Pre-cleanup audit
-BEFORE_COUNT=$(count_processes "tauri dev|pnpm run dev:tauri|corepack pnpm run dev:tauri|pnpm run tauri|corepack pnpm run tauri|vite|run-dev.sh")
+BEFORE_COUNT=$(count_processes "tauri dev|pnpm run dev:tauri|corepack pnpm run dev:tauri|pnpm run tauri|corepack pnpm run tauri|vite")
 echo "📊 Processus détectés (Tauri/Vite): $BEFORE_COUNT"
 
-# Kill Vite process (prefer pidfile to avoid killing unrelated Vite sessions)
+# Kill Vite processes (should not run in TAURI-only, but clean leftovers)
 echo "🔄 Arrêt des processus Vite (interdit en TAURI-only)..."
-VITE_PIDFILE="runtime/dev/logs/vite.pid"
-if [ -f "$VITE_PIDFILE" ]; then
-    VITE_PID=$(cat "$VITE_PIDFILE" 2>/dev/null || true)
-    if [ -n "${VITE_PID:-}" ] && ps -p "$VITE_PID" >/dev/null 2>&1; then
-        echo "   • Vite pidfile détecté: $VITE_PID"
-        kill "$VITE_PID" 2>/dev/null || true
-        sleep 1
-        if ps -p "$VITE_PID" >/dev/null 2>&1; then
-            kill -9 "$VITE_PID" 2>/dev/null || true
-        fi
-    fi
-    rm -f "$VITE_PIDFILE" 2>/dev/null || true
-fi
-
-# Fallback: narrower match on the dev port to avoid collateral kills
-pkill -f "vite dev --host 127\.0\.0\.1 --port 5173" 2>/dev/null || true
+pkill -f "vite" 2>/dev/null || true
 sleep 1
-
-# Backward-compatible cleanup: remove legacy FIFO/filter artifacts if present
-echo "🧹 Nettoyage des artefacts Vite (legacy)..."
-rm -f runtime/dev/logs/vite.filter.pid runtime/dev/logs/vite.pipe 2>/dev/null || true
 
 # Kill Tauri dev / pnpm tauri processes
 echo "🔄 Arrêt des processus Tauri dev..."
@@ -56,11 +37,6 @@ pkill -f "pnpm run dev:tauri" 2>/dev/null || true
 pkill -f "corepack pnpm run dev:tauri" 2>/dev/null || true
 pkill -f "pnpm run tauri" 2>/dev/null || true
 pkill -f "corepack pnpm run tauri" 2>/dev/null || true
-sleep 1
-
-# Kill run-dev.sh processes (launcher script)
-echo "🔄 Arrêt des processus run-dev.sh..."
-pkill -f "run-dev.sh" 2>/dev/null || true
 sleep 1
 
 # Kill orphaned TITANE∞ dev binaries (can linger if parent process exits)
@@ -80,7 +56,7 @@ lsof -ti:1430 2>/dev/null | xargs kill -9 2>/dev/null || true
 sleep 1
 
 # Verify cleanup
-AFTER_COUNT=$(count_processes "tauri dev|pnpm run dev:tauri|corepack pnpm run dev:tauri|pnpm run tauri|corepack pnpm run tauri|vite|run-dev.sh")
+AFTER_COUNT=$(count_processes "tauri dev|pnpm run dev:tauri|corepack pnpm run dev:tauri|pnpm run tauri|corepack pnpm run tauri|vite")
 CLEANED=$((BEFORE_COUNT - AFTER_COUNT))
 
 echo ""
@@ -96,7 +72,7 @@ echo ""
 # Warning if processes remain
 if [ $AFTER_COUNT -gt 0 ]; then
     echo "⚠️  AVERTISSEMENT: $AFTER_COUNT processus persistent (probablement normaux)"
-    echo "   Vérifier avec: ps aux | grep -E 'tauri dev|pnpm run dev:tauri|pnpm run tauri|vite|run-dev.sh'"
+    echo "   Vérifier avec: ps aux | grep -E 'tauri dev|pnpm run dev:tauri|pnpm run tauri|vite'"
     echo ""
 fi
 

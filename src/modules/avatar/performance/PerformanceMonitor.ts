@@ -3,8 +3,6 @@
 //   Real-time FPS, CPU, GPU, RAM profiling with dynamic resolution scaling
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { logger } from '@/utils/logger';
-
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
@@ -238,7 +236,7 @@ export class PerformanceMonitor {
    * Log metrics to console
    */
   private logMetrics(): void {
-    logger.debug('Metrics:', {
+    console.log('[PerformanceMonitor] Metrics:', {
       fps: `${this.currentMetrics.fps.toFixed(1)} (avg: ${this.currentMetrics.averageFps.toFixed(1)}, min: ${this.currentMetrics.minFps.toFixed(1)}, max: ${this.currentMetrics.maxFps.toFixed(1)})`,
       frameTime: `${this.currentMetrics.frameTime.toFixed(2)}ms`,
       cpu: `${this.currentMetrics.cpuUsage.toFixed(1)}%`,

@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v26.3.0 — Proprietary License
+ * TITANE_INFINITY v24.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,7 +8,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v26.3.0 — APP COMPONENT - Build Titan-Stable validé (AppImage + DEB) • Déploiement utilisateur en cours de validation
+ *   TITANE∞ v24.3.0 — APP COMPONENT - PRODUCTION READY
  *   v22Ω AI Performance Optimizations: 12 optimizations (-40% latency)
  *   Build 11.5s, Tests 1964 passed, Boot ~2s, 20 Engines Unified
  *   React Router + AppShell + Living Engines + Code Splitting
@@ -34,13 +34,11 @@ import { TitanStateProvider } from './context/TitanStateContext'; // ✨ v∞.MP
 import { AppShell, Sidebar, Header } from '@components/layout';
 import { Button } from './ui';
 // ✨ P3: Lazy-load XP bar for smaller initial bundle
-const XPBar = lazyWithDiagnostic(
-  () => import('./components/experience/XPBar').then(m => ({ default: m.XPBar })),
-  'XPBar'
+const XPBar = lazy(() =>
+  import('./components/experience/XPBar').then(m => ({ default: m.XPBar }))
 );
 import { AutoHealErrorBoundary } from './components/AutoHealErrorBoundary';
 import { ErrorBoundary } from './components/ErrorBoundary'; // ✨ v19 - Security Hardening
-import { lazyWithDiagnostic, lazyWithTimeout } from './utils/lazyImportDiagnostic'; // ✨ BOOT-FIX - Diagnostic lazy imports
 import {
   detectEnvironment,
   shouldBlockLoading as _shouldBlockLoading,
@@ -59,22 +57,16 @@ import { initializeOllama } from './services/ai/providers/ollama'; // ✨ v21 - 
 // ✨ v25.4.1 - A11Y & Performance monitoring (utilities planned for future implementation)
 // ✨ CONSOLE MONITOR - Auto-Heal Integration
 import { consoleMonitor } from './services/monitoring/consoleMonitor';
-// ✨ Temporarily import ConsoleMonitorDashboard statically to fix boot issues
-import { ConsoleMonitorDashboard } from './components/dev/ConsoleMonitorDashboard';
 // ✨ v25.3.1 + P3: Lazy-load Aura components (heavy graphics)
-const QuantumParticles = lazyWithDiagnostic(
-  () =>
-    import('./components/aura/QuantumParticles').then(m => ({
-      default: m.QuantumParticles,
-    })),
-  'QuantumParticles'
+const QuantumParticles = lazy(() =>
+  import('./components/aura/QuantumParticles').then(m => ({
+    default: m.QuantumParticles,
+  }))
 );
-const AuraControlPanel = lazyWithDiagnostic(
-  () =>
-    import('./components/aura/AuraControlPanel').then(m => ({
-      default: m.AuraControlPanel,
-    })),
-  'AuraControlPanel'
+const AuraControlPanel = lazy(() =>
+  import('./components/aura/AuraControlPanel').then(m => ({
+    default: m.AuraControlPanel,
+  }))
 );
 import { useAura } from './hooks/useAuraOrchestrator';
 import { useWindowControls } from './hooks/useWindowControls'; // ✨ v26.2.1 - Window zoom & fullscreen controls
@@ -107,71 +99,61 @@ if (typeof window !== 'undefined') {
 }
 
 // ✨ v24.3.0 - Lazy loaded pages (code splitting)
-const TimePage = lazyWithDiagnostic(
-  () => import('./pages/TimePage').then(m => ({ default: m.TimePage })),
-  'TimePage'
+const TimePage = lazy(() =>
+  import('./pages/TimePage').then(m => ({ default: m.TimePage }))
 );
-const Experience = lazyWithDiagnostic(
-  () => import('./pages/Experience').then(m => ({ default: m.Experience })),
-  'Experience'
+const Experience = lazy(() =>
+  import('./pages/Experience').then(m => ({ default: m.Experience }))
 );
-const Stats = lazyWithDiagnostic(
-  () => import('./pages/Stats').then(m => ({ default: m.Stats })),
-  'Stats'
-);
+const Stats = lazy(() => import('./pages/Stats').then(m => ({ default: m.Stats })));
 
 // ✨ v24 - Performance: Lazy load SingularityMonitor
-const SingularityMonitor = lazyWithDiagnostic(
-  () =>
-    import('./components/SingularityMonitor').then(m => ({
-      default: m.SingularityMonitor,
-    })),
-  'SingularityMonitor'
+const SingularityMonitor = lazy(() =>
+  import('./components/SingularityMonitor').then(m => ({ default: m.SingularityMonitor }))
 );
 
 // ✨ v∞.20.0 - Chat Bubble Global (Super Prompt #3)
 // ✨ PHASE 4.2 - Lazy load chat bubbles (defer ~150KB)
-const ChatBubble = lazyWithDiagnostic(
-  () => import('./components/chat/ChatBubble').then(m => ({ default: m.ChatBubble })),
-  'ChatBubble'
+const ChatBubble = lazy(() =>
+  import('./components/chat/ChatBubble').then(m => ({ default: m.ChatBubble }))
 );
 
 // ✨ v24.3.0 - Cognitive Layout Control
-const CognitiveLayoutControl = lazyWithDiagnostic(
-  () =>
-    import('./components/cognitive/CognitiveLayoutControl').then(m => ({
-      default: m.CognitiveLayoutControl,
-    })),
-  'CognitiveLayoutControl'
+const CognitiveLayoutControl = lazy(() =>
+  import('./components/cognitive/CognitiveLayoutControl').then(m => ({
+    default: m.CognitiveLayoutControl,
+  }))
 );
 
 import './components/psyche/DeepPsychePanel.css';
 import { presenceOS } from './engines/presence/_stubs';
 
-type _LazyModule<T> = { default: T };
+type LazyModule<T> = { default: T };
+
+const lazyWithTimeout = <T extends React.ComponentType>(
+  loader: () => Promise<LazyModule<T>>,
+  options: { timeoutMs: number; label: string }
+) =>
+  lazy<T>(() => {
+    const timeoutPromise = new Promise<LazyModule<T>>((_, reject) => {
+      setTimeout(() => {
+        reject(new Error(`Lazy load timeout: ${options.label}`));
+      }, options.timeoutMs);
+    });
+    return Promise.race([loader(), timeoutPromise]);
+  });
 
 // ✨ v24.3.0 - Lazy loaded pages
-const PerformanceTest = lazyWithDiagnostic(
-  () => import('./pages/PerformanceTest').then(m => ({ default: m.PerformanceTest })),
-  'PerformanceTest'
+const PerformanceTest = lazy(() =>
+  import('./pages/PerformanceTest').then(m => ({ default: m.PerformanceTest }))
 );
-const KnowledgeFusionPage = lazyWithDiagnostic(
-  () => import('./ui/pages/KnowledgeFusionPage'),
-  'KnowledgeFusionPage'
-);
-const CreationStudio = lazyWithDiagnostic(
-  () => import('./ui/pages/CreationStudio'),
-  'CreationStudio'
-);
-const EvolutionMonitor = lazyWithDiagnostic(
-  () => import('./ui/pages/EvolutionMonitor'),
-  'EvolutionMonitor'
-);
+const KnowledgeFusionPage = lazy(() => import('./ui/pages/KnowledgeFusionPage'));
+const CreationStudio = lazy(() => import('./ui/pages/CreationStudio'));
+const EvolutionMonitor = lazy(() => import('./ui/pages/EvolutionMonitor'));
 
 // ✨ v24.3.0 - Core pages
-const AdminPage = lazyWithDiagnostic(
-  () => import('./features/admin').then(m => ({ default: m.AdminPage })),
-  'AdminPage'
+const AdminPage = lazy(() =>
+  import('./features/admin').then(m => ({ default: m.AdminPage }))
 );
 const TitanePage = lazyWithTimeout(
   () => import('./pages/TitanePage').then(m => ({ default: m.TitanePage })),
@@ -193,38 +175,27 @@ const UltimateOptimizationDashboard = lazy(() =>
 );
 
 // ✨ v24.3.0 - Center modules
-const RealityCenter = lazyWithDiagnostic(
-  () =>
-    import('./components/RealityCenter/RealityCenter').then(m => ({
-      default: m.default,
-    })),
-  'RealityCenter'
+const RealityCenter = lazy(() =>
+  import('./components/RealityCenter/RealityCenter').then(m => ({ default: m.default }))
 );
 
 // ✨ v26.1 CONSOLE MONITOR DASHBOARD - Dev-only monitoring UI
-// Temporarily disabled lazy loading to fix boot issues
-// const ConsoleMonitorDashboard = lazyWithDiagnostic(
-//   () =>
-//     import('./components/dev/ConsoleMonitorDashboard').then(m => ({
-//       default: m.ConsoleMonitorDashboard,
-//     })),
-//   'ConsoleMonitorDashboard'
-// );
+const ConsoleMonitorDashboard = lazy(() =>
+  import('./components/dev/ConsoleMonitorDashboard').then(m => ({
+    default: m.ConsoleMonitorDashboard,
+  }))
+);
 
 // ✨ v26.2 PREDICTIVE DASHBOARD - ML-like error prediction & correlation
-const PredictiveDashboard = lazyWithDiagnostic(
-  () =>
-    import('./components/dev/PredictiveDashboard').then(m => ({
-      default: m.PredictiveDashboard,
-    })),
-  'PredictiveDashboard'
+const PredictiveDashboard = lazy(() =>
+  import('./components/dev/PredictiveDashboard').then(m => ({
+    default: m.PredictiveDashboard,
+  }))
 );
 
 // ✨ HYPER CENTER - Hyper-Intelligence Engine v∞ (OPUS #20)
-const HyperCenter = lazyWithDiagnostic(
-  () =>
-    import('./components/HyperCenter/HyperCenter').then(m => ({ default: m.default })),
-  'HyperCenter'
+const HyperCenter = lazy(() =>
+  import('./components/HyperCenter/HyperCenter').then(m => ({ default: m.default }))
 );
 
 // ✨ QUANTUM CENTER - Quantum Rendering Layer v∞ (OPUS #17)
@@ -289,21 +260,10 @@ const AppRouter: React.FC = () => {
 
   // ✨ v19.5.2 - User Onboarding State
   const [onboardingComplete, setOnboardingComplete] = useState<boolean>(true); // Assume complete until proven otherwise
-  const [checkingOnboarding, setCheckingOnboarding] = useState<boolean>(
-    import.meta.env.DEV ? false : true
-  ); // Skip check in dev mode
+  const [checkingOnboarding, setCheckingOnboarding] = useState<boolean>(true);
 
   // ✨ v19.5.2 - Check if onboarding is complete (first-run detection)
   useEffect(() => {
-    // ✨ FIX: Skip onboarding check in dev mode to prevent infinite loading
-    if (import.meta.env.DEV) {
-      setOnboardingComplete(true);
-      setCheckingOnboarding(false);
-      return;
-    }
-
-    let cancelled = false;
-
     const checkOnboarding = async () => {
       try {
         // En mode navigateur, vérifier d'abord le localStorage
@@ -316,10 +276,8 @@ const AppRouter: React.FC = () => {
               component: 'Onboarding',
               status: localComplete ? 'Complete' : 'Not started',
             });
-            if (!cancelled) {
-              setOnboardingComplete(localComplete || true);
-              setCheckingOnboarding(false);
-            }
+            setOnboardingComplete(localComplete || true); // Par défaut complété en mode navigateur
+            setCheckingOnboarding(false);
             return;
           }
         }
@@ -330,44 +288,35 @@ const AppRouter: React.FC = () => {
           component: 'Onboarding',
           status: isComplete ? 'Complete' : 'Not started',
         });
-        if (!cancelled) {
-          setOnboardingComplete(isComplete);
-        }
+        setOnboardingComplete(isComplete);
       } catch (error) {
         logger.warn('Failed to check onboarding status, assuming complete', {
           component: 'Onboarding',
           error,
         });
-        if (!cancelled) {
-          setOnboardingComplete(true);
-        }
+        setOnboardingComplete(true); // Fallback to main app
       } finally {
-        if (!cancelled) {
-          setCheckingOnboarding(false);
-        }
+        setCheckingOnboarding(false);
       }
     };
 
-    // ✨ FIX: Reduced timeout from 5s to 300ms to prevent infinite loading
+    // Add timeout to prevent infinite loading (3 seconds in browser mode, 5 in Tauri)
     const timeoutDuration =
       typeof window !== 'undefined' && localStorage.getItem('titane_browser_mode') === '1'
-        ? 200
-        : 300;
+        ? 1000
+        : 5000;
 
     const timeoutId = setTimeout(() => {
-      if (!cancelled) {
-        logger.warn('Onboarding check timeout, assuming complete', {
-          component: 'Onboarding',
-        });
-        setOnboardingComplete(true);
-        setCheckingOnboarding(false);
-      }
+      logger.warn('Onboarding check timeout, assuming complete', {
+        component: 'Onboarding',
+      });
+      setOnboardingComplete(true);
+      setCheckingOnboarding(false);
     }, timeoutDuration);
 
     checkOnboarding();
 
     return () => {
-      cancelled = true;
       clearTimeout(timeoutId);
     };
   }, []);
@@ -578,9 +527,72 @@ const AppRouter: React.FC = () => {
   }, []);
   */
 
-  // ✨ OPT-11 - Cognitive Layout Engine disabled (statically imported in useCognitiveLayout hook)
+  // ✨ OPT-11 - Lazy-load Cognitive Layout Engine
+  useEffect(() => {
+    let started = false;
 
-  // ✨ OPT-10 - TITANE∞ Micro-Interactions disabled (static import)
+    // Silent-by-default in production/Tauri: the cognitive layout observation loop must be explicitly enabled.
+    const envEnabled = import.meta.env.VITE_COGNITIVE_LAYOUT_ENGINE_ENABLED === '1';
+    let userEnabled = false;
+    try {
+      const raw = localStorage.getItem('titane_cognitive_layout_engine_enabled');
+      userEnabled = raw === '1' || raw === 'true';
+    } catch {
+      userEnabled = false;
+    }
+
+    const enabled = import.meta.env.DEV || envEnabled || userEnabled;
+    if (!enabled) {
+      return;
+    }
+
+    console.log('🧠 [COGNITIVE] Loading Cognitive Layout Engine...');
+    import('./engines/cognitive/cognitiveLayoutEngine')
+      .then(({ cognitiveLayoutEngine }) => {
+        if (!started) {
+          cognitiveLayoutEngine.start();
+          started = true;
+          console.log('✅ [COGNITIVE] Cognitive Layout Engine started');
+        }
+
+        return () => {
+          cognitiveLayoutEngine.stop();
+        };
+      })
+      .catch(err => {
+        logger.warn('Failed to load Cognitive Layout Engine', {
+          component: 'CognitiveLayout',
+          error: err,
+        });
+      });
+  }, []);
+
+  // ✨ OPT-10 - Lazy-load TITANE∞ Micro-Interactions
+  useEffect(() => {
+    logger.info('Loading TITANE∞ micro-interactions', { component: 'UIPolish' });
+    import('./ui/motion')
+      .then(({ initializeMicroInteractions }) => {
+        try {
+          initializeMicroInteractions();
+          logger.info(
+            'Micro-interactions initialized (Ripple, Magnetism, Focus Glow, Tooltips)',
+            { component: 'UIPolish' }
+          );
+        } catch (error) {
+          logger.error(
+            'Failed to initialize micro-interactions',
+            { component: 'App', service: 'UIPolish' },
+            error as Error
+          );
+        }
+      })
+      .catch(err => {
+        logger.warn('Failed to load motion module', {
+          component: 'UIPolish',
+          error: err,
+        });
+      });
+  }, []);
 
   // ✨ v∞.27.0 - Initialiser Unified Presence Engine (Super Prompt #3)
   // REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
@@ -872,7 +884,7 @@ const AppRouter: React.FC = () => {
           title="TITANE∞"
           subtitle={
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <span>v26.3.0 — Dual Runtime (Dev/Stable) • OMEGA v2 • MemoryOS</span>
+              <span>v24.3.0 — Singularity Architecture • 20 Engines • Full OPUS</span>
               <XPBar /> {/* ✨ v∞.D4 - Barre XP */}
             </div>
           }

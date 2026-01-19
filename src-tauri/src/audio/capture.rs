@@ -6,44 +6,11 @@
 
 use super::{AudioConfig, AudioError, AudioResult};
 use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
-use std::sync::mpsc;
 use std::sync::{
     atomic::{AtomicBool, Ordering},
     Arc, Mutex,
 };
 use std::time::Duration;
-
-fn build_stream<T: cpal::Sample + cpal::SizedSample + Send + 'static>(
-    device: &cpal::Device,
-    config: &cpal::StreamConfig,
-    buffer: Arc<Mutex<RingBuffer>>,
-    is_capturing: Arc<AtomicBool>,
-) -> Result<cpal::Stream, String>
-where
-    f32: cpal::FromSample<T>,
-{
-    let err_fn = |err| log::error!("[AudioCapture] Stream error: {}", err);
-
-    device
-        .build_input_stream(
-            config,
-            move |data: &[T], _: &cpal::InputCallbackInfo| {
-                if !is_capturing.load(Ordering::SeqCst) {
-                    return;
-                }
-
-                let samples: Vec<f32> =
-                    data.iter().map(|&s| cpal::Sample::from_sample(s)).collect();
-
-                if let Ok(mut buf) = buffer.lock() {
-                    buf.write(&samples);
-                }
-            },
-            err_fn,
-            None,
-        )
-        .map_err(|e| format!("Failed to build stream: {}", e))
-}
 
 /// Audio capture state shared between threads
 pub struct AudioCaptureState {
@@ -53,8 +20,8 @@ pub struct AudioCaptureState {
     is_capturing: Arc<AtomicBool>,
     /// Current audio configuration
     config: AudioConfig,
-    /// Capture worker thread (keeps the CPAL stream alive)
-    capture_thread: Option<std::thread::JoinHandle<()>>,
+    /// Stream handle (kept alive while capturing)
+    stream: Option<cpal::Stream>,
 }
 
 /// Thread-safe ring buffer for audio samples
@@ -130,7 +97,7 @@ impl AudioCaptureState {
             buffer: Arc::new(Mutex::new(RingBuffer::new(buffer_size))),
             is_capturing: Arc::new(AtomicBool::new(false)),
             config,
-            capture_thread: None,
+            stream: None,
         }
     }
 
@@ -141,86 +108,103 @@ impl AudioCaptureState {
             return Ok(());
         }
 
-        // Mark capturing true before spawning so the worker doesn't immediately exit.
-        self.is_capturing.store(true, Ordering::SeqCst);
+        let host = cpal::default_host();
+
+        let device = host
+            .default_input_device()
+            .ok_or_else(|| AudioError::DeviceError("No input device available".into()))?;
+
+        log::info!(
+            "[AudioCapture] Using device: {}",
+            device.name().unwrap_or_default()
+        );
+
+        // Get supported config
+        let supported_config = device
+            .default_input_config()
+            .map_err(|e| AudioError::DeviceError(format!("No supported config: {}", e)))?;
+
+        log::info!(
+            "[AudioCapture] Sample rate: {}, Channels: {}",
+            supported_config.sample_rate().0,
+            supported_config.channels()
+        );
 
         let buffer = self.buffer.clone();
         let is_capturing = self.is_capturing.clone();
-        let (ready_tx, ready_rx) = mpsc::channel::<Result<(), String>>();
 
-        let handle = std::thread::spawn(move || {
-            let init_result = (|| -> Result<(), String> {
-                let host = cpal::default_host();
-                let device = host
-                    .default_input_device()
-                    .ok_or_else(|| "No input device available".to_string())?;
+        // Build stream based on sample format
+        let stream = match supported_config.sample_format() {
+            cpal::SampleFormat::F32 => self.build_stream::<f32>(
+                &device,
+                &supported_config.into(),
+                buffer,
+                is_capturing.clone(),
+            ),
+            cpal::SampleFormat::I16 => self.build_stream::<i16>(
+                &device,
+                &supported_config.into(),
+                buffer,
+                is_capturing.clone(),
+            ),
+            cpal::SampleFormat::U16 => self.build_stream::<u16>(
+                &device,
+                &supported_config.into(),
+                buffer,
+                is_capturing.clone(),
+            ),
+            format => Err(AudioError::DeviceError(format!(
+                "Unsupported format: {:?}",
+                format
+            ))),
+        }?;
 
-                log::info!(
-                    "[AudioCapture] Using device: {}",
-                    device.name().unwrap_or_default()
-                );
+        stream
+            .play()
+            .map_err(|e| AudioError::RecordingError(format!("Failed to start stream: {}", e)))?;
 
-                let supported_config = device
-                    .default_input_config()
-                    .map_err(|e| format!("No supported config: {}", e))?;
+        self.stream = Some(stream);
+        self.is_capturing.store(true, Ordering::SeqCst);
 
-                log::info!(
-                    "[AudioCapture] Sample rate: {}, Channels: {}",
-                    supported_config.sample_rate().0,
-                    supported_config.channels()
-                );
+        log::info!("[AudioCapture] ✅ Capture started");
+        Ok(())
+    }
 
-                let sample_format = supported_config.sample_format();
-                let stream_config: cpal::StreamConfig = supported_config.into();
+    /// Build input stream for specific sample format
+    fn build_stream<T: cpal::Sample + cpal::SizedSample + Send + 'static>(
+        &self,
+        device: &cpal::Device,
+        config: &cpal::StreamConfig,
+        buffer: Arc<Mutex<RingBuffer>>,
+        is_capturing: Arc<AtomicBool>,
+    ) -> AudioResult<cpal::Stream>
+    where
+        f32: cpal::FromSample<T>,
+    {
+        let err_fn = |err| log::error!("[AudioCapture] Stream error: {}", err);
 
-                let stream = match sample_format {
-                    cpal::SampleFormat::F32 => {
-                        build_stream::<f32>(&device, &stream_config, buffer.clone(), is_capturing.clone())?
+        let stream = device
+            .build_input_stream(
+                config,
+                move |data: &[T], _: &cpal::InputCallbackInfo| {
+                    if !is_capturing.load(Ordering::SeqCst) {
+                        return;
                     }
-                    cpal::SampleFormat::I16 => {
-                        build_stream::<i16>(&device, &stream_config, buffer.clone(), is_capturing.clone())?
+
+                    // Convert samples to f32 and write to buffer
+                    let samples: Vec<f32> =
+                        data.iter().map(|&s| cpal::Sample::from_sample(s)).collect();
+
+                    if let Ok(mut buf) = buffer.lock() {
+                        buf.write(&samples);
                     }
-                    cpal::SampleFormat::U16 => {
-                        build_stream::<u16>(&device, &stream_config, buffer.clone(), is_capturing.clone())?
-                    }
-                    format => Err(format!("Unsupported format: {:?}", format))?,
-                };
+                },
+                err_fn,
+                None, // No timeout
+            )
+            .map_err(|e| AudioError::RecordingError(format!("Failed to build stream: {}", e)))?;
 
-                stream
-                    .play()
-                    .map_err(|e| format!("Failed to start stream: {}", e))?;
-
-                // Keep stream alive until capture is stopped.
-                while is_capturing.load(Ordering::SeqCst) {
-                    std::thread::sleep(Duration::from_millis(50));
-                }
-
-                drop(stream);
-                Ok(())
-            })();
-
-            let _ = ready_tx.send(init_result);
-        });
-
-        match ready_rx.recv_timeout(Duration::from_secs(3)) {
-            Ok(Ok(())) => {
-                self.capture_thread = Some(handle);
-                log::info!("[AudioCapture] ✅ Capture started");
-                Ok(())
-            }
-            Ok(Err(msg)) => {
-                self.is_capturing.store(false, Ordering::SeqCst);
-                let _ = handle.join();
-                Err(AudioError::RecordingError(msg))
-            }
-            Err(_) => {
-                self.is_capturing.store(false, Ordering::SeqCst);
-                let _ = handle.join();
-                Err(AudioError::RecordingError(
-                    "Capture start timed out".to_string(),
-                ))
-            }
-        }
+        Ok(stream)
     }
 
     /// Stop capturing audio
@@ -231,9 +215,8 @@ impl AudioCaptureState {
 
         self.is_capturing.store(false, Ordering::SeqCst);
 
-        if let Some(handle) = self.capture_thread.take() {
-            let _ = handle.join();
-        }
+        // Drop the stream to stop capture
+        self.stream = None;
 
         log::info!("[AudioCapture] ✅ Capture stopped");
         Ok(())

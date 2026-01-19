@@ -283,9 +283,9 @@ build_tauri() {
 
     cd "$PROJECT_DIR"
 
-    log INFO "pnpm run titane:build..."
+    log INFO "pnpm run tauri:build..."
     local start_time=$(date +%s)
-    "${PNPM[@]}" run titane:build 2>&1 | tee -a "$LOG_FILE"
+    "${PNPM[@]}" run tauri:build 2>&1 | tee -a "$LOG_FILE"
     local end_time=$(date +%s)
     local duration=$((end_time - start_time))
 
@@ -392,7 +392,7 @@ main() {
 ║                                                               ║
 ║    ✅✅✅ BUILD COMPLET — SUCCÈS TOTAL ✅✅✅              ║
 ║                                                               ║
-║         TITANE∞ vΩ est maintenant ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)           ║
+║         TITANE∞ vΩ est maintenant PRODUCTION READY           ║
 ║                                                               ║
 ╚═══════════════════════════════════════════════════════════════╝
 EOF

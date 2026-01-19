@@ -62,6 +62,7 @@
 ### P1 Impact: expect() Overuse (1300 warnings)
 
 **Current Pattern:**
+
 ```rust
 // ❌ DANGEROUS - Panics on error
 let config = serde_json::from_str(json_str).expect("Failed to parse config");
@@ -74,10 +75,11 @@ let value: u64 = string.parse().expect("Not a number");
 ```
 
 **Risk Assessment:**
+
 - **Severity:** HIGH (production crashes)
 - **Frequency:** 1300 instances across codebase
 - **Scope:** Core modules (chat, memory, validation, streaming)
-- **Real-world Impact:** 
+- **Real-world Impact:**
   - ChatEngine: 50+ expect() calls (streaming failures = app hang)
   - Orchestrator: 80+ expect() calls (provider failures = cascade breaks)
   - Memory system: 40+ expect() calls (corruption risk)
@@ -111,17 +113,17 @@ let value: u64 = string.parse()
 
 ### Module-by-Module Breakdown
 
-| Module | expect() Count | Risk Level | Modules Affected | ETA Fix |
-|--------|----------------|-----------|------------------|---------|
-| **chat_orchestrator.rs** | 80+ | HIGH | core chat pipeline | v27.0 P1 |
-| **streaming.rs** | 60+ | HIGH | streaming/buffering | v27.0 P1 |
-| **unified_memory.rs** | 40+ | MEDIUM | memory consolidation | v27.0 P2 |
-| **orchestrator_state.rs** | 35+ | HIGH | state management | v27.0 P1 |
-| **bloom_filter.rs** | 25+ | LOW | bloom verification | v27.0 P3 |
-| **ipc_batcher.rs** | 30+ | MEDIUM | IPC communication | v27.0 P2 |
-| **providers/** | 500+ | HIGH | provider cascade | v27.0 P1 |
-| **api/** | 150+ | HIGH | API endpoints | v27.0 P1 |
-| **Other** | 384+ | MIXED | Various modules | v27.0 P2 |
+| Module                    | expect() Count | Risk Level | Modules Affected     | ETA Fix  |
+| ------------------------- | -------------- | ---------- | -------------------- | -------- |
+| **chat_orchestrator.rs**  | 80+            | HIGH       | core chat pipeline   | v27.0 P1 |
+| **streaming.rs**          | 60+            | HIGH       | streaming/buffering  | v27.0 P1 |
+| **unified_memory.rs**     | 40+            | MEDIUM     | memory consolidation | v27.0 P2 |
+| **orchestrator_state.rs** | 35+            | HIGH       | state management     | v27.0 P1 |
+| **bloom_filter.rs**       | 25+            | LOW        | bloom verification   | v27.0 P3 |
+| **ipc_batcher.rs**        | 30+            | MEDIUM     | IPC communication    | v27.0 P2 |
+| **providers/**            | 500+           | HIGH       | provider cascade     | v27.0 P1 |
+| **api/**                  | 150+           | HIGH       | API endpoints        | v27.0 P1 |
+| **Other**                 | 384+           | MIXED      | Various modules      | v27.0 P2 |
 
 **Total: ~1300 expect() calls**
 
@@ -132,12 +134,14 @@ let value: u64 = string.parse()
 ### Phase 1: Hot Path Analysis (v27.0 Week 1)
 
 Identify critical expect() in:
+
 - Provider cascade (gemini, ollama, openai, anthropic, glm46v)
 - Streaming message handling
 - Conversation memory consolidation
 - Rate limiting checks
 
 **Tools:**
+
 ```bash
 # Find all expect() with line numbers
 grep -rn "\.expect(" src-tauri/src --include="*.rs" | wc -l
@@ -152,6 +156,7 @@ grep -rn "\.expect(" src-tauri/src/overdrive/chat_orchestrator.rs --include="*.r
 ### Phase 2: Systematic Replacement (v27.0 Week 2-3)
 
 **Approach 1: Use `?` operator (preferred)**
+
 ```rust
 pub fn process_message(msg: &str) -> Result<Message, Error> {
     let parsed = serde_json::from_str(msg)?; // Returns error instead of panicking
@@ -160,17 +165,20 @@ pub fn process_message(msg: &str) -> Result<Message, Error> {
 ```
 
 **Approach 2: Use `map_err()` for custom error**
+
 ```rust
 let data = fs::read_to_string(path)
     .map_err(|e| TAPIError::io(format!("Cannot read {}: {}", path, e)))?;
 ```
 
 **Approach 3: Use `unwrap_or()` with fallback**
+
 ```rust
 let timeout = config.timeout.unwrap_or(DEFAULT_TIMEOUT); // Safe with default
 ```
 
 **Approach 4: Log and continue**
+
 ```rust
 let value = dangerous_operation().unwrap_or_else(|e| {
     log::warn!("Operation failed: {}, using default", e);
@@ -282,12 +290,14 @@ cargo test --lib
 ## 🎓 Educational Resources
 
 **Why expect() is dangerous:**
+
 - It bypasses error handling
 - Process crashes if called
 - Not suitable for production
 - Makes code hard to test
 
 **Best practices:**
+
 - Use `?` operator for propagating errors
 - Use `match` for explicit handling
 - Use `unwrap_or()` only with safe defaults

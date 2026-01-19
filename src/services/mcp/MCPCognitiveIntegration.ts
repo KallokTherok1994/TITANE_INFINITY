@@ -19,7 +19,6 @@ import { chatEngine } from '@/services/ai/chatEngine';
 import type { Job as _Job } from './mcp.types';
 import { JobType, MemoryTier } from './mcp.types';
 import type { AIMessage } from '@/services/ai/types';
-import { logger } from '@/utils/logger';
 
 // Stub Message interface
 interface Message {
@@ -49,11 +48,11 @@ class MCPCognitiveIntegrationClass {
   }
 
   private log(message: string, ...args: unknown[]) {
-    logger.debug(`[MCP-Cognitive Integration] ${message}`, ...args);
+    console.log(`[MCP-Cognitive Integration] ${message}`, ...args);
   }
 
   private warn(message: string, ...args: unknown[]) {
-    logger.warn(`[MCP-Cognitive Integration] ⚠️ ${message}`, ...args);
+    console.warn(`[MCP-Cognitive Integration] ⚠️ ${message}`, ...args);
   }
 
   // ─────────────────────────────────────────────────────────────────────────

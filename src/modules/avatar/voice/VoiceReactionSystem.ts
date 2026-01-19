@@ -4,7 +4,7 @@
 //   Real-time physical reactions to voice (head, torso, breathing)
 // ═════════════════════════════════════════════════════════════════════════════
 
-import { Euler, MathUtils, Vector3 } from 'three';
+import * as THREE from 'three';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -34,8 +34,8 @@ export interface VoiceReactionConfig {
 }
 
 export interface PhysicalReactions {
-  headRotation: Euler; // Head rotation (X, Y, Z)
-  torsoPosition: Vector3; // Torso position offset
+  headRotation: THREE.Euler; // Head rotation (X, Y, Z)
+  torsoPosition: THREE.Vector3; // Torso position offset
   shoulderOffset: number; // Shoulder Y offset
   chestExpansion: number; // Chest expansion scale
 }
@@ -57,8 +57,8 @@ export class VoiceReactionSystem {
   private breathingPhase: number = 0;
 
   // Smoothing
-  private targetHeadRotation: Euler;
-  private targetTorsoPosition: Vector3;
+  private targetHeadRotation: THREE.Euler;
+  private targetTorsoPosition: THREE.Vector3;
 
   constructor(config: Partial<VoiceReactionConfig> = {}) {
     this.config = {
@@ -79,14 +79,14 @@ export class VoiceReactionSystem {
 
     // Initialize reactions
     this.currentReactions = {
-      headRotation: new Euler(0, 0, 0),
-      torsoPosition: new Vector3(0, 0, 0),
+      headRotation: new THREE.Euler(0, 0, 0),
+      torsoPosition: new THREE.Vector3(0, 0, 0),
       shoulderOffset: 0,
       chestExpansion: 0,
     };
 
-    this.targetHeadRotation = new Euler(0, 0, 0);
-    this.targetTorsoPosition = new Vector3(0, 0, 0);
+    this.targetHeadRotation = new THREE.Euler(0, 0, 0);
+    this.targetTorsoPosition = new THREE.Vector3(0, 0, 0);
 
     // Initialize voice analysis
     this.currentVoiceAnalysis = {
@@ -141,7 +141,7 @@ export class VoiceReactionSystem {
     if (this.config.enableHeadMovement && this.isCurrentlySpeaking) {
       // RMS → subtle head rotation
       const headAmount = rms * this.config.headMovementSensitivity;
-      const maxRotation = MathUtils.degToRad(this.config.headMovementMax);
+      const maxRotation = THREE.MathUtils.degToRad(this.config.headMovementMax);
 
       // Vary rotation on X/Y axes (natural movement)
       this.targetHeadRotation.x = Math.sin(Date.now() * 0.001) * headAmount * maxRotation;
@@ -206,17 +206,17 @@ export class VoiceReactionSystem {
     // 5. SMOOTH INTERPOLATION
     // ─────────────────────────────────────────
     // Head rotation (smooth damping)
-    this.currentReactions.headRotation.x = MathUtils.lerp(
+    this.currentReactions.headRotation.x = THREE.MathUtils.lerp(
       this.currentReactions.headRotation.x,
       this.targetHeadRotation.x,
       0.1
     );
-    this.currentReactions.headRotation.y = MathUtils.lerp(
+    this.currentReactions.headRotation.y = THREE.MathUtils.lerp(
       this.currentReactions.headRotation.y,
       this.targetHeadRotation.y,
       0.1
     );
-    this.currentReactions.headRotation.z = MathUtils.lerp(
+    this.currentReactions.headRotation.z = THREE.MathUtils.lerp(
       this.currentReactions.headRotation.z,
       this.targetHeadRotation.z,
       0.1

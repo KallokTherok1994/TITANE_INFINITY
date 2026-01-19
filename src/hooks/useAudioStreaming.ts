@@ -5,7 +5,6 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { logger } from '@/utils/logger';
 import {
   audioStreamingService,
   type StreamingState,
@@ -44,9 +43,9 @@ export interface UseAudioStreamingReturn {
  * @example
  * ```tsx
  * const { isStreaming, state, startStreaming, stopStreaming } = useAudioStreaming({
- *   onStateChange: (state) => logger.debug('State:', state),
+ *   onStateChange: (state) => console.log('State:', state),
  *   onStreamingComplete: (result) => {
- *     logger.debug('Audio captured:', result.audioData.length, 'samples');
+ *     console.log('Audio captured:', result.audioData.length, 'samples');
  *   },
  * });
  * ```
@@ -118,7 +117,7 @@ export function useAudioStreaming(
           const currentStats = await audioStreamingService.getStats();
           setStats(currentStats);
         } catch (err) {
-          logger.error('Stats error:', err);
+          console.error('[useAudioStreaming] Stats error:', err);
         }
       }, 500); // Update every 500ms
     } else {
@@ -150,7 +149,7 @@ export function useAudioStreaming(
    */
   const startStreaming = useCallback(async () => {
     if (isStreaming) {
-      logger.warn('Already streaming');
+      console.warn('[useAudioStreaming] Already streaming');
       return;
     }
 
@@ -163,7 +162,7 @@ export function useAudioStreaming(
         setIsStreaming(true);
       }
     } catch (err) {
-      logger.error('Start error:', err);
+      console.error('[useAudioStreaming] Start error:', err);
       if (isMountedRef.current) {
         setError(err as Error);
       }
@@ -175,7 +174,7 @@ export function useAudioStreaming(
    */
   const stopStreaming = useCallback(async (): Promise<StreamingResult | null> => {
     if (!isStreaming) {
-      logger.warn('Not streaming');
+      console.warn('[useAudioStreaming] Not streaming');
       return null;
     }
 
@@ -196,7 +195,7 @@ export function useAudioStreaming(
 
       return result;
     } catch (err) {
-      logger.error('Stop error:', err);
+      console.error('[useAudioStreaming] Stop error:', err);
       if (isMountedRef.current) {
         setError(err as Error);
         setIsStreaming(false);
@@ -220,7 +219,7 @@ export function useAudioStreaming(
         setStats(null);
       }
     } catch (err) {
-      logger.error('Force stop error:', err);
+      console.error('[useAudioStreaming] Force stop error:', err);
       if (isMountedRef.current) {
         setError(err as Error);
       }

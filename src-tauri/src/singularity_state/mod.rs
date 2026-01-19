@@ -454,12 +454,6 @@ fn generate_signature() -> String {
 mod tests {
     use super::*;
 
-    macro_rules! test_ok {
-        ($expr:expr) => {
-            $expr.expect(&format!("TEST FAILED at {}:{}", file!(), line!()))
-        };
-    }
-
     #[test]
     fn test_singularity_state_creation() {
         let state = SingularityState::new();
@@ -504,7 +498,7 @@ mod tests {
 
         assert!(result.is_ok(), "Deep sync failed: {:?}", result.err());
 
-        let report = test_ok!(result);
+        let report = result.expect("singularity deep sync should produce report");
         assert!(report.coherence_score >= 0.0 && report.coherence_score <= 1.0);
 
         // Vérifier que les champs META ont été mis à jour

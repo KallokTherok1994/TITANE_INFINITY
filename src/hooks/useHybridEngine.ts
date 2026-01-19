@@ -18,7 +18,6 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { logger } from '@/utils/logger';
 import { hybridEngine } from '../modules/hybrid/HybridEngine';
 import type {
   HybridMode,
@@ -106,7 +105,7 @@ export function useHybridEngine(): UseHybridEngineReturn {
         const result = await hybridEngine.executeCommand(command);
         return result;
       } catch (error) {
-        logger.error('Execute failed:', error);
+        console.error('[useHybridEngine] Execute failed:', error);
         throw error;
       }
     },
@@ -164,7 +163,7 @@ export function useHybridEngine(): UseHybridEngineReturn {
       );
       return patches;
     } catch (error) {
-      logger.error('Detect issues failed:', error);
+      console.error('[useHybridEngine] Detect issues failed:', error);
       return [];
     }
   }, []);
@@ -174,7 +173,7 @@ export function useHybridEngine(): UseHybridEngineReturn {
       const success = await hybridEngine.applyAutoPatch(patch);
       return success;
     } catch (error) {
-      logger.error('Apply auto-patch failed:', error);
+      console.error('[useHybridEngine] Apply auto-patch failed:', error);
       return false;
     }
   }, []);
@@ -186,7 +185,7 @@ export function useHybridEngine(): UseHybridEngineReturn {
       const diagnostics = await hybridEngine.runFullDiagnostic();
       return diagnostics;
     } catch (error) {
-      logger.error('Full diagnostic failed:', error);
+      console.error('[useHybridEngine] Full diagnostic failed:', error);
       return [];
     }
   }, []);

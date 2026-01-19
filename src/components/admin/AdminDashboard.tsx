@@ -51,7 +51,6 @@ import {
   formatDuration,
   createEmptySnapshot,
 } from '../../services/adminEngine';
-import { logger } from '@/utils/logger';
 
 // ════════════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -107,12 +106,12 @@ const VitalCard: React.FC<{
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
-      className="p-4 rounded-lg bg-bg-secondary border"
+      className="p-4 rounded-lg bg-[#1a1a1a] border"
       style={{ borderColor }}
     >
       <div className="flex items-center justify-between mb-2">
-        <span className="text-text-secondary text-sm">{label}</span>
-        <div className="text-text-muted">{icon}</div>
+        <span className="text-[#C4C4C4] text-sm">{label}</span>
+        <div className="text-[#727B81]">{icon}</div>
       </div>
       <div className="flex items-baseline gap-1">
         <span
@@ -121,7 +120,7 @@ const VitalCard: React.FC<{
         >
           {typeof value === 'number' ? value.toFixed(1) : value}
         </span>
-        {unit && <span className="text-text-muted text-sm">{unit}</span>}
+        {unit && <span className="text-[#727B81] text-sm">{unit}</span>}
       </div>
     </motion.div>
   );
@@ -163,16 +162,16 @@ const ModuleCard: React.FC<{
     <motion.div
       whileHover={{ scale: 1.02 }}
       onClick={onClick}
-      className="p-3 rounded-lg bg-bg-secondary border border-border-default cursor-pointer"
+      className="p-3 rounded-lg bg-[#1a1a1a] border border-[#333] cursor-pointer"
     >
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           <div style={{ color: statusColor }}>{getModuleIcon()}</div>
-          <span className="text-text-secondary text-sm font-medium">{displayName}</span>
+          <span className="text-[#C4C4C4] text-sm font-medium">{displayName}</span>
         </div>
         <div className="w-2 h-2 rounded-full" style={{ backgroundColor: statusColor }} />
       </div>
-      <div className="flex justify-between text-xs text-text-muted">
+      <div className="flex justify-between text-xs text-[#727B81]">
         <span>{latency > 0 ? `${latency.toFixed(0)}ms` : '-'}</span>
         <span>{errors > 0 ? `${errors} err` : 'OK'}</span>
       </div>
@@ -205,15 +204,15 @@ const NavBar: React.FC<{
   });
 
   return (
-    <div className="flex gap-2 p-2 bg-bg-primary rounded-lg border border-border-default">
+    <div className="flex gap-2 p-2 bg-[#0a0a0a] rounded-lg border border-[#333]">
       {filteredViews.map(view => (
         <button
           key={view.id}
           onClick={() => onViewChange(view.id)}
           className={`flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
             activeView === view.id
-              ? 'bg-bg-tertiary text-text-primary'
-              : 'text-text-muted hover:text-text-secondary hover:bg-bg-secondary'
+              ? 'bg-[#333] text-white'
+              : 'text-[#727B81] hover:text-[#C4C4C4] hover:bg-[#1a1a1a]'
           }`}
         >
           {view.icon}
@@ -259,7 +258,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       setLastUpdate(Date.now());
       setIsLoading(false);
     } catch (error) {
-      logger.error('Erreur collecte snapshot:', error);
+      console.error('[AdminDashboard] Erreur collecte snapshot:', error);
     }
   }, [adminEngine]);
 
@@ -321,10 +320,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   // Rendu conditionnel si USER n'a pas accès
   if (userRole === 'USER') {
     return (
-      <div
-        className={`p-6 bg-bg-primary rounded-xl border border-border-default ${className}`}
-      >
-        <div className="flex items-center justify-center gap-3 text-text-muted">
+      <div className={`p-6 bg-[#0a0a0a] rounded-xl border border-[#333] ${className}`}>
+        <div className="flex items-center justify-center gap-3 text-[#727B81]">
           <Shield size={24} />
           <span>Accès Admin requis</span>
         </div>
@@ -336,23 +333,21 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className={`p-6 bg-bg-primary rounded-xl border border-border-default ${className}`}
+      className={`p-6 bg-[#0a0a0a] rounded-xl border border-[#333] ${className}`}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
-          <h2 className="text-xl font-bold text-text-secondary">Admin Dashboard</h2>
+          <h2 className="text-xl font-bold text-[#C4C4C4]">Admin Dashboard</h2>
           <HealthBadge level={snapshot.healthLevel} />
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="text-sm text-text-muted">
+          <div className="text-sm text-[#727B81]">
             Score:{' '}
-            <span className="font-bold text-text-secondary">{snapshot.healthScore}</span>{' '}
-            | Grade:{' '}
-            <span className="font-bold text-text-secondary">
-              {snapshot.performanceGrade}
-            </span>
+            <span className="font-bold text-[#C4C4C4]">{snapshot.healthScore}</span> |
+            Grade:{' '}
+            <span className="font-bold text-[#C4C4C4]">{snapshot.performanceGrade}</span>
           </div>
 
           <button
@@ -360,7 +355,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             className={`p-2 rounded-lg border ${
               isPaused
                 ? 'border-[#f59e0b] text-[#f59e0b]'
-                : 'border-border-default text-text-muted hover:text-text-secondary'
+                : 'border-[#333] text-[#727B81] hover:text-[#C4C4C4]'
             }`}
           >
             {isPaused ? (
@@ -370,7 +365,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             )}
           </button>
 
-          <span className="text-xs text-text-muted">
+          <span className="text-xs text-[#727B81]">
             Màj: {new Date(lastUpdate).toLocaleTimeString('fr-FR')}
           </span>
         </div>
@@ -391,9 +386,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           {activeView === 'OVERVIEW' && (
             <div className="space-y-6">
               {/* Status message */}
-              <div className="p-4 bg-bg-secondary rounded-lg border border-border-default">
-                <p className="text-text-secondary">{snapshot.statusMessage}</p>
-                <p className="text-xs text-text-muted mt-1">
+              <div className="p-4 bg-[#1a1a1a] rounded-lg border border-[#333]">
+                <p className="text-[#C4C4C4]">{snapshot.statusMessage}</p>
+                <p className="text-xs text-[#727B81] mt-1">
                   Mode: {snapshot.systemMode} | Uptime:{' '}
                   {formatDuration(snapshot.vitals.uptime)}
                 </p>
@@ -461,9 +456,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
               {/* Modules Grid */}
               <div>
-                <h3 className="text-lg font-semibold text-text-secondary mb-4">
-                  Modules
-                </h3>
+                <h3 className="text-lg font-semibold text-[#C4C4C4] mb-4">Modules</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
                   {activeModules.map(module => (
                     <ModuleCard
@@ -480,28 +473,26 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               {/* Anomalies actives */}
               {snapshot.activeAnomalies.length > 0 && (
                 <div>
-                  <h3 className="text-lg font-semibold text-text-secondary mb-4">
+                  <h3 className="text-lg font-semibold text-[#C4C4C4] mb-4">
                     Anomalies actives ({snapshot.activeAnomalies.length})
                   </h3>
                   <div className="space-y-2">
                     {snapshot.activeAnomalies.slice(0, 5).map(anomaly => (
                       <div
                         key={anomaly.id}
-                        className="p-3 bg-bg-secondary rounded-lg border border-error-500 flex items-center justify-between"
+                        className="p-3 bg-[#1a1a1a] rounded-lg border border-[#ef4444] flex items-center justify-between"
                       >
                         <div className="flex items-center gap-3">
-                          <AlertTriangle size={18} className="text-error-500" />
+                          <AlertTriangle size={18} className="text-[#ef4444]" />
                           <div>
-                            <p className="text-text-secondary text-sm">
-                              {anomaly.message}
-                            </p>
-                            <p className="text-text-muted text-xs">
+                            <p className="text-[#C4C4C4] text-sm">{anomaly.message}</p>
+                            <p className="text-[#727B81] text-xs">
                               {MODULE_DISPLAY_NAMES[anomaly.moduleId]} | {anomaly.type}
                             </p>
                           </div>
                         </div>
                         {anomaly.autoHealed && (
-                          <span className="text-xs text-success-500 bg-success-500/20 px-2 py-1 rounded">
+                          <span className="text-xs text-[#22c55e] bg-[#22c55e20] px-2 py-1 rounded">
                             Auto-réparé
                           </span>
                         )}
@@ -513,41 +504,41 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
               {/* Providers IA */}
               <div>
-                <h3 className="text-lg font-semibold text-text-secondary mb-4">
+                <h3 className="text-lg font-semibold text-[#C4C4C4] mb-4">
                   Providers IA
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 bg-bg-secondary rounded-lg border border-border-default">
+                  <div className="p-4 bg-[#1a1a1a] rounded-lg border border-[#333]">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Bot size={20} className="text-[#8b5cf6]" />
-                        <span className="text-text-secondary">Ollama</span>
+                        <span className="text-[#C4C4C4]">Ollama</span>
                       </div>
                       {snapshot.vitals.ollamaLatency >= 0 ? (
-                        <Wifi size={18} className="text-success-500" />
+                        <Wifi size={18} className="text-[#22c55e]" />
                       ) : (
-                        <WifiOff size={18} className="text-error-500" />
+                        <WifiOff size={18} className="text-[#ef4444]" />
                       )}
                     </div>
-                    <p className="text-2xl font-bold text-text-secondary mt-2">
+                    <p className="text-2xl font-bold text-[#C4C4C4] mt-2">
                       {snapshot.vitals.ollamaLatency >= 0
                         ? `${snapshot.vitals.ollamaLatency.toFixed(0)}ms`
                         : 'Offline'}
                     </p>
                   </div>
-                  <div className="p-4 bg-bg-secondary rounded-lg border border-border-default">
+                  <div className="p-4 bg-[#1a1a1a] rounded-lg border border-[#333]">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Bot size={20} className="text-[#3b82f6]" />
-                        <span className="text-text-secondary">Gemini</span>
+                        <span className="text-[#C4C4C4]">Gemini</span>
                       </div>
                       {snapshot.vitals.geminiLatency >= 0 ? (
-                        <Wifi size={18} className="text-success-500" />
+                        <Wifi size={18} className="text-[#22c55e]" />
                       ) : (
-                        <WifiOff size={18} className="text-error-500" />
+                        <WifiOff size={18} className="text-[#ef4444]" />
                       )}
                     </div>
-                    <p className="text-2xl font-bold text-text-secondary mt-2">
+                    <p className="text-2xl font-bold text-[#C4C4C4] mt-2">
                       {snapshot.vitals.geminiLatency >= 0
                         ? `${snapshot.vitals.geminiLatency.toFixed(0)}ms`
                         : 'Offline'}
@@ -560,14 +551,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
           {activeView === 'MODULES' && (
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-text-secondary">
+              <h3 className="text-lg font-semibold text-[#C4C4C4]">
                 Détails des Modules
               </h3>
               <div className="grid gap-4">
                 {activeModules.map(module => (
                   <div
                     key={module.id}
-                    className="p-4 bg-bg-secondary rounded-lg border border-border-default"
+                    className="p-4 bg-[#1a1a1a] rounded-lg border border-[#333]"
                   >
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-3">
@@ -580,7 +571,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                               ],
                           }}
                         />
-                        <span className="text-text-secondary font-medium">
+                        <span className="text-[#C4C4C4] font-medium">
                           {module.displayName}
                         </span>
                       </div>
@@ -599,26 +590,24 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     </div>
                     <div className="grid grid-cols-4 gap-4 text-sm">
                       <div>
-                        <span className="text-text-muted">Latence</span>
-                        <p className="text-text-secondary">
-                          {module.avgLatency.toFixed(0)}ms
-                        </p>
+                        <span className="text-[#727B81]">Latence</span>
+                        <p className="text-[#C4C4C4]">{module.avgLatency.toFixed(0)}ms</p>
                       </div>
                       <div>
-                        <span className="text-text-muted">Erreurs</span>
-                        <p className="text-text-secondary">{module.errorCount}</p>
+                        <span className="text-[#727B81]">Erreurs</span>
+                        <p className="text-[#C4C4C4]">{module.errorCount}</p>
                       </div>
                       <div>
-                        <span className="text-text-muted">Heal Attempts</span>
-                        <p className="text-text-secondary">{module.healAttempts}</p>
+                        <span className="text-[#727B81]">Heal Attempts</span>
+                        <p className="text-[#C4C4C4]">{module.healAttempts}</p>
                       </div>
                       <div>
-                        <span className="text-text-muted">Ops en attente</span>
-                        <p className="text-text-secondary">{module.pendingOps}</p>
+                        <span className="text-[#727B81]">Ops en attente</span>
+                        <p className="text-[#C4C4C4]">{module.pendingOps}</p>
                       </div>
                     </div>
                     {module.lastError && (
-                      <div className="mt-3 p-2 bg-error-500/20 rounded text-sm text-error-500">
+                      <div className="mt-3 p-2 bg-[#ef444420] rounded text-sm text-[#ef4444]">
                         {module.lastError}
                       </div>
                     )}
@@ -629,7 +618,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           )}
 
           {activeView === 'LOGS' && (
-            <div className="text-center text-text-muted py-12">
+            <div className="text-center text-[#727B81] py-12">
               <Database size={48} className="mx-auto mb-4 opacity-50" />
               <p>Composant Logs - À implémenter</p>
               <p className="text-sm">Voir AdminTimeline pour la timeline</p>
@@ -637,14 +626,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           )}
 
           {activeView === 'TIMELINE' && (
-            <div className="text-center text-text-muted py-12">
+            <div className="text-center text-[#727B81] py-12">
               <Clock size={48} className="mx-auto mb-4 opacity-50" />
               <p>Composant Timeline - À implémenter</p>
             </div>
           )}
 
           {activeView === 'ACTIONS' && (
-            <div className="text-center text-text-muted py-12">
+            <div className="text-center text-[#727B81] py-12">
               <Zap size={48} className="mx-auto mb-4 opacity-50" />
               <p>Composant Actions - À implémenter</p>
               <p className="text-sm">Voir AdminActions pour les actions admin</p>
@@ -652,7 +641,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           )}
 
           {activeView === 'SETTINGS' && userRole === 'ADMIN' && (
-            <div className="text-center text-text-muted py-12">
+            <div className="text-center text-[#727B81] py-12">
               <Settings size={48} className="mx-auto mb-4 opacity-50" />
               <p>Configuration Admin - À implémenter</p>
             </div>

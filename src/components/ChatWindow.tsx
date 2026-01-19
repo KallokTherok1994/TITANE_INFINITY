@@ -21,7 +21,6 @@ import { useSingularityState } from '../core/state/SingularityState';
 import type { Message as _Message } from '../core/ARCHITECTURE_TYPES_v∞';
 import { listPromptPresets } from '@/core/prompts';
 import type { ChatMode } from '@/services/ai';
-import { getMessageText } from '@/services/ai/types';
 import './ChatWindow.css';
 
 export interface ChatWindowProps {
@@ -70,18 +69,14 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(
     // ✨ v24.2.1 FIX: Memoize filtered messages to prevent filter recalculation on every render
     const filteredMessages = useMemo(() => {
       if (!Array.isArray(messages)) return [];
-      return messages.filter(message => {
-        // Vérifier que le message existe et a un rôle valide
-        if (!message || !message.role || !['user', 'assistant'].includes(message.role)) {
-          return false;
-        }
-        
-        // Extraire le texte du message (support pour string content et objets complexes)
-        const messageText = getMessageText(message);
-        
-        // Vérifier que le contenu existe et n'est pas vide
-        return messageText && messageText.trim().length > 0;
-      });
+      return messages.filter(
+        message =>
+          message &&
+          message.role &&
+          ['user', 'assistant'].includes(message.role) &&
+          message.content &&
+          message.content.trim().length > 0
+      );
     }, [messages]);
 
     const handleRestoreHistory = useCallback(() => {
@@ -265,7 +260,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(
                 `msg-${message.timestamp}`
               }
               role={message.role}
-              content={getMessageText(message)}
+              content={message.content}
               timestamp={message.timestamp}
             />
           ))}

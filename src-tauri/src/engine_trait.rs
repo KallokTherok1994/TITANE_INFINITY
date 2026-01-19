@@ -236,12 +236,6 @@ impl OrchestratorEngine {
 mod tests {
     use super::*;
 
-    macro_rules! test_ok {
-        ($expr:expr) => {
-            $expr.expect(&format!("TEST FAILED at {}:{}", file!(), line!()))
-        };
-    }
-
     // Mock engine for testing
     struct MockEngine {
         name: String,
@@ -318,10 +312,12 @@ mod tests {
     fn test_orchestrator_init() {
         let mut orchestrator = OrchestratorEngine::new();
 
-        test_ok!(orchestrator
-            .register_engine(Box::new(MockEngine::new("Engine1", 80))));
-        test_ok!(orchestrator
-            .register_engine(Box::new(MockEngine::new("Engine2", 60))));
+        orchestrator
+            .register_engine(Box::new(MockEngine::new("Engine1", 80)))
+            .expect("register_engine should succeed for Engine1");
+        orchestrator
+            .register_engine(Box::new(MockEngine::new("Engine2", 60)))
+            .expect("register_engine should succeed for Engine2");
 
         assert!(orchestrator.init_all().is_ok());
         assert_eq!(orchestrator.state, EngineState::Running);
@@ -331,10 +327,12 @@ mod tests {
     fn test_orchestrator_cycle() {
         let mut orchestrator = OrchestratorEngine::new();
 
-        test_ok!(orchestrator
-            .register_engine(Box::new(MockEngine::new("Engine1", 50))));
-        test_ok!(orchestrator
-            .init_all());
+        orchestrator
+            .register_engine(Box::new(MockEngine::new("Engine1", 50)))
+            .expect("register_engine should succeed for Engine1");
+        orchestrator
+            .init_all()
+            .expect("init_all should succeed with a registered engine");
 
         assert!(orchestrator.run_cycle().is_ok());
         assert_eq!(orchestrator.total_cycles, 1);
@@ -344,18 +342,23 @@ mod tests {
     fn test_orchestrator_priority_order() {
         let mut orchestrator = OrchestratorEngine::new();
 
-        test_ok!(orchestrator
-            .register_engine(Box::new(MockEngine::new("LowPriority", 10))));
-        test_ok!(orchestrator
-            .register_engine(Box::new(MockEngine::new("HighPriority", 90))));
-        test_ok!(orchestrator
-            .register_engine(Box::new(MockEngine::new("MediumPriority", 50))));
+        orchestrator
+            .register_engine(Box::new(MockEngine::new("LowPriority", 10)))
+            .expect("register_engine should succeed for LowPriority");
+        orchestrator
+            .register_engine(Box::new(MockEngine::new("HighPriority", 90)))
+            .expect("register_engine should succeed for HighPriority");
+        orchestrator
+            .register_engine(Box::new(MockEngine::new("MediumPriority", 50)))
+            .expect("register_engine should succeed for MediumPriority");
 
-        test_ok!(orchestrator
-            .init_all());
+        orchestrator
+            .init_all()
+            .expect("init_all should succeed with multiple registered engines");
 
-        let statuses = test_ok!(orchestrator
-            .get_statuses());
+        let statuses = orchestrator
+            .get_statuses()
+            .expect("get_statuses should succeed after initialization");
         assert_eq!(statuses.len(), 3);
     }
 }

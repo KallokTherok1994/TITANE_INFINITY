@@ -53,18 +53,33 @@ export const config = {
   },
   onPrepare: async () => {
     const envPath = `${process.env.PATH}:${process.cwd()}/.tools/node/current/bin`;
-    devServerProcess = spawn('pnpm', ['exec', 'vite', 'dev', '--config', 'vite.config.ts', '--host', '127.0.0.1', '--port', '5173', '--strictPort'], {
-      cwd: process.cwd(),
-      env: { ...process.env, PATH: envPath },
-      stdio: 'pipe',
-    });
+    devServerProcess = spawn(
+      'pnpm',
+      [
+        'exec',
+        'vite',
+        'dev',
+        '--config',
+        'vite.config.ts',
+        '--host',
+        '127.0.0.1',
+        '--port',
+        '5173',
+        '--strictPort',
+      ],
+      {
+        cwd: process.cwd(),
+        env: { ...process.env, PATH: envPath },
+        stdio: 'pipe',
+      }
+    );
 
-    devServerProcess.stdout?.on('data', (data) => {
+    devServerProcess.stdout?.on('data', data => {
       if (process.env.WDIO_DEBUG) {
         process.stdout.write(`[wdio:devserver] ${data}`);
       }
     });
-    devServerProcess.stderr?.on('data', (data) => {
+    devServerProcess.stderr?.on('data', data => {
       process.stderr.write(`[wdio:devserver:err] ${data}`);
     });
 

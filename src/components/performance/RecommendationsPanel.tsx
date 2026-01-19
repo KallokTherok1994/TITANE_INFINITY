@@ -732,7 +732,7 @@ export const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
             )}
 
             {/* Liste des recommandations */}
-            <div className="p-4 space-y-2 max-h-125 overflow-y-auto">
+            <div className="p-4 space-y-2 max-h-[500px] overflow-y-auto">
               {sortedRecs.length > 0 ? (
                 <AnimatePresence>
                   {sortedRecs.map(rec => (

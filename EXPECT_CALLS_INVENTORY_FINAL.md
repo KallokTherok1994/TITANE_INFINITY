@@ -1,18 +1,18 @@
 # 🔴 URGENT: EXPECT() CALL INVENTORY COMPLETE
 
 **Updated Discovery:** 1432 total expect() calls found  
-**Status:** ⚠️ CRITICAL — Action required immediately  
+**Status:** ⚠️ CRITICAL — Action required immediately
 
 ---
 
 ## 🎯 Actual Inventory (vs Clippy Report)
 
-| Finding | Count | Status |
-|---------|-------|--------|
-| Clippy warnings | 1317 | ⚠️ Compiler reported |
-| Actual expect() calls | 1432 | 🔴 Found via grep |
-| Difference | +115 | In test files (expected) |
-| **TOTAL WORK:** | **1432 expect() to refactor** | 🚨 **INCREASED SCOPE** |
+| Finding               | Count                         | Status                   |
+| --------------------- | ----------------------------- | ------------------------ |
+| Clippy warnings       | 1317                          | ⚠️ Compiler reported     |
+| Actual expect() calls | 1432                          | 🔴 Found via grep        |
+| Difference            | +115                          | In test files (expected) |
+| **TOTAL WORK:**       | **1432 expect() to refactor** | 🚨 **INCREASED SCOPE**   |
 
 ---
 
@@ -58,12 +58,12 @@ The 1432 expect() calls are distributed across **MANY modules** (not concentrate
 
 ### Time Estimate Update
 
-| Phase | Original | Updated | Delta |
-|-------|----------|---------|-------|
-| Provider cascade | 10-11 days | 12-14 days | +20% |
-| Core modules | 8-9 days | 10-12 days | +20% |
-| API layer | 6-7 days | 7-9 days | +15% |
-| **Total v27.0** | **3-4 weeks** | **4-5 weeks** | **+25%** |
+| Phase            | Original      | Updated       | Delta    |
+| ---------------- | ------------- | ------------- | -------- |
+| Provider cascade | 10-11 days    | 12-14 days    | +20%     |
+| Core modules     | 8-9 days      | 10-12 days    | +20%     |
+| API layer        | 6-7 days      | 7-9 days      | +15%     |
+| **Total v27.0**  | **3-4 weeks** | **4-5 weeks** | **+25%** |
 
 ---
 
@@ -82,6 +82,7 @@ grep -rn "\.expect(" ./src-tauri/src --include="*.rs" | grep -v "tests" | wc -l
 ### 2. Identify Quick Wins
 
 Low-hanging fruit for auto-fix:
+
 - Parse errors (string → number)
 - File operations with defaults
 - Config loads with fallbacks
@@ -89,6 +90,7 @@ Low-hanging fruit for auto-fix:
 ### 3. Create Refactoring Batches
 
 Split 1432 into manageable chunks:
+
 - **Batch A:** Parser expect() (500-600 calls)
 - **Batch B:** File I/O expect() (200-300 calls)
 - **Batch C:** JSON/Config expect() (300-400 calls)
@@ -99,11 +101,13 @@ Split 1432 into manageable chunks:
 ## 📈 v27.0 Sprint Adjustment
 
 **New Approach:**
+
 - Keep decomposition as v27.0 focus
 - Move **all expect() refactoring to v27.0-phase-2** (concurrent with decomposition)
 - Use v26.4.2 for quick wins (auto-fix friendly expect())
 
 **Timeline:**
+
 ```
 v26.4.2 (This week):
   - Auto-fix trivial expect() calls

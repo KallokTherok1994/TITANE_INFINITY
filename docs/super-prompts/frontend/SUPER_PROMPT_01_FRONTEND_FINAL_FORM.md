@@ -10,7 +10,7 @@
 - **Complexité** : ⭐⭐⭐⭐ (Élevée)
 - **Durée estimée** : 2-4h (selon taille du codebase)
 - **Dépendances** : Aucune
-- **Output** : Code tech-ready (dev) + Documentation
+- **Output** : Code production-ready + Documentation
 - **Outils** : GitHub Copilot Chat + VS Code
 
 ---
@@ -458,7 +458,7 @@ Si le super prompt ne couvre pas tout en une fois :
 
 ### Copilot ne génère que du pseudo-code
 
-➡️ Reformuler en insistant sur « code réel, tech-ready (dev), pas de TODO »
+➡️ Reformuler en insistant sur « code réel, production-ready, pas de TODO »
 
 ### Les fichiers générés ne correspondent pas à la structure
 

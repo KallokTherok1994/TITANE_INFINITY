@@ -3,16 +3,16 @@
 //   Enhanced IK smoother, posture dynamics, gesture-voice synchronization
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { Euler, MathUtils, Quaternion, Vector3 } from 'three';
+import * as THREE from 'three';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
 
 export interface BoneTransform {
-  position: Vector3;
-  rotation: Euler;
-  scale: Vector3;
+  position: THREE.Vector3;
+  rotation: THREE.Euler;
+  scale: THREE.Vector3;
 }
 
 export interface PostureDynamicsConfig {
@@ -93,7 +93,7 @@ export class BodyGestureFluidityEngine {
   private boneCurrent: Map<string, BoneTransform> = new Map();
 
   // Velocity tracking (for glitch prevention)
-  private boneVelocities: Map<string, Vector3> = new Map();
+  private boneVelocities: Map<string, THREE.Vector3> = new Map();
   private lastUpdateTime: number = Date.now();
 
   constructor(config: Partial<PostureDynamicsConfig> = {}) {
@@ -130,9 +130,9 @@ export class BodyGestureFluidityEngine {
    */
   public setBoneTarget(boneName: string, transform: Partial<BoneTransform>): void {
     const existing = this.boneTargets.get(boneName) || {
-      position: new Vector3(),
-      rotation: new Euler(),
-      scale: new Vector3(1, 1, 1),
+      position: new THREE.Vector3(),
+      rotation: new THREE.Euler(),
+      scale: new THREE.Vector3(1, 1, 1),
     };
 
     this.boneTargets.set(boneName, {
@@ -164,25 +164,25 @@ export class BodyGestureFluidityEngine {
     // ─────────────────────────────────────────
     const influence = this.config.vocalToneInfluence;
 
-    this.currentPosture.spineRotation = MathUtils.lerp(
+    this.currentPosture.spineRotation = THREE.MathUtils.lerp(
       this.currentPosture.spineRotation,
       this.targetPosture.spineRotation,
       this.config.smoothingFactor * influence
     );
 
-    this.currentPosture.shoulderHeight = MathUtils.lerp(
+    this.currentPosture.shoulderHeight = THREE.MathUtils.lerp(
       this.currentPosture.shoulderHeight,
       this.targetPosture.shoulderHeight,
       this.config.smoothingFactor * influence
     );
 
-    this.currentPosture.armRelaxation = MathUtils.lerp(
+    this.currentPosture.armRelaxation = THREE.MathUtils.lerp(
       this.currentPosture.armRelaxation,
       this.targetPosture.armRelaxation,
       this.config.smoothingFactor * influence
     );
 
-    this.currentPosture.gestureScale = MathUtils.lerp(
+    this.currentPosture.gestureScale = THREE.MathUtils.lerp(
       this.currentPosture.gestureScale,
       this.targetPosture.gestureScale,
       this.config.smoothingFactor * influence
@@ -196,10 +196,13 @@ export class BodyGestureFluidityEngine {
       if (!current) continue;
 
       // Calculate velocity
-      const velocity = this.boneVelocities.get(boneName) || new Vector3();
+      const velocity = this.boneVelocities.get(boneName) || new THREE.Vector3();
 
       // Position interpolation with velocity limit
-      const positionDelta = new Vector3().subVectors(target.position, current.position);
+      const positionDelta = new THREE.Vector3().subVectors(
+        target.position,
+        current.position
+      );
       const distance = positionDelta.length();
 
       if (distance > 0.001) {
@@ -218,8 +221,8 @@ export class BodyGestureFluidityEngine {
       this.boneVelocities.set(boneName, velocity);
 
       // Rotation interpolation (slerp for smooth rotation)
-      const currentQuat = new Quaternion().setFromEuler(current.rotation);
-      const targetQuat = new Quaternion().setFromEuler(target.rotation);
+      const currentQuat = new THREE.Quaternion().setFromEuler(current.rotation);
+      const targetQuat = new THREE.Quaternion().setFromEuler(target.rotation);
       currentQuat.slerp(targetQuat, this.config.smoothingFactor);
       current.rotation.setFromQuaternion(currentQuat);
 
@@ -253,7 +256,7 @@ export class BodyGestureFluidityEngine {
    * Apply gesture amplitude scale (from vocal energy)
    */
   public setGestureAmplitude(amplitude: number): void {
-    this.config.gestureAmplitudeMultiplier = MathUtils.clamp(amplitude, 0.5, 2.0);
+    this.config.gestureAmplitudeMultiplier = THREE.MathUtils.clamp(amplitude, 0.5, 2.0);
   }
 
   /**

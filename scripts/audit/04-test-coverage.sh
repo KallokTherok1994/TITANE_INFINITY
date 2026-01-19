@@ -6,15 +6,6 @@
 
 set -e
 
-# Some toolchains occasionally emit numeric-only noise lines to stdout (observed under master/orchestrated runs).
-# They are not part of the intended audit output and make logs harder to read.
-# Filter them out while preserving all meaningful lines.
-exec > >(awk '!/^[0-9]+$/' )
-
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-cd "$PROJECT_ROOT"
-
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 REPORT_DIR="reports/test-coverage-$TIMESTAMP"
 mkdir -p "$REPORT_DIR"
@@ -51,226 +42,21 @@ echo "   └─ Rust tests: $RUST_TESTS"
 echo ""
 echo "🏃 [2/7] Running test suite..."
 if [ -f "package.json" ]; then
-  # Ensure deterministic coverage measurement: remove previous artifacts
-  # so we only report coverage produced by this run.
-  rm -rf coverage/unit coverage/.tmp coverage/coverage-summary.json 2>/dev/null || true
-
-  if [ -x "./.tools/node/current/bin/pnpm" ]; then
-    PNPM=("./.tools/node/current/bin/pnpm")
-  elif command -v corepack >/dev/null 2>&1; then
-    PNPM=(corepack pnpm)
-  elif command -v pnpm >/dev/null 2>&1; then
-    PNPM=(pnpm)
-  else
-    PNPM=()
-  fi
-
-  NODE_BIN=""
-  if [ -x "./.tools/node/current/bin/node" ]; then
-    NODE_BIN="./.tools/node/current/bin/node"
-  elif command -v node >/dev/null 2>&1; then
-    NODE_BIN="$(command -v node)"
-  fi
-
-  if [ ${#PNPM[@]} -gt 0 ]; then
-    set +e
-    # Use the unit coverage config, which emits coverage/unit/coverage-summary.json.
-    "${PNPM[@]}" run test:coverage:unit > "$REPORT_DIR/test-output.txt" 2>&1
-    TEST_EXIT=$?
-    set -e
-
-    if [ "$TEST_EXIT" -ne 0 ]; then
-      echo "   ⚠️ Tests/coverage failed (exit=$TEST_EXIT)"
-    fi
-  else
-    echo "   ⚠️ pnpm/corepack introuvable - tests ignorés"
-    echo "pnpm/corepack introuvable" > "$REPORT_DIR/test-output.txt"
-  fi
-
-  # Coverage detection (deterministic):
-  # 1) Prefer the JSON summary if produced by the unit coverage config.
-  # 2) Otherwise, compute from V8 raw fragments in coverage/unit/.tmp.
-  # 3) Otherwise, report 0.
-  COVERAGE="0"
-  COVERAGE_NOTE=""
-
-  if [ -f "coverage/unit/coverage-summary.json" ]; then
-    cp "coverage/unit/coverage-summary.json" "$REPORT_DIR/coverage-summary.json"
-    if command -v jq >/dev/null 2>&1; then
-      COVERAGE=$(jq -r '(.total.lines.pct // 0) | floor' "$REPORT_DIR/coverage-summary.json" 2>/dev/null || echo "0")
-    elif [ -n "${NODE_BIN:-}" ]; then
-      set +e
-      COVERAGE=$("$NODE_BIN" <<'NODE'
-const fs = require('fs');
-try {
-  const p = process.argv[1];
-  const data = JSON.parse(fs.readFileSync(p, 'utf8'));
-  const v = (data && data.total && data.total.lines && typeof data.total.lines.pct === 'number') ? data.total.lines.pct : 0;
-  process.stdout.write(String(Math.floor(v)));
-} catch {
-  process.stdout.write('0');
-}
-NODE
-"$REPORT_DIR/coverage-summary.json")
-      set -e
-    fi
-    if [[ "${COVERAGE:-}" =~ ^[0-9]+$ ]]; then
-      COVERAGE_NOTE="(from coverage/unit/coverage-summary.json)"
-      echo "   └─ Coverage: ${COVERAGE}% ${COVERAGE_NOTE}"
+    pnpm test -- --coverage --json --outputFile="$REPORT_DIR/test-results.json" > "$REPORT_DIR/test-output.txt" 2>&1 || {
+        echo "   ⚠️ Tests failed or no test command configured"
+    }
+    
+    if [ -f "coverage/coverage-summary.json" ]; then
+        cp coverage/coverage-summary.json "$REPORT_DIR/"
+        COVERAGE=$(jq -r '.total.lines.pct' "$REPORT_DIR/coverage-summary.json" 2>/dev/null || echo "0")
+        echo "   └─ Coverage: ${COVERAGE}%"
     else
-      COVERAGE="0"
-      echo "   └─ Coverage: 0% (invalid coverage-summary.json)"
-    fi
-  elif [ -d "coverage/unit/.tmp" ] && ls coverage/unit/.tmp/coverage-*.json >/dev/null 2>&1; then
-    # Fallback: Vitest v8 provider may only emit raw V8 coverage fragments in coverage/unit/.tmp.
-    # Compute an approximate % based on uncovered byte ranges (count==0) within src/ (excluding tests).
-    RAW_TMP_DIR="coverage/unit/.tmp"
-    if [ -n "${NODE_BIN:-}" ]; then
-      export TITANE_V8_COVERAGE_TMP_DIR="$RAW_TMP_DIR"
-      set +e
-      V8_OUT=$("$NODE_BIN" <<'NODE'
-const fs = require('fs');
-const path = require('path');
-
-function listCoverageFiles(dir) {
-  try {
-    return fs
-      .readdirSync(dir)
-      .filter(f => /^coverage-\d+\.json$/.test(f))
-      .map(f => path.join(dir, f));
-  } catch {
-    return [];
-  }
-}
-
-function parseJsonFile(filePath) {
-  try {
-    const raw = fs.readFileSync(filePath, 'utf8');
-    return JSON.parse(raw);
-  } catch {
-    return null;
-  }
-}
-
-function normalizeFileUrl(url) {
-  // Expect file:///...; return decoded path.
-  if (typeof url !== 'string') return null;
-  if (!url.startsWith('file://')) return null;
-  try {
-    // file:///home/... => /home/...
-    return decodeURIComponent(url.replace(/^file:\/\//, ''));
-  } catch {
-    return url.replace(/^file:\/\//, '');
-  }
-}
-
-function unionIntervals(intervals) {
-  if (!intervals.length) return [];
-  intervals.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
-  const out = [];
-  let [cs, ce] = intervals[0];
-  for (let i = 1; i < intervals.length; i++) {
-    const [s, e] = intervals[i];
-    if (s <= ce) {
-      ce = Math.max(ce, e);
-    } else {
-      out.push([cs, ce]);
-      cs = s;
-      ce = e;
-    }
-  }
-  out.push([cs, ce]);
-  return out;
-}
-
-function sumIntervals(intervals) {
-  let sum = 0;
-  for (const [s, e] of intervals) {
-    if (e > s) sum += (e - s);
-  }
-  return sum;
-}
-
-const tmpDir = process.env.TITANE_V8_COVERAGE_TMP_DIR || path.join(process.cwd(), 'coverage', 'unit', '.tmp');
-const files = listCoverageFiles(tmpDir);
-
-// Aggregate by source file path.
-const byFile = new Map();
-
-for (const f of files) {
-  const data = parseJsonFile(f);
-  if (!data || !Array.isArray(data.result)) continue;
-  for (const entry of data.result) {
-    const p = normalizeFileUrl(entry.url);
-    if (!p) continue;
-    // Focus on src/ and ignore tests.
-    if (!p.includes('/src/')) continue;
-    if (/\.(test|spec)\.(ts|tsx|js|jsx)$/.test(p)) continue;
-    if (p.includes('/src/test/') || p.includes('/src/test-utils/')) continue;
-    const functions = Array.isArray(entry.functions) ? entry.functions : [];
-    let fileLen = 0;
-    const uncovered = [];
-    for (const fn of functions) {
-      const ranges = Array.isArray(fn.ranges) ? fn.ranges : [];
-      for (const r of ranges) {
-        if (typeof r.startOffset !== 'number' || typeof r.endOffset !== 'number') continue;
-        if (r.endOffset > fileLen) fileLen = r.endOffset;
-        // count==0 ranges are treated as uncovered spans
-        if (r.count === 0) {
-          uncovered.push([Math.max(0, r.startOffset), Math.max(0, r.endOffset)]);
-        }
-      }
-    }
-    if (fileLen <= 0) continue;
-    const prev = byFile.get(p);
-    if (!prev) {
-      byFile.set(p, { fileLen, uncovered });
-    } else {
-      // Keep max fileLen, concat uncovered.
-      prev.fileLen = Math.max(prev.fileLen, fileLen);
-      prev.uncovered.push(...uncovered);
-    }
-  }
-}
-
-let totalBytes = 0;
-let coveredBytes = 0;
-
-for (const { fileLen, uncovered } of byFile.values()) {
-  const u = unionIntervals(uncovered.filter(([s, e]) => e > s && s < fileLen).map(([s, e]) => [s, Math.min(e, fileLen)]));
-  const uncoveredBytes = Math.min(fileLen, sumIntervals(u));
-  const covered = Math.max(0, fileLen - uncoveredBytes);
-  totalBytes += fileLen;
-  coveredBytes += covered;
-}
-
-if (totalBytes <= 0) {
-  process.stdout.write('0');
-} else {
-  const pct = Math.max(0, Math.min(100, Math.round((coveredBytes * 100) / totalBytes)));
-  process.stdout.write(String(pct));
-}
-NODE
-)
-      V8_EC=$?
-      set -e
-      if [ "$V8_EC" -eq 0 ] && [[ "${V8_OUT:-}" =~ ^[0-9]+$ ]]; then
-        COVERAGE="$V8_OUT"
-        COVERAGE_NOTE="(computed from V8 raw fragments in ${RAW_TMP_DIR})"
-        echo "   └─ Coverage: ${COVERAGE}% ${COVERAGE_NOTE}"
-      else
         COVERAGE="0"
-        echo "   └─ Coverage: 0% (no usable V8 fragments)"
-      fi
-    else
-      echo "   └─ Coverage: 0% (node introuvable pour calcul V8)"
+        echo "   └─ No coverage data generated"
     fi
-  else
-    echo "   └─ Coverage: 0% (no coverage files generated)"
-  fi
 else
-  COVERAGE="0"
-  echo "   ⚠️ package.json not found"
+    COVERAGE="0"
+    echo "   ⚠️ package.json not found"
 fi
 
 # 3. Rust Test Coverage
@@ -278,15 +64,9 @@ echo ""
 echo "🦀 [3/7] Checking Rust test coverage..."
 if [ -f "src-tauri/Cargo.toml" ]; then
     cd src-tauri
-  set +e
-  cargo test > "../$REPORT_DIR/rust-test-output.txt" 2>&1
-  RUST_TEST_EXIT=$?
-  set -e
-  if [ "$RUST_TEST_EXIT" -ne 0 ]; then
-    echo "   ⚠️ Rust tests failed (exit=$RUST_TEST_EXIT)"
-    echo "   └─ Tail (last 40 lines):"
-    tail -n 40 "../$REPORT_DIR/rust-test-output.txt" | sed 's/^/      /'
-  fi
+    cargo test 2>&1 | tee "../$REPORT_DIR/rust-test-output.txt" || {
+        echo "   ⚠️ Rust tests failed"
+    }
     cd ..
     
     RUST_TEST_COUNT=$(grep "test result:" "$REPORT_DIR/rust-test-output.txt" | grep -oE "[0-9]+ passed" | grep -oE "[0-9]+" || echo "0")
@@ -635,12 +415,7 @@ echo "================================================"
 echo "✅ Test Coverage Audit Complete!"
 echo ""
 echo "📊 Summary:"
-PASS_MARK="(❌ <80%)"
-COVERAGE_INT_MARK="${COVERAGE%.*}"
-if [[ "${COVERAGE_INT_MARK:-}" =~ ^[0-9]+$ ]] && [ "$COVERAGE_INT_MARK" -ge 80 ]; then
-  PASS_MARK="(✅)"
-fi
-echo "   ├─ Overall Coverage: ${COVERAGE}% ${PASS_MARK}"
+echo "   ├─ Overall Coverage: ${COVERAGE}% $([ "${COVERAGE%.*}" -ge 80 ] 2>/dev/null && echo "(✅)" || echo "(❌ <80%)")"
 echo "   ├─ Unit Tests: $UNIT_TESTS"
 echo "   ├─ E2E Tests: $E2E_TESTS $([ "$E2E_TESTS" -ge 10 ] && echo "(✅)" || echo "(⚠️ <10)")"
 echo "   ├─ Rust Tests: $RUST_TESTS $([ "$RUST_TESTS" -ge 50 ] && echo "(✅)" || echo "(⚠️ <50)")"
@@ -650,29 +425,3 @@ echo ""
 echo "📁 Full report: $REPORT_DIR/TEST_COVERAGE_SUMMARY.md"
 echo "📋 Coverage matrix: $REPORT_DIR/COVERAGE_MATRIX.md"
 echo ""
-
-# Deterministic score (0-100)
-COVERAGE_INT="${COVERAGE%.*}"
-if [ -z "${COVERAGE_INT:-}" ]; then COVERAGE_INT=0; fi
-
-RUST_COMPONENT=$((RUST_TESTS >= 50 ? 10 : (RUST_TESTS * 10 / 50)))
-E2E_COMPONENT=$((E2E_TESTS >= 10 ? 10 : E2E_TESTS))
-ASSERT_COMPONENT=$((ASSERTIONS >= 200 ? 10 : (ASSERTIONS * 10 / 200)))
-
-# Coverage is the largest component (70%). Align scoring with the stated target (>=80% coverage).
-# - >= 80% coverage earns full 70 points
-# - < 80% scales linearly down to 0
-COVERAGE_COMPONENT=0
-if [[ "${COVERAGE_INT:-}" =~ ^[0-9]+$ ]]; then
-  if [ "$COVERAGE_INT" -ge 80 ]; then
-    COVERAGE_COMPONENT=70
-  elif [ "$COVERAGE_INT" -gt 0 ]; then
-    COVERAGE_COMPONENT=$(( COVERAGE_INT * 70 / 80 ))
-  fi
-fi
-
-SCORE=$(( COVERAGE_COMPONENT + RUST_COMPONENT + E2E_COMPONENT + ASSERT_COMPONENT ))
-if [ "$SCORE" -gt 100 ]; then SCORE=100; fi
-if [ "$SCORE" -lt 0 ]; then SCORE=0; fi
-
-echo "Score: $SCORE"

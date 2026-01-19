@@ -16,7 +16,7 @@ import {
 import { secureInvoke } from '@/lib/security';
 import { createLogger } from '@/utils/logger';
 
-const logger = createLogger('TauriAutoRepair');
+const _logger = createLogger('TauriAutoRepair');
 
 // ══════════════════════════════════════════════════════════════════
 // TYPES
@@ -97,7 +97,7 @@ export class TauriAutoRepairEngine {
    * PHASE 1: Diagnostic complet
    */
   async phase1_diagnostic(): Promise<DiagnosticResult> {
-    logger.debug('Phase 1: Diagnostic...');
+    console.log('[AutoRepair] Phase 1: Diagnostic...');
 
     // Liste des commandes problématiques rapportées
     const problematicCommands = [
@@ -142,10 +142,10 @@ export class TauriAutoRepairEngine {
 
     this.report.phase1_diagnostic = result;
 
-    logger.debug(
+    console.log(
       `[AutoRepair] Diagnostic: ${result.commands_found}/${result.commands_tested} commandes trouvées`
     );
-    logger.debug(`[AutoRepair] Manquantes:`, missing);
+    console.log(`[AutoRepair] Manquantes:`, missing);
 
     return result;
   }
@@ -154,7 +154,7 @@ export class TauriAutoRepairEngine {
    * PHASE 2: Identification des causes
    */
   async phase2_identifyCauses(): Promise<CauseAnalysis> {
-    logger.debug('Phase 2: Identification des causes...');
+    console.log('[AutoRepair] Phase 2: Identification des causes...');
 
     const diagnostic = this.report.phase1_diagnostic;
     if (!diagnostic) {
@@ -215,8 +215,8 @@ export class TauriAutoRepairEngine {
 
     this.report.phase2_causes = result;
 
-    logger.debug(`[AutoRepair] Cause: ${result.root_cause}`);
-    logger.debug(`[AutoRepair] Modules affectés:`, result.affected_modules);
+    console.log(`[AutoRepair] Cause: ${result.root_cause}`);
+    console.log(`[AutoRepair] Modules affectés:`, result.affected_modules);
 
     return result;
   }
@@ -225,7 +225,7 @@ export class TauriAutoRepairEngine {
    * PHASE 3: Création du mapping et auto-rebuild
    */
   async phase3_createMapping(): Promise<MappingResult> {
-    logger.debug('Phase 3: Création mapping...');
+    console.log('[AutoRepair] Phase 3: Création mapping...');
 
     // Le mapping est déjà créé dans tauriCommandMapper.ts
     // On compte juste les mappings applicables
@@ -265,7 +265,7 @@ export class TauriAutoRepairEngine {
 
     this.report.phase3_mapping = result;
 
-    logger.debug(`[AutoRepair] Mappings créés: ${result.mappings_created}`);
+    console.log(`[AutoRepair] Mappings créés: ${result.mappings_created}`);
 
     return result;
   }
@@ -274,7 +274,7 @@ export class TauriAutoRepairEngine {
    * PHASE 4: Réparation Singularity State
    */
   async phase4_repairSingularity(): Promise<SingularityRepairResult> {
-    logger.debug('Phase 4: Réparation Singularity...');
+    console.log('[AutoRepair] Phase 4: Réparation Singularity...');
 
     let stability_before = 0;
     let titane_alignment_before = 0;
@@ -288,7 +288,7 @@ export class TauriAutoRepairEngine {
       stability_before = rawState?.symbolic?.stability || 0;
       titane_alignment_before = calculateTitaneAlignment(rawState);
 
-      logger.debug(
+      console.log(
         `[AutoRepair] Avant: stability=${stability_before}, alignment=${titane_alignment_before}`
       );
 
@@ -297,7 +297,7 @@ export class TauriAutoRepairEngine {
 
       // Vérifier que l'état réparé existe
       if (!repairedState) {
-        logger.warn('⚠️  Failed to repair singularity state');
+        console.warn('⚠️  Failed to repair singularity state');
         const failResult: SingularityRepairResult = {
           stability_before: 0,
           stability_after: 0,
@@ -328,7 +328,7 @@ export class TauriAutoRepairEngine {
         await mappedInvoke('sync_singularity');
         repairs_applied.push('sync_singularity: exécuté');
       } catch (err) {
-        logger.warn('Sync failed (non-critical):', err);
+        console.warn('[AutoRepair] Sync failed (non-critical):', err);
       }
 
       // Self-check
@@ -336,7 +336,7 @@ export class TauriAutoRepairEngine {
         await secureInvoke('singularity_self_check');
         repairs_applied.push('singularity_self_check: exécuté');
       } catch (err) {
-        logger.warn('Self-check failed (non-critical):', err);
+        console.warn('[AutoRepair] Self-check failed (non-critical):', err);
       }
 
       // Autonomy heal
@@ -344,7 +344,7 @@ export class TauriAutoRepairEngine {
         await secureInvoke('singularity_autonomy_heal');
         repairs_applied.push('singularity_autonomy_heal: exécuté');
       } catch (err) {
-        logger.warn('Autonomy heal unavailable');
+        console.warn('[AutoRepair] Autonomy heal unavailable');
       }
 
       const result: SingularityRepairResult = {
@@ -359,14 +359,14 @@ export class TauriAutoRepairEngine {
 
       this.report.phase4_singularity = result;
 
-      logger.debug(
+      console.log(
         `[AutoRepair] Après: stability=${stability_after}, alignment=${titane_alignment_after}`
       );
-      logger.debug(`[AutoRepair] Réparations:`, repairs_applied);
+      console.log(`[AutoRepair] Réparations:`, repairs_applied);
 
       return result;
     } catch (err) {
-      logger.error('Singularity repair failed:', err);
+      console.error('[AutoRepair] Singularity repair failed:', err);
 
       // Fallback: rapporter échec mais continuer
       const result: SingularityRepairResult = {
@@ -386,7 +386,7 @@ export class TauriAutoRepairEngine {
    * PHASE 5: Correction Auto-Audit
    */
   async phase5_repairAutoAudit(): Promise<AutoAuditRepairResult> {
-    logger.debug('Phase 5: Réparation Auto-Audit...');
+    console.log('[AutoRepair] Phase 5: Réparation Auto-Audit...');
 
     let crypto_integrity = true;
     let snapshots_count = 0;
@@ -399,7 +399,7 @@ export class TauriAutoRepairEngine {
       crypto_integrity = true;
       warnings_resolved++;
     } catch (err) {
-      logger.warn('Crypto integrity check unavailable');
+      console.warn('[AutoRepair] Crypto integrity check unavailable');
       crypto_integrity = true; // Fallback safe
     }
 
@@ -411,7 +411,7 @@ export class TauriAutoRepairEngine {
         warnings_resolved++;
       }
     } catch (err) {
-      logger.warn('Snapshots check unavailable');
+      console.warn('[AutoRepair] Snapshots check unavailable');
       snapshots_count = 0;
     }
 
@@ -427,7 +427,7 @@ export class TauriAutoRepairEngine {
         warnings_resolved++;
       }
     } catch (err) {
-      logger.warn('XP repair failed');
+      console.warn('[AutoRepair] XP repair failed');
       xp_state = 'failed';
     }
 
@@ -440,7 +440,7 @@ export class TauriAutoRepairEngine {
 
     this.report.phase5_autoaudit = result;
 
-    logger.debug(`[AutoRepair] Auto-Audit: ${warnings_resolved} warnings résolus`);
+    console.log(`[AutoRepair] Auto-Audit: ${warnings_resolved} warnings résolus`);
 
     return result;
   }
@@ -449,7 +449,7 @@ export class TauriAutoRepairEngine {
    * PHASE 6: Validation finale
    */
   async phase6_validate(): Promise<ValidationResult> {
-    logger.debug('Phase 6: Validation...');
+    console.log('[AutoRepair] Phase 6: Validation...');
 
     const diagnostic = this.report.phase1_diagnostic;
     const singularity = this.report.phase4_singularity;
@@ -491,7 +491,7 @@ export class TauriAutoRepairEngine {
 
     this.report.phase6_validation = result;
 
-    logger.debug(`[AutoRepair] Validation: ${overall_health}% santé globale`);
+    console.log(`[AutoRepair] Validation: ${overall_health}% santé globale`);
 
     return result;
   }
@@ -500,9 +500,9 @@ export class TauriAutoRepairEngine {
    * Exécuter toutes les phases
    */
   async executeFullRepair(): Promise<RepairReport> {
-    logger.debug('═══════════════════════════════════════════════════════════');
-    logger.debug('TITANE∞ TAURI AUTO-REPAIR ENGINE v21 — STARTING');
-    logger.debug('═══════════════════════════════════════════════════════════');
+    console.log('═══════════════════════════════════════════════════════════');
+    console.log('TITANE∞ TAURI AUTO-REPAIR ENGINE v21 — STARTING');
+    console.log('═══════════════════════════════════════════════════════════');
 
     try {
       await this.phase1_diagnostic();
@@ -521,16 +521,16 @@ export class TauriAutoRepairEngine {
         this.report.success = validation.overall_health >= 75;
       }
 
-      logger.debug('═══════════════════════════════════════════════════════════');
-      logger.debug(`REPAIR ENGINE: ${this.report.success ? '✅ SUCCESS' : '⚠️ PARTIAL'}`);
+      console.log('═══════════════════════════════════════════════════════════');
+      console.log(`REPAIR ENGINE: ${this.report.success ? '✅ SUCCESS' : '⚠️ PARTIAL'}`);
       if (validation) {
-        logger.debug(`Overall Health: ${validation.overall_health}%`);
+        console.log(`Overall Health: ${validation.overall_health}%`);
       }
-      logger.debug('═══════════════════════════════════════════════════════════');
+      console.log('═══════════════════════════════════════════════════════════');
 
       return this.report as RepairReport;
     } catch (err) {
-      logger.error('Fatal error:', err);
+      console.error('[AutoRepair] Fatal error:', err);
       this.report.success = false;
       this.report.recommendations = [
         'Erreur critique lors de la réparation. Vérifier les logs.',

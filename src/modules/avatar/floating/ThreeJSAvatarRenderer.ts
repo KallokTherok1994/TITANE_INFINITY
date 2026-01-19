@@ -4,30 +4,11 @@
 //   Premium WebGL rendering with PBR, TAA, Bloom, Studio Lighting
 // ═════════════════════════════════════════════════════════════════════════════
 
-import {
-  ACESFilmicToneMapping,
-  CapsuleGeometry,
-  CircleGeometry,
-  Color,
-  Fog,
-  Group,
-  MathUtils,
-  Mesh,
-  PCFSoftShadowMap,
-  PerspectiveCamera,
-  Scene,
-  ShadowMaterial,
-  Skeleton,
-  SphereGeometry,
-  SRGBColorSpace,
-  WebGLRenderer,
-} from 'three';
-import type { Bone, SkinnedMesh } from 'three';
+import * as THREE from 'three';
 import type { SkeletonSnapshot } from '../fullbody/fullbody_engine';
 import { PBRMaterialSystem } from '../rendering/PBRMaterialSystem';
 import { StudioLightingRig, type AppearanceStyle } from '../rendering/StudioLightingRig';
 import { PostProcessingPipeline } from '../rendering/PostProcessingPipeline';
-import { logger } from '@/utils/logger';
 
 // Debug flag (disable in production)
 const DEBUG = import.meta.env.DEV;
@@ -47,10 +28,10 @@ export interface ThreeJSAvatarRendererOptions {
 }
 
 export interface AvatarMeshes {
-  root: Group;
-  skeleton: Skeleton;
-  bones: Map<string, Bone>;
-  meshes: SkinnedMesh[];
+  root: THREE.Group;
+  skeleton: THREE.Skeleton;
+  bones: Map<string, THREE.Bone>;
+  meshes: THREE.SkinnedMesh[];
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -58,9 +39,9 @@ export interface AvatarMeshes {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export class ThreeJSAvatarRenderer {
-  private renderer: WebGLRenderer;
-  private scene: Scene;
-  private camera: PerspectiveCamera;
+  private renderer: THREE.WebGLRenderer;
+  private scene: THREE.Scene;
+  private camera: THREE.PerspectiveCamera;
   private avatarMeshes: AvatarMeshes | null = null;
   private animationFrameId: number | null = null;
   private isDisposed: boolean = false;
@@ -84,7 +65,7 @@ export class ThreeJSAvatarRenderer {
     this.usePostProcessing = enablePostProcessing;
 
     // Initialize renderer
-    this.renderer = new WebGLRenderer({
+    this.renderer = new THREE.WebGLRenderer({
       canvas,
       antialias: !enablePostProcessing, // TAA replaces MSAA
       alpha,
@@ -93,18 +74,18 @@ export class ThreeJSAvatarRenderer {
     this.renderer.setSize(width, height);
     this.renderer.setPixelRatio(Math.min(pixelRatio, 2));
     this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = PCFSoftShadowMap;
-    this.renderer.outputColorSpace = SRGBColorSpace;
-    this.renderer.toneMapping = ACESFilmicToneMapping;
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.0;
 
     // Initialize scene
-    this.scene = new Scene();
+    this.scene = new THREE.Scene();
     this.scene.background = null; // Transparent for floating window
-    this.scene.fog = new Fog(0x000000, 5, 15);
+    this.scene.fog = new THREE.Fog(0x000000, 5, 15);
 
     // Initialize camera
-    this.camera = new PerspectiveCamera(45, width / height, 0.1, 100);
+    this.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
     this.camera.position.set(0, 1.6, 2.5); // Eye level, 2.5m away
     this.camera.lookAt(0, 1.5, 0); // Look at avatar head
 
@@ -139,37 +120,37 @@ export class ThreeJSAvatarRenderer {
    * Create simple placeholder avatar (before 3D model loaded)
    */
   private createPlaceholderAvatar(): AvatarMeshes {
-    const root = new Group();
+    const root = new THREE.Group();
     root.name = 'AvatarRoot';
 
     // Body capsule (cloth material)
-    const bodyGeometry = new CapsuleGeometry(0.3, 1.0, 8, 16);
+    const bodyGeometry = new THREE.CapsuleGeometry(0.3, 1.0, 8, 16);
     const bodyMaterial = this.materialSystem.createClothMaterial(
       'placeholder-body',
       0x6366f1 // Indigo-500 (TITANE color)
     );
-    const body = new Mesh(bodyGeometry, bodyMaterial);
+    const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
     body.position.y = 1.0;
     body.castShadow = true;
     body.receiveShadow = true;
     root.add(body);
 
     // Head sphere (skin material)
-    const headGeometry = new SphereGeometry(0.15, 32, 32);
+    const headGeometry = new THREE.SphereGeometry(0.15, 32, 32);
     const headMaterial = this.materialSystem.createSkinMaterial(
       'placeholder-head',
       0xffdbac // Skin tone
     );
-    const head = new Mesh(headGeometry, headMaterial);
+    const head = new THREE.Mesh(headGeometry, headMaterial);
     head.position.y = 1.7;
     head.castShadow = true;
     head.receiveShadow = true;
     root.add(head);
 
     // Ground plane (to receive shadows)
-    const groundGeometry = new CircleGeometry(5, 32);
-    const groundMaterial = new ShadowMaterial({ opacity: 0.3 });
-    const ground = new Mesh(groundGeometry, groundMaterial);
+    const groundGeometry = new THREE.CircleGeometry(5, 32);
+    const groundMaterial = new THREE.ShadowMaterial({ opacity: 0.3 });
+    const ground = new THREE.Mesh(groundGeometry, groundMaterial);
     ground.rotation.x = -Math.PI / 2;
     ground.receiveShadow = true;
     root.add(ground);
@@ -177,8 +158,8 @@ export class ThreeJSAvatarRenderer {
     this.scene.add(root);
 
     // Create placeholder skeleton (for future updates)
-    const bones: Map<string, Bone> = new Map();
-    const skeleton = new Skeleton([]);
+    const bones: Map<string, THREE.Bone> = new Map();
+    const skeleton = new THREE.Skeleton([]);
 
     return {
       root,
@@ -193,12 +174,12 @@ export class ThreeJSAvatarRenderer {
    */
   public initializeAvatar(): void {
     if (this.avatarMeshes) {
-      logger.warn('Avatar already initialized');
+      console.warn('[ThreeJSAvatarRenderer] Avatar already initialized');
       return;
     }
 
     this.avatarMeshes = this.createPlaceholderAvatar();
-    if (DEBUG) logger.debug('Placeholder avatar created');
+    if (DEBUG) console.log('[ThreeJSAvatarRenderer] Placeholder avatar created');
   }
 
   // ═════════════════════════════════════════════════════════════════════════
@@ -211,7 +192,7 @@ export class ThreeJSAvatarRenderer {
    */
   public updateSkeleton(snapshot: SkeletonSnapshot): void {
     if (!this.avatarMeshes) {
-      if (DEBUG) logger.warn('Avatar not initialized');
+      if (DEBUG) console.warn('[ThreeJSAvatarRenderer] Avatar not initialized');
       return;
     }
 
@@ -257,7 +238,7 @@ export class ThreeJSAvatarRenderer {
    */
   public startRenderLoop(): void {
     if (this.animationFrameId !== null) {
-      logger.warn('Render loop already running');
+      console.warn('[ThreeJSAvatarRenderer] Render loop already running');
       return;
     }
 
@@ -269,7 +250,7 @@ export class ThreeJSAvatarRenderer {
     };
 
     this.animationFrameId = requestAnimationFrame(animate);
-    if (DEBUG) logger.debug('Render loop started');
+    if (DEBUG) console.log('[ThreeJSAvatarRenderer] Render loop started');
   }
 
   /**
@@ -279,7 +260,7 @@ export class ThreeJSAvatarRenderer {
     if (this.animationFrameId !== null) {
       cancelAnimationFrame(this.animationFrameId);
       this.animationFrameId = null;
-      if (DEBUG) logger.debug('Render loop stopped');
+      if (DEBUG) console.log('[ThreeJSAvatarRenderer] Render loop stopped');
     }
   }
 
@@ -313,7 +294,7 @@ export class ThreeJSAvatarRenderer {
    * Set camera zoom (FOV adjustment)
    */
   public setCameraZoom(fov: number): void {
-    this.camera.fov = MathUtils.clamp(fov, 30, 90);
+    this.camera.fov = THREE.MathUtils.clamp(fov, 30, 90);
     this.camera.updateProjectionMatrix();
   }
 
@@ -324,7 +305,7 @@ export class ThreeJSAvatarRenderer {
   /**
    * Set scene background (transparent by default)
    */
-  public setBackground(color: Color | null): void {
+  public setBackground(color: THREE.Color | null): void {
     this.scene.background = color;
   }
 
@@ -339,7 +320,7 @@ export class ThreeJSAvatarRenderer {
    * Set lighting intensity (legacy wrapper)
    */
   public setLightingIntensity(factor: number): void {
-    const clampedFactor = MathUtils.clamp(factor, 0.1, 2.0);
+    const clampedFactor = THREE.MathUtils.clamp(factor, 0.1, 2.0);
     this.lightingRig.setKeyIntensity(3.0 * clampedFactor);
     this.lightingRig.setFillIntensity(1.2 * clampedFactor);
     this.lightingRig.setRimIntensity(2.0 * clampedFactor);
@@ -367,7 +348,7 @@ export class ThreeJSAvatarRenderer {
     // Dispose avatar meshes
     if (this.avatarMeshes) {
       this.avatarMeshes.root.traverse(object => {
-        if (object instanceof Mesh) {
+        if (object instanceof THREE.Mesh) {
           object.geometry?.dispose();
           if (Array.isArray(object.material)) {
             object.material.forEach(mat => mat.dispose());
@@ -391,22 +372,22 @@ export class ThreeJSAvatarRenderer {
     this.renderer.dispose();
 
     this.isDisposed = true;
-    if (DEBUG) logger.debug('Disposed');
+    if (DEBUG) console.log('[ThreeJSAvatarRenderer] Disposed');
   }
 
   // ═════════════════════════════════════════════════════════════════════════
   // GETTERS
   // ═════════════════════════════════════════════════════════════════════════
 
-  public getRenderer(): WebGLRenderer {
+  public getRenderer(): THREE.WebGLRenderer {
     return this.renderer;
   }
 
-  public getScene(): Scene {
+  public getScene(): THREE.Scene {
     return this.scene;
   }
 
-  public getCamera(): PerspectiveCamera {
+  public getCamera(): THREE.PerspectiveCamera {
     return this.camera;
   }
 

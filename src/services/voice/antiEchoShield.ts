@@ -16,8 +16,6 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { logger } from '@/utils/logger';
-
 /**
  * Fingerprint audio d'une phrase TTS
  */
@@ -98,10 +96,10 @@ class AntiEchoShieldEngine {
     // Auto-mute si activé
     if (this.config.autoMute) {
       this.isMuted = true;
-      logger.debug('🔇 Auto-muted during TTS');
+      console.log('[AntiEcho] 🔇 Auto-muted during TTS');
     }
 
-    logger.debug(
+    console.log(
       `[AntiEcho] 🔊 TTS started: "${text.substring(0, 50)}..." (${estimatedDuration}ms)`
     );
 
@@ -113,7 +111,7 @@ class AntiEchoShieldEngine {
    */
   forceUnmute(): void {
     this.isMuted = false;
-    logger.debug('🔊 Force unmute activated');
+    console.log('[AntiEchoShield] 🔊 Force unmute activated');
   }
 
   /**
@@ -132,7 +130,7 @@ class AntiEchoShieldEngine {
    */
   endTTS(id: string): void {
     if (!this.activeTTS || this.activeTTS.id !== id) {
-      logger.warn('⚠️ TTS end mismatch');
+      console.warn('[AntiEcho] ⚠️ TTS end mismatch');
       return;
     }
 
@@ -150,11 +148,11 @@ class AntiEchoShieldEngine {
     if (this.config.autoMute) {
       setTimeout(() => {
         this.isMuted = false;
-        logger.debug('🔊 Auto-unmuted after TTS');
+        console.log('[AntiEcho] 🔊 Auto-unmuted after TTS');
       }, this.config.postTTSMargin);
     }
 
-    logger.debug('✅ TTS ended');
+    console.log('[AntiEcho] ✅ TTS ended');
   }
 
   /**
@@ -167,7 +165,7 @@ class AntiEchoShieldEngine {
     }
 
     this.isMuted = false;
-    logger.debug('🛑 Force stopped all TTS');
+    console.log('[AntiEcho] 🛑 Force stopped all TTS');
   }
 
   // ═══ ECHO DETECTION ═══
@@ -334,7 +332,7 @@ class AntiEchoShieldEngine {
    */
   setEnabled(enabled: boolean): void {
     this.config.enabled = enabled;
-    logger.debug(`[AntiEcho] ${enabled ? '✅ Enabled' : '❌ Disabled'}`);
+    console.log(`[AntiEcho] ${enabled ? '✅ Enabled' : '❌ Disabled'}`);
   }
 
   /**
@@ -342,7 +340,7 @@ class AntiEchoShieldEngine {
    */
   setThreshold(threshold: number): void {
     this.config.echoThreshold = Math.max(0, Math.min(1, threshold));
-    logger.debug(`[AntiEcho] 🎚️ Threshold: ${this.config.echoThreshold.toFixed(2)}`);
+    console.log(`[AntiEcho] 🎚️ Threshold: ${this.config.echoThreshold.toFixed(2)}`);
   }
 
   /**
@@ -350,7 +348,7 @@ class AntiEchoShieldEngine {
    */
   setPostTTSMargin(margin: number): void {
     this.config.postTTSMargin = Math.max(0, margin);
-    logger.debug(`[AntiEcho] ⏱️ Post-TTS margin: ${this.config.postTTSMargin}ms`);
+    console.log(`[AntiEcho] ⏱️ Post-TTS margin: ${this.config.postTTSMargin}ms`);
   }
 
   /**
@@ -377,7 +375,7 @@ class AntiEchoShieldEngine {
     this.activeTTS = null;
     this.recentTTS = [];
     this.isMuted = false;
-    logger.debug('🔄 Reset complete');
+    console.log('[AntiEcho] 🔄 Reset complete');
   }
 
   /**

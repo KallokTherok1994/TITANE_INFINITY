@@ -1,10 +1,12 @@
 # REPORT TESTS & GATES BLOQUANTES - TITANE∞ v26.3.0
+
 **Date:** 17/01/2026 10:04 UTC-5
 **Phase:** 5 - TESTS & GATES BLOQUANTES
 
 ## 🧪 TESTS CONFIGURÉS
 
 ### ✅ TESTS EXISTANTS
+
 - **Unit tests:** `tests/unit/`
 - **Integration tests:** `tests/glm46v-integration.test.ts`
 - **Contract tests:** `tests/contract/tauri-ipc-contract.test.ts`
@@ -12,7 +14,9 @@
 - **Phase gates:** `tests/phase*/gate-p*.test.ts`
 
 ### 📊 COVERAGE
+
 **Scripts configurés:**
+
 - `pnpm run test:coverage` - Couverture complète
 - `pnpm run test:coverage:unit` - Uniquement unit
 - `pnpm run test:coverage:integration` - Intégration
@@ -22,6 +26,7 @@
 ### ⚠️ STATUT: NON TESTABLES SANS PNPM
 
 **Gates obligatoires (devraient passer):**
+
 ```bash
 pnpm install           # Installation
 pnpm run dev:tauri     # Démarrage dev
@@ -32,23 +37,28 @@ pnpm exec eslint .     # Linting (max-warnings=0)
 ```
 
 **Gates de sécurité:**
+
 - `scripts/security/no-allow-all-gate.sh`
 - `scripts/security/no-ipc-fetch-gate.sh`
 - `scripts/security/ipc-contract-gate.sh`
 
 **Gates phase:**
+
 - `tests/phase*/gate-p*.test.ts`
 
 ## 🚨 PROBLÈMES CRITIQUES
 
 ### 1. 🚫 PNPM MANQUANT
+
 **Impact:** Aucune commande testable
 **Résultat:** Tests bloqués
 
 ### 2. 🔍 Couverture non mesurée
+
 **Impact:** Qualité non vérifiée
 
 ### 3. ⚠️ Gates non exécutées
+
 **Impact:** Certification impossible
 
 ## ✅ RECOMMANDATIONS

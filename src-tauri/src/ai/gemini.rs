@@ -1,6 +1,6 @@
 // TITANE∞ v15 - Gemini AI Provider
 // Google Gemini API integration with streaming support
-// Clean architecture v15: documented, tech-ready (dev)
+// Clean architecture v15: documented, production-ready
 
 use super::{AIError, AIProvider, AIRequest, AIResponse, AIResult};
 use serde::{Deserialize, Serialize};

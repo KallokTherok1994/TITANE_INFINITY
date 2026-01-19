@@ -5,8 +5,6 @@
  * Facilite l'import et l'instanciation des 4 moteurs cognitifs
  */
 
-import { tauriClient } from '@/lib/tauriClient';
-
 // ==================== TYPES ====================
 export * from './semanticMemory.types';
 export * from './goalConsistency.types';
@@ -43,7 +41,6 @@ export {
 import { SemanticMemoryEngine } from './SemanticMemoryEngine';
 import { LocalEmbeddingGenerator } from './LocalEmbeddingGenerator';
 import type { SemanticMemoryConfig, VectorStore } from './semanticMemory.types';
-import { logger } from '@/utils/logger';
 
 /**
  * Charger dynamiquement le VectorStore approprié
@@ -58,7 +55,7 @@ async function loadVectorStore(config: {
     const { createVectorStore } = await import('./TauriVectorStore');
     return await createVectorStore(config);
   } catch (error) {
-    logger.warn('TauriVectorStore not available', error);
+    console.warn('[Cognitive] TauriVectorStore not available', error);
     throw new Error(
       'VectorStore not available. This feature requires Tauri backend with SQLite support.'
     );
@@ -203,18 +200,21 @@ export async function checkCognitiveAvailability(): Promise<{
     await import('@xenova/transformers');
     results.transformers = true;
   } catch (error) {
-    logger.warn('Transformers.js not available');
+    console.warn('[Cognitive] Transformers.js not available');
   }
 
   // Check si on est dans Tauri (SQLite via backend Rust, pas better-sqlite3)
   // better-sqlite3 est un module Node.js natif qui ne fonctionne pas dans le navigateur
   try {
+    const { invoke } = await import('@tauri-apps/api/core');
     // Tester si le backend Tauri SQLite est disponible
-    await tauriClient.checkSqliteAvailable();
+    await invoke('check_sqlite_available');
     results.sqlite = true;
   } catch (error) {
     // Mode navigateur pur ou Tauri sans SQLite
-    logger.warn('SQLite not available (browser mode or Tauri backend not ready)');
+    console.warn(
+      '[Cognitive] SQLite not available (browser mode or Tauri backend not ready)'
+    );
     results.sqlite = false;
   }
 
@@ -227,27 +227,27 @@ export async function checkCognitiveAvailability(): Promise<{
  * Log cognitive system status
  */
 export function logCognitiveStatus(config: TitaneCognitiveConfig): void {
-  logger.debug('\n═══════════════════════════════════════════════════════════');
-  logger.debug('   🧠 TITANE∞ COGNITIVE SYSTEM STATUS');
-  logger.debug('═══════════════════════════════════════════════════════════');
-  logger.debug(
+  console.log('\n═══════════════════════════════════════════════════════════');
+  console.log('   🧠 TITANE∞ COGNITIVE SYSTEM STATUS');
+  console.log('═══════════════════════════════════════════════════════════');
+  console.log(
     `Semantic Memory:    ${config.semanticMemory.enabled ? '✅ ENABLED' : '❌ DISABLED'}`
   );
-  logger.debug(`  Model: ${config.semanticMemory.modelName}`);
-  logger.debug(`  DB: ${config.semanticMemory.dbPath}`);
-  logger.debug(
+  console.log(`  Model: ${config.semanticMemory.modelName}`);
+  console.log(`  DB: ${config.semanticMemory.dbPath}`);
+  console.log(
     `Goal & Consistency: ${config.goalConsistency.enabled ? '✅ ENABLED' : '❌ DISABLED'}`
   );
-  logger.debug(`  Auto-check: ${config.goalConsistency.autoCheck ? 'ON' : 'OFF'}`);
-  logger.debug(`  Auto-correct: ${config.goalConsistency.autoCorrect ? 'ON' : 'OFF'}`);
-  logger.debug(
+  console.log(`  Auto-check: ${config.goalConsistency.autoCheck ? 'ON' : 'OFF'}`);
+  console.log(`  Auto-correct: ${config.goalConsistency.autoCorrect ? 'ON' : 'OFF'}`);
+  console.log(
     `Evaluation:         ${config.evaluation.enabled ? '✅ ENABLED' : '❌ DISABLED'}`
   );
-  logger.debug(`  Live eval: ${config.evaluation.liveEvaluation ? 'ON' : 'OFF'}`);
-  logger.debug(
+  console.log(`  Live eval: ${config.evaluation.liveEvaluation ? 'ON' : 'OFF'}`);
+  console.log(
     `Observability:      ${config.observability.enabled ? '✅ ENABLED' : '❌ DISABLED'}`
   );
-  logger.debug(`  Mode: ${config.observability.mode.toUpperCase()}`);
-  logger.debug(`  Tracing: ${config.observability.tracing ? 'ON' : 'OFF'}`);
-  logger.debug('═══════════════════════════════════════════════════════════\n');
+  console.log(`  Mode: ${config.observability.mode.toUpperCase()}`);
+  console.log(`  Tracing: ${config.observability.tracing ? 'ON' : 'OFF'}`);
+  console.log('═══════════════════════════════════════════════════════════\n');
 }

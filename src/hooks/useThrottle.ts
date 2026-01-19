@@ -9,7 +9,6 @@
  */
 
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { logger } from '../utils/logger';
 
 /**
  * Throttle a value - updates at most once per interval
@@ -171,7 +170,7 @@ export function useThrottledAsyncCallback<TArgs extends unknown[], TReturn>(
         callbackRef
           .current(...args)
           .catch(error => {
-            logger.error('Throttled async callback error:', error);
+            console.error('Throttled async callback error:', error);
           })
           .finally(() => {
             executingRef.current = false;
@@ -185,7 +184,7 @@ export function useThrottledAsyncCallback<TArgs extends unknown[], TReturn>(
             callbackRef
               .current(...lastArgsRef.current)
               .catch(error => {
-                logger.error('Throttled async callback error:', error);
+                console.error('Throttled async callback error:', error);
               })
               .finally(() => {
                 executingRef.current = false;

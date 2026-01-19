@@ -15,6 +15,7 @@
 **Root Cause:** Script name mismatch in package.json
 
 **Files Fixed:**
+
 - ✅ `mega-deploy.sh` (line 437)
 - ✅ `scripts/deploy-complete.sh` (line 235)
 - ✅ `scripts/deploy-orchestrator.py` (line 177)
@@ -23,6 +24,7 @@
 - ✅ `src/core/devops/LocalAgentEngine.ts` (line 334)
 
 **Change:**
+
 ```bash
 # BEFORE
 pnpm run tauri:build
@@ -32,6 +34,7 @@ pnpm run titane:build
 ```
 
 **Verification:**
+
 ```bash
 $ grep "titane:build" package.json
 "titane:build": "./titane.sh build",
@@ -42,19 +45,23 @@ $ grep "titane:build" package.json
 ### 2️⃣ Tauri beforeBuildCommand Configuration
 
 **Problem:** The `beforeBuildCommand` in `runtime/dev/tauri.dev.conf.json` was trying to execute Vite build with incorrect pnpm resolution, causing:
+
 ```
 bash: ligne 1 : exec: pnpm : non trouvé
 beforeBuildCommand failed with exit code 127
 ```
 
-**Root Cause:** 
+**Root Cause:**
+
 - The shell spawned by `bash -lc` doesn't have access to pnpm (corepack not found)
 - The build frontend already executed in `pnpm run titane:build`, so re-running Vite is redundant
 
 **File Fixed:**
+
 - ✅ `runtime/dev/tauri.dev.conf.json` (lines 6-9)
 
 **Change:**
+
 ```jsonc
 // BEFORE
 "beforeBuildCommand": "bash -lc 'set -euo pipefail; ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd); cd \"$ROOT\"; export PATH=\"$ROOT/.tools/node/current/bin:$PATH\"; exec pnpm exec vite build'"
@@ -64,6 +71,7 @@ beforeBuildCommand failed with exit code 127
 ```
 
 **Why This Works:**
+
 1. Frontend is already built by `pnpm run build` in `titane.sh build`
 2. `beforeBuildCommand` just verifies dist exists
 3. No need to rebuild - Tauri just needs frontendDist to be present
@@ -72,23 +80,25 @@ beforeBuildCommand failed with exit code 127
 
 ## 📊 SUMMARY TABLE
 
-| Issue | Files | Type | Status |
-|-------|-------|------|--------|
-| tauri:build → titane:build | 6 | Script Name | ✅ Fixed |
-| beforeBuildCommand pnpm | 1 | Config | ✅ Fixed |
-| **Total** | **7** | **Mixed** | **✅ All Fixed** |
+| Issue                      | Files | Type        | Status           |
+| -------------------------- | ----- | ----------- | ---------------- |
+| tauri:build → titane:build | 6     | Script Name | ✅ Fixed         |
+| beforeBuildCommand pnpm    | 1     | Config      | ✅ Fixed         |
+| **Total**                  | **7** | **Mixed**   | **✅ All Fixed** |
 
 ---
 
 ## 🔍 TESTING STATUS
 
 ### Pre-Fix Test
+
 ```bash
 $ ./mega-deploy.sh --dry-run
 ❌ ERROR: Tauri build failed with exit code 1
 ```
 
 ### Post-Fix Test
+
 ```bash
 $ ./mega-deploy.sh --dry-run
 ✅ MEGA DEPLOYMENT COMPLETE

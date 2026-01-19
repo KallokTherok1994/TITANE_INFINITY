@@ -1,0 +1,779 @@
+[A10] date_utc=2026-01-13T184921Z
+[A10] git status -sb
+## MAIN...origin/MAIN [devant 7]
+ M src/__tests__/omega-e2e-validation.test.ts
+ M src/__tests__/omega-provider-tests.test.ts
+ M src/components/chat/ChatInput.tsx
+ M src/components/chat/MessageList.tsx
+ M src/core/services/orchestrator.ts
+ M src/core/services/systemHealth.ts
+ M src/modules/devSudo/devSudoBuiltins.ts
+ M src/modules/liveDebugger/LiveDebuggerEngine.ts
+ M src/modules/vocalDev/VocalDevConsoleEngine.ts
+ M src/services/ai/autoHealEngine.ts
+ M src/services/ai/orchestrator.ts
+ M src/services/ai/providers/ollama.ts
+ M src/services/ai/providers/tauriChat.ts
+ M src/services/monitoring/consoleMonitor.ts
+ M src/ui/pages/Chat.tsx
+?? docs/_evidence/v27/A10_unrelated_changes_inventory_2026-01-13T184921Z.txt
+?? docs/_evidence/v27/A1_gitlog_50.txt
+?? docs/_evidence/v27/A1_repo.txt
+?? docs/_evidence/v27/A1_tags_30.txt
+?? docs/_evidence/v27/A2_find_maxdepth4_sorted.txt
+?? docs/_evidence/v27/A2_git_status_2026-01-13.txt
+?? docs/_evidence/v27/A2_ls.txt
+?? docs/_evidence/v27/A3_git_diffstat_2026-01-13.txt
+?? docs/_evidence/v27/A3_package.json.txt
+?? docs/_evidence/v27/A3_tooling.txt
+?? docs/_evidence/v27/A4_diff_src_test_setup_ts_2026-01-13.txt
+?? docs/_evidence/v27/B1_config_files_list.txt
+?? docs/_evidence/v27/B1_npm_ls_vite_vitest.txt
+?? docs/_evidence/v27/B1_pnpm_ls_vite_vitest.txt
+?? docs/_evidence/v27/B2_ps_vitest.txt
+?? docs/_evidence/v27/B2_test_run.txt
+?? docs/_evidence/v27/B2_test_run_fail_hints_tail120.txt
+?? docs/_evidence/v27/B2_test_run_summary_grep.txt
+?? docs/_evidence/v27/B2_test_run_tail40.txt
+?? docs/_evidence/v27/B2_test_run_wc.txt
+?? docs/_evidence/v27/B3_test_claude_run.txt
+?? docs/_evidence/v27/B3_test_omega_provider_run.txt
+?? docs/_evidence/v27/B4_pnpm_test_run_2026-01-13T093401.txt
+?? docs/_evidence/v27/E_rg_v26_v27.txt
+?? docs/_evidence/v27/E_rg_v26_v27_head200.txt
+?? docs/_evidence/v27/snapshot-20260113-081652/
+?? src/services/ai/__tests__/unifiedHealingFacade.test.ts
+?? src/services/ai/unifiedHealingFacade.ts
+
+[A10] git diff --stat
+ src/__tests__/omega-e2e-validation.test.ts     |  3 +-
+ src/__tests__/omega-provider-tests.test.ts     | 44 ++++++++++++--
+ src/components/chat/ChatInput.tsx              | 23 +++++---
+ src/components/chat/MessageList.tsx            | 23 +++++---
+ src/core/services/orchestrator.ts              | 82 ++++++++++++++++++--------
+ src/core/services/systemHealth.ts              |  3 +
+ src/modules/devSudo/devSudoBuiltins.ts         | 16 ++---
+ src/modules/liveDebugger/LiveDebuggerEngine.ts |  4 +-
+ src/modules/vocalDev/VocalDevConsoleEngine.ts  | 16 +++--
+ src/services/ai/autoHealEngine.ts              | 23 ++++++++
+ src/services/ai/orchestrator.ts                | 61 ++++++++++---------
+ src/services/ai/providers/ollama.ts            | 25 +++++---
+ src/services/ai/providers/tauriChat.ts         | 27 ++++++---
+ src/services/monitoring/consoleMonitor.ts      | 55 +++++++++++------
+ src/ui/pages/Chat.tsx                          | 24 +++++---
+ 15 files changed, 299 insertions(+), 130 deletions(-)
+
+[A10] untracked (top 60)
+docs/_evidence/v27/A10_unrelated_changes_inventory_2026-01-13T184921Z.txt
+docs/_evidence/v27/A1_gitlog_50.txt
+docs/_evidence/v27/A1_repo.txt
+docs/_evidence/v27/A1_tags_30.txt
+docs/_evidence/v27/A2_find_maxdepth4_sorted.txt
+docs/_evidence/v27/A2_git_status_2026-01-13.txt
+docs/_evidence/v27/A2_ls.txt
+docs/_evidence/v27/A3_git_diffstat_2026-01-13.txt
+docs/_evidence/v27/A3_package.json.txt
+docs/_evidence/v27/A3_tooling.txt
+docs/_evidence/v27/A4_diff_src_test_setup_ts_2026-01-13.txt
+docs/_evidence/v27/B1_config_files_list.txt
+docs/_evidence/v27/B1_npm_ls_vite_vitest.txt
+docs/_evidence/v27/B1_pnpm_ls_vite_vitest.txt
+docs/_evidence/v27/B2_ps_vitest.txt
+docs/_evidence/v27/B2_test_run.txt
+docs/_evidence/v27/B2_test_run_fail_hints_tail120.txt
+docs/_evidence/v27/B2_test_run_summary_grep.txt
+docs/_evidence/v27/B2_test_run_tail40.txt
+docs/_evidence/v27/B2_test_run_wc.txt
+docs/_evidence/v27/B3_test_claude_run.txt
+docs/_evidence/v27/B3_test_omega_provider_run.txt
+docs/_evidence/v27/B4_pnpm_test_run_2026-01-13T093401.txt
+docs/_evidence/v27/E_rg_v26_v27.txt
+docs/_evidence/v27/E_rg_v26_v27_head200.txt
+docs/_evidence/v27/snapshot-20260113-081652/A1_git_head.txt
+docs/_evidence/v27/snapshot-20260113-081652/A1_git_log_50.txt
+docs/_evidence/v27/snapshot-20260113-081652/A1_git_status.txt
+docs/_evidence/v27/snapshot-20260113-081652/A1_git_tags_30.txt
+docs/_evidence/v27/snapshot-20260113-081652/A2_find_maxdepth4.txt
+docs/_evidence/v27/snapshot-20260113-081652/A2_ls.txt
+docs/_evidence/v27/snapshot-20260113-081652/A3_lockfiles.txt
+docs/_evidence/v27/snapshot-20260113-081652/A3_package_json.txt
+docs/_evidence/v27/snapshot-20260113-081652/A3_tooling_versions.txt
+docs/_evidence/v27/snapshot-20260113-081652/_INDEX.txt
+src/services/ai/__tests__/unifiedHealingFacade.test.ts
+src/services/ai/unifiedHealingFacade.ts
+
+[A10] sizes (top 40 by bytes)
+   3311690  docs/_evidence/v27/B2_test_run.txt
+   3162143  docs/_evidence/v27/B4_pnpm_test_run_2026-01-13T093401.txt
+    599826  docs/_evidence/v27/B3_test_omega_provider_run.txt
+    390977  docs/_evidence/v27/snapshot-20260113-081652/A2_find_maxdepth4.txt
+    390368  docs/_evidence/v27/A2_find_maxdepth4_sorted.txt
+    255289  docs/_evidence/v27/E_rg_v26_v27.txt
+    227891  docs/_evidence/v27/B2_test_run_fail_hints_tail120.txt
+     20452  src/services/ai/unifiedHealingFacade.ts
+     17618  docs/_evidence/v27/E_rg_v26_v27_head200.txt
+      9984  docs/_evidence/v27/A3_package.json.txt
+      9983  docs/_evidence/v27/snapshot-20260113-081652/A3_package_json.txt
+      7067  docs/_evidence/v27/B3_test_claude_run.txt
+      6775  docs/_evidence/v27/B2_test_run_summary_grep.txt
+      4915  docs/_evidence/v27/A10_unrelated_changes_inventory_2026-01-13T184921Z.txt
+      3645  docs/_evidence/v27/snapshot-20260113-081652/A1_git_log_50.txt
+      3642  docs/_evidence/v27/A1_gitlog_50.txt
+      3198  docs/_evidence/v27/B2_test_run_tail40.txt
+      3050  src/services/ai/__tests__/unifiedHealingFacade.test.ts
+      2687  docs/_evidence/v27/A2_ls.txt
+      2673  docs/_evidence/v27/snapshot-20260113-081652/A2_ls.txt
+      2449  docs/_evidence/v27/A1_repo.txt
+      1914  docs/_evidence/v27/A4_diff_src_test_setup_ts_2026-01-13.txt
+      1844  docs/_evidence/v27/snapshot-20260113-081652/A1_git_status.txt
+      1612  docs/_evidence/v27/A2_git_status_2026-01-13.txt
+      1343  docs/_evidence/v27/A3_git_diffstat_2026-01-13.txt
+      1253  docs/_evidence/v27/B2_ps_vitest.txt
+       672  docs/_evidence/v27/B1_npm_ls_vite_vitest.txt
+       492  docs/_evidence/v27/snapshot-20260113-081652/A1_git_tags_30.txt
+       489  docs/_evidence/v27/A1_tags_30.txt
+       398  docs/_evidence/v27/B1_pnpm_ls_vite_vitest.txt
+       295  docs/_evidence/v27/snapshot-20260113-081652/A3_tooling_versions.txt
+       191  docs/_evidence/v27/A3_tooling.txt
+       157  docs/_evidence/v27/B1_config_files_list.txt
+       107  docs/_evidence/v27/snapshot-20260113-081652/A1_git_head.txt
+        57  docs/_evidence/v27/snapshot-20260113-081652/_INDEX.txt
+        41  docs/_evidence/v27/B2_test_run_wc.txt
+        38  docs/_evidence/v27/snapshot-20260113-081652/A3_lockfiles.txt
+
+[A10] per-file diff heads (first 60 lines each)
+
+--- DIFF HEAD: src/__tests__/omega-e2e-validation.test.ts
+diff --git a/src/__tests__/omega-e2e-validation.test.ts b/src/__tests__/omega-e2e-validation.test.ts
+index cac26d52..7441a40c 100644
+--- a/src/__tests__/omega-e2e-validation.test.ts
++++ b/src/__tests__/omega-e2e-validation.test.ts
+@@ -14,6 +14,7 @@
+ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+ import { aiOrchestrator } from '../services/ai/orchestrator';
+ import { autoHealEngine } from '../services/ai/autoHealEngine';
++import { unifiedHealingFacade } from '../services/ai/unifiedHealingFacade';
+ import { geminiProvider } from '../services/ai/providers/gemini';
+ import type { AIMessage } from '../services/ai/types';
+ 
+@@ -141,7 +142,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E Validation', () => {
+   });
+ 
+   it('should trigger auto-healing on provider errors', async () => {
+-    const healSpy = vi.spyOn(autoHealEngine, 'heal');
++    const healSpy = vi.spyOn(unifiedHealingFacade, 'heal');
+ 
+     // Force error from Gemini
+     const originalGenerate = geminiProvider.generate;
+
+--- DIFF HEAD: src/__tests__/omega-provider-tests.test.ts
+diff --git a/src/__tests__/omega-provider-tests.test.ts b/src/__tests__/omega-provider-tests.test.ts
+index 0661b2c1..9d37b520 100644
+--- a/src/__tests__/omega-provider-tests.test.ts
++++ b/src/__tests__/omega-provider-tests.test.ts
+@@ -18,8 +18,21 @@ import { ollamaProvider } from '../services/ai/providers/ollama';
+ import { titaneLocalProvider } from '../services/ai/providers/titaneLocal';
+ import { aiOrchestrator } from '../services/ai/orchestrator';
+ import { autoHealEngine } from '../services/ai/autoHealEngine';
++import { unifiedHealingFacade } from '../services/ai/unifiedHealingFacade';
+ import type { AIMessage } from '../services/ai/types';
+ 
++beforeEach(() => {
++  // Isoler les tests: éviter l'accumulation de rate-limit/circuits entre tests.
++  unifiedHealingFacade.reset();
++  unifiedHealingFacade.configure({
++    enabled: true,
++    useCircuitBreaker: false,
++    maxHealsPerMinute: 10_000,
++    advancedThreshold: 'high',
++    logLevel: 'error',
++  });
++});
++
+ // ═══════════════════════════════════════════════════════════════════
+ // OMEGA TEST SUITE 1: GEMINI PROVIDER DOWN
+ // ═══════════════════════════════════════════════════════════════════
+@@ -150,7 +163,7 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 2: Tauri Backend Down', () => {
+   });
+ 
+   it('should auto-heal Tauri backend errors', async () => {
+-    const healSpy = vi.spyOn(autoHealEngine, 'heal');
++    const healSpy = vi.spyOn(unifiedHealingFacade, 'heal');
+ 
+     try {
+       await tauriChatProvider.generate('Test healing', []);
+@@ -619,7 +632,12 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 9: Concurrent Requests', () => {
+     // Trigger multiple healing operations simultaneously
+     const healOperations = Array.from({ length: 5 }, (_, i) => {
+       const error = new Error(`Concurrent error ${i}`);
+-      return autoHealEngine.heal('test-concurrent', error, 'provider', { index: i });
++      return unifiedHealingFacade.heal({
++        source: 'test-concurrent',
++        error,
++        type: 'provider',
++        metadata: { index: i },
++      });
+     });
+ 
+     await Promise.all(healOperations);
+@@ -732,13 +750,29 @@ describe('🟣 OMEGA Phase 7Ω - Integration: Complete System', () => {
+     expect(healingStats).toHaveProperty('providers');
+     expect(typeof healingStats.providers).toBe('object');
+ 
++    // Évite les timeouts: on rend l'action de healing immédiate et déterministe.
++    const awaitSpy = vi.spyOn(autoHealEngine, 'awaitHealAction').mockResolvedValue({
++      id: 'action_test_omega',
++      success: true,
++      action: 'noop',
++      duration: 0,
++      details: { test: 'omega-integration' },
+
+--- DIFF HEAD: src/components/chat/ChatInput.tsx
+diff --git a/src/components/chat/ChatInput.tsx b/src/components/chat/ChatInput.tsx
+index 69f5c104..013d59bc 100644
+--- a/src/components/chat/ChatInput.tsx
++++ b/src/components/chat/ChatInput.tsx
+@@ -14,7 +14,7 @@
+ 
+ import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+ import { logger } from '@/lib/logger';
+-import { autoHealEngine } from '../../services/ai/system';
++import { unifiedHealingFacade } from '../../services/ai/system';
+ import { FileUploadButton, type AnalyzedFile } from './FileUploadButton';
+ import { DictationButton } from './DictationButton';
+ import { UI_DELAYS } from '@/constants/timeouts';
+@@ -78,12 +78,21 @@ function useOmegaInputProtection() {
+ 
+   const handleInputError = useCallback(
+     (error: Error, context: string, inputValue?: string) => {
+-      // Auto-heal trigger (direct instance)
+-      autoHealEngine.heal('chat-input', error, 'validation', {
+-        context,
+-        inputLength: inputValue?.length || 0,
+-        timestamp: Date.now(),
+-      });
++      // Unified heal (non-bloquant)
++      void unifiedHealingFacade
++        .heal({
++          source: 'chat-input',
++          error,
++          type: 'validation',
++          metadata: {
++            context,
++            inputLength: inputValue?.length || 0,
++            timestamp: Date.now(),
++          },
++        })
++        .catch(() => {
++          // Intentionnel: fire-and-forget, éviter les rejections non gérées.
++        });
+ 
+       setInputState(prev => ({
+         ...prev,
+
+--- DIFF HEAD: src/components/chat/MessageList.tsx
+diff --git a/src/components/chat/MessageList.tsx b/src/components/chat/MessageList.tsx
+index d986584a..0b78d8cc 100644
+--- a/src/components/chat/MessageList.tsx
++++ b/src/components/chat/MessageList.tsx
+@@ -16,7 +16,7 @@ import React, { useRef, useEffect, useState, useCallback } from 'react';
+ import { logger } from '@/lib/logger';
+ import { MessageBubble } from './MessageBubble';
+ import type { AIMessage } from '../../services/ai/types';
+-import { autoHealEngine } from '../../services/ai/autoHealEngine';
++import { unifiedHealingFacade } from '../../services/ai/system';
+ import './MessageList.css';
+ 
+ const isDev = process.env.NODE_ENV === 'development';
+@@ -64,12 +64,21 @@ function useOmegaErrorBoundary() {
+     (error: Error, context: string, messages?: AIMessage[]) => {
+       const now = Date.now();
+ 
+-      // Auto-heal trigger
+-      autoHealEngine.heal('message-list', error, 'validation', {
+-        context,
+-        messageCount: messages?.length || 0,
+-        timestamp: now,
+-      });
++      // Unified heal (non-bloquant)
++      void unifiedHealingFacade
++        .heal({
++          source: 'message-list',
++          error,
++          type: 'validation',
++          metadata: {
++            context,
++            messageCount: messages?.length || 0,
++            timestamp: now,
++          },
++        })
++        .catch(() => {
++          // Intentionnel: fire-and-forget, éviter les rejections non gérées.
++        });
+ 
+       setState(prev => {
+         const newRecoveryCount = prev.recoveryCount + 1;
+
+--- DIFF HEAD: src/core/services/orchestrator.ts
+diff --git a/src/core/services/orchestrator.ts b/src/core/services/orchestrator.ts
+index 53a30a4a..ec97f44a 100644
+--- a/src/core/services/orchestrator.ts
++++ b/src/core/services/orchestrator.ts
+@@ -22,7 +22,7 @@ import { geminiProvider } from '../../services/ai/providers/gemini';
+ import { openaiProvider } from '../../services/ai/providers/openai'; // ← NOUVEAU: OpenAI GPT
+ import { claudeProvider } from '../../services/ai/providers/claude'; // ← NOUVEAU: Anthropic Claude
+ import { ollamaProvider } from '../../services/ai/providers/ollama';
+-import { autoHealEngine } from './systemHealth'; // ← NOUVEAU: Auto-heal intégré
++import { autoHealEngine, unifiedHealingFacade } from './systemHealth'; // ← NOUVEAU: Auto-heal intégré
+ import { metricsEngine } from './metrics'; // ← NOUVEAU: Metrics Engine v20Ω
+ import type { AggregatedMetrics } from '../../services/ai/metricsEngine';
+ import { cognitiveKernel } from './cognitiveKernel'; // ← NOUVEAU v22Ω: Cognitive Kernel
+@@ -508,7 +508,16 @@ class AIOrchestrator {
+ 
+       if (!valid) {
+         const error = `Invalid message: ${issues.join(', ')}`;
+-        autoHealEngine.heal('orchestrator', error, 'validation', { issues, requestId });
++        void unifiedHealingFacade
++          .heal({
++            source: 'orchestrator',
++            error,
++            type: 'validation',
++            metadata: { issues, requestId },
++          })
++          .catch(() => {
++            // Intentionnel: fire-and-forget
++          });
+         throw new Error(error);
+       }
+ 
+@@ -738,11 +747,20 @@ class AIOrchestrator {
+ 
+           // Trigger auto-heal sauf pour titane-local (déjà auto-réparé)
+           if (providerName !== 'titane-local') {
+-            autoHealEngine.heal(providerName, lastError, 'provider', {
+-              requestId,
+-              attempt: attempts,
+-              providerLatency: providerFailureLatency, // EVOLUTION v21Ω: Accurate latency
+-            });
++            void unifiedHealingFacade
++              .heal({
++                source: providerName,
++                error: lastError,
++                type: 'provider',
++                metadata: {
++                  requestId,
++                  attempt: attempts,
++                  providerLatency: providerFailureLatency, // EVOLUTION v21Ω: Accurate latency
++                },
++              })
++              .catch(() => {
++                // Intentionnel: fire-and-forget
++              });
+             this.orchestratorMetrics.autoHealTriggers++;
+           }
+ 
+@@ -811,15 +829,19 @@ Le système s'auto-répare en continu. Que puis-je t'aider à explorer ?`,
+       const responseTime = Date.now() - requestStartTime;
+       this.orchestratorMetrics.totalFailures++;
+
+--- DIFF HEAD: src/core/services/systemHealth.ts
+diff --git a/src/core/services/systemHealth.ts b/src/core/services/systemHealth.ts
+index 71cb1ad3..7cfa3fbb 100644
+--- a/src/core/services/systemHealth.ts
++++ b/src/core/services/systemHealth.ts
+@@ -9,3 +9,6 @@ export type {
+   AutoHealStats,
+   AutoHealConfig,
+ } from '../../services/ai/autoHealEngine';
++
++export { unifiedHealingFacade } from '../../services/ai/unifiedHealingFacade';
++export type { UnifiedStats, UnifiedHealResult, UnifiedHealRequest } from '../../services/ai/unifiedHealingFacade';
+
+--- DIFF HEAD: src/modules/devSudo/devSudoBuiltins.ts
+diff --git a/src/modules/devSudo/devSudoBuiltins.ts b/src/modules/devSudo/devSudoBuiltins.ts
+index 95837db4..853324cb 100644
+--- a/src/modules/devSudo/devSudoBuiltins.ts
++++ b/src/modules/devSudo/devSudoBuiltins.ts
+@@ -8,7 +8,7 @@
+ 
+ import { logger } from '@/utils/logger';
+ import { secureInvoke } from '@/lib/security';
+-import { autoHealEngine } from '@/services/ai/system';
++import { unifiedHealingFacade } from '@/services/ai/system';
+ import { autoSaveConversationEngine } from '@/modules/talkToTitane/AutoSaveConversationEngine';
+ import { talkToTitaneEngine } from '@/modules/talkToTitane/TalkToTitaneEngine';
+ import type { LiveDebuggerMode } from '@/modules/liveDebugger/LiveDebuggerEngine';
+@@ -3687,13 +3687,13 @@ Le patch généré nécessite review manuelle.
+       };
+     }
+ 
+-    // Appliquer le patch via AutoHealEngine (direct instance)
+-    await autoHealEngine.heal(
+-      'live-debugger',
+-      new Error(`Applying patch for ${patch.module}: ${patch.reason}`),
+-      'critical',
+-      { module: patch.module, confidence: patch.confidence }
+-    );
++    // Appliquer le patch via UnifiedHealingFacade
++    await unifiedHealingFacade.heal({
++      source: 'live-debugger',
++      error: new Error(`Applying patch for ${patch.module}: ${patch.reason}`),
++      type: 'critical',
++      metadata: { module: patch.module, confidence: patch.confidence },
++    });
+ 
+     return {
+       handled: true,
+
+--- DIFF HEAD: src/modules/liveDebugger/LiveDebuggerEngine.ts
+diff --git a/src/modules/liveDebugger/LiveDebuggerEngine.ts b/src/modules/liveDebugger/LiveDebuggerEngine.ts
+index 25709b13..c292fbfb 100644
+--- a/src/modules/liveDebugger/LiveDebuggerEngine.ts
++++ b/src/modules/liveDebugger/LiveDebuggerEngine.ts
+@@ -708,10 +708,10 @@ export class LiveDebuggerEngine {
+     this.notifyListeners();
+ 
+     try {
+-      // Note: autoHealEngine.heal() needs proper args in real implementation
++      // Note: unifiedHealingFacade.heal() needs proper args in real implementation
+       // For now, log the patch application
+       logger.debug('Auto-applying micro-patch:', patch.reason);
+-      // await autoHealEngine.heal(patch.file, patch.changes, patch.reason, patch.confidence);
++      // void unifiedHealingFacade.heal({ source: patch.module, error: patch.reason, type: 'validation' });
+ 
+       this.state.appliedPatches.push(patch);
+       this.state.totalPatches++;
+
+--- DIFF HEAD: src/modules/vocalDev/VocalDevConsoleEngine.ts
+diff --git a/src/modules/vocalDev/VocalDevConsoleEngine.ts b/src/modules/vocalDev/VocalDevConsoleEngine.ts
+index e7ed00e7..a3320b83 100644
+--- a/src/modules/vocalDev/VocalDevConsoleEngine.ts
++++ b/src/modules/vocalDev/VocalDevConsoleEngine.ts
+@@ -32,7 +32,7 @@
+ import { secureInvoke } from '@/lib/security';
+ import { voiceService as _voiceService } from '@/services/api';
+ import { hybridTTS } from '@/services/tts/hybridTTS';
+-import { autoHealEngine } from '@/services/ai/system';
++import { unifiedHealingFacade } from '@/services/ai/system';
+ import type { AutoHealError as _AutoHealError } from '@/services/ai/autoHealEngine';
+ import { logger } from '@/lib/logger';
+ 
+@@ -698,13 +698,17 @@ export class VocalDevConsoleEngine {
+       }
+ 
+       // Trigger self-healing (direct instance)
+-      const healResult = await autoHealEngine.heal(
+-        'vocal-dev',
+-        new Error(`Issues: ${diagnostics.issues.join(', ')}`)
+-      );
++      const healResult = await unifiedHealingFacade.heal({
++        source: 'vocal-dev',
++        error: new Error(`Issues: ${diagnostics.issues.join(', ')}`),
++        type: 'validation',
++        metadata: { target, issues: diagnostics.issues, timestamp: Date.now() },
++      });
++
++      const healingId = healResult.actionId ?? healResult.errorId ?? 'unknown';
+ 
+       return {
+-        output: `🩹 Auto-healing triggered:\n${diagnostics.issues.map(i => `- ${i}`).join('\n')}\n\nHealing ID: ${healResult.id}`,
++        output: `🩹 Auto-healing triggered:\n${diagnostics.issues.map(i => `- ${i}`).join('\n')}\n\nHealing ID: ${healingId}`,
+       };
+     } catch (error) {
+       const errorMsg = error instanceof Error ? error.message : String(error);
+
+--- DIFF HEAD: src/services/ai/autoHealEngine.ts
+diff --git a/src/services/ai/autoHealEngine.ts b/src/services/ai/autoHealEngine.ts
+index 88f5b22e..fde616bd 100644
+--- a/src/services/ai/autoHealEngine.ts
++++ b/src/services/ai/autoHealEngine.ts
+@@ -644,6 +644,29 @@ class AutoHealEngine {
+     return this.detectError(source, error, type, metadata);
+   }
+ 
++  /**
++   * Attendre la fin de l'action de guérison pour une erreur donnée.
++   * Utile pour les façades/orchestrateurs qui veulent un résultat synchronisé.
++   */
++  async awaitHealAction(
++    error: AutoHealError,
++    options?: {
++      /**
++       * Par défaut, (re)déclenche le pipeline pour garantir une action.
++       * Mettre à false si l'appelant sait que le pipeline est déjà lancé.
++       */
++      triggerIfNeeded?: boolean;
++    }
++  ): Promise<AutoHealAction> {
++    return new Promise<AutoHealAction>((resolve, reject) => {
++      this.healWaiters.set(error.id, { resolve, reject });
++      if (options?.triggerIfNeeded === false) {
++        return;
++      }
++      void this.triggerHeal(error);
++    });
++  }
++
+   /**
+    * Obtenir statistiques complètes
+    */
+
+--- DIFF HEAD: src/services/ai/orchestrator.ts
+diff --git a/src/services/ai/orchestrator.ts b/src/services/ai/orchestrator.ts
+index 6d7df972..4a66c369 100644
+--- a/src/services/ai/orchestrator.ts
++++ b/src/services/ai/orchestrator.ts
+@@ -33,6 +33,7 @@ import { claudeProvider } from './providers/claude'; // ← NOUVEAU: Anthropic C
+ import { copilotProvider } from './providers/copilot'; // ← NOUVEAU: GitHub Copilot
+ import { ollamaProvider } from './providers/ollama';
+ import { autoHealEngine } from './autoHealEngine';
++import { unifiedHealingFacade } from './unifiedHealingFacade';
+ import { metricsEngine } from './metricsEngine';
+ import { cognitiveKernel } from './cognitiveKernel'; // ← NOUVEAU v22Ω: Cognitive Kernel
+ import { circuitBreaker } from './circuitBreaker'; // ← v24.5: Circuit Breaker Pattern
+@@ -727,7 +728,7 @@ class AIOrchestrator {
+     const requestStartTime = Date.now();
+ 
+     // Ensure engines are loaded
+-    const { autoHeal, metrics: _metrics } = await ensureEngines();
++    await ensureEngines();
+ 
+     // Increment metrics
+     this.orchestratorMetrics.totalRequests++;
+@@ -739,7 +740,12 @@ class AIOrchestrator {
+ 
+       if (!valid) {
+         const error = `Invalid message: ${issues.join(', ')}`;
+-        autoHeal.heal('orchestrator', error, 'validation', { issues, requestId });
++        void unifiedHealingFacade.heal({
++          source: 'orchestrator',
++          error,
++          type: 'validation',
++          metadata: { issues, requestId },
++        });
+         throw new Error(error);
+       }
+ 
+@@ -1092,11 +1098,15 @@ class AIOrchestrator {
+ 
+           // Trigger auto-heal sauf pour titane-local (déjà auto-réparé)
+           if (providerName !== 'titane-local') {
+-            const { autoHeal: _autoHealLoaded } = await ensureEngines();
+-            _autoHealLoaded.heal(providerName, lastError, 'provider', {
+-              requestId,
+-              attempt: attempts,
+-              providerLatency: providerFailureLatency, // EVOLUTION v21Ω: Accurate latency
++            void unifiedHealingFacade.heal({
++              source: providerName,
++              error: lastError,
++              type: 'provider',
++              metadata: {
++                requestId,
++                attempt: attempts,
++                providerLatency: providerFailureLatency, // EVOLUTION v21Ω: Accurate latency
++              },
+             });
+             this.orchestratorMetrics.autoHealTriggers++;
+           }
+@@ -1183,18 +1193,17 @@ Le système s'auto-répare en continu. Que puis-je t'aider à explorer ?`,
+         );
+       }
+ 
+
+--- DIFF HEAD: src/services/ai/providers/ollama.ts
+diff --git a/src/services/ai/providers/ollama.ts b/src/services/ai/providers/ollama.ts
+index bfb8ff7f..d2a87229 100644
+--- a/src/services/ai/providers/ollama.ts
++++ b/src/services/ai/providers/ollama.ts
+@@ -19,7 +19,7 @@ import {
+   type SecureAIResponse,
+   type ChatResponse,
+ } from '@/lib/security';
+-import { autoHealEngine } from '../system';
++import { unifiedHealingFacade } from '../system';
+ import { memoryIntegration } from '../memoryIntegration'; // ✨ v21 - Memory integration
+ import type { MemoryContext } from '../memoryIntegration'; // ✨ v21
+ import { createLogger } from '@/utils/logger'; // ✨ v21.1 - Conditional logging
+@@ -243,13 +243,22 @@ function handleOllamaError(
+ 
+   const errorObj = error instanceof Error ? error : new Error(String(error));
+ 
+-  // Auto-heal trigger (direct instance)
+-  autoHealEngine.heal('ollama', errorObj, 'provider', {
+-    context,
+-    errorCount,
+-    ...metadata,
+-    timestamp: Date.now(),
+-  });
++  // Unified heal (non-bloquant)
++  void unifiedHealingFacade
++    .heal({
++      source: 'ollama',
++      error: errorObj,
++      type: 'provider',
++      metadata: {
++        context,
++        errorCount,
++        ...metadata,
++        timestamp: Date.now(),
++      },
++    })
++    .catch(() => {
++      // Intentionnel: fire-and-forget, éviter les rejections non gérées.
++    });
+ 
+   logger.error('Error in Ollama provider', {
+     context,
+
+--- DIFF HEAD: src/services/ai/providers/tauriChat.ts
+diff --git a/src/services/ai/providers/tauriChat.ts b/src/services/ai/providers/tauriChat.ts
+index 75c2fa7f..9d3f2c05 100644
+--- a/src/services/ai/providers/tauriChat.ts
++++ b/src/services/ai/providers/tauriChat.ts
+@@ -14,7 +14,7 @@
+ import type { AIMessage, AIProvider, AIResponse } from '../types';
+ import { TAURI_COMMANDS } from '../../../core/commands/TAURI_COMMANDS';
+ import { safeInvokeTauri } from '../../../utils/tauriProtector';
+-import { autoHealEngine } from '../system';
++import { unifiedHealingFacade } from '../system';
+ import { createLogger } from '@/utils/logger';
+ 
+ const logger = createLogger('TauriChat');
+@@ -231,13 +231,24 @@ class TauriChatProvider implements AIProvider {
+ 
+     const errorObj = error instanceof Error ? error : new Error(String(error));
+ 
+-    // Auto-heal trigger (direct instance)
+-    autoHealEngine.heal('tauri-chat', errorObj, 'provider', {
+-      context,
+-      errorCount: this.errorCount,
+-      metadata,
+-      timestamp: Date.now(),
+-    });
++    // Auto-heal trigger (unified)
++    void unifiedHealingFacade
++      .heal({
++        source: 'tauri-chat',
++        error: errorObj,
++        type: 'provider',
++        metadata: {
++          context,
++          errorCount: this.errorCount,
++          metadata,
++          timestamp: Date.now(),
++        },
++      })
++      .catch(err => {
++        logger.warn('UnifiedHealingFacade heal failed (tauri-chat)', {
++          error: err instanceof Error ? err.message : String(err),
++        });
++      });
+ 
+     logger.error(`Tauri invoke error [${context}]`, {
+       message: errorObj.message,
+
+--- DIFF HEAD: src/services/monitoring/consoleMonitor.ts
+diff --git a/src/services/monitoring/consoleMonitor.ts b/src/services/monitoring/consoleMonitor.ts
+index ec2a61e3..9df9b0b6 100644
+--- a/src/services/monitoring/consoleMonitor.ts
++++ b/src/services/monitoring/consoleMonitor.ts
+@@ -5,7 +5,7 @@
+  * et intègre automatiquement avec le système Auto-Heal
+  */
+ 
+-import { autoHealEngine } from '@/services/ai/autoHealEngine';
++import { unifiedHealingFacade } from '@/services/ai/unifiedHealingFacade';
+ import type { AutoHealError } from '@/services/ai/autoHealEngine';
+ import { createLogger } from '@/utils/logger';
+ import { predictiveEngine } from './predictiveEngine';
+@@ -316,6 +316,8 @@ class ConsoleMonitor {
+     if (
+       entry.message.includes('[[AUTO-HEAL]]') ||
+       entry.message.includes('[AUTO-HEAL]') ||
++      entry.message.includes('[[UNIFIED-HEALING]]') ||
++      entry.message.includes('[UNIFIED-HEALING]') ||
+       entry.message.includes('autoHealEngine') ||
+       entry.message.includes('[CONSOLE-MONITOR]')
+     ) {
+@@ -348,13 +350,24 @@ class ConsoleMonitor {
+         detection.suggestedAutoHealType ||
+         this.mapCategoryToAutoHealType(detection.category);
+ 
+-      autoHealEngine.heal('console', new Error(entry.message), autoHealType, {
+-        stack: entry.stack,
+-        args: entry.args,
+-        timestamp: entry.timestamp,
+-        category: detection.category,
+-        severity: detection.severity,
+-      });
++      void unifiedHealingFacade
++        .heal({
++          source: 'console',
++          error: new Error(entry.message),
++          type: autoHealType,
++          metadata: {
++            stack: entry.stack,
++            args: entry.args,
++            timestamp: entry.timestamp,
++            category: detection.category,
++            severity: detection.severity,
++          },
++        })
++        .catch(err => {
++          logger.warn('UnifiedHealingFacade heal failed (console)', {
++            error: err instanceof Error ? err.message : String(err),
++          });
++        });
+     }
+   }
+ 
+@@ -482,16 +495,22 @@ class ConsoleMonitor {
+         `⚠️ High error rate detected: ${this.stats.errorRate} errors/min (threshold: ${this.ERROR_THRESHOLD})`
+       );
+ 
+-      autoHealEngine.heal(
+-        'console',
+
+--- DIFF HEAD: src/ui/pages/Chat.tsx
+diff --git a/src/ui/pages/Chat.tsx b/src/ui/pages/Chat.tsx
+index ce8eea3c..24bc7617 100644
+--- a/src/ui/pages/Chat.tsx
++++ b/src/ui/pages/Chat.tsx
+@@ -38,7 +38,7 @@ import { ChatModeSelector } from '../../components/chat/ChatModeSelector';
+ import { ModeBadge } from '../../components/chat/ModeBadge';
+ import { VoiceConversation } from '../../components/VoiceConversation';
+ import type { ChatModeId } from '../../services/ai/chatModes.config';
+-import { autoHealEngine } from '../../services/ai/system';
++import { unifiedHealingFacade } from '../../services/ai/system';
+ // Phase 1.9: Audio Feedback - VAD + TTS integration
+ import useVAD, { useVADWithTTS, useBargeInHandler } from '../../hooks/useVAD';
+ // Phase 2 v24.7.4: Keyboard shortcuts & Focus trap
+@@ -463,12 +463,22 @@ function useOmegaRenderProtection() {
+   const handleRenderError = useCallback((error: Error, context: string) => {
+     renderAttempts.current++;
+ 
+-    // Auto-heal trigger (direct instance)
+-    autoHealEngine.heal('chat-page', error, 'validation', {
+-      context,
+-      renderAttempts: renderAttempts.current,
+-      timestamp: Date.now(),
+-    });
++    // Auto-heal trigger (unified, non-bloquant)
++    void unifiedHealingFacade
++      .heal({
++        source: 'chat-page',
++        error,
++        type: 'validation',
++        metadata: {
++          context,
++          renderAttempts: renderAttempts.current,
++          timestamp: Date.now(),
++        },
++      })
++      .catch(err => {
++        isDev &&
++          console.warn('[OMEGA CHAT PAGE] Unified healing failed:', err);
++      });
+ 
+     setPageState(prev => ({
+       ...prev,

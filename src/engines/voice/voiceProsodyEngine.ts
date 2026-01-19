@@ -12,7 +12,6 @@
  */
 
 import type { OrchestratedVoice } from './types';
-import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 //   TYPES
@@ -110,13 +109,13 @@ class VoiceProsodyEngine {
 
   activate(): void {
     this.state.isActive = true;
-    logger.debug('Activated');
+    console.log('[VoiceProsodyEngine] Activated');
     this.notifySubscribers();
   }
 
   deactivate(): void {
     this.state.isActive = false;
-    logger.debug('Deactivated');
+    console.log('[VoiceProsodyEngine] Deactivated');
     this.notifySubscribers();
   }
 

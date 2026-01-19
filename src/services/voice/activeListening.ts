@@ -70,7 +70,7 @@ export { adaptiveThresholdEngine } from '@/services/voice/adaptiveThresholdEngin
  *
  * function MyComponent() {
  *   const wake = useWakeWord((event) => {
- *     logger.debug('Wake detected:', event.mode);
+ *     console.log('Wake detected:', event.mode);
  *   });
  *
  *   return <button onClick={wake.start}>Start Listening</button>;

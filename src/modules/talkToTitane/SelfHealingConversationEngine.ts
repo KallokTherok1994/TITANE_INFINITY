@@ -23,7 +23,6 @@ import { readFile, writeFile, readdir } from '../../utils/tauriFsAdapter';
 import { existsSync } from '../../utils/tauriFsAdapter';
 import { join } from '../../utils/tauriFsAdapter';
 import type { ConversationEntry } from './AutoSaveConversationEngine';
-import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -99,13 +98,13 @@ class SelfHealingConversationEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   async initialize(): Promise<void> {
-    logger.debug('Initializing Self-Healing Conversation Engine v∞...');
+    console.log('[SelfHealing] Initializing Self-Healing Conversation Engine v∞...');
 
     if (this.config.enabled) {
       this.startScanTimer();
     }
 
-    logger.debug('Initialized');
+    console.log('[SelfHealing] Initialized');
   }
 
   private startScanTimer(): void {
@@ -120,14 +119,14 @@ class SelfHealingConversationEngine {
 
   async scan(): Promise<HealingReport> {
     if (this.state.isScanning) {
-      logger.debug('Scan already in progress');
+      console.log('[SelfHealing] Scan already in progress');
       return this.createEmptyReport();
     }
 
     this.state.isScanning = true;
     const startTime = Date.now();
 
-    logger.debug('Starting integrity scan...');
+    console.log('[SelfHealing] Starting integrity scan...');
 
     try {
       const issues: CorruptionIssue[] = [];
@@ -165,7 +164,7 @@ class SelfHealingConversationEngine {
         duration: Date.now() - startTime,
       };
 
-      logger.debug(
+      console.log(
         `[SelfHealing] Scan complete: ${issues.length} issues found in ${scannedFiles} files`
       );
 
@@ -318,14 +317,14 @@ class SelfHealingConversationEngine {
 
   async heal(report?: HealingReport): Promise<HealingReport> {
     if (this.state.isHealing) {
-      logger.debug('Healing already in progress');
+      console.log('[SelfHealing] Healing already in progress');
       return report || this.createEmptyReport();
     }
 
     this.state.isHealing = true;
 
     try {
-      logger.debug('Starting healing process...');
+      console.log('[SelfHealing] Starting healing process...');
 
       const targetReport = report || (await this.scan());
       let repaired = 0;
@@ -372,7 +371,7 @@ class SelfHealingConversationEngine {
         failed,
       };
 
-      logger.debug(
+      console.log(
         `[SelfHealing] Healing complete: ${repaired} repaired, ${failed} failed`
       );
 
@@ -407,7 +406,7 @@ class SelfHealingConversationEngine {
   private async healJsonMalformed(
     issues: CorruptionIssue[]
   ): Promise<{ repaired: number; failed: number }> {
-    logger.debug(`[SelfHealing] Healing ${issues.length} JSON malformed entries...`);
+    console.log(`[SelfHealing] Healing ${issues.length} JSON malformed entries...`);
     // Strategy: Remove corrupted lines, log to errors
     return { repaired: 0, failed: issues.length };
   }
@@ -415,7 +414,7 @@ class SelfHealingConversationEngine {
   private async healMissingFields(
     issues: CorruptionIssue[]
   ): Promise<{ repaired: number; failed: number }> {
-    logger.debug(`[SelfHealing] Healing ${issues.length} missing fields entries...`);
+    console.log(`[SelfHealing] Healing ${issues.length} missing fields entries...`);
     let repaired = 0;
 
     for (const issue of issues) {
@@ -435,7 +434,7 @@ class SelfHealingConversationEngine {
   private async healDuplicates(
     issues: CorruptionIssue[]
   ): Promise<{ repaired: number; failed: number }> {
-    logger.debug(`[SelfHealing] Healing ${issues.length} duplicate entries...`);
+    console.log(`[SelfHealing] Healing ${issues.length} duplicate entries...`);
     // Strategy: Remove duplicates, keep first occurrence
     return { repaired: issues.length, failed: 0 };
   }
@@ -443,7 +442,7 @@ class SelfHealingConversationEngine {
   private async healChronologicalGaps(
     issues: CorruptionIssue[]
   ): Promise<{ repaired: number; failed: number }> {
-    logger.debug(`[SelfHealing] Healing ${issues.length} chronological gaps...`);
+    console.log(`[SelfHealing] Healing ${issues.length} chronological gaps...`);
     // Strategy: Try to fill gaps from other sources (logs/memory/dataset)
     return { repaired: 0, failed: issues.length };
   }
@@ -453,7 +452,7 @@ class SelfHealingConversationEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   async rebuild(filePath: string): Promise<void> {
-    logger.debug(`[SelfHealing] Rebuilding file: ${filePath}`);
+    console.log(`[SelfHealing] Rebuilding file: ${filePath}`);
 
     const content = await readFile(filePath, 'utf-8');
     const lines = content.split('\n').filter(l => l.trim());
@@ -479,7 +478,7 @@ class SelfHealingConversationEngine {
     const rebuilt = unique.map(e => JSON.stringify(e)).join('\n') + '\n';
     await writeFile(filePath, rebuilt, 'utf-8');
 
-    logger.debug(`[SelfHealing] File rebuilt: ${unique.length} entries`);
+    console.log(`[SelfHealing] File rebuilt: ${unique.length} entries`);
   }
 
   private deduplicateEntries(entries: ConversationEntry[]): ConversationEntry[] {
@@ -514,7 +513,7 @@ class SelfHealingConversationEngine {
 
   configure(config: Partial<SelfHealingConfig>): void {
     this.config = { ...this.config, ...config };
-    logger.debug('Configuration updated:', config);
+    console.log('[SelfHealing] Configuration updated:', config);
   }
 
   getState(): SelfHealingState {
@@ -530,13 +529,13 @@ class SelfHealingConversationEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   async shutdown(): Promise<void> {
-    logger.debug('Shutting down...');
+    console.log('[SelfHealing] Shutting down...');
 
     if (this.scanTimer) {
       clearInterval(this.scanTimer);
     }
 
-    logger.debug('Shutdown complete');
+    console.log('[SelfHealing] Shutdown complete');
   }
 }
 

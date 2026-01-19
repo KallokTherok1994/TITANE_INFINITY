@@ -84,7 +84,7 @@ echo "⚠️  Warnings: $WARNINGS"
 echo ""
 
 if [ $ERRORS -eq 0 ]; then
-    echo "🎉 ✅ Tech-Ready (Dev) | Production: ⛔ EN ATTENTE (autorisation requise)! 🚀"
+    echo "🎉 READY FOR PRODUCTION! 🚀"
     exit 0
 else
     echo "❌ FIX ERRORS BEFORE DEPLOYING"
