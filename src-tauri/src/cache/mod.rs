@@ -2,8 +2,10 @@
 //   TITANE∞ v19.5.2 — Intelligent Cache Module
 //   P2-2: Cache LRU + Persistent - FULL IMPLEMENTATION
 //   SP-PERF-003: Semantic Cache for AI Responses
+//   Phase 4: LZ4 Compression Layer
 // ═══════════════════════════════════════════════════════════════
 
+pub mod compression;
 pub mod middleware;
 pub mod semantic_cache;
 
