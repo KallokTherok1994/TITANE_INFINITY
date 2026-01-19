@@ -406,6 +406,15 @@ pub fn generate_personality_prompt(engine: &PersonalityEngine) -> String {
 mod tests {
     use super::*;
 
+    macro_rules! test_ok {
+        ($expr:expr, $msg:expr $(,)?) => {
+            match $expr {
+                Ok(val) => val,
+                Err(err) => panic!("{}: {err}", $msg),
+            }
+        };
+    }
+
     // ========== Mood Tests ==========
 
     #[test]
@@ -480,15 +489,20 @@ mod tests {
     #[test]
     fn test_mood_serialize() {
         let mood = Mood::Curious;
-        let json = serde_json::to_string(&mood).expect("Mood doit pouvoir être sérialisé en JSON");
+        let json = test_ok!(
+            serde_json::to_string(&mood),
+            "Mood doit pouvoir être sérialisé en JSON"
+        );
         assert!(json.contains("Curious"));
     }
 
     #[test]
     fn test_mood_deserialize() {
         let json = "\"Caring\"";
-        let mood: Mood =
-            serde_json::from_str(json).expect("Mood doit pouvoir être désérialisé depuis JSON");
+        let mood: Mood = test_ok!(
+            serde_json::from_str(json),
+            "Mood doit pouvoir être désérialisé depuis JSON"
+        );
         assert_eq!(mood, Mood::Caring);
     }
 
@@ -539,8 +553,10 @@ mod tests {
             trigger: "goal".to_string(),
             duration_mins: 45,
         };
-        let json =
-            serde_json::to_string(&entry).expect("MoodEntry doit pouvoir être sérialisé en JSON");
+        let json = test_ok!(
+            serde_json::to_string(&entry),
+            "MoodEntry doit pouvoir être sérialisé en JSON"
+        );
         assert!(json.contains("Determined"));
         assert!(json.contains("goal"));
     }
@@ -583,8 +599,10 @@ mod tests {
     #[test]
     fn test_personality_state_serialize() {
         let state = PersonalityState::default();
-        let json = serde_json::to_string(&state)
-            .expect("PersonalityState doit pouvoir être sérialisé en JSON");
+        let json = test_ok!(
+            serde_json::to_string(&state),
+            "PersonalityState doit pouvoir être sérialisé en JSON"
+        );
         assert!(json.contains("Mentor"));
         assert!(json.contains("Serene"));
     }
@@ -619,8 +637,10 @@ mod tests {
     #[test]
     fn test_personality_profile_serialize() {
         let profile = PersonalityProfile::default();
-        let json = serde_json::to_string(&profile)
-            .expect("PersonalityProfile doit pouvoir être sérialisé en JSON");
+        let json = test_ok!(
+            serde_json::to_string(&profile),
+            "PersonalityProfile doit pouvoir être sérialisé en JSON"
+        );
         assert!(json.contains("extraversion"));
         assert!(json.contains("openness"));
     }

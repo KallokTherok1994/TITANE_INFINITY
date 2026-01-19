@@ -169,11 +169,15 @@ fn get_memory_directory() -> Result<PathBuf, String> {
 mod tests {
     use super::*;
     use std::fs;
+    use std::sync::{Mutex, OnceLock};
     use tempfile::TempDir;
+
+    static ENV_LOCK: OnceLock<Mutex<()>> = OnceLock::new();
 
     /// Test memory encryption/decryption cycle
     #[tokio::test]
     async fn test_memory_vault_encryption_cycle() {
+        let _env_guard = ENV_LOCK.get_or_init(|| Mutex::new(())).lock().unwrap();
         // Create temporary directory
         let temp_dir = TempDir::new().expect("Failed to create temp directory");
         let temp_path = temp_dir.path().to_path_buf();
@@ -221,8 +225,10 @@ mod tests {
     }
 
     /// Test wrong password fails gracefully
-    #[tokio::test] 
+    #[tokio::test]
     async fn test_memory_vault_wrong_password() {
+        let _env_guard = ENV_LOCK.get_or_init(|| Mutex::new(())).lock().unwrap();
+
         // Create temporary directory
         let temp_dir = TempDir::new().expect("Failed to create temp directory");
         let temp_path = temp_dir.path().to_path_buf();
@@ -251,6 +257,12 @@ mod tests {
     /// Test password validation
     #[tokio::test]
     async fn test_password_validation() {
+        let _env_guard = ENV_LOCK.get_or_init(|| Mutex::new(())).lock().unwrap();
+
+        let temp_dir = TempDir::new().expect("Failed to create temp directory");
+        let temp_path = temp_dir.path().to_path_buf();
+        std::env::set_var("TITANE_MEMORY_DIR", temp_path.to_string_lossy().to_string());
+
         // Too short password
         let weak_password = "123".to_string();
         
@@ -260,11 +272,15 @@ mod tests {
         
         let unlock_result = unlock_memory_vault(weak_password).await;
         assert!(unlock_result.is_err(), "Weak password should be rejected");
+        
+        std::env::remove_var("TITANE_MEMORY_DIR");
     }
 
     /// Test missing files handling
     #[tokio::test]
     async fn test_missing_files_handling() {
+        let _env_guard = ENV_LOCK.get_or_init(|| Mutex::new(())).lock().unwrap();
+
         // Create temporary directory
         let temp_dir = TempDir::new().expect("Failed to create temp directory");
         let temp_path = temp_dir.path().to_path_buf();

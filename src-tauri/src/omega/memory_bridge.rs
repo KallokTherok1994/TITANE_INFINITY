@@ -243,6 +243,12 @@ mod tests {
     use super::*;
     use crate::omega::context_v2::{OmegaContextV2, OmegaInput};
 
+    macro_rules! test_ok {
+        ($expr:expr) => {
+            $expr.expect(&format!("TEST FAILED at {}:{}", file!(), line!()))
+        };
+    }
+
     #[tokio::test]
     async fn test_memory_bridge_basic() {
         let unified_memory = Arc::new(RwLock::new(UnifiedMemory::new()));
@@ -434,7 +440,7 @@ mod tests {
             .await;
 
         assert!(result.is_ok());
-        let memory_id = result.expect("memory bridge should return stored id");
+        let memory_id = test_ok!(result);
         assert!(!memory_id.is_empty());
     }
 }
