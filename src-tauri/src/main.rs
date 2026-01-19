@@ -772,7 +772,8 @@ fn main() {
             conversation_engine::commands::conversation_health_check,
             conversation_engine::commands::conversation_memory_stats,
             // Chat Orchestrator Commands (CHAT PIPELINE v21 + R04 Memory Integration)
-            overdrive::chat_orchestrator::chat_send_message,
+            // NOTE: chat_send_message is DEPRECATED since v24.2.0 - use conversation_generate instead
+            // (exposed via chat_commands.rs with blocking error)
             overdrive::chat_orchestrator::chat_stream_message,
             overdrive::chat_orchestrator::chat_get_providers_status,
             overdrive::chat_orchestrator::chat_check_providers,

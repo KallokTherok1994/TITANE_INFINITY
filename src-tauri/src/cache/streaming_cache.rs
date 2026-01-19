@@ -5,7 +5,6 @@
 // Expected: 2-3x latency reduction for repeated queries
 // ═══════════════════════════════════════════════════════════════
 
-use serde_json::{json, Value as JsonValue};
 use std::sync::Arc;
 use parking_lot::RwLock;
 use std::collections::HashMap;

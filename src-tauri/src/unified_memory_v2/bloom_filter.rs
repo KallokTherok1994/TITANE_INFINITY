@@ -169,10 +169,14 @@ mod tests {
             filter.insert(&i);
         }
 
+        // Check membership to increment stats
+        let _ = filter.contains(&1); // Will be true (or false for non-existent)
+        let _ = filter.contains(&9999); // Will be false (definite negative)
+
         // After many insertions, we should have false negatives
         // (items definitely not in filter)
         let stats = filter.stats();
-        assert!(stats.checks >= 0); // Just verify stats tracking works
+        assert!(stats.checks > 0); // Verify stats tracking works (checks must be > 0)
     }
 
     #[test]
