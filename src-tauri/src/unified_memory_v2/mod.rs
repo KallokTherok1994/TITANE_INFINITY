@@ -38,6 +38,7 @@
 //! ```
 
 pub mod api;
+pub mod bloom_filter; // Phase 4: Bloom filter for semantic search
 pub mod bridge;
 pub mod compat; // Phase 2.3: Compatibility layer
 pub mod config;
