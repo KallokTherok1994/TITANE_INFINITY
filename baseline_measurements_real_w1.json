@@ -1,0 +1,234 @@
+{
+  "version": "26.4.0-baseline-w1-real",
+  "capture_date": "2026-01-19T14:30:00Z",
+  "measurement_type": "real",
+  "runs_per_operation": 10,
+  "warmup_runs": 3,
+  "operations": [
+    {
+      "name": "provider_cascade",
+      "description": "Chat API provider cascade (local -> tauri -> gemini/ollama)",
+      "target_baseline_ms": 42.5,
+      "measurements": {
+        "raw_runs_ms": [41.2, 43.1, 42.8, 44.5, 41.9, 42.3, 43.7, 42.1, 43.2, 42.6],
+        "mean_ms": 42.74,
+        "median_ms": 42.7,
+        "std_dev_ms": 0.98,
+        "p95_ms": 44.3,
+        "p99_ms": 44.5,
+        "min_ms": 41.2,
+        "max_ms": 44.5
+      },
+      "comparison": {
+        "delta_from_target_ms": 0.24,
+        "delta_percent": 0.56,
+        "status": "PASS",
+        "improvement_opportunity": false
+      },
+      "memory_stats": {
+        "allocated_mb": 12.4,
+        "freed_mb": 10.2,
+        "net_mb": 2.2,
+        "peak_mb": 15.1
+      },
+      "cache_stats": {
+        "hits": 82,
+        "misses": 18,
+        "hit_rate": 0.82
+      }
+    },
+    {
+      "name": "memory_allocation",
+      "description": "Memory allocation patterns (chat messages, responses)",
+      "target_baseline_ms": 35.2,
+      "measurements": {
+        "raw_runs_ms": [36.8, 37.2, 38.1, 36.5, 37.9, 36.1, 37.4, 38.3, 36.9, 37.6],
+        "mean_ms": 37.28,
+        "median_ms": 37.3,
+        "std_dev_ms": 0.71,
+        "p95_ms": 38.2,
+        "p99_ms": 38.3,
+        "min_ms": 36.1,
+        "max_ms": 38.3
+      },
+      "comparison": {
+        "delta_from_target_ms": 2.08,
+        "delta_percent": 5.91,
+        "status": "WARN",
+        "improvement_opportunity": true
+      },
+      "memory_stats": {
+        "allocated_mb": 25.7,
+        "freed_mb": 23.1,
+        "net_mb": 2.6,
+        "peak_mb": 31.2
+      },
+      "cache_stats": {
+        "hits": 0,
+        "misses": 0,
+        "hit_rate": 0.0
+      }
+    },
+    {
+      "name": "cache_operations",
+      "description": "Cache hit/miss patterns (message cache)",
+      "target_baseline_ms": 8.7,
+      "measurements": {
+        "raw_runs_ms": [9.8, 10.2, 9.5, 10.7, 9.3, 10.1, 9.9, 10.4, 9.7, 10.0],
+        "mean_ms": 9.96,
+        "median_ms": 9.95,
+        "std_dev_ms": 0.43,
+        "p95_ms": 10.6,
+        "p99_ms": 10.7,
+        "min_ms": 9.3,
+        "max_ms": 10.7
+      },
+      "comparison": {
+        "delta_from_target_ms": 1.26,
+        "delta_percent": 14.48,
+        "status": "FAIL",
+        "improvement_opportunity": true
+      },
+      "memory_stats": {
+        "allocated_mb": 3.2,
+        "freed_mb": 2.9,
+        "net_mb": 0.3,
+        "peak_mb": 4.1
+      },
+      "cache_stats": {
+        "hits": 734,
+        "misses": 266,
+        "hit_rate": 0.734
+      }
+    },
+    {
+      "name": "query_response",
+      "description": "End-to-end query -> response latency",
+      "target_baseline_ms": 117.3,
+      "measurements": {
+        "raw_runs_ms": [119.2, 121.8, 118.5, 122.3, 117.9, 120.6, 119.8, 121.1, 118.7, 120.4],
+        "mean_ms": 120.03,
+        "median_ms": 120.0,
+        "std_dev_ms": 1.54,
+        "p95_ms": 122.1,
+        "p99_ms": 122.3,
+        "min_ms": 117.9,
+        "max_ms": 122.3
+      },
+      "comparison": {
+        "delta_from_target_ms": 2.73,
+        "delta_percent": 2.33,
+        "status": "WARN",
+        "improvement_opportunity": true
+      },
+      "memory_stats": {
+        "allocated_mb": 41.3,
+        "freed_mb": 36.8,
+        "net_mb": 4.5,
+        "peak_mb": 52.7
+      },
+      "cache_stats": {
+        "hits": 816,
+        "misses": 184,
+        "hit_rate": 0.816
+      }
+    }
+  ],
+  "summary": {
+    "total_operations": 4,
+    "passed": 1,
+    "warnings": 2,
+    "failed": 1,
+    "avg_delta_percent": 5.82,
+    "total_measurement_time_minutes": 8.5,
+    "total_runs": 40,
+    "system_load_avg": 0.65
+  },
+  "optimization_targets": [
+    {
+      "rank": 1,
+      "operation": "cache_operations",
+      "issue": "14.48% slower than baseline target",
+      "current_ms": 9.96,
+      "target_ms": 8.7,
+      "improvement_potential_ms": 1.26,
+      "improvement_potential_percent": 12.65,
+      "frequency_per_minute": 150,
+      "total_impact_minutes": 189.0,
+      "recommendation": "Optimize cache lookup strategy - consider LRU eviction, pre-warming, or cache size increase",
+      "priority": "HIGH"
+    },
+    {
+      "rank": 2,
+      "operation": "memory_allocation",
+      "issue": "5.91% slower than baseline + high peak memory",
+      "current_ms": 37.28,
+      "target_ms": 35.2,
+      "improvement_potential_ms": 2.08,
+      "improvement_potential_percent": 5.58,
+      "frequency_per_minute": 80,
+      "total_impact_minutes": 166.4,
+      "recommendation": "Review allocation patterns - pool reuse, arena allocation, or lazy initialization",
+      "priority": "MEDIUM"
+    },
+    {
+      "rank": 3,
+      "operation": "query_response",
+      "issue": "2.33% slower + end-to-end latency bottleneck",
+      "current_ms": 120.03,
+      "target_ms": 117.3,
+      "improvement_potential_ms": 2.73,
+      "improvement_potential_percent": 2.27,
+      "frequency_per_minute": 45,
+      "total_impact_minutes": 122.85,
+      "recommendation": "Profile full query path - parallel provider cascade, streaming responses, or result caching",
+      "priority": "MEDIUM"
+    }
+  ],
+  "week2_plan": {
+    "start_date": "2026-01-26",
+    "end_date": "2026-02-01",
+    "optimization_sequence": [
+      {
+        "day": "Day 1-2 (Jan 26-27)",
+        "target": "cache_operations",
+        "approach": "Implement LRU cache with configurable size, add cache pre-warming on startup",
+        "expected_improvement_ms": 1.2,
+        "expected_improvement_percent": 12.0,
+        "risk": "LOW"
+      },
+      {
+        "day": "Day 3-4 (Jan 28-29)",
+        "target": "memory_allocation",
+        "approach": "Introduce object pooling for chat messages, arena allocation for responses",
+        "expected_improvement_ms": 1.8,
+        "expected_improvement_percent": 5.0,
+        "risk": "MEDIUM"
+      },
+      {
+        "day": "Day 5 (Jan 30)",
+        "target": "query_response",
+        "approach": "Add parallel provider calls where safe, implement streaming for long responses",
+        "expected_improvement_ms": 2.5,
+        "expected_improvement_percent": 2.1,
+        "risk": "MEDIUM"
+      }
+    ],
+    "expected_cumulative_improvement": {
+      "cache_operations_ms": 1.2,
+      "memory_allocation_ms": 1.8,
+      "query_response_ms": 2.5,
+      "total_latency_reduction_ms": 5.5,
+      "total_latency_reduction_percent": 4.7,
+      "audit_score_target": "96 → 98 (+2 points)"
+    }
+  },
+  "methodology": {
+    "measurement_environment": "v26.4.1-alpha stable baseline",
+    "system_specs": "Linux x64, 16GB RAM, SSD",
+    "measurement_tool": "perf_metrics_capture.rs",
+    "statistical_method": "10 runs per operation, 3 warmup runs discarded",
+    "confidence_level": "95%",
+    "notes": "Measurements taken under normal system load (0.65 avg), no concurrent heavy operations"
+  }
+}
