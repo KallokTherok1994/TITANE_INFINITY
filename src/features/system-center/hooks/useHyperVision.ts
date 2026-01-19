@@ -148,6 +148,16 @@ export function useHyperVision(
     }
   }, []);
 
+  // Cleanup any pending polling when the hook unmounts to avoid stray intervals
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, []);
+
   const resolveAnomaly = useCallback(
     async (id: string) => {
       try {
