@@ -114,6 +114,12 @@ fn wrap_tts_result(result: TTSResult<()>) -> Result<(), ChatEngineError> {
 mod tests {
     use super::*;
 
+    macro_rules! test_ok {
+        ($expr:expr) => {
+            $expr.expect(&format!("TEST FAILED at {}:{}", file!(), line!()))
+        };
+    }
+
     // ─────────────────────────────────────────────────────────────
     // SpeechMode Tests
     // ─────────────────────────────────────────────────────────────
@@ -161,48 +167,42 @@ mod tests {
     #[test]
     fn test_speech_mode_serialize_auto() {
         let mode = SpeechMode::Auto;
-        let json = serde_json::to_string(&mode)
-            .expect("SpeechMode::Auto doit pouvoir être sérialisé en JSON");
+        let json = test_ok!(serde_json::to_string(&mode));
         assert_eq!(json, "\"auto\"");
     }
 
     #[test]
     fn test_speech_mode_serialize_online() {
         let mode = SpeechMode::Online;
-        let json = serde_json::to_string(&mode)
-            .expect("SpeechMode::Online doit pouvoir être sérialisé en JSON");
+        let json = test_ok!(serde_json::to_string(&mode));
         assert_eq!(json, "\"online\"");
     }
 
     #[test]
     fn test_speech_mode_serialize_local() {
         let mode = SpeechMode::Local;
-        let json = serde_json::to_string(&mode)
-            .expect("SpeechMode::Local doit pouvoir être sérialisé en JSON");
+        let json = test_ok!(serde_json::to_string(&mode));
         assert_eq!(json, "\"local\"");
     }
 
     #[test]
     fn test_speech_mode_deserialize_auto() {
         let json = "\"auto\"";
-        let mode: SpeechMode = serde_json::from_str(json)
-            .expect("SpeechMode::Auto doit pouvoir être désérialisé depuis JSON");
+        let mode: SpeechMode = test_ok!(serde_json::from_str(json));
         assert!(matches!(mode, SpeechMode::Auto));
     }
 
     #[test]
     fn test_speech_mode_deserialize_online() {
         let json = "\"online\"";
-        let mode: SpeechMode = serde_json::from_str(json)
-            .expect("SpeechMode::Online doit pouvoir être désérialisé depuis JSON");
+        let mode: SpeechMode = test_ok!(serde_json::from_str(json));
         assert!(matches!(mode, SpeechMode::Online));
     }
 
     #[test]
     fn test_speech_mode_deserialize_local() {
         let json = "\"local\"";
-        let mode: SpeechMode = serde_json::from_str(json)
-            .expect("SpeechMode::Local doit pouvoir être désérialisé depuis JSON");
+        let mode: SpeechMode = test_ok!(serde_json::from_str(json));
         assert!(matches!(mode, SpeechMode::Local));
     }
 
