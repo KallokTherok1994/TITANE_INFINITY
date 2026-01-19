@@ -404,6 +404,13 @@ pub mod agent_system; // ✅ Agent System vΩ (Multi-Agents, Roles, Capabilities
 // pub mod meta_energy; // ✅ Meta-Energy Engine vΩ (Homéostasie, Énergie, Fatigue, Récupération, Load Balancing, Prédiction)
 
 // ═══════════════════════════════════════════════════════════════
+// PHASE 4 SPRINT 3: ACTION PREFETCH & IPC BATCHING
+// ═══════════════════════════════════════════════════════════════
+
+pub mod behavior_engine; // ✅ Behavior Prediction Engine v1 (Action Prefetcher)
+pub mod ipc_batcher; // ✅ IPC Message Batching v1 (Message Coalescing)
+
+// ═══════════════════════════════════════════════════════════════
 // RE-EXPORTS v15
 // ═══════════════════════════════════════════════════════════════
 
