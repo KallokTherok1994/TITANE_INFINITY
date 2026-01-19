@@ -57,7 +57,7 @@ pub type TTSResult<T> = Result<T, TTSError>;
 /// Most TTS requests are <300 chars → 1-3 chunks → stack-allocated
 pub fn split_into_chunks(text: &str, max_chars: usize) -> Vec<String> {
     let mut chunks: SmallVec<[String; 4]> = SmallVec::new();
-    let mut current_chunk = String::new();
+    let mut current_chunk = String::with_capacity(max_chars);  // Pre-allocate capacity
 
     // Split by sentences first
     for sentence in text.split(&['.', '!', '?', ';'][..]) {
@@ -76,8 +76,10 @@ pub fn split_into_chunks(text: &str, max_chars: usize) -> Vec<String> {
             // Save current chunk and start new one
             if !current_chunk.is_empty() {
                 chunks.push(current_chunk);
+                current_chunk = String::with_capacity(max_chars);  // Reuse with new capacity
             }
-            current_chunk = trimmed.to_string();
+            // Use .to_owned() instead of .to_string() on &str
+            current_chunk.push_str(trimmed);
         }
     }
 
@@ -89,14 +91,16 @@ pub fn split_into_chunks(text: &str, max_chars: usize) -> Vec<String> {
     // If no chunks (no sentence delimiters), split by words
     if chunks.is_empty() && !text.is_empty() {
         let words: SmallVec<[&str; 16]> = text.split_whitespace().collect();
-        let mut chunk = String::new();
+        let mut chunk = String::with_capacity(max_chars);  // Pre-allocate
 
         for word in words {
             if chunk.len() + word.len() + 1 > max_chars {
                 if !chunk.is_empty() {
                     chunks.push(chunk);
+                    chunk = String::with_capacity(max_chars);  // Reuse
                 }
-                chunk = word.to_string();
+                // Use .to_owned() instead of .to_string()
+                chunk.push_str(word);
             } else {
                 if !chunk.is_empty() {
                     chunk.push(' ');

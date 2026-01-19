@@ -5,6 +5,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 use once_cell::sync::Lazy;
+use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
@@ -12,6 +13,15 @@ use super::{
     merger::MergeResult, OmegaError, OmegaResult, PipelineStage, StageInput, StageOutput,
     StageProcessor,
 };
+
+// ═══════════════════════════════════════════════════════════════
+//   STATIC REGEX PATTERNS (Cached - compiled once on first use)
+// ═══════════════════════════════════════════════════════════════
+
+static EMAIL_PATTERN: Lazy<Regex> = Lazy::new(|| {
+    Regex::new(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}")
+        .expect("hard-coded email regex must compile")
+});
 
 // ═══════════════════════════════════════════════════════════════
 //   GUARDRAIL TYPES
@@ -201,13 +211,10 @@ impl SafetyChecker {
             }
         }
 
-        // Check for email pattern
-        let email_pattern = regex::Regex::new(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}");
-        if let Ok(re) = email_pattern {
-            if re.is_match(text) {
-                found_pii = true;
-                details.push("Email address detected".to_string());
-            }
+        // Check for email pattern (using cached static regex)
+        if EMAIL_PATTERN.is_match(text) {
+            found_pii = true;
+            details.push("Email address detected".to_string());
         }
 
         let score = if found_pii { 0.4 } else { 0.95 };
