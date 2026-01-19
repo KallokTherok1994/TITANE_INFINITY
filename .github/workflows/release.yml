@@ -51,6 +51,44 @@ jobs:
           pnpm test
           pnpm test:rust
           
+      - name: Run Performance Benchmark
+        run: |
+          chmod +x scripts/test/benchmark-performance.sh
+          ./scripts/test/benchmark-performance.sh
+          
+      - name: Performance Regression Check
+        run: |
+          # Extract latest benchmark results
+          LATEST=$(ls -t .performance-results/*.json 2>/dev/null | head -1)
+          if [ -f "$LATEST" ]; then
+            LAUNCH_TIME=$(jq '.metrics.launch_time_avg_s' "$LATEST")
+            BINARY_SIZE=$(jq '.metrics.binary_size_mb' "$LATEST")
+            
+            # Thresholds (hard limits for release)
+            LAUNCH_THRESHOLD=3.0
+            SIZE_THRESHOLD=150
+            
+            echo "📊 Performance Check:"
+            echo "  Launch Time: ${LAUNCH_TIME}s (max: ${LAUNCH_THRESHOLD}s)"
+            echo "  Binary Size: ${BINARY_SIZE}MB (max: ${SIZE_THRESHOLD}MB)"
+            
+            # Check launch time
+            if (( $(echo "$LAUNCH_TIME > $LAUNCH_THRESHOLD" | bc -l) )); then
+              echo "❌ FAILED: Launch time ${LAUNCH_TIME}s exceeds threshold ${LAUNCH_THRESHOLD}s"
+              exit 1
+            fi
+            
+            # Check binary size
+            if (( $(echo "$BINARY_SIZE > $SIZE_THRESHOLD" | bc -l) )); then
+              echo "❌ FAILED: Binary size ${BINARY_SIZE}MB exceeds threshold ${SIZE_THRESHOLD}MB"
+              exit 1
+            fi
+            
+            echo "✅ Performance check PASSED"
+          else
+            echo "⚠️  No benchmark results found, skipping performance check"
+          fi
+          
       - name: Build Release
         run: pnpm run build
         

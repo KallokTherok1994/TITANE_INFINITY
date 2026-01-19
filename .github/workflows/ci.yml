@@ -69,3 +69,24 @@ jobs:
         run: |
           echo "## Test Results" >> $GITHUB_STEP_SUMMARY
           echo "✅ Tests completed" >> $GITHUB_STEP_SUMMARY
+          
+      - name: Performance Baseline Check (PR only)
+        if: github.event_name == 'pull_request'
+        run: |
+          # Run quick performance check to warn about regressions
+          if [ -f "scripts/test/benchmark-performance.sh" ]; then
+            echo "🔍 Running performance baseline check..."
+            chmod +x scripts/test/benchmark-performance.sh
+            ./scripts/test/benchmark-performance.sh || true
+            
+            # Compare with baseline if available
+            LATEST=$(ls -t .performance-results/*.json 2>/dev/null | head -1)
+            if [ -f "$LATEST" ]; then
+              LAUNCH_TIME=$(jq '.metrics.launch_time_avg_s' "$LATEST")
+              echo "📊 Current Launch Time: ${LAUNCH_TIME}s"
+              echo "### Performance Baseline" >> $GITHUB_STEP_SUMMARY
+              echo "Launch Time: ${LAUNCH_TIME}s (target: < 2.0s)" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "⚠️  Performance benchmark script not found"
+          fi
