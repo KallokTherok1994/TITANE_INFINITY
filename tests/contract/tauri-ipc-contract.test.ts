@@ -190,7 +190,7 @@ describe('TITANE∞ - IPC Contract Tests', () => {
     ];
 
     for (const cmd of dangerousCommands) {
-      expect(allowedCommands.has(cmd)).toBe(false, `Dangerous command ${cmd} should not be allowed`);
+      expect(allowedCommands.has(cmd), `Dangerous command ${cmd} should not be allowed`).toBe(false);
     }
   });
 
@@ -204,6 +204,6 @@ describe('TITANE∞ - IPC Contract Tests', () => {
     getAllowedCommands();
 
     const duration = Date.now() - startTime;
-    expect(duration).toBeLessThan(1000, `Contract check too slow: ${duration}ms`);
+    expect(duration, `Contract check too slow: ${duration}ms`).toBeLessThan(1000);
   });
 });
