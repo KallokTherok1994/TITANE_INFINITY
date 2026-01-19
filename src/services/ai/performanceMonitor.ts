@@ -239,14 +239,6 @@ export class PerformanceMonitor {
   }
 
   /**
-   * Destroy all metric trackers (cleanup timers) to avoid background intervals
-   */
-  destroy(): void {
-    this.metrics.forEach(metric => metric.destroy());
-    this.metrics.clear();
-  }
-
-  /**
    * End timing and record metric
    */
   end(operationId: string, metricName: string, metadata?: Record<string, any>): number {

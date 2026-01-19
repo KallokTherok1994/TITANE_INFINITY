@@ -16,7 +16,6 @@
 import { aiOrchestrator } from './orchestrator';
 import { metricsEngine } from './metricsEngine';
 import { autoHealEngine } from './autoHealEngine';
-import { aiHealthMonitor } from './healthMonitor';
 
 // ─────────────────────────────────────────────────────────────────
 // CORE ORCHESTRATOR
@@ -42,7 +41,7 @@ export { ollamaProvider } from './providers/ollama';
 export { autoHealEngine } from './autoHealEngine';
 export { unifiedHealingFacade } from './unifiedHealingFacade';
 export { metricsEngine } from './metricsEngine';
-export { aiHealthMonitor } from './healthMonitor';
+// aiHealthMonitor is now dynamically imported to avoid circular dependencies
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -110,6 +109,10 @@ export async function initializeAISystem(options?: {
   // Démarrer health monitoring si explicitement demandé (ou par défaut en dev)
   const enableHealthMonitoring =
     options?.enableHealthMonitoring ?? isHealthMonitoringEnabledByDefault();
+
+  // Import health monitor dynamically to avoid circular dependency
+  const { aiHealthMonitor } = await import('./healthMonitor');
+
   if (enableHealthMonitoring) {
     aiHealthMonitor.startMonitoring();
   }
@@ -130,6 +133,7 @@ export async function quickHealthCheck(): Promise<{
   score: number;
   message: string;
 }> {
+  const { aiHealthMonitor } = await import('./healthMonitor');
   const report = await aiHealthMonitor.getHealthReport();
 
   let message = '';
@@ -183,6 +187,7 @@ export async function quickFix(): Promise<{
     actions.push('✅ Providers réinitialisés');
 
     // Clear old alerts
+    const { aiHealthMonitor } = await import('./healthMonitor');
     aiHealthMonitor.clearAllAlerts();
     actions.push('✅ Alertes nettoyées');
 

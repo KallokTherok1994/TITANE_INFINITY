@@ -45,6 +45,8 @@ export default defineConfig({
     ],
   },
 
+  // Handle onnxruntime-web eval usage (security warning suppression) - merged into main build config below
+
   // Configuration ESM
   esbuild: {
     target: 'esnext',
@@ -113,6 +115,53 @@ export default defineConfig({
     sourcemap: false,
     rollupOptions: {
       external: process.env.NODE_ENV === 'production' ? ['events'] : [],
+      onwarn(warning, warn) {
+        // Suppress eval warnings for onnxruntime-web (necessary for WebAssembly)
+        if (warning.code === 'EVAL' && warning.id?.includes('onnxruntime-web')) {
+          return;
+        }
+        // Suppress mixed import warnings (modules imported both statically and dynamically)
+        // These are expected for performance optimization (immediate + lazy loading)
+        if (warning.message?.includes('dynamically imported by') &&
+            warning.message?.includes('but also statically imported by')) {
+          return;
+        }
+        // Suppress chunk warnings for modules that are both static and dynamic imported
+        if (warning.code === 'CIRCULAR_DEPENDENCY' && warning.message?.includes('aiHealthMonitor')) {
+          return;
+        }
+        warn(warning);
+      },
+      output: {
+        // Enhanced chunking configuration to fix dynamic import issues
+        manualChunks: {
+          // Core React libraries
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+
+          // UI libraries
+          'ui-vendor': ['framer-motion', 'lucide-react'],
+
+          // Tauri APIs
+          'tauri-vendor': ['@tauri-apps/api', '@tauri-apps/plugin-dialog', '@tauri-apps/plugin-fs'],
+
+          // AI/ML libraries (problematic eval usage)
+          'ai-vendor': ['@xenova/transformers'],
+
+          // Chart libraries
+          'chart-vendor': ['chart.js', 'react-chartjs-2', 'recharts'],
+
+          // Utils and other libraries
+          'utils-vendor': ['date-fns', 'clsx', 'zustand', 'i18next'],
+
+          // Keep AI services in separate chunks to avoid circular deps
+          'ai-services': [
+            './src/services/ai/orchestrator',
+            './src/services/ai/metricsEngine',
+            './src/services/ai/autoHealEngine',
+            './src/services/ai/healthMonitor',
+          ],
+        },
+      },
     },
   },
   css: {

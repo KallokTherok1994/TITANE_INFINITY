@@ -41,7 +41,6 @@ const XPBar = lazyWithDiagnostic(
 import { AutoHealErrorBoundary } from './components/AutoHealErrorBoundary';
 import { ErrorBoundary } from './components/ErrorBoundary'; // ✨ v19 - Security Hardening
 import { lazyWithDiagnostic, lazyWithTimeout } from './utils/lazyImportDiagnostic'; // ✨ BOOT-FIX - Diagnostic lazy imports
-import { loadCognitiveLayoutEngine, loadMotionSystem } from './utils/dynamicImports'; // ✨ BOOT-FIX - Safe imports
 import {
   detectEnvironment,
   shouldBlockLoading as _shouldBlockLoading,
@@ -579,79 +578,9 @@ const AppRouter: React.FC = () => {
   }, []);
   */
 
-  // ✨ OPT-11 - Lazy-load Cognitive Layout Engine
-  useEffect(() => {
-    let started = false;
+  // ✨ OPT-11 - Cognitive Layout Engine disabled (statically imported in useCognitiveLayout hook)
 
-    // Silent-by-default in production/Tauri: the cognitive layout observation loop must be explicitly enabled.
-    const envEnabled = import.meta.env.VITE_COGNITIVE_LAYOUT_ENGINE_ENABLED === '1';
-    let userEnabled = false;
-    try {
-      const raw = localStorage.getItem('titane_cognitive_layout_engine_enabled');
-      userEnabled = raw === '1' || raw === 'true';
-    } catch {
-      userEnabled = false;
-    }
-
-    const enabled = import.meta.env.DEV || envEnabled || userEnabled;
-    if (!enabled) {
-      return;
-    }
-
-    console.log('🧠 [COGNITIVE] Loading Cognitive Layout Engine...');
-
-    // Utilisation du wrapper sécurisé pour éviter les problèmes de dep-scan
-    loadCognitiveLayoutEngine()
-      .then(({ cognitiveLayoutEngine }) => {
-        if (!started) {
-          cognitiveLayoutEngine.start();
-          started = true;
-          console.log('✅ [COGNITIVE] Cognitive Layout Engine started');
-        }
-
-        return () => {
-          cognitiveLayoutEngine.stop();
-        };
-      })
-      .catch(err => {
-        logger.warn('Failed to load Cognitive Layout Engine', {
-          component: 'CognitiveLayout',
-          error: err,
-        });
-      });
-  }, []);
-
-  // ✨ OPT-10 - Lazy-load TITANE∞ Micro-Interactions
-  useEffect(() => {
-    logger.info('Loading TITANE∞ micro-interactions', { component: 'UIPolish' });
-
-    // Utilisation du wrapper sécurisé pour éviter les problèmes de dep-scan
-    loadMotionSystem()
-      .then(({ initializeMicroInteractions }) => {
-        try {
-          initializeMicroInteractions();
-          console.log('✅ [MOTION] Micro-interactions initialized successfully');
-          logger.info(
-            'Micro-interactions initialized (Ripple, Magnetism, Focus Glow, Tooltips)',
-            { component: 'UIPolish' }
-          );
-        } catch (error) {
-          console.error('❌ [MOTION] Failed to initialize micro-interactions:', error);
-          logger.error(
-            'Failed to initialize micro-interactions',
-            { component: 'App', service: 'UIPolish' },
-            error as Error
-          );
-        }
-      })
-      .catch(error => {
-        console.error('❌ [MOTION] Failed to load motion module:', error);
-        logger.warn('Failed to load motion module', {
-          component: 'UIPolish',
-          error: error,
-        });
-      });
-  }, []);
+  // ✨ OPT-10 - TITANE∞ Micro-Interactions disabled (static import)
 
   // ✨ v∞.27.0 - Initialiser Unified Presence Engine (Super Prompt #3)
   // REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)

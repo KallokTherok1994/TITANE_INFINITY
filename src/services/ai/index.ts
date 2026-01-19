@@ -29,7 +29,7 @@ export * from './system';
 // Kernels (kept in services/ai for backward compatibility)
 export { cognitiveKernel } from './cognitiveKernel';
 export { metaKernel } from './metaKernel';
-export { singularityKernel } from './singularityKernel';
+// singularityKernel is now dynamically imported in App.tsx
 
 // Services (kept in services/ai for backward compatibility)
 export { aiOrchestrator, askTitan, streamTitan, getAIStatus } from './orchestrator';
@@ -40,7 +40,8 @@ export {
   type ChatEngineResponse,
 } from './chatEngine';
 // ✨ Direct exports of AI engines (no lazy loading)
-export { autoHealEngine, metricsEngine, aiHealthMonitor } from './system';
+export { autoHealEngine, metricsEngine } from './system';
+// aiHealthMonitor is now dynamically imported in system.ts to avoid circular dependencies
 
 // ✨ v21 Phase 2: Retry Strategy unifiée
 export {
