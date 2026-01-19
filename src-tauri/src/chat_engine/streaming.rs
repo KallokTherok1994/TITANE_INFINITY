@@ -19,14 +19,20 @@ pub fn chunk_text(
         return Vec::new();
     }
 
-    let mut chunks = Vec::new();
+    // Pre-allocate capacity to avoid reallocations
+    let estimated_chunks = (text.len() + chunk_size - 1) / chunk_size;
+    let mut chunks = Vec::with_capacity(estimated_chunks);
     let mut ordinal: u32 = 0;
+    
+    // Cache &str allocations (use .to_owned() instead of .to_string())
+    let conv_id = conversation_id.to_owned();
+    let msg_id = message_id.to_owned();
 
     for slice in text.as_bytes().chunks(chunk_size) {
         let content = String::from_utf8_lossy(slice).to_string();
         chunks.push(StreamChunk {
-            conversation_id: conversation_id.to_string(),
-            message_id: message_id.to_string(),
+            conversation_id: conv_id.clone(),
+            message_id: msg_id.clone(),
             ordinal,
             content,
             done: false,
