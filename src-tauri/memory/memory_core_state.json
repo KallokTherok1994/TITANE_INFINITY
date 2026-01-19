@@ -2,6 +2,13 @@
   "snapshots": [],
   "logs": [
     {
+      "id": "ui-1768787623945-tdlrehpe",
+      "timestamp": 1768787623945,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
       "id": "ui-1768762208572-jxkd1ehw",
       "timestamp": 1768762208572,
       "level": "Error",
@@ -13993,13 +14000,6 @@
       "level": "Info",
       "module": "frontend.boot",
       "message": "main.tsx: boot handlers registered"
-    },
-    {
-      "id": "ui-1768757782711-4yrnvtsl",
-      "timestamp": 1768757782711,
-      "level": "Error",
-      "module": "frontend.fatal",
-      "message": "Erreur UI (non capturée): The object can not be found here. (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-EM6PUTC5.js?v=facd9e3b:16718:27)"
     }
   ],
   "events": [],
@@ -14010,7 +14010,7 @@
   "knowledge": [],
   "rituals": [],
   "metadata": {
-    "last_validation_ts": 1768762208586,
+    "last_validation_ts": 1768787624343,
     "last_compaction_ts": null
   }
 }
