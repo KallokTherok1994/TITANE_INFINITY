@@ -2,8 +2,10 @@
 // ╔══════════════════════════════════════════════════════════════════════════════╗
 // ║                        EMOTION ENGINE v13                                    ║
 // ║           Détection valence + intensité émotionnelle vocale                  ║
+// ║           Phase 4: Batch vectorized emotion processing                       ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
+pub mod batch_processor;
 pub mod detector;
 // pub mod analyzer;  // À implémenter (template dans TITANE_V13_INTEGRATION_GUIDE.md)
 pub mod adaptor;
