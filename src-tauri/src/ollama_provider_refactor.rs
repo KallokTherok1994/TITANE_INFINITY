@@ -6,6 +6,8 @@
 /// following the patterns established in Gemini provider.
 
 use crate::epic1_provider_refactor::{Provider, ProviderError, ProviderResult};
+use async_trait::async_trait;
+use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 
@@ -79,7 +81,7 @@ pub struct OllamaError {
 /// Refactored Ollama Provider with Result-based error handling
 pub struct OllamaProvider {
     config: OllamaConfig,
-    client: reqwest::Client,
+    client: Client,
     health_status: bool,
 }
 
@@ -89,7 +91,7 @@ impl OllamaProvider {
         // Validate configuration before creating provider
         Self::validate_config(&config)?;
 
-        let client = reqwest::Client::builder()
+        let client = Client::builder()
             .timeout(Duration::from_secs(config.timeout_secs))
             .build()
             .map_err(|e| ProviderError::ConnectionFailed(
@@ -218,8 +220,9 @@ impl OllamaProvider {
     }
 }
 
+#[async_trait]
 impl Provider for OllamaProvider {
-    fn send_message(&self, message: &str) -> ProviderResult<String> {
+    async fn send_message(&mut self, message: &str) -> ProviderResult<String> {
         // Validate input
         if message.is_empty() {
             return Err(ProviderError::InvalidResponse(
@@ -236,6 +239,7 @@ impl Provider for OllamaProvider {
             .post(&endpoint)
             .json(&request_payload)
             .send()
+            .await
             .map_err(|e| {
                 if e.is_timeout() {
                     ProviderError::RequestTimeout(
@@ -255,12 +259,12 @@ impl Provider for OllamaProvider {
         // Check HTTP status
         let status = response.status();
         if !status.is_success() {
-            let body = response.text().unwrap_or_default();
+            let body = response.text().await.unwrap_or_default();
             return Err(self.map_http_error(status.as_u16(), &body));
         }
 
         // Parse response
-        let response_text = response.text().map_err(|e| {
+        let response_text = response.text().await.map_err(|e| {
             ProviderError::InvalidResponse(
                 format!("Failed to read response body: {}", e)
             )
@@ -269,7 +273,7 @@ impl Provider for OllamaProvider {
         self.parse_response(&response_text)
     }
 
-    fn health_check(&self) -> ProviderResult<()> {
+    async fn health_check(&mut self) -> ProviderResult<()> {
         // Check if provider is marked as healthy
         if !self.health_status {
             return Err(ProviderError::InternalError(
@@ -278,7 +282,7 @@ impl Provider for OllamaProvider {
         }
 
         // Try to connect to Ollama API (with reduced timeout)
-        let health_client = reqwest::blocking::Client::builder()
+        let health_client = Client::builder()
             .timeout(Duration::from_secs(5))
             .build()
             .map_err(|e| ProviderError::ConnectionFailed(
@@ -289,6 +293,7 @@ impl Provider for OllamaProvider {
         let response = health_client
             .get(&health_url)
             .send()
+            .await
             .map_err(|e| ProviderError::ConnectionFailed(
                 format!("Health check failed: {}", e)
             ))?;
@@ -388,11 +393,11 @@ mod tests {
         assert_eq!(endpoint, "http://localhost:11434/api/generate");
     }
 
-    #[test]
-    fn test_ollama_empty_message() {
+    #[tokio::test]
+    async fn test_ollama_empty_message() {
         let config = OllamaConfig::default();
-        let provider = OllamaProvider::new(config).unwrap();
-        let result = provider.send_message("");
+        let mut provider = OllamaProvider::new(config).unwrap();
+        let result = provider.send_message("").await;
         assert!(result.is_err());
         
         if let Err(ProviderError::InvalidResponse(msg)) = result {
