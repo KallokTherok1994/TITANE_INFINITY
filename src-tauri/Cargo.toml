@@ -96,6 +96,9 @@ async-stream = "0.3.6"
 md5 = "0.8.0"
 tracing = "0.1.43"
 
+# Phase 4: LZ4 Compression for Memory Cache
+lz4 = "1.24"
+
 [features]
 default = ["custom-protocol", "mock"]
 custom-protocol = ["tauri/custom-protocol"]
