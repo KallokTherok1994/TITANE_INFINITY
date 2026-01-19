@@ -81,6 +81,12 @@ impl AgentSupervisor {
 mod tests {
     use super::*;
 
+    macro_rules! test_ok {
+        ($expr:expr) => {
+            $expr.expect(&format!("TEST FAILED at {}:{}", file!(), line!()))
+        };
+    }
+
     // ─────────────────────────────────────────────────────────────────────
     // Tests SupervisorStats
     // ─────────────────────────────────────────────────────────────────────
@@ -145,7 +151,7 @@ mod tests {
             unhealthy_agents: 1,
             restarts_performed: 0,
         };
-        let json = serde_json::to_string(&stats).expect("SupervisorStats should serialize to JSON");
+        let json = test_ok!(serde_json::to_string(&stats));
         assert!(json.contains("\"total_monitored\":5"));
         assert!(json.contains("\"healthy_agents\":4"));
     }
@@ -154,7 +160,7 @@ mod tests {
     fn test_supervisor_stats_deserialize() {
         let json = r#"{"total_monitored":10,"healthy_agents":8,"unhealthy_agents":2,"restarts_performed":3}"#;
         let stats: SupervisorStats =
-            serde_json::from_str(json).expect("SupervisorStats should deserialize from JSON");
+            test_ok!(serde_json::from_str(json));
         assert_eq!(stats.total_monitored, 10);
         assert_eq!(stats.healthy_agents, 8);
         assert_eq!(stats.unhealthy_agents, 2);
@@ -169,9 +175,9 @@ mod tests {
             unhealthy_agents: 3,
             restarts_performed: 7,
         };
-        let json = serde_json::to_string(&stats).expect("SupervisorStats should serialize to JSON");
+        let json = test_ok!(serde_json::to_string(&stats));
         let restored: SupervisorStats =
-            serde_json::from_str(&json).expect("SupervisorStats should deserialize from JSON");
+            test_ok!(serde_json::from_str(&json));
         assert_eq!(restored.total_monitored, 15);
         assert_eq!(restored.restarts_performed, 7);
     }
@@ -238,7 +244,7 @@ mod tests {
             last_check: 1234567890,
             success_rate: 0.85,
         };
-        let json = serde_json::to_string(&health).expect("AgentHealth should serialize to JSON");
+        let json = test_ok!(serde_json::to_string(&health));
         assert!(json.contains("agent1"));
         assert!(json.contains("\"is_healthy\":true"));
     }
@@ -248,7 +254,7 @@ mod tests {
         let json =
             r#"{"agent_id":"test_agent","is_healthy":false,"last_check":999,"success_rate":0.4}"#;
         let health: AgentHealth =
-            serde_json::from_str(json).expect("AgentHealth should deserialize from JSON");
+            test_ok!(serde_json::from_str(json));
         assert_eq!(health.agent_id.as_str(), "test_agent");
         assert!(!health.is_healthy);
         assert_eq!(health.success_rate, 0.4);
@@ -324,10 +330,9 @@ mod tests {
             CapabilitySet::new(),
             AgentContract::default_for_role(&AgentRole::Observer),
         );
-        registry
+        test_ok!(registry
             .register(agent)
-            .await
-            .expect("registering agent should succeed");
+            .await);
 
         let supervisor = AgentSupervisor::new(registry, 1000, true);
         let healths = supervisor.monitor_all().await;
@@ -380,10 +385,9 @@ mod tests {
                 CapabilitySet::new(),
                 AgentContract::default_for_role(&AgentRole::Observer),
             );
-            registry
+            test_ok!(registry
                 .register(agent)
-                .await
-                .expect("registering agent should succeed");
+                .await);
         }
 
         let supervisor = AgentSupervisor::new(registry, 1000, true);
