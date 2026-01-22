@@ -13,6 +13,23 @@ import { performanceMonitor, MetricCategory } from './performanceMonitor';
 const logger = createLogger('ContextWindowManager');
 
 /**
+ * Extended message type for OpenAI-like multimodal content
+ */
+interface ContentPart {
+  type: 'text' | 'image_url';
+  text?: string;
+  image_url?: { url: string };
+}
+
+/**
+ * Extended AIMessage that supports both TITAN format and OpenAI multimodal
+ */
+interface ExtendedAIMessage extends Omit<AIMessage, 'content'> {
+  content: string | ContentPart[];
+  name?: string;
+}
+
+/**
  * Token limits for different AI models
  * Updated 2026-01-07 with latest model specifications
  */
@@ -96,7 +113,7 @@ function estimateTokens(text: string): number {
 /**
  * Count tokens in a message
  */
-function countMessageTokens(message: AIMessage): number {
+function countMessageTokens(message: AIMessage | ExtendedAIMessage): number {
   let total = 0;
 
   // Role overhead (typically ~4 tokens)
@@ -106,10 +123,10 @@ function countMessageTokens(message: AIMessage): number {
   if (typeof message.content === 'string') {
     total += estimateTokens(message.content);
   } else if (Array.isArray(message.content)) {
-    for (const part of message.content) {
+    for (const part of message.content as ContentPart[]) {
       if (typeof part === 'string') {
         total += estimateTokens(part);
-      } else if (part.type === 'text') {
+      } else if (part.type === 'text' && part.text) {
         total += estimateTokens(part.text);
       } else if (part.type === 'image_url') {
         // Images: approximately 85-170 tokens per tile (512x512)
@@ -118,9 +135,10 @@ function countMessageTokens(message: AIMessage): number {
     }
   }
 
-  // Name field if present
-  if (message.name) {
-    total += estimateTokens(message.name);
+  // Name field if present (OpenAI format)
+  const extMsg = message as ExtendedAIMessage;
+  if (extMsg.name) {
+    total += estimateTokens(extMsg.name);
   }
 
   return total;
@@ -158,7 +176,7 @@ export function getModelLimit(model: string): number {
 /**
  * Summarize a batch of messages into a single message
  */
-function summarizeMessages(messages: AIMessage[]): AIMessage {
+function summarizeMessages(messages: (AIMessage | ExtendedAIMessage)[]): AIMessage {
   const contentParts: string[] = [];
 
   for (const msg of messages) {
@@ -166,8 +184,8 @@ function summarizeMessages(messages: AIMessage[]): AIMessage {
     if (typeof msg.content === 'string') {
       content = msg.content;
     } else if (Array.isArray(msg.content)) {
-      content = msg.content
-        .map(p => (typeof p === 'string' ? p : p.type === 'text' ? p.text : '[image]'))
+      content = (msg.content as ContentPart[])
+        .map(p => (typeof p === 'string' ? p : p.type === 'text' && p.text ? p.text : '[image]'))
         .join(' ');
     }
 

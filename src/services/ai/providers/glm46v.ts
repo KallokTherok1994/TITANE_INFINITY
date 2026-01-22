@@ -90,14 +90,15 @@ Lorsque tu vois une image, décris-la précisément et utilise cette information
         content: msg.content,
       });
     } else if (Array.isArray(msg.content)) {
-      // Handle multimodal content
-      const content = msg.content
+      // Handle multimodal content (OpenAI-like format)
+      type ContentPart = { type: 'text'; text: string } | { type: 'image_url'; image_url: { url: string } };
+      const content = (msg.content as ContentPart[])
         .map(part => {
           if (part.type === 'text') {
-            return { type: 'text', text: part.text };
+            return { type: 'text' as const, text: part.text };
           } else if (part.type === 'image_url') {
             return {
-              type: 'image_url',
+              type: 'image_url' as const,
               image_url: { url: part.image_url.url },
             };
           }
