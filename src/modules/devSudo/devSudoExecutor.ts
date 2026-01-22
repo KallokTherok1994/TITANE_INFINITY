@@ -10,6 +10,9 @@ import { logger } from '@/utils/logger';
 import type { DevSudoCommand, DevSudoAction, DevSudoResult } from './types';
 import { getHandlerForAction, getActionDomain } from './devSudoLazyLoader';
 
+// Re-export for tests
+export { getActionDomain } from './devSudoLazyLoader';
+
 // Import built-in handlers that don't need lazy loading
 import {
   handleFixDeps,

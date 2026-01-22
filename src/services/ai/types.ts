@@ -35,6 +35,7 @@ export type AIProviderName =
   | 'openai'
   | 'claude'
   | 'copilot' // ✨ v26.3 - GitHub Copilot provider
+  | 'glm46v' // ✨ v26.3 - GLM-4.6V local vision model
   | 'fallback'
   | 'emergency-fallback'
   | 'ultimate-fallback'

@@ -204,6 +204,55 @@ class AutoHealEngine {
     return autoHealError;
   }
 
+  /**
+   * Public API: Await heal action for an error
+   * Optionally trigger healing if not already triggered
+   */
+  async awaitHealAction(
+    error: AutoHealError,
+    options?: { triggerIfNeeded?: boolean }
+  ): Promise<AutoHealAction> {
+    const triggerIfNeeded = options?.triggerIfNeeded ?? true;
+
+    // Check if action already exists
+    const existingAction = this.actions.get(
+      `action_for_${error.id}`
+    ) || Array.from(this.actions.values()).find(
+      a => a.errorId === error.id
+    );
+
+    if (existingAction) {
+      return existingAction;
+    }
+
+    return new Promise<AutoHealAction>((resolve, reject) => {
+      // Set up waiter
+      this.healWaiters.set(error.id, { resolve, reject });
+
+      // Optionally trigger if not already healing
+      if (triggerIfNeeded && this.config.enabled) {
+        void this.triggerHeal(error);
+      }
+
+      // Timeout fallback (prevent infinite wait)
+      setTimeout(() => {
+        if (this.healWaiters.has(error.id)) {
+          this.healWaiters.delete(error.id);
+          resolve({
+            id: `timeout_${error.id}`,
+            errorId: error.id,
+            timestamp: Date.now(),
+            action: 'fallback',
+            target: error.source || 'unknown',
+            success: false,
+            duration: 0,
+            details: { reason: 'await_timeout' },
+          });
+        }
+      }, 5000);
+    });
+  }
+
   private async waitForHealAction(error: AutoHealError): Promise<AutoHealAction> {
     return new Promise<AutoHealAction>((resolve, reject) => {
       this.healWaiters.set(error.id, { resolve, reject });
