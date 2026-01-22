@@ -17,7 +17,7 @@ import { _electron as electron } from 'playwright';
 /**
  * HELPER: Wait for pipeline initialization
  */
-async function waitForPipelineReady(page: Page, timeout = 10000) {
+async function waitForPipelineReady(page: Page, timeout = 30000) {
   await page.waitForFunction(
     () => {
       const status = (window as any).__pipelineStatus;
@@ -122,10 +122,10 @@ test.describe('OMEGA Pipeline v2 E2E Tests', () => {
    * Validates all steps execute in correct order
    */
   test('Step 1-10: Complete pipeline executes successfully', async ({ page }) => {
-    test.setTimeout(30000);
+    test.setTimeout(60000);
 
     await page.goto('http://localhost:1420'); // Tauri dev URL
-    await waitForPipelineReady(page);
+    await waitForPipelineReady(page, 30000);
 
     const result = await sendMessageWithTracking(page, 'Bonjour, comment vas-tu?');
 

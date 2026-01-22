@@ -100,16 +100,13 @@ pm_run() {
         fi
     fi
 
-    if command -v corepack &> /dev/null; then
-        corepack pnpm run "$@"
-        return $?
-    fi
-    if command -v pnpm &> /dev/null; then
-        pnpm run "$@"
+    # Fallback to npm if pnpm is not available
+    if command -v npm &> /dev/null; then
+        npm run "$@"
         return $?
     fi
 
-    error "pnpm/corepack introuvable (pnpm-only)"
+    error "Aucun gestionnaire de paquets trouvé (npm/pnpm requis)"
 }
 
 pm_exec() {
@@ -124,16 +121,13 @@ pm_exec() {
         fi
     fi
 
-    if command -v corepack &> /dev/null; then
-        corepack pnpm exec "$@"
-        return $?
-    fi
-    if command -v pnpm &> /dev/null; then
-        pnpm exec "$@"
+    # Fallback to npx if pnpm is not available
+    if command -v npx &> /dev/null; then
+        npx "$@"
         return $?
     fi
 
-    error "pnpm/corepack introuvable (pnpm-only)"
+    error "Aucun exécuteur de paquets trouvé (npx/pnpm requis)"
 }
 
 # Print header

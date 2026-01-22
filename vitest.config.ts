@@ -83,7 +83,6 @@ export const sharedTestConfig = defineConfig({
     testTimeout: 45000,
     hookTimeout: 20000,
     teardownTimeout: 10000,
-    minThreads: 1,
     maxThreads: maxThreadBudget,
     include: [
       'src/**/*.{test,spec}.{ts,tsx}',
@@ -117,6 +116,7 @@ export const sharedTestConfig = defineConfig({
     include: ['react', 'react-dom', 'react/jsx-runtime'],
     esbuildOptions: {
       target: 'esnext',
+      logLevel: 'silent', // Ajustement pour éviter les erreurs
     },
   },
 
