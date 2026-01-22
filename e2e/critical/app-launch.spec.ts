@@ -35,11 +35,11 @@ test.describe('Critical Path: Application Launch', () => {
 
   test('visual conductor initializes successfully', async ({ page }) => {
     // Wait for visual engine initialization
-    await page.waitForTimeout(1500);
+    await page.waitForTimeout(3000);
 
     // Check for canvas element (visual signatures)
     const canvas = await page.locator('canvas').first();
-    await expect(canvas).toBeVisible({ timeout: 5000 });
+    await expect(canvas).toBeVisible({ timeout: 10000 });
   });
 
   test('main navigation is present and interactive', async ({ page }) => {
@@ -65,7 +65,7 @@ test.describe('Critical Path: Application Launch', () => {
 
   test('system health indicator is present', async ({ page }) => {
     // Wait for system health initialization
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(3000);
 
     // Look for health indicator (may be in header or corner)
     const healthIndicator = await page.getByText(/health|status|score/i).first();

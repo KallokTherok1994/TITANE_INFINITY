@@ -11,11 +11,9 @@ import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import { fileURLToPath } from 'node:url';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import { visualizer } from 'rollup-plugin-visualizer';
 import viteCompression from 'vite-plugin-compression';
 import { injectManifest } from 'workbox-build';
 import type { Plugin, ResolvedConfig } from 'vite';
-import type { RollupLog } from 'rollup';
 
 const ROOT_DIR = fileURLToPath(new URL('.', import.meta.url));
 
@@ -92,12 +90,13 @@ export default defineConfig({
       },
     }),
     tsconfigPaths(), // Auto-sync avec tsconfig.json paths
-    visualizer({
-      open: false,
-      filename: 'dist/stats.html',
-      gzipSize: true,
-      brotliSize: true,
-    }),
+    // visualizer({
+    //   open: false,
+    //   filename: 'dist/stats.html',
+    //   template: 'sunburst',
+    // }),
+    // Ajout d'une alternative potentielle ici
+    // Exemple : bundle-analyzer ou autre plugin compatible
     // P2-A: Brotli compression (-15% vs gzip)
     viteCompression({
       verbose: true,
@@ -135,11 +134,6 @@ export default defineConfig({
     exclude: ['better-sqlite3', 'sqlite3', 'bindings'],
     // 🚀 OPTIMIZATION v24.7.7: Don't force re-optimize if cache is valid
     force: false,
-    esbuildOptions: {
-      target: 'esnext',
-      // ✨ v21.5 Sprint 1: Drop logs/debugger in production optimized deps
-      drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
-    },
   },
 
   resolve: {
@@ -174,13 +168,10 @@ export default defineConfig({
     minify: 'esbuild',
 
     // ✨ v26.1 CONSOLE MONITOR: Drop console calls in production
-    esbuildOptions: {
-      drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
-    },
 
     rollupOptions: {
       // ✅ FIX: Ne PAS externaliser @tauri-apps/api/* en mode Tauri!
-      // Tauri v2 fournit ces modules directement, ils doivent être bundlés
+      // Tauri v2 fournit ces modules directement, ils doivent être bundés
       // Seuls les vrais modules Node.js backend doivent être external
       external: [
         'better-sqlite3',
@@ -199,7 +190,7 @@ export default defineConfig({
       // Avoid noisy warnings from known-safe/3rd-party bundles.
       // - EMPTY_BUNDLE "monitoring": typically caused by forced chunk naming + tree-shaking.
       // - EVAL from onnxruntime-web: upstream bundle uses eval; we don't patch vendored code here.
-      onwarn: (warning: RollupLog, warn: (warning: RollupLog) => void) => {
+      onwarn: (warning, warn) => {
         if (warning.code === 'EMPTY_BUNDLE' && warning.message.includes('"monitoring"')) {
           return;
         }
@@ -324,6 +315,18 @@ export default defineConfig({
               if (id.includes('orchestration')) return 'service-orchestration';
               if (id.includes('ai/')) return 'service-ai';
               if (id.includes('analytics')) return 'service-analytics';
+
+              // Regroupement des dépendances circulaires dans un chunk unique
+              if (
+                id.includes('service-ai') ||
+                id.includes('service-memory') ||
+                id.includes('service-cognitive') ||
+                id.includes('services-common') ||
+                id.includes('service-audio')
+              ) {
+                return 'service-core';
+              }
+
               return 'services-common';
             }
 
