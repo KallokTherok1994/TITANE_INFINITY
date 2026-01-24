@@ -3,12 +3,8 @@ import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import { availableParallelism, cpus } from 'os';
-
-const detectedCpuCount =
-  typeof availableParallelism === 'function' ? availableParallelism() : cpus().length;
-const maxThreadBudget = Math.min(4, Math.max(1, Math.floor(detectedCpuCount / 2)));
-const isVitest = process.env.VITEST === 'true';
+// This file is only consumed by Vitest; keep test-time aliasing deterministic.
+const isVitest = true;
 
 const baseAliasEntries = [
   { find: '@', replacement: resolve(__dirname, './src') },
@@ -33,20 +29,36 @@ const baseAliasEntries = [
     find: '@tauri-apps/api/core',
     replacement: resolve(__dirname, './tests/mocks/tauriCore.ts'),
   },
+  {
+    find: '@tauri-apps/api/event',
+    replacement: resolve(__dirname, './tests/mocks/tauriEvent.ts'),
+  },
 ];
 
 const vitestAliasEntries = isVitest
   ? [
       {
-        find: /\/src\/hooks\/useChatCore$/,
+        find: '@hooks/useChatCore',
         replacement: resolve(__dirname, './src/hooks/__mocks__/useChatCore.mock.ts'),
       },
       {
-        find: /\/src\/hooks\/useChatMemory$/,
+        find: '@hooks/useChatMemory',
         replacement: resolve(__dirname, './src/hooks/__mocks__/useChatMemory.mock.ts'),
       },
       {
-        find: /\/src\/services\/tts\/hybridTTS$/,
+        find: '@/services/tts/hybridTTS',
+        replacement: resolve(__dirname, './src/services/tts/__mocks__/hybridTTS.mock.ts'),
+      },
+      {
+        find: /\/src\/hooks\/useChatCore(\.ts)?(\?.*)?$/,
+        replacement: resolve(__dirname, './src/hooks/__mocks__/useChatCore.mock.ts'),
+      },
+      {
+        find: /\/src\/hooks\/useChatMemory(\.ts)?(\?.*)?$/,
+        replacement: resolve(__dirname, './src/hooks/__mocks__/useChatMemory.mock.ts'),
+      },
+      {
+        find: /\/src\/services\/tts\/hybridTTS(\.ts)?(\?.*)?$/,
         replacement: resolve(__dirname, './src/services/tts/__mocks__/hybridTTS.mock.ts'),
       },
     ]
@@ -75,6 +87,10 @@ export const sharedTestConfig = defineConfig({
     name: 'core',
     globals: true,
     environment: 'happy-dom',
+    // Memory stability: avoid forking many workers; run files sequentially.
+    pool: 'forks',
+    maxWorkers: 1,
+    fileParallelism: false,
     setupFiles: [
       './src/setupTests.ts',
       './src/test/setup.ts',
@@ -83,13 +99,24 @@ export const sharedTestConfig = defineConfig({
     testTimeout: 45000,
     hookTimeout: 20000,
     teardownTimeout: 10000,
-    maxThreads: maxThreadBudget,
+    // maxThreads removed - not supported in Vitest 4.x, use pool options instead
     include: [
       'src/**/*.{test,spec}.{ts,tsx}',
       'tests/unit/**/*.{test,spec}.{ts,tsx}',
       'tests/integration/**/*.{test,spec}.{ts,tsx}',
     ],
-    exclude: ['node_modules', 'dist', 'src-tauri'],
+    exclude: [
+      'node_modules',
+      'dist',
+      'src-tauri',
+
+      // E2E Vitest suite is run explicitly via `pnpm run test:e2e:vitest`.
+      'src/tests/e2e/**',
+
+      // Browser/Perf suite is run explicitly via `pnpm run test:browser`.
+      'src/tests/browser/**',
+      '**/*.perf.test.{ts,tsx}',
+    ],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
@@ -121,7 +148,9 @@ export const sharedTestConfig = defineConfig({
   },
 
   resolve: {
-    alias: [...baseAliasEntries, ...vitestAliasEntries],
+    // IMPORTANT: les alias les plus spécifiques doivent venir en premier.
+    // Sinon, les alias génériques (ex: '@' ou '@hooks') capturent tout et les mocks ne s'appliquent jamais.
+    alias: [...vitestAliasEntries, ...baseAliasEntries],
   },
 
   build: {

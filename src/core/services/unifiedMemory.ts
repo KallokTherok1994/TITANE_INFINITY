@@ -15,6 +15,8 @@
  */
 
 const isDev = import.meta.env.DEV;
+const isTestEnv = import.meta.env.MODE === 'test' || Boolean(import.meta.env.VITEST);
+const shouldLog = isDev && !isTestEnv;
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES UNIFIED MEMORY
@@ -134,7 +136,7 @@ class UnifiedMemorySystem {
 
   constructor() {
     // Lazy auto-cleanup start
-    console.log('[UnifiedMemory] Initialized (STM/MTM/LTM)');
+    shouldLog && console.log('[UnifiedMemory] Initialized (STM/MTM/LTM)');
   }
 
   private ensureAutoCleanupStarted(): void {
@@ -221,7 +223,8 @@ class UnifiedMemorySystem {
 
       this.updateStats();
       isDev &&
-        console.log(`[UnifiedMemory] Stored (ChatEngine) in ${entry.tier}:`, entry.id);
+        shouldLog &&
+          console.log(`[UnifiedMemory] Stored (ChatEngine) in ${entry.tier}:`, entry.id);
       return entry.id;
     }
 
@@ -510,7 +513,8 @@ class UnifiedMemorySystem {
     if (isDev) {
       const stmCleaned = stmBefore - this.stm.length;
       const mtmCleaned = mtmBefore - this.mtm.size;
-      console.log(`[UnifiedMemory] Cleanup: STM -${stmCleaned}, MTM -${mtmCleaned}`);
+      shouldLog &&
+        console.log(`[UnifiedMemory] Cleanup: STM -${stmCleaned}, MTM -${mtmCleaned}`);
     }
   }
 

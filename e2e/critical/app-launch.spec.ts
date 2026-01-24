@@ -64,15 +64,22 @@ test.describe('Critical Path: Application Launch', () => {
   });
 
   test('system health indicator is present', async ({ page }) => {
+    // Close boot beacon first
+    const closeBeacon = page.getByRole('button', { name: /Fermer diagnostic/i });
+    if (await closeBeacon.isVisible()) {
+      await closeBeacon.click();
+      await page.waitForTimeout(300);
+    }
+
     // Wait for system health initialization
     await page.waitForTimeout(3000);
 
-    // Look for health indicator (may be in header or corner)
-    const healthIndicator = await page.getByText(/health|status|score/i).first();
+    // Look for Console Monitor or error indicators (text may be split across elements)
+    const consoleMonitor = await page.locator('text=Console Monitor').count();
+    const errMin = await page.locator('text=/\\d+ err\\/min/').count();
 
-    // Should exist somewhere on page
-    const count = await page.getByText(/health|status|score/i).count();
-    expect(count).toBeGreaterThan(0);
+    // Should have at least Console Monitor visible
+    expect(consoleMonitor + errMin).toBeGreaterThan(0);
   });
 
   test('no memory leaks after 10 seconds', async ({ page }) => {
@@ -123,6 +130,13 @@ test.describe('Critical Path: Application Launch', () => {
   });
 
   test('reactivity test: state updates propagate', async ({ page }) => {
+    // Close boot beacon if present (it intercepts clicks)
+    const closeBeacon = page.getByRole('button', { name: /Fermer diagnostic/i });
+    if (await closeBeacon.isVisible()) {
+      await closeBeacon.click();
+      await page.waitForTimeout(300);
+    }
+
     // Find any interactive element (button, input, toggle)
     const interactiveElement = await page
       .locator('button, input, [role="button"]')

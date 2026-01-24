@@ -166,10 +166,10 @@ describe('devSudoPatterns', () => {
       expect(getActionDomain('diagnostic' as DevSudoAction)).toBe('core');
     });
 
-    it.skip('should handle all domains', () => {
-      // SKIPPED: Not all domains have patterns defined in DEV_SUDO_PATTERNS
-      // Domain mapping is done in devSudoLazyLoader.ts, not devSudoPatterns.ts
-      const domains = [
+    it('should map every action to a known domain', () => {
+      // Domain mapping lives in devSudoLazyLoader.ts; patterns evolve over time.
+      // This test keeps coverage without assuming every domain must have patterns.
+      const allowedDomains = new Set([
         'core',
         'ai-local-models',
         'ai-training',
@@ -187,15 +187,12 @@ describe('devSudoPatterns', () => {
         'backend',
         'ide',
         'extended',
-      ];
+      ]);
 
-      domains.forEach(domain => {
-        // Each domain should have at least one action
-        const actions = Object.keys(DEV_SUDO_PATTERNS) as DevSudoAction[];
-        const domainActions = actions.filter(
-          action => getActionDomain(action) === domain
-        );
-        expect(domainActions.length).toBeGreaterThan(0);
+      const actions = Object.keys(DEV_SUDO_PATTERNS) as DevSudoAction[];
+      actions.forEach(action => {
+        const domain = getActionDomain(action);
+        expect(allowedDomains.has(domain)).toBe(true);
       });
     });
   });

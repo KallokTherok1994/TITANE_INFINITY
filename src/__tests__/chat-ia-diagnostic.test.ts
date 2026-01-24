@@ -45,6 +45,15 @@ vi.mock('@hooks/useChatMemory', () => ({
   useChatMemory: () => mockMemoryState,
 }));
 
+// Ensure unit tests don't hit the backend chat service path.
+vi.mock('@/services/api/chat', () => ({
+  chatService: {
+    sendMessageLegacy: vi.fn(async () => {
+      throw new Error('Mock backend unavailable');
+    }),
+  },
+}));
+
 describe('Chat IA Diagnostic Tests - Bug Resolution Validation', () => {
   beforeEach(() => {
     vi.clearAllMocks();

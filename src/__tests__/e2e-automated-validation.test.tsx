@@ -24,6 +24,16 @@ import { useChat } from '../hooks/useChat';
 import { MessageList } from '../components/chat/MessageList';
 import Chat from '../ui/pages/Chat';
 
+// In Vitest we don't exercise the real Tauri-backend chat service. For E2E-in-unit tests,
+// force the hook to use its local streaming/generate fallback path.
+vi.mock('@/services/api/chat', () => ({
+  chatService: {
+    sendMessageLegacy: vi.fn(async () => {
+      throw new Error('Mock backend unavailable');
+    }),
+  },
+}));
+
 const createMockResponse = (content = 'Assistant response'): ChatEngineResponse => ({
   content,
   provider: 'titane-local',

@@ -16,13 +16,13 @@ test.describe('Critical Path: Chat Interaction', () => {
   });
 
   test('chat interface is accessible', async ({ page }) => {
-    // Look for chat input (textarea, input, contenteditable)
+    // Look for chat input (textarea, input, contenteditable, or searchbox)
     const chatInput = await page
-      .locator('textarea, input[type="text"], [contenteditable="true"]')
+      .locator('textarea, input[type="text"], [contenteditable="true"], [role="searchbox"]')
       .first();
 
-    // Should have at least one input field
-    const inputCount = await page.locator('textarea, input[type="text"]').count();
+    // Should have at least one input field (including searchbox)
+    const inputCount = await page.locator('textarea, input[type="text"], [role="searchbox"]').count();
     expect(inputCount).toBeGreaterThan(0);
   });
 
@@ -54,6 +54,13 @@ test.describe('Critical Path: Chat Interaction', () => {
   });
 
   test('message appears in chat history after sending', async ({ page }) => {
+    // Close boot beacon if present to avoid click interception
+    const closeBeacon = page.getByRole('button', { name: /Fermer diagnostic/i });
+    if (await closeBeacon.isVisible()) {
+      await closeBeacon.click();
+      await page.waitForTimeout(300);
+    }
+
     // Find input and button
     const chatInput = await page.locator('textarea, [contenteditable="true"]').first();
     const sendButton = await page

@@ -36,7 +36,9 @@
     "test:coverage:check": "bash scripts/verify/verify-coverage.sh",
     "test:coverage:report": "cross-env NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run --coverage && echo 'Open coverage/index.html in browser'",
     "test:e2e": "playwright test",
+    "test:e2e:playwright": "playwright test",
     "test:e2e:vitest": "cross-env RUN_E2E_TESTS=1 NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run src/tests/e2e/titane_e2e.test.ts",
+    "test:e2e:wdio": "wdio run wdio.conf.js",
     "test:browser": "vitest --config vitest.browser.config.ts --run",
     "test:browser:ui": "vitest --config vitest.browser.config.ts --ui",
     "test:browser:watch": "vitest --config vitest.browser.config.ts",
@@ -48,6 +50,7 @@
     "test:compliance": "cross-env NODE_OPTIONS='--max-old-space-size=8192 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run src/__tests__/compliance",
     "test:omega": "cross-env NODE_OPTIONS='--max-old-space-size=8192 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run src/__tests__/*omega*.test.ts",
     "test:all": "cross-env NODE_OPTIONS='--max-old-space-size=8192' pnpm run test && pnpm run test:rust && pnpm run test:architecture && pnpm run test:compliance",
+    "test:all:full": "pnpm run test:all && pnpm run test:e2e:playwright && pnpm run test:e2e:wdio",
     "audit": "pnpm audit && cd src-tauri && cargo audit",
     "audit:master": "./scripts/audit/00-master-audit.sh",
     "audit:security": "./scripts/audit/01-security-audit.sh",
@@ -81,7 +84,16 @@
     "cline:install": "bash .clinerules/install-hooks.sh",
     "cline:test-hooks": "bash -c 'echo Testing hooks... && .clinerules/hooks/TaskStart < tests/fixtures/hook-test-input.json'",
     "cline:logs": "tail -f .clinerules/logs/operations.log",
-    "cline:verify": "bash -c 'for hook in TaskStart PreToolUse PostToolUse UserPromptSubmit; do echo \"Testing $hook...\"; test -x .clinerules/hooks/$hook && echo \"✅ $hook\" || echo \"❌ $hook\"; done'"
+    "cline:verify": "bash -c 'for hook in TaskStart PreToolUse PostToolUse UserPromptSubmit; do echo \"Testing $hook...\"; test -x .clinerules/hooks/$hook && echo \"✅ $hook\" || echo \"❌ $hook\"; done'",
+    "registry:log": "node scripts/registry/log-event.js",
+    "registry:snapshot": "node scripts/registry/rebuild-snapshot.js",
+    "registry:dashboard": "node scripts/registry/render-dashboard.js",
+    "registry:cycle:start": "node scripts/registry/start-cycle.js",
+    "registry:cycle:close": "node scripts/registry/close-cycle.js",
+    "verify:registry:sync": "node scripts/verify/registry-sync.js",
+    "verify:registry:integrity": "node scripts/verify/registry-integrity.js",
+    "verify:registry:quality": "node scripts/verify/registry-quality.js",
+    "verify:registry": "pnpm -s verify:registry:sync && pnpm -s verify:registry:integrity && pnpm -s verify:registry:quality"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.90.12",
@@ -135,16 +147,17 @@
     "@types/better-sqlite3": "^7.6.12",
     "@types/clipboardy": "^2.0.4",
     "@types/node": "^25.0.3",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.6",
     "@types/react-router-dom": "^5.3.3",
     "@types/react-window": "^1.8.8",
     "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^7.13.1",
     "@typescript-eslint/parser": "^7.13.1",
     "@vitejs/plugin-react": "^4.3.1",
-    "@vitest/browser": "^4.0.16",
-    "@vitest/browser-playwright": "^4.0.16",
+    "@vitest/browser": "^4.0.18",
+    "@vitest/browser-playwright": "^4.0.18",
+    "webdriverio": "^8.0.0",
     "@vitest/coverage-v8": "^4.0.16",
     "@vitest/ui": "^4.0.16",
     "autoprefixer": "^10.4.16",
@@ -166,8 +179,8 @@
     "playwright": "^1.57.0",
     "postcss": "^8.4.31",
     "prettier": "^3.7.4",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
     "react-window": "^2.2.3",
     "rollup-plugin-visualizer": "^6.0.5",
     "storybook": "^10.1.11",
@@ -190,7 +203,10 @@
     ],
     "overrides": {
       "mdast-util-to-hast": "^13.2.1"
-    }
+    },
+    "ignoredBuiltDependencies": [
+      "electron"
+    ]
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [

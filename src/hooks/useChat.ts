@@ -15,44 +15,177 @@
 import { useCallback, useEffect, useRef, useMemo, useState } from 'react';
 import { useChatCore, type UseChatCoreReturn } from '@hooks/useChatCore';
 import { useChatMemory } from '@hooks/useChatMemory';
-import { type ChatMode, type ChatEngineResponse } from '../services/ai';
-import type { AIMessage, AIProviderName } from '../services/ai/types';
+import type { ChatMode } from '@/services/ai/chatTypes';
+import type { AIMessage, AIProviderName, AIResponse } from '@/services/ai/types';
 import type { HarmonizedMessage } from '@/types/cognitiveKernel';
 import { hybridTTS } from '@/services/tts/hybridTTS';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
 // ✨ v24.2.1 - Streaming Debounce for Performance
 import { createStreamingBatcher } from '@/utils/streamingDebounce';
-import {
-  chatService,
-  type ChatMessage as BackendChatMessage,
-  type ChatResponse,
-  type StreamConfig,
-} from '../services/api';
-import { XP } from '../core/experience/XP_ENGINE';
-import { awardExperience } from '../services/experienceService';
+import type {
+  ChatMessage as BackendChatMessage,
+  ChatResponse,
+  StreamConfig,
+} from '@/services/api/chat';
 import { XPSource, XP_REWARDS } from '../types/experience';
-import { userPreferencesEngine } from '../services/userPreferencesEngine';
 
-// ✨ v22Ω - Cognitive Kernel Integration
-import { cognitiveKernel } from '@/services/ai/cognitiveKernel';
+let _chatServicePromise: Promise<{
+  sendMessageLegacy: (
+    messages: BackendChatMessage[],
+    config: StreamConfig
+  ) => Promise<ChatResponse>;
+}> | null = null;
 
-// ✨ v∞.20.0 - Camera Chat Integration (Super Prompt #3)
-import { handleCameraInChat } from '@/modules/camera/cameraChatIntegration';
+const loadChatService = async () => {
+  if (!_chatServicePromise) {
+    _chatServicePromise = import('@/services/api/chat').then(m => m.chatService);
+  }
+  return _chatServicePromise;
+};
+
 import { useVisionStore } from '@/stores/useVisionStore';
 
-// ✨ v∞.21.0 - DEV-SUDO Mode Integration (Super Prompt FULL UNLOCK)
-import { handleDevSudoInChat } from '@/modules/devSudo/devSudoIntegration';
+let _cognitiveKernelPromise: Promise<{
+  harmonizeChatMessages: (messages: unknown) => unknown;
+  harmonizeError: (error: unknown) => { message: string; type: string; recovery: string };
+}> | null = null;
+
+const loadCognitiveKernel = async () => {
+  if (!_cognitiveKernelPromise) {
+    _cognitiveKernelPromise = import('@/services/ai/cognitiveKernel').then(m => {
+      const kernel = (m as any).cognitiveKernel as any;
+      return {
+        harmonizeChatMessages: kernel.harmonizeChatMessages.bind(kernel),
+        harmonizeError: kernel.harmonizeError.bind(kernel),
+      };
+    });
+  }
+  return _cognitiveKernelPromise;
+};
+
+let _userPreferencesEnginePromise: Promise<{
+  generateContextForAI: () => unknown;
+  recordInteraction: (input: string, output: string) => void;
+}> | null = null;
+
+const loadUserPreferencesEngine = async () => {
+  if (!_userPreferencesEnginePromise) {
+    _userPreferencesEnginePromise = import('@/services/userPreferencesEngine').then(m => {
+      const engine = (m as any).userPreferencesEngine as any;
+      return {
+        generateContextForAI: engine.generateContextForAI.bind(engine),
+        recordInteraction: engine.recordInteraction.bind(engine),
+      };
+    });
+  }
+  return _userPreferencesEnginePromise;
+};
+
+let _experienceToolsPromise: Promise<{
+  gainXP: (amount: number, source?: string, description?: string) => void;
+  awardExperience: (
+    domainId: string,
+    amount: number,
+    source: XPSource,
+    metadata?: Record<string, unknown>
+  ) => Promise<void>;
+}> | null = null;
+
+const loadExperienceTools = async () => {
+  if (!_experienceToolsPromise) {
+    _experienceToolsPromise = Promise.all([
+      import('@/core/experience/XP_ENGINE'),
+      import('@/services/experienceService'),
+    ]).then(([xp, svc]) => {
+      const XP = (xp as any).XP as any;
+      const awardExperience = (svc as any).awardExperience as any;
+      return {
+        gainXP: XP.gain.bind(XP),
+        awardExperience,
+      };
+    });
+  }
+  return _experienceToolsPromise;
+};
+
+let _devSudoPromise: Promise<(content: string) => Promise<{ handled: boolean }>> | null =
+  null;
+
+const loadDevSudoIntegration = async () => {
+  if (!_devSudoPromise) {
+    _devSudoPromise = import('@/modules/devSudo/devSudoIntegration').then(
+      m => (m as any).handleDevSudoInChat
+    );
+  }
+  return _devSudoPromise;
+};
+
+let _cameraPromise: Promise<
+  (content: string, visionStore: unknown) => Promise<{ handled: boolean }>
+> | null = null;
+
+const loadCameraIntegration = async () => {
+  if (!_cameraPromise) {
+    _cameraPromise = import('@/modules/camera/cameraChatIntegration').then(
+      m => (m as any).handleCameraInChat
+    );
+  }
+  return _cameraPromise;
+};
 
 // ✨ v∞.24.2 - Production-Safe Logging
 import { chatLogger } from '@/utils/chatLogger';
 
 // ✨ v24.3.0 - Cloud Providers Availability Check
-import { openaiProvider } from '@/services/ai/providers/openai';
 import { UI_TIMEOUTS, getAdaptiveUITimeout } from '@/config/aiTimeouts.config'; // v22Ω: Centralized timeouts
-import { geminiProvider } from '@/services/ai/providers/gemini';
-import { claudeProvider } from '@/services/ai/providers/claude';
+
+let _cloudProvidersPromise: Promise<{
+  openaiProvider: { isAvailable: () => Promise<boolean> };
+  geminiProvider: { isAvailable: () => Promise<boolean> };
+  claudeProvider: { isAvailable: () => Promise<boolean> };
+}> | null = null;
+
+const loadCloudProviders = async () => {
+  if (!_cloudProvidersPromise) {
+    _cloudProvidersPromise = Promise.all([
+      import('@/services/ai/providers/openai'),
+      import('@/services/ai/providers/gemini'),
+      import('@/services/ai/providers/claude'),
+    ]).then(([openai, gemini, claude]) => ({
+      openaiProvider: openai.openaiProvider,
+      geminiProvider: gemini.geminiProvider,
+      claudeProvider: claude.claudeProvider,
+    }));
+  }
+  return _cloudProvidersPromise;
+};
+
+type ChatEngineResponse = AIResponse & {
+  mode: ChatMode;
+  contextUsed: string[];
+  suggestions?: string[];
+  omegaMetadata?: {
+    pipelineSteps: string[];
+    validationScore: number;
+    autoHealed: boolean;
+    failureHandled: boolean;
+    processingTime: number;
+    constitutionalProtection?: string;
+    cacheHit?: boolean;
+    cacheAge?: number;
+    streamSimulated?: boolean;
+  };
+};
 
 type MaybeAIMessage = Partial<AIMessage> | null | undefined;
+
+const COGNITIVE_KERNEL_FALLBACK = {
+  harmonizeChatMessages: (messages: unknown) => messages,
+  harmonizeError: (error: unknown) => {
+    const message = error instanceof Error ? error.message : String(error);
+    return { message, type: 'unknown', recovery: 'retry' };
+  },
+};
 
 // ✨ v24.3.0 - Cloud Providers Integration (OpenAI/Gemini/Anthropic)
 // ✨ v26.3.0 - Added GitHub Copilot provider
@@ -235,14 +368,11 @@ interface UseChatReturn {
   clearChat: () => void;
   setMode: (mode: ChatMode) => void;
   setInput: (value: string) => void;
-  handleSend: () => void;
-  restoreFromVault: () => void;
 
   // OMNIS Actions
   getDebugInfo: () => object;
   exportChat: () => string;
   importChat: (data: string) => boolean;
-
   // UI Integrity
   uiIntegrity: {
     version: number;
@@ -266,6 +396,27 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     return newId;
   });
 
+  // Cognitive Kernel: utilisé dans des chemins sync (init + applyMessagesSafely).
+  // Fallback sync + lazy-load (remplacement du ref quand prêt).
+  const cognitiveKernelRef = useRef(COGNITIVE_KERNEL_FALLBACK);
+
+  useEffect(() => {
+    let cancelled = false;
+    void loadCognitiveKernel()
+      .then(kernel => {
+        if (!cancelled) {
+          cognitiveKernelRef.current = kernel;
+        }
+      })
+      .catch(error => {
+        chatLogger.debug('CognitiveKernel lazy-load failed (using fallback)', { error });
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   // OMEGA FIX: Charger les messages depuis localStorage au démarrage pour éviter le flash
   const [messages, setMessages] = useState<AIMessage[]>(() => {
     if (typeof window === 'undefined') return [];
@@ -282,8 +433,10 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           );
 
           // 🧠 NOUVEAU v22Ω: Harmoniser messages avec Cognitive Kernel
-          const harmonized = cognitiveKernel.harmonizeChatMessages(memory.messages);
-          return harmonized;
+          const harmonized = cognitiveKernelRef.current.harmonizeChatMessages(
+            memory.messages
+          );
+          return Array.isArray(harmonized) ? (harmonized as AIMessage[]) : [];
         }
       }
     } catch (e) {
@@ -385,6 +538,15 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   // ✨ v24.3.7 - Optimized provider availability with Promise.allSettled + individual timeouts
   // 🔒 v26.2.1 - CRITICAL FIX H1: Race condition protection with guard
   useEffect(() => {
+    // Unit tests: skip provider availability checks (these call Tauri/secureInvoke).
+    // Keeping this isolated avoids noisy logs and potential flakiness.
+    const IS_TEST_ENV =
+      import.meta.env.MODE === 'test' ||
+      (typeof process !== 'undefined' && Boolean(process.env.VITEST));
+    if (IS_TEST_ENV) {
+      return;
+    }
+
     // ✨ v24.3.7: Helper to add timeout to any promise
     const withTimeout = <T>(
       promise: Promise<T>,
@@ -410,6 +572,9 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
       checkInProgress = true;
       try {
+        const { openaiProvider, geminiProvider, claudeProvider } =
+          await loadCloudProviders();
+
         // ✨ v24.3.7: Use Promise.allSettled with individual timeouts - no single slow provider blocks others
         const results = await Promise.allSettled([
           withTimeout(openaiProvider.isAvailable(), PROVIDER_CHECK_TIMEOUT, false),
@@ -577,9 +742,9 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
       // 🧠 NOUVEAU v22Ω: Harmoniser les messages avec Cognitive Kernel
       const harmonizedNormalized = hasMessages
-        ? cognitiveKernel.harmonizeChatMessages(
+        ? (cognitiveKernelRef.current.harmonizeChatMessages(
             normalized as Array<Partial<HarmonizedMessage>>
-          )
+          ) as typeof normalized)
         : normalized;
 
       if (!allowEmpty && !hasMessages && stateVaultRef.current.stable.length > 0) {
@@ -706,8 +871,10 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         !isLoadingRef.current &&
         timeSinceLastOp >= COOLDOWN_MS
       ) {
-        chatLogger.info('📭 All sources empty and cooldown passed, safe to reset');
-        applyMessagesSafely([], 'memory-sync-empty', { allowEmpty: true });
+        // Déjà vide partout (state/ref/vault) → ne pas forcer un setState([]) redondant.
+        // Important: évite une boucle de rendu si `messagesForMode` change de référence
+        // (ex: mocks tests) tout en restant vide.
+        chatLogger.info('📭 All sources empty and cooldown passed (no-op: already empty)');
       }
       return;
     }
@@ -752,6 +919,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       // ✨ v∞.21.0 - DEV-SUDO Mode Integration (Super Prompt FULL UNLOCK)
       // Vérifier commandes développeur en PRIORITÉ ABSOLUE
       try {
+        const handleDevSudoInChat = await loadDevSudoIntegration();
         const devSudoResult = await handleDevSudoInChat(content.trim());
 
         if (devSudoResult.handled) {
@@ -798,6 +966,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       // Vérifier commande caméra AVANT envoi au provider IA
       try {
         const visionStore = useVisionStore.getState();
+        const handleCameraInChat = await loadCameraIntegration();
         const cameraResult = await handleCameraInChat(content.trim(), visionStore);
 
         if (cameraResult.handled) {
@@ -1239,7 +1408,9 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         }));
 
         // ═══ INJECT USER PREFERENCES CONTEXT ═══
-        const preferencesContext = userPreferencesEngine.generateContextForAI();
+        const preferencesContext = (
+          await loadUserPreferencesEngine()
+        ).generateContextForAI();
         if (preferencesContext && backendHistory.length > 0) {
           // Ajouter le contexte au premier message utilisateur
           const firstUserMsgIndex = backendHistory.findIndex(m => m.role === 'user');
@@ -1289,7 +1460,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
               attemptedProviders.push(candidate);
 
               const response = await withTimeout(
-                chatService.sendMessageLegacy(backendHistory, {
+                (await loadChatService()).sendMessageLegacy(backendHistory, {
                   provider: candidate,
                 }),
                 `legacy:${candidate}`
@@ -1577,7 +1748,10 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
 
           // ═══ RECORD INTERACTION FOR PREFERENCES LEARNING ═══
           try {
-            userPreferencesEngine.recordInteraction(cleanMessage, finalContent);
+            (await loadUserPreferencesEngine()).recordInteraction(
+              cleanMessage,
+              finalContent
+            );
           } catch (prefError) {
             chatLogger.warn('⚠️ Preferences recording failed', { error: prefError });
           }
@@ -1585,8 +1759,10 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
           // ═══ AWARD XP FOR SUCCESSFUL MESSAGE ═══
           // Système XP global + domaines spécifiques
           try {
+            const { gainXP, awardExperience } = await loadExperienceTools();
+
             // XP Global Engine (+5 XP pour le moteur global)
-            XP.gain(
+            gainXP(
               XP_REWARDS.CHAT_MESSAGE,
               'chat_message',
               `Message envoyé: ${cleanMessage.substring(0, 50)}...`
@@ -1634,7 +1810,7 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
         console.error('[Chat] Engine pipeline error:', error);
 
         // 🧠 NOUVEAU v22Ω: Harmoniser l'erreur avec Cognitive Kernel
-        const harmonizedError = cognitiveKernel.harmonizeError(error);
+        const harmonizedError = cognitiveKernelRef.current.harmonizeError(error);
 
         const fallbackResponse: AIMessage = {
           role: 'assistant',

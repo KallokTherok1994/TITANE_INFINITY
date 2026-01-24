@@ -1,0 +1,179 @@
+{
+  "$schema": "./schemas/snapshot.schema.json",
+  "version": "1.0.0",
+  "lastUpdate": "2026-01-24T01:50:13.261Z",
+  "eventCount": 5,
+  "suites": {
+    "vitest-core": {
+      "id": "vitest-core",
+      "name": "Vitest Core",
+      "command": "pnpm test",
+      "config": "vitest.config.ts",
+      "status": "active",
+      "lastRun": null,
+      "lastResult": null
+    },
+    "vitest-unit-coverage": {
+      "id": "vitest-unit-coverage",
+      "name": "Unit Coverage",
+      "command": "pnpm test:coverage:unit",
+      "config": "vitest.unit.config.ts",
+      "thresholds": {
+        "statements": 80,
+        "branches": 80,
+        "functions": 80,
+        "lines": 80
+      },
+      "status": "active"
+    },
+    "vitest-integration-coverage": {
+      "id": "vitest-integration-coverage",
+      "name": "Integration Coverage",
+      "command": "pnpm test:coverage:integration",
+      "config": "vitest.integration.config.ts",
+      "thresholds": {
+        "statements": 70,
+        "branches": 70,
+        "functions": 70,
+        "lines": 70
+      },
+      "status": "active"
+    },
+    "vitest-architecture": {
+      "id": "vitest-architecture",
+      "name": "Architecture Tests",
+      "command": "pnpm test:architecture",
+      "config": "vitest.config.ts",
+      "status": "active"
+    },
+    "vitest-compliance": {
+      "id": "vitest-compliance",
+      "name": "Compliance Tests",
+      "command": "pnpm test:compliance",
+      "config": "vitest.config.ts",
+      "status": "active"
+    },
+    "vitest-omega": {
+      "id": "vitest-omega",
+      "name": "Omega Tests",
+      "command": "pnpm test:omega",
+      "config": "vitest.config.ts",
+      "status": "active"
+    },
+    "vitest-browser": {
+      "id": "vitest-browser",
+      "name": "Browser Tests (WebGL)",
+      "command": "pnpm test:browser",
+      "config": "vitest.browser.config.ts",
+      "status": "active"
+    },
+    "vitest-e2e": {
+      "id": "vitest-e2e",
+      "name": "E2E Vitest (Tauri)",
+      "command": "pnpm test:e2e:vitest",
+      "config": "vitest.config.ts",
+      "env": {
+        "RUN_E2E_TESTS": "1"
+      },
+      "status": "conditional"
+    },
+    "playwright-e2e": {
+      "id": "playwright-e2e",
+      "name": "Playwright E2E",
+      "command": "pnpm test:e2e:playwright",
+      "config": "playwright.config.ts",
+      "status": "active",
+      "note": "Canonical E2E command. 'pnpm test:e2e' is alias."
+    },
+    "wdio-e2e": {
+      "id": "wdio-e2e",
+      "name": "WebdriverIO E2E",
+      "command": "pnpm test:e2e:wdio",
+      "config": "wdio.conf.js",
+      "status": "active",
+      "note": "Officially included since 2026-01-23."
+    },
+    "rust-cargo-test": {
+      "id": "rust-cargo-test",
+      "name": "Rust Tests",
+      "command": "pnpm test:rust",
+      "config": "src-tauri/Cargo.toml",
+      "status": "active"
+    }
+  },
+  "gates": {
+    "GATE_P0_1_SECRETS": {
+      "workflow": "p0-1-secrets-guard.yml",
+      "blocking": true
+    },
+    "GATE_P0_2_SURFACE": {
+      "workflow": "p0-2-surface-guard.yml",
+      "blocking": true
+    },
+    "GATE_P2_CONTRACT": {
+      "workflow": "p2-contract-guard.yml",
+      "blocking": true
+    },
+    "GATE_P3_BUILD": {
+      "workflow": "p3-build-guard.yml",
+      "blocking": true
+    },
+    "GATE_P3_REPRO": {
+      "workflow": "stable-build.yml",
+      "blocking": true
+    },
+    "GATE_P4_CONSTITUTION": {
+      "workflow": "p4-constitution-audit.yml",
+      "blocking": true
+    },
+    "GATE_REGISTRY": {
+      "workflow": "registry-guard.yml",
+      "blocking": true,
+      "note": "Added 2026-01-23 - Ensures registry sync with code changes"
+    }
+  },
+  "combined": {
+    "test-all": {
+      "command": "pnpm test:all",
+      "includes": [
+        "vitest-core",
+        "rust-cargo-test",
+        "vitest-architecture",
+        "vitest-compliance"
+      ]
+    },
+    "test-all-full": {
+      "command": "pnpm test:all:full",
+      "includes": [
+        "vitest-core",
+        "rust-cargo-test",
+        "vitest-architecture",
+        "vitest-compliance",
+        "playwright-e2e",
+        "wdio-e2e"
+      ]
+    },
+    "test-100-full": {
+      "command": "pnpm test:100:full",
+      "includes": [
+        "vitest-core",
+        "vitest-e2e",
+        "vitest-browser"
+      ]
+    }
+  },
+  "registry": {
+    "schemaVersion": 2,
+    "activeCycleId": null,
+    "currentObjective": null,
+    "lastDecision": null,
+    "lastTestRun": null,
+    "nextBlocker": null,
+    "priorityActionUnique": null,
+    "lastEvent": {
+      "id": "01KFPV3HTK74D43Z74XMENHS9Y",
+      "timestamp": "2026-01-24T01:50:09.747Z",
+      "type": "CYCLE_END"
+    }
+  }
+}

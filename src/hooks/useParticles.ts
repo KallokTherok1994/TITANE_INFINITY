@@ -14,7 +14,7 @@ import { ParticleSystem, ParticleSystemConfig } from '@/particles/ParticleSystem
 import type { ParticlePattern } from '@/design-system/visual-states';
 
 export interface UseParticlesReturn {
-  canvasRef: React.RefObject<HTMLCanvasElement>;
+  canvasRef: React.RefObject<HTMLCanvasElement | null>;
   particleSystem: ParticleSystem | null;
   particleCount: number;
   setPattern: (pattern: ParticlePattern) => void;

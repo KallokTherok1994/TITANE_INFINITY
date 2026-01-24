@@ -8,16 +8,67 @@ import { MessageList } from '@/components/chat/MessageList';
 
 // Reuse the same useChatCore mock streaming behavior
 
+// Force useChat à utiliser le stream mock (pas de backend Tauri en unit tests)
+vi.mock('@/services/api/chat', () => ({
+  chatService: {
+    sendMessageLegacy: vi.fn(async () => {
+      throw new Error('Mock backend unavailable');
+    }),
+  },
+}));
+
+// Neutraliser les effets de bord (secureInvoke experience_update_state, etc.)
+vi.mock('@/core/experience/XP_ENGINE', () => ({
+  XP: { gain: vi.fn() },
+}));
+
+vi.mock('@/services/experienceService', () => ({
+  awardExperience: vi.fn(async () => null),
+}));
+
+vi.mock('@/services/userPreferencesEngine', () => ({
+  userPreferencesEngine: {
+    generateContextForAI: vi.fn(() => null),
+    recordInteraction: vi.fn(),
+  },
+}));
+
+vi.mock('@hooks/useChatCore', () => {
+  return {
+    useChatCore: () => ({
+      currentMode: 'default',
+      anomalyCount: 0,
+      currentProvider: 'test-provider',
+      generate: async () => ({ content: 'fallback response', provider: 'test-provider' }),
+      async *stream() {
+        yield 'Hello';
+        yield ' world';
+        return {
+          content: 'Hello world',
+          provider: 'test-provider',
+          timestamp: Date.now(),
+          mode: 'default',
+          contextUsed: [],
+          suggestions: [],
+        };
+      },
+      setMode: () => {},
+      setProvider: () => {},
+      validateResponse: () => ({ isValid: true, score: 1, issues: [] }),
+    }),
+  };
+});
+
 function TestHost(props: { onReady: (api: any) => void }) {
   const api = useChat();
-  React.useEffect(() => props.onReady(api), [api]);
+  React.useEffect(() => {
+    props.onReady(api);
+  }, [api, props]);
   return null;
 }
 
 describe('UI integration: first 10 responses', () => {
-  // Skip: Test is memory-intensive and may cause OOM on constrained systems
-  // This test passes when run in isolation but fails during full test suite due to heap exhaustion
-  it.skip('renders assistant responses in the MessageList for the first 10 messages', async () => {
+  it('renders assistant responses in the MessageList for the first 10 messages', async () => {
     let apiRef: any = null;
 
     const host = render(<TestHost onReady={api => (apiRef = api)} />);

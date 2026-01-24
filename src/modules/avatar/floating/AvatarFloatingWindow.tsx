@@ -58,7 +58,7 @@ export const AvatarFloatingWindow: React.FC<AvatarFloatingWindowProps> = ({
   const [showControls, setShowControls] = useState(false);
 
   // Auto-hide popup timeout
-  const hideTimeoutRef = useRef<NodeJS.Timeout>();
+  const hideTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   // FullBody avatar hook with skeleton update callback
   const handleSkeletonUpdate = useCallback((snapshot: SkeletonSnapshot) => {

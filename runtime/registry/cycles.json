@@ -1,0 +1,28 @@
+{
+  "$schema": "./schemas/cycles.schema.json",
+  "schemaVersion": 2,
+  "generatedAt": "2026-01-24T01:54:36.848Z",
+  "activeCycleId": "01KFPVBPNG1KB0ZHD8KT6K5D7Y",
+  "open": [
+    {
+      "id": "01KFPVBPNG1KB0ZHD8KT6K5D7Y",
+      "objective": "Stabiliser les tests Vitest: éviter les faux rejets 'Dangerous characters' dans sanitizeMessage, et rétablir les suites streaming/UI/chat.",
+      "owner": "Kevin Thibault",
+      "priority": "P0",
+      "startedAt": "2026-01-24T01:54:36.848Z",
+      "status": "OPEN"
+    }
+  ],
+  "closed": [
+    {
+      "id": "01KFPTTRHJQDZN7DZJ2TVN9GW9",
+      "objective": "v2 registry constitutionnel: implémenter scripts/registry + scripts/verify + gate CI registry-guard",
+      "owner": "Kevin Thibault",
+      "priority": "P0",
+      "startedAt": "2026-01-24T01:45:21.714Z",
+      "status": "CLOSED",
+      "endedAt": "2026-01-24T01:50:09.719Z",
+      "outcome": "achieved"
+    }
+  ]
+}

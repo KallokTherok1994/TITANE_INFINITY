@@ -304,10 +304,22 @@ describe('Chat IA v18 — Architecture Hybride', () => {
         new Error('Local error')
       );
 
+      // Mock generate to also fail for all providers
+      vi.spyOn(tauriChatProvider, 'generate').mockRejectedValue(
+        new Error('Backend error')
+      );
+      vi.spyOn(geminiProvider, 'generate').mockRejectedValue(new Error('API error'));
+      vi.spyOn(ollamaProvider, 'generate').mockRejectedValue(
+        new Error('Connection error')
+      );
+      vi.spyOn(titaneLocalProvider, 'generate').mockRejectedValue(
+        new Error('Local error')
+      );
+
       const response = await aiOrchestrator.generate('test');
 
-      // orchestrator should return emergency fallback
-      expect(response.provider).toMatch(/(emergency|ultimate|fallback|titane-local)/);
+      // orchestrator should return emergency fallback with OMEGA message
+      expect(response.provider).toMatch(/(emergency|ultimate|fallback|omega)/);
       expect(response.content).toContain('OMEGA Auto-Récupération');
     });
   });

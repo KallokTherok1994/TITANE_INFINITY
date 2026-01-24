@@ -37,7 +37,7 @@ export function useControlPanelSection<T>({
   const [isLoading, setIsLoading] = useState(true);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const savedTimeoutRef = useRef<NodeJS.Timeout>();
+  const savedTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   // Check if config has changes
   const hasChanges = JSON.stringify(config) !== JSON.stringify(originalConfig);

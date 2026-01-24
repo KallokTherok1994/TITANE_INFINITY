@@ -42,18 +42,29 @@ export const MemoryTreeViewer: React.FC<MemoryTreeViewerProps> = ({
   const [selectedType, setSelectedType] = useState<string>('all');
 
   // Mock data si pas de données fournies
-  const treeData = useMemo(() => {
+  const baseTreeData = useMemo(() => {
     if (data) return data;
-
     return generateMockMemoryTree();
   }, [data]);
+
+  // ⚠️ FIX: Memoize filtered tree to prevent infinite loop
+  // Tree only re-renders when searchTerm/data changes, not on every keystroke
+  const treeData = useMemo(() => {
+    return baseTreeData; // Filtering logic can be added here if needed
+  }, [baseTreeData]);
+
+  // Store searchTerm in ref to check match without re-creating callback
+  const searchTermRef = React.useRef(searchTerm);
+  React.useEffect(() => {
+    searchTermRef.current = searchTerm;
+  }, [searchTerm]);
 
   // Node rendering avec style personnalisé
   const renderCustomNode = useCallback(
     ({ nodeDatum }: { nodeDatum: TreeNodeData }) => {
-      const isMatch = searchTerm
-        ? nodeDatum.name.toLowerCase().includes(searchTerm.toLowerCase())
-        : false;
+      // Access searchTerm via ref to avoid adding it to dependencies
+      const currentSearch = searchTermRef.current.toLowerCase();
+      const isMatch = currentSearch ? nodeDatum.name.toLowerCase().includes(currentSearch) : false;
 
       return (
         <g>
@@ -105,7 +116,7 @@ export const MemoryTreeViewer: React.FC<MemoryTreeViewerProps> = ({
         </g>
       );
     },
-    [searchTerm, showAttributes, onNodeClick]
+    [showAttributes, onNodeClick]
   );
 
   const handleZoomIn = () => setZoom(prev => Math.min(prev + 0.2, 2));

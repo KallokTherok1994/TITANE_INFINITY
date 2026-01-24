@@ -14,13 +14,20 @@ test.describe('Critical Path: System Resilience', () => {
   });
 
   test('app handles network errors gracefully', async ({ page, context }) => {
+    // Close boot beacon first and wait for it to disappear
+    const closeBeacon = page.getByRole('button', { name: /Fermer diagnostic/i });
+    if (await closeBeacon.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await closeBeacon.click();
+      await closeBeacon.waitFor({ state: 'hidden', timeout: 5000 });
+    }
+
     // Simulate offline mode
     await context.setOffline(true);
 
     // Try interaction
     const button = await page.locator('button').first();
     if ((await button.count()) > 0) {
-      await button.click();
+      await button.click({ force: true }); // Force click to bypass any overlays
       await page.waitForTimeout(1000);
     }
 
@@ -33,6 +40,13 @@ test.describe('Critical Path: System Resilience', () => {
   });
 
   test('handles rapid user interactions without crashing', async ({ page }) => {
+    // Close boot beacon first
+    const closeBeacon = page.getByRole('button', { name: /Fermer diagnostic/i });
+    if (await closeBeacon.isVisible()) {
+      await closeBeacon.click();
+      await page.waitForTimeout(300);
+    }
+
     // Rapid clicks on various elements
     const buttons = await page.locator('button');
     const buttonCount = await buttons.count();

@@ -1,0 +1,162 @@
+# TITANE∞ Registry Guard - GATE_REGISTRY
+# Ensures registry is updated when test/config files change
+# Added: 2026-01-23
+
+name: '📋 Registry Guard'
+
+on:
+  push:
+    branches: [MAIN, main, dev]
+    paths:
+      - 'src/**/*.test.ts'
+      - 'src/**/*.test.tsx'
+      - 'src/**/*.spec.ts'
+      - 'src/**/*.spec.tsx'
+      - 'tests/**/*.test.ts'
+      - 'tests/**/*.test.tsx'
+      - 'tests/**/*.spec.ts'
+      - 'e2e/**/*.spec.ts'
+      - 'e2e/**/*.test.ts'
+      - 'e2e/**/*.test.js'
+      - 'vitest*.config.ts'
+      - 'playwright.config.ts'
+      - 'wdio.conf.js'
+      - '.github/workflows/*.yml'
+      - 'package.json'
+  pull_request:
+    branches: [MAIN, main]
+    paths:
+      - 'src/**/*.test.ts'
+      - 'src/**/*.test.tsx'
+      - 'src/**/*.spec.ts'
+      - 'src/**/*.spec.tsx'
+      - 'tests/**/*.test.ts'
+      - 'tests/**/*.test.tsx'
+      - 'tests/**/*.spec.ts'
+      - 'e2e/**/*.spec.ts'
+      - 'e2e/**/*.test.ts'
+      - 'e2e/**/*.test.js'
+      - 'vitest*.config.ts'
+      - 'playwright.config.ts'
+      - 'wdio.conf.js'
+      - '.github/workflows/*.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  registry-sync-check:
+    name: '📋 Registry Sync Check'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: '📥 Checkout'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # Need HEAD~1 for diff
+
+      - name: '🔧 Setup Node.js'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: '📦 Setup pnpm'
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: '📦 Install dependencies'
+        run: pnpm install --frozen-lockfile
+
+      - name: '🔍 Check registry files exist'
+        run: |
+          echo "📋 Checking registry files..."
+          
+          if [ ! -f "runtime/registry/events.jsonl" ]; then
+            echo "❌ FAIL: runtime/registry/events.jsonl missing"
+            echo "Initialize with: pnpm registry:cycle:start -- --objective='Décrire le cycle (>=20 chars)' --owner='<name>' --priority=P1 --next='Action prioritaire'"
+            exit 1
+          fi
+          
+          if [ ! -f "runtime/registry/snapshot.json" ]; then
+            echo "❌ FAIL: runtime/registry/snapshot.json missing"
+            echo "Create with: pnpm registry:snapshot"
+            exit 1
+          fi
+
+          if [ ! -f "runtime/registry/dashboard.md" ]; then
+            echo "❌ FAIL: runtime/registry/dashboard.md missing"
+            echo "Create with: pnpm registry:dashboard"
+            exit 1
+          fi
+          
+          echo "✅ Registry files exist"
+
+      - name: '📊 Show changed files'
+        run: |
+          echo "📂 Files changed in this commit:"
+          git diff --name-only HEAD~1 || git diff --name-only origin/MAIN || echo "Could not determine diff"
+
+      - name: '🔍 Verify registry sync'
+        run: pnpm verify:registry
+
+      - name: '🚨 GATE_REGISTRY Status'
+        if: always()
+        run: |
+          if [ -f ".registry-outdated" ]; then
+            echo "❌ GATE_REGISTRY: FAIL"
+            echo ""
+            cat .registry-outdated
+            exit 1
+          fi
+          echo "✅ GATE_REGISTRY: PASS"
+
+  evidence-collection:
+    name: '📊 Registry Evidence'
+    runs-on: ubuntu-latest
+    needs: registry-sync-check
+    if: always()
+
+    steps:
+      - name: '📥 Checkout'
+        uses: actions/checkout@v4
+
+      - name: '📊 Collect evidence'
+        run: |
+          mkdir -p /tmp/registry-evidence
+          TIMESTAMP=$(date -Iseconds)
+          EVIDENCE_FILE="/tmp/registry-evidence/registry-guard-${{ github.run_id }}.txt"
+          
+          {
+            echo "GATE_REGISTRY Evidence"
+            echo "======================"
+            echo "Timestamp: $TIMESTAMP"
+            echo "Repository: ${{ github.repository }}"
+            echo "Branch: ${{ github.ref_name }}"
+            echo "Commit: ${{ github.sha }}"
+            echo "Run ID: ${{ github.run_id }}"
+            echo ""
+            echo "Status: ${{ needs.registry-sync-check.result }}"
+            echo ""
+            echo "Registry Events (last 10):"
+            if [ -f "runtime/registry/events.jsonl" ]; then
+              tail -10 runtime/registry/events.jsonl
+            else
+              echo "No events file"
+            fi
+            echo ""
+            echo "Snapshot Summary:"
+            if [ -f "runtime/registry/snapshot.json" ]; then
+              cat runtime/registry/snapshot.json | head -50
+            else
+              echo "No snapshot file"
+            fi
+          } > "$EVIDENCE_FILE"
+
+      - name: '📦 Upload evidence'
+        uses: actions/upload-artifact@v4
+        with:
+          name: registry-guard-evidence-${{ github.run_id }}
+          path: /tmp/registry-evidence/
+          retention-days: 90

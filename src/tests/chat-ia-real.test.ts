@@ -6,11 +6,36 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useChat } from '../hooks/useChat';
-import { useChatCore, type UseChatCoreReturn } from '../hooks/useChatCore';
-import { useChatMemory, type UseChatMemoryReturn } from '../hooks/useChatMemory';
+import { useChatCore, type UseChatCoreReturn } from '@hooks/useChatCore';
+import { useChatMemory, type UseChatMemoryReturn } from '@hooks/useChatMemory';
 
-vi.mock('../hooks/useChatCore');
-vi.mock('../hooks/useChatMemory');
+// Force useChat à utiliser le fallback generate (pas de backend Tauri en unit tests)
+vi.mock('@/services/api/chat', () => ({
+  chatService: {
+    sendMessageLegacy: vi.fn(async () => {
+      throw new Error('Mock backend unavailable');
+    }),
+  },
+}));
+
+// Neutraliser les effets de bord (experience_update_state, etc.)
+vi.mock('@/core/experience/XP_ENGINE', () => ({
+  XP: { gain: vi.fn() },
+}));
+
+vi.mock('@/services/experienceService', () => ({
+  awardExperience: vi.fn(async () => null),
+}));
+
+vi.mock('@/services/userPreferencesEngine', () => ({
+  userPreferencesEngine: {
+    generateContextForAI: vi.fn(() => null),
+    recordInteraction: vi.fn(),
+  },
+}));
+
+vi.mock('@hooks/useChatCore');
+vi.mock('@hooks/useChatMemory');
 
 const mockedUseChatCore = vi.mocked(useChatCore);
 const mockedUseChatMemory = vi.mocked(useChatMemory);

@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TITANE∞ Registry Snapshot",
+  "type": "object",
+  "required": ["version", "lastUpdate", "eventCount"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "type": "string" },
+    "lastUpdate": { "type": ["string", "null"], "format": "date-time" },
+    "eventCount": { "type": "number" },
+    "registry": { "type": "object" },
+    "suites": { "type": "object" },
+    "gates": { "type": "object" },
+    "combined": { "type": "object" }
+  }
+}

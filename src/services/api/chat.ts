@@ -10,7 +10,17 @@ import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 import { invokeWithRetry, LONG_COMMAND_OPTIONS } from '@/lib/serviceInvoker';
 import { monitoring } from '@/monitoring';
 import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
-import { chatEngine } from '@/services/ai/chatEngine';
+
+let _chatEnginePromise: Promise<typeof import('@/services/ai/chatEngine')> | null =
+  null;
+
+const getChatEngine = async () => {
+  if (!_chatEnginePromise) {
+    _chatEnginePromise = import('@/services/ai/chatEngine');
+  }
+  const mod = await _chatEnginePromise;
+  return mod.chatEngine;
+};
 
 /**
  * Type pour l'ID de conversation OMEGA
@@ -225,7 +235,7 @@ class ChatService {
       );
 
       try {
-        const engineResponse = await chatEngine.generate(message, [], {
+        const engineResponse = await (await getChatEngine()).generate(message, [], {
           mode: 'default',
         });
         return {
