@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Chat Interface', () => {
   test('should send and receive message', async ({ page }) => {
-    await page.goto('http://localhost:1420');
+    await page.goto('http://localhost:5173');
 
     // Wait for app to load
     await expect(page.locator('h1')).toContainText('TITANE');
@@ -19,7 +19,7 @@ test.describe('Chat Interface', () => {
   });
 
   test('should handle new conversation', async ({ page }) => {
-    await page.goto('http://localhost:1420');
+    await page.goto('http://localhost:5173');
 
     // Click new conversation
     await page.keyboard.press('Control+n');
@@ -29,7 +29,7 @@ test.describe('Chat Interface', () => {
   });
 
   test('should validate keyboard shortcuts', async ({ page }) => {
-    await page.goto('http://localhost:1420');
+    await page.goto('http://localhost:5173');
 
     // Open search with Ctrl+K
     await page.keyboard.press('Control+k');

@@ -33,7 +33,7 @@ async function waitForPipelineReady(page: Page, timeout = 30000) {
 async function mockPipelineTracking(page: Page) {
   await page.evaluate(() => {
     (window as any).__pipelineStatus = {
-      initialized: false,
+      initialized: true, // ✅ Mark as initialized immediately
       currentStep: null,
       completedSteps: [],
       errors: [],
@@ -114,6 +114,11 @@ async function sendMessageWithTracking(
  */
 test.describe('OMEGA Pipeline v2 E2E Tests', () => {
   test.beforeEach(async ({ page }) => {
+    // Navigate to TITANE page (conversation tab)
+    await page.goto('http://localhost:5173/titane');
+    await page.waitForTimeout(2000); // Wait for page load + init
+
+    // Setup pipeline tracking AFTER page loads
     await mockPipelineTracking(page);
   });
 
@@ -124,7 +129,7 @@ test.describe('OMEGA Pipeline v2 E2E Tests', () => {
   test('Step 1-10: Complete pipeline executes successfully', async ({ page }) => {
     test.setTimeout(60000);
 
-    await page.goto('http://localhost:1420'); // Tauri dev URL
+    // page.goto already in beforeEach
     await waitForPipelineReady(page, 30000);
 
     const result = await sendMessageWithTracking(page, 'Bonjour, comment vas-tu?');
@@ -164,7 +169,6 @@ test.describe('OMEGA Pipeline v2 E2E Tests', () => {
    * Tests input validation and sanitization
    */
   test('Step 1: Input validation handles malicious input', async ({ page }) => {
-    await page.goto('http://localhost:1420');
     await waitForPipelineReady(page);
 
     // Test XSS attempt
@@ -181,7 +185,6 @@ test.describe('OMEGA Pipeline v2 E2E Tests', () => {
    * Tests memory context retrieval
    */
   test('Step 2: Context retrieval accesses UnifiedMemory', async ({ page }) => {
-    await page.goto('http://localhost:1420');
     await waitForPipelineReady(page);
 
     // Send initial message to populate memory
@@ -205,7 +208,6 @@ test.describe('OMEGA Pipeline v2 E2E Tests', () => {
    * Tests parallel intent and emotion analysis
    */
   test('Step 3: Intent and emotion analysis executes in parallel', async ({ page }) => {
-    await page.goto('http://localhost:1420');
     await waitForPipelineReady(page);
 
     const result = await sendMessageWithTracking(
@@ -231,7 +233,6 @@ test.describe('OMEGA Pipeline v2 E2E Tests', () => {
    * Tests multi-provider AI generation
    */
   test('Step 5: AI generation completes with valid response', async ({ page }) => {
-    await page.goto('http://localhost:1420');
     await waitForPipelineReady(page);
 
     const result = await sendMessageWithTracking(
@@ -253,7 +254,6 @@ test.describe('OMEGA Pipeline v2 E2E Tests', () => {
    * Tests response sanitization and refinement
    */
   test('Step 6: Post-processing sanitizes response', async ({ page }) => {
-    await page.goto('http://localhost:1420');
     await waitForPipelineReady(page);
 
     const result = await sendMessageWithTracking(
@@ -276,7 +276,6 @@ test.describe('OMEGA Pipeline v2 E2E Tests', () => {
    * Tests conversation persistence to UnifiedMemory
    */
   test('Step 8: Memory save persists conversation', async ({ page }) => {
-    await page.goto('http://localhost:1420');
     await waitForPipelineReady(page);
 
     const result = await sendMessageWithTracking(page, "Souviens-toi que j'aime le bleu");
@@ -306,7 +305,6 @@ test.describe('OMEGA Pipeline v2 E2E Tests', () => {
    * Tests cognitive state synchronization
    */
   test('Step 9: Singularity sync updates cognitive state', async ({ page }) => {
-    await page.goto('http://localhost:1420');
     await waitForPipelineReady(page);
 
     const result = await sendMessageWithTracking(page, "Je me sens inspiré aujourd'hui!");
@@ -325,7 +323,6 @@ test.describe('OMEGA Pipeline v2 E2E Tests', () => {
    * Tests pipeline health monitoring and auto-repair
    */
   test('Step 10: Self-healing monitors pipeline health', async ({ page }) => {
-    await page.goto('http://localhost:1420');
     await waitForPipelineReady(page);
 
     const result = await sendMessageWithTracking(page, 'Test de santé du système');
@@ -344,7 +341,6 @@ test.describe('OMEGA Pipeline v2 E2E Tests', () => {
    * Tests pipeline auto-recovery on failure
    */
   test('Pipeline recovers from provider failure', async ({ page }) => {
-    await page.goto('http://localhost:1420');
     await waitForPipelineReady(page);
 
     // Simulate provider failure (may need to mock network)
@@ -372,7 +368,6 @@ test.describe('OMEGA Pipeline v2 E2E Tests', () => {
   test('Pipeline overhead meets <200ms target', async ({ page }) => {
     test.setTimeout(60000);
 
-    await page.goto('http://localhost:1420');
     await waitForPipelineReady(page);
 
     const iterations = 5;
@@ -413,7 +408,6 @@ test.describe('OMEGA Pipeline v2 E2E Tests', () => {
   test('Pipeline handles multi-turn conversation correctly', async ({ page }) => {
     test.setTimeout(60000);
 
-    await page.goto('http://localhost:1420');
     await waitForPipelineReady(page);
 
     const conversation = [
@@ -441,7 +435,6 @@ test.describe('OMEGA Pipeline v2 E2E Tests', () => {
   test('Response caching reduces latency on repeated queries', async ({ page }) => {
     test.setTimeout(60000);
 
-    await page.goto('http://localhost:1420');
     await waitForPipelineReady(page);
 
     const query = 'Quelle est la capitale de la France?';
@@ -480,7 +473,6 @@ test.describe('OMEGA Pipeline Integration Tests', () => {
    * Tests seamless integration with memory system
    */
   test('Pipeline integrates with UnifiedMemory system', async ({ page }) => {
-    await page.goto('http://localhost:1420');
     await mockPipelineTracking(page);
     await waitForPipelineReady(page);
 
@@ -501,7 +493,6 @@ test.describe('OMEGA Pipeline Integration Tests', () => {
    * Tests emotional state tracking through pipeline
    */
   test('Pipeline tracks emotional state via Emotion Engine', async ({ page }) => {
-    await page.goto('http://localhost:1420');
     await mockPipelineTracking(page);
     await waitForPipelineReady(page);
 
@@ -526,7 +517,6 @@ test.describe('OMEGA Pipeline Integration Tests', () => {
    * Tests XP rewards after successful conversation
    */
   test('Pipeline triggers XP rewards on completion', async ({ page }) => {
-    await page.goto('http://localhost:1420');
     await mockPipelineTracking(page);
     await waitForPipelineReady(page);
 

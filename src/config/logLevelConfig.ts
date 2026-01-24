@@ -66,6 +66,10 @@ class RuntimeLogLevelManager {
   private config: LogLevelConfig;
   private listeners: Set<(config: LogLevelConfig) => void> = new Set();
 
+  private readonly isTestEnv: boolean =
+    (typeof import.meta !== 'undefined' && (import.meta as any)?.env?.MODE === 'test') ||
+    (typeof import.meta !== 'undefined' && Boolean((import.meta as any)?.env?.VITEST));
+
   constructor() {
     this.config = this.loadConfig();
     this.exposeGlobalAPI();
@@ -106,8 +110,11 @@ class RuntimeLogLevelManager {
       return this.createConfig(envLevel as RuntimeLogLevel);
     }
 
-    // Default: DEBUG in dev, INFO in production
-    const defaultLevel = import.meta.env.PROD ? 'INFO' : 'DEBUG';
+    // Default:
+    // - tests: WARN (avoid massive log capture + OOM during Vitest)
+    // - dev: DEBUG
+    // - prod: INFO
+    const defaultLevel = this.isTestEnv ? 'WARN' : import.meta.env.PROD ? 'INFO' : 'DEBUG';
     return this.createConfig(defaultLevel as RuntimeLogLevel);
   }
 
@@ -318,6 +325,7 @@ class RuntimeLogLevelManager {
    */
   private exposeGlobalAPI(): void {
     if (typeof window === 'undefined') return;
+    if (this.isTestEnv) return;
 
     const w = window as unknown as Record<string, unknown>;
     w.__TITANE_LOG__ = {

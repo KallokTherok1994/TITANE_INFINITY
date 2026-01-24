@@ -3,13 +3,13 @@ import { injectAxe, checkA11y } from 'axe-playwright';
 
 test.describe('Accessibility', () => {
   test('should pass axe checks', async ({ page }) => {
-    await page.goto('http://localhost:1420');
+    await page.goto('http://localhost:5173');
     await injectAxe(page);
     await checkA11y(page);
   });
 
   test('should navigate with keyboard only', async ({ page }) => {
-    await page.goto('http://localhost:1420');
+    await page.goto('http://localhost:5173');
 
     // Tab through elements
     await page.keyboard.press('Tab');
@@ -22,7 +22,7 @@ test.describe('Accessibility', () => {
   });
 
   test('should have proper ARIA labels', async ({ page }) => {
-    await page.goto('http://localhost:1420');
+    await page.goto('http://localhost:5173');
 
     await expect(page.locator('[role="main"]')).toBeVisible();
     await expect(page.locator('[role="banner"]')).toBeVisible();

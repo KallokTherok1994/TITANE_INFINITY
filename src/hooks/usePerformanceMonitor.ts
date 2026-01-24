@@ -56,7 +56,7 @@ export function usePerformanceMonitor(
 
   const frameCountRef = useRef(0);
   const lastTimeRef = useRef(performance.now());
-  const rafIdRef = useRef<number>();
+  const rafIdRef = useRef<number | undefined>(undefined);
   // ✨ v24.2.1: Track running state to prevent RAF after unmount
   const isRunningRef = useRef(false);
 

@@ -10,9 +10,10 @@
  * - Operation lock protection
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from 'vitest';
 import { renderHook, waitFor, act } from '@testing-library/react';
-import { useChat } from '../useChat';
+
+let useChat: typeof import('../useChat').useChat;
 
 // Types locaux pour les tests (basés sur useChat.ts)
 interface AIMessage {
@@ -23,33 +24,38 @@ interface AIMessage {
   metadata?: Record<string, unknown>;
 }
 
-// Mock des dépendances
-vi.mock('../useChatCore', () => ({
-  useChatCore: vi.fn(() => ({
-    currentMode: 'default',
-    anomalyCount: 0,
-    currentProvider: 'tauri-backend',
-    generate: vi.fn(async (message: string) => ({
-      content: `Mock response for: ${message}`,
-      provider: 'tauri-backend',
+// NOTE: useChatCore/useChatMemory sont mockés via `vitest.config.ts` (alias Vitest)
+// pour éviter de charger l'implémentation réelle (qui importe le chatEngine).
+
+// Mock chatEngine types (prevents OOM from loading orchestrator)
+vi.mock('@/services/ai/chatEngine', () => ({
+  chatEngine: {
+    generate: vi.fn(async () => ({
+      content: 'Mock response',
+      provider: 'titane-local',
       timestamp: Date.now(),
       mode: 'default',
       contextUsed: [],
-      suggestions: [],
     })),
-    stream: vi.fn(),
-    setMode: vi.fn(),
-    setProvider: vi.fn(),
-    validateResponse: vi.fn(() => ({ isValid: true, score: 1, issues: [] })),
-  })),
+  },
 }));
 
-vi.mock('../useChatMemory', () => ({
-  useChatMemory: vi.fn(() => ({
-    messagesForMode: [],
-    memoryStats: { count: 0, sizeMB: 0, compressed: false },
-    saveMessage: vi.fn(),
-    clearMode: vi.fn(),
+// Mock aiTimeouts config (prevents deep imports)
+vi.mock('@/config/aiTimeouts.config', () => ({
+  UI_TIMEOUTS: {
+    STREAM_DEBOUNCE: 50,
+    LOADING_INDICATOR_DELAY: 200,
+    MESSAGE_ANIMATION: 150,
+  },
+  getAdaptiveUITimeout: vi.fn(() => 5000),
+}));
+
+// Mock streamingDebounce utility
+vi.mock('@/utils/streamingDebounce', () => ({
+  createStreamingBatcher: vi.fn(() => ({
+    push: vi.fn(),
+    flush: vi.fn(),
+    clear: vi.fn(),
   })),
 }));
 
@@ -64,7 +70,7 @@ vi.mock('@/services/ai/cognitiveKernel', () => ({
   },
 }));
 
-vi.mock('@/services/api', () => ({
+vi.mock('@/services/api/chat', () => ({
   chatService: {
     sendMessageLegacy: vi.fn(async () => ({
       content: 'Backend response',
@@ -75,11 +81,7 @@ vi.mock('@/services/api', () => ({
   },
 }));
 
-vi.mock('@/services/tts/hybridTTS', () => ({
-  hybridTTS: {
-    speak: vi.fn(),
-  },
-}));
+// NOTE: hybridTTS est mocké via `vitest.config.ts` (alias Vitest)
 
 vi.mock('@/core/experience/XP_ENGINE', () => ({
   XP: {
@@ -143,6 +145,19 @@ vi.mock('@/utils/chatLogger', () => ({
     success: vi.fn(),
   },
 }));
+
+beforeAll(async () => {
+  console.error('[useChat.test] beforeAll: start');
+  // Vérification: s'assurer qu'on charge bien les mocks (alias Vitest)
+  const core = await import('@hooks/useChatCore');
+  const memory = await import('@hooks/useChatMemory');
+  expect((core as any).__TITANE_TEST_MOCK__).toBe(true);
+  expect((memory as any).__TITANE_TEST_MOCK__).toBe(true);
+
+  console.error('[useChat.test] beforeAll: importing useChat');
+  ({ useChat } = await import('../useChat'));
+  console.error('[useChat.test] beforeAll: useChat imported');
+});
 
 describe('useChat - KERNEL OMNIS Tests', () => {
   beforeEach(() => {
@@ -241,16 +256,13 @@ describe('useChat - KERNEL OMNIS Tests', () => {
     it('should not allow concurrent sends (operation lock)', async () => {
       const { result } = renderHook(() => useChat());
 
-      // Lancer 2 messages en parallèle
-      const promise1 = act(async () => {
-        return await result.current.sendMessage('Message 1');
+      // Lancer 2 messages en parallèle (dans UN seul act pour éviter l'overlap)
+      await act(async () => {
+        await Promise.all([
+          result.current.sendMessage('Message 1'),
+          result.current.sendMessage('Message 2'),
+        ]);
       });
-
-      const promise2 = act(async () => {
-        return await result.current.sendMessage('Message 2');
-      });
-
-      await Promise.all([promise1, promise2]);
 
       // Le lock devrait avoir empêché le chaos
       await waitFor(() => {
@@ -303,12 +315,13 @@ describe('useChat - KERNEL OMNIS Tests', () => {
   });
 
   describe('Chat Operations', () => {
-    it('should clear chat', () => {
+    it('should clear chat', async () => {
       const { result } = renderHook(() => useChat());
 
       // Ajouter des messages d'abord
-      act(() => {
-        result.current.sendMessage('Test');
+      // NOTE: sendMessage est async → éviter de laisser des promesses en vol entre tests
+      await act(async () => {
+        await result.current.sendMessage('Test');
       });
 
       // Clear
@@ -403,7 +416,7 @@ describe('useChat - KERNEL OMNIS Tests', () => {
 
   describe('Error Handling', () => {
     it('should handle backend errors gracefully', async () => {
-      const { chatService } = await import('@/services/api');
+      const { chatService } = await import('@/services/api/chat');
       vi.mocked(chatService.sendMessageLegacy).mockRejectedValueOnce(
         new Error('Backend error')
       );

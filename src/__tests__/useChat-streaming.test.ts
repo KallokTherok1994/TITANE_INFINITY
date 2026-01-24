@@ -2,6 +2,31 @@ import React, { useRef } from 'react';
 import { render, act, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 
+// Force useChat à passer par le fallback stream/generate (pas de backend Tauri en unit tests)
+vi.mock('@/services/api/chat', () => ({
+  chatService: {
+    sendMessageLegacy: vi.fn(async () => {
+      throw new Error('Mock backend unavailable');
+    }),
+  },
+}));
+
+// Neutraliser les effets de bord (secureInvoke experience_update_state, etc.)
+vi.mock('@/core/experience/XP_ENGINE', () => ({
+  XP: { gain: vi.fn() },
+}));
+
+vi.mock('@/services/experienceService', () => ({
+  awardExperience: vi.fn(async () => null),
+}));
+
+vi.mock('@/services/userPreferencesEngine', () => ({
+  userPreferencesEngine: {
+    generateContextForAI: vi.fn(() => null),
+    recordInteraction: vi.fn(),
+  },
+}));
+
 // Mock useChatCore to provide a stream implementation
 vi.mock('@hooks/useChatCore', () => {
   return {

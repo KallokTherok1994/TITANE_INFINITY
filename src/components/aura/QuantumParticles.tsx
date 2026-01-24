@@ -62,7 +62,7 @@ export const QuantumParticles: React.FC<QuantumParticlesProps> = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particles = useRef<Particle[]>([]);
   const mouse = useRef({ x: 0, y: 0, active: false });
-  const animationFrameId = useRef<number>();
+  const animationFrameId = useRef<number | undefined>(undefined);
 
   /* ═══ INITIALIZE PARTICLES ═══ */
   const initParticles = useCallback(

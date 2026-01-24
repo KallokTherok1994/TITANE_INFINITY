@@ -255,6 +255,8 @@ const startBootBeacon = (): void => {
     "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace";
   beacon.style.fontSize = '12px';
   beacon.style.lineHeight = '1.35';
+  // ⚠️ CRITICAL FIX: Allow clicks to pass through beacon (prevent test interference)
+  beacon.style.pointerEvents = 'none';
 
   const closeBtn = document.createElement('button');
   closeBtn.textContent = '×';
@@ -266,6 +268,8 @@ const startBootBeacon = (): void => {
   closeBtn.style.border = 'none';
   closeBtn.style.cursor = 'pointer';
   closeBtn.style.fontSize = '16px';
+  // Re-enable pointer events ONLY for close button
+  closeBtn.style.pointerEvents = 'auto';
   closeBtn.onclick = () => beacon.remove();
 
   const content = document.createElement('div');

@@ -226,10 +226,11 @@ class AIOrchestrator {
     issues: string[];
   } {
     const issues: string[] = [];
+    const fatalIssues: string[] = [];
 
     // Quick type check
     if (!message || typeof message !== 'string') {
-      issues.push('Invalid message type');
+      fatalIssues.push('Invalid message type');
       return { sanitized: '', valid: false, issues };
     }
 
@@ -239,7 +240,7 @@ class AIOrchestrator {
 
     // Validation longueur (optimisé)
     if (originalLength === 0) {
-      issues.push('Empty message');
+      fatalIssues.push('Empty message');
       return { sanitized: '', valid: false, issues };
     }
 
@@ -280,8 +281,8 @@ class AIOrchestrator {
 
     return {
       sanitized,
-      valid: sanitized.length > 0 && issues.length === 0,
-      issues,
+      valid: sanitized.length > 0 && fatalIssues.length === 0,
+      issues: [...fatalIssues, ...issues],
     };
   }
 

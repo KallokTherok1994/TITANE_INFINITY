@@ -52,7 +52,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(
     const [_lastLatency, _setLastLatency] = useState(0);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
-    const timeoutRef = useRef<NodeJS.Timeout>();
+    const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
     const promptPresets = useMemo(() => listPromptPresets(), []);
     const presetModeMap = useMemo<Partial<Record<string, ChatMode>>>(
       () => ({

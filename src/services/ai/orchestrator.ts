@@ -170,8 +170,13 @@ class AIOrchestrator {
     // Certains providers peuvent être indisponibles/undefined en tests ou selon le runtime.
     this.providers = this.providers.filter((p): p is AIProvider => Boolean(p));
     this.initializeProviderStats();
-    this.startWarmup();
-    this.startQuickFailCleanup();
+    // En contexte tests (Vitest), on évite tout side-effect à l'import :
+    // - warmup (appels provider.isAvailable → secureInvoke)
+    // - setInterval de cleanup
+    if (!IS_VITEST) {
+      this.startWarmup();
+      this.startQuickFailCleanup();
+    }
   }
 
   /**
@@ -304,6 +309,7 @@ class AIOrchestrator {
    * - Non-blocking: app can start while warmup completes
    */
   private async startWarmup(): Promise<void> {
+    if (IS_VITEST) return;
     if (this.isWarmup) return;
     this.isWarmup = true;
 
@@ -378,10 +384,11 @@ class AIOrchestrator {
     issues: string[];
   } {
     const issues: string[] = [];
+    const fatalIssues: string[] = [];
 
     // Quick type check
     if (!message || typeof message !== 'string') {
-      issues.push('Invalid message type');
+      fatalIssues.push('Invalid message type');
       return { sanitized: '', valid: false, issues };
     }
 
@@ -391,7 +398,7 @@ class AIOrchestrator {
 
     // Validation longueur (optimisé)
     if (originalLength === 0) {
-      issues.push('Empty message');
+      fatalIssues.push('Empty message');
       return { sanitized: '', valid: false, issues };
     }
 
@@ -432,8 +439,8 @@ class AIOrchestrator {
 
     return {
       sanitized,
-      valid: sanitized.length > 0 && issues.length === 0,
-      issues,
+      valid: sanitized.length > 0 && fatalIssues.length === 0,
+      issues: [...fatalIssues, ...issues],
     };
   }
 

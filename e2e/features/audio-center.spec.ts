@@ -43,11 +43,16 @@ test.describe('Feature: Audio Center', () => {
     // Verify Audio Center loaded
     await page.waitForTimeout(1000);
 
-    // Look for audio-specific elements
-    const audioHeader = page
-      .locator('h1:has-text("Audio"), h2:has-text("Audio"), h1:has-text("🎙")')
-      .first();
-    await expect(audioHeader).toBeVisible({ timeout: 10000 });
+    // Look for audio-specific elements (device selection, TTS settings)
+    const audioDeviceSection = page.locator('text=/Device|Périphérique|Audio Output|Sortie Audio/i').first();
+    const audioTTSSection = page.locator('text=/TTS|Text-to-Speech|Synthèse vocale/i').first();
+
+    const audioContentVisible = await Promise.race([
+      audioDeviceSection.isVisible({ timeout: 10000 }).catch(() => false),
+      audioTTSSection.isVisible({ timeout: 10000 }).catch(() => false),
+    ]);
+
+    expect(audioContentVisible).toBeTruthy();
   });
 
   test('Audio Center displays device selection', async ({ page }) => {

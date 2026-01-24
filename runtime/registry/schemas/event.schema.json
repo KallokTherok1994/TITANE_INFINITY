@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TITANE∞ Registry Event (v2)",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "id",
+    "timestamp",
+    "type",
+    "cycleId",
+    "attempt",
+    "actor",
+    "description",
+    "severity",
+    "impact",
+    "next_actions",
+    "blockers",
+    "owner",
+    "priority"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "id": { "type": "string", "minLength": 26, "maxLength": 26 },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "type": {
+      "type": "string",
+      "enum": [
+        "CYCLE_START",
+        "DECISION",
+        "INCIDENT",
+        "CYCLE_END",
+        "TEST_RUN",
+        "CI_RUN",
+        "FIX_APPLIED",
+        "CONFIG_CHANGED",
+        "WORKFLOW_CHANGED",
+        "SUITE_ADDED",
+        "SUITE_REMOVED",
+        "GATE_ADDED",
+        "GATE_REMOVED"
+      ]
+    },
+    "cycleId": { "type": "string", "minLength": 1 },
+    "attempt": { "type": "number", "minimum": 1 },
+    "actor": {
+      "type": "object",
+      "required": ["kind", "name"],
+      "properties": {
+        "kind": { "type": "string" },
+        "name": { "type": "string" },
+        "tool": { "type": "string" },
+        "model": { "type": "string" }
+      }
+    },
+    "description": { "type": "string", "minLength": 20 },
+    "severity": { "type": "string", "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"] },
+    "impact": { "type": "string", "enum": ["TESTS", "CI", "ARCHITECTURE", "SECURITY", "DELIVERY"] },
+    "files": { "type": "array", "items": { "type": "string" } },
+    "meta": { "type": "object" },
+    "next_actions": { "type": "array", "items": { "type": "string" } },
+    "blockers": { "type": "array", "items": { "type": "string" } },
+    "owner": { "type": "string" },
+    "priority": { "type": "string", "enum": ["P0", "P1", "P2", "P3"] }
+  }
+}

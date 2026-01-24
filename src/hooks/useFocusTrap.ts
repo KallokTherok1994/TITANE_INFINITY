@@ -18,7 +18,7 @@ import { useEffect, useRef, RefObject } from 'react';
 
 export interface UseFocusTrapOptions {
   /** Reference to the container element to trap focus within */
-  ref: RefObject<HTMLElement>;
+  ref: RefObject<HTMLElement | null>;
 
   /** Whether the focus trap is active */
   isActive: boolean;
@@ -176,7 +176,7 @@ export function useFocusTrap({
 export function useFocusTrapRef(
   isActive: boolean,
   onEscape?: () => void
-): RefObject<HTMLDivElement> {
+): RefObject<HTMLDivElement | null> {
   const ref = useRef<HTMLDivElement>(null);
 
   useFocusTrap({

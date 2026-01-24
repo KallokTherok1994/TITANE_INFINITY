@@ -146,9 +146,9 @@ export function useAudioSettings(): UseAudioSettingsReturn {
   const mountedRef = useRef(true);
 
   // Refs for stable callbacks (avoid circular deps)
-  const checkPermissionsRef = useRef<() => Promise<void>>();
-  const refreshDevicesRef = useRef<() => Promise<void>>();
-  const updateHealthSummaryRef = useRef<(updates: Partial<AudioHealthSummary>) => void>();
+  const checkPermissionsRef = useRef<(() => Promise<void>) | undefined>(undefined);
+  const refreshDevicesRef = useRef<(() => Promise<void>) | undefined>(undefined);
+  const updateHealthSummaryRef = useRef<((updates: Partial<AudioHealthSummary>) => void) | undefined>(undefined);
 
   // ─────────────────────────────────────────────────────────────────
   // INITIALIZATION

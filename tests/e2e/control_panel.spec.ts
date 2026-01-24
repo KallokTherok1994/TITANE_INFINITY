@@ -20,7 +20,7 @@ describe('Control Panel E2E', () => {
   describe('Navigation complète', () => {
     test("Ouvre l'application et navigue dans toutes les sections", async () => {
       // TODO: Implémenter avec WebDriver
-      // await driver.get('http://localhost:1420');
+      // await driver.get('http://localhost:5173');
 
       const _sections = [
         'system',
@@ -71,7 +71,7 @@ describe('Control Panel E2E', () => {
     test('Charge la page en moins de 3 secondes', async () => {
       // TODO: Implémenter
       // const startTime = Date.now();
-      // await driver.get('http://localhost:1420');
+      // await driver.get('http://localhost:5173');
       // await driver.wait(until.elementLocated(By.css('.cp-layout')), 3000);
       // const loadTime = Date.now() - startTime;
       // expect(loadTime).toBeLessThan(3000);
