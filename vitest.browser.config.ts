@@ -5,6 +5,7 @@
 
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
+import { playwright } from '@vitest/browser-playwright';
 import path from 'node:path';
 
 export default defineConfig({
@@ -21,9 +22,9 @@ export default defineConfig({
     // Browser mode configuration for WebGL/Three.js tests
     browser: {
       enabled: true,
-      // @ts-expect-error - Vitest typing issues with provider/name
-      provider: 'playwright',
-      name: 'chromium',
+      provider: playwright(),
+      // At least one instance is required.
+      instances: [{ browser: 'chromium' }],
       headless: true,
       screenshotOnFailure: false,
     },
@@ -45,7 +46,6 @@ export default defineConfig({
 
     // Globals for Three.js/WebGL
     globals: true,
-    environment: 'jsdom', // Fallback if browser mode fails
 
     // Retry flaky browser tests
     retry: 1,
