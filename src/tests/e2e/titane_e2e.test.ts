@@ -8,8 +8,9 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { invoke } from '@tauri-apps/api/core';
 
-// Skip E2E tests in unit test runs (require running Tauri app)
-const SKIP_E2E = !process.env.RUN_E2E_TESTS;
+// Skip E2E tests unless explicitly opt-in.
+// These scenarios require a real Tauri app context (IPC), not unit-test mocks.
+const SKIP_E2E = !process.env.RUN_E2E_TESTS || process.env.TITANE_E2E_TAURI !== '1';
 
 /**
  * Trace JSON pour chaque scénario E2E

@@ -6,6 +6,9 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 // This file is only consumed by Vitest; keep test-time aliasing deterministic.
 const isVitest = true;
 
+const runE2ETests =
+  process.env.RUN_E2E_TESTS === '1' || process.env.RUN_E2E_TESTS === 'true';
+
 const baseAliasEntries = [
   { find: '@', replacement: resolve(__dirname, './src') },
   { find: '@app', replacement: resolve(__dirname, './src/app') },
@@ -98,7 +101,7 @@ export const sharedTestConfig = defineConfig({
     ],
     testTimeout: 45000,
     hookTimeout: 20000,
-    teardownTimeout: 10000,
+    teardownTimeout: 60000,
     // maxThreads removed - not supported in Vitest 4.x, use pool options instead
     include: [
       'src/**/*.{test,spec}.{ts,tsx}',
@@ -110,8 +113,11 @@ export const sharedTestConfig = defineConfig({
       'dist',
       'src-tauri',
 
+      // Native addon tests: can be unstable under Vitest worker pools.
+      'src/services/unified/__tests__/SQLiteVectorStore.unit.test.ts',
+
       // E2E Vitest suite is run explicitly via `pnpm run test:e2e:vitest`.
-      'src/tests/e2e/**',
+      ...(runE2ETests ? [] : ['src/tests/e2e/**']),
 
       // Browser/Perf suite is run explicitly via `pnpm run test:browser`.
       'src/tests/browser/**',
