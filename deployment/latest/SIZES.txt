@@ -1,2 +1,2 @@
-82M	TITANE-Infinity_26.3.0_amd64.AppImage
-9,1M	TITANE-Infinity_26.3.0_amd64.deb
+81.6MB	TITANE-Infinity_26.2.0_amd64.AppImage
+9.5MB	TITANE-Infinity_26.2.0_amd64.deb
