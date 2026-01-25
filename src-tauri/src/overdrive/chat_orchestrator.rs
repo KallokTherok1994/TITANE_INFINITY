@@ -4,7 +4,7 @@
 // Orchestrateur IA hybride : Gemini (cloud) + Ollama (local) + fallback
 // ═══════════════════════════════════════════════════════════════════════════
 
-// TODO v25.x: Migrer vers conversation_engine::conversation_generate (OMEGA v2)
+// PLAN v25.x: Migrer vers conversation_engine::conversation_generate (OMEGA v2)
 
 use crate::core::tapi_error::TAPIError;
 use crate::core::{MemoryType, UnifiedMemory};

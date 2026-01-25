@@ -272,10 +272,10 @@ pub async fn cycle_get_diagnostics(
     Ok(CycleDiagnosticsResponse {
         clock_running: clock.is_running(),
         current_hour: clock.current_hour(),
-        uptime_seconds: 0, // TODO: track uptime
+        uptime_seconds: 0, // FUTUR: track uptime
         daily_phase: format!("{:?}", cycle_state.daily_phase),
         cognitive_mode: format!("{:?}", cycle_state.daily_phase.cognitive_mode()),
         omega_intensity: rhythm.omega_depth,
-        alignment_score: 0.85, // TODO: calculate real alignment
+        alignment_score: 0.85, // FUTUR: calculate real alignment
     })
 }

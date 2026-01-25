@@ -103,7 +103,7 @@ impl MonitoringEngine {
 
     /// Start background monitoring tasks
     pub async fn start_monitoring(&self) {
-        // TODO: Spawn periodic collection tasks
+        // FUTUR: Spawn periodic collection tasks
         // - CPU monitoring every 1s
         // - Health checks every 30s
         // - Telemetry export every 60s

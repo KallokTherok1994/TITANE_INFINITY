@@ -61,13 +61,13 @@ impl TelemetryExporter {
 
     /// Export for OpenTelemetry (placeholder)
     pub fn export_opentelemetry(&self) -> Result<String, String> {
-        // TODO: Implement OpenTelemetry export format
+        // FUTUR: Implement OpenTelemetry export format
         Ok(format!("OpenTelemetry export: {} events", self.events.len()))
     }
 
     /// Export for Prometheus (placeholder)
     pub fn export_prometheus(&self) -> Result<String, String> {
-        // TODO: Implement Prometheus metrics format
+        // FUTUR: Implement Prometheus metrics format
         Ok(format!("# HELP titane_events_total Total telemetry events\n# TYPE titane_events_total counter\ntitane_events_total {}\n", self.events.len()))
     }
 

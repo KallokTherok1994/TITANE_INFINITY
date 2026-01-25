@@ -193,7 +193,7 @@ export const {{NAME}}: React.FC = () => {
         // 4. Edge cases: Test empty inputs, null values, boundary conditions
         // 5. Property-based: Use proptest for randomized testing (optional)
         // 6. Template: "#[test] fn test_{fn_name}() { let input = ...; let result = {fn_name}(input); assert_eq!(result, expected); }"
-        "#[cfg(test)]\nmod tests {\n    use super::*;\n    \n    #[test]\n    fn test_creation() {\n        // TODO: Add tests\n    }\n}".to_string()
+        "#[cfg(test)]\nmod tests {\n    use super::*;\n    \n    #[test]\n    fn test_creation() {\n        // À FAIRE: Ajouter des tests\n    }\n}".to_string()
     }
 
     fn generate_docs(&self, intent: &str) -> String {

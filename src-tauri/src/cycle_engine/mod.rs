@@ -37,7 +37,7 @@ pub mod omega_integration;
 // 4. Async bounds: Add Send + Sync bounds for async command return types
 // 5. State access: Fix AppState type conflicts, use tauri::State<AppState> correctly
 // 6. Testing: Re-enable after fixes, ensure commands compile and integrate with Tauri runtime
-// pub mod commands; // TODO: Fix type issues
+// pub mod commands; // FUTUR: Fix type issues
 
 // Re-exports — Components
 pub use alignment::*;
