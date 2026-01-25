@@ -30,40 +30,42 @@ scripts/verify/
 
 ## 🛠️ Scripts NPM
 
-| Commande | Description |
-|----------|-------------|
-| `pnpm registry:log -- --type=TYPE --desc="..."` | Ajoute un événement au log |
-| `pnpm registry:snapshot` | Reconstruit le snapshot depuis les events |
-| `pnpm verify:registry` | Vérifie que le registry est à jour (CI gate) |
+| Commande                                        | Description                                  |
+| ----------------------------------------------- | -------------------------------------------- |
+| `pnpm registry:log -- --type=TYPE --desc="..."` | Ajoute un événement au log                   |
+| `pnpm registry:snapshot`                        | Reconstruit le snapshot depuis les events    |
+| `pnpm verify:registry`                          | Vérifie que le registry est à jour (CI gate) |
 
 ---
 
 ## 📊 Types d'événements
 
-| Type | Quand l'utiliser |
-|------|-----------------|
-| `REGISTRY_INIT` | Initialisation du système |
-| `TEST_ADDED` | Nouveau fichier de test ajouté |
-| `TEST_REMOVED` | Fichier de test supprimé |
-| `TEST_MODIFIED` | Modification majeure d'un test |
-| `CONFIG_CHANGED` | Changement dans vitest/playwright/wdio config |
-| `WORKFLOW_CHANGED` | Modification d'un workflow GitHub Actions |
-| `SUITE_ADDED` | Nouvelle suite de tests |
-| `SUITE_REMOVED` | Suite supprimée |
-| `GATE_ADDED` | Nouveau gate CI |
-| `GATE_MODIFIED` | Modification d'un gate |
-| `SCRIPT_ADDED` | Nouveau script npm |
-| `MANUAL_AUDIT` | Audit manuel du registry |
+| Type               | Quand l'utiliser                              |
+| ------------------ | --------------------------------------------- |
+| `REGISTRY_INIT`    | Initialisation du système                     |
+| `TEST_ADDED`       | Nouveau fichier de test ajouté                |
+| `TEST_REMOVED`     | Fichier de test supprimé                      |
+| `TEST_MODIFIED`    | Modification majeure d'un test                |
+| `CONFIG_CHANGED`   | Changement dans vitest/playwright/wdio config |
+| `WORKFLOW_CHANGED` | Modification d'un workflow GitHub Actions     |
+| `SUITE_ADDED`      | Nouvelle suite de tests                       |
+| `SUITE_REMOVED`    | Suite supprimée                               |
+| `GATE_ADDED`       | Nouveau gate CI                               |
+| `GATE_MODIFIED`    | Modification d'un gate                        |
+| `SCRIPT_ADDED`     | Nouveau script npm                            |
+| `MANUAL_AUDIT`     | Audit manuel du registry                      |
 
 ---
 
 ## 📋 Workflow CI
 
 Le workflow **registry-guard.yml** déclenche automatiquement sur:
+
 - Push vers `MAIN`, `main`, `dev`
 - Pull requests vers `MAIN`, `main`
 
 **Fichiers surveillés:**
+
 - `src/**/*.test.ts`, `src/**/*.spec.ts`
 - `tests/**/*.test.ts`, `tests/**/*.spec.ts`
 - `e2e/**/*.spec.ts`, `e2e/**/*.test.ts`, `e2e/**/*.test.js`
@@ -72,6 +74,7 @@ Le workflow **registry-guard.yml** déclenche automatiquement sur:
 - `package.json`
 
 **Comportement:**
+
 1. Vérifie que les fichiers registry existent
 2. Exécute `pnpm verify:registry`
 3. Fail si code modifié sans mise à jour registry récente

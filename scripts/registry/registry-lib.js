@@ -68,7 +68,12 @@ export function parseCliArgs(argv) {
     if (!token.startsWith('--')) continue;
     const [rawKey, rawValue] = token.slice(2).split('=');
     const key = rawKey.trim();
-    const value = rawValue !== undefined ? rawValue : (args[i + 1] && !args[i + 1].startsWith('--') ? args[++i] : '');
+    const value =
+      rawValue !== undefined
+        ? rawValue
+        : args[i + 1] && !args[i + 1].startsWith('--')
+          ? args[++i]
+          : '';
     result[key] = value;
   }
   return result;
@@ -78,7 +83,7 @@ export function splitCsv(value) {
   if (!value) return [];
   return value
     .split(',')
-    .map((s) => s.trim())
+    .map(s => s.trim())
     .filter(Boolean);
 }
 
@@ -92,8 +97,8 @@ export function looksLikeSecret(text) {
     /AIzaSy[A-Za-z0-9_-]{20,}/,
     /-----BEGIN [A-Z ]+PRIVATE KEY-----/,
   ];
-  if (patterns.some((p) => p.test(s))) return true;
-  if (/[A-Za-z0-9_\-]{48,}/.test(s)) return true;
+  if (patterns.some(p => p.test(s))) return true;
+  if (/[A-Za-z0-9_-]{48,}/.test(s)) return true;
   return false;
 }
 
@@ -108,7 +113,7 @@ export function assert(condition, message) {
 export function loadEventsJsonl(eventsFile) {
   if (!fs.existsSync(eventsFile)) return [];
   const content = fs.readFileSync(eventsFile, 'utf8');
-  const lines = content.split('\n').filter((l) => l.trim().length > 0);
+  const lines = content.split('\n').filter(l => l.trim().length > 0);
   return lines.map((line, idx) => {
     try {
       return JSON.parse(line);

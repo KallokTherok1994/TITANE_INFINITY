@@ -23,8 +23,10 @@ function render() {
   const cycles = fs.existsSync(CYCLES_FILE) ? readJson(CYCLES_FILE) : null;
   const events = loadEventsJsonl(EVENTS_FILE);
 
-  const activeCycleId = snapshot?.registry?.activeCycleId || cycles?.activeCycleId || null;
-  const activeCycle = activeCycleId && cycles ? cycles.open.find((c) => c.id === activeCycleId) : null;
+  const activeCycleId =
+    snapshot?.registry?.activeCycleId || cycles?.activeCycleId || null;
+  const activeCycle =
+    activeCycleId && cycles ? cycles.open.find(c => c.id === activeCycleId) : null;
   const recent = events.slice(-12).reverse();
 
   const lines = [];
@@ -36,7 +38,9 @@ function render() {
     lines.push(`- Objectif: ${activeCycle.objective}`);
   }
   if (snapshot?.registry?.priorityActionUnique) {
-    lines.push(`- Action prioritaire (unique): ${snapshot.registry.priorityActionUnique}`);
+    lines.push(
+      `- Action prioritaire (unique): ${snapshot.registry.priorityActionUnique}`
+    );
   }
   if (snapshot?.registry?.nextBlocker) {
     lines.push(`- Blocage principal: ${snapshot.registry.nextBlocker}`);
@@ -46,7 +50,9 @@ function render() {
   lines.push('## Dernière décision');
   if (snapshot?.registry?.lastDecision) {
     const d = snapshot.registry.lastDecision;
-    lines.push(`- ${d.timestamp} — ${d.description} (owner=${d.owner}, priority=${d.priority})`);
+    lines.push(
+      `- ${d.timestamp} — ${d.description} (owner=${d.owner}, priority=${d.priority})`
+    );
   } else {
     lines.push('- Aucune');
   }
@@ -55,7 +61,9 @@ function render() {
   lines.push('## Dernier test_run');
   if (snapshot?.registry?.lastTestRun) {
     const t = snapshot.registry.lastTestRun;
-    lines.push(`- ${t.timestamp} — suite=${t.suiteId || 'n/a'} failed=${t.failed ?? 'n/a'} passed=${t.passed ?? 'n/a'} duration_ms=${t.duration_ms ?? 'n/a'}`);
+    lines.push(
+      `- ${t.timestamp} — suite=${t.suiteId || 'n/a'} failed=${t.failed ?? 'n/a'} passed=${t.passed ?? 'n/a'} duration_ms=${t.duration_ms ?? 'n/a'}`
+    );
     if (t.command) lines.push(`- Commande: ${t.command}`);
   } else {
     lines.push('- Aucun');
@@ -68,7 +76,9 @@ function render() {
   } else {
     for (const e of recent) {
       const id = e.id ? e.id.slice(0, 10) : 'legacy';
-      const desc = e.description ? String(e.description).replace(/\s+/g, ' ').trim() : '(no description)';
+      const desc = e.description
+        ? String(e.description).replace(/\s+/g, ' ').trim()
+        : '(no description)';
       lines.push(`- ${e.timestamp} [${id}] ${e.type}: ${desc}`);
     }
   }

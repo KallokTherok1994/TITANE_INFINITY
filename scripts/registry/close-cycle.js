@@ -10,7 +10,14 @@ import { fileURLToPath } from 'node:url';
 import fs from 'node:fs';
 import { spawnSync } from 'node:child_process';
 
-import { assert, nowIso, parseCliArgs, readJson, resolveRepoRoot, writeJson } from './registry-lib.js';
+import {
+  assert,
+  nowIso,
+  parseCliArgs,
+  readJson,
+  resolveRepoRoot,
+  writeJson,
+} from './registry-lib.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = resolveRepoRoot(__dirname);
@@ -35,9 +42,12 @@ function close() {
   assert(owner && owner.trim().length > 0, 'Missing --owner');
   assert(priority && ['P0', 'P1', 'P2', 'P3'].includes(priority), 'Invalid --priority');
   assert(desc && desc.trim().length >= 20, 'Missing/short --desc (>=20 chars)');
-  assert(outcome && ['achieved', 'abandoned'].includes(outcome), 'Invalid --outcome (achieved|abandoned)');
+  assert(
+    outcome && ['achieved', 'abandoned'].includes(outcome),
+    'Invalid --outcome (achieved|abandoned)'
+  );
 
-  const idx = cycles.open.findIndex((c) => c.id === cycleId);
+  const idx = cycles.open.findIndex(c => c.id === cycleId);
   assert(idx >= 0, `Cycle non trouvé dans open: ${cycleId}`);
 
   const cycle = cycles.open[idx];
@@ -53,22 +63,26 @@ function close() {
   cycles.$schema = './schemas/cycles.schema.json';
   writeJson(CYCLES_FILE, cycles);
 
-  const res = spawnSync(process.execPath, [
-    path.resolve(ROOT_DIR, 'scripts/registry/log-event.js'),
-    `--type=CYCLE_END`,
-    `--cycleId=${cycleId}`,
-    `--attempt=1`,
-    `--severity=LOW`,
-    `--impact=DELIVERY`,
-    `--owner=${owner}`,
-    `--priority=${priority}`,
-    `--desc=${desc.trim()}`,
-    `--blockers=`,
-    `--justification=outcome:${outcome}`,
-  ], {
-    cwd: ROOT_DIR,
-    stdio: 'inherit',
-  });
+  const res = spawnSync(
+    process.execPath,
+    [
+      path.resolve(ROOT_DIR, 'scripts/registry/log-event.js'),
+      `--type=CYCLE_END`,
+      `--cycleId=${cycleId}`,
+      `--attempt=1`,
+      `--severity=LOW`,
+      `--impact=DELIVERY`,
+      `--owner=${owner}`,
+      `--priority=${priority}`,
+      `--desc=${desc.trim()}`,
+      `--blockers=`,
+      `--justification=outcome:${outcome}`,
+    ],
+    {
+      cwd: ROOT_DIR,
+      stdio: 'inherit',
+    }
+  );
   process.exit(res.status ?? 1);
 }
 

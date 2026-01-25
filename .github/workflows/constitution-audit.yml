@@ -1,99 +1,95 @@
-name: "📋 Constitution Audit (PHASE_4)"
+name: '📋 Constitution Audit (PHASE_4)'
 
 on:
   workflow_dispatch:
   schedule:
-    # Run weekly on Mondays at 00:00 UTC
     - cron: '0 0 * * 1'
   push:
     branches:
-      - "MAIN"
-      - "stable-runtime"
+      - 'MAIN'
+      - 'stable-runtime'
     tags:
-      - "v*.*.*"
+      - 'v*.*.*'
   pull_request:
     branches:
-      - "MAIN"
+      - 'MAIN'
 
 permissions:
   contents: read
 
 jobs:
   constitution-audit:
-    name: "Run Constitution Audit"
+    name: 'Run Constitution Audit'
     runs-on: ubuntu-latest
-    
     steps:
-      - name: "Checkout repository"
+      - name: 'Checkout repository'
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
-      - name: "Install system dependencies"
+
+      - name: 'Install system dependencies'
         run: |
           sudo apt-get update
           sudo apt-get install -y jq ripgrep
-      
-      - name: "🔍 PHASE_5: Capabilities Drift Check"
+
+      - name: '🔍 PHASE_5: Capabilities Drift Check'
         id: drift
         run: |
           chmod +x scripts/ci/check-capabilities-drift.sh
-          
+
           set +e
           bash scripts/ci/check-capabilities-drift.sh
           DRIFT_EXIT=$?
           set -e
-          
+
           echo "drift_exit_code=$DRIFT_EXIT" >> $GITHUB_OUTPUT
-          
+
           if [[ "$DRIFT_EXIT" -ne 0 ]]; then
             echo "❌ Capabilities drift detected!"
             exit 1
           else
             echo "✅ No capabilities drift"
           fi
-      
-      - name: "📋 PHASE_4: Run Constitution Audit"
+
+      - name: '📋 PHASE_4: Run Constitution Audit'
         id: audit
         run: |
           chmod +x scripts/audit/constitution-audit.sh
-          
-          # Run audit and capture exit code
+
           set +e
           bash scripts/audit/constitution-audit.sh --format both
           AUDIT_EXIT=$?
           set -e
-          
+
           echo "audit_exit_code=$AUDIT_EXIT" >> $GITHUB_OUTPUT
-          
+
           # Always continue to upload reports even if audit failed
           exit 0
-      
-      - name: "📊 Display Audit Summary"
+
+      - name: '📊 Display Audit Summary'
         run: |
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
           echo "📋 Constitution Audit Summary"
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          
+
           LATEST_JSON=$(ls -t reports/constitution-audit-*.json | head -n 1)
           LATEST_MD=$(ls -t reports/constitution-audit-*.md | head -n 1)
-          
+
           if [[ -f "$LATEST_JSON" ]]; then
             echo ""
             echo "📄 Latest JSON Report: $LATEST_JSON"
             jq '.summary' "$LATEST_JSON"
-            
+
             echo ""
             echo "📄 Latest Markdown Report: $LATEST_MD"
             echo ""
-            
-            # Extract summary from JSON
+
             TOTAL=$(jq -r '.summary.total_checks' "$LATEST_JSON")
             PASSED=$(jq -r '.summary.passed' "$LATEST_JSON")
             FAILED=$(jq -r '.summary.failed' "$LATEST_JSON")
             WARNINGS=$(jq -r '.summary.warnings' "$LATEST_JSON")
             COMPLIANCE=$(jq -r '.summary.compliance_percentage' "$LATEST_JSON")
-            
+
             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
             echo "Total Checks:  $TOTAL"
             echo "Passed:        $PASSED ✅"
@@ -105,8 +101,8 @@ jobs:
             echo "❌ No audit report found"
             exit 1
           fi
-      
-      - name: "📦 Upload Audit Reports"
+
+      - name: '📦 Upload Audit Reports'
         uses: actions/upload-artifact@v4
         with:
           name: constitution-audit-${{ github.sha }}
@@ -114,18 +110,18 @@ jobs:
             reports/constitution-audit-*.json
             reports/constitution-audit-*.md
           retention-days: 90
-      
-      - name: "🔍 Check Audit Compliance"
+
+      - name: '🔍 Check Audit Compliance'
         run: |
           LATEST_JSON=$(ls -t reports/constitution-audit-*.json | head -n 1)
-          
+
           FAILED=$(jq -r '.summary.failed' "$LATEST_JSON")
           COMPLIANCE=$(jq -r '.summary.compliance_percentage' "$LATEST_JSON")
-          
+
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
           echo "🔍 Compliance Check"
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          
+
           if [[ "$FAILED" -eq 0 ]]; then
             echo "✅ AUDIT PASSED: All checks passed ($COMPLIANCE% compliance)"
             exit 0
@@ -138,50 +134,51 @@ jobs:
             echo "⚠️  Constitution violations detected. Review audit report for details."
             exit 1
           fi
-      
-      - name: "📈 Post Audit Summary (PR Comment)"
+
+      - name: '📈 Post Audit Summary (PR Comment)'
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');
-            const latestJson = fs.readdirSync('reports')
-              .filter(f => f.startsWith('constitution-audit-') && f.endsWith('.json'))
+            const latestJson = fs
+              .readdirSync('reports')
+              .filter((f) => f.startsWith('constitution-audit-') && f.endsWith('.json'))
               .sort()
               .reverse()[0];
-            
+
             if (!latestJson) {
               console.log('No audit report found');
               return;
             }
-            
+
             const report = JSON.parse(fs.readFileSync(`reports/${latestJson}`, 'utf8'));
-            
+
             const body = `## 📋 Constitution Audit Report
 
-**Summary:**
-- **Total Checks:** ${report.summary.total_checks}
-- **Passed:** ✅ ${report.summary.passed}
-- **Failed:** ❌ ${report.summary.failed}
-- **Warnings:** ⚠️ ${report.summary.warnings}
-- **Compliance:** ${report.summary.compliance_percentage}%
+            **Summary:**
+            - **Total Checks:** ${report.summary.total_checks}
+            - **Passed:** ✅ ${report.summary.passed}
+            - **Failed:** ❌ ${report.summary.failed}
+            - **Warnings:** ⚠️ ${report.summary.warnings}
+            - **Compliance:** ${report.summary.compliance_percentage}%
 
-${report.summary.failed > 0 ? '⚠️ **Action Required:** Constitution violations detected.' : '✅ **All checks passed!**'}
+            ${report.summary.failed > 0 ? '⚠️ **Action Required:** Constitution violations detected.' : '✅ **All checks passed!**'}
 
-<details>
-<summary>📊 Full Report</summary>
+            <details>
+            <summary>📊 Full Report</summary>
 
-\`\`\`json
-${JSON.stringify(report, null, 2)}
-\`\`\`
+            \`\`\`json
+            ${JSON.stringify(report, null, 2)}
+            \`\`\`
 
-</details>
+            </details>
 
-_Generated by Constitution Audit v1.0.0_`;
-            
+            _Generated by Constitution Audit v1.0.0_`;
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: body
+              body,
             });
