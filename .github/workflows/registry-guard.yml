@@ -54,7 +54,7 @@ jobs:
       - name: '📥 Checkout'
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2  # Need HEAD~1 for diff
+          fetch-depth: 2 # Need HEAD~1 for diff
 
       - name: '🔧 Setup Node.js'
         uses: actions/setup-node@v4
@@ -72,13 +72,13 @@ jobs:
       - name: '🔍 Check registry files exist'
         run: |
           echo "📋 Checking registry files..."
-          
+
           if [ ! -f "runtime/registry/events.jsonl" ]; then
             echo "❌ FAIL: runtime/registry/events.jsonl missing"
             echo "Initialize with: pnpm registry:cycle:start -- --objective='Décrire le cycle (>=20 chars)' --owner='<name>' --priority=P1 --next='Action prioritaire'"
             exit 1
           fi
-          
+
           if [ ! -f "runtime/registry/snapshot.json" ]; then
             echo "❌ FAIL: runtime/registry/snapshot.json missing"
             echo "Create with: pnpm registry:snapshot"
@@ -90,7 +90,7 @@ jobs:
             echo "Create with: pnpm registry:dashboard"
             exit 1
           fi
-          
+
           echo "✅ Registry files exist"
 
       - name: '📊 Show changed files'
@@ -127,7 +127,7 @@ jobs:
           mkdir -p /tmp/registry-evidence
           TIMESTAMP=$(date -Iseconds)
           EVIDENCE_FILE="/tmp/registry-evidence/registry-guard-${{ github.run_id }}.txt"
-          
+
           {
             echo "GATE_REGISTRY Evidence"
             echo "======================"

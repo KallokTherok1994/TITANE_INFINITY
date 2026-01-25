@@ -70,12 +70,18 @@ function isVagueDescription(desc) {
   const d = desc.trim();
   if (d.length < 20) return true;
   if (/^(update|fix|changes|misc|cleanup|wip)\b/i.test(d)) return true;
-  const hasSignal = /\b(pnpm|vitest|cargo|tauri|workflow|gate|suite)\b/i.test(d) || /\.(ts|tsx|js|yml|json|md)\b/i.test(d) || d.includes('/') || /\d/.test(d);
+  const hasSignal =
+    /\b(pnpm|vitest|cargo|tauri|workflow|gate|suite)\b/i.test(d) ||
+    /\.(ts|tsx|js|yml|json|md)\b/i.test(d) ||
+    d.includes('/') ||
+    /\d/.test(d);
   return !hasSignal;
 }
 
 function getExistingAttemptKey(events, cycleId, type, attempt) {
-  return events.some((e) => e && e.cycleId === cycleId && e.type === type && e.attempt === attempt);
+  return events.some(
+    e => e && e.cycleId === cycleId && e.type === type && e.attempt === attempt
+  );
 }
 
 function logEvent() {
@@ -113,8 +119,14 @@ function logEvent() {
   assert(VALID_TYPES.includes(type), `Invalid type: ${type}`);
   assert(cycleId, 'Missing --cycleId');
   assert(Number.isFinite(attempt) && attempt >= 1, 'Invalid --attempt (>=1)');
-  assert(description && description.trim().length >= 20, 'Missing/short --desc (>=20 chars)');
-  assert(!isVagueDescription(description), 'Description trop vague (doit contenir un signal concret: fichier/commande/outil/numéro)');
+  assert(
+    description && description.trim().length >= 20,
+    'Missing/short --desc (>=20 chars)'
+  );
+  assert(
+    !isVagueDescription(description),
+    'Description trop vague (doit contenir un signal concret: fichier/commande/outil/numéro)'
+  );
   assert(severity && VALID_SEVERITY.includes(severity), 'Invalid --severity');
   assert(impact && VALID_IMPACT.includes(impact), 'Invalid --impact');
   assert(owner && owner.trim().length > 0, 'Missing --owner');
@@ -131,7 +143,10 @@ function logEvent() {
   const existingEvents = loadEventsJsonl(EVENTS_FILE);
   const duplicateAttempt = getExistingAttemptKey(existingEvents, cycleId, type, attempt);
   if (duplicateAttempt) {
-    assert(meta.justification && meta.justification.trim().length >= 15, 'attempt répété: fournir --justification (>=15 chars)');
+    assert(
+      meta.justification && meta.justification.trim().length >= 15,
+      'attempt répété: fournir --justification (>=15 chars)'
+    );
   }
 
   const event = {
@@ -151,7 +166,7 @@ function logEvent() {
     severity,
     impact,
     files: files.length > 0 ? files : undefined,
-    meta: Object.values(meta).some((v) => v !== undefined && v !== '') ? meta : undefined,
+    meta: Object.values(meta).some(v => v !== undefined && v !== '') ? meta : undefined,
     next_actions: nextActions,
     blockers,
     owner,
@@ -169,4 +184,3 @@ try {
   console.error(`❌ ${e.message}`);
   process.exit(1);
 }
-

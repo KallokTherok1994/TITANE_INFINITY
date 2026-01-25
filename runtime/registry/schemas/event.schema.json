@@ -54,7 +54,10 @@
     },
     "description": { "type": "string", "minLength": 20 },
     "severity": { "type": "string", "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"] },
-    "impact": { "type": "string", "enum": ["TESTS", "CI", "ARCHITECTURE", "SECURITY", "DELIVERY"] },
+    "impact": {
+      "type": "string",
+      "enum": ["TESTS", "CI", "ARCHITECTURE", "SECURITY", "DELIVERY"]
+    },
     "files": { "type": "array", "items": { "type": "string" } },
     "meta": { "type": "object" },
     "next_actions": { "type": "array", "items": { "type": "string" } },

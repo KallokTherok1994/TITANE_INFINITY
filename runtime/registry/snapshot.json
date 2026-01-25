@@ -155,11 +155,7 @@
     },
     "test-100-full": {
       "command": "pnpm test:100:full",
-      "includes": [
-        "vitest-core",
-        "vitest-e2e",
-        "vitest-browser"
-      ]
+      "includes": ["vitest-core", "vitest-e2e", "vitest-browser"]
     }
   },
   "registry": {

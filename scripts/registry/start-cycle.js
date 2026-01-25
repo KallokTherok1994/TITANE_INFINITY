@@ -9,7 +9,16 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import fs from 'node:fs';
 
-import { assert, generateUlid, nowIso, parseCliArgs, readJson, resolveRepoRoot, splitCsv, writeJson } from './registry-lib.js';
+import {
+  assert,
+  generateUlid,
+  nowIso,
+  parseCliArgs,
+  readJson,
+  resolveRepoRoot,
+  splitCsv,
+  writeJson,
+} from './registry-lib.js';
 import { spawnSync } from 'node:child_process';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -37,7 +46,10 @@ function start() {
   const priority = args.priority;
   const nextActions = splitCsv(args.next || args.next_actions);
 
-  assert(objective && objective.trim().length >= 20, 'Missing/short --objective (>=20 chars)');
+  assert(
+    objective && objective.trim().length >= 20,
+    'Missing/short --objective (>=20 chars)'
+  );
   assert(owner && owner.trim().length > 0, 'Missing --owner');
   assert(priority && ['P0', 'P1', 'P2', 'P3'].includes(priority), 'Invalid --priority');
   assert(nextActions.length >= 1, 'next_actions requis (min 1)');
@@ -61,21 +73,25 @@ function start() {
   cycles.$schema = './schemas/cycles.schema.json';
   writeJson(CYCLES_FILE, cycles);
 
-  const res = spawnSync(process.execPath, [
-    path.resolve(ROOT_DIR, 'scripts/registry/log-event.js'),
-    `--type=CYCLE_START`,
-    `--cycleId=${cycleId}`,
-    `--attempt=1`,
-    `--severity=MEDIUM`,
-    `--impact=DELIVERY`,
-    `--owner=${owner}`,
-    `--priority=${priority}`,
-    `--desc=${objective.trim()}`,
-    `--next=${nextActions.join(',')}`,
-  ], {
-    cwd: ROOT_DIR,
-    stdio: 'inherit',
-  });
+  const res = spawnSync(
+    process.execPath,
+    [
+      path.resolve(ROOT_DIR, 'scripts/registry/log-event.js'),
+      `--type=CYCLE_START`,
+      `--cycleId=${cycleId}`,
+      `--attempt=1`,
+      `--severity=MEDIUM`,
+      `--impact=DELIVERY`,
+      `--owner=${owner}`,
+      `--priority=${priority}`,
+      `--desc=${objective.trim()}`,
+      `--next=${nextActions.join(',')}`,
+    ],
+    {
+      cwd: ROOT_DIR,
+      stdio: 'inherit',
+    }
+  );
   process.exit(res.status ?? 1);
 }
 
