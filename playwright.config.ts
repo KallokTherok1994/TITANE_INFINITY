@@ -6,10 +6,15 @@
  */
 
 import { defineConfig, devices } from '@playwright/test';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const CONFIG_DIR = dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   // Test directories
-  testDir: './e2e',
+  // Chemin absolu pour éviter les soucis de cwd (ex: exécutions via wrappers/tasks)
+  testDir: resolve(CONFIG_DIR, 'e2e'),
   testMatch: '**/*.spec.ts',
 
   // Parallel execution
@@ -25,7 +30,9 @@ export default defineConfig({
   },
 
   // Reporting
-  reporter: process.env.CI ? [['html'], ['github']] : [['html'], ['list']],
+  reporter: process.env.CI
+    ? [['github'], ['html', { open: 'never' }]]
+    : [['list'], ['html', { open: 'never' }]],
 
   // Browser options
   use: {

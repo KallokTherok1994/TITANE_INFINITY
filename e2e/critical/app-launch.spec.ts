@@ -137,20 +137,22 @@ test.describe('Critical Path: Application Launch', () => {
       await page.waitForTimeout(300);
     }
 
-    // Find any interactive element (button, input, toggle)
-    const interactiveElement = await page
-      .locator('button, input, [role="button"]')
-      .first();
+    // Utilise une interaction stable (tabs TITANE) plutôt que le "premier bouton".
+    const tablist = page.getByRole('tablist', { name: /Sections principales TITANE/i });
+    await expect(tablist).toBeVisible({ timeout: 15000 });
 
-    if ((await interactiveElement.count()) > 0) {
-      await interactiveElement.click();
+    const memoryTab = page.getByRole('tab', { name: /Mémoire/i }).first();
+    const conversationTab = page.getByRole('tab', { name: /Conversation/i }).first();
 
-      // Wait for potential state update
-      await page.waitForTimeout(500);
+    await expect(memoryTab).toBeVisible({ timeout: 15000 });
+    await memoryTab.click({ force: true });
+    await page.waitForTimeout(300);
 
-      // Verify page still functional (no crash)
-      const bodyVisible = await page.locator('body').isVisible();
-      expect(bodyVisible).toBe(true);
-    }
+    await expect(conversationTab).toBeVisible({ timeout: 15000 });
+    await conversationTab.click({ force: true });
+    await page.waitForTimeout(300);
+
+    // Verify page still functional (no crash)
+    await expect(page.locator('body')).toBeVisible();
   });
 });

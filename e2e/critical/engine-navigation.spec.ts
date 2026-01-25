@@ -27,8 +27,10 @@ test.describe('Critical Path: Engine Navigation', () => {
 
   test('all 9 engines are represented in UI', async ({ page }) => {
     // Check for main navigation buttons (TITANE, TIME, STATS, ADMIN, DEV, FUSION, OPTIMIZE)
-    const navButtons = await page.locator('nav[aria-label="Main navigation"] button, nav button[role="button"]').count();
-    
+    const navButtons = await page
+      .locator('nav[aria-label="Main navigation"] button, nav button[role="button"]')
+      .count();
+
     // Should have at least 5 main navigation buttons visible
     expect(navButtons).toBeGreaterThan(5);
   });
@@ -42,7 +44,9 @@ test.describe('Critical Path: Engine Navigation', () => {
     }
 
     // Find navigation buttons in the sidebar
-    const navButtons = page.locator('nav[aria-label="Main navigation"] button, nav button');
+    const navButtons = page.locator(
+      'nav[aria-label="Main navigation"] button, nav button'
+    );
     const navCount = await navButtons.count();
 
     expect(navCount).toBeGreaterThan(0);
@@ -67,7 +71,9 @@ test.describe('Critical Path: Engine Navigation', () => {
     }
 
     // Look for Console Monitor or error indicators
-    const healthIndicators = await page.getByText(/Console Monitor|err\/min|health|status|score|état/i).count();
+    const healthIndicators = await page
+      .getByText(/Console Monitor|err\/min|health|status|score|état/i)
+      .count();
 
     // Should have at least one health indicator
     expect(healthIndicators).toBeGreaterThan(0);
