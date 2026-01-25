@@ -52,10 +52,21 @@ let _cognitiveKernelPromise: Promise<{
   harmonizeError: (error: unknown) => { message: string; type: string; recovery: string };
 }> | null = null;
 
+type CognitiveKernelModule = {
+  cognitiveKernel: {
+    harmonizeChatMessages: (messages: unknown) => unknown;
+    harmonizeError: (error: unknown) => {
+      message: string;
+      type: string;
+      recovery: string;
+    };
+  };
+};
+
 const loadCognitiveKernel = async () => {
   if (!_cognitiveKernelPromise) {
     _cognitiveKernelPromise = import('@/services/ai/cognitiveKernel').then(m => {
-      const kernel = (m as any).cognitiveKernel as any;
+      const kernel = (m as unknown as CognitiveKernelModule).cognitiveKernel;
       return {
         harmonizeChatMessages: kernel.harmonizeChatMessages.bind(kernel),
         harmonizeError: kernel.harmonizeError.bind(kernel),
@@ -70,10 +81,17 @@ let _userPreferencesEnginePromise: Promise<{
   recordInteraction: (input: string, output: string) => void;
 }> | null = null;
 
+type UserPreferencesEngineModule = {
+  userPreferencesEngine: {
+    generateContextForAI: () => unknown;
+    recordInteraction: (input: string, output: string) => void;
+  };
+};
+
 const loadUserPreferencesEngine = async () => {
   if (!_userPreferencesEnginePromise) {
     _userPreferencesEnginePromise = import('@/services/userPreferencesEngine').then(m => {
-      const engine = (m as any).userPreferencesEngine as any;
+      const engine = (m as unknown as UserPreferencesEngineModule).userPreferencesEngine;
       return {
         generateContextForAI: engine.generateContextForAI.bind(engine),
         recordInteraction: engine.recordInteraction.bind(engine),
@@ -93,14 +111,29 @@ let _experienceToolsPromise: Promise<{
   ) => Promise<void>;
 }> | null = null;
 
+type ExperienceXPModule = {
+  XP: {
+    gain: (amount: number, source?: string, description?: string) => void;
+  };
+};
+
+type ExperienceServiceModule = {
+  awardExperience: (
+    domainId: string,
+    amount: number,
+    source: XPSource,
+    metadata?: Record<string, unknown>
+  ) => Promise<void>;
+};
+
 const loadExperienceTools = async () => {
   if (!_experienceToolsPromise) {
     _experienceToolsPromise = Promise.all([
       import('@/core/experience/XP_ENGINE'),
       import('@/services/experienceService'),
     ]).then(([xp, svc]) => {
-      const XP = (xp as any).XP as any;
-      const awardExperience = (svc as any).awardExperience as any;
+      const XP = (xp as unknown as ExperienceXPModule).XP;
+      const awardExperience = (svc as unknown as ExperienceServiceModule).awardExperience;
       return {
         gainXP: XP.gain.bind(XP),
         awardExperience,
@@ -112,10 +145,14 @@ const loadExperienceTools = async () => {
 
 let _devSudoPromise: Promise<(content: string) => Promise<DevSudoResult>> | null = null;
 
+type DevSudoModule = {
+  handleDevSudoInChat: (content: string) => Promise<DevSudoResult>;
+};
+
 const loadDevSudoIntegration = async () => {
   if (!_devSudoPromise) {
     _devSudoPromise = import('@/modules/devSudo/devSudoIntegration').then(
-      m => (m as any).handleDevSudoInChat
+      m => (m as unknown as DevSudoModule).handleDevSudoInChat
     );
   }
   return _devSudoPromise;
@@ -125,10 +162,17 @@ let _cameraPromise: Promise<
   (content: string, visionStore: unknown) => Promise<CameraChatIntegrationResult>
 > | null = null;
 
+type CameraModule = {
+  handleCameraInChat: (
+    content: string,
+    visionStore: unknown
+  ) => Promise<CameraChatIntegrationResult>;
+};
+
 const loadCameraIntegration = async () => {
   if (!_cameraPromise) {
     _cameraPromise = import('@/modules/camera/cameraChatIntegration').then(
-      m => (m as any).handleCameraInChat
+      m => (m as unknown as CameraModule).handleCameraInChat
     );
   }
   return _cameraPromise;

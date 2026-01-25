@@ -44,7 +44,7 @@ type UseChatCoreReturn = {
     content: string,
     mode: ChatMode,
     prompt: string
-  ) => { isValid: boolean; score: number; issues: any[] };
+  ) => { isValid: boolean; score: number; issues: unknown[] };
 };
 
 const mockResponse = (content: string): ChatEngineResponse => ({
