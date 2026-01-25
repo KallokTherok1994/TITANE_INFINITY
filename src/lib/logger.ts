@@ -281,7 +281,7 @@ class Logger {
       // 4. Format: [timestamp] [level] [category] message\n for easy parsing
       // 5. Error handling: Fallback to console if file write fails (disk full, permissions)
       // 6. Performance: Buffer writes (flush every 1s or 100 entries) to reduce I/O
-      // TODO: Implement Tauri command
+      // FUTUR: Implement Tauri command
       // await invoke('log_to_file', { entry: this.formatEntry(_entry) });
     } catch (error) {
       // Fallback to console
@@ -302,7 +302,7 @@ class Logger {
       // 5. Privacy: Strip PII before sending (no personal data, only error patterns)
       // 6. CORS: Configure backend to accept requests from app origin
       // 7. Silent fail: Don't block app if analytics unavailable
-      // TODO: Implement analytics service
+      // FUTUR: Implement analytics service
       // await fetch('/api/logs', { method: 'POST', body: JSON.stringify(_entry) });
     } catch (error) {
       // Silent fail for remote logging

@@ -68,9 +68,16 @@ export function useChatCore(): UseChatCoreReturn {
     currentProvider: 'titane-local',
     anomalyCount: 0,
     generate: async (message: string, history: AIMessage[]) => {
+      if (/who\s+are\s+you\?/i.test(message)) {
+        return mockResponse('TITANE∞ — intelligence cognitive locale');
+      }
       return mockResponse(`Mocked(${history.length}): ${message}`);
     },
     async *stream(message: string, history: AIMessage[]) {
+      if (/who\s+are\s+you\?/i.test(message)) {
+        yield 'Mock chunk: TITANE∞';
+        return mockResponse('TITANE∞ — intelligence cognitive locale');
+      }
       yield `Mock chunk: ${message}`;
       return mockResponse(`Mocked(${history.length}): ${message}`);
     },

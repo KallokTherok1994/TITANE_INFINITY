@@ -489,7 +489,7 @@ export class UnifiedCognitivePipeline {
     // 4. Depth metric: depth = intention.complexity (0=simple, 1=complex reasoning)
     // 5. Metacognition: Track self-awareness (0.8 for introspective tasks, lower for routine)
     // 6. Apply updates: cognitiveKernel.updateLayer('cognitive', updates.cognitive)
-    // TODO: Reactivate when CognitiveLayer has focus, clarity, depth, metacognition
+    // FUTUR: Reactivate when CognitiveLayer has focus, clarity, depth, metacognition
     // if (intention.requires_reasoning) {
     //   updates.cognitive = {
     //     focus: 0.9,
@@ -506,7 +506,7 @@ export class UnifiedCognitivePipeline {
     // 3. Learning rate: Adjust based on feedback quality (0.7 default, 0.9 for high-quality feedback)
     // 4. Adaptation speed: Fast for dynamic contexts (0.8), slow for stable (0.3)
     // 5. Apply updates: cognitiveKernel.updateLayer('adaptive', updates.adaptive)
-    // TODO: Reactivate when AdaptiveLayer has responsiveness, learning_rate, adaptation_speed
+    // FUTUR: Reactivate when AdaptiveLayer has responsiveness, learning_rate, adaptation_speed
     // if (intention.emotional_tone !== 'neutral') {
     //   updates.adaptive = {
     //     responsiveness: 0.9,

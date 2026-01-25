@@ -18,6 +18,8 @@ import { useChatMemory } from '@hooks/useChatMemory';
 import type { ChatMode } from '@/services/ai/chatTypes';
 import type { AIMessage, AIProviderName, AIResponse } from '@/services/ai/types';
 import type { HarmonizedMessage } from '@/types/cognitiveKernel';
+import type { DevSudoResult } from '@/modules/devSudo/devSudoIntegration';
+import type { CameraChatIntegrationResult } from '@/modules/camera/cameraChatIntegration';
 import { hybridTTS } from '@/services/tts/hybridTTS';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
 // ✨ v24.2.1 - Streaming Debounce for Performance
@@ -108,8 +110,7 @@ const loadExperienceTools = async () => {
   return _experienceToolsPromise;
 };
 
-let _devSudoPromise: Promise<(content: string) => Promise<{ handled: boolean }>> | null =
-  null;
+let _devSudoPromise: Promise<(content: string) => Promise<DevSudoResult>> | null = null;
 
 const loadDevSudoIntegration = async () => {
   if (!_devSudoPromise) {
@@ -121,7 +122,7 @@ const loadDevSudoIntegration = async () => {
 };
 
 let _cameraPromise: Promise<
-  (content: string, visionStore: unknown) => Promise<{ handled: boolean }>
+  (content: string, visionStore: unknown) => Promise<CameraChatIntegrationResult>
 > | null = null;
 
 const loadCameraIntegration = async () => {
@@ -365,6 +366,8 @@ interface UseChatReturn {
 
   // Actions
   sendMessage: (content: string) => Promise<AIMessage>;
+  handleSend: () => Promise<void>;
+  restoreFromVault: () => void;
   clearChat: () => void;
   setMode: (mode: ChatMode) => void;
   setInput: (value: string) => void;
@@ -874,7 +877,9 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         // Déjà vide partout (state/ref/vault) → ne pas forcer un setState([]) redondant.
         // Important: évite une boucle de rendu si `messagesForMode` change de référence
         // (ex: mocks tests) tout en restant vide.
-        chatLogger.info('📭 All sources empty and cooldown passed (no-op: already empty)');
+        chatLogger.info(
+          '📭 All sources empty and cooldown passed (no-op: already empty)'
+        );
       }
       return;
     }

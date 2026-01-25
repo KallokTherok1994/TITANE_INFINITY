@@ -9,9 +9,6 @@ export async function listen<T = unknown>(
   return () => {};
 }
 
-export async function emit<T = unknown>(
-  _event: string,
-  _payload?: T
-): Promise<void> {
+export async function emit<T = unknown>(_event: string, _payload?: T): Promise<void> {
   // no-op
 }

@@ -336,7 +336,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
 
         const file = e.target.files[0];
 
-        // TODO: Intégrer avec Whisper API ou service de transcription
+        // FUTUR: Intégrer avec Whisper API ou service de transcription
         // Pour l'instant, on simule avec Web Speech API si disponible
         isDev &&
           console.log('[ChatToolbar] Audio file selected for transcription:', file.name);

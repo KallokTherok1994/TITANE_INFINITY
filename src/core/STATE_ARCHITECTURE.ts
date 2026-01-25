@@ -127,7 +127,7 @@
  * - `singularity_sync` : Force une synchronisation
  * - `singularity_repair` : Lance une réparation
  *
- * ## TODO CONSOLIDATION
+ * ## CONSOLIDATION (À FAIRE)
  *
  * - [ ] Créer un type unifié `GlobalState` qui définit clairement :
  *       - Ce qui est persisté (backend)

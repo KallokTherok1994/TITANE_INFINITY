@@ -31,6 +31,11 @@ const scheduleIdleTask =
     ? window.requestIdleCallback
     : (cb: () => void) => setTimeout(cb, 1); // Fallback: next tick
 
+const IS_VITEST =
+  typeof process !== 'undefined' &&
+  typeof process.env !== 'undefined' &&
+  typeof process.env.VITEST !== 'undefined';
+
 // ─────────────────────────────────────────────────────────────────
 // TYPES
 // ─────────────────────────────────────────────────────────────────
@@ -99,6 +104,12 @@ class ChatMemoryCompactor {
 
     // ✨ v24.3.7: Queue the save instead of executing immediately
     this.pendingSaves.set(mode, messages);
+
+    // In Vitest, avoid async idle batching that can leak state across tests.
+    if (IS_VITEST) {
+      this.flushPendingSaves();
+      return;
+    }
 
     // Schedule idle write if not already scheduled
     if (!this.saveScheduled) {

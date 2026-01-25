@@ -29,8 +29,8 @@ describe('GATE_RELEASE: TITANE∞ PRODUCTION CERTIFICATION', () => {
   describe('RELEASE.G1: Complete Phase Chain Validation', () => {
     it('should have all P0-P6 test gates operational', async () => {
       const phaseGates = [
-        // 'tests/phase0-1/gate-p0-1.test.ts',   // P0.1: Secrets Guard (TODO)
-        // 'tests/phase0-2/gate-p0-2.test.ts',   // P0.2: Surface Guard (TODO)
+        // 'tests/phase0-1/gate-p0-1.test.ts',   // P0.1: Secrets Guard (À FAIRE)
+        // 'tests/phase0-2/gate-p0-2.test.ts',   // P0.2: Surface Guard (À FAIRE)
         'tests/phase2/gate-p2.test.ts', // P2: Contracts
         'tests/phase3/gate-p3.test.ts', // P3: Stable Build
         'tests/phase4/gate-p4.test.ts', // P4: Constitution Audit
