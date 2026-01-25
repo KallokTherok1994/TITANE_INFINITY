@@ -3,7 +3,7 @@ use crate::error::TitaneError;
  * ═══════════════════════════════════════════════════════════════════════════
  * TITANE∞ v24 — ENGINE TRAIT & ORCHESTRATOR
  * Unified engine interface + orchestration
- * TODO #13
+ * TRACKER #13
  * ═══════════════════════════════════════════════════════════════════════════
  */
 use serde::{Deserialize, Serialize};

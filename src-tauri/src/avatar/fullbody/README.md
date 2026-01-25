@@ -222,7 +222,7 @@ Voir **`AVATAR_STYLE_V24.md`** pour détails complets.
 
 ---
 
-## 📝 TODO v24.1+
+## 📝 À FAIRE v24.1+
 
 ### Phase 1: Rendu 3D (WebGL/Three.js)
 

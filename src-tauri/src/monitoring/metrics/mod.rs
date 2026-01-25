@@ -34,8 +34,8 @@ pub struct CommandStats {
 /// Metrics collector coordinating all metric sources
 pub struct MetricsCollector {
     ipc_metrics: IpcMetrics,
-    // TODO: Add time-series storage
-    // TODO: Add metric registry
+    // FUTUR: Add time-series storage
+    // FUTUR: Add metric registry
 }
 
 impl MetricsCollector {

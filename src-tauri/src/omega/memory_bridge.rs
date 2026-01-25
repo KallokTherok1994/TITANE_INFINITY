@@ -3,7 +3,7 @@
 //   SUPER PROMPT #8: Seamless memory integration into pipeline
 // ═══════════════════════════════════════════════════════════════
 
-// TODO v25.x: Migrer vers unified_memory_v2::bridge
+// PLAN v25.x: Migrer vers unified_memory_v2::bridge
 // Warnings supprimés temporairement - migration planifiée Phase 3
 #![allow(deprecated)]
 

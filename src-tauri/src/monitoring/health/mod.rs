@@ -51,7 +51,7 @@ impl HealthMonitor {
     pub fn check_all(&mut self) -> HealthStatus {
         self.status.last_check = chrono::Utc::now();
 
-        // TODO: Implement actual health checks
+        // FUTUR: Implement actual health checks
         // - Tauri API health
         // - Memory usage thresholds
         // - Filesystem accessibility

@@ -147,7 +147,7 @@ pub async fn multimodal_search_cross_modal(
     let memory = state.image_memory.read().await;
     
     // For now, return placeholder
-    // TODO: Implement text→image and image→image search with proper embeddings
+    // FUTUR: Implement text→image and image→image search with proper embeddings
     Ok(SearchCrossModalResponse {
         success: true,
         results: vec![],

@@ -154,7 +154,7 @@ pub async fn import_config(file_path: String) -> Result<ConfigSnapshot, String> 
     // 3. These variables are read-only after initialization
     // 4. Tauri's lifecycle guarantees single-threaded config loading
     //
-    // TODO: Consider using thread-local storage or a configuration service
+    // FUTUR: Consider using thread-local storage or a configuration service
     // to avoid global state modification in future versions.
     unsafe {
         std::env::set_var("OLLAMA_BASE_URL", &config.runtime.ollama_url);
