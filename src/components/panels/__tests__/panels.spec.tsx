@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@/test-utils';
+import { render, screen, fireEvent, waitFor, act } from '@/test-utils';
 import { ChatPanel } from '../ChatPanel';
 import { MemoryPanel } from '../MemoryPanel';
 import { GovernancePanel } from '../GovernancePanel';
@@ -399,6 +399,7 @@ describe('GovernancePanel', () => {
 
   it('should refresh integrity report periodically', async () => {
     vi.useFakeTimers();
+    const setIntervalSpy = vi.spyOn(globalThis, 'setInterval');
 
     const { UIIntegrityChecker } = await import('@/visual-engine/UIIntegrityChecker');
     const instance = UIIntegrityChecker.getInstance();
@@ -418,11 +419,13 @@ describe('GovernancePanel', () => {
 
     const initialCallCount = runCheckSpy.mock.calls.length;
 
-    // Advance by 60 seconds to trigger interval
+    // Trigger the interval callback directly (more deterministic than advancing fake timers)
+    const intervalCall = setIntervalSpy.mock.calls.find((call) => call[1] === 60000);
+    expect(intervalCall).toBeTruthy();
+
+    const intervalCallback = intervalCall?.[0] as unknown as () => unknown;
     await act(async () => {
-      vi.advanceTimersByTime(60000);
-      await Promise.resolve();
-      await Promise.resolve();
+      await intervalCallback();
     });
 
     expect(runCheckSpy.mock.calls.length).toBeGreaterThan(initialCallCount);
@@ -554,7 +557,3 @@ describe('Panels Integration Tests', () => {
   });
 });
 
-// Helper function for act
-function act(callback: () => void) {
-  callback();
-}

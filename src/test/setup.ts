@@ -70,6 +70,15 @@ const fetchMock = vi.fn(async (input: any) => {
 
 vi.stubGlobal('fetch', fetchMock);
 
+// Polyfills pour l'environnement de tests (JSDOM)
+// Certains modules (visual engine) utilisent requestAnimationFrame.
+if (typeof globalThis.requestAnimationFrame !== 'function') {
+  globalThis.requestAnimationFrame = (cb: any) => setTimeout(() => cb(Date.now()), 0) as any;
+}
+if (typeof globalThis.cancelAnimationFrame !== 'function') {
+  globalThis.cancelAnimationFrame = (id: any) => clearTimeout(id);
+}
+
 class MockWebSocket {
   static CONNECTING = 0;
   static OPEN = 1;
@@ -484,6 +493,8 @@ const handleTauriInvoke = async (
     case 'performance_optimize_gpu':
     case 'performance_compress_memory':
     case 'performance_reset_optimizations':
+      return undefined;
+    case 'experience_update_state':
       return undefined;
     case 'crashguard_detect_threats':
     case 'crashguard_get_active_threats':
