@@ -53,6 +53,7 @@ export const VOID_COMMANDS = new Set<string>([
   'end_session',
   // State save commands
   'state_save',
+  'experience_update_state',
   'singularity_save_state',
   'singularity_reset',
   // Persistence commands that return ()
