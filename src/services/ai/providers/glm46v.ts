@@ -91,7 +91,9 @@ Lorsque tu vois une image, décris-la précisément et utilise cette information
       });
     } else if (Array.isArray(msg.content)) {
       // Handle multimodal content (OpenAI-like format)
-      type ContentPart = { type: 'text'; text: string } | { type: 'image_url'; image_url: { url: string } };
+      type ContentPart =
+        | { type: 'text'; text: string }
+        | { type: 'image_url'; image_url: { url: string } };
       const content = (msg.content as ContentPart[])
         .map(part => {
           if (part.type === 'text') {

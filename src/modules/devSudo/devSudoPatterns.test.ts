@@ -170,23 +170,14 @@ describe('devSudoPatterns', () => {
       // Domain mapping lives in devSudoLazyLoader.ts; patterns evolve over time.
       // This test keeps coverage without assuming every domain must have patterns.
       const allowedDomains = new Set([
-        'core',
-        'ai-local-models',
-        'ai-training',
-        'ai-bubble',
-        'data-collector',
-        'hybrid',
-        'fusion',
-        'vocal-dev-console',
-        'live-debugger',
-        'talk-to-titane',
+        'ide',
         'singularity',
         'vision',
-        'titanone',
-        'memory',
         'backend',
-        'ide',
+        'memory',
+        'titane-one',
         'extended',
+        'core',
       ]);
 
       const actions = Object.keys(DEV_SUDO_PATTERNS) as DevSudoAction[];

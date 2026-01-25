@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { beforeEach, afterEach } from 'vitest';
 
 export const __TITANE_TEST_MOCK__ = true;
 
@@ -7,6 +8,14 @@ const STABLE_COMPACT_RESULT = { cleaned: false, sizeMB: 0 };
 // Minimal in-memory persistence across hook instances (simulates stored assistant replies).
 // Intentionally module-scoped so a new renderHook() can "restore" previous assistant messages.
 let PERSISTED_ASSISTANT_MESSAGES: any[] = [];
+
+beforeEach(() => {
+  PERSISTED_ASSISTANT_MESSAGES = [];
+});
+
+afterEach(() => {
+  PERSISTED_ASSISTANT_MESSAGES = [];
+});
 
 type UseChatMemoryReturn = {
   messagesForMode: any[];

@@ -114,7 +114,11 @@ class RuntimeLogLevelManager {
     // - tests: WARN (avoid massive log capture + OOM during Vitest)
     // - dev: DEBUG
     // - prod: INFO
-    const defaultLevel = this.isTestEnv ? 'WARN' : import.meta.env.PROD ? 'INFO' : 'DEBUG';
+    const defaultLevel = this.isTestEnv
+      ? 'WARN'
+      : import.meta.env.PROD
+        ? 'INFO'
+        : 'DEBUG';
     return this.createConfig(defaultLevel as RuntimeLogLevel);
   }
 

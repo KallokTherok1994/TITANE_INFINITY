@@ -14,31 +14,42 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
+// @vitest-environment node
+
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { createRequire } from 'module';
 import type { UnifiedMemoryEntry } from '../UnifiedMemory';
 import { MemoryTier } from '../../mcp/mcp.types';
 import path from 'path';
 import fs from 'fs';
+import { fileURLToPath } from 'url';
 
-// Check if better-sqlite3 bindings are available
-let SQLiteVectorStoreCtor: typeof import('../SQLiteVectorStore').SQLiteVectorStore;
+const require = createRequire(import.meta.url);
+
+// Check if better-sqlite3 bindings are available (sync check to avoid blocking test collection)
 let hasSQLiteBindings = false;
-
 try {
-  // Attempt to load native module using dynamic import for ESM compatibility
-  await import('better-sqlite3');
+  require('better-sqlite3');
   hasSQLiteBindings = true;
-  const module = await import('../SQLiteVectorStore');
-  SQLiteVectorStoreCtor = module.SQLiteVectorStore;
 } catch {
-  // Native bindings not available - tests will be skipped
   hasSQLiteBindings = false;
 }
 
-// Use describe.skipIf to skip all tests when bindings are unavailable
-describe.skipIf(!hasSQLiteBindings)('SQLiteVectorStore', () => {
+type SQLiteVectorStoreCtorType = typeof import('../SQLiteVectorStore').SQLiteVectorStore;
+let sqliteVectorStoreImport: Promise<typeof import('../SQLiteVectorStore')> | undefined;
+
+const getSQLiteVectorStoreCtor = async (): Promise<SQLiteVectorStoreCtorType> => {
+  sqliteVectorStoreImport ??= import('../SQLiteVectorStore');
+  const module = await sqliteVectorStoreImport;
+  return module.SQLiteVectorStore;
+};
+
+const describeIf = hasSQLiteBindings ? describe : describe.skip;
+
+describeIf('SQLiteVectorStore', () => {
   let store: import('../SQLiteVectorStore').SQLiteVectorStore;
-  const testDbPath = path.join(__dirname, 'test-vector-store.db');
+  const testDir = path.dirname(fileURLToPath(import.meta.url));
+  const testDbPath = path.join(testDir, 'test-vector-store.db');
 
   beforeEach(async () => {
     // Clean up existing test DB
@@ -46,7 +57,8 @@ describe.skipIf(!hasSQLiteBindings)('SQLiteVectorStore', () => {
       fs.unlinkSync(testDbPath);
     }
 
-    store = new SQLiteVectorStoreCtor({ dbPath: testDbPath });
+    const SQLiteVectorStore = await getSQLiteVectorStoreCtor();
+    store = new SQLiteVectorStore({ dbPath: testDbPath });
     await store.initialize();
   });
 
@@ -101,13 +113,15 @@ describe.skipIf(!hasSQLiteBindings)('SQLiteVectorStore', () => {
 
   describe('Initialization', () => {
     it('should initialize successfully', async () => {
-      const newStore = new SQLiteVectorStoreCtor({ dbPath: ':memory:' });
+      const SQLiteVectorStore = await getSQLiteVectorStoreCtor();
+      const newStore = new SQLiteVectorStore({ dbPath: ':memory:' });
       await expect(newStore.initialize()).resolves.not.toThrow();
       await newStore.close();
     });
 
     it('should create tables on initialization', async () => {
-      const newStore = new SQLiteVectorStoreCtor({ dbPath: ':memory:' });
+      const SQLiteVectorStore = await getSQLiteVectorStoreCtor();
+      const newStore = new SQLiteVectorStore({ dbPath: ':memory:' });
       await newStore.initialize();
 
       const stats = await newStore.getStats();

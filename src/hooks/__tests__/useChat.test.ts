@@ -15,6 +15,14 @@ import { renderHook, waitFor, act } from '@testing-library/react';
 
 let useChat: typeof import('../useChat').useChat;
 
+beforeEach(() => {
+  try {
+    localStorage.clear();
+  } catch {
+    // Ignore storage errors in test environments
+  }
+});
+
 // Types locaux pour les tests (basés sur useChat.ts)
 interface AIMessage {
   role: 'user' | 'assistant' | 'system';
@@ -499,8 +507,14 @@ describe('useChat - Message Normalization', () => {
   it('should normalize messages with missing fields', () => {
     const { result } = renderHook(() => useChat());
 
-    // Ces tests vérifient indirectement la normalisation via le comportement
-    expect(result.current.messages).toEqual([]);
+    // Valide que les messages exposés par le hook sont toujours bien formés
+    // (même si des messages système/restore existent au montage).
+    expect(Array.isArray(result.current.messages)).toBe(true);
+    result.current.messages.forEach(message => {
+      expect(typeof message.role).toBe('string');
+      expect(typeof message.content).toBe('string');
+      expect(typeof message.timestamp).toBe('number');
+    });
   });
 
   it('should deduplicate messages by uiId', async () => {

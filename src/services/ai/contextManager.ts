@@ -185,7 +185,9 @@ function summarizeMessages(messages: (AIMessage | ExtendedAIMessage)[]): AIMessa
       content = msg.content;
     } else if (Array.isArray(msg.content)) {
       content = (msg.content as ContentPart[])
-        .map(p => (typeof p === 'string' ? p : p.type === 'text' && p.text ? p.text : '[image]'))
+        .map(p =>
+          typeof p === 'string' ? p : p.type === 'text' && p.text ? p.text : '[image]'
+        )
         .join(' ');
     }
 

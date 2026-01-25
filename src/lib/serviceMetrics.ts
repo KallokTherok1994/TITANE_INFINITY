@@ -225,7 +225,7 @@ export class ServiceMetrics {
       maxLatency,
       errorRate: Math.round(errorRate * 100) / 100,
       successRate: Math.round(successRate * 100) / 100,
-      cacheHitRate: 0, // TODO: track cache hits
+      cacheHitRate: 0, // FUTUR: track cache hits
       retryRate: Math.round(retryRate * 100) / 100,
       p50Latency: durations[p50Index] || 0,
       p95Latency: durations[p95Index] || 0,

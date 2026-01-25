@@ -224,7 +224,7 @@ class UnifiedMemorySystem {
       this.updateStats();
       isDev &&
         shouldLog &&
-          console.log(`[UnifiedMemory] Stored (ChatEngine) in ${entry.tier}:`, entry.id);
+        console.log(`[UnifiedMemory] Stored (ChatEngine) in ${entry.tier}:`, entry.id);
       return entry.id;
     }
 

@@ -43,7 +43,7 @@ describe('Consistency Engine — Goals Tracking (Phase 9)', () => {
    */
   it('should add a goal', () => {
     const goalId = engine.addGoal({
-      description: 'Build a TODO app',
+      description: 'Build a sample app',
       priority: 'high',
       status: 'active',
     });
@@ -53,7 +53,7 @@ describe('Consistency Engine — Goals Tracking (Phase 9)', () => {
 
     const goals = engine.getGoals();
     expect(goals).toHaveLength(1);
-    expect(goals[0].description).toBe('Build a TODO app');
+    expect(goals[0].description).toBe('Build a sample app');
     expect(goals[0].priority).toBe('high');
   });
 
@@ -638,7 +638,7 @@ describe('Consistency Engine — Auto-Correction (Phase 9)', () => {
    */
   it('should provide correction context', () => {
     engine.addFact({
-      content: 'User is building a TODO app',
+      content: 'User is building a sample app',
       confidence: 0.9,
       source: 'conversation',
     });

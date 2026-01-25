@@ -64,7 +64,9 @@ export const MemoryTreeViewer: React.FC<MemoryTreeViewerProps> = ({
     ({ nodeDatum }: { nodeDatum: TreeNodeData }) => {
       // Access searchTerm via ref to avoid adding it to dependencies
       const currentSearch = searchTermRef.current.toLowerCase();
-      const isMatch = currentSearch ? nodeDatum.name.toLowerCase().includes(currentSearch) : false;
+      const isMatch = currentSearch
+        ? nodeDatum.name.toLowerCase().includes(currentSearch)
+        : false;
 
       return (
         <g>

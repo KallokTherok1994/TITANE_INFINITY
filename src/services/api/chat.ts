@@ -11,8 +11,7 @@ import { invokeWithRetry, LONG_COMMAND_OPTIONS } from '@/lib/serviceInvoker';
 import { monitoring } from '@/monitoring';
 import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
 
-let _chatEnginePromise: Promise<typeof import('@/services/ai/chatEngine')> | null =
-  null;
+let _chatEnginePromise: Promise<typeof import('@/services/ai/chatEngine')> | null = null;
 
 const getChatEngine = async () => {
   if (!_chatEnginePromise) {
@@ -235,7 +234,9 @@ class ChatService {
       );
 
       try {
-        const engineResponse = await (await getChatEngine()).generate(message, [], {
+        const engineResponse = await (
+          await getChatEngine()
+        ).generate(message, [], {
           mode: 'default',
         });
         return {

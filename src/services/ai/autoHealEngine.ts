@@ -215,11 +215,9 @@ class AutoHealEngine {
     const triggerIfNeeded = options?.triggerIfNeeded ?? true;
 
     // Check if action already exists
-    const existingAction = this.actions.get(
-      `action_for_${error.id}`
-    ) || Array.from(this.actions.values()).find(
-      a => a.errorId === error.id
-    );
+    const existingAction =
+      this.actions.get(`action_for_${error.id}`) ||
+      Array.from(this.actions.values()).find(a => a.errorId === error.id);
 
     if (existingAction) {
       return existingAction;

@@ -306,7 +306,9 @@ describe('devSudoExecutor', () => {
 
     it('should return correct domain for titane-one actions', () => {
       // Actions with 'titane-one-' prefix
-      expect(getActionDomain('titane-one-introspect' as DevSudoAction)).toBe('titane-one');
+      expect(getActionDomain('titane-one-introspect' as DevSudoAction)).toBe(
+        'titane-one'
+      );
       expect(getActionDomain('titane-one-heal' as DevSudoAction)).toBe('titane-one');
     });
 
