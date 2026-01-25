@@ -885,7 +885,7 @@
 		{
 			"label": "🧪 Run Playwright E2E (critical)",
 			"type": "shell",
-			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\nexport PATH=\"$PWD/.tools/node/current/bin:$PATH\"\n./.tools/node/current/bin/pnpm run test:e2e\n",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\nexport PATH=\"$PWD/.tools/node/current/bin:$PATH\"\ncleanup() {\n  ./runtime/dev/cleanup.sh >/dev/null 2>&1 || true\n  bash scripts/verify/check-dev-ports-processes.sh\n}\ntrap cleanup EXIT INT TERM\n./.tools/node/current/bin/pnpm run test:e2e\n",
 			"isBackground": false,
 			"problemMatcher": [],
 			"group": "test"
