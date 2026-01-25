@@ -853,7 +853,7 @@
 		{
 			"label": "🧪 Smoke Deploy Full Local Dev (90s)",
 			"type": "shell",
-			"command": "timeout 90s ./scripts/launch/deploy_full_local_dev.sh",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\n./scripts/launch/deploy_full_local_dev.sh --smoke 90\n",
 			"isBackground": false,
 			"problemMatcher": [],
 			"group": "test"
