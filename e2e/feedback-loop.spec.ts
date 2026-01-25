@@ -9,12 +9,12 @@
  *   Tests Playwright pour valider architecture 3-layers anti-feedback
  *   Automatise la procédure test_feedback_loop_manual.md
  * ═══════════════════════════════════════════════════════════════════
- * 
+ *
  * ⚠️ NOTE: All tests in this file are SKIPPED
  * Reason: Require Electron build (dist-tauri/) which needs:
  *   - pnpm run build (production build)
  *   - Explicit authorization from Kevin Thibault
- * 
+ *
  * These tests can be re-enabled after production build is authorized.
  * ═══════════════════════════════════════════════════════════════════
  */

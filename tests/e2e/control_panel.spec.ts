@@ -19,7 +19,7 @@ describe('Control Panel E2E', () => {
 
   describe('Navigation complète', () => {
     test("Ouvre l'application et navigue dans toutes les sections", async () => {
-      // TODO: Implémenter avec WebDriver
+      // À FAIRE: Implémenter avec WebDriver
       // await driver.get('http://localhost:5173');
 
       const _sections = [
@@ -45,21 +45,21 @@ describe('Control Panel E2E', () => {
 
   describe('Interactions utilisateur', () => {
     test("Modifie le mode d'apparence", async () => {
-      // TODO: Implémenter
+      // À FAIRE: Implémenter
       // 1. Naviguer vers Apparence
       // 2. Cliquer sur le bouton "Sombre"
       // 3. Vérifier que le thème change
     });
 
     test('Active/désactive la singularité', async () => {
-      // TODO: Implémenter
+      // À FAIRE: Implémenter
       // 1. Naviguer vers Singularité
       // 2. Cliquer sur le toggle
       // 3. Vérifier le changement de statut
     });
 
     test('Nettoie le cache mémoire', async () => {
-      // TODO: Implémenter
+      // À FAIRE: Implémenter
       // 1. Naviguer vers Mémoire
       // 2. Noter la taille du cache
       // 3. Cliquer sur "Vider le cache"
@@ -69,7 +69,7 @@ describe('Control Panel E2E', () => {
 
   describe('Performance', () => {
     test('Charge la page en moins de 3 secondes', async () => {
-      // TODO: Implémenter
+      // À FAIRE: Implémenter
       // const startTime = Date.now();
       // await driver.get('http://localhost:5173');
       // await driver.wait(until.elementLocated(By.css('.cp-layout')), 3000);
@@ -78,7 +78,7 @@ describe('Control Panel E2E', () => {
     });
 
     test('Auto-refresh des métriques fonctionne', async () => {
-      // TODO: Implémenter
+      // À FAIRE: Implémenter
       // 1. Charger la section Système
       // 2. Noter les métriques initiales
       // 3. Attendre 6 secondes

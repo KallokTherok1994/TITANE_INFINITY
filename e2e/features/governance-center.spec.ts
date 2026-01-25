@@ -6,261 +6,85 @@
  */
 
 import { test, expect } from '@playwright/test';
+import { openAdminTab } from '../helpers/navigation';
 
 test.describe('Feature: Governance Center', () => {
   test.beforeEach(async ({ page }) => {
-    // Navigate to Vite dev server
-    await page.goto('http://localhost:5173');
-    // Wait for app to fully initialize
-    await page.waitForTimeout(2000);
+    await openAdminTab(page, /Gouvernance/i);
+    await page.waitForTimeout(500);
   });
 
   test('navigates to Governance Center page', async ({ page }) => {
-    // Wait for navigation
-    await page.waitForSelector('nav, [role="navigation"]', { timeout: 10000 });
-
-    // Look for Governance/Admin Center link
-    const governanceLink = page
-      .locator(
-        'a[href*="governance"], a[href*="admin"], button:has-text("Gouvernance"), button:has-text("Admin")'
-      )
-      .first();
-
-    if (await governanceLink.isVisible({ timeout: 5000 }).catch(() => false)) {
-      await governanceLink.click();
-    } else {
-      // Direct navigation fallback
-      await page.goto('http://localhost:5173/#/admin');
-      await page.waitForTimeout(1000);
-
-      // Navigate to Governance tab if in Admin Center
-      const governanceTab = page
-        .locator('button:has-text("Gouvernance"), [data-tab="governance"]')
-        .first();
-      if (await governanceTab.isVisible({ timeout: 2000 }).catch(() => false)) {
-        await governanceTab.click();
-      }
-    }
-
-    // Verify Governance Center loaded
-    await page.waitForTimeout(1000);
-
-    // Look for governance-specific elements
-    const governanceHeader = page
-      .locator(
-        'h1:has-text("Gouvernance"), h2:has-text("Gouvernance"), h1:has-text("Sécurité")'
-      )
-      .first();
-    await expect(governanceHeader).toBeVisible({ timeout: 10000 });
+    await expect(
+      page.getByRole('heading', { name: /Centre Gouvernance & Sécurité/i })
+    ).toBeVisible({ timeout: 15000 });
   });
 
   test('Governance Center displays 4 tabs', async ({ page }) => {
-    // Navigate to Governance Center
-    await page.goto('http://localhost:5173/#/admin');
-    await page.waitForTimeout(2000);
+    const secretsTab = page.getByRole('button', { name: /Secrets/i }).first();
+    const policiesTab = page.getByRole('button', { name: /Politiques/i }).first();
+    const permissionsTab = page.getByRole('button', { name: /Permissions/i }).first();
+    const logsTab = page.getByRole('button', { name: /Journal/i }).first();
 
-    // Navigate to Governance tab if needed
-    const governanceTab = page.locator('button:has-text("Gouvernance")').first();
-    if (await governanceTab.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await governanceTab.click();
-      await page.waitForTimeout(500);
-    }
-
-    // Verify 4 governance tabs exist
-    const secretsTab = page.locator('button:has-text("Secrets"), button:has-text("🔐")');
-    const policiesTab = page.locator(
-      'button:has-text("Politiques"), button:has-text("📋")'
-    );
-    const permissionsTab = page.locator(
-      'button:has-text("Permissions"), button:has-text("🛡")'
-    );
-    const logsTab = page.locator('button:has-text("Journal"), button:has-text("Logs")');
-
-    // At least one tab should be visible
-    const anyTabVisible = await Promise.race([
-      secretsTab
-        .first()
-        .isVisible({ timeout: 5000 })
-        .catch(() => false),
-      policiesTab
-        .first()
-        .isVisible({ timeout: 5000 })
-        .catch(() => false),
-      permissionsTab
-        .first()
-        .isVisible({ timeout: 5000 })
-        .catch(() => false),
-      logsTab
-        .first()
-        .isVisible({ timeout: 5000 })
-        .catch(() => false),
-    ]);
-
-    expect(anyTabVisible).toBeTruthy();
+    await expect(secretsTab).toBeVisible({ timeout: 15000 });
+    await expect(policiesTab).toBeVisible({ timeout: 15000 });
+    await expect(permissionsTab).toBeVisible({ timeout: 15000 });
+    await expect(logsTab).toBeVisible({ timeout: 15000 });
   });
 
   test('Secrets tab displays API key management', async ({ page }) => {
-    // Navigate to Governance Center Secrets tab
-    await page.goto('http://localhost:5173/#/admin');
-    await page.waitForTimeout(2000);
-
-    // Navigate to Governance → Secrets
-    const governanceTab = page.locator('button:has-text("Gouvernance")').first();
-    if (await governanceTab.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await governanceTab.click();
-      await page.waitForTimeout(500);
-    }
-
-    const secretsTab = page
-      .locator('button:has-text("Secrets"), button:has-text("🔐")')
-      .first();
-    if (await secretsTab.isVisible({ timeout: 3000 }).catch(() => false)) {
-      await secretsTab.click();
-      await page.waitForTimeout(500);
-    }
+    await page
+      .getByRole('button', { name: /Secrets/i })
+      .first()
+      .click({ force: true });
 
     // Verify Secrets tab content
     const geminiSection = page.locator('text=/Gemini|API Key|OpenAI|Anthropic/i').first();
-    const secretsHeader = page
-      .locator('h2:has-text("Secrets"), h3:has-text("Secrets"), h3:has-text("🔐")')
-      .first();
-
-    const secretsSectionVisible = await Promise.race([
-      geminiSection.isVisible({ timeout: 5000 }).catch(() => false),
-      secretsHeader.isVisible({ timeout: 5000 }).catch(() => false),
-    ]);
-
-    expect(secretsSectionVisible).toBeTruthy();
+    await expect(geminiSection).toBeVisible({ timeout: 15000 });
   });
 
   test('Policies tab displays IA policies list', async ({ page }) => {
-    // Navigate to Governance Center Policies tab
-    await page.goto('http://localhost:5173/#/admin');
-    await page.waitForTimeout(2000);
-
-    // Navigate to Governance → Policies
-    const governanceTab = page.locator('button:has-text("Gouvernance")').first();
-    if (await governanceTab.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await governanceTab.click();
-      await page.waitForTimeout(500);
-    }
-
-    const policiesTab = page
-      .locator('button:has-text("Politiques"), button:has-text("📋")')
-      .first();
-    if (await policiesTab.isVisible({ timeout: 3000 }).catch(() => false)) {
-      await policiesTab.click();
-      await page.waitForTimeout(500);
-    }
+    await page
+      .getByRole('button', { name: /Politiques/i })
+      .first()
+      .click({ force: true });
 
     // Verify Policies tab content
-    const policiesHeader = page
-      .locator('h2:has-text("Politiques"), h3:has-text("Politiques"), h3:has-text("📋")')
-      .first();
     const policyList = page
       .locator('text=/Politique|Policy|Garde-fou|Guardrail/i')
       .first();
-
-    const policiesSectionVisible = await Promise.race([
-      policiesHeader.isVisible({ timeout: 5000 }).catch(() => false),
-      policyList.isVisible({ timeout: 5000 }).catch(() => false),
-    ]);
-
-    expect(policiesSectionVisible).toBeTruthy();
+    await expect(policyList).toBeVisible({ timeout: 15000 });
   });
 
   test('Permissions tab displays permission matrix', async ({ page }) => {
-    // Navigate to Governance Center Permissions tab
-    await page.goto('http://localhost:5173/#/admin');
-    await page.waitForTimeout(2000);
-
-    // Navigate to Governance → Permissions
-    const governanceTab = page.locator('button:has-text("Gouvernance")').first();
-    if (await governanceTab.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await governanceTab.click();
-      await page.waitForTimeout(500);
-    }
-
-    const permissionsTab = page
-      .locator('button:has-text("Permissions"), button:has-text("🛡")')
-      .first();
-    if (await permissionsTab.isVisible({ timeout: 3000 }).catch(() => false)) {
-      await permissionsTab.click();
-      await page.waitForTimeout(500);
-    }
+    await page
+      .getByRole('button', { name: /Permissions/i })
+      .first()
+      .click({ force: true });
 
     // Verify Permissions tab content
-    const permissionsHeader = page
-      .locator(
-        'h2:has-text("Permissions"), h3:has-text("Permissions"), h3:has-text("🛡")'
-      )
-      .first();
     const permissionMatrix = page.locator('text=/ROOT|SYSTEM|User|Rôle|Role/i').first();
-
-    const permissionsSectionVisible = await Promise.race([
-      permissionsHeader.isVisible({ timeout: 5000 }).catch(() => false),
-      permissionMatrix.isVisible({ timeout: 5000 }).catch(() => false),
-    ]);
-
-    expect(permissionsSectionVisible).toBeTruthy();
+    await expect(permissionMatrix).toBeVisible({ timeout: 15000 });
   });
 
   test('Security Log tab displays audit entries', async ({ page }) => {
-    // Navigate to Governance Center Logs tab
-    await page.goto('http://localhost:5173/#/admin');
-    await page.waitForTimeout(2000);
-
-    // Navigate to Governance → Logs
-    const governanceTab = page.locator('button:has-text("Gouvernance")').first();
-    if (await governanceTab.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await governanceTab.click();
-      await page.waitForTimeout(500);
-    }
-
-    const logsTab = page
-      .locator(
-        'button:has-text("Journal"), button:has-text("Logs"), button:has-text("📝")'
-      )
-      .first();
-    if (await logsTab.isVisible({ timeout: 3000 }).catch(() => false)) {
-      await logsTab.click();
-      await page.waitForTimeout(500);
-    }
+    await page
+      .getByRole('button', { name: /Journal/i })
+      .first()
+      .click({ force: true });
 
     // Verify Logs tab content
-    const logsHeader = page
-      .locator(
-        'h2:has-text("Journal"), h3:has-text("Journal"), h3:has-text("Security Log")'
-      )
-      .first();
     const logEntries = page.locator('text=/Audit|Log|Event|Événement/i').first();
-
-    const logsSectionVisible = await Promise.race([
-      logsHeader.isVisible({ timeout: 5000 }).catch(() => false),
-      logEntries.isVisible({ timeout: 5000 }).catch(() => false),
-    ]);
-
-    expect(logsSectionVisible).toBeTruthy();
+    await expect(logEntries).toBeVisible({ timeout: 15000 });
   });
 
   test('Secrets tab: test input interaction (without sensitive data)', async ({
     page,
   }) => {
-    // Navigate to Secrets tab
-    await page.goto('http://localhost:5173/#/admin');
-    await page.waitForTimeout(2000);
-
-    const governanceTab = page.locator('button:has-text("Gouvernance")').first();
-    if (await governanceTab.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await governanceTab.click();
-      await page.waitForTimeout(500);
-    }
-
-    const secretsTab = page.locator('button:has-text("Secrets")').first();
-    if (await secretsTab.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await secretsTab.click();
-      await page.waitForTimeout(500);
-    }
+    await page
+      .getByRole('button', { name: /Secrets/i })
+      .first()
+      .click({ force: true });
 
     // Look for API key input fields (password type)
     const apiKeyInput = page
@@ -286,7 +110,7 @@ test.describe('Feature: Governance Center', () => {
 
   test('Governance Center: superAdmin badge visible', async ({ page }) => {
     // Navigate to Governance Center
-    await page.goto('http://localhost:5173/#/admin');
+    await page.goto('http://localhost:5173/admin');
     await page.waitForTimeout(2000);
 
     const governanceTab = page.locator('button:has-text("Gouvernance")').first();
@@ -307,7 +131,7 @@ test.describe('Feature: Governance Center', () => {
 
   test('Governance Center: refresh button works', async ({ page }) => {
     // Navigate to Governance Center
-    await page.goto('http://localhost:5173/#/admin');
+    await page.goto('http://localhost:5173/admin');
     await page.waitForTimeout(2000);
 
     const governanceTab = page.locator('button:has-text("Gouvernance")').first();
