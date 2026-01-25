@@ -12,6 +12,12 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
 
+# Fiabilise l'exécution de pnpm/corepack (leurs shebang utilisent /usr/bin/env node).
+# En préfixant PATH avec le Node repo-bundlé, on évite de tomber sur un Node système trop ancien.
+if [[ -d "$ROOT_DIR/.tools/node/current/bin" ]]; then
+  export PATH="$ROOT_DIR/.tools/node/current/bin:$PATH"
+fi
+
 BASE_URL="${OLLAMA_BASE_URL:-http://127.0.0.1:11434}"
 MODEL_NAME="llama3.2:latest"
 PULL_MODEL=false
