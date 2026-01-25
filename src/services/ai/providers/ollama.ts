@@ -210,11 +210,15 @@ async function checkEndpointHealth(): Promise<boolean> {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), ENDPOINT_TIMEOUT);
 
-    const response = await fetch(`${OLLAMA_API_URL}/api/tags`, {
-      method: 'GET',
-      signal: controller.signal,
-      headers: { Accept: 'application/json' },
-    });
+    const response = await fetch(
+      // @network-allowed
+      `${OLLAMA_API_URL}/api/tags`,
+      {
+        method: 'GET',
+        signal: controller.signal,
+        headers: { Accept: 'application/json' },
+      }
+    );
 
     clearTimeout(timeout);
 
@@ -355,24 +359,28 @@ export const ollamaProvider: AIProvider = {
             // ✨ v21 - Use memory-enriched prompt
             const prompt = await buildPromptWithMemory(sanitizedMessage, history);
 
-            const response = await fetch(`${OLLAMA_API_URL}/api/generate`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                model: OLLAMA_MODEL,
-                prompt,
-                stream: false,
-                options: {
-                  temperature: finalConfig.temperature,
-                  top_p: finalConfig.topP,
-                  top_k: finalConfig.topK,
-                  num_predict: finalConfig.maxTokens,
+            const response = await fetch(
+              // @network-allowed
+              `${OLLAMA_API_URL}/api/generate`,
+              {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
                 },
-              }),
-              signal: controller.signal,
-            });
+                body: JSON.stringify({
+                  model: OLLAMA_MODEL,
+                  prompt,
+                  stream: false,
+                  options: {
+                    temperature: finalConfig.temperature,
+                    top_p: finalConfig.topP,
+                    top_k: finalConfig.topK,
+                    num_predict: finalConfig.maxTokens,
+                  },
+                }),
+                signal: controller.signal,
+              }
+            );
 
             clearTimeout(timeout);
 
@@ -518,17 +526,21 @@ export const ollamaProvider: AIProvider = {
     let fullResponse = ''; // Track complete response for memory save
 
     try {
-      const response = await fetch(`${OLLAMA_API_URL}/api/generate`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: OLLAMA_MODEL,
-          prompt,
-          stream: true,
-        }),
-      });
+      const response = await fetch(
+        // @network-allowed
+        `${OLLAMA_API_URL}/api/generate`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: OLLAMA_MODEL,
+            prompt,
+            stream: true,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Ollama streaming error: ${response.status}`);

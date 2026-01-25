@@ -110,10 +110,14 @@ class ParlerTTSBridge {
     }
 
     try {
-      const response = await fetch(`${this.apiUrl}/api/v1/tts/health`, {
-        method: 'GET',
-        signal: AbortSignal.timeout(5000),
-      });
+      const response = await fetch(
+        // @network-allowed
+        `${this.apiUrl}/api/v1/tts/health`,
+        {
+          method: 'GET',
+          signal: AbortSignal.timeout(5000),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Health check failed: ${response.status}`);
@@ -185,14 +189,18 @@ class ParlerTTSBridge {
       });
 
       // Requête HTTP POST
-      const response = await fetch(`${this.apiUrl}/api/v1/tts/synthesize`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-        signal: AbortSignal.timeout(this.timeout),
-      });
+      const response = await fetch(
+        // @network-allowed
+        `${this.apiUrl}/api/v1/tts/synthesize`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+          signal: AbortSignal.timeout(this.timeout),
+        }
+      );
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -252,17 +260,21 @@ class ParlerTTSBridge {
         throw new Error('Parler-TTS disabled in Vitest environment');
       }
 
-      const response = await fetch(`${this.apiUrl}/api/v1/tts/update-style`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          style_description: newStyleDescription,
-          save_as_default: saveAsDefault,
-        }),
-        signal: AbortSignal.timeout(5000),
-      });
+      const response = await fetch(
+        // @network-allowed
+        `${this.apiUrl}/api/v1/tts/update-style`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            style_description: newStyleDescription,
+            save_as_default: saveAsDefault,
+          }),
+          signal: AbortSignal.timeout(5000),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Style update failed: ${response.status}`);

@@ -140,11 +140,15 @@ async function checkEndpointHealth(): Promise<boolean> {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 8000);
 
-    const response = await fetch(`${GLM46V_CONFIG.baseUrl}/models`, {
-      method: 'GET',
-      signal: controller.signal,
-      headers: { Accept: 'application/json' },
-    });
+    const response = await fetch(
+      // @network-allowed
+      `${GLM46V_CONFIG.baseUrl}/models`,
+      {
+        method: 'GET',
+        signal: controller.signal,
+        headers: { Accept: 'application/json' },
+      }
+    );
 
     clearTimeout(timeout);
 
@@ -298,20 +302,24 @@ export const glm46vProvider: AIProvider = {
           try {
             const payload = convertToGLM46VFormat(sanitizedMessage, history);
 
-            const response = await fetch(`${GLM46V_CONFIG.baseUrl}/chat/completions`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                model: GLM46V_CONFIG.model,
-                messages: payload.messages,
-                max_tokens: finalConfig.maxTokens,
-                temperature: finalConfig.temperature,
-                stream: false,
-              }),
-              signal: controller.signal,
-            });
+            const response = await fetch(
+              // @network-allowed
+              `${GLM46V_CONFIG.baseUrl}/chat/completions`,
+              {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  model: GLM46V_CONFIG.model,
+                  messages: payload.messages,
+                  max_tokens: finalConfig.maxTokens,
+                  temperature: finalConfig.temperature,
+                  stream: false,
+                }),
+                signal: controller.signal,
+              }
+            );
 
             clearTimeout(timeout);
 

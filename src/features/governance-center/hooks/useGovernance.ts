@@ -126,9 +126,13 @@ export function useGovernance() {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 3000); // 3s timeout
 
-      const response = await fetch('http://localhost:11434/api/tags', {
-        signal: controller.signal,
-      });
+      const response = await fetch(
+        // @network-allowed
+        'http://localhost:11434/api/tags',
+        {
+          signal: controller.signal,
+        }
+      );
 
       clearTimeout(timeoutId);
 
