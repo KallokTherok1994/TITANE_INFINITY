@@ -764,10 +764,14 @@ class AdvancedPerformanceOptimizer {
 
     const warmupPromises = criticalEndpoints.map(async endpoint => {
       try {
-        const response = await fetch(endpoint, {
-          method: 'HEAD',
-          cache: 'force-cache',
-        });
+        const response = await fetch(
+          // @network-allowed
+          endpoint,
+          {
+            method: 'HEAD',
+            cache: 'force-cache',
+          }
+        );
 
         if (response.ok) {
           console.log(`✅ [PERF-OPTIMIZER] API warmed up: ${endpoint}`);
