@@ -26,9 +26,20 @@ fi
 echo "🌐 Check: Appels réseau annotés..."
 # NOTE: l'ancien grep matchait des faux positifs (ex: "prefetch", commentaires, identifiants contenant "fetch").
 # On détecte maintenant des patterns d'appel réseau plus stricts.
-NETWORK_CALLS=$(grep -RInE "(^|[^A-Za-z0-9_])(fetch[[:space:]]*\(|axios[[:space:]]*(\.|\()|new[[:space:]]+XMLHttpRequest\\b)" src/ --include="*.ts" --include="*.tsx" 2>/dev/null | \
-                grep -v "// @network-allowed" | \
-                wc -l)
+
+# Prettier peut déplacer `// @network-allowed` sur la ligne suivante.
+# On compte donc un appel comme "annoté" si @network-allowed apparaît sur la ligne du match OU dans les 3 lignes suivantes.
+NETWORK_CALLS=0
+while IFS=: read -r FILE LINE _REST; do
+    # Skip si le marqueur est proche (ligne du match -> +3)
+    if sed -n "${LINE},$((LINE + 3))p" "$FILE" 2>/dev/null | grep -q "@network-allowed"; then
+        continue
+    fi
+    ((NETWORK_CALLS++))
+done < <(
+    grep -RInE "(^|[^A-Za-z0-9_])(fetch[[:space:]]*\(|axios[[:space:]]*(\.|\()|new[[:space:]]+XMLHttpRequest\\b)" src/ --include="*.ts" --include="*.tsx" 2>/dev/null | \
+        grep -vE ":[0-9]+:[[:space:]]*(//|\\*|/\\*)"
+)
 
 if [ "$NETWORK_CALLS" -gt 0 ]; then
     echo "⚠️ $NETWORK_CALLS appels réseau non annotés trouvés"
