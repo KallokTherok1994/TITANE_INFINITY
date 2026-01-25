@@ -885,7 +885,7 @@
 		{
 			"label": "🧪 Run Playwright E2E (critical)",
 			"type": "shell",
-			"command": "./.tools/node/current/bin/pnpm run test:e2e",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\nexport PATH=\"$PWD/.tools/node/current/bin:$PATH\"\n./.tools/node/current/bin/pnpm run test:e2e\n",
 			"isBackground": false,
 			"problemMatcher": [],
 			"group": "test"
