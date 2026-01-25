@@ -66,9 +66,11 @@ class RuntimeLogLevelManager {
   private config: LogLevelConfig;
   private listeners: Set<(config: LogLevelConfig) => void> = new Set();
 
-  private readonly isTestEnv: boolean =
-    (typeof import.meta !== 'undefined' && (import.meta as any)?.env?.MODE === 'test') ||
-    (typeof import.meta !== 'undefined' && Boolean((import.meta as any)?.env?.VITEST));
+  private readonly isTestEnv: boolean = (() => {
+    if (typeof import.meta === 'undefined') return false;
+    const env = (import.meta as unknown as { env?: Record<string, unknown> }).env;
+    return env?.MODE === 'test' || Boolean(env?.VITEST);
+  })();
 
   constructor() {
     this.config = this.loadConfig();

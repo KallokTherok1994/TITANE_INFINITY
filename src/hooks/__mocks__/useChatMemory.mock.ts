@@ -5,9 +5,13 @@ export const __TITANE_TEST_MOCK__ = true;
 
 const STABLE_COMPACT_RESULT = { cleaned: false, sizeMB: 0 };
 
+type PersistedAssistantMessage = {
+  role?: string;
+} & Record<string, unknown>;
+
 // Minimal in-memory persistence across hook instances (simulates stored assistant replies).
 // Intentionally module-scoped so a new renderHook() can "restore" previous assistant messages.
-let PERSISTED_ASSISTANT_MESSAGES: any[] = [];
+let PERSISTED_ASSISTANT_MESSAGES: PersistedAssistantMessage[] = [];
 
 beforeEach(() => {
   PERSISTED_ASSISTANT_MESSAGES = [];
@@ -18,13 +22,13 @@ afterEach(() => {
 });
 
 type UseChatMemoryReturn = {
-  messagesForMode: any[];
+  messagesForMode: PersistedAssistantMessage[];
   memoryStats: { count: number; sizeMB: number; compressed: boolean };
-  loadHistory: (...args: any[]) => any[];
-  saveMessage: (...args: any[]) => void;
-  clearMode: (...args: any[]) => void;
-  compactIfNeeded: (...args: any[]) => { cleaned: boolean; sizeMB: number };
-  awardXP: (...args: any[]) => Promise<void>;
+  loadHistory: (...args: unknown[]) => PersistedAssistantMessage[];
+  saveMessage: (...args: unknown[]) => void;
+  clearMode: (...args: unknown[]) => void;
+  compactIfNeeded: (...args: unknown[]) => { cleaned: boolean; sizeMB: number };
+  awardXP: (...args: unknown[]) => Promise<void>;
 };
 
 export function useChatMemory(): UseChatMemoryReturn {
@@ -38,9 +42,11 @@ export function useChatMemory(): UseChatMemoryReturn {
       compressed: false,
     },
     loadHistory: () => messagesForMode,
-    saveMessage: (message: any) => {
-      if (message && message.role === 'assistant') {
-        PERSISTED_ASSISTANT_MESSAGES.push(message);
+    saveMessage: (message: unknown) => {
+      if (!message || typeof message !== 'object') return;
+      const candidate = message as PersistedAssistantMessage;
+      if (candidate.role === 'assistant') {
+        PERSISTED_ASSISTANT_MESSAGES.push(candidate);
       }
     },
     clearMode: () => {
