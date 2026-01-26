@@ -2,10 +2,28 @@
 # TITANE∞ v26.3.0 — Test boot rapide et sécurisé
 echo "🚀 TITANE∞ - Test Boot Rapide"
 
+kill_vite_5173() {
+  if command -v ss >/dev/null 2>&1; then
+    (ss -ltnp 2>/dev/null || ss -ltn 2>/dev/null) | grep -E ':(5173)\b' | sed -nE 's/.*pid=([0-9]+).*/\1/p' | sort -u | while read -r pid; do
+      [ -z "$pid" ] && continue
+      kill -TERM "$pid" 2>/dev/null || true
+    done
+  fi
+
+  pkill -f 'vite/bin/vite\.js dev' 2>/dev/null || true
+  pkill -f 'vite\.js dev --host 127\.0\.0\.1 --port 5173' 2>/dev/null || true
+  pkill -f 'npx vite dev --host 127\.0\.0\.1 --port 5173' 2>/dev/null || true
+}
+
 # Function pour nettoyer proprement
 cleanup() {
   echo "🧹 Nettoyage..."
-  pkill -f "vite dev" 2>/dev/null || true
+  if [ -n "${VITE_PID:-}" ]; then
+    kill -TERM "$VITE_PID" 2>/dev/null || true
+    wait "$VITE_PID" 2>/dev/null || true
+  fi
+
+  kill_vite_5173
   pkill -f "tauri dev" 2>/dev/null || true
   sleep 1
 }
@@ -20,7 +38,7 @@ cleanup
 echo "2. Test de démarrage sécurisé (timeout 20s)..."
 # Démarrer Vite avec configuration optimisée
 export VITE_FORCE_OPTIMIZE=1
-timeout 20s npx vite dev --host 127.0.0.1 --port 5173 --strictPort > /tmp/boot-test-safe.log 2>&1 &
+npx vite dev --host 127.0.0.1 --port 5173 --strictPort > /tmp/boot-test-safe.log 2>&1 &
 VITE_PID=$!
 
 # Attendre que Vite soit prêt

@@ -106,7 +106,7 @@ require_clean_git() {
 }
 
 check_dev_ports() {
-  if [[ -x scripts/verify/check-dev-ports-processes.sh ]]; then
+  if [[ -f scripts/verify/check-dev-ports-processes.sh ]]; then
     say "[check] dev ports/processes"
     bash scripts/verify/check-dev-ports-processes.sh 2>&1 | tee -a "$LOG_FILE" >/dev/null
   else

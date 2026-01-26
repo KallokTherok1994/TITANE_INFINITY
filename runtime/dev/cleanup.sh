@@ -21,12 +21,42 @@ count_processes() {
     ps aux | grep -E "$pattern" | grep -v grep | wc -l
 }
 
+kill_port_from_ss() {
+    local port="$1"
+    if ! command -v ss >/dev/null 2>&1; then
+        return 0
+    fi
+
+    (ss -ltnp 2>/dev/null || ss -ltn 2>/dev/null) \
+        | grep -E ":(${port})\\b" \
+        | sed -nE 's/.*pid=([0-9]+).*/\1/p' \
+        | sort -u \
+        | while read -r pid; do
+            [ -z "$pid" ] && continue
+            kill -TERM "$pid" 2>/dev/null || true
+        done
+}
+
+kill_port() {
+    local port="$1"
+    if command -v lsof >/dev/null 2>&1; then
+        lsof -ti:"$port" 2>/dev/null | xargs kill -TERM 2>/dev/null || true
+        sleep 1
+        lsof -ti:"$port" 2>/dev/null | xargs kill -KILL 2>/dev/null || true
+        return 0
+    fi
+
+    kill_port_from_ss "$port"
+    sleep 1
+    kill_port_from_ss "$port"
+}
+
 # Pre-cleanup audit
 BEFORE_COUNT=$(count_processes "tauri dev|pnpm run dev:tauri|corepack pnpm run dev:tauri|pnpm run tauri|corepack pnpm run tauri|vite")
 echo "📊 Processus détectés (Tauri/Vite): $BEFORE_COUNT"
 
-# Kill Vite processes (should not run in TAURI-only, but clean leftovers)
-echo "🔄 Arrêt des processus Vite (interdit en TAURI-only)..."
+# Kill Vite processes (dev server interne Tauri) — clean leftovers/orphans only
+echo "🔄 Arrêt des processus Vite orphelins (dev server interne Tauri)..."
 pkill -f "vite" 2>/dev/null || true
 sleep 1
 
@@ -45,14 +75,15 @@ pkill -f "target/debug/titane-infinity" 2>/dev/null || true
 sleep 1
 
 # Free common dev ports (legacy Vite)
-echo "🔓 Libération des ports legacy (5173/4173)..."
-lsof -ti:5173 2>/dev/null | xargs kill -9 2>/dev/null || true
-lsof -ti:4173 2>/dev/null | xargs kill -9 2>/dev/null || true
+echo "🔓 Libération des ports legacy (4000/5173/4173)..."
+kill_port 4000
+kill_port 5173
+kill_port 4173
 sleep 1
 
 # Free Titan-Dev port (if a previous run left a server bound)
 echo "🔓 Libération du port Titan-Dev (1430)..."
-lsof -ti:1430 2>/dev/null | xargs kill -9 2>/dev/null || true
+kill_port 1430
 sleep 1
 
 # Verify cleanup
@@ -66,7 +97,7 @@ echo "╚═══════════════════════�
 echo ""
 echo "  Processus nettoyés: $CLEANED"
 echo "  Processus restants: $AFTER_COUNT"
-echo "  Ports legacy 5173/4173: LIBRES"
+echo "  Ports legacy 4000/5173/4173: LIBRES"
 echo ""
 
 # Warning if processes remain
