@@ -54,7 +54,7 @@ jobs:
             jq
 
       - name: 'Cache Rust dependencies'
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.cargo/bin/
@@ -67,7 +67,7 @@ jobs:
             ${{ runner.os }}-cargo-
 
       - name: 'Cache pnpm store'
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.local/share/pnpm/store
           key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
