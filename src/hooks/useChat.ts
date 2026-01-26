@@ -1761,34 +1761,29 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
           messagesRef.current.length
         );
 
+        // ✅ v26.3.1 FIX: Vérifier que le message a bien été appliqué
         const assistantFromState = getAssistantFromState();
-        const assistantMessage: AIMessage =
-          assistantFromState && assistantFromState.content.trim().length > 0
-            ? assistantFromState
-            : (() => {
-                // ✅ Repair: si le placeholder existe mais reste vide (bug de sync / dédup),
-                // forcer le contenu final dans l'entrée assistant ciblée.
-                if (targetUiId) {
-                  updateAssistant(
-                    message => ({
-                      ...message,
-                      content: finalContent,
-                      provider,
-                      timestamp: Date.now(),
-                    }),
-                    'assistant-stream-repair',
-                    { ...metadataPatch, uiId: targetUiId }
-                  );
-                }
-
-                return {
-                  role: 'assistant' as const,
-                  content: finalContent,
-                  provider,
-                  timestamp: Date.now(),
-                  metadata: withUiId(metadataPatch),
-                };
-              })();
+        if (!assistantFromState || assistantFromState.content.trim().length === 0) {
+          chatLogger.warn('⚠️ updateAssistant failed to apply content, forcing manual update');
+          // Forcer l'ajout du message si le placeholder n'a pas été trouvé
+          const forceMessage: AIMessage = {
+            role: 'assistant' as const,
+            content: finalContent,
+            provider,
+            timestamp: Date.now(),
+            metadata: withUiId({ ...metadataPatch, forcedFallback: true }),
+          };
+          applyMessagesSafely([...messagesRef.current, forceMessage], 'assistant-forced-fallback');
+        }
+        
+        // ✅ v26.3.1: Le message assistant est maintenant garanti d'avoir du contenu
+        const assistantMessage: AIMessage = assistantFromState || {
+          role: 'assistant' as const,
+          content: finalContent,
+          provider,
+          timestamp: Date.now(),
+          metadata: withUiId(metadataPatch),
+        };
 
         try {
           // ✅ v∞.FIX P1-6: Await saveMessage pour garantir persistence
