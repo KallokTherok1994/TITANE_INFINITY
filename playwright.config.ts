@@ -77,9 +77,9 @@ export default defineConfig({
 
   // Dev server configuration
   webServer: {
-    command: 'npx vite dev --host 127.0.0.1 --port 5173',
+    command: 'npx vite dev --host 127.0.0.1 --port 5173 --strictPort',
     url: 'http://localhost:5173',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
     timeout: 120000, // 2min to start
     stdout: 'pipe',
     stderr: 'pipe',

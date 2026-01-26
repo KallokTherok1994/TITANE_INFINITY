@@ -37,7 +37,7 @@
 		{
 			"label": "🔵 Build Titan-Stable",
 			"type": "shell",
-			"command": "./runtime/stable/build.sh",
+			"command": "set -euo pipefail\nif [ \"${TITANE_ALLOW_STABLE_BUILD:-}\" != \"1\" ]; then\n  echo \"REFUSED: stable build interdit sans approbation explicite.\"\n  echo \"Pour l'autoriser intentionnellement: TITANE_ALLOW_STABLE_BUILD=1\"\n  exit 1\nfi\n./runtime/stable/build.sh\n",
 			"options": {
 				"cwd": "${workspaceFolder}"
 			},
@@ -928,7 +928,7 @@
 		{
 			"label": "⬆️ Push MAIN to origin",
 			"type": "shell",
-			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\ngit push origin MAIN\n\ngit status --porcelain=v1 -b | cat\n\ngit rev-list --left-right --count origin/MAIN...HEAD | cat\n",
+			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\nif [ \"${TITANE_ALLOW_GIT_PUSH:-}\" != \"1\" ]; then\n  echo \"REFUSED: git push interdit sans demande explicite.\"\n  echo \"Pour l'autoriser intentionnellement: TITANE_ALLOW_GIT_PUSH=1\"\n  exit 1\nfi\ngit push origin MAIN\n\ngit status --porcelain=v1 -b | cat\n\ngit rev-list --left-right --count origin/MAIN...HEAD | cat\n",
 			"isBackground": false,
 			"problemMatcher": []
 		},
