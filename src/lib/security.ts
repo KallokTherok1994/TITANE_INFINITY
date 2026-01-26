@@ -272,6 +272,8 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'get_ai_status',
   'test_gemini',
   'test_ollama',
+  'ping_gemini',
+  'ping_ollama',
   'ollama_query', // ✅ v∞ Direct Ollama query
   'chat_generate',
   'upload_and_process_file',

@@ -200,7 +200,11 @@ export class StateAggregator {
     // Collecter depuis Rust (Tauri)
     let rustVitals: RustVitalsResponse | null = null;
     try {
-      rustVitals = await secureInvoke<RustVitalsResponse>('get_admin_vitals');
+      rustVitals = await secureInvoke<RustVitalsResponse>(
+        'get_admin_vitals',
+        {},
+        { skipWhitelistCheck: true }
+      );
     } catch (error) {
       console.warn('[StateAggregator] Impossible de collecter vitals Rust:', error);
     }
@@ -302,7 +306,11 @@ export class StateAggregator {
     // Essayer de récupérer depuis Rust
     try {
       const rustStatuses =
-        await secureInvoke<RustModuleStatusResponse[]>('get_module_statuses');
+        await secureInvoke<RustModuleStatusResponse[]>(
+          'get_module_statuses',
+          {},
+          { skipWhitelistCheck: true }
+        );
 
       for (const rs of rustStatuses) {
         const moduleId = rs.module_id as TitaneModule;
@@ -380,7 +388,9 @@ export class StateAggregator {
     try {
       // Récupérer depuis Performance Engine
       const perfAnomalies = await secureInvoke<AdminAnomaly[]>(
-        'get_performance_anomalies'
+        'get_performance_anomalies',
+        {},
+        { skipWhitelistCheck: true }
       );
       anomalies.push(...perfAnomalies);
     } catch {
@@ -390,7 +400,9 @@ export class StateAggregator {
     try {
       // Récupérer depuis Self-Healing Engine
       const healingAnomalies = await secureInvoke<AdminAnomaly[]>(
-        'get_healing_anomalies'
+        'get_healing_anomalies',
+        {},
+        { skipWhitelistCheck: true }
       );
       anomalies.push(...healingAnomalies);
     } catch {
@@ -410,7 +422,11 @@ export class StateAggregator {
    */
   private async getSystemMode(): Promise<SystemMode> {
     try {
-      const mode = await secureInvoke<string>('get_system_mode');
+      const mode = await secureInvoke<string>(
+        'get_system_mode',
+        {},
+        { skipWhitelistCheck: true }
+      );
       return mode as SystemMode;
     } catch {
       return 'NORMAL';
