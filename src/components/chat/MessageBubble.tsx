@@ -136,7 +136,8 @@ export const MessageBubble = memo(function MessageBubble({
   // Contenu du message avec lazy markdown
   const messageContent = useMemo(() => {
     if (role === 'assistant') {
-      if (content.length > 0) {
+      // Si le message a du contenu, l'afficher avec markdown
+      if (content && content.trim().length > 0) {
         // YOLO OPT: Lazy-load markdown pour assistant uniquement
         return (
           <Suspense fallback={<div className="markdown-loading">Chargement...</div>}>
@@ -149,10 +150,21 @@ export const MessageBubble = memo(function MessageBubble({
           </Suspense>
         );
       }
-      return <TypingIndicator />;
+      // Si le message est vide mais récent (< 3s), afficher le typing indicator
+      // Sinon afficher un placeholder pour indiquer un problème
+      const messageAge = Date.now() - timestamp;
+      if (messageAge < 3000) {
+        return <TypingIndicator />;
+      }
+      // Message vide et ancien = erreur ou placeholder non mis à jour
+      return (
+        <div className="message-error">
+          ⚠️ Erreur: aucune réponse générée
+        </div>
+      );
     }
     return content;
-  }, [role, content]);
+  }, [role, content, timestamp]);
 
   return (
     <div className={bubbleClasses} role="article" aria-label={ariaLabel}>
