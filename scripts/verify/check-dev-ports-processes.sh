@@ -6,6 +6,35 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 AUTOHEAL_DEV_HYGIENE="${TITANE_AUTOHEAL_DEV_HYGIENE:-0}"
 SETTLE_SECONDS="${TITANE_DEV_HYGIENE_SETTLE_SECONDS:-2}"
 
+settle_wait_until_empty() {
+  # Poll until output becomes empty (or timeout).
+  # Args: <seconds> <cmd...>
+  local seconds="$1"
+  shift
+
+  # If seconds is invalid/zero, don't wait.
+  if ! [[ "$seconds" =~ ^[0-9]+$ ]] || [ "$seconds" -le 0 ]; then
+    return 1
+  fi
+
+  local deadline now out
+  deadline=$(( $(date +%s) + seconds ))
+
+  while :; do
+    out="$("$@" || true)"
+    if [ -z "${out//[[:space:]]/}" ]; then
+      return 0
+    fi
+
+    now="$(date +%s)"
+    if [ "$now" -ge "$deadline" ]; then
+      return 1
+    fi
+
+    sleep 0.2
+  done
+}
+
 is_safe_to_kill_pid() {
   local pid="$1"
   local args
@@ -54,10 +83,8 @@ check_ports() {
   if [ -n "${ss_out//[[:space:]]/}" ]; then
     # Les runners peuvent encore être en phase d'arrêt (ex: Vite juste après Playwright).
     # En mode strict, on laisse une courte fenêtre de stabilisation avant d'échouer.
-    if [ "$AUTOHEAL_DEV_HYGIENE" != "1" ] && [ "${SETTLE_SECONDS}" -gt 0 ] 2>/dev/null; then
-      sleep "$SETTLE_SECONDS"
-      ss_out="$( (ss -ltnp 2>/dev/null || ss -ltn 2>/dev/null) | grep -E ':(4000|5173|4173|1430)\\b' || true )"
-      if [ -z "${ss_out//[[:space:]]/}" ]; then
+    if [ "$AUTOHEAL_DEV_HYGIENE" != "1" ]; then
+      if settle_wait_until_empty "$SETTLE_SECONDS" bash -lc "(ss -ltnp 2>/dev/null || ss -ltn 2>/dev/null) | grep -E ':(4000|5173|4173|1430)\\b' || true"; then
         echo "OK: no dev ports (settled)"
         return 0
       fi
@@ -100,20 +127,8 @@ check_processes() {
   done <<< "$matches"
 
   if [ -n "${filtered//[[:space:]]/}" ]; then
-    if [ "$AUTOHEAL_DEV_HYGIENE" != "1" ] && [ "${SETTLE_SECONDS}" -gt 0 ] 2>/dev/null; then
-      sleep "$SETTLE_SECONDS"
-      matches="$(pgrep -af 'vite/bin/vite\.js|\btauri dev\b|pnpm run dev:tauri|runtime/dev/tauri\.(dev\.)?conf\.json|vite\.js --port' 2>/dev/null || true)"
-      filtered=""
-
-      while IFS= read -r line; do
-        case "$line" in
-          *"pgrep -af"*) continue ;;
-          *"vitest.explorer"*|*"/dist/worker.js"*) continue ;;
-        esac
-        [ -n "$line" ] && filtered="${filtered}${line}\n"
-      done <<< "$matches"
-
-      if [ -z "${filtered//[[:space:]]/}" ]; then
+    if [ "$AUTOHEAL_DEV_HYGIENE" != "1" ]; then
+      if settle_wait_until_empty "$SETTLE_SECONDS" bash -lc "pgrep -af 'vite/bin/vite\\.js|\\btauri dev\\b|pnpm run dev:tauri|runtime/dev/tauri\\.(dev\\.)?conf\\.json|vite\\.js --port' 2>/dev/null || true"; then
         echo "OK: no dev processes (settled)"
         return 0
       fi
