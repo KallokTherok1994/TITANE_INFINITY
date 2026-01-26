@@ -17,7 +17,7 @@
 			},
 			"group": {
 				"kind": "build",
-				"isDefault": false
+				"isDefault": true
 			},
 			"detail": "Launch TITANE∞ Dev Runtime (development environment)"
 		},
@@ -50,7 +50,7 @@
 			},
 			"group": {
 				"kind": "build",
-				"isDefault": true
+				"isDefault": false
 			},
 			"detail": "Build TITANE∞ Stable Runtime (production user runtime)"
 		},
