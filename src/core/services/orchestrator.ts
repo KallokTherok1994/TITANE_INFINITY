@@ -26,6 +26,7 @@ import { autoHealEngine } from './systemHealth'; // ← NOUVEAU: Auto-heal inté
 import { metricsEngine } from './metrics'; // ← NOUVEAU: Metrics Engine v20Ω
 import type { AggregatedMetrics } from '../../services/ai/metricsEngine';
 import { cognitiveKernel } from './cognitiveKernel'; // ← NOUVEAU v22Ω: Cognitive Kernel
+import { z } from 'zod';
 
 const isDev = process.env.NODE_ENV === 'development';
 const NULL_BYTE = String.fromCharCode(0);
@@ -59,28 +60,29 @@ interface OrchestratorMetrics {
 }
 
 /**
- * AutoHealStatus - Compatible avec AutoHealStats de autoHealEngine
- * Tous les champs sont optionnels pour supporter les deux formats
+ * AutoHealStatus - Zod Schema pour validation runtime (P1 Audit v26.3.1)
+ * Compatible avec AutoHealStats de autoHealEngine
  */
-interface AutoHealStatus {
-  // Champs AutoHealStats
-  totalErrors?: number;
-  totalHeals?: number;
-  successRate?: number;
-  avgHealTime?: number;
-  errorsByType?: Record<string, number>;
-  actionsByType?: Record<string, number>;
-  lastHeal?: number;
-  healthScore?: number;
-  // Champs legacy
-  enabled?: boolean;
-  activeHealings?: number;
-  totalHealed?: number;
-  lastHealTimestamp?: number;
-  error?: string;
-  providers?: Record<string, unknown>;
-  [key: string]: unknown;
-}
+const AutoHealStatusSchema = z.object({
+  // Champs AutoHealStats (format principal)
+  totalErrors: z.number().min(0).optional(),
+  totalHeals: z.number().min(0).optional(),
+  successRate: z.number().min(0).max(100).optional(),
+  avgHealTime: z.number().min(0).optional(),
+  errorsByType: z.record(z.string(), z.number()).optional(),
+  actionsByType: z.record(z.string(), z.number()).optional(),
+  lastHeal: z.number().optional(),
+  healthScore: z.number().min(0).max(100).optional(),
+  // Champs legacy (backward compatibility)
+  enabled: z.boolean().optional(),
+  activeHealings: z.number().min(0).optional(),
+  totalHealed: z.number().min(0).optional(),
+  lastHealTimestamp: z.number().optional(),
+  error: z.string().optional(),
+  providers: z.record(z.string(), z.unknown()).optional(),
+}).passthrough(); // Permet champs additionnels pour extensibilité
+
+type AutoHealStatus = z.infer<typeof AutoHealStatusSchema>;
 
 interface NeuralSelection {
   selectedProvider: string;
@@ -1218,10 +1220,16 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
 
       await Promise.allSettled(availabilityChecks);
 
+      // Validation runtime Zod (P1 Audit v26.3.1)
+      const rawAutoHealStats = autoHealEngine.getStats();
+      const validatedAutoHeal = AutoHealStatusSchema.safeParse(rawAutoHealStats);
+      
       return {
         providers: Array.from(this.providerStats.values()),
         orchestrator: { ...this.orchestratorMetrics },
-        autoHeal: autoHealEngine.getStats() as unknown as AutoHealStatus,
+        autoHeal: validatedAutoHeal.success 
+          ? validatedAutoHeal.data 
+          : { error: 'Invalid AutoHeal stats format', raw: rawAutoHealStats },
         metrics: metricsEngine.getAggregatedMetrics(), // 📊 NOUVEAU: Métriques détaillées
         timestamp: Date.now(),
       };
@@ -1240,10 +1248,16 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
    * 📊 NOUVEAU v20Ω: Obtenir métriques détaillées
    */
   getDetailedMetrics() {
+    // Validation runtime Zod (P1 Audit v26.3.1)
+    const rawAutoHealStats = autoHealEngine.getStats();
+    const validatedAutoHeal = AutoHealStatusSchema.safeParse(rawAutoHealStats);
+    
     return {
       aggregated: metricsEngine.getAggregatedMetrics(),
       health: metricsEngine.getHealthStats(),
-      autoHeal: autoHealEngine.getStats(),
+      autoHeal: validatedAutoHeal.success 
+        ? validatedAutoHeal.data 
+        : { error: 'Invalid AutoHeal stats format', raw: rawAutoHealStats },
       orchestrator: { ...this.orchestratorMetrics },
     };
   }
@@ -1302,10 +1316,17 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
       recommendations.push('Majority of providers are failing');
     }
 
-    // Check auto-heal effectiveness
+    // Check auto-heal effectiveness (avec validation Zod P1)
     const autoHealStats = status.autoHeal;
-    if (autoHealStats.successRate && autoHealStats.successRate < 80) {
-      recommendations.push('Auto-heal effectiveness is low');
+    const validatedAutoHeal = AutoHealStatusSchema.safeParse(autoHealStats);
+    
+    if (validatedAutoHeal.success) {
+      const stats = validatedAutoHeal.data;
+      if (stats.successRate && stats.successRate < 80) {
+        recommendations.push('Auto-heal effectiveness is low');
+      }
+    } else {
+      recommendations.push('Auto-heal stats validation failed');
     }
 
     // Check response times
