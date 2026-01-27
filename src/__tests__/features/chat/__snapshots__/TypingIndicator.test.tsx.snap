@@ -1,0 +1,26 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`TypingIndicator Component > Snapshot > should match snapshot 1`] = `
+<div
+  style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background-color: #252525cc; border-radius: 0.75rem; border: 1px solid #727b8140; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px); margin-bottom: 1rem; opacity: 0; transform: translateY(10px);"
+>
+  <span
+    style="font-size: 0.875rem; color: #727b81; font-weight: 600;"
+  >
+    🤖 Gemini réfléchit
+  </span>
+  <div
+    style="display: flex; gap: 0.25rem; align-items: center;"
+  >
+    <div
+      style="width: 8px; height: 8px; border-radius: 9999px; background-color: #727b81; transform: none;"
+    />
+    <div
+      style="width: 8px; height: 8px; border-radius: 9999px; background-color: #727b81; transform: none;"
+    />
+    <div
+      style="width: 8px; height: 8px; border-radius: 9999px; background-color: #727b81; transform: none;"
+    />
+  </div>
+</div>
+`;
