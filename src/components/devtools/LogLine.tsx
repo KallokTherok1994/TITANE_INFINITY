@@ -3,7 +3,7 @@
  * Single log entry display
  */
 
-import type { LogEntry } from '@/types';
+import type { LogEntry, LogLevel } from '@/types';
 
 export interface LogLineProps {
   log: LogEntry;
@@ -11,11 +11,14 @@ export interface LogLineProps {
 }
 
 export function LogLine({ log, highlight }: LogLineProps) {
-  const levelColors = {
+  const levelColors: Partial<Record<LogLevel, string>> = {
     debug: 'text-gray-400',
     info: 'text-blue-400',
     warn: 'text-yellow-400',
     error: 'text-red-400',
+    Info: 'text-blue-400',
+    Warning: 'text-yellow-400',
+    Error: 'text-red-400',
   };
 
   const bgColor = highlight ? 'bg-blue-900/20' : 'hover:bg-gray-800';

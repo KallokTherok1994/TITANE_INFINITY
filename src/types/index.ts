@@ -2,6 +2,7 @@
 //   TITANE∞ — Global Types Export
 // ═══════════════════════════════════════════════════════════════
 
+// Export all types (conflicts resolved in consuming files if needed)
 export * from './audio';
 export * from './ai';
 export * from './devtools';

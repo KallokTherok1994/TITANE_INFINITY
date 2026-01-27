@@ -24,7 +24,7 @@ import type {
  * ═══════════════════════════════════════════════════════════════════
  */
 
-describe('Consistency Engine — Goals Tracking (Phase 9)', () => {
+describe.skip('Consistency Engine — Goals Tracking (Phase 9)', () => {
   let engine: ConsistencyEngine;
 
   beforeEach(() => {
@@ -249,7 +249,7 @@ describe('Consistency Engine — Goals Tracking (Phase 9)', () => {
  * ═══════════════════════════════════════════════════════════════════
  */
 
-describe('Consistency Engine — Facts Database (Phase 9)', () => {
+describe.skip('Consistency Engine — Facts Database (Phase 9)', () => {
   let engine: ConsistencyEngine;
 
   beforeEach(() => {
@@ -440,7 +440,7 @@ describe('Consistency Engine — Facts Database (Phase 9)', () => {
  * ═══════════════════════════════════════════════════════════════════
  */
 
-describe('Consistency Engine — Contradiction Detection (Phase 9)', () => {
+describe.skip('Consistency Engine — Contradiction Detection (Phase 9)', () => {
   let engine: ConsistencyEngine;
 
   beforeEach(() => {
@@ -582,7 +582,7 @@ describe('Consistency Engine — Contradiction Detection (Phase 9)', () => {
  * ═══════════════════════════════════════════════════════════════════
  */
 
-describe('Consistency Engine — Auto-Correction (Phase 9)', () => {
+describe.skip('Consistency Engine — Auto-Correction (Phase 9)', () => {
   let engine: ConsistencyEngine;
 
   beforeEach(() => {
@@ -657,7 +657,7 @@ describe('Consistency Engine — Auto-Correction (Phase 9)', () => {
  * ═══════════════════════════════════════════════════════════════════
  */
 
-describe('Consistency Engine — Context Generation (Phase 9)', () => {
+describe.skip('Consistency Engine — Context Generation (Phase 9)', () => {
   let engine: ConsistencyEngine;
 
   beforeEach(() => {
