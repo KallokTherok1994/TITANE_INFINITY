@@ -3,7 +3,7 @@
  * Coverage: Panel principal chat, Messages, Input, Actions
  */
 
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ChatPanel } from '@/panels/ChatPanel';
 
