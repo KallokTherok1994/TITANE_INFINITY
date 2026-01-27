@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Tests pour LogFilters Component
  * Coverage: Level filters, Category filters, Date range

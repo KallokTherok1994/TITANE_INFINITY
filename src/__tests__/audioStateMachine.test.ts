@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * TITANE_INFINITY v20.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.

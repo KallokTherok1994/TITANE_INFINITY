@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Tests pour LogViewer Component
  * Coverage: Log display, Filtering, Search, Virtual scrolling

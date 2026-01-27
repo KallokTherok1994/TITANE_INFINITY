@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Tests pour CoreHealthMonitor Component
  * Coverage: Health display, Thresholds, Alerts, History

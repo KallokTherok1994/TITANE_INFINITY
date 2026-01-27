@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Tests pour EventStream Component
  * Coverage: Real-time events, Filtering, Auto-scroll

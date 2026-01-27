@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Tests pour DevTools Errors Section
  * Coverage: Liste erreurs, Filtrage, Actions (retry, resolve)

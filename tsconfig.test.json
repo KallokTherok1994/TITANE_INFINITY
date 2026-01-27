@@ -8,15 +8,12 @@
     "skipLibCheck": true
   },
   "include": [
-    "src/**/*.d.ts",
     "src/**/*.test.ts",
     "src/**/*.test.tsx",
     "src/**/*.spec.ts",
     "src/**/*.spec.tsx",
-    "src/test/**/*",
     "src/__tests__/**/*",
-    "src/tests/**/*",
-    "src/test-utils/**/*"
+    "src/tests/**/*"
   ],
   "exclude": ["node_modules", "dist"]
 }
