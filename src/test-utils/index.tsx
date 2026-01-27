@@ -4,6 +4,19 @@
  */
 
 export * from './TestProviders';
-export * from './renderHook';
-export { render, screen, waitFor, within, fireEvent, act } from '@testing-library/react';
+export { renderHook } from './renderHook';
+export type { RenderHookOptions } from './renderHook';
+
+// Explicit re-exports from @testing-library/react for better TypeScript compatibility
+export {
+  render,
+  screen,
+  waitFor,
+  within,
+  fireEvent,
+  act,
+  cleanup,
+  renderHook as rtlRenderHook,
+} from '@testing-library/react';
+
 export { default as userEvent } from '@testing-library/user-event';
