@@ -1,0 +1,13 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`CoreHealthMonitor Component > Snapshot > should match snapshot 1`] = `
+<div
+  class="flex items-center justify-center h-64 bg-gray-900 rounded-lg"
+>
+  <div
+    class="text-gray-400"
+  >
+    Loading core health...
+  </div>
+</div>
+`;
