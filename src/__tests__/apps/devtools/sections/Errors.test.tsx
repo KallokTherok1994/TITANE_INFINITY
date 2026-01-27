@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { Errors } from '@/apps/devtools/sections/Errors';
+import { Errors } from '@/apps/devtools/sections';
 
 // Mock store
 const mockResolveError = vi.fn();

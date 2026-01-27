@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { DevToolsApp } from '@/apps/devtools/DevToolsApp';
+import { DevToolsApp } from '@/apps/devtools';
 
 // Mock hooks
 vi.mock('@/apps/devtools/hooks', () => ({

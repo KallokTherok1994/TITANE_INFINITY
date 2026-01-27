@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { SingularityDashboard } from '@/features/monitoring/SingularityDashboard';
+import { SingularityDashboard } from '@/components/monitoring/SingularityDashboard';
 
 describe('SingularityDashboard Component', () => {
   const mockMetrics = {

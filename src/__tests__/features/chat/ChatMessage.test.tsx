@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi } from 'vitest';
 import { renderWithProviders as render, screen } from '../../test-utils';
-import { ChatMessage } from '@/features/chat/ChatMessage';
+import { ChatMessage } from '@/features/chat';
 
 describe('ChatMessage Component', () => {
   const mockMessage = {

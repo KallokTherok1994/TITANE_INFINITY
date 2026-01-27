@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { useChat } from '@/hooks/useChat';
+import { useChat } from '@/hooks';
 
 // Mock Tauri invoke
 vi.mock('@tauri-apps/api/core', () => ({

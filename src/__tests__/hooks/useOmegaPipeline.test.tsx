@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { useOmegaPipeline } from '@/hooks/useOmegaPipeline';
+import { useOmegaPipeline } from '@/hooks';
 
 describe('useOmegaPipeline Hook', () => {
   beforeEach(() => {

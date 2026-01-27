@@ -14,7 +14,7 @@
 
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { renderHook, act, waitFor } from '@/test-utils';
-import { useVAD } from '@/hooks/useVAD';
+import { useVAD } from '@/hooks';
 import { audioService } from '@/features/audio-center/services/audioService';
 import { audioStateMachine } from '@/services/audio/audioStateMachine';
 

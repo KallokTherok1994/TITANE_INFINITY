@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { ChatPanel } from '@/panels/ChatPanel';
+import { ChatPanel } from '@/components/panels/ChatPanel';
 
 describe('ChatPanel Component', () => {
   const mockOnSend = vi.fn();
