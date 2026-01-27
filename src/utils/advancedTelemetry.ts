@@ -87,7 +87,10 @@ export class AdvancedTelemetry {
     if (!this.aggregations.has(key)) {
       this.aggregations.set(key, []);
     }
-    this.aggregations.get(key)!.push(value);
+    const aggregationArray = this.aggregations.get(key);
+    if (aggregationArray) {
+      aggregationArray.push(value);
+    }
   }
 
   /**
@@ -323,7 +326,8 @@ export class AdvancedTelemetry {
     }
 
     if (filter?.since !== undefined) {
-      filtered = filtered.filter(e => e.timestamp >= filter.since!);
+      const sinceValue = filter.since;
+      filtered = filtered.filter(e => e.timestamp >= sinceValue);
     }
 
     return filtered;

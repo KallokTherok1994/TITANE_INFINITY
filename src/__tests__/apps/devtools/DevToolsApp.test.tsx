@@ -145,8 +145,9 @@ describe('DevToolsApp', () => {
   });
 
   describe('Events', () => {
-    it('should initialize DevTools events on mount', () => {
-      const { useAllDevToolsEvents } = require('@/apps/devtools/hooks');
+    it('should initialize DevTools events on mount', async () => {
+      const devtoolsHooks = await import('@/apps/devtools/hooks');
+      const useAllDevToolsEvents = devtoolsHooks.useAllDevToolsEvents;
       
       render(<DevToolsApp />);
       

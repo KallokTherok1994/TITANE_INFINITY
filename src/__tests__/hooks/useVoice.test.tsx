@@ -72,7 +72,8 @@ describe('useVoice Hook', () => {
       const { result } = renderHook(() => useVoice());
       
       // Simuler erreur
-      vi.mocked(require('@tauri-apps/api/core').invoke).mockRejectedValueOnce(new Error('No microphone'));
+      const tauriCore = await import('@tauri-apps/api/core');
+      vi.mocked(tauriCore.invoke).mockRejectedValueOnce(new Error('No microphone'));
       
       await act(async () => {
         try {

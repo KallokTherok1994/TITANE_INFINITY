@@ -104,7 +104,8 @@ describe('useSingularity Hook', () => {
 
   describe('Error Handling', () => {
     it('should handle activation errors', async () => {
-      vi.mocked(require('@tauri-apps/api/core').invoke).mockRejectedValueOnce(new Error('Activation failed'));
+      const tauriCore = await import('@tauri-apps/api/core');
+      vi.mocked(tauriCore.invoke).mockRejectedValueOnce(new Error('Activation failed'));
       
       const { result } = renderHook(() => useSingularity());
       
