@@ -1,0 +1,74 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`EventStream Component > Snapshot > should match snapshot 1`] = `
+<div
+  class="space-y-2"
+>
+  <div
+    class="p-3 rounded border-l-4 border-blue-500 bg-blue-900/20"
+  >
+    <div
+      class="flex items-start justify-between"
+    >
+      <div
+        class="flex-1"
+      >
+        <p
+          class="text-sm font-medium text-white"
+        >
+          System started
+        </p>
+      </div>
+      <span
+        class="text-xs text-gray-500 ml-2"
+      >
+        11:46:12
+      </span>
+    </div>
+  </div>
+  <div
+    class="p-3 rounded border-l-4 border-blue-500 bg-blue-900/20"
+  >
+    <div
+      class="flex items-start justify-between"
+    >
+      <div
+        class="flex-1"
+      >
+        <p
+          class="text-sm font-medium text-white"
+        >
+          User action
+        </p>
+      </div>
+      <span
+        class="text-xs text-gray-500 ml-2"
+      >
+        11:46:12
+      </span>
+    </div>
+  </div>
+  <div
+    class="p-3 rounded border-l-4 border-red-500 bg-red-900/20"
+  >
+    <div
+      class="flex items-start justify-between"
+    >
+      <div
+        class="flex-1"
+      >
+        <p
+          class="text-sm font-medium text-white"
+        >
+          Error occurred
+        </p>
+      </div>
+      <span
+        class="text-xs text-gray-500 ml-2"
+      >
+        11:46:12
+      </span>
+    </div>
+  </div>
+</div>
+`;

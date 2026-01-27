@@ -1,0 +1,15 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SectionHeader Component > Snapshot > should match snapshot 1`] = `
+<div
+  class="flex items-center justify-between p-4 border-b border-gray-700"
+>
+  <div>
+    <h2
+      class="text-lg font-semibold text-white"
+    >
+      Test Section
+    </h2>
+  </div>
+</div>
+`;
