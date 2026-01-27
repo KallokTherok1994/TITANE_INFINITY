@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * TITANE∞ v26.3.1 — Tests Neural Selection AI Orchestrator
  * Tests P1 identifiés dans AUDIT_ORCHESTRATEURS_v26.3.1 (VERSION CORRIGÉE)

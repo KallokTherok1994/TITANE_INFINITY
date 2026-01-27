@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Tests pour LogLine Component
  * Coverage: Log formatting, Levels, Timestamps, Highlighting

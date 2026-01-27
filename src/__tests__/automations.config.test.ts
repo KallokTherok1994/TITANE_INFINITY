@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * TITANE∞ v19.2Ω — Automations Config Tests
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.

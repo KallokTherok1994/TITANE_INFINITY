@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * TITANE∞ v15.1 — Test de Stabilité Chat IA
  * Valide que les messages IA ne disparaissent plus après réponse

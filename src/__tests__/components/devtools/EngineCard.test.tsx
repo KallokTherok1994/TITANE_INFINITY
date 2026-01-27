@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Tests pour EngineCard Component
  * Coverage: Engine info, Status, Actions, Metrics

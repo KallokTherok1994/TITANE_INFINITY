@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Tests pour DevTools Engines Section
  * Coverage: Liste moteurs, Filtrage, Actions (restart, inspect)

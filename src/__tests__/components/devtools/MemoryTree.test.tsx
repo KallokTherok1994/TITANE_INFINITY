@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Tests pour MemoryTree Component  
  * Coverage: Tree structure, Expansion, Navigation

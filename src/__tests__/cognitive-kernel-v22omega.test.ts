@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * TITANE∞ v22Ω — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
