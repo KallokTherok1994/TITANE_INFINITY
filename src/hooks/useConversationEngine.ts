@@ -208,7 +208,22 @@ export function useConversationEngine(
           },
         };
 
-        setMessages(prev => [...prev, assistantMessage]);
+        console.log('[useConversationEngine] 📝 Assistant message créé:', {
+          id: assistantMessage.id,
+          role: assistantMessage.role,
+          content_length: assistantMessage.content?.length || 0,
+          content_preview: assistantMessage.content?.substring(0, 100),
+        });
+
+        setMessages(prev => {
+          const updated = [...prev, assistantMessage];
+          console.log('[useConversationEngine] 📊 Messages après ajout:', {
+            total: updated.length,
+            last_role: updated[updated.length - 1]?.role,
+            last_content_length: updated[updated.length - 1]?.content?.length || 0,
+          });
+          return updated;
+        });
         setLastResponse(response);
 
         // Callback
