@@ -60,8 +60,12 @@ export const MetricCard = React.memo(function MetricCard({
   const colors = colorStyles[color] ??
     colorStyles.primary ?? { icon: '#727b81', trend: '#727b81' };
 
+  // Generate testid from label (e.g., "IPC Latency P50" -> "metric-IPC-Latency-P50")
+  const testId = `metric-${label.replace(/\s+/g, '-')}`;
+
   return (
     <div
+      data-testid={testId}
       className={`rounded-lg p-4 border transition-all duration-200 hover:border-opacity-30 ${className}`}
       style={{
         background: 'var(--bg-panel, #101216)',

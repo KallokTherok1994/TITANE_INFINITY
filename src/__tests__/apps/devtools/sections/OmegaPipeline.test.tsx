@@ -10,22 +10,31 @@ import { OmegaPipeline } from '@/apps/devtools/sections/OmegaPipeline';
 // Mock store
 vi.mock('@/apps/devtools/store/devtools.store', () => ({
   useDevToolsStore: () => ({
-    pipeline: {
-      steps: [
-        { id: 'input', name: 'Input Processing', status: 'completed', duration: 50 },
-        { id: 'analysis', name: 'Analysis', status: 'running', duration: 120 },
-        { id: 'generation', name: 'Generation', status: 'pending', duration: 0 },
+    currentPipeline: [
+      { id: 'perception', status: 'complete', duration: 50 },
+      { id: 'analysis', status: 'running', duration: 120 },
+      { id: 'synthesis', status: 'pending', duration: 0 },
+    ],
+    pipelineHistory: [
+      [
+        { id: 'perception', status: 'complete', duration: 45 },
+        { id: 'analysis', status: 'complete', duration: 110 },
+        { id: 'synthesis', status: 'complete', duration: 55 },
       ],
-      currentStep: 'analysis',
-    },
+      [
+        { id: 'perception', status: 'complete', duration: 50 },
+        { id: 'analysis', status: 'complete', duration: 95 },
+        { id: 'synthesis', status: 'complete', duration: 50 },
+      ],
+    ],
   }),
 }));
 
 vi.mock('@/apps/devtools/components', () => ({
-  SectionHeader: ({ title, description }: any) => (
+  SectionHeader: ({ title, actions }: any) => (
     <div data-testid="section-header">
-      <h2>{title}</h2>
-      <p>{description}</p>
+      <span>{title}</span>
+      {actions && <div data-testid="header-actions">{actions}</div>}
     </div>
   ),
 }));
@@ -36,22 +45,24 @@ describe('DevTools OmegaPipeline Section', () => {
   });
 
   describe('Rendering', () => {
-    it('should render pipeline section', () => {
+    it('should render pipeline section with header', () => {
       render(<OmegaPipeline />);
+      
       expect(screen.getByTestId('section-header')).toBeInTheDocument();
+      expect(screen.getByText('Omega Pipeline')).toBeInTheDocument();
     });
 
-    it('should display pipeline steps', () => {
+    it('should display current execution section', () => {
       render(<OmegaPipeline />);
-      // Les étapes du pipeline devraient être visibles
-      expect(screen.getByText(/Input Processing/i) || screen.getByText(/Analysis/i)).toBeTruthy();
+      
+      expect(screen.getByText('Current Execution')).toBeInTheDocument();
     });
 
-    it('should show step statuses', () => {
+    it('should display total duration', () => {
       render(<OmegaPipeline />);
-      // Vérifier présence de statuts
-      const content = screen.getByTestId('section-header').parentElement;
-      expect(content).toBeTruthy();
+      
+      // Vérifier que le total existe (peut être 0ms si pas de pipeline)
+      expect(screen.getByText(/Total:/i)).toBeInTheDocument();
     });
   });
 

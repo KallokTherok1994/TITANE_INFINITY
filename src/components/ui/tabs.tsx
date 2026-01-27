@@ -44,6 +44,15 @@ export interface TabsProps {
  * ```
  */
 export function Tabs({ tabs, defaultTab, onTabChange, children }: TabsProps) {
+  // Guard against empty tabs array
+  if (!tabs || tabs.length === 0) {
+    return (
+      <div role="tablist" className="flex flex-col">
+        <div className="text-titanium-text-tertiary text-sm">No tabs available</div>
+      </div>
+    );
+  }
+
   const [activeTab, setActiveTab] = useState(defaultTab || tabs[0]?.id || '');
 
   const handleTabClick = (tabId: string, disabled?: boolean) => {

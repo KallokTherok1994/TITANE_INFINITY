@@ -7,60 +7,59 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Metrics } from '@/apps/devtools/sections/Metrics';
 
-// Mock MetricCard component
-vi.mock('@/apps/devtools/components/MetricCard', () => ({
-  MetricCard: ({ title, value }: any) => (
-    <div data-testid={`metric-${title}`}>
-      {title}: {value}
-    </div>
-  ),
+// Mock du store DevTools
+vi.mock('@/apps/devtools/store/devtools.store', () => ({
+  useDevToolsStore: () => ({
+    metrics: {
+      'ipc-latency-p50': { id: 'ipc-latency-p50', label: 'IPC Latency P50', value: 12, unit: 'ms', trend: 'stable', history: [10, 11, 12] },
+      'ipc-latency-p90': { id: 'ipc-latency-p90', label: 'IPC Latency P90', value: 25, unit: 'ms', trend: 'down', history: [28, 26, 25] },
+      'cpu-usage': { id: 'cpu-usage', label: 'CPU Usage', value: 34, unit: '%', trend: 'up', history: [30, 32, 34] },
+      'memory-usage': { id: 'memory-usage', label: 'Memory Usage', value: 512, unit: 'MB', trend: 'stable', history: [500, 510, 512] },
+      'omega-duration': { id: 'omega-duration', label: 'Omega Duration', value: 145, unit: 'ms', trend: 'stable', history: [140, 143, 145] },
+    },
+    timeRange: '2m',
+    setTimeRange: vi.fn(),
+  }),
 }));
 
-// Mock TrendGraph component
-vi.mock('@/apps/devtools/components/TrendGraph', () => ({
-  TrendGraph: ({ metric }: any) => (
-    <div data-testid={`trend-${metric}`}>Trend: {metric}</div>
-  ),
+// Mock des composants enfants
+vi.mock('@/apps/devtools/components', () => ({
+  SectionHeader: ({ title }: any) => <div data-testid="section-header">{title}</div>,
+  MetricCard: ({ label }: any) => <div data-testid={`metric-${label.replace(/\s+/g, '-')}`}>{label}</div>,
 }));
 
 describe('DevTools Metrics Section', () => {
   describe('Rendering', () => {
-    it('should render metrics section', () => {
+    it('should render metrics section with header', () => {
       render(<Metrics />);
       
-      // Au minimum, la section devrait être présente
-      expect(screen.getByTestId('metric-CPU') || screen.getByTestId('trend-CPU')).toBeTruthy();
+      expect(screen.getByTestId('section-header')).toBeInTheDocument();
+      expect(screen.getByText('System Metrics')).toBeInTheDocument();
     });
 
-    it('should display metric cards', () => {
+    it('should display all metric cards', () => {
       render(<Metrics />);
       
-      // Vérifier présence de métriques courantes
-      const metrics = ['CPU', 'Memory', 'FPS', 'Network'];
-      const rendered = metrics.filter(m => screen.queryByTestId(`metric-${m}`));
-      expect(rendered.length).toBeGreaterThan(0);
+      expect(screen.getByTestId('metric-IPC-Latency-P50')).toBeInTheDocument();
+      expect(screen.getByTestId('metric-IPC-Latency-P90')).toBeInTheDocument();
+      expect(screen.getByTestId('metric-CPU-Usage')).toBeInTheDocument();
+      expect(screen.getByTestId('metric-Memory-Usage')).toBeInTheDocument();
     });
   });
 
   describe('Metric Cards', () => {
-    it('should render individual metric cards with values', () => {
+    it('should render latency metrics', () => {
       render(<Metrics />);
       
-      const cpuMetric = screen.queryByTestId('metric-CPU');
-      if (cpuMetric) {
-        expect(cpuMetric).toHaveTextContent('CPU');
-      }
+      expect(screen.getByTestId('metric-IPC-Latency-P50')).toHaveTextContent('IPC Latency P50');
+      expect(screen.getByTestId('metric-IPC-Latency-P90')).toHaveTextContent('IPC Latency P90');
     });
-  });
 
-  describe('Trend Graphs', () => {
-    it('should render trend graphs for metrics', () => {
+    it('should render system resource metrics', () => {
       render(<Metrics />);
       
-      const cpuTrend = screen.queryByTestId('trend-CPU');
-      if (cpuTrend) {
-        expect(cpuTrend).toHaveTextContent('Trend: CPU');
-      }
+      expect(screen.getByTestId('metric-CPU-Usage')).toHaveTextContent('CPU Usage');
+      expect(screen.getByTestId('metric-Memory-Usage')).toHaveTextContent('Memory Usage');
     });
   });
 

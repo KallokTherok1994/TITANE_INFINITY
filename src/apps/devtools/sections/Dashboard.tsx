@@ -114,7 +114,7 @@ export function Dashboard() {
       </div>
 
       {/* Key Metrics */}
-      <div>
+      <div data-testid="metrics-display">
         <h3
           className="text-base font-semibold mb-3"
           style={{ color: 'var(--text-primary, #e0e0e0)' }}

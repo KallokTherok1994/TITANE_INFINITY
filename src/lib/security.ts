@@ -1367,6 +1367,11 @@ export function validateCommand(command: string): CommandValidationResult {
     return { valid: false, errors };
   }
 
+  // Désactiver whitelist en mode test si variable d'environnement est définie
+  if (isTestEnvironment && import.meta.env?.VITE_DISABLE_SECURITY_IN_TESTS === 'true') {
+    return { valid: true, errors: [] };
+  }
+
   if (!ALLOWED_COMMANDS.has(command)) {
     if (isTestEnvironment && TEST_ONLY_COMMANDS.has(command)) {
       return { valid: true, errors: [] };

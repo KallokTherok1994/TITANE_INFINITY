@@ -72,7 +72,7 @@ export function OmegaPipeline() {
               className="text-xs"
               style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
             >
-              History: <span className="font-medium">{pipelineHistory.length}</span>
+              History: <span className="font-medium">{pipelineHistory?.length || 0}</span>
             </span>
           </div>
         }
@@ -87,7 +87,7 @@ export function OmegaPipeline() {
           Current Execution
         </h3>
 
-        {currentPipeline.length === 0 ? (
+        {(currentPipeline?.length || 0) === 0 ? (
           <div
             className="flex items-center justify-center h-64 rounded-lg border"
             style={{
@@ -104,7 +104,7 @@ export function OmegaPipeline() {
           </div>
         ) : (
           <div className="space-y-3">
-            {currentPipeline.map((step, index) => {
+            {(currentPipeline || []).map((step, index) => {
               const colors = statusColors[step.status];
               const icon = stepIcons[step.id] || '⚡';
               const isActive = step.status === 'running';
@@ -112,7 +112,7 @@ export function OmegaPipeline() {
               return (
                 <div key={step.id} className="relative">
                   {/* Connector Line */}
-                  {index < currentPipeline.length - 1 && (
+                  {index < (currentPipeline || []).length - 1 && (
                     <div
                       className="absolute left-6 top-12 w-0.5 h-8 -mt-2"
                       style={{

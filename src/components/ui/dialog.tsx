@@ -77,15 +77,18 @@ export function DialogContent({
   className = '',
   children,
   onClose,
+  'aria-labelledby': ariaLabelledby,
 }: {
   className?: string;
   children: React.ReactNode;
   onClose?: () => void;
+  'aria-labelledby'?: string;
 }) {
   return (
     <div
       role="dialog"
       aria-modal="true"
+      aria-labelledby={ariaLabelledby}
       className={`
         relative 
         bg-titanium-bg-overlay 
@@ -143,12 +146,16 @@ export function DialogHeader({
 export function DialogTitle({
   className = '',
   children,
+  id,
 }: {
   className?: string;
   children: React.ReactNode;
+  id?: string;
 }) {
+  const titleId = id || `dialog-title-${Math.random().toString(36).substr(2, 9)}`;
   return (
     <h2
+      id={titleId}
       className={`text-xl font-semibold leading-tight text-titanium-text-primary ${className}`}
     >
       {children}
