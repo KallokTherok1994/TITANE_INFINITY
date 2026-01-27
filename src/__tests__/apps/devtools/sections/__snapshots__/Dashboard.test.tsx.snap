@@ -1,0 +1,398 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`DevTools Dashboard Section > Snapshot > should match snapshot 1`] = `
+<div
+  class="space-y-6"
+>
+  <div
+    class="flex items-start justify-between mb-6 "
+  >
+    <div>
+      <h2
+        class="text-xl font-semibold mb-1"
+      >
+        System Dashboard
+      </h2>
+      <p
+        class="text-sm"
+      >
+        Vue d'ensemble du système TITANE∞
+      </p>
+    </div>
+  </div>
+  <div
+    class="p-6 rounded-lg border"
+  >
+    <div
+      class="flex items-center justify-between mb-4"
+    >
+      <h3
+        class="text-lg font-semibold"
+      >
+        System Health
+      </h3>
+      <span
+        class="inline-flex items-center gap-1.5 rounded-full font-medium text-sm px-2.5 py-1 "
+        style="background: rgba(147, 179, 153, 0.15);"
+      >
+        <span
+          class="w-1.5 h-1.5 rounded-full animate-pulse"
+        />
+        HEALTHY
+      </span>
+    </div>
+    <div
+      class="grid grid-cols-3 gap-4"
+    >
+      <div>
+        <div
+          class="text-sm mb-1"
+        >
+          Active Engines
+        </div>
+        <div
+          class="text-2xl font-bold"
+        >
+          7
+           / 
+          9
+        </div>
+      </div>
+      <div>
+        <div
+          class="text-sm mb-1"
+        >
+          Critical Errors
+        </div>
+        <div
+          class="text-2xl font-bold"
+        >
+          0
+        </div>
+      </div>
+      <div>
+        <div
+          class="text-sm mb-1"
+        >
+          System Uptime
+        </div>
+        <div
+          class="text-2xl font-bold"
+        >
+          24h 35m
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <h3
+      class="text-base font-semibold mb-3"
+    >
+      Key Metrics
+    </h3>
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
+    >
+      <div
+        class="rounded-lg p-4 border transition-all duration-200 hover:border-opacity-30 "
+      >
+        <div
+          class="flex items-start justify-between mb-3"
+        >
+          <div
+            class="flex items-center gap-2"
+          >
+            <span
+              class="text-sm font-medium"
+            >
+              IPC Latency P50
+            </span>
+          </div>
+          <span
+            class="text-xs font-medium px-1.5 py-0.5 rounded"
+          >
+            →
+          </span>
+        </div>
+        <div
+          class="flex items-baseline gap-1 mb-3"
+        >
+          <span
+            class="text-2xl font-bold"
+          >
+            12
+          </span>
+          <span
+            class="text-sm font-medium"
+          >
+            ms
+          </span>
+        </div>
+      </div>
+      <div
+        class="rounded-lg p-4 border transition-all duration-200 hover:border-opacity-30 "
+      >
+        <div
+          class="flex items-start justify-between mb-3"
+        >
+          <div
+            class="flex items-center gap-2"
+          >
+            <span
+              class="text-sm font-medium"
+            >
+              Omega Duration
+            </span>
+          </div>
+          <span
+            class="text-xs font-medium px-1.5 py-0.5 rounded"
+          >
+            →
+          </span>
+        </div>
+        <div
+          class="flex items-baseline gap-1 mb-3"
+        >
+          <span
+            class="text-2xl font-bold"
+          >
+            145
+          </span>
+          <span
+            class="text-sm font-medium"
+          >
+            ms
+          </span>
+        </div>
+      </div>
+      <div
+        class="rounded-lg p-4 border transition-all duration-200 hover:border-opacity-30 "
+      >
+        <div
+          class="flex items-start justify-between mb-3"
+        >
+          <div
+            class="flex items-center gap-2"
+          >
+            <span
+              class="text-sm font-medium"
+            >
+              CPU Usage
+            </span>
+          </div>
+          <span
+            class="text-xs font-medium px-1.5 py-0.5 rounded"
+          >
+            ↗
+          </span>
+        </div>
+        <div
+          class="flex items-baseline gap-1 mb-3"
+        >
+          <span
+            class="text-2xl font-bold"
+          >
+            34
+          </span>
+          <span
+            class="text-sm font-medium"
+          >
+            %
+          </span>
+        </div>
+      </div>
+      <div
+        class="rounded-lg p-4 border transition-all duration-200 hover:border-opacity-30 "
+      >
+        <div
+          class="flex items-start justify-between mb-3"
+        >
+          <div
+            class="flex items-center gap-2"
+          >
+            <span
+              class="text-sm font-medium"
+            >
+              Memory Usage
+            </span>
+          </div>
+          <span
+            class="text-xs font-medium px-1.5 py-0.5 rounded"
+          >
+            →
+          </span>
+        </div>
+        <div
+          class="flex items-baseline gap-1 mb-3"
+        >
+          <span
+            class="text-2xl font-bold"
+          >
+            512
+          </span>
+          <span
+            class="text-sm font-medium"
+          >
+            MB
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <h3
+      class="text-base font-semibold mb-3"
+    >
+      Active Engines
+    </h3>
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+    >
+      <div
+        class="rounded-lg p-4 border transition-all duration-200 hover:border-opacity-30 "
+      >
+        <div
+          class="flex items-start justify-between mb-3"
+        >
+          <div>
+            <h3
+              class="text-base font-semibold mb-1"
+            >
+              Helios
+            </h3>
+            <span
+              class="inline-flex items-center gap-1.5 rounded-full font-medium text-xs px-2 py-0.5 "
+              style="background: rgba(147, 179, 153, 0.15);"
+            >
+              <span
+                class="w-1.5 h-1.5 rounded-full animate-pulse"
+              />
+              running
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="rounded-lg p-4 border transition-all duration-200 hover:border-opacity-30 "
+      >
+        <div
+          class="flex items-start justify-between mb-3"
+        >
+          <div>
+            <h3
+              class="text-base font-semibold mb-1"
+            >
+              Nexus
+            </h3>
+            <span
+              class="inline-flex items-center gap-1.5 rounded-full font-medium text-xs px-2 py-0.5 "
+              style="background: rgba(147, 179, 153, 0.15);"
+            >
+              <span
+                class="w-1.5 h-1.5 rounded-full animate-pulse"
+              />
+              running
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="rounded-lg p-4 border transition-all duration-200 hover:border-opacity-30 "
+      >
+        <div
+          class="flex items-start justify-between mb-3"
+        >
+          <div>
+            <h3
+              class="text-base font-semibold mb-1"
+            >
+              Harmonia
+            </h3>
+            <span
+              class="inline-flex items-center gap-1.5 rounded-full font-medium text-xs px-2 py-0.5 "
+              style="background: rgba(147, 179, 153, 0.15);"
+            >
+              <span
+                class="w-1.5 h-1.5 rounded-full animate-pulse"
+              />
+              running
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="rounded-lg p-4 border transition-all duration-200 hover:border-opacity-30 "
+      >
+        <div
+          class="flex items-start justify-between mb-3"
+        >
+          <div>
+            <h3
+              class="text-base font-semibold mb-1"
+            >
+              MemoryCore
+            </h3>
+            <span
+              class="inline-flex items-center gap-1.5 rounded-full font-medium text-xs px-2 py-0.5 "
+              style="background: rgba(147, 179, 153, 0.15);"
+            >
+              <span
+                class="w-1.5 h-1.5 rounded-full animate-pulse"
+              />
+              running
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="rounded-lg p-4 border transition-all duration-200 hover:border-opacity-30 "
+      >
+        <div
+          class="flex items-start justify-between mb-3"
+        >
+          <div>
+            <h3
+              class="text-base font-semibold mb-1"
+            >
+              Orchestrator
+            </h3>
+            <span
+              class="inline-flex items-center gap-1.5 rounded-full font-medium text-xs px-2 py-0.5 "
+              style="background: rgba(147, 179, 153, 0.15);"
+            >
+              <span
+                class="w-1.5 h-1.5 rounded-full animate-pulse"
+              />
+              running
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="rounded-lg p-4 border transition-all duration-200 hover:border-opacity-30 "
+      >
+        <div
+          class="flex items-start justify-between mb-3"
+        >
+          <div>
+            <h3
+              class="text-base font-semibold mb-1"
+            >
+              Coherence
+            </h3>
+            <span
+              class="inline-flex items-center gap-1.5 rounded-full font-medium text-xs px-2 py-0.5 "
+              style="background: rgba(147, 179, 153, 0.15);"
+            >
+              <span
+                class="w-1.5 h-1.5 rounded-full animate-pulse"
+              />
+              running
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

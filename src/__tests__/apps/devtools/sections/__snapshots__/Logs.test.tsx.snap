@@ -1,0 +1,109 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`DevTools Logs Section > Snapshot > should match snapshot 1`] = `
+<div
+  class="space-y-4 h-full flex flex-col"
+>
+  <div
+    class="flex items-start justify-between mb-6 "
+  >
+    <div>
+      <h2
+        class="text-xl font-semibold mb-1"
+      >
+        System Logs
+      </h2>
+      <p
+        class="text-sm"
+      >
+        Logs temps réel de tous les moteurs
+      </p>
+    </div>
+    <div
+      class="flex items-center gap-2"
+    >
+      <div
+        class="flex items-center gap-2"
+      >
+        <button
+          class="px-3 py-1.5 text-xs font-medium rounded-md border transition-colors duration-150 hover:bg-opacity-80"
+        >
+          Clear Logs
+        </button>
+        <div
+          class="flex items-center gap-2"
+        >
+          <input
+            checked=""
+            class="w-4 h-4 rounded"
+            id="auto-scroll"
+            type="checkbox"
+          />
+          <label
+            class="text-xs font-medium cursor-pointer"
+            for="auto-scroll"
+          >
+            Auto-scroll
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    data-testid="log-filters"
+  >
+    <button>
+      Filter Errors
+    </button>
+  </div>
+  <div
+    class="flex items-center gap-4"
+  >
+    <span
+      class="text-xs"
+    >
+      Total: 
+      <span
+        class="font-medium"
+      >
+        0
+      </span>
+    </span>
+    <span
+      class="text-xs"
+    >
+      Filtered: 
+      <span
+        class="font-medium"
+      >
+        0
+      </span>
+    </span>
+    <span
+      class="text-xs"
+    >
+      Errors:
+       
+      <span
+        class="font-medium"
+      >
+        0
+      </span>
+    </span>
+  </div>
+  <div
+    class="flex-1 rounded-lg border overflow-y-auto"
+    style="max-height: calc(100vh - 400px);"
+  >
+    <div
+      class="flex items-center justify-center h-64"
+    >
+      <p
+        class="text-sm"
+      >
+        No logs yet
+      </p>
+    </div>
+  </div>
+</div>
+`;

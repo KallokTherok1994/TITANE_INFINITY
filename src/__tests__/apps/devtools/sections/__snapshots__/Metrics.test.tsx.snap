@@ -1,0 +1,336 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`DevTools Metrics Section > Snapshot > should match snapshot 1`] = `
+<div
+  class="space-y-6"
+>
+  <div
+    class="flex items-start justify-between mb-6 "
+  >
+    <div>
+      <h2
+        class="text-xl font-semibold mb-1"
+      >
+        System Metrics
+      </h2>
+      <p
+        class="text-sm"
+      >
+        Performance et métriques temps réel
+      </p>
+    </div>
+    <div
+      class="flex items-center gap-2"
+    >
+      <div
+        class="flex items-center gap-3"
+      >
+        <select
+          class="px-3 py-1.5 text-sm rounded-md border"
+        >
+          <option
+            value="all"
+          >
+            All Engines
+          </option>
+          <option
+            value="helios"
+          >
+            Helios
+          </option>
+          <option
+            value="nexus"
+          >
+            Nexus
+          </option>
+          <option
+            value="sentinel"
+          >
+            Sentinel
+          </option>
+          <option
+            value="harmonia"
+          >
+            Harmonia
+          </option>
+        </select>
+        <div
+          class="flex gap-1"
+        >
+          <button
+            class="px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-150 "
+          >
+            30 secondes
+          </button>
+          <button
+            class="px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-150 ring-1"
+          >
+            2 minutes
+          </button>
+          <button
+            class="px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-150 "
+          >
+            5 minutes
+          </button>
+          <button
+            class="px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-150 "
+          >
+            10 minutes
+          </button>
+          <button
+            class="px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-150 "
+          >
+            1 heure
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <h3
+      class="text-base font-semibold mb-3"
+    >
+      IPC Latency
+    </h3>
+    <div
+      class="grid grid-cols-1 md:grid-cols-3 gap-4"
+    >
+      <div
+        data-testid="metric-undefined"
+      >
+        : 
+        12
+      </div>
+      <div
+        data-testid="metric-undefined"
+      >
+        : 
+        25
+      </div>
+    </div>
+  </div>
+  <div>
+    <h3
+      class="text-base font-semibold mb-3"
+    >
+      System Resources
+    </h3>
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 gap-4"
+    >
+      <div
+        data-testid="metric-undefined"
+      >
+        : 
+        34
+      </div>
+      <div
+        data-testid="metric-undefined"
+      >
+        : 
+        512
+      </div>
+    </div>
+  </div>
+  <div>
+    <h3
+      class="text-base font-semibold mb-3"
+    >
+      Omega Pipeline
+    </h3>
+    <div
+      class="grid grid-cols-1 gap-4"
+    >
+      <div
+        data-testid="metric-undefined"
+      >
+        : 
+        145
+      </div>
+    </div>
+  </div>
+  <div>
+    <h3
+      class="text-base font-semibold mb-3"
+    >
+      Detailed Statistics
+    </h3>
+    <div
+      class="rounded-lg border overflow-hidden"
+    >
+      <table
+        class="w-full"
+      >
+        <thead>
+          <tr
+            class="border-b"
+          >
+            <th
+              class="text-left px-4 py-3 text-xs font-semibold"
+            >
+              Metric
+            </th>
+            <th
+              class="text-right px-4 py-3 text-xs font-semibold"
+            >
+              Current
+            </th>
+            <th
+              class="text-right px-4 py-3 text-xs font-semibold"
+            >
+              Trend
+            </th>
+            <th
+              class="text-right px-4 py-3 text-xs font-semibold"
+            >
+              Last Update
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            class="border-b"
+          >
+            <td
+              class="px-4 py-3 text-sm font-medium"
+            >
+              IPC Latency P50
+            </td>
+            <td
+              class="px-4 py-3 text-sm font-mono text-right"
+            >
+              12
+               
+              ms
+            </td>
+            <td
+              class="px-4 py-3 text-sm text-right"
+            >
+              <span>
+                →
+              </span>
+            </td>
+            <td
+              class="px-4 py-3 text-xs font-mono text-right"
+            >
+              19:19:15
+            </td>
+          </tr>
+          <tr
+            class="border-b"
+          >
+            <td
+              class="px-4 py-3 text-sm font-medium"
+            >
+              IPC Latency P90
+            </td>
+            <td
+              class="px-4 py-3 text-sm font-mono text-right"
+            >
+              25
+               
+              ms
+            </td>
+            <td
+              class="px-4 py-3 text-sm text-right"
+            >
+              <span>
+                ↘
+              </span>
+            </td>
+            <td
+              class="px-4 py-3 text-xs font-mono text-right"
+            >
+              19:19:15
+            </td>
+          </tr>
+          <tr
+            class="border-b"
+          >
+            <td
+              class="px-4 py-3 text-sm font-medium"
+            >
+              Omega Duration
+            </td>
+            <td
+              class="px-4 py-3 text-sm font-mono text-right"
+            >
+              145
+               
+              ms
+            </td>
+            <td
+              class="px-4 py-3 text-sm text-right"
+            >
+              <span>
+                →
+              </span>
+            </td>
+            <td
+              class="px-4 py-3 text-xs font-mono text-right"
+            >
+              19:19:15
+            </td>
+          </tr>
+          <tr
+            class="border-b"
+          >
+            <td
+              class="px-4 py-3 text-sm font-medium"
+            >
+              CPU Usage
+            </td>
+            <td
+              class="px-4 py-3 text-sm font-mono text-right"
+            >
+              34
+               
+              %
+            </td>
+            <td
+              class="px-4 py-3 text-sm text-right"
+            >
+              <span>
+                ↗
+              </span>
+            </td>
+            <td
+              class="px-4 py-3 text-xs font-mono text-right"
+            >
+              19:19:15
+            </td>
+          </tr>
+          <tr
+            class=""
+          >
+            <td
+              class="px-4 py-3 text-sm font-medium"
+            >
+              Memory Usage
+            </td>
+            <td
+              class="px-4 py-3 text-sm font-mono text-right"
+            >
+              512
+               
+              MB
+            </td>
+            <td
+              class="px-4 py-3 text-sm text-right"
+            >
+              <span>
+                →
+              </span>
+            </td>
+            <td
+              class="px-4 py-3 text-xs font-mono text-right"
+            >
+              19:19:15
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+`;

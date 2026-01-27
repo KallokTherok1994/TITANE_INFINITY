@@ -1,0 +1,104 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`DevToolsApp > Snapshot > should match snapshot 1`] = `
+<div
+  class="h-full flex flex-col "
+>
+  <div
+    class="flex-shrink-0 border-b"
+  >
+    <div
+      class="px-6 py-4"
+    >
+      <div
+        class="flex items-center justify-between mb-4"
+      >
+        <div>
+          <h1
+            class="text-xl font-bold mb-1"
+          >
+            TITANE∞ DevTools
+          </h1>
+          <p
+            class="text-xs"
+          >
+            System Monitoring & Diagnostics Console
+          </p>
+        </div>
+        <div
+          class="flex items-center gap-2"
+        >
+          <div
+            class="w-2 h-2 rounded-full animate-pulse"
+          />
+          <span
+            class="text-xs font-medium"
+          >
+            System Online
+          </span>
+        </div>
+      </div>
+      <div
+        data-testid="tabs-component"
+      >
+        <div
+          data-testid="tabs-list"
+        >
+          <button
+            data-testid="tab-dashboard"
+          >
+            📊
+             
+            Dashboard
+          </button>
+          <button
+            data-testid="tab-metrics"
+          >
+            📈
+             
+            Metrics
+          </button>
+          <button
+            data-testid="tab-logs"
+          >
+            📝
+             
+            Logs
+          </button>
+          <button
+            data-testid="tab-engines"
+          >
+            ⚙️
+             
+            Engines
+          </button>
+          <button
+            data-testid="tab-memory"
+          >
+            🧠
+             
+            Memory
+          </button>
+          <button
+            data-testid="tab-pipeline"
+          >
+            🔄
+             
+            Pipeline
+          </button>
+          <button
+            data-testid="tab-errors"
+          >
+            ⚠️
+             
+            Errors
+          </button>
+        </div>
+        <div
+          data-testid="tabs-content"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;

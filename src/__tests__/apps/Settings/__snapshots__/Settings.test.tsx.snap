@@ -1,0 +1,40 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Settings Page > Snapshot > should match snapshot 1`] = `
+<div
+  aria-labelledby="settings-title"
+  class="settings"
+  role="main"
+>
+  <header>
+    <h1
+      id="settings-title"
+    >
+      settings.title
+    </h1>
+  </header>
+  <section
+    aria-labelledby="general-settings"
+  >
+    <h2
+      id="general-settings"
+    >
+      settings.general
+    </h2>
+    <div
+      data-testid="language-switcher"
+    >
+      LanguageSwitcher
+    </div>
+  </section>
+  <section
+    aria-labelledby="appearance-settings"
+  >
+    <h2
+      id="appearance-settings"
+    >
+      settings.appearance
+    </h2>
+  </section>
+</div>
+`;
