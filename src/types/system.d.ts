@@ -171,8 +171,9 @@ export interface WatchdogData {
 /**
  * Log level enumeration
  * Matches Rust enum LogLevel in shared/types.rs
+ * Extended with lowercase variants for frontend compatibility
  */
-export type LogLevel = 'Info' | 'Warning' | 'Error';
+export type LogLevel = 'Info' | 'Warning' | 'Error' | 'debug' | 'info' | 'warn' | 'error';
 
 /**
  * Individual log entry

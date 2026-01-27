@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { Tabs } from '../../components/ui/tabs';
+import { TabsLegacy as Tabs } from '../../components/ui/tabs';
 import { useAllDevToolsEvents } from './hooks';
 import {
   Dashboard,
