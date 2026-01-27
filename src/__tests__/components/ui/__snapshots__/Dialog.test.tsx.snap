@@ -1,0 +1,36 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Dialog Component > Snapshot > should match snapshot when open 1`] = `
+<div>
+  <div
+    class="fixed inset-0 z-modal flex items-center justify-center p-4"
+  >
+    <div
+      aria-hidden="true"
+      class="fixed inset-0 bg-black/70 backdrop-blur-sm"
+    />
+    <div
+      class="relative z-modal"
+    >
+      <div
+        aria-modal="true"
+        class="
+        relative 
+        bg-titanium-bg-overlay 
+        border border-titanium-border-default
+        rounded-lg shadow-lg 
+        p-6 max-w-lg w-full mx-4
+        
+      "
+        role="dialog"
+      >
+        <h2
+          class="text-xl font-semibold leading-tight text-titanium-text-primary "
+        >
+          Snapshot Test
+        </h2>
+      </div>
+    </div>
+  </div>
+</div>
+`;

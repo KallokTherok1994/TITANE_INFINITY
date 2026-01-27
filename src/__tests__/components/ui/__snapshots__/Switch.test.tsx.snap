@@ -1,0 +1,30 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Switch Component > Snapshot > should match snapshot 1`] = `
+<div
+  class="flex items-center gap-3"
+>
+  <button
+    aria-checked="false"
+    aria-label="Toggle switch"
+    class="
+          relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full
+          border-2 border-transparent transition-colors duration-200
+          focus:outline-none focus-visible:shadow-focus
+          disabled:cursor-not-allowed disabled:opacity-50
+          bg-titanium-bg-interactive
+        "
+    role="switch"
+    type="button"
+  >
+    <span
+      aria-hidden="true"
+      class="
+            pointer-events-none inline-block h-5 w-5 rounded-full
+            shadow-lg ring-0 transition-transform duration-200
+            translate-x-0 bg-titanium-text-tertiary
+          "
+    />
+  </button>
+</div>
+`;
