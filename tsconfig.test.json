@@ -2,6 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "noEmit": true,
+    "moduleResolution": "node",
     "typeRoots": ["./node_modules/@types", "./node_modules"],
     "types": ["vitest/globals", "@testing-library/jest-dom", "node"],
     "skipLibCheck": true
@@ -14,7 +15,8 @@
     "src/**/*.spec.tsx",
     "src/test/**/*",
     "src/__tests__/**/*",
-    "src/tests/**/*"
+    "src/tests/**/*",
+    "src/test-utils/**/*"
   ],
   "exclude": ["node_modules", "dist"]
 }

@@ -39,6 +39,9 @@ export interface ConversationGoal {
   metadata?: Record<string, unknown>;
 }
 
+// Alias pour compatibilité tests
+export type Goal = ConversationGoal;
+
 /**
  * Fact représente une vérité établie dans la conversation
  */
@@ -55,6 +58,9 @@ export interface ConversationFact {
   supersedes?: string; // Fact ID this replaces
   metadata?: Record<string, unknown>;
 }
+
+// Alias pour compatibilité tests
+export type Fact = ConversationFact;
 
 /**
  * Contradiction détectée entre deux faits ou énoncés

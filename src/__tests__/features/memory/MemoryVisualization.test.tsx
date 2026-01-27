@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { MemoryVisualization } from '@/features/memory/MemoryVisualization';
+// import { MemoryVisualization } from '@/features/memory/MemoryVisualization'; // Component not implemented
 
 describe.skip('MemoryVisualization Component (NON IMPLÉMENTÉ - fichier inexistant)', () => {
   const mockMemoryTree = {
