@@ -1,7 +1,7 @@
 # 🏗️ ARCHITECTURE FRONTEND TITANE∞
 
-**Version:** 25.4.0  
-**Date:** Janvier 2025  
+**Version:** 26.4.0  
+**Date:** Janvier 2026  
 **Auteurs:** Équipe TITANE∞
 
 ---
