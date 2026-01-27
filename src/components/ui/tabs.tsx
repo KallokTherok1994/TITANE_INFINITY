@@ -1,11 +1,180 @@
 /**
- * TITANE∞ v26.2.0 — Tabs Component (Titanium Dark)
- * Tab navigation with Titanium Dark design system
+ * TITANE∞ v26.4.0 — Tabs Component (Titanium Dark)
+ * Tab navigation with Titanium Dark design system + composable primitives
  * WCAG 2.2 AA compliant with full keyboard support
  * @license MIT
  */
 
-import React, { useState } from 'react';
+import React, { useState, createContext, useContext } from 'react';
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// CONTEXT
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+interface TabsContextValue {
+  activeTab: string;
+  setActiveTab: (value: string) => void;
+}
+
+const TabsContext = createContext<TabsContextValue | null>(null);
+
+function useTabsContext() {
+  const context = useContext(TabsContext);
+  if (!context) {
+    throw new Error('Tabs components must be used within <Tabs />');
+  }
+  return context;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// SUB-COMPONENTS (Composable Primitives)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+export interface TabsListProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+/**
+ * TabsList - Container for tab triggers
+ */
+export function TabsList({ children, className = '' }: TabsListProps) {
+  return (
+    <div
+      role="tablist"
+      className={`flex border-b border-titanium-border-default ${className}`}
+    >
+      {children}
+    </div>
+  );
+}
+
+export interface TabsTriggerProps {
+  value: string;
+  children: React.ReactNode;
+  disabled?: boolean;
+  icon?: React.ReactNode;
+  className?: string;
+}
+
+/**
+ * TabsTrigger - Individual tab button
+ */
+export function TabsTrigger({
+  value,
+  children,
+  disabled,
+  icon,
+  className = '',
+}: TabsTriggerProps) {
+  const { activeTab, setActiveTab } = useTabsContext();
+  const isActive = activeTab === value;
+
+  return (
+    <button
+      role="tab"
+      type="button"
+      aria-selected={isActive}
+      aria-controls={`tabpanel-${value}`}
+      id={`tab-${value}`}
+      tabIndex={isActive ? 0 : -1}
+      disabled={disabled}
+      onClick={() => !disabled && setActiveTab(value)}
+      className={`
+        relative px-4 py-3 text-sm font-medium
+        transition-colors duration-200
+        focus-visible:outline-none focus-visible:shadow-focus
+        disabled:cursor-not-allowed disabled:opacity-50
+        ${
+          isActive
+            ? 'text-titanium-text-primary border-b-2 border-titanium-accent-cool bg-titanium-bg-interactive'
+            : disabled
+              ? 'text-titanium-text-disabled'
+              : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-interactive'
+        }
+        ${className}
+      `}
+    >
+      <div className="flex items-center gap-2">
+        {icon && (
+          <span className="w-4 h-4" aria-hidden="true">
+            {icon}
+          </span>
+        )}
+        <span>{children}</span>
+      </div>
+    </button>
+  );
+}
+
+export interface TabsContentProps {
+  value: string;
+  children: React.ReactNode;
+  className?: string;
+}
+
+/**
+ * TabsContent - Content panel for a tab
+ */
+export function TabsContent({ value, children, className = '' }: TabsContentProps) {
+  const { activeTab } = useTabsContext();
+
+  if (activeTab !== value) return null;
+
+  return (
+    <div
+      role="tabpanel"
+      id={`tabpanel-${value}`}
+      aria-labelledby={`tab-${value}`}
+      className={`mt-4 ${className}`}
+    >
+      {children}
+    </div>
+  );
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// MAIN TABS COMPONENT (Root)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+export interface TabsRootProps {
+  defaultValue: string;
+  value?: string;
+  onValueChange?: (value: string) => void;
+  children: React.ReactNode;
+  className?: string;
+}
+
+/**
+ * Tabs (Root) - Provides context for composable tabs
+ */
+export function Tabs({
+  defaultValue,
+  value: controlledValue,
+  onValueChange,
+  children,
+  className = '',
+}: TabsRootProps) {
+  const [internalValue, setInternalValue] = useState(defaultValue);
+
+  const activeTab = controlledValue ?? internalValue;
+  const setActiveTab = (newValue: string) => {
+    if (!controlledValue) {
+      setInternalValue(newValue);
+    }
+    onValueChange?.(newValue);
+  };
+
+  return (
+    <TabsContext.Provider value={{ activeTab, setActiveTab }}>
+      <div className={`w-full ${className}`}>{children}</div>
+    </TabsContext.Provider>
+  );
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// LEGACY API (Backward Compatibility)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 export interface Tab {
   id: string;
@@ -14,7 +183,7 @@ export interface Tab {
   disabled?: boolean;
 }
 
-export interface TabsProps {
+export interface TabsLegacyProps {
   tabs: Tab[];
   defaultTab?: string;
   onTabChange?: (tabId: string) => void;
@@ -22,29 +191,15 @@ export interface TabsProps {
 }
 
 /**
- * Tabs - Tab navigation system with keyboard support
- *
- * @example
- * ```tsx
- * const tabs = [
- *   { id: 'logs', label: 'Logs', icon: <FileText /> },
- *   { id: 'metrics', label: 'Metrics', icon: <BarChart /> },
- *   { id: 'memory', label: 'Memory', icon: <Database /> },
- * ];
- *
- * <Tabs tabs={tabs} defaultTab="logs">
- *   {(activeTab) => (
- *     <>
- *       {activeTab === 'logs' && <LogsList />}
- *       {activeTab === 'metrics' && <MetricsGrid />}
- *       {activeTab === 'memory' && <MemoryPanel />}
- *     </>
- *   )}
- * </Tabs>
- * ```
+ * Tabs (Legacy) - Original render-props API
+ * @deprecated Use composable primitives (Tabs, TabsList, TabsTrigger, TabsContent)
  */
-export function Tabs({ tabs, defaultTab, onTabChange, children }: TabsProps) {
-  // Guard against empty tabs array
+export function TabsLegacy({
+  tabs,
+  defaultTab,
+  onTabChange,
+  children,
+}: TabsLegacyProps) {
   if (!tabs || tabs.length === 0) {
     return (
       <div role="tablist" className="flex flex-col">
@@ -53,93 +208,30 @@ export function Tabs({ tabs, defaultTab, onTabChange, children }: TabsProps) {
     );
   }
 
-  const [activeTab, setActiveTab] = useState(defaultTab || tabs[0]?.id || '');
-
-  const handleTabClick = (tabId: string, disabled?: boolean) => {
-    if (disabled) return;
-    setActiveTab(tabId);
-    onTabChange?.(tabId);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
-    const currentIndex = index;
-    let nextIndex = currentIndex;
-
-    if (e.key === 'ArrowRight') {
-      nextIndex = (currentIndex + 1) % tabs.length;
-      e.preventDefault();
-    } else if (e.key === 'ArrowLeft') {
-      nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
-      e.preventDefault();
-    } else if (e.key === 'Home') {
-      nextIndex = 0;
-      e.preventDefault();
-    } else if (e.key === 'End') {
-      nextIndex = tabs.length - 1;
-      e.preventDefault();
-    }
-
-    const nextTab = tabs[nextIndex];
-    if (nextIndex !== currentIndex && nextTab && !nextTab.disabled) {
-      handleTabClick(nextTab.id, nextTab.disabled ?? false);
-      (e.currentTarget.parentElement?.children[nextIndex] as HTMLElement)?.focus();
-    }
-  };
-
   return (
-    <div className="w-full">
-      {/* Tabs Header */}
-      <div role="tablist" className="flex border-b border-titanium-border-default">
-        {tabs.map((tab, index) => {
-          const isActive = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              role="tab"
-              type="button"
-              aria-selected={isActive}
-              aria-controls={`tabpanel-${tab.id}`}
-              id={`tab-${tab.id}`}
-              tabIndex={isActive ? 0 : -1}
-              disabled={tab.disabled}
-              onClick={() => handleTabClick(tab.id, tab.disabled)}
-              onKeyDown={e => handleKeyDown(e, index)}
-              className={`
-                relative px-4 py-3 text-sm font-medium
-                transition-colors duration-200
-                focus-visible:outline-none focus-visible:shadow-focus
-                disabled:cursor-not-allowed disabled:opacity-50
-                ${
-                  isActive
-                    ? 'text-titanium-text-primary border-b-2 border-titanium-accent-cool bg-titanium-bg-interactive'
-                    : tab.disabled
-                      ? 'text-titanium-text-disabled'
-                      : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-interactive'
-                }
-              `}
-            >
-              <div className="flex items-center gap-2">
-                {tab.icon && (
-                  <span className="w-4 h-4" aria-hidden="true">
-                    {tab.icon}
-                  </span>
-                )}
-                <span>{tab.label}</span>
-              </div>
-            </button>
-          );
-        })}
+    <Tabs
+      defaultValue={defaultTab || tabs[0]?.id || ''}
+      onValueChange={onTabChange}
+    >
+      <TabsList>
+        {tabs.map((tab) => (
+          <TabsTrigger
+            key={tab.id}
+            value={tab.id}
+            disabled={tab.disabled}
+            icon={tab.icon}
+          >
+            {tab.label}
+          </TabsTrigger>
+        ))}
+      </TabsList>
+      <div className="mt-4">
+        {tabs.map((tab) => (
+          <TabsContent key={tab.id} value={tab.id}>
+            {children(tab.id)}
+          </TabsContent>
+        ))}
       </div>
-
-      {/* Tabs Content */}
-      <div
-        role="tabpanel"
-        id={`tabpanel-${activeTab}`}
-        aria-labelledby={`tab-${activeTab}`}
-        className="mt-4"
-      >
-        {children(activeTab)}
-      </div>
-    </div>
+    </Tabs>
   );
 }
