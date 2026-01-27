@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { OmegaPipeline } from '@/apps/devtools/sections/OmegaPipeline';
+import { OmegaPipeline } from '@/apps/devtools/sections';
 
 // Mock store
 vi.mock('@/apps/devtools/store/devtools.store', () => ({

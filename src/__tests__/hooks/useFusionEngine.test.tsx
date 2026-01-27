@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
-import { useFusionEngine } from '@/hooks/useFusionEngine';
+import { useFusionEngine } from '@/hooks';
 
 describe('useFusionEngine Hook', () => {
   beforeEach(() => {

@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { VoiceControl } from '@/features/voice/VoiceControl';
+import { VoiceControlPanel as VoiceControl } from '@/components/VoiceControlPanel';
 
 describe('VoiceControl Component', () => {
   const mockOnStart = vi.fn();

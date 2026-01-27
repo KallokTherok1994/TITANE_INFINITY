@@ -5,7 +5,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { VirtualMessageList } from '@/features/chat/VirtualMessageList';
+import { VirtualMessageList } from '@/components/chat/VirtualMessageList';
 
 describe('VirtualMessageList Component', () => {
   const mockMessages = [

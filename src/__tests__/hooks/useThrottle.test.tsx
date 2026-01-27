@@ -3,9 +3,9 @@
  * Coverage: Throttling values, Delay, Leading/Trailing
  */
 
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { useThrottle } from '@/hooks/useThrottle';
+import { useThrottle } from '@/hooks';
 
 describe('useThrottle Hook', () => {
   beforeEach(() => {

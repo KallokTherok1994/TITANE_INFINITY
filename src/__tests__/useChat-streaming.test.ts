@@ -54,7 +54,7 @@ vi.mock('@hooks/useChatCore', () => {
   };
 });
 
-import { useChat } from '@/hooks/useChat';
+import { useChat } from '@/hooks';
 
 function TestHost(props: { onReady: (api: any) => void }) {
   const api = useChat();

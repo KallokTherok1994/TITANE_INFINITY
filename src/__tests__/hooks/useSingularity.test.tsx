@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { useSingularity } from '@/hooks/useSingularity';
+import { useSingularity } from '@/hooks';
 
 vi.mock('@tauri-apps/api/core', () => ({
   invoke: vi.fn(),

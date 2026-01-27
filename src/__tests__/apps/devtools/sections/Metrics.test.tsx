@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { Metrics } from '@/apps/devtools/sections/Metrics';
+import { Metrics } from '@/apps/devtools/sections';
 
 // Mock du store DevTools
 vi.mock('@/apps/devtools/store/devtools.store', () => ({

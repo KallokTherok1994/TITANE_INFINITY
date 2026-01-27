@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { Engines } from '@/apps/devtools/sections/Engines';
+import { Engines } from '@/apps/devtools/sections';
 
 // Mock store
 const mockUpdateEngine = vi.fn();

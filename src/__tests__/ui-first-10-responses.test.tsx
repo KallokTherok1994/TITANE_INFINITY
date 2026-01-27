@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@/test-utils';
 import { act } from '@testing-library/react';
 import { vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { useChat } from '@/hooks/useChat';
+import { useChat } from '@/hooks';
 import { MessageList } from '@/components/chat/MessageList';
 
 // Reuse the same useChatCore mock streaming behavior

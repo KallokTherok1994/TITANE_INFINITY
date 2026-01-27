@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { useKeyboardShortcuts } from '@/hooks';
 
 describe('useKeyboardShortcuts Hook', () => {
   beforeEach(() => {
@@ -103,8 +103,8 @@ describe('useKeyboardShortcuts Hook', () => {
       const callback1 = vi.fn();
       const callback2 = vi.fn();
       
-      const { rerender } = renderHook<{ shortcuts: Record<string, () => void> }, void>(
-        ({ shortcuts }) => useKeyboardShortcuts(shortcuts),
+      const { rerender } = renderHook(
+        ({ shortcuts }: { shortcuts: Record<string, () => void> }) => useKeyboardShortcuts(shortcuts),
         { initialProps: { shortcuts: { 'Ctrl+1': callback1 } } }
       );
 

@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
-import { Dashboard } from '@/apps/devtools/sections/Dashboard';
+import { Dashboard } from '@/apps/devtools/sections';
 
 // Mock du store DevTools avec données de test
 vi.mock('@/apps/devtools/store/devtools.store', () => ({

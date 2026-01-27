@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { SystemHealthMonitor } from '@/features/monitoring/SystemHealthMonitor';
+import { SystemHealthMonitor } from '@/components/monitoring/SystemHealthMonitor';
 
 describe('SystemHealthMonitor Component', () => {
   const mockHealth = {

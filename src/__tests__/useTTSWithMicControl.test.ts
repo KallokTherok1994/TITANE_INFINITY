@@ -14,9 +14,9 @@
 
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { renderHook, act, waitFor } from '@/test-utils';
-import { useTTSWithMicControl } from '@/hooks/useTTSWithMicControl';
+import { useTTSWithMicControl } from '@/hooks';
 import { voiceService } from '@/services/api/voice';
-import type { UseVADReturn } from '@/hooks/useVAD';
+import type { UseVADReturn } from '@/hooks';
 
 // Mock voiceService
 vi.mock('@/services/api/voice', () => ({

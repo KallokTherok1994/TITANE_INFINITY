@@ -3,9 +3,9 @@
  * Coverage: Breakpoints, Resize events, Media queries
  */
 
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { useResponsive } from '@/hooks/useResponsive';
+import { useResponsive } from '@/hooks';
 
 describe('useResponsive Hook', () => {
   beforeEach(() => {
