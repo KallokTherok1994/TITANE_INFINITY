@@ -1,0 +1,17 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Toast/ToastContainer Components > Snapshot > should match snapshot 1`] = `
+<div
+  aria-atomic="false"
+  aria-live="polite"
+  class="
+        fixed z-toast flex flex-col gap-2 
+        pointer-events-none
+        top-4 right-4
+      "
+>
+  <div
+    class="pointer-events-auto flex flex-col gap-2 min-w-[300px] max-w-md"
+  />
+</div>
+`;

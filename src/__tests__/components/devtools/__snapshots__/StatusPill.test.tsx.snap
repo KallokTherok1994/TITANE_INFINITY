@@ -1,0 +1,12 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`StatusPill Component > Snapshot > should match snapshot 1`] = `
+<span
+  class="inline-flex items-center px-2 py-1 rounded border text-xs font-medium bg-yellow-900 text-yellow-300 border-yellow-500"
+>
+  <span
+    class="w-2 h-2 rounded-full bg-current mr-1.5"
+  />
+  Warning
+</span>
+`;

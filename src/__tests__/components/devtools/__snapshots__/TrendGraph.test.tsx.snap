@@ -1,0 +1,66 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`TrendGraph Component > Snapshot > should match snapshot 1`] = `
+<svg
+  class="bg-gray-800 rounded"
+  height="60"
+  width="200"
+>
+  <polyline
+    fill="none"
+    points="0,60 50,19.090909090909093 100,38.18181818181818 150,0 200,10.909090909090907"
+    stroke="#60a5fa"
+    stroke-width="2"
+  />
+  <circle
+    cx="0"
+    cy="60"
+    fill="#60a5fa"
+    r="3"
+  >
+    <title>
+      1769532371423: 40
+    </title>
+  </circle>
+  <circle
+    cx="50"
+    cy="19.090909090909093"
+    fill="#60a5fa"
+    r="3"
+  >
+    <title>
+      1769532372423: 55
+    </title>
+  </circle>
+  <circle
+    cx="100"
+    cy="38.18181818181818"
+    fill="#60a5fa"
+    r="3"
+  >
+    <title>
+      1769532373423: 48
+    </title>
+  </circle>
+  <circle
+    cx="150"
+    cy="0"
+    fill="#60a5fa"
+    r="3"
+  >
+    <title>
+      1769532374423: 62
+    </title>
+  </circle>
+  <circle
+    cx="200"
+    cy="10.909090909090907"
+    fill="#60a5fa"
+    r="3"
+  >
+    <title>
+      1769532375423: 58
+    </title>
+  </circle>
+</svg>
+`;

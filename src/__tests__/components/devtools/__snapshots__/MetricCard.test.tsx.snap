@@ -1,0 +1,25 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`MetricCard Component > Snapshot > should match snapshot 1`] = `
+<div
+  class="p-4 rounded-lg border-l-4 border-green-500 bg-gray-800"
+>
+  <div
+    class="text-sm text-gray-400 mb-1"
+  />
+  <div
+    class="flex items-baseline gap-2"
+  >
+    <div
+      class="text-2xl font-bold text-white"
+    >
+      100
+    </div>
+    <span
+      class="text-sm text-gray-500"
+    >
+      %
+    </span>
+  </div>
+</div>
+`;
