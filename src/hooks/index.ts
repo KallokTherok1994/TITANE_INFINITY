@@ -58,6 +58,7 @@ export { useKeyboardShortcuts } from './useKeyboardShortcuts';
 export { useLocalStorage } from './useLocalStorage';
 export { useMediaQuery } from './useMediaQuery';
 export { useOmegaPipeline } from './useOmegaPipeline';
+export { useTTSWithMicControl } from './useTTSWithMicControl';
 
 // Legacy hooks
 export { useTitaneCore } from './useTitaneCore';
@@ -581,6 +582,7 @@ export type {
 // Hooks
 export {
   useIdentityKernel,
+  useIdentityKernel as useIdentity, // Alias pour compatibilité tests
   useIdentitySignature,
   useIdentityTone,
   useIdentityEnergy,

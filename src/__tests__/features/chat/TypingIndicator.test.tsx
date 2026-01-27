@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { renderWithProviders as render, screen } from '../../test-utils';
+import { renderWithProviders as render, screen } from '../../test-helpers';
 import { TypingIndicator } from '@/features/chat';
 
 describe('TypingIndicator Component', () => {

@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { MemoryCard } from '@/features/memory/MemoryCard';
+// import { MemoryCard } from '@/features/memory/MemoryCard'; // Component not implemented
 
 describe.skip('MemoryCard Component (NON IMPLÉMENTÉ - fichier inexistant)', () => {
   const mockEntry = {

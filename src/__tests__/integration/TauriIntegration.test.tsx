@@ -6,11 +6,11 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { invoke } from '@tauri-apps/api/core';
 import { Window } from '@tauri-apps/api/window';
-import { readTextFile, writeTextFile } from '@tauri-apps/api/fs';
+import { readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
 
 vi.mock('@tauri-apps/api/core');
 vi.mock('@tauri-apps/api/window');
-vi.mock('@tauri-apps/api/fs');
+vi.mock('@tauri-apps/plugin-fs');
 
 describe('Integration: Tauri Communication', () => {
   beforeEach(() => {

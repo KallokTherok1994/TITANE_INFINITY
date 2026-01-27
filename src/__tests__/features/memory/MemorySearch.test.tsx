@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { MemorySearch } from '@/features/memory/MemorySearch';
+// import { MemorySearch } from '@/features/memory/MemorySearch'; // Component not implemented
 
 describe.skip('MemorySearch Component (NON IMPLÉMENTÉ - fichier inexistant)', () => {
   const mockOnSearch = vi.fn();

@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { CommandPalette } from '@/panels/CommandPalette';
+// import { CommandPalette } from '@/panels/CommandPalette'; // Component not implemented
 
 describe.skip('CommandPalette Component (NON IMPLÉMENTÉ - fichier inexistant)', () => {
   const mockCommands = [
