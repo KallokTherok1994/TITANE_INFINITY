@@ -3,7 +3,7 @@
  * Coverage: Métriques (CPU, Memory, FPS), Seuils, Alertes
  */
 
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';
 

@@ -169,7 +169,7 @@ describe('E2E: DevTools Workflow', () => {
       render(<App />);
       
       fireEvent.click(screen.getByRole('button', { name: /devtools/i }));
-      fireEvent.click(screen.getByText(/engines/i });
+      fireEvent.click(screen.getByText(/engines/i));
       
       await waitFor(() => {
         expect(screen.getByText(/fusion.*engine/i)).toBeInTheDocument();

@@ -3,7 +3,7 @@
  * Coverage: Actions (send, attach, voice), États, Accessibility
  */
 
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ChatToolbar } from '@/features/chat/ChatToolbar';
 

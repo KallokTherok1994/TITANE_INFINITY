@@ -37,7 +37,7 @@ describe('AI Orchestrator - Neural Selection (P1 - Corrected)', () => {
 
     it('should include titane-local provider', async () => {
       const status = await aiOrchestrator.getProvidersStatus();
-      const titaneLocal = status.providers.find(p => p.name === 'titane-local');
+      const titaneLocal = status.providers.find((p: { name: string }) => p.name === 'titane-local');
       
       expect(titaneLocal).toBeDefined();
     });
