@@ -17,6 +17,7 @@ macro_rules! lock_or_recover {
 }
 
 use std::sync::{Arc, Mutex};
+use std::sync::atomic::{AtomicBool, Ordering};
 use tokio::net::UdpSocket;
 use tokio::time::{interval, Duration};
 
@@ -82,6 +83,7 @@ pub struct MeshLayer {
     listen_addr: SocketAddr,
     peers: Arc<Mutex<HashMap<String, NodeInfo>>>,
     socket: Option<Arc<UdpSocket>>,
+    running: Arc<AtomicBool>,
 }
 
 impl MeshLayer {
@@ -99,6 +101,7 @@ impl MeshLayer {
             listen_addr,
             peers: Arc::new(Mutex::new(HashMap::new())),
             socket: None,
+            running: Arc::new(AtomicBool::new(false)),
         }
     }
 
@@ -112,6 +115,9 @@ impl MeshLayer {
         self.socket = Some(Arc::new(socket));
 
         println!("[MeshLayer] Initialized on {}", self.listen_addr);
+
+        // ✅ FIX v26.4.1: Activer le flag running
+        self.running.store(true, Ordering::SeqCst);
 
         // Start background tasks
         self.start_discovery().await;
@@ -131,12 +137,19 @@ impl MeshLayer {
         };
         let node_id = self.node_id.clone();
         let peers = self.peers.clone();
+        let running = self.running.clone();
 
         tokio::spawn(async move {
             let mut interval = interval(Duration::from_secs(10));
 
             loop {
                 interval.tick().await;
+
+                // ✅ FIX v26.4.1: Vérifier si on doit arrêter
+                if !running.load(Ordering::SeqCst) {
+                    log::info!("[MeshLayer] Discovery loop stopped");
+                    break;
+                }
 
                 // Broadcast discovery message
                 let msg = MeshMessage::Discover {
@@ -182,12 +195,19 @@ impl MeshLayer {
         };
         let node_id = self.node_id.clone();
         let peers = self.peers.clone();
+        let running = self.running.clone();
 
         tokio::spawn(async move {
             let mut interval = interval(Duration::from_secs(5));
 
             loop {
                 interval.tick().await;
+
+                // ✅ FIX v26.4.1: Vérifier si on doit arrêter
+                if !running.load(Ordering::SeqCst) {
+                    log::info!("[MeshLayer] Heartbeat loop stopped");
+                    break;
+                }
 
                 // Send heartbeat to all known peers
                 let peer_addrs: Vec<SocketAddr> =
@@ -282,8 +302,10 @@ impl MeshLayer {
     }
 
     /// Shutdown mesh layer
+    /// ✅ FIX v26.4.1: Arrêter proprement les boucles d'arrière-plan
     pub async fn shutdown(&self) {
-        println!("[MeshLayer] Shutting down...");
+        self.running.store(false, Ordering::SeqCst);
+        log::info!("[MeshLayer] Shutdown requested - background tasks will stop");
         // Socket will be dropped automatically
     }
 }

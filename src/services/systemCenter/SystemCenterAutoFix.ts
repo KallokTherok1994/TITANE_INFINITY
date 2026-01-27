@@ -95,11 +95,7 @@ const INVALID_COMMAND_ALTERNATIVES: Record<string, CommandMapping> = {
     alternatives: ['get_system_health', 'get_module_health'],
     domain: 'diagnostics',
   },
-  hypervision_start: {
-    invalidCommand: 'hypervision_start',
-    alternatives: ['engines_monitoring_get_dashboard', 'performance_get_metrics'],
-    domain: 'monitoring',
-  },
+  // hypervision_start: Commande désormais migrée vers sc_hypervision_start (v26.4.1 fix crash)
   get_all_configs: {
     invalidCommand: 'get_all_configs',
     alternatives: ['get_runtime_config', 'state_get'],
