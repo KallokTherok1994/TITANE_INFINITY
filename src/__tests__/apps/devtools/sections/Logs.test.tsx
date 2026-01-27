@@ -7,29 +7,36 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Logs } from '@/apps/devtools/sections/Logs';
 
-// Mock LogViewer component
-vi.mock('@/apps/devtools/components/LogViewer', () => ({
-  LogViewer: ({ logs }: any) => (
-    <div data-testid="log-viewer">
-      LogViewer: {logs?.length || 0} logs
-    </div>
-  ),
+// Mock du store DevTools
+vi.mock('@/apps/devtools/store/devtools.store', () => ({
+  useDevToolsStore: () => ({
+    logs: [
+      { id: '1', timestamp: Date.now(), level: 'info', source: 'helios', message: 'Test log 1' },
+      { id: '2', timestamp: Date.now(), level: 'error', source: 'nexus', message: 'Test error' },
+    ],
+    autoScrollLogs: true,
+    setAutoScrollLogs: vi.fn(),
+    clearLogs: vi.fn(),
+  }),
 }));
 
-// Mock LogFilters component
-vi.mock('@/apps/devtools/components/LogFilters', () => ({
-  LogFilters: ({ onFilterChange }: any) => (
-    <div data-testid="log-filters">
-      <button onClick={() => onFilterChange?.({ level: 'error' })}>
-        Filter Errors
-      </button>
-    </div>
-  ),
+// Mock des composants enfants
+vi.mock('@/apps/devtools/components', () => ({
+  SectionHeader: ({ title }: any) => <div data-testid="section-header">{title}</div>,
+  LogLine: ({ log }: any) => <div data-testid={`log-${log.id}`}>{log.message}</div>,
+  LogFilters: ({ onReset }: any) => <div data-testid="log-filters"><button onClick={onReset}>Filter Errors</button></div>,
 }));
 
 describe('DevTools Logs Section', () => {
   describe('Rendering', () => {
-    it('should render logs section', () => {
+    it('should render logs section with header', () => {
+      render(<Logs />);
+      
+      expect(screen.getByTestId('section-header')).toBeInTheDocument();
+      expect(screen.getByText('System Logs')).toBeInTheDocument();
+    });
+
+    it('should render log viewer container', () => {
       render(<Logs />);
       
       expect(screen.getByTestId('log-viewer')).toBeInTheDocument();
@@ -42,13 +49,19 @@ describe('DevTools Logs Section', () => {
     });
   });
 
-  describe('Log Viewer', () => {
-    it('should display LogViewer component', () => {
+  describe('Log Display', () => {
+    it('should display log lines', () => {
       render(<Logs />);
       
-      const viewer = screen.getByTestId('log-viewer');
-      expect(viewer).toBeInTheDocument();
-      expect(viewer).toHaveTextContent('LogViewer');
+      expect(screen.getByTestId('log-1')).toBeInTheDocument();
+      expect(screen.getByTestId('log-2')).toBeInTheDocument();
+    });
+
+    it('should show log messages', () => {
+      render(<Logs />);
+      
+      expect(screen.getByText('Test log 1')).toBeInTheDocument();
+      expect(screen.getByText('Test error')).toBeInTheDocument();
     });
   });
 

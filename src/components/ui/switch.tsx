@@ -13,6 +13,9 @@ export interface SwitchProps {
   disabled?: boolean;
   label?: string;
   id?: string;
+  className?: string;
+  'data-testid'?: string;
+  'aria-label'?: string;
 }
 
 /**
@@ -33,6 +36,9 @@ export function Switch({
   disabled = false,
   label,
   id,
+  className,
+  'data-testid': dataTestId,
+  'aria-label': ariaLabel,
 }: SwitchProps) {
   const handleClick = () => {
     if (!disabled) {
@@ -48,16 +54,18 @@ export function Switch({
   };
 
   return (
-    <div className="flex items-center gap-3">
+    <div className={`flex items-center gap-3 ${className || ''}`}>
       <button
         id={id}
         role="switch"
         type="button"
         aria-checked={checked}
-        aria-label={label || 'Toggle switch'}
+        aria-label={ariaLabel || label || 'Toggle switch'}
         disabled={disabled}
         onClick={handleClick}
         onKeyDown={handleKeyDown}
+        data-testid={dataTestId}
+        data-state={checked ? 'checked' : 'unchecked'}
         className={`
           relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full
           border-2 border-transparent transition-colors duration-200

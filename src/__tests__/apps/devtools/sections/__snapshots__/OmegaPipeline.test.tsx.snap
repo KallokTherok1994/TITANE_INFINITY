@@ -1,0 +1,271 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`DevTools OmegaPipeline Section > Snapshot > should match snapshot 1`] = `
+<div
+  class="space-y-6"
+>
+  <div
+    data-testid="section-header"
+  >
+    Omega Pipeline
+  </div>
+  <div>
+    <h3
+      class="text-base font-semibold mb-3"
+    >
+      Current Execution
+    </h3>
+    <div
+      class="space-y-3"
+    >
+      <div
+        class="relative"
+      >
+        <div
+          class="absolute left-6 top-12 w-0.5 h-8 -mt-2"
+        />
+        <div
+          class="p-4 rounded-lg border transition-all duration-300 "
+          style="background: rgba(147, 179, 153, 0.15);"
+        >
+          <div
+            class="flex items-start gap-4"
+          >
+            <div
+              class="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-2xl "
+              style="border: 2px solid; border-width: var(--border-success,#93b399); border-style: var(--border-success,#93b399); border-color: var(--border-success,#93b399);"
+            >
+              ⚡
+            </div>
+            <div
+              class="flex-1 min-w-0"
+            >
+              <div
+                class="flex items-center justify-between mb-2"
+              >
+                <h4
+                  class="text-base font-semibold"
+                />
+                <span
+                  class="text-xs font-medium px-2 py-1 rounded-full"
+                  style="background: rgba(147, 179, 153, 0.15); border: 1px solid; border-width: var(--border-success,#93b399); border-style: var(--border-success,#93b399); border-color: var(--border-success,#93b399);"
+                >
+                  COMPLETE
+                </span>
+              </div>
+              <div
+                class="flex items-center gap-2 mb-2"
+              >
+                <span
+                  class="text-xs"
+                >
+                  Duration:
+                </span>
+                <span
+                  class="text-xs font-medium"
+                >
+                  50
+                  ms
+                </span>
+                <div
+                  class="flex-1 h-1.5 rounded-full overflow-hidden"
+                >
+                  <div
+                    class="h-full transition-all duration-300"
+                    style="width: 29.411764705882355%;"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="relative"
+      >
+        <div
+          class="absolute left-6 top-12 w-0.5 h-8 -mt-2"
+        />
+        <div
+          class="p-4 rounded-lg border transition-all duration-300 ring-2"
+          style="background: rgba(114, 123, 129, 0.15); --tw-ring-color: var(--border-info, #727b81);"
+        >
+          <div
+            class="flex items-start gap-4"
+          >
+            <div
+              class="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-2xl animate-pulse"
+              style="border: 2px solid; border-width: var(--border-info,#727b81); border-style: var(--border-info,#727b81); border-color: var(--border-info,#727b81);"
+            >
+              ⚡
+            </div>
+            <div
+              class="flex-1 min-w-0"
+            >
+              <div
+                class="flex items-center justify-between mb-2"
+              >
+                <h4
+                  class="text-base font-semibold"
+                />
+                <span
+                  class="text-xs font-medium px-2 py-1 rounded-full"
+                  style="background: rgba(114, 123, 129, 0.15); border: 1px solid; border-width: var(--border-info,#727b81); border-style: var(--border-info,#727b81); border-color: var(--border-info,#727b81);"
+                >
+                  RUNNING
+                </span>
+              </div>
+              <div
+                class="flex items-center gap-2 mb-2"
+              >
+                <span
+                  class="text-xs"
+                >
+                  Duration:
+                </span>
+                <span
+                  class="text-xs font-medium"
+                >
+                  120
+                  ms
+                </span>
+                <div
+                  class="flex-1 h-1.5 rounded-full overflow-hidden"
+                >
+                  <div
+                    class="h-full transition-all duration-300"
+                    style="width: 70.58823529411765%;"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="relative"
+      >
+        <div
+          class="p-4 rounded-lg border transition-all duration-300 "
+        >
+          <div
+            class="flex items-start gap-4"
+          >
+            <div
+              class="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-2xl "
+            >
+              ⚡
+            </div>
+            <div
+              class="flex-1 min-w-0"
+            >
+              <div
+                class="flex items-center justify-between mb-2"
+              >
+                <h4
+                  class="text-base font-semibold"
+                />
+                <span
+                  class="text-xs font-medium px-2 py-1 rounded-full"
+                >
+                  PENDING
+                </span>
+              </div>
+              <div
+                class="flex items-center gap-2 mb-2"
+              >
+                <span
+                  class="text-xs"
+                >
+                  Duration:
+                </span>
+                <span
+                  class="text-xs font-medium"
+                >
+                  0
+                  ms
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <h3
+      class="text-base font-semibold mb-3"
+    >
+      Recent Executions
+    </h3>
+    <div
+      class="rounded-lg border overflow-hidden"
+    >
+      <div
+        class="flex items-center gap-4 px-4 py-3 border-b last:border-b-0 hover:bg-white hover:bg-opacity-5 transition-colors"
+      >
+        <span
+          class="text-xs font-mono"
+        >
+          #
+          2
+        </span>
+        <div
+          class="flex-1 flex items-center gap-2"
+        >
+          <div
+            class="w-8 h-2 rounded-full"
+            title="undefined: complete"
+          />
+          <div
+            class="w-8 h-2 rounded-full"
+            title="undefined: complete"
+          />
+          <div
+            class="w-8 h-2 rounded-full"
+            title="undefined: complete"
+          />
+        </div>
+        <span
+          class="text-xs font-medium"
+        >
+          210
+          ms
+        </span>
+      </div>
+      <div
+        class="flex items-center gap-4 px-4 py-3 border-b last:border-b-0 hover:bg-white hover:bg-opacity-5 transition-colors"
+      >
+        <span
+          class="text-xs font-mono"
+        >
+          #
+          1
+        </span>
+        <div
+          class="flex-1 flex items-center gap-2"
+        >
+          <div
+            class="w-8 h-2 rounded-full"
+            title="undefined: complete"
+          />
+          <div
+            class="w-8 h-2 rounded-full"
+            title="undefined: complete"
+          />
+          <div
+            class="w-8 h-2 rounded-full"
+            title="undefined: complete"
+          />
+        </div>
+        <span
+          class="text-xs font-medium"
+        >
+          195
+          ms
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;

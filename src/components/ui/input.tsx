@@ -51,7 +51,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
 
     return (
-      <div className="w-full flex flex-col gap-2">
+      <div className={`w-full flex flex-col gap-2 ${className}`}>
         {label && (
           <label
             htmlFor={inputId}
@@ -95,7 +95,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-titanium-bg-elevated
               ${leftIcon ? 'pl-10' : ''}
               ${rightIcon ? 'pr-10' : ''}
-              ${className}
             `}
             {...props}
           />

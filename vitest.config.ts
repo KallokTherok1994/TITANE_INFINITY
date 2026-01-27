@@ -100,6 +100,11 @@ export const sharedTestConfig = defineConfig({
       './src/test/setup.ts',
       './src/test-utils/setup.ts',
     ],
+    // Variables d'environnement pour les tests
+    env: {
+      VITE_DISABLE_SECURITY_IN_TESTS: 'true',
+      NODE_ENV: 'test',
+    },
     testTimeout: 45000,
     hookTimeout: 20000,
     teardownTimeout: 60000,

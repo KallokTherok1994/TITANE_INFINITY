@@ -127,6 +127,7 @@ export function Logs() {
 
       {/* Logs Container */}
       <div
+        data-testid="log-viewer"
         ref={logsContainerRef}
         onScroll={handleScroll}
         className="flex-1 rounded-lg border overflow-y-auto"

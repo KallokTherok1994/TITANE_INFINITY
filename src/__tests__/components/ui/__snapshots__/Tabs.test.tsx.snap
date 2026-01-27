@@ -1,0 +1,14 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Tabs Component > Snapshot > should match snapshot 1`] = `
+<div
+  class="flex flex-col"
+  role="tablist"
+>
+  <div
+    class="text-titanium-text-tertiary text-sm"
+  >
+    No tabs available
+  </div>
+</div>
+`;

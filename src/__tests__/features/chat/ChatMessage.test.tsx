@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { renderWithProviders as render, screen } from '../../test-utils';
 import { ChatMessage } from '@/features/chat/ChatMessage';
 
 describe('ChatMessage Component', () => {

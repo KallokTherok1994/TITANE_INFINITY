@@ -192,7 +192,7 @@ export function Memory() {
                           : 'var(--text-success, #93b399)',
                   }}
                 >
-                  {selectedNode.type.toUpperCase()}
+                  {selectedNode.type?.toUpperCase() || 'UNKNOWN'}
                 </div>
               </div>
 
