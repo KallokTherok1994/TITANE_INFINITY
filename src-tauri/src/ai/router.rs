@@ -293,6 +293,12 @@ impl AIRouter {
         log::error!(
             "[AI Router v15] ✗ No provider available (UnifiedIA + Gemini + Ollama all failed)"
         );
+        log::error!(
+            "[AI Router v15] 🔍 Debug: unified_ia={}, gemini={}, ollama_available={:?}",
+            self.unified_ia.is_some(),
+            self.gemini_client.is_some(),
+            self.ollama_client.is_available().await
+        );
         // No provider available
         Err(AIError::NoProviderAvailable)
     }
