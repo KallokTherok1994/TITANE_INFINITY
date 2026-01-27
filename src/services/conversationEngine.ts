@@ -127,6 +127,12 @@ export async function processMessage(
     emotionContext?: EmotionState;
   }
 ): Promise<ConversationResponse> {
+  console.log('[conversationEngine] 📤 Sending to backend:', {
+    message_length: userMessage.length,
+    mode: options?.mode || 'default',
+    conversationId: options?.conversationId,
+  });
+
   const raw = (await secureInvoke<unknown>('conversation_process_message', {
     userMessage: userMessage,
     conversationId: options?.conversationId,
@@ -134,6 +140,13 @@ export async function processMessage(
     aiConfig: null,
     emotionContext: options?.emotionContext || null,
   })) as ConversationResponse;
+
+  console.log('[conversationEngine] 📥 Backend response:', {
+    message_id: raw.message_id,
+    assistant_message_length: raw.assistant_message?.length || 0,
+    assistant_message_preview: raw.assistant_message?.substring(0, 100),
+    provider: raw.metadata?.provider_used,
+  });
 
   return {
     ...raw,
