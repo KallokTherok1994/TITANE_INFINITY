@@ -121,6 +121,13 @@ pub async fn conversation_process_message(
     conversation_id: Option<String>,
     mode: Option<String>,
 ) -> CommandResult<ConversationResponse> {
+    log::info!(
+        "[conversation_process_message] 📨 Request received | msg_len={} | conv_id={:?} | mode={:?}",
+        user_message.len(),
+        conversation_id,
+        mode
+    );
+
     let mode = match mode.as_deref() {
         Some("brainstorming") => ConversationMode::Brainstorming,
         Some("synthesis") => ConversationMode::Synthesis,
@@ -131,18 +138,37 @@ pub async fn conversation_process_message(
     };
 
     let request = ConversationRequest {
-        user_message,
-        conversation_id,
+        user_message: user_message.clone(),
+        conversation_id: conversation_id.clone(),
         mode,
         ai_config: None,
         emotion_context: None,
         custom_system_prompt: None,
     };
 
-    engine
-        .process_message(request)
-        .await
-        .map_err(|e| e.to_string())
+    log::info!(
+        "[conversation_process_message] 🚀 Processing through engine | mode={:?}",
+        request.mode
+    );
+
+    match engine.process_message(request).await {
+        Ok(response) => {
+            log::info!(
+                "[conversation_process_message] ✅ Success | msg_id={} | tokens={}",
+                response.message_id,
+                response.metadata.tokens_used
+            );
+            Ok(response)
+        }
+        Err(e) => {
+            log::error!(
+                "[conversation_process_message] ❌ Error | msg='{}' | error={}",
+                user_message.chars().take(50).collect::<String>(),
+                e
+            );
+            Err(e.to_string())
+        }
+    }
 }
 
 /// Health check du système
