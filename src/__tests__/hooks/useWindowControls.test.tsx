@@ -3,7 +3,7 @@
  * Coverage: Contrôles fenêtre (minimize, maximize, close), États
  */
 
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useWindowControls } from '@/hooks/useWindowControls';
 

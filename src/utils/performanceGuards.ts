@@ -262,7 +262,9 @@ export class PerformanceGuard {
         // Update response time metric
         if (this.metrics.length > 0) {
           const lastMetric = this.metrics[this.metrics.length - 1];
-          lastMetric.responseTime = duration;
+          if (lastMetric) {
+            lastMetric.responseTime = duration;
+          }
         }
 
         return result;
@@ -277,7 +279,7 @@ export class PerformanceGuard {
    * Get current metrics
    */
   getCurrentMetrics(): PerformanceMetrics | null {
-    return this.metrics.length > 0 ? this.metrics[this.metrics.length - 1] : null;
+    return this.metrics.length > 0 ? (this.metrics[this.metrics.length - 1] ?? null) : null;
   }
 
   /**
