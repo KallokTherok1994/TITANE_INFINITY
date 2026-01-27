@@ -110,7 +110,7 @@ export const TAURI_COMMANDS = {
   HEALTH_CHECK: 'health_check',
   HYBRID_ANALYZE_CODE: 'hybrid_analyze_code',
   HYPER_SET_MODE: 'hyper_set_mode',
-  HYPERVISION_START: 'hypervision_start',
+  HYPERVISION_START: 'sc_hypervision_start',
   IDENTITY_DISABLE_RULE: 'identity_disable_rule',
   IDENTITY_ENABLE_RULE: 'identity_enable_rule',
   IDENTITY_SET_MATRIX: 'identity_set_matrix',

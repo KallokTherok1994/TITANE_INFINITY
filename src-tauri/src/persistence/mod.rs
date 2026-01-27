@@ -349,6 +349,12 @@ pub fn start_auto_snapshot_scheduler(
         loop {
             interval.tick().await;
 
+            // ✅ FIX v26.4.1: Vérifier si le scheduler doit s'arrêter
+            if !SCHEDULER_RUNNING.load(Ordering::SeqCst) {
+                log::info!("[AutoSnapshot] ⏹️ Arrêt demandé, sortie de la boucle");
+                break;
+            }
+
             // Vérifier si on doit faire un snapshot
             let should_snapshot = {
                 let engine = PERSISTENCE_ENGINE.read().await;

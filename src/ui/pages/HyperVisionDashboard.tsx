@@ -59,7 +59,7 @@ const HyperVisionDashboard: React.FC = React.memo(() => {
 
   const startMonitoring = useCallback(async () => {
     try {
-      await secureInvoke('hypervision_start');
+      await secureInvoke('sc_hypervision_start');
       setIsMonitoring(true);
     } catch (err) {
       console.error('Failed to start monitoring:', err);

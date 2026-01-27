@@ -220,14 +220,22 @@ impl HyperVisionEngine {
 }
 
 // ══════════════════════════════════════════════════════════════════
-// TAURI COMMANDS
+// TAURI COMMANDS - DEPRECATED
+// ══════════════════════════════════════════════════════════════════
+// AVERTISSEMENT: Ces commandes sont DÉPRÉCIÉES et causeront des crashes
+// si appelées plusieurs fois (fuite de tâches tokio).
+// UTILISER: sc_hypervision_start depuis system_center/hypervision.rs
 // ══════════════════════════════════════════════════════════════════
 
 #[tauri::command]
+#[deprecated(
+    since = "26.4.1",
+    note = "DANGER: Cette fonction crée des fuites mémoire. Utiliser sc_hypervision_start"
+)]
 pub async fn hypervision_start() -> Result<String, String> {
-    let engine = HyperVisionEngine::new(1000); // 1s interval
-    engine.start().await;
-    Ok("HyperVision monitoring started".to_string())
+    log::error!("[HyperVision] DEPRECATED: hypervision_start() appelé - RISQUE DE CRASH");
+    log::error!("[HyperVision] Utiliser sc_hypervision_start depuis system_center");
+    Err("DEPRECATED: Utiliser sc_hypervision_start à la place".to_string())
 }
 
 #[tauri::command]
