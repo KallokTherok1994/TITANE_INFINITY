@@ -51,6 +51,14 @@ export {
   type UseSystemHealthReturn,
 } from './useSystemHealth';
 
+// ═══ MISSING HOOKS EXPORTS (v26.4.0 Phase 2) ═══
+export { useFusionEngine } from './useFusionEngine';
+export { useWindowControls } from './useWindowControls';
+export { useKeyboardShortcuts } from './useKeyboardShortcuts';
+export { useLocalStorage } from './useLocalStorage';
+export { useMediaQuery } from './useMediaQuery';
+export { useOmegaPipeline } from './useOmegaPipeline';
+
 // Legacy hooks
 export { useTitaneCore } from './useTitaneCore';
 export { useMemoryCore } from './useMemoryCore';
