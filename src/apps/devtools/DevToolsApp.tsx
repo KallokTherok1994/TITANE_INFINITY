@@ -106,7 +106,7 @@ export function DevToolsApp({
 
           {/* Tabs Navigation */}
           <Tabs tabs={tabs} defaultTab={defaultSection}>
-            {activeSection => (
+            {(activeSection: string) => (
               <div className="flex-1 overflow-y-auto">
                 <div className="p-6">
                   {activeSection === 'dashboard' && <Dashboard />}

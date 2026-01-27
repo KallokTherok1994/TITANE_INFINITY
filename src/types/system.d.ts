@@ -190,6 +190,12 @@ export interface LogEntry {
 
   /** Log message content */
   message: string;
+
+  /** Optional category for log grouping */
+  category?: string;
+
+  /** Optional additional details (structured data) */
+  details?: Record<string, unknown>;
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
