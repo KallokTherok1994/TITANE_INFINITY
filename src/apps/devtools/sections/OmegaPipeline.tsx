@@ -51,7 +51,7 @@ const statusColors: Record<
 export function OmegaPipeline() {
   const { currentPipeline, pipelineHistory } = useDevToolsStore();
 
-  const totalDuration = currentPipeline
+  const totalDuration = (currentPipeline || [])
     .filter(s => s.duration)
     .reduce((sum, s) => sum + (s.duration || 0), 0);
 

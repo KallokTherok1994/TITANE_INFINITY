@@ -58,7 +58,7 @@ describe('useLocalStorage Hook', () => {
       const { result } = renderHook(() => useLocalStorage('counter', 0));
       
       act(() => {
-        result.current[1](prev => prev + 1);
+        result.current[1]((prev: number) => prev + 1);
       });
 
       expect(result.current[0]).toBe(1);

@@ -103,7 +103,7 @@ describe('useKeyboardShortcuts Hook', () => {
       const callback1 = vi.fn();
       const callback2 = vi.fn();
       
-      const { rerender } = renderHook(
+      const { rerender } = renderHook<{ shortcuts: Record<string, () => void> }, void>(
         ({ shortcuts }) => useKeyboardShortcuts(shortcuts),
         { initialProps: { shortcuts: { 'Ctrl+1': callback1 } } }
       );
