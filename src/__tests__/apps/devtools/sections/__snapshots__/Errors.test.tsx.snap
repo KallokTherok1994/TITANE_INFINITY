@@ -1,0 +1,181 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`DevTools Errors Section > Snapshot > should match snapshot 1`] = `
+<div
+  class="space-y-6"
+>
+  <div
+    data-testid="section-header"
+  >
+    <h2>
+      Error Management
+    </h2>
+    <p>
+      Erreurs système et diagnostics
+    </p>
+  </div>
+  <div
+    class="grid grid-cols-4 gap-4"
+  >
+    <div
+      class="p-4 rounded-lg border"
+    >
+      <div
+        class="text-sm mb-1"
+      >
+        Total Errors
+      </div>
+      <div
+        class="text-2xl font-bold"
+      >
+        3
+      </div>
+    </div>
+    <div
+      class="p-4 rounded-lg border"
+    >
+      <div
+        class="text-sm mb-1"
+      >
+        Unresolved
+      </div>
+      <div
+        class="text-2xl font-bold"
+      >
+        2
+      </div>
+    </div>
+    <div
+      class="p-4 rounded-lg border"
+    >
+      <div
+        class="text-sm mb-1"
+      >
+        High Impact
+      </div>
+      <div
+        class="text-2xl font-bold"
+      >
+        1
+      </div>
+    </div>
+    <div
+      class="p-4 rounded-lg border"
+    >
+      <div
+        class="text-sm mb-1"
+      >
+        Resolved
+      </div>
+      <div
+        class="text-2xl font-bold"
+      >
+        1
+      </div>
+    </div>
+  </div>
+  <div
+    class="grid grid-cols-1 lg:grid-cols-2 gap-6"
+  >
+    <div>
+      <h3
+        class="text-base font-semibold mb-3"
+      >
+        Error List
+      </h3>
+      <div
+        class="space-y-3"
+      >
+        <button
+          class="w-full text-left p-4 rounded-lg border transition-all duration-150  "
+          style="background: rgba(139, 95, 95, 0.20); --tw-ring-color: var(--border-danger, #8b5f5f);"
+        >
+          <div
+            class="flex items-start justify-between mb-2"
+          >
+            <div
+              class="flex items-center gap-2"
+            >
+              <span
+                class="text-xs font-medium px-2 py-0.5 rounded-full"
+              >
+                [
+                chat-engine
+                ]
+              </span>
+              <span
+                class="text-xs font-medium px-2 py-0.5 rounded-full"
+                style="background: rgba(139, 95, 95, 0.20); border: 1px solid; border-width: var(--border-danger,#8b5f5f); border-style: var(--border-danger,#8b5f5f); border-color: var(--border-danger,#8b5f5f);"
+              >
+                HIGH
+              </span>
+            </div>
+          </div>
+          <p
+            class="text-sm font-medium mb-1"
+          >
+            Connection timeout
+          </p>
+          <p
+            class="text-xs"
+          >
+            26/01/2026 19:33:55
+          </p>
+        </button>
+        <button
+          class="w-full text-left p-4 rounded-lg border transition-all duration-150  "
+          style="background: rgba(227, 213, 213, 0.15); --tw-ring-color: var(--border-warning, #e3d5d5);"
+        >
+          <div
+            class="flex items-start justify-between mb-2"
+          >
+            <div
+              class="flex items-center gap-2"
+            >
+              <span
+                class="text-xs font-medium px-2 py-0.5 rounded-full"
+              >
+                [
+                memory-engine
+                ]
+              </span>
+              <span
+                class="text-xs font-medium px-2 py-0.5 rounded-full"
+                style="background: rgba(227, 213, 213, 0.15); border: 1px solid; border-width: var(--border-warning,#e3d5d5); border-style: var(--border-warning,#e3d5d5); border-color: var(--border-warning,#e3d5d5);"
+              >
+                MEDIUM
+              </span>
+            </div>
+          </div>
+          <p
+            class="text-sm font-medium mb-1"
+          >
+            Memory limit exceeded
+          </p>
+          <p
+            class="text-xs"
+          >
+            26/01/2026 19:33:25
+          </p>
+        </button>
+      </div>
+    </div>
+    <div>
+      <h3
+        class="text-base font-semibold mb-3"
+      >
+        Error Details
+      </h3>
+      <div
+        class="flex items-center justify-center h-64 rounded-lg border"
+      >
+        <p
+          class="text-sm"
+        >
+          Select an error to view details
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;

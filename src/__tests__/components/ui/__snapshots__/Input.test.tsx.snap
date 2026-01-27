@@ -1,0 +1,32 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Input Component > Snapshot > should match snapshot 1`] = `
+<div
+  class="w-full flex flex-col gap-2"
+>
+  <div
+    class="relative"
+  >
+    <input
+      aria-invalid="false"
+      class="
+              w-full h-10 px-4 rounded
+              text-base font-normal
+              bg-titanium-bg-interactive
+              border
+              border-titanium-border-default
+              text-titanium-text-primary
+              placeholder:text-titanium-text-tertiary
+              transition-colors duration-200
+              focus:outline-none focus:shadow-focus focus:border-titanium-accent-bright
+              disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-titanium-bg-elevated
+              
+              
+              
+            "
+      id="input-pcfpr3b9r"
+      placeholder="Snapshot test"
+    />
+  </div>
+</div>
+`;

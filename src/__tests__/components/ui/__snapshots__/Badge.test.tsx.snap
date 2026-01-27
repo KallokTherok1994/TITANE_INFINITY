@@ -1,0 +1,17 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Badge Component > Snapshot > should match snapshot 1`] = `
+<span
+  class="
+        inline-flex items-center 
+        rounded-full 
+        font-medium 
+        transition-colors
+        bg-titanium-bg-interactive text-titanium-text-primary border border-titanium-border-default
+        px-3 py-1 text-sm
+        
+      "
+>
+  Snapshot
+</span>
+`;

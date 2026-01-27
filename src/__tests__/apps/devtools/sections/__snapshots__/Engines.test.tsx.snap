@@ -1,0 +1,136 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`DevTools Engines Section > Snapshot > should match snapshot 1`] = `
+<div
+  class="space-y-6"
+>
+  <div
+    data-testid="section-header"
+  >
+    <h2>
+      Cognitive Engines
+    </h2>
+    <p>
+      Status et contrôle des moteurs TITANE∞
+    </p>
+  </div>
+  <div
+    class="grid grid-cols-4 gap-4"
+  >
+    <div
+      class="p-4 rounded-lg border"
+    >
+      <div
+        class="text-sm mb-1"
+      >
+        Total Engines
+      </div>
+      <div
+        class="text-2xl font-bold"
+      >
+        3
+      </div>
+    </div>
+    <div
+      class="p-4 rounded-lg border"
+    >
+      <div
+        class="text-sm mb-1"
+      >
+        Running
+      </div>
+      <div
+        class="text-2xl font-bold"
+      >
+        1
+      </div>
+    </div>
+    <div
+      class="p-4 rounded-lg border"
+    >
+      <div
+        class="text-sm mb-1"
+      >
+        Idle
+      </div>
+      <div
+        class="text-2xl font-bold"
+      >
+        1
+      </div>
+    </div>
+    <div
+      class="p-4 rounded-lg border"
+    >
+      <div
+        class="text-sm mb-1"
+      >
+        Errors
+      </div>
+      <div
+        class="text-2xl font-bold"
+      >
+        1
+      </div>
+    </div>
+  </div>
+  <div
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+  >
+    <div
+      data-testid="engine-chat-engine"
+    >
+      <span>
+        Chat Engine
+      </span>
+      <span
+        data-testid="status-chat-engine"
+      >
+        running
+      </span>
+      <button>
+        Restart
+      </button>
+      <button>
+        Inspect
+      </button>
+    </div>
+    <div
+      data-testid="engine-memory-engine"
+    >
+      <span>
+        Memory Engine
+      </span>
+      <span
+        data-testid="status-memory-engine"
+      >
+        idle
+      </span>
+      <button>
+        Restart
+      </button>
+      <button>
+        Inspect
+      </button>
+    </div>
+    <div
+      data-testid="engine-fusion-engine"
+    >
+      <span>
+        Fusion Engine
+      </span>
+      <span
+        data-testid="status-fusion-engine"
+      >
+        error
+      </span>
+      <button>
+        Restart
+      </button>
+      <button>
+        Inspect
+      </button>
+    </div>
+  </div>
+</div>
+`;
