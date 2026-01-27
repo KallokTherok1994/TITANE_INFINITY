@@ -207,8 +207,8 @@ export class AdvancedTelemetry {
     return {
       count,
       sum,
-      min: sorted[0],
-      max: sorted[count - 1],
+      min: sorted[0] ?? 0,
+      max: sorted[count - 1] ?? 0,
       avg: sum / count,
       p50: this.percentile(sorted, 50),
       p95: this.percentile(sorted, 95),
@@ -223,7 +223,7 @@ export class AdvancedTelemetry {
     if (sortedValues.length === 0) return 0;
 
     const index = Math.ceil((p / 100) * sortedValues.length) - 1;
-    return sortedValues[Math.max(0, Math.min(index, sortedValues.length - 1))];
+    return sortedValues[Math.max(0, Math.min(index, sortedValues.length - 1))] ?? 0;
   }
 
   /**
@@ -322,8 +322,8 @@ export class AdvancedTelemetry {
       filtered = filtered.filter(e => e.category === filter.category);
     }
 
-    if (filter?.since) {
-      filtered = filtered.filter(e => e.timestamp >= filter.since);
+    if (filter?.since !== undefined) {
+      filtered = filtered.filter(e => e.timestamp >= filter.since!);
     }
 
     return filtered;
