@@ -17,6 +17,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useGlobalAIChat } from '../hooks/useGlobalAIChat';
 import { MessageBubble } from './chat/MessageBubble';
 import type { Message as _Message } from '../core/ARCHITECTURE_TYPES_v∞';
+import type { AIMessage } from '../services/ai/types';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -206,8 +207,28 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
   const [isHovering, setIsHovering] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  /**
+   * 🔧 HELPER: Extrait le contenu textuel d'un message (supporte string ou objet)
+   */
+  const getMessageText = useCallback((message: AIMessage): string => {
+    if (typeof message.content === 'string') {
+      return message.content;
+    }
+    if (message.content && typeof message.content === 'object') {
+      return (message.content as { text?: string }).text || '';
+    }
+    return '';
+  }, []);
+
   // ═══ AUTO-SCROLL ═══
   useEffect(() => {
+    // 🚨 DEBUG: Log changement messages
+    console.log('[AIChatBubble] 🔄 Messages mis à jour', {
+      count: messages.length,
+      lastMessage: messages[messages.length - 1],
+      timestamp: new Date().toISOString()
+    });
+    
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
@@ -275,9 +296,24 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
     if (!input.trim() || isLoading) return;
 
     const message = input.trim();
+    
+    // 🚨 DEBUG: Log envoi message UI
+    console.log('[AIChatBubble] 📤 Envoi message UI', {
+      message: message.substring(0, 100),
+      messageLength: message.length,
+      currentMessagesCount: messages.length,
+      timestamp: new Date().toISOString()
+    });
+    
     setInput('');
     await sendGlobalMessage(message);
-  }, [input, isLoading, sendGlobalMessage]);
+    
+    // 🚨 DEBUG: Log après envoi
+    console.log('[AIChatBubble] ✅ Message envoyé, attente réponse...', {
+      newMessagesCount: messages.length,
+      isLoading
+    });
+  }, [input, isLoading, sendGlobalMessage, messages.length]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -362,14 +398,35 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
             </div>
           )}
 
-          {messages.map((message, index) => (
-            <MessageBubble
-              key={message.timestamp ? `${message.timestamp}-${index}` : `msg-${index}`}
-              role={message.role}
-              content={message.content}
-              timestamp={message.timestamp}
-            />
-          ))}
+          {messages
+            .filter(message => {
+              // 🔧 FILTRE VALIDATION: Éliminer messages invalides
+              if (!message || !message.role || !['user', 'assistant'].includes(message.role)) {
+                console.warn('[AIChatBubble] ⚠️ Message invalide (rôle)', message);
+                return false;
+              }
+              const messageText = getMessageText(message);
+              const hasContent = messageText && messageText.trim().length > 0;
+              if (!hasContent) {
+                console.warn('[AIChatBubble] ⚠️ Message vide', { role: message.role, timestamp: message.timestamp });
+                return false;
+              }
+              // 🔍 DEBUG: Log message valide
+              console.log('[AIChatBubble] ✅ Message affiché', {
+                role: message.role,
+                contentLength: messageText.length,
+                timestamp: message.timestamp
+              });
+              return true;
+            })
+            .map((message, index) => (
+              <MessageBubble
+                key={message.timestamp ? `${message.timestamp}-${index}` : `msg-${index}`}
+                role={message.role}
+                content={getMessageText(message)}
+                timestamp={message.timestamp}
+              />
+            ))}
 
           {isLoading && (
             <div
