@@ -31,6 +31,7 @@ import type {
 import type { UnifiedMemoryQuery } from '@/services/unified/UnifiedMemory';
 import { createUnifiedMemory } from '@/services/unified';
 import { MemoryTier } from '@/services/mcp/mcp.types';
+import { toolCaller, type ToolCall, type ToolResult } from '@/services/chat/toolCaller'; // Sprint 6 Phase 3
 
 // Singleton UnifiedMemory instance
 let _unifiedMemoryInstance: Awaited<ReturnType<typeof createUnifiedMemory>> | null = null;
@@ -105,6 +106,61 @@ export class ConversationManager {
         memoriesUsed: aiRequest.messages.filter(m => m.role === 'system').length,
         summary: aiRequest.messages.find(m => m.role === 'system')?.content || '',
       };
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // Sprint 6 Phase 3: Tool Calling Integration
+    // ═══════════════════════════════════════════════════════════════════
+    // 4.5. Check if assistant response contains tool calls
+    const contentString = typeof response.content === 'string' ? response.content : '';
+    const toolCalls = toolCaller.parseToolCalls(contentString);
+    
+    if (toolCalls.length > 0) {
+      logger.info(`Found ${toolCalls.length} tool calls in response`, {
+        component: 'ConversationManager',
+        conversationId,
+        toolNames: toolCalls.map(tc => tc.toolName),
+      });
+
+      // Execute all tool calls in sequence
+      const toolResults: ToolResult[] = [];
+      for (const toolCall of toolCalls) {
+        try {
+          const result = await toolCaller.executeTool(toolCall);
+          toolResults.push(result);
+        } catch (error) {
+          logger.error(
+            `Tool execution failed: ${toolCall.toolName}`,
+            { component: 'ConversationManager', toolCall },
+            error as Error
+          );
+          // Add error result
+          toolResults.push({
+            toolName: toolCall.toolName,
+            success: false,
+            output: `Error executing tool: ${error instanceof Error ? error.message : String(error)}`,
+          });
+        }
+      }
+
+      // 4.6. Append tool results to response metadata
+      if (!response.metadata) {
+        response.metadata = {};
+      }
+      response.metadata.toolCalls = toolCalls;
+      response.metadata.toolResults = toolResults;
+
+      // 4.7. Optionally: Format tool results as part of the response content
+      // (This makes them visible in the UI without needing special rendering)
+      const resultsFormatted = toolResults
+        .map(
+          (r) =>
+            `\n\n🔧 **Tool: ${r.toolName}**\n${r.success ? '✅ Success' : '❌ Error'}\n${r.output}`
+        )
+        .join('');
+
+      // Append to response content (keep original response intact)
+      response.content = contentString + resultsFormatted;
     }
 
     // 5. Store assistant response in context

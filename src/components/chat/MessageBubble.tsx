@@ -18,6 +18,7 @@ import React, { memo, useMemo, lazy, Suspense } from 'react';
 import './MessageBubble.css';
 import { MarkdownContent } from './MarkdownContent';
 import { CodeBlock } from './CodeBlock';
+import { MessageReactions } from './MessageReactions'; // Sprint 6 Phase 3
 
 // YOLO OPT-6: Lazy-load ReactMarkdown (-80 KB gzip) as fallback
 // Markdown uniquement pour messages assistant (pas user)
@@ -170,6 +171,11 @@ export const MessageBubble = memo(function MessageBubble({
         </div>
 
         <div className="message-bubble-text">{messageContent}</div>
+
+        {/* Sprint 6 Phase 3: Message Reactions */}
+        {role === 'assistant' && content && content.trim().length > 0 && (
+          <MessageReactions messageTimestamp={timestamp} compact />
+        )}
       </div>
     </div>
   );
