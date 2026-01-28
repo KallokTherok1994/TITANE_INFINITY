@@ -66,9 +66,26 @@ class ChatMemoryCompactor {
       const key = `${STORAGE_KEY_PREFIX}${mode}`;
       const stored = localStorage.getItem(key);
 
-      if (!stored) return [];
+      // 🔍 v26.4.0: Debug log pour tracer le problème de persistence
+      logger.debug(`Loading messages for ${mode}`, {
+        component: 'MemoryCompactor',
+        key,
+        hasStored: !!stored,
+        storedLength: stored?.length || 0,
+      });
+
+      if (!stored) {
+        logger.warn(`No stored messages found for ${mode}`, {
+          component: 'MemoryCompactor',
+          key,
+        });
+        return [];
+      }
 
       const memory: ModeMemory = JSON.parse(stored);
+      logger.info(`Loaded ${memory.messages?.length || 0} messages for ${mode}`, {
+        component: 'MemoryCompactor',
+      });
       return memory.messages || [];
     } catch (error) {
       logger.error(
@@ -120,9 +137,19 @@ class ChatMemoryCompactor {
 
   /**
    * ✨ v24.3.7: Flush all pending saves during idle time
+   * 🔒 v26.4.0: Made public for force flush on tab switch/unmount
    */
-  private flushPendingSaves(): void {
+  flushPendingSaves(): void {
     this.saveScheduled = false;
+
+    if (this.pendingSaves.size === 0) {
+      logger.debug('No pending saves to flush', { component: 'MemoryCompactor' });
+      return;
+    }
+
+    logger.info(`Flushing ${this.pendingSaves.size} pending saves`, {
+      component: 'MemoryCompactor',
+    });
 
     for (const [mode, messages] of this.pendingSaves.entries()) {
       try {
@@ -145,6 +172,11 @@ class ChatMemoryCompactor {
         // Sauvegarder
         const key = `${STORAGE_KEY_PREFIX}${mode}`;
         localStorage.setItem(key, JSON.stringify(memory));
+        logger.info(`💾 Saved ${messages.length} messages to localStorage`, {
+          component: 'MemoryCompactor',
+          mode,
+          key,
+        });
       } catch (error) {
         logger.error(
           `Failed to save ${mode}`,

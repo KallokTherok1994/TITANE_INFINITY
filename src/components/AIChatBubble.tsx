@@ -14,6 +14,7 @@
 
 import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { List, ListImperativeAPI } from 'react-window'; // Sprint 5: Virtualisation (classe Component)
 import { useGlobalAIChat } from '../hooks/useGlobalAIChat';
 import { MessageBubble } from './chat/MessageBubble';
 import { ChatErrorBoundary } from './ChatErrorBoundary';
@@ -240,6 +241,11 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
   const [isSendButtonFocused, setIsSendButtonFocused] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Sprint 5: Virtualisation refs
+  const listRef = useRef<ListImperativeAPI>(null);
+  const rowHeightsRef = useRef<Map<number, number>>(new Map());
+  const [enableVirtualization, setEnableVirtualization] = useState(false);
+
   // 📊 Monitoring: Conversation ID unique (persiste pendant la session)
   const conversationId = useRef<string>(generateCorrelationId());
   const messageStartTime = useRef<number>(0);
@@ -295,6 +301,33 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
     });
   }, [messages, getMessageText]);
 
+  // Sprint 5: Active virtualisation si >50 messages (threshold conservateur)
+  useEffect(() => {
+    setEnableVirtualization(validMessages.length > 50);
+  }, [validMessages.length]);
+
+  // Sprint 5: Fonction pour obtenir hauteur estimée d'un message
+  const getItemSize = useCallback((index: number) => {
+    // Si on a mesuré la hauteur réelle, l'utiliser
+    if (rowHeightsRef.current.has(index)) {
+      return rowHeightsRef.current.get(index)!;
+    }
+    // Sinon, estimation basée sur longueur contenu
+    const message = validMessages[index];
+    if (!message) return 80; // Hauteur par défaut
+    const contentLength = getMessageText(message).length;
+    // Formule: 60px base + 0.5px par caractère (estimation conservative)
+    return Math.max(80, Math.min(60 + contentLength * 0.5, 500));
+  }, [validMessages, getMessageText]);
+
+  // Sprint 5: Callback pour mesurer hauteur réelle des items
+  const setItemSize = useCallback((index: number, size: number) => {
+    if (rowHeightsRef.current.get(index) !== size) {
+      rowHeightsRef.current.set(index, size);
+      // Note: react-window List recalcule automatiquement au prochain render
+    }
+  }, []);
+
   // ═══ AUTO-SCROLL ═══
   useEffect(() => {
     // 🚨 DEBUG: Log changement messages
@@ -304,10 +337,17 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
       timestamp: new Date().toISOString()
     });
     
-    if (messagesEndRef.current) {
+    // Sprint 5: Scroll avec virtualisation
+    if (enableVirtualization && listRef.current && validMessages.length > 0) {
+      // Scroll vers le dernier message
+      const element = listRef.current.element;
+      if (element) {
+        element.scrollTop = element.scrollHeight;
+      }
+    } else if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messages]);
+  }, [messages, enableVirtualization, validMessages.length]);
 
   // ═══ SUDO COMMANDS LISTENER ═══
   useEffect(() => {
@@ -577,14 +617,53 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
             </div>
           )}
 
-          {validMessages.map((message, index) => (
-            <MessageBubble
-              key={message.timestamp ? `${message.timestamp}-${index}` : `msg-${index}`}
-              role={message.role}
-              content={getMessageText(message)}
-              timestamp={message.timestamp}
+          {/* Sprint 5: Rendu virtualisé si >50 messages, sinon rendu normal */}
+          {enableVirtualization && validMessages.length > 0 ? (
+            <List
+              listRef={listRef}
+              rowCount={validMessages.length}
+              rowHeight={getItemSize}
+              defaultHeight={PANEL_HEIGHT - 140}
+              style={{ overflow: 'auto' }}
+              rowComponent={({ index, style }) => {
+                const message = validMessages[index];
+                // Guard: si pas de message, retourner élément vide
+                if (!message) {
+                  return <div style={style} />;
+                }
+                return (
+                  <div style={style}>
+                    <div
+                      ref={(el) => {
+                        if (el) {
+                          const height = el.getBoundingClientRect().height;
+                          setItemSize(index, height);
+                        }
+                      }}
+                      style={{ padding: '6px 0' }}
+                    >
+                      <MessageBubble
+                        key={message.timestamp ? `${message.timestamp}-${index}` : `msg-${index}`}
+                        role={message.role}
+                        content={getMessageText(message)}
+                        timestamp={message.timestamp}
+                      />
+                    </div>
+                  </div>
+                );
+              }}
+              rowProps={{}}
             />
-          ))}
+          ) : (
+            validMessages.map((message, index) => (
+              <MessageBubble
+                key={message.timestamp ? `${message.timestamp}-${index}` : `msg-${index}`}
+                role={message.role}
+                content={getMessageText(message)}
+                timestamp={message.timestamp}
+              />
+            ))
+          )}
 
           {isLoading && (
             <div

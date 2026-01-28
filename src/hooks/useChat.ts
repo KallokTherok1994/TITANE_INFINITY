@@ -15,6 +15,7 @@
 import { useCallback, useEffect, useRef, useMemo, useState } from 'react';
 import { useChatCore, type UseChatCoreReturn } from '@hooks/useChatCore';
 import { useChatMemory } from '@hooks/useChatMemory';
+import { chatMemoryCompactor } from '@/services/chatMemoryCompactor';
 import type { ChatMode } from '@/services/ai/chatTypes';
 import type { AIMessage, AIProviderName, AIResponse } from '@/services/ai/types';
 import type { HarmonizedMessage } from '@/types/cognitiveKernel';
@@ -468,7 +469,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   const [messages, setMessages] = useState<AIMessage[]>(() => {
     if (typeof window === 'undefined') return [];
     try {
-      // Clé utilisée par chatMemoryCompactor
+      // Clé utilisée par chatMemoryCompactor (note: currentMode n'est pas disponible ici, utiliser default)
       const stored = localStorage.getItem('titane_chat_mode_default');
       if (stored) {
         const memory = JSON.parse(stored);
@@ -476,7 +477,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           chatLogger.info(
             '📂 Initial load from localStorage:',
             memory.messages.length,
-            'messages'
+            'messages (mode: default)'
           );
 
           // 🧠 NOUVEAU v22Ω: Harmoniser messages avec Cognitive Kernel
@@ -486,6 +487,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           return Array.isArray(harmonized) ? (harmonized as AIMessage[]) : [];
         }
       }
+      chatLogger.info('📂 Initial load: no stored messages found');
     } catch (e) {
       chatLogger.warn('⚠️ Failed to load initial messages', { error: e });
     }
@@ -960,6 +962,41 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     }
   }, [currentMode, currentModeState]);
 
+  // ═══ FORCE FLUSH MEMORY ON UNMOUNT / TAB SWITCH (FIX: messages disparaissent) ═══
+  useEffect(() => {
+    const forceFlush = () => {
+      // Force flush all pending saves to localStorage (critical for tab switch)
+      try {
+        chatMemoryCompactor.flushPendingSaves();
+        chatLogger.info('🔒 Forced memory flush on tab switch/unmount');
+      } catch (error) {
+        chatLogger.error('❌ Failed to force flush', { error });
+      }
+    };
+
+    // Flush on tab visibility change (tab switch)
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        forceFlush();
+      }
+    };
+
+    // Flush before page unload
+    const handleBeforeUnload = () => {
+      forceFlush();
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    // Cleanup: flush on unmount
+    return () => {
+      forceFlush();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []); // Empty deps: listeners are stable
+
   // ═══ OMNIS SENDMESSAGE KERNEL ═══
   const sendMessage = useCallback(
     async (content: string): Promise<AIMessage> => {
@@ -1020,6 +1057,14 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           const updatedMessages = [...messagesRef.current, userMessage, devSudoResponse];
           applyMessagesSafely(updatedMessages, 'dev-sudo-command');
 
+          // ✅ PERSIST messages before returning (FIX: saveMessage was missing)
+          try {
+            await saveMessage(userMessage);
+            await saveMessage(devSudoResponse);
+          } catch (persistError) {
+            console.warn('[useChat] ⚠️ dev-sudo persistence failed', persistError);
+          }
+
           return devSudoResponse;
         }
       } catch (devSudoError) {
@@ -1061,6 +1106,14 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
           const updatedMessages = [...messagesRef.current, userMessage, cameraResponse];
           applyMessagesSafely(updatedMessages, 'camera-command');
+
+          // ✅ PERSIST messages before returning (FIX: saveMessage was missing)
+          try {
+            await saveMessage(userMessage);
+            await saveMessage(cameraResponse);
+          } catch (persistError) {
+            console.warn('[useChat] ⚠️ camera persistence failed', persistError);
+          }
 
           return cameraResponse;
         }
