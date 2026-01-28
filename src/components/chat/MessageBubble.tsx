@@ -16,8 +16,10 @@
 
 import React, { memo, useMemo, lazy, Suspense } from 'react';
 import './MessageBubble.css';
+import { MarkdownContent } from './MarkdownContent';
+import { CodeBlock } from './CodeBlock';
 
-// YOLO OPT-6: Lazy-load ReactMarkdown (-80 KB gzip)
+// YOLO OPT-6: Lazy-load ReactMarkdown (-80 KB gzip) as fallback
 // Markdown uniquement pour messages assistant (pas user)
 const LazyReactMarkdown = lazy(() => import('react-markdown'));
 import remarkGfm from 'remark-gfm';
@@ -133,22 +135,13 @@ export const MessageBubble = memo(function MessageBubble({
     [role]
   );
 
-  // Contenu du message avec lazy markdown
+  // Contenu du message avec markdown amélioré
   const messageContent = useMemo(() => {
     if (role === 'assistant') {
       // Si le message a du contenu, l'afficher avec markdown
       if (content && content.trim().length > 0) {
-        // YOLO OPT: Lazy-load markdown pour assistant uniquement
-        return (
-          <Suspense fallback={<div className="markdown-loading">Chargement...</div>}>
-            <LazyReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              components={markdownComponents}
-            >
-              {content}
-            </LazyReactMarkdown>
-          </Suspense>
-        );
+        // Utiliser notre MarkdownContent pour meilleur support
+        return <MarkdownContent content={content} />;
       }
       // Si le message est vide mais récent (< 3s), afficher le typing indicator
       // Sinon afficher un placeholder pour indiquer un problème
