@@ -19,6 +19,9 @@ import { MessageBubble } from './chat/MessageBubble';
 import { ChatErrorBoundary } from './ChatErrorBoundary';
 import type { Message as _Message } from '../core/ARCHITECTURE_TYPES_v∞';
 import type { AIMessage } from '../services/ai/types';
+import { chatMetrics } from '../services/monitoring/chatMetrics';
+import { logger, generateCorrelationId } from '../services/monitoring/logger';
+import { alerting, AlertType, AlertSeverity } from '../services/monitoring/alerting';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -236,6 +239,10 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
   const [isSendButtonFocused, setIsSendButtonFocused] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // 📊 Monitoring: Conversation ID unique (persiste pendant la session)
+  const conversationId = useRef<string>(generateCorrelationId());
+  const messageStartTime = useRef<number>(0);
+
   /**
    * 🔧 HELPER: Extrait le contenu textuel d'un message (supporte string ou objet)
    */
@@ -342,6 +349,19 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
     };
   }, [open, close, minimize, maximize, clear, setModel, enableDevMode, toggleFullscreen]);
 
+  // 📊 Monitoring: Démarrer conversation au premier message
+  useEffect(() => {
+    if (messages.length === 1 && !isLoading) {
+      chatMetrics.startConversation(conversationId.current);
+      logger.info('Conversation démarrée', 'AIChatBubble', {
+        conversationId: conversationId.current,
+      });
+      
+      // Démarrer le système d'alertes si pas déjà démarré
+      alerting.start();
+    }
+  }, [messages.length, isLoading]);
+
   // ═══ HANDLERS ═══
   const handleBubbleClick = useCallback(() => {
     if (isMinimized) {
@@ -363,8 +383,13 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
     if (!input.trim() || isLoading) return;
 
     const message = input.trim();
+    const correlationId = generateCorrelationId();
     
     try {
+      // 📊 Métriques: Enregistrer envoi message
+      chatMetrics.recordMessageSent(conversationId.current, message.length);
+      messageStartTime.current = Date.now();
+      
       // 🚨 DEBUG: Log envoi message UI
       console.log('[AIChatBubble] 📤 Envoi message UI', {
         message: message.substring(0, 100),
@@ -373,8 +398,25 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
         timestamp: new Date().toISOString()
       });
       
+      logger.info('Message utilisateur envoyé', 'AIChatBubble', {
+        messageLength: message.length,
+        messagesCount: messages.length,
+      }, correlationId);
+      
       setInput('');
       await sendGlobalMessage(message);
+      
+      // 📊 Métriques: Enregistrer réception réponse
+      const responseTime = Date.now() - messageStartTime.current;
+      const lastMessage = messages[messages.length - 1];
+      const responseLength = lastMessage ? getMessageText(lastMessage).length : 0;
+      
+      chatMetrics.recordMessageReceived(conversationId.current, responseTime, responseLength);
+      
+      logger.info('Réponse IA reçue', 'AIChatBubble', {
+        responseTime,
+        responseLength,
+      }, correlationId);
       
       // 🚨 DEBUG: Log après envoi
       console.log('[AIChatBubble] ✅ Message envoyé, attente réponse...', {
@@ -382,11 +424,27 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
         isLoading
       });
     } catch (error) {
+      // � Métriques: Enregistrer erreur
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      chatMetrics.recordError(conversationId.current, 'send_message_failed', errorMessage);
+      
+      logger.error('Erreur envoi message', 'AIChatBubble', error, {
+        messageLength: message.length,
+      }, correlationId);
+      
+      // 🔔 Alerte: Déclencher alerte si erreur
+      alerting.triggerManualAlert(
+        AlertType.ERROR_BOUNDARY_TRIGGERED,
+        AlertSeverity.WARNING,
+        `Erreur envoi message: ${errorMessage}`,
+        { conversationId: conversationId.current, errorMessage }
+      );
+      
       // 🔴 FAILSAFE: Ne jamais crasher l'UI
       console.error('[AIChatBubble] ❌ Erreur envoi message', error);
       setInput(message); // Restaurer input si erreur
     }
-  }, [input, isLoading, sendGlobalMessage, messages.length]);
+  }, [input, isLoading, sendGlobalMessage, messages.length, getMessageText]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {

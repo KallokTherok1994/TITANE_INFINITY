@@ -26,6 +26,8 @@ import {
 import { aiOrchestrator } from './orchestrator';
 import { memoryIntegration } from './memoryIntegration';
 import type { MemoryContext } from './memoryIntegration';
+import { logger as structuredLogger, generateCorrelationId } from '../monitoring/logger';
+import { chatMetrics } from '../monitoring/chatMetrics';
 
 // PHASE 2: Unified Memory System Integration
 import { unifiedMemory } from '@/core/services/unifiedMemory';
@@ -226,6 +228,15 @@ class ChatEngineOmega {
     const pipelineSteps: string[] = [];
     let autoHealed = false;
     const failureHandled = false;
+    const correlationId = generateCorrelationId();
+
+    // 📊 Logging structuré: Requête chatEngine
+    structuredLogger.info('Requête chat engine', 'ChatEngine', {
+      messageLength: message.length,
+      messagePreview: message.substring(0, 100),
+      historyLength: history.length,
+      mode: config?.mode || this.config.mode,
+    }, correlationId);
 
     // 🚨 DEBUG CRITICAL: Log direct console pour tracer le flux
     console.log('[chatEngine] 📤 generate() APPELÉ', {
@@ -248,18 +259,20 @@ class ChatEngineOmega {
         });
 
         if (cached) {
+          // � Logging structuré: Cache hit
+          logger.debug('Cache hit - Réponse instantanée', 'ChatEngine', {
+            provider: cached.provider,
+            contentLength: cached.content?.length,
+            age: Date.now() - cached.timestamp,
+            hitCount: cached.hitCount,
+          }, correlationId);
+          
           // 🚨 DEBUG: Log cache hit avec contenu
           console.log('[chatEngine] ⚡ CACHE HIT', {
             provider: cached.provider,
             contentLength: cached.content?.length,
             hasContent: !!cached.content && cached.content.trim().length > 0,
             timestamp: cached.timestamp
-          });
-          
-          logger.info('⚡ CACHE HIT - Instant response', {
-            provider: cached.provider,
-            age: Date.now() - cached.timestamp,
-            hitCount: cached.hitCount,
           });
 
           pipelineSteps.push('cache-hit');
