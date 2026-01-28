@@ -2,6 +2,69 @@
   "snapshots": [],
   "logs": [
     {
+      "id": "ui-1769616203985-mffwft0v",
+      "timestamp": 1769616203985,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1769615884109-91w1h4ip",
+      "timestamp": 1769615884109,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1769615775101-pw8txath",
+      "timestamp": 1769615775101,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1769615544630-nwa306vw",
+      "timestamp": 1769615544630,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1769615409215-rsxnjceb",
+      "timestamp": 1769615409215,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1769615306482-47g0u0cz",
+      "timestamp": 1769615306482,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1769615144770-ldmyor0d",
+      "timestamp": 1769615144770,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1769614644501-h26qr0bj",
+      "timestamp": 1769614644501,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1769614225877-dfb591lz",
+      "timestamp": 1769614225877,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
       "id": "ui-1769612939955-sxgkj10f",
       "timestamp": 1769612939955,
       "level": "Info",
@@ -2649,7 +2712,7 @@
   "knowledge": [],
   "rituals": [],
   "metadata": {
-    "last_validation_ts": 1769612940135,
+    "last_validation_ts": 1769616204159,
     "last_compaction_ts": null
   }
 }
