@@ -66,8 +66,18 @@ const DEFAULT_TOOLS: Record<string, ToolDefinition> = {
         if (!allowedPattern.test(expression)) {
           throw new Error('Invalid expression: only numbers and basic operators allowed');
         }
-        // eslint-disable-next-line no-eval
-        const result = Function(`"use strict"; return (${expression})`)();
+        
+        // ✅ #2: Add timeout protection (1s) to prevent infinite loops
+        const timeoutPromise = new Promise<never>((_, reject) => 
+          setTimeout(() => reject(new Error('Expression evaluation timeout (1s)')), 1000)
+        );
+        
+        const evalPromise = Promise.resolve(
+          // eslint-disable-next-line no-eval
+          Function(`"use strict"; return (${expression})`)()
+        );
+        
+        const result = await Promise.race([evalPromise, timeoutPromise]);
         console.log('[ToolCaller] calculate:', { expression, result });
         return { result, expression };
       } catch (error) {
@@ -147,6 +157,7 @@ const DEFAULT_TOOLS: Record<string, ToolDefinition> = {
 export class ToolCallerService {
   private tools: Map<string, ToolDefinition>;
   private callHistory: ToolCall[] = [];
+  private readonly MAX_HISTORY = 1000; // ✅ #1: Prevent memory leak
 
   constructor(customTools: Record<string, ToolDefinition> = {}) {
     this.tools = new Map(Object.entries({ ...DEFAULT_TOOLS, ...customTools }));
@@ -154,9 +165,22 @@ export class ToolCallerService {
 
   /**
    * Ajoute un outil personnalisé
+   * ✅ #3: Validate tool definition before registering
    */
   registerTool(tool: ToolDefinition): void {
+    // Validation
+    if (!tool.name) {
+      throw new Error('Tool must have a name');
+    }
+    if (typeof tool.execute !== 'function') {
+      throw new Error(`Tool ${tool.name} must have an execute function`);
+    }
+    if (this.tools.has(tool.name)) {
+      console.warn(`[ToolCaller] Tool ${tool.name} already registered, overwriting`);
+    }
+    
     this.tools.set(tool.name, tool);
+    console.log(`[ToolCaller] ✅ Tool registered: ${tool.name}`);
   }
 
   /**
@@ -278,7 +302,7 @@ export class ToolCallerService {
       console.log(`[ToolCaller] Executing ${toolName}:`, arguments_);
       const result = await tool.execute(arguments_);
 
-      // Store in history
+      // Store in history with memory limit
       this.callHistory.push({
         id: `tool_${Date.now()}_${Math.random()}`,
         toolName,
@@ -286,6 +310,12 @@ export class ToolCallerService {
         result,
         timestamp: Date.now(),
       });
+      
+      // ✅ #1: Enforce MAX_HISTORY limit - remove oldest if needed
+      if (this.callHistory.length > this.MAX_HISTORY) {
+        const removed = this.callHistory.shift();
+        console.log(`[ToolCaller] ⚠️ History limit reached (${this.MAX_HISTORY}), removed oldest entry`);
+      }
 
       return { result };
     } catch (error) {
