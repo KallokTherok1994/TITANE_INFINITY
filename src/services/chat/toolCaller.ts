@@ -1,0 +1,319 @@
+/**
+ * TITANE∞ — Tool Calling Service
+ * Exécute des outils/fonctions appelées par le modèle AI
+ *
+ * v26.4.0 (Sprint 6)
+ */
+
+// ═══════════════════════════════════════════════════════════════════
+// TYPES
+// ═══════════════════════════════════════════════════════════════════
+
+export interface ToolDefinition {
+  name: string;
+  description: string;
+  parameters?: Record<string, unknown>;
+  execute: (args: Record<string, unknown>) => Promise<unknown>;
+}
+
+export interface ToolCall {
+  id: string;
+  toolName: string;
+  arguments: Record<string, unknown>;
+  result?: unknown;
+  error?: string;
+  timestamp: number;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// DEFAULT TOOLS
+// ═══════════════════════════════════════════════════════════════════
+
+const DEFAULT_TOOLS: Record<string, ToolDefinition> = {
+  // Web Search Tool
+  web_search: {
+    name: 'web_search',
+    description: 'Search the web for information',
+    parameters: {
+      query: { type: 'string', description: 'Search query' },
+      maxResults: { type: 'number', description: 'Maximum results to return', default: 5 },
+    },
+    execute: async (args) => {
+      const { query = '', maxResults = 5 } = args as { query: string; maxResults?: number };
+      // Implémentation stub - en production, appeler une API réelle
+      console.log('[ToolCaller] web_search:', { query, maxResults });
+      return {
+        results: [
+          { title: `Result for "${query}"`, url: 'https://example.com', snippet: 'Placeholder result' },
+        ],
+      };
+    },
+  },
+
+  // Calculator Tool
+  calculate: {
+    name: 'calculate',
+    description: 'Perform mathematical calculations',
+    parameters: {
+      expression: { type: 'string', description: 'Mathematical expression (e.g., "2+2*3")' },
+    },
+    execute: async (args) => {
+      const { expression = '' } = args as { expression: string };
+      try {
+        // Security: Only allow safe math operations
+        // In production, use a proper expression parser
+        const allowedPattern = /^[0-9+\-*/(). ]+$/;
+        if (!allowedPattern.test(expression)) {
+          throw new Error('Invalid expression: only numbers and basic operators allowed');
+        }
+        // eslint-disable-next-line no-eval
+        const result = Function(`"use strict"; return (${expression})`)();
+        console.log('[ToolCaller] calculate:', { expression, result });
+        return { result, expression };
+      } catch (error) {
+        console.error('[ToolCaller] calculate error:', error);
+        throw error;
+      }
+    },
+  },
+
+  // Get Current Time
+  get_time: {
+    name: 'get_time',
+    description: 'Get the current date and time',
+    parameters: {},
+    execute: async () => {
+      const now = new Date();
+      const result = {
+        iso: now.toISOString(),
+        locale: now.toLocaleString('fr-FR'),
+        timestamp: now.getTime(),
+      };
+      console.log('[ToolCaller] get_time:', result);
+      return result;
+    },
+  },
+
+  // Get Weather (stub)
+  get_weather: {
+    name: 'get_weather',
+    description: 'Get weather information for a location',
+    parameters: {
+      location: { type: 'string', description: 'City name or coordinates' },
+      unit: { type: 'string', description: 'Temperature unit (C or F)', default: 'C' },
+    },
+    execute: async (args) => {
+      const { location = '', unit = 'C' } = args as { location: string; unit?: string };
+      // Implémentation stub - en production, appeler OpenWeather API ou similaire
+      console.log('[ToolCaller] get_weather:', { location, unit });
+      return {
+        location,
+        temperature: 20,
+        unit,
+        condition: 'Partly cloudy',
+        humidity: 65,
+        windSpeed: 10,
+      };
+    },
+  },
+
+  // Get Stock Info (stub)
+  get_stock: {
+    name: 'get_stock',
+    description: 'Get stock price and information',
+    parameters: {
+      ticker: { type: 'string', description: 'Stock ticker symbol (e.g., AAPL)' },
+    },
+    execute: async (args) => {
+      const { ticker = '' } = args as { ticker: string };
+      // Implémentation stub - en production, appeler un service de données financières
+      console.log('[ToolCaller] get_stock:', { ticker });
+      return {
+        ticker,
+        price: 150.25,
+        change: 2.5,
+        changePercent: 1.7,
+        high: 152.0,
+        low: 149.5,
+      };
+    },
+  },
+};
+
+// ═══════════════════════════════════════════════════════════════════
+// TOOL CALLER SERVICE
+// ═══════════════════════════════════════════════════════════════════
+
+export class ToolCallerService {
+  private tools: Map<string, ToolDefinition>;
+  private callHistory: ToolCall[] = [];
+
+  constructor(customTools: Record<string, ToolDefinition> = {}) {
+    this.tools = new Map(Object.entries({ ...DEFAULT_TOOLS, ...customTools }));
+  }
+
+  /**
+   * Ajoute un outil personnalisé
+   */
+  registerTool(tool: ToolDefinition): void {
+    this.tools.set(tool.name, tool);
+  }
+
+  /**
+   * Obtient la liste des outils disponibles (pour le système prompt)
+   */
+  getToolDescriptions(): string {
+    const tools = Array.from(this.tools.values());
+    return tools
+      .map(
+        (tool) => `
+- **${tool.name}**: ${tool.description}
+  Parameters: ${JSON.stringify(tool.parameters || {})}
+`
+      )
+      .join('\n');
+  }
+
+  /**
+   * Parse les appels d'outils depuis le texte du modèle
+   * Format attendu: <tool name="tool_name" arg1="value1" arg2="value2" />
+   * ou: <tool>{"name":"tool_name","arguments":{"arg1":"value1"}}</tool>
+   */
+  parseToolCalls(text: string): Array<{ name: string; arguments: Record<string, unknown> }> {
+    const calls: Array<{ name: string; arguments: Record<string, unknown> }> = [];
+
+    // Format 1: XML-like <tool name="..." args />
+    const xmlRegex = /<tool\s+name="([^"]+)"([^>]*)\/>/g;
+    let match: RegExpExecArray | null;
+    while ((match = xmlRegex.exec(text)) !== null) {
+      const name = match[1] ?? '';
+      const argsStr = match[2] ?? '';
+      const args: Record<string, unknown> = {};
+
+      // Parse attributes: key="value" key2="value2"
+      if (argsStr) {
+        const attrRegex = /(\w+)="([^"]*)"/g;
+        let attrMatch: RegExpExecArray | null;
+        while ((attrMatch = attrRegex.exec(argsStr)) !== null) {
+          const key = attrMatch[1] ?? '';
+          const value = attrMatch[2] ?? '';
+          if (key) args[key] = value;
+        }
+      }
+
+      if (name) calls.push({ name, arguments: args });
+    }
+
+    // Format 2: JSON <tool>{"name":"...","arguments":{...}}</tool>
+    const jsonRegex = /<tool>([\s\S]*?)<\/tool>/g;
+    while ((match = jsonRegex.exec(text)) !== null) {
+      const jsonStr = match[1] ?? '';
+      try {
+        const parsed = JSON.parse(jsonStr) as { name: string; arguments: Record<string, unknown> };
+        calls.push(parsed);
+      } catch (e) {
+        console.warn('[ToolCaller] Failed to parse JSON tool call:', jsonStr);
+      }
+    }
+
+    return calls;
+  }
+
+  /**
+   * Exécute un appel d'outil
+   */
+  async executeToolCall(
+    toolName: string,
+    arguments_: Record<string, unknown>
+  ): Promise<{ result: unknown; error?: string }> {
+    const tool = this.tools.get(toolName);
+
+    if (!tool) {
+      const error = `Tool "${toolName}" not found. Available tools: ${Array.from(this.tools.keys()).join(', ')}`;
+      console.error('[ToolCaller]', error);
+      return { result: null, error };
+    }
+
+    try {
+      console.log(`[ToolCaller] Executing ${toolName}:`, arguments_);
+      const result = await tool.execute(arguments_);
+
+      // Store in history
+      this.callHistory.push({
+        id: `tool_${Date.now()}_${Math.random()}`,
+        toolName,
+        arguments: arguments_,
+        result,
+        timestamp: Date.now(),
+      });
+
+      return { result };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error(`[ToolCaller] Error executing ${toolName}:`, errorMessage);
+
+      // Store error in history
+      this.callHistory.push({
+        id: `tool_${Date.now()}_${Math.random()}`,
+        toolName,
+        arguments: arguments_,
+        error: errorMessage,
+        timestamp: Date.now(),
+      });
+
+      return { result: null, error: errorMessage };
+    }
+  }
+
+  /**
+   * Exécute plusieurs appels d'outils en parallèle
+   */
+  async executeToolCalls(
+    calls: Array<{ name: string; arguments: Record<string, unknown> }>
+  ): Promise<Array<{ toolName: string; result: unknown; error?: string }>> {
+    const results = await Promise.all(
+      calls.map((call) => this.executeToolCall(call.name, call.arguments))
+    );
+    return results.map((result, idx) => {
+      const call = calls[idx];
+      if (!call) return { toolName: 'unknown', result: null };
+      return {
+        toolName: call.name,
+        ...result,
+      };
+    });
+  }
+
+  /**
+   * Obtient l'historique des appels d'outils
+   */
+  getCallHistory(): ToolCall[] {
+    return this.callHistory;
+  }
+
+  /**
+   * Formate un appel d'outil pour inclusion dans la réponse
+   */
+  formatToolResult(toolName: string, result: unknown, error?: string): string {
+    if (error) {
+      return `\n\n**Tool Error (${toolName}):** ${error}`;
+    }
+
+    return `\n\n**Tool Result (${toolName}):**\n\`\`\`json\n${JSON.stringify(result, null, 2)}\n\`\`\``;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// SINGLETON INSTANCE
+// ═══════════════════════════════════════════════════════════════════
+
+let toolCallerInstance: ToolCallerService | null = null;
+
+export function getToolCaller(customTools?: Record<string, ToolDefinition>): ToolCallerService {
+  if (!toolCallerInstance) {
+    toolCallerInstance = new ToolCallerService(customTools);
+  }
+  return toolCallerInstance;
+}
+
+export default ToolCallerService;

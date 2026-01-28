@@ -69,10 +69,7 @@ class ConversationExporter {
         messageCount: messages.length,
         ...(options.includeMetadata && { duration }),
       },
-      messages: options.includeMetadata ? messages : messages.map(msg => ({
-        ...msg,
-        ...(options.includeTimestamps ? { timestamp: msg.timestamp } : { timestamp: undefined }),
-      })),
+      messages: messages,
     };
 
     return JSON.stringify(data, null, 2);
@@ -161,15 +158,14 @@ class ConversationExporter {
     let match;
     while ((match = messagePattern.exec(text)) !== null) {
       const role = match[1] === 'Vous' ? 'user' : 'assistant';
-      const content = match[2].trim();
+      const content = (match[2] || '').trim();
 
       if (content) {
         messages.push({
-          id: `import_${Date.now()}_${Math.random()}`,
           role,
           content,
           timestamp: Date.now(),
-        });
+        } as AIMessage);
       }
     }
 
