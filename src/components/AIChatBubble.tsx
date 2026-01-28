@@ -56,6 +56,13 @@ const styles = {
     justifyContent: 'center',
     border: '2px solid rgba(196, 196, 196, 0.3)',
     transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
+    outline: 'none', // Supprime outline par défaut
+  },
+  bubbleFocus: {
+    // WCAG 2.1 AA: Focus indicator visible (3:1 contrast)
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 3px rgba(255, 255, 255, 0.2), 0 0 0 3px rgba(196, 196, 196, 0.6)',
+    outline: '2px solid #C4C4C4',
+    outlineOffset: '2px',
   },
   bubbleHover: {
     transform: 'scale(1.1)',
@@ -116,7 +123,14 @@ const styles = {
     justifyContent: 'center',
     color: '#C4C4C4',
     fontSize: '14px',
-    transition: 'background 0.2s ease-in-out',
+    transition: 'background 0.2s ease-in-out, outline 0.2s ease-in-out',
+    outline: 'none', // Supprime outline par défaut
+  },
+  iconButtonFocus: {
+    // WCAG 2.1 AA: Focus indicator visible
+    outline: '2px solid #C4C4C4',
+    outlineOffset: '2px',
+    background: 'rgba(114, 123, 129, 0.25)',
   },
   messagesContainer: {
     flex: 1,
@@ -140,8 +154,13 @@ const styles = {
     color: '#C4C4C4',
     fontSize: '13px',
     outline: 'none',
-    transition: 'border-color 0.2s ease-in-out',
+    transition: 'border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
     resize: 'none' as const,
+  },
+  inputFocus: {
+    // WCAG 2.1 AA: Focus indicator visible
+    borderColor: '#C4C4C4',
+    boxShadow: '0 0 0 2px rgba(196, 196, 196, 0.3)',
   },
   sendButton: {
     marginTop: '8px',
@@ -154,7 +173,13 @@ const styles = {
     fontSize: '13px',
     fontWeight: '600',
     cursor: 'pointer',
-    transition: 'opacity 0.2s ease-in-out',
+    transition: 'opacity 0.2s ease-in-out, outline 0.2s ease-in-out',
+    outline: 'none',
+  },
+  sendButtonFocus: {
+    // WCAG 2.1 AA: Focus indicator visible
+    outline: '2px solid #C4C4C4',
+    outlineOffset: '2px',
   },
   statusBar: {
     padding: '8px 16px',
@@ -206,6 +231,9 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
 
   const [input, setInput] = useState('');
   const [isHovering, setIsHovering] = useState(false);
+  const [isBubbleFocused, setIsBubbleFocused] = useState(false);
+  const [isInputFocused, setIsInputFocused] = useState(false);
+  const [isSendButtonFocused, setIsSendButtonFocused] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   /**
@@ -388,10 +416,13 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
           style={{
             ...styles.bubble,
             ...(isHovering ? styles.bubbleHover : {}),
+            ...(isBubbleFocused ? styles.bubbleFocus : {}),
           }}
           onClick={handleBubbleClick}
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
+          onFocus={() => setIsBubbleFocused(true)}
+          onBlur={() => setIsBubbleFocused(false)}
           title="TITANE∞ AI Companion"
           role="button"
           aria-label="Ouvrir TITANE∞ AI Companion"
@@ -517,10 +548,15 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
         {/* Input */}
         <div style={styles.inputContainer} role="form" aria-label="Formulaire de message">
           <textarea
-            style={styles.input}
+            style={{
+              ...styles.input,
+              ...(isInputFocused ? styles.inputFocus : {}),
+            }}
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
+            onFocus={() => setIsInputFocused(true)}
+            onBlur={() => setIsInputFocused(false)}
             placeholder="Message TITANE∞..."
             rows={2}
             disabled={isLoading}
@@ -532,10 +568,13 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
           <button
             style={{
               ...styles.sendButton,
+              ...(isSendButtonFocused ? styles.sendButtonFocus : {}),
               opacity: !input.trim() || isLoading ? 0.5 : 1,
               cursor: !input.trim() || isLoading ? 'not-allowed' : 'pointer',
             }}
             onClick={handleSend}
+            onFocus={() => setIsSendButtonFocused(true)}
+            onBlur={() => setIsSendButtonFocused(false)}
             disabled={!input.trim() || isLoading}
             aria-label={isLoading ? 'Envoi en cours...' : 'Envoyer le message'}
             aria-disabled={!input.trim() || isLoading}
