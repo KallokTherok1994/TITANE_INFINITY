@@ -1,5 +1,7 @@
 # TITANE∞ — Cognitive Operating System
 
+![CI/CD Status](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/ci.yml/badge.svg?branch=MAIN)
+
 **Version:** v26.4.0  
 **Status:** Production Ready ✅  
 **License:** Proprietary — © 2025-2026 Humain Total / Kevin Thibault
