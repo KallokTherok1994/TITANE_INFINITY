@@ -20,6 +20,7 @@ import { MessageBubble } from './chat/MessageBubble';
 import { ChatErrorBoundary } from './ChatErrorBoundary';
 import { ConversationControls } from './chat/ConversationControls'; // Sprint 6: Export/Import
 import { ModelSelector } from './chat/ModelSelector'; // Sprint 6: Model selection
+import { ContextUsage } from './chat/ContextUsage'; // Sprint 6 Phase 3: Token counter
 import type { Message as _Message } from '../core/ARCHITECTURE_TYPES_v∞';
 import type { AIMessage } from '../services/ai/types';
 import { chatMetrics } from '../services/monitoring/chatMetrics';
@@ -613,7 +614,7 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
           </div>
         </div>
 
-        {/* Sprint 6: Controls Section (ModelSelector + ConversationControls) */}
+        {/* Sprint 6: Controls Section (ModelSelector + ContextUsage + ConversationControls) */}
         <div style={{ 
           padding: '12px 16px',
           borderBottom: '1px solid rgba(114, 123, 129, 0.2)',
@@ -625,6 +626,12 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
             selectedModel={selectedModel}
             onModelChange={handleModelChange}
             showAdvanced={false}
+          />
+          {/* Sprint 6 Phase 3: Token counter (compact) */}
+          <ContextUsage 
+            messages={validMessages}
+            currentModel={selectedModel}
+            compact={true}
           />
           <ConversationControls 
             messages={messages}
