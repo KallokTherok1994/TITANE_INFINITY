@@ -18,6 +18,8 @@ import { List, ListImperativeAPI } from 'react-window'; // Sprint 5: Virtualisat
 import { useGlobalAIChat } from '../hooks/useGlobalAIChat';
 import { MessageBubble } from './chat/MessageBubble';
 import { ChatErrorBoundary } from './ChatErrorBoundary';
+import { ConversationControls } from './chat/ConversationControls'; // Sprint 6: Export/Import
+import { ModelSelector } from './chat/ModelSelector'; // Sprint 6: Model selection
 import type { Message as _Message } from '../core/ARCHITECTURE_TYPES_v∞';
 import type { AIMessage } from '../services/ai/types';
 import { chatMetrics } from '../services/monitoring/chatMetrics';
@@ -239,6 +241,7 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
   const [isBubbleFocused, setIsBubbleFocused] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [isSendButtonFocused, setIsSendButtonFocused] = useState(false);
+  const [selectedModel, setSelectedModel] = useState(currentModel || 'gpt-4-turbo'); // Sprint 6: Model selection
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Sprint 5: Virtualisation refs
@@ -503,6 +506,20 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
     }
   }, [clear]);
 
+  // Sprint 6: Handler pour changement de modèle
+  const handleModelChange = useCallback((modelId: string) => {
+    setSelectedModel(modelId);
+    setModel(modelId);
+  }, [setModel]);
+
+  // Sprint 6: Handler pour import de conversation
+  const handleImportConversation = useCallback((importedMessages: AIMessage[]) => {
+    // Importer les messages dans la conversation (implémentation simple)
+    // Note: Ceci serait intégré avec useConversationEngine pour une vraie implémentation
+    console.log('[AIChatBubble] 📥 Imported messages:', importedMessages.length);
+    // TODO: Appeler une action pour charger les messages importés
+  }, []);
+
   // ═══ RENDER BUBBLE (Minimized) ═══
   if (!isOpen || isMinimized) {
     return (
@@ -594,6 +611,25 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
               ✕
             </button>
           </div>
+        </div>
+
+        {/* Sprint 6: Controls Section (ModelSelector + ConversationControls) */}
+        <div style={{ 
+          padding: '12px 16px',
+          borderBottom: '1px solid rgba(114, 123, 129, 0.2)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px',
+        }}>
+          <ModelSelector 
+            selectedModel={selectedModel}
+            onModelChange={handleModelChange}
+            showAdvanced={false}
+          />
+          <ConversationControls 
+            messages={messages}
+            onImport={handleImportConversation}
+          />
         </div>
 
         {/* Messages */}
