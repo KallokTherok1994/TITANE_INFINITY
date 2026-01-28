@@ -393,8 +393,18 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
           title="TITANE∞ AI Companion"
+          role="button"
+          aria-label="Ouvrir TITANE∞ AI Companion"
+          aria-expanded={isOpen && !isMinimized}
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              handleBubbleClick();
+            }
+          }}
         >
-          <span style={styles.bubbleIcon}>🧠</span>
+          <span style={styles.bubbleIcon} role="img" aria-label="Icône cerveau intelligence artificielle">🧠</span>
         </motion.div>
       </ChatErrorBoundary>
     );
@@ -410,30 +420,61 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
         exit={{ scale: 0.9, opacity: 0, y: 20 }}
         transition={{ duration: 0.3, ease: 'easeInOut' }}
         style={styles.panel}
+        role="dialog"
+        aria-label="TITANE∞ AI Companion Chat Panel"
+        aria-modal="false"
+        onKeyDown={(e) => {
+          if (e.key === 'Escape') {
+            e.preventDefault();
+            handleClose();
+          }
+        }}
       >
         {/* Header */}
-        <div style={styles.header}>
+        <div style={styles.header} role="banner">
           <div>
-            <h3 style={styles.title}>TITANE∞ AI COMPANION</h3>
-            <div style={styles.subtitle}>
+            <h3 style={styles.title} id="chat-title">TITANE∞ AI COMPANION</h3>
+            <div style={styles.subtitle} role="status" aria-live="polite">
               {currentModel} • {messages.length} messages
             </div>
           </div>
-          <div style={styles.headerActions}>
-            <button style={styles.iconButton} onClick={handleClear} title="Effacer">
-              🗑️
+          <div style={styles.headerActions} role="toolbar" aria-label="Actions du chat">
+            <button 
+              style={styles.iconButton} 
+              onClick={handleClear} 
+              title="Effacer la conversation"
+              aria-label="Effacer la conversation"
+            >
+              <span role="img" aria-label="Icône corbeille">🗑️</span>
             </button>
-            <button style={styles.iconButton} onClick={handleMinimize} title="Minimiser">
+            <button 
+              style={styles.iconButton} 
+              onClick={handleMinimize} 
+              title="Minimiser"
+              aria-label="Minimiser le chat"
+            >
               —
             </button>
-            <button style={styles.iconButton} onClick={handleClose} title="Fermer">
+            <button 
+              style={styles.iconButton} 
+              onClick={handleClose} 
+              title="Fermer"
+              aria-label="Fermer le chat"
+            >
               ✕
             </button>
           </div>
         </div>
 
         {/* Messages */}
-        <div style={styles.messagesContainer}>
+        <div 
+          style={styles.messagesContainer}
+          role="log"
+          aria-label="Historique de conversation"
+          aria-live="polite"
+          aria-atomic="false"
+          aria-relevant="additions"
+        >
           {messages.length === 0 && (
             <div style={{ textAlign: 'center', color: '#727B81', padding: '40px 20px' }}>
               <div style={{ fontSize: '32px', marginBottom: '12px' }}>🧠⚡∞</div>
@@ -474,7 +515,7 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
         </div>
 
         {/* Input */}
-        <div style={styles.inputContainer}>
+        <div style={styles.inputContainer} role="form" aria-label="Formulaire de message">
           <textarea
             style={styles.input}
             value={input}
@@ -483,6 +524,10 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
             placeholder="Message TITANE∞..."
             rows={2}
             disabled={isLoading}
+            aria-label="Saisir votre message"
+            aria-multiline="true"
+            aria-required="false"
+            aria-disabled={isLoading}
           />
           <button
             style={{
@@ -492,6 +537,8 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
             }}
             onClick={handleSend}
             disabled={!input.trim() || isLoading}
+            aria-label={isLoading ? 'Envoi en cours...' : 'Envoyer le message'}
+            aria-disabled={!input.trim() || isLoading}
           >
             {isLoading ? 'Envoi...' : 'Envoyer'}
           </button>
