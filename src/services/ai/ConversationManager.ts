@@ -31,7 +31,7 @@ import type {
 import type { UnifiedMemoryQuery } from '@/services/unified/UnifiedMemory';
 import { createUnifiedMemory } from '@/services/unified';
 import { MemoryTier } from '@/services/mcp/mcp.types';
-import { toolCaller, type ToolCall, type ToolResult } from '@/services/chat/toolCaller'; // Sprint 6 Phase 3
+import { getToolCaller } from '@/services/chat/toolCaller'; // Sprint 6 Phase 3
 
 // Singleton UnifiedMemory instance
 let _unifiedMemoryInstance: Awaited<ReturnType<typeof createUnifiedMemory>> | null = null;
@@ -113,32 +113,37 @@ export class ConversationManager {
     // ═══════════════════════════════════════════════════════════════════
     // 4.5. Check if assistant response contains tool calls
     const contentString = typeof response.content === 'string' ? response.content : '';
-    const toolCalls = toolCaller.parseToolCalls(contentString);
+    const toolCallerService = getToolCaller();
+    const toolCalls = toolCallerService.parseToolCalls(contentString);
     
     if (toolCalls.length > 0) {
       logger.info(`Found ${toolCalls.length} tool calls in response`, {
         component: 'ConversationManager',
         conversationId,
-        toolNames: toolCalls.map(tc => tc.toolName),
+        toolNames: toolCalls.map(tc => tc.name),
       });
 
       // Execute all tool calls in sequence
-      const toolResults: ToolResult[] = [];
+      const toolResults: Array<{ toolName: string; result: unknown; error?: string }> = [];
       for (const toolCall of toolCalls) {
         try {
-          const result = await toolCaller.executeTool(toolCall);
-          toolResults.push(result);
+          const result = await toolCallerService.executeToolCall(toolCall.name, toolCall.arguments);
+          toolResults.push({
+            toolName: toolCall.name,
+            result: result.result,
+            error: result.error,
+          });
         } catch (error) {
           logger.error(
-            `Tool execution failed: ${toolCall.toolName}`,
+            `Tool execution failed: ${toolCall.name}`,
             { component: 'ConversationManager', toolCall },
             error as Error
           );
           // Add error result
           toolResults.push({
-            toolName: toolCall.toolName,
-            success: false,
-            output: `Error executing tool: ${error instanceof Error ? error.message : String(error)}`,
+            toolName: toolCall.name,
+            result: null,
+            error: `Error executing tool: ${error instanceof Error ? error.message : String(error)}`,
           });
         }
       }
@@ -155,7 +160,7 @@ export class ConversationManager {
       const resultsFormatted = toolResults
         .map(
           (r) =>
-            `\n\n🔧 **Tool: ${r.toolName}**\n${r.success ? '✅ Success' : '❌ Error'}\n${r.output}`
+            `\n\n🔧 **Tool: ${r.toolName}**\n${r.error ? '❌ Error: ' + r.error : '✅ Success'}\n\`\`\`json\n${JSON.stringify(r.result, null, 2)}\n\`\`\``
         )
         .join('');
 
