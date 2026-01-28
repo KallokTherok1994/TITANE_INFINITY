@@ -176,19 +176,63 @@ export class ToolCallerService {
 
   /**
    * Parse les appels d'outils depuis le texte du modèle
-   * Format attendu: <tool name="tool_name" arg1="value1" arg2="value2" />
-   * ou: <tool>{"name":"tool_name","arguments":{"arg1":"value1"}}</tool>
+   * Format principal (recommandé): JSON objets
+   * {"tool_name": "get_time"}
+   * {"tool_name": "calculate", "expression": "123*456"}
    */
   parseToolCalls(text: string): Array<{ name: string; arguments: Record<string, unknown> }> {
     const calls: Array<{ name: string; arguments: Record<string, unknown> }> = [];
+    console.log('[ToolCaller] 🔍 PARSING TEXT:', text.substring(0, 200)); // DEBUG: afficher début du texte
 
-    // Format 1: XML-like <tool name="..." args />
-    const xmlRegex = /<tool\s+name="([^"]+)"([^>]*)\/>/g;
+    // Format 1 (PRIMARY): JSON objects - {"tool_name": "...", "arg": "value"}
+    const jsonObjRegex = /\{\s*"tool_name"\s*:\s*"([^"]+)"([^}]*)\}/g;
     let match: RegExpExecArray | null;
+    let jsonFound = 0;
+    
+    while ((match = jsonObjRegex.exec(text)) !== null) {
+      jsonFound++;
+      const toolName = match[1] ?? '';
+      const argsStr = match[2] ?? '';
+      const args: Record<string, unknown> = {};
+      
+      console.log(`[ToolCaller] ✅ JSON MATCH #${jsonFound}: tool_name=${toolName}, argsStr=${argsStr}`); // DEBUG
+      
+      // Parse JSON properties: "key": "value"
+      if (argsStr) {
+        const propRegex = /"([^"]+)"\s*:\s*(?:"([^"]*)"|([^,}]+))/g;
+        let propMatch: RegExpExecArray | null;
+        while ((propMatch = propRegex.exec(argsStr)) !== null) {
+          const key = propMatch[1] ?? '';
+          const strValue = propMatch[2] ?? '';
+          const numValue = propMatch[3] ?? '';
+          if (key && key !== 'tool_name') {
+            const value = numValue && !isNaN(Number(numValue)) ? Number(numValue) : strValue;
+            args[key] = value;
+            console.log(`[ToolCaller]   → arg: ${key}=${value}`); // DEBUG: afficher chaque arg
+          }
+        }
+      }
+      
+      if (toolName) {
+        calls.push({ name: toolName, arguments: args });
+        console.log('[ToolCaller] ✨ TOOL CALL PARSED:', { toolName, arguments: args });
+      }
+    }
+
+    if (jsonFound === 0) {
+      console.log('[ToolCaller] ⚠️  NO JSON MATCHES FOUND'); // DEBUG: aucun JSON trouvé
+    }
+
+    // Format 2 (LEGACY XML): <tool name="..." args /> - backward compatibility
+    const xmlRegex = /<tool\s+name="([^"]+)"([^>]*)\/>/g;
+    let xmlFound = 0;
     while ((match = xmlRegex.exec(text)) !== null) {
+      xmlFound++;
       const name = match[1] ?? '';
       const argsStr = match[2] ?? '';
       const args: Record<string, unknown> = {};
+
+      console.log(`[ToolCaller] 📦 XML LEGACY MATCH #${xmlFound}: name=${name}`); // DEBUG
 
       // Parse attributes: key="value" key2="value2"
       if (argsStr) {
@@ -201,21 +245,17 @@ export class ToolCallerService {
         }
       }
 
-      if (name) calls.push({ name, arguments: args });
-    }
-
-    // Format 2: JSON <tool>{"name":"...","arguments":{...}}</tool>
-    const jsonRegex = /<tool>([\s\S]*?)<\/tool>/g;
-    while ((match = jsonRegex.exec(text)) !== null) {
-      const jsonStr = match[1] ?? '';
-      try {
-        const parsed = JSON.parse(jsonStr) as { name: string; arguments: Record<string, unknown> };
-        calls.push(parsed);
-      } catch (e) {
-        console.warn('[ToolCaller] Failed to parse JSON tool call:', jsonStr);
+      if (name) {
+        calls.push({ name, arguments: args });
+        console.log('[ToolCaller] 📦 LEGACY XML TOOL PARSED:', { name, arguments: args });
       }
     }
 
+    if (xmlFound === 0 && jsonFound === 0) {
+      console.log('[ToolCaller] 🚨 ZERO TOOLS PARSED - model did not generate tool calls'); // DEBUG
+    }
+
+    console.log(`[ToolCaller] 📋 FINAL RESULT: ${calls.length} tools parsed (${jsonFound} JSON + ${xmlFound} XML)`);
     return calls;
   }
 
