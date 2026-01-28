@@ -323,6 +323,15 @@ export const ollamaProvider: AIProvider = {
       ...(config as Partial<AIConfig> | undefined),
     };
 
+    // 🚨 DEBUG CRITICAL: Log appel Ollama provider
+    console.log('[ollamaProvider] 🟢 generate() APPELÉ', {
+      message: message.substring(0, 100),
+      historyLength: history.length,
+      model: OLLAMA_MODEL,
+      url: OLLAMA_API_URL,
+      timestamp: new Date().toISOString()
+    });
+
     // OMEGA: Pre-check endpoint health
     const isHealthy = await this.isAvailable();
     if (!isHealthy) {
@@ -330,6 +339,8 @@ export const ollamaProvider: AIProvider = {
       handleOllamaError(error, 'pre_check', { url: OLLAMA_API_URL });
       throw error;
     }
+
+    console.log('[ollamaProvider] ✅ Health check passed, proceeding...');
 
     // ============================================================
     // SECURE AI REQUEST (OMEGA Enhanced)
@@ -407,6 +418,13 @@ export const ollamaProvider: AIProvider = {
           } catch (error) {
             clearTimeout(timeout);
 
+            // 🚨 DEBUG CRITICAL: Log erreur fetch Ollama
+            console.error('[ollamaProvider] ❌ Fetch error', {
+              error: error instanceof Error ? error.message : String(error),
+              url: OLLAMA_API_URL,
+              timestamp: new Date().toISOString()
+            });
+
             if (error instanceof Error) {
               if (error.name === 'AbortError') {
                 throw new Error('Ollama: Request timeout (30s)');
@@ -457,6 +475,14 @@ export const ollamaProvider: AIProvider = {
         timestamp: Date.now(),
         model: OLLAMA_MODEL,
       };
+
+      // 🚨 DEBUG CRITICAL: Log succès Ollama
+      console.log('[ollamaProvider] ✅ Réponse Ollama générée avec succès', {
+        contentLength: aiResponse.content.length,
+        provider: aiResponse.provider,
+        model: aiResponse.model,
+        timestamp: new Date().toISOString()
+      });
 
       // ✨ v21 - Save interaction to memory (async, non-blocking)
       memoryIntegration

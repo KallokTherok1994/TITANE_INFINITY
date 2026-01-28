@@ -227,6 +227,13 @@ class ChatEngineOmega {
     let autoHealed = false;
     const failureHandled = false;
 
+    // 🚨 DEBUG CRITICAL: Log direct console pour tracer le flux
+    console.log('[chatEngine] 📤 generate() APPELÉ', {
+      message: message.substring(0, 100),
+      historyLength: history.length,
+      timestamp: new Date().toISOString()
+    });
+
     try {
       const finalConfig = { ...this.config, ...config };
 
@@ -513,6 +520,14 @@ Format: [Audit complet] + [Réponse utilisateur]
       pipelineSteps.push('orchestrator-call');
       logger.debug('Step 1.4: Calling orchestrator...');
 
+      // 🚨 DEBUG CRITICAL: Log avant appel orchestrator
+      console.log('[chatEngine] → Appel aiOrchestrator.generate()', {
+        message: validatedMessage.substring(0, 100),
+        historyLength: enrichedHistory.length,
+        mode: finalConfig.mode,
+        aiConfig: finalConfig.aiConfig
+      });
+
       // Timeout adaptatif selon le mode (plus long pour modes complexes)
       const baseTimeout = finalConfig.omegaConfig?.timeoutMs || 30000;
       const timeoutMs =
@@ -530,6 +545,13 @@ Format: [Audit complet] + [Réponse utilisateur]
         timeoutMs,
         `Orchestrator timeout (${timeoutMs}ms)`
       );
+
+      // 🚨 DEBUG CRITICAL: Log après réception réponse
+      console.log('[chatEngine] ← Réponse orchestrator reçue', {
+        provider: response?.provider,
+        contentLength: response?.content?.length,
+        timestamp: new Date().toISOString()
+      });
 
       if (!response || !response.content) {
         throw new Error('Orchestrator returned empty response');
