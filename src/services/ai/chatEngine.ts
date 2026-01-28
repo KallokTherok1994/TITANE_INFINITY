@@ -248,6 +248,14 @@ class ChatEngineOmega {
         });
 
         if (cached) {
+          // 🚨 DEBUG: Log cache hit avec contenu
+          console.log('[chatEngine] ⚡ CACHE HIT', {
+            provider: cached.provider,
+            contentLength: cached.content?.length,
+            hasContent: !!cached.content && cached.content.trim().length > 0,
+            timestamp: cached.timestamp
+          });
+          
           logger.info('⚡ CACHE HIT - Instant response', {
             provider: cached.provider,
             age: Date.now() - cached.timestamp,
