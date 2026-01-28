@@ -23,6 +23,10 @@
     "deny": []
   },
   "remote": {
-    "urls": ["https://generativelanguage.googleapis.com/**", "http://localhost:11434/**"]
+    "urls": [
+      "https://generativelanguage.googleapis.com/**",
+      "http://localhost:11434/**",
+      "http://127.0.0.1:11434/**"
+    ]
   }
 }
