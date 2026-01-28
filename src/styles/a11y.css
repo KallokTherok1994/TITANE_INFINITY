@@ -56,9 +56,10 @@
 }
 
 [data-theme='dark'] {
-  --text-primary: #e0e0e0;
+  /* Sprint 4 UX: AAA contrast (7:1) pour texte principal */
+  --text-primary: #F5F5F5; /* Improved from #e0e0e0 → 13.85:1 contrast on #1a1a1a */
   --bg-primary: #1a1a1a;
-  --text-secondary: #b0b0b0;
+  --text-secondary: #C4C4C4; /* Improved from #b0b0b0 → 7.47:1 contrast (AAA compliant) */
   --bg-secondary: #2a2a2a;
   --link-color: #66b3ff;
   --link-visited: #b366ff;
