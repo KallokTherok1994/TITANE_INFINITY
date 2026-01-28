@@ -2,6 +2,34 @@
   "snapshots": [],
   "logs": [
     {
+      "id": "ui-1769643992649-nicsqjbi",
+      "timestamp": 1769643992649,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (Promise non gérée): Command start_recording not found"
+    },
+    {
+      "id": "ui-1769642373118-xn1cay7j",
+      "timestamp": 1769642373118,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1769642372990-o99md5w5",
+      "timestamp": 1769642372990,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1769640716640-ewoac7q5",
+      "timestamp": 1769640716640,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
       "id": "ui-1769616203985-mffwft0v",
       "timestamp": 1769616203985,
       "level": "Info",
@@ -2712,7 +2740,7 @@
   "knowledge": [],
   "rituals": [],
   "metadata": {
-    "last_validation_ts": 1769616204159,
+    "last_validation_ts": 1769643992652,
     "last_compaction_ts": null
   }
 }
