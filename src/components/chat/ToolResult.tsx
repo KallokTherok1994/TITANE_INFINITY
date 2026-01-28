@@ -59,7 +59,7 @@ export const ToolResult = memo(function ToolResult({
           {isError ? '❌' : '✅'}
         </span>
         <span style={{ color: '#C4C4C4' }}>
-          {toolCall.toolName}
+          {toolCall.name}
         </span>
         <span style={{ color: '#727B81', fontSize: '11px', marginLeft: 'auto' }}>
           {timestamp}

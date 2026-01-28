@@ -16,9 +16,14 @@ export interface ToolDefinition {
   execute: (args: Record<string, unknown>) => Promise<unknown>;
 }
 
+/**
+ * ToolCall result with execution details
+ * Note: parseToolCalls() returns { name, arguments } only
+ * Full ToolCall created during executeToolCall()
+ */
 export interface ToolCall {
   id: string;
-  toolName: string;
+  name: string;  // ✅ Aligned with types/conversation.ts
   arguments: Record<string, unknown>;
   result?: unknown;
   error?: string;
@@ -305,7 +310,7 @@ export class ToolCallerService {
       // Store in history with memory limit
       this.callHistory.push({
         id: `tool_${Date.now()}_${Math.random()}`,
-        toolName,
+        name: toolName,
         arguments: arguments_,
         result,
         timestamp: Date.now(),
@@ -313,7 +318,7 @@ export class ToolCallerService {
       
       // ✅ #1: Enforce MAX_HISTORY limit - remove oldest if needed
       if (this.callHistory.length > this.MAX_HISTORY) {
-        const removed = this.callHistory.shift();
+        this.callHistory.shift();
         console.log(`[ToolCaller] ⚠️ History limit reached (${this.MAX_HISTORY}), removed oldest entry`);
       }
 
@@ -325,7 +330,7 @@ export class ToolCallerService {
       // Store error in history
       this.callHistory.push({
         id: `tool_${Date.now()}_${Math.random()}`,
-        toolName,
+        name: toolName,
         arguments: arguments_,
         error: errorMessage,
         timestamp: Date.now(),
