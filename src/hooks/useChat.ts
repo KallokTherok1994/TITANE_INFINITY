@@ -787,6 +787,14 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       const normalized = normalizeMessages(nextMessages, getNextUiId);
       const hasMessages = normalized.length > 0;
 
+      // 🚨 DEBUG: Log avant harmonisation
+      console.log('[useChat] 🔄 applyMessagesSafely appelée', {
+        context,
+        messagesCount: normalized.length,
+        lastMessage: normalized[normalized.length - 1],
+        timestamp: new Date().toISOString()
+      });
+
       // 🧠 NOUVEAU v22Ω: Harmoniser les messages avec Cognitive Kernel
       const harmonizedNormalized = hasMessages
         ? (cognitiveKernelRef.current.harmonizeChatMessages(
@@ -820,6 +828,14 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
       const applied = hasMessages ? harmonizedNormalized : [];
       const emitted = applied.map(message => ({ ...message }));
+
+      // 🚨 DEBUG: Log avant setMessages
+      console.log('[useChat] ✅ setMessages() appelée', {
+        context,
+        messagesCount: emitted.length,
+        lastMessage: emitted[emitted.length - 1],
+        timestamp: new Date().toISOString()
+      });
 
       setMessages(emitted);
       messagesRef.current = emitted;
