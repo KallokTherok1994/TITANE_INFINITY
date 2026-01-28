@@ -72,6 +72,16 @@
   }
 }
 
+/* Sprint 4 UX: Skeleton loading shimmer animation */
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
 .pulse-slow {
   animation: pulse-slow 3s ease-in-out infinite;
 }

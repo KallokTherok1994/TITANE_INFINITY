@@ -58,8 +58,9 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     border: '2px solid rgba(196, 196, 196, 0.3)',
-    transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
+    transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1)', // Sprint 4: Smooth easing
     outline: 'none', // Supprime outline par défaut
+    willChange: 'transform', // Sprint 4: Optimize performance
   },
   bubbleFocus: {
     // WCAG 2.1 AA: Focus indicator visible (3:1 contrast)
@@ -126,7 +127,7 @@ const styles = {
     justifyContent: 'center',
     color: '#C4C4C4',
     fontSize: '14px',
-    transition: 'background 0.2s ease-in-out, outline 0.2s ease-in-out',
+    transition: 'background 0.25s cubic-bezier(0.4, 0, 0.2, 1), outline 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)', // Sprint 4: Smooth transitions
     outline: 'none', // Supprime outline par défaut
   },
   iconButtonFocus: {
@@ -157,7 +158,7 @@ const styles = {
     color: '#C4C4C4',
     fontSize: '13px',
     outline: 'none',
-    transition: 'border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
+    transition: 'border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1)', // Sprint 4: Smooth easing
     resize: 'none' as const,
   },
   inputFocus: {
@@ -176,7 +177,7 @@ const styles = {
     fontSize: '13px',
     fontWeight: '600',
     cursor: 'pointer',
-    transition: 'opacity 0.2s ease-in-out, outline 0.2s ease-in-out',
+    transition: 'opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), outline 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)', // Sprint 4: Smooth transitions
     outline: 'none',
   },
   sendButtonFocus: {
@@ -594,9 +595,59 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
                 color: '#727B81',
                 fontSize: '12px',
               }}
+              role="status"
+              aria-live="polite"
+              aria-label="TITANE∞ est en train de générer une réponse"
             >
-              <span>TITANE∞ réfléchit</span>
-              <span className="animate-pulse">...</span>
+              {/* Sprint 4 UX: Loading skeleton avec animation */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                <div
+                  style={{
+                    width: '24px',
+                    height: '24px',
+                    borderRadius: '50%',
+                    background: 'linear-gradient(90deg, rgba(114, 123, 129, 0.3) 0%, rgba(196, 196, 196, 0.3) 50%, rgba(114, 123, 129, 0.3) 100%)',
+                    backgroundSize: '200% 100%',
+                    animation: 'shimmer 2s infinite ease-in-out',
+                  }}
+                />
+                <span style={{ fontWeight: '600' }}>TITANE∞ réfléchit...</span>
+              </div>
+              {/* Skeleton lines */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <div
+                  style={{
+                    height: '12px',
+                    width: '90%',
+                    borderRadius: '4px',
+                    background: 'linear-gradient(90deg, rgba(114, 123, 129, 0.2) 0%, rgba(196, 196, 196, 0.2) 50%, rgba(114, 123, 129, 0.2) 100%)',
+                    backgroundSize: '200% 100%',
+                    animation: 'shimmer 2s infinite ease-in-out',
+                  }}
+                />
+                <div
+                  style={{
+                    height: '12px',
+                    width: '75%',
+                    borderRadius: '4px',
+                    background: 'linear-gradient(90deg, rgba(114, 123, 129, 0.2) 0%, rgba(196, 196, 196, 0.2) 50%, rgba(114, 123, 129, 0.2) 100%)',
+                    backgroundSize: '200% 100%',
+                    animation: 'shimmer 2s infinite ease-in-out',
+                    animationDelay: '0.1s',
+                  }}
+                />
+                <div
+                  style={{
+                    height: '12px',
+                    width: '60%',
+                    borderRadius: '4px',
+                    background: 'linear-gradient(90deg, rgba(114, 123, 129, 0.2) 0%, rgba(196, 196, 196, 0.2) 50%, rgba(114, 123, 129, 0.2) 100%)',
+                    backgroundSize: '200% 100%',
+                    animation: 'shimmer 2s infinite ease-in-out',
+                    animationDelay: '0.2s',
+                  }}
+                />
+              </div>
             </div>
           )}
 
