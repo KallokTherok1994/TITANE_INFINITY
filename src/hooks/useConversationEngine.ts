@@ -24,6 +24,9 @@ import {
   healthCheck,
   getMemoryStats as _getMemoryStats,
 } from '@/services/conversationEngine';
+import { useChatMemory } from './useChatMemory';
+import type { AIMessage } from '@/types';
+import { chatMemoryCompactor } from '@/services/chatMemoryCompactor';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
@@ -96,6 +99,39 @@ export function useConversationEngine(
   // Refs
   const isProcessingRef = useRef(false);
   const healthCheckIntervalRef = useRef<number | null>(null);
+
+  // ✅ IMPORT MEMORY SYSTEM
+  const { saveMessage } = useChatMemory({ mode: currentMode });
+
+  // ═══ LOAD MESSAGES FROM LOCALSTORAGE ON MOUNT ═══
+  useEffect(() => {
+    const loadStoredMessages = async () => {
+      try {
+        const stored = localStorage.getItem(`titane_chat_mode_${currentMode}`);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed.messages && Array.isArray(parsed.messages)) {
+            // Convert AIMessage[] to ConversationMessage[]
+            const conversationMessages: ConversationMessage[] = parsed.messages.map(
+              (msg: any, index: number) => ({
+                id: msg.id || `loaded-${index}-${Date.now()}`,
+                role: msg.role as 'user' | 'assistant',
+                content: msg.content,
+                timestamp: msg.timestamp || Date.now(),
+                metadata: msg.metadata,
+              })
+            );
+            setMessages(conversationMessages);
+            // Messages chargés depuis localStorage
+          }
+        }
+      } catch (err) {
+        console.warn('[useConversationEngine] ⚠️ Failed to load stored messages:', err);
+      }
+    };
+
+    loadStoredMessages();
+  }, [currentMode]);
 
   // ═══ HEALTH CHECK AUTOMATIQUE ═══
   useEffect(() => {
@@ -182,6 +218,19 @@ export function useConversationEngine(
         return updated.length > maxMessages ? updated.slice(-maxMessages) : updated;
       });
 
+      // ✅ PERSIST USER MESSAGE IMMEDIATELY
+      try {
+        const userAIMessage: AIMessage = {
+          role: 'user',
+          content: userMessage.content,
+          timestamp: userMessage.timestamp,
+          metadata: {},
+        };
+        await saveMessage(userAIMessage);
+      } catch (persistError) {
+        console.warn('[useConversationEngine] ⚠️ Failed to persist user message', persistError);
+      }
+
       try {
         // Traiter le message via Conversation Engine
         const response = await processMessage(content, {
@@ -208,22 +257,35 @@ export function useConversationEngine(
           },
         };
 
-        console.log('[useConversationEngine] 📝 Assistant message créé:', {
-          id: assistantMessage.id,
-          role: assistantMessage.role,
-          content_length: assistantMessage.content?.length || 0,
-          content_preview: assistantMessage.content?.substring(0, 100),
-        });
+        // Assistant message créé et prêt à être sauvegardé
 
         setMessages(prev => {
           const updated = [...prev, assistantMessage];
-          console.log('[useConversationEngine] 📊 Messages après ajout:', {
-            total: updated.length,
-            last_role: updated[updated.length - 1]?.role,
-            last_content_length: updated[updated.length - 1]?.content?.length || 0,
-          });
           return updated;
         });
+
+        // ✅ PERSIST MESSAGES TO LOCALSTORAGE
+        try {
+          const userAIMessage: AIMessage = {
+            role: 'user',
+            content: userMessage.content,
+            timestamp: userMessage.timestamp,
+            metadata: {},
+          };
+          const assistantAIMessage: AIMessage = {
+            role: 'assistant',
+            content: assistantMessage.content,
+            timestamp: assistantMessage.timestamp,
+            metadata: assistantMessage.metadata || {},
+          };
+          await saveMessage(userAIMessage);
+          await saveMessage(assistantAIMessage);
+          // Ensure flush to localStorage
+          chatMemoryCompactor.flushPendingSaves();
+        } catch (persistError) {
+          console.warn('[useConversationEngine] ⚠️ Failed to persist messages', persistError);
+        }
+
         setLastResponse(response);
 
         // Callback

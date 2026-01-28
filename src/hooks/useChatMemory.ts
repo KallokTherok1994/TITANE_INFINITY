@@ -103,6 +103,10 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
     (message: AIMessage) => {
       const updatedMessages = chatMemoryCompactor.addMessageToMode(options.mode, message);
 
+      // 🔒 v26.4.0: Force immediate flush to prevent loss on tab switch
+      console.log(`🔒 [useChatMemory] Forcing immediate flush after save (mode: ${options.mode})`);
+      chatMemoryCompactor.flushPendingSaves();
+
       // FIX v15.1: Ne plus faire setMessagesForMode ici!
       // Cela déclenchait un re-render de useChat qui écrasait l'UI
       // L'historique sera rechargé uniquement au changement de mode
