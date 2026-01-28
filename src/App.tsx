@@ -70,6 +70,7 @@ const AuraControlPanel = lazy(() =>
 );
 import { useAura } from './hooks/useAuraOrchestrator';
 import { useWindowControls } from './hooks/useWindowControls'; // ✨ v26.2.1 - Window zoom & fullscreen controls
+import { useZoomControl, loadSavedZoom } from './hooks/useZoomControl'; // ✨ Sprint 6 Phase 3 - Zoom control
 
 /**
  * 🔐 POLITIQUE DE SÉCURITÉ ENVIRONNEMENT - RESTRICTIONS DÉSACTIVÉES
@@ -258,6 +259,9 @@ const AppRouter: React.FC = () => {
   // ✨ v26.2.1 - Window zoom & fullscreen controls (CTRL+scroll, F11)
   useWindowControls({ enableZoom: true, enableFullscreen: true });
 
+  // ✨ Sprint 6 Phase 3 - Keyboard zoom controls (Ctrl+Plus/Minus/0)
+  useZoomControl();
+
   // ✨ v19.5.2 - User Onboarding State
   const [onboardingComplete, setOnboardingComplete] = useState<boolean>(true); // Assume complete until proven otherwise
   const [checkingOnboarding, setCheckingOnboarding] = useState<boolean>(true);
@@ -382,6 +386,9 @@ const AppRouter: React.FC = () => {
 
   // ✨ v26.2 - Enable local network security mode for private home network
   useEffect(() => {
+    // ✨ Sprint 6 Phase 3 - Load saved zoom level
+    loadSavedZoom();
+
     import('./lib/security')
       .then(({ enableLocalNetworkMode }) => {
         enableLocalNetworkMode();
