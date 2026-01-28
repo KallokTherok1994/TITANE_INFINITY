@@ -730,6 +730,14 @@ class AIOrchestrator {
     const requestId = `req_${Date.now()}_${Math.random().toString(36).substring(7)}`;
     const requestStartTime = Date.now();
 
+    // 🚨 DEBUG CRITICAL: Log entrée orchestrator
+    console.log('[aiOrchestrator] 📨 generate() APPELÉ', {
+      message: message.substring(0, 100),
+      historyLength: history.length,
+      preferredProvider: config?.preferredProvider,
+      timestamp: new Date().toISOString()
+    });
+
     // Ensure engines are loaded
     const { autoHeal, metrics: _metrics } = await ensureEngines();
 
@@ -924,6 +932,14 @@ class AIOrchestrator {
             `\n🔍 [${attempts}/${providersToTry.length}] Trying ${providerName}...`
           );
 
+          // 🚨 DEBUG CRITICAL: Log avant tentative provider
+          console.log(`[aiOrchestrator] 🎯 Tentative provider #${attempts}`, {
+            providerName,
+            totalProviders: providersToTry.length,
+            isAvailable: !!provider,
+            timestamp: new Date().toISOString()
+          });
+
           // ═══ ISOLATED EXECUTION WITH ADAPTIVE TIMEOUT (v22Ω Optimized) ═══
           // v22Ω: Using centralized timeout config
           const executionTimeout = getProviderTimeout(providerName);
@@ -941,6 +957,14 @@ class AIOrchestrator {
             executionTimeout,
             requestId
           );
+
+          // 🚨 DEBUG CRITICAL: Log succès provider
+          console.log(`[aiOrchestrator] ✅ Succès provider`, {
+            providerName,
+            contentLength: response.content?.length,
+            provider: response.provider,
+            timestamp: new Date().toISOString()
+          });
 
           // ═══ SUCCESS PATH + COGNITIVE KERNEL UPDATE ═══
           // EVOLUTION v21Ω: Use provider-specific timing for accurate stats
@@ -1006,6 +1030,14 @@ class AIOrchestrator {
           lastError = error instanceof Error ? error : new Error(String(error));
           // EVOLUTION v21Ω: Use provider-specific latency for failure stats
           const providerFailureLatency = Date.now() - providerStartTime;
+
+          // 🚨 DEBUG CRITICAL: Log échec provider
+          console.error(`[aiOrchestrator] ❌ Échec provider`, {
+            providerName,
+            error: lastError.message,
+            latency: providerFailureLatency,
+            timestamp: new Date().toISOString()
+          });
 
           // ═══ FAILURE PATH + AUTO-HEAL + COGNITIVE KERNEL ═══
           this.updateProviderStats(providerName, false, providerFailureLatency);
