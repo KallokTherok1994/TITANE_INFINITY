@@ -250,7 +250,7 @@ export const TAURI_COMMANDS = {
   VECTOR_STORE_DELETE: 'vector_store_delete',
   VECTOR_STORE_INSERT: 'vector_store_insert',
   VECTOR_STORE_UPDATE: 'vector_store_update',
-  VOICE_START_RECORDING: 'voice_start_recording',
+  // FIX: Removed VOICE_START_RECORDING (commande deprecated, use 'start_recording' directly)
   WINDOW_SET_FULLSCREEN: 'window_set_fullscreen',
   WINDOW_SET_ZOOM: 'window_set_zoom',
   WINDOW_ZOOM_RESET: 'window_zoom_reset',

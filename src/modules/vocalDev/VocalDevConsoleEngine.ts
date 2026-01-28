@@ -333,8 +333,15 @@ export class VocalDevConsoleEngine {
       this.recordingStartTime = Date.now();
 
       // Start backend recording
-      await secureInvoke('voice_start_recording', {
-        language: this.config.language,
+      // FIX: Commande correcte = 'start_recording' (pas 'voice_start_recording')
+      await secureInvoke('start_recording', {
+        config: {
+          language: this.config.language || 'fr-FR',
+          sampleRate: 16000,
+          channels: 1,
+          format: 'wav',
+          maxDuration: 30,
+        },
       });
 
       // Start duration timer
@@ -374,11 +381,12 @@ export class VocalDevConsoleEngine {
       this.notifyListeners();
 
       // Stop backend recording + transcribe
-      const result = await secureInvoke<{ text: string; confidence: number }>(
-        'voice_stop_recording'
+      // FIX: Commande correcte = 'stop_recording' (pas 'voice_stop_recording')
+      const result = await secureInvoke<{ transcript: string; confidence: number }>(
+        'stop_recording'
       );
 
-      const transcript = result.text || '';
+      const transcript = result.transcript || '';
       this.state.recordingState.isTranscribing = false;
       this.state.recordingState.duration = 0;
 

@@ -1784,12 +1784,10 @@ class TauriClient {
     );
   }
 
-  async voiceStartRecording(params?: unknown): Promise<unknown> {
-    return await this.invoke(
-      TAURI_COMMANDS.VOICE_START_RECORDING,
-      (params as Record<string, unknown>) || {}
-    );
-  }
+  // DEPRECATED: Use secureInvoke('start_recording', { config }) directly
+  // async voiceStartRecording(params?: unknown): Promise<unknown> {
+  //   return await this.invoke('start_recording', (params as Record<string, unknown>) || {});
+  // }
 
   async windowSetFullscreen(params?: unknown): Promise<unknown> {
     return await this.invoke(
