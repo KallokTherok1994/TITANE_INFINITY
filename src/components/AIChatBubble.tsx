@@ -12,10 +12,11 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGlobalAIChat } from '../hooks/useGlobalAIChat';
 import { MessageBubble } from './chat/MessageBubble';
+import { ChatErrorBoundary } from './ChatErrorBoundary';
 import type { Message as _Message } from '../core/ARCHITECTURE_TYPES_v∞';
 import type { AIMessage } from '../services/ai/types';
 
@@ -220,6 +221,44 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
     return '';
   }, []);
 
+  /**
+   * 🔒 MEMOIZED: Messages filtrés et validés (évite race conditions)
+   */
+  const validMessages = useMemo(() => {
+    return messages.filter(message => {
+      // Validation stricte structure
+      if (!message || typeof message !== 'object') {
+        console.warn('[AIChatBubble] ⚠️ Message invalide (structure)', message);
+        return false;
+      }
+      
+      // Validation rôle
+      if (!message.role || !['user', 'assistant'].includes(message.role)) {
+        console.warn('[AIChatBubble] ⚠️ Message invalide (rôle)', message);
+        return false;
+      }
+      
+      // Validation contenu
+      const messageText = getMessageText(message);
+      const hasContent = messageText && messageText.trim().length > 0;
+      if (!hasContent) {
+        console.warn('[AIChatBubble] ⚠️ Message vide', { 
+          role: message.role, 
+          timestamp: message.timestamp 
+        });
+        return false;
+      }
+      
+      // Message valide
+      console.log('[AIChatBubble] ✅ Message affiché', {
+        role: message.role,
+        contentLength: messageText.length,
+        timestamp: message.timestamp
+      });
+      return true;
+    });
+  }, [messages, getMessageText]);
+
   // ═══ AUTO-SCROLL ═══
   useEffect(() => {
     // 🚨 DEBUG: Log changement messages
@@ -297,22 +336,28 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
 
     const message = input.trim();
     
-    // 🚨 DEBUG: Log envoi message UI
-    console.log('[AIChatBubble] 📤 Envoi message UI', {
-      message: message.substring(0, 100),
-      messageLength: message.length,
-      currentMessagesCount: messages.length,
-      timestamp: new Date().toISOString()
-    });
-    
-    setInput('');
-    await sendGlobalMessage(message);
-    
-    // 🚨 DEBUG: Log après envoi
-    console.log('[AIChatBubble] ✅ Message envoyé, attente réponse...', {
-      newMessagesCount: messages.length,
-      isLoading
-    });
+    try {
+      // 🚨 DEBUG: Log envoi message UI
+      console.log('[AIChatBubble] 📤 Envoi message UI', {
+        message: message.substring(0, 100),
+        messageLength: message.length,
+        currentMessagesCount: messages.length,
+        timestamp: new Date().toISOString()
+      });
+      
+      setInput('');
+      await sendGlobalMessage(message);
+      
+      // 🚨 DEBUG: Log après envoi
+      console.log('[AIChatBubble] ✅ Message envoyé, attente réponse...', {
+        newMessagesCount: messages.length,
+        isLoading
+      });
+    } catch (error) {
+      // 🔴 FAILSAFE: Ne jamais crasher l'UI
+      console.error('[AIChatBubble] ❌ Erreur envoi message', error);
+      setInput(message); // Restaurer input si erreur
+    }
   }, [input, isLoading, sendGlobalMessage, messages.length]);
 
   const handleKeyDown = useCallback(
@@ -334,28 +379,31 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
   // ═══ RENDER BUBBLE (Minimized) ═══
   if (!isOpen || isMinimized) {
     return (
-      <motion.div
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0, opacity: 0 }}
-        transition={{ duration: 0.3, ease: 'easeInOut' }}
-        style={{
-          ...styles.bubble,
-          ...(isHovering ? styles.bubbleHover : {}),
-        }}
-        onClick={handleBubbleClick}
-        onMouseEnter={() => setIsHovering(true)}
-        onMouseLeave={() => setIsHovering(false)}
-        title="TITANE∞ AI Companion"
-      >
-        <span style={styles.bubbleIcon}>🧠</span>
-      </motion.div>
+      <ChatErrorBoundary>
+        <motion.div
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0, opacity: 0 }}
+          transition={{ duration: 0.3, ease: 'easeInOut' }}
+          style={{
+            ...styles.bubble,
+            ...(isHovering ? styles.bubbleHover : {}),
+          }}
+          onClick={handleBubbleClick}
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
+          title="TITANE∞ AI Companion"
+        >
+          <span style={styles.bubbleIcon}>🧠</span>
+        </motion.div>
+      </ChatErrorBoundary>
     );
   }
 
   // ═══ RENDER PANEL (Open) ═══
   return (
-    <AnimatePresence>
+    <ChatErrorBoundary>
+      <AnimatePresence>
       <motion.div
         initial={{ scale: 0.9, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -398,35 +446,14 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
             </div>
           )}
 
-          {messages
-            .filter(message => {
-              // 🔧 FILTRE VALIDATION: Éliminer messages invalides
-              if (!message || !message.role || !['user', 'assistant'].includes(message.role)) {
-                console.warn('[AIChatBubble] ⚠️ Message invalide (rôle)', message);
-                return false;
-              }
-              const messageText = getMessageText(message);
-              const hasContent = messageText && messageText.trim().length > 0;
-              if (!hasContent) {
-                console.warn('[AIChatBubble] ⚠️ Message vide', { role: message.role, timestamp: message.timestamp });
-                return false;
-              }
-              // 🔍 DEBUG: Log message valide
-              console.log('[AIChatBubble] ✅ Message affiché', {
-                role: message.role,
-                contentLength: messageText.length,
-                timestamp: message.timestamp
-              });
-              return true;
-            })
-            .map((message, index) => (
-              <MessageBubble
-                key={message.timestamp ? `${message.timestamp}-${index}` : `msg-${index}`}
-                role={message.role}
-                content={getMessageText(message)}
-                timestamp={message.timestamp}
-              />
-            ))}
+          {validMessages.map((message, index) => (
+            <MessageBubble
+              key={message.timestamp ? `${message.timestamp}-${index}` : `msg-${index}`}
+              role={message.role}
+              content={getMessageText(message)}
+              timestamp={message.timestamp}
+            />
+          ))}
 
           {isLoading && (
             <div
@@ -477,6 +504,7 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
         </div>
       </motion.div>
     </AnimatePresence>
+    </ChatErrorBoundary>
   );
 };
 
