@@ -45,7 +45,7 @@ echo "📋 Phase 2: Extraction commands documentation..."
 
 # Extraire commands documentés dans TAURI_SURFACE.md
 # Pattern: "command_name",       // DESCRIPTION
-DOC_COMMANDS=$(grep -E '"[a-z_]+",\s*//.*' "$SURFACE_DOC" | sed 's/.*"\([a-z_]*\)".*/\1/' | sort || echo "")
+DOC_COMMANDS=$(grep -E '"[a-z0-9_]+",\s*//.*' "$SURFACE_DOC" | sed 's/.*"\([a-z0-9_]*\)".*/\1/' | sort || echo "")
 
 echo "📋 Phase 3: Comparaison allowlist vs documentation..."
 
