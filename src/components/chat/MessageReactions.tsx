@@ -149,7 +149,7 @@ export const MessageReactions: React.FC<MessageReactionsProps> = ({
           onMouseLeave={() => setShowPicker(false)}
         >
           {(Object.keys(REACTION_EMOJIS) as ReactionType[]).map((type) => {
-            const isActive = reactions[type] && reactions[type]! > 0;
+            const isActive = (reactions[type] ?? 0) > 0;
             return (
               <button
                 key={type}

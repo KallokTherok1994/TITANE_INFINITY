@@ -14,24 +14,10 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import React, { memo, useMemo, lazy, Suspense } from 'react';
+import React, { memo, useMemo } from 'react';
 import './MessageBubble.css';
 import { MarkdownContent } from './MarkdownContent';
-import { CodeBlock } from './CodeBlock';
 import { MessageReactions } from './MessageReactions'; // Sprint 6 Phase 3
-
-// YOLO OPT-6: Lazy-load ReactMarkdown (-80 KB gzip) as fallback
-// Markdown uniquement pour messages assistant (pas user)
-const LazyReactMarkdown = lazy(() => import('react-markdown'));
-import remarkGfm from 'remark-gfm';
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Type simplifié pour éviter import statique
-type Components = any;
-type CodeProps = {
-  className?: string;
-  children?: React.ReactNode;
-  [key: string]: unknown;
-};
 
 interface MessageBubbleProps {
   role: 'user' | 'assistant' | 'system';
@@ -40,29 +26,6 @@ interface MessageBubbleProps {
   isLatest?: boolean;
 }
 
-// Composants markdown memoizés (définis en dehors pour éviter recréation)
-const markdownComponents: Components = {
-  code: ({ className, children, ...props }: CodeProps) => {
-    const inline = !className;
-    return inline ? (
-      <code className="inline-code" {...props}>
-        {children}
-      </code>
-    ) : (
-      <code className={className} {...props}>
-        {children}
-      </code>
-    );
-  },
-  pre: ({ children }: { children?: React.ReactNode }) => (
-    <pre className="code-block">{children}</pre>
-  ),
-  a: ({ href, children }: { href?: string; children?: React.ReactNode }) => (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="markdown-link">
-      {children}
-    </a>
-  ),
-};
 
 /**
  * Formate un timestamp en heure locale

@@ -340,8 +340,13 @@ class ChatMetricsService {
 
     // Trier par date de fin (plus récent en dernier)
     ended.sort((a, b) => {
-      const dateA = new Date(a[1].endedAt!).getTime();
-      const dateB = new Date(b[1].endedAt!).getTime();
+      const endedAtA = a[1].endedAt;
+      const endedAtB = b[1].endedAt;
+      if (!endedAtA || !endedAtB) {
+        return 0;
+      }
+      const dateA = new Date(endedAtA).getTime();
+      const dateB = new Date(endedAtB).getTime();
       return dateA - dateB;
     });
 

@@ -127,13 +127,15 @@ export async function adjustStyles(
  * @param subsystems - List of subsystems to activate
  * @returns Promise resolving to ModuleActivationResponse
  */
+type ModuleSubsystemKey = keyof ActivateModulesRequest;
+
 export async function enableSubsystems(
-  subsystems: string[]
+  subsystems: ModuleSubsystemKey[]
 ): Promise<ModuleActivationResponse> {
   const request: ActivateModulesRequest = {};
 
   for (const subsystem of subsystems) {
-    (request as any)[subsystem] = true;
+    request[subsystem] = true;
   }
 
   return activateModules(request);
@@ -147,12 +149,12 @@ export async function enableSubsystems(
  * @returns Promise resolving to ModuleActivationResponse
  */
 export async function disableSubsystems(
-  subsystems: string[]
+  subsystems: ModuleSubsystemKey[]
 ): Promise<ModuleActivationResponse> {
   const request: ActivateModulesRequest = {};
 
   for (const subsystem of subsystems) {
-    (request as any)[subsystem] = false;
+    request[subsystem] = false;
   }
 
   return activateModules(request);

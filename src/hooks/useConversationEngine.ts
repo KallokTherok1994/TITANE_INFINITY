@@ -109,17 +109,28 @@ export function useConversationEngine(
       try {
         const stored = localStorage.getItem(`titane_chat_mode_${currentMode}`);
         if (stored) {
-          const parsed = JSON.parse(stored);
+          const parsed = JSON.parse(stored) as { messages?: unknown[] };
           if (parsed.messages && Array.isArray(parsed.messages)) {
             // Convert AIMessage[] to ConversationMessage[]
             const conversationMessages: ConversationMessage[] = parsed.messages.map(
-              (msg: any, index: number) => ({
-                id: msg.id || `loaded-${index}-${Date.now()}`,
-                role: msg.role as 'user' | 'assistant',
-                content: msg.content,
-                timestamp: msg.timestamp || Date.now(),
-                metadata: msg.metadata,
-              })
+              (msg, index: number) => {
+                const safe = typeof msg === 'object' && msg !== null ? (msg as Record<string, unknown>) : {};
+                const roleValue = safe.role === 'assistant' ? 'assistant' : 'user';
+                const contentValue = typeof safe.content === 'string' ? safe.content : '';
+                const timestampValue = typeof safe.timestamp === 'number' ? safe.timestamp : Date.now();
+                const metadataValue =
+                  typeof safe.metadata === 'object' && safe.metadata !== null
+                    ? (safe.metadata as Record<string, unknown>)
+                    : undefined;
+
+                return {
+                  id: typeof safe.id === 'string' ? safe.id : `loaded-${index}-${Date.now()}`,
+                  role: roleValue,
+                  content: contentValue,
+                  timestamp: timestampValue,
+                  metadata: metadataValue,
+                };
+              }
             );
             setMessages(conversationMessages);
             // Messages chargés depuis localStorage
@@ -326,7 +337,7 @@ export function useConversationEngine(
         isProcessingRef.current = false;
       }
     },
-    [conversationId, currentMode, options]
+    [conversationId, currentMode, options, saveMessage]
   );
 
   // ═══ CLEAR MESSAGES ═══

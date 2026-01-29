@@ -27,7 +27,6 @@ import { aiOrchestrator } from './orchestrator';
 import { memoryIntegration } from './memoryIntegration';
 import type { MemoryContext } from './memoryIntegration';
 import { logger as structuredLogger, generateCorrelationId } from '../monitoring/logger';
-import { chatMetrics } from '../monitoring/chatMetrics';
 
 // PHASE 2: Unified Memory System Integration
 import { unifiedMemory } from '@/core/services/unifiedMemory';

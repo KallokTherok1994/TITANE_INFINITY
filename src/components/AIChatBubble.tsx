@@ -314,7 +314,10 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
   const getItemSize = useCallback((index: number) => {
     // Si on a mesuré la hauteur réelle, l'utiliser
     if (rowHeightsRef.current.has(index)) {
-      return rowHeightsRef.current.get(index)!;
+      const measuredHeight = rowHeightsRef.current.get(index);
+      if (measuredHeight !== undefined) {
+        return measuredHeight;
+      }
     }
     // Sinon, estimation basée sur longueur contenu
     const message = validMessages[index];
@@ -489,7 +492,7 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
       console.error('[AIChatBubble] ❌ Erreur envoi message', error);
       setInput(message); // Restaurer input si erreur
     }
-  }, [input, isLoading, sendGlobalMessage, messages.length, getMessageText]);
+  }, [input, isLoading, sendGlobalMessage, messages, getMessageText]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {

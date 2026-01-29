@@ -80,9 +80,20 @@ vi.mock('../apps/devtools/store/devtools.store', () => ({
 }));
 
 // Mock Tauri invoke pour tous les tests
+type TauriMock = {
+  core: {
+    invoke: (cmd: string, _args?: unknown) => Promise<unknown>;
+  };
+  event: {
+    listen: () => Promise<{ then: () => void; catch: () => void }>;
+    once: () => Promise<{ then: () => void; catch: () => void }>;
+    emit: () => Promise<void>;
+  };
+};
+
 global.__TAURI__ = {
   core: {
-    invoke: async (cmd: string, args?: unknown) => {
+    invoke: async (cmd: string, _args?: unknown) => {
       // Mock responses pour commandes courantes
       switch (cmd) {
         case 'chat_create_conversation':
@@ -127,4 +138,4 @@ global.__TAURI__ = {
     once: async () => ({ then: () => {}, catch: () => {} }),
     emit: async () => {},
   },
-} as any;
+} as TauriMock;

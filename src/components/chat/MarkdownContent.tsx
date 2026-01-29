@@ -111,7 +111,7 @@ class MarkdownParser {
 
   private parseInline(accumulated: string): { parsed: boolean; nodes: ParsedNode[]; newPosition: number } {
     const char = this.text[this.position];
-    let nodes: ParsedNode[] = [];
+    const nodes: ParsedNode[] = [];
 
     // Bold (**text** or __text__)
     if ((char === '*' && this.text[this.position + 1] === '*') ||
@@ -308,7 +308,7 @@ const NodeRenderer: React.FC<RendererProps> = ({ node, index }) => {
         </pre>
       );
 
-    case 'heading':
+    case 'heading': {
       const level = parseInt(node.language?.substring(1) || '1');
       const headingSizes = ['2em', '1.75em', '1.5em', '1.25em', '1.1em', '1em'];
       return (
@@ -324,8 +324,9 @@ const NodeRenderer: React.FC<RendererProps> = ({ node, index }) => {
           {node.content}
         </h1>
       );
+    }
 
-    case 'list':
+    case 'list': {
       const listItems = node.content.split('\n').filter(Boolean);
       return (
         <ul
@@ -343,6 +344,7 @@ const NodeRenderer: React.FC<RendererProps> = ({ node, index }) => {
           ))}
         </ul>
       );
+    }
 
     case 'link':
       return (

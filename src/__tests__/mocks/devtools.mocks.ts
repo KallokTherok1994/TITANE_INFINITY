@@ -70,7 +70,7 @@ export const mockCoreInfo = {
 };
 
 // Mock pour secureInvoke utilisé par CoreHealthMonitor
-export const mockSecureInvoke = (command: string, args?: any) => {
+export const mockSecureInvoke = (command: string, _args?: Record<string, unknown>) => {
   switch (command) {
     case 'get_core_info':
       return Promise.resolve(mockCoreInfo);
