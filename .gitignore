@@ -142,6 +142,14 @@ src-tauri/vault/encrypted/test_data.enc
 .vscode-server/
 remote-tunnel.pid
 tunnel-*.log
+tunnel*.json
+secret*.json
+*.key
+
+# BLOQUANT: Sensitive files tracked by mistake
+.current-server-info
+src-tauri/capabilities/secrets.json
+tmp_import_useChat.mjs
 
 # Cline CLI binaries (legacy global install)
 .tools/node/_extract/
