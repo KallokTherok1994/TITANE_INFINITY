@@ -1020,6 +1020,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // OMEGA CONVERSATION ENGINE (v26.2)
   // Pipeline de conversation 12 étapes - Cerveau IA TITANE
   // ═══════════════════════════════════════════════════════════════
+  'create_new_conversation',
   'conversation_process_message',
   'conversation_generate',
   'conversation_health_check',

@@ -440,6 +440,21 @@ export class TauriInvokeProtector {
       } as T;
     }
 
+    if (safeCommand.includes('conversation_generate')) {
+      return {
+        content:
+          "Mode navigateur: backend Tauri indisponible. Lance l'application native TITANE∞ pour accéder au moteur IA complet.",
+        conversationId: `fallback-${Date.now()}`,
+        messageId: `fallback-${Date.now()}`,
+        latencyMs: 0,
+        metadata: {
+          fallback: true,
+          error: errorMessage,
+          source: 'tauri-protector',
+        },
+      } as T;
+    }
+
     if (safeCommand.includes('chat_send_message') || safeCommand.includes('chat')) {
       return {
         success: false,
