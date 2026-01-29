@@ -78,7 +78,7 @@ EXPERIMENTAL ──→ QUALIFIED ──→ STABLE ──→ DEPRECATED ──→
 
 | Statut | Count | Détail |
 |--------|-------|--------|
-| **STABLE** | 53 | Commands production-ready avec rétrocompatibilité |
+| **STABLE** | 57 | Commands production-ready avec rétrocompatibilité |
 | **QUALIFIED** | 2 | Commands avec API figée, tests complets, prêts pour STABLE |
 | **EXPERIMENTAL** | 0 | Commands en développement, API instable |
 | **DEPRECATED** | 0 | Commands marqués obsolètes, migration path définie |
@@ -88,9 +88,9 @@ EXPERIMENTAL ──→ QUALIFIED ──→ STABLE ──→ DEPRECATED ──→
 
 | Version | STABLE | QUALIFIED | EXPERIMENTAL | DEPRECATED | Notes |
 |---------|--------|-----------|-------------|------------|-------|
-| v26.3.0 | 53 | 0 | 0 | 0 | État initial PHASE 6 (migration depuis PHASE 5) |
-| v26.3.0+ | 53 | 0 | 2 | 0 | Première capability PHASE 6: memory-core-encryption |
-| v26.3.0++ | 53 | 2 | 0 | 0 | memory-core-encryption EXPERIMENTAL → QUALIFIED |
+| v26.3.0 | 57 | 0 | 0 | 0 | État initial PHASE 6 (migration depuis PHASE 5) |
+| v26.3.0+ | 57 | 0 | 2 | 0 | Première capability PHASE 6: memory-core-encryption |
+| v26.3.0++ | 57 | 2 | 0 | 0 | memory-core-encryption EXPERIMENTAL → QUALIFIED |
 
 **Migration PHASE 5 → PHASE 6**: Toutes les capabilities PHASE 5 "stable" sont automatiquement promues **STABLE** PHASE 6 avec grandfathering (pas de re-qualification requise).
 
@@ -119,7 +119,7 @@ command: <nom>
 
 ## Couche STABLE
 
-**Total commands stable**: 53 (au 2026-01-15) - **Grandfathered PHASE 5 → PHASE 6**
+**Total commands stable**: 57 (au 2026-01-15) - **Grandfathered PHASE 5 → PHASE 6**
 
 *Note: Toutes les commands ci-dessous ont été automatiquement promues **STABLE** lors de la migration PHASE 5 → PHASE 6 avec grandfathering. Aucune re-qualification requise.*
 
@@ -172,6 +172,10 @@ command: <nom>
 | `save_chat_interaction` | **STABLE** | filesystem, memory | tests/contract/tauri.contract.test.ts | docs/CHAT_ENGINE.md | v26.0.0 | v26.3.0 | Sauvegarde historique chat (P5→P6) |
 | `chat_generate` | **STABLE** | network, memory | tests/contract/tauri.contract.test.ts | docs/CHAT_ENGINE.md | v26.1.0 | v26.3.0 | Génération chat Ollama (P5→P6) |
 | `chat_stream_message` | **STABLE** | network, memory | tests/contract/tauri.contract.test.ts | docs/CHAT_ENGINE.md | v26.1.0 | v26.3.0 | Streaming chat (P5→P6) |
+| `chat_generate_glm46v` | **STABLE** | network, memory | tests/contract/tauri.contract.test.ts | docs/CHAT_ENGINE.md | v26.4.0 | v26.4.0 | Génération chat GLM-46v (P6) |
+| `check_glm46v_health` | **STABLE** | system | tests/contract/tauri.contract.test.ts | docs/CHAT_ENGINE.md | v26.4.0 | v26.4.0 | Healthcheck service GLM-46v (P6) |
+| `start_glm46v_server` | **STABLE** | system, network | tests/contract/tauri.contract.test.ts | docs/CHAT_ENGINE.md | v26.4.0 | v26.4.0 | Démarrage serveur GLM-46v (P6) |
+| `stop_glm46v_server` | **STABLE** | system, network | tests/contract/tauri.contract.test.ts | docs/CHAT_ENGINE.md | v26.4.0 | v26.4.0 | Arrêt serveur GLM-46v (P6) |
 | `cp_get_ai_config` | **STABLE** | memory | tests/contract/tauri.contract.test.ts | docs/AI_CONFIG.md | v26.1.0 | v26.3.0 | Config AI Control Panel (P5→P6) |
 | `cp_set_ai_config` | **STABLE** | memory, filesystem | tests/contract/tauri.contract.test.ts | docs/AI_CONFIG.md | v26.1.0 | v26.3.0 | Set config AI (P5→P6) |
 

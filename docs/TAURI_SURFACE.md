@@ -54,6 +54,10 @@ Toute modification de l'allowlist stable doit être documentée et justifiée.
           // === CHAT & IA ===
           "chat_generate",            // SYSTEM: génération IA
           "chat_stream_message",      // SYSTEM: streaming chat
+          "chat_generate_glm46v",     // SYSTEM: génération IA (GLM-46v)
+          "check_glm46v_health",      // READ: santé service GLM-46v
+          "start_glm46v_server",      // SYSTEM: démarrage service GLM-46v
+          "stop_glm46v_server",       // SYSTEM: arrêt service GLM-46v
           "save_chat_interaction",    // WRITE: sauvegarde interaction
           "cp_get_ai_config",         // READ: config IA Copilot
           "cp_set_ai_config",         // WRITE: config IA Copilot
