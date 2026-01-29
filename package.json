@@ -4,7 +4,7 @@
   "description": "TITANE∞ v26.4.0 - Cognitive Operating System: Tests 93% Production Ready, UI Enhanced, COPILOT-XS Compliant",
   "type": "module",
   "license": "SEE LICENSE.md",
-  "packageManager": "pnpm@10.27.0",
+  "packageManager": "pnpm@10.28.2",
   "scripts": {
     "preinstall": "node scripts/install/enforce-package-manager.cjs",
     "dev": "tauri dev $@",
@@ -148,7 +148,6 @@
     "@testing-library/react": "^16.3.1",
     "@testing-library/user-event": "^14.6.1",
     "@types/better-sqlite3": "^7.6.12",
-    "@types/clipboardy": "^2.0.4",
     "@types/node": "^25.0.3",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.6",
