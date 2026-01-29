@@ -5,7 +5,7 @@
  * © 2026 Kevin Thibault / TITANE Team
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import type {
   ActivateModulesRequest,
   ModuleActivationResponse,
@@ -50,7 +50,7 @@ export async function activateModules(
   request: ActivateModulesRequest
 ): Promise<ModuleActivationResponse> {
   try {
-    const response = await invoke<ModuleActivationResponse | FusionError>(
+    const response = await secureInvoke<ModuleActivationResponse | FusionError>(
       'fusion_activate_modules',
       { request }
     );
@@ -95,7 +95,7 @@ export async function adjustStyles(
   request: AdjustStylesRequest
 ): Promise<StyleAdjustmentResponse> {
   try {
-    const response = await invoke<StyleAdjustmentResponse | FusionError>(
+    const response = await secureInvoke<StyleAdjustmentResponse | FusionError>(
       'fusion_adjust_styles',
       { request }
     );

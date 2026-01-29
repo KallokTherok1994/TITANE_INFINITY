@@ -5,7 +5,7 @@
  * © 2026 Kevin Thibault / TITANE Team
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import type {
   UpdateStateRequest,
   UpdateStateResponse,
@@ -19,7 +19,7 @@ export async function updateFusionState(
   request: UpdateStateRequest
 ): Promise<UpdateStateResponse> {
   try {
-    const response = await invoke<UpdateStateResponse>('fusion_update_state', {
+    const response = await secureInvoke<UpdateStateResponse>('fusion_update_state', {
       request,
     });
 
@@ -41,7 +41,7 @@ export async function autoOptimizeFusion(
   request: AutoOptimizeRequest
 ): Promise<AutoOptimizeResponse> {
   try {
-    const response = await invoke<AutoOptimizeResponse>('fusion_auto_optimize', {
+    const response = await secureInvoke<AutoOptimizeResponse>('fusion_auto_optimize', {
       request,
     });
 

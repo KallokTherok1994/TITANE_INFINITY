@@ -5,7 +5,7 @@
  * © 2026 Kevin Thibault / TITANE Team
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import type {
   IAGenerationRequest,
   IAGenerationResponse,
@@ -37,7 +37,7 @@ export async function generateIAResponse(
   request: IAGenerationRequest
 ): Promise<IAGenerationResponse> {
   try {
-    const response = await invoke<IAGenerationResponse>(
+    const response = await secureInvoke<IAGenerationResponse>(
       'fusion_generate_ia_response',
       { request }
     );
@@ -152,7 +152,7 @@ export async function prepareTTS(
   request: TTSPrepareRequest
 ): Promise<TTSPrepareResponse> {
   try {
-    const response = await invoke<TTSPrepareResponse>(
+    const response = await secureInvoke<TTSPrepareResponse>(
       'fusion_prepare_tts',
       { request }
     );

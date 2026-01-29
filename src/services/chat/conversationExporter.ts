@@ -153,7 +153,7 @@ class ConversationExporter {
     const messages: AIMessage[] = [];
 
     // Regex pour parser les messages: ## Message N — Role
-    const messagePattern = /## Message \d+ — (Vous|TITANE∞)(?: \([^)]+\))?\n\n([\s\S]*?)(?=---|\Z)/g;
+    const messagePattern = /## Message \d+ — (Vous|TITANE∞)(?: \([^)]+\))?\n\n([\s\S]*?)(?=---|$)/g;
 
     let match;
     while ((match = messagePattern.exec(text)) !== null) {
