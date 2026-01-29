@@ -35,6 +35,21 @@ cd TITANE_INFINITY
 
 ---
 
+## ✅ Linting (ESLint v9)
+
+- **Configuration** : `eslint.config.js` (flat config). La configuration legacy `.eslintrc.cjs` est chargée via `FlatCompat`.
+- **Scope de lint** : uniquement `src/**/*.{js,jsx,ts,tsx}` (évite les artefacts de build).
+- **Overrides actuels** :
+    - `@typescript-eslint/no-unused-expressions` est désactivé pour :
+        - `src/core/**/*.{ts,tsx}`
+        - `src/components/chat/**/*.{ts,tsx}`
+        - `src/ui/pages/Chat.tsx`
+    - Raison : certaines expressions JSX/DSL intentionnelles déclenchent des faux positifs.
+- **Types vides** : éviter `interface {}` (règle `@typescript-eslint/no-empty-object-type`). Utiliser `Record<string, never>` ou supprimer l’interface si inutile.
+- **Règle d’évolution** : tout nouvel override doit inclure une justification dans `eslint.config.js` **et** être reporté dans ce guide.
+
+---
+
 ## 📁 Structure du Projet
 
 ### Backend (Rust)
