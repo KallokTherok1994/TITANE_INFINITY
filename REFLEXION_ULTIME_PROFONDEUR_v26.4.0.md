@@ -94,6 +94,7 @@ const result = await toolCallerService.executeToolCall(toolCall.name, toolCall.a
    - ✅ Erreurs capturées (ligne 133)
 
 5. **Format Résultats** (ligne 147-155):
+
    ```typescript
    const resultsFormatted = toolResults
      .map(
