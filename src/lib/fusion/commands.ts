@@ -12,6 +12,8 @@ import type {
   AdjustStylesRequest,
   StyleAdjustmentResponse,
   FusionError,
+} from './types';
+import {
   isModuleActivationSuccess,
   isStyleAdjustmentSuccess,
 } from './types';

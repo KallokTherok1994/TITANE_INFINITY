@@ -11,6 +11,8 @@ import type {
   IAGenerationResponse,
   TTSPrepareRequest,
   TTSPrepareResponse,
+} from './types-week2';
+import {
   isIAGenerationSuccess,
   isTTSPrepareSuccess,
 } from './types-week2';
