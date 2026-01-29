@@ -1,0 +1,3 @@
+dcaf51089a7e3b4bfeb5478288d1fcbc54508cd6baca20cc6aa97f3400c8b446  TITANE-Infinity_26.4.0_amd64.AppImage
+6dbcfda12e56e24acad416a204c9e75b5987c31e725845e85982d8e2065746d8  TITANE-Infinity_26.4.0_amd64.deb
+7d75dbb8de9ea930546152e7fc16b31e294d3bf9d914662ac0ae986eaeca1ef0  TITANE-Infinity_26.4.0_amd64.deb.sha256
