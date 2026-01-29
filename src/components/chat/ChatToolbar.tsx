@@ -38,6 +38,7 @@ import { useVisionStore } from '@/stores/useVisionStore';
 import { useAudioChat } from '@/hooks/useAudioChat';
 import { useVoiceEngine } from '@/hooks/useVoiceEngine';
 import { useAutoTimeout, useElapsedTime, formatElapsedTime } from '@/hooks/useAutoTimeout';
+import { useTTSPreference, useAudioConversationPreference } from '@/hooks/usePreferences';
 import { APISupport } from '@/utils/APISupport';
 import { audioTranscriptionService } from '@/services/audioTranscriptionService';
 import type { AnalyzedFile } from './FileUploadButton';
@@ -134,11 +135,16 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
     compact = false,
     className = '',
   }) => {
+    // ═══ IMPORTS HOOKS ═══
+    const { isTTSEnabled: persistedTTS, setTTSEnabled } = useTTSPreference();
+    const { isAudioConversationPreferred: persistedAudioConv, setAudioConversationPreferred } = 
+      useAudioConversationPreference();
+
     // ═══ ÉTATS ═══
     const [isRecordingAudio, setIsRecordingAudio] = useState(false);
     const [isDictating, setIsDictating] = useState(false);
-    const [isAudioConversationActive, setIsAudioConversationActive] = useState(false);
-    const [isTTSEnabled, setIsTTSEnabled] = useState(true);
+    const [isAudioConversationActive, setIsAudioConversationActive] = useState(persistedAudioConv);
+    const [isTTSEnabled, setIsTTSEnabledLocal] = useState(persistedTTS);
 
     // Refs
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -515,6 +521,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
         }
 
         setIsAudioConversationActive(newState);
+        setAudioConversationPreferred(newState); // ✅ NOUVEAU - Sauvegarder la préférence
 
         if (newState) {
           startListening();
@@ -533,6 +540,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
       isAudioConversationActive,
       startListening,
       stopListening,
+      setAudioConversationPreferred,
       onToggleAudioConversation,
     ]);
 
@@ -586,10 +594,11 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
     // ═══ HANDLERS - TTS ═══
     const handleTTSToggle = useCallback(() => {
       const newState = !isTTSEnabled;
-      setIsTTSEnabled(newState);
+      setIsTTSEnabledLocal(newState);
+      setTTSEnabled(newState); // ✅ NOUVEAU - Sauvegarder la préférence
       onToggleTTS?.(newState);
       isDev && console.log('[ChatToolbar] TTS:', newState ? 'ON' : 'OFF');
-    }, [isTTSEnabled, onToggleTTS]);
+    }, [isTTSEnabled, setTTSEnabled, onToggleTTS]);
 
     // ═══ RENDER ═══
     return (
