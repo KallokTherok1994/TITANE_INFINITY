@@ -13,8 +13,8 @@ on:
 
 # Variables d'environnement
 env:
-  NODE_VERSION: '20.x'
-  PNPM_VERSION: '8'
+  NODE_VERSION: '22.x'
+  PNPM_VERSION: '10.28.2'
   CARGO_TERM_COLOR: always
 
 jobs:
