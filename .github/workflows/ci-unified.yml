@@ -18,9 +18,9 @@ permissions:
 
 env:
   CARGO_TERM_COLOR: always
-  NODE_VERSION: '20'
+  NODE_VERSION: '22'
   RUST_VERSION: '1.83'
-  PNPM_VERSION: '9.0.0'
+  PNPM_VERSION: '10.28.2'
 
 jobs:
   # ═══════════════════════════════════════════════════════════════════════════
