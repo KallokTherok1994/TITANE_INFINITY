@@ -78,6 +78,20 @@ jobs:
           import random
           import math
 
+          def _json_fallback(value):
+              if isinstance(value, (np.bool_, np.integer, np.floating)):
+                  return value.item()
+              if isinstance(value, np.ndarray):
+                  return value.tolist()
+              if isinstance(value, (np.complexfloating, complex)):
+                  return {
+                      'real': float(value.real),
+                      'imag': float(value.imag),
+                  }
+              if isinstance(value, set):
+                  return list(value)
+              raise TypeError(f"Object of type {type(value).__name__} is not JSON serializable")
+
           class TitaneConsciousnessMatrix:
               def __init__(self, neural_depth=1000, consciousness_level='collective'):
                   self.neural_depth = int(neural_depth)
@@ -284,7 +298,7 @@ jobs:
 
           # Save consciousness report
           with open('reports/consciousness/consciousness-matrix.json', 'w') as f:
-              json.dump(consciousness_report, f, indent=2)
+              json.dump(consciousness_report, f, indent=2, default=_json_fallback)
 
           # Extract key metrics for outputs
           metrics = consciousness_report['metrics']
