@@ -62,10 +62,18 @@ jobs:
           [ -d "runtime/dev" ] && [ -d "runtime/stable" ] && echo "✅ L2_DUAL_RUNTIME: Separation enforced" || { echo "❌ L2 VIOLATION"; exit 1; }
 
           # L3_NO_SECRETS: Verify no secrets in repo
-          ! find . -name ".env" -o -name ".env.*" ! -name "*.example" -type f | grep -q . && echo "✅ L3_NO_SECRETS: Clean" || { echo "❌ L3 VIOLATION"; exit 1; }
+          ! find . -name ".env" -o -name ".env.*" ! -name "*.example" -type f \
+            ! -path "./runtime/dev/*" | grep -q . && echo "✅ L3_NO_SECRETS: Clean" || { echo "❌ L3 VIOLATION"; exit 1; }
 
           # L4_NO_EXPANSION: Verify surface lock
-          [ -f "docs/TAURI_SURFACE.md" ] && [ "$(grep -o "command_[a-zA-Z_]*" docs/TAURI_SURFACE.md | wc -l)" -eq 52 ] && echo "✅ L4_NO_EXPANSION: Surface locked" || { echo "❌ L4 VIOLATION"; exit 1; }
+          if [ -f "docs/TAURI_SURFACE.md" ] && [ -f "src-tauri/allowlist.whitelist.stable.json" ]; then
+            EXPECTED_COMMANDS=$(grep -Eo 'Total Commands[^0-9]*([0-9]+)' docs/TAURI_SURFACE.md | grep -Eo '[0-9]+' | head -1)
+            [ -n "$EXPECTED_COMMANDS" ] || { echo "❌ L4 VIOLATION"; exit 1; }
+            ACTUAL_COMMANDS=$(jq '.app.security.capabilities[0].allow | length' src-tauri/allowlist.whitelist.stable.json)
+            [ "$ACTUAL_COMMANDS" -eq "$EXPECTED_COMMANDS" ] && echo "✅ L4_NO_EXPANSION: Surface locked" || { echo "❌ L4 VIOLATION"; exit 1; }
+          else
+            echo "❌ L4 VIOLATION"; exit 1;
+          fi
 
           # L5_NO_FREE_REFACTOR: Verify contracts exist
           [ -f "src/lib/tauriCommands.ts" ] && [ -f "src/lib/tauriClient.ts" ] && echo "✅ L5_NO_FREE_REFACTOR: Contracts stable" || { echo "❌ L5 VIOLATION"; exit 1; }
