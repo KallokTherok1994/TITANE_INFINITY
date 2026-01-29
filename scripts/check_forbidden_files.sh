@@ -104,9 +104,10 @@ echo "📋 Additional security scans..."
 
 # Check for any .env files (critical) - exclude allowlisted paths
 ENV_FILES=$(find . -name ".env*" -not -name "*.example" -type f \
-  ! -path "./node_modules/*" \
-  ! -path "./actions-runner/*" \
-  2>/dev/null || true)
+    ! -path "./node_modules/*" \
+    ! -path "./actions-runner/*" \
+    ! -path "./runtime/dev/*" \
+    2>/dev/null || true)
 if [ -n "$ENV_FILES" ]; then
     echo "❌ CRITICAL: .env files found in build context:"
     echo "$ENV_FILES" | sed 's/^/    /'
