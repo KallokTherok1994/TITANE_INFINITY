@@ -45,9 +45,9 @@ FILES_TO_CHECK=(
   "src-tauri/src/system_state.rs"
   "src-tauri/src/memory_persistence.rs"
   "src/utils/invoke.ts"
-  "src/pages/MemoryV∞.tsx"
-  "RAPPORT_FINAL_100_POURCENT.md"
-  "cleanup_obsolete_files.sh"
+  "src/pages/Memory.tsx"
+  "docs/99_ARCHIVE/sessions/RAPPORT_FINAL_100_POURCENT.md"
+  "scripts/maintenance/cleanup_obsolete_files.sh"
 )
 
 for file in "${FILES_TO_CHECK[@]}"; do
@@ -67,10 +67,10 @@ echo ""
 echo "🔧 [4/6] Vérification commandes Tauri..."
 
 COMMANDS=(
-  "get_all_files"
-  "get_files_by_category"
-  "clear_memory"
-  "store_file"
+  "system_get_status"
+  "conversation_generate"
+  "chat_send_message"
+  "crashguard_clear_memory"
 )
 
 for cmd in "${COMMANDS[@]}"; do
@@ -93,7 +93,7 @@ SAFE_INVOKE_FILES=(
   "src/utils/invoke.ts"
   "src/services/experienceService.ts"
   "src/services/singularityBridge.ts"
-  "src/features/chat/ChatInput.tsx"
+  "src/components/chat/ChatInput.tsx"
 )
 
 for file in "${SAFE_INVOKE_FILES[@]}"; do
