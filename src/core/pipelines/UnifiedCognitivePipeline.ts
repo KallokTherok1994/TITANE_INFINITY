@@ -431,10 +431,16 @@ export class UnifiedCognitivePipeline {
    */
   private async prepareTTS(text: string): Promise<TTSAudio> {
     try {
-      const result = await secureInvoke<TTSAudio>('tts_generate_audio', {
+      // FIX: Commande correcte = 'speak' ou 'tts_speak' (pas 'tts_generate_audio')
+      // Note: 'speak' retourne async void, donc on utilise 'tts_speak' pour récupérer l'audio
+      const result = await secureInvoke<TTSAudio>('tts_speak', {
         text,
-        voice: this.config.tts_voice,
-        speed: this.config.tts_speed,
+        settings: {
+          voice_id: this.config.tts_voice,
+          speed: this.config.tts_speed,
+          pitch: 1.0,
+          volume: 1.0,
+        },
       });
 
       return result;

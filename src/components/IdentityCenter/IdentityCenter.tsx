@@ -150,7 +150,8 @@ const IdentityCenterContent: React.FC = () => {
         secureInvoke<PersonalitySnapshot>('identity_get_personality_snapshot').catch(
           () => null
         ),
-        secureInvoke<VoiceProfile[]>('identity_get_voice_profiles').catch(() => []),
+        // FIX: Commande correcte = 'identity_list_voice_profiles' (pas 'identity_get_voice_profiles')
+        secureInvoke<VoiceProfile[]>('identity_list_voice_profiles').catch(() => []),
         secureInvoke<ToneState>('identity_get_current_tone').catch(() => null),
         secureInvoke<OperationalMode>('identity_get_current_mode').catch(() => null),
         secureInvoke<OperationalMode[]>('identity_get_available_modes').catch(() => []),
@@ -393,7 +394,8 @@ const IdentityCenterContent: React.FC = () => {
 
   const handleVoiceChange = async (voiceId: string) => {
     try {
-      await secureInvoke('identity_set_voice_profile', { profileId: voiceId });
+      // FIX: Commande correcte = 'identity_set_active_voice_profile' (pas 'identity_set_voice_profile')
+      await secureInvoke('identity_set_active_voice_profile', { voiceProfileId: voiceId });
       const newVoice = voiceProfiles.find(v => v.id === voiceId);
       if (newVoice) {
         setActiveVoice(newVoice);
