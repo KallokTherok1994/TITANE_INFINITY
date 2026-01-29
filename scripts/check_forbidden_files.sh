@@ -4,7 +4,12 @@
 
 set -euo pipefail
 
-PROJECT_ROOT="/home/titane-os/Documents/GitHub/TITANE_INFINITY"
+if [[ -n "${GITHUB_WORKSPACE:-}" ]]; then
+    PROJECT_ROOT="$GITHUB_WORKSPACE"
+else
+    PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+fi
+
 MANIFEST_FILE="$PROJECT_ROOT/runtime/stable/manifest.json"
 VIOLATIONS=0
 
