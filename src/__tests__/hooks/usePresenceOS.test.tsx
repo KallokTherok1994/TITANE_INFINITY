@@ -27,7 +27,7 @@ describe('usePresenceOS Hook', () => {
   describe('Status Management', () => {
     it('should update status', () => {
       const { result } = renderHook(() => usePresenceOS());
-      
+
       act(() => {
         result.current.setStatus('away');
       });
@@ -37,9 +37,9 @@ describe('usePresenceOS Hook', () => {
 
     it('should support all status types', () => {
       const { result } = renderHook(() => usePresenceOS());
-      
+
       const statuses = ['online', 'away', 'busy', 'offline'];
-      
+
       statuses.forEach(status => {
         act(() => {
           result.current.setStatus(status as any);
@@ -53,32 +53,32 @@ describe('usePresenceOS Hook', () => {
     it('should detect idle after timeout', async () => {
       vi.useFakeTimers();
       const { result } = renderHook(() => usePresenceOS({ idleTimeout: 5000 }));
-      
+
       expect(result.current.isIdle).toBe(false);
-      
+
       act(() => {
         vi.advanceTimersByTime(5000);
       });
 
       expect(result.current.isIdle).toBe(true);
-      
+
       vi.useRealTimers();
     });
 
     it('should reset idle on activity', () => {
       vi.useFakeTimers();
       const { result } = renderHook(() => usePresenceOS({ idleTimeout: 5000 }));
-      
+
       act(() => {
         vi.advanceTimersByTime(5000);
       });
       expect(result.current.isIdle).toBe(true);
-      
+
       act(() => {
         result.current.resetIdle();
       });
       expect(result.current.isIdle).toBe(false);
-      
+
       vi.useRealTimers();
     });
   });
@@ -86,9 +86,9 @@ describe('usePresenceOS Hook', () => {
   describe('Activity Tracking', () => {
     it('should track last activity', () => {
       const { result } = renderHook(() => usePresenceOS());
-      
+
       const initialTime = result.current.lastActivity;
-      
+
       act(() => {
         result.current.recordActivity();
       });
@@ -98,7 +98,7 @@ describe('usePresenceOS Hook', () => {
 
     it('should update on user interaction', () => {
       const { result } = renderHook(() => usePresenceOS({ trackActivity: true }));
-      
+
       act(() => {
         window.dispatchEvent(new Event('mousemove'));
       });
@@ -111,7 +111,7 @@ describe('usePresenceOS Hook', () => {
     it('should call onStatusChange', () => {
       const onStatusChange = vi.fn();
       const { result } = renderHook(() => usePresenceOS({ onStatusChange }));
-      
+
       act(() => {
         result.current.setStatus('away');
       });
@@ -123,7 +123,7 @@ describe('usePresenceOS Hook', () => {
       vi.useFakeTimers();
       const onIdle = vi.fn();
       renderHook(() => usePresenceOS({ idleTimeout: 5000, onIdle }));
-      
+
       act(() => {
         vi.advanceTimersByTime(5000);
       });
@@ -137,9 +137,9 @@ describe('usePresenceOS Hook', () => {
     it('should cleanup listeners on unmount', () => {
       const removeEventListenerSpy = vi.spyOn(window, 'removeEventListener');
       const { unmount } = renderHook(() => usePresenceOS({ trackActivity: true }));
-      
+
       unmount();
-      
+
       expect(removeEventListenerSpy).toHaveBeenCalled();
     });
   });

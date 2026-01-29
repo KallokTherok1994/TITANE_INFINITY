@@ -16,6 +16,7 @@
 ## 🧪 Backend Tests (Rust)
 
 ### Unit Tests
+
 - [ ] `cargo test --bin titane-infinity -- --test-threads=1`
 - [ ] Verify Week 3 tests:
   - [ ] `fusion_commands_week3::tests::test_lipsync_basic`
@@ -31,6 +32,7 @@
   - [ ] `fusion_commands_week4::tests::test_auto_optimize_basic`
 
 ### Compilation
+
 - [ ] `cargo check --tests`
 
 ---

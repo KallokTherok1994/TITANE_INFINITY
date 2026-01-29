@@ -32,9 +32,7 @@ export function LogLine({ log, highlight }: LogLineProps) {
         <span className={`font-medium ${levelColors[log.level]}`}>
           {log.level.toUpperCase()}
         </span>
-        {log.category && (
-          <span className="text-gray-400 text-xs">[{log.category}]</span>
-        )}
+        {log.category && <span className="text-gray-400 text-xs">[{log.category}]</span>}
         <span className="flex-1 text-white">{log.message}</span>
       </div>
       {log.details && (

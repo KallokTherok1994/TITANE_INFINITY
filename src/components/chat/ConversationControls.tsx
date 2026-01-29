@@ -43,7 +43,9 @@ export const ConversationControls: React.FC<ConversationControlsProps> = ({
       setSuccess('Conversation exportée en JSON');
       setTimeout(() => setSuccess(null), 3000);
     } catch (err) {
-      setError(`Erreur lors de l'export: ${err instanceof Error ? err.message : 'Erreur inconnue'}`);
+      setError(
+        `Erreur lors de l'export: ${err instanceof Error ? err.message : 'Erreur inconnue'}`
+      );
     } finally {
       setExporting(false);
     }
@@ -56,7 +58,9 @@ export const ConversationControls: React.FC<ConversationControlsProps> = ({
       setSuccess('Conversation exportée en Markdown');
       setTimeout(() => setSuccess(null), 3000);
     } catch (err) {
-      setError(`Erreur lors de l'export: ${err instanceof Error ? err.message : 'Erreur inconnue'}`);
+      setError(
+        `Erreur lors de l'export: ${err instanceof Error ? err.message : 'Erreur inconnue'}`
+      );
     } finally {
       setExporting(false);
     }
@@ -75,7 +79,9 @@ export const ConversationControls: React.FC<ConversationControlsProps> = ({
       // Reset input
       event.target.value = '';
     } catch (err) {
-      setError(`Erreur lors de l'import: ${err instanceof Error ? err.message : 'Erreur inconnue'}`);
+      setError(
+        `Erreur lors de l'import: ${err instanceof Error ? err.message : 'Erreur inconnue'}`
+      );
     } finally {
       setImporting(false);
     }
@@ -114,13 +120,15 @@ export const ConversationControls: React.FC<ConversationControlsProps> = ({
           fontWeight: 500,
           transition: 'all 0.2s',
         }}
-        onMouseEnter={(e) => {
+        onMouseEnter={e => {
           if (!exporting && messages.length > 0) {
-            (e.currentTarget as HTMLButtonElement).style.background = 'rgba(114, 123, 129, 0.5)';
+            (e.currentTarget as HTMLButtonElement).style.background =
+              'rgba(114, 123, 129, 0.5)';
           }
         }}
-        onMouseLeave={(e) => {
-          (e.currentTarget as HTMLButtonElement).style.background = 'rgba(114, 123, 129, 0.3)';
+        onMouseLeave={e => {
+          (e.currentTarget as HTMLButtonElement).style.background =
+            'rgba(114, 123, 129, 0.3)';
         }}
       >
         {exporting ? '⏳ Export...' : '💾 JSON'}
@@ -142,13 +150,15 @@ export const ConversationControls: React.FC<ConversationControlsProps> = ({
           fontWeight: 500,
           transition: 'all 0.2s',
         }}
-        onMouseEnter={(e) => {
+        onMouseEnter={e => {
           if (!exporting && messages.length > 0) {
-            (e.currentTarget as HTMLButtonElement).style.background = 'rgba(114, 123, 129, 0.5)';
+            (e.currentTarget as HTMLButtonElement).style.background =
+              'rgba(114, 123, 129, 0.5)';
           }
         }}
-        onMouseLeave={(e) => {
-          (e.currentTarget as HTMLButtonElement).style.background = 'rgba(114, 123, 129, 0.3)';
+        onMouseLeave={e => {
+          (e.currentTarget as HTMLButtonElement).style.background =
+            'rgba(114, 123, 129, 0.3)';
         }}
       >
         {exporting ? '⏳ Export...' : '📝 MD'}
@@ -180,13 +190,15 @@ export const ConversationControls: React.FC<ConversationControlsProps> = ({
           fontWeight: 500,
           transition: 'all 0.2s',
         }}
-        onMouseEnter={(e) => {
+        onMouseEnter={e => {
           if (!importing) {
-            (e.currentTarget as HTMLButtonElement).style.background = 'rgba(114, 123, 129, 0.5)';
+            (e.currentTarget as HTMLButtonElement).style.background =
+              'rgba(114, 123, 129, 0.5)';
           }
         }}
-        onMouseLeave={(e) => {
-          (e.currentTarget as HTMLButtonElement).style.background = 'rgba(114, 123, 129, 0.3)';
+        onMouseLeave={e => {
+          (e.currentTarget as HTMLButtonElement).style.background =
+            'rgba(114, 123, 129, 0.3)';
         }}
       >
         {importing ? '⏳ Import...' : '📂 Import'}

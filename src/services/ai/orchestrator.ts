@@ -735,7 +735,7 @@ class AIOrchestrator {
       message: message.substring(0, 100),
       historyLength: history.length,
       preferredProvider: config?.preferredProvider,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
 
     // Ensure engines are loaded
@@ -937,7 +937,7 @@ class AIOrchestrator {
             providerName,
             totalProviders: providersToTry.length,
             isAvailable: !!provider,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
           });
 
           // ═══ ISOLATED EXECUTION WITH ADAPTIVE TIMEOUT (v22Ω Optimized) ═══
@@ -963,7 +963,7 @@ class AIOrchestrator {
             providerName,
             contentLength: response.content?.length,
             provider: response.provider,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
           });
 
           // ═══ SUCCESS PATH + COGNITIVE KERNEL UPDATE ═══
@@ -1036,7 +1036,7 @@ class AIOrchestrator {
             providerName,
             error: lastError.message,
             latency: providerFailureLatency,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
           });
 
           // ═══ FAILURE PATH + AUTO-HEAL + COGNITIVE KERNEL ═══

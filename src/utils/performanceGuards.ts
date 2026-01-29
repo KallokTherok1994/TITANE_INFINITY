@@ -193,7 +193,10 @@ export class PerformanceGuard {
     // Check memory
     if (metrics.memoryUsage > this.thresholds.maxMemoryMB) {
       this.addAlert({
-        severity: metrics.memoryUsage > this.thresholds.maxMemoryMB * 1.5 ? 'critical' : 'warning',
+        severity:
+          metrics.memoryUsage > this.thresholds.maxMemoryMB * 1.5
+            ? 'critical'
+            : 'warning',
         metric: 'maxMemoryMB',
         value: metrics.memoryUsage,
         threshold: this.thresholds.maxMemoryMB,
@@ -205,7 +208,9 @@ export class PerformanceGuard {
     if (metrics.responseTime > this.thresholds.maxResponseTimeMs) {
       this.addAlert({
         severity:
-          metrics.responseTime > this.thresholds.maxResponseTimeMs * 2 ? 'critical' : 'warning',
+          metrics.responseTime > this.thresholds.maxResponseTimeMs * 2
+            ? 'critical'
+            : 'warning',
         metric: 'maxResponseTimeMs',
         value: metrics.responseTime,
         threshold: this.thresholds.maxResponseTimeMs,
@@ -216,7 +221,8 @@ export class PerformanceGuard {
     // Check error rate
     if (metrics.errorRate > this.thresholds.maxErrorRate) {
       this.addAlert({
-        severity: metrics.errorRate > this.thresholds.maxErrorRate * 2 ? 'critical' : 'warning',
+        severity:
+          metrics.errorRate > this.thresholds.maxErrorRate * 2 ? 'critical' : 'warning',
         metric: 'maxErrorRate',
         value: metrics.errorRate,
         threshold: this.thresholds.maxErrorRate,
@@ -279,7 +285,9 @@ export class PerformanceGuard {
    * Get current metrics
    */
   getCurrentMetrics(): PerformanceMetrics | null {
-    return this.metrics.length > 0 ? (this.metrics[this.metrics.length - 1] ?? null) : null;
+    return this.metrics.length > 0
+      ? (this.metrics[this.metrics.length - 1] ?? null)
+      : null;
   }
 
   /**
@@ -354,7 +362,9 @@ export function TrackPerformance() {
     const originalMethod = descriptor.value;
 
     descriptor.value = async function (...args: any[]) {
-      return globalPerformanceGuard.trackOperation(() => originalMethod.apply(this, args));
+      return globalPerformanceGuard.trackOperation(() =>
+        originalMethod.apply(this, args)
+      );
     };
 
     return descriptor;

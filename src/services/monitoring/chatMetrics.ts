@@ -70,7 +70,13 @@ export interface GlobalMetrics {
  */
 export interface MetricEvent {
   /** Type d'événement */
-  type: 'message_sent' | 'message_received' | 'message_rejected' | 'error' | 'conversation_start' | 'conversation_end';
+  type:
+    | 'message_sent'
+    | 'message_received'
+    | 'message_rejected'
+    | 'error'
+    | 'conversation_start'
+    | 'conversation_end';
   /** ID conversation */
   conversationId: string;
   /** Timestamp événement (ISO 8601) */
@@ -146,7 +152,8 @@ class ChatMetricsService {
       timestamp: new Date().toISOString(),
       metadata: {
         totalMessages: metrics.totalMessages,
-        duration: new Date(metrics.endedAt).getTime() - new Date(metrics.startedAt).getTime(),
+        duration:
+          new Date(metrics.endedAt).getTime() - new Date(metrics.startedAt).getTime(),
       },
     });
   }
@@ -157,7 +164,9 @@ class ChatMetricsService {
   recordMessageSent(conversationId: string, messageLength: number): void {
     const metrics = this.conversations.get(conversationId);
     if (!metrics) {
-      console.warn(`[ChatMetrics] Conversation ${conversationId} introuvable, création auto`);
+      console.warn(
+        `[ChatMetrics] Conversation ${conversationId} introuvable, création auto`
+      );
       this.startConversation(conversationId);
       return this.recordMessageSent(conversationId, messageLength);
     }
@@ -176,7 +185,11 @@ class ChatMetricsService {
   /**
    * Enregistre la réception d'un message assistant
    */
-  recordMessageReceived(conversationId: string, responseTime: number, messageLength: number): void {
+  recordMessageReceived(
+    conversationId: string,
+    responseTime: number,
+    messageLength: number
+  ): void {
     const metrics = this.conversations.get(conversationId);
     if (!metrics) {
       console.warn(`[ChatMetrics] Conversation ${conversationId} introuvable`);
@@ -194,7 +207,8 @@ class ChatMetricsService {
 
     // Temps de réponse conversation
     const responseTimes = this.responseTimesBuffer.slice(-metrics.assistantMessages);
-    metrics.avgResponseTime = responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length;
+    metrics.avgResponseTime =
+      responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length;
     metrics.minResponseTime = Math.min(metrics.minResponseTime, responseTime);
     metrics.maxResponseTime = Math.max(metrics.maxResponseTime, responseTime);
 
@@ -287,9 +301,11 @@ class ChatMetricsService {
     const totalErrors = allMetrics.reduce((sum, m) => sum + m.errorCount, 0);
 
     // Temps de réponse moyen global (tous messages)
-    const avgResponseTime = this.responseTimesBuffer.length > 0
-      ? this.responseTimesBuffer.reduce((a, b) => a + b, 0) / this.responseTimesBuffer.length
-      : 0;
+    const avgResponseTime =
+      this.responseTimesBuffer.length > 0
+        ? this.responseTimesBuffer.reduce((a, b) => a + b, 0) /
+          this.responseTimesBuffer.length
+        : 0;
 
     // Taux validation/erreur global
     const totalRejected = allMetrics.reduce((sum, m) => sum + m.rejectedMessages, 0);
@@ -356,7 +372,9 @@ class ChatMetricsService {
       this.conversations.delete(conversationId);
     });
 
-    console.log(`[ChatMetrics] Nettoyage: ${toDelete.length} conversations supprimées (conservation: ${keepLast} dernières)`);
+    console.log(
+      `[ChatMetrics] Nettoyage: ${toDelete.length} conversations supprimées (conservation: ${keepLast} dernières)`
+    );
   }
 
   /**

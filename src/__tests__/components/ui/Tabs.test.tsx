@@ -55,7 +55,7 @@ describe('Tabs Component', () => {
           <TabsContent value="tab2">Content 2</TabsContent>
         </Tabs>
       );
-      
+
       fireEvent.click(screen.getByRole('tab', { name: /tab 2/i }));
       expect(screen.getByText('Content 2')).toBeInTheDocument();
     });
@@ -71,7 +71,7 @@ describe('Tabs Component', () => {
           <TabsContent value="tab2">Content 2</TabsContent>
         </Tabs>
       );
-      
+
       fireEvent.click(screen.getByRole('tab', { name: /tab 2/i }));
       expect(mockOnChange).toHaveBeenCalledWith('tab2');
     });
@@ -89,11 +89,11 @@ describe('Tabs Component', () => {
           <TabsContent value="tab2">Content 2</TabsContent>
         </Tabs>
       );
-      
+
       const tab1 = screen.getByRole('tab', { name: /tab 1/i });
       tab1.focus();
       fireEvent.keyDown(tab1, { key: 'ArrowRight' });
-      
+
       expect(screen.getByRole('tab', { name: /tab 2/i })).toHaveFocus();
     });
   });
@@ -108,7 +108,7 @@ describe('Tabs Component', () => {
           <TabsContent value="tab1">Content</TabsContent>
         </Tabs>
       );
-      
+
       const tab = screen.getByRole('tab', { name: /tab 1/i });
       expect(tab).toHaveAttribute('aria-selected');
     });
@@ -122,7 +122,7 @@ describe('Tabs Component', () => {
           <TabsContent value="tab1">Content</TabsContent>
         </Tabs>
       );
-      
+
       expect(screen.getByRole('tablist')).toBeInTheDocument();
     });
   });

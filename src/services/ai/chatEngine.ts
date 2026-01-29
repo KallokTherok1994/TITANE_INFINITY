@@ -230,18 +230,23 @@ class ChatEngineOmega {
     const correlationId = generateCorrelationId();
 
     // 📊 Logging structuré: Requête chatEngine
-    structuredLogger.info('Requête chat engine', 'ChatEngine', {
-      messageLength: message.length,
-      messagePreview: message.substring(0, 100),
-      historyLength: history.length,
-      mode: config?.mode || this.config.mode,
-    }, correlationId);
+    structuredLogger.info(
+      'Requête chat engine',
+      'ChatEngine',
+      {
+        messageLength: message.length,
+        messagePreview: message.substring(0, 100),
+        historyLength: history.length,
+        mode: config?.mode || this.config.mode,
+      },
+      correlationId
+    );
 
     // 🚨 DEBUG CRITICAL: Log direct console pour tracer le flux
     console.log('[chatEngine] 📤 generate() APPELÉ', {
       message: message.substring(0, 100),
       historyLength: history.length,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
 
     try {
@@ -259,19 +264,24 @@ class ChatEngineOmega {
 
         if (cached) {
           // � Logging structuré: Cache hit
-          logger.debug('Cache hit - Réponse instantanée', 'ChatEngine', {
-            provider: cached.provider,
-            contentLength: cached.content?.length,
-            age: Date.now() - cached.timestamp,
-            hitCount: cached.hitCount,
-          }, correlationId);
-          
+          logger.debug(
+            'Cache hit - Réponse instantanée',
+            'ChatEngine',
+            {
+              provider: cached.provider,
+              contentLength: cached.content?.length,
+              age: Date.now() - cached.timestamp,
+              hitCount: cached.hitCount,
+            },
+            correlationId
+          );
+
           // 🚨 DEBUG: Log cache hit avec contenu
           console.log('[chatEngine] ⚡ CACHE HIT', {
             provider: cached.provider,
             contentLength: cached.content?.length,
             hasContent: !!cached.content && cached.content.trim().length > 0,
-            timestamp: cached.timestamp
+            timestamp: cached.timestamp,
           });
 
           pipelineSteps.push('cache-hit');
@@ -545,7 +555,7 @@ Format: [Audit complet] + [Réponse utilisateur]
         message: validatedMessage.substring(0, 100),
         historyLength: enrichedHistory.length,
         mode: finalConfig.mode,
-        aiConfig: finalConfig.aiConfig
+        aiConfig: finalConfig.aiConfig,
       });
 
       // Timeout adaptatif selon le mode (plus long pour modes complexes)
@@ -570,7 +580,7 @@ Format: [Audit complet] + [Réponse utilisateur]
       console.log('[chatEngine] ← Réponse orchestrator reçue', {
         provider: response?.provider,
         contentLength: response?.content?.length,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
 
       if (!response || !response.content) {

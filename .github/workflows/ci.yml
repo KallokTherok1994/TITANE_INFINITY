@@ -7,9 +7,9 @@ name: CI/CD Quality Gate
 # Déclencheurs
 on:
   push:
-    branches: [ MAIN ]
+    branches: [MAIN]
   pull_request:
-    branches: [ MAIN ]
+    branches: [MAIN]
 
 # Variables d'environnement
 env:

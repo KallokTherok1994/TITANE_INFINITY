@@ -37,7 +37,7 @@ describe('useChat Hook', () => {
   describe('Send Message', () => {
     it('should add user message', async () => {
       const { result } = renderHook(() => useChat());
-      
+
       await act(async () => {
         await result.current.sendMessage('Hello TITANE');
       });
@@ -52,7 +52,7 @@ describe('useChat Hook', () => {
 
     it('should set loading state', async () => {
       const { result } = renderHook(() => useChat());
-      
+
       act(() => {
         result.current.sendMessage('Test');
       });
@@ -64,7 +64,7 @@ describe('useChat Hook', () => {
   describe('Clear Messages', () => {
     it('should clear message history', async () => {
       const { result } = renderHook(() => useChat());
-      
+
       await act(async () => {
         await result.current.sendMessage('Message 1');
       });

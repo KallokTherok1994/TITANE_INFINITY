@@ -24,9 +24,7 @@ export async function updateFusionState(
     });
 
     if (!isUpdateStateSuccess(response)) {
-      throw new Error(
-        typeof response === 'string' ? response : 'Unknown error'
-      );
+      throw new Error(typeof response === 'string' ? response : 'Unknown error');
     }
 
     return response;
@@ -46,9 +44,7 @@ export async function autoOptimizeFusion(
     });
 
     if (!isAutoOptimizeSuccess(response)) {
-      throw new Error(
-        typeof response === 'string' ? response : 'Unknown error'
-      );
+      throw new Error(typeof response === 'string' ? response : 'Unknown error');
     }
 
     return response;

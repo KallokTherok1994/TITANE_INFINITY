@@ -50,7 +50,7 @@ describe('useDebounce Hook', () => {
       );
 
       rerender({ value: 'second', delay: 500 });
-      
+
       act(() => {
         vi.advanceTimersByTime(250);
       });

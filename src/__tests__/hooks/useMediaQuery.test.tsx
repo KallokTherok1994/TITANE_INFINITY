@@ -14,7 +14,12 @@ describe('useMediaQuery Hook', () => {
 
   describe('Initialization', () => {
     it('should initialize with query match', () => {
-      const mockMatch = { matches: true, media: '', addEventListener: vi.fn(), removeEventListener: vi.fn() };
+      const mockMatch = {
+        matches: true,
+        media: '',
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      };
       vi.spyOn(window, 'matchMedia').mockReturnValue(mockMatch as any);
 
       const { result } = renderHook(() => useMediaQuery('(min-width: 768px)'));
@@ -22,7 +27,12 @@ describe('useMediaQuery Hook', () => {
     });
 
     it('should initialize false when not matching', () => {
-      const mockMatch = { matches: false, media: '', addEventListener: vi.fn(), removeEventListener: vi.fn() };
+      const mockMatch = {
+        matches: false,
+        media: '',
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      };
       vi.spyOn(window, 'matchMedia').mockReturnValue(mockMatch as any);
 
       const { result } = renderHook(() => useMediaQuery('(min-width: 2000px)'));
@@ -32,7 +42,12 @@ describe('useMediaQuery Hook', () => {
 
   describe('Query Matching', () => {
     it('should match desktop query', () => {
-      const mockMatch = { matches: true, media: '', addEventListener: vi.fn(), removeEventListener: vi.fn() };
+      const mockMatch = {
+        matches: true,
+        media: '',
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      };
       vi.spyOn(window, 'matchMedia').mockReturnValue(mockMatch as any);
 
       const { result } = renderHook(() => useMediaQuery('(min-width: 1024px)'));
@@ -40,7 +55,12 @@ describe('useMediaQuery Hook', () => {
     });
 
     it('should match mobile query', () => {
-      const mockMatch = { matches: true, media: '', addEventListener: vi.fn(), removeEventListener: vi.fn() };
+      const mockMatch = {
+        matches: true,
+        media: '',
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      };
       vi.spyOn(window, 'matchMedia').mockReturnValue(mockMatch as any);
 
       const { result } = renderHook(() => useMediaQuery('(max-width: 640px)'));
@@ -48,7 +68,12 @@ describe('useMediaQuery Hook', () => {
     });
 
     it('should match dark mode query', () => {
-      const mockMatch = { matches: true, media: '', addEventListener: vi.fn(), removeEventListener: vi.fn() };
+      const mockMatch = {
+        matches: true,
+        media: '',
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      };
       vi.spyOn(window, 'matchMedia').mockReturnValue(mockMatch as any);
 
       const { result } = renderHook(() => useMediaQuery('(prefers-color-scheme: dark)'));
@@ -62,8 +87,10 @@ describe('useMediaQuery Hook', () => {
       const mockMatch = {
         matches: false,
         media: '',
-        addEventListener: vi.fn((_, cb) => { listener = cb; }),
-        removeEventListener: vi.fn()
+        addEventListener: vi.fn((_, cb) => {
+          listener = cb;
+        }),
+        removeEventListener: vi.fn(),
       };
       vi.spyOn(window, 'matchMedia').mockReturnValue(mockMatch as any);
 
@@ -87,7 +114,7 @@ describe('useMediaQuery Hook', () => {
         matches: true,
         media: '',
         addEventListener: vi.fn(),
-        removeEventListener: removeListener
+        removeEventListener: removeListener,
       };
       vi.spyOn(window, 'matchMedia').mockReturnValue(mockMatch as any);
 

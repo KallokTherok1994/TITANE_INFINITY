@@ -41,7 +41,7 @@ const ignores = [
 ];
 
 const lintFiles = ['src/**/*.{js,jsx,ts,tsx}'];
-const compatConfig = compat.config(legacyConfig).map((config) => ({
+const compatConfig = compat.config(legacyConfig).map(config => ({
   ...config,
   files: lintFiles,
 }));

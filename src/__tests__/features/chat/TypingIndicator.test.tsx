@@ -12,7 +12,9 @@ describe('TypingIndicator Component', () => {
     it('should render typing indicator', () => {
       render(<TypingIndicator />);
       // L'indicateur devrait être présent (dots animés)
-      const indicator = screen.getByRole('status', { name: /typing/i }) || document.querySelector('[data-testid="typing-indicator"]');
+      const indicator =
+        screen.getByRole('status', { name: /typing/i }) ||
+        document.querySelector('[data-testid="typing-indicator"]');
       expect(indicator || screen.getByText(/\.\.\./i)).toBeTruthy();
     });
 
@@ -32,14 +34,17 @@ describe('TypingIndicator Component', () => {
     it('should have animated dots', () => {
       const { container } = render(<TypingIndicator />);
       // Vérifier présence d'animation (via classes CSS ou éléments)
-      expect(container.querySelector('[class*="animate"]') || container.querySelector('.dot')).toBeTruthy();
+      expect(
+        container.querySelector('[class*="animate"]') || container.querySelector('.dot')
+      ).toBeTruthy();
     });
   });
 
   describe('Accessibility', () => {
     it('should have aria-live region', () => {
       render(<TypingIndicator />);
-      const liveRegion = screen.queryByRole('status') || document.querySelector('[aria-live]');
+      const liveRegion =
+        screen.queryByRole('status') || document.querySelector('[aria-live]');
       expect(liveRegion).toBeTruthy();
     });
   });

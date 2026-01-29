@@ -17,7 +17,9 @@ describe('ChatPanel Component', () => {
   describe('Rendering', () => {
     it('should render chat panel', () => {
       render(<ChatPanel onSend={mockOnSend} />);
-      expect(screen.getByRole('region') || screen.getByPlaceholderText(/message/i)).toBeTruthy();
+      expect(
+        screen.getByRole('region') || screen.getByPlaceholderText(/message/i)
+      ).toBeTruthy();
     });
 
     it('should render message input', () => {

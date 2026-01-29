@@ -26,7 +26,6 @@ interface MessageBubbleProps {
   isLatest?: boolean;
 }
 
-
 /**
  * Formate un timestamp en heure locale
  */
@@ -114,11 +113,7 @@ export const MessageBubble = memo(function MessageBubble({
         return <TypingIndicator />;
       }
       // Message vide et ancien = erreur ou placeholder non mis à jour
-      return (
-        <div className="message-error">
-          ⚠️ Erreur: aucune réponse générée
-        </div>
-      );
+      return <div className="message-error">⚠️ Erreur: aucune réponse générée</div>;
     }
     return content;
   }, [role, content, timestamp]);

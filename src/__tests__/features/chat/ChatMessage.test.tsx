@@ -27,12 +27,20 @@ describe('ChatMessage Component', () => {
     });
 
     it('should render assistant message', () => {
-      render(<ChatMessage message={{ ...mockMessage, role: 'assistant', content: 'Hi there!' }} />);
+      render(
+        <ChatMessage
+          message={{ ...mockMessage, role: 'assistant', content: 'Hi there!' }}
+        />
+      );
       expect(screen.getByText('Hi there!')).toBeInTheDocument();
     });
 
     it('should render system message', () => {
-      render(<ChatMessage message={{ ...mockMessage, role: 'system', content: 'System notification' }} />);
+      render(
+        <ChatMessage
+          message={{ ...mockMessage, role: 'system', content: 'System notification' }}
+        />
+      );
       expect(screen.getByText('System notification')).toBeInTheDocument();
     });
   });

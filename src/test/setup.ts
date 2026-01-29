@@ -73,7 +73,8 @@ vi.stubGlobal('fetch', fetchMock);
 // Polyfills pour l'environnement de tests (JSDOM)
 // Certains modules (visual engine) utilisent requestAnimationFrame.
 if (typeof globalThis.requestAnimationFrame !== 'function') {
-  globalThis.requestAnimationFrame = (cb: any) => setTimeout(() => cb(Date.now()), 0) as any;
+  globalThis.requestAnimationFrame = (cb: any) =>
+    setTimeout(() => cb(Date.now()), 0) as any;
 }
 if (typeof globalThis.cancelAnimationFrame !== 'function') {
   globalThis.cancelAnimationFrame = (id: any) => clearTimeout(id);

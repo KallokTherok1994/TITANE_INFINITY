@@ -40,9 +40,12 @@ export function useToolCaller(customTools?: Record<string, ToolDefinition>) {
     return toolCallerRef.current.getCallHistory();
   }, []);
 
-  const formatToolResult = useCallback((toolName: string, result: unknown, error?: string) => {
-    return toolCallerRef.current.formatToolResult(toolName, result, error);
-  }, []);
+  const formatToolResult = useCallback(
+    (toolName: string, result: unknown, error?: string) => {
+      return toolCallerRef.current.formatToolResult(toolName, result, error);
+    },
+    []
+  );
 
   return {
     parseToolCalls,

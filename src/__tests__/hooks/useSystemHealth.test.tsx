@@ -34,9 +34,9 @@ describe('useSystemHealth Hook', () => {
     it('should update health periodically', async () => {
       vi.useFakeTimers();
       const { result } = renderHook(() => useSystemHealth({ interval: 1000 }));
-      
+
       const initialCpu = result.current.health.cpu;
-      
+
       act(() => {
         vi.advanceTimersByTime(1000);
       });
@@ -48,7 +48,7 @@ describe('useSystemHealth Hook', () => {
 
     it('should detect warnings', async () => {
       const { result } = renderHook(() => useSystemHealth({ cpuThreshold: 80 }));
-      
+
       act(() => {
         // Simuler CPU élevé
         result.current.health.cpu = 85;
@@ -59,7 +59,7 @@ describe('useSystemHealth Hook', () => {
 
     it('should detect critical state', async () => {
       const { result } = renderHook(() => useSystemHealth({ cpuThreshold: 90 }));
-      
+
       act(() => {
         result.current.health.cpu = 95;
         result.current.health.status = 'critical';
@@ -73,7 +73,7 @@ describe('useSystemHealth Hook', () => {
     it('should emit alert on threshold exceeded', async () => {
       const onAlert = vi.fn();
       renderHook(() => useSystemHealth({ onAlert, cpuThreshold: 80 }));
-      
+
       await act(async () => {
         await new Promise(resolve => setTimeout(resolve, 100));
       });

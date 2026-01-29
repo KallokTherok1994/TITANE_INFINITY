@@ -12,10 +12,7 @@ import type {
   TTSPrepareRequest,
   TTSPrepareResponse,
 } from './types-week2';
-import {
-  isIAGenerationSuccess,
-  isTTSPrepareSuccess,
-} from './types-week2';
+import { isIAGenerationSuccess, isTTSPrepareSuccess } from './types-week2';
 
 /**
  * Generate IA response from prompt
@@ -43,9 +40,7 @@ export async function generateIAResponse(
     );
 
     if (!isIAGenerationSuccess(response)) {
-      throw new Error(
-        typeof response === 'string' ? response : 'Unknown error'
-      );
+      throw new Error(typeof response === 'string' ? response : 'Unknown error');
     }
 
     return response;
@@ -152,15 +147,12 @@ export async function prepareTTS(
   request: TTSPrepareRequest
 ): Promise<TTSPrepareResponse> {
   try {
-    const response = await secureInvoke<TTSPrepareResponse>(
-      'fusion_prepare_tts',
-      { request }
-    );
+    const response = await secureInvoke<TTSPrepareResponse>('fusion_prepare_tts', {
+      request,
+    });
 
     if (!isTTSPrepareSuccess(response)) {
-      throw new Error(
-        typeof response === 'string' ? response : 'Unknown error'
-      );
+      throw new Error(typeof response === 'string' ? response : 'Unknown error');
     }
 
     return response;
@@ -290,10 +282,7 @@ export function formatBufferSize(bytes: number): string {
  * @param speed - Speech speed (0.5-2.0)
  * @returns Estimated duration in milliseconds
  */
-export function estimateAudioDuration(
-  textLength: number,
-  speed: number = 1.0
-): number {
+export function estimateAudioDuration(textLength: number, speed: number = 1.0): number {
   // Rough estimate: 150 words per minute = 2.5 words per second
   const estimatedWords = textLength / 5; // Average 5 chars per word
   const secondsAt1x = estimatedWords / 2.5;

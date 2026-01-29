@@ -18,7 +18,9 @@ describe('VoiceControl Component', () => {
   describe('Rendering', () => {
     it('should render voice button', () => {
       render(<VoiceControl onStart={mockOnStart} onStop={mockOnStop} />);
-      expect(screen.getByRole('button', { name: /voice|microphone/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /voice|microphone/i })
+      ).toBeInTheDocument();
     });
 
     it('should show idle state', () => {
@@ -28,12 +30,16 @@ describe('VoiceControl Component', () => {
     });
 
     it('should show listening state', () => {
-      render(<VoiceControl onStart={mockOnStart} onStop={mockOnStop} state="listening" />);
+      render(
+        <VoiceControl onStart={mockOnStart} onStop={mockOnStop} state="listening" />
+      );
       expect(screen.getByText(/listening|recording/i)).toBeTruthy();
     });
 
     it('should show processing state', () => {
-      render(<VoiceControl onStart={mockOnStart} onStop={mockOnStop} state="processing" />);
+      render(
+        <VoiceControl onStart={mockOnStart} onStop={mockOnStop} state="processing" />
+      );
       expect(screen.getByText(/processing|analyzing/i)).toBeTruthy();
     });
   });
@@ -46,7 +52,9 @@ describe('VoiceControl Component', () => {
     });
 
     it('should stop voice recording', () => {
-      render(<VoiceControl onStart={mockOnStart} onStop={mockOnStop} state="listening" />);
+      render(
+        <VoiceControl onStart={mockOnStart} onStop={mockOnStop} state="listening" />
+      );
       fireEvent.click(screen.getByRole('button', { name: /stop|voice/i }));
       expect(mockOnStop).toHaveBeenCalledTimes(1);
     });
@@ -61,7 +69,9 @@ describe('VoiceControl Component', () => {
 
   describe('Snapshot', () => {
     it('should match snapshot', () => {
-      const { container } = render(<VoiceControl onStart={mockOnStart} onStop={mockOnStop} />);
+      const { container } = render(
+        <VoiceControl onStart={mockOnStart} onStop={mockOnStop} />
+      );
       expect(container.firstChild).toMatchSnapshot();
     });
   });

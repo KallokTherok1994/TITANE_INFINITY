@@ -36,7 +36,7 @@ describe.skip('useVoice Hook (NON IMPLÉMENTÉ - hook commenté dans index.ts)',
   describe('Recording', () => {
     it('should start recording', async () => {
       const { result } = renderHook(() => useVoice());
-      
+
       await act(async () => {
         await result.current.startRecording();
       });
@@ -46,7 +46,7 @@ describe.skip('useVoice Hook (NON IMPLÉMENTÉ - hook commenté dans index.ts)',
 
     it('should stop recording', async () => {
       const { result } = renderHook(() => useVoice());
-      
+
       await act(async () => {
         await result.current.startRecording();
         await result.current.stopRecording();
@@ -57,7 +57,7 @@ describe.skip('useVoice Hook (NON IMPLÉMENTÉ - hook commenté dans index.ts)',
 
     it('should handle transcription', async () => {
       const { result } = renderHook(() => useVoice());
-      
+
       await act(async () => {
         await result.current.startRecording();
         await result.current.stopRecording();
@@ -70,11 +70,11 @@ describe.skip('useVoice Hook (NON IMPLÉMENTÉ - hook commenté dans index.ts)',
   describe('Error Handling', () => {
     it('should handle recording errors', async () => {
       const { result } = renderHook(() => useVoice());
-      
+
       // Simuler erreur
       const tauriCore = await import('@tauri-apps/api/core');
       vi.mocked(tauriCore.invoke).mockRejectedValueOnce(new Error('No microphone'));
-      
+
       await act(async () => {
         try {
           await result.current.startRecording();

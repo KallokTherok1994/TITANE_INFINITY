@@ -30,7 +30,13 @@ describe.skip('CommandPalette Component (NON IMPLÉMENTÉ - fichier inexistant)'
     });
 
     it('should not render when closed', () => {
-      render(<CommandPalette isOpen={false} commands={mockCommands} onExecute={mockOnExecute} />);
+      render(
+        <CommandPalette
+          isOpen={false}
+          commands={mockCommands}
+          onExecute={mockOnExecute}
+        />
+      );
       expect(screen.queryByPlaceholderText(/search|command/i)).not.toBeInTheDocument();
     });
 
@@ -81,7 +87,9 @@ describe.skip('CommandPalette Component (NON IMPLÉMENTÉ - fichier inexistant)'
 
   describe('Snapshot', () => {
     it('should match snapshot', () => {
-      const { container } = render(<CommandPalette isOpen commands={mockCommands} onExecute={mockOnExecute} />);
+      const { container } = render(
+        <CommandPalette isOpen commands={mockCommands} onExecute={mockOnExecute} />
+      );
       expect(container.firstChild).toMatchSnapshot();
     });
   });

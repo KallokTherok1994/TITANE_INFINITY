@@ -49,7 +49,9 @@ describe('VirtualMessageList Component', () => {
 
   describe('Scroll', () => {
     it('should auto-scroll to bottom by default', () => {
-      const { container } = render(<VirtualMessageList messages={mockMessages} autoScrollToBottom />);
+      const { container } = render(
+        <VirtualMessageList messages={mockMessages} autoScrollToBottom />
+      );
       // Le container devrait avoir scroll au bottom
       expect(container).toBeTruthy();
     });

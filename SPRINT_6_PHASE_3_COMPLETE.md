@@ -11,20 +11,21 @@
 **Phase 3 complète les fonctionnalités avancées du chat IA:**
 
 ### 🎯 Objectifs Phase 3
+
 1. ✅ **Message Reactions** — Système de réactions emoji sur les messages
 2. ✅ **Token Counter** — Comptage précis et alertes de contexte
 3. ✅ **Tool Calling Integration** — Exécution automatique des outils dans les conversations
 
 ### 📈 Métriques de Livraison
 
-| Métrique | Valeur | Cible | Statut |
-|----------|--------|-------|--------|
-| **Fichiers créés** | 5 nouveaux | 4-6 | ✅ |
-| **Fichiers modifiés** | 2 fichiers | 2-3 | ✅ |
-| **Lignes de code** | ~650 lignes | 500-800 | ✅ |
-| **Erreurs TypeScript** | 0 | 0 | ✅ |
-| **Tests manuels** | À faire | 3/3 features | ⏳ |
-| **Performance impact** | Négligeable | <5% | ✅ |
+| Métrique               | Valeur      | Cible        | Statut |
+| ---------------------- | ----------- | ------------ | ------ |
+| **Fichiers créés**     | 5 nouveaux  | 4-6          | ✅     |
+| **Fichiers modifiés**  | 2 fichiers  | 2-3          | ✅     |
+| **Lignes de code**     | ~650 lignes | 500-800      | ✅     |
+| **Erreurs TypeScript** | 0           | 0            | ✅     |
+| **Tests manuels**      | À faire     | 3/3 features | ⏳     |
+| **Performance impact** | Négligeable | <5%          | ✅     |
 
 ---
 
@@ -33,10 +34,12 @@
 ### 1️⃣ Message Reactions (UX Enhancement)
 
 **Fichiers:**
+
 - `src/services/chat/messageReactions.ts` (130 lignes) — Service de gestion des réactions
 - `src/components/chat/MessageReactions.tsx` (170 lignes) — Composant UI
 
 **Fonctionnalités:**
+
 - ✅ 5 types de réactions: 👍 👎 ❤️ 😂 🤔
 - ✅ Persistence localStorage (clé: `titane_message_reactions`)
 - ✅ Affichage compact avec comptage
@@ -45,11 +48,12 @@
 - ✅ Intégration MessageBubble (assistant messages uniquement)
 
 **Architecture:**
+
 ```typescript
 // Service pattern (singleton)
 class MessageReactionsService {
   private reactionsCache: Map<number, Record<ReactionType, number>>;
-  
+
   toggleReaction(messageTimestamp: number, reaction: ReactionType): void;
   getReactions(messageTimestamp: number): Record<ReactionType, number>;
   clearAll(): void;
@@ -65,6 +69,7 @@ interface MessageReactionsProps {
 ```
 
 **Storage Format:**
+
 ```json
 {
   "messageTimestamp": 1706345600000,
@@ -77,6 +82,7 @@ interface MessageReactionsProps {
 ```
 
 **Styling:**
+
 - Dark theme aligned (rgba(114, 123, 129))
 - Rounded buttons (borderRadius: 12px)
 - Hover animations (scale 1.2)
@@ -87,10 +93,12 @@ interface MessageReactionsProps {
 ### 2️⃣ Token Counter (Context Awareness)
 
 **Fichiers:**
+
 - `src/services/chat/tokenCounter.ts` (200 lignes) — Service de comptage
 - `src/components/chat/ContextUsage.tsx` (220 lignes) — Composant d'affichage
 
 **Fonctionnalités:**
+
 - ✅ Estimation intelligente des tokens (hybride mots + caractères)
 - ✅ Support multi-modèles (GPT-4, Claude, Gemini, Llama local)
 - ✅ Alertes contextuelles (70% = yellow, 85% = orange, 100% = red)
@@ -101,6 +109,7 @@ interface MessageReactionsProps {
 - ✅ Mode complet avec détails
 
 **Architecture:**
+
 ```typescript
 // Service methods
 class TokenCounterService {
@@ -113,7 +122,7 @@ class TokenCounterService {
 }
 
 // Component modes
-<ContextUsage 
+<ContextUsage
   messages={messages}
   currentModel={model}
   compact={true}       // Compact: "🔢 12.5K / 128K ⚠️"
@@ -131,14 +140,16 @@ class TokenCounterService {
 | Local Llama | 4K | 75% |
 
 **Token Estimation Formula:**
+
 ```typescript
 // Hybride: moyenne entre approche mots et caractères
-const byWords = words * 1.3;       // ~1.3 tokens par mot
-const byChars = chars / 3.5;       // ~3.5 chars par token
+const byWords = words * 1.3; // ~1.3 tokens par mot
+const byChars = chars / 3.5; // ~3.5 chars par token
 const tokens = (byWords + byChars) / 2;
 ```
 
 **Intégration UI:**
+
 - Ajouté dans AIChatBubble header (ligne ~625)
 - Positionné entre ModelSelector et ConversationControls
 - Mode compact activé par défaut
@@ -149,9 +160,11 @@ const tokens = (byWords + byChars) / 2;
 ### 3️⃣ Tool Calling Integration (Agent Capabilities)
 
 **Fichiers:**
+
 - `src/services/ai/ConversationManager.ts` (modifié, +60 lignes)
 
 **Fonctionnalités:**
+
 - ✅ Parsing automatique des tool calls dans les réponses
 - ✅ Exécution séquentielle des outils
 - ✅ Gestion des erreurs (fallback gracieux)
@@ -160,6 +173,7 @@ const tokens = (byWords + byChars) / 2;
 - ✅ Logging détaillé pour debugging
 
 **Flux d'exécution:**
+
 ```
 1. User message → ConversationManager.sendMessage()
 2. AI response received ← routeToAI()
@@ -171,6 +185,7 @@ const tokens = (byWords + byChars) / 2;
 ```
 
 **Code Integration (ConversationManager.ts):**
+
 ```typescript
 // Après routeToAI, avant store in context (ligne ~105)
 const contentString = typeof response.content === 'string' ? response.content : '';
@@ -178,7 +193,7 @@ const toolCalls = toolCaller.parseToolCalls(contentString);
 
 if (toolCalls.length > 0) {
   const toolResults: ToolResult[] = [];
-  
+
   // Execute tools in sequence
   for (const toolCall of toolCalls) {
     try {
@@ -206,12 +221,14 @@ if (toolCalls.length > 0) {
 ```
 
 **Supported Tools (Phase 2):**
+
 - ✅ `calculate` — Évaluations mathématiques
 - ✅ `get_time` — Date/heure actuelle
 - ✅ `search_memory` — Recherche dans la mémoire
 - ⏳ Extensible via toolCaller.ts (registry pattern)
 
 **Error Handling:**
+
 - Try-catch par tool (échec d'un outil n'arrête pas les autres)
 - Logging détaillé avec correlation IDs
 - Message d'erreur formaté dans l'UI
@@ -288,6 +305,7 @@ UI Update (AIChatBubble)
 ### Tests Manuels (À faire)
 
 **1. Message Reactions:**
+
 - [ ] Click "+" button → picker appears
 - [ ] Click emoji → reaction added (count = 1)
 - [ ] Click same emoji → reaction removed (count = 0)
@@ -295,6 +313,7 @@ UI Update (AIChatBubble)
 - [ ] Reload page → reactions persisted (localStorage)
 
 **2. Token Counter:**
+
 - [ ] Start conversation → token count = 0
 - [ ] Send message → token count updates
 - [ ] Long conversation → warning at 70% (yellow)
@@ -303,20 +322,21 @@ UI Update (AIChatBubble)
 - [ ] Change model → limits update correctly
 
 **3. Tool Calling:**
+
 - [ ] Ask "What time is it?" → get_time executed
-- [ ] Ask "Calculate 123 * 456" → calculate executed
+- [ ] Ask "Calculate 123 \* 456" → calculate executed
 - [ ] Tool result displayed with 🔧 icon
 - [ ] Tool error handled gracefully (shows ❌)
 - [ ] Multiple tools in one response
 
 ### Performance ✅
 
-| Métrique | Before | After | Delta |
-|----------|--------|-------|-------|
-| **Bundle size** | ~1.2MB | ~1.22MB | +20KB |
-| **Initial render** | 180ms | 185ms | +5ms |
-| **Message render** | 12ms | 13ms | +1ms |
-| **Tool execution** | N/A | 50-200ms | (async) |
+| Métrique           | Before | After    | Delta   |
+| ------------------ | ------ | -------- | ------- |
+| **Bundle size**    | ~1.2MB | ~1.22MB  | +20KB   |
+| **Initial render** | 180ms  | 185ms    | +5ms    |
+| **Message render** | 12ms   | 13ms     | +1ms    |
+| **Tool execution** | N/A    | 50-200ms | (async) |
 
 **Impact: Négligeable** (<5% overhead)
 
@@ -371,6 +391,7 @@ UI Update (AIChatBubble)
    - Lines changed: +62
 
 **Total:**
+
 - 5 nouveaux fichiers
 - 3 fichiers modifiés
 - ~650 lignes de code nouveau
@@ -390,6 +411,7 @@ UI Update (AIChatBubble)
 ### 2. Reactions Storage (localStorage)
 
 **Alternatives considérées:**
+
 - ✅ **localStorage:** Simple, no backend, persiste
 - ❌ **Memory only:** Perdu au refresh
 - ❌ **Backend DB:** Overkill pour cette feature
@@ -399,6 +421,7 @@ UI Update (AIChatBubble)
 ### 3. Tool Execution (Sequential)
 
 **Alternatives considérées:**
+
 - ❌ **Parallel:** Risque de race conditions
 - ✅ **Sequential:** Prévisible, order matters
 - ❌ **Concurrent with limit:** Trop complexe pour Phase 3
@@ -408,10 +431,12 @@ UI Update (AIChatBubble)
 ### 4. Context Usage Display (Two Modes)
 
 **Rationale:**
+
 - **Compact:** Pour header (économise l'espace)
 - **Full:** Pour panneau détails (quand demandé)
 
 **Props design:**
+
 ```typescript
 compact?: boolean;   // Toggle mode
 showCost?: boolean;  // Optional cost display
@@ -424,24 +449,28 @@ showCost?: boolean;  // Optional cost display
 ### Améliorations Possibles
 
 **1. Message Reactions:**
+
 - [ ] Reactions sur messages utilisateurs
 - [ ] Reactions customisables (emoji picker complet)
 - [ ] Stats globales (most used reactions)
 - [ ] Export reactions avec conversations
 
 **2. Token Counter:**
+
 - [ ] Intégration tiktoken (si bundle acceptable)
 - [ ] Token streaming (real-time pendant génération)
 - [ ] Alertes proactives (notification avant limite)
 - [ ] Token usage history (graphique)
 
 **3. Tool Calling:**
+
 - [ ] Auto-loop (agent re-sends with results)
 - [ ] Tool approval UI (ask before execution)
 - [ ] Tool registry UI (enable/disable tools)
 - [ ] Custom tools (user-defined)
 
 **4. Polish:**
+
 - [ ] Animation d'apparition (MessageReactions)
 - [ ] Transitions (ContextUsage progress bar)
 - [ ] Keyboard shortcuts (quick reactions)
@@ -453,36 +482,37 @@ showCost?: boolean;  // Optional cost display
 
 ### Code Quality
 
-| Métrique | Valeur | Cible | Statut |
-|----------|--------|-------|--------|
-| **TypeScript strict** | ✅ 100% | 100% | ✅ |
-| **ESLint errors** | 0 | 0 | ✅ |
-| **Dead code** | 0% | <1% | ✅ |
-| **Test coverage** | N/A (manual) | Manual OK | ⏳ |
-| **Documentation** | 100% | 100% | ✅ |
+| Métrique              | Valeur       | Cible     | Statut |
+| --------------------- | ------------ | --------- | ------ |
+| **TypeScript strict** | ✅ 100%      | 100%      | ✅     |
+| **ESLint errors**     | 0            | 0         | ✅     |
+| **Dead code**         | 0%           | <1%       | ✅     |
+| **Test coverage**     | N/A (manual) | Manual OK | ⏳     |
+| **Documentation**     | 100%         | 100%      | ✅     |
 
 ### Performance
 
-| Métrique | Valeur | Cible | Statut |
-|----------|--------|-------|--------|
-| **Bundle size impact** | +20KB | <50KB | ✅ |
-| **Render overhead** | +5ms | <10ms | ✅ |
-| **Memory usage** | +2MB | <5MB | ✅ |
-| **Tool execution** | 50-200ms | <500ms | ✅ |
+| Métrique               | Valeur   | Cible  | Statut |
+| ---------------------- | -------- | ------ | ------ |
+| **Bundle size impact** | +20KB    | <50KB  | ✅     |
+| **Render overhead**    | +5ms     | <10ms  | ✅     |
+| **Memory usage**       | +2MB     | <5MB   | ✅     |
+| **Tool execution**     | 50-200ms | <500ms | ✅     |
 
 ### Features
 
-| Feature | Statut | Tests | Docs |
-|---------|--------|-------|------|
+| Feature               | Statut  | Tests     | Docs        |
+| --------------------- | ------- | --------- | ----------- |
 | **Message Reactions** | ✅ DONE | ⏳ Manual | ✅ Complete |
-| **Token Counter** | ✅ DONE | ⏳ Manual | ✅ Complete |
-| **Tool Integration** | ✅ DONE | ⏳ Manual | ✅ Complete |
+| **Token Counter**     | ✅ DONE | ⏳ Manual | ✅ Complete |
+| **Tool Integration**  | ✅ DONE | ⏳ Manual | ✅ Complete |
 
 ---
 
 ## ✅ CHECKLIST FINAL
 
 ### Code ✅
+
 - [x] messageReactions.ts créé (130 lignes)
 - [x] MessageReactions.tsx créé (170 lignes)
 - [x] tokenCounter.ts créé (200 lignes)
@@ -494,6 +524,7 @@ showCost?: boolean;  // Optional cost display
 - [x] ESLint: 0 warnings
 
 ### Testing ⏳
+
 - [ ] Message Reactions: Manual tests
 - [ ] Token Counter: Manual tests
 - [ ] Tool Calling: Manual tests
@@ -501,12 +532,14 @@ showCost?: boolean;  // Optional cost display
 - [ ] Accessibility: Keyboard nav
 
 ### Documentation ✅
+
 - [x] SPRINT_6_PHASE_3_COMPLETE.md
 - [x] Code comments (JSDoc)
 - [x] Architecture diagrams (text)
 - [x] API documentation (inline)
 
 ### Git ⏳
+
 - [ ] Commit Phase 3 changes
 - [ ] Tag: v26.4.0-phase3
 - [ ] Push to main
@@ -518,22 +551,26 @@ showCost?: boolean;  // Optional cost display
 **Sprint 6 Phase 3 COMPLETE!**
 
 **Livré:**
+
 - ✅ Message Reactions (engagement utilisateur)
 - ✅ Token Counter (awareness contexte)
 - ✅ Tool Calling Integration (agent capabilities)
 
 **Qualité:**
+
 - ✅ 0 erreurs TypeScript
 - ✅ Architecture cohérente (Ring 3 + 4)
 - ✅ Performance maintenue (<5% overhead)
 - ✅ Documentation complète
 
 **Prêt pour:**
+
 - Tests manuels (3 features)
 - Commit + tag v26.4.0
 - Sprint 7 planning
 
 **Total Sprint 6 (Phases 1-3):**
+
 - 16 fichiers créés/modifiés
 - ~2650 lignes de code
 - 6 features majeures livrées

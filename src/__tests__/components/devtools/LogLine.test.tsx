@@ -15,7 +15,7 @@ describe('LogLine Component', () => {
     timestamp: Date.now(),
     level: 'info',
     message: 'Test log message',
-    category: 'system'
+    category: 'system',
   };
 
   describe('Rendering', () => {

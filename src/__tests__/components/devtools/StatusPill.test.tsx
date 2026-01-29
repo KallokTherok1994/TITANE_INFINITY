@@ -85,7 +85,9 @@ describe('StatusPill Component', () => {
     });
 
     it('should support aria-label', () => {
-      render(<StatusPill status="error" label="Critical" aria-label="System critical error" />);
+      render(
+        <StatusPill status="error" label="Critical" aria-label="System critical error" />
+      );
       expect(screen.getByLabelText('System critical error')).toBeInTheDocument();
     });
   });

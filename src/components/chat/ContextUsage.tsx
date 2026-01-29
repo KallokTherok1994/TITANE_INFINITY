@@ -73,11 +73,10 @@ export const ContextUsage: React.FC<ContextUsageProps> = ({
       >
         <span style={{ opacity: 0.7 }}>🔢</span>
         <span>
-          {tokenCounter.formatTokenCount(usage.tokenCount.total)} / {tokenCounter.formatTokenCount(usage.limit)}
+          {tokenCounter.formatTokenCount(usage.tokenCount.total)} /{' '}
+          {tokenCounter.formatTokenCount(usage.limit)}
         </span>
-        {usage.isNearLimit && (
-          <span style={{ fontSize: '14px' }}>⚠️</span>
-        )}
+        {usage.isNearLimit && <span style={{ fontSize: '14px' }}>⚠️</span>}
       </div>
     );
   }
@@ -107,12 +106,8 @@ export const ContextUsage: React.FC<ContextUsageProps> = ({
           fontWeight: 600,
         }}
       >
-        <span style={{ color: 'rgba(250, 250, 250, 0.9)' }}>
-          Utilisation du contexte
-        </span>
-        <span style={{ color: getColor() }}>
-          {(usage.percentage * 100).toFixed(1)}%
-        </span>
+        <span style={{ color: 'rgba(250, 250, 250, 0.9)' }}>Utilisation du contexte</span>
+        <span style={{ color: getColor() }}>{(usage.percentage * 100).toFixed(1)}%</span>
       </div>
 
       {/* Barre de progression */}
@@ -149,12 +144,8 @@ export const ContextUsage: React.FC<ContextUsageProps> = ({
           color: 'rgba(250, 250, 250, 0.6)',
         }}
       >
-        <span>
-          {usage.tokenCount.total.toLocaleString()} tokens
-        </span>
-        <span>
-          Limite: {usage.limit.toLocaleString()}
-        </span>
+        <span>{usage.tokenCount.total.toLocaleString()} tokens</span>
+        <span>Limite: {usage.limit.toLocaleString()}</span>
       </div>
 
       {/* Breakdown input/output */}
@@ -166,12 +157,8 @@ export const ContextUsage: React.FC<ContextUsageProps> = ({
           color: 'rgba(250, 250, 250, 0.5)',
         }}
       >
-        <span>
-          📥 Input: {tokenCounter.formatTokenCount(usage.tokenCount.input)}
-        </span>
-        <span>
-          📤 Output: {tokenCounter.formatTokenCount(usage.tokenCount.output)}
-        </span>
+        <span>📥 Input: {tokenCounter.formatTokenCount(usage.tokenCount.input)}</span>
+        <span>📤 Output: {tokenCounter.formatTokenCount(usage.tokenCount.output)}</span>
       </div>
 
       {/* Coût estimé */}
@@ -230,7 +217,9 @@ export const ContextUsage: React.FC<ContextUsageProps> = ({
           }}
         >
           <span>🚨</span>
-          <span>Limite de contexte dépassée! Archivez des messages ou changez de modèle.</span>
+          <span>
+            Limite de contexte dépassée! Archivez des messages ou changez de modèle.
+          </span>
         </div>
       )}
     </div>

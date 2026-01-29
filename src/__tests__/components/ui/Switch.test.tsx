@@ -61,7 +61,9 @@ describe('Switch Component', () => {
 
     it('should support aria-label', () => {
       render(<Switch aria-label="Enable notifications" />);
-      expect(screen.getByRole('switch', { name: 'Enable notifications' })).toBeInTheDocument();
+      expect(
+        screen.getByRole('switch', { name: 'Enable notifications' })
+      ).toBeInTheDocument();
     });
 
     it('should reflect checked state in aria-checked', () => {

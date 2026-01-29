@@ -18,6 +18,7 @@ Cette release introduit la **nouvelle identité visuelle officielle** de TITANE 
 - **Multi-formats** : PNG (32x32, 128x128, 256x256@2), ICO (Windows), ICNS (macOS)
 
 L'icône s'intègre parfaitement dans tous les environnements :
+
 - ✅ Menus d'application
 - ✅ Barre de tâches
 - ✅ Alt+Tab
@@ -28,7 +29,7 @@ L'icône s'intègre parfaitement dans tous les environnements :
 
 ## 📦 Installation
 
-### Debian / Ubuntu / Linux Mint / Pop!_OS
+### Debian / Ubuntu / Linux Mint / Pop!\_OS
 
 ```bash
 # Télécharger le package DEB
@@ -57,11 +58,13 @@ Après installation, TITANE INFINITY apparaît dans votre menu d'applications av
 ## 🔐 Vérification d'Intégrité
 
 **SHA256 Checksum:**
+
 ```
 7da7b12aa1108f48e0df61fb5c1a9447a3a5474e822e2b639a8748b57f4e41fb
 ```
 
 Vérifiez toujours l'intégrité du fichier téléchargé :
+
 ```bash
 echo "7da7b12aa1108f48e0df61fb5c1a9447a3a5474e822e2b639a8748b57f4e41fb  TITANE-Infinity_26.4.0_amd64.deb" | sha256sum -c
 ```
@@ -95,17 +98,17 @@ Cette release a passé **100% des tests** avec succès :
 
 ### Artifacts
 
-| Artifact | Taille | Architecture |
-|----------|--------|--------------|
+| Artifact    | Taille | Architecture   |
+| ----------- | ------ | -------------- |
 | DEB Package | 9.5 MB | amd64 (x86_64) |
-| Binary | 22 MB | Optimisé (LTO) |
+| Binary      | 22 MB  | Optimisé (LTO) |
 
 ### Compatibilité
 
 - ✅ Ubuntu 20.04+
 - ✅ Debian 11+ (Bullseye)
 - ✅ Linux Mint 20+
-- ✅ Pop!_OS 20.04+
+- ✅ Pop!\_OS 20.04+
 - ✅ Autres distributions Debian-based
 
 ---
@@ -115,6 +118,7 @@ Cette release a passé **100% des tests** avec succès :
 Cette version inclut les **systèmes avancés d'infaillibilité** introduits en v26.4.0 :
 
 ### Performance Guards (`performanceGuards.ts`)
+
 - Monitoring FPS temps réel (60 FPS target)
 - Tracking mémoire (limite 512 MB)
 - Surveillance response time (<100ms)
@@ -122,6 +126,7 @@ Cette version inclut les **systèmes avancés d'infaillibilité** introduits en 
 - Health checks système
 
 ### Advanced Telemetry (`advancedTelemetry.ts`)
+
 - Event tracking (metric/error/warning/info)
 - Agrégations statistiques (p50/p95/p99)
 - Batch processing (100 events/10s)
@@ -172,6 +177,7 @@ Les données utilisateur et configurations sont **préservées automatiquement**
 L'**AppImage n'est pas inclus** dans cette release en raison de problèmes techniques lors du bundling. Le **package DEB couvre l'essentiel** des distributions Linux principales.
 
 Si vous avez besoin d'un AppImage, veuillez :
+
 1. Ouvrir une issue sur GitHub
 2. Utiliser le DEB en attendant (recommandé)
 
@@ -189,22 +195,26 @@ Une future version mineure (v26.4.1) pourra inclure l'AppImage si la demande est
 ## 📝 Changelog Complet
 
 ### Ajouts
+
 - ✨ Nouvelle icône holographique avec symbole ∞
 - ✨ Dégradé bleu titanium → cyan sur tous les formats
 - ✨ Intégration système complète (desktop file, icons, launcher)
 
 ### Améliorations
+
 - 🚀 Build frontend optimisé (9.34s)
 - 🚀 Compilation Rust avec LTO complet
 - 🚀 Compression Gzip + Brotli activée
 - 🚀 Service Worker avec 107 fichiers précachés
 
 ### Corrections
+
 - 🐛 Toutes les erreurs TypeScript corrigées (475+)
 - 🐛 Validations de types strictes partout
 - 🐛 Build DEB stabilisé et testé
 
 ### Maintenance
+
 - 🔧 Documentation mise à jour
 - 🔧 Tests exhaustifs (2508/2508)
 - 🔧 Conformité COPILOT-XS 100%
@@ -239,6 +249,6 @@ Merci à tous les testeurs et utilisateurs de TITANE INFINITY pour votre soutien
 
 ---
 
-*Release signée par Kevin Thibault — TITANE∞*  
-*Build validé le 26 janvier 2026, 20:39 EST*  
-*Commit: 014f1de8912eed61c49e5f5fe1456d2d3dd0d38f*
+_Release signée par Kevin Thibault — TITANE∞_  
+_Build validé le 26 janvier 2026, 20:39 EST_  
+_Commit: 014f1de8912eed61c49e5f5fe1456d2d3dd0d38f_

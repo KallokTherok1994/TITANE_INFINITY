@@ -28,9 +28,7 @@ export async function processLipSync(
     );
 
     if (!isLipSyncProcessSuccess(response)) {
-      throw new Error(
-        typeof response === 'string' ? response : 'Unknown error'
-      );
+      throw new Error(typeof response === 'string' ? response : 'Unknown error');
     }
 
     return response;
@@ -67,15 +65,12 @@ export async function animateAvatar(
   request: AnimateAvatarRequest
 ): Promise<AnimateAvatarResponse> {
   try {
-    const response = await secureInvoke<AnimateAvatarResponse>(
-      'fusion_animate_avatar',
-      { request }
-    );
+    const response = await secureInvoke<AnimateAvatarResponse>('fusion_animate_avatar', {
+      request,
+    });
 
     if (!isAnimateAvatarSuccess(response)) {
-      throw new Error(
-        typeof response === 'string' ? response : 'Unknown error'
-      );
+      throw new Error(typeof response === 'string' ? response : 'Unknown error');
     }
 
     return response;

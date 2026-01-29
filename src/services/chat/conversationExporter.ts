@@ -58,9 +58,8 @@ class ConversationExporter {
   ): string {
     const firstMessage = messages[0];
     const lastMessage = messages[messages.length - 1];
-    const duration = lastMessage && firstMessage
-      ? lastMessage.timestamp - firstMessage.timestamp
-      : 0;
+    const duration =
+      lastMessage && firstMessage ? lastMessage.timestamp - firstMessage.timestamp : 0;
 
     const data: ConversationExportData = {
       metadata: {
@@ -119,7 +118,10 @@ class ConversationExporter {
     const filename = `conversation_${timestamp}.${options.format === 'markdown' ? 'md' : 'json'}`;
 
     const element = document.createElement('a');
-    element.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(content)}`);
+    element.setAttribute(
+      'href',
+      `data:text/plain;charset=utf-8,${encodeURIComponent(content)}`
+    );
     element.setAttribute('download', filename);
     element.style.display = 'none';
     document.body.appendChild(element);
@@ -153,7 +155,8 @@ class ConversationExporter {
     const messages: AIMessage[] = [];
 
     // Regex pour parser les messages: ## Message N — Role
-    const messagePattern = /## Message \d+ — (Vous|TITANE∞)(?: \([^)]+\))?\n\n([\s\S]*?)(?=---|$)/g;
+    const messagePattern =
+      /## Message \d+ — (Vous|TITANE∞)(?: \([^)]+\))?\n\n([\s\S]*?)(?=---|$)/g;
 
     let match;
     while ((match = messagePattern.exec(text)) !== null) {

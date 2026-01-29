@@ -29,40 +29,249 @@ export interface CodeBlockProps {
 class SyntaxHighlighter {
   private static readonly KEYWORDS: Record<string, string[]> = {
     typescript: [
-      'abstract', 'any', 'as', 'async', 'await', 'boolean', 'break', 'case', 'catch', 'class',
-      'const', 'continue', 'debugger', 'declare', 'default', 'delete', 'do', 'else', 'enum',
-      'export', 'extends', 'false', 'finally', 'for', 'from', 'function', 'get', 'global',
-      'if', 'implements', 'import', 'in', 'instanceof', 'interface', 'is', 'keyof', 'let',
-      'module', 'namespace', 'never', 'new', 'null', 'number', 'of', 'package', 'private',
-      'protected', 'public', 'readonly', 'require', 'return', 'set', 'static', 'string',
-      'super', 'switch', 'symbol', 'this', 'throw', 'true', 'try', 'type', 'typeof',
-      'unknown', 'var', 'void', 'while', 'with', 'yield',
+      'abstract',
+      'any',
+      'as',
+      'async',
+      'await',
+      'boolean',
+      'break',
+      'case',
+      'catch',
+      'class',
+      'const',
+      'continue',
+      'debugger',
+      'declare',
+      'default',
+      'delete',
+      'do',
+      'else',
+      'enum',
+      'export',
+      'extends',
+      'false',
+      'finally',
+      'for',
+      'from',
+      'function',
+      'get',
+      'global',
+      'if',
+      'implements',
+      'import',
+      'in',
+      'instanceof',
+      'interface',
+      'is',
+      'keyof',
+      'let',
+      'module',
+      'namespace',
+      'never',
+      'new',
+      'null',
+      'number',
+      'of',
+      'package',
+      'private',
+      'protected',
+      'public',
+      'readonly',
+      'require',
+      'return',
+      'set',
+      'static',
+      'string',
+      'super',
+      'switch',
+      'symbol',
+      'this',
+      'throw',
+      'true',
+      'try',
+      'type',
+      'typeof',
+      'unknown',
+      'var',
+      'void',
+      'while',
+      'with',
+      'yield',
     ],
     javascript: [
-      'abstract', 'arguments', 'await', 'boolean', 'break', 'byte', 'case', 'catch', 'char',
-      'class', 'const', 'continue', 'debugger', 'default', 'delete', 'do', 'double', 'else',
-      'enum', 'eval', 'export', 'extends', 'false', 'final', 'finally', 'float', 'for',
-      'function', 'goto', 'if', 'implements', 'import', 'in', 'instanceof', 'int', 'interface',
-      'let', 'long', 'native', 'new', 'null', 'package', 'private', 'protected', 'public',
-      'return', 'short', 'static', 'super', 'switch', 'synchronized', 'this', 'throw', 'throws',
-      'transient', 'true', 'try', 'typeof', 'var', 'void', 'volatile', 'while', 'with', 'yield',
+      'abstract',
+      'arguments',
+      'await',
+      'boolean',
+      'break',
+      'byte',
+      'case',
+      'catch',
+      'char',
+      'class',
+      'const',
+      'continue',
+      'debugger',
+      'default',
+      'delete',
+      'do',
+      'double',
+      'else',
+      'enum',
+      'eval',
+      'export',
+      'extends',
+      'false',
+      'final',
+      'finally',
+      'float',
+      'for',
+      'function',
+      'goto',
+      'if',
+      'implements',
+      'import',
+      'in',
+      'instanceof',
+      'int',
+      'interface',
+      'let',
+      'long',
+      'native',
+      'new',
+      'null',
+      'package',
+      'private',
+      'protected',
+      'public',
+      'return',
+      'short',
+      'static',
+      'super',
+      'switch',
+      'synchronized',
+      'this',
+      'throw',
+      'throws',
+      'transient',
+      'true',
+      'try',
+      'typeof',
+      'var',
+      'void',
+      'volatile',
+      'while',
+      'with',
+      'yield',
     ],
     python: [
-      'False', 'None', 'True', 'and', 'as', 'assert', 'async', 'await', 'break', 'class',
-      'continue', 'def', 'del', 'elif', 'else', 'except', 'finally', 'for', 'from', 'global',
-      'if', 'import', 'in', 'is', 'lambda', 'nonlocal', 'not', 'or', 'pass', 'raise', 'return',
-      'try', 'while', 'with', 'yield',
+      'False',
+      'None',
+      'True',
+      'and',
+      'as',
+      'assert',
+      'async',
+      'await',
+      'break',
+      'class',
+      'continue',
+      'def',
+      'del',
+      'elif',
+      'else',
+      'except',
+      'finally',
+      'for',
+      'from',
+      'global',
+      'if',
+      'import',
+      'in',
+      'is',
+      'lambda',
+      'nonlocal',
+      'not',
+      'or',
+      'pass',
+      'raise',
+      'return',
+      'try',
+      'while',
+      'with',
+      'yield',
     ],
     rust: [
-      'abstract', 'as', 'async', 'await', 'become', 'box', 'break', 'const', 'continue', 'crate',
-      'do', 'dyn', 'else', 'enum', 'extern', 'false', 'final', 'fn', 'for', 'if', 'impl', 'in',
-      'let', 'loop', 'macro', 'match', 'mod', 'move', 'mut', 'override', 'priv', 'pub', 'ref',
-      'return', 'self', 'Self', 'static', 'struct', 'super', 'trait', 'true', 'try', 'type',
-      'typeof', 'unsafe', 'unsized', 'use', 'virtual', 'where', 'while', 'yield',
+      'abstract',
+      'as',
+      'async',
+      'await',
+      'become',
+      'box',
+      'break',
+      'const',
+      'continue',
+      'crate',
+      'do',
+      'dyn',
+      'else',
+      'enum',
+      'extern',
+      'false',
+      'final',
+      'fn',
+      'for',
+      'if',
+      'impl',
+      'in',
+      'let',
+      'loop',
+      'macro',
+      'match',
+      'mod',
+      'move',
+      'mut',
+      'override',
+      'priv',
+      'pub',
+      'ref',
+      'return',
+      'self',
+      'Self',
+      'static',
+      'struct',
+      'super',
+      'trait',
+      'true',
+      'try',
+      'type',
+      'typeof',
+      'unsafe',
+      'unsized',
+      'use',
+      'virtual',
+      'where',
+      'while',
+      'yield',
     ],
     bash: [
-      'case', 'do', 'done', 'elif', 'else', 'esac', 'fi', 'for', 'function', 'if', 'in',
-      'select', 'then', 'time', 'until', 'while',
+      'case',
+      'do',
+      'done',
+      'elif',
+      'else',
+      'esac',
+      'fi',
+      'for',
+      'function',
+      'if',
+      'in',
+      'select',
+      'then',
+      'time',
+      'until',
+      'while',
     ],
   };
 
@@ -84,20 +293,38 @@ class SyntaxHighlighter {
       .replace(/>/g, '&gt;');
 
     // Highlight comments
-    highlighted = highlighted.replace(/#.*$/gm, (match) => `<span class="hljs-comment">${match}</span>`);
-    highlighted = highlighted.replace(/\/\/.*$/gm, (match) => `<span class="hljs-comment">${match}</span>`);
-    highlighted = highlighted.replace(/\/\*[\s\S]*?\*\//g, (match) => `<span class="hljs-comment">${match}</span>`);
+    highlighted = highlighted.replace(
+      /#.*$/gm,
+      match => `<span class="hljs-comment">${match}</span>`
+    );
+    highlighted = highlighted.replace(
+      /\/\/.*$/gm,
+      match => `<span class="hljs-comment">${match}</span>`
+    );
+    highlighted = highlighted.replace(
+      /\/\*[\s\S]*?\*\//g,
+      match => `<span class="hljs-comment">${match}</span>`
+    );
 
     // Highlight strings
-    highlighted = highlighted.replace(/(['"`])(?:(?=(\\?))\2.)*?\1/g, (match) => `<span class="hljs-string">${match}</span>`);
+    highlighted = highlighted.replace(
+      /(['"`])(?:(?=(\\?))\2.)*?\1/g,
+      match => `<span class="hljs-string">${match}</span>`
+    );
 
     // Highlight numbers
-    highlighted = highlighted.replace(/\b\d+\.?\d*\b/g, (match) => `<span class="hljs-number">${match}</span>`);
+    highlighted = highlighted.replace(
+      /\b\d+\.?\d*\b/g,
+      match => `<span class="hljs-number">${match}</span>`
+    );
 
     // Highlight keywords
     if (Array.isArray(keywords) && keywords.length > 0) {
       const keywordRegex = new RegExp(`\\b(${keywords.join('|')})\\b`, 'g');
-      highlighted = highlighted.replace(keywordRegex, (match) => `<span class="hljs-keyword">${match}</span>`);
+      highlighted = highlighted.replace(
+        keywordRegex,
+        match => `<span class="hljs-keyword">${match}</span>`
+      );
     }
 
     return highlighted;
@@ -140,11 +367,13 @@ const CopyButton: React.FC<CopyButtonProps> = ({ code }) => {
         transition: 'all 0.2s',
         zIndex: 10,
       }}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLButtonElement).style.background = 'rgba(114, 123, 129, 0.5)';
+      onMouseEnter={e => {
+        (e.currentTarget as HTMLButtonElement).style.background =
+          'rgba(114, 123, 129, 0.5)';
       }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLButtonElement).style.background = 'rgba(114, 123, 129, 0.3)';
+      onMouseLeave={e => {
+        (e.currentTarget as HTMLButtonElement).style.background =
+          'rgba(114, 123, 129, 0.3)';
       }}
     >
       {copied ? '✓ Copied' : 'Copy'}
@@ -160,7 +389,12 @@ const CopyButton: React.FC<CopyButtonProps> = ({ code }) => {
  * CodeBlock Component
  * Renders code with syntax highlighting and copy button
  */
-export const CodeBlock: React.FC<CodeBlockProps> = ({ code, language = 'typescript', className, style }) => {
+export const CodeBlock: React.FC<CodeBlockProps> = ({
+  code,
+  language = 'typescript',
+  className,
+  style,
+}) => {
   const preRef = useRef<HTMLPreElement>(null);
 
   useEffect(() => {

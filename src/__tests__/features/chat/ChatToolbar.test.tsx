@@ -19,7 +19,9 @@ describe('ChatToolbar Component', () => {
   describe('Rendering', () => {
     it('should render toolbar', () => {
       render(<ChatToolbar onSend={mockOnSend} />);
-      expect(screen.getByRole('toolbar') || screen.getByRole('button', { name: /send/i })).toBeTruthy();
+      expect(
+        screen.getByRole('toolbar') || screen.getByRole('button', { name: /send/i })
+      ).toBeTruthy();
     });
 
     it('should render send button', () => {
@@ -29,12 +31,17 @@ describe('ChatToolbar Component', () => {
 
     it('should render attach button when provided', () => {
       render(<ChatToolbar onSend={mockOnSend} onAttach={mockOnAttach} />);
-      expect(screen.getByRole('button', { name: /attach/i }) || screen.getByLabelText(/attach/i)).toBeTruthy();
+      expect(
+        screen.getByRole('button', { name: /attach/i }) ||
+          screen.getByLabelText(/attach/i)
+      ).toBeTruthy();
     });
 
     it('should render voice button when provided', () => {
       render(<ChatToolbar onSend={mockOnSend} onVoice={mockOnVoice} />);
-      expect(screen.getByRole('button', { name: /voice/i }) || screen.getByLabelText(/voice/i)).toBeTruthy();
+      expect(
+        screen.getByRole('button', { name: /voice/i }) || screen.getByLabelText(/voice/i)
+      ).toBeTruthy();
     });
   });
 
@@ -47,14 +54,17 @@ describe('ChatToolbar Component', () => {
 
     it('should handle attach click', () => {
       render(<ChatToolbar onSend={mockOnSend} onAttach={mockOnAttach} />);
-      const attachBtn = screen.getByRole('button', { name: /attach/i }) || screen.getByLabelText(/attach/i);
+      const attachBtn =
+        screen.getByRole('button', { name: /attach/i }) ||
+        screen.getByLabelText(/attach/i);
       fireEvent.click(attachBtn);
       expect(mockOnAttach).toHaveBeenCalledTimes(1);
     });
 
     it('should handle voice toggle', () => {
       render(<ChatToolbar onSend={mockOnSend} onVoice={mockOnVoice} />);
-      const voiceBtn = screen.getByRole('button', { name: /voice/i }) || screen.getByLabelText(/voice/i);
+      const voiceBtn =
+        screen.getByRole('button', { name: /voice/i }) || screen.getByLabelText(/voice/i);
       fireEvent.click(voiceBtn);
       expect(mockOnVoice).toHaveBeenCalled();
     });
@@ -76,7 +86,9 @@ describe('ChatToolbar Component', () => {
 
   describe('Snapshot', () => {
     it('should match snapshot', () => {
-      const { container } = render(<ChatToolbar onSend={mockOnSend} onAttach={mockOnAttach} onVoice={mockOnVoice} />);
+      const { container } = render(
+        <ChatToolbar onSend={mockOnSend} onAttach={mockOnAttach} onVoice={mockOnVoice} />
+      );
       expect(container.firstChild).toMatchSnapshot();
     });
   });

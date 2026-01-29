@@ -13,10 +13,7 @@ import type {
   StyleAdjustmentResponse,
   FusionError,
 } from './types';
-import {
-  isModuleActivationSuccess,
-  isStyleAdjustmentSuccess,
-} from './types';
+import { isModuleActivationSuccess, isStyleAdjustmentSuccess } from './types';
 
 /**
  * Error class for Fusion command failures
@@ -188,9 +185,7 @@ export async function updateColor(
 ): Promise<StyleAdjustmentResponse> {
   // Validate hex color format
   if (!/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(hexColor)) {
-    throw new Error(
-      `Invalid hex color format: ${hexColor}. Expected #RRGGBB or #RGB`
-    );
+    throw new Error(`Invalid hex color format: ${hexColor}. Expected #RRGGBB or #RGB`);
   }
 
   return adjustStyles({

@@ -44,19 +44,25 @@ describe('MetricCard Component', () => {
 
   describe('Thresholds', () => {
     it('should show normal state', () => {
-      render(<MetricCard label="CPU" value={50} threshold={{ warning: 70, critical: 90 }} />);
+      render(
+        <MetricCard label="CPU" value={50} threshold={{ warning: 70, critical: 90 }} />
+      );
       const card = screen.getByText('CPU').closest('div');
       expect(card?.className).toMatch(/normal|ok|success/i);
     });
 
     it('should show warning state', () => {
-      render(<MetricCard label="CPU" value={75} threshold={{ warning: 70, critical: 90 }} />);
+      render(
+        <MetricCard label="CPU" value={75} threshold={{ warning: 70, critical: 90 }} />
+      );
       const card = screen.getByText('CPU').closest('div');
       expect(card?.className).toMatch(/warning|yellow/i);
     });
 
     it('should show critical state', () => {
-      render(<MetricCard label="CPU" value={95} threshold={{ warning: 70, critical: 90 }} />);
+      render(
+        <MetricCard label="CPU" value={95} threshold={{ warning: 70, critical: 90 }} />
+      );
       const card = screen.getByText('CPU').closest('div');
       expect(card?.className).toMatch(/critical|error|red|danger/i);
     });

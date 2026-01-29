@@ -34,7 +34,7 @@ export function useOmegaPipeline(): UseOmegaPipelineReturn {
       // Simulate pipeline stages
       for (let i = 1; i <= 100; i += 20) {
         setState({ stage: 'processing', progress: i });
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 100));
       }
 
       setState({

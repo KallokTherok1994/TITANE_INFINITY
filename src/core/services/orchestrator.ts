@@ -63,24 +63,26 @@ interface OrchestratorMetrics {
  * AutoHealStatus - Zod Schema pour validation runtime (P1 Audit v26.3.1)
  * Compatible avec AutoHealStats de autoHealEngine
  */
-const AutoHealStatusSchema = z.object({
-  // Champs AutoHealStats (format principal)
-  totalErrors: z.number().min(0).optional(),
-  totalHeals: z.number().min(0).optional(),
-  successRate: z.number().min(0).max(100).optional(),
-  avgHealTime: z.number().min(0).optional(),
-  errorsByType: z.record(z.string(), z.number()).optional(),
-  actionsByType: z.record(z.string(), z.number()).optional(),
-  lastHeal: z.number().optional(),
-  healthScore: z.number().min(0).max(100).optional(),
-  // Champs legacy (backward compatibility)
-  enabled: z.boolean().optional(),
-  activeHealings: z.number().min(0).optional(),
-  totalHealed: z.number().min(0).optional(),
-  lastHealTimestamp: z.number().optional(),
-  error: z.string().optional(),
-  providers: z.record(z.string(), z.unknown()).optional(),
-}).passthrough(); // Permet champs additionnels pour extensibilité
+const AutoHealStatusSchema = z
+  .object({
+    // Champs AutoHealStats (format principal)
+    totalErrors: z.number().min(0).optional(),
+    totalHeals: z.number().min(0).optional(),
+    successRate: z.number().min(0).max(100).optional(),
+    avgHealTime: z.number().min(0).optional(),
+    errorsByType: z.record(z.string(), z.number()).optional(),
+    actionsByType: z.record(z.string(), z.number()).optional(),
+    lastHeal: z.number().optional(),
+    healthScore: z.number().min(0).max(100).optional(),
+    // Champs legacy (backward compatibility)
+    enabled: z.boolean().optional(),
+    activeHealings: z.number().min(0).optional(),
+    totalHealed: z.number().min(0).optional(),
+    lastHealTimestamp: z.number().optional(),
+    error: z.string().optional(),
+    providers: z.record(z.string(), z.unknown()).optional(),
+  })
+  .passthrough(); // Permet champs additionnels pour extensibilité
 
 type AutoHealStatus = z.infer<typeof AutoHealStatusSchema>;
 
@@ -1223,12 +1225,12 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
       // Validation runtime Zod (P1 Audit v26.3.1)
       const rawAutoHealStats = autoHealEngine.getStats();
       const validatedAutoHeal = AutoHealStatusSchema.safeParse(rawAutoHealStats);
-      
+
       return {
         providers: Array.from(this.providerStats.values()),
         orchestrator: { ...this.orchestratorMetrics },
-        autoHeal: validatedAutoHeal.success 
-          ? validatedAutoHeal.data 
+        autoHeal: validatedAutoHeal.success
+          ? validatedAutoHeal.data
           : { error: 'Invalid AutoHeal stats format', raw: rawAutoHealStats },
         metrics: metricsEngine.getAggregatedMetrics(), // 📊 NOUVEAU: Métriques détaillées
         timestamp: Date.now(),
@@ -1251,12 +1253,12 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
     // Validation runtime Zod (P1 Audit v26.3.1)
     const rawAutoHealStats = autoHealEngine.getStats();
     const validatedAutoHeal = AutoHealStatusSchema.safeParse(rawAutoHealStats);
-    
+
     return {
       aggregated: metricsEngine.getAggregatedMetrics(),
       health: metricsEngine.getHealthStats(),
-      autoHeal: validatedAutoHeal.success 
-        ? validatedAutoHeal.data 
+      autoHeal: validatedAutoHeal.success
+        ? validatedAutoHeal.data
         : { error: 'Invalid AutoHeal stats format', raw: rawAutoHealStats },
       orchestrator: { ...this.orchestratorMetrics },
     };
@@ -1319,7 +1321,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
     // Check auto-heal effectiveness (avec validation Zod P1)
     const autoHealStats = status.autoHeal;
     const validatedAutoHeal = AutoHealStatusSchema.safeParse(autoHealStats);
-    
+
     if (validatedAutoHeal.success) {
       const stats = validatedAutoHeal.data;
       if (stats.successRate && stats.successRate < 80) {

@@ -12,8 +12,16 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { chatMetrics } from '../../../src/services/monitoring/chatMetrics';
-import { logger, LogLevel, generateCorrelationId } from '../../../src/services/monitoring/logger';
-import { alerting, AlertType, AlertSeverity } from '../../../src/services/monitoring/alerting';
+import {
+  logger,
+  LogLevel,
+  generateCorrelationId,
+} from '../../../src/services/monitoring/logger';
+import {
+  alerting,
+  AlertType,
+  AlertSeverity,
+} from '../../../src/services/monitoring/alerting';
 
 describe('Sprint 2: Monitoring System', () => {
   describe('ChatMetrics Service', () => {
@@ -59,12 +67,12 @@ describe('Sprint 2: Monitoring System', () => {
     it('calcule correctement le taux de validation', () => {
       const conversationId = 'test-conv-4';
       chatMetrics.startConversation(conversationId);
-      
+
       // 3 messages valides
       chatMetrics.recordMessageSent(conversationId, 50);
       chatMetrics.recordMessageReceived(conversationId, 1000, 100);
       chatMetrics.recordMessageSent(conversationId, 60);
-      
+
       // 1 message rejeté
       chatMetrics.recordMessageRejected(conversationId, 'Message vide');
 
@@ -74,14 +82,14 @@ describe('Sprint 2: Monitoring System', () => {
       expect(metrics?.validationRate).toBeCloseTo(0.75, 2); // 75%
     });
 
-    it('calcule correctement le taux d\'erreur', () => {
+    it("calcule correctement le taux d'erreur", () => {
       const conversationId = 'test-conv-5';
       chatMetrics.startConversation(conversationId);
-      
+
       // 2 messages normaux
       chatMetrics.recordMessageSent(conversationId, 50);
       chatMetrics.recordMessageReceived(conversationId, 1000, 100);
-      
+
       // 1 erreur
       chatMetrics.recordError(conversationId, 'NetworkError', 'Failed to fetch');
 
@@ -95,7 +103,7 @@ describe('Sprint 2: Monitoring System', () => {
       chatMetrics.startConversation('conv-1');
       chatMetrics.recordMessageSent('conv-1', 50);
       chatMetrics.recordMessageReceived('conv-1', 1000, 100);
-      
+
       // Conversation 2
       chatMetrics.startConversation('conv-2');
       chatMetrics.recordMessageSent('conv-2', 60);
@@ -179,7 +187,7 @@ describe('Sprint 2: Monitoring System', () => {
 
       const jsonLogs = logger.exportLogs();
       const parsed = JSON.parse(jsonLogs);
-      
+
       expect(Array.isArray(parsed)).toBe(true);
       expect(parsed).toHaveLength(2);
     });
@@ -245,7 +253,7 @@ describe('Sprint 2: Monitoring System', () => {
       expect(history[0].resolvedAt).toBeDefined();
     });
 
-    it('détecte un taux d\'erreur élevé', () => {
+    it("détecte un taux d'erreur élevé", () => {
       // Créer une conversation avec 20% d'erreurs
       chatMetrics.startConversation('conv-1');
       chatMetrics.recordMessageSent('conv-1', 50);
@@ -260,12 +268,12 @@ describe('Sprint 2: Monitoring System', () => {
 
       const activeAlerts = alerting.getActiveAlerts();
       const errorAlert = activeAlerts.find(a => a.type === AlertType.HIGH_ERROR_RATE);
-      
+
       expect(errorAlert).toBeDefined();
       expect(errorAlert?.severity).toBe(AlertSeverity.CRITICAL);
     });
 
-    it('ne déclenche pas d\'alerte si seuils non dépassés', () => {
+    it("ne déclenche pas d'alerte si seuils non dépassés", () => {
       // Conversation normale (pas d'erreurs)
       chatMetrics.startConversation('conv-1');
       chatMetrics.recordMessageSent('conv-1', 50);
@@ -293,7 +301,7 @@ describe('Sprint 2: Monitoring System', () => {
       chatMetrics.recordMessageReceived('conv-2', 1000, 100); // OK
 
       alerting.checkAlerts();
-      
+
       // L'alerte devrait être auto-résolue
       expect(alerting.getActiveAlerts()).toHaveLength(0);
     });

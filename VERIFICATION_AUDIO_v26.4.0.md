@@ -1,4 +1,5 @@
 # VÉRIFICATION APPROFONDIE — Mode Audio v26.4.0
+
 ## Analyse Complète du Système Audio TITANE∞
 
 **Date**: 2026-01-28  
@@ -23,14 +24,14 @@
 
 ### 1. **Hooks React Audio** (6 hooks principaux)
 
-| Hook | Lignes | Rôle | Statut |
-|------|--------|------|--------|
-| **useVAD** | 551 | Voice Activity Detection | ✅ Parfait |
-| **useAudioChat** | 339 | Intégration audio chat | ✅ Parfait |
-| **useActiveListening** | 465 | Écoute active + wake word | ✅ Parfait |
-| **useTTS** | ~200 | Text-to-Speech wrapper | ✅ Parfait |
-| **useTTSWithMicControl** | ~280 | TTS + contrôle micro | ✅ Parfait |
-| **useVoiceInput** | - | Input vocal | ✅ Parfait |
+| Hook                     | Lignes | Rôle                      | Statut     |
+| ------------------------ | ------ | ------------------------- | ---------- |
+| **useVAD**               | 551    | Voice Activity Detection  | ✅ Parfait |
+| **useAudioChat**         | 339    | Intégration audio chat    | ✅ Parfait |
+| **useActiveListening**   | 465    | Écoute active + wake word | ✅ Parfait |
+| **useTTS**               | ~200   | Text-to-Speech wrapper    | ✅ Parfait |
+| **useTTSWithMicControl** | ~280   | TTS + contrôle micro      | ✅ Parfait |
+| **useVoiceInput**        | -      | Input vocal               | ✅ Parfait |
 
 **Total Hooks**: ~2635 lignes de code React ultra-optimisé
 
@@ -39,6 +40,7 @@
 ### 2. **Services Audio Core** (4 services)
 
 #### **audioStateMachine** (347 lignes) ✅
+
 - **Rôle**: Machine à états centralisée pour pipeline audio
 - **États**: idle → user_speaking → processing → ai_speaking → idle
 - **Événements**: 12 types (VAD_SPEECH_START, TTS_START, BARGE_IN, etc.)
@@ -50,6 +52,7 @@
 - **Export**: `audioStateMachine` singleton
 
 #### **audioStreamingService** (284 lignes) ✅
+
 - **Rôle**: Streaming audio real-time (CPAL backend)
 - **Features**:
   - ✅ Buffer management
@@ -59,6 +62,7 @@
 - **Interfaces**: StreamingConfig, StreamingResult, StreamingStats
 
 #### **audioHealthService** (831 lignes) ✅
+
 - **Rôle**: Monitoring santé audio + auto-repair
 - **Features**:
   - ✅ Device issue logging
@@ -68,6 +72,7 @@
 - **Interfaces**: HealthTestResult, AudioHealthReport, RepairAction, SelfHealResult
 
 #### **audioSelfHeal** (319 lignes) ✅
+
 - **Rôle**: Auto-guérison pipeline audio
 - **Features**:
   - ✅ Automatic recovery
@@ -80,6 +85,7 @@
 ### 3. **Services TTS** (3 services)
 
 #### **ttsEngineService** (707 lignes) ✅
+
 - **Rôle**: Service TTS intelligent multi-provider
 - **Providers**:
   - ✅ ElevenLabs premium (Voice ID: FvmvwvObRqIHojkEGh5N)
@@ -94,6 +100,7 @@
 - **Interfaces**: TTSRequest, TTSResponse, TTSState, TTSPreferences, TTSProvider
 
 #### **hybridTTS** ✅
+
 - **Rôle**: TTS hybride (cloud + local)
 - **Intégrations**:
   - ✅ Utilisé par emotionalTTS
@@ -102,6 +109,7 @@
   - ✅ Stop/resume capabilities
 
 #### **emotionalTTS** (144 lignes) ✅
+
 - **Rôle**: Rendu TTS avec injection émotionnelle
 - **Features**:
   - ✅ SSML generation
@@ -114,6 +122,7 @@
 ### 4. **Services Voice** (10+ services)
 
 #### **voiceRouter** (417 lignes) ✅
+
 - **Rôle**: Routeur de tours de parole (voice turns)
 - **Features**:
   - ✅ Turn management
@@ -123,6 +132,7 @@
 - **Interfaces**: VoiceTurnConfig, VoiceTurnResult, VoiceRouterError
 
 #### **attentionEngine** (408 lignes) ✅
+
 - **Rôle**: Gestion de l'attention TITANE
 - **États**: disarmed → armed → processing → active
 - **Features**:
@@ -133,6 +143,7 @@
 - **Export**: `attentionEngine` singleton
 
 #### **wakeWordEngine** ✅
+
 - **Rôle**: Détection wake word "TITANE"
 - **Features**:
   - ✅ Real-time detection
@@ -141,6 +152,7 @@
   - ✅ Intégration useActiveListening
 
 #### **voiceFingerprintTauri** (190 lignes) ✅
+
 - **Rôle**: Layer 3 anti-feedback (détection voix TITANE)
 - **Features**:
   - ✅ Calibration TITANE voice
@@ -150,6 +162,7 @@
 - **Methods**: `calibrateTITANEVoice()`, `checkIsTitaneSpeaking()`, `isTitaneCalibrated()`
 
 #### **interruptionController** (199 lignes) ✅
+
 - **Rôle**: Gestion interruptions (barge-in)
 - **Features**:
   - ✅ Stop TTS on interrupt
@@ -158,6 +171,7 @@
   - ✅ State recovery
 
 #### **adaptiveThresholdEngine** ✅
+
 - **Rôle**: Seuils adaptatifs pour VAD
 - **Features**:
   - ✅ Dynamic threshold adjustment
@@ -165,6 +179,7 @@
   - ✅ Environment adaptation
 
 #### **emotionalAnalyzer** (454 lignes) ✅
+
 - **Rôle**: Analyse émotionnelle voix
 - **Features**:
   - ✅ Emotion detection
@@ -173,6 +188,7 @@
 - **Export**: `emotionalAnalyzer` singleton
 
 #### **autonomicReactionEngine** (432 lignes) ✅
+
 - **Rôle**: Réactions autonomes TITANE
 - **Features**:
   - ✅ Quick reactions
@@ -181,6 +197,7 @@
 - **Exports**: `autonomicReactionEngine`, `generateAutonomicReaction()`, `generateQuickReaction()`
 
 #### **innerDialogueController** (789 lignes) ✅
+
 - **Rôle**: Dialogue intérieur TITANE
 - **Features**:
   - ✅ Inner thoughts
@@ -190,6 +207,7 @@
 - **Export**: `innerDialogueController` singleton (line 789)
 
 #### **unifiedVocalEngine** ✅
+
 - **Rôle**: Moteur vocal unifié
 - **Features**:
   - ✅ audioStateMachine sync
@@ -201,6 +219,7 @@
 ### 5. **Composants UI Audio** (2 composants)
 
 #### **VoiceConversation.tsx** ✅
+
 - **Rôle**: Interface conversation vocale
 - **Features**:
   - ✅ Voice controls
@@ -208,6 +227,7 @@
   - ✅ State display
 
 #### **VoiceControlPanel.tsx** ✅
+
 - **Rôle**: Panneau de contrôle audio
 - **Features**:
   - ✅ Mic toggle
@@ -223,6 +243,7 @@
 **Hook Principal**: `useVAD` (551 lignes)
 
 **Features**:
+
 - ✅ Real-time speech detection
 - ✅ Tauri backend (audioService.processVADFrame)
 - ✅ Browser fallback
@@ -233,6 +254,7 @@
 - ✅ **State Machine Integration**: Emit VAD_SPEECH_START/END events
 
 **Types Exportés**:
+
 ```typescript
 export type VADState = 'silence' | 'speech' | 'unknown';
 export interface VADConfig { threshold, minSpeechFrames, minSilenceFrames }
@@ -241,6 +263,7 @@ export interface UseVADReturn { ... 15 methods/properties }
 ```
 
 **Méthodes Clés**:
+
 - `startListening()`: Démarre VAD
 - `stopListening()`: Arrête VAD
 - `processAudioData(Float32Array)`: Process audio frame
@@ -251,6 +274,7 @@ export interface UseVADReturn { ... 15 methods/properties }
 - `runTest()`: Test VAD complet
 
 **Protection Anti-Echo 3 Layers**:
+
 1. **Layer 1**: State machine (audioStateMachine.isAISpeaking())
 2. **Layer 2**: Suspension VAD (`suspendForTTS()`)
 3. **Layer 3**: Voice fingerprinting (`voiceFingerprintTauri.checkIsTitaneSpeaking()`)
@@ -262,6 +286,7 @@ export interface UseVADReturn { ... 15 methods/properties }
 **Hook Principal**: `useActiveListening` (465 lignes)
 
 **Features**:
+
 - ✅ Wake word detection ("TITANE")
 - ✅ Audio streaming (useAudioStreaming)
 - ✅ Attention state management (attentionEngine)
@@ -270,14 +295,42 @@ export interface UseVADReturn { ... 15 methods/properties }
 - ✅ Interruption control (interruptionController)
 
 **Types Exportés**:
+
 ```typescript
-export interface ActiveListeningConfig { enableWakeWord, enableAdaptiveThreshold, sensitivity, autoArm }
-export interface ActiveListeningCallbacks { onWakeDetected, onCommand, onAttentionChange, onPartialTranscript, onFinalTranscript }
-export interface ActiveListeningState { isListening, attentionState, lastWakeEvent, isProcessingCommand, streamingActive }
-export interface UseActiveListeningReturn { state, arm, disarm, reset, startListening, stopListening, isArmed, canListen }
+export interface ActiveListeningConfig {
+  enableWakeWord;
+  enableAdaptiveThreshold;
+  sensitivity;
+  autoArm;
+}
+export interface ActiveListeningCallbacks {
+  onWakeDetected;
+  onCommand;
+  onAttentionChange;
+  onPartialTranscript;
+  onFinalTranscript;
+}
+export interface ActiveListeningState {
+  isListening;
+  attentionState;
+  lastWakeEvent;
+  isProcessingCommand;
+  streamingActive;
+}
+export interface UseActiveListeningReturn {
+  state;
+  arm;
+  disarm;
+  reset;
+  startListening;
+  stopListening;
+  isArmed;
+  canListen;
+}
 ```
 
 **Méthodes Clés**:
+
 - `arm()`: Active l'écoute wake word
 - `disarm()`: Désactive l'écoute
 - `reset()`: Reset attention engine
@@ -293,6 +346,7 @@ export interface UseActiveListeningReturn { state, arm, disarm, reset, startList
 **Hook Principal**: `useAudioChat` (339 lignes)
 
 **Features**:
+
 - ✅ Speech recognition (Web Speech API)
 - ✅ TTS integration
 - ✅ Continuous mode support
@@ -301,12 +355,26 @@ export interface UseActiveListeningReturn { state, arm, disarm, reset, startList
 - ✅ Error handling robuste
 
 **Types Exportés**:
+
 ```typescript
-export interface AudioChatConfig { enabled, voiceId, language, autoListen, continuousMode }
-export interface AudioChatState { isListening, isSpeaking, transcript, confidence, error }
+export interface AudioChatConfig {
+  enabled;
+  voiceId;
+  language;
+  autoListen;
+  continuousMode;
+}
+export interface AudioChatState {
+  isListening;
+  isSpeaking;
+  transcript;
+  confidence;
+  error;
+}
 ```
 
 **Méthodes**:
+
 - `startListening()`: Lance reconnaissance vocale
 - `stopListening()`: Arrête reconnaissance
 - `speak(text)`: Synthèse vocale
@@ -323,6 +391,7 @@ export interface AudioChatState { isListening, isSpeaking, transcript, confidenc
 **Service Backend**: `ttsEngineService` (707 lignes)
 
 **Features**:
+
 - ✅ Multi-provider (ElevenLabs → Piper → Espeak)
 - ✅ Emotional adaptation automatique
 - ✅ Cache intelligent
@@ -332,17 +401,36 @@ export interface AudioChatState { isListening, isSpeaking, transcript, confidenc
 - ✅ Tauri backend integration
 
 **Types Principaux**:
+
 ```typescript
 export type TTSEmotion = 'neutral' | 'happy' | 'sad' | 'angry' | 'surprised' | 'fearful';
 export type TTSProvider = 'elevenlabs' | 'piper' | 'espeak';
-export interface TTSRequest { text, emotion, messageId, priority }
-export interface TTSResponse { success, audio, duration, emotion, provider }
-export interface TTSState { isPlaying, isSynthesizing, queue, currentRequest, providers }
+export interface TTSRequest {
+  text;
+  emotion;
+  messageId;
+  priority;
+}
+export interface TTSResponse {
+  success;
+  audio;
+  duration;
+  emotion;
+  provider;
+}
+export interface TTSState {
+  isPlaying;
+  isSynthesizing;
+  queue;
+  currentRequest;
+  providers;
+}
 ```
 
 **Voice ID TITANE**: `FvmvwvObRqIHojkEGh5N` (ElevenLabs premium)
 
 **Méthodes Service**:
+
 - `speak(text, options)`: Synthétise et joue
 - `synthesize(text, options)`: Génère audio uniquement
 - `stop()`: Arrête lecture
@@ -359,6 +447,7 @@ export interface TTSState { isPlaying, isSynthesizing, queue, currentRequest, pr
 **Hook**: `useTTSWithMicControl` (~280 lignes)
 
 **Features**:
+
 - ✅ Coordonne TTS + microphone
 - ✅ Auto-mute mic pendant TTS (anti-feedback)
 - ✅ Auto-unmute après TTS
@@ -372,6 +461,7 @@ export interface TTSState { isPlaying, isSynthesizing, queue, currentRequest, pr
 **Service**: `audioStateMachine` (347 lignes) - ✅ **CŒUR DU SYSTÈME**
 
 ### **États (AudioConversationState)**
+
 ```
 idle          → En repos, prêt à écouter
 user_speaking → L'utilisateur parle (VAD actif)
@@ -382,6 +472,7 @@ error         → Erreur (nécessite reset)
 ```
 
 ### **Événements (AudioEvent) - 12 types**
+
 ```
 VAD_SPEECH_START  → VAD détecte parole user
 VAD_SPEECH_END    → VAD détecte silence user
@@ -398,6 +489,7 @@ ERROR             → Erreur générale
 ```
 
 ### **Transitions Valides**
+
 ```typescript
 idle → [VAD_SPEECH_START, PAUSE, ERROR]
 user_speaking → [VAD_SPEECH_END, PAUSE, ERROR, RESET]
@@ -408,6 +500,7 @@ error → [RESET]
 ```
 
 ### **Méthodes Publiques**
+
 - `transition(event)`: Effectue transition
 - `getCurrentState()`: État actuel
 - `onStateChange(listener)`: Subscribe changements
@@ -416,10 +509,11 @@ error → [RESET]
 - `canTransition(event)`: Validation transition
 
 ### **Singletons**
+
 ```typescript
 export const audioStateMachine = new AudioStateMachine({
   initialState: 'idle',
-  enableLogging: true
+  enableLogging: true,
 });
 ```
 
@@ -430,15 +524,18 @@ export const audioStateMachine = new AudioStateMachine({
 ### **Protection Anti-Écho 3 Layers**
 
 #### **Layer 1: State Machine**
+
 - Check `audioStateMachine.isAISpeaking()`
 - Évite traitement audio pendant TTS
 
 #### **Layer 2: VAD Suspension**
+
 - `suspendForTTS()`: Suspend VAD avant TTS
 - `resumeAfterTTS(delayMs)`: Résume après TTS + 500ms delay
 - Empêche détection voix TITANE comme user
 
 #### **Layer 3: Voice Fingerprinting**
+
 - `voiceFingerprintTauri.calibrateTITANEVoice(samples[])`
 - `voiceFingerprintTauri.checkIsTitaneSpeaking(audioData)`
 - Détection ML de la voix TITANE vs user
@@ -446,6 +543,7 @@ export const audioStateMachine = new AudioStateMachine({
 - Skip VAD processing si TITANE détecté
 
 ### **Barge-In (Interruption)**
+
 - `enableBargeIn()`: Active interruption pendant TTS
 - Detection continue même pendant TTS
 - Event `BARGE_IN` → stop TTS immédiat
@@ -457,13 +555,13 @@ export const audioStateMachine = new AudioStateMachine({
 
 ### **Hook → Service Mappings** ✅
 
-| Hook | Service Principal | Services Secondaires |
-|------|-------------------|----------------------|
-| useVAD | audioService | audioStateMachine, voiceFingerprintTauri |
-| useActiveListening | audioStreamingService | wakeWordEngine, attentionEngine, adaptiveThresholdEngine |
-| useAudioChat | Web Speech API | hybridTTS |
-| useTTS | ttsEngineService | audioStateMachine |
-| useTTSWithMicControl | ttsEngineService | audioStateMachine |
+| Hook                 | Service Principal     | Services Secondaires                                     |
+| -------------------- | --------------------- | -------------------------------------------------------- |
+| useVAD               | audioService          | audioStateMachine, voiceFingerprintTauri                 |
+| useActiveListening   | audioStreamingService | wakeWordEngine, attentionEngine, adaptiveThresholdEngine |
+| useAudioChat         | Web Speech API        | hybridTTS                                                |
+| useTTS               | ttsEngineService      | audioStateMachine                                        |
+| useTTSWithMicControl | ttsEngineService      | audioStateMachine                                        |
 
 ### **Service Dependencies** ✅
 
@@ -496,6 +594,7 @@ audioHealthService (monitoring)
 ## ✅ VALIDATIONS COMPLÈTES
 
 ### **TypeScript Compilation** ✅
+
 ```bash
 npx tsc --noEmit
 ✅ 0 erreurs TypeScript
@@ -504,12 +603,14 @@ npx tsc --noEmit
 ```
 
 ### **Code Quality** ✅
+
 - ✅ 0 `TODO` dans code audio (seulement dans strings)
 - ✅ 0 `FIXME` dans code audio
 - ✅ `@ts-expect-error` uniquement dans tests (normal)
 - ✅ `@ts-ignore` uniquement dans tests/mocks (normal)
 
 ### **Architecture** ✅
+
 - ✅ Singleton pattern uniforme (8+ singletons)
 - ✅ React hooks optimaux (useMemo, useRef, useCallback)
 - ✅ State machine robuste (transitions validées)
@@ -518,6 +619,7 @@ npx tsc --noEmit
 - ✅ Tauri integration propre (secureInvoke, detectEnvironment)
 
 ### **Features Audio Avancées** ✅
+
 - ✅ VAD real-time avec anti-echo 3 layers
 - ✅ Wake word detection "TITANE"
 - ✅ Barge-in (interruption) support
@@ -533,16 +635,16 @@ npx tsc --noEmit
 
 ## 📈 MÉTRIQUES CODE AUDIO
 
-| Catégorie | Fichiers | Lignes | Statut |
-|-----------|----------|--------|--------|
-| **Hooks Audio** | 10 | ~2635 | ✅ Parfait |
-| **Services Audio** | 4 | ~1700 | ✅ Parfait |
-| **Services TTS** | 3 | ~1000 | ✅ Parfait |
-| **Services Voice** | 10+ | ~4000 | ✅ Parfait |
-| **Composants UI** | 2 | ~500 | ✅ Parfait |
-| **Types/Interfaces** | 4 | ~200 | ✅ Parfait |
-| **Tests** | 5+ | ~800 | ✅ Parfait |
-| **TOTAL** | **37+** | **~10835** | **✅ 100%** |
+| Catégorie            | Fichiers | Lignes     | Statut      |
+| -------------------- | -------- | ---------- | ----------- |
+| **Hooks Audio**      | 10       | ~2635      | ✅ Parfait  |
+| **Services Audio**   | 4        | ~1700      | ✅ Parfait  |
+| **Services TTS**     | 3        | ~1000      | ✅ Parfait  |
+| **Services Voice**   | 10+      | ~4000      | ✅ Parfait  |
+| **Composants UI**    | 2        | ~500       | ✅ Parfait  |
+| **Types/Interfaces** | 4        | ~200       | ✅ Parfait  |
+| **Tests**            | 5+       | ~800       | ✅ Parfait  |
+| **TOTAL**            | **37+**  | **~10835** | **✅ 100%** |
 
 ---
 
@@ -573,30 +675,35 @@ npx tsc --noEmit
 ## 🚀 POINTS FORTS
 
 ### **1. Architecture Robuste**
+
 - State machine centralisée (audioStateMachine)
 - Singleton pattern uniforme
 - Event-driven architecture
 - Clear separation of concerns
 
 ### **2. Anti-Feedback Multi-Layer**
+
 - Layer 1: State checking
 - Layer 2: VAD suspension
 - Layer 3: ML voice fingerprinting
 - → Feedback impossible
 
 ### **3. Barge-In Intelligent**
+
 - Detection continue optionnelle
 - Interruption prioritaire
 - Recovery automatique
 - State preservation
 
 ### **4. TTS Premium**
+
 - ElevenLabs voice (FvmvwvObRqIHojkEGh5N)
 - Emotional adaptation
 - Cache + queue
 - Fallback cascade (Piper → Espeak)
 
 ### **5. Monitoring & Self-Heal**
+
 - audioHealthService
 - audioSelfHeal
 - Diagnostics complets
@@ -609,6 +716,7 @@ npx tsc --noEmit
 ### **Tests Recommandés** (optionnels)
 
 1. **Test Manuel Audio** (10 min):
+
    ```bash
    pnpm run dev:tauri
    # Tester:

@@ -104,7 +104,9 @@ test.describe('🔥 Flux Critiques — Garantie Infaillibilité', () => {
     // UI should remain responsive
     const performanceMetrics = await page.evaluate(() => {
       const paint = performance.getEntriesByType('paint');
-      const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+      const navigation = performance.getEntriesByType(
+        'navigation'
+      )[0] as PerformanceNavigationTiming;
 
       return {
         fcp: paint.find(p => p.name === 'first-contentful-paint')?.startTime || 0,
@@ -346,16 +348,20 @@ test.describe('🔥 Flux Critiques — Garantie Infaillibilité', () => {
     expect(afterReloadCount).toBe(initialCount);
 
     // Message content should be identical
-    const lastMessage = await page.locator('[data-testid="chat-message"]').last().textContent();
+    const lastMessage = await page
+      .locator('[data-testid="chat-message"]')
+      .last()
+      .textContent();
     expect(lastMessage).toContain('Test consistency');
   });
 
   test('should prevent race conditions in concurrent operations', async ({ page }) => {
     // Start multiple operations simultaneously
     const operations = Array.from({ length: 5 }, (_, i) =>
-      page.locator('[data-testid="chat-input"]').fill(`Concurrent ${i + 1}`).then(() =>
-        page.locator('[data-testid="chat-input"]').press('Enter')
-      )
+      page
+        .locator('[data-testid="chat-input"]')
+        .fill(`Concurrent ${i + 1}`)
+        .then(() => page.locator('[data-testid="chat-input"]').press('Enter'))
     );
 
     await Promise.all(operations);

@@ -68,7 +68,9 @@ describe.skip('MemoryCard Component (NON IMPLÉMENTÉ - fichier inexistant)', ()
 
   describe('Snapshot', () => {
     it('should match snapshot', () => {
-      const { container } = render(<MemoryCard entry={mockEntry} onDelete={mockOnDelete} />);
+      const { container } = render(
+        <MemoryCard entry={mockEntry} onDelete={mockOnDelete} />
+      );
       expect(container.firstChild).toMatchSnapshot();
     });
   });

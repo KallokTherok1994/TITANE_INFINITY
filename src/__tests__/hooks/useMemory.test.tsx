@@ -36,7 +36,7 @@ describe.skip('useMemory Hook (NON IMPLÉMENTÉ - hook commenté dans index.ts)'
   describe('Add Memory', () => {
     it('should add entry to STM', async () => {
       const { result } = renderHook(() => useMemory());
-      
+
       await act(async () => {
         await result.current.addMemory('Test memory', 'stm');
       });
@@ -46,7 +46,7 @@ describe.skip('useMemory Hook (NON IMPLÉMENTÉ - hook commenté dans index.ts)'
 
     it('should handle importance score', async () => {
       const { result } = renderHook(() => useMemory());
-      
+
       await act(async () => {
         await result.current.addMemory('Important', 'mtm', 0.9);
       });
@@ -58,7 +58,7 @@ describe.skip('useMemory Hook (NON IMPLÉMENTÉ - hook commenté dans index.ts)'
   describe('Search Memory', () => {
     it('should search across tiers', async () => {
       const { result } = renderHook(() => useMemory());
-      
+
       await act(async () => {
         const results = await result.current.searchMemory('query');
         expect(Array.isArray(results)).toBe(true);
@@ -69,7 +69,7 @@ describe.skip('useMemory Hook (NON IMPLÉMENTÉ - hook commenté dans index.ts)'
   describe('Delete Memory', () => {
     it('should remove memory entry', async () => {
       const { result } = renderHook(() => useMemory());
-      
+
       await act(async () => {
         await result.current.deleteMemory('mem-id');
       });

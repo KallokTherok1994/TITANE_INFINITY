@@ -5,7 +5,14 @@
 
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui';
 
 describe('Dialog Component', () => {
   describe('Rendering', () => {
@@ -73,7 +80,7 @@ describe('Dialog Component', () => {
           </DialogContent>
         </Dialog>
       );
-      
+
       // Trigger close (via Escape key or backdrop click)
       const dialog = screen.getByRole('dialog');
       fireEvent.keyDown(dialog, { key: 'Escape' });

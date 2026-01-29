@@ -1,4 +1,5 @@
 # 🧪 TEST SUITE COMPLÈTE - Sprint 6 Phase 3
+
 **Date**: 28 janvier 2026  
 **Version**: v26.4.0  
 **Status**: PRODUCTION - READY FOR TESTING
@@ -10,6 +11,7 @@
 ### 1️⃣ TOOL CALLING (4 outils)
 
 #### Test 1a: `get_time` (Heure actuelle)
+
 ```
 REQUÊTE: "Quelle heure est-il maintenant?"
 ATTENDU:
@@ -18,7 +20,7 @@ ATTENDU:
   ✅ Réponse: Timestamp ISO + heure locale française + timestamp Unix
   ✅ Format: {"tool_name": "get_time"}
 
-VALIDATION: 
+VALIDATION:
   [ ] JSON détecté dans console
   [ ] Outil exécuté avec résultat
   [ ] Réponse du modèle inclut l'heure
@@ -26,6 +28,7 @@ VALIDATION:
 ```
 
 #### Test 1b: `calculate` (Calcul mathématique)
+
 ```
 REQUÊTE: "Fais le calcul: 456 * 123 + 789"
 ATTENDU:
@@ -42,6 +45,7 @@ VALIDATION:
 ```
 
 #### Test 1c: `web_search` (Recherche web)
+
 ```
 REQUÊTE: "Fais une recherche sur la tour Eiffel"
 ATTENDU:
@@ -58,6 +62,7 @@ VALIDATION:
 ```
 
 #### Test 1d: `get_weather` (Météo)
+
 ```
 REQUÊTE: "Quel est la météo à Paris aujourd'hui?"
 ATTENDU:
@@ -77,10 +82,11 @@ VALIDATION:
 ### 2️⃣ GESTION DE MÉMOIRE (Chat Memory)
 
 #### Test 2a: Sauvegarde localStorage
+
 ```
 REQUÊTE: Envoyer 3 messages consécutifs
 ATTENDU:
-  ✅ Console: [CHAT] – "📂 Initial load from localStorage:" 
+  ✅ Console: [CHAT] – "📂 Initial load from localStorage:"
   ✅ localStorage key: titane_chat_mode_default
   ✅ Chaque message sauvegardé immédiatement
 
@@ -92,6 +98,7 @@ VALIDATION:
 ```
 
 #### Test 2b: Persistance des messages
+
 ```
 PROCÉDURE:
   1. Envoyer 5 messages
@@ -110,6 +117,7 @@ VALIDATION:
 ```
 
 #### Test 2c: Memory Compactor
+
 ```
 REQUÊTE: Envoyer 50+ messages
 ATTENDU:
@@ -128,6 +136,7 @@ VALIDATION:
 ### 3️⃣ MESSAGE REACTIONS (Émoji)
 
 #### Test 3a: Ajout de réaction
+
 ```
 PROCÉDURE:
   1. Cliquer sur message utilisateur
@@ -146,6 +155,7 @@ VALIDATION:
 ```
 
 #### Test 3b: Retrait de réaction
+
 ```
 PROCÉDURE:
   1. Message avec 👍 réaction
@@ -161,6 +171,7 @@ VALIDATION:
 ```
 
 #### Test 3c: Multiples réactions
+
 ```
 PROCÉDURE:
   1. Sur un même message, ajouter 👍 + ❤️ + 😂
@@ -179,6 +190,7 @@ VALIDATION:
 ### 4️⃣ TOKEN COUNTER
 
 #### Test 4a: Estimation token (OpenAI)
+
 ```
 REQUÊTE: Message long (~500 caractères)
 ATTENDU:
@@ -194,6 +206,7 @@ VALIDATION:
 ```
 
 #### Test 4b: Multi-modèle tokens
+
 ```
 PROCÉDURE:
   1. Basculer entre Ollama / OpenAI / Gemini
@@ -217,6 +230,7 @@ VALIDATION:
 ### 5️⃣ ZOOM CONTROL (Clavier)
 
 #### Test 5a: Zoom In/Out
+
 ```
 PROCÉDURE:
   1. Ctrl + Plus → Zoom +10%
@@ -241,6 +255,7 @@ VALIDATION:
 ### 6️⃣ FOURNISSEURS IA (Providers)
 
 #### Test 6a: Ollama (local)
+
 ```
 REQUIS: Ollama running sur 127.0.0.1:11434
 PROCÉDURE:
@@ -260,6 +275,7 @@ VALIDATION:
 ```
 
 #### Test 6b: Provider Fallback
+
 ```
 PROCÉDURE:
   1. Arrêter Ollama
@@ -280,6 +296,7 @@ VALIDATION:
 ### 7️⃣ CHAT MODES (Modes de conversation)
 
 #### Test 7a: Mode par défaut
+
 ```
 REQUÊTE: N'importe quel message
 ATTENDU:
@@ -293,12 +310,13 @@ VALIDATION:
 ```
 
 #### Test 7b: Autres modes (si disponibles)
+
 ```
 MODES À TESTER:
   • Reflection: Mode introspection
   • Code mentor: Conseils code
   • Expert advisor: Expert domain
-  
+
 ATTENDU:
   ✅ Chaque mode a son systemPrompt unique
   ✅ Comportement distinct
@@ -313,6 +331,7 @@ VALIDATION:
 ### 8️⃣ INTÉGRATION COMPLÈTE
 
 #### Test 8a: Tool + Memory + Reactions
+
 ```
 PROCÉDURE:
   1. Envoyer: "Quelle heure est-il?"
@@ -332,6 +351,7 @@ VALIDATION:
 ```
 
 #### Test 8b: Performance globale
+
 ```
 PROCÉDURE:
   1. Envoyer 10 messages rapides
@@ -353,25 +373,26 @@ VALIDATION:
 
 ## 🎯 RÉSUMÉ CHECKLIST FINALE
 
-| Feature | Test 1a | Test 2a | Test 3a | Test 4a | Test 5a | Test 6a | Test 8a |
-|---------|---------|---------|---------|---------|---------|---------|---------|
-| Tool: get_time | [ ] | | | | | | |
-| Tool: calculate | [ ] | | | | | | |
-| Tool: web_search | [ ] | | | | | | |
-| Tool: get_weather | [ ] | | | | | | |
-| Memory Save | | [ ] | | | | | |
-| Memory Persist | | [ ] | | | | | |
-| Reactions | | | [ ] | | | | |
-| Token Counter | | | | [ ] | | | |
-| Zoom Control | | | | | [ ] | | |
-| Ollama Provider | | | | | | [ ] | |
-| Full Integration | | | | | | | [ ] |
+| Feature           | Test 1a | Test 2a | Test 3a | Test 4a | Test 5a | Test 6a | Test 8a |
+| ----------------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- |
+| Tool: get_time    | [ ]     |         |         |         |         |         |         |
+| Tool: calculate   | [ ]     |         |         |         |         |         |         |
+| Tool: web_search  | [ ]     |         |         |         |         |         |         |
+| Tool: get_weather | [ ]     |         |         |         |         |         |         |
+| Memory Save       |         | [ ]     |         |         |         |         |         |
+| Memory Persist    |         | [ ]     |         |         |         |         |         |
+| Reactions         |         |         | [ ]     |         |         |         |         |
+| Token Counter     |         |         |         | [ ]     |         |         |         |
+| Zoom Control      |         |         |         |         | [ ]     |         |         |
+| Ollama Provider   |         |         |         |         |         | [ ]     |         |
+| Full Integration  |         |         |         |         |         |         | [ ]     |
 
 ---
 
 ## 📊 RÉSULTATS À DOCUMENTER
 
 Pour chaque test réussi, noter:
+
 ```
 ✅ Test 1a: get_time
    Status: PASS/FAIL
@@ -396,5 +417,4 @@ Pour chaque test réussi, noter:
 
 **Commit**: 30e452fd  
 **Production Status**: ✅ READY  
-**Next Step**: Exécuter tests complets et documenter résultats  
-
+**Next Step**: Exécuter tests complets et documenter résultats

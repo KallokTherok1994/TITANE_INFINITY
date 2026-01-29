@@ -51,28 +51,28 @@ describe('DevToolsApp', () => {
   describe('Rendering', () => {
     it('should render DevTools app with title', () => {
       render(<DevToolsApp />);
-      
+
       const title = screen.getByText('TITANE∞ DevTools');
       expect(title).toBeInTheDocument();
     });
 
     it('should render subtitle', () => {
       render(<DevToolsApp />);
-      
+
       const subtitle = screen.getByText('System Monitoring & Diagnostics Console');
       expect(subtitle).toBeInTheDocument();
     });
 
     it('should render live status indicator', () => {
       const { container } = render(<DevToolsApp />);
-      
+
       const statusDot = container.querySelector('.animate-pulse');
       expect(statusDot).toBeInTheDocument();
     });
 
     it('should apply custom className', () => {
       const { container } = render(<DevToolsApp className="custom-class" />);
-      
+
       const main = container.querySelector('.custom-class');
       expect(main).toBeInTheDocument();
     });
@@ -81,7 +81,7 @@ describe('DevToolsApp', () => {
   describe('Tabs', () => {
     it('should render all 7 tabs', () => {
       render(<DevToolsApp />);
-      
+
       const tabs = [
         'dashboard',
         'metrics',
@@ -92,7 +92,7 @@ describe('DevToolsApp', () => {
         'errors',
       ];
 
-      tabs.forEach((tabId) => {
+      tabs.forEach(tabId => {
         const tab = screen.getByTestId(`tab-${tabId}`);
         expect(tab).toBeInTheDocument();
       });
@@ -100,24 +100,24 @@ describe('DevToolsApp', () => {
 
     it('should render tabs with icons', () => {
       render(<DevToolsApp />);
-      
+
       const dashboardTab = screen.getByTestId('tab-dashboard');
       expect(dashboardTab.textContent).toContain('📊');
-      
+
       const metricsTab = screen.getByTestId('tab-metrics');
       expect(metricsTab.textContent).toContain('📈');
     });
 
     it('should default to dashboard section', () => {
       render(<DevToolsApp />);
-      
+
       // Le composant Tabs devrait être rendu avec defaultTab="dashboard"
       expect(screen.getByTestId('tabs-component')).toBeInTheDocument();
     });
 
     it('should support custom default section', () => {
       render(<DevToolsApp defaultSection="metrics" />);
-      
+
       expect(screen.getByTestId('tabs-component')).toBeInTheDocument();
     });
   });
@@ -125,7 +125,7 @@ describe('DevToolsApp', () => {
   describe('Sections', () => {
     it('should load Dashboard section', async () => {
       render(<DevToolsApp />);
-      
+
       await waitFor(() => {
         // La section dashboard devrait être visible
         expect(screen.getByTestId('tabs-content')).toBeInTheDocument();
@@ -134,11 +134,11 @@ describe('DevToolsApp', () => {
 
     it('should have sections available for navigation', () => {
       render(<DevToolsApp />);
-      
+
       // Vérifier que les tabs sont cliquables
       const metricsTab = screen.getByTestId('tab-metrics');
       expect(metricsTab).toBeInTheDocument();
-      
+
       const logsTab = screen.getByTestId('tab-logs');
       expect(logsTab).toBeInTheDocument();
     });
@@ -148,9 +148,9 @@ describe('DevToolsApp', () => {
     it('should initialize DevTools events on mount', async () => {
       const devtoolsHooks = await import('@/apps/devtools/hooks');
       const useAllDevToolsEvents = devtoolsHooks.useAllDevToolsEvents;
-      
+
       render(<DevToolsApp />);
-      
+
       expect(useAllDevToolsEvents).toHaveBeenCalled();
     });
   });
@@ -158,7 +158,7 @@ describe('DevToolsApp', () => {
   describe('Styles', () => {
     it('should have correct background styles', () => {
       const { container } = render(<DevToolsApp />);
-      
+
       const main = container.querySelector('.h-full.flex.flex-col');
       expect(main).toHaveStyle({
         background: 'var(--bg-base, #050607)',
@@ -167,7 +167,7 @@ describe('DevToolsApp', () => {
 
     it('should have header with elevated background', () => {
       const { container } = render(<DevToolsApp />);
-      
+
       const header = container.querySelector('.flex-shrink-0.border-b');
       expect(header).toHaveStyle({
         background: 'var(--bg-elevated, #0b0d0f)',
@@ -177,17 +177,11 @@ describe('DevToolsApp', () => {
 
   describe('TypeScript Props', () => {
     it('should accept DevToolsSection type for defaultSection', () => {
-      const validSections: Array<'dashboard' | 'metrics' | 'logs' | 'engines' | 'memory' | 'pipeline' | 'errors'> = [
-        'dashboard',
-        'metrics',
-        'logs',
-        'engines',
-        'memory',
-        'pipeline',
-        'errors',
-      ];
+      const validSections: Array<
+        'dashboard' | 'metrics' | 'logs' | 'engines' | 'memory' | 'pipeline' | 'errors'
+      > = ['dashboard', 'metrics', 'logs', 'engines', 'memory', 'pipeline', 'errors'];
 
-      validSections.forEach((section) => {
+      validSections.forEach(section => {
         const { unmount } = render(<DevToolsApp defaultSection={section} />);
         expect(screen.getByTestId('tabs-component')).toBeInTheDocument();
         unmount();

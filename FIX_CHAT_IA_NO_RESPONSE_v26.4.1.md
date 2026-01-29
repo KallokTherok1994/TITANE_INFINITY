@@ -9,8 +9,9 @@
 ## 🔍 ANALYSE DU PROBLÈME
 
 ### Symptômes
+
 ```
-[Warning] [TauriProtector] Command conversation_process_message failed: 
+[Warning] [TauriProtector] Command conversation_process_message failed:
   "AI error: No AI provider available"
 ```
 
@@ -30,10 +31,12 @@ let ai_router = Arc::new(tokio::sync::RwLock::new(
 ```
 
 **Problème**: L'AIRouter est initialisé sans :
+
 1. API key Gemini (`None`)
 2. Modèle Ollama (`None`)
 
 **Conséquence**: Lors de l'appel `conversation_process_message`:
+
 - Pipeline OMEGA démarre ✅
 - AIRouter tente Gemini → échoue (pas d'API key)
 - AIRouter tente Ollama → échoue (pas de modèle configuré)
@@ -58,6 +61,7 @@ log::info!("[AI Router] Initialized with default Ollama model: llama3.1");
 ```
 
 **Impact**:
+
 - ✅ Ollama devient provider par défaut
 - ✅ Modèle `llama3.1` utilisé automatiquement
 - ✅ Pas besoin d'API key Gemini pour fonctionner
@@ -74,9 +78,9 @@ pub async fn conversation_process_message(...) -> CommandResult<ConversationResp
         conversation_id,
         mode
     );
-    
+
     // ... traitement ...
-    
+
     match engine.process_message(request).await {
         Ok(response) => {
             log::info!(
@@ -99,6 +103,7 @@ pub async fn conversation_process_message(...) -> CommandResult<ConversationResp
 ```
 
 **Impact**:
+
 - ✅ Trace entrée/sortie de chaque requête
 - ✅ Diagnostic précis en cas d'erreur
 - ✅ Visibilité sur tokens utilisés
@@ -117,6 +122,7 @@ log::error!(
 ```
 
 **Impact**:
+
 - ✅ Affiche status de chaque provider en cas d'échec
 - ✅ Facilite diagnostic : quel provider est disponible?
 
@@ -125,6 +131,7 @@ log::error!(
 ## 📊 FLUX CORRIGÉ
 
 ### Avant (❌ Échec)
+
 ```
 User Message → conversation_process_message
   ↓
@@ -134,12 +141,13 @@ AIRouter.query(request)
   ├─ Try UnifiedIA → ❌ None
   ├─ Try Gemini    → ❌ No API key
   └─ Try Ollama    → ❌ No model configured
-  
+
 Result: AIError::NoProviderAvailable
 Frontend: Case vide/masquée
 ```
 
 ### Après (✅ Succès)
+
 ```
 User Message → conversation_process_message
   ↓
@@ -149,7 +157,7 @@ AIRouter.query(request)
   ├─ Try UnifiedIA → ❌ None
   ├─ Try Gemini    → ❌ No API key
   └─ Try Ollama    → ✅ llama3.1 available
-  
+
 Result: AIResponse { content: "...", provider: Ollama, ... }
 Frontend: Réponse affichée correctement ✅
 ```
@@ -159,6 +167,7 @@ Frontend: Réponse affichée correctement ✅
 ## 🧪 VALIDATION
 
 ### Compilation
+
 ```bash
 cargo check --manifest-path=src-tauri/Cargo.toml
 # ✅ Finished `dev` profile [unoptimized + debuginfo] target(s) in 22.48s
@@ -167,6 +176,7 @@ cargo check --manifest-path=src-tauri/Cargo.toml
 ### Tests Requis
 
 1. **Smoke Test Chat IA**:
+
    ```bash
    pnpm run dev:tauri
    # Ouvrir Chat IA
@@ -175,6 +185,7 @@ cargo check --manifest-path=src-tauri/Cargo.toml
    ```
 
 2. **Logs Backend**:
+
    ```
    [AI Router] Initialized with default Ollama model: llama3.1
    [conversation_process_message] 📨 Request | msg_len=7 | conv_id=Some(...) | mode=Some("default")
@@ -195,16 +206,19 @@ cargo check --manifest-path=src-tauri/Cargo.toml
 ## 🎯 PROCHAINES ÉTAPES
 
 ### Court Terme
+
 - [ ] Tester avec Ollama arrêté → fallback approprié
 - [ ] Tester avec Ollama + API Gemini configurée
 - [ ] Valider affichage frontend (vérifier CSS)
 
 ### Moyen Terme
+
 - [ ] Ajouter UI pour sélectionner provider (Ollama/Gemini/OpenAI)
 - [ ] Permettre configuration modèle Ollama via UI
 - [ ] Ajouter indicateur provider actif dans Chat UI
 
 ### Long Terme
+
 - [ ] Fallback automatique Ollama → Gemini si Ollama indisponible
 - [ ] Support multi-providers en parallèle (consensus)
 - [ ] Cache réponses pour accélérer requêtes similaires

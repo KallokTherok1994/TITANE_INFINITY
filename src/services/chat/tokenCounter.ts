@@ -33,9 +33,17 @@ const MODEL_CONTEXT_LIMITS: Record<string, ModelContextLimits> = {
   'gpt-4': { model: 'gpt-4', maxTokens: 8192, warningThreshold: 0.8 },
   'gpt-3.5-turbo': { model: 'gpt-3.5-turbo', maxTokens: 16385, warningThreshold: 0.8 },
   'claude-3-opus': { model: 'claude-3-opus', maxTokens: 200000, warningThreshold: 0.9 },
-  'claude-3-sonnet': { model: 'claude-3-sonnet', maxTokens: 200000, warningThreshold: 0.9 },
+  'claude-3-sonnet': {
+    model: 'claude-3-sonnet',
+    maxTokens: 200000,
+    warningThreshold: 0.9,
+  },
   'claude-3-haiku': { model: 'claude-3-haiku', maxTokens: 200000, warningThreshold: 0.9 },
-  'gemini-2.0-flash': { model: 'gemini-2.0-flash', maxTokens: 1000000, warningThreshold: 0.95 },
+  'gemini-2.0-flash': {
+    model: 'gemini-2.0-flash',
+    maxTokens: 1000000,
+    warningThreshold: 0.95,
+  },
   'gemini-pro': { model: 'gemini-pro', maxTokens: 32768, warningThreshold: 0.85 },
   'local-llama': { model: 'local-llama', maxTokens: 4096, warningThreshold: 0.75 },
   'github-models': { model: 'github-models', maxTokens: 128000, warningThreshold: 0.85 },
@@ -95,7 +103,7 @@ export class TokenCounterService {
     let input = 0;
     let output = 0;
 
-    messages.forEach((msg) => {
+    messages.forEach(msg => {
       const count = this.countMessageTokens(msg);
       total += count;
 

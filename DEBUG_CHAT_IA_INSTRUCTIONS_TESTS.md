@@ -5,11 +5,13 @@
 **Problème reporté:** Réponses du Chat IA ne s'affichent pas (cases vides/masquées)
 
 **Fixes Phase 1 appliqués:**
+
 - ✅ Configuration Ollama llama3.1 par défaut dans `main.rs`
 - ✅ Modèle llama3.1 installé (4.9 GB)
 - ✅ Logs backend ajoutés (Rust)
 
 **Fixes Phase 2 appliqués:**
+
 - ✅ Logs frontend ajoutés (TypeScript)
 - ✅ Tous les fichiers compilent sans erreurs
 - ✅ Commits pushed sur origin/MAIN
@@ -40,6 +42,7 @@ pnpm run dev:tauri
 ### Étape 4: Envoyer message de test
 
 **Message recommandé:**
+
 ```
 Bonjour, test debug phase 2
 ```
@@ -98,10 +101,12 @@ Bonjour, test debug phase 2
 **Symptôme:** Seulement log `[conversationEngine] 📤 Sending...`, puis rien
 
 **Cause probable:**
+
 - Tauri invoke échoue silencieusement
 - Commande `conversation_process_message` non enregistrée
 
 **Action:**
+
 1. Vérifier dans terminal: erreurs de compilation Rust ?
 2. Redémarrer app: `Ctrl+C` puis `pnpm run dev:tauri`
 
@@ -112,11 +117,13 @@ Bonjour, test debug phase 2
 **Symptôme:** Log `[conversation_process_message] 📨 Request` puis `[conversation_process_message] ❌ Error | error=...`
 
 **Causes possibles:**
+
 - **"No AI provider available"** → Ollama non configuré (vérifié Phase 1)
 - **"Connection refused"** → Service Ollama pas démarré
 - **"Model not found"** → llama3.1 absent
 
 **Actions:**
+
 ```bash
 # Vérifier service Ollama
 curl http://127.0.0.1:11434/api/tags
@@ -133,6 +140,7 @@ ollama list
 ### Cas 3: ❌ Backend Success mais content_length=0
 
 **Symptôme:**
+
 ```
 [conversation_process_message] ✅ Success | tokens=0
 [conversationEngine] 📥 Backend response: {
@@ -144,6 +152,7 @@ ollama list
 **Cause:** Ollama génère réponse vide ou mapping défaillant
 
 **Actions:**
+
 ```bash
 # Test Ollama direct
 ollama run llama3.1 "Bonjour"
@@ -157,6 +166,7 @@ ollama run llama3.1 "Bonjour"
 ### Cas 4: ❌ Frontend reçoit mais message non créé
 
 **Symptôme:**
+
 ```
 [conversationEngine] 📥 Backend response: { assistant_message_length: 250 }
 # Mais AUCUN log "[useConversationEngine] 📝 Assistant message créé"
@@ -165,6 +175,7 @@ ollama run llama3.1 "Bonjour"
 **Cause:** Structure `ConversationResponse` incorrecte ou hook non déclenché
 
 **Action dans Console DevTools:**
+
 ```javascript
 // Vérifier structure raw response
 console.log('Check response structure');
@@ -175,6 +186,7 @@ console.log('Check response structure');
 ### Cas 5: ❌ Message créé mais state non mis à jour
 
 **Symptôme:**
+
 ```
 [useConversationEngine] 📝 Assistant message créé: { content_length: 250 }
 # Mais AUCUN log "[useConversationEngine] 📊 Messages après ajout"
@@ -183,6 +195,7 @@ console.log('Check response structure');
 **Cause:** `setMessages` non appelé ou React state gelé
 
 **Action dans Console DevTools:**
+
 ```javascript
 // Forcer re-render
 document.querySelector('.conversation-container')?.dispatchEvent(new Event('click'));
@@ -193,6 +206,7 @@ document.querySelector('.conversation-container')?.dispatchEvent(new Event('clic
 ### Cas 6: ✅ State mis à jour MAIS pas visible dans UI
 
 **Symptôme:**
+
 ```
 [useConversationEngine] 📊 Messages après ajout: { total: 2, last_content_length: 250 }
 # Mais case vide dans interface
@@ -201,9 +215,10 @@ document.querySelector('.conversation-container')?.dispatchEvent(new Event('clic
 **Cause:** Problème CSS/DOM (opacity, display:none, height:0)
 
 **Actions dans Console DevTools:**
+
 ```javascript
 // Compter messages dans DOM
-document.querySelectorAll('.conversation-message').length
+document.querySelectorAll('.conversation-message').length;
 // Attendu: 2 (user + assistant)
 
 // Inspecter assistant message
@@ -215,12 +230,12 @@ if (assistantMsg) {
     opacity: getComputedStyle(assistantMsg).opacity,
     height: assistantMsg.offsetHeight,
     width: assistantMsg.offsetWidth,
-    innerHTML_length: assistantMsg.innerHTML.length
+    innerHTML_length: assistantMsg.innerHTML.length,
   });
 }
 
 // Vérifier contenu texte
-assistantMsg?.textContent
+assistantMsg?.textContent;
 ```
 
 ---
@@ -230,16 +245,19 @@ assistantMsg?.textContent
 ### 1. Console Logs Complets
 
 **Copier TOUS les logs:**
+
 - Clic droit dans Console → "Save as..."
 - Ou: Sélectionner tout (Ctrl+A) → Copier
 
 **Identifier:**
+
 - ✅ Dernier log SUCCESS avant rupture
 - ❌ Premier log ABSENT attendu
 
 ### 2. Terminal Backend (Rust)
 
 **Copier output terminal** où tourne `pnpm run dev:tauri`:
+
 ```
 [AI Router] ...
 [conversation_process_message] ...
@@ -248,12 +266,14 @@ assistantMsg?.textContent
 ### 3. DOM Inspection
 
 **Dans DevTools → Elements:**
+
 - Chercher: `.conversation-message` (Ctrl+F)
 - Screenshot de l'élément `.assistant` si présent
 
 ### 4. React DevTools (optionnel mais utile)
 
 Si extension installée:
+
 - Onglet "Components"
 - Chercher `ConversationContainer` ou `useConversationEngine`
 - Screenshot du state `messages`
@@ -271,6 +291,7 @@ Si extension installée:
 5. **Réponse VISIBLE** dans l'interface UI
 
 **Confirmation à fournir:**
+
 ```
 ✅ Chat IA fonctionne !
 Provider utilisé: Ollama
@@ -360,11 +381,13 @@ cargo check --manifest-path=src-tauri/Cargo.toml
 ## ⏭️ PROCHAINES ÉTAPES (après test)
 
 **Si ✅ test réussi:**
+
 1. Documenter résolution dans rapport final
 2. Retirer logs de debug (optionnel pour production)
 3. Créer tests automatisés E2E
 
 **Si ❌ test échoué:**
+
 1. Identifier point de rupture via logs
 2. Appliquer Phase 3 (correctifs ciblés)
 3. Re-tester

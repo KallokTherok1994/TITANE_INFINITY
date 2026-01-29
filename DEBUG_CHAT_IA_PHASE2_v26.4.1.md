@@ -9,12 +9,14 @@
 ## 🔍 PHASE 1 RECAP (Déjà Effectué)
 
 ### Corrections Appliquées
+
 ✅ AIRouter: Ollama llama3.1 configuré par défaut  
 ✅ Logs debug backend: conversation_process_message  
 ✅ Logs debug backend: AIRouter status providers  
 ✅ Modèle Ollama: llama3.1 installé (4.9 GB)
 
 ### Résultat Phase 1
+
 ❌ **Problème persiste** : Les réponses ne s'affichent toujours pas
 
 ---
@@ -165,7 +167,7 @@ pnpm run dev:tauri
 
 ```javascript
 // Dans DevTools Console:
-document.querySelectorAll('.conversation-message.assistant').length
+document.querySelectorAll('.conversation-message.assistant').length;
 // Doit retourner le nombre de messages assistant
 ```
 
@@ -197,10 +199,12 @@ if (msg) {
 ### Cas A: Backend ne répond pas
 
 **Symptômes**:
+
 - Pas de log `[conversation_process_message] ✅ Success`
 - Erreur `No AI provider available` persiste
 
 **Solutions**:
+
 1. Vérifier Ollama actif: `curl http://127.0.0.1:11434/api/tags`
 2. Vérifier modèle llama3.1 installé
 3. Redémarrer Ollama: `ollama serve`
@@ -208,10 +212,12 @@ if (msg) {
 ### Cas B: Backend répond mais contenu vide
 
 **Symptômes**:
+
 - Log `Success` présent
 - `assistant_message_length: 0`
 
 **Solutions**:
+
 1. Vérifier logs Ollama: `journalctl -u ollama -f`
 2. Tester génération directe: `ollama run llama3.1 "Bonjour"`
 3. Vérifier mapping response dans pipeline Rust
@@ -219,10 +225,12 @@ if (msg) {
 ### Cas C: Frontend reçoit mais ne crée pas message
 
 **Symptômes**:
+
 - Log `Backend response` avec contenu
 - Pas de log `Assistant message créé`
 
 **Solutions**:
+
 1. Vérifier structure `ConversationResponse`
 2. Vérifier champ `assistant_message` existe
 3. Ajouter breakpoint dans hook
@@ -230,11 +238,13 @@ if (msg) {
 ### Cas D: Message créé mais pas affiché
 
 **Symptômes**:
+
 - Log `Assistant message créé` présent
 - Log `Messages après ajout` augmente
 - Pas de message dans UI
 
 **Solutions**:
+
 1. Vérifier composant render: `filteredMessages.map`
 2. Vérifier filtre ne supprime pas assistant
 3. Inspecter DOM pour messages masqués par CSS
@@ -242,10 +252,12 @@ if (msg) {
 ### Cas E: Message affiché mais invisible
 
 **Symptômes**:
+
 - Message dans DOM
 - `offsetHeight: 0` ou `display: none`
 
 **Solutions**:
+
 1. Inspecter `.conversation-message-text` CSS
 2. Vérifier `white-space`, `color`, `background`
 3. Vérifier z-index et positioning
@@ -255,6 +267,7 @@ if (msg) {
 ## 📋 CHECKLIST DE VALIDATION
 
 ### Backend
+
 - [ ] Ollama actif sur port 11434
 - [ ] Modèle llama3.1 présent
 - [ ] Log `[AI Router] Initialized`
@@ -262,17 +275,20 @@ if (msg) {
 - [ ] `tokens > 0` dans logs
 
 ### Frontend - Service Layer
+
 - [ ] Log `📤 Sending to backend`
 - [ ] Log `📥 Backend response`
 - [ ] `assistant_message_length > 0`
 
 ### Frontend - Hook
+
 - [ ] Log `📝 Assistant message créé`
 - [ ] `content_length > 0`
 - [ ] Log `📊 Messages après ajout`
 - [ ] `total` augmente correctement
 
 ### Frontend - Render
+
 - [ ] Messages visibles dans DevTools Elements
 - [ ] `.conversation-message.assistant` présent
 - [ ] CSS `display: flex` (pas `none`)
@@ -283,6 +299,7 @@ if (msg) {
 ## 🚀 COMMANDES UTILES
 
 ### Backend
+
 ```bash
 # Vérifier Ollama
 curl http://127.0.0.1:11434/api/tags
@@ -297,6 +314,7 @@ ollama serve  # Mode direct
 ```
 
 ### Frontend
+
 ```bash
 # Lancer dev
 pnpm run dev:tauri
@@ -309,6 +327,7 @@ pnpm exec tsc --noEmit
 ```
 
 ### Git
+
 ```bash
 # Status modifications
 git status
@@ -326,6 +345,7 @@ git commit -m "debug(chat-ia): Ajout logs détaillés frontend/backend phase 2"
 ## 📝 PROCHAINES ÉTAPES
 
 1. **Lancer app en mode dev**
+
    ```bash
    pnpm run dev:tauri
    ```

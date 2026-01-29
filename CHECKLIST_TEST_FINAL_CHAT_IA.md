@@ -21,6 +21,7 @@
 ### Option A: Test Standard (Recommandé)
 
 #### Terminal 1: Lancer l'application
+
 ```bash
 cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
 pnpm run dev:tauri
@@ -29,6 +30,7 @@ pnpm run dev:tauri
 **Attendre:** Compilation Rust terminée + fenêtre TITANE∞ ouverte (~30 sec)
 
 #### Terminal 2 (Optionnel): Monitoring logs temps réel
+
 ```bash
 cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
 ./scripts/monitor_chat_logs.sh
@@ -37,6 +39,7 @@ cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
 **Bénéfice:** Voir logs colorisés en temps réel (cyan/vert/rouge)
 
 #### Dans l'application:
+
 1. **F12** → Onglet **Console** (DevTools)
 2. Cliquer sur **"CONVERSATION"** ou **"Chat IA"**
 3. Envoyer message: **"Bonjour, test debug phase 2"**
@@ -112,6 +115,7 @@ cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
 - [ ] **Réponse VISIBLE** dans interface UI ← **OBJECTIF FINAL**
 
 **Action si succès:**
+
 ```bash
 # Créer screenshot interface
 # Copier tous les logs
@@ -127,6 +131,7 @@ cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
 **Symptôme:** Log #1 présent, mais aucun #2, #3, #4
 
 **Vérification:**
+
 ```bash
 # Terminal où tourne dev:tauri montre des erreurs Rust ?
 # Si oui: recompiler
@@ -140,6 +145,7 @@ cargo build --manifest-path=src-tauri/Cargo.toml
 **Symptôme:** Log `[conversation_process_message] ❌ Error`
 
 **Vérification Ollama:**
+
 ```bash
 # Service actif ?
 curl http://127.0.0.1:11434/api/tags
@@ -158,6 +164,7 @@ ollama list  # doit montrer llama3.1
 **Symptôme:** Log #4 `✅ Success` MAIS log #5 `assistant_message_length: 0`
 
 **Test Ollama direct:**
+
 ```bash
 ollama run llama3.1 "Bonjour"
 # Si réponse vide → problème modèle Ollama
@@ -171,9 +178,10 @@ ollama run llama3.1 "Bonjour"
 **Symptôme:** Tous logs OK, `content_length > 0`, MAIS case vide dans UI
 
 **Diagnostic DOM (dans Console DevTools):**
+
 ```javascript
 // Compter messages
-document.querySelectorAll('.conversation-message').length
+document.querySelectorAll('.conversation-message').length;
 // Attendu: 2
 
 // Inspecter assistant
@@ -184,7 +192,7 @@ console.log({
   opacity: msg ? getComputedStyle(msg).opacity : 'N/A',
   height: msg ? msg.offsetHeight + 'px' : 'N/A',
   text_length: msg ? msg.textContent.length : 0,
-  text_preview: msg ? msg.textContent.substring(0, 50) : ''
+  text_preview: msg ? msg.textContent.substring(0, 50) : '',
 });
 ```
 
@@ -221,31 +229,38 @@ console.log({
 **Durée test:** X minutes
 
 **Point de rupture identifié:**
+
 - Dernier log réussi: #X - [description]
 - Premier log manquant: #Y - [attendu]
 - Catégorie: [Backend / Frontend / Rendering]
 
 **LOGS CONSOLE (DevTools F12):**
 ```
+
 [Copier TOUS les logs ici]
+
 ```
 
 **LOGS TERMINAL (Backend Rust):**
 ```
+
 [Copier logs du terminal où tourne dev:tauri]
-```
+
+````
 
 **DIAGNOSTIC DOM:**
 ```javascript
 [Résultat de la commande document.querySelectorAll ci-dessus]
-```
+````
 
 **Actions tentées:**
+
 - [ ] Redémarrage Ollama
 - [ ] Recompilation Rust
 - [ ] Test Ollama direct
 - [ ] Autre: [préciser]
-```
+
+````
 
 ---
 
@@ -269,7 +284,7 @@ cargo build --manifest-path=src-tauri/Cargo.toml
 
 # Vérifier compilation TypeScript
 pnpm exec tsc --noEmit
-```
+````
 
 ---
 

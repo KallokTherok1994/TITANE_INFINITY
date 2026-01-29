@@ -62,13 +62,15 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     border: '2px solid rgba(196, 196, 196, 0.3)',
-    transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1)', // Sprint 4: Smooth easing
+    transition:
+      'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1)', // Sprint 4: Smooth easing
     outline: 'none', // Supprime outline par défaut
     willChange: 'transform', // Sprint 4: Optimize performance
   },
   bubbleFocus: {
     // WCAG 2.1 AA: Focus indicator visible (3:1 contrast)
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 3px rgba(255, 255, 255, 0.2), 0 0 0 3px rgba(196, 196, 196, 0.6)',
+    boxShadow:
+      '0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 3px rgba(255, 255, 255, 0.2), 0 0 0 3px rgba(196, 196, 196, 0.6)',
     outline: '2px solid #C4C4C4',
     outlineOffset: '2px',
   },
@@ -131,7 +133,8 @@ const styles = {
     justifyContent: 'center',
     color: '#C4C4C4',
     fontSize: '14px',
-    transition: 'background 0.25s cubic-bezier(0.4, 0, 0.2, 1), outline 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)', // Sprint 4: Smooth transitions
+    transition:
+      'background 0.25s cubic-bezier(0.4, 0, 0.2, 1), outline 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)', // Sprint 4: Smooth transitions
     outline: 'none', // Supprime outline par défaut
   },
   iconButtonFocus: {
@@ -162,7 +165,8 @@ const styles = {
     color: '#C4C4C4',
     fontSize: '13px',
     outline: 'none',
-    transition: 'border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1)', // Sprint 4: Smooth easing
+    transition:
+      'border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1)', // Sprint 4: Smooth easing
     resize: 'none' as const,
   },
   inputFocus: {
@@ -181,7 +185,8 @@ const styles = {
     fontSize: '13px',
     fontWeight: '600',
     cursor: 'pointer',
-    transition: 'opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), outline 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)', // Sprint 4: Smooth transitions
+    transition:
+      'opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), outline 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)', // Sprint 4: Smooth transitions
     outline: 'none',
   },
   sendButtonFocus: {
@@ -277,29 +282,29 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
         console.warn('[AIChatBubble] ⚠️ Message invalide (structure)', message);
         return false;
       }
-      
+
       // Validation rôle
       if (!message.role || !['user', 'assistant'].includes(message.role)) {
         console.warn('[AIChatBubble] ⚠️ Message invalide (rôle)', message);
         return false;
       }
-      
+
       // Validation contenu
       const messageText = getMessageText(message);
       const hasContent = messageText && messageText.trim().length > 0;
       if (!hasContent) {
-        console.warn('[AIChatBubble] ⚠️ Message vide', { 
-          role: message.role, 
-          timestamp: message.timestamp 
+        console.warn('[AIChatBubble] ⚠️ Message vide', {
+          role: message.role,
+          timestamp: message.timestamp,
         });
         return false;
       }
-      
+
       // Message valide
       console.log('[AIChatBubble] ✅ Message affiché', {
         role: message.role,
         contentLength: messageText.length,
-        timestamp: message.timestamp
+        timestamp: message.timestamp,
       });
       return true;
     });
@@ -311,21 +316,24 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
   }, [validMessages.length]);
 
   // Sprint 5: Fonction pour obtenir hauteur estimée d'un message
-  const getItemSize = useCallback((index: number) => {
-    // Si on a mesuré la hauteur réelle, l'utiliser
-    if (rowHeightsRef.current.has(index)) {
-      const measuredHeight = rowHeightsRef.current.get(index);
-      if (measuredHeight !== undefined) {
-        return measuredHeight;
+  const getItemSize = useCallback(
+    (index: number) => {
+      // Si on a mesuré la hauteur réelle, l'utiliser
+      if (rowHeightsRef.current.has(index)) {
+        const measuredHeight = rowHeightsRef.current.get(index);
+        if (measuredHeight !== undefined) {
+          return measuredHeight;
+        }
       }
-    }
-    // Sinon, estimation basée sur longueur contenu
-    const message = validMessages[index];
-    if (!message) return 80; // Hauteur par défaut
-    const contentLength = getMessageText(message).length;
-    // Formule: 60px base + 0.5px par caractère (estimation conservative)
-    return Math.max(80, Math.min(60 + contentLength * 0.5, 500));
-  }, [validMessages, getMessageText]);
+      // Sinon, estimation basée sur longueur contenu
+      const message = validMessages[index];
+      if (!message) return 80; // Hauteur par défaut
+      const contentLength = getMessageText(message).length;
+      // Formule: 60px base + 0.5px par caractère (estimation conservative)
+      return Math.max(80, Math.min(60 + contentLength * 0.5, 500));
+    },
+    [validMessages, getMessageText]
+  );
 
   // Sprint 5: Callback pour mesurer hauteur réelle des items
   const setItemSize = useCallback((index: number, size: number) => {
@@ -341,9 +349,9 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
     console.log('[AIChatBubble] 🔄 Messages mis à jour', {
       count: messages.length,
       lastMessage: messages[messages.length - 1],
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
-    
+
     // Sprint 5: Scroll avec virtualisation
     if (enableVirtualization && listRef.current && validMessages.length > 0) {
       // Scroll vers le dernier message
@@ -404,7 +412,7 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
       logger.info('Conversation démarrée', 'AIChatBubble', {
         conversationId: conversationId.current,
       });
-      
+
       // Démarrer le système d'alertes si pas déjà démarré
       alerting.start();
     }
@@ -432,54 +440,78 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
 
     const message = input.trim();
     const correlationId = generateCorrelationId();
-    
+
     try {
       // 📊 Métriques: Enregistrer envoi message
       chatMetrics.recordMessageSent(conversationId.current, message.length);
       messageStartTime.current = Date.now();
-      
+
       // 🚨 DEBUG: Log envoi message UI
       console.log('[AIChatBubble] 📤 Envoi message UI', {
         message: message.substring(0, 100),
         messageLength: message.length,
         currentMessagesCount: messages.length,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
-      
-      logger.info('Message utilisateur envoyé', 'AIChatBubble', {
-        messageLength: message.length,
-        messagesCount: messages.length,
-      }, correlationId);
-      
+
+      logger.info(
+        'Message utilisateur envoyé',
+        'AIChatBubble',
+        {
+          messageLength: message.length,
+          messagesCount: messages.length,
+        },
+        correlationId
+      );
+
       setInput('');
       await sendGlobalMessage(message);
-      
+
       // 📊 Métriques: Enregistrer réception réponse
       const responseTime = Date.now() - messageStartTime.current;
       const lastMessage = messages[messages.length - 1];
       const responseLength = lastMessage ? getMessageText(lastMessage).length : 0;
-      
-      chatMetrics.recordMessageReceived(conversationId.current, responseTime, responseLength);
-      
-      logger.info('Réponse IA reçue', 'AIChatBubble', {
+
+      chatMetrics.recordMessageReceived(
+        conversationId.current,
         responseTime,
-        responseLength,
-      }, correlationId);
-      
+        responseLength
+      );
+
+      logger.info(
+        'Réponse IA reçue',
+        'AIChatBubble',
+        {
+          responseTime,
+          responseLength,
+        },
+        correlationId
+      );
+
       // 🚨 DEBUG: Log après envoi
       console.log('[AIChatBubble] ✅ Message envoyé, attente réponse...', {
         newMessagesCount: messages.length,
-        isLoading
+        isLoading,
       });
     } catch (error) {
       // � Métriques: Enregistrer erreur
       const errorMessage = error instanceof Error ? error.message : String(error);
-      chatMetrics.recordError(conversationId.current, 'send_message_failed', errorMessage);
-      
-      logger.error('Erreur envoi message', 'AIChatBubble', error, {
-        messageLength: message.length,
-      }, correlationId);
-      
+      chatMetrics.recordError(
+        conversationId.current,
+        'send_message_failed',
+        errorMessage
+      );
+
+      logger.error(
+        'Erreur envoi message',
+        'AIChatBubble',
+        error,
+        {
+          messageLength: message.length,
+        },
+        correlationId
+      );
+
       // 🔔 Alerte: Déclencher alerte si erreur
       alerting.triggerManualAlert(
         AlertType.ERROR_BOUNDARY_TRIGGERED,
@@ -487,7 +519,7 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
         `Erreur envoi message: ${errorMessage}`,
         { conversationId: conversationId.current, errorMessage }
       );
-      
+
       // 🔴 FAILSAFE: Ne jamais crasher l'UI
       console.error('[AIChatBubble] ❌ Erreur envoi message', error);
       setInput(message); // Restaurer input si erreur
@@ -511,10 +543,13 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
   }, [clear]);
 
   // Sprint 6: Handler pour changement de modèle
-  const handleModelChange = useCallback((modelId: string) => {
-    setSelectedModel(modelId);
-    setModel(modelId);
-  }, [setModel]);
+  const handleModelChange = useCallback(
+    (modelId: string) => {
+      setSelectedModel(modelId);
+      setModel(modelId);
+    },
+    [setModel]
+  );
 
   // Sprint 6: Handler pour import de conversation
   const handleImportConversation = useCallback((importedMessages: AIMessage[]) => {
@@ -548,14 +583,20 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
           aria-label="Ouvrir TITANE∞ AI Companion"
           aria-expanded={isOpen && !isMinimized}
           tabIndex={0}
-          onKeyDown={(e) => {
+          onKeyDown={e => {
             if (e.key === 'Enter' || e.key === ' ') {
               e.preventDefault();
               handleBubbleClick();
             }
           }}
         >
-          <span style={styles.bubbleIcon} role="img" aria-label="Icône cerveau intelligence artificielle">🧠</span>
+          <span
+            style={styles.bubbleIcon}
+            role="img"
+            aria-label="Icône cerveau intelligence artificielle"
+          >
+            🧠
+          </span>
         </motion.div>
       </ChatErrorBoundary>
     );
@@ -565,265 +606,294 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
   return (
     <ChatErrorBoundary>
       <AnimatePresence>
-      <motion.div
-        initial={{ scale: 0.9, opacity: 0, y: 20 }}
-        animate={{ scale: 1, opacity: 1, y: 0 }}
-        exit={{ scale: 0.9, opacity: 0, y: 20 }}
-        transition={{ duration: 0.3, ease: 'easeInOut' }}
-        style={styles.panel}
-        role="dialog"
-        aria-label="TITANE∞ AI Companion Chat Panel"
-        aria-modal="false"
-        onKeyDown={(e) => {
-          if (e.key === 'Escape') {
-            e.preventDefault();
-            handleClose();
-          }
-        }}
-      >
-        {/* Header */}
-        <div style={styles.header} role="banner">
-          <div>
-            <h3 style={styles.title} id="chat-title">TITANE∞ AI COMPANION</h3>
-            <div style={styles.subtitle} role="status" aria-live="polite">
-              {currentModel} • {messages.length} messages
-            </div>
-          </div>
-          <div style={styles.headerActions} role="toolbar" aria-label="Actions du chat">
-            <button 
-              style={styles.iconButton} 
-              onClick={handleClear} 
-              title="Effacer la conversation"
-              aria-label="Effacer la conversation"
-            >
-              <span role="img" aria-label="Icône corbeille">🗑️</span>
-            </button>
-            <button 
-              style={styles.iconButton} 
-              onClick={handleMinimize} 
-              title="Minimiser"
-              aria-label="Minimiser le chat"
-            >
-              —
-            </button>
-            <button 
-              style={styles.iconButton} 
-              onClick={handleClose} 
-              title="Fermer"
-              aria-label="Fermer le chat"
-            >
-              ✕
-            </button>
-          </div>
-        </div>
-
-        {/* Sprint 6: Controls Section (ModelSelector + ContextUsage + ConversationControls) */}
-        <div style={{ 
-          padding: '12px 16px',
-          borderBottom: '1px solid rgba(114, 123, 129, 0.2)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '8px',
-        }}>
-          <ModelSelector 
-            selectedModel={selectedModel}
-            onModelChange={handleModelChange}
-            showAdvanced={false}
-          />
-          {/* Sprint 6 Phase 3: Token counter (compact) */}
-          <ContextUsage 
-            messages={validMessages}
-            currentModel={selectedModel}
-            compact={true}
-          />
-          <ConversationControls 
-            messages={messages}
-            onImport={handleImportConversation}
-          />
-        </div>
-
-        {/* Messages */}
-        <div 
-          style={styles.messagesContainer}
-          role="log"
-          aria-label="Historique de conversation"
-          aria-live="polite"
-          aria-atomic="false"
-          aria-relevant="additions"
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0, y: 20 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          exit={{ scale: 0.9, opacity: 0, y: 20 }}
+          transition={{ duration: 0.3, ease: 'easeInOut' }}
+          style={styles.panel}
+          role="dialog"
+          aria-label="TITANE∞ AI Companion Chat Panel"
+          aria-modal="false"
+          onKeyDown={e => {
+            if (e.key === 'Escape') {
+              e.preventDefault();
+              handleClose();
+            }
+          }}
         >
-          {messages.length === 0 && (
-            <div style={{ textAlign: 'center', color: '#727B81', padding: '40px 20px' }}>
-              <div style={{ fontSize: '32px', marginBottom: '12px' }}>🧠⚡∞</div>
-              <div style={{ fontSize: '14px', fontWeight: '600', marginBottom: '6px' }}>
-                TITANE∞ AI Companion
-              </div>
-              <div style={{ fontSize: '12px', opacity: 0.7 }}>
-                Assistant permanent • Toujours disponible
-              </div>
-            </div>
-          )}
-
-          {/* Sprint 5: Rendu virtualisé si >50 messages, sinon rendu normal */}
-          {enableVirtualization && validMessages.length > 0 ? (
-            <List
-              listRef={listRef}
-              rowCount={validMessages.length}
-              rowHeight={getItemSize}
-              defaultHeight={PANEL_HEIGHT - 140}
-              style={{ overflow: 'auto' }}
-              rowComponent={({ index, style }) => {
-                const message = validMessages[index];
-                // Guard: si pas de message, retourner élément vide
-                if (!message) {
-                  return <div style={style} />;
-                }
-                return (
-                  <div style={style}>
-                    <div
-                      ref={(el) => {
-                        if (el) {
-                          const height = el.getBoundingClientRect().height;
-                          setItemSize(index, height);
-                        }
-                      }}
-                      style={{ padding: '6px 0' }}
-                    >
-                      <MessageBubble
-                        key={message.timestamp ? `${message.timestamp}-${index}` : `msg-${index}`}
-                        role={message.role}
-                        content={getMessageText(message)}
-                        timestamp={message.timestamp}
-                      />
-                    </div>
-                  </div>
-                );
-              }}
-              rowProps={{}}
-            />
-          ) : (
-            validMessages.map((message, index) => (
-              <MessageBubble
-                key={message.timestamp ? `${message.timestamp}-${index}` : `msg-${index}`}
-                role={message.role}
-                content={getMessageText(message)}
-                timestamp={message.timestamp}
-              />
-            ))
-          )}
-
-          {isLoading && (
-            <div
-              style={{
-                padding: '12px',
-                background: 'rgba(114, 123, 129, 0.1)',
-                borderRadius: '8px',
-                color: '#727B81',
-                fontSize: '12px',
-              }}
-              role="status"
-              aria-live="polite"
-              aria-label="TITANE∞ est en train de générer une réponse"
-            >
-              {/* Sprint 4 UX: Loading skeleton avec animation */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                <div
-                  style={{
-                    width: '24px',
-                    height: '24px',
-                    borderRadius: '50%',
-                    background: 'linear-gradient(90deg, rgba(114, 123, 129, 0.3) 0%, rgba(196, 196, 196, 0.3) 50%, rgba(114, 123, 129, 0.3) 100%)',
-                    backgroundSize: '200% 100%',
-                    animation: 'shimmer 2s infinite ease-in-out',
-                  }}
-                />
-                <span style={{ fontWeight: '600' }}>TITANE∞ réfléchit...</span>
-              </div>
-              {/* Skeleton lines */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <div
-                  style={{
-                    height: '12px',
-                    width: '90%',
-                    borderRadius: '4px',
-                    background: 'linear-gradient(90deg, rgba(114, 123, 129, 0.2) 0%, rgba(196, 196, 196, 0.2) 50%, rgba(114, 123, 129, 0.2) 100%)',
-                    backgroundSize: '200% 100%',
-                    animation: 'shimmer 2s infinite ease-in-out',
-                  }}
-                />
-                <div
-                  style={{
-                    height: '12px',
-                    width: '75%',
-                    borderRadius: '4px',
-                    background: 'linear-gradient(90deg, rgba(114, 123, 129, 0.2) 0%, rgba(196, 196, 196, 0.2) 50%, rgba(114, 123, 129, 0.2) 100%)',
-                    backgroundSize: '200% 100%',
-                    animation: 'shimmer 2s infinite ease-in-out',
-                    animationDelay: '0.1s',
-                  }}
-                />
-                <div
-                  style={{
-                    height: '12px',
-                    width: '60%',
-                    borderRadius: '4px',
-                    background: 'linear-gradient(90deg, rgba(114, 123, 129, 0.2) 0%, rgba(196, 196, 196, 0.2) 50%, rgba(114, 123, 129, 0.2) 100%)',
-                    backgroundSize: '200% 100%',
-                    animation: 'shimmer 2s infinite ease-in-out',
-                    animationDelay: '0.2s',
-                  }}
-                />
+          {/* Header */}
+          <div style={styles.header} role="banner">
+            <div>
+              <h3 style={styles.title} id="chat-title">
+                TITANE∞ AI COMPANION
+              </h3>
+              <div style={styles.subtitle} role="status" aria-live="polite">
+                {currentModel} • {messages.length} messages
               </div>
             </div>
-          )}
+            <div style={styles.headerActions} role="toolbar" aria-label="Actions du chat">
+              <button
+                style={styles.iconButton}
+                onClick={handleClear}
+                title="Effacer la conversation"
+                aria-label="Effacer la conversation"
+              >
+                <span role="img" aria-label="Icône corbeille">
+                  🗑️
+                </span>
+              </button>
+              <button
+                style={styles.iconButton}
+                onClick={handleMinimize}
+                title="Minimiser"
+                aria-label="Minimiser le chat"
+              >
+                —
+              </button>
+              <button
+                style={styles.iconButton}
+                onClick={handleClose}
+                title="Fermer"
+                aria-label="Fermer le chat"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
 
-          <div ref={messagesEndRef} />
-        </div>
-
-        {/* Input */}
-        <div style={styles.inputContainer} role="form" aria-label="Formulaire de message">
-          <textarea
+          {/* Sprint 6: Controls Section (ModelSelector + ContextUsage + ConversationControls) */}
+          <div
             style={{
-              ...styles.input,
-              ...(isInputFocused ? styles.inputFocus : {}),
+              padding: '12px 16px',
+              borderBottom: '1px solid rgba(114, 123, 129, 0.2)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8px',
             }}
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            onFocus={() => setIsInputFocused(true)}
-            onBlur={() => setIsInputFocused(false)}
-            placeholder="Message TITANE∞..."
-            rows={2}
-            disabled={isLoading}
-            aria-label="Saisir votre message"
-            aria-multiline="true"
-            aria-required="false"
-            aria-disabled={isLoading}
-          />
-          <button
-            style={{
-              ...styles.sendButton,
-              ...(isSendButtonFocused ? styles.sendButtonFocus : {}),
-              opacity: !input.trim() || isLoading ? 0.5 : 1,
-              cursor: !input.trim() || isLoading ? 'not-allowed' : 'pointer',
-            }}
-            onClick={handleSend}
-            onFocus={() => setIsSendButtonFocused(true)}
-            onBlur={() => setIsSendButtonFocused(false)}
-            disabled={!input.trim() || isLoading}
-            aria-label={isLoading ? 'Envoi en cours...' : 'Envoyer le message'}
-            aria-disabled={!input.trim() || isLoading}
           >
-            {isLoading ? 'Envoi...' : 'Envoyer'}
-          </button>
-        </div>
+            <ModelSelector
+              selectedModel={selectedModel}
+              onModelChange={handleModelChange}
+              showAdvanced={false}
+            />
+            {/* Sprint 6 Phase 3: Token counter (compact) */}
+            <ContextUsage
+              messages={validMessages}
+              currentModel={selectedModel}
+              compact={true}
+            />
+            <ConversationControls
+              messages={messages}
+              onImport={handleImportConversation}
+            />
+          </div>
 
-        {/* Status Bar */}
-        <div style={styles.statusBar}>
-          <span>TITANE∞ v∞.25.0</span>
-          <span style={styles.modelBadge}>{currentModel}</span>
-        </div>
-      </motion.div>
-    </AnimatePresence>
+          {/* Messages */}
+          <div
+            style={styles.messagesContainer}
+            role="log"
+            aria-label="Historique de conversation"
+            aria-live="polite"
+            aria-atomic="false"
+            aria-relevant="additions"
+          >
+            {messages.length === 0 && (
+              <div
+                style={{ textAlign: 'center', color: '#727B81', padding: '40px 20px' }}
+              >
+                <div style={{ fontSize: '32px', marginBottom: '12px' }}>🧠⚡∞</div>
+                <div style={{ fontSize: '14px', fontWeight: '600', marginBottom: '6px' }}>
+                  TITANE∞ AI Companion
+                </div>
+                <div style={{ fontSize: '12px', opacity: 0.7 }}>
+                  Assistant permanent • Toujours disponible
+                </div>
+              </div>
+            )}
+
+            {/* Sprint 5: Rendu virtualisé si >50 messages, sinon rendu normal */}
+            {enableVirtualization && validMessages.length > 0 ? (
+              <List
+                listRef={listRef}
+                rowCount={validMessages.length}
+                rowHeight={getItemSize}
+                defaultHeight={PANEL_HEIGHT - 140}
+                style={{ overflow: 'auto' }}
+                rowComponent={({ index, style }) => {
+                  const message = validMessages[index];
+                  // Guard: si pas de message, retourner élément vide
+                  if (!message) {
+                    return <div style={style} />;
+                  }
+                  return (
+                    <div style={style}>
+                      <div
+                        ref={el => {
+                          if (el) {
+                            const height = el.getBoundingClientRect().height;
+                            setItemSize(index, height);
+                          }
+                        }}
+                        style={{ padding: '6px 0' }}
+                      >
+                        <MessageBubble
+                          key={
+                            message.timestamp
+                              ? `${message.timestamp}-${index}`
+                              : `msg-${index}`
+                          }
+                          role={message.role}
+                          content={getMessageText(message)}
+                          timestamp={message.timestamp}
+                        />
+                      </div>
+                    </div>
+                  );
+                }}
+                rowProps={{}}
+              />
+            ) : (
+              validMessages.map((message, index) => (
+                <MessageBubble
+                  key={
+                    message.timestamp ? `${message.timestamp}-${index}` : `msg-${index}`
+                  }
+                  role={message.role}
+                  content={getMessageText(message)}
+                  timestamp={message.timestamp}
+                />
+              ))
+            )}
+
+            {isLoading && (
+              <div
+                style={{
+                  padding: '12px',
+                  background: 'rgba(114, 123, 129, 0.1)',
+                  borderRadius: '8px',
+                  color: '#727B81',
+                  fontSize: '12px',
+                }}
+                role="status"
+                aria-live="polite"
+                aria-label="TITANE∞ est en train de générer une réponse"
+              >
+                {/* Sprint 4 UX: Loading skeleton avec animation */}
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    marginBottom: '8px',
+                  }}
+                >
+                  <div
+                    style={{
+                      width: '24px',
+                      height: '24px',
+                      borderRadius: '50%',
+                      background:
+                        'linear-gradient(90deg, rgba(114, 123, 129, 0.3) 0%, rgba(196, 196, 196, 0.3) 50%, rgba(114, 123, 129, 0.3) 100%)',
+                      backgroundSize: '200% 100%',
+                      animation: 'shimmer 2s infinite ease-in-out',
+                    }}
+                  />
+                  <span style={{ fontWeight: '600' }}>TITANE∞ réfléchit...</span>
+                </div>
+                {/* Skeleton lines */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <div
+                    style={{
+                      height: '12px',
+                      width: '90%',
+                      borderRadius: '4px',
+                      background:
+                        'linear-gradient(90deg, rgba(114, 123, 129, 0.2) 0%, rgba(196, 196, 196, 0.2) 50%, rgba(114, 123, 129, 0.2) 100%)',
+                      backgroundSize: '200% 100%',
+                      animation: 'shimmer 2s infinite ease-in-out',
+                    }}
+                  />
+                  <div
+                    style={{
+                      height: '12px',
+                      width: '75%',
+                      borderRadius: '4px',
+                      background:
+                        'linear-gradient(90deg, rgba(114, 123, 129, 0.2) 0%, rgba(196, 196, 196, 0.2) 50%, rgba(114, 123, 129, 0.2) 100%)',
+                      backgroundSize: '200% 100%',
+                      animation: 'shimmer 2s infinite ease-in-out',
+                      animationDelay: '0.1s',
+                    }}
+                  />
+                  <div
+                    style={{
+                      height: '12px',
+                      width: '60%',
+                      borderRadius: '4px',
+                      background:
+                        'linear-gradient(90deg, rgba(114, 123, 129, 0.2) 0%, rgba(196, 196, 196, 0.2) 50%, rgba(114, 123, 129, 0.2) 100%)',
+                      backgroundSize: '200% 100%',
+                      animation: 'shimmer 2s infinite ease-in-out',
+                      animationDelay: '0.2s',
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Input */}
+          <div
+            style={styles.inputContainer}
+            role="form"
+            aria-label="Formulaire de message"
+          >
+            <textarea
+              style={{
+                ...styles.input,
+                ...(isInputFocused ? styles.inputFocus : {}),
+              }}
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              onFocus={() => setIsInputFocused(true)}
+              onBlur={() => setIsInputFocused(false)}
+              placeholder="Message TITANE∞..."
+              rows={2}
+              disabled={isLoading}
+              aria-label="Saisir votre message"
+              aria-multiline="true"
+              aria-required="false"
+              aria-disabled={isLoading}
+            />
+            <button
+              style={{
+                ...styles.sendButton,
+                ...(isSendButtonFocused ? styles.sendButtonFocus : {}),
+                opacity: !input.trim() || isLoading ? 0.5 : 1,
+                cursor: !input.trim() || isLoading ? 'not-allowed' : 'pointer',
+              }}
+              onClick={handleSend}
+              onFocus={() => setIsSendButtonFocused(true)}
+              onBlur={() => setIsSendButtonFocused(false)}
+              disabled={!input.trim() || isLoading}
+              aria-label={isLoading ? 'Envoi en cours...' : 'Envoyer le message'}
+              aria-disabled={!input.trim() || isLoading}
+            >
+              {isLoading ? 'Envoi...' : 'Envoyer'}
+            </button>
+          </div>
+
+          {/* Status Bar */}
+          <div style={styles.statusBar}>
+            <span>TITANE∞ v∞.25.0</span>
+            <span style={styles.modelBadge}>{currentModel}</span>
+          </div>
+        </motion.div>
+      </AnimatePresence>
     </ChatErrorBoundary>
   );
 };

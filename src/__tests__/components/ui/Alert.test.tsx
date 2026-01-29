@@ -51,13 +51,21 @@ describe('Alert Component', () => {
   describe('Dismissible', () => {
     it('should show close button when dismissible', () => {
       const onDismiss = vi.fn();
-      render(<Alert dismissible onDismiss={onDismiss}>Dismissible alert</Alert>);
+      render(
+        <Alert dismissible onDismiss={onDismiss}>
+          Dismissible alert
+        </Alert>
+      );
       expect(screen.getByRole('button', { name: /close|dismiss/i })).toBeInTheDocument();
     });
 
     it('should call onDismiss when closed', () => {
       const onDismiss = vi.fn();
-      render(<Alert dismissible onDismiss={onDismiss}>Test</Alert>);
+      render(
+        <Alert dismissible onDismiss={onDismiss}>
+          Test
+        </Alert>
+      );
       fireEvent.click(screen.getByRole('button', { name: /close|dismiss/i }));
       expect(onDismiss).toHaveBeenCalledTimes(1);
     });

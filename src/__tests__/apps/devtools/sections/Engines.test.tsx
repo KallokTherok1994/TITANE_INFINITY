@@ -15,9 +15,27 @@ const mockSetSelectedEngine = vi.fn();
 vi.mock('@/apps/devtools/store/devtools.store', () => ({
   useDevToolsStore: () => ({
     engines: [
-      { id: 'chat-engine', name: 'Chat Engine', status: 'running', lastExecution: Date.now(), errorCount: 0 },
-      { id: 'memory-engine', name: 'Memory Engine', status: 'idle', lastExecution: Date.now() - 60000, errorCount: 0 },
-      { id: 'fusion-engine', name: 'Fusion Engine', status: 'error', lastExecution: Date.now(), errorCount: 3 },
+      {
+        id: 'chat-engine',
+        name: 'Chat Engine',
+        status: 'running',
+        lastExecution: Date.now(),
+        errorCount: 0,
+      },
+      {
+        id: 'memory-engine',
+        name: 'Memory Engine',
+        status: 'idle',
+        lastExecution: Date.now() - 60000,
+        errorCount: 0,
+      },
+      {
+        id: 'fusion-engine',
+        name: 'Fusion Engine',
+        status: 'error',
+        lastExecution: Date.now(),
+        errorCount: 3,
+      },
     ],
     updateEngine: mockUpdateEngine,
     setSelectedEngine: mockSetSelectedEngine,
@@ -70,7 +88,7 @@ describe('DevTools Engines Section', () => {
   describe('Filtering', () => {
     it('should filter engines by status', () => {
       render(<Engines />);
-      
+
       // Test initial state (all)
       expect(screen.getAllByRole('button', { name: /restart/i })).toHaveLength(3);
     });
@@ -80,24 +98,29 @@ describe('DevTools Engines Section', () => {
     it('should handle engine restart', () => {
       vi.useFakeTimers();
       render(<Engines />);
-      
+
       const restartBtn = screen.getAllByRole('button', { name: /restart/i })[0];
       fireEvent.click(restartBtn);
-      
-      expect(mockUpdateEngine).toHaveBeenCalledWith('chat-engine', { status: 'starting' });
-      
+
+      expect(mockUpdateEngine).toHaveBeenCalledWith('chat-engine', {
+        status: 'starting',
+      });
+
       vi.advanceTimersByTime(1000);
-      expect(mockUpdateEngine).toHaveBeenCalledWith('chat-engine', expect.objectContaining({ status: 'running' }));
-      
+      expect(mockUpdateEngine).toHaveBeenCalledWith(
+        'chat-engine',
+        expect.objectContaining({ status: 'running' })
+      );
+
       vi.useRealTimers();
     });
 
     it('should handle engine inspection', () => {
       render(<Engines />);
-      
+
       const inspectBtn = screen.getAllByRole('button', { name: /inspect/i })[0];
       fireEvent.click(inspectBtn);
-      
+
       expect(mockSetSelectedEngine).toHaveBeenCalledWith('chat-engine');
     });
   });

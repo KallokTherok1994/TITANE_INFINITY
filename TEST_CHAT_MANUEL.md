@@ -11,26 +11,31 @@ L'application TITANE∞ est actuellement en cours d'exécution en mode dev.
 **Conditions:** Ollama non installé, aucune clé API configurée
 
 **Actions:**
+
 1. Ouvre l'application TITANE∞
 2. Va dans l'onglet "Chat IA"
 3. Envoie un message: "Bonjour"
 
 **Résultats Attendus (APRÈS FIX):**
+
 - ✅ Typing indicator apparaît pendant < 3 secondes
 - ✅ Un message de fallback s'affiche:
+
   ```
   🤖 TITANE∞ — Configuration IA Requise
-  
+
   Aucun provider IA n'est actuellement disponible...
-  
+
   Solutions recommandées:
   1. Installer Ollama (local, gratuit, privé)
   2. Ou configurer une clé API cloud
   ```
+
 - ✅ Suggestions affichées en dessous
 - ✅ La bulle n'est JAMAIS vide
 
 **Résultats à Éviter (AVANT FIX):**
+
 - ❌ Bulle de message vide qui reste indéfiniment
 - ❌ Typing indicator qui tourne sans fin
 - ❌ Aucun message d'erreur visible
@@ -42,12 +47,14 @@ L'application TITANE∞ est actuellement en cours d'exécution en mode dev.
 **Conditions:** Ollama installé mais non démarré
 
 **Actions:**
+
 1. Va dans Settings → AI Providers
 2. Sélectionne "Ollama (Local)"
 3. Retourne au Chat IA
 4. Envoie un message: "Test"
 
 **Résultats Attendus:**
+
 - ✅ Typing indicator < 3s
 - ✅ Après 3s, message d'erreur visible
 - ✅ Suggestion de vérifier qu'Ollama est démarré
@@ -60,10 +67,12 @@ L'application TITANE∞ est actuellement en cours d'exécution en mode dev.
 **Conditions:** Ollama démarré avec un modèle
 
 **Actions:**
+
 1. Démarre Ollama: `ollama serve`
 2. Dans le chat, envoie: "Explique-moi ce qu'est TITANE"
 
 **Résultats Attendus:**
+
 - ✅ Typing indicator apparaît brièvement
 - ✅ Réponse générée et affichée en markdown
 - ✅ Aucune bulle vide
@@ -74,12 +83,14 @@ L'application TITANE∞ est actuellement en cours d'exécution en mode dev.
 ## 🔍 Vérification dans les Logs
 
 **Terminal Tauri:**
+
 ```bash
 # Surveiller les logs en temps réel
 tail -f runtime/dev/logs/*.log | grep -E "(AI Router|useChat|fallback)"
 ```
 
 **Logs à Observer:**
+
 - `[AI Router v15] Trying UnifiedIA...`
 - `[AI Router v15] ✗ UnifiedIA failed`
 - `[AI Router v20.1] Trying Gemini API...`
@@ -108,16 +119,19 @@ tail -f runtime/dev/logs/*.log | grep -E "(AI Router|useChat|fallback)"
 ## 🐛 Si un Problème Persiste
 
 1. **Vérifier que les corrections sont appliquées:**
+
    ```bash
    ./scripts/validate-chat-fallback-fix.sh
    ```
 
 2. **Vérifier les commits:**
+
    ```bash
    git log --oneline | grep -E "(b8e6abca|7fef2e91)"
    ```
 
 3. **Relancer les tests unitaires:**
+
    ```bash
    pnpm test src/__tests__/chat-fallback-display.test.ts
    pnpm test src/hooks/__tests__/useChat.test.ts
@@ -133,6 +147,7 @@ tail -f runtime/dev/logs/*.log | grep -E "(AI Router|useChat|fallback)"
 ## 📸 Captures d'Écran Attendues
 
 ### Avant Fix (❌ Bug)
+
 ```
 ┌─────────────────────────────────────┐
 │ 👤 Vous                             │
@@ -147,6 +162,7 @@ tail -f runtime/dev/logs/*.log | grep -E "(AI Router|useChat|fallback)"
 ```
 
 ### Après Fix (✅ Corrigé)
+
 ```
 ┌─────────────────────────────────────┐
 │ 👤 Vous                             │

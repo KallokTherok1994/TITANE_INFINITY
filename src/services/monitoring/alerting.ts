@@ -72,7 +72,10 @@ interface AlertRule {
   severity: AlertSeverity;
   condition: (global: GlobalMetrics, conversation?: ConversationMetrics) => boolean;
   getMessage: (global: GlobalMetrics, conversation?: ConversationMetrics) => string;
-  getMetadata: (global: GlobalMetrics, conversation?: ConversationMetrics) => Record<string, unknown>;
+  getMetadata: (
+    global: GlobalMetrics,
+    conversation?: ConversationMetrics
+  ) => Record<string, unknown>;
 }
 
 /**
@@ -126,10 +129,10 @@ class AlertingSystem {
     {
       type: AlertType.HIGH_REJECTION_RATE,
       severity: AlertSeverity.WARNING,
-      condition: (global) => global.validationRate < (1 - this.config.rejectionRateThreshold),
-      getMessage: (global) =>
+      condition: global => global.validationRate < 1 - this.config.rejectionRateThreshold,
+      getMessage: global =>
         `Taux de rejet élevé: ${((1 - global.validationRate) * 100).toFixed(1)}% (seuil: ${this.config.rejectionRateThreshold * 100}%)`,
-      getMetadata: (global) => ({
+      getMetadata: global => ({
         validationRate: global.validationRate,
         rejectionRate: 1 - global.validationRate,
         threshold: this.config.rejectionRateThreshold,
@@ -140,10 +143,10 @@ class AlertingSystem {
     {
       type: AlertType.SLOW_RESPONSE_TIME,
       severity: AlertSeverity.WARNING,
-      condition: (global) => global.avgResponseTime > this.config.responseTimeThreshold,
-      getMessage: (global) =>
+      condition: global => global.avgResponseTime > this.config.responseTimeThreshold,
+      getMessage: global =>
         `Temps de réponse lent: ${(global.avgResponseTime / 1000).toFixed(1)}s (seuil: ${this.config.responseTimeThreshold / 1000}s)`,
-      getMetadata: (global) => ({
+      getMetadata: global => ({
         avgResponseTime: global.avgResponseTime,
         threshold: this.config.responseTimeThreshold,
       }),
@@ -153,10 +156,10 @@ class AlertingSystem {
     {
       type: AlertType.HIGH_ERROR_RATE,
       severity: AlertSeverity.CRITICAL,
-      condition: (global) => global.errorRate > this.config.errorRateThreshold,
-      getMessage: (global) =>
+      condition: global => global.errorRate > this.config.errorRateThreshold,
+      getMessage: global =>
         `Taux d'erreur élevé: ${(global.errorRate * 100).toFixed(1)}% (seuil: ${this.config.errorRateThreshold * 100}%)`,
-      getMetadata: (global) => ({
+      getMetadata: global => ({
         errorRate: global.errorRate,
         threshold: this.config.errorRateThreshold,
         totalErrors: global.totalErrors,
@@ -168,7 +171,8 @@ class AlertingSystem {
       type: AlertType.LONG_CONVERSATION,
       severity: AlertSeverity.INFO,
       condition: (global, conversation) =>
-        !!conversation && conversation.totalMessages > this.config.longConversationThreshold,
+        !!conversation &&
+        conversation.totalMessages > this.config.longConversationThreshold,
       getMessage: (global, conversation) =>
         `Conversation longue détectée: ${conversation?.totalMessages} messages (seuil: ${this.config.longConversationThreshold})`,
       getMetadata: (global, conversation) => ({
@@ -191,12 +195,12 @@ class AlertingSystem {
    */
   start(): void {
     if (!this.config.enabled) {
-      logger.info('Système d\'alertes désactivé (config.enabled=false)', 'Alerting');
+      logger.info("Système d'alertes désactivé (config.enabled=false)", 'Alerting');
       return;
     }
 
     if (this.checkTimer) {
-      logger.warn('Système d\'alertes déjà démarré', 'Alerting');
+      logger.warn("Système d'alertes déjà démarré", 'Alerting');
       return;
     }
 
@@ -226,7 +230,7 @@ class AlertingSystem {
     if (this.checkTimer) {
       clearInterval(this.checkTimer);
       this.checkTimer = null;
-      logger.info('Système d\'alertes arrêté', 'Alerting');
+      logger.info("Système d'alertes arrêté", 'Alerting');
     }
   }
 
@@ -336,7 +340,12 @@ class AlertingSystem {
         logger.warn(`[ALERT] ${alert.message}`, 'Alerting', alert.metadata);
         break;
       case AlertSeverity.CRITICAL:
-        logger.error(`[ALERT CRITICAL] ${alert.message}`, 'Alerting', undefined, alert.metadata);
+        logger.error(
+          `[ALERT CRITICAL] ${alert.message}`,
+          'Alerting',
+          undefined,
+          alert.metadata
+        );
         break;
     }
   }
@@ -358,7 +367,8 @@ class AlertingSystem {
     logger.info(`[ALERT RESOLVED] ${alert.message}`, 'Alerting', {
       alertId,
       type: alert.type,
-      resolvedAfter: new Date(alert.resolvedAt).getTime() - new Date(alert.timestamp).getTime(),
+      resolvedAfter:
+        new Date(alert.resolvedAt).getTime() - new Date(alert.timestamp).getTime(),
     });
   }
 

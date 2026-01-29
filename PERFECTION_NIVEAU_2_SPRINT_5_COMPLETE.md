@@ -12,12 +12,14 @@
 Optimiser le rendu du chat IA pour gérer efficacement 100+ messages simultanés sans dégradation de performance.
 
 **Problème initial:**
+
 - Rendu de TOUS les messages via `validMessages.map()`
 - DOM nodes = nombre de messages (100 messages = 100+ nodes)
 - Scroll laggy sur conversations longues
 - Memory footprint croissant
 
 **Solution implémentée:**
+
 - Virtualisation conditionnelle avec `react-window`
 - Seuil conservateur: 50 messages (activation automatique)
 - Rendu uniquement des messages visibles (windowing)
@@ -36,6 +38,7 @@ import { List, ListImperativeAPI } from 'react-window';
 ```
 
 **Composants clés:**
+
 - `List`: Composant de virtualisation (accepte rowHeight fonction pour tailles variables)
 - `ListImperativeAPI`: Interface impérative pour scroll programmatique
 
@@ -58,6 +61,7 @@ useEffect(() => {
 ```
 
 **Rationale:**
+
 - 50 messages = seuil conservateur (Sprint 5 cible >100)
 - Évite overhead pour petites conversations
 - Transition transparente (même UX)
@@ -65,23 +69,27 @@ useEffect(() => {
 **3. Calcul Hauteur (L307-320)**
 
 ```tsx
-const getItemSize = useCallback((index: number) => {
-  // Si hauteur mesurée, utiliser valeur réelle
-  if (rowHeightsRef.current.has(index)) {
-    return rowHeightsRef.current.get(index)!;
-  }
-  
-  // Sinon, estimer depuis longueur contenu
-  const message = validMessages[index];
-  if (!message) return 80; // Default
-  
-  const contentLength = getMessageText(message).length;
-  // Formule: 60px base + 0.5px/char (capped 80-500px)
-  return Math.max(80, Math.min(60 + contentLength * 0.5, 500));
-}, [validMessages, getMessageText]);
+const getItemSize = useCallback(
+  (index: number) => {
+    // Si hauteur mesurée, utiliser valeur réelle
+    if (rowHeightsRef.current.has(index)) {
+      return rowHeightsRef.current.get(index)!;
+    }
+
+    // Sinon, estimer depuis longueur contenu
+    const message = validMessages[index];
+    if (!message) return 80; // Default
+
+    const contentLength = getMessageText(message).length;
+    // Formule: 60px base + 0.5px/char (capped 80-500px)
+    return Math.max(80, Math.min(60 + contentLength * 0.5, 500));
+  },
+  [validMessages, getMessageText]
+);
 ```
 
 **Stratégie d'estimation:**
+
 - **Priorité 1:** Hauteur mesurée (si disponible)
 - **Priorité 2:** Estimation basée sur longueur texte
 - **Formula:** `60 + (chars * 0.5)` clamped [80, 500]px
@@ -99,6 +107,7 @@ const setItemSize = useCallback((index: number, size: number) => {
 ```
 
 **Mesure via ref callback:**
+
 ```tsx
 <div
   ref={(el) => {
@@ -128,6 +137,7 @@ useEffect(() => {
 ```
 
 **Dual-mode:**
+
 - Virtualisé: Scroll via `element.scrollTop`
 - Normal: Scroll via `scrollIntoView`
 
@@ -144,7 +154,7 @@ useEffect(() => {
     rowComponent={({ index, style }) => {
       const message = validMessages[index];
       if (!message) return <div style={style} />;
-      
+
       return (
         <div style={style}>
           <div ref={(el) => { /* mesure */ }}>
@@ -163,6 +173,7 @@ useEffect(() => {
 ```
 
 **Propriétés List:**
+
 - `rowCount`: Nombre total de messages
 - `rowHeight`: Fonction getItemSize (mode variable)
 - `defaultHeight`: Hauteur viewport (PANEL_HEIGHT - 140px)
@@ -175,22 +186,24 @@ useEffect(() => {
 
 ### Métriques Théoriques
 
-| Métrique | Sans Virtualization | Avec Virtualization (>50) |
-|----------|---------------------|---------------------------|
-| **DOM nodes** | O(n) = 100 nodes | O(1) = ~12 nodes |
-| **Rendu initial** | 100 messages | 12 messages (viewport) |
-| **Re-render** | 100 MessageBubble | 12 MessageBubble |
-| **Memory** | Croissant (n) | Constant (viewport) |
-| **Scroll FPS** | 30-45 fps (lag) | 60 fps (smooth) |
+| Métrique          | Sans Virtualization | Avec Virtualization (>50) |
+| ----------------- | ------------------- | ------------------------- |
+| **DOM nodes**     | O(n) = 100 nodes    | O(1) = ~12 nodes          |
+| **Rendu initial** | 100 messages        | 12 messages (viewport)    |
+| **Re-render**     | 100 MessageBubble   | 12 MessageBubble          |
+| **Memory**        | Croissant (n)       | Constant (viewport)       |
+| **Scroll FPS**    | 30-45 fps (lag)     | 60 fps (smooth)           |
 
 ### Optimisations Cumulatives
 
 **Sprint 1:** MessageBubble déjà `React.memo`
+
 ```tsx
 export default React.memo(MessageBubble); // L16
 ```
 
 **Sprint 5:** Virtualisation + memo
+
 - **Résultat:** Render uniquement messages visibles + skip re-render si props identiques
 - **Gain:** ~90% réduction DOM operations pour >100 messages
 
@@ -201,16 +214,19 @@ export default React.memo(MessageBubble); // L16
 ### Problème: Import VariableSizeList
 
 **Erreur rencontrée:**
+
 ```
 Module '"react-window"' has no exported member 'VariableSizeList'
 ```
 
 **Cause:**
+
 - `@types/react-window` définit `export class VariableSizeList`
 - Mais runtime exporte seulement: `Grid`, `List`, `getScrollbarSize`
 - Mismatch types vs runtime
 
 **Solution:**
+
 ```tsx
 // ❌ INCORRECT
 import { VariableSizeList } from 'react-window';
@@ -220,6 +236,7 @@ import { List, ListImperativeAPI } from 'react-window';
 ```
 
 **Explication:**
+
 - `List` est un composant unifié
 - `rowHeight={number}` → mode fixed size
 - `rowHeight={(index) => number}` → mode variable size
@@ -228,15 +245,18 @@ import { List, ListImperativeAPI } from 'react-window';
 ### Problème: Children render prop
 
 **Erreur TypeScript:**
+
 ```
 Type '({ index, style }) => JSX.Element' is not assignable to type 'ReactNode'
 ```
 
 **Cause:**
+
 - `children` dans ListProps est `ReactNode` (statique)
 - Pas de render props pattern pour children
 
 **Solution:**
+
 ```tsx
 // ❌ INCORRECT
 <List>
@@ -253,15 +273,18 @@ Type '({ index, style }) => JSX.Element' is not assignable to type 'ReactNode'
 ### Problème: resetAfterIndex not found
 
 **Erreur:**
+
 ```
 Property 'resetAfterIndex' does not exist on type 'ListImperativeAPI'
 ```
 
 **Cause:**
+
 - `ListImperativeAPI` n'expose que: `element` (getter) + `scrollToRow()` (method)
 - Pas de `resetAfterIndex` comme VariableSizeList de react-virtualized
 
 **Solution:**
+
 - Supprimer appel `listRef.current.resetAfterIndex(index)`
 - `List` recalcule automatiquement au prochain render
 - Store heights dans rowHeightsRef suffit
@@ -284,6 +307,7 @@ pnpm run dev
 ```
 
 **Scénarios:**
+
 1. **<50 messages:** Vérifier rendu normal (pas de virtualisation)
 2. **>50 messages:** Vérifier virtualisation activée
    - DevTools: Compter DOM nodes (doit être ~10-15)
@@ -292,9 +316,10 @@ pnpm run dev
 3. **Transition 49→51:** Vérifier switch transparent
 
 **Vérification DOM:**
+
 ```javascript
 // Console DevTools
-document.querySelectorAll('[data-role="message"]').length
+document.querySelectorAll('[data-role="message"]').length;
 // Doit être ~12 (viewport) même avec 100+ messages
 ```
 
@@ -305,32 +330,37 @@ document.querySelectorAll('[data-role="message"]').length
 ### Pourquoi Seuil 50 (pas 100)?
 
 **Rationale:**
+
 - Sprint 5 cible: >100 messages
 - Threshold 50 = marge sécurité (2x moins)
 - Conversations typiques: 10-30 messages (pas de overhead)
-- >50 = conversations longues (bénéfice immédiat)
+- > 50 = conversations longues (bénéfice immédiat)
 - Peut être ajusté: env var ou user setting
 
 ### Pourquoi react-window (pas react-virtualized)?
 
 **Avantages react-window:**
+
 - ✅ Plus léger (10KB vs 27KB gzip)
 - ✅ Moderne (hooks, TypeScript)
 - ✅ Déjà installé dans projet
 - ✅ Moins de boilerplate
 
 **react-virtualized:**
+
 - Plus features (Grid, MultiGrid, Table)
 - Mais overhead pour simple List
 
 ### Pourquoi Estimer Hauteur (pas mesure only)?
 
 **Problem:** First render avant mesure
+
 - Besoin estimation initiale sinon hauteur 0
 - Cause scroll jump, mauvaise UX
 
 **Solution:** Hybrid
-1. Première passe: Estimation (60 + chars*0.5)
+
+1. Première passe: Estimation (60 + chars\*0.5)
 2. Après render: Mesure réelle (getBoundingClientRect)
 3. Store + re-render avec hauteurs exactes
 
@@ -341,16 +371,20 @@ document.querySelectorAll('[data-role="message"]').length
 ## 🔄 Intégration Continue
 
 **Fichiers modifiés:**
+
 - `src/components/AIChatBubble.tsx` (+80 lignes)
 
 **Dépendances:**
+
 - Aucune nouvelle (react-window déjà présent)
 
 **Breaking changes:**
+
 - Aucun (API publique inchangée)
 - Rendu identique (virtualisé transparent)
 
 **Backward compatibility:**
+
 - ✅ <50 messages: Comportement identique (pas de virtualisation)
 - ✅ >50 messages: Amélioration performance (pas de régression)
 
@@ -361,6 +395,7 @@ document.querySelectorAll('[data-role="message"]').length
 **NIVEAU 2 Progression:** 5/6 sprints (83%)
 
 **Sprint 6: AI Features (NIVEAU 3)**
+
 - Context window optimization (8K → 32K tokens)
 - Multi-turn conversation memory
 - Tool calling / function calling
@@ -369,6 +404,7 @@ document.querySelectorAll('[data-role="message"]').length
 - Conversation export/import
 
 **Optimisations Futures (Optionnel):**
+
 - Dynamic threshold (user setting ou auto-adjust)
 - Virtualization pour autres listes (historique, settings)
 - Intersection Observer pour lazy-load images
@@ -417,6 +453,7 @@ document.querySelectorAll('[data-role="message"]').length
 **Formula empirique:** `60 + (chars * 0.5)` clamped [80, 500]
 
 **Calibration:**
+
 - Messages courts (50 chars): ~85px ✓
 - Messages moyens (200 chars): ~160px ✓
 - Messages longs (500+ chars): ~500px ✓

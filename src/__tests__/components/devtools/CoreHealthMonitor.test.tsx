@@ -16,7 +16,7 @@ describe('CoreHealthMonitor Component', () => {
     fps: 60,
     network: 'connected',
     status: 'healthy',
-    timestamp: Date.now()
+    timestamp: Date.now(),
   };
 
   describe('Rendering', () => {
@@ -59,7 +59,7 @@ describe('CoreHealthMonitor Component', () => {
     it('should highlight high CPU', () => {
       const highCPU = { ...mockHealth, cpu: 90 };
       render(<CoreHealthMonitor health={highCPU} />);
-      
+
       const cpuMetric = screen.getByText(/90%/);
       expect(cpuMetric.className).toMatch(/warning|danger|high/i);
     });
@@ -67,7 +67,7 @@ describe('CoreHealthMonitor Component', () => {
     it('should highlight high memory', () => {
       const highMemory = { ...mockHealth, memory: 95 };
       render(<CoreHealthMonitor health={highMemory} />);
-      
+
       const memoryMetric = screen.getByText(/95%/);
       expect(memoryMetric.className).toMatch(/warning|danger|high/i);
     });
@@ -75,7 +75,7 @@ describe('CoreHealthMonitor Component', () => {
     it('should highlight low FPS', () => {
       const lowFPS = { ...mockHealth, fps: 20 };
       render(<CoreHealthMonitor health={lowFPS} />);
-      
+
       const fpsMetric = screen.getByText(/20/);
       expect(fpsMetric.className).toMatch(/warning|danger|low/i);
     });

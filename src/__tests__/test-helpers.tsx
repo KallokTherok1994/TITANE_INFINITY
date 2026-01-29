@@ -14,11 +14,7 @@ interface ProvidersWrapperProps {
  * Wrapper avec AnimationProvider (requis pour certains composants)
  */
 function ProvidersWrapper({ children }: ProvidersWrapperProps) {
-  return (
-    <AnimationProvider>
-      {children}
-    </AnimationProvider>
-  );
+  return <AnimationProvider>{children}</AnimationProvider>;
 }
 
 /**
