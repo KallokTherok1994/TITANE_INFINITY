@@ -235,6 +235,16 @@ mod fusion_commands_week2 {
     include!("fusion_commands_week2.rs");
 }
 
+// Fusion Commands Week 3 - Lip-sync & Avatar Animation
+mod fusion_commands_week3 {
+    include!("fusion_commands_week3.rs");
+}
+
+// Fusion Commands Week 4 - State Sync & Auto-Optimization
+mod fusion_commands_week4 {
+    include!("fusion_commands_week4.rs");
+}
+
 // Hybrid Engine commands v∞.26.0
 mod hybrid_commands {
     include!("commands/hybrid.rs");
@@ -1148,6 +1158,14 @@ fn main() {
             // Fusion Backend Commands (Week 2)
             fusion_commands_week2::fusion_generate_ia_response,
             fusion_commands_week2::fusion_prepare_tts,
+
+            // Fusion Backend Commands (Week 3)
+            fusion_commands_week3::fusion_process_lipsync,
+            fusion_commands_week3::fusion_animate_avatar,
+
+            // Fusion Backend Commands (Week 4)
+            fusion_commands_week4::fusion_update_state,
+            fusion_commands_week4::fusion_auto_optimize,
         ])
         .run(tauri::generate_context!())
         .unwrap_or_else(|e| {

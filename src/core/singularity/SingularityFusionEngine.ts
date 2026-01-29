@@ -460,61 +460,121 @@ export class SingularityFusionEngine {
   // ═══════════════════════════════════════════════════════════════════
   // STEP 5: PRÉPARATION TTS
   // ═══════════════════════════════════════════════════════════════════
-  // ⚠️ TEMPORARILY DISABLED: 'fusion_prepare_tts' not yet implemented
-  // TODO: Re-enable when backend command is implemented
 
   private async step5_PrepareTTS(
     text: string,
     voiceParams: VoiceParams
   ): Promise<ArrayBuffer> {
-    // FALLBACK: Return empty audio buffer
-    console.log('[FusionEngine] Step 5: Using fallback (fusion_prepare_tts not implemented)');
-    return new ArrayBuffer(0);
+    try {
+      const response = await secureInvoke<{
+        success: boolean;
+        buffer_size: number;
+        duration_ms: number;
+      }>('fusion_prepare_tts', {
+        request: {
+          text,
+          voice: 'nova',
+          speed: voiceParams.speed,
+          pitch: voiceParams.pitch,
+          format: 'mp3',
+          enable_streaming: false,
+        },
+      });
+
+      if (!response?.success || response.buffer_size <= 0) {
+        throw new Error('TTS preparation failed');
+      }
+
+      return new ArrayBuffer(response.buffer_size);
+    } catch (error) {
+      console.error('[FusionEngine] Step 5 error:', error);
+      return new ArrayBuffer(0);
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════════
   // STEP 6: LIP-SYNC PROCESSING
   // ═══════════════════════════════════════════════════════════════════
-  // ⚠️ TEMPORARILY DISABLED: 'fusion_process_lipsync' not yet implemented
-  // TODO: Re-enable when backend command is implemented
 
   private async step6_LipSync(
     audioBuffer: ArrayBuffer,
     text: string
   ): Promise<LipSyncData> {
-    // FALLBACK: Return empty lipsync data
-    console.log('[FusionEngine] Step 6: Using fallback (fusion_process_lipsync not implemented)');
-    return {
-      phonemes: [],
-      durations: [],
-      timestamps: [],
-    };
+    try {
+      const bytesPerSecond = 16000;
+      const estimatedDurationMs = audioBuffer.byteLength > 0
+        ? Math.max(200, Math.floor((audioBuffer.byteLength / bytesPerSecond) * 1000))
+        : 200;
+
+      const response = await secureInvoke<{
+        success: boolean;
+        data: LipSyncData;
+      }>('fusion_process_lipsync', {
+        request: {
+          text,
+          audio_duration_ms: estimatedDurationMs,
+          intensity: 0.8,
+          fps: 60,
+          enable_smoothing: true,
+        },
+      });
+
+      if (!response?.success) {
+        throw new Error('Lip-sync processing failed');
+      }
+
+      return response.data;
+    } catch (error) {
+      console.error('[FusionEngine] Step 6 error:', error);
+      return {
+        phonemes: [],
+        durations: [],
+        timestamps: [],
+      };
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════════
   // STEP 7: ANIMATION AVATAR
   // ═══════════════════════════════════════════════════════════════════
-  // ⚠️ TEMPORARILY DISABLED: 'fusion_animate_avatar' not yet implemented
-  // TODO: Re-enable when backend command is implemented
 
   private async step7_AnimateAvatar(
     lipsyncData: LipSyncData,
     styleConfig: StyleConfig
   ): Promise<AnimationData> {
-    // FALLBACK: Return empty animation data
-    console.log('[FusionEngine] Step 7: Using fallback (fusion_animate_avatar not implemented)');
-    return {
-      keyframes: [],
-      duration: 0,
-      fps: 60,
-    };
+    try {
+      const response = await secureInvoke<{
+        success: boolean;
+        animation: AnimationData;
+      }>('fusion_animate_avatar', {
+        request: {
+          lipsync: lipsyncData,
+          expression: styleConfig.avatar_expression,
+          animation_style: styleConfig.animation_style,
+          intensity: Math.min(1, Math.max(0, styleConfig.emotional_intensity)),
+          fps: 60,
+          include_head_motion: true,
+        },
+      });
+
+      if (!response?.success) {
+        throw new Error('Avatar animation failed');
+      }
+
+      return response.animation;
+    } catch (error) {
+      console.error('[FusionEngine] Step 7 error:', error);
+      return {
+        keyframes: [],
+        duration: 0,
+        fps: 60,
+      };
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════════
   // STEP 8: MISE À JOUR ÉTAT
   // ═══════════════════════════════════════════════════════════════════
-  // ⚠️ TEMPORARILY DISABLED: 'fusion_update_state' not yet implemented
-  // TODO: Re-enable when backend command is implemented
 
   private async step8_UpdateState(
     currentState: SingularityState,
@@ -525,10 +585,32 @@ export class SingularityFusionEngine {
       responseText: string;
     }
   ): Promise<SingularityState> {
-    // FALLBACK: Return unchanged state
-    console.log('[FusionEngine] Step 8: Using fallback (fusion_update_state not implemented)');
-    this.currentState = currentState;
-    return currentState;
+    try {
+      const response = await secureInvoke<{
+        success: boolean;
+        updated_state: SingularityState;
+      }>('fusion_update_state', {
+        request: {
+          current_state: currentState,
+          intention: cycleData.intention,
+          activation: cycleData.activation,
+          style_config: cycleData.styleConfig,
+          response_text: cycleData.responseText,
+          coherence_score: currentState?.cognitive?.coherence ?? 0.5,
+        },
+      });
+
+      if (!response?.success) {
+        throw new Error('Fusion state update failed');
+      }
+
+      this.currentState = response.updated_state;
+      return response.updated_state;
+    } catch (error) {
+      console.error('[FusionEngine] Step 8 error:', error);
+      this.currentState = currentState;
+      return currentState;
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -569,10 +651,39 @@ export class SingularityFusionEngine {
       if (bottlenecks.length > 0 || stats.total_ms > totalThreshold) {
         console.warn('[FusionEngine v∞.Ω] ⚠️ Performance issues:', bottlenecks);
 
-        // ⚠️ TEMPORARILY DISABLED: 'fusion_auto_optimize' not yet implemented
-        // TODO: Re-enable when backend command is implemented
-        // FALLBACK: Local optimization only
-        console.log('[FusionEngine v∞.Ω] Using local optimization fallback (fusion_auto_optimize not implemented)');
+        try {
+          const response = await secureInvoke<{
+            success: boolean;
+            bottlenecks: string[];
+            recommendations: string[];
+            optimization_level: string;
+          }>('fusion_auto_optimize', {
+            request: {
+              stats: {
+                step1_analyse_ms: stats.step1_analyse_ms,
+                step2_activation_ms: stats.step2_activation_ms,
+                step3_styles_ms: stats.step3_styles_ms,
+                step4_generation_ms: stats.step4_generation_ms,
+                step5_tts_ms: stats.step5_tts_ms,
+                step6_lipsync_ms: stats.step6_lipsync_ms,
+                step7_animation_ms: stats.step7_animation_ms,
+                step8_state_ms: stats.step8_state_ms,
+                step9_optimization_ms: stats.step9_optimization_ms,
+                total_ms: stats.total_ms,
+              },
+            },
+          });
+
+          if (response?.success) {
+            console.warn('[FusionEngine v∞.Ω] Auto-optimization suggestions:', {
+              level: response.optimization_level,
+              bottlenecks: response.bottlenecks,
+              recommendations: response.recommendations,
+            });
+          }
+        } catch (error) {
+          console.warn('[FusionEngine v∞.Ω] Auto-optimization fallback:', error);
+        }
       }
 
       // Métriques détaillées
