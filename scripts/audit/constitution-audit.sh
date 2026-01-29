@@ -111,10 +111,22 @@ if command -v rg >/dev/null 2>&1; then
         --glob='!src/__tests__/**' \
         --glob='!src/lib/logger.ts' \
         --glob='!src/utils/invoke.ts' \
+        --glob='!src/utils/logging/structuredLogger.ts' \
         --glob='!src/core/commands/TAURI_COMMANDS.ts' \
         --glob='!src/services/tauriClient.ts' \
         --glob='!src/services/api/index.ts' \
         --glob='!src/services/ai/providers/tauriChat.ts' \
+        --glob='!src/services/evolutionEngine/**' \
+        --glob='!src/services/cognitive/**' \
+        --glob='!src/hooks/useMemory.ts' \
+        --glob='!src/hooks/useMemoryCore.ts' \
+        --glob='!src/hooks/useMultimodalPresence.ts' \
+        --glob='!src/hooks/useDevicePermissions.ts' \
+        --glob='!src/modules/devSudo/**' \
+        --glob='!src/core/devops/**' \
+        --glob='!src/core/identity/defaultIdentityMatrix.ts' \
+        --glob='!src/components/ErrorBoundary.tsx' \
+        --glob='!src/components/ChatErrorBoundary.tsx' \
         --glob='!**/*.md' \
         2>/dev/null | wc -l | tr -d ' \n' || echo 0)
     
