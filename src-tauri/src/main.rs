@@ -230,6 +230,11 @@ mod fusion_commands_week1 {
     include!("fusion_commands_week1.rs");
 }
 
+// Fusion Commands Week 2 - IA & TTS Implementation
+mod fusion_commands_week2 {
+    include!("fusion_commands_week2.rs");
+}
+
 // Hybrid Engine commands v∞.26.0
 mod hybrid_commands {
     include!("commands/hybrid.rs");
@@ -1139,6 +1144,10 @@ fn main() {
             // Fusion Backend Commands (Week 1)
             fusion_commands_week1::fusion_activate_modules,
             fusion_commands_week1::fusion_adjust_styles,
+
+            // Fusion Backend Commands (Week 2)
+            fusion_commands_week2::fusion_generate_ia_response,
+            fusion_commands_week2::fusion_prepare_tts,
         ])
         .run(tauri::generate_context!())
         .unwrap_or_else(|e| {
