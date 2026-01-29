@@ -142,12 +142,16 @@ export interface CachedIAResponse {
 export function isIAGenerationSuccess(
   response: IAGenerationResponse | unknown
 ): response is IAGenerationResponse {
+  if (typeof response !== 'object' || response === null) {
+    return false;
+  }
+
+  const candidate = response as Record<string, unknown>;
+
   return (
-    typeof response === 'object' &&
-    response !== null &&
-    response.success === true &&
-    'response' in response &&
-    'model' in response
+    candidate.success === true &&
+    'response' in candidate &&
+    'model' in candidate
   );
 }
 
@@ -157,12 +161,16 @@ export function isIAGenerationSuccess(
 export function isTTSPrepareSuccess(
   response: TTSPrepareResponse | unknown
 ): response is TTSPrepareResponse {
+  if (typeof response !== 'object' || response === null) {
+    return false;
+  }
+
+  const candidate = response as Record<string, unknown>;
+
   return (
-    typeof response === 'object' &&
-    response !== null &&
-    response.success === true &&
-    'buffer_size' in response &&
-    'voice' in response
+    candidate.success === true &&
+    'buffer_size' in candidate &&
+    'voice' in candidate
   );
 }
 
