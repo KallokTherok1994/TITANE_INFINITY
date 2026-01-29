@@ -23,8 +23,8 @@ mod control_panel_tests {
         assert!(result.is_ok());
 
         let info = result.expect("cp_get_system_info should succeed");
-        // ✅ v26.4.0: Updated to match actual Cargo.toml version
-        assert_eq!(info.version, "26.4.0");
+        // ✅ v27.0.0: Updated to match actual Cargo.toml version
+        assert_eq!(info.version, "27.0.0");
         assert!(info.memory_usage >= 0.0 && info.memory_usage <= 100.0);
         assert!(info.cpu_usage >= 0.0 && info.cpu_usage <= 100.0);
         assert!(info.disk_usage >= 0.0 && info.disk_usage <= 100.0);
