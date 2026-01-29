@@ -17,7 +17,7 @@ Toute modification de l'allowlist stable doit être documentée et justifiée.
 
 ## 📊 Surface Stable Actuelle
 
-### 1. COMMANDS (Tauri Invoke) - 52 Commands Total
+### 1. COMMANDS (Tauri Invoke) - 57 Commands Total
 ```json
 // src-tauri/allowlist.whitelist.stable.json (Production Allowlist)
 {
@@ -107,7 +107,7 @@ Toute modification de l'allowlist stable doit être documentée et justifiée.
 }
 ```
 
-**Total Commands** : 52 commands  
+**Total Commands** : 57 commands  
 **Classification** :
 - **READ** (23) : lecture données/état système
 - **WRITE** (12) : modification données utilisateur
