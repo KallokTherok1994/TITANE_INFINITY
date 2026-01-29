@@ -18,7 +18,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import React, { useState, useCallback, useRef, memo } from 'react';
+import React, { useState, useCallback, useRef, memo, useEffect } from 'react';
 import {
   Paperclip,
   Mic,
@@ -37,6 +37,8 @@ import {
 import { useVisionStore } from '@/stores/useVisionStore';
 import { useAudioChat } from '@/hooks/useAudioChat';
 import { useVoiceEngine } from '@/hooks/useVoiceEngine';
+import { useAutoTimeout, useElapsedTime, formatElapsedTime } from '@/hooks/useAutoTimeout';
+import { APISupport } from '@/utils/APISupport';
 import type { AnalyzedFile } from './FileUploadButton';
 import './ChatToolbar.css';
 
@@ -220,6 +222,15 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
       if (!onScreenCapture) return;
 
       try {
+        // ✅ NOUVEAU - Vérifier support Screen Capture
+        const supported = await APISupport.supportsScreenCapture();
+        if (!supported) {
+          const errorMsg = APISupport.getErrorMessage('screen-capture');
+          alert(errorMsg);
+          isDev && console.warn('[ChatToolbar] Screen capture not supported:', errorMsg);
+          return;
+        }
+
         // Utiliser l'API Screen Capture
         const stream = await navigator.mediaDevices.getDisplayMedia({
           video: { displaySurface: 'monitor' } as MediaTrackConstraints,
@@ -245,7 +256,14 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
 
         isDev && console.log('[ChatToolbar] Screenshot captured');
       } catch (err) {
-        console.error('[ChatToolbar] Screen capture error:', err);
+        const errorCode = (err as any)?.name || 'Unknown';
+        if (errorCode === 'NotAllowedError') {
+          console.log('[ChatToolbar] Screen capture cancelled by user');
+        } else if (errorCode === 'NotFoundError') {
+          alert('Aucun écran à capturer trouvé');
+        } else {
+          console.error('[ChatToolbar] Screen capture error:', err);
+        }
       }
     }, [onScreenCapture]);
 
@@ -276,6 +294,22 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
       if (!onImageAnalysis) return;
 
       try {
+        // ✅ NOUVEAU - Vérifier support et disponibilité caméra
+        const supported = await APISupport.supportsGetUserMedia();
+        if (!supported) {
+          const errorMsg = APISupport.getErrorMessage('camera');
+          alert(errorMsg);
+          isDev && console.warn('[ChatToolbar] Camera not supported:', errorMsg);
+          return;
+        }
+
+        const hasCamera = await APISupport.hasCamera();
+        if (!hasCamera) {
+          alert('Aucune caméra détectée. Vérifiez la connexion du matériel et les permissions.');
+          isDev && console.warn('[ChatToolbar] No camera found');
+          return;
+        }
+
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         const video = document.createElement('video');
         video.srcObject = stream;
@@ -310,14 +344,37 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
           onDictationResult(result);
         }
       } else {
-        setIsDictating(true);
         try {
+          // ✅ NOUVEAU - Vérifier microphone disponible
+          const hasMic = await APISupport.hasMicrophone();
+          if (!hasMic) {
+            alert('Aucun microphone détecté. Vérifiez la connexion du matériel et les permissions.');
+            isDev && console.warn('[ChatToolbar] No microphone found for dictation');
+            return;
+          }
+
+          setIsDictating(true);
           await voiceEngine.startDictation();
-        } catch {
+        } catch (err) {
           setIsDictating(false);
+          console.error('[ChatToolbar] Dictation error:', err);
+          alert(`Erreur dictation: ${(err as Error).message || 'Erreur inconnue'}`);
         }
       }
     }, [isDictating, voiceEngine, onDictationResult]);
+
+    // ✅ NOUVEAU - Auto-stop dictation après 60 secondes
+    useAutoTimeout({
+      id: 'dictation',
+      timeoutMs: 60 * 1000,
+      isActive: isDictating,
+      onTimeout: () => {
+        console.warn('[ChatToolbar] Dictation auto-stopped after 60s');
+        setIsDictating(false);
+        onDictationResult?.('[Dictation arrêtée automatiquement après 60s]');
+      },
+      isDev,
+    });
 
     // ═══ HANDLERS - ENREGISTREMENT AUDIO ═══
     const handleAudioRecordToggle = useCallback(async () => {
@@ -328,6 +385,22 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
       } else {
         // Démarrer l'enregistrement
         try {
+          // ✅ NOUVEAU - Vérifier support MediaRecorder
+          if (!APISupport.supportsMediaRecorder()) {
+            const errorMsg = APISupport.getErrorMessage('media-recorder');
+            alert(errorMsg);
+            isDev && console.warn('[ChatToolbar] MediaRecorder not supported');
+            return;
+          }
+
+          // ✅ NOUVEAU - Vérifier microphone disponible
+          const hasMic = await APISupport.hasMicrophone();
+          if (!hasMic) {
+            alert('Aucun microphone détecté. Vérifiez la connexion du matériel et les permissions.');
+            isDev && console.warn('[ChatToolbar] No microphone found for recording');
+            return;
+          }
+
           const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
           const mediaRecorder = new MediaRecorder(stream);
           mediaRecorderRef.current = mediaRecorder;
@@ -356,10 +429,25 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
 
           isDev && console.log('[ChatToolbar] Audio recording started');
         } catch (err) {
+          setIsRecordingAudio(false);
           console.error('[ChatToolbar] Audio recording error:', err);
+          alert(`Erreur enregistrement audio: ${(err as Error).message || 'Erreur inconnue'}`);
         }
       }
     }, [isRecordingAudio, onAudioRecorded]);
+
+    // ✅ NOUVEAU - Auto-stop recording après 5 minutes
+    useAutoTimeout({
+      id: 'audio-record',
+      timeoutMs: 5 * 60 * 1000,
+      isActive: isRecordingAudio,
+      onTimeout: () => {
+        console.warn('[ChatToolbar] Audio recording auto-stopped after 5 minutes');
+        setIsRecordingAudio(false);
+        mediaRecorderRef.current?.stop();
+      },
+      isDev,
+    });
 
     // ═══ HANDLERS - TRANSCRIPTION FICHIER AUDIO ═══
     const handleAudioTranscriptionClick = useCallback(() => {
@@ -385,18 +473,35 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
     );
 
     // ═══ HANDLERS - CONVERSATION AUDIO ═══
-    const handleAudioConversationToggle = useCallback(() => {
+    const handleAudioConversationToggle = useCallback(async () => {
       const newState = !isAudioConversationActive;
-      setIsAudioConversationActive(newState);
 
-      if (newState) {
-        startListening();
-      } else {
-        stopListening();
+      try {
+        // ✅ NOUVEAU - Vérifier support si on active
+        if (newState) {
+          const hasMic = await APISupport.hasMicrophone();
+          if (!hasMic) {
+            alert('Aucun microphone détecté. Mode conversation audio non disponible.');
+            isDev && console.warn('[ChatToolbar] No microphone for audio conversation');
+            return;
+          }
+        }
+
+        setIsAudioConversationActive(newState);
+
+        if (newState) {
+          startListening();
+        } else {
+          stopListening();
+        }
+
+        onToggleAudioConversation?.(newState);
+        isDev && console.log('[ChatToolbar] Audio conversation:', newState ? 'ON' : 'OFF');
+      } catch (err) {
+        setIsAudioConversationActive(false);
+        console.error('[ChatToolbar] Audio conversation toggle error:', err);
+        alert(`Erreur: ${(err as Error).message || 'Erreur inconnue'}`);
       }
-
-      onToggleAudioConversation?.(newState);
-      isDev && console.log('[ChatToolbar] Audio conversation:', newState ? 'ON' : 'OFF');
     }, [
       isAudioConversationActive,
       startListening,
@@ -404,14 +509,49 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
       onToggleAudioConversation,
     ]);
 
+    // ✅ NOUVEAU - Auto-stop audio conversation après 10 minutes
+    useAutoTimeout({
+      id: 'audio-conversation',
+      timeoutMs: 10 * 60 * 1000,
+      isActive: isAudioConversationActive,
+      onTimeout: () => {
+        console.warn('[ChatToolbar] Audio conversation auto-stopped after 10 minutes');
+        setIsAudioConversationActive(false);
+        stopListening();
+        onToggleAudioConversation?.(false);
+      },
+      isDev,
+    });
+
     // ═══ HANDLERS - CAMÉRA LIVE ═══
     const handleCameraLiveToggle = useCallback(async () => {
       if (isCameraActive) {
         disableVision();
         onToggleCameraLive?.(false);
       } else {
-        await enableVision(30 * 60 * 1000); // 30 minutes
-        onToggleCameraLive?.(true);
+        try {
+          // ✅ NOUVEAU - Vérifier support et disponibilité caméra
+          const supported = await APISupport.supportsGetUserMedia();
+          if (!supported) {
+            const errorMsg = APISupport.getErrorMessage('camera');
+            alert(errorMsg);
+            isDev && console.warn('[ChatToolbar] Camera not supported for live mode');
+            return;
+          }
+
+          const hasCamera = await APISupport.hasCamera();
+          if (!hasCamera) {
+            alert('Aucune caméra détectée. Caméra live non disponible.');
+            isDev && console.warn('[ChatToolbar] No camera found for live mode');
+            return;
+          }
+
+          await enableVision(30 * 60 * 1000); // 30 minutes
+          onToggleCameraLive?.(true);
+        } catch (err) {
+          console.error('[ChatToolbar] Camera live toggle error:', err);
+          alert(`Erreur: ${(err as Error).message || 'Erreur inconnue'}`);
+        }
       }
       isDev && console.log('[ChatToolbar] Camera live:', !isCameraActive ? 'ON' : 'OFF');
     }, [isCameraActive, enableVision, disableVision, onToggleCameraLive]);
