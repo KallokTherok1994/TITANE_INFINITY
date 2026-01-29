@@ -227,7 +227,7 @@ StatusIndicator.displayName = 'StatusIndicator';
 // SECTION 1: CONVERSATION
 // ═══════════════════════════════════════════════════════════════════════════
 
-interface ConversationSectionProps {}
+type ConversationSectionProps = Record<string, never>;
 
 const ConversationSection: React.FC<ConversationSectionProps> = () => {
   // ═══ IMPORTS & HOOKS ═══
@@ -814,7 +814,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
 // SECTION 2: VISION & PERCEPTION
 // ═══════════════════════════════════════════════════════════════════════════
 
-interface VisionSectionProps {}
+type VisionSectionProps = Record<string, never>;
 
 const VisionSection: React.FC<VisionSectionProps> = () => {
   const env = detectEnvironment();
@@ -1050,7 +1050,7 @@ const OverviewSection: React.FC<OverviewSectionProps> = ({ stats }) => {
 // SECTION 4: IDENTITÉ & ADN
 // ═══════════════════════════════════════════════════════════════════════════
 
-interface IdentitySectionProps {}
+type IdentitySectionProps = Record<string, never>;
 
 const IdentitySection: React.FC<IdentitySectionProps> = () => {
   const env = detectEnvironment();
@@ -1248,7 +1248,7 @@ const MemorySection: React.FC<MemorySectionProps> = ({ stats }) => {
 // SECTION 6: ÉVOLUTION MÉMOIRE
 // ═══════════════════════════════════════════════════════════════════════════
 
-interface MemoryEvolutionSectionProps {}
+type MemoryEvolutionSectionProps = Record<string, never>;
 
 const MemoryEvolutionSection: React.FC<MemoryEvolutionSectionProps> = () => {
   const env = detectEnvironment();
@@ -1492,7 +1492,7 @@ const ProgressionSection: React.FC<ProgressionSectionProps> = ({
 // SECTION 8: TRANSFORMATION
 // ═══════════════════════════════════════════════════════════════════════════
 
-interface TransformationSectionProps {}
+type TransformationSectionProps = Record<string, never>;
 
 const TransformationSection: React.FC<TransformationSectionProps> = () => {
   return (
